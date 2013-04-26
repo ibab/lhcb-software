@@ -29,6 +29,18 @@ namespace FiniteStateMachine   {
    */
   struct Tasklist  {
   public:
+    struct Timeout {
+      std::string from;
+      std::string to;
+      int timeout;
+      Timeout() : timeout(0) {}
+      Timeout(const std::string& f, const std::string& t, int v) : from(f), to(t), timeout(v) {}
+      Timeout(const Timeout& c) : from(c.from), to(c.to), timeout(c.timeout) {}
+      Timeout& operator=(const Timeout& c) { from=c.from; to=c.to; timeout=c.timeout; return *this;}
+    };
+    /// Defintiion of the timeout container
+    typedef std::vector<Timeout> Timeouts;
+
     /// Definition of the parameter container
     typedef std::pair<std::string,std::string> Param;
     typedef std::vector<Param> Params;
@@ -58,6 +70,8 @@ namespace FiniteStateMachine   {
       Params ioParams;
       /// Map of program arguments
       Params args;
+      /// Timeouts for this task type
+      Timeouts timeouts;
 
       /// Constructor
       Task();

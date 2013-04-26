@@ -41,12 +41,13 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine)  {
   string mode = RTL::str_upper(m_mode);
   TasklistAnalyzer analyzer(tasks);
   const Type* type = machine.type();
+  int ALWAYS = TypedObject::ALWAYS;
 
   ::snprintf(text,sizeof(text),"%d",m_instances);
   DD4hep::XML::_toDictionary(Unicode("NUMBER_OF_INSTANCES"),Unicode(text));
   xml_h inventory = DD4hep::XML::DocumentHandler().load(m_config).root();
   xml_coll_t(inventory,_Unicode(task)).for_each(analyzer);
-  cout << "------------------------------------ Task list -------------------------------------" << endl;
+  machine.display(ALWAYS,"------------------------------------ Task list -------------------------------------");
   for(Tasklist::Tasks::const_iterator i=tasks.begin(); i!=tasks.end(); ++i)  {
     Tasklist::Task* t=*i;
     size_t instances = t->instances;
@@ -63,7 +64,6 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine)  {
     utgid     = RTL::str_replace(utgid,"${PARTITION}",m_partition);
     utgid     = RTL::str_replace(utgid,"${RUNINFO}",m_runinfo);
     utgid     = RTL::str_replace(utgid,"${NAME}",t->name);
-
     for(size_t i=0; i<=instances; ++i)   {
       ::snprintf(text,sizeof(text),instances>0 ? "%02d" : "%d",int(i));
       string instance_utgid = RTL::str_replace(utgid,"${INSTANCE}",text);
@@ -72,10 +72,25 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine)  {
       slave->fmc_args = RTL::str_replace(fmc_start,"${INSTANCE}",text)+ " -DUTGID="+instance_utgid;
       slave->cmd_args = RTL::str_replace(arguments,"${INSTANCE}",text);
       machine.addSlave(slave);
-      cout << "+---- Task:" << t->name << " " << "UTGID:" << slave->name() << endl
-	   << "|     tmStart -m " << node << " "
-	   << slave->fmc_args << " " << slave->command() << " " 
-	   << slave->cmd_args << endl;
+      machine.display(ALWAYS,"+---- Task:%s UTGID %s",t->name.c_str(),slave->c_name());
+      machine.display(ALWAYS,"|     tmStart -m %s %s %s %s",node.c_str(),slave->fmc_args.c_str(),
+		      slave->command().c_str(),slave->cmd_args.c_str());
+      for(Tasklist::Timeouts::const_iterator it=t->timeouts.begin(); it!=t->timeouts.end(); ++it)   {
+	const State* from = type->state((*it).from);
+	const State* to   = type->state((*it).to);
+	int tmo = (*it).timeout;
+	if ( from && to )   {
+	  const Transition* tr = from->findTrans(to);
+	  if ( tr )  {
+	    slave->addTimeout(tr,tmo);
+	    continue;
+	  }
+	}
+	machine.display(machine.ERROR,"%s> Type: %s -- Cannot set timeout %s -> %s = %d seconds [%s]",
+			slave->c_name(), type->c_name(),
+			from ? from->c_name() : "????", to ? to->c_name() : "????", tmo,
+			from && to ? "No transition found" : "Invalid State(s)");
+      }
     }
   }
   return true;
@@ -92,7 +107,6 @@ bool XmlTaskConfiguration::getTasks(vector<string>& task_names)  {
   DD4hep::XML::_toDictionary(Unicode("NUMBER_OF_INSTANCES"),Unicode(text));
   xml_h inventory = DD4hep::XML::DocumentHandler().load(m_config).root();
   xml_coll_t(inventory,_Unicode(task)).for_each(analyzer);
-  cout << "------------------------------------ Task list -------------------------------------" << endl;
   for(Tasklist::Tasks::const_iterator i=tasks.begin(); i!=tasks.end(); ++i)  {
     Tasklist::Task* t=*i;
     size_t instances = t->instances;

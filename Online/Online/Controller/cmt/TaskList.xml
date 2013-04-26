@@ -11,6 +11,13 @@
     <fmcparam name="workdirectory" value="/home/frankm"/>
     <fmcparam name="stdout"        value="/tmp/logSrv.fifo"/>
     <fmcparam name="stderr"        value="/tmp/logSrv.fifo"/>
+    <timeout  from="Any"           transition="default"       value="5"/>
+    <timeout  from="OFFLINE"       to="NOT_READY"  value="5"/>
+    <timeout  from="NOT_READY"     to="READY"      value="15"/>
+    <timeout  from="READY"         to="RUNNING"    value="5"/>
+    <timeout  from="RUNNING"       to="READY"      value="5"/>
+    <timeout  from="READY"         to="NOT_READY"  value="5"/>
+    <timeout  from="NOT_READY"     to="OFFLINE"    value="2"/>
   </task>
 
   <task name="MEPRx" user="online" group="onliners">

@@ -14,6 +14,7 @@
 // Framework include files
 #include "CPP/Event.h"
 #include "CPP/Interactor.h"
+#include "FiniteStateMachine/Type.h"
 #include "FiniteStateMachine/State.h"
 #include "FiniteStateMachine/Transition.h"
 

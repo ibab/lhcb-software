@@ -29,6 +29,9 @@ DECLARE_UNICODE_TAG(ioparam);
 DECLARE_UNICODE_TAG(user);
 DECLARE_UNICODE_TAG(group);
 DECLARE_UNICODE_TAG(instances);
+DECLARE_UNICODE_TAG(timeout);
+DECLARE_UNICODE_TAG(from);
+DECLARE_UNICODE_TAG(to);
 
 namespace FiniteStateMachine {
   struct TaskParams : public xml_h {
@@ -40,6 +43,9 @@ namespace FiniteStateMachine {
     std::string command() const   { return  child(_U(command)).text();   }
     bool hasValue() const         { return  hasAttr(_U(value));           }
     std::string value() const     { return  attr<std::string>(_U(value)); }
+    std::string from() const      { return  attr<std::string>(_U(from)); }
+    std::string to() const        { return  attr<std::string>(_U(to)); }
+    int timeout() const           { return  attr<int>(_U(timeout)); }
   };
 }
 
@@ -63,6 +69,12 @@ void TasklistPrinter::operator()(const xml_h& h)  {
 void TasklistPrinter::Args::operator()(const xml_h& h)  {
   TaskParams a = h;
   cout << a.name() << "=" << a.value() << " ";
+}
+
+/// Action operator when analyzing data
+void TasklistPrinter::Timeouts::operator()(const xml_h& h)  {
+  TaskParams a = h;
+  cout << endl << "   Timeout: " << a.from() << " -> " << a.to() << " = " << a.timeout();
 }
 
 /// Action operator when analyzing data
@@ -103,6 +115,12 @@ void TasklistAnalyzer::Args::operator()(const xml_h& h)  {
   TaskParams a = h;
   string val = a.hasValue() ? a.value() : string();
   task->args.push_back(make_pair(a.name(),val));
+}
+
+/// Action operator when analyzing data
+void TasklistAnalyzer::Timeouts::operator()(const xml_h& h)  {
+  TaskParams a = h;
+  task->timeouts.push_back(Tasklist::Timeout(a.from(),a.to(),a.timeout()));
 }
 
 /// Action operator when analyzing data
