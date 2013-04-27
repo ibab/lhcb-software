@@ -251,7 +251,7 @@ ControlMenu::ControlMenu(const std::string& config)
   ::strcpy(m_modeCmd,s_modeList[0]);
   ::strcpy(m_slaveCmd,s_cmdList[0]);
   ::strcpy(m_stateCmd,s_stateList[0]);
-  ::strcpy(m_slvTypeCmd,s_slvList[0]);
+  ::strcpy(m_slvTypeCmd,s_slvList[m_config_exists ? 1 : 0]);
   ::strcpy(m_runinfoCmd,"OnlineEnv.py");
   ::strcpy(m_partitionCmd,s_partList[0]);
   ::strcpy(m_configCmd,config.empty() ? "Tasklist.xml" : config.c_str());
@@ -292,7 +292,7 @@ ControlMenu::ControlMenu(const std::string& config)
   ::upic_add_comment(COM_LINE_5,           line.c_str(),"");
   ::upic_add_comment(COM_LINE_6,line.c_str(),"");
   ::upic_close_menu();
-  ::upic_set_cursor(m_id,CMD_SEND_CTRL,0);
+  ::upic_set_cursor(m_id,CMD_CONFIG_FSM,0);
   UpiSensor::instance().add(this,m_id);
   ::upic_write_message("Opened window.","");
   ::upic_disable_command(m_id,CMD_SET_CONFIG);
@@ -611,6 +611,7 @@ void ControlMenu::handle(const Event& ev)   {
     case CMD_SETSTATE_CTRL:
       clean_str(m_stateCmd,sizeof(m_stateCmd));
       setMachineState(m_stateCmd);
+      ::upic_set_cursor(m_id,CMD_SEND_CTRL,0);
       return;
     case CMD_SEND_CTRL:
       clean_str(m_slaveCmd,sizeof(m_slaveCmd));
@@ -618,6 +619,7 @@ void ControlMenu::handle(const Event& ev)   {
       return;
     case CMD_SLAVE_RESET:
       executeTransition("RESET");
+      ::upic_set_cursor(m_id,CMD_SEND_CTRL,0);
       return;
     case COM_SLAVE_STATE:
       ::upic_replace_comment(m_id,ev.iocPtr<SlaveTag>()->id,ev.iocPtr<SlaveTag>()->line,"");
@@ -634,10 +636,12 @@ void ControlMenu::handle(const Event& ev)   {
       if      ( ev.iocData()<100 ) killSlave(ev.iocData()%100);
       else if ( ev.iocData()<200 ) errorSlave(ev.iocData()%100);
       else timeoutSlave(ev.iocData()%100);
+      ::upic_set_cursor(m_id,CMD_SEND_CTRL,0);
       return;
 
     case CMD_CONFIG_FSM:
       startController();
+      ::upic_set_cursor(m_id,CMD_SEND_CTRL,0);
       return;
     default:
       return;
