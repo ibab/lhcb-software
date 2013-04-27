@@ -117,21 +117,13 @@ public:
     return zone;
   }  
 
-  /// Phi range [-pi,pi] of a given zone in the global frame.
-  virtual const std::pair<double,double>& globalPhiRange(unsigned int zone) const {
-    return m_zonesCache[zone].globalPhiLimits;
-  }
-  /// R range of a given zone in the global frame.
-  virtual const std::pair<double,double>& globalRRange(unsigned int zone) const {
-    return m_zonesCache[zone].globalRLimits;
-  }
-  
   /// Phi at a given radius in the local frame
   virtual double phiOfStrip(unsigned int strip, double fraction, const double radius) const {
     const unsigned int zone = zoneOfStrip(strip);
     const double effectiveStrip = fraction + strip - m_zones[zone].firstStrip;
     return effectiveStrip * m_zones[zone].pitch + phiOffset(radius); 
   }
+
   /// Phi pitch in radians for a given strip
   virtual double phiPitchOfStrip(unsigned int strip) const {
     const unsigned int zone = zoneOfStrip(strip);
@@ -142,7 +134,6 @@ public:
     const unsigned int zone = zoneOfRadius(radius);
     return m_zones[zone].pitch * radius;
   }
-  
   /// Phi distance to the origin in the local frame
   virtual double distToOrigin(unsigned int strip) const {
     const unsigned int zone = zoneOfStrip(strip);
@@ -199,12 +190,8 @@ private:
   StatusCode initSensor();
   /// Calculate the strip limits and parameters in the global frame
   StatusCode updateStripCache();
-  /// Calculate the zone limits in the global frame
-  StatusCode updateZoneCache();
   /// Update the geometry cache when the alignment changes
   StatusCode updateGeometryCache();
-  /// Build up map of strip to routing line conversions
-  void buildRoutingLineMap();
   
   /// Return the offset in phi for a given radius
   double phiOffset(double radius) const {
@@ -219,16 +206,9 @@ private:
     return (fabs(d0 / radius) < 1.) ? asin(d0 / radius) - c0 : asin(1.) - c0;
   }
 
-  bool m_down;
   double m_phiOrigin;
   /// Phi resolution of the sensor (gradient and constant)
   std::pair<double, double> m_resolution;
-
-  struct phiZoneCache {
-    std::pair<double, double> globalPhiLimits;
-    std::pair<double, double> globalRLimits;
-  };
-  std::vector<phiZoneCache> m_zonesCache;
 
   struct phiStripCache {
     double a, b, c;

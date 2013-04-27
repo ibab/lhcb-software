@@ -96,8 +96,6 @@ StatusCode DeVLPhiSensor::initialize() {
     msg << MSG::ERROR << "Failed to initialise DeVLPhiSensor." << endmsg;
     return sc;
   }
-  // Build up map of strips to routing lines.
-  buildRoutingLineMap();
   // Register geometry conditions, update strip cache.
   updMgrSvc()->registerCondition(this, this->m_geometry,
                                  &DeVLPhiSensor::updateGeometryCache);
@@ -440,68 +438,8 @@ StatusCode DeVLPhiSensor::residual(const Gaudi::XYZPoint& point,
 }
 
 //=============================================================================
-// Build map of strips to routing line and back
-//=============================================================================
-void DeVLPhiSensor::buildRoutingLineMap() {
-
-  MsgStream msg(msgSvc(), "DeVLPhiSensor");
-  if (m_debug) {
-    msg << MSG::DEBUG << "Building routing line map for sensor " 
-        << sensorNumber() << endmsg;
-  }
-
-  const unsigned int nStripsPerGroup = 128;
-  const unsigned int nGroups = 20;
-  // Mapping from strip groups to pad groups.
-  std::vector<int> padGroup(nGroups);
-  // Zone 0
-  padGroup[0]  = 16;
-  padGroup[1]  = 15;
-  padGroup[2]  = 10;
-  padGroup[3]  =  9;
-  padGroup[4]  =  4;
-  padGroup[5]  =  3;
-  // Zone 1
-  padGroup[6]  = 18;
-  padGroup[7]  = 13;
-  padGroup[8]  = 12;
-  padGroup[9]  =  7;
-  padGroup[10] =  6;
-  padGroup[11] =  1;
-  // Zone 2
-  padGroup[12] = 19;
-  padGroup[13] = 17;
-  padGroup[14] = 14;
-  padGroup[15] = 11;
-  padGroup[16] =  8;
-  padGroup[17] =  5;
-  padGroup[18] =  2;
-  padGroup[19] =  0;   
-
-  // Loop over the strip groups.
-  for (unsigned int isg = 0; isg < nGroups; ++isg) {
-    // Get the corresponding pad group.
-    const unsigned int ipg = padGroup[isg];
-    // Loop over the strips in this group.
-    for (unsigned int js = 0; js < nStripsPerGroup; ++js) {
-      const unsigned int strip = isg * nStripsPerGroup + js;
-      const unsigned int pad = (ipg + 1) * nStripsPerGroup - js - 1;
-      m_mapStripToRoutingLine[strip] = pad;
-      m_mapRoutingLineToStrip[pad]   = strip;
-      if (m_verbose) {
-        msg << MSG::VERBOSE 
-            << "Pad (routing line) " << pad
-            << " strip " << strip
-            << endmsg;
-      }
-    }
-  }
-  
-}
-
-// ============================================================================
 /// Return a trajectory (for track fit) from strip + offset
-// ============================================================================
+//=============================================================================
 std::auto_ptr<LHCb::Trajectory> DeVLPhiSensor::trajectory(const LHCb::VLChannelID& id,
                                                           const double offset) const {
 
@@ -529,7 +467,7 @@ std::auto_ptr<LHCb::Trajectory> DeVLPhiSensor::trajectory(const LHCb::VLChannelI
   Gaudi::XYZPoint gEnd1 = localToGlobal(lEnd1);
   Gaudi::XYZPoint gEnd2 = localToGlobal(lEnd2);
 
-  // Put into trajectory.
+  // Make a trajectory.
   LHCb::Trajectory* tTraj = new LHCb::LineTraj(gEnd1, gEnd2);
   std::auto_ptr<LHCb::Trajectory> autoTraj(tTraj);
   return autoTraj;
@@ -538,7 +476,6 @@ std::auto_ptr<LHCb::Trajectory> DeVLPhiSensor::trajectory(const LHCb::VLChannelI
 
 StatusCode DeVLPhiSensor::updateStripCache() {
 
-  m_zonesCache.resize(m_numberOfZones);
   m_stripsCache.resize(m_numberOfStrips);
   for (unsigned int zone = 0; zone < m_numberOfZones; ++zone) {
     unsigned int firstStrip = m_zones[zone].firstStrip;
@@ -560,72 +497,12 @@ StatusCode DeVLPhiSensor::updateStripCache() {
   
 }
 
-StatusCode DeVLPhiSensor::updateZoneCache() {
-
-  for (unsigned int zone = 0; zone < m_numberOfZones; ++zone) {
-    const unsigned int minStrip = m_zones[zone].firstStrip;
-    const unsigned int maxStrip = minStrip + m_zones[zone].nbStrips - 1;
-    const unsigned int midStrip = (minStrip + maxStrip) / 2;
-
-    // Determine the ranges of the zones in the global frame.
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMin = globalStripLimits(minStrip);
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMax = globalStripLimits(maxStrip);
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMid = globalStripLimits(midStrip);
-    
-    std::vector<double> rLimits;
-    rLimits.push_back(globalLimitsMin.first.rho()); 
-    rLimits.push_back(globalLimitsMin.second.rho());
-    rLimits.push_back(globalLimitsMax.first.rho()); 
-    rLimits.push_back(globalLimitsMax.second.rho());
-    rLimits.push_back(globalLimitsMid.first.rho()); 
-    rLimits.push_back(globalLimitsMid.second.rho());
-    m_zonesCache[zone].globalRLimits.first  = *std::min_element(rLimits.begin(), rLimits.end());
-    m_zonesCache[zone].globalRLimits.second = *std::max_element(rLimits.begin(), rLimits.end());
-
-    std::vector<double> phiLimits;
-    phiLimits.push_back(globalLimitsMin.first.phi()); 
-    phiLimits.push_back(globalLimitsMin.second.phi());
-    phiLimits.push_back(globalLimitsMax.first.phi()); 
-    phiLimits.push_back(globalLimitsMax.second.phi());
-    // Map to [0, 2pi] for right hand side sensors.
-    if (isRight()) {
-      for (unsigned int i = 0; i < phiLimits.size(); ++i) {
-        if (phiLimits[i] < 0) phiLimits[i] += 2 * Gaudi::Units::pi;
-      }
-    }
-    m_zonesCache[zone].globalPhiLimits.first  = *std::min_element(phiLimits.begin(), phiLimits.end());
-    m_zonesCache[zone].globalPhiLimits.second = *std::max_element(phiLimits.begin(), phiLimits.end());
-    // Map back to [-pi,pi]
-    if (isRight()) {
-      if (m_zonesCache[zone].globalPhiLimits.first  > Gaudi::Units::pi) {
-        m_zonesCache[zone].globalPhiLimits.first  -= 2 * Gaudi::Units::pi;
-      }
-      if (m_zonesCache[zone].globalPhiLimits.second > Gaudi::Units::pi) {
-        m_zonesCache[zone].globalPhiLimits.second -= 2 * Gaudi::Units::pi;
-      }
-    }
-
-    // Extend the phi ranges by half a strip pitch
-    const double pitch = fabs(phiPitchOfStrip(minStrip));
-    m_zonesCache[zone].globalPhiLimits.first   -= pitch / 2.;
-    m_zonesCache[zone].globalPhiLimits.second  += pitch / 2.;
-  }
-  return StatusCode::SUCCESS;
-  
-}
-
 StatusCode DeVLPhiSensor::updateGeometryCache() {
 
   StatusCode sc = updateStripCache();
   if (!sc.isSuccess()) {
     MsgStream msg(msgSvc(), "DeVLPhiSensor");
     msg << MSG::ERROR << "Failed to update strip cache." << endmsg;
-    return sc;
-  }
-  sc = updateZoneCache();
-  if (!sc.isSuccess()) {
-    MsgStream msg(msgSvc(), "DeVLPhiSensor");
-    msg << MSG::ERROR << "Failed to update zone limit cache." << endmsg;
     return sc;
   }
   return StatusCode::SUCCESS;

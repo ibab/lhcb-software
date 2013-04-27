@@ -131,15 +131,6 @@ public:
     return zone;    
   }
 
-  /// Phi range [-pi,pi] of a given zone in the global frame.
-  virtual const std::pair<double,double>& globalPhiRange(unsigned int zone) const {
-    return m_zonesCache[zone].globalPhiLimits;
-  }
-  /// R range of a given zone in the global frame.
-  virtual const std::pair<double,double>& globalRRange(unsigned int zone) const {
-    return m_zonesCache[zone].globalRLimits; 
-  }
-  
   /// Radius of the centre of a strip in the local frame
   virtual double rOfStrip(const unsigned int strip) const {
     return m_strips[strip].r;
@@ -243,12 +234,6 @@ private:
   double m_phiGap;
   /// R resolution of the sensor (gradient and constant)
   std::pair<double, double> m_resolution;
-
-  struct rZoneCache {
-    std::pair<double, double> globalPhiLimits;
-    std::pair<double, double> globalRLimits;
-  };
-  std::vector<rZoneCache> m_zonesCache;
 
   struct rStripCache {
     float globalR;

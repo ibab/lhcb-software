@@ -94,8 +94,6 @@ StatusCode DeVLRSensor::initialize() {
     msg << MSG::ERROR << "Failed to initialise DeVLRSensor." << endmsg;
     return sc;
   }
-  // Build up map of strips to routing lines.
-  buildRoutingLineMap();
   // Register geometry conditions, update strip cache.
   updMgrSvc()->registerCondition(this, this->m_geometry,
                                  &DeVLRSensor::updateGeometryCache);
@@ -481,60 +479,6 @@ StatusCode DeVLRSensor::residual(const Gaudi::XYZPoint& point,
 
 }
 
-//=============================================================================
-/// Build up routing line map
-//=============================================================================
-void DeVLRSensor::buildRoutingLineMap() {
-
-  // TODO: to be checked and refined
-  const int nChannelsPerChip = 128;
-  int firstPad = 0;
-  for (unsigned int zone = 0; zone < m_numberOfZones; ++zone) {
-    switch (zone) {
-      case 0:
-        firstPad = 20 * nChannelsPerChip - 1;
-        break;
-      case 1:
-        firstPad = 16 * nChannelsPerChip - 1;
-        break;
-      case 2:
-        firstPad = 12 * nChannelsPerChip - 11;
-        break;
-      case 3:
-        firstPad = 4 * nChannelsPerChip;
-        break;
-      case 4:
-        firstPad = 0;
-        break;
-      default:
-        break;
-    }
-    for (unsigned int strip = 0; strip < m_zones[zone].nbStrips; ++strip) {
-      int pad = firstPad;
-      if (zone < 2) {
-        pad -= strip;
-      } else if (zone > 2) {
-        pad += strip;
-      } else {
-        if (strip < 491) {
-          pad -= strip;  
-        }
-      }
-      m_mapStripToRoutingLine[m_zones[zone].firstStrip + strip] = pad;
-      m_mapRoutingLineToStrip[pad] = m_zones[zone].firstStrip + strip;
-      
-      if (m_verbose) {
-        MsgStream msg(msgSvc(), "DeVLRSensor");
-        msg << MSG::VERBOSE 
-            << "Pad (routing line) " << pad
-            << " strip " << strip
-            << endmsg;
-      }
-    }
-  }
-  
-}
-
 //==============================================================================
 /// Return a trajectory (for track fit) from strip + offset
 //==============================================================================
@@ -572,7 +516,7 @@ std::auto_ptr<LHCb::Trajectory> DeVLRSensor::trajectory(const LHCb::VLChannelID&
     gEnd = gTmp;
   }
 
-  // Put into trajectory
+  // Make a trajectory.
   LHCb::Trajectory* tTraj = new LHCb::CircleTraj(gOrigin, gBegin - gOrigin, 
                                                  gEnd - gOrigin, radius);
   std::auto_ptr<LHCb::Trajectory> autoTraj(tTraj);
@@ -620,67 +564,12 @@ StatusCode DeVLRSensor::updateStripCache() {
 
 }
 
-StatusCode DeVLRSensor::updateZoneCache() {
-
-  m_zonesCache.resize(m_numberOfZones);
-  for (unsigned int lzone = 0; lzone < m_numberOfZones; ++lzone) {
-    const unsigned int minStrip = m_zones[lzone].firstStrip;
-    const unsigned int maxStrip = minStrip + m_zones[lzone].nbStrips - 1;
-    const unsigned int midStrip = (minStrip + maxStrip) / 2;
-    unsigned int zone = lzone;
-    if (isDownstream()) {
-      zone = m_numberOfZones - 1 - zone;
-    }
-    // Determine the phi ranges of the zone in the global frame.
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMin = globalStripLimits(minStrip);
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMax = globalStripLimits(maxStrip);
-    std::pair<Gaudi::XYZPoint, Gaudi::XYZPoint> globalLimitsMid = globalStripLimits(midStrip);
-    std::vector<double> phiLimits;
-    phiLimits.push_back(globalLimitsMin.first.phi()); 
-    phiLimits.push_back(globalLimitsMin.second.phi());
-    phiLimits.push_back(globalLimitsMax.first.phi()); 
-    phiLimits.push_back(globalLimitsMax.second.phi());
-    phiLimits.push_back(globalLimitsMid.first.phi()); 
-    phiLimits.push_back(globalLimitsMid.second.phi());
-    // Map to [0, 2pi] for right hand side sensors.
-    if (isRight()) {
-      for (unsigned int i = 0; i < phiLimits.size(); ++i) {
-        if (phiLimits[i] < 0) phiLimits[i] += 2 * Gaudi::Units::pi;
-      }
-    }
-    m_zonesCache[zone].globalPhiLimits.first  = *std::min_element(phiLimits.begin(), phiLimits.end());
-    m_zonesCache[zone].globalPhiLimits.second = *std::max_element(phiLimits.begin(), phiLimits.end());
-    // Map back to [-pi,pi]
-    if (isRight()) {
-      if (m_zonesCache[zone].globalPhiLimits.first  > Gaudi::Units::pi) {
-        m_zonesCache[zone].globalPhiLimits.first  -= 2 * Gaudi::Units::pi;
-      }
-      if (m_zonesCache[zone].globalPhiLimits.second > Gaudi::Units::pi) {
-        m_zonesCache[zone].globalPhiLimits.second -= 2 * Gaudi::Units::pi;
-      }
-    }
-
-    // R limits are the radii of the outer strip + local pitch / 2 and the inner strip - local pitch / 2
-    m_zonesCache[zone].globalRLimits.first   = globalROfStrip(minStrip)  - rPitchOfStrip(minStrip) / 2.;
-    m_zonesCache[zone].globalRLimits.second  = globalROfStrip(maxStrip)  + rPitchOfStrip(maxStrip) / 2.;
-  }
-  return StatusCode::SUCCESS;
-  
-}
-
 StatusCode DeVLRSensor::updateGeometryCache() {
 
   StatusCode sc = updateStripCache();
   if (!sc.isSuccess()) {
     MsgStream msg(msgSvc(), "DeVLRSensor");
     msg << MSG::ERROR << "Failed to update strip cache." << endmsg;
-    return sc;
-  }
-
-  sc = updateZoneCache();
-  if (!sc.isSuccess()) {
-    MsgStream msg(msgSvc(), "DeVLRSensor");
-    msg << MSG::ERROR << "Failed to update zone limit cache." << endmsg;
     return sc;
   }
   return StatusCode::SUCCESS;
