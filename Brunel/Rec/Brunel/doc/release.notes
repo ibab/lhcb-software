@@ -18,6 +18,7 @@ Purpose: LHCb reconstruction program
   . New MC12TuneV2 ANN PID tuning and minor optimisations (ChargedProtoANNPID)
   . Fixes to monitoring sequence to allow for missing detectors in Upgrade
     confiurations (RecConf)
+  . Updated default database tags
 
 - Changes to tests
   . Update test files and references for latest fixes to upgrade geometries
