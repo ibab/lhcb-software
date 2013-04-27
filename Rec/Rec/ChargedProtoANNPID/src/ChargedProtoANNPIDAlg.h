@@ -118,7 +118,7 @@ namespace ANNGlobalPID
     };
 
 #ifdef _ENABLE_NEUROBAYES
-    /** @class ANNHelper ChargedProtoANNPIDAlg.h
+    /** @class NeuroBayesANN ChargedProtoANNPIDAlg.h
      *
      *  Helper class for NeuroBayes networks
      *
