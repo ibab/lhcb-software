@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DaVinciTrackScaling
+! Responsible : Vanya Belyaev
+! Purpose     : Track scaling and smearing
+!-----------------------------------------------------------------------------
+
+! 2013-04-27 - Chris Jones
+ - First import. Components moved from Phys/DaVinciTools
