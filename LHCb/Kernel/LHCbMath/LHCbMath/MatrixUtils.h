@@ -20,6 +20,10 @@
 #include "Math/Vector4D.h"
 #include "Math/Vector3D.h"
 // ============================================================================
+// LHCbMath
+// ============================================================================
+#include "LHCbMath/EqualTo.h"
+// ============================================================================
 /** @file
  *  The collection of functions for manipulation with matrices and vectors.
  *  In particular it includes

@@ -1604,6 +1604,7 @@ namespace Gaudi
     } ;
     // ========================================================================
     /** @class Rho0
+     *  \f$ \rho^{0} \rightarrow \pi^+ \pi^- \f$
      *  J.D.Jackson,
      *  "Remarks on the Phenomenological Analysis of Resonances",
      *  In Nuovo Cimento, Vol. XXXIV, N.6
@@ -1625,6 +1626,7 @@ namespace Gaudi
     } ;
     // ========================================================================
     /** @class Kstar0
+     *  \f$ K^{*0} \rightarrow K^+ \pi^- \f$
      *  J.D.Jackson,
      *  "Remarks on the Phenomenological Analysis of Resonances",
      *  In Nuovo Cimento, Vol. XXXIV, N.6
@@ -1643,6 +1645,28 @@ namespace Gaudi
                 const double pi_mass  = 139.6 ) ;   // MeV
       /// destructor
       virtual ~Kstar0 () ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Phi0
+     *  \f$ \phi \rightarrow K^+ K^- \f$
+     *  J.D.Jackson,
+     *  "Remarks on the Phenomenological Analysis of Resonances",
+     *  In Nuovo Cimento, Vol. XXXIV, N.6
+     *  @see Gaudi::Math::BreitWigner::Jackson_A2 
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2014-04-27
+     */
+    class GAUDI_API Phi0 : public Gaudi::Math::BreitWigner
+    {
+    public:
+      // ======================================================================
+      // constructor from all parameters
+      Phi0  ( const double m0       = 1019.5 ,     // MeV
+              const double gam0     =    4.3 ,     // MeV
+              const double k_mass   =  493.7 ) ;   // MeV
+      /// destructor
+      virtual ~Phi0 () ;
       // ======================================================================
     } ;
     // ========================================================================

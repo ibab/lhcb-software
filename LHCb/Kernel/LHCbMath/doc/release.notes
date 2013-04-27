@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2013-04-27 - 
+ - EqualTo: add comparison ove vectors, points & matrices 
+
 ! 2013-04-27 - Vanya Belyaev
  - Functions.h: small fix 
 

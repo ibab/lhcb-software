@@ -13,6 +13,12 @@
 #include "Math/Vector4D.h"
 #include "Math/Vector3D.h"
 // ============================================================================
+// LHCbMath
+// ============================================================================
+#include "LHCbMath/LHCbMath.h"
+#include "LHCbMath/EqualTo.h"
+#include "LHCbMath/MatrixUtils.h"
+// ============================================================================
 /** @file 
  *  The collection of useful utils to minimize the conversion from 
  *  geometry&kinematical vectors into linear algebra vectors 

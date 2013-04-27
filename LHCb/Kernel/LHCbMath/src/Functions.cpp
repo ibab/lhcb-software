@@ -3177,6 +3177,25 @@ Gaudi::Math::Kstar0::~Kstar0(){}
 // ============================================================================
 // constructor from all parameters
 // ============================================================================
+Gaudi::Math::Phi0::Phi0
+( const double m0       ,
+  const double gam0     ,
+  const double k_mass   )
+  : Gaudi::Math::BreitWigner ( m0         ,
+                               gam0       ,
+                               k_mass     ,
+                               k_mass     ,
+                               1          ,
+                               Jackson_A2 )
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::Phi0::~Phi0(){}
+
+// ============================================================================
+// constructor from all parameters
+// ============================================================================
 Gaudi::Math::Rho0FromEtaPrime::Rho0FromEtaPrime
 ( const double m0        ,
   const double gam0      ,
