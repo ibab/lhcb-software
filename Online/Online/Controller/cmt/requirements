@@ -1,5 +1,5 @@
 package Controller
-version v0r1
+version v0r0
 author "Markus Frank"
 
 branches FiniteStateMachine cmt src
