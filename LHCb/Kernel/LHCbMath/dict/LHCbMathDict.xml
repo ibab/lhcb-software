@@ -57,6 +57,7 @@
     <field name = "m_rho_fun" transient = "true"/>      
   </class>
   <class name    = "Gaudi::Math::Rho0"             />
+  <class name    = "Gaudi::Math::Kstar0"           />
   <class name    = "Gaudi::Math::Rho0FromEtaPrime" />
   <class name    = "Gaudi::Math::Flatte"           />
   <class name    = "Gaudi::Math::Flatte2"          />
