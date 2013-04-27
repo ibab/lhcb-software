@@ -4,6 +4,13 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2013-04-27 - Marco Cattaneo
+ - Update default database tags to the latest ones:
+   . LHCBCOND, 2013, 2012, 2011: cond-20130404
+   . DDDB,     2013, 2012      : head-20130312-1
+   . DDDB,                 2011: head-20130312
+   . DQFLAGS   2013, 2012      : dq-20130418
+
 ! 2013-04-24 - Illya Shapoval
  - When forming an Ariadne query, a preference is given to DDDBConf().Simulation
    instead of CondDB().Simulation property.
