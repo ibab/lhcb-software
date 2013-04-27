@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+! 2013-04-27 - Chris Jones
+ - Add new package Phys/DaVinciTrackScaling
+
 </PRE><H1><A NAME=v10r5>2013-04-05 Analysis v10r5 </A></H1><PRE>
 New development release, built against Phys v16r5.
 

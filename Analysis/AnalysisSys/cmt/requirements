@@ -70,6 +70,7 @@ use  MicroDSTExample            v2r14p1 Ex         # Juan Palacios
 
 use  TrackSmearing              v1r6    Phys   # Alex Shires
 use  DaVinciTrackRefitting      v1r3    Phys   # Matt Needham
+use  DaVinciTrackScaling        v1r0    Phys   # Vanya Belyaev
 
 ####################################################################
 
