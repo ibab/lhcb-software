@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-04-27 - Chris Jones
+ - Move Track scaling and smearing tools to dedicated package 
+   Phys/DaVinciTrackScaling in Analysis
+
 ! 2013-04-26 - Vanya Belyaev
  - StackScaleState.cpp : suppress debug printout 
 
