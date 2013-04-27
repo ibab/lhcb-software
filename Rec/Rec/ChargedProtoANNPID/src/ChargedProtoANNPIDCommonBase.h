@@ -28,7 +28,7 @@
 #include "Event/RecSummary.h"
 
 //-----------------------------------------------------------------------------
-/** @namespaceANNGlobalPID
+/** @namespace ANNGlobalPID
  *
  *  General namespace for Global PID ANN software
  *

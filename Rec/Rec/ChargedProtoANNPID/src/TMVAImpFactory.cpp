@@ -9,7 +9,13 @@ using namespace std;
 namespace ANNGlobalPID
 {
 
-  // The MC12TuneV2 networks
+  /** @namespace MC12TuneV2
+   *
+   *  Namespace for C++ implementations of MC12TuneV2 TMVA networks.
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   2013-04-26
+   */
   namespace MC12TuneV2
   {
     // Long tracks

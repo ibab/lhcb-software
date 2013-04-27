@@ -16,9 +16,9 @@ namespace ANNGlobalPID
 
 #ifndef IClassifierReader__def
 #define IClassifierReader__def
-  /** @class TMVAImpFactory TMVAImpFactory.h
+  /** @class IClassifierReader TMVAImpFactory.h
    *
-   *  Interface class for TMVA C++ implementation of networks
+   *  Interface class for TMVA C++ implementation of MVAs
    */
   class IClassifierReader
   {
