@@ -29,6 +29,7 @@ using namespace FiniteStateMachine::DAQ;
 Controller::Controller(const string&  nam, Machine* m)
   : CommandTarget(nam), m_machine(m), m_queueExit(false)
 {
+  m_errorState = m_machine->type()->state(ST_NAME_ERROR);
   m->setFailAction(Callback::make(this,&Controller::fail));
   m->setCompletionAction(Callback::make(this,&Controller::publish));
   publish();
@@ -44,6 +45,14 @@ FSM::ErrCond Controller::fail()  {
   // Nothing to do, since failure will be handled with IOC SLAVE_FAILED
   display(ALWAYS,"Controller: %s> FAILED to invoke transition %s from %s",
 	  c_name(),tr ? tr->c_name() : "", m_machine->c_state());
+  for(Machine::Slaves::const_iterator i=m_machine->slaves().begin(); i!= m_machine->slaves().end(); ++i)  {
+    Slave* s = const_cast<Slave*>(*i);
+    if ( s->currentState() == Slave::SLAVE_FAILED )
+      s->setState(m_errorState);
+    display(ALWAYS,"Controller: %s> Slave %s in state %s has meta-state:%s",
+	    c_name(), s->c_name(), s->c_state(), s->metaStateName());
+  }
+
   IocSensor::instance().send(this,ERROR_PROCESS,this);
   return FSM::SUCCESS;
 }
@@ -69,7 +78,7 @@ void Controller::handle(const Event& ev)    {
       ::exit(0);
       break;
     case ERROR_PROCESS:
-      m_machine->invokeTransition(ST_NAME_ERROR,Rule::SLAVE2MASTER);
+      m_machine->invokeTransition(m_errorState,Rule::SLAVE2MASTER);
       break;
     case Slave::SLAVE_FAILED:
       break;

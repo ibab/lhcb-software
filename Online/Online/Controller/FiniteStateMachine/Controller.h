@@ -39,6 +39,8 @@ namespace FiniteStateMachine   {
 	   ERROR_PROCESS=99999
     };
 
+    /// Static cache of the pointer to the error state
+    const State* m_errorState;
     /// Reference to machine object
     Machine* m_machine;
     /// Flag if on next occurrence of OFFLINE we should exit

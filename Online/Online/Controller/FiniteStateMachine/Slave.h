@@ -70,10 +70,14 @@ namespace FiniteStateMachine {
     virtual ~Slave();    
     /// Internal meta-state of the slave
     SlaveState currentState() const                       {  return m_meta;                 }
+    /// Internal meta-state of the slave
+    void setCurrentState(SlaveState new_state)            {  m_meta = new_state;            }
     /// Access meta state as string
     const char* metaStateName() const;
     /// Access current state of the slave
     const State* state() const                            {  return m_state;                }
+    /// Set current state of the slave. Note: be careful modifying the state if it does not correspond to the object 
+    void setState(const State* new_state)                 {  m_state = new_state;           }
     /// Access the current rule to be applied
     const Rule*  rule() const                             {  return m_rule;                 }
     /// Retrieve reference to current State structure name

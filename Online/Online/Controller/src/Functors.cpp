@@ -78,6 +78,32 @@ void InvokeSlave::operator()(Slave* s)   {
   }
 }
 
+/// Standard constructor
+InvokeSlave2::InvokeSlave2(const std::vector<Slave*>& s, const Transition* t,Rule::Direction dir) 
+  : FsmCheckFunctor<const Transition*>(t), direction(dir), slaves(s)
+{
+}
+
+/// Operator invoked for each rule and invoke slave accordingly
+void InvokeSlave2::operator()(const Rule* rule)   {
+  for(Machine::Slaves::const_iterator i=slaves.begin(); i!=slaves.end();++i)    {
+    Slave* s = *i;
+    if ( !object->checkLimbo() && s->isLimbo() ) continue;
+    else if ( s->currentState() == Slave::SLAVE_EXECUTING ) continue;
+    else if ( (*rule)(s->state(),direction) )  {
+      FSM::ErrCond sc = s->apply(rule);
+      if      ( status == FSM::SUCCESS && sc == FSM::WAIT_ACTION ) status = sc;
+      else if ( sc == FSM::TRANNOTFOUND ) { /* Rule does not apply */ }
+      else if ( sc != FSM::SUCCESS      ) status = sc;
+    }
+  }
+}
+
+/// Operator invoked for each slave to be checked
+void SetSlaveState::operator()(Slave* s)     {
+  s->setCurrentState(object);
+}
+
 /// Operator invoked for each slave to be checked
 void SlaveLimboCount::operator()(const Slave* s)     {
   if ( s->isLimbo() )  ++count;

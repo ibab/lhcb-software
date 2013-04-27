@@ -133,7 +133,8 @@ void DimSlave::handleState(const string& msg)  {
     if ( !starting )  {
       display(NOLOG,"%s::%s> Slave DEAD. Curr State:%s",
 	      RTL::processName().c_str(),c_name(),metaStateName());
-      send(SLAVE_LIMBO,m_state);
+      //send(SLAVE_LIMBO,m_state);
+      iamDead();
     }
     return;
   }
@@ -141,7 +142,9 @@ void DimSlave::handleState(const string& msg)  {
   const State* state = type()->state(msg);
   const Transition* transition = state ? m_state->findTrans(state) : 0;
   if ( starting )   {
-    send(SLAVE_ALIVE,type()->initialState());
+    //send(SLAVE_ALIVE,type()->initialState());
+    iamHere();
+    return;
   }
   else if ( transition )  {
     //send(SLAVE_FINISHED,state);

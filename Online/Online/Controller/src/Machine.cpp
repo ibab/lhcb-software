@@ -293,7 +293,9 @@ ErrCond Machine::startTransition()  {
       PredicateSlave pred = for_each(sl.begin(),sl.end(),PredicateSlave(tr));
       if ( pred.ok() )   {
 	display(NOLOG,"%s> Executing %s. Predicates checking finished successfully.",c_name(),tr->c_name());
-	InvokeSlave func = for_each(sl.begin(),sl.end(),InvokeSlave(tr,m_direction));
+	//InvokeSlave func = for_each(sl.begin(),sl.end(),InvokeSlave(tr,m_direction));
+	const Transition::Rules& rules = tr->rules();
+	InvokeSlave2 func = for_each(rules.begin(), rules.end(), InvokeSlave2(sl,tr,m_direction));
 	if ( func.status == FSM::WAIT_ACTION )  {
 	  return FSM::SUCCESS;
 	}

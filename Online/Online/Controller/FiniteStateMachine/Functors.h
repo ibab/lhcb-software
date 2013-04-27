@@ -17,6 +17,7 @@
 
 // C/C++ include files
 #include <string>
+#include <vector>
 #include <algorithm>
 
 /* 
@@ -109,32 +110,48 @@ namespace FiniteStateMachine {
 
   template <class T> struct FsmCheckFunctor {
     /// Current reference object pointer
-    const T* object;
+    T object;
     /// Internal object status
     int status;
     /// Standard constructor
-    FsmCheckFunctor(const T* t) : object(t), status(FSM::SUCCESS) {}
+    FsmCheckFunctor(T t) : object(t), status(FSM::SUCCESS) {}
     /// Check if predicates were fullfilled
     bool ok() const    {   return status == FSM::SUCCESS;     }
     /// Check if predicates were fullfilled
     bool wait() const  {   return status == FSM::WAIT_ACTION; }
   };
-  struct PredicateSlave : public FsmCheckFunctor<Transition> {
+  struct SetSlaveState  : public FsmCheckFunctor<Slave::SlaveState> {
     /// Standard constructor
-    PredicateSlave(const Transition* t) : FsmCheckFunctor<Transition>(t) {}
+    SetSlaveState(Slave::SlaveState s) : FsmCheckFunctor<Slave::SlaveState>(s) {}
+    /// Operator invoked for each predicate to check if it is fulfilled
+    void operator()(Slave* s);
+  };
+  struct PredicateSlave : public FsmCheckFunctor<const Transition*> {
+    /// Standard constructor
+    PredicateSlave(const Transition* t) : FsmCheckFunctor<const Transition*>(t) {}
     /// Operator invoked for each predicate to check if it is fulfilled
     void operator()(const Slave* s);
   };
-  struct InvokeSlave : public FsmCheckFunctor<Transition>  {
+  struct InvokeSlave : public FsmCheckFunctor<const Transition*>  {
     /// Flag to indicate if the transition is MASTER2SLAVE or SLAVE2MASTER (see Rule.h)
     Rule::Direction direction;
     /// Standard constructor
-    InvokeSlave(const Transition* t,Rule::Direction dir) : FsmCheckFunctor<Transition>(t), direction(dir) {}
+    InvokeSlave(const Transition* t, Rule::Direction dir) : FsmCheckFunctor<const Transition*>(t), direction(dir) {}
     /// Operator invoked for each predicate to check if it is fulfilled
     void operator()(Slave* s);
   };
   
-  struct PrintObject  {
+  struct InvokeSlave2 : public FsmCheckFunctor<const Transition*>  {
+    /// Flag to indicate if the transition is MASTER2SLAVE or SLAVE2MASTER (see Rule.h)
+    Rule::Direction direction;
+    const std::vector<Slave*> slaves;
+    /// Standard constructor
+    InvokeSlave2(const std::vector<Slave*>& s, const Transition* t,Rule::Direction dir);
+    /// Operator invoked for each predicate to check if it is fulfilled
+    void operator()(const Rule* rule);
+  };
+  
+   struct PrintObject  {
     /// Printout prefix
     std::string prefix;
     /// Standard constructor

@@ -122,25 +122,22 @@ namespace UPI {
       DimSlave::handleIoc(event);
       switch(event.type)  {
       case SLAVE_LIMBO:
-	ioc().send(handler,CMD_UPDATE_SLAVE,this);
-	break;
       case SLAVE_STARTING:
-      case SLAVE_FAILED:
       case SLAVE_KILLED:
       case SLAVE_FINISHED:
       case SLAVE_TRANSITION_TIMEOUT:
-	ioc().send(handler,CMD_UPDATE_SLAVE,this);
 	break;
+      case SLAVE_FAILED:
       case SLAVE_TRANSITION:
 	ioc().send(handler,SLAVE_TRANSITION,this);
 	break;
       case SLAVE_ALIVE:
 	ioc().send(this,SLAVE_FINISHED,event.data);
-	ioc().send(handler,CMD_UPDATE_SLAVE,this);
 	return;
       default:
 	break;
       }
+      ioc().send(handler,CMD_UPDATE_SLAVE,this);
     }
     int processIO() {
       FILE* f = ::fdopen(m_out[0],"r");
