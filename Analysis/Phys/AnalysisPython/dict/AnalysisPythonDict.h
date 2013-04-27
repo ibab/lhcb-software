@@ -11,6 +11,7 @@
 #include "Analysis/RooMakeHistos.h"
 #include "Analysis/UStat.h"
 #include "Analysis/HStats.h"
+#include "Analysis/SFactor.h"
 #include "Analysis/Models.h"
 #include "Analysis/Mute.h"
 // ============================================================================

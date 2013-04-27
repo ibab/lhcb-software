@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-04-27 - Vanya Belyaev
+ - helper function sFactor
+
 ! 2013-04-26 - Vanya Belyaev
 
  - PyRoUts: minor fix for  histo -> graph transformatioin methods  

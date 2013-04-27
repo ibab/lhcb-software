@@ -17,6 +17,7 @@
   <class name = "Analysis::Process"                 />
   <class name = "Analysis::RooMakeHistos"           />
   <class name = "Analysis::UStat"                   />
+  <class name = "Analysis::SFactor"                 />
   <class name = "Analysis::Models::BreitWigner"     />
   <class name = "Analysis::Models::Rho0"            />
   <class name = "Analysis::Models::Flatte"          />
