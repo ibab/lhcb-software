@@ -10,6 +10,6 @@ gaudi_depends_on_subdirs(GaudiAlg
 gaudi_add_module(DaVinciTrackScaling
                  src/*.cpp
                  INCLUDE_DIRS AIDA
-                 LINK_LIBRARIES LHCbMathLib TrackEventLib DetDescLib)
+                 LINK_LIBRARIES LHCbMathLib TrackEvent DetDescLib)
 
 gaudi_install_python_modules()
