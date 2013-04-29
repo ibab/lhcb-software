@@ -5,8 +5,188 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-! 2013-04-09 - Chris Jones
- - Remove Event/PackedEvent, as now merged into Event/EventPacker.
+</PRE><H1><A NAME=v35r6>2013-04-30 LHCbSys v35r6</A></H1><PRE>
+This version uses Gaudi v23r7 and LCG_64d
+
+- Packages removed:  Event/PackedEvent, as now merged into Event/EventPacker
+- Packages modified: Associators/MCAssociators v1r4, Calo/CaloDAQ v4r33,
+    Calo/CaloKernel v6r4, DAQ/DAQUtils v1r11, DAQ/MDF v3r37, Det/CaloDet v10r16,
+    Det/DDDB v1r62, Det/DetCond v12r30, Det/DetDesc v18r32, 
+    Det/DetDescChecks v5r10, Det/DetDescCnv v4r18, Det/MuonDet v9r11,
+    Det/RichDet v16r17, Det/STDet v4r30, Det/VLDet v1r6, Det/VPDet v2r2,
+    Event/EventPacker v3r0, Event/EventSys v26r0, Event/GenEvent v6r6,
+    Event/RecEvent v2r46, Ex/IOExample v4r10, Kernel/LHCbAlgs v2r57,
+    Kernel/LHCbKernel v14r0, Kernel/LHCbMath v3r39, Kernel/PartProp v1r16,
+    Kernel/XMLSummaryKernel v1r10, L0/L0MuonKernel v9r10, 
+    Muon/MuonInterfaces v1r4, Phys/LoKiCore v11r12, Phys/LoKiGen v10r12,
+    Phys/LoKiHlt v3r12, Phys/LoKiMC v10r8, Phys/LoKiNumbers v10r4,
+    Rich/RichKernel v7r53, ST/STKernel v2r12, Tools/CondDBEntityResolver v5r5,
+    Tools/CondDBUI v3r22, Tools/XmlTools v6r8, Tr/TrackInterfaces v4r24,
+    Tr/TrackKernel v1r13
+
+- In Calo/CaloDAQ v4r33
+  . In CaloFillRawBuffer: Protected against invalid algorithm name
+
+- In DAQ/DAQUtils v1r11
+  . Added RawEventCombiners (merged from the swimming branch) 
+  . Moved to getIfExists
+
+- In Det/DDDB v1r62
+  . Updated default database tags to the latest ones:
+    o LHCBCOND, 2013, 2012, 2011: cond-20130404
+    o DDDB,     2013, 2012      : head-20130312-1
+    o DDDB,                 2011: head-20130312
+    o DQFLAGS   2013, 2012      : dq-20130418
+  . When forming an Ariadne query, a preference is given to DDDBConf().Simulation
+    instead of CondDB().Simulation property.
+  . 'AutoTags' property added. If set to True, an automatic Ariadne-driven
+    CondDB configuration is used according to the datatype set.
+
+- In Det/DetCond v12r30
+  . Removed the temporary hack used for C++11 (it was needed only because Boost
+    was not yet built with C++11 enabled).
+  . Bug fix: expansion of SQLITEUPGRADEDBPATH env. variable is prevented.
+  . Added functionalities of compression and decompression on CondDB with new
+    class CondDBCompression
+    o Set up prototype to allow multiple compression methods, with an additional
+      byte identifying the method prepended to the compressed string
+    o Added the compression method of LZMA from ROOT with the assigned method 
+      number at 0, the method number for BZip2 is 1. LZMA is default
+
+- In Det/DetDescChecks v5r10
+  . Added loaddddb2012-ariadne.qmt and loaddddb-sim-2012-ariadne.qmt tests
+    to load CondDB using the Ariadne driven tags configuration.
+
+- In Det/RichDet v16r17
+  . Some minor CPU optimisations
+  . Partial changes in DeRichSystem for the single RICH simulation. Allow one 
+    Rich detector with number 0 or 1. Not complete yet, this version will not
+    work with the single RICH
+
+- In Det/VLDet v1r6
+  . Removed unused functions
+
+- In Event/EventPacker v3r0
+  . Added a new mapper tool, ChargedProtoParticleMapper, for charged 
+    ProtoParticles that implements recalibration of the PID information 
+    on the fly.
+  . Fixed compilation with CMake.
+  . Merged Event/PackedEvent into this package.
+  . Moved Kernel/StandardPacker.h into this package from Kernel/LHCbKernel.
+    Also no longer installed in the InstallArea, as only required privately in
+    this package.
+  . Do not install the packed event header files into the InstallArea, as they
+    are not required outside this package.
+
+- In Event/EventSys v26r0
+  . Removed Event/PackedEvent dependency (obsolete package)
+
+- In Event/RecEvent v2r46
+  . Added method TrackTwoprongVertex::massWithError
+
+- In Ex/IOExample v4r10
+  . Fixed i686 references for move to EOS
+
+- In Kernel/LHCbAlgs v2r56, v2r57
+  . Added IT and OT to known detector list.
+  . Added a new simple little algorithm, ApplicationVersionFilter, that 
+    selects/rejects events based on a regex filter on the application version.
+  . Removed unnecessary Assert after call to svc<>
+  . Fixed untested StatusCode
+
+- In Kernel/LHCbKernel v14r0
+  . Moved Kernel/StandardPacker.h into Event/EventPacker
+  . Extended the RichSmartID test application to check conversion to and from
+    an LHCbID. 
+  . Fixed LHCbID class to use & instead of && in richID().
+  . HitPattern: adapt for FT; merge UT with TT; add VP and VL
+
+- In Kernel/LHCbMath v3r39
+  . EqualTo: added comparison ove vectors, points & matrices 
+  . Functions.h: small fix 
+  . Added few helper functions into ValueWithError
+
+- In Phys/LoKiCore v11r12
+  . Added LoKi::Tensors into dictionary
+  . Extended functionality for TES-getters
+
+- In Phys/LoKiGen v10r12
+  . Added GFLIGHT, GPVFLIGHT, GBETA , GGGAMMA and GBETAGAMMA symbols 
+  
+- In Phys/LoKiHlt v3r12
+  . Add functionality to effectively convert various L0, ODIN, Hlt-functors into
+    "void-functions", that in particular allows their insertion into
+    Hlt1-streamers
+
+- In Phys/LoKiNumbers v10r4
+  . Fix to follow changes in LoKiCore 
+
+- In Rich/RichKernel v7r53
+  . No longer set the -DRICHDEBUG flag in debug builds, as no longer used.
+
+- In Tools/CondDBEntityResolver v5r5
+  . Added support for compressed CondDB with the class CondDBCompression
+
+- In Tools/CondDBUI v3r22
+  . AriadneAdmin_InitialImport.py added:
+    A script to perform an initial import of the LHCb compatibility relations
+    between LHCb Software Projects, computing platforms, CondDB tags,
+    reconstruction and simulation types and GRID sites.
+  . recotypes_paths.txt, simtypes_paths.txt and sites.txt added:
+    For the purpose of easy import of LHCb reconstruction and simulation types,
+    and of the list of sites three special-format files are added to doc/Ariadne
+  . __init__.py: In the storeObject process, only do the compression if the
+    compressed object is smaller in size.
+  . __init__.py, Browser/Models.py: Added support to read/write compressed
+    databases. The compression/decompress processes work in the background
+    without user intervention.
+  . compress_db_metadata.py, compress_db_metadata_mp.py: new scripts to compress
+    the content of a CondDB file, both will yield exactly the same results. The
+    later one is supposed to be much faster since it run concurrent tasks with
+    multiprocessing
+
+- In Tr/TrackInterfaces v4r24
+  . Added ITrackVertexer::ipchi2
+  . Prepared IVeloExpectation for change in HitPattern
+
+- In Tr/TrackKernel v1r13
+  . TrackCloneData: bug fixes + adapted for upgrade
+
+- In Associators/MCAssociators v1r4, Calo/CaloDAQ v4r33, Kernel/LHCbMath v3r39,
+     Kernel/PartProp v1r16, Phys/LoKiCore v11r12,  Phys/LoKiGen v10r12,
+     Phys/LoKiMC v10r8, Phys/LoKiMC v10r8
+  . Fixes to support compilation with clang
+
+- In Calo/CaloKernel v6r4, DAQ/MDF v3r37, Event/EventPacker v3r0,
+     Phys/LoKiCore v11r12, Phys/LoKiGen v10r12
+  . Fixes to support compilation with gcc47
+
+- In Det/DetDescCnv v4r18, Det/MuonDet v9r11, Det/STDet v4r30
+  . Replaced some unnecessary dynamic_cast by static_cast, fixes FORWARD_NULL 
+    defects
+
+- In Calo/CaloDAQ v4r33, Det/CaloDet v10r16, Det/DetCond v12r0, 
+     Det/DetDesc v18r32, Det/DetDescCnv v4r18, Det/MuonDet v9r11, 
+     Det/STDet v4r30, Det/VPDet v2r2, Event/GenEvent v6r6, Kernel/LHCbAlgs v2r56,
+     L0/L0MuonKernel v9r10, Muon/MuonInterfaces v1r4, Phys/LoKiGen v10r12,
+     ST/STKernel v2r12, Tools/XmlTools v6r8, Tr/TrackKernel v1r13
+  . Fixed Coverity defects
+
+- In Det/DetDescChecks v5r10, Det/RichDet v16r17, Det/VPDet v2r2,
+     Phys/LoKiCore v11r12, Phys/LoKiGen v10r12, Phys/LoKiMC v10r8,
+     Phys/LoKiMC v10r8
+  . Replaced endreq by endmsg
+
+- In Det/MuonDet v9r11
+  . Fixed unprotected DEBUGs
+
+- In Kernel/XMLSummaryKernel v1r10, Phys/LoKiCore v11r12
+  . Fixed Eclipse static analyzer warning.
+
+- In Phys/LoKiCore v11r12, Phys/LoKiGen v10r12, Phys/LoKiMC v10r8,
+     Phys/LoKiMC v10r8
+  . Removed unnecessary disclaimers from file documentation blocks
+
 
 </PRE><H1><A NAME=v35r5>2013-03-21 LHCbSys v35r5</A></H1><PRE>
 This version uses Gaudi v23r7 and LCG_64d
