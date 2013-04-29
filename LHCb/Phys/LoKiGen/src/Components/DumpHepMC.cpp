@@ -156,7 +156,7 @@ StatusCode LoKi::DumpHepMC::execute()
       LoKi::Objects::_ALL_  ,  // accept 
       LoKi::Objects::_NONE_ ) ; // mark
   //
-  log << endreq ;
+  log << endmsg ;
   //
   return StatusCode::SUCCESS ;
 } 

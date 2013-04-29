@@ -30,10 +30,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg,
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement
- *  with the smear campaign of Dr. O.Callot et al.:
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
- *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-23
  */
@@ -272,10 +268,10 @@ namespace LoKi
      *
      *  ...
      *  info ()
-     *     << " Monitoring results : "                       << endreq
-     *     << " NEntries:  #" << counter->entries ()         << endreq
+     *     << " Monitoring results : "                       << endmsg
+     *     << " NEntries:  #" << counter->entries ()         << endmsg
      *     << " Efficiency:(" << counter->eff     ()
-     *     << "+="            << counter->effErr  () << ")%" << endreq ;
+     *     << "+="            << counter->effErr  () << ")%" << endmsg ;
      *
      *  @endcode
      *
@@ -998,13 +994,13 @@ namespace LoKi
      *
      *  ...
      *  info ()
-     *     << " Monitoring results : "                 << endreq
-     *     << " NEntries:  #" << counter->entries  ()  << endreq
-     *     << " TotalSum:   " << counter->flag     ()  << endreq
+     *     << " Monitoring results : "                 << endmsg
+     *     << " NEntries:  #" << counter->entries  ()  << endmsg
+     *     << " TotalSum:   " << counter->flag     ()  << endmsg
      *     << " Mean+-RMS:  " << counter->flagMean ()
-     *     << "+="            << counter->flagRMS  ()  << endreq
+     *     << "+="            << counter->flagRMS  ()  << endmsg
      *     << " Min/Max:    " << counter->flagMin  ()
-     *     << "/"             << counter->flagMax  ()  << endreq ;
+     *     << "/"             << counter->flagMax  ()  << endmsg ;
      *
      *  @endcode
      *

@@ -25,10 +25,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the smear campaign of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
  *  @date   2011-06-03
  * 
@@ -121,7 +117,7 @@ namespace LoKi
      *    
      *    /// print decay chain to gausdi message stream
      *    MsgStream log( msgSvc() , name() ) ;
-     *    dc.print ( head , log , endreq          ) ;
+     *    dc.print ( head , log , endmsg          ) ;
      *
      *  @endcode 
      * 
@@ -243,7 +239,7 @@ namespace LoKi
      *    
      *    /// print decay chain to gaudi message stream
      *    MsgStream log( msgSvc() , name() ) ;
-     *    dc.print ( event , log , endreq          ) ;
+     *    dc.print ( event , log , endmsg          ) ;
      *
      *  @endcode 
      * 
@@ -297,7 +293,7 @@ namespace LoKi
      *    
      *    /// print decay chain to gaudi message stream
      *    MsgStream log( msgSvc() , name() ) ;
-     *    dc.print ( event , log , endreq          ) ;
+     *    dc.print ( event , log , endmsg          ) ;
      *
      *  @endcode 
      * 
@@ -342,7 +338,7 @@ namespace LoKi
      *    
      *    /// print decay chain to gaudi message stream
      *    MsgStream log( msgSvc() , name() ) ;
-     *    dc.print ( events , log , endreq          ) ;
+     *    dc.print ( events , log , endmsg          ) ;
      *
      *  @endcode 
      * 

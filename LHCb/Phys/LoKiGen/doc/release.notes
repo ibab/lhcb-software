@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-04-29 - Marco Cattaneo
+ - Replace endreq by endmsg
+ - Remove unnecessary disclaimers from file documentation blocks
+
 ! 2013-04-19 - Vanya Belyaev
  - fix warning message for coverity 
 
@@ -20,7 +24,6 @@
  - Added default constructors to fix compilation errors with clang.
 
 ! 2013-04-14 - Vanya Belyaev
-
  - add GFLIGHT, GPVFLIGHT, GBETA , GGGAMMA and GBETAGAMMA symbols 
    (mainly for MC-production)  
 
