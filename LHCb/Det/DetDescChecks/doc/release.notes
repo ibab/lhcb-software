@@ -5,6 +5,9 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+! 2013-04-29 - Marco Cattaneo
+ - Replace endreq by endmsg
+
 ! 2013-04-24 - Illya Shapoval
  - Another new test added: loaddddb-sim-2012-ariadne.qmt.
 

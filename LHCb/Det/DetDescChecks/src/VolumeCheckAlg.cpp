@@ -1,4 +1,3 @@
-// $Id: VolumeCheckAlg.cpp,v 1.8 2009-11-15 16:46:00 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -98,30 +97,30 @@ StatusCode DetDesc::VolumeCheck::initialize()
   
   const std::string stars(80,'*');
   
-  info() << stars     << endreq ;
-  info() << m_volume  << endreq ;
-  info() << stars     << endreq ;
+  info() << stars     << endmsg ;
+  info() << m_volume  << endmsg ;
+  info() << stars     << endmsg ;
   if ( !m_volume->pvolumes().empty() )
   {
     info() << " Has " << m_volume->pvolumes().size() 
-           << " daughter volumes " << endreq ;
+           << " daughter volumes " << endmsg ;
     for ( ILVolume::PVolumes::const_iterator pv = m_volume->pvBegin() ; 
           m_volume->pvEnd() != pv ; ++pv )
     {
       info() << " **** Daughter Physical Volume #"
-             << pv - m_volume->pvBegin() << endreq ;
-      info() << *pv << endreq ;
+             << pv - m_volume->pvBegin() << endmsg ;
+      info() << *pv << endmsg ;
     }
   }
   
   if ( !m_volume->isAssembly() ) 
   {
     const ISolid* solid       = m_volume->solid() ;
-    info() << " **** Solid "    << endreq ;
-    info() << solid             << endreq ;
+    info() << " **** Solid "    << endmsg ;
+    info() << solid             << endmsg ;
     const Material* material  = m_volume->material() ;
-    info() << " **** Material " << endreq ;
-    info() << material          << endreq ;
+    info() << " **** Material " << endmsg ;
+    info() << material          << endmsg ;
   }
   
   if ( !m_volume->isAssembly() && 0 != m_volume->solid() ) 
@@ -153,7 +152,7 @@ StatusCode DetDesc::VolumeCheck::execute()
 {
   // spherical (3d) shots 
   {
-    info() << " Start 3D shots #" << m_shotsSphere << endreq ;    
+    info() << " Start 3D shots #" << m_shotsSphere << endmsg ;    
     // get random number generator 
     Rndm::Numbers flat( randSvc() , Rndm::Flat( -1.0 , 1.0 ) );
     // display the progress 
@@ -209,7 +208,7 @@ StatusCode DetDesc::VolumeCheck::execute()
   
   // xy - shots 
   {
-    info() << " Start XY shots #" << m_shotsXY  << endreq ;
+    info() << " Start XY shots #" << m_shotsXY  << endmsg ;
     // get random number generator 
     Rndm::Numbers flat( randSvc() , Rndm::Flat( 0.0 , 1.0 ) );
     // display the progress 
@@ -252,7 +251,7 @@ StatusCode DetDesc::VolumeCheck::execute()
   
   // yz - shots 
   {
-    info() << " Start YZ shots #" << m_shotsYZ << endreq ;
+    info() << " Start YZ shots #" << m_shotsYZ << endmsg ;
     // get random number generator 
     Rndm::Numbers flat( randSvc() , Rndm::Flat( 0.0 , 1.0 ) );
     // display the progress 
@@ -297,7 +296,7 @@ StatusCode DetDesc::VolumeCheck::execute()
   
   // zx - shoots 
   {
-    info()  << " Start ZX shots #" << m_shotsZX << endreq ;
+    info()  << " Start ZX shots #" << m_shotsZX << endmsg ;
     // get random number generator 
     Rndm::Numbers flat( randSvc() , Rndm::Flat( 0.0 , 1.0 ) );
     // display the progress 

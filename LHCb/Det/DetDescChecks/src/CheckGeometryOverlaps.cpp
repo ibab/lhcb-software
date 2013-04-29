@@ -1,4 +1,3 @@
-// $Id: CheckGeometryOverlaps.cpp,v 1.2 2009-11-15 16:46:00 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -251,9 +250,9 @@ StatusCode DetDesc::CheckOverlap::initialize()
   /// check for Transport Service 
   svc<ITransportSvc> ( "TransportSvc" , true ) ;
   
-  always() << " ATTENTION! THIS ALGORITHM DOES DESTROY THE GEOMETRY TREE" << endreq ;
-  always() << " ATTENTION! NEVER USED IT IN THE REAL JOB OR RELY ON THE " << endreq ;
-  always() << " ATTENTION! RESULT OF ANY OTHER 'GEOMETRY' TOOL/ALGORITHM" << endreq ;
+  always() << " ATTENTION! THIS ALGORITHM DOES DESTROY THE GEOMETRY TREE" << endmsg ;
+  always() << " ATTENTION! NEVER USED IT IN THE REAL JOB OR RELY ON THE " << endmsg ;
+  always() << " ATTENTION! RESULT OF ANY OTHER 'GEOMETRY' TOOL/ALGORITHM" << endmsg ;
   
   return StatusCode::SUCCESS ;
 }
@@ -267,9 +266,9 @@ StatusCode DetDesc::CheckOverlap::execute()
 {
   StatusCode sc = checkVolume ( m_volume , 0 ) ;
   
-  always() << " ATTENTION! THIS ALGORITHM DOES DESTROY THE GEOMETRY TREE" << endreq ;
-  always() << " ATTENTION! NEVER USED IT IN THE REAL JOB OR RELY ON THE " << endreq ;
-  always() << " ATTENTION! RESULT OF ANY OTHER 'GEOMETRY' TOOL/ALGORITHM" << endreq ;
+  always() << " ATTENTION! THIS ALGORITHM DOES DESTROY THE GEOMETRY TREE" << endmsg ;
+  always() << " ATTENTION! NEVER USED IT IN THE REAL JOB OR RELY ON THE " << endmsg ;
+  always() << " ATTENTION! RESULT OF ANY OTHER 'GEOMETRY' TOOL/ALGORITHM" << endmsg ;
   
   return sc ;
 }
@@ -292,7 +291,7 @@ StatusCode DetDesc::CheckOverlap::checkVolume
   
   always() 
     << lev << std::string ( 2*level , ' ' ) 
-    << "Checking: " << volume -> name () << endreq ;
+    << "Checking: " << volume -> name () << endmsg ;
   
   // ==========================================================================
   // loop over all daughter volumes and
@@ -324,7 +323,7 @@ StatusCode DetDesc::CheckOverlap::checkVolume
   // ==========================================================================
   always() 
     << lev << std::string ( 2*level , ' ' ) 
-    << "Checked:  " << volume -> name () << endreq ;
+    << "Checked:  " << volume -> name () << endmsg ;
   
   counter ("#volumes") += 1 ;
   if ( volume->isAssembly() ) { counter ("#assembly") += 1 ; }
@@ -402,7 +401,7 @@ StatusCode DetDesc::CheckOverlap::makeShots
     info () << ( fmt %  nShots ).str() 
             << volume -> name () 
             << " #pv=" << volume->pvolumes().size() 
-            << endreq ;
+            << endmsg ;
   }
   
   // display the progress
@@ -459,7 +458,7 @@ StatusCode DetDesc::CheckOverlap::makeShots
         error() << "Problem is detected with volume " 
                 << volume->name () 
                 << " With P/V=" 
-                << point << "/" << (*iv) << endreq ;
+                << point << "/" << (*iv) << endmsg ;
         
         DetDesc::IntersectionErrors::inspect
           ( volume , point  , *iv ,  intersections ) ;
@@ -483,9 +482,9 @@ StatusCode DetDesc::CheckOverlap::makeShots
 // ========================================================================
 StatusCode DetDesc::CheckOverlap::finalize   () 
 {
-  always () << " ATTENTION! THIS ALGORITHM DOES DESTROY THE GEOMETRY TREE" << endreq ;
-  always () << " ATTENTION! NEVER USED IT IN THE REAL JOB OR RELY ON THE " << endreq ;
-  always () << " ATTENTION! RESULT OF ANY OTHER 'GEOMETRY' TOOL/ALGORITHM" << endreq ;
+  always () << " ATTENTION! THIS ALGORITHM DOES DESTROY THE GEOMETRY TREE" << endmsg ;
+  always () << " ATTENTION! NEVER USED IT IN THE REAL JOB OR RELY ON THE " << endmsg ;
+  always () << " ATTENTION! RESULT OF ANY OTHER 'GEOMETRY' TOOL/ALGORITHM" << endmsg ;
   
   return GaudiAlgorithm::finalize () ;
 }
