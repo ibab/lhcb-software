@@ -101,7 +101,7 @@ StatusCode DeRichAerogelRadiator::initialize ( )
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << "DeRichAerogelRadiator Tile subtileNum and subtileCopy number "
                   << m_tileNumber <<"   "
-                  << m_subtileNumInTile <<"   "<<m_subtilecopynumber<<endreq;
+                  << m_subtileNumInTile <<"   "<<m_subtilecopynumber<<endmsg;
     }
     else 
     {

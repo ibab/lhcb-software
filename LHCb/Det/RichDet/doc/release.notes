@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2013-04-29 - Marco Cattaneo
+ - Replace endreq by endmsg
+
 ! 2013-04-09 - Chris Jones
  - Some minor CPU optimisations
 

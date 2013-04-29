@@ -151,14 +151,14 @@ DeRichMultiSolidRadiator::addVolumes(const ILVolume* lv,
     }
     else
     {
-      error() << "InAdmissible number of subtiles in Aerogel tile 2 = " << aNumSubTile << endreq;
+      error() << "InAdmissible number of subtiles in Aerogel tile 2 = " << aNumSubTile << endmsg;
       sc = StatusCode::FAILURE;
     }
 
   }
   else
   {
-    error() << "No Aerogel full tile from DeRichMultiSolidRadiator" << endreq;
+    error() << "No Aerogel full tile from DeRichMultiSolidRadiator" << endmsg;
     sc = StatusCode::FAILURE;
   }
 
