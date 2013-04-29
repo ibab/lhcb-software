@@ -2,6 +2,7 @@
 ! package manager: Marco Cattaneo
 !-------------------------------------------------------------------------
 
+!========================= EventSys v26r0 2013-04-29 =========================
 ! 2013-04-10 - Marco Cattaneo
  - Remove Event/PackedEvent dependency (obsolete package)
 
