@@ -12,7 +12,7 @@
 #include "FiniteStateMachine/Machine.h"
 #include "FiniteStateMachine/FSMTypes.h"
 #include "FiniteStateMachine/Transition.h"
-#include "FiniteStateMachine/Controller.h"
+#include "Controller/Controller.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 #include "RTL/rtl.h"

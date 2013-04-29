@@ -113,7 +113,6 @@ FSM::ErrCond Slave::transitionDone(const State* state)  {
 /// Callback, when the slave invoked a transition himself
 FSM::ErrCond Slave::transitionSlave(const State* state)  {
   if ( state )  {
-    const Rule* r = m_rule;
     m_rule  = 0;
     m_state = state;
     m_meta  = SLAVE_ALIVE;

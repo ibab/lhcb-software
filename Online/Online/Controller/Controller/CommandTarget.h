@@ -8,13 +8,13 @@
 **      M.Frank  CERN/LHCb
 **
 **==========================================================*/
-#ifndef ONLINE_FINITESTATEMACHINE_COMMANDTARGET_H
-#define ONLINE_FINITESTATEMACHINE_COMMANDTARGET_H
+#ifndef ONLINE_CONTROLLER_COMMANDTARGET_H
+#define ONLINE_CONTROLLER_COMMANDTARGET_H
 
 // Framework include files
 #include "FiniteStateMachine/Type.h"
 #include "FiniteStateMachine/FSM.h"
-#include "FiniteStateMachine/DimSlave.h"
+#include "Controller/DimSlave.h"
 #include "CPP/Interactor.h"
 #include "dis.hxx"
 
@@ -28,7 +28,7 @@ namespace FiniteStateMachine {
   class Machine;
   class State;
 
-  /**@class CommandTarget  CommandTarget.h FiniteStateMachine/CommandTarget.h
+  /**@class CommandTarget  CommandTarget.h Controller/CommandTarget.h
    *
    * @author  M.Frank
    * @date    01/03/2013
@@ -88,7 +88,7 @@ namespace FiniteStateMachine {
   };   //  End class State
 
 
-  /**@class DAQCommandTarget  CommandTarget.h FiniteStateMachine/CommandTarget.h
+  /**@class DAQCommandTarget  CommandTarget.h Controller/CommandTarget.h
    *
    * @author  M.Frank
    * @date    01/03/2013
@@ -115,5 +115,5 @@ namespace FiniteStateMachine {
   };   //  End class State
 
 }      //  End namespace 
-#endif //  ONLINE_FINITESTATEMACHINE_COMMANDTARGET_H
+#endif //  ONLINE_CONTROLLERxo_COMMANDTARGET_H
 

@@ -8,11 +8,11 @@
 **      M.Frank  CERN/LHCb
 **
 **==========================================================*/
-#ifndef ONLINE_FINITESTATEMACHINE_CONTROLLER_H
-#define ONLINE_FINITESTATEMACHINE_CONTROLLER_H
+#ifndef ONLINE_CONTROLLER_CONTROLLER_H
+#define ONLINE_CONTROLLER_CONTROLLER_H
 
 // Framework include files
-#include "FiniteStateMachine/CommandTarget.h"
+#include "Controller/CommandTarget.h"
 
 // C/C++ include files
 #include <string>

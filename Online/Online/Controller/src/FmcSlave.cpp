@@ -9,9 +9,9 @@
 **
 **==========================================================*/
 // Framework include files
-#include "FiniteStateMachine/FmcSlave.h"
+#include "Controller/FmcSlave.h"
+#include "Controller/TaskManager.h"
 #include "FiniteStateMachine/Type.h"
-#include "FiniteStateMachine/TaskManager.h"
 #include "RTL/rtl.h"
 extern "C" {
 #include "dic.h"

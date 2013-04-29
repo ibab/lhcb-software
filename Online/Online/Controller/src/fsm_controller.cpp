@@ -10,8 +10,8 @@
 // Framework include files
 #include "FiniteStateMachine/Machine.h"
 #include "FiniteStateMachine/FSMTypes.h"
-#include "FiniteStateMachine/Controller.h"
-#include "FiniteStateMachine/XmlTaskConfiguration.h"
+#include "Controller/Controller.h"
+#include "Controller/XmlTaskConfiguration.h"
 #include "RTL/rtl.h"
 #include "dis.hxx"
 
@@ -22,8 +22,6 @@
 
 using namespace std;
 using namespace FiniteStateMachine;
-using namespace FiniteStateMachine::DAQ;
-typedef FSM::ErrCond ErrCond;
 
 static void help_ctrl() {
   ::fprintf(stdout,

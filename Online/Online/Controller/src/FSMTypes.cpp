@@ -131,7 +131,7 @@ static Type* defineDAQSteerType() {
   const State* running   = typ->addState(ST_NAME_RUNNING);
   const State* error     = typ->addState(ST_NAME_ERROR);
 
-  Tr*  create    = typ->addTransition("create",    unknown,   offline,   CHECK|CREATE);
+  /* Tr* crea = */ typ->addTransition("create",    unknown,   offline,   CHECK|CREATE);
   Tr*  load      = typ->addTransition("load",      offline,   not_ready, CHECK|CREATE);
   Tr*  configure = typ->addTransition("configure", not_ready, ready);
   Tr*  start     = typ->addTransition("start",     ready,     running);

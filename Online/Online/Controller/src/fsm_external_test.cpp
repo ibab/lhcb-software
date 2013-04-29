@@ -13,8 +13,8 @@
 #include "FiniteStateMachine/FSMTypes.h"
 #include "FiniteStateMachine/Functors.h"
 #include "FiniteStateMachine/TestAutoTrans.h"
-#include "FiniteStateMachine/Controller.h"
-#include "FiniteStateMachine/NativeDimSlave.h"
+#include "Controller/Controller.h"
+#include "Controller/NativeDimSlave.h"
 
 #include "CPP/IocSensor.h"
 #include "RTL/rtl.h"

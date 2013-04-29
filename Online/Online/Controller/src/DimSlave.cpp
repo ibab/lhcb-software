@@ -9,7 +9,7 @@
 **
 **==========================================================*/
 // Framework include files
-#include "FiniteStateMachine/DimSlave.h"
+#include "Controller/DimSlave.h"
 #include "FiniteStateMachine/Type.h"
 #include "RTL/rtl.h"
 extern "C" {

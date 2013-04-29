@@ -8,11 +8,11 @@
 **      M.Frank  CERN/LHCb
 **
 **==========================================================*/
-#ifndef ONLINE_FINITESTATEMACHINE_TASKLISTHANDLERS_H
-#define ONLINE_FINITESTATEMACHINE_TASKLISTHANDLERS_H
+#ifndef ONLINE_CONTROLLER_TASKLISTHANDLERS_H
+#define ONLINE_CONTROLLER_TASKLISTHANDLERS_H
 
 // Framework include files
-#include "FiniteStateMachine/Tasklist.h"
+#include "Controller/Tasklist.h"
 
 // Forward declarations
 namespace DD4hep { namespace XML { struct Handle_t; }}
@@ -24,7 +24,7 @@ typedef DD4hep::XML::Handle_t xml_h;
  */
 namespace FiniteStateMachine   {
 
-  /**@class TasklistPrinter  Tasklisthandlers.h FiniteStateMachine/Tasklisthandlers.h
+  /**@class TasklistPrinter  Tasklisthandlers.h Controller/Tasklisthandlers.h
    *
    * @author  M.Frank
    * @date    01/03/2013
@@ -37,7 +37,7 @@ namespace FiniteStateMachine   {
     void operator()(const xml_h& h);
   };
 
-  /**@class TasklistAnalyzer  Tasklisthandlers.h FiniteStateMachine/Tasklisthandlers.h
+  /**@class TasklistAnalyzer  Tasklisthandlers.h Controller/Tasklisthandlers.h
    *
    * @author  M.Frank
    * @date    01/03/2013
@@ -46,7 +46,7 @@ namespace FiniteStateMachine   {
   struct TasklistAnalyzer  {  
     /// Definition of the task type
     typedef Tasklist::Task Task;
-    /**@class TasklistAnalyzer::Args  Tasklisthandlers.h FiniteStateMachine/Tasklisthandlers.h
+    /**@class TasklistAnalyzer::Args  Tasklisthandlers.h Controller/Tasklisthandlers.h
      *
      * @author  M.Frank
      * @date    01/03/2013
@@ -59,7 +59,7 @@ namespace FiniteStateMachine   {
       /// Constructor
       Base(Task* t);
     };
-    /**@class TasklistAnalyzer::Args  Tasklisthandlers.h FiniteStateMachine/Tasklisthandlers.h
+    /**@class TasklistAnalyzer::Args  Tasklisthandlers.h Controller/Tasklisthandlers.h
      *
      * @author  M.Frank
      * @date    01/03/2013
@@ -71,7 +71,7 @@ namespace FiniteStateMachine   {
       /// Action operator when analyzing data
       void operator()(const xml_h& h);
     };
-    /**@class TasklistAnalyzer::Params  Tasklisthandlers.h FiniteStateMachine/Tasklisthandlers.h
+    /**@class TasklistAnalyzer::Params  Tasklisthandlers.h Controller/Tasklisthandlers.h
      *
      * @author  M.Frank
      * @date    01/03/2013
@@ -83,7 +83,7 @@ namespace FiniteStateMachine   {
       /// Action operator when analyzing data
       void operator()(const xml_h& h);   
     };
-    /**@class TasklistAnalyzer::Timeouts  Tasklisthandlers.h FiniteStateMachine/Tasklisthandlers.h
+    /**@class TasklistAnalyzer::Timeouts  Tasklisthandlers.h Controller/Tasklisthandlers.h
      *
      * @author  M.Frank
      * @date    01/03/2013
@@ -114,5 +114,5 @@ namespace FiniteStateMachine   {
   /// Constructor
   inline TasklistAnalyzer::Timeouts::Timeouts(Task* t) : Base(t)   {}
 }      //  End namespace 
-#endif //  ONLINE_FINITESTATEMACHINE_TASKLISTHANDLERS_H
+#endif //  ONLINE_CONTROLLER_TASKLISTHANDLERS_H
 

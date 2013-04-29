@@ -8,8 +8,8 @@
 **      M.Frank  CERN/LHCb
 **
 **==========================================================*/
-#ifndef ONLINE_FINITESTATEMACHINE_TASKLIST_H
-#define ONLINE_FINITESTATEMACHINE_TASKLIST_H
+#ifndef ONLINE_CONTROLLER_TASKLIST_H
+#define ONLINE_CONTROLLER_TASKLIST_H
 
 // C/C++ include files
 #include <string>
@@ -21,7 +21,7 @@
  */
 namespace FiniteStateMachine   {
 
-  /**@class Tasklist  Tasklist.h FiniteStateMachine/Tasklist.h
+  /**@class Tasklist  Tasklist.h Controller/Tasklist.h
    *
    * @author  M.Frank
    * @date    01/03/2013
@@ -45,7 +45,7 @@ namespace FiniteStateMachine   {
     typedef std::pair<std::string,std::string> Param;
     typedef std::vector<Param> Params;
 
-    /** @class Task  Tasklist.h FiniteStateMachine/Tasklist.h
+    /** @class Task  Tasklist.h Controller/Tasklist.h
      *
      * @author  M.Frank
      * @date    01/03/2013
@@ -100,5 +100,5 @@ namespace FiniteStateMachine   {
     Tasks::const_iterator begin() const { return tasks.begin(); }
   };   //  End class Tasklist
 }      //  End namespace 
-#endif //  ONLINE_FINITESTATEMACHINE_TASKLIST_H
+#endif //  ONLINE_CONTROLLER_TASKLIST_H
 

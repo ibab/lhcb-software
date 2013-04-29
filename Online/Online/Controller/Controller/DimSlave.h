@@ -22,7 +22,7 @@
  */
 namespace FiniteStateMachine   {
 
-  /**@class DimSlave  DimSlave.h FiniteStateMachine/DimSlave.h
+  /**@class DimSlave  DimSlave.h Controller/DimSlave.h
    *
    * Basic implmentation of a slave process proxy, which uses DIM
    * for the inter process communication.

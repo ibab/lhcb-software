@@ -8,8 +8,8 @@
 **      M.Frank  CERN/LHCb
 **
 **==========================================================*/
-#ifndef ONLINE_FINITESTATEMACHINE_XMLTASKCONFIGURATION_H
-#define ONLINE_FINITESTATEMACHINE_XMLTASKCONFIGURATION_H
+#ifndef ONLINE_CONTROLLER_XMLTASKCONFIGURATION_H
+#define ONLINE_CONTROLLER_XMLTASKCONFIGURATION_H
 
 // C/C++ include files
 #include <string>
@@ -57,5 +57,5 @@ namespace FiniteStateMachine   {
     bool getTasks(std::vector<std::string>& tasks);
   };   //  End class XmlTaskConfiguration
 }      //  End namespace 
-#endif //  ONLINE_FINITESTATEMACHINE_XMLTASKCONFIGURATION_H
+#endif //  ONLINE_CONTROLLER_XMLTASKCONFIGURATION_H
 

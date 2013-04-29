@@ -9,9 +9,9 @@
 **
 **==========================================================*/
 // Framework include files
-#include "FiniteStateMachine/XmlTaskConfiguration.h"
-#include "FiniteStateMachine/TasklistHandlers.h"
-#include "FiniteStateMachine/FmcSlave.h"
+#include "Controller/XmlTaskConfiguration.h"
+#include "Controller/TasklistHandlers.h"
+#include "Controller/FmcSlave.h"
 #include "FiniteStateMachine/Machine.h"
 #include "XML/XMLTypes.h"
 #include "RTL/strdef.h"

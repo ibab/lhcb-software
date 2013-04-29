@@ -54,7 +54,7 @@ Status TypedObject::display(int severity, const char* fmt...)  {
     va_start( args, fmt);                        // - a standard C formatted 
     char str[4096];                              //   string (like printf)
     size_t il  = 0;//sprintf(str,"%s::",RTL::processName().c_str());
-    size_t len = vsprintf(str+il,fmt,args);
+    size_t len = vsnprintf(str+il,sizeof(str)-il-2,fmt,args);
     va_end (args);
     str[il+len]   = '\n';
     str[il+len+1] = '\0';

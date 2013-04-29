@@ -12,14 +12,14 @@
 #define ONLINE_CONTROLLER_FMCSLAVE_H
 
 // Framework include files
-#include "FiniteStateMachine/DimSlave.h"
+#include "Controller/DimSlave.h"
 
 /* 
  *  FiniteStateMachine namespace declaration
  */
 namespace FiniteStateMachine   {
 
-  /**@class Fmcslave  Fmcslave.h FiniteStateMachine/Fmcslave.h
+  /**@class Fmcslave  Fmcslave.h Controller/Fmcslave.h
    *
    * @author  M.Frank
    * @date    01/03/2013
