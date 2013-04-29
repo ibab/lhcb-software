@@ -27,9 +27,10 @@ namespace FiniteStateMachine   {
    */
   class FmcSlave : public DimSlave   {
   public:
-    std::string  fmc_args;
-    std::string  cmd_args;
+    /// Flag indicating (initial) internal transition actions
     bool         m_internal;
+    /// Pointer array with process arguments (to be set by the sub-class)
+    std::vector<std::string>  m_fmcArgs;
   public:
     /** Class Constructor
      *
@@ -43,6 +44,10 @@ namespace FiniteStateMachine   {
     virtual ~FmcSlave();
     /// Access flag indicating (initial) internal transition actions
     bool isInternal() const { return m_internal; }
+    /// Set the FMC arguments from single string
+    DimSlave& setFmcArgs(const std::string& args);
+    /// Add the FMC arguments from single string
+    DimSlave& addFmcArgs(const std::string& args);
 
     /// Start slave process
     virtual ErrCond start();

@@ -35,6 +35,7 @@ namespace FiniteStateMachine {
 
   struct CtrlNativeSlave : public NativeDimSlave {
     int m_out[2];
+    std::string utgid;
     Control* handler;
 
     /// Standard constructor
@@ -46,19 +47,16 @@ namespace FiniteStateMachine {
       : NativeDimSlave(typ,nam,machine), handler(handler) 
     {
       m_killCmd = "destroy";
+      cloneEnv();
+      m_cmd   = gentest_path();
       if ( args.empty() )  {      
-	m_cmd   = gentest_path();
 	m_argv += nam,"libController.so","controller_fsm_test","-name="+nam;
       }
       else  {
-	std::string copy = args;
-	for( char* p = (char*)copy.c_str(), *savePtr=0;; p=0)  {
-	  char* token = ::strtok_r(p," ",&savePtr);
-	  if ( !token ) break;
-	  m_argv += token;
-	}
+	m_argv += nam,"libController.so","fsm_ctrl","-type=NativeDimSlave";
+	addArgs(args);
       }
-      cloneEnv();
+      utgid = "UTGID="+name();
     }
     /// Standard destructor
     virtual ~CtrlNativeSlave() {
@@ -70,6 +68,7 @@ namespace FiniteStateMachine {
 	std::vector<char*> argv, envp;
 	char text[64];
 	int ret = 0;
+
 	::pipe(m_out);
 	handler->startSlaveIO();
 	display(ALWAYS,"%s> Slave is forking child process.....",c_name());
@@ -81,11 +80,10 @@ namespace FiniteStateMachine {
 	argv.push_back(0);
 
 	for(size_t i=0; i<m_envp.size();++i)  {
-	  if ( m_envp[i].substr(0,5)=="UTGID" )
-	    envp.push_back((char*)("UTGID="+name()).c_str());
-	  else
-	    envp.push_back((char*)m_envp[i].c_str());
+	  if ( m_envp[i].substr(0,5)=="UTGID" ) continue;
+	  envp.push_back((char*)m_envp[i].c_str());
 	}
+	envp.push_back((char*)utgid.c_str());
 	envp.push_back(0);
 	switch((m_pid = ::fork()))  {
 	case -1:  // Error
@@ -155,7 +153,7 @@ namespace FiniteStateMachine {
     CtrlFmcSlave(Control* h, Machine* machine, const Type* typ, const std::string& nam, const std::string& args="") 
       : FmcSlave(typ,nam,machine,false), handler(h)    {
       m_killCmd = "destroy";
-      cmd_args = args;
+      setArgs(args);
     }
     /// Standard destructor
     virtual ~CtrlFmcSlave()       {  }
@@ -195,10 +193,16 @@ namespace FiniteStateMachine {
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
 #include "RTL/strdef.h"
+extern "C" {
 #include "dis.hxx"
 #include "dic.hxx"
+}
+
+// C/C++ include files
 #include <string>
 #include <sstream>
+#include <stdexcept>
+#include <unistd.h>
 
 using namespace std;
 using namespace FiniteStateMachine;
@@ -219,8 +223,14 @@ static void print_routine(void* param, const char* text) {
 Control::Control(const std::string& config) 
   : m_numSlaves(3), m_thread(0), m_machine(0), m_slave(0)
 {
-  m_config_exists = 0 == ::access(config.c_str(),R_OK);
+  char wd[PATH_MAX];
   TypedObject::setPrinter(this,print_routine);
+  m_config_exists = 0 == ::access(config.c_str(),R_OK);
+  if ( 0 == ::getcwd(wd,sizeof(wd)) )  {
+    TypedObject::display(TypedObject::ALWAYS,"CANNOT retrieve current working directory: %s",RTL::errorString());
+    throw runtime_error("CANNOT retrieve current working directory");
+  }
+  m_currWD = wd;
 }
 
 /// Standard destructor
@@ -308,6 +318,7 @@ void Control::startController()   {
     startControllerConfig();
   else
     startControllerNoConfig();
+  m_machine->addSlave(m_slave);
   ioc().send(this,CMD_UPDATE_SLAVE,this);
 }
 
@@ -317,15 +328,15 @@ void Control::startControllerNoConfig()   {
   Type* daq = fsm_type("DAQ");
   char text[256];
 
-  if ( string(m_slvTypeCmd) == "CtrlNativeSlave" )   {
+  if ( string(m_slvTypeCmd) == "NativeDimSlave" )   {
     m_slave = new CtrlNativeSlave(this,m_machine,daq,"CTRL_0");
   }
   else  {
     CtrlFmcSlave* slave = new CtrlFmcSlave(this,m_machine,daq,"CTRL_0");
-    slave->fmc_args = "-g onliners -n online -w /home/frankm -O /tmp/logSrv.fifo -E /tmp/logSrv.fifo";
+    slave->setFmcArgs("-g onliners -n online -w "+m_currWD+" -O /tmp/logSrv.fifo -E /tmp/logSrv.fifo");
+    slave->setCommand("runFarmCtrl.sh");
     m_slave = slave;
   }
-  m_machine->addSlave(m_slave);
   for(int i=0; i<m_numSlaves; ++i)  {
     ::snprintf(text,sizeof(text),"SLAVE_%d",i);
     m_dim[i] = SlaveTag(this,text,CMD_KILL_SLAVE+2*i+1);
@@ -348,17 +359,16 @@ void Control::startControllerConfig()   {
        << " -taskconfig=" << m_configCmd
        << " -partition=" << m_partitionCmd
        << " -mode=normal";
-  if ( string(m_slvTypeCmd) == "CtrlNativeSlave" )   {
+  if ( string(m_slvTypeCmd) == "NativeDimSlave" )   {
     m_slave = new CtrlNativeSlave(this,m_machine,daq,nam.str(),args.str());
   }
   else  {
+    args << " -type=FmcSlave";
     CtrlFmcSlave* slave = new CtrlFmcSlave(this,m_machine,daq,nam.str(),args.str());
-    slave->fmc_args = "-g onliners -n online -w /home/frankm -O /tmp/logSrv.fifo -E /tmp/logSrv.fifo";
+    slave->setFmcArgs("-g onliners -n online -w "+m_currWD+" -O /tmp/logSrv.fifo -E /tmp/logSrv.fifo");
+    slave->setCommand("runFarmCtrl.sh");
     m_slave = slave;
   }
-  m_slave->setCommand("runFarmCtrl.sh");
-  m_machine->addSlave(m_slave);
-
   XmlTaskConfiguration cfg(m_partitionCmd,m_configCmd,m_runinfoCmd,m_modeCmd,m_numSlaves);
   vector<string> tasks;
   if ( cfg.getTasks(tasks) )  {

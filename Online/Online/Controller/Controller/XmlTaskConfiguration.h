@@ -52,7 +52,7 @@ namespace FiniteStateMachine   {
     /// Default destructor
     virtual ~XmlTaskConfiguration();
     /// Analyse the configuration file and attach the corresponding slaves to the FSM machine
-    bool attachTasks(Machine& machine);
+    bool attachTasks(Machine& machine, const std::string& slave_type);
     /// Analyse the configuration file and attach the corresponding slaves to the FSM machine
     bool getTasks(std::vector<std::string>& tasks);
   };   //  End class XmlTaskConfiguration

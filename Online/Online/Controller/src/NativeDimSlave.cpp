@@ -35,10 +35,17 @@ NativeDimSlave::~NativeDimSlave() {
 /// Start slave process
 FSM::ErrCond NativeDimSlave::start()  {
   int ret = 0;
+  string utgid = "UTGID="+name();
   vector<char*> argv, envp;
-  for(size_t i=0; i<m_argv.size();++i) argv.push_back((char*)m_argv[i].c_str());
-  for(size_t i=0; i<m_envp.size();++i) envp.push_back((char*)m_envp[i].c_str());
+  for(size_t i=0; i<m_argv.size();++i)   {
+    argv.push_back((char*)m_argv[i].c_str());
+  }
   argv.push_back(0);
+  for(size_t i=0; i<m_envp.size();++i) {
+    if ( m_envp[i].substr(0,5)=="UTGID" ) continue;
+    envp.push_back((char*)m_envp[i].c_str());
+  }
+  envp.push_back((char*)utgid.c_str());
   envp.push_back(0);
   if ( m_pid == 0 )  {
     switch((m_pid = ::fork()))  {

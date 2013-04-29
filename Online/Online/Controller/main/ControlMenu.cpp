@@ -43,7 +43,7 @@ static void backSpaceCallBack (int menu,int /* cmd */,int par,const void* param)
   ev.target->handle(ev);
 }
 
-static const char* s_slvList[]    = {"CtrlNativeSlave","CtrlFmcSlave"};
+static const char* s_slvList[]    = {"NativeDimSlave","FmcSlave"};
 static const char* s_partList[]   = {"LHCb","LHCb1","LHCb2","FEST","RICH","VELO"};
 static const char* s_modeList[]   = {"NORMAL","FORKING","CHECKPOINTING"};
 static const char* s_cmdList[]    = {"create","load","configure","start","stop","reset","unload","destroy","recover"};

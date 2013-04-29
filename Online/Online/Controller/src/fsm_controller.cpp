@@ -48,10 +48,11 @@ static void invalid_arg(const char* fmt, ...) {
 
 /// Test routine
 extern "C" int fsm_ctrl(int argc, char** argv)  {
-  string utgid = RTL::processName(), runinfo, taskdefs, mode, partition;
+  string utgid = RTL::processName(), runinfo, taskdefs, mode, partition, type="FmcSlave";
   int    print = 0, count=-1;
   RTL::CLI cli(argc, argv, help_ctrl);
   cli.getopt("mode",2,mode);
+  cli.getopt("type",2,type);
   cli.getopt("print",2,print);
   cli.getopt("count",2,count);
   cli.getopt("runinfo",2,runinfo);
@@ -70,7 +71,7 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
   Controller           ctrl(utgid,&mach);
   XmlTaskConfiguration cfg(partition,taskdefs,runinfo,mode,count);
 
-  if ( !cfg.attachTasks(mach) )  {
+  if ( !cfg.attachTasks(mach,type) )  {
     ::fprintf(stderr,"Failed to interprete XML tasklist.\n");
     ::exit(EINVAL);
   }

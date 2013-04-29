@@ -17,6 +17,11 @@ extern "C" {
 #include "dim.h"
 }
 
+// C/C++ include files
+#include <boost/assign/std/vector.hpp>
+#include <cstring>
+
+using namespace boost::assign;
 using namespace FiniteStateMachine;
 using namespace std;
 
@@ -44,6 +49,23 @@ DimSlave::~DimSlave() {
 DimSlave& DimSlave::cloneEnv()  {
   m_envp.clear();
   for(char** e=environ; *e; ++e) m_envp.push_back(*e);
+  return *this;
+}
+
+/// Set the process arguments from single string
+DimSlave& DimSlave::setArgs(const string& args)  {
+  m_argv.clear();
+  return addArgs(args);
+}
+
+/// Set the process arguments from single string
+DimSlave& DimSlave::addArgs(const string& args)  {
+  std::string copy = args;
+  for( char* p = (char*)copy.c_str(), *savePtr=0;; p=0)  {
+    char* token = ::strtok_r(p," ",&savePtr);
+    if ( !token ) break;
+    m_argv += token;
+  }
   return *this;
 }
 

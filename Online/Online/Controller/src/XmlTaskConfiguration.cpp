@@ -11,6 +11,7 @@
 // Framework include files
 #include "Controller/XmlTaskConfiguration.h"
 #include "Controller/TasklistHandlers.h"
+#include "Controller/NativeDimSlave.h"
 #include "Controller/FmcSlave.h"
 #include "FiniteStateMachine/Machine.h"
 #include "XML/XMLTypes.h"
@@ -19,6 +20,7 @@
 
 // C/C++ include files
 #include <iostream>
+#include <climits>
 
 using namespace std;
 using namespace FiniteStateMachine;
@@ -34,7 +36,7 @@ XmlTaskConfiguration::~XmlTaskConfiguration()  {
 }
 
 /// Analyse the configuration file and attach the corresponding slaves to the FSM machine
-bool XmlTaskConfiguration::attachTasks(Machine& machine)  {
+bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_type)  {
   char text[32];
   Tasklist tasks;
   string node = RTL::str_upper(RTL::nodeNameShort());
@@ -65,16 +67,41 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine)  {
     utgid     = RTL::str_replace(utgid,"${RUNINFO}",m_runinfo);
     utgid     = RTL::str_replace(utgid,"${NAME}",t->name);
     for(size_t i=0; i<=instances; ++i)   {
+      DimSlave* slave = 0;
       ::snprintf(text,sizeof(text),instances>0 ? "%02d" : "%d",int(i));
       string instance_utgid = RTL::str_replace(utgid,"${INSTANCE}",text);
-      FmcSlave* slave = new FmcSlave(type,instance_utgid,&machine,(m_mode != "NORMAL") && (i != 0));
-      slave->setCommand(t->command);
-      slave->fmc_args = RTL::str_replace(fmc_start,"${INSTANCE}",text)+ " -DUTGID="+instance_utgid;
-      slave->cmd_args = RTL::str_replace(arguments,"${INSTANCE}",text);
+      string instance_args = RTL::str_replace(arguments,"${INSTANCE}",text);
+      string instance_fmc = RTL::str_replace(fmc_start,"${INSTANCE}",text)+ " -DUTGID="+instance_utgid;
+      string cmd = t->command;
+      machine.display(ALWAYS,"+---- Task:%s UTGID %s",t->name.c_str(),instance_utgid.c_str());
+      if ( slave_type == "NativeDimSlave" )  {
+	slave = new NativeDimSlave(type,instance_utgid,&machine);
+	char wd[PATH_MAX];
+	if ( 0 == ::getcwd(wd,sizeof(wd)) )  {
+	  machine.display(ALWAYS,"|     CANNOT attch slave %s. Failed to retrieve current working directory: %s",
+			  instance_utgid.c_str(),RTL::errorString());
+	  return false;
+	}
+	cmd = wd + string("/") + t->command;
+	if ( 0 != ::access(cmd.c_str(),X_OK) )  {
+	  machine.display(ALWAYS,"|     CANNOT attch slave %s. File %s is not executable: %s",
+			  instance_utgid.c_str(),cmd.c_str(),RTL::errorString());
+	  return false;
+	}
+	slave->setArgs(instance_utgid+" "+instance_args);
+	slave->setCommand(cmd);
+	slave->cloneEnv();
+      }
+      else  {
+	FmcSlave* s = new FmcSlave(type,instance_utgid,&machine,(m_mode != "NORMAL") && (i != 0));
+	s->setFmcArgs(instance_fmc);
+	s->setArgs(instance_args);
+	slave = s;
+	machine.display(ALWAYS,"|     tmStart -m %s %s %s %s",node.c_str(),instance_fmc.c_str(),
+			cmd.c_str(),instance_args.c_str());
+      }
+      slave->setCommand(cmd);
       machine.addSlave(slave);
-      machine.display(ALWAYS,"+---- Task:%s UTGID %s",t->name.c_str(),slave->c_name());
-      machine.display(ALWAYS,"|     tmStart -m %s %s %s %s",node.c_str(),slave->fmc_args.c_str(),
-		      slave->command().c_str(),slave->cmd_args.c_str());
       for(Tasklist::Timeouts::const_iterator it=t->timeouts.begin(); it!=t->timeouts.end(); ++it)   {
 	const State* from = type->state((*it).from);
 	const State* to   = type->state((*it).to);

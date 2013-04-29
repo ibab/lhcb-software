@@ -18,6 +18,10 @@ extern "C" {
 #include "dim.h"
 }
 
+// C/C++ include files
+#include <boost/assign/std/vector.hpp>
+
+using namespace boost::assign;
 using namespace FiniteStateMachine;
 using namespace std;
 
@@ -31,12 +35,35 @@ FmcSlave::FmcSlave(const Type* typ, const string& nam, Machine* machine, bool in
 FmcSlave::~FmcSlave() {
 }
 
+/// Set the FMC arguments from single string
+DimSlave& FmcSlave::setFmcArgs(const string& args)  {
+  m_fmcArgs.clear();
+  return addFmcArgs(args);
+}
+
+/// Add the FMC arguments from single string
+DimSlave& FmcSlave::addFmcArgs(const string& args)  {
+  std::string copy = args;
+  for( char* p = (char*)copy.c_str(), *savePtr=0;; p=0)  {
+    char* token = ::strtok_r(p," ",&savePtr);
+    if ( !token ) break;
+    m_fmcArgs += token;
+  }
+  return *this;
+}
+
 /// Start slave process
 FSM::ErrCond FmcSlave::start()  {
+  string fmc_args, cmd_args;
   if ( isInternal() )  {
     send(SLAVE_ALIVE,0);
     return FSM::WAIT_ACTION;
   }
+  for(size_t i=0; i<m_fmcArgs.size();++i)
+    fmc_args += m_fmcArgs[i] + " ";
+  for(size_t i=0; i<m_argv.size();++i)
+    cmd_args += m_argv[i] + " ";
+
   TaskManager::instance(RTL::nodeNameShort()).start(name(),fmc_args,m_cmd,cmd_args);
   return FSM::SUCCESS;
 }

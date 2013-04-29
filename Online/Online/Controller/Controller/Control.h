@@ -83,6 +83,7 @@ namespace FiniteStateMachine {
     Machine*         m_machine;
     DimSlave*        m_slave;
     bool             m_config_exists;
+    std::string      m_currWD;
 
   public:
     struct SlaveTag {

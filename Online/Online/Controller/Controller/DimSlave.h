@@ -109,8 +109,13 @@ namespace FiniteStateMachine   {
     DimSlave& startTimer(int reason, const void* param=0);
     /// Stop the slave's transition timeout
     DimSlave& stopTimer();
+
     /// Clone the environment of the existing process
     DimSlave& cloneEnv();
+    /// Set the process arguments from single string
+    DimSlave& setArgs(const std::string& args);
+    /// Add entries to the process arguments from single string
+    DimSlave& addArgs(const std::string& args);
 
     /// DTQ overload to process timeout(s)
     static void tmoHandler(void* tag);

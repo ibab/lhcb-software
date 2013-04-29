@@ -27,7 +27,7 @@ using namespace FiniteStateMachine::DAQ;
 
 /// Constructor
 Controller::Controller(const string&  nam, Machine* m)
-  : CommandTarget(nam), m_machine(m), m_queueExit(false)
+  : CommandTarget(nam), m_errorState(0), m_machine(m), m_queueExit(false)
 {
   m_errorState = m_machine->type()->state(ST_NAME_ERROR);
   m->setFailAction(Callback::make(this,&Controller::fail));
