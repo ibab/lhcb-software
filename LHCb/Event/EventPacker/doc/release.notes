@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v3r0 2013-04-29 =========================
 ! 2013-04-19 - Chris Jones
  - Add a new mapper tool, ChargedProtoParticleMapper, for charged 
    ProtoParticles that implements recalibration of the PID information 
