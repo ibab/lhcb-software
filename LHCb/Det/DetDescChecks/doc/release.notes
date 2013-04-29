@@ -5,6 +5,7 @@
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
 
+!========================= DetDescChecks v5r10 2013-04-29 =========================
 ! 2013-04-29 - Marco Cattaneo
  - Replace endreq by endmsg
 
