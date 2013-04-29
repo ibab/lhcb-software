@@ -4,6 +4,7 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+!========================= DetDescCnv v4r18 2013-04-29 =========================
 ! 2013-04-26 - Marco Cattaneo
  - Replace some unnecessary dynamic_cast by static_cast, fixes FORWARD_NULL 
    defects
