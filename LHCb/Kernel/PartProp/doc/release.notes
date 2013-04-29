@@ -4,6 +4,7 @@
 ! Purpose     :
 ! -----------------------------------------------------------------------------
 
+!========================= PartProp v1r16 2013-04-29 =========================
 ! 2013-04-15 - Marco Clemencic
  - Move 'operator<<' inside a namespace to fix compilation errors with clang.
  - Added default constructors to fix compilation errors with clang.
