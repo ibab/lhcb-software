@@ -3,6 +3,7 @@
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!========================= STDet v4r30 2013-04-29 =========================
 ! 2013-04-26 - Marco Cattaneo
  - Replace some unnecessary dynamic_cast by static_cast, fixes FORWARD_NULL 
    defects
