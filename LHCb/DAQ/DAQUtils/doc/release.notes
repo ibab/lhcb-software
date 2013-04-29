@@ -4,6 +4,7 @@
 ! Purpose     : Various utilities for manipulating RawEvent
 !-----------------------------------------------------------------------------
 
+!========================= DAQUtils v1r11 2013-04-29 =========================
 ! 2013-04-18 - Rob Lambert
  - Merge in RawEventCombiners from the swimming branch. 
  - move to getIfExists.
