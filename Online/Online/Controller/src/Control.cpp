@@ -201,6 +201,7 @@ extern "C" {
 // C/C++ include files
 #include <string>
 #include <sstream>
+#include <climits>
 #include <stdexcept>
 #include <unistd.h>
 
