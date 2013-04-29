@@ -508,7 +508,7 @@ StatusCode LoKi::Hybrid::EvtTupleTool::updateODIN ()  // update ODIN-variables
     //
     debug() << "The decoded variable name is '"
             << m_odin.back().m_name << "'\t, the functor : '"
-            << m_odin.back().m_fun  << "'" << endreq ;
+            << m_odin.back().m_fun  << "'" << endmsg ;
   }  
   // 
   release ( factory ) ; // we do not need the factory anymore 
@@ -539,7 +539,7 @@ StatusCode LoKi::Hybrid::EvtTupleTool::updateL0DU ()  // update ODIN-variables
     //
     debug() << "The decoded variable name is '"
             << m_l0 .back().m_name << "'\t, the functor : '"
-            << m_l0 .back().m_fun  << "'" << endreq ;
+            << m_l0 .back().m_fun  << "'" << endmsg ;
   }  
   // 
   release ( factory ) ; // we do not need the factory anymore 
@@ -570,7 +570,7 @@ StatusCode LoKi::Hybrid::EvtTupleTool::updateHLT ()  // update HLT-variables
     //
     debug() << "The decoded variable name is '"
             << m_hdr .back().m_name << "'\t, the functor : '"
-            << m_hdr .back().m_fun  << "'" << endreq ;
+            << m_hdr .back().m_fun  << "'" << endmsg ;
   }  
   // 
   release ( factory ) ; // we do not need the factory anymore 
@@ -601,7 +601,7 @@ StatusCode LoKi::Hybrid::EvtTupleTool::updateVOID ()  // update VOID-variables
     //
     debug() << "The decoded variable name is '"
             << m_void.back().m_name << "'\t, the functor : '"
-            << m_void.back().m_fun  << "'" << endreq ;
+            << m_void.back().m_fun  << "'" << endmsg ;
   }  
   // 
   release ( factory ) ; // we do not need the factory anymore 

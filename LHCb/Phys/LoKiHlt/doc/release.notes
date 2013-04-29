@@ -4,11 +4,14 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2013-04-29 - Marco Cattaneo
+ - Replace endreq by endmsg
+ - Remove unnecessary disclaimers from file documentation blocks
+
 ! 2013-04-15 - Marco Clemencic
  - Added default constructors to fix compilation errors with clang.
 
 ! 2013-03-28 - Vanya Belyaev
-
  - add functionality to effectively convert
    various L0, ODIN, Hlt-functors into "void-functions",
    that in particualr allows their insertion into Hlt1-streamers
