@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v14r0 2013-04-29 =========================
 !  2013-04-16 - Wouter Hulsbergen
  - HitPattern: add VP and VL
 
