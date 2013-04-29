@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic
 ! ========================================================================
 
+!========================= CondDBUI v3r22 2013-04-29 =========================
 ! 2013-04-25 - Illya Shapoval
  - AriadneAdmin_InitialImport.py added:
    A script to perform an initial import of the LHCb compatibility relations
