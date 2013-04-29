@@ -137,10 +137,10 @@ namespace CHECKPOINTING_NAMESPACE  {
  */
 namespace CHECKPOINTING_NAMESPACE  {
 
-  struct SysInfo;
+  class SysInfo;
   STATIC(long) checkpointing_sys_fwrite(int fd, const SysInfo* s);
 
-  struct FileDesc;
+  class FileDesc;
   /// Write descriptor and possibly data to file identified by fileno fd_out
   STATIC(int) checkpoint_file_fwrite(const FileDesc* d, int fd_out);
   /// Write descriptor and possibly data to memory block
