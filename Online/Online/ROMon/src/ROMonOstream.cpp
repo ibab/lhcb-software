@@ -31,6 +31,7 @@ ostream& operator<<(ostream& os, const CONTROL& c) {
      << endl;
   return os;
 }
+template ostream& operator<< <CONTROL>(ostream& os, const Online::FixItems<CONTROL>& c);
 
 ostream& operator<<(ostream& os, const MBMClient& c) {
   os << " MBMClient@"  << (void*)&c
@@ -44,6 +45,7 @@ ostream& operator<<(ostream& os, const MBMClient& c) {
   os << endl;
   return os;
 }
+template ostream& operator<< <MBMClient>(ostream& os, const Online::FixItems<MBMClient>& c);
 
 ostream& operator<<(ostream& os, const MBMBuffer& b) {
   os << "MBM@"     << (void*)&b
@@ -53,6 +55,7 @@ ostream& operator<<(ostream& os, const MBMBuffer& b) {
   os << "Clients:" << b.clients  << endl;
   return os;
 }
+template ostream& operator<< <MBMBuffer>(ostream& os, const Online::FixItems<MBMBuffer>& c);
 
 ostream& operator<<(ostream& os, const FSMTask& t) {
   os << "Task@"    << (void*)&t
@@ -63,6 +66,7 @@ ostream& operator<<(ostream& os, const FSMTask& t) {
      << endl;
   return os;
 }
+template ostream& operator<< <FSMTask>(ostream& os, const Online::FixItems<FSMTask>& c);
 
 ostream& operator<<(ostream& os, const Node& n) {
   char buff[64];
@@ -89,6 +93,7 @@ ostream& operator<<(ostream& os, const Node& n) {
      << endl;
   return os;
 }
+template ostream& operator<< <ROMon::Node>(ostream& os, const Online::VarItems<ROMon::Node>& c);
 
 ostream& operator<<(ostream& os, const Nodeset& n) {
   os << "Nodeset@"       << (void*)&n
@@ -97,3 +102,4 @@ ostream& operator<<(ostream& os, const Nodeset& n) {
   os << "Nodes:"    << n.nodes << endl;
   return os;
 }
+template ostream& operator<< <Nodeset>(ostream& os, const Online::VarItems<Nodeset>& c);
