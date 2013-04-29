@@ -30,10 +30,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the smear campaign of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
  *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
  *  @date   2011-06-03
  * 
@@ -186,7 +182,7 @@ StatusCode LoKi::DumpMC::execute()
       LoKi::Objects::_ALL_  ,     // accept 
       LoKi::Objects::_NONE_ ) ;   // mark
   //
-  log << endreq ;
+  log << endmsg ;
   //
   return StatusCode::SUCCESS ;
 } 

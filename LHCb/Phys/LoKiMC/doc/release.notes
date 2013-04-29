@@ -14,6 +14,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2013-04-29 - Marco Cattaneo
+ - Replace endreq by endmsg
+ - Remove unnecessary disclaimers from file documentation blocks
+
 ! 2013-04-15 - Marco Clemencic
  - Added default constructors to fix compilation errors with clang.
 

@@ -118,7 +118,7 @@ StatusCode LoKi::Hybrid::MCParticleSelector::initialize ()
   if ( sc.isFailure() ) 
   { return Error ( "Error from IMCHybridFactory", sc   ) ; }     // RETURN 
   // 
-  info() << "CUT: '" << m_mccut << "' "<< endreq ;
+  info() << "CUT: '" << m_mccut << "' "<< endmsg ;
   //
   return StatusCode::SUCCESS ;  
 }
