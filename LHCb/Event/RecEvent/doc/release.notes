@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r46 2013-04-29 =========================
 ! 2013-03-22 - Wouter Hulsbergen
  - added method TrackTwoprongVertex::massWithError
 
