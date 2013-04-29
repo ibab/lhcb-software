@@ -279,7 +279,7 @@ namespace Gaudi
      *      ( v1->covMatrix() + v2->covMatrix() ).Sinverse( ifail ) ) ;
      *  if ( 0 != ifail ) { ... error here ... } ;
      *
-     *  always() << " Chi2 distance between vertices is " << chi2 << endreq ;
+     *  always() << " Chi2 distance between vertices is " << chi2 << endmsg ;
      *
      *  @endcode 
      *
@@ -315,7 +315,7 @@ namespace Gaudi
      *        v1->position() - v2.position() ) ;
      *  if ( 0 != ifail ) { ... error here ... } ;
      *
-     *  always() << " Chi2 distance between vertices is " << chi2 << endreq ;
+     *  always() << " Chi2 distance between vertices is " << chi2 << endmsg ;
      *
      *  @endcode 
      *
@@ -348,7 +348,7 @@ namespace Gaudi
      *     ( p1->momCovMatrix() + p2->momCovMatrix() ).Sinverse( ifail ) ) ;
      *  if ( 0 != ifail ) { ... error here ... } ;
      *
-     *  always() << " Chi2 distance in momenta is " << chi2 << endreq ;
+     *  always() << " Chi2 distance in momenta is " << chi2 << endmsg ;
      *
      *  @endcode 
      *
@@ -384,7 +384,7 @@ namespace Gaudi
      *       p1->momentum() - p2.momentum() ) ;
      *  if ( 0 != ifail ) { ... error here ... } ;
      *
-     *  always() << " Chi2 distance in momenta is " << chi2 << endreq ;
+     *  always() << " Chi2 distance in momenta is " << chi2 << endmsg ;
      *
      *  @endcode 
      *
