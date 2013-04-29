@@ -161,6 +161,11 @@ namespace FiniteStateMachine {
     int processIO()    {
       return 1;
     }
+    /// Handle state updates for a particular slave
+    virtual void handleState(const std::string& msg)  {
+      ioc().send(handler,CMD_WRITE_MESSAGE,::strdup((name()+"> Received new message:"+msg).c_str()));
+      if ( msg != DAQ::ST_NAME_UNKNOWN ) FmcSlave::handleState(msg);
+    }
     /// IOC handler
     void handleIoc(const Event& event)   {
       DimSlave::handleIoc(event);
