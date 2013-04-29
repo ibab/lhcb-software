@@ -4,6 +4,7 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+!========================= RichKernel v7r53 2013-04-29 =========================
 ! 2013-04-19 - Chris Jones
  - No longer set the -DRICHDEBUG flag in debug builds, as no longer used.
 
