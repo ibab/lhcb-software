@@ -102,21 +102,24 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
       }
       slave->setCommand(cmd);
       machine.addSlave(slave);
+      const Type::States& states = type->states();
       for(Tasklist::Timeouts::const_iterator it=t->timeouts.begin(); it!=t->timeouts.end(); ++it)   {
-	const State* from = type->state((*it).from);
-	const State* to   = type->state((*it).to);
+	bool found = false;
 	int tmo = (*it).timeout;
-	if ( from && to )   {
-	  const Transition* tr = from->findTrans(to);
-	  if ( tr )  {
-	    slave->addTimeout(tr,tmo);
-	    continue;
+	for(Type::States::const_iterator is=states.begin(); is!=states.end(); ++is)  {
+	  const State::Transitions& tr = (*is).second->outgoing();
+	  for(State::Transitions::const_iterator itr=tr.begin(); itr!=tr.end(); ++itr)  {
+	    const Transition* tr = *itr;
+	    if ( tr->name() == it->action )  {
+	      slave->addTimeout(tr,tmo);
+	      found = true;
+	    }
 	  }
 	}
-	machine.display(machine.ERROR,"%s> Type: %s -- Cannot set timeout %s -> %s = %d seconds [%s]",
-			slave->c_name(), type->c_name(),
-			from ? from->c_name() : "????", to ? to->c_name() : "????", tmo,
-			from && to ? "No transition found" : "Invalid State(s)");
+	if ( !found )  {
+	  machine.display(machine.ERROR,"%s> Type: %s -- Cannot set timeout for action %s = %d seconds [%s]",
+			  slave->c_name(), type->c_name(), it->action.c_str(), tmo, "No transition found");
+	}
       }
     }
   }

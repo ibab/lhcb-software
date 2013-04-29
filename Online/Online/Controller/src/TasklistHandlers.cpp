@@ -26,6 +26,7 @@ DECLARE_UNICODE_TAG(command);
 DECLARE_UNICODE_TAG(argument);
 DECLARE_UNICODE_TAG(fmcparam);
 DECLARE_UNICODE_TAG(ioparam);
+DECLARE_UNICODE_TAG(action);
 DECLARE_UNICODE_TAG(user);
 DECLARE_UNICODE_TAG(group);
 DECLARE_UNICODE_TAG(instances);
@@ -43,8 +44,7 @@ namespace FiniteStateMachine {
     std::string command() const   { return  child(_U(command)).text();   }
     bool hasValue() const         { return  hasAttr(_U(value));           }
     std::string value() const     { return  attr<std::string>(_U(value)); }
-    std::string from() const      { return  attr<std::string>(_U(from)); }
-    std::string to() const        { return  attr<std::string>(_U(to)); }
+    std::string action() const    { return  attr<std::string>(_U(action)); }
     int timeout() const           { return  attr<int>(_U(timeout)); }
   };
 }
@@ -74,7 +74,7 @@ void TasklistPrinter::Args::operator()(const xml_h& h)  {
 /// Action operator when analyzing data
 void TasklistPrinter::Timeouts::operator()(const xml_h& h)  {
   TaskParams a = h;
-  cout << endl << "   Timeout: " << a.from() << " -> " << a.to() << " = " << a.timeout();
+  cout << endl << "   Timeout: " << a.action() << " = " << a.timeout();
 }
 
 /// Action operator when analyzing data
@@ -84,7 +84,7 @@ void TasklistPrinter::Params::operator()(const xml_h& h)  {
   string val = p.hasValue() ? p.value() : string();
   if      ( nam == "define"                 ) cout << " -D " << val;
   else if ( nam == "utgid"                  ) cout << " -u " << val;
-  else if ( nam == "workdirectory"          ) cout << " -w " << val;
+  else if ( nam == "wd"                     ) cout << " -w " << val;
   else if ( nam == "priority"               ) cout << " -r " << val;
   else if ( nam == "nice"                   ) cout << " -p " << val;
   else if ( nam == "stderr" && val.empty()  ) cout << " -e";
@@ -120,7 +120,7 @@ void TasklistAnalyzer::Args::operator()(const xml_h& h)  {
 /// Action operator when analyzing data
 void TasklistAnalyzer::Timeouts::operator()(const xml_h& h)  {
   TaskParams a = h;
-  task->timeouts.push_back(Tasklist::Timeout(a.from(),a.to(),a.timeout()));
+  task->timeouts.push_back(Tasklist::Timeout(a.action(),a.timeout()));
 }
 
 /// Action operator when analyzing data
@@ -128,7 +128,7 @@ void TasklistAnalyzer::Params::operator()(const xml_h& h)  {
   TaskParams p = h;
   string fmc_par, nam = p.name(), val = p.hasValue() ? p.value() : string();
   if      ( nam == "define"                 ) fmc_par = "-D " + val;
-  else if ( nam == "workdirectory"          ) fmc_par = "-w " + val;
+  else if ( nam == "wd"                     ) fmc_par = "-w " + val;
   else if ( nam == "priority"               ) fmc_par = "-r " + val;
   else if ( nam == "nice"                   ) fmc_par = "-p " + val;
   else if ( nam == "stderr" && val.empty()  ) fmc_par = "-e";

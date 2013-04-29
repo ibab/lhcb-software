@@ -30,13 +30,12 @@ namespace FiniteStateMachine   {
   struct Tasklist  {
   public:
     struct Timeout {
-      std::string from;
-      std::string to;
+      std::string action;
       int timeout;
       Timeout() : timeout(0) {}
-      Timeout(const std::string& f, const std::string& t, int v) : from(f), to(t), timeout(v) {}
-      Timeout(const Timeout& c) : from(c.from), to(c.to), timeout(c.timeout) {}
-      Timeout& operator=(const Timeout& c) { from=c.from; to=c.to; timeout=c.timeout; return *this;}
+    Timeout(const std::string& a, int t) : action(a), timeout(t) {}
+      Timeout(const Timeout& c) : action(c.action), timeout(c.timeout) {}
+      Timeout& operator=(const Timeout& c) { action=c.action; timeout=c.timeout; return *this;}
     };
     /// Defintiion of the timeout container
     typedef std::vector<Timeout> Timeouts;
