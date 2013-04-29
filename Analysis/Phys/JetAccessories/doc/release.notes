@@ -4,6 +4,11 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2013-04-29 - Victor Coco
+ - Fix composite particle treatment for sub-resonnance in charged particles
+ - Remove the hard coded pt cut in JEC
+ - Add the possibility to only save jets containing a B particle
+
 ! 2013-02-26 - Chris Jones
  - Fix -pedantic compilation warnings
 

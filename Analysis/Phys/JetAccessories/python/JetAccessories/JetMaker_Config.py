@@ -15,6 +15,7 @@ class JetMakerConf:
                  JetEnergyCorrection = True ,
                  JetIDCut = True,
                  jetidnumber=98 ,
+                 onlySaveB = False,
                  algtype="anti-kt"):
         
         jetname_dict = {"kt":0,"Cambridge":1,"anti-kt":2}
@@ -32,6 +33,7 @@ class JetMakerConf:
         self.jetMakerTool =  'LoKi__FastJetMaker'
         self.jetMakerType =  jetname_dict[algtype]
         self.jetidnumber = jetidnumber
+        self.OnlySaveWithB = onlySaveB
         self.PFParticleTypes = [ dictOfPFType[k] for k in PFTypes ]
         if 'Pi0' in PFTypes:
             self.PFParticleTypes.append(dictOfPFType['MergedPi0'])
@@ -49,6 +51,7 @@ class JetMakerConf:
         algo =  LoKi__PFJetMaker ( jetMakerName )
         algo.JetMaker = self.jetMakerTool
         algo.Associate2Vertex = self.AssociateWithPV
+        algo.OnlySaveWithB = self.OnlySaveWithB 
         algo.addTool ( LoKi__FastJetMaker )
         algo.Inputs = self.Inputs
         algo.PFParticleTypes = self.PFParticleTypes

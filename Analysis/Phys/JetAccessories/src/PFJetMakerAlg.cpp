@@ -83,7 +83,7 @@ namespace LoKi
         ( "Associate2Vertex"  , 
           m_associate2Vertex , 
           "Jet reconstruction per vertex") ;  
-      declareProperty ( "ApplyJetID"  , 
+      declareProperty ( "ApplyJetID"  ,
 			m_applyJetID = false, 
 			"Apply jet ID cuts") ; 
       declareProperty("ApplyJEC"  , 
@@ -92,6 +92,9 @@ namespace LoKi
       declareProperty("PFParticleTypes"  , 
 		      m_inputTypes  ,
 		      "Type of particles to consider");
+      declareProperty("OnlySaveWithB"  , 
+		      m_onlysavewithB  ,
+		      "Only save jets containing a B meson");
       
       declareProperty("HistoPath"  , m_histo_path = "JEC" , "The path of the JEC histograms" );
       //
@@ -111,34 +114,34 @@ namespace LoKi
                             N90 = 9002 ,
                             MTF = 9003 ,
                             NSatCalo = 9004,
-			    NHasPV = 9005,
+                            NHasPV = 9005,
                             CPF = 9006,
-			    JetWidth = 9007,
-			    NSatECAL = 9008,
-			    NSatHCAL = 9009,
-			    NIPChi2Inf4 = 9010,
-                MPT = 9011,
-			    Charged = 9201,
-			    ChargedHadron = 9202,
-			    Muon  = 9203,
-			    Electron = 9204,
-			    Neutral  = 9205,
-			    Photon = 9206,
-			    Pi0 = 9207,
-			    MergedPi0 = 9208,
-			    ResolvedPi0 = 9209,
-			    NeutralHadron = 9210,
-			    NeutralRecovery = 9211 ,
-			    Composite  = 9212  ,
-			    V0 = 9213 ,
-			    D = 9214 ,
-			    B = 9215 ,
-			    BadParticle = 9216  ,
-			    Charged0Momentum = 9217  ,
-			    ChargedInfMomentum = 9218 ,
-			    BadPhotonMatchingT = 9219 ,
-			    BadPhoton = 9220 ,
-			    IsolatedPhoton = 9221 
+                            JetWidth = 9007,
+                            NSatECAL = 9008,
+                            NSatHCAL = 9009,
+                            NIPChi2Inf4 = 9010,
+                            MPT = 9011,
+                            Charged = 9201,
+                            ChargedHadron = 9202,
+                            Muon  = 9203,
+                            Electron = 9204,
+                            Neutral  = 9205,
+                            Photon = 9206,
+                            Pi0 = 9207,
+                            MergedPi0 = 9208,
+                            ResolvedPi0 = 9209,
+                            NeutralHadron = 9210,
+                            NeutralRecovery = 9211 ,
+                            Composite  = 9212  ,
+                            V0 = 9213 ,
+                            D = 9214 ,
+                            B = 9215 ,
+                            BadParticle = 9216  ,
+                            Charged0Momentum = 9217  ,
+                            ChargedInfMomentum = 9218 ,
+                            BadPhotonMatchingT = 9219 ,
+                            BadPhoton = 9220 ,
+                            IsolatedPhoton = 9221 
     };
                          
 			    
@@ -178,6 +181,8 @@ namespace LoKi
     std::string m_histo_path ;
     /// input particles to consider
     std::vector < int > m_inputTypes ;
+    bool m_onlysavewithB;
+    
     
     
     
@@ -201,6 +206,7 @@ namespace LoKi
 StatusCode LoKi::PFJetMaker::initialize () 
 {
   StatusCode sc = LoKi::Algo::initialize() ; 
+  
   if ( sc.isFailure() ) { return sc ; }
   // Initialize the tool
   if ( 0 == m_maker ) { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
@@ -326,6 +332,12 @@ StatusCode LoKi::PFJetMaker::analyse   ()
           delete jet ;
           continue;
         }
+        if ( m_onlysavewithB && jet->info(B,-100.)<1.e-6){
+          jets.pop_back() ;
+          delete jet ;
+          continue;
+        }
+        verbose()<<PT(jet)<<" "<<jet->info(B,-100.)<<" "<<ID(jet)<<endreq;
         save ( "jets" , jet ).ignore() ;
         jets.pop_back() ;
         delete jet ;
@@ -356,10 +368,15 @@ StatusCode LoKi::PFJetMaker::analyse   ()
     {
       LHCb::Particle* jet = jets.back() ;
       this->appendJetIDInfo(jet);
-      if (m_applyJetID  && ( mtf(jet)>0.75 || nPVInfo(jet)<2 || mpt(jet))<1800){
+      if (( m_applyJetID  && ( mtf(jet)>0.75 || nPVInfo(jet)<2 || mpt(jet)<1800) ) ){
           jets.pop_back() ;
           delete jet ;
           continue;
+      }
+      if ( m_onlysavewithB && jet->info(B,-100.)<1e-6){
+        jets.pop_back() ;
+        delete jet ;
+        continue;
       }
       save ( "jets" , jet ).ignore() ;
       jets.pop_back() ;
@@ -506,7 +523,8 @@ StatusCode LoKi::PFJetMaker::JEC( LHCb::Particle* jet )
   if(jetpt>499) jetpt=498;
   if(jeteta<2.0) jeteta=2.0;
   if(jeteta>4.8) jeteta=4.8;
-  double cor = histo->Interpolate(jetpt, jeteta, jetcpf);
+  double cor = 1.;
+  if (jetpt>5.) cor = histo->Interpolate(jetpt, jeteta, jetcpf);
   // Store the uncorrected kinematics
 
   jet->addInfo ( 9100 , cor );

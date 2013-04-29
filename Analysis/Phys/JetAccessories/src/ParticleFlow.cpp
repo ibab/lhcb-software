@@ -27,6 +27,8 @@
 #include "Relations/IRelation.h"
 #include "Relations/IRelationWeighted2D.h"
 #include "Relations/Get.h"
+#include "LoKi/PhysExtract.h"
+#include "LoKi/ParticleCuts.h"
 // local
 #include "ParticleFlow.h"
 
@@ -656,7 +658,10 @@ StatusCode ParticleFlow::preprocessDatas( LHCb::Particles& PFParticles , Particl
     // Sort the composite particles by vertex chi2
     std::sort( sortComposites.begin(), sortComposites.end(), sortChi2() );     
     BOOST_FOREACH(const LHCb::Particle* comp, sortComposites){
-      LHCb::Particle::ConstVector daughters = comp->daughtersVector();
+      // LHCb::Particle::ConstVector daughters = comp->daughtersVector();
+      LHCb::Particle::ConstVector daughters;
+      int motherID = LoKi::Cuts::ID(comp);
+      LoKi::Extract::getParticles( comp , std::back_inserter ( daughters ) ,  LoKi::Cuts::ID!=motherID && LoKi::Cuts::HASPROTO ) ;
       bool overlap = false;
       // Loop over the daughters and check if they overlapp
       for (LHCb::Particle::ConstVector::const_iterator i_p = daughters.begin();daughters.end()!=i_p;++i_p){
