@@ -83,10 +83,16 @@ namespace FiniteStateMachine   {
     DimSlave(const Type* typ, const std::string& nam, Machine* machine);
     /// Standatrd destructor
     virtual ~DimSlave();
+
     /// Set the command line value
     void setCommand(const std::string& cmd)  {  m_cmd = cmd;  }
     /// Access the command string 
     const std::string& command() const       {  return m_cmd; }
+    /// Set the default timeout value
+    void setTimeout(int val)                 {  m_tmp = val;  }
+    /// Access the command string 
+    int timeout() const                      {  return m_tmo; }
+
     /// Start slave process. Must be implemented by sub-class
     virtual ErrCond start() = 0;
     /// Kill slave process

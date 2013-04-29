@@ -106,11 +106,15 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
       for(Tasklist::Timeouts::const_iterator it=t->timeouts.begin(); it!=t->timeouts.end(); ++it)   {
 	bool found = false;
 	int tmo = (*it).timeout;
+	if ( (*it).action == "Any" )  {
+	  slave->setTimeout(tmo);
+	  continue;
+	}
 	for(Type::States::const_iterator is=states.begin(); is!=states.end(); ++is)  {
 	  const State::Transitions& tr = (*is).second->outgoing();
 	  for(State::Transitions::const_iterator itr=tr.begin(); itr!=tr.end(); ++itr)  {
 	    const Transition* tr = *itr;
-	    if ( tr->name() == it->action )  {
+	    if ( tr->name() == (*it).action )  {
 	      slave->addTimeout(tr,tmo);
 	      found = true;
 	    }
