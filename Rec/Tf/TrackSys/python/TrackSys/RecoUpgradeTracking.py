@@ -171,54 +171,13 @@ def RecoUpgradeTracking(exclude=[]):
     if "Match" in trackTypes:
         tracklists += ["Rec/Track/Match"]
 
-    # create the best track creator and fit tracks
-    from Configurables import UpgradeBestTrackCreator, TrackMasterFitter
+    from Configurables import TrackBestTrackCreator, TrackMasterFitter
     from TrackFitter.ConfiguredFitters import ConfiguredMasterFitter
-    bestTrackCreator = UpgradeBestTrackCreator( TracksInContainers = tracklists )
+    bestTrackCreator = TrackBestTrackCreator( TracksInContainers = tracklists )
     bestTrackCreator.addTool( TrackMasterFitter, name="Fitter") 
     bestTrackCreator.FitTracks = True
+    bestTrackCreator.InitTrackStates = False
     ConfiguredMasterFitter( bestTrackCreator.Fitter )
-
     bestSeq.Members += [ bestTrackCreator ]
-
-
-   # ### Do the track fit
-   # fitSeq = GaudiSequencer("TrFitSeq")
-   # GaudiSequencer("RecoTrSeq").Members += [ fitSeq ]
-   # from Configurables import TrackEventFitter, TrackMasterFitter, MeasurementProvider
-   # from TrackFitter.ConfiguredFitters import ConfiguredEventFitter, ConfiguredMasterFitter
-   # eventfitter = TrackEventFitter("FitBest")
-   # eventfitter.TracksInContainer = "Rec/Track/Best"
-   # eventfitter.addTool( TrackMasterFitter, name="Fitter")
-   # ConfiguredMasterFitter(eventfitter.Fitter,
-   #                        FieldOff = False,
-   #                        SimplifiedGeometry = False,
-   #                        NoDriftTimes       = None,
-   #                        KalmanSmoother     = None,
-   #                        LiteClusters = True,
-   #                        ApplyMaterialCorrections = None,
-   #                        StateAtBeamLine = True,
-   #                        MaxNumberOutliers = 2)
-   # eventfitter.Fitter.MeasProvider.IgnoreVelo = True
-   # eventfitter.Fitter.MeasProvider.IgnoreVP = True
-   # eventfitter.Fitter.MeasProvider.IgnoreVL = True
-   # eventfitter.Fitter.MeasProvider.IgnoreTT = True
-   # eventfitter.Fitter.MeasProvider.IgnoreUT = True
-   # eventfitter.Fitter.MeasProvider.IgnoreIT = True
-   # eventfitter.Fitter.MeasProvider.IgnoreOT = True
-   # eventfitter.Fitter.MeasProvider.IgnoreFT = True
-   # 
-   # 
-   # if ("VP" in subDets):
-   #     eventfitter.Fitter.MeasProvider.IgnoreVP = False
-   # if ("VL" in subDets):
-   #     eventfitter.Fitter.MeasProvider.IgnoreVL = False
-   # if ("FT" in subDets):
-   #     eventfitter.Fitter.MeasProvider.IgnoreFT = False
-   # if ("UT" in subDets):
-   #     eventfitter.Fitter.MeasProvider.IgnoreUT = False
-   #     
-
-   # fitSeq.Members += [ eventfitter ]
 
 

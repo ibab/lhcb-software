@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2013-04-29 - Thomas Nikodem
+ - Replaced UpgradeBestTrackCreator by TrackBestTrackCreator in RecoUpgradeTracking.py
+
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 
