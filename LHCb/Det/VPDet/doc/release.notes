@@ -4,6 +4,7 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+!========================= VPDet v2r2 2013-04-29 =========================
 ! 2013-04-02 - Marco Cattaneo
  - Replace endreq by endmsg
  - Fix UNINIT_CTOR defects
