@@ -32,7 +32,7 @@ macro_append ONLINE_CPPFLAGS "" \
 	target-vc9   " -wd4996 " \
 	target-vc7   "" \
 	target-gcc   " -W -Wno-long-long -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend " \
-	target-clang " -W -Wno-long-long -Wparentheses -Wctor-dtor-privacy -Wno-non-template-friend "
+	target-clang " -W -Wno-long-long -Wparentheses -Wctor-dtor-privacy "
 
 private
 macro_append  use_includes ' $(ppcmd)"$(ONLINEBASEROOT)/OnlineBase" '
