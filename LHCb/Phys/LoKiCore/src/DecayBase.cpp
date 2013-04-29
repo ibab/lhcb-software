@@ -163,7 +163,7 @@ StatusCode LoKi::DecayBase::_parse
     ( tree , input , _symbols , _particles , err.stream() ) ;
   if ( sc.isFailure() ) 
   {
-    err << endreq ;
+    err << endmsg ;
     return Error ( "Unable to parse '"+input+"'" , sc ) ;            // RETURN 
   }
   //

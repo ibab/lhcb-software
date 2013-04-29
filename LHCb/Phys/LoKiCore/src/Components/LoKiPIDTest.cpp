@@ -59,7 +59,7 @@ namespace LoKi
         const LHCb::ParticleProperty* pp = *ipp ;
         if ( 0 == pp ) { continue ; }                            // RETURN
         debug() << "Name/PID: "
-                << "'" << pp->particle() << "':" << pp->pdgID() << endreq ;
+                << "'" << pp->particle() << "':" << pp->pdgID() << endmsg ;
         // verify name -> pid map  
         Assert ( pp->particle   () == nameFromPID ( pp->particleID() ) , 
                  "Mismatch in Name/PID map for '" + pp->particle() + "'" ) ;

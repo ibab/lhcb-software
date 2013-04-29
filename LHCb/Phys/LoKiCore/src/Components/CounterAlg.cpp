@@ -29,11 +29,6 @@
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
- *
- *  
  *                    $Revision$
  *  Last modification $Date$
  *                 by $Author$
@@ -276,7 +271,7 @@ StatusCode LoKi::CounterAlg::updateItems ()                 // update variables
     //
     debug() << "The decoded variable name is '"
             << m_items.back().m_name << "'\t, the functor : '"
-            << m_items.back().m_fun  << "'" << endreq ;
+            << m_items.back().m_fun  << "'" << endmsg ;
   }  
   // 
   release ( factory ) ; // we do not need the factory anymore 

@@ -382,7 +382,7 @@ public:
       MsgStream log ( msgSvc() , name() ) ;
       log << MSG::ALWAYS << std::endl ;
       LoKi::Welcome::instance ().welcome( log.stream() ) ;
-      log << endreq ;
+      log << endmsg ;
     }
     // RESET the sequential event number 
     m_event = 0  ;
@@ -463,7 +463,7 @@ public:
       MsgStream log ( msgSvc() , name() ) ;
       log << MSG::ALWAYS << std::endl ;
       LoKi::Welcome::instance ().goodbye( log.stream() ) ;
-      log << endreq ;
+      log << endmsg ;
     }
     //
     return Service::finalize() ;
@@ -522,7 +522,7 @@ public:
       MsgStream log ( msgSvc() , name() ) ;
       log << MSG::ALWAYS << std::endl ;
       LoKi::Welcome::instance ().welcome ( log.stream() ) ;
-      log << endreq ;
+      log << endmsg ;
     }
     //
     return StatusCode::SUCCESS ;

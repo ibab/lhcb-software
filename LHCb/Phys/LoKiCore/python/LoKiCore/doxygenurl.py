@@ -24,10 +24,6 @@
 #   This file is part of LoKi project: 
 #    ``C++ ToolKit for Smart and Friendly Physics Analysis''
 # 
-#   By usage of this code one clearly states the disagreement 
-#  with the campain of Dr.O.Callot et al.: 
-#  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
-#
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 #  @date 2007-07-22
 #
@@ -54,11 +50,6 @@ and the minor helper function
   
   This file is part of LoKi project: 
   ``C++ ToolKit for Smart and Friendly Physics Analysis''
-  
-  By usage of this code one clearly states the disagreement 
-  with the campain of Dr.O.Callot et al.: 
-  ``No Vanya's lines are allowed in LHCb/Gaudi software.''
-
   
 $Revision$
 Last modification $Date$
