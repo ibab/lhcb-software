@@ -142,7 +142,8 @@ void DimSlave::handleTimeout()  {
 /// Handle timeout on unload transition according to timer ID
 void DimSlave::handleUnloadTimeout()  {
   if ( m_timerID.second == SLAVE_UNLOAD_TIMEOUT )   {
-    display(ERROR,"%s> unload command unsuccessful. FAILURE - insufficient implementation. State:%s",c_name(),metaStateName());	  
+    display(ERROR,"%s> unload command unsuccessful. FAILURE - [%s]. State:%s",
+	    c_name(),"Insufficient Implementation",metaStateName());	  
   }
 }
 

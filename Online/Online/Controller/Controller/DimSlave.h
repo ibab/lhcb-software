@@ -89,7 +89,7 @@ namespace FiniteStateMachine   {
     /// Access the command string 
     const std::string& command() const       {  return m_cmd; }
     /// Set the default timeout value
-    void setTimeout(int val)                 {  m_tmp = val;  }
+    void setTimeout(int val)                 {  m_tmo = val;  }
     /// Access the command string 
     int timeout() const                      {  return m_tmo; }
 
