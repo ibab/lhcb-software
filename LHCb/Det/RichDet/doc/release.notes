@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v16r17 2013-04-29 =========================
 ! 2013-04-29 - Marco Cattaneo
  - Replace endreq by endmsg
 
