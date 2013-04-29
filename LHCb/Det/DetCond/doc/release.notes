@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r30 2013-04-29 =========================
 ! 2013-04-26 - Liang Sun
  - Removed all references to BZip2. We still need 32Bit machines
 
