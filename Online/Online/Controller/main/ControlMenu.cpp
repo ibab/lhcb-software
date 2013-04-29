@@ -1,6 +1,7 @@
 #include "ControlMenu.h"
 
 #include <boost/assign/std/vector.hpp>
+#include "FiniteStateMachine/FSMTypes.h"
 #include "FiniteStateMachine/FmcSlave.h"
 #include "FiniteStateMachine/NativeDimSlave.h"
 #include "CPP/IocSensor.h"
@@ -61,6 +62,7 @@ namespace UPI {
     CtrlNativeSlave(ControlMenu* handler,Machine* machine, const Type* typ, const std::string& nam, const std::string& args="")
       : NativeDimSlave(typ,nam,machine), handler(handler) 
     {
+      m_killCmd = "destroy";
       if ( args.empty() )  {      
 	m_cmd   = FiniteStateMachine::gentest_path();
 	m_argv += nam,"libController.so","controller_fsm_test","-name="+nam;
@@ -81,6 +83,7 @@ namespace UPI {
     /// Start slave process
     FSM::ErrCond start()  {
       if ( m_pid == 0 )  {
+	std::string proc = RTL::processName();
 	std::vector<char*> argv, envp;
 	char text[64];
 	int ret = 0;
@@ -94,10 +97,13 @@ namespace UPI {
 	argv.push_back(text);
 	argv.push_back(0);
 
-	for(size_t i=0; i<m_envp.size();++i)
-	  envp.push_back((char*)m_envp[i].c_str());
+	for(size_t i=0; i<m_envp.size();++i)  {
+	  if ( m_envp[i].substr(0,5)=="UTGID" )
+	    envp.push_back((char*)("UTGID="+name()).c_str());
+	  else
+	    envp.push_back((char*)m_envp[i].c_str());
+	}
 	envp.push_back(0);
-
 	switch((m_pid = ::fork()))  {
 	case -1:  // Error
 	  return FSM::FAIL;
@@ -121,7 +127,8 @@ namespace UPI {
     void handleIoc(const Event& event)   {
       DimSlave::handleIoc(event);
       switch(event.type)  {
-      case SLAVE_LIMBO:
+      case SLAVE_LIMBO:	
+	break;
       case SLAVE_STARTING:
       case SLAVE_KILLED:
       case SLAVE_FINISHED:
@@ -152,17 +159,27 @@ namespace UPI {
       ioc().send(handler,CMD_STOP_SLAVEIO,handler);
       return 1;
     }
+    /// Handle state updates for a particular slave
+    virtual void handleState(const std::string& msg)  {
+      ioc().send(handler,CMD_UPI_WRITE_MESSAGE,::strdup((name()+"> Received new message:"+msg).c_str()));
+      if ( msg != FiniteStateMachine::DAQ::ST_NAME_UNKNOWN ) NativeDimSlave::handleState(msg);
+    }
   };
 
   struct CtrlFmcSlave : public FiniteStateMachine::FmcSlave {
     ControlMenu* handler;
     /// Standard constructor
     CtrlFmcSlave(ControlMenu* h, Machine* machine, const Type* typ, const std::string& nam, const std::string& args="") 
-      : FmcSlave(typ,nam,machine,false), handler(h)    {  cmd_args = args;   }
+      : FmcSlave(typ,nam,machine,false), handler(h)    {
+      m_killCmd = "destroy";
+      cmd_args = args;
+    }
     /// Standard destructor
     virtual ~CtrlFmcSlave()       {  }
     /// Nothing to do here
-    int processIO()            {      return 1;    }
+    int processIO()    {
+      return 1;
+    }
     /// IOC handler
     void handleIoc(const Event& event)   {
       DimSlave::handleIoc(event);
@@ -191,7 +208,6 @@ namespace UPI {
 }
 
 #include "FiniteStateMachine/Type.h"
-#include "FiniteStateMachine/FSMTypes.h"
 #include "FiniteStateMachine/XmlTaskConfiguration.h"
 #include "UPI/UpiSensor.h"
 #include "CPP/IocSensor.h"
@@ -324,6 +340,7 @@ void ControlMenu::slave_handler(void* tag, void* addr, int* size) {
   }
 }
 
+/// Static routine to execute the I/O Thread
 int ControlMenu::ctrl_thread_routine(void* arg)  {
   CtrlNativeSlave* s = (CtrlNativeSlave*)arg;
   return s->processIO();
@@ -336,12 +353,21 @@ FSM::ErrCond ControlMenu::update()      {
   return FSM::SUCCESS;
 }
 
+/// Destroy the controller task
+FSM::ErrCond ControlMenu::destroy()   {
+  if ( m_slave ) m_slave->kill();
+  ioc().send(this,CMD_UPDATE_SLAVE,this);
+  return FSM::SUCCESS;
+}
+
 /// Start the controller task
 void ControlMenu::startController()   {
   Type* typ = fsm_type("DAQSteer");
+  const Transition* trans = typ->transition(ST_NAME_OFFLINE,ST_NAME_UNKNOWN);
   m_machine = new Machine(typ,RTL::processName()+"::DAQ");
   m_machine->setCompletionAction(Callback::make(this,&ControlMenu::update));
   m_machine->setFailAction(Callback::make(this,&ControlMenu::update));
+  m_machine->setAction(trans,Callback::make(this,&ControlMenu::destroy));
   m_machine->setHandler(this);
   if ( m_config_exists )
     startControllerConfig();
@@ -487,6 +513,7 @@ void ControlMenu::executeTransition(const string& transition)   {
     return;
   }
   m_machine->invokeTransition(tr);
+  ioc().send(this,CMD_UPDATE_SLAVE,this);
 }
 
 /// Invoke transition on FSM machine to given targte state
@@ -499,6 +526,7 @@ void ControlMenu::gotoState(const string& state)   {
     return;
   }
   m_machine->invokeTransition(tr,Rule::SLAVE2MASTER);
+  ioc().send(this,CMD_UPDATE_SLAVE,this);
 }
 
 /// Force local machine state
@@ -511,6 +539,7 @@ void ControlMenu::setMachineState(const string& state_name)   {
     return;
   }
   m_machine->setState(state).setTarget(0);
+  ioc().send(this,CMD_UPDATE_SLAVE,this);
 }
 
 /// Exit slave via DIM command
@@ -526,6 +555,7 @@ void ControlMenu::killSlave(int which)   {
   else
     msg += "> Failed to send command to slave's EXIT datapoint.";
   ::upic_write_message(msg.c_str(),"");
+  ioc().send(this,CMD_UPDATE_SLAVE,this);
 }
 
 /// Send slave to state error via DIM command
@@ -541,6 +571,7 @@ void ControlMenu::errorSlave(int which)   {
   else
     msg += "> Failed to send ERROR command to slave's command datapoint.";
   ::upic_write_message(msg.c_str(),"");
+  ioc().send(this,CMD_UPDATE_SLAVE,this);
 }
 
 /// Send slave to state error via triggered timeout
@@ -556,6 +587,7 @@ void ControlMenu::timeoutSlave(int which)   {
   else
     msg += "> Failed to send TIMEOUT command to slave's command datapoint.";
   ::upic_write_message(msg.c_str(),"");
+  ioc().send(this,CMD_UPDATE_SLAVE,this);
 }
 
 /// Display callback handler

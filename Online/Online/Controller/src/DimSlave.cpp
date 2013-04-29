@@ -22,7 +22,7 @@ using namespace std;
 
 /// Class Constructor
 DimSlave::DimSlave(const Type* typ, const string& nam, Machine* machine) 
-  : Slave(typ,nam,machine), m_dimState(0,0), m_timerID(0,0), m_commandName()
+  : Slave(typ,nam,machine), m_dimState(0,0), m_timerID(0,0), m_commandName(), m_killCmd("unload")
 {
   m_commandName = nam;
   m_tmo = 3;
@@ -50,10 +50,10 @@ DimSlave& DimSlave::cloneEnv()  {
 /// Kill slave process
 FSM::ErrCond DimSlave::kill()  {
   stopTimer();
-  int ret = ::dic_cmnd_service((char*)m_commandName.c_str(),(char*)"unload",7);
-  display(ALWAYS,"%s::%s> %s command to slave. Curr State:%s",
+  int ret = ::dic_cmnd_service((char*)m_commandName.c_str(),(char*)m_killCmd.c_str(),m_killCmd.length()+1);
+  display(ALWAYS,"%s::%s> %s %s command to slave. Curr State:%s",
 	  RTL::processName().c_str(),c_name(),
-	  ret != 1 ? "FAILED to send UNLOAD" : "Sent unload",metaStateName());	  
+	  ret != 1 ? "FAILED to send" : "Sent",m_killCmd.c_str(),metaStateName());	  
   startTimer(SLAVE_UNLOAD_TIMEOUT);
   return FSM::WAIT_ACTION;
 }

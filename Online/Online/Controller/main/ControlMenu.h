@@ -107,11 +107,13 @@ namespace UPI {
     /// Send slave to state error via triggered timeout
     void timeoutSlave(int which);
 
+    /// Destroy the controller task
+    FSM::ErrCond destroy();
     /// Update function when FSM machine completes transitions
     FSM::ErrCond update();
     /// Display callback handler
     virtual void handle(const Event& ev);
-    /// Thread routine to execute slave task
+    /// Static routine to execute the I/O Thread
     static int   ctrl_thread_routine(void* arg);
     /// DimInfo overload to process slave states
     static void  slave_handler(void* tag, void* address, int* size);

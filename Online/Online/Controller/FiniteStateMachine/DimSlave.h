@@ -52,6 +52,8 @@ namespace FiniteStateMachine   {
     TimerID                   m_timerID;
     /// Name of the DIM command to receive the slave's state information
     std::string               m_commandName;
+    /// Name of the command to be sent as first action to shutdown slave
+    std::string               m_killCmd;
     /// String with start command
     std::string               m_cmd;
     /// Pointer array with process arguments (to be set by the sub-class)

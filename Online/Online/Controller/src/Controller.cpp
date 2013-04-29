@@ -43,8 +43,8 @@ Controller::~Controller() {
 FSM::ErrCond Controller::fail()  {
   const Transition* tr = m_machine->currTrans();
   // Nothing to do, since failure will be handled with IOC SLAVE_FAILED
-  display(ALWAYS,"Controller: %s> FAILED to invoke transition %s from %s",
-	  c_name(),tr ? tr->c_name() : "", m_machine->c_state());
+  display(ALWAYS,"Controller: %s> FAILED to invoke transition %s from %s Metastate:%s",
+	  c_name(),tr ? tr->c_name() : "", m_machine->c_state(), m_machine->currentMetaName());
   for(Machine::Slaves::const_iterator i=m_machine->slaves().begin(); i!= m_machine->slaves().end(); ++i)  {
     Slave* s = const_cast<Slave*>(*i);
     if ( s->currentState() == Slave::SLAVE_FAILED )
@@ -62,7 +62,7 @@ FSM::ErrCond Controller::publish()  {
   string state = m_machine->c_state();
   ErrCond ret = declareState(state);
   if ( m_queueExit && state == ST_NAME_OFFLINE )  {
-    IocSensor::instance().send(this,EXIT_PROCESS,this);
+    //IocSensor::instance().send(this,EXIT_PROCESS,this);
   }
   return ret;
 }
@@ -83,8 +83,11 @@ void Controller::handle(const Event& ev)    {
     case Slave::SLAVE_FAILED:
       break;
     case Slave::SLAVE_TRANSITION:  // Forwarded from Machine
-      if ( m_machine->state() != slave->state() ) 
+      if ( m_machine->state() != slave->state() )   {
+	display(ALWAYS,"Controller: %s> SLAVE_TRANSITION: Invoke transition from %s to %s",
+		c_name(),m_machine->c_state(),slave->c_state());
 	m_machine->invokeTransition(slave->c_state(),Rule::SLAVE2MASTER);
+      }
       break;
     case Machine::MACH_EXEC_ACT:  // Forwarded from Machine
       m_machine->invokeTransition((const State*)ev.data);
@@ -148,11 +151,6 @@ void Controller::commandHandler()   {
     setTargetState(NOT_READY);
     invokeTransition(cmd);
   }
-  else if ( cmd == "unload"   )  {
-    m_queueExit = true;
-    setTargetState(UNKNOWN);
-    invokeTransition(cmd);
-  }
   else if ( cmd == "pause"    )  {
     setTargetState(PAUSED);
     invokeTransition(cmd);
@@ -168,6 +166,18 @@ void Controller::commandHandler()   {
   else if ( cmd == "RESET" )  {
     setTargetState(OFFLINE);
     invokeTransition(cmd);
+  }
+  else if ( cmd == "unload"   )  {
+    m_queueExit = true;
+    setTargetState(OFFLINE);
+    invokeTransition(cmd);
+  }
+  else if ( cmd == "destroy"   )  {
+    m_queueExit = true;
+    setTargetState(UNKNOWN);
+    IocSensor::instance().send(this,EXIT_PROCESS,this);
+    declareState(ST_NAME_UNKNOWN);
+    return;
   }
   else   { // Will invoke transition to error!
     invokeTransition("UnknownTransition");
