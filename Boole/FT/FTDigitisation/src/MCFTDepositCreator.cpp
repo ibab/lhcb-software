@@ -167,19 +167,27 @@ StatusCode MCFTDepositCreator::initialize() {
     }
  
     
-
-    info() << format( "x=%7.0f\n", x);
+    if ( msgLevel( MSG::DEBUG) ) {
+      debug() << format( "x=%7.0f\n", x);
+    }
+        
     for ( int kk = 0; m_nYSteps > kk ; ++kk ) {
-      info() << format( "y=%7.0f [%6.3f] ", kk * m_yStepOfMap , m_transmissionMap[kx*m_nYSteps+kk]);
-       plot2D(kx * m_xStepOfMap,kk * m_yStepOfMap,"ReflectionAttenuationMap",
-               "Attenuation coefficient (direct+reflection) (Quarter 3); x [mm];y [mm]",
-               0., m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, 
-               m_nXSteps, m_nYSteps, m_transmissionMap[kx*m_nYSteps+kk]);
+      if ( msgLevel( MSG::DEBUG) ) {
+        debug() << format( "y=%7.0f [%6.3f] ", kk * m_yStepOfMap , m_transmissionMap[kx*m_nYSteps+kk]);
+      }
+        
+      plot2D(kx * m_xStepOfMap,kk * m_yStepOfMap,"ReflectionAttenuationMap",
+             "Attenuation coefficient (direct+reflection) (Quarter 3); x [mm];y [mm]",
+             0., m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, 
+             m_nXSteps, m_nYSteps, m_transmissionMap[kx*m_nYSteps+kk]);
       plot2D(kx * m_xStepOfMap , kk * m_yStepOfMap, 
              "FinalAttenuationMap","Attenuation coefficient as a function of the position (Quarter 3); x [mm];y [mm]",
              0., m_nXSteps*m_xStepOfMap, 0.,m_nYSteps*m_yStepOfMap, m_nXSteps, m_nYSteps, m_transmissionMap[kx*m_nYSteps+kk]);
     }
-    info() << endmsg;  
+    if ( msgLevel( MSG::DEBUG) ) {
+      debug() << endmsg;  
+    }
+            
   }
 
   return StatusCode::SUCCESS;

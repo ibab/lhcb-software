@@ -251,11 +251,13 @@ class Read:
             
 
             ClusChannelID         = tfile.Get('FTClusterCreator/ClusChannelID')
+            ClusSiPMID            = tfile.Get('FTClusterCreator/ClusSiPMID')
             ClusFraction          = tfile.Get('FTClusterCreator/ClusFraction')
             ClusSize              = tfile.Get('FTClusterCreator/ClusSize')
             ClusCharge            = tfile.Get('FTClusterCreator/ClusCharge')
             ClusChargeZoom        = tfile.Get('FTClusterCreator/ClusChargeZOOM')
             ClusChargeVsSize      = tfile.Get('FTClusterCreator/ClusChargevsSize') #2D
+            ClusterPerSiPM        = tfile.Get('FTClusterCreator/ClusterPerSiPM')
             KeptHitEntryPosition  = tfile.Get('FTClusterCreator/KeptHitEntryPosition') #2D
             KeptHitEnergy         = tfile.Get('FTClusterCreator/KeptHitEnergy')
             KeptHitPDGId          = tfile.Get('FTClusterCreator/KeptHitPDGId')
@@ -270,7 +272,8 @@ class Read:
             ClusChargeVsSize.SetMarkerColor(kBlue)
             ClusChargeVsSize.Draw("COLORZ")
             Clustercvs.SaveAs(OutFileMantisse+"_ClusChargeVsSize"+Extension)
-                
+
+            ClusterSize64 = files[:files.find('-histos')]
             for i in range(2):
                 if i==1:
                     Clustercvs.SetLogy()
@@ -280,6 +283,11 @@ class Read:
                 ClusChannelID.SetMarkerColor(kBlue)
                 ClusChannelID.Draw("P")
                 Clustercvs.SaveAs(OutFileMantisse+"_ClusChannelID"+Extension)
+
+                ClusSiPMID.SetMarkerStyle(8)
+                ClusSiPMID.SetMarkerColor(kBlue)
+                ClusSiPMID.Draw("P")
+                Clustercvs.SaveAs(OutFileMantisse+"_ClusSiPMID"+Extension)
             
                 ClusFraction.SetMarkerStyle(8)
                 ClusFraction.SetMarkerColor(kBlue)
@@ -300,10 +308,15 @@ class Read:
                 ClusChargeZoom.SetMarkerColor(kBlue)
                 ClusChargeZoom.Draw("P")
                 Clustercvs.SaveAs(OutFileMantisse+"_ClusChargeZoom"+Extension)
-                
+
+                ClusterPerSiPM.SetMarkerStyle(8)
+                ClusterPerSiPM.SetMarkerColor(kBlue)
+                ClusterPerSiPM.Draw("P")
+                Clustercvs.SaveAs(OutFileMantisse+"_ClusterPerSiPM"+Extension)
         
 def main():
     t = Read()
+    #t = Read(["Bs_mumu_v6_nu325_EC-histos.root","Bs_mumu_v6_nu65_EC-histos.root","MiniBias_v6_nu325_EC-histos.root","MiniBias_v6_nu65_EC-histos.root"])
     #t.DepositPlots()
     #t.DigitPlots()
     t.ClusterPlots()

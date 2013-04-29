@@ -4,6 +4,10 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2013-04-29 - Eric Cogneras
+ - Plot of the number of cluster per SiPM, needed by electronics
+ - Debugging information encapsulation
+
 ! 2013-04-10 - Eric Cogneras
  - cluster monitoring
  - Change of DDDB version numbering from O. Gruenberg propagated to joboption

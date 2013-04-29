@@ -1,6 +1,8 @@
 // $Id$
 // Include files
 //#include <iterator>
+#include <sstream>
+
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
@@ -69,6 +71,7 @@ StatusCode FTClusterCreator::initialize() {
   
   m_nberOfLostHitFromMap = 0;
   m_nberOfKeptHitFromMap = 0;
+  m_evtNbCluster64 = 0;
 
   return StatusCode::SUCCESS;
 }
@@ -80,7 +83,8 @@ StatusCode FTClusterCreator::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-
+ 
+  
   // retrieve FTDigits
   const MCFTDigits* mcDigitsCont = get<MCFTDigits>(m_inputLocation);
   debug() <<"mcDigitsCont->size() : " << mcDigitsCont->size()<< endmsg;
@@ -123,10 +127,12 @@ StatusCode FTClusterCreator::execute() {
   // Since Digit Container is sorted wrt channelID, clusters are defined searching for bumps of ADC Count
   MCFTDigits::const_iterator seedDigitIter = mcDigitsCont->begin();
 
+  int ClusterPerSiPMCounter = 0;
+  unsigned int ReferenceSiPMID = 0;
+  unsigned int LastSiPMID = 0;
+  
   while(seedDigitIter != mcDigitsCont->end()){ // loop over digits
     MCFTDigit* seedDigit = *seedDigitIter;
-
-  
 
     if(seedDigit->adcCount() > m_adcThreshold){ // ADC count in  digit is over threshold : start cluster
       bool hasSeed = seedDigit->adcCount() > m_clusterMinADCPeak;
@@ -141,6 +147,9 @@ StatusCode FTClusterCreator::execute() {
       std::map< const LHCb::MCParticle*, double> mcContributionMap;
 
 
+
+ 
+
       if ( msgLevel( MSG::DEBUG) ) {
         debug() <<"++ Starts clustering with Channel "<<seedDigit->channelID()
                 <<" (ADC = "<<seedDigit->adcCount() <<" )"<< endmsg;
@@ -154,6 +163,7 @@ StatusCode FTClusterCreator::execute() {
       do{
         // Add digit to cluster
         MCFTDigit* lastDigit = *lastDigitIter;
+ 
         if ( msgLevel( MSG::DEBUG) ) {
           debug() <<"+Add to Cluster : "<<lastDigit->channelID()<<" (ADC = "<<lastDigit->adcCount() <<" )"<< endmsg;
         }
@@ -185,11 +195,11 @@ StatusCode FTClusterCreator::execute() {
       for(std::vector<int>::const_iterator i = clusterADCDistribution.begin();i != clusterADCDistribution.end(); ++i){
         totalCharge += *i;
         meanPosition += (i-clusterADCDistribution.begin()) * (*i);
-        if(msgLevel(MSG::DEBUG)){
-          debug() <<"- Distance="<< (i-clusterADCDistribution.begin())
-                  <<" adc="<<*i << " totalCharge=" << totalCharge
-                  << endmsg;
-        }
+        //if(msgLevel(MSG::DEBUG)){
+        //  debug() <<"- Distance="<< (i-clusterADCDistribution.begin())
+        //          <<" adc="<<*i << " totalCharge=" << totalCharge
+        //          << endmsg;
+        //}
       }
       meanPosition =(*seedDigitIter)->channelID() + meanPosition/totalCharge;
 
@@ -201,6 +211,32 @@ StatusCode FTClusterCreator::execute() {
       if( ( totalCharge > m_clusterMinCharge) &&
           hasSeed &&
           (clusterADCDistribution.size() > m_clusterMinWidth) ) {
+
+        if(ReferenceSiPMID == 0 ) ReferenceSiPMID = (*seedDigitIter)->channelID().sipmId();
+
+        LastSiPMID = (*seedDigitIter)->channelID().sipmId();
+
+        // Check number of cluster per SiPM
+        if ( msgLevel( MSG::DEBUG) ) {
+          debug() << "ClusterPerSiPMCounter Checks : ReferenceSiPMID = " << ReferenceSiPMID
+                  << "  LastSiPMID = " <<LastSiPMID<< endmsg;
+        }
+
+        if (ReferenceSiPMID == LastSiPMID) ++ClusterPerSiPMCounter;
+        else {
+          plot(ClusterPerSiPMCounter, "ClusterPerSiPM", "Cluster per SiPM distribution; Nb of clusters" , 
+               0. , 50., 50);
+          if ( msgLevel( MSG::DEBUG) ) {
+            if(ClusterPerSiPMCounter == 0) debug() << "|||| Event with ClusterPerSiPMCounter == 0 : Event ="
+                                                   << endmsg;
+          }
+         
+          ReferenceSiPMID = LastSiPMID;
+          ClusterPerSiPMCounter = 1;
+        }
+        if ( msgLevel( MSG::DEBUG) ) {
+          debug() << "ClusterPerSiPMCounter = " << ClusterPerSiPMCounter<< endmsg;
+        }
         for(std::vector<const LHCb::MCHit*>::const_iterator hitIter = clusterHitDistribution.begin(); 
             hitIter != clusterHitDistribution.end(); ++hitIter){
           hitBoolMap[*hitIter]=true;     
@@ -214,16 +250,18 @@ StatusCode FTClusterCreator::execute() {
         FTCluster *newCluster = new FTCluster(meanChanPosition,fractionChanPosition,(lastDigitIter-seedDigitIter),totalCharge);
 
         // draw cluster channelID
+        plot(newCluster->channelID().sipmId(), "ClusSiPMID", "Cluster SiPMID; Cluster SiPMID" , 
+             0. , 10000. ,10000);
         plot(newCluster->channelID(), "ClusChannelID", "Cluster ChannelID; Cluster ChannelID" , 
              0. , 1000000. ,10000);
         // draw cluster fractional part
         plot(newCluster->fraction(), "ClusFraction", 
-             "Cluster Fractional part; Nber of events" , 0 , 1);
+             "Cluster Fraction Part Distribution;Cluster Fractional part; Nber of events" , 0 , 1);
         // draw cluster width
-        plot(newCluster->size(),"ClusSize","Cluster Size;Nber of events" , 0. , 50., 50);
+        plot(newCluster->size(),"ClusSize","Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
         // draw cluster total adc charge
-        plot(newCluster->charge(),"ClusCharge","Cluster Charge;Nber of events" , 0 , 100);
-        plot(newCluster->charge(),"ClusChargeZOOM","Cluster Charge;Nber of events" , 
+        plot(newCluster->charge(),"ClusCharge","Cluster Charge Distribution;Cluster Charge;Nber of events" , 0 , 100);
+        plot(newCluster->charge(),"ClusChargeZOOM","Cluster Charge Distribution;Cluster Charge;Nber of events" , 
              0. , 50., 50);
         plot2D(newCluster->size(), newCluster->charge(), "ClusChargevsSize",
                "Cluster charge vs. size;Cluster size [Nb of Channels];Cluster Charge [ADC counts]",
@@ -235,18 +273,38 @@ StatusCode FTClusterCreator::execute() {
         ++m_nCluster;
         m_sumCharge += totalCharge;
 
+        if ( msgLevel( MSG::DEBUG) ) {
+          if (newCluster->size() ==64 ){
+            debug() << "|||| Event with newCluster->size() ==64 : Event ="
+                                                << endmsg;
+            std::stringstream plotName;
+            plotName << "Cluster64_" << m_evtNbCluster64;//(*seedDigitIter)->channelID();
+            m_evtNbCluster64++;
+            int sipmChannel = 0;
+            
+             for(std::vector<int>::const_iterator i = clusterADCDistribution.begin();i != clusterADCDistribution.end(); ++i){
+               plot(sipmChannel,plotName.str().c_str(),"Cluster with size = 64;Cluster channels;ADC Count" , 0. , 70., 70, *i);
+               sipmChannel++;
+               
+             }
+             
+          }
+          
+        }
+         
+
         clusterCont->insert(newCluster);
 
 
         // Define second member of mcContributionMap as the fraction of energy corresponding to each involved MCParticle
         for(std::map<const LHCb::MCParticle*,double>::iterator i = mcContributionMap.begin(); i != mcContributionMap.end(); ++i){
           mcToClusterLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
-          if ( msgLevel( MSG::DEBUG) ) {
-            debug() << "Linked ClusterChannel=" << newCluster->channelID()
-                    << " to MCIndex="<<i->first->index()
-                    << " with EnergyFraction=" << (i->second)/totalEnergyFromMC
-                    << endmsg;
-          }
+//           if ( msgLevel( MSG::DEBUG) ) {
+//             debug() << "Linked ClusterChannel=" << newCluster->channelID()
+//                     << " to MCIndex="<<i->first->index()
+//                     << " with EnergyFraction=" << (i->second)/totalEnergyFromMC
+//                     << endmsg;
+//           }
         }
 
         // DEBUG
@@ -261,9 +319,10 @@ StatusCode FTClusterCreator::execute() {
                   << " Fraction = " <<newCluster->fraction()
                   << endmsg;
         }
+
       }
       seedDigitIter = (lastDigitIter-1);
-    }
+    } // END if(seedDigit->adcCount() > m_adcThreshold)
     ++seedDigitIter;
   }
 

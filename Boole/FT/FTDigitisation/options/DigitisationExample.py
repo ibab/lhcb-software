@@ -50,9 +50,11 @@ myAlgDigit = MCFTDigitCreator()
 
 myAlgCluster = FTClusterCreator()
 #myAlgCluster.OutputLevel = DEBUG
-myAlgCluster.ClusterMaxWidth = 1000
-myAlgCluster.ClusterMinCharge = 1
-myAlgCluster.ClusterMinADCPeak = 1
+myAlgCluster.ADCThreshold = 1
+myAlgCluster.ClusterMaxWidth = 8
+myAlgCluster.ClusterMinWidth = 1
+myAlgCluster.ClusterMinCharge = 8
+myAlgCluster.ClusterMinADCPeak = 5
 
 
 #myAlgEncoder = FTRawBankEncoder()
@@ -75,7 +77,7 @@ GaudiSequencer("DigiFTSeq").Members = [myAlgDeposit,
 #OutputStream("DigiWriter").ItemList = ["/Event/Gen/Header#1", "/Event/MC/Header#1", "/Event/MC/DigiHeader#1", "/Event/DAQ/RawEvent#1", "/Event/pSim/MCVertices#1", "/Event/pSim/MCParticles#1", "/Event/Link/Raw/Velo/Clusters#1", "/Event/Link/Raw/TT/Clusters#1", "/Event/Link/Raw/FT/Clusters#1", "/Event/MC/TrackInfo#1" ]
 
 
-#Boole().EvtMax = 1
+#Boole().EvtMax = 100
 
 
 

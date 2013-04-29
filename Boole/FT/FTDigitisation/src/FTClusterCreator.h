@@ -51,6 +51,8 @@ private:
 
   int     m_nberOfLostHitFromMap;
   int     m_nberOfKeptHitFromMap;
+  int     m_evtNbCluster64;
+  
 };
 #endif // FTCLUSTERCREATOR_H
 
