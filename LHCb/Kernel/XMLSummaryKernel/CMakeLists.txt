@@ -1,7 +1,7 @@
 ################################################################################
 # Package: XMLSummaryKernel
 ################################################################################
-gaudi_subdir(XMLSummaryKernel v1r9)
+gaudi_subdir(XMLSummaryKernel v1r10)
 
 gaudi_depends_on_subdirs(GaudiConf
                          GaudiKernel
