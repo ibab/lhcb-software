@@ -106,7 +106,7 @@ use L0MuonKernel          v9r10   L0      # Julien Cogan
 use ProcessorKernel       v7r1    L0      # Julien Cogan
 
 use MuonDAQ               v4r17   Muon    # Alessia Satta
-use MuonInterfaces        v1r3    Muon    # Alessia Satta
+use MuonInterfaces        v1r4    Muon    # Alessia Satta
 use MuonKernel            v4r1    Muon    # Andrei Tsaregorodtsev
 
 #use RootCnv               v1r18   Online  # (also in GAUDI and ONLINE projects)
