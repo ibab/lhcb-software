@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+!========================= DetDesc v18r32 2013-04-29 =========================
 ! 2013-04-02 - Marco Cattaneo
  - Fix trivial coverity UNREACHABLE defect
 
