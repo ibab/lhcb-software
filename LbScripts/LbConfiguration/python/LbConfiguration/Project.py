@@ -535,7 +535,7 @@ LbScripts.disableHasBinary()#IGNORE:E0602
 
 # LHCb
 LHCb.setApplicationPackage("Ex")#IGNORE:E0602
-LHCb.setFullSize(15000000)#IGNORE:E0602
+LHCb.setFullSize(20000000)#IGNORE:E0602
 LHCb.setBaseName("GAUDI")#IGNORE:E0602
 
 

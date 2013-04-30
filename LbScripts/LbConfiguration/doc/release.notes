@@ -1,3 +1,7 @@
+2013-04-30 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Project.py: Set LHCb AFS volume size to 20G
+
 2013-04-23 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r7p1
