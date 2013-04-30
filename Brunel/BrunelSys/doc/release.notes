@@ -3,6 +3,90 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v44r4>2013-05-02 Brunel v44r4</A></H1><PRE>
+This version uses projects LCG 64d, Gaudi v23r7, LHCb v35r6, Lbcom v13r6p1,
+ Rec v14r6 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Development release for Upgrade productions
+
+- Changes to supported platforms
+  . Now supports build with CMake, gcc47, clang32
+    (Rec v14r6, Lbcom v13r6, LHCb v35r6)
+
+- Configuration changes
+  . Fixes to monitoring sequence to allow for missing detectors in Upgrade
+    configurations (RecConf v2r13, TrackMonitors v1r44)
+  . Removed dependency on ChargedProtoANNPIDParam (ChargedProtoANNPID v2r0)  
+  . Update the CMT and CMake configurations of ChargedProtoANNPID to only enable
+    Neurobayes on platforms that it supports. TMVA is now default for 2011 and
+    2012 data types (ChargedProtoANNPID v2r0) 
+  . Updated default database tags to the latest ones (DDDB v1r62):
+    o LHCBCOND, 2013, 2012, 2011: cond-20130404
+    o DDDB,     2013, 2012      : head-20130312-1
+    o DDDB,                 2011: head-20130312
+    o DQFLAGS   2013, 2012      : dq-20130418
+  . No longer set the -DRICHDEBUG flag in debug builds, as no longer used
+    (Rich/RichKernel v7r53)
+
+- New functionality
+  . Add support for reprocessing from split RawEvent (i.e. from DST) for upgrade
+    configurations (FTDAQ v1r3, VLDAQ v1r4, VPDAQ v2r2) (Also in Brunel v44r3p1)
+  . Add support for compressed CondDB
+    (DetCond v12r30, CondDBUI v3r22, CondDBEntityResolver v5r5)
+
+- New tuning
+  . Added check for backward velo tracks in Upgrade forward tracking
+    (PrAlgorithms v1r4)
+  . Put back check for VL overlap tracks (PrVL v1r2)
+  . Modifications for VL compact design (PrVL v1r1) (Also in Brunel v44r3p1)
+  . Replace UpgradeBestTrackCreator by TrackBestTrackCreator in upgrade 
+    configurations (TrackSys v7r11)
+  . Add new MC12TuneV2 network tuning (ChargedProtoANNPID v2r0):-
+    o Based on high statistics training using new MC12 inclusive B samples.
+    o Uses TMVA instead of Neurobayes as MVA technology.
+    o Gives slightly PID better performance.
+      + Much faster implementation due to use of compiled TMVA macros.
+  . Drop support for obsolete ANN PID tunings (parameters not imported).
+    Only MC12TuneV1 and MC12TuneV2 now supported. (ChargedProtoANNPID v2r0)
+
+- New optimisations
+  . Rework the code to compute the input variables to the ANN PID networks,
+    to remove the remaining CPU overheads. (ChargedProtoANNPID v2r0)
+  . Remove the use of a full track selector tool, as we are only using it to
+    select the correct track type. More efficient to just do it directly.
+   (ChargedProtoANNPID v2r0)
+  . Some minor CPU optimisations (/RichDet v16r17)
+
+- Bug fixes
+  . Fix for 2pi -> 0 transition in VL overlap region (PrVL v1r2)
+  . Remove spurious factor 2 in VPLite error (TrackFitEvent v5r22)
+  . Fix incorrect setting of STMeasurement type for UT (TrackFitEvent v5r22)
+  . Fixes in TrackMonitor and TrackVertexMonitor to make them work for upgrade
+    (TrackMonitors v1r44)
+  . TrackCloneData: bug fixes + adapted for upgrade (TrackKernel v1r13)
+
+- Monitoring changes
+  . Improved PV monitoring (TrackCheckers v4r16)
+  . Added code for track multiplicity information  (TrackCheckers v4r16)
+  . Added code to distinguish secondaries from primaries & from ghosts
+    (TrackCheckers v4r16)
+  . Improved and simplified variable binning for 2D histograms
+    (TrackMonitors v1r44)
+  . Added a few new histograms (tx, ty, mass vs. tx, mass vs. opening angle)
+    (TrackMonitors v1r44)
+
+- Changes to tests
+  . Update test files and references for latest fixes to upgrade geometries
+  . Pick up options files for input files from PRConfig package. This is
+    future proofing for changes to physical location of input data
+  . Add dependency on PARAM/QMTestFiles, which now contains the small input
+    data files used by 2011-crashes, 2012-crashes and bigevents test, previously
+    in /castor/cern.ch/user/c/cattanem.
+  . Remove enabling of ANN Neurobayes printout from tests using 2011 or 2012
+    data, since NeuroBayes is no longer run by default for these DataTypes
+
+- Changes to example options
+  . Remove options files that are duplicated in PRConfig package 
 
 </PRE><H1><A NAME=v44r3>2013-03-26 Brunel v44r3</A></H1><PRE>
 This version uses projects LCG 64d, Gaudi v23r7, LHCb v35r5, Lbcom v13r5,
