@@ -1160,12 +1160,22 @@ void ZooWriter::writeEvent()
       zooev()->m_nTracksDownstream = recsum->info(LHCb::RecSummary::nDownstreamTracks,-999);
       zooev()->m_nTracksT = recsum->info(LHCb::RecSummary::nTTracks,-999);
       zooev()->m_nTracksVeloBackward = recsum->info(LHCb::RecSummary::nBackTracks,-999);
+
+      zooev()->m_veloMult = recsum->info(LHCb::RecSummary::nVeloClusters,-999);
+      zooev()->m_ttMult = recsum->info(LHCb::RecSummary::nTTClusters,-999);
+      zooev()->m_itMult = recsum->info(LHCb::RecSummary::nITClusters,-999);
+      zooev()->m_otMult = recsum->info(LHCb::RecSummary::nOTClusters,-999);
     } else if (exist<LHCb::Tracks>(LHCb::TrackLocation::Default)) {
     #else
       if (exist<LHCb::Tracks>(LHCb::TrackLocation::Default)) {
     #endif
       LHCb::Tracks* alltracks;
       alltracks = get<LHCb::Tracks>(LHCb::TrackLocation::Default);
+
+    zooev()->m_veloMult = -999;
+    zooev()->m_ttMult = -999;
+    zooev()->m_itMult = -999;
+    zooev()->m_otMult = -999;
     
     zooev()->m_trackmult = alltracks->size();
     BOOST_FOREACH(const LHCb::Track* ptr, *alltracks) {
@@ -1197,8 +1207,13 @@ void ZooWriter::writeEvent()
 
     if (m_writeMC) {
 	zooev()->m_nbMCPVs = m_visPrimVertTool->countVertices();
+	LHCb::GenCollisions* CollVect = getIfExists<LHCb::GenCollisions>(
+		LHCb::GenCollisionLocation::Default);
+	if(CollVect!=NULL) zooev()->m_nInteractions = CollVect->size();
+	else zooev()->m_nInteractions = -1;
     } else {
 	zooev()->m_nbMCPVs = -1;
+        zooev()->m_nInteractions = -1;
     }
 
     // set links to particle and mc particle containers in the event

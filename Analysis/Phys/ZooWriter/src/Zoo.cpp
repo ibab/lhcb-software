@@ -64,7 +64,7 @@ const ZooHitPattern& ZooHitPattern::operator ^= (const ZooHitPattern& other)
 void ZooEv::Clear()
 {
     m_particles = 0; m_mcParticles = 0; m_trackmult = 0; m_nbMCPVs = 0;
-    m_L0Dec = 0;
+    m_nInteractions = 0; m_L0Dec = 0;
     std::fill(m_triggerDecisions,
 	    m_triggerDecisions + TriggerDecisions::NTriggerDecisionWords,
 	    0);
@@ -82,6 +82,7 @@ void ZooEv::Clear()
     m_nTracksVelo = 0; m_nTracksVeloBackward = 0; m_nTracksLong = 0;
     m_nTracksUpstream = 0; m_nTracksDownstream = 0; m_nTracksT = 0;
     m_spdMult = 0; m_prsMult = 0; m_ecalMult = 0; m_hcalMult = 0;
+    m_veloMult = 0; m_ttMult = 0; m_itMult = 0; m_otMult = 0;
     m_mcGenEventInfo = 0;
     m_nMCPartInAcceptance = 0;
 }

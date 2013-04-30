@@ -4,6 +4,11 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+!  2013-04-30 - Marco Meissner
+ - added sub-detector occupancies (VELO, TT, IT, OT) to ZooEv
+ - added "nInteractions" to ZooEv; contains number of primary interactions 
+   from generator level. !=nPVs
+
 ! 2013-04-15 - Paul Seyfert
  - small fixes to Rules.mk by M. Schiller (copy&paste from
    PhysFit/B2DXFitters) for Mac OS X compatibility

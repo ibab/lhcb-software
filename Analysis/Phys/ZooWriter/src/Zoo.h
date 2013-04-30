@@ -1085,6 +1085,7 @@ class ZooEv : public TObject
 
 	Short_t m_trackmult; 
 	Short_t m_nbMCPVs;
+        Short_t m_nInteractions;
 
 	UInt_t m_L0Dec;
 	UInt_t m_triggerDecisions[TriggerDecisions::NTriggerDecisionWords];
@@ -1125,6 +1126,11 @@ class ZooEv : public TObject
 	Short_t m_prsMult;
 	Short_t m_ecalMult;
 	Short_t m_hcalMult;
+
+	Short_t m_veloMult;
+	Short_t m_ttMult;
+        Short_t m_itMult;
+        Short_t m_otMult;
 
 	TRef m_mcGenEventInfo;
 
@@ -1176,6 +1182,8 @@ class ZooEv : public TObject
 	int trackmult() const { return m_trackmult; }
 	///returns the number of MC PV's
        	int nbMCPVs()   const { return m_nbMCPVs; }
+        ///return number of MC Interactions
+        int nInteractions() const { return m_nInteractions; }
 	///returns the L0Decision of the event
 	int L0Dec()             const { return m_L0Dec;}
 	///returns an array of reconstructed PV's in the event
@@ -1239,6 +1247,11 @@ class ZooEv : public TObject
 	int nECALMult() const { return m_ecalMult; }
 	int nHCALMult() const { return m_hcalMult; }
 
+        int nVELOMult() const { return m_veloMult; }
+        int nTTMult() const { return m_ttMult; }
+        int nITMult() const { return m_itMult; }
+        int nOTMult() const { return m_otMult; }
+
 	int polarity() const { return m_polarity; }
 
 	/// access per-job objects by their key
@@ -1247,7 +1260,7 @@ class ZooEv : public TObject
 	void setPerJobObjects(TMap* perJobObjMap)
 	{ m_perJobObjects = reinterpret_cast<TObject*>(perJobObjMap); }
 
-	ClassDef(ZooEv,10)
+	ClassDef(ZooEv,11)
 };
 
 
