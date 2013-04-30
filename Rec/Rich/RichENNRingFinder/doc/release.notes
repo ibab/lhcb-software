@@ -4,14 +4,15 @@
 ! Purpose     : Uses an elastic Neural Network to do ring finding without tracks
 !-------------------------------------------------------------------------------
 
+!========================= RichENNRingFinder v1r5p1 2013-04-30 =======================
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 
-!========================= RichENNRingFinder v1r5 2012-11-28 =========================
+!========================= RichENNRingFinder v1r5 2012-11-28 ========================
 ! 2012-11-23 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= RichENNRingFinder v1r4 2011-09-06 =========================
+!========================= RichENNRingFinder v1r4 2011-09-06 ========================
 ! 2011-09-02 - Chris Jones
  - Use stable_sort when sorting the pixels
 
