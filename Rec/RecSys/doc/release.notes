@@ -5,6 +5,112 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v14r6>2013-04-30 RecSys v14r6</A></H1><PRE>
+This version uses Gaudi v23r7 and LHCb v35r6
+
+- Packages modified: Hlt/HltMonitors v1r6p1, Muon/MuonID v9r5p1,
+    Muon/MuonPIDChecker v5r4p1, Muon/MuonTrackMonitor v2r7p1,
+    Pr/PrAlgorithms v1r4, Pr/PrVL v1r2, Rec/ChargedProtoANNPID v2r1,
+    Rec/GlobalReco v6r44p1, Rec/LumiAlgs v8r1p1, Rec/RecAlgs v2r14,
+    Rec/RecConf v2r13, Rec/RecoUpgrade v3r1p1, Rich/RichAlignment v1r8p1,
+    Rich/RichENNRingFinder v1r5p1, Rich/RichParticleSearch v1r11p1,
+    Rich/RichRecQC v2r61p1, Rich/RichRecSys v4r7p1, 
+    Rich/RichRecTemplateRings v1r7, Tf/PatAlgorithms v4r26p1, 
+    Tf/PatVeloTT v3r23p1, Tf/TfTools v1r18, Tf/TrackMatching v2r35p1,
+    Tf/TrackSys v7r11, Tf/TsaAlgorithms v3r27p1, Tr/PatPV v3r26p1,
+    Tr/TrackCheckers v4r16, Tr/TrackFitEvent v5r22, Tr/TrackFitter v4r10p1,
+    Tr/TrackMonitors v1r44, Tr/TrackTools v4r23, Tr/TrackUtils v1r52,
+    Velo/VeloRecMonitors v2r24 
+
+- In Pr/PrAlgorithms v1r4
+  . Added check for backward velo tracks in PrForwardTracking.
+
+- In PrVL v1r1, v1r2
+  . Fix for 2pi -> 0 transition in overlap region
+  . put back check for overlap tracks
+  . modifications for compact design 
+
+- In Rec/ChargedProtoANNPID v2r0, v2r1
+  . Update the CMT and CMake configurations to only enable Neurobayes on
+    platforms that it supports
+  . Small update to the python configurable for use in the 'on-demand'
+    recalibration of the ANNPID in DaVinci.
+  . Rework the code to compute the input variables to the ANN PID networks,
+    to remove the remaining CPU overheads.
+  . Remove the use of a full track selector tool, as we are only using it to
+    select the correct track type. More efficient to just do it directly.
+  . No longer print a warning if the ANNPID is being replaced for a given
+    ProtoParticle, as this is normal when applied as a recalibration.
+    Also, saves a little more CPU due to the string manipulations that
+    where required.
+  . Add new MC12TuneV2 network tuning :-
+    o Based on high statistics training using new MC12 inclusive B samples.
+    o Uses TMVA instead of Neurobayes as MVA technology.
+    o Gives slightly PID better performance.
+      + Much faster implementation due to use of compiled TMVA macros.
+  . Config files have now been imported from the Paramfiles package
+    ChargedProtoANNPIDParam directly into this package.
+  . Dropped support for obsolete tunings (parameters not imported).
+    Only MC12TuneV1 and MC12TuneV2 now supported.
+  . Add 'FromB' and 'FromD' flags to training tuple.
+  . Update ganga scripts to v6 series.
+
+- In Rec/RecConf v2r13
+  . Added checks if detector exists to monitoring sequence. 
+  . Removed obsolete upgrade stuff in RecSysConf.
+
+- In Tf/TrackSys v7r11
+  . Replaced UpgradeBestTrackCreator by TrackBestTrackCreator in 
+    RecoUpgradeTracking.py
+
+- In Tr/TrackCheckers v4r16
+  . removed some unused constants
+  . improved PV monitoring
+  . Added a couple of histograms
+  . Added code for track multiplicity information
+  . Added features to the IP tool
+  . Added code to distinguish secondaries from primaries & from ghosts
+
+- In Tr/TrackFitEvent v5r22
+  . Removed spurious factor 2 in VPLite error
+  . Added new measurement class OriginConstraint
+    o Introduces dependency on Tr/TrackKernel
+  . Fixed small bug in STMeasurement: measurement type set incorrectly for UT.
+
+- In Tr/TrackMonitors v1r44
+  . Added protections to ConfiguredTrackMonitors in case detector does not exist.
+  . Improved and simplified variable binning for 2D histograms
+  . Added a few new histograms (tx, ty, mass vs. tx, mass vs. opening angle)
+  . Fix narrowing warning in PVSplit
+  . Fixes in TrackMonitor and TrackVertexMonitor to make them work for upgrade
+
+- In Tr/TrackTools v4r23
+  . Adaptations of VeloExpectation and TrackNNGhostId in preparation for change
+    of HitPattern
+
+- In Tr/TrackUtils v1r52
+  . Change TrackBestTrackCreator to use TrackKernel/TrackCloneData
+  . Prepare TrackComputeExpectedHits for change in HitPattern
+
+- In Rec/RecAlgs v2r14, Tf/TfTools v1r18
+  . Fix gcc 4.7 compilation
+
+- In Rich/RichRecTemplateRings v1r7, Velo/VeloRecMonitors v2r24
+  . Fix clang32 compilation
+
+- In Hlt/HltMonitors v1r6p1, Muon/MuonID v9r5p1, Muon/MuonPIDChecker v5r4p1,
+     Muon/MuonTrackMonitor v2r7p1, Rec/ChargedProtoANNPID v2r0, 
+     Rec/GlobalReco v6r44p1, Rec/LumiAlgs v8r1p1, Rec/RecConf v2r13,
+     Rec/RecoUpgrade v3r1p1, Rich/RichAlignment v1r8p1,
+     Rich/RichENNRingFinder v1r5p1, Rich/RichParticleSearch v1r11p1,
+     Rich/RichRecQC v2r61p1, Rich/RichRecSys v4r7p1,
+     Rich/RichRecTemplateRings v1r7, Tf/PatAlgorithms v4r26p1, 
+     Tf/PatVeloTT v3r23p1, Tf/TrackMatching v2r35p1, Tf/TrackSys v7r11,
+     Tf/TsaAlgorithms v3r27p1, Tr/PatPV v3r26p1, Tr/TrackFitter v4r10p1,
+     Tr/TrackMonitors v1r44, Velo/VeloRecMonitors v2r24 
+  . Add __init__.py to please CMake
+
+
 </PRE><H1><A NAME=v14r5>2013-03-25 RecSys v14r5</A></H1><PRE>
 This version uses Gaudi v23r7 and LHCb v35r5
 
