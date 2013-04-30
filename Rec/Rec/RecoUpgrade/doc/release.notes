@@ -4,6 +4,7 @@
 ! Purpose     : Package for the reconstruction in upgraded detector classes
 !-----------------------------------------------------------------------------
 
+!========================= RecoUpgrade v3r1p1 2013-04-30 =========================
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 
