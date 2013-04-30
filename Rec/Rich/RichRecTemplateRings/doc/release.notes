@@ -4,13 +4,14 @@
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !-----------------------------------------------------------------------------
 
+!========================= RichRecTemplateRings v1r7 2013-04-30 ======================
 ! 2013-04-22 - Chris Jones
  - Fic clang32 compilation
 
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 
-!========================= RichRecTemplateRings v1r6 2012-11-28 =========================
+!========================= RichRecTemplateRings v1r6 2012-11-28 ======================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
  - Modified requirements to simplify auto conversion to CMake.
