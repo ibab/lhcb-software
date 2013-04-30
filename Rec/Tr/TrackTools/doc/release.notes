@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tr/TrackTools
-! Responsible : Jose Hernando, Eduardo Rodrigues
+! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!========================= TrackTools v4r23 2013-04-30 =========================
 ! 2013-03-24 - Wouter Hulsbergen
  - Adaptations of VeloExpectation and TrackNNGhostId in preparation for change of HitPattern
 
