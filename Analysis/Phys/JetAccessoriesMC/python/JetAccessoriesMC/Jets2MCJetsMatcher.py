@@ -13,7 +13,7 @@ class Jets2MCJetsConf:
                  MCJets2JetsTable = "Relations/Phys/StdMCJets2StdJets",
                  Jets2MCJetsTable = "Relations/Phys/StdJets2StdMCJets",
                  MinRForP2MC = 0.05,
-                 PartTypes = ['pi+','K+','p+','mu+','e+','gamma','pi0','KS0','KL0','n0'],
+                 PartTypes = ['pi+','K+','p+','mu+','e+','gamma','pi0','KS0','KL0','n0','f_0(980)','f_0(1370)'],
                  R = 0.5 ,
                  PtMin = 5000.,
                  MotherCut = "GNONE" ,

@@ -372,7 +372,7 @@ StatusCode LoKi::MCJetMaker::analyse   ()
   // PID and stable particles cut
   LoKi::Types::GCut cut = GVALID ;
   for ( std::vector< std::string >::iterator pid = m_inputTypes.begin() ; m_inputTypes.end() != pid ; ++ pid ){
-    if( pid == m_inputTypes.begin()) cut =  ( (*pid) == LoKi::Cuts::GABSID );
+    if( pid == m_inputTypes.begin() ) cut =  ( (*pid) == LoKi::Cuts::GABSID );
     else cut =  ( cut || ( (*pid) == LoKi::Cuts::GABSID ) );
   }
   if ( m_simpleAcceptance ) cut = cut && ( LoKi::Cuts::GTHETA < 0.4 );
@@ -417,14 +417,14 @@ StatusCode LoKi::MCJetMaker::analyse   ()
       pid.setPid(GID(*p));
       newPart->setParticleID(pid);
       if ((*p)->production_vertex ()){
-	Gaudi::XYZPoint p_vertexPosition ((*p)->production_vertex ()->point3d().x(),(*p)->production_vertex ()->point3d().y(),(*p)->production_vertex ()->point3d().z());
-	newPart->setReferencePoint (p_vertexPosition);
+        Gaudi::XYZPoint p_vertexPosition ((*p)->production_vertex ()->point3d().x(),(*p)->production_vertex ()->point3d().y(),(*p)->production_vertex ()->point3d().z());
+        newPart->setReferencePoint (p_vertexPosition);
       }
       if((*p)->end_vertex ()){
-	Gaudi::XYZPoint e_vertexPosition ((*p)->end_vertex ()->point3d().x(),(*p)->end_vertex ()->point3d().y(),(*p)->end_vertex ()->point3d().z());
-	LHCb::Vertex  vJet;
-	vJet.setPosition( e_vertexPosition );
-	newPart->setEndVertex(vJet.clone());
+        Gaudi::XYZPoint e_vertexPosition ((*p)->end_vertex ()->point3d().x(),(*p)->end_vertex ()->point3d().y(),(*p)->end_vertex ()->point3d().z());
+        LHCb::Vertex  vJet;
+        vJet.setPosition( e_vertexPosition );
+        newPart->setEndVertex(vJet.clone());
       }
       newPart->addInfo ( ProcessID , processID );
       newPart->addInfo ( GBarCode , GBAR(*p) );
@@ -452,20 +452,20 @@ StatusCode LoKi::MCJetMaker::analyse   ()
       newPart->addInfo ( FromMother , isFromMother(*p) );
       newPart->addInfo ( GBarCode , GBAR(*p) );
       if ( !m_outputTable.empty() ){
-	LHCb::HepMC2MC2D::Range range = tableHepMC2MC->relations(*p);
-	if (range.size()>0){
-	  LHCb::MCParticle*  mcp = range[0];
-	  mapBarCode2MCPs[int(GBAR(*p))]=  mcp ;
-	}
+        LHCb::HepMC2MC2D::Range range = tableHepMC2MC->relations(*p);
+        if (range.size()>0){
+          LHCb::MCParticle*  mcp = range[0];
+          mapBarCode2MCPs[int(GBAR(*p))]=  mcp ;
+        }
       }
       int motherBarCode(-1),motherID(0);
       for(std::vector< const HepMC::GenParticle* >::const_iterator imother = mothers.begin();
-	  mothers.end()!=imother ; ++ imother){
-	GCut isFromthisMother = GFROMTREE(*imother);
-	if (isFromthisMother(*p)){
-	  motherBarCode = GBAR(*imother);
-	  motherID = GID(*imother);
-	}
+          mothers.end()!=imother ; ++ imother){
+        GCut isFromthisMother = GFROMTREE(*imother);
+        if (isFromthisMother(*p)){
+          motherBarCode = GBAR(*imother);
+          motherID = GID(*imother);
+        }
       }
       newPart->addInfo ( GMotherBarCode , motherBarCode  );
       newPart->addInfo ( MotherID , motherID );

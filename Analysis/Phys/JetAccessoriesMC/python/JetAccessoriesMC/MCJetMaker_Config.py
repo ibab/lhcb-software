@@ -7,7 +7,7 @@ from Configurables import ( GaudiSequencer, LoKi__MCJetMaker, LoKi__FastJetMaker
 
 class MCJetMakerConf:
 
-    def __init__(self, _name, PartTypes = ['pi+','K+','p+','mu+','e+','gamma','pi0','KS0','KL0','n0'],
+    def __init__(self, _name, PartTypes = ['pi+','K+','p+','mu+','e+','gamma','pi0','KS0','KL0','n0','f_0(980)','f_0(1370)'],
                  R = 0.5 ,
                  PtMin = 5000.,
                  MotherCut = "GNONE" ,

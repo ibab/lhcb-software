@@ -100,6 +100,7 @@ StatusCode MCJets2JetsAlg::initialize   ()
   if ( sc.isFailure() ) return sc;
   if( m_jetALocation.empty() || m_jetBLocation.empty() )return Error("No input locations is specified") ;
   if( m_jetMatcherName.empty() || m_jetBLocation.empty() )return Error("No jet matching tool specified") ;
+  info()<<"Matching "<<m_jetALocation<<" with "<<m_jetBLocation<<endreq;
   if (m_output.empty())return Error ( "No OutputTable is specified" ) ;
   if (m_output2.empty())return Error ( "No OutputInverseTable is specified" ) ;
   return sc;
@@ -110,6 +111,7 @@ StatusCode MCJets2JetsAlg::execute   ()
   // Get the jets
   const LHCb::Particles* PartsA    = get<LHCb::Particles>(m_jetALocation);
   const LHCb::Particles* PartsB    = get<LHCb::Particles>(m_jetBLocation);
+  
   if ( PartsA->empty() || PartsB->empty() ){
     Warning("No jets to match in the event") ;
     setFilterPassed ( false ); 
