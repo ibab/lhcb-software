@@ -4,6 +4,7 @@
 ! Purpose     : Algorithms for VL Digitization
 !-----------------------------------------------------------------------------
 
+!========================= VLDigitisation v1r5 2013-04-30 =========================
 ! 2013-04-08 - Heinrich Schindler
  - added possibility to model radiation damage 
 
