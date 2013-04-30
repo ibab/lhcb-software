@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GlobalReco
 ################################################################################
-gaudi_subdir(GlobalReco v6r44)
+gaudi_subdir(GlobalReco v6r44p1)
 
 gaudi_depends_on_subdirs(Calo/CaloInterfaces
                          Calo/CaloUtils
