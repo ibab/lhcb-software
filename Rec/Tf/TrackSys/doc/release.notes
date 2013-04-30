@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tf/TrackSys
-! Responsible : Eduardo Rodrigues
+! Responsible : 
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!========================= TrackSys v7r11 2013-04-30 =========================
 ! 2013-04-29 - Thomas Nikodem
  - Replaced UpgradeBestTrackCreator by TrackBestTrackCreator in RecoUpgradeTracking.py
 
