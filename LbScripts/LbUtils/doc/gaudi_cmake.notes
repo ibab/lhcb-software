@@ -1,3 +1,18 @@
+! 2013-04-25 - Marco Clemencic (ba879be)
+
+ - fixes for the use of C++11 standard
+
+   Enabled by default for every gcc >= 4.7 and use the option c++0x for gcc 4.6
+   if required.
+
+! 2013-04-25 - Marco Clemencic (fbbfa90)
+
+ - ensure that genreflex is called in the right build-time environment
+
+   If the environment is not the right one for the compiler requested, 
+   genreflex may fail trying to detect the compiler, because it ignores the 
+   gccxml options like '--gccxml-compiler'.
+
 ! 2013-04-22 - Marco Clemencic (31f5179)
 
  - restored special ROOT sections of heptools-common for backward compat.
