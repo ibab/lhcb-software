@@ -3,6 +3,13 @@
 ! Purpose     : Track reconstruction for VL
 !-----------------------------------------------------------------------------
 
+!========================= PrVL v1r2 2013-04-30 =========================
+! 2013-04-26 - Heinrich Schindler
+ - Fix for 2pi -> 0 transition in overlap region
+
+! 2013-04-24 - Heinrich Schindler
+ - put back check for overlap tracks
+
 !========================= PrVL v1r1 2013-04-22 =========================
 ! 2013-04-2 - Heinrich Schindler
  - modifications for compact design 
