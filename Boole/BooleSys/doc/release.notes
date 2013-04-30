@@ -3,6 +3,26 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v26r5>2013-05-02 Boole v26r5</A></H1><PRE>
+This version uses projects LCGCMT 64d, Gaudi v23r7, LHCb v35r6, Lbcom v13r6p1
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Changes to supported platforms
+   . Now supports build with CMake, gcc47, clang32
+     (MuonBackground v2r13, Lbcom v13r6, LHCb v35r6)
+
+ - Functionality changes
+   . Added possibility to model radiation damage (VLDigitisation v1r5)
+   . Add support for compressed CondDB
+     (DetCond v12r30, CondDBUI v3r22, CondDBEntityResolver v5r5)
+
+ - Changes to monitoring
+   . Modifications to FT monitoring (FTDigitisation v1r5)
+
+ - Changes to tests
+   . Added tests/options/db-latest-upgrade.py
+   . Update input files and references to follow changes to VP, VL geometry
+
 </PRE><H1><A NAME=v26r4>2013-03-26 Boole v26r4</A></H1><PRE>
 This version uses projects LCGCMT 64d, Gaudi v23r7, LHCb v35r5, Lbcom v13r5
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
