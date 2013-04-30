@@ -89,9 +89,7 @@
         type="double"
       >
 	<code>
-	  if ( '2' == version() )  
-	    return beamParameters()->luminosity();
-	  return m_luminosity ;
+         return ( '2' == version() ? beamParameters()->luminosity() : m_luminosity );
         </code>
       </method>
       <method
@@ -101,9 +99,7 @@
         type="double"
       >
         <code>
-	 if ( '2' == version() )
-           return beamParameters()->totalXSec();
-	  return m_totCrossSection ;
+         return ( '2' == version() ? beamParameters()->totalXSec() : m_totCrossSection );
         </code>
       </method>
       <method
@@ -113,9 +109,7 @@
         type="double"
       >
         <code>
-	  if ( '2' == version() )
-	    return beamParameters()->revolutionFrequency();
-	  return m_crossingFreq ;
+         return ( '2' == version() ? beamParameters()->revolutionFrequency() : m_crossingFreq );
         </code>
       </method>
      </class>

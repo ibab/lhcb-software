@@ -3,6 +3,10 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+! 2013-04-30 - Chris Jones
+ - Avoid multiple return statements in inline methods, as this effectively
+   garantees the compiler will not inline the code.
+
 !========================= GenEvent v6r6 2013-04-29 =========================
 ! 2013-04-02 - Marco Cattaneo
  - Fix UNINIT_CTOR defect
