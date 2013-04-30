@@ -1205,16 +1205,19 @@ void ZooWriter::writeEvent()
     }
     
 
-    if (m_writeMC) {
-	zooev()->m_nbMCPVs = m_visPrimVertTool->countVertices();
-	LHCb::GenCollisions* CollVect = getIfExists<LHCb::GenCollisions>(
-		LHCb::GenCollisionLocation::Default);
-	if(CollVect!=NULL) zooev()->m_nInteractions = CollVect->size();
-	else zooev()->m_nInteractions = -1;
-    } else {
-	zooev()->m_nbMCPVs = -1;
+      if (m_writeMC) {
+        zooev()->m_nbMCPVs = m_visPrimVertTool->countVertices();
+        LHCb::GenCollisions* CollVect = getIfExists<LHCb::GenCollisions>(
+            LHCb::GenCollisionLocation::Default);
+        if (CollVect!=NULL) {
+          zooev()->m_nInteractions = CollVect->size();
+        } else { // if (CollVect!=NULL)
+          zooev()->m_nInteractions = -1;
+        } // else (CollVect!=NULL)
+      } else { // if (m_writeMC)
+        zooev()->m_nbMCPVs = -1;
         zooev()->m_nInteractions = -1;
-    }
+      } // else (m_writeMC)
 
     // set links to particle and mc particle containers in the event
     zooev()->SetP(objman()->getBankRef<ZooP>());
