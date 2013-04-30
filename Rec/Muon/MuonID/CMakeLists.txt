@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MuonID
 ################################################################################
-gaudi_subdir(MuonID v9r5)
+gaudi_subdir(MuonID v9r5p1)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/RecEvent
