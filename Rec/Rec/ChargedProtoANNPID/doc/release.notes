@@ -4,11 +4,12 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+!========================= ChargedProtoANNPID v2r1 2013-04-30 =======================
 ! 2012-04-26 - Chris Jones
  - Move the TMVA 'MC12TuneV2' compiled MVA namespace into the ANNGlobalPID
    namespace.
 
-!========================= ChargedProtoANNPID v2r0 2013-04-23 =========================
+!========================= ChargedProtoANNPID v2r0 2013-04-23 =======================
 
 ! 2013-04-17 - Marco Clemencic
  - Ported to CMake the configuration to disable the use of Neurobayes.
@@ -79,7 +80,7 @@
  - Print some basic statistics of the ANNPID distributions during finalize,
    to help monitor for instabilities in the expert.
 
-!========================= ChargedProtoANNPID v1r11 2013-02-14 =========================
+!========================= ChargedProtoANNPID v1r11 2013-02-14 ======================
 ! 2013-02-01 - Chris Jones
  - Make it possible to turn on or offline the suppression of printout from the
    underlying ANN library (NeuroBayes) via options.
