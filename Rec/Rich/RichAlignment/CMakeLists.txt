@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichAlignment
 ################################################################################
-gaudi_subdir(RichAlignment v1r8)
+gaudi_subdir(RichAlignment v1r8p1)
 
 gaudi_depends_on_subdirs(Event/MCEvent
                          Kernel/MCInterfaces
