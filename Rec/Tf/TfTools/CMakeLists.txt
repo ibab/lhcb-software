@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TfTools
 ################################################################################
-gaudi_subdir(TfTools v1r17)
+gaudi_subdir(TfTools v1r18)
 
 gaudi_depends_on_subdirs(Det/OTDet
                          Det/STDet
