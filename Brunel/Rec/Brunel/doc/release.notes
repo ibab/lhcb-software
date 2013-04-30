@@ -3,6 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v44r4>2013-05-02 Brunel v44r4</A></H1><PRE>
+This version uses projects LCG 64d, Gaudi v23r7, LHCb v35r6, Lbcom v13r6p1,
+ Rec v14r6 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Development release for Upgrade productions
+
 - Changes to configuration
   . Add python/Brunel/__init__.py to please CMake
   . Pass information of detectors to RecMoniConf.
@@ -10,15 +16,15 @@ Purpose: LHCb reconstruction program
 - Changes to references to reflect changes since v44r3
   . Add support for reprocessing from split RawEvent (FTDAQ, VLDAQ, VPDAQ)
   . Additional histograms in TrackMonitors
-  . In brunel2012magdown, attempt to update reference block to monitor
-    ChargedProtoANNPID histogram statistics
   . Fix small bug in STMeasurement, measurement type incorrectly set for UT
-  . Updated VP/VL geometrry
+  . Updated VP/VL geometry
   . Minor optimisations in RichDet
   . New MC12TuneV2 ANN PID tuning and minor optimisations (ChargedProtoANNPID)
   . Fixes to monitoring sequence to allow for missing detectors in Upgrade
     confiurations (RecConf)
   . Updated default database tags
+  . Replaced UpgradeBestTrackCreator by TrackBestTrackCreator in upgrade 
+    configurations
 
 - Changes to tests
   . Update test files and references for latest fixes to upgrade geometries
