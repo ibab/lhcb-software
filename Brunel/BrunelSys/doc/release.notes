@@ -63,7 +63,7 @@ This version uses projects LCG 64d, Gaudi v23r7, LHCb v35r6, Lbcom v13r6p1,
   . Fix incorrect setting of STMeasurement type for UT (TrackFitEvent v5r22)
   . Fixes in TrackMonitor and TrackVertexMonitor to make them work for upgrade
     (TrackMonitors v1r44)
-  . TrackCloneData: bug fixes + adapted for upgrade (TrackKernel v1r13)
+  . TrackCloneData: bug fixes + adapted for upgrade (TrackKernel v1r13, v1r14)
 
 - Monitoring changes
   . Improved PV monitoring (TrackCheckers v4r16)
