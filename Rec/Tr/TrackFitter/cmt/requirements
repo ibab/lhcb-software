@@ -1,15 +1,17 @@
+#=========================================================================
 # Created    : 21/03/2002
 # Maintainer : Wouter Hulsbergen
+#=========================================================================
 
 package           TrackFitter
-version           v4r10
+version           v4r10p1
 
 # Structure, i.e. directories to process. 
-#============================================================================
+#=========================================================================
 branches          cmt doc src
 
 # Used packages
-#============================================================================
+#=========================================================================
 use     TrackEvent      v*      Event
 use     TrackFitEvent	v*      Tr
 use     TrackInterfaces	v*      Tr
@@ -20,11 +22,11 @@ use     GaudiKernel     v*
 use     GSL             v*      LCG_Interfaces
 
 # Component library building rule
-#============================================================================
+#=========================================================================
 library          TrackFitter    ../src/*.cpp
 
 # define component library link options
-#============================================================================
+#=========================================================================
 apply_pattern component_library library=TrackFitter
 
 #private
