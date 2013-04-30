@@ -4,6 +4,7 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+!========================= FTDigitisation v1r4 2013-04-30 =========================
 ! 2013-04-29 - Eric Cogneras
  - Plot of the number of cluster per SiPM, needed by electronics
  - Debugging information encapsulation
