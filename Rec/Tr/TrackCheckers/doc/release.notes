@@ -4,6 +4,15 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+!========================= TrackCheckers v4r16 2013-04-30 =========================
+! 2013-xx-xx Wouter and Panagiotis Tsopelas
+ - removed some unused constants
+ - improved PV monitoring
+ - Added a couple of histograms
+ - Added code for track multiplicity information
+ - Added features to the IP tool
+ - Added code to distinghuish secondaries, from primaries & from ghosts
+
 !========================= TrackCheckers v4r15 2013-02-14 =========================
 ! 2013-01-07 - Marco Clemencic
  - Fixed link problem in CMake build.
@@ -35,7 +44,7 @@
  - New algorithm VertexChecker to measure the performance of vertexing
  - New type of tracks monitored in TrackEffChecker: Tracks with IP between 1 and 2 mm
 
-!========================= TrackCheckers v4r11p1 2011-02-28 =========================
+!========================= TrackCheckers v4r11p1 2011-02-28 ========================
 ! 2011-02-16 - Victor Coco
  - Initialize LinkInfo in TrackCheckerBase reconstructedInRefContainer function
    and reconstructed function to avoid FPE
