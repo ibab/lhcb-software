@@ -17,9 +17,12 @@
  - fixed readout of ghostprobability in case tracks are refitted
    NB: I didn't fully check if refitting has other undesired features
 
+!============================ Zoo v14r0 2012-10-22 ===========================
+
 ! 2012-10-22 - Paul Seyfert
  - added trigger lines for 2011 and 2012 data
    (2012 until 0x9a0042, excluding 0x97003c)
+ - this is tag pseyfert_20121022
 
 ! 2012-09-25 - Paul Seyfert
  - uninitialised memory in ZooDLL::m_isMuon
