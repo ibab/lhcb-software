@@ -1,9 +1,10 @@
 -----------------------------------------------------------------------------
 ! Package     : Tf/TrackMatching
-! Responsible : Eduardo Rodrigues
+! Responsible : 
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+!========================= TrackMatching v2r35p1 2013-04-30 ========================
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 
