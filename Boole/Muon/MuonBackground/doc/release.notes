@@ -5,10 +5,11 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
-2012-04-23 - Chris Jones
+!========================= MuonBackground v2r13 2013-04-30 ========================
+! 2012-04-23 - Chris Jones
  - Remove unneccessary forward declarations to appease clang.
 
-!========================= MuonBackground v2r12 2012-12-12 =========================
+!========================= MuonBackground v2r12 2012-12-12 ========================
 ! 2012-12-11 - Marco Clemencic
  - Added CMake configuration file.
 

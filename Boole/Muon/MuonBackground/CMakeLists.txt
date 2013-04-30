@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MuonBackground
 ################################################################################
-gaudi_subdir(MuonBackground v2r12)
+gaudi_subdir(MuonBackground v2r13)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/GenEvent
