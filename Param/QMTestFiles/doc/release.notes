@@ -4,6 +4,7 @@
 ! Purpose     : Small data files used as input to QMTests
 !-----------------------------------------------------------------------------
 
+!========================= QMTestFiles v1r0 2013-04-30 =========================
 ! 2013-04-16 - Marco Cattaneo
  - Initial version containing single events files used by Brunel regression tests
    (previously in /castor/cern.ch/user/c/cattanem)
