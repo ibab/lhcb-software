@@ -4,33 +4,34 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= MuonTrackMonitor v2r7p1 2013-04-30 =======================
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 
-!========================= MuonTrackMonitor v2r7 2012-11-28 =========================
+!========================= MuonTrackMonitor v2r7 2012-11-28 ========================
 ! 2012-11-23 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= MuonTrackMonitor v2r6 2012-02-28 =========================
+!========================= MuonTrackMonitor v2r6 2012-02-28 ========================
 ! 2012-02-28 - Wouter Hulsbergen
  - remove line that sets "NodeFitter.BiDirectionalFit" inconfiguration.
    (long obsolete)
 
-!========================= MuonTrackMonitor v2r5 2012-01-31 =========================
+!========================= MuonTrackMonitor v2r5 2012-01-31 ========================
 ! 2012-01-19 - Giacomo GRAZIANI
  - move 2d histograms to expert mode
 
-!========================= MuonTrackMonitor v2r4 2011-08-31 =========================
+!========================= MuonTrackMonitor v2r4 2011-08-31 ========================
 ! 2011-08-25 - Patrizia de Simone
  - Moved MuEffMonitor from MuonTrackMonitor to DaVinciMonitors and removed it from 
    Brunel sequence
 
-!========================= MuonTrackMonitor v2r3 2011-07-27 =========================
+!========================= MuonTrackMonitor v2r3 2011-07-27 ========================
 ! 2011-07-27 - Marco Cattaneo
  - Protect unprotected MSG::DEBUG, also using UNLIKELY macro
  - Replace all endreq by endmsg
 
-!========================= MuonTrackMonitor v2r2 2011-04-27 =========================
+!========================= MuonTrackMonitor v2r2 2011-04-27 ========================
 ! 2011-04-22 - Marco Cattaneo
  - Disable use of TisTosTool in MuEffMonitor when DoTrigger property is True.
    This is a temporary hack to allow this code to compile following move of
@@ -39,7 +40,7 @@
    found for the trigger dependent efficiency monitoring that could have been
    done in DaVinci
 
-!========================= MuonTrackMonitor v2r1p1 2011-02-28 =========================
+!========================= MuonTrackMonitor v2r1p1 2011-02-28 =======================
 ! 2011-02-13 - Chris Jones
  - Add missing use statement in requirements file for HltEvent
 
