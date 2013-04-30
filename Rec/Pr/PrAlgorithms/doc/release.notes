@@ -4,6 +4,7 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrAlgorithms v1r4 2013-04-30 =========================
 ! 2013-04-22 - Sascha Stahl
  - Added check for backward velo tracks in PrForwardTracking.
 
