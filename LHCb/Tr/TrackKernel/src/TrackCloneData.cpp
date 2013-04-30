@@ -41,14 +41,14 @@ namespace LHCb
     // exceptions from StaticArray::push_back
     //try {
     for( LHCb::Track::LHCbIDContainer::const_iterator id = ids.begin() ;
-	 id != ids.end(); ++id ) {
+         id != ids.end(); ++id ) {
       switch( id->detectorType() ) {
       case LHCb::LHCbID::VL:
       case LHCb::LHCbID::VP:
       case LHCb::LHCbID::Velo:
-	if( id->isVeloR() ) m_ids[VeloR].push_back(*id) ;
-	else m_ids[VeloPhi].push_back(*id) ;
-	break ;
+        if( id->isVeloR() || id->isVLR()) m_ids[VeloR].push_back(*id) ;
+        else m_ids[VeloPhi].push_back(*id) ;
+        break ;
       case LHCb::LHCbID::UT:
       case LHCb::LHCbID::TT: m_ids[TT].push_back(*id) ; break ;
       case LHCb::LHCbID::FT:
