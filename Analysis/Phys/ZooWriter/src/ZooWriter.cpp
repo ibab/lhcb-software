@@ -1202,7 +1202,14 @@ void ZooWriter::writeEvent()
 		break;
 	}
     }
+// this ugly #if just to have a closing environment is mainly to
+// * help autoindent
+// * help parenthesis matching
+#if DV_VER >= 293
     }
+#else
+    }
+#endif
     
 
       if (m_writeMC) {
