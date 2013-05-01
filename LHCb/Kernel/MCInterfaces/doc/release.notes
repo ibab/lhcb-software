@@ -4,6 +4,11 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+! 2012-05-01 - Paul Seyfert
+ - introduce return values in ghost classification tools
+    (replace exception by status code in case of missing data on TES)
+   comes along with change in TrackMCTools
+
 !========================= MCInterfaces v1r16 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

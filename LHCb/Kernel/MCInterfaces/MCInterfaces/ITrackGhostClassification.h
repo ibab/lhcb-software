@@ -27,17 +27,19 @@ public:
  *  Information on what a ghost track is....
  *  @param aTrack to link
  *  @param tinfo link info 
+ *  @return statuscode whether classification was successful
  */
- virtual void info(const LHCb::Track& aTrack, LHCb::GhostTrackInfo& tinfo) const= 0;
+ virtual StatusCode info(const LHCb::Track& aTrack, LHCb::GhostTrackInfo& tinfo) const= 0;
 
 
  /**
  *  Information on a list of LHCbIDs
  *  @param start first iterator 
  *  @param stop  last iterator
- *  @param tinfo link info  
+ *  @param tinfo link info
+ *  @return statuscode whether classification was successful
  */
- virtual void info(LHCbIDs::const_iterator& start, 
+ virtual StatusCode info(LHCbIDs::const_iterator& start, 
                    LHCbIDs::const_iterator& stop, LHCb::GhostTrackInfo& tinfo) const= 0;
 
 
