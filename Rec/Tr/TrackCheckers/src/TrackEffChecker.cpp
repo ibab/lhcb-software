@@ -117,10 +117,12 @@ void TrackEffChecker::ghostInfo(const LHCb::Tracks* tracks) {
       if (fullDetail() == true) {
         plots(type+"/ghost",(*iterT));
         LHCb::GhostTrackInfo gInfo;
-        ghostClassification()->info(**iterT,gInfo);
-        const LHCb::GhostTrackInfo::Classification& gtype = gInfo.classification();
-        plot(gtype,"ghost classification",-0.5, 30.5, 31);
-        ++counter(Gaudi::Utils::toString(gtype));
+        StatusCode sc = ghostClassification()->info(**iterT,gInfo);
+        if (sc.isSuccess()) {
+          const LHCb::GhostTrackInfo::Classification& gtype = gInfo.classification();
+          plot(gtype,"ghost classification",-0.5, 30.5, 31);
+          ++counter(Gaudi::Utils::toString(gtype));
+        }
       }
     }
     else {

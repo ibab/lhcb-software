@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2013-05-01 Paul Seyfert
+ - Pick up changes in ITrackGhostClassification
+
 !========================= TrackCheckers v4r16 2013-04-30 =========================
 ! 2013-xx-xx Wouter and Panagiotis Tsopelas
  - removed some unused constants
