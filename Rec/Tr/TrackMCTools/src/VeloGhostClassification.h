@@ -24,7 +24,7 @@ public:
 
  private:
 
-  void specific(LHCbIDs::const_iterator& start, 
+  StatusCode specific(LHCbIDs::const_iterator& start, 
                 LHCbIDs::const_iterator& stop, LHCb::GhostTrackInfo& tinfo) const;
 
 

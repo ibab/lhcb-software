@@ -90,11 +90,11 @@ private:
   template<typename ID, typename LINKER>
   void linkToDetTruth(const ID& id, LINKER& aLinker, LinkMap& output ) const;
 
-  void linkIT(const LHCb::LHCbID& id, LinkMap& output) const;
-  void linkTT(const LHCb::LHCbID& id, LinkMap& output) const;
-  void linkOT(const LHCb::LHCbID& id, LinkMap& output) const;
-  void linkVelo(const LHCb::LHCbID& id, LinkMap& output) const;
-  void linkMuon(const LHCb::LHCbID& id, LinkMap& output) const;
+  StatusCode linkIT(const LHCb::LHCbID& id, LinkMap& output) const;
+  StatusCode linkTT(const LHCb::LHCbID& id, LinkMap& output) const;
+  StatusCode linkOT(const LHCb::LHCbID& id, LinkMap& output) const;
+  StatusCode linkVelo(const LHCb::LHCbID& id, LinkMap& output) const;
+  StatusCode linkMuon(const LHCb::LHCbID& id, LinkMap& output) const;
 
   mutable STLinks m_itLinks;
   mutable STLinks m_ttLinks;

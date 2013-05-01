@@ -23,7 +23,7 @@ LongGhostClassification::~LongGhostClassification(){
   // destructer
 }
 
-void LongGhostClassification::specific(LHCbIDs::const_iterator& start, 
+StatusCode LongGhostClassification::specific(LHCbIDs::const_iterator& start, 
                                        LHCbIDs::const_iterator& stop, 
                                        LHCb::GhostTrackInfo& tinfo) const{
 
@@ -61,7 +61,7 @@ void LongGhostClassification::specific(LHCbIDs::const_iterator& start,
      tinfo.setClassification(LHCb::GhostTrackInfo::InconsistentParts);
   }
 
-  return;
+  return StatusCode::SUCCESS;
 }
 
 bool LongGhostClassification::isGhost(TrackGhostClassificationBase::LHCbIDs::const_iterator& start, 

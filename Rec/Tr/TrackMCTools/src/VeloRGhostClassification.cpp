@@ -24,7 +24,7 @@ VeloRGhostClassification::~VeloRGhostClassification(){
 }
 
 
-void VeloRGhostClassification::specific(LHCbIDs::const_iterator& start, 
+StatusCode VeloRGhostClassification::specific(LHCbIDs::const_iterator& start, 
                                             LHCbIDs::const_iterator& stop, 
                                             LHCb::GhostTrackInfo& tinfo) const{
 
@@ -33,5 +33,5 @@ void VeloRGhostClassification::specific(LHCbIDs::const_iterator& start,
     if (bMatch.second < 0.5) tinfo.setClassification(LHCb::GhostTrackInfo::Combinatoric);
   }
   
-  return;
+  return StatusCode::SUCCESS;
 }

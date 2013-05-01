@@ -35,16 +35,18 @@ public:
   * Information on what a ghost track is....
   *  @param aTrack to link
   *  @param tinfo link info
+  *  @return StatusCode whether classification was successfull
   */
-  void info(const LHCb::Track& aTrack, LHCb::GhostTrackInfo& tinfo) const;
+  StatusCode info(const LHCb::Track& aTrack, LHCb::GhostTrackInfo& tinfo) const;
 
   /**
   *  Information on a list of LHCbIDs
   *  @param start first iterator
   *  @param stop  last  iterator
   *  @param tinfo link info
+  *  @return StatusCode whether classification was successfull
   */
-  virtual void info(LHCbIDs::const_iterator& start, 
+  virtual StatusCode info(LHCbIDs::const_iterator& start, 
                     LHCbIDs::const_iterator& stop, LHCb::GhostTrackInfo& tinfo) const;
 
   /**
@@ -67,17 +69,17 @@ public:
   typedef std::vector<LHCb::LHCbID> LHCbIDs;
 
   /** generic information */
-  void generic(const LHCb::Track& aTrack, LHCb::GhostTrackInfo& tinfo) const;
+  StatusCode generic(const LHCb::Track& aTrack, LHCb::GhostTrackInfo& tinfo) const;
 
   /** generic information */
-  void generic(LHCbIDs::const_iterator& start, 
+  StatusCode generic(LHCbIDs::const_iterator& start, 
                LHCbIDs::const_iterator& stop, LHCb::GhostTrackInfo& tinfo) const;
 
   /** specific information */
-  void specific(const LHCb::Track& aTrack, LHCb::GhostTrackInfo& tinfo) const;
+  StatusCode specific(const LHCb::Track& aTrack, LHCb::GhostTrackInfo& tinfo) const;
 
   /** specific information */
-  virtual void specific(LHCbIDs::const_iterator& start, 
+  virtual StatusCode specific(LHCbIDs::const_iterator& start, 
                 LHCbIDs::const_iterator& stop, LHCb::GhostTrackInfo& tinfo) const;
 
 

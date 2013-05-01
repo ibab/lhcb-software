@@ -45,7 +45,7 @@ TTrackGhostClassification::~TTrackGhostClassification(){
 }
 
 
-void TTrackGhostClassification::specific(LHCbIDs::const_iterator& start, 
+StatusCode TTrackGhostClassification::specific(LHCbIDs::const_iterator& start, 
                                      LHCbIDs::const_iterator& stop,
                                      LHCb::GhostTrackInfo& tinfo) const{
   
@@ -73,7 +73,7 @@ void TTrackGhostClassification::specific(LHCbIDs::const_iterator& start,
       tinfo.setClassification(LHCb::GhostTrackInfo::InconsistentParts);
   }
 
-  return;
+  return StatusCode::SUCCESS;
  }
 
 bool TTrackGhostClassification::stereoOT(const OTChannelID& chan) const{

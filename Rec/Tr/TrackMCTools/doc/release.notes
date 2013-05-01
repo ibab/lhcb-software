@@ -4,6 +4,11 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2012-05-01 - Paul Seyfert
+ - introduce return values in ghost classification tools
+   (replace exception by status code in case of missing data on TES)
+   comes along with change in MCInterfaces
+
 !========================= TrackMCTools v3r3 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.

@@ -26,7 +26,7 @@ VeloGhostClassification::~VeloGhostClassification(){
   // destructer
 }
 
-void VeloGhostClassification::specific(LHCbIDs::const_iterator& start, 
+StatusCode VeloGhostClassification::specific(LHCbIDs::const_iterator& start, 
                                        LHCbIDs::const_iterator& stop, 
                                        LHCb::GhostTrackInfo& tinfo) const{
 
@@ -57,6 +57,6 @@ void VeloGhostClassification::specific(LHCbIDs::const_iterator& start,
   if (isMatched(rMatch) && isMatched(phiMatch) && phiMatch.first != rMatch.first){
     tinfo.setClassification(LHCb::GhostTrackInfo::InconsistentParts);
   }
-
+  return StatusCode::SUCCESS;
 }
 

@@ -38,7 +38,7 @@ public:
   bool stereoIT(const LHCb::STChannelID& chan) const;
 
 
-  virtual void specific(LHCbIDs::const_iterator& start, 
+  virtual StatusCode specific(LHCbIDs::const_iterator& start, 
                         LHCbIDs::const_iterator& stop, LHCb::GhostTrackInfo& tinfo) const;
 
 

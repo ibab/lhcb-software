@@ -23,7 +23,7 @@ UpstreamGhostClassification::~UpstreamGhostClassification(){
   // destructer
 }
 
-void UpstreamGhostClassification::specific(LHCbIDs::const_iterator& start, 
+StatusCode UpstreamGhostClassification::specific(LHCbIDs::const_iterator& start, 
                                        LHCbIDs::const_iterator& stop, 
                                        LHCb::GhostTrackInfo& tinfo) const{
 
@@ -55,5 +55,5 @@ void UpstreamGhostClassification::specific(LHCbIDs::const_iterator& start,
      tinfo.setClassification(LHCb::GhostTrackInfo::InconsistentParts);
   }
 
-  return;
+  return StatusCode::SUCCESS;
 }

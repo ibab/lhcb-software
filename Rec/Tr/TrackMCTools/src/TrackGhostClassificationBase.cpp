@@ -40,22 +40,22 @@ StatusCode TrackGhostClassificationBase::initialize(){
 }
 
 
-void TrackGhostClassificationBase::info(const LHCb::Track& aTrack, 
+StatusCode TrackGhostClassificationBase::info(const LHCb::Track& aTrack, 
                                         LHCb::GhostTrackInfo& tinfo) const{
-  generic(aTrack,tinfo);
-  specific(aTrack,tinfo);
-  return;
+  StatusCode sc = generic(aTrack,tinfo);
+  if (sc.isFailure()) return sc;
+  return specific(aTrack,tinfo);
 }
 
-void TrackGhostClassificationBase::generic(const LHCb::Track& aTrack, 
+StatusCode TrackGhostClassificationBase::generic(const LHCb::Track& aTrack, 
                                            LHCb::GhostTrackInfo& tinfo) const{
 
   LHCbIDs::const_iterator start = aTrack.lhcbIDs().begin();
   LHCbIDs::const_iterator stop = aTrack.lhcbIDs().end();
-  generic(start,stop,tinfo);
+  return generic(start,stop,tinfo);
 }
 
-void TrackGhostClassificationBase::specific(const LHCb::Track& aTrack, 
+StatusCode TrackGhostClassificationBase::specific(const LHCb::Track& aTrack, 
                                             LHCb::GhostTrackInfo& tinfo) const{
  
   // default behaviour call the id version 
@@ -63,22 +63,22 @@ void TrackGhostClassificationBase::specific(const LHCb::Track& aTrack,
     // we still have some work to do !
     LHCbIDs::const_iterator start = aTrack.lhcbIDs().begin();
     LHCbIDs::const_iterator stop = aTrack.lhcbIDs().end();
-    specific(start,stop,tinfo);
+    return specific(start,stop,tinfo);
   }   // if
-  return;
+  return StatusCode::SUCCESS;
 }
 
 
-void TrackGhostClassificationBase::info(LHCbIDs::const_iterator& start, 
+StatusCode TrackGhostClassificationBase::info(LHCbIDs::const_iterator& start, 
                                         LHCbIDs::const_iterator& stop, 
                                         LHCb::GhostTrackInfo& tinfo) const{
 
-  generic(start,stop,tinfo);
-  specific(start,stop,tinfo);
-  return;
+  StatusCode sc = generic(start,stop,tinfo);
+  if (sc.isFailure()) return sc;
+  return specific(start,stop,tinfo);
 }
 
-void TrackGhostClassificationBase::generic(LHCbIDs::const_iterator& start, 
+StatusCode TrackGhostClassificationBase::generic(LHCbIDs::const_iterator& start, 
                                            LHCbIDs::const_iterator& stop, 
                                            LHCb::GhostTrackInfo& tinfo) const{
 
@@ -86,8 +86,7 @@ void TrackGhostClassificationBase::generic(LHCbIDs::const_iterator& start,
   ILHCbIDsToMCParticles::LinkMap testMap;
   StatusCode sc = linkTool()->link(start,stop,testMap);  
   if (sc.isFailure() ){
-    Warning("Linking failed: no classification possible", StatusCode::FAILURE);
-    return;
+    return Warning("Linking failed: no classification possible", StatusCode::FAILURE, 30);
   }
 
   // set the link map
@@ -100,13 +99,13 @@ void TrackGhostClassificationBase::generic(LHCbIDs::const_iterator& start,
   if (!isGhost(start,stop)){
     // duh its not a ghost
     tinfo.setClassification(GhostTrackInfo::Real); 
-    return;
+    return StatusCode::SUCCESS;
   }
 
   // spillover
   if (spillover(bestPair) == true){
     tinfo.setClassification(GhostTrackInfo::SpilloverAndNoise); 
-    return;
+    return StatusCode::SUCCESS;
   }
 
   // second best match
@@ -115,42 +114,42 @@ void TrackGhostClassificationBase::generic(LHCbIDs::const_iterator& start,
   // check for decay in flight
   if (decayInFlight(bestPair,secondBest) == true){
     tinfo.setClassification(GhostTrackInfo::DecayInFlight); 
-    return;
+    return StatusCode::SUCCESS;
   }
 
   // conversion
   if (conversion(bestPair,secondBest) == true){
     tinfo.setClassification(GhostTrackInfo::Conversion); 
-    return;
+    return StatusCode::SUCCESS;
   }
 
   // electromagnetic shower
   if (emShower(tinfo) == true){
     tinfo.setClassification(GhostTrackInfo::EM); 
-    return;
+    return StatusCode::SUCCESS;
   }
 
   // interaction
   if (interaction(tinfo) == true){
     tinfo.setClassification(GhostTrackInfo::HadronicInteraction); 
-    return;
+    return StatusCode::SUCCESS;
   }
 
   // phi...
   if (fromPhi(bestPair,secondBest) == true){
     tinfo.setClassification(GhostTrackInfo::FromPhi);
-    return;
+    return StatusCode::SUCCESS;
   }
  
-  return;
+  return StatusCode::SUCCESS;
 }
 
-void TrackGhostClassificationBase::specific(LHCbIDs::const_iterator& , 
+StatusCode TrackGhostClassificationBase::specific(LHCbIDs::const_iterator& , 
                                             LHCbIDs::const_iterator& , 
                                             LHCb::GhostTrackInfo& ) const{
 
   //nothing specific for the base class
-  return;
+  return StatusCode::SUCCESS;
 }
 
 
