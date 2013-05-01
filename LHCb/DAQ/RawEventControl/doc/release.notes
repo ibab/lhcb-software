@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : DAQ/RawEventControl
+! Responsible : Rob Lambert
+! Purpose     : To hold configurables for splitting/joining raw events
+!-----------------------------------------------------------------------------
+
+! 2013-05-01 - Rob Lambert
+ - Create package
