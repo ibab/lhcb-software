@@ -9,15 +9,14 @@
  */
 
 //=============================================================================
-// Standard constructor, initializes variables
+/// Standard constructor
 //=============================================================================
 PrVLTrack::PrVLTrack() :
-    m_rzone(0), m_overlap(false), m_backward(false),
+    m_rzone(0), m_overlap(false), m_backward(false), m_valid(true),
     m_s0(0.), m_sr(0.), m_sz(0.), m_srz(0.), m_sz2(0.),
     m_r0(-999.), m_tr(-999.),  m_r0Err2(999.), m_trErr2(999.),
     m_nbUsedRHits(0),
     m_missedSensors(-1),
-    m_valid(true),
     m_x0(0.), m_y0(0.), m_tx(0.), m_ty(0.), 
     m_qFactor(0.),
     m_sa2(0.), m_sa2z(0.), m_sa2z2(0.),
@@ -144,7 +143,7 @@ double PrVLTrack::rInterpolated(double z) {
 //=========================================================================
 void PrVLTrack::setPhiClusters(PrVLTrack& track,
                                double x0, double tx, double y0, double ty,
-                               PrVLHit* h1, PrVLHit* h2, PrVLHit* h3) {
+                               PrVLHits hits) {
 
   m_rHits.clear();
   PrVLHits::const_iterator ith;
@@ -158,9 +157,9 @@ void PrVLTrack::setPhiClusters(PrVLTrack& track,
   m_backward = track.backward();
 
   m_phiHits.clear();
-  m_phiHits.push_back(h1);
-  m_phiHits.push_back(h2);
-  m_phiHits.push_back(h3);
+  for (ith = hits.begin(); ith != hits.end(); ++ith) {
+    m_phiHits.push_back(*ith);
+  }
   std::sort(m_phiHits.begin(), m_phiHits.end(), PrVLHit::DecreasingByZ());
   fitTrack();
   

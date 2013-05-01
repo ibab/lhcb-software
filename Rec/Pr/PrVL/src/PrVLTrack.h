@@ -49,6 +49,9 @@ public:
     }
     return chi2 / (m_rHits.size() - 2.);
   }
+  void setPhiChi2(const double q) {m_phiChi2 = q;}
+  double phiChi2() const {return m_phiChi2;}
+  
   unsigned int rZone(double z, bool& right);
   double rInterpolated(double z);
 
@@ -95,18 +98,11 @@ public:
 
   void setPhiClusters(PrVLTrack& track,
                       double x0, double tx, double y0, double ty,
-                      PrVLHit* h1, PrVLHit* h2, PrVLHit* h3);
+                      PrVLHits hits);
   void setPhiClusters(PrVLHit* r1, int zone, 
                       PrVLHit* h1, PrVLHit* h2, PrVLHit* h3);
 
   bool addPhiCluster(PrVLHit* hit, double maxChi2);
-  void addPhiClusters(PrVLHits& hits) {
-    PrVLHits::const_iterator it;
-    for (it = hits.begin(); it != hits.end(); ++it) {
-      m_phiHits.push_back(*it);
-    }
-    fitTrack();
-  }
 
   void fitTrack();
 
@@ -243,7 +239,8 @@ public:
   struct DecreasingByPhiLength {
     bool operator() (const PrVLTrack& lhs, const PrVLTrack& rhs) const {
       if (lhs.nbPhiHits() == rhs.nbPhiHits()) {
-        return lhs.m_qFactor < rhs.m_qFactor;
+        // return lhs.m_qFactor < rhs.m_qFactor;
+        return lhs.phiChi2() < rhs.phiChi2();
       }
       return lhs.nbPhiHits() > rhs.nbPhiHits(); 
     }
@@ -252,7 +249,8 @@ public:
 private:
   unsigned int m_rzone;
   double m_overlap;
-  bool m_backward;  
+  bool m_backward; 
+  bool m_valid; 
   double m_s0;
   double m_sr;
   double m_sz;
@@ -264,11 +262,11 @@ private:
   double m_trErr2;
 
   int m_nbUsedRHits;
-  PrVLHits m_rHits;
   int m_missedSensors;
-  bool m_valid;
 
+  PrVLHits m_rHits;
   PrVLHits m_phiHits;
+
   double m_x0;
   double m_y0;
   double m_tx;
@@ -290,6 +288,8 @@ private:
   double m_sacz;
   double m_sbc;
   double m_sbcz;
+
+  double m_phiChi2;
 };
 
 typedef std::vector<PrVLTrack> PrVLTracks;

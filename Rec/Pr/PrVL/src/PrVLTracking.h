@@ -52,6 +52,9 @@ private:
                        const bool unused); 
   PrVLHit* closestPhiHit(PrVLHits& hits, const double phi, const double tol, 
                          const bool unused); 
+  PrVLHit* closestPhiHitOtherSide(PrVLHits& hits, const double phi, 
+                                  const double tol, const bool unused,
+                                  const unsigned int sensor); 
   PrVLHit* closestPhiHit(PrVLHits& hits, const double x, const double y, 
                          const double tol, const bool unused); 
   bool addPhiHit(PrVLHits& hits, PrVLTrack& track, const double maxChi2);
@@ -67,6 +70,8 @@ private:
   void printHit(const PrVLHit* hit, const std::string title);
   void printRZTrack(PrVLTrack& track);
   void printTrack(PrVLTrack& track);
+
+  std::string m_trackLocation;
 
   bool m_forward;
   bool m_backward;
@@ -96,6 +101,7 @@ private:
   double m_maxChi2PerHit;
   double m_maxChi2ToAdd;
   double m_maxQXy;
+  double m_maxQXyFull;
   double m_maxQPhi;
   double m_maxQRPhi;
 
@@ -112,7 +118,7 @@ private:
   /// Pointer to detector element
   DeVL* m_det;
   /// Number of stations
-  unsigned int m_nStations;
+  int m_nStations;
   /// List of possible Phi hits matching an RZ seed track
   std::vector<PrVLHits> m_phiHits;
   /// Number of zones in an R sensor
