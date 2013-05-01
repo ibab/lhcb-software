@@ -146,6 +146,7 @@ StatusCode GenInit::execute() {
   header->setApplicationVersion( this->appVersion() );
   header->setRunNumber( m_runNumber );
   header->setEvtNumber( eventNumber );
+  header->setEvType( 0 ) ;
   put( header, m_mcHeader );    
 
   // Check if BeamParameters already exists (main event only!!), in which case link from header

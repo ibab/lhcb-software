@@ -175,19 +175,6 @@ void PrintEventAlg::printDecayTree(long depth, const std::string& prefix,
     name= p->particle();
   }
 
-  double x,y,z;
-  
-  if( mother->originVertex()) {
-    x=mother->originVertex()->position().x();
-    y=mother->originVertex()->position().y();
-    z=mother->originVertex()->position().z();
-  }
-  else {
-    x=-99999.9;
-    y=-99999.9;
-    z=-99999.9;
-  }
-
   info() << depth << prefix.substr(0, prefix.length()-1)
          << "+--->" << std::setw(12) << std::setiosflags(std::ios::left) 
          << name 
