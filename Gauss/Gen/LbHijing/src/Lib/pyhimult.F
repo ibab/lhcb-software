@@ -2,17 +2,17 @@
 C*********************************************************************  
     
       SUBROUTINE PYHIMULT(MMUL)   
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Initializes treatment of multiple interactions, selects kinematics  
 C...of hardest interaction if low-pT physics included in run, and   
 C...generates all non-hardest interactions. 
-      COMMON/LUJETS/N,K(9000,5),P(9000,5),V(9000,5)
-      SAVE /LUJETS/ 
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
-      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
-      SAVE /LUDAT2/ 
-      COMMON/PYHISUBS/MSEL,MSUB(200),KFIN(2,-40:40),CKIN(200) 
+      COMMON/HILUJETS/N,NPAD,K(9000,5),P(9000,5),V(9000,5)
+      SAVE /HILUJETS/ 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
+      COMMON/HILUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
+      SAVE /HILUDAT2/ 
+      COMMON/PYHISUBS/MSEL,MSELPD,MSUB(200),KFIN(2,-40:40),CKIN(200) 
       SAVE /PYHISUBS/ 
       COMMON/PYHIPARS/MSTP(200),PARP(200),MSTI(200),PARI(200) 
       SAVE /PYHIPARS/ 
@@ -188,10 +188,10 @@ C...Low-pT: choose xT2, tau, y* and cos(theta-hat) fixed.
           IF(MINT(82).EQ.1) NGEN(ISUB,1)=NGEN(ISUB,1)-1 
           ISUB=95   
           MINT(1)=ISUB  
-          VINT(21)=0.01*VINT(149)   
-          VINT(22)=0.   
-          VINT(23)=0.   
-          VINT(25)=0.01*VINT(149)   
+          VINT(21)=0.01d0*VINT(149)   
+          VINT(22)=0.D0   
+          VINT(23)=0.D0   
+          VINT(25)=0.01d0*VINT(149)   
     
         ELSE    
 C...Multiple interactions (first semihard interaction). 

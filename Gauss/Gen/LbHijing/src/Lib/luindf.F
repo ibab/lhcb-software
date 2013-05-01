@@ -2,16 +2,16 @@
 C*********************************************************************  
     
       SUBROUTINE LUINDF(IP) 
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Purpose: to handle the fragmentation of a jet system (or a single   
 C...jet) according to independent fragmentation models. 
-      IMPLICIT DOUBLE PRECISION(D)  
-      COMMON/LUJETS/N,K(9000,5),P(9000,5),V(9000,5)
-      SAVE /LUJETS/ 
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
-      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
-      SAVE /LUDAT2/ 
+c      IMPLICIT DOUBLE PRECISION(D)  
+      COMMON/HILUJETS/N,NPAD,K(9000,5),P(9000,5),V(9000,5)
+      SAVE /HILUJETS/ 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
+      COMMON/HILUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
+      SAVE /HILUDAT2/ 
       DIMENSION DPS(5),PSI(4),NFI(3),NFL(3),IFET(3),KFLF(3),    
      &KFLO(2),PXO(2),PYO(2),WO(2)   
     
@@ -47,7 +47,8 @@ C...Reset counters. Identify parton system and take copy. Check flavour.
       ENDIF 
     
 C...Boost copied system to CM frame. Find CM energy and sum flavours.   
-      IF(NJET.NE.1) CALL LUDBRB(NSAV+1,NSAV+NJET,0.,0.,-DPS(1)/DPS(4),  
+      IF(NJET.NE.1) CALL LUDBRB(NSAV+1,NSAV+NJET,0.d0,0.d0,
+     & -DPS(1)/DPS(4),  
      &-DPS(2)/DPS(4),-DPS(3)/DPS(4))    
       PECM=0.   
       DO 130 J=1,3  
@@ -406,7 +407,7 @@ C...Document independent fragmentation system. Remove copy of jets.
       N=N-NJET+1    
     
 C...Boost back particle system. Set production vertices.    
-      IF(NJET.NE.1) CALL LUDBRB(NSAV+1,N,0.,0.,DPS(1)/DPS(4),   
+      IF(NJET.NE.1) CALL LUDBRB(NSAV+1,N,0.d0,0.d0,DPS(1)/DPS(4),   
      &DPS(2)/DPS(4),DPS(3)/DPS(4))  
       DO 520 I=NSAV+1,N 
       DO 520 J=1,4  

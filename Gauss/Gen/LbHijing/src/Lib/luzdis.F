@@ -2,10 +2,10 @@
 C*********************************************************************  
     
       SUBROUTINE LUZDIS(KFL1,KFL2,PR,Z) 
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Purpose: to generate the longitudinal splitting variable z. 
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
     
 C...Check if heavy flavour fragmentation.   
       KFLA=IABS(KFL1)   

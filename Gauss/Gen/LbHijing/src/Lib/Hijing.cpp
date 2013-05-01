@@ -15,11 +15,11 @@
 // HIJSET Fortran function
 extern "C" {
 #ifdef WIN32
-  void __stdcall HIJSET(const float*, const char*, int, const char*, int,
+  void __stdcall HIJSET(const double*, const char*, int, const char*, int,
                         const char*, int,  const int*, const int*, const int*,
                         const int*) ;
 #else
-  void hijset_ (float&, const char*, const char*, const char*, 
+  void hijset_ (double&, const char*, const char*, const char*, 
                 int&, int&, int&, int&, int, int, int);
 #endif
 }
@@ -27,7 +27,7 @@ extern "C" {
 void Hijing::HijingInit(double l_efrm, const std::string l_frame,
                         const std::string l_proj, const std::string l_targ,
                         int l_iap, int l_izp, int l_iat, int l_izt) {
-  float efrm=l_efrm;
+  double efrm=l_efrm;
   
   char frame[8]; memset(frame,' ',8); strncpy(frame, l_frame.c_str(), strlen(l_frame.c_str()));
   char proj[8]; memset(proj,' ',8); strncpy(proj, l_proj.c_str(), strlen(l_proj.c_str()));
@@ -50,9 +50,9 @@ void Hijing::HijingInit(double l_efrm, const std::string l_frame,
 // HIJING Fortran function
 extern "C" {
 #ifdef WIN32
-  void __stdcall HIJING( const char*, int, const float*, const float* ) ;
+  void __stdcall HIJING( const char*, int, const double*, const double* ) ;
 #else
-  void hijing_ (const char*, float&, float&, int ) ;
+  void hijing_ (const char*, double&, double&, int ) ;
 #endif
 }
 
@@ -75,8 +75,8 @@ void Hijing::LunHep( int mcconv ) {
 
 void Hijing::HijingEvnt( const std::string l_frame, double l_bmin, double l_bmax ) {
   char frame[8]; memset(frame,' ',8); strncpy(frame, l_frame.c_str(), strlen(l_frame.c_str()));
-  float bmin=l_bmin;
-  float bmax=l_bmax;
+  double bmin=l_bmin;
+  double bmax=l_bmax;
   
 #ifdef WIN32
   HIJING( frame, strlen(frame), &bmin, &bmax) ;

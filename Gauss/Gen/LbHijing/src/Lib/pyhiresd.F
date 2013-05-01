@@ -2,19 +2,19 @@
 C*********************************************************************  
     
       SUBROUTINE PYHIRESD 
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Allows resonances to decay (including parton showers for hadronic   
 C...channels).  
-      IMPLICIT DOUBLE PRECISION(D)  
-      COMMON/LUJETS/N,K(9000,5),P(9000,5),V(9000,5)
-      SAVE /LUJETS/ 
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
-      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
-      SAVE /LUDAT2/ 
-      COMMON/LUDAT3/MDCY(500,3),MDME(2000,2),BRAT(2000),KFDP(2000,5)    
-      SAVE /LUDAT3/ 
-      COMMON/PYHISUBS/MSEL,MSUB(200),KFIN(2,-40:40),CKIN(200) 
+C      IMPLICIT DOUBLE PRECISION(D)  
+      COMMON/HILUJETS/N,NPAD,K(9000,5),P(9000,5),V(9000,5)
+      SAVE /HILUJETS/ 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
+      COMMON/HILUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
+      SAVE /HILUDAT2/ 
+      COMMON/HILUDAT3/MDCY(500,3),MDME(2000,2),BRAT(2000),KFDP(2000,5)    
+      SAVE /HILUDAT3/ 
+      COMMON/PYHISUBS/MSEL,MSELPD,MSUB(200),KFIN(2,-40:40),CKIN(200) 
       SAVE /PYHISUBS/ 
       COMMON/PYHIPARS/MSTP(200),PARP(200),MSTI(200),PARI(200) 
       SAVE /PYHIPARS/ 
@@ -253,10 +253,10 @@ C...Angular weight for H0 -> Z0 + Z0 or W+ + W- -> 4 quarks/leptons
         IF(KFA.NE.37) THEN  
 C...Angular weight for gamma*/Z0 -> 2 quarks/leptons    
           EI=KCHG(IABS(MINT(15)),1)/3.  
-          AI=SIGN(1.,EI+0.1)    
+          AI=SIGN(1.d0,EI+0.1d0)    
           VI=AI-4.*EI*XW    
           EF=KCHG(KFA,1)/3. 
-          AF=SIGN(1.,EF+0.1)    
+          AF=SIGN(1.d0,EF+0.1d0)    
           VF=AF-4.*EF*XW    
           GG=1. 
           GZ=1./(8.*XW*(1.-XW))*SH*(SH-SQMZ)/((SH-SQMZ)**2+GZMZ**2) 
@@ -385,14 +385,14 @@ C...Angular weight for f + g -> f' + W+/- -> f' + 2 quarks/leptons
       ELSEIF(ISUB.EQ.141) THEN  
 C...Angular weight for gamma*/Z0/Z'0 -> 2 quarks/leptons    
         EI=KCHG(IABS(MINT(15)),1)/3.    
-        AI=SIGN(1.,EI+0.1)  
+        AI=SIGN(1.d0,EI+0.1d0)  
         VI=AI-4.*EI*XW  
-        API=SIGN(1.,EI+0.1) 
+        API=SIGN(1.d0,EI+0.1d0) 
         VPI=API-4.*EI*XW    
         EF=KCHG(KFA,1)/3.   
-        AF=SIGN(1.,EF+0.1)  
+        AF=SIGN(1.d0,EF+0.1d0)  
         VF=AF-4.*EF*XW  
-        APF=SIGN(1.,EF+0.1) 
+        APF=SIGN(1.d0,EF+0.1d0) 
         VPF=APF-4.*EF*XW    
         GG=1.   
         GZ=1./(8.*XW*(1.-XW))*SH*(SH-SQMZ)/((SH-SQMZ)**2+GZMZ**2)   

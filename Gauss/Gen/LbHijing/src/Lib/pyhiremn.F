@@ -2,7 +2,7 @@
 C*********************************************************************  
     
       SUBROUTINE PYHIREMN(IPU1,IPU2)  
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Adds on target remnants (one or two from each side) and 
 C...includes primordial kT. 
       COMMON/HIPARNT/HIPR1(100),IHPR2(50),HINT1(100),IHNT2(50)
@@ -10,12 +10,12 @@ C...includes primordial kT.
       COMMON/HISTRNG/NFP(300,15),PPHI(300,15),NFT(300,15),PTHI(300,15)
       SAVE  /HISTRNG/
 C...COMMON BLOCK FROM HIJING
-      COMMON/LUJETS/N,K(9000,5),P(9000,5),V(9000,5)
-      SAVE /LUJETS/ 
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
-      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
-      SAVE /LUDAT2/ 
+      COMMON/HILUJETS/N,NPAD,K(9000,5),P(9000,5),V(9000,5)
+      SAVE /HILUJETS/ 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
+      COMMON/HILUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
+      SAVE /HILUDAT2/ 
       COMMON/PYHIPARS/MSTP(200),PARP(200),MSTI(200),PARI(200) 
       SAVE /PYHIPARS/ 
       COMMON/PYHIINT1/MINT(400),VINT(400) 
@@ -157,17 +157,17 @@ C...Transform partons to overall CM-frame (not for leptoproduction).
       IF(ILEP.EQ.0) THEN    
         ROBO(3)=(P(I1,1)+P(I2,1))/SHR   
         ROBO(4)=(P(I1,2)+P(I2,2))/SHR   
-        CALL LUDBRB(I1,I2,0.,0.,-DBLE(ROBO(3)),-DBLE(ROBO(4)),0D0)  
+        CALL LUDBRB(I1,I2,0.d0,0.d0,-DBLE(ROBO(3)),-DBLE(ROBO(4)),0D0)  
         ROBO(2)=ULANGL(P(I1,1),P(I1,2)) 
-        CALL LUDBRB(I1,I2,0.,-ROBO(2),0D0,0D0,0D0)  
+        CALL LUDBRB(I1,I2,0.d0,-ROBO(2),0D0,0D0,0D0)  
         ROBO(1)=ULANGL(P(I1,3),P(I1,1)) 
-        CALL LUDBRB(I1,I2,-ROBO(1),0.,0D0,0D0,0D0)  
+        CALL LUDBRB(I1,I2,-ROBO(1),0.d0,0D0,0D0,0D0)  
         NMAX=MAX(MINT(52),IPU1,IPU2)    
         CALL LUDBRB(I1,NMAX,ROBO(1),ROBO(2),DBLE(ROBO(3)),DBLE(ROBO(4)),    
      &  0D0)    
-        ROBO(5)=MAX(-0.999999,MIN(0.999999,(VINT(141)-VINT(142))/   
+        ROBO(5)=MAX(-0.999999d0,MIN(0.999999d0,(VINT(141)-VINT(142))/   
      &  (VINT(141)+VINT(142)))) 
-        CALL LUDBRB(I1,NMAX,0.,0.,0D0,0D0,DBLE(ROBO(5)))    
+        CALL LUDBRB(I1,NMAX,0.d0,0.d0,0D0,0D0,DBLE(ROBO(5)))    
       ENDIF 
     
 C...Check invariant mass of remnant system: 
@@ -306,7 +306,7 @@ C...Reconstruct kinematics of remnants.
     
 C...Hadronic events: boost remnants to correct longitudinal frame.  
       IF(ILEP.LE.0) THEN    
-        CALL LUDBRB(NS+1,N,0.,0.,0D0,0D0,-DBLE(PZH/(VINT(1)-PEH)))  
+        CALL LUDBRB(NS+1,N,0.d0,0.d0,0D0,0D0,-DBLE(PZH/(VINT(1)-PEH)))  
 C...Leptoproduction events: boost colliding subsystem.  
       ELSE  
         NMAX=MAX(IP,MINT(52))   
@@ -314,21 +314,21 @@ C...Leptoproduction events: boost colliding subsystem.
         PZF=PZ*(-1)**(ILEP-1)   
         PT2=P(ILEPR,1)**2+P(ILEPR,2)**2 
         PHIPT=ULANGL(P(ILEPR,1),P(ILEPR,2)) 
-        CALL LUDBRB(MINT(84)+1,NMAX,0.,-PHIPT,0D0,0D0,0D0)  
+        CALL LUDBRB(MINT(84)+1,NMAX,0.d0,-PHIPT,0D0,0D0,0D0)  
         RQP=P(IQ,3)*(PT2+PEI**2)-P(IQ,4)*PEI*PZI    
         SINTH=P(IQ,4)*SQRT(PT2*(PT2+PEI**2)/(RQP**2+PT2*    
-     &  P(IQ,4)**2*PZI**2))*SIGN(1.,-RQP)   
-        CALL LUDBRB(MINT(84)+1,NMAX,ASIN(SINTH),0.,0D0,0D0,0D0) 
+     &  P(IQ,4)**2*PZI**2))*SIGN(1.d0,-RQP)   
+        CALL LUDBRB(MINT(84)+1,NMAX,ASIN(SINTH),0.d0,0D0,0D0,0D0) 
         BETAX=(-PEI*PZI*SINTH+SQRT(PT2*(PT2+PEI**2-(PZI*SINTH)**2)))/   
      &  (PT2+PEI**2)    
-        CALL LUDBRB(MINT(84)+1,NMAX,0.,0.,DBLE(BETAX),0D0,0D0)  
-        CALL LUDBRB(MINT(84)+1,NMAX,0.,PHIPT,0D0,0D0,0D0)   
+        CALL LUDBRB(MINT(84)+1,NMAX,0.d0,0.d0,DBLE(BETAX),0D0,0D0)  
+        CALL LUDBRB(MINT(84)+1,NMAX,0.d0,PHIPT,0D0,0D0,0D0)   
         PEM=P(IQ,4)+P(IP,4) 
         PZM=P(IQ,3)+P(IP,3) 
         BETAZ=(-PEM*PZM+PZF*SQRT(PZF**2+PEM**2-PZM**2))/(PZF**2+PEM**2) 
-        CALL LUDBRB(MINT(84)+1,NMAX,0.,0.,0D0,0D0,DBLE(BETAZ))  
-        CALL LUDBRB(I1,I2,ASIN(SINTH),0.,DBLE(BETAX),0D0,0D0)   
-        CALL LUDBRB(I1,I2,0.,PHIPT,0D0,0D0,DBLE(BETAZ)) 
+        CALL LUDBRB(MINT(84)+1,NMAX,0.d0,0.d0,0D0,0D0,DBLE(BETAZ))  
+        CALL LUDBRB(I1,I2,ASIN(SINTH),0.d0,DBLE(BETAX),0D0,0D0)   
+        CALL LUDBRB(I1,I2,0.d0,PHIPT,0D0,0D0,DBLE(BETAZ)) 
       ENDIF 
     
       RETURN    

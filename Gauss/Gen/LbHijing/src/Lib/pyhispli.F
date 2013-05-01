@@ -2,7 +2,7 @@
 C*********************************************************************  
     
       SUBROUTINE PYHISPLI(KF,KFLIN,KFLCH,KFLSP)   
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...In case of a hadron remnant which is more complicated than just a   
 C...quark or a diquark, split it into two (partons or hadron + parton). 
       DIMENSION KFL(3)  

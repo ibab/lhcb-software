@@ -7,21 +7,22 @@ C						                   *
 C  Scatter two excited strings, JP from proj and JT from target    *
 C*******************************************************************
 	SUBROUTINE HIJSFT(JP,JT,JOUT,IERROR)
+	IMPLICIT REAL*8(A-H,O-Z)
 	COMMON/HIJCRDN/YP(3,300),YT(3,300)
 	SAVE  /HIJCRDN/
 	COMMON/HIPARNT/HIPR1(100),IHPR2(50),HINT1(100),IHNT2(50)
 	SAVE  /HIPARNT/
         COMMON/HIJDAT/HIDAT0(10,10),HIDAT(10)
 	SAVE  /HIJDAT/
-	COMMON/RANSEED/NSEED
-	SAVE  /RANSEED/
+	COMMON/HIRANSEED/NSEED,NSEEDPD
+	SAVE  /HIRANSEED/
 	COMMON/HIJJET1/NPJ(300),KFPJ(300,500),PJPX(300,500),
      &               PJPY(300,500),PJPZ(300,500),PJPE(300,500),
      &               PJPM(300,500),NTJ(300),KFTJ(300,500),
      &               PJTX(300,500),PJTY(300,500),PJTZ(300,500),
      &               PJTE(300,500),PJTM(300,500)
 	SAVE  /HIJJET1/
-	COMMON/HIJJET2/NSG,NJSG(900),IASG(900,3),K1SG(900,100),
+	COMMON/HIJJET2/NSG,NSGPD,NJSG(900),IASG(900,3),K1SG(900,100),
      &		K2SG(900,100),PXSG(900,100),PYSG(900,100),
      &		PZSG(900,100),PESG(900,100),PMSG(900,100)
 	SAVE  /HIJJET2/
@@ -31,7 +32,7 @@ C*******************************************************************
      &		NFDP,NFDT,WP,WM,SW,XREMP,XREMT,DPKC1,DPKC2,PP11,PP12,
      &		PT11,PT12,PTP2,PTT2
 	SAVE  /DPMCOM1/
-	COMMON/DPMCOM2/NDPM,KDPM(20,2),PDPM1(20,5),PDPM2(20,5)
+	COMMON/DPMCOM2/NDPM,NDPMPD,KDPM(20,2),PDPM1(20,5),PDPM2(20,5)
 	SAVE  /DPMCOM2/
 C*******************************************************************
 C	JOUT-> the number
@@ -267,17 +268,17 @@ C*****give some PT kick to the two exited strings******************
 	SWPTD=4.0*(MAX(DPM0,DTM0)**2+MAX(PTP02,PTT02))
 	SWPTX=4.0*(AMX**2+MAX(PTP02,PTT02))
 	IF(SW.LE.SWPTN) THEN
-		PKCMX=0.0
+		PKCMX=0.0d0
 	ELSE IF(SW.GT.SWPTN .AND. SW.LE.SWPTD
      &		.AND.NPJ(JP).EQ.0.AND.NTJ(JT).EQ.0) THEN
-	   PKCMX=SQRT(SW/4.0-MAX(AMP0,AMT0)**2)
+	   PKCMX=SQRT(SW/4.0d0-MAX(AMP0,AMT0)**2)
      &           -SQRT(MAX(PTP02,PTT02))
 	ELSE IF(SW.GT.SWPTD .AND. SW.LE.SWPTX
      &		.AND.NPJ(JP).EQ.0.AND.NTJ(JT).EQ.0) THEN
-	   PKCMX=SQRT(SW/4.0-MAX(DPM0,DTM0)**2)
+	   PKCMX=SQRT(SW/4.0d0-MAX(DPM0,DTM0)**2)
      &           -SQRT(MAX(PTP02,PTT02))
 	ELSE IF(SW.GT.SWPTX) THEN
-	   PKCMX=SQRT(SW/4.0-AMX**2)-SQRT(MAX(PTP02,PTT02))
+	   PKCMX=SQRT(SW/4.0d0-AMX**2)-SQRT(MAX(PTP02,PTT02))
 	ENDIF
 C		********maximun PT kick
 C*********************************************************
@@ -313,20 +314,20 @@ C			the pt kick is the pt from hard-collision.
 C
 C               ********decite whether to have single-diffractive
 	IF(IHPR2(5).EQ.0) THEN
-		PKC=HIPR1(2)*SQRT(-ALOG(1.0-hijing_RAN(NSEED)
-     &			*(1.0-EXP(-PKCMX**2/HIPR1(2)**2))))
+		PKC=HIPR1(2)*SQRT(-LOG(1.0d0-hijing_RAN(NSEED)
+     &			*(1.0d0-EXP(-PKCMX**2/HIPR1(2)**2))))
 		GO TO 30
 	ENDIF
-	PKC=HIRND2(3,0.0,PKCMX**2)
+	PKC=HIRND2(3,0.0d0,PKCMX**2)
 	PKC=SQRT(PKC)
 	IF(PKC.GT.HIPR1(20)) 
-     &	   PKC=HIPR1(2)*SQRT(-ALOG(EXP(-HIPR1(20)**2/HIPR1(2)**2)
+     &	   PKC=HIPR1(2)*SQRT(-LOG(EXP(-HIPR1(20)**2/HIPR1(2)**2)
      &	       -hijing_RAN(NSEED)*(EXP(-HIPR1(20)**2/HIPR1(2)**2)-
      &	       EXP(-PKCMX**2/HIPR1(2)**2))))
 C
-	IF(I_SNG.EQ.1) PKC=0.65*SQRT(
-     &		-ALOG(1.0-hijing_RAN(NSEED)
-     & *(1.0-EXP(-PKCMX**2/0.65**2))))
+	IF(I_SNG.EQ.1) PKC=0.65d0*SQRT(
+     &		-LOG(1.0d0-hijing_RAN(NSEED)
+     & *(1.0d0-EXP(-PKCMX**2/0.65d0**2))))
 C			********select PT kick
 30	PHI0=2.0*HIPR1(40)*hijing_RAN(NSEED)
 	PKC11=PKC*SIN(PHI0)

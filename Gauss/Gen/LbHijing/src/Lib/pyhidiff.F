@@ -2,12 +2,12 @@
 C*********************************************************************  
     
       SUBROUTINE PYHIDIFF
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Handles diffractive and elastic scattering. 
-      COMMON/LUJETS/N,K(9000,5),P(9000,5),V(9000,5)
-      SAVE /LUJETS/ 
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
+      COMMON/HILUJETS/N,NPAD,K(9000,5),P(9000,5),V(9000,5)
+      SAVE /HILUJETS/ 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
       COMMON/PYHIPARS/MSTP(200),PARP(200),MSTI(200),PARI(200) 
       SAVE /PYHIPARS/ 
       COMMON/PYHIINT1/MINT(400),VINT(400) 

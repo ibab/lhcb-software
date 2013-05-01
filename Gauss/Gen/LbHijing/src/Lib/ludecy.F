@@ -2,16 +2,16 @@
 C*********************************************************************  
     
       SUBROUTINE LUDECY(IP) 
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Purpose: to handle the decay of unstable particles. 
-      COMMON/LUJETS/N,K(9000,5),P(9000,5),V(9000,5)
-      SAVE /LUJETS/ 
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
-      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
-      SAVE /LUDAT2/ 
-      COMMON/LUDAT3/MDCY(500,3),MDME(2000,2),BRAT(2000),KFDP(2000,5)    
-      SAVE /LUDAT3/ 
+      COMMON/HILUJETS/N,NPAD,K(9000,5),P(9000,5),V(9000,5)
+      SAVE /HILUJETS/ 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
+      COMMON/HILUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
+      SAVE /HILUDAT2/ 
+      COMMON/HILUDAT3/MDCY(500,3),MDME(2000,2),BRAT(2000),KFDP(2000,5)    
+      SAVE /HILUDAT3/ 
       DIMENSION VDCY(4),KFLO(4),KFL1(4),PV(10,5),RORD(10),UE(3),BE(3),  
      &WTCOR(10) 
       DATA WTCOR/2.,5.,15.,60.,250.,1500.,1.2E4,1.2E5,150.,16./ 
@@ -149,7 +149,8 @@ C...Read out decay products. Convert to standard flavour code.
       ELSEIF(KPA.EQ.81) THEN    
         KFP=KFS*(1000*MOD(KFA/10,10)+100*MOD(KFA/100,10)+1) 
       ELSEIF(KP.EQ.82) THEN 
-        CALL LUKFDI(-KFS*INT(1.+(2.+PARJ(2))*hijing_RLU(0)),0,KFP,KDUMP)
+        CALL LUKFDI(-KFS*INT(1.d0+(2.d0+PARJ(2))*hijing_RLU(0)),
+     &    0,KFP,KDUMP)
         IF(KFP.EQ.0) GOTO 150   
         MSTJ(93)=1  
         IF(PV(1,5).LT.PARJ(32)+2.*ULMASS(KFP)) GOTO 150 

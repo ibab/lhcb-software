@@ -2,18 +2,18 @@
 C*********************************************************************  
     
       SUBROUTINE LUPREP(IP) 
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Purpose: to rearrange partons along strings, to allow small systems 
 C...to collapse into one or two particles and to check flavours.    
-      IMPLICIT DOUBLE PRECISION(D)  
-      COMMON/LUJETS/N,K(9000,5),P(9000,5),V(9000,5)
-      SAVE /LUJETS/ 
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
-      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
-      SAVE /LUDAT2/ 
-      COMMON/LUDAT3/MDCY(500,3),MDME(2000,2),BRAT(2000),KFDP(2000,5)    
-      SAVE /LUDAT3/ 
+c      IMPLICIT DOUBLE PRECISION(D)  
+      COMMON/HILUJETS/N,NPAD,K(9000,5),P(9000,5),V(9000,5)
+      SAVE /HILUJETS/ 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
+      COMMON/HILUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
+      SAVE /HILUDAT2/ 
+      COMMON/HILUDAT3/MDCY(500,3),MDME(2000,2),BRAT(2000),KFDP(2000,5)    
+      SAVE /HILUDAT3/ 
       DIMENSION DPS(5),DPC(5),UE(3) 
     
 C...Rearrange parton shower product listing along strings: begin loop.  
@@ -192,7 +192,7 @@ C...Perform two-particle decay of jet system, if possible.
   220   P(N+3,J)=-PA*UE(J)  
         P(N+2,4)=SQRT(PA**2+P(N+2,5)**2)    
         P(N+3,4)=SQRT(PA**2+P(N+3,5)**2)    
-        CALL LUDBRB(N+2,N+3,0.,0.,DPC(1)/DPC(4),DPC(2)/DPC(4),  
+        CALL LUDBRB(N+2,N+3,0.d0,0.d0,DPC(1)/DPC(4),DPC(2)/DPC(4),  
      &  DPC(3)/DPC(4))  
       ELSE  
         NP=0    

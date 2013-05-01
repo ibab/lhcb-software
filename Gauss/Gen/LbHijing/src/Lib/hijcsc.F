@@ -4,13 +4,14 @@ C	This subroutine performs elastic scatterings and possible
 C	elastic cascading within their own nuclei
 c*******************************************************************
 	SUBROUTINE HIJCSC(JP,JT)
+	IMPLICIT REAL*8(A-H,O-Z)
 	DIMENSION PSC1(5),PSC2(5)
 	COMMON/HIJCRDN/YP(3,300),YT(3,300)
 	SAVE  /HIJCRDN/
 	COMMON/HIPARNT/HIPR1(100),IHPR2(50),HINT1(100),IHNT2(50)
 	SAVE  /HIPARNT/
-	COMMON/RANSEED/NSEED
-	SAVE  /RANSEED/
+	COMMON/HIRANSEED/NSEED,NSEEDPD
+	SAVE  /HIRANSEED/
 	COMMON/HISTRNG/NFP(300,15),PP(300,15),NFT(300,15),PT(300,15)
 	SAVE  /HISTRNG/
 	IF(JP.EQ.0 .OR. JT.EQ.0) GO TO 25

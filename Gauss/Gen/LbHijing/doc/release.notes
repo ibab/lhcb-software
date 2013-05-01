@@ -4,6 +4,13 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2013-05-01 - Patrick Robbe
+ - src/Lib: import all HIJING source code from GENSER (version 1.383bs2)
+   and convert everything to double precision. Change LUJETS common
+   block to HILUJETS and RANSEED to HIRANSEED. 
+ - options: add options to configure Hijing for pA and Ap collisions and
+   add options to set up beam parameters
+
 !======================== LbHijing v8r2p1 2013-04-10 =========================
 ! 2013-03-05 - Zhenwei Yang
  - Fix bug in Lorentz boost from proton-nucleon center-of-mass frame to lab

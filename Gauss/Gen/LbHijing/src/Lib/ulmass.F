@@ -2,12 +2,12 @@
 C*********************************************************************  
     
       FUNCTION ULMASS(KF)   
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Purpose: to give the mass of a particle/parton. 
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
-      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
-      SAVE /LUDAT2/ 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
+      COMMON/HILUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
+      SAVE /HILUDAT2/ 
     
 C...Reset variables. Compressed code.   
       ULMASS=0. 

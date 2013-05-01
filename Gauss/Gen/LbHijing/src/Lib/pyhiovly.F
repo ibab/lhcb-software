@@ -2,12 +2,12 @@
 C*********************************************************************  
     
       SUBROUTINE PYHIOVLY(MOVLY)  
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Initializes multiplicity distribution and selects mutliplicity  
 C...of overlayed events, i.e. several events occuring at the same   
 C...beam crossing.  
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
       COMMON/PYHIPARS/MSTP(200),PARP(200),MSTI(200),PARI(200) 
       SAVE /PYHIPARS/ 
       COMMON/PYHIINT1/MINT(400),VINT(400) 

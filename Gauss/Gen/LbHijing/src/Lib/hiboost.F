@@ -1,0 +1,36 @@
+C
+C
+C
+C
+	SUBROUTINE HIBOOST
+	IMPLICIT REAL*8(A-H,O-Z)
+c      	IMPLICIT DOUBLE PRECISION(D)  
+      	COMMON/HILUJETS/N,NPAD,K(9000,5),P(9000,5),V(9000,5) 
+      	SAVE /HILUJETS/ 
+      	COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      	SAVE /HILUDAT1/ 
+	COMMON/HIPARNT/HIPR1(100),IHPR2(50),HINT1(100),IHNT2(50)
+	SAVE  /HIPARNT/
+	DO 100 I=1,N
+	   DBETA=P(I,3)/P(I,4)
+	   IF(ABS(DBETA).GE.1.D0) THEN
+	      DB=HINT1(2)
+	      IF(DB.GT.0.99999999D0) THEN 
+C		********Rescale boost vector if too close to unity. 
+		 WRITE(6,*) '(HIBOOT:) boost vector too large' 
+		 DB=0.99999999D0
+	      ENDIF 
+	      DGA=1D0/DSQRT(1D0-DB**2)
+	      DP3=P(I,3)
+	      DP4=P(I,4)
+	      P(I,3)=(DP3+DB*DP4)*DGA  
+	      P(I,4)=(DP4+DB*DP3)*DGA  
+	      GO TO 100
+	   ENDIF
+	   Y=0.5*DLOG((1.D0+DBETA)/(1.D0-DBETA))
+	   AMT=DSQRT(P(I,1)**2+P(I,2)**2+P(I,5)**2)
+	   P(I,3)=AMT*DSINH(Y+HINT1(3))
+	   P(I,4)=AMT*DCOSH(Y+HINT1(3))
+100	CONTINUE
+	RETURN
+	END

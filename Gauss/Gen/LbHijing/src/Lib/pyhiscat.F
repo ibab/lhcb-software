@@ -2,18 +2,18 @@
 C*********************************************************************  
     
       SUBROUTINE PYHISCAT 
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Finds outgoing flavours and event type; sets up the kinematics  
 C...and colour flow of the hard scattering. 
-      COMMON/LUJETS/N,K(9000,5),P(9000,5),V(9000,5)
-      SAVE /LUJETS/ 
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
-      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
-      SAVE /LUDAT2/ 
-      COMMON/LUDAT3/MDCY(500,3),MDME(2000,2),BRAT(2000),KFDP(2000,5)    
-      SAVE /LUDAT3/ 
-      COMMON/PYHISUBS/MSEL,MSUB(200),KFIN(2,-40:40),CKIN(200) 
+      COMMON/HILUJETS/N,NPAD,K(9000,5),P(9000,5),V(9000,5)
+      SAVE /HILUJETS/ 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
+      COMMON/HILUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
+      SAVE /HILUDAT2/ 
+      COMMON/HILUDAT3/MDCY(500,3),MDME(2000,2),BRAT(2000),KFDP(2000,5)    
+      SAVE /HILUDAT3/ 
+      COMMON/PYHISUBS/MSEL,MSELPD,MSUB(200),KFIN(2,-40:40),CKIN(200) 
       SAVE /PYHISUBS/ 
       COMMON/PYHIPARS/MSTP(200),PARP(200),MSTI(200),PARI(200) 
       SAVE /PYHIPARS/ 

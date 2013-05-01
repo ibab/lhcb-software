@@ -2,16 +2,16 @@
 C*********************************************************************  
     
       SUBROUTINE PYHIRAND 
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Generates quantities characterizing the high-pT scattering at the   
 C...parton level according to the matrix elements. Chooses incoming,    
 C...reacting partons, their momentum fractions and one of the possible  
 C...subprocesses.   
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
-      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
-      SAVE /LUDAT2/ 
-      COMMON/PYHISUBS/MSEL,MSUB(200),KFIN(2,-40:40),CKIN(200) 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
+      COMMON/HILUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
+      SAVE /HILUDAT2/ 
+      COMMON/PYHISUBS/MSEL,MSELPD,MSUB(200),KFIN(2,-40:40),CKIN(200) 
       SAVE /PYHISUBS/ 
       COMMON/PYHIPARS/MSTP(200),PARP(200),MSTI(200),PARI(200) 
       SAVE /PYHIPARS/ 
@@ -152,20 +152,20 @@ C...Choose t-hat according to exp(B*t-hat+C*t-hat^2).
         B=VINT(121) 
         C=VINT(122) 
         IF(ISUB.EQ.92.OR.ISUB.EQ.93) THEN   
-          B=0.5*B   
-          C=0.5*C   
+          B=0.5d0*B   
+          C=0.5d0*C   
         ENDIF   
         THM=MIN(MAX(THL,PARP(101)),THU) 
-        EXPTH=0.    
+        EXPTH=0.d0
         THARG=B*(THM-THU)   
-        IF(THARG.GT.-20.) EXPTH=EXP(THARG)  
+        IF(THARG.GT.-20.d0) EXPTH=EXP(THARG)  
   150   TH=THU+LOG(EXPTH+(1.-EXPTH)*hijing_RLU(0))/B   
         TH=MAX(THM,MIN(THU,TH)) 
         RATLOG=MIN((B+C*(TH+THM))*(TH-THM),(B+C*(TH+THU))*(TH-THU)) 
         IF(RATLOG.LT.LOG(hijing_RLU(0))) GOTO 150  
-        VINT(21)=1. 
-        VINT(22)=0. 
-        VINT(23)=MIN(1.,MAX(-1.,(2.*TH-THTER1)/THTER2)) 
+        VINT(21)=1.d0 
+        VINT(22)=0.d0
+        VINT(23)=MIN(1.d0,MAX(-1.d0,(2.d0*TH-THTER1)/THTER2)) 
     
 C...Note: in the following, by In is meant the integral over the    
 C...quantity multiplying coefficient cn.    

@@ -2,15 +2,15 @@
 C*********************************************************************  
     
       SUBROUTINE LUSHOW(IP1,IP2,QMAX)   
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Purpose: to generate timelike parton showers from given partons.    
-      IMPLICIT DOUBLE PRECISION(D)  
-      COMMON/LUJETS/N,K(9000,5),P(9000,5),V(9000,5)
-      SAVE /LUJETS/ 
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
-      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
-      SAVE /LUDAT2/ 
+c      IMPLICIT DOUBLE PRECISION(D)  
+      COMMON/HILUJETS/N,NPAD,K(9000,5),P(9000,5),V(9000,5)
+      SAVE /HILUJETS/ 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
+      COMMON/HILUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
+      SAVE /HILUDAT2/ 
       DIMENSION PMTH(5,40),PS(5),PMA(4),PMSD(4),IEP(4),IPA(4),  
      &KFLA(4),KFLD(4),KFL(4),ITRY(4),ISI(4),ISL(4),DP(4),DPT(5,4)   
     
@@ -812,7 +812,7 @@ C...Transformation from CM frame.
      &  SIN(PHI)*(P(IPA(2),2)+GABEP*BEY)-SIN(THE)*(P(IPA(2),3)+GABEP*   
      &  BEZ),-SIN(PHI)*(P(IPA(2),1)+GABEP*BEX)+COS(PHI)*(P(IPA(2),2)+   
      &  GABEP*BEY)) 
-        CALL LUDBRB(NS+1,N,0.,CHI,0D0,0D0,0D0)  
+        CALL LUDBRB(NS+1,N,0.d0,CHI,0D0,0D0,0D0)  
       ENDIF 
       DBEX=DBLE(BEX)    
       DBEY=DBLE(BEY)    

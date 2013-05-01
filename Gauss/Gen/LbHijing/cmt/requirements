@@ -19,7 +19,7 @@ include_dirs  $(LBHIJINGROOT)
 ### NOTE: the order of these use is important, for the wrong order
 ###       GaussHijing.exe complains about vanishing process and stops
 use  GENSER      v*  Gen
-use  hijing      v*  LCG_GeneratorsInterfaces
+# use  hijing      v*  LCG_GeneratorsInterfaces
 use  LbPythia    v*  Gen
 
 
@@ -41,12 +41,17 @@ apply_pattern library_stamps    library=LbHijingLib
 #
 #end_private
 
+#private
+#macro_append fflags " -fno-automatic "
+#end_private
+
 
 # do not build on windows
 #============================================================================
 apply_pattern disable_package_on platform=target-winxp
 
 private
-macro_prepend LbHijingLib_shlibflags "$(hijing_home)/lib/hidata.o $(hijing_home)/lib/pyhidata.o $(hijing_home)/lib/ludata.o "
-
+# macro_prepend LbHijingLib_shlibflags "$(hijing_home)/lib/hidata.o $(hijing_home)/lib/pyhidata.o $(hijing_home)/lib/ludata.o "
+# macro_prepend LbHijingLib_shlibflags "$(hijing_home)/lib/pyhidata.o $(hijing_home)/lib/ludata.o "
+# macro_remove  hijing_linkopts " -lhijing "
 end_private

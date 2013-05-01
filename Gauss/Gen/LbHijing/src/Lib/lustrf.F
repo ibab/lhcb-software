@@ -2,15 +2,16 @@
 C*********************************************************************  
     
       SUBROUTINE LUSTRF(IP) 
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Purpose: to handle the fragmentation of an arbitrary colour singlet 
 C...jet system according to the Lund string fragmentation model.    
-      IMPLICIT DOUBLE PRECISION(D)  
-      COMMON/LUJETS/N,K(9000,5),P(9000,5),V(9000,5)
-      SAVE /LUJETS/ 
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
-      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
-      SAVE /LUDAT2/ 
+C      IMPLICIT DOUBLE PRECISION(D)  
+      COMMON/HILUJETS/N,NPAD,K(9000,5),P(9000,5),V(9000,5)
+      SAVE /HILUJETS/ 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
+      COMMON/HILUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
+      SAVE /HILUDAT2/ 
       DIMENSION DPS(5),KFL(3),PMQ(3),PX(3),PY(3),GAM(3),IE(2),PR(2),    
      &IN(9),DHM(4),DHG(4),DP(5,5),IRANK(2),MJU(4),IJU(3),PJU(5,5),  
      &TJU(5),KFJH(2),NJS(2),KFJS(2),PJS(4,5)    
@@ -70,7 +71,7 @@ C...Take copy of partons to be considered. Check flavour sum.
       ENDIF 
     
 C...Boost copied system to CM frame (for better numerical precision).   
-      CALL LUDBRB(N+1,N+NP,0.,0.,-DPS(1)/DPS(4),-DPS(2)/DPS(4), 
+      CALL LUDBRB(N+1,N+NP,0.d0,0.d0,-DPS(1)/DPS(4),-DPS(2)/DPS(4), 
      &-DPS(3)/DPS(4))   
     
 C...Search for very nearby partons that may be recombined.  
@@ -900,8 +901,8 @@ C...Solve kinematics for final two hadrons, if possible.
       KFL1A=IABS(KFL(1))    
       KFL2A=IABS(KFL(2))    
       IF(MAX(MOD(KFL1A,10),MOD(KFL1A/1000,10),MOD(KFL2A,10),    
-     &MOD(KFL2A/1000,10)).GE.6) FB=SIGN(SQRT(MAX(0.,FA**2-  
-     &4.*WREM2*PR(JT))),FLOAT(JS))  
+     &MOD(KFL2A/1000,10)).GE.6) FB=SIGN(SQRT(MAX(0.d0,FA**2-  
+     &4.*WREM2*PR(JT))),DBLE(JS))  
       DO 820 J=1,4  
       P(I-1,J)=(PX(JT)+PX(3))*P(IN(3*JQ+3),J)+(PY(JT)+PY(3))*   
      &P(IN(3*JQ+3)+1,J)+0.5*(DHR1*(FA+FB)*P(IN(3*JQ+1),J)+  
@@ -964,7 +965,7 @@ C...Order particles in rank along the chain. Update mother pointer.
   900 CONTINUE  
     
 C...Boost back particle system. Set production vertices.    
-      CALL LUDBRB(NSAV+1,N,0.,0.,DPS(1)/DPS(4),DPS(2)/DPS(4),   
+      CALL LUDBRB(NSAV+1,N,0.d0,0.d0,DPS(1)/DPS(4),DPS(2)/DPS(4),   
      &DPS(3)/DPS(4))    
       DO 910 I=NSAV+1,N 
       DO 910 J=1,4  

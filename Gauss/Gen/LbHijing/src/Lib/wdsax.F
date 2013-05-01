@@ -1,0 +1,13 @@
+C
+C
+	FUNCTION WDSAX(X)
+	IMPLICIT REAL*8(A-H,O-Z)
+C     			********THREE PARAMETER WOOD SAXON
+      	COMMON/WOOD/R,D,FNORM,W
+	SAVE  /WOOD/
+      	WDSAX=FNORM*(1.+W*(X/R)**2)/(1+DEXP((X-R)/D))
+       	IF (W.LT.0.) THEN
+       		IF (X.GE.R/DSQRT(ABS(W))) WDSAX=0.
+       	ENDIF
+      	RETURN
+      	END

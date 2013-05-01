@@ -2,16 +2,16 @@
 C*********************************************************************  
     
       SUBROUTINE PYHISSPA(IPU1,IPU2)  
-    
+      IMPLICIT REAL*8(A-H,O-Z)
 C...Generates spacelike parton showers. 
-      IMPLICIT DOUBLE PRECISION(D)  
-      COMMON/LUJETS/N,K(9000,5),P(9000,5),V(9000,5)
-      SAVE /LUJETS/ 
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
-      SAVE /LUDAT1/ 
-      COMMON/LUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
-      SAVE /LUDAT2/ 
-      COMMON/PYHISUBS/MSEL,MSUB(200),KFIN(2,-40:40),CKIN(200) 
+C      IMPLICIT DOUBLE PRECISION(D)  
+      COMMON/HILUJETS/N,NPAD,K(9000,5),P(9000,5),V(9000,5)
+      SAVE /HILUJETS/ 
+      COMMON/HILUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200) 
+      SAVE /HILUDAT1/ 
+      COMMON/HILUDAT2/KCHG(500,3),PMAS(500,4),PARF(2000),VCKM(4,4)    
+      SAVE /HILUDAT2/ 
+      COMMON/PYHISUBS/MSEL,MSELPD,MSUB(200),KFIN(2,-40:40),CKIN(200) 
       SAVE /PYHISUBS/ 
       COMMON/PYHIPARS/MSTP(200),PARP(200),MSTI(200),PARI(200) 
       SAVE /PYHIPARS/ 
@@ -296,9 +296,9 @@ C...Reconstruct kinematics of branching: timelike parton shower.
           DPB(4)=SQRT(DPB(3)**2+DMS)    
           DBEZ=(DPB(4)*DPB(1)-DPB(3)*DPB(2))/(DPB(4)*DPB(2)-DPB(3)* 
      &    DPB(1))   
-          CALL LUDBRB(IT+1,N,0.,0.,0D0,0D0,DBEZ)    
+          CALL LUDBRB(IT+1,N,0.d0,0.d0,0D0,0D0,DBEZ)    
           THE=ULANGL(P(IT,3),P(IT,1))   
-          CALL LUDBRB(IT+1,N,THE,0.,0D0,0D0,0D0)    
+          CALL LUDBRB(IT+1,N,THE,0.d0,0D0,0D0,0D0)    
         ENDIF   
     
 C...Reconstruct kinematics of branching: spacelike parton.  
@@ -331,7 +331,7 @@ C...Define colour flow of branching.
         N=N+1   
     
 C...Boost to new CM-frame.  
-        CALL LUDBRB(NS+1,N,0.,0.,-DBLE((P(N,1)+P(IS(JR),1))/(P(N,4)+    
+        CALL LUDBRB(NS+1,N,0.d0,0.d0,-DBLE((P(N,1)+P(IS(JR),1))/(P(N,4)+    
      &  P(IS(JR),4))),0D0,-DBLE((P(N,3)+P(IS(JR),3))/(P(N,4)+   
      &  P(IS(JR),4))))  
         IR=N+(JT-1)*(IS(1)-N)   
@@ -377,7 +377,7 @@ C...Boost hard scattering partons to frame of shower initiators.
         ROBO(4)=ROBO(4)/ROBOT   
         ROBO(5)=ROBO(5)/ROBOT   
       ENDIF 
-      CALL LUDBRB(N+2,N+2,0.,0.,-DBLE(ROBO(3)),-DBLE(ROBO(4)),  
+      CALL LUDBRB(N+2,N+2,0.d0,0.d0,-DBLE(ROBO(3)),-DBLE(ROBO(4)),  
      &-DBLE(ROBO(5)))   
       ROBO(2)=ULANGL(P(N+2,1),P(N+2,2)) 
       ROBO(1)=ULANGL(P(N+2,3),SQRT(P(N+2,1)**2+P(N+2,2)**2))    
