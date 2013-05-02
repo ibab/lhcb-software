@@ -47,6 +47,7 @@ GiGaGetHitsAlg::GiGaGetHitsAlg( const std::string& name,
   declareProperty( "VeloHits",   m_velohits   = LHCb::MCHitLocation::Velo );
   declareProperty( "PuVetoHits", m_puvelohits = LHCb::MCHitLocation::PuVeto );
   declareProperty( "TTHits",     m_tthits = LHCb::MCHitLocation::TT );
+  declareProperty( "SLHits",     m_slhits = LHCb::MCHitLocation::SL );
   declareProperty( "ITHits",     m_ithits = LHCb::MCHitLocation::IT );
   declareProperty( "OTHits",     m_othits = LHCb::MCHitLocation::OT );
   declareProperty( "FTHits",     m_fthits = LHCb::MCHitLocation::FT );
@@ -97,6 +98,9 @@ StatusCode GiGaGetHitsAlg::execute() {
 
   // Inner Tracker hits
   hitsTracker( "IT", m_ithits );
+  
+  // SL  hits
+  hitsTracker( "SL", m_slhits );
 
   // Outer Tracker hits
   hitsTracker( "OT", m_othits );

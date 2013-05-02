@@ -39,6 +39,7 @@ private:
   std::string    m_othits      ;      ///< TES path where to look for OT hits 
   std::string    m_tthits      ;      ///< TES path where to look for TT hits
   std::string    m_ithits      ;      ///< TES path where to look for IT hits
+  std::string    m_slhits      ;      ///< TES path where to look for SL hits
   std::string    m_fthits      ;      ///< TES path where to look for FT hits
   std::string    m_uthits      ;      ///< TES path where to look for UT hits
   std::string    m_velohits    ;      ///< TES path where to look for Velo hits

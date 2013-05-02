@@ -4,6 +4,9 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+! 2013-05-02 - Paul Szczypka
+ - Added SL hit information.
+
 ! 2013-05-01 - Patrick Robbe
  - GenInit.cpp: set to 0 the event type of the GenHeader when creating it.
    It will be filled to the correct value then in Generators/Generation.
