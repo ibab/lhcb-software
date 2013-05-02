@@ -116,3 +116,6 @@ template class DataPacking::Unpack<LHCb::MCFTHitPacker>;
 typedef DataPacking::Unpack<LHCb::MCFTHitPacker> S;
 DECLARE_ALGORITHM_FACTORY( S )
 
+template class DataPacking::Unpack<LHCb::MCSLHitPacker>;
+typedef DataPacking::Unpack<LHCb::MCSLHitPacker> T;
+DECLARE_ALGORITHM_FACTORY( T )

@@ -115,3 +115,7 @@ DECLARE_ALGORITHM_FACTORY( R )
 template class DataPacking::Pack<LHCb::MCFTHitPacker>;
 typedef DataPacking::Pack<LHCb::MCFTHitPacker> S;
 DECLARE_ALGORITHM_FACTORY( S )
+
+template class DataPacking::Pack<LHCb::MCSLHitPacker>;
+typedef DataPacking::Pack<LHCb::MCSLHitPacker> T;
+DECLARE_ALGORITHM_FACTORY( T )
