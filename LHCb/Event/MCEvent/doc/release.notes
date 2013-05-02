@@ -3,6 +3,9 @@
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output)
 !-----------------------------------------------------------------------------
 
+! 2013-05-02 - Paul Szczypka
+ - Added SL hit locations.
+
 !========================= MCEvent v2r25 2013-02-04 =========================
 ! 2013-01-28 - Sajan Easo
  - Added an extra flag in MCRichHit.xml for the PMT lens for upgrade studies.
