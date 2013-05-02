@@ -156,8 +156,8 @@ void MessageLogger::printMessage(const char* msg, bool crlf)  {
         break;
       } 
     }
-    ::fprintf(m_output,msg);
-    if ( crlf ) ::fprintf(m_output,"\n");
+    ::fputs(msg,m_output);
+    if ( crlf ) ::fputc('\n',m_output);
     if ( m_colors ) ::plain();
     if ( m_output != stdout ) ::fflush(m_output);
   }
@@ -199,8 +199,8 @@ void MessageLogger::printAlarm(const char* msg, bool crlf)  {
         break;
       } 
     }
-    ::fprintf(m_output,msg);
-    if ( crlf ) ::fprintf(m_output,"\n");
+    ::fputs(msg,m_output);
+    if ( crlf ) ::fputc('\n',m_output);
     if ( m_colors ) ::plain();
     if ( m_output != stdout ) ::fflush(m_output);
   }
@@ -355,24 +355,24 @@ void MessageLogger::printHeader(const vector<string>& titles, bool with_guards) 
       ::memset(buffer,' ',cols);
       buffer[cols-1] = 0; 
       if ( with_guards ) {
-	::printf(buffer);
-	::printf("\n");
+	::fputs(buffer,stdout);
+	::fputc('\n',stdout);
       }
       for(vector<string>::const_iterator i=titles.begin();i!=titles.end();++i) {
         const string& title = *i;
-        ::memcpy(&buffer[20],title.c_str(),title.length());
-        ::printf(buffer);
-        ::printf("\n");
+        ::memcpy(&buffer[20],title.c_str(),title.length()+1);
+        ::fputs(buffer,stdout);
+        ::fputc('\n',stdout);
         ::memset(&buffer[20],' ',title.length());
         buffer[cols-1] = 0;
       }
       if ( with_guards ) {
-	::printf(buffer);
-	::printf("\n");
+	::fputs(buffer,stdout);
+	::fputc('\n',stdout);
       }
       ::normal();
       ::plain();
-      ::printf("\n");
+      ::fputc('\n',stdout);
       return;
     }
   } 
