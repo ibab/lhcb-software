@@ -1,4 +1,4 @@
-package RawEventControl
+package RawEventCompat
 version           v1r0
 
 branches cmt doc python tests
@@ -9,5 +9,5 @@ use DAQUtils v* DAQ
 apply_pattern install_python_modules
 apply_pattern QMTest
 
-#will need additional packages for testing, 
+#will need additional packages for testing,
 #at least GaudiConf for IOHelper and LHCbApp
