@@ -6,6 +6,7 @@
 extern "C"{
 #include <ZipLZMA.h>
 }
+#include "GaudiKernel/GaudiException.h"
 
 // local
 #include "DetCond/CondDBCompression.h"
@@ -28,7 +29,8 @@ std::string CondDBCompression::compress(const std::string& strin, const int8_t m
     case 0: //LZMA method from ROOT package
         srcsize = strin.length();
         R__zipLZMA(9, &srcsize, const_cast<char*>(strin.c_str()), (int*)(&destLen), dest, &retbit);
-        if (retbit == 0) return "";
+        if (retbit == 0 ) 
+            throw GaudiException("Error during LZMA compression", "CondDBCompression.cpp", StatusCode::FAILURE );
         destLen = retbit;
         break;
     default: //Do nothing if method not recognized
@@ -63,14 +65,14 @@ std::string CondDBCompression::decompress(const std::string& strin){
         switch (method){
         case 0:
             R__unzipLZMA((int*)&output_length, (unsigned char*)(const_cast<char*>(zdata.c_str())), (int*)(&destLen), (unsigned char*)(dest), &retbit);    
-            if (retbit == 0) return ""; // empty string if error during compression
+            if (retbit == 0 ) 
+                throw GaudiException("Error during LZMA decompression", "CondDBCompression.cpp", StatusCode::FAILURE );
             destLen = retbit;
             break;
         default: //Do nothing if method not recognized
             delete [] dest;
             return strin;
         }
-        if (destLen == 0 ) return "";
     	std::string out(dest, destLen);
     	delete [] dest;
         return out;

@@ -3,6 +3,8 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+! 2013-05-02 - Liang Sun
+ - Removed one defunct line to please Coverity. Added in GaudiException() to handle LZMA errors 
 
 !========================= DetCond v12r30 2013-04-29 =========================
 ! 2013-04-26 - Liang Sun
