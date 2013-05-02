@@ -206,7 +206,7 @@ int OutputLogger::overflow (int c)    {
     case 'F':
       if ( m_level > 6 ) break;
     default:
-      ::printf(_buf.c_str());
+      ::puts(_buf.c_str());
     break;
     }
     _buf="";

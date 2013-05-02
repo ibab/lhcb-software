@@ -44,14 +44,6 @@ namespace
     }
   }
 
-  inline void toLowerCase(std::string &s)
-  {
-    for (unsigned int i=0;i<s.size();i++)
-    {
-      s[i] = tolower(s[i]);
-    }
-  }
-
   template <class T> struct ObjectLock {
     T* m_obj;
     ObjectLock(T* a) : m_obj(a) { m_obj->Lock(); }

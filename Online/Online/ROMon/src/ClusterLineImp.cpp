@@ -408,6 +408,7 @@ void CtrlFarmClusterLine::excludedHandler(void* tag, void* address, int* size) {
 StorageClusterLine::StorageClusterLine(FarmLineDisplay* p, const string& partition, const std::string& n)
 : ClusterLine(p,partition,n)
 {
+  m_numUpdate = 0;
   m_lastUpdate = time(0);
   m_hasProblems = false;
   connect(strlower(m_name)+"/ROpublish");
@@ -428,6 +429,7 @@ void StorageClusterLine::display() {
   int tot_prod[3] = {0,0,0}, min_prod[3] = {INT_max,INT_max,INT_max};
   int   num_cl[3] = {0,0,0}, num_sl[3] = {0,0,0};
 
+  ++m_numUpdate;
   m_inUse = false;
   for (Nodes::const_iterator n=c->nodes.begin(); n!=c->nodes.end(); n=c->nodes.next(n))  {
     bool recv_node = ::strncasecmp((*n).name,"storerecv",8) == 0;
