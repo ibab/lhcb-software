@@ -27,7 +27,7 @@ using namespace std;
 
 /// Class Constructor
 FmcSlave::FmcSlave(const Type* typ, const string& nam, Machine* machine, bool internal) 
-  : DimSlave(typ,nam,machine), m_internal(internal)
+  : DimSlave(typ,nam,machine,internal)
 {
 }
 
@@ -55,25 +55,12 @@ DimSlave& FmcSlave::addFmcArgs(const string& args)  {
 /// Start slave process
 FSM::ErrCond FmcSlave::start()  {
   string fmc_args, cmd_args;
-  if ( isInternal() )  {
-    send(SLAVE_ALIVE,0);
-    return FSM::WAIT_ACTION;
-  }
   for(size_t i=0; i<m_fmcArgs.size();++i)
     fmc_args += m_fmcArgs[i] + " ";
   for(size_t i=0; i<m_argv.size();++i)
     cmd_args += m_argv[i] + " ";
-
   TaskManager::instance(RTL::nodeNameShort()).start(name(),fmc_args,m_cmd,cmd_args);
   return FSM::SUCCESS;
-}
-
-/// Send transition request to the slave
-FSM::ErrCond FmcSlave::sendRequest(const Transition* tr)  {
-  if ( tr )  {
-    return isInternal() ? send(SLAVE_FINISHED,tr->to()) : DimSlave::sendRequest(tr);
-  }
-  return FSM::FAIL;
 }
 
 /// Handle timeout on unload transition according to timer ID

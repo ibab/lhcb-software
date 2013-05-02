@@ -108,8 +108,10 @@ namespace FiniteStateMachine {
     Machine& setTarget (const Transition* trans)  {  m_currTrans = trans; return *this;        }
     /// Set machine interrupt handler
     Machine& setHandler(Interactor* handler)      {  m_handler = handler; return *this;        }
-    /// Access array of slaves
+    /// Access array of slaves (CONST)
     const Slaves& slaves()  const                 {  return m_slaves;                          }
+    /// Access array of slaves
+    Slaves& slaves()                              {  return m_slaves;                          }
     /// Access number of slaves
     std::size_t numSlaves()  const                {  return m_slaves.size();                   }
     /// Check if the machine is in idle state

@@ -43,8 +43,6 @@ namespace FiniteStateMachine   {
     const State* m_errorState;
     /// Reference to machine object
     Machine* m_machine;
-    /// Flag if on next occurrence of OFFLINE we should exit
-    bool m_queueExit;
 
   public:
     /// Constructor
@@ -60,6 +58,8 @@ namespace FiniteStateMachine   {
     ErrCond fail();
     /// Publish state information when transition is completed
     ErrCond publish();
+    /// State enter action for READY: Reset all internal slaves to external ones
+    ErrCond ready();
     /// Invoke single transition request on machine
     ErrCond invokeTransition(const std::string& tr);
     /// Set transition target state

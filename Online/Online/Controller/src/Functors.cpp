@@ -46,7 +46,7 @@ void SlaveStarter::operator()(Slave* s)    {
   else if ( st == Slave::SLAVE_FAILED )
     ++fail;
   else if ( st == Slave::SLAVE_LIMBO )  {
-    FSM::ErrCond sc = s->start();
+    FSM::ErrCond sc = s->startSlave();
     if ( sc == FSM::WAIT_ACTION  ) ++dead;
     else if ( sc == FSM::SUCCESS ) ++count;
     else ++fail;
@@ -55,7 +55,7 @@ void SlaveStarter::operator()(Slave* s)    {
 
 /// Operator invoked for each slave to be killed
 void SlaveKiller::operator()(Slave* s)    {
-  FSM::ErrCond sc = s->kill();
+  FSM::ErrCond sc = s->killSlave();
   if ( sc == FSM::SUCCESS     ) ++dead;
   if ( sc == FSM::WAIT_ACTION ) ++count;
   else ++fail;

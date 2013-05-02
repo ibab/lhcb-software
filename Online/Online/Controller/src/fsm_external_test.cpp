@@ -11,18 +11,16 @@
 #include "FiniteStateMachine/Slave.h"
 #include "FiniteStateMachine/Machine.h"
 #include "FiniteStateMachine/FSMTypes.h"
-#include "FiniteStateMachine/Functors.h"
+//#include "FiniteStateMachine/Functors.h"
 #include "FiniteStateMachine/TestAutoTrans.h"
 #include "Controller/Controller.h"
 #include "Controller/NativeDimSlave.h"
-
 #include "CPP/IocSensor.h"
 #include "RTL/rtl.h"
 #include "dis.hxx"
 
-#include <boost/assign/std/vector.hpp>
-
 // C/C++ include files
+#include <boost/assign/std/vector.hpp>
 #include <iostream>
 #include <cstdio>
 #include <cerrno>
@@ -35,44 +33,43 @@ typedef FSM::ErrCond ErrCond;
 
 namespace   {
   struct ExternalSlave : public NativeDimSlave {
-    ExternalSlave(const Type* typ, const string& nam, Machine* machine) : NativeDimSlave(typ,nam,machine)   {
+    ExternalSlave(const Type* typ, const string& nam, Machine* machine) : NativeDimSlave(typ,nam,machine,false)   {
       m_cmd = controller_bindir() + "/external_fsm_client.exe";
       m_argv += name(),"-name="+name();
       cloneEnv();
     }
     virtual ~ExternalSlave() {}
   };
-  static void help_fun() {
-    ::printf("Invalid arguments to test executable.\n");
-    ::exit(EINVAL);
-  }
   static string make_slave_name(int i) {
     char text[32];
     ::sprintf(text,"SLAVE_%d",i);
     return text;
   }
-
 }
 
 extern "C" int external_fsm_client(int argc, char** argv)  {
-  int print = -0;
+  int num_instance=0, print = -0;
   string dim_name = "SLAVE";
-  RTL::CLI cli(argc, argv, help_fun);
-  cli.getopt("name",2,dim_name);
-  cli.getopt("print",1,print);
+  RTL::CLI cli(argc, argv, 0);
+  cli.getopt("name",      1, dim_name);
+  cli.getopt("print",     1, print);
+  cli.getopt("instances", 1, num_instance);
   TypedObject::setPrintLevel(print);
-  DAQCommandTarget(dim_name).run();
+  TypedObject::display(TypedObject::ALWAYS,"%s> Starting. Should fork %d children.",
+		       dim_name.c_str(),num_instance);
+  DAQCommandTarget target(dim_name);
+  target.run();
   return 1;
 }
 
 extern "C" int external_fsm_test(int argc, char** argv)  {
   string dim_name = "Ctrl";
   int print = 0, rounds = -1, num_slaves=2;
-  RTL::CLI cli(argc, argv, help_fun);
+  RTL::CLI cli(argc, argv, 0);
   bool auto_start = cli.getopt("auto",2);
-  cli.getopt("name",2,dim_name);
+  cli.getopt("name",  1,dim_name);
   cli.getopt("rounds",1,rounds);
-  cli.getopt("print",1,print);
+  cli.getopt("print", 1,print);
   cli.getopt("slaves",1,num_slaves);
 
   TypedObject::setPrintLevel(print);
@@ -97,9 +94,9 @@ extern "C" int external_fsm_test(int argc, char** argv)  {
 extern "C" int controller_fsm_test(int argc, char** argv)  {
   string dim_name = "Ctrl";
   int    print = 0, num_slaves=2;
-  RTL::CLI cli(argc, argv, help_fun);
-  cli.getopt("name",2,dim_name);
-  cli.getopt("print",1,print);
+  RTL::CLI cli(argc, argv, 0);
+  cli.getopt("name",  1,dim_name);
+  cli.getopt("print", 1,print);
   cli.getopt("slaves",1,num_slaves);
   TypedObject::setPrintLevel(print);
 

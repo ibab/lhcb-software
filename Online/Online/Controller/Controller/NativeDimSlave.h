@@ -37,7 +37,7 @@ namespace FiniteStateMachine   {
      * @arg typ     [string, read-only] FSM type
      * @arg machine [string, read-only] FSM machine reference
      */
-    NativeDimSlave(const Type* typ, const std::string& nam, Machine* machine);
+    NativeDimSlave(const Type* typ, const std::string& nam, Machine* machine, bool internal);
     /// Standatrd destructor
     virtual ~NativeDimSlave();
     /// Start slave process

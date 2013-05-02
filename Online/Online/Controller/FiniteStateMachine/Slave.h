@@ -54,10 +54,16 @@ namespace FiniteStateMachine {
     };
 
   protected:
+    /// The slave's meta-state
     SlaveState        m_meta;
+    /// Reference to the managing machine
     Machine*          m_machine;
+    /// Current slave state. During transition the original state
     const State*      m_state;
+    /// Rule currently applied during this transition
     const Rule*       m_rule;
+    /// Flag indicating (initial) internal transition actions
+    bool              m_internal;
   public:
     /** Class Constructor
      *
@@ -65,13 +71,19 @@ namespace FiniteStateMachine {
      * @arg nam     [string, read-only] Slave name
      * @arg machine [string, read-only] FSM machine reference
      */
-    Slave(const Type* typ, const std::string& nam, Machine* machine);
+    Slave(const Type* typ, const std::string& nam, Machine* machine, bool internal);
     /// Standatrd destructor
     virtual ~Slave();    
     /// Internal meta-state of the slave
     SlaveState currentState() const                       {  return m_meta;                 }
     /// Internal meta-state of the slave
     void setCurrentState(SlaveState new_state)            {  m_meta = new_state;            }
+    /// Check if the slave is limbo
+    bool isLimbo() const           {  return m_meta==SLAVE_LIMBO || m_meta==SLAVE_STARTING; }
+    /// Access flag indicating (initial) internal transition actions
+    bool isInternal() const                               {  return m_internal;             }
+    /// Access flag indicating (initial) internal transition actions
+    void setInternal(bool internal_flag)                  {  m_internal = internal_flag;    }
     /// Access meta state as string
     const char* metaStateName() const;
     /// Access current state of the slave
@@ -84,14 +96,12 @@ namespace FiniteStateMachine {
     const char* c_state ()  const;
     /// Retrieve reference to managing machine structure name
     const char* c_machine ()  const;
-    /// Check if the slave is limbo
-    bool isLimbo() const           {  return m_meta==SLAVE_LIMBO || m_meta==SLAVE_STARTING; }
 
     /// Invoke transition on slave. Noop if slave is already in target state
     ErrCond apply(const Rule* rule);
 
-    /// Send IOC interrupt to slave
-    ErrCond send(int code, const State* state=0)   const;
+    /// Send IOC interrupt to slave - used for internal slave transitions
+    virtual ErrCond send(int code, const State* state=0)   const;
 
     /// External interrupt handler
     virtual void handle(const Event& event);
@@ -100,15 +110,20 @@ namespace FiniteStateMachine {
     /// Send notification to machine object about slave's state changes
     virtual ErrCond notifyMachine(int meta_state);
 
-    /// Send transition request to the slave
-    virtual ErrCond sendRequest(const Transition* tr) = 0;
     /// Start slave process
-    virtual ErrCond start() = 0;
-    /** Kill slave process. 
+    virtual ErrCond startSlave();
+    /// Start slave process
+    virtual ErrCond killSlave();
+
+    /// Virtual method -- must be overloaded -- Send transition request to the slave
+    virtual ErrCond sendRequest(const Transition* tr);
+    /// Start slave process. Base class implementation will throw an exception
+    virtual ErrCond start();
+    /** Kill slave process. Base class implementation will throw an exception
      *  Function MUST return FSM::SUCCESS if slave is truely dead 
      *  or FSM::WAIT_ACTION if slave is going to die.
      */
-    virtual ErrCond kill() = 0;
+    virtual ErrCond kill();
 
     /// Callback on alive signs of slave process: Invoke using IOC SLAVE_ALIVE
     virtual ErrCond iamHere();

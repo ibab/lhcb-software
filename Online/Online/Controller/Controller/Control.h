@@ -71,14 +71,16 @@ namespace FiniteStateMachine {
     lib_rtl_thread_t m_thread;
     char             m_slaveCmd[128];
     char             m_stateCmd[128];
-    char             m_tmoCmd[16];
-    char             m_killCmd[16];
-    char             m_errorCmd[16];
+    char             m_anyCmd[32];
     char             m_modeCmd[32];
     char             m_slvTypeCmd[32];
     char             m_partitionCmd[32];
     char             m_configCmd[32];
     char             m_runinfoCmd[32];
+    char             m_tmoCmd[16];
+    char             m_killCmd[16];
+    char             m_pauseCmd[16];
+    char             m_errorCmd[16];
 
     Machine*         m_machine;
     DimSlave*        m_slave;
@@ -129,9 +131,9 @@ namespace FiniteStateMachine {
     /// Start the controller task
     virtual void startController();
     /// Start the controller task
-    virtual void startControllerConfig();
+    virtual void startControllerConfig(std::vector<std::string>& tasks);
     /// Start the controller task
-    virtual void startControllerNoConfig();
+    virtual void startControllerNoConfig(std::vector<std::string>& tasks);
     /// Kill the controller task
     virtual void killController();
     /// Invoke transition on FSM machine
@@ -144,12 +146,8 @@ namespace FiniteStateMachine {
     virtual void updateSlaveState();
     /// Update the display with the new FSM machine state
     virtual void updateMachineState();
-    /// Exit slave via DIM command
-    virtual void killSlave(int which);
-    /// Send slave to state error via DIM command
-    virtual void errorSlave(int which);
-    /// Send slave to state error via triggered timeout
-    virtual void timeoutSlave(int which);
+    /// Send a command to one of the slave's data points
+    void execDimCommand(const std::string& dp, const std::string& data);
 
     /// Destroy the controller task
     FSM::ErrCond destroy();

@@ -27,11 +27,14 @@ using namespace FiniteStateMachine::DAQ;
 
 /// Constructor
 Controller::Controller(const string&  nam, Machine* m)
-  : CommandTarget(nam), m_errorState(0), m_machine(m), m_queueExit(false)
+  : CommandTarget(nam), m_errorState(0), m_machine(m)
 {
-  m_errorState = m_machine->type()->state(ST_NAME_ERROR);
+  const Type*  typ = m_machine->type();
+  const State* rdy = typ->state(ST_NAME_READY);
+  m_errorState = typ->state(ST_NAME_ERROR);
   m->setFailAction(Callback::make(this,&Controller::fail));
   m->setCompletionAction(Callback::make(this,&Controller::publish));
+  m->setInAction(rdy,Callback::make(this,&Controller::ready));
   publish();
 }
 
@@ -45,8 +48,8 @@ FSM::ErrCond Controller::fail()  {
   // Nothing to do, since failure will be handled with IOC SLAVE_FAILED
   display(ALWAYS,"Controller: %s> FAILED to invoke transition %s from %s Metastate:%s",
 	  c_name(),tr ? tr->c_name() : "", m_machine->c_state(), m_machine->currentMetaName());
-  for(Machine::Slaves::const_iterator i=m_machine->slaves().begin(); i!= m_machine->slaves().end(); ++i)  {
-    Slave* s = const_cast<Slave*>(*i);
+  for(Machine::Slaves::iterator i=m_machine->slaves().begin(); i!= m_machine->slaves().end(); ++i)  {
+    Slave* s = *i;
     if ( s->currentState() == Slave::SLAVE_FAILED )
       s->setState(m_errorState);
     display(ALWAYS,"Controller: %s> Slave %s in state %s has meta-state:%s",
@@ -60,11 +63,18 @@ FSM::ErrCond Controller::fail()  {
 /// Publish state information when transition is completed
 FSM::ErrCond Controller::publish()  {
   string state = m_machine->c_state();
-  ErrCond ret = declareState(state);
-  if ( m_queueExit && state == ST_NAME_OFFLINE )  {
-    //IocSensor::instance().send(this,EXIT_PROCESS,this);
+  return declareState(state);
+}
+
+/// State enter action for READY: Reset all internal slaves to external ones
+FSM::ErrCond Controller::ready()  {
+  for(Machine::Slaves::iterator i=m_machine->slaves().begin(); i!= m_machine->slaves().end(); ++i)  {
+    Slave* s = *i;
+    if ( s->isInternal() )  {
+      s->setInternal(false);
+    }
   }
-  return ret;
+  return FSM::SUCCESS;
 }
 
 /// Interrupt handling routine
@@ -163,17 +173,15 @@ void Controller::commandHandler()   {
     setTargetState(OFFLINE);
     invokeTransition(cmd);
   }
-  else if ( cmd == "RESET" )  {
+  else if ( cmd == "destroy" )  {
     setTargetState(OFFLINE);
     invokeTransition(cmd);
   }
   else if ( cmd == "unload"   )  {
-    m_queueExit = true;
     setTargetState(OFFLINE);
     invokeTransition(cmd);
   }
   else if ( cmd == "destroy"   )  {
-    m_queueExit = true;
     setTargetState(UNKNOWN);
     IocSensor::instance().send(this,EXIT_PROCESS,this);
     declareState(ST_NAME_UNKNOWN);

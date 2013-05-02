@@ -26,8 +26,8 @@ using namespace FiniteStateMachine;
 using namespace std;
 
 /// Class Constructor
-DimSlave::DimSlave(const Type* typ, const string& nam, Machine* machine) 
-  : Slave(typ,nam,machine), m_dimState(0,0), m_timerID(0,0), m_commandName(), m_killCmd("unload")
+DimSlave::DimSlave(const Type* typ, const string& nam, Machine* machine, bool internal) 
+  : Slave(typ,nam,machine,internal), m_dimState(0,0), m_timerID(0,0), m_commandName(), m_killCmd("unload")
 {
   m_commandName = nam;
   m_tmo = 3;

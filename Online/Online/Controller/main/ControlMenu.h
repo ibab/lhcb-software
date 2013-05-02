@@ -31,6 +31,8 @@ namespace UPI {
     }
     /// Output and printing helper function
     virtual void write_message(const char* fmt,...);
+    /// Add lines and commands to menu for each task
+    void addTaskMenuLines(int which, const std::string& name);
 
   public:
     /// Standard constructor with object setup through parameters
@@ -38,9 +40,9 @@ namespace UPI {
     /// Standard destructor
     virtual ~ControlMenu();
     /// Start the controller task
-     virtual void startControllerConfig();
+    virtual void startControllerConfig(std::vector<std::string>& tasks);
     /// Start the controller task
-     virtual void startControllerNoConfig();
+    virtual void startControllerNoConfig(std::vector<std::string>& tasks);
     /// Display callback handler
     virtual void handle(const Event& ev);
   };   //  End class ControlMenu

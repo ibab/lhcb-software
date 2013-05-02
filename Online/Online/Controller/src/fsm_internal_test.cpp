@@ -39,42 +39,23 @@ namespace   {
     typedef FSM::ErrCond ErrCond;
     /// Initializing constructor
     InternalSlave(const Type* typ, const string& nam, int msleep, Machine* machine) 
-      : Slave(typ,nam,machine), m_sleep(msleep) {
-    }
+      : Slave(typ,nam,machine,true), m_sleep(msleep) {}
     /// Defautl constructor
-    virtual ~InternalSlave() {
-    }
+    virtual ~InternalSlave() {}
     /// Helper to send internal interrupts
-    virtual ErrCond _send(ErrCond ret, int cmd, const State* state=0)  {
+    virtual ErrCond send(int cmd, const State* state=0)  const {
       if ( m_sleep > 0 ) ::lib_rtl_sleep(m_sleep);
-      send(cmd,state);
-      return ret;
-    }
-    /// Start internal slave
-    virtual ErrCond start()  {
-      display(NOLOG,"Slave %s> starting....",c_name());
-      return _send(FSM::WAIT_ACTION,SLAVE_ALIVE);
-    }
-    /// Kill internal slave
-    virtual ErrCond kill()  {
-      display(NOLOG,"Slave %s> killing....",c_name());
-      return _send(FSM::WAIT_ACTION,SLAVE_LIMBO);
-    }
-    /// Send internal message
-    virtual ErrCond sendRequest(const Transition* tr)  {
-      return _send(FSM::SUCCESS,SLAVE_FINISHED,tr->to());
+      return Slave::send(cmd,state);
     }
   };
-  static void help_fun() {}
 }
-
 
 extern "C" int internal_fsm_test(int argc, char** argv)  {
   int msleep = -1, print = -1, rounds = -1;
-  RTL::CLI cli(argc, argv, help_fun);
-  cli.getopt("sleep",1,msleep);
+  RTL::CLI cli(argc, argv, 0);
+  cli.getopt("sleep", 1,msleep);
   cli.getopt("rounds",1,rounds);
-  cli.getopt("print",1,print);
+  cli.getopt("print", 1,print);
 
   TypedObject::setPrintLevel(print);
   const Type*    t = fsm_type("DAQ");

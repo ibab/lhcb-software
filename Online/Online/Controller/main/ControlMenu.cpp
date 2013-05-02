@@ -53,11 +53,13 @@ static const char* s_stateList[]  = {"OFFLINE","NOT_READY","READY","RUNNING","ER
 UPI::ControlMenu::ControlMenu(const std::string& config) 
   : Control(config), m_id(0)
 {
-  string line = "------------------------------------------------------------";
+  string line = "----------------------------------------------------------------------------";
   m_id = UpiSensor::instance().newID();
   ::strcpy(m_killCmd,"Kill");
-  ::strcpy(m_errorCmd,"ERROR");
-  ::strcpy(m_tmoCmd,"TIMEOUT");
+  ::strcpy(m_pauseCmd,"Pause");
+  ::strcpy(m_errorCmd,"Error");
+  ::strcpy(m_tmoCmd,"Timeout");
+  ::strcpy(m_anyCmd,s_cmdList[0]);
   ::strcpy(m_modeCmd,s_modeList[0]);
   ::strcpy(m_slaveCmd,s_cmdList[0]);
   ::strcpy(m_stateCmd,s_stateList[0]);
@@ -127,36 +129,31 @@ void UPI::ControlMenu::write_message(const char* fmt,...)   {
   ::upic_write_message(str,"");
 }
 
-/// Start the controller task
-void UPI::ControlMenu::startControllerNoConfig()   {
+/// Add lines and commands to menu for each task
+void UPI::ControlMenu::addTaskMenuLines(int which, const string& name)  {
   char text[256];
-  Control::startControllerNoConfig();
-  for(int i=0; i<m_numSlaves; ++i)  {
-    ::upic_set_param(m_killCmd, 1,"A4",m_killCmd, 0,0,0,0,1);
-    ::upic_set_param(m_errorCmd,2,"A5",m_errorCmd,0,0,0,0,1);
-    ::upic_set_param(m_tmoCmd,  3,"A7",m_tmoCmd,0,0,0,0,1);
-    ::sprintf(text,"SLAVE_%d  ^^^^ Send to ^^^^^  Force ^^^^^^^",i);
-    ::upic_insert_command(m_id,COM_LINE_6,CMD_KILL_SLAVE+2*i,  text,""); 
-    ::upic_insert_comment(m_id,COM_LINE_6,CMD_KILL_SLAVE+2*i+1,"          ------------------",""); 
-  }
+  ::sprintf(text,"%-24s  ^^^^ Force ^^^^^^^ Send to ^^^^^  ^^^^^  ^^^^^^^^^ ",name.c_str());
+  ::upic_set_param(m_killCmd,  1, "A4", m_killCmd,  0,0,0,0,1);
+  ::upic_set_param(m_tmoCmd,   2, "A7", m_tmoCmd,   0,0,0,0,1);
+  ::upic_set_param(m_pauseCmd, 3, "A5", m_pauseCmd, 0,0,0,0,1);
+  ::upic_set_param(m_errorCmd, 4, "A5", m_errorCmd, 0,0,0,0,1);
+  ::upic_set_param(m_anyCmd,   5, "A9", m_anyCmd,   0,0,s_cmdList,sizeof(s_cmdList)/sizeof(s_cmdList[0]),1);
+  ::upic_insert_command(m_id,COM_LINE_6,CMD_KILL_SLAVE+2*which, text,""); 
+  ::upic_insert_comment(m_id,COM_LINE_6,CMD_KILL_SLAVE+2*which+1,"          ------------------",""); 
 }
 
 /// Start the controller task
-void UPI::ControlMenu::startControllerConfig()   {
-  vector<string> tasks;
-  XmlTaskConfiguration cfg(m_partitionCmd,m_configCmd,m_runinfoCmd,m_modeCmd,m_numSlaves);
-  Control::startControllerConfig();
-  if ( cfg.getTasks(tasks) )  {
-    char text[256];
-    for(size_t i=0; i<tasks.size(); ++i)  {
-      ::upic_set_param(m_killCmd, 1,"A4",m_killCmd, 0,0,0,0,1);
-      ::upic_set_param(m_errorCmd,2,"A5",m_errorCmd,0,0,0,0,1);
-      ::upic_set_param(m_tmoCmd,  3,"A7",m_tmoCmd,0,0,0,0,1);
-      ::sprintf(text,"%-24s  ^^^^ Send to ^^^^^  Force ^^^^^^^",tasks[i].c_str());
-      ::upic_insert_command(m_id,COM_LINE_6,CMD_KILL_SLAVE+2*i,  text,""); 
-      ::upic_insert_comment(m_id,COM_LINE_6,CMD_KILL_SLAVE+2*i+1,"          ------------------",""); 
-    }
-  }
+void UPI::ControlMenu::startControllerNoConfig(vector<string>& tasks)   {
+  Control::startControllerNoConfig(tasks);
+  for(int i=0; i<m_numSlaves; ++i)
+    addTaskMenuLines(i,tasks[i].c_str());
+}
+
+/// Start the controller task
+void UPI::ControlMenu::startControllerConfig(vector<string>& tasks)   {
+  Control::startControllerConfig(tasks);
+  for(size_t i=0; i<tasks.size(); ++i)
+    addTaskMenuLines(i,tasks[i].c_str());
 }
 
 /// Display callback handler

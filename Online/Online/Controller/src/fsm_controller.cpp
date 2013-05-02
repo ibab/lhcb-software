@@ -10,8 +10,8 @@
 // Framework include files
 #include "FiniteStateMachine/Machine.h"
 #include "FiniteStateMachine/FSMTypes.h"
-#include "Controller/Controller.h"
 #include "Controller/XmlTaskConfiguration.h"
+#include "Controller/Controller.h"
 #include "RTL/rtl.h"
 #include "dis.hxx"
 
@@ -70,7 +70,8 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
   Machine              mach(fsm_type("DAQ"),utgid+"::daq");
   Controller           ctrl(utgid,&mach);
   XmlTaskConfiguration cfg(partition,taskdefs,runinfo,mode,count);
-
+  
+  ctrl.display(ctrl.ALWAYS,"%s> Selected running mode is:%s",utgid.c_str(),mode.c_str());
   if ( !cfg.attachTasks(mach,type) )  {
     ::fprintf(stderr,"Failed to interprete XML tasklist.\n");
     ::exit(EINVAL);

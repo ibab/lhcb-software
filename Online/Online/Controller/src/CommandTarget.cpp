@@ -121,7 +121,7 @@ void DAQCommandTarget::commandHandler()   {
     m_timeout = false;
     return;
   }
-  else if ( cmd == "TIMEOUT" )  {
+  else if ( cmd == "timeout" )  {
     display(NOLOG,"%s> Will TIMEOUT next request.",c_name());
     m_timeout = true;
     return;
@@ -144,9 +144,9 @@ void DAQCommandTarget::commandHandler()   {
     setTargetState(RUNNING);
   else if ( cmd == "recover" )
     setTargetState(OFFLINE);
-  else if ( cmd == "RESET" )
+  else if ( cmd == "destroy" )
     setTargetState(OFFLINE);
-  else if ( cmd == "ERROR" )
+  else if ( cmd == "error" )
     setTargetState(ERROR);
   else   {
     setTargetState(ERROR);

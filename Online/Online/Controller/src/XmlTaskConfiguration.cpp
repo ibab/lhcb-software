@@ -37,7 +37,7 @@ XmlTaskConfiguration::~XmlTaskConfiguration()  {
 
 /// Analyse the configuration file and attach the corresponding slaves to the FSM machine
 bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_type)  {
-  char text[32];
+  char text[32], instances_text[32];
   Tasklist tasks;
   string node = RTL::str_upper(RTL::nodeNameShort());
   string mode = RTL::str_upper(m_mode);
@@ -45,15 +45,15 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
   const Type* type = machine.type();
   int ALWAYS = TypedObject::ALWAYS;
 
-  ::snprintf(text,sizeof(text),"%d",m_instances);
-  DD4hep::XML::_toDictionary(Unicode("NUMBER_OF_INSTANCES"),Unicode(text));
+  ::snprintf(instances_text,sizeof(instances_text),"%d",m_instances);
+  DD4hep::XML::_toDictionary(Unicode("NUMBER_OF_INSTANCES"),Unicode(instances_text));
   xml_h inventory = DD4hep::XML::DocumentHandler().load(m_config).root();
   xml_coll_t(inventory,_Unicode(task)).for_each(analyzer);
   machine.display(ALWAYS,"------------------------------------ Task list -------------------------------------");
   for(Tasklist::Tasks::const_iterator i=tasks.begin(); i!=tasks.end(); ++i)  {
-    Tasklist::Task* t=*i;
-    size_t instances = t->instances;
-    string arguments = t->arguments(), fmc_start = t->fmcStartParams(), utgid=t->utgid;
+    Tasklist::Task* t = *i;
+    size_t instances  = t->instances;
+    string arguments  = t->arguments(), fmc_start = t->fmcStartParams(), utgid=t->utgid;
     fmc_start = RTL::str_replace(fmc_start,"${NODE}",node);
     fmc_start = RTL::str_replace(fmc_start,"${PARTITION}",m_partition);
     fmc_start = RTL::str_replace(fmc_start,"${RUNINFO}",m_runinfo);
@@ -68,14 +68,22 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
     utgid     = RTL::str_replace(utgid,"${NAME}",t->name);
     for(size_t i=0; i<=instances; ++i)   {
       DimSlave* slave = 0;
+      bool forking = (m_mode != "NORMAL") && (instances != 0);
       ::snprintf(text,sizeof(text),instances>0 ? "%02d" : "%d",int(i));
       string instance_utgid = RTL::str_replace(utgid,"${INSTANCE}",text);
       string instance_args = RTL::str_replace(arguments,"${INSTANCE}",text);
       string instance_fmc = RTL::str_replace(fmc_start,"${INSTANCE}",text)+ " -DUTGID="+instance_utgid;
       string cmd = t->command;
-      machine.display(ALWAYS,"+---- Task:%s UTGID %s",t->name.c_str(),instance_utgid.c_str());
+
+      if ( forking && (i == 0) )  {
+	instance_args += string(" -instances=")+instances_text;
+      }
+      machine.display(ALWAYS,"+---- Task:%s UTGID: %s. %s %s",
+		      t->name.c_str(), instance_utgid.c_str(),
+		      forking && (i == 0) ? "Total number of processes to be forked:" : "",
+		      forking && (i == 0) ? instances_text : "");
       if ( slave_type == "NativeDimSlave" )  {
-	slave = new NativeDimSlave(type,instance_utgid,&machine);
+	slave = new NativeDimSlave(type,instance_utgid,&machine,forking && (i != 0));
 	char wd[PATH_MAX];
 	if ( 0 == ::getcwd(wd,sizeof(wd)) )  {
 	  machine.display(ALWAYS,"|     CANNOT attch slave %s. Failed to retrieve current working directory: %s",
@@ -89,11 +97,10 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
 	  return false;
 	}
 	slave->setArgs(instance_utgid+" "+instance_args);
-	slave->setCommand(cmd);
 	slave->cloneEnv();
       }
       else  {
-	FmcSlave* s = new FmcSlave(type,instance_utgid,&machine,(m_mode != "NORMAL") && (i != 0));
+	FmcSlave* s = new FmcSlave(type,instance_utgid,&machine,forking && (i != 0));
 	s->setFmcArgs(instance_fmc);
 	s->setArgs(instance_args);
 	slave = s;

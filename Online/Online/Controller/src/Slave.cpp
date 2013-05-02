@@ -15,14 +15,14 @@
 #include "CPP/IocSensor.h"
 
 // C/C++ include files
-//#include <cstdio>
+#include <stdexcept>
 
 using namespace FiniteStateMachine;
 using namespace std;
 
 /// Class Constructor
-Slave::Slave(const Type *typ, const string& nam, Machine* machine)
-  : TypedObject(typ,nam), m_meta(SLAVE_LIMBO), m_machine(machine), m_state(0), m_rule(0)
+Slave::Slave(const Type *typ, const string& nam, Machine* machine, bool internal)
+  : TypedObject(typ,nam), m_meta(SLAVE_LIMBO), m_machine(machine), m_state(0), m_rule(0), m_internal(internal)
 {
   m_state = type()->initialState();
 }
@@ -137,9 +137,42 @@ FSM::ErrCond Slave::apply(const Rule* rule)  {
   if ( tr )  {
     m_rule = rule;
     m_meta = SLAVE_EXECUTING;
-    return sendRequest(tr);
+    return isInternal() ? send(SLAVE_FINISHED,tr->to()) : sendRequest(tr);
   }
   return FSM::TRANNOTFOUND;
+}
+
+/// Start slave process
+FSM::ErrCond Slave::startSlave()  {
+  if ( isInternal() )  {
+    send(SLAVE_ALIVE,0);
+    return FSM::WAIT_ACTION;
+  }
+  return start();
+}
+
+/// Start slave process
+FSM::ErrCond Slave::killSlave()  {
+  if ( isInternal() )  {
+    send(SLAVE_LIMBO,0);
+    return FSM::WAIT_ACTION;
+  }
+  return kill();
+}
+
+/// Start slave process. Base class implementation will throw an exception
+FSM::ErrCond Slave::start()  {
+  throw runtime_error(name()+"> Slave::start -- invalid base class implementation called.");
+}
+
+/// Kill slave process. Base class implementation will throw an exception
+FSM::ErrCond Slave::kill()   {
+  throw runtime_error(name()+"> Slave::kill -- invalid base class implementation called.");
+}
+
+/// Virtual method -- must be overloaded -- Send transition request to the slave
+FSM::ErrCond Slave::sendRequest(const Transition* tr)  {
+  throw runtime_error(name()+"> Slave::sendRequest -- invalid base class implementation called.");
 }
 
 /// IOC and network handler

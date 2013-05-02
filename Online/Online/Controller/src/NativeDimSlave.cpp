@@ -23,8 +23,8 @@ using namespace std;
 typedef FSM::ErrCond ErrCond;
 
 /// Class Constructor
-NativeDimSlave::NativeDimSlave(const Type* typ, const string& nam, Machine* machine) 
-  : DimSlave(typ,nam,machine), m_pid(0)
+NativeDimSlave::NativeDimSlave(const Type* typ, const string& nam, Machine* machine, bool internal) 
+  : DimSlave(typ,nam,machine,internal), m_pid(0)
 {
 }
 
@@ -35,8 +35,9 @@ NativeDimSlave::~NativeDimSlave() {
 /// Start slave process
 FSM::ErrCond NativeDimSlave::start()  {
   int ret = 0;
-  string utgid = "UTGID="+name();
   vector<char*> argv, envp;
+  string utgid = "UTGID="+name();
+
   for(size_t i=0; i<m_argv.size();++i)   {
     argv.push_back((char*)m_argv[i].c_str());
   }

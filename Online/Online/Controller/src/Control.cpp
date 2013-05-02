@@ -44,7 +44,7 @@ namespace FiniteStateMachine {
 		    const Type* typ, 
 		    const std::string& nam, 
 		    const std::string& args="")
-      : NativeDimSlave(typ,nam,machine), handler(handler) 
+      : NativeDimSlave(typ,nam,machine,false), handler(handler) 
     {
       m_killCmd = "destroy";
       cloneEnv();
@@ -313,6 +313,7 @@ void Control::updateSlaveState()   {
 
 /// Start the controller task
 void Control::startController()   {
+  vector<string> tasks;
   Type* typ = fsm_type("DAQSteer");
   const Transition* trans = typ->transition(ST_NAME_OFFLINE,ST_NAME_UNKNOWN);
   m_machine = new Machine(typ,RTL::processName()+"::DAQ");
@@ -321,15 +322,15 @@ void Control::startController()   {
   m_machine->setAction(trans,Callback::make(this,&Control::destroy));
   m_machine->setHandler(this);
   if ( m_config_exists )
-    startControllerConfig();
+    startControllerConfig(tasks);
   else
-    startControllerNoConfig();
+    startControllerNoConfig(tasks);
   m_machine->addSlave(m_slave);
   ioc().send(this,CMD_UPDATE_SLAVE,this);
 }
 
 /// Start the controller task
-void Control::startControllerNoConfig()   {
+void Control::startControllerNoConfig(vector<string>& tasks)   {
   string node = RTL::str_upper(RTL::nodeNameShort());
   Type* daq = fsm_type("DAQ");
   char text[256];
@@ -345,6 +346,7 @@ void Control::startControllerNoConfig()   {
   }
   for(int i=0; i<m_numSlaves; ++i)  {
     ::snprintf(text,sizeof(text),"SLAVE_%d",i);
+    tasks.push_back(text);
     m_dim[i] = SlaveTag(this,text,CMD_KILL_SLAVE+2*i+1);
     ::snprintf(text,sizeof(text),"SLAVE_%d/status",i);
     m_dim[i].svc = ::dic_info_service(text,MONITORED,0,0,0,slave_handler,(long)&m_dim[i],0,0);   
@@ -352,7 +354,7 @@ void Control::startControllerNoConfig()   {
 }
 
 /// Start the controller task
-void Control::startControllerConfig()   {
+void Control::startControllerConfig(vector<string>& tasks)   {
   string node = RTL::str_upper(RTL::nodeNameShort());
   Type* daq = fsm_type("DAQ");
   stringstream args, nam;
@@ -364,7 +366,7 @@ void Control::startControllerConfig()   {
        << " -runinfo=bla.py"
        << " -taskconfig=" << m_configCmd
        << " -partition=" << m_partitionCmd
-       << " -mode=normal";
+       << " -mode=" << m_modeCmd;
   if ( string(m_slvTypeCmd) == "NativeDimSlave" )   {
     m_slave = new CtrlNativeSlave(this,m_machine,daq,nam.str(),args.str());
   }
@@ -376,7 +378,6 @@ void Control::startControllerConfig()   {
     m_slave = slave;
   }
   XmlTaskConfiguration cfg(m_partitionCmd,m_configCmd,m_runinfoCmd,m_modeCmd,m_numSlaves);
-  vector<string> tasks;
   if ( cfg.getTasks(tasks) )  {
     char text[256];
     for(size_t i=0; i<tasks.size(); ++i)  {
@@ -455,50 +456,11 @@ void Control::setMachineState(const string& state_name)   {
   ioc().send(this,CMD_UPDATE_SLAVE,this);
 }
 
-/// Exit slave via DIM command
-void Control::killSlave(int which)   {
-  char cmd[256];
-  int  data = 1;
-  const SlaveTag& tag = m_dim[which];
-  ::snprintf(cmd,sizeof(cmd),"%s/EXIT",tag.name.c_str());
-  string msg = cmd;
-  int ret = ::dic_cmnd_service(cmd,&data,sizeof(data));
-  if ( ret == 1 )
-    msg += "> Successfully sent command to slave's EXIT datapoint.";
-  else
-    msg += "> Failed to send command to slave's EXIT datapoint.";
-  write_message(msg.c_str());
-  ioc().send(this,CMD_UPDATE_SLAVE,this);
-}
-
-/// Send slave to state error via DIM command
-void Control::errorSlave(int which)   {
-  char cmd[256];
-  char data[] = {"ERROR"};
-  const SlaveTag& tag = m_dim[which];
-  ::snprintf(cmd,sizeof(cmd),"%s",tag.name.c_str());
-  string msg = cmd;
-  int ret = ::dic_cmnd_service(cmd,data,strlen(data)+1);
-  if ( ret == 1 )
-    msg += "> Successfully sent ERROR command to slave's command datapoint.";
-  else
-    msg += "> Failed to send ERROR command to slave's command datapoint.";
-  write_message(msg.c_str());
-  ioc().send(this,CMD_UPDATE_SLAVE,this);
-}
-
-/// Send slave to state error via triggered timeout
-void Control::timeoutSlave(int which)   {
-  char cmd[256];
-  char data[] = {"TIMEOUT"};
-  const SlaveTag& tag = m_dim[which];
-  ::snprintf(cmd,sizeof(cmd),"%s",tag.name.c_str());
-  string msg = cmd;
-  int ret = ::dic_cmnd_service(cmd,data,strlen(data)+1);
-  if ( ret == 1 )
-    msg += "> Successfully sent TIMEOUT command to slave's command datapoint.";
-  else
-    msg += "> Failed to send TIMEOUT command to slave's command datapoint.";
+/// Send a command to one of the slave's data points
+void Control::execDimCommand(const string& dp, const string& data)  {
+  string msg = dp + "> Successfully sent command "+data+" to slave.";
+  int ret = ::dic_cmnd_service((char*)dp.c_str(), (char*)data.c_str(), data.length()+1);
+  if ( ret != 1 ) msg = dp + "> Failed to send command "+data+" to slave.";
   write_message(msg.c_str());
   ioc().send(this,CMD_UPDATE_SLAVE,this);
 }
@@ -506,6 +468,7 @@ void Control::timeoutSlave(int which)   {
 /// Display callback handler
 void Control::handle(const Event& ev)   {
   Slave* slave;
+  int which;
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type)  {
@@ -580,9 +543,15 @@ void Control::handle(const Event& ev)   {
       ::lib_rtl_sleep(1000);
       ::exit(2);
     case CMD_KILL_SLAVE:
-      if      ( ev.iocData()<100 ) killSlave(ev.iocData()%100);
-      else if ( ev.iocData()<200 ) errorSlave(ev.iocData()%100);
-      else timeoutSlave(ev.iocData()%100);
+      which = ev.iocData()%100;
+      if      ( ev.iocData()<100 ) execDimCommand(m_dim[which].name+"/EXIT","EXIT");
+      else if ( ev.iocData()<200 ) execDimCommand(m_dim[which].name,"timeout");
+      else if ( ev.iocData()<300 ) execDimCommand(m_dim[which].name,"pause");
+      else if ( ev.iocData()<400 ) execDimCommand(m_dim[which].name,"error");
+      else if ( ev.iocData()<500 )  {
+	clean_str(m_anyCmd,sizeof(m_anyCmd));
+	execDimCommand(m_dim[which].name,m_anyCmd);
+      }
       set_cursor(CMD_SEND_CTRL,0);
       return;
     case CMD_CONFIG_FSM:
