@@ -353,22 +353,22 @@ int upic_key_action (unsigned int /* event */, void*)
             buf--;
             pos--;
             col--;
-            upic_draw_param (d, p, row, SCR::INVERSE, buf_pos - pos);
+            ::upic_draw_param (d, p, row, SCR::INVERSE, buf_pos - pos);
           }
           key = SCR::INVALID;
         }
         else   {
-          if (!p->prev) upic_restore_params_in_line (i);
+          if (!p->prev) ::upic_restore_params_in_line (i);
         }
         break;
       case SCR::MOVE_RIGHT :
         if (input)   {
-          if (buf_pos < strlen(p->buf))   {
-            if ((pos == p->chars))   {
+          if ( buf_pos < ::strlen(p->buf) )   {
+            if ( pos == p->chars )   {
               /* scroll to left */
               pos--;
               col--;
-              upic_draw_param (d, p, row, SCR::INVERSE, buf_pos - pos);
+              ::upic_draw_param (d, p, row, SCR::INVERSE, buf_pos - pos);
             }
             if (pos < p->chars)   {
               buf++;
