@@ -87,9 +87,9 @@ def _getDict(locations=None,recodict=None):
     "Find the latest dictionaries"
     #find the latest dictionaries
     if locations is None:
-        locations = RawEventHistory().getProp("Locations")
+        locations = RawEventFormat().getProp("Locations")
     if recodict is None:
-        recodict = RawEventHistory().getProp("RecoDict")
+        recodict = RawEventFormat().getProp("RecoDict")
     return locations,recodict
 
 ####################################################
@@ -183,8 +183,8 @@ def RecombineWholeEvent(version,DoD=True, regex=".*", locations=None, recodict=N
 ####################################################
 # Configurables
 ####################################################
-class RawEventHistory(ConfigurableUser):
-    "A simple configurable to hold the dictionaries of which event locations are stored where"
+class RawEventFormat(ConfigurableUser):
+    "A simple configurable to hold the dictionaries of which event locations are stored where. A configurable is one way to do this, allowing users to modify things, or maybe some python shelved dictionary with a method to get at it"
     __slots__ = {
         "Locations" : __locations__ #which locations have been where
         , "RecoDict" : __reco_dict__ #which reco version goes to which RawEvent version
@@ -194,7 +194,7 @@ class RawEventHistory(ConfigurableUser):
      
 class RecombineRawEvent(ConfigurableUser):
     "A simple configurable to add the raw event recreation to the DoD service"
-    __used_configurables__ = [RawEventHistory]
+    __used_configurables__ = [RawEventFormat]
      
     __slots__ = {
         "Method" : "Simple"  #Simple or Map combiner

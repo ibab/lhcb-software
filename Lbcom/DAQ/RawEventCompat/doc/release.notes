@@ -7,3 +7,4 @@
 ! 2013-05-01 - Rob Lambert
  - Create package
  - create configurables and methods in Configuration.py
+ - Remane one of the configurables to RawEventFormat
