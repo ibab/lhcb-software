@@ -19,6 +19,7 @@
 #include "ROMon/ROMonOstream.h"
 using namespace std;
 using namespace ROMon;
+using namespace Online;
 
 ostream& operator<<(ostream& os, const CONTROL& c) {
   os << "Events: Prod:" << setw(8) << c.tot_produced
@@ -31,7 +32,7 @@ ostream& operator<<(ostream& os, const CONTROL& c) {
      << endl;
   return os;
 }
-template ostream& operator<< <CONTROL>(ostream& os, const Online::FixItems<CONTROL>& c);
+template ostream& operator<< <CONTROL>(ostream& os, const FixItems<CONTROL>& c);
 
 ostream& operator<<(ostream& os, const MBMClient& c) {
   os << " MBMClient@"  << (void*)&c
@@ -45,7 +46,8 @@ ostream& operator<<(ostream& os, const MBMClient& c) {
   os << endl;
   return os;
 }
-template ostream& operator<< <MBMClient>(ostream& os, const Online::FixItems<MBMClient>& c);
+
+template ostream& operator<< <MBMClient>(ostream& os, const FixItems<MBMClient>& c);
 
 ostream& operator<<(ostream& os, const MBMBuffer& b) {
   os << "MBM@"     << (void*)&b
@@ -55,7 +57,8 @@ ostream& operator<<(ostream& os, const MBMBuffer& b) {
   os << "Clients:" << b.clients  << endl;
   return os;
 }
-template ostream& operator<< <MBMBuffer>(ostream& os, const Online::FixItems<MBMBuffer>& c);
+
+template ostream& operator<< <MBMBuffer>(ostream& os, const FixItems<MBMBuffer>& c);
 
 ostream& operator<<(ostream& os, const FSMTask& t) {
   os << "Task@"    << (void*)&t
@@ -66,7 +69,8 @@ ostream& operator<<(ostream& os, const FSMTask& t) {
      << endl;
   return os;
 }
-template ostream& operator<< <FSMTask>(ostream& os, const Online::FixItems<FSMTask>& c);
+
+template ostream& operator<< <FSMTask>(ostream& os, const FixItems<FSMTask>& c);
 
 ostream& operator<<(ostream& os, const Node& n) {
   char buff[64];
@@ -93,7 +97,8 @@ ostream& operator<<(ostream& os, const Node& n) {
      << endl;
   return os;
 }
-template ostream& operator<< <ROMon::Node>(ostream& os, const Online::VarItems<ROMon::Node>& c);
+
+template ostream& operator<< <Node>(ostream& os, const VarItems<Node>& c);
 
 ostream& operator<<(ostream& os, const Nodeset& n) {
   os << "Nodeset@"       << (void*)&n
@@ -102,4 +107,6 @@ ostream& operator<<(ostream& os, const Nodeset& n) {
   os << "Nodes:"    << n.nodes << endl;
   return os;
 }
-template ostream& operator<< <Nodeset>(ostream& os, const Online::VarItems<Nodeset>& c);
+
+template ostream& operator<< <Nodeset>(ostream& os, const VarItems<Nodeset>& c);
+
