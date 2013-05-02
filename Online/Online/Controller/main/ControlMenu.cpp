@@ -55,14 +55,14 @@ UPI::ControlMenu::ControlMenu(const std::string& config)
 {
   string line = "----------------------------------------------------------------------------";
   m_id = UpiSensor::instance().newID();
-  ::strcpy(m_killCmd,"Kill");
-  ::strcpy(m_pauseCmd,"Pause");
-  ::strcpy(m_errorCmd,"Error");
-  ::strcpy(m_tmoCmd,"Timeout");
-  ::strcpy(m_anyCmd,s_cmdList[0]);
-  ::strcpy(m_modeCmd,s_modeList[0]);
-  ::strcpy(m_slaveCmd,s_cmdList[0]);
-  ::strcpy(m_stateCmd,s_stateList[0]);
+  ::strcpy(m_killCmd,   "Kill");
+  ::strcpy(m_pauseCmd,  "Pause");
+  ::strcpy(m_errorCmd,  "Error");
+  ::strcpy(m_tmoCmd,    "Timeout");
+  ::strcpy(m_anyCmd,    s_cmdList[0]);
+  ::strcpy(m_modeCmd,   s_modeList[0]);
+  ::strcpy(m_slaveCmd,  s_cmdList[0]);
+  ::strcpy(m_stateCmd,  s_stateList[0]);
   ::strcpy(m_slvTypeCmd,s_slvList[m_config_exists ? 1 : 0]);
   ::strcpy(m_runinfoCmd,"OnlineEnv.py");
   ::strcpy(m_partitionCmd,s_partList[0]);

@@ -57,12 +57,12 @@ static Type* defineDAQType()    {
   Tr*  daq_err1  = daq->addTransition("daq_err",   ready,       error,     NO_CHECKS);
   Tr*  daq_err2  = daq->addTransition("daq_err",   running,     error,     NO_CHECKS);
 
-  Tr*  destroy0  = daq->addTransition("destroy",     error,       offline,   NO_CHECKS);
-  Tr*  destroy1  = daq->addTransition("destroy",     running,     offline,   NO_CHECKS);
-  Tr*  destroy2  = daq->addTransition("destroy",     ready,       offline,   NO_CHECKS);
-  Tr*  destroy3  = daq->addTransition("destroy",     not_ready,   offline,   NO_CHECKS);
-  Tr*  destroy4  = daq->addTransition("destroy",     offline,     offline,   NO_CHECKS);
-  Tr*  destroy5  = daq->addTransition("destroy",     paused,      offline,   NO_CHECKS);
+  Tr*  RESET0    = daq->addTransition("RESET",     error,       offline,   NO_CHECKS);
+  Tr*  RESET1    = daq->addTransition("RESET",     running,     offline,   NO_CHECKS);
+  Tr*  RESET2    = daq->addTransition("RESET",     ready,       offline,   NO_CHECKS);
+  Tr*  RESET3    = daq->addTransition("RESET",     not_ready,   offline,   NO_CHECKS);
+  Tr*  RESET4    = daq->addTransition("RESET",     offline,     offline,   NO_CHECKS);
+  Tr*  RESET5    = daq->addTransition("RESET",     paused,      offline,   NO_CHECKS);
 
 
   daq->setInitialState(offline);
@@ -79,12 +79,12 @@ static Type* defineDAQType()    {
   daq->addRule      (recover3,   daq, ST_NAME_ERROR,     ST_NAME_OFFLINE);
   daq->addRule      (recover4,   daq, ST_NAME_ERROR,     ST_NAME_OFFLINE);
 
-  daq->addRule      (destroy0,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
-  daq->addRule      (destroy1,     daq, ST_NAME_RUNNING,   ST_NAME_OFFLINE);
-  daq->addRule      (destroy2,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
-  daq->addRule      (destroy3,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
-  daq->addRule      (destroy4,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
-  daq->addRule      (destroy5,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
+  daq->addRule      (RESET0,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
+  daq->addRule      (RESET1,     daq, ST_NAME_RUNNING,   ST_NAME_OFFLINE);
+  daq->addRule      (RESET2,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
+  daq->addRule      (RESET3,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
+  daq->addRule      (RESET4,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
+  daq->addRule      (RESET5,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
 
   daq->addRule      (reset0,     daq, ST_NAME_NOT_READY, ST_NAME_NOT_READY);
   daq->addRule      (reset0,     daq, ST_NAME_READY,     ST_NAME_NOT_READY);
@@ -158,11 +158,11 @@ static Type* defineDAQSteerType() {
   Tr*  daq_err1  = typ->addTransition("error",     ready,       error,     NO_CHECKS);
   Tr*  daq_err2  = typ->addTransition("error",     running,     error,     NO_CHECKS);
 
-  Tr*  destroy0  = typ->addTransition("destroy",     error,       offline,   NO_CHECKS);
-  Tr*  destroy1  = typ->addTransition("destroy",     running,     offline,   NO_CHECKS);
-  Tr*  destroy2  = typ->addTransition("destroy",     ready,       offline,   NO_CHECKS);
-  Tr*  destroy3  = typ->addTransition("destroy",     not_ready,   offline,   NO_CHECKS);
-  Tr*  destroy4  = typ->addTransition("destroy",     offline,     offline,   NO_CHECKS);
+  Tr*  RESET0    = typ->addTransition("RESET",     error,       offline,   NO_CHECKS);
+  Tr*  RESET1    = typ->addTransition("RESET",     running,     offline,   NO_CHECKS);
+  Tr*  RESET2    = typ->addTransition("RESET",     ready,       offline,   NO_CHECKS);
+  Tr*  RESET3    = typ->addTransition("RESET",     not_ready,   offline,   NO_CHECKS);
+  Tr*  RESET4    = typ->addTransition("RESET",     offline,     offline,   NO_CHECKS);
 
   typ->setInitialState(unknown);
   typ->addRule      (daq_err0,   daq, ST_NAME_ANY,       ST_NAME_ERROR);
@@ -185,11 +185,11 @@ static Type* defineDAQSteerType() {
   typ->addRule      (unload2,    daq, ST_NAME_OFFLINE,   ST_NAME_OFFLINE);
   typ->addRule      (destroy,    daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
 
-  typ->addRule      (destroy0,   daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
-  typ->addRule      (destroy1,   daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
-  typ->addRule      (destroy2,   daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
-  typ->addRule      (destroy3,   daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
-  typ->addRule      (destroy4,   daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
+  typ->addRule      (RESET0,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
+  typ->addRule      (RESET1,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
+  typ->addRule      (RESET2,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
+  typ->addRule      (RESET3,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
+  typ->addRule      (RESET4,     daq, ST_NAME_ANY,       ST_NAME_OFFLINE);
   return typ;
 }
 

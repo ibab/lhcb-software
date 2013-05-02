@@ -173,7 +173,7 @@ void Controller::commandHandler()   {
     setTargetState(OFFLINE);
     invokeTransition(cmd);
   }
-  else if ( cmd == "destroy" )  {
+  else if ( cmd == "RESET" )  {
     setTargetState(OFFLINE);
     invokeTransition(cmd);
   }
