@@ -594,8 +594,6 @@ namespace MBMDump  {
     PrintMenu*         m_printWindow;
     /// Pointer to bank list window (if invoked)
     BankListWindow* m_banksWindow;
-    /// Pointer to start of MEP record (if showing MEP related data)
-    int*               m_mepStart;
     int                m_bufType;
     int shiftWordsUp    (int first_word,int n_lines);
     int shiftWordsDown  (int first_word,int n_lines);

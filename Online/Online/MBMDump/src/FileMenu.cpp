@@ -18,7 +18,7 @@ FileMenu::FileMenu(FileMainMenu* par,int cmd_id) : BaseMenu(par), m_parentCmd(cm
 {
   m_file = dynamic_cast<FileMainMenu*>(par);
   ::strncpy(m_fileName,par->fileName(),sizeof(m_fileName));
-  openDetached(parent().id(),cmd_id,"Supply file name","",procName());
+  openDetached(parent().id(),m_parentCmd,"Supply file name","",procName());
   setParam(m_fileName,1,"%96s",m_fileName,0,0,0,0,0);
   addCommand(1,"File Name:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
   closeMenu();
