@@ -144,7 +144,8 @@ static Type* defineDAQSteerType() {
   Tr*  load      = typ->addTransition("load",      offline,     not_ready, CHECK|CREATE);
   Tr*  configure = typ->addTransition("configure", not_ready,   ready);
   Tr*  start     = typ->addTransition("start",     ready,       running);
-  Tr*  stop      = typ->addTransition("stop",      running,     ready);
+  Tr*  stop0     = typ->addTransition("stop",      running,     ready);
+  Tr*  stop1     = typ->addTransition("stop",      paused,      ready);
   Tr*  pause     = typ->addTransition("pause",     running,     paused);
 
   Tr*  unload1   = typ->addTransition("unload",    not_ready,   offline);
@@ -178,7 +179,8 @@ static Type* defineDAQSteerType() {
   typ->addPredicate (start,      daq, ST_NAME_READY,     ST_NAME_RUNNING);
   typ->addRule      (start,      daq, ST_NAME_READY,     ST_NAME_RUNNING);
 
-  typ->addRule      (stop,       daq, ST_NAME_RUNNING,   ST_NAME_READY);
+  typ->addRule      (stop0,      daq, ST_NAME_RUNNING,   ST_NAME_READY);
+  typ->addRule      (stop1,      daq, ST_NAME_PAUSED,    ST_NAME_READY);
 
   typ->addRule      (unload1,    daq, ST_NAME_NOT_READY, ST_NAME_OFFLINE);
   typ->addRule      (unload2,    daq, ST_NAME_NOT_READY, ST_NAME_OFFLINE);
