@@ -89,7 +89,9 @@ class LHCbApp(LHCbConfigurableUser):
         "rich2pmt"   : "Rich2Pmt",
         "rich1horiz" : "Rich1Horiz",
         "magnet"     : "Magnet",
-        "compact"    : "Compact"
+        "compact"    : "Compact",
+        "sl"         : "SL",
+        "ot"         : "OT"
         }
 
 
@@ -150,7 +152,7 @@ class LHCbApp(LHCbConfigurableUser):
             "magnetRegion" : ["magnet"]
             },
         "AfterMagnetRegion"  : {
-            "itRegion"    : ["it", "ot", "ft"],
+            "itRegion"    : ["it", "ot", "ft", "sl"],
             "rich2Region" : ["rich2", "rich2pmt", "rich", "superrich"]
             },
         "DownstreamRegion"   : {
