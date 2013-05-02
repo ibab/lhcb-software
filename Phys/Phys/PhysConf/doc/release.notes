@@ -5,6 +5,8 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+!========================= PhysConf v1r21 2013-05-02 =========================
+
 ! 2013-05-02 - Chris Jones
  - Fix the automatic ANN PID recalibration to properly run on uDSTs.
 
