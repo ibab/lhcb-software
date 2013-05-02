@@ -140,6 +140,28 @@ class PhysConf(LHCbConfigurableUser) :
             rerunPIDSeq.Members += [ ChargedProtoParticleAddMuonInfo("CProtoPAddNewMuon"),
                                      ChargedProtoCombineDLLsAlg("CProtoPCombDLLNewMuon") ]
 
+        # Compatibility with pre-2011 data, where Rec/Summary and Trigger/RawEvent are missing
+        import PhysConf.CheckMissingTESData as DataCheck
+        DataCheck.checkForMissingData()
+
+#
+# Data on demand
+#
+    def dataOnDemand(self):
+        """
+        dataOnDemand service
+        """
+        dataOnDemand = DataOnDemandSvc()
+        
+        dataOnDemand.NodeMap['/Event/Rec']            = 'DataObject'
+        dataOnDemand.NodeMap['/Event/Rec/Muon']       = 'DataObject'
+        dataOnDemand.NodeMap['/Event/Rec/Rich']       = 'DataObject'
+        dataOnDemand.NodeMap['/Event/Phys']           = 'DataObject'
+        dataOnDemand.NodeMap['/Event/Relations/Phys'] = 'DataObject'
+        
+        # raw event
+        importOptions("$STDOPTS/DecodeRawEvent.py")
+
         # ANN PID recalibration
         if self.getProp("AllowPIDRecalib") :
 
@@ -189,28 +211,6 @@ class PhysConf(LHCbConfigurableUser) :
                 DataOnDemandSvc().AlgMappingTools  = [cppmapper] + DataOnDemandSvc().AlgMappingTools
 
             appendPostConfigAction( _ANNPIDReCalib_ )
-
-        # Compatibility with pre-2011 data, where Rec/Summary and Trigger/RawEvent are missing
-        import PhysConf.CheckMissingTESData as DataCheck
-        DataCheck.checkForMissingData()
-
-#
-# Data on demand
-#
-    def dataOnDemand(self):
-        """
-        dataOnDemand service
-        """
-        dataOnDemand = DataOnDemandSvc()
-        
-        dataOnDemand.NodeMap['/Event/Rec']            = 'DataObject'
-        dataOnDemand.NodeMap['/Event/Rec/Muon']       = 'DataObject'
-        dataOnDemand.NodeMap['/Event/Rec/Rich']       = 'DataObject'
-        dataOnDemand.NodeMap['/Event/Phys']           = 'DataObject'
-        dataOnDemand.NodeMap['/Event/Relations/Phys'] = 'DataObject'
-        
-        # raw event
-        importOptions("$STDOPTS/DecodeRawEvent.py")
             
 #
 # LoKi
