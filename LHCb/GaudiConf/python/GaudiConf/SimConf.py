@@ -451,11 +451,6 @@ class SimConf(LHCbConfigurableUser) :
         log.info( "%s.OptItemList = %s"%(self.getProp("Writer"),tape.OptItemList) )
     
     def __apply_configuration__(self):
-        print "########################################"
-        print "##           SimConf                  ##"
-        print "########################################"
-        print self.getProp("Detectors")
-
         GaudiKernel.ProcessJobOptions.PrintOn()
         
         self._doWrite()

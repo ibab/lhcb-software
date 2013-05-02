@@ -4,6 +4,9 @@
 !------------------------------------------------------------------------------
 
 ! 2013-05-02 - Paul Szczypka
+ - Removed debug print statements from SimConf
+
+! 2013-05-02 - Paul Szczypka
  - Added SL detector code to SimConf
 
 !========================= GaudiConf v17r8 2013-03-21 =========================
