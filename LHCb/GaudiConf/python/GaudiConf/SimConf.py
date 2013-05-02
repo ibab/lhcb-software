@@ -21,7 +21,7 @@ class SimConf(LHCbConfigurableUser) :
         ,"EnablePack"        : True # Turn on/off packing of the SIM data
         ,"EnableUnpack"      : True # Configure the SIM unpacking via the Data On Demand Service
         ,"DataUnpackingSeq"  : None # If set, the data unpacking will be run explicitly in the given sequence
-        ,"Detectors"         : ['Velo','PuVeto','TT','IT','OT','Rich','Muon','Spd','Prs','Ecal','Hcal'] # Active sub-detectors
+        ,"Detectors"         : ['Velo','PuVeto','TT','SL','OT','Rich','Muon','Spd','Prs','Ecal','Hcal'] # Active sub-detectors
         ,"PackingSequencers" : { } # The packing sequence to fill for each spillover event
         ,"DataType"          : "" # Flag for backward compatibility with old data
         ,"SaveHepMC"         : True # If False, do not save HepMC on output file
@@ -113,6 +113,11 @@ class SimConf(LHCbConfigurableUser) :
                     from Configurables import DataPacking__Pack_LHCb__MCITHitPacker_     as MCITHitPacker
                     packing.Members += [ MCITHitPacker("MCITHitPacker"+slot) ]
 
+
+                if 'SL' in dets :
+                    from Configurables import DataPacking__Pack_LHCb__MCSLHitPacker_     as MCSLHitPacker
+                    packing.Members += [ MCSLHitPacker("MCSLHitPacker"+slot) ]
+
                 if 'OT' in dets :
                     from Configurables import DataPacking__Pack_LHCb__MCOTHitPacker_     as MCOTHitPacker
                     packing.Members += [ MCOTHitPacker("MCOTHitPacker"+slot) ]
@@ -200,6 +205,10 @@ class SimConf(LHCbConfigurableUser) :
             if 'IT' in dets :
                 from Configurables import DataPacking__Unpack_LHCb__MCITHitPacker_
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCITHitPacker_, "UnpackMCITHits", slot, 'IT/Hits' )
+
+            if 'SL' in dets :
+                from Configurables import DataPacking__Unpack_LHCb__MCSLHitPacker_
+                self._makeUnpacker( DataPacking__Unpack_LHCb__MCSLHitPacker_, "UnpackMCSLHits", slot, 'SL/Hits' )
 
             if 'OT' in dets :
                 from Configurables import DataPacking__Unpack_LHCb__MCOTHitPacker_
@@ -389,6 +398,9 @@ class SimConf(LHCbConfigurableUser) :
                 if 'Hcal' in dets :
                     simList += [ self.tapeLocation( slot, mcRoot, 'Hcal/Hits' ) ]
                    
+                if 'SL' in dets :
+                    simList += [ self.tapeLocation( slot, mcRoot, 'SL/Hits' ) ]
+
                 if 'Rich' in dets :
                     simList += [ self.tapeLocation( slot, mcRoot, 'Rich/Hits' ),
                                  self.tapeLocation( slot, mcRoot, 'Rich/OpticalPhotons' ),
@@ -439,6 +451,11 @@ class SimConf(LHCbConfigurableUser) :
         log.info( "%s.OptItemList = %s"%(self.getProp("Writer"),tape.OptItemList) )
     
     def __apply_configuration__(self):
+        print "########################################"
+        print "##           SimConf                  ##"
+        print "########################################"
+        print self.getProp("Detectors")
+
         GaudiKernel.ProcessJobOptions.PrintOn()
         
         self._doWrite()

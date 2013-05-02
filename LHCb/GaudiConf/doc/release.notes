@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-05-02 - Paul Szczypka
+ - Added SL detector code to SimConf
+
 !========================= GaudiConf v17r8 2013-03-21 =========================
 
 ! 2013-03-21 - Chris Jones
