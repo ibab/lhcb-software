@@ -23,8 +23,8 @@ namespace  {
     : MEP::Consumer(nam, partID), m_evtProd(0), m_refCount(cnt)    
     {
       prt = 0;
-      unsigned int vetomask[4] = {0,0,0,0};
-      unsigned int trmask[4]   = {~0x0,~0x0,~0x0,~0x0};
+      unsigned int vetomask[4] = {0u,0u,0u,0u};
+      unsigned int trmask[4]   = {~0x0u,~0x0u,~0x0u,~0x0u};
       m_flags = USE_EVT_BUFFER|USE_MEP_BUFFER;
       include();
       m_bmid = m_mepID->mepBuffer;

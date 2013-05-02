@@ -66,7 +66,7 @@ namespace LHCb  {
     /// Property: Flag to register callback for MEP error event handling. 0=No handling, 1=save as MEP, 2=save as events
     int              m_handleErrs;
     /// Property: 4rth. Word of trigger mask for sending ERROR MEPs. 
-    int              m_routingBits;
+    unsigned int     m_routingBits;
     /// Property: Request specification
     Requirements     m_req;
     /// Property: Name of output buffer for error events (requires handleErrs to be set)

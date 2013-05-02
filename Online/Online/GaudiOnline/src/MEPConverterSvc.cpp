@@ -279,7 +279,7 @@ StatusCode MEPConverterSvc::saveEvents(void* data, size_t length, const unsigned
       size_t len, ev_len = rawEventLength(raw);
       int ret = m_errProd->getSpace(ev_len);
       if ( MBM_NORMAL == ret )    {
-	unsigned int trMask[] = {0x0,0x0,mask[3],m_routingBits};
+	unsigned int trMask[] = {0u,0u,mask[3],m_routingBits};
 	EventDesc& e = m_errProd->event();
 	const Banks& daq  = raw->banks(RawBank::DAQ);
 	const Banks& odin = raw->banks(RawBank::ODIN);
@@ -347,7 +347,7 @@ StatusCode MEPConverterSvc::saveMEP(void* data, size_t length,const unsigned int
       size_t hdrSize = 0;
       EventDesc& e = m_errProd->event();
       char* target = (char*)e.data;
-      unsigned int trMask[] = {0x0,0x0,mask[3],m_routingBits};
+      unsigned int trMask[] = {0u,0u,mask[3],m_routingBits};
       MEPEvent* me = (MEPEvent*)((MEPEVENT*)data)->data;
 
       // First create the MDF bank to ensure proper data handling

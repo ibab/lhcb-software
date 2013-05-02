@@ -54,7 +54,7 @@ namespace LHCb  {
     /// Property: MEP manager service name/type
     std::string      m_mepMgrName;
     /// Property: 4rth. Word of trigger mask for sending ERROR MEPs. 
-    int              m_routingBits;
+    unsigned int     m_routingBits;
     /// Property: Flag to register callback for MEP error event handling. 0=No handling, 1=save as MEP, 2=save as events
     int              m_handleErrs;
     /// Flag indicating that MBM event retrieval is active
