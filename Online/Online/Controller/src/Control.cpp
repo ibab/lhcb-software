@@ -480,6 +480,8 @@ void Control::handle(const Event& ev)   {
 	  gotoState(state->name());
 	else if ( state->name() == ST_NAME_ERROR )
 	  gotoState(state->name());
+	else if ( state->name() == ST_NAME_PAUSED )
+	  gotoState(state->name());
 	ioc().send(this,CMD_UPDATE_SLAVE,this);
 	return;
       }
