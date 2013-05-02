@@ -172,7 +172,7 @@ def RecombineWholeEvent(version,DoD=True, regex=".*", locations=None, recodict=N
     #configure my combiner
     from Configurables import RawEventSimpleCombiner
     myCombiner=RawEventSimpleCombiner("resurectRawEvent")
-    myCombiner.RawBanksToCopy=[aloc for aloc in ReverseDict(version,locations) if re.match(regex,aloc)]
+    myCombiner.InputRawEventLocations=[aloc for aloc in ReverseDict(version,locations) if re.match(regex,aloc)]
     
     #configure DoD if required
     if DoD:
