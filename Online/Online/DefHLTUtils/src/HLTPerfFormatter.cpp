@@ -13,6 +13,7 @@
 #include "TSeqCollection.h"
 #include "TAxis.h"
 #include "TROOT.h"
+#include "RTL/strdef.h"
 #include "ROMon/Utilities.h"
 #include "HLTPerfFormatter.h"
 //#include <pair>
@@ -50,7 +51,7 @@ void HLTPerfFormatter::Extract(nodemap &Map)//int main(int , char **)
     dyn_string *nodes;
     if (nodelist->size()>1)
     {
-      toLowerCase(nodelist->at(1));
+      nodelist->at(1) = RTL::str_lower(nodelist->at(1));
       nodes = Strsplit(nodelist->at(1).c_str(),",");
       for (size_t i=0;i<nodes->size();i++)
       {

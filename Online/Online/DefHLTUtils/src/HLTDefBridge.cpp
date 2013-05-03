@@ -11,6 +11,7 @@
 #include "ROMon/Utilities.h"
 #include "stdio.h"
 #include "RTL/rtl.h"
+#include "RTL/strdef.h"
 class DefHltcommand : public DimCommand
 {
 public:
@@ -43,8 +44,7 @@ public:
 
 int main(int , char **)
 {
-  std::string myHost = RTL::nodeNameShort();
-  toLowerCase(myHost);
+  std::string myHost = RTL::str_lower(RTL::nodeNameShort());
   DimClient::setDnsNode(myHost.c_str());
   DimServer::setDnsNode("ecs03");
   DimServer::autoStartOn();

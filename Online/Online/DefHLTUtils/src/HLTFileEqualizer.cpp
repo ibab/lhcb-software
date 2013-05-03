@@ -2,6 +2,7 @@
 #include <math.h>
 #include <time.h>
 #include "ROMon/Utilities.h"
+#include "RTL/strdef.h"
 
 static FILE *outf;
 static bool inhibit_act;
@@ -581,9 +582,7 @@ void DefHltInfoHandler::infoHandler()
   for (_N::const_iterator i = nodes.begin();i!= nodes.end();i=nodes.next(i))
   {
     const _R& runs = (*i).runs;
-    std::string nname;
-    nname = (*i).name;
-    toLowerCase(nname);
+    std::string nname = RTL::str_lower((*i).name);
     myNodeMap::iterator nit;
     myNodeMap::iterator anit;
     m_Equalizer->m_recvNodes.insert(nname);
@@ -828,7 +827,7 @@ void ExclInfo::infoHandler()
   {
     if (nlist->at(i).size()>0)
     {
-      toLowerCase(nlist->at(i));
+      nlist->at(i) = RTL::str_lower(nlist->at(i));
       m_exclNodes->insert(nlist->at(i));
     }
   }
