@@ -36,7 +36,8 @@ class DaVinciAlgorithm;
  */
 
 class BTaggingTool : public GaudiTool,
-                     virtual public IBTaggingTool {
+                     virtual public IBTaggingTool 
+{
 
 public:
 
@@ -44,7 +45,9 @@ public:
   BTaggingTool( const std::string& type,
                 const std::string& name,
                 const IInterface* parent );
+
   virtual ~BTaggingTool( ); ///< Destructor
+
   StatusCode initialize();    ///<  initialization
 
   //-------------------------------------------------------------
@@ -67,8 +70,10 @@ private:
 
   const LHCb::Particle::ConstVector
   chooseCandidates(const LHCb::Particle* AXB,
-                   LHCb::Particle::Range& parts,
+                   const LHCb::Particle::Range& parts,
                    const LHCb::RecVertex::ConstVector& PileUpVtx);
+
+private:
 
   ITaggingUtils* m_util;
   IParticleDescendants* m_descend;

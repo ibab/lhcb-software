@@ -26,49 +26,49 @@ using namespace Gaudi::Units;
 DECLARE_TOOL_FACTORY( BTaggingTool )
 
 //=========================================================================
-BTaggingTool::BTaggingTool( const std::string& type,
-                            const std::string& name,
-                            const IInterface* parent ) :
-  GaudiTool ( type, name, parent ) {
+  BTaggingTool::BTaggingTool( const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent ) :
+    GaudiTool ( type, name, parent ) {
 
-  declareInterface<IBTaggingTool>(this);
+    declareInterface<IBTaggingTool>(this);
 
-  declareProperty( "ChoosePVCriterium",     m_ChoosePV    = "bestPV");
-  declareProperty( "UseReFitPV",            m_UseReFitPV  = true );
+    declareProperty( "ChoosePVCriterium",     m_ChoosePV    = "bestPV");
+    declareProperty( "UseReFitPV",            m_UseReFitPV  = true );
 
-  //preselction of tagging candidates
-  declareProperty( "IPPU_cut",              m_IPPU_cut    = 3.0 );
-  declareProperty( "thetaMin_cut",          m_thetaMin    = 0.012 );
-  declareProperty( "distphi_cut",           m_distphi_cut = 0.005 );
+    //preselction of tagging candidates
+    declareProperty( "IPPU_cut",              m_IPPU_cut    = 3.0 );
+    declareProperty( "thetaMin_cut",          m_thetaMin    = 0.012 );
+    declareProperty( "distphi_cut",           m_distphi_cut = 0.005 );
 
-  declareProperty( "CombineTaggersName",      m_CombineTaggersName   = "CombineTaggersProbability" );
-  declareProperty( "TaggerLocation",          m_taggerLocation = "Phys/TaggingParticles" );
+    declareProperty( "CombineTaggersName",      m_CombineTaggersName = "CombineTaggersProbability" );
+    declareProperty( "TaggerLocation",          m_taggerLocation = "Phys/TaggingParticles" );
 
-  //choose active taggers
-  declareProperty( "EnableMuonTagger",        m_EnableMuon    = true );
-  declareProperty( "EnableElectronTagger",    m_EnableElectron= true );
-  declareProperty( "EnableKaonOSTagger",      m_EnableKaonOS  = true );
-  declareProperty( "EnableKaonSSTagger",      m_EnableKaonSS  = true );
-  declareProperty( "EnablePionTagger",        m_EnablePionSS  = true );
-  declareProperty( "EnableVertexChargeTagger",m_EnableVertexCharge= true);
-  declareProperty( "EnableJetSameTagger",     m_EnableJetSame = false );
+    //choose active taggers
+    declareProperty( "EnableMuonTagger",        m_EnableMuon    = true );
+    declareProperty( "EnableElectronTagger",    m_EnableElectron= true );
+    declareProperty( "EnableKaonOSTagger",      m_EnableKaonOS  = true );
+    declareProperty( "EnableKaonSSTagger",      m_EnableKaonSS  = true );
+    declareProperty( "EnablePionTagger",        m_EnablePionSS  = true );
+    declareProperty( "EnableVertexChargeTagger",m_EnableVertexCharge= true);
+    declareProperty( "EnableJetSameTagger",     m_EnableJetSame = false );
 
-  declareProperty( "ForceSignalID",           m_ForceSignalID  = " "); //force signal B as Bu, Bd, Bs
-  declareProperty( "UseVtxChargeWithoutOS",   m_UseVtxOnlyWithoutOS = false ); //use vtcxch only when no other OS tagger is active
+    declareProperty( "ForceSignalID",           m_ForceSignalID  = " "); //force signal B as Bu, Bd, Bs
+    declareProperty( "UseVtxChargeWithoutOS",   m_UseVtxOnlyWithoutOS = false ); //use vtcxch only when no other OS tagger is active
 
-  m_util    = 0;
-  m_descend = 0;
-  m_pvReFitter = 0;
-  m_dva =0;
-  m_combine = 0;
-  m_taggerMu=m_taggerEle=m_taggerKaon=0;
-  m_taggerKaonS=m_taggerPionS=m_taggerVtx=0 ;
-}
+    m_util    = 0;
+    m_descend = 0;
+    m_pvReFitter = 0;
+    m_dva =0;
+    m_combine = 0;
+    m_taggerMu=m_taggerEle=m_taggerKaon=0;
+    m_taggerKaonS=m_taggerPionS=m_taggerVtx=0 ;
+  }
 
 BTaggingTool::~BTaggingTool() {}
 
 //==========================================================================
-StatusCode BTaggingTool::initialize() 
+StatusCode BTaggingTool::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
@@ -141,35 +141,42 @@ StatusCode BTaggingTool::initialize()
 }
 
 //==========================================================================
-StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
+StatusCode BTaggingTool::tag( FlavourTag& theTag,
+                              const Particle* AXB,
                               const RecVertex* RecVert,
-                              Particle::ConstVector& vtags ) {
+                              Particle::ConstVector& vtags )
+{
 
   theTag.setDecision( FlavourTag::none );
-  if ( ! AXB ) {
-    err() << "No B hypothesis to tag!" << endreq;
-    return StatusCode::FAILURE;
+  if ( !AXB )
+  {
+    return Error( "No B hypothesis to tag!" );
   }
 
   //Load vertices and particles
-  Particle::Range  parts=get<Particle::Range>(m_taggerLocation+"/Particles");
+  const Particle::Range  parts=get<Particle::Range>(m_taggerLocation+"/Particles");
   const RecVertex::Range verts=get<RecVertex::Range>(RecVertexLocation::Primary);
   if(msgLevel(MSG::DEBUG)) debug()<<" Nr Vertices: "<< verts.size()
                                   <<" Nr Particles: "<<parts.size()<<endreq;
 
   Vertex::ConstVector allVtx;
-  RecVertex::Range::const_iterator iv;
-  for(iv=verts.begin(); iv!=verts.end(); iv++) {
-    if(msgLevel(MSG::DEBUG)) debug()<<"PV found at z="<<(*iv)->position().z()/mm<<endreq;
+  allVtx.reserve( verts.size() );
+  for ( RecVertex::Range::const_iterator iv = verts.begin(); 
+        iv != verts.end(); ++iv ) 
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug()<<"PV found at z="<<(*iv)->position().z()/mm<<endreq;
     allVtx.push_back(AXB->endVertex());
   }
 
   //////////////////////////////////////////////////////////////////////////////
   //choose RecVert PV and pileup vertices taking into account refitting ///////
   RecVertex RefitRecVert(0);
-  const RecVertex::ConstVector PileUpVtx= choosePrimary(AXB, verts, RecVert, RefitRecVert);
-  if(RecVert){
-    if( msgLevel(MSG::DEBUG) ) {
+  const RecVertex::ConstVector PileUpVtx = choosePrimary(AXB, verts, RecVert, RefitRecVert);
+  if ( RecVert ) 
+  {
+    if( msgLevel(MSG::DEBUG) ) 
+    {
       debug()<<"--> RecVert z=" << RecVert->position().z()/mm <<"  "<<m_ChoosePV<<endreq;
       if(m_UseReFitPV)
         debug() <<"-->     refitRecVert z=" << RefitRecVert.position().z()/mm <<endreq;
@@ -178,11 +185,11 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
         debug()<<"--> PileUpPV at z="<<(*iv)->position().z()/mm<<endreq;
       }
     }
-  } else {
-    err() <<"No Vertex found! Skip. "<<endreq;
-    return StatusCode::FAILURE;
+  } 
+  else
+  {
+    return Error( "No Vertex found! Skip." );
   }
-
 
   ////////////////////////////////////////////////////////
   //loop over Particles, preselect candidates ///////////
@@ -191,9 +198,9 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 
 
   //AXB is the signal B from selection
-  bool isBd = false; if( AXB->particleID().hasDown() )   isBd = true;
-  bool isBs = false; if( AXB->particleID().hasStrange()) isBs = true;
-  bool isBu = false; if( AXB->particleID().hasUp() )     isBu = true;
+  bool isBd = AXB->particleID().hasDown();
+  bool isBs = AXB->particleID().hasStrange();
+  bool isBu = AXB->particleID().hasUp();
 
   ///ForceSignalID
   if (m_ForceSignalID=="Bd") { isBd = true; isBu = false; isBs = false; }
@@ -210,12 +217,14 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   if(m_EnableKaonSS)   kaonS= m_taggerKaonS-> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnablePionSS)   pionS= m_taggerPionS-> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableJetSame)  jetS = m_taggerJetS -> tag(AXB, RecVert, allVtx, vtags);
-  if(m_EnableVertexCharge){
+  if(m_EnableVertexCharge)
+  {
     Particle::ConstVector vtagsPlusOS(0);
-    Particle::ConstVector::const_iterator i, j;
-    for ( i=vtags.begin(); i!=vtags.end(); i++ ){
+    for ( Particle::ConstVector::const_iterator i=vtags.begin(); i!=vtags.end(); ++i )
+    {
       const ProtoParticle* iproto = (*i)->proto();
-      if( m_UseVtxOnlyWithoutOS ) {
+      if( m_UseVtxOnlyWithoutOS )
+      {
         if(muon.type()!=0)
           if(muon.taggerParts().at(0)->proto() == iproto )
             vtagsPlusOS.push_back(*i);
@@ -232,6 +241,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   }
 
   std::vector<Tagger*> taggers;
+  taggers.reserve(6);
   taggers.push_back(&muon);
   taggers.push_back(&elec);
   taggers.push_back(&kaon);
@@ -252,8 +262,11 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 
   if (msgLevel(MSG::DEBUG)) debug() <<"combine taggers "<< taggers.size() <<endreq;
   m_combine -> combineTaggers( theTag, taggers , signalType);
-  debug()<<"omega: "<<theTag.omega()<<endreq;
-  debug()<<"omegaOS: "<<theTag.omegaOS()<<endreq;
+  if (msgLevel(MSG::DEBUG))
+  {
+    debug()<<"omega: "<<theTag.omega()<<endreq;
+    debug()<<"omegaOS: "<<theTag.omegaOS()<<endreq;
+  }
 
   ///OUTPUT to Logfile ---------------------------------------------------
 
@@ -292,7 +305,8 @@ const RecVertex::ConstVector
 BTaggingTool::choosePrimary(const Particle* AXB,
                             const RecVertex::Range& verts,
                             const RecVertex*& RecVert,
-                            RecVertex& RefitRecVert){
+                            RecVertex& RefitRecVert)
+{
 
 
   RecVertex::ConstVector PileUpVtx(0); //will contain all the other primary vtx's
@@ -411,8 +425,9 @@ BTaggingTool::choosePrimary(const Particle* AXB,
   //of taggers and SV building. Do not move this line above PileUpVtx building
   if( m_UseReFitPV ) RecVert = (&RefitRecVert);
 
-  if( ! RecVert ) {
-    err() <<"No Reconstructed Vertex!! Skip." <<endreq;
+  if( ! RecVert ) 
+  {
+    Error( "No Reconstructed Vertex!! Skip." ).ignore();
     return PileUpVtx;
   }
 
@@ -422,15 +437,17 @@ BTaggingTool::choosePrimary(const Particle* AXB,
 //=============================================================================
 const Particle::ConstVector
 BTaggingTool::chooseCandidates(const Particle* AXB,
-                               Particle::Range& parts,
-                               const RecVertex::ConstVector& PileUpVtx) {
+                               const Particle::Range& parts,
+                               const RecVertex::ConstVector& PileUpVtx) 
+{
 
   Particle::ConstVector vtags;
   vtags.reserve(32);
   Particle::ConstVector axdaugh = m_descend->descendants( AXB );
   axdaugh.push_back( AXB );
   std::vector<const LHCb::Particle*> clones;
-  for (Particle::Range::iterator ip = parts.begin(); parts.end() != ip; ++ip) {
+  for (Particle::Range::const_iterator ip = parts.begin(); parts.end() != ip; ++ip)
+  {
     const LHCb::Particle* p = *ip;
     const ProtoParticle* proto = p->proto();
     if ( !proto || !proto->track() ) continue;

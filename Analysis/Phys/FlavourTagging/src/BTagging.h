@@ -13,18 +13,21 @@
  *  @date   02/10/2006
  */
 
-class BTagging : public DaVinciAlgorithm {
+class BTagging : public DaVinciAlgorithm
+{
 
 public:
+
   /// Standard constructor
   BTagging( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~BTagging( ); ///< Destructor
 
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode execute();    ///< Algorithm execution
 
 private:
 
+  /// Run the tagging on the given location
   void performTagging(const std::string & location);
 
 private:

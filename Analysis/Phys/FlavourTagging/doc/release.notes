@@ -5,6 +5,11 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2013-05-03 - Chris Jones
+ - Various improments and bug fixes. 
+  + Protect debug and verbose printout with if statements
+  + Use continue instead of return;
+
 !========================= FlavourTagging v12r12p1 2013-04-05 =========================
 
 ! 2013-02-26 - Chris Jones
