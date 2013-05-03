@@ -35,10 +35,11 @@
         value = "b = -1, bbar = 1, none = 0" 
         access= "PUBLIC"
       />
-     <constructor
-        desc = "Copy constructor hack for windows..."
+
+      <constructor
+        desc = "Copy Constructor"
         argList  = "const FlavourTag&amp; c"
-        initList = "KeyedObject&lt;int&gt;(), m_decision(c.m_decision), m_category(c.m_category), m_omega(c.m_omega), m_taggers(c.m_taggers), m_decisionOS(c.m_decisionOS), m_categoryOS(c.m_categoryOS), m_omegaOS(c.m_omegaOS), m_taggedB(c.m_taggedB)">
+        initList = "KeyedObject&lt;int&gt;(), m_decision(c.decision()), m_category(c.category()), m_omega(c.omega()), m_taggers(c.taggers()), m_decisionOS(c.decisionOS()), m_categoryOS(c.categoryOS()), m_omegaOS(c.omegaOS()), m_taggedB(c.taggedB())">
         <code/>
       </constructor>
 
@@ -63,13 +64,13 @@
         </code>
       </method>
 
-
       <attribute
         desc = "The result of the tagging algorithm"
         name = "decision"
-        type = "int"
+        type = "short int"
         init = "0"
       />
+
       <relation
         desc = "The B meson for which this tag has been made"
         name = "taggedB"
@@ -80,13 +81,14 @@
       <attribute
         desc = "Category of tag"
         name = "category"
-        type = "int"
+        type = "unsigned short int"
         init = "0"
       />
+
       <attribute
         desc = "Wrong tag fraction (predicted)"
         name = "omega"
-        type = "double"
+        type = "float"
         init = "0.50"
       />
 
@@ -95,23 +97,25 @@
 	name    = "taggers" 
 	type    = "std::vector&lt;LHCb::Tagger&gt;"
       />
+
       <attribute 
 	desc = "decision of opposite side taggers only"
 	name = "decisionOS"
-	type = "int"
+	type = "short int"
         init = "0"
       />
+
       <attribute
         desc = "Category of tag using opposite side only"
         name = "categoryOS"
-        type = "int"
+        type = "unsigned short int"
         init = "0"
       />
 
       <attribute
         desc = "Wrong tag fraction (predicted) using opposite side only"
         name = "omegaOS"
-        type = "double"
+        type = "float"
         init = "0.50"
       />
 
@@ -119,7 +123,7 @@
         name    = "addTagger"
         type    = "void"
 	argList = "LHCb::Tagger HAS"
-        desc    = "add one Tagger">
+        desc    = "Add one Tagger">
         <code>  
           m_taggers.push_back(HAS); 
           return;

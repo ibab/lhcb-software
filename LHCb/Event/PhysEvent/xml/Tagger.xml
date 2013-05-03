@@ -21,35 +21,41 @@
                 VtxCharge, Topology"
         access="PUBLIC"
      />
+
+     <constructor
+        desc = "Copy Constructor"
+        argList  = "const Tagger&amp; c"
+        initList = "m_type(c.type()), m_decision(c.decision()), m_omega(c.omega()), m_taggerParts(c.taggerParts())">
+        <code/>
+     </constructor>
+
      <attribute
         desc = "The type of tagger"
         name = "type"
-        type = "int"
+        type = "unsigned short int"
         init = "0"
      />
 
      <attribute 
 	desc = "decision of tagger"
 	name = "decision"
-	type = "int"
+	type = "short int"
         init = "0"
      />
 		
      <attribute 
 	desc = "wrong tag fraction of tagger from MC tuning"
 	name = "omega"
-	type = "double"
+	type = "float"
         init = "0.50"
      />		
-
  
-      <relation
+     <relation
         name="taggerParts"
         desc="Vector of Particle(s) used to build the Tagger"
         multiplicity="N"
         type="LHCb::Particle"
-        />
-
+     />
 
     </class>
   </package>
