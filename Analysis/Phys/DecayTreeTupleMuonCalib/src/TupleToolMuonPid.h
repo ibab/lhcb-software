@@ -37,6 +37,9 @@ public:
   virtual StatusCode fill( const LHCb::Particle*, const LHCb::Particle*
                            , const std::string&, Tuples::Tuple& );
 
+  StatusCode trackExtrapolate(const LHCb::Track *pTrack, std::vector<double> &trackX, std::vector<double> &trackY );
+  std::vector<int> findTrackRegions(const LHCb::Track *pTrack);
+
 private:
   DeMuonDetector*  m_mudet;
   unsigned int m_NStation;     // Number of stations
