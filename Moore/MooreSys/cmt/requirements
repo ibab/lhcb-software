@@ -8,18 +8,11 @@ branches doc cmt
 
 use  Moore               v20r1      Hlt
 use  IndependenceTests   v1r4       Hlt
-use  HltMonitor          v1r2	    Hlt   # Roel Aaij
-use  Swimming            v3r0	    Phys  # Roel Aaij
+use  HltMonitor          v1r2	    Hlt   # Diego Martinez
+use  Swimming            v3r0	    Phys  # Nick Torr
 
 
 # Bug fixes on top of LHCb v35r4 release stack
-
-# Hlt
-#use  HltSettings         v5r57       Hlt
-#use  Hlt1Lines           v6r31       Hlt
-#use  Hlt2Lines           v8r28       Hlt
-#use  HltConf             v9r22       Hlt
-#use  HltTracking         v9r25p1     Hlt
 
 
 # Declare this as a container package
