@@ -62,20 +62,17 @@ void BTagging::performTagging(const std::string & location)
   }
 
   if ( msgLevel(MSG::VERBOSE) )
-    verbose() << " Will tag "<< parts.size() << " B hypos!" <<endreq;
+    verbose() << "Will tag "<< parts.size() << " B hypos!" <<endreq;
 
   // Make new FT object container
   FlavourTags * tags = new FlavourTags;
-  // Output to TES
-  const std::string tagLocation = location+"/"+m_TagLocation;
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "Putting FlavourTags in " << tagLocation << endmsg;
-  put( tags, tagLocation );
 
   //-------------- loop on signal B candidates from selection
   Particle::Range::const_iterator icandB;
   for ( icandB = parts.begin(); icandB != parts.end(); icandB++)
   {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Found Particle of type " << (*icandB)->particleID() << endmsg;
     if ( (*icandB)->particleID().hasBottom() )
     {
       if ( msgLevel(MSG::DEBUG) )
@@ -157,6 +154,17 @@ void BTagging::performTagging(const std::string & location)
       }
 
     }
+  }
+
+  // Output to TES, if tags is not empty
+  const std::string tagLocation = location+"/"+m_TagLocation;
+  if ( tags->empty() )
+  {
+    delete tags;
+  }
+  else
+  {
+    put( tags, tagLocation );
   }
 
 }
