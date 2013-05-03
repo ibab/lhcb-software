@@ -4,7 +4,10 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
-!  2013-04-30 - Marco Meissner
+! 2013-05-03 - Paul Seyfert
+ - new PV handling, developed by Thomas Nikodem
+
+! 2013-04-30 - Marco Meissner
  - added sub-detector occupancies (VELO, TT, IT, OT) to ZooEv
  - added "nInteractions" to ZooEv; contains number of primary interactions 
    from generator level. !=nPVs

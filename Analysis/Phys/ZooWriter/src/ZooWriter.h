@@ -296,7 +296,7 @@ class ZooWriter : public DaVinciTupleAlgorithm {
 	HitManVeloR* m_hitManagerVeloR;
 	HitManVeloPhi* m_hitManagerVeloPhi;
 	
-	ZooP *GetSaved(const LHCb::Particle* p); 
+	ZooP *GetSaved(const LHCb::Particle* p, const LHCb::RecVertex* recvtx = NULL); 
 
 	void writeMC();
 	ZooMCP *GetSaved(const LHCb::MCParticle* p);

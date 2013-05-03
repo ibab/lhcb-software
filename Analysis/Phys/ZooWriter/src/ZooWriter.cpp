@@ -577,7 +577,7 @@ StatusCode ZooWriter::execute()
 	LHCb::Particle::Range parts = get<LHCb::Particle::Range>( s.collection );
 	BOOST_FOREACH(const LHCb::Particle* const part, parts) {
       m_parts[selectionid]++;
-      ZooP* zp = GetSaved(part);
+      ZooP* zp = GetSaved(part,NULL);
 	    s.pref->push_back(zp);
       addLoKi(zp,part);
 	}
@@ -697,71 +697,63 @@ void ZooWriter::getTreefitParams(const LHCb::Particle* node, DecayTreeFitter::Fi
 }
 
 void ZooWriter::treeFit(const LHCb::Particle* p) {
-//  const LHCb::RecVertex* pv =
-  const LHCb::RecVertex* bestpv = 0;
-//    dynamic_cast<const LHCb::RecVertex*>(this->getRelatedPV(p));
-  if (!p->daughters().empty())
-  { 
-    //this method intelligently selects the best PV AFTER PV refit
-    //best PV is currently the PV with the smallest ip sig
 
-    double best_ipSig = 999.0;
-    double curr_ip, curr_ipChi2, curr_ipSig;
+  if(p->daughters().empty())return;
 
-    const LHCb::RecVertex::Range vtcs = primaryVertices();
-    BOOST_FOREACH(const LHCb::VertexBase* vtx, vtcs) {
-      if (!vtx->isPrimary()) continue;
+  LHCb::RecVertex bestpv;// = new LHCb::RecVertex();
+  bool bestpvFound = false;
+  //this method intelligently selects the best PV AFTER PV refit
+  //best PV is currently the PV with the smallest ip sig, provided the lifetime fit works
+  double best_ipSig = 999.0;
+  double curr_ip, curr_ipChi2, curr_ipSig;
 
-      const LHCb::RecVertex* currpv = dynamic_cast<const LHCb::RecVertex*>(vtx);
-      LHCb::RecVertex newpv(currpv  ? (*currpv) : LHCb::RecVertex());
-      if (m_pvReFitter->remove(p, &newpv))
-      { 
-        bool treefit_ok = true;
+  const LHCb::RecVertex::Range vtcs = primaryVertices();
 
-        DecayTreeFitter::Fitter treefitter( *p, newpv ) ;
-        setTreefitMassConstraint(p, &treefitter);
-        treefitter.fit();//mass constraints here
-        if (treefitter.status() != 0)
-          treefit_ok = false;
+  //std::vector<const LHCb::Track*> daughtertracks;
+  //fillDaughterTracks(daughtertracks,p);
+  //std::vector<LHCb::RecVertex> vtcs;
+  //if(!m_pvReFitter->reDoMultiPV2(vtcs,daughtertracks))return;
 
-        //can additionally specify minimum number of tracks
-        if (    int(newpv.tracks().size()) > m_minTracksPV
-             && m_dist->distance(p, &newpv, curr_ip, curr_ipChi2)
-             && treefit_ok
-            )
-        {   
-            curr_ipSig = sqrt(curr_ipChi2);//negative ip chi2???
-            //selection according to smallest ipsig (similar to
-            //relatedvertex)
-            if (curr_ipSig < best_ipSig && !isnan(curr_ipSig))
-            { 
-              bestpv = currpv;
-              best_ipSig = curr_ipSig;//set new best values
-            }
-        }
+  BOOST_FOREACH(const LHCb::RecVertex* constvtx, vtcs) {
+  //for(int i=0;i<vtcs.size();i++){
+  //LHCb::RecVertex* vtx = &(vtcs[i]);
+    LHCb::RecVertex vtx(constvtx ? (*constvtx) : LHCb::RecVertex());
+    if(!m_pvReFitter->remove(p,&vtx))continue;
+    if (!vtx.isPrimary()) continue;
+    if(int(vtx.tracks().size()) <= m_minTracksPV)continue;       
+    //DecayTreeFitter::Fitter treefitter( *p, vtx);
+//    	    setTreefitMassConstraint(p, &treefitter);
+    //treefitter.fit();//mass constraints here
+    //if(treefitter.status() != 0)  continue;
+    if( m_dist->distance(p, &vtx, curr_ip, curr_ipChi2) ){
+      curr_ipSig = sqrt(curr_ipChi2);//negative ip chi2???
+      if(curr_ipSig < best_ipSig){
+        //if(!bestpv)bestpv = new LHCb::RecVertex();
+        bestpv = vtx;
+        bestpvFound = true;
+        best_ipSig = curr_ipSig;//set new best values
       }
     }
   }
-
-  const LHCb::RecVertex* pv = bestpv;
-
-  //do the tree fit
-  if (pv) {
-    LHCb::RecVertex newPV(*pv);
-    if (m_pvReFitter->remove(p, &newPV)) {
-      //decaytree fitter
-      DecayTreeFitter::Fitter treefitter( *p, newPV ) ;
-      //apply mass constraints
-      setTreefitMassConstraint(p, &treefitter);
+  
+  if(bestpvFound){
+      DecayTreeFitter::Fitter treefitter( *p, bestpv ) ;
+      //apply mass constraints (no actually don't do it. calculate mass
+      //constrained mass seperately)
+//      setTreefitMassConstraint(p, &treefitter);
       //perform fit
       treefitter.fit();
       //extract all fitted quantities
       getTreefitParams(p, &treefitter);
-    }
+      //delete bestpv;
   }
+ 
+  //delete bestpv;
+
+// std::cout << "pv size: " << bestpv->tracks().size() << std::endl;
 }
 
-ZooP *ZooWriter::GetSaved(const LHCb::Particle* const p)
+ZooP* ZooWriter::GetSaved(const LHCb::Particle* p, const LHCb::RecVertex* recvtx)
 {
     ZooP *&zp = objman()->getOrCreateMappingFor<ZooP>(p);
     if (zp) return zp;
@@ -806,102 +798,82 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* const p)
 
     zp->m_pid = p->particleID().pid();
     
-    // get PV
-#if DV_VER < 271
-    const LHCb::VertexBase *pv = desktop()->relatedVertex(p);
-#endif
-#if DV_VER >= 271
-    //const LHCb::VertexBase *pv = this->getRelatedPV(p);
-    const LHCb::VertexBase *pv = this->bestPV(p);
-#endif
-
-    const LHCb::RecVertex* bestpv = 0;
-    if (!p->daughters().empty() && (m_intelligentPV || m_secondIpSig)) 
-    {
-	//this method intelligently selects the best PV AFTER PV refit
-	//best PV is currently the PV with the smallest ip sig, provided the lifetime fit works
-	
-	//double best_chi2 = 999.0;
-	double best_ipSig = 999.0;
-	double best_ip = 999.0;
-	double secondbest_ip = 999.0;//this should be saved, too
-	double secondbest_ipSig = 999.0;//this should be saved, too
-
-	double curr_ct, curr_ctErr, curr_chi2;
-	double curr_ip, curr_ipChi2, curr_ipSig;
-	const LHCb::RecVertex::Range vtcs = primaryVertices();
-	BOOST_FOREACH(const LHCb::VertexBase* vtx, vtcs) {
-	    if (!vtx->isPrimary()) continue;
-	    //newPV
-	    const LHCb::RecVertex* currpv =
-		dynamic_cast<const LHCb::RecVertex*>(vtx);
-	    LHCb::RecVertex newpv(currpv  ? (*currpv) : LHCb::RecVertex());
-	    if (m_pvReFitter->remove(p, &newpv))
-	    {	    
-		bool treefit_ok = true;
-		if (m_onlyTreefitter)
-		{
-		    DecayTreeFitter::Fitter treefitter( *p, newpv ) ;
-		    treefitter.fit();//no mass constraints here
-		    if (treefitter.status() != 0)
-			treefit_ok = false;
-		}
-
-		//can additionally specify minimum number of tracks
-		if (int(newpv.tracks().size()) > m_minTracksPV 
-			&& m_dist->distance(p, &newpv, curr_ip, curr_ipChi2)
-			&& (m_onlyTreefitter ?
-			    treefit_ok
-			    : (m_lifetimeFitter->fit(newpv, *p, curr_ct, curr_ctErr, curr_chi2) == 1)
-			   )
-		   )
-		{
-		    //selection according to smallest lifetime fit chi2
-		    /*
-		       if (curr_chi2 < chi2)
-		       {
-		       bestpv = currpv;
-		       best_chi2 = curr_chi2;		      
-		       }
-		       */		
-		    curr_ipSig = sqrt(curr_ipChi2);//negative ip chi2???
-		    //selection according to smallest ipsig (similar to relatedvertex)
-                    if(!isnan(curr_ipSig)){		    
-                        if (curr_ipSig < best_ipSig)
-		    {
-			bestpv = currpv;
-			secondbest_ipSig = best_ipSig;//save second best (old) values
-			secondbest_ip = best_ip;
-			best_ipSig = curr_ipSig;//set new best values
-			best_ip = curr_ip;
-		        }else if(curr_ipSig < secondbest_ipSig){
-                            secondbest_ipSig = curr_ipSig;
-                            secondbest_ip = curr_ip;
-                        }
-		    }
-		}	    
-	    }
-	}
-	if (m_secondIpSig)
-	{
-	    zp->m_second_ip = secondbest_ip;
-	    zp->m_second_ipSig = secondbest_ipSig;
-	}
-	if (m_intelligentPV)
-	    pv = bestpv;
+    LHCb::RecVertex pv;
+    bool hasBestPV = false;
+    //if PV was calculated for mother particle use this
+    double best_ipSig = 999.0;
+    double ntracks_PV = -1;
+    if(recvtx) {
+      pv = *recvtx;
+      hasBestPV = true;
     }
+    
+    // thomas n. please comment this part a bit further
+    if ( !p->daughters().empty())
+    {
+         bool refit = !hasBestPV;
+         double best_ip = 999.0;
+         double secondbest_ip = 999.0;//this should be saved, too
+         double secondbest_ipSig = 999.0;//this should be saved, too
+
+         double curr_ct, curr_ctErr, curr_chi2;
+         double curr_ip, curr_ipChi2, curr_ipSig;
 
 
+         LHCb::RecVertex::Range vtcs = primaryVertices();
+         
 
-    // fall back onto emergency PV if we have nothing better...
-    if (0 == pv && pvWouter())
-	pv = pvWouter().get();
+         BOOST_FOREACH(const LHCb::RecVertex* constvtx, vtcs) {
+
+            if (!constvtx->isPrimary()) continue;
+            LHCb::RecVertex vtx(constvtx  ? (*constvtx) : LHCb::RecVertex());
+            //do not refit for daughter particles if PV already refitted from
+            //mother
+            if (refit && !m_pvReFitter->remove(p,&vtx)) continue;
+            if (int(vtx.tracks().size()) <= m_minTracksPV) continue;       
+             if ( m_dist->distance(p, &vtx, curr_ip, curr_ipChi2) ){
+               curr_ipSig = std::sqrt(curr_ipChi2);
+               //selection according to smallest ipsig (similar to relatedvertex)
+               if (!isnan(curr_ipSig)) {
+                 if (curr_ipSig < best_ipSig) {
+                   ntracks_PV = int(vtx.tracks().size());
+                   pv = vtx;
+                   hasBestPV = true;
+                   secondbest_ipSig = best_ipSig;//save second best (old) values
+                   secondbest_ip = best_ip;
+                   best_ipSig = curr_ipSig;//set new best values
+                   best_ip = curr_ip;
+                 } else {
+                   if (curr_ipSig < secondbest_ipSig) {
+                     secondbest_ipSig = curr_ipSig;
+                     secondbest_ip = curr_ip;
+                   } // curr_ipSig better than second best, but not better than best
+                 } // curr_ipSig not better than best
+               } // curr_ipSig isn't nan
+             } // distance calculator was successful
+         } // loop over vertices
+         if (m_secondIpSig)
+         {
+             zp->m_second_ip = secondbest_ip;
+             zp->m_second_ipSig = secondbest_ipSig;
+         }
+    }
+    
+
+    //if no PV found yet get related PV
+    if(!hasBestPV){
+      const LHCb::RecVertex *newpv = (const LHCb::RecVertex*) this->getRelatedPV(p);
+      if(newpv){
+        pv = *newpv;
+        hasBestPV = true;
+      }
+    }
 
     zp->m_particle =
       ZooPackedParticle(p->referencePoint(), p->momentum(),
 			writeCovariance?p->covMatrix():nanm7);
     
-    zp->AssignInfo<ZooPackedVertex>(writePackedVertex(pv, 
+    zp->AssignInfo<ZooPackedVertex>(writePackedVertex((hasBestPV?&pv:NULL),
 						      writeCovariance, false));
 
     const SmartRefVector<LHCb::Particle> &ch = p->daughters();
@@ -924,8 +896,8 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* const p)
       if (m_writeDLL) writeDLL(zp,p);
       
       double IP = nan, chi2 = nan;
-      if (pv) {
-	if (!m_dist->distance(p, pv, IP, chi2)) {
+      if (hasBestPV) {
+	if (!m_dist->distance(p, &pv, IP, chi2)) {
 	  IP = chi2 = nan;
 	} else
 	  chi2 = std::sqrt(chi2);
@@ -938,7 +910,12 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* const p)
       // decay product, save children      
       for (SmartRefVector<LHCb::Particle>::const_iterator i = ch.begin();
 	   i != ch.end(); ++i) {
-	ZooP *zc=GetSaved(*i);
+	ZooP *zc = NULL;
+        if(hasBestPV) {
+          zc = GetSaved(*i,&pv);
+        } else {
+          zc = GetSaved(*i,NULL);
+        }
 	zc->AddMother(zp);
 	zp->AddChild(zc);
       }
@@ -949,9 +926,9 @@ ZooP *ZooWriter::GetSaved(const LHCb::Particle* const p)
       int isolation = -999;
       
       // work out flight dist, proper time etc from PV with particle removed
-      if (pv) {
+      if (hasBestPV) {
 	  const LHCb::RecVertex* rpv =
-	      dynamic_cast<const LHCb::RecVertex*>(pv);
+	      dynamic_cast<const LHCb::RecVertex*>(&pv);
 	  LHCb::RecVertex newPV(rpv?(*rpv):LHCb::RecVertex());
 
 	  if (rpv && (m_intelligentPV || m_pvReFitter->remove(p, &newPV))) {//do not have to refit if we use intelligentPV
