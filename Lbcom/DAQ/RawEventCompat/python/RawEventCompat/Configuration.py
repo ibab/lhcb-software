@@ -19,7 +19,7 @@ from Gaudi.Configuration import *
 #dictionary of version: <bank, location>
 __locations__={
     #the original raw event, put everything in DAQ/RawEvent
-    0.0 : { 
+    0.0 : {
         "ALL" : "DAQ/RawEvent"
         },
     2.0 : {
@@ -64,13 +64,13 @@ __reco_dict__={ "Reco14" : 2.0, "Strip20" : 2.0 }
 def _checkv(version,locations=None,recodict=None):
     "Check the version exists, return the numeric version"
     locations,recodict=_getDict(locations,recodict)
-    
+
     if type(version) is str:
         if version not in recodict:
             raise KeyError("the chosen reconstruction pass is not known "+version)
         else:
             version=recodict[version]
-    
+
     if version not in locations:
         raise KeyError("the chosen version is not known "+str(version))
 
@@ -106,36 +106,36 @@ def ReverseDict(version,locations=None,recodict=None):
     locations,recodict=_getDict(locations,recodict)
     #check the options
     version=_checkv(version, locations,recodict)
-    
+
     reversed={}
     for key in locations[version]:
         if locations[version][key] in reversed:
             reversed[locations[version][key]].append(key)
         else:
             reversed[locations[version][key]]=[key]
-    
+
     return reversed
 
 def RecombineEventByMap(version,regex=".*",DoD=True, locations=None, recodict=None):
     """A simple python method to recombine the raw event into DAQ/RawEvent
     Allows fine-tuning of the contents to be copied by specifying a regex of bank names to copy
-    
+
     version: which version to start from, msut be set by user
     regex : regex of known banks to copy, default .*, modify to '(?!(L0)|(Hlt)).*' to ignore all trigger banks, for example
     DoD : Default  True, Ensure data-on-demand is the first in ExtSvc and then add the recombiner to DoD.
     locations: the locations dictionary passed
     recodict: how to link reconstruction/stripping passes to the versions
-    
+
     returns the combiner used
     """
     #find dictionaries
     locations,recodict=_getDict(locations,recodict)
     #regular expressions
     import re
-    
+
     #check the options
     version=_checkv(version, locations)
-    
+
     #configure my combiner
     from Configurables import RawEventMapCombiner
     myCombiner=RawEventMapCombiner("resurectRawEventMap")
@@ -143,9 +143,9 @@ def RecombineEventByMap(version,regex=".*",DoD=True, locations=None, recodict=No
     for abank in locations[version]:
         if re.match(regex,abank):
             toCopy[abank]=locations[version][abank]
-    
+
     myCombiner.RawBanksToCopy=toCopy
-    
+
     #configure DoD if required
     if DoD:
         _dod(myCombiner)
@@ -160,7 +160,7 @@ def RecombineWholeEvent(version,DoD=True, regex=".*", locations=None, recodict=N
     regex : regular expression of locations, allowing locations to be ignored
     locations: the locations dictionary passed
     recodict: how to link reconstruction/stripping passes to the versions
-    
+
     returns the combiner used
     """
     #find dictionaries
@@ -168,16 +168,16 @@ def RecombineWholeEvent(version,DoD=True, regex=".*", locations=None, recodict=N
     import re
     #check the options
     version=_checkv(version, locations)
-    
+
     #configure my combiner
     from Configurables import RawEventSimpleCombiner
     myCombiner=RawEventSimpleCombiner("resurectRawEvent")
     myCombiner.InputRawEventLocations=[aloc for aloc in ReverseDict(version,locations) if re.match(regex,aloc)]
-    
+
     #configure DoD if required
     if DoD:
         _dod(myCombiner)
-    
+
     return myCombiner
 
 ####################################################
@@ -191,11 +191,11 @@ class RawEventFormat(ConfigurableUser):
         }
     def __apply_configuration__(self):
         pass
-     
+
 class RecombineRawEvent(ConfigurableUser):
     "A simple configurable to add the raw event recreation to the DoD service"
     __used_configurables__ = [RawEventFormat]
-     
+
     __slots__ = {
         "Method" : "Simple"  #Simple or Map combiner
         , "Regex" : ".*"  #locations or RawBanks to copy.
@@ -205,17 +205,17 @@ class RecombineRawEvent(ConfigurableUser):
         "Simple": RecombineWholeEvent,
         "Map" : RecombineEventByMap
         }
-    
+
     def __apply_configuration__(self):
         #check arguments
         if self.getProp("Method") not in self.__known_methods__:
             raise KeyError("You have asked for an undefined method ", self.getProp("Method"))
-        
+        loc,rec=_getDict()
         #call correct method
         self.__known_methods__[self.getProp("Method")](
             version=self.getProp("Version"),
             regex=self.getProp("Regex"),
-            locations=RawEventHistory().getProp("Locations"),
-            recodict=RawEventHistory().getProp("RecoDict")
+            locations=loc,
+            recodict=rec
             )
-        
+
