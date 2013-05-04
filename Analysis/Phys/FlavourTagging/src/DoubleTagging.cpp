@@ -52,7 +52,7 @@ DoubleTagging::~DoubleTagging() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode DoubleTagging::initialize() 
+StatusCode DoubleTagging::initialize()
 {
   const StatusCode sc = DaVinciAlgorithm::initialize();
   if (sc.isFailure()) return sc;
@@ -82,9 +82,11 @@ StatusCode DoubleTagging::initialize()
     nagree.push_back(0);
     Wk.push_back(0);
     SigmaWk.push_back(0);
-
-    debug() << "Input W      " << i+1 << " = " << inputW[i] << endmsg;
-    debug() << "Input SigmaW " << i+1 << " = " << inputSigmaW[i] << endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Input W      " << i+1 << " = " << inputW[i] << endmsg;
+      debug() << "Input SigmaW " << i+1 << " = " << inputSigmaW[i] << endmsg;
+    }
   }
 
   return sc;
@@ -93,9 +95,9 @@ StatusCode DoubleTagging::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode DoubleTagging::execute() 
+StatusCode DoubleTagging::execute()
 {
-  
+
   const Particle::Range parts = this->particles();
   if(parts.empty())
   {
@@ -118,7 +120,7 @@ StatusCode DoubleTagging::execute()
     {
       ++m_ntotal;
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "Running tagging on candidate with PID = " 
+        debug() << "Running tagging on candidate with PID = "
                 << (*icandB)->particleID() << endmsg;
       FlavourTag* Tag   = new FlavourTag;
       FlavourTag* OSTag = new FlavourTag;
@@ -161,7 +163,7 @@ StatusCode DoubleTagging::execute()
 
         warning() << " WARNING: make combination assuming Bu or Bd (with SSpion!!) fix it!!!"
                   << signalType<<endmsg;
-        
+
         const unsigned int category = m_oscombine->combineTaggers(*OSTag,ptaggers,signalType);
         const std::vector<Tagger> OStaggers = OSTag->taggers();
 
@@ -246,7 +248,7 @@ double DoubleTagging::calculateSigmaWk(int ndt,int nag,double Wtagger,double Sig
 
   const double fracvariance = frac*(1-frac)/ndt;
   const double fcontrvar = fracvariance/(wmfrac*wmfrac);
-  const double Wmcontrvar = 
+  const double Wmcontrvar =
     (fracfac*fracfac/(wmfrac*wmfrac*wmfrac*wmfrac))*SigmaWtagger*SigmaWtagger;
 
   return std::sqrt(Wmcontrvar + fcontrvar);
