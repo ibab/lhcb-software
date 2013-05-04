@@ -32,7 +32,6 @@ BTagging::~BTagging() {}
 //=======================================================================
 StatusCode BTagging::execute()
 {
-  info() << "Running FT" << endmsg;
   for ( std::vector<std::string>::const_iterator iLoc = inputLocations().begin();
         iLoc != inputLocations().end(); ++iLoc )
   {
