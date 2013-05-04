@@ -21,9 +21,10 @@ DECLARE_ALGORITHM_FACTORY( DoubleTagging )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DoubleTagging::DoubleTagging( const std::string& name,
-                              ISvcLocator* pSvcLocator)
-  : DaVinciAlgorithm ( name , pSvcLocator ) {
+  DoubleTagging::DoubleTagging( const std::string& name,
+                                ISvcLocator* pSvcLocator)
+    : DaVinciAlgorithm ( name , pSvcLocator )
+{
   declareProperty( "MuonMissTagProb",m_Wm           = 0.32);
   declareProperty( "MuonMissTagProbError",m_SigmaWm = 0.017);
   declareProperty( "ElectronMissTagProb",m_We       = 0.33);
@@ -42,6 +43,7 @@ DoubleTagging::DoubleTagging( const std::string& name,
   declareProperty( "OutputTagLocation", m_TagLocation = "/Event/Phys/Tags");
   declareProperty( "OutputOSTagLocation", m_TagLocationOS = "/Event/Phys/OSTags");
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -50,17 +52,14 @@ DoubleTagging::~DoubleTagging() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode DoubleTagging::initialize() {
-  StatusCode sc = DaVinciAlgorithm::initialize();
+StatusCode DoubleTagging::initialize() 
+{
+  const StatusCode sc = DaVinciAlgorithm::initialize();
   if (sc.isFailure()) return sc;
 
   m_ntotal = m_ndt_total = m_nag_total = 0;
 
   m_oscombine = tool<ICombineTaggersTool> ("CombineTaggersOSTDR",this);
-  if(!m_oscombine) {
-    fatal() << "Unable to retrieve "<< "CombineTaggersOSTDR" << endreq;
-    return StatusCode::FAILURE;
-  }
 
   inputW.push_back(m_Wm);
   inputW.push_back(m_We);
@@ -77,7 +76,8 @@ StatusCode DoubleTagging::initialize() {
   inputSigmaW.push_back(m_SigmaWv);
 
   ncategories = 6;
-  for(size_t i=0;i<ncategories;++i){
+  for(size_t i=0;i<ncategories;++i)
+  {
     ndoubletagged.push_back(0);
     nagree.push_back(0);
     Wk.push_back(0);
@@ -93,11 +93,14 @@ StatusCode DoubleTagging::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode DoubleTagging::execute() {
-
+StatusCode DoubleTagging::execute() 
+{
+  
   const Particle::Range parts = this->particles();
-  if(parts.empty()){
-    debug() << "No B candidates" << endmsg;
+  if(parts.empty())
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "No B candidates" << endmsg;
     setFilterPassed(false);
     return StatusCode::SUCCESS;
   }
@@ -108,62 +111,70 @@ StatusCode DoubleTagging::execute() {
   put(OStags,m_TagLocationOS);
 
   for(Particle::Range::const_iterator icandB = parts.begin();
-      icandB != parts.end(); ++icandB) {
+      icandB != parts.end(); ++icandB)
+  {
 
-    if((*icandB)->particleID().hasBottom()){
+    if((*icandB)->particleID().hasBottom())
+    {
       ++m_ntotal;
-      debug() << "Running tagging on candidate with PID = " << (*icandB)->particleID() << endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Running tagging on candidate with PID = " 
+                << (*icandB)->particleID() << endmsg;
       FlavourTag* Tag   = new FlavourTag;
       FlavourTag* OSTag = new FlavourTag;
 
-      if(flavourTagging()->tag(*Tag,*icandB) != 1 ){
-        debug() << "All Tagging failed" << endmsg;
+      if(flavourTagging()->tag(*Tag,*icandB) != 1 )
+      {
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << "All Tagging failed" << endmsg;
         delete Tag;
         delete OSTag;
         continue;
       }
-      else{
+      else
+      {
         tags->insert(Tag);
         OStags->insert(OSTag);
 
         int sskaondec = 0;
         std::vector<Tagger*> ptaggers;
         std::vector<Tagger> taggers = Tag->taggers();
-        debug() << "Total number of taggers ran in BTaggingTool = "
-                << taggers.size() << endmsg;
 
-        for(size_t i=0;i<taggers.size();++i){
-          debug() << "Type of taggers ran in BTaggingTool =        "
-                  << taggers[i].type() << endmsg;
-          if(taggers[i].type() == Tagger::SS_Kaon){
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << "Total number of taggers ran in BTaggingTool = "
+                  << taggers.size() << endmsg;
+
+        for(size_t i=0;i<taggers.size();++i)
+        {
+          if ( msgLevel(MSG::DEBUG) )
+            debug() << "Type of taggers ran in BTaggingTool =        "
+                    << taggers[i].type() << endmsg;
+          if(taggers[i].type() == Tagger::SS_Kaon)
+          {
             sskaondec = taggers[i].decision();
-            debug() << "SS Kaon decision = " << sskaondec << endmsg;
+            if ( msgLevel(MSG::DEBUG) )
+              debug() << "SS Kaon decision = " << sskaondec << endmsg;
           }
           else ptaggers.push_back( &(taggers[i]) );
         }
         int signalType=1;
-        fatal()<<" WARNING: make combination assuming Bu or Bd (with SSpion!!) fix it!!!"<<signalType<<endmsg;
 
-        unsigned int category = m_oscombine->combineTaggers(*OSTag,ptaggers,signalType);
+        warning() << " WARNING: make combination assuming Bu or Bd (with SSpion!!) fix it!!!"
+                  << signalType<<endmsg;
+        
+        const unsigned int category = m_oscombine->combineTaggers(*OSTag,ptaggers,signalType);
         const std::vector<Tagger> OStaggers = OSTag->taggers();
-
-        /*
-          debug() << "Total number of taggers ran in OS combiner  = "
-          << taggers.size() << endmsg;
-          for(std::vector<Tagger>::const_iterator itag = OStaggers.begin();
-          itag != OStaggers.end(); ++itag){
-          debug() << "Type of taggers ran in OS combiner =         "
-          << itag->type() << endmsg;
-          }
-        */
 
         if( sskaondec == 0 || category == 0 ) continue;
 
-        for(size_t i=0;i<ncategories;++i){
-          if(category == i+1){
+        for(size_t i=0;i<ncategories;++i)
+        {
+          if(category == i+1)
+          {
             ++ndoubletagged[i];
             ++m_ndt_total;
-            if(OSTag->decision() == sskaondec){
+            if(OSTag->decision() == sskaondec)
+            {
               ++nagree[i];
               ++m_nag_total;
             }
@@ -181,9 +192,11 @@ StatusCode DoubleTagging::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode DoubleTagging::finalize() {
+StatusCode DoubleTagging::finalize()
+{
 
-  for(size_t i=0;i<ncategories;++i){
+  for(size_t i=0;i<ncategories;++i)
+  {
     debug() << "ndoubletagged = " << i+1 << " = " << ndoubletagged[i] << endmsg;
     debug() << "nagree =        " << i+1 << " = " << nagree[i] << endmsg;
 
@@ -219,7 +232,7 @@ StatusCode DoubleTagging::finalize() {
 double DoubleTagging::calculateWk(int ndt,int nag,double Wtagger)
 {
   if(!ndt || !nag) return -1;
-  double fraction = ((double) nag)/ndt;
+  const double fraction = ((double) nag)/ndt;
   return (1 - fraction - Wtagger)/(1 - 2*Wtagger);
 }
 
@@ -227,38 +240,45 @@ double DoubleTagging::calculateWk(int ndt,int nag,double Wtagger)
 double DoubleTagging::calculateSigmaWk(int ndt,int nag,double Wtagger,double SigmaWtagger)
 {
   if(!ndt || !nag) return -1;
-  double frac = ((double) nag)/ndt;
-  double wmfrac = (1 - 2*Wtagger);
-  double fracfac = (1 - 2*frac);
+  const double frac = ((double) nag)/ndt;
+  const double wmfrac = (1 - 2*Wtagger);
+  const double fracfac = (1 - 2*frac);
 
-  double fracvariance = frac*(1-frac)/ndt;
-  double fcontrvar = fracvariance/(wmfrac*wmfrac);
-  double Wmcontrvar = (fracfac*fracfac/(wmfrac*wmfrac*wmfrac*wmfrac))*SigmaWtagger*SigmaWtagger;
+  const double fracvariance = frac*(1-frac)/ndt;
+  const double fcontrvar = fracvariance/(wmfrac*wmfrac);
+  const double Wmcontrvar = 
+    (fracfac*fracfac/(wmfrac*wmfrac*wmfrac*wmfrac))*SigmaWtagger*SigmaWtagger;
 
-  return sqrt(Wmcontrvar + fcontrvar);
+  return std::sqrt(Wmcontrvar + fcontrvar);
 }
 
 //================================================================
-double efferr(double eff, int tot) {
-  return sqrt( eff*(1-eff)/tot);
+double efferr(double eff, int tot)
+{
+  return std::sqrt( eff*(1-eff)/tot);
 }
 
 //================================================================
-void DoubleTagging::combineMeasurements(std::vector<double>& Wks,std::vector<double>& SigmaWks, double& Wktot, double& SigmaWktot)
+void DoubleTagging::combineMeasurements(std::vector<double>& Wks,
+                                        std::vector<double>& SigmaWks,
+                                        double& Wktot, double& SigmaWktot)
 {
   double invarsum = 0;
   Wktot = 0;
-  for(size_t i=0;i<Wks.size();++i){
+  for(size_t i=0;i<Wks.size();++i)
+  {
     if( (SigmaWks[i] != 0) && (Wks[i] > 0) ){
       invarsum += 1/(SigmaWks[i]*SigmaWks[i]);
       Wktot += Wks[i]/(SigmaWks[i]*SigmaWks[i]);
     }
   }
-  if(invarsum > 0){
+  if(invarsum > 0)
+  {
     Wktot = Wktot/invarsum;
-    SigmaWktot = sqrt(1/invarsum);
+    SigmaWktot = std::sqrt(1/invarsum);
   }
-  else{
+  else
+  {
     Wktot = 0;
     SigmaWktot = 0;
   }

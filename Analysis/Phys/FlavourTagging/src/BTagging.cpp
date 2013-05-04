@@ -32,6 +32,7 @@ BTagging::~BTagging() {}
 //=======================================================================
 StatusCode BTagging::execute()
 {
+  //info() << "Running FT" << endmsg;
   for ( std::vector<std::string>::const_iterator iLoc = inputLocations().begin();
         iLoc != inputLocations().end(); ++iLoc )
   {
@@ -68,8 +69,8 @@ void BTagging::performTagging(const std::string & location)
   FlavourTags * tags = new FlavourTags;
 
   //-------------- loop on signal B candidates from selection
-  Particle::Range::const_iterator icandB;
-  for ( icandB = parts.begin(); icandB != parts.end(); icandB++)
+  for ( Particle::Range::const_iterator icandB = parts.begin(); 
+        icandB != parts.end(); ++icandB )
   {
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Found Particle of type " << (*icandB)->particleID() << endmsg;
@@ -83,15 +84,15 @@ void BTagging::performTagging(const std::string & location)
 
       //--------------------- TAG IT ---------------------
       //use tool for tagging by just specifing the signal B
-      StatusCode sc = flavourTagging() -> tag( *theTag, *icandB );
+      const StatusCode sc = flavourTagging() -> tag( *theTag, *icandB );
 
       //use tool for tagging if you want to specify the Primary Vtx
-      //StatusCode sc = flavourTagging() -> tag( *theTag, *icandB, PVertex );
+      //const StatusCode sc = flavourTagging() -> tag( *theTag, *icandB, PVertex );
 
       //use tool for tagging if you want to specify a list of particles
-      //StatusCode sc = flavourTagging() -> tag( *theTag, *icandB, PVertex, vtags );
+      //const StatusCode sc = flavourTagging() -> tag( *theTag, *icandB, PVertex, vtags );
       //--------------------------------------------------
-      if (!sc)
+      if ( sc.isFailure() )
       {
         Error( "Tagging Tool returned error." ).ignore();
         delete theTag;

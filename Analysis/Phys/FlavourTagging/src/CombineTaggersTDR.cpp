@@ -17,19 +17,26 @@ DECLARE_TOOL_FACTORY( CombineTaggersTDR )
   CombineTaggersTDR::CombineTaggersTDR( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent ) :
-    GaudiTool ( type, name, parent ) {
-    declareInterface<ICombineTaggersTool>(this);
-  }
+    GaudiTool ( type, name, parent )
+{
+  declareInterface<ICombineTaggersTool>(this);
+}
 
 CombineTaggersTDR::~CombineTaggersTDR(){}
 
 //=======================================================================
 int CombineTaggersTDR::combineTaggers(FlavourTag& theTag,
-                                      std::vector<Tagger*>& vtg , int signalType){
+                                      std::vector<Tagger*>& vtg , 
+                                      int signalType)
+{
 
   if( vtg.empty() ) return 0;
-  debug()<<"entering TDR/PID type combination"<<endreq;
-  fatal()<<" WARNING: update the code according to the new variable signalType !!!!!! "<<signalType<<endmsg;
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug()<<"entering TDR/PID type combination"<<endreq;
+
+  fatal()<<" WARNING: update the code according to the new variable signalType !!!!!! "
+         <<signalType<<endmsg;
   ///////////////////////////////////////////////////////////////////////////
   // WARNING: update the code according to the new variable signalType !!!!!!
   ///////////////////////////////////////////////////////////////////////////

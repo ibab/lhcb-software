@@ -19,7 +19,8 @@ DECLARE_TOOL_FACTORY( TaggerPionSameTool )
 TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent ) :
-  GaudiTool ( type, name, parent ) {
+  GaudiTool ( type, name, parent )
+{
   declareInterface<ITagger>(this);
 
   declareProperty( "CombTech", m_CombinationTechnique = "NNet" );
@@ -58,41 +59,37 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
 TaggerPionSameTool::~TaggerPionSameTool() {}
 
 //=====================================================================
-StatusCode TaggerPionSameTool::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+StatusCode TaggerPionSameTool::initialize()
+{
+  const StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
 
-  warning() << "PiSS calib ctt: P0_Cal "<<m_P0_Cal_pionS<<", P1_Cal "<<m_P1_Cal_pionS<<endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "PiSS calib ctt: P0_Cal "<<m_P0_Cal_pionS
+            << ", P1_Cal "<<m_P1_Cal_pionS<<endreq;
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
-  if( ! m_util ) {
-    fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
-    return StatusCode::FAILURE;
-  }
-  m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
-  if(! m_nnet) {
-    fatal() << "Unable to retrieve NNetTool"<< endreq;
-    return StatusCode::FAILURE;
-  }
-  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
-  if( ! m_descend ) {
-    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
-    return StatusCode::FAILURE;
-  }
 
-  return StatusCode::SUCCESS;
+  m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
+
+  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+
+  return sc;
 }
 
 //=====================================================================
 Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
                                 std::vector<const Vertex*>& allVtx,
-                                Particle::ConstVector& vtags ){
+                                Particle::ConstVector& vtags )
+{
+
   Tagger tpionS;
   if(!RecVert) return tpionS;
 
-  verbose()<<"--Pion SS Tagger--"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose()<<"--Pion SS Tagger--"<<endreq;
 
-  Gaudi::LorentzVector ptotB = AXB0->momentum();
+  const Gaudi::LorentzVector& ptotB = AXB0->momentum();
   double B0mass = ptotB.M();
 
   //fill auxdaugh for distphi
@@ -101,50 +98,55 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   axdaugh.push_back( AXB0 );
   //select pionS sameside tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
-  const Particle* ipionS=0;
+  const Particle * ipionS = NULL;
   double ptmaxpS = -99.0, ncand=0;
   Particle::ConstVector::const_iterator ipart, jpart;
-  for( ipart = vtags.begin(); ipart != vtags.end(); ++ipart ) {
+  for ( ipart = vtags.begin(); ipart != vtags.end(); ++ipart )
+  {
 
     //PID cuts to select the pion
     const ProtoParticle* proto = (*ipart)->proto();
-    double PIDk= proto->info( ProtoParticle::CombDLLk,  -1000.0 );
-    double PIDp= proto->info( ProtoParticle::CombDLLp,  -1000.0 );
+    const double PIDk = proto->info( ProtoParticle::CombDLLk,  -1000.0 );
+    const double PIDp = proto->info( ProtoParticle::CombDLLp,  -1000.0 );
     bool pidpass=false;
     if( PIDk==0 ) pidpass=true;
     if( PIDk!=0 ) if(PIDk < m_PionSame_PIDNoK_cut &&
                      PIDp < m_PionSame_PIDNoP_cut) pidpass=true;
     if( (*ipart)->particleID().abspid() != 211 ) continue;
     if(!pidpass) continue;
-    verbose()<<" Pion PIDk="<< PIDk <<endreq;
 
-    double Pt = (*ipart)->pt();
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose()<<" Pion PIDk="<< PIDk <<endreq;
+
+    const double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_pionS )  continue;
-    double P  = (*ipart)->p();
+    const double P  = (*ipart)->p();
     if( P  < m_P_cut_pionS )  continue;
-    verbose()<<" Pion P="<< P <<" Pt="<< Pt <<endreq;
+
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose()<<" Pion P="<< P <<" Pt="<< Pt <<endreq;
 
     //double cloneDist = (*ipart)->proto()->track()->info(LHCb::Track::CloneDist, -1.);
     //if (cloneDist!=-1) continue;
 
     const Track* track = proto->track();
-    double lcs = track->chi2PerDoF();
+    const double lcs = track->chi2PerDoF();
     if( lcs > m_lcs_cut ) continue;
     if( track->type() != Track::Long ) continue;
 
-    double tsa = track->likelihood();
+    const double tsa = track->likelihood();
     if(tsa < m_ghost_cut) continue;
-    verbose() << " Pion lcs="<< lcs <<" tsa="<<tsa<<endmsg;
 
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " Pion lcs="<< lcs <<" tsa="<<tsa<<endmsg;
 
-    double IP, IPerr;
+    double IP(0), IPerr(0);
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
     if(!IPerr) continue;
-    double IPsig = fabs(IP/IPerr);
+    const double IPsig = std::fabs(IP/IPerr);
     if(IPsig > m_IPs_cut_pionS)  continue;
 
-
-    double ippu=(*ipart)->info(1,100000.); // retrieve the stored information of IP significance wrt PU, saved in BTaggingTool.cpp
+    const double ippu=(*ipart)->info(1,100000.); // retrieve the stored information of IP significance wrt PU, saved in BTaggingTool.cpp
     if(ippu < m_ipPU_cut_pS) continue;
 
 
@@ -152,17 +154,17 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
     if( distphi < m_distPhi_cut_pS ) continue;
 
-    double deta  = fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
-    double dphi = fabs(TaggingHelpers::dphi(
-                                            (*ipart)->momentum().Phi(), ptotB.Phi()));
-    double dR = sqrt(deta*deta+dphi*dphi);
+    const double deta = std::fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
+    const double dphi = std::fabs(TaggingHelpers::dphi((*ipart)->momentum().Phi(), ptotB.Phi()));
+    const double dR = std::sqrt(deta*deta+dphi*dphi);
     if(deta > m_eta_max_cut_pionS) continue;
     if(deta < m_eta_min_cut_pionS) continue;
     if(dphi > m_phi_cut_pionS) continue;
     if(dR > m_dR_cut_pionS) continue;
 
-    double dQ = (ptotB+(*ipart)->momentum()).M() - B0mass;
-    verbose() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;
+    const double dQ = (ptotB+(*ipart)->momentum()).M() - B0mass;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;
     if(dQ > m_dQcut_pionS ) continue;
 
     ++ncand;
@@ -176,24 +178,26 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   }
   if( !ipionS ) return tpionS;
 
-  double extra_dQ = (ptotB+ipionS->momentum()).M() - B0mass;
+  const double extra_dQ = (ptotB+ipionS->momentum()).M() - B0mass;
   if( extra_dQ > m_dQcut_extra_pionS ) return tpionS;
-  verbose() << " Pion dQExtra="<< extra_dQ <<endmsg;
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << " Pion dQExtra="<< extra_dQ <<endmsg;
 
   //calculate omega
   double pn = 1-m_AverageOmega;
-  if(m_CombinationTechnique == "NNet") {
+  if ( m_CombinationTechnique == "NNet" ) 
+  {
 
     //calculate omega
-    double IP, IPerr;
+    double IP(0), IPerr(0);
     m_util->calcIP(ipionS, RecVert, IP, IPerr);
-    double B0the= ptotB.Theta();
-    double B0phi= ptotB.Phi();
-    double ang = asin((ipionS->pt())/(ipionS->p()));
-    double deta= log(tan(B0the/2.))-log(tan(ang/2.));
-    double dphi= fabs(TaggingHelpers::dphi(ipionS->momentum().Phi(), B0phi));
-    double dQ  = ((ptotB+ ipionS->momentum() ).M() - B0mass);
-    double dR = sqrt(deta*deta+dphi*dphi);
+    const double B0the= ptotB.Theta();
+    const double B0phi= ptotB.Phi();
+    const double ang = std::asin((ipionS->pt())/(ipionS->p()));
+    const double deta= std::log(std::tan(B0the/2.))-std::log(std::tan(ang/2.));
+    const double dphi= std::fabs(TaggingHelpers::dphi(ipionS->momentum().Phi(), B0phi));
+    const double dQ  = ((ptotB+ ipionS->momentum() ).M() - B0mass);
+    const double dR  = std::sqrt(deta*deta+dphi*dphi);
 
     std::vector<double> NNinputs(10);
     NNinputs.at(0) = m_util->countTracks(vtags);
@@ -204,19 +208,16 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     NNinputs.at(7) = dQ/GeV;
     NNinputs.at(8) = allVtx.size();
 
-    //    std::cout<<" NNet inputs BC "<<NNinputs.at(0)<<" "<<NNinputs.at(1)<<" "<<NNinputs.at(3)<<" "<<NNinputs.at(4)<<" "<<NNinputs.at(5)<<" "<<NNinputs.at(7)<<" "<<NNinputs.at(8)<<" "<<std::endl;
-
     pn = m_nnet->MLPpS( NNinputs );
-    verbose() << " Pion pn="<< pn <<endmsg;
-
-    //    std::cout<<" NNet inputs AC "<<NNinputs.at(0)<<" "<<NNinputs.at(1)<<" "<<NNinputs.at(3)<<" "<<NNinputs.at(4)<<" "<<NNinputs.at(5)<<" "<<NNinputs.at(7)<<" "<<NNinputs.at(8)<<" "<<pn<<std::endl;
-
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " Pion pn="<< pn <<endmsg;
 
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     //pn = 1 - m_P0_Cal_pionS - m_P1_Cal_pionS * ( (1-pn)-m_Eta_Cal_pionS);
     pn = 1 - m_P0_Cal_pionS - m_P1_Cal_pionS * ((1-pn)-m_Eta_Cal_pionS) - m_P2_Cal_pionS * ((1-pn)-m_Eta_Cal_pionS) * ((1-pn)-m_Eta_Cal_pionS);
 
-    debug() << " PionS pn="<< pn <<" w="<<1-pn<<endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << " PionS pn="<< pn <<" w="<<1-pn<<endmsg;
 
     if( pn < 0 || pn > 1 ) return tpionS;
     if( pn < m_PionProbMin ) return tpionS;

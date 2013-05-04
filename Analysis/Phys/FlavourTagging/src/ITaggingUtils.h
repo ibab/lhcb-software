@@ -16,7 +16,8 @@ static const InterfaceID IID_ITaggingUtils("ITaggingUtils", 1 , 0);
  *  @date   2007-02-07
  */
 
-class ITaggingUtils : virtual public IAlgTool {
+class ITaggingUtils : virtual public IAlgTool 
+{
 
 public:
   
@@ -34,9 +35,11 @@ public:
 				  const LHCb::Particle* ,
 				  const LHCb::Particle* , double& , double& )=0;
 
-  virtual int countTracks( LHCb::Particle::ConstVector& )=0;
+  virtual int countTracks( const LHCb::Particle::ConstVector& )=0;
 
   virtual bool isinTree( const LHCb::Particle*, 
                          std::vector<const LHCb::Particle*>& , double& )=0;
+
 };
+
 #endif // ICOMBINETAGGERSTOOL_H

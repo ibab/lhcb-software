@@ -23,10 +23,11 @@
 DECLARE_TOOL_FACTORY( NNetTool_MLP )
 
 //=============================================================================
-NNetTool_MLP::NNetTool_MLP( const std::string& type,
-                            const std::string& name,
-                            const IInterface* parent ) :
-  GaudiTool ( type, name, parent ) {
+  NNetTool_MLP::NNetTool_MLP( const std::string& type,
+                              const std::string& name,
+                              const IInterface* parent ) :
+    GaudiTool ( type, name, parent )
+{
   declareInterface<INNetTool>(this);
 
   declareProperty( "P0_mu_scale", m_P0mu =  -1.73872);
@@ -62,22 +63,26 @@ NNetTool_MLP::NNetTool_MLP( const std::string& type,
 NNetTool_MLP::~NNetTool_MLP(){}
 
 //=============================================================================
-double NNetTool_MLP::pol2(double x, double a0, double a1) {
+double NNetTool_MLP::pol2(double x, double a0, double a1)
+{
   return a0+a1*x;
 }
-double NNetTool_MLP::pol3(double x, double a0, double a1, double a2) {
+double NNetTool_MLP::pol3(double x, double a0, double a1, double a2) 
+{
   return a0+a1*x+a2*x*x;
 }
-double NNetTool_MLP::pol4(double x, double a0, double a1, double a2, double a3) {
+double NNetTool_MLP::pol4(double x, double a0, double a1, double a2, double a3) 
+{
   return a0+a1*x+a2*x*x+a3*x*x*x;
 }
-
 //=============================================================================
-void NNetTool_MLP::normaliseOS(std::vector<double>& par) {
 
-  if(msgLevel(MSG::DEBUG)) debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
-                                  <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)<<" "<<par.at(7)
-                                  <<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
+void NNetTool_MLP::normaliseOS(std::vector<double>& par) 
+{
+  if(msgLevel(MSG::DEBUG)) 
+    debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+           <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)<<" "<<par.at(7)
+           <<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
 
   par.at(0) /= 90.; //multiplicity
   par.at(1) /= 25.; //ptB
@@ -91,7 +96,8 @@ void NNetTool_MLP::normaliseOS(std::vector<double>& par) {
   par.at(8) = (par.at(8)-1)/4.;//krec
   par.at(9) = (par.at(9)-1)/3;//ncands
 }
-void NNetTool_MLP::normaliseSS(std::vector<double>& par) {
+void NNetTool_MLP::normaliseSS(std::vector<double>& par)
+{
   par.at(9) = (par.at(9) * 3) + 1;//undo ncands
   par.at(9) /= 4.; //nndr
   par.at(5) /= 2.; //nndeta
@@ -99,17 +105,19 @@ void NNetTool_MLP::normaliseSS(std::vector<double>& par) {
   par.at(7) /= 12.;//nndq
   if(par.at(7)>1.) par.at(7) = 1.;
 }
-void NNetTool_MLP::normalisepSS(std::vector<double>& par) {
+void NNetTool_MLP::normalisepSS(std::vector<double>& par)
+{
   par.at(5) /= 4.;   //nndr
   par.at(6) /= 3.2;  //nnpartPhi
   par.at(7) /= 12.;  //nndq
   if(par.at(7)>1.) par.at(7) = 1.;
 }
-void NNetTool_MLP::normaliseVtx(std::vector<double>& par) {
-
-  debug()<<"par vtx = "<<par.at(0)<<" "<<par.at(1)<<" "<<par.at(2)
-         <<" "<<par.at(3)<<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
-         <<" "<<par.at(7)<<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(10)<<endreq;
+void NNetTool_MLP::normaliseVtx(std::vector<double>& par) 
+{
+  if(msgLevel(MSG::DEBUG)) 
+    debug()<<"par vtx = "<<par.at(0)<<" "<<par.at(1)<<" "<<par.at(2)
+           <<" "<<par.at(3)<<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
+           <<" "<<par.at(7)<<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(10)<<endreq;
 
   par.at(0) /= 90.;  //vtag size
   par.at(1) = (par.at(1)-1)/4.;  //krec
@@ -126,67 +134,80 @@ double NNetTool_MLP::MLPm(std::vector<double>& par) {
 
   normaliseOS(par);
   NNmuon net;
-  double rnet = net.value(0, par.at(2),par.at(3),par.at(8),
+  const double rnet = net.value(0, par.at(2),par.at(3),par.at(8),
                           par.at(1),par.at(4));
 
-  double pn = 1.0-pol4(rnet, m_P0mu, m_P1mu, m_P2mu, m_P3mu);// <=========
+  const double pn = 1.0-pol4(rnet, m_P0mu, m_P1mu, m_P2mu, m_P3mu);// <=========
 
-  if(msgLevel(MSG::DEBUG))debug()<<"muon: par = "<<par.at(2)<<" "<<par.at(3)
-                                 <<" "<<par.at(8)<<" "<<par.at(1)<<" "<<par.at(4)<<endreq;
-  if(msgLevel(MSG::DEBUG))debug()<<" muon: rnet="<<rnet<<" pn="<<pn<<endreq;
+  if(msgLevel(MSG::DEBUG))
+  {
+    debug()<<"muon: par = "<<par.at(2)<<" "<<par.at(3)
+           <<" "<<par.at(8)<<" "<<par.at(1)<<" "<<par.at(4)<<endreq;
+    debug()<<" muon: rnet="<<rnet<<" pn="<<pn<<endreq;
+  }
 
   return pn;
 }
 
 //=============================================================================
-double NNetTool_MLP::MLPe(std::vector<double>& par) {
+double NNetTool_MLP::MLPe(std::vector<double>& par)
+{
 
   normaliseOS( par );
   NNele net;
-  double rnet = net.value(0, par.at(2),par.at(3),par.at(8),
+  const double rnet = net.value(0, par.at(2),par.at(3),par.at(8),
                           par.at(1),par.at(4));
 
-  double pn = 1.0-pol3(rnet, m_P0e, m_P1e, m_P2e);// <=========
+  const double pn = 1.0-pol3(rnet, m_P0e, m_P1e, m_P2e);// <=========
 
-  if(msgLevel(MSG::DEBUG))debug()<<"ele: par = "<<par.at(2)<<" "<<par.at(3)
-                                 <<" "<<par.at(8)<<" "<<par.at(1)<<" "<<par.at(4)<<endreq;
-  if(msgLevel(MSG::DEBUG))debug()<<" ele: rnet="<<rnet<<" pn="<<pn<<endreq;
+  if(msgLevel(MSG::DEBUG)) 
+  {
+    debug()<<"ele: par = "<<par.at(2)<<" "<<par.at(3)
+           <<" "<<par.at(8)<<" "<<par.at(1)<<" "<<par.at(4)<<endreq;
+    debug()<<" ele: rnet="<<rnet<<" pn="<<pn<<endreq;
+  }
 
   return pn;
 }
 
 //=============================================================================
-double NNetTool_MLP::MLPk(std::vector<double>& par ) {
-
+double NNetTool_MLP::MLPk(std::vector<double>& par )
+{
   normaliseOS( par );
   NNkaon net;
-  double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(8),
+  const double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(8),
                           par.at(1),par.at(4));
+  
+  const double pn = 1.0-pol4(rnet, m_P0k, m_P1k, m_P2k, m_P3k);// <=========
 
-  double pn = 1.0-pol4(rnet, m_P0k, m_P1k, m_P2k, m_P3k);// <=========
-
-  if(msgLevel(MSG::DEBUG))debug()<<"kaon: par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
-                                 <<" "<<par.at(8)<<" "<<par.at(1)<<" "<<par.at(4)<<endreq;
-  if(msgLevel(MSG::DEBUG))debug()<<" k: rnet="<<rnet<<" pn="<<pn<<endreq;
+  if(msgLevel(MSG::DEBUG))
+  {
+    debug()<<"kaon: par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+           <<" "<<par.at(8)<<" "<<par.at(1)<<" "<<par.at(4)<<endreq;
+    debug()<<" k: rnet="<<rnet<<" pn="<<pn<<endreq;
+  }
 
   return pn;
 }
 
 //=============================================================================
-double NNetTool_MLP::MLPkS(std::vector<double>& par) {
-
+double NNetTool_MLP::MLPkS(std::vector<double>& par)
+{
   normaliseOS( par );
   normaliseSS( par );
   NNkaonS net;
-  double rnet = net.value(0, par.at(0),par.at(3),par.at(8),par.at(5),
-                          par.at(6),par.at(1),par.at(7));
+  const double rnet = net.value(0, par.at(0),par.at(3),par.at(8),par.at(5),
+                                par.at(6),par.at(1),par.at(7));
 
-  double pn = 1.0-pol3(rnet, m_P0ks, m_P1ks, m_P2ks);// <=========
+  const double pn = 1.0-pol3(rnet, m_P0ks, m_P1ks, m_P2ks);// <=========
 
-  if(msgLevel(MSG::DEBUG))debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
-                                 <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
-                                 <<" "<<par.at(7)<<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
-  if(msgLevel(MSG::DEBUG))debug()<<" kS: rnet="<<rnet<<" pn="<<pn<<endreq;
+  if(msgLevel(MSG::DEBUG))
+  {
+    debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+           <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
+           <<" "<<par.at(7)<<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
+    debug()<<" kS: rnet="<<rnet<<" pn="<<pn<<endreq;
+  }
 
   return pn;
 }
@@ -197,32 +218,39 @@ double NNetTool_MLP::MLPpS(std::vector<double>& par) {
   normaliseOS( par );
   normalisepSS( par );
   NNpionS net;
-  double rnet = net.value(0,par.at(0),par.at(3),par.at(4),
+  const double rnet = net.value(0,par.at(0),par.at(3),par.at(4),
                           par.at(8),par.at(1),par.at(7),par.at(5));
 
-  double pn = 1.0-pol3(rnet, m_P0ps, m_P1ps, m_P2ps);// <=========
+  const double pn = 1.0-pol3(rnet, m_P0ps, m_P1ps, m_P2ps);// <=========
 
-  if(msgLevel(MSG::DEBUG)) debug()<<"pS: par = "<<par.at(0)<<" "<<par.at(3)<<" "<<par.at(4)
-                                  <<" "<<par.at(8)<<" "<<par.at(1)<<" "<<par.at(7)<<" "<<par.at(5)<<endreq;
-  if(msgLevel(MSG::DEBUG)) debug()<<" pS: rnet="<<rnet<<" pn="<<pn<<endreq;
+  if(msgLevel(MSG::DEBUG)) 
+  {
+    debug()<<"pS: par = "<<par.at(0)<<" "<<par.at(3)<<" "<<par.at(4)
+           <<" "<<par.at(8)<<" "<<par.at(1)<<" "<<par.at(7)<<" "<<par.at(5)<<endreq;
+    debug()<<" pS: rnet="<<rnet<<" pn="<<pn<<endreq;
+  }
 
   return pn;
 }
 
 //=============================================================================
-double NNetTool_MLP::MLPvtx(std::vector<double>& par) {
-
+double NNetTool_MLP::MLPvtx(std::vector<double>& par)
+{
+  
   normaliseVtx( par );
   NNvtx net;
-  double rnet = net.value(0,par.at(0),par.at(1),par.at(2),par.at(3),par.at(4),
+  const double rnet = net.value(0,par.at(0),par.at(1),par.at(2),par.at(3),par.at(4),
                           par.at(5),par.at(9),par.at(10));
 
-  double pn = 1.0-pol2(rnet, m_P0vtx, m_P1vtx);// <=========
-
-  if(msgLevel(MSG::DEBUG)) debug()<<"vtx: par = "<<par.at(0)<<" "<<par.at(1)<<" "<<par.at(2)
-                                  <<" "<<par.at(3)<<" "<<par.at(4)<<" "<<par.at(5)<<" "
-                                  <<par.at(9)<<" "<<par.at(10)<<endreq;
-  if(msgLevel(MSG::DEBUG)) debug()<<" vtx: rnet="<<rnet<<" pn="<<pn<<endreq;
+  const double pn = 1.0-pol2(rnet, m_P0vtx, m_P1vtx);// <=========
+  
+  if(msgLevel(MSG::DEBUG)) 
+  {
+    debug()<<"vtx: par = "<<par.at(0)<<" "<<par.at(1)<<" "<<par.at(2)
+           <<" "<<par.at(3)<<" "<<par.at(4)<<" "<<par.at(5)<<" "
+           <<par.at(9)<<" "<<par.at(10)<<endreq;
+    debug()<<" vtx: rnet="<<rnet<<" pn="<<pn<<endreq;
+  }
 
   return pn;
 }

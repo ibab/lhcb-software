@@ -21,17 +21,21 @@ class IDVAlgorithm;
  */
 
 class TaggingUtils : public GaudiTool,
-                     virtual public ITaggingUtils {
+                     virtual public ITaggingUtils
+{
 
 public:
+
   /// Standard constructor
   TaggingUtils( const std::string& type,
                 const std::string& name,
                 const IInterface* parent );
+
   virtual ~TaggingUtils( ); ///< Destructor
-  StatusCode initialize();    ///<  initialization
+  StatusCode initialize();  ///<  initialization
 
   //-------------------------------------------------------------
+
   StatusCode calcIP( const LHCb::Particle* axp,
                      const LHCb::VertexBase* v,
                      double& ip, double& iperr) ;
@@ -45,9 +49,11 @@ public:
                           const LHCb::Particle* p2,
                           double& doca, double& docaerr) ;
 
-  int countTracks( LHCb::Particle::ConstVector& );
+  int countTracks(const LHCb::Particle::ConstVector& );
+
   bool isinTree( const LHCb::Particle*,
                  std::vector<const LHCb::Particle*>& , double& );
+
   //-------------------------------------------------------------
 
 private:

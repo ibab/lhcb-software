@@ -64,7 +64,7 @@ private:
 
   bool isin(LHCb::Particle::ConstVector& , const LHCb::Particle* );
 
-  double angle( Gaudi::LorentzVector , Gaudi::LorentzVector );
+  double angle( const Gaudi::LorentzVector& , const Gaudi::LorentzVector& );
   double ipprob(double x) ;
   double ptprob(double x);
   double aprob(double x);

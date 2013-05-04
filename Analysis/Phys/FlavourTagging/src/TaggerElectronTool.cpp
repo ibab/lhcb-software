@@ -17,7 +17,8 @@ DECLARE_TOOL_FACTORY( TaggerElectronTool )
   TaggerElectronTool::TaggerElectronTool( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent ) :
-    GaudiTool ( type, name, parent ) {
+    GaudiTool ( type, name, parent )
+{
 
     declareInterface<ITagger>(this);
 
@@ -53,43 +54,35 @@ TaggerElectronTool::~TaggerElectronTool() {}
 //=====================================================================
 StatusCode TaggerElectronTool::initialize()
 {
-  StatusCode sc = GaudiTool::initialize();
+  const StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
 
-  warning() << "Ele calib ctt: P0_Cal "<<m_P0_Cal_ele<<", P1_Cal "<<m_P1_Cal_ele<<endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Ele calib ctt: P0_Cal "<<m_P0_Cal_ele
+            << ", P1_Cal "<<m_P1_Cal_ele<<endreq;
 
   m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
-  if(! m_nnet) {
-    fatal() << "Unable to retrieve NNetTool"<< endreq;
-    return StatusCode::FAILURE;
-  }
-  m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
-  if( ! m_util ) {
-    fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
-    return StatusCode::FAILURE;
-  }
-  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
-  if( ! m_descend ) {
-    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
-    return StatusCode::FAILURE;
-  }
-  m_electron = tool<ICaloElectron>( "CaloElectron");
-  if(! m_electron) {
-    fatal() << "Unable to retrieve ICaloElectronTool"<< endreq;
-    return StatusCode::FAILURE;
-  }
 
-  return StatusCode::SUCCESS;
+  m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
+
+  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+
+  m_electron = tool<ICaloElectron>( "CaloElectron");
+
+  return sc;
 }
 
 //=====================================================================
 Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
                                 std::vector<const Vertex*>& allVtx,
-                                Particle::ConstVector& vtags ){
+                                Particle::ConstVector& vtags )
+{
+
   Tagger tele;
   if(!RecVert) return tele;
 
-  verbose()<<"-- Electron Tagger --"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose()<<"-- Electron Tagger --"<<endreq;
 
   //fill auxdaugh for distphi
   double distphi;
@@ -100,64 +93,76 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Particle::ConstVector vele(0);
   const Particle* iele=0;
   double ptmaxe = -99.0, ncand=0;
-  Particle::ConstVector::const_iterator ipart;
-  for( ipart = vtags.begin(); ipart != vtags.end(); ++ipart ) {
+  for( Particle::ConstVector::const_iterator ipart = vtags.begin();
+       ipart != vtags.end(); ++ipart ) 
+  {
 
-    bool inHcalACC= (*ipart)->proto()->info(ProtoParticle::InAccHcal, false);
+    const bool inHcalACC= (*ipart)->proto()->info(ProtoParticle::InAccHcal, false);
     if(!inHcalACC) continue;
 
-    double pide=(*ipart)->proto()->info( ProtoParticle::CombDLLe, -1000.0 );
+    const double pide=(*ipart)->proto()->info( ProtoParticle::CombDLLe, -1000.0 );
     if(pide < m_PIDe_cut ) continue;
-    verbose() << " Ele PIDe="<< pide <<endmsg;
 
-    double Pt = (*ipart)->pt();
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " Ele PIDe="<< pide <<endmsg;
+
+    const double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_ele )  continue;
 
-    double P = (*ipart)->p();
+    const double P = (*ipart)->p();
     if( P < m_P_cut_ele )  continue;
-    verbose() << " Ele P="<< P <<" Pt="<<Pt<<endmsg;
+
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " Ele P="<< P <<" Pt="<<Pt<<endmsg;
 
     //double cloneDist = (*ipart)->proto()->track()->info(LHCb::Track::CloneDist, -1.);
     //if (cloneDist!=-1) continue;
 
     const Track* track = (*ipart)->proto()->track();
-    double lcs = track->chi2PerDoF();
+    const double lcs = track->chi2PerDoF();
     if( lcs > m_lcs_cut_ele ) continue;
     if(track->type() != Track::Long) continue;
 
-    double tsa = track->likelihood();
+    const double tsa = track->likelihood();
     if(tsa < m_ghost_cut_ele) continue;
 
-    verbose() << " Ele lcs="<< lcs <<" tsa="<<tsa<<endmsg;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " Ele lcs="<< lcs <<" tsa="<<tsa<<endmsg;
 
     //calculate signed IP wrt RecVert
-    double IP, IPerr;
+    double IP(0), IPerr(0);
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
     if(!IPerr) continue;
-    double IPsig = IP/IPerr;
+    const double IPsig = IP/IPerr;
     if(fabs(IPsig) < m_IPs_cut_ele) continue;
 
-    double ippu=(*ipart)->info(1,100000.);
+    const double ippu=(*ipart)->info(1,100000.);
     if(ippu < m_ipPU_cut_ele) continue;
     //distphi
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
     if( distphi < m_distPhi_cut_ele ) continue;
 
     double eOverP  = -999;
-    if( m_electron->set(*ipart) ) {
+    if( m_electron->set(*ipart) ) 
+    {
       eOverP  = m_electron->eOverP();
     }
 
-    if(eOverP > m_EoverP || eOverP<-100) {
-      verbose() << " Elec E/P=" << eOverP <<endreq;
+    if(eOverP > m_EoverP || eOverP<-100)
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " Elec E/P=" << eOverP <<endreq;
 
-      double veloch = (*ipart)->proto()->info( ProtoParticle::VeloCharge, 0.0 );
-      if( veloch > m_VeloChMin && veloch < m_VeloChMax ) {
-        verbose() << " Elec veloch=" << veloch << endreq;
+      const double veloch = (*ipart)->proto()->info( ProtoParticle::VeloCharge, 0.0 );
+      if( veloch > m_VeloChMin && veloch < m_VeloChMax ) 
+      {
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " Elec veloch=" << veloch << endreq;
 
         ++ncand;
 
-        if( Pt > ptmaxe ) {
+        if( Pt > ptmaxe ) 
+        {
           iele = (*ipart);
           ptmaxe = Pt;
         }
@@ -168,9 +173,10 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
   //calculate omega
   double pn = 1-m_AverageOmega;
-  if(m_CombinationTechnique == "NNet") {
+  if(m_CombinationTechnique == "NNet") 
+  {
 
-    double IP, IPerr;
+    double IP(0), IPerr(0);
     m_util->calcIP(iele, RecVert, IP, IPerr);
 
     std::vector<double> NNinputs(10);
@@ -183,11 +189,13 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     NNinputs.at(8) = allVtx.size();
 
     pn = m_nnet->MLPe( NNinputs );
-    verbose() << " Elec pn=" << pn << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " Elec pn=" << pn << endreq;
 
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     pn = 1 - m_P0_Cal_ele - m_P1_Cal_ele * ( (1-pn)-m_Eta_Cal_ele);
-    debug() << " Elec pn="<< pn <<" w="<<1-pn<<endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << " Elec pn="<< pn <<" w="<<1-pn<<endmsg;
     if( pn < 0 || pn > 1 ) return tele;
     if( pn < m_ProbMin_ele ) return tele;
 

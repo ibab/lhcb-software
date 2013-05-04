@@ -62,10 +62,11 @@ StatusCode TaggingUtils::initialize()
 StatusCode TaggingUtils::calcDOCAmin( const Particle* axp,
                                       const Particle* p1,
                                       const Particle* p2,
-                                      double& doca, double& docaerr) {
-  double doca1, doca2, err1, err2;
-  StatusCode sc1 = m_Dist->distance (axp, p1, doca1, err1);
-  StatusCode sc2 = m_Dist->distance (axp, p2, doca2, err2);
+                                      double& doca, double& docaerr) 
+{
+  double doca1(0), doca2(0), err1(0), err2(0);
+  const StatusCode sc1 = m_Dist->distance (axp, p1, doca1, err1);
+  const StatusCode sc2 = m_Dist->distance (axp, p2, doca2, err2);
 
   doca = std::min(doca1, doca2);
   if(doca == doca1) docaerr=err1; else docaerr=err2;
@@ -85,13 +86,15 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
   StatusCode sc2 = m_Dist->distance (axp, v, ipC, ipChi2);
   Gaudi::XYZVector ipV;
   StatusCode sc = m_Dist->distance (axp, v, ipV);
-  debug()<<"ipS: "<<ipC<<", ipV.R: "<<ipV.R()<<endreq;
-  if(sc2 && ipChi2!=0) {
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"ipS: "<<ipC<<", ipV.R: "<<ipV.R()<<endreq;
+  if(sc2 && ipChi2!=0) 
+  {
     if (sc) zsign = ipV.z()>0? 1:-1;
     ip=ipC*zsign;          // IP with sign
-    iperr=ipC/sqrt(ipChi2);
+    iperr=ipC/std::sqrt(ipChi2);
   }
-  debug()<<"IP: "<<ipC<<", "<<ip<<", (sign = "<<zsign<<" )"<<endreq;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug()<<"IP: "<<ipC<<", "<<ip<<", (sign = "<<zsign<<" )"<<endreq;
   return sc2;
 }
 
@@ -103,8 +106,9 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
   double ipminerr = 0.0;
   StatusCode sc, lastsc=1;
 
-  RecVertex::ConstVector::const_iterator iv;
-  for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); ++iv){
+  for ( RecVertex::ConstVector::const_iterator iv = PileUpVtx.begin(); 
+        iv != PileUpVtx.end(); ++iv )
+  {
     double ipx=0, ipex=0;
     double ipC=0, ipChi2=0;
     sc = m_Dist->distance (axp, *iv, ipC, ipChi2);
@@ -123,17 +127,19 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
   return lastsc;
 }
 //=========================================================================
-int TaggingUtils::countTracks( Particle::ConstVector& vtags ) {
+int TaggingUtils::countTracks( const Particle::ConstVector& vtags ) {
 
   int nr = 0;
 
   typedef Particle::ConstVector::const_iterator Iterator;
   using TaggingHelpers::SameTrackStatus;
   using TaggingHelpers::isSameTrack;
-  for (Iterator ipart = vtags.begin(); vtags.end() != ipart; ++ipart ) {
+  for (Iterator ipart = vtags.begin(); vtags.end() != ipart; ++ipart )
+  {
     bool duplic=false;
-    for( Iterator jpart = vtags.begin(); ipart != jpart; ++jpart ) {
-      SameTrackStatus isSame = isSameTrack(**ipart, **jpart);
+    for( Iterator jpart = vtags.begin(); ipart != jpart; ++jpart ) 
+    {
+      const SameTrackStatus isSame = isSameTrack(**ipart, **jpart);
       if (isSame) {
         duplic=true;
         break;
@@ -147,11 +153,14 @@ int TaggingUtils::countTracks( Particle::ConstVector& vtags ) {
 //============================================================================
 bool TaggingUtils::isinTree(const Particle* axp,
                             Particle::ConstVector& sons,
-                            double& dist_phi){
+                            double& dist_phi)
+{
+
   dist_phi = std::numeric_limits<double>::max();
 
-  for (Particle::ConstVector::iterator ip = sons.begin();
-       ip != sons.end(); ++ip) {
+  for ( Particle::ConstVector::iterator ip = sons.begin();
+        ip != sons.end(); ++ip )
+  {
     using TaggingHelpers::SameTrackStatus;
     using TaggingHelpers::isSameTrack;
     using TaggingHelpers::toString;
@@ -160,8 +169,9 @@ bool TaggingUtils::isinTree(const Particle* axp,
     const double deltaphi =
       fabs(dphi(axp->momentum().phi(), (*ip)->momentum().phi()));
     if (dist_phi > deltaphi) dist_phi = deltaphi;
-    SameTrackStatus isSame = isSameTrack(*axp, **ip);
-    if (isSame) {
+    const SameTrackStatus isSame = isSameTrack(*axp, **ip);
+    if ( isSame )
+    {
       if (msgLevel(MSG::VERBOSE))
         verbose() << " particle is: " << toString(isSame)
                   << " isinTree part: " << axp->particleID().pid()

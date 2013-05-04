@@ -51,20 +51,18 @@ DECLARE_TOOL_FACTORY( TaggerNEWKaonOppositeTool )
 TaggerNEWKaonOppositeTool::~TaggerNEWKaonOppositeTool() {}
 
 //=====================================================================
-StatusCode TaggerNEWKaonOppositeTool::initialize() {
+StatusCode TaggerNEWKaonOppositeTool::initialize()
+{
+  const StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
 
-  warning() << "NEW NN KOS calib ctt: P0_Cal "<<m_P0_Cal_kaon<<", P1_Cal "<<m_P1_Cal_kaon<<endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "NEW NN KOS calib ctt: P0_Cal "<<m_P0_Cal_kaon
+            << ", P1_Cal "<<m_P1_Cal_kaon<<endreq;
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
-  if( ! m_util ) {
-    fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
-    return StatusCode::FAILURE;
-  }
+ 
   m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
-  if( ! m_descend ) {
-    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
-    return StatusCode::FAILURE;
-  }
 
   std::vector<std::string> variable_names;
   variable_names.push_back("log(k_p)");
@@ -97,25 +95,26 @@ StatusCode TaggerNEWKaonOppositeTool::initialize() {
   mydata_reader = new DataReaderCompileWrapper(variable_names);
   variable_names.clear();
 
-
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=====================================================================
 Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
                                        const RecVertex* RecVert,
                                        std::vector<const Vertex*>& allVtx,
-                                       Particle::ConstVector& vtags ){
+                                       Particle::ConstVector& vtags )
+{
+
   Tagger tkaon;
   if(!RecVert) return tkaon;
 
-  verbose()<<"--NEW NN Kaon OppositeSide Tagger--"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose()<<"--NEW NN Kaon OppositeSide Tagger--"<<endreq;
 
-  double B_Pt     = AXB0->pt();
-  double B_eta    = AXB0->momentum().Eta();
-  double B_phi    = AXB0->momentum().Phi();
-  int    no_vtx   = allVtx.size();
+  const double B_Pt     = AXB0->pt();
+  const double B_eta    = AXB0->momentum().Eta();
+  const double B_phi    = AXB0->momentum().Phi();
+  const int    no_vtx   = allVtx.size();
 
   //fill auxdaugh for distphi
   double distphi;
@@ -129,39 +128,41 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
 
   Particle::ConstVector vtags_sel;
 
-  for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) { // presel before NN1
+  for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ )
+  { // presel before NN1
 
-    double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
+    const double pidk = (*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
 
     if(pidk < m_PID_k_cut ) continue;
     if(pidk==0 || pidk==-1000.0) continue;
 
-    double pidproton = (*ipart)->proto()->info(ProtoParticle::CombDLLp, -1000.0);
+    const double pidproton = (*ipart)->proto()->info(ProtoParticle::CombDLLp, -1000.0);
     if( pidk - pidproton < m_PIDkp_cut ) continue;
-    verbose() << " Kaon PIDk="<< pidk <<" Dkp="<<pidk - pidproton<<endmsg;
 
-    double cloneDist = (*ipart)->proto()->track()->info(LHCb::Track::CloneDist, -1.);
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " Kaon PIDk="<< pidk <<" Dkp="<<pidk - pidproton<<endmsg;
+
+    const double cloneDist = (*ipart)->proto()->track()->info(LHCb::Track::CloneDist, -1.);
     if (cloneDist!=-1) continue;
 
-    double tsa = (*ipart)->proto()->track()->likelihood();
+    const double tsa = (*ipart)->proto()->track()->likelihood();
     if( tsa < m_ghost_cut ) continue;
 
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
     if( distphi < m_distPhi_cut_kaon ) continue;
 
-    int type =(*ipart)->proto()->track()->type();
+    const int type =(*ipart)->proto()->track()->type();
     if( type != 3 )   continue;
-
 
     ////////////////////////////////
     vtags_sel.push_back(*ipart);         // store presel tagger candidate
     ////////////////////////////////
 
-    ncand++;
+    ++ncand;
   }
 
   int cands = m_util->countTracks(vtags_sel);
-  assert(ncand == cands);
+  //assert(ncand == cands); // CRJ Cannot call asserts in production
   double cands_nn_1 = cands;
 
   typedef std::pair <double, int> myPair;
@@ -179,33 +180,28 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
   std::tr1::array<double, max_tracks> pos_rnet_opp;
   std::tr1::array<double, max_tracks> pos_pidk;
 
-
-
-
   int count = 0;
 
   for( ipart = vtags_sel.begin(); ipart != vtags_sel.end(); ipart++ ) { // do NN1 sel
 
-
-    double Pt = (*ipart)->pt();
-    double P = (*ipart)->p();
+    const double Pt = (*ipart)->pt();
+    const double P = (*ipart)->p();
     const Track* track = (*ipart)->proto()->track();
-    double lcs = track->chi2PerDoF();
-    double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
+    const double lcs = track->chi2PerDoF();
+    const double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
 
-    double IP, IPerr;
+    double IP(0), IPerr(0);
     m_util->calcIP(*ipart, RecVert, IP, IPerr);
     IP = fabs(IP);
     if(!IPerr) continue;
-    double IPsig = fabs(IP/IPerr);
-    double ippu=(*ipart)->info(1,100000.);
+    const double IPsig = fabs(IP/IPerr);
+    const double ippu=(*ipart)->info(1,100000.);
 
+    const double eta = (*ipart)->momentum().Eta();
+    const double phi = (*ipart)->momentum().Phi();
 
-    double eta = (*ipart)->momentum().Eta();
-    double phi = (*ipart)->momentum().Phi();
-
-    double diff_eta = B_eta - eta;
-    double diff_phi = B_phi - phi;
+    const double diff_eta = B_eta - eta;
+    const double diff_phi = B_phi - phi;
 
     std::vector<double> values;
     values.push_back(log(P)          );
@@ -225,17 +221,18 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
 
     if(m_nn_1 < m_NN1_cut_kaon) continue;
 
-    myPair pair = std::make_pair(m_nn_1, count); // sort tracks by NN1 output, highest first
+    const myPair pair = std::make_pair(m_nn_1, count); // sort tracks by NN1 output, highest first
     myMap.push_back(pair);
-    debug() << " " << pair.first << " " << pair.second << endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << " " << pair.first << " " << pair.second << endmsg;
 
     pre_sign_tag.at(count) = (*ipart)->charge();
     pre_rnet_opp.at(count) = m_nn_1;
     pre_pidk.at(count)     = pidk;
 
-    count ++;
+    ++count;
 
-    myPair_ev ev_pair = std::make_pair(m_nn_1, ipart); // find highest nn1 track
+    const myPair_ev ev_pair = std::make_pair(m_nn_1, ipart); // find highest nn1 track
     event_map.push_back(ev_pair);
 
   }
@@ -245,36 +242,42 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
   cands = myMap.size();
   double cands_nn_2 = cands;
 
-  debug() << " after NN cut " << cands << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << " after NN cut " << cands << endmsg;
 
   int    my_os_k_dec = 0;
   double my_os_k_eta = -0.1;
 
   if(cands == 0) return tkaon;
 
-  else{
-    std::sort(myMap.begin(), myMap.end(), std::greater<myPair>());
-    for(unsigned i =0; i < (unsigned)cands; i++){
-      assert(i < pos_rnet_opp.size());
-      assert(i < pre_rnet_opp.size());
-      assert(i < pos_sign_tag.size());
-      assert(i < pre_sign_tag.size());
-      assert(i < pos_pidk.size());
-      assert(i < pre_pidk.size());
-      debug() << " <map 1> " << myMap[i].first << " <map 2> " << myMap[i].second << endmsg;
+  else
+  {
+    std::stable_sort(myMap.begin(), myMap.end(), std::greater<myPair>());
+    for(unsigned i =0; i < (unsigned)cands; i++)
+    {
+      // CRJ : Cannot call assert in production
+//       assert(i < pos_rnet_opp.size());
+//       assert(i < pre_rnet_opp.size());
+//       assert(i < pos_sign_tag.size());
+//       assert(i < pre_sign_tag.size());
+//       assert(i < pos_pidk.size());
+//       assert(i < pre_pidk.size());
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << " <map 1> " << myMap[i].first << " <map 2> " << myMap[i].second << endmsg;
       pos_rnet_opp.at(i) = pre_rnet_opp.at(myMap[i].second);
       pos_sign_tag.at(i) = pre_sign_tag.at(myMap[i].second);
       pos_pidk.at(i)     = pre_pidk.at(myMap[i].second);
     }
 
-    if(cands < max_tracks){
-      for(int i=0; i < (max_tracks-cands); i++){
+    if(cands < max_tracks)
+    {
+      for(int i=0; i < (max_tracks-cands); ++i)
+      {
         pos_rnet_opp.at(cands+i) = 0.;
         pos_sign_tag.at(cands+i) = 0.;
         pos_pidk.at(cands+i)     = 0.;
       }
     }
-
 
     std::vector<double> values;
     values.push_back(pos_sign_tag.at(0)*pos_rnet_opp.at(0));
@@ -293,18 +296,18 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
 
     my_os_k_eta = m_nn_2;
 
-    debug () << " NN 2     " << m_nn_2 << endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug () << " NN 2     " << m_nn_2 << endmsg;
 
     myMap.clear();
 
     // event_map is a vector, so let's sort it descending...
-    std::sort(event_map.rbegin(), event_map.rend());
-    assert(event_map.front().first >= event_map.back().first);
+    std::stable_sort( event_map.rbegin(), event_map.rend() );
+    //assert(event_map.front().first >= event_map.back().first);
     ikaon = *event_map[0].second;
 
     event_map.clear();
   }
-
 
   if( ! ikaon ) return tkaon;
 

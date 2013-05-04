@@ -40,9 +40,13 @@ private:
   void normaliseSS(std::vector<double>& );
   void normalisepSS(std::vector<double>& );
   void normaliseVtx(std::vector<double>& );
+
   double pol2(double x, double a0, double a1);
   double pol3(double x, double a0, double a1, double a2);
   double pol4(double x, double a0, double a1, double a2, double a3);
+
+private:
+
   double m_P0mu, m_P1mu, m_P2mu, m_P3mu;
   double m_P0e, m_P1e, m_P2e;
   double m_P0k, m_P1k, m_P2k, m_P3k;
@@ -52,4 +56,5 @@ private:
   double m_ProbMinVtx, m_MinimumVCharge;
 
 };
+
 #endif // NNETTOOL_NNETTOOL_MLP_H

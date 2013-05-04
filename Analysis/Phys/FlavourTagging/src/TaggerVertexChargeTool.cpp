@@ -17,7 +17,8 @@ DECLARE_TOOL_FACTORY( TaggerVertexChargeTool )
 TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent ) :
-  GaudiTool ( type, name, parent ) {
+  GaudiTool ( type, name, parent ) 
+{
 
   declareInterface<ITagger>(this);
 
@@ -50,111 +51,113 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
   declareProperty( "TracksEq2",    m_wSameSign2           = 0.4141 );
   declareProperty( "TracksGt2",    m_wSameSignMoreThan2   = 0.3250 );
 
-  m_svtool = 0;
-  m_nnet = 0;
-  m_util = 0;
+  m_svtool = NULL;
+  m_nnet   = NULL;
+  m_util   = NULL;
 }
 
 TaggerVertexChargeTool::~TaggerVertexChargeTool() {}
 
 //=====================================================================
-StatusCode TaggerVertexChargeTool::initialize() {
-  StatusCode sc = GaudiTool::initialize();
+StatusCode TaggerVertexChargeTool::initialize()
+{
+  const StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;
 
-  warning() << "Vtx calib ctt: P0_Cal "<<m_P0_Cal_vtx<<", P1_Cal "<<m_P1_Cal_vtx<<endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Vtx calib ctt: P0_Cal "<<m_P0_Cal_vtx
+            << ", P1_Cal "<<m_P1_Cal_vtx<<endreq;
 
   m_svtool = tool<ISecondaryVertexTool> ("SVertexOneSeedTool",
                                          m_SecondaryVertexToolName, this);
-  if(! m_svtool) {
-    warning()<< "*** No Vertex Charge tag will be used! "
-             << m_SecondaryVertexToolName << endreq;
-  }
-  m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
-  if( ! m_util ) {
-    fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
-    return StatusCode::FAILURE;
-  }
-  m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
-  if(! m_nnet) {
-    fatal() << "Unable to retrieve NNetTool"<< endreq;
-    return StatusCode::FAILURE;
-  }
 
-  return StatusCode::SUCCESS;
+  m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
+
+  m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
+
+  return sc;
 }
 
 //=====================================================================
 Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
                                     const RecVertex* RecVert,
                                     Vertex::ConstVector& allVtx,
-                                    Particle::ConstVector& vtags ) {
+                                    Particle::ConstVector& vtags ) 
+{
   Tagger tVch;
   if(!RecVert) return tVch;
   if(vtags.empty()) return tVch;
 
-  verbose()<<"--Vertex Tagger--"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose()<<"--Vertex Tagger--"<<endreq;
 
   ///--- Inclusive Secondary Vertex ---
   //look for a secondary Vtx due to opposite B
   std::vector<Vertex> vvec(0);
   if(m_svtool) vvec = m_svtool -> buildVertex( *RecVert, vtags );
   if(vvec.empty()) return tVch;
-  Particle::ConstVector Pfit = vvec.at(0).outgoingParticlesVector();
+  const Particle::ConstVector& Pfit = vvec.at(0).outgoingParticlesVector();
 
   //if Vertex does not contain any daughters, exit
-  if(Pfit.size()<1) return tVch;
-  debug()<<"--- SVTOOL buildVertex returns: "<<vvec.size()
-         <<", with "<<Pfit.size()<<"tracks"<<endreq;
+  if ( Pfit.empty() ) return tVch;
+  if ( msgLevel(MSG::DEBUG) )
+    debug()<<"--- SVTOOL buildVertex returns: "<<vvec.size()
+           <<", with "<<Pfit.size()<<"tracks"<<endreq;
   double maxprobf = vvec.at(0).info(1, 0.5 );
-  debug()<<" -- likelihood seed "<<maxprobf<<endreq;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug()<<" -- likelihood seed "<<maxprobf<<endreq;
   Vertex seedvtx;
 
-  const Gaudi::XYZPoint BoppDir = vvec.at(0).position();  // SV-PV !!!
-  debug()<<"BoppDir: "<<BoppDir<<endreq;
+  const Gaudi::XYZPoint& BoppDir = vvec.at(0).position();  // SV-PV !!!
+  if ( msgLevel(MSG::DEBUG) )
+    debug()<<"BoppDir: "<<BoppDir<<endreq;
 
   //calculate vertex charge and other variables for NN
   double Vch = 0, norm = 0;
   double Vptmean = 0, Vipsmean = 0, Vflaglong = 0, Vdocamax = 0;
   int vflagged = 0;
   Gaudi::LorentzVector SVmomentum;
-  Particle::ConstVector::const_iterator ip;
-  for(ip=Pfit.begin(); ip!=Pfit.end(); ++ip) {
-    debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endreq;
+  for ( Particle::ConstVector::const_iterator ip = Pfit.begin();
+        ip!=Pfit.end(); ++ip ) 
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endreq;
     SVmomentum += (*ip)->momentum();
-    double a = pow((*ip)->pt()/GeV, m_PowerK);
-    Vch += (*ip)->charge() * a;
-    norm+= a;
+    const double a = std::pow((*ip)->pt()/GeV, m_PowerK);
+    Vch  += (*ip)->charge() * a;
+    norm += a;
     ++vflagged;
     Vptmean += (*ip)->pt()/GeV;
-    double minip, miniperr;
+    double minip(0), miniperr(0);
     m_util->calcIP(*ip, RecVert, minip, miniperr);
-    minip=fabs(minip);
+    minip = std::fabs(minip);
     Vipsmean += minip/miniperr;
     const Track* iptrack = (*ip)->proto()->track();
     if( iptrack->type()== Track::Long ) ++Vflaglong;
-    double docaSV, docaErrSV;
+    double docaSV(0), docaErrSV(0);
     m_util->calcDOCAmin( *ip, Pfit.at(0), Pfit.at(1), docaSV, docaErrSV); //DOCA wrt the seeds
     Vdocamax += docaSV;
-    debug()<<"docaSV:"<<docaSV<<endreq;
+    if ( msgLevel(MSG::DEBUG) )
+      debug()<<"docaSV:"<<docaSV<<endreq;
   }
 
-  if(norm) {
+  if ( norm )
+  {
     Vch /= norm;
     if(fabs(Vch) < m_MinimumVCharge ) Vch = 0;
     Vptmean  /= vflagged;
     Vipsmean /= vflagged;
     Vdocamax/= vflagged;
   }
-  debug()<<"Vch: "<<Vch<<endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"Vch: "<<Vch<<endreq;
   if( Vch==0 ) return tVch;
 
   //Variables of the SV (Seed Vertex)
-  double SVP = SVmomentum.P()/1000;
-  double SVM = SVmomentum.M()/1000;
-  double SVGP = SVP/(0.16*SVM+0.12);
-  double SVtau = sqrt(BoppDir.Mag2())*5.28/SVGP/0.299792458;
-  debug()<<"BoppDir.Mag2: "<<sqrt(BoppDir.Mag2())<<", SVGP: "<<SVGP<<", SVtau: "<<SVtau<<endreq;
+  const double SVP = SVmomentum.P()/1000;
+  const double SVM = SVmomentum.M()/1000;
+  const double SVGP = SVP/(0.16*SVM+0.12);
+  const double SVtau = std::sqrt(BoppDir.Mag2())*5.28/SVGP/0.299792458;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug()<<"BoppDir.Mag2: "<<sqrt(BoppDir.Mag2())<<", SVGP: "<<SVGP<<", SVtau: "<<SVtau<<endreq;
   if ( Vptmean < m_Ptmean_vtx)              return tVch;
   if ( Vptmean*vflagged < m_Ptsum_vtx)      return tVch;
   if (Vipsmean*vflagged < m_IPSsum_vtx)     return tVch;
@@ -163,10 +166,12 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   if (SVM < m_Msum_vtx ) return tVch;
 
   //calculate omega
-  debug()<<"calculate omega with "<<m_CombinationTechnique<<endreq;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug()<<"calculate omega with "<<m_CombinationTechnique<<endreq;
   double omega = m_AverageOmega;
   double pn = 1-omega;
-  if(m_CombinationTechnique == "Probability") {
+  if(m_CombinationTechnique == "Probability") 
+  {
     if( fabs(Vch)<0.75 ) omega = m_P0 + m_P1*fabs(Vch) ;
     if( fabs(Vch)>0.75 ) omega = m_Gt075;
     if( fabs(Vch)>0.99 ) { // tracks have all the same charge
@@ -175,7 +180,8 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
     }
     pn = 1 - omega;
   }
-  if(m_CombinationTechnique == "NNet") {
+  if(m_CombinationTechnique == "NNet") 
+  {
     std::vector<double> NNinputs(11);
     NNinputs.at(0) = m_util->countTracks(vtags);
     NNinputs.at(1) = allVtx.size();
@@ -189,23 +195,28 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
     omega = 1 - pn;
   }
 
-  verbose() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts"
-            <<", omega= "<< omega <<endreq;
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts"
+              <<", omega= "<< omega <<endreq;
 
   //Calibration (w=1-pn) w' = p0 + p1(w-eta)
   omega =  m_P0_Cal_vtx + m_P1_Cal_vtx * ( omega-m_Eta_Cal_vtx);
-  debug() << " Vtx pn="<< 1-omega <<" w="<<omega<<endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << " Vtx pn="<< 1-omega <<" w="<<omega<<endmsg;
 
   if( omega < 0 || omega > 1 ) return tVch;
   if( 1-omega < m_ProbMin_vtx ) return tVch;
   //  if(   omega > m_ProbMin_vtx ) return tVch;
 
-  verbose()<<"Vtx passed"<<endreq;
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose()<<"Vtx passed"<<endreq;
 
   tVch.setDecision( Vch>0 ? -1 : 1 );
   tVch.setOmega( omega );
   tVch.setType( Tagger::VtxCharge );
-  for(ip=Pfit.begin(); ip!=Pfit.end(); ++ip) {
+  for ( Particle::ConstVector::const_iterator ip = Pfit.begin();
+        ip!=Pfit.end(); ++ip )
+  {
     tVch.addToTaggerParts(*ip);
   }
 

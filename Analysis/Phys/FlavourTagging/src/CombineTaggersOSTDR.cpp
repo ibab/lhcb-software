@@ -16,16 +16,21 @@ DECLARE_TOOL_FACTORY( CombineTaggersOSTDR )
   CombineTaggersOSTDR::CombineTaggersOSTDR( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent ) :
-    GaudiTool ( type, name, parent ) {
-    declareInterface<ICombineTaggersTool>(this);
-  }
+    GaudiTool ( type, name, parent )
+{
+  declareInterface<ICombineTaggersTool>(this);
+}
 
 CombineTaggersOSTDR::~CombineTaggersOSTDR(){}
 
 //=============================================================================
-int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>& vtg, int signalType){
+int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, 
+                                        std::vector<Tagger*>& vtg, 
+                                        int signalType)
+{
 
-  debug() << "Running CombineTaggersOSTDR::combineTaggers signalTpye" <<signalType<< endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Running CombineTaggersOSTDR::combineTaggers signalTpye" <<signalType<< endmsg;
 
   //Want to combine opposite side muon, electron, kaon, vertex
   int catt=0;
@@ -34,40 +39,44 @@ int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>
   std::vector<int> itag;
   for(int j=0; j!=4; ++j) itag.push_back(0);
 
-  debug() << "Number of taggers = " << vtg.size() << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Number of taggers = " << vtg.size() << endmsg;
 
-  for(std::vector<Tagger*>::const_iterator iter = vtg.begin(); iter != vtg.end(); ++iter){
-    if((*iter)->type() == Tagger::OS_Muon){
-      debug() << "Muon tool present    " << endmsg;
+  for(std::vector<Tagger*>::const_iterator iter = vtg.begin(); iter != vtg.end(); ++iter)
+  {
+    if((*iter)->type() == Tagger::OS_Muon)
+    {
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Muon tool present    " << endmsg;
       ostaggers.push_back(*iter);
       itag[0] = (*iter)->decision();
-      debug() << "Muon decision =      " << itag[0] << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Muon decision =      " << itag[0] << endmsg;
       if(itag[0] != 0) theTag.addTagger(**iter);
     }
     if((*iter)->type() == Tagger::OS_Electron){
-      debug() << "Electron tool present" << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Electron tool present" << endmsg;
       ostaggers.push_back(*iter);
       itag[1] = (*iter)->decision();
-      debug() << "Electron decision =  " << itag[1] << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Electron decision =  " << itag[1] << endmsg;
       if(itag[1] != 0) theTag.addTagger(**iter);
     }
     if((*iter)->type() == Tagger::OS_Kaon){
-      debug() << "Kaon tool present    " << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Kaon tool present    " << endmsg;
       ostaggers.push_back(*iter);
       itag[2] = (*iter)->decision();
-      debug() << "Kaon decision =      " << itag[2] << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Kaon decision =      " << itag[2] << endmsg;
       if(itag[2] !=0 ) theTag.addTagger(**iter);
     }
     if((*iter)->type() == Tagger::VtxCharge){
-      debug() << "Vertex tool present  " << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Vertex tool present  " << endmsg;
       ostaggers.push_back(*iter);
       itag[3] = (*iter)->decision();
-      debug() << "Vertex decision =    " << itag[3] << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Vertex decision =    " << itag[3] << endmsg;
       if(itag[3] != 0) theTag.addTagger(**iter);
     }
   }
 
-  if(itag[0]){
+  if(itag[0])
+  {
     tagdecision = itag[0];
     catt = 1;
     if(itag[2]){
@@ -75,7 +84,8 @@ int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>
       catt=4;
     }
   }
-  else if(itag[1]){
+  else if(itag[1])
+  {
     tagdecision = itag[1];
     catt = 2;
     if(itag[2]){
@@ -83,11 +93,13 @@ int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, std::vector<Tagger*>
       catt=5;
     }
   }
-  else if(itag[2]){
+  else if(itag[2])
+  {
     tagdecision = itag[2];
     catt = 3;
   }
-  else if(itag[3]){
+  else if(itag[3])
+  {
     tagdecision = itag[3];
     catt = 6;
   }
