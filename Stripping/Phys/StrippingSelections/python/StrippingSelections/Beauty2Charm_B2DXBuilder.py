@@ -330,8 +330,8 @@ class B2DXBuilder(object):
 
     def _makeB02DstH(self,dname,d2x):
         '''Makes B0 -> D*+- H-+'''
-        decays = {'B02DstarPi': ["B0 -> D*(2010)- pi+"],
-                  'B02DstarK' : ["B0 -> D*(2010)- K+"]}
+        decays = {'B02DstarPi': ["B0 -> D*(2010)- pi+","B0 -> D*(2010)+ pi-"],
+                  'B02DstarK' : ["B0 -> D*(2010)- K+","B0 -> D*(2010)+ K-"]}
         inputs = {'B02DstarPi': d2x+self.topoPions,
                   'B02DstarK': d2x+self.topoKaons}
         b2dsth = makeB2XSels(decays,dname,inputs,self.config,True,False)
