@@ -1,4 +1,5 @@
 from GaudiConf import IOHelper
+# checked
 IOHelper().inputFiles(
 ['PFN:root://eoslhcb.cern.ch//eos/lhcb/MC/Upgrade/XDST/00023815/0000/00023815_00000887_3.xdst',
  'PFN:root://eoslhcb.cern.ch//eos/lhcb/MC/Upgrade/XDST/00023819/0000/00023819_00000526_3.xdst',

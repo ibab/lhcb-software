@@ -20,8 +20,9 @@ Brunel().InputType = 'DIGI'
 
 import os
 setting = os.getenv("TIM")
-setting = "1"
-#sample = {"mu": '7.6', "cooling": 'poco', "channel": 'minbias'}
+if setting is None:
+    setting = "2"
+    
 if setting == "1":
     sample = {"mu": '3.8', "cooling": 'poco', "channel": 'Kstmumu'}
 elif setting == "2":
@@ -36,12 +37,14 @@ elif setting == "4":
 #EventSelector().Input = ["/afs/cern.ch/work/p/pjalocha/public/VP_Sim/VP_PocoFoam_UT_FT_nu6.8.digi"]
 #EventSelector().Input = ["/afs/cern.ch/work/p/pjalocha/public/VP_Sim/VP_MicroChannel_UT_FT_nu6.8.digi"]
 
+EventSelector().Input = ["/tmp/8k-dsts/VPUTFT-Kstmumu-poco-3.8.dst"]
 # XXX How is this XML catalog + options file thing meant to work?
-importOptions("$FSTTOOLSROOT/options/VPUTFT-%(channel)s-%(cooling)s-%(mu)s.py"%(sample))
+#importOptions("$FSTTOOLSROOT/options/VPUTFT-%(channel)s-%(cooling)s-%(mu)s.py"%(sample))
 
 # Output DST
-output_fname = "/tmp/VPUTFT-%(channel)s-%(cooling)s-%(mu)s.dst"%(sample)
-InputCopyStream("DstWriter2").Output = "DATAFILE='PFN:%s'"%(output_fname)
+output_fname = "/tmp/thead/VPUTFT-%(channel)s-%(cooling)s-%(mu)s.dst"%(sample)
+#output_fname = "VPUTFT-%(channel)s-%(cooling)s-%(mu)s.dst"%(sample)
+#InputCopyStream("DstWriter2").Output = "DATAFILE='PFN:%s'"%(output_fname)
 
 
 # Configuration of the trigger emulation
@@ -50,7 +53,7 @@ FstConf().TStationType = "FT"
 # XXX Need to figure this cut out
 FstConf().TStationHits = 10
 
-Brunel().EvtMax = 300#3000
+Brunel().EvtMax = 8#*1000#3000
 
 CondDB().Upgrade = True
 if sample['cooling'] == "poco":
@@ -65,7 +68,6 @@ Brunel().DDDBtag = "dddb-20130408"
 
 Brunel().MCLinksSequence = ["Unpack", "Tr"]
 Brunel().MCCheckSequence = ["Pat"]
-
 def setup_truth_matching():
    from Configurables import GaudiSequencer, PrTrackAssociator, PrChecker
    from Configurables import UnpackMCParticle, UnpackMCVertex

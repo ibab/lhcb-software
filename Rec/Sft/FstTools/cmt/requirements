@@ -31,3 +31,5 @@ apply_pattern    install_python_modules
 
 # FstTools Configurable uses the generated configurables
 macro_append FstToolsGenConfUser_dependencies FstToolsConfDbMerge
+#macro_append FstTools_linkopts "-lprofiler -L/afs/cern.ch/user/t/thead/lib"
+#macro_append FstTools_cppflags "-I/afs/cern.ch/user/t/thead/include"

@@ -4,6 +4,9 @@
 ! Purpose     : First Software Trigger tools for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-05-04 - Tim Head
+ - Record state of play before move to Brunel v44r3p1
+
 ! 2013-04-19 - Tim Head
  - Updated config options to run on upgrade samples
  - added upgrade sampel file lists for K*mumu, minbias for VP poco and micro

@@ -9,6 +9,8 @@
 // local
 #include "FstSequencer.h"
 
+//#include "gperftools/profiler.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : FstSequencer
 //
@@ -76,6 +78,8 @@ StatusCode FstSequencer::initialize() {
   }
   if ( m_measureTime ) m_timerTool->decreaseIndent();
 
+  //ProfilerStart("gaudi.prof");
+
   return StatusCode::SUCCESS;
 }
 
@@ -118,7 +122,6 @@ StatusCode FstSequencer::execute() {
   setExecuted( true );
 
   if ( m_measureTime ) m_timerTool->stop( m_timer );
-
   return StatusCode::SUCCESS;
 }
 
@@ -126,7 +129,7 @@ StatusCode FstSequencer::execute() {
 //  Finalize
 //=============================================================================
 StatusCode FstSequencer::finalize() {
-
+  //ProfilerStop();
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
   if ( 0 < m_nEvent ) {
     info() << format( "== Accepted %8d events from %8d (%7.2f %%) ==",

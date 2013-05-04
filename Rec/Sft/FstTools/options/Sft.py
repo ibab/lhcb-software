@@ -15,6 +15,7 @@ RecMoniConf().MoniSequence = []
 Brunel().OutputType = "NONE"
 
 MessageSvc().Format = '% F%50W%S%7W%R%T %0W%M'
+#MessageSvc().setVerbose += ['FTRawBankDecoder']
 #MessageSvc().setVerbose += ['HltPVsPV3D', 'FstVPDecoding']
 #MessageSvc().setVerbose += ['FastFit', 'DstWriter2', 'STOnlinePosition']
 #MessageSvc().setDebug += ['SimplifiedMaterialLocator']
