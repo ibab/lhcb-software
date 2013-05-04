@@ -27,7 +27,7 @@ importOptions("$GAUSSOPTS/Gauss-Job.py")
 LHCbApp().EvtMax = 1000
 LHCbApp().OutputLevel = INFO
 Gauss().Histograms = "NONE"
-Gauss().Output = "NONE"
+Gauss().OutputType = "NONE"
 Gauss().DatasetName = "myRivetGauss"
 # force head on collisions:
 #Gauss().BeamCrossingAngle = 0.0

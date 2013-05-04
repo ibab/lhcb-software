@@ -5,6 +5,12 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
+! 2013-May-04 - Patrick Spradlin
+ - Corrected a Guass property name referenced by example steering options
+   options/example/MC_LHCb_GENERIC.py,
+     -Gauss().Output = "NONE"
+     +Gauss().OutputType = "NONE"
+
 !========================= GenTune v1r1 2013-03-05 =========================
 ! 2013-03-05 - Alex Grecu
  - correct particle status id mapping algorithm to PYTHIA/HepMC 2.05 codes
