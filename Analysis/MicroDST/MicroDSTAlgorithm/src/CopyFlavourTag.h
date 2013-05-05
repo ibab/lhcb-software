@@ -50,7 +50,7 @@ template<> struct Defaults<LHCb::FlavourTag>
 {
   const static std::string clonerType;
 };
-const std::string Defaults<LHCb::FlavourTag>::clonerType = "FlavourTagCloner";
+const std::string Defaults<LHCb::FlavourTag>::clonerType = "FlavourTagDeepCloner";
 //=============================================================================
 template<> struct Location<LHCb::FlavourTag>
 {
