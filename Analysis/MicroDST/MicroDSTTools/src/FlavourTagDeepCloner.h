@@ -4,7 +4,7 @@
 
 #include "ObjectClonerBase.h"
 
-#include "MicroDST/ICloneFlavourTag.h" 
+#include "MicroDST/ICloneFlavourTag.h"
 
 namespace LHCb
 {
@@ -81,6 +81,16 @@ private:
 
   std::string m_particleClonerName;
 
+  bool m_cloneTaggerParticles;
+
 };
+
+//=============================================================================
+
+inline const LHCb::Particle*
+FlavourTagDeepCloner::cloneParticle(const LHCb::Particle* particle) const
+{
+  return (*m_particleCloner)(particle);
+}
 
 #endif // FLAVOURTAGDEEPCLONER_H

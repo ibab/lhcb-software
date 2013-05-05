@@ -13,6 +13,7 @@ namespace LHCb
 
 /** @class FlavourTagCloner FlavourTagCloner.h
  *
+ *  Clones flavour tagging objects
  *
  *  @author Juan PALACIOS
  *  @date   2008-08-08

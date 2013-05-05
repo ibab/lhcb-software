@@ -19,9 +19,10 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-VertexBaseFromRecVertexCloner::VertexBaseFromRecVertexCloner( const std::string& type,
-                                                              const std::string& name,
-                                                              const IInterface* parent )
+VertexBaseFromRecVertexCloner::
+VertexBaseFromRecVertexCloner( const std::string& type,
+                               const std::string& name,
+                               const IInterface* parent )
   : base_class ( type, name , parent ) { }
 
 //=============================================================================
@@ -58,3 +59,5 @@ VertexBaseFromRecVertexCloner::~VertexBaseFromRecVertexCloner() {}
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( VertexBaseFromRecVertexCloner )
+
+//=============================================================================

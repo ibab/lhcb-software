@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
 
+! 2013-05-05 - Chris Jones
+ - Improvements to support Flavour Tags
+
 !========================= MicroDSTTools v2r9 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

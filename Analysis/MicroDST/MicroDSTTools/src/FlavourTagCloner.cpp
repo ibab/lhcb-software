@@ -22,7 +22,8 @@
 FlavourTagCloner::FlavourTagCloner( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
-  : base_class ( type, name , parent ) { }
+  : base_class ( type, name , parent ) 
+{ }
 
 //=============================================================================
 
@@ -35,11 +36,16 @@ LHCb::FlavourTag* FlavourTagCloner::operator() (const LHCb::FlavourTag* tag)
 
 LHCb::FlavourTag* FlavourTagCloner::clone( const LHCb::FlavourTag* tag )
 {
-  LHCb::FlavourTag * tmp =
-    cloneKeyedContainerItem<BasicFTCopy>(tag);
+  // Clone the FT object
+  LHCb::FlavourTag * tmp = cloneKeyedContainerItem<BasicFTCopy>(tag);
 
+  // Update the Particle SmartRef
   tmp->setTaggedB( getStoredClone<LHCb::Particle>( tag->taggedB() ) );
 
+  // Clear the taggers vector
+  tmp->setTaggers( std::vector<LHCb::Tagger>() );
+
+  // return
   return tmp;
 }
 

@@ -109,8 +109,9 @@ LHCb::Particle* ParticleCloner::clone(const LHCb::Particle* particle)
 
 //=============================================================================
 
-void ParticleCloner::storeDaughters(LHCb::Particle* particleClone,
-                                    const SmartRefVector<LHCb::Particle>& daughters)
+void 
+ParticleCloner::storeDaughters( LHCb::Particle* particleClone,
+                                const SmartRefVector<LHCb::Particle>& daughters )
 {
   particleClone->clearDaughters();
 
@@ -118,7 +119,7 @@ void ParticleCloner::storeDaughters(LHCb::Particle* particleClone,
         dau != daughters.end(); ++dau )
   {
     LHCb::Particle* daughterClone = this->clone( *dau );
-    if (daughterClone) particleClone->addToDaughters(daughterClone);
+    if ( daughterClone ) { particleClone->addToDaughters(daughterClone); }
   }
 }
 

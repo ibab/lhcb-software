@@ -25,12 +25,11 @@ FlavourTagDeepCloner::FlavourTagDeepCloner( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent )
   :
-  base_class ( type, name , parent ),
-  m_particleCloner(NULL),
-  m_particleClonerName("ParticleCloner")
-
+  base_class       ( type, name , parent ),
+  m_particleCloner ( NULL )
 {
-  declareProperty("ICloneParticle", m_particleClonerName);
+  declareProperty( "ICloneParticle", m_particleClonerName = "ParticleCloner" );
+  declareProperty( "CloneTaggerParticles", m_cloneTaggerParticles = true );
 }
 
 //=============================================================================
@@ -40,17 +39,8 @@ StatusCode FlavourTagDeepCloner::initialize()
   const StatusCode sc = base_class::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_particleCloner = tool<ICloneParticle>(m_particleClonerName,
-                                          this->parent() );
+  m_particleCloner = tool<ICloneParticle>( m_particleClonerName, this->parent() );
 
-  if (m_particleCloner) 
-  {
-    debug() << "Found ParticleCloner " << m_particleCloner->name() << endmsg;
-  }
-  else
-  {
-    error() << "Failed to find ParticleCloner" << endmsg;
-  }
   return sc;
 }
 
@@ -65,17 +55,16 @@ LHCb::FlavourTag* FlavourTagDeepCloner::operator() (const LHCb::FlavourTag* tag)
 
 LHCb::FlavourTag* FlavourTagDeepCloner::clone( const LHCb::FlavourTag* tag )
 {
-  LHCb::FlavourTag* tmp =
-    cloneKeyedContainerItem<BasicFTCopy>(tag);
+  // Clone the FT object
+  LHCb::FlavourTag* tmp = cloneKeyedContainerItem<BasicFTCopy>(tag);
 
+  // Update and clone the tagged B Particle
   tmp->setTaggedB( getStoredClone<LHCb::Particle>( tag->taggedB() ) );
 
-  // will have to deal with the taggers by hand, since LHCb::Tagger is
-  // not a contained object.
-  // loop over taggers, clone tagger particles, clone them, and set them.
-
+  // Clone the taggers
   cloneTaggers(tmp);
 
+  // return
   return tmp;
 }
 
@@ -83,16 +72,21 @@ LHCb::FlavourTag* FlavourTagDeepCloner::clone( const LHCb::FlavourTag* tag )
 
 void FlavourTagDeepCloner::cloneTaggers(LHCb::FlavourTag* tag) const
 {
+  // Get the vector of taggers
   const std::vector<LHCb::Tagger>& taggers = tag->taggers();
 
+  // Make a new vector for the clones
   std::vector<LHCb::Tagger> clonedTaggers;
+  clonedTaggers.reserve( taggers.size() );
 
-  std::vector<LHCb::Tagger>::const_iterator iTagger = taggers.begin();
-  for ( ; iTagger!=taggers.end(); ++iTagger ) 
+  // Clone each tagger
+  for ( std::vector<LHCb::Tagger>::const_iterator iTagger = taggers.begin();
+        iTagger != taggers.end(); ++iTagger )
   {
-    clonedTaggers.push_back(cloneTagger(*iTagger));
+    clonedTaggers.push_back( cloneTagger(*iTagger) );
   }
 
+  // update in the FT object
   tag->setTaggers(clonedTaggers);
 }
 
@@ -100,26 +94,37 @@ void FlavourTagDeepCloner::cloneTaggers(LHCb::FlavourTag* tag) const
 
 LHCb::Tagger FlavourTagDeepCloner::cloneTagger(const LHCb::Tagger& tagger) const
 {
+  // Clone the tagger object
   LHCb::Tagger tmp(tagger);
-  const SmartRefVector<LHCb::Particle>& taggerParts = tagger.taggerParts();
-  SmartRefVector<LHCb::Particle> clonedTaggerParts;
-  SmartRefVector<LHCb::Particle>::const_iterator iTaggerPart = taggerParts.begin();
-  for ( ;  iTaggerPart != taggerParts.end(); ++iTaggerPart) 
+
+  // Should we clone the tagger particles
+  if ( m_cloneTaggerParticles )
   {
-    clonedTaggerParts.push_back(cloneParticle(*iTaggerPart));
+    // Get the vector of tagger particles
+    const SmartRefVector<LHCb::Particle>& taggerParts = tagger.taggerParts();
+
+    // make a new clone vector
+    SmartRefVector<LHCb::Particle> clonedTaggerParts;
+    clonedTaggerParts.reserve( taggerParts.size() );
+
+    // Clone the particles
+    for ( SmartRefVector<LHCb::Particle>::const_iterator iTaggerPart = taggerParts.begin();
+          iTaggerPart != taggerParts.end(); ++iTaggerPart )
+    {
+      clonedTaggerParts.push_back(cloneParticle(*iTaggerPart));
+    }
+
+    // Update the particles vector in the tagger object
+    tmp.setTaggerParts(clonedTaggerParts);
+  }
+  else
+  {
+    // Clear the particle vector
+    tmp.clearTaggerParts();
   }
 
-  tmp.setTaggerParts(clonedTaggerParts);
-
+  // return
   return tmp;
-}
-
-//=============================================================================
-
-const LHCb::Particle* 
-FlavourTagDeepCloner::cloneParticle(const LHCb::Particle* particle) const 
-{
-  return (*m_particleCloner)(particle);
 }
 
 //=============================================================================

@@ -23,7 +23,7 @@ VertexBaseFromRecVertexClonerNoTracks::
 VertexBaseFromRecVertexClonerNoTracks( const std::string& type,
                                        const std::string& name,
                                        const IInterface* parent )
-  : VertexBaseFromRecVertexCloner ( type, name , parent ) { }
+  : VertexBaseFromRecVertexCloner ( type, name, parent ) { }
 
 //=============================================================================
 
@@ -44,3 +44,5 @@ VertexBaseFromRecVertexClonerNoTracks::~VertexBaseFromRecVertexClonerNoTracks() 
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( VertexBaseFromRecVertexClonerNoTracks )
+
+//=============================================================================
