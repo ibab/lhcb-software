@@ -47,15 +47,14 @@ namespace MicroDST
     //===========================================================================
     /// Standard constructor
     RelationsClonerAlg( const std::string& name, ISvcLocator* pSvcLocator )
-      :
-      MicroDSTAlgorithm ( name , pSvcLocator ),
-      m_cloner(NULL),
-      m_clonerType(DEFAULTS::clonerType),
-      m_tableCloner( boost::bind(&RelationsClonerAlg<TABLE>::cloneFrom, &(*this), _1),
-                     boost::bind(&RelationsClonerAlg<TABLE>::cloneTo,   &(*this), _1) )
+      : MicroDSTAlgorithm ( name , pSvcLocator   ),
+        m_cloner          ( NULL                 ),
+        m_clonerType      ( DEFAULTS::clonerType ),
+        m_tableCloner( boost::bind(&RelationsClonerAlg<TABLE>::cloneFrom, &(*this), _1),
+                       boost::bind(&RelationsClonerAlg<TABLE>::cloneTo,   &(*this), _1) )
     {
-      declareProperty("ClonerType", m_clonerType);
-      //setProperty( "OutputLevel", 2 );
+      declareProperty( "ClonerType", m_clonerType );
+      //setProperty( "OutputLevel", 1 );
     }
 
     //===========================================================================
@@ -132,7 +131,7 @@ namespace MicroDST
                   << " into " << outputLocation << endmsg;
       }
 
-      if (exist<TABLE>(outputLocation) )
+      if ( exist<TABLE>(outputLocation) )
       {
         this->Warning("Object "+ outputLocation + " already exists. Not cloning.",
                       StatusCode::SUCCESS, 0).ignore() ;

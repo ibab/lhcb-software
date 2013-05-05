@@ -83,11 +83,15 @@ MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
 
   typedef typename Cloner::Type _type;
   typedef typename _type::Container _container;
+  //if ( this->msgLevel(MSG::VERBOSE) )
+  //  this->verbose() << "Trying to load data at '" << from << "'" << endmsg;
   const _container* data = this->getInputContainer<_container>( from );
   if ( !data )
   {
-//     this->Warning("copyKeyedContainer found no data at "+from,
-//                   StatusCode::FAILURE, 0).ignore();
+    //if ( this->msgLevel(MSG::VERBOSE) )
+    //  this->verbose() << "  -> No data object" << endmsg;
+    //this->Warning("copyKeyedContainer found no data at "+from,
+    //              StatusCode::FAILURE, 0).ignore();
     return NULL;
   }
 
@@ -111,8 +115,8 @@ MicroDSTCommon<PBASE>::copyKeyedContainer( const typename Cloner::Type::Containe
 
   if ( !from )
   {
-//     this->Warning("copyKeyedContainer found no data at "+ location,
-//                   StatusCode::FAILURE, 0).ignore();
+    //     this->Warning("copyKeyedContainer found no data at "+ location,
+    //                   StatusCode::FAILURE, 0).ignore();
     return NULL;
   }
 
