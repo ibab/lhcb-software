@@ -117,11 +117,11 @@ void FlavourTagPacker::unpack( const PackedData       & pft,
   }
 
   // Taggers
-  std::vector<LHCb::Tagger> taggers;
+  std::vector<LHCb::Tagger>& taggers = 
+    *(const_cast<std::vector<LHCb::Tagger>*>(&ft.taggers()));
   taggers.reserve( pft.lastTagger - pft.firstTagger );
   for ( unsigned int iT = pft.firstTagger; iT < pft.lastTagger; ++iT )
   {
-
     // Reference to packed tagger
     const LHCb::PackedTagger & ptagger = pfts.taggers()[iT];
 
@@ -143,9 +143,7 @@ void FlavourTagPacker::unpack( const PackedData       & pft,
       SmartRef<LHCb::Particle> ref(&fts,hintID,key);
       tagger.addToTaggerParts( ref );
     }
-
   }
-  ft.setTaggers( taggers );
 
 }
 
@@ -196,7 +194,7 @@ StatusCode FlavourTagPacker::check( const Data & dataA,
   // Checks
 
   // key
-  ok &= dataA.key() == dataB.key();
+  ok &= ch.compareInts( "Key", dataA.key(), dataB.key() );
 
   // decision
   ok &= ch.compareInts( "Decision", dataA.decision(), dataB.decision() );
