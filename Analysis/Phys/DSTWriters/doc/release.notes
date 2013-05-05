@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2013-05-05 - Chris Jones
+ - Add support for storing Flavour Tags on (u)DSTs.
+
 !========================= DSTWriters v4r8 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

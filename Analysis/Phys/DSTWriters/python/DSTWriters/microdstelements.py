@@ -192,20 +192,24 @@ class CloneParticleMCInfo(MicroDSTElement) :
 
 class CloneBTaggingInfo(MicroDSTElement) :
     """
-    Generator returning consistently configured list of BTagging and CopyFlavourTags
+    Generator returning consistently configured list of CopyFlavourTags
     Configurables.
     """
+
+    def __init__( self,
+                  branch               = '',
+                  CloneTaggerParticles = False ) :
+        MicroDSTElement.__init__(self, branch)
+        self.clonerTaggerPs = CloneTaggerParticles
+    
     def __call__(self, sel) :
-        from Configurables import BTagging
-        from Configurables import CopyFlavourTag
-        importOptions('$FLAVOURTAGGINGOPTS/BTaggingTool.py')
-        BTagAlgo = BTagging(self.personaliseName(sel,'BTagging'))
-        BTagAlgo.Inputs=self.dataLocations(sel,"")
-        cloner = CopyFlavourTag(self.personaliseName(sel,
-                                                     "CopyFlavourTag"))
+        from Configurables import BTagging, CopyFlavourTag, FlavourTagDeepCloner
+        cloner = CopyFlavourTag( name = self.personaliseName(sel,"CopyFlavourTags") )
         cloner.InputLocations = self.dataLocations(sel,"FlavourTags")
+        cloner.addTool( FlavourTagDeepCloner, name = "FlavourTagDeepCloner" )
+        cloner.FlavourTagDeepCloner.CloneTaggerParticles = self.clonerTaggerPs
         self.setOutputPrefix(cloner)
-        return [BTagAlgo, cloner]
+        return [cloner]
 
 class ClonePVRelations(MicroDSTElement) :
     """
@@ -228,7 +232,7 @@ class ClonePVRelations(MicroDSTElement) :
     def __call__(self, sel) :
         from Configurables import CopyParticle2PVRelations
         cloner = CopyParticle2PVRelations(self.personaliseName(sel,"CopyP2PV_"+self.location))
-        cloner.InputLocations = self.dataLocations(sel, self.location)
+        cloner.InputLocations = self.dataLocations(sel,self.location)
         cloner.ClonerType = self.clonerType
         #cloner.OutputLevel = 1
         if self.clonePVs == False :
@@ -287,22 +291,22 @@ class ReFitAndClonePVs(MicroDSTElement) :
     def __call__(self, sel) :
         from Configurables import CopyParticle2PVRelations, PVReFitterAlg, BestPVAlg
 
-        # Reftter
-        refitPVs = PVReFitterAlg(self.personaliseName(sel, 'ReFitPvs'))
-        refitPVs.ParticleInputLocations = self.dataLocations(sel, 'Particles')
+        # Refitter
+        refitPVs = PVReFitterAlg(self.personaliseName(sel,'ReFitPvs'))
+        refitPVs.ParticleInputLocations = self.dataLocations(sel,'Particles')
 
         # Pick the best
-        bestPV = BestPVAlg(self.personaliseName(sel, 'BestPV'))
-        bestPV.P2PVRelationsInputLocations = self.dataLocations(sel, refitPVs.name()+'_P2PV')
+        bestPV = BestPVAlg(self.personaliseName(sel,'BestPV'))
+        bestPV.P2PVRelationsInputLocations = self.dataLocations(sel,refitPVs.name()+'_P2PV')
 
         # Clone to stream
-        cloner = CopyParticle2PVRelations(self.personaliseName(sel, 'CopyReFitP2PV'))
+        cloner = CopyParticle2PVRelations(self.personaliseName(sel,'CopyReFitP2PV'))
         cloner.ClonerType = self.clonerType
-        cloner.InputLocations = self.dataLocations(sel, bestPV.name()+'_P2PV')
+        cloner.InputLocations = self.dataLocations(sel,bestPV.name()+'_P2PV')
         self.setOutputPrefix(cloner)
 
         # Return
-        return [refitPVs, bestPV, cloner]
+        return [refitPVs,bestPV,cloner]
         
 class CloneL0DUReport(MicroDSTElement) :
     """
@@ -414,19 +418,11 @@ class PackStrippingReports(MicroDSTElement) :
     """
     def __call__(self, sel):
         from Configurables import PackDecReport
-        # Packer for the full object, at /Event/Strip/
-        fpacker = PackDecReport( name = "PackFullStripReps",
-                                 InputName   = "Strip/Phys/DecReports",
-                                 OutputName  = "Strip/pPhys/DecReports",
-                                 DeleteInput = True )
-        # Packer for stream dependant location, if present
-        # Probably will not be used, so could be removed eventually,
-        # but keep for the moment
-##         spacker = PackDecReport( name = self.personaliseName(sel,"PackStripReps"),
-##                                  InputName   = self.branch + "/Phys/DecReports",
-##                                  OutputName  = self.branch + "/pPhys/DecReports",
-##                                  DeleteInput = True )
-        return [fpacker]
+        packer = PackDecReport( name = "PackFullStripReps",
+                                InputName   = "Strip/Phys/DecReports",
+                                OutputName  = "Strip/pPhys/DecReports",
+                                DeleteInput = True )
+        return [packer]
 
 class PackParticlesAndVertices(MicroDSTElement) :
     """

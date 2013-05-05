@@ -38,6 +38,7 @@ def stripMicroDSTElements( pack=True, saveTrackClusters=True, isMC=False ) :
         ClonePVs( RecVertexCloner = "RecVertexClonerNoTracks",
                   ClonePVWeights  = False ),
         CloneParticleTrees(),
+        CloneBTaggingInfo( CloneTaggerParticles = False ),
         ClonePVRelations( location = "Particle2VertexRelations",
                           clonePVs = True,
                           RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" ),
