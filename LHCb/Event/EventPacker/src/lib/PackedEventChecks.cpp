@@ -166,3 +166,24 @@ DataChecks::compareDoubles( const std::string & name,
   parent->counter("Diff.    - "+name) += a-b;
   return ok;
 }
+
+bool
+DataChecks::compareFloats( const std::string & name,
+                           const float& a,
+                           const float& b,
+                           const float tol ) const
+{
+  const bool ok = ( std::fabs( a - b ) < tol );
+  if (!ok)
+  {
+    parent->warning() << name << " comparison failed :-" << endmsg
+                      << " Original = " << a << endmsg
+                      << " Unpacked = " << b << endmsg
+                      << "  Diff = " << std::fabs(a-b) << " > " << tol
+                      << endmsg;
+  }
+  parent->counter("Original - "+name) += a;
+  parent->counter("Unpacked - "+name) += b;
+  parent->counter("Diff.    - "+name) += a-b;
+  return ok;
+}

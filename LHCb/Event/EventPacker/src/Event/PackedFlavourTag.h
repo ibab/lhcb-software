@@ -1,0 +1,259 @@
+// $Id: PackedFlavourTag.h,v 1.2 2010-05-19 09:04:08 jonrob Exp $
+#ifndef EVENT_PackedFlavourTag_H
+#define EVENT_PackedFlavourTag_H 1
+
+#include <string>
+
+// Kernel
+#include "Kernel/StandardPacker.h"
+
+// Event
+#include "Event/FlavourTag.h"
+
+// Gaudi
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/StatusCode.h"
+
+class GaudiAlgorithm;
+
+namespace LHCb
+{
+
+  // ----------------------------------------------------------------------------------------
+
+  /** @struct PackedFlavourTag Event/PackedFlavourTag.h
+   *
+   *  Packed FlavourTag
+   *
+   *  @author Christopher Rob Jones
+   *  @date   2013-05-03
+   */
+  struct PackedFlavourTag
+  {
+    /// Default constructor
+    PackedFlavourTag()
+      : key(0),
+        decision(0),   category(0),   omega(0),
+        decisionOS(0), categoryOS(0), omegaOS(0),
+        taggedB(-1),
+        firstTagger(0), lastTagger(0)
+    { }
+
+    // packed data members
+
+    long long key;         ///< reference to the original container + key
+
+    short int           decision;   ///< The result of the tagging algorithm
+    unsigned short int  category;   ///< Category of tag
+    short int           omega;      ///< Wrong tag fraction (predicted)
+
+    short int           decisionOS; ///< decision of opposite side taggers only
+    unsigned short int  categoryOS; ///< Category of tag using opposite side only
+    short int           omegaOS;    ///< Wrong tag fraction (predicted) using opposite side only
+
+    long long taggedB;    ///< The B for which this tag has been made
+
+    // Taggers
+    unsigned int firstTagger, lastTagger;
+
+  };
+
+  // ----------------------------------------------------------------------------------------
+
+  /** @struct PackedTagger Event/PackedFlavourTag.h
+   *
+   *  Packed Flavour Tagger
+   *
+   *  @author Christopher Rob Jones
+   *  @date   2013-05-03
+   */
+  struct PackedTagger
+  {
+    /// Default constructor
+    PackedTagger()
+      : type(0), decision(0), omega(0),
+        firstTagP(0), lastTagP(0)
+    { }
+
+    // packed data members
+
+    unsigned short int type; ///< The type of tagger
+    short int      decision; ///< Decision of tagger
+    short int         omega; ///< Wrong tag fraction of tagger from MC tuning
+
+    // Tagging Particles
+    unsigned int firstTagP, lastTagP;
+
+  };
+
+  // ----------------------------------------------------------------------------------------
+
+  static const CLID CLID_PackedFlavourTags = 1583;
+
+  /// Namespace for locations in TDS
+  namespace PackedFlavourTagLocation
+  {
+    static const std::string& Default  = "pPhys/FlavourTags";
+    static const std::string& InStream = "/pPhys/FlavourTags";
+  }
+
+  /** @class PackedFlavourTags Event/PackedFlavourTag.h
+   *
+   *  Packed FlavourTags
+   *
+   *  @author Christopher Rob Jones
+   *  @date   2013-05-03
+   */
+  class PackedFlavourTags : public DataObject
+  {
+
+  public:
+
+    /// Vector of packed Flavour Tags
+    typedef std::vector<LHCb::PackedFlavourTag> Vector;
+
+    /// Vector of packed Taggers
+    typedef std::vector<LHCb::PackedTagger> Taggers;
+
+    /// Tagging Particles
+    typedef std::vector<long long> TaggingParticles;
+
+  public:
+    
+    /// Default Packing Version
+    static char defaultPackingVersion() { return 0; }
+
+  public:
+
+    /// Standard constructor
+    PackedFlavourTags( ) : m_packingVersion(defaultPackingVersion()) { }
+
+    /// Destructor
+    virtual ~PackedFlavourTags( ) { }
+
+    /// Class ID
+    static const CLID& classID() { return CLID_PackedFlavourTags; }
+
+    /// Class ID
+    virtual const CLID& clID() const { return PackedFlavourTags::classID(); }
+
+  public:
+
+    /// Write access to the data vector
+    Vector & data()             { return m_vect; }
+
+    /// Read access to the data vector
+    const Vector & data() const { return m_vect; }
+
+    /// Set the packing version
+    void setPackingVersion( const char ver ) { m_packingVersion = ver; }
+
+    /// Access the packing version
+    char packingVersion() const { return m_packingVersion; }
+
+    /// Const access to taggers
+    const Taggers& taggers() const { return m_taggers; }
+    /// Access to taggers
+    Taggers& taggers()             { return m_taggers; }
+
+    /// Const access to tagging Particles
+    const TaggingParticles& taggeringPs() const { return m_taggingPs; }
+    /// Access to taggers
+    TaggingParticles& taggeringPs()             { return m_taggingPs; }
+
+  private:
+
+    /// Data packing version (not used as yet, but for any future schema evolution)
+    char m_packingVersion;
+
+    /// The packed flavour tags
+    Vector m_vect;
+
+    /// Packed Taggers
+    Taggers m_taggers;
+
+    /// Tagging Particles
+    TaggingParticles m_taggingPs;
+
+  };
+
+  // -----------------------------------------------------------------------
+
+  /** @class FlavourTagPacker Event/PackedFlavourTag.h
+   *
+   *  Utility class to handle the packing and unpacking of the FlavourTags
+   *
+   *  @author Christopher Rob Jones
+   *  @date   2009-10-13
+   */
+  class FlavourTagPacker
+  {
+  public:
+
+    // These are required by the templated algorithms
+    typedef LHCb::FlavourTag                    Data;
+    typedef LHCb::PackedFlavourTag        PackedData;
+    typedef LHCb::FlavourTags             DataVector;
+    typedef LHCb::PackedFlavourTags PackedDataVector;
+    static const std::string& packedLocation()   { return LHCb::PackedFlavourTagLocation::Default; }
+    static const std::string& unpackedLocation() { return LHCb::FlavourTagLocation::Default; }
+
+  private:
+
+    /// Default Constructor hidden
+    FlavourTagPacker() : m_parent(NULL) {}
+
+  public:
+
+    /// Default Constructor
+    FlavourTagPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+
+  public:
+
+    /// Pack a single FlavourTag
+    void pack( const Data & ft,
+               PackedData & pft,
+               PackedDataVector & pfts ) const;
+
+    /// Pack FlavourTags
+    void pack( const DataVector & fts,
+               PackedDataVector & pfts ) const;
+
+    /// Unpack a single FlavourTag
+    void unpack( const PackedData       & pft,
+                 Data                   & ft,
+                 const PackedDataVector & pfts,
+                 DataVector             & fts ) const;
+
+    /// Unpack FlavourTags
+    void unpack( const PackedDataVector & pfts,
+                 DataVector             & fts ) const;
+
+    /// Compare two FlavourTag vectors to check the packing -> unpacking performance
+    StatusCode check( const DataVector & dataA,
+                      const DataVector & dataB ) const;
+
+    /// Compare two FlavourTags to check the packing -> unpacking performance
+    StatusCode check( const Data & dataA,
+                      const Data & dataB ) const;
+
+  private:
+
+    /// Access the parent algorithm
+    GaudiAlgorithm& parent() const { return *m_parent; }
+
+  private:
+
+    /// Standard packing of quantities into integers ...
+    StandardPacker m_pack;
+
+    /// Pointer to parent algorithm
+    GaudiAlgorithm * m_parent;
+
+  };
+
+  // -----------------------------------------------------------------------
+
+}
+
+#endif // EVENT_PackedFlavourTag_H

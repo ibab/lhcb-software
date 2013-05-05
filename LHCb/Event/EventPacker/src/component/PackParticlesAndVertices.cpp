@@ -23,15 +23,7 @@ PackParticlesAndVertices::PackParticlesAndVertices( const std::string& name,
   declareProperty( "ListRemaining",      m_listRemaining = false    );
   declareProperty( "EnableCheck",        m_enableCheck   = false    );
   declareProperty( "VetoedContainers",   m_vetoedConts  );
-
-  m_clIdParticles   = 0x60000 + LHCb::CLID_Particle;
-  m_clIdVertices    = 0x60000 + LHCb::CLID_Vertex;
-  m_clIdRecVertices = 0x60000 + LHCb::CLID_RecVertex;
-  m_clIdPart2Vert   = 0xEA9168DC; // Particle to Vertex relation
-  m_clIdPart2MCPart = 0x7B880798; // Particle to MCParticle relations
-  m_clIdPart2Int    = 0xF94852E4; // Particle to int relations
-
-  //setProperty( "OutputLevel", 2 );
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
@@ -45,6 +37,15 @@ PackParticlesAndVertices::~PackParticlesAndVertices() {}
 StatusCode PackParticlesAndVertices::execute()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+
+  // Class IDs for handled data
+  const unsigned int clIdParticles   = 0x60000 + LHCb::CLID_Particle;
+  const unsigned int clIdVertices    = 0x60000 + LHCb::CLID_Vertex;
+  const unsigned int clIdRecVertices = 0x60000 + LHCb::CLID_RecVertex;
+  const unsigned int clIdFlavourTags = 0x60000 + LHCb::CLID_FlavourTag;
+  const unsigned int clIdPart2Vert   = 0xEA9168DC; // Particle to Vertex relation
+  const unsigned int clIdPart2MCPart = 0x7B880798; // Particle to MCParticle relations
+  const unsigned int clIdPart2Int    = 0xF94852E4; // Particle to int relations
 
   // Only continue if this stream exists for this event
   DataObject* root = getIfExists<DataObject*>( m_inputStream );
@@ -68,8 +69,11 @@ StatusCode PackParticlesAndVertices::execute()
   // list of objects to remove at the end
   std::vector<DataObject*> toBeDeleted;
 
+  //==============================================================================
+  // Find Particles
+  //==============================================================================
   names.clear();
-  selectContainers( root, names, m_clIdParticles );
+  selectContainers( root, names, clIdParticles );
   if ( !names.empty() )
   {
     LHCb::PackedParticles* pparts = new LHCb::PackedParticles();
@@ -80,18 +84,21 @@ StatusCode PackParticlesAndVertices::execute()
           names.end() != itS; ++itS )
     {
       LHCb::Particles* parts = get<LHCb::Particles>( *itS );
-      if ( UNLIKELY(m_deleteInput) ) toBeDeleted.push_back( parts );
+      if ( m_deleteInput ) toBeDeleted.push_back( parts );
       if ( parts->empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
         debug() << format( "%4d particles in ", parts->size() ) << *itS << endmsg;
       packAParticleContainer( parts, *pparts );
     }
     if ( msgLevel( MSG::DEBUG ) )
-      debug() << "Stored " << pparts->data().size() << " packed tracks" << endmsg;
+      debug() << "Stored " << pparts->data().size() << " packed particles" << endmsg;
   }
 
+  //==============================================================================
+  // Find Vertices
+  //==============================================================================
   names.clear();
-  selectContainers( root, names, m_clIdVertices );
+  selectContainers( root, names, clIdVertices );
   if ( !names.empty() )
   {
     LHCb::PackedVertices* pverts = new LHCb::PackedVertices();
@@ -102,7 +109,7 @@ StatusCode PackParticlesAndVertices::execute()
           names.end() != itS; ++itS )
     {
       LHCb::Vertices* verts = get<LHCb::Vertices>( *itS );
-      if ( UNLIKELY(m_deleteInput) ) toBeDeleted.push_back( verts );
+      if ( m_deleteInput ) toBeDeleted.push_back( verts );
       if ( verts->empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
         debug () << format( "%4d vertices in ", verts->size() ) << *itS << endmsg;
@@ -112,8 +119,37 @@ StatusCode PackParticlesAndVertices::execute()
       debug() << "Stored " << pverts->data().size() << " packed vertices" << endmsg;
   }
 
+  //==============================================================================
+  // Find Flavour Tags
+  //==============================================================================
   names.clear();
-  selectContainers( root, names, m_clIdRecVertices );
+  selectContainers( root, names, clIdFlavourTags );
+  if ( !names.empty() )
+  {
+    LHCb::PackedFlavourTags * pfts = new LHCb::PackedFlavourTags();
+    put( pfts, m_inputStream + LHCb::PackedFlavourTagLocation::InStream );
+    if ( msgLevel( MSG::DEBUG ) )
+      debug() << "=== Process FlavourTag containers :" << endmsg;
+    for ( std::vector<std::string>::const_iterator itS = names.begin();
+          names.end() != itS; ++itS )
+    {
+      LHCb::FlavourTags * fts = get<LHCb::FlavourTags>( *itS );
+      if ( m_deleteInput ) toBeDeleted.push_back( fts );
+      if ( fts->empty() ) continue;
+      if ( msgLevel( MSG::DEBUG ) )
+        debug() << format( "%4d FlavourTags in ", fts->size() ) << *itS << endmsg;
+      packAFTContainer( fts, *pfts );
+    }
+    if ( msgLevel( MSG::DEBUG ) )
+      debug() << "Stored " << pfts->data().size() << " packed FlavourTags" 
+              << endmsg;
+  }
+
+  //==============================================================================
+  // Find Rec Vertices
+  //==============================================================================
+  names.clear();
+  selectContainers( root, names, clIdRecVertices );
   if ( !names.empty() )
   {
     LHCb::PackedRecVertices* prverts = new LHCb::PackedRecVertices();
@@ -125,7 +161,7 @@ StatusCode PackParticlesAndVertices::execute()
           names.end() != itS; ++itS )
     {
       LHCb::RecVertices* rverts = get<LHCb::RecVertices>( *itS );
-      if ( UNLIKELY(m_deleteInput) ) toBeDeleted.push_back( rverts );
+      if ( m_deleteInput ) toBeDeleted.push_back( rverts );
       if ( rverts->empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
         debug () << format( "%4d RecVertices in ", rverts->size() ) << *itS << endmsg;
@@ -135,8 +171,11 @@ StatusCode PackParticlesAndVertices::execute()
       debug() << "Stored " << prverts->vertices().size() << " packed RecVertices" << endmsg;
   }
 
+  //==============================================================================
+  // Find Relations
+  //==============================================================================
   names.clear();
-  selectContainers( root, names, m_clIdPart2Vert );
+  selectContainers( root, names, clIdPart2Vert );
   if ( !names.empty() )
   {
     LHCb::PackedRelations* prels = new LHCb::PackedRelations();
@@ -147,7 +186,7 @@ StatusCode PackParticlesAndVertices::execute()
           names.end() != itS; ++itS )
     {
       P2VRELATION* rels = get<P2VRELATION>( *itS );
-      if ( UNLIKELY(m_deleteInput) ) toBeDeleted.push_back( rels );
+      if ( m_deleteInput ) toBeDeleted.push_back( rels );
       if ( rels->relations().empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
         debug () << format( "%4d relations in ", rels->relations().size() ) << *itS << endmsg;
@@ -158,10 +197,13 @@ StatusCode PackParticlesAndVertices::execute()
               << " packed Particle2Vertex relations" << endmsg;
   }
 
+  //==============================================================================
+  // Find Particle to Ints
+  //==============================================================================
   if ( msgLevel( MSG::DEBUG ) )
-    debug() << "Looking for Particle2Int relations " << m_clIdPart2Int << endmsg;
+    debug() << "Looking for Particle2Int relations " << clIdPart2Int << endmsg;
   names.clear();
-  selectContainers( root, names, m_clIdPart2Int );
+  selectContainers( root, names, clIdPart2Int );
   if ( !names.empty() )
   {
     LHCb::PackedRelations * pPartIds = new LHCb::PackedRelations();
@@ -172,7 +214,7 @@ StatusCode PackParticlesAndVertices::execute()
           names.end() != itS; ++itS )
     {
       Part2IntRelations * partIds = get<Part2IntRelations>( *itS );
-      if ( UNLIKELY(m_deleteInput) ) toBeDeleted.push_back( partIds );
+      if ( m_deleteInput ) toBeDeleted.push_back( partIds );
       if ( partIds->relations().empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
         debug() << format( "%4d Particle2Ints in ", partIds->relations().size() ) 
@@ -185,8 +227,11 @@ StatusCode PackParticlesAndVertices::execute()
 
   // MC Information next
 
+  //==============================================================================
+  // Find MC relations
+  //==============================================================================
   names.clear();
-  selectContainers( root, names, m_clIdPart2MCPart );
+  selectContainers( root, names, clIdPart2MCPart );
   if ( !names.empty() )
   {
     LHCb::PackedRelations* prels = new LHCb::PackedRelations();
@@ -197,7 +242,7 @@ StatusCode PackParticlesAndVertices::execute()
           names.end() != itS; ++itS )
     {
       P2MCPRELATION * rels = get<P2MCPRELATION>( *itS );
-      if ( UNLIKELY(m_deleteInput) ) toBeDeleted.push_back( rels );
+      if ( m_deleteInput ) toBeDeleted.push_back( rels );
       if ( rels->relations().empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
         debug () << format( "%4d relations in ", rels->relations().size() ) << *itS << endmsg;
@@ -209,7 +254,7 @@ StatusCode PackParticlesAndVertices::execute()
   }
 
   //== Remove the converted containers if requested
-  if ( UNLIKELY(m_deleteInput) )
+  if ( m_deleteInput )
   {
     for ( std::vector<DataObject*>::iterator itO = toBeDeleted.begin();
           toBeDeleted.end() != itO; ++itO )
@@ -301,7 +346,65 @@ void PackParticlesAndVertices::selectContainers ( DataObject* obj,
 }
 
 //=========================================================================
-//  Pack a container of particles in the PackedParticles object
+// Pack a container of FlavourTags in the PackedParticles object
+//=========================================================================
+void
+PackParticlesAndVertices::packAFTContainer ( const LHCb::FlavourTags* fts,
+                                             LHCb::PackedFlavourTags& pfts )
+{
+  const LHCb::FlavourTagPacker ftPacker(*this);
+
+  // checks
+  LHCb::FlavourTags * unpacked = ( m_enableCheck ? new LHCb::FlavourTags() : NULL );
+  if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsFTTest" ); }
+
+  for ( LHCb::FlavourTags::const_iterator iD = fts->begin();
+        iD != fts->end(); ++iD )
+  {
+    const LHCb::FlavourTag & ft = **iD;
+
+    // Make a new packed data object and save
+    pfts.data().push_back( LHCb::PackedFlavourTag() );
+    LHCb::PackedFlavourTag& pft = pfts.data().back();
+
+    // reference to original container and key
+    pft.key = m_pack.reference64( &pfts, ft.parent(), ft.key() );
+
+    // pack the physics info
+    ftPacker.pack( ft, pft, pfts );
+
+    // checks ?
+    if ( unpacked )
+    {
+      int key(0), linkID(0);
+      m_pack.indexAndKey64( pft.key, linkID, key );
+      LHCb::FlavourTag * testObj = new LHCb::FlavourTag();
+      unpacked->insert( testObj, key );
+      ftPacker.unpack( pft, *testObj, pfts, *unpacked );
+      ftPacker.check( ft, *testObj ).ignore();
+    }
+
+  }
+
+  // clean up test data
+  if ( unpacked )
+  {
+    const StatusCode sc = evtSvc()->unregisterObject( unpacked );
+    if ( sc.isSuccess() )
+    {
+      delete unpacked;
+    }
+    else
+    {
+      Exception( "Failed to delete test data after unpacking check" );
+    }
+  }
+
+  if ( !m_deleteInput ) fts->registry()->setAddress( 0 );
+}
+
+//=========================================================================
+// Pack a container of particles in the PackedParticles object
 //=========================================================================
 void
 PackParticlesAndVertices::packAParticleContainer ( const LHCb::Particles* parts,

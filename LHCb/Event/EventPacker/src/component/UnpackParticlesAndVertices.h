@@ -16,6 +16,8 @@
 #include "Event/PackedRecVertex.h"
 #include "Event/MCParticle.h"
 #include "Kernel/Particle2LHCbIDs.h"
+#include "Event/FlavourTag.h"
+#include "Event/PackedFlavourTag.h"
 
 /** @class UnpackParticlesAndVertices UnpackParticlesAndVertices.h
  *

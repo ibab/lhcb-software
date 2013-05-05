@@ -4,6 +4,12 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2013-05-05 - Chris Jones
+ - Add new PackedFlavourTag classes to support packing during the stripping
+ - Update PackParticlesAndVertices and UnpackParticlesAndVertices to
+   include FlavourTagging objects
+ - Update ParticlesAndVerticesMapper to include the FlavourTagging objects.
+
 ! 2013-05-02 - Paul Szczypka
  - Addition of SL code.
 

@@ -191,6 +191,8 @@ StatusCode VertexPacker::check( const Data & dataA,
 
   // checks here
 
+  // key
+  ok &= dataA.key() == dataB.key();
   // technique
   ok &= dataA.technique() == dataB.technique();
   // Chi^2

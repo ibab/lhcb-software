@@ -80,8 +80,8 @@ namespace DataPacking
           text << name << ":" << n << m;
           if ( m == n )
           { // On diagonal
-            ok &= compareDoubles( text.str(), 
-                                  std::sqrt(a(n,m)), 
+            ok &= compareDoubles( text.str(),
+                                  std::sqrt(a(n,m)),
                                   std::sqrt(b(n,m)),
                                   tolOnDiag[n] );
           }
@@ -135,29 +135,22 @@ namespace DataPacking
                          const double& b,
                          const double tol = 1.0e-4 ) const;
 
-    /// Compare two int values
-    inline bool compareInts( const std::string & name,
-                             const int a,
-                             const int b ) const
-    {
-      const bool ok = ( a == b );
-      if (!ok)
-      {
-        parent->warning() << name << " compare (signed)Ints failed :-" << endmsg
-                          << "  " << a << " " << b << endmsg;
-      }
-      return ok;
-    }
+    /// Compare two float values
+    bool compareFloats( const std::string & name,
+                        const float& a,
+                        const float& b,
+                        const float tol = 1.0e-4 ) const;
 
     /// Compare two unsigned int values
+    template < class TYPE >
     inline bool compareInts( const std::string & name,
-                             const unsigned int a,
-                             const unsigned int b ) const
+                             const TYPE a,
+                             const TYPE b ) const
     {
       const bool ok = ( a == b );
       if (!ok)
       {
-        parent->warning() << name << " compare (unsigned)Ints failed" << endmsg
+        parent->warning() << name << " compare ints failed" << endmsg
                           << "  " << a << " " << b << endmsg;
       }
       return ok;

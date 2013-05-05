@@ -16,15 +16,17 @@
 #include "Event/Particle.h"
 #include "Event/PackedParticle.h"
 #include "Event/Vertex.h"
+#include "Event/FlavourTag.h"
 #include "Event/PackedVertex.h"
 #include "Event/PackedRelations.h"
 #include "Event/RecVertex.h"
 #include "Event/PackedRecVertex.h"
+#include "Event/PackedFlavourTag.h"
 #include "Event/MCParticle.h"
 
 /** @class PackParticlesAndVertices PackParticlesAndVertices.h
  *
- *  Packs Particles and Vertices
+ *  Packs Particles, Vertices and related information.
  *
  *  @author Olivier Callot
  *  @date   2012-01-23
@@ -63,6 +65,10 @@ private:
   void packAVertexContainer ( const LHCb::Vertices* verts,
                               LHCb::PackedVertices& pverts );
 
+  /// Pack a FlavourTag container
+  void packAFTContainer ( const LHCb::FlavourTags* fts,
+                          LHCb::PackedFlavourTags& pfts );
+
   /// Pack a RecVertex container
   void packARecVertexContainer ( const LHCb::RecVertices* rverts,
                                  LHCb::PackedRecVertices& prverts );
@@ -87,14 +93,6 @@ private:
   bool m_listRemaining;     ///< list the remaining objects after packing
   std::vector<std::string> m_vetoedConts; ///< Vetoed containers. Will not be packed.
   StandardPacker m_pack;
-
-  // Class IDs for all handled types
-  unsigned int m_clIdParticles;
-  unsigned int m_clIdVertices;
-  unsigned int m_clIdRecVertices;
-  unsigned int m_clIdPart2Vert;
-  unsigned int m_clIdPart2MCPart;
-  unsigned int m_clIdPart2Int;
 
 };
 

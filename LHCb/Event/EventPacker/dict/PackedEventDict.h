@@ -27,5 +27,6 @@
 #include "Event/PackedParticle2Ints.h"
 #include "Event/PackedCluster.h"
 #include "Event/PackedCaloCluster.h"
+#include "Event/PackedFlavourTag.h"
 
 #endif // DICT_PACKEDEVENTDICT_H

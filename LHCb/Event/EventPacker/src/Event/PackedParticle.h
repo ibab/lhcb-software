@@ -54,7 +54,7 @@ namespace LHCb
     { }
 
     // packed data members
-    long long key;         ///< referenceLong to the original container + key of the particle
+    long long key;         ///< reference to the original container + key of the particle
     int particleID;        ///< PID Code
     int measMass;          ///< Measured mass
     int measMassErr;       ///< Error on the measured mass

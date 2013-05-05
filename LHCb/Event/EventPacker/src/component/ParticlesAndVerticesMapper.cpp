@@ -7,10 +7,6 @@
 #include "ParticlesAndVerticesMapper.h"
 
 // ----------------------------------------------------------------------------
-// Implementation file for class: ParticlesAndVerticesMapper
-//
-// 17/01/2012: Marco Clemencic
-// ----------------------------------------------------------------------------
 
 // ============================================================================
 // Standard constructor, initializes variables
@@ -123,80 +119,107 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     int key(0), linkID(0);
 
     // Load the packed Particles
-    LHCb::PackedParticles* pparts =
-      getIfExists<LHCb::PackedParticles>(evtSvc(),streamR+LHCb::PackedParticleLocation::InStream);
-    if ( NULL != pparts )
     {
-      for ( std::vector<LHCb::PackedParticle>::iterator itP = pparts->data().begin();
-            pparts->data().end() != itP; ++itP )
+      LHCb::PackedParticles* pparts =
+        getIfExists<LHCb::PackedParticles>(evtSvc(),streamR+LHCb::PackedParticleLocation::InStream);
+      if ( NULL != pparts )
       {
-        m_pack.indexAndKey64( (*itP).key, linkID, key );
-        addPath( pparts->linkMgr()->link(linkID)->path() );
+        for ( std::vector<LHCb::PackedParticle>::iterator itP = pparts->data().begin();
+              pparts->data().end() != itP; ++itP )
+        {
+          m_pack.indexAndKey64( (*itP).key, linkID, key );
+          addPath( pparts->linkMgr()->link(linkID)->path() );
+        }
       }
     }
 
     // Load the vertices
-    LHCb::PackedVertices* pverts =
-      getIfExists<LHCb::PackedVertices>(evtSvc(),streamR+LHCb::PackedVertexLocation::InStream);
-    if ( NULL != pverts )
     {
-      for ( std::vector<LHCb::PackedVertex>::iterator itV = pverts->data().begin();
-            pverts->data().end() != itV; ++itV )
+      LHCb::PackedVertices* pverts =
+        getIfExists<LHCb::PackedVertices>(evtSvc(),streamR+LHCb::PackedVertexLocation::InStream);
+      if ( NULL != pverts )
       {
-        m_pack.indexAndKey64( (*itV).key, linkID, key );
-        addPath( pverts->linkMgr()->link(linkID)->path() );
+        for ( std::vector<LHCb::PackedVertex>::iterator itV = pverts->data().begin();
+              pverts->data().end() != itV; ++itV )
+        {
+          m_pack.indexAndKey64( (*itV).key, linkID, key );
+          addPath( pverts->linkMgr()->link(linkID)->path() );
+        }
+      }
+    }
+
+    // Load the packed FlavourTags
+    {
+      LHCb::PackedFlavourTags* pfts =
+        getIfExists<LHCb::PackedFlavourTags>(evtSvc(),streamR+LHCb::PackedFlavourTagLocation::InStream);
+      if ( NULL != pfts )
+      {
+        for ( std::vector<LHCb::PackedFlavourTag>::iterator itFT = pfts->data().begin();
+              pfts->data().end() != itFT; ++itFT )
+        {
+          m_pack.indexAndKey64( (*itFT).key, linkID, key );
+          addPath( pfts->linkMgr()->link(linkID)->path() );
+        }
       }
     }
 
     // Load the Rec vertices
-    LHCb::PackedRecVertices* pRecVerts =
-      getIfExists<LHCb::PackedRecVertices>(evtSvc(),streamR+LHCb::PackedRecVertexLocation::InStream);
-    if ( NULL != pRecVerts )
     {
-      for ( std::vector<LHCb::PackedRecVertex>::iterator itV = pRecVerts->vertices().begin();
-            pRecVerts->vertices().end() != itV; ++itV )
+      LHCb::PackedRecVertices* pRecVerts =
+        getIfExists<LHCb::PackedRecVertices>(evtSvc(),streamR+LHCb::PackedRecVertexLocation::InStream);
+      if ( NULL != pRecVerts )
       {
-        const int linkID = (*itV).container;
-        addPath( pRecVerts->linkMgr()->link(linkID)->path() );
+        for ( std::vector<LHCb::PackedRecVertex>::iterator itV = pRecVerts->vertices().begin();
+              pRecVerts->vertices().end() != itV; ++itV )
+        {
+          const int linkID = (*itV).container;
+          addPath( pRecVerts->linkMgr()->link(linkID)->path() );
+        }
       }
     }
 
     // Particle 2 Vertex relations
-    LHCb::PackedRelations* prels =
-      getIfExists<LHCb::PackedRelations>(evtSvc(),streamR+LHCb::PackedRelationsLocation::InStream);
-    if ( NULL != prels )
     {
-      for ( std::vector<LHCb::PackedRelation>::iterator itR = prels->relations().begin();
-            prels->relations().end() != itR; ++itR )
+      LHCb::PackedRelations* prels =
+        getIfExists<LHCb::PackedRelations>(evtSvc(),streamR+LHCb::PackedRelationsLocation::InStream);
+      if ( NULL != prels )
       {
-        m_pack.indexAndKey64( (*itR).container, linkID, key );
-        addPath( prels->linkMgr()->link(linkID)->path() );
+        for ( std::vector<LHCb::PackedRelation>::iterator itR = prels->relations().begin();
+              prels->relations().end() != itR; ++itR )
+        {
+          m_pack.indexAndKey64( (*itR).container, linkID, key );
+          addPath( prels->linkMgr()->link(linkID)->path() );
+        }
       }
     }
 
     // Particle 2 MCParticle relations
-    LHCb::PackedRelations* prelsMC =
-      getIfExists<LHCb::PackedRelations>(evtSvc(),streamR+LHCb::PackedRelationsLocation::P2MCP);
-    if ( NULL != prelsMC )
     {
-      for ( std::vector<LHCb::PackedRelation>::iterator itR = prelsMC->relations().begin();
-            prelsMC->relations().end() != itR; ++itR )
+      LHCb::PackedRelations* prelsMC =
+        getIfExists<LHCb::PackedRelations>(evtSvc(),streamR+LHCb::PackedRelationsLocation::P2MCP);
+      if ( NULL != prelsMC )
       {
-        m_pack.indexAndKey64( (*itR).container, linkID, key );
-        addPath( prelsMC->linkMgr()->link(linkID)->path() );
+        for ( std::vector<LHCb::PackedRelation>::iterator itR = prelsMC->relations().begin();
+              prelsMC->relations().end() != itR; ++itR )
+        {
+          m_pack.indexAndKey64( (*itR).container, linkID, key );
+          addPath( prelsMC->linkMgr()->link(linkID)->path() );
+        }
       }
     }
 
     // Particle 2 Int relations
-    LHCb::PackedRelations* prelsInt =
-      getIfExists<LHCb::PackedRelations>(evtSvc(),streamR+LHCb::PackedRelationsLocation::P2Int);
-    if ( NULL != prelsInt )
     {
-      for ( std::vector<LHCb::PackedRelation>::iterator itR = prelsInt->relations().begin();
-            prelsInt->relations().end() != itR; ++itR )
+      LHCb::PackedRelations* prelsInt =
+        getIfExists<LHCb::PackedRelations>(evtSvc(),streamR+LHCb::PackedRelationsLocation::P2Int);
+      if ( NULL != prelsInt )
       {
-        m_pack.indexAndKey64( (*itR).container, linkID, key );
-        addPath( prelsInt->linkMgr()->link(linkID)->path() );
+        for ( std::vector<LHCb::PackedRelation>::iterator itR = prelsInt->relations().begin();
+              prelsInt->relations().end() != itR; ++itR )
+        {
+          m_pack.indexAndKey64( (*itR).container, linkID, key );
+          addPath( prelsInt->linkMgr()->link(linkID)->path() );
+        }
       }
     }
 

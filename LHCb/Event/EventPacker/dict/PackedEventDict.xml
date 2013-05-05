@@ -74,6 +74,13 @@
   <class name="std::vector<LHCb::PackedParticle>" />
   <class name="LHCb::PackedParticles" id="0000062D-0000-0000-0000-000000000000" />
 
+  <class name="LHCb::PackedFlavourTag" />
+  <class name="std::vector<LHCb::PackedFlavourTag>" />
+  <class name="LHCb::PackedFlavourTags" id="0000062F-0000-0000-0000-000000000000" />
+
+  <class name="LHCb::PackedTagger" />
+  <class name="std::vector<LHCb::PackedTagger>" />
+
   <class name="LHCb::PackedVertex" />
   <class name="std::vector<LHCb::PackedVertex>" />
   <class name="LHCb::PackedVertices" id="0000062E-0000-0000-0000-000000000000" />

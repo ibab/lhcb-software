@@ -293,7 +293,6 @@ void ParticlePacker::unpack( const PackedDataVector & pparts,
     // Fill data from packed object
     unpack( ppart, *part, pparts, parts );
   }
-
 }
 
 StatusCode ParticlePacker::check( const DataVector & dataA,
@@ -322,6 +321,9 @@ StatusCode ParticlePacker::check( const Data & dataA,
   const DataPacking::DataChecks ch(parent());
 
   // checks here
+
+  // key
+  ok &= dataA.key() == dataB.key();
 
   // PID
   ok &= dataA.particleID() == dataB.particleID();
