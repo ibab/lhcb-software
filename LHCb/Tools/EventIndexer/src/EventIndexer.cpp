@@ -30,7 +30,7 @@ EventIndexer::EventIndexer(const std::string& name, ISvcLocator* pSvcLocator)
   : base_class(name, pSvcLocator), m_file(0), m_tree(0)
 {
   declareProperty("Stripping", m_stripping = "",
-                  "Stripping version (empty to guess from file name).");
+                  "Stripping version.");
   declareProperty("OutputFile", m_outputFileName = "indexer_data.root",
                   "Output file name for the indexer data.");
 }
@@ -127,18 +127,15 @@ void EventIndexer::handle(const Incident& incident) {
   m_data.lfn = incident.source();
   // reset the position counter
   m_data.position = 0;
-  if (m_stripping.empty()) {
-    // guess the stripping name
-    std::string::size_type end = m_data.lfn.rfind('.');
-    if (end == std::string::npos){
-      m_data.stripping = "";
-      return;
-    }
+  std::string::size_type end = m_data.lfn.rfind('.');
+  if (end == std::string::npos){
+    m_data.stream = "";
+  } else {
     std::string::size_type begin = m_data.lfn.rfind('.', end - 1);
     if (begin == std::string::npos){
-      m_data.stripping = "";
-      return;
+      m_data.stream = "";
+    } else {
+      m_data.stream = m_data.lfn.substr(++begin, end);
     }
-    m_data.stripping = m_data.lfn.substr(++begin, end);
   }
 }

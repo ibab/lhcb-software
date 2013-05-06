@@ -10,6 +10,8 @@ public:
   IndexerData(): position(0), eventNumber(0), runNumber(0) {}
   /// Version of the Stripping.
   std::string stripping;
+  /// Stream name.
+  std::string stream;
   /// Logical File Name (LFN)
   std::string lfn;
   /// Position of the event in the file.
