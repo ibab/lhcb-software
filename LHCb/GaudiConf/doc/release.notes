@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-05-06 - Paul Szczypka
+ - Revert default detector list in SimCond to include IT. (Removes SL)
+
 ! 2013-05-02 - Paul Szczypka
  - Removed debug print statements from SimConf
 

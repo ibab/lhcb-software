@@ -21,7 +21,7 @@ class SimConf(LHCbConfigurableUser) :
         ,"EnablePack"        : True # Turn on/off packing of the SIM data
         ,"EnableUnpack"      : True # Configure the SIM unpacking via the Data On Demand Service
         ,"DataUnpackingSeq"  : None # If set, the data unpacking will be run explicitly in the given sequence
-        ,"Detectors"         : ['Velo','PuVeto','TT','SL','OT','Rich','Muon','Spd','Prs','Ecal','Hcal'] # Active sub-detectors
+        ,"Detectors"         : ['Velo','PuVeto','TT','IT','OT','Rich','Muon','Spd','Prs','Ecal','Hcal'] # Active sub-detectors
         ,"PackingSequencers" : { } # The packing sequence to fill for each spillover event
         ,"DataType"          : "" # Flag for backward compatibility with old data
         ,"SaveHepMC"         : True # If False, do not save HepMC on output file
@@ -112,7 +112,6 @@ class SimConf(LHCbConfigurableUser) :
                 if 'IT' in dets :
                     from Configurables import DataPacking__Pack_LHCb__MCITHitPacker_     as MCITHitPacker
                     packing.Members += [ MCITHitPacker("MCITHitPacker"+slot) ]
-
 
                 if 'SL' in dets :
                     from Configurables import DataPacking__Pack_LHCb__MCSLHitPacker_     as MCSLHitPacker
