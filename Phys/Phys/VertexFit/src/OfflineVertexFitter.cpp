@@ -2196,7 +2196,7 @@ bool OfflineVertexFitter::isResonance(const LHCb::Particle* part) const
   {
     std::ostringstream mess; 
     mess << "No ParticleProperty for PID=" << part->particleID();
-    Error( mess.str() ).ignore();
+    Exception( mess.str() );
   }
   return ( partProp ? partProp->lifetime() < 1.e-6*Gaudi::Units::nanosecond : false );
 }
