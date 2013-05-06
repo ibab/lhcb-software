@@ -22,13 +22,13 @@
 #
 # =============================================================================
 package       BenderSys
-version       v22r5p2
+version       v22r5p3
 
 author        Vanya BELYAEV
 
 
 # =========== Bender Application itself =======================================
-use           Bender         v22r5p2 Phys 
+use           Bender         v22r5p3 Phys 
   
 # =========== Bender-based tools and scripts ==================================
 use           BenderTools    v22r5p2 Phys 
