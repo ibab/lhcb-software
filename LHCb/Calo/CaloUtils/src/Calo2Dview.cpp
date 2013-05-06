@@ -43,7 +43,11 @@ Calo2Dview::Calo2Dview( const std::string& name,
     m_l0(false),
     m_pin(false),
     m_energyWeighted(true),
-    m_flux(false)
+    m_flux(false),
+    m_storeH1(NULL),
+    m_storeH2(NULL),
+    m_storeP1(NULL),
+    m_storeP2(NULL)
 {
   declareProperty( "OneDimension"   ,  m_1d  = false);         // 1D histo (value versus CaloCellID) default is 2D view
   declareProperty( "Profile"        ,  m_profile  = false);         // 1D histo profile type ?

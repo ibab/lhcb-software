@@ -152,7 +152,7 @@ protected:
     if ( !match.invert() ) 
     {
       if ( msgLevel ( MSG::DEBUG ) ) 
-      { debug() << "CaloPosition:" << c << endreq ; }
+      { debug() << "CaloPosition:" << c << endmsg ; }
       return Warning ( "match(): Could not invert '2D-calo' matrix, see debug",StatusCode::FAILURE,0) ;
     }
     return StatusCode::SUCCESS ;
@@ -174,7 +174,7 @@ protected:
     { 
       Warning ( "match(): Could not invert 'track' matrix") ; 
       if ( msgLevel ( MSG::DEBUG ) ) 
-      { debug() << "State:" << s << endreq ; }
+      { debug() << "State:" << s << endmsg ; }
       return StatusCode::FAILURE ; 
     }
     return StatusCode::SUCCESS ;
@@ -200,7 +200,7 @@ protected:
     { 
       Warning ( "match(): Could not invert '3D-calo' matrix") ; 
       if ( msgLevel ( MSG::DEBUG ) ) 
-      { debug() << "CaloPosition:" << c << endreq ; }
+      { debug() << "CaloPosition:" << c << endmsg ; }
       return StatusCode::FAILURE ; 
     }
     return StatusCode::SUCCESS ;
@@ -222,7 +222,7 @@ protected:
     { 
       Warning ( "match(): Could not invert '2D-calobrem' matrix") ; 
       if ( msgLevel ( MSG::DEBUG ) ) 
-      { debug() << "CaloPosition:" << c << endreq ; }
+      { debug() << "CaloPosition:" << c << endmsg ; }
       return StatusCode::FAILURE ; 
     }
     return StatusCode::SUCCESS ;
@@ -250,7 +250,7 @@ protected:
     {
       Warning ( "match(): Could not invert 'track' matrix") ; 
       if ( msgLevel ( MSG::DEBUG ) ) 
-      { debug() << "State:" << s << endreq ; }
+      { debug() << "State:" << s << endmsg ; }
       return StatusCode::FAILURE ; 
     }
     return StatusCode::SUCCESS ;
