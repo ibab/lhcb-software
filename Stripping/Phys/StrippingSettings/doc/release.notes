@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-05-06 - Anton Poluektov 
+ - Added prelimitary configuration of Stripping20r2 (2.76 TeV stripping)
+   and empty placeholder for Stripping20r3 (pA-Ap stripping)
+
 !========================= StrippingSettings v2r23 2013-04-22 =========================
 
 ! 2013-04-22 - Anton Poluektov 
