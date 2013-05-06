@@ -2665,7 +2665,7 @@ InputCopyStream      INFO Events output: 5
 FSRInputCopyStream   INFO Set up File Summary Record
 FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
-DataOnDemandSvc      INFO Handled "DataFault" incidents: 15/5/56(Alg/Node/Total).
+DataOnDemandSvc      INFO Handled "DataFault" incidents: 15/5/61(Alg/Node/Total).
 ToolSvc              INFO Removing all tools created by ToolSvc
 RootCnvSvc           INFO Disconnected data IO:4430C60E-B185-E211-A426-003048F0E846 [ROOT-MC10.dst]
 RootCnvSvc           INFO Disconnected data IO:7C3CB66C-021D-E011-B1B8-003048CBA516 [root://eoslhcb.cern.ch//eos/lhcb/MC/MC10/ALLSTREAMS.DST/00008898/0000/00008898_00000002_1.allstreams.dst]

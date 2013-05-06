@@ -20,6 +20,8 @@
 # |-EnablePackingChecks = False
 # |-DataType            = ''
 # |-Writer              = 'DstWriter'
+# |-Detectors           = ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon']
+# |                     (default: ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon'])
 # |-Persistency         = None
 # |-KeepDAQRawEvent     = False
 # |-PackSequencer       = None
@@ -37,6 +39,8 @@
 # |-EnablePackingChecks = False
 # |-DataType            = ''
 # |-Writer              = 'DstWriter'
+# |-Detectors           = ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon']
+# |                     (default: ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon'])
 # |-Persistency         = None
 # |-KeepDAQRawEvent     = False
 # |-PackSequencer       = None
@@ -49,8 +53,8 @@
 # No Writer defined for DIGI
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r2)
-                                          running on lxbuild163.cern.ch on Mon Nov 12 09:15:04 2012
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r3)
+                                          running on lxbuild163.cern.ch on Mon May  6 10:21:21 2013
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
@@ -146,7 +150,7 @@ TESFingerPrint      DEBUG Property update for OutputLevel : new value = 1
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x21e794a0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x22d4c1d0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -374,10 +378,10 @@ DumpTracks          DEBUG *** Track ***
    2.02015e-06-5.74093e-06 1.42358e-08-9.77654e-09 8.73945e-10 ]
 
 
-IODataManager        INFO Referring to dataset ROOT-2009.dst by its file ID:C8649216-A12C-E211-B7FD-003048C9CD62
+IODataManager        INFO Referring to dataset ROOT-2009.dst by its file ID:364966FA-25B6-E211-8F3C-003048C9CD62
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x21f78950@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x2362c0d0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -412,7 +416,7 @@ DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Contain
 DumpTracks           INFO There are 0 tracks in Rec/Track/Best
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x228a7ce0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x2377b090@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -525,7 +529,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x225a7c10@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x2347af50@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -716,7 +720,7 @@ DumpTracks          DEBUG *** Track ***
 
 EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
 PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
-StoreExplorerAlg     INFO ========= /Event[0x21f55be0@EventDataSvc]:
+StoreExplorerAlg     INFO ========= /Event[0x23603fc0@EventDataSvc]:
 StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
@@ -846,10 +850,10 @@ InputCopyStream      INFO Events output: 5
 FSRInputCopyStream   INFO Set up File Summary Record
 FSRInputCopyStream   INFO Events output: 1
 EventLoopMgr         INFO Histograms converted successfully according to request.
-DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/36(Alg/Node/Total).
+DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/41(Alg/Node/Total).
 ToolSvc              INFO Removing all tools created by ToolSvc
+RootCnvSvc           INFO Disconnected data IO:364966FA-25B6-E211-8F3C-003048C9CD62 [ROOT-2009.dst]
 RootCnvSvc           INFO Disconnected data IO:A2FEF372-CF47-DF11-98F2-00304879F224 [root://castorlhcb.cern.ch//castor/cern.ch/grid//lhcb/data/2009/DST/00006290/0000/00006290_00000001_1.dst?svcClass=lhcbdisk]
-RootCnvSvc           INFO Disconnected data IO:C8649216-A12C-E211-B7FD-003048C9CD62 [ROOT-2009.dst]
 XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
