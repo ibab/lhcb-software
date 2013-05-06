@@ -1,4 +1,3 @@
-// $Id: ExampleAlg.cpp,v 1.2 2007-02-14 16:32:14 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -69,16 +68,6 @@ StatusCode ExampleAlg::execute() {
   debug() << "==> Execute" << endmsg;
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode ExampleAlg::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=========================================================================

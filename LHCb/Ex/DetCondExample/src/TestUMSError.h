@@ -1,4 +1,3 @@
-// $Id: TestUMSError.h,v 1.1 2006-01-19 18:32:11 marcocle Exp $
 #ifndef TESTUMSERROR_H 
 #define TESTUMSERROR_H 1
 
@@ -25,7 +24,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 

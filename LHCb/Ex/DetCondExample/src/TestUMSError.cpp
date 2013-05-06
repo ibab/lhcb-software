@@ -1,4 +1,3 @@
-// $Id: TestUMSError.cpp,v 1.2 2006-08-31 13:53:44 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -48,12 +47,12 @@ StatusCode TestUMSError::initialize() {
     m_dbAccSvc = svc<ICondDBAccessSvc>("CondDBAccessSvc",true);
 
     // Store sample data if the database is empty
-    info() << "Inject data into the cache" << endreq;
+    info() << "Inject data into the cache" << endmsg;
     sc = i_injectData();
     if ( !sc.isSuccess() ) return sc;
     
     // Locate the Update Manager Service
-    info() << "*** register conditions ***" << endreq;
+    info() << "*** register conditions ***" << endmsg;
     registerCondition<TestUMSError>("/dd/TestObject");
 
   }
@@ -74,16 +73,6 @@ StatusCode TestUMSError::execute() {
   info() << "Event " << ++m_evtCount << endmsg;
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode TestUMSError::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-  
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=========================================================================

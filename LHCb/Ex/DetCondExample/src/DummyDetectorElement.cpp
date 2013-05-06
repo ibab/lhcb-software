@@ -24,7 +24,9 @@ DECLARE_CONVERTER_FACTORY(XmlDummyDetectorElementCnv)
 // Standard constructor, initializes variables
 //=============================================================================
 DummyDetectorElement::DummyDetectorElement(const std::string& name):
-        DetectorElement(name)
+  DetectorElement(name),
+  m_slowTemp(0.0),
+  m_maxChannels(0)
 {
 }
 //=============================================================================

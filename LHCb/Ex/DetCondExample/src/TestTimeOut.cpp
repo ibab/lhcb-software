@@ -1,4 +1,3 @@
-// $Id: TestTimeOut.cpp,v 1.5 2008-06-10 16:42:17 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -68,16 +67,6 @@ StatusCode TestTimeOut::execute() {
   }
   
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode TestTimeOut::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

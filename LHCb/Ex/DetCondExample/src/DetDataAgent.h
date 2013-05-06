@@ -1,4 +1,3 @@
-//$Id: DetDataAgent.h,v 1.6 2006-08-31 13:53:44 marcocle Exp $
 #ifndef DETCONDEXAMPLE_DETDATAAGENT_H
 #define DETCONDEXAMPLE_DETDATAAGENT_H
 
@@ -49,7 +48,7 @@ bool DetDataAgent::analyse(IRegistry* dir, int /*level*/ ){
       if (pvdo) log << "\n" << pvdo->printParams();
     }
   }
-  log << endreq;
+  log << endmsg;
   return true;
 }
 

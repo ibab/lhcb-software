@@ -1,4 +1,3 @@
-// $Id: PopulateDB.h,v 1.10 2006-07-12 18:18:13 marcocle Exp $
 #ifndef POPULATEDB_H 
 #define POPULATEDB_H 1
 
@@ -28,7 +27,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

@@ -1,4 +1,3 @@
-// $Id: TestCacheInjection.cpp,v 1.11 2008-12-16 16:36:02 marcocle Exp $
 // Include files
 
 // from Gaudi
@@ -25,7 +24,11 @@ DECLARE_ALGORITHM_FACTORY( TestCacheInjection )
 //=============================================================================
 TestCacheInjection::TestCacheInjection( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ), m_dbAccSvc(NULL), m_evtCount(0)
+  : GaudiAlgorithm ( name , pSvcLocator ), m_dbAccSvc(NULL), m_evtCount(0),
+    m_cond1(NULL),
+    m_cond2(NULL),
+    m_cond3(NULL),
+    m_cond4(NULL)
 {
 
 }
@@ -48,11 +51,11 @@ StatusCode TestCacheInjection::initialize() {
     m_dbAccSvc = svc<ICondDBAccessSvc>("CondDBAccessSvc",true);
 
     // Store sample data if the database is empty
-    info() << "Inject data into the cache" << endreq;
+    info() << "Inject data into the cache" << endmsg;
     sc = i_injectData();
     if ( !sc.isSuccess() ) return sc;
 
-    info() << "*** register conditions ***" << endreq;
+    info() << "*** register conditions ***" << endmsg;
     registerCondition<TestCacheInjection>("CacheTest/Object1",m_cond1);
     registerCondition<TestCacheInjection>("CacheTest/Object2",m_cond2);
     registerCondition<TestCacheInjection>("CacheTest/Object3",m_cond3);
@@ -120,16 +123,6 @@ StatusCode TestCacheInjection::execute() {
   info() << "         data = " << m_cond4->paramAsString("data") << endmsg;
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode TestCacheInjection::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=========================================================================

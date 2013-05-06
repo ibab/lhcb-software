@@ -1,4 +1,3 @@
-// $Id: ExampleAlg.h,v 1.1 2006-02-09 08:29:12 marcocle Exp $
 #ifndef EXAMPLEALG_H 
 #define EXAMPLEALG_H 1
 
@@ -23,7 +22,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 

@@ -1,4 +1,3 @@
-// $Id: TestCacheInjection.h,v 1.2 2006-01-19 18:32:11 marcocle Exp $
 #ifndef TESTCACHEINJECTION_H 
 #define TESTCACHEINJECTION_H 1
 
@@ -25,7 +24,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 

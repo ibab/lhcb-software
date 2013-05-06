@@ -1,4 +1,3 @@
-// $Id: PopulateDB.cpp,v 1.37 2008-11-03 16:12:01 marcocle Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -59,6 +58,8 @@ static std::string fix_dtd(std::string orig)
 PopulateDB::PopulateDB( const std::string& name,
                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_dbEditor(NULL)
+  , m_dbAccSvc(NULL)
 {
 
 }
@@ -114,16 +115,6 @@ StatusCode PopulateDB::execute() {
   //  debug() << "==> Execute" << endmsg;
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode PopulateDB::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=========================================================================

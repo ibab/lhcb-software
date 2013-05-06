@@ -1,4 +1,3 @@
-// $Id: MultiDBTest.cpp,v 1.11 2007-09-13 09:22:19 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -44,7 +43,7 @@ StatusCode MultiDBTest::initialize() {
   
   try {
 
-    info() << "*** register conditions ***" << endreq;
+    info() << "*** register conditions ***" << endmsg;
     registerCondition<MultiDBTest>("/dd/multiDBTest/Cond1",m_cond1);
     registerCondition<MultiDBTest>("/dd/multiDBTest/Cond2",m_cond2);
     registerCondition<MultiDBTest>("/dd/multiDBTest/Align1",m_align1);
@@ -73,16 +72,6 @@ StatusCode MultiDBTest::execute() {
   info() << m_align1->offNominalMatrix() << endmsg;
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MultiDBTest::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

@@ -3,6 +3,11 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2013-05-06 - Marco Cattaneo
+ - Replace endreq by endmsg
+ - Fix UNINIT_CTOR defects
+ - Remove "do nothing" finalize methods
+
 !========================= DetCondExample v11r12 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

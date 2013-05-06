@@ -1,4 +1,3 @@
-// $Id: CondDBTestAlgorithm.h,v 1.7 2007-02-05 19:05:13 marcocle Exp $
 #ifndef CONDDBTESTALGORITHM_H 
 #define CONDDBTESTALGORITHM_H 1
 
@@ -34,7 +33,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
   /// Dump interesting information about a DataObject

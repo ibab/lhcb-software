@@ -1,4 +1,3 @@
-// $Id: TestTimeOut.h,v 1.1 2006-08-31 11:48:14 marcocle Exp $
 #ifndef TESTTIMEOUT_H 
 #define TESTTIMEOUT_H 1
 
@@ -23,7 +22,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

@@ -1,4 +1,3 @@
-// $Id: MultiDBTest.h,v 1.4 2007-05-29 13:40:22 marcocle Exp $
 #ifndef MULTIDBTEST_H 
 #define MULTIDBTEST_H 1
 
@@ -25,7 +24,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

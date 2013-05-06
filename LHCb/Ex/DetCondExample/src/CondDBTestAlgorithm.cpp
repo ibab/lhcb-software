@@ -32,10 +32,14 @@ CondDBTestAlgorithm::CondDBTestAlgorithm( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_LHCb_cond(NULL),
     m_Hcal_cond(NULL),
+    m_TabProp(NULL),
+    m_m01(NULL),
+    m_m12(NULL),
     m_LHCb_temp(-1e20),
     m_Hcal_temp(-1e20),
     m_avg_temp(-1e20),
-    m_evtCount(0)
+    m_evtCount(0),
+    m_dds(NULL)
 {
   declareProperty("TestDirectMapping",m_direct_mapping_test = true);
 }
@@ -215,16 +219,6 @@ StatusCode CondDBTestAlgorithm::execute() {
 
   // Event processing completed
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CondDBTestAlgorithm::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=========================================================================
