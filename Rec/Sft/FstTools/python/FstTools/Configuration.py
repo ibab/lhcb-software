@@ -184,6 +184,7 @@ class FstConf(LHCbConfigurableUser):
             FstForward.OutputName = self.getProp("RootInTES") + "Track/Forward"
             FstForward.addTool(PrForwardTool)
             FstForward.PrForwardTool.MinPt = 1250 #self.getProp("MinPt")
+            FstForward.PrForwardTool.AddUTClusterName = ""
             
         else:
             log.warning("Unknown TStationType option '%s' !"%self.getProp("TStationType"))

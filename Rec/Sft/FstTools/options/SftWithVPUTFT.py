@@ -31,6 +31,14 @@ elif setting == "3":
     sample = {"mu": '3.8', "cooling": 'poco', "channel": 'minbias'}
 elif setting == "4":
     sample = {"mu": '3.8', "cooling": 'micro', "channel": 'minbias'}
+elif setting == "5":
+    sample = {"mu": '7.6', "cooling": 'poco', "channel": 'Kstmumu'}
+elif setting == "6":
+    sample = {"mu": '7.6', "cooling": 'micro', "channel": 'Kstmumu'}
+elif setting == "7":
+    sample = {"mu": '7.6', "cooling": 'poco', "channel": 'minbias'}
+elif setting == "8":
+    sample = {"mu": '7.6', "cooling": 'micro', "channel": 'minbias'}
 
 # Some privately generated samples, you still need to fill the sample
 # dictionary with sensible things for things to work

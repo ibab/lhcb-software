@@ -23,7 +23,6 @@ setting = os.getenv("TIM")
 if setting is None:
     setting = "8"
 
-setting = "8"
 if setting == "1":
     sample = {"mu": '3.8', "cooling": 'tpg', "channel": 'Kstmumu'}
 elif setting == "2":
