@@ -1,10 +1,7 @@
-
 //-----------------------------------------------------------------------------
 /** @file UTStationHitManager.h
  *
  *  Header file for class : Tf::UTStationHitManager
- *
- *  $Id: UTStationHitManager.h,v 1.17 2010-04-07 05:17:03 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -607,7 +604,7 @@ namespace Tf
           if ( msgLevel(MSG::DEBUG) )
           {
             debug() << "Found " << uthits.size() << " UTHits for station=" << sta
-                    << " layer=" << lay << " region=" << reg << endreq;
+                    << " layer=" << lay << " region=" << reg << endmsg;
           }
           for (Tf::STHitRange::const_iterator itUTH = uthits.begin();
                itUTH < uthits.end(); itUTH++)

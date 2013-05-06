@@ -1,10 +1,7 @@
-
 //-----------------------------------------------------------------------------
 /** @file TTStationHitManager.h
  *
  *  Header file for class : Tf::TTStationHitManager
- *
- *  $Id: TTStationHitManager.h,v 1.17 2010-04-07 05:17:03 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -607,7 +604,7 @@ namespace Tf
           if ( msgLevel(MSG::DEBUG) )
           {
             debug() << "Found " << tthits.size() << " TTHits for station=" << sta
-                    << " layer=" << lay << " region=" << reg << endreq;
+                    << " layer=" << lay << " region=" << reg << endmsg;
           }
           for (Tf::STHitRange::const_iterator itTTH = tthits.begin();
                itTTH < tthits.end(); itTTH++)

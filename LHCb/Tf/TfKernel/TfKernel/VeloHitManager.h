@@ -1,4 +1,3 @@
-// $Id: VeloHitManager.h,v 1.8 2008-06-02 13:49:53 smenzeme Exp $
 #ifndef INCLUDE_TF_VELOHITMANAGER_H
 #define INCLUDE_TF_VELOHITMANAGER_H 1
 
@@ -245,7 +244,7 @@ namespace Tf
     // first update
     sc = updMgrSvc()->update(this);
     if(!sc.isSuccess()) {
-      error() << "Failed to update station structure." << endreq;
+      error() << "Failed to update station structure." << endmsg;
       return sc;
     }
   
