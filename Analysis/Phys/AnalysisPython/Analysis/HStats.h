@@ -1,4 +1,4 @@
-// $Id: HistoStats.h,v 1.3 2007/09/19 08:16:59 marcocle Exp $
+// $Id$
 // ============================================================================
 #ifndef ANALYSIS_HSTATS_H
 #define ANALYSIS_HSTATS_H 1

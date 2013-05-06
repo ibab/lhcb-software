@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.8 2010-03-23 19:35:45 jpalac Exp $
+#$Id$
 # =============================================================================
 # Created    : 2009-07-14
 # Maintainer : Juan PALACIOS
@@ -40,6 +40,9 @@ macro_append       ROOT_linkopts " -lRooFitCore " \
 
 macro_append       ROOT_linkopts " -lHist " \
                    target-winxp  " libHist.lib " 
+
+macro_append       ROOT_linkopts " -lTreePlayer " \
+                   target-winxp  " libTreePlayer.lib " 
 
 macro_append       AnalysisPythonLib_dependencies     " AnalysisPythonGen "
 macro_append       AnalysisPythonDict_dependencies    " AnalysisPythonLib "

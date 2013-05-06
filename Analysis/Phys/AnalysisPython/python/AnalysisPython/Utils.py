@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Utils.py 151154 2013-01-27 11:55:52Z ibelyaev $
+# $Id$
 # =============================================================================
 ## @file
 #  Module with some simple but useful utilities 
@@ -8,16 +8,16 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-02-10
 #  
-#                    $Revision: 151154 $
-#  Last modification $Date: 2013-01-27 12:55:52 +0100 (Sun, 27 Jan 2013) $
-#  by                $Author: ibelyaev $
+#                    $Revision$
+#  Last modification $Date$
+#  by                $Author$
 # =============================================================================
 """
 Module with some simple but useful utilities 
 
 """
 # =============================================================================
-__version__ = "$Revision: 151154 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2013-02-10"
 # =============================================================================

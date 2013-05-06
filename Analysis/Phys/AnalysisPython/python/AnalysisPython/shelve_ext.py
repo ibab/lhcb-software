@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id:$
+# $Id$
 # =============================================================================
 # @file shelve_ext
 # 
@@ -19,9 +19,9 @@
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # @date   2012-05-13
 # 
-#                    $Revision: 135438 $
-#  Last Modification $Date: 2012-02-16 12:50:28 +0100 (Thu, 16 Feb 2012) $
-#                 by $Author: ibelyaev $
+#                    $Revision$
+#  Last Modification $Date$
+#                 by $Author$
 # =============================================================================
 """
 This is small extension for standars shelve module to allow more
@@ -36,7 +36,7 @@ flexible treatment for the data base
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2012-05-13"
-__version__ = "$Revision: 135438 $" 
+__version__ = "$Revision$" 
 __all__     = ()   ## nothing to import 
 # =============================================================================
 # import logging 

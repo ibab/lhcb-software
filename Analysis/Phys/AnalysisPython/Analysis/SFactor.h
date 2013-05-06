@@ -1,4 +1,4 @@
-// $Id: $
+// $Id$
 // =============================================================================
 #ifndef ANALYSIS_SFACTOR_H 
 #define ANALYSIS_SFACTOR_H 1
