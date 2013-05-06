@@ -12,7 +12,7 @@
 #define ONLINE_FINITESTATEMACHINE_STATE_H
 
 // Framework include files
-#include "FiniteStateMachine/TypedObject.h"
+#include "FiniteStateMachine/Rule.h"
 
 // C/C++ include files
 #include <set>
@@ -24,6 +24,7 @@ namespace FiniteStateMachine {
 
   // Forward declarations
   class Transition;
+  class When;
   class Path;
 
   /**@class StateActions  State  State.h Ctrl/State.h
@@ -88,12 +89,15 @@ namespace FiniteStateMachine {
   public:
     /// Transition container definition
     typedef std::set<const Transition*> Transitions;
+    typedef std::set<When*>             Whens;
 
   protected:
     /// Set of enter transitions to the current state
     Transitions  m_incoming;
     /// Set of leave transitions from the current state
     Transitions  m_outgoing;
+    /// Container of when clauses defining state changes
+    Whens        m_when;
     /// Flag for a transient state
     int          m_transient;
 
@@ -125,6 +129,12 @@ namespace FiniteStateMachine {
     void setTransient ()                { m_transient = 1;         }
     /// Return flag if the state is transient
     int isTransient () const            { return m_transient != 0; }
+
+    /// Access the when clauses
+    const Whens& when() const           { return m_when;           }
+    /// Add when clause to state object
+    const When* addWhen(const std::pair<When::Multiplicity,When::States>& p1, const State* target) const;
+
     /// Return reference to set of leave transitions (CONST)
     const Transitions& outgoing() const { return m_outgoing;       }
     /// Return reference to set of enter transitions (CONST)
@@ -133,6 +143,7 @@ namespace FiniteStateMachine {
     Transitions& outgoing()             { return m_outgoing;       }
     /// Return reference to set of enter transitions
     Transitions& incoming()             { return m_incoming;       }
+
   };   //  End class State
 
   typedef FsmHandle<State> StateHandle;

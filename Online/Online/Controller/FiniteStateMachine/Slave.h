@@ -64,6 +64,8 @@ namespace FiniteStateMachine {
     const Rule*       m_rule;
     /// Flag indicating (initial) internal transition actions
     bool              m_internal;
+    /// Flag to store if slave is alive
+    bool              m_alive;
   public:
     /** Class Constructor
      *
@@ -78,8 +80,10 @@ namespace FiniteStateMachine {
     SlaveState currentState() const                       {  return m_meta;                 }
     /// Internal meta-state of the slave
     void setCurrentState(SlaveState new_state)            {  m_meta = new_state;            }
+    /// Check if the task is alive
+    bool isAlive() const                                  {  return m_alive;                }
     /// Check if the slave is limbo
-    bool isLimbo() const           {  return m_meta==SLAVE_LIMBO || m_meta==SLAVE_STARTING; }
+    bool isLimbo() const    {  return !m_alive||m_meta==SLAVE_LIMBO||m_meta==SLAVE_STARTING;}
     /// Access flag indicating (initial) internal transition actions
     bool isInternal() const                               {  return m_internal;             }
     /// Access flag indicating (initial) internal transition actions

@@ -149,10 +149,11 @@ void DimSlave::handleUnloadTimeout()  {
 
 /// Handle state updates for a particular slave
 void DimSlave::handleState(const string& msg)  {
+  string        m = msg;
   int          st = currentState();
   bool   starting = st == SLAVE_LIMBO || st == SLAVE_STARTING;
   stopTimer();
-  if ( msg.empty() )    {  // No-link ?
+  if ( m.empty() )    {  // No-link ?
     if ( !starting )  {
       display(NOLOG,"%s::%s> Slave DEAD. Curr State:%s",
 	      RTL::processName().c_str(),c_name(),metaStateName());
@@ -161,8 +162,11 @@ void DimSlave::handleState(const string& msg)  {
     }
     return;
   }
+  else if ( m == "UNKNOWN" ) {
+    m = "OFFLINE";
+  }
 
-  const State* state = type()->state(msg);
+  const State* state = type()->state(m);
   const Transition* transition = state ? m_state->findTrans(state) : 0;
   if ( starting )   {
     //send(SLAVE_ALIVE,type()->initialState());
@@ -185,7 +189,7 @@ void DimSlave::handleState(const string& msg)  {
     return;
   }
   display(ALWAYS,"%s::%s> Slave state:%s Meta-state:%s",
-	  RTL::processName().c_str(),c_name(),msg.c_str(),metaStateName());
+	  RTL::processName().c_str(),c_name(),m.c_str(),metaStateName());
 }
 
 /// DimInfo overload to process messages

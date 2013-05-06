@@ -22,6 +22,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 
 class Event;
 
@@ -46,6 +47,8 @@ namespace FiniteStateMachine {
     typedef std::map<const State*,StateActions>            StateActionMap;
     /// TransitionActions container definition
     typedef std::map<const Transition*,TransitionActions>  TransitionActionMap;
+    /// Container of slaves States
+    typedef std::set<const State*>                         States;
     /// Container of slaves
     typedef std::vector<Slave*>                            Slaves;
 
@@ -60,6 +63,7 @@ namespace FiniteStateMachine {
       MACH_INACTION   =  3007,        /// Executing state enter action
       MACH_FINISH     =  3008,        /// Action function code at end of FSM transition
       MACH_FAIL       =  3009,        /// Code used on failure
+      MACH_EVAL_WHEN  =  3010,
       MACH_LAST       =  3099
     };
   protected:
@@ -121,6 +125,12 @@ namespace FiniteStateMachine {
     const char* currentMetaName()  const;
     /// Meta state name of target meta-state
     const char* previousMetaName()  const;
+    
+    /// Collect the states of all slaves
+    const States slaveStates() const;
+
+    /// Evaluate the when rules accoding to the slave states and invoke transition if required.
+    void evaluateWhens();
 
     /** Specific Interactor handle to act on sensor interrupts
      *  @arg  ev    [Event,read-only]   Event structure to be handled

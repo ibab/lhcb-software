@@ -45,6 +45,7 @@ namespace FiniteStateMachine   {
     typedef std::map<std::string,State*>       States;
     /// Transition container definition
     typedef std::map<std::string,Transition*>  Transitions;
+
   protected:
     /// Object name
     std::string m_name;

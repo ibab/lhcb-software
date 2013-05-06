@@ -54,6 +54,7 @@ static const char* _metaStateName(int state)   {
     MakeName(MACH_INACTION);         /// Executing state enter action
     MakeName(MACH_FINISH);           /// Action function code at end of FSM transition
     MakeName(MACH_FAIL);             /// Code used on failure
+    MakeName(MACH_EVAL_WHEN);
 #undef MakeName
   default: return "UNKNOWN";
   }
@@ -81,7 +82,7 @@ Machine::Machine(const Type *typ, const string& nam)
   m_fsm.addTransition(MACH_INACTION, MACH_IDLE,     "WaitIact->Idle",  cb.make(&Machine::finishTransition));
   // NOT_OK transitions
   m_fsm.addTransition(MACH_IDLE,     MACH_FAIL,     "Idle->Fail",      cb.make(&Machine::doFail));
-  m_fsm.addTransition(MACH_OUTACTION,MACH_FAIL,     "Active->Fail",    cb.make(&Machine::doFail));
+  m_fsm.addTransition(MACH_ACTIVE,   MACH_FAIL,     "Active->Fail",    cb.make(&Machine::doFail));
   m_fsm.addTransition(MACH_OUTACTION,MACH_FAIL,     "WaitOAct->Fail",  cb.make(&Machine::doFail));
   m_fsm.addTransition(MACH_EXEC_ACT, MACH_FAIL,     "WaitAct->Fail",   cb.make(&Machine::doFail));
   m_fsm.addTransition(MACH_CHK_SLV,  MACH_FAIL,     "CheckSlv->Fail",  cb.make(&Machine::doFail));
@@ -143,12 +144,38 @@ void Machine::handleIoc(const Event& event)   {
   case Machine::MACH_EXEC_ACT:
     status = m_fsm.invokeTransition(MACH_EXEC_ACT,this);
     break;
+  case Machine::MACH_EVAL_WHEN:
+    evaluateWhens();
+    break;
   default:
     status = m_fsm.invokeTransition(event.type,this);
     break;
   }
   if ( status != FSM::SUCCESS )  {
     PrintObject()(this);
+  }
+}
+
+/// Collect the states of all slaves
+const Machine::States Machine::slaveStates() const   {
+  States states;
+  for(Slaves::const_iterator i=m_slaves.begin(); i!=m_slaves.end(); ++i)
+    states.insert((*i)->state());
+  return states;
+}
+
+/// Evaluate the when rules accoding to the slave states and invoke transition if required.
+void Machine::evaluateWhens()  {
+  const State* st = state();
+  const State::Whens& w = st->when();
+  const When::States sl_states = slaveStates();
+  for(State::Whens::const_iterator i=w.begin(); i != w.end(); ++i)  {
+    const State* to = (*i)->evaluate(sl_states);
+    if ( to )   {
+      display(ALWAYS,"When: Invoke transition to state:%s",to->c_name());
+      invokeTransition(to);
+      return;
+    }
   }
 }
 
@@ -193,6 +220,7 @@ ErrCond Machine::goIdle()  {
 ErrCond Machine::doOutAction (const void* user_param)  {
   if ( state() )  {
     StateActionMap::const_iterator i = m_stateActions.find(state());
+    for_each(m_slaves.begin(),m_slaves.end(),SlaveReset());
     int sc = (i==m_stateActions.end()) ? (*i).second.out().execute(user_param) : ErrCond(FSM::SUCCESS);
     if ( sc == FSM::WAIT_ACTION )   // Action will be completed later
       return FSM::SUCCESS;
@@ -363,6 +391,7 @@ ErrCond Machine::finishTransition (const void* user_param)  {
   setState(tr->to()).setTarget(0);
   if ( i != m_transActions.end() ) (*i).second.completion().execute(user_param);
   m_completion.execute(user_param);
+  ioc().send(this,MACH_EVAL_WHEN,this);
   display(NOLOG,"%s> Executing %s. Finished transition. Current state:%s",c_name(),tr->c_name(),tr->to()->c_name());
   m_direction = Rule::MASTER2SLAVE;
   return FSM::SUCCESS;
@@ -376,6 +405,7 @@ ErrCond Machine::doFail (const void* user_param)  {
     (*i).second.fail().execute(user_param);
   m_fail.execute(user_param);
   // Need to invoke error processing due to dead child in steady state
+  ioc().send(this,MACH_EVAL_WHEN,this);
   ioc().send(m_handler,Slave::SLAVE_FAILED,this);
   return ret;
 }

@@ -9,12 +9,14 @@
 **
 **==========================================================*/
 // Framework include files
+#include "FiniteStateMachine/Type.h"
 #include "FiniteStateMachine/State.h"
 #include "FiniteStateMachine/Functors.h"
 #include "FiniteStateMachine/Transition.h"
 
 // C/C++ include files
 #include <cstdio>
+#include <stdexcept>
 
 using namespace FiniteStateMachine;
 using namespace std;
@@ -65,6 +67,8 @@ State::State(const Type *typ, const string& nam)
 
 /// Standatrd destructor  
 State::~State()    {
+  for_each(m_when.begin(),m_when.end(),Delete<When>());
+  m_when.end();
 }
 
 /// Return Pointer to FSM transition object leading to the requested target state
@@ -84,4 +88,19 @@ const Transition* State::findTrans (const string& state)  const {
 const Transition* State::findTransByName (const string& transition)  const {
   Transitions::const_iterator i = find_if(m_outgoing.begin(),m_outgoing.end(),FindTransitionByName(transition));
   return i == m_outgoing.end() ? 0 : (*i);
+}
+
+/// Add when clause to state object
+const When* State::addWhen(const pair<When::Multiplicity,When::States>& p1, const State* target)  const {
+  if ( target )  {
+    if ( target->type() == type() )  {
+      When*  wh = new When(type(), p1.first, p1.second, target);
+      State* me = const_cast<State*>(this);
+      me->m_when.insert(wh);
+      return wh;
+    }
+    throw runtime_error("Type:"+type()->name()+"> When of state:"+name()+". Target state "+
+			target->name()+" has invalid type!");
+  }
+  throw runtime_error("Type:"+type()->name()+"> When of state:"+name()+". Invalid target state for WHEN clause.");
 }

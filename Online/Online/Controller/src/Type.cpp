@@ -121,7 +121,7 @@ const Predicate* Type::addPredicate(Transition* transition,const Type* target_ty
 {
   if ( transition )  {
     string sname="";
-    set<const State*> allowed;
+    Predicate::States allowed;
 
     const State* st1 = target_type->state(s1);
     const State* st2 = s2.empty() ? 0 : target_type->state(s2);

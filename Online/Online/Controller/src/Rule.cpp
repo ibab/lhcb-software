@@ -77,6 +77,68 @@ Predicate::~Predicate()    {
 }
 
 /// Check if a slave with a given state satisfies the predicate
-bool Predicate::operator()(const State* slave_state)  const   {
+bool Predicate::hasState(const State* slave_state)  const   {
   return m_allowed.find(slave_state) != m_allowed.end();
+}
+
+/// Class Constructor
+When::When(const Type *typ, Multiplicity m, const States& allowed, const State* target)
+  : Predicate(typ,allowed), m_mult(m), m_target(target)
+{
+}
+
+/// Standatrd destructor  
+When::~When()  {
+}
+
+/// Check if a slave with a given state satisfies the predicate
+const State* When::evaluate(const States& slave_states)  const   {
+  if ( !slave_states.empty() ) {
+    
+  }
+  return 0;
+}
+
+static pair<When::Multiplicity,When::States> 
+makeWhenParam(When::Multiplicity p, const State* s0, const State* s1, const State* s2, const State* s3,
+				    const State* s4, const State* s5, const State* s6, const State* s7)
+{
+  pair<When::Multiplicity,When::States> r(p,When::States());
+  r.second.insert(s0);
+  if ( s1 ) r.second.insert(s1);
+  if ( s2 ) r.second.insert(s2);
+  if ( s3 ) r.second.insert(s3);
+  if ( s4 ) r.second.insert(s4);
+  if ( s5 ) r.second.insert(s5);
+  if ( s6 ) r.second.insert(s6);
+  if ( s7 ) r.second.insert(s7);
+  return r;
+}
+
+pair<When::Multiplicity,When::States> 
+FiniteStateMachine::allChildrenIn  (const State* s0, const State* s1, const State* s2, const State* s3,
+				    const State* s4, const State* s5, const State* s6, const State* s7)
+{
+  return makeWhenParam(When::ALL_IN_STATE, s0, s1, s2, s3, s4, s5, s6, s7);
+}
+
+pair<When::Multiplicity,When::States> 
+FiniteStateMachine::allChildrenNotIn(const State* s0, const State* s1, const State* s2, const State* s3,
+			 	     const State* s4, const State* s5, const State* s6, const State* s7)
+{
+  return makeWhenParam(When::ALL_NOT_IN_STATE, s0, s1, s2, s3, s4, s5, s6, s7);
+}
+
+pair<When::Multiplicity,When::States> 
+FiniteStateMachine::anyChildIn     (const State* s0, const State* s1, const State* s2, const State* s3,
+				    const State* s4, const State* s5, const State* s6, const State* s7)
+{
+  return makeWhenParam(When::ANY_IN_STATE, s0, s1, s2, s3, s4, s5, s6, s7);
+}
+
+pair<When::Multiplicity,When::States> 
+FiniteStateMachine::anyChildNotIn(  const State* s0, const State* s1, const State* s2, const State* s3,
+				    const State* s4, const State* s5, const State* s6, const State* s7)
+{
+  return makeWhenParam(When::ANY_NOT_IN_STATE, s0, s1, s2, s3, s4, s5, s6, s7);
 }

@@ -101,8 +101,58 @@ namespace FiniteStateMachine   {
     /// Access container with allowed states
     const States& allowed() const { return m_allowed; }
     /// Check if a slave with a given state satisfies the predicate
-    bool operator()(const State* slave_state)  const;
+    bool hasState(const State* slave_state)  const;
   };   //  End class Predicate
-}      //  End namespace 
+
+  /**@class When  When.h FiniteStateMachine/When.h
+   *
+   * @author  M.Frank
+   * @date    01/03/2013
+   * @version 0.1
+   */
+  class When : public Predicate   {
+  public:
+    enum Multiplicity { 
+      NONE             = 0, 
+      ANY_IN_STATE     = 1<<0,
+      ANY_NOT_IN_STATE = 1<<1,
+      ALL_IN_STATE     = 1<<2,
+      ALL_NOT_IN_STATE = 1<<3
+    };
+
+  protected:
+    /// Multiplicity enum
+    Multiplicity  m_mult;
+    /// Target state
+    const State*  m_target;
+
+  public:
+    /** Class Constructor. The rule applies to all objects independent of their currrent state
+     *
+     * @arg typ    [pointer,   read-only]  FSM type
+     * @arg states [container, read-only]  Container of allowed states for this predicate.
+     */
+    When(const Type *typ, Multiplicity m, const States& allowed, const State* target);
+    /// Standatrd destructor  
+    virtual ~When();
+    /// Check if a slave with a given state satisfies the predicate
+    const State* evaluate(const States& slave_states)  const;
+  };   //  End class When
+
+  std::pair<When::Multiplicity,When::States> 
+    allChildrenIn   (const State* s0,   const State* s1=0, const State* s2=0, const State* s3=0,
+		     const State* s4=0, const State* s5=0, const State* s6=0, const State* s7=0);
+  std::pair<When::Multiplicity,When::States> 
+    allChildrenNotIn(const State* s0,   const State* s1=0, const State* s2=0, const State* s3=0,
+		     const State* s4=0, const State* s5=0, const State* s6=0, const State* s7=0);
+  std::pair<When::Multiplicity,When::States> 
+    anyChildIn      (const State* s0,   const State* s1=0, const State* s2=0, const State* s3=0,
+		     const State* s4=0, const State* s5=0, const State* s6=0, const State* s7=0);
+  std::pair<When::Multiplicity,When::States> 
+    anyChildNotIn(   const State* s0,   const State* s1=0, const State* s2=0, const State* s3=0,
+	 	     const State* s4=0, const State* s5=0, const State* s6=0, const State* s7=0);
+  inline const State* moveTo(const State* s)    {  return s; }
+
+}      //  End namespace FiniteStateMachine
 #endif //  ONLINE_FINITESTATEMACHINE_RULE_H
 

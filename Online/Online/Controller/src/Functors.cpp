@@ -109,6 +109,11 @@ void SlaveLimboCount::operator()(const Slave* s)     {
   if ( s->isLimbo() )  ++count;
 }
 
+/// Operator invoked for each task to reset its state to idle
+void SlaveReset::operator()(Slave* s) const {
+  s->setCurrentState(s->isAlive() ? Slave::SLAVE_ALIVE : Slave::SLAVE_LIMBO);
+}
+
 /// Operator invoked for each rule to check if it is fulfilled
 void CheckStateSlave::operator()(const Slave* s)   {  
   const State* slState = s->state();
@@ -158,7 +163,7 @@ void PredicateSlave::operator()(const Slave* s)   {
     const Predicate* p = (*i);
     if ( s->type() == p->type() )  {
       if      ( !check_limbo && s->isLimbo() ) continue;
-      else if ( !(*p)(s->state()) ) status = FSM::FAIL;
+      else if ( !p->hasState(s->state()) ) status = FSM::FAIL;
     }
   }
 }

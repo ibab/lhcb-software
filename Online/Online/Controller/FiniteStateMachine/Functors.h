@@ -74,6 +74,18 @@ namespace FiniteStateMachine {
     bool operator()(const Transition* t) const;
   };
 
+  class SlaveReset  {
+  public:
+    /// Operator invoked for each task to reset its state to idle
+    void operator()(Slave* t) const;
+  };
+
+  template <typename T> class Delete  {
+  public:
+    /// Operator invoked for each object to be deleted
+    void operator()(T* t) const  { delete t; }
+  };
+
   template<typename T> struct ActionCounter  {
     const T* object;
     size_t count;

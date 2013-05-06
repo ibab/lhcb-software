@@ -22,7 +22,8 @@ using namespace std;
 
 /// Class Constructor
 Slave::Slave(const Type *typ, const string& nam, Machine* machine, bool internal)
-  : TypedObject(typ,nam), m_meta(SLAVE_LIMBO), m_machine(machine), m_state(0), m_rule(0), m_internal(internal)
+  : TypedObject(typ,nam), m_meta(SLAVE_LIMBO), m_machine(machine), m_state(0), 
+    m_rule(0), m_internal(internal), m_alive(false)
 {
   m_state = type()->initialState();
 }
@@ -78,6 +79,7 @@ FSM::ErrCond Slave::notifyMachine(int meta_state)  {
 /// Callback on alive signs of slave process
 FSM::ErrCond Slave::iamHere()  {
   m_rule  = 0;
+  m_alive = true;
   m_meta  = SLAVE_ALIVE;
   m_state = type()->initialState();
   return m_machine->checkAliveSlaves();
@@ -86,6 +88,7 @@ FSM::ErrCond Slave::iamHere()  {
 /// Callback on sudden death of slave process
 FSM::ErrCond Slave::iamDead()  {
   m_rule  = 0;
+  m_alive = false;
   m_meta  = SLAVE_LIMBO;
   m_state = type()->initialState();
   ErrCond ret = m_machine->checkSlaves();

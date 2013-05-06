@@ -11,6 +11,7 @@
 // Framework include files
 #include "FiniteStateMachine/Type.h"
 #include "FiniteStateMachine/Rule.h"
+#include "FiniteStateMachine/State.h"
 #include "FiniteStateMachine/Transition.h"
 #include "FiniteStateMachine/FSMTypes.h"
 #include <stdexcept>
@@ -29,6 +30,16 @@ static Type* defineDAQType()    {
   const State* running   = daq->addState(ST_NAME_RUNNING);
   const State* error     = daq->addState(ST_NAME_ERROR);
   const State* paused    = daq->addState(ST_NAME_PAUSED);
+
+  not_ready->addWhen(anyChildIn(error),     moveTo(error));
+  not_ready->addWhen(anyChildIn(not_ready), moveTo(not_ready));
+  not_ready->addWhen(allChildrenIn(ready,running,paused), moveTo(ready));
+
+  ready->addWhen  (  allChildrenIn(error),   moveTo(error));
+  ready->addWhen  (  allChildrenIn(running), moveTo(running));
+
+  running->addWhen(  anyChildIn(error),      moveTo(error));
+  running->addWhen(  anyChildIn(paused),     moveTo(paused));
 
   Tr*  load      = daq->addTransition("load",      offline,     not_ready, CHECK|CREATE);
   Tr*  configure = daq->addTransition("configure", not_ready,   ready);
