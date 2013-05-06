@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-05-06 - Vanya Belyaev
+
+ - PyRoUts.py: add "withCuts" iterator for TTree/TChain
+
+! 2013-05-06 - Vanya Belyaev
  - add few utilities for much faster processing of trees in python 
 
 ! 2013-04-27 - Vanya Belyaev

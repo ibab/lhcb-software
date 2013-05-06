@@ -29,6 +29,7 @@ __date__    = "2011-06-07"
 # =============================================================================
 __all__     = (
     #
+    'cpp'            , ## global C++ namespace 
     'rootID'         , ## construct the (global) unique ROOT identifier
     'funcID'         , ## construct the (global) unique ROOT identifier
     'funID'          , ## construct the (global) unique ROOT identifier
@@ -4407,6 +4408,44 @@ _2d_interp_     . __doc__ += '\n' + cpp.Gaudi.Math.Interp2D .__init__ .__doc__
 for t in ( ROOT.TH2D , ROOT.TH2F ) :
     t.interp    = _2d_interp_ 
 
+_large = 2**63
+# =============================================================================
+## Iterator over ``good events'' in TTree/TChain:
+#  @code 
+#    >>> tree = ... # get the tree
+#    >>> for i in tree.withCuts ( 'pt>5' ) : print i.y
+#  @endcode
+#  @attention: TTree::GetEntry is already invoked for accepted events,
+#              no need in second call
+#  @see Analysis::PyIterator
+#  @see Analysis::Formula
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-05-06
+def _iter_cuts_ ( self , cuts , first = 0 , last = _large ) :
+    """
+    Iterator over ``good events'' in TTree/TChain:
+    
+    >>> tree = ... # get the tree
+    >>> for i in tree.withCuts ( 'pt>5' ) : print i.y
+    
+    Attention: TTree::GetEntry is already invoked for accepted events,
+               no need in second call 
+    """
+    #
+    _pit = cpp.Analysis.PyIterator ( self , cuts , first , last )
+    if first < last and not _pit.ok() :
+        raise TypeError ( "Invalid Formula: %s" % cuts )
+    #
+    _t = _pit.tree()
+    while _t :
+        yield _t
+        _t = _pit.next()
+    #
+    del _pit
+
+ROOT.TTree .withCuts  = _iter_cuts_ 
+ROOT.TChain.withCuts  = _iter_cuts_ 
+    
 # =============================================================================
 logger.info ( 'Some useful decorations for TMinuit objects')
 # =============================================================================
@@ -4415,7 +4454,7 @@ logger.info ( 'Some useful decorations for TMinuit objects')
 #  @date   2012-09-28
 def _mn_par_ ( self , i ) :
     """
-    Get the paraeter fomr minuit
+    Get the parameter from minuit
 
     >>> mn = ...             # TMinuit object
     >>> p1 = mn[0]           # get the parameter 
