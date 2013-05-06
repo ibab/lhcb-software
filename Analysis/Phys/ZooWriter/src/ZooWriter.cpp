@@ -80,129 +80,129 @@ using namespace std;
 
 const int PREVIOUSVERTEXKEY = 978123;
 
-namespace {
-  std::string _preambulo (const std::vector<std::string>& lines)
-  {
-    std::string::size_type sz = 0;
-    for (std::vector<std::string>::const_iterator iline =
-        lines.begin() ; lines.end() != iline ; ++iline) {
-      sz += iline->size() + 1;
+  namespace {
+    std::string _preambulo (const std::vector<std::string>& lines)
+    {
+      std::string::size_type sz = 0;
+      for (std::vector<std::string>::const_iterator iline =
+          lines.begin() ; lines.end() != iline ; ++iline) {
+        sz += iline->size() + 1;
+      }
+      std::string result ;
+      result.reserve(sz); // preallocate enough space
+      for (std::vector<std::string>::const_iterator iline =
+          lines.begin() ; lines.end() != iline ; ++iline) {
+        if ( lines.begin() != iline ) { result += '\n'; }
+        result += (*iline);
+      }
+      return result;
     }
-    std::string result ;
-    result.reserve(sz); // preallocate enough space
-    for (std::vector<std::string>::const_iterator iline =
-        lines.begin() ; lines.end() != iline ; ++iline) {
-      if ( lines.begin() != iline ) { result += '\n'; }
-      result += (*iline);
-    }
-    return result;
+    inline std::string preambulo()
+    { std::vector<std::string> m_p; return _preambulo ( m_p ); }
+
   }
-  inline std::string preambulo()
-  { std::vector<std::string> m_p; return _preambulo ( m_p ); }
 
-  inline const LHCb::RecVertex* calculateSecondIP(const ZooP* zp, const LHCb::RecVertex* myBestVertex) {
-    bool refit = (NULL==myBestVertex);
-    double best_ipSig = 999.0;
-    double best_ip = 999.0;
-    double secondbest_ip = 999.0;//this should be saved, too
-    double secondbest_ipSig = 999.0;//this should be saved, too
-    double desired_ip = 999.0;
-    double desired_ipSig = 999.0;
-    double desired_ipChi2 = 999.0;
+const LHCb::RecVertex ZooWriter::calculateSecondIP(ZooP* zp, const LHCb::Particle* p, const LHCb::RecVertex* myBestVertex) {
+  LHCb::RecVertex pv;
+  bool refit = (NULL==myBestVertex);
+  double best_ipSig = 999.0;
+  double best_ip = 999.0;
+  double secondbest_ip = 999.0;//this should be saved, too
+  double secondbest_ipSig = 999.0;//this should be saved, too
+  double desired_ip = 999.0;
+  double desired_ipSig = 999.0;
+  double desired_ipChi2 = 999.0;
 
-    double curr_ct, curr_ctErr, curr_chi2;
-    double curr_ip, curr_ipChi2, curr_ipSig;
+  const double nan = std::numeric_limits<double>::quiet_NaN();
+  double curr_ip, curr_ipChi2, curr_ipSig;
 
 
-    LHCb::RecVertex::Range vtcs = primaryVertices();
+  LHCb::RecVertex::Range vtcs = primaryVertices();
 
-    if (myBestVertex) {
-      LHCb::RecVertex myVertex(myBestVertex  ? (*myBestVertex) : LHCb::RecVertex());
-      if (myVertex) {
-        if (m_dist->distance(p, myVertex, desired_ip, desired_ipChi2)) {
-          desired_ipSig = std::sqrt(desired_ipChi2);
-        } else {
-          desired_ip = desired_ipSig = desired_ipChi2 = nan;
-        }
-      }
-
-      zp->m_ip = desired_ip;
-      zp->m_ipSig = desired_ipSig;
-
+  if (myBestVertex) {
+    LHCb::RecVertex myVertex(myBestVertex  ? (*myBestVertex) : LHCb::RecVertex());
+    if (m_dist->distance(p, &myVertex, desired_ip, desired_ipChi2)) {
+      desired_ipSig = std::sqrt(desired_ipChi2);
+    } else {
+      desired_ip = nan;
+      desired_ipSig = nan;
+      desired_ipChi2 = nan;
     }
+    zp->m_ip = desired_ip;
+    zp->m_ipSig = desired_ipSig;
 
-    BOOST_FOREACH(const LHCb::RecVertex* constvtx, vtcs) {
+  }
 
-      if (!constvtx->isPrimary()) continue;
-      LHCb::RecVertex vtx(constvtx  ? (*constvtx) : LHCb::RecVertex());
-      if (constvtx) {
-        vtx->info(PREVIOUSVERTEXKEY,(double)(int)constvtx->key());
-      }
-      //do not refit for daughter particles if PV already refitted from
-      //mother
-      if (refit && !m_pvReFitter->remove(p,&vtx)) continue;
-      if (int(vtx.tracks().size()) <= m_minTracksPV) continue;
-      if ( m_dist->distance(p, &vtx, curr_ip, curr_ipChi2) ) {
-        curr_ipSig = std::sqrt(curr_ipChi2);
-        //selection according to smallest ipsig (similar to relatedvertex)
-        if (!isnan(curr_ipSig)) {
-          if (curr_ipSig < best_ipSig) {
-            ntracks_PV = int(vtx.tracks().size());
-            pv = vtx;
-            secondbest_ipSig = best_ipSig;//save second best (old) values
-            secondbest_ip = best_ip;
-            best_ipSig = curr_ipSig;//set new best values
-            best_ip = curr_ip;
-          } else {
-            if (curr_ipSig < secondbest_ipSig) {
-              secondbest_ipSig = curr_ipSig;
-              secondbest_ip = curr_ip;
-            } // curr_ipSig better than second best, but not better than best
-          } // curr_ipSig not better than best
-        } // curr_ipSig isn't nan
-      } // distance calculator was successful
-    } // loop over vertices
+  BOOST_FOREACH(const LHCb::RecVertex* constvtx, vtcs) {
 
-    // okay, now it becomes nasty:
-    // A) if we're dealing with a secondary vertex (i.e. zp is reconstructed as a prompt B):
-    //   the returned vertex is supposed to be the best vertex.
-    //   second_ip is supposed to be the IP wrt the second best vertex.
-    // B) if we're dealing with a tertiary vertex (i.e. zp is a D from a B):
-    //   the returned vertex is the mother's PV.
-    //   the IP is computed wrt the mother's PV.
-    //   the second_ip is either the best IP (in case the best vertex is a different vertex than the mother's
-    //                           hence this gives the standard IP of the D as it would result from ignorance of the B
-    //                    or it's the IP wrt the D's second best PV (which might be a different PV than the B's second best PV)
-    //
-    // it is therefore strongly advised to the user to check whether the second best IP is better than the best IP!!!
-    //
-    // in the same manner, if m_intelligentPV is switched off, myBestVertex will be the DaVinci default vertex and the standard IP will be the
-    // DaVinci default IP and the second best IP will be whatever is zoontuple standard
+    if (!constvtx->isPrimary()) continue;
+    LHCb::RecVertex vtx(constvtx  ? (*constvtx) : LHCb::RecVertex());
+    if (constvtx) {
+      vtx.addInfo(PREVIOUSVERTEXKEY,(double)(int)constvtx->key());
+    }
+    //do not refit for daughter particles if PV already refitted from
+    //mother
+    if (refit && !m_pvReFitter->remove(p,&vtx)) continue;
+    if (int(vtx.tracks().size()) <= m_minTracksPV) continue;
+    if ( m_dist->distance(p, &vtx, curr_ip, curr_ipChi2) ) {
+      curr_ipSig = std::sqrt(curr_ipChi2);
+      //selection according to smallest ipsig (similar to relatedvertex)
+      if (!isnan(curr_ipSig)) {
+        if (curr_ipSig < best_ipSig) {
+          pv = vtx;
+          secondbest_ipSig = best_ipSig;//save second best (old) values
+          secondbest_ip = best_ip;
+          best_ipSig = curr_ipSig;//set new best values
+          best_ip = curr_ip;
+        } else {
+          if (curr_ipSig < secondbest_ipSig) {
+            secondbest_ipSig = curr_ipSig;
+            secondbest_ip = curr_ip;
+          } // curr_ipSig better than second best, but not better than best
+        } // curr_ipSig not better than best
+      } // curr_ipSig isn't nan
+    } // distance calculator was successful
+  } // loop over vertices
 
-    if (NULL==myBestVertex) { // A) above
-      if (m_secondIpSig)
-      {
-        zp->m_ip = best_ip;
-        zp->m_ipSig = best_ipSig;
+  // okay, now it becomes nasty:
+  // A) if we're dealing with a secondary vertex (i.e. zp is reconstructed as a prompt B):
+  //   the returned vertex is supposed to be the best vertex.
+  //   second_ip is supposed to be the IP wrt the second best vertex.
+  // B) if we're dealing with a tertiary vertex (i.e. zp is a D from a B):
+  //   the returned vertex is the mother's PV.
+  //   the IP is computed wrt the mother's PV.
+  //   the second_ip is either the best IP (in case the best vertex is a different vertex than the mother's
+  //                           hence this gives the standard IP of the D as it would result from ignorance of the B
+  //                    or it's the IP wrt the D's second best PV (which might be a different PV than the B's second best PV)
+  //
+  // it is therefore strongly advised to the user to check whether the second best IP is better than the best IP!!!
+  //
+  // in the same manner, if m_intelligentPV is switched off, myBestVertex will be the DaVinci default vertex and the standard IP will be the
+  // DaVinci default IP and the second best IP will be whatever is zoontuple standard
+
+  if (NULL==myBestVertex) { // A) above
+    if (m_secondIpSig)
+    {
+      zp->m_ip = best_ip;
+      zp->m_ipSig = best_ipSig;
+      zp->m_second_ip = secondbest_ip;
+      zp->m_second_ipSig = secondbest_ipSig;
+    }
+  } else { // B) above
+    if (m_secondIpSig) {
+      if (pv.info(PREVIOUSVERTEXKEY,-10.) - myBestVertex->info(PREVIOUSVERTEXKEY,-20.) < 0.1) { // best D PV and best B PV are the same
+        // NB: m_ip assignment has been done already in the B) case
         zp->m_second_ip = secondbest_ip;
         zp->m_second_ipSig = secondbest_ipSig;
+      } else { // D and B point to different vertices
+        zp->m_second_ip = best_ip;
+        zp->m_second_ipSig = best_ipSig;
       }
-    } else { // B) above
-      if (m_secondIpSig) {
-        if (pv->info(PREVIOUSVERTEXKEY) - myBestVertex->info(PREVIOUSVERTEXKEY) < 0.1) { // best D PV and best B PV are the same
-          // NB: m_ip assignment has been done already in the B) case
-          zp->m_second_ip = secondbest_ip;
-          zp->m_second_ipSig = secondbest_ipSig;
-        } else { // D and B point to different vertices
-          zp->m_second_ip = best_ip;
-          zp->m_second_ipSig = best_ipSig;
-        }
-      }
-    } // A) or B)
+    }
+  } // A) or B)
 
-    return (myBestVertex?myBestVertex:pv);
-  } // inline calculateSecondIP
-}
+  return ((NULL==myBestVertex)?pv:(*myBestVertex));
+} // calculateSecondIP
 
 
 ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
@@ -895,15 +895,13 @@ ZooP* ZooWriter::GetSaved(const LHCb::Particle* p, const LHCb::RecVertex* recvtx
   LHCb::RecVertex pv;
   bool hasBestPV = false;
   //if PV was calculated for mother particle use this
-  double best_ipSig = 999.0;
-  double ntracks_PV = -1;
   if(recvtx) {
     pv = *recvtx;
     hasBestPV = true;
   }
 
   {
-    pv = *(calculateSecondIP(zp,(m_intelligentPV?recvtx:this->bestPV(p))));
+    pv = (calculateSecondIP(zp,p,(m_intelligentPV?recvtx:(const LHCb::RecVertex*)this->bestPV(p))));
     hasBestPV = true; // FIXME can calculateSecondIP return a NULL pointer?
   }
 
@@ -960,7 +958,6 @@ ZooP* ZooWriter::GetSaved(const LHCb::Particle* p, const LHCb::RecVertex* recvtx
 
     double fD = nan, fDErr = nan, fDChi2 = nan;
     double ct = nan, ctErr = nan, ctChi2 = nan;
-    double IP = nan, chi2 = nan, IPSig = nan;
     int isolation = -999;
 
     // work out flight dist, proper time etc from PV with particle removed
