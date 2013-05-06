@@ -2186,6 +2186,21 @@ StatusCode OfflineVertexFitter::getMergedPi0Parameter(const LHCb::Particle& pi0,
   return sc;
 }
 
+//==================================================================
+//  method to determine if a particle is a resonance
+//==================================================================
+bool OfflineVertexFitter::isResonance(const LHCb::Particle* part) const
+{
+  const LHCb::ParticleProperty * partProp = m_ppSvc->find(part->particleID());
+  if ( !partProp )
+  {
+    std::ostringstream mess; 
+    mess << "No ParticleProperty for PID=" << part->particleID();
+    Error( mess.str() ).ignore();
+  }
+  return ( partProp ? partProp->lifetime() < 1.e-6*Gaudi::Units::nanosecond : false );
+}
+
 //=============================================================================
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( OfflineVertexFitter )

@@ -2,6 +2,9 @@
 #ifndef OFFLINEVERTEXFITTER_H
 #define OFFLINEVERTEXFITTER_H 1
 
+// STD
+#include <sstream>
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -96,7 +99,6 @@ public:
     Error("remove is not implemented for OffLineVertexFitter");
     return StatusCode::FAILURE;
   }
-
 
 private:
 
@@ -211,15 +213,6 @@ private:
   std::string m_transporterName;
 
 };
-
-//==================================================================
-//  method to determine if a particle is a resonance
-//==================================================================
-inline bool OfflineVertexFitter::isResonance(const LHCb::Particle* part) const
-{
-  const LHCb::ParticleProperty *  partProp = m_ppSvc->find(part->particleID());
-  return partProp->lifetime() < 1.e-6*Gaudi::Units::nanosecond ;
-}
 
 //==================================================================
 //  method to determine if a particle is a merged pi0
