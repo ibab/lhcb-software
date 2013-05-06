@@ -40,5 +40,7 @@ FstConf().Compare = False
 # and adds the TES locations to which the
 # trigger emulation writes
 writer = InputCopyStream('DstWriter2')
-writer.ItemList += ["Fst#999"]
-#GaudiSequencer("RecoWriterSeq").Members += [writer]
+writer.ItemList += ["Fst#999",
+                    "Link#999",
+                    ]
+GaudiSequencer("RecoWriterSeq").Members += [writer]

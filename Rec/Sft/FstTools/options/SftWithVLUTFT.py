@@ -1,4 +1,4 @@
-# HLT1 emulation for upgraded LHCb with VP UT and FT
+# HLT1 emulation for upgraded LHCb with VL UT and FT
 import sys
 
 from GaudiKernel.ProcessJobOptions import importOptions
@@ -21,45 +21,54 @@ Brunel().InputType = 'DIGI'
 import os
 setting = os.getenv("TIM")
 if setting is None:
-    setting = "2"
-    
+    setting = "8"
+
+setting = "8"
 if setting == "1":
-    sample = {"mu": '3.8', "cooling": 'poco', "channel": 'Kstmumu'}
+    sample = {"mu": '3.8', "cooling": 'tpg', "channel": 'Kstmumu'}
 elif setting == "2":
     sample = {"mu": '3.8', "cooling": 'micro', "channel": 'Kstmumu'}
 elif setting == "3":
-    sample = {"mu": '3.8', "cooling": 'poco', "channel": 'minbias'}
+    sample = {"mu": '3.8', "cooling": 'tpg', "channel": 'minbias'}
 elif setting == "4":
     sample = {"mu": '3.8', "cooling": 'micro', "channel": 'minbias'}
+# High lumi
+elif setting == "5":
+    sample = {"mu": '7.6', "cooling": 'tpg', "channel": 'minbias'}
+elif setting == "6":
+    sample = {"mu": '7.6', "cooling": 'micro', "channel": 'minbias'}
+elif setting == "7":
+    sample = {"mu": '7.6', "cooling": 'tpg', "channel": 'Kstmumu'}
+elif setting == "8":
+    sample = {"mu": '7.6', "cooling": 'micro', "channel": 'Kstmumu'}
 
 # Some privately generated samples, you still need to fill the sample
 # dictionary with sensible things for things to work
 #EventSelector().Input = ["/afs/cern.ch/work/p/pjalocha/public/VP_Sim/VP_PocoFoam_UT_FT_nu6.8.digi"]
 #EventSelector().Input = ["/afs/cern.ch/work/p/pjalocha/public/VP_Sim/VP_MicroChannel_UT_FT_nu6.8.digi"]
 
-#EventSelector().Input = ["/tmp/8k-dsts/VPUTFT-Kstmumu-poco-3.8.dst"]
 # XXX How is this XML catalog + options file thing meant to work?
-importOptions("$FSTTOOLSROOT/options/VPUTFT-%(channel)s-%(cooling)s-%(mu)s.py"%(sample))
+importOptions("$FSTTOOLSROOT/options/VLUTFT-%(channel)s-%(cooling)s-%(mu)s.py"%(sample))
 
 # Output DST
-output_fname = "/tmp/thead/VPUTFT-%(channel)s-%(cooling)s-%(mu)s.dst"%(sample)
+output_fname = "/tmp/thead/VLUTFT-%(channel)s-%(cooling)s-%(mu)s.dst"%(sample)
 #output_fname = "VPUTFT-%(channel)s-%(cooling)s-%(mu)s.dst"%(sample)
 InputCopyStream("DstWriter2").Output = "DATAFILE='PFN:%s'"%(output_fname)
 
 
 # Configuration of the trigger emulation
-FstConf().VeloType = "VP"
+FstConf().VeloType = "VL"
 FstConf().TStationType = "FT"
 # XXX Need to figure this cut out
 FstConf().TStationHits = 10
 
-Brunel().EvtMax = 10000#*1000#3000
+Brunel().EvtMax = 8#*1000#3000
 
 CondDB().Upgrade = True
 if sample['cooling'] == "poco":
-    CondDB().AllLocalTagsByDataType = ["VP_Compact_Pocofoam+UT", "FT"]
+    CondDB().AllLocalTagsByDataType = ["VL_Compact_TPG+UT", "FT"]
 elif sample['cooling'] == "micro":
-    CondDB().AllLocalTagsByDataType = ["VP_Compact_MicroChannel+UT", "FT"]
+    CondDB().AllLocalTagsByDataType = ["VL_Compact_MicroChannel+UT", "FT"]
     
 Brunel().DataType = "Upgrade"
 Brunel().Simulation = True
