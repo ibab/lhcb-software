@@ -1,4 +1,3 @@
-// $Id: AllLinks.h,v 1.13 2008-12-04 13:41:44 ocallot Exp $
 #ifndef LINKER_ALLLINKS_H 
 #define LINKER_ALLLINKS_H 1
 
@@ -39,7 +38,7 @@ public:
       if ( 0 != msgSvc ) {
         MsgStream msg( msgSvc, "AllLinks::"+containerName );
         msg << MSG::ERROR << "*** Link container " << name
-            << " not found." << endreq;
+            << " not found." << endmsg;
       }
     } else {
       //== Check proper template, only if specified. 

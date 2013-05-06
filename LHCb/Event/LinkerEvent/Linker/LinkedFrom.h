@@ -42,7 +42,7 @@ public:
       if ( 0 != msgSvc ) {
         MsgStream msg( msgSvc, "LinkedFrom::"+containerName );
         msg << MSG::ERROR << "*** Link container " << name
-            << " not found." << endreq;
+            << " not found." << endmsg;
       }
     } else {
       //== Check proper template, only if specified. 

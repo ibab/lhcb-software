@@ -1,4 +1,3 @@
-// $Id: LinkerWithKey.h,v 1.14 2008-03-10 14:41:44 ocallot Exp $
 #ifndef LINKER_LINKERWITHKEY_H 
 #define LINKER_LINKERWITHKEY_H 1
 
@@ -40,7 +39,7 @@ public:
         if ( !sc && NULL != msgSvc ) {
           MsgStream msg( msgSvc, "LinkerWithKey::"+containerName );
           msg << MSG::ERROR << "*** Link container " << name
-              << " cannot be registered, Status " << sc << endreq;
+              << " cannot be registered, Status " << sc << endmsg;
         }
       }
       

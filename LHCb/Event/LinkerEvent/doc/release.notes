@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2013-05-06 - Marco Cattaneo
+ - Replace endreq by endmsg
+
 !========================= LinkerEvent v3r10 2013-02-04 =========================
 ! 2012-12-20 - Marco Cattaneo
  - Fix UNINIT_CTOR coverity defect
