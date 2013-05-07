@@ -3,6 +3,14 @@ Package     : StrippingSys
 Package Coordinator : Jibo He, Anton Poluektov
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v6r2p5 2013-05-07 =========================
+
+Patch release for Stripping20r0p1 (2012 incremental restripping)
+
+* Phys/StrippingSettings
+  - Fix typo in Betac2PhiP line configuration and move it to microDST (Charm stream)
+  - Fix name for HeavyBaryon line
+
 !========================= StrippingSys v6r2p4 2013-04-22 =========================
 
 * Phys/StrippingSelections
