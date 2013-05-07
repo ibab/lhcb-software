@@ -5,6 +5,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================= FlavourTagging v12r13 2013-05-07 =========================
+
 ! 2013-05-05 - Chris Jones
  - More CPU improvements, mostly by protecting debug and verbose printouts.
 
