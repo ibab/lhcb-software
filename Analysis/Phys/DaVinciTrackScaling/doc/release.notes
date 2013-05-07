@@ -4,5 +4,7 @@
 ! Purpose     : Track scaling and smearing
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciTrackScaling v1r0 2013-05-07 =========================
+
 ! 2013-04-27 - Chris Jones
  - First import. Components moved from Phys/DaVinciTools
