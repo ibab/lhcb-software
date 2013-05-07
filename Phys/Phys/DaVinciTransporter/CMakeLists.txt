@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciTransporter
 ################################################################################
-gaudi_subdir(DaVinciTransporter v3r10p1)
+gaudi_subdir(DaVinciTransporter v3r10p2)
 
 gaudi_depends_on_subdirs(Phys/DaVinciKernel
                          Tr/TrackInterfaces)

@@ -3,6 +3,11 @@
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+!========================= DaVinciTransporter v3r10p2 2013-05-07 =========================
+
+! 2013-05-07 - Chris Jones
+ - Fix -pedantic compilation warnings
+
 !========================= DaVinciTransporter v3r10p1 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
