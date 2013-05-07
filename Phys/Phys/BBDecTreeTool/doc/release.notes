@@ -4,6 +4,11 @@
 ! Purpose     : Decision Tree classifier for Hlt2 topological trigger
 ! -----------------------------------------------------------------------------
 
+!========================= BBDecTreeTool v1r6p2 2013-05-07 =========================
+
+! 2013-05-07 - Chris Jones
+ - Fix -pedantic compilation warnings
+
 !========================= BBDecTreeTool v1r6p1 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
