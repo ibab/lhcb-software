@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-06-06 - Lucio Anderlini (BandQ)
+  - Fixed the zero-retention bug in Betac pentaquark lines (Yury Shch.)
+  - Corrected the name of HeavyBaryons lines back to HeavyBaryon (Raphael)
+
 ! 2013-05-06 - Anton Poluektov 
  - Added prelimitary configuration of Stripping20r2 (2.76 TeV stripping)
    and empty placeholder for Stripping20r3 (pA-Ap stripping)
