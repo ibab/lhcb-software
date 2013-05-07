@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r23p1 2013-05-07 =========================
+
 ! 2013-05-07 - Anton Poluektov 
   - Revert modification of Stripping20r1p1 config
   - Move Betac line to Charm stream (from CharmCompleteEvent) in Stripping20r0p1 
