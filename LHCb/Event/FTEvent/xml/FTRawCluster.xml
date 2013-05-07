@@ -10,7 +10,7 @@
     <class  name        = "FTRawCluster"
             author      = "Olivier Callot"
             desc        = "Raw cluster, all information on 32 bits for fast container"
-            location    = "Raw/FT/RawClusters"
+            location    = "Raw/FT/LiteClusters"
             serializers = "FALSE" >
 
       <import name="Kernel/FastClusterContainer"/>
@@ -23,9 +23,9 @@
                access = "PUBLIC" />
 
       <typedef desc   = "finding policy"
-               type   = "SiDataFunctor::CompareByChannel &lt; LHCb::FTChannelID &gt;"
-               def    = "findPolicy"
-               access = "PUBLIC " /> 
+                type   = "SiDataFunctor::CompareByChannel &lt; LHCb::FTRawCluster &gt;"
+                def    = "findPolicy"
+                access = "PUBLIC " /> 
 
       <typedef desc   = "fast container of Raw Cluster"
                type   = "FastClusterContainer&lt;LHCb::FTRawCluster,int&gt;"

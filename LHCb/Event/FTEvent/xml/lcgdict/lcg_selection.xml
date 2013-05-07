@@ -1,0 +1,5 @@
+<!--- $Id:        Author  : Eric Cogneras        Created : 2013-05-06 -->
+<lcgdict>
+  <class name="FastClusterContainer<LHCb::FTRawCluster, int >"/> 
+</lcgdict>
+
