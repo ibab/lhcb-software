@@ -1,17 +1,14 @@
-// $Id: $
 #ifndef RATEFROMTCK_H 
 #define RATEFROMTCK_H 1
 
 // CondDB
 #include "DetDesc/Condition.h"
-#include "GaudiKernel/IDetDataSvc.h"
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-#include "Kernel/IPropertyConfigSvc.h"
+//#include "Kernel/IPropertyConfigSvc.h"
 #include "Kernel/TCK.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "Kernel/IRateFromTCK.h"
 static const InterfaceID IID_RateFromCondDB ( "RateFromCondDB", 1, 0 ); // needed as there's no interface
 /** @class RateFromCondDB RateFromCondDB.h
@@ -49,8 +46,8 @@ protected:
 private:
   StatusCode i_updateConditions();              ///< Function extracting data from Condition
 
-  mutable IPropertyConfigSvc * m_propertyConfigSvc;
-  std::string m_propertyConfigSvcName;          ///< Name of PropertyConfigSvc
+  //  mutable IPropertyConfigSvc * m_propertyConfigSvc;
+  //  std::string m_propertyConfigSvcName;      ///< Name of PropertyConfigSvc
   Condition *m_condTrigger;                     ///< Condition for sampling coefficients
   double m_rate;                                ///< rate in condDB
   std::string m_condition ;                     ///< ConditionName
