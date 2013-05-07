@@ -4,9 +4,12 @@
 ! Purpose     : Trigger and stripping related tuple tools
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTupleTrigger v1r1 2013-05-07 =========================
+
 ! 2013-04-26
  - TupleToolTISTOS: fill stripping info only if m_stripping is true
-   , Looely related to https://savannah.cern.ch/bugs/?101236
+   Looely related to https://savannah.cern.ch/bugs/?101236
+
 !========================= DecayTreeTupleTrigger v1r0p1 2013-04-05 =========================
 
 ! 2013-03-27 - Chris Jones
