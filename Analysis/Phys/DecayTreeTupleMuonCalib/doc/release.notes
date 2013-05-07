@@ -4,9 +4,12 @@
 ! Purpose     : tuple tools for Muon PID calibration
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTupleMuonCalib v1r2 2013-05-07 =========================
+
 ! 2013-04-15 - Jose Helder Lopes
- - Implemented code to extrapolate a track to the muon system and find the region it crosses in each station.
-   Added the region of the extrapolated track in M2 to the ntuple.
+ - Implemented code to extrapolate a track to the muon system and find the region 
+   it crosses in each station.
+ - Added the region of the extrapolated track in M2 to the ntuple.
 
 !========================= DecayTreeTupleMuonCalib v1r1 2013-04-05 =========================
 
