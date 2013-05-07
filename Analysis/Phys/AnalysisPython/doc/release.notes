@@ -5,19 +5,19 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
-! 2013-05-06 - Vanya Belyaev
+!========================= AnalysisPython v2r20 2013-05-07 =========================
 
+! 2013-05-06 - Vanya Belyaev
  - PyRoUts.py: add "withCuts" iterator for TTree/TChain
 
 ! 2013-05-06 - Vanya Belyaev
- - add few utilities for much faster processing of trees in python 
+ - Add few utilities for much faster processing of trees in python 
 
 ! 2013-04-27 - Vanya Belyaev
- - helper function sFactor
+ - Add helper function sFactor
 
 ! 2013-04-26 - Vanya Belyaev
-
- - PyRoUts: minor fix for  histo -> graph transformatioin methods  
+ - PyRoUts: minor fix for histo -> graph transformation methods  
 
 !========================= AnalysisPython v2r19 2013-04-05 =========================
 
