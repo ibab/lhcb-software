@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TisTosTobbing
 ################################################################################
-gaudi_subdir(TisTosTobbing v7r8p2)
+gaudi_subdir(TisTosTobbing v7r8p3)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Event/HltEvent
