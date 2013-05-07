@@ -8,7 +8,7 @@
  - Modified the test to match the new logic.
 
 ! 2013-05-06 - Andrey Ustyuzhanin
- - Added an extrafield for the stream name and fill it from the file name,
+ - Added an extra field for the stream name and fill it from the file name,
    while the Stripping name must always be provided via options.
 
 !========================= EventIndexer v1r0 2013-03-20 =========================
