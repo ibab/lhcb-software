@@ -4,6 +4,11 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r20 2013-05-07 =========================
+
+! 2013-04-23 - Laurence Carson
+  - Fixed reference for QM Test.
+
 !========================= StrippingArchive v1r19 2013-04-22 =========================
 
 ! 2013-04-19 - Anton Poluektov 
