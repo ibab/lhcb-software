@@ -4,8 +4,10 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessoriesMC v2r3 2013-05-07 =========================
+
 ! 2013-04-30 - Victor Coco
- - add the f_0 s to the list of particles to be taken into account in the configs
+ - Add the f_0 s to the list of particles to be taken into account in the configs
 
 ! 2013-04-25 - Chris Jones
  - Add more missing calls to initialize() and finalize()
