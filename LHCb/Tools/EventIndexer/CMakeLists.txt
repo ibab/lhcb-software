@@ -7,6 +7,7 @@ gaudi_subdir(EventIndexer v1r0)
 gaudi_depends_on_subdirs(GaudiAlg Event/RecEvent)
 
 find_package(ROOT COMPONENTS Core Cint Tree)
+find_package(RELAX)
 
 set(dict_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/EventIndexer.h
               ${CMAKE_CURRENT_SOURCE_DIR}/src/LinkDef.h)

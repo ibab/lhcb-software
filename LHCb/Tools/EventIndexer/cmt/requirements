@@ -16,6 +16,7 @@ branches         cmt doc src tests
 use              GaudiAlg        v*
 use              RecEvent        v*        Event
 use              ROOT            v*        LCG_Interfaces
+use              RELAX           v*        LCG_Interfaces -no_auto_imports
 
 private
 #============================================================================

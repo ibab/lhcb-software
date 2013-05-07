@@ -104,8 +104,10 @@ StatusCode EventIndexer::finalize() {
   DEBMSG << "==> Finalize" << endmsg;
 
   VERMSG << "Flush the TTree" << endmsg;
-  if (m_tree)
+  if (m_tree) {
+    m_file->cd(); // ensure that we write to the right file
     m_tree->Write();
+  }
 
   VERMSG << "Close the output file" << endmsg;
   if (m_file) {
@@ -125,6 +127,8 @@ StatusCode EventIndexer::finalize() {
 void EventIndexer::handle(const Incident& incident) {
   // set the current input file
   m_data.lfn = incident.source();
+
+  VERMSG << "New input file opened: " << m_data.lfn << endmsg;
   // reset the position counter
   m_data.position = 0;
   std::string::size_type end = m_data.lfn.rfind('.');
@@ -135,7 +139,9 @@ void EventIndexer::handle(const Incident& incident) {
     if (begin == std::string::npos){
       m_data.stream = "";
     } else {
-      m_data.stream = m_data.lfn.substr(++begin, end);
+      ++begin;
+      m_data.stream = m_data.lfn.substr(begin, end - begin);
+      VERMSG << "Stream name: " << m_data.stream << endmsg;
     }
   }
 }

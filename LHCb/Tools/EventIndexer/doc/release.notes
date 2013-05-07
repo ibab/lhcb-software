@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-05-07 - Marco Clemencic
+ - Fixed a couple of bugs (stream name detection and writing to file).
+
+! 2013-05-07 - Marco Clemencic
  - Modified the test to match the new logic.
 
 ! 2013-05-06 - Andrey Ustyuzhanin
