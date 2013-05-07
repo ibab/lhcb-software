@@ -4,6 +4,9 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2013-05-07 - Marco Cattaneo
+ - Fix clang32 warning
+
 !========================= Magnet v7r6 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

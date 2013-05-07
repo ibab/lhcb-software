@@ -33,7 +33,8 @@ DECLARE_ALGORITHM_FACTORY( MagFieldReader )
 MagFieldReader::MagFieldReader( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
-  , m_pIMF(0), m_pIAF(0)
+  , m_pIMF(0)
+//, m_pIAF(0)
 {
   declareProperty("Zmin", m_zMin =  -500.0*Gaudi::Units::mm);
   declareProperty("Zmax", m_zMax = 14000.0*Gaudi::Units::mm);  

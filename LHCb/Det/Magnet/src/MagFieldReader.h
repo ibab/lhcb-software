@@ -40,7 +40,7 @@ private:
   
   // Pointer to the magnetic field service
   IMagneticFieldSvc* m_pIMF;
-  IMagneticFieldSvc* m_pIAF;  
+  //  IMagneticFieldSvc* m_pIAF;
 
 
   
