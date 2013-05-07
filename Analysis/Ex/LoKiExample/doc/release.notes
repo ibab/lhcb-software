@@ -7,6 +7,8 @@
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiExample v8r8p4 2013-05-07 =========================
+
 ! 2013-02-28 - Chris Jones
  - Fix -pedantic compilation warnings
 

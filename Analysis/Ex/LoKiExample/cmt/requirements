@@ -1,7 +1,7 @@
 # $Id: requirements,v 1.53 2010-06-02 11:13:16 jpalac Exp $ 
 # =============================================================================
 package         LoKiExample
-version         v8r8p3
+version         v8r8p4
 
 # ============= structure =====================================================
 branches        cmt doc src python
@@ -9,10 +9,9 @@ branches        cmt doc src python
 # ============= dependencies  =================================================
 use             Python      v* LCG_Interfaces -no_auto_imports 
 use             LoKi        v* Phys
-use  LoKiGenMC              v*    Phys
-use LoKiAlgoMC              v*     Phys
+use LoKiGenMC               v* Phys
+use LoKiAlgoMC              v* Phys
 use LoKiArrayFunctors       v* Phys
-##use             HbookCnv    v* 
 use             LHCbMath    v* Kernel  
 
 # ============= patterns ======================================================
