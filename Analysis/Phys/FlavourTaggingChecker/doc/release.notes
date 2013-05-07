@@ -6,6 +6,8 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!========================= FlavourTaggingChecker v6r13p1 2013-05-07 =========================
+
 ! 2013-02-27 - Chris Jones
  - Fix -pedantic compilation warnings
 
