@@ -5,6 +5,8 @@
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
 
+!========================= DisplVerticesMC v1r4p4 2013-05-07 =========================
+
 ! 2013-02-27 - Chris Jones
  - Fix -pedantic compilation warnings
 
