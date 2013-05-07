@@ -5,7 +5,7 @@
 
 from GaudiKernel.SystemOfUnits import *
 
-#HeavyBaryon = {
+#HeavyBaryons = {
 #    'BUILDERTYPE'  : 'HeavyBaryonsConf',
 #    'CONFIG'       : {    'TRCHI2DOF'             :       4.,
 #                          'PionPIDK'              :       5.,
@@ -62,51 +62,24 @@ ChiCJPsiGammaConv = {
     }                                                  
 
 
-# OLD DICTIONARY USED ON STRIPPING20r1p1, TYPO IN Hlt2IncPhiDecision
-#Betac2PhiP = {
-#    'BUILDERTYPE'  : 'StrippingBetac2PhiPConf',
-#    'CONFIG'       : {
-#                    'Daug_TRCHI2DOF_MAX'        : 10.     
-#                  , 'Daug_P_MIN'                : 1200.0*MeV 
-#                  , 'Daug_PT_MIN'               : 200.0*MeV
-#                  , 'Daug_MIPDV'                : 0.0      # mm
-#                  , 'Proton_PIDpi_MIN'          : 10.0
-#                  , 'Proton_PIDK_MIN'           :  0.0 
-#                  , 'Phi_WIN'                   : 20.0 * MeV
-#                  , 'Phi_PT'                    : 1700.0*MeV         
-#                  , 'Betac_AM_MIN'              : 1950.0 * MeV 
-#                  , 'Betac_AM_MAX'              : 3300.0 * MeV 
-#                  , 'Betac_BPVDIRA_MIN'         : 0.999   
-#                  , 'Betac_VCHI2VDOF_MAX'       : 10.0   
-#                  , 'Betac_BPVLTIME_MIN'        : 0.0 * ns
-#                  , 'Betac_BPVLTIME_MAX'        : 0.06 * ns
-#                  , 'Hlt2IncPhiDecision'        : "HLT_PASS_RE('Hlt2IncPhiDecsion')"
-#                  , 'PrescaleBetac2PhiP'        : 1.0
-#                  , 'PostscaleBetac2PhiP'       : 1.0
-#                 },
-#'STREAMS' : ['CharmCompleteEvent'],
-#'WGs' : ['BandQ']
-#}
-#
-
 Betac2PhiP = {
     'BUILDERTYPE'  : 'StrippingBetac2PhiPConf',
     'CONFIG'       : {
                     'Daug_TRCHI2DOF_MAX'        : 10.     
-                  , 'Daug_P_MIN'                : 10000.0 * MeV 
-                  , 'Daug_PT_MIN'               : 400.0 * MeV
-                  , 'Daug_MIPDV'                : 0.05 * mm
-                  , 'Proton_PIDpi_MIN'          : 20.0
-                  , 'Proton_PIDK_MIN'           : 10.0 
-                  , 'Phi_WIN'                   : 10.0 * MeV
-                  , 'Phi_PT'                    : 0.0 * MeV         
+                  , 'Daug_P_MIN'                : 1200.0*MeV 
+                  , 'Daug_PT_MIN'               : 200.0*MeV
+                  , 'Daug_MIPDV'                : 0.0      # mm
+                  , 'Proton_PIDpi_MIN'          : 10.0
+                  , 'Proton_PIDK_MIN'           :  0.0 
+                  , 'Phi_WIN'                   : 20.0 * MeV
+                  , 'Phi_PT'                    : 1700.0*MeV         
                   , 'Betac_AM_MIN'              : 1950.0 * MeV 
-                  , 'Betac_AM_MAX'              : 2800.0 * MeV 
-                  , 'Betac_BPVDIRA_MIN'         : 0.9999
+                  , 'Betac_AM_MAX'              : 3300.0 * MeV 
+                  , 'Betac_BPVDIRA_MIN'         : 0.999   
                   , 'Betac_VCHI2VDOF_MAX'       : 10.0   
                   , 'Betac_BPVLTIME_MIN'        : 0.0 * ns
-                  , 'Betac_BPVLTIME_MAX'        : 0.006 * ns
-                  , 'Hlt2IncPhiDecision'        : "HLT_PASS_RE('Hlt2IncPhiDecision')"
+                  , 'Betac_BPVLTIME_MAX'        : 0.06 * ns
+                  , 'Hlt2IncPhiDecision'        : "HLT_PASS_RE('Hlt2IncPhiDecsion')"
                   , 'PrescaleBetac2PhiP'        : 1.0
                   , 'PostscaleBetac2PhiP'       : 1.0
                  },

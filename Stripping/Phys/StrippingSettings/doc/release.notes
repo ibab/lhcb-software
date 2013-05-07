@@ -4,7 +4,12 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2013-06-06 - Lucio Anderlini (BandQ)
+! 2013-05-07 - Anton Poluektov 
+  - Revert modification of Stripping20r1p1 config
+  - Move Betac line to Charm stream (from CharmCompleteEvent) in Stripping20r0p1 
+    and update stripping20r0p1 dbase
+
+! 2013-05-06 - Lucio Anderlini (BandQ)
   - Fixed the zero-retention bug in Betac pentaquark lines (Yury Shch.)
   - Corrected the name of HeavyBaryons lines back to HeavyBaryon (Raphael)
 

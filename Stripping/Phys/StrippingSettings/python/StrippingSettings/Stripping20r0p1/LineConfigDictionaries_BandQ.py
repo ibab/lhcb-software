@@ -110,7 +110,7 @@ Betac2PhiP = {
                   , 'PrescaleBetac2PhiP'        : 1.0
                   , 'PostscaleBetac2PhiP'       : 1.0
                  },
-'STREAMS' : ['CharmCompleteEvent'],
+'STREAMS' : ['Charm'],
 'WGs' : ['BandQ']
 }
 
