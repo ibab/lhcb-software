@@ -1,4 +1,3 @@
-// $Id:
 #ifndef CALODATAPROVIDER_H 
 #define CALODATAPROVIDER_H 1
 
@@ -25,7 +24,6 @@ public:
   virtual ~CaloDataProvider( ); ///< Destructor
 
   virtual StatusCode initialize();
-  virtual StatusCode finalize();
   void clear();
   void cleanData(int feb);
   int    adc(LHCb::CaloCellID id, int def = 0);

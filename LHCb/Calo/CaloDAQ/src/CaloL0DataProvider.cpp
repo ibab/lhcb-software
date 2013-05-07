@@ -39,10 +39,6 @@ CaloL0DataProvider::~CaloL0DataProvider() {}
 //=========================================================================
 //  Initialisation, according to the name -> detector
 //=========================================================================
-StatusCode CaloL0DataProvider::finalize ( ) {
-  return CaloReadoutTool::finalize();
-}
-
 StatusCode CaloL0DataProvider::initialize ( ) {
   StatusCode sc = CaloReadoutTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm

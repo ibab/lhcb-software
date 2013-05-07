@@ -137,7 +137,7 @@ StatusCode CaloAdcFromRaw::execute() {
       catch(GaudiException &exc) { 
         counter("Duplicate CaloADC") += 1;
         std::ostringstream os("");
-        os << "Duplicate CaloADC for channel " << id << endmsg;
+        os << "Duplicate CaloADC for channel " << id << std::endl;
         Warning(os.str(),StatusCode::SUCCESS).ignore();
         int card =  m_data->deCalo()->cardNumber( id );
         int tell1=  m_data->deCalo()->cardToTell1( card);
@@ -177,7 +177,7 @@ StatusCode CaloAdcFromRaw::execute() {
       catch(GaudiException &exc) { 
         counter("Duplicate L0ADC") += 1;
         std::ostringstream os("");
-        os << "Duplicate L0ADC for channel " << id << endmsg;
+        os << "Duplicate L0ADC for channel " << id << std::endl;
         Warning(os.str(),StatusCode::SUCCESS).ignore();
         int card =  m_data->deCalo()->cardNumber( id );
         int tell1=  m_data->deCalo()->cardToTell1( card);
@@ -212,7 +212,7 @@ StatusCode CaloAdcFromRaw::execute() {
         catch(GaudiException &exc) { 
           counter("Duplicate L0Bit") += 1;
           std::ostringstream os("");
-          os << "Duplicate L0Bit for channel " << id << endmsg;
+          os << "Duplicate L0Bit for channel " << id << std::endl;
           Warning(os.str(),StatusCode::SUCCESS).ignore();
           int card =  m_data->deCalo()->cardNumber( id );
           int tell1=  m_data->deCalo()->cardToTell1( card);
@@ -224,16 +224,6 @@ StatusCode CaloAdcFromRaw::execute() {
     }
   }
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloAdcFromRaw::finalize() {
-
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

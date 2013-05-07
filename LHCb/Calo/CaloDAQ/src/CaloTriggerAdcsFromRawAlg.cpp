@@ -129,15 +129,4 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
   if(m_statusOnTES)m_l0AdcTool->putStatusOnTES();  
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloTriggerAdcsFromRawAlg::finalize() {
-
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
 //=============================================================================

@@ -35,11 +35,6 @@ CaloTriggerAdcsFromRaw::~CaloTriggerAdcsFromRaw() {}
 //=========================================================================
 //  Initialise
 //=========================================================================
-
-StatusCode CaloTriggerAdcsFromRaw::finalize ( ) {
-  return CaloReadoutTool::finalize();
-}
-
 StatusCode CaloTriggerAdcsFromRaw::initialize ( ) {
   StatusCode sc = CaloReadoutTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool

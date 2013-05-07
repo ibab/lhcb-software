@@ -106,13 +106,3 @@ StatusCode CaloTriggerBitsFromRawAlg::execute() {
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloTriggerBitsFromRawAlg::finalize() {
-
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

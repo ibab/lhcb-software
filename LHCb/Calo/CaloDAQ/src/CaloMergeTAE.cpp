@@ -1,4 +1,3 @@
-// $Id: CaloMergeTAE.cpp,v 1.6 2009-11-24 19:53:42 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -127,16 +126,6 @@ StatusCode CaloMergeTAE::execute() {
   }
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloMergeTAE::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

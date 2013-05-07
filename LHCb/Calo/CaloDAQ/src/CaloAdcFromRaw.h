@@ -1,4 +1,3 @@
-// $Id: CaloAdcFromRaw.h,v 1.1 2009-08-17 12:11:15 odescham Exp $
 #ifndef CALOADCFROMRAW_H
 #define CALOADCFROMRAW_H 1
 
@@ -27,7 +26,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

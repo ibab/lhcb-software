@@ -79,16 +79,5 @@ StatusCode CaloDigitFilterAlg::execute() {
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloDigitFilterAlg::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;  
-
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================
 
   

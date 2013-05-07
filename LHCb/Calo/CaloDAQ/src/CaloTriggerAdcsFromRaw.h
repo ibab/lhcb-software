@@ -1,4 +1,3 @@
-// $Id: CaloTriggerAdcsFromRaw.h,v 1.9 2009-10-12 16:03:54 odescham Exp $
 #ifndef CALOTRIGGERADCSFROMRAW_H 
 #define CALOTRIGGERADCSFROMRAW_H 1
 
@@ -24,7 +23,6 @@ public:
   virtual ~CaloTriggerAdcsFromRaw( ); ///< Destructor
 
   virtual StatusCode initialize();
-  virtual StatusCode finalize();
 
 
   const std::vector<LHCb::L0CaloAdc>& adcs( );

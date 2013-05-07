@@ -39,10 +39,6 @@ CaloEnergyFromRaw::~CaloEnergyFromRaw() {}
 //=========================================================================
 //  Initialisation, according to the name -> detector
 //=========================================================================
-StatusCode CaloEnergyFromRaw::finalize ( ) {
-  return CaloReadoutTool::finalize();
-}
-
 StatusCode CaloEnergyFromRaw::initialize ( ) {
   StatusCode sc = CaloReadoutTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
