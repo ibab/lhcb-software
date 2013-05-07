@@ -1,7 +1,7 @@
 project STRIPPING
 
-use PHYS      PHYS_v16r1
-use LBCOM     LBCOM_v13r1p1
+use PHYS      PHYS_v16r6
+use LBCOM     LBCOM_v13r6p1
 
 build_strategy	with_installarea
 setup_strategy	root
