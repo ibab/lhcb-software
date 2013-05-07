@@ -104,7 +104,7 @@ const int PREVIOUSVERTEXKEY = 978123;
 
 const LHCb::RecVertex ZooWriter::calculateSecondIP(ZooP* zp, const LHCb::Particle* p, const LHCb::RecVertex* myBestVertex) {
   LHCb::RecVertex pv;
-  bool refit = (NULL==myBestVertex);
+  bool gotavertex = (NULL!=myBestVertex);
   double best_ipSig = 999.0;
   double best_ip = 999.0;
   double secondbest_ip = 999.0;//this should be saved, too
@@ -120,7 +120,7 @@ const LHCb::RecVertex ZooWriter::calculateSecondIP(ZooP* zp, const LHCb::Particl
   LHCb::RecVertex::Range vtcs = primaryVertices();
 
   if (myBestVertex) {
-    LHCb::RecVertex myVertex(myBestVertex  ? (*myBestVertex) : LHCb::RecVertex());
+    LHCb::RecVertex myVertex(*myBestVertex);
     if (m_dist->distance(p, &myVertex, desired_ip, desired_ipChi2)) {
       desired_ipSig = std::sqrt(desired_ipChi2);
     } else {
@@ -131,18 +131,24 @@ const LHCb::RecVertex ZooWriter::calculateSecondIP(ZooP* zp, const LHCb::Particl
     zp->m_ip = desired_ip;
     zp->m_ipSig = desired_ipSig;
 
+    if (!m_secondIpSig) { // we don't need to search for the second best IP
+      return *myBestVertex;
+    }
   }
 
   BOOST_FOREACH(const LHCb::RecVertex* constvtx, vtcs) {
-
+    if (UNLIKELY(NULL==constvtx)) {
+      Error("NULL pointer in rec vertex container",StatusCode::SUCCESS,10).ignore();
+      continue;
+    }
     if (!constvtx->isPrimary()) continue;
-    LHCb::RecVertex vtx(constvtx  ? (*constvtx) : LHCb::RecVertex());
+    LHCb::RecVertex vtx(*constvtx);
     if (constvtx) {
       vtx.addInfo(PREVIOUSVERTEXKEY,(double)(int)constvtx->key());
     }
     //do not refit for daughter particles if PV already refitted from
     //mother
-    if (refit && !m_pvReFitter->remove(p,&vtx)) continue;
+    if (!gotavertex && !m_pvReFitter->remove(p,&vtx)) continue;
     if (int(vtx.tracks().size()) <= m_minTracksPV) continue;
     if ( m_dist->distance(p, &vtx, curr_ip, curr_ipChi2) ) {
       curr_ipSig = std::sqrt(curr_ipChi2);
@@ -180,7 +186,7 @@ const LHCb::RecVertex ZooWriter::calculateSecondIP(ZooP* zp, const LHCb::Particl
   // in the same manner, if m_intelligentPV is switched off, myBestVertex will be the DaVinci default vertex and the standard IP will be the
   // DaVinci default IP and the second best IP will be whatever is zoontuple standard
 
-  if (NULL==myBestVertex) { // A) above
+  if (!gotavertex) { // A) above
     if (m_secondIpSig)
     {
       zp->m_ip = best_ip;
@@ -201,7 +207,7 @@ const LHCb::RecVertex ZooWriter::calculateSecondIP(ZooP* zp, const LHCb::Particl
     }
   } // A) or B)
 
-  return ((NULL==myBestVertex)?pv:(*myBestVertex));
+  return (gotavertex:(*myBestVertex):pv);
 } // calculateSecondIP
 
 
@@ -396,7 +402,7 @@ ZooWriter::ZooWriter(const std::string& name, ISvcLocator *svc) :
   declareProperty( "MCList",               m_MCList);
   declareProperty( "WriteDLL",             m_writeDLL = false);
   declareProperty( "IntelligentPV",        m_intelligentPV = true);
-  declareProperty( "SecondIpSig",          m_secondIpSig = false);
+  declareProperty( "SecondIpSig",          m_secondIpSig = true);
   declareProperty( "OnlyTreefitter",       m_onlyTreefitter = false);
   declareProperty( "MinTracksPV",          m_minTracksPV = 0);
 
