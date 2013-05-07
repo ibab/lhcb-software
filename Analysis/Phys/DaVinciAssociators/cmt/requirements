@@ -3,7 +3,7 @@
 # Maintainer : Vladimir Gligorov
 
 package           DaVinciAssociators
-version           v9r5
+version           v9r5p1
 
 # This template is an example for a standard Algorithm package
 #
