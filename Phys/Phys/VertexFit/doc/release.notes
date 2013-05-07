@@ -4,6 +4,8 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+!========================= VertexFit v6r15 2013-05-07 =========================
+
 ! 2013-05-06 - Chris Jones
  - Protect OfflineVertexFitter against an invalid ParticleID value in 
    isResonance. An exception is now thrown in this situation.
