@@ -3,6 +3,25 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v33r4>2013-05-07 DaVinci v33r4</A></H1><PRE>
+
+New development release based on the LHCb v35r6 stack.
+
+Executive Summary :-
+
+- Core changes 
+ . Support for building with new compilers, gcc 4.7 and clang 3.2
+
+- In VertexFit :
+ . Protect OfflineVertexFitter against an invalid ParticleID value in 
+   isResonance. An exception is now thrown in this situation.
+
+- DaVinciTrackScaling :
+ . New package, including components moved from Phys/DaVinciTools
+
+- AnalysisPython
+ . Various improvements related to TTrees.
+
 </PRE><H1><A NAME=v33r3p3>2013-05-02 DaVinci v33r3p3</A></H1><PRE>
 
 A patch on top of DaVinci v33r3p2, to fix an issue with the 
