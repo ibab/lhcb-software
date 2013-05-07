@@ -3,6 +3,41 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v16r6>2013-05-07 Phys v16r6 </A></H1><PRE>
+Development release, based on Rec v14r6, LHCb v35r6.
+
+- Packages Updated :
+   SelectionLine, BBDecTreeTool, DaVinciInterfaces, DaVinciMCKernel,
+   DaVinciTools, DaVinciTransporter, HighPtJets, LoKiAlgo,
+   LoKiArrayFunctors, LoKiFitters, LoKiPhys, LoKiProtoParticles,
+   LoKiTracks, NeuroBayesTools, TisTosTobbing, PhysConf, 
+   ParticleMaker, VertexFit
+
+- In DaVinciTools :
+ . Small CPU improvement to SubstitutePIDTool
+ . Move Track scaling and smearing tools to dedicated package 
+   Phys/DaVinciTrackScaling in Analysis
+
+- In LoKiArrayFunctors :
+ . Add missing default constuctors, to fix clang compilation errors
+
+- In LoKiFitters :
+ . Minor improvement in the treatment of bad cases
+
+- In LoKiPhys :
+ . Fix compilation with clang, by adding missing default constructors
+ . Fixed an error that was causing a segfault in clang++
+
+- In LoKiProtoParticles :
+ . Fix compilation by clang, by adding missing default constructors
+
+- LoKiTracks :
+ . Fix compilation with clang, by adding missing default constructors
+
+- In VertexFit :
+ . Protect OfflineVertexFitter against an invalid ParticleID value in 
+   isResonance. An exception is now thrown in this situation.
+
 </PRE><H1><A NAME=v16r5>2013-04-05 Phys v16r5 </A></H1><PRE>
 Development release, based on Rec v14r5, LHCb v35r5.
 
