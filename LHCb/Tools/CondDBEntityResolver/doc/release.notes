@@ -5,6 +5,10 @@
 !               CondDB URLs into XML documents
 !-----------------------------------------------------------------------------
 
+! 2013-05-07 - Marco Clemencic
+ - Imported the class CondDBCompression from Det/DetCond, including dictionary
+   and tests.
+
 !========================= CondDBEntityResolver v5r5 2013-04-29 =========================
 ! 2013-02-21 - Liang Sun
  - Added support for compressed CondDB with the class CondDBCompression

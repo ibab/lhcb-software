@@ -9,7 +9,7 @@ extern "C"{
 #include "GaudiKernel/GaudiException.h"
 
 // local
-#include "DetCond/CondDBCompression.h"
+#include "CondDBCompression.h"
 #include "base64.h"
 
 #define MAXBUFFSIZE  33554432 // 32MB maximum size for xml buffer
@@ -29,7 +29,7 @@ std::string CondDBCompression::compress(const std::string& strin, const int8_t m
     case 0: //LZMA method from ROOT package
         srcsize = strin.length();
         R__zipLZMA(9, &srcsize, const_cast<char*>(strin.c_str()), (int*)(&destLen), dest, &retbit);
-        if (retbit == 0 ) 
+        if (retbit == 0 )
             throw GaudiException("Error during LZMA compression", "CondDBCompression.cpp", StatusCode::FAILURE );
         destLen = retbit;
         break;
@@ -37,7 +37,7 @@ std::string CondDBCompression::compress(const std::string& strin, const int8_t m
         delete [] dest;
         return strin;
     }
-	
+
     std::string deststr(dest, destLen);
 	delete [] dest;
 	std::string out;
@@ -64,8 +64,8 @@ std::string CondDBCompression::decompress(const std::string& strin){
     	int retbit(0);
         switch (method){
         case 0:
-            R__unzipLZMA((int*)&output_length, (unsigned char*)(const_cast<char*>(zdata.c_str())), (int*)(&destLen), (unsigned char*)(dest), &retbit);    
-            if (retbit == 0 ) 
+            R__unzipLZMA((int*)&output_length, (unsigned char*)(const_cast<char*>(zdata.c_str())), (int*)(&destLen), (unsigned char*)(dest), &retbit);
+            if (retbit == 0)
                 throw GaudiException("Error during LZMA decompression", "CondDBCompression.cpp", StatusCode::FAILURE );
             destLen = retbit;
             break;

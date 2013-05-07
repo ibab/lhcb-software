@@ -8,6 +8,7 @@
 #ifndef CONDDBCOMPRESSION_H_
 #define CONDDBCOMPRESSION_H_
 
+#include <string>
 #include <stdint.h>
 
 /** @class CondDBCompression CondDBCompression.h DetCond/CondDBCompression.h

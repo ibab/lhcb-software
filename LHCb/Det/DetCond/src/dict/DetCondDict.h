@@ -20,7 +20,6 @@
 #include "DetCond/ICondDBEditor.h"
 #include "DetCond/ICondDBReader.h"
 #include "DetCond/ICOOLConfSvc.h"
-#include "DetCond/CondDBCompression.h"
 // ============================================================================
 // CORAL (not available through PyCool)
 // ============================================================================

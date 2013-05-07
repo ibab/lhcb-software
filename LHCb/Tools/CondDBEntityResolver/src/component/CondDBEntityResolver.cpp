@@ -18,7 +18,7 @@
 #include "CoolKernel/IRecord.h"
 #include "CoolKernel/RecordException.h"
 
-#include "DetCond/CondDBCompression.h"
+#include "CondDBCompression.h"
 
 // local
 #include "CondDBEntityResolver.h"

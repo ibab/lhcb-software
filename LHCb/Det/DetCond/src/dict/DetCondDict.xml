@@ -6,7 +6,6 @@
   <class name="ICondDBEditor"        />
   <class name="ICondDBAccessSvc"     />
   <class name="ICOOLConfSvc"         />
-  <class name="CondDBCompression"/>
 
   <class name="coral::IReplicaSortingAlgorithm" />
   <class name="coral::IConnectionService" />

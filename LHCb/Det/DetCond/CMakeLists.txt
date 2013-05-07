@@ -8,16 +8,15 @@ gaudi_depends_on_subdirs(Det/DetDesc
                          GaudiKernel
                          Kernel/LHCbKernel)
 
-find_package(Boost COMPONENTS system)
+find_package(Boost COMPONENTS system thread filesystem)
 find_package(COOL COMPONENTS CoolKernel CoolApplication)
 find_package(CORAL COMPONENTS CoralBase CoralKernel RelationalAccess)
-find_package(BZip2)
 
 gaudi_add_library(DetCondLib
                   src/Lib/*.cpp
                   PUBLIC_HEADERS DetCond
                   INCLUDE_DIRS Boost COOL CORAL
-                  LINK_LIBRARIES Boost COOL CORAL BZip2 DetDescLib GaudiAlgLib GaudiKernel LHCbKernel)
+                  LINK_LIBRARIES Boost COOL CORAL DetDescLib GaudiAlgLib GaudiKernel LHCbKernel)
 
 gaudi_add_module(DetCond
                  src/component/*.cpp
