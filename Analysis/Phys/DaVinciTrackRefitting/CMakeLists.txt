@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciTrackRefitting
 ################################################################################
-gaudi_subdir(DaVinciTrackRefitting v1r3)
+gaudi_subdir(DaVinciTrackRefitting v1r4)
 
 gaudi_depends_on_subdirs(Event/TrackEvent
                          Kernel/LHCbKernel
