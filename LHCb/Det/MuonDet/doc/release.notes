@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2013-05-07 - Marco Cattaneo
+ - Fix clang32 warnings
+
 !========================= MuonDet v9r11 2013-04-29 =========================
 ! 2013-04-26 - Marco Cattaneo
  - Replace some unnecessary dynamic_cast by static_cast, fixes some FORWARD_NULL 

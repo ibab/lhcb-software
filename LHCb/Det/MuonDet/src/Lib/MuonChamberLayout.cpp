@@ -1195,17 +1195,17 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
 
   // do the reflections of the tileID structure into Cartesian coordinates
   if ( 0 == tile.quarter() ){
-    xOffset = xOffset;
-    yOffset = yOffset;
+    //    xOffset = xOffset;
+    //    yOffset = yOffset;
   } else if ( 1 == tile.quarter() ){
-    xOffset = xOffset;
+    //    xOffset = xOffset;
     yOffset = yRatio - (1 + yOffset);
   } else if ( 2 == tile.quarter() ){
     xOffset = xRatio - (1 + xOffset);
     yOffset = yRatio - (1 + yOffset);
   } else if ( 3 == tile.quarter() ){
     xOffset = xRatio - (1 + xOffset);
-    yOffset = yOffset;
+    //    yOffset = yOffset;
   }
 
   if ( m_debug ) {
