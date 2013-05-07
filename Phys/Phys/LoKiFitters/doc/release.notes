@@ -5,9 +5,10 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
-! 2013-04-14 - Vanya Belyaev
+!========================= LoKiFitters v4r5 2013-05-07 =========================
 
- - minor improvement in the treatment of bas cases 
+! 2013-04-14 - Vanya Belyaev
+ - Minor improvement in the treatment of bad cases 
 
 !========================= LoKiFitters v4r4 2012-11-30 =========================
 
