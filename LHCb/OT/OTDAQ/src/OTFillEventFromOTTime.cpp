@@ -45,10 +45,8 @@ OTFillEventFromOTTime::OTFillEventFromOTTime( const std::string& name,
   , dataContainer(NULL)
   , goldatacontainer(NULL)
   , finalBuf(NULL)
-  , aBank(NULL)
-  //Fixed Numbers of Banks and of Gols
+  //Fixed Number of Banks
   , numberOfBanks(48)
-  , numberOfGols(9)
 {
   // Constructor
 

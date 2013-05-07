@@ -1,4 +1,3 @@
-// $Id: OTFillEventFromOTTime.h,v 1.3 2007-11-26 11:08:30 wouter Exp $
 #ifndef OTDAQ_OTFILLEVENTFROMOTTIME_H 
 #define OTDAQ_OTFILLEVENTFROMOTTIME_H 1
 
@@ -57,10 +56,10 @@ private:
   mBank* dataContainer;
   mGol* goldatacontainer;
   dataBuffer* finalBuf;
-  dataBank* aBank;
+  //  dataBank* aBank;
 
   int numberOfBanks;
-  int numberOfGols;
+  //  int numberOfGols;
   
   // converts channel ID number into bank number for sorting
   int chID2int(LHCb::OTChannelID otChannel); // int is bank ID
