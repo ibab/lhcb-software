@@ -5,6 +5,8 @@ $Id$
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiArrayFunctors v10r1 2013-05-07 =========================
+
 ! 2013-04-23 - Chris Jones
  - Add missing default constuctors, to fix clang compilation errors
 
