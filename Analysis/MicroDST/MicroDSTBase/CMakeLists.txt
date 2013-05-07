@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MicroDSTBase
 ################################################################################
-gaudi_subdir(MicroDSTBase v3r3)
+gaudi_subdir(MicroDSTBase v3r3p1)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          GaudiKernel
