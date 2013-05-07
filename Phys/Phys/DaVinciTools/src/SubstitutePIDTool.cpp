@@ -1,16 +1,21 @@
 // $Id: $
 // Include files
 
+// STL
+#include <math.h>
+
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "LoKi/IDecay.h"
-#include "LoKi/Decays.h"
-//#include "LoKi/select.h"
-#include "Kernel/ParticleProperty.h"
-#include "Kernel/IParticlePropertySvc.h"
-#include "LoKi/ParticleProperties.h"
 #include "GaudiKernel/StatEntity.h"
 #include "GaudiKernel/IAlgContextSvc.h"
+
+// Loki
+#include "LoKi/IDecay.h"
+#include "LoKi/Decays.h"
+#include "LoKi/ParticleProperties.h"
+
+#include "Kernel/ParticleProperty.h"
+#include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/DecayTree.h"
 
 // local
@@ -72,39 +77,45 @@ StatusCode SubstitutePIDTool::decodeCode( const SubstitutionMap& newMap )
   //
   // decode "substitutions"
   //
-  if (msgLevel(MSG::DEBUG)) 
+  if (msgLevel(MSG::DEBUG))
     debug() << "decodeCode newMap " << newMap << endmsg ;
-  if ( newMap.empty() ){
+  if ( newMap.empty() )
+  {
     if (msgLevel(MSG::DEBUG))
       debug() << "passed an empty map. decodeCode will do nothing" << endmsg ;
-    if ( m_map.empty() && m_initialized ) 
-    { 
+    if ( m_map.empty() && m_initialized )
+    {
       return Error ( "Empty 'Substitute' map passed to decodeCode" );
     }
-    else return StatusCode::SUCCESS ;
-  } else {
-    if (msgLevel(MSG::DEBUG)) 
+    else 
+    {
+      return StatusCode::SUCCESS ;
+    }
+  }
+  else 
+  {
+    if (msgLevel(MSG::DEBUG))
       debug() << "passed a non empty map. decodeCode will update." << endmsg ;
     m_map = newMap ;
   }
-  if ( m_map.empty() ) 
+  if ( m_map.empty() )
   {
     // could happen if tool is configured directly
-    return Error ( "Empty 'Substitute' map" ) ; 
-  } 
+    return Error ( "Empty 'Substitute' map" ) ;
+  }
   //
   if (msgLevel(MSG::DEBUG)) debug() << "decodeCode map " << m_map << endmsg ;
   // get the factory
   Decays::IDecay* factory = tool<Decays::IDecay>( "LoKi::Decay" );
   //
   m_subs.clear() ;
-  LHCb::IParticlePropertySvc* ppSvc = 
+  LHCb::IParticlePropertySvc* ppSvc =
     svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
   for ( SubstitutionMap::const_iterator item = m_map.begin() ;
         m_map.end() != item ; ++item )
   {
     /// construct the tree
-    if (msgLevel(MSG::DEBUG)) 
+    if (msgLevel(MSG::DEBUG))
       debug() << "* -> Map: " << item->first << " : " << item->second << endmsg ;
     Decays::IDecay::Tree tree = factory->tree ( item->first ) ;
     if ( !tree  )
@@ -122,7 +133,7 @@ StatusCode SubstitutePIDTool::decodeCode( const SubstitutionMap& newMap )
     if ( !pp )
     { return Error ( "Unable to find ParticleID for '" + item->second + "'" ) ; }
     //
-    if (msgLevel(MSG::DEBUG)) 
+    if (msgLevel(MSG::DEBUG))
       debug() << "* -> Inserting " << tree
               << " in map for PID " <<  pp->particleID() << endmsg ;
     //
@@ -131,13 +142,13 @@ StatusCode SubstitutePIDTool::decodeCode( const SubstitutionMap& newMap )
   //
   if ( m_subs.size() != m_map.size() )
   { return Error("Mismatch in decoded substitution container") ; }
-  if (msgLevel(MSG::DEBUG)) 
+  if (msgLevel(MSG::DEBUG))
   {
     debug() << "ISub Size: " << m_subs.size() << " " << m_map.size() << endmsg ;
     for ( Substitutions::iterator isub = m_subs.begin() ;
-          m_subs.end() != isub ; ++isub ) 
+          m_subs.end() != isub ; ++isub )
     {
-      debug() << "* -> ISub: " << isub -> m_pid 
+      debug() << "* -> ISub: " << isub -> m_pid
               << " Size: " << m_subs.size() << endmsg ;
     }
   }
@@ -151,7 +162,7 @@ StatusCode SubstitutePIDTool::decodeCode( const SubstitutionMap& newMap )
 // ============================================================================
 // loop over particles
 // ============================================================================
-StatusCode 
+StatusCode
 SubstitutePIDTool::substitute( const LHCb::Particle::ConstVector& input,
                                LHCb::Particle::ConstVector& output )
 {
@@ -189,7 +200,9 @@ unsigned int SubstitutePIDTool::substitute ( LHCb::Particle* p )
   for ( Substitutions::iterator isub = m_subs.begin() ;
         m_subs.end() != isub ; ++isub )
   {
-    if (msgLevel(MSG::DEBUG)) debug() << "ISub: " << isub -> m_pid << " Size: " << m_subs.size() << endmsg ;
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << "ISub: " << isub -> m_pid << " Size: " << m_subs.size() 
+              << endmsg ;
     LHCb::Particle** _p = &p ;
     //
     LHCb::Particle::ConstVector found ;
@@ -230,15 +243,13 @@ unsigned int SubstitutePIDTool::correctP4 ( LHCb::Particle* p )
     const Gaudi::LorentzVector& oldMom = p->momentum() ;
     //
     const double newMass   = LoKi::Particles::massFromPID ( p->particleID() ) ;
-    const double newEnergy = ::sqrt ( oldMom.P2() + newMass*newMass ) ;
+    const double newEnergy = std::sqrt ( oldMom.P2() + newMass*newMass ) ;
     //
-    Gaudi::LorentzVector newMom = Gaudi::LorentzVector () ;
-    newMom.SetXYZT ( oldMom.Px () ,
-                     oldMom.Py () ,
-                     oldMom.Pz () , newEnergy ) ;
-    //
-    p -> setMomentum(newMom) ;
-    p -> setMeasuredMass(newMass);
+    p -> setMomentum( Gaudi::LorentzVector( oldMom.Px() ,
+                                            oldMom.Py() ,
+                                            oldMom.Pz() , 
+                                            newEnergy  ) );
+    p -> setMeasuredMass( newMass );
     return 1 ;
   }
   //
@@ -258,7 +269,7 @@ unsigned int SubstitutePIDTool::correctP4 ( LHCb::Particle* p )
     sum += dau->momentum() ;
   }
   //
-  if (  0 != num )
+  if ( 0 != num )
   {
     p -> setMomentum     ( sum     ) ;
     p -> setMeasuredMass ( sum.M() ) ;

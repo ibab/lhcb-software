@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-05-07 - Chris Jones
+ - Small CPU improvement to SubstitutePIDTool
+
 ! 2013-04-27 - Chris Jones
  - Move Track scaling and smearing tools to dedicated package 
    Phys/DaVinciTrackScaling in Analysis
