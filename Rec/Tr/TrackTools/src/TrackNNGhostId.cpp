@@ -73,7 +73,6 @@ DECLARE_TOOL_FACTORY( TrackNNGhostId )
       m_nOTCont(0)
 {
   declareInterface<ITrackManipulator>(this);
-  declareProperty("IsMC2012Tuning",m_tuningMC12=false);
 }
 
 //=============================================================================
@@ -145,9 +144,6 @@ StatusCode TrackNNGhostId::initialize()
     return Error("Failed to initialize", sc,1);
   }
   incSvc()->addListener(this, IncidentType::BeginEvent); 
-  if (m_tuningMC12) {
-    Error("deprecated property, will use latest tuning. Please fix.", StatusCode::SUCCESS,1).ignore();
-  }
 
   /**
    *   initialize input variable names as used for training

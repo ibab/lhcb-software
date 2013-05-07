@@ -65,8 +65,6 @@ private:
   IHitExpectation* m_otExpectation;
   IVeloExpectation* m_veloExpectation;
 
-  bool m_tuningMC12;
-
   const Rich::TabulatedFunction1D* m_FlattenLookupTableLongtrack;
   const Rich::TabulatedFunction1D* m_FlattenLookupTableVelo;
   const Rich::TabulatedFunction1D* m_FlattenLookupTableUpstream;
