@@ -48,8 +48,10 @@ New development release, built against Phys v16r5.
 - Packages Updated :
    HltSelChecker, AnalysisPython, DaVinciTrackRefitting, 
    DecayTreeTuple, DecayTreeTupleMC, DecayTreeTupleMuonCalib,
-   DecayTreeTupleReco, DecayTreeTupleTrigger, FlavourTagging,
-   JetAccessoriesMC, JetTagging, LoKiAlgoMC, TrackSmearing
+   DecayTreeTupleReco, DecayTreeTupleTrigger, DisplVerticesMC,
+   DecayTreeTupleMuonCalib, DecayTreeTupleTrigger
+   FlavourTagging, JetAccessoriesMC, JetTagging, LoKiAlgoMC, 
+   TrackSmearing
 
 - In DaVinciTrackRefitting :
  . Added ParticleRefitter algorithm to update existing Particles in
@@ -77,6 +79,15 @@ New development release, built against Phys v16r5.
  . Add relation tables between MCJets and MCParticles in MCJetMakerAlg.
    Also needed to remove makeTree and create the TES container instead
    so that jets get saved at Phys/algoName+Jets/Particles 
+
+- In DecayTreeTupleMuonCalib :
+ . Implemented code to extrapolate a track to the muon system and find the region 
+   it crosses in each station.
+ . Added the region of the extrapolated track in M2 to the ntuple.
+
+- In DecayTreeTupleTrigger :
+ . TupleToolTISTOS: fill stripping info only if m_stripping is true
+   Looely related to https://savannah.cern.ch/bugs/?101236
 
 - In TrackSmearing :
  . Fixed setting up the settings for different years.

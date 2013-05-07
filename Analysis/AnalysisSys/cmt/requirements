@@ -27,7 +27,7 @@ use  VertexFitCheck             v1r8p3   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r3p1   Phys   # Juan Palacios
 use  FlavourTaggingChecker      v6r13p1  Phys   # Marc Grabalosa
 use  ParticleMakerChecker       v1r5p1   Phys   # Chris Jones
-use  DisplVerticesMC            v1r4p3   Phys   # Victor Coco
+use  DisplVerticesMC            v1r4p4   Phys   # Victor Coco
 use  JetTagging                 v1r1     Phys   # Cedric Potterat
 use  JetAccessories		v2r1     Phys   # Victor Coco, Cedric Potterat
 use  JetAccessoriesMC		v2r3	 Phys   # Victor Coco, Cedric Potterat
@@ -40,8 +40,8 @@ use  DecayTreeTupleReco         v1r2     Phys
 use  DecayTreeTupleDalitz       v1r0     Phys
 use  DecayTreeTupleJets         v1r1p1   Phys
 use  DecayTreeTupleMC           v1r2     Phys
-use  DecayTreeTupleTrigger      v1r0p1   Phys
-use  DecayTreeTupleMuonCalib    v1r1     Phys
+use  DecayTreeTupleTrigger      v1r1     Phys
+use  DecayTreeTupleMuonCalib    v1r2     Phys
 
 ####################################################################
 
