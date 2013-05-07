@@ -1,7 +1,7 @@
 ################################################################################
 # Package: StrippingSys
 ################################################################################
-gaudi_subdir(StrippingSys v6r2p5)
+gaudi_subdir(StrippingSys v6r6)
 
 gaudi_depends_on_subdirs(Phys/CommonParticles
                          Phys/DisplVertices
