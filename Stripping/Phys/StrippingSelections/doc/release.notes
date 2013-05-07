@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-05-07 - Lucio Anderlini (for Yury Shcheglov)
+ - Committed bug fix for Betac2PhiP line
+
 ! 2013-05-04 - Chris Thomas
  - Added c.c. decay to B0->D*h line in Beauty2Charm_B2DXBuilder.py
 

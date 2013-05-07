@@ -5,7 +5,7 @@ Adapted to current stripping framework by Y. Shcheglov.
 '''
 
 __author__ = ['Yury Shcheglov', 'Alexey Dzyuba']
-__date__ = '12/04/2012 modified 21/05/2012  by NRS.  Modified 4/12/2012 and  18/03/2013 by Y. Shcheglov'
+__date__ = '12/04/2012 modified 21/05/2012  by NRS.  Modified 4/12/2012, 18/03/2013, 7/05/2013 by Y. Shcheglov'
 __version__ = '$Revision: 3.0 $'
 
 __all__ = ( 'StrippingBetac2PhiPConf',
@@ -158,20 +158,20 @@ def makeBetac2PhiP(name
 
 default_config = {
                     'Daug_TRCHI2DOF_MAX'        : 10.     
-                  , 'Daug_P_MIN'                : 1200.0*MeV 
-                  , 'Daug_PT_MIN'               : 200.0*MeV
-                  , 'Daug_MIPDV'                : 0.0      # mm
-		  , 'Proton_PIDpi_MIN'          : 10.0
-                  , 'Proton_PIDK_MIN'           :  0.0 
-                  , 'Phi_WIN'                   : 20.0 * MeV
-                  , 'Phi_PT'                    : 1700.0*MeV         
+                  , 'Daug_P_MIN'                : 10000.0 * MeV 
+                  , 'Daug_PT_MIN'               : 400.0 * MeV
+                  , 'Daug_MIPDV'                : 0.05 * mm
+		  , 'Proton_PIDpi_MIN'          : 20.0
+                  , 'Proton_PIDK_MIN'           : 10.0 
+                  , 'Phi_WIN'                   : 10.0 * MeV
+                  , 'Phi_PT'                    : 0.0 * MeV         
                   , 'Betac_AM_MIN'              : 1950.0 * MeV 
-                  , 'Betac_AM_MAX'              : 3300.0 * MeV 
-                  , 'Betac_BPVDIRA_MIN'         : 0.999   
+                  , 'Betac_AM_MAX'              : 2800.0 * MeV 
+                  , 'Betac_BPVDIRA_MIN'         : 0.9999
                   , 'Betac_VCHI2VDOF_MAX'       : 10.0   
                   , 'Betac_BPVLTIME_MIN'        : 0.0 * ns
-                  , 'Betac_BPVLTIME_MAX'        : 0.06 * ns
-                  , 'Hlt2IncPhiDecision'        : "HLT_PASS_RE('Hlt2IncPhiDecsion')"
+                  , 'Betac_BPVLTIME_MAX'        : 0.006 * ns
+                  , 'Hlt2IncPhiDecision'        : "HLT_PASS_RE('Hlt2IncPhiDecision')"
                   , 'PrescaleBetac2PhiP'        : 1.0
                   , 'PostscaleBetac2PhiP'       : 1.0
                  }
