@@ -2,6 +2,10 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+! 2013-05-07 - Marco Cattaneo
+ - Fix clang32 warning
+ - Fix UNINIT_CTOR defect
+
 !========================= VeloDet v13r19 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

@@ -1,4 +1,3 @@
-// $Id: DeVeloPhiType.h,v 1.33 2009-07-27 10:36:15 jonrob Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -377,7 +376,7 @@ private:
   double m_innerCoverage;
   double m_outerCoverage;
   //  double m_halfCoverage;
-  bool m_down;
+  //  bool m_down;
 
   /// cache of strip impact parameters for each zone in the ideal frame
   double m_idealDistToOrigin[2];

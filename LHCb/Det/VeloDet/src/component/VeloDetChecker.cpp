@@ -29,6 +29,7 @@ DECLARE_ALGORITHM_FACTORY( VeloDetChecker )
 VeloDetChecker::VeloDetChecker( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
+  , m_velo(NULL)
 {
   declareProperty("VeloDet", m_check = true);
   declareProperty("RSensors",m_r = true);
