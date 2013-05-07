@@ -5,6 +5,8 @@
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= SelectionLine v1r0p3 2013-05-07 =========================
+
 ! 2013-02-27 - Chris Jones
  - Fix -pedantic compilation warnings
 
