@@ -23,6 +23,7 @@ setting = os.getenv("TIM")
 if setting is None:
     setting = "2"
     
+Brunel().DatasetName = setting    
 if setting == "1":
     sample = {"mu": '3.8', "cooling": 'poco', "channel": 'Kstmumu'}
 elif setting == "2":

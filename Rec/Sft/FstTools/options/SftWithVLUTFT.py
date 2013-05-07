@@ -22,7 +22,8 @@ import os
 setting = os.getenv("TIM")
 if setting is None:
     setting = "8"
-
+    
+Brunel().DatasetName = setting
 if setting == "1":
     sample = {"mu": '3.8', "cooling": 'tpg', "channel": 'Kstmumu'}
 elif setting == "2":
@@ -61,10 +62,10 @@ FstConf().TStationType = "FT"
 # XXX Need to figure this cut out
 FstConf().TStationHits = 10
 
-Brunel().EvtMax = 8#*1000#3000
+Brunel().EvtMax = 10000#*1000#3000
 
 CondDB().Upgrade = True
-if sample['cooling'] == "poco":
+if sample['cooling'] == "tpg":
     CondDB().AllLocalTagsByDataType = ["VL_Compact_TPG+UT", "FT"]
 elif sample['cooling'] == "micro":
     CondDB().AllLocalTagsByDataType = ["VL_Compact_MicroChannel+UT", "FT"]
