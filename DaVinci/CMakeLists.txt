@@ -9,7 +9,7 @@ find_package(GaudiProject)
 gaudi_project(DaVinci v33r4
               USE Analysis v10r6
                   Stripping v6r6
-                  Lbcom v13r6
+                  Lbcom v13r6p1
               DATA AppConfig VERSION v3r*
                    FieldMap VERSION v5r*
                    ParamFiles VERSION v8r*
