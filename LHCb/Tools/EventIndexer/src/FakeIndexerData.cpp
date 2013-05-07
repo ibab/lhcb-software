@@ -25,7 +25,11 @@ DECLARE_ALGORITHM_FACTORY(FakeIndexerData)
 FakeIndexerData::FakeIndexerData(const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator), m_eventNumber(0)
 {
-
+  m_files.push_back("first_file.FakeStream.dst");
+  m_files.push_back("second_file.OtherStream.dst");
+  declareProperty("FakeInputFiles", m_files,
+                  "Names of the input files we pretend we are reading "
+                  " (10 events each).");
 }
 
 // ============================================================================
@@ -55,14 +59,12 @@ StatusCode FakeIndexerData::initialize() {
 StatusCode FakeIndexerData::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  // pretend we are opening files
-  if (m_eventNumber == 0) {
-    info() << "Pretend opening file 'first_file.StripFake.dst'" << endmsg;
-    m_incSvc->fireIncident(Incident("first_file.StripFake.dst", IncidentType::BeginInputFile));
-  }
-  else if (m_eventNumber == 10) {
-    info() << "Pretend opening file 'second_file.StripFake.dst'" << endmsg;
-    m_incSvc->fireIncident(Incident("second_file.StripFake.dst", IncidentType::BeginInputFile));
+  if ((m_eventNumber % 10) == 0) {
+    size_t idx = m_eventNumber / 10;
+    if (idx < m_files.size()) {
+      info() << "Pretend opening file '" << m_files[idx] << "'" << endmsg;
+      m_incSvc->fireIncident(Incident(m_files[idx], IncidentType::BeginInputFile));
+    }
   }
 
   // generate and store a RecHeader

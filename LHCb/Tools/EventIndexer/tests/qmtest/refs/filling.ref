@@ -1,5 +1,5 @@
-# --> Including file '/afs/cern.ch/work/m/marcocle/workspace/LHCb_v35r4/Tools/EventIndexer/tests/qmtest/.eclipse/eventindexer.filling.launch.py'
-# <-- End of file '/afs/cern.ch/work/m/marcocle/workspace/LHCb_v35r4/Tools/EventIndexer/tests/qmtest/.eclipse/eventindexer.filling.launch.py'
+# --> Including file '/tmp/marcocle/tmpOPo3e1.py'
+# <-- End of file '/tmp/marcocle/tmpOPo3e1.py'
 # Dumping all configurables and properties (different from default)
 {'ApplicationMgr': {'EvtMax': 20,
                     'EvtSel': 'NONE',
@@ -10,7 +10,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr (GaudiCoreSvc v1r3)
-                                          running on pclhcb117 on Thu Mar 14 15:13:03 2013
+                                          running on lxplus427.cern.ch on Tue May  7 11:26:47 2013
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 EventLoopMgr      WARNING Unable to locate service "EventSelector"
@@ -18,7 +18,7 @@ EventLoopMgr      WARNING No events will be processed from external input.
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-FakeIndexerData      INFO Pretend opening file 'first_file.StripFake.dst'
+FakeIndexerData      INFO Pretend opening file 'first_file.FakeStream.dst'
 FakeIndexerData      INFO Run 123456, Event 1
 FakeIndexerData      INFO Run 123456, Event 2
 FakeIndexerData      INFO Run 123456, Event 3
@@ -29,7 +29,7 @@ FakeIndexerData      INFO Run 123456, Event 7
 FakeIndexerData      INFO Run 123456, Event 8
 FakeIndexerData      INFO Run 123456, Event 9
 FakeIndexerData      INFO Run 123456, Event 10
-FakeIndexerData      INFO Pretend opening file 'second_file.StripFake.dst'
+FakeIndexerData      INFO Pretend opening file 'second_file.OtherStream.dst'
 FakeIndexerData      INFO Run 123456, Event 11
 FakeIndexerData      INFO Run 123456, Event 12
 FakeIndexerData      INFO Run 123456, Event 13

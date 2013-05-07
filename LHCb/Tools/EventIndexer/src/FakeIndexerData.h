@@ -27,6 +27,9 @@ private:
 
   SmartIF<IIncidentSvc> m_incSvc;
   long long m_eventNumber;
+
+  // Name of the fake input files (10 events each).
+  std::vector<std::string> m_files;
 };
 
 }

@@ -4,6 +4,13 @@
 ! Purpose     : Components for generation of indexes of events.
 !-----------------------------------------------------------------------------
 
+! 2013-05-07 - Marco Clemencic
+ - Modified the test to match the new logic.
+
+! 2013-05-06 - Andrey Ustyuzhanin
+ - Added an extrafield for the stream name and fill it from the file name,
+   while the Stripping name must always be provided via options.
+
 !========================= EventIndexer v1r0 2013-03-20 =========================
 ! 2013-03-15 - Marco Clemencic
  - Fix to the CMake configuration.
