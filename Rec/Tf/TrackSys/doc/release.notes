@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2013-05-07 - Paul Seyfert
+ - entirely remove deprecated property from TrackAddNNGhostId (was commented
+   out)
+
 !========================= TrackSys v7r11 2013-04-30 =========================
 ! 2013-04-29 - Thomas Nikodem
  - Replaced UpgradeBestTrackCreator by TrackBestTrackCreator in RecoUpgradeTracking.py
@@ -41,7 +45,7 @@
  - Added a clone killer for the upgrade to the upgrade sequence.
  - Added UT to the decoded detectors.
  - Renamed PatCheckingUpgrade.py into PrUpgradeChecking.py and enabled
-	 the efficiency checkers.
+    the efficiency checkers.
 
 ! 2012-12-12 - Sascha Stahl
  - started implementing a sequence for the upgrade
