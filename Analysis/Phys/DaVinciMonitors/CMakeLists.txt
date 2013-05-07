@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciMonitors
 ################################################################################
-gaudi_subdir(DaVinciMonitors v1r19p3)
+gaudi_subdir(DaVinciMonitors v1r19p4)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/HltEvent
