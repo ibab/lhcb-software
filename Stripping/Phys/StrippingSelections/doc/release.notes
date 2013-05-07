@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+!========================= StrippingSelections v3r24 2013-05-07 =========================
+
 ! 2013-05-07 - Lucio Anderlini (for Yury Shcheglov)
  - Committed bug fix for Betac2PhiP line
 
