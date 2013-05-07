@@ -95,7 +95,6 @@ private:
   DeCalorimeter*   m_calo;
   //
   std::string  m_detectorName;
-  const std::vector<LHCb::RawBank*>* m_banks;
   std::string m_raw;
   std::string m_data;
   std::string m_adcLoc;

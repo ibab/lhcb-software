@@ -89,7 +89,7 @@ StatusCode CaloTriggerBitsFromRawAlg::execute() {
     }catch(GaudiException &exc) { 
       counter("Duplicate l0Bit") += 1;
       std::ostringstream os("");
-      os << "Duplicate l0Bit for channel " << *iCell << " " << endmsg;
+      os << "Duplicate l0Bit for channel " << *iCell << " " << std::endl;
       Warning(os.str(),StatusCode::SUCCESS).ignore();
       int card =  m_l0BitTool->deCalo()->cardNumber( *iCell );
       int tell1=  m_l0BitTool->deCalo()->cardToTell1( card);

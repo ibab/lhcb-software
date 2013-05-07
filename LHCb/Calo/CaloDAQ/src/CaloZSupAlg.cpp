@@ -221,7 +221,7 @@ StatusCode CaloZSupAlg::execute() {
       catch(GaudiException &exc) {
         counter("Duplicate ADC") += 1;
         std::ostringstream os("");
-        os << "Duplicate ADC for channel " << id << endmsg;
+        os << "Duplicate ADC for channel " << id << std::endl;
         Warning(os.str(),StatusCode::SUCCESS).ignore();
         int card =  m_adcTool->deCalo()->cardNumber( id );
         int tell1=  m_adcTool->deCalo()->cardToTell1( card);
@@ -240,7 +240,7 @@ StatusCode CaloZSupAlg::execute() {
       catch(GaudiException &exc) {
         counter("Duplicate Digit") += 1;
         std::ostringstream os("");
-        os << "Duplicate Digit for channel " << id << endmsg;
+        os << "Duplicate Digit for channel " << id << std::endl;
         Warning(os.str(),StatusCode::SUCCESS).ignore();
         int card =  m_adcTool->deCalo()->cardNumber( id );
         int tell1=  m_adcTool->deCalo()->cardToTell1( card);
