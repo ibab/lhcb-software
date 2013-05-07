@@ -76,7 +76,6 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
     ::fprintf(stderr,"Failed to interprete XML tasklist.\n");
     ::exit(EINVAL);
   }
-  mach.setHandler(&ctrl);
   ctrl.display(ctrl.ALWAYS,"Controller task started...");
   DimServer::autoStartOn();
   DimServer::start(utgid.c_str());

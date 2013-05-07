@@ -36,11 +36,6 @@ static ErrCond ret_failure( Machine* actor)  {
   return FSM::SUCCESS;
 }
 
-static ErrCond ret_check( Machine* actor, ErrCond sc, int ok, int fail)  {
-  ioc().send((Machine*)actor, sc == FSM::SUCCESS ? ok : fail);
-  return sc;
-}
-
 /// Convert meta state to name
 static const char* _metaStateName(int state)   {
   switch(state)  {
@@ -52,9 +47,7 @@ static const char* _metaStateName(int state)   {
     MakeName(MACH_CHK_SLV);          /// Machine is checking if all slave tasks completed the transition
     MakeName(MACH_EXEC_ACT);         /// Executing Action
     MakeName(MACH_INACTION);         /// Executing state enter action
-    MakeName(MACH_FINISH);           /// Action function code at end of FSM transition
     MakeName(MACH_FAIL);             /// Code used on failure
-    MakeName(MACH_EVAL_WHEN);
 #undef MakeName
   default: return "UNKNOWN";
   }
@@ -63,7 +56,7 @@ static const char* _metaStateName(int state)   {
 
 /// Class Constructor
 Machine::Machine(const Type *typ, const string& nam)
-  : TypedObject(typ,nam), m_fsm(MACH_IDLE), m_handler(0), m_currState(0), 
+  : TypedObject(typ,nam), m_fsm(MACH_IDLE), m_currState(0), 
     m_currTrans(0), m_direction(Rule::MASTER2SLAVE)
 {
   display(NOLOG,"FSMmachine: creating machine %s of type %s",c_name(),typ->c_name());
@@ -71,10 +64,17 @@ Machine::Machine(const Type *typ, const string& nam)
   Callback cb(this);
   m_fsm.addTransition(MACH_IDLE,     MACH_IDLE,     "Idle->Idle",      cb.make(&Machine::goIdle));
   m_fsm.addTransition(MACH_IDLE,     MACH_OUTACTION,"Idle->OutAct",    cb.make(&Machine::doOutAction));
+
+  // Short protocol: If there are no slaves to be checked (SLAVE2MASTER)
+  m_fsm.addTransition(MACH_OUTACTION,MACH_EXEC_ACT, "OutAct->WaitAct", cb.make(&Machine::doAction));
+
+  // Full protocol: Full slave handling
   m_fsm.addTransition(MACH_OUTACTION,MACH_ACTIVE,   "OutAct->Active",  cb.make(&Machine::handleSlaves));
   m_fsm.addTransition(MACH_ACTIVE,   MACH_ACTIVE,   "Active->Active",  cb.make(&Machine::checkAliveSlaves));
   m_fsm.addTransition(MACH_ACTIVE,   MACH_CHK_SLV,  "Active->ChkSlv",  cb.make(&Machine::startTransition));
   m_fsm.addTransition(MACH_ACTIVE,   MACH_EXEC_ACT, "ChkSlv->WaitAct", cb.make(&Machine::doAction));
+
+  // Action processing
   m_fsm.addTransition(MACH_EXEC_ACT, MACH_EXEC_ACT, "WaitAct->WaitAct",cb.make(&Machine::nullAction));
   m_fsm.addTransition(MACH_CHK_SLV,  MACH_CHK_SLV,  "ChkSlv->ChkSlv",  cb.make(&Machine::nullAction));
   m_fsm.addTransition(MACH_CHK_SLV,  MACH_EXEC_ACT, "ChkSlv->WaitAct", cb.make(&Machine::doAction));
@@ -136,16 +136,13 @@ void Machine::handleIoc(const Event& event)   {
     status = m_fsm.invokeTransition(MACH_CHK_SLV,event.data);
     break;
   case Slave::SLAVE_TRANSITION:   /// State change by slave. Handle the request.
-    ioc().send(m_handler,Slave::SLAVE_TRANSITION,event.data);
+    evaluateWhens();
     break;
   case Slave::SLAVE_FAILED:
     checkSlaves();
     break;
   case Machine::MACH_EXEC_ACT:
     status = m_fsm.invokeTransition(MACH_EXEC_ACT,this);
-    break;
-  case Machine::MACH_EVAL_WHEN:
-    evaluateWhens();
     break;
   default:
     status = m_fsm.invokeTransition(event.type,this);
@@ -167,13 +164,18 @@ const Machine::States Machine::slaveStates() const   {
 /// Evaluate the when rules accoding to the slave states and invoke transition if required.
 void Machine::evaluateWhens()  {
   const State* st = state();
-  const State::Whens& w = st->when();
-  const When::States sl_states = slaveStates();
-  for(State::Whens::const_iterator i=w.begin(); i != w.end(); ++i)  {
-    const State* to = (*i)->evaluate(sl_states);
-    if ( to )   {
-      display(ALWAYS,"When: Invoke transition to state:%s",to->c_name());
-      invokeTransition(to);
+  const State::Whens& whens = st->when();
+  const Machine::States states = whens.empty() ? Machine::States() : slaveStates();
+  display(ALWAYS,"%s> Machine Idle:%s EvaluateWhen: Check %d when clauses.",
+	  c_name(),isIdle() ? " YES " : " NO ",int(whens.size()));
+  for(State::Whens::const_iterator iw=whens.begin(); iw != whens.end(); ++iw)  {
+    const When* w = (*iw);
+    display(ALWAYS,"%s> Check conditions for WHEN:%s",c_name(),w->c_name());
+    When::Result res = w->fires(states);
+    if ( res.first )  {
+      display(ALWAYS,"%s> WHEN clause: %s fired. Invoke tramsition to:%s",
+	      c_name(),w->c_name(),res.first->c_name());
+      invokeTransition(res.first,res.second);
       return;
     }
   }
@@ -214,31 +216,6 @@ ErrCond Machine::invokeTransition(const std::string& target_state, Rule::Directi
 ErrCond Machine::goIdle()  {
   setTarget(0);
   return FSM::SUCCESS;
-}
-
-/// Execute state leave action
-ErrCond Machine::doOutAction (const void* user_param)  {
-  if ( state() )  {
-    StateActionMap::const_iterator i = m_stateActions.find(state());
-    for_each(m_slaves.begin(),m_slaves.end(),SlaveReset());
-    int sc = (i==m_stateActions.end()) ? (*i).second.out().execute(user_param) : ErrCond(FSM::SUCCESS);
-    if ( sc == FSM::WAIT_ACTION )   // Action will be completed later
-      return FSM::SUCCESS;
-    return ret_check(this,sc,MACH_ACTIVE,MACH_FAIL);
-  }
-  return FSM::FAIL;
-}
-
-/// Finish any lengthy action
-ErrCond Machine::finishAnyAction(ErrCond status, int next_state)  {
-  if      ( status == FSM::SUCCESS     ) return ret_success(this,next_state);
-  else if ( status == FSM::WAIT_ACTION ) return FSM::SUCCESS;  // Noop, self transition
-  return ret_failure(this); // BADPREACTION,BADPOSTACTION,BADACTION,FAIL
-}
-
-/// Finish lengthy state leave action
-ErrCond Machine::finishOutAction(ErrCond status)  {
-  return finishAnyAction(status,MACH_ACTIVE);
 }
 
 /// Null action
@@ -343,6 +320,29 @@ ErrCond Machine::startTransition()  {
   return ret_failure(this);
 }
 
+/// Finish any lengthy action
+ErrCond Machine::finishAnyAction(ErrCond status, int next_state)  {
+  if      ( status == FSM::SUCCESS     ) return ret_success(this,next_state);
+  else if ( status == FSM::WAIT_ACTION ) return FSM::SUCCESS;  // Noop, self transition
+  return ret_failure(this); // BADPREACTION,BADPOSTACTION,BADACTION,FAIL
+}
+
+/// Execute state leave action
+ErrCond Machine::doOutAction (const void* user_param)  {
+  if ( state() )  {
+    StateActionMap::const_iterator i = m_stateActions.find(state());
+    for_each(m_slaves.begin(),m_slaves.end(),SlaveReset());
+    int sc = (i==m_stateActions.end()) ? (*i).second.out().execute(user_param) : ErrCond(FSM::SUCCESS);
+    return finishOutAction(sc);
+  }
+  return FSM::FAIL;
+}
+
+/// Finish lengthy state leave action
+ErrCond Machine::finishOutAction(ErrCond status)  {
+  return finishAnyAction(status,MACH_ACTIVE);
+}
+
 /// Execute state leave action
 ErrCond Machine::doAction (const void* user_param)  {
   const Transition* tr = currTrans();
@@ -351,15 +351,11 @@ ErrCond Machine::doAction (const void* user_param)  {
     int sc = (*i).second.pre().execute(user_param);
     if ( sc == FSM::SUCCESS )  {
       sc = (*i).second.action().execute(user_param);
-      if ( sc == FSM::SUCCESS ) 
-	return ret_success(this,MACH_INACTION);
-      else if ( sc == FSM::WAIT_ACTION )   // Action will be completed later
-	return FSM::SUCCESS;
-      return ret_failure(this);
+      return finishAction(sc);
     }
     return ret_failure(this);
   }
-  return ret_success(this,MACH_INACTION);
+  return finishAction(FSM::SUCCESS);
 }
 
 /// Finish lengthy state leave action
@@ -373,15 +369,14 @@ ErrCond Machine::doInAction (const void* user_param)  {
   if ( tr->to() )  {
     StateActionMap::const_iterator i = m_stateActions.find(tr->to());
     int sc = (i==m_stateActions.end()) ? ErrCond(FSM::SUCCESS) : (*i).second.in().execute(user_param);
-    if ( sc == FSM::WAIT_ACTION ) return FSM::SUCCESS;
-    return ret_check(this,sc,MACH_IDLE,MACH_FAIL);
+    return finishInAction(sc);
   }
   return FSM::FAIL;
 }
 
 /// Finish lengthy state leave action
 ErrCond Machine::finishInAction(ErrCond status)  {
-  return finishAnyAction(status,MACH_FINISH);
+  return finishAnyAction(status,MACH_IDLE);
 }
 
 /// Execute state leave action
@@ -391,7 +386,6 @@ ErrCond Machine::finishTransition (const void* user_param)  {
   setState(tr->to()).setTarget(0);
   if ( i != m_transActions.end() ) (*i).second.completion().execute(user_param);
   m_completion.execute(user_param);
-  ioc().send(this,MACH_EVAL_WHEN,this);
   display(NOLOG,"%s> Executing %s. Finished transition. Current state:%s",c_name(),tr->c_name(),tr->to()->c_name());
   m_direction = Rule::MASTER2SLAVE;
   return FSM::SUCCESS;
@@ -404,9 +398,6 @@ ErrCond Machine::doFail (const void* user_param)  {
   if ( i != m_transActions.end() )
     (*i).second.fail().execute(user_param);
   m_fail.execute(user_param);
-  // Need to invoke error processing due to dead child in steady state
-  ioc().send(this,MACH_EVAL_WHEN,this);
-  ioc().send(m_handler,Slave::SLAVE_FAILED,this);
   return ret;
 }
 
@@ -458,6 +449,7 @@ Machine& Machine::setCompletionAction(const Transition* transition, const Callba
   return *this;
 }
 
+/// Add a slave to this FSM  machine
 FSM::ErrCond Machine::addSlave(Slave* slave)   {
   if ( slave )  {
     Slaves::iterator i=find(m_slaves.begin(),m_slaves.end(),slave);
@@ -469,6 +461,7 @@ FSM::ErrCond Machine::addSlave(Slave* slave)   {
   throw runtime_error(name()+"> Attempt to add invalid slave.");
 }
 
+/// Remove a slave from this FSM  machine
 FSM::ErrCond Machine::removeSlave(Slave* slave)   {
   if ( slave )  {
     Slaves::iterator i=find(m_slaves.begin(),m_slaves.end(),slave);

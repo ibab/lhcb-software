@@ -61,22 +61,16 @@ namespace FiniteStateMachine {
       MACH_CHK_SLV    =  3005,        /// Machine is checking if all slave tasks completed the transition
       MACH_EXEC_ACT   =  3006,        /// Executing Action
       MACH_INACTION   =  3007,        /// Executing state enter action
-      MACH_FINISH     =  3008,        /// Action function code at end of FSM transition
-      MACH_FAIL       =  3009,        /// Code used on failure
-      MACH_EVAL_WHEN  =  3010,
+      MACH_FAIL       =  3008,        /// Code used on failure
       MACH_LAST       =  3099
     };
   protected:
     /// Internal finite state machine implementation
     FSM                 m_fsm;
-    /// Reference to external event handler
-    Interactor*         m_handler;
     /// Reference to the State structure of the state the machine is in
     const State*        m_currState;
     /// Hold pointer of current Transition
     const Transition*   m_currTrans;
-    /// Hold pointer Cancel callback structure
-    Callback            m_cancelCB;
     /// Set of StateActions assigned to this machine  
     StateActionMap      m_stateActions;
     /// Set of TransActions assigned to this machine
@@ -110,17 +104,13 @@ namespace FiniteStateMachine {
     const Transition* currTrans()  const          {  return m_currTrans;                       }
     /// Store the current transition
     Machine& setTarget (const Transition* trans)  {  m_currTrans = trans; return *this;        }
-    /// Set machine interrupt handler
-    Machine& setHandler(Interactor* handler)      {  m_handler = handler; return *this;        }
     /// Access array of slaves (CONST)
     const Slaves& slaves()  const                 {  return m_slaves;                          }
     /// Access array of slaves
     Slaves& slaves()                              {  return m_slaves;                          }
-    /// Access number of slaves
-    std::size_t numSlaves()  const                {  return m_slaves.size();                   }
     /// Check if the machine is in idle state
     bool isIdle()  const                          {  return m_fsm.currentState() == MACH_IDLE; }
-    int  targetState() const                      {  return m_fsm.targetState();               }
+    //int  targetState() const                      {  return m_fsm.targetState();               }
     /// Meta state name of current meta-state
     const char* currentMetaName()  const;
     /// Meta state name of target meta-state
@@ -131,6 +121,11 @@ namespace FiniteStateMachine {
 
     /// Evaluate the when rules accoding to the slave states and invoke transition if required.
     void evaluateWhens();
+
+    /// Add a slave to this FSM  machine
+    ErrCond addSlave(Slave* slave);
+    /// Remove a slave from this FSM  machine
+    ErrCond removeSlave(Slave* slave);
 
     /** Specific Interactor handle to act on sensor interrupts
      *  @arg  ev    [Event,read-only]   Event structure to be handled
@@ -218,10 +213,6 @@ namespace FiniteStateMachine {
      *  @return  Status code indicating success or failure
      */
     Machine& setTransActions (const Transition* transition,const Callback& pre_action,const Callback& action,const Callback& fail_action);
-
-    /// Add a slave to this FSM 
-    ErrCond addSlave(Slave* slave);
-    ErrCond removeSlave(Slave* slave);
   };   //  End class Machine
 
   typedef FsmHandle<Machine> MachineHandle;

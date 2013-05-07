@@ -25,6 +25,10 @@ using namespace boost::assign;
 using namespace FiniteStateMachine;
 using namespace std;
 
+enum Timeouts {
+  SLAVETIMEOUT = 1000
+};
+
 /// Class Constructor
 DimSlave::DimSlave(const Type* typ, const string& nam, Machine* machine, bool internal) 
   : Slave(typ,nam,machine,internal), m_dimState(0,0), m_timerID(0,0), m_commandName(), m_killCmd("unload")
@@ -89,7 +93,7 @@ FSM::ErrCond DimSlave::sendRequest(const Transition* tr)  {
 	    RTL::processName().c_str(),c_name(),data,m_commandName.c_str(),c_state());
     int ret = ::dic_cmnd_service((char*)m_commandName.c_str(),(char*)data,len+1);
     if ( ret == 1 )  {
-      startTimer(SLAVE_TRANSITION_TIMEOUT,tr);
+      startTimer(SLAVETIMEOUT,tr);
       return FSM::WAIT_ACTION;
     }
   }
@@ -130,12 +134,7 @@ DimSlave& DimSlave::stopTimer()  {
 /// Handle timeout according to timer ID
 void DimSlave::handleTimeout()  {
   if ( SLAVE_EXECUTING == currentState() )  {
-    if ( m_timerID.second == SLAVE_TRANSITION_TIMEOUT )  {
-      send(SLAVE_TRANSITION_TIMEOUT);
-    }
-    else {
-      handleUnloadTimeout();
-    }
+    m_timerID.second == SLAVETIMEOUT ? (void)transitionFailed() : handleUnloadTimeout();
   }
 }
 
@@ -157,7 +156,6 @@ void DimSlave::handleState(const string& msg)  {
     if ( !starting )  {
       display(NOLOG,"%s::%s> Slave DEAD. Curr State:%s",
 	      RTL::processName().c_str(),c_name(),metaStateName());
-      //send(SLAVE_LIMBO,m_state);
       iamDead();
     }
     return;
@@ -168,28 +166,16 @@ void DimSlave::handleState(const string& msg)  {
 
   const State* state = type()->state(m);
   const Transition* transition = state ? m_state->findTrans(state) : 0;
-  if ( starting )   {
-    //send(SLAVE_ALIVE,type()->initialState());
+  if ( starting )
     iamHere();
-    return;
-  }
-  else if ( transition )  {
-    //send(SLAVE_FINISHED,state);
+  else if ( transition )
     transitionDone(state);
-    return;
-  }
-  else if ( state )  {
-    //send(SLAVE_TRANSITION,state);
+  else if ( state )
     transitionSlave(state);
-    return;
-  }
-  else  {
-    //send(SLAVE_FAILED,state);
+  else
     transitionFailed();
-    return;
-  }
-  display(ALWAYS,"%s::%s> Slave state:%s Meta-state:%s",
-	  RTL::processName().c_str(),c_name(),m.c_str(),metaStateName());
+  //display(ALWAYS,"%s::%s> Slave state:%s Meta-state:%s",
+  //	  RTL::processName().c_str(),c_name(),m.c_str(),metaStateName());
 }
 
 /// DimInfo overload to process messages

@@ -46,16 +46,15 @@ Controller::~Controller() {
 FSM::ErrCond Controller::fail()  {
   const Transition* tr = m_machine->currTrans();
   // Nothing to do, since failure will be handled with IOC SLAVE_FAILED
-  display(ALWAYS,"Controller: %s> FAILED to invoke transition %s from %s Metastate:%s",
-	  c_name(),tr ? tr->c_name() : "", m_machine->c_state(), m_machine->currentMetaName());
+  display(ALWAYS,"%s::%s> Controller: FAILED to invoke transition %s from %s Metastate:%s",
+	  c_name(), m_machine->type()->c_name(), tr ? tr->c_name() : "", 
+	  m_machine->c_state(), m_machine->currentMetaName());
   for(Machine::Slaves::iterator i=m_machine->slaves().begin(); i!= m_machine->slaves().end(); ++i)  {
     Slave* s = *i;
-    if ( s->currentState() == Slave::SLAVE_FAILED )
-      s->setState(m_errorState);
-    display(ALWAYS,"Controller: %s> Slave %s in state %s has meta-state:%s",
+    if ( s->currentState() == Slave::SLAVE_FAILED ) s->setState(m_errorState);
+    display(ALWAYS,"%s> Controller: Slave %s in state %s has meta-state:%s",
 	    c_name(), s->c_name(), s->c_state(), s->metaStateName());
   }
-
   IocSensor::instance().send(this,ERROR_PROCESS,this);
   return FSM::SUCCESS;
 }
@@ -90,21 +89,10 @@ void Controller::handle(const Event& ev)    {
     case ERROR_PROCESS:
       m_machine->invokeTransition(m_errorState,Rule::SLAVE2MASTER);
       break;
-    case Slave::SLAVE_FAILED:
-      break;
-    case Slave::SLAVE_TRANSITION:  // Forwarded from Machine
-      if ( m_machine->state() != slave->state() )   {
-	display(ALWAYS,"Controller: %s> SLAVE_TRANSITION: Invoke transition from %s to %s",
-		c_name(),m_machine->c_state(),slave->c_state());
-	m_machine->invokeTransition(slave->c_state(),Rule::SLAVE2MASTER);
-      }
-      break;
-    case Machine::MACH_EXEC_ACT:  // Forwarded from Machine
-      m_machine->invokeTransition((const State*)ev.data);
-      break;
     default:
-      display(ALWAYS,"Controller: %s> ERROR: Invoke transition from %s",c_name(),m_machine->c_state());
-      m_machine->invokeTransition((const State*)ev.data);
+      display(ALWAYS,"Controller: %s> ERROR: Invoke transition from %s action:%d",
+	      c_name(),m_machine->c_state(),ev.type);
+      //m_machine->invokeTransition((const State*)ev.data);
       break;
     }
     break;
@@ -124,10 +112,10 @@ FSM::ErrCond Controller::invokeTransition(const string& transition)  {
   const Transition* trans = state->findTransByName(transition);
   ErrCond ret = trans ? m_machine->invokeTransition(trans) : ErrCond(FSM::TRANNOTFOUND);
   if ( ret != FSM::SUCCESS )   {
-    setTargetState(ERROR);
-    ret = m_machine->invokeTransition(ST_NAME_ERROR,Rule::SLAVE2MASTER);
-    display(ALWAYS,"Unknown transition:%s from state %s. Moving to ERROR!",
-	    transition.c_str(),state->c_name());
+    //setTargetState(ERROR);
+    //ret = m_machine->invokeTransition(ST_NAME_ERROR,Rule::SLAVE2MASTER);
+    //display(ALWAYS,"Unknown transition:%s from state %s. Moving to ERROR!",
+    //    transition.c_str(),state->c_name());
   }
   return ret;
 }

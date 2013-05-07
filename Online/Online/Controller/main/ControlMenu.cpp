@@ -63,7 +63,7 @@ UPI::ControlMenu::ControlMenu(const std::string& config)
   ::strcpy(m_modeCmd,   s_modeList[0]);
   ::strcpy(m_slaveCmd,  s_cmdList[0]);
   ::strcpy(m_stateCmd,  s_stateList[0]);
-  ::strcpy(m_slvTypeCmd,s_slvList[m_config_exists ? 1 : 0]);
+  ::strcpy(m_slvTypeCmd,s_slvList[0]);//[m_config_exists ? 1 : 0]);
   ::strcpy(m_runinfoCmd,"OnlineEnv.py");
   ::strcpy(m_partitionCmd,s_partList[0]);
   ::strcpy(m_configCmd,config.empty() ? "Tasklist.xml" : config.c_str());

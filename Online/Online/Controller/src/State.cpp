@@ -91,12 +91,12 @@ const Transition* State::findTransByName (const string& transition)  const {
 }
 
 /// Add when clause to state object
-const When* State::addWhen(const pair<When::Multiplicity,When::States>& p1, const State* target)  const {
+const When* State::when(const pair<When::Multiplicity,When::States>& p1, const State* target, Rule::Direction direction)  const {
   if ( target )  {
     if ( target->type() == type() )  {
-      When*  wh = new When(type(), p1.first, p1.second, target);
+      When*  wh = new When(type(), this, p1.first, p1.second, target, direction);
       State* me = const_cast<State*>(this);
-      me->m_when.insert(wh);
+      me->m_when.push_back(wh);
       return wh;
     }
     throw runtime_error("Type:"+type()->name()+"> When of state:"+name()+". Target state "+

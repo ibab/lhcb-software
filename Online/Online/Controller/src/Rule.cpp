@@ -82,9 +82,11 @@ bool Predicate::hasState(const State* slave_state)  const   {
 }
 
 /// Class Constructor
-When::When(const Type *typ, Multiplicity m, const States& allowed, const State* target)
-  : Predicate(typ,allowed), m_mult(m), m_target(target)
+When::When(const Type *typ, const State* current, Multiplicity m, const States& allowed, 
+	   const State* target, Rule::Direction direction)
+  : Predicate(typ,allowed), m_rule(typ,current,target,direction), m_mult(m)
 {
+  m_name = makeName(typ,current,target);
 }
 
 /// Standatrd destructor  
@@ -92,11 +94,30 @@ When::~When()  {
 }
 
 /// Check if a slave with a given state satisfies the predicate
-const State* When::evaluate(const States& slave_states)  const   {
-  if ( !slave_states.empty() ) {
-    
+When::Result When::fires(const States& states)  const   {
+  const State* to = m_rule.targetState();
+  States::const_iterator i;
+  if ( m_mult == ALL_IN_STATE )   {
+    for(i=states.begin(); i!=states.end(); ++i)
+      if ( m_allowed.find(*i) == m_allowed.end() ) 
+	return Result(0,Rule::NO_DIRECTION);
   }
-  return 0;
+  else if ( m_mult == ALL_NOT_IN_STATE )   {
+    for(i=states.begin(); i!=states.end(); ++i)
+      if ( m_allowed.find(*i) != m_allowed.end() ) 
+	return Result(0,Rule::NO_DIRECTION);
+  }
+  else if ( m_mult == ANY_IN_STATE )   {
+    for(i=states.begin(); i!=states.end(); ++i)
+      if ( m_allowed.find(*i) != m_allowed.end() ) 
+	return Result(to,m_rule.direction());
+  }
+  else if ( m_mult == ANY_NOT_IN_STATE )   {
+    for(i=states.begin(); i!=states.end(); ++i)
+      if ( m_allowed.find((*i)) == m_allowed.end() )
+	return Result(to,m_rule.direction());
+  }
+  return Result(0,Rule::NO_DIRECTION);
 }
 
 static pair<When::Multiplicity,When::States> 
@@ -115,30 +136,34 @@ makeWhenParam(When::Multiplicity p, const State* s0, const State* s1, const Stat
   return r;
 }
 
+const State* FiniteStateMachine::moveTo(const State* s)    {
+  return s; 
+}
+
 pair<When::Multiplicity,When::States> 
-FiniteStateMachine::allChildrenIn  (const State* s0, const State* s1, const State* s2, const State* s3,
-				    const State* s4, const State* s5, const State* s6, const State* s7)
+FiniteStateMachine::allChildrenInState  (const State* s0, const State* s1, const State* s2, const State* s3,
+					 const State* s4, const State* s5, const State* s6, const State* s7)
 {
   return makeWhenParam(When::ALL_IN_STATE, s0, s1, s2, s3, s4, s5, s6, s7);
 }
 
 pair<When::Multiplicity,When::States> 
-FiniteStateMachine::allChildrenNotIn(const State* s0, const State* s1, const State* s2, const State* s3,
-			 	     const State* s4, const State* s5, const State* s6, const State* s7)
+FiniteStateMachine::allChildrenNotInState(const State* s0, const State* s1, const State* s2, const State* s3,
+					  const State* s4, const State* s5, const State* s6, const State* s7)
 {
   return makeWhenParam(When::ALL_NOT_IN_STATE, s0, s1, s2, s3, s4, s5, s6, s7);
 }
 
 pair<When::Multiplicity,When::States> 
-FiniteStateMachine::anyChildIn     (const State* s0, const State* s1, const State* s2, const State* s3,
+FiniteStateMachine::anyChildInState(const State* s0, const State* s1, const State* s2, const State* s3,
 				    const State* s4, const State* s5, const State* s6, const State* s7)
 {
   return makeWhenParam(When::ANY_IN_STATE, s0, s1, s2, s3, s4, s5, s6, s7);
 }
 
 pair<When::Multiplicity,When::States> 
-FiniteStateMachine::anyChildNotIn(  const State* s0, const State* s1, const State* s2, const State* s3,
-				    const State* s4, const State* s5, const State* s6, const State* s7)
+FiniteStateMachine::anyChildNotInState(const State* s0, const State* s1, const State* s2, const State* s3,
+				       const State* s4, const State* s5, const State* s6, const State* s7)
 {
   return makeWhenParam(When::ANY_NOT_IN_STATE, s0, s1, s2, s3, s4, s5, s6, s7);
 }

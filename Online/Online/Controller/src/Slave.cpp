@@ -45,8 +45,6 @@ const char* Slave::metaStateName() const  {
     MakeName(SLAVE_EXECUTING);
     MakeName(SLAVE_TRANSITION);
     MakeName(SLAVE_FINISHED);
-    MakeName(SLAVE_START_TIMEOUT);
-    MakeName(SLAVE_TRANSITION_TIMEOUT);
 #undef  MakeName
   }
   return "UNKNOWN";
@@ -91,26 +89,24 @@ FSM::ErrCond Slave::iamDead()  {
   m_alive = false;
   m_meta  = SLAVE_LIMBO;
   m_state = type()->initialState();
-  ErrCond ret = m_machine->checkSlaves();
-  if ( ret == FSM::TRANNOTFOUND )  {
+  if ( !m_machine->currTrans() )
     return notifyMachine(SLAVE_TRANSITION);
-  }
-  return ret;
+  return m_machine->checkSlaves();
 }
 
 /// Callback, when transition was executed successfully
 FSM::ErrCond Slave::transitionDone(const State* state)  {
+  const Rule* r = m_rule;
   m_rule  = 0;
   m_state = state;
-  m_meta  = SLAVE_ALIVE;
-  ErrCond ret = m_machine->checkSlaves();
-  if ( ret == FSM::TRANNOTFOUND )  {
-    return notifyMachine(SLAVE_TRANSITION);
+  if ( r && r->targetState() != state )  {
+    m_meta = SLAVE_FAILED;
+    return notifyMachine(SLAVE_FAILED);
   }
-  if ( ret == FSM::WAIT_ACTION )
-    return FSM::SUCCESS;
-  // Else: FSM::SUCCESS or FSM::FAIL
-  return ret;
+  m_meta  = SLAVE_ALIVE;
+  if ( !m_machine->currTrans() )
+    return notifyMachine(SLAVE_TRANSITION);
+  return m_machine->checkSlaves();
 }
 
 /// Callback, when the slave invoked a transition himself
@@ -175,50 +171,6 @@ FSM::ErrCond Slave::kill()   {
 
 /// Virtual method -- must be overloaded -- Send transition request to the slave
 FSM::ErrCond Slave::sendRequest(const Transition* tr)  {
-  throw runtime_error(name()+"> Slave::sendRequest -- invalid base class implementation called.");
-}
-
-/// IOC and network handler
-void Slave::handle(const Event& event)  {
-  switch(event.eventtype) {
-  case NetEvent:
-    break;
-  case IocEvent:
-    handleIoc(event);
-    break;
-  default:
-    display(ERROR,"Slave> %s: Unforeseen eventtype:%d",c_name(),event.eventtype);
-    break;
-  }
-}
-
-/// IOC handler
-void Slave::handleIoc(const Event& event)   {
-  switch(event.type)  {
-  case SLAVE_LIMBO:
-    iamDead();
-    break;
-  case SLAVE_ALIVE:
-    iamHere();
-    break;
-  case SLAVE_TRANSITION:
-    transitionSlave(event.iocPtr<State>());
-    break;
-  case SLAVE_FINISHED:
-    transitionDone(event.iocPtr<State>());
-    break;
-  case SLAVE_FAILED:
-    transitionFailed();
-    break;
-  case SLAVE_STARTING:
-    break;
-  // IOC handling of external commands
-  case SLAVE_TRANSITION_TIMEOUT:
-    display(ERROR,"%s > Transition timeout:%d",c_name(),event.type);
-    transitionFailed();
-    break;
-  default:
-    display(ERROR,"%s > Unforeseen ioc:%d",c_name(),event.type);
-    break;
-  }
+  throw runtime_error(name()+"> Slave::sendRequest -- invalid base class implementation called. Transition="+
+		      string(tr ? tr->name() : "----"));
 }

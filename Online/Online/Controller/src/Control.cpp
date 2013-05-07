@@ -104,29 +104,6 @@ namespace FiniteStateMachine {
       }
       return FSM::SUCCESS;
     }
-    /// IOC handler
-    void handleIoc(const Event& event)   {
-      DimSlave::handleIoc(event);
-      switch(event.type)  {
-      case SLAVE_LIMBO:	
-	break;
-      case SLAVE_STARTING:
-      case SLAVE_KILLED:
-      case SLAVE_FINISHED:
-      case SLAVE_TRANSITION_TIMEOUT:
-	break;
-      case SLAVE_FAILED:
-      case SLAVE_TRANSITION:
-	ioc().send(handler,SLAVE_TRANSITION,this);
-	break;
-      case SLAVE_ALIVE:
-	ioc().send(this,SLAVE_FINISHED,event.data);
-	return;
-      default:
-	break;
-      }
-      ioc().send(handler,CMD_UPDATE_SLAVE,this);
-    }
     int processIO() {
       FILE* f = ::fdopen(m_out[0],"r");
       char* line = 0;
@@ -142,53 +119,33 @@ namespace FiniteStateMachine {
     }
     /// Handle state updates for a particular slave
     virtual void handleState(const std::string& msg)  {
-      ioc().send(handler,CMD_WRITE_MESSAGE,::strdup((name()+"> Received new message:"+msg).c_str()));
+      ioc().send(handler,CMD_WRITE_MESSAGE,::strdup((m_machine->name()+">> "+name()+"> Received new message:"+msg).c_str()));
       if ( msg != DAQ::ST_NAME_UNKNOWN ) NativeDimSlave::handleState(msg);
+      ioc().send(handler,CMD_UPDATE_MACHINE,this);
     }
   };
 
   struct CtrlFmcSlave : public FmcSlave {
     Control* handler;
     /// Standard constructor
-    CtrlFmcSlave(Control* h, Machine* machine, const Type* typ, const std::string& nam, const std::string& args="") 
+    CtrlFmcSlave(Control* h, 
+		 Machine* machine, 
+		 const Type* typ, 
+		 const std::string& nam, 
+		 const std::string& args="") 
       : FmcSlave(typ,nam,machine,false), handler(h)    {
       m_killCmd = "destroy";
       setArgs(args);
     }
     /// Standard destructor
-    virtual ~CtrlFmcSlave()       {  }
+    virtual ~CtrlFmcSlave()       {               }
     /// Nothing to do here
-    int processIO()    {
-      return 1;
-    }
+    int processIO()               {  return 1;    }
     /// Handle state updates for a particular slave
     virtual void handleState(const std::string& msg)  {
-      ioc().send(handler,CMD_WRITE_MESSAGE,::strdup((name()+"> Received new message:"+msg).c_str()));
+      ioc().send(handler,CMD_WRITE_MESSAGE,::strdup((m_machine->name()+">> "+name()+"> Received new message:"+msg).c_str()));
       if ( msg != DAQ::ST_NAME_UNKNOWN ) FmcSlave::handleState(msg);
-    }
-    /// IOC handler
-    void handleIoc(const Event& event)   {
-      DimSlave::handleIoc(event);
-      switch(event.type)  {
-      case SLAVE_TRANSITION:
-	ioc().send(handler,SLAVE_TRANSITION,this);
-	ioc().send(handler,CMD_UPDATE_SLAVE,this);
-	break;
-      case SLAVE_ALIVE:
-	ioc().send(this,SLAVE_FINISHED,event.data);
-	ioc().send(handler,CMD_UPDATE_SLAVE,this);
-	return;
-
-      case SLAVE_LIMBO:
-      case SLAVE_STARTING:
-      case SLAVE_FAILED:
-      case SLAVE_KILLED:
-      case SLAVE_FINISHED:
-      case SLAVE_TRANSITION_TIMEOUT:
-      default:
-	ioc().send(handler,CMD_UPDATE_SLAVE,this);
-	break;
-      }
+      ioc().send(handler,CMD_UPDATE_MACHINE,this);
     }
   };
 }
@@ -320,7 +277,6 @@ void Control::startController()   {
   m_machine->setCompletionAction(Callback::make(this,&Control::update));
   m_machine->setFailAction(Callback::make(this,&Control::update));
   m_machine->setAction(trans,Callback::make(this,&Control::destroy));
-  m_machine->setHandler(this);
   if ( m_config_exists )
     startControllerConfig(tasks);
   else
@@ -467,27 +423,10 @@ void Control::execDimCommand(const string& dp, const string& data)  {
 
 /// Display callback handler
 void Control::handle(const Event& ev)   {
-  Slave* slave;
   int which;
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type)  {
-    case Slave::SLAVE_TRANSITION:
-      slave = ev.iocPtr<Slave>();
-      if ( slave )  {
-	const State* state = slave->state();
-	if ( state->name() == ST_NAME_OFFLINE )
-	  gotoState(state->name());
-	else if ( state->name() == ST_NAME_ERROR )
-	  gotoState(state->name());
-	else if ( state->name() == ST_NAME_PAUSED )
-	  gotoState(state->name());
-	ioc().send(this,CMD_UPDATE_SLAVE,this);
-	return;
-      }
-      ioc().send(this,CMD_UPDATE_SLAVE,this);
-      write_message("Unknown request SLAVE_TRANSITION ");
-      return;
     case CMD_START_SLAVEIO:
       startSlaveIO();
       return;

@@ -12,7 +12,6 @@
 #define ONLINE_FINITESTATEMACHINE_SLAVE_H
 
 // Framework include files
-#include "CPP/Interactor.h"
 #include "FiniteStateMachine/State.h"
 #include "FiniteStateMachine/Transition.h"
 
@@ -35,7 +34,7 @@ namespace FiniteStateMachine {
    * @date    01/03/2013
    * @version 0.1
    */
-  class Slave : public TypedObject, public Interactor    {
+  class Slave : public TypedObject  {
   public:
     typedef FSM::ErrCond ErrCond;
     enum SlaveState  {
@@ -49,8 +48,6 @@ namespace FiniteStateMachine {
       SLAVE_DEAD               = 3108,
       SLAVE_TRANSITION         = 3109,
       SLAVE_FINISHED           = 3110,
-      SLAVE_START_TIMEOUT      = 3900,
-      SLAVE_TRANSITION_TIMEOUT = 3901
     };
 
   protected:
@@ -107,10 +104,6 @@ namespace FiniteStateMachine {
     /// Send IOC interrupt to slave - used for internal slave transitions
     virtual ErrCond send(int code, const State* state=0)   const;
 
-    /// External interrupt handler
-    virtual void handle(const Event& event);
-    /// IOC interrupt handle handler
-    virtual void handleIoc(const Event& event);
     /// Send notification to machine object about slave's state changes
     virtual ErrCond notifyMachine(int meta_state);
 

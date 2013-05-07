@@ -16,6 +16,7 @@
 
 // C/C++ include files
 #include <set>
+#include <vector>
 
 /* 
  *  FiniteStateMachine namespace declaration
@@ -89,7 +90,7 @@ namespace FiniteStateMachine {
   public:
     /// Transition container definition
     typedef std::set<const Transition*> Transitions;
-    typedef std::set<When*>             Whens;
+    typedef std::vector<When*>           Whens;
 
   protected:
     /// Set of enter transitions to the current state
@@ -133,7 +134,9 @@ namespace FiniteStateMachine {
     /// Access the when clauses
     const Whens& when() const           { return m_when;           }
     /// Add when clause to state object
-    const When* addWhen(const std::pair<When::Multiplicity,When::States>& p1, const State* target) const;
+    const When* when(const std::pair<When::Multiplicity,When::States>& p1, 
+		     const State* target, 
+		     Rule::Direction direction = Rule::SLAVE2MASTER) const;
 
     /// Return reference to set of leave transitions (CONST)
     const Transitions& outgoing() const { return m_outgoing;       }

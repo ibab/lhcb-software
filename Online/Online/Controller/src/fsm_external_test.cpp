@@ -71,20 +71,16 @@ extern "C" int external_fsm_test(int argc, char** argv)  {
   cli.getopt("rounds",1,rounds);
   cli.getopt("print", 1,print);
   cli.getopt("slaves",1,num_slaves);
-
   TypedObject::setPrintLevel(print);
 
-  const Type*    d = fsm_type("DAQ");
-  Machine*       m = new Machine(d,"daq++");
-  TestAutoTrans* a = new TestAutoTrans(m,rounds);
+  const Type*    daq = fsm_type("DAQ");
+  Machine*       mac = new Machine(daq,"daq++");
+  TestAutoTrans* a = new TestAutoTrans(mac,rounds);
   a->configDAQ().sleep["load"] = 2;
-
   for(int i=0; i<num_slaves; ++i)
-    m->addSlave(new ExternalSlave(d,make_slave_name(i),m));
+    mac->addSlave(new ExternalSlave(daq,make_slave_name(i),mac));
 
-  m->setHandler(a);
   if ( auto_start ) a->go_to(ST_NAME_NOT_READY);
-
   DimServer::autoStartOn();
   DimServer::start(dim_name.c_str());
   IocSensor::instance().run();
@@ -99,14 +95,12 @@ extern "C" int controller_fsm_test(int argc, char** argv)  {
   cli.getopt("print", 1,print);
   cli.getopt("slaves",1,num_slaves);
   TypedObject::setPrintLevel(print);
-
-  const Type* d = fsm_type("DAQ");
-  Machine*    m = new Machine(d,dim_name+"::daq++");
+  const Type* daq = fsm_type("DAQ");
+  Machine*    mac = new Machine(daq,dim_name+"::daq++");
   for(int i=0; i<num_slaves; ++i)
-    m->addSlave(new ExternalSlave(d,make_slave_name(i),m));
+    mac->addSlave(new ExternalSlave(daq,make_slave_name(i),mac));
 
-  Controller* target = new Controller(dim_name,m);
-  m->setHandler(target);
+  Controller* target = new Controller(dim_name,mac);
   target->display(target->ALWAYS,"Controller task started...");
   DimServer::autoStartOn();
   DimServer::start(dim_name.c_str());

@@ -39,6 +39,7 @@ namespace FiniteStateMachine   {
   class Rule : public TypedObject   {
   public:
     enum Direction {
+      NO_DIRECTION = 0,
       MASTER2SLAVE = 1,
       SLAVE2MASTER = 2
     };
@@ -65,7 +66,7 @@ namespace FiniteStateMachine   {
     /// Retrieve pointer to the current state object
     const State* currState ()  const      { return m_currState;        }
     /// Rule direction
-    int direction() const                 { return m_direction;        }
+    Direction direction() const           { return m_direction;        }
     /// Is the rule directed towards the master
     bool toMaster() const        { return m_direction == SLAVE2MASTER; }
     /// Is the rule directed towards the master
@@ -119,39 +120,42 @@ namespace FiniteStateMachine   {
       ALL_IN_STATE     = 1<<2,
       ALL_NOT_IN_STATE = 1<<3
     };
+    typedef std::pair<const State*,Rule::Direction> Result;
 
   protected:
+    /// The Rule to be executed for this when clause
+    Rule          m_rule;
     /// Multiplicity enum
     Multiplicity  m_mult;
-    /// Target state
-    const State*  m_target;
-
   public:
-    /** Class Constructor. The rule applies to all objects independent of their currrent state
-     *
-     * @arg typ    [pointer,   read-only]  FSM type
-     * @arg states [container, read-only]  Container of allowed states for this predicate.
-     */
-    When(const Type *typ, Multiplicity m, const States& allowed, const State* target);
+    /// Class Constructor. The rule applies to all objects independent of their currrent state
+    When(const Type *typ, 
+	 const State* current, 
+	 Multiplicity m, 
+	 const States& allowed, 
+	 const State* target,
+	 Rule::Direction direction);
     /// Standatrd destructor  
     virtual ~When();
+    const Rule&  rule()  const        {  return m_rule;   }
+    Multiplicity multiplicity() const {  return m_mult;   }
     /// Check if a slave with a given state satisfies the predicate
-    const State* evaluate(const States& slave_states)  const;
+    Result fires(const States& slave_states)  const;
   };   //  End class When
 
   std::pair<When::Multiplicity,When::States> 
-    allChildrenIn   (const State* s0,   const State* s1=0, const State* s2=0, const State* s3=0,
-		     const State* s4=0, const State* s5=0, const State* s6=0, const State* s7=0);
+    allChildrenInState(const State* s0,   const State* s1=0, const State* s2=0, const State* s3=0,
+		       const State* s4=0, const State* s5=0, const State* s6=0, const State* s7=0);
   std::pair<When::Multiplicity,When::States> 
-    allChildrenNotIn(const State* s0,   const State* s1=0, const State* s2=0, const State* s3=0,
-		     const State* s4=0, const State* s5=0, const State* s6=0, const State* s7=0);
+    allChildrenNotInState(const State* s0,   const State* s1=0, const State* s2=0, const State* s3=0,
+			  const State* s4=0, const State* s5=0, const State* s6=0, const State* s7=0);
   std::pair<When::Multiplicity,When::States> 
-    anyChildIn      (const State* s0,   const State* s1=0, const State* s2=0, const State* s3=0,
-		     const State* s4=0, const State* s5=0, const State* s6=0, const State* s7=0);
+    anyChildInState(const State* s0,   const State* s1=0, const State* s2=0, const State* s3=0,
+		    const State* s4=0, const State* s5=0, const State* s6=0, const State* s7=0);
   std::pair<When::Multiplicity,When::States> 
-    anyChildNotIn(   const State* s0,   const State* s1=0, const State* s2=0, const State* s3=0,
-	 	     const State* s4=0, const State* s5=0, const State* s6=0, const State* s7=0);
-  inline const State* moveTo(const State* s)    {  return s; }
+    anyChildNotInState(const State* s0,   const State* s1=0, const State* s2=0, const State* s3=0,
+		       const State* s4=0, const State* s5=0, const State* s6=0, const State* s7=0);
+  const State* moveTo(const State* s);
 
 }      //  End namespace FiniteStateMachine
 #endif //  ONLINE_FINITESTATEMACHINE_RULE_H
