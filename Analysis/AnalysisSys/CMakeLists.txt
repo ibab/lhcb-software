@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AnalysisSys
 ################################################################################
-gaudi_subdir(AnalysisSys v10r5)
+gaudi_subdir(AnalysisSys v10r6)
 
 gaudi_depends_on_subdirs(Analysis/PyAna
                          Ex/LoKiExample
@@ -20,6 +20,7 @@ gaudi_depends_on_subdirs(Analysis/PyAna
                          Phys/DaVinciMCTools
                          Phys/DaVinciMonitors
                          Phys/DaVinciTrackRefitting
+                         Phys/DaVinciTrackScaling
                          Phys/DecayTreeTuple
                          Phys/DecayTreeTupleBase
                          Phys/DecayTreeTupleDalitz
