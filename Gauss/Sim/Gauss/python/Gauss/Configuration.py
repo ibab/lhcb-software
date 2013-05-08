@@ -138,8 +138,7 @@ class Gauss(LHCbConfigurableUser):
        ,"ReplaceWithGDML": """Replace a list of specified volumes with GDML description from file provided """
        }
     KnownHistOptions     = ['NONE','DEFAULT']
-    #TrackingSystem       = ['VELO','TT','IT','OT']
-    TrackingSystem       = ['VELO','TT','OT']
+    TrackingSystem       = ['VELO','TT','IT','OT']
     PIDSystem            = ['RICH','CALO','MUON']
     _beamPipeStates = ['beampipeon', 'beampipeoff', 'beampipeindet']
 

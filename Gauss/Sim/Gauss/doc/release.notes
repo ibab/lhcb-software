@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-05-08 - Paul Szczypka
+ - Add IT back into TrackingSystem list.
+
 ! 2013-05-02 - Paul Szczypka
  - Added SL code to configurable.
 
