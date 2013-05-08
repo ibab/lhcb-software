@@ -15,6 +15,8 @@ include_path      none
 use XmlTools v* Tools
 use DetCond  v* Det
 
+private
+
 # Component library building rule
 #============================================================================
 library          CondDBEntityResolver    ../src/component/*.cpp
@@ -24,13 +26,16 @@ library          CondDBEntityResolver    ../src/component/*.cpp
 apply_pattern    component_library library=CondDBEntityResolver
 
 # =============== LCG Dictionary ==============================================
+include_dirs ../src/component
 apply_pattern     reflex_dictionary                                     \
                   dictionary=CondDBEntityResolver                                    \
-                  headerfiles=$(CONDDBENTITYRESOLVEROOT)/src/dict/dict.h     \
-                  selectionfile=$(CONDDBENTITYRESOLVEROOT)/src/dict/dict.xml \
+                  headerfiles=$(CONDDBENTITYRESOLVERROOT)/src/dict/dict.h     \
+                  selectionfile=$(CONDDBENTITYRESOLVERROOT)/src/dict/dict.xml \
                   options="-U__MINGW32__"
 # Disable some compiler warnings in the automatically generated dict code
 macro_append DetCondDict_cppflags "" \
                        target-icc " -wd2259"
 
 apply_pattern QMTest
+
+end_private

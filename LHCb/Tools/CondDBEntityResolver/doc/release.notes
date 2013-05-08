@@ -5,6 +5,9 @@
 !               CondDB URLs into XML documents
 !-----------------------------------------------------------------------------
 
+! 2013-05-08 - Marco Clemencic
+ - Fixed a bug in the requirements file.
+
 ! 2013-05-07 - Marco Clemencic
  - Imported the class CondDBCompression from Det/DetCond, including dictionary
    and tests.
