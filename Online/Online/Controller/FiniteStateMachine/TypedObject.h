@@ -35,7 +35,12 @@ namespace FiniteStateMachine {
   public:
     enum { 
       NOLOG=0,
+      VERBOSE,
+      DEBUG,
+      INFO,
+      WARNING,
       ERROR,
+      FATAL,
       ALWAYS
     };
     typedef void (*dump_function_t)(void*, const char*);

@@ -36,7 +36,7 @@ namespace UPI {
 
   public:
     /// Standard constructor with object setup through parameters
-    ControlMenu(const std::string& config);
+    ControlMenu(const std::string& config, int prt);
     /// Standard destructor
     virtual ~ControlMenu();
     /// Start the controller task

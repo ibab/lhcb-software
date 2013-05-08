@@ -183,10 +183,11 @@ static void print_routine(void* param, const char* text) {
 }
 
 /// Standard constructor with object setup through parameters
-Control::Control(const std::string& config) 
-  : m_numSlaves(3), m_thread(0), m_machine(0), m_slave(0)
+Control::Control(const std::string& config, int prt) 
+  : m_numSlaves(3), m_print(prt), m_thread(0), m_machine(0), m_slave(0)
 {
   char wd[PATH_MAX];
+  TypedObject::setPrintLevel(prt);
   TypedObject::setPrinter(this,print_routine);
   m_config_exists = 0 == ::access(config.c_str(),R_OK);
   if ( 0 == ::getcwd(wd,sizeof(wd)) )  {
@@ -322,7 +323,8 @@ void Control::startControllerConfig(vector<string>& tasks)   {
        << " -runinfo=bla.py"
        << " -taskconfig=" << m_configCmd
        << " -partition=" << m_partitionCmd
-       << " -mode=" << m_modeCmd;
+       << " -mode=" << m_modeCmd
+       << " -print=" << m_print;
   if ( string(m_slvTypeCmd) == "NativeDimSlave" )   {
     m_slave = new CtrlNativeSlave(this,m_machine,daq,nam.str(),args.str());
   }

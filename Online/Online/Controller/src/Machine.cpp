@@ -59,7 +59,7 @@ Machine::Machine(const Type *typ, const string& nam)
   : TypedObject(typ,nam), m_fsm(MACH_IDLE), m_currState(0), 
     m_currTrans(0), m_direction(Rule::MASTER2SLAVE)
 {
-  display(NOLOG,"FSMmachine: creating machine %s of type %s",c_name(),typ->c_name());
+  display(DEBUG,"FSMmachine: creating machine %s of type %s",c_name(),typ->c_name());
   setState(m_type->initialState()).setTarget(0);
   Callback cb(this);
   m_fsm.addTransition(MACH_IDLE,     MACH_IDLE,     "Idle->Idle",      cb.make(&Machine::goIdle));
@@ -172,19 +172,19 @@ void Machine::evaluateWhens()  {
   const State::Whens& whens = state()->when();
   if ( !whens.empty() )  {
     const Machine::States states = slaveStates();
-    display(ALWAYS,"%s> Machine Idle:%s EvaluateWhen: Check %d when clauses.",
+    display(INFO,"%s> Machine Idle:%s EvaluateWhen: Check %d when clauses.",
 	    c_name(),isIdle() ? " YES " : " NO ",int(whens.size()));
     for(State::Whens::const_iterator iw=whens.begin(); iw != whens.end(); ++iw)  {
       const When* w = (*iw);
       When::Result res = w->fires(states);
       if ( res.first )  {
-	display(ALWAYS,"%s> WHEN clause: %s fired. Invoke tramsition to:%s",
+	display(INFO,"%s> WHEN clause: %s fired. Invoke tramsition to:%s",
 		c_name(),w->c_name(),res.first->c_name());
 	invokeTransition(res.first,res.second);
 	return;
       }
       else  {
-	display(ALWAYS,"%s> WHEN clause: %s rejected.",c_name(),w->c_name());
+	display(INFO,"%s> WHEN clause: %s rejected.",c_name(),w->c_name());
       }
     }
   }
@@ -293,7 +293,7 @@ ErrCond Machine::checkSlaves()   {
     else if ( !tr->checkLimbo() && check.fail==0 && check.dead+check.count==sl.size() )
       return ret_success(this,MACH_EXEC_ACT);
     else if ( check.fail>0 && check.count+check.fail == sl.size() )   {
-      display(ALWAYS,"%s> Executing %s. Invoke MACH_FAIL. count:%d fail:%d dead:%d",
+      display(INFO,"%s> Executing %s. Invoke MACH_FAIL. count:%d fail:%d dead:%d",
 	      c_name(),tr->c_name(), int(check.count), int(check.fail), int(check.dead));
       return ret_failure(this);
     }
@@ -313,13 +313,13 @@ ErrCond Machine::startTransition()  {
     if ( !sl.empty() )  {
       PredicateSlave pred = for_each(sl.begin(),sl.end(),PredicateSlave(tr));
       if ( pred.ok() )   {
-	display(NOLOG,"%s> Executing %s. Predicates checking finished successfully.",c_name(),tr->c_name());
+	display(DEBUG,"%s> Executing %s. Predicates checking finished successfully.",c_name(),tr->c_name());
 	InvokeSlave func = for_each(sl.begin(),sl.end(),InvokeSlave(tr,m_direction));
 	if ( func.status == FSM::WAIT_ACTION )  {
 	  return FSM::SUCCESS;
 	}
 	else if ( !func.ok() )  {
-	  display(NOLOG,"%s> Executing %s. Failed to invoke slaves according to rules.",c_name(),tr->c_name());
+	  display(INFO,"%s> Executing %s. Failed to invoke slaves according to rules.",c_name(),tr->c_name());
 	  return ret_failure(this);
 	}
 	return ret_success(this,MACH_EXEC_ACT);
@@ -399,7 +399,7 @@ ErrCond Machine::finishTransition (const void* user_param)  {
   setState(tr->to()).setTarget(0);
   if ( i != m_transActions.end() ) (*i).second.completion().execute(user_param);
   m_completion.execute(user_param);
-  display(NOLOG,"%s> Executing %s. Finished transition. Current state:%s",c_name(),tr->c_name(),tr->to()->c_name());
+  display(INFO,"%s> Executing %s. Finished transition. Current state:%s",c_name(),tr->c_name(),tr->to()->c_name());
   m_direction = Rule::MASTER2SLAVE;
   return FSM::SUCCESS;
 }

@@ -10,8 +10,8 @@
 **==========================================================*/
 
 // Framework include files
+#include "FiniteStateMachine/TypedObject.h"
 #include "ControlMenu.h"
-#include "Controller/XmlTaskConfiguration.h"
 #include "UPI/UpiSensor.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
@@ -50,8 +50,8 @@ static const char* s_cmdList[]    = {"create","load","configure","start","stop",
 static const char* s_stateList[]  = {"OFFLINE","NOT_READY","READY","RUNNING","ERROR","PAUSED","UNKNOWN"};
 
 /// Standard constructor with object setup through parameters
-UPI::ControlMenu::ControlMenu(const std::string& config) 
-  : Control(config), m_id(0)
+UPI::ControlMenu::ControlMenu(const string& config, int prt) 
+  : Control(config, prt), m_id(0)
 {
   string line = "----------------------------------------------------------------------------";
   m_id = UpiSensor::instance().newID();
@@ -177,10 +177,13 @@ void UPI::ControlMenu::handle(const Event& ev)   {
 extern "C" int fsm_upi_controlmenu(int argc, char** argv)  {
   string config;
   int srows, scols, cols, rows, col, row;
-  RTL::CLI cli(argc, argv, 0);
-  cli.getopt("config",2,config);
+  int prt = 4;// TypedObject::WARNING;
 
-  UPI::ControlMenu ctrl(config);
+  RTL::CLI cli(argc, argv, 0);
+  cli.getopt("config", 2, config);
+  cli.getopt("print",  2, prt);
+
+  UPI::ControlMenu ctrl(config,prt);
   ::upic_get_screen_size(&srows, &scols);
   ::upic_get_message_window(&rows, &cols,&row, &col);
   ::upic_set_message_window (srows-15, scols-2, 16, 2);

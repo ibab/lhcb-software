@@ -52,7 +52,7 @@ FSM::ErrCond CommandTarget::declareState(const std::string& new_state, const std
   std::string old_state = m_stateName;
   m_prevStateName = m_stateName;
   m_stateName = new_state;
-  display(ALWAYS,"%s> Declare state:%s  %s",c_name(),m_stateName.c_str(),opt.c_str());
+  display(INFO,"%s> Declare state:%s  %s",c_name(),m_stateName.c_str(),opt.c_str());
   m_service->updateService((char*)m_stateName.c_str());
   if ( new_state == ST_NAME_ERROR )
     declareSubState(FAILED_ACTION);
@@ -117,12 +117,12 @@ void DAQCommandTarget::commandHandler()   {
   std::string cmd = getString();
   display(NOLOG,"%s> Received transition request:%s",c_name(),cmd.c_str());
   if ( m_timeout )  {
-    display(NOLOG,"%s> Ignore transition request:%s for TIMEOUT",c_name(),cmd.c_str());
+    display(WARNING,"%s> Ignore transition request:%s for TIMEOUT",c_name(),cmd.c_str());
     m_timeout = false;
     return;
   }
   else if ( cmd == "timeout" )  {
-    display(NOLOG,"%s> Will TIMEOUT next request.",c_name());
+    display(WARNING,"%s> Will TIMEOUT next request.",c_name());
     m_timeout = true;
     return;
   }

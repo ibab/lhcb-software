@@ -49,7 +49,7 @@ void TypedObject::setPrinter(void* arg, dump_function_t fcn)  {
 
 /// Calls the display action
 Status TypedObject::display(int severity, const char* fmt...)  {
-  if ( severity > print_lvl ) {                  // receives:
+  if ( severity >= print_lvl ) {                  // receives:
     va_list args;                                // - the log level
     va_start( args, fmt);                        // - a standard C formatted 
     char str[4096];                              //   string (like printf)

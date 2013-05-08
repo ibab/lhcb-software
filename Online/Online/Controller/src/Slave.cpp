@@ -70,7 +70,7 @@ FSM::ErrCond Slave::send(int code, const State* state)   const {
 }
 
 FSM::ErrCond Slave::notifyMachine(int meta_state)  {
-  //display(NOLOG,"Slave %s> notify machine: %s State:%s",c_name(),m_machine->c_name(),metaStateName());
+  display(DEBUG,"Slave %s> notify machine: %s State:%s",c_name(),m_machine->c_name(),metaStateName());
   IocSensor::instance().send((Interactor*)m_machine,meta_state,(void*)this); 
   return FSM::SUCCESS;
 }
@@ -138,7 +138,7 @@ FSM::ErrCond Slave::apply(const Rule* rule)  {
   if ( tr )  {
     m_rule = rule;
     m_meta = SLAVE_EXECUTING;
-    display(ALWAYS,"%s> Send request \"%s\"to target process.",c_name(),tr->c_name());
+    display(INFO,"%s> Send request \"%s\"to target process.",c_name(),tr->c_name());
     return isInternal() ? send(SLAVE_FINISHED,tr->to()) : sendRequest(tr);
   }
   return FSM::TRANNOTFOUND;

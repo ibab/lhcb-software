@@ -68,6 +68,7 @@ namespace FiniteStateMachine {
 
   protected:
     int              m_numSlaves;
+    int              m_print;
     lib_rtl_thread_t m_thread;
     char             m_slaveCmd[128];
     char             m_stateCmd[128];
@@ -121,7 +122,7 @@ namespace FiniteStateMachine {
     virtual void replace_comment(int, const char*) {}
   public:
     /// Standard constructor with object setup through parameters
-    Control(const std::string& config);
+    Control(const std::string& config, int prt);
     /// Standard destructor
     virtual ~Control();
     /// Start slave's IO pump
