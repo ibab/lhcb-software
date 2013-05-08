@@ -18,7 +18,7 @@ config_default = { 'Prescale'  : 1.0,
                    'pT'        : 18.,
                    'photonIso' : 30,
 
-                   'PrescaleLoose'  : 0.05,
+                   'PrescaleLoose'  : 0.5, ##changed from 0.05
                    'PostscaleLoose' : 1.0,
                    'pTLoose'        : 7.5,
                    'photonIsoLoose' : 5
