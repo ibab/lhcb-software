@@ -15,7 +15,7 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLooseMuons
 
-confdict_MuMuSS = { 'MuMuSSLine1Prescale' :  .1,
+confdict_MuMuSS = { 'MuMuSSLine1Prescale' :  1.0, ##changed from 0.1
                     'MuMuSSLine2Prescale' : 1.0,
                     'MuMuSSLine3Prescale' : 1.0,
                     'MuMuSSLine4Prescale' : 1.0,
