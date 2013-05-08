@@ -17,11 +17,11 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLooseMuons, StdAllNoPIDsMuons
 
 confdict_WMu = { 'WMu_Prescale'    : 1.0,
-                 'WMuLow_Prescale' : 0.1,
-                 'STNB_Prescale' : 0.2,
+                 'WMuLow_Prescale' : 1.0, ##changed from 0.1
+                 'STNB_Prescale' : 1.0, ##changed from 0.2
                  'WMu_Postscale'   : 1.0,
-                 'SingMuon10_Prescale' : 0.01,
-                 'SingMuon48_Prescale'  : 0.4,
+                 'SingMuon10_Prescale' : 1.0, ##changed from 0.01
+                 'SingMuon48_Prescale'  : 1.0, ##changed from 0.4
                  'pT'     : 20.,
                  'pTlow'  : 15.,
                  'pTvlow' :  5.,
