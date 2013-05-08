@@ -68,7 +68,7 @@ config = {
                                       , "MaxFractTrwHitBefore" :  0.49
                                       }
         # prescaled
-        , "SinglePSSelection"       : { "PreScale"             :  0.005
+        , "SinglePSSelection"       : { "PreScale"             :  0.01 ##changed from 0.005
                                       , "MinRho"               :  0.5*units.mm
                                       , "MinMass"              :  3.0*units.GeV
                                       , "MinSumPT"             :  0.0*units.GeV
