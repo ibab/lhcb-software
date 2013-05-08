@@ -28,6 +28,19 @@ using namespace std;
 using namespace FiniteStateMachine;
 using namespace FiniteStateMachine::DAQ;
 
+/// Feed data to DIS when updating data
+static void feed(void* tag, void** buff, int* size, int* /* first */) {
+  static const char* data = "";
+  string* s = *(string**)tag;
+  if ( !s->empty() )  {
+    *buff = (void*)s->c_str();
+    *size = s->length()+1;
+    return;
+  }
+  *buff = (void*)data;
+  *size = 1;
+}
+
 /// Constructor
 CommandTarget::CommandTarget(const std::string& nam) : DimCommand(nam.c_str(), (char*)"C"), TypedObject(0,nam)  { 
   string svcname = nam+"/status";
@@ -37,23 +50,26 @@ CommandTarget::CommandTarget(const std::string& nam) : DimCommand(nam.c_str(), (
   m_monitor.pid         = ::lib_rtl_pid();
   m_monitor.partitionID = -1;
   m_monitor.pad         = 0;
-  m_service    = new DimService(svcname.c_str(),(char*)m_stateName.c_str());
+  m_service    = ::dis_add_service((char*)svcname.c_str(),(char*)"C",0,0,feed,(long)&m_stateName);
   svcname      = nam+"/fsm_status";
-  m_fsmService = new DimService(svcname.c_str(),(char*)"L:2;I:1;C",&m_monitor,sizeof(m_monitor));
-  DimServer::start(nam.c_str());
+  m_fsmService = ::dis_add_service((char*)svcname.c_str(),(char*)"L:2;I:1;C",&m_monitor,sizeof(m_monitor),0,0);
 }
 
 /// Standard destructor
 CommandTarget::~CommandTarget()   {
+  if ( m_service != 0 ) ::dis_remove_service(m_service);
+  if ( m_fsmService != 0 ) ::dis_remove_service(m_fsmService);
 }
 
 /// Declare process state to DIM service
 FSM::ErrCond CommandTarget::declareState(const std::string& new_state, const std::string& opt)  {
   std::string old_state = m_stateName;
   m_prevStateName = m_stateName;
+  ::dim_lock();
   m_stateName = new_state;
+  ::dim_unlock();
   display(INFO,"%s> Declare state:%s  %s",c_name(),m_stateName.c_str(),opt.c_str());
-  m_service->updateService((char*)m_stateName.c_str());
+  ::dis_update_service(m_service);
   if ( new_state == ST_NAME_ERROR )
     declareSubState(FAILED_ACTION);
   else if ( old_state == new_state )
@@ -83,12 +99,21 @@ FSM::ErrCond CommandTarget::declareSubState(SubState new_state)  {
     break;
   }
   // std::cout << "Update substate..." << std::endl;
-  m_fsmService->updateService(&m_monitor,sizeof(m_monitor));
+  ::dis_update_service(m_fsmService);
+  return FSM::SUCCESS;
+}
+
+/// Publish state information when transition is completed
+FSM::ErrCond CommandTarget::publish()  {
+  declareState(m_stateName);
   return FSM::SUCCESS;
 }
 
 /// Run the object
 CommandTarget& CommandTarget::run()  {
+  DimServer::autoStartOn();
+  DimServer::start(c_name());
+  publish();
   IocSensor::instance().run();
   return *this;
 }
@@ -97,7 +122,7 @@ CommandTarget& CommandTarget::run()  {
 DAQCommandTarget::DAQCommandTarget(const std::string& nam)  
   : CommandTarget(nam), m_timeout(false)
 {
-  declareState(ST_NAME_OFFLINE);
+  m_stateName = ST_NAME_OFFLINE;
 }
 
 /// Standard destructor

@@ -102,8 +102,7 @@ extern "C" int controller_fsm_test(int argc, char** argv)  {
 
   Controller* target = new Controller(dim_name,mac);
   target->display(target->ALWAYS,"Controller task started...");
-  DimServer::autoStartOn();
-  DimServer::start(dim_name.c_str());
+  target->publish();
   target->run();
   return 1;
 }

@@ -77,8 +77,6 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
     ::exit(EINVAL);
   }
   ctrl.display(ctrl.ALWAYS,"Controller task started...");
-  DimServer::autoStartOn();
-  DimServer::start(utgid.c_str());
   ctrl.run();
   return 1;
 }

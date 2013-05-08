@@ -80,6 +80,8 @@ namespace FiniteStateMachine {
     Callback            m_completion;
     /// General callback always called when a transition fails
     Callback            m_fail;
+    /// General callback always called when a slaves get manipulated
+    Callback            m_meta;
     /// Falg to indicate command reversal
     Rule::Direction     m_direction;
   public:
@@ -185,6 +187,8 @@ namespace FiniteStateMachine {
     Machine& setFailAction (const Callback& action);
     /// Update callback structures always called when a transition completes
     Machine& setCompletionAction (const Callback& action);
+    /// Update callback structures always called when slaves get manipulated
+    Machine& setMetaStateAction (const Callback& action);
     /// Update callback structures for state enter action. 
     Machine& setInAction (const State* state, const Callback& action);
     /// Update callback structures for state leave action. 

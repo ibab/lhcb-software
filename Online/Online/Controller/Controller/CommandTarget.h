@@ -45,10 +45,9 @@ namespace FiniteStateMachine {
     /// Variable to contain the previous state name
     std::string   m_prevStateName;
     /// Pointer to the dim service publishing the state
-    DimService*   m_service;
+    int           m_service;
     /// Pointer to the dim service publishing the sub-state
-    DimService*   m_fsmService;
-  
+    int           m_fsmService;
 
   public:
     enum SubState  {
@@ -72,6 +71,9 @@ namespace FiniteStateMachine {
 
     /// Declare FSM sub-state
     ErrCond declareSubState(SubState new_state);
+
+    /// Publish state information when transition is completed
+    virtual ErrCond publish();
 
     /// ITaskFSM overload: Set transition target state
     virtual void setTargetState(int target) = 0;

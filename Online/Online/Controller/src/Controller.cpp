@@ -18,12 +18,27 @@
 #include "RTL/rtl.h"
 
 // C/C++ include files
-#include <cstdio>
-#include <memory>
+#include <sstream>
 
 using namespace std;
 using namespace FiniteStateMachine;
 using namespace FiniteStateMachine::DAQ;
+
+typedef Machine::Slaves Slaves;
+
+
+/// Feed data to DIS when updating data
+static void feed(void* tag, void** buff, int* size, int* /* first */) {
+  static const char* data = "";
+  string* s = *(string**)tag;
+  if ( !s->empty() )  {
+    *buff = (void*)s->c_str();
+    *size = s->length()+1;
+    return;
+  }
+  *buff = (void*)data;
+  *size = 1;
+}
 
 /// Constructor
 Controller::Controller(const string&  nam, Machine* m)
@@ -34,34 +49,52 @@ Controller::Controller(const string&  nam, Machine* m)
   m_errorState = typ->state(ST_NAME_ERROR);
   m->setFailAction(Callback::make(this,&Controller::fail));
   m->setCompletionAction(Callback::make(this,&Controller::publish));
+  m->setMetaStateAction(Callback::make(this,&Controller::publishSlaves));
   m->setInAction(rdy,Callback::make(this,&Controller::ready));
-  publish();
+  m_fsmTasks = ::dis_add_service((char*)(nam+"/fsm_tasks").c_str(),(char*)"C",0,0,feed,(long)&m_taskInfo);
 }
 
 /// Standard destructor
 Controller::~Controller() {
+  if ( m_fsmTasks != 0 ) ::dis_remove_service(m_fsmTasks);
 }
 
 /// Publish state information when transition failed. 
 FSM::ErrCond Controller::fail()  {
   const Transition* tr = m_machine->currTrans();
-  // Nothing to do, since failure will be handled with IOC SLAVE_FAILED
+  const Slaves slaves = m_machine->slaves();
   display(ALWAYS,"%s::%s> Controller: FAILED to invoke transition %s from %s.",
 	  c_name(), m_machine->type()->c_name(), tr ? tr->c_name() : "??Unknown??",m_machine->c_state());
   m_machine->setSlaveState(Slave::SLAVE_FAILED,m_errorState);
-  for(Machine::Slaves::iterator i=m_machine->slaves().begin(); i!= m_machine->slaves().end(); ++i)  {
+  for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); ++i)  {
     Slave* s = *i;
-    if ( s->currentState() == Slave::SLAVE_FAILED ) s->setState(m_errorState);
     display(ALWAYS,"%s> Controller: Slave %s in state %s has meta-state:%s",
 	    c_name(), s->c_name(), s->c_state(), s->metaStateName());
   }
-  //  IocSensor::instance().send(this,ERROR_PROCESS,this);
+  return publishSlaves();
+}
+
+/// Publish state information of the slaves
+FSM::ErrCond Controller::publishSlaves()  {
+  stringstream info;
+  const Slaves slaves = m_machine->slaves();
+  for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); ++i)  {
+    Slave* s = *i;
+    info << s->name() << "/" << s->state()->name() << "/" << string(s->metaStateName());
+    if ( ++i == slaves.end() ) break;
+    info << "|";
+  }
+  ::dim_lock();
+  m_taskInfo = info.str();
+  ::dim_unlock();
+  ::dis_update_service(m_fsmTasks);
   return FSM::SUCCESS;
 }
 
 /// Publish state information when transition is completed
 FSM::ErrCond Controller::publish()  {
   string state = m_machine->c_state();
+  publishSlaves();
   return declareState(state);
 }
 
@@ -122,7 +155,7 @@ FSM::ErrCond Controller::invokeTransition(const string& transition)  {
 /// DimCommand overload: handle DIM commands
 void Controller::commandHandler()   {
   // Decouple as quickly as possible from the DIM command loop !
-  std::string cmd = getString();
+  string cmd = getString();
   display(NOLOG,"%s> Received transition request:%s",c_name(),cmd.c_str());
   if ( !m_machine->isIdle() )  {
     display(ERROR,"%s> Machine is not idle!",c_name());

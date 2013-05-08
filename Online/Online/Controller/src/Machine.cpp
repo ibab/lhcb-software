@@ -245,6 +245,7 @@ ErrCond Machine::handleSlaves()  {
   const Slaves&     sl = slaves();
   if ( sl.size() > 0 && tr->create() )  {
     SlaveStarter starter=for_each(sl.begin(),sl.end(),SlaveStarter(tr));
+    m_meta.execute(this);
     // Failed to create some of the slaves
     if ( starter.fail >0 ) return ret_failure(this);
     // Slaves are created, wait for the IAMHERE. We can only continue if ALL slaves are alive
@@ -253,6 +254,7 @@ ErrCond Machine::handleSlaves()  {
   }
   else if ( sl.size() > 0 && tr->killActive() )  {
     SlaveKiller killer=for_each(sl.begin(),sl.end(),SlaveKiller(tr));
+    m_meta.execute(this);
     // All slaves are dead now
     if ( killer.dead == sl.size() ) return ret_success(this,MACH_ACTIVE);
     // Some slaves are still in the process to die....
@@ -267,6 +269,7 @@ ErrCond Machine::checkAliveSlaves()  {
   const Transition* tr = currTrans();
   if ( !sl.empty() && tr->checkLimbo() )  {
     SlaveLimboCount limbos=for_each(sl.begin(),sl.end(),SlaveLimboCount());
+    m_meta.execute(this);
     if ( limbos.count>0 ) return FSM::SUCCESS;
   }
   return ret_success(this,MACH_CHK_SLV);
@@ -315,6 +318,7 @@ ErrCond Machine::startTransition()  {
       if ( pred.ok() )   {
 	display(DEBUG,"%s> Executing %s. Predicates checking finished successfully.",c_name(),tr->c_name());
 	InvokeSlave func = for_each(sl.begin(),sl.end(),InvokeSlave(tr,m_direction));
+	m_meta.execute(this);
 	if ( func.status == FSM::WAIT_ACTION )  {
 	  return FSM::SUCCESS;
 	}
@@ -360,6 +364,7 @@ ErrCond Machine::finishOutAction(ErrCond status)  {
 ErrCond Machine::doAction (const void* user_param)  {
   const Transition* tr = currTrans();
   TransitionActionMap::const_iterator i = m_transActions.find(tr);
+  m_meta.execute(this);
   if ( i != m_transActions.end() )  {
     int sc = (*i).second.pre().execute(user_param);
     if ( sc == FSM::SUCCESS )  {
@@ -411,10 +416,17 @@ ErrCond Machine::doFail (const void* user_param)  {
   if ( i != m_transActions.end() )
     (*i).second.fail().execute(user_param);
   m_fail.execute(user_param);
+  m_meta.execute(this);
   return ret;
 }
 
-    /// Update callback structures always called when a transition fails
+/// Update callback structures always called when a transition starts
+Machine& Machine::setMetaStateAction (const Callback& action)   {
+  m_meta = action;
+  return *this;
+}
+
+/// Update callback structures always called when a transition fails
 Machine& Machine::setFailAction (const Callback& action)  {
   m_fail = action;
   return *this;

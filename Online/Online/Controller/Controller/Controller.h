@@ -42,7 +42,11 @@ namespace FiniteStateMachine   {
     /// Static cache of the pointer to the error state
     const State* m_errorState;
     /// Reference to machine object
-    Machine* m_machine;
+    Machine*     m_machine;
+    /// Variable to publish the task information
+    std::string  m_taskInfo;
+    /// Pointer to the dim service publishing the task information
+    int          m_fsmTasks;
 
   public:
     /// Constructor
@@ -55,13 +59,15 @@ namespace FiniteStateMachine   {
     virtual void handle(const Event& ev);
 
     /// Publish state information when transition failed. 
-    ErrCond fail();
+    virtual ErrCond fail();
     /// Publish state information when transition is completed
-    ErrCond publish();
+    virtual ErrCond publish();
+    /// Publish state information of the slaves
+    virtual FSM::ErrCond publishSlaves();
     /// State enter action for READY: Reset all internal slaves to external ones
-    ErrCond ready();
+    virtual ErrCond ready();
     /// Invoke single transition request on machine
-    ErrCond invokeTransition(const std::string& tr);
+    virtual ErrCond invokeTransition(const std::string& tr);
     /// Set transition target state
     virtual void setTargetState(int target);
   };   //  End class Controller
