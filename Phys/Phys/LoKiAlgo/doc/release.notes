@@ -9,19 +9,15 @@
 !========================= LoKiAlgo v9r8p2 2013-05-08 =========================
 
 ! 2013-05-08 - Vanya Belyaev
-
- - TupleDicts.cpp
-
-   fix a serious bug in column_float method
+ - TupleDicts.cpp  : Fix a serious bug in column_float method
 
 ! 2013-04-11 - Vanya Belyaev
-
- - GetLoKiAlgo.cpp: bug fix 
+ - GetLoKiAlgo.cpp : bug fix 
 
 !========================= LoKiAlgo v9r8p1 2013-04-05 =========================
 
 ! 2013-03-22 - Chris Jones
- - Fix redefinition warnings for _XOPEN_SOURCE during dictionary  generation 
+ - Fix redefinition warnings for _XOPEN_SOURCE during dictionary generation 
    on SLC6.
 
 ! 2013-03-02 - Chris Jones
