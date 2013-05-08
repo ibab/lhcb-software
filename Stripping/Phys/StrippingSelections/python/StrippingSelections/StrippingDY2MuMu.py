@@ -17,9 +17,9 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLooseMuons
 
-confdict_DY2MuMu = { 'DY2MuMu1LinePrescale'    : 0.05,
-                     'DY2MuMu1LineHltPrescale' : 0.50,
-                     'DY2MuMu2LinePrescale'    : 0.25,
+confdict_DY2MuMu = { 'DY2MuMu1LinePrescale'    : 1.0, ##changed from 0.05
+                     'DY2MuMu1LineHltPrescale' : 1.0, ##changed from 0.5
+                     'DY2MuMu2LinePrescale'    : 1.0, ##changed from 0.25
                      'DY2MuMu2LineHltPrescale' : 1.0,
                      'DY2MuMu3LinePrescale'    : 1.0,
                      'DY2MuMu4LinePrescale'    : 1.0,
