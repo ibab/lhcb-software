@@ -54,6 +54,16 @@ const Transition* Type::transition(const std::string& from, const std::string& t
   return transition(from+"->"+to);
 }
 
+/// Access transition by its source and target state name. Throws exception if transition does not exist
+Type::ConstTransitions Type::transitionsByName(const std::string& nam)  const  {
+  ConstTransitions tr;
+  for(Transitions::const_iterator i=m_transitions.begin(); i != m_transitions.end(); ++i) {
+    const Transition* t = (*i).second;
+    if ( t->name() == nam ) tr.insert(make_pair((*i).first,t));
+  }
+  return tr;
+}
+
 /// Add a new state to the FSM type
 const State* Type::addState(const std::string& nam)  {
   if ( !nam.empty() )  {
@@ -99,50 +109,4 @@ Transition* Type::addTransition(const std::string& cmd, const State* from, const
     throw runtime_error("Type::addTransition> Invalid initial state to add transition "+cmd+" to type "+name());  
   }
   throw runtime_error("Type::addTransition> Invalid state name: <empty> to add transition to "+name());  
-}
-
-/// Add a new rule to a transition
-const Rule* Type::addRule(Transition* transition, const Type* target_type, 
-			  const string& curr_state, const string& target_state, 
-			  Rule::Direction direction)  
-{
-  if ( transition )  {
-    return transition->addRule(target_type,curr_state,target_state,direction);
-  }
-  throw runtime_error("Type::addRule> invalid transition to add rule for type:"+name());
-}
-
-
-/// Add a new predicate to a transition
-const Predicate* Type::addPredicate(Transition* transition,const Type* target_type,
-				    const std::string& s1, const std::string& s2,
-				    const std::string& s3, const std::string& s4, 
-				    const std::string& s5)  
-{
-  if ( transition )  {
-    string sname="";
-    Predicate::States allowed;
-
-    const State* st1 = target_type->state(s1);
-    const State* st2 = s2.empty() ? 0 : target_type->state(s2);
-    const State* st3 = s3.empty() ? 0 : target_type->state(s3);
-    const State* st4 = s4.empty() ? 0 : target_type->state(s4);
-    const State* st5 = s5.empty() ? 0 : target_type->state(s5);
-    if ( !st1 ) sname = s1;
-    else if ( !s2.empty() && !st2 ) sname = s2;
-    else if ( !s3.empty() && !st3 ) sname = s3;
-    else if ( !s4.empty() && !st4 ) sname = s4;
-    else if ( !s5.empty() && !st5 ) sname = s5;
-    else  {
-      if ( st1 ) allowed.insert(st1);
-      if ( st2 ) allowed.insert(st2);
-      if ( st3 ) allowed.insert(st3);
-      if ( st4 ) allowed.insert(st4);
-      if ( st5 ) allowed.insert(st5);
-      return transition->addPredicate(target_type,allowed);
-    }
-    throw runtime_error("Type::addPredicate> invalid allowed state "+sname+
-			" for predicate in transition:"+transition->name()+" of type "+name());
-  }
-  throw runtime_error("Type::addPredicate> invalid transition to add predicate for type:"+name());
 }

@@ -38,16 +38,17 @@ namespace FiniteStateMachine {
   public:
     typedef FSM::ErrCond ErrCond;
     enum SlaveState  {
-      SLAVE_LIMBO              = 3101,
-      SLAVE_STARTING           = 3102,
-      SLAVE_ALIVE              = 3103,
-      SLAVE_EXECUTING          = 3104,
-      SLAVE_FAILED             = 3105,
-      SLAVE_KILLED             = 3106,
+      SLAVE_NONE               = 0xFFFFFFFF,
+      SLAVE_LIMBO              = 1<<20,
+      SLAVE_STARTING           = 1<<21,
+      SLAVE_ALIVE              = 1<<22,
+      SLAVE_EXECUTING          = 1<<23,
+      SLAVE_FAILED             = 1<<24,
+      SLAVE_KILLED             = 1<<25,
       // Handling of answers from physical slaves
-      SLAVE_DEAD               = 3108,
-      SLAVE_TRANSITION         = 3109,
-      SLAVE_FINISHED           = 3110,
+      SLAVE_DEAD               = 1<<26,
+      SLAVE_TRANSITION         = 1<<27,
+      SLAVE_FINISHED           = 1<<28
     };
 
   protected:

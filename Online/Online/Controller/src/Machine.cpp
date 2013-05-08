@@ -87,7 +87,7 @@ Machine::Machine(const Type *typ, const string& nam)
   m_fsm.addTransition(MACH_EXEC_ACT, MACH_FAIL,     "WaitAct->Fail",   cb.make(&Machine::doFail));
   m_fsm.addTransition(MACH_CHK_SLV,  MACH_FAIL,     "CheckSlv->Fail",  cb.make(&Machine::doFail));
   m_fsm.addTransition(MACH_INACTION, MACH_FAIL,     "WaitIAct->Fail",  cb.make(&Machine::doFail));
-  m_fsm.addTransition(MACH_FAIL,     MACH_IDLE,     "Fail->Idle",      cb.make(&Machine::goIdle));
+  m_fsm.addTransition(MACH_FAIL,     MACH_IDLE,     "Fail->Idle",      cb.make(&Machine::goIdleFromFail));
 }
 
 /// Standatrd destructor  
@@ -153,6 +153,12 @@ void Machine::handleIoc(const Event& event)   {
   }
 }
 
+/// Set all slave matching the meta state mask to the real FSM state.
+int Machine::setSlaveState(int meta_mask, const State* state)   {
+  SetSlaveState actor = for_each(m_slaves.begin(),m_slaves.end(),SetSlaveState(state,meta_mask));
+  return actor.count;
+}
+
 /// Collect the states of all slaves
 const Machine::States Machine::slaveStates() const   {
   States states;
@@ -163,20 +169,23 @@ const Machine::States Machine::slaveStates() const   {
 
 /// Evaluate the when rules accoding to the slave states and invoke transition if required.
 void Machine::evaluateWhens()  {
-  const State* st = state();
-  const State::Whens& whens = st->when();
-  const Machine::States states = whens.empty() ? Machine::States() : slaveStates();
-  display(ALWAYS,"%s> Machine Idle:%s EvaluateWhen: Check %d when clauses.",
-	  c_name(),isIdle() ? " YES " : " NO ",int(whens.size()));
-  for(State::Whens::const_iterator iw=whens.begin(); iw != whens.end(); ++iw)  {
-    const When* w = (*iw);
-    display(ALWAYS,"%s> Check conditions for WHEN:%s",c_name(),w->c_name());
-    When::Result res = w->fires(states);
-    if ( res.first )  {
-      display(ALWAYS,"%s> WHEN clause: %s fired. Invoke tramsition to:%s",
-	      c_name(),w->c_name(),res.first->c_name());
-      invokeTransition(res.first,res.second);
-      return;
+  const State::Whens& whens = state()->when();
+  if ( !whens.empty() )  {
+    const Machine::States states = slaveStates();
+    display(ALWAYS,"%s> Machine Idle:%s EvaluateWhen: Check %d when clauses.",
+	    c_name(),isIdle() ? " YES " : " NO ",int(whens.size()));
+    for(State::Whens::const_iterator iw=whens.begin(); iw != whens.end(); ++iw)  {
+      const When* w = (*iw);
+      When::Result res = w->fires(states);
+      if ( res.first )  {
+	display(ALWAYS,"%s> WHEN clause: %s fired. Invoke tramsition to:%s",
+		c_name(),w->c_name(),res.first->c_name());
+	invokeTransition(res.first,res.second);
+	return;
+      }
+      else  {
+	display(ALWAYS,"%s> WHEN clause: %s rejected.",c_name(),w->c_name());
+      }
     }
   }
 }
@@ -185,8 +194,9 @@ void Machine::evaluateWhens()  {
 ErrCond Machine::invokeTransition (const Transition* transition, Rule::Direction direction)   {
   if ( transition )  {
     setTarget(transition);
-    m_fsm.setCurrentState(MACH_IDLE);
     m_direction = direction;
+    m_fsm.setCurrentState(MACH_IDLE);
+    for_each(m_slaves.begin(),m_slaves.end(),SlaveReset());
     return m_fsm.invokeTransition(MACH_OUTACTION,this);
   }
   return FSM::TRANNOTFOUND;
@@ -216,6 +226,12 @@ ErrCond Machine::invokeTransition(const std::string& target_state, Rule::Directi
 ErrCond Machine::goIdle()  {
   setTarget(0);
   return FSM::SUCCESS;
+}
+
+/// Finish failed transition and return to the IDLE status
+ErrCond Machine::goIdleFromFail()  {
+  ioc().send(this,Slave::SLAVE_TRANSITION,this);
+  return goIdle();
 }
 
 /// Null action
@@ -298,9 +314,7 @@ ErrCond Machine::startTransition()  {
       PredicateSlave pred = for_each(sl.begin(),sl.end(),PredicateSlave(tr));
       if ( pred.ok() )   {
 	display(NOLOG,"%s> Executing %s. Predicates checking finished successfully.",c_name(),tr->c_name());
-	//InvokeSlave func = for_each(sl.begin(),sl.end(),InvokeSlave(tr,m_direction));
-	const Transition::Rules& rules = tr->rules();
-	InvokeSlave2 func = for_each(rules.begin(), rules.end(), InvokeSlave2(sl,tr,m_direction));
+	InvokeSlave func = for_each(sl.begin(),sl.end(),InvokeSlave(tr,m_direction));
 	if ( func.status == FSM::WAIT_ACTION )  {
 	  return FSM::SUCCESS;
 	}
@@ -331,7 +345,6 @@ ErrCond Machine::finishAnyAction(ErrCond status, int next_state)  {
 ErrCond Machine::doOutAction (const void* user_param)  {
   if ( state() )  {
     StateActionMap::const_iterator i = m_stateActions.find(state());
-    for_each(m_slaves.begin(),m_slaves.end(),SlaveReset());
     int sc = (i==m_stateActions.end()) ? (*i).second.out().execute(user_param) : ErrCond(FSM::SUCCESS);
     return finishOutAction(sc);
   }

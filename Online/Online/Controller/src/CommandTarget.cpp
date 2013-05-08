@@ -136,8 +136,6 @@ void DAQCommandTarget::commandHandler()   {
     setTargetState(STOPPED);
   else if ( cmd == "reset"    )
     setTargetState(NOT_READY);
-  else if ( cmd == "unload"   )
-    setTargetState(UNKNOWN);
   else if ( cmd == "pause"    )
     setTargetState(PAUSED);
   else if ( cmd == "continue" )
@@ -148,6 +146,10 @@ void DAQCommandTarget::commandHandler()   {
     setTargetState(OFFLINE);
   else if ( cmd == "error" )
     setTargetState(ERROR);
+  else if ( cmd == "unload"   )
+    setTargetState(UNKNOWN);
+  else if ( cmd == "RESET"   )
+    setTargetState(UNKNOWN);
   else   {
     setTargetState(ERROR);
     return;

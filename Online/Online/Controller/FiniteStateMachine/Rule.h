@@ -24,6 +24,7 @@ namespace FiniteStateMachine   {
 
   // Forward declarations
   class State;
+  class Transition;
 
   /**@class Rule  Rule.h FiniteStateMachine/Rule.h
    *    A FSM rule consists out of three components:
@@ -48,23 +49,24 @@ namespace FiniteStateMachine   {
     const State* m_currState;
     /// FSM target state of the target type the rule applies to
     const State* m_targetState;
+    /// FSM transition to be executed if specified
+    const Transition* m_transition;
     /// Rule direction: Master->Task or Task->Master
     Direction    m_direction;
 
   public:
-    /** Class Constructor
-     *
-     * @arg typ           [pointer, read-only]  FSM type
-     * @arg state_current [pointer, read-only]  Current state of the object the rule applies to
-     * @arg state_target  [pointer, read-only]  Target state of the object the rule applies to
-     */
+    /// Initializing class Constructor
     Rule(const Type *typ, const State* state_current, const State* state_target, Direction direction);
+    /// Initializing class Constructor
+    Rule(const Type *typ, const Transition* tr, Direction direction);
     /// Standatrd destructor  
     virtual ~Rule();    
     /// Retrieve pointer to the target state object
-    const State* targetState ()  const    { return m_targetState;      }
+    const State* targetState ()  const;
     /// Retrieve pointer to the current state object
-    const State* currState ()  const      { return m_currState;        }
+    const State* currState ()  const;
+    /// Access the FSM transition if it is specified
+    const Transition* transition() const  { return m_transition;       }
     /// Rule direction
     Direction direction() const           { return m_direction;        }
     /// Is the rule directed towards the master
@@ -72,7 +74,7 @@ namespace FiniteStateMachine   {
     /// Is the rule directed towards the master
     bool toSlave() const         { return m_direction == MASTER2SLAVE; }
     /// Check if a rule applies to a given slave state
-    bool operator()(const State* slave_state, Direction direction)  const;
+    bool applies(const State* slave_state, Direction direction)  const;
   };   //  End class Rule
 
 

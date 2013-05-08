@@ -68,7 +68,7 @@ void InvokeSlave::operator()(Slave* s)   {
   if ( !object->checkLimbo() && s->isLimbo() ) return; 
   for(Transition::Rules::const_iterator i=r.begin(); i!=r.end();++i)  {
     const Rule* rule = (*i);
-    if ( (*rule)(slState,direction) )  {
+    if ( rule->applies(slState,direction) )  {
       FSM::ErrCond sc = s->apply(rule);
       if      ( status == FSM::SUCCESS && sc == FSM::WAIT_ACTION ) status = sc;
       else if ( sc == FSM::TRANNOTFOUND ) { /* Rule does not apply */ }
@@ -78,30 +78,12 @@ void InvokeSlave::operator()(Slave* s)   {
   }
 }
 
-/// Standard constructor
-InvokeSlave2::InvokeSlave2(const std::vector<Slave*>& s, const Transition* t,Rule::Direction dir) 
-  : FsmCheckFunctor<const Transition*>(t), direction(dir), slaves(s)
-{
-}
-
-/// Operator invoked for each rule and invoke slave accordingly
-void InvokeSlave2::operator()(const Rule* rule)   {
-  for(Machine::Slaves::const_iterator i=slaves.begin(); i!=slaves.end();++i)    {
-    Slave* s = *i;
-    if ( !object->checkLimbo() && s->isLimbo() ) continue;
-    else if ( s->currentState() == Slave::SLAVE_EXECUTING ) continue;
-    else if ( (*rule)(s->state(),direction) )  {
-      FSM::ErrCond sc = s->apply(rule);
-      if      ( status == FSM::SUCCESS && sc == FSM::WAIT_ACTION ) status = sc;
-      else if ( sc == FSM::TRANNOTFOUND ) { /* Rule does not apply */ }
-      else if ( sc != FSM::SUCCESS      ) status = sc;
-    }
-  }
-}
-
 /// Operator invoked for each slave to be checked
 void SetSlaveState::operator()(Slave* s)     {
-  s->setCurrentState(object);
+  if ( (mask&s->currentState()) != 0 )  {
+    s->setState(object);
+    ++count;
+  }
 }
 
 /// Operator invoked for each slave to be checked
@@ -161,10 +143,8 @@ void PredicateSlave::operator()(const Slave* s)   {
   const Transition::Predicates& pred = object->predicates();
   for(Transition::Predicates::const_iterator i=pred.begin(); i!=pred.end(); ++i)  {
     const Predicate* p = (*i);
-    if ( s->type() == p->type() )  {
-      if      ( !check_limbo && s->isLimbo() ) continue;
-      else if ( !p->hasState(s->state()) ) status = FSM::FAIL;
-    }
+    if      ( !check_limbo && s->isLimbo() ) continue;
+    else if ( !p->hasState(s->state()) ) status = FSM::FAIL;
   }
 }
 

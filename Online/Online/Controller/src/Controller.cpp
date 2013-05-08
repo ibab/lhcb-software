@@ -46,16 +46,16 @@ Controller::~Controller() {
 FSM::ErrCond Controller::fail()  {
   const Transition* tr = m_machine->currTrans();
   // Nothing to do, since failure will be handled with IOC SLAVE_FAILED
-  display(ALWAYS,"%s::%s> Controller: FAILED to invoke transition %s from %s Metastate:%s",
-	  c_name(), m_machine->type()->c_name(), tr ? tr->c_name() : "", 
-	  m_machine->c_state(), m_machine->currentMetaName());
+  display(ALWAYS,"%s::%s> Controller: FAILED to invoke transition %s from %s.",
+	  c_name(), m_machine->type()->c_name(), tr ? tr->c_name() : "??Unknown??",m_machine->c_state());
+  m_machine->setSlaveState(Slave::SLAVE_FAILED,m_errorState);
   for(Machine::Slaves::iterator i=m_machine->slaves().begin(); i!= m_machine->slaves().end(); ++i)  {
     Slave* s = *i;
     if ( s->currentState() == Slave::SLAVE_FAILED ) s->setState(m_errorState);
     display(ALWAYS,"%s> Controller: Slave %s in state %s has meta-state:%s",
 	    c_name(), s->c_name(), s->c_state(), s->metaStateName());
   }
-  IocSensor::instance().send(this,ERROR_PROCESS,this);
+  //  IocSensor::instance().send(this,ERROR_PROCESS,this);
   return FSM::SUCCESS;
 }
 
@@ -78,7 +78,6 @@ FSM::ErrCond Controller::ready()  {
 
 /// Interrupt handling routine
 void Controller::handle(const Event& ev)    {
-  Slave* slave = ev.iocPtr<Slave>();
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type)  {

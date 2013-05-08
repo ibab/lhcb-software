@@ -54,15 +54,14 @@ namespace FiniteStateMachine {
 
     /// Metastates and Action codes of the FSMmachine object
     enum MachineState  {
-      MACH_WAIT_NULL  =  3001,
-      MACH_IDLE       =  3002,        /// Machine IDLE
-      MACH_OUTACTION  =  3003,        /// Executing state leave action
-      MACH_ACTIVE     =  3004,
-      MACH_CHK_SLV    =  3005,        /// Machine is checking if all slave tasks completed the transition
-      MACH_EXEC_ACT   =  3006,        /// Executing Action
-      MACH_INACTION   =  3007,        /// Executing state enter action
-      MACH_FAIL       =  3008,        /// Code used on failure
-      MACH_LAST       =  3099
+      MACH_WAIT_NULL  =  1<<1,
+      MACH_IDLE       =  1<<2,        /// Machine IDLE
+      MACH_OUTACTION  =  1<<3,        /// Executing state leave action
+      MACH_ACTIVE     =  1<<4,
+      MACH_CHK_SLV    =  1<<5,        /// Machine is checking if all slave tasks completed the transition
+      MACH_EXEC_ACT   =  1<<6,        /// Executing Action
+      MACH_INACTION   =  1<<7,        /// Executing state enter action
+      MACH_FAIL       =  1<<8         /// Code used on failure
     };
   protected:
     /// Internal finite state machine implementation
@@ -110,15 +109,15 @@ namespace FiniteStateMachine {
     Slaves& slaves()                              {  return m_slaves;                          }
     /// Check if the machine is in idle state
     bool isIdle()  const                          {  return m_fsm.currentState() == MACH_IDLE; }
-    //int  targetState() const                      {  return m_fsm.targetState();               }
     /// Meta state name of current meta-state
     const char* currentMetaName()  const;
     /// Meta state name of target meta-state
     const char* previousMetaName()  const;
     
+    /// Set all slave matching the meta state mask to the real FSM state.
+    int  setSlaveState(int meta_mask, const State* state);
     /// Collect the states of all slaves
     const States slaveStates() const;
-
     /// Evaluate the when rules accoding to the slave states and invoke transition if required.
     void evaluateWhens();
 
@@ -155,6 +154,8 @@ namespace FiniteStateMachine {
 
     /// Action routine to be called if a transition is ended and the machine is idle.
     ErrCond goIdle();
+    /// Finish failed transition and return to the IDLE status
+    ErrCond goIdleFromFail();
 
     /// Null action
     virtual ErrCond nullAction()  const;

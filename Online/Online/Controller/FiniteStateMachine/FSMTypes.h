@@ -40,7 +40,6 @@ namespace FiniteStateMachine   {
     const char ST_NAME_STOPPED[]      = {"READY"};
     const char ST_NAME_ERROR[]        = {"ERROR"};
     const char ST_NAME_PAUSED[]       = {"PAUSED"};
-    const char ST_NAME_ANY[]          = {"*"};
 
     enum StateChar  {
       UNKNOWN   = 'U',

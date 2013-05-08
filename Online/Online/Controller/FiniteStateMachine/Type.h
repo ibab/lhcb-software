@@ -42,9 +42,11 @@ namespace FiniteStateMachine   {
   class Type   {
   public:
     /// State container definition
-    typedef std::map<std::string,State*>       States;
+    typedef std::map<std::string,State*>             States;
     /// Transition container definition
-    typedef std::map<std::string,Transition*>  Transitions;
+    typedef std::map<std::string,Transition*>        Transitions;
+    /// User Transition container definition
+    typedef std::map<std::string,const Transition*>  ConstTransitions;
 
   protected:
     /// Object name
@@ -78,15 +80,8 @@ namespace FiniteStateMachine   {
     const Transition* transition(const std::string& nam)  const;
     /// Access transition by its source and target state name. Throws exception if transition does not exist
     const Transition* transition(const std::string& from, const std::string& to)  const;
-
-    /// Add a new rule to a transition
-    const Rule*       addRule(Transition* transition, const Type* target_type, const std::string& current_state, const std::string& target_state, Rule::Direction direction=Rule::MASTER2SLAVE);
-    /// Add a new predicate to a transition
-    const Predicate*  addPredicate(Transition* transition,   const Type* target_type,
-				   const std::string& s1,    const std::string& s2="",
-				   const std::string& s3="", const std::string& s4="", 
-				   const std::string& s5="");
-
+    /// Access to transition groups with the same name
+    ConstTransitions transitionsByName(const std::string& name)  const;
     /// Add a new state to the FSM type
     const State*      addState(const std::string& nam);
     /// Add a new Transition to the FSM type. Intrinsic transition - no command sent to slaves

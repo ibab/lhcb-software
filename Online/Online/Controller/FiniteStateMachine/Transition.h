@@ -17,6 +17,7 @@
 
 // C/C++ include files
 #include <map>
+#include <vector>
 
 /* 
  *  FiniteStateMachine namespace declaration
@@ -122,7 +123,7 @@ namespace FiniteStateMachine {
   class Transition : public TypedObject  {
   public:
     /// Rule container definition
-    typedef std::set<Rule*>      Rules;
+    typedef std::vector<Rule*> Rules;
     /// Predicate container definition
     typedef std::set<Predicate*> Predicates;
     enum TransitionFlags {
@@ -182,13 +183,42 @@ namespace FiniteStateMachine {
     bool killActive() const                 { return m_kill;         }
 
     /// Add a new predicate to a transition defining the allowed states of slaves for satisfication
-    const Predicate* addPredicate(const Type* target_type, const Predicate::States& allowed);
+    const Predicate* addPredicate(const Predicate::States& allowed);
     /// Add a new rule to a transition
-    const Rule* addRule(const Type* target_type, 
-			const std::string& curr_state, 
-			const std::string& target_state, 
-			Rule::Direction direction);
-  };   //  End class State
+    const Rule* adoptRule(Rule* rule);
+    /// Add a new rules to a transition
+    void adoptRule(Rules rules);
+  };   //  End class Transition
+
+  /**@class AllChildrenOfType  Transition.h FiniteStateMachine/Transition.h
+   *
+   *    Helper class to add rules and predicates to transition objects
+   *
+   * @author  M.Frank
+   * @date    01/03/2013
+   * @version 0.1
+   */
+  struct AllChildrenOfType : public TypedObject {
+    typedef std::map<std::string,const Transition*>  Transitions;
+    typedef Transition::Rules Rules;
+    /// Class constructor
+    AllChildrenOfType(const Type* t) : TypedObject(t,"") {}
+    /// Standard destructor
+    virtual ~AllChildrenOfType() {}
+    /// Helper function to add predicates
+    Predicate::States inState(const std::string& s1,    const std::string& s2="",
+			      const std::string& s3="", const std::string& s4="", 
+			      const std::string& s5="") const;
+    /// Helper function to add ANY rules
+    Rule* moveTo(             const std::string& target_state) const;
+    /// Helper function to add rules for transitions
+    Rule* execTransition(     const std::string& curr_state, 
+			      const std::string& target_state, 
+			      Rule::Direction direction=Rule::MASTER2SLAVE) const;
+    /// Helper function to define a whole set of rules to a transition depending on explicit transitions
+    Rules execTransition(const Transitions& transitions)  const;
+  };
+
 }      //  End namespace 
 #endif //  ONLINE_FINITESTATEMACHINE_TRANSITION_H
 

@@ -12,13 +12,11 @@
 #include "FiniteStateMachine/Type.h"
 #include "FiniteStateMachine/State.h"
 #include "FiniteStateMachine/FSMTypes.h"
-#include "FiniteStateMachine/Functors.h"
 #include "FiniteStateMachine/Transition.h"
 
 // C/C++ include files
 #include <cstdio>
 #include <stdexcept>
-#include <algorithm>
 
 using namespace FiniteStateMachine;
 using namespace std;
@@ -77,35 +75,84 @@ Transition::~Transition()    {
 }
 
 /// Add a new rule to a transition
-const Rule* Transition::addRule(const Type* target_type, const string& curr_state, 
-				const string& target_state, Rule::Direction direction)
-{
-  if ( target_type )  {
-    bool any = curr_state==DAQ::ST_NAME_ANY;
-    string nam = target_type->name()+"::"+curr_state+"->"+target_state;
-    const State* t_state = target_type->state(target_state);
-    const State* c_state = any ? 0 : target_type->state(curr_state);
-    if ( !any && !c_state )  {
-      throw runtime_error("Transition::addRule> invalid object state "+curr_state+
-			  " for rule in transition:"+name()+" of type "+type()->name());
-    }
-    if ( t_state )   {
-      Rule* rule = new Rule(target_type,c_state,t_state,direction);
-      m_rules.insert(rule);
-      return rule;
-    }
-    throw runtime_error("Transition::addRule> invalid target state "+target_state+
-			" for rule in transition:"+name()+" of type "+type()->name());
+const Rule* Transition::adoptRule(Rule* rule)   {
+  if ( rule ) {
+    m_rules.push_back(rule);
+    return rule;
   }
-  throw runtime_error("Transition::addRule> invalid target type for rule in transition:"+name()+" of type "+type()->name());
+  throw runtime_error("Transition::addRule> invalid rule for transition:"+name()+" of type "+type()->name());
+}
+
+/// Add a new rules to a transition
+void Transition::adoptRule(Rules rules) {
+  for(Rules::iterator i=rules.begin(); i!=rules.end(); ++i)
+    adoptRule(*i);
 }
 
 /// Add a new predicate to a transition
-const Predicate* Transition::addPredicate(const Type* target_type, const Predicate::States& allowed)  {
-  if ( target_type )  {
-    Predicate* predicate = new Predicate(target_type,allowed);
-    m_predicates.insert(predicate);
-    return predicate;
-  }
-  throw runtime_error("Transition::addPredicate> invalid target type for predicate in transition:"+name()+" of type "+type()->name());
+const Predicate* Transition::addPredicate(const Predicate::States& allowed)  {
+  Predicate* predicate = new Predicate(type(),allowed);
+  m_predicates.insert(predicate);
+  return predicate;
 }
+
+/// Helper function to define a whole set of rules to a transition depending on explicit transitions
+AllChildrenOfType::Rules AllChildrenOfType::execTransition(const Transitions& transitions)  const {
+  Rules rules;
+  for(Type::ConstTransitions::const_iterator i=transitions.begin(); i!=transitions.end(); ++i) {
+    Rule* r = new Rule(m_type,(*i).second,Rule::MASTER2SLAVE);
+    rules.push_back(r);
+  }
+  return rules;
+}
+
+/// Add a new rule to a transition
+Rule* AllChildrenOfType::execTransition(const string& curr_state, const string& target_state, Rule::Direction direction)  const {
+  bool   any = curr_state == ST_NAME_ANY;
+  string nam = m_type->name()+"::"+curr_state+"->"+target_state;
+  const State* t_state = m_type->state(target_state);
+  const State* c_state = any ? 0 : m_type->state(curr_state);
+  if ( !any && !c_state )  {
+    throw runtime_error("adoptRule> invalid object state "+curr_state+" in type "+m_type->name());
+  }
+  if ( t_state )   {
+    Rule* rule = new Rule(m_type,c_state,t_state,direction);
+    return rule;
+  }
+  throw runtime_error("adoptRule> invalid target state "+target_state+" in type "+m_type->name());
+}
+
+/// Helper function to add ANY rules
+Rule* AllChildrenOfType::moveTo(const string& target_state) const    {
+  return execTransition(ST_NAME_ANY,target_state,Rule::MASTER2SLAVE);
+}
+
+/// Add a new predicate to a transition
+Predicate::States AllChildrenOfType::inState(const string& s1, const string& s2,
+					     const string& s3, const string& s4, 
+					     const string& s5)  const
+{
+  string sname="";
+  Predicate::States allowed;
+
+  const State* st1 = m_type->state(s1);
+  const State* st2 = s2.empty() ? 0 : m_type->state(s2);
+  const State* st3 = s3.empty() ? 0 : m_type->state(s3);
+  const State* st4 = s4.empty() ? 0 : m_type->state(s4);
+  const State* st5 = s5.empty() ? 0 : m_type->state(s5);
+  if ( !st1 ) sname = s1;
+  else if ( !s2.empty() && !st2 ) sname = s2;
+  else if ( !s3.empty() && !st3 ) sname = s3;
+  else if ( !s4.empty() && !st4 ) sname = s4;
+  else if ( !s5.empty() && !st5 ) sname = s5;
+  else  {
+    if ( st1 ) allowed.insert(st1);
+    if ( st2 ) allowed.insert(st2);
+    if ( st3 ) allowed.insert(st3);
+    if ( st4 ) allowed.insert(st4);
+    if ( st5 ) allowed.insert(st5);
+    return allowed;
+  }
+  throw runtime_error("Type::addPredicate> invalid allowed state "+sname+" for predicate of type "+m_type->name());
+}
+

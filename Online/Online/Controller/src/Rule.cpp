@@ -22,16 +22,23 @@ using namespace std;
 
 static string makeName(const Type *type, const State* state_current, const State* state_target)  {
   string nam = type->name()+"::";
-  nam += state_current ? state_current->c_name() : DAQ::ST_NAME_ANY;
+  nam += state_current ? state_current->c_name() : ST_NAME_ANY;
   nam += "->";
-  nam += state_target ? state_target->c_name() : DAQ::ST_NAME_ANY;
+  nam += state_target ? state_target->c_name() : ST_NAME_ANY;
   return nam;
 }
 
 /// Class Constructor
-Rule::Rule(const Type *typ, const State* state_current, const State* state_target, Direction dir)
+Rule::Rule(const Type* typ, const State* state_current, const State* state_target, Direction dir)
   : TypedObject(typ,makeName(typ,state_current,state_target)), 
-    m_currState(state_current), m_targetState(state_target), m_direction(dir)
+    m_currState(state_current), m_targetState(state_target), m_transition(0), m_direction(dir)
+{
+}
+
+/// Class Constructor
+Rule::Rule(const Type* typ, const Transition* tr, Direction dir)
+  : TypedObject(typ,makeName(tr->type(),tr->from(),tr->to())), 
+    m_currState(0), m_targetState(0), m_transition(tr), m_direction(dir)
 {
 }
 
@@ -39,30 +46,51 @@ Rule::Rule(const Type *typ, const State* state_current, const State* state_targe
 Rule::~Rule()    {
 }
 
+/// Retrieve pointer to the target state object
+const State* Rule::targetState ()  const    {
+  return m_transition ? m_transition->to() : m_targetState;
+}
+
+/// Retrieve pointer to the current state object
+const State* Rule::currState ()  const      {
+  return m_transition ? m_transition->from() : m_currState;
+}
+
 /// Check if a rule applies to a given slave state
-bool Rule::operator()(const State* slave_state, Direction direction_flag)  const  {
+bool Rule::applies(const State* slave_state, Direction direction_flag)  const  {
+  const State* to = targetState();
   if ( slave_state->type() == m_type && m_direction == direction_flag )  {
     // If required slave state check it!
-    const Transition* tr = slave_state->findTrans(m_targetState);
-    if ( tr )   {
+    const Transition* tr = m_transition;
+    if ( tr )  {
+      if ( tr->from() == slave_state )  {
+	display(NOLOG,"+++RULE: %s> Apply rule on slave: tr:%s --  %s -> %s",
+		c_name(),tr->c_name(),tr->from()->c_name(),to->c_name());
+	return true;
+      }
+      display(NOLOG,"+++RULE: %s> Ignore rule on slave:  %s -> %s  [NO_TRANSITION]",
+	      c_name(),slave_state->c_name(),to->c_name());
+      return false;
+    }
+    else if ( 0 != (tr=slave_state->findTrans(to)) )   {
       if ( !m_currState || (m_currState && m_currState == tr->from()) )  {
 	display(NOLOG,"+++RULE: %s> Apply rule on slave: tr:%s [%s] --  %s -> %s",
 		c_name(),tr->c_name(),m_currState ? m_currState->c_name() : "----",
-		slave_state->c_name(),m_targetState->c_name());
+		slave_state->c_name(),to->c_name());
 	return true;
       }
       display(NOLOG,"+++RULE: %s> Ignore rule on slave:  %s -> %s  (%s , %s) [STATE_MISMATCH]",
-	      c_name(),slave_state->c_name(),m_targetState->c_name(),
+	      c_name(),slave_state->c_name(),to->c_name(),
 	      m_currState ? m_currState->c_name() : "----",
 	      slave_state ? slave_state->c_name() : "----");
       return false;
-      }
+    }
     display(NOLOG,"+++RULE: %s> Ignore rule on slave:  %s -> %s  [NO_TRANSITION]",
-	    c_name(),slave_state->c_name(),m_targetState->c_name());
+	    c_name(),slave_state->c_name(),to->c_name());
     return false;
   }
   display(NOLOG,"+++RULE: %s> Ignore rule on slave:  %s -> %s",
-	  c_name(),slave_state->c_name(),m_targetState->c_name());
+	  c_name(),slave_state->c_name(),to->c_name());
   return false;
 }
 

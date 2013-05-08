@@ -28,71 +28,72 @@ namespace FiniteStateMachine {
   // Forward declarations
   typedef FsmHandle<Machine> MachineHandle;
 
-  class ByName  {
-  protected:
-    /// Object name
-    const TypedObject* object;
-  public:
-    /// Standard constructor
-    ByName(const TypedObject* o) : object(o) {    }
-    /// Operator invoked for each predicate to check if it is fulfilled
-    bool operator()(const TypedObject* p) const;
-    /// Operator invoked for each predicate to check if it is fulfilled
-    bool operator()(const std::pair<std::string,TypedObject*>& p) const;
-  };
-  
-  class FindTransitionByState  {
-  protected:
-    /// Current transition pointer
-    const State* object;
-  public:
-    /// Standard constructor
-    FindTransitionByState(const State* s) : object(s) {}
-    /// Operator invoked for each predicate to check if it is fulfilled
-    bool operator()(const Transition* t) const;
-  };
-
-  class FindTransitionByName  {
-  protected:
-    /// Current transition pointer
-    const std::string& object;
-  public:
-    /// Standard constructor
-    FindTransitionByName(const std::string& s) : object(s) {}
-    /// Operator invoked for each predicate to check if it is fulfilled
-    bool operator()(const Transition* t) const;
-  };
-
-  class FindTransitionByStateName  {
-  protected:
-    /// Current transition pointer
-    const std::string& object;
-  public:
-    /// Standard constructor
-    FindTransitionByStateName(const std::string& s) : object(s) {}
-    /// Operator invoked for each predicate to check if it is fulfilled
-    bool operator()(const Transition* t) const;
-  };
-
-  class SlaveReset  {
-  public:
-    /// Operator invoked for each task to reset its state to idle
-    void operator()(Slave* t) const;
-  };
-
   template <typename T> class Delete  {
   public:
     /// Operator invoked for each object to be deleted
     void operator()(T* t) const  { delete t; }
   };
 
-  template<typename T> struct ActionCounter  {
-    const T* object;
+  template<typename T> struct Functor  {
+    typedef Functor<T> Base;
+    /// Functor Object
+    T object;
+    /// Standard constructor
+    Functor(T o) : object(o) {}
+  };
+
+  template<typename T> struct ActionCounter : Functor<const T*> {
     size_t count;
     size_t fail;
     size_t dead;
     /// Standard constructor
-    ActionCounter(const T* o) : object(o), count(0), fail(0), dead(0) {}
+    ActionCounter(const T* o) : Functor<const T*>(o), count(0), fail(0), dead(0) {}
+  };
+
+  template <class T> struct FsmCheck : Functor<T> {
+    /// Internal object status
+    int status;
+    /// Standard constructor
+    FsmCheck(T t) : Functor<T>(t), status(FSM::SUCCESS) {}
+    /// Check if predicates were fullfilled
+    bool ok() const    {   return status == FSM::SUCCESS;     }
+    /// Check if predicates were fullfilled
+    bool wait() const  {   return status == FSM::WAIT_ACTION; }
+  };
+
+  struct ByName : Functor<const TypedObject*> {
+    /// Standard constructor
+    ByName(const TypedObject* o) : Base(o) {    }
+    /// Operator invoked for each predicate to check if it is fulfilled
+    bool operator()(const TypedObject* p) const;
+    /// Operator invoked for each predicate to check if it is fulfilled
+    bool operator()(const std::pair<std::string,TypedObject*>& p) const;
+  };
+  
+  struct FindTransitionByState : Functor<const State*> {
+    /// Standard constructor
+    FindTransitionByState(const State* s) : Base(s) {}
+    /// Operator invoked for each predicate to check if it is fulfilled
+    bool operator()(const Transition* t) const;
+  };
+
+  struct FindTransitionByName : Functor<const std::string&> {
+    /// Standard constructor
+    FindTransitionByName(const std::string& s) : Base(s) {}
+    /// Operator invoked for each predicate to check if it is fulfilled
+    bool operator()(const Transition* t) const;
+  };
+
+  struct FindTransitionByStateName : Functor<const std::string&>  {
+    /// Standard constructor
+    FindTransitionByStateName(const std::string& s) : Base(s) {}
+    /// Operator invoked for each predicate to check if it is fulfilled
+    bool operator()(const Transition* t) const;
+  };
+
+  struct SlaveReset  {
+    /// Operator invoked for each task to reset its state to idle
+    void operator()(Slave* t) const;
   };
 
   struct SlaveStarter : public ActionCounter<Transition>  {
@@ -101,18 +102,21 @@ namespace FiniteStateMachine {
     /// Operator invoked for each slave to be started
     void operator()(Slave* s);
   };
+
   struct SlaveKiller : public ActionCounter<Transition>  {
     /// Standard constructor
     SlaveKiller (const Transition* t) : ActionCounter(t) {}
     /// Operator invoked for each slave to be started
     void operator()(Slave* s);
   };
+
   struct SlaveLimboCount : public ActionCounter<void>  {
     /// Standard constructor
     SlaveLimboCount() : ActionCounter(0) {}
     /// Operator invoked for each slave to be checked
     void operator()(const Slave* s);
   };
+
   struct CheckStateSlave : public ActionCounter<Transition>  {
     /// Standard constructor
     CheckStateSlave(const Transition* t) : ActionCounter(t) {}
@@ -120,47 +124,30 @@ namespace FiniteStateMachine {
     void operator()(const Slave* s);
   };
 
-  template <class T> struct FsmCheckFunctor {
-    /// Current reference object pointer
-    T object;
-    /// Internal object status
-    int status;
-    /// Standard constructor
-    FsmCheckFunctor(T t) : object(t), status(FSM::SUCCESS) {}
-    /// Check if predicates were fullfilled
-    bool ok() const    {   return status == FSM::SUCCESS;     }
-    /// Check if predicates were fullfilled
-    bool wait() const  {   return status == FSM::WAIT_ACTION; }
-  };
-  struct SetSlaveState  : public FsmCheckFunctor<Slave::SlaveState> {
-    /// Standard constructor
-    SetSlaveState(Slave::SlaveState s) : FsmCheckFunctor<Slave::SlaveState>(s) {}
+  struct SetSlaveState  : public ActionCounter<State> {
+    /// Slave mask
+    int mask;
+    /// Standard constructor. By default all slaves are acted on
+    SetSlaveState(const State* new_state, int match_mask=Slave::SLAVE_NONE) 
+      : ActionCounter(new_state), mask(match_mask) {}
     /// Operator invoked for each predicate to check if it is fulfilled
     void operator()(Slave* s);
   };
-  struct PredicateSlave : public FsmCheckFunctor<const Transition*> {
+
+  struct PredicateSlave : public FsmCheck<const Transition*> {
     /// Standard constructor
-    PredicateSlave(const Transition* t) : FsmCheckFunctor<const Transition*>(t) {}
+    PredicateSlave(const Transition* t) : FsmCheck(t) {}
     /// Operator invoked for each predicate to check if it is fulfilled
     void operator()(const Slave* s);
   };
-  struct InvokeSlave : public FsmCheckFunctor<const Transition*>  {
+
+  struct InvokeSlave : public FsmCheck<const Transition*>  {
     /// Flag to indicate if the transition is MASTER2SLAVE or SLAVE2MASTER (see Rule.h)
     Rule::Direction direction;
     /// Standard constructor
-    InvokeSlave(const Transition* t, Rule::Direction dir) : FsmCheckFunctor<const Transition*>(t), direction(dir) {}
+    InvokeSlave(const Transition* t, Rule::Direction dir) : FsmCheck(t), direction(dir) {}
     /// Operator invoked for each predicate to check if it is fulfilled
     void operator()(Slave* s);
-  };
-  
-  struct InvokeSlave2 : public FsmCheckFunctor<const Transition*>  {
-    /// Flag to indicate if the transition is MASTER2SLAVE or SLAVE2MASTER (see Rule.h)
-    Rule::Direction direction;
-    const std::vector<Slave*> slaves;
-    /// Standard constructor
-    InvokeSlave2(const std::vector<Slave*>& s, const Transition* t,Rule::Direction dir);
-    /// Operator invoked for each predicate to check if it is fulfilled
-    void operator()(const Rule* rule);
   };
   
    struct PrintObject  {

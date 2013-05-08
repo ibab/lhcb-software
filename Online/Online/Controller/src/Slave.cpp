@@ -36,6 +36,7 @@ Slave::~Slave()    {
 const char* Slave::metaStateName() const  {
   switch(m_meta)  {
 #define MakeName(x) case Slave::x: return #x
+    MakeName(SLAVE_NONE);
     MakeName(SLAVE_LIMBO);
     MakeName(SLAVE_STARTING);
     MakeName(SLAVE_ALIVE);
@@ -131,11 +132,13 @@ FSM::ErrCond Slave::transitionFailed()  {
 
 /// Invoke transition on slave. Noop if slave is already in target state
 FSM::ErrCond Slave::apply(const Rule* rule)  {
-  const Transition* tr = m_state->findTrans(rule->targetState());
+  const Transition* tr = rule->transition();
+  if ( !tr ) tr = m_state->findTrans(rule->targetState());
   m_rule = 0;
   if ( tr )  {
     m_rule = rule;
     m_meta = SLAVE_EXECUTING;
+    display(ALWAYS,"%s> Send request \"%s\"to target process.",c_name(),tr->c_name());
     return isInternal() ? send(SLAVE_FINISHED,tr->to()) : sendRequest(tr);
   }
   return FSM::TRANNOTFOUND;

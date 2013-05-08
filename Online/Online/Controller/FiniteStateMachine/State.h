@@ -26,7 +26,8 @@ namespace FiniteStateMachine {
   // Forward declarations
   class Transition;
   class When;
-  class Path;
+
+  const char ST_NAME_ANY[] = {"*"};
 
   /**@class StateActions  State  State.h Ctrl/State.h
    *
