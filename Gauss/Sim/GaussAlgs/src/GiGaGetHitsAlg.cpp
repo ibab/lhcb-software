@@ -100,7 +100,7 @@ StatusCode GiGaGetHitsAlg::execute() {
   hitsTracker( "IT", m_ithits );
   
   // SL  hits
-  hitsTracker( "SL", m_slhits );
+  //hitsTracker( "SL", m_slhits );
 
   // Outer Tracker hits
   hitsTracker( "OT", m_othits );

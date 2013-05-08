@@ -4,6 +4,9 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+~ 2013-05-08 - Paul Szczypka
+ - commented out SL hitsTracker line such that it isn't run by default.
+
 ! 2013-05-02 - Paul Szczypka
  - Added SL hit information.
 
