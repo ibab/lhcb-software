@@ -29,6 +29,7 @@ from GaudiKernel.SystemOfUnits import MeV
 
 
 config_default = { #PID cuts
+                   'pAPreScale'   : 0.01,
                    'checkPV'   : True,
                    'HLT' : "HLT_PASS('Hlt1MBNoBiasDecision')|HLT_PASS('Hlt1MBMicroBiasTStationDecision')|HLT_PASS('Hlt1MBMicroBiasVeloDecision')|HLT_PASS('Hlt1MBMicroBiasTStationRateLimitedDecision')|HLT_PASS('Hlt1MBMicroBiasVeloRateLimitedDecision')",
                    'ProtonPIDppi'              :       -5.,  #(PIDp-PIDpi) > -5                   
@@ -82,6 +83,7 @@ config_default = { #PID cuts
 #-------------------------------------------------------------------------------------------------------------
 class StrippingStrangeBaryonsConf(LineBuilder) :
        __configuration_keys__ = ( #PID cuts
+                                  'pAPreScale',
                                   'checkPV',
                                   'HLT',
                                   'ProtonPIDppi',
@@ -270,7 +272,7 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
                                                       )
               
               #print "1st HLT = ", "%(HLT)s" %self.config
-              Ximinus2LambdaPiLine = StrippingLine (OutputList+self.name,  HLT = "%(HLT)s" %self.config , algos = [Ximinus2LambdaPi])
+              Ximinus2LambdaPiLine = StrippingLine (OutputList+self.name, prescale = "%(pAPreScale)s" %self.config, HLT = "%(HLT)s" %self.config , algos = [Ximinus2LambdaPi])
               self.registerLine (Ximinus2LambdaPiLine)
 
 
@@ -294,7 +296,7 @@ class StrippingStrangeBaryonsConf(LineBuilder) :
                                                         #"(LV01 > %(COS_L_Xi)s) " %self.config
                                                         )
        	      # print "2nd HLT = ", "%(HLT)s" %self.config
-              Omegaminus2LambdaKLine = StrippingLine(OutputList+self.name,  HLT = "%(HLT)s" %self.config, algos = [Omegaminus2LambdaK])
+              Omegaminus2LambdaKLine = StrippingLine(OutputList+self.name, prescale = "%(pAPreScale)s" %self.config, HLT = "%(HLT)s" %self.config, algos = [Omegaminus2LambdaK])
               self.registerLine (Omegaminus2LambdaKLine)             
 
 
