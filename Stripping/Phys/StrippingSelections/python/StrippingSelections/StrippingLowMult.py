@@ -16,11 +16,11 @@ from GaudiKernel.SystemOfUnits import MeV, mm
 
 confdict_LowMult = {
     'LowMultPrescale'           : 1.0
-    , 'LowMultWSPrescale'       : 0.1
-    , 'LowMultHHIncPrescale'    : 0.1
-    , 'LowMultLMRPrescale'      : 0.2
-    , 'LowMultPrescale_ps'      : 0.005
-    , 'LowMultNoFilterPrescale' : 0.1
+    , 'LowMultWSPrescale'       : 1.0 ##changed from 0.1
+    , 'LowMultHHIncPrescale'    : 1.0 ##changed from 0.1
+    , 'LowMultLMRPrescale'      : 1.0 ##changed from 0.2
+    , 'LowMultPrescale_ps'      : 1.0 ##changed from 0.005
+    , 'LowMultNoFilterPrescale' : 1.0 ##changed from 0.1
     , 'LowMultPostscale'        : 1.0
     # Final-state particles
     , 'H_PTmin'         : 100.0 * MeV
