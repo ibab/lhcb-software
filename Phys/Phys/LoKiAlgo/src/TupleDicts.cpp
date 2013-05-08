@@ -31,6 +31,10 @@
 // ============================================================================
 #include "LoKi/TupleDicts.h"
 // ============================================================================
+// Boost
+// ============================================================================
+#include "boost/static_assert.hpp"
+// ============================================================================
 /** @file
  *  Implementation file for class LoKi::Dicts::TupleArray 
 *
@@ -571,9 +575,10 @@ StatusCode LoKi::Dicts::TupleBasic::column_bool
 namespace 
 {
   // ==========================================================================
-  const double s_float_max =  0.99 * std::numeric_limits<float>::max() ;
-  const double s_float_min =  0.99 * std::numeric_limits<float>::min() ;
-  // ==========================================================================
+  BOOST_STATIC_ASSERT( std::numeric_limits<float>::is_specialized ) ;
+  const double s_float_max =  0.999 * std::numeric_limits<float>::max () ;
+  const double s_float_min = -0.999 * std::numeric_limits<float>::max () ;
+  // ==========================================================================  
 }
 // ============================================================================
 // store float  value in n-tuple
