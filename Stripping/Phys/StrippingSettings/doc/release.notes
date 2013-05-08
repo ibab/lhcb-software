@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 !========================= StrippingSettings v2r23p1 2013-05-07 =========================
+
+! 2013-05-08 - Anton Poluektov 
+  - Revert modification of dbase/stripping20r1p1
+
 ! 2013-05-08 - Ronan Wallace
  - Added QEE lines to LineConfigDictionaries_ALL.py in Stripping20r3 for pA data.                       
 
