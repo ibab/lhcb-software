@@ -5,15 +5,17 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+
+!========================= LoKiAlgo v9r8p2 2013-05-08 =========================
+
 ! 2013-05-08 - Vanya Belyaev
 
  - TupleDicts.cpp
 
    fix a serious bug in column_float method
 
-!========================= LoKiAlgo v9r8p2 2013-05-07 =========================
-
 ! 2013-04-11 - Vanya Belyaev
+
  - GetLoKiAlgo.cpp: bug fix 
 
 !========================= LoKiAlgo v9r8p1 2013-04-05 =========================
