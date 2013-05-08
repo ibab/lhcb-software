@@ -13,8 +13,8 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllNoPIDsMuons
 
-confdict_SingleTrackTIS = { 'SingleTrackTIS_Prescale'    : 0.10,
-                            'SingleTrackTISLow_Prescale' : 0.01,
+confdict_SingleTrackTIS = { 'SingleTrackTIS_Prescale'    : 1.0, ##changed from 0.1
+                            'SingleTrackTISLow_Prescale' : 1.0, ##changed from 0.01
                             'SingleTrackTIS_Postscale'   : 1.00,
                             'pT'    : 20.,
                             'pTlow' : 15.
