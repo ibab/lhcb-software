@@ -1,0 +1,87 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>../options/run_moore.py</text></argument>
+  <argument name="timeout">
+    <integer>1200</integer>
+  </argument>
+  <argument name="args"><set>
+    <text>-n</text>
+    <text>1200</text>
+    <text>--l0</text>
+    <text>Physics_September2012</text>
+  </set></argument>
+  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
+  <argument name="validator"><text>
+#print "YES"
+#reftable
+reftable='../refs/physics.2012.timing.ref'
+
+#look for input from the timing table. 
+#BBDT fires exactly once :)
+#expected_string = &quot;Hlt2Topo3BodyBBDTPostScal|     0.000 |     0.001 |    0.001       0.0 |       1 |     0.000 |&quot; 
+#if stdout.find(expected_string) == -1:
+#    causes.append('missing BBDT string')
+#    result['moore.physics.2012.expected_string'] = result.Quote(expected_string)
+
+#print "YES2"
+#look for input from the timing table
+#Hlt1TrackMuon also fires exactly 10 times :)
+#expected_string = &quot;Hlt1TrackMuonPostScaler  |     0.000 |     0.001 |    0.001       0.0 |      10 |&quot; 
+#if stdout.find(expected_string) == -1:
+#    causes.append('missing Muon string')
+#    result['moore.physics.2012.expected_string'] = result.Quote(expected_string)
+#print "YES3"
+
+#parse the timing table into a simple comma-separated list. Check each number of events.
+#print "YES4"
+
+timing=[]
+timingdict={}
+for line in stdout.split('\n'):
+    if 'TIMER' not in line or 'Hlt' not in line:
+        continue
+    line=line.replace('\t',' ')
+    line=line.replace('  ',' ')
+    line=line[line.find('INFO')+4:]
+    line=line.strip().rstrip()
+    line=line.split('|')
+    if not line[0].startswith('Hlt'): 
+        continue
+    name=line[0].strip().rstrip()
+    num=line[4].strip().rstrip()
+    timing.append(':'.join([name,line[4]]))
+    timingdict[name]=int(num)
+
+timing='\n'.join(timing)
+reftiming=open(reftable)
+refresult=reftiming.read()
+reftiming.close()
+#print "YES5"
+
+if refresult.strip().rstrip()!=timing.strip().rstrip():
+    #print "YES55"
+    newreftiming=open(reftable+'.new','w')
+    newreftiming.write(timing)
+    newreftiming.close()
+    refresultdict={}
+    for line in refresult.split('\n'):
+        line=line.strip().rstrip()
+        if len(line)&lt;2 : 
+            continue
+        refresultdict[line.split(':')[0]]=int(line.split(',')[1])
+    causes.append('#events in timing tables disagree')
+    if len([True for r in refresultdict if r not in timingdict])+len([True for r in timingdict if r not in refresultdict])+len([True for r in refresultdict if r in timingdict and timingdict[r]!=refresultdict[r]])&gt;100:
+        result['moore.physics.2012.different']=result.Quote('More than 100 differences')
+    else:
+        result['moore.physics.2012.missing'] = result.Quote(',\n\t'.join([r+':'+str(refresultdict[r]) for r in refresultdict if r not in timingdict]))
+        result['moore.physics.2012.added'] = result.Quote(',\n\t'.join([r+':'+str(timingdict[r]) for r in timingdict if r not in refresultdict]))
+        result['moore.physics.2012.different'] = result.Quote(',\n\t'.join([r+':'+str(refresultdict[r])+'-&gt;'+str(timingdict[r]) for r in refresultdict if r in timingdict and timingdict[r]!=refresultdict[r]]))
+
+#print "YES6"
+
+#count error lines, shouldn't be any warnings or errors, ideally
+countErrorLines({"FATAL":0,"ERROR":6,"WARNING":1})
+
+</text></argument>
+</extension>
+
