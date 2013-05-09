@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-05-09 - Chris Jones
+ - Add missing entry for packing to davincitests.qms
+
+! 2013-05-09 - Chris Jones
  - Disable FT MC10 test, as input data file no longer available.
  - Update commonparticles.test_standardintermediate reference.
  - Update davinci.test_davinci_initialise reference for new timing table 
