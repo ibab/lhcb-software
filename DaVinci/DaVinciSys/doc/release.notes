@@ -3,6 +3,10 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+! 2013-05-09 - Chris Jones
+ - Update davincisys QM test reference for new timing table 
+   indentation levels.
+
 </PRE><H1><A NAME=v33r4>2013-05-07 DaVinci v33r4</A></H1><PRE>
 
 New development release based on the LHCb v35r6 stack.
