@@ -4,6 +4,12 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-05-09 - Chris Jones
+ - Disable FT MC10 test, as input data file no longer available.
+ - Update commonparticles.test_standardintermediate reference.
+ - Update davinci.test_davinci_initialise reference for new timing table 
+   indentation level.
+
 !========================= DaVinciTests v2r16 2013-02-21 =========================
 
 ! 2013-02-19 - Stefania Vecchi

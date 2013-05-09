@@ -7,21 +7,21 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-TimingAuditor.TIMER                                            INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO  DaVinciEventSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO   DaVinciInitAlg              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO   FilteredEventSeq            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO    DaVinciEventInitSeq        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO     PhysInitSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO     AnalysisInitSeq           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO    DaVinciAnalysisSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO     DaVinciUserSequence       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO     MonitoringSequence        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO   LumiSeq                     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO    EventAccount               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO   IntegratorSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO    IntegrateBeamCrossing      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO --------------------------------------------------------------------------------------------------
+TimingAuditor.TIMER                                            INFO EVENT LOOP                                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO  DaVinciEventSeq                                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO   DaVinciInitAlg                                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO   FilteredEventSeq                                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO    DaVinciEventInitSeq                            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     PhysInitSeq                                   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     AnalysisInitSeq                               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO    DaVinciAnalysisSeq                             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     DaVinciUserSequence                           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO     MonitoringSequence                            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO   LumiSeq                                         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO    EventAccount                                   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO   IntegratorSeq                                   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO    IntegrateBeamCrossing                          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.TIMER                                            INFO ----------------------------------------------------------------------------------------------------------------------
 """, stdout, result, causes, signature_offset = 0, id='rest')
 countErrorLines({"FATAL":0})
 </text></argument>
