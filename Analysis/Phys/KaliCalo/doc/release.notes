@@ -4,6 +4,9 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2013-05-09 - Chris Jones
+ - Fix data paths in KaliPi0.py to read data from EOS instead of castor.
+
 !========================= KaliCalo v4r13p2 2013-05-07 =========================
 
 ! 2013-02-27 - Chris Jones

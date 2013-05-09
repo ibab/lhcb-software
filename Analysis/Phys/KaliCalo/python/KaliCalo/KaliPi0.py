@@ -96,9 +96,9 @@ if '__main__' == __name__ :
     
     ioh = IOHelper()
     
-    castor   =  'castor:/castor/cern.ch/grid'
+    eos      = 'root://eoslhcb.cern.ch//eos'
     pattern  = '/lhcb/LHCb/Collision11/FMDST/00011385/0000/00011385_00000%03d_1.fmdst'
-    ioh.inputFiles ( [ castor+pattern%i for i in range(1,10) ] )
+    ioh.inputFiles ( [ eos+pattern%i for i in range(1,10) ] )
     
     #evtSel.open ( 'KaliPi0_2k+11.fmdst_test')
 
