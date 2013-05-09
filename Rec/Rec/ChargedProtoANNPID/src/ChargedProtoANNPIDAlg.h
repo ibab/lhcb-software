@@ -40,6 +40,7 @@
 #include "boost/assign/list_of.hpp"
 #include "boost/regex.hpp"
 #include "boost/algorithm/string.hpp"
+#include "boost/format.hpp"
 
 // FPE exception protection
 #include "Kernel/FPEGuard.h"

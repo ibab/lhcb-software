@@ -209,10 +209,10 @@ StatusCode ChargedProtoANNPIDAlg::initialize()
     }
 
     // print a summary of the configuration
+    const std::string sF = "ANNPID : Tune=%-13s TrackType=%-12s Particle=%-12s";
+    info() << boost::format(sF) % m_netVersion % trackType % particleType << endmsg;
     if ( msgLevel(MSG::DEBUG) )
-      debug() << "Particle type    = " << particleType << endmsg
-              << "Track Selection  = " << trackType << endmsg
-              << "Network type     = " << annType << endmsg
+      debug() << "Network type     = " << annType << endmsg
               << "ConfigFile       = " << configFile << endmsg
               << "ParamFile        = " << paramFileName << endmsg
               << "ANN inputs (" << inputs.size() << ")  = " << inputs << endmsg

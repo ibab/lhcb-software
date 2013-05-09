@@ -4,6 +4,10 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-05-09 - Chris Jones
+ - Add a short info() level summary printout to ChargedProtoANNPIDAlg, to help
+   identify the configuration in use from a log file.
+
 !========================= ChargedProtoANNPID v2r1 2013-04-30 =======================
 ! 2012-04-26 - Chris Jones
  - Move the TMVA 'MC12TuneV2' compiled MVA namespace into the ANNGlobalPID

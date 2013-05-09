@@ -9,7 +9,7 @@ using namespace std;
 namespace ANNGlobalPID
 {
 
-  /** @namespace MC12TuneV2
+  /** @namespace MC12TuneV2 TMVAImpFactory.cpp
    *
    *  Namespace for C++ implementations of MC12TuneV2 TMVA networks.
    *
