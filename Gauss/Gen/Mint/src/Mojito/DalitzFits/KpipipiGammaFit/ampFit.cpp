@@ -330,64 +330,64 @@ int ampFit(){
       double scanMinLLM=-9999;
       double scanMinLLZ=-9999;
 
-      for(int i=0; i < scanBins; i++){
-	double gamma_value = ((double)i+0.5)*2*pi/((double)scanBins);
-	gamma.setCurrentFitVal(gamma_value);
-	for(int j=0; j < scanBins; j++){
-	  double delta_value = ((double)j+0.5)*2*pi/((double)scanBins);
-	  delta.setCurrentFitVal(delta_value);
+        for(int i=0; i < scanBins; i++){
+            double gamma_value = ((double)i+0.5)*2*pi/((double)scanBins);
+            gamma.setCurrentFitVal(gamma_value);
+            for(int j=0; j < scanBins; j++){
+                    double delta_value = ((double)j+0.5)*2*pi/((double)scanBins);
+                delta.setCurrentFitVal(delta_value);
 
-	  double v = fcn.getNewVal();  
-	  if( (i==0 && j==0) || v < scanMinLL) scanMinLL=v;
-	  scanHisto->Fill(gamma, delta, v);
+                double v = fcn.getNewVal();  
+                if( (i==0 && j==0) || v < scanMinLL) scanMinLL=v;
+                scanHisto->Fill(gamma, delta, v);
+                
+                double vP = fcnP.getNewVal();  
+                if( (i==0 && j==0) || vP < scanMinLLP) scanMinLLP=vP;
+                scanHistoP->Fill(gamma, delta, vP);
 
-	  double vP = fcnP.getNewVal();  
-	  if( (i==0 && j==0) || vP < scanMinLLP) scanMinLLP=vP;
-	  scanHistoP->Fill(gamma, delta, vP);
-
-	  double vM = fcnM.getNewVal();  
-	  if( (i==0 && j==0) || vM < scanMinLLM) scanMinLLM=vM;
-	  scanHistoM->Fill(gamma, delta, vM);
-	}
-      }
-      for(int i=0; i < scanBins; i++){
-	double gamma_value = scanMinGammaZoom + ((double)i+0.5) * gammaZoomRange/((double)scanBins);
-	gamma.setCurrentFitVal(gamma_value);
-	for(int j=0; j < scanBins; j++){
-	  double delta_value = scanMinDeltaZoom + ((double)j+0.5) * deltaZoomRange/((double)scanBins);
-	  delta.setCurrentFitVal(delta_value);
-	  double v = fcn.getNewVal();
+                double vM = fcnM.getNewVal();  
+                if( (i==0 && j==0) || vM < scanMinLLM) scanMinLLM=vM;
+                scanHistoM->Fill(gamma, delta, vM);
+            }
+        }
+        for(int i=0; i < scanBins; i++){
+            double gamma_value = scanMinGammaZoom + ((double)i+0.5) * gammaZoomRange/((double)scanBins);
+            gamma.setCurrentFitVal(gamma_value);
+            for(int j=0; j < scanBins; j++){
+                double delta_value = scanMinDeltaZoom + ((double)j+0.5) * deltaZoomRange/((double)scanBins);
+                delta.setCurrentFitVal(delta_value);
+                double v = fcn.getNewVal();
 	  
-	  if( (i==0 && j==0) || v < scanMinLLZ) scanMinLLZ=v;
+                if( (i==0 && j==0) || v < scanMinLLZ) scanMinLLZ=v;
 	  
-	  scanZoomHisto->Fill(gamma, delta, v);
-	}
-      }
+                scanZoomHisto->Fill(gamma, delta, v);
+            }
+        }
 
-      for(int i=0; i < scanBins; i++){
-	double gamma_value = ((double)i+0.5)*2*pi/((double)scanBins);
-	for(int j=0; j < scanBins; j++){
-	  double delta_value = ((double)j+0.5)*2*pi/((double)scanBins);
-	  scanHisto->Fill(gamma_value, delta_value, -scanMinLL);
-	  scanHistoP->Fill(gamma_value, delta_value, -scanMinLLP);
-	  scanHistoM->Fill(gamma_value, delta_value, -scanMinLLM);
-	}
-      }
-      for(int i=0; i < scanBins; i++){
-	double gamma_value = scanMinGammaZoom + ((double)i+0.5) * gammaZoomRange/((double)scanBins);
-	for(int j=0; j < scanBins; j++){
-	  double delta_value = scanMinDeltaZoom + ((double)j+0.5) * deltaZoomRange/((double)scanBins);
-	  scanZoomHisto->Fill(gamma_value, delta_value, -scanMinLLZ);
-	}
-      }
-      scanFile->cd();
-      scanHisto->Write();
-      scanHistoP->Write();
-      scanHistoM->Write();
-      scanZoomHisto->Write();
-      scanFile->Close();
+        for(int i=0; i < scanBins; i++){
+            double gamma_value = ((double)i+0.5)*2*pi/((double)scanBins);
+            for(int j=0; j < scanBins; j++){
+                double delta_value = ((double)j+0.5)*2*pi/((double)scanBins);
+                scanHisto->Fill(gamma_value, delta_value, -scanMinLL);
+                scanHistoP->Fill(gamma_value, delta_value, -scanMinLLP);
+                scanHistoM->Fill(gamma_value, delta_value, -scanMinLLM);
+            }
+        }
+        for(int i=0; i < scanBins; i++){
+            double gamma_value = scanMinGammaZoom + ((double)i+0.5) * gammaZoomRange/((double)scanBins);
+            for(int j=0; j < scanBins; j++){
+                double delta_value = scanMinDeltaZoom + ((double)j+0.5) * deltaZoomRange/((double)scanBins);
+                scanZoomHisto->Fill(gamma_value, delta_value, -scanMinLLZ);
+            }
+        }
+        scanFile->cd();
+        scanHisto->Write();
+        scanHistoP->Write();
+        scanHistoM->Write();
+        scanZoomHisto->Write();
+        scanFile->Close();
       
-      cout << "ex " << j_ex << ") " << "done 2-D scan" << endl;
+        cout << "ex " << j_ex << ") " << "done 2-D scan" << endl;
     }
     
     DalitzHistoSet fitHP = BpPdf.histoSet(); 

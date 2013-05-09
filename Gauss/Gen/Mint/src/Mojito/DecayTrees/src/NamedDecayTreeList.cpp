@@ -1862,7 +1862,7 @@ int NamedDecayTreeList::makeKsPiPiPizeroList() {
 int NamedDecayTreeList::make4PiList() {
   // T.McKetterick
   bool dbThis=false;
-
+    
   DecayTree* dk=0;
 
   //D0 -> a1(1260)pi-, a1(1260)->rho(770)pi+, rho->pi+pi-   [S-WAVE]
@@ -1960,6 +1960,13 @@ int NamedDecayTreeList::make4PiList() {
   dk->addDgtr(211, -211);
   add(*dk);
   if(dbThis) cout << "sixth decay: " << *dk << endl;
+  delete dk;
+    
+//D0 -> pi+pi-pi+pi-  Added by JBenton
+  dk = new DecayTree(421);
+  dk->addDgtr(211, -211, 211, -211);
+  add(*dk);
+  if(dbThis) cout << "seventh decay: " << *dk << endl;
   delete dk;
 
   return _trees.size();

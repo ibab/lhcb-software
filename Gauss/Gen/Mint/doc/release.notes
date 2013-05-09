@@ -6,6 +6,9 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 2013-05-08 - Jack Benton
+ - Added direct D0->4pi decay to NamedDecayTreeList.cpp
+
 !=========================== Mint v2r0 2013-03-07 ============================
 ! 2013-02-20 - Matthew Coombes
  - Removed Miranda packages

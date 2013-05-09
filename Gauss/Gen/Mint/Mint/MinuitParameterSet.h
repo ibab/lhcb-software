@@ -55,7 +55,7 @@ class MinuitParameterSet{
 
   void deleteListAndObjects(); 
   // pitfall: delete objects in use
-  void deleteListKeepObjects();
+    void deleteListKeepObjects();
   // pitfall: potential memory leak
 
   TNtupleD* makeNewNtpForOwner(TFile*& ntpFile) const;
