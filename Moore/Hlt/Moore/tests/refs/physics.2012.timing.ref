@@ -244,7 +244,7 @@ Hlt1BeamGasCrossingParasi:    0
 Hlt1ErrorEvent:  1200 
 Hlt1ErrorEventPreScaler:  1200 
 Hlt1ErrorEventHltFilter:  1200 
-Hlt1ErrorEventPostScaler:    2 
+Hlt1ErrorEventPostScaler:    0 
 Hlt1Global:  1200 
 Hlt1GlobalPreScaler:  1200 
 Hlt1GlobalHltFilter:  1200 

@@ -16,25 +16,6 @@
 #reftable
 reftable='../refs/physics.2012.timing.ref'
 
-#look for input from the timing table. 
-#BBDT fires exactly once :)
-#expected_string = &quot;Hlt2Topo3BodyBBDTPostScal|     0.000 |     0.001 |    0.001       0.0 |       1 |     0.000 |&quot; 
-#if stdout.find(expected_string) == -1:
-#    causes.append('missing BBDT string')
-#    result['moore.physics.2012.expected_string'] = result.Quote(expected_string)
-
-#print "YES2"
-#look for input from the timing table
-#Hlt1TrackMuon also fires exactly 10 times :)
-#expected_string = &quot;Hlt1TrackMuonPostScaler  |     0.000 |     0.001 |    0.001       0.0 |      10 |&quot; 
-#if stdout.find(expected_string) == -1:
-#    causes.append('missing Muon string')
-#    result['moore.physics.2012.expected_string'] = result.Quote(expected_string)
-#print "YES3"
-
-#parse the timing table into a simple comma-separated list. Check each number of events.
-#print "YES4"
-
 timing=[]
 timingdict={}
 for line in stdout.split('\n'):
@@ -45,6 +26,8 @@ for line in stdout.split('\n'):
     line=line[line.find('INFO')+4:]
     line=line.strip().rstrip()
     line=line.split('|')
+    if len(line)&lt;5:
+        continue
     if not line[0].startswith('Hlt'): 
         continue
     name=line[0].strip().rstrip()
@@ -56,7 +39,6 @@ timing='\n'.join(timing)
 reftiming=open(reftable)
 refresult=reftiming.read()
 reftiming.close()
-#print "YES5"
 
 if refresult.strip().rstrip()!=timing.strip().rstrip():
     #print "YES55"
@@ -68,7 +50,7 @@ if refresult.strip().rstrip()!=timing.strip().rstrip():
         line=line.strip().rstrip()
         if len(line)&lt;2 : 
             continue
-        refresultdict[line.split(':')[0]]=int(line.split(',')[1])
+        refresultdict[':'.join(line.split(':')[:-1])]=int(line.split(':')[-1])
     causes.append('#events in timing tables disagree')
     if len([True for r in refresultdict if r not in timingdict])+len([True for r in timingdict if r not in refresultdict])+len([True for r in refresultdict if r in timingdict and timingdict[r]!=refresultdict[r]])&gt;100:
         result['moore.physics.2012.different']=result.Quote('More than 100 differences')
@@ -77,9 +59,8 @@ if refresult.strip().rstrip()!=timing.strip().rstrip():
         result['moore.physics.2012.added'] = result.Quote(',\n\t'.join([r+':'+str(timingdict[r]) for r in timingdict if r not in refresultdict]))
         result['moore.physics.2012.different'] = result.Quote(',\n\t'.join([r+':'+str(refresultdict[r])+'-&gt;'+str(timingdict[r]) for r in refresultdict if r in timingdict and timingdict[r]!=refresultdict[r]]))
 
-#print "YES6"
-
 #count error lines, shouldn't be any warnings or errors, ideally
+#error lines here are stupid Gaudi warnings about not being able to navigate to input file, 3 input files means 6 errors.
 countErrorLines({"FATAL":0,"ERROR":6,"WARNING":1})
 
 </text></argument>

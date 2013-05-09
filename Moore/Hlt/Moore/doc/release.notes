@@ -2,7 +2,15 @@ Package     : Hlt/Moore
 Package Coordinator : R. Lambert, G. Raven
 Purpose     : LHCb HLT application
 
+
+! 2013-05-09 - Rob Lambert
+ - Fix residual bugs in my test.
+
+! 2013-05-08 - Rob Lambert
+ - Create test which actually works for Physics_September2012.
+
 !========================= Moore v20r1 2013-04-09 =========================
+
 ! 2013-03-11 - Rob Lambert
  - Fix setOtherProps also for LHCbApp.
 
