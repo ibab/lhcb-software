@@ -21,27 +21,27 @@
 // constructor 
 // ============================================================================
 Analysis::SelectorWithCuts::SelectorWithCuts
-( TTree*             tree , 
-  const std::string& cuts , 
+( const std::string& cuts , 
+  TTree*             tree , 
   PyObject*          self ) 
   : Analysis::Selector ( tree , self ) 
-  , m_cuts             ( cuts        ) 
-  , m_formula          ( 0           ) 
+  , fMycuts             ( cuts        ) 
+  , fMyformula          ( 0           ) 
 {
   if ( 0 != tree ) 
-  { m_formula = new Analysis::Formula ( "" , m_cuts , tree ) ; }
+  { fMyformula = new Analysis::Formula ( "" , fMycuts , tree ) ; }
 }
 // ============================================================================
 // virtual destructor 
 // ============================================================================
 Analysis::SelectorWithCuts::~SelectorWithCuts ()
-{ if ( 0 != m_formula ) { delete m_formula ; m_formula = 0 ; } }
+{ if ( 0 != fMyformula ) { delete fMyformula ; fMyformula = 0 ; } }
 // ============================================================================
 // notify 
 // ============================================================================
 Bool_t Analysis::SelectorWithCuts::Notify() 
 {
-  if ( 0 != m_formula ) { m_formula->Notify() ; }
+  if ( 0 != fMyformula ) { fMyformula->Notify() ; }
   return TPySelector::Notify () ;
 }
 // ============================================================================
@@ -50,8 +50,8 @@ Bool_t Analysis::SelectorWithCuts::Notify()
 void Analysis::SelectorWithCuts::Init ( TTree* tree ) 
 {
   //
-  if ( 0 != m_formula ) { delete m_formula ; m_formula = 0 ; }
-  m_formula = new Analysis::Formula ( "" , m_cuts , tree ) ;
+  if ( 0 != fMyformula ) { delete fMyformula ; fMyformula = 0 ; }
+  fMyformula = new Analysis::Formula ( "" , fMycuts , tree ) ;
   //
   TPySelector::Init ( tree ) ;
 }
@@ -68,8 +68,8 @@ void Analysis::SelectorWithCuts::Begin ( TTree* tree )
 void Analysis::SelectorWithCuts::SlaveBegin ( TTree* tree ) 
 {
   //
-  if ( 0 != m_formula ) { delete m_formula ; m_formula = 0 ; }
-  m_formula = new Analysis::Formula ( "" , m_cuts , tree ) ;
+  if ( 0 != fMyformula ) { delete fMyformula ; fMyformula = 0 ; }
+  fMyformula = new Analysis::Formula ( "" , fMycuts , tree ) ;
   //
   TPySelector::SlaveBegin ( tree ) ;
 }
@@ -79,7 +79,7 @@ void Analysis::SelectorWithCuts::SlaveBegin ( TTree* tree )
 Bool_t Analysis::SelectorWithCuts::Process      ( Long64_t entry ) 
 {
   //
-  if ( 0 != m_formula && m_formula->GetNdim() && !m_formula ->evaluate() ) 
+  if ( 0 != fMyformula && fMyformula->GetNdim() && !fMyformula ->evaluate() ) 
   { return false ; }
   //
   return TPySelector::Process ( entry ) ;
@@ -88,7 +88,7 @@ Bool_t Analysis::SelectorWithCuts::Process      ( Long64_t entry )
 // is formula OK?
 // ============================================================================
 bool Analysis::SelectorWithCuts::ok () const // is formula OK ? 
-{ return 0 != m_formula && m_formula->ok () ; }
+{ return 0 != fMyformula && fMyformula->ok () ; }
 
 
 // ============================================================================

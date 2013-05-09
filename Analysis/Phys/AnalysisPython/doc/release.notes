@@ -5,6 +5,12 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+
+! 2013-05-09 - Vanya Belyaev
+
+ - many small improvements for python selectors, 
+   especially selector swith embedded cuts 
+
 !========================= AnalysisPython v2r20 2013-05-07 =========================
 
 ! 2013-05-06 - Vanya Belyaev

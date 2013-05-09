@@ -31,8 +31,8 @@ namespace Analysis
     // ========================================================================
     /// constructor 
     SelectorWithCuts
-    ( TTree*             tree = 0  , 
-      const std::string& cuts = "" , 
+    ( const std::string& cuts = "" , 
+      TTree*             tree = 0  , 
       PyObject*          self = 0  ) ;
     /// virtual destructor 
     virtual ~SelectorWithCuts () ; // virtual destructor 
@@ -50,13 +50,15 @@ namespace Analysis
     /// is formula OK ? 
     bool ok () const  ; // is formula OK ? 
     /// get the formula 
-    Analysis::Formula* formula () const { return m_formula ; }
+    Analysis::Formula* formula () const { return fMyformula ; }
+    /// get the formula
+    const std::string& cuts    () const { return fMycuts    ; }
     // ========================================================================
   private:
     // ========================================================================
     /// the selection formula 
-    std::string        m_cuts    ; 
-    Analysis::Formula* m_formula ;
+    std::string        fMycuts    ; 
+    Analysis::Formula* fMyformula ;
   };
   // ==========================================================================
 } //                                                  end of namespace Analysis 
