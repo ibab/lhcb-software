@@ -92,7 +92,7 @@ StatusCode UnpackTrack::execute()
     }
   }
 
-  counter("# UnpackedTracks") += newTracks->size();
+  counter("# Unpacked Tracks") += newTracks->size();
 
   return StatusCode::SUCCESS;
 }

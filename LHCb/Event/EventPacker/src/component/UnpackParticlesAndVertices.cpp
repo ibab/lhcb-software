@@ -86,6 +86,7 @@ StatusCode UnpackParticlesAndVertices::execute()
     {
       debug() << "Retrieved " << nbPart << " Particles in " << nbPartContainer << " containers" << endmsg;
     }
+    counter("# Unpacked Particles") += nbPart;
   }
 
   //=================================================================
@@ -128,6 +129,7 @@ StatusCode UnpackParticlesAndVertices::execute()
       debug() << "Retrieved " << nbVert << " vertices in " << nbVertContainer << " containers"
               << endmsg;
     }
+    counter("# Unpacked Vertices") += nbVert;
   }
 
   //=================================================================
@@ -179,6 +181,7 @@ StatusCode UnpackParticlesAndVertices::execute()
     {
       debug() << "Retrieved " << nbFT << " FlavourTags in " << nbFTContainer << " containers" << endmsg;
     }
+    counter("# Unpacked FlavourTags") += nbFT;
   }
 
   //=================================================================
@@ -219,9 +222,10 @@ StatusCode UnpackParticlesAndVertices::execute()
     }
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "Retrieved " << nbRecVert << " RecVerticess in " << nbRecVertContainer << " containers"
+      debug() << "Retrieved " << nbRecVert << " RecVertices in " << nbRecVertContainer << " containers"
               << endmsg;
     }
+    counter("# Unpacked RecVertices") += nbRecVert;
   }
 
   //=================================================================
