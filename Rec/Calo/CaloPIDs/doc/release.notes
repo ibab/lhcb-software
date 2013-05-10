@@ -4,6 +4,10 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+
+! 2013-05-10 - Olivier Deschamps
+  - move CaloTrackAlg/Match/Tool.{cpp,h} from CaloUtils
+
 !========================= CaloPIDs v5r13 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.

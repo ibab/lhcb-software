@@ -5,7 +5,7 @@
 // ============================================================================
 #include "CaloChi22ID.h"
 #include "ToVector.h"
-#include "CaloUtils/CaloTrackAlg.h"
+#include "CaloTrackAlg.h"
 // ============================================================================
 /** The preconfigured instance of class CaloChi22ID 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu

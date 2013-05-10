@@ -27,7 +27,7 @@
 // ============================================================================
 // local
 // ============================================================================
-#include "CaloUtils/CaloTrackTool.h"
+#include "CaloTrackTool.h"
 // ============================================================================
 /** @class CaloEnergyForTrack
  *  tool which accumulates the energy for the given track 

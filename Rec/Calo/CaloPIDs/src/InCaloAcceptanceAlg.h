@@ -25,7 +25,7 @@
 // CaloUtils 
 // ============================================================================
 #include "CaloUtils/Calo2Track.h"
-#include "CaloUtils/CaloTrackAlg.h"
+#include "CaloTrackAlg.h"
 #include "CaloUtils/CaloAlgUtils.h"
 // ============================================================================
 // Local 
