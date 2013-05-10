@@ -3,6 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2013-05-10 - Olivier Deschamps
+  - move CaloTrackAlg/Match/Tool.{cpp,h} to CaloPIDs
+  - remove "use TrackInterfaces" from requirements
+
 ! 2013-05-06 - Marco Cattaneo
  - Replace endreq by endmsg
  - Fix UNINIT_CTOR defect
