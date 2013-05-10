@@ -1,6 +1,11 @@
-Package     : Hlt/Moore
-Package Coordinator : R. Lambert, G. Raven
-Purpose     : LHCb HLT application
+!============================================
+! Package     : Hlt/Moore
+! Package Coordinator : R. Lambert, G. Raven
+! Purpose     : LHCb HLT application
+!============================================
+
+! 2013-05-10 - Rob Lambert
+ - Update passthrough and vdm tests, so that they actually check for things...
 
 
 ! 2013-05-09 - Rob Lambert
