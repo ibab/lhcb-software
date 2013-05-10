@@ -5,6 +5,12 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v22r6    2013-05-10 ====================
+
+! 2013-05-10 - Vanya Belyaev
+
+ - Fill.py: add "phi"-variables 
+
 ! ==================== Phys/BenderTools v22r5p2  2013-04-26 ====================
 
 ! 2013-04-16 - Vanya Belyaev

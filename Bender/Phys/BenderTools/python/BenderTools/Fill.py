@@ -369,12 +369,13 @@ def treatTracks ( self         ,
                        'pt_track'    + suffix        , PT  / GeV  , 
                        'eta_track'   + suffix        , ETA        , 
                        'PChi2_track' + suffix        , TRPCHI2    , 
-                       LHCb.Particle.Range ( good ) , 
-                       'n_track'     + suffix        , 10         )
+                       LHCb.Particle.Range ( good )               , 
+                       'n_track'     + suffix        , 20         )
     
-    sc = tup.fArrayP ( 'chi2_track'  + suffix        , TRCHI2DOF , 
-                       LHCb.Particle.Range ( good )  , 
-                       'n_track'     + suffix        , 10         )
+    sc = tup.fArrayP ( 'chi2_track'  + suffix        , TRCHI2DOF ,
+                       'phi_track'   + suffix        , PHI       ,                        
+                       LHCb.Particle.Range ( good )              , 
+                       'n_track'     + suffix        , 20        )
     return sc
 
 # =============================================================================
@@ -392,8 +393,8 @@ def treatKine ( self          ,
     tup.column_int   ( 'pid'   + suffix , int ( ID      ( p ) )     )
     tup.column_float ( 'pt'    + suffix ,       PT      ( p ) / GeV )
     tup.column_float ( 'm'     + suffix ,        M      ( p ) / GeV )
-    tup.column_float ( 'phi'   + suffix ,      PHI      ( p )       )
     tup.column_float ( 'eta'   + suffix ,      ETA      ( p )       )
+    tup.column_float ( 'phi'   + suffix ,      PHI      ( p )       )
     #
     ## 4-vector
     #
