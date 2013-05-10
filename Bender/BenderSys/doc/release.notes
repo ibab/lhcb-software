@@ -23,6 +23,13 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v22r6> 2013-05-10 Bender v22r6 based on the DaVinci v33r4</A>
+
+It is identical to v22r5*, but based on the fresh DaVinci v33r4 (newer LHCb-stack)
+picking up a lot of new goodies and zillions of bug-fixes 
+in underlying software stack. 
+In particular the bug with <code>tup.column_float</code> method is fixed 
+
 <A NAME=v22r5p3> 2013-05-06 Bender v22r5p3 based on the DaVinci v33r3p3</A>
 
 It is identical to v22r5p2, but based on the fresh DaVinci v33r3p3 
