@@ -11,7 +11,44 @@ from Configurables       import GaudiSequencer as Sequence
 from Hlt1                import Hlt1Conf
 from Hlt2                import Hlt2Conf
 
+
+#############################################################################
+# Helper functions
+#############################################################################
+
+def __forAll__( c, prop_value_dict, types=['FilterDesktop','CombineParticles',"DVAlgorithm", "DaVinciAlgorithm", "DaVinciHistoAlgorithm", "DaVinciTupleAlgorithm" ] ) :
+    """ Find all configurable algorithms and set certain properties
+    """
+    if type(prop_value_dict) is not dict:
+        raise TypeError("Hey, you need to give me a dictionary, you passed me a, "+str(type(prop_value_dict)))
+    
+    if c.getType() in types:
+        for prop in prop_value_dict:
+            if hasattr(c,prop) or (hasattr(c,"properties") and prop in c.properties()):
+                c.setProp(prop,prop_value_dict[prop])
+    
+    #iterate/recurse over all subparts
+    for p in [ 'Members','Filter0','Filter1' ] :
+        if not hasattr(c,p) : continue
+        seq = getattr(c,p)
+        if type(seq) is not list: seq = [ seq ]
+        for i in seq : __forAll__(i,prop_value_dict,types) 
+
+def __onlinePV__():
+    """Use the tracking cofigurables to define the onlinePV location
+    """
+    import HltTracking
+    from HltTracking.HltVertexNames import Hlt3DPrimaryVerticesName as PV3DSelection
+    from HltTracking.HltVertexNames import ( _vertexLocation,
+                                             HltSharedVerticesPrefix,
+                                             HltGlobalVertexLocation )
+    from HltTracking.HltPVs import ProtoPV3DSelection
+    pv3d  = _vertexLocation( HltSharedVerticesPrefix, HltGlobalVertexLocation, PV3DSelection )
+    proto = _vertexLocation( HltSharedVerticesPrefix, HltGlobalVertexLocation, ProtoPV3DSelection )
+    return {"PV3D" : pv3d, "Proto": proto}
+
 ##################################################################################
+
 class HltConf(LHCbConfigurableUser):
     """
     Hlt configuration
@@ -158,6 +195,14 @@ class HltConf(LHCbConfigurableUser):
         if thresClass and hasattr( thresClass, 'Hlt2DefaultVoidFilter' ) :
             Hlt2Conf().DefaultVoidFilter = getattr( thresClass, 'Hlt2DefaultVoidFilter' )
 
+        #fix input locations, for the moment do with a post-config action,
+        #TODO: in the future set in Hlt1 and Hlt2 separately
+        
+        #get the vertex locations required
+        loc=__onlinePV__()["PV3D"]
+        def __setOnlinePV__(hlt=Hlt, loc=loc):
+            __forAll__(hlt, {"InputPrimaryVertices":loc})
+        appendPostConfigAction(__setOnlinePV__)
 
 #########################################################################################
 # Utility function for setting thresholds both in Hlt1 and 2
@@ -295,13 +340,7 @@ class HltConf(LHCbConfigurableUser):
         HltVertexReportsMaker().VertexSelections = vertices
         #Can't do this any longer, need replacing with a smart way to get the vertex locations
         #HltVertexReportsMaker().Context = "HLT"
-        from HltTracking.HltVertexNames import Hlt3DPrimaryVerticesName as PV3DSelection
-        from HltTracking.HltVertexNames import ( _vertexLocation,
-                                                 HltSharedVerticesPrefix,
-                                                 HltGlobalVertexLocation )                  
-        from HltTracking.HltPVs import ProtoPV3DSelection
-        pv3d  = _vertexLocation( HltSharedVerticesPrefix, HltGlobalVertexLocation, PV3DSelection )
-        HltVertexReportsMaker().PVLocation=pv3d
+        HltVertexReportsMaker().PVLocation=__onlinePV__()["PV3D"]
         ## do not write out the candidates for the vertices we store 
         from Configurables import HltSelReportsMaker
         HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
@@ -466,15 +505,7 @@ class HltConf(LHCbConfigurableUser):
                                  )
 
         # Configure vertex monitoring
-        from HltTracking.HltVertexNames import Hlt3DPrimaryVerticesName as PV3DSelection
-        from HltTracking.HltVertexNames import ( _vertexLocation,
-                                                 HltSharedVerticesPrefix,
-                                                 HltGlobalVertexLocation )                  
-        from HltTracking.HltPVs import ProtoPV3DSelection
-        pv3d  = _vertexLocation( HltSharedVerticesPrefix, HltGlobalVertexLocation, PV3DSelection )
-        proto = _vertexLocation( HltSharedVerticesPrefix, HltGlobalVertexLocation, ProtoPV3DSelection )
-        HltGlobalMonitor().VertexLocations = { 'PV3D'  : pv3d,
-                                               'Proto' : proto }
+        HltGlobalMonitor().VertexLocations = __onlinePV__()
 
         def _recurse(c,fun) :
             fun(c)
