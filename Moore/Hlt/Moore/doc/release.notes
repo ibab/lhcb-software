@@ -5,6 +5,9 @@
 !============================================
 
 ! 2013-05-10 - Rob Lambert
+ - Test for physics 2012 almost works, but there are erros in MuonID and the selected numbers of events are always smaller for many lines.
+
+! 2013-05-10 - Rob Lambert
  - Update passthrough, calibration and cosmic tests, so that they actually check for things...
 
 
