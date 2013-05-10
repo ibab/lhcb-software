@@ -126,7 +126,9 @@ def dumpDst ( usage   = __usage__   ,
         )
     
     options , arguments = parser.parse_args() 
-
+    
+    options.OutputLevel = 4
+    
     print 120*'*'
     if options.Quiet :
         print ' Trivial Bender-based script to explore the content of (x,mu,s,r,...)DSTs '
@@ -163,12 +165,19 @@ def dumpDst ( usage   = __usage__   ,
     else :
         DataOnDemandSvc   ( Dump = False , OutputLevel = 6 )
         msg.setFatal += [ 'DataOnDemandSvc' ] 
-
         
-    msg.setFatal += [ 'RootCnvSvc'          ,
-                      'IOManagerSvc'        ,
-                      'RootHistSvc'         ,
-                      'LHCb::RawDataCnvSvc' ]
+    msg.setFatal += [ 'RootCnvSvc'               ,
+                      'IOManagerSvc'             ,
+                      'RootHistSvc'              ,
+                      'LHCb::RawDataCnvSvc'      ,
+                      'HcalDet.Quality'          ,
+                      'EcalDet.Quality'          ,
+                      'MagneticFieldSvc'         ,
+                      'PropertyConfigSvc'        ,
+                      'ToolSvc.L0DUConfig'       ,
+                      'ToolSvc.L0CondDBProvider' , 
+                      'L0MuonFromRaw'            ,
+                      'IntegrateBeamCrossing'    ]
 
     from Bender.Main import appMgr, run, cpp
     
@@ -177,8 +186,6 @@ def dumpDst ( usage   = __usage__   ,
 
     root = options.RootInTES
     ## guess a bit about structure 
-    ##if not options.RootInTES :
-    ##    if hasInFile ( arguments , 'EW.DST' ) :
     
     if ext in ( 'gen' , 'xgen' , 'GEN' , 'XGEN' ) :
         from BenderTools.GenFiles import genAction

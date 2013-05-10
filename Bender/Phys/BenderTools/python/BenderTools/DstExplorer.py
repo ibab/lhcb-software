@@ -223,9 +223,7 @@ def configure ( options , arguments ) :
     if options.RootInTES and '/' == options.RootInTES[-1] :
         options.RootInTES = options.RootInTES[:-1]
     if options.RootInTES and '/Event' != options.RootInTES  : 
-        from BenderTools.MicroDST import uDstConf 
-        uDstConf(options.RootInTES)
-        
+        daVinci.RootInTES = options.RootInTES 
     #
     ## check for Grid-access
     #
@@ -237,7 +235,8 @@ def configure ( options , arguments ) :
 
     if not options.Simulation and options.DataType in ( '2010' ,
                                                         '2011' ,
-                                                        '2012' ) :
+                                                        '2012' ,
+                                                        '2013' ) :
         #
         ## try to use the latest available tags:
         #
@@ -267,7 +266,6 @@ def configure ( options , arguments ) :
             options.OutputLevel < 3 or not options.Quiet )
         if tags :
             logger.info( 'Extract tags from DATA : %s' % tags         )
-            logger.info( 'Extract tags from DATA : %s' % tags.keys()  )
             if tags.has_key ( 'DDDB'    ) and tags ['DDDB'   ] : 
                 daVinci.DDDBtag   = tags ['DDDB'  ]                 
                 logger.info( ' DDDBtag   : %s ' % daVinci.DDDBtag    )
@@ -275,15 +273,8 @@ def configure ( options , arguments ) :
                 daVinci.CondDBtag = tags ['CONDDB']
                 logger.info( ' CondDBtag : %s ' % daVinci.CondDBtag  )
             if tags.has_key ( 'SIMCOND' ) and tags ['SIMCOND'] :
-                from Configurables import CondDB 
-                db = CondDB()
-                if  db.LocalTags.has_key( 'SIMCOND' ) :                    
-                    db.LocalTags["SIMCOND"] += [ tags ['SIMCOND'] ] 
-                else :
-                    db.LocalTags["SIMCOND"]  = [ tags ['SIMCOND'] ] 
-                        
-                logger.info( ' SIMCOND   : %s ' %  db.LocalTags["SIMCOND"] ) 
-
+                daVinci.CondDBtag = tags ['SIMCOND']
+                logger.info( ' CondDBtag : %s ' % daVinci.CondDBtag  )
 
     ## specific action for (x)gen files 
     if ext in ( 'gen' , 'xgen' , 'GEN' , 'XGEN' ) :
