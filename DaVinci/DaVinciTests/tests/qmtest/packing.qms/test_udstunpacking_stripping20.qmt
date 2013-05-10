@@ -1,15 +1,12 @@
 <?xml version="1.0" ?>
 <!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
-<!-- This must be identical to the block in test_hlt12_mc09.qmt -->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="args"><set>
-  <text>../options/DVTestHlt2-MC09.py</text>
+  <text>../options/Packing/DaVinci-uDSTUnpacking-Stripping20-Test.py</text>
 </set></argument>
+<argument name="reference"><text>../refs/test_udstunpacking_stripping20.ref</text></argument>
 <argument name="validator"><text>
-findReferenceBlock("""
- |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|      1000 |        117 |(  11.7000 +- 1.01642  )%|   -------   |   -------   |
-""", stdout, result, causes, signature_offset = 0, id = "Hlt2")
-countErrorLines({"FATAL":0})
+countErrorLines({"FATAL":0, "WARNING":0, "ERROR":0})
 </text></argument>
 </extension>

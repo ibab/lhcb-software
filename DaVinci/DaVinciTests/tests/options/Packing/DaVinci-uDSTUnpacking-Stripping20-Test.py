@@ -5,22 +5,23 @@ from Configurables import GaudiSequencer
 from Configurables import DaVinci, PhysConf
 ########################################################################
 
-DaVinci().EvtMax    = 100                   # Number of events
-DaVinci().PrintFreq = 10                    # Events to skip
-DaVinci().DataType  = "2012"                # Must be given
-DaVinci().Simulation    = False
+DaVinci().EvtMax     = 100                  # Number of events
+DaVinci().PrintFreq  = 10                   # Events to skip
+DaVinci().DataType   = "2012"               # Must be given
+DaVinci().HistogramFile = "udst-unpacking.root"
+DaVinci().InputType  = "MDST"
 
 ########################################################################
 
 from Configurables import DataObjectVersionFilter
 DaVinci().UserAlgorithms += [
-    DataObjectVersionFilter( "CheckTracks",
-                             DataObjectLocation = "/Event/Bhadron/Rec/Track/Best",
-                             MaxVersion = 999 ),
     DataObjectVersionFilter( "CheckDecReports",
                              DataObjectLocation = "/Event/Strip/Phys/DecReports",
                              MaxVersion = 999,
                              OutputLevel = 3 ),
+    DataObjectVersionFilter( "CheckTracks",
+                             DataObjectLocation = "/Event/Bhadron/Rec/Track/Best",
+                             MaxVersion = 999 ),
     DataObjectVersionFilter( "CheckVeloClusters",
                              DataObjectLocation = "/Event/Bhadron/Raw/Velo/Clusters",
                              MaxVersion = 999,
