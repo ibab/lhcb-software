@@ -7,6 +7,7 @@
 ! 2013-05-10 - Chris Jones
  - Split the unpacking tests into two, one for uDSTs and another for DSTs.
  - Remove all the HLT tests, as cannot be run in DV anymore.
+ - Add two new tests for ANNPID on DSTS and uDSTs.
 
 ! 2013-05-09 - Chris Jones
  - Add missing entry for packing to davincitests.qms

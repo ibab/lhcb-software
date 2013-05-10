@@ -1,0 +1,21 @@
+ANNPIDMoni        SUCCESS Booked 18 Histogram(s) : 1D=18 
+ANNPIDMoni        SUCCESS List of booked 1D histograms in directory         "PROTO/ANNPIDMoni" :-
+ | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
+ | Downstream/ElectronANN    | "Downstream Electron ANN PID"                 |   228   |   0.027729 | 0.087635   |     6.1249 |     47.387 |
+ | Downstream/GhostANN       | "Downstream Ghost ANN PID"                    |   228   |    0.39513 | 0.3644     |    0.49996 |      -1.36 |
+ | Downstream/KaonANN        | "Downstream Kaon ANN PID"                     |   228   |   0.024623 | 0.045711   |     3.2591 |     12.734 |
+ | Downstream/MuonANN        | "Downstream Muon ANN PID"                     |   228   |  0.0014382 | 0.011834   |     9.6041 |     102.23 |
+ | Downstream/PionANN        | "Downstream Pion ANN PID"                     |   228   |    0.45204 | 0.37484    |    0.16571 |     -1.583 |
+ | Downstream/ProtonANN      | "Downstream Proton ANN PID"                   |   228   |   0.075155 | 0.12662    |     2.3818 |     5.2262 |
+ | Long/ElectronANN          | "Long Electron ANN PID"                       |   4345  |   0.026552 | 0.12665    |     5.8435 |     34.663 |
+ | Long/GhostANN             | "Long Ghost ANN PID"                          |   4345  |      0.207 | 0.33549    |     1.5884 |    0.87622 |
+ | Long/KaonANN              | "Long Kaon ANN PID"                           |   4345  |    0.14326 | 0.26355    |     2.1262 |     3.3226 |
+ | Long/MuonANN              | "Long Muon ANN PID"                           |   4345  |   0.040605 | 0.17543    |     4.4265 |      18.29 |
+ | Long/PionANN              | "Long Pion ANN PID"                           |   4345  |    0.54096 | 0.38233    |   -0.23917 |    -1.5934 |
+ | Long/ProtonANN            | "Long Proton ANN PID"                         |   4345  |   0.056644 | 0.1363     |     4.0359 |     18.635 |
+ | Upstream/ElectronANN      | "Upstream Electron ANN PID"                   |    21   |   0.069211 | 0.18201    |     3.4984 |     11.325 |
+ | Upstream/GhostANN         | "Upstream Ghost ANN PID"                      |    21   |    0.24351 | 0.28565    |     1.1008 |   -0.25839 |
+ | Upstream/KaonANN          | "Upstream Kaon ANN PID"                       |    21   |   0.089112 | 0.12289    |     3.1492 |     9.7647 |
+ | Upstream/MuonANN          | "Upstream Muon ANN PID"                       |    21   |  0.0037318 | 0.0047034  |     4.4216 |     16.915 |
+ | Upstream/PionANN          | "Upstream Pion ANN PID"                       |    21   |    0.55084 | 0.27775    |   -0.45405 |    -1.0632 |
+ | Upstream/ProtonANN        | "Upstream Proton ANN PID"                     |    21   |   0.049979 | 0.085864   |     2.0641 |      2.739 |

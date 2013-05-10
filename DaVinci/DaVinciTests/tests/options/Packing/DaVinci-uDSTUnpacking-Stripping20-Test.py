@@ -5,8 +5,8 @@ from Configurables import GaudiSequencer
 from Configurables import DaVinci, PhysConf
 ########################################################################
 
-DaVinci().EvtMax     = 100                  # Number of events
-DaVinci().PrintFreq  = 10                   # Events to skip
+DaVinci().EvtMax     = 1000                 # Number of events
+DaVinci().PrintFreq  = 100                  # Events to skip
 DaVinci().DataType   = "2012"               # Must be given
 DaVinci().HistogramFile = "udst-unpacking.root"
 DaVinci().InputType  = "MDST"

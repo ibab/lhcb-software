@@ -1,9 +1,9 @@
 Bhadron_pRec_Tr...SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# Unpacked Tracks"                             |        99 |        429 |     4.3333 |     2.5146 |      2.0000 |      14.000 |
+ | "# Unpacked Tracks"                             |       994 |       4594 |     4.6217 |     2.5366 |      2.0000 |      22.000 |
 Bhadron_PsAndVs...SUCCESS Number of counters : 4
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# Unpacked FlavourTags"                        |        54 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
- | "# Unpacked Particles"                          |        54 |        876 |     16.222 |     17.937 |      0.0000 |      106.00 |
- | "# Unpacked RecVertices"                        |        54 |        189 |     3.5000 |     3.5681 |      0.0000 |      17.000 |
- | "# Unpacked Vertices"                           |        54 |        346 |     6.4074 |     7.8846 |      0.0000 |      47.000 |
+ | "# Unpacked FlavourTags"                        |       954 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ | "# Unpacked Particles"                          |       954 |      30626 |     32.103 |     110.85 |      0.0000 |      2913.0 |
+ | "# Unpacked RecVertices"                        |       954 |       9234 |     9.6792 |     67.573 |      0.0000 |      2010.0 |
+ | "# Unpacked Vertices"                           |       954 |      15277 |     16.014 |     83.815 |      0.0000 |      2396.0 |
