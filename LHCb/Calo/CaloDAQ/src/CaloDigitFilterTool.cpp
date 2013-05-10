@@ -167,7 +167,7 @@ double CaloDigitFilterTool::getOffset(LHCb::CaloCellID id, int scale,bool spd){
 int  CaloDigitFilterTool::getMask(std::string det){
   std::map<std::string,int>::iterator it = m_maskMap.find( det );
   if( it == m_maskMap.end() ){
-    it == m_maskMap.find( "Default");
+    it = m_maskMap.find( "Default");
     if( it == m_maskMap.end() )return 0;
     else return it->second;
    }
