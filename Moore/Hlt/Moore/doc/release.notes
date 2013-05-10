@@ -5,7 +5,7 @@
 !============================================
 
 ! 2013-05-10 - Rob Lambert
- - Update passthrough and vdm tests, so that they actually check for things...
+ - Update passthrough, calibration and cosmic tests, so that they actually check for things...
 
 
 ! 2013-05-09 - Rob Lambert

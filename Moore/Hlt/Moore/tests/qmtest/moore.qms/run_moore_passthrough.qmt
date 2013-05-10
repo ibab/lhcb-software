@@ -8,7 +8,7 @@
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
-expected_string = &quot;SUCCESS Reading Event record 1001. Record number within stream 2: 800&quot; 
+expected_string = &quot;SUCCESS Reading Event record 1101. Record number within stream 3: 800&quot; 
 if stdout.find(expected_string) == -1:
     causes.append('missing string')
     result['GaudiTest.expected_string'] = result.Quote(expected_string)
