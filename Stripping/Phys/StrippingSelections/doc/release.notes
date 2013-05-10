@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-05-10 - Marco Meissner
+ - Added simple prescale MinimumBias Stripping Line for pA / Ap data.
+   A         StrippingProtonIonMinBias.py
+
 !========================= StrippingSelections v3r24 2013-05-07 =========================
 ! 2013-05-08 - Ronan Wallace
  - Relaxed prescales in most QEE lines for pA data.
