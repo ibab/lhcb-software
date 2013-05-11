@@ -5,6 +5,9 @@
 
 !========================= ParticleMaker v6r7p2 2013-04-23 =========================
 
+! 2012-02-25 - Olivier Deschamps
+ - DiElectronMaker : remove unecessary include
+
 ! 2012-02-25 - Chris Jones 
  - Fix -pedantic compilation warnings 
 

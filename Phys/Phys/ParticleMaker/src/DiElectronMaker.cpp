@@ -2,7 +2,6 @@
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "CaloUtils/CaloTrackTool.h"
 #include "Kernel/IRelatedPVFinder.h"
 #include "Kernel/IParticleTransporter.h"
 // local
