@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2013-05-11 - Vanya Belyaev
+ - speedup the integration 
+
 !========================= LHCbMath v3r39 2013-04-29 =========================
 ! 2013-04-27  - Vanya Belyaev 
  - EqualTo: add comparison ove vectors, points & matrices 
