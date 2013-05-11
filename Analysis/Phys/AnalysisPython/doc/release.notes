@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-05-11 - Vanya Belyaev
+
+ - add (python) comparison operators for RooRealVar
+
+! 2013-05-11 - Vanya Belyaev
  - (py)minuit: 
 
      improments in cor&cov methods 

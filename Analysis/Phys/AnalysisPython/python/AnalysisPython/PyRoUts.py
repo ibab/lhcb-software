@@ -5348,6 +5348,80 @@ ROOT.RooRealVar . __rmul__  = _rrv_rmul_
 ROOT.RooRealVar . __rpow__  = _rrv_rpow_
 
 # =============================================================================
+## (compare RooRealVar and "number"
+def _rrv_le_ ( s , o ) :
+    """
+    compare RooRealVal and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> iv var <= num : print ' ok! '
+    """
+    return o >= s.getVal()
+
+## (compare RooRealVar and "number"
+def _rrv_lt_ ( s , o ) :
+    """
+    compare RooRealVal and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> iv var < num : print ' ok! '
+    """
+    return o > s.getVal()
+
+## (compare RooRealVar and "number"
+def _rrv_ge_ ( s , o ) :
+    """
+    compare RooRealVal and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> iv var >= num : print ' ok! '
+    """
+    return o <= s.getVal()
+
+## (compare RooRealVar and "number"
+def _rrv_gt_ ( s , o ) :
+    """
+    compare RooRealVal and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> iv var > num : print ' ok! '
+    """
+    return o < s.getVal()
+
+## (compare RooRealVar and "number"
+def _rrv_eq_ ( s , o ) :
+    """
+    compare RooRealVal and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> iv var == num : print ' ok! '
+    """
+    return o == s.getVal()
+
+## (compare RooRealVar and "number"
+def _rrv_ne_ ( s , o ) :
+    """
+    compare RooRealVal and ``number''
+    
+    >>> var = ...
+    >>> num = ...
+    >>> iv var != num : print ' ok! '
+    """
+    return o != s.getVal()
+
+ROOT.RooRealVar . __lt__   = _rrv_lt_
+ROOT.RooRealVar . __gt__   = _rrv_gt_
+ROOT.RooRealVar . __le__   = _rrv_le_
+ROOT.RooRealVar . __ge__   = _rrv_ge_
+ROOT.RooRealVar . __eq__   = _rrv_eq_
+ROOT.RooRealVar . __ne__   = _rrv_ne_
+
+# =============================================================================
 ## further decoration
 import GaudiPython.HistoUtils
 logger.info ( 'Histogram utilities from GaudiPython.HistoUtils' )
