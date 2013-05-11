@@ -5,6 +5,11 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-05-11 - Vanya Belyaev
+ - (py)minuit: 
+
+     improments in cor&cov methods 
+
 
 ! 2013-05-09 - Vanya Belyaev
 

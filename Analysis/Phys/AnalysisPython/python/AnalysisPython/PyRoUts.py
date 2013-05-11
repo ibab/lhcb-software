@@ -4826,7 +4826,7 @@ ROOT.TMinuit . contour = _mn_contour_
 
 # =============================================================================
 ## get the covariance matrix from TMinuit
-def _mn_cov_ ( self , size = -1 ) :
+def _mn_cov_ ( self , size = -1 , root = False ) :
     """
     Get the covariance matrix from TMinuit
 
@@ -4842,25 +4842,21 @@ def _mn_cov_ ( self , size = -1 ) :
     matrix = array.array ( 'd' , [ 0 for i in range(0, size * size) ]  )
     self.mnemat ( matrix , size )
     #
-    if   1 == size : mtrx = cpp.Gaudi.Math.SymMatrix1x1 ()
-    elif 2 == size : mtrx = cpp.Gaudi.Math.SymMatrix2x2 ()
-    elif 3 == size : mtrx = cpp.Gaudi.Math.SymMatrix3x3 ()
-    elif 4 == size : mtrx = cpp.Gaudi.Math.SymMatrix4x4 ()
-    elif 5 == size : mtrx = cpp.Gaudi.Math.SymMatrix5x5 ()
-    elif 6 == size : mtrx = cpp.Gaudi.Math.SymMatrix6x6 ()
-    elif 7 == size : mtrx = cpp.Gaudi.Math.SymMatrix7x7 ()
+    if   1 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix1x1 ()
+    elif 2 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix2x2 ()
+    elif 3 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix3x3 ()
+    elif 4 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix4x4 ()
+    elif 5 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix5x5 ()
+    elif 6 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix6x6 ()
+    elif 7 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix7x7 ()
     ## no 8x8! 
-    elif 9 == size : mtrx = cpp.Gaudi.Math.SymMatrix9x9 ()
+    elif 9 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix9x9 ()
     else :
-        t_line = cpp.std.vector('double')
-        t_mtrx = cpp.std.vector( t_line )
-        mtrx   = t_mtrx() 
-        for i in range ( 0 , size ) : mtrx.push_back ( t_line( size ) )
-        #
+        ## use ROOT matrices 
+        mtrx = ROOT.TMatrix( size , size )
         for i in range ( 0 , size ) :
             for j in range ( 0 , size ) :
                 mtrx [i][j] = matrix [ i * size + j ]
-                
         return mtrx  ## RETURN 
         
     for i in range ( 0 , size ) :
@@ -4871,7 +4867,7 @@ def _mn_cov_ ( self , size = -1 ) :
 
 # =============================================================================
 ## get the correlation matrix from TMinuit
-def _mn_cor_ ( self , size = -1 ) :
+def _mn_cor_ ( self , size = -1 , root  = False ) :
     """
     Get the correlation matrix from TMinuit
 
@@ -4880,24 +4876,41 @@ def _mn_cor_ ( self , size = -1 ) :
         
     """
     #
-    cov = self.cov ( size )
+    cov = self.cov ( size , root )
     #
     from math import sqrt
     #
-    # matrix?
-    if hasattr ( cov , 'kRows' ) and hasattr ( cov , 'kCols' ) :
-        ## copy 
-        cor = cov.__class__ () 
-        for i in range(0, cov.kRows) :
-            d_i = cov(i,i)
-            cor[i,i] = 1 if 0 < d_i else 0 
-            for j in range ( i + 1 , cov.kRows ) :
-                d_j = cov(j,j)
-                if 0 != cov(i,j) and 0 < d_i and 0 < d_j  :
-                    cor[i,j] = cov(i,j) / sqrt ( d_i * d_j )
-                else : 
-                    cor[i,j] = 0 
-        return cor
+    if   isinstance ( cov , ROOT.TMatrix ) :
+
+        size  = cov.GetNrows()
+        root  = True
+        
+    else : size = cov.kRows
+
+    ## use ROOT matrices 
+    if root : cor = ROOT.TMatrix  ( size , size )
+    else    : cor = cov.__class__ () 
+
+    for i in range(0, size ) :
+        
+        d_i = cov ( i , i )
+        cor [ i , i ] = 1 if 0 < d_i else 0
+        
+        for j in range ( i + 1 , size  ) :
+            
+            d_j = cov ( j , j )
+            
+            if 0 != cov ( i , j ) and 0 < d_i and 0 < d_j  :
+                
+                if root  : cor [ i ] [ j ] = cov ( i , j ) / sqrt ( d_i * d_j )
+                else     : cor [ i ,   j ] = cov ( i , j ) / sqrt ( d_i * d_j )
+                
+            else :
+                
+                if _root : cor [ i ] [ j ] = 0 
+                else     : cor [ i ,   j ] = 0
+
+    return cor
             
 _mn_cor_ . __doc__ += '\n' + ROOT.TMinuit.mnemat . __doc__ 
 
