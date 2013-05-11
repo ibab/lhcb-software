@@ -71,6 +71,7 @@ import StrippingB23MuLines
 
 import StrippingDiMuonNew
 import StrippingDiMuonForXsection
+import StrippingDiMuonNew
 import StrippingBc2JpsiHNew
 import StrippingBc2JpsiMuXNew
 import StrippingJpsiMuMuforD0MuMu

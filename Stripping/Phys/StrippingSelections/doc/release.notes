@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-05-11 - Lucio Anderlini (for Zhenwei Yang)
+  - Added the StrippingDiMuonpA.py line for Zhenwei
+
 ! 2013-05-10 - Marco Meissner
  - Added simple prescale MinimumBias Stripping Line for pA / Ap data.
    A         StrippingProtonIonMinBias.py
