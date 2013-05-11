@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-05-11 - Lucio Anderlini (BandQ)
+ - Added configuration dictionary for DiMuonpA (Zhenwei) for Stripping20r3
+
 !========================= StrippingSettings v2r23p1 2013-05-07 =========================
 
 ! 2013-05-08 - Anton Poluektov 

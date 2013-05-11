@@ -588,3 +588,17 @@ LLP2MuX = {
     'STREAMS' : [ 'ALL' ]
     }
 
+DiMuonpA = {
+    'BUILDERTYPE'  : 'DiMuonpAConf',
+    'CONFIG'       : {
+    'TotalCuts'  :  """
+    (MINTREE('mu+'==ABSID,PT)>0.60*GeV)
+    & (VFASPF(VCHI2PDOF)<25)
+    & ((ADMASS('J/psi(1S)')<150*MeV) | (ADMASS('psi(2S)')<150*MeV) | (MM>8.4*GeV))
+    """,
+    'Prescale'   :  1.,
+    'CheckPV'    :  False
+    },
+    'WGs' : [ 'BandQ' ],
+    'STREAMS' : [ 'ALL' ]
+    }
