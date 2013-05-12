@@ -207,7 +207,7 @@ const LHCb::RecVertex ZooWriter::calculateSecondIP(ZooP* zp, const LHCb::Particl
     }
   } // A) or B)
 
-  return (gotavertex:(*myBestVertex):pv);
+  return (gotavertex?(*myBestVertex):pv);
 } // calculateSecondIP
 
 
