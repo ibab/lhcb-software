@@ -2613,7 +2613,7 @@ namespace Gaudi
       // ======================================================================
     private:
       // ======================================================================
-      /// default consytructor is disabled 
+      /// default constructor is disabled 
       StudentT() ;  // default consytructor is disabled 
       // ======================================================================
     private:
@@ -2633,6 +2633,204 @@ namespace Gaudi
       // ======================================================================
       /// integration workspace
       Gaudi::Math::WorkSpace     m_workspace  ;    // integration workspace
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class GammaDist 
+     *  Gamma-distribution shape/scale parameters 
+     *  http://en.wikipedia.org/wiki/Gamma_distribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     */
+    class GAUDI_API GammaDist 
+      : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor form scale & shape parameters
+       *  param k      \f$k\f$ parameter (shape)
+       *  param theta  \f$\theta\f$ parameter (scale)
+       */
+      GammaDist ( const double k     ,   // shape parameter  
+                  const double theta ) ; // scale parameter
+      /// desctructor
+      ~GammaDist() ;  // desctructor
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// calculate gamma distribution shape
+      double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // variables
+      // ======================================================================
+      double k          () const  { return m_k                          ; }
+      double theta      () const  { return m_theta                      ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      double mean       () const  { return m_k * m_theta                ; }
+      double dispersion () const  { return m_k * m_theta * m_theta      ; }
+      double variance   () const  { return dispersion ()                ; }
+      double sigma      () const  { return std::sqrt ( dispersion ()  ) ; }
+      double skewness   () const  { return 2.0 / std::sqrt ( m_k )      ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** effective $\chi^2\f$-parameters 
+       *  If   \f$ Q  \sim \chi^2(\nu)\f$  and c is a positive constant, 
+       *  than \f$ cQ \sim \Gamma (k = \nu/2, \theta = 2c) \f$ 
+       */
+      double nu () const { return 2   * k     () ; }
+      double c  () const { return 0.5 * theta () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      bool setK     ( const double value  ) ;
+      bool setTheta ( const double value  ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral
+      double integral () const ;
+      /// get the integral between low and high limits
+      double integral ( const double low  ,
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is disabled 
+      GammaDist () ;  // default consytructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// shape 
+      double m_k      ; // shape 
+      /// scale 
+      double m_theta  ; // scale 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// auxillary intermediate parameter 
+      mutable double m_aux ; // auxillary intermediate parameter 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class LogGammaDist 
+     *  Distribution for log(x) where x has gamma-distribution shape/scale parameters 
+     *  http://en.wikipedia.org/wiki/Gamma_distribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     */
+    class GAUDI_API LogGammaDist 
+      : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor from scale & shape parameters
+       *  param k      \f$k\f$ parameter (shape)
+       *  param theta  \f$\theta\f$ parameter (scale)
+       */
+      LogGammaDist ( const double k     ,   // shape parameter  
+                     const double theta ) ; // scale parameter
+      /// destructor
+      virtual ~LogGammaDist() ;  // desctructor
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// calculate log-gamma distribution shape
+      virtual double operator() ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // variables
+      // ======================================================================
+      double k          () const  { return m_gamma.k     () ; }
+      double theta      () const  { return m_gamma.theta () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      double mean       () const  { return m_gamma.mean       () ; } 
+      double dispersion () const  { return m_gamma.dispersion () ; }
+      double sigma      () const  { return m_gamma.sigma      () ; } 
+      double skewness   () const  { return m_gamma.skewness   () ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** effective $\chi^2\f$-parameters 
+       *  If   \f$ Q  \sim \chi^2(\nu)\f$  and c is a positive constant, 
+       *  than \f$ cQ \sim \Gamma (k = \nu/2, \theta = 2c) \f$ 
+       */
+      double nu () const { return m_gamma.nu () ; } 
+      double c  () const { return m_gamma.c  () ; } 
+      // ======================================================================
+    public: 
+      // ======================================================================
+      /// get the underlying gamma distribution
+      const GammaDist& gamma() const { return m_gamma ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      bool setK     ( const double value  ) { return m_gamma.setK     ( value ) ; }
+      bool setTheta ( const double value  ) { return m_gamma.setTheta ( value ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral
+      double integral () const ;
+      /// get the integral between low and high limits
+      virtual double integral ( const double low  ,
+                                const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is disabled 
+      LogGammaDist () ;  // default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================      
+      /// helper gamma distribution 
+      GammaDist m_gamma ;  // helper gamma distribution 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Log10GammaDist 
+     *  Distribution for log10(x) where x has gamma-distribution shape/scale parameters 
+     *  http://en.wikipedia.org/wiki/Gamma_distribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     */
+    class GAUDI_API Log10GammaDist : public LogGammaDist 
+    {
+    public:
+      // ======================================================================
+      /** constructor form scale & shape parameters
+       *  param k      \f$k\f$ parameter (shape)
+       *  param theta  \f$\theta\f$ parameter (scale)
+       */
+      Log10GammaDist ( const double k     ,   // shape parameter  
+                       const double theta ) ; // scale parameter
+      /// destructor
+      virtual ~Log10GammaDist() ;  // destructor
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// calculate log-gamma distribution shape
+      virtual double operator() ( const double x    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral
+      double integral () const ;
+      /// get the integral between low and high limits
+      virtual double integral   ( const double low  ,
+                                  const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is disabled 
+      Log10GammaDist () ;  // default constructor is disabled 
       // ======================================================================
     } ;
     // ========================================================================

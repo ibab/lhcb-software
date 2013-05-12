@@ -222,6 +222,13 @@ namespace
    */
   const double      s_TRUNC = 15.0 ;
   // ==========================================================================
+  /** @var s_LN10
+   *  \f$\ln(10)\f$ 
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-05-23
+   */
+  const double      s_LN10 = std::log ( 10 ) ;
+  // ==========================================================================
   // Chebyshev & Co
   // ==========================================================================
   Gaudi::Math::Chebyshev_<2> s_c2 ;
@@ -5175,7 +5182,176 @@ double Gaudi::Math::StudentT::integral
   //
   return result ;
 }
+// ============================================================================
 
+
+// ============================================================================
+/* constructor form scale & shape parameters
+ *  param k      \f$k\f$ parameter (shape)
+ *  param theta  \f$\theta\f$ parameter (scale)
+ */
+// ============================================================================
+Gaudi::Math::GammaDist::GammaDist 
+( const double k     ,   // shape parameter  
+  const double theta )   // scale parameter
+  : m_k     ( std::abs ( k     ) )
+  , m_theta ( std::abs ( theta ) ) 
+{}
+// ============================================================================
+// destrructor
+// ============================================================================
+Gaudi::Math::GammaDist::~GammaDist (){}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::GammaDist::setK ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  //
+  if ( s_equal ( v , m_k ) ) { return false ; }
+  //
+  m_k = v ;
+  //
+  // evaluate auxillary parameter 
+  m_aux =  0 ;
+  if ( s_equal ( 1 , m_k ) ) { m_k    = 1 ; }
+  else                       { m_aux += -gsl_sf_lngamma ( m_k ) ; }
+  m_aux += - m_k * my_log ( m_theta ) ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::GammaDist::setTheta ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  //
+  if ( s_equal ( v , m_theta ) ) { return false ; }
+  //
+  m_theta = v ;
+  //
+  // evaluate auxillary parameter 
+  m_aux =  0 ;
+  if ( s_equal ( 1 , m_k ) ) {}
+  else                       { m_aux += -gsl_sf_lngamma ( m_k ) ; }
+  m_aux += - m_k * my_log ( m_theta ) ;
+  //
+  //
+  return true ;
+}
+// ============================================================================
+// calculate gamma distribution shape
+// ============================================================================
+double Gaudi::Math::GammaDist::operator() ( const double x ) const
+{
+  // simple cases 
+  if ( x < 0 ) { return 0 ; }
+  // 
+  if ( s_equal ( x , 0 )    ) { return s_equal ( m_k , 1 ) ? 1/m_theta : 0.0 ; }
+  //
+  double result = m_aux - x / m_theta ;
+  if ( !s_equal ( m_k , 1 ) ) { result += ( m_k - 1 ) * my_log ( x ) ; }
+  //
+  return my_exp ( result ) ;
+}
+// ============================================================================
+// get the integral
+// ============================================================================
+double Gaudi::Math::GammaDist::integral () const { return 1 ; }
+// ============================================================================
+// get the integral between low and high limits
+// ============================================================================
+double Gaudi::Math::GammaDist::integral ( const double low  ,
+                                          const double high ) const 
+{
+  //
+  if      ( s_equal ( low  , high ) ) { return 0 ; }
+  else if (           low  > high   ) { return -1 * integral ( high , low  ) ; }
+  else if (           high <= 0     ) { return 0 ; }
+  else if (           low  < 0      ) { return      integral ( 0    , high ) ; }
+  //
+  return 
+    gsl_sf_gamma_inc_P ( m_k , high / m_theta ) - 
+    gsl_sf_gamma_inc_P ( m_k , low  / m_theta ) ;
+}
+
+// ============================================================================
+/* constructor form scale & shape parameters
+ *  param k      \f$k\f$ parameter (shape)
+ *  param theta  \f$\theta\f$ parameter (scale)
+ */
+// ============================================================================
+Gaudi::Math::LogGammaDist::LogGammaDist 
+( const double k     ,   // shape parameter  
+  const double theta )   // scale parameter
+  : m_gamma ( k , theta ) 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::LogGammaDist::~LogGammaDist (){}
+// ============================================================================
+// calculate log-gamma distribution shape
+// ============================================================================
+double Gaudi::Math::LogGammaDist::operator() ( const double x ) const
+{
+  // 
+  const double z = my_exp ( x ) ;
+  return m_gamma ( z ) * z ;
+  //
+}
+// ============================================================================
+// get the integral
+// ============================================================================
+double Gaudi::Math::LogGammaDist::integral () const { return 1 ; }
+// ============================================================================
+// get the integral between low and high limits
+// ============================================================================
+double Gaudi::Math::LogGammaDist::integral ( const double low  ,
+                                             const double high ) const 
+{
+  //
+  if      ( s_equal ( low  , high ) ) { return 0 ; }
+  else if (           low  > high   ) { return -1 * integral ( high , low  ) ; }
+  //
+  const double z_low  = my_exp ( low  ) ;
+  const double z_high = my_exp ( high ) ;
+  //
+  return m_gamma.integral ( z_low , z_high ) ;
+}
+// ============================================================================
+/* constructor form scale & shape parameters
+ *  param k      \f$k\f$ parameter (shape)
+ *  param theta  \f$\theta\f$ parameter (scale)
+ */
+// ============================================================================
+Gaudi::Math::Log10GammaDist::Log10GammaDist 
+( const double k     ,   // shape parameter  
+  const double theta )   // scale parameter
+  : Gaudi::Math::LogGammaDist( k , theta ) 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::Log10GammaDist::~Log10GammaDist (){}
+// ============================================================================
+// calculate log-gamma distribution shape
+// ============================================================================
+double Gaudi::Math::Log10GammaDist::operator() ( const double x ) const
+{ return LogGammaDist::operator() ( x * s_LN10 ) * s_LN10 ; }
+// ============================================================================
+// get the integral 
+// ============================================================================
+double Gaudi::Math::Log10GammaDist::integral () const { return 1 ; }
+// ============================================================================
+// get the integral between low and high limits
+// ============================================================================
+double Gaudi::Math::Log10GammaDist::integral ( const double low  ,
+                                               const double high ) const 
+{ return LogGammaDist::integral ( low  * s_LN10 , high * s_LN10 ) ; }
 // ============================================================================
 // The END
 // ============================================================================

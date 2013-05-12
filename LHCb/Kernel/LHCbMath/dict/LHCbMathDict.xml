@@ -67,6 +67,10 @@
   </class>
   <class name    = "Gaudi::Math::Positive"        />
   <class name    = "Gaudi::Math::Bernstein"       />
+  <class name    = "Gaudi::Math::GammaDist"       />
+  <class name    = "Gaudi::Math::LogGammaDist"    />
+  <class name    = "Gaudi::Math::Log10GammaDist"  />
+
 
   <class name    = "Gaudi::Math::Spline"           >
     <field name  = "m_spline" transient = "true"/>      
