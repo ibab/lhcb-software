@@ -64,6 +64,51 @@ def _lfn_pfn_strip_ ( file_name ) :
     if 0 < p : file_name = file_name [ : p ]
     
     return file_name
+
+# =============================================================================
+def useDBTagsFromData (
+    file_name      ,   ## the file name 
+    castor  = True ,   ## use castor/EOS ? 
+    grid    = ''   ,   ## use grid?
+    daVinci = None ) : 
+    """
+    Extract the tags from data file  and configure DaVinci
+
+    dv        = DaVinci ( ... )
+    datatiles = ...
+
+    from BenderTools.GetDBtags import useDBtagsFromDATA
+
+    useDBtagsFromDATA ( datafiles , castor , grid )
+    
+    """
+    if isinstance ( file_name , (list,tuple) ) and file_name : file_name = file_name[0]
+    if not file_name :
+        logger.error( ' useDBTagsFromDATA: Invalid file name(s) ')
+        return
+
+    tags = getDBTags  ( file_name , castor , grid )
+
+    if not tags : 
+        logger.warning ( 'No tags are extracted from the file %s' % data_file )
+        return tags  
+    #
+    logger.info    ( 'Extractes tags from DATA are : %s' % tags         )
+    
+    if not daVinci :
+        from Configurables import DaVinci
+        daVinci = DaVinci () 
+    if tags.has_key ( 'DDDB'    ) and tags ['DDDB'   ] : 
+        daVinci.DDDBtag   = tags ['DDDB'  ]                 
+        logger.info ( ' DDDBtag   : %s ' % daVinci.DDDBtag    )
+    if tags.has_key ( 'CONDDB'  ) and tags ['CONDDB' ] : 
+        daVinci.CondDBtag = tags ['CONDDB']
+        logger.info ( ' CondDBtag : %s ' % daVinci.CondDBtag  )
+    if tags.has_key ( 'SIMCOND' ) and tags ['SIMCOND'] :
+        daVinci.CondDBtag = tags ['SIMCOND']
+        logger.info ( ' CondDBtag : %s ' % daVinci.CondDBtag  )
+
+    return tags
     
 # =============================================================================
 ## get DB-tags from the data
@@ -76,7 +121,6 @@ def getDBTags ( file_name      ,
                 debug  = False ) :
     
     import os
-
     
     file_name = os.path.expandvars ( file_name ) 
     file_name = os.path.expanduser ( file_name ) 

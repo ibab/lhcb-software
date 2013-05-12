@@ -258,23 +258,13 @@ def configure ( options , arguments ) :
     if options.Simulation :
         #
         ## try to get the tags from Rec/Header
-        from BenderTools.GetDBtags import getDBTags
-        tags = getDBTags (
+        from BenderTools.GetDBtags import useDBTagsFromData
+        
+        tags = useDBTagsFromData (
             files [ 0 ]       ,
             options.Castor    ,
             options.Grid      ,
-            options.OutputLevel < 3 or not options.Quiet )
-        if tags :
-            logger.info( 'Extract tags from DATA : %s' % tags         )
-            if tags.has_key ( 'DDDB'    ) and tags ['DDDB'   ] : 
-                daVinci.DDDBtag   = tags ['DDDB'  ]                 
-                logger.info( ' DDDBtag   : %s ' % daVinci.DDDBtag    )
-            if tags.has_key ( 'CONDDB'  ) and tags ['CONDDB' ] : 
-                daVinci.CondDBtag = tags ['CONDDB']
-                logger.info( ' CondDBtag : %s ' % daVinci.CondDBtag  )
-            if tags.has_key ( 'SIMCOND' ) and tags ['SIMCOND'] :
-                daVinci.CondDBtag = tags ['SIMCOND']
-                logger.info( ' CondDBtag : %s ' % daVinci.CondDBtag  )
+            daVinci           ) 
 
     ## specific action for (x)gen files 
     if ext in ( 'gen' , 'xgen' , 'GEN' , 'XGEN' ) :
@@ -378,8 +368,14 @@ if '__main__' == __name__ :
     ## instantiate the application manager 
     gaudi  = appMgr ()
     
-    evtSel = gaudi.evtSel() 
+    evtSel = gaudi.evtSel()
+    
+    evtSvc = gaudi.evtSvc()
+    detSvc = gaudi.detSvc()
 
+    evt    = evtSvc
+    det    = detSvc
+    
     ## initialize and read the first event
     run ( 1 )
     
