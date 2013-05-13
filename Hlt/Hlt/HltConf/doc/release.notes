@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2013-05-13 - Rob Lambert
+ - Apply postCOnfig to everything with the InputPrimaryVertices property
+
 ! 2013-05-10 - Rob Lambert
  - Add postConfigAction to change PV locations... should be done lower down
    but for now at least it works.task #40113

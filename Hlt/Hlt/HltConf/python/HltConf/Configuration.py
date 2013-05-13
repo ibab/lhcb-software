@@ -16,13 +16,13 @@ from Hlt2                import Hlt2Conf
 # Helper functions
 #############################################################################
 
-def __forAll__( c, prop_value_dict, types=['FilterDesktop','CombineParticles',"DVAlgorithm", "DaVinciAlgorithm", "DaVinciHistoAlgorithm", "DaVinciTupleAlgorithm" ] ) :
+def __forAll__( c, prop_value_dict, types=['FilterDesktop','CombineParticles',"DVAlgorithm", "DaVinciAlgorithm", "DaVinciHistoAlgorithm", "DaVinciTupleAlgorithm", "*" ] ) :
     """ Find all configurable algorithms and set certain properties
     """
     if type(prop_value_dict) is not dict:
         raise TypeError("Hey, you need to give me a dictionary, you passed me a, "+str(type(prop_value_dict)))
     
-    if c.getType() in types:
+    if "*" in types or ".*" in types or c.getType() in types:
         for prop in prop_value_dict:
             if hasattr(c,prop) or (hasattr(c,"properties") and prop in c.properties()):
                 c.setProp(prop,prop_value_dict[prop])
