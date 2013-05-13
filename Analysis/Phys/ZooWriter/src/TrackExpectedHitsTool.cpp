@@ -71,7 +71,11 @@ StatusCode TrackExpectedHitsTool::execute(
 {
     ids.reserve(2 * tr.nLHCbIDs());
 
+#if DV_VER >= 334
+    IVeloExpectation::VeloPattern velo[4];
+#else
     std::bitset<23> velo[4];
+#endif
     if (!m_forceVeloExpectation) {
 	m_veloExpectation->expectedInfo(tr, velo);
     } else {

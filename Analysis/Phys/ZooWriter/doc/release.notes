@@ -4,6 +4,13 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+!============================ Zoo v14r1p1 2013-05-13 =========================
+
+! 2013-05-13 - Paul Seyfert
+ - adapted changes in Tr/TrackInterfaces v4r24 (shipped with DaVinci v33r4)
+ - otherwise fully compatible with the previous tag
+ - tagged as pseyfert_20130513
+
 !============================ Zoo v14r1 2013-05-07 ===========================
 
 ! 2013-05-07 - Paul Seyfert
