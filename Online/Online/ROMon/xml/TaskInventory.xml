@@ -282,6 +282,7 @@
   <TaskList name="FMC"/>
   <TaskList name="StandardHLT"/>
   <TaskList name="ControlsPC"/>
+  <Task name="HLTEQBridge"/>
   <Task name="LogDef"/>
   <Task name="LogSumDefSrv"/>
   <Task name="LogGaudi"/>

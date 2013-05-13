@@ -22,13 +22,6 @@
    <Node name="hlta0418"   type="HLTWorker"/>
    <Node name="hlta0419"   type="HLTWorker"/>
    <Node name="hlta0420"   type="HLTWorker"/>
-   <Node name="hlta0421"   type="HLTWorker"/>
-   <Node name="hlta0422"   type="HLTWorker"/>
-   <Node name="hlta0423"   type="HLTWorker"/>
-   <Node name="hlta0424"   type="HLTWorker"/>
-   <Node name="hlta0425"   type="HLTWorker"/>
-   <Node name="hlta0426"   type="HLTWorker"/>
-   <Node name="hlta0427"   type="HLTWorker"/>
   </NodeList>
 </TaskInventory>
 

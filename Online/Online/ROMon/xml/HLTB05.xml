@@ -1,0 +1,34 @@
+<TaskInventory>
+  <NodeList name="HLTB05">
+   <Name>HLTB05</Name>
+   <Node name="hltb05"   type="HLTControl"/>
+   <Node name="hltb0501"   type="HLTWorker"/>
+   <Node name="hltb0502"   type="HLTWorker"/>
+   <Node name="hltb0503"   type="HLTWorker"/>
+   <Node name="hltb0504"   type="HLTWorker"/>
+   <Node name="hltb0505"   type="HLTWorker"/>
+   <Node name="hltb0506"   type="HLTWorker"/>
+   <Node name="hltb0507"   type="HLTWorker"/>
+   <Node name="hltb0508"   type="HLTWorker"/>
+   <Node name="hltb0509"   type="HLTWorker"/>
+   <Node name="hltb0510"   type="HLTWorker"/>
+   <Node name="hltb0511"   type="HLTWorker"/>
+   <Node name="hltb0512"   type="HLTWorker"/>
+   <Node name="hltb0513"   type="HLTWorker"/>
+   <Node name="hltb0514"   type="HLTWorker"/>
+   <Node name="hltb0515"   type="HLTWorker"/>
+   <Node name="hltb0516"   type="HLTWorker"/>
+   <Node name="hltb0517"   type="HLTWorker"/>
+   <Node name="hltb0518"   type="HLTWorker"/>
+   <Node name="hltb0519"   type="HLTWorker"/>
+   <Node name="hltb0520"   type="HLTWorker"/>
+   <Node name="hltb0521"   type="HLTWorker"/>
+   <Node name="hltb0522"   type="HLTWorker"/>
+   <Node name="hltb0523"   type="HLTWorker"/>
+   <Node name="hltb0524"   type="HLTWorker"/>
+   <Node name="hltb0525"   type="HLTWorker"/>
+   <Node name="hltb0526"   type="HLTWorker"/>
+   <Node name="hltb0527"   type="HLTWorker"/>
+  </NodeList>
+</TaskInventory>
+
