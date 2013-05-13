@@ -1,17 +1,3 @@
-// $Id: CaloTrackAlg.h,v 1.7 2007-08-24 21:28:04 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2006/06/18 18:32:55  ibelyaev
-//  fix soem minor bugs
-//
-// Revision 1.5  2006/06/13 14:13:52  cattanem
-// TrackUse moved to TrackEvent
-//
-// Revision 1.4  2006/06/06 11:59:52  ibelyaev
-//  new base classes for PIDs & rewritten TrackUse
-//
 // ============================================================================
 #ifndef CALOUTILS_CALOTrackAlg_H 
 #define CALOUTILS_CALOTrackAlg_H 1
@@ -60,10 +46,7 @@ class CaloTrackAlg : public GaudiAlgorithm
 {
 public:  
   /// standard algorithm initialization 
-  virtual StatusCode initialize(); 
-  /// standard algorithm finalization 
-  virtual StatusCode finalize  ();
-
+  virtual StatusCode initialize();
 
 public:
   //

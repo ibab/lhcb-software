@@ -3,7 +3,7 @@
 // ============================================================================
 #include "Event/Track.h"
 #include "CaloUtils/CaloAlgUtils.h"
-#include "CaloUtils/CaloTrackAlg.h"
+#include "CaloTrackAlg.h"
 // ============================================================================
 /** @file 
  * 
@@ -55,11 +55,6 @@ StatusCode CaloTrackAlg::initialize()
   return StatusCode::SUCCESS ;  
 }
 // ============================================================================
-/// standard algorithm finalization 
-StatusCode CaloTrackAlg::finalize  () { return GaudiAlgorithm::finalize() ; }
-// ============================================================================
-
-
 void CaloTrackAlg::_setProperty(const std::string& p ,const std::string& v){
   StatusCode sc = setProperty(p,v);
   if(sc.isSuccess()){

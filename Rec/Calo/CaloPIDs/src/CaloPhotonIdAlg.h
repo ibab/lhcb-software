@@ -41,7 +41,6 @@ public:
 
   virtual StatusCode initialize(); ///< Algorithm initialization
   virtual StatusCode execute(); ///< Algorithm execution
-  virtual StatusCode finalize(); ///< Algorithm finalization
 
   /// callback function invoked by the UpdateManagerSvc
   StatusCode i_updateDLL();

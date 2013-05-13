@@ -232,17 +232,6 @@ StatusCode CaloPhotonIdAlg::execute() {
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloPhotonIdAlg::finalize() {
-  if (msgLevel(MSG::DEBUG))
-    debug() << "==> Finalize" << endmsg;
-  return GaudiAlgorithm::finalize(); // must be called after all other actions
-}
-
-//=============================================================================
-
 //============================================================================
 double CaloPhotonIdAlg::likelihood(const LHCb::CaloHypo* hypo) {
   // Get the relevant information - basic checks
