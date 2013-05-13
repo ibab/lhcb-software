@@ -22,6 +22,18 @@
    <Node name="hltf0618"   type="HLTWorker"/>
    <Node name="hltf0619"   type="HLTWorker"/>
    <Node name="hltf0620"   type="HLTWorker"/>
+   <Node name="hltf0621"   type="HLTWorker"/>
+   <Node name="hltf0622"   type="HLTWorker"/>
+   <Node name="hltf0623"   type="HLTWorker"/>
+   <Node name="hltf0624"   type="HLTWorker"/>
+   <Node name="hltf0625"   type="HLTWorker"/>
+   <Node name="hltf0626"   type="HLTWorker"/>
+   <Node name="hltf0627"   type="HLTWorker"/>
+   <Node name="hltf0628"   type="HLTWorker"/>
+   <Node name="hltf0629"   type="HLTWorker"/>
+   <Node name="hltf0630"   type="HLTWorker"/>
+   <Node name="hltf0631"   type="HLTWorker"/>
+   <Node name="hltf0632"   type="HLTWorker"/>
   </NodeList>
 </TaskInventory>
 
