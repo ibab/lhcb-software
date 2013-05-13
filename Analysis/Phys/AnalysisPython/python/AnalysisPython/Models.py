@@ -95,14 +95,20 @@ for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.Voigt                  ,
                Gaudi.Math.Spline                 ,
                Gaudi.Math.Linear                 ,
-               Gaudi.Math.Parabola               ) :
+               Gaudi.Math.Parabola               ,
+               #
+               Gaudi.Math.GammaDist              ,
+               Gaudi.Math.LogGammaDist           ,
+               Gaudi.Math.Log10GammaDist         ,
+               ) :
     model . tf1 = _tf1_ 
 
-Gaudi.Math.LASS23L   . amp = _amp_
-Gaudi.Math.Bugg23L   . amp = _amp_
-Gaudi.Math.Flatte    . amp = _amp_
-Gaudi.Math.Flatte2   . amp = _amp_
-Gaudi.Math.Flatte23L . amp = _amp_
+Gaudi.Math.LASS23L     . amp = _amp_
+Gaudi.Math.Bugg23L     . amp = _amp_
+Gaudi.Math.Flatte      . amp = _amp_
+Gaudi.Math.Flatte2     . amp = _amp_
+Gaudi.Math.Flatte23L   . amp = _amp_
+Gaudi.Math.BreitWigner . amp = _amp_
 
 # =============================================================================
 if '__main__' == __name__ :
