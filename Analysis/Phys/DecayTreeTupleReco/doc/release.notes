@@ -4,6 +4,11 @@
 ! Purpose     : Reconstruction related tuple tools
 !-----------------------------------------------------------------------------
 
+! 2013-05-13 - Chris Jones
+ - TupleToolVELOClusters
+  . Fix inappropriate return values causing compilation warnings with icc11.
+  . Do not load the RecSummary object, as not actually used.
+
 !========================= DecayTreeTupleReco v1r2 2013-04-05 =========================
 
 ! 2013-03-08 - Marco Clemencic
