@@ -1,6 +1,0 @@
-<TaskInventory>
-  <NodeList name="STOREIO01">
-   <Name>STOREIO01</Name>
-   <Node name="STOREIO01" type="IONode"/>
-  </NodeList>
-</TaskInventory>

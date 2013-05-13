@@ -1,7 +1,0 @@
-<TaskInventory>
-  <NodeList name="MONA07">
-   <Name>MONA07</Name>
-   <Node name="mona07"   type="MonitoringControlTest"/>
-  </NodeList>
-</TaskInventory>
-
