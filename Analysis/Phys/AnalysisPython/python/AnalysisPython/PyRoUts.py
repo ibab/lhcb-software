@@ -4408,6 +4408,112 @@ _2d_interp_     . __doc__ += '\n' + cpp.Gaudi.Math.Interp2D .__init__ .__doc__
 for t in ( ROOT.TH2D , ROOT.TH2F ) :
     t.interp    = _2d_interp_ 
 
+# =============================================================================
+# 
+# =============================================================================
+## make the solution for equation   h(x)=v
+#
+#  @code 
+#    >>> histo = ...
+#    >>> value = ...
+#    >>> solutions = histo.solve ( values )
+#  @endcode
+#  @author Vanya BELYAVE Ivan.Belyaev@itep.ru
+#  @date 2013-05-13
+def _solve_ ( h1 , value ) :
+    """
+    Make a solution for equation h(x)=v
+    
+    >>> histo = ...
+    >>> value = ...
+    >>> solutions = histo.solve ( values )
+    
+    """
+    #
+    if hasattr ( value , 'value' ) : value = value.value()
+    #
+    solutions = []
+    _size = len ( h1 ) 
+    for i in h1.iteritems() :
+
+        ibin = i[0]
+        x    = i[1]
+        y    = i[2]
+
+        yi   = y.value()
+        if value == yi : 
+            solutions.append  ( x.value () )
+            continue
+
+        di   = value - yi 
+        xi   = x.value()
+
+        j = ibin + 1
+        if not j <= _size : continue
+
+        yj  = h1.GetBinContent ( j )
+        xj  = h1.GetBinCenter  ( j )
+        
+        dj   = value - yj 
+
+        if 0 <= di * dj : continue  ## the same sign, skip 
+        
+        dd   = yi - yj
+        
+        if 0 == dd    : continue
+        
+        xs   = ( xi * dj  - xj * di ) / dd 
+
+        solutions.append ( xs )
+
+
+    return tuple  ( solutions ) 
+
+# =============================================================================
+## propose edge for "equal" bins 
+#
+#  @code
+#
+#    >>> histo = ....
+#    >>> edges = histo.equal_edges ( 10 )
+#
+#  @endcode
+#  @author Vanya BELYAVE Ivan.Belyaev@itep.ru
+#  @date 2013-05-13
+def _equal_edges_ ( h1 , num  ) :
+    """
+    Propose the edged for ``equal-bins''
+
+    >>> histo = ....
+    >>> edges = histo.equal_edges ( 10 )
+    
+    """
+    if not isinstance ( num , ( int , long ) ) :
+        return TypeError, "'num' is not integer!"
+    elif 1 >  num :
+        return TypeError, "'num' is invalid!"
+    elif 1 == num : return ( h1.xmin() , h1.xmax() ) ## triavial binnig scheme 
+
+    ## integrate it! 
+    _eff = h1.effic()
+
+    _bins = [ h1.xmin()  ]
+    d     = 1.0 / num 
+    for i in range ( 1 , num ) :
+        vi  = float ( i ) / num
+        eqs = _solve_ ( _eff , vi )
+        if not eqs : continue
+        _bins.append( eqs[0] )
+
+    _bins.append ( h1.xmax() )
+
+    return tuple ( _bins ) 
+    
+ROOT.TH1F . solve       = _solve_                              
+ROOT.TH1D . solve       = _solve_                              
+ROOT.TH1F . equal_edges = _equal_edges_                              
+ROOT.TH1D . equal_edges = _equal_edges_                         
+
 _large = 2**63
 # =============================================================================
 ## Iterator over ``good events'' in TTree/TChain:
@@ -5420,6 +5526,7 @@ ROOT.RooRealVar . __le__   = _rrv_le_
 ROOT.RooRealVar . __ge__   = _rrv_ge_
 ROOT.RooRealVar . __eq__   = _rrv_eq_
 ROOT.RooRealVar . __ne__   = _rrv_ne_
+
 
 # =============================================================================
 ## further decoration
