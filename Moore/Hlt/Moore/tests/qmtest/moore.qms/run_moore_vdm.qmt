@@ -5,14 +5,51 @@
     <text>-n</text>
     <text>1200</text>
     <text>--l0</text>
-    <text>VanDerMeerScan_Mar11</text>
+    <text>VanDerMeerScan_Jul12</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
-expected_string = &quot;SUCCESS Reading Event record 1001. Record number within stream 2: 59&quot; 
+expected_string = &quot;SUCCESS Reading Event record 1101. Record number within stream 3: 800&quot; 
 if stdout.find(expected_string) == -1:
     causes.append('missing string')
-    result['GaudiTest.expected_string'] = result.Quote(expected_string)
+    result['moore.run_moore_vdm.expected_string'] = result.Quote(expected_string)
+
+#ideally no errors, but there is always two when opening every Raw file
+countErrorLines({"FATAL":0,"ERROR":6,"WARNING":1})
+
+
+
+timing=[]
+timingdict={}
+for line in stdout.split('\n'):
+    if 'TIMER' not in line or 'Hlt' not in line:
+        continue
+    line=line.replace('\t',' ')
+    line=line.replace('  ',' ')
+    line=line[line.find('INFO')+4:]
+    line=line.strip().rstrip()
+    line=line.split('|')
+    if len(line)&lt;5:
+        continue
+    if not line[0].startswith('Hlt'): 
+        continue
+    name=line[0].strip().rstrip()
+    num=line[4].strip().rstrip()
+    timing.append(':'.join([name,line[4]]))
+    timingdict[name]=int(num)
+
+if len([t for t in timingdict if t.startswith("Hlt2")])!=1:
+    causes.append('Does not look like pass-through')
+    result['moore.run_moore_vdm.passthrough'] = result.Quote('Expected only one Hlt2 entry in timing table, saw '+','.join([t for t in timingdict if t.startswith("Hlt2")]))
+
+if 'Hlt1BeamGasBeam1' not in timingdict:
+    causes.append('Doesn't contain beamgas lines')
+    result['moore.run_moore_vdm.bg'] = result.Quote('No line called Hlt1BeamGasBeam1 in timing table')
+elif timingdict['Hlt1BeamGasBeam1']!=1200:
+    causes.append('BeamGas does not see all events')
+    result['moore.run_moore_vdm.passnumber'] = result.Quote('Expected 1200 events, saw '+str(timingdict['Hlt1BeamGasBeam1']))
+
+
 </text></argument>
 </extension>
 
