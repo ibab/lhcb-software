@@ -1,0 +1,5 @@
+#pragma print off
+OnlineEnv.PartitionID       = 333;
+OnlineEnv.PartitionName     = "LHCb";
+ApplicationMgr.SvcOptMapping += { "LHCb::MEPManager/MEPManager", "Gaudi::MultiFileCatalog/FileCatalog", "Gaudi::IODataManager/IODataManager" };
+MessageSvc.OutputLevel              = 3;
