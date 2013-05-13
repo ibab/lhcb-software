@@ -28,8 +28,7 @@ DECLARE_TOOL_FACTORY( PIDPlots )
 PIDPlots::PIDPlots( const std::string& type,
                     const std::string& name,
                     const IInterface* parent )
-  : HistoToolBase ( type, name, parent ),
-    m_trSelector  ( NULL )
+  : HistoToolBase ( type, name, parent )
 {
   // interface
   declareInterface<Rich::Rec::IPIDPlots>(this);

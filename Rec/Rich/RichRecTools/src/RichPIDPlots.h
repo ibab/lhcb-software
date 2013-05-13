@@ -20,7 +20,6 @@
 
 // interfaces
 #include "RichRecBase/IRichPIDPlots.h"
-#include "RichRecBase/IRichTrackSelector.h"
 
 // Event
 #include "Event/Track.h"
@@ -109,8 +108,6 @@ namespace Rich
       }
 
     private: // data
-
-      mutable const ITrackSelector * m_trSelector;  ///< Track selector
 
       // Job Options
       double m_dllCut;            ///< Dll cut value  
