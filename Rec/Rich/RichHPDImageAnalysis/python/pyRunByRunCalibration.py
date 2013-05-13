@@ -42,12 +42,12 @@ def initialise():
         #LHCbApp().CondDBtag = "head-20110524"
         
         #DDDBConf(DataType = "2011")
-        #LHCbApp().DDDBtag   = "head-20110914"
-        #LHCbApp().CondDBtag = "head-20110914"
+        #LHCbApp().DDDBtag   = "dddb-20120831"
+        #LHCbApp().CondDBtag = "cond-20121208"
 
         DDDBConf(DataType = "2012")
         LHCbApp().DDDBtag   = "dddb-20120831"
-        LHCbApp().CondDBtag = "cond-20121108"
+        LHCbApp().CondDBtag = "cond-20121211"
 
         # Move HPD Occs
         #cDB.addLayer(CondDBAccessSvc("NewMDMSCondDB-28022011",
@@ -288,10 +288,10 @@ def queryBookKeeping(run):
 
 def getAllRuns():
     from LHCbDIRAC.BookkeepingSystem.Client.BookkeepingClient import BookkeepingClient
-    print "Trying to get a list of all runs this year"
+    print "Trying to get a list of all runs"
     nTries = 0
     res = { 'OK' : False }
-    dict = { 'StartDate'        : "2012-04-01",
+    dict = { 'StartDate'        : "2011-03-01",
              'EndDate'          : "2012-12-31",
              'AllowOutsideRuns' : True, # Allows runs to start inside but finish outside the dates
              'CheckRunStatus'   : False # Don't care if it is processed or not
@@ -308,7 +308,7 @@ def getAllRuns():
         print "ERROR geting list of runs"
     else:
         runs = res['Value']['Runs']
-    print "Runs", runs
+    #print "Runs", runs
     runs.sort()
     return runs
 

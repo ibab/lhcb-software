@@ -25,7 +25,7 @@ namespace Rich
 
       /// Default Constructor
       SimpleChi2Fit() 
-        : m_errDef(0), m_hist(NULL), m_sf(0), m_boundary(NULL) 
+        : m_errDef(0), m_sf(0), m_boundary(NULL) 
       { }
 
       /// Constructor
@@ -44,7 +44,6 @@ namespace Rich
     private:
 
       double m_errDef ;
-      const TH2* m_hist ;
       double m_sf ;
       const Pixel::List * m_boundary ;
 

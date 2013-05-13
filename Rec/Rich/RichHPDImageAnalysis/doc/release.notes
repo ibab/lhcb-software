@@ -4,6 +4,9 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+! 2013-05-13 - Chris Jones
+ - Fix clang32 unused class data member warnings.
+
 !========================= RichHPDImageAnalysis v1r13 2012-11-28 =========================
 ! 2012-11-26 - Chris Jones
  - Update HPD image alignment scripts.

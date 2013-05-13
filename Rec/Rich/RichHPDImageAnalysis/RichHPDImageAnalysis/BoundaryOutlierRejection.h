@@ -70,7 +70,6 @@ namespace Rich
 
     private:
 
-      const TH2* m_hist;      ///< Pointer to the fitted histogram
       Pixel::List m_boundary; ///< List of pixels used in the fit
       FitResult m_result;     ///< The fit result
       Params m_params;        ///< Parameters for outlier rejection

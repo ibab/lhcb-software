@@ -15,8 +15,7 @@ using namespace Rich::HPDImage;
 
 SimpleChi2Fit::SimpleChi2Fit( const TH2* hist ,
                               const Pixel::List& list )
-  : m_errDef     ( 1.   ),
-    m_hist       ( hist ),
+  : m_errDef     ( 1.    ),
     m_sf ( hist ? (1.0*hist->GetNbinsX())/(1.0*hist->GetNbinsY()) : 0.0 ),
     m_boundary   ( &list )
 { }

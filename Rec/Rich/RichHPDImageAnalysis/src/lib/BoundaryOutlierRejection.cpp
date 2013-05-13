@@ -15,8 +15,7 @@ BoundaryOutlierRejection::BoundaryOutlierRejection( const TH2* hist,
                                                     const Pixel::List& list,
                                                     const FitResult& result,
                                                     const Params& params )
-  : m_hist     ( hist   ),
-    m_boundary ( list   ),
+  : m_boundary ( list   ),
     m_result   ( result ),
     m_params   ( params ),
     m_sf ( hist ? (1.0*hist->GetNbinsX())/(1.0*hist->GetNbinsY()) : 0.0 )
