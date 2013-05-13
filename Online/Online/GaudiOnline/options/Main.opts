@@ -1,3 +1,4 @@
+#pragma print off
 #include "$GAUDIONLINEROOT/options/Remap.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";

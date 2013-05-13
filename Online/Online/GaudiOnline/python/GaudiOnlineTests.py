@@ -2,8 +2,9 @@ from OnlineEnv import *
 
 pid = PartitionID
 pnam = PartitionName
+print_config = False
 
-def _run(app,prt=True):                      return (app,end_config(prt))
+def _run(app,prt=print_config):              return (app,end_config(prt))
 #------------------------------------------------------------------------------------------------
 def runDimReader(buffer):                    return _run(dimFileReaderApp(pid,pnam,buffer,True))
 #------------------------------------------------------------------------------------------------
@@ -76,22 +77,21 @@ def runMBMReadSEGV(percent=1,print_freq=0.0001):
   segv.OutputLevel = 1
   return _run(res)
 #------------------------------------------------------------------------------------------------
-#def runMDF2MBM(buffers,input=["DATA='file:///daqarea/lhcb/data/2008/RAW/LHCb/BEAM/32484/032484_0000081651.raw' SVC='LHCb::MDFSelector'"]):
 def runMDF2MBM(buffers,input=["DATA='file:///home/frankm/data/mepData_0.dat' SVC='LHCb::MDFSelector'"]):
   return _run(mdf2mbmApp(pid,pnam,buffers=buffers,input=input,partitionBuffers=True))
+#------------------------------------------------------------------------------------------------
 def runMDF2MBMFile(buffers,fname,partitionBuffers=True):
   return _run(mdf2mbmApp(pid,pnam,buffers=buffers,input=["DATA='"+fname+"' SVC='LHCb::MDFSelector'"],partitionBuffers=partitionBuffers))
-
+#------------------------------------------------------------------------------------------------
 def runMDF2MBMRepro(buffers,fname,partitionBuffers=True):
   return _run(mdf2mbmReproApp(pid,pnam,buffers=buffers,input=["DATA='"+fname+"' SVC='LHCb::MDFSelector'"],partitionBuffers=partitionBuffers))
-
+#------------------------------------------------------------------------------------------------
 def runMDF2MBMRepro2(buffers,input,partitionBuffers=True):
   return _run(mdf2mbmReproApp(pid,pnam,buffers=buffers,input=input,partitionBuffers=partitionBuffers))
-
 #------------------------------------------------------------------------------------------------
-def runMDF2MBM2(buffers):
+def runMDF2MBM2(buffers,partitionBuffers=True):
   import data;
-  return _run(mdf2mbmApp(pid,pnam,buffers=buffers,input=data.Input,partitionBuffers=True),False)
+  return _run(mdf2mbmApp(pid,pnam,buffers=buffers,input=data.Input,partitionBuffers=partitionBuffers),False)
 #------------------------------------------------------------------------------------------------
 def runEvtServer(buffer, partitionBuffers, request='USER'):
   return _run(evtServerApp(pid,pnam,buffer=buffer,partitionBuffers=partitionBuffers,request=request))
@@ -151,6 +151,9 @@ def runHlt1Read(percent=25,print_freq=0.0001,delay=100):
 #------------------------------------------------------------------------------------------------
 def runHlt2Read(percent=5,print_freq=0.0001,delay=1000):
   return _run(hltApp(pid,pnam,percent=percent,print_freq=print_freq,delay=delay,buffers=['Hlt2Input','Send'],type='ONE',decode=False))
+#------------------------------------------------------------------------------------------------
+def runHLTx(buffers=['Events','Send'],percent=5,print_freq=0.0001,delay=1000):
+  return _run(hltApp(pid,pnam,percent=percent,print_freq=print_freq,delay=delay,buffers=buffers,type='ONE',decode=False),prt=False)
 #------------------------------------------------------------------------------------------------
 def runHltShuffle():
   return _run(deferApp(pid,pnam,buffers=['Hlt1Accept','Hlt2Input','HltDeferred'],type='ALL'))

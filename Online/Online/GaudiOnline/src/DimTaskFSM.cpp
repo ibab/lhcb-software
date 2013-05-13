@@ -51,7 +51,10 @@ namespace  {
       // Decouple as quickly as possible from the DIM command loop !
       std::string cmd = getString();
       //m_target->output(MSG::DEBUG,std::string("Received DIM command:"+cmd).c_str());
-      if      ( cmd == "configure"  ) {
+      if      ( cmd == "load"  ) {  // Ignore!
+	return;
+      }
+      else if ( cmd == "configure"  ) {
 	m_target->setTargetState(Target::ST_READY);
 	IOCSENSOR.send(m_target, Target::CONFIGURE);
       }
@@ -67,20 +70,36 @@ namespace  {
 	m_target->setTargetState(Target::ST_UNKNOWN);
 	IOCSENSOR.send(m_target, Target::TERMINATE);
       }
-      else if ( cmd == "unload"     ) {
-	m_target->setTargetState(Target::ST_UNKNOWN);
-        m_target->cancel();
-        IOCSENSOR.send(m_target, DimTaskFSM::UNLOAD);
-      }
       else if ( cmd == "pause"      ) {
 	m_target->setTargetState(Target::ST_PAUSED);
         m_target->cancel();
         IOCSENSOR.send(m_target, DimTaskFSM::PAUSE);
       }
-      else if ( cmd == "continue"      ) {
+      else if ( cmd == "continue"   ) {
 	m_target->setTargetState(Target::ST_RUNNING);
         m_target->cancel();
         IOCSENSOR.send(m_target, DimTaskFSM::CONTINUE);
+      }
+      else if ( cmd == "unload"     ) {
+	m_target->setTargetState(Target::ST_UNKNOWN);
+        m_target->cancel();
+        IOCSENSOR.send(m_target, DimTaskFSM::UNLOAD);
+      }
+      else if ( cmd == "recover"    ) {
+	m_target->setTargetState(Target::ST_UNKNOWN);
+        m_target->cancel();
+        IOCSENSOR.send(m_target, DimTaskFSM::UNLOAD);
+      }
+      else if ( cmd == "RESET"      )   {
+	m_target->setTargetState(Target::ST_UNKNOWN);
+        m_target->cancel();
+        IOCSENSOR.send(m_target, DimTaskFSM::UNLOAD);
+      }
+      else if ( cmd == "error" )  {
+	m_target->setTargetState(Target::ST_ERROR);
+        m_target->cancel();
+        m_target->declareState(Target::ST_ERROR);
+        return;
       }
       else   {
         m_target->declareState(Target::ST_ERROR);
@@ -196,7 +215,8 @@ StatusCode DimTaskFSM::printErr(int flag, const char* format, ...)  {
   char buffer[1024];
   sprintf(buffer,"Error: ");
   va_start( args, format );
-  size_t len = ::vsprintf(&buffer[7], format, args);
+  size_t len = ::vsnprintf(&buffer[7], sizeof(buffer)-8, format, args);
+  buffer[sizeof(buffer)-1] = 0;
   if ( len > sizeof(buffer) )  {
     // !! memory corruption !!
     output(MSG::ERROR,"Memory corruption...");
@@ -228,16 +248,24 @@ std::string DimTaskFSM::stateName(int state) {
     return ST_NAME_UNKNOWN;
   }
 }
-
+#include <sstream>
 /// Declare process state to DIM service
 StatusCode DimTaskFSM::_declareState(const std::string& new_state)  {
   std::string old_state = m_stateName;
   m_prevStateName = m_stateName;
   m_stateName = new_state;
-  //output(MSG::DEBUG,std::string("Declare state:"+new_state).c_str());
+  output(MSG::DEBUG,std::string("PUBLISH state:"+new_state).c_str());
   m_service->updateService((char*)m_stateName.c_str());
-  if ( new_state == ST_NAME_ERROR )
+  if ( new_state == ST_NAME_ERROR )  {
+#if 0
+    std::stringstream str;
+    str << m_name << "PUBLISH state:" << new_state << " PID:" << ::lib_rtl_pid() << std::ends;
+    output(MSG::ALWAYS,str.str().c_str());
+    output(MSG::ALWAYS,str.str().c_str());
+    ::lib_rtl_sleep(40000);
+#endif
     declareSubState(FAILED_ACTION);
+  }
   else if ( old_state == new_state )
     declareSubState(FAILED_ACTION);
   else
