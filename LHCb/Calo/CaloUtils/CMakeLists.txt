@@ -12,21 +12,20 @@ gaudi_depends_on_subdirs(Calo/CaloInterfaces
                          Event/RecEvent
                          Event/TrackEvent
                          GaudiAlg
-                         Kernel/LHCbMath
-                         Tr/TrackInterfaces)
+                         Kernel/LHCbMath)
 
 find_package(AIDA)
 
 gaudi_add_library(CaloUtils
                   src/*.cpp
                   PUBLIC_HEADERS CaloUtils
-                  INCLUDE_DIRS AIDA Event/DigiEvent Tr/TrackInterfaces
+                  INCLUDE_DIRS AIDA Event/DigiEvent
                   LINK_LIBRARIES CaloInterfaces CaloDetLib L0Event MCEvent PhysEvent RecEvent TrackEvent GaudiAlgLib LHCbMathLib)
 
 gaudi_add_dictionary(CaloUtils
                      dict/CaloUtilsDict.h
                      dict/CaloUtils.xml
-                     INCLUDE_DIRS Event/DigiEvent Tr/TrackInterfaces
+                     INCLUDE_DIRS Event/DigiEvent
                      LINK_LIBRARIES CaloInterfaces CaloDetLib L0Event MCEvent PhysEvent RecEvent TrackEvent GaudiAlgLib LHCbMathLib CaloUtils
                      OPTIONS " -U__MINGW32__ ")
 
