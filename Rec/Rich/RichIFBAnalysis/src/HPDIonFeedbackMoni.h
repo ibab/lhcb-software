@@ -63,7 +63,6 @@ namespace Rich
       unsigned long long m_interval;          ///< Defines event sizes for hitmaps and IFB calculations
       unsigned long long m_nEvts;               ///< Total number of events
       unsigned long long m_nMonitoredEvents;    ///< Monitored number of events
-      unsigned int dataset;                ///< Index of dataset
       unsigned long long r1clustersThisEvent;    ///< Number of non-zero RICH1 clusters in event
       unsigned long long r2clustersThisEvent;    ///< Number of non-zero RICH2 clusters in event
       unsigned int minX, maxX, minY, maxY, binsX, binsY;   ///< Hitmap limits

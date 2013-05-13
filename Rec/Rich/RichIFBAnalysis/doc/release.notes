@@ -4,6 +4,9 @@
 ! Purpose     : Ross Young
 !-----------------------------------------------------------------------------
 
+! 2013-05-13 - Chris Jones
+ - Fix clnag32 warning due to unused class data member
+
 !========================= RichIFBAnalysis v1r3 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
