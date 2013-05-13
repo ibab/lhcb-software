@@ -104,7 +104,7 @@ def uDstConf ( rootInTes        ,
     logger.info  ( "Configure L0&HLT decoding  RootInTES='%s'" % rootInTes )
     
     from Configurables import DataOnDemandSvc
-    dod = DataOnDemandSvc( Dump = True )
+    dod = DataOnDemandSvc()
     
     #
     ## extra configuration:
