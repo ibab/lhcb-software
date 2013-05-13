@@ -32,6 +32,13 @@ while [ $nar -lt $narg ] ; do
           version=$1
           shift
           ;;
+       -V )
+          lbpackage=LHCbVMDirac
+          package=LHCbVMDIRAC
+          shift
+          version=$1
+          shift
+          ;;
        -W )
           lbpackage=LHCbWebDirac
           package=LHCbWebDIRAC
