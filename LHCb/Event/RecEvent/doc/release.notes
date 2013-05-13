@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2013-05-13 - Chris Jones
+ - Fix bug in clusterLocateDigit where assignment instead of equality 
+   operator was being used.
+
 !========================= RecEvent v2r46 2013-04-29 =========================
 ! 2013-03-22 - Wouter Hulsbergen
  - added method TrackTwoprongVertex::massWithError

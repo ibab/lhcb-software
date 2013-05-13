@@ -751,7 +751,7 @@ namespace LHCb
                         const LHCb::CaloDigit* digit )
     {
       for( ; begin != end ; ++begin )
-      { if( digit = begin->digit() ) {  return begin; } }
+      { if ( digit == begin->digit() ) { return begin; } }
       return end;
     }
     // ==========================================================================
