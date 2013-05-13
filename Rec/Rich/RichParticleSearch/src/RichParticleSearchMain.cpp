@@ -380,9 +380,9 @@ StatusCode RichParticleSearchMain::execute() {
 						if ( m_histoOutputLevel > 1 )
 						{
 							//Make Plots per track
-							plot1D( avTrackMass, "TrackMass", "Mass per Track",9000, 0, 45000);
+							plot1D( avTrackMass, "TrackMass", "Mass per Track", 0, 45000, 9000 );
 							// Plot inverse Mass per Track
-							plot1D( 1/avTrackMass, "InverseMass", "Inverse Mass per track", 8000, 0, 0.0008);
+							plot1D( 1/avTrackMass, "InverseMass", "Inverse Mass per track", 0, 0.0008, 8000 );
 						}
 
 						//Get Any Muon Information
@@ -485,8 +485,8 @@ StatusCode RichParticleSearchMain::execute() {
 
 									if ( m_histoOutputLevel > 1 ){
 										//Make Plots per track
-										plot1D( avTrackMass, "MassperPhoton", "Mass per Photon",90000, 0, 45000);
-										plot1D( 1/avTrackMass, "InverseMassPerPhoton", "Inverse Mass per photon", 8000, 0, 0.0008);
+										plot1D( avTrackMass, "MassperPhoton", "Mass per Photon", 0, 45000, 90000 );
+										plot1D( 1/avTrackMass, "InverseMassPerPhoton", "Inverse Mass per photon", 0, 0.0008, 8000);
 									}
 
 									double Var = fabs(thetaRec- AvThetaRec);

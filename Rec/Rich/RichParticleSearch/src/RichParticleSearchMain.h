@@ -106,9 +106,6 @@ namespace Rich
         //Beta cuts
         double m_maxCKcut;
 
-        //Mass Deviation from mean cut
-        double m_massDevCut;
-
         //CK Deviation from mean Cut
         double m_CKDevCut;
 
