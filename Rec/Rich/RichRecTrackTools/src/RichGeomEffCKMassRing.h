@@ -29,9 +29,6 @@
 #include "RichRecBase/IRichMassHypothesisRingCreator.h"
 #include "RichKernel/IRichParticleProperties.h"
 
-// RichDet
-#include "RichDet/DeRichSystem.h"
-
 // GSL
 #include "gsl/gsl_math.h"
 
@@ -95,8 +92,6 @@ namespace Rich
 
       /// Pointer to RichParticleProperties interface
       const IParticleProperties * m_richPartProp;
-
-      const DeRichSystem * m_richSys;    ///< RICH detector system object
 
       /// Particle ID types to consider in the photon creation checks
       Rich::Particles m_pidTypes;

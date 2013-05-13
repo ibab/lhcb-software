@@ -26,8 +26,7 @@ GeomEffCKMassRing::GeomEffCKMassRing ( const std::string& type,
   : ToolBase          ( type, name, parent ),
     m_ckAngle         ( NULL ),
     m_massHypoRings   ( NULL ),
-    m_richPartProp    ( NULL ),
-    m_richSys         ( NULL )
+    m_richPartProp    ( NULL )
 {
 
   // define interface

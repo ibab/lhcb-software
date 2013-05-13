@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-05-13 - Chris Jones
+ - Remove unused data member in Rich::Rec::GeomEffCKMassRing
+
 !========================= RichRecTrackTools v1r34 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
