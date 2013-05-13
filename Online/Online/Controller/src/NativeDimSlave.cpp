@@ -10,6 +10,7 @@
 **==========================================================*/
 // Framework include files
 #include "Controller/NativeDimSlave.h"
+#include "FiniteStateMachine/Machine.h"
 
 // C/C++ include files
 #include <unistd.h>

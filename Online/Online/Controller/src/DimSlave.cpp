@@ -11,6 +11,7 @@
 // Framework include files
 #include "Controller/DimSlave.h"
 #include "FiniteStateMachine/Type.h"
+#include "FiniteStateMachine/Machine.h"
 #include "RTL/rtl.h"
 extern "C" {
 #include "dic.h"
@@ -134,6 +135,7 @@ DimSlave& DimSlave::stopTimer()  {
 /// Handle timeout according to timer ID
 void DimSlave::handleTimeout()  {
   if ( SLAVE_EXECUTING == currentState() )  {
+    display(ALWAYS,"%s> Slave %s Received new message TIMEOUT.",RTL::processName().c_str(),c_name());
     m_timerID.second == SLAVETIMEOUT ? (void)transitionFailed() : handleUnloadTimeout();
   }
 }
@@ -161,8 +163,14 @@ void DimSlave::handleState(const string& msg)  {
     return;
   }
   else if ( m == "UNKNOWN" ) {
+#if 0
+    display(ALWAYS,"%s::%s> IGNORE Slave state:%s",
+	    RTL::processName().c_str(),c_name(),m.c_str());
+    return;
+#endif
     m = "OFFLINE";
   }
+  display(INFO,"%s> Received new message from %s %s",m_machine->c_name(),c_name(),m.c_str());
 
   const State* state = type()->state(m);
   const Transition* transition = state ? m_state->findTrans(state) : 0;
@@ -174,8 +182,6 @@ void DimSlave::handleState(const string& msg)  {
     transitionSlave(state);
   else
     transitionFailed();
-  //display(ALWAYS,"%s::%s> Slave state:%s Meta-state:%s",
-  //	  RTL::processName().c_str(),c_name(),m.c_str(),metaStateName());
 }
 
 /// DimInfo overload to process messages

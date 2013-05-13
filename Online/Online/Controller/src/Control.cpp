@@ -109,6 +109,12 @@ namespace FiniteStateMachine {
       char* line = 0;
       size_t len = 0;
       while( ::getline(&line,&len,f) != -1 )   {
+#if 0
+	if ( strstr(line,"Received new message") )
+	  ioc().send(handler,CMD_WRITE_MESSAGE,::strdup(line));
+	else if ( strstr(line,"PUBLISH state") )
+	  ioc().send(handler,CMD_WRITE_MESSAGE,::strdup(line));
+#endif
 	ioc().send(handler,CMD_WRITE_MESSAGE,::strdup(line));
       }
       ::free(line);
@@ -119,9 +125,9 @@ namespace FiniteStateMachine {
     }
     /// Handle state updates for a particular slave
     virtual void handleState(const std::string& msg)  {
-      ioc().send(handler,CMD_WRITE_MESSAGE,::strdup((m_machine->name()+">> "+name()+"> Received new message:"+msg).c_str()));
       if ( msg != DAQ::ST_NAME_UNKNOWN ) NativeDimSlave::handleState(msg);
-      ioc().send(handler,CMD_UPDATE_MACHINE,this);
+      else ioc().send(handler,CMD_WRITE_MESSAGE,::strdup((m_machine->name()+"> Received new message from "+name()+ " "+msg).c_str()));
+      ioc().send(handler,CMD_UPDATE_SLAVE,this);
     }
   };
 
@@ -143,9 +149,9 @@ namespace FiniteStateMachine {
     int processIO()               {  return 1;    }
     /// Handle state updates for a particular slave
     virtual void handleState(const std::string& msg)  {
-      ioc().send(handler,CMD_WRITE_MESSAGE,::strdup((m_machine->name()+">> "+name()+"> Received new message:"+msg).c_str()));
       if ( msg != DAQ::ST_NAME_UNKNOWN ) FmcSlave::handleState(msg);
-      ioc().send(handler,CMD_UPDATE_MACHINE,this);
+      else ioc().send(handler,CMD_WRITE_MESSAGE,::strdup((m_machine->name()+">> "+name()+"> Received new message:"+msg).c_str()));
+      ioc().send(handler,CMD_UPDATE_SLAVE,this);
     }
   };
 }

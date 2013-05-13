@@ -19,6 +19,8 @@
 #include <cstring>
 #include <iostream>
 #include <FiniteStateMachine/FSM.h>
+#include "FiniteStateMachine/TypedObject.h"
+
 using namespace std;
 using namespace FiniteStateMachine;
 
@@ -102,9 +104,13 @@ FSM::ErrCond FSM::removeTransition(MicFSMState from, MicFSMState to)    {
   }
   return FSM::TRANNOTFOUND;             // return false (not found)
 }
-#include "FiniteStateMachine/TypedObject.h"
+
 //----------------------------------------------------------------------------
 FSM::ErrCond FSM::invokeTransition(MicFSMState target, const void* user_param)   {
+#if 0
+  TypedObject::display(TypedObject::ALWAYS,"FSM[%s]> Invoke transition from state:%d to state %d",
+		       RTL::processName().c_str(),m_currentState,int(target));
+#endif
   for(MicFSMTransition* tr = m_transitionHead; tr; tr = tr->next)  {
     if( tr->from == m_currentState && tr->to == target )  {
       m_targetState = target;

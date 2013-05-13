@@ -129,21 +129,25 @@ When::Result When::fires(const States& states)  const   {
     for(i=states.begin(); i!=states.end(); ++i)
       if ( m_allowed.find(*i) == m_allowed.end() ) 
 	return Result(0,Rule::NO_DIRECTION);
+    return Result(to,m_rule.direction());
   }
   else if ( m_mult == ALL_NOT_IN_STATE )   {
     for(i=states.begin(); i!=states.end(); ++i)
       if ( m_allowed.find(*i) != m_allowed.end() ) 
 	return Result(0,Rule::NO_DIRECTION);
+    return Result(to,m_rule.direction());
   }
   else if ( m_mult == ANY_IN_STATE )   {
     for(i=states.begin(); i!=states.end(); ++i)
       if ( m_allowed.find(*i) != m_allowed.end() ) 
 	return Result(to,m_rule.direction());
+    return Result(0,Rule::NO_DIRECTION);
   }
   else if ( m_mult == ANY_NOT_IN_STATE )   {
     for(i=states.begin(); i!=states.end(); ++i)
       if ( m_allowed.find((*i)) == m_allowed.end() )
 	return Result(to,m_rule.direction());
+    return Result(0,Rule::NO_DIRECTION);
   }
   return Result(0,Rule::NO_DIRECTION);
 }

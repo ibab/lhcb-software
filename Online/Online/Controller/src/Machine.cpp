@@ -136,10 +136,25 @@ void Machine::handleIoc(const Event& event)   {
     status = m_fsm.invokeTransition(MACH_CHK_SLV,event.data);
     break;
   case Slave::SLAVE_TRANSITION:   /// State change by slave. Handle the request.
-    evaluateWhens();
+    display(INFO,"%s> Machine got SLAVE_TRANSITION in state:%s/%s - evaluate WHENs. Idle:%s",
+	    c_name(), c_state(), currentMetaName(), isIdle() ? "Yes" : "No");
+#if 0
+    for(Slaves::const_iterator i=m_slaves.begin(); i!= m_slaves.end(); ++i)  {
+      const Slave* s = *i;
+      display(ALWAYS,"%s> Controller Slave %s in state %s/%s",
+	      c_name(), s->c_name(), s->c_state(), s->metaStateName());
+    }
+#endif
+    if ( isIdle() ) {
+      evaluateWhens();
+    }
     break;
   case Slave::SLAVE_FAILED:
-    checkSlaves();
+    if ( FSM::TRANNOTFOUND == checkSlaves() )  {
+      display(WARNING,"%s> Machine got SLAVE_FAILED in meta state:%s - evaluate WHENs. Idle:%s",
+	      c_name(), currentMetaName(), isIdle() ? "Yes" : "No");
+      evaluateWhens();
+    }
     break;
   case Machine::MACH_EXEC_ACT:
     status = m_fsm.invokeTransition(MACH_EXEC_ACT,this);
@@ -177,7 +192,7 @@ void Machine::evaluateWhens()  {
     for(State::Whens::const_iterator iw=whens.begin(); iw != whens.end(); ++iw)  {
       const When* w = (*iw);
       When::Result res = w->fires(states);
-      if ( res.first )  {
+      if ( res.first && res.first != state() )  {
 	display(INFO,"%s> WHEN clause: %s fired. Invoke tramsition to:%s",
 		c_name(),w->c_name(),res.first->c_name());
 	invokeTransition(res.first,res.second);
@@ -224,6 +239,7 @@ ErrCond Machine::invokeTransition(const std::string& target_state, Rule::Directi
 
 /// Finish lengthy state leave action
 ErrCond Machine::goIdle()  {
+  m_fsm.setCurrentState(MACH_IDLE);
   setTarget(0);
   return FSM::SUCCESS;
 }

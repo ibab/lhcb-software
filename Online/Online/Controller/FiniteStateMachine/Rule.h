@@ -139,8 +139,12 @@ namespace FiniteStateMachine   {
 	 Rule::Direction direction);
     /// Standatrd destructor  
     virtual ~When();
-    const Rule&  rule()  const        {  return m_rule;   }
-    Multiplicity multiplicity() const {  return m_mult;   }
+    /// Access rule to be applied
+    const Rule&  rule()  const         {  return m_rule;               }
+    /// Access multiplicity of When clause (ANY/ALL)
+    Multiplicity multiplicity() const  {  return m_mult;               }
+    /// Retrieve pointer to the target state object
+    const State* targetState ()  const {  return m_rule.targetState(); }
     /// Check if a slave with a given state satisfies the predicate
     Result fires(const States& slave_states)  const;
   };   //  End class When

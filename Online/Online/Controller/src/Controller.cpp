@@ -67,7 +67,7 @@ FSM::ErrCond Controller::fail()  {
 	  c_name(), m_machine->type()->c_name(), tr ? tr->c_name() : "??Unknown??",m_machine->c_state());
   m_machine->setSlaveState(Slave::SLAVE_FAILED,m_errorState);
   for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); ++i)  {
-    Slave* s = *i;
+    const Slave* s = *i;
     display(ALWAYS,"%s> Controller: Slave %s in state %s has meta-state:%s",
 	    c_name(), s->c_name(), s->c_state(), s->metaStateName());
   }
@@ -94,6 +94,15 @@ FSM::ErrCond Controller::publishSlaves()  {
 /// Publish state information when transition is completed
 FSM::ErrCond Controller::publish()  {
   string state = m_machine->c_state();
+  display(ALWAYS,"%s> Controller PUBLISH state %s",m_machine->c_name(),state.c_str());
+  if ( state == "ERROR" )  {
+    const Slaves slaves = m_machine->slaves();
+    for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); ++i)  {
+      const Slave* s = *i;
+      display(ALWAYS,"%s> Controller: Slave %s in state %s has meta-state:%s",
+	      c_name(), s->c_name(), s->c_state(), s->metaStateName());
+    }
+  }
   publishSlaves();
   return declareState(state);
 }

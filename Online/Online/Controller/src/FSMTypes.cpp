@@ -33,28 +33,36 @@ static Type* defineDAQType()    {
 
   daq->setInitialState(offline);
 
-  not_ready->when(anyChildInState(error),      moveTo(error));
-  not_ready->when(anyChildInState(offline),    moveTo(offline));
+  not_ready->when(anyChildInState(error),          moveTo(error));
+  not_ready->when(anyChildInState(offline),        moveTo(offline));
   not_ready->when(allChildrenInState(ready,running,paused), moveTo(ready));
 
-  ready->when    (  anyChildInState(error),      moveTo(error));
-  ready->when    (  anyChildInState(offline),    moveTo(offline));
-  ready->when    (  anyChildInState(not_ready),  moveTo(not_ready));
-  ready->when    (  allChildrenInState(running), moveTo(running));
+  ready->when    (  anyChildInState(error),        moveTo(error));
+  ready->when    (  anyChildInState(offline),      moveTo(offline));
+  ready->when    (  anyChildInState(not_ready),    moveTo(not_ready));
+  ready->when    (  allChildrenInState(running),   moveTo(running));
 
-  running->when  (  anyChildInState(error),      moveTo(error));
-  running->when  (  anyChildInState(offline),    moveTo(offline));
-  running->when  (  anyChildInState(not_ready),  moveTo(not_ready));
-  running->when  (  anyChildInState(paused),     moveTo(paused));
-  running->when  (  allChildrenInState(ready),   moveTo(ready));
+  running->when  (  anyChildInState(error),        moveTo(error));
+  running->when  (  anyChildInState(offline),      moveTo(offline));
+  running->when  (  anyChildInState(not_ready),    moveTo(not_ready));
+  running->when  (  anyChildInState(paused),       moveTo(paused));
+  running->when  (  allChildrenInState(ready),     moveTo(ready));
 
-  paused->when   (  anyChildInState(error),      moveTo(error));
-  paused->when   (  anyChildInState(offline),    moveTo(offline));
-  paused->when   (  anyChildInState(not_ready),  moveTo(not_ready));
-  paused->when   (  allChildrenInState(running), moveTo(running));
-  paused->when   (  allChildrenInState(ready),   moveTo(ready));
+  paused->when   (  anyChildInState(error),        moveTo(error));
+  paused->when   (  anyChildInState(offline),      moveTo(offline));
+  paused->when   (  anyChildInState(not_ready),    moveTo(not_ready));
+  paused->when   (  allChildrenInState(running),   moveTo(running));
+  paused->when   (  allChildrenInState(ready),     moveTo(ready));
 
-  error->when    (  allChildrenInState(offline), moveTo(offline));
+  offline->when  (  allChildrenInState(running),   moveTo(running));
+  offline->when  (  allChildrenInState(ready,paused,running),     moveTo(ready));
+  offline->when  (  allChildrenInState(not_ready,ready,paused,running), moveTo(not_ready));
+
+  error->when    (  anyChildInState(error),        moveTo(error));
+  error->when    (  allChildrenInState(offline),   moveTo(offline));
+  error->when    (  allChildrenInState(running),   moveTo(running));
+  error->when    (  allChildrenInState(ready,paused,running),     moveTo(ready));
+  error->when    (  allChildrenInState(not_ready,ready,paused,running), moveTo(not_ready));
 
   
   Tr*  unload0   = daq->addTransition("unload",    running,     offline, NO_CHECKS);
@@ -83,6 +91,15 @@ static Type* defineDAQType()    {
   Tr*  RESET3    = daq->addTransition("RESET",     not_ready,   offline,   NO_CHECKS);
   Tr*  RESET4    = daq->addTransition("RESET",     offline,     offline,   NO_CHECKS);
   Tr*  RESET5    = daq->addTransition("RESET",     paused,      offline,   NO_CHECKS);
+
+  daq->addTransition("When-Rule",     error,       not_ready, CHECK);
+  daq->addTransition("When-Rule",     error,       ready,     CHECK);
+  daq->addTransition("When-Rule",     error,       running,   CHECK);
+  daq->addTransition("When-Rule",     error,       paused,    CHECK);
+
+  daq->addTransition("When-Rule",   offline,       ready,     CHECK);
+  daq->addTransition("When-Rule",   offline,       running,   CHECK);
+  daq->addTransition("When-Rule",   offline,       paused,    CHECK);
 
   daq_err0->adoptRule(AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
   daq_err1->adoptRule(AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
@@ -190,26 +207,34 @@ static Type* defineDAQSteerType() {
   const State* daq_error     = daq->state(ST_NAME_ERROR);
   const State* daq_paused    = daq->state(ST_NAME_PAUSED);
  
-  not_ready->when(anyChildInState(error,daq_error),          moveTo(error));
-  not_ready->when(anyChildInState(offline,daq_offline),      moveTo(offline));
-  not_ready->when(allChildrenInState(daq_ready,daq_running,daq_paused), moveTo(ready));
+  not_ready->when(anyChildInState(error,daq_error),              moveTo(error));
+  not_ready->when(anyChildInState(offline,daq_offline),          moveTo(offline));
+  not_ready->when(allChildrenInState(daq_ready,daq_running,daq_paused),     moveTo(ready));
 
-  ready->when    (  anyChildInState(error,daq_error),        moveTo(error));
-  ready->when    (  anyChildInState(offline,daq_offline),    moveTo(offline));
-  ready->when    (  allChildrenInState(daq_running), moveTo(running));
-  ready->when    (  allChildrenInState(daq_not_ready),moveTo(not_ready));
+  ready->when    (  anyChildInState(error,daq_error),            moveTo(error));
+  ready->when    (  anyChildInState(offline,daq_offline),        moveTo(offline));
+  ready->when    (  allChildrenInState(running,daq_running),     moveTo(running));
+  ready->when    (  allChildrenInState(not_ready,daq_not_ready), moveTo(not_ready));
 
-  running->when  (  anyChildInState(error,daq_error),        moveTo(error));
-  running->when  (  anyChildInState(offline,daq_offline),    moveTo(offline));
-  running->when  (  anyChildInState(paused,daq_paused),      moveTo(paused));
-  running->when  (  allChildrenInState(ready,daq_ready),     moveTo(ready));
+  running->when  (  anyChildInState(error,daq_error),            moveTo(error));
+  running->when  (  anyChildInState(offline,daq_offline),        moveTo(offline));
+  running->when  (  anyChildInState(paused,daq_paused),          moveTo(paused));
+  running->when  (  allChildrenInState(ready,daq_ready,paused,daq_paused),  moveTo(ready));
 
-  paused->when   (  anyChildInState(error,daq_error),        moveTo(error));
-  paused->when   (  anyChildInState(offline,daq_offline),    moveTo(offline));
-  paused->when   (  allChildrenInState(daq_running), moveTo(running));
-  paused->when   (  allChildrenInState(daq_ready),   moveTo(ready));
+  paused->when   (  anyChildInState(error,daq_error),            moveTo(error));
+  paused->when   (  anyChildInState(offline,daq_offline),        moveTo(offline));
+  paused->when   (  allChildrenInState(daq_running),             moveTo(running));
+  paused->when   (  allChildrenInState(daq_ready),               moveTo(ready));
 
-  error->when    (  allChildrenInState(offline,daq_offline), moveTo(offline));
+  offline->when  (  allChildrenInState(running,daq_running),     moveTo(running));
+  offline->when  (  allChildrenInState(ready,daq_ready,daq_paused,daq_running),         moveTo(ready));
+  offline->when  (  allChildrenInState(not_ready,daq_not_ready,daq_ready,daq_paused,daq_running), moveTo(not_ready));
+
+  error->when    (  anyChildInState(error,daq_error),            moveTo(error));
+  error->when    (  allChildrenInState(offline,daq_offline),     moveTo(offline));
+  error->when    (  allChildrenInState(running,daq_running),     moveTo(running));
+  error->when    (  allChildrenInState(ready,daq_ready,daq_paused,daq_running),         moveTo(ready));
+  error->when    (  allChildrenInState(not_ready,daq_not_ready,daq_ready,daq_paused,daq_running), moveTo(not_ready));
 
   /* Tr* crea = */ typ->addTransition("create",    unknown,     offline,   CHECK|CREATE);
   Tr*  load      = typ->addTransition("load",      offline,     not_ready, CHECK|CREATE);
@@ -225,7 +250,8 @@ static Type* defineDAQSteerType() {
   Tr*  destroy   = typ->addTransition("destroy",   offline,     unknown,   KILL);
 
   Tr*  reset1    = typ->addTransition("reset",     ready,       not_ready);
-  Tr*  recover   = typ->addTransition("recover",   error,       offline);
+  Tr*  recover0  = typ->addTransition("recover",   error,       offline);
+  Tr*  recover1  = typ->addTransition("recover",   not_ready,   offline);
 
   Tr*  daq_err0  = typ->addTransition("error",     not_ready,   error,     NO_CHECKS);
   Tr*  daq_err1  = typ->addTransition("error",     ready,       error,     NO_CHECKS);
@@ -239,11 +265,20 @@ static Type* defineDAQSteerType() {
   Tr*  RESET4    = typ->addTransition("RESET",     offline,     offline,   NO_CHECKS);
   Tr*  RESET5    = typ->addTransition("RESET",     paused,      offline,   NO_CHECKS);
 
+  typ->addTransition("When-Rule",     error,       not_ready, CHECK);
+  typ->addTransition("When-Rule",     error,       ready,     CHECK);
+  typ->addTransition("When-Rule",     error,       running,   CHECK);
+  typ->addTransition("When-Rule",     error,       paused,    CHECK);
+
+  typ->addTransition("When-Rule",   offline,       ready,     CHECK);
+  typ->addTransition("When-Rule",   offline,       running,   CHECK);
+  typ->addTransition("When-Rule",   offline,       paused,    CHECK);
+
   daq_err0->adoptRule(    AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
   daq_err1->adoptRule(    AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
   daq_err2->adoptRule(    AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
   daq_err3->adoptRule(    AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
-  recover->adoptRule(     AllChildrenOfType(daq).execTransition(ST_NAME_ERROR,     ST_NAME_OFFLINE));
+  recover0->adoptRule(    AllChildrenOfType(daq).execTransition(ST_NAME_ERROR,     ST_NAME_OFFLINE));
 
   reset1->adoptRule(      AllChildrenOfType(daq).execTransition(ST_NAME_READY,     ST_NAME_NOT_READY));
   load->adoptRule(        AllChildrenOfType(daq).execTransition(ST_NAME_OFFLINE,   ST_NAME_NOT_READY));
