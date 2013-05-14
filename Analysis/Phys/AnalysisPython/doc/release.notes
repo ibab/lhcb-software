@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-05-14 - Vanya Belyaev
+
+ - add (log&log10)gamma distribution models 
+
 ! 2013-05-13 - Vanya Belyaev
  - add the function for bining according to the density 
 

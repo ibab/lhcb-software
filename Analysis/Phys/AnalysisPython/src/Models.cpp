@@ -1554,6 +1554,175 @@ Double_t Analysis::Models::StudentT::evaluate() const
 // ============================================================================
 
 
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::GammaDist::GammaDist
+( const char*          name  , 
+  const char*          title ,
+  RooAbsReal&          x     ,
+  RooAbsReal&          k     ,
+  RooAbsReal&          theta )
+  : RooAbsPdf  (name ,title ) 
+//
+  , m_x       ( "x"     , "Observable" , this , x     ) 
+  , m_k       ( "k"     , "Shape"      , this , k     ) 
+  , m_theta   ( "theta" , "Scale"      , this , theta )
+//
+  , m_gamma   ( 1 , 1 ) 
+{
+  m_gamma.setK     ( m_k     ) ;
+  m_gamma.setTheta ( m_theta ) ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::GammaDist::GammaDist
+( const Analysis::Models::GammaDist& right ,
+  const char*                        name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x     ( "x"     , this , right.m_x     ) 
+  , m_k     ( "k"     , this , right.m_k     ) 
+  , m_theta ( "theta" , this , right.m_theta )
+//
+  , m_gamma (                  right.m_gamma ) 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::GammaDist::~GammaDist () {}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::GammaDist*
+Analysis::Models::GammaDist::clone( const char* name ) const 
+{ return new Analysis::Models::GammaDist ( *this , name) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::GammaDist::evaluate() const 
+{
+  m_gamma.setK     ( m_k     ) ;
+  m_gamma.setTheta ( m_theta ) ;
+  //
+  return m_gamma   ( m_x ) ;
+}
+// ============================================================================
+
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::LogGammaDist::LogGammaDist
+( const char*          name  , 
+  const char*          title ,
+  RooAbsReal&          x     ,
+  RooAbsReal&          k     ,
+  RooAbsReal&          theta )
+  : RooAbsPdf  (name ,title ) 
+//
+  , m_x       ( "x"     , "Observable" , this , x     ) 
+  , m_k       ( "k"     , "Shape"      , this , k     ) 
+  , m_theta   ( "theta" , "Scale"      , this , theta )
+//
+  , m_gamma   ( 1 , 1 ) 
+{
+  m_gamma.setK     ( m_k     ) ;
+  m_gamma.setTheta ( m_theta ) ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::LogGammaDist::LogGammaDist
+( const Analysis::Models::LogGammaDist& right ,
+  const char*                           name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x     ( "x"     , this , right.m_x     ) 
+  , m_k     ( "k"     , this , right.m_k     ) 
+  , m_theta ( "theta" , this , right.m_theta )
+//
+  , m_gamma (                  right.m_gamma ) 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::LogGammaDist::~LogGammaDist () {}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::LogGammaDist*
+Analysis::Models::LogGammaDist::clone( const char* name ) const 
+{ return new Analysis::Models::LogGammaDist ( *this , name) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::LogGammaDist::evaluate() const 
+{
+  m_gamma.setK     ( m_k     ) ;
+  m_gamma.setTheta ( m_theta ) ;
+  //
+  return m_gamma   ( m_x ) ;
+}
+// ============================================================================
+
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::Log10GammaDist::Log10GammaDist
+( const char*          name  , 
+  const char*          title ,
+  RooAbsReal&          x     ,
+  RooAbsReal&          k     ,
+  RooAbsReal&          theta )
+  : RooAbsPdf  (name ,title ) 
+//
+  , m_x       ( "x"     , "Observable" , this , x     ) 
+  , m_k       ( "k"     , "Shape"      , this , k     ) 
+  , m_theta   ( "theta" , "Scale"      , this , theta )
+//
+  , m_gamma   ( 1 , 1 ) 
+{
+  m_gamma.setK     ( m_k     ) ;
+  m_gamma.setTheta ( m_theta ) ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::Log10GammaDist::Log10GammaDist
+( const Analysis::Models::Log10GammaDist& right ,
+  const char*                           name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x     ( "x"     , this , right.m_x     ) 
+  , m_k     ( "k"     , this , right.m_k     ) 
+  , m_theta ( "theta" , this , right.m_theta )
+//
+  , m_gamma (                  right.m_gamma ) 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::Log10GammaDist::~Log10GammaDist () {}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Log10GammaDist*
+Analysis::Models::Log10GammaDist::clone( const char* name ) const 
+{ return new Analysis::Models::Log10GammaDist ( *this , name) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Log10GammaDist::evaluate() const 
+{
+  m_gamma.setK     ( m_k     ) ;
+  m_gamma.setTheta ( m_theta ) ;
+  //
+  return m_gamma   ( m_x ) ;
+}
+// ============================================================================
+
+
 
 // ============================================================================
 // The END 

@@ -1031,7 +1031,7 @@ namespace Analysis
       /// clone 
       virtual  StudentT* clone ( const char* name ) const ; 
       // ======================================================================
-    public:
+    protected: 
       // ======================================================================
       RooRealProxy m_x        ;
       RooRealProxy m_mu       ;
@@ -1047,6 +1047,146 @@ namespace Analysis
       mutable Gaudi::Math::StudentT m_stt ;           // the actual function 
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class GammaDist 
+     *  Gamma-distribution shape/scale parameters 
+     *  http://en.wikipedia.org/wiki/Gamma_distribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     *  @see Gaudi::Math::GammaDist 
+     */
+    class GAUDI_API GammaDist : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::GammaDist, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters
+      GammaDist ( const char*          name      , 
+                  const char*          title     ,
+                  RooAbsReal&          x         , 
+                  RooAbsReal&          k         ,
+                  RooAbsReal&          theta     ) ;
+      /// "copy constructor"
+      GammaDist ( const GammaDist&     right     , 
+                  const char*          name  = 0 )  ;
+      /// destructor 
+      virtual ~GammaDist () ;
+      /// clone 
+      virtual  GammaDist* clone ( const char* name ) const ; 
+      // ======================================================================
+    protected: 
+      // ======================================================================
+      RooRealProxy m_x        ;
+      RooRealProxy m_k        ;
+      RooRealProxy m_theta    ;
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function
+      mutable Gaudi::Math::GammaDist m_gamma ; // the actual function
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class LogGammaDist 
+     *  Distribution for log(x), where x follows 
+     *  gamma-distribution shape/scale parameters 
+     *  http://en.wikipedia.org/wiki/Gamma_distribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     *  @see Gaudi::Math::LogGammaDist 
+     */
+    class GAUDI_API LogGammaDist : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::LogGammaDist, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters
+      LogGammaDist ( const char*          name      , 
+                     const char*          title     ,
+                     RooAbsReal&          x         , 
+                     RooAbsReal&          k         ,
+                     RooAbsReal&          theta     ) ;
+      /// "copy constructor"
+      LogGammaDist ( const LogGammaDist&  right     , 
+                     const char*          name  = 0 )  ;
+      /// destructor 
+      virtual ~LogGammaDist () ;
+      /// clone 
+      virtual  LogGammaDist* clone ( const char* name ) const ; 
+      // ======================================================================
+    protected: 
+      // ======================================================================
+      RooRealProxy m_x        ;
+      RooRealProxy m_k        ;
+      RooRealProxy m_theta    ;
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function
+      mutable Gaudi::Math::LogGammaDist m_gamma ; // the actual function
+      // ======================================================================
+    } ;  
+    // ========================================================================
+    /** @class Log10GammaDist 
+     *  Distribution for log10(x), where x follows 
+     *  gamma-distribution shape/scale parameters 
+     *  http://en.wikipedia.org/wiki/Gamma_distribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     *  @see Gaudi::Math::Log10GammaDist 
+     */
+    class GAUDI_API Log10GammaDist : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Log10GammaDist, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters
+      Log10GammaDist ( const char*           name      , 
+                       const char*           title     ,
+                       RooAbsReal&           x         , 
+                       RooAbsReal&           k         ,
+                       RooAbsReal&           theta     ) ;
+      /// "copy constructor"
+      Log10GammaDist ( const Log10GammaDist& right     , 
+                       const char*           name  = 0 )  ;
+      /// destructor 
+      virtual ~Log10GammaDist () ;
+      /// clone 
+      virtual  Log10GammaDist* clone ( const char* name ) const ; 
+      // ======================================================================
+    protected: 
+      // ======================================================================
+      RooRealProxy m_x        ;
+      RooRealProxy m_k        ;
+      RooRealProxy m_theta    ;
+      // ======================================================================
+      // the actual evaluation of function 
+      Double_t evaluate() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function
+      mutable Gaudi::Math::Log10GammaDist m_gamma ; // the actual function
+      // ======================================================================
+    } ;  
     // ========================================================================
   } //                                        end of namespace Analysis::Models
   // ==========================================================================

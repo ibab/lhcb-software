@@ -39,6 +39,9 @@
   <class name = "Analysis::Models::PolyPositive"    />
   <class name = "Analysis::Models::ExpoPositive"    />
   <class name = "Analysis::Models::StudentT"        />
+  <class name = "Analysis::Models::GammaDist"       />
+  <class name = "Analysis::Models::LogGammaDist"    />
+  <class name = "Analysis::Models::Log10GammaDist"  />
 
   <class name = "Gaudi::Utils::HStats"              />
   <class name = "Gaudi::Utils::Mute"                />
