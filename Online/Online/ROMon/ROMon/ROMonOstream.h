@@ -22,11 +22,12 @@
 #include "ROMon/ROMon.h"
 
 std::ostream& operator<<(std::ostream& os, const CONTROL& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::MBMClient& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::MBMBuffer& b);
-std::ostream& operator<<(std::ostream& os, const ROMon::FSMTask& t);
-std::ostream& operator<<(std::ostream& os, const ROMon::Node& n);
-std::ostream& operator<<(std::ostream& os, const ROMon::Nodeset& n);
-
+namespace ROMon  {
+  std::ostream& operator<<(std::ostream& os, const MBMClient& c);
+  std::ostream& operator<<(std::ostream& os, const MBMBuffer& b);
+  std::ostream& operator<<(std::ostream& os, const FSMTask& t);
+  std::ostream& operator<<(std::ostream& os, const Node& n);
+  std::ostream& operator<<(std::ostream& os, const Nodeset& n);
+}
 #endif /* ROMON_ROMONOSTREAM_H */
 

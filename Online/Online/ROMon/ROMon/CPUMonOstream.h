@@ -20,18 +20,18 @@
 
 // Framework include files
 #include "ROMon/CPUMon.h"
+namespace ROMon  {
+  std::ostream& operator<<(std::ostream& os, const CPU::Stat& s);
+  std::ostream& operator<<(std::ostream& os, const CPU& n);
+  std::ostream& operator<<(std::ostream& os, const CPUset& n);
+  std::ostream& operator<<(std::ostream& os, const CPUfarm& n);
 
-std::ostream& operator<<(std::ostream& os, const ROMon::CPU::Stat& s);
-std::ostream& operator<<(std::ostream& os, const ROMon::CPU& n);
-std::ostream& operator<<(std::ostream& os, const ROMon::CPUset& n);
-std::ostream& operator<<(std::ostream& os, const ROMon::CPUfarm& n);
+  std::ostream& operator<<(std::ostream& os, const Process& n);
+  std::ostream& operator<<(std::ostream& os, const Procset& n);
+  std::ostream& operator<<(std::ostream& os, const ProcFarm& n);
 
-std::ostream& operator<<(std::ostream& os, const ROMon::Process& n);
-std::ostream& operator<<(std::ostream& os, const ROMon::Procset& n);
-std::ostream& operator<<(std::ostream& os, const ROMon::ProcFarm& n);
-
-std::ostream& operator<<(std::ostream& os, const ROMon::Memory& n);
-std::ostream& operator<<(std::ostream& os, const ROMon::NodeStats& n);
-
+  std::ostream& operator<<(std::ostream& os, const Memory& n);
+  std::ostream& operator<<(std::ostream& os, const NodeStats& n);
+}
 #endif /* ROMON_CPUMONOSTREAM_H */
 

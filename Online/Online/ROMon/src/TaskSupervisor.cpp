@@ -101,46 +101,46 @@ string Cluster::PVSSProject::projectName(const string& n) {
   return "";
 }
 
-ostream& operator<<(ostream& os, const vector<Cluster::Node::Item>& t) {
+ostream& ROMon::operator<<(ostream& os, const vector<Cluster::Node::Item>& t) {
   for(Cluster::Node::Tasks::const_iterator i=t.begin(); i!=t.end();++i)
     os << setw(12) << left << (*i).first << " " << (const char*)((*i).second?"/OK":"/NOT OK");
   return os;
 }
 
-ostream& operator<<(ostream& os, const Cluster::Node& n) {
+ostream& ROMon::operator<<(ostream& os, const Cluster::Node& n) {
   os << "    Node:" << setw(12) << left << n.name << "   [" << n.status << "]" << endl
      << "       Tasks:      " << n.tasks << endl
      << "       Connections:" << n.conns << endl;
   return os;
 }
 
-ostream& operator<<(ostream& os, const Cluster& c) {
+ostream& ROMon::operator<<(ostream& os, const Cluster& c) {
   os << "  Cluster:" << setw(12) << left << c.name << "  [" << c.status << "]" << endl;
   for(Cluster::Nodes::const_iterator i=c.nodes.begin(); i!=c.nodes.end();++i)
     os << (*i).second;
   return os;
 }
 
-ostream& operator<<(ostream& os, const list<Cluster>& c) {
+ostream& ROMon::operator<<(ostream& os, const list<Cluster>& c) {
   for(list<Cluster>::const_iterator i=c.begin(); i!=c.end();++i)
     os << "-------------------------------------------------------------" << endl << *i;
   return os;
 }
 
-ostream& operator<<(ostream& os, const Inventory::NodeCollection& nc) {
+ostream& ROMon::operator<<(ostream& os, const Inventory::NodeCollection& nc) {
   os << "     -->Node Collection:" << nc.name << endl;
   for(Inventory::NodeCollection::NodeList::const_iterator j=nc.nodes.begin(); j != nc.nodes.end();++j)
     os << "         -->Node:      " << setw(18) << left << (*j).first << (*j).second << endl;
   return os;
 }
 
-ostream& operator<<(ostream& os, const Inventory::NodeCollectionMap& n) {
+ostream& ROMon::operator<<(ostream& os, const Inventory::NodeCollectionMap& n) {
   for(Inventory::NodeCollectionMap::const_iterator i=n.begin(); i != n.end();++i)
     os << (*i).second;
   return os;
 }
 
-ostream& operator<<(ostream& os, const Inventory::NodeType& nt) {
+ostream& ROMon::operator<<(ostream& os, const Inventory::NodeType& nt) {
   os << "Node Type:" << nt.name << endl;
   for(Inventory::TaskList::const_iterator j=nt.tasks.begin();j!=nt.tasks.end();++j)
     os << "    Task:" << (*j) << endl;
@@ -149,13 +149,13 @@ ostream& operator<<(ostream& os, const Inventory::NodeType& nt) {
   return os;
 }
 
-ostream& operator<<(ostream& os, const Inventory::NodeTypeMap& n) {
+ostream& ROMon::operator<<(ostream& os, const Inventory::NodeTypeMap& n) {
   for(Inventory::NodeTypeMap::const_iterator i=n.begin(); i != n.end();++i)
     os << (*i).second;
   return os;
 }
 
-ostream& operator<<(ostream& os, const Inventory& inv)  {  return inv.print(os);    }
+ostream& ROMon::operator<<(ostream& os, const Inventory& inv)  {  return inv.print(os);    }
 ostream& Inventory::print(ostream& os)   const  {
   os << "-------------------------------  Task Inventory ------------------------------" << endl;
   os << "-->List of all tasks:" << endl;

@@ -363,14 +363,15 @@ namespace ROMon {
   };
 
 }
-std::ostream& operator<<(std::ostream& os, const ROMon::Cluster& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::Cluster::Node& n);
-std::ostream& operator<<(std::ostream& os, const ROMon::Cluster::Node::Tasks& t);
-std::ostream& operator<<(std::ostream& os, const std::list<ROMon::Cluster>& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::Inventory::NodeCollection& nc);
-std::ostream& operator<<(std::ostream& os, const ROMon::Inventory::NodeCollectionMap& ncm);
-std::ostream& operator<<(std::ostream& os, const ROMon::Inventory::NodeType& nt);
-std::ostream& operator<<(std::ostream& os, const ROMon::Inventory::NodeTypeMap& ntm);
-std::ostream& operator<<(std::ostream& os, const ROMon::Inventory& inv);
-
+namespace ROMon  {
+  std::ostream& operator<<(std::ostream& os, const Cluster& c);
+  std::ostream& operator<<(std::ostream& os, const Cluster::Node& n);
+  std::ostream& operator<<(std::ostream& os, const Cluster::Node::Tasks& t);
+  std::ostream& operator<<(std::ostream& os, const std::list<Cluster>& c);
+  std::ostream& operator<<(std::ostream& os, const Inventory::NodeCollection& nc);
+  std::ostream& operator<<(std::ostream& os, const Inventory::NodeCollectionMap& ncm);
+  std::ostream& operator<<(std::ostream& os, const Inventory::NodeType& nt);
+  std::ostream& operator<<(std::ostream& os, const Inventory::NodeTypeMap& ntm);
+  std::ostream& operator<<(std::ostream& os, const Inventory& inv);
+}
 #endif // TASKSUPERVISOR_H

@@ -43,7 +43,7 @@ namespace ROMon {
 
   class Run {
   public:
-    typedef FixItems<File> Files;
+    typedef Online::FixItems<File> Files;
     int    number;
     int    partitionID;
     char   partition[32];
@@ -62,7 +62,7 @@ namespace ROMon {
   };
   class RunDB {
   public:
-    typedef VarItems<Run> Runs;
+    typedef Online::VarItems<Run> Runs;
     enum { TYPE = 3 };
     /// First word: Data type descriptor (MUST always be 3)
     int  type;
@@ -90,6 +90,9 @@ namespace ROMon {
     int     endUpdate();
   };
 
+  std::ostream& operator<<(std::ostream& os, const File& f); 
+  std::ostream& operator<<(std::ostream& os, const Run& f); 
+  std::ostream& operator<<(std::ostream& os, const RunDB& f); 
 }
 #endif /* ROMON_RUNDB_H */
 

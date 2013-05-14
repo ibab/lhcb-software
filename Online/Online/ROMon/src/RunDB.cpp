@@ -7,7 +7,7 @@
 using namespace ROMon;
 using namespace std;
 
-ostream& operator<<(ostream& os, const File& f) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::File& f) {
   os << "   File:"  << f.id
      << " Name:"      << f.location << "/" << f.name << endl
      << " Created: "  << setw(8)  << f.created
@@ -21,7 +21,7 @@ ostream& operator<<(ostream& os, const File& f) {
   return os;
 }
 
-ostream& operator<<(ostream& os, const Run& r) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::Run& r) {
   os << "   Run:"  << r.number
      << " PartID:" << setw(8) << r.partitionID
      << " [" << r.partition << "] :" << r.runType
@@ -34,7 +34,7 @@ ostream& operator<<(ostream& os, const Run& r) {
   return os;
 }
 
-ostream& operator<<(ostream& os, const RunDB& db) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::RunDB& db) {
   os << " RunDB:"  << db.readTime << " " << db.totalSize
      << " Runs: "  << endl
      << db.runs

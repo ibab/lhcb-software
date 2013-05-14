@@ -584,19 +584,21 @@ namespace ROMon {
 #include "RTL/Unpack.h"
 
 #include <iostream>
-std::ostream& operator<<(std::ostream& os, const ROMon::Memory& m);
-std::ostream& operator<<(std::ostream& os, const ROMon::CPU::Stat& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::CPU& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::CPUset& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::CPUfarm& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::Process& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::Procset& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::ProcFarm& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::NodeStats& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::ProcFarm& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::Diskspace& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::DeferredHLTStats& c);
-std::ostream& operator<<(std::ostream& os, const ROMon::DeferredHLTSubfarmStats& c);
+namespace ROMon  {
+  std::ostream& operator<<(std::ostream& os, const Memory& m);
+  std::ostream& operator<<(std::ostream& os, const CPU::Stat& c);
+  std::ostream& operator<<(std::ostream& os, const CPU& c);
+  std::ostream& operator<<(std::ostream& os, const CPUset& c);
+  std::ostream& operator<<(std::ostream& os, const CPUfarm& c);
+  std::ostream& operator<<(std::ostream& os, const Process& c);
+  std::ostream& operator<<(std::ostream& os, const Procset& c);
+  std::ostream& operator<<(std::ostream& os, const ProcFarm& c);
+  std::ostream& operator<<(std::ostream& os, const NodeStats& c);
+  std::ostream& operator<<(std::ostream& os, const ProcFarm& c);
+  std::ostream& operator<<(std::ostream& os, const Diskspace& c);
+  std::ostream& operator<<(std::ostream& os, const DeferredHLTStats& c);
+  std::ostream& operator<<(std::ostream& os, const DeferredHLTSubfarmStats& c);
+}
 
 #endif /* ROMON_CPUMON_H */
 

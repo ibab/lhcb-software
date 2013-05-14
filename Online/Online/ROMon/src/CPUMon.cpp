@@ -8,26 +8,26 @@
 using namespace ROMon;
 using namespace std;
 
-ostream& operator<<(ostream& os, const Memory& m) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::Memory& m) {
   char text[132];
   sprintf(text,"Memory:%d Free:%d Cache:%5d Active:%d Inactive:%d",
           m.memTotal,m.memFree,m.cached,m.active,m.inactive);
   return os << text;
 }
 
-ostream& operator<<(ostream& os, const CPU::Stat& s) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::CPU::Stat& s) {
   char text[132];
   sprintf(text,"User:%4.1f%% Sys:%4.1f%% IO:%4.1f%% irq:%4.1f%% sirq:%4.1f%%",
           s.user,s.system,s.iowait,s.IRQ,s.softIRQ);
   return os << text;
 }
-ostream& operator<<(ostream& os, const CPU& c) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::CPU& c) {
   char text[132];
   sprintf(text,"    Clock:%5.0f Cache:%5d kB Bogo:%4.2f ",c.clock,c.cache,c.bogomips);
   return os << text << c.stats;
 }
 
-ostream& operator<<(ostream& os, const CPUset& s) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::CPUset& s) {
   os << "  Node:"  << s.name << " Family:" << s.family << " ContextRate:" << s.ctxtRate 
      << " Last update:" << s.time << "." << s.millitm << endl
      << "          Memory:" << s.memory << " kB Free:" << s.memfree << " kB Usage:" << s.averages << endl;
@@ -36,14 +36,14 @@ ostream& operator<<(ostream& os, const CPUset& s) {
   return os;
 }
 
-ostream& operator<<(ostream& os, const CPUfarm& f) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::CPUfarm& f) {
   os << "Farm:"  << f.name << " " << f.nodes.size() << " nodes. Last update:" << f.time << endl;
   for(CPUfarm::Nodes::const_iterator n=f.nodes.begin(); n!=f.nodes.end(); n=f.nodes.next(n))
     os << *n << endl;
   return os;
 }
 
-ostream& operator<<(ostream& os, const Process& p) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::Process& p) {
   char text[132];
   bool noutgid = ::strncmp(p.utgid,"N/A",3)==0;
   const char *opt = noutgid ? p.cmd : "", *utgid = noutgid ? "N/A: " : p.utgid;
@@ -56,7 +56,7 @@ ostream& operator<<(ostream& os, const Process& p) {
   return os << text;
 }
 
-ostream& operator<<(ostream& os, const Procset& s) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::Procset& s) {
   char text[132];
   sprintf(text,"          %5s %5s %4s %4s %6s %6s %-4s %-16s %s","PID","PPID","%CPU","%MEM","VSize","RSS","#Thr","Owner","UTGID");
   os << "  Node:"  << s.name << " " << s.processes.size() 
@@ -67,29 +67,29 @@ ostream& operator<<(ostream& os, const Procset& s) {
   return os;
 }
 
-ostream& operator<<(ostream& os, const ProcFarm& f) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::ProcFarm& f) {
   os << "Farm:"  << f.name << " " << f.nodes.size() << " nodes. Last update:" << f.time << endl;
   for(ProcFarm::Nodes::const_iterator n=f.nodes.begin(); n!=f.nodes.end(); n=f.nodes.next(n))
     os << *n << endl;
   return os;
 }
 
-ostream& operator<<(ostream& os, const NodeStats& n) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::NodeStats& n) {
   os << *n.cpu() << endl << "  " << n.memory << endl << *n.procs();
   return os;
 }
 
-ostream& operator<<(ostream& os, const Diskspace& n) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::Diskspace& n) {
   os << "Local disk:" << n.blockSize << " " << n.numBlocks << "/" << n.freeBlocks << endl;
   return os;
 }
 
-ostream& operator<<(ostream& os, const DeferredHLTStats& n) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::DeferredHLTStats& n) {
   os << n.name << endl << "  " << n.localdisk << endl;
   return os;
 }
 
-ostream& operator<<(ostream& os, const DeferredHLTSubfarmStats& n) {
+ostream& ROMon::operator<<(ostream& os, const ROMon::DeferredHLTSubfarmStats& n) {
   os << n.name << endl << "  " << endl;
   return os;
 }

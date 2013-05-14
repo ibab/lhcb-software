@@ -32,9 +32,8 @@ ostream& operator<<(ostream& os, const CONTROL& c) {
      << endl;
   return os;
 }
-template ostream& operator<< <CONTROL>(ostream& os, const FixItems<CONTROL>& c);
 
-ostream& operator<<(ostream& os, const MBMClient& c) {
+ostream& ROMon::operator<<(ostream& os, const MBMClient& c) {
   os << " MBMClient@"  << (void*)&c
      << " Name:"      << setw(24) << left << c.name 
      << " PID:"       << setw(6)  << c.processID
@@ -47,9 +46,7 @@ ostream& operator<<(ostream& os, const MBMClient& c) {
   return os;
 }
 
-template ostream& operator<< <MBMClient>(ostream& os, const FixItems<MBMClient>& c);
-
-ostream& operator<<(ostream& os, const MBMBuffer& b) {
+ostream& ROMon::operator<<(ostream& os, const MBMBuffer& b) {
   os << "MBM@"     << (void*)&b
      << " Name:"   << setw(16) << left << b.name
      << " Len:"    << b.length() << endl;
@@ -58,9 +55,7 @@ ostream& operator<<(ostream& os, const MBMBuffer& b) {
   return os;
 }
 
-template ostream& operator<< <MBMBuffer>(ostream& os, const FixItems<MBMBuffer>& c);
-
-ostream& operator<<(ostream& os, const FSMTask& t) {
+ostream& ROMon::operator<<(ostream& os, const FSMTask& t) {
   os << "Task@"    << (void*)&t
      << " UTGID:"  << setw(32) << left << t.name
      << " PID:"    << setw(6)  << t.processID
@@ -70,9 +65,7 @@ ostream& operator<<(ostream& os, const FSMTask& t) {
   return os;
 }
 
-template ostream& operator<< <FSMTask>(ostream& os, const FixItems<FSMTask>& c);
-
-ostream& operator<<(ostream& os, const Node& n) {
+ostream& ROMon::operator<<(ostream& os, const Node& n) {
   char buff[64];
   time_t tim = n.time;
   ::strftime(buff,sizeof(buff),"%Y-%m-%d %H:%M:%S",::localtime(&tim));
@@ -98,15 +91,11 @@ ostream& operator<<(ostream& os, const Node& n) {
   return os;
 }
 
-template ostream& operator<< <Node>(ostream& os, const VarItems<Node>& c);
-
-ostream& operator<<(ostream& os, const Nodeset& n) {
+ostream& ROMon::operator<<(ostream& os, const Nodeset& n) {
   os << "Nodeset@"       << (void*)&n
      << " Name:"      << n.name
      << endl;
   os << "Nodes:"    << n.nodes << endl;
   return os;
 }
-
-template ostream& operator<< <Nodeset>(ostream& os, const VarItems<Nodeset>& c);
 
