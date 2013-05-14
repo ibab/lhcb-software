@@ -233,7 +233,6 @@ extern "C" int scr_test(int argc, char** argv)  {
   ::printf("\n\n\n  +---------------------------------------+\n");
   ::printf("  |    It looks like SCR seems to work    |\n");
   ::printf("  +---------------------------------------+\n\n\n");
-
   return 0;
 }
 
@@ -244,5 +243,6 @@ extern "C" int scr_qmtest(int /* argc */, char** /* argv */)  {
     ::fflush(input);
     ::lib_rtl_sleep(500);
   }
+  ::pclose(input);
   return 0;
 }

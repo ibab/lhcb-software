@@ -112,7 +112,7 @@ void RTL::ExitSignalHandler::init()  {
   INSTALL_SIGNAL(SIGINT,   new_action);
   INSTALL_SIGNAL(SIGTERM,  new_action);
   INSTALL_SIGNAL(SIGHUP,   new_action);
-  INSTALL_SIGNAL(SIGPIPE,  new_action);
+  // INSTALL_SIGNAL(SIGPIPE,  new_action);
   // INSTALL_SIGNAL(SIGKILL,  new_action);
   INSTALL_SIGNAL(SIGQUIT,  new_action);
   INSTALL_SIGNAL(SIGBUS,   new_action);

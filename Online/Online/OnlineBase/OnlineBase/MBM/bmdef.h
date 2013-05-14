@@ -73,10 +73,6 @@ extern "C"  {
   BMID mbm_include (const char* bm_name, const char* name, int partid);
   int  mbm_exclude (BMID bm);
   __MBM_CONST char* mbm_buffer_address(BMID);
-  /// Register optional callback on _mbm_efree
-  int  mbm_register_free_event(BMID bm, RTL_ast_t astadd, void* astparam);
-  /// Register optional callback on _mbm_ealloc
-  int  mbm_register_alloc_event(BMID bm, RTL_ast_t astadd, void* astparam);
 
   int  mbm_add_req (BMID bm, int evtype, __MBM_CONST unsigned int* trmask, __MBM_CONST unsigned int* veto, int masktype, 
                     int usertype, int freqmode, float freq);
@@ -101,8 +97,6 @@ extern "C"  {
   int  mbm_send_space  (BMID bm);
   int  mbm_wait_space  (BMID bm);
   int  mbm_wait_space_a(BMID bm);
-  /// Default AST implementation on get_space
-  int  mbm_get_space_ast(void* par);
 
   int  mbm_cancel_request   (BMID bm);
   int  mbm_stop_consumer    (BMID bm);
