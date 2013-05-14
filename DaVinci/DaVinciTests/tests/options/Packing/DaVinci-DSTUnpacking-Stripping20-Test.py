@@ -16,4 +16,4 @@ from Configurables import TrackMonitor
 DaVinci().UserAlgorithms += [ TrackMonitor() ]
 
 from GaudiConf import IOHelper
-IOHelper().inputFiles(['PFN:root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/BHADRONCOMPLETEEVENT.DST/00021317/0000/00021317_00003475_1.bhadroncompleteevent.dst'])
+IOHelper().inputFiles(['PFN:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision12/BHADRONCOMPLETEEVENT.DST/00021317/0000/00021317_00003475_1.bhadroncompleteevent.dst'])

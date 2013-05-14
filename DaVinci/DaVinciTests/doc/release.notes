@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-05-14 - Chris Jones
+ - Update pid, packing and tagging options to read data from EOS freezer.
+
+! 2013-05-14 - Chris Jones
  - Add MC12 based flavour tagging test
 
 ! 2013-05-10 - Chris Jones
