@@ -2,6 +2,8 @@
 ! Package manager: T.Ruf
 ! Purpose: Creates dictionaries for the use of Linker relations in Python
 !------------------------------------------------------------------------------
+
+!========================= LinkerInstances v3r7 2013-05-14 =========================
 ! 2013-05-14 - Thomas Ruf
  - Added support for Upgrade cluster classes
 

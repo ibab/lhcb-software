@@ -1,9 +1,9 @@
-# =============================================================================
+# ========================================================================
 package LinkerInstances
 author  Stefan Roiser
 manager Thomas Ruf
 
-version           v3r6
+version           v3r7
 branches cmt dict doc python xml 
 
 use LinkerEvent  v*    Event

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LinkerInstances
 ################################################################################
-gaudi_subdir(LinkerInstances v3r6)
+gaudi_subdir(LinkerInstances v3r7)
 
 gaudi_depends_on_subdirs(Event/DigiEvent
                          Event/LinkerEvent
