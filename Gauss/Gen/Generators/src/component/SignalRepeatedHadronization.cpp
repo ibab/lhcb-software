@@ -97,7 +97,9 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
                         theGenCollision ) ;
 
     if ( ! gotSignalInteraction ) m_productionTool -> turnOffFragmentation( ) ;
- 
+
+    if (i==0 && ! gotSignalInteraction) theGenCollision -> setIsSignal( true ) ;
+
     sc = m_productionTool -> generateEvent( theGenEvent , theGenCollision ) ;
  
     if ( sc.isFailure() ) Exception( "Could not generate event" ) ;
@@ -184,7 +186,7 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
                 theGenEvent -> 
                   set_signal_process_vertex( theSignal -> end_vertex() ) ;
                 
-                theGenCollision -> setIsSignal( true ) ;
+                // theGenCollision -> setIsSignal( true ) ;
                 
                 if ( theSignal -> pdg_id() > 0 ) ++m_nSig ;
                 else ++m_nSigBar ;

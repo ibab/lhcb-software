@@ -5,6 +5,11 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+- 2013-05-14 - Aurelien Martens
+ - move the call to setIsSignal() in SRH.cpp before the call of generateEvent
+this allows the production tool to know if it is generating a signal of pile up
+at the generatio time to avoid double storing of parton level HepMC
+
 !======================= Generators v14r2 2013-03-27 =========================
 ! 2013-03-22 - Stephane Tourneur
  - Minor modification to allow the inclusive production of baryons with
