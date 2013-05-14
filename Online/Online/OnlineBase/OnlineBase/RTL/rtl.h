@@ -56,6 +56,7 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
   struct lib_rtl_gbl  {
     void*             address;
     void*             addaux;
+    long              size;
   };
   typedef lib_rtl_gbl* lib_rtl_gbl_t;
   typedef int (*RTL_ast_t)(void*);
@@ -190,7 +191,7 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
 
   /// Create named global section
   int lib_rtl_create_section(__CXX_CONST char* sec_name, size_t size, lib_rtl_gbl_t* handle, bool keep=false);
-  /// Map global section a a specific address
+  /// Map global section a a specific address. If the size is NULL, map the entire section
   int lib_rtl_map_section(__CXX_CONST char* sec_name, size_t size, lib_rtl_gbl_t* address);
   /// Delete named global section
   int lib_rtl_delete_section(lib_rtl_gbl_t handle);
