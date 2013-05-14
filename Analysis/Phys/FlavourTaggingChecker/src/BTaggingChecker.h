@@ -9,7 +9,8 @@
 #include "Event/GenCollision.h"
 #include "Event/GenHeader.h"
 #include "Kernel/IPrintDecayTreeTool.h"
-#include "MCInterfaces/IForcedBDecayTool.h"
+//#include "MCInterfaces/IForcedBDecayTool.h"
+#include "IBDecayTool.h"
 #include "Kernel/IBackgroundCategory.h"
 
 #include "Event/L0DUReport.h"
@@ -41,10 +42,11 @@ class BTaggingChecker : public DaVinciAlgorithm {
   /// Vector of locations of the tags to monitor
   std::string m_tags_location; 
   IPrintDecayTreeTool* m_debug;
-  IForcedBDecayTool* m_forcedBtool;
+  //IForcedBDecayTool* m_forcedBtool;
+  IBDecayTool*         m_forcedBtool;
   IBackgroundCategory* m_bkg;
 
-  //IForcedBDecayTool* m_forcedBtool;
+
   const LHCb::MCParticle* forcedB(void);
   bool  m_requireHltTrigger;
   

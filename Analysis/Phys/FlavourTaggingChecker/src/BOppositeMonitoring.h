@@ -7,7 +7,8 @@
 #include "Kernel/DaVinciHistoAlgorithm.h"
 
 #include "Event/RecHeader.h"
-#include "MCInterfaces/IForcedBDecayTool.h"
+//#include "MCInterfaces/IForcedBDecayTool.h"
+#include "IBDecayTool.h"
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
 
 /** @class BOppositeMonitoring BOppositeMonitoring.h
@@ -30,7 +31,7 @@ public:
 protected:
 
 private:
-  IForcedBDecayTool*    m_forcedBtool;
+  IBDecayTool*    m_forcedBtool;
 
   int  nmcpb; //mcp with B
   int nB511, nB521, nB531, nB541; //B

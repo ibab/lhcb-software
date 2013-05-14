@@ -59,7 +59,7 @@ public:
   //-------------------------------------------------------------
 
 private:
-
+  // TO Fix with MC12
   LHCb::MCParticle::ConstVector prodsBstar( const LHCb::MCParticle*  );
   LHCb::MCParticle::ConstVector prodsBstarstar( const LHCb::MCParticle*  );
   LHCb::MCParticle::ConstVector prodsBstring( const LHCb::MCParticle*  );

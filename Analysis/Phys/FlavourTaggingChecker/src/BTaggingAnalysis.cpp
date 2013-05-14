@@ -99,9 +99,9 @@ StatusCode BTaggingAnalysis::initialize() {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
     return StatusCode::FAILURE;
   }
-  m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
+  m_forcedBtool = tool<IBDecayTool> ( "BDecayTool", this );
   if (m_EnableMC) if( ! m_forcedBtool ) {
-    fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
+    fatal() << "Unable to retrieve BDecayTool tool "<< endreq;
     return StatusCode::FAILURE;
   }
   m_electron = tool<ICaloElectron>( "CaloElectron");

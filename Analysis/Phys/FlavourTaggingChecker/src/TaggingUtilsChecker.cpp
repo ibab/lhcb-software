@@ -449,6 +449,7 @@ MCParticle* TaggingUtilsChecker::associatedofHEP(HepMC::GenParticle* hepmcp) {
   return 0;
 }
 //=============================================================================
+/* TO BE FIXED
 int TaggingUtilsChecker::comes_from_excitedB(const MCParticle* BS,
                                              const MCParticle* mcp ) {
   MCParticle::ConstVector::iterator iexc;
@@ -473,6 +474,17 @@ int TaggingUtilsChecker::comes_from_excitedB(const MCParticle* BS,
   return origin;
 }
 
+
+*/
+
+//=============================================================================
+int TaggingUtilsChecker::comes_from_excitedB(const MCParticle* BS,
+                                             const MCParticle* mcp ) {
+  MCParticle::ConstVector::iterator iexc;
+  debug()<<" TaggingUtilsChecker::comes_from_excitedB is not supported anymore BS="<< *BS <<" mcp="<<*mcp<<endreq;
+  int origin=0;
+   return origin;
+}
 //=============================================================================
 StatusCode TaggingUtilsChecker::finalize() { return StatusCode::SUCCESS; }
 

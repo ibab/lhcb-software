@@ -29,7 +29,8 @@
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/IVertexFit.h"
 
-#include "MCInterfaces/IForcedBDecayTool.h"
+//#include "MCInterfaces/IForcedBDecayTool.h"
+#include "BDecayTool.h"
 
 #include "CaloUtils/ICaloElectron.h"
 
@@ -91,7 +92,7 @@ private:
   
   IPrintMCDecayTreeTool*     m_debug;
   ICaloElectron*             m_electron;
-  IForcedBDecayTool*         m_forcedBtool;
+  IBDecayTool*               m_forcedBtool;
   IBackgroundCategory*       m_bkgCategory;
   ILifetimeFitter*           m_pLifetimeFitter;
   ITaggingUtilsChecker*      m_util;

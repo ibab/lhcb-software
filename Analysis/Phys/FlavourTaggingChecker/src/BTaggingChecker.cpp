@@ -35,7 +35,8 @@ StatusCode BTaggingChecker::initialize() {
   StatusCode sc = DaVinciAlgorithm::initialize() ;
 
   m_debug = tool<IPrintDecayTreeTool> ( "PrintDecayTreeTool", this );
-  m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
+  //m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
+  m_forcedBtool = tool<IBDecayTool> ( "BDecayTool", this );
   m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
 
   nsele=0;

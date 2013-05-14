@@ -8,7 +8,8 @@
 // from Gaudi
 #include "Kernel/DaVinciAlgorithm.h"
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
-#include "MCInterfaces/IForcedBDecayTool.h"
+//#include "MCInterfaces/IForcedBDecayTool.h"
+#include "IBDecayTool.h"
 
 // from Associators
 #include "Kernel/Particle2MCLinker.h"
@@ -44,7 +45,7 @@ class CheatedSelection : public DaVinciAlgorithm {
   IPrintMCDecayTreeTool* m_debug;
   Particle2MCLinker* m_linker; ///< Pointer to associator using links
 
-  IForcedBDecayTool* m_forcedBtool;
+  IBDecayTool*      m_forcedBtool;
   LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* ) ;
   
   std::string m_inputLocation;

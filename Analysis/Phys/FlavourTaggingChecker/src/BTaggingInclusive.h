@@ -13,7 +13,8 @@
 #include "Kernel/IEvtTypeSvc.h"
 #include "MCInterfaces/IMCDecayFinder.h"
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
-#include "MCInterfaces/IForcedBDecayTool.h"
+//#include "MCInterfaces/IForcedBDecayTool.h"
+#include "IBDecayTool.h"
 
 // from DaVinci
 #include "Kernel/DaVinciAlgorithm.h"
@@ -45,7 +46,7 @@ public:
 
   IPrintMCDecayTreeTool* m_debug;
 
-  IForcedBDecayTool* m_forcedBtool;
+  IBDecayTool* m_forcedBtool;
   LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* ) ;
 
   int nsele,nrt[50],nwt[50];

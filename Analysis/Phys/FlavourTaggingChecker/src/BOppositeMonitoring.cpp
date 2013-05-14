@@ -45,9 +45,10 @@ StatusCode BOppositeMonitoring::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
   
   //Identify B signal
-  m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
+  //m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );// doesn't work for MC12 data
+  m_forcedBtool = tool<IBDecayTool> ( "BDecayTool", this );
   if( ! m_forcedBtool ) {
-    fatal() << "Unable to retrieve ForcedBDecayTool tool "<< endreq;
+    fatal() << "Unable to retrieve BDecayTool tool "<< endreq;
     return StatusCode::FAILURE;
   }
   
