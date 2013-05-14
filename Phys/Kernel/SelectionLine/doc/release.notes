@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2013-05-14 - Chris Jones
+ - Fix a few icc11 warnings from Selection::Line, plus a little tidy up.
+
 !========================= SelectionLine v1r0p3 2013-05-07 =========================
 
 ! 2013-02-27 - Chris Jones
@@ -16,6 +19,7 @@
  - Added CMake configuration file.
 
 !======================= SelectionLine v1r0p1 2010-02-27 =====================
+
 ! 2010-02-27 - Gerhard Raven
  - shorten histogram names
 

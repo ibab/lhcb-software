@@ -54,85 +54,113 @@ using namespace HistogramUtilities;
 //
 // 2008-09-13 : Gerhard Raven
 //-----------------------------------------------------------------------------
+
 void
-Selection::Line::Stage::updateHandler(Property&) {
-  if (!m_initialized) {
+Selection::Line::Stage::updateHandler(Property&)
+{
+  if ( !m_initialized ) 
+  {
     m_dirty=true;
     return;
   }
-  if (m_algorithm!=0) m_algorithm->release();
-  if (!m_property.value().empty()) {
+  if ( m_algorithm ) m_algorithm->release();
+  if ( !m_property.value().empty() )
+  {
     m_algorithm = m_parent.getSubAlgorithm(m_property.value());
-    if (!m_algorithm) throw GaudiException( "could not obtain algorithm for " , m_property.value(), StatusCode::FAILURE);
+    if ( !m_algorithm ) throw GaudiException( "could not obtain algorithm for " ,
+                                              m_property.value(),
+                                              StatusCode::FAILURE );
     m_algorithm->addRef();
   }
   m_dirty = false;
 }
 
 StatusCode
-Selection::Line::Stage::initialize(ISequencerTimerTool* timer) {
-  m_initialized=true;
+Selection::Line::Stage::initialize(ISequencerTimerTool* timer)
+{
+  m_initialized = true;
   if ( m_dirty ) updateHandler(m_property);
   // TODO: bind timer call...
-  if ( timer!=0 && algorithm()!=0 ) setTimer( timer->addTimer( algorithm()->name() ) );
+  if ( timer && algorithm() ) setTimer( timer->addTimer( algorithm()->name() ) );
   // empty transition is allowed...
-  return algorithm()!=0 ? algorithm()->sysInitialize() : StatusCode::SUCCESS;
+  return ( algorithm() ? algorithm()->sysInitialize() : StatusCode::SUCCESS );
 }
 
 StatusCode
-Selection::Line::Stage::execute(ISequencerTimerTool* timertool) {
+Selection::Line::Stage::execute(ISequencerTimerTool* timertool)
+{
   assert(!m_dirty);
-  if (!algorithm()              ) return StatusCode::SUCCESS;
-  if (!algorithm()->isEnabled() ) return StatusCode::SUCCESS;
-  if ( algorithm()->isExecuted()) return StatusCode::SUCCESS;
+  if ( !algorithm()               ) return StatusCode::SUCCESS;
+  if ( !algorithm()->isEnabled()  ) return StatusCode::SUCCESS;
+  if (  algorithm()->isExecuted() ) return StatusCode::SUCCESS;
   // TODO: bind timer at init time
   if ( timertool ) timertool->start( timer() );
   StatusCode result = StatusCode::FAILURE;
-  try {
+  try
+  {
     result = algorithm()->sysExecute();
     algorithm()->setExecuted( true );
-  } catch (...) { }
+  }
+  catch ( ... ) { }
   if ( timertool ) timertool->stop( timer() );
   return result;
 }
 
 Selection::Line::SubAlgos
-Selection::Line::retrieveSubAlgorithms() const {
+Selection::Line::retrieveSubAlgorithms() const
+{
   typedef std::list<std::pair<const Algorithm*,unsigned> > SubAlgoList;
   SubAlgoList subAlgo;
-  subAlgo.push_back( std::make_pair(this,0));
+  subAlgo.push_back( std::make_pair(this,0) );
   SubAlgoList::iterator i = subAlgo.begin();
-  while ( i != subAlgo.end() ) {
-    std::vector<Algorithm*> *subs = i->first->subAlgorithms();
-    if (!subs->empty()) {
-      unsigned depth = i->second+1;
+  while ( i != subAlgo.end() )
+  {
+    std::vector<Algorithm*> * subs = i->first->subAlgorithms();
+    if ( !subs->empty() )
+    {
+      const unsigned int depth = i->second+1;
       SubAlgoList::iterator j = i;
       ++j;
-      for (std::vector<Algorithm*>::const_iterator k = subs->begin();k!=subs->end();++k)
-        subAlgo.insert(j, std::make_pair( *k, depth ) );
+      for ( std::vector<Algorithm*>::const_iterator k = subs->begin();
+            k != subs->end(); ++k )
+      {
+        subAlgo.insert( j, std::make_pair( *k, depth ) );
+      }
     }
     ++i;
   }
   subAlgo.pop_front(); // remove ourselves...
-  debug() << " dumping sub algorithms: " << endmsg;
-  for (SubAlgoList::const_iterator i = subAlgo.begin(); i!= subAlgo.end();++i) {
-    debug() << std::string(3+3*i->second,' ') << i->first->name() << endmsg;
+
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Dumping sub algorithms :" << endmsg;
+    for ( SubAlgoList::const_iterator ii = subAlgo.begin();
+          ii != subAlgo.end(); ++ii )
+    {
+      debug() << std::string( 3 + (3*ii->second) , ' ' ) 
+              << ii->first->name() << endmsg;
+    }
   }
-  // transform map such that it has algo, # of sub(sub(sub()))algorightms
+
+  // transform map such that it has algo, # of sub(sub(sub()))algorithms
 
   SubAlgos table;
-  for (SubAlgoList::const_iterator i = subAlgo.begin(); i!= subAlgo.end();++i) {
-    SubAlgoList::const_iterator j = i; ++j;
-    while ( j!=subAlgo.end() && j->second > i->second ) ++j;
-    table.push_back(std::make_pair( i->first, std::distance(i,j) ) );
+  for ( SubAlgoList::const_iterator ii = subAlgo.begin(); 
+        ii != subAlgo.end(); ++ii )
+  {
+    SubAlgoList::const_iterator j = ii; ++j;
+    while ( j != subAlgo.end() && j->second > ii->second ) ++j;
+    table.push_back( std::make_pair( ii->first, std::distance(ii,j) ) );
   }
+
   return table;
 }
 
-
-IANNSvc& Selection::Line::annSvc() const {
-  if (m_hltANNSvc == 0) {
-    StatusCode sc = serviceLocator()->service(s_ANNSvc, m_hltANNSvc);
+IANNSvc& Selection::Line::annSvc() const 
+{
+  if ( !m_hltANNSvc ) 
+  {
+    const StatusCode sc = serviceLocator()->service(s_ANNSvc, m_hltANNSvc);
     Assert( sc.isSuccess() && m_hltANNSvc != 0, " no ANNSvc??");
   }
   return *m_hltANNSvc;
@@ -158,11 +186,13 @@ Selection::Line::Line( const std::string& name,
   , m_timer(0)
   , m_nAcceptOnError(0)
 {
-  for (unsigned i=0; i<m_stages.size(); ++i) {
+  for ( unsigned i = 0; i < m_stages.size(); ++i )
+  {
     m_stages[i] = new Stage(*this, transition(stage(i)));
     declareProperty( m_stages[i]->property().name() , m_stages[i]->property() );
   }
-  declareProperty( "HltDecReportsLocation", m_outputContainerName   = LHCb::HltDecReportsLocation::Default );
+  declareProperty( "HltDecReportsLocation", 
+                   m_outputContainerName = LHCb::HltDecReportsLocation::Default );
   //TODO: install updateHandler, refuse changes after initialize...
   declareProperty( "DecisionName"         , m_decision       = name+"Decision");
   declareProperty( "ANNSvc"               , s_ANNSvc         = "HltANNSvc");
@@ -177,32 +207,32 @@ Selection::Line::Line( const std::string& name,
   declareProperty( "IncidentsToBeFlagged" , m_incidents);
 
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
 Selection::Line::~Line() { }
 
-
-
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode Selection::Line::initialize() {
-  /// initialize the base:
-
+StatusCode Selection::Line::initialize() 
+{
+  // initialize the base:
   StatusCode status = GaudiHistoAlg::initialize();
   if ( !status.isSuccess() ) return status;
 
   /// lock the context
   Gaudi::Utils::AlgContext lock1 ( this , contextSvc() ) ;
 
-  debug() << "==> Initialize" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endreq;
   m_jos    = svc<IJobOptionsSvc>( "JobOptionsSvc"  );
   m_algMgr = svc<IAlgManager>   ( "ApplicationMgr" );
 
   // register for incidents...
   IIncidentSvc* incidentSvc = svc<IIncidentSvc>( "IncidentSvc" );
-  BOOST_FOREACH( const std::string& s, m_incidents ) {
+  BOOST_FOREACH( const std::string& s, m_incidents )
+  {
     bool rethrow = false; bool oneShot = false; long priority = 0;
     incidentSvc->addListener(this,s,priority,rethrow,oneShot);
   }
@@ -210,19 +240,22 @@ StatusCode Selection::Line::initialize() {
   m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
   if ( m_timerTool->globalTiming() ) m_measureTime = true;
 
-  if ( m_measureTime ) {
+  if ( m_measureTime ) 
+  {
     m_timer = m_timerTool->addTimer( name() );
     m_timerTool->increaseIndent();
-  } else {
+  }
+  else
+  {
     release( m_timerTool );
     m_timerTool = 0;
   }
 
   //== Initialize the stages
-  StatusCode sc;
-  BOOST_FOREACH( Stage* i, m_stages) {
-    sc = i->initialize(m_timerTool);
-    if (!sc.isSuccess()) Error( "Failed to initialize " + i->name(), sc );
+  BOOST_FOREACH( Stage* i, m_stages) 
+  {
+    const StatusCode sc = i->initialize(m_timerTool);
+    if ( !sc.isSuccess() ) Error( "Failed to initialize " + i->name(), sc ).ignore();
   }
 
   //== pick up (recursively!) our sub algorithms and their depth count
@@ -237,29 +270,34 @@ StatusCode Selection::Line::initialize() {
   //== Create the monitoring histograms
   m_errorHisto = book1D("error",name()+" error",-0.5,7.5,8);
   m_timeHisto  = book1D("walltime",name()+" log(wall time/ms)",-3,6);
-  m_stepHisto  = book1D("rejection stage", name()+ " rejection stage",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
-  m_candHisto  = bookProfile1D("candidates accepted", name()+" candidates accepted",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
+  m_stepHisto  = book1D("rejection stage", name()+ " rejection stage",
+                        -0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
+  m_candHisto  = bookProfile1D("candidates accepted", name()+" candidates accepted",
+                               -0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
   // if possible, add labels to axis...
   // Remove common part of the name for easier label reading (assumes name is suff. descriptive)
   std::vector<std::string> stepLabels;
-  std::string common =name();
-  for (SubAlgos::const_iterator i = m_subAlgo.begin();i!=m_subAlgo.end();++i) {
+  const std::string common = name();
+  for ( SubAlgos::const_iterator i = m_subAlgo.begin(); i != m_subAlgo.end(); ++i )
+  {
     std::string stepname = i->first->name();
     const std::string::size_type j = stepname.find(common);
     if (j!=std::string::npos) stepname.erase(j,common.size());
     stepLabels.push_back( stepname );
   }
-  if (!setBinLabels( m_stepHisto, stepLabels )) {
+  if (!setBinLabels( m_stepHisto, stepLabels )) 
+  {
     error() << " Could not set bin labels in step histo " << endmsg;
   }
-  if (!setBinLabels( m_candHisto, stepLabels )) {
+  if (!setBinLabels( m_candHisto, stepLabels ))
+  {
     error() << " Could not set bin labels in cand histo " << endmsg;
   }
 
-
   //== and the counters
   m_acceptCounter = &counter("#accept");
-  declareInfo("COUNTER_TO_RATE[#accept]",*m_acceptCounter,std::string("Events accepted by ") + m_decision);
+  declareInfo("COUNTER_TO_RATE[#accept]",*m_acceptCounter,
+              std::string("Events accepted by ") + m_decision);
   m_errorCounter = &counter("#errors"); // do not export to DIM -- we have a histogram for this..
   //declareInfo("#errors",counter("#errors"),std::string("Errors seen by ") + m_decision);
   m_slowCounter = &counter("#slow events");// do not export to DIM -- we have a histogram for this..
@@ -276,8 +314,9 @@ StatusCode Selection::Line::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode Selection::Line::execute() {
-  longlong startClock = System::currentTime( System::microSec );
+StatusCode Selection::Line::execute() 
+{
+  const longlong startClock = System::currentTime( System::microSec );
 
   /// lock the context
   Gaudi::Utils::AlgContext lock1 ( this , contextSvc() ) ;
@@ -286,31 +325,34 @@ StatusCode Selection::Line::execute() {
 
   debug() << "==> Execute" << endreq;
   StatusCode result = StatusCode::SUCCESS;
-  LHCb::HltDecReports* reports = getOrCreate<LHCb::HltDecReports,LHCb::HltDecReports>(m_outputContainerName);
-  if (reports->hasDecisionName( m_decision ) ) {
-    error() << "HltDecReports already contains report" << endmsg;
-    return StatusCode::FAILURE;
+  LHCb::HltDecReports* reports = 
+    getOrCreate<LHCb::HltDecReports,LHCb::HltDecReports>(m_outputContainerName);
+  if ( reports->hasDecisionName(m_decision) ) 
+  {
+    return Error( "HltDecReports already contains report" );
   }
-
 
   std::pair<std::string,unsigned> key = id();
 
-
   //TODO: add c'tor with only ID
   LHCb::HltDecReport report( 0, 0, 0, key.second );
-  if (report.invalidIntDecisionID()) {
+  if ( report.invalidIntDecisionID() ) 
+  {
     warning() << " DecisionName=" << key.first << " has invalid intDecisionID=" << key.second << endmsg;
   }
   bool accept = !m_stages.empty(); // make sure an empty line always rejects events...
   m_caughtIncident = false; // only interested in incidents during stages->execute...
 
-  for (unsigned i=0;i<m_stages.size();++i) {
+  for (unsigned i=0;i<m_stages.size();++i) 
+  {
     result = m_stages[i]->execute();
-    if (m_caughtIncident) {
+    if (m_caughtIncident) 
+    {
       report.setErrorBits(report.errorBits() | 0x02);
       m_caughtIncident = false;
     }
-    if (result.isFailure()) {
+    if (result.isFailure())
+    {
       report.setErrorBits(report.errorBits() | 0x01);
       break;
     }
@@ -319,12 +361,14 @@ StatusCode Selection::Line::execute() {
     report.setExecutionStage( i+1 );
   }
   // plot the wall clock time spent...
-  double elapsedTime = double(System::currentTime( System::microSec ) - startClock);
+  const double elapsedTime = double(System::currentTime( System::microSec ) - startClock);
   fill( m_timeHisto, log10(elapsedTime)-3 ,1.0); // convert to millisec
   if (elapsedTime>m_slowThreshold) report.setErrorBits( report.errorBits() | 0x4 );
 
   // did not(yet) accept, but something bad happened...
-  if ( !accept && report.errorBits()!=0 && ( m_nAcceptOnError < m_maxAcceptOnError || m_maxAcceptOnError<0) ) {
+  if ( !accept && report.errorBits() != 0 && 
+       ( m_nAcceptOnError < m_maxAcceptOnError || m_maxAcceptOnError<0) )
+  {
     accept =  ( m_acceptOnError    && ( (report.errorBits()&0x01)!=0) )
       || ( m_acceptOnIncident && ( (report.errorBits()&0x02)!=0) )
       || ( m_acceptIfSlow     && ( (report.errorBits()&0x04)!=0) );
@@ -348,10 +392,14 @@ StatusCode Selection::Line::execute() {
   fill( m_errorHisto, report.errorBits(), 1.0);
   // make stair plot
   SubAlgos::iterator last = m_subAlgo.begin();
-  while ( last != m_subAlgo.end() ) {
-    if (last->first->filterPassed()) {
+  while ( last != m_subAlgo.end() ) 
+  {
+    if (last->first->filterPassed()) 
+    {
       last+=last->second;
-    } else {
+    }
+    else
+    {
       if (last->second==1) break; // don't have subalgos, so this is where we stopped
       ++last; // descend into subalgorithms, figure out which one failed.....
       // Note: what to do if subalgos pass, but parent failed??  (yes, this is possible!)
@@ -361,49 +409,55 @@ StatusCode Selection::Line::execute() {
     }
   }
   fill( m_stepHisto, std::distance(m_subAlgo.begin(),last), 1.0);
-  for(SubAlgos::iterator i = m_subAlgo.begin();i!=last;++i) {
+  for ( SubAlgos::iterator i = m_subAlgo.begin(); i != last; ++i )
+  {
     fill(m_candHisto,std::distance(m_subAlgo.begin(),i),numberOfCandidates(i->first),1.0);
   }
   if ( m_measureTime ) m_timerTool->stop( m_timer );
 
-
   return m_returnOK ? StatusCode::SUCCESS : result;
 }
 
-
-std::vector< const Algorithm* > Selection::Line::algorithms() const {
+std::vector< const Algorithm* > Selection::Line::algorithms() const 
+{
   std::vector< const Algorithm* > subs;
-  for( SubAlgos::const_iterator i = m_subAlgo.begin(); i!=m_subAlgo.end(); ++i) {
+  for( SubAlgos::const_iterator i = m_subAlgo.begin(); i != m_subAlgo.end(); ++i )
+  {
     subs.push_back(i->first);
   }
   return subs;
 }
+
 //=========================================================================
 // reset the executed status of all members
 //=========================================================================
-void Selection::Line::resetExecuted ( ) {
+void Selection::Line::resetExecuted ( ) 
+{
   Algorithm::resetExecuted();
   // algorithm doesn't call resetExecuted of subalgos! should it???
   BOOST_FOREACH( Stage* i, m_stages) i->resetExecuted();
 }
 
-
 //=========================================================================
 // listen for incident during processing...
 //=========================================================================
-void Selection::Line::handle( const Incident& ) {
+void Selection::Line::handle( const Incident& ) 
+{
   m_caughtIncident = true;
 }
+
 //=========================================================================
 //  Obtain pointer to an instance of the requested algorithm.
 //=========================================================================
-Algorithm* Selection::Line::getSubAlgorithm(const std::string& algname) {
+Algorithm* Selection::Line::getSubAlgorithm(const std::string& algname) 
+{
   ListItem name(algname);
   IAlgorithm* myIAlg(0);
   Algorithm *myAlg(0);
   //== Check wether the specified algorithm already exists. If not, create it
   StatusCode result = m_algMgr->getAlgorithm( name.name(), myIAlg );
-  if ( result.isSuccess() ) {
+  if ( result.isSuccess() ) 
+  {
     myAlg = dynamic_cast<Algorithm*>(myIAlg);
     subAlgorithms()->push_back(myAlg) ;
     return myAlg;
@@ -415,30 +469,35 @@ Algorithm* Selection::Line::getSubAlgorithm(const std::string& algname) {
   //== Set the Context if not in the jobOptions list
   if ( ""  != context() ||
        ""  != rootInTES() ||
-       0.0 != globalTimeOffset() ) {
+       0.0 != globalTimeOffset() )
+  {
     bool foundContext = false;
     bool foundRootInTES = false;
     bool foundGlobalTimeOffset = false;
     const std::vector<const Property*>* properties = m_jos->getProperties( name.name() );
-    if ( 0 != properties ) {
+    if ( properties ) 
+    {
       // Iterate over the list to set the options
       for ( std::vector<const Property*>::const_iterator itProp = properties->begin();
-            itProp != properties->end();
-            itProp++ )   {
+            itProp != properties->end(); ++itProp )   
+      {
         if (!foundContext) foundContext = ( "Context" == (*itProp)->name() ) ;
         if (!foundRootInTES) foundRootInTES = ( "RootInTES" == (*itProp)->name() ) ;
         if (!foundGlobalTimeOffset) foundGlobalTimeOffset = ( "GlobalTimeOffset" == (*itProp)->name() );
       }
     }
-    if ( !foundContext && "" != context() ) {
+    if ( !foundContext && "" != context() ) 
+    {
       m_jos->addPropertyToCatalogue( name.name(), StringProperty( "Context", context() ) ).ignore();
       addedContext = true;
     }
-    if ( !foundRootInTES && "" != rootInTES() ) {
+    if ( !foundRootInTES && "" != rootInTES() ) 
+    {
       m_jos->addPropertyToCatalogue( name.name(), StringProperty( "RootInTES", rootInTES() ) ).ignore();
       addedRootInTES = true;
     }
-    if ( !foundGlobalTimeOffset && 0.0 != globalTimeOffset() ) {
+    if ( !foundGlobalTimeOffset && 0.0 != globalTimeOffset() ) 
+    {
       m_jos->addPropertyToCatalogue( name.name(), DoubleProperty( "GlobalTimeOffset", globalTimeOffset() ) ).ignore();
       addedGlobalTimeOffset = true;
     }
@@ -449,15 +508,19 @@ Algorithm* Selection::Line::getSubAlgorithm(const std::string& algname) {
 
   //== Remove the property, in case this is not a GaudiAlgorithm...
   // TODO: weird: we add it, and if we added it, we remove it again???
-  if ( addedContext ) {
+  if ( addedContext ) 
+  {
     m_jos->removePropertyFromCatalogue( name.name(), "Context" ).ignore();
   }
-  if ( addedRootInTES ) {
+  if ( addedRootInTES ) 
+  {
     m_jos->removePropertyFromCatalogue( name.name(), "RootInTES" ).ignore();
   }
-  if ( addedGlobalTimeOffset ) {
+  if ( addedGlobalTimeOffset ) 
+  {
     m_jos->removePropertyFromCatalogue( name.name(), "GlobalTimeOffset" ).ignore();
   }
+  
   return myAlg;
 }
 //=============================================================================
