@@ -204,19 +204,21 @@ StatusCode Pythia8Production::initializeGenerator( ) {
 //   Function called to generate one event with Pythia8
 //=============================================================================
 StatusCode Pythia8Production::generateEvent( HepMC::GenEvent * theEvent , 
-                                             LHCb::GenCollision * 
-                                             theCollision ) 
+                                             LHCb::GenCollision * theCollision )
 {
   // Generate Event
   m_pythia->next();
-  //TODO
-  //maybe this can be moved to somewhere else, since not quite needed if generating MinBias
-  //--
-  m_event = m_pythia->event;  
+
+  // not needed in all cases
+  if (!m_pythia->flag("HadronLevel:all")) m_event = m_pythia->event;  
 
   // Update event counter
   ++m_nEvents ;
-  return toHepMC( theEvent, theCollision ) ;
+  
+  debug() << m_pythia->flag("HadronLevel:all") << " " << theCollision->isSignal() << endmsg;
+
+  if (theCollision->isSignal() || m_pythia->flag("HadronLevel:all")) return toHepMC( theEvent, theCollision ) ;
+  else return StatusCode::SUCCESS;
 }
 
 //=============================================================================
