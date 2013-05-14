@@ -4,6 +4,7 @@
 ! Purpose     : Event model for FT digitisation and reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= FTEvent v1r4 2013-05-14 =========================
 ! 2013-05-07 - Eric Cogneras
  - add xml/lcgdict/lcg_selection.xml and dict/lcgDict.h for python compatibility
  - In FTRawCluster, fix bug in SiDataFunctor::CompareByChannel argument 
