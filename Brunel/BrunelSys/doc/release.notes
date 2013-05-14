@@ -3,6 +3,10 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+- Changes to tests
+  . In brunelsys.qmt, added a reference block to check existence of 
+    MC12TuneV2 INFO messages from ANNPID
+
 </PRE><H1><A NAME=v44r4>2013-05-02 Brunel v44r4</A></H1><PRE>
 This version uses projects LCG 64d, Gaudi v23r7, LHCb v35r6, Lbcom v13r6p1,
  Rec v14r6 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*

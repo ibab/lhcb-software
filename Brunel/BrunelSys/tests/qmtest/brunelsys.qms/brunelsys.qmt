@@ -9,5 +9,26 @@
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
+block = """
+ANNGPIDLongElec...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Long         Particle=electron
+ANNGPIDLongMuon      INFO ANNPID : Tune=MC12TuneV2    TrackType=Long         Particle=muon
+ANNGPIDLongPion      INFO ANNPID : Tune=MC12TuneV2    TrackType=Long         Particle=pion
+ANNGPIDLongKaon      INFO ANNPID : Tune=MC12TuneV2    TrackType=Long         Particle=kaon
+ANNGPIDLongProton    INFO ANNPID : Tune=MC12TuneV2    TrackType=Long         Particle=proton
+ANNGPIDLongGhost     INFO ANNPID : Tune=MC12TuneV2    TrackType=Long         Particle=ghost
+ANNGPIDDownstre...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Downstream   Particle=electron
+ANNGPIDDownstre...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Downstream   Particle=muon
+ANNGPIDDownstre...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Downstream   Particle=pion
+ANNGPIDDownstre...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Downstream   Particle=kaon
+ANNGPIDDownstre...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Downstream   Particle=proton
+ANNGPIDDownstre...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Downstream   Particle=ghost
+ANNGPIDUpstream...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Particle=electron
+ANNGPIDUpstream...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Particle=muon
+ANNGPIDUpstream...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Particle=pion
+ANNGPIDUpstream...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Particle=kaon
+ANNGPIDUpstream...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Particle=proton
+ANNGPIDUpstream...   INFO ANNPID : Tune=MC12TuneV2    TrackType=Upstream     Particle=ghost
+ """
+findReferenceBlock(block)
 </text></argument>
 </extension>
