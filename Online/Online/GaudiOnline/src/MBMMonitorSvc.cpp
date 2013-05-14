@@ -29,8 +29,6 @@ void LHCb::MBMMonitorSvc::Client::publish(MBMDescriptor* dsc, const std::string&
     svc->declareInfo(u+"/Reqs",   proc.reqs,  "Requirememnt summary");
     svc->declareInfo(u+"/PartID", partid,     "Partition identifier");
     svc->declareInfo(u+"/Events", events,     "Number of events processed");
-    svc->declareInfo(u+"/UTime",  utime,      "Process time spent in user mode");
-    svc->declareInfo(u+"/STime",  stime,      "Process time spent in system mode");
   }
   else  {
 #ifdef _USE_FAT_DEVICES
@@ -55,8 +53,6 @@ void LHCb::MBMMonitorSvc::Client::revoke(MBMDescriptor* dsc)   {
     svc->undeclareInfo(u+"/Type");
     svc->undeclareInfo(u+"/State");
     svc->undeclareInfo(u+"/Events");
-    svc->undeclareInfo(u+"/UTime");
-    svc->undeclareInfo(u+"/STime");
     svc->undeclareInfo(u+"/Reqs");
   }
   else  {
@@ -77,17 +73,15 @@ void LHCb::MBMMonitorSvc::Client::read(MBMDescriptor* /* dsc */ , const USER& us
   proc.type   = 0;
   proc.active = 1;
   proc.pid    = us.pid;
-  utime       = us.utime;
-  stime       = us.stime;
   partid      = us.partid;
   if ( us.ev_produced>0 || us.get_sp_calls>0 )   {
     proc.type  = 1<<0;
-    proc.state = char(us.p_state);
+    proc.state = char(us.state);
     events     = us.ev_produced;
   }
   else if ( us.ev_actual>0 || us.get_ev_calls>0 || us.n_req>0 ) {
     proc.type  = 1<<1;
-    proc.state = char(us.c_state);
+    proc.state = char(us.state);
     events = us.ev_seen;
     for (int k=0; k<us.n_req; ++k )  {
       if      ( us.req[k].user_type == BM_REQ_ONE  ) proc.reqs |= 1<<0;
@@ -188,24 +182,27 @@ void LHCb::MBMMonitorSvc::Info::checkClients()   {
 
 LHCb::MBMMonitorSvc::MBMDescriptor::MBMDescriptor() : active(0), name(0), svc(0) {
   info.dsc = this;
-  id = (BMDESCRIPT*)MBM_INV_DESC;
   for(size_t k=0,nc=sizeof(info.clients)/sizeof(info.clients[0]); k<nc; ++k)
     info.clients[k].init();
 }
 
-BMDESCRIPT* LHCb::MBMMonitorSvc::MBMDescriptor::map()  {
-  id = (BMDESCRIPT*)::mbm_map_memory(name);
-  if ( id != MBM_INV_DESC )  {
-    active = 1;
+int LHCb::MBMMonitorSvc::MBMDescriptor::map()  {
+  if ( id == 0 ) {
+    id = new ServerBMID_t();
+    if ( MBM_NORMAL == ::mbmsrv_map_mon_memory(name,id) ) {
+      active = 1;
+      return 1;   
+    }
   }
-  return id;
+  return 0;
 }
 
 void LHCb::MBMMonitorSvc::MBMDescriptor::unmap()  {
-  if ( id != MBM_INV_DESC )  {
+  if ( id )   {
     revoke();
-    ::mbm_unmap_memory(id);
-    id = (BMDESCRIPT*)MBM_INV_DESC;
+    ::mbmsrv_unmap_memory(id);
+    delete id;
+    id = 0;
     active  = 0;
     name = 0;
   }
@@ -310,15 +307,13 @@ void LHCb::MBMMonitorSvc::mapBuffers()   {
   for (int i = 0; i < b->p_bmax; ++i)  {
     const char* nam = b->buffers[i].name;
     if ( b->buffers[i].used == 1 )  {
-      if ( m_bms[i].id != MBM_INV_DESC )
-        continue;
-      if ( m_bms[i].map() == MBM_INV_DESC )
+      if ( m_bms[i].map() != MBM_NORMAL )
         continue;
       if ( m_buffers.find(nam) != m_buffers.end() )
         continue;
       m_buffers.insert(std::make_pair(nam,&m_bms[i]));
     }
-    else if ( m_bms[i].id != MBM_INV_DESC && m_buffers.find(nam) != m_buffers.end() )  {
+    else if ( m_bms[i].id != 0 && m_buffers.find(nam) != m_buffers.end() )  {
       m_bms[i].revoke();
       m_bms[i].unmap();
       m_buffers.erase(m_buffers.find(nam));

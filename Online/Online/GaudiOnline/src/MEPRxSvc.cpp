@@ -28,8 +28,8 @@
 #include "GaudiOnline/MEPHdr.h"
 #include "GaudiOnline/MEPRxSys.h"
 #include "NET/IPHeader.h"
-#include "MBM/MepProducer.h"
 #include "MBM/Producer.h"
+#include "MBM/mepdef.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/MDFHeader.h"
 #include "MDF/OnlineRunInfo.h"
@@ -387,7 +387,8 @@ void MEPRx::incompleteEvent()
 
 void MEPRx::setupMDFBank(u_int32_t run, u_int32_t orbit, u_int32_t bunchID)
 {
-    uint mask[] = { ~0U, ~0U, ~0U, ~0U };
+    uint mask[] =
+    { ~0, ~0, ~0, ~0 };
     MDFHeader* hdr = (MDFHeader *) m_MDFBankHdr->data();
     hdr->setHdr(0);
     hdr->setSize(0);

@@ -100,12 +100,12 @@ namespace LHCb    {
     struct MBMDescriptor   {
       char              active;
       const char*       name;
-      BMDESCRIPT*       id;
+      ServerBMID        id;
       Info              info;
       MBMClients        clients;
       MBMMonitorSvc*    svc;
       MBMDescriptor();
-      BMDESCRIPT* map();
+      int  map();
       void unmap();
       void publish();
       void read();

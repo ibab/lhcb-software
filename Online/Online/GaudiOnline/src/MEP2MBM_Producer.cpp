@@ -36,25 +36,21 @@ namespace {
     ::printf("    -d(ebug)               Invoke debugger\n");
   }
 
-  struct MEPProducer  : public MBM::Producer  {
+  struct EvtProducer  : public MBM::Producer  {
     string m_fname;
     int m_spaceSize, m_refCount, m_evtCount, m_etyp;
     long mepStart;
-    MEPProducer(const string& buff, const string& nam, int partitionID, const string& fn, int refcnt, size_t siz, int evtCount, bool /* unused */, int etyp) 
+    EvtProducer(const string& buff, const string& nam, int partitionID, const string& fn, int refcnt, size_t siz, int evtCount, bool /* unused */, int etyp) 
       : MBM::Producer(buff, nam, partitionID), m_fname(fn), m_spaceSize(siz), m_refCount(refcnt), m_evtCount(evtCount), m_etyp(etyp)
-    //: MEP::Producer(nam, partitionID), m_fname(fn), m_spaceSize(siz), m_refCount(refcnt), m_evtCount(evtCount), m_etyp(etyp)
     {
       m_spaceSize *= 1024;  // Space size is in kBytes
-      //m_flags = USE_MEP_BUFFER;
-      //::mep_map_unused_buffers(unused);
       include();
-      //m_bmid = m_mepID->mepBuffer;
       mepStart = (long)bufferAddress();
       ::printf(" Buffer space: %d bytes\n",m_spaceSize);
       ::printf(" MEP    buffer start: %08lX\n",mepStart);
       ::printf("Initial refcount value is %d\n",m_refCount);
     }
-    virtual ~MEPProducer()  {
+    virtual ~EvtProducer()  {
     }
     int __dummyReadEvent(void* data, size_t bufLen, size_t& evtLen)  {
       static int nrewind = 0;
@@ -75,7 +71,6 @@ namespace {
 	  goto again;
 	}
 	evtLen = me->size()+me->sizeOf();
-	// printf("MEP size: %d \n",evtLen);
 	return 1;
       }
       return 0;
@@ -160,8 +155,8 @@ extern "C" int mep2mbm_producer(int argc,char **argv) {
   cli.getopt("count",1,evtCount);
   if ( debug ) ::lib_rtl_start_debugger();
   ::printf("%synchronous MEP Producer \"%s\" Partition:%d (pid:%d) included in buffers. Will produce %d MEPs from %s Type:%d\n",
-	   async ? "As" : "S", name.c_str(), partID, MEPProducer::pid(),evtCount,fname.c_str(),etyp);
-  MEPProducer p(buff, name, partID, fname, refCount, space, evtCount, unused, etyp);
+	   async ? "As" : "S", name.c_str(), partID, EvtProducer::pid(),evtCount,fname.c_str(),etyp);
+  EvtProducer p(buff, name, partID, fname, refCount, space, evtCount, unused, etyp);
   if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
   return p.run();
 }

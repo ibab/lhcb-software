@@ -50,8 +50,6 @@ namespace LHCb  {
     /// Convert MEP into a sequence of events being worked down.
     StatusCode convertMEP(const MBM::EventDesc& e);
     
-    /// Connect to MEP buffer
-    StatusCode connectMEP(const std::string& input);
     /// Connect to regular MBM buffer
     StatusCode connectMBM(const std::string& input);
     /// Test routine for run-time exceptions
@@ -429,10 +427,7 @@ StatusCode MBMContext::receiveEvent()  {
 StatusCode MBMContext::connect(const string& input)  {
   StatusCode sc = StatusCode::SUCCESS;
   m_events.clear();
-  if ( input=="EVENT" || input=="RESULT" || input=="MEP" )
-    sc = connectMEP(input);
-  else 
-    sc = connectMBM(input);
+  sc = connectMBM(input);
   if ( sc.isSuccess() )  {
     for (int i=0, n=m_sel->numReq(); i<n; ++i )  {
       m_consumer->addRequest(m_sel->req(i));
@@ -441,31 +436,6 @@ StatusCode MBMContext::connect(const string& input)  {
   }
   m_sel->error("Failed to connect to buffer manager \""+input+"\".");
   return sc;
-}
-
-StatusCode MBMContext::connectMEP(const string& input)  {
-  IMEPManager* m = m_onlineSel->mepMgr();
-  MEPID mepID = m->mepID();
-  if ( mepID != MEP_INV_DESC )  {
-    m_mepStart = (void*)mepID->mepStart;
-    if ( input == "MEP" )  {
-      m_consumer = new MBM::Consumer(mepID->mepBuffer,mepID->processName,mepID->partitionID);
-    }
-    else if ( input == "EVENT" )  {
-      m_consumer = new MBM::Consumer(mepID->evtBuffer,mepID->processName,mepID->partitionID);
-      m_onlineSel->setDecode(true);
-    }
-    else if ( input == "RESULT" )  {
-      m_consumer = new MBM::Consumer(mepID->resBuffer,mepID->processName,mepID->partitionID);
-      m_onlineSel->setDecode(true);
-    }
-    if ( m_consumer )  {
-      if ( m_consumer->id() != MBM_INV_DESC )  {
-        return StatusCode::SUCCESS;
-      }
-    }
-  }
-  return StatusCode::FAILURE;
 }
 
 StatusCode MBMContext::connectMBM(const string& input)  {
@@ -502,7 +472,7 @@ void MBMContext::close()  {
 MBMEvtSelector::MBMEvtSelector(const string& nam, ISvcLocator* svc)
   : OnlineBaseEvtSelector(nam,svc), m_mepMgr(0), m_currContext(0)
 {
-  m_input = "EVENT";
+  m_input = "Events";
   m_decode = true;
   declareProperty("MaxRetry",m_maxRetry=-1);
 }

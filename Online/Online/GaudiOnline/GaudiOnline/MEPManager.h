@@ -11,7 +11,6 @@
 
 #include "GaudiKernel/Service.h"
 #include "MBM/mepdef.h"
-#include "MBM/bmdef.h"
 #include <cstring>
 #include <map>
 #include <set>
@@ -56,8 +55,6 @@ namespace LHCb    {
     bool                       m_partitionBuffers;
     /// Property; Flag to indicate if signals should be handled
     bool                       m_handleSignals;
-    /// Identifier of MEP buffer
-    MEPID                      m_mepID;
     /// Buffer to store MBM identifiers
     std::vector<BMID>          m_bmIDs;
     /// Map between buffer identifiers and the corresponding name
@@ -80,9 +77,6 @@ namespace LHCb    {
 
     /// Create consumer attached to a specified buffer
     MBM::Consumer* createConsumer(const std::string& buffer,const std::string& instance);
-
-    /// Access to MEP identifier structure
-    MEPID  mepID() const                               { return m_mepID;    }
 
     /// Access to optional MBM buffer identifiers
     const std::map<std::string,BMID>& buffers()  const { return m_buffMap;  }

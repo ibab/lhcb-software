@@ -24,13 +24,13 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "MDF/RawEventHelpers.h"
 #include "GaudiOnline/MEPRxSys.h"
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
 #include "MBM/Requirement.h"
 #include "MBM/mepdef.h"
 
+#include <unistd.h>
 #include <sys/time.h>
 #include <errno.h>
 #include <sys/types.h>
