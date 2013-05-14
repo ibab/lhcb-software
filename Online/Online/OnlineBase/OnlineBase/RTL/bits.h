@@ -3,10 +3,12 @@
 #ifdef __cplusplus
 #include <cstdlib>
 #include <cstring>
+#include <climits>
 extern "C" {
 #else
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
 #endif
   inline int bit_set(unsigned int* mask,int pos)  {
     mask[pos/32] |= (1<<(pos%32));
@@ -51,6 +53,14 @@ namespace Bits  {
     /// Initializing bitfield constructor
     explicit BitMask(int def) {
       for(int j=0; j<i;++j) m_mask[j]=def;
+    }
+    /// Number of digits for the bitfield
+    static unsigned int digits() {
+      return i*sizeof(unsigned int)*CHAR_BIT;
+    }
+    /// Number of 32 bit words in the mask
+    int words()  const {
+      return i;
     }
     /// Clear bitfield
     void clear()  {
