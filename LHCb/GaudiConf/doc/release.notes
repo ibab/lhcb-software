@@ -2,6 +2,8 @@
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
+
+!========================= GaudiConf v17r9 2013-05-14 =========================
 ! 2013-05-14 - Thomas Ruf
  - DecodeRawEvent.py, added support for dataondemand for FT/VL/VP clusters  
 
