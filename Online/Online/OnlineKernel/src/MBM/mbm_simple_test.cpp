@@ -1,7 +1,9 @@
+#define MBM_IMPLEMENTATION
 #include <cstdio>
 #include <cstdlib>
 #include "RTL/rtl.h"
 #include "RTL/ProcessGroup.h"
+#include "MBM/bmstruct.h"
 #include "MBM/bmdef.h"
 #include <iostream>
 
@@ -112,3 +114,50 @@ extern "C" int mbm_full_test(int argc, char** /* argv */)  {
 
   return 0;
 }
+
+int mbm_qmtest_check_no_active_buffers(int, char**)   {
+  lib_rtl_gbl_t handle = 0;
+  int res = ::mbmsrv_map_global_buffer_info(&handle,true);
+  if ( lib_rtl_is_success(res) ) {
+    BUFFERS* buffers = (BUFFERS*)handle->address;
+    time_t start = ::time(0), now;
+    int bad = 0;
+  rescan:
+    bad = 0;
+    now = ::time(0);
+    for (int i = 0; i < buffers->p_bmax; ++i)  {
+      if ( buffers->buffers[i].used == 1 )  {
+	if ( now - start > 400 ) {
+	  _mbm_printf("MBM: Buffer %s is still in use!\n",buffers->buffers[i].name);
+	  ++bad;
+	}
+      }
+    }
+    if ( (bad > 0) && (now - start > 400) ) {
+      _mbm_printf("MBM: Buffers are still not released after 400 seconds!\n");
+      ::mbmsrv_unmap_global_buffer_info(handle,false);
+      ::exit(0);
+    }
+    else if ( bad > 0 )  {
+      ::lib_rtl_sleep(1000);
+      goto rescan;
+    }
+    res = 1;
+  }
+  ::mbmsrv_unmap_global_buffer_info(handle,false);
+  return res;
+}
+
+extern "C" int mbm_qmtest_check_start() {
+  char cmd[1024];
+  ::snprintf(cmd,sizeof(cmd),"%s/%s/test.exe mbm_qmtest_check_no_active_buffers",
+	     ::lib_rtl_getenv("ONLINEKERNELROOT"),
+	     ::lib_rtl_getenv("CMTCONFIG"));
+  int ret = system(cmd);
+  if ( ret != 1 ) {
+    _mbm_printf("MBM: Failed to wait for other test to finish....\n");
+    return 0;
+  }
+  return ret;
+}
+

@@ -17,8 +17,7 @@ MBM::Consumer::Consumer(BMID bmid, const std::string& client_name, int partition
 }
 
 // Standard destructor
-MBM::Consumer::~Consumer()
-{
+MBM::Consumer::~Consumer()   {
 }
 
 // Switch to non-blocking execution mode
@@ -40,7 +39,7 @@ int MBM::Consumer::eventAst(void* param) {
 // Ast to be called on event receival (may be overloaded by clients)
 int MBM::Consumer::eventAst() {
   //::lib_rtl_output(LIB_RTL_INFO,"Consumer AST\n");
-  int sc = ::mbm_get_event_ast((void*)m_bmid);
+  int sc = MBM_NORMAL;// ::mbm_get_event_ast((void*)m_bmid);
   if ( sc == MBM_NORMAL ) {
     if ( !m_blocking ) {
       sc = ::wtc_insert(m_facility, this);
@@ -57,7 +56,7 @@ int MBM::Consumer::eventAst() {
 // Static action to be called on event receival
 int MBM::Consumer::eventAction(unsigned int facility, void* param) {
   Consumer* cons = (Consumer*)param;
-  if ( facility != cons->m_facility ) {
+  if ( facility != cons->m_facility )   {
     // Error ?
   }
   return cons->eventAction();
@@ -119,9 +118,9 @@ void MBM::Consumer::delRequest(int evtype, const unsigned int trmask[4], const u
     if ( sc == MBM_NORMAL )  {
       return;
     }
-    throw std::runtime_error("Failed to delete request from MBM buffer:"+m_buffName+" [Internal Error]");
+    throw std::runtime_error("Failed to delete request to MBM buffer:"+m_buffName+" [Internal Error]");
   }
-  throw std::runtime_error("Failed to delete request from MBM buffer:"+m_buffName+" [Buffer not connected]");
+  throw std::runtime_error("Failed to delete request to MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
 
 int MBM::Consumer::getEventAsync() {

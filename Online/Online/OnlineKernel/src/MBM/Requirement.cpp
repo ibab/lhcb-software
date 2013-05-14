@@ -33,7 +33,7 @@ void MBM::Requirement::parse(const std::string& reqstring)
   // "EvType=x;TriggerMask=0xfeedbabe,0xdeadfeed,0xdeadbabe,0xdeadaffe;
   //  VetoMask=0x,0x,0x,0x;MaskType=ANY/ALL;UserType=USER/VIP/ONE;
   //  Frequency=MANY/PERC;Perc=20.5"
-  for(int i=0;i<ikey;i++)  {
+  for(int i=0; i<ikey; i++ )  {
     char* keyw = strtok(items[i],"=");
     for (unsigned int j=0;j<strlen(keyw);j++)  {
       keyw[j] = char(::toupper(keyw[j]));
@@ -76,12 +76,20 @@ void MBM::Requirement::parse(const std::string& reqstring)
       for (unsigned int j=0;j<strlen(values);j++)  {
         values[j] = char(::toupper(values[j]));
       }
-      if (strcmp(values,"USER") == 0)
+      if (strcmp(values,"USER") == 0) {
         userType = BM_REQ_USER;
-      else if (strcmp(values,"VIP") == 0)
+      }
+      else if (strcmp(values,"VIP") == 0) {
         userType = BM_REQ_VIP;
-      else
-        userType = BM_REQ_ONE;
+      }
+      else if (strcmp(values,"ALL") == 0) {
+        userType = BM_REQ_ALL;
+      }
+      else {
+	int tmp = *(int*)values;
+	tmp = tmp >> 8;
+        userType = (tmp<<8) + BM_REQ_ONE;
+      }
       continue;
     }
     if (strcmp(keyw, "FREQUENCY") == 0)  {

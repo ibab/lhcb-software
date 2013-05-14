@@ -2,17 +2,19 @@
 #include "WT/wtdef.h"
 #include "MBM/Consumer.h"
 
+#define PATTERN 0xFEEDBABE
+
 namespace {
    static void help()  {
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"mbm_cons -opt [-opt]\n");
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -n=<name>              buffer member name\n");
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -s=<number>            sleep interval between events [milli seconds]\n");
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -b=<name>              Buffer identifier \n");
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -p(artition)=<number>  Partition ID\n");
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -q                     Quiet mode (do not print trigger number mismatch)\n");
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -a(synchronous)        Asynchonous mode (default is synchronous)\n");
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -o(ne)                 ONE consumer (REQ type ONE)\n");
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -u(sermode)            USER mode (SPY) consumer\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"mbm_cons -opt [-opt]");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -n=<name>              buffer member name");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -s=<number>            sleep interval between events [milli seconds]");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -b=<name>              Buffer identifier ");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -p(artition)=<number>  Partition ID");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -q                     Quiet mode (do not print trigger number mismatch)");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -a(synchronous)        Asynchonous mode (default is synchronous)");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -o(ne)                 ONE consumer (REQ type ONE)");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"    -u(sermode)            USER mode (SPY) consumer");
   }
   struct Cons : public MBM::Consumer  {
     int m_nbad, m_trnumber, m_quiet, m_sleep, m_check;
@@ -24,14 +26,17 @@ namespace {
       if ( m_trnumber == -1 )  {
         m_trnumber = *e.data;
       }
-      else if( m_trnumber != *e.data ) {
-        if ( !m_quiet && m_check )  {
-          ::lib_rtl_output(LIB_RTL_ERROR,"======= Mismatch [%d] found %d %d [%p]\n",
-            ++m_nbad, m_trnumber, *e.data, (void*)e.data);
+      //      else if( m_trnumber != *e.data ) {
+      else if ( PATTERN != *(unsigned int*)e.data ) {
+	if ( !m_quiet && m_check )  {
+	  //          ::lib_rtl_output(LIB_RTL_ERROR,"======= Mismatch [%d] found %d %d [%p]",
+	  //	   ++m_nbad, m_trnumber, *e.data, (void*)e.data);
+	   ::lib_rtl_output(LIB_RTL_ERROR,"++++++Mismatch [%d] found %08X [%p]",
+			    ++m_nbad,*e.data,e.data);
         }
-        m_trnumber = *e.data;
+        //m_trnumber = *e.data;
       }
-      m_trnumber++;
+      //m_trnumber++;
       if ( m_sleep ) lib_rtl_sleep(m_sleep);
       return Consumer::eventAction();
     }
@@ -41,39 +46,40 @@ namespace {
 extern "C" int mbm_cons(int argc,char **argv) {  
   RTL::CLI cli(argc, argv, help);
   std::string name = "consumer", buffer="0";
-  int partID = 0x103, sleep = 0;
+  int partID = 0x103, sleep = 0, inc_opt=0;
   bool one   = cli.getopt("one",1) != 0;
   bool quiet = cli.getopt("quiet",1) != 0;
   bool async = cli.getopt("asynchronous",1) != 0;
   bool user  = cli.getopt("usermode",1) != 0;
-  unsigned int vetomask[4] = {0U,0U,0U,0U};
-  unsigned int trmask[4]   = {~0U,~0U,~0U,~0U};
+  unsigned int vetomask[4] = {0,0,0,0};
+  unsigned int trmask[4]   = {~0x0,~0x0,~0x0,~0x0};
 
   cli.getopt("name",1,name);
   cli.getopt("buffer",1,buffer);
   cli.getopt("sleep",1,sleep);
+  cli.getopt("inc_opt",1,inc_opt);
   cli.getopt("partitionid",1,partID);
   int status = wtc_init();
   if( status != WT_SUCCESS ) exit(status);
-  ::lib_rtl_output(LIB_RTL_ALWAYS,"Consumer \"%s\" (pid:%d) running in buffer:\"%s\"\n",
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"Consumer \"%s\" (pid:%d) running in buffer:\"%s\"",
     name.c_str(),Cons::pid(),buffer.c_str());
 
   Cons c(buffer,name,partID,sleep,quiet,!(one||user));
   if ( async )   {
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"  Running in asynchronous mode.\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"  Running in asynchronous mode.");
     c.setNonBlocking(WT_FACILITY_DAQ_EVENT, true);
   }
   if ( one ) {
-    c.addRequest(1,trmask,vetomask,BM_MASK_ANY,BM_REQ_ONE,BM_FREQ_PERC,100.);
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"  Event request type is BM_REQ_ONE.\n");
+    c.addRequest(1,trmask,vetomask,BM_MASK_ANY,(inc_opt<<8)+BM_REQ_ONE,BM_FREQ_PERC,100.);
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"  Event request type is BM_REQ_ONE [%d].",inc_opt);
   }
   else if ( user ) {
     c.addRequest(1,trmask,vetomask,BM_MASK_ANY,BM_REQ_USER,BM_FREQ_PERC,100.);
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"  Event request type is BM_REQ_USER.\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"  Event request type is BM_REQ_USER.");
   }
   else {
     c.addRequest(1,trmask,vetomask,BM_MASK_ANY,BM_REQ_ALL,BM_FREQ_PERC,100.);
-    ::lib_rtl_output(LIB_RTL_ALWAYS,"  Event request type is BM_REQ_ALL.\n");
+    ::lib_rtl_output(LIB_RTL_ALWAYS,"  Event request type is BM_REQ_ALL.");
   }
   return c.run();
 }
