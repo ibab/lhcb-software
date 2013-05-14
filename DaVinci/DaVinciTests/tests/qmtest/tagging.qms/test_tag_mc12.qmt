@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="timeout"><integer>3600</integer></argument>
+<argument name="args"><set>
+  <text>../options/Tagging/DVTestTagging-MC12.py</text>
+</set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+BTaggingChecker                            INFO =======================================================
+BTaggingChecker                            INFO  Summary: EXCLUSIVE TAGGING PERFORMANCE 
+BTaggingChecker                            INFO  Category            EFF.          Etag         Wrong TF      r       w       
+BTaggingChecker                            INFO        1  NNet       1.5+-1.3       23+-2.3       38+-5.4      50      30
+BTaggingChecker                            INFO        2  NNet         2+-1.4      9.6+-1.6       27+-7.8      24       9
+BTaggingChecker                            INFO        3  NNet       1.4+-1.1      4.9+-1.2       24+-10      13       4
+BTaggingChecker                            INFO        4  NNet         1+-0.86        2+-0.76       14+-13       6       1
+BTaggingChecker                            INFO        5  NNet       1.5+-0.65      1.5+-0.65        0+-0       5       0
+BTaggingChecker                            INFO ---------------------------------------------------------
+BTaggingChecker                            INFO  **   OS muons     0.81+-0.85      2.6+-0.86       22+-14       7       2
+BTaggingChecker                            INFO  **   OS elect      2.7+-1.2      3.8+-1      7.7+-7.4      12       1
+BTaggingChecker                            INFO  **   OS kaons      1.6+-1.3       21+-2.2       36+-5.7      46      26
+BTaggingChecker                            INFO  **   SS kaon     -0.29+-0.56      2.6+-0.86       67+-16       3       6
+BTaggingChecker                            INFO  **   SS pion      0.87+-0.96      7.8+-1.5       33+-9.1      18       9
+BTaggingChecker                            INFO  **   VertexCh      4.3+-2.1       23+-2.3       28+-5.1      56      22
+BTaggingChecker                            INFO ---------------------------------------------------------
+BTaggingChecker                            INFO Tagging efficiency =     41 +/- 2.7 %
+BTaggingChecker                            INFO Wrong Tag fraction =     29 +/- 3.9 %
+BTaggingChecker                            INFO EFFECTIVE COMB. TE =    7.3 +/- 2.4 %     (Total events=   344)
+BTaggingChecker                         SUCCESS =========================================================
+""", stdout, result, causes, signature_offset = 1)
+countErrorLines({"FATAL":0})
+</text></argument>
+</extension>
