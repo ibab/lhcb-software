@@ -21,6 +21,7 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["BeforeMagnetRegion/"]) +\
   LineSkipper(["DownstreamRegion"]) +\
   LineSkipper(["MD5 sum:"]) + \
+  LineSkipper("INFO ANNPID : Tune=MC12TuneV2    TrackType") + \
   RegexpReplacer(when = "RichHotPixels     WARNING Rich::HPDAnalysisAlg::",
                  orig = r'[01 ]{33}', repl = r'') +\
   RegexpReplacer(when = "RichHotPixels     SUCCESS  #WARNINGS   =",
