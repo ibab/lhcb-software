@@ -5,11 +5,18 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
-! 2013-05-14 - Stefania Vecchi
- - changes in the code to substitute ForcedBDecayTool (based on HepMC classes no longer available in MC12) 
-   with BDecayTool
-   affected:  BOppositeMonitoring, BTaggingAnalysis, BTaggingChecker, BTaggingInclusive and the CheatedSelection,  TaggingUtilsChecker
 
+! 2013-05-14 - Chris Jones
+ - Suppress info message printed each event by BTaggingChecker to debug. 
+   Needed to minimise log file size in nightly tests.
+ - Using Warning( ... ) for warning messages printed during the event loop.
+ - A few little optimisations ..
+
+! 2013-05-14 - Stefania Vecchi
+ - changes in the code to substitute ForcedBDecayTool (based on HepMC classes no 
+   longer available in MC12) with BDecayTool
+   Affected : BOppositeMonitoring, BTaggingAnalysis, BTaggingChecker, BTaggingInclusive 
+              and the CheatedSelection, TaggingUtilsChecker
 
 !========================= FlavourTaggingChecker v6r13p1 2013-05-07 =========================
 

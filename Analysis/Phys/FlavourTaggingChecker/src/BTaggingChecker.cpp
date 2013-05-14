@@ -16,12 +16,12 @@ DECLARE_ALGORITHM_FACTORY( BTaggingChecker )
 //==========================================================================
 BTaggingChecker::BTaggingChecker( const std::string& name,
                                   ISvcLocator* pSvcLocator )
-  : DaVinciAlgorithm ( name , pSvcLocator ),
-    m_debug(0)
-  , m_forcedBtool(0) 
+: DaVinciAlgorithm ( name , pSvcLocator ),
+  m_debug(0)
+  , m_forcedBtool(0)
   , m_bkg(0)
 {
-  declareProperty("TagsLocation", 
+  declareProperty("TagsLocation",
                   m_tags_location = FlavourTagLocation::Default );
   declareProperty( "RequireHltTrigger", m_requireHltTrigger = false );
 }
@@ -30,9 +30,10 @@ BTaggingChecker::BTaggingChecker( const std::string& name,
 BTaggingChecker::~BTaggingChecker() {}
 
 //==========================================================================
-StatusCode BTaggingChecker::initialize() {
-
-  StatusCode sc = DaVinciAlgorithm::initialize() ;
+StatusCode BTaggingChecker::initialize()
+{
+  const StatusCode sc = DaVinciAlgorithm::initialize() ;
+  if ( sc.isFailure() ) return sc;
 
   m_debug = tool<IPrintDecayTreeTool> ( "PrintDecayTreeTool", this );
   //m_forcedBtool = tool<IForcedBDecayTool> ( "ForcedBDecayTool", this );
@@ -48,8 +49,8 @@ StatusCode BTaggingChecker::initialize() {
 //==========================================================================
 // Main execution
 //==========================================================================
-StatusCode BTaggingChecker::execute() {
- 
+StatusCode BTaggingChecker::execute()
+{
   setFilterPassed( false );
 
   ////////////////////////////////////////////////////
@@ -57,44 +58,48 @@ StatusCode BTaggingChecker::execute() {
   const MCParticle* BS = m_forcedBtool->forcedB();
   ////////////////////////////////////////////////////
 
-  if(!BS) {
-    warning()<<"BTaggingChecker called but no B was forced to decay in MC"<<endreq;
-    return StatusCode::SUCCESS;
+  if ( !BS )
+  {
+    return Warning( "Called but no B was forced to decay in MC",
+                    StatusCode::SUCCESS );
   }
-  
+
   int tagdecision=0, ix=0;
   int truetag = BS->particleID().pid()>0 ? 1 : -1;
 
   //look in TagLocation
-  FlavourTags* tags(0);
-  if( exist<FlavourTags>( m_tags_location ) ) {
-    tags = get<FlavourTags>( m_tags_location );
-  } else {
-    debug() << "No tags found in " << m_tags_location << endreq;
+  const FlavourTags * tags = getIfExists<FlavourTags>( m_tags_location );
+  if ( !tags )
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "No tags found in " << m_tags_location << endreq;
     return StatusCode::SUCCESS;
   }
-  debug()<< tags->size()<<" tags found in "<<m_tags_location << endreq;
-  
-  const Particle* P=0;
+  if ( msgLevel(MSG::DEBUG) )
+    debug()<< tags->size()<<" tags found in "<<m_tags_location << endreq;
+
+  const Particle* P = NULL;
   int bkgcat = -1;
   double pmax=-1;
-  FlavourTags::const_iterator ti;
-  for( ti=tags->begin(); ti!=tags->end(); ti++ ) {
+  for( FlavourTags::const_iterator ti = tags->begin(); ti != tags->end(); ++ti )
+  {
 
-    if((*ti)->taggedB()->p()>pmax) {
+    if ( (*ti)->taggedB()->p() > pmax )
+    {
       P = (*ti)->taggedB();
       pmax=(*ti)->taggedB()->p();
       tagdecision = (*ti)->decision();
       ix          = (*ti)->category();
 
-      if(!tagdecision) continue;
-      
-      std::vector<Tagger> mytaggers = (*ti)->taggers();
-      std::vector<Tagger>::iterator itag;
-      for(itag=mytaggers.begin(); itag!=mytaggers.end(); ++itag) {
-        std::string tts;
-        int taggdec=itag->decision();
-        switch ( itag->type() ) {
+      if ( !tagdecision ) continue;
+
+      const std::vector<Tagger>& mytaggers = (*ti)->taggers();
+      for ( std::vector<Tagger>::const_iterator itag = mytaggers.begin();
+            itag != mytaggers.end(); ++itag )
+      {
+        const int taggdec = itag->decision();
+        switch ( itag->type() ) 
+        {
         case Tagger::OS_Muon    : (taggdec==truetag ? ++nrtag[1] : ++nwtag[1]); break;
         case Tagger::OS_Electron: (taggdec==truetag ? ++nrtag[2] : ++nwtag[2]); break;
         case Tagger::OS_Kaon    : (taggdec==truetag ? ++nrtag[3] : ++nwtag[3]); break;
@@ -103,32 +108,36 @@ StatusCode BTaggingChecker::execute() {
         case Tagger::VtxCharge  : (taggdec==truetag ? ++nrtag[6] : ++nwtag[6]); break;
         }
       }
-    
+
       if(msgLevel(MSG::DEBUG)) m_debug->printTree( (*ti)->taggedB() );
     }
-    
-  }
-  
 
-  if(P) if(m_bkg) if( ! P->isBasicParticle() ){
-    bkgcat = (int)(m_bkg->category( P ));
-    debug() << "BackgroundCategory decision  "<< bkgcat << endreq;
   }
- 
+
+  if ( P && m_bkg && !P->isBasicParticle() )
+  {
+    bkgcat = (int)(m_bkg->category( P ));
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "BackgroundCategory decision  "<< bkgcat << endreq;
+  }
+
   //----------------------------------------------------------------------
-  long L0Decision = 0;
-  long HLT1Decision = 0;
-  long HLT2Decision = 0;
-  int trig=-1;
-  if( exist<L0DUReport>(L0DUReportLocation::Default) ) {
-    L0DUReport* l0 = get<L0DUReport>(L0DUReportLocation::Default);
-    if(l0) L0Decision  = l0->decision();
+  long long L0Decision = 0;
+  long long HLT1Decision = 0;
+  long long HLT2Decision = 0;
+  int trig = -1;
+  L0DUReport* l0 = getIfExists<L0DUReport>(L0DUReportLocation::Default);
+  if ( l0 ) 
+  {
+    L0Decision = l0->decision();
     trig = L0Decision;
   }
-  if (m_requireHltTrigger) {
+  if ( m_requireHltTrigger ) 
+  {
     const HltDecReports* decReports =
-      get<HltDecReports>(LHCb::HltDecReportsLocation::Default);
-    if(decReports) {
+      getIfExists<HltDecReports>(LHCb::HltDecReportsLocation::Default);
+    if ( decReports )
+    {
       HLT1Decision = (int) decReports->decReport("Hlt1Global")->decision();
       HLT2Decision = (int) decReports->decReport("Hlt2Global")->decision();
       trig += HLT2Decision*100 + HLT1Decision*10;
@@ -136,8 +145,9 @@ StatusCode BTaggingChecker::execute() {
   }
 
   //----------------------------------------------------------------------
-  info() << "BTAGGING MON "<< std::setw(3) << trig << std::setw(4) << truetag 
-         << std::setw(4) << bkgcat << endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "BTAGGING MON "<< std::setw(3) << trig << std::setw(4) << truetag
+            << std::setw(4) << bkgcat << endreq;
 
   //count rights and wrongs
   nsele++;
@@ -149,20 +159,21 @@ StatusCode BTaggingChecker::execute() {
 }
 
 //==========================================================================
-StatusCode BTaggingChecker::finalize(){
+StatusCode BTaggingChecker::finalize()
+{
   MsgStream req( msgSvc(), name() );
   req.setf(std::ios::fixed);
 
   // calculate effective efficiency in categories with errors
   double rtt=0;
   double wtt=0;
-  double rtag,wtag,utag;
+  double rtag(0),wtag(0),utag(0);
   double ef_tot=0;
   double effe_tot=0;
-  double epsilerr, epsilerrtot=0;
+  double epsilerr(0), epsilerrtot(0);
 
   info()<<"======================================================="<<endreq;
-  info()<< std::setw(40)<< "Summary: EXCLUSIVE TAGGING PERFORMANCE " <<endmsg; 
+  info()<< std::setw(40)<< "Summary: EXCLUSIVE TAGGING PERFORMANCE " <<endmsg;
   info()<< " Category            EFF.          Etag         Wrong TF"
         << "      r       w       "<<endreq;
 
@@ -232,9 +243,9 @@ StatusCode BTaggingChecker::finalize(){
           <<" "<<std::setw(7)<< (int) wtag
           << endreq;
   }
-  
 
-  
+
+
   //calculate global tagging performances -------------------------------
 
   //equivalent value of the wrong tag fraction
@@ -254,6 +265,6 @@ StatusCode BTaggingChecker::finalize(){
          << "     (Total events= "<<std::setw(5) << int(nsele) <<")"<< endreq;
   info() << "=========================================================\n\n";
 
-  return DaVinciAlgorithm::finalize() ; 
+  return DaVinciAlgorithm::finalize() ;
 }
 
