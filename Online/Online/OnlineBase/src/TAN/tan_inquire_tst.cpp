@@ -32,10 +32,7 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
       switch( *++c | 0x20 )  {
         case 'q': quiet = true;         break;
         case 'c': continuous = true;      break;
-        case 'n': 
-	  ::strncpy(host,c+2,sizeof(host));
-	  host[sizeof(host)-1] = 0;
-	  break;
+        case 'n': strncpy(host,c+2,sizeof(host));   break;
         default:
           printf("Usage : inquire -opt <opts>\n");
           printf("        -c           contious mode\n");

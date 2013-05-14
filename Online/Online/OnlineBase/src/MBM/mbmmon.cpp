@@ -3,7 +3,6 @@
 /*                  ASCII BUFFER MANAGER DISPLAY                         */
 /*                                                                       */
 /*-----------------------------------------------------------------------*/
-#include <cstdlib>
 #include "RTL/rtl.h"
 #include "MBM/Monitor.h"
 #include "CPP/AsciiDisplay.h"

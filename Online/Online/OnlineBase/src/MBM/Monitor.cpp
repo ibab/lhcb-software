@@ -15,9 +15,6 @@
 /*  5  19/01/08  Adaption and cleanup for Linux/WIN32          MF        */
 /*-----------------------------------------------------------------------*/
 #define MBM_IMPLEMENTATION
-#include <cstdio>
-#include <cstring>
-#include <ctime>
 #include "MBM/Monitor.h"
 #include "MBM/bmstruct.h"
 #include "CPP/Event.h"
@@ -115,7 +112,7 @@ void Monitor::handle(const Event& ev) {
 int Monitor::initMonitor() {
   //signal (SIGINT,handler);
   //signal (SIGABRT,handler);
-  int status = ::mbm_map_global_buffer_info(&m_bm_all);
+  int status = ::mbmsrv_map_global_buffer_info(&m_bm_all);
   if(!lib_rtl_is_success(status))   {   
     ::printf("Cannot map global buffer information....\n");
     return status;
@@ -135,7 +132,8 @@ int Monitor::updateDisplay() {
   catch(...) {
     display()->draw_line_normal(" Exception during buffer monitoring.");
   }
-  display()->end_update();
+  MonitorDisplay* m_disp = display();
+  m_disp->end_update();
   return 1;
 }
 
@@ -157,80 +155,58 @@ size_t Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
 
 int Monitor::show_information()   {
   int i, j, k;
-#if defined(SHOW_TIMES)
-  static const char* fmt_def  = " %-15s%5x%7d%5s          %40s%5s%7s";
-  static const char* fmt_prod = " %-15s%5x%7d%5s%6s%11d   %3.0f%32s%7s  %7.1e %7.1e %d %d";
-  static const char* fmt_cons = " %-15s%5x%7d%5s%6s               %12d%11d   %3.0f%5s%7s  %7.1e %7.1e %d %d";
-  static const char* head=" Name       Partition    Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer    UTime  STime";
-#elif defined(SHOW_SLEEPS)
-  static const char* fmt_def  = " %-15s%5x%7d%5s          %40s%5s%7s";
-  static const char* fmt_prod = " %-15s%5x%7d%5s%6s%11d   %3.0f%32s%7s %d";
-  static const char* fmt_cons = " %-15s%5x%7d%5s%6s               %12d%11d   %3.0f%5s%7s %d";
-  static const char* head=" Name       Partition    Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer  Sleeps";
-#else
-  static const char* fmt_def  = " %-36s%5x%7d%5s          %40s%5s%7s";
-  static const char* fmt_prod = " %-36s%5x%7d%5s%6s%11d   %3.0f%32s%7s";
-  static const char* fmt_cons = " %-36s%5x%7d%5s%6s               %12d%11d   %3.0f%5s%7s";
-  static const char* head=" Name                            Partition    Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
-#endif
+  static const char* fmt_def  = " %1d/%-34s%5x%7d%5s          %40s%5s%7s";
+  static const char* fmt_prod = " %1d/%-34s%5x%7d%5s%6s%11d   %3.0f%32s%7s";
+  static const char* fmt_cons = " %1d/%-34s%5x%7d%5s%6s               %12d%11d   %3.0f%5s%7s";
+  static const char* head=" Srv/Name                        Partition    Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
   char line[256];
   display()->draw_line_normal("");
   display()->draw_line_reverse("                 Buffer Manager Monitor [%s]  pid:%d on %s", 
     ::lib_rtl_timestr("%a %d %b %Y  %H:%M:%S",0), lib_rtl_pid(),RTL::nodeName().c_str());
   display()->draw_line_normal("");
-  for (i=0;m_numBM>0 && i<m_buffers->p_bmax;i++)  {
+  for(i=0;m_numBM>0 && i<m_buffers->p_bmax;i++)  {
     if ( m_bms[i].m_buff != 0 )  {
-      BMDESCRIPT* dsc = m_bms[i].m_mgr.m_bm;
+      BufferMemory* dsc = m_bms[i].m_mgr.m_bm;
       draw_buffer(dsc->bm_name, dsc->ctrl);
       display()->draw_line_normal("");
     }
   }
   display()->draw_line_reverse(m_numBM<=0 ? "               No active buffers present" : head);
 
-  for (i=0;m_numBM>0 && i<m_buffers->p_bmax;i++)  {
+  for(i=0;m_numBM>0 && i<m_buffers->p_bmax;i++)  {
     if ( m_bms[i].m_buff != 0 )  {
       USER *us, *utst=(USER*)~0x0;
-      BMDESCRIPT* dsc = m_bms[i].m_mgr.m_bm;
-      CONTROL*    ctr = dsc->ctrl;
+      BufferMemory* dsc = m_bms[i].m_mgr.m_bm;
+      CONTROL*      ctr = dsc->ctrl;
       for (j=0,us=dsc->user;j<ctr->p_umax;j++,us++)    {
         if ( us == utst || us == 0    ) break;
         if ( us->block_id != BID_USER ) continue;
         if ( us->busy     == 0        ) continue;
         char spy_val[5] = {' ',' ',' ',' ',0};
         for (k=0; k<us->n_req; ++k )  {
-          if      ( us->req[k].user_type == BM_REQ_ONE  ) spy_val[1] = '1';
-          else if ( us->req[k].user_type == BM_REQ_USER ) spy_val[2] = 'U';
+          if      ( us->req[k].user_type == BM_REQ_USER ) spy_val[2] = 'U';
           else if ( us->req[k].user_type == BM_REQ_ALL  ) spy_val[3] = 'A';
-          else if ( us->req[k].freq < 100.0             ) spy_val[0] = 'S';
+          else if ( us->req[k].user_type == BM_REQ_ONE  ) spy_val[1] = 'a'+us->req[k].user_type_one;
+          if      ( us->req[k].freq < 100.0             ) spy_val[0] = 'F';
         }
         if ( us->ev_produced>0 || us->get_sp_calls>0 )   {
           float perc = 0;
           if ( ctr->tot_produced>0 ) perc = ((float)us->ev_produced/(float)ctr->tot_produced)*100;
           ::sprintf(line,fmt_prod,
-            us->name,us->partid,us->pid,"P",sstat[us->p_state+1],us->ev_produced,
-            perc+0.1, spy_val, dsc->bm_name
-#if defined(SHOW_TIMES)
-            ,us->utime, us->stime, us->free_calls, us->alloc_calls
-#elif defined(SHOW_SLEEPS)
-            ,us->sleep_calls
-#endif
+		    us->serverid,us->name,us->partid,us->pid,"P",sstat[us->state+1],us->ev_produced,
+		    perc+0.1, spy_val, dsc->bm_name
             );
         }
         else if ( us->ev_actual>0 || us->get_ev_calls>0 || us->n_req>0 ) {
           float perc = 0;
           if ( ctr->tot_produced>0 ) perc = ((float)us->ev_seen/(float)ctr->tot_produced)*100;
           ::sprintf(line,fmt_cons,
-            us->name,us->partid,us->pid,"C",sstat[us->c_state+1],
-            us->ev_seen, us->ev_freed, perc+0.1, spy_val, dsc->bm_name
-#if defined(SHOW_TIMES)
-            ,us->utime, us->stime, us->free_calls, us->alloc_calls
-#elif defined(SHOW_SLEEPS)
-            ,us->sleep_calls
-#endif
+		    us->serverid, us->name,us->partid,us->pid,"C",sstat[us->state+1],
+		    us->ev_seen, us->ev_freed, perc+0.1, spy_val, dsc->bm_name
             );
         }
         else        {
-          ::sprintf(line,fmt_def,us->name,us->partid,us->pid,"?","",spy_val, dsc->bm_name);    
+          ::sprintf(line,fmt_def,us->serverid,us->name,us->partid,us->pid,"?","",spy_val, dsc->bm_name);    
         }
         display()->draw_line_normal(line);
       }
@@ -248,7 +224,7 @@ int Monitor::optparse (const char* c)  {
   case 'i':        /*      buffer_id        */  
     iret = sscanf(c+1,"=%s",m_buffID);
     if( iret != 1 )      {
-      ::lib_rtl_output(LIB_RTL_ERROR,"Error reading Buffer identifier parameter\n");
+      ::lib_rtl_output(LIB_RTL_ERROR,"Error reading Buffer identifier parameter.\n");
       ::exit(0);
     }
     m_bmid = m_buffID;
@@ -267,7 +243,7 @@ int Monitor::optparse (const char* c)  {
 
 int Monitor::get_bm_list()   {
   m_numBM = 0;
-  int status = ::mbm_map_global_buffer_info(&m_bm_all,false);
+  int status = ::mbmsrv_map_global_buffer_info(&m_bm_all,false);
   if( !lib_rtl_is_success(status) )   {   
     //::lib_rtl_output(LIB_RTL_ERROR,"Cannot map global buffer information....\n");
     m_bm_all = 0;
@@ -313,7 +289,7 @@ int Monitor::drop_bm_list()   {
   }
   m_numBM = 0;
   if ( m_bm_all ) {
-    ::mbm_unmap_global_buffer_info(m_bm_all,false);
+    ::mbmsrv_unmap_global_buffer_info(m_bm_all,false);
     m_bm_all = 0;
   }
   m_buffers = 0;

@@ -6,12 +6,13 @@
 #include <cstdio>
 #include <cstring>
 #include <iostream>
-#include <sys/stat.h>
 
 //inline int rtl_printf(const char* fmt, ...)  {
 //  va_list args;
 //  va_start(args, fmt);
-//  return vprintf(fmt, args);
+//  size_t len = vprintf(fmt, args);
+//  printf("\n");
+//  return len;;
 //}
 inline int rtl_printf(const char* , ...)  {
   return 1;
@@ -239,17 +240,17 @@ int lib_rtl_wait_event_a_call(void* param)  {
   lib_rtl_action* pars = (lib_rtl_action*)param;
   while(pars->flag)  {
     try {
-      ::rtl_printf("wait...\n");
+      ::rtl_printf("wait...");
       ::lib_rtl_wait_for_event(pars->flag);
       ::lib_rtl_clear_event(pars->flag);
       if ( pars->action )  {
-        ::rtl_printf("action...\n");
+        ::rtl_printf("action...");
         (*pars->action)(pars->param);
-        ::rtl_printf("action...done.\n");
+        ::rtl_printf("action...done.");
       }
     }
     catch(...) {
-      ::rtl_printf("Exception!!!\n");
+      ::rtl_printf("Exception!!!");
     }
   }
   delete pars;
@@ -272,13 +273,13 @@ int lib_rtl_wait_for_event_a(lib_rtl_event_t flag, lib_rtl_thread_routine_t acti
     }
     waitEventThreads().insert(std::make_pair(flag,thread));
   }
-  ::rtl_printf("Set event...\n");
+  ::rtl_printf("Set event...");
   ::lib_rtl_set_event(flag);
   return 1;
 }
 
 static void help_set_event()  {
-  ::lib_rtl_output(LIB_RTL_ALWAYS,"rtl_set_event -opt [-opt]\n");
+  ::lib_rtl_output(LIB_RTL_ALWAYS,"rtl_set_event -opt [-opt]          \n");
   ::lib_rtl_output(LIB_RTL_ALWAYS,"    -n=<name>      Event flag name \n");
 }
 extern "C" int rtl_set_event(int argc, char** argv)  {

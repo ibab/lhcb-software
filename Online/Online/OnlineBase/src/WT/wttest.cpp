@@ -190,6 +190,6 @@ extern "C" int wtc_test_qmtest(int /* argc */, char** /* argv */)   {
     void* userpar;
     status = wtc_wait(&facility, &userpar, &sub_status);
     lib_rtl_output(LIB_RTL_ALWAYS,"Exited WAIT>>>> Facility = %d Status=%d Sub-Status = %d\n", 
-      facility, status, sub_status);
+		   facility, status, sub_status);
   }
 }

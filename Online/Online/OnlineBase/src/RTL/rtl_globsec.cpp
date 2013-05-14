@@ -6,8 +6,7 @@
 #include <cstdlib>
 #include <string>
 #include "rtl_internal.h"
-#include <sys/stat.h>
-#include <fcntl.h>
+#include "fcntl.h"
 
 #if defined(__linux)
 #include "unistd.h"
@@ -40,8 +39,8 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
   std::auto_ptr<lib_rtl_gbl_desc> h(new lib_rtl_gbl_desc);
   sprintf(h->name,"/%s",sec_name);
   h->addaux = h.get();
-  h->size = siz;
-  *address = 0;
+  h->size   = siz;
+  *address  = 0;
   //::lib_rtl_output(LIB_RTL_DEBUG,"Create global section %s of size:%d\n",h->name, h->size);
 #if defined(__linux)
   int sysprot  = PROT_READ+PROT_WRITE;
@@ -111,21 +110,25 @@ int lib_rtl_delete_section(lib_rtl_gbl_t h)    {
 
 /// Map global section a a specific address
 int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* address)   {
-  long siz  = (size/4096)*4096 + (((size%4096)==0) ? 0 : 4096);  //  multiple of page size
   std::auto_ptr<lib_rtl_gbl_desc> h(new lib_rtl_gbl_desc);
   sprintf(h->name,"/%s",sec_name);
   h->addaux = h.get();
-  h->size = siz;
   *address = 0;
   //::lib_rtl_output(LIB_RTL_DEBUG,"Map global section %s of size:%d\n",h->name, h->size);
 #if defined(__linux)
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
   h->fd = ::shm_open(h->name,O_RDWR,0666);
+  h->size = (int((size+4095)/4096))*4096;  //  multiple of page size
   if ( 0 == h->fd )  {
     ::close(h->fd);
     ::shm_unlink(h->name);
     return 0;
+  }
+  if ( 0 == size ) {   // Map whole section
+    struct stat st_buf;
+    ::fstat(h->fd,&st_buf); // Must succeed, since file could be opened
+    h->size = st_buf.st_size;
   }
   h->address = ::mmap (0, h->size, sysprot, sysflags, h->fd, 0);
   if ( h->address != MAP_FAILED && h->address != 0 )  {
@@ -137,9 +140,10 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
   if ( h->fd ) ::close(h->fd);
   return 0;
 #elif defined(_WIN32)
+  h->size   = (int((size+4095)/4096))*4096;
   h->addaux = ::OpenFileMapping(FILE_MAP_ALL_ACCESS,FALSE,h->name);
   if ( h->addaux )  {
-    h->address = ::MapViewOfFile(h->addaux,FILE_MAP_ALL_ACCESS,0,0,siz);
+    h->address = ::MapViewOfFile(h->addaux,FILE_MAP_ALL_ACCESS,0,0,size==0 ? 0 : h->size);
     if ( h->address != 0 )  {
       h->fd = 0;
       *address = h.release();

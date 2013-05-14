@@ -43,7 +43,7 @@ int mask_or2 (const unsigned int* mask1, const unsigned int* mask2,unsigned int*
   int result = 0;
   for (int i=0;i<mask_size;++i)  {
     mask3[i] = mask1[i] | mask2[i];
-    result   |= mask3[i];
+    result  |= mask3[i];
   }
   return result;
 }
@@ -75,7 +75,7 @@ int mask_and_ro3 (const unsigned int* mask1,const unsigned int* mask2, const uns
 
 int mask_or_ro2 (const unsigned int* mask1,const unsigned int* mask2, const int mask_size) {
   int result = 0;
-  for (int i=0;i<mask_size;++i)  {
+  for (int i=0;!result && i<mask_size;++i)  {
     result |= (mask1[i] | mask2[i]);
   }
   return result;
@@ -83,7 +83,7 @@ int mask_or_ro2 (const unsigned int* mask1,const unsigned int* mask2, const int 
 
 int mask_or_ro3 (const unsigned int* mask1,const unsigned int* mask2, const unsigned int* mask3, const int mask_size) {
   int result = 0;
-  for (int i=0;i<mask_size;++i)  {
+  for (int i=0; !result && i<mask_size; ++i)  {
     result |= (mask1[i] | mask2[i] | mask3[i]);
   }
   return result;
@@ -91,7 +91,7 @@ int mask_or_ro3 (const unsigned int* mask1,const unsigned int* mask2, const unsi
 
 int mask_or_ro4 (const unsigned int* mask1,const unsigned int* mask2, const unsigned int* mask3, const unsigned int* mask4, const int mask_size) {
   int result = 0;
-  for (int i=0;i<mask_size;++i)  {
+  for (int i=0;!result && i<mask_size;++i)  {
     result |= (mask1[i] | mask2[i] | mask3[i] | mask4[i]);
   }
   return result;
@@ -100,7 +100,7 @@ int mask_or_ro4 (const unsigned int* mask1,const unsigned int* mask2, const unsi
 int mask_summ(const unsigned int* mask, int mask_size)   {
   int result = 0;
   for (int i=0;i<mask_size;++i)  {
-    result |= mask[i] ;
+    result |= mask[i];
   }
   return result;
 }

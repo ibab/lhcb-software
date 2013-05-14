@@ -24,31 +24,31 @@ protected:
   TcpNetworkChannel*    _pNetwork;
   TanDataBase::Entry*   _pEntry;
 public:
-  explicit Receivehandler ( EventReactor* reactor ) 
+  Receivehandler ( EventReactor* reactor ) 
     : EventHandler(reactor), _pNetwork(0), _pEntry(0)  {
-  }
-  Receivehandler ( EventReactor* reactor, TcpNetworkChannel* chan, TanDataBase::Entry* entry ) 
-    : EventHandler(reactor), _pNetwork(chan), _pEntry(entry)  
-  {
-  }
-  virtual ~Receivehandler() {
-  }
-  TcpNetworkChannel* channel()     {
-    return _pNetwork;
-  }
-  TanDataBase::Entry* _Entry()     {
-    return _pEntry;
-  }
-  void _Set( TcpNetworkChannel* chan, TanDataBase::Entry* entry )  {
-    _pNetwork = chan;
-    _pEntry   = entry;
-  }
-  void _Delete()  {
-    TcpNetworkChannel* chan = channel();
-    chan->cancel();
-    delete chan;
-    delete this;
-  }
+    }
+    Receivehandler ( EventReactor* reactor, TcpNetworkChannel* chan, TanDataBase::Entry* entry ) 
+      : EventHandler(reactor), _pNetwork(chan), _pEntry(entry)  
+    {
+    }
+    virtual ~Receivehandler() {
+    }
+    TcpNetworkChannel* channel()     {
+      return _pNetwork;
+    }
+    TanDataBase::Entry* _Entry()     {
+      return _pEntry;
+    }
+    void _Set( TcpNetworkChannel* chan, TanDataBase::Entry* entry )  {
+      _pNetwork = chan;
+      _pEntry   = entry;
+    }
+    void _Delete()  {
+      TcpNetworkChannel* chan = channel();
+      chan->cancel();
+      delete chan;
+      delete this;
+    }
 };
 
 
@@ -79,7 +79,7 @@ protected:
 public:
   //@Man Public member functions
   /// Standard constructor
-  explicit NameService( NetworkConnection* ptr = 0, bool verbose = false);
+  NameService( NetworkConnection* ptr = 0, bool verbose = false);
   /// Standard destructor
   virtual ~NameService();
   /// handle Tan request
@@ -116,7 +116,7 @@ class UdpNameService : public NameService {
 public:
   //@Man Public member functions
   /// Standard constructor
-  explicit UdpNameService(bool verbose = false);
+  UdpNameService(bool verbose = false);
   /// Standard destructor
   virtual ~UdpNameService()   {
   }
@@ -158,9 +158,9 @@ protected:
 public:
   //@Man Public member functions
   /// Standard constructor with initialization
-  explicit TcpNameService(int port, bool verbose = false);
+  TcpNameService(int port, bool verbose = false);
   /// Standard constructor
-  explicit TcpNameService(bool verbose = false);
+  TcpNameService(bool verbose = false);
   /// Standard destructor
   virtual ~TcpNameService();
   /// Overloaded abstract member function: Act on Nameservice requests
@@ -334,7 +334,7 @@ void UdpNameService::handle ()   {
     handleMessage( ent, req, rep );
 #ifndef SERVICE
     // Swap port to reply connection
-    addr.sin_port = NetworkChannel::Port(htons((NetworkChannel::Port)(m_port+1)));
+    addr.sin_port = htons(m_port+1);
 #endif
     //lib_rtl_output(LIB_RTL_DEBUG,"send to port:%04X\n",addr.sin_port);
     status = snd.send(&rep,sizeof(rep),0,0,&addr);
@@ -422,12 +422,13 @@ int TcpNameService::handle ( EventHandler* handler )  {
 int TcpNameService::handleAcceptRequest ( EventHandler* handler )  {
   int retry = 1, accept_error;                                     //
   NetworkChannel::Address address;                                 //
-  NetworkChannel::Channel channel = m_pNetwork->accept(address);   // Accept
-  accept_error = m_pNetwork->error();                              //
-  int status = m_pNetwork->queueAccept(m_port,handler);            // Rearm ACCEPT
-  if ( !lib_rtl_is_success(status) )  {                            //
+  NetworkChannel::Channel channel = m_pNetwork->accept(address);  // Accept
+  accept_error = m_pNetwork->error();                             //
+  int status = m_pNetwork->queueAccept(m_port,handler);           // Rearm ACCEPT
+  if ( !lib_rtl_is_success(status) )  {
     lib_rtl_output(LIB_RTL_ERROR,"handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s",
-		   accept_error,retry,m_pNetwork->errMsg());       //
+      m_pNetwork->error(),retry,                                  //
+      m_pNetwork->errMsg());                                      //
   }                                                                //
   if ( channel <= 0 )   {                                          // Error!
     return NAME_SERVER_SUCCESS;                                    // Return status code
@@ -575,7 +576,7 @@ Options:
   if ( !srv ) goto Options;
   if ( !nowait )  {
     srv->run();
+    delete srv;
   }
-  delete srv;
   return 0x1;
 }

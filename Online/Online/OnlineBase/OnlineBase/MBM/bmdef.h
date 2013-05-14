@@ -12,20 +12,23 @@ enum MBM_dimensions  {
 
 enum MBM_Internals  {
   BM_MAX_REQS   = 8,
-  BM_MAX_EVTYPE = 10
+  BM_MAX_EVTYPE = 10,
+  BM_MAX_REQONE = 12,   // This must be a multiple of 4!!!
+  BM_MAX_THREAD = 16
 };
 
 enum MBM_MaskTypes  {
   BM_MASK_ANY   = 0,
-  BM_MASK_ALL   = 1
+  BM_MASK_ALL   = 1,
+  BM_MASK_REQ   = 0xFF  // Only used if Request type is BM_REQ_ONE
 };
 
 enum MBM_RequestTypes  {
-  BM_NOTALL    = 0,
-  BM_REQ_USER  = 0,
-  BM_REQ_VIP   = 1,
-  BM_REQ_ALL   = 1,
-  BM_REQ_ONE   = 2
+  BM_NOTALL       = 0,
+  BM_REQ_USER     = 0,
+  BM_REQ_VIP      = 1,
+  BM_REQ_ALL      = 1,
+  BM_REQ_ONE      = 2
 };
 
 enum MBM_FrequencyTypes  {
@@ -39,13 +42,19 @@ typedef int (*RTL_ast_t)(void*);
 struct BMDESCRIPT;
 struct CONTROL;
 struct USER;
+struct EVENT;
+struct BufferMemory;
 typedef BMDESCRIPT* BMID;
 #else
 typedef void* BMID;
 typedef void* USER;
 typedef void* CONTROL;
+typedef void* EVENT;
+typedef void  BufferMemory;
 #endif
+
 #define MBM_INV_DESC   ((BMID)-1)
+#define MBM_INV_MEMORY ((BufferMemory*)-1)
 
 #ifdef __cplusplus
 #define __MBM_CONST const
@@ -53,11 +62,14 @@ extern "C"  {
 #endif
   struct BUFFERS;
   int  mbm_qmtest_check_no_active_buffers(int, char**);
-  int mbm_qmtest_check_start();
+  int  mbm_qmtest_check_start();
+
   int  mbm_install(int argc , char** argv);
   int  mbm_deinstall(int argc , char** argv);
   int  mbm_dump(int argc , char** argv);
   int  mbm_mon(int argc , char** argv);
+
+  /// Include as client in buffer manager
   BMID mbm_include (const char* bm_name, const char* name, int partid);
   int  mbm_exclude (BMID bm);
   __MBM_CONST char* mbm_buffer_address(BMID);
@@ -65,6 +77,7 @@ extern "C"  {
   int  mbm_register_free_event(BMID bm, RTL_ast_t astadd, void* astparam);
   /// Register optional callback on _mbm_ealloc
   int  mbm_register_alloc_event(BMID bm, RTL_ast_t astadd, void* astparam);
+
   int  mbm_add_req (BMID bm, int evtype, __MBM_CONST unsigned int* trmask, __MBM_CONST unsigned int* veto, int masktype, 
                     int usertype, int freqmode, float freq);
   int  mbm_del_req    (BMID bm, int evtype, __MBM_CONST unsigned int* trmask, __MBM_CONST unsigned int* veto, int masktype, int usertype);
@@ -108,22 +121,21 @@ extern "C"  {
 
   int  mbm_wait_event(BMID bm);
   int  mbm_wait_event_a(BMID bm);
-  /// Default AST implementation on get_event
-  int  mbm_get_event_ast(void* par);
-  /// Map buffer memory sections
-  BMID mbm_map_memory(const char* bm_name);
-  /// Map buffer memory sections used for monitoring
-  BMID mbm_map_mon_memory(const char* name);
-  /// Unmap buffer memory sections
-  int mbm_unmap_memory(BMID bm);
+
+  /// Map monitoring shared memory section
+  BufferMemory* mbm_map_mon_memory(__MBM_CONST char* bm_name);
+  /// Unmap monitoring shared memory section
+  int  mbm_unmap_mon_memory(BufferMemory* bmid);
+  /// Access control table in monitoring section
+  CONTROL* mbm_get_control_table(BufferMemory* bmid);
+  /// Access user table in monitoring section
+  USER* mbm_get_user_table(BufferMemory* bmid);
+  /// Access event table in monitoring section
+  EVENT* mbm_get_event_table(BufferMemory* bmid);
   /// Map global buffer information on this machine
   int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle, bool create=true);
   /// Unmap global buffer information on this machine
   int mbm_unmap_global_buffer_info(lib_rtl_gbl_t handle, bool remove=false);
-  /// Access buffer control block
-  CONTROL* mbm_get_control_table(BMID bm);
-  /// Access user control block
-  USER* mbm_get_user_table(BMID bm);
 
 #ifdef __cplusplus
 #undef __MBM_CONST

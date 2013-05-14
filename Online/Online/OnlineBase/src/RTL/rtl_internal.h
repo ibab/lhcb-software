@@ -53,7 +53,6 @@ typedef rtl_event*  lib_rtl_event_t;
 
 #include "RTL/rtl.h"
 struct lib_rtl_gbl_desc : public lib_rtl_gbl {
-  int         size;
   int         fd;
   char        name[32];
 };

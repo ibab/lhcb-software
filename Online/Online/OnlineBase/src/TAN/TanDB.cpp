@@ -71,7 +71,7 @@ public:
 };
 
 static void strup (char* s1, const char* s2)   {
-  for(; *s2; s2++) *s1++ = char(::toupper(*s2));
+  for(; *s2; s2++) *s1++ = ::toupper(*s2);
   *s1 = 0;
 }
 // ----------------------------------------------------------------------------
@@ -137,7 +137,7 @@ extern "C" int tandb_free_port (TanDataBase::Entry* ce)   {
 // Database Constructor
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-TanDataBase::TanDataBase() : _iPort(0), _iAlloc(0), m_lock(0) {
+TanDataBase::TanDataBase() : m_lock(0) {
   PubArea Pa(NAMESRV_PUBAREA_NAME);
   int status = PA_FAILURE;
   void* slot = 0;
@@ -229,7 +229,7 @@ TanDataBase& TanDataBase::Instance() {
 NetworkChannel::Port TanDataBase::findPort ( TanMessage& msg )  {
   RTL::Lock lock(m_lock);
   Entry *e = _findEntry ( msg._Name() );  
-  return NetworkChannel::Port((e && e->m_dead == 0) ? e->m_port : 0);
+  return (e && e->m_dead == 0) ? e->m_port : 0;
 }
 // ----------------------------------------------------------------------------
 // Allocate database port from a given already alloctaed entry
@@ -317,7 +317,7 @@ Done:
   index = current_port;
 #endif
   ce->m_dead   = 0;
-  ce->m_port   = NetworkChannel::Port(NAMESERVICE_BASE_PORT+index+1);   // THAT'S MY PORT NUMBER
+  ce->m_port   = NAMESERVICE_BASE_PORT+index+1;   // THAT'S MY PORT NUMBER
   //fprintf(stdout, "%s [%s] Got port:%d %X -> current: %d remaining: %d \n", 
   //        ce->name, ce->m_msg.m_name, ce->port,ce->port, current_port, ports_availible-current_port);
   //fflush(stdout);
@@ -423,7 +423,7 @@ TanDataBase::Entry* TanDataBase::_allocateEntry ( NetworkChannel::Channel chan )
         e->im_osb._lPort = peer.sin_port;
       else
         ::lib_rtl_output(LIB_RTL_ERROR,"Cannot determine sock of socket %d\n", e->chan);
-#elif defined(_VMS)
+#elif _VMS
       e->m_iosb.dev_info = e->m_iosb.status = e->m_iosb.count = 0;
       e->hl.next = e->hl.prev = e->al.next = e->al.prev = 0;
 #else
@@ -524,11 +524,11 @@ int TanDataBase::Close (TanDataBase::Entry *ce)   {
 int TanDataBase::Dump( std::ostream& os )  {
   char text[1024];
   const char *func;
-  ::snprintf(text,sizeof(text),"NameServer Database entry dump: #Allocated %d With port:%d",
+  ::sprintf(text,"NameServer Database entry dump: #Allocated %d With port:%d",
     _pData->_allocated,_pData->_ports);
   os << text << std::endl;
-  ::snprintf(text,sizeof(text),"%-16s %-4s(%-3s) %-4s Msg:%-6s %-3s %-16s %s",
-	    "Name","Port","Flg","Chan","Reqst","Len","Name","Address");
+  ::sprintf(text,"%-16s %-4s(%-3s) %-4s Msg:%-6s %-3s %-16s %s",
+    "Name","Port","Flg","Chan","Reqst","Len","Name","Address");
   os << text << std::endl;
   for ( int i = 0; i < TanPaSlot::NumEntries; i++ )     {
     if ( _pData->_pEntry[i] != 0 )  {
@@ -557,10 +557,10 @@ int TanDataBase::Dump( std::ostream& os )  {
             func = "-----";
             break;
         }
-        ::snprintf(text,sizeof(text),"%-16s %04X Prt  %-4d %-3s %-7s%-4d%-16s %s",
-		  e._Name(), e.port(), e.channel(), e.m_dead==1 ? "***" : "",
-		  func, int(htonl(e.m_msg._Length())), e.m_msg._Name(),
-		  inet_ntoa(e.m_msg.address()));
+        ::sprintf(text,"%-16s %04X Prt  %-4d %-3s %-7s%-4d%-16s %s",
+          e._Name(), e.port(), e.channel(), e.m_dead==1 ? "***" : "",
+          func, htonl(e.m_msg._Length()), e.m_msg._Name(),
+          inet_ntoa(e.m_msg.address()));
         os << text << std::endl;
         for ( qentry_t* a  = _NextEntry(&e.al), *last = 0; 
           a != _TheEntry(&e.al) && a != 0 && a != last;
@@ -577,10 +577,9 @@ int TanDataBase::Dump( std::ostream& os )  {
             case TanMessage::DUMP:           func = "DUMPDB";      break;
             default:                         func = "-----";       break;
           }
-          ::snprintf(text,sizeof(text),"%-16s %04X Als  %-4d %-3s %-7s%-4d%-16s %s",
-		    ee->_Name(), ee->port(), ee->channel(), ee->m_dead==1 ? "***" : "",
-		    func, int(ee->m_msg._Length()), ee->m_msg._Name(), 
-		    inet_ntoa(ee->m_msg.address()));
+          ::sprintf(text,"%-16s %04X Als  %-4d %-3s %-7s%-4d%-16s %s",
+            ee->_Name(), ee->port(), ee->channel(), ee->m_dead==1 ? "***" : "",
+            func, ee->m_msg._Length(), ee->m_msg._Name(), inet_ntoa(ee->m_msg.address()));
           os << text << std::endl;
         }
       }

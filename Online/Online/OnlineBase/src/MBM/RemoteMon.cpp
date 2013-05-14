@@ -7,11 +7,6 @@
 /*  0  14/05/07  Initial version                               MF        */
 /*-----------------------------------------------------------------------*/
 #define MBM_IMPLEMENTATION
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <cstdarg>
-#include <ctime>
 #include "CPP/XMLStream.h"
 #include "MBM/bmstruct.h"
 #include "bm_internals.h"
@@ -120,7 +115,7 @@ int MBM::XMLMonitorServer::handleAcceptRequest ( EventHandler* handler )  {
   int accept_error = m_pNetwork->error();                          //
   int status = m_pNetwork->queueAccept(m_port,handler);            // Rearm ACCEPT
   if ( !lib_rtl_is_success(status) )  {
-    lib_rtl_output(LIB_RTL_ALWAYS,"handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s",
+    lib_rtl_output(LIB_RTL_ALWAYS,"handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s\n",
       accept_error,retry,m_pNetwork->errMsg());
   }
   if ( channel > 0 )   {
@@ -193,12 +188,12 @@ void MBM::XMLMonitorServer::dumpUser(XMLStream& o, const USER* us) {
 
   if ( us->ev_produced>0 || us->get_sp_calls>0 )   {
     o << XML::item("TYPE","Producer");
-    o << XML::item("STATE", XML::text(sstat[us->p_state+1]));
+    o << XML::item("STATE", XML::text(sstat[us->state+1]));
     o << XML::item("NPROD", us->ev_produced);
   }
   else if ( us->ev_actual>0 || us->get_ev_calls>0 || us->n_req>0 ) {
     o << XML::item("TYPE","Consumer");
-    o << XML::item("STATE", XML::text(sstat[us->c_state+1]));
+    o << XML::item("STATE", XML::text(sstat[us->state+1]));
     o << XML::item("NSEEN", us->ev_seen);
     o << XML::item("NFREE", us->ev_freed);
   }
@@ -213,7 +208,7 @@ void MBM::XMLMonitorServer::dumpBuffers(XMLStream& o)   {
   o << XML::item("NODE", XML::text(RTL::nodeName()));
   for (int j, i=0;i<m_numBM && m_buffers->p_bmax;i++)  {
     if ( m_bms[i].m_buff != 0 )  {
-      BMDESCRIPT* dsc = m_bms[i].m_mgr.m_bm;
+      BufferMemory* dsc = m_bms[i].m_mgr.m_bm;
       USER *us, *utst=(USER*)~0x0;
       CONTROL*    ctr = dsc->ctrl;
       XML::Guard buff(o, "BUFFER", i);
@@ -244,7 +239,7 @@ int MBM::XMLMonitorServer::optparse (const char* c)  {
 
 int MBM::XMLMonitorServer::get_bm_list()   {
   m_numBM = 0;
-  int status = ::mbm_map_global_buffer_info(&m_bm_all,false);
+  int status = ::mbmsrv_map_global_buffer_info(&m_bm_all,false);
   if( !lib_rtl_is_success(status) )   {   
     lib_rtl_output(LIB_RTL_ERROR,"Cannot map global buffer information....\n");
     m_bm_all = 0;
@@ -258,7 +253,7 @@ int MBM::XMLMonitorServer::get_bm_list()   {
     if ( m_buffers->buffers[i].used == 1 )  {
       if ( m_bms[i].m_buff == 0 )  {
         m_bms[i].m_mgr.setup(m_buffers->buffers[i].name);
-        int sc = m_bms[i].m_mgr.mapSections();
+        int sc = m_bms[i].m_mgr.mapMonitorSections();
         if ( !lib_rtl_is_success(sc) )   {
           m_bms[i].m_mgr.unmapSections();
           continue;
@@ -286,7 +281,7 @@ int MBM::XMLMonitorServer::drop_bm_list()   {
   }
   m_numBM = 0;
   if ( m_bm_all ) {
-    ::mbm_unmap_global_buffer_info(m_bm_all,false);
+    ::mbmsrv_unmap_global_buffer_info(m_bm_all,false);
     m_bm_all = 0;
   }
   m_buffers = 0;

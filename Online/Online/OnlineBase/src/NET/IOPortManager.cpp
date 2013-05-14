@@ -23,12 +23,12 @@ extern "C" int console_read_test(int, char**)  {
   DWORD cNumRead, fdwMode, fdwSaveOldMode; 
   INPUT_RECORD irInBuf; 
   if (! GetConsoleMode(hStdin, &fdwSaveOldMode) ) 
-    lib_rtl_output(LIB_RTL_ALWAYS,"GetConsoleMode"); 
+    lib_rtl_output(LIB_RTL_ALWAYS,"GetConsoleMode\n"); 
 
   // Enable the window and mouse input events. 
   fdwMode = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT; 
   if (! SetConsoleMode(hStdin, fdwMode) ) 
-    lib_rtl_output(LIB_RTL_ALWAYS,"SetConsoleMode"); 
+    lib_rtl_output(LIB_RTL_ALWAYS,"SetConsoleMode\n"); 
   while (1) {
     // Wait for the events. 
     if (! ReadConsoleInput( 
@@ -36,7 +36,7 @@ extern "C" int console_read_test(int, char**)  {
       &irInBuf,     // buffer to read into 
       1,         // size of read buffer 
       &cNumRead) ) // number of records read 
-      lib_rtl_output(LIB_RTL_ALWAYS,"ReadConsoleInput"); 
+      lib_rtl_output(LIB_RTL_ALWAYS,"ReadConsoleInput\n"); 
     switch(irInBuf.EventType) 
     { 
     case KEY_EVENT: // keyboard input 
@@ -59,7 +59,7 @@ extern "C" int console_read_test(int, char**)  {
       break; 
 
     default: 
-      lib_rtl_output(LIB_RTL_ALWAYS,"unknown event type"); 
+      lib_rtl_output(LIB_RTL_ALWAYS,"unknown event type\n"); 
       break; 
     } 
   }
@@ -67,7 +67,7 @@ extern "C" int console_read_test(int, char**)  {
 
 extern "C" int console_read_test2(int, char**)  {
   char c=0;
-  lib_rtl_output(LIB_RTL_ALWAYS, "do not forget to execute: 'stty -icanon -echo'" );
+  lib_rtl_output(LIB_RTL_ALWAYS, "do not forget to execute: 'stty -icanon -echo'\n" );
   fflush(stdout);
   int fd = fileno(stdin);
   lib_rtl_output(LIB_RTL_ALWAYS,"Get console IO...type q to quit\n\n\n");
@@ -77,7 +77,7 @@ extern "C" int console_read_test2(int, char**)  {
     lib_rtl_output(LIB_RTL_ALWAYS,"Got char:%02X\n",c);
     fflush(stdout);
   }
-  lib_rtl_output(LIB_RTL_ALWAYS, "do not forget to execute: 'stty icanon echo'" );
+  lib_rtl_output(LIB_RTL_ALWAYS, "do not forget to execute: 'stty icanon echo'\n" );
   return 1;
 }
 #endif
@@ -132,12 +132,12 @@ namespace {
     INPUT_RECORD irInBuf; 
     if ( !xterm )  {
       if (! GetConsoleMode(hStdin, &fdwSaveOldMode) ) 
-        lib_rtl_output(LIB_RTL_ALWAYS,"GetConsoleMode"); 
+        lib_rtl_output(LIB_RTL_ALWAYS,"GetConsoleMode\n"); 
 
       // Enable the window and mouse input events. 
       DWORD fdwMode = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT; 
       if (! SetConsoleMode(hStdin, fdwMode) ) 
-        lib_rtl_output(LIB_RTL_ALWAYS,"SetConsoleMode"); 
+        lib_rtl_output(LIB_RTL_ALWAYS,"SetConsoleMode\n"); 
     }
 #endif
 
@@ -154,7 +154,7 @@ namespace {
               1,              // size of read buffer 
               &cNumRead) )    // number of records read 
         {
-          lib_rtl_output(LIB_RTL_ALWAYS,"ReadConsoleInput"); 
+          lib_rtl_output(LIB_RTL_ALWAYS,"ReadConsoleInput\n"); 
         }
         if ( irInBuf.EventType != KEY_EVENT ) continue;
         if ( irInBuf.Event.KeyEvent.bKeyDown == 0 ) continue;

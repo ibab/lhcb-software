@@ -5,10 +5,6 @@
 /*                                                                       */
 /*-----------------------------------------------------------------------*/
 #define MBM_IMPLEMENTATION
-#include <cstdio>
-#include <cstring>
-#include <cstdarg>
-#include <ctime>
 #include "MBM/bmstruct.h"
 #include "bm_internals.h"
 #include "Manager.h"
@@ -28,7 +24,7 @@ namespace {
     typedef map<string,USER*> Users;
     Users m_oneTasks;
     virtual int show(bool show_states);
-    virtual int show(BMDESCRIPT* dsc, bool show_states);
+    virtual int show(BufferMemory* dsc, bool show_states);
     Summary()                           {           }
     virtual ~Summary()                  {           }
   };
@@ -36,10 +32,10 @@ namespace {
 
 int Summary::show(bool show_states) {
   lib_rtl_gbl_t bm_all;
-  int status = ::mbm_map_global_buffer_info(&bm_all,false);
+  int status = ::mbmsrv_map_global_buffer_info(&bm_all,false);
   if(!lib_rtl_is_success(status))   {   
     ::lib_rtl_output(LIB_RTL_ERROR,"Cannot map global buffer information....\n");
-    exit(status);
+    ::exit(status);
   }
   ::printf("+++++ MBM buffer section sucessfully mapped.\n");
   BUFFERS* buffs = (BUFFERS*)bm_all->address;
@@ -61,14 +57,14 @@ int Summary::show(bool show_states) {
     }
   }
   catch(...) {
-    printf(" Exception during buffer monitoring.\n");
+    ::printf(" Exception during buffer monitoring.\n");
   }
-  ::mbm_unmap_global_buffer_info(bm_all,false);
+  ::mbmsrv_unmap_global_buffer_info(bm_all,false);
   ::printf("\n+++++ MBM summary finished.\n");
   return 1;
 }
 
-int Summary::show(BMDESCRIPT* dsc, bool show_states)   {
+int Summary::show(BufferMemory* dsc, bool show_states)   {
   int j, k;
   static const char* fmt_def  = " %-20s%5x%5s          %40s%5s%7s\n";
   static const char* fmt_prod = " %-20s%5x%5s%6s%11d   %3.0f%32s%7s\n";
@@ -80,8 +76,8 @@ int Summary::show(BMDESCRIPT* dsc, bool show_states)   {
 
   ::printf("\n======================== MBM Bufer summary for buffer \"%s\" ========================\n\n",dsc->bm_name);
   ::sprintf(txt," Buffer \"%s\"",dsc->bm_name);
-  ::printf("%-26s  Events: Produced:%d Seen:%d Pending:%d Max:%d\n",
-	   txt, ctr->tot_produced, ctr->tot_seen, ctr->i_events, ctr->p_emax);
+  ::printf("%-26s  Events: Produced:%ld Seen:%ld Pending:%d Max:%d\n",
+	   txt, long(ctr->tot_produced), long(ctr->tot_seen), ctr->i_events, ctr->p_emax);
   ::printf("%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]\n\n",
 	   "",(ctr->bm_size*ctr->bytes_p_Bit)/1024, (ctr->i_space*ctr->bytes_p_Bit)/1024, 
 	   ctr->i_users, ctr->p_umax);
@@ -95,8 +91,8 @@ int Summary::show(BMDESCRIPT* dsc, bool show_states)   {
     users[us->name] = us;
   }
   USER cons_one, prod_one;
-  memset(&cons_one,0,sizeof(cons_one));
-  memset(&prod_one,0,sizeof(prod_one));
+  ::memset(&cons_one,0,sizeof(cons_one));
+  ::memset(&prod_one,0,sizeof(prod_one));
   for(Users::const_iterator ui=users.begin(); ui!=users.end();++ui) {
     char spy_val[5] = {' ',' ',' ',' ',0};
     us = (*ui).second;
@@ -115,21 +111,21 @@ int Summary::show(BMDESCRIPT* dsc, bool show_states)   {
       if ( ctr->tot_produced>0 ) perc = ((float)us->ev_produced/(float)ctr->tot_produced)*100;
       if ( m_oneTasks.find(us->name) != m_oneTasks.end() ) {
 	prod_one.ev_produced += us->ev_produced;
-	prod_one.p_state  = 0;
-	prod_one.partid   = us->partid;
+	prod_one.state  = 0;
+	prod_one.partid = us->partid;
 	::strcpy(prod_one.name,"PROD_ONE");
 	continue;
       }
-      const char* st = show_states ? sstat[us->p_state+1] : "";
+      const char* st = show_states ? sstat[us->state+1] : "";
       ::printf(fmt_prod,us->name,us->partid,"P",st,us->ev_produced,
-		perc+0.1, spy_val, dsc->bm_name);
+	       perc+0.1, spy_val, dsc->bm_name);
     }
     else if ( us->ev_actual>0 || us->get_ev_calls>0 || us->n_req>0 ) {
       float perc = 0;
       if ( spy_val[1]=='1' )   {
 	m_oneTasks[us->name] = 0;
 	cons_one.ev_seen += us->ev_seen;
-	cons_one.c_state  = 0;
+	cons_one.state    = 0;
 	cons_one.partid   = us->partid;
 	::strcpy(cons_one.name,"CONS_ONE");
 	continue;
@@ -137,7 +133,7 @@ int Summary::show(BMDESCRIPT* dsc, bool show_states)   {
       if ( ctr->tot_produced>0 ) {
 	perc = ((float)us->ev_seen/(float)ctr->tot_produced)*100;
       }
-      const char* st = show_states ? sstat[us->c_state+1] : "";
+      const char* st = show_states ? sstat[us->state+1] : "";
       ::printf(fmt_cons,us->name,us->partid,"C",st,
 	       us->ev_seen, perc+0.1, spy_val, dsc->bm_name);
     }

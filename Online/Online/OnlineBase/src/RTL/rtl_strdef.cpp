@@ -115,25 +115,6 @@ int strcase_match_wild (const char *candidate_string, const char *pattern_string
   return match1(pattern_string,candidate_string,false) ? STR_MATCH : STR_NOMATCH;
 }
 
-std::string RTL::str_lower(const std::string& str) {
-  std::string res = str;
-  for(char* p=(char*)res.c_str(); *p; ++p) *p = ::tolower(*p);
-  return res;
-}
-
-std::string RTL::str_upper(const std::string& str) {
-  std::string res = str;
-  for(char* p=(char*)res.c_str(); *p; ++p) *p = ::toupper(*p);
-  return res;
-}
-
-std::string RTL::str_replace(const std::string& str, const std::string& pattern, const std::string& replacement) {
-  std::string res = str;
-  for(size_t id=res.find(pattern); id != std::string::npos; id = res.find(pattern) )
-    res.replace(id,pattern.length(),replacement);
-  return res;
-}
-
 #if 0
 int str_match_wild (const char *candidate_string, const char *pattern_string)   {
   int result = STR_NOMATCH;

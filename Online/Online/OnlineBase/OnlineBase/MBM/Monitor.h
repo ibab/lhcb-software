@@ -15,13 +15,13 @@ namespace MBM {
 
   class Monitor : public Interactor  {
   protected:
-    DisplayDescriptor* m_bms;
-    int                m_numBM;
-    char               m_buffID[32];
-    char*              m_bmid;
-    lib_rtl_gbl_t      m_bm_all;
-    BUFFERS*           m_buffers;
-    MonitorDisplay*    m_display;
+    DisplayDescriptor*  m_bms;
+    int                 m_numBM;
+    char                m_buffID[32];
+    char*               m_bmid;
+    lib_rtl_gbl_t       m_bm_all;
+    BUFFERS*            m_buffers;
+    MonitorDisplay*     m_display;
   public:
     MonitorDisplay* display() { return m_display; }
     virtual int monitor();

@@ -112,6 +112,7 @@ void RTL::ExitSignalHandler::init()  {
   INSTALL_SIGNAL(SIGINT,   new_action);
   INSTALL_SIGNAL(SIGTERM,  new_action);
   INSTALL_SIGNAL(SIGHUP,   new_action);
+  INSTALL_SIGNAL(SIGPIPE,  new_action);
   // INSTALL_SIGNAL(SIGKILL,  new_action);
   INSTALL_SIGNAL(SIGQUIT,  new_action);
   INSTALL_SIGNAL(SIGBUS,   new_action);
@@ -144,7 +145,6 @@ void RTL::ExitSignalHandler::install(int num, const string& name, struct sigacti
 }
 
 void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void *ptr) {
-  RTL::ExitHandler::execute();
   SigMap& m = instance().m_map;
   SigMap::iterator i=m.find(signum);
   if ( i != m.end() ) {
@@ -153,16 +153,23 @@ void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void *ptr) {
     func_cast<void (*)(int,siginfo_t*, void*)> dsc(dsc0.ptr);
     if ( s_RTL_exit_handler_print ) {
       ::lib_rtl_output(LIB_RTL_ERROR,"RTL:Handled signal: %d [%s] Old action:%p\n",
-		       info->si_signo,(*i).second.first.c_str(),dsc.ptr);
+		       signum,(*i).second.first.c_str(),dsc.ptr);
     }
-    if ( old && old != SIG_IGN )    {
+    if ( signum == SIGINT || signum == SIGHUP || signum == SIGFPE || signum == SIGPIPE ) {
+      if ( old && old != SIG_IGN && dsc.fun )
+	dsc.fun(signum,info,ptr);
+    }
+    else if ( old && old != SIG_IGN && dsc.fun )  {
+      RTL::ExitHandler::execute();
       dsc.fun(signum,info,ptr);
-      //::_exit(signum);
     }
     else if ( old == SIG_DFL ) {
+      RTL::ExitHandler::execute();
       ::_exit(0);
     }
+    return;
   }
+  RTL::ExitHandler::execute();
 }
 
 #elif _WIN32
@@ -423,8 +430,7 @@ int lib_rtl_get_datainterface_name(char* node, size_t len)  {
   if ( !tmp )  {
     char n[64], nn[70];
     if ( 0 == ::gethostname (n,sizeof(n)) )  {
-      char* loc = strchr(n,'.');
-      if ( loc ) *loc = 0;
+      if ( strchr(n,'.')>0 ) *strchr(n,'.') = 0;
       ::strncpy(nn,n,sizeof(n));
       ::strcat(nn,"-d");
       hostent* h = ::gethostbyname(nn);
@@ -455,7 +461,9 @@ size_t lib_rtl_output(int level, const char* format, ...)   {
   result = (RTL::s_rtl_printer != 0)
     ? (*RTL::s_rtl_printer)(RTL::s_rtl_printer_arg, level, format, args)
     : ::vfprintf(stdout, format, args);
-  if ( !RTL::s_rtl_printer ) ::fflush(stdout);
+  if ( !RTL::s_rtl_printer ) {
+    ::fflush(stdout);
+  }
   va_end(args);
   return result;
 }
@@ -468,7 +476,9 @@ size_t lib_rtl_printf(const char* format, ...)   {
   result = (RTL::s_rtl_printer != 0)
     ? (*RTL::s_rtl_printer)(RTL::s_rtl_printer_arg, LIB_RTL_ALWAYS, format, args)
     : ::vfprintf(stdout, format, args);
-  if ( !RTL::s_rtl_printer ) ::fflush(stdout);
+  if ( !RTL::s_rtl_printer ) {
+    ::fflush(stdout);
+  }
   va_end(args);
   return result;
 }

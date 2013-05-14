@@ -19,6 +19,7 @@ namespace MBM {
     int   p_moni;         // Start monitor
     int   p_emax;         // maximum events allowed 
     int   p_umax;         // maximun users
+    int   p_tmax;         // maximun server threads
     int   p_size;         // buffer size
     int   p_force;        // force deinstall
     int   p_bits;         // Block size 

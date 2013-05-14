@@ -3,12 +3,13 @@
 
 // Include files
 #include "RTL/rtl.h"
-struct BMDESCRIPT;
+typedef struct ServerBMID_t* ServerBMID;
 
 /*
  *    MBM Namespace declaration
  */
 namespace MBM {
+
   /* @class MBM::Manager  Manager.h  MBM/Manager.h
    *
    * @author  M.Frank
@@ -16,19 +17,24 @@ namespace MBM {
    * @date    10/01/2006
    */
   struct Manager  {
-    BMDESCRIPT* m_bm;
-    char ctrl_mod[32];       // Control section name
-    char buff_mod[32];       // Buffer section name
-    char user_mod[32];       // Userdata section name
-    char event_mod[32];      // Event data section name
-    char bitmap_mod[32];     // Bitmap section name 
-    const   char* bm_id;     // Buffer id
+    /// BM identifier
+    ServerBMID m_bm;
+    /// Global section module name for the control sections
+    char          ctrl_mod[32];
+    /// Global section module name for the buffer data
+    char          buff_mod[32];
+    /// Buffer id
+    const   char* bm_id;
+    /// Global section handle to buffer inventory
     lib_rtl_gbl_t bm_all;
+
   public:
     /// Default constructor
     Manager();
     /// Default destructor 
     virtual ~Manager();
+    /// Access the server's BMID
+    ServerBMID bmid() const {  return m_bm; }
     /// Map BM memory sections
     virtual int mapSections();
     /// Map BM monitoring memory sections
