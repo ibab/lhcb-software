@@ -21,7 +21,7 @@
 using namespace std;
 using namespace LHCb;
 
-extern "C" int mbm_install(int argc , char** argv);
+extern "C" std::vector<ServerBMID> mbm_multi_install(int argc , char** argv);
 
 /// Standard service constructor
 MEPManager::MEPManager(const string& nam, ISvcLocator* loc)
@@ -85,11 +85,13 @@ StatusCode MEPManager::initializeBuffers()  {
         *strchr(items[i],' ') = 0;
       }
     }
-    StatusCode sc = mbm_install(ikey, items);
-    for(size_t j=0; j<ikey; ++j)  {
+    std::vector<ServerBMID> bmids = mbm_multi_install(ikey, items);
+    for(size_t j=0; j<ikey; ++j)
       delete [] items[j];
+    if ( bmids.empty() ) {
+      return error("Failed to initialize MBM buffers.");
     }
-    return sc;
+    return StatusCode::SUCCESS;
   }
   return StatusCode::SUCCESS;
 }

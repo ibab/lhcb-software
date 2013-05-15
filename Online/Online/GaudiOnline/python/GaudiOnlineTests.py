@@ -137,7 +137,7 @@ def runPanoramixSim(source,load=1,print_freq=1.0):
   return _run(app,True)
 #------------------------------------------------------------------------------------------------
 def runMepBuffer():
-  flags = '-s=7000 -e=100 -u=5 -b=12 -f -i=MEP -c -s=200 -e=500 -u=14 -f -i=EVENT -c -s=200 -e=100 -u=14 -f -i=RESULT -c'
+  flags = '-s=7000 -e=100 -u=5 -b=12 -f -i=Mep -c -s=200 -e=500 -u=14 -f -i=Events -c -s=200 -e=100 -u=14 -f -i=Overflow -c'
   return _run(mbmInitApp(pid,pnam,flags))
 #------------------------------------------------------------------------------------------------
 #  New HLT architecture with Hlt1 and Hlt2 separation

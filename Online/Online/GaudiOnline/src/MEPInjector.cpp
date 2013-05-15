@@ -225,8 +225,8 @@ StatusCode MEPInjector::initBuffers() {
         std::string tmp = "-i=" + *iteNames;
         strcpy(*pName, tmp.c_str());
 
-        int sc = mbm_install(items.size(), &items[0]);
-        if ( sc != MBM_NORMAL ) {
+        ServerBMID srv_bmid = mbm_install_server(items.size(), &items[0]);
+        if ( !srv_bmid ) {
            ::lib_rtl_output(LIB_RTL_ERROR,"Unable to install MBM buffers...\n");
            return StatusCode::FAILURE;
         }
