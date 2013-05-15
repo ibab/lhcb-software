@@ -4,6 +4,9 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-05-15 - Patrick Robbe
+ - SemilepCutForADS.cpp: fix compilation warning for gcc46
+
 !========================== GenCuts v3r3 2013-03-21 ========================== 
 ! 2013-03-21 - Gloria Corti
  - Remove include of Generators/ExternalGenerator.h from 

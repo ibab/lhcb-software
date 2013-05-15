@@ -61,12 +61,12 @@ bool SemilepCutForADS::applyCut( ParticleVector & theParticleVector ,
   int findD0=0;
   double mu_px(0.) , mu_py(0.) , mu_pz(0.) , mu_pE(0.); 
   int findmu=0;
-  int findnu=0;int findBu=0;
+  int findnu=0;
   for ( it = theParticleVector.begin() ; it != theParticleVector.end() ; ++it ) {
     
     debug() << "-----------------------------------"<< std::endl<< endmsg ;
     debug() << "Parent: " << (*it) -> pdg_id() << endmsg ;
-    if ( 521 == abs((*it) -> pdg_id()) ) findBu=1;
+
     HepMC::GenVertex * EV = (*it) -> end_vertex() ; if ( 0 == EV ) return false;
     if ( ! passCuts( *it ) ) return false;
     
