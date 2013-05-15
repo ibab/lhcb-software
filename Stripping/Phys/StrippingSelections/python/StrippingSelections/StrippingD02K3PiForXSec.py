@@ -265,17 +265,17 @@ default_config = {
                   , 'Daug_3of4_PT_MIN'          :  300.0 * MeV
                   , 'Daug_2of4_PT_MIN'          :  350.0 * MeV
                   , 'Daug_1of4_PT_MIN'          :  400.0 * MeV
-                  , 'Daug_All_BPVIPCHI2_MIN'    :    1.5
-                  , 'Daug_3of4_BPVIPCHI2_MIN'   :    3.5
-                  , 'Daug_2of4_BPVIPCHI2_MIN'   :    7.0
-                  , 'Daug_1of4_BPVIPCHI2_MIN'   :    7.0
-                  , 'K_PIDK_MIN'                :    5.0
+                  , 'Daug_All_BPVIPCHI2_MIN'    :    1.0
+                  , 'Daug_3of4_BPVIPCHI2_MIN'   :    4.0
+                  , 'Daug_2of4_BPVIPCHI2_MIN'   :    4.0
+                  , 'Daug_1of4_BPVIPCHI2_MIN'   :    4.0
+                  , 'K_PIDK_MIN'                :    0.0
                   #, 'Pi_PIDK_MAX'               :   0.0
-                  , 'Comb_ADAMASS_WIN'          :   80.0 * MeV
+                  , 'Comb_ADAMASS_WIN'          :  100.0 * MeV
                   , 'Comb_ADOCAMAX_MAX'         :    0.5 * mm
-                  , 'D0_VCHI2VDOF_MAX'          :   20.0
-                  , 'D0_acosBPVDIRA_MAX'        :   25.0 * mrad
-                  , 'D0_PVDispCut'              : "(BPVVDCHI2 > 16.0)"
+                  , 'D0_VCHI2VDOF_MAX'          :   25.0
+                  , 'D0_acosBPVDIRA_MAX'        :   35.0 * mrad
+                  , 'D0_PVDispCut'              : "((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150 * picosecond))"
                   , 'Dstar_AMDiff_MAX'          :  160.0 * MeV
                   , 'Dstar_VCHI2VDOF_MAX'       :  100.0
                   #

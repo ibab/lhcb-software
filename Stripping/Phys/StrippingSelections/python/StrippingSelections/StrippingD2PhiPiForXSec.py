@@ -224,9 +224,9 @@ default_config = {
                   , 'Phi_M_MAX'                 : 1040.0 * MeV
                   , 'D_AM_MIN'                  : 1770.0 * MeV
                   , 'D_AM_MAX'                  : 2070.0 * MeV
-                  , 'D_VCHI2VDOF_MAX'           :   10.0
-                  , 'D_acosBPVDIRA_MAX'         :   14.0 * mrad
-                  , 'D_PVDispCut'               : "(BPVVDCHI2 > 30.0)"
+                  , 'D_VCHI2VDOF_MAX'           :   25.0
+                  , 'D_acosBPVDIRA_MAX'         :   35.0 * mrad
+                  , 'D_PVDispCut'               : "((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150 * picosecond))"
                   , 'HltFilter'                 : None
                   #
                   , 'PrescaleD2PhiPi'           :    1.0

@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-May-15 - Patrick Spradlin
+ - Updated default configuration dicionaries in open charm cross-section lines
+   M       python/StrippingSelections/StrippingD2HHHForXSec.py
+   M       python/StrippingSelections/StrippingD2PhiPiForXSec.py
+   M       python/StrippingSelections/StrippingLambdac2PKPiForXSec.py
+   M       python/StrippingSelections/StrippingD02K3PiForXSec.py
+   M       python/StrippingSelections/StrippingD02HHForXSec.py
+
 ! 2013-05-15 - Stefano Perazzini
  - Modified StrippingStrangeBaryons.py in order to have it compatible for both Stripping20r2 and Stripping20r3
 

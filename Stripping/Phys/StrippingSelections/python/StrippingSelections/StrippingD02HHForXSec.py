@@ -238,13 +238,13 @@ def makeDstar2D0Pi( name
 
 default_config = {
                     'Daug_PT_MIN'               : 250.0 * MeV
-                  , 'Daug_BPVIPCHI2_MIN'        :   9.0
+                  , 'Daug_BPVIPCHI2_MIN'        :   4.0
                   , 'K_PIDK_MIN'                :   0.0
-                  , 'Pi_PIDK_MAX'               :   0.0
+                  , 'Pi_PIDK_MAX'               :   3.0
                   , 'D0_ADAMASS_WIN'            :  80.0*MeV
                   , 'D0_VCHI2VDOF_MAX'          :  25.0
-                  , 'D0_acosBPVDIRA_MAX'        :  14.0 * mrad
-                  , 'D0_PVDispCut'              : "(BPVVDCHI2 > 16.0)"
+                  , 'D0_acosBPVDIRA_MAX'        :  35.0 * mrad
+                  , 'D0_PVDispCut'              : "((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150 * picosecond))"
                   , 'Dstar_AMDiff_MAX'          : 160.0*MeV
                   , 'Dstar_VCHI2VDOF_MAX'       : 100.0
                   #

@@ -347,17 +347,17 @@ default_config = {
                    , 'Daug_2of3_PT_MIN'         :  400.0 * MeV
                    , 'Daug_1of3_PT_MIN'         : 1000.0 * MeV
                    , 'Daug_All_BPVIPCHI2_MIN'   :    1.0
-                   , 'Daug_2of3_BPVIPCHI2_MIN'  :    2.0
-                   , 'Daug_1of3_BPVIPCHI2_MIN'  :    2.0
+                   , 'Daug_2of3_BPVIPCHI2_MIN'  :    1.0
+                   , 'Daug_1of3_BPVIPCHI2_MIN'  :    4.0
                    , 'Proton_PIDpPIDpi_MIN'     :    0.0
                    , 'Proton_PIDpPIDK_MIN'      :    0.0
                    , 'K_PIDK_MIN'               :    0.0
-                   , 'Pi_PIDK_MAX'              :    0.0
+                   , 'Pi_PIDK_MAX'              :    3.0
                    , 'Comb_ADAMASS_WIN'         :   90.0 * MeV
                    , 'Comb_ADOCAMAX_MAX'        :    0.5 * mm
-                   , 'Lambdac_VCHI2VDOF_MAX'    :   20.0
-                   , 'Lambdac_acosBPVDIRA_MAX'  :   14.0 * mrad
-                   , 'Lambdac_PVDispCut'        : "(BPVVDCHI2 > 8.0)"
+                   , 'Lambdac_VCHI2VDOF_MAX'    :   25.0
+                   , 'Lambdac_acosBPVDIRA_MAX'  :   35.0 * mrad
+                   , 'Lambdac_PVDispCut'        : "((BPVVDCHI2 > 4.0)|(BPVLTIME() > 0.075 * picosecond))"
                    , 'HltFilter'                :  None
                    , 'PrescaleLambdac2PKPi'     :    1.0
                    , 'PostscaleLambdac2PKPi'    :    1.0
