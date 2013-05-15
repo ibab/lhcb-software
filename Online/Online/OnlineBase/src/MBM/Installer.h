@@ -32,7 +32,9 @@ namespace MBM {
     /// Flag to indicate the start of the monitor after installation
     bool startMonitor() const { return p_moni > 0; }
     /// Continue with installation by processing further options
-    int  continueInstallation()  const { return p_continue!=0; }
+    int  continueInstallation()  const { return p_continue==1; }
+    /// Start the MBM server threads asynchronously
+    int  startAsynchronous()  const { return p_continue>1; }
     /// Parse options
     virtual int  optparse (const char* c);
     /// Deinstall buffers

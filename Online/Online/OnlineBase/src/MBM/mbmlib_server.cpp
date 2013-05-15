@@ -281,7 +281,7 @@ int _mbmsrv_close_fifos(ServerBMID bm) {
     ::close(bm->clientfd);
   bm->clientfd = 0;
   // Return for convenience here error, since this is called in initialize
-  return MBM_ERROR;
+  return MBM_NORMAL;
 }
 
 int _mbmsrv_shutdown (void* /* param */) {
@@ -1307,7 +1307,8 @@ int _mbmsrv_connect(ServerBMID bm)    {
     }
     if( -1 == (s.fifo=::open(s.fifoName,O_RDWR|O_NONBLOCK)) ) {
       ::lib_rtl_signal_message(LIB_RTL_OS,"Unable to open the fifo: %s\n",s.fifoName);
-      return _mbmsrv_close_fifos(bm);
+      _mbmsrv_close_fifos(bm);
+      return MBM_ERROR;
     }
     if ( -1 == (fcntl(s.fifo,F_SETFL,fcntl(s.fifo,F_GETFL)|O_NONBLOCK)) ) {
       ::lib_rtl_signal_message(LIB_RTL_OS,"Unable to set fifo: %s non-blocking\n",s.fifoName);
@@ -1315,25 +1316,29 @@ int _mbmsrv_connect(ServerBMID bm)    {
     s.poll = ::epoll_create(1);
     if ( s.poll < 0 ) {
       ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to create pollset for server fifo %s.\n",s.fifoName);
-      return _mbmsrv_close_fifos(bm);
+      _mbmsrv_close_fifos(bm);
+      return MBM_ERROR;
     }
     struct epoll_event epoll;
     epoll.events = EPOLLIN | EPOLLPRI | EPOLLERR | EPOLLHUP;
     epoll.data.fd = s.fifo;
     if ( 0 > ::epoll_ctl(s.poll,EPOLL_CTL_ADD,epoll.data.fd,&epoll) ) {
       ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to add server fifo %s to epoll descriptor.\n",s.fifoName);
-      return _mbmsrv_close_fifos(bm);
+      _mbmsrv_close_fifos(bm);
+      return MBM_ERROR;
     }
   }
 
   bm->clientfd = ::epoll_create(bm->ctrl->p_umax);
   if ( bm->clientfd < 0 ) {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to create client epollset for server %s.\n",bm->bm_name);
-    return _mbmsrv_close_fifos(bm);
+    _mbmsrv_close_fifos(bm);
+    return MBM_ERROR;
   }
   if ( !lib_rtl_is_success(::lib_rtl_create_lock(0, &bm->lockid)) ) {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Failed create server lock for buffer %s.\n",bm->bm_name);
-    return _mbmsrv_close_fifos(bm);
+    _mbmsrv_close_fifos(bm);
+    return MBM_ERROR;
   }
 
   // Now setup exit and rundown handler

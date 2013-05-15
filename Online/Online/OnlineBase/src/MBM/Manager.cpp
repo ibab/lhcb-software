@@ -49,3 +49,10 @@ int MBM::Manager::mapMonitorSections()  {
 int MBM::Manager::unmapSections()  {
   return ::mbmsrv_unmap_memory(m_bm);
 }
+
+/// Release the server's BMID and give ownership to the caller
+ServerBMID MBM::Manager::releaseBMID() {
+  ServerBMID tmp = m_bm;
+  m_bm = 0;
+  return tmp;
+}

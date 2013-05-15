@@ -41,6 +41,8 @@ namespace MBM {
     virtual int mapMonitorSections();
     /// Unmap BM memory sections
     virtual int unmapSections();
+    /// Release the server's BMID and give ownership to the caller
+    ServerBMID releaseBMID();
     /// Parse installer options
     virtual int optparse (const char* c) = 0;
     /// Get installer options

@@ -44,19 +44,23 @@ struct CONTROL;
 struct USER;
 struct EVENT;
 struct BufferMemory;
+struct ServerBMID_t;
 typedef BMDESCRIPT* BMID;
+typedef ServerBMID_t* ServerBMID;
 #else
 typedef void* BMID;
 typedef void* USER;
 typedef void* CONTROL;
 typedef void* EVENT;
 typedef void  BufferMemory;
+typedef void* ServerBMID;
 #endif
 
 #define MBM_INV_DESC   ((BMID)-1)
 #define MBM_INV_MEMORY ((BufferMemory*)-1)
 
 #ifdef __cplusplus
+#include <vector>
 #define __MBM_CONST const
 extern "C"  {
 #endif
@@ -64,7 +68,10 @@ extern "C"  {
   int  mbm_qmtest_check_no_active_buffers(int, char**);
   int  mbm_qmtest_check_start();
 
-  int  mbm_install(int argc , char** argv);
+  ServerBMID  mbm_install_server(int argc , char** argv);
+#ifdef __cplusplus
+  std::vector<ServerBMID> mbm_multi_install(int argc , char** argv);
+#endif
   int  mbm_deinstall(int argc , char** argv);
   int  mbm_dump(int argc , char** argv);
   int  mbm_mon(int argc , char** argv);

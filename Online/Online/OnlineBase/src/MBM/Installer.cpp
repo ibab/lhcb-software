@@ -121,6 +121,9 @@ int MBM::Installer::optparse (const char* c)  {
   case 'c':
     p_continue = 1;
     break;
+  case 'a':
+    p_continue = 2;
+    break;
   case '?':
   case 'h':
     help();
@@ -283,7 +286,7 @@ int MBM::Installer::deinstall()  {
   return MBM_NORMAL;
 }
 
-extern "C" int mbm_install(int argc , char** argv) {
+ServerBMID mbm_install_server(int argc , char** argv) {
   try  {
     MBM::Installer inst(argc, argv);
     int sc = inst.install();
@@ -291,22 +294,46 @@ extern "C" int mbm_install(int argc , char** argv) {
       if ( inst.startMonitor() )  {
         lib_rtl_sleep(1000);
         mbm_mon(0, argv); 
+	::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ All done.\n");
+	return 0;
+      }
+      else if ( inst.startAsynchronous() ) {
+	ServerBMID bmid = inst.releaseBMID();
+	::mbmsrv_dispatch_nonblocking(bmid);
+	::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ All done.\n");
+	return bmid;
       }
       else if ( !inst.continueInstallation() ) {
 	ServerBMID bmid = inst.bmid();
 	::mbmsrv_dispatch_nonblocking(bmid);
 	::mbmsrv_wait_dispatch(bmid);
+	::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ All done.\n");
+	return 0;
       }
     }
-    ::lib_rtl_output(LIB_RTL_INFO,"All done.\n");
-    return sc;
+    ::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ MBM installation failed.\n");
+    return 0;
   }
   catch (std::exception& e)  {
-    ::lib_rtl_output(LIB_RTL_ERROR,"MBM initialization failed: %s\n",e.what());
+    ::lib_rtl_output(LIB_RTL_ERROR,"++mbm_install++ MBM initialization failed: %s\n",e.what());
+  }
+  return 0;
+}
+#if 0
+extern "C" int mbm_install(int argc , char** argv) {
+  try  {
+    ServerBMID bm = mbm_install_server(argc,argv);
+    if ( bm ) {
+      delete bm;
+      return MBM_NORMAL;
+    }
+  }
+  catch (std::exception& e)  {
+    ::lib_rtl_output(LIB_RTL_ERROR,"++mbm_install++ MBM initialization failed: %s\n",e.what());
   }
   return MBM_ERROR;
 }
-
+#endif
 extern "C" int mbm_deinstall(int argc , char** argv) {
   MBM::Installer inst(argc, argv);
   return inst.deinstall();
@@ -318,7 +345,37 @@ extern "C" int mbm_remove(int argc, char** argv) {
 }
 
 extern "C" int mbm_install_qmtest(int argc , char** argv) {
-  int ret = mbm_install(argc,argv);
-  return (ret == 1) ? 0 : ret;
+  ServerBMID bm = mbm_install_server(argc,argv);
+  return bm ? 0 : 1;
 }
 
+extern "C" std::vector<ServerBMID> mbm_multi_install(int argc , char** argv) {
+  std::vector<char*> opts;
+  std::vector<ServerBMID> bmids;
+  static char type[64] = "mbm_install";
+  opts.push_back(type);
+  for(size_t i=0; i<size_t(argc); ++i)  {
+    char c0 = argv[i][0];
+    char c1 = ::toupper(argv[i][1]);
+    opts.push_back(argv[i]);
+    if ( (c0 == '-' || c0 == '/') && (c1 == 'C' || c1 == 'A') ) {
+      ServerBMID bmid = mbm_install_server(opts.size(), &opts[0]);
+      if ( !bmid )  {
+        ::lib_rtl_output(LIB_RTL_ERROR,"Unable to install MBM buffers...\n");
+        throw std::runtime_error("Unable to install MBM buffers...");
+      }
+      bmids.push_back(bmid);
+      opts.clear();
+      opts.push_back(type);
+    }
+  }
+  if ( opts.size() > 1 )  {
+    ServerBMID bmid = mbm_install_server(opts.size(), &opts[0]);
+    if ( !bmid )  {
+      ::lib_rtl_output(LIB_RTL_ERROR,"Unable to install MBM buffers...\n");
+      throw std::runtime_error("Unable to install MBM buffers...");
+    }
+    bmids.push_back(bmid);
+  }
+  return bmids;
+}
