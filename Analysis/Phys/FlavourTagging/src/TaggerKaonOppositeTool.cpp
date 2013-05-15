@@ -131,7 +131,7 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
     if (fabs(IP) > m_IP_cut_kaon) continue;
     if (IPsig < m_IPs_cut_kaon) continue;
 
-    const double ippu=(*ipart)->info(1,100000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,100000.);
 
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " Kaon IPs="<< IPsig <<" IP="<<fabs(IP)<<" IPPU="<<ippu<<endmsg;

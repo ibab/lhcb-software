@@ -136,7 +136,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     const double IPsig = IP/IPerr;
     if(fabs(IPsig) < m_IPs_cut_ele) continue;
 
-    const double ippu=(*ipart)->info(1,100000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,100000.);
     if(ippu < m_ipPU_cut_ele) continue;
     //distphi
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal

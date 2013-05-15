@@ -260,7 +260,14 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
                                     << std::setw(3) << vtxCh.decision()
                                     << endmsg;
 
-  return StatusCode::SUCCESS;
+  ///Cancel vtags info-------
+  for ( Particle::ConstVector::const_iterator i=vtags.begin(); i!=vtags.end(); ++i )
+  {    
+    Particle* c = const_cast<Particle*>(*i);
+    if( c->hasInfo(LHCb::Particle::LastGlobal+1) ) c->eraseInfo(LHCb::Particle::LastGlobal+1);    
+  }
+
+return StatusCode::SUCCESS;
 }
 //==========================================================================
 StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB )
@@ -295,6 +302,7 @@ BTaggingTool::choosePrimary(const Particle* AXB,
       RecVertex newPV(*RecVert);
       Particle newPart(*AXB);
       StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);
+      if(!sc) { Error("ReFitter fails!"); } // Should we stop the execution? 
       if( msgLevel(MSG::DEBUG) ) debug()<<" Refitted PV "<<endreq;
       RefitRecVert = newPV;
     }
@@ -318,7 +326,7 @@ BTaggingTool::choosePrimary(const Particle* AXB,
       RecVertex newPV(*RecVert);
       Particle newPart(*AXB);
       const StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);
-      // CRJ _ You should check sc here .... 
+      if(!sc) { Error("ReFitter fails!"); } // Should we stop the execution? 
       if( msgLevel(MSG::DEBUG) ) debug()<<" Refitted PV "<<endreq;
       RefitRecVert = newPV;
     }
@@ -523,9 +531,15 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
     if(ippuerr) 
     {
       if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts
-      // CRJ : This is not really allowed
-      //Particle* c = const_cast<Particle*>(p);
-      //c->addInfo(1, ippu/ippuerr);
+      // CRJ : This is not really allowed -- SV reintroduced for Local FT use
+      Particle* c = const_cast<Particle*>(p);
+      if( c->hasInfo(LHCb::Particle::LastGlobal+1) )
+      {
+        Error("LastGlobal+1 info already set: erasing it");
+        c->eraseInfo(LHCb::Particle::LastGlobal+1);
+      }
+      
+      c->addInfo(LHCb::Particle::LastGlobal+1, ippu/ippuerr);
       if( msgLevel(MSG::VERBOSE) )
         verbose()<<"particle p="<<p->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
     }

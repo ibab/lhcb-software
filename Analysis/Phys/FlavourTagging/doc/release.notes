@@ -4,6 +4,9 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2013-05-15 - Stefania Vecchi
+ - restored the storage of IPPUs in info(LastGlobal+1) for FT internal use (commented in v12r13 by Chris)
+ - updated final SSpi calibration constants for Reco12 D*munu analysis with correct B+ fraction 
 
 !========================= FlavourTagging v12r13 2013-05-07 =========================
 

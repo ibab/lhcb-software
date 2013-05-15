@@ -134,7 +134,7 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " IPsig="<< IPsig <<endreq;
 
-    const double ippu=(*ipart)->info(1,100000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,100000.);
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " ippu="<< ippu <<endreq;
     if(ippu < m_ipPU_cut_muon) continue;

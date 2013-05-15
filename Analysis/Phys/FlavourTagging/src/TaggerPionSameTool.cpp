@@ -42,10 +42,15 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "PionSame_PIDNoK_cut", m_PionSame_PIDNoK_cut = 4.3);
   declareProperty( "PionSame_PIDNoP_cut", m_PionSame_PIDNoP_cut = 14.0);
   // 1fb-1 paper tuning
-  declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.388 );
-  declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.88 );
-  declareProperty( "PionSame_P2_Cal",  m_P2_Cal_pionS   = -2.06 );
-  declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.361 );
+  //declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.388 );
+  //declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.88 );
+  //declareProperty( "PionSame_P2_Cal",  m_P2_Cal_pionS   = -2.06 );
+  //declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.361 );
+  // Last value from D*munu analysis with 10% B+ background
+  declareProperty( "PionSame_P0_Cal",  m_P0_Cal_pionS   = 0.4049 );
+  declareProperty( "PionSame_P1_Cal",  m_P1_Cal_pionS   = 0.83   );
+  declareProperty( "PionSame_P2_Cal",  m_P2_Cal_pionS   = -1.99  );
+  declareProperty( "PionSame_Eta_Cal", m_Eta_Cal_pionS  = 0.3908 );
 
   declareProperty( "PionSame_AverageOmega",  m_AverageOmega   = 0.40 );
   declareProperty( "PionSame_ProbMin",       m_PionProbMin   = 0.56);
@@ -146,7 +151,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     const double IPsig = std::fabs(IP/IPerr);
     if(IPsig > m_IPs_cut_pionS)  continue;
 
-    const double ippu=(*ipart)->info(1,100000.); // retrieve the stored information of IP significance wrt PU, saved in BTaggingTool.cpp
+    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,100000.); // retrieve the stored information of IP significance wrt PU, saved in BTaggingTool.cpp
     if(ippu < m_ipPU_cut_pS) continue;
 
 

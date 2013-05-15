@@ -53,7 +53,7 @@ int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
   double probNN=0;
 
   //obtain pn(omega) and tagdec for each tagger
-  for( int i = 0; i != vtgsize; i++ ) 
+  for( int i = 0; i != vtgsize; ++i ) 
   { //multiply all probabilities
     if (!vtg.at(i)->decision()) continue;
     int type = vtg.at(i)->type();

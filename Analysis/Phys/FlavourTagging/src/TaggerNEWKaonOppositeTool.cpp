@@ -195,7 +195,7 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
     IP = fabs(IP);
     if(!IPerr) continue;
     const double IPsig = fabs(IP/IPerr);
-    const double ippu=(*ipart)->info(1,100000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,100000.);
 
     const double eta = (*ipart)->momentum().Eta();
     const double phi = (*ipart)->momentum().Phi();

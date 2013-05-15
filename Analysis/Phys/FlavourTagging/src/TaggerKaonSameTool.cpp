@@ -136,7 +136,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
     if ( msgLevel(MSG::VERBOSE) )
       verbose()<<" KaonS IPs="<<IPsig<<endreq;
 
-    const double ippu=(*ipart)->info(1,100000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,100000.);
     if(ippu < m_ipPU_cut_kS) continue;
     //distphi
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
