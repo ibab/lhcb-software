@@ -3,6 +3,9 @@
 ! Responsible : Juan Palacios
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+! 2013-05-15 - Stefania Vecchi
+ - updated reference file tagging.qms/test_tag_mc12.qmt according to the fix in the 
+   FT (r156852)
 
 ! 2013-05-14 - Chris Jones
  - Update pid, packing and tagging options to read data from EOS freezer.
