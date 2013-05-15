@@ -309,9 +309,7 @@ StatusCode LLParticlesFromRecVertices::initialize() {
 
   m_VERTEXCUT =
     ( RV_TrNUM(TrALL) >= m_LLPMinNumTracks )
-    && ( ! RV_TrHAS(TrBACKWARD) )
-    && ( m_RHO > m_LLPMinR )
-    ;
+    && ( m_RHO > m_LLPMinR )  ;
 
   m_UPPVZ = LoKi::select<const LHCb::RecVertex*>(
                                                  ( VZ < m_FirstPVMaxZ ) && ( VZ > m_FirstPVMinZ )

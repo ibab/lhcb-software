@@ -4,6 +4,9 @@
 ! Purpose     : Stripping and Offline algorithms and tools for the selection
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
+! 2013-05-15 - Veerle Heijne
+ - LLParticlesFromRecVertices.cpp: Remove requirement of 'no backward tracks' for 
+   displaced vertex candidate
 
 !========================= DisplVertices v7r15 2013-04-05 =========================
 
