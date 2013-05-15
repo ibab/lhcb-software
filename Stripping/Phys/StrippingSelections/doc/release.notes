@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-05-15 - Stefano Perazzini
+ - Modified StrippingStrangeBaryons.py in order to have it compatible for both Stripping20r2 and Stripping20r3
+
 ! 2013-05-11 - Lucio Anderlini (for Zhenwei Yang)
   - Added the StrippingDiMuonpA.py line for Zhenwei
 
