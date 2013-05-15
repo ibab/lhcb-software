@@ -149,7 +149,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                     (props['HAD_TRCHI2DOF_MAX'],props['V0DT_MIPCHI2DV_MIN'])
         else:
             cuts += '& (MIPCHI2DV(PRIMARY) > %s)' % props['ALL_MIPCHI2DV_MIN']
-            cuts += '&(((TRCHI2DOF < %s)& ISMUON)|(TRCHI2DOF < %s))' \
+            cuts += '&(((TRCHI2DOF < %s)& (HASMUON & ISMUON))|(TRCHI2DOF < %s))' \
                     % (props['MU_TRCHI2DOF_MAX'],props['HAD_TRCHI2DOF_MAX'])
         
         filter = Hlt2Member(FilterDesktop,'Filter', Inputs=inputSeq,
@@ -196,7 +196,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         cuts += " & (NINTREE(('KS0'==ID)|('Lambda0'==ABSID)) <= %s)" \
                 % self.getProps()['NV0_%dBody_MAX'%n]
         cuts += "&(INTREE(ISBASIC & (MIPCHI2DV(PRIMARY)>%s) "\
-                " & ((PT > %s*MeV) | (ISMUON & (PT > %s*MeV)))))"\
+                " & ((PT > %s*MeV) | ((HASMUON & ISMUON) & (PT > %s*MeV)))))"\
                 %  (self.getProps()['ONETRACK_IPCHI2_MIN'],
                     self.getProps()['ONETRACK_PT_MIN'],
                     self.getProps()['MU_ONETRACK_PT_MIN'])

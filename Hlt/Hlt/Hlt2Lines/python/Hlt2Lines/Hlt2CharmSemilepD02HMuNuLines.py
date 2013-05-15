@@ -240,7 +240,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
  
         if forMuon:
             incuts = "(TRCHI2DOF< %(Trk_TRCHI2DOF_MAX)s )" \
-	             "& ISMUON & (PT> %(Muon_PT_MIN)s)"  % self.getProps()
+	             "& (HASMUON & ISMUON) & (PT> %(Muon_PT_MIN)s)"  % self.getProps()
         else:
             incuts = "(TRCHI2DOF< %(Trk_TRCHI2DOF_MAX)s )" \
 	             "& (PT> %(Hadron_PT_MIN)s)" % self.getProps()
