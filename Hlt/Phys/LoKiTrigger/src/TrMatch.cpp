@@ -141,11 +141,10 @@ LoKi::Hlt1::Match::operator()
 // ============================================================================
 std::ostream& LoKi::Hlt1::Match::fillStream ( std::ostream& s ) const 
 {
-  return 
-    s << "TC_MATCH("
-      << "'" << output () << "',"
-      <<        source () << "," 
-      <<        config () << ")" ;  
+  return s << "TC_MATCH("    
+           << "'" << output () << "',"
+           <<        source () << "," 
+           <<        config () << ")" ;  
 }
 // ============================================================================
 // constructor 
