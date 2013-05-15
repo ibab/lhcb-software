@@ -51,7 +51,7 @@ Controller::Controller(const string&  nam, Machine* m)
   m->setCompletionAction(Callback::make(this,&Controller::publish));
   m->setMetaStateAction(Callback::make(this,&Controller::publishSlaves));
   m->setInAction(rdy,Callback::make(this,&Controller::ready));
-  m_fsmTasks = ::dis_add_service((char*)(nam+"/fsm_tasks").c_str(),(char*)"C",0,0,feed,(long)&m_taskInfo);
+  m_fsmTasks = ::dis_add_service((char*)(nam+"/tasks").c_str(),(char*)"C",0,0,feed,(long)&m_taskInfo);
 }
 
 /// Standard destructor

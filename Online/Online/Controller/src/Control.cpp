@@ -64,7 +64,7 @@ namespace FiniteStateMachine {
     /// Start slave process
     FSM::ErrCond start()  {
       if ( m_pid == 0 )  {
-	std::string proc = RTL::processName();
+	std::string cmdline=m_cmd, proc = RTL::processName();
 	std::vector<char*> argv, envp;
 	char text[64];
 	int ret = 0;
@@ -74,8 +74,10 @@ namespace FiniteStateMachine {
 	display(ALWAYS,"%s> Slave is forking child process.....",c_name());
 	::snprintf(text,sizeof(text),"-slaves=%d",handler->numSlaves());
 
-	for(size_t i=0; i<m_argv.size();++i)
+	for(size_t i=0; i<m_argv.size();++i) {
 	  argv.push_back((char*)m_argv[i].c_str());
+	  
+	}
 	argv.push_back(text);
 	argv.push_back(0);
 
