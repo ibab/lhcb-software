@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-05-15 - Chris Jones
+ - Fix a bug in addMomenta in Kinematics.h where the Predicate cut was not 
+   being properly applied.
+
 !========================= LoKiCore v11r12 2013-04-29 =========================
 ! 2013-04-29 - Marco Cattaneo
  - Replace endreq by endmsg
