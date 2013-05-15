@@ -4,6 +4,9 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-05-15 - Patrick Robbe
+ - Fixed compilation warning in GiGaIsotopeCnv.cpp on gcc46
+
 !========================= GiGaCnv v20r1 2013-02-05 ==========================
 ! 2013-01-16 - Marco Clemencic
  - Fixed segfault during generation of configurables on gcc 4.6.

@@ -119,11 +119,11 @@ StatusCode GiGaIsotopeCnv::updateRep
   if( 0 != G4Isotope::GetIsotope( isotope->registry()->identifier() ) ) 
     { return StatusCode::SUCCESS; }
   /// Here we should create the Isotop
-  G4Isotope* NewIsotope = 0 ;
-  NewIsotope = new G4Isotope( isotope->registry()->identifier () ,
-                              (int) isotope->Z                () ,
-                              (int) isotope->N                () ,
-                              isotope->A                      () );
+  // G4Isotope* NewIsotope = 0 ;
+  new G4Isotope( isotope->registry()->identifier () ,
+                 (int) isotope->Z                () ,
+                 (int) isotope->N                () ,
+                 isotope->A                      () );
   ///
   G4bool warning = false;
   if( 0 != G4Material::GetMaterial( isotope->registry()->identifier(),warning ) ) 
