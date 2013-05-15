@@ -49,13 +49,7 @@ int main ( int /*argc*/, char** /*argv*/ )
                 // Test conversion to and from an LHCbID
                 const LHCb::LHCbID lID( id );
                 const LHCb::RichSmartID nid( lID.richID() );
-                if ( nid.rich()        != id.rich()       ||
-                     nid.panel()       != id.panel()      ||
-                     nid.pdNumInCol()  != id.pdNumInCol() ||
-                     nid.pdCol()       != id.pdCol()      ||
-                     nid.pixelRow()    != id.pixelRow()   ||
-                     nid.pixelCol()    != id.pixelCol()   ||
-                     nid.pixelSubRow() != id.pixelSubRow() )
+                if ( nid.key() != id.key() )
                 {
                   cerr << "Problem with RichSmartID <-> LHCbID conversion" << endl;
                   cerr << "  Original  ID : " << id  << endl;
@@ -107,13 +101,7 @@ int main ( int /*argc*/, char** /*argv*/ )
               // Test conversion to and from an LHCbID
               const LHCb::LHCbID lID( id );
               const LHCb::RichSmartID nid( lID.richID() );
-              if ( nid.rich()        != id.rich()       ||
-                   nid.panel()       != id.panel()      ||
-                   nid.pdNumInCol()  != id.pdNumInCol() ||
-                   nid.pdCol()       != id.pdCol()      ||
-                   nid.pixelRow()    != id.pixelRow()   ||
-                   nid.pixelCol()    != id.pixelCol()   ||
-                   nid.pixelSubRow() != id.pixelSubRow() )
+              if ( nid.key() != id.key() )
               {
                 cerr << "Problem with RichSmartID <-> LHCbID conversion" << endl;
                 cerr << "  Original  ID : " << id  << endl;
@@ -134,7 +122,7 @@ int main ( int /*argc*/, char** /*argv*/ )
   }
   else
   {
-    cout << "RichSmartID tests SUCCESSFULL" << endl;
+    cout << "RichSmartID tests SUCCESSFUL" << endl;
   }
 
   return 0;

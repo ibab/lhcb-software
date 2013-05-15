@@ -7,7 +7,7 @@
        name   = "LHCbID"
        desc   = "LHCb wide channel identifier"
        author = "Marco Cattaneo"
-       virtual= "FALSE"                        >
+       virtual= "FALSE">
 
        <import name="Kernel/VeloChannelID"/>
        <import name="Kernel/STChannelID"/>
@@ -306,15 +306,46 @@
          </code>
        </method>
 
+       <method
+         type = "bool"
+         name = "isBitOn"
+         desc = "Checks if a given bit is set"
+         virtual = "FALSE" 
+         access  = "PRIVATE"
+         const   = "TRUE"> 
+         <arg type = "unsigned int" name = "pos" const = "TRUE"/>
+         <code>
+           return ( 0 != ( lhcbID() &amp; (1&lt;&lt;pos) ) );
+         </code>
+       </method>
+
+       <method
+         type = "void"
+         name = "setBit"
+         desc = "Sets the given bit to the given value"
+         virtual = "FALSE" 
+         access  = "PRIVATE"
+         const   = "FALSE"> 
+         <arg type = "unsigned int" name = "pos"   const = "TRUE"/>
+         <arg type = "unsigned int" name = "value" const = "TRUE"/>
+         <code>
+           m_lhcbID |= value&lt;&lt;pos;
+         </code>
+       </method>
+
        <constructor
          desc     = "Constructor from RichSmartID"
          initList = "m_lhcbID(0)" >
          <arg const="TRUE" name="chanID" type="RichSmartID" />
          <code>
-  unsigned int richData = chanID.dataBitsOnly();
-  if( chanID.pixelDataAreValid() ) richData += 0x8000000;
+  // Set the type to be RICH
   setDetectorType( Rich );
-  setID( richData );
+  // Save the data bits 
+  setID( chanID.dataBitsOnly() );
+  // Save the MaPMT/HPD flag in bit 27
+  setBit( 27, chanID.idType() );
+  // Set the validity bits
+  setBit( 26, chanID.pixelDataAreValid() );
          </code>
        </constructor>
 
@@ -334,10 +365,28 @@
          const = 'TRUE'
          desc  = "return the richSmartID">
 	 <code>
-  if ( !isRich() ) return LHCb::RichSmartID(0x0);
-  LHCb::RichSmartID::KeyType id = m_lhcbID &amp; IDMask;
-  if( id &amp; 0x8000000 ) id = id | 0x7E000000;
-  return LHCb::RichSmartID(id);
+  // Create the RichSMartID data bits
+  LHCb::RichSmartID::KeyType data( isRich() ? (m_lhcbID&amp;IDMask) : 0 );
+  // Create a temporary RichSmartID
+  LHCb::RichSmartID tmpid ( data );
+  // Retrieve the MaPMT/HPD flag
+  if ( isRich() ) { tmpid.setIDType( (LHCb:: RichSmartID::IDType)isBitOn(27) ); }
+  // Object to return, with RICH and panel fields set
+  LHCb::RichSmartID id( tmpid.rich(),       tmpid.panel(), 
+                        tmpid.pdNumInCol(), tmpid.pdCol(),
+                        tmpid.idType() );
+  // Set pixels fields
+  if ( isBitOn(26) )
+  {
+     id.setPixelRow    ( tmpid.pixelRow()    );
+     id.setPixelCol    ( tmpid.pixelCol()    );
+     if ( tmpid.idType() == LHCb::RichSmartID::HPDID ) 
+     { 
+       id.setPixelSubRow ( tmpid.pixelSubRow() );
+     }
+  }
+  // return
+  return id;
          </code>
        </method>
 

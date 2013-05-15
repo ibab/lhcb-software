@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2013-05-15 - Chris Jones
+ - Fix LHCbID <-> RichSmartID conversion, which broke when support for MaPMTs
+   was added to the RichSmartID class.
+
 !========================= LHCbKernel v14r0 2013-04-29 =========================
 !  2013-04-16 - Wouter Hulsbergen
  - HitPattern: add VP and VL
