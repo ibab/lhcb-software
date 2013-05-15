@@ -5,7 +5,10 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
-! 2013-May-04 - Patrick Spradlin
+! 2013-05-15 - Paul Szczypka
+ - Corrected same Gauss property name in tests/options/MC_Generics.py
+
+! 2013-05-04 - Patrick Spradlin
  - Corrected a Guass property name referenced by example steering options
    options/example/MC_LHCb_GENERIC.py,
      -Gauss().Output = "NONE"
