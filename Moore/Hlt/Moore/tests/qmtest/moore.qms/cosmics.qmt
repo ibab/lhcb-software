@@ -11,7 +11,7 @@
 expected_string = &quot;SUCCESS Reading Event record 1101. Record number within stream 3: 800&quot; 
 if stdout.find(expected_string) == -1:
     causes.append('missing string')
-    result['GaudiTest.expected_string'] = result.Quote(expected_string)
+    result['moore.cosmics.expected_string'] = result.Quote(expected_string)
 
 
 countErrorLines({"FATAL":0,"ERROR":6,"WARNING":1})
@@ -41,13 +41,13 @@ for line in stdout.split('\n'):
 
 if len([t for t in timingdict if t.startswith("Hlt2")])!=1:
     causes.append('Does not look like pass-through')
-    result['moore.run_moore_cosmics.passthrough'] = result.Quote('Expected only one Hlt2 entry in timing table, saw '+','.join([t for t in timingdict if t.startswith("Hlt2")]))
+    result['moore.cosmics.passthrough'] = result.Quote('Expected only one Hlt2 entry in timing table, saw '+','.join([t for t in timingdict if t.startswith("Hlt2")]))
 
 if 'Hlt1CosmicOTPostScaler' not in timingdict:
     causes.append('No OT cosmics selection seen')
 elif timingdict['Hlt1CosmicOTPostScaler']!=1200:
     causes.append('OT Cosmic test does not select everything')
-    result['moore.run_moore_cosmics.passnumber'] = result.Quote('Expected 1200 events, saw '+str(timingdict['Hlt1CosmicOTPostScaler']))
+    result['moore.cosmics.passnumber'] = result.Quote('Expected 1200 events, saw '+str(timingdict['Hlt1CosmicOTPostScaler']))
 
 
 </text></argument>

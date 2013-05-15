@@ -4,19 +4,16 @@
   <argument name="args"><set>
     <text>-n</text>
     <text>1200</text>
-    <text>--l0</text>
-    <text>VanDerMeerScan_Jul12</text>
+    <text>Calibration_VeloMicroBias</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
 expected_string = &quot;SUCCESS Reading Event record 1101. Record number within stream 3: 800&quot; 
 if stdout.find(expected_string) == -1:
     causes.append('missing string')
-    result['moore.run_moore_vdm.expected_string'] = result.Quote(expected_string)
-
-#ideally no errors, but there is always two when opening every Raw file
-countErrorLines({"FATAL":0,"ERROR":6,"WARNING":1})
-
+    result['moore.calibration.expected_string'] = result.Quote(expected_string)
+#check that all events are actually passed through?
+#Parse timing table, and check that there is only one entry for HLT 2 and it sees all events (1200)
 
 
 timing=[]
@@ -40,16 +37,16 @@ for line in stdout.split('\n'):
 
 if len([t for t in timingdict if t.startswith("Hlt2")])!=1:
     causes.append('Does not look like pass-through')
-    result['moore.run_moore_vdm.passthrough'] = result.Quote('Expected only one Hlt2 entry in timing table, saw '+','.join([t for t in timingdict if t.startswith("Hlt2")]))
+    result['moore.calibration.passthrough'] = result.Quote('Expected only one Hlt2 entry in timing table, saw '+','.join([t for t in timingdict if t.startswith("Hlt2")]))
 
-if 'Hlt1BeamGasBeam1' not in timingdict:
-    causes.append('Doesn't contain beamgas lines')
-    result['moore.run_moore_vdm.bg'] = result.Quote('No line called Hlt1BeamGasBeam1 in timing table')
-elif timingdict['Hlt1BeamGasBeam1']!=1200:
-    causes.append('BeamGas does not see all events')
-    result['moore.run_moore_vdm.passnumber'] = result.Quote('Expected 1200 events, saw '+str(timingdict['Hlt1BeamGasBeam1']))
+if 'Hlt1MBMicroBiasVelo' not in timingdict:
+    causes.append('No MB selection seen')
+elif timingdict['Hlt1MBMicroBiasVelo']!=1200:
+    causes.append('MB test does not select everything')
+    result['moore.calibration.passnumber'] = result.Quote('Expected 1200 events, saw '+str(timingdict['Hlt1MBMicroBiasVelo']))
 
 
+countErrorLines({"FATAL":0,"ERROR":6,"WARNING":1})
 </text></argument>
 </extension>
 
