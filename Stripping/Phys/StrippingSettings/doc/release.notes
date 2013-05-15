@@ -4,6 +4,12 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-May-15 - Patrick Spradlin
+  - Modified dictionaries in Stripping20r2 and Stripping20r3 for open charm
+    cross-section lines.
+    M       python/StrippingSettings/Stripping20r2/LineConfigDictionaries_ALL.py
+    M       python/StrippingSettings/Stripping20r3/LineConfigDictionaries_ALL.py
+
 ! 2013-05-14 - Stefano Perazzini
  - Modified the dictionary in Stripping20r2 and Stripping20r3 for StrippingStrangeBaryons lines.
 

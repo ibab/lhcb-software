@@ -602,3 +602,183 @@ DiMuonpA = {
     'WGs' : [ 'BandQ' ],
     'STREAMS' : [ 'ALL' ]
     }
+
+# Xsec: D(s)+ -> h+ h- h+
+D2HHHForXSec = {
+    'BUILDERTYPE' : 'StrippingD2HHHForXSecConf',
+    'CONFIG'      : { 
+                    'Daug_All_PT_MIN'           :  200.0 * MeV
+                  , 'Daug_2of3_PT_MIN'          :  400.0 * MeV
+                  , 'Daug_1of3_PT_MIN'          :  400.0 * MeV
+                  , 'Daug_All_BPVIPCHI2_MIN'    :    1.0
+                  , 'Daug_2of3_BPVIPCHI2_MIN'   :    4.0
+                  , 'Daug_1of3_BPVIPCHI2_MIN'   :    4.0
+                  , 'K_PIDK_MIN'                :    0.0
+                  , 'Pi_PIDK_MAX'               :    3.0
+                  , 'Comb_AM_MIN'               : 1580.0 * MeV
+                  , 'Comb_AM_MAX'               : 2260.0 * MeV
+                  , 'Comb_ADOCAMAX_MAX'         :    0.5 * mm
+                  , 'D_VCHI2VDOF_MAX'           :   25.0
+                  , 'D_acosBPVDIRA_MAX'         :   35.0 * mrad
+                  , 'D_PVDispCut'               : "((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150 * picosecond))"
+                  , 'HltFilter'                 : None
+                  #, 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
+                  , 'PrescaleD2KPP'             :    1.0
+                  , 'PrescaleD2KKP'             :    1.0
+                  , 'PrescaleD2KKK'             :   -1.0
+                  , 'PrescaleD2PPP'             :   -1.0
+                  , 'PrescaleD2KPPDCS'          :   -1.0
+                  , 'PostscaleD2KPP'            :    1.0
+                  , 'PostscaleD2KKP'            :    1.0
+                  , 'PostscaleD2KKK'            :   -1.0
+                  , 'PostscaleD2PPP'            :   -1.0
+                  , 'PostscaleD2KPPDCS'         :   -1.0
+    },
+    'WGs' : [ 'Charm' ],
+    'STREAMS' : [ 'ALL' ] 
+    }
+
+
+# Xsec: D(s)+ -> phi pi+
+D2PhiPiForXSec = {
+    'BUILDERTYPE' : 'StrippingD2PhiPiForXSecConf',
+    'CONFIG'      : {
+                    'K_BPVIPCHI2_MIN'           :    1.0
+                  , 'Pi_BPVIPCHI2_MIN'          :    1.0
+                  , 'K_PIDK_MIN'                :    0.0
+                  , 'Phi_M_MIN'                 : 1000.0 * MeV
+                  , 'Phi_M_MAX'                 : 1040.0 * MeV
+                  , 'D_AM_MIN'                  : 1770.0 * MeV
+                  , 'D_AM_MAX'                  : 2070.0 * MeV
+                  , 'D_VCHI2VDOF_MAX'           :   25.0
+                  , 'D_acosBPVDIRA_MAX'         :   35.0 * mrad
+                  , 'D_PVDispCut'               : "((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150 * picosecond))"
+                  , 'HltFilter'                 : None
+                  #, 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
+                  #
+                  , 'PrescaleD2PhiPi'           :    1.0
+                  , 'PostscaleD2PhiPi'          :    1.0
+    },
+    'WGs' : [ 'Charm' ],
+    'STREAMS' : [ 'ALL' ] 
+    }
+
+# Xsec: Lc+ -> p K- pi+
+Lambdac2PKPiForXSec = {
+    'BUILDERTYPE' : 'StrippingLambdac2PKPiForXSecConf',
+    'CONFIG'      : {
+                     'Daug_All_PT_MIN'          :  200.0 * MeV
+                   , 'Daug_2of3_PT_MIN'         :  400.0 * MeV
+                   , 'Daug_1of3_PT_MIN'         : 1000.0 * MeV
+                   , 'Daug_All_BPVIPCHI2_MIN'   :    1.0
+                   , 'Daug_2of3_BPVIPCHI2_MIN'  :    1.0
+                   , 'Daug_1of3_BPVIPCHI2_MIN'  :    4.0
+                   , 'Proton_PIDpPIDpi_MIN'     :    0.0
+                   , 'Proton_PIDpPIDK_MIN'      :    0.0
+                   , 'K_PIDK_MIN'               :    0.0
+                   , 'Pi_PIDK_MAX'              :    3.0
+                   , 'Comb_ADAMASS_WIN'         :   90.0 * MeV
+                   , 'Comb_ADOCAMAX_MAX'        :    0.5 * mm
+                   , 'Lambdac_VCHI2VDOF_MAX'    :   25.0
+                   , 'Lambdac_acosBPVDIRA_MAX'  :   35.0 * mrad
+                   , 'Lambdac_PVDispCut'        : "((BPVVDCHI2 > 4.0)|(BPVLTIME() > 0.075 * picosecond))"
+                   , 'HltFilter'                :  None
+                   #, 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
+                   , 'PrescaleLambdac2PKPi'     :    1.0
+                   , 'PostscaleLambdac2PKPi'    :    1.0
+                   , 'PrescaleLambdac2PKK'      :    1.0
+                   , 'PostscaleLambdac2PKK'     :    1.0
+                   , 'PrescaleLambdac2PPiPi'    :   -1.0
+                   , 'PostscaleLambdac2PPiPi'   :   -1.0
+                   , 'PrescaleLambdac2PPiKWS'   :   -1.0
+                   , 'PostscaleLambdac2PPiKWS'  :   -1.0
+    },
+    'WGs'          : ['Charm'],
+    'STREAMS'      : [ 'ALL' ] 
+    }
+
+# Xsec: D0 -> K- pi- pi+ pi+
+D02K3PiForXSec = {
+    'BUILDERTYPE' : 'D02K3PiForXSecConf',
+    'CONFIG'      : {
+                    'Daug_All_PT_MIN'           :  250.0 * MeV
+                  , 'Daug_3of4_PT_MIN'          :  300.0 * MeV
+                  , 'Daug_2of4_PT_MIN'          :  350.0 * MeV
+                  , 'Daug_1of4_PT_MIN'          :  400.0 * MeV
+                  , 'Daug_All_BPVIPCHI2_MIN'    :    1.0
+                  , 'Daug_3of4_BPVIPCHI2_MIN'   :    4.0
+                  , 'Daug_2of4_BPVIPCHI2_MIN'   :    4.0
+                  , 'Daug_1of4_BPVIPCHI2_MIN'   :    4.0
+                  , 'K_PIDK_MIN'                :    0.0
+                  #, 'Pi_PIDK_MAX'               :   0.0
+                  , 'Comb_ADAMASS_WIN'          :  100.0 * MeV
+                  , 'Comb_ADOCAMAX_MAX'         :    0.5 * mm
+                  , 'D0_VCHI2VDOF_MAX'          :   25.0
+                  , 'D0_acosBPVDIRA_MAX'        :   35.0 * mrad
+                  , 'D0_PVDispCut'              : "((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150 * picosecond))"
+                  , 'Dstar_AMDiff_MAX'          :  160.0 * MeV
+                  , 'Dstar_VCHI2VDOF_MAX'       :  100.0
+                  #
+                  , 'HltFilter'                 : None
+                  #, 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
+                  #
+                  , 'PrescaleD02K3Pi'             :  1.0
+                  , 'PrescaleDstar2D0Pi_D02K3Pi'  :  1.0
+                  , 'PostscaleD02K3Pi'            :  1.0
+                  , 'PostscaleDstar2D0Pi_D02K3Pi' :  1.0
+    },
+    'WGs' : [ 'Charm' ],
+    'STREAMS' : [ 'ALL' ] 
+    }
+
+# Xsec: D0 -> K- pi+ (geometrical selection)
+D02KPiGeoForXSec = {
+    'BUILDERTYPE'  : 'StrippingD02KPiGeoForXSecConf',
+    'CONFIG'       : {
+                    'D0_ADAMASS_WIN'      : 250.0 * MeV
+                  , 'D0_AMAXDOCA_MAX'     :  10.0 * mm
+                  , 'D0_ADMASS_WIN'       : 125.0 * MeV
+                  , 'D0_NU_2PT_MIN'       :  14.0
+                  , 'D0_BPVVDSIGN_MIN'    :   1.0 * mm
+                  , 'Dstar_AMDiff_MAX'    : 160.0 * MeV
+                  , 'Dstar_VCHI2VDOF_MAX' : 100.0
+                  , 'Dstar_MDiff_MAX'     : 155.0 * MeV
+                  , 'HltFilter'           : None
+                  #, 'HltFilter'           : "HLT_PASS_RE('Hlt1MB.*')"
+                  #
+                  , 'PrescaleD02HH'             :   1.0
+                  , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
+                  , 'PostscaleD02HH'            :   1.0
+                  , 'PostscaleDstar2D0Pi_D02HH' :   1.0
+    },
+    'WGs' : ['Charm'],
+    'STREAMS' : [ 'ALL' ] 
+    }
+
+# Xsec: D0 -> h+ h-
+D02HHForXSec = { 
+    'BUILDERTYPE' : 'StrippingD02HHForXSecConf',
+    'CONFIG'      : {
+                    'Daug_PT_MIN'               : 250.0 * MeV
+                  , 'Daug_BPVIPCHI2_MIN'        :   4.0
+                  , 'K_PIDK_MIN'                :   0.0
+                  , 'Pi_PIDK_MAX'               :   3.0
+                  , 'D0_ADAMASS_WIN'            :  80.0*MeV
+                  , 'D0_VCHI2VDOF_MAX'          :  25.0
+                  , 'D0_acosBPVDIRA_MAX'        :  35.0 * mrad
+                  , 'D0_PVDispCut'              : "((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150 * picosecond))"
+                  , 'Dstar_AMDiff_MAX'          : 160.0*MeV
+                  , 'Dstar_VCHI2VDOF_MAX'       : 100.0
+                  #
+                  , 'HltFilter'          : None
+                  #, 'HltFilter'           : "HLT_PASS_RE('Hlt1MB.*')"
+                  #
+                  , 'PrescaleD02HH'             :   1.0
+                  , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
+                  , 'PostscaleD02HH'            :   1.0
+                  , 'PostscaleDstar2D0Pi_D02HH' :   1.0
+    },
+    'WGs' : [ 'Charm' ],
+    'STREAMS' : [ 'ALL' ] 
+    }
+
