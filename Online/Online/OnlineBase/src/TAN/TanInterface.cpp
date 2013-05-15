@@ -229,31 +229,31 @@ int TanInterface::setLocalAddress  ( NetworkChannel::Address& sin )       {
 // ----------------------------------------------------------------------------
 void TanInterface::nodeWithName(const char* name, char* node, char* proc)  {
   int n, s = 0;
-  char *p;
-  if ( 0 != (p=strstr(name,"::")) )    {      // DECNET STYLE
+  const char *p;
+  if ( 0 != (p=::strstr(name,"::")) )    {      // DECNET STYLE
     s = 0;
     if (node != 0)  {
-      strncpy (node, name, n = p - name);
+      ::strncpy (node, name, n = p - name);
       node [n] = 0;
     }
-    if (proc!= 0)  strcpy (proc, p + 2);
+    if (proc!= 0) ::strcpy (proc, p + 2);
   }
-  else if ( 0 != (p=strchr(name,'@')) )    {
+  else if ( 0 != (p=::strchr(name,'@')) )    {
     s = 1;
     if (node != 0)  {                         // INTERNET STYLE
-      strcpy (node, p + 1);
+      ::strcpy (node, p + 1);
     }
     if (proc!= 0)   {
-      strncpy (proc, name, n = p-name);
+      ::strncpy (proc, name, n = p-name);
       proc [n] = 0;
     }
   }
   else    {
-    if (node != 0) strcpy (node, m_pcHostName);
-    if (proc != 0) strcpy (proc, name);
+    if (node != 0) ::strcpy (node, m_pcHostName);
+    if (proc != 0) ::strcpy (proc, name);
   }
-  for(p=node; p && *p; p++) *p = s==1 ? ::tolower(*p) : ::toupper(*p);
-  for(p=proc; p && *p; p++) *p = s==1 ? ::tolower(*p) : ::toupper(*p);
+  for(char* q=node; q && *q; q++) *q = s==1 ? ::tolower(*q) : ::toupper(*q);
+  for(char* q=proc; q && *q; q++) *q = s==1 ? ::tolower(*q) : ::toupper(*q);
 }
 // ----------------------------------------------------------------------------
 //  retrieve network address of a task given his name
