@@ -176,7 +176,7 @@ void StorageSubDisplay::updateContent(const Nodeset& ns) {
   string evt_buff = std::string("Events_"+m_partition);
   int numNodes = 0, numBuffs = 0, numClients = 0;
   float fsp, fsl, fspace[3] = {FLT_max,FLT_max,FLT_max}, fslots[3] = {FLT_max,FLT_max,FLT_max};
-  int tot_prod[3] = {0,0,0}, min_prod[3] = {INT_max,INT_max,INT_max};
+  long long int tot_prod[3] = {0,0,0}, min_prod[3] = {INT_max,INT_max,INT_max};
   int   num_cl[3] = {0,0,0}, num_sl[3] = {0,0,0};
 
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
@@ -219,14 +219,14 @@ void StorageSubDisplay::updateContent(const Nodeset& ns) {
   }
 
   if ( tot_prod[0] != 0 )
-    ::sprintf(txt,"%9d%4d%5d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
+    ::sprintf(txt,"%9lld%4d%5d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
   else
     ::sprintf(txt,"%9s%4s%5s%17s","--","--","--","");
   ::scrc_put_chars(m_display,"Recv Layer:",BOLD,2,1,1);
   ::scrc_put_chars(m_display,txt,NORMAL,2,14,1);
 
   if ( tot_prod[1] != 0 )
-    ::sprintf(txt,"%9d%4d%5d%17s",tot_prod[1],num_cl[1],num_sl[1],"");
+    ::sprintf(txt,"%9lld%4d%5d%17s",tot_prod[1],num_cl[1],num_sl[1],"");
   else
     ::sprintf(txt,"%9s%4s%5s%17s","--","--","--","");
   ::scrc_put_chars(m_display,"Stream Layer:",BOLD,3,1,1);

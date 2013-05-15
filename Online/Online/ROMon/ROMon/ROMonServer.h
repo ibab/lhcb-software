@@ -44,7 +44,7 @@ namespace ROMon {
     /// Default destructor
     virtual ~ROMonServer() {}
     /// Dump buffer information to memory
-    void dumpBufferInfo(const char* bm_name, BMID dsc, MBMBuffer* mbm);
+    void dumpBufferInfo(const char* bm_name, BufferMemory* dsc, MBMBuffer* mbm);
     /// Handle update
     virtual int handle(void* buff, size_t buff_len);
     /// Start monitoring activity

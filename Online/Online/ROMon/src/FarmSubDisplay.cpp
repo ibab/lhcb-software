@@ -181,11 +181,11 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   typedef MBMBuffer::Clients           Clients;
   typedef Node::Buffers                Buffers;
   typedef Nodeset::Nodes               Nodes;
-  static const int   INT_max = numeric_limits<int>::max();
+  static const long  INT_max = numeric_limits<long>::max();
   static const float FLT_max = numeric_limits<float>::max();
 
   char txt[128], text[128];
-  int evt_prod[4]    = {0,0,0,0}, min_prod[4]  = {INT_max,INT_max,INT_max,INT_max};
+  long long int evt_prod[4] = {0,0,0,0}, min_prod[4]  = {INT_max,INT_max,INT_max,INT_max};
   int free_space[4]  = {0,0,0,0}, min_space[4] = {INT_max,INT_max,INT_max,INT_max};
   int free_slots[4]  = {0,0,0,0}, min_slots[4] = {INT_max,INT_max,INT_max,INT_max};
   int buf_clients[4] = {0,0,0,0};
@@ -296,7 +296,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
     fspace[2] < SPACE_MIN || fspace[3] < SPACE_MIN;
 
   if ( evt_prod[0] || evt_prod[1] )
-    ::sprintf(txt,"%9d%5d%11d%6d%9d%5d",
+    ::sprintf(txt,"%9lld%5d%11lld%6d%9lld%5d",
               evt_prod[3],free_slots[3],
               evt_prod[1],free_slots[1],
               evt_prod[2],free_slots[2]);
@@ -304,7 +304,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
     ::sprintf(txt,"%9s%5s%10s%7s%9s%5s","--","--","--","--","--","--");
   ::scrc_put_chars(m_display,txt,NORMAL,2,5,1);
   if ( min_prod[0] != INT_max || min_prod[1] != INT_max )
-    ::sprintf(txt,"%9d%5d%11d%6d%9d%5d",
+    ::sprintf(txt,"%9lld%5d%11lld%6d%9lld%5d",
               min_prod[3],min_slots[3],
               min_prod[1],min_slots[1],
               min_prod[2],min_slots[2]);

@@ -38,10 +38,10 @@ namespace ROMon {
     int               m_evtMoore;
     int               m_evtSent;
     int               m_evtOvl;
-    int               m_totBuilt;
-    int               m_totMoore;
-    int               m_totSent;
-    int               m_totOvl;
+    long long int     m_totBuilt;
+    long long int     m_totMoore;
+    long long int     m_totSent;
+    long long int     m_totOvl;
     int               m_numUpdate;
     /// Flag to indicate probles with entity
     bool              m_hasProblems;
@@ -214,7 +214,7 @@ typedef vector<string>               StringV;
 #define COL_WARNING         (RED|BOLD)
 #define COL_ALARM           (RED|BOLD|INVERSE)
 #define COL_OK              (GREEN|INVERSE)
-#define INT_max  numeric_limits<int>::max()
+#define INT_max  numeric_limits<long>::max()
 #define FLT_max  numeric_limits<float>::max()
 namespace ROMon {
   typedef MBMBuffer::Clients           Clients;
@@ -408,7 +408,6 @@ void CtrlFarmClusterLine::excludedHandler(void* tag, void* address, int* size) {
 StorageClusterLine::StorageClusterLine(FarmLineDisplay* p, const string& partition, const std::string& n)
 : ClusterLine(p,partition,n)
 {
-  m_numUpdate = 0;
   m_lastUpdate = time(0);
   m_hasProblems = false;
   connect(strlower(m_name)+"/ROpublish");
@@ -426,10 +425,9 @@ void StorageClusterLine::display() {
   string evt_buff = std::string("Events_"+m_partition);
   int numNodes = 0, numBuffs = 0, numClients = 0;
   float fsp, fsl, fspace[3] = {FLT_max,FLT_max,FLT_max}, fslots[3] = {FLT_max,FLT_max,FLT_max};
-  int tot_prod[3] = {0,0,0}, min_prod[3] = {INT_max,INT_max,INT_max};
-  int   num_cl[3] = {0,0,0}, num_sl[3] = {0,0,0};
+  long long tot_prod[3] = {0,0,0}, min_prod[3] = {INT_max,INT_max,INT_max};
+  int       num_cl[3] = {0,0,0}, num_sl[3] = {0,0,0};
 
-  ++m_numUpdate;
   m_inUse = false;
   for (Nodes::const_iterator n=c->nodes.begin(); n!=c->nodes.end(); n=c->nodes.next(n))  {
     bool recv_node = ::strncasecmp((*n).name,"storerecv",8) == 0;
@@ -469,14 +467,14 @@ void StorageClusterLine::display() {
   }
 
   if ( tot_prod[0] != 0 )
-    ::sprintf(txt,"Evt:%10d Cl:%4d Sl:%4d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
+    ::sprintf(txt,"Evt:%10lld Cl:%4d Sl:%4d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
   else
     ::sprintf(txt,"%14s%8s%9s%64s","--","--","--","");
   ::scrc_put_chars(dis," Receive:",BOLD,pos,77+CLUSTERLINE_START,0);
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+9+CLUSTERLINE_START,0);
 
   if ( tot_prod[1] != 0 )
-    ::sprintf(txt,"Evt:%10d Cl:%4d Sl:%4d%17s",tot_prod[1],num_cl[1],num_sl[1],"");
+    ::sprintf(txt,"Evt:%10lld Cl:%4d Sl:%4d%17s",tot_prod[1],num_cl[1],num_sl[1],"");
   else
     ::sprintf(txt,"%14s%8s%9s%64s","--","--","--","");
   ::scrc_put_chars(dis,"  Stream:",BOLD,pos,77+40+CLUSTERLINE_START,0);
@@ -551,8 +549,8 @@ void MonitoringClusterLine::display() {
   string evt_buff = "Events_"+m_partition;
   string out_buff = "Output_"+m_partition;
   int numNodes = 0, numBuffs = 0, numClients = 0;
-  int tot_prod[3] = {0,0,0}, num_cl[3] = {0,0,0}, num_sl[3] = {0,0,0};
-  int min_prod[3] = {INT_max,INT_max,INT_max};
+  int  num_cl[3] = {0,0,0}, num_sl[3] = {0,0,0};
+  long long tot_prod[3] = {0,0,0}, min_prod[3] = {INT_max,INT_max,INT_max};
   float fsp, fspace[3] = {FLT_max,FLT_max,FLT_max};
   float fsl, fslots[3] = {FLT_max,FLT_max,FLT_max};
 
@@ -605,17 +603,17 @@ void MonitoringClusterLine::display() {
   m_hasProblems = true;
 
   if ( tot_prod[0] != 0 )
-    ::sprintf(txt,"Evt:%10d Cl:%4d Sl:%4d%64s",tot_prod[0],num_cl[0],num_sl[0],"");
+    ::sprintf(txt,"Evt:%10lld Cl:%4d Sl:%4d%64s",tot_prod[0],num_cl[0],num_sl[0],"");
   else
     ::sprintf(txt,"%14s%8s%9s%64s","--","--","--","");
   ::scrc_put_chars(dis,"   Relay:",BOLD,pos,77+CLUSTERLINE_START,0);
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+9+CLUSTERLINE_START,0);
 
   if ( tot_prod[1] != 0 && tot_prod[2] != 0 )
-    ::sprintf(txt,"Evt:%10d Cl:%4d Sl:%4d Evt:%10d Cl:%4d Sl:%4d%64s",
+    ::sprintf(txt,"Evt:%10lld Cl:%4d Sl:%4d Evt:%10lld Cl:%4d Sl:%4d%64s",
 	      tot_prod[1],num_cl[1],num_sl[1],tot_prod[2],num_cl[2],num_sl[2],"");
   else if ( tot_prod[1] != 0 )
-    ::sprintf(txt,"Evt:%10d Cl:%4d Sl:%4d  %-62s",tot_prod[1],num_cl[1],num_sl[1],"No Output streams");
+    ::sprintf(txt,"Evt:%10lld Cl:%4d Sl:%4d  %-62s",tot_prod[1],num_cl[1],num_sl[1],"No Output streams");
   else
     ::sprintf(txt,"%14s%8s%9s%64s","--","--","--","");
   ::scrc_put_chars(dis,"  Worker:",BOLD,pos,77+40+CLUSTERLINE_START,0);
@@ -693,17 +691,17 @@ void FarmClusterLine::display() {
   Display*       dis = m_parent->display();
   const Nodeset*   c = data<Nodeset>();
   const Nodes& nodes = c->nodes;
-  int evt_prod[4]    = {0,0,0,0}, min_prod[4]  = {INT_max,INT_max,INT_max,INT_max};
+  long long int evt_prod[4]    = {0,0,0,0}, min_prod[4]  = {INT_max,INT_max,INT_max,INT_max};
   int free_space[4]  = {0,0,0,0}, min_space[4] = {INT_max,INT_max,INT_max,INT_max};
   int free_slots[4]  = {0,0,0,0}, min_slots[4] = {INT_max,INT_max,INT_max,INT_max};
   int buf_clients[4] = {0,0,0,0};
   float fspace[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
   float fslots[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
   float fsl, fsp;
-  int evt_ovl        = INT_max;
-  int evt_sent       = INT_max;
-  int evt_moore      = INT_max;
-  int evt_built      = INT_max;
+  int evt_ovl   = INT_max;
+  int evt_sent  = INT_max;
+  int evt_moore = INT_max;
+  int evt_built = INT_max;
   int numNodes       = 0;
   int numBuffs       = 0;
   int numClients     = 0;
@@ -870,7 +868,7 @@ void FarmClusterLine::display() {
   err = err + "                                                                 ";
   ::scrc_put_chars(dis,err.substr(0,35).c_str(),col,pos,42+CLUSTERLINE_START,0);
   if ( evt_prod[0] || evt_prod[1] )
-    ::sprintf(txt,"%10d%5d%11d%6d%10d%5d",
+    ::sprintf(txt,"%10lld%5d%11lld%6d%10lld%5d",
               evt_prod[3],free_slots[3],
               evt_prod[1],free_slots[1],
               evt_prod[2],free_slots[2]);
@@ -880,7 +878,7 @@ void FarmClusterLine::display() {
   if ( min_prod[0] != INT_max || min_prod[1] != INT_max ) {
     if ( min_prod[3]  == INT_max ) min_prod[3] = 0;  // if not existing....
     if ( min_slots[3] == INT_max ) min_slots[3] = 0; // if not existing....
-    ::sprintf(txt,"%10d%5d%11d%6d%10d%5d",
+    ::sprintf(txt,"%10lld%5d%11lld%6d%10lld%5d",
               min_prod[3],min_slots[3],
               min_prod[1],min_slots[1],
               min_prod[2],min_slots[2]);

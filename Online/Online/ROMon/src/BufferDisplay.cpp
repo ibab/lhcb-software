@@ -66,7 +66,7 @@ void BufferDisplay::update(const void* data) {
           //  if ( p ) *p = 0;
           //}
           ::sprintf(name," Buffer \"%s\"",bnam);
-          ::sprintf(txt,"%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
+          ::sprintf(txt,"%-26s  Events: Produced:%lld Actual:%lld Seen:%lld Pending:%d Max:%d",
                     name, c.tot_produced, c.tot_actual, c.tot_seen, c.i_events, c.p_emax);
           ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
           ::sprintf(txt,"%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]",

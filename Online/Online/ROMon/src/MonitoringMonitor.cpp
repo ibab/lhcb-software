@@ -38,13 +38,13 @@ namespace ROMon {
     };
 
     typedef std::map<std::string,NodeMon*>  Monitors;
-    bool        m_isReco;
+    bool              m_inUse, m_isReco;
 
     std::string m_partition;
-    Monitors    m_nodes;
-    Monitors    m_history;
-    NodeMon     m_sum;
-    NodeMon     m_sumHist;
+    Monitors   m_nodes;
+    Monitors   m_history;
+    NodeMon    m_sum;
+    NodeMon    m_sumHist;
 
     void extractData(const Nodeset& ns);
     void analyzeData();

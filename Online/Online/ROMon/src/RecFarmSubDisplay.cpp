@@ -165,7 +165,7 @@ void RecFarmSubDisplay::handle(const Event& ev) {
 /// Update display content
 void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
   char txt[128], text[128];
-  int evt_prod[2]    = {0,0}, min_prod[2]  = {INT_max,INT_max};
+  long long int evt_prod[2]={0,0}, min_prod[2]={INT_max,INT_max};
   int free_space[2]  = {0,0}, min_space[2] = {INT_max,INT_max};
   int used_slots[2]  = {0,0}, min_slots[2] = {INT_max,INT_max};
   int buf_clients[2] = {0,0};
@@ -244,14 +244,14 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
   m_hasProblems = true;
 
   if ( buf_clients[0] != 0 )
-    ::sprintf(txt,"%9d%4d%6d   %9d%4d%6d",
+    ::sprintf(txt,"%9lld%4d%6d   %9lld%4d%6d",
               evt_prod[0],buf_clients[0],used_slots[0],
               evt_prod[1],buf_clients[1],used_slots[1]);
   else
     ::sprintf(txt,"%9s%4s%6s   %9s%4s%6s","--","","--","--","","--");
   ::scrc_put_chars(m_display,txt,NORMAL,2,5,1);
   if ( buf_clients[0] != 0 )
-    ::sprintf(txt,"%9d%4s%6d   %9d%4s%6d",min_prod[0],"",min_slots[0],min_prod[1],"",min_slots[1]);
+    ::sprintf(txt,"%9lld%4s%6d   %9lld%4s%6d",min_prod[0],"",min_slots[0],min_prod[1],"",min_slots[1]);
   else
     ::sprintf(txt,"%9s%4s%6s   %9s%4s%6s","--","","--","--","","--");
   ::scrc_put_chars(m_display,txt,NORMAL,3,5,1);

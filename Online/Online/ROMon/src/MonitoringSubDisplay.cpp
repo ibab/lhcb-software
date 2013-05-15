@@ -175,8 +175,8 @@ void MonitoringSubDisplay::updateContent(const Nodeset& ns) {
   string evt_buff = std::string("Events_"+m_partition);
   string out_buff = std::string("Output_"+m_partition);
   int numNodes = 0, numBuffs = 0, numClients = 0;
-  int tot_prod[3] = {0,0,0}, num_cl[3] = {0,0,0}, num_sl[3] = {0,0,0};
-  int min_prod[3] = {INT_max,INT_max,INT_max};
+  int num_cl[3] = {0,0,0}, num_sl[3] = {0,0,0};
+  long long int tot_prod[3] = {0,0,0}, min_prod[3] = {INT_max,INT_max,INT_max};
 
   float fsp, fspace[3] = {FLT_max,FLT_max,FLT_max};
   float fsl, fslots[3] = {FLT_max,FLT_max,FLT_max};
@@ -234,14 +234,14 @@ void MonitoringSubDisplay::updateContent(const Nodeset& ns) {
   if ( tot_prod[1] != 0 && tot_prod[2] != 0 ) {
     ::sprintf(txt,"%-7s%9s%4s%5s%9s%4s%4s","","Events","Cl","Sl","Output","Cl","Sl");
     ::scrc_put_chars(m_display,txt,INVERSE,1,1,1);
-    ::sprintf(txt,"%9d%4d%5d%9d%4d%4d",
+    ::sprintf(txt,"%9lld%4d%5d%9lld%4d%4d",
               tot_prod[1],num_cl[1],num_sl[1],
               tot_prod[2],num_cl[2],num_sl[2]);
   }
   else if ( tot_prod[1] != 0 ) {
     ::sprintf(txt,"%-7s%9s%4s%5s%17s","","Events","Cl","Sl","");
     ::scrc_put_chars(m_display,txt,INVERSE,1,1,1);
-    ::sprintf(txt,"%9d%4d%5d%17s",tot_prod[1],num_cl[1],num_sl[1],"  No Output streams");
+    ::sprintf(txt,"%9lld%4d%5d%17s",tot_prod[1],num_cl[1],num_sl[1],"  No Output streams");
   }
   else {
     ::sprintf(txt,"%-7s%9s%4s%5s%17s","","Events","Cl","Sl","");
@@ -252,7 +252,7 @@ void MonitoringSubDisplay::updateContent(const Nodeset& ns) {
   ::scrc_put_chars(m_display,txt,NORMAL,2,8,1);
 
   if ( tot_prod[0] != 0 )
-    ::sprintf(txt,"%9d%4d%5d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
+    ::sprintf(txt,"%9lld%4d%5d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
   else
     ::sprintf(txt,"%9s%4s%5s%17s","--","--","--","");
   ::scrc_put_chars(m_display,"Relay: ",BOLD,3,1,1);

@@ -57,7 +57,7 @@ int ROMonServer::handle(void* buff, size_t /* len */)   {
       for (int i = 0; i < buffers->p_bmax; ++i)  {
         if ( buffers->buffers[i].used == 1 )  {
           const char* bm_name = buffers->buffers[i].name;
-          BMID dsc = ::mbm_map_mon_memory(bm_name);
+          BufferMemory* dsc = ::mbm_map_mon_memory(bm_name);
           if ( dsc ) {
             try {
               dumpBufferInfo(bm_name,dsc,mbm);
@@ -65,7 +65,7 @@ int ROMonServer::handle(void* buff, size_t /* len */)   {
             catch(...)    {
             }
             mbm = b->add(mbm);
-            ::mbm_unmap_memory(dsc);
+            ::mbm_unmap_mon_memory(dsc);
           }
         }
       }
@@ -80,7 +80,7 @@ int ROMonServer::handle(void* buff, size_t /* len */)   {
 }
 
 /// Dump buffer information to memory
-void ROMonServer::dumpBufferInfo(const char* bm_name, BMID dsc, MBMBuffer* mbm)   {
+void ROMonServer::dumpBufferInfo(const char* bm_name, BufferMemory* dsc, MBMBuffer* mbm)   {
   CONTROL  *ctr = mbm_get_control_table(dsc);
   USER     *us  = mbm_get_user_table(dsc), *utst=(USER*)~0x0;
   MBMBuffer::Clients::iterator t = mbm->clients.reset();
@@ -108,12 +108,12 @@ void ROMonServer::dumpBufferInfo(const char* bm_name, BMID dsc, MBMBuffer* mbm) 
     t->events      = 0;
     if ( us->ev_produced>0 || us->get_sp_calls>0 )   {
       t->type      = 'P';
-      t->state     = char(us->p_state+1);
+      t->state     = char(us->state+1);
       t->events    = us->ev_produced;
     }
     else if ( us->ev_actual>0 || us->get_ev_calls>0 || us->n_req>0 ) {
       t->type      = 'C';
-      t->state     = char(us->c_state+1);
+      t->state     = char(us->state+1);
       t->events    = us->ev_seen;
     }
     t = mbm->clients.add(t);
