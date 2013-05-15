@@ -12,6 +12,7 @@ use DigiEvent    v*    Event
 use RecEvent     v*    Event
 use TrackEvent   v*    Event
 use PhysEvent    v*    Event
+use FTEvent      v*    Event
 
 # =============================================================================
 # Produce lcg dictionary for instances of Linker classes
