@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2013-05-16 - Sebastian Neubert
+ - Added VeloTT tracking lines
 
 !========================= HltSettings v6r0p1 2013-04-09 =========================
 ! 2013-03-25 - Rob Lambert
