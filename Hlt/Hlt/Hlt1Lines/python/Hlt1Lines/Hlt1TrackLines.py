@@ -48,6 +48,28 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'AllL0_Velo_Qcut'   : 3.
                     ,   'AllL0_GEC'         : 'Loose'
                     ,   'AllL0_ValidateTT'  : False
+                    ,   'AllL0VeloTT_Velo_NHits' : 9.
+                    ,   'AllL0VeloTT_Velo_Qcut'  : 3.
+                    ,   'AllL0VeloTT_IP'         : 0.100
+                    ,   'AllL0VeloTT_PT'          : 1800.
+                    ,   'AllL0VeloTT_P'           : 10000.
+                    ,   'AllL0VeloTT_IP'          : 0.100
+                    ,   'AllL0VeloTT_IPChi2'      : 16.
+                    ,   'AllL0VeloTT_TrChi2'      : 3.
+                    ,   'AllL0VeloTT_TrNTHits'    : 16.
+                    ,   'AllL0VeloTT_GEC'         : 'Loose'
+                    ,   'AllL0VeloTT_ValidateTT'  : False
+                    ,   'AllL0VeloTTForw_Velo_NHits' : 9.
+                    ,   'AllL0VeloTTForw_Velo_Qcut'  : 3.
+                    ,   'AllL0VeloTTForw_IP'         : 0.100
+                    ,   'AllL0VeloTTForw_PT'          : 1800.
+                    ,   'AllL0VeloTTForw_P'           : 10000.
+                    ,   'AllL0VeloTTForw_IP'          : 0.100
+                    ,   'AllL0VeloTTForw_IPChi2'      : 16.
+                    ,   'AllL0VeloTTForw_TrChi2'      : 3.
+                    ,   'AllL0VeloTTForw_TrNTHits'    : 16.
+                    ,   'AllL0VeloTTForw_GEC'         : 'Loose'
+                    ,   'AllL0VeloTTForw_ValidateTT'  : False
                     ,   'Muon_PT'           : 800.
                     ,   'Muon_P'            : 8000.
                     ,   'Muon_IP'           : 0.100
@@ -82,17 +104,20 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
 
     def hlt1Track_Preambulo( self, prefix ) :
         from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
-                                                       LooseForward, TightForward,
-                                                       FitTrack, MatchVeloMuon, IsMuon )
+                                                       LooseForward, TightForward, PEstiForward, pET,
+                                                       FitTrack, FitVeloTTTrack, MatchVeloMuon, IsMuon )
         from HltTracking.Hlt1TrackFilterConf import (ValidateWithTT)
  
         Preambulo = [ VeloCandidates( prefix ),
                       TightForward,
                       LooseForward,
+                      PEstiForward,
+                      pET,
                       ValidateWithTT,
                       MatchVeloMuon,
                       IsMuon ,
-                      FitTrack ]
+                      FitTrack,
+                      FitVeloTTTrack,]
         return Preambulo
 
     def do_timing( self, unit ):
@@ -110,6 +135,98 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             code = re.sub( '\\s+%s\\s+' % step, sub, code )
         unit.Code = code
         return unit
+
+    #A new line containing only the PaVeloTT, no forward tracking
+    def hlt1TrackVeloTT_Streamer(self, name, props) :
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
+        from Configurables import LoKi__HltUnit as HltUnit
+        props['name'] = name
+        lineCode = """
+        VeloCandidates
+        >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
+        ( TrNVELOMISS < %(Velo_Qcut)s ) & \
+        ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) ) 
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass VeloQ/IP', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nVeloIP' , LoKi.Monitoring.ContextSvc ) )
+        >>  pET
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass PatVeloTT', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nVeloTT', LoKi.Monitoring.ContextSvc) )
+        >> ( ( TrPT > %(PT)s * MeV ) & \
+        ( TrP  > %(P)s  * MeV ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
+        >>  FitVeloTTTrack
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
+        >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
+        ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2/IPChi2', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
+        >> SINK( 'Hlt1%(name)sDecision' )
+        >> ~TC_EMPTY
+        """ % props
+
+        hlt1TrackVeloTT_Unit = HltUnit(
+            'Hlt1'+name+'Unit',
+            Preambulo = self.hlt1Track_Preambulo( name ),
+            Code = lineCode
+            )       
+        from HltTracking.HltPVs import PV3D
+        return [ Hlt1GECUnit( 'Loose' ), PV3D(), hlt1TrackVeloTT_Unit ]
+    #enddef #hlt1TrackVeloTT_Streamer
+
+    def hlt1TrackVeloTTForw_Streamer( self, name, props ) :
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
+        from Configurables import LoKi__HltUnit as HltUnit
+        props['name'] = name
+        props['forward'] = 'PEstiForward' 
+        if props['ValidateTT'] :
+            props['forward'] = "ValidateWithTT >>" + props['forward']  
+
+        lineCode = """ 
+        VeloCandidates
+        >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
+        ( TrNVELOMISS < %(Velo_Qcut)s ) & \
+        ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) ) 
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass VeloQ/IP', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nVeloIP' , LoKi.Monitoring.ContextSvc ) )
+        >>  pET
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass PatVeloTT', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nVeloTT', LoKi.Monitoring.ContextSvc) )
+        >>  %(forward)s 
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass Forward', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nForward' , LoKi.Monitoring.ContextSvc ) )
+        >> ( (TrTNORMIDC > %(TrNTHits)s ) & \
+        ( TrPT > %(PT)s * MeV ) & \
+        ( TrP  > %(P)s  * MeV ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
+        >>  FitTrack
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
+        >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
+        ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2/IPChi2', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
+        >> SINK( 'Hlt1%(name)sDecision' )
+        >> ~TC_EMPTY
+        """ % props
+
+        Preambulo = self.hlt1Track_Preambulo( name )
+        #Preambulo.append("hPPre = Gaudi.Histo1DDef('preP',0,10000)")
+        Preambulo.append("from LoKiCore.functions import *")
+	Preambulo.append("from LoKiPhys.decorators import *")
+        Preambulo.append("from GaudiPython.HistoUtils import book")              
+        Preambulo.append("histo = Gaudi.Histo1DDef('Pre VeloTT Pt', 0.0, 10000.0,100)")
+
+        hlt1TrackVeloTTForw_Unit = HltUnit(
+            'Hlt1'+name+'Unit',
+            ##OutputLevel = 1 ,
+            Preambulo = Preambulo,
+            Code = lineCode
+            )       
+        from HltTracking.HltPVs import PV3D
+        return [ Hlt1GECUnit( 'Loose' ), PV3D(), hlt1TrackVeloTTForw_Unit ]
 
     def hlt1TrackNonMuon_Streamer( self, name, props ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
@@ -153,7 +270,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         from HltTracking.HltPVs import PV3D
         return [ Hlt1GECUnit( 'Loose' ), PV3D(), hlt1TrackNonMuon_Unit ]
 
-    def hlt1TrackForwardPassThrough_Streamer( self, name, props ) : 
+    def hlt1TrackForwardPassThrough_Streamer( self, name, props ):
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
         from Configurables import LoKi__HltUnit as HltUnit
         props['name'] = name
@@ -242,6 +359,18 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
              , L0DU = "L0_DECISION_PHYSICS" 
              , algos = self.hlt1TrackNonMuon_Streamer( "TrackAllL0", self.localise_props( "AllL0" ) )
                )
+        Line ( 'TrackAllL0VeloTT'
+             , prescale = self.prescale
+             , postscale = self.postscale
+             , L0DU = "L0_DECISION_PHYSICS"
+             , algos = self.hlt1TrackVeloTT_Streamer( "TrackAllL0VeloTT", self.localise_props( "AllL0VeloTT"))
+        )
+        Line ( 'TrackAllL0VeloTTForw'
+             , prescale = self.prescale
+             , postscale = self.postscale
+             , L0DU = "L0_DECISION_PHYSICS"
+             , algos = self.hlt1TrackVeloTTForw_Streamer( "TrackAllL0VeloTTForw", self.localise_props("AllL0VeloTTForw"))
+        )       
         Line ( 'TrackAllL0Tight'
              , prescale = self.prescale
              , postscale = self.postscale
