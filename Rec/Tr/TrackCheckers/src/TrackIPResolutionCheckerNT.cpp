@@ -209,10 +209,19 @@ StatusCode TrackIPResolutionCheckerNT::execute()
         hits = get<LHCb::MCHits>( mchitlocation ) ;
     
     if ( hits ){
-        BOOST_FOREACH( const LHCb::MCHit* mchit, *hits ) {
-            if( mchit->mcParticle() )
-                mchitmap[ mchit->mcParticle() ].push_back( mchit ) ;
+      // first collect
+      BOOST_FOREACH( const LHCb::MCHit* mchit, *hits ) {
+	if( mchit->mcParticle() ) {
+	  mchitmap[ mchit->mcParticle() ].push_back( mchit ) ;
         }
+      }
+      // now sort them
+      for( MCHitMap::iterator it = mchitmap.begin() ; it != mchitmap.end() ; ++it ) {
+	if( it->first->momentum().Pz() > 0)
+	  std::sort( it->second.begin(), it->second.end(), ForwardMCHitSorter() ) ;
+	else
+	  std::sort( it->second.begin(), it->second.end(), BackwardMCHitSorter() ) ;
+      }
     }
     
     // we also just like to have the total number of true PVs
@@ -220,14 +229,18 @@ StatusCode TrackIPResolutionCheckerNT::execute()
 
     int itrack=0 ;
     
+    //std::cout << "Number of tracks" << tracks.size() << std::endl ;
     BOOST_FOREACH(const LHCb::Track* track, tracks) {
-        
+      //std::cout<< "a " << track << std::endl ;
         // keep track of track multiplicity
         theTuple->column("itrack",int(itrack)) ;
         ++itrack ;
         theTuple->column("ntrack",int(tracks.size())) ;
         theTuple->column("numtruePV",int(mcheader->numOfPrimaryVertices())) ;
-        
+    
+        if( ! track->hasVelo() ) continue ;
+	//std::cout << "b:" << std::endl ;
+
         //tree->Draw("ntrack","itrack==0") ;
         //tree->Draw("numrecPV","itrack==0") ;
         
@@ -253,22 +266,31 @@ StatusCode TrackIPResolutionCheckerNT::execute()
         theTuple->column("TChi2", track->info(LHCb::Track::FitTChi2,0)) ;
         theTuple->column("TNdof", track->info(LHCb::Track::FitTNDoF,0)) ;
         theTuple->column("backward",track->checkFlag( LHCb::Track::Backward)) ;
-        
+   
+	const LHCb::State* stateAtFirstHit = track->stateAt( LHCb::State::FirstMeasurement ) ;
+	//std::cout<< "State at first hit: " << stateAtFirstHit << std::endl ;
+	theTuple->column("firsthitx", double(stateAtFirstHit ? stateAtFirstHit->x() : 0) ) ;
+	theTuple->column("firsthity", double(stateAtFirstHit ? stateAtFirstHit->y() : 0) ) ;
+	theTuple->column("firsthitz", double(stateAtFirstHit ? stateAtFirstHit->z() : 0) ) ;
+	
+
         LHCb::HitPattern hitpattern(track->lhcbIDs()) ;
-        theTuple->column("numVeloStations",hitpattern.numVeloStations()) ;
-        theTuple->column("numVeloStationsOverlap",hitpattern.numVeloStationsOverlap()) ;
-        theTuple->column("numITStationsOverlap",hitpattern.numITStationsOverlap()) ;
-        theTuple->column("numITOTStationsOverlap",hitpattern.numITOTStationsOverlap()) ;
-        theTuple->column("numVeloHoles",hitpattern.numVeloHoles()) ;
-        theTuple->column("numTHoles",hitpattern.numTHoles()) ;
-        theTuple->column("numTLayers",hitpattern.numTLayers()) ;
-        theTuple->column("numVeloStations",hitpattern.numVeloStations()) ;
-        theTuple->column("numVeloClusters",hitpattern.numVeloR()+hitpattern.numVeloPhi()) ;
-        theTuple->column("numhits",track->lhcbIDs().size()) ;
+        theTuple->column("numVeloStations",int(hitpattern.numVeloStations())) ;
+        theTuple->column("numVeloStationsOverlap",int(hitpattern.numVeloStationsOverlap())) ;
+        theTuple->column("numITStationsOverlap",int(hitpattern.numITStationsOverlap())) ;
+        theTuple->column("numITOTStationsOverlap",int(hitpattern.numITOTStationsOverlap())) ;
+        theTuple->column("numVeloHoles",int(hitpattern.numVeloHoles())) ;
+        theTuple->column("numTHoles",int(hitpattern.numTHoles())) ;
+        theTuple->column("numTLayers",int(hitpattern.numTLayers())) ;
+        theTuple->column("numVeloStations",int(hitpattern.numVeloStations())) ;
+        theTuple->column("numVeloClusters",int(hitpattern.numVeloR()+hitpattern.numVeloPhi())) ;
+        theTuple->column("numhits",int(track->lhcbIDs().size())) ;
         
+	//std::cout << "Number of velo stations: " << hitpattern.numVeloStations() << " " << track->lhcbIDs().size() << std::endl ;
         // find the closest PV, again using the minimal distance
         
         const LHCb::State& state = track->firstState() ;
+	//std::cout << "state: " << &state << std::endl ;
         LHCb::CubicStateInterpolationTraj tracktraj( state, Gaudi::XYZVector() ) ;
         Gaudi::XYZPoint trkpos( state.position() ) ;
         Gaudi::XYZVector trkdir( state.slopes().Unit() ) ;
@@ -277,20 +299,20 @@ StatusCode TrackIPResolutionCheckerNT::execute()
         theTuple->column("trackWasFitted", trackWasFitted);
         
         // We also want to monitor the reconstructed IP, so the IP with respect to the reconstructed PVs.
-        theTuple->column("numrecPV", pvs.size() ) ;
+        theTuple->column("numrecPV", int(pvs.size()) ) ;
         const LHCb::RecVertex* recpv(0) ;
         double bestip2(0);
         
-        BOOST_FOREACH(const LHCb::RecVertex* thispv, pvs) {
-            Gaudi::XYZVector dx = trkpos - thispv->position()  ;
-            Gaudi::XYZVector delta = dx - trkdir * dx.Dot(trkdir) ;
-            double ip2 = delta.Mag2() ;
-            if( recpv==0 || ip2 < bestip2 ) {
-                bestip2 = ip2 ;
-                recpv = thispv ;
-            }
+	BOOST_FOREACH(const LHCb::RecVertex* thispv, pvs) {
+	  Gaudi::XYZVector dx = trkpos - thispv->position()  ;
+	  Gaudi::XYZVector delta = dx - trkdir * dx.Dot(trkdir) ;
+	  double ip2 = delta.Mag2() ;
+	  if( recpv==0 || ip2 < bestip2 ) {
+	    bestip2 = ip2 ;
+	    recpv = thispv ;
+	  }
         } // end of BOOST over pvs
-        
+	//std::cout<< "recpv: " << recpv << std::endl ;
         if (recpv) {
             LHCb::State stateAtVtx = tracktraj.state( recpv->position().z() ) ;
             // now compute the errors. this isn't quite right because:
@@ -323,7 +345,7 @@ StatusCode TrackIPResolutionCheckerNT::execute()
         typeofprefix = isFromPV ? 0 : (hasMCMatch ? 1 : 2) ;
         theTuple->column("typeofprefix", typeofprefix) ;
         
-        
+	//std::cout<< "hasMCMatch: " << hasMCMatch << std::endl ;
         int mcOVT = -1 ; // set to -1 for ghosts
         if( hasMCMatch ) {
             Gaudi::XYZPoint trueorigin = mcparticle->originVertex()->position() ;
@@ -362,51 +384,66 @@ StatusCode TrackIPResolutionCheckerNT::execute()
             theTuple->column("IPxerr", std::sqrt( state.covariance()(0,0) ) );
             theTuple->column("IPyerr", std::sqrt( state.covariance()(1,1) ) ) ;
             
-            
+	    //std::cout<< "hits: " << hits << " " << mcparticle << std::endl ;
             if( hits ) {
-                // store the z-position of the first MC hit
-                MCHitVector& mchits = mchitmap[mcparticle] ;
-                if( mcparticle->momentum().Pz() > 0)
-                    std::sort( mchits.begin(), mchits.end(), ForwardMCHitSorter() ) ;
-                else
-                    std::sort( mchits.begin(), mchits.end(), BackwardMCHitSorter() ) ;
+	      MCHitMap::const_iterator mchitmapit = mchitmap.find( mcparticle ) ;
+	      if( mchitmapit == mchitmap.end() ) {
+		theTuple->column("nummchits",int(0) ) ;
+	      } else {
+		// store the z-position of the first MC hit
+                const MCHitVector& mchits = mchitmapit->second ;
+		theTuple->column("nummchits",int(mchits.size())) ;
+		//std::cout<< "mchits: " << mchits.size() << std::endl ;
+		
+		const LHCb::MCHit* mchit = mchits.front() ;
+		const LHCb::MCHit* mchitL = mchits.back() ;
+		Gaudi::XYZPoint poshit = mchit->entry() ;
+		theTuple->column("edep",mchit->energy());
+		theTuple->column("firstmchitx",poshit.x()) ;
+		theTuple->column("firstmchity",poshit.y()) ;
+		theTuple->column("firstmchitz",poshit.z()) ;
+		theTuple->column("firstmchitdz",mchit->displacement().z()) ;
+		theTuple->column("lastmchitz",mchitL->entry().z()) ;
+		theTuple->column("truetxfirsthit",mchit->dxdz()) ;
+		theTuple->column("truetyfirsthit",mchit->dydz()) ;
+		double dz = poshit.z() - z ;
+		theTuple->column("IPxfirsthit",(x + dz * tx) - poshit.x()) ;
+		theTuple->column("IPyfirsthit",(y + dz * ty) - poshit.y()) ;
                 
-                theTuple->column("nummchits",mchits.size()) ;
-                const LHCb::MCHit* mchit = mchits.front() ;
-                const LHCb::MCHit* mchitL = mchits.back() ;
-                Gaudi::XYZPoint poshit = mchit->entry() ;
-                theTuple->column("edep",mchit->energy());
-                theTuple->column("firstmchitx",poshit.x()) ;
-                theTuple->column("firstmchity",poshit.y()) ;
-                theTuple->column("firstmchitz",poshit.z()) ;
-                theTuple->column("firstmchitdz",mchit->displacement().z()) ;
-                theTuple->column("lastmchitz",mchitL->entry().z()) ;
-                theTuple->column("truetxfirsthit",mchit->dxdz()) ;
-                theTuple->column("truetyfirsthit",mchit->dydz()) ;
-                double dz = poshit.z() - z ;
-                theTuple->column("IPxfirsthit",(x + dz * tx) - poshit.x()) ;
-                theTuple->column("IPyfirsthit",(y + dz * ty) - poshit.y()) ;
-                
-                // let's now extrapolate the mchit of the first hit to the z position of the vertex,
-                // as if there were no scattering
-                dz = trueorigin.z() - poshit.z() ;
-                double extrapolatedmchitx = poshit.x() + dz * mchit->dxdz() ;
-                double extrapolatedmchity = poshit.y() + dz * mchit->dydz() ;
-                
-                dz = trueorigin.z() - state.z() ;
-                theTuple->column("IPxfirsthitatvertex",(state.x() + dz* state.tx()) - extrapolatedmchitx) ;
-                theTuple->column("IPyfirsthitatvertex",(state.y() + dz* state.ty()) - extrapolatedmchity) ;
-                
-            } // hits check
+		// let's now extrapolate the mchit of the first hit to the z position of the vertex,
+		// as if there were no scattering
+		dz = trueorigin.z() - poshit.z() ;
+		double extrapolatedmchitx = poshit.x() + dz * mchit->dxdz() ;
+		double extrapolatedmchity = poshit.y() + dz * mchit->dydz() ;
+		
+		dz = trueorigin.z() - state.z() ;
+		theTuple->column("IPxfirsthitatvertex",(state.x() + dz* state.tx()) - extrapolatedmchitx) ;
+		theTuple->column("IPyfirsthitatvertex",(state.y() + dz* state.ty()) - extrapolatedmchity) ;
+		//std::cout << "d" << std::endl ;
+	      } // hits check
             
-        }   // end of hasMCMatch check
-        
-        theTuple->column("mcOriginVertexType", mcOVT );
+	    }   // end of hasMCMatch check
+	}
+	theTuple->column("mcOriginVertexType", mcOVT );
         
         theTuple->write();
-        
+	
+	//std::cout << "c" << std::endl ;
 	    
     } // end of tracks
     
+    // let's also make a tuple for the PVs
+    // create the ntuple
+    // Tuple pvtuple = nTuple( "pvs" , "" , CLID_ColumnWiseTuple );
+    // int ipv(0) ;
+    // BOOST_FOREACH( const LHCb::MCVertex* pv, mcheader->primaryVertices() ) {
+    //   pvtuple->column( "ipv", ipv++) ;
+    //   pvtuple->column( "npv", mcheader->primaryVertices().size() ) ;
+    //   pvtuple->column( "x", pv->position().x() ) ;
+    //   pvtuple->column( "y", pv->position().y() ) ;
+    //   pvtuple->column( "z", pv->position().z() ) ;
+    //   pvtuple->write() ;
+    // }
+
     return StatusCode::SUCCESS ;
 }
