@@ -410,7 +410,7 @@ Lambdac2PKPiForXSec = {
 
 # Xsec: D0 -> K- pi- pi+ pi+
 D02K3PiForXSec = {
-    'BUILDERTYPE' : 'D02K3PiForXSecConf',
+    'BUILDERTYPE' : 'StrippingD02K3PiForXSecConf',
     'CONFIG'      : {
                     'Daug_All_PT_MIN'           :  250.0 * MeV
                   , 'Daug_3of4_PT_MIN'          :  300.0 * MeV
