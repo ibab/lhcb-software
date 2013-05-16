@@ -955,9 +955,9 @@ class DiMuonConf(LineBuilder):
             self.registerLine( self.Psi2MuMuTOSLine )
             #self.registerLine( self.DiMuonDetachedLine )
             self.registerLine( self.Jpsi2MuMuDetachedLine )
-            self.registerLine( self.Jpsi2MuMuDetachedMinusLine )
+#            self.registerLine( self.Jpsi2MuMuDetachedMinusLine )
             self.registerLine( self.Psi2MuMuDetachedLine )
-            self.registerLine( self.Psi2MuMuDetachedMinusLine )
+#            self.registerLine( self.Psi2MuMuDetachedMinusLine )
 
 def filterDiMuon( name,
                   MuonPT,
