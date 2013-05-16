@@ -125,5 +125,5 @@ int main ( int /*argc*/, char** /*argv*/ )
     cout << "RichSmartID tests SUCCESSFUL" << endl;
   }
 
-  return 0;
+  return ( OK ? 0 : 1 );
 }

@@ -4,6 +4,11 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2013-05-16 - Chris Jones
+ - Move the RichSmartIDTest code into the src/Test directory (to allow the tests
+   directory to instead be used for a new QM test.
+ - Add new QM test to run RichSmartIDTest.exe
+
 ! 2013-05-15 - Chris Jones
  - Fix LHCbID <-> RichSmartID conversion, which broke when support for MaPMTs
    was added to the RichSmartID class.

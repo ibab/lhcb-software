@@ -30,10 +30,11 @@ god_build_dictionary(xml/*.xml
 
 if(GAUDI_BUILD_TESTS)
   gaudi_add_executable(RichSmartIDTest
-                       tests/RichSmartIDTest/*.cpp
+                       src/Test/RichSmartIDTest/*.cpp
                        INCLUDE_DIRS ROOT Boost
                        LINK_LIBRARIES ROOT Boost GaudiKernel GaudiObjDescLib LHCbMathLib LHCbKernel)
 endif()
 
 gaudi_install_python_modules()
 
+gaudi_add_test(QMTest QMTEST)

@@ -60,5 +60,10 @@ macro_append Boost_linkopts " $(Boost_linkopts_system) "
 
 # RichSmartID Debug Application
 #============================================================================
-application RichSmartIDTest ../tests/RichSmartIDTest/*.cpp
+application RichSmartIDTest ../src/Test/RichSmartIDTest/*.cpp
 macro_append RichSmartIDTest_dependencies " LHCbKernel "
+
+# QM tests
+private
+  apply_pattern QMTest
+end_private
