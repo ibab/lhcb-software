@@ -339,13 +339,13 @@ StatusCode BTaggingAnalysis::execute() {
     long trtyp = track->type();
     //track studies (forward and matched tracks) TrackMatching->PatMatch 
     //if (track->checkHistory(Track::TrackMatching) == true) trtyp=7; //old code had that
-    double distphi;
+    double distphi(0);
     m_util->isinTree( axp, axdaugh, distphi );
 
     double pionCombinedMass = GetInvariantMass(AXBS->measuredMass()/GeV, AXBS->momentum()/GeV, 0.1395702, axp->momentum()/GeV);
     
     //calculate signed IP wrt RecVert
-    double IP, IPerr, IPsign;
+    double IP(0), IPerr(0), IPsign(0);
     IP=-1;
     if(!(axp->particleID().hasBottom())) {
       m_util->calcIP(axp, RecVert, IPsign, IPerr);
@@ -354,24 +354,24 @@ StatusCode BTaggingAnalysis::execute() {
 
     //calculate min IP wrt all pileup vtxs 
     double IPPU = 10000;
-    double ipval, iperr;
+    double ipval(0), iperr(0);
     m_util->calcIP( axp, PileUpVtx, ipval, iperr );
     if(iperr) IPPU=ipval/iperr;
     //cal IP wrt different PU
     //debug()<<"--> min ippu "<<ipval<<endreq;
-    double nippu, nippuerr, ipmean, xpos, ypos, zpos, xerrpos, yerrpos, zerrpos;
-    int ntracks;
-    double ippubs, ippuchi2bs;
+    double nippu(0), nippuerr(0), ipmean(0), xpos(0), ypos(0), zpos(0), xerrpos(0), yerrpos(0), zerrpos(0);
+    int ntracks(0);
+    double ippubs(0), ippuchi2bs(0);
     m_util->calcIPPU( axp, AXBS, PileUpVtx, 0, nippu, nippuerr, ipmean, xpos, ypos, zpos, 
                       xerrpos, yerrpos, zerrpos, ntracks, ippubs, ippuchi2bs );
-    double nippu2, nippuerr2, xpos2, ypos2, zpos2, xerrpos2, yerrpos2, zerrpos2;
-    int ntracks2;
-    double ippubs2, ippuchi2bs2;
+    double nippu2(0), nippuerr2(0), xpos2(0), ypos2(0), zpos2(0), xerrpos2(0), yerrpos2(0), zerrpos2(0);
+    int ntracks2(0);
+    double ippubs2(0), ippuchi2bs2(0);
     m_util->calcIPPU( axp, AXBS, PileUpVtx, nippu, nippu2, nippuerr2, ipmean, xpos2, ypos2, zpos2, 
                       xerrpos2, yerrpos2, zerrpos2, ntracks2, ippubs2, ippuchi2bs2 );
-    double nippu3, nippuerr3, xpos3, ypos3, zpos3, xerrpos3, yerrpos3, zerrpos3;
-    int ntracks3;
-    double ippubs3, ippuchi2bs3;
+    double nippu3(0), nippuerr3(0), xpos3(0), ypos3(0), zpos3(0), xerrpos3(0), yerrpos3(0), zerrpos3(0);
+    int ntracks3(0);
+    double ippubs3(0), ippuchi2bs3(0);
     m_util->calcIPPU( axp, AXBS, PileUpVtx, nippu2, nippu3, nippuerr3, ipmean, xpos3, ypos3, zpos3, 
                       xerrpos3, yerrpos3, zerrpos3, ntracks3, ippubs3, ippuchi2bs3  );
 
@@ -482,8 +482,8 @@ StatusCode BTaggingAnalysis::execute() {
     pPIDNNpi.push_back(proto->info( ProtoParticle::ProbNNpi, -1000.0 ));
 
     // global flags 
-    const bool inEcalACC = proto->info(ProtoParticle::InAccEcal, false);
-    const bool inHcalACC = proto->info(ProtoParticle::InAccHcal, false);
+    const bool inEcalACC = 0 != proto->info(ProtoParticle::InAccEcal,0);
+    const bool inHcalACC = 0 != proto->info(ProtoParticle::InAccHcal,0);
     long PIDfl= 0;
     if( proto->muonPID() ) 
       if(proto->muonPID()->IsMuon()) PIDfl += 100000;
@@ -504,7 +504,7 @@ StatusCode BTaggingAnalysis::execute() {
       }
     }
     if(!svertices.empty()) {
-      const SmartRefVector<Particle> partsInSVnew = 
+      const SmartRefVector<Particle>& partsInSVnew = 
         svertices.at(0).outgoingParticles();
       for(SmartRefVector<Particle>::const_iterator i = 
             partsInSVnew.begin(); i != partsInSVnew.end(); ++i) {
@@ -750,7 +750,7 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
     double kdmin = 1000000;
     RecVertex::Range::const_iterator iv;
     for(iv=verts.begin(); iv!=verts.end(); ++iv){
-      double var, ip, iperr;
+      double var(0), ip(0), iperr(0);
       if(m_ChoosePV == "CheatPV") {//mc vertex
         debug()<<"CheatPV criteria";
         if (m_EnableMC) {
