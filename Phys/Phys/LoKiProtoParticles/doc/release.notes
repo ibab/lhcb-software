@@ -6,6 +6,9 @@
 ! Purpose     : New package to deal with ProtoParticles 
 ! -----------------------------------------------------------------------------
 
+! 2013-05-16 - Chris Jones
+ - Fix some more clang32 compilation warnings
+
 !========================= LoKiProtoParticles v2r1p2 2013-05-07 =========================
 
 ! 2013-04-22 - Chris Jones

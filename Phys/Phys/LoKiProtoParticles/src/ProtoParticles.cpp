@@ -342,7 +342,7 @@ LoKi::ProtoParticles::HasTrack::operator()
     Error ( "LHCb::ProtoParticle* points to NULL, return 'false'" ) ;
     return false ;                                                    // RETURN
   }
-  return 0 != p->track () ;
+  return ( NULL != p->track() );
 }
 // ============================================================================
 // OPTIONAL: the nice printtout 
@@ -365,7 +365,6 @@ LoKi::ProtoParticles::Charged::clone() const
 // ============================================================================
 std::ostream& LoKi::ProtoParticles::Charged::fillStream ( std::ostream& s ) const 
 { return s << " PP_CHARGED " ; }
-
 
 // ============================================================================
 // MANDATORY: virtual destructor
@@ -390,7 +389,7 @@ LoKi::ProtoParticles::Neutral::operator()
     return false ;                                                    // RETURN
   }
   //
-  return 0 == p->track () && !p->calo().empty() ;
+  return ( NULL == p->track() && !p->calo().empty() );
 }
 // ============================================================================
 // OPTIONAL: the nice printtout 
@@ -398,9 +397,6 @@ LoKi::ProtoParticles::Neutral::operator()
 std::ostream& LoKi::ProtoParticles::Neutral::fillStream ( std::ostream& s ) const 
 { return s << " PP_NEUTRAL " ; }
 
-    
- 
- 
 // ============================================================================
 // MANDATORY: virtual destructor
 // ============================================================================
@@ -469,9 +465,9 @@ LoKi::ProtoParticles::HasAerogel::operator()
 const LHCb::RichPID* 
 LoKi::ProtoParticles::HasAerogel::rich ( const LHCb::ProtoParticle* p ) const 
 {
-  if ( 0 == p   ) { return   0 ; }                           // RETURN 
+  if ( NULL == p   ) { return NULL ; }                           // RETURN 
   const LHCb::RichPID* pid = p->richPID() ;
-  if ( 0 != pid ) { return pid ; }                           // RETURN 
+  if ( NULL != pid ) { return pid  ; }                           // RETURN 
   // 
   LHCb::ProtoParticle::ExtraInfo::const_iterator ifind = 
     p->extraInfo().find ( LHCb::ProtoParticle::RichPIDStatus ) ;
@@ -511,7 +507,7 @@ LoKi::ProtoParticles::HasRich1Gas::operator()
     return false ;                                                    // RETURN
   }
   const LHCb::RichPID* pid = rich ( p ) ;
-  if ( 0 == pid ) 
+  if ( NULL == pid ) 
   {
     Warning ( "LHCb::RichPID* points to NULL, return 'false'" ) ;
     return false ;                                                    // RETURN
@@ -549,7 +545,7 @@ LoKi::ProtoParticles::HasRich2Gas::operator()
     return false ;                                                    // RETURN
   }
   const LHCb::RichPID* pid = rich ( p ) ;
-  if ( 0 == pid ) 
+  if ( NULL == pid ) 
   {
     Warning ( "LHCb::RichPID* points to NULL, return 'false'" ) ;
     return false ;                                                    // RETURN
@@ -694,7 +690,7 @@ LoKi::ProtoParticles::HasDetector::operator()
 bool LoKi::ProtoParticles::HasDetector::hasCaloDLL 
 ( const LHCb::ProtoParticle* p ) const 
 {
-  return ( 0 != p ) && 
+  return ( NULL != p ) && 
     ( p -> hasInfo ( LHCb::ProtoParticle::EcalPIDe  ) || 
       p -> hasInfo ( LHCb::ProtoParticle::PrsPIDe   ) || 
       p -> hasInfo ( LHCb::ProtoParticle::BremPIDe  ) || 
@@ -706,7 +702,7 @@ bool LoKi::ProtoParticles::HasDetector::hasCaloDLL
 bool LoKi::ProtoParticles::HasDetector::hasSpdInfo 
 ( const LHCb::ProtoParticle* p ) const 
 {
-  return ( 0 != p ) &&  
+  return ( NULL != p ) &&  
     ( // 
      p -> hasInfo ( LHCb::ProtoParticle::CaloChargedSpd    ) || 
      p -> hasInfo ( LHCb::ProtoParticle::CaloNeutralSpd    ) || 
@@ -718,7 +714,7 @@ bool LoKi::ProtoParticles::HasDetector::hasSpdInfo
 bool LoKi::ProtoParticles::HasDetector::hasPrsInfo 
 ( const LHCb::ProtoParticle* p ) const 
 {
-  return ( 0 != p ) &&  
+  return ( NULL != p ) &&  
     ( // 
      p -> hasInfo ( LHCb::ProtoParticle::PrsPIDe           ) || 
      p -> hasInfo ( LHCb::ProtoParticle::CaloChargedPrs    ) || 
@@ -731,7 +727,7 @@ bool LoKi::ProtoParticles::HasDetector::hasPrsInfo
 bool LoKi::ProtoParticles::HasDetector::hasEcalInfo 
 ( const LHCb::ProtoParticle* p ) const 
 {
-  return ( 0 != p ) &&  
+  return ( NULL != p ) &&  
     ( // 
      p -> hasInfo ( LHCb::ProtoParticle::EcalPIDe          ) || 
      p -> hasInfo ( LHCb::ProtoParticle::BremPIDe          ) || 
@@ -762,7 +758,7 @@ bool LoKi::ProtoParticles::HasDetector::hasEcalInfo
 bool LoKi::ProtoParticles::HasDetector::hasHcalInfo 
 ( const LHCb::ProtoParticle* p ) const 
 {
-  return ( 0 != p ) &&  
+  return ( NULL != p ) &&  
     (
      // 
      p -> hasInfo ( LHCb::ProtoParticle::HcalPIDe          ) || 
@@ -774,7 +770,7 @@ bool LoKi::ProtoParticles::HasDetector::hasHcalInfo
 bool LoKi::ProtoParticles::HasDetector::hasBremInfo 
 ( const LHCb::ProtoParticle* p ) const 
 {
-  return ( 0 != p ) &&  
+  return ( NULL != p ) &&  
     ( // 
      p -> hasInfo ( LHCb::ProtoParticle::BremPIDe          ) || 
      p -> hasInfo ( LHCb::ProtoParticle::CaloBremMatch     ) || 
@@ -784,7 +780,7 @@ bool LoKi::ProtoParticles::HasDetector::hasBremInfo
 bool LoKi::ProtoParticles::HasDetector::hasCaloInfo 
 ( const LHCb::ProtoParticle* p ) const 
 {
-  return ( 0 != p ) &&  
+  return ( NULL != p ) &&  
     ( // 
      p -> hasInfo ( LHCb::ProtoParticle::EcalPIDe          ) || 
      p -> hasInfo ( LHCb::ProtoParticle::PrsPIDe           ) || 
@@ -827,7 +823,7 @@ bool LoKi::ProtoParticles::HasDetector::hasRichAerogel
 {
   if ( !hasRichDLL  ( p ) ) { return false ; }
   const LHCb::RichPID* pid = rich ( p ) ;
-  return ( 0 != pid ) && pid->usedAerogel() ; 
+  return ( NULL != pid ) && pid->usedAerogel() ; 
 }
 // ======================================================================
 bool LoKi::ProtoParticles::HasDetector::hasRich1Gas
@@ -835,7 +831,7 @@ bool LoKi::ProtoParticles::HasDetector::hasRich1Gas
 { 
   if ( !hasRichDLL  ( p ) ) { return false ; }
   const LHCb::RichPID* pid = rich ( p ) ;
-  return ( 0 != pid ) && pid->usedRich1Gas () ; 
+  return ( NULL != pid ) && pid->usedRich1Gas () ; 
 }
 // ======================================================================
 bool LoKi::ProtoParticles::HasDetector::hasRich2Gas
@@ -843,41 +839,41 @@ bool LoKi::ProtoParticles::HasDetector::hasRich2Gas
 {
   if ( !hasRichDLL  ( p ) ) { return false ; }
   const LHCb::RichPID* pid = rich ( p ) ;
-  return ( 0 != pid ) && pid->usedRich2Gas () ; 
+  return ( NULL != pid ) && pid->usedRich2Gas () ; 
 }
 // ======================================================================
 bool LoKi::ProtoParticles::HasDetector::hasRichDLL 
 ( const LHCb::ProtoParticle* p ) const 
-{ return ( 0 != p ) && p->hasInfo( LHCb::ProtoParticle::RichPIDStatus ) ; }
+{ return ( NULL != p ) && p->hasInfo( LHCb::ProtoParticle::RichPIDStatus ) ; }
 // ======================================================================
 bool LoKi::ProtoParticles::HasDetector::hasMuonInfo 
 ( const LHCb::ProtoParticle* p ) const 
-{ return ( 0 != p ) && p->hasInfo( LHCb::ProtoParticle::MuonPIDStatus ) ; }
+{ return ( NULL != p ) && p->hasInfo( LHCb::ProtoParticle::MuonPIDStatus ) ; }
 // ======================================================================
 bool LoKi::ProtoParticles::HasDetector::inSpdAcceptance 
 ( const LHCb::ProtoParticle* p ) const 
-{ return  ( 0 != p ) && p -> info ( LHCb::ProtoParticle::InAccSpd  , false ) ; }  
+{ return  ( NULL != p ) && ( 0 != p -> info ( LHCb::ProtoParticle::InAccSpd  , 0 ) ) ; }  
 // ======================================================================
 bool LoKi::ProtoParticles::HasDetector::inPrsAcceptance 
 ( const LHCb::ProtoParticle* p ) const 
-{ return  ( 0 != p ) && p -> info ( LHCb::ProtoParticle::InAccPrs  , false ) ; }  
+{ return  ( NULL != p ) && ( 0 != p -> info ( LHCb::ProtoParticle::InAccPrs  , 0 ) ) ; }  
 // ======================================================================
 bool LoKi::ProtoParticles::HasDetector::inEcalAcceptance 
 ( const LHCb::ProtoParticle* p ) const 
-{ return  ( 0 != p ) && p -> info ( LHCb::ProtoParticle::InAccEcal , false ) ; }  
+{ return  ( NULL != p ) && ( 0 != p -> info ( LHCb::ProtoParticle::InAccEcal , 0 ) ) ; }  
 // ======================================================================
 bool LoKi::ProtoParticles::HasDetector::inHcalAcceptance 
 ( const LHCb::ProtoParticle* p ) const 
-{ return  ( 0 != p ) && p -> info ( LHCb::ProtoParticle::InAccHcal , false ) ; }  
+{ return  ( NULL != p ) && ( 0 != p -> info ( LHCb::ProtoParticle::InAccHcal , 0 ) ) ; }  
 // ======================================================================
 bool LoKi::ProtoParticles::HasDetector::inBremAcceptance 
 ( const LHCb::ProtoParticle* p ) const 
-{ return  ( 0 != p ) && p -> info ( LHCb::ProtoParticle::InAccBrem , false ) ; }  
+{ return  ( NULL != p ) && ( 0 != p -> info ( LHCb::ProtoParticle::InAccBrem , 0 ) ) ; }  
 // ======================================================================
 bool LoKi::ProtoParticles::HasDetector::inCaloAcceptance 
 ( const LHCb::ProtoParticle* p ) const 
 { 
-  return  ( 0 != p ) && 
+  return  ( NULL != p ) && 
     ( inSpdAcceptance  ( p ) || 
       inPrsAcceptance  ( p ) || 
       inEcalAcceptance ( p ) || 
@@ -1054,7 +1050,7 @@ LoKi::ProtoParticles::IsMuon::operator()
   //
   const LHCb::MuonPID* pid = muon ( p ) ;
   //
-  return 0 != pid && pid->IsMuon () ;
+  return ( NULL != pid && pid->IsMuon() );
 }
 // ============================================================================
 // OPTIONAL: the nice printtout 
@@ -1067,10 +1063,10 @@ std::ostream& LoKi::ProtoParticles::IsMuon::fillStream ( std::ostream& s ) const
 const LHCb::MuonPID* 
 LoKi::ProtoParticles::IsMuon::muon ( const LHCb::ProtoParticle* p  ) const 
 {
-  if ( 0 == p   ) { return   0 ; }                           // RETURN 
+  if ( NULL == p   ) { return NULL; }                           // RETURN 
   //
   const LHCb::MuonPID* pid = p->muonPID () ;
-  if ( 0 != pid ) { return pid ; }                           // RETURN 
+  if ( NULL != pid ) { return pid ; }                           // RETURN 
   //
   // Access the status word
   LHCb::ProtoParticle::ExtraInfo::const_iterator ifind = 
@@ -1107,7 +1103,7 @@ LoKi::ProtoParticles::IsLooseMuon::operator()
   //
   const LHCb::MuonPID* pid = muon ( p ) ;
   //
-  return 0 != pid && pid->IsMuonLoose () ;
+  return ( NULL != pid && pid->IsMuonLoose() );
 }
 // ============================================================================
 // OPTIONAL: the nice printtout 
@@ -1416,7 +1412,7 @@ LoKi::ProtoParticles::TrackCut::operator()
   }
   //
   const LHCb::Track* track = p->track() ;
-  if ( 0 == track ) 
+  if ( NULL == track ) 
   {
     Error ( "LHCb::Track* points to NULL, return 'false'" ) ;
     return false ;                                                    // RETURN    
@@ -1477,7 +1473,7 @@ LoKi::ProtoParticles::TrackFun::operator()
   }
   //
   const LHCb::Track* track = p->track() ;
-  if ( 0 == track ) 
+  if ( NULL == track ) 
   {
     Error ( "LHCb::Track* points to NULL, return 'bad'" ) ;
     return m_bad ;                                                    // RETURN    
@@ -1530,7 +1526,7 @@ LoKi::ProtoParticles::RichAboveThres::operator()
   }
   //
   const LHCb::RichPID* pid = rich ( p ) ;
-  if ( 0 == pid ) 
+  if ( NULL == pid ) 
   {
     Error ("Can't access the RichPID information, return false") ;
     return false ;
@@ -1595,7 +1591,7 @@ LoKi::ProtoParticles::NShared::operator()
   { return p -> info ( LHCb::ProtoParticle::MuonNShared , -1000 ) ; }
   //
   const LHCb::MuonPID* muon = p->muonPID() ;
-  if ( 0 == muon ) 
+  if ( NULL == muon ) 
   {
     Error ( "LHCb::MuonPID* points to NULL, return -100 " ) ;
     return -100 ;                                                   // RETURN    
@@ -1611,13 +1607,6 @@ LoKi::ProtoParticles::NShared::fillStream ( std::ostream& s ) const
 { return  s << "PP_NSHAREDMU" ; }
 
 
-
-
-
-  
-  
-
 // ============================================================================
 // The END 
 // ============================================================================
-
