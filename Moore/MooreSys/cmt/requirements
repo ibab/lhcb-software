@@ -6,7 +6,7 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v20r1      Hlt
+use  Moore               v20r1p1    Hlt
 use  IndependenceTests   v1r4       Hlt
 use  HltMonitor          v1r2	    Hlt   # Diego Martinez
 use  Swimming            v3r0	    Phys  # Nick Torr
