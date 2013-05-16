@@ -4,8 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v20r1p1 2013-05-16 =========================
 ! 2013-05-15 - Rob Lambert
  - fix some small problems in the tests
+ - update test for physics 2012 to Moore v14r8 *with* FastVelo from today.
 
 ! 2013-05-13 - Rob Lambert
  - update vdm test to slightly later threshold settings
