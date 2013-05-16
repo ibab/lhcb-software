@@ -49,6 +49,9 @@ public:
    
     void simpleFit( PatVTTTrack& vtt);
 
+    /// toggle passing of unmatched velo candidates to output
+    void passUnmatched(bool flag=true){m_passUnmatched=flag;}
+
   protected:
 
     void simpleFitTracks( std::vector<PatVTTTrack>&);
@@ -86,6 +89,7 @@ public:
     PatTTMagnetTool*    m_PatTTMagnetTool;  ///< Multipupose tool for Bdl and deflection
     bool m_debug;
     bool m_verbose;
+    bool m_passUnmatched;                   ///< flag to toggle passing unmatched velo candidates to output (default=true) 
 
   };
 

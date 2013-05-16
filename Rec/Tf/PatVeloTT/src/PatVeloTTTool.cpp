@@ -50,6 +50,7 @@ PatVeloTTTool::PatVeloTTTool( const std::string& type,
   // Grouping tolerance
   declareProperty("DxGroupTol"         , m_dxGroupTol       = 0.8 * Gaudi::Units::mm);
   declareProperty("DxGroupFactor"      , m_dxGroupFactor    = 0.25);
+  declareProperty("passUnmatched"      , m_passUnmatched    = true);
 
 
 }
@@ -127,10 +128,15 @@ PatVeloTTTool::tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::
 
   std::vector<PatVTTTrack> vttTracks;
   getCandidates(velotrack, vttTracks);
+  
   simpleFitTracks(vttTracks);
   localCleanUp(vttTracks);
   selectBestTracks(vttTracks);
   prepareOutputTracks(vttTracks, outtracks);
+  // check if there any candidates within TT acceptance have been found if not --> pass on input track
+  if(outtracks.size()<1){
+    outtracks.push_back(new LHCb::Track(velotrack));
+  }
   return StatusCode::SUCCESS;
 
 }
