@@ -7,8 +7,10 @@ __tmp = LHCb.Track.Long
 
 from Gaudi import Configuration
 from Configurables import ( PatSeedingTool,
-                            PatForwardTool, 
-                            MatchVeloMuon, HltTrackFit )
+                            PatForwardTool,
+                            PatVeloTTTool,
+                            MatchVeloMuon,
+                            HltTrackFit )
                             
 from HltLine.HltLine import Hlt1Tool
 
@@ -18,6 +20,7 @@ from HltLine.HltLine import Hlt1Tool
 __all__ = ( 'MatchVeloL0Muon',
             'TightForward',
             'LooseForward',
+            'pET',
             'FitTrack',
             'VeloOnlyFitTrack',
             'MatchVeloMuon',
@@ -31,19 +34,34 @@ def ConfiguredPatSeeding( minPSeed = 3000):
         
 _minPt =  800  #### MOVE TO 800 (used to be 500 )
 _minP  = 8000 #### MOVE TO 8000 (used to be 5000 )
-def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt ) :
+def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt, useMomEst = False ) :
     if name == None: name = PatForwardTool.__name__
     from HltTracking.HltReco import CommonForwardTrackingOptions 
     return Hlt1Tool( PatForwardTool
                      , name
                      , SecondLoop = True
+                     , UseMomentumEstimate = useMomEst
                      , MaxChi2 = CommonForwardTrackingOptions["MaxChi2"]
                      , MaxChi2Track = CommonForwardTrackingOptions["MaxChi2Track"]
                      , MinHits = CommonForwardTrackingOptions["MinHits"]
                      , MinOTHits = CommonForwardTrackingOptions["MinOTHits"]
                      , MinPt = minPt
                      , MinMomentum = minP ).createConfigurable( parent )
-            
+
+def ConfiguredpET(parent, name = None, minP = _minP) :
+    print "%%%%% Running ConfiguredpET %%%%"
+    if name == None: name = PatVeloTTTool.__name__
+    from HltTracking.HltReco import CommonpETOptions 
+    return Hlt1Tool( PatVeloTTTool
+                     , name
+                     , minMomentum = minP ## it was 2000.
+                     , DxGroupFactor = CommonpETOptions["DxGroupFactor"]
+                     , maxPseudoChi2 = CommonpETOptions["maxPseudoChi2"]
+                     , maxSolutionsPerTrack = CommonpETOptions["maxSolutionsPerTrack"]
+                     #, fitTracks = CommonpETOptions["fitTracks"]
+                     #, maxChi2 = CommonpETOptions["maxChi2"]
+                     ).createConfigurable( parent )
+
 def ConfiguredFastKalman( parent = None, name = None ) :
     if name == None: name = HltTrackFit.__name__
     if parent :
@@ -117,17 +135,26 @@ import Hlt1StreamerConf as Conf
 
 ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 3000, 1250 )
 ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ), 3000,  500 )
-
+ConfiguredForward( ToolSvc(), to_name( Conf.PEstiForward ), 3000, 1250 , useMomEst=True)
+ConfiguredpET( ToolSvc(), to_name( Conf.pET ), 800)
 ## Strings for users
 TightForward  = "TightForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.TightForward  ) )"
 LooseForward  = "LooseForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.LooseForward  ) )"
-
+PEstiForward  = "PEstiForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.PEstiForward  ) )"
+pET           = "pET = (execute(decodeTT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.pET  ) )"
 # =============================================================================
 ## Hlt trackfit upgrade configuration
 # =============================================================================
 ConfiguredFastKalman( parent = None, name = to_name( Conf.FitTrack ) )
 ## String for users
 FitTrack      = "FitTrack      = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitTrack )"
+
+# =============================================================================
+## Hlt trackfit upgrade configuration
+# =============================================================================
+ConfiguredFastKalman( parent = None, name = to_name( Conf.FitVeloTTTrack ) )
+## String for users
+FitVeloTTTrack      = "FitVeloTTTrack      = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitVeloTTTrack )"
 
 # =============================================================================
 ## Hlt Velo-only trackfit upgrade configuration
