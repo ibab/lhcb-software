@@ -3,6 +3,31 @@ Package     : MooreSys
 Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v20r1p1>2013-05-16 Moore v20r1p1</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v35r5 stack. Depends on Rec v14r5 via Phys v16r5. Based on Gaudi v23r7.
+
+Moore version intended to be used for HLT splitting commissioning in the May 2013 commissioning week.
+
+Two major fixes made:
+ - postConfigure fix all PVlocations to replace OnOfflineTool behaviour.
+ - ensure each ISMUON functor has a previous HASMUON functor to suppress loki warnings
+
+Other modifications:
+ - testing improved a lot, now Moore tests running with vdm, passthrough and physics
+   are sensitive to legitimate problems.
+
+Disclaimer: This Moore version does not behave identically to 2012 trigger differences are at the %-level, nominally v20r1p1 selects fewer events, but the majority of the modifications seem to be from changes in FastVelo.
+
+To see what has changed take a look at the test references for moore.physics.2012 test.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v20r1p1
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v20r1p1
+
+and
+
+https://savannah.cern.ch/task/?40113
+
 </PRE><H1><A NAME=v20r1>2013-04-09 Moore v20r1</A></H1><PRE>
 Moore/HLT LS1 development version. LHCb v35r5 stack. Depends on Rec v14r5 via Phys v16r5. Based on Gaudi v23r7.
 
