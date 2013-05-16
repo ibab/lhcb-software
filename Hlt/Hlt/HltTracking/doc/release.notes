@@ -6,8 +6,9 @@
 
 
 ! 2013-05-16 - Sebastian Neubert
- - Added the VeloTT tool
-
+ - Added configuration for VeloTT tool, VeloTT only trackfit and VeloTTForward
+   switched off Transfer of IDs, Ancestor and ExtraInfo for upgrade streamers   
+   
 !========================= HltTracking v9r26p1 2013-04-09 =========================
 ! 2013-03-29 - Rob Lambert
  - Add CaloDAQ and L0DU to environment
