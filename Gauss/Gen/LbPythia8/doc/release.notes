@@ -4,6 +4,7 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia8 v7r2 2013-05-16 =========================
 ! 2013-05-14 - Aurelien Martens
  - do not store HepMC at the generateEvent call for pile-up events in case of 
 repeated hadronisation since already done at hadronisation level.
