@@ -3,6 +3,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2013-05-16 - Chris Jones
+ - Fix some clang32 compilation warnings
+
 !========================= TisTosTobbing v7r8p3 2013-05-07 =========================
 
 ! 2013-05-07 - Chris Jones

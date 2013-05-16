@@ -61,7 +61,7 @@ TisTosParticleTagger::~TisTosParticleTagger() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode TisTosParticleTagger::initialize() 
+StatusCode TisTosParticleTagger::initialize()
 {
   const StatusCode sc = DaVinciAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
@@ -137,7 +137,7 @@ StatusCode TisTosParticleTagger::initialize()
             << endmsg;
     return StatusCode::FAILURE;
   } else {
-    for ( std::map<std::string,int>::const_iterator entry = m_tistosSpecs.begin(); 
+    for ( std::map<std::string,int>::const_iterator entry = m_tistosSpecs.begin();
           entry != m_tistosSpecs.end(); ++entry )
     {
       const std::string& spec = entry->first  ;
@@ -277,7 +277,7 @@ StatusCode TisTosParticleTagger::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode TisTosParticleTagger::execute() 
+StatusCode TisTosParticleTagger::execute()
 {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
@@ -310,7 +310,7 @@ StatusCode TisTosParticleTagger::execute()
   bool skipL0(false);
 
   for (LHCb::Particle::ConstVector::const_iterator particle = particles.begin();
-       particle != particles.end(); ++particle) 
+       particle != particles.end(); ++particle)
   {
     if( !particleOK(*particle) ){
       if ( msgLevel(MSG::DEBUG) ) debug() << " Particle failed integrity check key = " << (*particle)->key() << endmsg;
@@ -378,10 +378,10 @@ StatusCode TisTosParticleTagger::execute()
         }
         if ( msgLevel(MSG::DEBUG) ) debug() << triggerInput + " TUS " << acc << endmsg;
         if( index )if( !storeTag(candi,index,acc) ){
-          std::ostringstream mess;
-          mess << triggerInput + " TUS index=" << index << " used for other types or illegal " << endmsg;
-          Warning( mess.str(),StatusCode::SUCCESS, 10 ).setChecked();
-        }
+            std::ostringstream mess;
+            mess << triggerInput << " TUS index=" << index << " used for other types or illegal";
+            Warning( mess.str(),StatusCode::SUCCESS, 10 ).setChecked();
+          }
         if( acc ){
           acceptStage[iTriggerStage] =true;
           if( m_fast )break;
@@ -402,10 +402,10 @@ StatusCode TisTosParticleTagger::execute()
         }
         if ( msgLevel(MSG::DEBUG) ) debug() << triggerInput + " TOS " << acc << endmsg;
         if( index )if( !storeTag(candi,index,acc) ){
-          std::ostringstream mess;
-          mess << triggerInput + " TOS index=" << index << " used for other types or illegal " << endmsg;
-          Warning( mess.str(),StatusCode::SUCCESS, 10 ).setChecked();
-        }
+            std::ostringstream mess;
+            mess << triggerInput << " TOS index=" << index << " used for other types or illegal";
+            Warning( mess.str(),StatusCode::SUCCESS, 10 ).setChecked();
+          }
         if( acc ){
           acceptStage[iTriggerStage] =true;
           if( m_fast )break;
@@ -426,10 +426,10 @@ StatusCode TisTosParticleTagger::execute()
         }
         if ( msgLevel(MSG::DEBUG) ) debug() << triggerInput + " TIS " << acc << endmsg;
         if( index )if( !storeTag(candi,index,acc) ){
-          std::ostringstream mess;
-          mess << triggerInput + " TIS index=" << index << " used for other types or illegal " << endmsg;
-          Warning( mess.str(),StatusCode::SUCCESS, 10 ).setChecked();
-        }
+            std::ostringstream mess;
+            mess << triggerInput << " TIS index=" << index << " used for other types or illegal";
+            Warning( mess.str(),StatusCode::SUCCESS, 10 ).setChecked();
+          }
         if( acc ){
           acceptStage[iTriggerStage] =true;
           if( m_fast )break;
@@ -446,7 +446,7 @@ StatusCode TisTosParticleTagger::execute()
 
     if ( msgLevel(MSG::DEBUG) )
     {
-      for(unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage); 
+      for(unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage);
           iTriggerStage < NTriggerStages; ++iTriggerStage)
       {
         if( iTriggerStage==HLT1 ){
@@ -480,7 +480,7 @@ StatusCode TisTosParticleTagger::execute()
     }
   }
 
-  for( std::vector<LHCb::Particle>::iterator i = outparts.begin(); 
+  for( std::vector<LHCb::Particle>::iterator i = outparts.begin();
        i != outparts.end(); ++i ) { this->markTree( &(*i) ); }
 
   if ( msgLevel(MSG::DEBUG) ) debug() << " Filter passed = " << passed << endmsg;
