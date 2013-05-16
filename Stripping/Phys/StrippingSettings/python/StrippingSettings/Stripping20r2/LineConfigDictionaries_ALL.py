@@ -92,7 +92,7 @@ StrangeBaryons = {
     'BUILDERTYPE'  : 'StrippingStrangeBaryonsConf',
     'CONFIG' : {
     #PID cuts
-    'PreScale'    : 0.01,
+    'PreScale'    : 1,
     'checkPV'   : True,
     'HLT' : "HLT_PASS('Hlt1MBNoBiasDecision')",
     'ProtonPIDppi'              :       -5.,  #(PIDp-PIDpi) > -5                   
