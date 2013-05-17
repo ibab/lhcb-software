@@ -4,9 +4,13 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-05-17 - Chris Jones
+ - Fix operator precedence order issue for ? and + in 
+   LHCb::TrackTraj::distTo1stError and LHCb::TrackTraj::distTo2ndError
+
 !========================= TrackKernel v1r14 2013-04-30 =========================
 ! 2013-04-30 - Sascha Stahl
- -  Bugfix for VL.
+ - Bugfix for VL.
 
 !========================= TrackKernel v1r13 2013-04-29 =========================
 ! 2013-04-05 - Wouter Hulsbergen
