@@ -1,3 +1,7 @@
+2013-05-17  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbRelease/Archive/ProjectManager.py: Fixed
+
 2013-04-22  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v4r13

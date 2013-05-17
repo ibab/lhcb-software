@@ -234,7 +234,7 @@ class ProjectManager(object):
             if not h.endswith(".html"):
                 continue
             path = os.path.join(self.htmldir, h)
-            pf = HTMLDependencyManager.ProjectFile.loadFromFile(path)
+            pf = HTMLDependencyManager.ProjectFile.loadFromFile(self.distdir, path)
             self.htmlDeps.append(pf)
         self.htmlDepsLoaded = True
 
