@@ -59,20 +59,20 @@ namespace
     OBJECT   end   ) ;
   // 
   // add ID 
-  inline std::size_t insert ( _LHCbIDs& ids , const LHCb::LHCbID&    id ) 
-  { return ids.insert ( id ).second ? 1 : 0 ; }
+  //inline std::size_t insert ( _LHCbIDs& ids , const LHCb::LHCbID&    id ) 
+  //{ return ids.insert ( id ).second ? 1 : 0 ; }
   //
   // add ID from Calorimeter Cell
   inline std::size_t insert ( _LHCbIDs& ids , const LHCb::CaloCellID& id ) 
   { return ids.insert ( id ).second ? 1 : 0 ; }
   // 
   // insert IDs from set of IDs
-  inline std::size_t insert ( _LHCbIDs& ids , const _LHCbIDs& v ) 
-  { 
-    std::size_t _size = ids.size() ;
-    ids.insert ( v.begin() , v.end() ) ;
-    return ids.size() - _size ;
-  }
+  // inline std::size_t insert ( _LHCbIDs& ids , const _LHCbIDs& v ) 
+  // { 
+  //   std::size_t _size = ids.size() ;
+  //   ids.insert ( v.begin() , v.end() ) ;
+  //   return ids.size() - _size ;
+  // }
   // insert IDs from vector of IDs
   inline std::size_t insert ( _LHCbIDs& ids , const std::vector<LHCb::LHCbID>& v ) 
   { 
