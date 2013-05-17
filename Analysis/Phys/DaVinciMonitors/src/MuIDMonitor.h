@@ -1,12 +1,21 @@
 #ifndef MUIDMONITOR_H 
 #define MUIDMONITOR_H 1
 
-// Include files
 // from STL
 #include <string>
 #include <map>
 #include <vector>
+#include <cstdio>
+
+// Boost
 #include "boost/assign/list_of.hpp"
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/IRegistry.h" // IOpaqueAddress
+#include "GaudiUtils/Aida2ROOT.h"
+#include "GaudiAlg/GaudiHistoTool.h"
+#include "GaudiAlg/IHistoTool.h"
 
 // DaVinci
 #include "Kernel/DaVinciHistoAlgorithm.h"
@@ -18,26 +27,30 @@
 #include "Event/MuonPID.h"
 #include "Event/Track.h"
 #include "Event/MuonCoord.h"
+#include "Event/Particle.h"
+#include "Event/ODIN.h"
+#include "Event/MuonDigit.h"
+#include "Event/IntLink.h"
 
+// Muon Det
 #include "MuonDet/MuonBasicGeometry.h"
 #include "MuonDet/DeMuonDetector.h"
 
+// ROOT
 #include "TMath.h"
-
-class MuonPID;
-class Track;
-class MuonCoord;
-class DeMuonDetector;
+#include "TH1D.h"
+#include "TF1.h"
+#include "TDirectory.h"
 
 /** @class MuIDMonitor MuIDMonitor.h
- *  
+ *
  *  This is an Algorithm to create MuonPID objects starting from tracks and
  *  using the hits in the muon system
  *
  *  @author A. Sarti & M. Palutan
  *  @date   10/10/2009
- *  
- *  
+ *
+ *
  */
 class MuIDMonitor : public DaVinciHistoAlgorithm
 {
@@ -45,7 +58,7 @@ class MuIDMonitor : public DaVinciHistoAlgorithm
 public:
   /// Standard constructor
   MuIDMonitor( const std::string& name,
-	      ISvcLocator* pSvcLocator);
+               ISvcLocator* pSvcLocator);
 
   virtual ~MuIDMonitor( ); ///< Destructor
 
@@ -77,7 +90,7 @@ private:
   double foiX(const int &station, const int &region, const double &p, const double &dx);
   /// return the FOI in y in a station and region for momentum (in MeV/c)
   double foiY(const int &station, const int &region, const double &p, const double &dy);
-  
+
   /// clear track based local variables
   void resetTrackLocals();
 
@@ -92,7 +105,6 @@ private:
   double m_PreSelMomentum;
   double m_MassMean, m_MassWin, m_EffWin;
   int m_JPAna, m_LMAna, m_hitInFoi;
-  bool m_extrapolated, m_passed;
   int m_extrFail;
   GaudiAlg::HistoBinEdges m_edgesJPX,m_edgesLMX;
 
@@ -105,7 +117,7 @@ private:
 
   //Mu probability
   float m_MuProb;
-  double m_LklhMu,m_LklhPi,m_OthDist;
+  double m_LklhMu,m_LklhPi;
   // function that defines the field of interest size
   // formula is p(1) + p(2)*exp(-p(3)*momentum)
   std::vector< double >     m_xfoiParam1;
@@ -134,11 +146,11 @@ private:
 
   // local array of region sizes
   std::vector<double> m_regionInnerX; // inner edge in abs(x)
-  std::vector<double> m_regionOuterX; // outer edge in abs(x) 
-                            
+  std::vector<double> m_regionOuterX; // outer edge in abs(x)
+
   std::vector<double> m_regionInnerY; // inner edge in abs(y)
-  std::vector<double> m_regionOuterY; // outer edge in abs(y) 
-  
+  std::vector<double> m_regionOuterY; // outer edge in abs(y)
+
   // These are indexed [station]
   //std::vector<double> m_stationZ; // station position
   double m_stationZ[5]; // station position
@@ -150,7 +162,7 @@ private:
   double m_MomM1; // in MeV/c
   double m_trackSlopeX;
   std::vector<double> m_trackX; // position of track in x(mm) in each station
-  std::vector<double> m_trackY; // position of track in y(mm) in each station  
+  std::vector<double> m_trackY; // position of track in y(mm) in each station
 
   //test if found a hit in the MuonStations
   std::vector<int> m_occupancy;
@@ -158,8 +170,7 @@ private:
 
   // store X of hits for dx/dz matching with track (only need M2/M3)
   std::vector<double> m_CoordX;
-  int m_xMatchStation; // first station to calculate slope (M2)
-  
+
   // OK nasty optimisation here, store x,dx,y,dy of each coord to test against
   // track extrapolation
   class coordExtent_{
@@ -174,13 +185,13 @@ private:
   };
 
 
-  // vector of positions of coords (innner vector coords, 
+  // vector of positions of coords (innner vector coords,
   // outer is [station* m_NRegion + region ]
-  std::vector<std::vector<coordExtent_> > m_coordPos; 
-  std::vector<std::vector<double> > m_coordPosMonx; 
-  std::vector<std::vector<double> > m_coordPosMony; 
-  std::vector<std::vector<double> > m_coordPosMondx; 
-  std::vector<std::vector<double> > m_coordPosMondy; 
+  std::vector<std::vector<coordExtent_> > m_coordPos;
+  std::vector<std::vector<double> > m_coordPosMonx;
+  std::vector<std::vector<double> > m_coordPosMony;
+  std::vector<std::vector<double> > m_coordPosMondx;
+  std::vector<std::vector<double> > m_coordPosMondy;
 
 };
 #endif // MUIDMONITOR_H

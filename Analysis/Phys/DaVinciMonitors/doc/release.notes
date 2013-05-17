@@ -4,6 +4,9 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2013-05-17 - Chris Jones
+ - Remove unused data members (clang warnings).
+
 !========================= DaVinciMonitors v1r19p4 2013-05-07 =========================
 
 ! 2013-03-27 - Chris Jones

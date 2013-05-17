@@ -1,24 +1,3 @@
-// Include files
-#include <cstdio>
-#include <map>
-#include <vector>
-
-// from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IRegistry.h" // IOpaqueAddress
-#include "GaudiUtils/Aida2ROOT.h"
-#include "GaudiAlg/GaudiHistoTool.h"
-#include "GaudiAlg/IHistoTool.h"
-
-#include "Event/Particle.h"
-
-#include "Event/ODIN.h" // event & run number
-
-#include "Event/MuonDigit.h"
-#include "Event/IntLink.h"
-#include "TDirectory.h"
-#include "TH1D.h"
-#include "TF1.h"
 
 // local
 #include "MuIDMonitor.h"
@@ -42,17 +21,17 @@ DECLARE_ALGORITHM_FACTORY( MuIDMonitor )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  MuIDMonitor::MuIDMonitor( const std::string& name,
-                            ISvcLocator* pSvcLocator)
-    : DaVinciHistoAlgorithm ( name , pSvcLocator ),
-      m_distPion( 9, 1.0 ),
-      m_distMuon( 9, 1.0 ),
-      m_xfoiParam1( 20, 1.0 ),
-      m_xfoiParam2( 20, 1.0 ),
-      m_xfoiParam3( 20, 1.0 ),
-      m_yfoiParam1( 20, 1.0 ),
-      m_yfoiParam2( 20, 1.0 ),
-      m_yfoiParam3( 20, 1.0 )
+MuIDMonitor::MuIDMonitor( const std::string& name,
+                          ISvcLocator* pSvcLocator)
+: DaVinciHistoAlgorithm ( name , pSvcLocator ),
+  m_distPion( 9, 1.0 ),
+  m_distMuon( 9, 1.0 ),
+  m_xfoiParam1( 20, 1.0 ),
+  m_xfoiParam2( 20, 1.0 ),
+  m_xfoiParam3( 20, 1.0 ),
+  m_yfoiParam1( 20, 1.0 ),
+  m_yfoiParam2( 20, 1.0 ),
+  m_yfoiParam3( 20, 1.0 )
 {
 
   using namespace boost::assign;
