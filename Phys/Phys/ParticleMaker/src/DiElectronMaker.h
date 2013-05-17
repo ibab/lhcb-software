@@ -45,7 +45,6 @@ private:
   
   const ITrackSelector * m_trSel;
   IProtoParticleFilter* m_pFilter;
-  IProtoParticleFilter* m_photFilter;
   ICaloElectron* m_caloElectron;
   DeCalorimeter* m_calo;  
 
@@ -68,7 +67,6 @@ private:
   double m_ptmin;
   double m_eptmin;
   int m_method;
-  int m_addopt;
   double m_deltaY;
   double m_deltaYmax;
   double m_ecalE;
