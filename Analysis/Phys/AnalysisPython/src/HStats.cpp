@@ -287,23 +287,5 @@ double Gaudi::Utils::HStats::rmsErr ( const TH1* histo )
   return rms ( histo ) * std::sqrt ( result ) ;
 }
 // ============================================================================
-namespace
-{
-  // ==========================================================================
-  // get underflow bin 
-  inline int uBin ( const TH1* /* histo */ ) { return 0 ; }  // RETURN 
-  // ==========================================================================
-  // get overflow bin 
-  inline int oBin ( const TH1*    histo    ) 
-  { 
-    if ( 0 == histo  ) { return 0 ; }                       // RETURN
-    const TAxis* axis = histo -> GetXaxis () ;
-    if ( 0 == axis   ) { return 0 ; }                       // RETURN
-    //
-    return 1 + axis -> GetNbins () ;                        // RETURN
-  }
-  // ==========================================================================
-}
-// ============================================================================
 // The END 
 // ============================================================================
