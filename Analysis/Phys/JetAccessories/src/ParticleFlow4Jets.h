@@ -164,8 +164,6 @@ private:
 
   std::string  m_banCandidatesLocation ;
 
-  bool m_banCandidates ;
-
   double m_minHCALE ;
 
   bool  m_banFromTTrack ;
