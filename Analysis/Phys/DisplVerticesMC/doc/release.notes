@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices (MC-dependent code)
 !-----------------------------------------------------------------------------
 
+! 2013-05-17 - Chris Jones
+ - Remove unused data members (clang warnings).
+
 !========================= DisplVerticesMC v1r4p4 2013-05-07 =========================
 
 ! 2013-02-27 - Chris Jones

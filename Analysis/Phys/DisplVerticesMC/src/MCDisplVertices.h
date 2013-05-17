@@ -15,13 +15,6 @@
 //To use Wouter's vertex tool
 #include "TrackInterfaces/ITrackVertexer.h"
 
-//To use TrackMasterExtrapolator
-#include "TrackInterfaces/ITrackExtrapolator.h"
-
-//To refit particles
-#include "Kernel/IParticle2State.h"
-#include "TrackInterfaces/ITrackFitter.h"
-
 //To decode L0DU raw infos
 #include "L0Interfaces/IL0DUFromRawTool.h"
 
@@ -68,10 +61,6 @@ private:
   const IVertexFit *m_vFit;
   IMeasurementProvider* m_measProvider;
   ITrackVertexer * m_tFit; //Wouter's tool
-  ITrackExtrapolator * m_extra;  //extrapolator
-  IParticle2State* m_pToState;  //refit particle
-  ITrackFitter* m_trackFit;     //refit particle
-  ITrackFitter* m_trackPreFit;  //refit particle
   ITriggerTisTos* m_tisTos;
   IL0DUFromRawTool* m_l0BankDecoder;
   ITransportSvc * m_transSvc;
@@ -279,8 +268,6 @@ private:
   bool   m_IsPreyFromMother ;       ///< Is the Prey from the given Mother ?
 
   //Dummy things for HepMC
-  HepMC::ThreeVector * kdec1;           // the neutralino MC decay vertex
-  HepMC::ThreeVector * kdec2;           // the neutralino MC decay vertex
   HepMC::FourVector dumV1;       // dummy lorentz vector
   HepMC::FourVector dumV2;       // dummy lorentz vector
 
