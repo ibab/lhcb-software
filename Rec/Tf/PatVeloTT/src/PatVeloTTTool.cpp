@@ -134,7 +134,7 @@ PatVeloTTTool::tracksFromTrack(const LHCb::Track & velotrack, std::vector<LHCb::
   selectBestTracks(vttTracks);
   prepareOutputTracks(vttTracks, outtracks);
   // check if there any candidates within TT acceptance have been found if not --> pass on input track
-  if(outtracks.size()<1){
+  if(m_passUnmatched && outtracks.size()<1){
     outtracks.push_back(new LHCb::Track(velotrack));
   }
   return StatusCode::SUCCESS;
