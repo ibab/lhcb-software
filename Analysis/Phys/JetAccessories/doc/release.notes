@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2013-05-17 - Chris Jones
+ - Remove unused data members, to fix clang 3.2 warnings.
+
 ! 2013-04-29 - Victor Coco
  - Fix composite particle treatment for sub-resonnance in charged particles
  - Remove the hard coded pt cut in JEC

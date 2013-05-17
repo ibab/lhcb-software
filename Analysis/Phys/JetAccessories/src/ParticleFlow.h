@@ -44,7 +44,9 @@
  */
 class TF1;
 
-class ParticleFlow : public GaudiTupleAlg {
+class ParticleFlow : public GaudiTupleAlg
+{
+  
 public: 
 
   /// Standard constructor
@@ -58,8 +60,6 @@ public:
 
   enum BannedCaloCluster { BadTrack = -1 , InfMom = 0 , TrackMatch ,TrackMatchTT ,TrackMatchHCAL ,TrackMatchHCALTT , Bremsstrahlung ,
                            Photon  , CnvPhoton  , ResolvedPi0 , MergedPi0 , ChargedHadron , BadPhotonMatchingT , BadPhoton } ;
-
-protected:
 
 private:
   
@@ -165,27 +165,17 @@ private:
 
   double m_photonID4Photon ;
 
-  //bool m_catchBremFromElectrons ;
   bool m_useHCAL;
 
   bool m_useTTHits ; 
 
-  bool m_useNNGhost ;
-
   double m_noTTChi2PerDof ;
-
 
   std::map< int , const LHCb::Track* > m_trackKeyToBan ;
 
   double m_minHCALE ;
 
-  double m_minHCALET_NR ; // to become minET....
-
-  double m_minECALET_NR ;
-
   bool  m_banFromTTrack ;
-  
-  double  m_Chi2HCALCutTT ;
   
   double m_Chi2ECALCutTT;
 
