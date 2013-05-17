@@ -1,0 +1,57 @@
+#============================================================================
+# Created    : 2005-11-15
+# Maintainer : Vladimir Gligorov, Johannes Albrecht
+#============================================================================
+package           HltTracking
+version           v9r26p1
+
+# Structure
+#============================================================================
+branches          cmt doc src 
+include_path      none
+
+# Used packages
+#============================================================================
+
+use GaudiKernel         v*
+use GaudiAlg            v*
+use HltBase             v*  Hlt
+use HltEvent            v*  Event
+use TrackEvent          v*  Event
+use TrackInterfaces     v*  Tr
+
+#use Boost               v*  LCG_Interfaces
+use Python              v*  LCG_Interfaces
+#use SelPy               v*  Phys
+# our python uses various instances defined in HltCommon...
+use HltCommon           v*  Hlt
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          HltTracking    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=HltTracking
+
+# =============================================================================
+# ======= the patterns ========================================================
+macro HltTrackingUserModules "HltTracking.Hlt2Tracking"
+apply_pattern install_python_modules
+
+
+# ==== Auto added tests ====
+apply_pattern    QMTest
+private
+  macro SQL_use "" QMTest "SQLDDDB v* Det --no-auto-imports"
+  macro LHCbAlgs_use "" QMTest "LHCbAlgs v* Kernel --no-auto-imports"
+  macro CaloDAQ_use "" QMTest "CaloDAQ v* Calo --no-auto-imports"
+  macro L0DU_use "" QMTest "L0DU v* L0 --no-auto-imports"
+  use $(SQL_use)
+  use $(LHCbAlgs_use)
+  use $(CaloDAQ_use)
+  use $(L0DU_use)
+end_private
+

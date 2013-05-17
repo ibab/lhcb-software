@@ -1,0 +1,918 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltTracking
+! Responsible : Vladimir Gligorov / Johannes Albrecht
+! Purpose     : Steering the tracking by Hlt
+!-----------------------------------------------------------------------------
+
+
+!========================= HltTracking v9r26p1 2013-04-09 =========================
+! 2013-03-29 - Rob Lambert
+ - Add CaloDAQ and L0DU to environment
+
+! 2013-03-25 - Rob Lambert
+ - Print more details of given exceptions
+
+
+! 2013-03-25 - Rob Lambert
+ - Fix test problems
+
+
+! 2013-03-22 - Rob Lambert
+ - Add a huge number of qmtests, dummy tests mostly checking instantiation
+
+!========================= HltTracking v9r26 2013-02-28 =========================
+! 2013-02-27 - Rob Lambert
+ - Move to endmsg, not endreq, see task #40215
+
+! 2013-02-11 - Chris Jones
+ - Turn off pixel clusters in the RICH Reco settings. Not used and just wastes
+   a little CPU (used offline for monitoring only).
+
+! 2013-01-09 - E. van Herwijnen
+ - I removed Jibo's pA run forward reco p,pt cuts from the head and put 
+   them in the v9r25p1 branch
+
+!========================= HltTracking v9r25 2012-08-30 =========================
+! 2012-08-27 - V. Gligorov
+ - Add HHHKs, Ks->MuMuHH, and hyperon lines
+
+!========================= HltTracking v9r24 2012-06-27 =========================! 2012-06-27 - E. van Herwijnen
+ - Configure LooseForward min pt to 500 (from 300)
+
+!========================= HltTracking v9r23 2012-06-21 =========================
+! 2012-06-21 - V. Gligorov
+ - Fix bug with Rich tracking
+
+!========================= HltTracking v9r22 2012-06-19 =========================
+! 2012-06-18 - S. Stahl
+ - Lowered pt threshold for LooseForward to 300
+
+! 2012-06-13 - V. Gligorov
+ - Add CEP lines to Hlt2Tracking
+ - Modify the LowPT Rich conf to PID pions/kaons/protons > 300 MeV PT
+
+!========================= HltTracking v9r21 2012-05-16 =========================
+! 2012-05-08 - V. Gligorov
+ - Relax Hlt1 tracking P cuts to 3 GeV for both loose and tight forward
+
+!========================= HltTracking v9r20 2012-04-30 ========================
+! 2012-04-29 - V. Gligorov
+ - Fix Rich so lines using RICH PID use Forward as well as Match tracks
+
+!========================= HltTracking v9r19 2012-04-26 ========================
+! 2012-04-26 - V. Gligorov
+ - Relax default PT cut in forward upgrade for TrackAllL0 to 1.25 GeV
+ - Tighten track chi2 cuts in HLT2 proton ID to 3 
+
+! 2012-04-24 - Johannes Allbrecht
+ - bring p cut in forward and matching to 3 gev
+
+!========================= HltTracking v9r18 2012-04-24 =========================
+!========================= HltTracking v9r17 2012-04-24 =========================
+! 2012-04-24 - V. Gligorov
+ - Relax default track chi2 cut for downstream tracks to 3
+ - Update default data type to 2012
+ - Add Hlt2CharmHadD02HHXDstLines lines 
+
+! 2012-04-23 - Sascha Stahl
+ - Added option MinMomentum and MinPt to Downstream and Matchtracking
+
+! 2012-04-20 - Sascha Stahl
+ - Implemented global track cut in tracking sequence. Value set in HltTrackNames.py
+		Fixed Clonekiller. Clonekiller only runs when forward and matching are run.
+
+! 2012-04-18 - B. VIAUD
+ - The Hlt2CharmHadD02HHHHLines.py has been deteleted
+    from Hlt2Lines: remove the reference to it 
+    in Hlt2Tracking.py
+
+! 2012-04-18 - Sascha Stahl
+ - Fixed configuration of Downstream tracking to not run on already used seeds
+		and hits
+
+!========================= HltTracking v9r16 2012-04-10 =========================
+! 2012-04-10 - V. Gligorov
+ - Tighten P/PT reco cuts again as per tuning from Sascha and Christoph.  
+
+!========================= HltTracking v9r15 2012-04-09 =========================
+! 2012-04-06 - V. Gligorov
+ - Fix independence problem in downstream tracking 
+
+!========================= HltTracking v9r14 2012-03-20 =========================
+! 2012-03-20 - S. Stahl
+ - Set p cut of Forward tracking to 1 GeV in Hlt1TrackUpgradeConf.py 
+   and Hlt2Tracking.py.
+
+!========================= HltTracking v9r13 2012-03-18 =========================
+! 2012-03-15 - V. Gligorov
+ - Remove obsolete tracking config
+
+- 2012-03-16 - Albert Puig
+ - Fixed warnings in calo reconstruction due to missing ProtoP.
+
+! 2012-03-15 - Pieter David
+ - Add vertex upgrade version of the track upgrade strings (used as streamer 
+   preambulo) for displaced vertex line
+ - add configuration for a forward straight-line velo-only track fit
+
+! 2012-03-09 - V. Gligorov
+ - Add Lc->LambdaH lines.
+
+! 2012-03-05 - V. Gligorov
+ - Fix the proton ID configurations to use both forward and match tracking.
+
+!========================= HltTracking v9r12 2012-03-01 =========================
+! 2012-03-01
+ - Fixed Electron building from L0 candidates.
+
+!========================= HltTracking v9r11 2012-02-29 =========================
+ - EvH tagged for release
+
+! 2012-02-28
+ - add cut on track IP wrt beam line to speed up PV finding (HltPVs.py)
+
+! 2012-02-27 - V. Gligorov
+ - Changes for 2012 running. Set default P/PT cuts in the forward
+   tracking to 3000/300. Set the default P cut in the seeding and
+   turn it on by default. Turn on the clone kiling between the forward
+   and match tracking. Set the number of double hits required in
+   the seeding to 2.   
+
+! 2012-02-27 - Benoit VIAUD
+ - A few obsolete lines removed 
+     Hlt2CharmSemilep2Had1MuForHHMuMu.py
+     Hlt2CharmSemilepD02HHMuMu2SoftMuonsLines.py
+     Hlt2CharmSemilepD02HHMuMuHardHadronsAndMuonsLines.py
+     Hlt2CharmSemilepD02HHMuMuHardHadronsSoftMuonsLines.py
+     Hlt2CharmSemilepTwoHadForMuMuHH.py
+
+! 2012-02-27 - Benoit VIAUD
+ - More conventional names for the D->hhhh lines
+
+    Hlt2CharmHadD4HLines.py  --> Hlt2CharmHadD02HHHHLines
+    Hlt2CharmHadDstD4HLines.py  --> Hlt2CharmHadD02HHHHDstLines
+    Hlt2CharmHadDstD4HNoH1Lines.py --> Hlt2CharmHadD02HHHHDstNoHlt1Lines
+    Hlt2CharmHadTwoBodyForD4H.py --> Hlt2CharmHadTwoBodyForD02HHHH
+
+
+! 2012-02-26 - Jibo He
+ - Added Hlt2DiPhiTis to Hlt2Tracking.py
+
+! 2012-02-24 - Benoit VIAUD
+ - New Lines for D->hhhh, D->hmumu and D->hhmumu modes
+
+    Added Hlt2CharmHadD4HLines.py
+    Added Hlt2CharmHadDstD4HLines.py
+    Added Hlt2CharmHadDstD4HNoH1Lines.py
+    Added Hlt2CharmHadTwoBodyForD4H.py
+
+! 2012-02-15 - Mariusz Witek
+ - turn on beam spot info for PatPV3D in HltPVs.py. It makes PatPV3D 2x faster.
+
+!========================= HltTracking v9r10 2012-01-25 =========================
+! 2011-01-25 - V. Gligorov
+  - Move tracking options for forward, downstream, seeding to HltReco for
+    consistency; Hlt2Tracking and Hlt1TrackUpgradeConf now import dictionaries
+    of options from HltReco.
+
+!========================== HltTracking v9r9p2 2011-08-03 ===================
+
+! 2011-11-25 - Marcin Kucharczyk
+  - Add Hlt2HighPtJets line to Hlt2Tracking.py
+
+! 2011-07-30 - Roel Aaij
+ - L0CaloCandidates in Hlt1TrackUpgradeConf.py now uses L0 FullCalo as input.
+
+! 2011-07-0 - Albert Puig
+ - Fixed passing of track location to CaloLines configurable in Hlt2Tracking.py
+
+!========================== HltTracking v9r9p1 2011-07-04 ===================
+! 2011-07-06 - Gerhard Raven
+ - reduce PV window from 0.5 mm to 0.3 mm
+
+! 2011-06-27 - Gerhard Raven
+ - remove debug printout...
+
+!========================== HltTracking v9r9   2011-06-26 ===================
+! 2011-06-26 - Gerhard Raven
+ - fix ValidateWithTT configuration
+
+! 2011-06-24 - V. Gligorov
+ - Fix more conflicts caused in Hlt2Tracking by previous commits
+ 
+! 2011-06-23 - V. Gligorov
+ - Add new prompt LambdaC trigger
+ - Add new minimum bias charm triggers
+
+! 2011-06-23 - V. Gligorov
+ - Update default cut in Validate With TT to 3
+ - Fix conflicts caused in Hlt2Tracking by previous commits 
+
+! 2011-06-22 - Benoit Viaud
+ - Added SecondLoop Muons to Hlt2Tracking.py, plus the configurables of two new lines 
+   using them for D0->HHMuMu
+
+! 2011-06-22 - Albert Puig
+ - Added Photons/Electrons/Pi0 from L0 to Hlt2Tracking.py
+
+! 2011-05-19 - Jibo He
+ - python/HltTracking/Hlt2TrackingConfigurations.py
+   Change RichHypos of LowPTProton to two to avoid outputlocation overwrite 
+
+!========================== HltTracking v9r8p1 2011-05-11 ===================
+! 2011-05-12 -  Gerhard Raven
+ - add a central place which defines MaxOTHits for use in PatForward, PatSeeding
+   and GEC, and use it. Default value is 15k
+
+! 2011-05-11 -  Gerhard Raven
+ - add fiducial OT time window: [-8,56] ns
+
+! 2011-05-08 -  Roel Aaij
+ - Remove Hlt2UnfittedForwardTracking
+
+!========================== HltTracking v9r8 2011-05-04 ===================
+! 2011-04-29 - Roel Aaij
+ - Rename MatchVeloElectron -> MatchVeloL0Calo since the tool is more general
+   and add configuration for the tool.
+ - Add cloned Hlt::Candidates for L0CaloCandidates.
+
+! 2011-04-11 - Mariusz Witek
+ - Modify MatchVeloElectron.cpp to accept only L0Electrons with high PT
+   for SingleElectronNoIP line (Z->ee dedicated)
+ - Change matching chi2 from 25 to 9 in Hlt1TrackMatchConf.py
+
+! 2011-04-10 - Roel Aaij
+ - Add configuration of FastTTValidationTool to Hlt1TrackFilterConf.py
+
+!========================== HltTracking v9r7 2011-03-29 ===================
+! 2011-Mar-29 - V. Gligorov
+ - Add SemilepD02HMuNu lines to Hlt2Tracking.py
+
+! 2011-Mar-29 - Patrick Spradlin
+ - Renamed some new Hlt2Charm configurables to conform with a convention.
+   Requires Hlt2Lines r121026.
+
+! 2011-03-29 - Roel Aaij
+ - Add streamer configuration for MatchVeloElectron and remove obsolete
+   options for configuration of match tools from Hlt1TrackMatchConf.py
+ - Update the functor configuration objects for removal of the quality values.
+ - Update MatchVeloElectron to not use quality function arguments.
+
+!========================== HltTracking v9r6 2011-03-18 ===================
+! 2011-03-28 - Benoit Viaud
+ - Add new Hmumu and HHmumu lines to Hlt2Tracking.py
+
+! 2011-03-18 - Roel Aaij + Gerhard Raven
+ - technical changes to avoid recursive HltUnits due to PV3D filtering...
+   (really, really bad sideeffects!)
+
+! 2011-03-17 - Roel Aaij
+ - Add beam spot filter to HltPVs, output of PatPV3D is stored as ProtoPV3D
+   and the default PV3D is replaced by the filtered vertices.
+ - Add first version of MatchVeloElectron from Mariusz and its configuration.
+ - Remove obsolete TrackMatch callbacks.
+
+!========================== HltTracking v9r5p1 2011-03-09 ===================
+! 2011-03-09 - Roel Aaij
+ - Remove the check for fit history from HltTrackFit.
+
+! 2011-03-08 - Jibo He
+ - Hlt2TrackingConfigurations.py
+   RichHypos changed to 3 hypothesis for both Protons
+   PT cut changed to 1.9 GeV for Hlt2BiKalmanFittedRichForProtons
+   PT cut changed to 0.5 GeV for Hlt2BiKalmanFittedRichForLowPTProtons
+ 
+!========================== HltTracking v9r5  2011-03-06 ===================
+! 2011-03-05 - Roel Aaij
+ - Moved Hlt1 track upgrade symbols for streamers from their temporary home 
+   in Hlt1Streamers back to Hlt1TrackUpgradeConf.
+ - Added FullPV3D to Hlt1PVs.py
+
+!========================== HltTracking v9r4  2011-03-02 ===================
+! 2011-Mar-02 - Patrick Spradlin
+ - Added Hlt2CharmHadTwoBodyForMultiBodyConf and restored
+   Hlt2CharmHadD02HHHHLinesConf to Hlt2Tracking.__used_configurables__ list.
+   Requires Hlt2Lines 119486.
+
+! 2011-03-01 - Roel Aaij
+ - Set PT to 500 for LooseForward
+
+! 2011-03-01 - Gerhard Raven
+ - replace a few InputTrackLocation and OutputProtoParticleLocation with
+   generic Input and Output
+
+! 2011-03-01 - V. Gligorov
+ - Removed Hlt2CharmHadD02HHHHLinesConf from Hlt2Tracking until they
+   are fixed to depend properly on the D2HHH lines.
+
+! 2011-02-28 - Roel Aaij
+ - Update the options to the UpgradeConf for MatchVeloMuon
+
+! 2011-02-28 - Mariusz Witek
+ - Switch to 3D PV seeding.  PVSeedTool->PVSeed3DTool. Modifications in HltPVs.py
+
+! 2011-02-28 - Jibo He
+ - Hlt2TrackingConfigurations.py
+  + Added Low PT Proton (>0.6 GeV, same as Hlt1 LooseForward) 
+
+! 2011-Feb-24 - Patrick Spradlin
+ - Added Hlt2CharmHadD02HHHHLinesConf to Hlt2Tracking.__used_configurables__
+   list.  Requires Hlt2Lines r118787.
+
+!========================== HltTracking v9r3  2011-02-22 ===================
+! 2011-02-18 - Gerhard Raven
+ - remove commented out configurations
+ - move HltTrackFit from HltL0Conf to HltTracking
+ - remove reference to RadCor
+ - remove HltTrackMatch, HltVertexUpgrade, HltTrackUpgradeTool, HltTrackUpgrade
+ - remove 2d velo-t match
+
+!========================== HltTracking v9r2  2011-02-16 ===================
+! 2011-02-16 - Gerhard Raven
+ - remove reference to RZ velo tracking
+ - add HltSharedVeloTracksName
+
+! 2011-02-16 - V. Gligorov
+ - linked Charm KsHH lines.
+
+! 2011-02-16 - Alexandr Kozlinskiy
+ - linked new CharmRareDecay HLT2 lines
+
+! 2011-02-14 - Gerhard Raven
+ - replace HltTrackFilter with Hlt::TrackFilter
+
+! 2011-02-13 - Gerhard Raven
+ - in streamer definition of forward, velo-muon match, include the required
+   decoding
+
+! 2011-02-12 - Gerhard Raven
+ - replace HltVertexFilter by HltCopySelection<LHCb::RecVertex>
+
+! 2011-02-11 - Sam Gregson
+ - Linked up new Hlt2 D2KS0H line
+
+! 2011-02-11 - Vanya Belyaev
+
+ - Hlt::Track2L0CaloMatch.cpp
+
+   palceholder for new Ulrich's tool for track<-->Calo matching 
+
+ - cmt/requirements 
+   
+   version increment top v9r2 
+
+!========================== HltTracking v9r1  2011-02-10 ===================
+! 2011-02-10 - Roel Aaij
+ - Moved VeloCandidates from HltReco to Hlt1Streamers and changed it into 
+   a function that provides a cloned set of candidate tracks as input.
+
+! 2011-02-09 - Roel Aaij
+ - Removed definition of unused TrackFunctions from Hlt1StreamerConf.py
+
+!========================== HltTracking v9r0  2011-02-07 ===================
+! 2011-02-07 - Roel Aaij
+ - Moved Hlt1Units.py from Hlt1Lines to Hlt1StreamerConf.py
+ - Added exported strings which are to be added to Preambulo by users for
+   - HltPVs.py
+   - HltReco.py
+   - Hlt1Streamers.py
+ - Hlt1Streamers.py
+   - this file is temporary and will be merged into Hlt1TrackUpgradeConf.py 
+     once the "old" symbols have become obsolete.
+   - Contains configuration of Forward and FitTrack Hlt1 upgrades. Created
+     TightForward and LooseForward
+ - HltPVs.py
+   - Refactored definition of PV3D to using exported strings; still backwards
+     compatible.
+ - HltReco.py
+   - Refactored candidate definition to use exported string.
+ - Hlt1TrackUpgradeConf.py
+   - Added fuction to configure MatchVeloMuon
+ - Hlt1TrackUpgradeTool
+   - Get a public tool instead of a private one
+
+! 2011-02-04 - Victor Coco
+ - small fix in hlt1 track fit config
+
+! 2011-02-03 - Victor Coco
+ - Track fit configuration now call the ConfiguredHltFitter. AddDefaultReferenceNodes is now to True in Hlt1 (consistent with Hlt2)
+
+! 2011-02-02 - Roel Aaij
+ - Add UpgradeConf object for new MatchVeloMuon tool
+
+! 2011-01-30 - V. Gligorov
+ - Stream the PVs.
+
+!========================== HltTracking v8r2  2011-01-30 ===================
+! 2011-Jan-28 - Patrick Spradlin
+ - Added Hlt2CharmHadD2HHHLinesConf to Hlt2Tracking.__used_configurables__ list.
+   Requires Hlt2Lines 116279.
+
+! 2011-01-27 - Johannes Albrecht
+ - Updated APE values for ST
+
+! 2011-Jan-26 - Patrick Spradlin
+ - Added Hlt2CharmHadD02HHLinesConf to Hlt2Tracking.__used_configurables__ list.
+   Requires Hlt2Lines 116037.
+ - Removed references to obsolete Hlt2CharmLines{,Conf} from Hlt2Tracking.py.
+
+!========================== HltTracking v8r1  2011-01-20 ===================
+! 2011-01-19 - Alex Shires
+ - Add in Hlt2MuNTrackLines configurable
+
+!========================== HltTracking v8r0p2 2011-01-05 ===================
+! 2011-01-05 - Gerhard Raven
+ - temporarily set DataType in RichRecSys -- does nothing but avoid an
+   exception, only needed in the REC v10r6 stack.
+
+!========================== HltTracking v8r0p1 2010-12-16 ===================
+! 2010-12-14 - Johannes Albrecht
+ - fix bug in Fwd Tracking in Hlt2Tracking.py
+
+!========================== HltTracking v8r0  2010-12-08 ===================
+! 2010-12-03 - Johannes Albrecht
+ - first draft of FastVelo tracking
+
+! 2010-11-30 - Vanya Belyaev
+
+ - HltReco.py
+    tiny fix for streamers
+
+! 2010-11-30 - Roel Aaij
+ - Small fix in HltTracking for changes in RichRecSysConf, the datatype should
+   be properly set.
+
+! 2010-11-29 - V. Gligorov
+ - Add option to grab track/protoparticles using the 2-loop forward reco
+   in Hlt2Tracking, see 
+   http://indico.cern.ch/getFile.py/access?contribId=2&resId=0&materialId=slides&confId=110443
+   for the motivation behind this.
+ - Follow above in HltTrackNames.
+ - Remove obsolete configs from Hlt2TrackingConfigurations      
+
+! 2010-11-22 - Vanya Belyaev
+
+ - HltReco.py
+
+     add symbols for new streamers framework 
+
+ - cmt/requirements
+
+     version increment to v7r1 
+
+
+! 2010-10-20 - Olivier Callot
+ - Add a flag to use FastVeloTracking in HltReco.py
+   Default is False
+
+!========================== HltTracking v7r0p1 2010-09-30 ===================
+! 2010-09-30 - Gerhard Raven
+ - fix typo in requirements
+
+!========================== HltTracking v7r0 2010-09-08 ===================
+! 2010-09-08 - Gerhard Raven
+ - change upgrade such that there is one public (common!) tool
+   per output location to insure that the caching is consistent
+ - change matching such that there are no 'hidden' properties
+
+! 2010-09-07 - Gerhard Raven
+ - add some commments about VeloTT upgrade: it won't work!
+ - speed up addLHCbIDs, HltTrackUpgrade::execute
+ - remove unused prepareRZVelo
+ - remove m_owner, VeloTT upgrade from HltTrackUpgradeTool
+ - make   TransferAncestor and TransferIDs properties of HltTrackUpgradeTool
+
+
+!========================== HltTracking v6r3 2010-08-26 ===================
+! 2010-08-23 - M. Witek
+ - Specify PVSeedTool for PatPV3D reconstruction since default in PatPV changed to PVSeed3DTool. 
+
+! 2010-08-18 - V. Gligorov 
+ - Changes to Hlt2Tracking
+  . Minimum P/PT cuts in Forward Reco of 5000/500 MeV
+  . Minimum P cut of 2500 MeV in Seeding
+  . Change to fast fit to remove 2 Outliers, 1 extra iteration, 
+    do not update transport service
+
+! 2010-08-17 - Gerhard Raven
+ - remove RZ based matching
+ - follow const correctness changes in HltBase
+
+! 2010-08-07 - V. Gligorov
+ - Adapt to new format of RICH configuration options.
+
+!========================== HltTracking v6r2 2010-07-17 ===================
+! 2010-07-18 - V. Gligorov
+ - Add default momentum cuts to the RICH reconstruction. Also fix a bug introduced
+   by some conflicting commits regarding the removal of the obsolete configuration
+   below.
+
+! 2010-06-07 - V. Gligorov
+ - Remove an obsolete Hlt2 tracking configuration.
+
+!========================== HltTracking v6r1 2010-07-07 ===================
+! 2010-07-07 - Johannes Albrecht
+ - HltConfiguredPR: change tracking cuts to default (tight) cuts
+
+! 2010-07-06 - Gerhard Raven
+ - remove unneeded import, set output selection on minimalVelo
+
+! 2010-07-01 - Gerhard Raven
+ - make the max # of Velo tracks in PatForward a slot
+
+!========================== HltTracking v6r0   2010-05-28 ===================
+! 2010-05-28 - Gerhard Raven
+ - fix warnings about histograms with empty title 
+ - remove redundant sequencer
+
+! 2010-05-27 - V. Gligorov
+ - Major update to VeloCalo matching. In short:
+  . Parameterize calorimeter E resolution as (10%+70%/sqrt(E))
+  . Remove 2D matching
+  . Return separate chi2 values for X and Y matching
+  . Retune the pt kick constant based on 2010 data;
+    Reduce by a factor of 1.2 from 1263 GeV/c  
+
+! 2010-05-26 - V. Gligorov
+ - Fix bug in how the Velo reconstruction is configured and update VeloCalo
+   matching to match only by the Y position of the Calo cluster.
+
+! 2010-05-23 - V. Gligorov
+ - Remove PV2D from HltReco,HltVertexNames,HltPVs
+
+! 2010-05-23 - Jibo He
+ - Hlt2Tracking.py
+   + Added Hlt2B2KstareeLines
+
+! 2010-05-21 - M. Witek
+- Modifications of PV3D configuration to use latest tuning in PatPV for HLT
+
+! 2010-05-11 - V. Gligorov
+ - Switch to doing 3D reco upfront for Hlt1; use same 3D primary vertex between 
+   Hlt1 and Hlt2.
+
+! 2010-05-10 - V. Gligorov
+ - Enable neutral reco. when making electron protoparticles in order
+   to have the brems correction in. 
+
+! 2010-05-07 - Jibo He
+ - python/HltTracking/Hlt2Tracking.py
+   + Added Hlt2InclusiveDiElectronLines
+
+!========================== HltTracking v5r2   2010-04-26 ===================
+! 2010-04-26 - V. Gligorov
+ - Use the full offline track fit to make 3D primary vertices from Velo
+   tracks. This is a temporary fix and should be removed as soon as the 
+   linaer extrapolation is fixed! Hlt1 and Hlt2 now use identical primary
+   vertices except that Hlt1 PVs live in Hlt/Vertex/PV2D and Hlt2 PVs
+   live in Hlt/Vertex/PV3D. 
+
+!========================== HltTracking v5r1p1 2010-04-24 ===================
+! 2010-04-23 - V. Gligorov
+ - some more tweaks to cheated PV2D
+
+!========================== HltTracking v5r1   2010-04-21 ===================
+! 2010-04-19 - V. Gligorov
+ - Return 3D PVs when asked for 2D PVs; this cheat is to be used while the
+   real 2D PVs are being fixed.
+
+! 2010-04-19 - Johannes Albrecht
+ - HltReco.py: add ST calibrations for early data
+
+! 2010-04-16 - Johannes Albrecht
+ - Hlt2Tracking.py: set options for early data running
+
+! 2010-04-13 - V. Gligorov
+  - Add an option for "Early Data" tracking to Hlt2 tracking, currently this
+    is just a dummy if statement...   
+
+! 2010-04-13 - Francesco Dettori 
+ - adding Hlt2Dst2D2XXLines to Hlt2Tracking.py 
+
+!========================== HltTracking v5r0   2010-03-28 ===================
+! 2010-03-27 - Gerhard Raven
+ - Hlt2Tracking.py: replace mix of tabs and spaces with spaces
+ - HltVertexUpgrade: less casting...
+
+! 2010-03-27 - V. Gligorov
+ - Create a list of recognized track fit types which work with
+   the RICH ID.
+
+! 2010-03-27 - Jibo He
+ - Hlt2Tracking.py
+   . Add Hlt2InclusiveDiProtonLines
+
+! 2010-03-26 - V. Gligorov
+ - Add a combined DLL for Rich protos.
+
+! 2010-03-25 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784.
+   . Add the ability to CALO ID Muons, needed for Tag-and-Probe
+   . Add the ability to control the RICH radiators and particle
+     hypotheses used in the reconstruction.
+   . Add safety checks to make sure that tracking/pid configurations
+     only get used for their intended purpose, e.g. that if someone
+     configured an instance to make RICH-ID protons they cannot then
+     use it to make pi0s.
+   . Add genuine NoPIDs ProtoParticles, which are not overwritten with
+     PID information by other tools.   
+   . Remove the options UseRICH and UseCALO and replace them with methods
+     to get RICH-IDd and CALO-IDd protoparticles.
+   . Remove the option to both RICH and CALO ID charged hadrons. 
+   . Fix assorted bugs.   
+
+! 2010-03-23 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784.
+   Split the neutral reconstruction into charged and neutral parts,
+   so that lines which need electrons do not make photons, and that we
+   don't ID electrons when making photons. Add a tracking configuration
+   for making neutrals. 
+
+! 2010-03-17 - V. Gligorov
+ - Continuing work on Savannah tasks #12691,13784.
+   Add reconstruciton code to HltTracking, including
+     HltPVs
+     HltReco
+     Hlt2Tracking
+     Hlt2TrackingConfigurations
+     HltTrackNames
+     HltVertexNames
+
+! 2010-03-11 - V. Gligorov
+ - Continuing work on Savannah tasks 13784 and 12691. Change vertex naming
+   convention in HltVertexUpgrade to Hlt1/Vertex
+
+! 2010-03-02 - V. Gligorov
+ - Follow developments in Savannah tasks 13784/12691. Change Hlt/Tracks
+   to Hlt1/Track to obey naming convention in HLT.
+
+! 2010-03-01 - Gerhard Raven
+ - fix windows compiler warnings
+
+!========================== HltTracking v4r5 2010-04-19 ===================
+! 2010-04-15 - Johannes Albrecht
+ - HltGuidedForward: make forward tool private
+
+!========================== HltTracking v4r4p2 2010-02-17 ===================
+! 2010-02-11 - Gerhard Raven
+ - move some printout from info() to debug()
+
+!========================== HltTracking v4r4p1 2010-01-11 ===================
+! 2009-12-23 - Gerhard Raven
+ - move #include arround to facilitate HltBase/stringKey -> GaudiKernel/StringKey
+   migration
+
+!========================== HltTracking v4r4 2009-12-03 ===================
+! 2009-12-03 - Gerhard Raven
+ - do not abort when a track fails to be upgraded
+   (https://savannah.cern.ch/bugs/?59973)
+
+! 2009-12-02 - Johannes Albrecht
+ - add monitoring histograms for HltVertexUpgrade
+
+! 2009-10-27 - Johannes Albrecht
+ - HltTrackMatch: protect against emtpy output
+
+! 2009-10-26 - Johannes Albrecht
+ - add monitoring histograms for HltTrackMatch and HltTrackUpgrade
+
+!========================== HltTracking v4r3 2009-10-17 ===================
+! 2009-10-08 - Gerhard Raven
+ - use ITrackUpgrade interface instead of HltTrackUpgrade
+
+! 2009-10-07 - Gerhard Raven
+ - follow some cosmetic changes in HltBase/HltUtils.h
+
+!========================== HltTracking v4r2 2009-08-31 ===================
+! 2009-08-18 - Mariusz Witek
+- Add new track upgrade used in ECAL Alley for radiation correction of electrons in HltTrackUpgradeTool.cpp  
+
+!========================== HltTracking v4r1 2009-07-03 ===================
+! 2009-06-30 - Antonio Perez-Calero
+ -Fixed bug in input track type for confirmation with T. From Calo->TypeUnknown
+
+! 2009-06-25 - Antonio Perez-Calero
+ - Modified HltTrackUpgradeTool logic so that a vertex can now be formed from one track 
+ (e.g. a muon) which may be forward and fitted, and velo tracks, and this vertex can
+ be later upgraded forward and fitted. This now allows reco algos to change order for
+ timing studies.
+ - Also in HltTrackUpgradeTool extra info is now passed from the seed to daughters, 
+ but keeping info originally stored. 
+
+!========================== HltTracking v4r0 2009-06-03 ===================
+! 2009-05-29 - Gerhard Raven
+ - remove unneeded include
+ - move EDictionary from HltBase to HltTracking
+ - remove options from branches in cmt/requirements
+ - move the forward + track match algorithms from HltHadAlley here
+ - move the track match algorithms from HltMuonAlley here
+ - move the track match algorithms from HltEcalAlley here
+
+!========================== HltTracking v3r8 2009-01-15 ===================
+! 2008-12-29 - Gerhard Raven
+ - remove unneeded call to saveConfiguration
+ - use standard msglevel 
+
+! 2008-11-19 - Gerhard Raven
+ - remove unneeded include
+
+!========================== HltTracking v3r7 2008-11-24 ===================
+! 2008-11-12 - Vanya BELYAEV
+ - HltTrackUpgradeTool::update 
+   add "const'-qualifier for container of input tracks 
+
+! 2008-11-03 - Johannes Albrecht
+ - HltTrackUpgradeTool: Add new reco tool to fit tracks: HltTrackFit
+
+!========================== HltTracking v3r6 2008-09-10 ===================
+
+! 2008-09-10 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v3r6
+
+! 2008-09-08 - Gerhard Raven
+  - remove (usage of) HltEnums, direct usage of boost::algorithm::split
+
+!========================== HltTracking v3r5 2008-08-06 ===================
+! 2008-07-30 - Gerhard Raven
+  - follow changes in HltBase
+
+!========================== HltTracking v3r4 2008-07-09 ===================
+! 2008-07-09 - Jose A. Hernando
+  - HltTrackUpgradeTool: follow interfaces for drawing n panoramix
+
+! 2008-07-04 - Gerhard Raven
+  - HltTrackUpgrade: don't assume HltSelection is-a std::vector
+  - HltTrackUpgradeTool: fix extraneous compiler warning
+
+! 2008-07-02 - Gerhard Raven
+  - fix four unchecked StatusCodes, reduce three times the same compiler 
+    warning to one...
+
+! 2008-06-27 - Jose A. Hernando
+  - rename PatMatch to VeloT, and VeloT to VeloTDist in HltTrackMatch
+  - transfer info in the VertexUpgrade and in the TrackMatch
+
+! 2008-06-23 - Gerhard Raven
+  - remove commented out code in HltTrackUpgrade
+  - remove unused include of HltConfigurationHelper.h
+
+! 2008-06-20 - Jose A. Hernando
+  - extending HltTrackUpgrade tool to cope with new functionality to be used
+    in Panoramix
+
+!========================== HltTracking v3r3 2008-06-09 ===================
+! 2008-06-03 - Jose A. Hernando
+  - reparing tracking the tracking for the L0-confirmation. 
+
+! 2008-05-30 - Jose A. Hernando
+  - adaptations for the velo+calo match in the hadron alley
+
+! 2008-05-22 - Gerhard Raven
+  - follow migration of some interfaces from HltBase to TrackInterfaces
+
+! 2008-05-21 - Johannes Albrecht
+	- HltTrackMatch.cpp: add reco configuration for PatMatchTool
+
+! 2008-05-14 - Gerhard Raven
+ - follow change in HltAlgorithm: no need to specify name for outputselection,
+   it is automaticaly taken from the OutputSelection property
+
+! 2008-05-11 - Gerhard Raven
+ - remove ITracksFromTrack interface which is in TrackInterfaces
+ - HltVertexUpgrade: no need for local variables to be class members
+
+
+! 2008-05-07 - Gerhard Raven
+ - remove unused protected datamember in HltAlgorithm derived classes
+
+! 2008-05-06 - Patrick Koppenburg
+ - Change order of initialisations in creator to avoid warning
+
+! 2008-05-02 - Gerhard Raven
+ - no longer need to set m_algoType in HltAlgorithm derived classes
+ - fix some initialize/finalize imbalances
+ - don't delete tools obtained with tool<IXXX>(...)
+ - don't request timertool twice
+
+!========================== HltTracking v3r2 2008-04-25 ===================
+! 2008-04-25 - Patrick Koppenburg
+ - Error become a warning
+
+! 2008-04-24 Jose A. Hernando
+ - HltTrackUpgradeTool option to not track the reconstruction DoTrackReco = true;
+
+! 2008-04-XX Jose A. Hernando
+ - HltTrackMatch, solving a bug in storing quality (deltaX,deltaY) into the track extraInfo
+
+!========================== HltTracking v3r1 2008-03-07 ===================
+! 2008-02-12 Jose A. Hernando
+ - HltVertexUpgrade, removing info print out
+
+!========================== HltTracking v3r0 2008-02-05 ===================
+! 2008-01-22 - Jose A. Hernando
+ - HLT-clean
+   remove:
+  src/HltTrackSelector.cpp
+  src/HltTrackSelector.h
+  src/HltTracking.cpp
+  src/HltTracking.h
+  src/HltTracking_dll.cpp
+   add:
+  src/HltTrackMatch.cpp (match two tracks segments into a unique track)
+  src/HltTrackMatch.h
+
+
+!========================== HltTracking v2r0 2007-12-17 ===================
+! 2007-12-11 - Jose A. Hernando
+ - HltTrackUpgradeTool making tool public again
+
+! 2007-11-20 - Jose A. Hernando
+ - HltTrackUpgradeTool extended functionality (export IDs, ancestors)
+
+! 2007-11-15 - Jose A. Hernando
+ - L0ConfWithT in HltTrackUpgrade
+
+! 2007-11-14 - Jose A. Hernando
+ - Tf adaptation, remove Pat dependences
+
+!========================== HltTracking v1r4 2007-07-31 ===================
+! 2007-07-17 - Patrick Koppenburg
+ - Removed _load file
+
+! 2007-06-28 - Jose A. Hernando
+	- HltTrackUpgradeTool : master tracking tool to upgrade one seed
+  - ITracksFromTrack : temporally interface to not break compilation (it will move to Tr/TrackInterfaces)
+
+! 2007-06-25 - Jose A. Hernando
+	- HltTracking : register info in configuration
+	- HltTrackUpgrade : new master tracking algo, in preparation for track seed interface ITrackUpgrade.h
+	- HltVertexUpgrade : upgradin vertices, in priperation
+
+! 2007-06-20 - Jose A. Hernando
+ - minor changes, remove begin,end Execute
+
+!========================== HltTracking v1r3p1 2007-05-25 ===================
+! 2007-05-25 - Patrick Koppenburg
+ - Even more verbose stuff: print covariance matrix in outputlevel =1
+ - Increment to v1r3p1
+
+! 2007-05-14 - Patrick Koppenburg
+ - Added some more verbose()
+
+! ======================== HltTracking v1r3 2007-02-06 =======================
+! 2007-01-16 - Jose A. Hernando
+  - HltTracking: adding options OrderByPt (default false) to order or not
+          tracks by pt
+  - adding comments
+
+! 2007-01-16 - Jose A. Hernando
+  - HltTracking small bug with VeloTTKey
+
+! ======================== HltTracking v1r2 2006-11-07 =======================
+! 2006-10-27 - Jose A. Hernando
+  - HltTracking setting timers and improve loadTracks
+
+! 2006-10-09 - Jose A. Hernando
+  - HltTracking adding configuration for MuonForward
+
+! ======================== HltTracking v1r1 2006-10-18 =======================
+! 2006-10-18 - Marco Cattaneo
+ - protect HltTracking against initialization failures
+
+! 2006-10-03 - Jose A. Hernando
+ - Use Hlt as prefix of the track location from the Pat
+ - Make the mode "select" the default of the track selector 
+
+! ======================== HltTracking v1r0 2006-09-26 =======================
+! 2006-09-26 - Marco Cattaneo
+ - Adapt to move of base classes to Hlt/HltBase
+
+! 2006-09-25 Jose A. Hernando
+	- src/HltTrackSelector.h : updating the tool to select a track for DC06.
+  - src/HltTracking.h : master algorithm to drive most of the reconstruction in the HLT code.
+    It has different three configurations: for Velo,VeloTT,and Forward
+    It has two modes: 
+       1) Takes a Hlt::TrackContainer (a selection of tracks), it returns
+the reconstructed tracks in an output Hlt::TrackContainer.
+          For each track, it checks if was already reconstructed, and if so, it will the track not be reconstructed again.
+      2) With no logical containers, assumes that the rest of the input tracks in the origial pat-container needs to be reconstructed. So, it finished the reconstruction. 
+       i.e if it algorithms it is call with the configuration: Velo. It will loop in all the tracks in the Velo RZ track container, if the tracks has not been reconstructed a Velo Space yet, then it will be reconstructed. The final output will be in the pat-container, and copied, if needed into a logical Hlt::TrackContainer.
+
+! 2006-01-26 Jose A. Hernando
+  - src/ removing HltForward and HltVeloTT algorithms: using HltTrackSelector tool instead
+    src/HltTrackSelector.h .cpp tool to decide when to accpet a track to track
+        use an options with mode: selected, rest, all
+
+! 2006-01-19 Jose A. Hernando
+	- cmt/requirements
+	  depends on Pat-packages, and Hlt and Track Event Model
+  - src/HltForward
+    algorithm to steer the Forward reconstruction
+    modes of operation (via option) = "selected","rest","all"
+    track the seed Tracks that has been "selected", the one not-selected, or all
+  - src/HltVeloTT	
+    algorithm to steer the VeloTT reconstruction
+    modes of operation (via option) = "selected","rest","all"
+    track the seed Tracks that has been "selected", the one not-selected, or all
+
