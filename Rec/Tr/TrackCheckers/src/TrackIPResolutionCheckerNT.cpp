@@ -269,6 +269,8 @@ StatusCode TrackIPResolutionCheckerNT::execute()
    
 	const LHCb::State* stateAtFirstHit = track->stateAt( LHCb::State::FirstMeasurement ) ;
 	//std::cout<< "State at first hit: " << stateAtFirstHit << std::endl ;
+	theTuple->column("firsthittx", double(stateAtFirstHit ? stateAtFirstHit->tx() : 0) ) ;
+	theTuple->column("firsthitty", double(stateAtFirstHit ? stateAtFirstHit->ty() : 0) ) ;
 	theTuple->column("firsthitx", double(stateAtFirstHit ? stateAtFirstHit->x() : 0) ) ;
 	theTuple->column("firsthity", double(stateAtFirstHit ? stateAtFirstHit->y() : 0) ) ;
 	theTuple->column("firsthitz", double(stateAtFirstHit ? stateAtFirstHit->z() : 0) ) ;
@@ -404,12 +406,28 @@ StatusCode TrackIPResolutionCheckerNT::execute()
 		theTuple->column("firstmchitz",poshit.z()) ;
 		theTuple->column("firstmchitdz",mchit->displacement().z()) ;
 		theTuple->column("lastmchitz",mchitL->entry().z()) ;
-		theTuple->column("truetxfirsthit",mchit->dxdz()) ;
-		theTuple->column("truetyfirsthit",mchit->dydz()) ;
+		theTuple->column("truetxfirstmchit",mchit->dxdz()) ;
+		theTuple->column("truetyfirstmchit",mchit->dydz()) ;
 		double dz = poshit.z() - z ;
-		theTuple->column("IPxfirsthit",(x + dz * tx) - poshit.x()) ;
-		theTuple->column("IPyfirsthit",(y + dz * ty) - poshit.y()) ;
+		theTuple->column("IPxfirstmchit",(x + dz * tx) - poshit.x()) ;
+		theTuple->column("IPyfirstmchit",(y + dz * ty) - poshit.y()) ;
                 
+		if( stateAtFirstHit ) {
+		  // locate closest MCHit
+		  const LHCb::MCHit* closestmchit = mchit ;
+		  BOOST_FOREACH( const LHCb::MCHit* anmchit, mchits ) {
+		    if( std::abs( stateAtFirstHit->z() - anmchit->entry().z() ) < 
+			std::abs( stateAtFirstHit->z() - mchit->entry().z() ) )
+		      mchit = anmchit ;
+		  }
+		  theTuple->column("truetxfirsthit",closestmchit->dxdz()) ;
+		  theTuple->column("truetyfirsthit",closestmchit->dydz()) ;
+		  Gaudi::XYZPoint posmchit = closestmchit->entry() ;
+		  double dz = posmchit.z() - stateAtFirstHit->z() ;
+		  theTuple->column("IPxfirsthit",(stateAtFirstHit->x() + dz * stateAtFirstHit->tx()) - posmchit.x()) ;
+		  theTuple->column("IPyfirsthit",(stateAtFirstHit->y() + dz * stateAtFirstHit->ty()) - posmchit.y()) ;
+		}
+		
 		// let's now extrapolate the mchit of the first hit to the z position of the vertex,
 		// as if there were no scattering
 		dz = trueorigin.z() - poshit.z() ;
