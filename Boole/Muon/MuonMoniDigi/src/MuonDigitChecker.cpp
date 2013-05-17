@@ -19,6 +19,7 @@
 #include "Event/MCMuonDigit.h"
 #include "MuonDet/DeMuonDetector.h"   
 #include "MuonDigitChecker.h"
+#include <sstream>
 
 DECLARE_ALGORITHM_FACTORY( MuonDigitChecker )
 
@@ -31,7 +32,7 @@ MuonDigitChecker::MuonDigitChecker( const std::string& name,
     m_hitMonitor   ( false )
 {
   declareProperty( "hitMonitor"              ,m_hitMonitor );
-  setProperty( "NTupleProduce", "false" );
+  //  setProperty( "NTupleProduce", "false" );
   setProperty( "HistoTopDir",  "MUON/" );
   setProperty( "NTupleTopDir", "MUON/" );
 
@@ -40,7 +41,7 @@ MuonDigitChecker::MuonDigitChecker( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonDigitChecker::~MuonDigitChecker() {}
+MuonDigitChecker::~MuonDigitChecker() {delete m_base;}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -66,6 +67,8 @@ StatusCode MuonDigitChecker::initialize() {
       }
     }
   }
+
+  m_base = new MuonBasicGeometry(this->detSvc(), this->msgSvc());
   return StatusCode::SUCCESS;
 };
 
@@ -385,6 +388,17 @@ StatusCode MuonDigitChecker::execute() {
 //=============================================================================
 
 StatusCode MuonDigitChecker::finalize() {
+
+  int nStations = m_base->getStations();
+  info()<<"Stazioni trovate: "<<nStations<<endmsg;;
+  std::stringstream statStr;
+  for(int i=0;i<nStations;i++){
+    std::string statName = m_base->getStationName(i);
+    statStr<<statName<<"     ";
+  }
+    
+
+
   info() << "-----------------------------------------------------------------"
 	 << endmsg;
   info() << "       Muon Monitoring Table " << endmsg;
@@ -401,9 +415,10 @@ StatusCode MuonDigitChecker::finalize() {
       info() << "-----------------------------------------------------------------" << endmsg;
       info() << "----- TES Container: "<< myTes << "------------------------" << endmsg;
       info() << "-----------------------------------------------------------------" << endmsg;
-      info()<<" M1      M2      M3      M4      M5 "<<endmsg;
+      //      info()<<" M1      M2      M3      M4      M5 "<<endmsg;
+      info()<<statStr.str()<<endmsg;
       for(int r=0; r<4; r++) {
-	for(int s=0; s<5; s++) {
+	for(int s=0; s<nStations; s++) {
 	  if(cnt[s][r][c])  {
 	    info()<<format("%5.3lf  ",(double)nhit[s][r][c]/cnt[s][r][c]);
 	  } else {
@@ -429,9 +444,10 @@ StatusCode MuonDigitChecker::finalize() {
     info() << "-----------------------------------------------------------------" << endmsg;
     info() << "-----   Container: "<< myCon << "------------------------" << endmsg;
     info() << "-----------------------------------------------------------------" << endmsg;
-    info()<<"   M1     M2     M3     M4     M5 "<<endmsg;
+    //    info()<<"   M1     M2     M3     M4     M5 "<<endmsg;
+    info()<<statStr.str()<<endmsg;
     for(int r=0; r<4; r++) {
-      for(int s=0; s<5; s++) {
+      for(int s=0; s<nStations; s++) {
 	if(Dcnt[s][r][c])  {
 	  info()<<format("%5.3lf  ",(double)nDhit[s][r][c]/Dcnt[s][r][c]);
 	} else {

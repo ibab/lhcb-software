@@ -5,6 +5,7 @@
 // Include files
 
 // from Gaudi
+#include "MuonDet/MuonBasicGeometry.h"   
 #include "GaudiAlg/GaudiTupleAlg.h"
 
 /** @class MuonDigitChecker MuonDigitChecker.h
@@ -30,6 +31,6 @@ private:
   int nDhit[5][4][6],Dcnt[5][4][6];
 
   bool m_hitMonitor;
-
+  MuonBasicGeometry* m_base;
 };
 #endif // MuonDigitChecker_H
