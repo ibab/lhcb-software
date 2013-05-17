@@ -21,11 +21,12 @@ DeMuonChamber::DeMuonChamber()
   : m_msgStream(NULL),
     m_StationNumber(0), 
     m_RegionNumber(0),
-    m_ChamberNumber(0)
+    m_ChamberNumber(0),
+    m_StationName("") 
 {
 }
 
-/// Constructor seting pad sizes and number of gas gaps and chamber number
+/// Constructor setting pad sizes and number of gas gaps and chamber number
 DeMuonChamber::DeMuonChamber( int nStation,
                               int nRegion,
                               int nChamber)
@@ -66,6 +67,7 @@ StatusCode DeMuonChamber::initialize()
   std::string chnum;
   chnum.assign(name,start+19,10);
   sscanf(chnum.c_str(),"/Cham%d",&chm);
+  //  this->setStationNumber(sta-1); // error !!!!!! when M1 is not present station number =1 for M2 !!!
   this->setStationNumber(sta-1);
   this->setRegionNumber(reg-1);
   this->setChamberNumber(chm-1);
@@ -75,7 +77,7 @@ StatusCode DeMuonChamber::initialize()
 
   // for now with MWPCs and RPCs this is a good formula
   setGridName(m_chmbGrid);
-  //msgStream()<<MSG::INFO<<" test ale "<<name <<" "<<sta<<" "<<reg<<" "<<chm<<endmsg;
+  msgStream()<<MSG::DEBUG<<"Initialising DeMuonChamber: "<<name <<" "<<sta<<" "<<reg<<" "<<chm<<endmsg;
   return sc;
 }
 

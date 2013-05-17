@@ -1,3 +1,4 @@
+// $Id: MuonChamberLayout.h,v 1.5 2009-10-08 15:20:47 asatta Exp $
 #ifndef PUBLIC_MUONCHAMBERLAYOUT_H 
 #define PUBLIC_MUONCHAMBERLAYOUT_H 1
 
@@ -5,6 +6,7 @@
 
 //From Muon
 #include "MuonDet/DeMuonChamber.h"
+#include "MuonDet/MuonBasicGeometry.h"
 #include "MuonKernel/MuonSystemLayout.h"
 
 //Gaudi
@@ -228,6 +230,8 @@ private:
   //My data provider
   IDataProviderSvc* m_detSvc;
 
+  unsigned int offset[4];
+
   // size of logical channels
   std::vector<unsigned int> m_logVertGridX;
   std::vector<unsigned int> m_logVertGridY;
@@ -239,6 +243,8 @@ private:
 
   // definition of M1 according to DB, filled in DeMuonDetector::initialize()
   bool m_isM1defined;
+  //  MuonBasicGeometry* m_baseGeom(IDataProviderSvc* d, IMessageSvc* m);
+  MuonBasicGeometry* m_baseGeom;
 
 
 };

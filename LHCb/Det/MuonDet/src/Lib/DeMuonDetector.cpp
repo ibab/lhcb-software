@@ -25,11 +25,15 @@
 DeMuonDetector::DeMuonDetector() : m_msgStream(NULL),
                                    m_isM1defined(true)     
 {
+
+  bool debug = false;
+  if(debug) std::cout<< "Building the Detector !!!" <<std::endl;
   m_detSvc = 0;
   m_stations = 0;
   m_regions = 0;
   m_chamberLayout = 0;
   m_hitNotInGap = 0;
+
 }
 
 /// Standard Destructor
@@ -49,29 +53,7 @@ StatusCode DeMuonDetector::initialize()
 
   if( UNLIKELY( msgStream().level() <= MSG::VERBOSE ) ) 
     msgStream() << MSG::VERBOSE << "Initializing the detector" <<endmsg;
-
-
-  // Retrieve m_isM1defined from DB
-  //  const ILVolume* lv = geometry()->lvolume();
-  //  const std::string aMuonPvName = "MuonSubsystem";
-  //  const IPVolume* aMuonPv = lv->pvolume(aMuonPvName);
-  //  const std::string aMyM1 = "pvM1";
-
-//  for(ILVolume::PVolumes::const_iterator pviter = lv->pvBegin();
-//      pviter != lv->pvEnd(); ++pviter){
-//    const std::string mypvVolName = (*pviter)->name();
-//    if(mypvVolName.find(aMyM1)) m_isM1defined = true;
-//    else m_isM1defined=false;
-//
-//    msgStream() << MSG::INFO  << "Is M1 defined? Comparing " << 
-//      mypvVolName << 
-//      " with " <<
-//      aMyM1 << endmsg;
-//
-//  }
-
-//  m_isM1defined = false;
-
+  
   m_detSvc = this->dataSvc();
 
   StatusCode sc = DetectorElement::initialize();
@@ -81,26 +63,72 @@ StatusCode DeMuonDetector::initialize()
   }
 
   SmartDataPtr<DetectorElement> muonSys (m_detSvc,DeMuonLocation::Default);
-  //Getting stations
+  if(!muonSys){
+    msgStream()<< MSG::ERROR << "Error retrieving the muon detector "<<endmsg;
+    return StatusCode::FAILURE;
+  }
+
+
+
+
+  //Getting cabling
   m_isM1defined = false;
   IDetectorElement::IDEContainer::iterator itSt=muonSys->childBegin();
+
+  
+  
   for(itSt=muonSys->childBegin(); itSt<muonSys->childEnd(); itSt++){
+    if(testForFilter(*itSt)) continue; // skip muon filters
+
     std::string name=((*itSt)->name()).c_str();
     // Test if M1 is defined in the DB
     m_isM1defined |= (name.find("/M1") != name.npos);
+    
+    std::string base = DeMuonLocation::Cabling;
+    std::string sName, path;
+    path = base+"/"+sName.assign(name.end()-2, name.end())+"/Cabling";
+
+    updMgrSvc()->registerCondition(&m_daqHelper, path,
+				   &MuonDAQHelper::updateLUT);
+      /*
+    if(m_isM1defined) {
+      updMgrSvc()->registerCondition(&m_daqHelper,
+				     "/dd/Conditions/ReadoutConf/Muon/Cabling/M1/Cabling",
+				     &MuonDAQHelper::updateLUT);
+    }
+    updMgrSvc()->registerCondition(&m_daqHelper,
+				   "/dd/Conditions/ReadoutConf/Muon/Cabling/M2/Cabling",
+				   &MuonDAQHelper::updateLUT);
+    updMgrSvc()->registerCondition(&m_daqHelper,
+				   "/dd/Conditions/ReadoutConf/Muon/Cabling/M3/Cabling",
+				   &MuonDAQHelper::updateLUT);
+    updMgrSvc()->registerCondition(&m_daqHelper,
+				   "/dd/Conditions/ReadoutConf/Muon/Cabling/M4/Cabling",
+				   &MuonDAQHelper::updateLUT);
+    updMgrSvc()->registerCondition(&m_daqHelper,
+				   "/dd/Conditions/ReadoutConf/Muon/Cabling/M5/Cabling",
+				   &MuonDAQHelper::updateLUT);
+      */
   }
 
+
+
+
   //Initialize the maximum number of allowed chambers per region
-  int myDum[4] = {12,24,48,192};
+  int myDum[4] = {12,24,48,192}; // this can go to DDDB
   for(int dum = 0; dum<4; dum++) {MaxRegions[dum] = myDum[dum];}
-
-  //Initializing the Layout
-  MuonLayout R1(1,1), R2(1,2), R3(1,4), R4(2,8);
-  MuonChamberLayout * tLay = new
-    MuonChamberLayout(R1,R2,R3,R4,m_detSvc,msgSvc());
+  
+  
+  //Initializing the Layout in chamber coordinates
+  MuonLayout R1(1,1), R2(1,2), R3(1,4), R4(2,8); // also this can go to DDDB
+  MuonChamberLayout* tLay = new MuonChamberLayout(R1,R2,R3,R4,m_detSvc,msgSvc());
   m_chamberLayout = tLay;
-
+  
+  
   m_ChmbPtr =  m_chamberLayout->fillChambersVector(m_detSvc);
+  
+  //Initialize vectors containing Detector informations
+  CountDetEls();
 
   //fill geo info
   fillGeoInfo();
@@ -111,25 +139,9 @@ StatusCode DeMuonDetector::initialize()
       m_stationBox[0][1]<<" "<<
       m_stationBox[0][2]<<" "<<
       m_stationBox[0][3]<<" "<<endmsg;
-  //Initialize vectors containing Detector informations
-  CountDetEls();
   //  delete tLay;
-  updMgrSvc()->registerCondition(&m_daqHelper,
-                                 "/dd/Conditions/ReadoutConf/Muon/Cabling/M1/Cabling",
-                                 &MuonDAQHelper::updateLUT);
-  updMgrSvc()->registerCondition(&m_daqHelper,
-                                 "/dd/Conditions/ReadoutConf/Muon/Cabling/M2/Cabling",
-                                 &MuonDAQHelper::updateLUT);
-  updMgrSvc()->registerCondition(&m_daqHelper,
-                                 "/dd/Conditions/ReadoutConf/Muon/Cabling/M3/Cabling",
-                                 &MuonDAQHelper::updateLUT);
-  updMgrSvc()->registerCondition(&m_daqHelper,
-                                 "/dd/Conditions/ReadoutConf/Muon/Cabling/M4/Cabling",
-                                 &MuonDAQHelper::updateLUT);
-  updMgrSvc()->registerCondition(&m_daqHelper,
-                                 "/dd/Conditions/ReadoutConf/Muon/Cabling/M5/Cabling",
-                                 &MuonDAQHelper::updateLUT);
 
+  
   m_daqHelper.initSvc(dataSvc(),msgSvc());
   sc=m_daqHelper.initDAQMaps();
 
@@ -494,6 +506,7 @@ void DeMuonDetector::CountDetEls() {
   }//Stations Loop
 
   m_stations = msta;
+  // these are the so-called partitions i.e. regions summed over stations
   m_regions = mallreg;
 
   return;
@@ -593,11 +606,23 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
     //If given.. assign region and chamber number
     regNum = region; chamberNumber = chamber;
   }
+  /*
+  msgStream() << MSG::INFO <<"Create list of physical channels: (entry/exit/s/s1/r/c) "
+	      <<my_entry<<" "
+	      <<my_exit<<" "<<station<<" "
+	      <<station1<<" "
+	      <<region<<" "<<chamber<<endmsg;
+  */
 
   //Getting the chamber pointer.
-  DeMuonChamber*  myChPtr =  getChmbPtr(station,regNum,chamberNumber) ;
-  Gaudi::XYZPoint midInCh= (myChPtr ->geometry())
-    ->toLocal(Gaudi::XYZPoint(
+  DeMuonChamber*  myChPtr =  getChmbPtr(station,regNum,chamberNumber); 
+  //check if the retrieved chamber is OK
+  /*
+  msgStream() << MSG::INFO <<"Chamber name/gridname: "<< myChPtr->name()
+	      <<" "<<myChPtr->getGridName()<<" "
+	      <<myChPtr ->geometry()<<endmsg;
+  */
+  Gaudi::XYZPoint midInCh= (myChPtr ->geometry())->toLocal(Gaudi::XYZPoint(
                               ((my_entry.x()+my_exit.x())/2),
                               ((my_entry.y()+my_exit.y())/2),
                               ((my_entry.z()+my_exit.z())/2)));
@@ -754,7 +779,7 @@ StatusCode DeMuonDetector::getPCCenter(MuonFrontEndID fe,int chamber,
   double dy = box->yHalfLength();
   Condition* aGrid = 
   myChPtr->condition(myChPtr->getGridName());
-  MuonChamberGrid* theGrid = static_cast<MuonChamberGrid*>(aGrid);
+  MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(aGrid);
   double xcenter_norma=-1;
   double ycenter_norma=-1;  
   StatusCode sc=theGrid->getPCCenter(fe,xcenter_norma,ycenter_norma);
@@ -791,37 +816,58 @@ StatusCode  DeMuonDetector::Chamber2Tile(int  chaNum, int station, int region,
 
 void DeMuonDetector::fillGeoInfo()
 {
-  bool debug=false;
+    bool debug=false;
+  //  bool debug=true;
 
-  IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
   int station=0;
   int Side=0;
   int region=0;
-  for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
+
+  IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
+  for(; itSt<this->childEnd(); itSt++){ // loop over detector elements
+
     //Check if the "station" isn't actually a filter
+    //    msgStream()<<MSG::INFO<<"DET ELEM stations: "<<(*itSt)->name()<<endmsg;
     if (testForFilter(*itSt) == true)
       continue;
+    //
 
+    // get station z-coordinates
     IGeometryInfo*  geoSt=(*itSt)->geometry();
     Gaudi::XYZPoint globSt= geoSt->toGlobal(Gaudi::XYZPoint(0,0,0));
-    m_stationZ[station] = globSt.z();
-//    msgStream()<<MSG::INFO<<"STATION: "<<station << " --> z: " <<
-//      m_stationZ[station]  <<endmsg;
+    //    m_stationZ[station] = globSt.z();
+        m_stationZ.push_back(globSt.z());
+	//    msgStream()<<MSG::INFO<<"STATION: "<<station << " --> z: " <<
+        //    m_stationZ.at(station) <<endmsg;
+    //    m_stationZ[station]  <<endmsg;
+    //
 
+    // now crawl down to the chambers
 
+    Side=0;
 
     IDetectorElement::IDEContainer::iterator itSide=(*itSt)->childBegin();
-    Side=0;
-    for(itSide=(*itSt)->childBegin(); itSide<(*itSt)->childEnd(); itSide++){
+    for(; itSide<(*itSt)->childEnd(); itSide++){ // loop over sides
 
       IDetectorElement::IDEContainer::iterator itRg=(*itSide)->childBegin();
       region=0;
-      if(debug)msgStream()<<MSG::INFO<<" station "<<station<<endmsg;
-      for(itRg=(*itSide)->childBegin(); itRg<(*itSide)->childEnd(); itRg++){
-        if(debug)msgStream()<<MSG::INFO<<" region "<<region<<endmsg;
+      //      if(debug)
+      // msgStream()<<MSG::INFO<<" station "<<station<<endmsg;
+
+      //      for(itRg=(*itSide)->childBegin(); itRg<(*itSide)->childEnd(); itRg++){ // loop over regions
+      for(; itRg<(*itSide)->childEnd(); itRg++){ // loop over regions
+	//        if(debug)
+	//msgStream()<<MSG::INFO<<" region "<<region<<endmsg;
+	//    msgStream()<<MSG::INFO<<"DET ELEM region: "<<(*itRg)->name()<<endmsg;
+
         IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
         //        DeMuonRegion* reg=dynamic_cast<DeMuonRegion*> (*itRg);
-        for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
+	//        for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
+
+	// apparently it loops only over the first chamber to get general information
+	// can it be made equivalently using begin() iterator ?
+	//        for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){ // loop over chambers
+	//    msgStream()<<MSG::INFO<<"DET ELEM cham: "<<(*itCh)->name()<<endmsg;
           DeMuonChamber* chPt=dynamic_cast<DeMuonChamber*> (*itCh);
           int gaps=0;
           double area=0;
@@ -836,17 +882,21 @@ void DeMuonDetector::fillGeoInfo()
             size_t pos;
             pos=lvolname.find_last_of("/");
             std::string mystring=lvolname.substr(pos+1);
+	    //    msgStream()<<MSG::INFO<<"VOL NAME: "<<lvolname<<endmsg;
             
 	    
-            if(mystring=="lvGasGap"){
+    if(mystring=="lvGasGap"){ // these are the gas gaps
 	    
               ILVolume::PVolumes::const_iterator pvGapIterator;
               for (pvGapIterator=(geoCh->pvBegin());
                    pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
-                if(!((*pvGapIterator)->lvolume()->sdName().empty())){
-                  if(debug)msgStream()<<MSG::ERROR<<
-                             " in quale gao siamo "<<
-                             (*pvGapIterator)->lvolume()->name()<<endmsg;
+
+		//		msgStream()<<MSG::INFO<<"Gap Volume Name: "
+		//   <<(*pvGapIterator)->lvolume()->sdName()<<endmsg;
+
+                if( !((*pvGapIterator)->lvolume()->sdName().empty()) ){
+		  //                  if(debug)msgStream()<<MSG::ERROR<<
+
                   const ILVolume* geoGap=(*pvGapIterator)->lvolume();
                   //Retrieve the chamber box dimensions  
                   const SolidBox *box = dynamic_cast<const SolidBox *>
@@ -859,7 +909,15 @@ void DeMuonDetector::fillGeoInfo()
                   m_sensitiveAreaZ[station*4+region]=2*dz;
                   area=4*dx*dy;
                   m_areaChamber[station*4+region]=area;
-                  gaps++;  
+                  gaps++;
+		  /*
+                   msgStream()<<MSG::INFO<<" in quale gap siamo "
+			   <<(*pvGapIterator)->lvolume()->name()
+			   <<" dimensions x, y, z: "
+			   <<2*dx<<" "
+			   <<2*dy<<" "
+			   <<2*dz<<" "<<endmsg;
+		  */
                 }
               }
             }
@@ -868,12 +926,19 @@ void DeMuonDetector::fillGeoInfo()
           
           m_gapPerRegion[station*4+region]=gaps;
           m_gapPerFE[station*4+region]=gaps/2;
-
-
-          
+	  /*
+	  msgStream()<<MSG::INFO<<"Grid for chamber (s/r/c):  "
+		     <<station<<"/"<<region<<" "<<chPt->name()<<" "
+		     <<chPt->getGridName()<<endmsg;
+	  */
           Condition* bGrid = (chPt)->condition(chPt->getGridName());
-          MuonChamberGrid* theGrid = static_cast<MuonChamberGrid*>(bGrid);
+          MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(bGrid);
           
+	  // the grid condition is the size of physical readout channels for a certain 
+	  // readout type (i.e. wires or cathode pads) normalized to the 
+	  // number of physical channels of the same type in the chamber
+	  // By convention 0=wires, 1=cathode pads
+
           int nreadout=1;
           if(theGrid->getGrid2SizeY()>1)nreadout=2;
           m_readoutNumber[station*4+region]=nreadout;
@@ -891,20 +956,20 @@ void DeMuonDetector::fillGeoInfo()
                 (theGrid->getReadoutGrid())[i];
             }
           }
-          int maps=(theGrid->getMapGrid()).size()/2;
+          int maps=(theGrid->getMapGrid()).size()/2; 
           m_LogMapPerRegion[station*4+region]=maps;
-          if(debug)msgStream()<<MSG::INFO<<" red and maps "<<nreadout<<" "<<maps<<endmsg;
+	  //          if(debug)msgStream()<<MSG::INFO<<" red and maps "<<nreadout<<" "<<maps<<endmsg;
           if(nreadout==1)
           {
             for( int i = 0; i<maps;i++){
               m_LogMapRType[i][station*4+region]=
                 m_readoutType[0][station*4+region];
               m_LogMapMergex[i][station*4+region]=
-                (theGrid->getMapGrid())[i*2];
+                (theGrid->getMapGrid())[i*2]; // these are the log OR of the physical channels
               m_LogMapMergey[i][station*4+region]=
-                (theGrid->getMapGrid())[i*2+1];
-              if(debug)msgStream()<<MSG::INFO<<" red and maps "<<i<<" "<< m_LogMapRType[i][station*4+region]<<" "<<
-                m_LogMapMergex[i][station*4+region]<<" "<<m_LogMapMergey[i][station*4+region]<<endmsg;
+                (theGrid->getMapGrid())[i*2+1]; // these are the log OR of the physical channels
+	      //              if(debug)msgStream()<<MSG::INFO<<" red and maps "<<i<<" "<< m_LogMapRType[i][station*4+region]<<" "<<
+	      //                m_LogMapMergex[i][station*4+region]<<" "<<m_LogMapMergey[i][station*4+region]<<endmsg;
             }
           }else if(nreadout==2){
             for( int i = 0; i<maps;i++){
@@ -914,13 +979,13 @@ void DeMuonDetector::fillGeoInfo()
                 (theGrid->getMapGrid())[i*2];
               m_LogMapMergey[i][station*4+region]=
                 (theGrid->getMapGrid())[i*2+1];
-              if(debug)msgStream()<<MSG::INFO<<" red and maps "<<i<<" "<< m_LogMapRType[i][station*4+region]<<" "<<
-                m_LogMapMergex[i][station*4+region]<<" "<<m_LogMapMergey[i][station*4+region]<<endmsg;
+	      //              if(debug)msgStream()<<MSG::INFO<<" red and maps "<<i<<" "<< m_LogMapRType[i][station*4+region]<<" "<<
+	      //   m_LogMapMergex[i][station*4+region]<<" "<<m_LogMapMergey[i][station*4+region]<<endmsg;
             }
           }
 
-          break;
-        }
+	  //          break;
+	  //        }
         int chamber=0;
         for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
           chamber++;
@@ -930,9 +995,270 @@ void DeMuonDetector::fillGeoInfo()
       Side++;
     }
     station++;
-  }
+  } // end of loop over detector elements
 
   // initialization by hand of the logical layout in the different regions
+  // che orrore...
+
+  if(m_isM1defined) {
+    m_layoutX[0][0]=24;
+    m_layoutX[0][1]=24;
+    m_layoutX[0][2]=24;
+    m_layoutX[0][3]=24;
+    m_layoutX[0][4]=48;
+    m_layoutX[0][5]=48;
+    m_layoutX[0][6]=48;
+    m_layoutX[0][7]=48;
+    m_layoutX[1][4]=8;
+    m_layoutX[1][5]=4;
+    m_layoutX[1][6]=2;
+    m_layoutX[1][7]=2;
+    m_layoutX[0][8]=48;
+    m_layoutX[0][9]=48;
+    m_layoutX[0][10]=48;
+    m_layoutX[0][11]=48;
+    m_layoutX[1][8]=8;
+    m_layoutX[1][9]=4;
+    m_layoutX[1][10]=2;
+    m_layoutX[1][11]=2;
+    m_layoutX[0][12]=12;
+    m_layoutX[0][13]=12;
+    m_layoutX[0][14]=12;
+    m_layoutX[0][15]=12;
+    m_layoutX[1][13]=4;
+    m_layoutX[1][14]=2;
+    m_layoutX[1][15]=2;
+    m_layoutX[0][16]=12;
+    m_layoutX[0][17]=12;
+    m_layoutX[0][18]=12;
+    m_layoutX[0][19]=12;
+    m_layoutX[1][17]=4;
+    m_layoutX[1][18]=2;
+    m_layoutX[1][19]=2;
+    
+    m_layoutY[0][0]=8;
+    m_layoutY[0][1]=8;
+    m_layoutY[0][2]=8;
+    m_layoutY[0][3]=8;
+    m_layoutY[0][4]=1;
+    m_layoutY[0][5]=2;
+    m_layoutY[0][6]=2;
+    m_layoutY[0][7]=2;
+    m_layoutY[1][4]=8;
+    m_layoutY[1][5]=8;
+    m_layoutY[1][6]=8;
+    m_layoutY[1][7]=8;
+    m_layoutY[0][8]=1;
+    m_layoutY[0][9]=2;
+    m_layoutY[0][10]=2;
+    m_layoutY[0][11]=2;
+    m_layoutY[1][8]=8;
+    m_layoutY[1][9]=8;
+    m_layoutY[1][10]=8;
+    m_layoutY[1][11]=8;
+    m_layoutY[0][12]=8;
+    m_layoutY[0][13]=2;
+    m_layoutY[0][14]=2;
+    m_layoutY[0][15]=2;
+    m_layoutY[1][13]=8;
+    m_layoutY[1][14]=8;
+    m_layoutY[1][15]=8;
+    m_layoutY[0][16]=8;
+    m_layoutY[0][17]=2;
+    m_layoutY[0][18]=2;
+    m_layoutY[0][19]=2;
+    m_layoutY[1][17]=8;
+    m_layoutY[1][18]=8;
+    m_layoutY[1][19]=8;
+  //initializatuon by hand of the OR inside the same Cardiac
+    m_phCardiacORNX[1][0]=1;
+    m_phCardiacORNX[1][1]=1;
+    m_phCardiacORNX[1][2]=2;
+    m_phCardiacORNX[0][3]=2;
+    m_phCardiacORNY[1][0]=1;
+    m_phCardiacORNY[1][1]=2;
+    m_phCardiacORNY[1][2]=1;
+    m_phCardiacORNY[0][3]=1;
+    
+    m_phCardiacORNX[0][4]=1;
+    m_phCardiacORNX[1][4]=1;
+    m_phCardiacORNX[0][5]=1;
+    m_phCardiacORNX[1][5]=2;
+    m_phCardiacORNX[1][6]=1;
+    m_phCardiacORNX[0][7]=1;
+    
+    m_phCardiacORNY[0][4]=1;
+    m_phCardiacORNY[1][4]=1;
+    m_phCardiacORNY[0][5]=1;
+    m_phCardiacORNY[1][5]=2;
+    m_phCardiacORNY[1][6]=1;
+    m_phCardiacORNY[0][7]=1;
+    
+    m_phCardiacORNX[0][8]=1;
+    m_phCardiacORNX[1][8]=1;
+    m_phCardiacORNX[0][9]=1;
+    m_phCardiacORNX[1][9]=2;
+    m_phCardiacORNX[1][10]=1;
+    m_phCardiacORNX[0][11]=1;
+    
+    m_phCardiacORNY[0][8]=1;
+    m_phCardiacORNY[1][8]=1;
+    m_phCardiacORNY[0][9]=1;
+    m_phCardiacORNY[1][9]=2;
+    m_phCardiacORNY[1][10]=1;
+    m_phCardiacORNY[0][11]=1;
+    
+    m_phCardiacORNX[1][12]=1;
+    m_phCardiacORNX[1][13]=1;
+    m_phCardiacORNX[1][14]=2;
+    m_phCardiacORNX[0][15]=4;
+    
+    m_phCardiacORNY[1][12]=1;
+    m_phCardiacORNY[1][13]=1;
+    m_phCardiacORNY[1][14]=1;
+    m_phCardiacORNY[0][15]=1;
+    
+    m_phCardiacORNX[1][16]=1;
+    m_phCardiacORNX[1][17]=1;
+    m_phCardiacORNX[1][18]=2;
+    m_phCardiacORNX[0][19]=4;
+    
+    m_phCardiacORNY[1][16]=1;
+    m_phCardiacORNY[1][17]=1;
+    m_phCardiacORNY[1][18]=1;
+    m_phCardiacORNY[0][19]=1;
+    
+  } else {
+    //    m_layoutX[0][0]=24;  //M1
+    //    m_layoutX[0][1]=24;  //M1
+    //    m_layoutX[0][2]=24;  //M1
+    //    m_layoutX[0][3]=24;  //M1
+    m_layoutX[0][ 0]=48; //M2 vstrips
+    m_layoutX[0][ 1]=48; //M2 vstrips
+    m_layoutX[0][ 2]=48; //M2 vstrips
+    m_layoutX[0][ 3]=48; //M2 vstrips
+    m_layoutX[1][ 0]=8;  //M2 hstrips
+    m_layoutX[1][ 1]=4;  //M2 hstrips
+    m_layoutX[1][ 2]=2;  //M2 hstrips
+    m_layoutX[1][ 3]=2;  //M2 hstrips
+    m_layoutX[0][ 4]=48; //M3 vstrips
+    m_layoutX[0][ 5]=48; //M3 vstrips
+    m_layoutX[0][ 6]=48; //M3 vstrips
+    m_layoutX[0][ 7]=48; //M3 vstrips
+    m_layoutX[1][ 4]=8;  //M3 hstrips
+    m_layoutX[1][ 5]=4;  //M3 hstrips
+    m_layoutX[1][ 6]=2;  //M3 hstrips
+    m_layoutX[1][ 7]=2;  //M3 hstrips
+    m_layoutX[0][ 8]=12; //M4 vstrips
+    m_layoutX[0][ 9]=12; //M4 vstrips
+    m_layoutX[0][10]=12; //M4 vstrips
+    m_layoutX[0][11]=12; //M4 vstrips
+    m_layoutX[1][ 9]=4;  //M4 hstrips
+    m_layoutX[1][10]=2;  //M4 hstrips
+    m_layoutX[1][11]=2;  //M4 hstrips
+    m_layoutX[0][12]=12; //M5 vstrips
+    m_layoutX[0][13]=12; //M5 vstrips
+    m_layoutX[0][14]=12; //M5 vstrips
+    m_layoutX[0][15]=12; //M5 vstrips
+    m_layoutX[1][13]=4;  //M5 hstrips
+    m_layoutX[1][14]=2;  //M5 hstrips
+    m_layoutX[1][15]=2;  //M5 hstrips
+ 
+    //    m_layoutY[0][0]=8; //M1
+    //    m_layoutY[0][1]=8; //M1
+    //    m_layoutY[0][2]=8; //M1
+    //    m_layoutY[0][3]=8; //M1
+    m_layoutY[0][ 0]=1;  //M2 vstrips
+    m_layoutY[0][ 1]=2;	//M2 vstrips
+    m_layoutY[0][ 2]=2;	//M2 vstrips
+    m_layoutY[0][ 3]=2;	//M2 vstrips
+    m_layoutY[1][ 0]=8;	//M2 hstrips
+    m_layoutY[1][ 1]=8;	//M2 hstrips
+    m_layoutY[1][ 2]=8;	//M2 hstrips
+    m_layoutY[1][ 3]=8;	//M2 hstrips
+    m_layoutY[0][ 4]=1;	//M3 vstrips
+    m_layoutY[0][ 5]=2;	//M3 vstrips
+    m_layoutY[0][ 6]=2;	//M3 vstrips
+    m_layoutY[0][ 7]=2;	//M3 vstrips
+    m_layoutY[1][ 4]=8;	//M3 hstrips
+    m_layoutY[1][ 5]=8;	//M3 hstrips
+    m_layoutY[1][ 6]=8;	//M3 hstrips
+    m_layoutY[1][ 7]=8;	//M3 hstrips
+    m_layoutY[0][ 8]=8;	//M4 vstrips
+    m_layoutY[0][ 9]=2;	//M4 vstrips
+    m_layoutY[0][10]=2;	//M4 vstrips
+    m_layoutY[0][11]=2;	//M4 vstrips
+    m_layoutY[1][ 9]=8;	//M4 hstrips
+    m_layoutY[1][10]=8;	//M4 hstrips
+    m_layoutY[1][11]=8;	//M4 hstrips
+    m_layoutY[0][12]=8;	//M5 vstrips
+    m_layoutY[0][13]=2;	//M5 vstrips
+    m_layoutY[0][14]=2;	//M5 vstrips
+    m_layoutY[0][15]=2;	//M5 vstrips
+    m_layoutY[1][13]=8;	//M5 hstrips
+    m_layoutY[1][14]=8;	//M5 hstrips
+    m_layoutY[1][15]=8;	//M5 hstrips
+  //initializatuon by hand of the OR inside the same Cardiac
+    /*
+    m_phCardiacORNX[1][0]=1;
+    m_phCardiacORNX[1][1]=1;
+    m_phCardiacORNX[1][2]=2;
+    m_phCardiacORNX[0][3]=2;
+
+    m_phCardiacORNY[1][0]=1;
+    m_phCardiacORNY[1][1]=2;
+    m_phCardiacORNY[1][2]=1;
+    m_phCardiacORNY[0][3]=1;
+    */    
+    m_phCardiacORNX[0][0]=1;
+    m_phCardiacORNX[1][0]=1;
+    m_phCardiacORNX[0][1]=1;
+    m_phCardiacORNX[1][1]=2;
+    m_phCardiacORNX[1][2]=1;
+    m_phCardiacORNX[0][3]=1;
+    
+    m_phCardiacORNY[0][0]=1;
+    m_phCardiacORNY[1][0]=1;
+    m_phCardiacORNY[0][1]=1;
+    m_phCardiacORNY[1][1]=2;
+    m_phCardiacORNY[1][2]=1;
+    m_phCardiacORNY[0][3]=1;
+    
+    m_phCardiacORNX[0][4]=1;
+    m_phCardiacORNX[1][4]=1;
+    m_phCardiacORNX[0][5]=1;
+    m_phCardiacORNX[1][5]=2;
+    m_phCardiacORNX[1][6]=1;
+    m_phCardiacORNX[0][7]=1;
+    
+    m_phCardiacORNY[0][4]=1;
+    m_phCardiacORNY[1][4]=1;
+    m_phCardiacORNY[0][5]=1;
+    m_phCardiacORNY[1][5]=2;
+    m_phCardiacORNY[1][6]=1;
+    m_phCardiacORNY[0][7]=1;
+    
+    m_phCardiacORNX[1][8]=1;
+    m_phCardiacORNX[1][9]=1;
+    m_phCardiacORNX[1][10]=2;
+    m_phCardiacORNX[0][11]=4;
+    
+    m_phCardiacORNY[1][8]=1;
+    m_phCardiacORNY[1][9]=1;
+    m_phCardiacORNY[1][10]=1;
+    m_phCardiacORNY[0][11]=1;
+    
+    m_phCardiacORNX[1][12]=1;
+    m_phCardiacORNX[1][13]=1;
+    m_phCardiacORNX[1][14]=2;
+    m_phCardiacORNX[0][15]=4;
+    
+    m_phCardiacORNY[1][12]=1;
+    m_phCardiacORNY[1][13]=1;
+    m_phCardiacORNY[1][14]=1;
+    m_phCardiacORNY[0][15]=1;
+  }
+  /*
   m_layoutX[0][0]=24;
   m_layoutX[0][1]=24;
   m_layoutX[0][2]=24;
@@ -1002,11 +1328,13 @@ void DeMuonDetector::fillGeoInfo()
   m_layoutY[1][17]=8;
   m_layoutY[1][18]=8;
   m_layoutY[1][19]=8;
-
+  */
   // fill pad sizes
 
-  for(int stat=0;stat<5;stat++){
-    for(int reg=0;reg<4;reg++){
+  //  msgStream()<<MSG::INFO<<"Stations/regions in this setup: "<<station<<"/"<<region<<endmsg;
+
+  for(int stat=0;stat<m_stations;stat++){
+    for(int reg=0;reg<m_regsperSta[stat];reg++){
       unsigned int part=stat*4+reg;
       // one readout
       if( m_readoutNumber[part]==1){
@@ -1033,65 +1361,13 @@ void DeMuonDetector::fillGeoInfo()
         m_padSizeX[part]=(m_sensitiveAreaX[part]/m_phChannelNX[0][part])* mgx;
         m_padSizeY[part]=(m_sensitiveAreaY[part]/m_phChannelNY[1][part])* mgy;
       }
+
+      //  msgStream()<<MSG::INFO<<"S/R/P "<<stat<<"/"<<reg<<"/"<<part
+      //	     <<" pX/pY "<<m_padSizeX[part]<<"/"<<m_padSizeY[part]<<endmsg;
+
+
     }
   }
-  //initializatuon by hand of the OR inside the same Cardiac
-  m_phCardiacORNX[1][0]=1;
-  m_phCardiacORNX[1][1]=1;
-  m_phCardiacORNX[1][2]=2;
-  m_phCardiacORNX[0][3]=2;
-  m_phCardiacORNY[1][0]=1;
-  m_phCardiacORNY[1][1]=2;
-  m_phCardiacORNY[1][2]=1;
-  m_phCardiacORNY[0][3]=1;
-
-  m_phCardiacORNX[0][4]=1;
-  m_phCardiacORNX[1][4]=1;
-  m_phCardiacORNX[0][5]=1;
-  m_phCardiacORNX[1][5]=2;
-  m_phCardiacORNX[1][6]=1;
-  m_phCardiacORNX[0][7]=1;
-
-  m_phCardiacORNY[0][4]=1;
-  m_phCardiacORNY[1][4]=1;
-  m_phCardiacORNY[0][5]=1;
-  m_phCardiacORNY[1][5]=2;
-  m_phCardiacORNY[1][6]=1;
-  m_phCardiacORNY[0][7]=1;
-
-  m_phCardiacORNX[0][8]=1;
-  m_phCardiacORNX[1][8]=1;
-  m_phCardiacORNX[0][9]=1;
-  m_phCardiacORNX[1][9]=2;
-  m_phCardiacORNX[1][10]=1;
-  m_phCardiacORNX[0][11]=1;
-
-  m_phCardiacORNY[0][8]=1;
-  m_phCardiacORNY[1][8]=1;
-  m_phCardiacORNY[0][9]=1;
-  m_phCardiacORNY[1][9]=2;
-  m_phCardiacORNY[1][10]=1;
-  m_phCardiacORNY[0][11]=1;
-
-  m_phCardiacORNX[1][12]=1;
-  m_phCardiacORNX[1][13]=1;
-  m_phCardiacORNX[1][14]=2;
-  m_phCardiacORNX[0][15]=4;
-
-  m_phCardiacORNY[1][12]=1;
-  m_phCardiacORNY[1][13]=1;
-  m_phCardiacORNY[1][14]=1;
-  m_phCardiacORNY[0][15]=1;
-
-  m_phCardiacORNX[1][16]=1;
-  m_phCardiacORNX[1][17]=1;
-  m_phCardiacORNX[1][18]=2;
-  m_phCardiacORNX[0][19]=4;
-
-  m_phCardiacORNY[1][16]=1;
-  m_phCardiacORNY[1][17]=1;
-  m_phCardiacORNY[1][18]=1;
-  m_phCardiacORNY[0][19]=1;
 
   return;
 }
@@ -1113,12 +1389,11 @@ void DeMuonDetector::fillGeoArray()
 
   for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
     //get the dimensions of the inner rectangular
-    if(debug)msgStream()<<MSG::INFO<<" inside loop "<<endmsg;
 
-    if(debug)msgStream()<<MSG::DEBUG<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
+    msgStream()<<MSG::DEBUG<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
     if (testForFilter(*itSt) == true)
       continue;
-    if(debug)msgStream()<<MSG::DEBUG<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
+    msgStream()<<MSG::DEBUG<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
 
     double minX=100000;
     double minY=100000;
@@ -1184,7 +1459,7 @@ if(debug)msgStream()<<MSG::ERROR<<geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZP
     m_stationBox[station][0]=minX;
     m_stationBox[station][1]=minY;
     //now the dimsnion of the outer parr...
-    if(debug)msgStream()<<MSG::INFO<<" min size "<<minX<<" "<<minY<<endmsg;
+    if(debug)msgStream()<<MSG::DEBUG<<" min size "<<minX<<" "<<minY<<endmsg;
     double maxX=0;
     double maxY=0;
     for(unsigned int nx=0;nx<2*layoutOuter.xGrid();nx++){
@@ -1313,7 +1588,7 @@ DetectorElement* DeMuonDetector::Tile2Station(LHCb::MuonTileID aTile)
 
   SmartDataPtr<DetectorElement> station(m_detSvc, stationPath);
   if( !station ) {
-    msgStream() << MSG::INFO << "Error in retrieving DetectorElement!" << endmsg;
+    msgStream() << MSG::ERROR << "Error in retrieving DetectorElement!" << endmsg;
   }
   return station;
 }
@@ -1348,7 +1623,7 @@ DetectorElement* DeMuonDetector::Hit2Station(Gaudi::XYZPoint myPoint)
 
   SmartDataPtr<DetectorElement> station(m_detSvc, stationPath);
   if( !station ) {
-    msgStream() << MSG::INFO << "Error in retrieving DetectorElement!" << endmsg;
+    msgStream() << MSG::ERROR << "Error in retrieving DetectorElement!" << endmsg;
   }
   return station;
 }

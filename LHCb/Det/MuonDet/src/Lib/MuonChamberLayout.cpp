@@ -30,7 +30,7 @@
 // Standard constructor, initializes variables
 //=============================================================================
 MuonChamberLayout::MuonChamberLayout()
-  : m_msgStream(NULL), m_msgSvc(NULL),  m_detSvc(NULL), m_isM1defined(false)
+  : m_msgStream(NULL), m_msgSvc(NULL),  m_detSvc(NULL), m_baseGeom(NULL)
 {
 
   MuonLayout R1(1,1);
@@ -49,7 +49,7 @@ MuonChamberLayout::MuonChamberLayout(MuonLayout R1,
                                      MuonLayout R4,
                                      IDataProviderSvc* detSvc,
                                      IMessageSvc *msgSvc)
-  : m_msgStream(NULL)
+  : m_msgStream(NULL), m_baseGeom(NULL)
 {
 
 
@@ -76,12 +76,17 @@ StatusCode MuonChamberLayout::initialize( ) {
 
   SmartDataPtr<DeMuonDetector> 
     MuonDe(m_detSvc,DeMuonLocation::Default);
-  m_isM1defined = MuonDe->isM1defined();
+  bool  isM1defined = MuonDe->isM1defined();
   if (debug)
-    msgStream()<<MSG::INFO<< "Retrieved M1 definition status: " << m_isM1defined <<endmsg;
+    msgStream()<<MSG::INFO<< "Retrieved M1 definition status: " << isM1defined <<endmsg;
 
+  m_isM1defined = isM1defined;
 
-  //Grid initialization
+  m_baseGeom = new MuonBasicGeometry(m_detSvc, m_msgSvc);
+
+  // GPGP
+  //Grid initialization N.B. these numbers are already defined in the MuonLayout
+  // why hard-code them here ????
   int iDd;
   unsigned int cgX[4] = {1,1,1,2}; m_cgX.resize(4);
   for(iDd = 0; iDd<4; iDd++) { m_cgX.at(iDd) = cgX[iDd]; }
@@ -92,6 +97,8 @@ StatusCode MuonChamberLayout::initialize( ) {
     msgStream()<<MSG::DEBUG<< " Building a Grid inside MuonLayout"<<endmsg;
   }
 
+  //GPGP also these constants can be obtained from the #of chambers/region
+  // and the layout
   //Offset: needs to change?
   int myoffset[4] = {0,16,48,112}; m_offSet.resize(4);
   for(iDd = 0; iDd<4; iDd++) { m_offSet.at(iDd) = myoffset[iDd]; }
@@ -106,7 +113,11 @@ StatusCode MuonChamberLayout::initialize( ) {
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonChamberLayout::~MuonChamberLayout() {delete m_msgStream; m_msgStream = NULL;}
+MuonChamberLayout::~MuonChamberLayout() {
+  delete m_msgStream; 
+  m_msgStream = NULL;
+  delete m_baseGeom;
+}
 
 void MuonChamberLayout::Copy(MuonChamberLayout &lay) {
   //Copy constructor
@@ -406,7 +417,10 @@ LHCb::MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb)const{
   LHCb::MuonTileID myTile;
 
   //Region and station got from chamber
-  myTile.setStation(chmb->stationNumber());
+  std::string statname = chmb->stationNumber();
+
+  //  myTile.setStation(chmb->stationNumber());
+  myTile.setStation(m_baseGeom->getStationNumber(statname));
   unsigned int reg = chmb->regionNumber();
   myTile.setRegion(reg);
 
@@ -551,6 +565,8 @@ void MuonChamberLayout::gridPosition(float x, float y, int iS, int &idx,
   return;
 }
 
+//GPGP also these numbers can go to DDDB
+// they are station specific constants: chamber sensitive dimensions
 void MuonChamberLayout::setGridStep(){
   float dimX[5] = {240.f,301.363f,325.155f,348.947f,372.739f};
   float dimY[5] = {200.f,251.136f,270.962f,290.789f,310.615f};
@@ -561,12 +577,14 @@ void MuonChamberLayout::setGridStep(){
 
 
 std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProviderSvc* detSvc) {
-
   int idx(-1),idy(-1),reg(-1);
-  bool debug = false;
+   bool debug = false;
+  //    bool debug = true;
 
+
+   //GPGP another hard-coded set: these will be in DDDB
   int MaxRegions[4] = {12,24,48,192};
-  m_ChVec.resize(1380);
+  m_ChVec.resize(1380); // idem
 
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -609,8 +627,8 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
 
 
     while(iS != obtIS-(m_isM1defined?1:2)) {
-      msgStream() << MSG::INFO << "iS number " << iS << " obtIS number " <<
-        obtIS << " isM1defined: " << m_isM1defined << endmsg;
+      //      msgStream() << MSG::INFO << "iS number " << iS << " obtIS number " <<
+      //        obtIS << " isM1defined: " << m_isM1defined << endmsg;
       msgStream()<<MSG::WARNING <<"There is/are void stations! "<<endmsg;
       for(int ire = 0; ire<4; ire++) {
         for(int ich = 0; ich<MaxRegions[ire]; ich++) {
@@ -670,9 +688,7 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
         int chamCnt = 0;
         IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
         for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
-
-          DeMuonChamber*  deChmb =  dynamic_cast<DeMuonChamber*>( *itCh
-                                                                  ) ;
+          DeMuonChamber*  deChmb =  dynamic_cast<DeMuonChamber*>(*itCh);
           int countCh=276*iS+deChmb->chamberNumber();
           if(iR==1)countCh=countCh+12;
           if(iR==2)countCh=countCh+12+24;
@@ -696,6 +712,33 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
           }
 
           encode++;
+
+	  /* retrieve the chamber grid parameters according to their central XY point
+	     the chamber position is encoded in each region on a grid of ncham x ncham =
+	     R1: 4x4  = 16 (16  = m_offset[1])
+	     R1: 8x4  = 32 (48  = 16+32 = m_offset[2])
+	     R1: 16x4 = 64 (112 = 48+48 + m_offset[3])
+	     R1: 32x8  = 256 -> tot = 368
+	     the origin of the grid is at the lower-right corner (side C, Q3, x,y<0)
+	     e.g. R1:
+	               y
+
+                       A
+	       SIDE A  |  SIDE C
+	     +----+----+----+----+
+	     |ch01|ch02|ch03|ch04|
+	     | 15 | 14 | 13 | 12 |
+	     +----+----+----+----+
+	     |ch05| xx | xx |ch06|
+	     | 11 | 10 | 09 | 08 |
+       x <---+----+----o----+----+
+	     |ch07| xx | xx |ch08|
+	     | 07 | 06 | 05 | 04 |
+	     +----+----+----+----+
+	     |ch09|ch10|ch11|ch12|
+	     | 03 | 02 | 01 | 00 |
+	     +----+----+----+----+ (0,0)
+	  */
 
           double myX = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).x();
           double myY = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).y();
@@ -734,11 +777,15 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
     //next station
     iS++;
   }
-  if(debug){
+    if(debug){
     msgStream()<<MSG::INFO<<"Filled chamber vector of size: "<<encode<<endmsg;
-  }
+      }
 
   return m_ChVec;
+
+
+
+
 }
 
 bool MuonChamberLayout::shouldLowReg(int idX, int idY, int reg) const {
@@ -889,11 +936,19 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile,
 StatusCode MuonChamberLayout::fillSystemGrids(DeMuonChamber *deChmb,
                                               int vIdx, int reg){
 
-  bool debug = false;
+    bool debug = false;
+  //  bool debug = true;
+
 
   //Getting the grid pointer
   Condition* aGrid = deChmb->condition(deChmb->getGridName());
   MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(aGrid);
+
+  //  int stat = deChmb->stationNumber();
+
+  std::string statname = deChmb->stationNumber();
+  int stat = m_baseGeom->getStationNumber(statname);
+
 
   if(!theGrid) {return StatusCode::FAILURE;}
 
@@ -914,7 +969,8 @@ StatusCode MuonChamberLayout::fillSystemGrids(DeMuonChamber *deChmb,
   }
 
   if(debug) {
-    msgStream() << MSG::DEBUG << "Grid "<< deChmb->getGridName() 
+    //    msgStream() << MSG::DEBUG << "Grid "<< deChmb->getGridName() 
+    msgStream() << MSG::INFO << "Stat/Region "<<stat<<"/"<<reg<<" Grid "<< deChmb->getGridName() 
                 <<"  data:: "<<grX/m_cgX.at(reg)<<" "<<grY/m_cgY.at(reg)
                 <<" "<<SgrX/m_cgX.at(reg)<<" "<<SgrY/m_cgY.at(reg)
                 <<" ; Map:: "<<xm0<<" "<<ym0<<" "<<xm1<<" "<<ym1<<endmsg;
@@ -963,7 +1019,7 @@ StatusCode MuonChamberLayout::fillSystemGrids(DeMuonChamber *deChmb,
     //There are 2 different readouts
     if( !readoutType.at(0) ){
       //First readout is anode readout xm0
-      // must be two maps for Andode and cathode seperatly
+      // must be two maps for Andode and cathode seperately
       if ( grX / xm0 > SgrX / xm1 ){
         axm0 = xm0; axm1 = xm1; aym0 = ym0; aym1 = ym1;
         agrX = grX; agrY = grY; aSgrX = SgrX; aSgrY = SgrY;
@@ -1195,17 +1251,17 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
 
   // do the reflections of the tileID structure into Cartesian coordinates
   if ( 0 == tile.quarter() ){
-    //    xOffset = xOffset;
-    //    yOffset = yOffset;
+    xOffset = xOffset;
+    yOffset = yOffset;
   } else if ( 1 == tile.quarter() ){
-    //    xOffset = xOffset;
+    xOffset = xOffset;
     yOffset = yRatio - (1 + yOffset);
   } else if ( 2 == tile.quarter() ){
     xOffset = xRatio - (1 + xOffset);
     yOffset = yRatio - (1 + yOffset);
   } else if ( 3 == tile.quarter() ){
     xOffset = xRatio - (1 + xOffset);
-    //    yOffset = yOffset;
+    yOffset = yOffset;
   }
 
   if ( m_debug ) {
@@ -1680,7 +1736,7 @@ Tile2ChamberNum(const LHCb::MuonTileID& tile){
     fillChambersVector(this->dataSvc());
     msgStream() << MSG::INFO <<" Called initialization "<<endmsg;
     if( 0 == m_logVertGridX.size() ){
-      msgStream() << MSG::INFO <<" Initialization failed!"<<endmsg;
+      msgStream() << MSG::DEBUG <<" Initialization failed!"<<endmsg;
       return m_chaVect;
     }
   }

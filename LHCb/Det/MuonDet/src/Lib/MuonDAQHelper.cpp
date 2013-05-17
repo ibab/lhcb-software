@@ -6,6 +6,7 @@
 #include "MuonDet/MuonDAQHelper.h"
 #include "SortTileInTU.h"
 #include "SortPairTileInTU.h"
+#include "sstream"
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonDAQHelper
 //
@@ -20,15 +21,19 @@ MuonDAQHelper::MuonDAQHelper(  ) : m_msgStream(NULL),
     m_detSvc(0),
     m_msgSvc(0),
     m_TotTell1(0),
-    m_M1Tell1(0),
-    m_TotODEBoard(0)
+    m_M1Tell1(0)
+//    m_TotODEBoard(0)
 {
 
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonDAQHelper::~MuonDAQHelper() { delete m_msgStream; m_msgStream = NULL; }
+MuonDAQHelper::~MuonDAQHelper() { 
+  delete m_msgStream; 
+  m_msgStream = NULL;
+  delete m_basegeometry;
+}
 
 //=============================================================================
 
@@ -40,721 +45,792 @@ void MuonDAQHelper::initSvc(IDataProviderSvc* detSvc , IMessageSvc * msgSvc )
   m_detSvc=detSvc ;
   m_msgSvc =msgSvc;
 
-  basePath[0]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M1/";
-  basePath[1]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M2/";
-  basePath[2]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M3/";
-  basePath[3]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M4/";
-  basePath[4]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M5/";
+  m_basegeometry = new MuonBasicGeometry(detSvc,msgSvc);
 
-  m_layoutX[0][0]=24;
-  m_layoutX[0][1]=24;
-  m_layoutX[0][2]=24;
-  m_layoutX[0][3]=24;
-  m_layoutX[0][4]=48;
-  m_layoutX[0][5]=48;
-  m_layoutX[0][6]=48;
-  m_layoutX[0][7]=48;
-  m_layoutX[1][4]=8;
-  m_layoutX[1][5]=4;
-  m_layoutX[1][6]=2;
-  m_layoutX[1][7]=2;
-  m_layoutX[0][8]=48;
-  m_layoutX[0][9]=48;
-  m_layoutX[0][10]=48;
-  m_layoutX[0][11]=48;
-  m_layoutX[1][8]=8;
-  m_layoutX[1][9]=4;
-  m_layoutX[1][10]=2;
-  m_layoutX[1][11]=2;
-  m_layoutX[0][12]=12;
-  m_layoutX[0][13]=12;
-  m_layoutX[0][14]=12;
-  m_layoutX[0][15]=12;
-  m_layoutX[1][13]=4;
-  m_layoutX[1][14]=2;
-  m_layoutX[1][15]=2;
-  m_layoutX[0][16]=12;
-  m_layoutX[0][17]=12;
-  m_layoutX[0][18]=12;
-  m_layoutX[0][19]=12;
-  m_layoutX[1][17]=4;
-  m_layoutX[1][18]=2;
-  m_layoutX[1][19]=2;
+  m_nStations = m_basegeometry->getStations();
+  int isM1defined = m_basegeometry->retrieveM1status();
 
-  m_layoutY[0][0]=8;
-  m_layoutY[0][1]=8;
-  m_layoutY[0][2]=8;
-  m_layoutY[0][3]=8;
-  m_layoutY[0][4]=1;
-  m_layoutY[0][5]=2;
-  m_layoutY[0][6]=2;
-  m_layoutY[0][7]=2;
-  m_layoutY[1][4]=8;
-  m_layoutY[1][5]=8;
-  m_layoutY[1][6]=8;
-  m_layoutY[1][7]=8;
-  m_layoutY[0][8]=1;
-  m_layoutY[0][9]=2;
-  m_layoutY[0][10]=2;
-  m_layoutY[0][11]=2;
-  m_layoutY[1][8]=8;
-  m_layoutY[1][9]=8;
-  m_layoutY[1][10]=8;
-  m_layoutY[1][11]=8;
-  m_layoutY[0][12]=8;
-  m_layoutY[0][13]=2;
-  m_layoutY[0][14]=2;
-  m_layoutY[0][15]=2;
-  m_layoutY[1][13]=8;
-  m_layoutY[1][14]=8;
-  m_layoutY[1][15]=8;
-  m_layoutY[0][16]=8;
-  m_layoutY[0][17]=2;
-  m_layoutY[0][18]=2;
-  m_layoutY[0][19]=2;
-  m_layoutY[1][17]=8;
-  m_layoutY[1][18]=8;
-  m_layoutY[1][19]=8;
+  basePath["M1"]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M1/";
+  basePath["M2"]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M2/";
+  basePath["M3"]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M3/";
+  basePath["M4"]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M4/";
+  basePath["M5"]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M5/";
 
-
-  layout[0]=1;
-  layout[1]=1;
-  layout[2]=1;
-  layout[3]=1;
-  layout[4]=2;
-  layout[5]=2;
-  layout[6]=2;
-  layout[7]=2;
-  layout[8]=2;
-  layout[9]=2;
-  layout[10]=2;
-  layout[11]=2;
-  layout[12]=1;
-  layout[13]=2;
-  layout[14]=2;
-  layout[15]=2;
-  layout[16]=1;
-  layout[17]=2;
-  layout[18]=2;
-  layout[19]=2;
-
+  if(isM1defined) {
+    
+    m_layoutX[0][0]=24;
+    m_layoutX[0][1]=24;
+    m_layoutX[0][2]=24;
+    m_layoutX[0][3]=24;
+    m_layoutX[0][4]=48;
+    m_layoutX[0][5]=48;
+    m_layoutX[0][6]=48;
+    m_layoutX[0][7]=48;
+    m_layoutX[1][4]=8;
+    m_layoutX[1][5]=4;
+    m_layoutX[1][6]=2;
+    m_layoutX[1][7]=2;
+    m_layoutX[0][8]=48;
+    m_layoutX[0][9]=48;
+    m_layoutX[0][10]=48;
+    m_layoutX[0][11]=48;
+    m_layoutX[1][8]=8;
+    m_layoutX[1][9]=4;
+    m_layoutX[1][10]=2;
+    m_layoutX[1][11]=2;
+    m_layoutX[0][12]=12;
+    m_layoutX[0][13]=12;
+    m_layoutX[0][14]=12;
+    m_layoutX[0][15]=12;
+    m_layoutX[1][13]=4;
+    m_layoutX[1][14]=2;
+    m_layoutX[1][15]=2;
+    m_layoutX[0][16]=12;
+    m_layoutX[0][17]=12;
+    m_layoutX[0][18]=12;
+    m_layoutX[0][19]=12;
+    m_layoutX[1][17]=4;
+    m_layoutX[1][18]=2;
+    m_layoutX[1][19]=2;
+    
+    m_layoutY[0][0]=8;
+    m_layoutY[0][1]=8;
+    m_layoutY[0][2]=8;
+    m_layoutY[0][3]=8;
+    m_layoutY[0][4]=1;
+    m_layoutY[0][5]=2;
+    m_layoutY[0][6]=2;
+    m_layoutY[0][7]=2;
+    m_layoutY[1][4]=8;
+    m_layoutY[1][5]=8;
+    m_layoutY[1][6]=8;
+    m_layoutY[1][7]=8;
+    m_layoutY[0][8]=1;
+    m_layoutY[0][9]=2;
+    m_layoutY[0][10]=2;
+    m_layoutY[0][11]=2;
+    m_layoutY[1][8]=8;
+    m_layoutY[1][9]=8;
+    m_layoutY[1][10]=8;
+    m_layoutY[1][11]=8;
+    m_layoutY[0][12]=8;
+    m_layoutY[0][13]=2;
+    m_layoutY[0][14]=2;
+    m_layoutY[0][15]=2;
+    m_layoutY[1][13]=8;
+    m_layoutY[1][14]=8;
+    m_layoutY[1][15]=8;
+    m_layoutY[0][16]=8;
+    m_layoutY[0][17]=2;
+    m_layoutY[0][18]=2;
+    m_layoutY[0][19]=2;
+    m_layoutY[1][17]=8;
+    m_layoutY[1][18]=8;
+    m_layoutY[1][19]=8;
+    
+    // this is the number of layouts (i.e. H and V)    
+    layout[0]=1; // only pads
+    layout[1]=1;
+    layout[2]=1;
+    layout[3]=1;
+    layout[4]=2; // H and V strips
+    layout[5]=2;
+    layout[6]=2;
+    layout[7]=2;
+    layout[8]=2;
+    layout[9]=2;
+    layout[10]=2;
+    layout[11]=2;
+    layout[12]=1; // only pads
+    layout[13]=2; // H and V strips
+    layout[14]=2;
+    layout[15]=2;
+    layout[16]=1; // only pads
+    layout[17]=2; // H and V strips
+    layout[18]=2;
+    layout[19]=2;
+  } else {
+    //    m_layoutX[0][0]=24;  //M1
+    //    m_layoutX[0][1]=24;  //M1
+    //    m_layoutX[0][2]=24;  //M1
+    //    m_layoutX[0][3]=24;  //M1
+    m_layoutX[0][ 0]=48; //M2 vstrips
+    m_layoutX[0][ 1]=48; //M2 vstrips
+    m_layoutX[0][ 2]=48; //M2 vstrips
+    m_layoutX[0][ 3]=48; //M2 vstrips
+    m_layoutX[1][ 0]=8;  //M2 hstrips
+    m_layoutX[1][ 1]=4;  //M2 hstrips
+    m_layoutX[1][ 2]=2;  //M2 hstrips
+    m_layoutX[1][ 3]=2;  //M2 hstrips
+    m_layoutX[0][ 4]=48; //M3 vstrips
+    m_layoutX[0][ 5]=48; //M3 vstrips
+    m_layoutX[0][ 6]=48; //M3 vstrips
+    m_layoutX[0][ 7]=48; //M3 vstrips
+    m_layoutX[1][ 4]=8;  //M3 hstrips
+    m_layoutX[1][ 5]=4;  //M3 hstrips
+    m_layoutX[1][ 6]=2;  //M3 hstrips
+    m_layoutX[1][ 7]=2;  //M3 hstrips
+    m_layoutX[0][ 8]=12; //M4 vstrips
+    m_layoutX[0][ 9]=12; //M4 vstrips
+    m_layoutX[0][10]=12; //M4 vstrips
+    m_layoutX[0][11]=12; //M4 vstrips
+    m_layoutX[1][ 9]=4;  //M4 hstrips
+    m_layoutX[1][10]=2;  //M4 hstrips
+    m_layoutX[1][11]=2;  //M4 hstrips
+    m_layoutX[0][12]=12; //M5 vstrips
+    m_layoutX[0][13]=12; //M5 vstrips
+    m_layoutX[0][14]=12; //M5 vstrips
+    m_layoutX[0][15]=12; //M5 vstrips
+    m_layoutX[1][13]=4;  //M5 hstrips
+    m_layoutX[1][14]=2;  //M5 hstrips
+    m_layoutX[1][15]=2;  //M5 hstrips
+ 
+    //    m_layoutY[0][0]=8; //M1
+    //    m_layoutY[0][1]=8; //M1
+    //    m_layoutY[0][2]=8; //M1
+    //    m_layoutY[0][3]=8; //M1
+    m_layoutY[0][ 0]=1;  //M2 vstrips
+    m_layoutY[0][ 1]=2;	//M2 vstrips
+    m_layoutY[0][ 2]=2;	//M2 vstrips
+    m_layoutY[0][ 3]=2;	//M2 vstrips
+    m_layoutY[1][ 0]=8;	//M2 hstrips
+    m_layoutY[1][ 1]=8;	//M2 hstrips
+    m_layoutY[1][ 2]=8;	//M2 hstrips
+    m_layoutY[1][ 3]=8;	//M2 hstrips
+    m_layoutY[0][ 4]=1;	//M3 vstrips
+    m_layoutY[0][ 5]=2;	//M3 vstrips
+    m_layoutY[0][ 6]=2;	//M3 vstrips
+    m_layoutY[0][ 7]=2;	//M3 vstrips
+    m_layoutY[1][ 4]=8;	//M3 hstrips
+    m_layoutY[1][ 5]=8;	//M3 hstrips
+    m_layoutY[1][ 6]=8;	//M3 hstrips
+    m_layoutY[1][ 7]=8;	//M3 hstrips
+    m_layoutY[0][ 8]=8;	//M4 vstrips
+    m_layoutY[0][ 9]=2;	//M4 vstrips
+    m_layoutY[0][10]=2;	//M4 vstrips
+    m_layoutY[0][11]=2;	//M4 vstrips
+    m_layoutY[1][ 9]=8;	//M4 hstrips
+    m_layoutY[1][10]=8;	//M4 hstrips
+    m_layoutY[1][11]=8;	//M4 hstrips
+    m_layoutY[0][12]=8;	//M5 vstrips
+    m_layoutY[0][13]=2;	//M5 vstrips
+    m_layoutY[0][14]=2;	//M5 vstrips
+    m_layoutY[0][15]=2;	//M5 vstrips
+    m_layoutY[1][13]=8;	//M5 hstrips
+    m_layoutY[1][14]=8;	//M5 hstrips
+    m_layoutY[1][15]=8;	//M5 hstrips
+    
+    
+    //    layout[0]=1; //M1
+    //    layout[1]=1;
+    //    layout[2]=1;
+     //   layout[3]=1;
+    layout[ 0]=2; //M2
+    layout[ 1]=2;
+    layout[ 2]=2;
+    layout[ 3]=2;
+    layout[ 4]=2;
+    layout[ 5]=2;
+    layout[ 6]=2;
+    layout[ 7]=2;
+    layout[ 8]=1;
+    layout[ 9]=2;
+    layout[10]=2;
+    layout[11]=2;
+    layout[12]=1;
+    layout[13]=2;
+    layout[14]=2;
+    layout[15]=2;
+  }
 }
 
+//------------------------------------------------------------------------
+//
+// Steering routine to retrieve the information 
+// about cabling in the condition database
+//
+//------------------------------------------------------------------------
 
 StatusCode MuonDAQHelper::initDAQMaps()
 {
-
-  //unsigned int countL1=0;
-  m_TotTell1=0;
+  // Perform sanity checks about number of TELL1s and ODEs
+  StatusCode sc;
+  //
+  // TELL1 sanity checks
+  //
   if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-    msgStream()<<MSG::DEBUG<<" step 1 "<<endmsg;
-  //init Tell1 Number and link in Tell1
-  for(int station=0;station<5;station++){
-    // debug()<<"station number "<<station<<endmsg;
-    std::string cablingBasePath=getBasePath(station);
-    std::string cablingPath=cablingBasePath+"Cabling";
-    SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
-    if( 0 == cabling ) {
-      msgStream()<<MSG::ERROR << cablingPath << " not found in XmlDDDB" << endmsg;
-      return StatusCode::FAILURE;
-    }
-    m_TotTell1=m_TotTell1+cabling->getNumberOfL1Board();
-    if(station==0)m_M1Tell1=cabling->getNumberOfL1Board();
+    msgStream()<<MSG::DEBUG<<"Initialize TELL1 "<<endmsg;
 
-
-  }
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-    msgStream()<<MSG::DEBUG<<" step 2 "<<endmsg;
-
-  if(m_TotTell1>MuonDAQHelper_maxTell1Number){
-    msgStream()<<MSG::ERROR<<
-      " Real Tell1 Number is greater that the number defined in software "
-               <<endmsg;
-    return StatusCode::FAILURE;
-  }
-  int Tell1Counter=0;
-  for(int station=0;station<5;station++){
-    std::string cablingBasePath=getBasePath(station);
-    std::string cablingPath=cablingBasePath+"Cabling";
-    SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
-    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
-      std::string L1path=cablingBasePath+
-        cabling->getL1Name(L1Board);
-      SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
-      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-        msgStream()<<MSG::DEBUG<<" tell1 "<<L1path<<endmsg;
-      m_tellPerStation[station].push_back(l1->L1Number());
-
-      for(unsigned int i=0;i<MuonDAQHelper_linkNumber;i++){
-        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-          msgStream()<<MSG::DEBUG<<" link "<<i<<" "<<l1->getLinkConnection(i)<<endmsg;
-
-        (m_linkInTell1[Tell1Counter]).push_back(l1->getLinkConnection(i));
-        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-          msgStream()<<MSG::DEBUG<<" test Tell1Counter "<<
-            (m_linkInTell1[Tell1Counter])[i]<<endmsg;
-
-      }
-      Tell1Counter++;
-    }
-  }
-
-  //check the ODE board number
-  unsigned int ODENumber=0;
-  for(int station=0;station<5;station++){
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-      msgStream()<<MSG::DEBUG<<"station number "<<station<<endmsg;
-    std::string cablingBasePath=getBasePath(station);
-    std::string cablingPath=cablingBasePath+"Cabling";
-    SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
-    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
-      std::string L1path=cablingBasePath+
-        cabling->getL1Name(L1Board);
-      SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
-      ODENumber=ODENumber+l1->numberOfODE();
-
-    }
-  }
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-    msgStream()<<MSG::DEBUG<<" step 3 "<<endmsg;
-
-  if(ODENumber>MuonDAQHelper_maxODENumber){
-    msgStream()<<MSG::ERROR<<
-      " Real ODE Number is greater that the number defined in software "
-               <<ODENumber<<endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  StatusCode sc=initTELL1Maps();
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-    msgStream()<<MSG::DEBUG<<" step 4 "<<endmsg;
-
-  if(sc.isFailure())return sc;
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-    msgStream()<<MSG::DEBUG<<" step 5 "<<endmsg;
-  sc=initODEMaps();
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-    msgStream()<<MSG::DEBUG<<" step 6 "<<endmsg;
-  if(sc.isFailure())return sc;
-  sc=initODENames();
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-    msgStream()<<MSG::DEBUG<<" step odename "<<endmsg;
-  if(sc.isFailure())return sc;
-
-  sc=initializeLUTCrossing();
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-    msgStream()<<MSG::DEBUG<<" step 7 "<<endmsg;
-  if(sc.isFailure())return sc;
-  sc=initReverseMaps() ;
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-    msgStream()<<MSG::DEBUG<<" step 8 "<<endmsg;
-  if(sc.isFailure())return sc;
-  //  sc=checkMapConsistency();
+  sc=initTELL1();
   if(sc.isFailure()){
-    msgStream()<<MSG::WARNING<<"Map Consistency check failed"<<endmsg;
+    msgStream()<<MSG::ERROR<<"TELL1 sanity checks failed"<<endmsg;
     return sc;
-  }else
-  {
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-      msgStream()<<MSG::DEBUG<<" test sucessful"<<endmsg;
   }
+
+  //
+  // ODE sanity checks
+  //
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+    msgStream()<<MSG::DEBUG<<" Initialize ODE "<<endmsg;
+
+  sc=initODE();
+  if(sc.isFailure()){
+    msgStream()<<MSG::ERROR<<"ODE sanity checks failed"<<endmsg;
+    return sc;
+  }
+
+  //
+  // Ititialize TELL1/ODE maps
+  //
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+    msgStream()<<MSG::DEBUG<<" Initialize TELL1/ODE maps "<<endmsg;
+
+  sc=initMaps();
+  if(sc.isFailure()){
+    msgStream()<<MSG::ERROR<<"TELL1/ODE map initialization failed"<<endmsg;
+    return sc;
+  }
+
+  //
+  // TELL1 pad LUT
+  //
+  sc=initLUTCrossing();
+  if(sc.isFailure()){
+    msgStream()<<MSG::ERROR<<"TELL1 pad LUT initialization failed"<<endmsg;
+    return sc;
+  }
+
+  //
+  // reverse mapping
+  //
+  sc=initReverseMaps();
+  if(sc.isFailure()){
+    msgStream()<<MSG::ERROR<<"Reverse mapping initialization failed"<<endmsg;
+    return sc;
+  }
+
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+    msgStream()<<MSG::DEBUG<<"Map initialization sucessful"<<endmsg;
 
   return StatusCode::SUCCESS;
 }
 
+//------------------------------------------------------------------------
+//
+// Perform sanity cheks on number of configured TELL1
+// in CondDB
+//
+//------------------------------------------------------------------------
 
-
-StatusCode MuonDAQHelper::initTELL1Maps()
+StatusCode MuonDAQHelper::initTELL1()
 {
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+    msgStream()<<MSG::DEBUG<<"Retrieve the number of TELL1s and perform a sanity check"<<endmsg;
+
+  m_TotTell1=0;  // TELL1 counter
+
+  for(int station=0; station<m_nStations; station++){ // loop over stations
+
+    // parse the xml file and load the parameters
+    std::string cablingBasePath=getBasePath(m_basegeometry->getStationName(station)); // hardwired at the moment
+    std::string cablingPath=cablingBasePath+"Cabling"; // path to the Cabling Condition for station
+    SmartDataPtr<MuonStationCabling> cabling(m_detSvc, cablingPath); 
+
+    if( UNLIKELY( 0 == cabling) ) {
+      msgStream()<<MSG::ERROR << cablingPath << " not found in XmlDDDB" << endmsg;
+      return StatusCode::FAILURE;
+    }
+
+    m_TotTell1 = m_TotTell1 + cabling->getNumberOfL1Board(); // update the TELL1 counter
+
+    // special counter for M1 TELL1s
+    if(m_basegeometry->getStationName(station) == "M1") m_M1Tell1=cabling->getNumberOfL1Board();
+    //
+
+  } // end of loop over stations
+
+  if( UNLIKELY( m_TotTell1 > MuonDAQHelper_maxTell1Number ) ){
+    msgStream()<<MSG::ERROR<<"Number of retrieved TELL1 in CondDB exceeds max allowed in software "
+	       <<endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+    msgStream()<<MSG::DEBUG<<"Number of retrieved TELL1 in CondDB: "<<m_TotTell1<<endmsg;
+
+  return StatusCode::SUCCESS;
+}
+
+//------------------------------------------------------------------------
+//
+// Perform sanity cheks on number of configured ODE
+// in CondDB
+//
+//------------------------------------------------------------------------
+
+StatusCode MuonDAQHelper::initODE()
+{
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+    msgStream()<<MSG::DEBUG<<" Retrieve the ODEs connected to each TELL1"<<endmsg;
+
+  unsigned int ODECounter=0;
+
+  for(int station=0; station < m_nStations; station++){ // loop over stations
+
+    // load the parameters
+    std::string cablingBasePath=getBasePath(m_basegeometry->getStationName(station));
+    std::string cablingPath=cablingBasePath+"Cabling";
+    SmartDataPtr<MuonStationCabling> cabling(m_detSvc, cablingPath);
+
+    if( UNLIKELY( 0 == cabling) ) {
+      msgStream()<<MSG::ERROR << cablingPath << " not found in XmlDDDB" << endmsg;
+      return StatusCode::FAILURE;
+    }
+
+    for(int L1Board=0; L1Board < cabling->getNumberOfL1Board(); L1Board++){ // loop over TELL1s
+
+      // path to the MxL1BoardNumbery Condition
+      std::string L1Path = cablingBasePath+cabling->getL1Name(L1Board);
+      // parse the xml file and load the parameters
+      SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1Path);
+
+      if( UNLIKELY( 0 == l1) ) {
+	msgStream()<<MSG::ERROR << L1Path << " not found in XmlDDDB" << endmsg;
+	return StatusCode::FAILURE;
+      }
+
+      ODECounter=ODECounter+l1->numberOfODE();
+
+    } // end of loop over TELL1s
+  } // end of loop over stations
+
+  if( UNLIKELY( ODECounter > MuonDAQHelper_maxODENumber ) ){
+    msgStream()<<MSG::ERROR<<" Number of retrieved ODEs in CondDB exceeds max allowed in software: "
+               <<ODECounter<<endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+    msgStream()<<MSG::DEBUG<<"Number of retrieved ODEs in CondDB: "<<ODECounter<<endmsg;
+
+  return StatusCode::SUCCESS;
+}
+
+//------------------------------------------------------------------------
+//
+//  load TELL1/ODE pad mapping parameters
+// 
+//
+//------------------------------------------------------------------------
+
+StatusCode MuonDAQHelper::initMaps()
+{
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+    msgStream()<<MSG::DEBUG<<"Load TELL1/ODE mapping parameters "<<endmsg;
 
   int Tell1Number=0;
-  for(int station=0;station<5;station++){
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-      msgStream()<<MSG::DEBUG<<"station number "<<station<<endmsg;
-    std::string cablingBasePath=getBasePath(station);
-    std::string cablingPath=cablingBasePath+"Cabling";
-    SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
-    if( 0 == cabling ) {
+  for(int station=0; station < m_nStations; station++){
+
+    std::string cablingBasePath = getBasePath(m_basegeometry->getStationName(station));
+    std::string cablingPath     = cablingBasePath + "Cabling";
+    SmartDataPtr<MuonStationCabling> cabling(m_detSvc, cablingPath);
+
+    if( UNLIKELY( 0 == cabling ) ) {
       msgStream()<<MSG::ERROR << cablingPath << " not found in XmlDDDB" << endmsg;
       return StatusCode::FAILURE;
     }
 
+    for(int L1Board=0; L1Board < cabling->getNumberOfL1Board(); L1Board++){ // loop over TELL1s
 
-    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
+      std::string L1Path = cablingBasePath+cabling->getL1Name(L1Board);
+      SmartDataPtr<MuonL1Board> l1(m_detSvc,L1Path);
 
-
-      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-        msgStream()<<MSG::DEBUG<<"L1 number "<<cabling->getL1Name(0)<<endmsg;
-      std::string L1path=cablingBasePath+
-        cabling->getL1Name(L1Board);
-      SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
-      //unsigned totODE=0;
-
-      for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
-        unsigned int ODE_channels=0;
-
-        std::string ODEpath=cablingBasePath
-          +l1->getODEName(ODEBoard);
-        //info()<<"ODE number "<<L1Board<<" "<<l1->getODEName(ODEBoard)<<endmsg;
-        SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEpath);
-        if( 0 == ode ) {
-          msgStream()<<MSG::ERROR << ODEpath << " not found in XmlDDDB" << endmsg;
-          return StatusCode::FAILURE;
-        }
-        //        long odenum=ode->getODESerialNumber();
-        //m_ODEInTell1[countL1].push_back(odenum);
-        //build LUT with ode ID --> MuonTileID
-        unsigned int region=ode->region();
-        //totODE++;
-
-        for(int TS=0;TS<ode->getTSNumber();TS++){
-
-          std::string  TSPath= cablingBasePath+
-            ode->getTSName(TS);
-          unsigned int quadrant= ode->getTSQuadrant(TS);
-          unsigned int TSLayoutX=ode->getTSLayoutX();
-          unsigned int TSLayoutY=ode->getTSLayoutY();
-          unsigned int TSGridX=ode->getTSGridX(TS);
-          unsigned int TSGridY=ode->getTSGridY(TS);
-          unsigned int digitOffSetX=0;
-          unsigned int digitOffSetY=0;
-          SmartDataPtr<MuonTSMap>  TSMap(m_detSvc,TSPath);
-          int i=0;
-          if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-            msgStream()<<MSG::DEBUG<<TSPath<<endmsg;
-          m_TUSize[station][region]=TSMap->synchChSize();
-
-          for(int isynch=0;isynch<TSMap->synchChSize();isynch++){
-            if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-              msgStream()<<MSG::DEBUG<<" TS "<<isynch<<" "<<
-                TSMap->synchChUsed(isynch)<<endmsg;
-            ODE_channels++;
-
-            if(TSMap->synchChUsed(isynch)){
-
-
-              //          for(int i=0;i<TSMap->numberOfOutputSignal();i++){
-              //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endmsg;
-              unsigned int layout=TSMap->layoutOutputChannel(i);
-              unsigned int  layoutX=TSMap->gridXLayout(layout);
-              unsigned int  layoutY=TSMap->gridYLayout(layout);
-              digitOffSetX=layoutX*TSGridX;
-              digitOffSetY=layoutY*TSGridY;
-              unsigned int digitX=digitOffSetX+TSMap->gridXOutputChannel(i);
-              unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i);
-              MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY);
-              MuonTileID muontile(station,lay,region,
-                                  quadrant,digitX,digitY);
-              // if(station==1&&region==0&&quadrant==3)
-              // {
-              //   msgStream()<<MSG::VERBOSE<<ODE_channels<<" "
-              //         <<isynch<<" "<<  digitX<< " "<<digitY<<endmsg;
-              //
-              // }
-
-              m_mapTileInTell1[Tell1Number].push_back(muontile);
-              //      m_mapTileInTell1[Tell1Number].push_back(muontile);
-              i++;
-            }else{
-              MuonTileID muontile;
-              m_mapTileInTell1[Tell1Number].push_back(muontile);
-            }
-          }
-        }
-        //check if 192 channels/ODE have been filled , if not fill with zero
-        if(ODE_channels!=192)
-        {
-          for(unsigned int ODE_ch_missing=ODE_channels;
-              ODE_ch_missing<192;ODE_ch_missing++)
-          {
-
-            MuonTileID muontile;
-            m_mapTileInTell1[Tell1Number].push_back(muontile);
-          }
-
-        }
-
+      if( UNLIKELY( 0 == l1) ) {
+	msgStream()<<MSG::ERROR << L1Path << " not found in XmlDDDB" << endmsg;
+	return StatusCode::FAILURE;
       }
 
+      m_TELL1Name.push_back(L1Path); // array of TELL1 names
+      // load TELL1 numbers per station
+      m_tellPerStation[station].push_back(l1->L1Number()); // <-- modify it !!!
+
+      for(unsigned int i=0; i < MuonDAQHelper_linkNumber; i++){ // loop over TELL1 inputs
+	//
+        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+          msgStream()<<MSG::DEBUG<<" TELL1 Optical Link: "
+		     <<i<<" is connected to ODE: "<<l1->getLinkConnection(i)<<endmsg;
+	//
+
+	// load optical link map per TELL1
+        m_linkInTell1[Tell1Number].push_back(l1->getLinkConnection(i)); // <-- modify it !!!
+
+      } // end of loop over TELL1 inputs
+
+      //
+      // get mapping for the ODE connected to each TELL1
+      //
+      unsigned totODE = 0; // counter of ODEs per TELL1
+      for(int ODEBoard=0; ODEBoard < l1->numberOfODE(); ODEBoard++){ // loop over ODES
+        unsigned int ODE_channels = 0;
+
+        std::string ODEPath = cablingBasePath+l1->getODEName(ODEBoard);
+        SmartDataPtr<MuonODEBoard> ode(m_detSvc,ODEPath);
+
+        if( UNLIKELY( 0 == ode ) ) {
+          msgStream()<<MSG::ERROR << ODEPath << " not found in XmlDDDB" << endmsg;
+          return StatusCode::FAILURE;
+        }
+        totODE++;
+        long odenum = ode->getODESerialNumber();
+        m_ODEInTell1[Tell1Number].push_back(odenum); // ODE numbers in this TELL1
+        m_ODENameInECS[odenum]=ode->ECSName(); // ONLINE ODE names
+
+	//
+	// get the trigger sector (TS) maps
+	//
+        unsigned int region    = ode->region();
+	unsigned int TSLayoutX = ode->getTSLayoutX();
+	unsigned int TSLayoutY = ode->getTSLayoutY();
+        for(int TS=0; TS < ode->getTSNumber(); TS++){ // loop over TS
+
+          std::string TSPath = cablingBasePath+ode->getTSName(TS);
+          SmartDataPtr<MuonTSMap>  TSMap(m_detSvc,TSPath);
+
+	  if( UNLIKELY( 0 == TSMap) ) {
+	    msgStream()<<MSG::ERROR << TSPath << " not found in XmlDDDB" << endmsg;
+	    return StatusCode::FAILURE;
+	  }
+
+          unsigned int quadrant  = ode->getTSQuadrant(TS);
+          unsigned int TSGridX   = ode->getTSGridX(TS);
+          unsigned int TSGridY   = ode->getTSGridY(TS);
+
+          m_TUSize[station][region]=TSMap->synchChSize(); // #of sync channels in this TS
+
+          int iOdeChan = 0;
+          for(int isynch=0; isynch<TSMap->synchChSize(); isynch++){
+	    
+            if( UNLIKELY( msgStream().level() <= MSG::VERBOSE ) )
+              msgStream()<<MSG::VERBOSE<<" SYNC channel "<<isynch<<" is used/unused (1/0): "
+			 <<TSMap->synchChUsed(isynch)<<endmsg;
+	    
+            ODE_channels++;
+	    
+            if(TSMap->synchChUsed(isynch)){
+              unsigned int layout  = TSMap->layoutOutputChannel(iOdeChan);
+              unsigned int layoutX = TSMap->gridXLayout(layout);
+              unsigned int layoutY = TSMap->gridYLayout(layout);
+              unsigned int digitOffSetX = layoutX*TSGridX;
+              unsigned int digitOffSetY = layoutY*TSGridY;
+              unsigned int digitX = digitOffSetX + TSMap->gridXOutputChannel(iOdeChan);
+              unsigned int digitY = digitOffSetY + TSMap->gridYOutputChannel(iOdeChan);
+              MuonLayout lay(TSLayoutX*layoutX, TSLayoutY*layoutY); // layout in terms of H- or V- strips
+              MuonTileID muontile(station, lay, region, quadrant, digitX, digitY);
+
+	      // load maps
+              m_mapTileInTell1[Tell1Number].push_back(muontile); //tile map by TELL1
+              m_mapTileInODE[odenum-1].push_back(muontile); // tile map by ODE
+              m_mapTileInODEDC06[odenum-1].push_back(muontile); // special for DC06...
+
+              iOdeChan++;
+
+            } else { // empty tiles for unused channels
+              MuonTileID muontile;
+              m_mapTileInTell1[Tell1Number].push_back(muontile);
+              m_mapTileInODE[odenum-1].push_back(muontile);
+            }
+
+          }
+        }
+
+        //check if 192 channels/ODE have been filled , if not fill with zero
+        if(ODE_channels != 192){
+          for(unsigned int ODE_ch_missing=ODE_channels;
+	      ODE_ch_missing<192; ODE_ch_missing++){
+	    MuonTileID muontile;
+	    m_mapTileInTell1[Tell1Number].push_back(muontile);
+	  }
+        }
+	//
+
+      } // end loop over ODEs
+      
+      m_ODENumberInTell1[Tell1Number]=totODE; // #ODEs in this TELL1
       Tell1Number++;
 
-    }
-
-
+    } // end loop over TELL1s
   }
   return StatusCode::SUCCESS;
 }
 
+//------------------------------------------------------------------------
+//
+// Initialize TELL1 pad LUT (to emulate pad mapping in TELL1s)
+// 
+//
+//------------------------------------------------------------------------
 
-
-StatusCode MuonDAQHelper::initODEMaps()
+StatusCode MuonDAQHelper::initLUTCrossing()
 {
+  int Tell1Number=m_M1Tell1;
 
-  unsigned int countL1=0;
-  for(int station=0;station<5;station++){
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-      msgStream()<<MSG::DEBUG<<"station number "<<station<<endmsg;
-    std::string cablingBasePath=getBasePath(station);
-    std::string cablingPath=cablingBasePath+"Cabling";
-    SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
-    if( 0 == cabling ) {
-      msgStream()<<MSG::ERROR << cablingPath << " not found in XmlDDDB" << endmsg;
-      return StatusCode::FAILURE;
-    }
+  for(int station=0; station<m_nStations; station++){
 
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-      msgStream()<<MSG::DEBUG<<" station "<<station<<endmsg;
-    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
-      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-        msgStream()<<MSG::DEBUG<<"L1 number "<<cabling->getL1Name(0)<<endmsg;
-      std::string L1path=cablingBasePath+
-        cabling->getL1Name(L1Board);
-      SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
-      unsigned totODE=0;
+    std::string cablingBasePath = getBasePath(m_basegeometry->getStationName(station));
+    std::string cablingPath     = cablingBasePath+"Cabling";
+    SmartDataPtr<MuonStationCabling> cabling(m_detSvc, cablingPath);
 
-      for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
-        std::string ODEpath=cablingBasePath
-          +l1->getODEName(ODEBoard);
-        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-          msgStream()<<MSG::DEBUG<<"ODE number "<<L1Board<<
-          " "<<l1->getODEName(ODEBoard)<<endmsg;
-        SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEpath);
-        if( 0 == ode ) {
-          msgStream()<<MSG::ERROR << ODEpath << " not found in XmlDDDB" << endmsg;
-          return StatusCode::FAILURE;
-        }
-        long odenum=ode->getODESerialNumber();
-        m_ODEInTell1[countL1].push_back(odenum);
-        //build LUT with ode ID --> MuonTileID
+    for(int L1Board=0; L1Board < cabling->getNumberOfL1Board(); L1Board++){
+
+      std::string L1Path = cablingBasePath + cabling->getL1Name(L1Board);
+      SmartDataPtr<MuonL1Board> l1(m_detSvc,L1Path);
+
+      if( UNLIKELY( 0 == l1) ) {
+	msgStream()<<MSG::ERROR << L1Path << " not found in XmlDDDB" << endmsg;
+	return StatusCode::FAILURE;
+      }
+
+      for(int ODEBoard=0; ODEBoard < l1->numberOfODE();ODEBoard++){
+
+        std::string ODEPath=cablingBasePath + l1->getODEName(ODEBoard);
+        SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEPath);
+
+	if( UNLIKELY( 0 == ode) ) {
+	  msgStream()<<MSG::ERROR << ODEPath << " not found in XmlDDDB" << endmsg;
+	  return StatusCode::FAILURE;
+	}
+
         unsigned int region=ode->region();
-        totODE++;
+	unsigned int TSLayoutX = ode->getTSLayoutX();
+	unsigned int TSLayoutY = ode->getTSLayoutY();
+
+        MuonTSMap* FirstTSMap = NULL;
 
         for(int TS=0;TS<ode->getTSNumber();TS++){
 
-          std::string  TSPath= cablingBasePath+
-            ode->getTSName(TS);
-          unsigned int quadrant= ode->getTSQuadrant(TS);
-          unsigned int TSLayoutX=ode->getTSLayoutX();
-          unsigned int TSLayoutY=ode->getTSLayoutY();
-          unsigned int TSGridX=ode->getTSGridX(TS);
-          unsigned int TSGridY=ode->getTSGridY(TS);
-          unsigned int digitOffSetX=0;
-          unsigned int digitOffSetY=0;
+          unsigned int quadrant  = ode->getTSQuadrant(TS);
+          unsigned int TSGridX   = ode->getTSGridX(TS);
+          unsigned int TSGridY   = ode->getTSGridY(TS);
+
+          std::string  TSPath= cablingBasePath + ode->getTSName(TS);
           SmartDataPtr<MuonTSMap>  TSMap(m_detSvc,TSPath);
-          int i=0;
-          for(int isynch=0;isynch<TSMap->synchChSize();isynch++){
 
-            if(TSMap->synchChUsed(isynch)){
-              //for(int i=0;i<TSMap->numberOfOutputSignal();i++){
-              //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endmsg;
-              unsigned int layout=TSMap->layoutOutputChannel(i);
-              unsigned int  layoutX=TSMap->gridXLayout(layout);
-              unsigned int  layoutY=TSMap->gridYLayout(layout);
-              digitOffSetX=layoutX*TSGridX;
-              digitOffSetY=layoutY*TSGridY;
-              unsigned int digitX=digitOffSetX+TSMap->gridXOutputChannel(i);
-              unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i);
-              MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY);
-              MuonTileID muontile(station,lay,region,
-                                  quadrant,digitX,digitY);
-              m_mapTileInODE[odenum-1].push_back(muontile);
-              if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-                msgStream()<<MSG::DEBUG<<m_mapTileInODE[odenum-1].size()<<" "<<
-                  muontile<<endmsg;
+          if(TS==0){
+            FirstTSMap=static_cast<MuonTSMap*>(TSMap);
+          }
 
-              m_mapTileInODEDC06[odenum-1].push_back(muontile);
-              i++;
-            }else{
-              MuonTileID muontile;
-              m_mapTileInODE[odenum-1].push_back(muontile);
-            }
+          std::vector<LHCb::MuonTileID> digitInTS;
+          std::vector<LHCb::MuonTileID> wrongdigitInTS; // this is to patch a Firmware bug
+
+          for(int i=0 ; i < TSMap->numberOfOutputSignal(); i++){
+
+            unsigned int layout  = TSMap->layoutOutputChannel(i);
+            unsigned int layoutX = TSMap->gridXLayout(layout);
+            unsigned int layoutY = TSMap->gridYLayout(layout);
+            unsigned int digitOffSetX = layoutX*TSGridX;
+            unsigned int digitOffSetY = layoutY*TSGridY;
+            unsigned int digitX = digitOffSetX+TSMap->gridXOutputChannel(i);
+            unsigned int digitY = digitOffSetY+TSMap->gridYOutputChannel(i);
+
+            MuonLayout lay(TSLayoutX*layoutX, TSLayoutY*layoutY);
+            MuonTileID muontile(station, lay, region, quadrant, digitX, digitY);
+            digitInTS.push_back(muontile);
+
+	    // this is to patch a Firmware bug
+            unsigned int wrongDigitX=digitOffSetX+FirstTSMap->gridXOutputChannel(i);
+            unsigned int wrongDigitY=digitOffSetY+FirstTSMap->gridYOutputChannel(i);
+            MuonTileID wrongmuontile(station,lay,region,
+                                     quadrant,wrongDigitX,wrongDigitY);
+            wrongdigitInTS.push_back(wrongmuontile);
+	    //
+
+          }
+
+          std::vector<LHCb::MuonTileID> crossAddressDC06 = DoPadDC06(digitInTS,TSMap);
+          std::vector<LHCb::MuonTileID> crossAddressV1   = DoPadV1(digitInTS,wrongdigitInTS,TSMap);
+          std::vector<LHCb::MuonTileID>::iterator itPad;
+          for(itPad=crossAddressDC06.begin();itPad<crossAddressDC06.end();
+              itPad++){
+            m_mapPadDC06[Tell1Number].push_back(*itPad);
+          }
+          for(itPad=crossAddressV1.begin();itPad<crossAddressV1.end(); itPad++){
+            m_mapPadV1[Tell1Number].push_back(*itPad);
           }
         }
       }
-      m_ODENumberInTell1[countL1]=totODE;
-      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-        msgStream()<<MSG::DEBUG<<" number "<<countL1<<" "<<totODE<<endmsg;
-
-      countL1++;
+      Tell1Number++;
     }
   }
   return StatusCode::SUCCESS;
-
 }
 
+//------------------------------------------------------------------------
+//
+// Initialize TELL1/ODE mapping by quadrant. Useful to retrieve
+// information knowing for example the TS or other geographical parameters
+//
+//------------------------------------------------------------------------
 
 StatusCode MuonDAQHelper::initReverseMaps()
 {
-
   unsigned int ODEStart=0;
   unsigned int ODEEnd=1;
-  m_L1Name.resize(80);
-  // for(int i=0;i<80;i++)m_L1Name.push_back("");
 
-  unsigned int L1Count=0;
-  m_TotODEBoard=0;
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-    msgStream()<<MSG::DEBUG<<" qui "<<endmsg;
+  m_L1Name.resize(80); // internal array of TELL1 names
 
-  for(int station=0;station<5;station++){
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-      msgStream()<<MSG::DEBUG<<"station number "<<station<<endmsg;
+  for(int station=0; station < m_nStations; station++){ // loop over stations
 
-    std::string cablingBasePath=getBasePath(station);
-    std::string cablingPath=cablingBasePath+"Cabling";
-    SmartDataPtr<MuonStationCabling>  cabling(m_detSvc,
-                                              cablingPath);
-    if( 0 == cabling ) {
+    std::string cablingBasePath = getBasePath(m_basegeometry->getStationName(station));
+    std::string cablingPath     = cablingBasePath+"Cabling";
+    SmartDataPtr<MuonStationCabling> cabling(m_detSvc, cablingPath);
+
+    if( UNLIKELY( 0 == cabling ) ) {
       msgStream()<<MSG::ERROR<< cablingPath << " not found in XmlDDDB" << endmsg;
       return StatusCode::FAILURE;
     }
-    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) {
-      msgStream()<<MSG::DEBUG<<"station path "<<cablingPath<<endmsg;
-      msgStream()<<MSG::DEBUG<<"station number "<<station<<" "<<
-        "L1number "<<  cabling->getNumberOfL1Board()<<endmsg;
-    }
-    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
 
-      L1Count++;
+    for(int L1Board=0; L1Board <cabling->getNumberOfL1Board(); L1Board++){//loop over TELL1
 
-      std::string L1path=cablingBasePath+
-        cabling->getL1Name(L1Board);
-      SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
-      m_TotODEBoard=m_TotODEBoard+l1->numberOfODE();
-      m_TELL1Name.push_back(L1path);
+      std::string L1Path=cablingBasePath + cabling->getL1Name(L1Board);
+      SmartDataPtr<MuonL1Board> l1(m_detSvc,L1Path);
 
-      for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
-        std::string ODEpath=cablingBasePath
-          +l1->getODEName(ODEBoard);
-        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-          msgStream()<<MSG::DEBUG<<L1Board<<" ode "<<ODEBoard<<" "<<ODEpath<<endmsg;
+      if( UNLIKELY( 0 == l1) ) {
+	msgStream()<<MSG::ERROR << L1Path << " not found in XmlDDDB" << endmsg;
+	return StatusCode::FAILURE;
+      }
 
-        SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEpath);
-        if( 0 == ode ) {
-          msgStream()<<MSG::ERROR << ODEpath << " not found in XmlDDDB" << endmsg;
+      for(int ODEBoard=0; ODEBoard < l1->numberOfODE(); ODEBoard++){ // loop over ODEs
+        std::string ODEPath=cablingBasePath + l1->getODEName(ODEBoard);
+        SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEPath);
+
+        if( UNLIKELY( 0 == ode ) ) {
+          msgStream()<<MSG::ERROR << ODEPath << " not found in XmlDDDB" << endmsg;
           return StatusCode::FAILURE;
         }
-        //long odenum=ode->getODESerialNumber();
-        // m_ODEInL1[L1Count-1].push_back(odenum);
-        long region=ode->region();
-        //debug()<<"ODE region "<<region<<endmsg;
-        for(int quadrant=0;quadrant<4;quadrant++){
+
+        long region = ode->region();
+        for(int quadrant=0; quadrant < 4; quadrant++){ // loop over quadrants
           unsigned int index=station*16+region*4+quadrant;
-          //debug()<<" ode in quarter " <<quadrant
-          //     <<" "<<ode->isQuadrantContained(quadrant)<<endmsg;
-          if(ode->isQuadrantContained(quadrant)){
-            m_L1Name[index]=L1path;
-            if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) {
-              msgStream()<<MSG::DEBUG<<"quadrant number "<<quadrant<<endmsg;
-              msgStream()<<MSG::DEBUG<<"index "<<index<<" "<<L1path<<endmsg;
-            }
+
+          if( ode->isQuadrantContained(quadrant) ){
+            m_L1Name[index]=L1Path; // fill all the TELL1 names by quadrant
           }
-        }
-      }
-    }
-  }
+        } // end loop over quadrants
+      } // end loop over ODEs
+    } // end loop over TELL1s
+  } // end loop over stations
 
+  for(int station=0; station < m_nStations; station++){
+    std::string cablingBasePath = getBasePath(m_basegeometry->getStationName(station));
 
-
-  for(int station=0;station<5;station++){
-    std::string cablingBasePath=getBasePath(station);
-    for(int region=0;region<4;region++){
-      for(int quadrant=0;quadrant<4;quadrant++){
-
+    for(int region=0; region < 4; region++){
+      for(int quadrant=0;quadrant < 4; quadrant++){
         int numODE=0;
         unsigned int index=station*16+region*4+quadrant;
 
+        std::string L1Path=m_L1Name[index];
+        SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1Path);
 
-        std::string L1path=m_L1Name[index];
+	if( UNLIKELY( 0 == l1) ) {
+	  msgStream()<<MSG::ERROR << L1Path << " not found in XmlDDDB" << endmsg;
+	  return StatusCode::FAILURE;
+	}
 
+        for(int ODEBoard=0; ODEBoard < l1->numberOfODE(); ODEBoard++){
 
-        SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
+          std::string ODEPath=cablingBasePath + l1->getODEName(ODEBoard);
+          SmartDataPtr<MuonODEBoard> ode(m_detSvc,ODEPath);
 
-        // debug()<<station<<" "<<region<<" "<<quadrant<<" "<<
-        //         L1path<<endmsg;
+	  if( UNLIKELY( 0 == ode ) ) {
+	    msgStream()<<MSG::ERROR << ODEPath << " not found in XmlDDDB" << endmsg;
+	    return StatusCode::FAILURE;
+	  }
 
-        for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
-          std::string ODEpath=cablingBasePath+
-            l1->getODEName(ODEBoard);
-          //  debug()<<" ode path "<<ODEpath<<endmsg;
-          SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEpath);
-          if(ode->region()==region){
-            //debug()<<" ode quadrant "<<
-            //ode->isQuadrantContained(quadrant)<<endmsg;
+          if( ode->region() == region){
             if(ode->isQuadrantContained(quadrant)){
-              //debug()<<station<<" "<<region<<" "<<quadrant<<" "<<
-              // ODEpath<<endmsg;
               numODE++;
-              m_ODEName.push_back(ODEpath);
+              m_ODEName.push_back(ODEPath); // ode names by quadrant
             }
-            //debug()<<numODE<<endmsg;
           }
         }
 
-
-
+	// questa roba mi sembra un orrore, revise deeply !
         m_ODENameStart[station][region][quadrant]=ODEStart;
         ODEEnd=ODEStart+numODE;
         m_ODENameEnd[station][region][quadrant]=ODEEnd;
         ODEStart=ODEEnd;
-        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-          msgStream()<<MSG::DEBUG<<" ff "<<m_ODENameStart[0][0][0]<<" "<<
-            station<<" "<<region<<" "<<quadrant<<endmsg;
       }
-
-
     }
   }
-
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-    msgStream()<<MSG::DEBUG<<" exit "<<endmsg;
 
   return StatusCode::SUCCESS;
 
 }
 
+//------------------------------------------------------------------------
+//
+// Class methods
+// 
+//
+//------------------------------------------------------------------------
 
+//------------------------------------------------------------------------
+// get the CondDB base path for the Cabling condition
+//------------------------------------------------------------------------
 
-
-
-std::string MuonDAQHelper::getBasePath(int station)
+std::string MuonDAQHelper::getBasePath(std::string statname)
 {
-  return basePath[station];
+  return basePath[statname];
 }
 
+//------------------------------------------------------------------------
+// Create pads. Backward compatibility with DC06
+//------------------------------------------------------------------------
 
-StatusCode MuonDAQHelper::initializeLUTCrossing()
-{
-  int countTell1=m_M1Tell1;
-
-  for(int station=1;station<5;station++){
-    //debug()<<"station number "<<station<<endmsg;
-    std::string cablingBasePath=getBasePath(station);
-    std::string cablingPath=cablingBasePath+"Cabling";
-    SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
-    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
-      //debug()<<"L1 number "<<cabling->getL1Name(0)<<endmsg;
-      std::string L1path=cablingBasePath+
-        cabling->getL1Name(L1Board);
-      SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
-      //      unsigned totODE=0;
-      for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
-        std::string ODEpath=cablingBasePath
-          +l1->getODEName(ODEBoard);
-        SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEpath);
-        //build LUT with ode ID --> MuonTileID
-        unsigned int region=ode->region();
-        MuonTSMap*  FirstTSMap=NULL;
-
-        for(int TS=0;TS<ode->getTSNumber();TS++){
-          std::string  TSPath= cablingBasePath+
-            ode->getTSName(TS);
-          unsigned int quadrant= ode->getTSQuadrant(TS);
-          unsigned int TSLayoutX=ode->getTSLayoutX();
-          unsigned int TSLayoutY=ode->getTSLayoutY();
-          unsigned int TSGridX=ode->getTSGridX(TS);
-          unsigned int TSGridY=ode->getTSGridY(TS);
-          unsigned int digitOffSetX=0;
-          unsigned int digitOffSetY=0;
-          SmartDataPtr<MuonTSMap>  TSMap(m_detSvc,TSPath);
-          //debug()<<"trigger sector "<<TSPath<<endmsg;
-          if(TS==0){
-            FirstTSMap=static_cast<MuonTSMap*>( TSMap);
-
-          }
-
-          std::vector<LHCb::MuonTileID> digitInTS;
-          std::vector<LHCb::MuonTileID> wrongdigitInTS;
-          for(int i=0;i<TSMap->numberOfOutputSignal();i++){
-            //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endmsg;
-            unsigned int layout=TSMap->layoutOutputChannel(i);
-            unsigned int  layoutX=TSMap->gridXLayout(layout);
-            unsigned int  layoutY=TSMap->gridYLayout(layout);
-            digitOffSetX=layoutX*TSGridX;
-            digitOffSetY=layoutY*TSGridY;
-            unsigned int digitX=digitOffSetX+TSMap->gridXOutputChannel(i);
-            unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i);
-            MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY);
-            MuonTileID muontile(station,lay,region,
-                                quadrant,digitX,digitY);
-            digitInTS.push_back(muontile);
-
-            unsigned int wrongDigitX=digitOffSetX+FirstTSMap->gridXOutputChannel(i);
-            unsigned int wrongDigitY=digitOffSetY+FirstTSMap->gridYOutputChannel(i);
-
-            MuonTileID wrongmuontile(station,lay,region,
-                                     quadrant,wrongDigitX,wrongDigitY);
-            wrongdigitInTS.push_back(wrongmuontile);
-
-          }
-          std::vector<LHCb::MuonTileID> crossAddressDC06
-            =DoPadDC06(digitInTS,TSMap);
-          std::vector<LHCb::MuonTileID> crossAddressV1
-            =DoPadV1(digitInTS,wrongdigitInTS,TSMap);
-          std::vector<LHCb::MuonTileID>::iterator itPad;
-          for(itPad=crossAddressDC06.begin();itPad<crossAddressDC06.end();
-              itPad++){
-            m_mapPadDC06[countTell1].push_back(*itPad);
-          }
-          for(itPad=crossAddressV1.begin();itPad<crossAddressV1.end();
-              itPad++){
-            m_mapPadV1[countTell1].push_back(*itPad);
-          }
-        }
-      }
-      countTell1++;
-    }
-  }
-  return StatusCode::SUCCESS;
-
-}
 std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadDC06(std::vector<
                                                        LHCb::MuonTileID> digit,
                                                        MuonTSMap* TS)
 {
-
   std::vector<LHCb::MuonTileID> list_of_pads;
+
   if(TS->numberOfLayout()==2){
-    //how many subsector????
     int NX=TS->gridXLayout(1);
     int NY=TS->gridYLayout(0);
     int Nsub=NX*NY;
 
-    //debug()<<"number NX NY "<<NX<<" "<<NY<<endmsg;
     int maxPads=TS->gridXLayout(0)*TS->gridYLayout(1);
     list_of_pads.reserve(maxPads);
+
     LHCb::MuonTileID t;
     for(int i=0;i<maxPads;i++){
       list_of_pads.push_back(t);
     }
     // work on sub sector
     if(Nsub>8){
-      // err()<<"error the dimensioning of the TS subsector is wrong "<<endmsg;
       return list_of_pads;
-
     }
+
     std::vector<unsigned int> horiz[8];
     std::vector<unsigned int> hvert[8];
+
     // clear the memory;
     // start fill the sub sector matrices
     std::vector<LHCb::MuonTileID>::iterator it;
     int index=0;
     for(it=digit.begin();it<digit.end();it++,index++){
-      //also zero must be set
-      // which subsector?
       int mx=TS->gridXOutputChannel(index)/
         (TS->gridXLayout(TS->layoutOutputChannel(index))/NX);
       int my=TS->gridYOutputChannel(index)/
         (TS->gridYLayout(TS->layoutOutputChannel(index))/NY);
-      //debug()<<" digit "<<index<<" "<<mx<<" "<<my<<" "<<*it<<endmsg;
       int Msub=mx+my*NX;
+
       // horizntal o vertical?
       bool horizontal=false;
-      if(TS->layoutOutputChannel(index)==0)horizontal=true;
+      if(TS->layoutOutputChannel(index)==0) horizontal=true;
       if(horizontal)horiz[Msub].push_back(*it);
       else hvert[Msub].push_back(*it);
-      //debug()<<" horizontal ? "<<     horizontal<<endmsg;
     }
+
     // now the address of fired pads..
     for(int i=0;i<Nsub;i++){
       // cross only local to each sub matrix
@@ -824,62 +900,61 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadV1(std::vector<LHCb::
                                                      MuonTileID> digit,
                                                      std::vector<LHCb::
                                                      MuonTileID> wrongdigit,
-                                                     MuonTSMap* TS){
-
+                                                     MuonTSMap* TS)
+{
   std::vector<LHCb::MuonTileID> list_of_pads;
   std::vector<LHCb::MuonTileID> wrong_list_of_pads;
+  std::vector<LHCb::MuonTileID>::iterator it1;
+  std::vector<LHCb::MuonTileID>::iterator it2;
 
-
-
-
-  std::vector<LHCb::MuonTileID>::iterator it;
-  std::vector<LHCb::MuonTileID>::iterator ittwo;
   int index=0;
-  int station=digit.begin()->station();
-  int region=digit.begin()->region();
-  bool wrongFirmware=false;
-  if(station==3&&region==0)wrongFirmware=true;
-  if(station==4&&region==0)wrongFirmware=true;
+  bool wrongFirmware = false;
+
+  int station = digit.begin()->station();
+  int region  = digit.begin()->region();
+
+  if(m_basegeometry->getStationName(station) == "M4" && region==0)wrongFirmware=true;
+  if(m_basegeometry->getStationName(station) == "M5" && region==0)wrongFirmware=true;
   if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
-    msgStream()<<MSG::DEBUG<<" st reg wrong "<<station<<" "<<region<<" "<<
-      wrongFirmware<<endmsg;
+    msgStream()<<MSG::DEBUG<<"Station/Region with wrong firmware: "
+	       <<station<<" "<<region<<" "<<wrongFirmware<<endmsg;
 
+  // regions with logical strips
   if(TS->numberOfLayout()==2){
-    for(it=digit.begin();it<digit.end();it++){
-      for(ittwo=it+1;ittwo<digit.end();ittwo++){
-
-        LHCb::MuonTileID cross=it->intercept(*ittwo);
+    for(it1=digit.begin(); it1<digit.end(); it1++){
+      for(it2=it1+1; it2<digit.end(); it2++){
+	
+        LHCb::MuonTileID cross=it1->intercept(*it2);
         if(cross.isValid()){
           list_of_pads.push_back(cross);
         }
       }
     }
-  }else{
-    if(wrongFirmware)ittwo=wrongdigit.begin();
-    for(it=digit.begin();it<digit.end();it++,index++){
-      list_of_pads.push_back(*it);
+  } else {
+    if(wrongFirmware)it2=wrongdigit.begin();
+    for(it1=digit.begin();it1<digit.end();it1++,index++){
+      list_of_pads.push_back(*it1);
       if(wrongFirmware){
-
-        wrong_list_of_pads.push_back(*ittwo);
-        ittwo++;
+	
+        wrong_list_of_pads.push_back(*it2);
+        it2++;
       }
     }
   }
-
 
   if(!wrongFirmware){
     std::stable_sort(list_of_pads.begin(),list_of_pads.end(),SortTileInTU());
   }else if(wrongFirmware){
     std::vector<std::pair<LHCb::MuonTileID,LHCb::MuonTileID> > doubleList;
-    ittwo= wrong_list_of_pads.begin();
+    it2= wrong_list_of_pads.begin();
 
-    for(it=list_of_pads.begin();it<list_of_pads.end();it++){
+    for(it1=list_of_pads.begin();it1<list_of_pads.end();it1++){
       std::pair<LHCb::MuonTileID,LHCb::MuonTileID> tilePair;
-      tilePair.first=*ittwo;
-      tilePair.second=*it;
+      tilePair.first=*it2;
+      tilePair.second=*it1;
       doubleList.push_back(tilePair);
 
-      ittwo++;
+      it2++;
 
     }
     std::stable_sort(doubleList.begin(),doubleList.end(),SortPairTileInTU());
@@ -989,9 +1064,9 @@ LHCb::MuonTileID  MuonDAQHelper::findTS(LHCb::MuonTileID digit)
   unsigned int index=station*16+region*4;
   //msgStream()<<MSG::INFO<<m_L1Name.size()<<endmsg;
 
-  std::string L1path=m_L1Name[index];
-  //  msgStream()<<MSG::INFO<<L1path<<" "<<station<<" "<<region<<endmsg;
-  SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
+  std::string L1Path=m_L1Name[index];
+
+  SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1Path);
   unsigned int TSLayoutX=(unsigned int)l1->getTSLayoutX(region);
   unsigned int TSLayoutY=(unsigned int)l1->getTSLayoutY(region);
   MuonLayout TSLayout(TSLayoutX,TSLayoutY);
@@ -1174,7 +1249,7 @@ std::string MuonDAQHelper::findTSPath(std::string ODEPath,
 
 
   SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEPath);
-  std::string base=getBasePath(station);
+  std::string base=getBasePath(m_basegeometry->getStationName(station));
   std::string  TSPath=ode->getTSName(TSPosition);
   //info()<<TSPosition<<ode->name()<<endmsg;
 
@@ -1268,7 +1343,7 @@ unsigned int MuonDAQHelper::DAQaddressInODE(LHCb::MuonTileID digitTile,
   }
   unsigned int DigitOutputPosition=digitInODE+DigitPosition;
   if(print)
-    msgStream()<<MSG::INFO<<" the output position in L1 of the digit is "<<
+    msgStream()<<MSG::DEBUG<<" the output position in L1 of the digit is "<<
       DigitOutputPosition<<endmsg;
   return DigitOutputPosition;
 }
@@ -1420,7 +1495,7 @@ StatusCode MuonDAQHelper::checkMapConsistency()
 
 
   //check if all log ch tile are present
-  for (int station=0;station<5;station++){
+  for (int station=0;station<m_nStations;station++){
     for (int region=0;region<4;region++){
       int num_lay=layout[station*4+region];
       for(int ilay=0;ilay<num_lay;ilay++){
@@ -1641,14 +1716,14 @@ MuonL1Board* MuonDAQHelper::getL1Board(unsigned int board_num){
 
   MuonL1Board* empty=NULL;
 
-  for(int station=0;station<5;station++){
-    std::string cablingBasePath=getBasePath(station);
+  for(int station=0;station<m_nStations;station++){
+    std::string cablingBasePath=getBasePath(m_basegeometry->getStationName(station));
     std::string cablingPath=cablingBasePath+"Cabling";
     SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
     for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
-      std::string L1path=cablingBasePath+
+      std::string L1Path=cablingBasePath+
         cabling->getL1Name(L1Board);
-      SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
+      SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1Path);
       if(static_cast<unsigned int>(l1->L1Number())==board_num)return l1;
     }
   }
@@ -1663,13 +1738,13 @@ MuonODEBoard* MuonDAQHelper::getODEBoard(MuonL1Board* l1,
 
   int station=l1-> getStation();
 
-  std::string cablingBasePath=getBasePath(station);
+  std::string cablingBasePath=getBasePath(m_basegeometry->getStationName(station));
   for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
 
-    std::string ODEpath=cablingBasePath
+    std::string ODEPath=cablingBasePath
       +l1->getODEName(ODEBoard);
 
-    SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEpath);
+    SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEPath);
     if(static_cast<unsigned int>(ode->getODESerialNumber())
        ==board)return ode;
 
@@ -1687,7 +1762,7 @@ MuonTSMap* MuonDAQHelper::getTSMap(MuonL1Board* l1, MuonODEBoard* ode,
 
   int station=l1-> getStation();
 
-  std::string cablingBasePath=getBasePath(station);
+  std::string cablingBasePath=getBasePath(m_basegeometry->getStationName(station));
 
   std::string  TSPath= cablingBasePath+
     ode->getTSName(ts);
@@ -1730,42 +1805,6 @@ StatusCode  MuonDAQHelper::findHWNumber(LHCb::MuonTileID digit,
     }
   }
   return sc;
-}
-
-StatusCode  MuonDAQHelper::initODENames()
-{
-  //StatusCode sc=StatusCode::FAILURE;
-
-  for(int station=0;station<5;station++){
-
-    std::string cablingBasePath=getBasePath(station);
-    std::string cablingPath=cablingBasePath+"Cabling";
-    SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
-    if( 0 == cabling ) {
-      msgStream()<<MSG::ERROR << cablingPath << " not found in XmlDDDB" << endmsg;
-      return StatusCode::FAILURE;
-    }
-    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
-      std::string L1path=cablingBasePath+
-        cabling->getL1Name(L1Board);
-      SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path);
-      for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
-        std::string ODEpath=cablingBasePath
-          +l1->getODEName(ODEBoard);
-        SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEpath);
-        if( 0 == ode ) {
-          msgStream()<<MSG::ERROR << ODEpath << " not found in XmlDDDB" << endmsg;
-          return StatusCode::FAILURE;
-        }
-        long odenum=ode->getODESerialNumber();
-        std::string ODEName=ode->ECSName();
-        m_ODENameInECS[odenum]=ODEName;
-
-      }
-    }
-  }
-
-  return StatusCode::SUCCESS;
 }
 
 StatusCode  MuonDAQHelper::findL0Number(LHCb::MuonTileID digit,
@@ -1878,3 +1917,160 @@ LHCb::MuonTileID MuonDAQHelper::getPadTileInODE(std::string ODEName, int firstCh
   return firstTile.intercept(secondTile);
 }
 
+
+/* inutile
+
+StatusCode MuonDAQHelper::initODEMaps()
+{
+
+  unsigned int countL1=0;
+  for(int station = 0; station < m_nStations;station++){
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+      msgStream()<<MSG::DEBUG<<"station number "<<station<<endmsg;
+
+    std::string cablingBasePath=getBasePath(station);
+    std::string cablingPath=cablingBasePath+"Cabling";
+    SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
+
+    if( 0 == cabling ) {
+      msgStream()<<MSG::ERROR << cablingPath << " not found in XmlDDDB" << endmsg;
+      return StatusCode::FAILURE;
+    }
+
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+      msgStream()<<MSG::DEBUG<<" station "<<station<<endmsg;
+
+    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
+
+      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+        msgStream()<<MSG::DEBUG<<"L1 number "<<cabling->getL1Name(0)<<endmsg;
+
+      std::string L1Path=cablingBasePath+cabling->getL1Name(L1Board);
+      SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1Path);
+
+      unsigned totODE=0;
+
+      for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
+        std::string ODEPath=cablingBasePath+l1->getODEName(ODEBoard);
+
+        if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+          msgStream()<<MSG::DEBUG<<"ODE number "<<L1Board<<
+          " "<<l1->getODEName(ODEBoard)<<endmsg;
+        SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEPath);
+
+        if( 0 == ode ) {
+          msgStream()<<MSG::ERROR << ODEPath << " not found in XmlDDDB" << endmsg;
+          return StatusCode::FAILURE;
+        }
+
+        long odenum=ode->getODESerialNumber();
+        m_ODEInTell1[countL1].push_back(odenum);
+        //build LUT with ode ID --> MuonTileID
+        unsigned int region=ode->region();
+        totODE++;
+
+        for(int TS=0;TS<ode->getTSNumber();TS++){
+
+          std::string  TSPath= cablingBasePath+
+            ode->getTSName(TS);
+          unsigned int quadrant= ode->getTSQuadrant(TS);
+          unsigned int TSLayoutX=ode->getTSLayoutX();
+          unsigned int TSLayoutY=ode->getTSLayoutY();
+          unsigned int TSGridX=ode->getTSGridX(TS);
+          unsigned int TSGridY=ode->getTSGridY(TS);
+          unsigned int digitOffSetX=0;
+          unsigned int digitOffSetY=0;
+          SmartDataPtr<MuonTSMap>  TSMap(m_detSvc,TSPath);
+          int i=0;
+          for(int isynch=0;isynch<TSMap->synchChSize();isynch++){
+
+            if(TSMap->synchChUsed(isynch)){
+              //for(int i=0;i<TSMap->numberOfOutputSignal();i++){
+              //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endmsg;
+              unsigned int layout=TSMap->layoutOutputChannel(i);
+              unsigned int  layoutX=TSMap->gridXLayout(layout);
+              unsigned int  layoutY=TSMap->gridYLayout(layout);
+              digitOffSetX=layoutX*TSGridX;
+              digitOffSetY=layoutY*TSGridY;
+              unsigned int digitX=digitOffSetX+TSMap->gridXOutputChannel(i);
+              unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i);
+              MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY);
+              MuonTileID muontile(station,lay,region,
+                                  quadrant,digitX,digitY);
+              m_mapTileInODE[odenum-1].push_back(muontile);
+              if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+                msgStream()<<MSG::DEBUG<<m_mapTileInODE[odenum-1].size()<<" "<<
+                  muontile<<endmsg;
+
+              m_mapTileInODEDC06[odenum-1].push_back(muontile);
+              i++;
+            }else{
+              MuonTileID muontile;
+              m_mapTileInODE[odenum-1].push_back(muontile);
+            }
+          }
+        }
+      }
+      m_ODENumberInTell1[countL1]=totODE;
+      if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+        msgStream()<<MSG::DEBUG<<" number "<<countL1<<" "<<totODE<<endmsg;
+
+      countL1++;
+    }
+  }
+  return StatusCode::SUCCESS;
+
+}
+*/
+
+/* inutile
+StatusCode  MuonDAQHelper::initODENames()
+{
+  //StatusCode sc=StatusCode::FAILURE;
+
+  for(int station=0;station<m_nStations;station++){
+
+    std::string cablingBasePath=getBasePath(station);
+    std::string cablingPath=cablingBasePath+"Cabling";
+    SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath);
+    if( 0 == cabling ) {
+      msgStream()<<MSG::ERROR << cablingPath << " not found in XmlDDDB" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){
+      std::string L1Path=cablingBasePath+
+        cabling->getL1Name(L1Board);
+      SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1Path);
+      for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
+        std::string ODEPath=cablingBasePath
+          +l1->getODEName(ODEBoard);
+        SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEPath);
+        if( 0 == ode ) {
+          msgStream()<<MSG::ERROR << ODEPath << " not found in XmlDDDB" << endmsg;
+          return StatusCode::FAILURE;
+        }
+        long odenum=ode->getODESerialNumber();
+        std::string ODEName=ode->ECSName();
+        m_ODENameInECS[odenum]=ODEName;
+
+      }
+    }
+  }
+
+  return StatusCode::SUCCESS;
+}
+*/
+
+
+  //  sc=initODEMaps(); // inutile, mergiata con la precedente
+  /*
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+    msgStream()<<MSG::DEBUG<<" step 6 "<<endmsg;
+  if(sc.isFailure())return sc;
+  */
+  /* inutile, incorporata nella precedente
+  sc=initODENames();
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+    msgStream()<<MSG::DEBUG<<" step odename "<<endmsg;
+  if(sc.isFailure())return sc;
+  */

@@ -3,6 +3,12 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2013-05-17 - Giovanni PASSALEVA
+ - Several fixes to allow configurations without M1. mainly removed hardcoded
+   parameters replaced with parametric ones.
+ - patched some hardcoded variable initialization. Will befixed in a later 
+   version moving parameters and constants to CondDB or DDDB
+
 ! 2013-05-07 - Marco Cattaneo
  - Fix clang32 warnings
 

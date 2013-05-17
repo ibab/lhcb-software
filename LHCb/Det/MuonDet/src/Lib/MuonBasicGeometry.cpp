@@ -1,3 +1,5 @@
+// $Id: MuonBasicGeometry.cpp,v 1.8 2010-03-17 16:19:07 cattanem Exp $
+
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/MsgStream.h"
@@ -28,7 +30,7 @@ MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
   m_stationNumber=0; 
   m_regionNumber=4;   
   m_isM1defined=false;
-  
+  std::string stationName;  
   IDetectorElement::IDEContainer::iterator itStation; 
 
  // for(itStation=muonSystem->childBegin(); itStation<muonSystem->childEnd(); itStation++){
@@ -50,17 +52,27 @@ MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
         <<(*itStation)->name() <<endmsg;      
     }
     //log << MSG::INFO << "+ " << muStation->name() << endmsg;
-    std::string stationName=findName(muStation->name(),DeMuonLocation::Default); 
+    //    log << MSG::INFO << "+ " << muStation->name() << endmsg; //GP
+    stationName=findName(muStation->name(),DeMuonLocation::Default); 
     //log << MSG::INFO << "+++ " << stationName << endmsg;
    
-    m_stationNumber=m_stationNumber+1;
-    numsta.push_back(stationName);
+    //    m_stationNumber=m_stationNumber+1;
+    std::pair<std::string, int> tmpStat;
+    tmpStat.first = stationName;
+    tmpStat.second = m_stationNumber;
+    m_stations.push_back(tmpStat);
+    //    log << MSG::INFO << "+++ " << (m_stations.at(m_stationNumber)).first 
+    //	<< " is station: "<<(m_stations.at(m_stationNumber)).second <<endmsg; //GP
+
+    m_stationNumber++; //GP
     
   }
+
   bool isM1defined=m_isM1defined;
-  if( log.level() <= MSG::DEBUG )
-    log << MSG::DEBUG << "Retrieved M1 definition status: " << isM1defined <<endmsg;
+  //  log << MSG::DEBUG << "Retrieved M1 definition status: " << isM1defined <<endmsg;
+  //  log << MSG::INFO << "Retrieved M1 definition status: " << isM1defined <<endmsg; //GP
   m_partition=m_stationNumber*m_regionNumber;
+  //  log << MSG::INFO << "stations partitions " <<m_stationNumber<<" "<<m_partition <<endmsg; //GP
   
 }
 //=============================================================================
@@ -78,7 +90,18 @@ int MuonBasicGeometry::getPartitions(  ) {
   return m_partition;  
 }
 std::string MuonBasicGeometry::getStationName(int station  ) {
-  return numsta[station];  
+  return (m_stations.at(station)).first;  
+}
+
+int MuonBasicGeometry::getStationNumber(std::string stationName){
+  std::vector< std::pair<std::string, int> >::iterator sIt = m_stations.begin();
+
+  for(int i=0; sIt != m_stations.end(); sIt++, i++){
+    if( (*sIt).first == stationName) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 
