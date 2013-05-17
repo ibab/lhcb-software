@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-05-17 - Chris Jones
+ - Remove unused data members, to fix clang32 warnings.
+
 !========================= TrackSmearing v1r6 2013-04-05 =========================
 
 ! 2013-04-03 - Sascha Stahl

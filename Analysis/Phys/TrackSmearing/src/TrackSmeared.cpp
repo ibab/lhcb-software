@@ -156,8 +156,6 @@ StatusCode TrackSmeared::initialize()
   info()<< "smear copied tracks: "<< m_smearCopied << endmsg;
   info()<< "++++++++++++++++" << endmsg;
 
-  //m_trackFitter = tool<ITrackFitter>("TrackInitFit");
-
   m_funcx_data = new TF1("funcx_data","[0]/1000.0+[1]*x",0.0,1.0);
   m_funcx_data->SetParameter(0,m_xpar1_data);
   m_funcx_data->SetParameter(1,m_xpar2_data);

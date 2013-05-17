@@ -1,24 +1,24 @@
 // $Id: $
-#ifndef TRACKSMEARED_H 
+#ifndef TRACKSMEARED_H
 #define TRACKSMEARED_H 1
 
-// Include files
-// from DaVinci, this is a specialized GaudiAlgorithm
+// from DaVinci
 #include "Kernel/DaVinciAlgorithm.h"
-#include "TrackInterfaces/ITrackFitter.h"
+
+// ROOT
 #include <TF1.h>
 #include <TRandom3.h>
+
 /** @class TrackSmeared TrackSmeared.h
- *  
+ *
  *
  *  @author Sascha Stahl
  *  @date   2010-08-27
  */
-class TrackSmeared : public DaVinciAlgorithm 
-
+class TrackSmeared : public DaVinciAlgorithm
 {
 
-public: 
+public:
 
   /// Standard constructor
   TrackSmeared( const std::string& name, ISvcLocator* pSvcLocator );
@@ -33,12 +33,12 @@ private:
 
   void smearStates(  const std::vector< LHCb::State * > & states );
 
-  double getSigma( LHCb::State* state, 
-                   const std::vector<TF1*>& funcs_data, 
+  double getSigma( LHCb::State* state,
+                   const std::vector<TF1*>& funcs_data,
                    const std::vector<TF1*>& funcs_mc);
   double getSigmax(LHCb::State* state);
   double getSigmay(LHCb::State* state);
-  
+
   StatusCode smearProto();
   StatusCode smearBest();
   StatusCode smearCopied();
@@ -55,9 +55,8 @@ private:
   std::string m_protoLocation;
   std::string m_settings;
 
-  ITrackFitter* m_trackFitter;
   TF1* m_funcx_data;
-  TF1* m_funcx_mc;  
+  TF1* m_funcx_mc;
   TF1* m_funcy_data;
   TF1* m_funcy_mc;
   std::vector<TF1*> m_funcsx_mc;
@@ -68,7 +67,6 @@ private:
   DPairVector m_paramsx_mc;
   DPairVector m_paramsy_data;
   DPairVector m_paramsy_mc;
-  unsigned int m_nPhiBins;
   double m_xpar1_mc;
   double m_xpar2_mc;
   double m_xpar1_data;
@@ -86,9 +84,9 @@ private:
   bool m_smearProto;
   bool m_smearCopied;
   TRandom3* m_rnd;
- 
-  
-    
+
+
+
 
 };
 #endif // TRACKSMEARED_H
