@@ -386,7 +386,7 @@ StatusCode MuonBackground::initializeGeometry() {
   //  containerOfFirstGapPosition.resize(m_stationNumber+1);
   int chamber=0;
   
-  for(int station=0;station<5;station++){
+  for(int station=0;station<m_stationNumber;station++){
     for(int region=0;region<4;region++){
       m_chamberInRegion[station*4+region]=chamber;
       chamber=chamber+m_muonDetector->chamberInRegion(station,region);    
