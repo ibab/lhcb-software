@@ -3,7 +3,9 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
-
+! 2013-05-17 - Antonio Falabella
+  - TupleToolTagging.cpp: Changed in order to retrieve the flavour tagging 
+    informations if they are present (for muDST).
 !========================= DecayTreeTuple v4r1 2013-04-05 =========================
 
 ! 2013-03-21 - Patrick Koppenburg
