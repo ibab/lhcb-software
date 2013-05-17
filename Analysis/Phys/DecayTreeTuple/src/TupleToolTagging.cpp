@@ -19,6 +19,7 @@
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
 #include <utility>
+#include <boost/algorithm/string.hpp>
 
 using namespace LHCb;
 
@@ -121,21 +122,40 @@ StatusCode TupleToolTagging::fill( const Particle* mother
   Assert( P && mother && m_dva && m_tagging,
           "Should not happen, you are inside TupleToolTagging.cpp" );
 
+  std::string loc = objectLocation( P->parent() );
+
   // nothing to tag on something which is not a B
   if( !P->particleID().hasBottom() ) return StatusCode::SUCCESS;
 
-  const VertexBase* v = m_dva->bestVertex( mother );
-  const RecVertex* vtx = dynamic_cast<const RecVertex*>(v);
-
   FlavourTag theTag;
-  StatusCode sc=StatusCode::SUCCESS;
-  if( !vtx ){
-    sc = m_tagging->tag( theTag, P );
-  }
-  else {
-    sc = m_tagging->tag( theTag, P, vtx );
-  }
+  FlavourTags* tags = NULL;
+  bool check = false;
 
+  StatusCode sc=StatusCode::SUCCESS;
+
+  boost::replace_all( loc, "/Particles", "/FlavourTags" );
+
+  if( exist < LHCb::FlavourTags > (loc,IgnoreRootInTES))
+	tags = get< LHCb::FlavourTags > (loc,IgnoreRootInTES );
+
+  if (tags){
+	for(FlavourTags::const_iterator it = tags->begin(); it != tags->end(); ++it) {
+	  if( P != (**it).taggedB()) continue;
+		theTag =  **it;
+		check = true;
+	}
+	if (!check) sc = StatusCode::FAILURE;
+  }
+  else{
+    const VertexBase* v = m_dva->bestVertex( mother );
+    const RecVertex* vtx = dynamic_cast<const RecVertex*>(v);
+    if( !vtx ){
+      sc = m_tagging->tag( theTag, P );
+    }
+    else {
+      sc = m_tagging->tag( theTag, P, vtx );
+    }
+  }
   // try to find unphysical defaults
   int dec = 0;//-1000
   int cat = -1;
