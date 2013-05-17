@@ -1395,7 +1395,7 @@ BackgroundCategory::associate_particles_in_decay(const ParticleVector & particle
         looper++;
       }
       if (mc_correctPID) {
-        if ((mc_correctPID == mc_bestQ)) {
+        if ( mc_correctPID == mc_bestQ ) {
           if (msgLevel(MSG::VERBOSE)) verbose() << "Pushing back best match"
                                                 << endmsg;
           if (msgLevel(MSG::VERBOSE)) verbose() << "Best PID weight = "
