@@ -19,16 +19,6 @@
  *  @author P. Koppenburg
  *  @date   2009-04-21
  */
-namespace
-{
-  std::string to_upper( const std::string& in )
-  {
-    std::string  out( in );
-    std::transform( in.begin() , in.end() , out.begin () , ::toupper ) ;
-    return out ;
-  }
-}
-
 class ParticleMakerBase : public DaVinciAlgorithm
 {
 
@@ -55,23 +45,18 @@ protected:
   }
   
   // BremStrahlung correction for electron
-  void addBrem(LHCb::Particle* particle){
-    bool ok = false;
-    for( std::vector<std::string>::iterator p = m_addBremPhoton.begin();m_addBremPhoton.end() != p ; ++p){
-      if( *p == m_pid){
-        ok=true;
-        break;
-      }
-    }
-    
-    if( !ok )return;
-    if (  !m_brem->addBrem( particle ) )return;
-    if (msgLevel(MSG::DEBUG)) debug() << " ------- BremStrahlung has been added to the particle " 
-                                      << particle << " (PID=" << m_pid << ")" << endmsg;
-    counter("Applying Brem-correction to " + Gaudi::Utils::toString(particle->particleID().pid()) )+=1;
+  void addBrem( LHCb::Particle* particle );
+
+  /// Convert a string to Upper case
+  std::string to_upper( const std::string& in )
+  {
+    std::string out( in );
+    std::transform( in.begin() , in.end() , out.begin () , ::toupper ) ;
+    return out ;
   }
   
 private:
+
   /// Avoid loading Particles etc.
   virtual StatusCode loadEventInput();
 
@@ -99,6 +84,7 @@ private:
 
   /// Local ProtoParticle container.
   LHCb::ProtoParticle::ConstVector m_protos;
+
   /// Track selector tool
   IBremAdder* m_brem;
 

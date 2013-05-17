@@ -28,9 +28,9 @@ ParticleMakerBase::ParticleMakerBase( const std::string& name,
   , m_brem    ( NULL )
 {
   declareProperty ( "Input"   , m_input = LHCb::ProtoParticleLocation::Charged ) ;
-  declareProperty ( "Particle" , m_pid = "UNDEFINED" , 
+  declareProperty ( "Particle" , m_pid = "UNDEFINED" ,
                     "Particle to create : pion, kaon, muon..."   ) ;
-  declareProperty( "AddBremPhotonTo",  m_addBremPhoton, 
+  declareProperty( "AddBremPhotonTo",  m_addBremPhoton,
                    "ParticleIDs to be Brem-corrected (default : electrons only)");
   m_addBremPhoton.push_back( "e+" );
 }
@@ -40,18 +40,18 @@ ParticleMakerBase::ParticleMakerBase( const std::string& name,
 StatusCode ParticleMakerBase::initialize ( )
 {
   StatusCode sc = DaVinciAlgorithm::initialize();
-  if (!sc) return sc;
+  if ( sc.isFailure() ) return sc;
 
   if ( getDecayDescriptor() == "" ) setDecayDescriptor(m_pid) ;
 
   // BremStrahlung correction
   m_brem = tool<IBremAdder>("BremAdder","BremAdder", this);
 
-  if ( this->inputLocations().empty() ) 
+  if ( this->inputLocations().empty() )
   {
     this->inputLocations().push_back(m_input);
-  } 
-  else 
+  }
+  else
   {
     m_input = "";
   }
@@ -77,8 +77,8 @@ StatusCode ParticleMakerBase::execute()
   LHCb::Particle::ConstVector constParts ; /// @todo this is a hack due to CaloParticle...
   constParts.reserve(newParts.size());
 
-  for ( LHCb::Particle::Vector::const_iterator i = newParts.begin() ; 
-        i != newParts.end() ; ++i ) 
+  for ( LHCb::Particle::Vector::const_iterator i = newParts.begin() ;
+        i != newParts.end() ; ++i )
   {
     constParts.push_back(*i);
     addBrem( *i );
@@ -103,10 +103,12 @@ StatusCode ParticleMakerBase::execute()
 
   return sc;
 }
+
 //=============================================================================
-StatusCode ParticleMakerBase::loadEventInput() 
+
+StatusCode ParticleMakerBase::loadEventInput()
 {
-  if (msgLevel(MSG::VERBOSE)) 
+  if (msgLevel(MSG::VERBOSE))
   {
     verbose() << ">>> ProtoParticleMakerBase::loadEventInput: load ProtoParticles from "
               << this->inputLocations() << endmsg;
@@ -117,7 +119,7 @@ StatusCode ParticleMakerBase::loadEventInput()
   for ( std::vector<std::string>::const_iterator iLoc = this->inputLocations().begin();
         iLoc != this->inputLocations().end(); ++iLoc )
   {
-    const LHCb::ProtoParticle::Container* pp = 
+    const LHCb::ProtoParticle::Container* pp =
       getIfExists< LHCb::ProtoParticle::Container > ( *iLoc) ;
     if ( pp )
     {
@@ -127,12 +129,12 @@ StatusCode ParticleMakerBase::loadEventInput()
                   << *iLoc << endmsg;
       }
       for ( LHCb::ProtoParticle::Container::const_iterator iPP = pp->begin();
-            iPP != pp->end(); ++iPP ) 
-      { 
+            iPP != pp->end(); ++iPP )
+      {
         m_protos.push_back(*iPP);
       }
-    } 
-    else 
+    }
+    else
     {
       Info("No ProtoParticles at " + *iLoc);
       continue;
@@ -141,4 +143,31 @@ StatusCode ParticleMakerBase::loadEventInput()
 
   return StatusCode::SUCCESS;
 }
+
+//=============================================================================
+
+void ParticleMakerBase::addBrem( LHCb::Particle* particle )
+{
+  bool ok = false;
+  for ( std::vector<std::string>::iterator p = m_addBremPhoton.begin() ;
+        m_addBremPhoton.end() != p; ++p )
+  {
+    if ( *p == m_pid ) 
+    {
+      ok = true;
+      break;
+    }
+  }
+  
+  if ( !ok ) return;
+  if ( !m_brem->addBrem( particle ) ) return;
+
+  if (msgLevel(MSG::DEBUG))
+    debug() << " ------- BremStrahlung has been added to the particle "
+            << particle << " (PID=" << m_pid << ")" << endmsg;
+
+  counter( "Applying Brem-correction to " +
+           Gaudi::Utils::toString(particle->particleID().pid()) ) += 1;
+}
+
 //=============================================================================

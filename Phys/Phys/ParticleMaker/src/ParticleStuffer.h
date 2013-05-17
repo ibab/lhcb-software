@@ -1,5 +1,5 @@
 // $Id: ParticleStuffer.h,v 1.7 2006-05-10 12:27:38 pkoppenb Exp $
-#ifndef PARTICLESTUFFER_H 
+#ifndef PARTICLESTUFFER_H
 #define PARTICLESTUFFER_H 1
 
 // Include files
@@ -20,42 +20,42 @@ class IParticlePropertySvc;
  *  Fill a particle given a vertex and a particle ID
  *  @author Paul Colrain
  *  @date   14/03/2002
- *  Modified by S. Amato to transport parameters to the vertex position 11/10/2002 
+ *  Modified by S. Amato to transport parameters to the vertex position 11/10/2002
  */
-class ParticleStuffer : public GaudiTool, 
-                        virtual public IParticleStuffer {
+class ParticleStuffer : public GaudiTool,
+                        virtual public IParticleStuffer
+{
 
 public:
 
   /// Standard constructor
-  ParticleStuffer( const std::string& type, 
+  ParticleStuffer( const std::string& type,
                    const std::string& name,
                    const IInterface* parent);
-  
-  /// Desctructor
-  virtual ~ParticleStuffer( ){ }; 
+
+  /// Destructor
+  virtual ~ParticleStuffer( );
 
   /// Retrieve  the ParticlePropertyService.
-  StatusCode initialize();    
+  StatusCode initialize();
 
-  
   /// Fill Composite Particle from Vertex
   StatusCode fillParticle( const LHCb::Particle::ConstVector& daughters,
-                           const LHCb::Vertex&,  
+                           const LHCb::Vertex&,
                            const LHCb::ParticleID&,
                            LHCb::Particle&);
 
   /// Fill Composite Particle from Vertex
   StatusCode fillParticle( const LHCb::Particle::ConstVector& daughters,
-                           const LHCb::Vertex&,  
+                           const LHCb::Vertex&,
                            LHCb::Particle&);
 
 private:
-  LHCb::IParticlePropertySvc* m_ppSvc;        ///< Reference to ParticlePropertySvc
-  IToolSvc* m_pToolSvc;
+
+  LHCb::IParticlePropertySvc* m_ppSvc;  ///< Reference to ParticlePropertySvc
   IParticleTransporter* m_pTransporter; ///< Reference to ParticleTransporter
   std::string m_transporterType;        ///< Type of transporter to use
-  
+
 };
 
 #endif // PARTICLESTUFFER_H

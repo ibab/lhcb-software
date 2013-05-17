@@ -3,12 +3,15 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
-!========================= ParticleMaker v6r7p2 2013-04-23 =========================
+! 2013-05-17 - Chris Jones
+ - Fix various clang warnings
 
-! 2012-02-25 - Olivier Deschamps
+! 2013-05-11 - Olivier Deschamps
  - DiElectronMaker : remove unecessary include
 
-! 2012-02-25 - Chris Jones 
+!========================= ParticleMaker v6r7p2 2013-04-23 =========================
+
+! 2013-02-25 - Chris Jones 
  - Fix -pedantic compilation warnings 
 
 !========================= ParticleMaker v6r7p1 2013-02-20 =========================
