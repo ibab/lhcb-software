@@ -53,6 +53,5 @@ private:
 
   unsigned int m_vtype;
   
-  
 };
 #endif // MUONDIGITTORAWBUFFER_H

@@ -12,6 +12,7 @@
 #include "MuonDet/MuonL1Board.h"
 #include "MuonDet/MuonODEBoard.h"
 #include "MuonDet/MuonStationCabling.h"
+#include "MuonDet/MuonBasicGeometry.h"
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
 #include "Event/BankWriter.h"
@@ -42,7 +43,7 @@ MuonDigitToRawBuffer::MuonDigitToRawBuffer( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonDigitToRawBuffer::~MuonDigitToRawBuffer() {}
+MuonDigitToRawBuffer::~MuonDigitToRawBuffer(){}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -52,9 +53,13 @@ StatusCode MuonDigitToRawBuffer::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialise" << endmsg;
+
   m_muonDet=getDet<DeMuonDetector>(DeMuonLocation::Default);
+  //  info()<<"dopo demuondetector"<<endmsg;
   m_TotL1Board=(m_muonDet->getDAQInfo())->TotTellNumber();
+  //  info()<<"dopo TotL1"<<endmsg;
   m_M1Tell1=(m_muonDet->getDAQInfo())->M1TellNumber();
+  //  info()<<"dopo M1L1"<<endmsg;
 
   for(int i=0;i<m_TotL1Board;i++){
     unsigned int ODE_in_L1=(m_muonDet->getDAQInfo())->ODEInTell1(i);
@@ -97,128 +102,6 @@ StatusCode MuonDigitToRawBuffer::execute() {
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<<" exit "<<endmsg;
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-/*std::vector<unsigned int> MuonDigitToRawBuffer::padsinTS(
-                                                         std::vector<unsigned
-                                                         int>& TSDigit,
-                                                         std::string TSPath){
-  //input the sequence of 0/1 for fired and not fired channels..
-  std::vector<unsigned int> list_of_pads;
-  //maxPads=0;
-  SmartDataPtr<MuonTSMap>  TS(detSvc(),TSPath);
-  //debug()<<"----- start a trigger sector cross ---------"<<endmsg;
-  //debug()<<TSPath<<" "<<TS->numberOfOutputSignal()<<endmsg;
-  //debug()<<" seq ";
-  //std::vector<unsigned int>::iterator idebug;
-  //for(idebug=TSDigit.begin();idebug<TSDigit.end();idebug++){
-  //  debug()<<" "<<*idebug;
-  //}
-  //debug()<<endmsg;
-
-  if(TS->numberOfLayout()==2){
-    //how many subsector????
-    int NX=TS->gridXLayout(1);
-    int NY=TS->gridYLayout(0);
-    int Nsub=NX*NY;
-    //debug()<<"number NX NY "<<NX<<" "<<NY<<endmsg;
-    //maxPads=TS->gridXLayout(0)*TS->gridYLayout(1);
-    // work on sub sector
-    if(Nsub>8){
-      err()<<"error the dimensioning of the TS subsector is wrong "<<endmsg;
-      return list_of_pads;
-
-    }
-
-    std::vector<unsigned int> horiz[8];
-    std::vector<unsigned int> hvert[8];
-    // clear the memory;
-
-    // start fill the sub sector matrices
-    std::vector<unsigned int>::iterator it;
-    int index=0;
-
-    for(it=TSDigit.begin();it<TSDigit.end();it++,index++){
-      //also zero must be set
-      // which subsector?
-      int mx=TS->gridXOutputChannel(index)/
-        (TS->gridXLayout(TS->layoutOutputChannel(index))/NX);
-      int my=TS->gridYOutputChannel(index)/
-        (TS->gridYLayout(TS->layoutOutputChannel(index))/NY);
-      //debug()<<" digit "<<index<<" "<<mx<<" "<<my<<" "<<*it<<endmsg;
-      int Msub=mx+my*NX;
-      // horizntal o vertical?
-      bool horizontal=false;
-      if(TS->layoutOutputChannel(index)==0)horizontal=true;
-      if(horizontal)horiz[Msub].push_back(*it);
-      else hvert[Msub].push_back(*it);
-      // debug()<<" horizontal ? "<<     horizontal<<endmsg;
-    }
-    // now the address of fired pads..
-    for(int i=0;i<Nsub;i++){
-      // cross only local to each sub matrix
-      std::vector<unsigned int>::iterator itx;
-      std::vector<unsigned int>::iterator ity;
-      //debug
-      //debug()<<" sub matrix "<<i<<endmsg;
-      //debug()<<" horizontal sequence ";
-
-      // for(itx=horiz[i].begin();
-      //    itx<horiz[i].end();itx++)
-      // {
-      //  debug()<<*itx<<" ";
-      //}
-      //debug()<<endmsg;
-      //debug()<<" vertical sequence ";
-
-      //for(ity=hvert[i].begin();ity<hvert[i].end();ity++){
-      //  debug()<<*ity<<" ";
-      //}
-      //debug()<<endmsg;
-      //end debug
-      unsigned int y_index=0;
-      unsigned int subY=i/NX;
-      unsigned int subX=i-subY*NX;
-
-      unsigned int offsetY=subY*(TS->gridYLayout(1)/NY);
-      unsigned int offsetX=subX*(TS->gridXLayout(0)/NX);
-      for(ity=hvert[i].begin();
-          ity<hvert[i].end();ity++,y_index++){
-        if(*ity!=0){
-          unsigned int x_index=0;
-          for(itx=horiz[i].begin();
-              itx<horiz[i].end();itx++,x_index++){
-            if(*itx!=0){
-              unsigned int address=offsetX+x_index+
-                (offsetY+y_index)*(TS->gridXLayout(0));
-              //      debug()<<" result of the address "<<address<<endmsg;
-              list_of_pads.push_back(address);
-            }
-          }
-        }
-      }
-    }
-  }else{
-    //easy only zero suppression
-    std::vector<unsigned int>::iterator it;
-    unsigned int index=0;
-    for(it=TSDigit.begin();it<TSDigit.end();it++,index++){
-      unsigned int address=index;
-      if(*it!=0){list_of_pads.push_back(address);
-      //      debug()<<" result of the address "<<address<<endmsg;
-      }
-    }
-  }
-  return list_of_pads;
-}
-
-*/
-
-
-
-
-
-
 ///
 StatusCode MuonDigitToRawBuffer::ProcessDC06()
 {
@@ -394,8 +277,12 @@ StatusCode MuonDigitToRawBuffer::ProcessV1()
   sc=ProcessDigitV1();
   if(sc.isFailure())return sc;
 
+  //  info()<<"entra in ProcessPads"<<endmsg;
+
   sc=ProcessPads();
   if(sc.isFailure())return sc;
+
+  //  info()<<"esce da ProcessPads"<<endmsg;
 
   unsigned int pp_counter[4];
 
@@ -602,12 +489,29 @@ StatusCode MuonDigitToRawBuffer::ProcessDigitDC06()
 
 StatusCode MuonDigitToRawBuffer::ProcessPads()
 {
-   for(unsigned int i=m_M1Tell1;i<(unsigned int) m_TotL1Board;i++){
+  MuonBasicGeometry basegeometry( detSvc(),msgSvc());
+
+
+  //  info()<<"sono in ProcessPads(): m1L1/totL1 "<<m_M1Tell1<<"/"<<m_TotL1Board<<endmsg;
+
+
+  
+  for(unsigned int i=m_M1Tell1;i<(unsigned int) m_TotL1Board;i++){
     //get Tell1 information
-     std::string L1path=(m_muonDet->getDAQInfo())->Tell1Name(i);
+    std::string L1path=(m_muonDet->getDAQInfo())->Tell1Name(i);
+    //    info()<<"in ProcessPads(): tell1 and path "<< i <<" "<<L1path<<endmsg;
     SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
-    int station=l1->getStation();
-    std::string cablingBasePath=(m_muonDet->getDAQInfo())->getBasePath(station);
+    // this method implies 5 stations ! Don't use it !
+    //    int station=l1->getStation();
+    // patch with this for the moment
+    std::string::size_type findLastSeparator=L1path.rfind("/");
+    std::string stname=L1path.substr(findLastSeparator+1,2);
+    //
+    //    std::string cablingBasePath=(m_muonDet->getDAQInfo())->getBasePath(basegeometry.getStationName(station));
+    std::string cablingBasePath=(m_muonDet->getDAQInfo())->getBasePath(stname);
+
+    //    info()<<"in ProcessPads(): station and path "<<stname<<" "<<cablingBasePath<<endmsg;
+
     unsigned int padsInTell1=0;
     unsigned int ODE_in_L1=(m_muonDet->getDAQInfo())->ODEInTell1(i);
     unsigned int maxPads=0;
@@ -746,6 +650,10 @@ StatusCode MuonDigitToRawBuffer::ProcessDigitV1()
 
   LHCb::MuonDigits* digit = get<LHCb::MuonDigits>( LHCb::MuonDigitLocation::MuonDigit );
   LHCb::MuonDigits::iterator idigit;
+
+  //    info()<<"Processing V1 number of digits: "<<digit->size()<<endmsg;
+
+
   for(idigit=digit->begin();idigit<digit->end();idigit++){
     LHCb::MuonTileID digitTile=(*idigit)->key();
     unsigned int time=(*idigit)->TimeStamp();
@@ -753,6 +661,10 @@ StatusCode MuonDigitToRawBuffer::ProcessDigitV1()
     long L1Number=0;
     long ODENumber=0;
     unsigned int ODEAdd=0;
+
+
+    //    info()<<"Processing V1 digit: "<<digitTile.toString()<<" time "<<time<<endmsg;
+    continue;
 
     long DigitOutputPosition=(m_muonDet->getDAQInfo())->DAQaddressInL1(digitTile,L1Number,ODENumber,ODEAdd);
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
@@ -821,3 +733,125 @@ unsigned int pp_num=(m_muonDet->getDAQInfo())->getPPNumber(L1Number,ODENumber);
 
 }
 */
+
+//=============================================================================
+/*std::vector<unsigned int> MuonDigitToRawBuffer::padsinTS(
+                                                         std::vector<unsigned
+                                                         int>& TSDigit,
+                                                         std::string TSPath){
+  //input the sequence of 0/1 for fired and not fired channels..
+  std::vector<unsigned int> list_of_pads;
+  //maxPads=0;
+  SmartDataPtr<MuonTSMap>  TS(detSvc(),TSPath);
+  //debug()<<"----- start a trigger sector cross ---------"<<endmsg;
+  //debug()<<TSPath<<" "<<TS->numberOfOutputSignal()<<endmsg;
+  //debug()<<" seq ";
+  //std::vector<unsigned int>::iterator idebug;
+  //for(idebug=TSDigit.begin();idebug<TSDigit.end();idebug++){
+  //  debug()<<" "<<*idebug;
+  //}
+  //debug()<<endmsg;
+
+  if(TS->numberOfLayout()==2){
+    //how many subsector????
+    int NX=TS->gridXLayout(1);
+    int NY=TS->gridYLayout(0);
+    int Nsub=NX*NY;
+    //debug()<<"number NX NY "<<NX<<" "<<NY<<endmsg;
+    //maxPads=TS->gridXLayout(0)*TS->gridYLayout(1);
+    // work on sub sector
+    if(Nsub>8){
+      err()<<"error the dimensioning of the TS subsector is wrong "<<endmsg;
+      return list_of_pads;
+
+    }
+
+    std::vector<unsigned int> horiz[8];
+    std::vector<unsigned int> hvert[8];
+    // clear the memory;
+
+    // start fill the sub sector matrices
+    std::vector<unsigned int>::iterator it;
+    int index=0;
+
+    for(it=TSDigit.begin();it<TSDigit.end();it++,index++){
+      //also zero must be set
+      // which subsector?
+      int mx=TS->gridXOutputChannel(index)/
+        (TS->gridXLayout(TS->layoutOutputChannel(index))/NX);
+      int my=TS->gridYOutputChannel(index)/
+        (TS->gridYLayout(TS->layoutOutputChannel(index))/NY);
+      //debug()<<" digit "<<index<<" "<<mx<<" "<<my<<" "<<*it<<endmsg;
+      int Msub=mx+my*NX;
+      // horizntal o vertical?
+      bool horizontal=false;
+      if(TS->layoutOutputChannel(index)==0)horizontal=true;
+      if(horizontal)horiz[Msub].push_back(*it);
+      else hvert[Msub].push_back(*it);
+      // debug()<<" horizontal ? "<<     horizontal<<endmsg;
+    }
+    // now the address of fired pads..
+    for(int i=0;i<Nsub;i++){
+      // cross only local to each sub matrix
+      std::vector<unsigned int>::iterator itx;
+      std::vector<unsigned int>::iterator ity;
+      //debug
+      //debug()<<" sub matrix "<<i<<endmsg;
+      //debug()<<" horizontal sequence ";
+
+      // for(itx=horiz[i].begin();
+      //    itx<horiz[i].end();itx++)
+      // {
+      //  debug()<<*itx<<" ";
+      //}
+      //debug()<<endmsg;
+      //debug()<<" vertical sequence ";
+
+      //for(ity=hvert[i].begin();ity<hvert[i].end();ity++){
+      //  debug()<<*ity<<" ";
+      //}
+      //debug()<<endmsg;
+      //end debug
+      unsigned int y_index=0;
+      unsigned int subY=i/NX;
+      unsigned int subX=i-subY*NX;
+
+      unsigned int offsetY=subY*(TS->gridYLayout(1)/NY);
+      unsigned int offsetX=subX*(TS->gridXLayout(0)/NX);
+      for(ity=hvert[i].begin();
+          ity<hvert[i].end();ity++,y_index++){
+        if(*ity!=0){
+          unsigned int x_index=0;
+          for(itx=horiz[i].begin();
+              itx<horiz[i].end();itx++,x_index++){
+            if(*itx!=0){
+              unsigned int address=offsetX+x_index+
+                (offsetY+y_index)*(TS->gridXLayout(0));
+              //      debug()<<" result of the address "<<address<<endmsg;
+              list_of_pads.push_back(address);
+            }
+          }
+        }
+      }
+    }
+  }else{
+    //easy only zero suppression
+    std::vector<unsigned int>::iterator it;
+    unsigned int index=0;
+    for(it=TSDigit.begin();it<TSDigit.end();it++,index++){
+      unsigned int address=index;
+      if(*it!=0){list_of_pads.push_back(address);
+      //      debug()<<" result of the address "<<address<<endmsg;
+      }
+    }
+  }
+  return list_of_pads;
+}
+
+*/
+
+
+
+
+
+
