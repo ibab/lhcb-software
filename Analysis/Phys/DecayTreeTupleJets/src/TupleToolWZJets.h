@@ -10,8 +10,11 @@
 #include "Kernel/IJetMaker.h"
 
 //autor: Albert Bursche
-class TupleToolWZJets : public TupleToolJetsBase, virtual public IParticleTupleTool  {
+class TupleToolWZJets : public TupleToolJetsBase, virtual public IParticleTupleTool
+{
+
 public:
+
   /// Standard constructor
   TupleToolWZJets( const std::string& type,
                    const std::string& name,
@@ -23,8 +26,11 @@ public:
                            , const LHCb::Particle*
                            , const std::string&
                            , Tuples::Tuple& );
+
   virtual StatusCode initialize();
+
 private:
+
   std::vector<LHCb::Particle*> m_decayParticles;
 
   /// Check if your track belongs to your decay or not
@@ -37,8 +43,6 @@ private:
   //std::string m_BosonContainer;
   std::vector<std::string> m_PartContainer;
   unsigned int m_MaxJets;
-  bool m_reqOverlap;
-  bool m_remOverlap;
   bool m_IsoJetAbsID;
   //  Tuples::Tuple* m_tuple;
   std::string m_prefix;
@@ -52,7 +56,7 @@ private:
   LoKi::Types::Fun m_DPHI;
   LoKi::Types::Fun m_DETA;
   LoKi::Types::Fun m_DR2;
-  
+
   LHCb::Particles& GetParticles();
   void AddDecProducts(LHCb::Particles&);
   bool StoreAdditionalJets(const IJetMaker::Jets& AddJets);

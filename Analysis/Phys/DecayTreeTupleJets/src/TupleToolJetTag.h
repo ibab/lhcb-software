@@ -10,32 +10,34 @@
 class TupleToolJetTag : public TupleToolJetsBase,
                         virtual public IParticleTupleTool
 {
-  public:
-    TupleToolJetTag(const std::string& type,
-                    const std::string& name,
-                    const IInterface* parent);
 
-    virtual ~TupleToolJetTag(){};
+public:
 
-    virtual StatusCode initialize();
+  TupleToolJetTag(const std::string& type,
+                  const std::string& name,
+                  const IInterface* parent);
 
-    virtual StatusCode fill(const LHCb::Particle*,
-                            const LHCb::Particle*,
-                            const std::string&,
-                            Tuples::Tuple&);
-  private:
-    // label for ntuple
-    std::string m_tagToolLabel;
-    // name to retrieve tool
-    std::string m_tagToolName;
+  virtual ~TupleToolJetTag(){};
 
-    bool m_verboseHlt1;   ///< get details on Hlt1
+  virtual StatusCode initialize();
 
-    // tool handle
-  protected:
+  virtual StatusCode fill(const LHCb::Particle*,
+                          const LHCb::Particle*,
+                          const std::string&,
+                          Tuples::Tuple&);
 
-    IJetTagTool* m_TagTool;
-    bool m_verboseTag;   ///< get details on Tag
+private:
+
+  // label for ntuple
+  std::string m_tagToolLabel;
+
+  // name to retrieve tool
+  std::string m_tagToolName;
+
+protected:
+
+  IJetTagTool* m_TagTool;
+  bool m_verboseTag;   ///< get details on Tag
 
 };
 

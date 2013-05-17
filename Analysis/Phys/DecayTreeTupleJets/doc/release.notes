@@ -4,6 +4,9 @@
 ! Purpose     : Jet related Tuple Tools
 !-----------------------------------------------------------------------------
 
+! 2013-05-17 - Chris Jones
+ - Remove unused data members to fix clang warnings.
+
 !========================= DecayTreeTupleJets v1r1p1 2013-05-07 =========================
 
 ! 2013-02-26 - Chris Jones
