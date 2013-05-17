@@ -28,19 +28,18 @@ DECLARE_TOOL_FACTORY( MCTupleToolDecayType )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  MCTupleToolDecayType::MCTupleToolDecayType( const std::string& type,
-                                              const std::string& name,
-                                              const IInterface* parent )
-    : TupleToolBase ( type, name , parent )
-    , m_mother(0)
-    , m_top(0)
-    , m_fillSlowFind(0)
-    , m_fillPseudoFind(0)
-    , m_findEventTypes(0)
-    , m_hasEventType(0)
-    , m_hasMCDecay("")
-    , m_mcEventType(0)
-    , m_mcDecay(0)
+MCTupleToolDecayType::MCTupleToolDecayType( const std::string& type,
+                                            const std::string& name,
+                                            const IInterface* parent )
+: TupleToolBase ( type, name , parent )
+  , m_mother(0)
+  , m_fillSlowFind(0)
+  , m_fillPseudoFind(0)
+  , m_findEventTypes(0)
+  , m_hasEventType(0)
+  , m_hasMCDecay("")
+  , m_mcEventType(0)
+  , m_mcDecay(0)
 {
   declareInterface<IMCParticleTupleTool>(this);
 
@@ -72,10 +71,10 @@ DECLARE_TOOL_FACTORY( MCTupleToolDecayType )
 
 //=============================================================================
 
-StatusCode MCTupleToolDecayType::initialize(){
-  if( ! TupleToolBase::initialize() ) return StatusCode::FAILURE;
-  StatusCode sc=StatusCode::SUCCESS;
-
+StatusCode MCTupleToolDecayType::initialize()
+{
+  StatusCode sc = TupleToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
 
   m_mcEventType = tool<IMCEventTypeFinder>("MCEventTypeFinder","Event_Type",this);
   m_mcDecay = tool<IMCDecayFinder>("MCDecayFinder","Decay_Type",this);

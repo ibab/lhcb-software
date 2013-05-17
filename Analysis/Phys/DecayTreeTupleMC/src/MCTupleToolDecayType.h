@@ -18,29 +18,29 @@
 #include <set>
 /** @class MCTupleToolDecayType MCTupleToolDecayType.h jborel/MCTupleToolDecayType.h
  *
- * \brief 
+ * \brief
  * \sa DecayTreeTuple
  *
  *  @author Robert Lambert
  *  @date   2009-02-25
- *  
+ *
  *  This TupleTool enables you to output the LHCb EventTypes for the MC particle associated to this candidate
  *  and/or search for a given MCDecay string
  *  The association should be done in TupleToolMCTruth
- *  
+ *
  *  There are two methods used to find the event type   (Pseudo or Slow)
  *   and several places you can look for the event type (GenHeader, FullEvent, MCAssociate)
- * 
+ *
  *  CONFIGURATION:
 
  *  You will also need to configure the EvtTypeSvc(), which takes the list of all possible decays from Gauss
- 
+
  *  EvtTypeSvc().EvtTypesFile='...fullpath.../table_event.txt'
- 
+
  *  Usually the file resides in $DECFILESROOT/doc/table_event.txt, copy and ship it with your job
- 
+
  *  METHODS:
- 
+
  *
 
  *  A) The Pseudo method: guesses the event type, by constructing the possible types
@@ -65,7 +65,7 @@
 
  *  WHERE TO LOOK:
 
- * 
+ *
 
  *  1) The GenHeader    : The GenHeader contains the event type which was generated.
 
@@ -105,8 +105,8 @@
 
  *  OPTIONS:
 
- *  
- * 
+ *
+ *
 
  *  mother         bool   Actually categorise the mc mother of this particle, not the associate itself
 
@@ -126,7 +126,7 @@
 
  *                        by default this is empty, fine for most cases
 
- * 
+ *
 
  *  fillSlowFind   bool   search through using decay strings, very slow method
 
@@ -164,7 +164,7 @@
 
  *  By default, only the Pseudo event types will be looked for
 
- *  
+ *
 
  *  _MCP_FoundTypes              (farray)            List of all found event types for the assosciate
 
@@ -178,7 +178,7 @@
 
  *  _MCP_numMatchingTypes        (unsigned int)      How many of hasEventType there are in the Event Types for the assosciate
 
- *  
+ *
 
  *  _MCP_PseudoTypes             (farray)            List of all found event types for the assosciate
 
@@ -192,45 +192,45 @@
 
  *  _MCP_numMatchingPseudoTypes  (unsigned int)      How many of hasEventType are in the Pseudo Event Types for the assosciate
 
- * 
+ *
 
  *  _MCP_hasGivenDecay           (bool)              does this MCP decay by the string in hasMCDecay?
 
- * 
+ *
  */
 
 
-class MCTupleToolDecayType : public TupleToolBase, virtual public IMCParticleTupleTool {
+class MCTupleToolDecayType : public TupleToolBase, virtual public IMCParticleTupleTool
+{
+
 public:
+
   /// Standard constructor
   MCTupleToolDecayType( const std::string& type,
-		    const std::string& name,
-		    const IInterface* parent);
+                        const std::string& name,
+                        const IInterface* parent);
 
   virtual ~MCTupleToolDecayType(){}; ///< Destructor
 
   virtual StatusCode fill( const LHCb::MCParticle*
-			   , const LHCb::MCParticle*
-			   , const std::string&
-			   , Tuples::Tuple& );
+                           , const LHCb::MCParticle*
+                           , const std::string&
+                           , Tuples::Tuple& );
 
   virtual StatusCode initialize();
-  //  virtual StatusCode finalize();
 
 private:
 
   //  const GaudiAlgorithm* getParent() const ;
 
   //Members which are set by the options:
- 
-  bool m_mother; //!< set by mother option categorise the mcmother of this mcparticle, not the associate itself
-  bool m_top; //!< set by top option. categorise the ultimate mcmother of this mcparticle, not the associate itself
 
+  bool m_mother; //!< set by mother option categorise the mcmother of this mcparticle, not the associate itself
   bool m_fillSlowFind;   //< set by the fillSlowFind   option, search through using decay strings
   bool m_fillPseudoFind; //< set by the fillPseudoFind option, construct the event types logically, much faster but less accurate
-  
-  ///m_findEventTypes set by the allEventTypes option, the full list of all event types to consider. 
-  std::vector<long unsigned int> m_findEventTypes; 
+
+  ///m_findEventTypes set by the allEventTypes option, the full list of all event types to consider.
+  std::vector<long unsigned int> m_findEventTypes;
   ///m_hasEventType set by the hasEventType option, how many of this list of types appear in this event?
   std::vector<long unsigned int> m_hasEventType;
   std::string m_hasMCDecay;                        //< set by the hasMCDecay option, look for this decay string aswell
@@ -239,10 +239,10 @@ private:
 
   LHCb::EventTypeSet m_findEventTypeSet; //< loaded from m_findEventTypes
   LHCb::EventTypeSet m_hasEventTypeSet;  //< loaded from m_hasEventType
-  
+
   IMCEventTypeFinder* m_mcEventType; //< the EventTypeFinder tool
   IMCDecayFinder* m_mcDecay;         //< the DecayTypeFinder tool
-  
+
   ///convert a std::vector to a std::set
   bool vec2set(std::vector<long unsigned int>& avec,LHCb::EventTypeSet& aset);
   bool set2vec(LHCb::EventTypeSet& aset,std::vector<long unsigned int>& avec);

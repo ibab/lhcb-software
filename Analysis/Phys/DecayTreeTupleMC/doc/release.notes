@@ -4,6 +4,9 @@
 ! Purpose     : MC tuple tools
 !-----------------------------------------------------------------------------
 
+! 2013-05-17 - Chris Jones
+ - Remove unused data members to fix clang warnings.
+
 ! 2013-05-14 - Chris Jones
  - Patch TupleToolGeneration to not throw an exception if a NULL LHCb::HepMCEvent
    pointer is found, as this is now normal in MC12 data (and thus this tool 
