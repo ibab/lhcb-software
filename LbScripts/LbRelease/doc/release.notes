@@ -1,5 +1,14 @@
 2013-05-17  Ben Couturier <Ben.Couturier@cern.ch>
 
+	* First version of SoftConfDB package
+	python/LbRelease/SoftConfDB/LbSdbImportProject.py
+	python/LbRelease/SoftConfDB/LbSdbImportAll.py
+	python/LbRelease/SoftConfDB/LbSdbQuery.py
+	python/LbRelease/SoftConfDB/__init__.py
+	python/LbRelease/SoftConfDB/AppImporter.py
+	python/LbRelease/SoftConfDB/LbSdbAddPlatform.py
+	python/LbRelease/SoftConfDB/SoftConfDB.py
+	scripts/lb-sdb-query
 	* python/LbRelease/Archive/ProjectManager.py: Fixed
 
 2013-04-22  Ben Couturier <Ben.Couturier@cern.ch>
