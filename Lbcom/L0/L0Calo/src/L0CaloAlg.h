@@ -98,6 +98,9 @@ private:
 
   int         m_hcalThreshold             ;   ///< Zero suppression threshold for hadron
   int         m_ecalThreshold             ;   ///< Zero suppression threshold for electromagnetic
+
+  bool        m_maskHotCells              ;   ///< Mask the 8 central cells in the HCAL
+  bool        m_ignoreDatabase            ;   ///< Ignore the database content to add ECAL or to use PS/SPD
   
   // Local variables
   DeCalorimeter *    m_ecal               ; ///< Pointer to Ecal detector element

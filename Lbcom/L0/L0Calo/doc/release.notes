@@ -3,6 +3,11 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2013-05-17 - Patrick Robbe
+ - L0CaloAlg: add two options (false by default) to:
+   * mask the HCAL hot cells in the Hadron trigger emulation (MaskHotCells)
+   * force the use of options instead of database (IgnoreDatabase)
+
 !========================= L0Calo v11r10 2013-04-22 =========================
 ! 2013-04-22 - Chris Jones
  - Fix clang32 compilation

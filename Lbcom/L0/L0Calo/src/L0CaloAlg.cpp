@@ -85,6 +85,8 @@ L0CaloAlg::L0CaloAlg( const std::string & name , ISvcLocator * pSvcLocator)
   declareProperty( "UseNewElectron"  , m_newElectron        = true     ) ;
   declareProperty( "HcalThreshold"   , m_hcalThreshold      = 8        ) ;
   declareProperty( "EcalThreshold"   , m_ecalThreshold      = 0        ) ;
+  declareProperty( "MaskHotCells"    , m_maskHotCells       = false    ) ;
+  declareProperty( "IgnoreDatabase"  , m_ignoreDatabase     = false    ) ;
   m_spdMult = std::vector< int >( 16 , 0 ) ;
 }
 
@@ -769,6 +771,24 @@ void L0CaloAlg::sumHcalData( ) {
   for ( std::vector<LHCb::L0CaloAdc>::const_iterator itAdc = adcs.begin();
         adcs.end() != itAdc; ++itAdc ) {
     LHCb::CaloCellID id = (*itAdc).cellID();
+
+    if ( m_maskHotCells ) {
+      // Mask Hot HCAL cells (4 per side, close to the beam pipe)
+      int areaw = id.area() ;
+      if ( 1 == areaw ) {
+        int roww = id.row() ;
+        int colw = id.col() ;
+        if ( ( roww == 15 ) && ( colw == 13 ) ) continue ;
+        if ( ( roww == 16 ) && ( colw == 13 ) ) continue ;
+        if ( ( roww == 15 ) && ( colw == 18 ) ) continue ;
+        if ( ( roww == 16 ) && ( colw == 18 ) ) continue ;
+        if ( ( roww == 15 ) && ( colw == 12 ) ) continue ;
+        if ( ( roww == 16 ) && ( colw == 12 ) ) continue ;
+        if ( ( roww == 15 ) && ( colw == 19 ) ) continue ;
+        if ( ( roww == 16 ) && ( colw == 19 ) ) continue ; 
+      }
+    }
+    
     int adc = (*itAdc).adc();
     
     // Get digits. Sum in front-end cards.
@@ -1096,7 +1116,11 @@ StatusCode L0CaloAlg::updateL0Calibration( ) {
     Warning("Use default AddECALToHCAL = true").ignore() ;
     m_addEcalToHcal = m_addEcalToHcalOpts ;
   } else {
-    m_addEcalToHcal = (m_l0Cond -> param< int >( "AddECALToHCAL" ))!=0 ;
+    if ( m_ignoreDatabase ) {
+      Warning( "Database content will be ignored" ).ignore() ;
+      m_addEcalToHcal = m_addEcalToHcalOpts ;
+    } else 
+      m_addEcalToHcal = (m_l0Cond -> param< int >( "AddECALToHCAL" ))!=0 ;
   }
 
   if ( ! m_l0Cond -> exists( "UsePSSPD" ) ) {
@@ -1104,7 +1128,11 @@ StatusCode L0CaloAlg::updateL0Calibration( ) {
     Warning("Use default UsePSSPD = true").ignore() ;
     m_usePsSpd = m_usePsSpdOpts ;
   } else {
-    m_usePsSpd      = (m_l0Cond -> param< int >( "UsePSSPD" ))!=0 ;
+    if ( m_ignoreDatabase ) {
+      Warning( "Database content will be ignored" ).ignore() ;
+      m_usePsSpd = m_usePsSpdOpts ;
+    } else
+      m_usePsSpd      = (m_l0Cond -> param< int >( "UsePSSPD" ))!=0 ;
   }
   
   if( msgLevel(MSG::DEBUG) ) {
