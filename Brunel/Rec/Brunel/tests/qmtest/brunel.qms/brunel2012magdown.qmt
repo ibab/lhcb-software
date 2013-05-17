@@ -31,7 +31,7 @@ ChargedProtoANN...SUCCESS List of booked 1D histograms in directory         "PRO
  | Upstream/GhostANN         | "Upstream Ghost ANN PID"                      |   1363  |    0.40399 | 0.35591    |    0.31217 |    -1.5072 |
  | Upstream/KaonANN          | "Upstream Kaon ANN PID"                       |   1363  |   0.055402 | 0.071468   |      3.561 |     17.065 |
  | Upstream/MuonANN          | "Upstream Muon ANN PID"                       |   1363  |  0.0043546 | 0.020965   |      33.76 |       1203 |
- | Upstream/PionANN          | "Upstream Pion ANN PID"                       |   1363  |    0.38536 | 0.27789    |     0.2678 |    -1.2351 |
+ | Upstream/PionANN          | "Upstream Pion ANN PID"                       |   1363  |    0.38536 | 0.27789    |     0.2679 |    -1.2353 |
  | Upstream/ProtonANN        | "Upstream Proton ANN PID"                     |   1363  |   0.031445 | 0.049975   |     3.2967 |     15.303 |
 """
 findReferenceBlock(block)
