@@ -2,6 +2,7 @@
 #define MUONALGS_MUONDIGITIZATIONDATA_CPP 1
 
 #include <string>
+#include <sstream>
 #include "MuonDigitizationData.h"    
 #include "MuonPhyChannelInput.h"    
 #include "MuonPhysicalChannel.h" 
@@ -15,45 +16,42 @@
 template<class T> 
 MuonDigitizationData<T>::MuonDigitizationData(const std::string &path, 
                                               MsgStream* mlog, 
-                                              IDataProviderSvc*
-																							eveSvc,const std::string 
-                                              &specpath)
+                                              IDataProviderSvc* eveSvc,
+					      const std::string &specpath)
 {
   //  MsgStream log(msgSvc(), name());
   s_basePathInTES = path ;
   m_registered = 0 ;
   log = (mlog);
   eventSvc=eveSvc ;
-	s_specificPath=specpath ; 
-  for(int i=0;i<MuonDigitizationData_m_partitionNumber;i++){    
+  s_specificPath=specpath ; 
+  for(int i=0; i<MuonDigitizationData_m_partitionNumber; i++){    
     KeyedContainer<T>* pippo=new  KeyedContainer<T>;
-    muonDataPartition[i]=pippo;    
+    muonDataPartition[i]=pippo;
   }
   
-// *log << MSG::INFO<<"ciao"<<endmsg;
-
-endPathInTES[0]=std::string("M1/R1");
-endPathInTES[1]=std::string("M1/R2");
-endPathInTES[2]=std::string("M1/R3");
-endPathInTES[3]=std::string("M1/R4");
-endPathInTES[4]=std::string("M2/R1");
-endPathInTES[5]=std::string("M2/R2");
-endPathInTES[6]=std::string("M2/R3");
-endPathInTES[7]=std::string("M2/R4");
-endPathInTES[8]=std::string("M3/R1");
-endPathInTES[9]=std::string("M3/R2");
-endPathInTES[10]=std::string("M3/R3");
-endPathInTES[11]=std::string("M3/R4");
-endPathInTES[12]=std::string("M4/R1");
-endPathInTES[13]=std::string("M4/R2");
-endPathInTES[14]=std::string("M4/R3");
-endPathInTES[15]=std::string("M4/R4");
-endPathInTES[16]=std::string("M5/R1");
-endPathInTES[17]=std::string("M5/R2");
-endPathInTES[18]=std::string("M5/R3");
-endPathInTES[19]=std::string("M5/R4");
-
-
+  *log << MSG::DEBUG<<"ciao"<<endmsg;
+  
+  endPathInTES[0]=std::string("M1/R1");
+  endPathInTES[1]=std::string("M1/R2");
+  endPathInTES[2]=std::string("M1/R3");
+  endPathInTES[3]=std::string("M1/R4");
+  endPathInTES[4]=std::string("M2/R1");
+  endPathInTES[5]=std::string("M2/R2");
+  endPathInTES[6]=std::string("M2/R3");
+  endPathInTES[7]=std::string("M2/R4");
+  endPathInTES[8]=std::string("M3/R1");
+  endPathInTES[9]=std::string("M3/R2");
+  endPathInTES[10]=std::string("M3/R3");
+  endPathInTES[11]=std::string("M3/R4");
+  endPathInTES[12]=std::string("M4/R1");
+  endPathInTES[13]=std::string("M4/R2");
+  endPathInTES[14]=std::string("M4/R3");
+  endPathInTES[15]=std::string("M4/R4");
+  endPathInTES[16]=std::string("M5/R1");
+  endPathInTES[17]=std::string("M5/R2");
+  endPathInTES[18]=std::string("M5/R3");
+  endPathInTES[19]=std::string("M5/R4");
 }
 
 
@@ -70,7 +68,6 @@ template<class T> MuonDigitizationData<T>::~MuonDigitizationData(){
         delete  (*it);
       }
       delete muonDataPartition[i];
-      
     }
   }
   else if(m_registered>0){
@@ -84,28 +81,36 @@ template<class T> MuonDigitizationData<T>::~MuonDigitizationData(){
          << endmsg;
     
   } ;  
-// *log << MSG::INFO<<"cavolo "<<endmsg;
-
+  // *log << MSG::INFO<<"cavolo "<<endmsg;
+  
 }
 
-template<class T> StatusCode MuonDigitizationData<T>::registerPartitions(){
+template<class T> StatusCode MuonDigitizationData<T>::registerPartitions(MuonBasicGeometry* gbase){
   std::string path;
-  for(int i=0;i<MuonDigitizationData_m_partitionNumber;i++){
-    path=s_basePathInTES+"/"+endPathInTES[i]+"/"+s_specificPath;
-//    *log << MSG::INFO <<path<<" "<<eventSvc<<endmsg;
-    	 *log << MSG::DEBUG <<path<<endmsg;
+  std::stringstream rgname;
+  int partitions = gbase->getPartitions();
+  for(int i=0;i<partitions;i++){
+    int ista = i/4;
+    int ireg = i - ista*4 +1;
+    std::string stname = gbase->getStationName(ista);
+    rgname<<"R"<<ireg;
+    //    path=s_basePathInTES+"/"+endPathInTES[i]+"/"+s_specificPath;
+    path=s_basePathInTES+"/"+stname+"/"+rgname.str()+"/"+s_specificPath;
+    //    *log << MSG::INFO <<path<<" "<<eventSvc<<endmsg;
+    //    *log << MSG::DEBUG <<path<<endmsg;
+    //    *log << MSG::INFO <<"MuonDigitizationData: partition/path: "<<i<<" "<<path<<endmsg;
     
     StatusCode result= eventSvc->registerObject(path, muonDataPartition[i]);
     // StatusCode result=StatusCode::SUCCESS;
     if(result==StatusCode::SUCCESS){
-//      *log << MSG::INFO <<i<<" result "<<result<<endmsg;
+      //      *log << MSG::INFO <<i<<" result "<<result<<endmsg;
     }else{
       *log << MSG::INFO <<i<<" non funziona "<<muonDataPartition[i]->size()<<endmsg;        
-	m_registered=-1;
+      m_registered=-1;
     } 
   }
   m_registered=1;
-  *log << MSG::INFO<<"register "<<m_registered<<endmsg;
+  //  *log << MSG::INFO<<"register "<<m_registered<<endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -137,21 +142,21 @@ template<class T> bool MuonDigitizationData<T>::isObjectIn(int i,T* p0, T*&
       ++iter ;
     }while(iter<(*muonDataPartition[i]).end()&&!found);
   }
-	return found;
+  return found;
 }	
 
 
 template<class T> KeyedContainer<T>*
 MuonDigitizationData<T>::getPartition(int i)
 {
-	return muonDataPartition[i];
+  return muonDataPartition[i];
 }
 
 template<class T> bool MuonDigitizationData<T>::isEmpty(int i){
-//  return  ((getPartition(i)->size()=0)?true:false);
+  //  return  ((getPartition(i)->size()=0)?true:false);
   long size=(*muonDataPartition[i]).size() ;
-	if(size==0) return true;
-	else return false; 
+  if(size==0) return true;
+  else return false; 
 }
 
 
@@ -162,5 +167,3 @@ template class  MuonDigitizationData<MuonCardiacChannelOutput>;
 //template class  MuonDigitizationData<MuonODEOutput>;
 
 #endif
-
-

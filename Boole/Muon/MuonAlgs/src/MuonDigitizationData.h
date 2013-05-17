@@ -5,6 +5,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/KeyedContainer.h"
 #include "Event/MCHit.h"
+#include "MuonDet/MuonBasicGeometry.h"
 
 static const int MuonDigitizationData_m_partitionNumber=20;
 
@@ -19,7 +20,7 @@ public:
   //check if the ith partition is empty
   bool isEmpty(int i);
   bool isObjectIn(int i,T* p0,T*& pFound, bool (*comp)(T* p1, T* p2));
-  StatusCode registerPartitions();
+  StatusCode registerPartitions(MuonBasicGeometry* gbase);
   
   KeyedContainer<T>* getPartition(int i);
   
@@ -38,6 +39,7 @@ private:
   //static const int m_partitionNumber=20;  !!! windows
   
   std::string endPathInTES[20];
+  //  std::map<std::string, std::string> endPathInTES;
   
   KeyedContainer<T>* muonDataPartition[MuonDigitizationData_m_partitionNumber];
   

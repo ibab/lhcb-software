@@ -20,7 +20,8 @@ MuonPhysicalChannelOutput::MuonPhysicalChannelOutput
 
 
 void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput, 
-                                                 LHCb::MuonTileID phChTileID[2],DeMuonDetector* muonDetector){  
+                                                 LHCb::MuonTileID phChTileID[2],
+						 DeMuonDetector* muonDetector){  
   
   //bool debug=false;
   
@@ -45,6 +46,11 @@ void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput,
   numberTileOutput=0;
   // loop over FE channel readout
   //
+
+  //  std::cout<<"Calculate Tile ID for channel: "<<*phChID()<<" log map: "
+  //	   <<muonDetector->getLogMapInRegion(station,region)<<std::endl;;
+
+
 
   for (int readoutNumber=0;readoutNumber<(int)muonDetector->
          getLogMapInRegion(station,region);readoutNumber++){

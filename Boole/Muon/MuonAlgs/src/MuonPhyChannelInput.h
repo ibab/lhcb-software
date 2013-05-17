@@ -10,16 +10,16 @@ class MuonPhyChannelInput: public KeyedObject<int>
 {
 public:  
   MuonPhyChannelInput(unsigned int phID, MuonHitTraceBack value):m_ID(phID),
-	m_hitTraceBack(value){};
-	MuonPhyChannelInput() {};
-	~MuonPhyChannelInput(){};  
-     
-	MuonPhChID* phChID(); 	
-
-  void setPhChID(MuonPhChID& value);
-	MuonHitTraceBack* getHitTraceBack();
- 
- 
+    m_hitTraceBack(value){};
+    MuonPhyChannelInput() {};
+    ~MuonPhyChannelInput(){};  
+    
+    MuonPhChID* phChID(); 	
+    
+    void setPhChID(MuonPhChID& value);
+    MuonHitTraceBack* getHitTraceBack();
+    
+    
 private:
   MuonPhChID m_ID;
   MuonHitTraceBack m_hitTraceBack ;

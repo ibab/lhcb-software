@@ -4,6 +4,10 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-05-16 - Giovanni Passaleva
+ - Several fixes to allow configuration without M1 mainly removal of
+   hardcoded # of stations changed with parametric one
+
 !========================= MuonAlgs v6r11 2012-12-12 =========================
 ! 2012-12-11 - Marco Clemencic
  - Added CMake configuration file.
