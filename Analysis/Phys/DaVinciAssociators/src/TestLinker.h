@@ -10,7 +10,7 @@
 #include "AsctAlgorithm.h"
 
 /** @class TestLinker TestLinker.h
- *  
+ *
  *  Example of use of various DaVinci features
  *
  *  @author Philippe Charpentier
@@ -19,23 +19,25 @@
 
 #define TR_EFFICIENCY
 
-namespace LHCb {  
+namespace LHCb {
   class Track;
 }
 
-class TestLinker : public AsctAlgorithm {
+class TestLinker : public AsctAlgorithm
+{
 
 public:
-  /// Standard constructor 
-  TestLinker(const std::string& name, ISvcLocator* pSvcLocator); 
+
+  /// Standard constructor
+  TestLinker(const std::string& name, ISvcLocator* pSvcLocator);
 
   virtual ~TestLinker( ); ///< Standard destructor
-  
+
   StatusCode initialize();    ///< Algorithm initialization
   StatusCode execute   ();    ///< Algorithm execution
   StatusCode finalize  ();    ///< Algorithm finalization
 
-  void prTable( const MSG::Level level, const std::string title, 
+  void prTable( const MSG::Level level, const std::string title,
                 const std::vector<int>& table, const int width);
   int trType( const LHCb::Track* tr );
 
@@ -43,20 +45,11 @@ private:
 
   // Define the name of the associator to be used, and define a pointer
   Particle2MCLinker* m_linkChi2;  ///< Pointer to associator using Chi2
-  Particle2MCLinker* 
-    m_linkLinks; ///< Pointer to associator using links
-  Particle2MCLinker* 
-    m_linkComp; ///< Pointer to composite particle associator using links
-  Particle2MCLinker* 
-    m_linkWithChi2; ///< Pointer to associator with chi2 as weight
-  Particle2MCLinker* 
-    m_linkCharged;  ///< Pointer to associator of ProtoParticles
-  Particle2MCLinker* 
-    m_linkNeutral;  ///< Pointer to associator of ProtoParticles
-  ProtoParticle2MCLinker*
-    m_linkChargedPP;
-  ProtoParticle2MCLinker*
-    m_linkNeutralPP;
+  Particle2MCLinker* m_linkLinks; ///< Pointer to associator using links
+  Particle2MCLinker* m_linkComp; ///< Pointer to composite particle associator using links
+  Particle2MCLinker* m_linkWithChi2; ///< Pointer to associator with chi2 as weight
+  ProtoParticle2MCLinker* m_linkChargedPP;
+  ProtoParticle2MCLinker* m_linkNeutralPP;
 
   int m_matchLinks;
   int m_matchChi2;

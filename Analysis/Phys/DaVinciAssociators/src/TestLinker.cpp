@@ -1,5 +1,5 @@
 // $Id: TestLinker.cpp,v 1.7 2008-02-12 15:10:30 jpalac Exp $
-#define TestLinker_CPP 
+#define TestLinker_CPP
 
 // Include files
 // from STL
@@ -15,7 +15,7 @@
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
 
-// from Event 
+// from Event
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
 #include "Event/ProtoParticle.h"
@@ -34,9 +34,9 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TestLinker
-// 
+//
 // Example of how to access various info from DaVinci
-// 
+//
 // 26/04/2002 : Philippe Charpentier
 //-----------------------------------------------------------------------------
 
@@ -48,8 +48,8 @@ DECLARE_ALGORITHM_FACTORY( TestLinker )
 // Standard creator, initializes variables
 //=============================================================================
 TestLinker::TestLinker(const std::string& name,
-                                           ISvcLocator* pSvcLocator) :
-  AsctAlgorithm(name, pSvcLocator)
+                       ISvcLocator* pSvcLocator) :
+AsctAlgorithm(name, pSvcLocator)
   , m_linkChi2(0)
   , m_linkLinks(0)
   , m_linkComp(0)
@@ -75,7 +75,7 @@ TestLinker::TestLinker(const std::string& name,
   , m_skippedEvts(0)
   , m_nbEvts(0)
   , m_setInputData(true)
-{ 
+{
   declareProperty( "SetInputData", m_setInputData);
 }
 
@@ -90,35 +90,35 @@ TestLinker::~TestLinker() { }
 StatusCode TestLinker::initialize() {
 
   // Use the message service
-  _info << ">>> Initialize" << endreq;  
+  _info << ">>> Initialize" << endreq;
 
-  std::vector<std::string> inp = 
+  std::vector<std::string> inp =
     m_setInputData ? m_inputData : std::vector<std::string>();
-  
+
   // Retrieve the link objects used by this algorithm
   m_linkWithChi2 = new Particle2MCLinker( this, Particle2MCMethod::WithChi2,
-                                        inp);
-  
-  m_linkChi2 = new Particle2MCLinker( this, Particle2MCMethod::Chi2,
-                                        inp);
-  
-  m_linkComp = new Particle2MCLinker( this, Particle2MCMethod::Composite,
-                                        inp);
-  
-  m_linkLinks = new Particle2MCLinker( this, Particle2MCMethod::Links,
-                                        inp);
+                                          inp);
 
-  m_linkChargedPP = 
-    new ProtoParticle2MCLinker( this, 
+  m_linkChi2 = new Particle2MCLinker( this, Particle2MCMethod::Chi2,
+                                      inp);
+
+  m_linkComp = new Particle2MCLinker( this, Particle2MCMethod::Composite,
+                                      inp);
+
+  m_linkLinks = new Particle2MCLinker( this, Particle2MCMethod::Links,
+                                       inp);
+
+  m_linkChargedPP =
+    new ProtoParticle2MCLinker( this,
                                 Particle2MCMethod::ChargedPP,
                                 std::vector<std::string>(1,ProtoParticleLocation::Charged));
-  
-  m_linkNeutralPP = 
-    new ProtoParticle2MCLinker( this, 
+
+  m_linkNeutralPP =
+    new ProtoParticle2MCLinker( this,
                                 Particle2MCMethod::NeutralPP,
                                 std::vector<std::string>(1,ProtoParticleLocation::Neutrals));
-  
-  
+
+
   // Initialization terminated
   return GaudiAlgorithm::initialize();
 }
@@ -132,30 +132,30 @@ StatusCode TestLinker::execute() {
   int matchLinksNotChi2=0, matchLinksHighChi2=0
     , matchChi2NotLinks=0, matchDifferent=0, matchLinksDiffComp=0
     , matchMissedComp=0, matchComp=0;
-  int skippedEvt = 0;  
+  int skippedEvt = 0;
 
   for( std::vector<std::string>::iterator inp = m_inputData.begin();
        m_inputData.end() != inp; inp++) {
     // Retrieve Particles
     SmartDataPtr<Particles> parts (eventSvc(), *inp);
-    if ( ! parts ) { 
-      _debug << "    No Particles retrieved from " 
-          << *inp << endreq;
+    if ( ! parts ) {
+      _debug << "    No Particles retrieved from "
+             << *inp << endreq;
       continue;
     }
     else {
       // msg number of Candidates retrieved
-      _verbose << "    Number of Particles retrieved from " 
-          << *inp << "  = " << parts->size() << endreq;
+      _verbose << "    Number of Particles retrieved from "
+               << *inp << "  = " << parts->size() << endreq;
       if( parts->size() == 0 ) skippedEvt = 1;
     }
 
     //========================================
     // Example of use of the Associator tool
     //========================================
-    
+
     // Using the direct association
-    for(Particles::const_iterator cand = parts->begin(); 
+    for(Particles::const_iterator cand = parts->begin();
         parts->end() != cand; cand++, nbParts++) {
       Particle* part = *cand;
 
@@ -164,29 +164,29 @@ StatusCode TestLinker::execute() {
       const MCParticle* mcPartComp = 0;
       double chi2 = 0.;
       int nbChi2 = m_linkChi2->associatedMCP(part);
-        
+
       mcPartLinks = m_linkLinks->first(part);
       std::string strCharged = part->charge()? "Charged" : "Neutral";
-      _verbose << "+++ " << strCharged << " particle " << part->key() 
+      _verbose << "+++ " << strCharged << " particle " << part->key()
                << " " << part->particleID().pid()
                << " , momentum, slopes "
-               << part->p() << " " 
-               << part->slopes().X() << " " 
-               << part->slopes().Y() 
+               << part->p() << " "
+               << part->slopes().X() << " "
+               << part->slopes().Y()
                << endreq;
-      
+
       if( NULL != mcPartLinks ) {
         // An association was obtained from links
         _verbose << "    Associated to "
                  << m_linkLinks->associatedMCP(part)
                  << " MCParts: " << endreq;
-        if( part->charge() ) matchLinks++;    
+        if( part->charge() ) matchLinks++;
         int nass = 0;
         do {
           nass++;
           double weight = m_linkLinks->weight();
           const Gaudi::LorentzVector mc4Mom = mcPartLinks->momentum();
-          _verbose << "    MCPart " << mcPartLinks->key() << " " 
+          _verbose << "    MCPart " << mcPartLinks->key() << " "
                    << mcPartLinks->particleID().pid()
                    << " (weight "
                    << weight << ") from links : momentum, slopes "
@@ -195,7 +195,7 @@ StatusCode TestLinker::execute() {
                    << mc4Mom.Py()/mc4Mom.Pz() << endreq;
           mcPartLinks = m_linkLinks->next();
         } while( NULL != mcPartLinks );
-        
+
         // Reset the link to the first one to test the "decreasing" feature
         mcPartLinks = m_linkLinks->first( part );
         mcPartComp = m_linkComp->first( part );
@@ -239,7 +239,7 @@ StatusCode TestLinker::execute() {
           _verbose << "      MCPart found from Chi2 is different" << endreq;
         }
         const Gaudi::LorentzVector mc4Mom = mcPartChi2->momentum();
-        _verbose << "      MCPart from Chi2 " 
+        _verbose << "      MCPart from Chi2 "
                  << part->particleID().pid()
                  << " : momentum, slope "
                  << mc4Mom.Vect().R() << " "
@@ -248,7 +248,7 @@ StatusCode TestLinker::execute() {
         _verbose << "       Chi2 was " << chi2 << endreq;
         Particle* partLinks = m_linkLinks->firstP( mcPartChi2 );
         if( partLinks ) {
-          _verbose << "       It is linked to Particle " 
+          _verbose << "       It is linked to Particle "
                    << partLinks->key() << endreq;
         }
       }
@@ -259,7 +259,7 @@ StatusCode TestLinker::execute() {
   }
 
   if( 0 == nbParts ) return StatusCode::SUCCESS;
-  
+
   int width = (int)log10((double)nbParts+1)+1;
 
   _debug << "========= On " << std::setw(width) <<  nbParts
@@ -279,7 +279,7 @@ StatusCode TestLinker::execute() {
          << "   | Matched with both  | " << std::setw(width) << matchFull
          << " | Matched different | " << std::setw(width) << matchDifferent
          << endreq;
-  
+
   m_matchLinks += matchLinks;
   m_matchChi2 += matchChi2;
   m_matchFull += matchFull;
@@ -294,11 +294,11 @@ StatusCode TestLinker::execute() {
 
 
 #ifdef TR_EFFICIENCY
-  // Now use reverse associators to check how frequently 
+  // Now use reverse associators to check how frequently
   //     an MCParticle is associated
 
   // Retrieve MCParticles
-  SmartDataPtr<MCParticles> 
+  SmartDataPtr<MCParticles>
     mcParts(eventSvc(), MCParticleLocation::Default );
 
   // Loop on MCParticles now
@@ -312,14 +312,14 @@ StatusCode TestLinker::execute() {
   int mcPartRecons = 0;
   std::vector<int> trackFound(6, 0);
   m_nbEvts++;
-  
+
   if( skippedEvt ) {
     m_skippedEvts++;
   } else {
-    LinkedFrom<Track> trLink( eventSvc(), 
-                                      NULL, 
-                                      TrackLocation::Default); 
-    
+    LinkedFrom<Track> trLink( eventSvc(),
+                              NULL,
+                              TrackLocation::Default);
+
     // Get the track info if present
     MCTrackInfo trackInfo( eventSvc(), msgSvc() );
     for( MCParticles::const_iterator mcIt=mcParts->begin();
@@ -340,8 +340,8 @@ StatusCode TestLinker::execute() {
         mcPartRecons++;
         bool countTr = true;
         bool countProto = true;
-        for( Track* tr = trLink.first(mcPart); 
-             NULL != tr; 
+        for( Track* tr = trLink.first(mcPart);
+             NULL != tr;
              tr = trLink.next()) {
           verbose() << "      Is associated to track " << tr->key();
           if( !tr->checkFlag( Track::Clone ) ) {
@@ -354,10 +354,10 @@ StatusCode TestLinker::execute() {
             countTr = false;
             trackFound[type] = 1;
             // Check the protoPart comes from that track
-            ProtoParticle2MCLinker* protoLink = 
-              mcPart->particleID().threeCharge() ? 
+            ProtoParticle2MCLinker* protoLink =
+              mcPart->particleID().threeCharge() ?
               m_linkChargedPP : m_linkNeutralPP;
-            
+
             for( ProtoParticle* proto = protoLink->firstP(mcPart);
                  NULL != proto;
                  proto = protoLink->nextP() ) {
@@ -398,7 +398,7 @@ StatusCode TestLinker::execute() {
           mcPart2Part[0]++;
           if( partTrType ) mcPart2Part[partTrType]++;
         }
-        if( !trackFound[1] && !trackFound[2] 
+        if( !trackFound[1] && !trackFound[2]
             && trackFound[3] && trackFound[4] ) {
           mcPart2Track[6]++;
         }
@@ -407,28 +407,28 @@ StatusCode TestLinker::execute() {
   }
 
   width = (int)log10((double)mcPartCount+1)+1;
-  _debug 
+  _debug
     << "========= On " << std::setw(width) << mcPartCount
     << " MCParticles ========="
     << endreq
     << "   |                       |  Total  | Forward |  Match  |  Velo   |"
     << "  Seed   | Upstream|  Missed |" << endreq;
   width = 7;
-  _debug 
+  _debug
     << "   | Reconstructible long  | " << std::setw(width) << mcPartRecons
     <<endreq;
 
-  prTable( MSG::DEBUG, 
+  prTable( MSG::DEBUG,
            "   | Linked to a track     | ", mcPart2Track, width);
-  prTable( MSG::DEBUG, 
+  prTable( MSG::DEBUG,
            "   | Linked to a ProtoPart | ", mcPart2Proto, width);
-  prTable( MSG::DEBUG, 
+  prTable( MSG::DEBUG,
            "   | Linked to a Part/Link | ", mcPart2PartLink, width);
-  prTable( MSG::DEBUG, 
+  prTable( MSG::DEBUG,
            "   | Linked to a Part/Chi2 | ", mcPart2PartChi2, width);
-  prTable( MSG::DEBUG, 
+  prTable( MSG::DEBUG,
            "   | Linked to a Particle  | ", mcPart2Part, width);
-  
+
   // Collect full statistics
   m_mcPartRecons += mcPartRecons;
   m_mcPartCount += mcPartCount;
@@ -436,20 +436,20 @@ StatusCode TestLinker::execute() {
   for( i=0; i < m_mcPart2Track.size(); i++ ) {
     m_mcPart2Track[i] += mcPart2Track[i];
   }
-  for( i=0; i < m_mcPart2Proto.size(); i++ ) {  
+  for( i=0; i < m_mcPart2Proto.size(); i++ ) {
     m_mcPart2Proto[i] += mcPart2Proto[i];
     m_mcPart2Part[i] += mcPart2Part[i];
     m_mcPart2PartChi2[i] += mcPart2PartChi2[i];
     m_mcPart2PartLink[i] += mcPart2PartLink[i];
   }
-  
-#endif  
-  
+
+#endif
+
   // End of execution for each event
   return StatusCode::SUCCESS;
 }
-void TestLinker::prTable( const MSG::Level level,  
-                          const std::string title, 
+void TestLinker::prTable( const MSG::Level level,
+                          const std::string title,
                           const std::vector<int>& table, const int width)
 {
   if( msgLevel( level ) ) {
@@ -476,7 +476,7 @@ int TestLinker::trType( const Track* tr ){
   }
   return type;
 }
-  
+
 //=============================================================================
 //  Finalize
 //=============================================================================
@@ -484,7 +484,7 @@ StatusCode TestLinker::finalize() {
 
   _debug << ">>> Finalize" << endreq;
   int width = (int)log10((double)m_nbParts+1)+1;
- 
+
   _info << "======== Statistics for Particles to MCParticles association"
         << "========" << endreq
         << "======== On " << std::setw(width) <<  m_nbParts
@@ -505,7 +505,7 @@ StatusCode TestLinker::finalize() {
         << " | Matched different | " << std::setw(width) << m_matchDifferent
         << endreq;
 
-#ifdef TR_EFFICIENCY  
+#ifdef TR_EFFICIENCY
   width = (int)log10((double)m_mcPartCount+1)+1;
   _info << "======== Statistics on MCParticle associations ========"
         << endreq
@@ -519,15 +519,15 @@ StatusCode TestLinker::finalize() {
   _info  << "   | Reconstructible long  | " << std::setw(width) << m_mcPartRecons
          <<endreq;
 
-  prTable( MSG::INFO, 
+  prTable( MSG::INFO,
            "   | Linked to a track     | ", m_mcPart2Track, width);
-  prTable( MSG::INFO, 
+  prTable( MSG::INFO,
            "   | Linked to a ProtoPart | ", m_mcPart2Proto, width);
-  prTable( MSG::INFO, 
+  prTable( MSG::INFO,
            "   | Linked to a Part/Link | ", m_mcPart2PartLink, width);
-  prTable( MSG::INFO, 
+  prTable( MSG::INFO,
            "   | Linked to a Part/Chi2 | ", m_mcPart2PartChi2, width);
-  prTable( MSG::INFO, 
+  prTable( MSG::INFO,
            "   | Linked to a Particle  | ", m_mcPart2Part, width);
 #endif
 

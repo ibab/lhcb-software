@@ -4,6 +4,9 @@
 ! Responsible : Vladimir Gligorov
 !==============================================================================
 
+! 2013-05-17 - Chris Jones
+ - Fix clang 3.2 warning due to unused data members.
+
 !========================= DaVinciAssociators v9r5p1 2013-05-07 =========================
 
 ! 2013-02-26 - Chris Jones
