@@ -11,8 +11,9 @@
 // local
 #include "ParticleAdder.h"
 
-using namespace LHCb ;
+using namespace LHCb;
 using namespace Gaudi::Units;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : ParticleAdder
 //

@@ -29,9 +29,8 @@ public:
                  const IInterface* parent);
 
   /// Method to fit a vertex
-  StatusCode fit
-  ( LHCb::Vertex& ,
-    const LHCb::Particle::ConstVector& ) const ;
+  StatusCode fit ( LHCb::Vertex& ,
+                   const LHCb::Particle::ConstVector& ) const ;
 
   /// Method to fit a vertex returning a Particle (that should already know its PID)
   StatusCode fit( const LHCb::Particle::ConstVector&,
@@ -51,11 +50,6 @@ public:
                       LHCb::Vertex&                      vertex  ) const;
 
   virtual ~ParticleAdder( ); ///< Destructor
-
-private:
-
-
-  LHCb::IParticlePropertySvc* m_ppSvc;
 
 };
 #endif // PARTICLEADDER_H
