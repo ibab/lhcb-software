@@ -452,8 +452,7 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
   {
     dist_ave = dist_ave/nHits;
   }
-  else dist_ave = dist_ave;
-  
+ 
   if ( msgLevel(MSG::VERBOSE) )
     verbose() <<" So the dist_ave for track "<< track->key()<<"  ("<< track->charge() 
               << ")   will be: " << dist_ave<< endmsg;
