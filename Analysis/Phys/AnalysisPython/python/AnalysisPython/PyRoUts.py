@@ -4956,7 +4956,7 @@ def _mn_cov_ ( self , size = -1 , root = False ) :
     elif 6 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix6x6 ()
     elif 7 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix7x7 ()
     ## no 8x8! 
-    elif 9 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix9x9 ()
+    ## elif 9 == size and not root : mtrx = cpp.Gaudi.Math.SymMatrix9x9 ()
     else :
         ## use ROOT matrices 
         mtrx = ROOT.TMatrix( size , size )
