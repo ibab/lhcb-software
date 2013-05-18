@@ -182,7 +182,7 @@ Gaudi.SymMatrix8x8        = Gaudi.SymMatrix(8)
 Gaudi.SymMatrix9x9        = Gaudi.SymMatrix(9)
 
 
-Gaudi.Math.SymMatrix3x3   = Gaudi.SymMatrix2x2 
+Gaudi.Math.SymMatrix2x2   = Gaudi.SymMatrix2x2 
 Gaudi.Math.SymMatrix3x3   = Gaudi.SymMatrix3x3 
 Gaudi.Math.SymMatrix4x4   = Gaudi.SymMatrix4x4
 Gaudi.Math.SymMatrix5x5   = Gaudi.SymMatrix5x5 

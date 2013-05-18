@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2013-05-18 - Vanya Belyaev
+ - Types.py: minor fix in symmatrix alias 
+
 ! 2013-05-12 - Vanya Belyaev
  - add gamma-dist and loggamma-dist functions 
 
