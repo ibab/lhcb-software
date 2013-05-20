@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2013-05-20 - Chris Jones
+ - Fix bug in WritePackedDst where && insead of & was accidentally used.
+
 ! 2013-05-10 - Chris Jones
  - Add some additional counters to the ParticlesAndVertices unpacker.
    Useful for QM tests.

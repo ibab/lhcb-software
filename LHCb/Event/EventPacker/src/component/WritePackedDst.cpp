@@ -201,8 +201,8 @@ StatusCode WritePackedDst::execute()
 
       LHCb::RecHeader* in = get<LHCb::RecHeader>( *itC );
       PackedBank bank( in );
-      unsigned int evHigh = ((in->evtNumber() ) >> 32) && 0xFFFFFFFF;
-      unsigned int evLow  = ( in->evtNumber() && 0xFFFFFFFF );
+      unsigned int evHigh = ((in->evtNumber() ) >> 32) & 0xFFFFFFFF;
+      unsigned int evLow  = ( in->evtNumber() & 0xFFFFFFFF ); 
       bank.addEntry( evHigh, evLow, 0 ); // 0 is size of random seeds vector, for backward compatibility
       bank.storeString( in->applicationName() );
       bank.storeString( in->applicationVersion() );
