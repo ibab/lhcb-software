@@ -12,8 +12,8 @@
 #reftable
 if "FAIL" in stdout:
     causes.append('Failed to emulate a l0TCK')
-    result['moore.l0-emulation-mc.fail']=result.Quote("\".join([line for line in stdout.split('\n') if "TEST RESULT" in line and "FAIL" in line]))
-result['moore.l0-emulation-mc.pass']=result.Quote("\".join([line for line in stdout.split('\n') if "TEST RESULT" in line and "PASS" in line]))
+    result['moore.l0-emulation-mc.fail']=result.Quote("\n".join([line/strip() for line in stdout.split('\n') if "TEST RESULT" in line and "FAIL" in line]))
+result['moore.l0-emulation-mc.pass']=result.Quote("\n".join([line.strip() for line in stdout.split('\n') if "TEST RESULT" in line and "PASS" in line]))
 </text></argument>
 </extension>
 
