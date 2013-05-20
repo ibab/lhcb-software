@@ -6,6 +6,7 @@
 
 ! 2013-05-20 - Rob Lambert
  - new MC test, new L0TCK test prototypes
+ - finished L0CK test, using threads to improve runtime... hope that's OK
 
 !========================= Moore v20r1p1 2013-05-16 =========================
 ! 2013-05-15 - Rob Lambert

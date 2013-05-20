@@ -7,7 +7,7 @@ for TCK in getTCKList():
     L0TCKs[hex(int(TCK,16)&0xffff)]=TCK
     
 #print L0TCKs
-options="\"from Configurables import L0MuonAlg; L0MuonAlg( 'L0Muon' ).L0DUConfigProviderType = 'L0DUConfigProvider'; from Configurables import L0Conf; L0Conf().TCK = '##TCK##';\""
+options="\"from Configurables import Moore; Moore().EvtMax=11; from Configurables import L0MuonAlg; L0MuonAlg( 'L0Muon' ).L0DUConfigProviderType = 'L0DUConfigProvider'; from Configurables import L0Conf; L0Conf().TCK = '##TCK##';\""
 
 #L0TCKs={"0x0045":"0x409f0045"}
 
@@ -20,8 +20,7 @@ for l0 in L0TCKs:
     while len(l0)<6:
         l0='x'.join([l0.split('x')[0],'0'+l0.split('x')[-1]])
     results[l0]=commands.getstatusoutput('gaudirun.py $APPCONFIGOPTS/Moore/MooreSimProductionWithL0Emulation.py $APPCONFIGOPTS/Moore/DataType-2012.py $APPCONFIGOPTS/Conditions/TCK-0x409f0045.py ../options/default-threshold.py ../options/Moore-Testing-MC.py  --option='+options.replace("##TCK##",l0))
-    break
-
+    
 #s,o=results["0x0045"]
 #print o
 #print s
@@ -32,7 +31,7 @@ w_e_f={}
 for l0 in results:
     s,o=results[l0]
     #check simple things, exit code, all events, contains sequencer, no FATAL errors
-    parsed[l0]=[s==0,"SUCCESS Reading Event record 191. Record number within stream 2: 91" in o,"L0EmulatorSeq" in o]
+    parsed[l0]=[s==0,"SUCCESS Reading Event record 11." in o,"L0EmulatorSeq" in o]
     w_e_f[l0]=[]
     for line in o.split('\n'):
         if line.startswith('#'):
