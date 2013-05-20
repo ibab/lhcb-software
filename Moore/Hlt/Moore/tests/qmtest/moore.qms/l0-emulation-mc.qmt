@@ -5,7 +5,7 @@
     <integer>1800</integer>
   </argument>
   <argument name="args"><set>
-    <text>../options/L0_TCKs_Thread</text>
+    <text>../options/L0TCKs_Thread.py</text>
   </set></argument>
   <argument name="validator"><text>
 #print "YES"
