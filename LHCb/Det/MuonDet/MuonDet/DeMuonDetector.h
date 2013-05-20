@@ -333,7 +333,8 @@ private:
   float m_sensitiveAreaY[partition];
   float m_sensitiveAreaZ[partition];  
   double m_stationBox[5][4];
-  double m_stationZ[5];
+  //  double m_stationZ[5];
+  std::vector<double> m_stationZ;
   MuonDAQHelper m_daqHelper;
   int   m_hitNotInGap;
 
@@ -351,9 +352,10 @@ inline int DeMuonDetector::getStation(const double z) const
 //  double s_off[5] = {12100,15200,16400,17600,18800};
   double offset = /* DDDB cords - s_off = */ 70; //Shouldn't be zero?
 
-
-  for(idX = 0; idX<5; idX++) {
-    if(fabs(z-m_stationZ[idX]+offset)<s_size) break;
+  int nsta = m_stationZ.size();
+  for(idX = 0; idX<nsta; idX++) {
+    //    if(fabs(z-m_stationZ[idX]+offset)<s_size) break;
+    if(fabs(z-m_stationZ.at(idX)+offset)<s_size) break;
   }
 
 
@@ -377,7 +379,8 @@ inline int DeMuonDetector::regions()
 }
 
 inline double DeMuonDetector::getStationZ(const int station){
-    return m_stationZ[station];
+  //    return m_stationZ[station];
+  return m_stationZ.at(station);
 }
 
 

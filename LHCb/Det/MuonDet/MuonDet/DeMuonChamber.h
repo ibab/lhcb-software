@@ -11,6 +11,7 @@
 // Include files
 #include <vector>
 #include <string>
+#include <sstream>
 
 #include "GaudiKernel/MsgStream.h"
 
@@ -55,13 +56,15 @@ public:
   StatusCode initialize();
 
   /// get Station Number
-  inline int stationNumber() const {
-    return m_StationNumber;
+  //  inline int stationNumber() const {
+  inline std::string stationNumber() const {
+    return m_StationName.str();
   }
 
-  /// set Station Number
+  /// set Station Number (from 0 -> nStations)
   void setStationNumber(int nStation){
     m_StationNumber = nStation;
+    m_StationName <<"M"<<nStation+1;
   }
 
   /// get Region Number
@@ -130,6 +133,8 @@ private:
   /// Chamber number in region
   int m_ChamberNumber;
 
+  /// Station name
+  std::stringstream m_StationName;
 };
 
 #endif    // MUONDET_DEMUONCHAMBER_H

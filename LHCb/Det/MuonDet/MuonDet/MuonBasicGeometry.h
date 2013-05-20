@@ -26,6 +26,7 @@ public:
   int getPartitions();
   std::string  findName(std::string allname,std::string rootName);
   std::string getStationName(int station);
+  int getStationNumber(std::string stationName);
   int retrieveM1status();
 
 private:
@@ -33,6 +34,6 @@ private:
   int m_regionNumber;
   int m_isM1defined;
   int m_partition;
-  std::vector<std::string> numsta;  
+  std::vector< std::pair<std::string, int> >m_stations;  
 };
 #endif // MUONALGS_MUONBASICGEOMETRY_H

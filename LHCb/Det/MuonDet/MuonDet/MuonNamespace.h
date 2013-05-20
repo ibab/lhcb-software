@@ -6,5 +6,6 @@
 #endif
 namespace DeMuonLocation{
   static const std::string& Default="/dd/Structure/LHCb/DownstreamRegion/Muon";
+  static const std::string& Cabling="/dd/Conditions/ReadoutConf/Muon/Cabling";
 }
 #endif // MUONDET_MUONNAMESPACE_H
