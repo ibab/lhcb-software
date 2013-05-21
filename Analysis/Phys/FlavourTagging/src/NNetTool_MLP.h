@@ -51,9 +51,7 @@ private:
   double m_P0e, m_P1e, m_P2e;
   double m_P0k, m_P1k, m_P2k, m_P3k;
   double m_P0ps, m_P1ps, m_P2ps;
-  double m_P0ks, m_P1ks, m_P2ks, m_P0vtx, m_P1vtx, m_P2vtx, m_P3vtx;
-  double m_Gt075, m_wSameSign2, m_wSameSignMoreThan2;
-  double m_ProbMinVtx, m_MinimumVCharge;
+  double m_P0ks, m_P1ks, m_P2ks, m_P0vtx, m_P1vtx;
 
 };
 

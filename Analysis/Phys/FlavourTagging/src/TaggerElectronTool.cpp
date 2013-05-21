@@ -97,7 +97,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
        ipart != vtags.end(); ++ipart ) 
   {
 
-    const bool inHcalACC= (*ipart)->proto()->info(ProtoParticle::InAccHcal, false);
+    const bool inHcalACC = 0 != (*ipart)->proto()->info(ProtoParticle::InAccHcal,0);
     if(!inHcalACC) continue;
 
     const double pide=(*ipart)->proto()->info( ProtoParticle::CombDLLe, -1000.0 );
