@@ -63,4 +63,4 @@ for i in range(8):
     t=LockOnPrintThread(l0pool,lock)
     t.method=runAndParse
     t.start()
-    sleep(5) #don't all start at the same time!
+#sleep(5) #don't all start at the same time!

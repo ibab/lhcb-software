@@ -2,7 +2,7 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="timeout">
-    <integer>1800</integer>
+    <integer>3600</integer>
   </argument>
   <argument name="args"><set>
     <text>../options/L0TCKs_Thread.py</text>
