@@ -345,41 +345,42 @@ StatusCode MuonDigitChecker::execute() {
     if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt1->write();  
     if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  }
-  Tuple nt2 = nTuple(42,"DIGITS",CLID_ColumnWiseTuple);
-  
-  longlong m_digit_evt = evt->evtNumber();
-  StatusCode sc=nt2->column("Event", m_digit_evt, 0LL,10000LL);
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  sc=nt2->farray("is",    m_digit_s,      "Ndigits",1000);
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  sc=nt2->farray("ir",    m_digit_r,      "Ndigits",1000);
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  sc=nt2->farray("x" ,    m_digit_x,      "Ndigits",1000);
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  sc=nt2->farray("y" ,    m_digit_y,      "Ndigits",1000);
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  sc=nt2->farray("z" ,    m_digit_z,      "Ndigits",1000);
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  sc=nt2->farray("dx",    m_digit_dx,     "Ndigits",1000);
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  sc=nt2->farray("dy",    m_digit_dy,     "Ndigits",1000);
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  sc=nt2->farray("dz",    m_digit_dz,     "Ndigits",1000);
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  sc=nt2->farray("t" ,    m_digit_time,   "Ndigits",1000);
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  sc=nt2->farray("origin",m_digit_origin, "Ndigits",1000);
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  sc=nt2->farray("bx"    ,m_digit_bx,     "Ndigits",1000);
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  sc=nt2->farray("firing",m_digit_firing, "Ndigits",1000);
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  sc=nt2->farray("multip",m_digit_multi,  "Ndigits",1000);
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  sc=nt2->write();  
-  if(sc.isFailure())debug()<<" nt error "<<endmsg;
-  
+
+    Tuple nt2 = nTuple(42,"DIGITS",CLID_ColumnWiseTuple);
+    
+    longlong m_digit_evt = evt->evtNumber();
+    //    StatusCode sc=nt2->column("Event", m_digit_evt, 0LL,10000LL);
+    sc=nt2->column("Event", m_digit_evt, 0LL,10000LL);
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    sc=nt2->farray("is",    m_digit_s,      "Ndigits",1000);
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    sc=nt2->farray("ir",    m_digit_r,      "Ndigits",1000);
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    sc=nt2->farray("x" ,    m_digit_x,      "Ndigits",1000);
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    sc=nt2->farray("y" ,    m_digit_y,      "Ndigits",1000);
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    sc=nt2->farray("z" ,    m_digit_z,      "Ndigits",1000);
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    sc=nt2->farray("dx",    m_digit_dx,     "Ndigits",1000);
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    sc=nt2->farray("dy",    m_digit_dy,     "Ndigits",1000);
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    sc=nt2->farray("dz",    m_digit_dz,     "Ndigits",1000);
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    sc=nt2->farray("t" ,    m_digit_time,   "Ndigits",1000);
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    sc=nt2->farray("origin",m_digit_origin, "Ndigits",1000);
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    sc=nt2->farray("bx"    ,m_digit_bx,     "Ndigits",1000);
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    sc=nt2->farray("firing",m_digit_firing, "Ndigits",1000);
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    sc=nt2->farray("multip",m_digit_multi,  "Ndigits",1000);
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    sc=nt2->write();  
+    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+  }  
   return StatusCode::SUCCESS;
 }
   
