@@ -816,7 +816,7 @@ StatusCode  DeMuonDetector::Chamber2Tile(int  chaNum, int station, int region,
 
 void DeMuonDetector::fillGeoInfo()
 {
-    bool debug=false;
+  //    bool debug=false;
   //  bool debug=true;
 
   int station=0;

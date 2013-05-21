@@ -68,7 +68,7 @@ MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
     
   }
 
-  bool isM1defined=m_isM1defined;
+  //  bool isM1defined=m_isM1defined;
   //  log << MSG::DEBUG << "Retrieved M1 definition status: " << isM1defined <<endmsg;
   //  log << MSG::INFO << "Retrieved M1 definition status: " << isM1defined <<endmsg; //GP
   m_partition=m_stationNumber*m_regionNumber;
