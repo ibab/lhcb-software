@@ -229,33 +229,54 @@ WMu = {
     'STREAMS' : [ 'ALL' ] 
     }
 
+
 ## Micro-DST, Vanya BELYAEV
 ## Test:  Yes
 PromptCharm = {
     'BUILDERTYPE' : 'StrippingPromptCharmConf', 
     'CONFIG'      : {
-    ## PT-cuts 
+    #
+    #
+    ## PT-cuts
     #
     'pT(D0)'           :  3.0 * GeV ,    ## pt-cut for  prompt   D0
-    'pT(D0) for D*+'   :  2.0 * GeV ,    ## pt-cut for  D0 from  D*+ 
+    'pT(D0) for D*+'   :  2.0 * GeV ,    ## pt-cut for  D0 from  D*+
     'pT(D+)'           :  3.0 * GeV ,    ## pt-cut for  prompt   D+
     'pT(Ds+)'          :  3.0 * GeV ,    ## pt-cut for  prompt   Ds+
     'pT(Ds+) for Bc+'  :  1.0 * GeV ,    ## pt-cut for  Ds+ from Bc+
+    'pT(Ds+) for Lb'   :  1.0 * GeV ,    ## pt-cut for  Ds+ from Lb0
     'pT(Lc+)'          :  3.0 * GeV ,    ## pt-cut for  prompt   Lc+
+    'pT(Lc+) for Xicc' :  1.0 * GeV ,    ## pt-cut for  Lc+ from Xicc
+    'pT(Lc+) for Lb'   :  1.0 * GeV ,    ## pt-cut for  Lc+ from Lb0
+    'pT(Xicc+)'        :  2.0 * GeV ,    ## pt-cut for  Xicc+ 
+    'pT(Xicc++)'       :  2.0 * GeV ,    ## pt-cut for  Xicc++
     #
-    # Selection of basic particles 
+    # Selection of basic particles
     #
-    'TrackCuts'       : ' ( TRCHI2DOF < 5 ) & ( PT > 250 * MeV ) & ( TRGHOSTPROB < 0.5 ) & in_range  ( 2 , ETA , 5 ) ' , 
-    'BasicCuts'       : ' & ( 9 < MIPCHI2DV() ) ' , 
-    'KaonCuts'        : ' & ( 2 < PIDK  - PIDpi ) '                           , 
-    'PionCuts'        : ' & ( 2 < PIDpi - PIDK  ) '                           , 
-    'ProtonCuts'      : ' & ( 2 < PIDp  - PIDpi ) & ( 2 < PIDp - PIDK ) '     , 
+    'TrackCuts'       : """
+    ( TRCHI2DOF < 4     ) &
+    ( PT > 250 * MeV    ) &
+    ( TRGHOSTPROB < 0.5 ) & 
+    in_range  ( 2 , ETA , 5 )
+    """ ,
+    'BasicCuts'       : ' & ( 9 < MIPCHI2DV() ) ' ,
+    'KaonCuts'        : ' & ( 2 < PIDK  - PIDpi ) '                           ,
+    'PionCuts'        : ' & ( 2 < PIDpi - PIDK  ) '                           ,
+    'ProtonCuts'      : ' & ( 2 < PIDp  - PIDpi ) & ( 2 < PIDp - PIDK ) '     ,
     'SlowPionCuts'    : ' TRCHI2DOF < 5 '                                     ,
-    'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) '   , 
+    'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) '   ,
     #
-    # Global Event cuts 
+    ## photons from chi_(c,b)
     #
-    'CheckPV'         : True , 
+    'GammaChi'        : ' ( PT > 450 * MeV ) & ( CL > 0.05 ) '  ,
+    #
+    ## W+- selection
+    #
+    'WCuts'           : " ( 'mu+'== ABSID ) & ( PT > 15 * GeV )" ,
+    #
+    # Global Event cuts
+    #
+    'CheckPV'         : True ,
     #
     # Technicalities:
     #
@@ -266,53 +287,49 @@ PromptCharm = {
     "kpi    = DECTREE ('[D0    -> K-  pi+]CC') " ,
     # number of kaons in final state (as CombinationCuts)
     "ak2    = 2 == ANUM( 'K+' == ABSID ) "       ,
-    # shortcut for chi2 of vertex fit 
+    # shortcut for chi2 of vertex fit
     'chi2vx = VFASPF(VCHI2) '                    ,
     # shortcut for the c*tau
-    "from GaudiKernel.PhysicalConstants import c_light" , 
-    "ctau   = BPVLTIME ( 9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
+    "from GaudiKernel.PhysicalConstants import c_light" ,
+    "ctau     = BPVLTIME (   9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
+    "ctau_9   = BPVLTIME (   9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
+    "ctau_16  = BPVLTIME (  16 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<16
+    "ctau_25  = BPVLTIME (  25 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<25
+    "ctau_100 = BPVLTIME ( 100 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<100
+    "ctau_no  = BPVLTIME (     ) * c_light "  , ## no embedded cut for chi2(lifetimeFit)
     # dimuons:
     "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
     "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
+    ## good proton
+    "good_proton   = ( 'p+' == ABSID ) & HASRICH & in_range ( 8 * GeV , P , 150 * GeV )  " ,
+    "good_proton   = good_proton & ( PIDp - PIDpi > 2 ) " ,
+    "good_proton   = good_proton & ( PIDp - PIDK  > 2 ) " 
     ] ,
     ## monitoring ?
     'Monitor'     : False ,
-    ## pescales 
+    ## pescales
     'D0Prescale'             : 1.0 ,
     'D*Prescale'             : 1.0 ,
     'DsPrescale'             : 1.0 ,
     'D+Prescale'             : 1.0 ,
     'LambdaCPrescale'        : 1.0 ,
     'LambdaC*Prescale'       : 1.0 ,
+    'Xicc+Prescale'          : 1.0 ,
+    'Xicc++Prescale'         : 1.0 ,
     'SigmaCPrescale'         : 1.0 ,
-    'DiCharmPrescale'        : 1.0 , 
-    'DiMu&CharmPrescale'     : 1.0 , 
-    'Chi&CharmPrescale'      : 1.0 , 
-    'Ds&PsiPrescale'         : 1.0 
+    'DiCharmPrescale'        : 1.0 ,
+    'DiMu&CharmPrescale'     : 1.0 ,
+    'Chi&CharmPrescale'      : 1.0 ,
+    'Ds&PsiPrescale'         : 1.0 ,
+    'Ds&Lc+Prescale'         : 1.0 ,
+    'Charm&WPrescale'        : 1.0 ,
+    'DiMuon&WPrescale'       : 1.0 ,
+    'Chi&WPrescale'          : 1.0 ,
+    ## ========================================================================
     },
     'WGs' : [ 'Charm' ],
     'STREAMS' : [ 'ALL' ]
-#    {
-#      'Charm' : [    
-#        'StrippingD02HHForPromptCharm',
-#        'StrippingDstarForPromptCharm',
-#        'StrippingDsForPromptCharm',
-#        'StrippingDForPromptCharm',
-#        'StrippingLambdaCForPromptCharm',
-#        'StrippingSigmaCForPromptCharm',
-#        'StrippingLambdaCstarForPromptCharm',
-#        'StrippingDiMuonAndCharmForPromptCharm',
-#        'StrippingChiAndCharmForPromptCharm',
-#        'StrippingDsPsiForPromptCharm',
-#        'StrippingCharmAndWForPromptCharm',
-#        'StrippingDiMuonAndWForPromptCharm',
-#        'StrippingChiAndWForPromptCharm'
-#        ],
-#      'CharmCompleteEvent' : [
-#        'StrippingDiCharmForPromptCharm'
-#        ]
-#      }
-    }
+}
 
 # Xsec: D(s)+ -> h+ h- h+
 D2HHHForXSec = {
