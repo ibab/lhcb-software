@@ -17,7 +17,7 @@ extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
   //                                      M.Frank
   // ----------------------------------------------------------------------------
   TanInterface& interf = TanInterface::instance();
-  int status;
+  int status = 1;
   bool continuous = false, quiet = false;
   char *c, buff[64], host[32];
   tan_host_name(host,sizeof(host));
