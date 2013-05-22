@@ -4,6 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2013-05-21 - Sebastian Neubert
+ - Added streamer configurations for VeloTT lines, including VeloTTTool as pET 
+   and separate Forward tracking and trackfit streamers for the use with the VeloTT
+   should be used with PatVeloTT revision later than 156982 
+   The current configuration of the bookkeeping (ExtraInfo) leads to dependence
+   issues of the Tracking Lines using the VeloTT. The lines cannot be run in parallel.  
 
 !========================= HltTracking v9r26p1 2013-04-09 =========================
 ! 2013-03-29 - Rob Lambert

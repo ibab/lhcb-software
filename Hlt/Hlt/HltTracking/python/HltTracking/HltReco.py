@@ -43,6 +43,14 @@ MaxOTHits = 15000
 CommonMatchVeloMuonOptions = {"MaxChi2DoFX" : 10,
                               "XWindow" : 200,
                               "YWindow" : 200  }
+
+CommonpETOptions = {"minMomentum" : 2000.0 ,
+                    "DxGroupFactor" : 0.0,
+                    "maxPseudoChi2" : 256.0 ,
+                    "maxSolutionsPerTrack" : 1,
+                    "fitTracks" : False,
+                    "maxChi2" : 256.}
+
 CommonForwardTrackingOptions = { "MaxChi2" : 40,
                                  "MaxChi2Track" : 40,
                                  "MinHits" : 12,  
