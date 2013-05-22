@@ -391,7 +391,7 @@ StatusCode MuonDigitChecker::execute() {
 StatusCode MuonDigitChecker::finalize() {
 
   int nStations = m_base->getStations();
-  info()<<"Stazioni trovate: "<<nStations<<endmsg;;
+  //  info()<<"Stazioni trovate: "<<nStations<<endmsg;;
   std::stringstream statStr;
   for(int i=0;i<nStations;i++){
     std::string statName = m_base->getStationName(i);
