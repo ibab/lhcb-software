@@ -1265,9 +1265,9 @@ yy_state_type yy_current_state;
 
 
 #ifdef __cplusplus
-static int yyinput()
+static inline int yyinput()
 #else
-static int input()
+static inline int input()
 #endif
 	{
 	int c;
