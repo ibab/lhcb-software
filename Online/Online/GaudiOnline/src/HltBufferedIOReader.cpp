@@ -57,6 +57,8 @@ namespace LHCb
     std::string m_buffer;
     /// Property: Data directory name
     std::string                m_directory;
+    /// Property: Path to the file containing broken nodes, where no reading should happen
+    std::string                m_brokenHostsFile;
     /// Property: List of runs to be processed (as strings!)
     std::vector<std::string>   m_allowedRuns;
 
@@ -64,6 +66,8 @@ namespace LHCb
     int m_evtCount;
     /// Flag to indicate if files should be deleted
     bool m_deleteFiles;
+    /// Flag to indicate if the node is in the broken hosts file and hence disabled
+    bool m_disabled;
 
     // Helper routines
     size_t scanFiles();
@@ -121,16 +125,42 @@ namespace LHCb
 // Instantiation of a static factory class used by clients to create instances of this service
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,HltBufferedIOReader)
 
-  using namespace LHCb;
+using namespace LHCb;
 using namespace std;
+
+static int file_read(int file, char* p, int len) {
+  int tmp = 0;
+  while (tmp < len)   {
+    int sc = ::read(file, p + tmp, len - tmp);
+    if (sc > 0)
+      tmp += sc;
+    else if (sc == 0)
+      return 0;
+    else return -1;
+  }
+  return 1;
+}
+
+static bool file_write(int file, const void* data, int len)   {
+  const char* p = (const char*) data;
+  int tmp = len;
+  while (tmp > 0)  {
+    int sc = ::write(file, p + len - tmp, tmp);
+    if (sc > 0)
+      tmp -= sc;
+    else return false;
+  }
+  return true;
+}
 
 /// Standard Constructor
 HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc) :
   OnlineService(nam, svcLoc), m_receiveEvts(false), m_lock(0), m_producer(0),
-  m_evtCount(0)
+  m_evtCount(0), m_disabled(false)
 {
-  declareProperty("Buffer", m_buffer = "Mep");
-  declareProperty("Directory", m_directory = "/localdisk");
+  declareProperty("Buffer",      m_buffer = "Mep");
+  declareProperty("Directory",   m_directory = "/localdisk");
+  declareProperty("BrokenHosts", m_brokenHostsFile = "");
   declareProperty("DeleteFiles", m_deleteFiles = true);
   declareProperty("AllowedRuns", m_allowedRuns);
   m_allowedRuns.push_back("*");
@@ -159,6 +189,33 @@ StatusCode HltBufferedIOReader::initialize()   {
     return error("Failed to initialize service base class.");
   else if (!(sc = service("MEPManager", m_mepMgr)).isSuccess())
     return error("Failed to access MEP manager service.");
+
+  if ( !m_brokenHostsFile.empty() ) {
+    struct stat file;
+    if ( 0 == ::stat(m_brokenHostsFile.c_str(),&file) ) {
+      const std::string node = RTL::nodeNameShort();
+      int   fd   = ::open(m_brokenHostsFile.c_str(),O_RDONLY);
+      char* data = new char[file.st_size+1];
+      int rc = file_read(fd,data,file.st_size);
+      if ( 1 == rc ) {
+        data[file.st_size] = 0;
+        for(int i=0; i<file.st_size; ++i) 
+          data[i] = ::toupper(data[i]);
+        for(char* ptr=(char*)node.c_str(); *ptr; ++ptr)
+          *ptr = ::toupper(*ptr);
+        if ( ::strstr(data,node.c_str()) ) {
+          warning("Node is disabled and will not process any deferred files.");
+          m_disabled = true;
+        }
+      }
+      delete [] data;
+      ::close(fd);
+    }
+    else {
+      error("Failed to access broken node file:"+m_brokenHostsFile+" [Error ignored]");
+    }
+  }
+
   m_producer = m_mepMgr->createProducer(m_buffer, RTL::processName());
   if (0 == m_producer)  {
     return error("Fatal error: Failed to create MBM producer object.");
@@ -228,59 +285,36 @@ void HltBufferedIOReader::handle(const Incident& inc)
   }
 }
 
-static int file_read(int file, char* p, int len) {
-  int tmp = 0;
-  while (tmp < len)   {
-    int sc = ::read(file, p + tmp, len - tmp);
-    if (sc > 0)
-      tmp += sc;
-    else if (sc == 0)
-      return 0;
-    else return -1;
-  }
-  return 1;
-}
-
-static bool file_write(int file, const void* data, int len)   {
-  const char* p = (const char*) data;
-  int tmp = len;
-  while (tmp > 0)  {
-    int sc = ::write(file, p + len - tmp, tmp);
-    if (sc > 0)
-      tmp -= sc;
-    else return false;
-  }
-  return true;
-}
-
 size_t HltBufferedIOReader::scanFiles()   {
   m_files.clear();
-  DIR* dir = opendir(m_directory.c_str());
-  if (dir)  {
-    struct dirent *entry;
-    bool take_all = (m_allowedRuns.size() > 0 && m_allowedRuns[0]=="*");
-    while ((entry = ::readdir(dir)) != 0)    {
-      //cout << "File:" << entry->d_name << endl;
-      if ( 0 != ::strncmp(entry->d_name,"Run_",4) ) {
-        continue;
-      }
-      else if ( !take_all )  {
-        bool take_run = false;
-        for(vector<string>::const_iterator i=m_allowedRuns.begin(); i!=m_allowedRuns.end(); ++i) {
-          if ( ::strstr(entry->d_name,(*i).c_str()) != 0 ) {
-            take_run = true;
-            break;
-          }
+  if ( !m_disabled )   {
+    DIR* dir = opendir(m_directory.c_str());
+    if (dir)  {
+      struct dirent *entry;
+      bool take_all = (m_allowedRuns.size() > 0 && m_allowedRuns[0]=="*");
+      while ((entry = ::readdir(dir)) != 0)    {
+        //cout << "File:" << entry->d_name << endl;
+        if ( 0 != ::strncmp(entry->d_name,"Run_",4) ) {
+          continue;
         }
-        if ( !take_run ) continue;
+        else if ( !take_all )  {
+          bool take_run = false;
+          for(vector<string>::const_iterator i=m_allowedRuns.begin(); i!=m_allowedRuns.end(); ++i) {
+            if ( ::strstr(entry->d_name,(*i).c_str()) != 0 ) {
+              take_run = true;
+              break;
+            }
+          }
+          if ( !take_run ) continue;
+        }
+        m_files.insert(m_directory + "/" + entry->d_name);
       }
-      m_files.insert(m_directory + "/" + entry->d_name);
+      ::closedir(dir);
+      return m_files.size();
     }
-    ::closedir(dir);
-    return m_files.size();
+    const char* err = RTL::errorString();
+    info("Failed to open directory:" + string(err ? err : "????????"));
   }
-  const char* err = RTL::errorString();
-  info("Failed to open directory:" + string(err ? err : "????????"));
   return 0;
 }
 
@@ -337,8 +371,8 @@ void HltBufferedIOReader::safeRestOfFile(int file_handle)     {
 StatusCode HltBufferedIOReader::i_run()  {
   int file_handle = 0;
   bool files_processed = false;
-  m_receiveEvts = true;
   bool m_goto_paused = true;
+  m_receiveEvts = true;
   ::lib_rtl_sleep(10000);
   while (1)  {
     files_processed = scanFiles() == 0;

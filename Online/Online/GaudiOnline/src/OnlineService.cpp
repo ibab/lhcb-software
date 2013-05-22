@@ -165,6 +165,27 @@ void LHCb::OnlineService::info(const char* msg,...)   const {
   }
 }
 
+void LHCb::OnlineService::warning(const std::string& msg)   const {
+  MsgStream err(msgSvc(), name());
+  err << MSG::WARNING;
+  if ( err.isActive() ) err << msg << endmsg;
+}
+
+void LHCb::OnlineService::warning(const char* msg,...)   const {
+  MsgStream err(msgSvc(), name());
+  err << MSG::WARNING;
+  if ( err.isActive() )  {
+    va_list args;
+    va_start(args, msg);
+    char buff[1024];
+    size_t nSize = vsnprintf(buff, sizeof(buff), msg, args);
+    err << buff << endmsg;
+    if ( nSize == sizeof(buff) )  {
+      err << MSG::FATAL << "Incomplete message - buffer overrun." << endreq;
+    }
+  }
+}
+
 void LHCb::OnlineService::debug(const std::string& msg)   const {
   MsgStream err(msgSvc(), name());
   err << MSG::DEBUG;

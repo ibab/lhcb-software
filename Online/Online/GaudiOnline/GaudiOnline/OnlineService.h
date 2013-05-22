@@ -96,6 +96,9 @@ namespace LHCb  {
     /// Info printout handling
     void info(const char* msg,...) const;
     void info(const std::string& msg) const;
+    /// Warning printout handling
+    void warning(const char* msg,...) const;
+    void warning(const std::string& msg) const;
     /// Error handling
     StatusCode error(const std::string& msg) const;
     StatusCode error(const char* msg,...) const;
