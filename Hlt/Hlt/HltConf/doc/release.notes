@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2013-05-21 - Sebastian Neubert
+ - Added configuration and ids for VeloTT lines 
+
 !========================= HltConf v10r0p2 2013-05-16 =========================
 ! 2013-05-13 - Rob Lambert
  - Apply postCOnfig to everything with the InputPrimaryVertices property
