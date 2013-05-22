@@ -221,7 +221,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
     case C_BLDSC:
     case C_BTDSC:
     case C_CHECKDSC:
-      if ( m_evtData.start && m_main->mepID() != MEP_INV_DESC )  {
+      if ( m_evtData.start && m_main->mepID() != MBM_INV_DESC )  {
         RawEventDescriptor dsc;
         std::vector<RawBank*> b;
         BankListWindow::Banks banks;
@@ -230,7 +230,7 @@ void DisplayMenu::handleMenu(int cmd_id)    {
         dsc.setEventType(EVENT_TYPE_EVENT);
         dsc.setHeader(m_evtData.start);
         dsc.setSize(m_evtData.length);
-        dsc.setMepBuffer((void*)m_main->mepID()->mepStart);
+        dsc.setMepBuffer((void*)m_evtData.start);
         for(int j=0, n=dsc.numberOfFragments(); j<n; ++j)  {
           MEPFragment* f = dsc.fragment(j);
           if (cmd_id == C_CHECKDSC) checkFragment(f);

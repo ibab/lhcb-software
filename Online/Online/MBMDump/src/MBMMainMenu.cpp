@@ -25,8 +25,7 @@ static const char* buff_types[]={Unknown_type,mep_type,raw_type,dsc_type,mdf_typ
 static const char* buff_names[]={"MEP","EVENT","RESULT","SEND","Events_","OUTPUT","RAW","0","1","2","3","4"};
 
 MBMMainMenu::MBMMainMenu() 
-: m_bmID(MBM_INV_DESC), m_mepID(MEP_INV_DESC), 
-  m_partID(0x14d), m_memory(0), m_dispMenu(0)
+: m_bmID(MBM_INV_DESC), m_partID(0x14d), m_memory(0), m_dispMenu(0)
 {
   int num_types = sizeof(buff_types)/sizeof(buff_types[0]);
   int num_names = sizeof(buff_names)/sizeof(buff_names[0]);
@@ -88,56 +87,12 @@ int MBMMainMenu::includeMBM() {
   return MBM_ERROR;
 }
 
-int MBMMainMenu::includeMEP() {
-  m_bmID = MBM_INV_DESC;
-  if( m_mepID == MEP_INV_DESC )   {
-    m_mepID = ::mep_include(m_name,m_partID, m_mepFlags);
-    if( m_mepID != MEP_INV_DESC ){
-      if ( m_mepFlags == USE_EVT_BUFFER ) m_bmID = m_mepID->evtBuffer;
-      if ( m_mepFlags == USE_RES_BUFFER ) m_bmID = m_mepID->resBuffer;
-      replaceCommand(C_INC_EXC,"Exclude process");
-      enableCommands(2, C_RQS,  C_CMD);
-      disableCommands(3, C_PROC, C_PART, C_BUF, C_TYP);
-      setCursor(C_RQS,1);
-      output("Process %s included into buffer %s",m_name,m_buffName);
-      output(" MEP    buffer start: %p",m_mepID->mepStart);
-      output(" EVENT  buffer start: %p",m_mepID->evtStart);
-      output(" RESULT buffer start: %p",m_mepID->resStart);
-      return MBM_NORMAL;
-    }
-    output("Failed to include process %s into buffer %s",m_name,m_buffName);
-    return MBM_ERROR;
-  }
-  output("Process already included in MBM");
-  return MBM_ERROR;
-}
-
 int MBMMainMenu::excludeMBM() {
   if( m_bmID != MBM_INV_DESC )   {
     int status = ::mbm_exclude(m_bmID);     // Try to exclude from the buffer
     switch(status){
     case MBM_NORMAL:
       m_bmID = MBM_INV_DESC;
-      disableCommands(2, C_RQS,  C_CMD);
-      enableCommands(3, C_PROC, C_PART, C_BUF, C_TYP);
-      replaceCommand(C_INC_EXC,"Include process");
-      output("Process excluded from buffer manager");
-      return MBM_NORMAL;
-    default:
-      output("Failed to exclude : Unknown error");
-      return status;
-    }
-  }
-  return MBM_ERROR;
-}
-
-int MBMMainMenu::excludeMEP() {
-  if( m_mepID != MEP_INV_DESC )   {
-    int status = ::mep_exclude(m_mepID);
-    switch(status){
-    case MBM_NORMAL:
-      m_bmID = MBM_INV_DESC;
-      m_mepID = MEP_INV_DESC;
       disableCommands(2, C_RQS,  C_CMD);
       enableCommands(3, C_PROC, C_PART, C_BUF, C_TYP);
       replaceCommand(C_INC_EXC,"Include process");
@@ -164,11 +119,8 @@ void MBMMainMenu::handleMenu(int cmd_id)    {
     setCursor(C_BUF,3);
     return;
   case C_BUF:
-    m_mepFlags = 0;
     m_buffName[sizeof(m_buffName)-1] = 0;
     if ( (ptr=::strchr(m_buffName,' ')) ) *ptr = 0;
-    if ( !::strcmp(m_buffName,"EVENT")  ) m_mepFlags = USE_EVT_BUFFER;
-    if ( !::strcmp(m_buffName,"RESULT") ) m_mepFlags = USE_RES_BUFFER;
     setCursor(C_TYP,4);
     return;
   case C_TYP:
@@ -182,25 +134,13 @@ void MBMMainMenu::handleMenu(int cmd_id)    {
     if ( (ptr=::strchr(m_name,' ')) ) *ptr = 0;
     if ( (ptr=::strchr(m_buffName,' ')) ) *ptr = 0;
     if ( (ptr=::strchr(m_buffType,' ')) ) *ptr = 0;
-    if ( m_mepFlags == 0 )  {
-      if (m_bmID == MBM_INV_DESC) {
-	includeMBM();
-	including=true;
-      }
-      else  {
-	excludeMBM();
-	including=false;
-      }
+    if (m_bmID == MBM_INV_DESC) {
+      includeMBM();
+      including=true;
     }
     else  {
-      if (m_mepID == MEP_INV_DESC) {
-	includeMEP();
-	including=true;
-      }
-      else {
-	excludeMEP();
-	including=false;
-      }
+      excludeMBM();
+      including=false;
     }
     setCursor(m_bmID == MBM_INV_DESC ? C_PART : C_RQS,1);
     for(int i=0; i<8; ++i) m_req[i].setBufferID(m_bmID);
@@ -225,8 +165,7 @@ void MBMMainMenu::handleMenu(int cmd_id)    {
     ::lib_rtl_start_debugger();
     break;
   case C_EXIT:
-    if ( m_mepID != MEP_INV_DESC ) ::mep_exclude(m_mepID);
-    else if ( m_bmID != MBM_INV_DESC ) ::mbm_exclude(m_bmID);
+    if ( m_bmID != MBM_INV_DESC ) ::mbm_exclude(m_bmID);
     ::exit(quit());
     break; 
   }

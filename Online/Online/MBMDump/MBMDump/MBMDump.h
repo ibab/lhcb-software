@@ -88,7 +88,7 @@ namespace MBMDump  {
   class EventInput  {
   public:
     /// Access MEP identifier (if configured)
-    virtual MEPID mepID() const { return 0; }
+    virtual BMID mepID() const { return 0; }
     /// Wait and get next event
     virtual int getEvent(struct DataBlock *event) = 0;
   };
@@ -648,12 +648,10 @@ namespace MBMDump  {
           C_EXIT
     };
     BMID  m_bmID;
-    MEPID m_mepID;
     int   m_partID;
     char  m_name[18];
     char  m_buffName[20];
     char  m_buffType[20];
-    int   m_mepFlags;
     int*  m_memory;
     /// Buffer to requirements menus
     Requirement m_req[8];
@@ -665,17 +663,13 @@ namespace MBMDump  {
     /// Default destructor
     virtual ~MBMMainMenu();
     /// Access to MEP identifier
-    virtual MEPID mepID() const { return m_mepID; }
+    virtual BMID mepID() const { return m_bmID; }
     /// Virtual overload to handle menu interaction(s)
     virtual void handleMenu(int cmd_id);
     /// Include into specified MBM buffer
     int includeMBM();
     /// Exclude from spcified MBM buffer
     int excludeMBM();
-    /// Include into specified MEP buffer(s)
-    int includeMEP();
-    /// Exclude from spcified MEP buffer(s)
-    int excludeMEP();
     /// Wait and get next event
     virtual int getEvent(struct DataBlock *event);
   };
