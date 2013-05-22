@@ -99,16 +99,12 @@ StatusCode HltSelReportsDecoder::execute() {
   // get inputs
   LHCb::RawEvent* rawEvent = 0;
   std::vector<std::string>::const_iterator iLoc = m_rawEventLocations.begin();
-  for (; iLoc != m_rawEventLocations.end() ; ++iLoc ) {
+  for (; (iLoc != m_rawEventLocations.end()&& rawEvent==0) ; ++iLoc ) {
     //    try RootInTES independent path first
-    if (exist<LHCb::RawEvent>(*iLoc, false)) {
-      rawEvent = get<LHCb::RawEvent>(*iLoc, false);
-      break;
-    }
+      rawEvent = getIfExists<LHCb::RawEvent>(*iLoc, false);
     //   now try RootInTES dependent path
-    if (exist<LHCb::RawEvent>(*iLoc)) {
-      rawEvent = get<LHCb::RawEvent>(*iLoc);
-      break;
+    if (rawEvent==0) {
+      rawEvent = getIfExists<LHCb::RawEvent>(*iLoc);
     }
   }
 
