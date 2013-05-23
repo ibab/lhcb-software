@@ -51,8 +51,8 @@ extern "C" int mbm_cons(int argc,char **argv) {
   bool quiet = cli.getopt("quiet",1) != 0;
   bool async = cli.getopt("asynchronous",1) != 0;
   bool user  = cli.getopt("usermode",1) != 0;
-  unsigned int vetomask[4] = {0,0,0,0};
-  unsigned int trmask[4]   = {~0x0,~0x0,~0x0,~0x0};
+  unsigned int vetomask[4] = {0u,0u,0u,0u};
+  unsigned int trmask[4]   = {~0x0u,~0x0u,~0x0u,~0x0u};
 
   cli.getopt("name",1,name);
   cli.getopt("buffer",1,buffer);
