@@ -9,6 +9,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2013-05-23 - Ben Couturier
+ - Remove use of DVAlgorithm from solution of DaVinci1   
+
 !========================= Analysis v10r4p2 2013-02-20 =========================
 
 ! 2013-02-08 Patrick Koppenburg

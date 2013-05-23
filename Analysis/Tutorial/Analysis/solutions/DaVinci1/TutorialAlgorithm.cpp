@@ -22,7 +22,7 @@ DECLARE_ALGORITHM_FACTORY( TutorialAlgorithm );
 //=============================================================================
 TutorialAlgorithm::TutorialAlgorithm( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+  : DaVinciTupleAlgorithm ( name , pSvcLocator )
 {
 
 }
@@ -35,7 +35,7 @@ TutorialAlgorithm::~TutorialAlgorithm() {}
 // Initialization
 //=============================================================================
 StatusCode TutorialAlgorithm::initialize() {
-  StatusCode sc = DVAlgorithm::initialize(); 
+  StatusCode sc = DaVinciTupleAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
@@ -109,7 +109,7 @@ StatusCode TutorialAlgorithm::finalize() {
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
-  return DVAlgorithm::finalize(); 
+  return DaVinciTupleAlgorithm::finalize(); 
 } 
 
 //=============================================================================

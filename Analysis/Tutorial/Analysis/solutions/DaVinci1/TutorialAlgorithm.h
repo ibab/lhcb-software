@@ -4,7 +4,7 @@
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "Kernel/DVAlgorithm.h"
+#include "Kernel/DaVinciTupleAlgorithm.h"
 
 
 /** @class TutorialAlgorithm TutorialAlgorithm.h
@@ -16,7 +16,7 @@
  *  @author Patrick Koppenburg
  *  @date   2006-05-24
  */
-class TutorialAlgorithm : public DVAlgorithm {
+class TutorialAlgorithm : public DaVinciTupleAlgorithm {
 public: 
   /// Standard constructor
   TutorialAlgorithm( const std::string& name, ISvcLocator* pSvcLocator );
