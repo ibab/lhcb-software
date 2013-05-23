@@ -42,6 +42,10 @@ namespace   {
       : Slave(typ,nam,machine,true), m_sleep(msleep) {}
     /// Defautl constructor
     virtual ~InternalSlave() {}
+    /// Start the slave's transition timeout
+    virtual Slave& startTimer(int, const void*) { return *this; }
+    /// Stop the slave's transition timeout
+    virtual Slave& stopTimer() { return *this; }
     /// Helper to send internal interrupts
     virtual ErrCond send(int cmd, const State* state=0)  const {
       if ( m_sleep > 0 ) ::lib_rtl_sleep(m_sleep);

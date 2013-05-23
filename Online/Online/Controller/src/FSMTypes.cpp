@@ -54,6 +54,7 @@ static Type* defineDAQType()    {
   paused->when   (  allChildrenInState(running),   moveTo(running));
   paused->when   (  allChildrenInState(ready),     moveTo(ready));
 
+  offline->when  (  anyChildInState(error),        moveTo(error));
   offline->when  (  allChildrenInState(running),   moveTo(running));
   offline->when  (  allChildrenInState(ready,paused,running),     moveTo(ready));
   offline->when  (  allChildrenInState(not_ready,ready,paused,running), moveTo(not_ready));
@@ -65,10 +66,10 @@ static Type* defineDAQType()    {
   error->when    (  allChildrenInState(not_ready,ready,paused,running), moveTo(not_ready));
 
   
-  Tr*  unload0   = daq->addTransition("unload",    running,     offline, NO_CHECKS);
+  Tr*  unload0   = daq->addTransition("unload",    running,     offline,   NO_CHECKS);
   //Tr*  unload1   = daq->addTransition("unload",    ready,       offline, NO_CHECKS);
-  Tr*  unload2   = daq->addTransition("unload",    not_ready,   offline, KILL);
-  Tr*  unload3   = daq->addTransition("unload",    offline,     offline, NO_CHECKS);
+  Tr*  unload2   = daq->addTransition("unload",    not_ready,   offline,   KILL);
+  Tr*  unload3   = daq->addTransition("unload",    offline,     offline,   NO_CHECKS);
 
   Tr*  reset0    = daq->addTransition("reset",     not_ready,   not_ready);
   Tr*  reset1    = daq->addTransition("reset",     ready,       not_ready, NO_CHECKS);
@@ -78,12 +79,13 @@ static Type* defineDAQType()    {
   Tr*  recover1  = daq->addTransition("recover",   running,     offline,   NO_CHECKS);
   Tr*  recover2  = daq->addTransition("recover",   ready,       offline,   NO_CHECKS);
   Tr*  recover3  = daq->addTransition("recover",   not_ready,   offline,   NO_CHECKS);
-  Tr*  recover4  = daq->addTransition("recover",   offline,     offline);
+  Tr*  recover4  = daq->addTransition("recover",   offline,     offline,   NO_CHECKS);
 
   Tr*  daq_err0  = daq->addTransition("daq_err",   not_ready,   error,     NO_CHECKS);
   Tr*  daq_err1  = daq->addTransition("daq_err",   ready,       error,     NO_CHECKS);
   Tr*  daq_err2  = daq->addTransition("daq_err",   running,     error,     NO_CHECKS);
   Tr*  daq_err3  = daq->addTransition("daq_err",   paused,      error,     NO_CHECKS);
+  Tr*  daq_err4  = daq->addTransition("daq_err",   offline,     error,     NO_CHECKS);
 
   Tr*  RESET0    = daq->addTransition("RESET",     error,       offline,   NO_CHECKS);
   Tr*  RESET1    = daq->addTransition("RESET",     running,     offline,   NO_CHECKS);
@@ -105,6 +107,7 @@ static Type* defineDAQType()    {
   daq_err1->adoptRule(AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
   daq_err2->adoptRule(AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
   daq_err3->adoptRule(AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
+  //daq_err4->adoptRule(AnyChildOfType(daq).moveTo(ST_NAME_ERROR));
 
   //daq->adoptRule      (recover0,   daq, ST_NAME_ERROR,     ST_NAME_OFFLINE);
   // Otherwise: FULL KILL on recover
@@ -136,13 +139,15 @@ static Type* defineDAQType()    {
 
   /// Offline -> Not Ready
   Tr*  load      = daq->addTransition("load",      offline,     not_ready, CHECK|CREATE);
-  load->addPredicate( AllChildrenOfType(daq).inState(ST_NAME_OFFLINE, ST_NAME_NOT_READY, ST_NAME_READY, ST_NAME_RUNNING));
+  load->addPredicate( AllChildrenOfType(daq).inState(ST_NAME_OFFLINE, ST_NAME_NOT_READY, ST_NAME_READY, ST_NAME_PAUSED, ST_NAME_RUNNING));
   load->adoptRule(    AllChildrenOfType(daq).execTransition(ST_NAME_OFFLINE,   ST_NAME_NOT_READY));
+  load->adoptRule(    AllChildrenOfType(daq).execTransition(ST_NAME_PAUSED,    ST_NAME_READY));
 
   /// Not Ready -> Ready
   Tr*  configure = daq->addTransition("configure", not_ready,   ready);
-  configure->addPredicate(AllChildrenOfType(daq).inState(ST_NAME_NOT_READY, ST_NAME_READY, ST_NAME_RUNNING));
+  configure->addPredicate(AllChildrenOfType(daq).inState(ST_NAME_NOT_READY, ST_NAME_READY, ST_NAME_PAUSED, ST_NAME_RUNNING));
   configure->adoptRule(   AllChildrenOfType(daq).execTransition(ST_NAME_NOT_READY, ST_NAME_READY));
+  configure->adoptRule(   AllChildrenOfType(daq).execTransition(ST_NAME_PAUSED,    ST_NAME_READY));
 
   /// Ready -> Running
   Tr*  start0    = daq->addTransition("start",     ready,       running);
@@ -283,7 +288,7 @@ static Type* defineDAQSteerType() {
   reset1->adoptRule(      AllChildrenOfType(daq).execTransition(ST_NAME_READY,     ST_NAME_NOT_READY));
   load->adoptRule(        AllChildrenOfType(daq).execTransition(ST_NAME_OFFLINE,   ST_NAME_NOT_READY));
 
-  configure->addPredicate(AllChildrenOfType(daq).inState(ST_NAME_NOT_READY, ST_NAME_READY, ST_NAME_RUNNING));
+  configure->addPredicate(AllChildrenOfType(daq).inState(ST_NAME_NOT_READY, ST_NAME_READY, ST_NAME_PAUSED, ST_NAME_RUNNING));
   configure->adoptRule(   AllChildrenOfType(daq).execTransition(ST_NAME_NOT_READY, ST_NAME_READY));
 
   start0->addPredicate(   AllChildrenOfType(daq).inState(ST_NAME_READY, ST_NAME_PAUSED, ST_NAME_RUNNING));

@@ -13,6 +13,7 @@
 #include "FiniteStateMachine/Slave.h"
 #include "FiniteStateMachine/Machine.h"
 #include "CPP/IocSensor.h"
+#include "RTL/rtl.h"
 
 // C/C++ include files
 #include <stdexcept>
@@ -20,21 +21,9 @@
 using namespace FiniteStateMachine;
 using namespace std;
 
-/// Class Constructor
-Slave::Slave(const Type *typ, const string& nam, Machine* machine, bool internal)
-  : TypedObject(typ,nam), m_meta(SLAVE_LIMBO), m_machine(machine), m_state(0), 
-    m_rule(0), m_internal(internal), m_alive(false)
-{
-  m_state = type()->initialState();
-}
-
-/// Standatrd destructor  
-Slave::~Slave()    {
-}
-
 /// Access meta state as string
-const char* Slave::metaStateName() const  {
-  switch(m_meta)  {
+static const char* _metaStateName(int meta)   {
+  switch(meta)  {
 #define MakeName(x) case Slave::x: return #x
     MakeName(SLAVE_NONE);
     MakeName(SLAVE_LIMBO);
@@ -46,9 +35,33 @@ const char* Slave::metaStateName() const  {
     MakeName(SLAVE_EXECUTING);
     MakeName(SLAVE_TRANSITION);
     MakeName(SLAVE_FINISHED);
+    // Timeout handling
+    MakeName(SLAVETIMEOUT);
+    MakeName(SLAVE_UNLOAD_TIMEOUT);
+    MakeName(SLAVE_TERMINATE_TIMEOUT);
+    MakeName(SLAVE_KILL_TIMEOUT);
+    MakeName(SLAVE_START_TIMEOUT);
 #undef  MakeName
   }
   return "UNKNOWN";
+}
+
+/// Class Constructor
+Slave::Slave(const Type *typ, const string& nam, Machine* machine, bool internal)
+  : TypedObject(typ,nam), m_timerID(0,0), m_tmo(5), 
+    m_meta(SLAVE_LIMBO), m_machine(machine), m_state(0), 
+    m_rule(0), m_internal(internal), m_alive(false)
+{
+  m_state = type()->initialState();
+}
+
+/// Standatrd destructor  
+Slave::~Slave()    {
+}
+
+/// Access meta state as string
+const char* Slave::metaStateName() const  {
+  return _metaStateName(m_meta);
 }
 
 /// Retrieve reference to current State structure name
@@ -139,7 +152,12 @@ FSM::ErrCond Slave::apply(const Rule* rule)  {
     m_rule = rule;
     m_meta = SLAVE_EXECUTING;
     display(INFO,"%s> Send request \"%s\"to target process.",c_name(),tr->c_name());
-    return isInternal() ? send(SLAVE_FINISHED,tr->to()) : sendRequest(tr);
+    if ( isInternal() ) {
+      return send(SLAVE_FINISHED,tr->to());
+    }
+    ErrCond ret = sendRequest(tr);
+    startTimer(SLAVETIMEOUT,tr);
+    return ret;
   }
   return FSM::TRANNOTFOUND;
 }
@@ -150,7 +168,9 @@ FSM::ErrCond Slave::startSlave()  {
     send(SLAVE_ALIVE,0);
     return FSM::WAIT_ACTION;
   }
-  return start();
+  FSM::ErrCond ret = start();
+  startTimer(SLAVE_START_TIMEOUT);
+  return ret;
 }
 
 /// Start slave process
@@ -159,7 +179,80 @@ FSM::ErrCond Slave::killSlave()  {
     send(SLAVE_LIMBO,0);
     return FSM::WAIT_ACTION;
   }
-  return kill();
+  ErrCond ret = kill();
+  startTimer(SLAVE_UNLOAD_TIMEOUT);
+  return ret;
+}
+
+/// Add entry in transition timeout table (timeout in seconds)
+Slave& Slave::addTimeout(const Transition* param, int value)  {
+  m_timeouts[param] = value;
+  return *this;
+}
+
+/// Remove entry in transition timeout table
+Slave& Slave::removeTimeout(const Transition* param)  {
+  TimeoutTable::iterator i=m_timeouts.find(param);
+  if ( i != m_timeouts.end() ) m_timeouts.erase(i);
+  return *this;
+}
+
+/// Handle timeout according to timer ID
+void Slave::handleTimeout()  {
+  int st = currentState();
+  display(ALWAYS,"%s> Slave %s Received new message TIMEOUT. State:%08X [%s] timer value:%08X [%s]",
+	  RTL::processName().c_str(),c_name(),st,metaStateName(),
+	  m_timerID.second,_metaStateName(m_timerID.second));
+  if ( isLimbo() )  {
+    transitionFailed();
+  }
+  else if ( SLAVE_EXECUTING == st )  {
+    m_timerID.second == SLAVETIMEOUT ? (void)transitionFailed() : handleUnloadTimeout();
+  }
+}
+
+/// Handle timeout on unload transition according to timer ID
+void Slave::handleUnloadTimeout()  {
+  if ( m_timerID.second == SLAVE_UNLOAD_TIMEOUT )   {
+    display(ERROR,"%s> unload command unsuccessful. FAILURE - [%s]. State:%s",
+	    c_name(),"Insufficient Implementation",metaStateName());	  
+  }
+}
+
+/// Handle state updates for a particular slave
+void Slave::handleState(const string& msg)  {
+  string        m = msg;
+  int          st = currentState();
+  bool   starting = st == SLAVE_LIMBO || st == SLAVE_STARTING;
+  stopTimer();
+  if ( m.empty() )    {  // No-link ?
+    if ( !starting )  {
+      display(NOLOG,"%s::%s> Slave DEAD. Curr State:%s",
+	      RTL::processName().c_str(),c_name(),metaStateName());
+      iamDead();
+    }
+    return;
+  }
+  else if ( m == "UNKNOWN" ) {
+#if 0
+    display(ALWAYS,"%s::%s> IGNORE Slave state:%s",
+	    RTL::processName().c_str(),c_name(),m.c_str());
+    return;
+#endif
+    m = "OFFLINE";
+  }
+  display(INFO,"%s> Received new message from %s %s",m_machine->c_name(),c_name(),m.c_str());
+
+  const State* state = type()->state(m);
+  const Transition* transition = (state && m_state) ? m_state->findTrans(state) : 0;
+  if ( starting )
+    iamHere();
+  else if ( transition )
+    transitionDone(state);
+  else if ( state )
+    transitionSlave(state);
+  else
+    transitionFailed();
 }
 
 /// Start slave process. Base class implementation will throw an exception

@@ -24,7 +24,9 @@ Tasklist::Task::~Task() {
 
 /// String with the FMC parameters propery concatenated
 string Tasklist::Task::fmcStartParams() const  {
-  string res = "-g "+group+" -n "+user;
+  string res = "";
+  if ( !group.empty() ) res += " -g "+group;
+  if ( !user.empty()  ) res += " -n "+user;
   for(Params::const_iterator i=fmcParams.begin(); i!=fmcParams.end(); ++i)
     res += " "+(*i).second;
   return res;

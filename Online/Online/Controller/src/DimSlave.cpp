@@ -32,7 +32,7 @@ enum Timeouts {
 
 /// Class Constructor
 DimSlave::DimSlave(const Type* typ, const string& nam, Machine* machine, bool internal) 
-  : Slave(typ,nam,machine,internal), m_dimState(0,0), m_timerID(0,0), m_commandName(), m_killCmd("unload")
+  : Slave(typ,nam,machine,internal), m_dimState(0,0), m_commandName(), m_killCmd("unload")
 {
   m_commandName = nam;
   m_tmo = 3;
@@ -65,7 +65,8 @@ DimSlave& DimSlave::setArgs(const string& args)  {
 
 /// Set the process arguments from single string
 DimSlave& DimSlave::addArgs(const string& args)  {
-  std::string copy = args;
+  std::string copy = "--";
+  copy = args.c_str();
   for( char* p = (char*)copy.c_str(), *savePtr=0;; p=0)  {
     char* token = ::strtok_r(p," ",&savePtr);
     if ( !token ) break;
@@ -81,7 +82,6 @@ FSM::ErrCond DimSlave::kill()  {
   display(ALWAYS,"%s::%s> %s %s command to slave. Curr State:%s",
 	  RTL::processName().c_str(),c_name(),
 	  ret != 1 ? "FAILED to send" : "Sent",m_killCmd.c_str(),metaStateName());	  
-  startTimer(SLAVE_UNLOAD_TIMEOUT);
   return FSM::WAIT_ACTION;
 }
 
@@ -94,24 +94,10 @@ FSM::ErrCond DimSlave::sendRequest(const Transition* tr)  {
 	    RTL::processName().c_str(),c_name(),data,m_commandName.c_str(),c_state());
     int ret = ::dic_cmnd_service((char*)m_commandName.c_str(),(char*)data,len+1);
     if ( ret == 1 )  {
-      startTimer(SLAVETIMEOUT,tr);
       return FSM::WAIT_ACTION;
     }
   }
   return FSM::FAIL;
-}
-
-/// Add entry in transition timeout table (timeout in seconds)
-DimSlave& DimSlave::addTimeout(const Transition* param, int value)  {
-  m_timeouts[param] = value;
-  return *this;
-}
-
-/// Remove entry in transition timeout table
-DimSlave& DimSlave::removeTimeout(const Transition* param)  {
-  TimeoutTable::iterator i=m_timeouts.find(param);
-  if ( i != m_timeouts.end() ) m_timeouts.erase(i);
-  return *this;
 }
 
 /// Start the slave's transition timeout
@@ -130,58 +116,6 @@ DimSlave& DimSlave::stopTimer()  {
   if ( m_timerID.first ) ::dtq_stop_timer(m_timerID.first);
   m_timerID = TimerID(0,0);
   return *this;
-}
-
-/// Handle timeout according to timer ID
-void DimSlave::handleTimeout()  {
-  if ( SLAVE_EXECUTING == currentState() )  {
-    display(ALWAYS,"%s> Slave %s Received new message TIMEOUT.",RTL::processName().c_str(),c_name());
-    m_timerID.second == SLAVETIMEOUT ? (void)transitionFailed() : handleUnloadTimeout();
-  }
-}
-
-/// Handle timeout on unload transition according to timer ID
-void DimSlave::handleUnloadTimeout()  {
-  if ( m_timerID.second == SLAVE_UNLOAD_TIMEOUT )   {
-    display(ERROR,"%s> unload command unsuccessful. FAILURE - [%s]. State:%s",
-	    c_name(),"Insufficient Implementation",metaStateName());	  
-  }
-}
-
-/// Handle state updates for a particular slave
-void DimSlave::handleState(const string& msg)  {
-  string        m = msg;
-  int          st = currentState();
-  bool   starting = st == SLAVE_LIMBO || st == SLAVE_STARTING;
-  stopTimer();
-  if ( m.empty() )    {  // No-link ?
-    if ( !starting )  {
-      display(NOLOG,"%s::%s> Slave DEAD. Curr State:%s",
-	      RTL::processName().c_str(),c_name(),metaStateName());
-      iamDead();
-    }
-    return;
-  }
-  else if ( m == "UNKNOWN" ) {
-#if 0
-    display(ALWAYS,"%s::%s> IGNORE Slave state:%s",
-	    RTL::processName().c_str(),c_name(),m.c_str());
-    return;
-#endif
-    m = "OFFLINE";
-  }
-  display(INFO,"%s> Received new message from %s %s",m_machine->c_name(),c_name(),m.c_str());
-
-  const State* state = type()->state(m);
-  const Transition* transition = state ? m_state->findTrans(state) : 0;
-  if ( starting )
-    iamHere();
-  else if ( transition )
-    transitionDone(state);
-  else if ( state )
-    transitionSlave(state);
-  else
-    transitionFailed();
 }
 
 /// DimInfo overload to process messages

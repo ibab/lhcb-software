@@ -154,6 +154,10 @@ namespace FiniteStateMachine {
     /// Execute state leave action
     ErrCond finishTransition (const void* user_param);
 
+    /// Callback executed on a failure of a metastate change
+    ErrCond metaTransitionFail();
+    /// Callback executed if the current transition is not availible
+    ErrCond metaTransitionMissing();
     /// Action routine to be called if a transition is ended and the machine is idle.
     ErrCond goIdle();
     /// Finish failed transition and return to the IDLE status

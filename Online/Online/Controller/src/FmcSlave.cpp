@@ -43,7 +43,8 @@ DimSlave& FmcSlave::setFmcArgs(const string& args)  {
 
 /// Add the FMC arguments from single string
 DimSlave& FmcSlave::addFmcArgs(const string& args)  {
-  std::string copy = args;
+  std::string copy = "--";
+  copy = args.c_str();
   for( char* p = (char*)copy.c_str(), *savePtr=0;; p=0)  {
     char* token = ::strtok_r(p," ",&savePtr);
     if ( !token ) break;

@@ -36,20 +36,8 @@ namespace FiniteStateMachine   {
    */
   class DimSlave : public Slave   {
   protected:
-    /// TimerID definition
-    typedef std::pair<void*,unsigned long> TimerID;
-    /// Definition of the timeout table
-    typedef std::map<const void*,int> TimeoutTable; 
-
-  protected:
-    /// Timeout table for various transitions
-    TimeoutTable              m_timeouts;
     /// ID of the DIM command to send commands to the slave
     std::pair<int,int>        m_dimState;
-    /// General transition timeout, if no other is specified.
-    int                       m_tmo;
-    /// ID of timeout timer
-    TimerID                   m_timerID;
     /// Name of the DIM command to receive the slave's state information
     std::string               m_commandName;
     /// Name of the command to be sent as first action to shutdown slave
@@ -62,11 +50,6 @@ namespace FiniteStateMachine   {
     std::vector<std::string>  m_envp;
 
   public:
-    enum  Slave_Timeouts {
-      SLAVE_UNLOAD_TIMEOUT    = 2001,
-      SLAVE_TERMINATE_TIMEOUT = 2002,
-      SLAVE_KILL_TIMEOUT      = 2003
-    };
     struct FSMMonitoring  {
       unsigned long lastCmd, doneCmd;
       int pid;
@@ -88,10 +71,6 @@ namespace FiniteStateMachine   {
     void setCommand(const std::string& cmd)  {  m_cmd = cmd;  }
     /// Access the command string 
     const std::string& command() const       {  return m_cmd; }
-    /// Set the default timeout value
-    void setTimeout(int val)                 {  m_tmo = val;  }
-    /// Access the command string 
-    int timeout() const                      {  return m_tmo; }
 
     /// Start slave process. Must be implemented by sub-class
     virtual ErrCond start() = 0;
@@ -100,17 +79,6 @@ namespace FiniteStateMachine   {
     /// Send transition request to the slave
     virtual ErrCond sendRequest(const Transition* tr);
 
-    /// Handle timeout according to timer ID
-    virtual void handleTimeout();
-    /// Handle timeout on unload transition according to timer ID
-    virtual void handleUnloadTimeout();
-    /// Handle state updates for a particular slave
-    virtual void handleState(const std::string& msg);
-
-    /// Add entry in transition timeout table (timeout in seconds)
-    DimSlave& addTimeout(const Transition* param, int tmp);
-    /// Remove entry in transition timeout table
-    DimSlave& removeTimeout(const Transition* param);
     /// Start the slave's transition timeout
     DimSlave& startTimer(int reason, const void* param=0);
     /// Stop the slave's transition timeout

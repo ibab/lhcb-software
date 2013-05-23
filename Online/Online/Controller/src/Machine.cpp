@@ -14,6 +14,7 @@
 #include "FiniteStateMachine/Functors.h"
 #include "FiniteStateMachine/Transition.h"
 #include "CPP/IocSensor.h"
+#include "RTL/rtl.h"
 
 // C/C++ include files
 #include <cstdarg>
@@ -62,6 +63,8 @@ Machine::Machine(const Type *typ, const string& nam)
   display(DEBUG,"FSMmachine: creating machine %s of type %s",c_name(),typ->c_name());
   setState(m_type->initialState()).setTarget(0);
   Callback cb(this);
+  m_fsm.setFailureCallback(cb.make(&Machine::metaTransitionFail));
+  m_fsm.setNoTransitionCallback(cb.make(&Machine::metaTransitionMissing));
   m_fsm.addTransition(MACH_IDLE,     MACH_IDLE,     "Idle->Idle",      cb.make(&Machine::goIdle));
   m_fsm.addTransition(MACH_IDLE,     MACH_OUTACTION,"Idle->OutAct",    cb.make(&Machine::doOutAction));
 
@@ -88,6 +91,7 @@ Machine::Machine(const Type *typ, const string& nam)
   m_fsm.addTransition(MACH_CHK_SLV,  MACH_FAIL,     "CheckSlv->Fail",  cb.make(&Machine::doFail));
   m_fsm.addTransition(MACH_INACTION, MACH_FAIL,     "WaitIAct->Fail",  cb.make(&Machine::doFail));
   m_fsm.addTransition(MACH_FAIL,     MACH_IDLE,     "Fail->Idle",      cb.make(&Machine::goIdleFromFail));
+  m_fsm.addTransition(MACH_FAIL,     MACH_FAIL,     "Fail->Fail",      cb.make(&Machine::nullAction));
 }
 
 /// Standatrd destructor  
@@ -205,6 +209,22 @@ void Machine::evaluateWhens()  {
   }
 }
 
+/// Callback executed on a failure of a metastate change
+ErrCond Machine::metaTransitionFail() {
+  display(ALWAYS,"FSM[%s]> FAILED ACTION from state:%d [%s] to state %d [%s]",
+	  RTL::processName().c_str(),int(m_fsm.currentState()),_metaStateName(m_fsm.currentState()),
+	  int(m_fsm.targetState()),_metaStateName(m_fsm.targetState()));
+  return FSM::SUCCESS;
+}
+
+/// Callback executed if the current transition is not availible
+ErrCond Machine::metaTransitionMissing() {
+  display(ALWAYS,"FSM[%s]> UNKNOWN TRANSITION  from state:%d [%s] to state %d [%s]",
+	  RTL::processName().c_str(),int(m_fsm.currentState()),_metaStateName(m_fsm.currentState()),
+	  int(m_fsm.targetState()),_metaStateName(m_fsm.targetState()));
+  return FSM::SUCCESS;
+}
+
 /// Invoke FSM transition
 ErrCond Machine::invokeTransition (const Transition* transition, Rule::Direction direction)   {
   if ( transition )  {
@@ -281,14 +301,17 @@ ErrCond Machine::handleSlaves()  {
 
 /// Start slaves if required by transition descriptor
 ErrCond Machine::checkAliveSlaves()  {
-  const Slaves&     sl = slaves();
   const Transition* tr = currTrans();
-  if ( !sl.empty() && tr->checkLimbo() )  {
-    SlaveLimboCount limbos=for_each(sl.begin(),sl.end(),SlaveLimboCount());
-    m_meta.execute(this);
-    if ( limbos.count>0 ) return FSM::SUCCESS;
+  if ( tr ) {
+    const Slaves&     sl = slaves();
+    if ( !sl.empty() && tr->checkLimbo() )  {
+      SlaveLimboCount limbos=for_each(sl.begin(),sl.end(),SlaveLimboCount());
+      m_meta.execute(this);
+      if ( limbos.count>0 ) return FSM::SUCCESS;
+    }
+    return ret_success(this,MACH_CHK_SLV);
   }
-  return ret_success(this,MACH_CHK_SLV);
+  return ret_success(this,Slave::SLAVE_TRANSITION);
 }
 
 /// Check slave status. Once all slaves have answered, invoke transition

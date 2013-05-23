@@ -51,6 +51,8 @@ namespace FiniteStateMachine   {
     MicFSMState        m_targetState;            // Previous state
     MicFSMTransition*  m_currentTransition;      // Current transition
     MicFSMTransition*  m_transitionHead;         // Transition head list
+    Callback           m_failCall;               // Callback if meta-state change fails
+    Callback           m_noTransCall;            // Callback if no trransiiton present
   public:
     /// Standard constructor
     FSM();
@@ -58,6 +60,10 @@ namespace FiniteStateMachine   {
     /// Standard destructor
     virtual ~FSM();
     void setCurrentState(MicFSMState s)  { m_currentState = s;     }
+    /// Register callback to be executed on a metastate failure
+    void setFailureCallback(const Callback& action);
+    /// Register callback to be executed if the current transition is not availible
+    void setNoTransitionCallback(const Callback& action);
     MicFSMState targetState()    const   { return m_targetState;   }
     MicFSMState currentState()   const   { return m_currentState;  }
     MicFSMState previousState()  const   { return m_previousState; }

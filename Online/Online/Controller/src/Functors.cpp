@@ -102,13 +102,11 @@ void CheckStateSlave::operator()(const Slave* s)   {
   const Type*  slType  = s->type();
   const Rule*  slRule  = s->rule();
   const Transition::Rules& r = object->rules();
-  if ( s->isLimbo() ) { 
-    //s->display(s->ALWAYS,"%s> DEAD Metastate:%s",s->c_name(),s->metaStateName());
-    ++dead; 
+  if ( s->currentState() == Slave::SLAVE_FAILED ) { 
+    ++fail;  // Must be first check: Slave may have failed on start while limbo....
   }
-  else if ( s->currentState() == Slave::SLAVE_FAILED ) { 
-    //s->display(s->ALWAYS,"%s> FAILED Metastate:%s",s->c_name(),s->metaStateName());
-    ++fail; 
+  else if ( s->isLimbo() ) { 
+    ++dead;  // Count the number of dead slaves.
   }
   else if ( s->currentState() == Slave::SLAVE_EXECUTING ) { 
     //s->display(s->ALWAYS,"%s> EXECUTING - ignore Metastate:%s",s->c_name(),s->metaStateName());
@@ -121,7 +119,8 @@ void CheckStateSlave::operator()(const Slave* s)   {
 	else if ( slState == rule->targetState() )  ++count;  // Slave fulfills state criteria
 	else if ( slState == rule->currState() )  {}   // Slave fulfills state criteria, has not yet answered
 	else if ( !slRule ) ++count; // There was nothing to be done.
-	else {++fail;  // What can I do: there was a rule, but the slave did not go to the target state
+	else {
+	  ++fail;  // What can I do: there was a rule, but the slave did not go to the target state
 	  s->display(s->ALWAYS,"%s FAILED Metastate:%s [Rule not fulfilled] State:%s",
 		     s->c_name(),s->metaStateName(),slState->c_name());
 	}
@@ -159,7 +158,7 @@ void PrintObject::operator()(const Machine* m) const  {
   m->display(flag,"%s|  Current state:      %s",pref,m->c_state());
   m->display(flag,"%s|  Current Transition: %s",pref,tr ? tr->c_name()       : "----");
   m->display(flag,"%s|  Target  state:      %s",pref,tr ? tr->to()->c_name() : "----");
-  PrintObject slave_printer("++"+prefix);
+  PrintObject slave_printer("|++"+prefix);
   for_each(m->slaves().begin(),m->slaves().end(),slave_printer);
   m->display(flag,"%s+----------------------------------------------------------------------",pref);
 }
@@ -176,7 +175,7 @@ void PrintObject::operator()(const MachineHandle& h) const  {
 
 /// Operator invoked for each machine during printing.
 void PrintObject::operator()(const Slave* s) const  {
-  s->display(TypedObject::ALWAYS,"%s+  Slave: %s of type %s: State:%-12s Meta-state:%s managed by %s",
+  s->display(TypedObject::ALWAYS,"%s+  Slave: %-32s of type %s: State:%-12s Meta-state:%-14s managed by %s",
 	     prefix.c_str(),s->c_name(),s->type()->c_name(),s->c_state(),
 	     s->metaStateName(),s->c_machine());
 }

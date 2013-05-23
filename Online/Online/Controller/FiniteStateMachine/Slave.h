@@ -48,10 +48,28 @@ namespace FiniteStateMachine {
       // Handling of answers from physical slaves
       SLAVE_DEAD               = 1<<26,
       SLAVE_TRANSITION         = 1<<27,
-      SLAVE_FINISHED           = 1<<28
+      SLAVE_FINISHED           = 1<<28,
+      // Timeout values
+      SLAVETIMEOUT             = 1<<29,
+      SLAVE_UNLOAD_TIMEOUT,
+      SLAVE_TERMINATE_TIMEOUT,
+      SLAVE_KILL_TIMEOUT,
+      SLAVE_START_TIMEOUT
     };
 
   protected:
+    /// TimerID definition
+    typedef std::pair<void*,unsigned long> TimerID;
+    /// Definition of the timeout table
+    typedef std::map<const void*,int> TimeoutTable; 
+
+    /// Timeout table for various transitions
+    TimeoutTable      m_timeouts;
+    /// ID of timeout timer
+    TimerID           m_timerID;
+    /// General transition timeout, if no other is specified.
+    int               m_tmo;
+
     /// The slave's meta-state
     SlaveState        m_meta;
     /// Reference to the managing machine
@@ -98,6 +116,27 @@ namespace FiniteStateMachine {
     const char* c_state ()  const;
     /// Retrieve reference to managing machine structure name
     const char* c_machine ()  const;
+
+    /// Set the default timeout value
+    void setTimeout(int val)                 {  m_tmo = val;  }
+    /// Access the command string 
+    int timeout() const                      {  return m_tmo; }
+    /// Add entry in transition timeout table (timeout in seconds)
+    Slave& addTimeout(const Transition* param, int tmp);
+    /// Remove entry in transition timeout table
+    Slave& removeTimeout(const Transition* param);
+    /// Start the slave's transition timeout
+    virtual Slave& startTimer(int reason, const void* param=0) = 0;
+    /// Stop the slave's transition timeout
+    virtual Slave& stopTimer() = 0;
+
+    /// Handle timeout according to timer ID
+    virtual void handleTimeout();
+    /// Handle timeout on unload transition according to timer ID
+    virtual void handleUnloadTimeout();
+
+    /// Handle state updates for a particular slave
+    virtual void handleState(const std::string& msg);
 
     /// Invoke transition on slave. Noop if slave is already in target state
     ErrCond apply(const Rule* rule);

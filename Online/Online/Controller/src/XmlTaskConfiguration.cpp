@@ -76,7 +76,7 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
       string cmd = t->command;
 
       if ( forking && (i == 0) )  {
-	instance_args += string(" -instances=")+instances_text;
+	instance_args += string(" -instances ")+instances_text;
       }
       machine.display(ALWAYS,"+---- Task:%s UTGID: %s. %s %s",
 		      t->name.c_str(), instance_utgid.c_str(),

@@ -165,7 +165,7 @@ FSM::ErrCond Controller::invokeTransition(const string& transition)  {
 void Controller::commandHandler()   {
   // Decouple as quickly as possible from the DIM command loop !
   string cmd = getString();
-  display(NOLOG,"%s> Received transition request:%s",c_name(),cmd.c_str());
+  display(INFO,"%s> Received transition request:%s",c_name(),cmd.c_str());
   if ( !m_machine->isIdle() )  {
     display(ERROR,"%s> Machine is not idle!",c_name());
     m_machine->goIdle();

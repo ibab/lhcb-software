@@ -17,9 +17,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <iostream>
 #include <FiniteStateMachine/FSM.h>
-#include "FiniteStateMachine/TypedObject.h"
 
 using namespace std;
 using namespace FiniteStateMachine;
@@ -59,6 +57,16 @@ FSM::~FSM()  {
   }
 }
 
+/// Register callback to be executed on a metastate failure
+void FSM::setFailureCallback(const Callback& action) {
+  m_failCall = action;
+}
+
+/// Register callback to be executed if the current transition is not availible
+void FSM::setNoTransitionCallback(const Callback& action) {
+  m_noTransCall = action;
+}
+
 //----------------------------------------------------------------------------
 FSM::ErrCond FSM::addTransition(MicFSMState from, MicFSMState to, 
 				const string& condition, const Callback& action)
@@ -80,7 +88,6 @@ FSM::ErrCond FSM::addTransition(MicFSMState from, MicFSMState to,
   }
   return FSM::SUCCESS;                   // return always true
 }
-#include "RTL/rtl.h"
 
 //----------------------------------------------------------------------------
 FSM::ErrCond FSM::removeTransition(MicFSMState from, MicFSMState to)    {
@@ -107,19 +114,14 @@ FSM::ErrCond FSM::removeTransition(MicFSMState from, MicFSMState to)    {
 
 //----------------------------------------------------------------------------
 FSM::ErrCond FSM::invokeTransition(MicFSMState target, const void* user_param)   {
-#if 0
-  TypedObject::display(TypedObject::ALWAYS,"FSM[%s]> Invoke transition from state:%d to state %d",
-		       RTL::processName().c_str(),m_currentState,int(target));
-#endif
   for(MicFSMTransition* tr = m_transitionHead; tr; tr = tr->next)  {
     if( tr->from == m_currentState && tr->to == target )  {
       m_targetState = target;
       m_currentTransition = tr;              // Set the current transition 
-      //std::cout << "Transition from state:" << m_currentState << " to state: " << int(target) << std::endl;
       if( tr->action )        {              // Check if action routine exists 
         ErrCond status = ErrCond(tr->action.execute(user_param));
         if( status != FSM::SUCCESS )   {     // Check for success 
-	  std::cout << "Failed     action: " << int(tr->from) << " --> " << int(tr->to) << std::endl;
+	  m_failCall.execute(user_param);
           return status;                     // Return the same status 
         }
       }
@@ -129,7 +131,6 @@ FSM::ErrCond FSM::invokeTransition(MicFSMState target, const void* user_param)  
       return FSM::SUCCESS;                   // return success
     }
   }
-  TypedObject::display(TypedObject::ALWAYS,"FSM[%s]> Unknown transition from state:%d to state %d",
-		       RTL::processName().c_str(),m_currentState,int(target));
+  m_noTransCall.execute(user_param);
   return FSM::TRANNOTFOUND;                  // return false (not found)
 }
