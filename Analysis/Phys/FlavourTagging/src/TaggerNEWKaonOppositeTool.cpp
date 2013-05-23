@@ -122,7 +122,7 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
   axdaugh.push_back( AXB0 );
   //select kaon opposite tagger(s)
   Particle const * ikaon=0;
-  int ncand = 0;
+  int cands = 0;
   Particle::ConstVector::const_iterator ipart;
   //Particle::ConstVector::iterator ipart;
 
@@ -158,11 +158,9 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
     vtags_sel.push_back(*ipart);         // store presel tagger candidate
     ////////////////////////////////
 
-    ++ncand;
+    ++cands;
   }
 
-  int cands = m_util->countTracks(vtags_sel);
-  //assert(ncand == cands); // CRJ Cannot call asserts in production
   double cands_nn_1 = cands;
 
   typedef std::pair <double, int> myPair;
@@ -255,13 +253,6 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
     std::stable_sort(myMap.begin(), myMap.end(), std::greater<myPair>());
     for(unsigned i =0; i < (unsigned)cands; i++)
     {
-      // CRJ : Cannot call assert in production
-//       assert(i < pos_rnet_opp.size());
-//       assert(i < pre_rnet_opp.size());
-//       assert(i < pos_sign_tag.size());
-//       assert(i < pre_sign_tag.size());
-//       assert(i < pos_pidk.size());
-//       assert(i < pre_pidk.size());
       if ( msgLevel(MSG::DEBUG) )
         debug() << " <map 1> " << myMap[i].first << " <map 2> " << myMap[i].second << endmsg;
       pos_rnet_opp.at(i) = pre_rnet_opp.at(myMap[i].second);
@@ -303,7 +294,6 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
 
     // event_map is a vector, so let's sort it descending...
     std::stable_sort( event_map.rbegin(), event_map.rend() );
-    //assert(event_map.front().first >= event_map.back().first);
     ikaon = *event_map[0].second;
 
     event_map.clear();
