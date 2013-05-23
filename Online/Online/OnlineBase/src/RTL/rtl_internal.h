@@ -3,6 +3,7 @@
 
 #ifndef _WIN32
 #define USE_PTHREADS
+#include <sys/stat.h>
 #endif
 
 #ifdef USE_PTHREADS
