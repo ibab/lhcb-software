@@ -4,6 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2013-05-23 - Marco Cattaneo
+ - Updated comment on ODIN::triggerConfigurationKey to alert users that this is
+   the requested value but not necessarily the value actually used by Moore, 
+   which is in LHCb::HltDecReports::configuredTCK
+
 !========================= DAQEvent v9r12 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

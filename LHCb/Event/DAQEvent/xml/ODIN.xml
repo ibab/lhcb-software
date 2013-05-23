@@ -249,7 +249,7 @@
 
       <attribute
         name="triggerConfigurationKey"
-        desc="Trigger Configuration Key"
+        desc="Requested Trigger Configuration Key. The key actually used is in LHCb::HltDecReports::configuredTCK"
         type="unsigned int"
         init="0" />
 
