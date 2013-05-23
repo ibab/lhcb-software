@@ -394,7 +394,7 @@ int mbm_wait_event(BMID bm) {
     *bm->evt_ptr  = (int*)ptr;
     *bm->evt_size = evt.size;
     *bm->evt_type = evt.type;
-    ::memcpy(bm->trmask,evt.trmask,sizeof(bm->trmask));
+    ::memcpy(bm->trmask,evt.trmask,sizeof(evt.trmask));
     if ( bm->ast_addr != 0 ) {
       ::lib_rtl_run_ast(bm->ast_addr, bm->ast_param, 3);
     }

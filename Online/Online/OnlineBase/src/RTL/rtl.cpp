@@ -430,7 +430,7 @@ int lib_rtl_get_datainterface_name(char* node, size_t len)  {
   if ( !tmp )  {
     char n[64], nn[70];
     if ( 0 == ::gethostname (n,sizeof(n)) )  {
-      if ( strchr(n,'.')>0 ) *strchr(n,'.') = 0;
+      if ( strchr(n,'.') != 0 ) *strchr(n,'.') = 0;
       ::strncpy(nn,n,sizeof(n));
       ::strcat(nn,"-d");
       hostent* h = ::gethostbyname(nn);

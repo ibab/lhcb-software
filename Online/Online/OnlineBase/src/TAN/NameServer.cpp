@@ -420,15 +420,14 @@ int TcpNameService::handle ( EventHandler* handler )  {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 int TcpNameService::handleAcceptRequest ( EventHandler* handler )  {
-  int retry = 1, accept_error;                                     //
+  int retry = 1;                                                   //
   NetworkChannel::Address address;                                 //
-  NetworkChannel::Channel channel = m_pNetwork->accept(address);  // Accept
-  accept_error = m_pNetwork->error();                             //
-  int status = m_pNetwork->queueAccept(m_port,handler);           // Rearm ACCEPT
+  NetworkChannel::Channel channel = m_pNetwork->accept(address);   // Accept
+  //int accept_error = m_pNetwork->error();                          //
+  int status = m_pNetwork->queueAccept(m_port,handler);            // Rearm ACCEPT
   if ( !lib_rtl_is_success(status) )  {
     lib_rtl_output(LIB_RTL_ERROR,"handleAcceptRequest> Accept Rearm FAILED %d RetryCount:%d %s",
-      m_pNetwork->error(),retry,                                  //
-      m_pNetwork->errMsg());                                      //
+      m_pNetwork->error(),retry,m_pNetwork->errMsg());             //
   }                                                                //
   if ( channel <= 0 )   {                                          // Error!
     return NAME_SERVER_SUCCESS;                                    // Return status code

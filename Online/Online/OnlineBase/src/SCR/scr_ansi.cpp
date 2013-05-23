@@ -100,7 +100,6 @@ int scrc_rearm_keyboard (unsigned int /* fac */, void* par)   {
   }
   _ss_ssig(0,Insignal);
 #else
-  typedef int (*_F)(void*);
   IOPortManager(0).addEx(0, ::fileno(stdin), scrc_ast_keyboard, par);
 #endif
   return WT_SUCCESS;
