@@ -51,6 +51,6 @@ apply_pattern QMTestSummarize
 private
 macro_append use_includes     ' $(ppcmd)"$(ONLINEKERNELROOT)/OnlineKernel" '
 macro_append cppflags         ' $(ONLINE_CPPFLAGS) '
-macro_append test_use_linkopts           "" target-icc " -Wl,--no-as-needed "
-macro_append gentest_use_linkopts        "" target-icc " -Wl,--no-as-needed "
-macro_append mbm_remove_use_linkopts     "" target-icc " -Wl,--no-as-needed "
+macro_append test_use_linkopts           " -ldl " WIN32 "" target-icc " -Wl,--no-as-needed "
+macro_append gentest_use_linkopts        " -ldl " WIN32 "" target-icc " -Wl,--no-as-needed "
+macro_append mbm_remove_use_linkopts     " -ldl " WIN32 "" target-icc " -Wl,--no-as-needed "
