@@ -1,4 +1,13 @@
 #!/bin/bash
+# =========================================================================
+#
+#  Default script to start the event reader task on the HLT farm
+#
+#  Author   M.Frank
+#  Version: 1.0
+#  Date:    20/05/2013
+#
+# =========================================================================
 #
 export PYTHONPATH=${HOME}/data:${PYTHONPATH};
-start_Class2_task "import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBM2(buffers=['Events'],partitionBuffers=False)"
+exec -a ${UTGID} ${Class2_task} -opts=../options/OverflowReader.opts

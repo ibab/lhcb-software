@@ -1,0 +1,15 @@
+OnlineEnv.MBM_setup = "-s=100000 -e=1000 -u=40 -b=17 -f -i=Events -c -s=40000 -e=150 -u=8 -b=17 -f -i=Overflow -c -s=30000 -e=150 -u=36 -f -i=Send -c";
+OnlineEnv.PartitionBuffers = true;
+//
+//
+OnlineEnv.MEPRx_Output     = "Events";
+OnlineEnv.MEPRx_Buffers    = {"Events"};
+//
+//
+OnlineEnv.DiskWR_Input     =  "Send";
+OnlineEnv.DiskWR_Buffers   = {"Send"};
+//
+//
+OnlineEnv.PassAll_Input    =  "Events";
+OnlineEnv.PassAll_Output   =  "Send";
+OnlineEnv.PassAll_Buffers  = {"Events", "Send"};

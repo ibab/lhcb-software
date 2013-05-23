@@ -8,7 +8,7 @@
     <argument name="-runinfo"      value="${RUNINFO}"/>
     <argument name="-partition"    value="${PARTITION}"/>
     <fmcparam name="utgid"         value="${PARTITION}_${NODE}_${NAME}_${INSTANCE}"/>
-    <fmcparam name="wd"            value="/home/frankm"/>
+    <fmcparam name="wd"            value="/home/frankm/cmtuser/Online_v4r68/Online/ControllerTests/scripts"/>
     <fmcparam name="stdout"        value="/tmp/logSrv.fifo"/>
     <fmcparam name="stderr"        value="/tmp/logSrv.fifo"/>
     <timeout  action="Any"         value="5"/>
@@ -26,7 +26,7 @@
     <argument name="-runinfo"      value="${RUNINFO}"/>
     <argument name="-partition"    value="${PARTITION}"/>
     <fmcparam name="utgid"         value="${PARTITION}_${NODE}_${NAME}_${INSTANCE}"/>
-    <fmcparam name="wd"            value="/home/frankm"/>
+    <fmcparam name="wd"            value="/home/frankm/cmtuser/Online_v4r68/Online/ControllerTests/scripts"/>
     <fmcparam name="stdout"        value="/tmp/logSrv.fifo"/>
     <fmcparam name="stderr"        value="/tmp/logSrv.fifo"/>
     <ioparam  name="output"        value="Events"/>
@@ -40,7 +40,7 @@
     <argument name="-runinfo"      value="${RUNINFO}"/>
     <argument name="-partition"    value="${PARTITION}"/>
     <fmcparam name="utgid"         value="${PARTITION}_${NODE}_${NAME}_${INSTANCE}"/>
-    <fmcparam name="wd"            value="/home/frankm"/>
+    <fmcparam name="wd"            value="/home/frankm/cmtuser/Online_v4r68/Online/ControllerTests/scripts"/>
     <fmcparam name="stdout"        value="/tmp/logSrv.fifo"/>
     <fmcparam name="stderr"        value="/tmp/logSrv.fifo"/>
     <ioparam  name="input"         value="Send"/>
@@ -48,13 +48,13 @@
     <timeout  action="load"        value="10"/>
   </task>
 
-  <task name="Hlt1" user="online" group="onliners" instances="NUMBER_OF_INSTANCES">
+  <task name="PassAll" user="online" group="onliners" instances="NUMBER_OF_INSTANCES">
     <command>runFarmTask.sh</command>
     <argument name="-type"         value="${NAME}"/>
     <argument name="-runinfo"      value="${RUNINFO}"/>
     <argument name="-partition"    value="${PARTITION}"/>
     <fmcparam name="utgid"         value="${PARTITION}_${NODE}_${NAME}_${INSTANCE}"/>
-    <fmcparam name="wd"            value="/home/frankm"/>
+    <fmcparam name="wd"            value="/home/frankm/cmtuser/Online_v4r68/Online/ControllerTests/scripts"/>
     <fmcparam name="stdout"        value="/tmp/logSrv.fifo"/>
     <fmcparam name="stderr"        value="/tmp/logSrv.fifo"/>
     <ioparam  name="input"         value="Events"/>

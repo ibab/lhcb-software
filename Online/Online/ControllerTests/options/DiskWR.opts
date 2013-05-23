@@ -1,0 +1,32 @@
+#pragma print off
+#include "$INFO_OPTIONS"
+#include "$SUBFARM_OPTIONS"
+#include "$MBM_SETUP_OPTIONS"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.ExtSvc               += {"IncidentSvc"};
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+
+Runable.MEPManager                   = "LHCb::MEPManager/MBM";
+ApplicationMgr.ExtSvc               += {"LHCb::MEPManager/MBM"};
+MBM.PartitionBuffers                 = @OnlineEnv.PartitionBuffers;
+MBM.PartitionID                      = @OnlineEnv.PartitionID;
+MBM.PartitionName                    = @OnlineEnv.PartitionName;
+MBM.Buffers                          = @OnlineEnv.DiskWR_Buffers;
+/*
+ApplicationMgr.TopAlg               += {"LHCb::SocketDataSender/SND"};
+SND.DataSink                         = @OnlineEnv.Target;
+SND.Compress                         = 0;
+SND.DataType                         = 3; // MDF_NONE=1, MDF_RECORDS=2, MDF_BANKS=3 
+SND.InputDataType                    = 3;
+*/
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+ApplicationMgr.ExtSvc               += {"LHCb::OnlineEvtSelector/EventSelector"};
+EventSelector.MEPManager             = @Runable.MEPManager;
+EventSelector.Input                  = @OnlineEnv.DiskWR_Input;
+EventSelector.AllowSuspend           = true;
+EventSelector.Decode                 = false;
+EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0";
+HistogramPersistencySvc.OutputLevel  = 5;
+MonitorSvc.CounterUpdateInterval = 5;
