@@ -1,6 +1,6 @@
 package GaudiSerialize
 author Albert Puig
-version v0r10
+version v0r11
 
 branches  cmt doc src GaudiSerialize 
 
