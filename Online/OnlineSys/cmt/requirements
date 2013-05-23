@@ -23,7 +23,10 @@ macro CondDBServer_use "CondDBServer v1r4 Online" target-i686 ""
 use $(CondDBServer_use)
 ###use CondDBServer        v1r4     Online
 use DailyReport         v1r2     Online
-use DefHLTUtils         v1r2     Online
+
+###use DefHLTUtils         v1r2     Online
+
+
 use DIM                 v19r36   Online
 ####use ExampleGaucho       v3r4     Online
 use FarmMonitor         v2r11    Online
