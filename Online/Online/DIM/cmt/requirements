@@ -21,7 +21,7 @@ macro_remove  cflags '' WIN32 '-fmessage-length=0 -fPIC'
 pattern dim_exe \
     application  <name>  <files> ; \
     macro_append <name>_cflags  " $(<package>_cppflags)" ; \
-    macro_append <name>linkopts " -pthread " WIN32 "" ; \
+    macro_append <name>linkopts " -ldim -pthread " WIN32 "" ; \
     macro_append <name>_dependencies " dim "
 
 apply_pattern install_more_includes more=dim 
@@ -38,9 +38,9 @@ macro_append dim_shlibflags " -pthread -lrt " WIN32 " "
 apply_pattern dim_exe name=dns files=dns.c 
 apply_pattern dim_exe name=did files="did/make_did.c"
 
-macro_append  didlinkopts    "  " \
+macro_append didlinkopts     " -lXm " \
  target-linux&target-i686    " -L/usr/X11R6/lib   -lXm "    \
- target-linux&target-x86_64  " -L/usr/X11R6/lib64 -lXm "    \
+ target-linux&target-x86_64  " -L/usr/X11R6/lib64 -L /usr/lib64 -lXm "  \
  WIN32                       " "
 
 apply_pattern dim_exe name=test_server       files=examples/test_server.c
