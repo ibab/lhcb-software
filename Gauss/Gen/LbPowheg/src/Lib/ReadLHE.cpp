@@ -22,9 +22,6 @@
 #include "LbPowheg/ReadLHE.h"
 // ============================================================================
 /** @file
- *  Implementation file for class LbPythia::ReadLHE 
- *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
- *  @date 2007-06-29
  */
 // ============================================================================
 /* standard constructor 

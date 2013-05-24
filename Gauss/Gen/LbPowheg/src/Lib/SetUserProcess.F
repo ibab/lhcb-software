@@ -4,8 +4,6 @@ C-----------------------------------------------------------------------
 C  Purpose   : Set User Process in Pythia For Gauss
 C  Arguments : Type of User process to set
 C
-C  Author    : Patrick Robbe
-C  Created   : 2005-03-06
 C-----------------------------------------------------------------------
       IMPLICIT NONE
 C-----------------------------------------------------------------------
