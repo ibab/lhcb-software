@@ -1,5 +1,5 @@
 !-----------------------------------------------------------------------------
-! Package     : Phys/NeuroBayesTool
+! Package     : Phys/NeuroBayesTools
 ! Responsible : Ulrich Kerzel
 ! Purpose     : Collection of Tools for identifying various decays using
 !               the NeuroBayes neural network package
@@ -31,7 +31,7 @@
 ! 2011-03-03 - Ulrich Kerzle
  - fix ifdef for Windows
 
-! ====================== Phys/NeuroBayesTool v1r1 2011-02-28==================
+! ====================== Phys/NeuroBayesTools v1r1 2011-02-28==================
 
 ! 2011-02-27 - Ulrich Kerzel
 - add network with kinematic variables only (no PID) to reduce combinatorics
@@ -44,7 +44,7 @@
  - anothehr ifdef for compilation on windows
  - coment out plotting of network output
 
-! ====================== Phys/NeuroBayesTool v1r0 2011-02-21==================
+! ====================== Phys/NeuroBayesTools v1r0 2011-02-21==================
 
 ! 2011-02-18 - Ulrich Kerzel
 - use return vaule of Error() 
