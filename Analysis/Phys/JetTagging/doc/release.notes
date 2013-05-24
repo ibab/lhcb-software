@@ -4,6 +4,9 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+! 2013-05-24 - Chris Jones
+ - Check values with lfin as well as lnan
+
 !========================= JetTagging v1r1 2013-04-05 =========================
 
 ! 2013-03-22 - Cedric Potterat
