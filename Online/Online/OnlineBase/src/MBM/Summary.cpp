@@ -76,9 +76,9 @@ int Summary::show(BufferMemory* dsc, bool show_states)   {
 
   ::printf("\n======================== MBM Bufer summary for buffer \"%s\" ========================\n\n",dsc->bm_name);
   ::sprintf(txt," Buffer \"%s\"",dsc->bm_name);
-  ::printf("%-26s  Events: Produced:%ld Seen:%ld Pending:%d Max:%d\n",
+  ::printf("%-26s  Events: Produced:%ld Seen:%ld Pending:%ld Max:%d\n",
 	   txt, long(ctr->tot_produced), long(ctr->tot_seen), ctr->i_events, ctr->p_emax);
-  ::printf("%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]\n\n",
+  ::printf("%-26s  Space(kB):[Tot:%d Free:%ld] Users:[Tot:%ld Max:%d]\n\n",
 	   "",(ctr->bm_size*ctr->bytes_p_Bit)/1024, (ctr->i_space*ctr->bytes_p_Bit)/1024, 
 	   ctr->i_users, ctr->p_umax);
 

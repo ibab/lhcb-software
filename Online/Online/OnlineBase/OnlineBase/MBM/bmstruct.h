@@ -174,9 +174,9 @@ struct CONTROL    {
   int    shift_p_Bit;        // Shifts per Bit to obtain size in bytes
   int    bytes_p_Bit;        // Number of bytes per bit in bitmap.
   int    last_bit;           // last bit on the bipmap
-  int    i_events;           // instantaneous event number
-  int    i_space;            // instantaneous free  space
-  int    i_users;            // instantaneous sctive users
+  long   i_events;           // instantaneous event number
+  long   i_space;            // instantaneous free  space
+  long   i_users;            // instantaneous sctive users
   i_huge tot_produced;       // events produced counter
   i_huge tot_actual;         // events matching req
   i_huge tot_seen;           // events seen
