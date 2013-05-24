@@ -10,6 +10,7 @@ gaudi_depends_on_subdirs(Event/LinkerEvent
                          GaudiAlg
                          GaudiUtils
                          Kernel/MCInterfaces
+                         Tf/PatKernel
                          Tr/TrackFitEvent
                          Tr/TrackInterfaces
                          Tr/TrackKernel)
@@ -18,6 +19,6 @@ find_package(GSL)
 
 gaudi_add_module(TrackCheckers
                  src/*.cpp
-                 INCLUDE_DIRS GSL AIDA Kernel/MCInterfaces Tr/TrackInterfaces
+                 INCLUDE_DIRS GSL AIDA Kernel/MCInterfaces Tf/PatKernel Tr/TrackInterfaces
                  LINK_LIBRARIES GSL LinkerEvent MCEvent RecEvent TrackEvent GaudiAlgLib GaudiUtilsLib TrackFitEvent TrackKernel)
 

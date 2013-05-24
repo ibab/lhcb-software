@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2013-05-24 - Marco Cattaneo
+ - Add missing PatKernel dependency
+
 ! 2013-05-01 Paul Seyfert
  - Pick up changes in ITrackGhostClassification
 

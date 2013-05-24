@@ -24,6 +24,7 @@ use   TrackInterfaces 	v*	Tr
 use   TrackKernel 	v*	Tr
 use   MCInterfaces      v*      Kernel
 use   TrackKernel       v*      Tr
+use   PatKernel         v*      Tf
 
 # Component library building rule
 #=========================================================================
