@@ -5,6 +5,9 @@
 !               the NeuroBayes neural network package
 !-----------------------------------------------------------------------------
 
+! 2013-05-24 - Chris Jones
+ - Check value with lfin as well as lnan
+
 !========================= NeuroBayesTools v1r2p2 2013-05-07 =========================
 
 ! 2013-03-03 - Chris Jones

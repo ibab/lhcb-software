@@ -1,5 +1,5 @@
 // $Id: $
-// Include files 
+// Include files
 #include <cmath>
 #include <algorithm>
 
@@ -28,8 +28,8 @@ DECLARE_TOOL_FACTORY( NBB2HHTriggerTool )
 //=============================================================================
 NBB2HHTriggerTool::NBB2HHTriggerTool( const std::string& type,
                                       const std::string& name,
-                                      const IInterface* parent ):
-  base_class(type,name,parent),
+                                      const IInterface* parent )
+: base_class(type,name,parent),
   m_NetworkCut (       -1.0         ),
   m_DoPrecuts  (       false        ),
   m_UsePID     (       true         ),
@@ -44,32 +44,18 @@ NBB2HHTriggerTool::NBB2HHTriggerTool( const std::string& type,
 }
 
 // ===========================================================================
-StatusCode NBB2HHTriggerTool::initialize() {
-
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "==> Initialize" << endmsg;
-
-
-
+StatusCode NBB2HHTriggerTool::initialize() 
+{
   // initialize the base class  (the first action)
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure()) return sc;
 
   // get tools and algs
-  m_DistCalc   = tool<IDistanceCalculator>("LoKi::DistanceCalculator");
-  if (!m_DistCalc) {
-    return Error("Could not get DistanceCalculator");
-  }
+  m_DistCalc  = tool<IDistanceCalculator>("LoKi::DistanceCalculator");
 
-  m_HistoTool = tool<IHistoTool>("HistoTool", this); 
-  if (!m_HistoTool){
-    return Error("Could not get Histogramming tool");
-  }
+  m_HistoTool = tool<IHistoTool>("HistoTool", this);
 
-  if (m_UsePID)
-    m_nVar = 16;
-  else
-    m_nVar = 12;
+  m_nVar = ( m_UsePID ? 16 : 12 );
 
   //
   // print settings
@@ -79,7 +65,7 @@ StatusCode NBB2HHTriggerTool::initialize() {
   debug()   <<  "Apply precuts  " <<  m_DoPrecuts     << endmsg;
   debug()   <<  "Use PID        " <<  m_UsePID        << endmsg;
   debug()   <<  "#variables     " <<  m_nVar          << endmsg;
- 
+
   //
   // setup NeuroBayes
   //
@@ -91,13 +77,18 @@ StatusCode NBB2HHTriggerTool::initialize() {
   // (easier for switching between different networks)
   m_inArray = new float[NB_MAXNODE];
 
+#else
+
+  return Error( "Platform not supported for NeuroBayes" );
 
 #endif
 
 
   return StatusCode::SUCCESS;
-} //initialise
+} 
+
 // ============================================================================
+
 bool NBB2HHTriggerTool::operator()(const LHCb::Particle* p) const {
 
   if(0 == p) {
@@ -105,7 +96,7 @@ bool NBB2HHTriggerTool::operator()(const LHCb::Particle* p) const {
     return false ;
   } // null
 
-  // safe side: reject everything by default  
+  // safe side: reject everything by default
   bool returnValue = false;
 
   bool filledInputVar =  NBB2HHTriggerTool::getInputVar(p);
@@ -119,7 +110,7 @@ bool NBB2HHTriggerTool::operator()(const LHCb::Particle* p) const {
     } // if msg
 
     double netOut =  -1.0;
-#ifdef __GNUC__    
+#ifdef __GNUC__
     netOut = m_NBExpert->nb_expert(m_inArray);
 #endif
 
@@ -142,7 +133,7 @@ bool NBB2HHTriggerTool::operator()(const LHCb::Particle* p) const {
     if (prob > m_NetworkCut) {
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Bhh cand pass cut "  << m_NetworkCut << endmsg;
-      
+
       if (m_DoPlot) {
         double mB   = p->measuredMass()/Gaudi::Units::GeV;
         m_HistoTool->plot1D(mB    , "mBCut"  , "mass acc cand"                 ,  5.0  , 6.0 ,  120);
@@ -263,15 +254,15 @@ bool NBB2HHTriggerTool::getInputVar(const LHCb::Particle* particle) const {
         maxPt            <  2.0    )
       return false;
 
-      if (m_UsePID) {
-        if (!hPlusAboveThresholdK       ||
-            !hMinusAboveThresholdK      ||
-            (hPlusDllK   > -0.1 && hPlusDllK  < 0.1) ||
-            (hMinusDllK  > -0.1 && hMinusDllK < 0.1) ||
-            maxDllK          <  0.1)            
-          return false;
-      } // if usePID
-      return false;
+    if (m_UsePID) {
+      if (!hPlusAboveThresholdK       ||
+          !hMinusAboveThresholdK      ||
+          (hPlusDllK   > -0.1 && hPlusDllK  < 0.1) ||
+          (hMinusDllK  > -0.1 && hMinusDllK < 0.1) ||
+          maxDllK          <  0.1)
+        return false;
+    } // if usePID
+    return false;
   } //if doPrecut
 
 
@@ -296,12 +287,14 @@ bool NBB2HHTriggerTool::getInputVar(const LHCb::Particle* particle) const {
 
 
   double cosTheta        = LoKi::Cuts::LV01(particle);
-  if (lnan(cosTheta))
+  if ( lnan(cosTheta) || !lfin(cosTheta) )
+  {
     cosTheta = -999;
+  }
   else
-    cosTheta = fabs(cosTheta); 
-
-
+  {
+    cosTheta = fabs(cosTheta);
+  }
 
 
 
@@ -333,7 +326,7 @@ bool NBB2HHTriggerTool::getInputVar(const LHCb::Particle* particle) const {
     m_inArray[ 12 ] =  hPlusTrackChi2;
     m_inArray[ 13 ] =  hMinusTrackChi2;
     m_inArray[ 14 ] =  cosTheta;
-    m_inArray[ 15 ] =  ptB; 
+    m_inArray[ 15 ] =  ptB;
   } else {
     m_inArray[  0 ] =  minPt;
     m_inArray[  1 ] =  maxPt;
@@ -348,7 +341,7 @@ bool NBB2HHTriggerTool::getInputVar(const LHCb::Particle* particle) const {
     m_inArray[ 10 ] =  cosTheta;
     m_inArray[ 11 ] =  ptB;
   } // if UsePID
-    
+
   if (m_DoPlot) {
     m_HistoTool->plot1D(hPlusDllK      , "DllK"      , "Delta LL K" , -20,     20.0, 120);
     m_HistoTool->plot1D(hMinusDllK     , "DllK"      , "Delta LL K" , -20,     20.0, 120);
@@ -357,7 +350,7 @@ bool NBB2HHTriggerTool::getInputVar(const LHCb::Particle* particle) const {
     m_HistoTool->plot1D(hPlusP         , "p"         , "Kaon p"     ,  10,     50.0, 120);
     m_HistoTool->plot1D(hMinusP        , "p"         , "Kaon p"     ,  10,     50.0, 120);
     m_HistoTool->plot1D(chi2B          , "chi2"      , "B chi2"     ,   0,     25.0, 120);
-    m_HistoTool->plot1D(mErrB          , "mErrB"     , "B mErr"     ,   0,      0.1, 120); 
+    m_HistoTool->plot1D(mErrB          , "mErrB"     , "B mErr"     ,   0,      0.1, 120);
     m_HistoTool->plot1D(pB             , "pB"        , "B p"        ,  25,    100.0, 120);
     m_HistoTool->plot1D(docaB          , "doca"      , "doca"       ,   0,      0.1, 120);
     m_HistoTool->plot1D(hPlusTrackChi2 , "trackChi2" , "trackChi2"  ,   0,      5.0, 120);
