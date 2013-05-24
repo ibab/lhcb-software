@@ -2,7 +2,6 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
-#include "TrackInterfaces/ITrackSelector.h"
 
 // from Event
 #include "Event/ODIN.h"
@@ -16,21 +15,13 @@
 #include "VeloDet/DeVelo.h"
 #include "Kernel/VeloChannelID.h"
 #include "Event/RecVertex.h"
-#include "TrackKernel/TrackStateVertex.h"
 #include "TrackInterfaces/ITrackVertexer.h"
-//#include <boost/lambda/bind.hpp>
-//#include <boost/lambda/lambda.hpp>
 #include <boost/foreach.hpp>
 
 //from TrackInterfaces
 #include "TrackInterfaces/IVeloExpectation.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
 #include "TrackInterfaces/ITrackSelector.h"
-
-// Det
-
-// gsl
-//#include "gsl/gsl_math.h"
 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"

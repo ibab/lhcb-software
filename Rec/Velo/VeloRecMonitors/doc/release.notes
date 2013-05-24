@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2013-05-24 - Marco Cattaneo
+ - Remove unnecessary include that caused unnecessary TrackKernel dependency
+
 !========================= VeloRecMonitors v2r24 2013-04-30 =========================
 ! 2013-04-23 - Chris Jones
  - Remove unneccessary forward declarations that broke clang compilation
