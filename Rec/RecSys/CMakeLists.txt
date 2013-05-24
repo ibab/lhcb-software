@@ -8,6 +8,7 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Calo/CaloReco
                          Hlt/HltMonitors
                          Muon/MuonID
+			 Muon/MuonInterfaces
                          Muon/MuonPIDChecker
                          Muon/MuonTools
                          Muon/MuonTrackAlign
@@ -36,6 +37,7 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Rich/RichPIDMerge
                          Rich/RichParticleSearch
                          Rich/RichRecAlgorithms
+			 Rich/RichRecBase
                          Rich/RichRecMCAlgorithms
                          Rich/RichRecMCTools
                          Rich/RichRecMonitors
@@ -50,6 +52,7 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Tf/FastPV
                          Tf/FastVelo
                          Tf/PatAlgorithms
+			 Tf/PatKernel
 			 Tf/PatPixel 
                          Tf/PatVelo
                          Tf/PatVeloTT
@@ -67,6 +70,7 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Tr/TrackFitEvent
                          Tr/TrackFitter
                          Tr/TrackIdealPR
+			 Tr/TrackKernel
                          Tr/TrackMCTools
                          Tr/TrackMonitors
                          Tr/TrackProjectors
