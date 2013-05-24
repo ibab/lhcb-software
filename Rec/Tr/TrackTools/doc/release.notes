@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2013-05-24 - Marco Cattaneo
+ - Add missing PatKernel dependency
+
 ! 2013-05-07 - Paul Seyfert
  - fully remove deprecated property from TrackNNGhostId
 

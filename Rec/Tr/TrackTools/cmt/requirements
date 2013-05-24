@@ -22,6 +22,7 @@ use   TrackEvent      v*     Event
 use   DigiEvent       v*     Event
 
 use   STKernel        v*     ST
+use   PatKernel       v*     Tf
 use   TsaKernel       v*     Tf
 use   TrackFitEvent   v*     Tr
 use   TrackInterfaces v*     Tr
