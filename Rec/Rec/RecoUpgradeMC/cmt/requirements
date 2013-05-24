@@ -5,7 +5,6 @@ branches cmt src doc options python
 
 
 use   LinkerEvent        v*    Event
-use   TrackFitEvent      v*    Tr
 use   VPDet              v*    Det
 use   LinkerEvent        v*    Event
 use   RecEvent           v*    Event
@@ -13,6 +12,7 @@ use   TrackEvent         v*    Event
 use   TrackFitEvent      v*    Tr
 use   TrackKernel        v*    Tr
 use   TrackInterfaces    v*    Tr
+use   PatKernel          v*    Tf
 use   LHCbMath           v*    Kernel
 use   PartProp           v*    Kernel
 use   MCEvent            v*    Event
