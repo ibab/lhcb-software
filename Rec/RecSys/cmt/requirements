@@ -20,6 +20,7 @@ use MuonID               v9r5p1  Muon # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker       v5r4p1  Muon # Erica Polycarpo, Miriam Gandelman
 use MuonTools            v5r4    Muon # Alessia Satta
 use MuonTrackAlign       v1r9    Muon # Silvia Pozzi
+use MuonInterfaces       v1r4    Muon # Giovanni Passaleva
 use MuonTrackMonitor     v2r7p1  Muon # Giacomo Graziani
 use MuonTrackRec         v3r8    Muon # Giacomo Graziani
 
@@ -53,6 +54,7 @@ use RichIFBAnalysis      v1r3    Rich # Ross Young, Chris Jones
 use RichParticleSearch   v1r11p1 Rich # Matt Coombes
 use RichPIDMerge         v2r10   Rich # Chris Jones
 use RichRecAlgorithms    v2r20   Rich # Chris Jones
+use RichRecBase          v4r16   Rich # Chris Jones
 use RichRecMCAlgorithms  v1r4    Rich # Chris Jones
 use RichRecMCTools       v2r30   Rich # Chris Jones
 use RichRecMonitors      v2r34   Rich # Chris Jones
@@ -70,6 +72,7 @@ use FstTools             v1r0    Sft  # Yasmine Amhis
 # Tf packages: Track Pattern Recognition
 use FastVelo             v1r12   Tf   # ??
 use PatAlgorithms        v4r26p1 Tf   # Stephanie Hansmann-Menzemer
+use PatKernel            v2r6    Tf   # Stephanie Hansmann-Menzemer
 use PatPixel             v1r0    Tf   # Pavel Jalocha
 use PatVelo              v3r28   Tf   # David Hutchcroft
 use PatVeloTT            v3r23p1 Tf   # Mariusz Witek
@@ -88,6 +91,7 @@ use TrackExtrapolators   v2r33   Tr   # Eduardo Rodrigues
 use TrackFitEvent        v5r22   Tr   # Eduardo Rodrigues
 use TrackFitter          v4r10p1 Tr   # Wouter Hulsbergen
 use TrackIdealPR         v2r20   Tr   # Eduardo Rodrigues
+use TrackKernel          v1r13   Tr   # Wouter Hulsbergen
 use TrackMCTools         v3r3    Tr   # Eduardo Rodrigues
 use TrackMonitors        v1r44   Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v2r34   Tr   # Wouter Hulsbergen
