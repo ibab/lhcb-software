@@ -1,8 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : DAQ/DAQSys
 ! Responsible : Marco Cattaneo
-! Purpose     : Hat package for packages encoding and decoding DAQ buffers
+! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
+
+! 2013-05-24 - Marco Cattaneo
+ - Add dependency on L0Calo, L0DU. L0Muon. RichDAQ, STDAQ, VeloDAQ
 
 !========================= DAQSys v6r1 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic

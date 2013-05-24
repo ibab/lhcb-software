@@ -5,7 +5,13 @@ branches doc cmt
 
 # LHCb DAQ buffer libraries
 
+use CaloDAQ     v*  Calo
+use L0Calo      v*  L0
+use L0DU        v*  L0
+use L0Muon      v*  L0
 use MuonDAQ     v*  Muon
 use OTDAQ       v*  OT
-use CaloDAQ     v*  Calo
+use RichDAQ     v*  Rich
 use SiDAQ       v*  Si
+use STDAQ       v*  ST
+use VeloDAQ     v*  Velo
