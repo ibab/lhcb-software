@@ -3,6 +3,9 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+! 2013-05-24 - Chris Jones
+ - Move package Phys/NeuroBayesTools to Analysis
+
 </PRE><H1><A NAME=v16r6>2013-05-07 Phys v16r6 </A></H1><PRE>
 Development release, based on Rec v14r6, LHCb v35r6.
 
