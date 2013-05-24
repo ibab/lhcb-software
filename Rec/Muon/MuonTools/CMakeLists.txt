@@ -4,11 +4,11 @@
 gaudi_subdir(MuonTools v5r4)
 
 gaudi_depends_on_subdirs(Det/MuonDet
+                         Muon/MuonDAQ
+                         Muon/MuonInterfaces
                          GaudiAlg)
 
 gaudi_add_module(MuonTools
                  src/*.cpp
-                 LINK_LIBRARIES MuonDetLib GaudiAlgLib)
-
-gaudi_env(SET MUONTOOLSOPTS \${MUONTOOLSROOT}/options)
+                 LINK_LIBRARIES MuonDetLib MuonInterfacesLib GaudiAlgLib)
 

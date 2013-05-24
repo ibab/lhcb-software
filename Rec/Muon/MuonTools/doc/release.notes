@@ -3,6 +3,10 @@
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
 
+! 2013-05-24 - Marco Cattaneo
+ - Add missing dependencies on MuonInterfaces and MuonDAQ
+ - Remove obsolete options directory
+
 !========================= MuonTools v5r4 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.

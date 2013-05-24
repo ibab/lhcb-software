@@ -1,6 +1,0 @@
-// $ID: $
-// $Log: not supported by cvs2svn $
-/// ===========================================================================
-/// standard options to load MuonTools package 
-/// ===========================================================================
-ApplicationMgr.DLLs  += { "MuonTools" };
