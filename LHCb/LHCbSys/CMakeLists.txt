@@ -73,11 +73,13 @@ gaudi_depends_on_subdirs(Associators/MCAssociators
                          Kernel/XMLSummaryBase
                          Kernel/XMLSummaryKernel
                          L0/L0Base
+			 L0/L0Calo
+			 L0/L0DU
                          L0/L0Interfaces
+			 L0/L0Muon
                          L0/L0MuonKernel
                          L0/ProcessorKernel
                          Muon/MuonDAQ
-                         Muon/MuonInterfaces
                          Muon/MuonKernel
                          OT/OTDAQ
                          Phys/LoKiCore
@@ -85,13 +87,13 @@ gaudi_depends_on_subdirs(Associators/MCAssociators
                          Phys/LoKiHlt
                          Phys/LoKiMC
                          Phys/LoKiNumbers
+			 Rich/RichDAQ
                          Rich/RichKernel
-                         Rich/RichRecBase
+			 ST/STDAQ
                          ST/STKernel
                          ST/STTELL1Event
                          Si/SiDAQ
                          Sim/SimComponents
-                         Tf/PatKernel
                          Tf/TfKernel
                          Tf/TsaKernel
                          Tools/CondDBEntityResolver
@@ -100,7 +102,7 @@ gaudi_depends_on_subdirs(Associators/MCAssociators
                          Tools/FileStager
                          Tools/XmlTools
                          Tr/TrackInterfaces
-                         Tr/TrackKernel)
+			 Velo/VeloDAQ)
 
 
 gaudi_add_test(QMTest QMTEST)
