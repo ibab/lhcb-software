@@ -48,7 +48,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// Default Constructor
-      TrackChi2() { }
+      TrackChi2() : m_track() { }
       /// MANDATORY: virtual destructor 
       virtual ~TrackChi2() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -82,7 +82,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// Default Constructor
-      TrackChi2PerDoF() { }
+      TrackChi2PerDoF() : m_track() { }
       /// MANDATORY: virtual destructor 
       virtual ~TrackChi2PerDoF() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -116,7 +116,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// Default Constructor
-      TrackChi2Prob() { }
+      TrackChi2Prob() : m_track() { }
       /// MANDATORY: virtual destructor 
       virtual ~TrackChi2Prob () {}
       /// MANDATORY: clone method ("virtual constructor") 
@@ -196,7 +196,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// Default Constructor
-      TrackType() { }
+      TrackType() : m_track() { }
       /// MANDATORY: virtual destructor 
       virtual ~TrackType() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -232,7 +232,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// Default Constructor
-      TrackHistory() { }
+      TrackHistory() : m_track() { }
       /// MANDATORY: virtual destructor 
       virtual ~TrackHistory() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -304,7 +304,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// Default Constructor
-      TrackStatus() { }
+      TrackStatus() : m_track() { }
       /// MANDATORY: virtual destructor 
       virtual ~TrackStatus() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -335,7 +335,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// Default Constructor
-      GhostProbability() { }
+      GhostProbability() : m_track() { }
       /// MANDATORY: virtual destructor 
       virtual ~GhostProbability() {}
       /// MANDATORY: clone method ("vitual constructor")
@@ -366,7 +366,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// Default Constructor
-      TrackLikelihood() { }
+      TrackLikelihood() : m_track() { }
       /// MANDATORY: virtual destructor 
       virtual ~TrackLikelihood() {}
       /// MANDATORY: clone method ("vitual constructor")
