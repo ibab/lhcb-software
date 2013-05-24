@@ -164,7 +164,6 @@ void StorageSubDisplay::handle(const Event& ev) {
 
 /// Update display content
 void StorageSubDisplay::updateContent(const Nodeset& ns) {
-  typedef MBMBuffer::Clients           Clients;
   typedef Node::Buffers                Buffers;
   typedef Nodeset::Nodes               Nodes;
   char txt[128], text[128];

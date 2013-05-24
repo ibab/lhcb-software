@@ -181,21 +181,21 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   typedef MBMBuffer::Clients           Clients;
   typedef Node::Buffers                Buffers;
   typedef Nodeset::Nodes               Nodes;
-  static const long  INT_max = numeric_limits<long>::max();
+  static const long  LNG_max = numeric_limits<long>::max();
   static const float FLT_max = numeric_limits<float>::max();
 
   char txt[128], text[128];
-  long long int evt_prod[4] = {0,0,0,0}, min_prod[4]  = {INT_max,INT_max,INT_max,INT_max};
-  int free_space[4]  = {0,0,0,0}, min_space[4] = {INT_max,INT_max,INT_max,INT_max};
-  int free_slots[4]  = {0,0,0,0}, min_slots[4] = {INT_max,INT_max,INT_max,INT_max};
+  long int evt_prod[4] = {0,0,0,0}, min_prod[4]  = {LNG_max,LNG_max,LNG_max,LNG_max};
+  long int free_space[4]  = {0,0,0,0}, min_space[4] = {LNG_max,LNG_max,LNG_max,LNG_max};
+  long int free_slots[4]  = {0,0,0,0}, min_slots[4] = {LNG_max,LNG_max,LNG_max,LNG_max};
   int buf_clients[4] = {0,0,0,0};
   float fspace[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
   float fslots[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
   float fsl, fsp;
-  int evt_ovl        = INT_max;
-  int evt_sent       = INT_max;
-  int evt_moore      = INT_max;
-  int evt_built      = INT_max;
+  long evt_ovl        = LNG_max;
+  long evt_sent       = LNG_max;
+  long evt_moore      = LNG_max;
+  long evt_built      = LNG_max;
   bool inuse         = false;
   int numNodes       = 0;
   int numBuffs       = 0;
@@ -205,10 +205,10 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
     numNodes++;
-    int node_evt_ovl = 0;
-    int node_evt_mep = 0;
-    int node_evt_sent = INT_max;
-    int node_evt_moore = INT_max;
+    long node_evt_ovl = 0;
+    long node_evt_mep = 0;
+    long node_evt_sent = LNG_max;
+    long node_evt_moore = LNG_max;
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       int idx = 0;
       char b = (*ib).name[0];
@@ -258,12 +258,12 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
           //  Normal  and        TAE event processing
 	  //  MEP or DeferHLT    Orig.MEP schmema
           if( b == EVT_BUFFER || b == MEP_BUFFER )  {
-            node_evt_moore = min(node_evt_moore,(*ic).events);
+            node_evt_moore = min(node_evt_moore,long((*ic).events));
           }
           break;
         case OVLWR_TASK:
           if( b == OVL_BUFFER )  {
-            node_evt_ovl = min(node_evt_ovl,(*ic).events);
+            node_evt_ovl = min(node_evt_ovl,long((*ic).events));
           }
           break;
         default:
@@ -296,15 +296,15 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
     fspace[2] < SPACE_MIN || fspace[3] < SPACE_MIN;
 
   if ( evt_prod[0] || evt_prod[1] )
-    ::sprintf(txt,"%9lld%5d%11lld%6d%9lld%5d",
+    ::sprintf(txt,"%9ld%5ld%11ld%6ld%9ld%5ld",
               evt_prod[3],free_slots[3],
               evt_prod[1],free_slots[1],
               evt_prod[2],free_slots[2]);
   else
     ::sprintf(txt,"%9s%5s%10s%7s%9s%5s","--","--","--","--","--","--");
   ::scrc_put_chars(m_display,txt,NORMAL,2,5,1);
-  if ( min_prod[0] != INT_max || min_prod[1] != INT_max )
-    ::sprintf(txt,"%9lld%5d%11lld%6d%9lld%5d",
+  if ( min_prod[0] != LNG_max || min_prod[1] != LNG_max )
+    ::sprintf(txt,"%9ld%5ld%11ld%6ld%9ld%5ld",
               min_prod[3],min_slots[3],
               min_prod[1],min_slots[1],
               min_prod[2],min_slots[2]);

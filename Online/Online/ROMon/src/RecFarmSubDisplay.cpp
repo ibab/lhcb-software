@@ -66,7 +66,7 @@ using namespace std;
 typedef MBMBuffer::Clients           Clients;
 typedef Node::Buffers                Buffers;
 typedef Nodeset::Nodes               Nodes;
-static const int   INT_max = numeric_limits<int>::max();
+static const long  LNG_max = numeric_limits<int>::max();
 static const float FLT_max = numeric_limits<float>::max();
 
 // Max. 15 seconds without update allowed
@@ -165,15 +165,15 @@ void RecFarmSubDisplay::handle(const Event& ev) {
 /// Update display content
 void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
   char txt[128], text[128];
-  long long int evt_prod[2]={0,0}, min_prod[2]={INT_max,INT_max};
-  int free_space[2]  = {0,0}, min_space[2] = {INT_max,INT_max};
-  int used_slots[2]  = {0,0}, min_slots[2] = {INT_max,INT_max};
-  int buf_clients[2] = {0,0};
+  long long int evt_prod[2]={0,0}, min_prod[2]={LNG_max,LNG_max};
+  long free_space[2]  = {0,0}, min_space[2] = {LNG_max,LNG_max};
+  long used_slots[2]  = {0,0}, min_slots[2] = {LNG_max,LNG_max};
+  long buf_clients[2] = {0,0};
   float fspace[2]    = {FLT_max,FLT_max};
   float fslots[2]    = {FLT_max,FLT_max};
-  int evt_sent       = INT_max;
-  int evt_reco       = INT_max;
-  int evt_recv       = INT_max;
+  long evt_sent       = LNG_max;
+  long evt_reco       = LNG_max;
+  long evt_recv       = LNG_max;
   bool inuse         = false;
   int numNodes       = 0;
   int numBuffs       = 0;
@@ -183,9 +183,9 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
     numNodes++;
-    int node_evt_recv = 0;
-    int node_evt_sent = INT_max;
-    int node_evt_reco = INT_max;
+    long node_evt_recv = 0;
+    long node_evt_sent = LNG_max;
+    long node_evt_reco = LNG_max;
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       int idx = 0;
       char b = (*ib).name[0];

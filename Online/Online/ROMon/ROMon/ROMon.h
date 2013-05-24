@@ -40,13 +40,13 @@ namespace ROMon {
   PACK_DATA(class) MBMClient {
   public:
     /// Object name
-    char name[BM_USER_NAME_LEN];
-    int  partitionID;
-    int  processID;
-    int  events;
-    char reqs[4];
-    char type;
-    char state;
+    char  name[BM_USER_NAME_LEN];
+    int   partitionID;
+    int   processID;
+    long  events;
+    char  reqs[4];
+    char  type;
+    char  state;
     /// 3 Byte payload padding to ensure 32 bit alignment
     char pad[2];
   public:    // Public data accessors
