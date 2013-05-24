@@ -16,6 +16,7 @@ branches          cmt doc src
 use     VPDet           v*      Det
 use     DigiEvent       v*      Event
 use     TrackEvent      v*      Event
+use     PatKernel       v*      Tf
 use     GaudiAlg        v*
 use     GaudiKernel     v*
 
