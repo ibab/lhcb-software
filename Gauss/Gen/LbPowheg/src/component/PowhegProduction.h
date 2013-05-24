@@ -24,11 +24,6 @@
 //#include "LbPowheg/Powheg.h"
 // ============================================================================
 /** @class PowhegProduction PowhegProduction.h
- *
- *  Interface tool to produce events with POWHEG - BOX
- *
- *  @author Bartek Rachwal  bartlomiej.rachwal@ifj.edu.pl
- *  @date 2013-04-16
  */
 class PowhegProduction : public LbPythia::ReadLHE
 {

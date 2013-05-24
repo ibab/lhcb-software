@@ -28,13 +28,6 @@ namespace LbPythia
 {
   // ==========================================================================
   /** @class ReadLHE RadLHE.h ReadLHE.cpp
-   *
-   *  Simple production tool which reads parton level 
-   *  LHE file (Les Houches Events). The LHE standard 
-   *  in described in hep-ph/0609017 CERN-LCGAPP-2006-03
-   *
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2006-10-03
    */
   class ReadLHE: public LbPythia::ReadFile
   {

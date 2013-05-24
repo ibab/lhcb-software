@@ -1,5 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Gen/LbPowheg
-! autor	      : Bartek Rachwal
-! Purpose     : Package for Powheg-Box in Gauss
+! Responsible	: Marcin Kucharczyk, Bartek Rachwal
+! Purpose     : Implementation of the powheg-box in Gauss
 !-----------------------------------------------------------------------------
+
+!========================= LbPowheg v1r0 2013-05-24 ==========================
+! 2013-05-24 - Marcin Kucharczyk
+ - First import of the package
+

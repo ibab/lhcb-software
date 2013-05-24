@@ -13,11 +13,6 @@
 #include "LbPowheg/Powheg.h"
 // ============================================================================
 /** @class PowhegProduction PowhegProduction.h
- *
- *  Interface tool to produce events with Powheg- BOX
- *
- *  @author Bartek Rachwal  bartlomiej.rachwal@ifj.edu.pl
- *  @date 2013-04-16
  */
 class PowhegProduction : public LbPythia::Powheg
 {
@@ -36,15 +31,10 @@ class PowhegProduction : public LbPythia::Powheg
   ( const std::string& type,
     const std::string& name,
     const IInterface* parent );
-  
-
   virtual ~PowhegProduction() {} ///< destructor 
-  
   virtual StatusCode initialize( ) ;   ///< Initialize method
-
   virtual StatusCode finalize( ) ; ///< Finalize method
 
-    
 private:
   // =========================================================================
   StatusCode generateLHE() ;

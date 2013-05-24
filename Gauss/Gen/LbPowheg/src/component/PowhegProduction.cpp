@@ -22,13 +22,7 @@
 #include "LbPowheg/ReadLHE.h"
 // ============================================================================
 /** @class PowhegProduction PowhegProduction.cpp
- *
- *  Interface tool to produce events with Powheg- BOX
- *
- *  @author Bartek Rachwal  bartlomiej.rachwal@ifj.edu.pl
- *  @date 2013-05-20
  */
-
 
 //=============================================================================
 // Standard constructor

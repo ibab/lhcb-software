@@ -16,11 +16,6 @@
 
 // ============================================================================
 /** @class PowhegProductionWZ PowhegProductionWZ.cpp
- *
- *  Interface tool to produce events with Powheg- BOX
- *
- *  @author Bartek Rachwal  bartlomiej.rachwal@ifj.edu.pl
- *  @date 2013-04-16
  */
 
 //=============================================================================
