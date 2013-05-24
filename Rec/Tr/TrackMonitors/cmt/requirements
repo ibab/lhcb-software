@@ -18,6 +18,7 @@ use   GaudiUtils        v*
 use   RecEvent		v*	Event
 use   MCEvent		v*	Event
 use   TrackEvent       	v*	Event
+use   PatKernel         v*      Tf
 use   TrackFitEvent     v*	Tr
 use   TrackInterfaces 	v*	Tr
 use   TrackKernel	v*	Tr
