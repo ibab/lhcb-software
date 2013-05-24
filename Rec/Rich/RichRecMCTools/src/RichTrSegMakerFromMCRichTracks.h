@@ -39,7 +39,6 @@
 #include "Event/MCRichTrack.h"
 
 // RichDet
-#include "RichDet/DeRich.h"
 #include "RichDet/DeRichRadiator.h"
 
 namespace Rich
@@ -98,9 +97,6 @@ namespace Rich
         const LHCb::MCRichTrack * mcRichTrack( const ContainedObject * obj ) const;
 
       private: // data
-
-        /// Rich1 and Rich2 detector objects
-        const DeRich* m_rich[Rich::NRiches];
 
         /// typedef of array of DeRichRadiators
         typedef boost::array<DeRichRadiator*, Rich::NRadiatorTypes> Radiators;

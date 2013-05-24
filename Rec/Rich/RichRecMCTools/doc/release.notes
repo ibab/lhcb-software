@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2013-05-24 - Chris Jones
+ - Remove unused data member from TrSegMakerFromMCRichTracks (clang warning).
+
 !========================= RichRecMCTools v2r30 2012-11-28 =========================
 ! 2012-11-23 - Marco Clemencic
  - Added CMake configuration file.
