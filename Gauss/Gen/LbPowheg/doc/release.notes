@@ -1,6 +1,6 @@
 !-----------------------------------------------------------------------------
 ! Package     : Gen/LbPowheg
-! Responsible	: Marcin Kucharczyk, Bartek Rachwal
+! Responsible	: Bartek Rachwal, Marcin Kucharczyk
 ! Purpose     : Implementation of the powheg-box in Gauss
 !-----------------------------------------------------------------------------
 
