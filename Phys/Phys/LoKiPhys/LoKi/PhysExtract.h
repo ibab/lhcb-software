@@ -76,7 +76,7 @@ namespace LoKi
       const PREDICATE&      cut      ) 
     {
       // trivial check 
-      if ( 0 ==  particle ) { return output ; }                 // RETURN      
+      if ( NULL ==  particle ) { return output ; }            // RETURN      
       if ( cut ( particle ) ) 
       { 
         // get own protoparticle (the basic action)
@@ -389,7 +389,7 @@ namespace LoKi
       const PREDICATE&  cut      )
     {
       // trivial check
-      if ( 0 == particle ) { return output ; }                   // RETURN
+      if ( NULL == particle ) { return output ; }               // RETURN
       // fill and advance the output iterator 
       if ( cut ( particle ) ) 
       {
@@ -673,7 +673,7 @@ namespace LoKi
     {
       inline LHCb::ProtoParticle* operator() 
         ( const LHCb::Particle* p ) const 
-      { return 0 != p ? const_cast<LHCb::ProtoParticle*> ( p->proto() ) : 0 ; }
+      { return NULL != p ? const_cast<LHCb::ProtoParticle*> ( p->proto() ) : NULL ; }
     } ;
     // ========================================================================
     /** @struct Particle2Track
@@ -685,13 +685,14 @@ namespace LoKi
      */
     struct Particle2Track
     {
+      Particle2Track() : m_eval() { }
       inline LHCb::Track* operator() ( const LHCb::Particle* p ) const 
       {
         LHCb::ProtoParticle* pp = m_eval ( p ) ;
-        return 0 != pp ? const_cast<LHCb::Track*>( pp->track() ) : 0 ;        
+        return ( NULL != pp ? const_cast<LHCb::Track*>( pp->track() ) : NULL );        
       } ;
     private :
-      Particle2ProtoParticle m_eval ;   
+      Particle2ProtoParticle m_eval ;
     } ;
     // ========================================================================
     /** Simple funtion to get recursively all tracks, which 
@@ -722,7 +723,7 @@ namespace LoKi
       const PREDICATE&      cut      ) 
     {
       // trivial check 
-      if ( 0 == particle ) { return output ; }                   // RETURN 
+      if ( NULL == particle ) { return output ; }                // RETURN 
       // get the protoparticles 
       typedef std::vector<const LHCb::ProtoParticle*> PPS;
       PPS protos ;
@@ -732,9 +733,9 @@ namespace LoKi
             protos.end() != iproto ; ++iproto ) 
       {
         const LHCb::ProtoParticle* proto = *iproto ;
-        if ( 0 == proto ) { continue ; }                       // CONITNUE 
+        if ( NULL == proto ) { continue ; }                    // CONITNUE 
         const LHCb::Track* track = proto->track() ;
-        if ( 0 == track ) { continue ; }                       // CONTINUE 
+        if ( NULL == track ) { continue ; }                    // CONTINUE 
         // ATTENTION: const_cast is in use! 
         *output = const_cast<LHCb::Track*> ( track ) ;
         ++output ;                                             // ADVANCE 
@@ -803,7 +804,7 @@ namespace LoKi
     // ========================================================================
     /** Simple funtion to get recursively all tracks, which 
      *  makes contribution for a given particle 
-     *  
+     *
      *  @code
      * 
      *  const LHCb::Particle* patricle = ... ;
@@ -1070,7 +1071,7 @@ namespace LoKi
       OUTPUT                output    , 
       const PREDICATE&      predicate ) 
     {
-      if ( 0 == particle ) { return output ; }             // RETURN 
+      if ( NULL == particle ) { return output ; }            // RETURN 
       typedef std::vector<const LHCb::ProtoParticle*> PPS ;
       PPS pps;
       getProtoParticles_if 
@@ -1078,9 +1079,9 @@ namespace LoKi
       for ( PPS::const_iterator ip = pps.begin() ; pps.end() != ip ; ++ip ) 
       {
         const LHCb::ProtoParticle* pp = *ip ;
-        if ( 0 == pp   ) { continue ; }                      // CONTINUE 
+        if ( NULL == pp   ) { continue ; }                   // CONTINUE 
         const LHCb::MuonPID* muon = pp->muonPID() ;
-        if ( 0 == muon ) { continue ; }                      // CONTINUE 
+        if ( NULL == muon ) { continue ; }                   // CONTINUE 
         // ATTENTION: const_cast is in use! 
         *output = const_cast<LHCb::MuonPID*> ( muon ) ;
         ++output ;                                           // ADVANCE 
@@ -1166,7 +1167,7 @@ namespace LoKi
       OUTPUT                output    , 
       const PREDICATE&      predicate ) 
     {
-      if ( 0 == particle ) { return output ; }             // RETURN 
+      if ( NULL == particle ) { return output ; }            // RETURN 
       typedef std::vector<const LHCb::ProtoParticle*> PPS ;
       PPS pps;
       getProtoParticles_if 
@@ -1174,9 +1175,9 @@ namespace LoKi
       for ( PPS::const_iterator ip = pps.begin() ; pps.end() != ip ; ++ip ) 
       {
         const LHCb::ProtoParticle* pp = *ip ;
-        if ( 0 == pp   ) { continue ; }                      // CONTINUE 
+        if ( NULL == pp   ) { continue ; }                   // CONTINUE 
         const LHCb::RichPID* rich = pp->richPID() ;
-        if ( 0 == rich ) { continue ; }                      // CONTINUE 
+        if ( NULL == rich ) { continue ; }                   // CONTINUE 
         // ATTENTION: const_cast is in use! 
         *output = const_cast<LHCb::RichPID*> ( rich ) ;
         ++output ;                                           // ADVANCE 

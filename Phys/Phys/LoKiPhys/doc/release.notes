@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2013-05-24 - Chris Jones
+ - Fix UNINT_CTOR Coverity warning.
+
 !========================= LoKiPhys v10r14 2013-05-07 =========================
 
 ! 2013-04-22 - Chris Jones
