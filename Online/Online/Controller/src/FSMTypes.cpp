@@ -65,15 +65,10 @@ static Type* defineDAQType()    {
   error->when    (  allChildrenInState(ready,paused,running),     moveTo(ready));
   error->when    (  allChildrenInState(not_ready,ready,paused,running), moveTo(not_ready));
 
-  
-  Tr*  unload0   = daq->addTransition("unload",    running,     offline,   NO_CHECKS);
-  //Tr*  unload1   = daq->addTransition("unload",    ready,       offline, NO_CHECKS);
-  Tr*  unload2   = daq->addTransition("unload",    not_ready,   offline,   KILL);
-  Tr*  unload3   = daq->addTransition("unload",    offline,     offline,   NO_CHECKS);
-
   Tr*  reset0    = daq->addTransition("reset",     not_ready,   not_ready);
   Tr*  reset1    = daq->addTransition("reset",     ready,       not_ready, NO_CHECKS);
   Tr*  reset2    = daq->addTransition("reset",     error,       not_ready, NO_CHECKS);
+  Tr*  reset3    = daq->addTransition("reset",     offline,     offline,   NO_CHECKS);
 
   Tr*  recover0  = daq->addTransition("recover",   error,       offline,   NO_CHECKS);
   Tr*  recover1  = daq->addTransition("recover",   running,     offline,   NO_CHECKS);
@@ -103,19 +98,19 @@ static Type* defineDAQType()    {
   daq->addTransition("When-Rule",   offline,       running,   CHECK);
   daq->addTransition("When-Rule",   offline,       paused,    CHECK);
 
-  daq_err0->adoptRule(AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
-  daq_err1->adoptRule(AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
-  daq_err2->adoptRule(AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
-  daq_err3->adoptRule(AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
-  //daq_err4->adoptRule(AnyChildOfType(daq).moveTo(ST_NAME_ERROR));
+  daq_err0->adoptRule(AllChildrenOfType(daq).moveTo(error));
+  daq_err1->adoptRule(AllChildrenOfType(daq).moveTo(error));
+  daq_err2->adoptRule(AllChildrenOfType(daq).moveTo(error));
+  daq_err3->adoptRule(AllChildrenOfType(daq).moveTo(error));
+  //daq_err4->adoptRule(AnyChildOfType(daq).moveTo(error));
 
-  //daq->adoptRule      (recover0,   daq, ST_NAME_ERROR,     ST_NAME_OFFLINE);
+  //daq->adoptRule      (recover0,   daq, error,     offline);
   // Otherwise: FULL KILL on recover
-  recover0->adoptRule(AllChildrenOfType(daq).execTransition(ST_NAME_ERROR,     ST_NAME_OFFLINE));
-  recover1->adoptRule(AllChildrenOfType(daq).execTransition(ST_NAME_ERROR,     ST_NAME_OFFLINE));
-  recover2->adoptRule(AllChildrenOfType(daq).execTransition(ST_NAME_ERROR,     ST_NAME_OFFLINE));
-  recover3->adoptRule(AllChildrenOfType(daq).execTransition(ST_NAME_ERROR,     ST_NAME_OFFLINE));
-  recover4->adoptRule(AllChildrenOfType(daq).execTransition(ST_NAME_ERROR,     ST_NAME_OFFLINE));
+  recover0->adoptRule(AllChildrenOfType(daq).move(error,     offline));
+  recover1->adoptRule(AllChildrenOfType(daq).move(error,     offline));
+  recover2->adoptRule(AllChildrenOfType(daq).move(error,     offline));
+  recover3->adoptRule(AllChildrenOfType(daq).move(error,     offline));
+  recover4->adoptRule(AllChildrenOfType(daq).move(error,     offline));
 
   RESET0->adoptRule(  AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
   RESET1->adoptRule(  AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
@@ -124,69 +119,89 @@ static Type* defineDAQType()    {
   RESET4->adoptRule(  AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
   RESET5->adoptRule(  AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
 
-  reset0->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_NOT_READY, ST_NAME_NOT_READY));
-  reset0->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_READY,     ST_NAME_NOT_READY));
-  reset0->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_ERROR,     ST_NAME_NOT_READY));
+  reset0->adoptRule(  AllChildrenOfType(daq).move(not_ready, not_ready));
+  reset0->adoptRule(  AllChildrenOfType(daq).move(ready,     not_ready));
+  reset0->adoptRule(  AllChildrenOfType(daq).move(error,     not_ready));
 
-  reset1->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_NOT_READY, ST_NAME_NOT_READY));
-  reset1->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_READY,     ST_NAME_NOT_READY));
-  reset1->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_ERROR,     ST_NAME_NOT_READY));
+  reset1->adoptRule(  AllChildrenOfType(daq).move(not_ready, not_ready));
+  reset1->adoptRule(  AllChildrenOfType(daq).move(ready,     not_ready));
+  reset1->adoptRule(  AllChildrenOfType(daq).move(error,     not_ready));
 
-  reset2->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_NOT_READY, ST_NAME_NOT_READY));
-  reset2->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_READY,     ST_NAME_NOT_READY));
-  reset2->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_RUNNING,   ST_NAME_READY));
-  reset2->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_ERROR,     ST_NAME_NOT_READY));
+  reset2->adoptRule(  AllChildrenOfType(daq).move(not_ready, not_ready));
+  reset2->adoptRule(  AllChildrenOfType(daq).move(ready,     not_ready));
+  //reset2->adoptRule(  AllChildrenOfType(daq).move(running,   ready));
+  reset2->adoptRule(  AllChildrenOfType(daq).move(error,     not_ready));
+
+  reset3->adoptRule(  AllChildrenOfType(daq).move(not_ready, not_ready));
+  reset3->adoptRule(  AllChildrenOfType(daq).move(ready,     not_ready));
+  reset3->adoptRule(  AllChildrenOfType(daq).move(paused,    ready));
+  //reset3->adoptRule(  AllChildrenOfType(daq).move(running,   ready));
+  reset3->adoptRule(  AllChildrenOfType(daq).move(error,     not_ready));
 
   /// Offline -> Not Ready
   Tr*  load      = daq->addTransition("load",      offline,     not_ready, CHECK|CREATE);
-  load->addPredicate( AllChildrenOfType(daq).inState(ST_NAME_OFFLINE, ST_NAME_NOT_READY, ST_NAME_READY, ST_NAME_PAUSED, ST_NAME_RUNNING));
-  load->adoptRule(    AllChildrenOfType(daq).execTransition(ST_NAME_OFFLINE,   ST_NAME_NOT_READY));
-  load->adoptRule(    AllChildrenOfType(daq).execTransition(ST_NAME_PAUSED,    ST_NAME_READY));
+  load->addPredicate( AllChildrenOfType(daq).inState(offline, not_ready, ready, paused, running));
+  load->adoptRule(    AllChildrenOfType(daq).move(offline,   not_ready));
+  load->adoptRule(    AllChildrenOfType(daq).move(paused,    ready));
 
   /// Not Ready -> Ready
   Tr*  configure = daq->addTransition("configure", not_ready,   ready);
-  configure->addPredicate(AllChildrenOfType(daq).inState(ST_NAME_NOT_READY, ST_NAME_READY, ST_NAME_PAUSED, ST_NAME_RUNNING));
-  configure->adoptRule(   AllChildrenOfType(daq).execTransition(ST_NAME_NOT_READY, ST_NAME_READY));
-  configure->adoptRule(   AllChildrenOfType(daq).execTransition(ST_NAME_PAUSED,    ST_NAME_READY));
+  configure->addPredicate(AllChildrenOfType(daq).inState(not_ready, ready, paused, running));
+  configure->adoptRule(   AllChildrenOfType(daq).move(not_ready, ready));
+  configure->adoptRule(   AllChildrenOfType(daq).move(paused,    ready));
 
   /// Ready -> Running
   Tr*  start0    = daq->addTransition("start",     ready,       running);
-  start0->addPredicate(AllChildrenOfType(daq).inState(ST_NAME_READY,     ST_NAME_PAUSED,  ST_NAME_RUNNING));
-  start0->adoptRule(   AllChildrenOfType(daq).execTransition(ST_NAME_READY,     ST_NAME_RUNNING));
-  start0->adoptRule(   AllChildrenOfType(daq).execTransition(ST_NAME_PAUSED,    ST_NAME_RUNNING));
+  start0->addPredicate(AllChildrenOfType(daq).inState(ready,     paused,  running));
+  start0->adoptRule(   AllChildrenOfType(daq).move(ready,     running));
+  start0->adoptRule(   AllChildrenOfType(daq).move(paused,    running));
 
   /// Running -> Paused
   Tr*  pause     = daq->addTransition("pause",     running,     paused);
-  pause->adoptRule(    AllChildrenOfType(daq).execTransition(ST_NAME_RUNNING,   ST_NAME_PAUSED,  Rule::MASTER2SLAVE));
+  pause->adoptRule(    AllChildrenOfType(daq).move(running,   paused,  Rule::MASTER2SLAVE));
 
   /// Paused -> Running
   Tr*  start1    = daq->addTransition("start",     paused,      running);
-  start1->addPredicate(AllChildrenOfType(daq).inState(ST_NAME_READY, ST_NAME_PAUSED, ST_NAME_RUNNING));
-  start1->adoptRule(   AllChildrenOfType(daq).execTransition(ST_NAME_READY,     ST_NAME_RUNNING));
-  start1->adoptRule(   AllChildrenOfType(daq).execTransition(ST_NAME_PAUSED,    ST_NAME_RUNNING));
+  start1->addPredicate(AllChildrenOfType(daq).inState(ready, paused, running));
+  start1->adoptRule(   AllChildrenOfType(daq).move(ready,     running));
+  start1->adoptRule(   AllChildrenOfType(daq).move(paused,    running));
 
   /// Paused -> Ready
   Tr*  stop1     = daq->addTransition("stop",      paused,      ready);
-  stop1->adoptRule(    AllChildrenOfType(daq).execTransition(ST_NAME_PAUSED,    ST_NAME_READY));
-  stop1->adoptRule(    AllChildrenOfType(daq).execTransition(ST_NAME_RUNNING,   ST_NAME_READY));
+  stop1->adoptRule(    AllChildrenOfType(daq).move(paused,    ready));
+  stop1->adoptRule(    AllChildrenOfType(daq).move(running,   ready));
 
   /// Running -> Ready
   Tr*  stop0     = daq->addTransition("stop",      running,     ready);
-  stop0->adoptRule(    AllChildrenOfType(daq).execTransition(ST_NAME_RUNNING,   ST_NAME_READY));
+  stop0->adoptRule(    AllChildrenOfType(daq).move(running,   ready));
 
   /// Ready -> Ready
   Tr*  stop2     = daq->addTransition("stop",      ready,       ready);
-  stop2->adoptRule(    AllChildrenOfType(daq).execTransition(ST_NAME_RUNNING,   ST_NAME_READY));
+  stop2->adoptRule(    AllChildrenOfType(daq).move(running,   ready));
 
-  unload0->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_RUNNING,   ST_NAME_OFFLINE, Rule::MASTER2SLAVE));
+  /// In case Children died, the controller is OFFLINE; still must accept commands
+  Tr*  stop3     = daq->addTransition("stop",      offline,     offline,        NO_CHECKS);
+  stop3->adoptRule(    AllChildrenOfType(daq).move(paused,    ready));
+  stop3->adoptRule(    AllChildrenOfType(daq).move(running,   ready));
 
-  unload2->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_RUNNING,   ST_NAME_OFFLINE, Rule::MASTER2SLAVE));
-  unload2->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_READY,     ST_NAME_OFFLINE, Rule::MASTER2SLAVE));
-  unload2->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_NOT_READY, ST_NAME_OFFLINE));
+  // Unload while RUNNING: let's avoid it if possible!
+  Tr*  unload0   = daq->addTransition("unload",    running,     offline,   NO_CHECKS);
+  unload0->adoptRule(  AllChildrenOfType(daq).move(running,   offline, Rule::MASTER2SLAVE));
 
-  unload3->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_RUNNING,   ST_NAME_OFFLINE, Rule::MASTER2SLAVE));
-  unload3->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_READY,     ST_NAME_OFFLINE, Rule::MASTER2SLAVE));
-  unload3->adoptRule(  AllChildrenOfType(daq).execTransition(ST_NAME_NOT_READY, ST_NAME_OFFLINE));
+  // Unload while READY:   let's avoid it if possible!
+  //Tr*  unload1   = daq->addTransition("unload",    ready,       offline, NO_CHECKS);
+
+  // Normal case: all slaves are NOT_READY
+  Tr*  unload2   = daq->addTransition("unload",    not_ready,   offline,   KILL);
+  unload2->adoptRule(  AllChildrenOfType(daq).move(running,   offline, Rule::MASTER2SLAVE));
+  unload2->adoptRule(  AllChildrenOfType(daq).move(ready,     offline, Rule::MASTER2SLAVE));
+  unload2->adoptRule(  AllChildrenOfType(daq).move(not_ready, offline));
+
+  // If we have dead children, the master is OFFLINE. Still propagate the commands
+  Tr*  unload3   = daq->addTransition("unload",    offline,     offline,   NO_CHECKS);
+  unload3->adoptRule(  AllChildrenOfType(daq).move(running,   offline, Rule::MASTER2SLAVE));
+  unload3->adoptRule(  AllChildrenOfType(daq).move(ready,     offline, Rule::MASTER2SLAVE));
+  unload3->adoptRule(  AllChildrenOfType(daq).move(not_ready, offline));
 
   return daq;
 }
@@ -283,30 +298,30 @@ static Type* defineDAQSteerType() {
   daq_err1->adoptRule(    AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
   daq_err2->adoptRule(    AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
   daq_err3->adoptRule(    AllChildrenOfType(daq).moveTo(ST_NAME_ERROR));
-  recover0->adoptRule(    AllChildrenOfType(daq).execTransition(ST_NAME_ERROR,     ST_NAME_OFFLINE));
+  recover0->adoptRule(    AllChildrenOfType(daq).move(ST_NAME_ERROR,     ST_NAME_OFFLINE));
 
-  reset1->adoptRule(      AllChildrenOfType(daq).execTransition(ST_NAME_READY,     ST_NAME_NOT_READY));
-  load->adoptRule(        AllChildrenOfType(daq).execTransition(ST_NAME_OFFLINE,   ST_NAME_NOT_READY));
+  reset1->adoptRule(      AllChildrenOfType(daq).move(ST_NAME_READY,     ST_NAME_NOT_READY));
+  load->adoptRule(        AllChildrenOfType(daq).move(ST_NAME_OFFLINE,   ST_NAME_NOT_READY));
 
   configure->addPredicate(AllChildrenOfType(daq).inState(ST_NAME_NOT_READY, ST_NAME_READY, ST_NAME_PAUSED, ST_NAME_RUNNING));
-  configure->adoptRule(   AllChildrenOfType(daq).execTransition(ST_NAME_NOT_READY, ST_NAME_READY));
+  configure->adoptRule(   AllChildrenOfType(daq).move(ST_NAME_NOT_READY, ST_NAME_READY));
 
   start0->addPredicate(   AllChildrenOfType(daq).inState(ST_NAME_READY, ST_NAME_PAUSED, ST_NAME_RUNNING));
-  start0->adoptRule(      AllChildrenOfType(daq).execTransition(ST_NAME_READY,     ST_NAME_RUNNING));
-  start0->adoptRule(      AllChildrenOfType(daq).execTransition(ST_NAME_PAUSED,    ST_NAME_RUNNING));
+  start0->adoptRule(      AllChildrenOfType(daq).move(ST_NAME_READY,     ST_NAME_RUNNING));
+  start0->adoptRule(      AllChildrenOfType(daq).move(ST_NAME_PAUSED,    ST_NAME_RUNNING));
 
   start1->addPredicate(   AllChildrenOfType(daq).inState(ST_NAME_READY, ST_NAME_PAUSED, ST_NAME_RUNNING));
-  start1->adoptRule(      AllChildrenOfType(daq).execTransition(ST_NAME_READY,     ST_NAME_RUNNING));
-  start1->adoptRule(      AllChildrenOfType(daq).execTransition(ST_NAME_PAUSED,    ST_NAME_RUNNING));
+  start1->adoptRule(      AllChildrenOfType(daq).move(ST_NAME_READY,     ST_NAME_RUNNING));
+  start1->adoptRule(      AllChildrenOfType(daq).move(ST_NAME_PAUSED,    ST_NAME_RUNNING));
 
-  pause->adoptRule(       AllChildrenOfType(daq).execTransition(ST_NAME_RUNNING,   ST_NAME_PAUSED, Rule::MASTER2SLAVE));
-  stop0->adoptRule(       AllChildrenOfType(daq).execTransition(ST_NAME_RUNNING,   ST_NAME_READY));
-  stop1->adoptRule(       AllChildrenOfType(daq).execTransition(ST_NAME_PAUSED,    ST_NAME_READY));
+  pause->adoptRule(       AllChildrenOfType(daq).move(ST_NAME_RUNNING,   ST_NAME_PAUSED, Rule::MASTER2SLAVE));
+  stop0->adoptRule(       AllChildrenOfType(daq).move(ST_NAME_RUNNING,   ST_NAME_READY));
+  stop1->adoptRule(       AllChildrenOfType(daq).move(ST_NAME_PAUSED,    ST_NAME_READY));
 
-  unload1->adoptRule(     AllChildrenOfType(daq).execTransition(ST_NAME_NOT_READY, ST_NAME_OFFLINE));
-  unload2->adoptRule(     AllChildrenOfType(daq).execTransition(ST_NAME_NOT_READY, ST_NAME_OFFLINE));
-  unload2->adoptRule(     AllChildrenOfType(daq).execTransition(ST_NAME_OFFLINE,   ST_NAME_OFFLINE));
-  destroy->adoptRule(     AllChildrenOfType(daq).execTransition(ST_NAME_ANY,       ST_NAME_OFFLINE));
+  unload1->adoptRule(     AllChildrenOfType(daq).move(ST_NAME_NOT_READY, ST_NAME_OFFLINE));
+  unload2->adoptRule(     AllChildrenOfType(daq).move(ST_NAME_NOT_READY, ST_NAME_OFFLINE));
+  unload2->adoptRule(     AllChildrenOfType(daq).move(ST_NAME_OFFLINE,   ST_NAME_OFFLINE));
+  destroy->adoptRule(     AllChildrenOfType(daq).move(ST_NAME_ANY,       ST_NAME_OFFLINE));
 
   RESET0->adoptRule(      AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
   RESET1->adoptRule(      AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));

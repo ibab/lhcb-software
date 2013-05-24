@@ -116,15 +116,42 @@ Rule* AllChildrenOfType::execTransition(const string& curr_state, const string& 
     throw runtime_error("adoptRule> invalid object state "+curr_state+" in type "+m_type->name());
   }
   if ( t_state )   {
-    Rule* rule = new Rule(m_type,c_state,t_state,direction);
-    return rule;
+    return execTransition(curr_state,target_state,direction);
   }
   throw runtime_error("adoptRule> invalid target state "+target_state+" in type "+m_type->name());
+}
+
+/// Add a new rule to a transition
+Rule* AllChildrenOfType::execTransition(const State* curr_state, const State* target_state, Rule::Direction direction)  const {
+  if ( target_state )   {
+    Rule* rule = new Rule(m_type,curr_state,target_state,direction);
+    return rule;
+  }
+  throw runtime_error("adoptRule> invalid target state in type "+m_type->name());
 }
 
 /// Helper function to add ANY rules
 Rule* AllChildrenOfType::moveTo(const string& target_state) const    {
   return execTransition(ST_NAME_ANY,target_state,Rule::MASTER2SLAVE);
+}
+
+/// Helper function to add ANY rules
+Rule* AllChildrenOfType::moveTo(const State* target_state) const    {
+  return execTransition(0,target_state,Rule::MASTER2SLAVE);
+}
+
+/// Helper function to add predicates
+Predicate::States AllChildrenOfType::inState(const State* s1, const State* s2,
+					     const State* s3, const State* s4, 
+					     const State* s5) const
+{
+  Predicate::States allowed;
+  if ( s1 ) allowed.insert(s1);
+  if ( s2 ) allowed.insert(s2);
+  if ( s3 ) allowed.insert(s3);
+  if ( s4 ) allowed.insert(s4);
+  if ( s5 ) allowed.insert(s5);
+  return allowed;
 }
 
 /// Add a new predicate to a transition
@@ -133,8 +160,6 @@ Predicate::States AllChildrenOfType::inState(const string& s1, const string& s2,
 					     const string& s5)  const
 {
   string sname="";
-  Predicate::States allowed;
-
   const State* st1 = m_type->state(s1);
   const State* st2 = s2.empty() ? 0 : m_type->state(s2);
   const State* st3 = s3.empty() ? 0 : m_type->state(s3);
@@ -146,12 +171,7 @@ Predicate::States AllChildrenOfType::inState(const string& s1, const string& s2,
   else if ( !s4.empty() && !st4 ) sname = s4;
   else if ( !s5.empty() && !st5 ) sname = s5;
   else  {
-    if ( st1 ) allowed.insert(st1);
-    if ( st2 ) allowed.insert(st2);
-    if ( st3 ) allowed.insert(st3);
-    if ( st4 ) allowed.insert(st4);
-    if ( st5 ) allowed.insert(st5);
-    return allowed;
+    return inState(st1,st2,st3,st4,st5);
   }
   throw runtime_error("Type::addPredicate> invalid allowed state "+sname+" for predicate of type "+m_type->name());
 }

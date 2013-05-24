@@ -209,14 +209,34 @@ namespace FiniteStateMachine {
     Predicate::States inState(const std::string& s1,    const std::string& s2="",
 			      const std::string& s3="", const std::string& s4="", 
 			      const std::string& s5="") const;
+    /// Helper function to add predicates
+    Predicate::States inState(const State* s1,   const State* s2=0,
+			      const State* s3=0, const State* s4=0, 
+			      const State* s5=0) const;
     /// Helper function to add ANY rules
     Rule* moveTo(             const std::string& target_state) const;
+    /// Helper function to add ANY rules
+    Rule* moveTo(             const State* target_state) const;
     /// Helper function to add rules for transitions
     Rule* execTransition(     const std::string& curr_state, 
 			      const std::string& target_state, 
 			      Rule::Direction direction=Rule::MASTER2SLAVE) const;
+    /// Helper function to add rules for transitions
+    Rule* execTransition(     const State* curr_state, 
+			      const State* target_state, 
+			      Rule::Direction direction=Rule::MASTER2SLAVE) const;
     /// Helper function to define a whole set of rules to a transition depending on explicit transitions
     Rules execTransition(const Transitions& transitions)  const;
+    /// Helper function to add rules for transitions
+    Rule* move(              const std::string& curr_state, 
+			      const std::string& target_state, 
+			      Rule::Direction direction=Rule::MASTER2SLAVE) const
+    {  return execTransition(curr_state, target_state, direction);   }
+    /// Helper function to add rules for transitions
+    Rule* move(               const State* curr_state, 
+			      const State* target_state, 
+			      Rule::Direction direction=Rule::MASTER2SLAVE) const
+    {  return execTransition(curr_state, target_state, direction);   }
   };
 
 }      //  End namespace 
