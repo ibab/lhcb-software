@@ -29,8 +29,8 @@ TrSegMakerFromMCRichTracks( const std::string& type,
                             const std::string& name,
                             const IInterface* parent)
   : Rich::Rec::ToolBase ( type, name, parent ),
-    m_truth      ( 0 ),
-    m_rectruth   ( 0 ),
+    m_truth      ( NULL ),
+    m_rectruth   ( NULL ),
     m_usedRads   ( Rich::NRadiatorTypes, true ),
     m_minPathL   ( Rich::NRadiatorTypes, 0 ),
     m_minPhots   ( Rich::NRadiatorTypes, 1 )
