@@ -3,6 +3,9 @@
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+! 2013-05-23 - Chris Jones
+ - Check value using lnan as well as lfin
+
 !========================= DaVinciTransporter v3r10p2 2013-05-07 =========================
 
 ! 2013-05-07 - Chris Jones
