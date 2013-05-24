@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+! 2013-05-24 - Chris Jones
+ - Import package Phys/NeuroBayesTools from Phys
+
 </PRE><H1><A NAME=v10r6>2013-05-07 Analysis v10r6 </A></H1><PRE>
 New development release, built against Phys v16r6.
 

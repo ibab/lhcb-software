@@ -74,6 +74,10 @@ use  DaVinciTrackScaling        v1r0    Phys   # Vanya Belyaev
 
 ####################################################################
 
+use NeuroBayesTools             v1r2p2   Phys    # Ulrich Kerzel
+
+####################################################################
+
 # Declare this as a container package
 apply_pattern container_package
 
