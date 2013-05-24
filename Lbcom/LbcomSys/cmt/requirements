@@ -24,9 +24,6 @@ use FTDAQ             v1r3     FT        #
 use HltDAQ            v2r16    Hlt       # Tomasz Skwarnicki
 
 # L0 trigger simulation
-use L0Calo            v11r10   L0        # Patrick Robbe
-use L0DU              v10r27p2 L0        # Olivier Deschamps   
-use L0Muon            v9r12    L0        # Julien Cogan
 use L0MuonMonitor     v2r3     L0        # Julien Cogan
 use PuVeto            v7r9     L0        # Serena Oggero
 
@@ -39,7 +36,6 @@ use OTMonitor         v3r5p1   OT        # Wouter Hulsbergen
 
 # Rich
 use RichAlgorithms    v1r6     Rich      # Chris Jones
-use RichDAQ           v3r40    Rich      # Chris Jones
 use RichMCMonitors    v1r10    Rich      # Chris Jones
 use RichMCTools       v3r18    Rich      # Chris Jones
 use RichTools         v2r41    Rich      # Chris Jones
@@ -51,14 +47,12 @@ use SiTools           v1r9     Si        # Matt Needham
 use STAlgorithms      v4r6     ST        # Jeroen van Tilburg
 use STAssociators     v1r7     ST        # Jeroen van Tilburg
 use STCheckers        v4r1     ST        # Jeroen van Tilburg
-use STDAQ             v4r2     ST        # Jeroen van Tilburg
 use STMonitors        v4r2     ST        # Mark Tobin
 use STTools           v4r14p1  ST        # Jeroen van Tilburg
 
 # Velo
 use VeloAlgorithms    v5r7     Velo      # Tomasz Szumlak
 use VeloAssociators   v2r5     Velo      # Tomasz Szumlak
-use VeloDAQ           v6r9p1   Velo      # Kurt Rinnert
 use VeloSimulation    v3r14    Velo      # Tomasz Szumlak
 use VeloTools         v4r2     Velo      # Tomasz Szumlak
 

@@ -6,6 +6,9 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+- Packages removed: L0/L0Calo, L0/L0DU, L0/L0Muon, Rich/RichDAQ, ST/STDAQ,
+                    Velo/VeloDAQ (all moved to LHCb)
+
 </PRE><H1><A NAME=v13r6p1>2013-04-30 LbcomSys v13r6p1</A></H1><PRE>
 This version uses Gaudi v23r7 and LHCb v35r6
 
