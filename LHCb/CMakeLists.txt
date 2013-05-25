@@ -15,4 +15,5 @@ gaudi_project(LHCb v35r6
               DATA Gen/DecFiles
                    Det/SQLDDDB VERSION v7r*
                    FieldMap
-                   TCK/HltTCK)
+                   TCK/HltTCK
+		   TCK/L0TCK VERSION v4r*)
