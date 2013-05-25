@@ -1,6 +1,5 @@
 project BRUNEL
 
-use LBCOM LBCOM_v13r6p1
 use REC   REC_v14r6
 
 build_strategy	with_installarea
