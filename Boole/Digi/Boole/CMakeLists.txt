@@ -20,6 +20,7 @@ gaudi_depends_on_subdirs(Bcm/BcmDigi
                          GaudiKernel
                          Kernel/LHCbAlgs
                          LbcomSys
+                         L0/L0DU
 			 Muon/MuonAlgs
 			 Muon/MuonBackground
 			 Muon/MuonMoniDigi

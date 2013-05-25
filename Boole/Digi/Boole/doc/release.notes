@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Packaging changes
+   . Add dependency on L0DU, following move of L0DU to LHCb, to pick up 
+     run time dependency on L0TCK
+
  - Changes to references to follow changes in underlying packages
    . Fixes for configurations without M1 (Muon packages)
 
