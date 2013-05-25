@@ -43,7 +43,7 @@ DECLARE_TOOL_FACTORY(TrgVertexFitter)
 TrgVertexFitter::TrgVertexFitter( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+: GaudiTool ( type, name , parent )
   ,m_photonID(22)
   ,m_pi0ID(111)
   ,m_stuffer()
@@ -61,7 +61,8 @@ TrgVertexFitter::~TrgVertexFitter() {}
 //=============================================================================
 // Initialize
 //=============================================================================
-StatusCode TrgVertexFitter::initialize(){
+StatusCode TrgVertexFitter::initialize()
+{
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
   m_stuffer = tool<IParticleStuffer>("ParticleStuffer");
@@ -92,7 +93,9 @@ StatusCode TrgVertexFitter::fit
 StatusCode TrgVertexFitter::fit( LHCb::Vertex& V ,
                                  const LHCb::Particle::ConstVector& parts ) const
 {
-  if (msgLevel(MSG::DEBUG)) debug() << "Hello from TrgVertexFitter vertexing " << parts.size() << " particles" << endmsg ;
+  if (msgLevel(MSG::DEBUG)) 
+    debug() << "Hello from TrgVertexFitter vertexing " << parts.size() << " particles" 
+            << endmsg ;
 
   // Vector of particles to use in fit, can contain daughters of input particles
   LHCb::Particle::ConstVector partsToFit;
@@ -104,21 +107,26 @@ StatusCode TrgVertexFitter::fit( LHCb::Vertex& V ,
 
   bool fitNeeded = true ;
 
-  StatusCode sc = classify(parts,partsToFit, inputNeutralsFromMother, inputNeutralsFromResonance,V, fitNeeded);
+  StatusCode sc = classify(parts,partsToFit, 
+                           inputNeutralsFromMother,
+                           inputNeutralsFromResonance, 
+                           V, fitNeeded);
   if (!sc) return sc ;
 
-  if (fitNeeded ){
-
+  if (fitNeeded )
+  {
     // Do the fit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    StatusCode scFit = doFit( partsToFit, V );
-    if ( !scFit) {
+    const StatusCode scFit = doFit( partsToFit, V );
+    if ( !scFit) 
+    {
       return Warning("doFit failed",StatusCode::FAILURE,0);
     }
   }
 
   // Add daugthers
-  for(Particle::ConstVector::const_iterator iterP = partsToFit.begin(); iterP != partsToFit.end(); iterP++) {
+  for(Particle::ConstVector::const_iterator iterP = partsToFit.begin(); 
+      iterP != partsToFit.end(); ++iterP ) 
+  {
     V.addToOutgoingParticles(*iterP);
     if (msgLevel(MSG::VERBOSE)) verbose() << "Particle added to vertex outgoingParticles: "
                                           << (*iterP)->particleID().pid() << endmsg;
@@ -126,25 +134,28 @@ StatusCode TrgVertexFitter::fit( LHCb::Vertex& V ,
 
 
   //Add the neutrals daughters from  the resonances  once the fit is done
-  for(Particle::ConstVector::const_iterator iterNeutrals =inputNeutralsFromResonance.begin();
-      iterNeutrals != inputNeutralsFromResonance.end(); iterNeutrals++ ){
+  for( Particle::ConstVector::const_iterator iterNeutrals = inputNeutralsFromResonance.begin();
+       iterNeutrals != inputNeutralsFromResonance.end(); ++iterNeutrals )
+  {
     V.addToOutgoingParticles(*iterNeutrals);
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Neutral Particle  from the resonances  are added to vertex outgoingParticles: "
-                                          << (*iterNeutrals)->particleID().pid() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) 
+      verbose() << "Neutral Particle  from the resonances  are added to vertex outgoingParticles: "
+                << (*iterNeutrals)->particleID().pid() << endmsg;
   }
 
   //Add the neutrals daughters from  the mother once the fit is done
   for(Particle::ConstVector::const_iterator iterNeutrals =inputNeutralsFromMother.begin();
       iterNeutrals != inputNeutralsFromMother.end(); iterNeutrals++ ){
     V.addToOutgoingParticles(*iterNeutrals);
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Neutral Particle  from the mother are added to vertex outgoingParticles: "
-                                          << (*iterNeutrals)->particleID().pid() << endmsg;
+    if (msgLevel(MSG::VERBOSE)) 
+      verbose() << "Neutral Particle  from the mother are added to vertex outgoingParticles: "
+                << (*iterNeutrals)->particleID().pid() << endmsg;
   }
 
-
-
-  if (msgLevel(MSG::DEBUG)) debug() << "Returning vertex " << V.position() << " with error\n"
-                                    <<  V.covMatrix() << " Size: " << V.outgoingParticles().size() << endmsg ;
+  if (msgLevel(MSG::DEBUG)) 
+    debug() << "Returning vertex " << V.position() << " with error\n"
+            <<  V.covMatrix() << " Size: " << V.outgoingParticles().size() 
+            << endmsg ;
 
   return StatusCode::SUCCESS;
 }
@@ -212,10 +223,12 @@ StatusCode TrgVertexFitter::doFit( const LHCb::Particle::ConstVector& partsToFit
   double vX,vY,vZ;
   const StatusCode stPosAndErr = vertexPositionAndError(AX, BX, CX, DX, EX, AY, BY, CY, DY, EY,
                                                         vX, vY, vZ, V);
-  if (!stPosAndErr){
+  if (!stPosAndErr)
+  {
     return Warning("vertexPositionAndError failed", StatusCode::FAILURE, 0);
   }
-  if (msgLevel(MSG::VERBOSE)){
+  if (msgLevel(MSG::VERBOSE))
+  {
     verbose() << "Got from VPAE X A " << AX << " B " << BX << " C " << CX << " D " << DX << " E " << EX << endmsg ;
     verbose() << "              Y A " << AY << " B " << BY << " C " << CY << " D " << DY << " E " << EY << endmsg ;
     verbose() << "              v " << vX << " " << vY << " " << vZ << "\n" << V << endmsg ;
@@ -272,7 +285,7 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX,
   const double R1 = CX*AX/BX + CY*AY/BY - EX - EY ;
   const double R2 = DX + DY - CX*CX/BX - CY*CY/BY ;
 
-  if (msgLevel(MSG::VERBOSE)) 
+  if (msgLevel(MSG::VERBOSE))
   {
     verbose() << "X : " << std::setprecision(10)
               << AX << " "<< BX << " "<< CX << " " << DX << " " << EX << endmsg ;
@@ -292,7 +305,7 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX,
     verbose() << " = " << R2 << endmsg ;
   }
 
-  if ( R2 < m_epsilon ) 
+  if ( R2 < m_epsilon )
   {
     Warning("R2 is too small, leaving.", StatusCode::FAILURE, 0).ignore();
     debug() << " R1 " << R1 << " R2 " << R2 << endmsg ;
@@ -313,15 +326,15 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX,
   Gaudi::SymMatrix3x3 fastCov;
 
   const double det = ( BX*BY*( DX + DY ) - CX*CX*BY - CY*CY*BX );
-  if ( 0 == gsl_fcmp ( det , 0 , 1.e-8 ) ) 
+  if ( 0 == gsl_fcmp ( det , 0 , 1.e-8 ) )
   {
     Warning("Position covariance matrix determinant is zero",StatusCode::FAILURE,0).ignore();
     return StatusCode::FAILURE;
   }
   const double invDet = 1./det ;
-  if ( ! lfin(invDet) ){ // that's probably not needed anymore
-    Warning("Position covariance matrix determinant cannot be inverted",StatusCode::FAILURE,0).ignore();
-    return StatusCode::FAILURE;
+  if ( !lfin(invDet) || lnan(invDet) )
+  { // that's probably not needed anymore
+    return Warning("Position covariance matrix determinant cannot be inverted",StatusCode::FAILURE,0);
   }
 
   fastCov(0,0) = invDet * ( -CY*CY + ( BY * ( DX + DY )));
@@ -357,7 +370,7 @@ StatusCode TrgVertexFitter::combine( const LHCb::Particle::ConstVector& daughter
 //=============================================================================
 /// add not active for fast vertex fitter
 StatusCode TrgVertexFitter::add(const LHCb::Particle* p,
-                                LHCb::Vertex& v) const 
+                                LHCb::Vertex& v) const
 {
   if (msgLevel(MSG::VERBOSE)) verbose() << "Print " << v.position() << " and " << p
                                         << " to inhibit compilation warnings" << endmsg ;
@@ -367,7 +380,7 @@ StatusCode TrgVertexFitter::add(const LHCb::Particle* p,
 //=============================================================================
 /// remove not active for fast vertex fitter
 StatusCode TrgVertexFitter::remove(const LHCb::Particle* p,
-                                   LHCb::Vertex& v) const 
+                                   LHCb::Vertex& v) const
 {
   if (msgLevel(MSG::VERBOSE)) verbose() << "Print " << v.position() << " and " << p
                                         << " to inhibit compilation warnings" << endmsg ;
@@ -395,15 +408,17 @@ StatusCode TrgVertexFitter::classify( const LHCb::Particle::ConstVector& parts,
   unsigned int nLongLived = 0;
 
   // Main loop on input particles
-  for ( Particle::ConstVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) 
+  for ( Particle::ConstVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart )
   {
     const Particle* par = *iPart;
     if ( !par) {
       fatal() << "Pointer to particle failed: "  << endmsg;
       return StatusCode::FAILURE;
     }
-    if (msgLevel(MSG::DEBUG)){
-      debug() << " VERTEXING Particle " << par->key() << " " << par->particleID().pid() << " " << par->momentum() << endmsg ;
+    if (msgLevel(MSG::DEBUG))
+    {
+      debug() << " VERTEXING Particle " << par->key() << " " << par->particleID().pid()
+              << " " << par->momentum() << endmsg ;
     }
     // Take actions 1) 2) 3) or 4) according to particle type
     // 2) For resonances, use daughter particles for fit if m_useDaughters is set to true
@@ -419,7 +434,8 @@ StatusCode TrgVertexFitter::classify( const LHCb::Particle::ConstVector& parts,
         for ( SmartRefVector<Particle>::const_iterator iDaught=daughters.begin();
               iDaught!=daughters.end();++iDaught) {
           const Particle* daught = *iDaught;
-          if ( !daught) {
+          if ( !daught) 
+          {
             fatal() << "Pointer to daughter particle failed: " << daught->particleID().pid() << endmsg;
             return StatusCode::FAILURE;
           }
@@ -457,22 +473,25 @@ StatusCode TrgVertexFitter::classify( const LHCb::Particle::ConstVector& parts,
   // Number of particles to be used for the fit
   // Can be different than # of input particles!
   const unsigned int nPartsToFit = partsToFit.size();
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of particles that will be used for the fit: "
-                                        << nPartsToFit << endmsg;
+  if (msgLevel(MSG::VERBOSE)) 
+    verbose() << "Number of particles that will be used for the fit: "
+              << nPartsToFit << endmsg;
 
   //Number of neutrals from the mother that will be added at the end
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Number of neutrals from the mother  that will be added to the vertex: "
-                                        << inputNeutralsFromMother.size() << endmsg;
-
+  if (msgLevel(MSG::VERBOSE))
+    verbose() << "Number of neutrals from the mother  that will be added to the vertex: "
+              << inputNeutralsFromMother.size() << endmsg;
+  
   if ( nLongLived==1 && inputNeutralsFromMother.size()>0 )
   {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Special case: won't refit, but add "
-                                          << inputNeutralsFromMother.size()
-                                          << " gamma(s)/pi0s to existing vertex" << endmsg;
+    if (msgLevel(MSG::VERBOSE)) 
+      verbose() << "Special case: won't refit, but add "
+                << inputNeutralsFromMother.size()
+                << " gamma(s)/pi0s to existing vertex" << endmsg;
     // Get the composite vertex in case of no fit (no X -> n gammas)
 
     for ( std::vector<const Particle*>::const_iterator iPart=partsToFit.begin();
-          iPart!=partsToFit.end(); ++iPart ) 
+          iPart!=partsToFit.end(); ++iPart )
     {
       const Particle* composite = *iPart;
       const Vertex* Vtemp = composite->endVertex();
@@ -482,11 +501,13 @@ StatusCode TrgVertexFitter::classify( const LHCb::Particle::ConstVector& parts,
 
       const SmartRefVector<Particle>& daughters = Vtemp->outgoingParticles();
       for ( SmartRefVector<Particle>::const_iterator iDaught=daughters.begin();
-            iDaught!=daughters.end();++iDaught) 
+            iDaught!=daughters.end();++iDaught)
       {
         if( m_photonID == (*iDaught)->particleID().pid()
             || m_pi0ID == (*iDaught)->particleID().pid() )
+        {
           inputNeutralsFromMother.push_back(*iDaught);
+        }
         ++nNeutralsFromMother;
       } // iDaught
 
@@ -494,7 +515,7 @@ StatusCode TrgVertexFitter::classify( const LHCb::Particle::ConstVector& parts,
       if ( nNeutralsFromMother == Vtemp->outgoingParticles().size() ) continue;
 
       // We have our vertex
-      if (msgLevel(MSG::VERBOSE)) 
+      if (msgLevel(MSG::VERBOSE))
       {
         verbose() << " composite ID " << composite->particleID().pid()
                   << " will be used to add gammas" << endmsg;
@@ -512,7 +533,8 @@ StatusCode TrgVertexFitter::classify( const LHCb::Particle::ConstVector& parts,
     fitNeeded = false ; // no need to refit
   }
   // Check wether enough particles
-  else if ( (nPartsToFit == 0) || (nPartsToFit == 1)){
+  else if ( (nPartsToFit == 0) || (nPartsToFit == 1))
+  {
     fatal() << "Not enough particles to fit! " << nPartsToFit << endmsg;
     return StatusCode::FAILURE;
   }

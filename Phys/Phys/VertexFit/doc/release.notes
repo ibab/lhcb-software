@@ -4,6 +4,9 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2013-05-25 - Chris Jones
+ - Fix another clang 3.2 warning.
+
 ! 2013-05-17 - Chris Jones
  - Fix clang 3.2 warning.
 
