@@ -3,6 +3,9 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2013-05-25 - Marco Cattaneo
+ - Add missing dependency on CaloDAQ
+
 !========================= L0DU v10r27p2 2013-04-22 =========================
 ! 2013-04-08 - Marco Cattaneo
  - Add __init.py__ to please CMake

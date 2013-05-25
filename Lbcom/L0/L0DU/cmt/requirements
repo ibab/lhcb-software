@@ -12,6 +12,7 @@ set L0DUOPTS	$(L0DUROOT)/options
 use L0Event      v*    Event
 use DAQEvent     v*    Event
 use CaloDet      v*    Det
+use CaloDAQ      v*    Calo
 use CaloUtils    v*    Calo
 use L0Interfaces v*    L0
 use AIDA         v*    LCG_Interfaces -no_auto_imports
