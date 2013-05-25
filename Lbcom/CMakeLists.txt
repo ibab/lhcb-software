@@ -9,5 +9,4 @@ find_package(GaudiProject)
 gaudi_project(Lbcom v13r6p1
               USE LHCb v35r6
               DATA ParamFiles
-                   TCK/HltTCK
-                   TCK/L0TCK VERSION v4r*)
+                   TCK/HltTCK)
