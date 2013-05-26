@@ -212,7 +212,7 @@ document = DDDB(
     xml_idplus   ,
     xml_idpminus ,
     xml_offsets  ,
-    comment = "Momentum scale            %s %s" % ( reco , year ) ,
+    ## comment = "Momentum scale            %s %s" % ( reco , year ) ,
     name    = 'MomentumScale' 
     ),
     )   

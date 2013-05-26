@@ -83,7 +83,7 @@ smear     = PARAM (
 document = DDDB(
     CONDITION (
     smear    ,
-    comment = 'Covariance scale %s %s %s ' % ( sim , reco , year ) ,
+    ## comment = 'Covariance scale %s %s %s ' % ( sim , reco , year ) ,
     name    = 'CovarianceScale' ,
     ),
     )   

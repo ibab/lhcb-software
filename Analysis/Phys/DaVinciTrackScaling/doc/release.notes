@@ -4,6 +4,12 @@
 ! Purpose     : Track scaling and smearing
 !-----------------------------------------------------------------------------
 
+! 2013-05-26 - Vanya Belyaev
+
+ - helper scripts to fill CONDDB:
+
+    : remove "comment" attribute for Condition object
+
 !========================= DaVinciTrackScaling v1r0 2013-05-07 =========================
 
 ! 2013-04-27 - Chris Jones
