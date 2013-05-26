@@ -883,10 +883,10 @@ namespace LoKi
       if ( predicate ( particle ) ) { return particle ; }            // RETURN 
       //
       typedef SmartRefVector<LHCb::MCVertex>   EndVertices ;
-      typedef SmartRefVector<LHCb::MCParticle> Ps          ;
+      //      typedef SmartRefVector<LHCb::MCParticle> Ps          ;
       const EndVertices& vertices = particle->endVertices() ;
       //
-      for ( EndVertices::const_iterator ivx = vertices.begin() ; 
+      for ( EndVertices::const_iterator ivx = vertices.begin() ;
             vertices.end() != ivx ; ++ivx ) 
       {
         const LHCb::MCVertex* vx = *ivx ;
