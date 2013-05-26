@@ -11,6 +11,6 @@ gaudi_depends_on_subdirs(Calo/CaloDAQ
                          OT/OTDAQ
                          Rich/RichDAQ
                          Si/SiDAQ
-			 ST/STDQAQ
+			 ST/STDAQ
 			 Velo/VeloDAQ)
 
