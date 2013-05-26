@@ -186,7 +186,7 @@ StatusCode CaloDigitMCTruth::execute    ()
   /// helper class to build MC history tree 
   typedef MCCaloHistory<LHCb::CaloDigit>             MCHistory ;
   /// auxillary structure for conversion  "CaloCellID" -> "int"
-  typedef Containers::key_traits<LHCb::CaloCellID>   Key       ;
+  //  typedef Containers::key_traits<LHCb::CaloCellID>   Key       ;
 
   // get digits from TES  
   Digits*   digits   = getIfExists<Digits>     ( m_input ) ;
