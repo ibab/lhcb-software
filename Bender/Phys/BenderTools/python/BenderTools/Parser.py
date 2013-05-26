@@ -218,15 +218,15 @@ def dataType ( files ) :
         elif 0 <= f.find ( 'Stripping20r1' ) : dtype = '2011'
         elif 0 <= f.find ( 'Stripping20r0' ) : dtype = '2012'
         #
-        elif 0 <= f.find ( '2010'  ) : dtype = '2010'
-        elif 0 <= f.find ( '2011'  ) : dtype = '2011'
-        elif 0 <= f.find ( '2012'  ) : dtype = '2012'
-        elif 0 <= f.find ( '2013'  ) : dtype = '2013'
+        # elif 0 <= f.find ( '2010'          ) : dtype = '2010'
+        # elif 0 <= f.find ( '2011'          ) : dtype = '2011'
+        # elif 0 <= f.find ( '2012'          ) : dtype = '2012'
+        # elif 0 <= f.find ( '2013'          ) : dtype = '2013'
         #
-        elif 0 <= f.find ( '2k+10' ) : dtype = '2010'
-        elif 0 <= f.find ( '2k+11' ) : dtype = '2011'
-        elif 0 <= f.find ( '2k+12' ) : dtype = '2012'
-        elif 0 <= f.find ( '2k+13' ) : dtype = '2013'
+        elif 0 <= f.find ( '2k+10'         ) : dtype = '2010'
+        elif 0 <= f.find ( '2k+11'         ) : dtype = '2011'
+        elif 0 <= f.find ( '2k+12'         ) : dtype = '2012'
+        elif 0 <= f.find ( '2k+13'         ) : dtype = '2013'
         
         #
         if   0 <= f.find ( 'MC09' ) or 0 <= f.find ( 'MC/2009' ) :
@@ -240,11 +240,13 @@ def dataType ( files ) :
             simu  = True 
         elif 0 <= f.find ( 'MC12' ) or 0 <= f.find ( 'MC/2012' ) :
             dtype = '2012'
-            simu = True
+            simu  = True
         elif 0 <= f.find ( 'MC13' ) or 0 <= f.find ( 'MC/2013' ) :
             dtype = '2013'
-            simu = True
-        elif 0 <= f.find ( '/MC/' ) : simu = True
+            simu  = True
+        elif 0 <= f.find ( '/MC/'   ) : simu = True
+        elif 0 <= f.find ( 'Pythia' ) : simu = True
+        elif 0 <= f.find ( 'BcVeg'  ) : simu = True
         
         p   = f.rfind ( '.' )
         if 0 <= p :

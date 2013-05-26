@@ -105,6 +105,7 @@ def _fill_initialize ( self ) :
     #
     self._maxTrChi2     = MAXTREE ( ISBASIC & HASTRACK , TRCHI2DOF    )
     self._maxTrGhost    = MAXTREE ( ISBASIC & HASTRACK , TRGHOSTPROB  )
+    self._minTrKL       = MINTREE ( ISBASIC & HASTRACK , CLONEDIST    ) 
     self._minTrIPchi2   = MINTREE ( ISBASIC & HASTRACK , BPVIPCHI2()  )
     #
     ##
@@ -162,6 +163,7 @@ def _fill_finalize   ( self ) :
     #
     self._maxTrChi2    = None 
     self._maxTrGhost   = None 
+    self._minTrKL      = None 
     self._minTrIPchi2  = None 
     #
     self._EtC          = None 
@@ -358,12 +360,13 @@ def treatTracks ( self         ,
             m2    = self._delta_m2 ( p_i , p_j )
             m2min = min ( m2min , m2 )
             
-    sc = tup.column_float ( 'm2min_track'   + suffix , m2min                  )    
-    sc = tup.column_float ( 'minPt_track'   + suffix , self._min_Pt     ( p ) )
-    sc = tup.column_float ( 'minEta_track'  + suffix , self._min_Eta    ( p ) )
-    sc = tup.column_float ( 'maxEta_track'  + suffix , self._max_Eta    ( p ) )
-    sc = tup.column_float ( 'maxChi2_track' + suffix , self._maxTrChi2  ( p ) )
-    sc = tup.column_float ( 'maxTrGh_track' + suffix , self._maxTrGhost ( p ) )
+    sc = tup.column_float ( 'm2min_track'     + suffix , m2min                  )    
+    sc = tup.column_float ( 'minPt_track'     + suffix , self._min_Pt     ( p ) )
+    sc = tup.column_float ( 'minEta_track'    + suffix , self._min_Eta    ( p ) )
+    sc = tup.column_float ( 'maxEta_track'    + suffix , self._max_Eta    ( p ) )
+    sc = tup.column_float ( 'maxChi2_track'   + suffix , self._maxTrChi2  ( p ) )
+    sc = tup.column_float ( 'maxTrGh_track'   + suffix , self._maxTrGhost ( p ) )
+    sc = tup.column_float ( 'minKL_track'     + suffix , self._minTrKL    ( p ) )
     
     sc = tup.fArrayP ( 'p_track'     + suffix        , P   / GeV  , 
                        'pt_track'    + suffix        , PT  / GeV  , 

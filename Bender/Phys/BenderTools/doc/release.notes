@@ -5,6 +5,10 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2013-05-26 - Vanya Belyaev
+
+ - many tiny modifications 
+
 ! 2013-05-12 - Vanya Belyaev
 
  - more improvements in the treatment of DB-tags 

@@ -259,7 +259,6 @@ def configure ( options , arguments ) :
         #
         ## try to get the tags from Rec/Header
         from BenderTools.GetDBtags import useDBTagsFromData
-        
         tags = useDBTagsFromData (
             files [ 0 ]       ,
             options.Castor    ,

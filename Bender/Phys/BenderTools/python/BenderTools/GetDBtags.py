@@ -90,7 +90,7 @@ def useDBTagsFromData (
     tags = getDBTags  ( file_name , castor , grid )
 
     if not tags : 
-        logger.warning ( 'No tags are extracted from the file %s' % data_file )
+        logger.warning ( 'No tags are extracted from the file %s' % file_name )
         return tags  
     #
     logger.info    ( 'Extractes tags from DATA are : %s' % tags         )
