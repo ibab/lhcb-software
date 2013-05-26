@@ -1,6 +1,4 @@
 // ============================================================================
-#define CALOUTILS_COVARIANCEESTIMATOR_CPP 1 
-// ============================================================================
 /// Include files
 #include<cmath>
 #include "GaudiKernel/Point3DTypes.h"
@@ -66,8 +64,8 @@ StatusCode CovarianceEstimator::operator()( LHCb::CaloCluster* cluster ) const
   if( 0 == detector()            ) { return StatusCode(221)     ; }
   
   // avoid long names 
-  typedef LHCb::CaloCluster::Entries::iterator       iterator;
-  typedef LHCb::CaloCluster::Entries::const_iterator const_iterator;
+  //  typedef LHCb::CaloCluster::Entries::iterator       iterator;
+  //  typedef LHCb::CaloCluster::Entries::const_iterator const_iterator;
   
   LHCb::CaloCluster::Entries entries = cluster->entries();
   const unsigned int size = entries.size() ;

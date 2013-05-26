@@ -1,8 +1,5 @@
-// $Id: SpreadEstimator.cpp,v 1.13 2009-05-10 15:17:00 ibelyaev Exp $
 // ============================================================================
 // Include files
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
 // ============================================================================
 #include <cmath>
 // ============================================================================
@@ -97,8 +94,8 @@ StatusCode SpreadEstimator::operator() ( LHCb::CaloCluster* cluster ) const
   /// detector?
   if ( 0 == detector ()           ) { return StatusCode( 221 )   ; }
   
-  /// avoid long names 
-  typedef LHCb::CaloCluster::Entries::const_iterator const_iterator;
+  // avoid long names 
+  //  typedef LHCb::CaloCluster::Entries::const_iterator const_iterator;
   
   const double x_prec  = 0.2 * Gaudi::Units::mm  ;
   const double x_prec2 = x_prec * x_prec         ;
