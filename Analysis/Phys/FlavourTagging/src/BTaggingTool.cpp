@@ -56,6 +56,7 @@ DECLARE_TOOL_FACTORY( BTaggingTool )
 
   declareProperty( "ForceSignalID",           m_ForceSignalID  = " "); //force signal B as Bu, Bd, Bs
   declareProperty( "UseVtxChargeWithoutOS",   m_UseVtxOnlyWithoutOS = false ); //use vtcxch only when no other OS tagger is active
+  declareProperty( "Personality", m_personality = "2012");
 
   m_util    = 0;
   m_descend = 0;
@@ -66,7 +67,7 @@ DECLARE_TOOL_FACTORY( BTaggingTool )
   m_taggerKaonS=m_taggerPionS=m_taggerVtx=0 ;
 }
 
-BTaggingTool::~BTaggingTool() {}
+BTaggingTool::~BTaggingTool() { }
 
 //==========================================================================
 StatusCode BTaggingTool::initialize()
@@ -110,6 +111,22 @@ StatusCode BTaggingTool::initialize()
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
                              StatusCode::FAILURE);
 
+  // register (multiple) personalities of chooseCandidates
+  m_chooseCandidates.registerPersonality("2011",
+	  this, &BTaggingTool::chooseCandidates2011);
+  m_chooseCandidates.registerPersonality("2012",
+	  this, &BTaggingTool::chooseCandidates2012);
+
+  // select personality
+  // (this throws an exception if the personality chosen by the user is not
+  // known)
+  try {
+      m_chooseCandidates.setPersonality(m_personality);
+  } catch (const std::exception& e) {
+      error() << "Caught exception while setting chooseCandidates "
+	  "personality: " << e.what() << endmsg;
+      return StatusCode::FAILURE;
+  };
 
   return sc;
 }
@@ -453,8 +470,89 @@ BTaggingTool::choosePrimary(const Particle* AXB,
 }
 
 //=============================================================================
-const Particle::ConstVector
+const Particle::ConstVector 
 BTaggingTool::chooseCandidates(const Particle* AXB,
+                               const Particle::Range& parts,
+                               const RecVertex::ConstVector& PileUpVtx) {
+ return m_chooseCandidates(AXB, parts, PileUpVtx);
+}
+//=============================================================================
+const Particle::ConstVector 
+BTaggingTool::chooseCandidates2011(const Particle* AXB,
+                               const Particle::Range& parts,
+                               const RecVertex::ConstVector& PileUpVtx) {
+
+  double distphi;
+  Particle::ConstVector vtags(0);
+  Particle::Range::iterator ip;
+  Particle::ConstVector axdaugh = m_descend->descendants( AXB );
+  axdaugh.push_back( AXB );
+  for ( ip = parts.begin(); ip != parts.end(); ip++ ){
+
+    const ProtoParticle* proto = (*ip)->proto();
+    if( !proto )                                 continue;
+    if( !proto->track() )                        continue;
+    if( proto->track()->type() < 3 )             continue; 
+    if( proto->track()->type() > 4 )             continue;
+    if( (*ip)->p()/GeV < 2.0 )                   continue;               
+    if( (*ip)->momentum().theta() < m_thetaMin ) continue;
+    if( (*ip)->charge() == 0 )                   continue;               
+    if( (*ip)->p()/GeV  > 200 )                  continue;
+    if( (*ip)->pt()/GeV >  10 )                  continue;
+    if( m_util->isinTree( *ip, axdaugh, distphi ) ) continue ;//exclude signal
+    if( distphi < m_distphi_cut ) continue;
+
+    //calculate the min IP wrt all pileup vtxs
+    double ippu, ippuerr;
+    m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
+    //eliminate from vtags all parts coming from a pileup vtx
+
+    
+    if(ippuerr) {
+      if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts 
+      Particle* c = const_cast<Particle*>(*ip);
+      c->addInfo(1, ippu/ippuerr);
+      verbose()<<"particle p="<<(*ip)->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
+    }else debug()<<"particle p="<<(*ip)->p()<<" ippu NAN ****"<<endmsg; // happens only when there is 1 PV 
+      
+    
+    
+    bool dup=false;
+    Particle::ConstVector::const_iterator ik;
+    double partp = (*ip)->p();
+    for ( ik = ip+1; ik != parts.end(); ik++) {
+      if((*ik)->proto() == proto) { 
+        dup=true; 
+        break; 
+      }
+      //more duplicates
+      if((*ik)->p()==partp){
+        warning()<<"Same particle momentum but different protoparticle --> duplicate"<<endreq;
+        dup=true;
+        break;
+      }
+    }
+    if(dup) continue; 
+ 
+    ////////////////////////////////
+    vtags.push_back(*ip);         // store tagger candidate
+    ////////////////////////////////
+
+    if (msgLevel(MSG::DEBUG)) 
+      debug() <<"part ID="<<(*ip)->particleID().pid()
+              <<" p="<<(*ip)->p()/GeV
+              <<" pt="<<(*ip)->pt()/GeV
+              <<" PIDm="<<(*ip)->proto()->info( ProtoParticle::CombDLLmu, 0)
+              <<" PIDe="<<(*ip)->proto()->info( ProtoParticle::CombDLLe, 0)
+              <<" PIDk="<<(*ip)->proto()->info( ProtoParticle::CombDLLk, 0)
+              <<endreq;
+  }
+  return vtags;
+}
+
+//=============================================================================
+const Particle::ConstVector
+BTaggingTool::chooseCandidates2012(const Particle* AXB,
                                const Particle::Range& parts,
                                const RecVertex::ConstVector& PileUpVtx)
 {
@@ -731,3 +829,9 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
 }
 
 //=========================================================================
+StatusCode BTaggingTool::finalize()
+{
+    return GaudiTool::finalize();
+}
+
+

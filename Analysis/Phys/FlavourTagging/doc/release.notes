@@ -4,6 +4,16 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2013-05-26 - Manuel Tobias Schiller
+ - introduce MultiplePersonalityCall class - a templated class which allows
+   callable objects of identical signature to be called; this class
+   multiplexes calls to the different implementations ("personalities")
+   registered by the caller
+ - change BTaggingTool and TaggingUtils to provide a personality property,
+   changed functionality is implemented using the MultiplePersonalityCall
+   class
+
 ! 2013-05-23 - Katharina Kreplin
  - Fixed one ambiguity in TaggerNEWKaonOppositeTool.cpp
    (number of tracks after PID preselection) and

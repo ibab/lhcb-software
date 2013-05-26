@@ -11,6 +11,7 @@ class IPVReFitter;
 class IDVAlgorithm;
 
 #include "ITaggingUtils.h"
+#include "MultiplePersonalityCall.h"
 
 /** @class TaggingUtils TaggingUtils.h
  *
@@ -33,6 +34,7 @@ public:
 
   virtual ~TaggingUtils( ); ///< Destructor
   StatusCode initialize();  ///<  initialization
+  StatusCode finalize();    ///<  finalization
 
   //-------------------------------------------------------------
 
@@ -51,18 +53,33 @@ public:
 
   int countTracks(const LHCb::Particle::ConstVector& );
 
-  bool isinTree( const LHCb::Particle*,
-                 std::vector<const LHCb::Particle*>& , double& );
+  bool isinTree(const LHCb::Particle*,
+                 const LHCb::Particle::ConstVector& , double& );
 
   //-------------------------------------------------------------
 
 private:
 
   std::string m_ChoosePV ;
+  std::string m_personality;
   const IDistanceCalculator *m_Dist;
   IDVAlgorithm* m_dva;
   const IPVReFitter* m_pvReFitter;
 
+  MultiplePersonalityCall<boost::function<
+      int(const LHCb::Particle::ConstVector&)> > m_countTracks;
+  MultiplePersonalityCall<boost::function<
+      bool(const LHCb::Particle*,
+	      const LHCb::Particle::ConstVector&, double&) > > m_isinTree;
+
+  int countTracks2011(const LHCb::Particle::ConstVector& );
+  int countTracks2012(const LHCb::Particle::ConstVector& );
+
+  bool isinTree2011(const LHCb::Particle*,
+                 const LHCb::Particle::ConstVector& , double& );
+
+  bool isinTree2012(const LHCb::Particle*,
+                 const LHCb::Particle::ConstVector& , double& );
 };
 
 //===============================================================//

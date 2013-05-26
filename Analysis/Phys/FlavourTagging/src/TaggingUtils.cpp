@@ -1,12 +1,12 @@
 // Include files 
 #include <limits>
-#include "TaggingUtils.h"
 #include <Kernel/IDVAlgorithm.h>
 #include <Kernel/GetIDVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
 #include "Kernel/IPVReFitter.h"
 
 #include "TaggingHelpers.h"
+#include "TaggingUtils.h"
 
 //--------------------------------------------------------------------
 // Implementation file for class : TaggingUtils
@@ -29,6 +29,7 @@ DECLARE_TOOL_FACTORY( TaggingUtils )
     m_dva(0)
 {
   declareProperty( "ChoosePVCriterium", m_ChoosePV = "PVbyIPs");
+  declareProperty( "Personality", m_personality = "2012" );
   declareInterface<ITaggingUtils>(this);
 }
 
@@ -54,6 +55,28 @@ StatusCode TaggingUtils::initialize()
     fatal() << "Unable to retrieve AdaptivePVReFitter" << endreq;
     return StatusCode::FAILURE;
   }
+  
+  // register multiple personalities
+  m_countTracks.registerPersonality("2011",
+	  this, &TaggingUtils::countTracks2011);
+  m_countTracks.registerPersonality("2012",
+	  this, &TaggingUtils::countTracks2012);
+  m_isinTree.registerPersonality("2011",
+	  this, &TaggingUtils::isinTree2011);
+  m_isinTree.registerPersonality("2012",
+	  this, &TaggingUtils::isinTree2012);
+
+  // select personality
+  // (this throws an exception if the personality chosen by the user is not
+  // known)
+  try {
+      m_countTracks.setPersonality(m_personality);
+      m_isinTree.setPersonality(m_personality);
+  } catch (const std::exception& e) {
+      error() << "Caught exception while setting personality: " << e.what() <<
+	  endmsg;
+      return StatusCode::FAILURE;
+  };
 
   return sc;
 }
@@ -127,7 +150,31 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
   return lastsc;
 }
 //=========================================================================
-int TaggingUtils::countTracks( const Particle::ConstVector& vtags ) {
+int TaggingUtils::countTracks( const LHCb::Particle::ConstVector& vtags )
+{ return m_countTracks(vtags); }
+//=========================================================================
+int TaggingUtils::countTracks2011( const LHCb::Particle::ConstVector& vtags ) {
+
+  int nr = 0;
+
+  //nr = vtags.size();
+
+  Particle::ConstVector::const_iterator ipart, jpart;
+  for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
+    bool duplic=false;
+    for( jpart = ipart+1; jpart != vtags.end(); jpart++ ) {
+      if((*jpart)->proto()==(*ipart)->proto()) { 
+        duplic=true; 
+        break; 
+      }
+    }
+    if(!duplic) ++nr;
+  }
+
+  return nr;
+}
+//=========================================================================
+int TaggingUtils::countTracks2012( const LHCb::Particle::ConstVector& vtags ) {
 
   int nr = 0;
 
@@ -151,14 +198,50 @@ int TaggingUtils::countTracks( const Particle::ConstVector& vtags ) {
   return nr;
 }
 //============================================================================
-bool TaggingUtils::isinTree(const Particle* axp,
-                            Particle::ConstVector& sons,
+bool TaggingUtils::isinTree(const LHCb::Particle* axp,
+                            const LHCb::Particle::ConstVector& sons,
+                            double& dist_phi)
+{
+    return m_isinTree(axp, sons, *(&dist_phi));
+}
+//============================================================================
+bool TaggingUtils::isinTree2011(const LHCb::Particle* axp, 
+			    const LHCb::Particle::ConstVector& sons, 
+                            double& dist_phi){
+  double p_axp  = axp->p();
+  double pt_axp = axp->pt();
+  double phi_axp= axp->momentum().phi();
+  dist_phi=1000.;
+
+  for( Particle::ConstVector::const_iterator ip = sons.begin(); 
+       ip != sons.end(); ip++ ){
+
+    double dphi = fabs(TaggingHelpers::dphi(phi_axp,(*ip)->momentum().phi()));
+    dist_phi= std::min(dist_phi, dphi);
+    
+    if( (    fabs(p_axp -(*ip)->p()) < 0.1 
+             && fabs(pt_axp-(*ip)->pt())< 0.01 
+             && dphi < 0.1 )
+        || axp->proto()==(*ip)->proto() ) {
+      if (msgLevel(MSG::VERBOSE)) 
+        verbose() << " isinTree part: " << axp->particleID().pid() 
+                  << " with p="<<p_axp/Gaudi::Units::GeV 
+                  << " pt="<<pt_axp/Gaudi::Units::GeV 
+                  << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto()<<endreq;
+      return true;
+    }
+  }
+  return false;
+}
+//============================================================================
+bool TaggingUtils::isinTree2012(const LHCb::Particle* axp,
+                            const LHCb::Particle::ConstVector& sons,
                             double& dist_phi)
 {
 
   dist_phi = std::numeric_limits<double>::max();
 
-  for ( Particle::ConstVector::iterator ip = sons.begin();
+  for ( Particle::ConstVector::const_iterator ip = sons.begin();
         ip != sons.end(); ++ip )
   {
     using TaggingHelpers::SameTrackStatus;
@@ -185,3 +268,5 @@ bool TaggingUtils::isinTree(const Particle* axp,
 }
 
 //====================================================================
+StatusCode TaggingUtils::finalize() { return GaudiTool::finalize(); }
+

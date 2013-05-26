@@ -25,6 +25,9 @@
 //
 #include <Kernel/IDVAlgorithm.h>
 #include <Kernel/GetIDVAlgorithm.h>
+
+#include "MultiplePersonalityCall.h"
+
 class DaVinciAlgorithm;
 
 /** @class BTaggingTool BTaggingTool.h
@@ -49,6 +52,7 @@ public:
   virtual ~BTaggingTool( ); ///< Destructor
 
   StatusCode initialize();    ///<  initialization
+  StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
   StatusCode tag( LHCb::FlavourTag& theTag, const LHCb::Particle* );
@@ -64,12 +68,27 @@ private:
 
   const LHCb::RecVertex::ConstVector
   choosePrimary(const LHCb::Particle* AXB,
-                const LHCb::RecVertex::Range& verts,
-                const LHCb::RecVertex*& RecVert,
-                LHCb::RecVertex& RefitRecVert);
+	  const LHCb::RecVertex::Range& verts,
+	  const LHCb::RecVertex*& RecVert,
+	  LHCb::RecVertex& RefitRecVert);
+
+  MultiplePersonalityCall<boost::function<
+      const LHCb::Particle::ConstVector(
+	      const LHCb::Particle* /* AXB */,
+	      const LHCb::Particle::Range& /* parts */,
+	      const LHCb::RecVertex::ConstVector& /* PileUpVtx*/) > >
+      m_chooseCandidates;
 
   const LHCb::Particle::ConstVector
   chooseCandidates(const LHCb::Particle* AXB,
+                   const LHCb::Particle::Range& parts,
+                   const LHCb::RecVertex::ConstVector& PileUpVtx);
+  const LHCb::Particle::ConstVector
+  chooseCandidates2012(const LHCb::Particle* AXB,
+                   const LHCb::Particle::Range& parts,
+                   const LHCb::RecVertex::ConstVector& PileUpVtx);
+  const LHCb::Particle::ConstVector
+  chooseCandidates2011(const LHCb::Particle* AXB,
                    const LHCb::Particle::Range& parts,
                    const LHCb::RecVertex::ConstVector& PileUpVtx);
 
@@ -99,6 +118,7 @@ private:
   bool m_EnableJetSame;
 
   bool m_UseVtxOnlyWithoutOS, m_UseReFitPV;
+  std::string m_personality;
 
 };
 
