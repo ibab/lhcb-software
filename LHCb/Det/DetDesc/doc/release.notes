@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+! 2013-05-26 - Marco Cattaneo
+ - Fix trivial gcc48 warnings
+
 !========================= DetDesc v18r32 2013-04-29 =========================
 ! 2013-04-02 - Marco Cattaneo
  - Fix trivial coverity UNREACHABLE defect

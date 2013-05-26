@@ -480,7 +480,7 @@ unsigned int LVolume::intersectLine
   const double              Threshold     ) const 
 {
   // avoid long names 
-  typedef std::vector<ILVolume::Interval>    Intervals; 
+  //  typedef std::vector<ILVolume::Interval>    Intervals; 
   using namespace VolumeIntersectionIntervals ;
   // clear the container 
   intersections.clear();
@@ -555,7 +555,7 @@ unsigned int LVolume::intersectLine
   ISolid::Tick TickMin = tickMin ;
   ISolid::Tick TickMax = tickMax ;  
   // avoid long names 
-  typedef std::vector<ILVolume::Interval>    Intervals;
+  //  typedef std::vector<ILVolume::Interval>    Intervals;
   using namespace VolumeIntersectionIntervals;
   // clear the output container 
   intersections.clear();

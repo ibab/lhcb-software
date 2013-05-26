@@ -132,8 +132,8 @@ namespace SolidTicks
     const SOLID       & solid )
   {
     //     useful local typedefs 
-    typedef ISolid::Tick            Tick     ; 
-    typedef ISolid::Ticks::iterator iterator ;
+    //    typedef ISolid::Tick            Tick     ; 
+    //    typedef ISolid::Ticks::iterator iterator ;
     // (1) sort container  
     std::sort( ticks.begin() , ticks.end() ) ; 
     // (2) eliminate duplicates and (3) shrink container 
@@ -260,16 +260,16 @@ namespace SolidTicks
   unsigned int adjustToTickRange( TickContainer& ticks, const ISolid::Tick & tickMin, const ISolid::Tick & tickMax ) 
   {
     // useful local typedefs 
-    typedef ISolid::Tick            Tick     ; 
-    typedef ISolid::Ticks::iterator iterator ;
+    //    typedef ISolid::Tick            Tick     ; 
+    //    typedef ISolid::Ticks::iterator iterator ;
     if( !ticks.empty() ) {
       static ISolid::Ticks validticks ; validticks.clear() ;
       // explicitely use that ticks come in pairs
       for( typename TickContainer::const_iterator it = ticks.begin() ; it+1 < ticks.end(); it +=2) 
-	if( *it <= tickMax && *(it+1) >= tickMin ) {
-	  validticks.push_back( std::max( tickMin, *it) ) ;
-	  validticks.push_back( std::min( tickMax, *(it+1)) ) ;
-	}
+        if( *it <= tickMax && *(it+1) >= tickMin ) {
+          validticks.push_back( std::max( tickMin, *it) ) ;
+          validticks.push_back( std::min( tickMax, *(it+1)) ) ;
+        }
       ticks.swap(validticks) ;
     }
     return ticks.size () ;
