@@ -614,6 +614,25 @@ ROOT.TAxis . __contains__ = lambda s , i : 1 <= i <= s.GetNbins()
 
 
 # =============================================================================
+## number of "empty" bins
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-05-20
+def _num_empty_ ( h ) :
+    """
+    Check number of empty bins :
+
+    >>> h = ...
+    >>> e = h.numEmpty()
+    """
+    ne  = 0 
+    for i in h.iteritems() : 
+        v = i[-1]
+        if 0 == v.value() and 0 == v.cov2 () : ne +=1
+    return ne 
+
+ROOT.TH1 . numEmpty = _num_empty_
+
+# =============================================================================
 ## find bin in 1D-histogram
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
@@ -3199,7 +3218,7 @@ def hToGraph ( h1                   ,
     #
     ## book graph
     #
-    graph = ROOT.TGraphErrors( len( h1 )  )
+    graph = ROOT.TGraphErrors( len ( h1 )  - 2 )
     
     #
     ## copy attributes
@@ -3413,7 +3432,7 @@ def hToGraph_ ( h1 , funcx , funcy ) :
     #
     ## book graph
     #
-    graph = ROOT.TGraphAsymmErrors( len( h1 )  )
+    graph = ROOT.TGraphAsymmErrors( len ( h1 )  - 2 )
     
     #
     ## copy attributes
@@ -3543,6 +3562,115 @@ def axis_bins ( bins         ) :
         ) 
 
 # =============================================================================
+## prepare "slice" for the axis
+#  @code 
+#    >>> axis  = ...
+#    >>> naxis = axis[2:10] ## keep only bins from 2nd (inclusive) till 10 (exclusive)
+#  @endcode     
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-05-20
+def _axis_getslice_ ( self , i , j ) :
+    """
+    Make a ``slice'' for the axis:
+
+    >>> axis  = ...
+    >>> naxis = axis[2:10] ## keep only bins from 2nd (inclusive) till 10 (exclusive)
+    
+    """
+    nb = self.GetNbins()
+    
+    while i < 1 : i += nb
+    while j < 1 : j += nb
+    
+    i = min ( nb , i )
+    j = min ( nb , j )
+    
+    if i >= j : raise IndexError 
+    
+    edges = self.edges()
+    
+    return axis_bins ( edges [i-1:j] ) 
+
+
+ROOT.TAxis. __getslice__ = _axis_getslice_
+
+# =============================================================================
+## get "slice" for 1D histogram
+#  @code     
+#    >>> h1 = ...
+#    >>> nh = h1[2:10] ## keep only bins from 2nd (inclusive) till 10 (exclusive)
+#  @endcode     
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-05-20 
+def _h1_getslice_ ( h1 , i , j ) :
+    """
+    Get the ``slice'' for 1D-histogram:
+    
+    >>> h1 = ...
+    >>> nh = h1[2:10] ## keep only bins from 2nd (inclusive) till 10 (exclusive)
+    
+    """
+    axis = h1  .GetXaxis()
+    nb   = axis.GetNbins()
+    
+    while i < 0 : i += nb
+    while j < 0 : j += nb
+    
+    i = max ( 1 , min ( nb + 1 , i ) ) 
+    j = max ( 1 , min ( nb + 1 , j ) ) 
+
+    if i >= j :
+        raise IndexError 
+    
+    edges = axis.edges ()
+    edges = edges [i-1:j]
+    
+    from numpy import array
+     
+    typ = h1.__class__ 
+    result = typ ( hID  ()       ,
+                   h1.GetTitle() ,
+                   len ( edges ) - 1 , array ( edges , dtype='d' ) )
+    
+    result.Sumw2()
+    result += h1
+    
+    return result 
+
+ROOT.TH1F  . __getslice__  =   _h1_getslice_ 
+ROOT.TH1D  . __getslice__  =   _h1_getslice_ 
+
+# =============================================================================
+## make 1D-histogram from axis
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2011-06-07
+def h1_axis ( axis           ,
+              title  = '1D'  , 
+              name   = None  ,
+              double = False ) :
+    """
+    Make 1D-histogram with binning defined by already created axes
+    
+    >>> axis = ...
+    >>> h1 = h1_axes ( axis , title = 'MyHisto' ) 
+    
+    """
+    #
+    if not name : name = hID()
+    #
+    if not issubclass ( type ( axis ) , ROOT.TAxis ) : axis = axis_bins   ( axis )
+    # 
+    bins  = axis.edges()
+    #
+    from numpy import array
+    #
+    typ = ROOT.TH1D if double else ROOT.TH1F
+    return typ ( name  ,
+                 title ,
+                 len ( bins ) - 1 , array ( bins , dtype='d' ) ) 
+
+
+# =============================================================================
 ## make 2D-histogram from axes
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
@@ -3576,36 +3704,6 @@ def h2_axes ( x_axis            ,
                  title ,
                  len ( x_bins ) - 1 , array ( x_bins , dtype='d' ) ,
                  len ( y_bins ) - 1 , array ( y_bins , dtype='d' ) ) 
-
-
-# =============================================================================
-## make 1D-histogram from axis
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2011-06-07
-def h1_axis ( axis           ,
-              title  = '1D'  , 
-              name   = None  ,
-              double = False ) :
-    """
-    Make 1D-histogram with binning deifned by already created axes
-    
-    >>> axis = ...
-    >>> h1 = h1_axes ( axis , title = 'MyHisto' ) 
-    
-    """
-    #
-    if not name : name = hID()
-    #
-    if not issubclass ( type ( axis ) , ROOT.TAxis ) : axis = axis_bins   ( axis )
-    # 
-    bins  = axis.edges()
-    #
-    from numpy import array
-    #
-    typ = ROOT.TH1D if double else ROOT.TH1F
-    return typ ( name  ,
-                 title ,
-                 len ( bins ) - 1 , array ( bins , dtype='d' ) ) 
 
 # =============================================================================
 ## helper class to wrap 1D-histogram as function 

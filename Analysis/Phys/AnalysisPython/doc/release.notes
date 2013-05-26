@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-05-26 - Vanya Belyaev
+ - add the slicing for exes and histos 
+
 ! 2013-05-17 - Chris Jones
  - Remove unused methods from HStats.cpp to fix clang 3.2 warning
 
