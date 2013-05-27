@@ -1,0 +1,26 @@
+//
+// L0MuonAlg options
+//
+// XML data file to configure the simulation
+//L0Muon.ConfigFile      = "$PARAMFILESROOT/data/L0MuonKernel.xml";
+//L0Muon.Extension       = "";
+//L0Muon.WriteOnTES      = false;
+//L0Muon.WriteL0ProcData = true;
+//L0Muon.WriteRawBanks   = false;
+//L0Muon.InputSource     = 0;
+//L0Muon.Version = 0;
+//L0Muon.OutputMode  = 0;
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+//L0Muon.OutputLevel=  3;
+//L0Muon.DebugMode  = false;
+//L0Muon.OutputTool.OutputLevel=  2;
+
+// Overwrite default FOI: should be relaxed for optimization:
+//L0Muon.FoiXSize = {4,5,0,2,4};
+//L0Muon.FoiYSize = {0,0,0,1,1};
+//===========================================
+//For trigger studies: 
+//candidate search without M1
+//L0Muon.IgnoreM1 =false;
+//===========================================

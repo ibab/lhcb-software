@@ -1,0 +1,490 @@
+!-----------------------------------------------------------------------------
+!Package L0Muon
+!Package manager: A.Tsaregorodtsev - Julien Cogan
+!-----------------------------------------------------------------------------
+
+!========================= L0Muon v9r12 2013-02-14 =========================
+! 2013-02-05 - Julien Cogan
+ - L0MuonOutputs : fix bug discovered by Coverity (was affecting debug print 
+   out only)  
+
+! 2013-02-05 - Marco Cattaneo
+ - Fix gcc -pedantic warning and UNINIT_CTOR defect in previous commit
+
+! 2013-01-22 - Julien Cogan
+ - L0MuonModifyInputTool : new tool to allow removal of some hits used in the 
+   L0Muon emulation for special studies (interface is IL0MuonModifyInputTool
+   in L0/L0Interfaces)
+ - L0MuonAlg : modified to use this tool if the new property ModifyDigits
+   is set to True (False by default)
+  
+!========================= L0Muon v9r11 2012-11-28 =========================
+! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+
+! 2012-10-22 - Marco Cattaneo
+ - Fix coverity defects
+ - Fix gcc -pedantic warnings
+ - Use getIfExists where appropriate
+ - Replace endreq by endmsg
+
+!========================= L0Muon v9r10 2012-05-02 =========================
+! 2012-05-02 - Julien Cogan
+ - L0MuonAlg (fix) : delete pointer to LUT in finalize
+
+! 2012-04-24 - Julien Cogan
+ - Allow to use LUT in emulator for pt computation
+ - Add a new tool to recompute L0Muon candidate pt using LUT
+
+!========================= L0Muon v9r9 2012-03-26 =========================
+! 2012-02-29 - Julien Cogan
+ - Fix bug in L0MuonOutput.cpp : typo in loop over PU when 
+
+!========================= L0Muon v9r8 2011-12-14 =========================
+! 2011-12-09 - Marco Cattaneo
+ - Add explicit Boost_linkopts for compatibility with Gaudi v23
+
+! 2011-12-07 - Marco Clemencic
+ - Fixed compilation with Boost 1.48 (filesystem V3) (for Gaudi v23)
+ - Enabled backward compatibility with Boost 1.44 (i.e. Gaudi v22r5)
+
+! 2011-11-17 - Julien Cogan
+ - L0MuonCandidatesFromRaw, L0MuonOutputs : fix output location for TAE
+
+! 2011-11-14 - Julien Cogan
+ - L0MuonCandidatesFromRaw : add possibility to use rootIInTES using recently
+ added flag in L0FromRawBase (m_useRootInTES)
+ - L0MuonCandidatesFromRaw : add possibility to instanciante several instance
+ of the L0Muon decoding without rebuilding the RegisterFactory
+
+! 2011-11-08 - Julien Cogan
+ - L0MuonCandidatesFromRaw : configure the raw event location using the
+ new property defined in L0/L0Base/L0FromRaw. Protect against rootintes when
+ accessing this location. Write bank read status only if the raw event is in
+ the default location.
+
+!========================= L0Muon v9r7 2011-11-08 =========================
+! 2011-09-28 - Julien Cogan
+ - L0MuonCandidatesFromRaw, make the raw event steerable in location
+
+!========================= L0Muon v9r6 2011-08-31 =========================
+! 2011-08-25 - Rob Lambert
+ - L0MuonOutputs, make the raw event steerable in location
+
+!========================= L0Muon v9r5 2011-06-15 =========================
+! 2011-05-27 - Julien Cogan
+ - L0MuonFromRawTrans : fix the fix (more variables creation in the constructor)
+
+! 2011-05-26 - Julien Cogan
+ - L0MuonAlg.cpp : fix sprintf statements to please Coverity
+ - L0MuonFromRawTrans : fix (?) bug found by coverity (use too much stack space)
+
+! 2011-05-25 - Julien Cogan
+ - L0MuonOutput : Fix an other bug found by Coverity (affecting only debug
+   output)
+
+! 2011-05-25 - Julien Cogan
+ - L0MuonOutput : Try to fix "bugs" found by Coverity (local variable exceed
+   allowed stack space). Faulty variables are now using pointers so that the used
+   memory is taken from the heap.
+
+!========================= L0Muon v9r4 2011-04-27 =========================
+! 2011-04-19 - Julien Cogan
+ - fix "bugs" found by Coverity (variables were initialised in the initialize methode)
+	  - L0MuonAlg.cpp : initialize m_totEvent,m_totBx,m_itck in constructor
+    - L0MuonCandidatesFromRaw.cpp : initialize m_totEvent,m_totBx,m_errorEvent,
+			m_enableTAE,m_procVersion in constructor
+    - L0MuonFromRawTrans.cpp : initialize m_version,m_l0EventNumber,m_l0_B_Id
+      in constructor
+
+!========================= L0Muon v9r3 2011-04-05 =========================
+! 2011-04-04 - Julien Cogan
+ - fix bug occuring when the L0Muon condition is not present (e.g. MC09
+  configuration) -> do not return an error if the runUpdate fails.
+
+! 2011-03-23 - Julien Cogan
+ - L0Muon emulator (L0MuonAlg) : FOI are taken from the TCK (using L0DUConfig).
+   The TCK
+   - can be specified via the property TCK (default behaviour), or
+   - can be picked up from the data (if UseTCKFromData is set to True).
+  This is now the only way to set up the FOI which means that it is mandatory
+  to import the TCK configuration file (importOptions("$L0TCK/L0DUConfig.opts"))
+  when using the L0Muon emulator. L0Conf configurable in L0/L0DU is modified
+  to account for this change.
+  - L0MuonAlg : fix a bug which prevented running the emulator from the l0muon
+  data when relying on the data on demand service to perfom the L0Muon decoding.
+
+!========================= L0Muon v9r2 2010-10-25 =========================
+
+! 2010-10-01 - Julien Cogan
+ - L0MuonCandidatesFromRaw : better use of rootInTes to allow to decode banks
+   saved in MicroDSTs
+
+!========================= L0Muon v9r1p1 2010-06-21 ==========================
+! 2010-06-16 - Julien Cogan
+ - Fix windows compilation warnings
+
+!========================= L0Muon v9r1 2010-03-18 ==========================
+! 2010-03-12 - Julien Cogan
+ - Change in CondDB (L0MuonAlg), use new condition (SoftFOI)
+
+! 2010-03-09 - Julien Cogan
+ - Add implementation of L0MuonOverflowTool
+
+! 2010-03-08 - Julien Cogan
+ - Add implementation of L0MuonOLErrorTool and L0MuonInputTool
+
+! 2010-03-04 - Julien Cogan
+ - Adapt to change in CondDB (L0MuonAlg)
+ - Better handling of TAE event (L0MuonCandidatesFromRaw & L0MuonAlg)
+
+! 2010-03-02 - Julien Cogan
+ - L0MuonOutputs : add protection against wrong magic pattern in RAW banks.
+
+!========================= L0Muon v9r0 2010-02-15 ==========================
+! 2010-02-09 - Julien Cogan
+ - fix bug when filling L0MuonError for L0MuonCtrlCand Bank
+
+! 2010-02-08 - Julien Cogan
+ - Fix compilation warning on Windows (L0MuonOutputs, L0MuonFromRawTrans)
+ - L0MuonAlg :
+    - set proper protection against missing condition in CondDB
+    - define CondDB conditions and parameters names as algorithm properties
+
+! 2010-02-05 - Julien Cogan
+ - set IgnoreCondDB to true not to use condb until the conditions are really
+   there
+
+! 2010-02-04 - Julien Cogan
+ - Trigger parameters and CondDB :
+    - access the FOI values and the procVersion from CondDB
+    - new property : IgnoreCondDB to disable the previous feature if needed
+      (set to false by default)
+    - remove useless IgnoreM2 property
+    - set new default for procVersion = 3
+ - Clean up :
+    - remove calls to ChronoStatSvc (L0MuonAlg + L0MuonCandidatesFromRaw)
+    - split the fillOlsFromDigits method into parts:
+       - get the hits from the relevants location
+       - fill the ol registers
+    - L0MuonOutputTool : use locations defined in L0Event for BCSU candidates
+    - L0MuonOutputTool : remove the check using exists<>(location) to avoid
+      conflict with the data on demand svc.
+
+!========================= L0Muon v8r6 2010-01-21 ==========================
+! 2010-01-21 - Julien Cogan
+ - requirements: use new base package L0/L0Base
+ - L0MuonAlg, L0MuonCandidatesFromRaw : use new structure (common
+   options amongst all L0 packages, defined in L0Base)
+
+!========================= L0Muon v8r5p3 2009-11-24 ========================
+! 2009-11-24 - Julien Cogan
+ - Fix to decode bank v3
+
+!========================= L0Muon v8r5p2 2009-10-20 ========================
+! 2009-09-13 - Chris Jones
+ - Remove calls to ChronoStatSvc in execute
+
+!========================= L0Muon v8r5p1 2009-07-28 ========================
+! 2009-07-28 - Marco Cattaneo
+ - Remove obsolete file L0Muon_dll.cpp
+
+! 2009-07-15 - Gerhard Raven
+ - avoid pushing hardwired filenames into JobOptionsSvc by expanding
+   environment variables 'late'
+
+!========================= L0Muon v8r5 2009-02-20 ==========================
+! 2009-02-20 - Julien Cogan
+ - Fix untested status codes
+
+! 2009-02-18 - Julien Cogan
+ - Possibiliy to disable the decoding of TAE event (DisableTAE property)
+
+! 2009-02-09 - Julien Cogan
+ - L0MuonCandidatesFromRaw: fix a bug introduce in the last change. Avoid
+   to consider the /PrevPrev tree.
+
+! 2009-02-03 - Julien Cogan
+ - L0MuonCandidatesFromRaw: modify the way the TAE are handled in the
+   decoding. do not use anymore the exist method to check for raw data since
+   it creates the Prev_i Next_i leaves when data on demand is activated.
+   Instead, check the Event tree by hand.
+
+! 2009-01-30 - Julien Cogan
+ - Fix a bug in the filling of the L0MuonCandidates (pt sign was missing)
+ - Modify the default mode for writing bank (standard instead of light)
+
+!========================= L0Muon v8r4 2009-01-12 ==========================
+! 2008-12-15 - Marco Cattaneo
+ - Fix gcc 4.3 warning, clean up some includes
+
+! 2008-12-11 - Julien Cogan
+ - Implement the possibility to run the emulator from the muon non-zero
+   suppressed bank
+
+!========================= L0Muon v8r3 2008-11-21 ==========================
+! 2008-11-13 - Julien Cogan
+ - Minor fix to handle case where the L0Muon bank is not there
+
+! 2008-11-11 - Marco Cattaneo
+ - Trivial fix for untested StatusCode
+
+! 2008-11-04 - Julien Cogan
+ - Remove pt encdong paramter from algorihtm properties
+ - Add possibily to emulate TAE events
+
+!========================= L0Muon v8r2p1 2008-10-01 ========================
+! 2008-09-21 - Julien Cogan
+ - minor clean up
+
+! 2008-09-15 - Julien Cogan
+ - Add printout protection.
+
+!========================= L0Muon v8r2 2008-09-04 ========================
+! 2008-09-04 - Julien Cogan
+ - Change in L0MuonFromRawTrans :
+     + use a third instance of RegisterFactory
+     + use by default the config file in PARAMFILES
+
+!========================= L0Muon v8r1 2008-07-29 ========================
+! 2008-07-23 - Julien Cogan
+ - Protect against not valid MuonTileID when filling the OL in L0MuonAlg.
+ - Remove the Extension property from L0MuonAlg and L0MuonCandidatesFromRaw.
+   Replaced by the Context property in the L0MuonOutput tool.
+ - Check for L0MuonError bank - fill the RawBankReadOutStatus if error bank
+   found
+
+! 2008-07-21 - Julien Cogan
+ - minor bug fix (error message in L0MuonOutput)
+
+!========================= L0Muon v8r0 2008-07-17 ========================
+! 2008-07-16 - Julien Cogan
+ - Bug fixes
+ - Protect raw bank writing for encoding errors
+
+! 2008-07-15 - Julien Cogan
+ - Possibility to ask for compression of banks
+ - Clean the managment of the ouput mode
+ - Merge procVersion & bankVersion into a single tag : version
+
+! 2008-07-11 - Julien Cogan
+ - Decoding of bank version 2 : tested (without RLE compression)
+ - Use of L0MuonError (introduced in Event/L0Event)
+
+! 2008-06-18 - Julien Cogan
+ - bug fixes and updates
+
+! 2008-06-05 - Julien Cogan
+ - Decoding of bank version 2 !! NOT TESTED !!
+ - Possibility to run without M1 or M2
+
+!========================= L0Muon v7r8p1 2008-05-13 ======================
+! 2008-05-13 - Julien Cogan
+ - Add check for untested status codes in L0MuonAlg.
+
+!========================= L0Muon v7r8 2008-04-15 ========================
+! 2008-04-14 - Julien Cogan
+ - Remove undesirable print out in L0MuonAlg
+ - Protect more debug with if(msgLevel(MSG::DEBUG) in L0MuonAlg
+ - Add contact name in L0MuonAlg.h and L0MuonCandidatesFromRaw.h
+
+! 2008-04-08 - Julien Cogan
+ - L0MuonAlg : Allow to run from  data coming from several time bunch
+   crossing (TAE mode)
+ - L0MuonFromRawTrans :Upgrade and minor bug fix
+
+! 2008-03-07 Julien Cogan
+ - Update decoding and monitoring of L0Muon data in transparent mode
+
+!========================= L0Muon v7r7 2008-02-19 ========================
+! 2008-02-08 Julien Cogan
+ - L0MuonFromRawTrans : new algorithm to decode the data with the format
+   used at the pit during commissionning.
+ - L0MuonMonitor : new algorithm to make histograms from L0Muon data
+   stored in the TES.
+
+!========================= L0Muon v7r6 2008-01-17 ========================
+! 2008-01-17 - Gerhard Raven
+ - add some if(msgLevel(MSG::DEBUG) around debug() statements in L0MuonAlg
+
+! 2008-01-04 - Julien Cogan
+ - Prevent L0MuonCandidatesFromRaw from writing of empty containers in the
+   TES. This is done in order to gain time for the HLT.
+
+!========================= L0Muon v7r5 2007-11-01 ========================
+! 2007-10-31 - Patrick Koppenburg
+ - increment to v7r5
+
+! 2007-10-31 - Olivier Deschamps
+ - adapt to change in L0DUBase.h
+
+!========================= L0Muon v7r4 2007-10-09 ========================
+! 2007-10-09 - Julien Cogan
+ - Add job options to allow more flexible steering of the algorithms
+
+!========================= L0Muon v7r3 2007-09-06 ========================
+! 2007-09-06 - Julien Cogan
+ - Add the possiblity to start the L0Muon emulator with L0Muon data in
+   input
+
+!========================= L0Muon v7r2 2007-08-27 ========================
+! 2007-08-27 - Julien Cogan
+ - Major change to handle different processor versions and bank versions
+  o remove the L0MuonProcessorDatasFromRaw (processor data are produced
+    by L0MuonAlg)
+  o add the L0MuonOutput tool to write/decode L0Muon banks
+
+!========================= L0Muon v7r1 2007-04-25 ========================
+! 2007-04-25 - Marco Cattaneo
+ - Remove obsolete file L0Muon_load.cpp
+
+! 2007-04-25 - Julien Cogan
+ - Bug fix in L0MuonCandidateFromRaw; correct the size of the loop over
+   the bank data.
+
+!========================= L0Muon v7r0 2006-10-20 ========================
+! 2006-10-20 - Marco Cattaneo
+ - Use DECLARE_xxx_FACTORY macros, remove unnecessary MsgStream
+
+! 2006-10-20 - Julien Cogan
+ - Add the files from L0MuonTrigger. This package is becoming the new
+   package to run the L0Muon simulation.
+
+! 2006-10-20 - Julien Cogan
+ - Remove everything in order to replace the content of this package
+   (which is now obsolete) with the content of the package L0MuonTrigger
+   (which contains the latest version of the simulation for the L0Muon)
+
+!========================= L0Muon v6r7 2004-01-06 ========================
+! 2004-01-06 - Marco Cattaneo
+ - Move to Gaudi v14 (use MuonEvent v3r* and L0Event v13r* in requirements)
+ - Rename Brunel.opts to Boole.opts, and adapt for Boole
+
+!========================= L0Muon v6r6 2003-12-10 ========================
+! 2003-12-10 - Marco Cattaneo
+ - Fix for Gaudi v13
+
+!======================== L0Muon v6r5p1 2003-06-23 ========================
+! 2003-06-23 - A.Tsaregorodtsev
+ - Fixes for gcc 3.2
+
+!========================= L0Muon v6r5 2003-04-08 =========================
+! 2003-04-08 - O. Leroy
+ - M3 seed cleaning no longer done in the y direction. It is done only in the
+	 x direction. On the 3863 useful Bs->Jpsi phi events offline selected by
+   Gerhard Raven, this "new" cleaning increases the signal efficiency from
+	 96.9% to 98.2%. Killing adjacent hits in the y-direction was killing too
+   much good events in the past.
+
+!========================= L0Muon v6r4 2003-01-30 =========================
+! 2003-01-28 - A.Tsaregorodtsev
+  - Changed logic for treating the PU overflow conditions: now
+    PU always returns 2 randomly chosen candidates if there are
+    more than 2 candidates found; No more the whole quarter of the
+    processor is empty in this case;
+  - M3 seeds cleaning is done by default as supposed to be in hardware;
+  - Default FoIs are set to reasonable values for the 125 KHz L0Muon
+    bandwidth (O.Leroy)
+
+!======================== L0Muon v6r3 2002-12-06 ======================
+! 2002-11-15 - Florence Ranjard
+ - requirements - use LHCB v11r4
+
+!========================= L0Muon v6r2 2002-11-06 =========================
+! 2002-11-06 - A.Tsaregorodtsev
+  - Added working mode for dealing with 4 Muon stations configuration
+    (dbase v249r1)
+
+! 2002-11-04 - A.Tsaregorodtsev
+  - added getTowers() public method to L0mTrigger to get Towers in
+    the L0mAnalysis context;
+  - slight change in the  L0mTrigger sequence of operations (clean-up
+    in the beginning of the processing ).
+
+!========================= L0Muon v6r1 2002-10-04 =========================
+! 2002-09-24 - Marco Cattaneo
+ - Use MuonTools v3r*
+
+! 2002-06-23 - A.Tsaregorodtsev
+ - Allow input from MuonDigits or from MuonCoords controlled
+   by a job option InputFromMuonCoords (bool);
+ - Additional mode "ignore M1" switched on by a job option IgnoreM1(bool);
+ - Additional mode suppressing seed clusters switched on by a
+   job option SeedClustering(bool).
+
+!========================= L0Muon v6r0 2002-07-09 ====================
+! 2002-06-28 - A.Tsaregorodtsev
+ - Fix to L0mTrigger to be compatible with new digitization
+
+! 2002-06-10 - Marco Cattaneo
+ - Change version to v6r0 to use EventKernel v2r*
+
+!========================= L0Muon v5r0 2002-05-07 =====================
+! 20020507 - Marco Cattaneo
+  - L0mCrate.h: add include <cmath>, for Windows
+  - requirements: fix for Windows
+
+! 20020506 - Andrei Tsaregorodtsev
+  Major modifications of the Muon trigger code to adapt to the
+  new Event model and to use new MuonDigits based on MuonTileID:
+  - MuonTile and MuonLayout classes are moved to Muon/MuonKernel package;
+  - L0MuonCandidate is moved to Event/L0Event package;
+  - Single L0mTrigger algorithm left, essentially what was L0mTriggerProcD
+    algorithm in the past;
+  - Removed all the files used to build L0mPads from the output of the old
+    MuonSicbCnv.
+
+!====================================v4========================================
+! 20020108 - L0Muon v4r0 Marco Cattaneo
+  Changes for Gaudi v9:
+  requirements       - use DetDesc v9r*, LHCbEvent v12r*
+  MuonLogicalPad.cpp - adapt to changes in MuonDigit accessors
+  MuonPadLayout.cpp  - adapt to changes in MuonDigit accessors
+                       add fix for Windows compilation
+!====================================v3r1======================================
+! 20010726 - L0Muon v3r1 Marco Cattaneo
+
+  Fixes for Windows:
+  - Add include files for static declaration of CLIDs
+  - Add missing factory declarations
+
+!====================================v3========================================
+! 12/07/2001 - Olivier Callot
+  - Change the version in the requirements to adapt to the new Gaudi/LHCb
+    release
+
+! 20010606 L0Muon v2r1 A.T.
+
+  - Added "Limited Y" search in stations M4 and M5;
+  - All the Processing Units are configured once at the initialisation step;
+  - Fixed bug in the CreateTower procedure for the cases of crossing the
+    boundary between regions;
+  - All the numbering for quarters/regions/indices starts from 0.
+  - many minor code improvements.
+
+!==============================================================================
+! 20010606 L0Muon v2 A.T.
+
+  Major revision of all the code. A detailed ( including crates
+  and processing units ) version of the trigger processor is
+  included.
+  The library is subdivided into component and static parts.
+
+! 20010503 L0Muon v1r1 A.T.
+
+  Same functionality.
+  Revision of the code to bring it to conformance with conventions.
+  Extra checks of container pointers validity. Reimplementation of
+  several methods to optimize efficiency:
+
+    MuonLayout.tiles(), L0mTriggerProc.createTower()
+
+! 20010418 M.Cattaneo
+  requirements - replace {} with () in macro to please nmake,
+                 use LHCbEvent v10*
+
+! 20010406 L0Muon v1
+
+  Initial version of the L0Muon - L0 Muon trigger simulation.
+  The package builds L0MuonCandidate objects as the output.

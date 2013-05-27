@@ -1,0 +1,32 @@
+package           L0Muon
+version           v9r12
+
+# ================ structure =============================================
+branches cmt src options doc
+include_path none
+
+# ================ used packages =========================================
+use L0Base          v*   L0
+use L0MuonKernel    v*   L0
+use ProcessorKernel v*   L0
+use L0Interfaces    v*   L0
+use MuonKernel      v*   Muon
+use DetDesc         v*   Det
+use L0Event         v*   Event
+use DAQEvent        v*   Event
+use DigiEvent       v*   Event
+use MuonDAQ         v*   Muon
+use Boost           v*   LCG_Interfaces
+use ParamFiles      v*   -no_auto_imports
+
+macro_append Boost_linkopts " $(Boost_linkopts_system) $(Boost_linkopts_filesystem) "
+
+# ================ component library =====================================
+library L0Muon ../src/component/*.cpp
+
+apply_pattern component_library library=L0Muon
+
+private
+# Work around to be able to compile with Gaudi v22r5
+macro_append pp_cppflags " -DBOOST_FILESYSTEM_VERSION=3 "
+end_private
