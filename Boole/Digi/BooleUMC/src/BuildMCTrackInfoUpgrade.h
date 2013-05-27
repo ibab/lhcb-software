@@ -88,7 +88,6 @@ private:
   DeVL*         m_vlDet;
   DeVP*         m_vpDet;
 
-  DeSTDetector* m_utDet;
   DeSTDetector* m_ttDet;
   DeSTDetector* m_itDet;
   DeOTDetector* m_otDet;

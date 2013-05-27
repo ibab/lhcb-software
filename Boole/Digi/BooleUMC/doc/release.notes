@@ -4,6 +4,10 @@
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
 
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warning
+ - Fix UNINIT_CTOR defects
+
 !========================= BooleUMC v2r1 2012-12-12 =========================
 ! 2012-12-11 - Marco Clemencic
  - Added CMake configuration file.

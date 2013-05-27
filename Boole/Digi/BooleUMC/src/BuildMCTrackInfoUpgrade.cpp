@@ -47,10 +47,10 @@ BuildMCTrackInfoUpgrade::BuildMCTrackInfoUpgrade( const std::string& name,
   , m_velo(0)
   , m_vlDet(0)
   , m_vpDet(0)
-  , m_utDet(0)
   , m_ttDet(0)
   , m_itDet(0)
   , m_otDet(0)
+  , m_ftDet(0)
 {
   declareProperty( "WithVelo",  m_withVelo  = false );
   declareProperty( "WithVP",    m_withVP    = false );

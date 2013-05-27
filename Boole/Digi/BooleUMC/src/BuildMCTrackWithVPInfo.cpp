@@ -39,6 +39,10 @@ DECLARE_ALGORITHM_FACTORY( BuildMCTrackWithVPInfo );
 BuildMCTrackWithVPInfo::BuildMCTrackWithVPInfo( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_vpDet(0)
+  , m_ttDet(0)
+  , m_itDet(0)
+  , m_otDet(0)
 {
 
 }
