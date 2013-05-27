@@ -1,4 +1,3 @@
-// $Id: TrackNNGhostId.h,v 1.3 2009-10-23 12:20:26 albrecht Exp $
 #ifndef TRACKNNGHOSTID_H
 #define TRACKNNGHOSTID_H 1
 
@@ -71,10 +70,7 @@ private:
   const Rich::TabulatedFunction1D* m_FlattenLookupTableDownstream;
   const Rich::TabulatedFunction1D* m_FlattenLookupTableTtrack;
 
-  int m_nITCont;
-  int m_nTTCont;
   int m_nOTCont;
-  int m_nVeloCont;
   bool m_configured;
 
   bool cutoff(double& unregularized) const;

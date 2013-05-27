@@ -22,7 +22,6 @@ DECLARE_ALGORITHM_FACTORY( MuonTTTrack )
 MuonTTTrack::MuonTTTrack( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_muonPids(NULL)
   , m_ttHitAddingTool(NULL)
   , m_lhcbid2mcparticles(NULL)
   , m_muonPad2MC(NULL)

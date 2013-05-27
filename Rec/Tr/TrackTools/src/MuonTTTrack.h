@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef MUONTTTRACK_H 
 #define MUONTTTRACK_H 1
 
@@ -73,7 +72,6 @@ private:
   bool m_fillMuonStubInfo;
   std::string m_trackToolName;
   unsigned int m_minNumberTTHits;
-  const LHCb::MuonPIDs* m_muonPids;
   std::map<const LHCb::Track*, const LHCb::Track*> m_muonMap;
 
   // -- Tools

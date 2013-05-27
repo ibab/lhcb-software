@@ -41,7 +41,6 @@ protected:
 
 private:
   ILHCbMagnetSvc*     m_magFieldSvc;
-  double m_MomentumError;
   /// Define the parameters of the Z dependance
   std::vector<double> m_paramsTCubic;
   std::vector<double> m_paramsTParab;
