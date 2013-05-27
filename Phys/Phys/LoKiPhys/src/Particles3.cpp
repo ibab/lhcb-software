@@ -106,7 +106,7 @@ LoKi::Particles::ClosestApproach::chi2_
   //
   if ( sc.isFailure ()  ) 
   { 
-    //Error ( " IDistanceCalculator::distance Failed, return 'InvalidChi2' ", sc ) ;
+    Error ( " IDistanceCalculator::distance Failed, return 'InvalidChi2' ", sc ) ;
     return  LoKi::Constants::InvalidChi2 ; 
   }
   //

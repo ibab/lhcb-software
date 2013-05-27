@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2013-05-27 - Vanya Belyaev 
+ - enable very important error message.
+
 ! 2013-05-24 - Chris Jones
  - Fix UNINT_CTOR Coverity warning.
 
