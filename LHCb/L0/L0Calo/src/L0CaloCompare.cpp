@@ -24,11 +24,6 @@ L0CaloCompare::L0CaloCompare( const std::string& name,
   : Calo2Dview ( name , pSvcLocator ) 
   , m_histSpdMult_Comp(NULL) 
   , m_histSumEt_Comp(NULL)
-  , m_histEleErrorC(NULL)
-  , m_histPhoErrorC(NULL)
-  , m_histHadErrorC(NULL)
-  , m_histPilErrorC(NULL)
-  , m_histPigErrorC(NULL)
   , m_histTotalCount(NULL)
   , m_histErrorCount(NULL)
 { 

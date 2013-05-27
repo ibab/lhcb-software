@@ -3,6 +3,9 @@
 ! Package Manager : Patrick Robbe & M-H. Schune
 !----------------------------------------------------------------------------
 
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warnings
+
 ! 2013-05-17 - Patrick Robbe
  - L0CaloAlg: add two options (false by default) to:
    * mask the HCAL hot cells in the Hadron trigger emulation (MaskHotCells)

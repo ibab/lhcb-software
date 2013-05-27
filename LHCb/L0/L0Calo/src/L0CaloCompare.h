@@ -1,4 +1,3 @@
-// $Id: L0CaloCompare.h,v 1.7 2010-05-20 16:45:14 robbep Exp $
 #ifndef L0CALOCOMPARE_H 
 #define L0CALOCOMPARE_H 1
 
@@ -39,11 +38,6 @@ private:
 
   AIDA::IHistogram1D*            m_histSpdMult_Comp ; 
   AIDA::IHistogram1D*            m_histSumEt_Comp ;
-  AIDA::IHistogram1D*            m_histEleErrorC  ;
-  AIDA::IHistogram1D*            m_histPhoErrorC  ;
-  AIDA::IHistogram1D*            m_histHadErrorC  ;
-  AIDA::IHistogram1D*            m_histPilErrorC  ;
-  AIDA::IHistogram1D*            m_histPigErrorC  ;
 
   AIDA::IHistogram1D*            m_histTotalCount ;
   AIDA::IHistogram1D*            m_histErrorCount ;
