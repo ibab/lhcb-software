@@ -30,6 +30,7 @@ DECLARE_ALGORITHM_FACTORY( PrFitKsParams )
 PrFitKsParams::PrFitKsParams( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
+  , m_fitTool(NULL)
 {
   declareProperty( "NTupleName",     m_tupleName  = "Track" );
   declareProperty( "ZTT1",           m_zTT1       = 2469.0*Gaudi::Units::mm ); //THIS NEEDS TO BE CHANGED FOR UT

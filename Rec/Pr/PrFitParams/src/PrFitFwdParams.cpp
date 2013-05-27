@@ -79,6 +79,10 @@ PrFitFwdParams::PrFitFwdParams( const std::string& name,
   declareProperty( "VeloTracksLocation", 
                    m_veloTracksLocation = LHCb::TrackLocation::Velo);
 
+  for ( unsigned int i=0 ; 3 > i ; i++ ) {
+    m_count[i] = 0;
+  }
+
 
 }
 
@@ -95,12 +99,6 @@ StatusCode PrFitFwdParams::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
-
-  unsigned int i;
-
-  for ( i=0 ; 3 > i ; i++ ) {
-    m_count[i] = 0;
-  }
 
   m_ZmPar.init ( "zMagnet" , m_zMagParams );
   m_xPar.init  ( "x"        , m_xParams );

@@ -35,6 +35,7 @@ DECLARE_ALGORITHM_FACTORY( PrFitSeedParams )
 PrFitSeedParams::PrFitSeedParams( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
+  , m_fitTool(NULL)
 {
   declareProperty( "TupleName",          m_tupleName  = "Track" );
   declareProperty( "ZRef",               m_zRef       = StateParameters::ZMidT );
@@ -254,6 +255,7 @@ StatusCode PrFitSeedParams::execute() {
       zEst = 0.;
       axt = 0.;
       bxt = 0.;
+      cxt = 0.;
       ayt = 0.;
       byt = 0.;
     }
