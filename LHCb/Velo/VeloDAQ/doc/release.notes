@@ -3,6 +3,9 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warnings and UNINIT_CTOR defects
+
 !========================= VeloDAQ v6r9p1 2013-04-22 =========================
 ! 2013-04-08 - Marco Cattaneo
  - Add __init.py__ to please CMake

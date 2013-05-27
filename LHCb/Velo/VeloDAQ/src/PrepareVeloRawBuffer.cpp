@@ -37,6 +37,7 @@ PrepareVeloRawBuffer::PrepareVeloRawBuffer( const std::string& name,
   m_clusterLoc(LHCb::InternalVeloClusterLocation::Default),
   m_rawEventLoc(LHCb::RawEventLocation::Default),
   m_bankVersion(VeloDAQ::v3),
+  m_bankSizeInBytes(0),
   m_velo(NULL)
 {
   declareProperty("InternalVeloClusterLocation",m_clusterLoc=LHCb::InternalVeloClusterLocation::Default);
@@ -287,7 +288,7 @@ unsigned int PrepareVeloRawBuffer::makeBank (
 
       if ( isVerbose ) {
         verbose() <<"strip " << clu->strip(0)
-          << ",adc= " + aw.value() << endmsg;
+                  << ",adc= " << aw.value() << endmsg;
       }
     } else {
       // multiple strip cluster

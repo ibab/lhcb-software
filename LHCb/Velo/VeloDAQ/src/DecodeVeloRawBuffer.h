@@ -129,10 +129,6 @@ private:
   /// more than this will force an IncidentType::AbortEvent
   unsigned int m_maxVeloClusters;
 
-  /// if true will add setFilterPass(false) to the algorihtm when an error 
-  /// is detected, defaults to false for Brunel to keep going
-  bool  m_setFilterPass;
-
   /// m_errorCount is the number of errors per fault to print
   /// default = 0
   /// 10 is added to it if the message level is debug
