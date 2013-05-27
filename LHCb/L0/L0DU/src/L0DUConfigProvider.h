@@ -1,4 +1,3 @@
-// $Id: L0DUConfigProvider.h,v 1.11 2010-02-12 23:40:52 odescham Exp $
 #ifndef L0DUCONFIGPROVIDER_H 
 #define L0DUCONFIGPROVIDER_H 1
 
@@ -133,7 +132,6 @@ private:
   std::vector<int> m_condMax;
   bool m_reOrder;
   bool m_check;
-  unsigned long m_condMask;
   unsigned int m_reported;
   std::vector<int> m_FOIx;
   std::vector<int> m_FOIy;
