@@ -52,7 +52,8 @@ VPMCDepositCreator::VPMCDepositCreator(const std::string& name,
   : GaudiAlgorithm(name, pSvcLocator),
 #endif
 
-    m_vPelDet(0)
+    m_vPelDet(0),
+    m_depositedCharge(NULL)
 {
   declareProperty("InputLocation", m_inputLocation = 
                   "MC/VP/Hits");
@@ -424,12 +425,4 @@ void VPMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
   }
 
   return;
-}
-
-
-//============================================================================
-StatusCode VPMCDepositCreator::finalize() {
-
-  return GaudiAlgorithm::finalize();
-
 }

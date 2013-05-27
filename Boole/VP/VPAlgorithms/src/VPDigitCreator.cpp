@@ -41,6 +41,8 @@ VPDigitCreator::VPDigitCreator(const std::string& name,
 #else
   : GaudiAlgorithm(name, pSvcLocator)
 #endif
+  , m_isDebug(false)
+  , m_isVerbose(false)
 
 {
   declareProperty("InputLocation", m_inputLocation = 
@@ -150,13 +152,4 @@ void VPDigitCreator::createDigits(const MCVPDigits* digitsMC,
       digitsCont->insert(newDigit,(*iterMC)->channelID());
     }
   }
-}
-
-
-
-//============================================================================
-StatusCode VPDigitCreator::finalize() {
-
-  return GaudiAlgorithm::finalize();
-
 }

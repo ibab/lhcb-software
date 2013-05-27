@@ -118,11 +118,3 @@ void VPSpilloverSubtraction::mvDigits(VPDigits* digitContCentr,
     }
   }
 }
-
-
-//============================================================================
-StatusCode VPSpilloverSubtraction::finalize() {
-
-  return GaudiAlgorithm::finalize();
-
-}

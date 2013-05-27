@@ -1,4 +1,3 @@
-// $Id: VPClusterCreator.h,v 1.2 2010-01-06 14:08:46 marcin Exp $
 #ifndef VPCLUSTERCREATOR_H
 #define VPCLUSTERCREATOR_H 1
 // Include files
@@ -47,7 +46,6 @@ public:
   virtual ~VPClusterCreator();   ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalise
 
   class PixDigit {
   public:

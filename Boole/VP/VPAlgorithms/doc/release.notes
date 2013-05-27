@@ -3,6 +3,11 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warnings
+ - Fix UNINIT_CTOR defects
+ - Remove 'do nothing' finalize methods
+
 !========================= VPAlgorithms v3r2 2012-12-12 =========================
 ! 2012-12-11 - Marco Clemencic
  - Added CMake configuration file.

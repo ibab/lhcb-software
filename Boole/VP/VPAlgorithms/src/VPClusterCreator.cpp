@@ -1,4 +1,3 @@
-// $Id: VPClusterCreator.cpp,v 1.3 2010-01-06 14:08:46 marcin Exp $
 // Include files:
 // STL
 #include <string>
@@ -50,6 +49,7 @@ VPClusterCreator::VPClusterCreator(const std::string& name,
 #else
   : GaudiAlgorithm(name, pSvcLocator)
 #endif
+  , m_vPelDet(NULL)
 
 {
   declareProperty("InputLocation", m_inputLocation = 
@@ -300,13 +300,4 @@ unsigned int VPClusterCreator::scaleToT(int totSum)
   unsigned int scaledToT = int(ceil(totSum / m_scaleFactor));
   if(scaledToT > m_maxValue) scaledToT = int(m_maxValue);
   return scaledToT;
-}
-
-
-
-//============================================================================
-StatusCode VPClusterCreator::finalize() {
-
-  return GaudiAlgorithm::finalize();
-
 }

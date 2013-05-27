@@ -1,4 +1,3 @@
-// $Id: VPMCDigitCreator.cpp,v 1.1.1.1 2009-12-04 14:16:52 marcin Exp $
 // Include files:
 // STL
 #include <string>
@@ -30,6 +29,8 @@ DECLARE_ALGORITHM_FACTORY(VPMCDigitCreator);
 VPMCDigitCreator::VPMCDigitCreator(const std::string& name, 
                                              ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
+  , m_isDebug(false)
+  , m_isVerbose(false)
 {
   declareProperty("InputLocation", m_inputLocation = 
                   "MC/VP/Deposits");
@@ -139,11 +140,4 @@ bool VPMCDigitCreator::keepAdding(const MCVPDeposit* firstDep,
                                        const MCVPDeposit* secondDep) const
 {
   return (firstDep->channelID() == secondDep->channelID()); // return true if same channel ID (same pixel)
-}
-
-//============================================================================
-StatusCode VPMCDigitCreator::finalize() {
-
-  return GaudiAlgorithm::finalize();
-
 }

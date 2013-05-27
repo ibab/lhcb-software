@@ -24,7 +24,6 @@ public:
   virtual ~VPSpilloverSubtraction();  //< Destructor
   virtual StatusCode initialize();         //< Algorithm initialization
   virtual StatusCode execute   ();         //< Algorithm execution
-  virtual StatusCode finalize  ();         //< Algorithm finalise
 
 protected:
 

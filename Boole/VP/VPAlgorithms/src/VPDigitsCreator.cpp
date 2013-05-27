@@ -1,4 +1,3 @@
-// $Id: $
 // Include files 
 
 // from Gaudi
@@ -25,6 +24,7 @@ DECLARE_ALGORITHM_FACTORY( VPDigitsCreator );
 VPDigitsCreator::VPDigitsCreator( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_buffer(NULL)
 {
   std::vector<std::string> tmp =
     boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/");

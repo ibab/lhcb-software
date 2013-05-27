@@ -1,4 +1,3 @@
-#// $Id: VPMCDepositCreator.h,v 1.1.1.1 2009-12-04 14:16:52 marcin Exp $
 #ifndef VPMCDEPOSITCREATOR_H
 #define VPMCDEPOSITCREATOR_H 1
 // Include files
@@ -43,7 +42,6 @@ public:
   virtual ~VPMCDepositCreator(); ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalise
 
 protected:
 
@@ -70,9 +68,7 @@ private:
   DeVP* m_vPelDet;
   double m_siteSize;
   int m_maxNumSites;
-  int m_simPointsPerPixel;
   int m_inhomogenCh;
-  int m_simulationPointsPerPixel;
   double m_diffuseSigma; 
   double m_chargeUniform;
   double m_eVPerElectron;

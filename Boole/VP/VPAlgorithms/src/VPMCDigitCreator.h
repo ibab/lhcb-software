@@ -1,4 +1,3 @@
-#// $Id: VPMCDigitCreator.h,v 1.1.1.1 2009-12-04 14:16:52 marcin Exp $
 #ifndef VPMCDIGITCREATOR_H
 #define VPMCDIGITCREATOR_H 1
 // Include files
@@ -21,7 +20,6 @@ public:
   virtual ~VPMCDigitCreator();   ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalise
 
 protected:
 
