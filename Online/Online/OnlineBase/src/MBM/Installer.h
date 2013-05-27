@@ -34,7 +34,7 @@ namespace MBM {
     /// Continue with installation by processing further options
     int  continueInstallation()  const { return p_continue==1; }
     /// Start the MBM server threads asynchronously
-    int  startAsynchronous()  const { return p_continue>1; }
+    int  startBlocking()  const { return p_continue==0; }
     /// Parse options
     virtual int  optparse (const char* c);
     /// Deinstall buffers

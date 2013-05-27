@@ -297,18 +297,18 @@ ServerBMID mbm_install_server(int argc , char** argv) {
 	::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ All done.\n");
 	return 0;
       }
-      else if ( inst.startAsynchronous() ) {
-	ServerBMID bmid = inst.releaseBMID();
-	::mbmsrv_dispatch_nonblocking(bmid);
-	::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ All done.\n");
-	return bmid;
-      }
-      else if ( !inst.continueInstallation() ) {
+      else if ( inst.startBlocking() ) {
 	ServerBMID bmid = inst.bmid();
 	::mbmsrv_dispatch_nonblocking(bmid);
 	::mbmsrv_wait_dispatch(bmid);
 	::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ All done.\n");
 	return 0;
+      }
+      else if ( inst.continueInstallation() ) {
+	ServerBMID bmid = inst.releaseBMID();
+	::mbmsrv_dispatch_nonblocking(bmid);
+	::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ All done.\n");
+	return bmid;
       }
     }
     ::lib_rtl_output(LIB_RTL_INFO,"++mbm_install++ MBM installation failed.\n");
