@@ -390,7 +390,7 @@ Gaudi::TrackSymMatrix PrVLTrack::covariance(double z) {
   cov(4, 4) = 1.;
 
   if (!cov.InvertChol()) {
-    std::cerr << "Choleski inversion failed" << endmsg;
+    std::cerr << "Choleski inversion failed" << std::endl;
   }
   return cov;
   
