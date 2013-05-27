@@ -1,4 +1,3 @@
-// $Id: PatVPFitLHCbIDs.h,v 1.4(??) 2010/03/10 16:25:59(??) lcarson Exp(??) $
 #ifndef TF_PATVPFITLHCBIDS_H 
 #define TF_PATVPFITLHCBIDS_H 1
 
@@ -101,7 +100,6 @@ namespace Tf {
     DeVP* m_vP;
 
     /// parameter to take MS into account
-    bool m_beamState;
     double m_stepError;
     double m_variableMS;
 
