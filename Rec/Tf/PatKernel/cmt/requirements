@@ -1,0 +1,48 @@
+#============================================================================
+# Created    : 2007-09-06
+# Maintainer : Stephanie Hansmann-Menzemer
+#============================================================================
+package           PatKernel
+version           v2r6
+
+#============================================================================
+# Structure
+#============================================================================
+branches          cmt dict doc src PatKernel
+
+#============================================================================
+# Used packages.
+#============================================================================
+
+use  OTDet       v*  Det
+use  STDet       v*  Det
+use  TfKernel    v*  Tf
+
+use  VeloDet     v*  Det
+use  TrackEvent  v*  Event
+
+#============================================================================
+# Install includes
+#============================================================================
+apply_pattern install_more_includes more=PatKernel
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library PatKernel ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern component_library    library=PatKernel
+
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                     \
+              dictionary=PatKernel                                  \
+              headerfiles=$(PATKERNELROOT)/dict/PatKernelDict.h     \
+              selectionfile=$(PATKERNELROOT)/dict/PatKernelDict.xml \
+              options="-U__MINGW32__"
+
+# Hack for Gaudi v21r1 to link dictionary on windows
+private
+set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
