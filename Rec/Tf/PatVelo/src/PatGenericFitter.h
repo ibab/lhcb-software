@@ -1,4 +1,3 @@
-// $Id: PatGenericFitter.h,v 1.2 2008-02-13 16:10:19 krinnert Exp $
 #ifndef TF_PAT_PATGENERICFITTER_H 
 #define TF_PAT_PATGENERICFITTER_H 1
 
@@ -88,7 +87,6 @@ namespace Tf {
 
       bool m_valid;
       bool m_align;  
-      double m_innerDTO, m_outerDTO;  
 
       std::vector<PatVeloRHit*>   m_rCoord;
       std::vector<PatVeloPhiHit*> m_pCoord;  

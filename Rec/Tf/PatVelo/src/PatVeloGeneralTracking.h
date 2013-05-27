@@ -1,4 +1,3 @@
-// $Id: PatVeloGeneralTracking.h,v 1.12 2010-04-07 20:51:37 dhcroft Exp $
 #ifndef TF_PATVELOGENERALTRACKING_H 
 #define TF_PATVELOGENERALTRACKING_H 1
 
@@ -207,7 +206,6 @@ namespace Tf {
     double m_ErrScale;       ///< scale factor for linear cluster errors
     double m_ErrMin;         ///< const term to add to linear cluster errors
     double m_ErrExtrapScale; ///< error scale factor to apply to track
-    double m_MaxChiAdd;      ///< max chi2 for point to be added to track
     double m_MaxMissedSensor;///< Number of sensors thet can be missed
     double m_chiSqDofMax;    ///< max chi2/dof of track to keep
     bool m_allCoords;        ///< make all tracks even if cluster already used

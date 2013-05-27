@@ -1,4 +1,3 @@
-// $Id: NewVeloRTracking.h,v 1.1 2009-09-09 13:38:23 ocallot Exp $
 #ifndef NEWVELORTRACKING_H
 #define NEWVELORTRACKING_H 1
 
@@ -133,7 +132,6 @@ private:
   DeVelo*                        m_velo; ///< Ponter to DeVelo object to get sensor numbers
   Tf::PatVeloRHitManager*        m_hitManager;
   IPatDebugTool*                 m_debugTool;
-  IPatDebugTrackTool*            m_debugTrackTool;
   bool                           m_isDebug;
   bool                           m_debug;
 
