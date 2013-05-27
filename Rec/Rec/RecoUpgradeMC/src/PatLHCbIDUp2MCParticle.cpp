@@ -31,7 +31,6 @@ DECLARE_ALGORITHM_FACTORY( PatLHCbIDUp2MCParticle )
 PatLHCbIDUp2MCParticle::PatLHCbIDUp2MCParticle( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_level1(0),
     m_othitcreator("Tf::OTHitCreator")
 {
   m_targetName = "Pat/LHCbID";

@@ -96,7 +96,6 @@ private:
   std::vector< double > m_nMuon;
 
   double m_nTotVelo;     // Total number of Velo hits
-  double m_nTotVP;  // Total number of VP hits
   double m_nTotTT1;      // Total number of TT hits
   double m_nTotSeed;     // Total number of IT+OT hits
   double m_nTotMuon;     // Total number of Muon hits

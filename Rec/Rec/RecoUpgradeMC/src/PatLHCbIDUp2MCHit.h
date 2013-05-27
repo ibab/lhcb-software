@@ -51,7 +51,6 @@
     }  
     
   private:
-    bool        m_level1;
     std::string m_targetName;
     std::vector<const LHCb::MCHit*> m_hitList;
     bool m_linkVP;

@@ -55,12 +55,8 @@ VPV0s::VPV0s( const std::string& name,
   : GaudiTupleAlg ( name , pSvcLocator ),
     m_extrapolator("TrackMasterExtrapolator",this),
     m_interpolator("TrackInterpolator",this),
-    m_zmin(-100*Gaudi::Units::cm),
-    m_zmax( 300*Gaudi::Units::cm),
-    m_distanceCutUpstream(5*Gaudi::Units::mm),
     m_distanceCutLong(1*Gaudi::Units::mm),
     m_deltaZCut(5*Gaudi::Units::cm),
-    m_deltaZSignificanceCut(5),
     m_maxChi2V0Vertex(25),     // 1 dof
     m_maxChi2PVConstraint(20), // 2 dofs
     m_minDecayLengthSignificance(5),

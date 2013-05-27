@@ -55,7 +55,6 @@
   }  increasingSensor;
 
   private:
-    bool        m_level1;
     std::string m_targetName;
     std::vector<const LHCb::MCParticle*> m_partList;
     ToolHandle<Tf::IOTHitCreator> m_othitcreator;

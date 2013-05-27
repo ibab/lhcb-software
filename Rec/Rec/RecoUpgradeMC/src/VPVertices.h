@@ -1,4 +1,3 @@
-// $Id: VPV0s.h,v 1.1.1.1 2007/10/09 18:41:19 smenzeme Exp $
 #ifndef VPVERTICES_H 
 #define VPVERTICES_H 1
 
@@ -52,8 +51,6 @@ namespace LHCb {
     DeVP* m_vP;
     IVPClusterPosition* m_positiontool ;
     ILHCbIDsToMCHits* m_linkTool;
-    LHCb::VPLiteCluster::VPLiteClusters* m_clusters;
-    
   };
 
 

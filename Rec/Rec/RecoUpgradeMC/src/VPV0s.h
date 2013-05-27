@@ -1,4 +1,3 @@
-// $Id: VPV0s.h,v 1.1.1.1 2007/10/09 18:41:19 smenzeme Exp $
 #ifndef VPV0S_H 
 #define VPV0S_H 1
 
@@ -73,12 +72,8 @@ namespace LHCb {
     const LHCb::ParticleProperty* m_protonProperty ;
     
     unsigned int m_maxNumCommonHits ;
-    double m_zmin ;
-    double m_zmax ;
-    double m_distanceCutUpstream ;
     double m_distanceCutLong ;
     double m_deltaZCut ;
-    double m_deltaZSignificanceCut ;
     double m_maxChi2V0Vertex ;
     double m_maxChi2PVConstraint ;
     double m_minDecayLengthSignificance ;
@@ -88,7 +83,6 @@ namespace LHCb {
     double m_sigmaBFlightZ ;
     double m_ksmasscut ;
     double m_lambdamasscut ;
-    double m_chisqProbCut ;
     bool m_useExtrapolator ;
     bool m_excludePVTracks ;
     bool m_rejectUpstreamHits ;
