@@ -76,8 +76,8 @@ private:
   std::string m_trackLocation ;
   std::string m_MCVertexLocation ;
 
-  double m_maxDistance ;
-  double m_maxFineDistance ;
+  //  double m_maxDistance ;
+  //  double m_maxFineDistance ;
 
   double m_numSigma ;
   double m_hitSigma ;
@@ -178,8 +178,8 @@ void splitRandomTracks( std::vector<LHCb::Track*> input,
 PVResolution::PVResolution( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiTupleAlg( name , pSvcLocator ),
-    m_maxDistance(50.),
-    m_maxFineDistance(10.),
+    //m_maxDistance(50.),
+    //m_maxFineDistance(10.),
     m_rsvc(0)
 {
   declareProperty("TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
