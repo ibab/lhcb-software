@@ -201,6 +201,21 @@ void State::setState( double x, double y, double z,
 }
 
 //=============================================================================
+// Transport state to new z-position
+//=============================================================================
+void State::linearTransportTo( double z )
+{
+  double dz = z - m_z ;
+  m_stateVector(0) += dz * m_stateVector(2) ;
+  m_stateVector(1) += dz * m_stateVector(3) ;
+  m_covariance(0,0) += 2*dz*m_covariance(0,2) + dz*dz*m_covariance(2,2) ;
+  m_covariance(0,2) += dz*m_covariance(2,2) ;
+  m_covariance(1,1) += 2*dz*m_covariance(1,3) + dz*dz*m_covariance(3,3) ;
+  m_covariance(1,3) += dz*m_covariance(3,3) ;
+  m_z = z ;
+}
+
+//=============================================================================
 // fillstream
 //=============================================================================
 std::ostream& LHCb::State::fillStream(std::ostream& os) const 

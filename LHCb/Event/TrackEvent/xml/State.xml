@@ -518,6 +518,15 @@
       </method>
 
       <method
+	name      = "linearTransportTo"
+	desc      = "transport this state to a new z-position"
+	type      = "void"
+	virtual   = "FALSE"
+	const     = "FALSE" >
+	<arg name = "z" type = "double"/>
+      </method>
+
+      <method
 	name      = "fillStream"
 	desc      = "printOut method to Gaudi message stream"
 	type      = "std::ostream&amp;"
