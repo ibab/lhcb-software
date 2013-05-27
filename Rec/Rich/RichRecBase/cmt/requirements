@@ -1,0 +1,51 @@
+#============================================================================
+# Created    : 2002-11-19
+# Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
+#============================================================================
+
+version           v4r16
+
+#============================================================================
+# Structure
+#============================================================================
+branches xml dict doc src cmt Event RichRecBase
+
+#============================================================================
+# Used packages.
+#============================================================================
+use   RecEvent       v*      Event
+use   RichKernel     v*      Rich
+use   RichDet        v*      Det
+
+#============================================================================
+# Build GOD objects
+#============================================================================
+private
+use GaudiObjDesc v* -no_auto_imports
+end_private
+apply_pattern god_headers files=../xml/*.xml
+
+#============================================================================
+# Environment
+#============================================================================
+apply_pattern install_more_includes more=RichRecBase offset=Event
+
+#============================================================================
+# Build library
+#============================================================================
+library RichRecBase           ../src/event/*.cpp ../src/base/*.cpp
+apply_pattern linker_library    library=RichRecBase
+
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                         \
+              dictionary=RichRecBase                                    \
+              headerfiles=$(RICHRECBASEROOT)/dict/RichRecBaseDict.h     \
+              selectionfile=$(RICHRECBASEROOT)/dict/RichRecBaseDict.xml \
+              options="-U__MINGW32__ -DBOOST_DISABLE_ASSERTS"
+# Disable some compiler warnings in the automatically generated dict code
+macro_append RichRecBaseDict_cppflags "" \
+                           target-icc " -wd873 -wd177 -wd191"
+
+
+macro RichRecBaseGen_dependencies RichRecBaseObj2Doth
+#============================================================================

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichRecBase">
+
+<!-- **************************************************************************
+  * $Id: RichRecRing.xml,v 1.19 2009-06-08 18:53:41 jonrob Exp $
+  *****************************************************************************
+  * XML-description of RichRecRing class                                      *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ***************************************************************************** -->
+
+
+<class 
+        author   = "Chris Jones    Christopher.Rob.Jones@cern.ch" 
+        desc     = "A Reconstructed Cherenkov Ring" 
+        id       = "12426" 
+        location = "Rec/Rich/RecoEvent/Rings" 
+        name     = "RichRecRing" >
+
+        <base name="KeyedObject&lt;int&gt;"/>
+        &KeyedObject;
+            
+        <import name="GaudiKernel/Point3DTypes.h"/>
+        <import name="Kernel/RichDetectorType"/>
+        <import name="Kernel/RichParticleIDType"/>
+        <import name="Kernel/RichSide"/>
+        <import name="GaudiKernel/PhysicalConstants"/>
+        <import name="Event/RichRecPointOnRing" soft="FALSE" />
+        <import name="Event/RichRecPixelOnRing" soft="FALSE" />
+        <import name="Event/RichRecSegment" soft="TRUE" />
+
+        <location name="SegmentHypoRings" place="Rec/Rich/RecoEvent/SegmentHypoRings"/>
+        <location name="MarkovRings"      place="Rec/Rich/Markov/Rings"/>
+        <location name="TemplateRings"    place="Rec/Rich/Template/Rings"/>
+        <location name="ENNRings"         place="Rec/Rich/ENN/Rings"/>
+
+	<typedef 
+		desc   = "type for internal storage for floating point data" 
+		access = "PUBLIC" 
+		def    = "FloatType" 
+		type   = "float"
+	/>
+
+       <constructor 
+                desc     = "Constructor with arguments" 
+                initList = "m_centrePointGlobal(segment->pdPanelHitPoint()),m_centrePointLocal(segment->pdPanelHitPointLocal()),m_radius(radius),m_massHypo(hypo),m_historyCode(0),m_richRecSegment(segment)">
+                <arg inout="BYVALUE"  const="TRUE"  name="segment"    type="LHCb::RichRecSegment*"   />
+                <arg inout="BYVALUE"  const="TRUE"  name="radius"     type="LHCb::RichRecRing::FloatType"   />
+                <arg inout="BYVALUE"  const="TRUE"  name="hypo"       type="Rich::ParticleIDType"           />
+                <code>
+  setRich(segment->trackSegment().rich());
+                </code>
+        </constructor>
+
+        <constructor 
+                desc     = "Copy Constructor. Creates a new RichRecRing with the same physics content" 
+                initList = "KeyedObject&lt;int&gt;(), m_centrePointGlobal(ring.centrePointGlobal()), m_centrePointLocal(ring.centrePointLocal()), m_radius(ring.radius()), m_massHypo(ring.massHypo()), m_ringPoints(ring.ringPoints()), m_historyCode(ring.historyCode()),m_richRecPixels(ring.richRecPixels()),m_richRecSegment(ring.richRecSegment())" >
+                <arg const="TRUE" name="ring" type="LHCb::RichRecRing"  />
+                <code/>
+        </constructor>
+
+        <attribute 
+                desc = "Reconstructed centre point on HPD panel (global coordinates)" 
+                name = "centrePointGlobal" 
+                type = "Gaudi::XYZPoint"
+                init = "0,0,0"
+        />
+        
+        <attribute 
+                desc = "Reconstructed centre point on HPD panel (local coordinates)"  
+                name = "centrePointLocal" 
+                type = "Gaudi::XYZPoint"
+                init = "0,0,0"
+        />
+            
+        <attribute 
+                desc = "The radius of the reconstructed ring, in radians" 
+                init = "0" 
+                name = "radius" 
+                type = "LHCb::RichRecRing::FloatType"
+        />
+            
+        <attribute 
+                desc = "Assumed mass hypothsis for this ring" 
+                init = "Rich::Unknown" 
+                name = "massHypo" 
+                type = "Rich::ParticleIDType"
+        />
+
+        <attribute 
+                desc = "A collection of points on the ring" 
+                name = "ringPoints"
+                type = "LHCb::RichRecPointOnRing::Vector"
+                nonconstaccessor = "TRUE"
+        />
+
+        <enum name="RingType" desc="The Ring type" access="PUBLIC" >
+          <enumval name="UndefinedType" value="0"  desc="The ring type is undefined"/>
+          <enumval name="RayTracedCK"   value="1"  desc="The ring was formed by ray tracing photons at a given Cherenkov angle around the associated RichRecSegment"/>
+          <enumval name="TracklessRing" value="2"  desc="The ring was produced by a trackless ring finding algorithm"/>
+          <enumval name="TemplateRing"  value="3"  desc="The ring uses RichRecSegment projection and template rings from saturated tracks"/>
+        </enum>
+
+        <enum name="RingAlgorithm" desc="The algorithm used to create the ring" access="PUBLIC" >
+          <enumval name="UndefinedAlg"  value="0"  desc="The ring algorithm is undefined"/>
+          <enumval name="Markov"        value="1"  desc="Markov Chain Monte Carlo ring finder"/>
+          <enumval name="Hough"         value="2"  desc="Hough Transform ring finder"/>
+          <enumval name="Template"      value="3"  desc="RingFinder using Fourier Correlations from Template Rings"/>
+          <enumval name="ENN"           value="4"  desc="Elastic Neural Network ring finder"/>
+        </enum>
+
+        <attribute 
+                desc = "Bit packed field containing history information" 
+                name = "historyCode" 
+                init = "0"
+                type = "bitfield" >
+                <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2"                                    length="1"  name="rich"  type="Rich::DetectorType" />
+                <bitfield desc="The Rich panel. For Rich1(Rich2) either Rich::up(Rich::left) or Rich::down(Rich::right)" length="1"  name="panel" type="Rich::Side"         />
+                <bitfield desc="The Rich radiator type"                                                                  length="2"  name="radiator" type="Rich::RadiatorType" />
+                <bitfield desc="The ring type"                                                                           length="4"  name="type"  type="LHCb::RichRecRing::RingType" />
+                <bitfield desc="The algorithm used to create this ring"                                                  length="4"  name="algorithm" type="LHCb::RichRecRing::RingAlgorithm" />
+                <bitfield desc="The total number of samples used when ray tracing the points for this ring"              length="10" name="nTotalPointSamples" type="unsigned int" />
+        </attribute>
+
+        <relation 
+                desc = "RichRecSegment to which this ring is associated" 
+                name = "richRecSegment" 
+                type = "LHCb::RichRecSegment"
+                nonconstaccessor = "TRUE"
+        />
+            
+        <attribute
+                desc         = "The RichRecPixels associated to this ring" 
+                name         = "richRecPixels" 
+                type         = "LHCb::RichRecPixelOnRing::Vector"
+                nonconstaccessor = "TRUE"
+        />
+
+        <method 
+                const = "TRUE" 
+                type  = "const LHCb::RichRecPointOnRing*"
+                desc  = "Return the point on the ring closest to the given azimuth" 
+                name  = "getPointClosestInAzimuth" >
+                <arg const="TRUE" inout="BYVALUE" name="angle" type="double"/>
+                <code>
+  const LHCb::RichRecPointOnRing* point =  NULL;
+  const unsigned int nPoints = ringPoints().size();
+  if ( nPoints&gt;0 )
+  {
+    const unsigned int iPoint 
+      = (unsigned int) ( (angle*((double)(nPoints))/Gaudi::Units::twopi) - 0.5 );
+    point = &amp;ringPoints()[ iPoint &lt; nPoints ? iPoint : nPoints-1 ];
+  }
+  return point;
+                </code>
+        </method>
+
+        <method 
+                const = "TRUE" 
+                type  = "double"
+                desc  = "Computes the average probability of all pixels associated to this ring" 
+                name  = "averagePixelProb" >
+        </method>
+
+</class>
+
+</package>
+</gdd>
