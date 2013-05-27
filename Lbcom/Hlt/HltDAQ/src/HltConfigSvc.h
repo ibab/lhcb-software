@@ -1,4 +1,3 @@
-// $Id: HltConfigSvc.h,v 1.1 2010-05-05 13:20:44 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -63,7 +62,6 @@ private:
   IDataProviderSvc            *m_evtSvc;          ///< get Evt Svc to get ODIN (which contains TCK)
   IIncidentSvc                *m_incidentSvc;     ///< 
   ToolHandle<IGenericTool>     m_decodeOdin;
-  bool                         m_decodeOdinOnDemand;
   bool                         m_checkOdin;
   bool                         m_maskL0TCK;
   unsigned int                 m_id;
