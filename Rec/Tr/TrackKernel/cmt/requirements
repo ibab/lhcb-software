@@ -1,0 +1,37 @@
+#=========================================================================
+# Created    : 2009-07-08
+# Maintainer : Wouter Hulsbergen
+#=========================================================================
+package           TrackKernel
+version           v1r14
+
+# Structure, i.e. directories to process. 
+#=========================================================================
+branches          cmt doc src TrackKernel
+
+# Used packages.
+#=========================================================================
+use   DetDesc         v*      Det
+use   LHCbKernel      v*      Kernel
+use   LHCbMath        v*      Kernel
+use   TrackEvent      v*      Event
+
+# Install public includes
+#=========================================================================
+apply_pattern install_more_includes more=TrackKernel
+
+# LCG Dictionaries
+#=========================================================================
+apply_pattern reflex_dictionary                                        \
+              dictionary=TrackKernel                                   \
+              headerfiles=$(TRACKKERNELROOT)/src/TrackKernelDict.h     \
+              selectionfile=$(TRACKKERNELROOT)/src/TrackKernelDict.xml \
+              options="-U__MINGW32__"
+# Disable some compiler warnings in the automatically generated dict code
+macro_append TrackKernelDict_cppflags "" \
+                           target-icc " -wd654"
+
+# Build linker library
+#=========================================================================
+library       TrackKernel     *.cpp
+apply_pattern linker_library	library=TrackKernel
