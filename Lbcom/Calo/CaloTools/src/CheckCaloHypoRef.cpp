@@ -83,13 +83,3 @@ StatusCode CheckCaloHypoRef::execute() {
 } 
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CheckCaloHypoRef::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

@@ -1,4 +1,3 @@
-// $Id: CaloCosmicsTrackAlg.h,v 1.1 2008-05-22 22:47:59 odescham Exp $
 #ifndef CALOCOSMICSTRACKALG_H 
 #define CALOCOSMICSTRACKALG_H 1
 
@@ -24,7 +23,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

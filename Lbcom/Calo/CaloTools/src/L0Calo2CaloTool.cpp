@@ -279,11 +279,6 @@ const LHCb::CaloDigits* L0Calo2CaloTool::makeDigits
 
   return digits;
 }
-// ==========================================================================
-StatusCode L0Calo2CaloTool::finalize()
-{  
-  return GaudiTool::finalize ();
-}
 // ============================================================================
 void L0Calo2CaloTool::collectTell1s
 ( std::set<int>&                    tell1s,

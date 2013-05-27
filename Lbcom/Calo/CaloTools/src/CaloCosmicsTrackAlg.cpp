@@ -164,11 +164,3 @@ StatusCode CaloCosmicsTrackAlg::execute() {
  
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloCosmicsTrackAlg::finalize() {
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  return GaudiTupleAlg::finalize();  // must be called after all other actions
-}
