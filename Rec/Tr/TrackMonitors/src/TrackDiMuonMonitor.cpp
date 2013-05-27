@@ -36,8 +36,6 @@ private:
   IMagneticFieldSvc* m_magfieldsvc ;
   ITrajPoca* m_pocatool ;
   ITrackVertexer* m_vertexer ;
-  double m_minZ ;
-  double m_maxZ ;
   double m_maxDistance ;
   double m_minMass ;
   double m_maxMass ;
@@ -57,8 +55,6 @@ DECLARE_ALGORITHM_FACTORY( TrackDiMuonMonitor )
 TrackDiMuonMonitor::TrackDiMuonMonitor( const std::string& name,
 				ISvcLocator* pSvcLocator)
   : GaudiHistoAlg( name , pSvcLocator ),
-    m_minZ(-100*Gaudi::Units::cm),
-    m_maxZ( 300*Gaudi::Units::cm),
     m_maxDistance( 5*Gaudi::Units::mm),
     m_minMass(2.6*Gaudi::Units::GeV),
     m_maxMass(4.0*Gaudi::Units::GeV),

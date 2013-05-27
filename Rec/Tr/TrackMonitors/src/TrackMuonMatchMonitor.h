@@ -1,4 +1,3 @@
-// $Id: TrackMuonMatchMonitor.h,v 1.3 2010-03-19 15:17:52 wouter Exp $
 #ifndef TRACKMUONMATCHMONITOR_H 
 #define TRACKMUONMATCHMONITOR_H 1
 
@@ -30,11 +29,7 @@ protected:
 
 private:
   
-  int m_myStation;
-  
-  DeMuonDetector*       m_muonDet; 
-  //  IMuonFastPosTool*     m_posTool;
-
+  DeMuonDetector*       m_muonDet;
   ITrackExtrapolator*   m_extrapolator;
   std::string           m_tTracksLocation;
   std::string           m_nExtrapolator;

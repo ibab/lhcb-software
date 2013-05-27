@@ -1,4 +1,3 @@
-// $Id: TrackExpectedHitsXYZTool.h,v 1.2 2010/02/01 15:55:31 mschille Exp $
 #ifndef INCLUDE_TRACKEXPECTEDHITSXYZTOOL_H
 #define INCLUDE_TRACKEXPECTEDHITSXYZTOOL_H 1
 
@@ -123,13 +122,7 @@ class TrackExpectedHitsXYZTool : public GaudiTool
 
 	double m_tolX; ///< initial tolerance when getting rough hit list
 	double m_tolY; ///< initial tolerance when getting rough hit list
-	double m_tolR; ///< initial tolerance when getting rough hit list
-	double m_tolPhi; ///< initial tolerance when getting rough hit list
 	double m_nSigma; ///< initial track pos. uncertainty scale for rough hit list
-	double m_maxDistOT; ///< max. final dist. hit-track in OT
-	double m_maxDistIT; ///< max. final dist. hit-track in IT
-	double m_maxDistTT; ///< max. final dist. hit-track in TT
-	double m_maxDistVelo; ///< max. final dist. hit-track in Velo
 	
 	/// collect line hits as used in IT, TT and OT
 	template<typename HITMANAGER, typename IndexHelper,
