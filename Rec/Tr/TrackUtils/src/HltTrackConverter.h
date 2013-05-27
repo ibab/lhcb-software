@@ -37,8 +37,6 @@ public:
   bool m_addFirstState;
   double m_CloneOverlapTreshold;
   unsigned int m_MinimalHits ;
-  LHCb::HltObjectSummary * m_HltObjectSummary;
-  ObjectVector<LHCb::HltObjectSummary>* m_HltObjectSummarys ;
   void executeRecursive(LHCb::Track::Vector& tracks, const LHCb::HltObjectSummary& SelRep) const ;
   LHCb::Track::Types  SetTrackType(const LHCb::Track& ) const ;
   void RemoveClones(LHCb::Track::Vector& tracks) const ;

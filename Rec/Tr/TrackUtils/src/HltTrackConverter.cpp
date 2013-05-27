@@ -30,8 +30,6 @@ DECLARE_ALGORITHM_FACTORY( HltTrackConverter )
 HltTrackConverter::HltTrackConverter( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_HltObjectSummary(0)
-  , m_HltObjectSummarys(0)
 {
   declareProperty( "HltObjectSummary", 
                    m_HltObjectSummaryLocation = LHCb::HltObjectSummaryLocation::Default

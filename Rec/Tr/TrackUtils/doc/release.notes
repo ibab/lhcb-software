@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warnings
+
 !========================= TrackUtils v1r52 2013-04-30 =========================
 ! 2013-04-04 - Wouter Hulsbergen
  - change TrackBestTrackCreator to use TrackKernel/TrackCloneData

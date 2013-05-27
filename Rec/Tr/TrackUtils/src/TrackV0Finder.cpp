@@ -72,7 +72,6 @@ private:
   double m_ksmasscutLL ;
   double m_ksmasscutDD ;
   double m_lambdamasscut ;
-  double m_chisqProbCut ;
   double m_minCTauKs ;
   double m_minCTauLambda ;
   bool m_useExtrapolator ;
