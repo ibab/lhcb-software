@@ -42,7 +42,9 @@ DECLARE_ALGORITHM_FACTORY( MCOTTimeCreator );
 
 MCOTTimeCreator::MCOTTimeCreator(const std::string& name, 
                                  ISvcLocator* pSvcLocator) :
-  GaudiAlgorithm(name, pSvcLocator)
+  GaudiAlgorithm(name, pSvcLocator),
+  m_nsToTDCcounts(0.),
+  m_readoutWindow(0.)
 {
   // constructor 
   // jobOptions - defaults

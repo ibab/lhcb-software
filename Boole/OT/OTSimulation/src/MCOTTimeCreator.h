@@ -1,5 +1,3 @@
-// $Id: MCOTTimeCreator.h,v 1.11 2009-04-27 16:54:14 janos Exp $
-
 #ifndef OTSIMULATION_MCOTTIMECREATOR_H
 #define OTSIMULATION_MCOTTIMECREATOR_H 1
 
@@ -58,7 +56,6 @@ private:
   StatusCode createTimes(LHCb::MCOTTimes* times);
 
   std::vector<double> m_startReadOutGate;  ///< start of readout gate
-  double              m_sizeOfReadOutGate; ///< end of readout gate   
   double              m_deadTime;          ///< Analogdeadtime
   int                 m_countsPerBX;       ///< counts per BX
   int                 m_numberOfBX;        ///< Number of BX

@@ -1,7 +1,13 @@
 !--------------------------------------------------------------------------
 ! Package         : OTSimulation
-! Package manager : Jan Amoraal
+! Package manager : Lucia Grillo
 !--------------------------------------------------------------------------
+
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warning
+ - Fix UNINIT_CTOR and FORWARD_NULL warnings
+ - Use geIfExists
+ - Fix untested StatusCode
 
 !========================= OTSimulation v5r4 2013-02-15 =========================
 ! 2013-01-26 - Marco Clemencic

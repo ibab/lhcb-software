@@ -1,4 +1,3 @@
-// $Id: OTFillRawBuffer.cpp,v 1.13 2008-06-04 15:17:17 janos Exp $
 // Include files 
 // from std
 #include <algorithm>
@@ -31,6 +30,7 @@ DECLARE_ALGORITHM_FACTORY( OTFillRawBuffer );
 OTFillRawBuffer::OTFillRawBuffer( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_encoder(NULL)
 {
  
 }
@@ -53,13 +53,11 @@ StatusCode OTFillRawBuffer::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   
   /// Get MCOTTimes
-  const LHCb::MCOTTimes* times = 0;
+  const LHCb::MCOTTimes* times = getIfExists<LHCb::MCOTTimes>( LHCb::MCOTTimeLocation::Default );
   
   /// They should be there, but it doesn't hurt to check
-  if ( !exist<LHCb::MCOTTimes>( LHCb::MCOTTimeLocation::Default ) ) {
-    Error( "There are no MCOTTimes in TES", StatusCode::FAILURE );
-  } else {
-    times = get<LHCb::MCOTTimes>( LHCb::MCOTTimeLocation::Default );
+  if ( 0 == times ) {
+    return Error( "There are no MCOTTimes in TES", StatusCode::SUCCESS );
   }
   
   /// Tmp vector of channel ids we want encode
@@ -73,7 +71,7 @@ StatusCode OTFillRawBuffer::execute() {
                   boost::lambda::bind( &LHCb::MCOTTime::channel, boost::lambda::_1) );
   
   StatusCode sc = m_encoder->encodeChannels( channels );
-  if ( sc.isFailure() ) Error( "Could not encode channels", sc );
+  if ( sc.isFailure() ) Error( "Could not encode channels", sc ).ignore();
   
   return StatusCode::SUCCESS;
 }

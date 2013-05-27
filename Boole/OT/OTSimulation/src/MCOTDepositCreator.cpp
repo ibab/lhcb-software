@@ -54,6 +54,9 @@ DECLARE_ALGORITHM_FACTORY( MCOTDepositCreator );
 MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
                                        ISvcLocator* pSvcLocator) :
   GaudiAlgorithm(name, pSvcLocator),
+  m_tracker(NULL),
+  m_noiseTool(NULL),
+  m_pulseTool(NULL),
   m_deposits(),
   m_firstStation(0u),
   m_spillNames()
