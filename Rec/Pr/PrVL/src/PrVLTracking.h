@@ -58,6 +58,9 @@ private:
   PrVLHit* closestPhiHit(PrVLHits& hits, const double x, const double y, 
                          const double tol, const bool unused); 
   bool addPhiHit(PrVLHits& hits, PrVLTrack& track, const double maxChi2);
+  bool fitProtoTrack(PrVLHits& hits, const unsigned int nMin,
+                     const unsigned int nR, double& q,
+                     double& x0, double& y0, double& tx, double& ty);
 
   bool matchKey(const PrVLHit* hit) {
     bool ok = false;
@@ -153,7 +156,6 @@ private:
   int m_timeFinal;
 
   PrVLTracks m_rzTracks; 
-  PrVLTracks m_rzTracksSkipped; 
   PrVLTracks m_spaceTracks;  
 
 };

@@ -3,6 +3,9 @@
 ! Purpose     : Track reconstruction for VL
 !-----------------------------------------------------------------------------
 
+! 2013-05-27 - Heinrich Schindler
+ - modifications after change of stereo angles
+
 !========================= PrVL v1r2 2013-04-30 =========================
 ! 2013-04-26 - Heinrich Schindler
  - Fix for 2pi -> 0 transition in overlap region

@@ -133,8 +133,11 @@ double PrVLTrack::rInterpolated(double z) {
       it1 = it;
     }
   }
-  double zRatio = (z - (*it0)->z()) / ((*it1)->z( ) - (*it0)->z());
-  return (zRatio * (*it1)->r() + (1. - zRatio) * (*it0)->r());
+  const double r0 = (*it0)->r();
+  const double r1 = (*it1)->r();
+  const double z0 = (*it0)->z();
+  const double z1 = (*it1)->z();
+  return r0 + (r1 - r0) * (z - z0) / (z1 - z0);
 
 }
 

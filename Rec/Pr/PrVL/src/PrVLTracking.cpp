@@ -40,28 +40,28 @@ PrVLTracking::PrVLTracking(const std::string& name, ISvcLocator* pSvcLocator) :
   // Parameters for RZ tracking
   declareProperty("MaxRSlope4", m_maxRSlope4 = 0.4);
   declareProperty("MaxRSlope3", m_maxRSlope3 = 0.6);
-  declareProperty("RTol4",      m_rTol4       = 0.85);
+  declareProperty("RTol4",      m_rTol4       = 0.75);
   declareProperty("RTol3",      m_rTol3       = 1.2);
-  declareProperty("RTolExtra",  m_rTolExtra   = 2.0);
-  declareProperty("RTolOverlap", m_rTolOverlap = 0.4);
+  declareProperty("RTolExtra",  m_rTolExtra   = 3.0);
+  declareProperty("RTolOverlap", m_rTolOverlap = 0.7);
   declareProperty("MaxMissed",   m_maxMissed = 1);
   declareProperty("MinToTag",    m_minToTag = 4);
   // Parameters for space tracking
-  declareProperty("XTolOverlap", m_xTolOverlap = 1.5);
-  declareProperty("PhiTol",      m_phiTol = 0.07);
-  declareProperty("XYTol",       m_xyTol = 0.5);
-  declareProperty("MaxQPhi",     m_maxQPhi = 1.5);
-  declareProperty("MaxQXy",      m_maxQXy = 10.);
-  declareProperty("MaxQRPhi",    m_maxQRPhi = 10.);
+  declareProperty("XTolOverlap", m_xTolOverlap = 0.9);
+  declareProperty("PhiTol",      m_phiTol = 0.04);
+  declareProperty("XYTol",       m_xyTol = 0.45);
+  declareProperty("MaxQPhi",     m_maxQPhi = 3.);
+  declareProperty("MaxQXy",      m_maxQXy = 5.);
+  declareProperty("MaxQRPhi",    m_maxQRPhi = 9.);
   declareProperty("MaxQXyFull",  m_maxQXyFull = 10.);
   declareProperty("FractionPhi",    m_fractionPhi = 0.7);
   declareProperty("FractionShared", m_fractionShared = 0.7);
   declareProperty("FractionUsed",   m_fractionUsed = 0.6);
   declareProperty("MaxChi2PerHit",  m_maxChi2PerHit = 18.);
-  declareProperty("MaxChi2ToAdd",   m_maxChi2ToAdd = 20.);
   // Parameters for merging clones
   declareProperty("FractionForMerge", m_fractionForMerge = 0.6);
-  declareProperty("MaxDistToMerge", m_maxDistToMerge = 0.1 * Gaudi::Units::mm);
+  declareProperty("MaxChi2ToAdd",     m_maxChi2ToAdd = 20.);
+  declareProperty("MaxDistToMerge",   m_maxDistToMerge = 0.1 * Gaudi::Units::mm);
   declareProperty("MaxDeltaSlopeToMerge", m_maxDeltaSlopeToMerge = 0.002);
   // Parameters for recovery
   declareProperty("MaxRZForExtra", m_maxRZForExtra = 200);
@@ -100,7 +100,7 @@ StatusCode PrVLTracking::initialize() {
   m_tolPhi.resize(2 * m_nZonesR);
   const double dphi = Gaudi::Units::pi / double(m_nZonesR);
   // Get the angle of the first strip to determine the overlap phi range.
-  const double phiFirst = phiSensor->phiOfStrip(0, 0., phiSensor->rMin(0));
+  const double phiFirst = rSensor->phiMinZone(0, rSensor->rMin(0));
   const double dphiOverlap = fabs(phiFirst) - Gaudi::Units::halfpi;
   for (unsigned int i = 0; i < 2 * m_nZonesR; ++i) {
     double phi = -0.5 * Gaudi::Units::pi + (0.5 + i) * dphi;
@@ -182,7 +182,6 @@ StatusCode PrVLTracking::execute() {
   }
   // Reset the containers.
   m_rzTracks.clear();
-  m_rzTracksSkipped.clear();
   m_spaceTracks.clear();
   buildHits();
 
@@ -253,10 +252,9 @@ StatusCode PrVLTracking::execute() {
     }
     findPhiHits(*itt, false);
     const int status = findSpaceTracksPhi(*itt);
-    if (2 == status) m_rzTracksSkipped.push_back(*itt);
+    if (2 == status) findSpaceTracksXY(*itt);
   }
   m_rzTracks.clear();
-  m_rzTracks.swap(m_rzTracksSkipped);
   for (itt = m_rzTracks.begin(); itt != m_rzTracks.end(); ++itt) {
     if (m_debug) {
       info() << "Track " << itt - m_rzTracks.begin() << endmsg;
@@ -265,7 +263,7 @@ StatusCode PrVLTracking::execute() {
     findPhiHits(*itt, false);
     findSpaceTracksXY(*itt);
   }
-
+  m_rzTracks.clear();
   if (m_timing) m_timerTool->stop(m_timeSpace);
   if (m_debug) {
     info() << "Made " << m_spaceTracks.size() << " space tracks" << endmsg;
@@ -282,6 +280,7 @@ StatusCode PrVLTracking::execute() {
       if ((*it)->z() < zMin) continue;
       findUnusedR(*it, forward);
     }
+    cleanupRZ();
   }
   for (itt = m_rzTracks.begin(); itt != m_rzTracks.end(); ++itt) {
     findPhiHits(*itt, true);
@@ -461,7 +460,8 @@ void PrVLTracking::findQuadruplets(DeVLRSensor* sensor0, const bool forward) {
             newTrack.setRZone(iz);
           }
           // Calculate expected radius and tolerance at the second sensor.
-          const double r1 = newTrack.rPred(z1);
+          // const double r1 = newTrack.rPred(z1);
+          const double r1 = newTrack.rInterpolated(z1);
           double tol1 = m_rTol4 * sensor1->rPitchOfRadius(r1);
           if (m_debug && (matchKey(*it0) || matchKey(*it3) || matchKey(h2))) {
             printHit(h2, "    S2 ");
@@ -775,6 +775,7 @@ void PrVLTracking::findPhiHits(PrVLTrack& seed, const bool unused) {
       for (ith = m_hits[i][j].begin(); ith != m_hits[i][j].end(); ++ith) {
         if (m_debug && matchKey(*ith)) printHit(*ith, "");
         if (unused && (*ith)->nUsed() >= (*ith)->nMaxUsed()) continue;
+        // Calculate global phi at the predicted radius.
         float phiS = sensor->phiOfStrip((*ith)->strip(), (*ith)->fraction(), rPred);
         if (!sensor->isDownstream()) phiS = -phiS; 
         if ((*ith)->right()) phiS += Gaudi::Units::pi;
@@ -830,6 +831,7 @@ void PrVLTracking::findPhiHitsOverlap(PrVLTrack& seed, const bool unused) {
       for (ith = m_hits[i][j].begin(); ith != m_hits[i][j].end(); ++ith) {
         if (m_debug && matchKey(*ith)) printHit(*ith, "");
         if (unused && (*ith)->nUsed() >= (*ith)->nMaxUsed()) continue;
+        // Calculate global phi at the predicted radius.
         float phiS = sensor->phiOfStrip((*ith)->strip(), (*ith)->fraction(), rPred);
         if (!sensor->isDownstream()) phiS = -phiS; 
         if ((*ith)->right()) phiS += Gaudi::Units::pi;
@@ -837,14 +839,12 @@ void PrVLTracking::findPhiHitsOverlap(PrVLTrack& seed, const bool unused) {
         const float sPhiS = sin(phiS);
         const double x = rPred * cPhiS;
         const double y = rPred * sPhiS;
+        if (fabs(x) > m_xTolOverlap) continue;
         if (y < 0.) {
           if (seed.rZone() != 0 && seed.rZone() != 2 * m_nZonesR - 1) continue;
         } else {
           if (seed.rZone() != m_nZonesR - 1 && seed.rZone() != m_nZonesR) continue;
         }
-        if (m_debug && matchKey(*ith)) info() << "  Passed y cut." << endmsg;
-        if (fabs(x) > m_xTolOverlap) continue;
-        if (m_debug && matchKey(*ith)) info() << "  Passed x cut." << endmsg;
         (*ith)->setX(x);
         (*ith)->setY(y);
         (*ith)->setZ(sensor->z(x, y));
@@ -890,6 +890,9 @@ int PrVLTracking::findSpaceTracksPhi(PrVLTrack& seed) {
   unsigned int nStations = abs(lastStation - firstStation) + 1;
   if (nStations < 3) return 1;
   unsigned int minNbPhi = std::min(nStations, seed.nbRHits());
+  if (seed.overlap()) {
+    minNbPhi = std::min(nStations, (seed.nbRHits() / 2));
+  }
   minNbPhi = int(m_fractionPhi * minNbPhi);
   if (minNbPhi < 3) minNbPhi = 3;
   if (m_debug) {
@@ -943,70 +946,16 @@ int PrVLTracking::findSpaceTracksPhi(PrVLTrack& seed) {
     }
     if (hits.size() < minNbPhi) continue; 
     // Fit the proto-track.
-    PrVLHits::iterator ith;
-    double ux = 0., uy = 0., ud = 0.;
-    double vx = 0., vy = 0., vd = 0.;
-    double s0 = 0., sz = 0., szz = 0.;
-    if (m_debug) {
-      info() << "  === " << hits.size() << " Phi hits ===" << endmsg;
-    }
-    for (ith = hits.begin(); ith != hits.end(); ++ith) {
-      if (m_debug) printHit(*ith, "  ");
-      const double x = (*ith)->x();
-      const double y = (*ith)->y();
-      const double z = (*ith)->z();
-      const double d = (*ith)->phi();
-      const double w = (*ith)->weight();
-      ux += w * x;
-      uy += w * y;
-      vx += w * x * z;
-      vy += w * y * z;
-      ud += w * d;
-      vd += w * d * z;
-      s0 += w;
-      sz += w * z;
-      szz += w * z * z;
-    }
-    const double det = s0 * szz - sz * sz;
-    const double tx = (vx * s0 - ux * sz) / det;
-    const double ty = (vy * s0 - uy * sz) / det;
-    const double x0 = (ux * szz - vx * sz) / det;
-    const double y0 = (uy * szz - vy * sz) / det;
-    const double td = (vd * s0 - ud * sz) / det;
-    const double d0 = (ud * szz - vd * sz) / det;
-    // Calculate the chi2.
+    double x0 = 0., y0 = 0.;
+    double tx = 0., ty = 0.;
     double qxy = 0.;
-    double qphi = 0.;
-    for (ith = hits.begin(); ith != hits.end(); ++ith) {
-      const double x = (*ith)->x();
-      const double y = (*ith)->y();
-      const double d = (*ith)->phi();
-      const double z = (*ith)->z();
-      const double w = (*ith)->weight();
-      const double dx = x - (x0 + tx * z);
-      const double dy = y - (y0 + ty * z);
-      const double dd = d - (d0 + td * z);
-      qxy += w * (dx * dx + dy * dy);
-      qphi += w * dd * dd;
-    }
-    qxy /= (2. * hits.size() - 4.);
-    qphi /= (hits.size() - 2.);
-    if (qphi > m_maxQPhi) {
-      if (m_debug) info() << " >> chi2 (phi) = " << qphi << endmsg;
-      continue;
-    }
-    if (seed.nbRHits() > 5 && hits.size() >= seed.nbRHits()) {
-      if (qxy > m_maxQXyFull) {
-        if (m_debug) info() << " >> chi2 (x, y) = " << qxy << endmsg;
-        continue;
-      } 
-    } else if (qxy > m_maxQXy) {
-      if (m_debug) info() << " >> chi2 (x, y) = " << qxy << endmsg;
+    if (!fitProtoTrack(hits, 3 * minNbPhi, seed.nbRHits(), qxy, x0, y0, tx, ty)) {
       continue;
     }
     PrVLTrack track;
     track.setPhiClusters(seed, x0, tx, y0, ty, hits);
     track.updateRParameters();
+    PrVLHits::iterator ith;
     while (track.phiHits().size() > minNbPhi && track.qFactor() > m_maxQRPhi) {
       double worstChi2 = -1.;
       PrVLHits::iterator worst = track.phiHits().end();
@@ -1020,17 +969,6 @@ int PrVLTracking::findSpaceTracksPhi(PrVLTrack& seed) {
       if (m_debug) printHit(*worst, " - ");
       track.removePhiHit(*worst);
     }
-    // Check if the track has too many missed stations after cleaning up.
-    bool hole = false;
-    for (ith = track.phiHits().begin() + 1; ith != track.phiHits().end(); ++ith) {
-      PrVLHits::iterator itp = ith - 1;
-      const int gap = (*ith)->sensor() - (*itp)->sensor();
-      if (abs(gap) > 4) {
-        hole = true;
-        break;
-      }
-    }
-    if (hole) continue;
     const double fUsed = double(track.nbUsedPhiHits()) / track.nbPhiHits();
     if (!shared && fUsed > m_fractionUsed) {
       if (m_debug) info() << " >> too many used (" << fUsed << ")" << endmsg;
@@ -1224,17 +1162,6 @@ bool PrVLTracking::findSpaceTracksXY(PrVLTrack& seed) {
             track.removePhiHit(worst);
           }
         }
-        // Check if the track has too many missed stations after cleaning up.
-        bool hole = false;
-        for (ith = track.phiHits().begin() + 1; ith != track.phiHits().end(); ++ith) {
-          PrVLHits::iterator itp = ith - 1;
-          const int gap = (*ith)->sensor() - (*itp)->sensor();
-          if (abs(gap) > 4) {
-            hole = true;
-            break;
-          }
-        }
-        if (hole) continue;
         const double fUsed = double(track.nbUsedPhiHits()) / track.nbPhiHits();
         if (fUsed > m_fractionUsed) {
           if (m_debug) info() << " >> too many used (" << fUsed << ")" << endmsg;
@@ -1244,6 +1171,7 @@ bool PrVLTracking::findSpaceTracksXY(PrVLTrack& seed) {
           if (m_debug) info() << " >> q = " << track.qFactor() << endmsg;
           continue;
         }
+        track.setPhiChi2(track.qFactor());
         tracks.push_back(track);
       }
     }
@@ -1279,6 +1207,103 @@ bool PrVLTracking::findSpaceTracksXY(PrVLTrack& seed) {
   if (seed.nbRHits() >= m_minToTag) seed.untagUsedRHits();
   return false;
 
+}
+
+//============================================================================
+/// Fit the Phi hits in phi/z and xy (r set from RZ track).
+/// Can delete hits from the track if bad fit initially.
+//============================================================================
+bool PrVLTracking::fitProtoTrack(PrVLHits &hits, const unsigned int nMin,
+                                 const unsigned int nR,
+                                 double& qxy, double& x0, double& y0,
+                                 double& tx, double& ty) {
+
+  double qmax = m_maxQXy;
+  if (nR > 5 && hits.size() >= nR) qmax = m_maxQXyFull;
+
+  double sx  = 0., sy  = 0., sp  = 0.;
+  double sxz = 0., syz = 0., spz = 0.;
+  double s0  = 0., sz  = 0., szz = 0.;
+  if (m_debug) {
+    info() << "  === " << hits.size() << " Phi hits ===" << endmsg;
+  }
+  PrVLHits::iterator ith;
+  for (ith = hits.begin(); ith != hits.end(); ++ith) {
+    if (m_debug) printHit(*ith, "  ");
+    const double x = (*ith)->x();
+    const double y = (*ith)->y();
+    const double z = (*ith)->z();
+    const double p = (*ith)->phi();
+    const double w = (*ith)->weight();
+    sx += w * x;
+    sy += w * y;
+    sp += w * p;
+    sxz += w * x * z;
+    syz += w * y * z;
+    spz += w * p * z;
+    s0 += w;
+    sz += w * z;
+    szz += w * z * z;
+  }
+  const double det = s0 * szz - sz * sz;
+  tx = (sxz * s0 - sx * sz) / det;
+  ty = (syz * s0 - sy * sz) / det;
+  x0 = (sx * szz - sxz * sz) / det;
+  y0 = (sy * szz - syz * sz) / det;
+  const double tphi = (spz * s0 - sp * sz) / det;
+  const double phi0 = (sp * szz - spz * sz) / det;
+  // Calculate the chi2.
+  qxy = 0.;
+  double qphi = 0.;
+  double worstQXy = 0.;
+  double worstQPhi = 0.;
+  PrVLHits::iterator worstHitXy = hits.end();
+  PrVLHits::iterator worstHitPhi = hits.end();
+  for (ith = hits.begin(); ith != hits.end(); ++ith) {
+    const double z = (*ith)->z();
+    const double w = (*ith)->weight();
+    const double dx = x0 + tx * z - (*ith)->x();
+    const double dy = y0 + ty * z - (*ith)->y();
+    const double dphi = phi0 + tphi * z - (*ith)->phi();
+    qxy += w * (dx * dx + dy * dy);
+    qphi += w * dphi * dphi;
+    if (w * (dx * dx + dy * dy) > worstQXy) {
+      worstQXy = w * (dx * dx + dy * dy);
+      worstHitXy = ith;
+    }
+    if (w * dphi * dphi > worstQPhi) {
+      worstQPhi = w * dphi * dphi;
+      worstHitPhi = ith;
+    }
+  }
+  qphi /= (hits.size() - 2.);
+  if (qphi > m_maxQPhi) {
+    if (m_debug) info() << "  >> chi2 (phi) = " << qphi << endmsg;
+    if (nMin <= hits.size()) {
+      // Try to rescue this combination by dropping one hit.
+      hits.erase(worstHitPhi);
+      // Recurse with shorter phi list
+      return fitProtoTrack(hits, nMin, nR, qxy, x0, y0, tx, ty);
+    } else {
+      // Too few hits
+      return false;
+    }
+  }
+  qxy /= (2. * hits.size() - 4.);
+
+  if (qxy > qmax) {
+    if (m_debug) info() << "  >> chi2 (x, y) = " << qxy << endmsg;
+    if (nMin <= hits.size()) {
+      // Try to rescue this combination by dropping one hit.
+      hits.erase(worstHitXy);
+      // Recurse with shorter phi list.
+      return fitProtoTrack(hits, nMin, nR, qxy, x0, y0, tx, ty);
+    } else {
+      return false;
+    }
+  }
+  // Found OK phi combination
+  return true;
 }
 
 //============================================================================
