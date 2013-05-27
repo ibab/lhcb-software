@@ -1,0 +1,6 @@
+createTTRawBuffer.DetType = "TT";
+createITRawBuffer.DetType = "IT";
+
+//ToolSvc.ITReadoutTool.printMapping = true;
+//ToolSvc.TTReadoutTool.printMapping = true;
+
