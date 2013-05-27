@@ -1,4 +1,3 @@
-// $Id: TsaSeedTrackCnvTool.h,v 1.3 2008-07-17 13:22:20 smenzeme Exp $
 #ifndef TSASEEDTRACKCNVTOOL_H 
 #define TSASEEDTRACKCNVTOOL_H 1
 
@@ -66,7 +65,6 @@ namespace Tf
       double m_ETy2;
       double m_EQdivP2;
 
-      double m_likCut;
       double m_curvFactor;
       bool m_pFromPtKick;
       bool m_pFromCurvature;

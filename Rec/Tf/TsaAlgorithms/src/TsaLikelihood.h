@@ -1,4 +1,3 @@
-// $ Exp $
 #ifndef _TsaLikelihood_H
 #define _TsaLikelihood_H
 
@@ -87,7 +86,6 @@ namespace Tf
       SeedParabolaFit* m_parabolaFit;
 
       double m_likCut;
-      double m_maxDriftRadius;
       double m_itEff;
       double m_otEff;
       std::vector<double> m_f1Par;
