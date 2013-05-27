@@ -1,8 +1,0 @@
-//________________________________________________________________________
-// 
-// Replace the L0DU bank  by the emulated one
-//_________________________________________________________________________
-//
-
-#include "$L0DUROOT/options/ReplaceL0DUBanksSeq.opts"
-ApplicationMgr.TopAlg += { "GaudiSequencer/ReplaceL0DUBankSeq" };
