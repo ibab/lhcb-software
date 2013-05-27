@@ -32,7 +32,6 @@ CaloDetTestAlgorithm::CaloDetTestAlgorithm( const std::string& name   ,
                             ISvcLocator*       svcloc )
   : GaudiAlgorithm ( name , svcloc ) 
   , m_DetData(  )
-  , m_calo(NULL)
 {
   declareProperty("DetDataLocation" , m_DetData ) ;
   
@@ -100,19 +99,6 @@ StatusCode CaloDetTestAlgorithm::initialize()
 
   
   return StatusCode::SUCCESS;
-}
-
-// ============================================================================
-/** standard algorithm finalization 
- *  @return status code 
- */
-// ============================================================================
-StatusCode CaloDetTestAlgorithm::finalize() 
-{
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  
-  /// finalize the base class 
-  return GaudiAlgorithm::finalize();
 }
 
 // ============================================================================

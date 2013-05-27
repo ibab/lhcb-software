@@ -1,14 +1,3 @@
-// $Id: CaloDetTestAlgorithm.h,v 1.3 2007-12-05 16:36:20 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2005/12/16 17:12:40  odescham
-// v8r0 - LHCb v20 migration + cleaning
-//
-// Revision 1.1  2001/12/15 18:28:17  ibelyaev
-//  update for new policy of versions and new test algorithm
-//
 // ============================================================================
 #ifndef CALODET_CALODETTESTALGORITHM_H 
 #define CALODET_CALODETTESTALGORITHM_H 1
@@ -45,11 +34,6 @@ public:
    */
   virtual StatusCode execute   ();   
   
-  /** standard algorithm finalization 
-   *  @return status code 
-   */
-  virtual StatusCode finalize  ();   
-  
 protected:
   
   /** Standard constructor
@@ -65,7 +49,6 @@ protected:
   
 private:
   std::string m_DetData;
-  const DeCalorimeter* m_calo;
   
 };
 

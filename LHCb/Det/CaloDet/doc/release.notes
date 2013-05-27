@@ -3,6 +3,10 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! ====================================================================
 
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warning
+ - Remove unused finalize() method
+
 !========================= CaloDet v10r16 2013-04-29 =========================
 ! 2013-04-02 - Marco Cattaneo
  - Fix UNINIT_CTOR defects
