@@ -1,4 +1,3 @@
-// $Id: TrackSeedFind.h,v 1.2 2008-07-17 13:24:20 smenzeme Exp $
 #ifndef TRACKSEEDING_SEEDFind_H 
 #define TRACKSEEDING_SEEDFind_H 1
 
@@ -40,8 +39,6 @@ public:
 
 
 private:
-
-  IChronoStatSvc* svc; 
 
   //methods
 
@@ -98,7 +95,6 @@ private:
   double m_zMagnet; // midplane 
   double m_zRotPoint; // z where the effective angle change between T1 and T3 takes place
   double m_BAngleChange;  // fractional change of track angle between T1 and T3 with respect to T1 and the origin 
-  double m_BFieldInt; // average field integral
   double m_zmin[3]; // minimum z positions of T1,T2,T3 planes
   double m_zmax[3]; // maximum z positions of T1,T2,T3 planes
   double m_minstereo; // smallest absolute value of the stereo angle in the U,V planes
