@@ -140,7 +140,7 @@ private:
   void init() {
     m_valid = true;
     m_hits.reserve( 32 );
-    const LHCb::State& state = m_track->closestState( 0. );
+    const LHCb::State& state = m_track->closestState( LHCb::State::EndVelo );
     m_x0     = state.x();
     m_y0     = state.y();
     m_z0     = state.z();

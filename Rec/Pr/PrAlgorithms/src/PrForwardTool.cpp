@@ -251,7 +251,7 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
       double q = track.qOverP() > 0 ? 1. : -1.;
       double magscalefactor = m_geoTool->magscalefactor();
       kick = q*magscalefactor*(-1)*m_magnetKickParams[0] / ( fabs(1./track.qOverP()) -  m_magnetKickParams[1] ) ;
-      kick *= ( m_geoTool->zReference() - zMag);
+      kick *= ( zZone - zMag);
       double maxRange = m_minRange + m_momentumEstimateError*fabs(kick);
       xMin = xInZone + kick - maxRange;
       xMax = xInZone + kick + maxRange;
