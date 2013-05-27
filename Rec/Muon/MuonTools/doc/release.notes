@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta Alessia.Sattaft@cern.ch
 ! =============================================================================
 
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warnings
+
 ! 2013-05-24 - Marco Cattaneo
  - Add missing dependencies on MuonInterfaces and MuonDAQ
  - Remove obsolete options directory

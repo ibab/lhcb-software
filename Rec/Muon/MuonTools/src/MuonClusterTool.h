@@ -1,4 +1,3 @@
-// $Id: MuonClusterTool.h,v 1.1 2010-02-09 16:02:24 asatta Exp $
 #ifndef MUONCLUSTERTOOL_H 
 #define MUONCLUSTERTOOL_H 1
 
@@ -43,8 +42,5 @@ private:
   //  std::vector<std::pair<LHCb::MuonCluster *,int> > m_outputclust[5];
   std::vector<LHCb::MuonCluster * > m_finalclust[5];
   DeMuonDetector* m_muonDetector;  
-  bool m_debug;
-
-
 };
 #endif // MUONCLUSTERTOOL_H

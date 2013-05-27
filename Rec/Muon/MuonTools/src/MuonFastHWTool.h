@@ -1,4 +1,3 @@
-// $Id: MuonFastHWTool.h,v 1.2 2010-03-15 11:37:36 asatta Exp $
 #ifndef MUONFASTHWTOOL_H 
 #define MUONFASTHWTOOL_H 1
 
@@ -101,6 +100,5 @@ private:
   std::vector<int>   m_ODENum[80][2];
   std::vector<int>            m_synchNum[80][2];
   DeMuonDetector* m_muonDetector;  
-  bool m_debug;
 };
 #endif // MUONFASTHWTOOL_H

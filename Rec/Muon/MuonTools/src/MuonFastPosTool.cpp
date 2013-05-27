@@ -24,7 +24,6 @@ DECLARE_TOOL_FACTORY( MuonFastPosTool )
     : GaudiTool ( type, name, parent )
     , m_stationNumber(0)
     , m_regionNumber(0)
-    , m_debug(false)
 {
   declareInterface<IMuonFastPosTool>(this);
 }

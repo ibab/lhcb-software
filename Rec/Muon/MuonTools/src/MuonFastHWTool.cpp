@@ -26,7 +26,7 @@ MuonFastHWTool::MuonFastHWTool( const std::string& type,
     , m_stationNumber(0)
     , m_regionNumber(0)
     //, m_DDS()
-    ,m_debug(false){
+{
   declareInterface<IMuonFastHWTool>(this);
   
   return ;

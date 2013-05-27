@@ -1,4 +1,3 @@
-// $Id: MuonFastPosTool.h,v 1.2 2010-02-09 13:06:19 asatta Exp $
 #ifndef MUONFASTPOSTOOL_H 
 #define MUONFASTPOSTOOL_H 1
 
@@ -60,6 +59,5 @@ private:
 //  IDataProviderSvc* m_DDS;
   std::vector<Gaudi::XYZPoint> m_pos[5];
   DeMuonDetector* m_muonDetector;  
-  bool m_debug;
 };
 #endif // MUONFASTPOSTOOL_H
