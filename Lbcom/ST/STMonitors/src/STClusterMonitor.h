@@ -77,7 +77,6 @@ namespace ST
 
 
     /// Toggles to turn plots off/on
-    bool m_plot2D; ///< Toggle 2D plots on/off
     bool m_plotBySvcBox; ///< Plot by Service Box
     bool m_plotByDetRegion; ///< Plot by unique detector region
     bool m_plotByPort; ///< Plot number of clusters/tell1 by vs port
