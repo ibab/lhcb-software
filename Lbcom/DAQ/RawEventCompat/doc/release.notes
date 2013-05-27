@@ -4,6 +4,9 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+! 2013-05-27 - Rob Lambert
+ - Expand 1.0 configuration, interpret as search paths
+
 ! 2013-05-01 - Rob Lambert
  - Create package
  - create configurables and methods in Configuration.py

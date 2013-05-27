@@ -17,11 +17,67 @@ from Gaudi.Configuration import *
 #at some point this dictionary will be set from a DBASE package
 
 #dictionary of version: <bank, location>
+# if a list of locations is given, treat as a search path, <bank, [location1, location2...] >
 __locations__={
-    #the original raw event, put everything in DAQ/RawEvent
+    #the original raw event, as in the pit, and Boole, put everything in DAQ/RawEvent, input for Trigger.
     0.0 : {
-        "ALL" : "DAQ/RawEvent"
+        'ODIN': "DAQ/RawEvent",
+        'L0DU': "DAQ/RawEvent",
+        'L0Calo': "DAQ/RawEvent",
+        'L0CaloFull': "DAQ/RawEvent",
+        'L0DU': "DAQ/RawEvent",
+        'L0Muon': "DAQ/RawEvent",
+        'L0MuonProcCand': "DAQ/RawEvent",
+        'L0PU': "DAQ/RawEvent",
+        'HltSelReports': "DAQ/RawEvent",
+        'HltDecReports': "DAQ/RawEvent",
+        'HltRoutingBits': "DAQ/RawEvent",
+        'HltVertexReports': "DAQ/RawEvent",
+        'Rich': "DAQ/RawEvent",
+        'Muon': "DAQ/RawEvent",
+        'PrsE': "DAQ/RawEvent",
+        'EcalE': "DAQ/RawEvent",
+        'HcalE': "DAQ/RawEvent",
+        'PrsTrig': "DAQ/RawEvent",
+        'EcalTrig': "DAQ/RawEvent",
+        'HcalTrig': "DAQ/RawEvent",
+        'EcalPacked': "DAQ/RawEvent",
+        'HcalPacked': "DAQ/RawEvent",
+        'PrsPacked': "DAQ/RawEvent",
+        'EcalPackedError': "DAQ/RawEvent",
+        'HcalPackedError': "DAQ/RawEvent",
+        'PrsPackedError': "DAQ/RawEvent"
         },
+    #stripping 17-like, all in DAQ/RawEvent, and some things also in Trigger/RawEvent
+    1.0 : {
+        'ODIN': ["Trigger/RawEvent","DAQ/RawEvent"],
+        'L0DU': ["Trigger/RawEvent","DAQ/RawEvent"],
+        'L0Calo': ["Trigger/RawEvent","DAQ/RawEvent"],
+        'L0CaloFull': ["Trigger/RawEvent","DAQ/RawEvent"],
+        'L0DU': ["Trigger/RawEvent","DAQ/RawEvent"],
+        'L0Muon': ["Trigger/RawEvent","DAQ/RawEvent"],
+        'L0MuonProcCand': ["Trigger/RawEvent","DAQ/RawEvent"],
+        'L0PU': ["Trigger/RawEvent","DAQ/RawEvent"],
+        'HltSelReports': ["Trigger/RawEvent","DAQ/RawEvent"],
+        'HltDecReports': ["Trigger/RawEvent","DAQ/RawEvent"],
+        'HltRoutingBits': ["Trigger/RawEvent","DAQ/RawEvent"],
+        'HltVertexReports': ["Trigger/RawEvent","DAQ/RawEvent"],
+        'Rich': "DAQ/RawEvent",
+        'Muon': "DAQ/RawEvent",
+        'PrsE': "DAQ/RawEvent",
+        'EcalE': "DAQ/RawEvent",
+        'HcalE': "DAQ/RawEvent",
+        'PrsTrig': "DAQ/RawEvent",
+        'EcalTrig': "DAQ/RawEvent",
+        'HcalTrig': "DAQ/RawEvent",
+        'EcalPacked': "DAQ/RawEvent",
+        'HcalPacked': "DAQ/RawEvent",
+        'PrsPacked': "DAQ/RawEvent",
+        'EcalPackedError': "DAQ/RawEvent",
+        'HcalPackedError': "DAQ/RawEvent",
+        'PrsPackedError': "DAQ/RawEvent"
+        },
+    #stripping 20-like, NO DAQ/RawEvent, everything split up into different places
     2.0 : {
         'ODIN': "Trigger/RawEvent",
         'L0DU': "Trigger/RawEvent",
@@ -56,7 +112,7 @@ __locations__={
 #at some point this dictionary will be set from a DBASE package
 
 #dictionary of Reco and stripping pass : version
-__reco_dict__={ "Reco14" : 2.0, "Strip20" : 2.0 }
+__reco_dict__={ "Reco14" : 2.0, "Strip20" : 2.0, "Reco12" : 1.0, "Strip17" :1.0, "Pit" : 0.0 , "LHCb" : 0.0 , "Moore" : 0.0}
 
 ####################################################
 # Helpers to avoid code duplications
@@ -95,6 +151,21 @@ def _getDict(locations=None,recodict=None):
 ####################################################
 # Simple python functions
 ####################################################
+def WhereAll(bank,version,locations=None,recodict=None):
+    """Return a search path, all possible places to find a bank in a given version"""
+    #find dictionaries
+    locations,recodict=_getDict(locations,recodict)
+    #check the options
+    version=_checkv(version, locations,recodict)
+    loc=locations[version][bank]
+    if type(loc) is str:
+        return [loc]
+    else:
+        return loc
+    
+def WhereBest(bank,version,locations=None,recodict=None):
+    """Return one location, where best to find a given bank in a given processing"""
+    return WhereAll(bank,version,locations,recodict)[0]
 
 def ReverseDict(version,locations=None,recodict=None):
     """
@@ -109,11 +180,16 @@ def ReverseDict(version,locations=None,recodict=None):
 
     reversed={}
     for key in locations[version]:
-        if locations[version][key] in reversed:
-            reversed[locations[version][key]].append(key)
-        else:
-            reversed[locations[version][key]]=[key]
-
+        #if it's a list, treat as a search path, add both
+        loc=locations[version][key]
+        if type(loc) is not list:
+            loc=[loc]
+        for aloc in loc:
+            if aloc in reversed:
+                reversed[aloc].append(key)
+            else:
+                reversed[aloc]=[key]
+    
     return reversed
 
 def RecombineEventByMap(version,regex=".*",DoD=True, locations=None, recodict=None):
@@ -137,13 +213,16 @@ def RecombineEventByMap(version,regex=".*",DoD=True, locations=None, recodict=No
     version=_checkv(version, locations)
 
     #configure my combiner
-    from Configurables import RawEventMapCombiner
+    try:
+        from Configurables import RawEventMapCombiner
+    except ImportError:
+        raise ImportError("You don't have RawEventMapCombiner available, choose another method, or getpack the correct version of DAQ/DAQUtils (v1r5p1, v1r7b, head)")
     myCombiner=RawEventMapCombiner("resurectRawEventMap")
     toCopy={}
     for abank in locations[version]:
         if re.match(regex,abank):
-            toCopy[abank]=locations[version][abank]
-
+            toCopy[abank]=WhereBest(abank,version,locations,recodict)
+    
     myCombiner.RawBanksToCopy=toCopy
 
     #configure DoD if required
@@ -170,7 +249,10 @@ def RecombineWholeEvent(version,DoD=True, regex=".*", locations=None, recodict=N
     version=_checkv(version, locations)
 
     #configure my combiner
-    from Configurables import RawEventSimpleCombiner
+    try:
+        from Configurables import RawEventSimpleCombiner
+    except ImportError:
+        raise ImportError("You don't have RawEventSimpleCombiner available, choose another method, or getpack the correct version of DAQ/DAQUtils (v1r5p1, v1r7b, head)")
     myCombiner=RawEventSimpleCombiner("resurectRawEvent")
     myCombiner.InputRawEventLocations=[aloc for aloc in ReverseDict(version,locations) if re.match(regex,aloc)]
 
@@ -193,23 +275,33 @@ class RawEventFormat(ConfigurableUser):
         pass
 
 class RecombineRawEvent(ConfigurableUser):
-    "A simple configurable to add the raw event recreation to the DoD service"
+    """A simple configurable to add the raw event recreation to the DoD service
+    Only used to recreate the original raw event location for the trigger."""
+    #not sure if this is the correct specification here... 
     __used_configurables__ = [RawEventFormat]
-
+    
     __slots__ = {
         "Method" : "Simple"  #Simple or Map combiner
         , "Regex" : ".*"  #locations or RawBanks to copy.
         , "Version" : 2.0 #version to copy from
         }
+    _propertyDocDct={
+        "Method" : "Simple or Map combiner, see the documentation of the methods in __known_methods__, default Simple"  #Simple or Map combiner
+        , "Regex" : "locations or RawBanks to copy. A regular expression such that you can ignore certain locations or bank names. Default .*"  #locations or RawBanks to copy.
+        , "Version" : "Version to copy from, float. Default 2.0" #version to copy from
+        }
+    
     __known_methods__={
         "Simple": RecombineWholeEvent,
         "Map" : RecombineEventByMap
         }
-
+    
     def __apply_configuration__(self):
         #check arguments
         if self.getProp("Method") not in self.__known_methods__:
             raise KeyError("You have asked for an undefined method ", self.getProp("Method"))
+        if self.getProp("Version") in [0.0,1.0]:
+            raise KeyError("Versions 0.0 and 1.0 anyway have a combined raw event... why would you want to do this? ", self.getProp("Version"))
         loc,rec=_getDict()
         #call correct method
         self.__known_methods__[self.getProp("Method")](
