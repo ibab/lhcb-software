@@ -40,7 +40,6 @@ DECLARE_ALGORITHM_FACTORY( OTChannelMonitor )
 OTChannelMonitor::OTChannelMonitor( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator ),
-    m_otdet(NULL),
     m_numEvents(0),
     m_isOnline(false),
     m_scaleHistos(true),
@@ -166,33 +165,36 @@ StatusCode OTChannelMonitor::execute() {
 
       // Get module for the given hit for position information 
       const  DeOTModule * tmpModule = m_otdet->findModule (ihit->channel());
-      
-      // Get point 
-      Gaudi::XYZPoint mypoint =  tmpModule->centerOfStraw(ihit->channel().straw());
-      
+      if(!tmpModule)continue;
+
       // Each point is weighted according to the size of the module 
       // A correction is implemented which takes into account the variation of the particle flux 
       // with distance from the beam axis 
       double weight = getChannelWeight(tmpModule, ihit->channel());
+      
+      // Get point 
+      Gaudi::XYZPoint mypoint =  tmpModule->centerOfStraw(ihit->channel().straw());
+      
 
       // Get unique layer number 
       int uniqueLayer = ihit->channel().sequentialUniqueLayer(); 
       if ( msgLevel(MSG::DEBUG) ) 
-        debug() << " Going to fill layer " << uniqueLayer << " at point " << mypoint.X() << endreq;
+	debug() << " Going to fill layer " << uniqueLayer << " at point " << mypoint.X() << endreq;
 
       // Fill layer histogram
       fill(m_LayerHist[uniqueLayer], mypoint.X(),weight);
-      
+
       // TODO
       // - insert correction for average luminosity
       
-      delete tmpModule;
     }
 
       
   }
   
   return sc ;
+
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

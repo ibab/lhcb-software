@@ -3,6 +3,9 @@
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
 
+! 2013-05-27 - Francesco Dettori 
+ - Small bug fix in OTChannelMonitor 
+
 !========================= OTMonitor v3r5p1 2013-04-22 =========================
 ! 2013-04-22 - Marco Cattaneo
  - Fix trivial UNINIT_CTOR and UNREACHABLE Coverity defects
