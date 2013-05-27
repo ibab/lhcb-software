@@ -1,4 +1,3 @@
-// $Id: STOfflinePosition.h,v 1.10 2010-04-05 09:57:33 mneedham Exp $
 #ifndef STOfflinePosition_H
 #define STOfflinePosition_H 1
 
@@ -70,7 +69,6 @@ private:
 
   // job options
   std::vector<double> m_errorVec;  ///< Error parametrized by cluster size
-  double m_sharingCorr;            ///< Old charge sharing correction factor
   double m_linSharingCorr2;        ///< Corr factor linear term 2-strip clusters
   double m_cubicSharingCorr2;      ///< Corr factor cubic term 2-strip clusters
   double m_cubicSharingCorr3;      ///< Corr factor cubic term 3-strip clusters

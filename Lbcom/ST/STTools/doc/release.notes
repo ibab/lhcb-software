@@ -3,6 +3,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warning
+
 !========================= STTools v4r14p1 2013-04-22 =========================
 ! 2013-04-08 - Marco Cattaneo
  - Add __init.py__ to please CMake
@@ -15,7 +18,7 @@
  - Added CMake configuration file.
 
 ! 2012-10-19 - Marco Cattaneo
- - Fix gcc -pedentic warnings
+ - Fix gcc -pedantic warnings
  - Fix coverity defect
  - Fix unprotected debug()
  - Use getIfExists instead of separate exist and get calls.
