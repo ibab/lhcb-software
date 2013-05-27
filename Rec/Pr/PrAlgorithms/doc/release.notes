@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warnings
+
 !========================= PrAlgorithms v1r4 2013-04-30 =========================
 ! 2013-04-22 - Sascha Stahl
  - Added check for backward velo tracks in PrForwardTracking.

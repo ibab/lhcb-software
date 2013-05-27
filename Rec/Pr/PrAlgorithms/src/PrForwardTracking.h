@@ -45,7 +45,6 @@ private:
   int            m_wantedKey;
   int            m_veloKey;
   IPrDebugTool*  m_debugTool;
-  bool           m_debug;
   bool           m_doTiming;
   ISequencerTimerTool* m_timerTool;
   int            m_timeTotal;

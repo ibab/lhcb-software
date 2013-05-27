@@ -53,7 +53,6 @@ PrDownstream::PrDownstream( const std::string& name,
     m_magFieldSvc(NULL),
     m_utHitManager(NULL),
     m_debugTool(NULL),
-    m_utDet(NULL),
     m_timerTool(NULL)    
 {
   declareProperty( "InputLocation" , m_inputLocation  = ""    );

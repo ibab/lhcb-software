@@ -78,7 +78,6 @@ private:
   std::string     m_debugToolName;
   int             m_wantedKey;
   IPrDebugTool*   m_debugTool;
-  bool            m_debug;
 
   std::vector<PrSeedTrack>       m_trackCandidates;
   std::vector<PrSeedTrack>       m_xCandidates;
