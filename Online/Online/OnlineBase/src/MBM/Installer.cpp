@@ -349,7 +349,7 @@ extern "C" int mbm_install_qmtest(int argc , char** argv) {
   return bm ? 0 : 1;
 }
 
-extern "C" std::vector<ServerBMID> mbm_multi_install(int argc , char** argv) {
+std::vector<ServerBMID> mbm_multi_install(int argc , char** argv) {
   std::vector<char*> opts;
   std::vector<ServerBMID> bmids;
   static char type[64] = "mbm_install";

@@ -61,6 +61,9 @@ typedef void* ServerBMID;
 
 #ifdef __cplusplus
 #include <vector>
+#ifdef __cplusplus
+  std::vector<ServerBMID> mbm_multi_install(int argc , char** argv);
+#endif
 #define __MBM_CONST const
 extern "C"  {
 #endif
@@ -69,9 +72,6 @@ extern "C"  {
   int  mbm_qmtest_check_start();
 
   ServerBMID  mbm_install_server(int argc , char** argv);
-#ifdef __cplusplus
-  std::vector<ServerBMID> mbm_multi_install(int argc , char** argv);
-#endif
   int  mbm_deinstall(int argc , char** argv);
   int  mbm_dump(int argc , char** argv);
   int  mbm_mon(int argc , char** argv);
