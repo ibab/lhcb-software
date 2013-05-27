@@ -1,23 +1,3 @@
-// $Id: CaloMergedPi0Alg.h,v 1.8 2010-03-08 01:19:40 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2008/06/30 15:36:33  odescham
-// prepare for HLT processing
-//
-// Revision 1.6  2006/10/13 21:39:46  odescham
-// Setup CaloReco on-Demand
-//
-// Revision 1.5  2006/05/30 09:42:03  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.4  2005/11/07 12:12:42  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.3  2004/10/27 12:40:08  ibelyaev
-//  update for new Calo/CaloUtils + MergedPi0 'optimization'
-//
 // ============================================================================
 #ifndef CALORECO_CaloMergedPi0Alg_H 
 #define CALORECO_CaloMergedPi0Alg_H 1
@@ -120,7 +100,6 @@ private:
   
   /** NTuple 
    */
-  INTuple*            m_ntuple    ; ///< pointer to NTuple 
   std::string         m_ntupleLUN ; ///< logical file unit for NTuple
   NTuple::Item<float>  m_mas ; 
   NTuple::Item<long>   m_cls ; 
@@ -141,7 +120,6 @@ private:
 
   // Input Parameters
   bool m_createClusterOnly;
-  unsigned long m_pi0s;
   
 private:
   CaloCorrectionBase* m_trSh;
