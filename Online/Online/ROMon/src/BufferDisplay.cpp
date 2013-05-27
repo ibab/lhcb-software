@@ -66,11 +66,11 @@ void BufferDisplay::update(const void* data) {
           //  if ( p ) *p = 0;
           //}
           ::sprintf(name," Buffer \"%s\"",bnam);
-          ::sprintf(txt,"%-26s  Events: Produced:%lld Actual:%lld Seen:%lld Pending:%d Max:%d",
+          ::sprintf(txt,"%-26s  Events: Produced:%lld Actual:%lld Seen:%lld Pending:%ld Max:%d",
                     name, c.tot_produced, c.tot_actual, c.tot_seen, c.i_events, c.p_emax);
           ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-          ::sprintf(txt,"%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]",
-                    "",(c.bm_size*c.bytes_p_Bit)/1024, (c.i_space*c.bytes_p_Bit)/1024, 
+          ::sprintf(txt,"%-26s  Space(kB):[Tot:%ld Free:%ld] Users:[Tot:%ld Max:%ld]",
+                    "",long((c.bm_size*c.bytes_p_Bit)/1024), long((c.i_space*c.bytes_p_Bit)/1024), 
                     c.i_users, c.p_umax);
           ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
           ::scrc_put_chars(m_display,"  Occupancy [Events]:",NORMAL,++line,1,1);
@@ -120,10 +120,10 @@ void BufferDisplay::update(const void* data) {
               }
             }
             if ( c.type == 'C' )
-              ::sprintf(txt,"%-22s%5X%6d C%4s%12d %c%c%c%c %s",cnam,c.partitionID,c.processID,
+              ::sprintf(txt,"%-22s%5X%6d C%4s%12ld %c%c%c%c %s",cnam,c.partitionID,c.processID,
                         sstat[(size_t)c.state],c.events,c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],bnam);
             else if ( c.type == 'P' )
-              ::sprintf(txt,"%-22s%5X%6d P%4s%12d %4s %s",cnam,c.partitionID,c.processID,
+              ::sprintf(txt,"%-22s%5X%6d P%4s%12ld %4s %s",cnam,c.partitionID,c.processID,
                         sstat[(size_t)c.state],c.events,"",bnam);
             else
               ::sprintf(txt,"%-22s%5X%6d ?%4s%12s %4s %s",cnam,c.partitionID,c.processID,"","","",bnam);
