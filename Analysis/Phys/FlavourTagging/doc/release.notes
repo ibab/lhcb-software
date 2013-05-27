@@ -5,6 +5,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2013-05-27 - Manuel Tobias Schiller
+ - add the changes in ITaggingUtils I forgot in my last commit
+
 ! 2013-05-26 - Manuel Tobias Schiller
  - introduce MultiplePersonalityCall class - a templated class which allows
    callable objects of identical signature to be called; this class

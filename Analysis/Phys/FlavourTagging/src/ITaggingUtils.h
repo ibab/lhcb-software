@@ -38,7 +38,7 @@ public:
   virtual int countTracks( const LHCb::Particle::ConstVector& )=0;
 
   virtual bool isinTree( const LHCb::Particle*, 
-                         std::vector<const LHCb::Particle*>& , double& )=0;
+                         const LHCb::Particle::ConstVector& , double& )=0;
 
 };
 
