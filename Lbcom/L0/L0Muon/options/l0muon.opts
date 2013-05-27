@@ -1,7 +1,0 @@
-ApplicationMgr.TopAlg += {"GaudiSequencer/L0"};
-
-L0.Members += { "L0MuonAlg/L0Muon"};
-#include "$L0MUONROOT/options/l0muonAlg.opts"
-
-L0.Members += { "L0MuonCandidatesFromRaw/L0MuonFromRaw"};
-#include "$L0MUONROOT/options/l0muonFromRaw.opts"
