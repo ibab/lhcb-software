@@ -1,0 +1,142 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichNonZeroSuppALICEData_V1.icpp
+ *
+ *  Implementation file for RICH DAQ helper class : RichNonZeroSuppALICEData
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   2004-12-17
+ */
+//-----------------------------------------------------------------------------
+
+// Gaudi
+#include "GaudiKernel/MsgStream.h"
+
+// local
+#include "RichNonZeroSuppALICEData_V1.h"
+
+// RichKernel
+#include "RichKernel/RichMap.h"
+
+// =================================================================================================
+
+namespace Rich {
+  namespace DAQ {
+
+    namespace RichNonZeroSuppALICEDataV1
+    {
+
+      template< class Version, class Header, class Footer >
+      void
+      RichNonZeroSuppALICEData<Version,Header,Footer>::buildData( const LHCb::RichSmartID::Vector & digits )
+      {
+        // Set data words
+        for ( LHCb::RichSmartID::Vector::const_iterator iDig = digits.begin();
+              iDig != digits.end(); ++ iDig )
+        {
+          const Rich::DAQ::ShortType row = 8*(*iDig).pixelRow() + (*iDig).pixelSubRow();
+          setPixelActive( row, (*iDig).pixelCol() );
+        }
+        // set footer parity
+        if ( this->footer().hasParityWord() )
+        {
+          Footer foot = this->footer();
+          foot.setParityWord( this->createParityWord(digits) );
+          this->setFooter(foot);
+        }
+        // Fill the number of 8 bit words + 1 field in header
+        Header head ( this->header() );
+        head.setNEightBitBlocksPlusOne ( calcEightBitword(digits) + 1 );
+        this->setHeader( head );
+      }
+
+      template< class Version, class Header, class Footer >
+      Rich::DAQ::ShortType
+      RichNonZeroSuppALICEData<Version,Header,Footer>::calcEightBitword( const LHCb::RichSmartID::Vector & digits ) const
+      {
+        using namespace RichZSPacked_V2;
+
+        // temporary data map
+        typedef Rich::Map< Rich::DAQ::ShortType, Rich::DAQ::ShortType > DataMap;
+        DataMap dataM;
+
+        // Get dummy packed data
+        const RichZSPacked zsData;
+
+        // Loop over digits
+        for ( LHCb::RichSmartID::Vector::const_iterator iID = digits.begin();
+              iID != digits.end(); ++iID )
+        {
+
+          // Get bit and address
+          const Rich::DAQ::ShortType bit     = zsData.bitFromCol( (*iID).pixelCol() );
+          const Rich::DAQ::ShortType address = zsData.addressFromRowCol( (*iID).pixelRow(), (*iID).pixelCol() );
+
+          // Set the correct bit on for this address
+          this->setBit( dataM[address], bit );
+
+        }
+
+        // How many words ?
+        const Rich::DAQ::ShortType nWords = dataM.size()/2 + dataM.size()%2;
+        return nWords;
+      }
+
+      template< class Version, class Header, class Footer >
+      Rich::DAQ::ShortType
+      RichNonZeroSuppALICEData<Version,Header,Footer>::fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
+                                                                         const LHCb::RichSmartID hpdID ) const
+      {
+        m_nHits = 0; // reset number of hits to zero
+
+        // reserve size in hit vector ( guess )
+        ids.reserve( 96 );
+
+        // Fill with active channels
+        for ( Rich::DAQ::ShortType iRow = 0; iRow < Rich::DAQ::MaxDataSizeALICE; ++iRow )
+        {
+          for ( Rich::DAQ::ShortType iCol = 0; iCol < Rich::DAQ::MaxDataSize; ++iCol )
+          {
+            if ( isPixelActive(iRow,iCol) )
+            {
+              ids.push_back( LHCb::RichSmartID( hpdID.rich(),
+                                                hpdID.panel(),
+                                                hpdID.pdNumInCol(),
+                                                hpdID.pdCol(),
+                                                iRow/8,  // pixel row
+                                                iCol,    // pixel col
+                                                iRow%8 ) // pixel subrow
+                             );
+              ++m_nHits; // count hits
+            }
+          }
+        }
+
+        return m_nHits;
+      }
+
+      template< class Version, class Header, class Footer >
+      Rich::DAQ::ShortType RichNonZeroSuppALICEData<Version,Header,Footer>::hitCount() const
+      {
+        if ( m_nHits < 0 )
+        {
+          // not yet calculated, so need to do it here
+          m_nHits = 0;
+          for ( Rich::DAQ::ShortType iRow = 0; iRow < Rich::DAQ::MaxDataSizeALICE; ++iRow )
+          {
+            for ( Rich::DAQ::ShortType iCol = 0; iCol < Rich::DAQ::MaxDataSize; ++iCol )
+            {
+              if ( isPixelActive(iRow,iCol) )
+              {
+                ++m_nHits; // count hits
+              }
+            }
+          }
+        }
+        return static_cast<Rich::DAQ::ShortType>(m_nHits);
+      }
+
+    } // end V1 namespace
+
+  }
+}

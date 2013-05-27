@@ -1,0 +1,28 @@
+#============================================================================
+# Created    : 2003-11-06
+# Maintainer : Chris Jones
+#============================================================================
+
+package           RichDAQ
+version           v3r40
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+include_path none
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use   RichKernel     v*      Rich
+use   DigiEvent      v*      Event
+use   DAQEvent       v*      Event
+use   RichDet        v*      Det
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          RichDAQ    ../src/*.cpp
+
+apply_pattern component_library library=RichDAQ

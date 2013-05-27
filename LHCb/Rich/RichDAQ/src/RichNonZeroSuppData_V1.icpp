@@ -1,0 +1,67 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichNonZeroSuppData_V1.icpp
+ *
+ *  Implementation file for RICH DAQ helper class : RichNonZeroSuppData
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   2004-12-17
+ */
+//-----------------------------------------------------------------------------
+
+// Gaudi
+#include "GaudiKernel/MsgStream.h"
+
+// local
+#include "RichNonZeroSuppData_V1.h"
+
+// =================================================================================================
+
+namespace Rich
+{
+  namespace DAQ
+  {
+
+    namespace RichNonZeroSuppDataV1
+    {
+
+      template< class Version, class Header, class Footer >
+      ShortType RichNonZeroSuppData<Version,Header,Footer>::fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
+                                                                              const LHCb::RichSmartID hpdID ) const
+      {
+        ShortType nHits(0);
+
+        // reserve size in hit vector ( guess )
+        ids.reserve( 96 );
+
+        // Fill with active channels
+        for ( ShortType iRow = 0; iRow < MaxDataSize; ++iRow )
+        {
+          for ( ShortType iCol = 0; iCol < MaxDataSize; ++iCol )
+          {
+            if ( isPixelActive(iRow,iCol) )
+            {
+              ids.push_back( LHCb::RichSmartID( hpdID.rich(),
+                                                hpdID.panel(),
+                                                hpdID.pdNumInCol(),
+                                                hpdID.pdCol(),
+                                                iRow, iCol ) );
+              ++nHits;
+            }
+          }
+        }
+
+        return nHits;
+      }
+
+      template< class Version, class Header, class Footer >
+      ShortType RichNonZeroSuppData<Version,Header,Footer>::hitCount() const
+      {
+        // For this implementation the header nEightBitBlocksPlusOne word contains the number of hits
+        return this->header().nEightBitBlocksPlusOne();
+      }
+
+    } // end V1 namespace
+
+  }
+}

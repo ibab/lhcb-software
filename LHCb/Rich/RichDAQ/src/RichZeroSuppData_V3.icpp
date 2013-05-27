@@ -1,0 +1,173 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichZeroSuppData_V3.icpp
+ *
+ *  Implementation file for RICH DAQ helper class : RichZeroSuppData
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   2004-12-17
+ */
+//-----------------------------------------------------------------------------
+
+// local
+#include "RichZeroSuppData_V3.h"
+
+// RichKernel
+#include "RichKernel/RichMap.h"
+
+//-----------------------------------------------------------------------------
+
+namespace Rich
+{
+  namespace DAQ
+  {
+
+    namespace RichZeroSuppDataV3
+    {
+
+      template< class Version, class Header, class Footer >
+      void RichZeroSuppData<Version,Header,Footer>::buildData( const LHCb::RichSmartID::Vector & pdHits )
+      {
+        using namespace RichZSPacked_V2;
+
+        // temporary data map
+        typedef Rich::Map< ShortType, ShortType > DataMap;
+        DataMap dataM;
+        
+        // Get dummy packed data
+        const RichZSPacked zsData;
+
+        // Loop over digits
+        for ( LHCb::RichSmartID::Vector::const_iterator iID = pdHits.begin();
+              iID != pdHits.end(); ++iID )
+        {
+
+          // Get bit and address
+          const ShortType bit     = zsData.bitFromCol( (*iID).pixelCol() );
+          const ShortType address = zsData.addressFromRowCol( (*iID).pixelRow(), (*iID).pixelCol() );
+
+          // Set the correct bit on for this address
+          this->setBit( dataM[address], bit );
+
+        }
+
+        // How many words ?
+        const ShortType nWords = dataM.size()/2 + dataM.size()%2;
+        if ( nWords > MaxDataSize ) { m_tooBig = true; return; }
+
+        // Store "nEightBitBlocksPlusOne" value in header word
+        Header head ( this->header() );
+        head.setNEightBitBlocksPlusOne ( dataM.size() + 1 );
+        this->setHeader( head );
+
+        // Loop over address / bitfield pairs and fill to data bank
+        DataMap::const_iterator iD = dataM.begin();
+        while ( iD != dataM.end() )
+        {
+          const ShortType address0( (*iD).first ), field0( (*iD).second );
+          ShortType address1(0), field1(0);
+          ++iD;
+          if ( iD != dataM.end() )
+          {
+            address1 = (*iD).first;
+            field1   = (*iD).second;
+            ++iD;
+          }
+
+          // Add these to the data block
+          this->addData( RichZSPacked( address0, field0, address1, field1 ) );
+        }
+
+        // set footer parity
+        if ( this->footer().hasParityWord() )
+        {
+          Footer foot = this->footer();
+          foot.setParityWord( this->createParityWord(pdHits) );
+          this->setFooter(foot);
+        }
+
+      }
+
+      template< class Version, class Header, class Footer >
+      ShortType RichZeroSuppData<Version,Header,Footer>::fillRichSmartIDs ( LHCb::RichSmartID::Vector & ids,
+                                                                            const LHCb::RichSmartID hpdID ) const
+      {
+        using namespace RichZSPacked_V2;
+
+        m_nHits = 0; // reset number of hits to zero
+
+        // Number of data words
+        const ShortType nDataWords = this->dataSize();
+
+        // Is the last word padded or not ?
+        const bool lastWordIsPadded = ( 0 == this->header().nEightBitBlocksPlusOne()%2 );
+
+        // rough guess at number of hits
+        ids.reserve( nDataWords * 4 );
+
+        // Loop over data fields
+        for ( ShortType iData = 0; iData < nDataWords; ++iData )
+        {
+
+          // Get packed data data
+          const RichZSPacked zsData( this->data()[iData] );
+
+          // Get first address and bit field
+          const ShortType address0 = zsData.address0();
+          const ShortType bits0    = zsData.bitField0();
+          if ( bits0 != 0 )
+          {
+            for ( ShortType iB = 0; iB < RichZSPacked::BitsField; ++iB )
+            {
+              if ( this->isBitOn(bits0,iB) )
+              {
+                ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
+                                                  hpdID.pdNumInCol(), hpdID.pdCol(),
+                                                  zsData.rowFromAddress(address0),
+                                                  zsData.colFromAddressAndBit(address0,iB) ) );
+                ++m_nHits; // count hits
+              }
+            }
+          }
+
+          if ( (iData < this->dataSize()-1) || !lastWordIsPadded )
+          {
+            // Get second address and bit field
+            const ShortType address1 = zsData.address1();
+            const ShortType bits1    = zsData.bitField1();
+            if ( address0 != address1 && bits1 != 0 )
+            {
+              for ( ShortType iB = 0; iB < RichZSPacked::BitsField; ++iB )
+              {
+                if ( this->isBitOn(bits1,iB) )
+                {
+                  ids.push_back( LHCb::RichSmartID( hpdID.rich(), hpdID.panel(),
+                                                    hpdID.pdNumInCol(), hpdID.pdCol(),
+                                                    zsData.rowFromAddress(address1),
+                                                    zsData.colFromAddressAndBit(address1,iB) ) );
+                  ++m_nHits; // count hits
+                }
+              }
+            }
+          }
+
+        }
+
+        return m_nHits;
+      }
+
+      template< class Version, class Header, class Footer >
+      ShortType RichZeroSuppData<Version,Header,Footer>::hitCount() const
+      {
+        if ( m_nHits < 0 )
+        {
+          LHCb::RichSmartID::Vector ids;
+          this->fillRichSmartIDs( ids, LHCb::RichSmartID(Rich::Rich1,Rich::top,0,0) ); // fills m_nHits
+        }
+        return m_nHits;
+      }
+
+    } // V3 namespace
+
+  }
+}
