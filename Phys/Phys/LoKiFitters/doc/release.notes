@@ -5,6 +5,12 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2013-05-27 - 
+ - fix a bug with particle classification.
+   essentially all cvalcuatino of DOCACHI2 with 
+   participation of K0S was wrong.
+   Many thanks to Matt Reid for reporting the problem.
+
 !========================= LoKiFitters v4r5 2013-05-07 =========================
 
 ! 2013-04-14 - Vanya Belyaev

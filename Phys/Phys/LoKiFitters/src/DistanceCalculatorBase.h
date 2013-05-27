@@ -31,6 +31,8 @@
 #include "Kernel/IParticleTransporter.h"
 #include "Kernel/IDistanceCalculator.h"
 // ============================================================================
+#include "ParticleClassificator.h"
+// ============================================================================
 /** @file 
  *
  *  This file is a part of 
@@ -74,7 +76,7 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date   2008-03-05
    */
-  class DistanceCalculatorBase : public GaudiTool 
+  class DistanceCalculatorBase : public LoKi::ParticleClassificator
   {
   public:
     // ========================================================================
@@ -83,7 +85,7 @@ namespace LoKi
     // ========================================================================
   public:
     // ========================================================================
-    /// the error codes:
+    /// the error code
     enum {
       /// Invalid Particle 
       InvalidParticle         = 901 , // Invalid Particle 

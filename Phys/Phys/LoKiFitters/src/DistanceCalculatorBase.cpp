@@ -44,7 +44,7 @@ LoKi::DistanceCalculatorBase::DistanceCalculatorBase
 ( const std::string& type   , // tool type (?)
   const std::string& name   , // tool instance name 
   const IInterface*  parent ) // the parent 
-  : GaudiTool ( type , name , parent ) 
+  : LoKi::ParticleClassificator ( type , name , parent ) 
 // number of prints 
   , m_prints              ( 10 )
 // The name of particle transporter tool 
@@ -85,7 +85,7 @@ LoKi::DistanceCalculatorBase::~DistanceCalculatorBase(){}
 // ============================================================================
 StatusCode LoKi::DistanceCalculatorBase::initialize () 
 {
-  StatusCode sc = GaudiTool::initialize () ;
+  StatusCode sc = LoKi::ParticleClassificator::initialize () ;
   if ( sc.isFailure() ) { return sc ; }         // RETURN
   //
   if ( msgLevel ( MSG::DEBUG ) &&  0 == m_prints ) 
@@ -103,7 +103,7 @@ StatusCode LoKi::DistanceCalculatorBase::finalize ()
 {
   m_transporter   = 0 ;
   m_stateProvider = 0 ;
-  return GaudiTool::finalize () ;
+  return LoKi::ParticleClassificator::finalize () ;
 }
 // ============================================================================
 // The END 

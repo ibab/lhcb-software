@@ -823,7 +823,7 @@ LoKi::DistanceCalculator::DistanceCalculator
   declareProperty 
     ( "DeltaPath"        , m_delta_path          , 
       "Delta c*tau (convergency criterion)"      ) ; 
-  StatusCode sc = setProperty ( "MaxPrints" , 0 ) ;
+  StatusCode sc = setProperty ( "MaxPrints" , 10 ) ;
   Assert ( sc.isSuccess () , "Unable (re)set property 'MaxPrints'"    , sc ) ;
 }
 // ============================================================================
@@ -1010,7 +1010,6 @@ StatusCode LoKi::DistanceCalculator::_distance
   double&               dist , 
   double*               chi2 ) const 
 {
-
   using namespace Gaudi::Math::Operators ;
   
   Gaudi::XYZPoint point1 ;
@@ -1058,14 +1057,12 @@ StatusCode LoKi::DistanceCalculator::_distance
     
     ++nIter ;
   } /// end of iterations 
-  
+
   // check for  the convergency
   if ( dz >= m_deltaZ )
-  { _Warning ( "There is no convergency-III", NoConvergency ) ; }
-  
+  { _Warning ( "There is no convergency-III", NoConvergency ) ; }  
   // evaluate the distance 
   dist = ( point1 - point2 ) . R () ;
-  
   // evaluate chi2 (if needed) 
   if ( 0 != chi2 ) 
   {
@@ -1076,11 +1073,33 @@ StatusCode LoKi::DistanceCalculator::_distance
     LoKi::KalmanFilter::Entries::iterator first  = m_entries.begin() ;
     LoKi::KalmanFilter::Entries::iterator second = first + 1         ;   
     // load:
-    StatusCode sc = LoKi::KalmanFilter::load ( *good1 , *first  ) ;
+    //
+    StatusCode sc = StatusCode::SUCCESS ;
+    LoKi::KalmanFilter::ParticleType type1 = particleType ( good1 ) ;
+    switch ( type1 ) 
+    {
+      // load : 
+    case LoKi::KalmanFilter::LongLivedParticle  :
+      sc =            LoKi::KalmanFilter::loadAsFlying     ( *good1 , *first ) ; break ;
+    case LoKi::KalmanFilter::ShortLivedParticle :
+      sc =            LoKi::KalmanFilter::loadAsShortLived ( *good1 , *first ) ; break ;
+    default:
+      sc =            LoKi::KalmanFilter::load             ( *good1 , *first ) ; break ;      
+    }
     if ( sc.isFailure() ) 
     { return _Error ( "distance(III): error from KalmanFilter::load(1)" , sc ) ; }
-    // load : 
-    sc =            LoKi::KalmanFilter::load ( *good2 , *second ) ;
+    //
+    LoKi::KalmanFilter::ParticleType type2 = particleType ( good1 ) ;
+    switch ( type2 ) 
+    {
+      // load : 
+    case LoKi::KalmanFilter::LongLivedParticle  :
+      sc =            LoKi::KalmanFilter::loadAsFlying     ( *good2 , *second ) ; break ;
+    case LoKi::KalmanFilter::ShortLivedParticle :
+      sc =            LoKi::KalmanFilter::loadAsShortLived ( *good2 , *second ) ; break ;
+    default:
+      sc =            LoKi::KalmanFilter::load             ( *good2 , *second ) ; break ;      
+    }
     if ( sc.isFailure() ) 
     { return _Error ( "distance(III): error from KalmanFilter::load(2)" , sc ) ; }
     //
