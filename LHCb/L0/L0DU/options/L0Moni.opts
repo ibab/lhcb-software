@@ -1,0 +1,10 @@
+//_________________________________________________________
+// 
+// Monitor the whole L0 including processors
+//_________________________________________________________
+//
+#include "$L0DUROOT/options/L0Sequence.opts"
+ApplicationMgr.TopAlg += { "GaudiSequencer/L0MoniSeq" };
+
+
+

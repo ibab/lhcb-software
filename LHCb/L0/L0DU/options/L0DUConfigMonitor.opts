@@ -1,0 +1,76 @@
+#include "$STDOPTS/LHCbApplication.opts"
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+//--------------------------------------------------------
+
+#include "$L0DUOPTS/L0Sequence.opts"
+
+// Monitor a given TCK
+
+ApplicationMgr.TopAlg += { "GaudiSequencer/L0ConfigMonitor" };
+
+L0ConfigMonitor.Members += {   
+  "TriggerTypeCounter" ,         
+    "OdinTypesFilter/OdinFilter", 
+    "GaudiSequencer/L0DUFromRawSeq" , 
+    "GaudiSequencer/L0DUMoniSeq"      // monitor data TCK
+    };
+#include "$L0DUOPTS/L0DUConfigMonitorSeq.opts" // Complete L0ConfigMonitor sequence with alternative TCK monitoring
+ToolSvc.L0DUConfig.context = "Check";
+
+//OdinFilter.TriggerTypes = {"PhysicsTrigger" };
+
+// TCK to be monitored : 
+L0DUEmu.TCK = "0x10000"; // template config = 0x10000
+
+
+// define a template configuration (if TCK set to  0x10000) : 
+ToolSvc.L0DUConfig.Template.Description = "dummy template";
+ToolSvc.L0DUConfig.Template.Conditions = {
+{ "name=[Hadron,Et]" , "data=[Hadron(Et)]"   , "comparator=[>]" , "threshold=[128]" },
+{ "name=[SpdMult]"   , "data=[Spd(Mult)]"    , "comparator=[>]" , "threshold=[2]"  },
+{ "name=[PUMult]"    , "data=[PUHits(Mult)]" , "comparator=[>]" , "threshold=[7]"  },
+{ "name=[Muon1,Pt]"  , "data=[Muon1(Pt)]"    , "comparator=[>]" , "threshold=[12]" },
+{ "name=[PuMult>10]"   , "data=[PUHits(Mult)]"  , "comparator=[>]" , "threshold=[10]" },
+{ "name=[PuMult<50]"   , "data=[PUHits(Mult)]"  , "comparator=[<]" , "threshold=[50]" },
+{ "name=[SpdMult>75]"   , "data=[Spd(Mult)]"  , "comparator=[>]" , "threshold=[75]" }
+};
+
+ToolSvc.L0DUConfig.Template.Channels ={
+{ "name=[HCAL]" , "rate==[100.0]" , "conditions= [Hadron,Et]" , "Mask=[000]" },
+{ "name=[SPD]"  , "rate==[100.0]" , "conditions= [SpdMult]" , "Mask=[000]" },
+{ "name=[MUON]" , "rate==[100.0]" , "conditions= [Muon1,Pt]" },
+{ "name=[CALO]" , "rate==[100.0]" , "conditions= [HCAL]      && [SPD]" },
+{ "name=[PU]"   , "rate==[100.0]" , "conditions= [PUMult]" },
+{ "name=[LumiBeam1]" , "rate==[100.0]" , "conditions= [PuMult<50] && [SpdMult>75]"   , "Mask=[010]" },
+{ "name=[LumiBeam2]" , "rate==[100.0]" , "conditions= [PuMult>10]   " , "Mask=[100]" }
+
+};
+
+
+//---------------------------------------------------------------------------
+// Histogram output
+//---------------------------------------------------------------------------
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+
+
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "L0DUConfigMoni.root";  
+
+//---------------------------------------------------------------------------
+// Event input  (& output)
+//---------------------------------------------------------------------------
+
+//ApplicationMgr.EvtMax = 1024;
+//EventSelector.FirstEvent = 1;  
+//#pragma print off
+//#include "$ORWELLOPTS/Beam5VeloCMagDownNu1WTruth_InclB.opts"
+//#pragma print on
+
+
+#include "$STDOPTS/RawDataIO.opts" 
+ApplicationMgr.EvtMax = 1500;  
+EventSelector.FirstEvent = 1; 
+EventSelector.Input += {
+  "DATA='rfio:///castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/BEAM1/62556/062556_0000000001.raw'  SVC='LHCb::MDFSelector'"
+    //  "DATA='rfio:///castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63994/063994_0000000001.raw'  SVC='LHCb::MDFSelector'"
+    };

@@ -1,0 +1,9 @@
+//__________________________________________________________________________
+// 
+// Emulate the whole L0 sequence (including L0Processors) + L0DU monitoring
+//__________________________________________________________________________
+//
+// WARNING : SIMulation and Emulation cannot be run in the same job !
+
+#include "$L0DUROOT/options/L0EmulatorSeq.opts"
+ApplicationMgr.TopAlg += { "GaudiSequencer/L0EmulationSeq" };
