@@ -186,16 +186,16 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
 
   char txt[128], text[128];
   long long int evt_prod[4]    = {0,0,0,0}, min_prod[4]  = {LNG_max,LNG_max,LNG_max,LNG_max};
-  long long int free_space[4]  = {0,0,0,0}, min_space[4] = {LNG_max,LNG_max,LNG_max,LNG_max};
-  long long int free_slots[4]  = {0,0,0,0}, min_slots[4] = {LNG_max,LNG_max,LNG_max,LNG_max};
+  long int free_space[4]  = {0,0,0,0}, min_space[4] = {LNG_max,LNG_max,LNG_max,LNG_max};
+  long int free_slots[4]  = {0,0,0,0}, min_slots[4] = {LNG_max,LNG_max,LNG_max,LNG_max};
   int buf_clients[4] = {0,0,0,0};
   float fspace[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
   float fslots[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
   float fsl, fsp;
-  long long int evt_ovl        = LNG_max;
-  long long int evt_sent       = LNG_max;
-  long long int evt_moore      = LNG_max;
-  long long int evt_built      = LNG_max;
+  long int evt_ovl        = LNG_max;
+  long int evt_sent       = LNG_max;
+  long int evt_moore      = LNG_max;
+  long int evt_built      = LNG_max;
   bool inuse         = false;
   int numNodes       = 0;
   int numBuffs       = 0;
@@ -205,10 +205,10 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
     numNodes++;
-    long long int node_evt_ovl = 0;
-    long long int node_evt_mep = 0;
-    long long int node_evt_sent = LNG_max;
-    long long int node_evt_moore = LNG_max;
+    long int node_evt_ovl = 0;
+    long int node_evt_mep = 0;
+    long int node_evt_sent = LNG_max;
+    long int node_evt_moore = LNG_max;
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       int idx = 0;
       char b = (*ib).name[0];
@@ -296,7 +296,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
     fspace[2] < SPACE_MIN || fspace[3] < SPACE_MIN;
 
   if ( evt_prod[0] || evt_prod[1] )
-    ::sprintf(txt,"%9lld%5lld%11lld%6lld%9lld%5lld",
+    ::sprintf(txt,"%9lld%5ld%11lld%6ld%9lld%5ld",
               evt_prod[3],free_slots[3],
               evt_prod[1],free_slots[1],
               evt_prod[2],free_slots[2]);
@@ -304,7 +304,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
     ::sprintf(txt,"%9s%5s%10s%7s%9s%5s","--","--","--","--","--","--");
   ::scrc_put_chars(m_display,txt,NORMAL,2,5,1);
   if ( min_prod[0] != LNG_max || min_prod[1] != LNG_max )
-    ::sprintf(txt,"%9lld%5lld%11lld%6lld%9lld%5lld",
+    ::sprintf(txt,"%9lld%5ld%11lld%6ld%9lld%5ld",
               min_prod[3],min_slots[3],
               min_prod[1],min_slots[1],
               min_prod[2],min_slots[2]);

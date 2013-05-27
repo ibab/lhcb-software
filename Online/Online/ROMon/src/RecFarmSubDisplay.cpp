@@ -10,12 +10,12 @@ namespace ROMon {
    *   @author M.Frank
    */
   class RecFarmSubDisplay : public InternalDisplay  {
-    long long int     m_evtRecv;
-    long long int     m_evtReco;
-    long long int     m_evtSent;
-    long long int     m_totRecv;
-    long long int     m_totReco;
-    long long int     m_totSent;
+    long int          m_evtRecv;
+    long int          m_evtReco;
+    long int          m_evtSent;
+    long int          m_totRecv;
+    long int          m_totReco;
+    long int          m_totSent;
     int               m_height;
     bool              m_hasProblems;
   public:
@@ -166,14 +166,14 @@ void RecFarmSubDisplay::handle(const Event& ev) {
 void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
   char txt[128], text[128];
   long long int evt_prod[2]={0,0}, min_prod[2]={LNG_max,LNG_max};
-  long long int free_space[2]  = {0,0}, min_space[2] = {LNG_max,LNG_max};
-  long long int used_slots[2]  = {0,0}, min_slots[2] = {LNG_max,LNG_max};
-  long long int buf_clients[2] = {0,0};
+  long int free_space[2]  = {0,0}, min_space[2] = {LNG_max,LNG_max};
+  long int used_slots[2]  = {0,0}, min_slots[2] = {LNG_max,LNG_max};
+  long int buf_clients[2] = {0,0};
   float fspace[2]    = {FLT_max,FLT_max};
   float fslots[2]    = {FLT_max,FLT_max};
-  long long int evt_sent       = LNG_max;
-  long long int evt_reco       = LNG_max;
-  long long int evt_recv       = LNG_max;
+  long int evt_sent       = LNG_max;
+  long int evt_reco       = LNG_max;
+  long int evt_recv       = LNG_max;
   bool inuse         = false;
   int numNodes       = 0;
   int numBuffs       = 0;
@@ -183,9 +183,9 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
     numNodes++;
-    long long int node_evt_recv = 0;
-    long long int node_evt_sent = LNG_max;
-    long long int node_evt_reco = LNG_max;
+    long int node_evt_recv = 0;
+    long int node_evt_sent = LNG_max;
+    long int node_evt_reco = LNG_max;
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       int idx = 0;
       char b = (*ib).name[0];
@@ -244,14 +244,14 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
   m_hasProblems = true;
 
   if ( buf_clients[0] != 0 )
-    ::sprintf(txt,"%9lld%4lld%6lld   %9lld%4lld%6lld",
+    ::sprintf(txt,"%9lld%4ld%6ld   %9lld%4ld%6ld",
               evt_prod[0],buf_clients[0],used_slots[0],
               evt_prod[1],buf_clients[1],used_slots[1]);
   else
     ::sprintf(txt,"%9s%4s%6s   %9s%4s%6s","--","","--","--","","--");
   ::scrc_put_chars(m_display,txt,NORMAL,2,5,1);
   if ( buf_clients[0] != 0 )
-    ::sprintf(txt,"%9lld%4s%6lld   %9lld%4s%6lld",min_prod[0],"",min_slots[0],min_prod[1],"",min_slots[1]);
+    ::sprintf(txt,"%9lld%4s%6ld   %9lld%4s%6ld",min_prod[0],"",min_slots[0],min_prod[1],"",min_slots[1]);
   else
     ::sprintf(txt,"%9s%4s%6s   %9s%4s%6s","--","","--","--","","--");
   ::scrc_put_chars(m_display,txt,NORMAL,3,5,1);

@@ -692,16 +692,16 @@ void FarmClusterLine::display() {
   const Nodeset*   c = data<Nodeset>();
   const Nodes& nodes = c->nodes;
   long long int evt_prod[4]    = {0,0,0,0}, min_prod[4]  = {INT_max,INT_max,INT_max,INT_max};
-  long long int free_space[4]  = {0,0,0,0}, min_space[4] = {INT_max,INT_max,INT_max,INT_max};
-  long long int free_slots[4]  = {0,0,0,0}, min_slots[4] = {INT_max,INT_max,INT_max,INT_max};
-  long long int buf_clients[4] = {0,0,0,0};
+  long int free_space[4]  = {0,0,0,0}, min_space[4] = {INT_max,INT_max,INT_max,INT_max};
+  long int free_slots[4]  = {0,0,0,0}, min_slots[4] = {INT_max,INT_max,INT_max,INT_max};
+  long int buf_clients[4] = {0,0,0,0};
   float fspace[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
   float fslots[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
   float fsl, fsp;
-  long long int evt_ovl   = INT_max;
-  long long int evt_sent  = INT_max;
-  long long int evt_moore = INT_max;
-  long long int evt_built = INT_max;
+  long int evt_ovl   = INT_max;
+  long int evt_sent  = INT_max;
+  long int evt_moore = INT_max;
+  long int evt_built = INT_max;
   int numNodes       = 0;
   int numBuffs       = 0;
   int numClients     = 0;
@@ -712,10 +712,10 @@ void FarmClusterLine::display() {
   for (Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
     numNodes++;
-    long long int node_evt_ovl = 0;
-    long long int node_evt_mep = 0;
-    long long int node_evt_sent = INT_max;
-    long long int node_evt_moore = INT_max;
+    long int node_evt_ovl = 0;
+    long int node_evt_mep = 0;
+    long int node_evt_sent = INT_max;
+    long int node_evt_moore = INT_max;
 
     const char* nn = (*n).name;
     txt[1] = nn[0];
@@ -868,7 +868,7 @@ void FarmClusterLine::display() {
   err = err + "                                                                 ";
   ::scrc_put_chars(dis,err.substr(0,35).c_str(),col,pos,42+CLUSTERLINE_START,0);
   if ( evt_prod[0] || evt_prod[1] )
-    ::sprintf(txt,"%10lld%5lld%11lld%6lld%10lld%5lld",
+    ::sprintf(txt,"%10lld%5ld%11lld%6ld%10lld%5ld",
               evt_prod[3],free_slots[3],
               evt_prod[1],free_slots[1],
               evt_prod[2],free_slots[2]);
@@ -878,7 +878,7 @@ void FarmClusterLine::display() {
   if ( min_prod[0] != INT_max || min_prod[1] != INT_max ) {
     if ( min_prod[3]  == INT_max ) min_prod[3] = 0;  // if not existing....
     if ( min_slots[3] == INT_max ) min_slots[3] = 0; // if not existing....
-    ::sprintf(txt,"%10lld%5lld%11lld%6lld%10lld%5lld",
+    ::sprintf(txt,"%10lld%5ld%11lld%6ld%10lld%5ld",
               min_prod[3],min_slots[3],
               min_prod[1],min_slots[1],
               min_prod[2],min_slots[2]);

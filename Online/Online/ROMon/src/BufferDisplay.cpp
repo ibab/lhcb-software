@@ -69,7 +69,7 @@ void BufferDisplay::update(const void* data) {
           ::sprintf(txt,"%-26s  Events: Produced:%lld Actual:%lld Seen:%lld Pending:%ld Max:%d",
                     name, c.tot_produced, c.tot_actual, c.tot_seen, c.i_events, c.p_emax);
           ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
-          ::sprintf(txt,"%-26s  Space(kB):[Tot:%ld Free:%ld] Users:[Tot:%ld Max:%ld]",
+          ::sprintf(txt,"%-26s  Space(kB):[Tot:%ld Free:%ld] Users:[Tot:%ld Max:%d]",
                     "",long((c.bm_size*c.bytes_p_Bit)/1024), long((c.i_space*c.bytes_p_Bit)/1024), 
                     c.i_users, c.p_umax);
           ::scrc_put_chars(m_display,txt,NORMAL,++line,1,1);
