@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warning
+
 !========================= LumiAlgs v8r1p1 2013-04-30 =========================
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake

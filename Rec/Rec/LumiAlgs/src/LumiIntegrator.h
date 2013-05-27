@@ -87,7 +87,6 @@ public:
  private:
   std::string m_ToolName;                       // name of tool for normalization
 
-  unsigned long m_count_files;                  // number of files
   unsigned long m_count_events;                 // number of events
   std::vector<std::string> m_duplicateFiles;    // keep track of duplicates
 

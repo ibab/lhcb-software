@@ -29,7 +29,6 @@ LumiIntegrator::LumiIntegrator( const std::string& type,
                                 const IInterface* parent )
   : GaudiTool ( type, name , parent ),
     m_ToolName(""),
-    m_count_files(0),
     m_count_events(0),
     m_duplicateFiles(0),
     m_integral(0.),
