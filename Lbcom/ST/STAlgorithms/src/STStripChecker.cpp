@@ -34,7 +34,7 @@ DECLARE_ALGORITHM_FACTORY( STStripChecker )
 //=============================================================================
 STStripChecker::STStripChecker( const string& name,
                                 ISvcLocator* pSvcLocator)
-  : HistoAlgBase ( name , pSvcLocator ), initDone( false ), m_counter( 0 )
+  : HistoAlgBase ( name , pSvcLocator ), m_counter( 0 )
 {
   declareProperty( "SignalToNoise", m_signalToNoiseCut = 8. );
   declareProperty( "HitsNumber"   ,  m_hitsNumber = 1u );

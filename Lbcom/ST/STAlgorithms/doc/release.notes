@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warning
+
 !========================= STAlgorithms v4r6 2013-02-14 =========================
 ! 2013-01-26 - Marco Clemencic
  - Added dependency on AIDA.

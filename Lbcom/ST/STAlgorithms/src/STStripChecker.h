@@ -1,4 +1,3 @@
-// $Id: STStripChecker.h,v 1.1 2009-10-28 15:06:56 jluisier Exp $
 #ifndef STSTRIPCHECKER_H 
 #define STSTRIPCHECKER_H 1
 
@@ -69,11 +68,6 @@ private:
    * Input data
    */
   LHCb::STClusters* clusterCont;
-
-  /**
-   * Stores information about initialisation.
-   */
-  bool initDone;
 
   /**
    * Last "printed" sector
