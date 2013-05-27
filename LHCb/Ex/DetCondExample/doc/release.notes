@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warning
+
 ! 2013-05-06 - Marco Cattaneo
  - Replace endreq by endmsg
  - Fix UNINIT_CTOR defects

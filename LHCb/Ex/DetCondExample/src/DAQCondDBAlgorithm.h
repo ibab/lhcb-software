@@ -1,4 +1,3 @@
-//$Id: DAQCondDBAlgorithm.h,v 1.6 2006-07-12 18:18:13 marcocle Exp $
 #ifndef DETCONDEXAMPLE_DAQCONDDBALGORITHM_H
 #define DETCONDEXAMPLE_DAQCONDDBALGORITHM_H 1
 
@@ -7,10 +6,6 @@
 
 // Forward declarations
 class ICondDBEditor;
-namespace pool
-{
-  class AttributeListSpecification;
-}
 
 ///---------------------------------------------------------------------------
 /** @class DAQCondDBAlgorithm DAQCondDBAlgorithm.h DetCondExample/DAQCondDBAlgorithm.h
@@ -62,10 +57,6 @@ class DAQCondDBAlgorithm : public GaudiAlgorithm {
 
   /// Handle to the CondDBEditor (retrieved during the initialization)
   ICondDBEditor* m_dbEditor;
-
-  /// Specification for the payload to sore
-  pool::AttributeListSpecification* m_payloadSpec;
-
 };
 
 #endif    // DETCONDEXAMPLE_DAQCONDDBALGORITHM_H

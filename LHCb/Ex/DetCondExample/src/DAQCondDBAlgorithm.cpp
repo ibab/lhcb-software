@@ -1,5 +1,3 @@
-//$Id: DAQCondDBAlgorithm.cpp,v 1.16 2007-02-14 16:32:14 marcocle Exp $
-
 #include "DAQCondDBAlgorithm.h"
 
 #include "DetCond/ICondDBEditor.h"
@@ -34,8 +32,7 @@ DAQCondDBAlgorithm::DAQCondDBAlgorithm( const std::string& name,
     m_nsInitialized(0),
     m_nsExec(0),
     m_nsDBIO(0),
-    m_dbEditor(0),
-    m_payloadSpec(0)
+    m_dbEditor(0)
 {
   declareProperty( "daqFolderName",    m_daqFolderName   = "DAQ" );
   declareProperty( "daqRecordSize",    m_daqRecordSize   = 10    );
