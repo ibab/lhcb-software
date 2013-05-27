@@ -1,4 +1,3 @@
-// $Id: AddTTClusterTool.h,v 1.3 2010-02-08 17:55:53 decianm Exp $
 #ifndef ADDTTCLUSTERTOOL_H
 #define ADDTTCLUSTERTOOL_H 1
 
@@ -110,7 +109,6 @@ private:
    *  of TT clusters.)
    */
   double m_spreadWeight;
-  bool m_addMeasurements;
   bool m_addLHCbIDs;
 
  

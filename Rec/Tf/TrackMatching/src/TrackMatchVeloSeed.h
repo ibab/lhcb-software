@@ -1,4 +1,3 @@
-// $Id: TrackMatchVeloSeed.h,v 1.6 2010-04-22 07:39:10 mneedham Exp $
 #ifndef TRACKMATCHVELOSEED_H 
 #define TRACKMATCHVELOSEED_H 1
 
@@ -87,8 +86,6 @@ private:
   std::string m_veloTracks;
   /// Input Seed tracks
   std::string m_seedTracks;
-  /// flag to add the XxxMeasurements to the track
-  bool m_addMeasurements;
   /// Chi2 cut to decide whether to match 2 tracks
   double m_chi2MatchingCut;
   /// Store all combinations smaller than chi2-cut or only the best ones
