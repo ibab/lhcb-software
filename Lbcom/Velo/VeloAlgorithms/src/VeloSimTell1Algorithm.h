@@ -1,4 +1,3 @@
-// $Id: VeloSimTell1Algorithm.h,v 1.2 2009-10-24 13:48:23 szumlat Exp $
 #ifndef VELOSIMTELL1ALGORITHM_H 
 #define VELOSIMTELL1ALGORITHM_H 1
 
@@ -118,12 +117,10 @@ protected:
   
 private:
 
-  LHCb::RawEvent* m_rawEvent;
   std::string m_rawEventLoc;
   DeVelo* m_detElement;
   LHCb::VeloTELL1Datas* m_inputData;
   LHCb::VeloTELL1Datas* m_outputData;
-  VeloProcessInfos* m_procInfos;
   std::string m_procInfosLoc;
   std::string m_algorithmType;
   unsigned int m_tell1Process;

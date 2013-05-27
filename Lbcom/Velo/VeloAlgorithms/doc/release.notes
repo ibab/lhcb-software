@@ -3,6 +3,9 @@
 ! Responsible : Tomasz Szumlak
 !--------------------------------------------------------------------------
 
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warnings
+
 !========================= VeloAlgorithms v5r7 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.
