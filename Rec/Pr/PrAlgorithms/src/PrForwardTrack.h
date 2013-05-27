@@ -3,6 +3,7 @@
 
 // Include files
 #include "Event/Track.h"
+#include "Event/StateParameters.h"
 #include "PrKernel/PrHit.h"
 
 /** @class PrForwardTrack PrForwardTrack.h
@@ -140,7 +141,7 @@ private:
   void init() {
     m_valid = true;
     m_hits.reserve( 32 );
-    const LHCb::State& state = m_track->closestState( LHCb::State::EndVelo );
+    const LHCb::State& state = m_track->closestState( StateParameters::ZEndVelo );
     m_x0     = state.x();
     m_y0     = state.y();
     m_z0     = state.z();
