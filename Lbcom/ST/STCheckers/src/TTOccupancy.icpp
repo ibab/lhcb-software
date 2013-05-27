@@ -131,7 +131,7 @@ void TTOccupancy<PBASE>::fillHistograms(const PBASE* obj )
   const STChannelID aChan = obj->channelID();  
 
   DeSTSector* aSector = tracker()->findSector(aChan);
-  DeTTSector* ttSector = dynamic_cast<DeTTSector*>(aSector);
+  DeTTSector* ttSector = static_cast<DeTTSector*>(aSector);
 
   const unsigned int nstrips = ttSector->nStrip();
 

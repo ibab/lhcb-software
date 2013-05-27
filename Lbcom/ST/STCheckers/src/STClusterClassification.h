@@ -61,9 +61,6 @@ private:
   std::vector<std::string> m_spillVector;  // short names of spills
   std::vector<std::string>  m_spillNames; // full name of spills
      
-  // index of event spill
-  int m_eventIndex;
-  int m_nStation;
   int m_nEvent;
 
   std::string m_asctLocation;
