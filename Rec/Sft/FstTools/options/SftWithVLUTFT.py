@@ -86,7 +86,8 @@ def setup_truth_matching():
    GaudiSequencer("MCLinksTrSeq").Members = ["UnpackMCParticle", "UnpackMCVertex"]
    GaudiSequencer("MCLinksTrSeq").Members += ["PrLHCbID2MCParticle", "PrTrackAssociator"]
    PrTrackAssociator().RootOfContainers = "/Event/Fst/Track"
-   GaudiSequencer("CheckPatSeq").Members = ["PrChecker", "PrDebugTrackingLosses"]
+   writer = InputCopyStream('DstWriter2')
+   GaudiSequencer("CheckPatSeq").Members = ["PrChecker", "PrDebugTrackingLosses"]#, writer]
    PrChecker().VeloTracks = "/Event/Fst/Track/Velo"
    PrChecker().ForwardTracks = "/Event/Fst/Track/Forward"
 appendPostConfigAction(setup_truth_matching)

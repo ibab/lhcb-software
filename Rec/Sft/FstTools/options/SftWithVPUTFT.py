@@ -21,8 +21,8 @@ Brunel().InputType = 'DIGI'
 import os
 setting = os.getenv("TIM")
 if setting is None:
-    setting = "2"
-    
+    setting = "1"
+
 Brunel().DatasetName = setting    
 if setting == "1":
     sample = {"mu": '3.8', "cooling": 'poco', "channel": 'Kstmumu'}
@@ -81,12 +81,24 @@ def setup_truth_matching():
    from Configurables import GaudiSequencer, PrTrackAssociator, PrChecker
    from Configurables import UnpackMCParticle, UnpackMCVertex
    from Configurables import PrDebugTrackingLosses
+   from Configurables import PatPixelTracking
    GaudiSequencer("CaloBanksHandler").Members = []
    GaudiSequencer("DecodeTriggerSeq").Members = []
-   GaudiSequencer("MCLinksTrSeq").Members = ["UnpackMCParticle", "UnpackMCVertex"]
-   GaudiSequencer("MCLinksTrSeq").Members += ["PrLHCbID2MCParticle", "PrTrackAssociator"]
+   #GaudiSequencer("MCLinksTrSeq").Members = ["UnpackMCParticle", "UnpackMCVertex"]
+   GaudiSequencer("MCLinksTrSeq").Members = ["PrLHCbID2MCParticle", "PrTrackAssociator"]
    PrTrackAssociator().RootOfContainers = "/Event/Fst/Track"
-   GaudiSequencer("CheckPatSeq").Members = ["PrChecker", "PrDebugTrackingLosses"]
+   writer = InputCopyStream('DstWriter2')
+   GaudiSequencer("CheckPatSeq").Members = ["PrChecker", "PrDebugTrackingLosses"]#,writer]
    PrChecker().VeloTracks = "/Event/Fst/Track/Velo"
    PrChecker().ForwardTracks = "/Event/Fst/Track/Forward"
+   #PrDebugTrackingLosses().Velo = True
+   #PrDebugTrackingLosses().Clone = True
+   #PrDebugTrackingLosses().VeloName = PatPixelTracking("FstPixel").OutputTracksName
+   pix_tracking = PatPixelTracking("FstPixel")
+   #pix_tracking.DebugToolName = "PatPixelDebugTool"
+   #pix_tracking.WantedKey = 588
+   #pix_tracking.MaxChi2ToAdd = 150
+   #pix_tracking.ExtraTol = 0.8 #mm
+   print pix_tracking
+   
 appendPostConfigAction(setup_truth_matching)

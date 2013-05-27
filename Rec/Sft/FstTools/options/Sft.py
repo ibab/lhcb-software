@@ -10,7 +10,7 @@ from Configurables import Brunel
 import Gaudi.Configuration as GC
 
 
-Brunel().RecoSequence = ["L0", "HLT", "Writer"]
+Brunel().RecoSequence = ["L0", "HLT"]
 RecMoniConf().MoniSequence = []
 Brunel().OutputType = "NONE"
 
@@ -43,4 +43,3 @@ writer = InputCopyStream('DstWriter2')
 writer.ItemList += ["Fst#999",
                     "Link#999",
                     ]
-GaudiSequencer("RecoWriterSeq").Members += [writer]
