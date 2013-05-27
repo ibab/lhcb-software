@@ -71,7 +71,6 @@ private:
   std::vector<AlgorithmEntry> m_entries; ///< List of algorithms to process.
   bool m_modeOR;                         ///< Indicates that the OR is wanted instead of AND
 
-  bool m_ignoreFilter;                   ///< True if one continues always.
   bool m_measureTime;                    ///< Flag to measure time
   bool m_returnOK;                       ///< Forces the sequencer to return a good status
   ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
