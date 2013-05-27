@@ -114,7 +114,7 @@ def nHitsOnTrackInVELOAcceptance(x, y, z, tx, ty) :
       if x > 0 : 
         n1 = n_mods_z_range( z, z1_max[1], z_strip_A )
       else :
-        n_mods_z_range( z, z1_max[1], z_strip_C )
+        n1 = n_mods_z_range( z, z1_max[1], z_strip_C )
     else :
       if x > 0 :
         # From A side to C side
