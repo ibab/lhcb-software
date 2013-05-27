@@ -1,4 +1,3 @@
-// $Id: PatMakeV0.h,v 1.3 2009-04-20 06:24:33 cattanem Exp $
 #ifndef PATMAKEKSHORT_H
 #define PATMAKEKSHORT_H 1
 
@@ -200,7 +199,6 @@ private:
   double m_xImpactRef;
   double m_yImpactRef;
   double m_V0vtxRefZ;   
-  double m_V0vtxRef[3];   
   double m_vtxRef[3];  
   double m_bestSol;
   double m_primOK;
@@ -652,18 +650,8 @@ double NormedSmallestImpactParameter()   {
   AIDA::IHistogram1D * m_checkPrimChi2;
 
 
-  AIDA::IHistogram1D * m_invMass;
-  AIDA::IHistogram1D * m_zTrue;
   AIDA::IHistogram1D * m_zRec;
-  AIDA::IHistogram2D * m_impactAtOrigin;
   AIDA::IHistogram2D * m_rVsz;
-  AIDA::IHistogram2D * m_rVszMC;
-  AIDA::IHistogram1D * m_ptMCTrue;
-  AIDA::IHistogram1D * m_ptMCRec;
-  AIDA::IHistogram1D * m_theta;
-  AIDA::IHistogram1D * m_grandParent;
-  AIDA::IHistogram1D * m_ptMCRecBd;
-  AIDA::IHistogram1D * m_thetaBd;
 
   AIDA::IHistogram1D * m_invMassRecoKs;
   AIDA::IHistogram1D * m_invMassRecoLambda;
@@ -672,9 +660,8 @@ double NormedSmallestImpactParameter()   {
   AIDA::IHistogram2D * m_impactAtOriginReco;
   AIDA::IHistogram1D * m_multiplicity;
 
-  AIDA::IHistogram1D * m_invMassChoice;
   AIDA::IHistogram2D * m_impactAtOriginChoice;
-  AIDA::IHistogram1D *   m_plotChi2;
+  AIDA::IHistogram1D * m_plotChi2;
 
   AIDA::IHistogram1D * m_nSolSelect;
   AIDA::IHistogram1D * m_nSolSelectTotal;

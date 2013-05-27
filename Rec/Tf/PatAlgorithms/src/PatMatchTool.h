@@ -1,4 +1,3 @@
-// $Id: PatMatchTool.h,v 1.6 2009-02-09 14:33:10 albrecht Exp $
 #ifndef PATMATCHTOOL_H
 #define PATMATCHTOOL_H 1
 
@@ -139,7 +138,6 @@ class PatMatchTool : public GaudiTool,
 	double m_dyTol;
 	double m_dyTolSlope;
 	double m_magnetBend;
-	double m_momentumScale;
 	double m_maxChi2;
   double m_minMomentum;
   double m_minPt;

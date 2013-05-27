@@ -1,4 +1,3 @@
-// $Id: FastForwardTool.h,v 1.3 2008-07-17 13:16:49 smenzeme Exp $
 #ifndef FASTFORWARDTOOL_H
 #define FASTFORWARDTOOL_H 1
 
@@ -124,7 +123,6 @@ private:
   std::string                                m_addTtToolName;
 
   //== Parameters of the algorithm
-  bool   m_secondLoop;
   double m_zAfterVelo;
   double m_yCompatibleTol;
   double m_yCompatibleTolFinal;

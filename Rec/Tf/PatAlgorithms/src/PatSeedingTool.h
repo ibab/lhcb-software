@@ -1,4 +1,3 @@
-// $Id: PatSeedingTool.h,v 1.18 2009-11-12 17:18:32 kholubye Exp $
 #ifndef PATSEEDINGTOOL_H
 #define PATSEEDINGTOOL_H 1
 
@@ -236,8 +235,6 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
 
     PatSeedTool*       m_seedTool;
 
-    double m_wireVelocity;
-    double m_driftVelocity;
     double m_maxImpact;
 
     bool m_measureTime;

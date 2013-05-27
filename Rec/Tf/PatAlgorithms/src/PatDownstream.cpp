@@ -53,7 +53,6 @@ PatDownstream::PatDownstream( const std::string& name,
     m_magFieldSvc(NULL),
     m_ttHitManager(NULL),
     m_debugTool(NULL),
-    m_ttDet(NULL),
     m_timerTool(NULL)    
 {
   declareProperty( "InputLocation" , m_inputLocation  = ""    );

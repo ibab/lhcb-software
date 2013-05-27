@@ -1,4 +1,3 @@
-// $Id: PatDownstream.h,v 1.8 2009-12-04 17:42:18 sstahl Exp $
 #ifndef PATDOWNSTREAM_H 
 #define PATDOWNSTREAM_H 1
 
@@ -117,7 +116,6 @@ private:
   IPatDebugTTTool* m_debugTool;
   std::string m_debugToolName;
 
-  DeSTDetector*       m_ttDet;    ///< TT Detector element
   double m_zTTa;                  ///< Position of first station
   double m_zTT;                   ///< Average position for track estimate
 
