@@ -1,0 +1,45 @@
+! =============================================================================
+! Package     : MuonInterfaces
+! Responsible : Alessia Satta Alessia.Satta@cern.ch
+! =============================================================================
+
+!========================= MuonInterfaces v1r4 2013-04-29 =========================
+! 2013-04-02 - Marco Cattaneo
+ - Fix UNINIT_CTOR defects
+
+!========================= MuonInterfaces v1r3 2012-11-26 =========================
+! 2012-11-15 - Marco Clemencic
+ - Added CMake configuration file.
+
+!========================= MuonInterfaces v1r2p2 2011-11-07 =========================
+! 2011-10-11 - Marco Cattaneo
+ - Trivial fix to icc remark
+
+!======================= MuonInterfaces v1r2p1 2010-10-25 ===================
+! 2010-08-24 - Pere Mato
+ - Added explicit [missing] dependency to Event/DAQEvent package. Only needed for the CMake tests. 
+
+!====================== MuonInterfaces v1r2 2010-05-21 ========================
+! 2010-05-06 - G.Graziani
+- fix compilation warning
+
+! 2010-05-04 - Stefania Vecchi
+- improve MuonTrack::AddXTalk method
+
+!====================== MuonInterfaces v1r1 2010-04-09 ========================
+! 2010-03-25 - Giacomo Graziani
+- add IMuonHitDecode::fakehits() method
+
+!====================== MuonInterfaces v1r0p1 2010-03-18 ======================
+! 2010-03-17 - Giacomo Graziani
+ - small fix in MuonTrack.cpp
+
+!====================== MuonInterfaces v1r0 2010-02-12 ========================
+! 2010-02-10 - Giacomo Graziani
+ - move all tool interfaces from MuonTrackRec, and the related classes 
+
+! 2010-02-09 - Alessia Satta
+ - First release. Only header of interfaces are supposed to 
+   be in this package
+
+
