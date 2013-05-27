@@ -21,8 +21,6 @@
 using namespace std;
 using namespace LHCb;
 
-extern "C" std::vector<ServerBMID> mbm_multi_install(int argc , char** argv);
-
 /// Standard service constructor
 MEPManager::MEPManager(const string& nam, ISvcLocator* loc)
 : Service(nam, loc), m_partitionID(0x103)
