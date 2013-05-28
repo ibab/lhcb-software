@@ -1,4 +1,3 @@
-// $Id: CaloCosmicsTrackTool.h,v 1.3 2008-12-10 09:56:47 cattanem Exp $
 #ifndef CALOCOSMICSTRACKTOOL_H 
 #define CALOCOSMICSTRACKTOOL_H 1
 
@@ -73,7 +72,6 @@ private:
   double m_sty;
   double m_theta;
   double m_sTheta;
-  double m_phibis;
   double m_phi;
   double m_sPhi;
   double m_chi2;
