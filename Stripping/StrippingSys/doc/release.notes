@@ -7,6 +7,7 @@ Purpose     : LHCb stripping packages
 
 * Phys/StripArchive
   - Add StrippingArchive entry for S20r2. This was missing from STRIPPING v6r2p6.
+  - No use of Phys/NeuroBayesTools in v6r2p7. 
 
 ! 2013-05-28 - Chris Jones
  - Import package Phys/NeuroBayesTools from Phys

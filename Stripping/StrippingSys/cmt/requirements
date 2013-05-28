@@ -27,7 +27,6 @@ use  StrippingUtils              v1r8     Phys   # Juan Palacios
 ####################################################################
 
 use  TMVASelections              v1r6     Phys   # Stripping coordinators 
-use  NeuroBayesTools             v1r3   Phys   # ???
 
 ####################################################################
 
