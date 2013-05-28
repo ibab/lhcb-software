@@ -4,6 +4,7 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "Event/Track.h"
+#include "Event/StateParameters.h"
 
 // local
 #include "PatPixelTracking.h"
@@ -46,6 +47,7 @@ DECLARE_ALGORITHM_FACTORY( PatPixelTracking )
   declareProperty( "DebugToolName",         m_debugToolName     = ""    );
   declareProperty( "WantedKey",             m_wantedKey         = -100  );
   declareProperty( "TimingMeasurement",     m_doTiming          = false );
+  declareProperty( "ClosestToBeamKalmanFit",  m_closestToBeamKalmanFit  = true ) ;
 }
 //=============================================================================
 // Destructor
@@ -356,11 +358,30 @@ void PatPixelTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
     double zBeam = (*itT).zBeam();                            // Z where the track passes closest to the beam
     bool backward = zBeam > zMax;                             // decide: forward or backward track
     newTrack->setFlag( LHCb::Track::Backward, backward );
-                                                              // add just one state to the LHCb::Track
-    state.setLocation( LHCb::State::ClosestToBeam );          // extrapolation on a track to the position closest to the beam
+
+    // set the state closest to beam
+    state.setLocation( LHCb::State::ClosestToBeam );
     state.setState( (*itT).state( zBeam ) );
-    state.setCovariance( (*itT).covariance( zBeam ) );
+    if( m_closestToBeamKalmanFit ) {
+      // run a K-filter with scattering to improve IP resolution
+      double tx = state.tx() ; double ty = state.ty() ;
+      // calibrated on MC, shamelessly hardcoded:
+      double scat2 = 1e-8 + 7e-6*(tx*tx+ty*ty) ;
+      (*itT).fitKalman( state, backward ? 1 : -1 , scat2 ) ;
+    } else {
+      state.setCovariance( (*itT).covariance( zBeam ) );
+    }
     newTrack->addToStates( state );
+    
+    // set state at the end of the velo from unweighted straight line fit
+    if( !backward ) {
+      state.setLocation( LHCb::State::EndVelo ) ;
+      state.setState( (*itT).state( StateParameters::ZEndVelo ) ) ;
+      state.setCovariance( (*itT).covariance( state.z() ) );
+      newTrack->addToStates( state );
+    }
+    
+    // set the chi2/dof
     newTrack->setNDoF(2*((*itT).hits().size()-2)); newTrack->setChi2PerDoF((*itT).chi2());
     outputTracks->insert( newTrack );
 

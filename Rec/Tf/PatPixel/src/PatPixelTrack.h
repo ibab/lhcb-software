@@ -7,6 +7,10 @@
 #include "PatPixelSensor.h"
 #include "Event/StateVector.h"
 
+namespace LHCb {
+  class State ;
+}
+
 /** @class PatPixelTrack PatPixelTrack.h
  *  Working tracks, used inside the PatPixelTracking
  *
@@ -89,6 +93,9 @@ public:
   double meanY() const { return m_uy/m_u0; }
   double meanZ() const { return m_sz/m_s0; }
 
+  /// Fit with a K-filter with scattering. Return the chi2
+  double fitKalman( LHCb::State& state, int direction, double noisePerLayer ) const ;
+  
 protected:
 
 private:

@@ -3,6 +3,7 @@
 
 // local
 #include "PatPixelTrack.h"
+#include "Event/State.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatPixelTrack
@@ -160,4 +161,125 @@ Gaudi::TrackSymMatrix PatPixelTrack::covariance( double z ) {
   cov(4,4) = 1.;
   return cov;
 }
-//=============================================================================
+//===============================================================================
+
+namespace {
+
+  /// Helper function to sort hits
+  struct SortDecreasingZ
+  {
+    SortDecreasingZ() {}
+    bool operator()( const PatPixelHit* lhs, const PatPixelHit* rhs) const {
+      return lhs->z() > rhs->z() ;
+    }
+  } ;
+
+  /// Helper function to filter one hit
+  inline double filter( double z,
+			double& x, double& tx,
+			double& covXX, double& covXTx, double& covTxTx,
+			double zhit, double xhit, double whit )
+  {
+    // compute the prediction
+    double dz = zhit - z ;
+    double predx = x + dz * tx ;
+    double predcovXX  = covXX + 2* dz * covXTx + dz * dz * covTxTx ;
+    double predcovXTx = covXTx + dz * covTxTx ;
+    double predcovTxTx = covTxTx ;
+    // compute the gain matrix
+    double R = 1/whit + predcovXX ;
+    double Kx  = predcovXX  / R ;
+    double KTx = predcovXTx / R ;
+    // update the state vector
+    double r = xhit - predx ;
+    x  = predx + Kx  * r ;
+    tx = tx    + KTx * r ;
+    // update the covariance matrix. we can write it in many ways ...
+    covXX   /*= predcovXX  - Kx * predcovXX */             = (1 - Kx) * predcovXX ;
+    covXTx  /*= predcovXTx - predcovXX * predcovXTx / R */ = (1 - Kx) * predcovXTx ;
+    covTxTx = predcovTxTx - KTx * predcovXTx ;
+    // return the chi2
+    return r*r/R ;
+  }
+}
+
+//===============================================================================
+// Fit the track with a Kalman filter, allowing for some scattering at
+// every hit. Function arguments:
+//  state: state at the last filtered hit.
+//  direction=+1 : filter in positive z direction (not normally what you want)
+//  direction=-1 : filter in negative z direction
+//  noise2PerLayer: scattering contribution (squared) to tx and ty
+// The return value is the chi2 of the fit  
+// ===============================================================================
+double
+PatPixelTrack::fitKalman( LHCb::State& state, int direction, double noise2PerLayer ) const
+{
+  // WH: hits are apparently not perfectly sorted. if we really want
+  // to use this in the future, we probably want to sort them only
+  // once. for now, we sort on every call. since hits seem to be
+  // almost sorted in decreasing Z, that's what we'll stick to.
+  PatPixelTrack* nonconstthis = const_cast<PatPixelTrack*>(this) ;
+  std::sort( nonconstthis->m_hits.begin(), nonconstthis->m_hits.end(), SortDecreasingZ() ) ;
+
+  // assume the hits are sorted, but don't assume anything on the direction of sorting
+  int N = int(m_hits.size()) ;
+  int firsthit = 0 ;
+  int lasthit  = N-1 ;
+  int dhit = +1 ;
+  if( ( m_hits[lasthit]->z() - m_hits[firsthit]->z() ) * direction < 0 ) {
+    std::swap( firsthit, lasthit ) ;
+    dhit = -1 ;
+  }
+  
+  // we filter x and y simultaneously but take them uncorrelated.
+  // filter first the first hit.
+
+  const PatPixelHit* hit = m_hits[firsthit] ;
+  double x  = hit->x() ;
+  double tx = m_tx ;
+  double y  = hit->y() ;
+  double ty = m_ty ;
+  double z  = hit->z() ; 
+
+  // initialize the covariance matrix
+  double covXX = 1/hit->wx() ;
+  double covYY = 1/hit->wy() ;
+  double covXTx  = 0 ; // no initial correlation
+  double covYTy  = 0 ;
+  double covTxTx = 1 ; // randomly large error
+  double covTyTy = 1 ; 
+  
+  // add remaining hits
+  double chi2(0) ;
+  for(int i = firsthit + dhit; i != lasthit + dhit; i += dhit ) {
+    hit = m_hits[i] ;
+    // add the noise
+    covTxTx += noise2PerLayer ;
+    covTyTy += noise2PerLayer ;
+    // filter X
+    chi2 += filter( z, x, tx, covXX, covXTx, covTxTx, hit->z(), hit->x(), hit->wx() ) ;
+    // filter Y
+    chi2 += filter( z, y, ty, covYY, covYTy, covTyTy, hit->z(), hit->y(), hit->wy() ) ;
+    // update z (note done in the filter, since needed only once)
+    z = hit->z() ;
+  }
+
+  // add the noise at the last hit
+  covTxTx += noise2PerLayer ;
+  covTyTy += noise2PerLayer ;
+
+  // finally, fill the state
+  state.setX( x ) ;
+  state.setY( y ) ;
+  state.setZ( z ) ;
+  state.setTx( tx ) ;
+  state.setTy( ty ) ;
+  state.covariance()(0,0) = covXX ;
+  state.covariance()(0,2) = covXTx ;
+  state.covariance()(2,2) = covTxTx ;
+  state.covariance()(1,1) = covYY ;
+  state.covariance()(1,3) = covYTy ;
+  state.covariance()(3,3) = covTyTy ;
+  return chi2 ;
+}
