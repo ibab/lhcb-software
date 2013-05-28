@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- QMTest Changes
+  . Updated the vl_compact qmtests and references to use the optimised geo
+
 - Packaging changes
   . Add dependency on L0DU, following move of L0DU to LHCb, to pick up 
     run time dependency on L0TCK
