@@ -4,6 +4,7 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrAlgorithms v1r5 2013-05-28 =========================
 ! 2013-05-27 - Sascha Stahl
  - PrForward track now picks up state closest to the end of velo.
  - Bugfix when using momentum estimate.
