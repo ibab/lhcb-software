@@ -1,0 +1,44 @@
+#$Id: requirements,v 1.42 2010-09-08 09:18:23 graven Exp $
+#============================================================================
+# Created    :
+# Maintainer :
+#============================================================================
+package           NeuroBayesTool
+version           v1r2p2
+
+# Structure
+#============================================================================
+branches          cmt doc src
+include_path      none
+
+# Used packages
+#============================================================================
+
+use GaudiKernel         v*
+use GaudiAlg            v*
+use DaVinciKernel       v*  Phys
+use LoKi                v*  Phys
+use LoKiPhys            v*  Phys
+
+use neurobayes_expert   v*  LCG_Interfaces
+
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          NeuroBayesTool    ../src/*.cpp -import=AIDA
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=NeuroBayesTool
+private
+macro_append     NeuroBayesTool_cppflags "" \
+                              target-gcc " -Wno-variadic-macros "
+end_private
+
+# =============================================================================
+# ======= the patterns ========================================================
+apply_pattern install_python_modules
+
+
