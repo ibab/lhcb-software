@@ -38,9 +38,6 @@ use CaloDAQ            v*    Calo           -no_auto_imports
 use LinkerInstances    v*    Event
 use SimComponents      v*    Sim            -no_auto_imports
 
-# For L0 Decoding (Awaiting reorganisation of DAQ decoding options).
-use L0DU         v*    L0
-
 #-- Lbcom
 use LbcomSys     v*
 

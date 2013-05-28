@@ -8,13 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
-! 2013-05-28 - Chris Jones
- - Add explicit dependency on L0/L0DU (previously implicit via Lbcom).
-
 !========================= DaVinci v33r4 2013-05-07 ===========================
 
 ! 2013-05-07 - Chris Jones
- - New release, based on LHCB v35r6 stack
+ - New release, based on LHCb v35r6 stack
 
 !========================= DaVinci v33r3p3 2013-05-02 =========================
 
