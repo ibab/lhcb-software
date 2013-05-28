@@ -66,7 +66,7 @@ namespace LHCb  {
         m_fileOffset(0), m_mifSel(pSel), m_mifFID(0)
     { 
       m_header = (MIFHeader*)new char[1024];
-      m_msg = pSel->messageService();
+      m_msg = m_mifSel->messageService();
     }
     /// Standard destructor 
     virtual ~MIFContext();
