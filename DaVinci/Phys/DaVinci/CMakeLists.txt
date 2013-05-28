@@ -4,6 +4,7 @@
 gaudi_subdir(DaVinci v33r4)
 
 gaudi_depends_on_subdirs(AnalysisSys
+                         L0/L0DU
                          Calo/CaloDAQ
                          Det/DDDB
                          Event/LinkerInstances

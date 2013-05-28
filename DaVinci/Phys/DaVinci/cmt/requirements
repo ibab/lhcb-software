@@ -38,23 +38,31 @@ use CaloDAQ            v*    Calo           -no_auto_imports
 use LinkerInstances    v*    Event
 use SimComponents      v*    Sim            -no_auto_imports
 
+# For L0 Decoding (Awaiting reorganisation of DAQ decoding options).
+use L0DU         v*    L0
+
 #-- Lbcom
-use LbcomSys    v*
+use LbcomSys     v*
 
 #-- Rec 
-use RecSys      v*
-
-# Allow the generation of QMTest summary 
-apply_pattern QMTestSummarize
+use RecSys       v*
 
 #-- Phys
-use PhysSys     v*
+use PhysSys      v*
 
 #-- Stripping
 use StrippingSys v*
 
 #-- Analysis
 use AnalysisSys v*
+
+# Private
+#use B2D0hD2KsPiPiDalitz v* Phys
+
+#============================================================================
+
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
 
 # define link options
 #============================================================================
