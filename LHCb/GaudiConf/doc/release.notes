@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-05-28 - Chris Jones
+ - Add explicit dependency on L0/L0DU to satisfy runtime requirement for 
+   DAQ decoding.
+
 !========================= GaudiConf v17r9 2013-05-14 =========================
 ! 2013-05-14 - Thomas Ruf
  - DecodeRawEvent.py, added support for dataondemand for FT/VL/VP clusters  

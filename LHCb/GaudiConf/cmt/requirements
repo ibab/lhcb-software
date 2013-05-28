@@ -6,6 +6,8 @@ include_path none
 
 use LHCbKernel     v* Kernel # For LHCbConfigurableUser dependency
 use GaudiPolicy    v*
+# For L0 Decoding (Awaiting reorganisation of DAQ decoding options).
+use L0DU           v*    L0
 
 ignore_pattern package_stamps
 
