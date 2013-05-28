@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2013-05-28 - Chris Jones
+ - Fix clang warning (incorrect use of + instead of << with ostringstream).
+
 !========================= RichRecQC v2r61p1 2013-04-30 =========================
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake

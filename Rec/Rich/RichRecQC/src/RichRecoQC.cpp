@@ -48,20 +48,20 @@ RecoQC::RecoQC( const std::string& name,
 
   // Ch Theta Rec histogram limits: low, high -> aerogel, Rich1Gas, Rich2Gas
   {
-    std::vector<double> tmp = list_of(0.150)(0.030)(0.010);
+    const std::vector<double> tmp = list_of(0.150)(0.030)(0.010);
     declareProperty( "ChThetaRecHistoLimitMin", m_ckThetaMin = tmp);
   }
   {
-    std::vector<double> tmp = list_of(0.325)(0.065)(0.036);
+    const std::vector<double> tmp = list_of(0.325)(0.065)(0.036);
     declareProperty( "ChThetaRecHistoLimitMax", m_ckThetaMax = tmp);
   }
   {
-    std::vector<double> tmp = list_of(0.025)(0.005)(0.0025);
+    const std::vector<double> tmp = list_of(0.025)(0.005)(0.0025);
     declareProperty( "CKResHistoRange", m_ckResRange = tmp);
   }
 
   {
-    std::vector<bool> tmp = list_of(true)(true)(true);
+    const std::vector<bool> tmp = list_of(true)(true)(true);
     declareProperty( "Radiators", m_rads = tmp);
   }
 
@@ -726,7 +726,7 @@ RecoQC::FitResult RecoQC::fit( TH1D * hist,
         // Fit function
         std::ostringstream fFuncType, fitName;
         fFuncType << "gaus(0)+pol" << nPol << "(3)";
-        fitName << rad + "FitF" << nPol;
+        fitName << rad << "FitF" << nPol;
         TF1 * fFitF = new TF1( fitName.str().c_str(),
                                fFuncType.str().c_str(),
                                -m_ckResRange[rad], m_ckResRange[rad] );
