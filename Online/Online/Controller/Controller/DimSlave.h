@@ -74,6 +74,8 @@ namespace FiniteStateMachine   {
 
     /// Start slave process. Must be implemented by sub-class
     virtual ErrCond start() = 0;
+    /// Inquire slave state. The reply may come later!
+    virtual ErrCond inquireState();
     /// Kill slave process
     virtual ErrCond kill();
     /// Send transition request to the slave

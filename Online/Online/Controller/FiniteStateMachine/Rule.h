@@ -74,7 +74,7 @@ namespace FiniteStateMachine   {
     /// Is the rule directed towards the master
     bool toSlave() const         { return m_direction == MASTER2SLAVE; }
     /// Check if a rule applies to a given slave state
-    bool applies(const State* slave_state, Direction direction)  const;
+    const Transition* applies(const State* slave_state, Direction direction)  const;
   };   //  End class Rule
 
 

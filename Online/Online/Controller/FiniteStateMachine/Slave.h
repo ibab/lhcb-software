@@ -14,6 +14,7 @@
 // Framework include files
 #include "FiniteStateMachine/State.h"
 #include "FiniteStateMachine/Transition.h"
+#include "CPP/Interactor.h"
 
 // C/C++ include files
 #include <set>
@@ -34,7 +35,7 @@ namespace FiniteStateMachine {
    * @date    01/03/2013
    * @version 0.1
    */
-  class Slave : public TypedObject  {
+  class Slave : public TypedObject, public Interactor  {
   public:
     typedef FSM::ErrCond ErrCond;
     enum SlaveState  {
@@ -130,6 +131,10 @@ namespace FiniteStateMachine {
     /// Stop the slave's transition timeout
     virtual Slave& stopTimer() = 0;
 
+    /** Specific Interactor handle to act on sensor interrupts
+     *  @arg  ev    [Event,read-only]   Event structure to be handled
+     */
+    virtual void handle(const Event& event);
     /// Handle timeout according to timer ID
     virtual void handleTimeout();
     /// Handle timeout on unload transition according to timer ID
@@ -154,6 +159,8 @@ namespace FiniteStateMachine {
 
     /// Virtual method -- must be overloaded -- Send transition request to the slave
     virtual ErrCond sendRequest(const Transition* tr);
+    /// Inquire slave state. The reply may come later!
+    virtual ErrCond inquireState();
     /// Start slave process. Base class implementation will throw an exception
     virtual ErrCond start();
     /** Kill slave process. Base class implementation will throw an exception

@@ -75,12 +75,19 @@ Transition::~Transition()    {
 }
 
 /// Add a new rule to a transition
-const Rule* Transition::adoptRule(Rule* rule)   {
+Transition& Transition::adoptRule(Rule* rule)   {
   if ( rule ) {
     m_rules.push_back(rule);
-    return rule;
+    return *this;
   }
   throw runtime_error("Transition::addRule> invalid rule for transition:"+name()+" of type "+type()->name());
+}
+
+/// Add a new rule to a transition
+Transition& Transition::adoptRule(const Transition* tr, Rule::Direction dir)    {
+  if ( tr )
+    return adoptRule(new Rule(tr->type(), tr, dir));
+  throw runtime_error("Transition::addRule> invalid transition to add rule for of type "+type()->name());
 }
 
 /// Add a new rules to a transition
@@ -97,17 +104,22 @@ const Predicate* Transition::addPredicate(const Predicate::States& allowed)  {
 }
 
 /// Helper function to define a whole set of rules to a transition depending on explicit transitions
-AllChildrenOfType::Rules AllChildrenOfType::execTransition(const Transitions& transitions)  const {
+ObjectsOfType::Rules ObjectsOfType::execTransition(const Transitions& transitions)  const {
   Rules rules;
   for(Type::ConstTransitions::const_iterator i=transitions.begin(); i!=transitions.end(); ++i) {
-    Rule* r = new Rule(m_type,(*i).second,Rule::MASTER2SLAVE);
+    Rule* r = new Rule(m_type,(*i).second,direction);
     rules.push_back(r);
   }
   return rules;
 }
 
+/// Helper function to add rules for transitions
+Rule* ObjectsOfType::execute(const Transition* transition)  const {
+  return new Rule(m_type,transition,direction);
+}
+
 /// Add a new rule to a transition
-Rule* AllChildrenOfType::execTransition(const string& curr_state, const string& target_state, Rule::Direction direction)  const {
+Rule* ObjectsOfType::execTransition(const string& curr_state, const string& target_state)  const {
   bool   any = curr_state == ST_NAME_ANY;
   string nam = m_type->name()+"::"+curr_state+"->"+target_state;
   const State* t_state = m_type->state(target_state);
@@ -116,13 +128,13 @@ Rule* AllChildrenOfType::execTransition(const string& curr_state, const string& 
     throw runtime_error("adoptRule> invalid object state "+curr_state+" in type "+m_type->name());
   }
   if ( t_state )   {
-    return execTransition(curr_state,target_state,direction);
+    return execTransition(curr_state,target_state);
   }
   throw runtime_error("adoptRule> invalid target state "+target_state+" in type "+m_type->name());
 }
 
 /// Add a new rule to a transition
-Rule* AllChildrenOfType::execTransition(const State* curr_state, const State* target_state, Rule::Direction direction)  const {
+Rule* ObjectsOfType::execTransition(const State* curr_state, const State* target_state)  const {
   if ( target_state )   {
     Rule* rule = new Rule(m_type,curr_state,target_state,direction);
     return rule;
@@ -131,17 +143,17 @@ Rule* AllChildrenOfType::execTransition(const State* curr_state, const State* ta
 }
 
 /// Helper function to add ANY rules
-Rule* AllChildrenOfType::moveTo(const string& target_state) const    {
-  return execTransition(ST_NAME_ANY,target_state,Rule::MASTER2SLAVE);
+Rule* ObjectsOfType::moveTo(const string& target_state) const    {
+  return execTransition(ST_NAME_ANY,target_state);
 }
 
 /// Helper function to add ANY rules
-Rule* AllChildrenOfType::moveTo(const State* target_state) const    {
-  return execTransition(0,target_state,Rule::MASTER2SLAVE);
+Rule* ObjectsOfType::moveTo(const State* target_state) const    {
+  return execTransition(0,target_state);
 }
 
 /// Helper function to add predicates
-Predicate::States AllChildrenOfType::inState(const State* s1, const State* s2,
+Predicate::States ObjectsOfType::inState(const State* s1, const State* s2,
 					     const State* s3, const State* s4, 
 					     const State* s5) const
 {
@@ -155,7 +167,7 @@ Predicate::States AllChildrenOfType::inState(const State* s1, const State* s2,
 }
 
 /// Add a new predicate to a transition
-Predicate::States AllChildrenOfType::inState(const string& s1, const string& s2,
+Predicate::States ObjectsOfType::inState(const string& s1, const string& s2,
 					     const string& s3, const string& s4, 
 					     const string& s5)  const
 {

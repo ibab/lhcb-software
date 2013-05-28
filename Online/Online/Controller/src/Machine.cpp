@@ -19,6 +19,8 @@
 // C/C++ include files
 #include <cstdarg>
 #include <stdexcept>
+#include <iostream>
+#include <sstream>
 
 using namespace FiniteStateMachine;
 using namespace std;
@@ -35,6 +37,12 @@ static ErrCond ret_success( Machine* actor, int code)  {
 static ErrCond ret_failure( Machine* actor)  {
   ioc().send((Machine*)actor,Machine::MACH_FAIL);
   return FSM::SUCCESS;
+}
+
+static const char* dir(int d) {
+  if ( d == Rule::SLAVE2MASTER ) return "Slave->Master";
+  else if ( d == Rule::MASTER2SLAVE ) return "Master->Slave";
+  return "Unknown";
 }
 
 /// Convert meta state to name
@@ -63,6 +71,7 @@ Machine::Machine(const Type *typ, const string& nam)
   display(DEBUG,"FSMmachine: creating machine %s of type %s",c_name(),typ->c_name());
   setState(m_type->initialState()).setTarget(0);
   Callback cb(this);
+  m_fsm.setCurrentState(MACH_IDLE);
   m_fsm.setFailureCallback(cb.make(&Machine::metaTransitionFail));
   m_fsm.setNoTransitionCallback(cb.make(&Machine::metaTransitionMissing));
   m_fsm.addTransition(MACH_IDLE,     MACH_IDLE,     "Idle->Idle",      cb.make(&Machine::goIdle));
@@ -190,9 +199,15 @@ const Machine::States Machine::slaveStates() const   {
 void Machine::evaluateWhens()  {
   const State::Whens& whens = state()->when();
   if ( !whens.empty() )  {
+    stringstream state_names;
     const Machine::States states = slaveStates();
+    state_names << "States:";
+    for(Slaves::const_iterator is=m_slaves.begin(); is!=m_slaves.end(); ++is)
+      state_names << (*is)->name() << "@" << (*is)->c_state() << "  ";
+
     display(INFO,"%s> Machine Idle:%s EvaluateWhen: Check %d when clauses.",
 	    c_name(),isIdle() ? " YES " : " NO ",int(whens.size()));
+    display(DEBUG,"%s> Slave state names:%s",c_name(),state_names.str().c_str());
     for(State::Whens::const_iterator iw=whens.begin(); iw != whens.end(); ++iw)  {
       const When* w = (*iw);
       When::Result res = w->fires(states);
@@ -203,7 +218,7 @@ void Machine::evaluateWhens()  {
 	return;
       }
       else  {
-	display(INFO,"%s> WHEN clause: %s rejected.",c_name(),w->c_name());
+	display(DEBUG,"%s> WHEN clause: %s rejected.",c_name(),w->c_name());
       }
     }
   }
@@ -321,6 +336,9 @@ ErrCond Machine::checkSlaves()   {
   if ( tr )  {
     // Here we only enter in the presence of slaves!
     CheckStateSlave check = for_each(sl.begin(),sl.end(),CheckStateSlave(tr));
+    display(DEBUG,"%s> Executing %s. Count:%d Fail:%d Dead:%d Size:%d",
+	    c_name(),tr->c_name(), int(check.count), int(check.fail), int(check.dead),int(sl.size()));
+
     if ( tr->killActive() && check.dead < sl.size() )
       return FSM::WAIT_ACTION;
     else if ( tr->create()     && check.dead > 0    )
@@ -355,9 +373,9 @@ ErrCond Machine::startTransition()  {
     if ( !sl.empty() )  {
       PredicateSlave pred = for_each(sl.begin(),sl.end(),PredicateSlave(tr));
       if ( pred.ok() )   {
-	display(DEBUG,"%s> Executing %s. Predicates checking finished successfully.",c_name(),tr->c_name());
-	InvokeSlave func = for_each(sl.begin(),sl.end(),InvokeSlave(tr,m_direction));
+	display(DEBUG,"%s> Executing %s. Predicates checking finished successfully. Dir:%s",c_name(),tr->c_name(),dir(m_direction));
 	m_meta.execute(this);
+	InvokeSlave func = for_each(sl.begin(),sl.end(),InvokeSlave(tr,m_direction));
 	if ( func.status == FSM::WAIT_ACTION )  {
 	  return FSM::SUCCESS;
 	}

@@ -36,7 +36,7 @@ DimSlave::DimSlave(const Type* typ, const string& nam, Machine* machine, bool in
 {
   m_commandName = nam;
   m_tmo = 3;
-  display(ALWAYS,"%s::%s> State data point: %s",RTL::processName().c_str(),c_name(),(nam+"/status").c_str());
+  display(INFO,"%s::%s> State data point: %s",RTL::processName().c_str(),c_name(),(nam+"/status").c_str());
   m_dimState.first  = ::dic_info_service((char*)(nam+"/status").c_str(),MONITORED,0,0,0,stateHandler,(long)this,0,0);
   m_dimState.second = ::dic_info_service((char*)(nam+"/fsm_status").c_str(),MONITORED,0,0,0,infoHandler,(long)this,0,0);
 }
@@ -79,7 +79,7 @@ DimSlave& DimSlave::addArgs(const string& args)  {
 FSM::ErrCond DimSlave::kill()  {
   stopTimer();
   int ret = ::dic_cmnd_service((char*)m_commandName.c_str(),(char*)m_killCmd.c_str(),m_killCmd.length()+1);
-  display(ALWAYS,"%s::%s> %s %s command to slave. Curr State:%s",
+  display(INFO,"%s::%s> %s %s command to slave. Curr State:%s",
 	  RTL::processName().c_str(),c_name(),
 	  ret != 1 ? "FAILED to send" : "Sent",m_killCmd.c_str(),metaStateName());	  
   return FSM::WAIT_ACTION;
@@ -90,7 +90,7 @@ FSM::ErrCond DimSlave::sendRequest(const Transition* tr)  {
   if ( tr )  {
     const char* data = tr->name().c_str();
     int len = tr->name().length();
-    display(NOLOG,"%s::%s> Sending request %s to %s [%s]",
+    display(DEBUG,"%s::%s> Sending request %s to %s [%s]",
 	    RTL::processName().c_str(),c_name(),data,m_commandName.c_str(),c_state());
     int ret = ::dic_cmnd_service((char*)m_commandName.c_str(),(char*)data,len+1);
     if ( ret == 1 )  {
@@ -98,6 +98,13 @@ FSM::ErrCond DimSlave::sendRequest(const Transition* tr)  {
     }
   }
   return FSM::FAIL;
+}
+
+/// Inquire slave state. The reply may come later!
+FSM::ErrCond DimSlave::inquireState() {
+  char cmd[7] = {"!state"};
+  ::dic_cmnd_service((char*)m_commandName.c_str(),cmd,sizeof(cmd));
+  return FSM::SUCCESS;
 }
 
 /// Start the slave's transition timeout

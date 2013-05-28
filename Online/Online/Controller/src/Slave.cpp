@@ -112,11 +112,8 @@ FSM::ErrCond Slave::iamDead()  {
 FSM::ErrCond Slave::transitionDone(const State* state)  {
   const Rule* r = m_rule;
   m_rule  = 0;
+  m_alive = true;
   m_state = state;
-  if ( r && r->targetState() != state )  {
-    m_meta = SLAVE_FAILED;
-    return notifyMachine(SLAVE_FAILED);
-  }
   m_meta  = SLAVE_ALIVE;
   if ( !m_machine->currTrans() )
     return notifyMachine(SLAVE_TRANSITION);
@@ -127,6 +124,7 @@ FSM::ErrCond Slave::transitionDone(const State* state)  {
 FSM::ErrCond Slave::transitionSlave(const State* state)  {
   if ( state )  {
     m_rule  = 0;
+    m_alive = true;
     m_state = state;
     m_meta  = SLAVE_ALIVE;
     // State change by slave. Handle the request.
@@ -151,7 +149,8 @@ FSM::ErrCond Slave::apply(const Rule* rule)  {
   if ( tr )  {
     m_rule = rule;
     m_meta = SLAVE_EXECUTING;
-    display(INFO,"%s> Send request \"%s\"to target process.",c_name(),tr->c_name());
+    display(INFO,"%s> Send request \"%s\" to target process:%s",
+	    m_machine->c_name(), tr->c_name(), c_name());
     if ( isInternal() ) {
       return send(SLAVE_FINISHED,tr->to());
     }
@@ -164,6 +163,7 @@ FSM::ErrCond Slave::apply(const Rule* rule)  {
 
 /// Start slave process
 FSM::ErrCond Slave::startSlave()  {
+  inquireState();
   if ( isInternal() )  {
     send(SLAVE_ALIVE,0);
     return FSM::WAIT_ACTION;
@@ -241,10 +241,15 @@ void Slave::handleState(const string& msg)  {
 #endif
     m = "OFFLINE";
   }
-  display(INFO,"%s> Received new message from %s %s",m_machine->c_name(),c_name(),m.c_str());
-
   const State* state = type()->state(m);
   const Transition* transition = (state && m_state) ? m_state->findTrans(state) : 0;
+  // After fork slaves do not answer with OFFLINE of NOT_READY!
+  starting &= (m == "OFFLINE");// || m == "NOT_READY");
+
+  display(INFO,"%s> Received new message from %p %s %s  starting:%s state:%p transition:%p",
+	  m_machine->c_name(), this, c_name(), m.c_str(),
+	  starting ? "YES" : "NO", state,transition);
+
   if ( starting )
     iamHere();
   else if ( transition )
@@ -253,6 +258,30 @@ void Slave::handleState(const string& msg)  {
     transitionSlave(state);
   else
     transitionFailed();
+}
+
+
+/// IOC handler
+void Slave::handle(const Event& event)   {
+  const State* state = (const State*)event.data;
+  switch(event.type)  {
+  case Slave::SLAVE_ALIVE:
+    iamHere();
+    break;
+  case Slave::SLAVE_LIMBO:
+    iamDead();
+    break;
+  case Slave::SLAVE_FINISHED:
+    transitionDone(state);
+    break;
+  default:
+    break;
+  }
+}
+
+/// Inquire slave state. The reply may come later!
+FSM::ErrCond Slave::inquireState() {
+  throw runtime_error(name()+"> Slave::start -- invalid base class implementation called.");
 }
 
 /// Start slave process. Base class implementation will throw an exception

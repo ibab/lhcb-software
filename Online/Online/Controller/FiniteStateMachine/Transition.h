@@ -185,12 +185,14 @@ namespace FiniteStateMachine {
     /// Add a new predicate to a transition defining the allowed states of slaves for satisfication
     const Predicate* addPredicate(const Predicate::States& allowed);
     /// Add a new rule to a transition
-    const Rule* adoptRule(Rule* rule);
+    Transition& adoptRule(Rule* rule);
+    /// Add a new rule to a transition
+    Transition& adoptRule(const Transition* tr, Rule::Direction dir=Rule::MASTER2SLAVE);
     /// Add a new rules to a transition
     void adoptRule(Rules rules);
   };   //  End class Transition
 
-  /**@class AllChildrenOfType  Transition.h FiniteStateMachine/Transition.h
+  /**@class ObjectsOfType  Transition.h FiniteStateMachine/Transition.h
    *
    *    Helper class to add rules and predicates to transition objects
    *
@@ -198,13 +200,14 @@ namespace FiniteStateMachine {
    * @date    01/03/2013
    * @version 0.1
    */
-  struct AllChildrenOfType : public TypedObject {
+  struct ObjectsOfType : public TypedObject {
     typedef std::map<std::string,const Transition*>  Transitions;
     typedef Transition::Rules Rules;
+    Rule::Direction  direction;
     /// Class constructor
-    AllChildrenOfType(const Type* t) : TypedObject(t,"") {}
+    ObjectsOfType(const Type* t, Rule::Direction d) : TypedObject(t,""), direction(d) {}
     /// Standard destructor
-    virtual ~AllChildrenOfType() {}
+    virtual ~ObjectsOfType() {}
     /// Helper function to add predicates
     Predicate::States inState(const std::string& s1,    const std::string& s2="",
 			      const std::string& s3="", const std::string& s4="", 
@@ -218,25 +221,28 @@ namespace FiniteStateMachine {
     /// Helper function to add ANY rules
     Rule* moveTo(             const State* target_state) const;
     /// Helper function to add rules for transitions
-    Rule* execTransition(     const std::string& curr_state, 
-			      const std::string& target_state, 
-			      Rule::Direction direction=Rule::MASTER2SLAVE) const;
+    Rule* execute(     const Transition* tranition)  const;
     /// Helper function to add rules for transitions
-    Rule* execTransition(     const State* curr_state, 
-			      const State* target_state, 
-			      Rule::Direction direction=Rule::MASTER2SLAVE) const;
+    Rule* execTransition(     const std::string& curr_state, const std::string& target_state) const;
+    /// Helper function to add rules for transitions
+    Rule* execTransition(     const State* curr_state, const State* target_state) const;
     /// Helper function to define a whole set of rules to a transition depending on explicit transitions
     Rules execTransition(const Transitions& transitions)  const;
     /// Helper function to add rules for transitions
-    Rule* move(              const std::string& curr_state, 
-			      const std::string& target_state, 
-			      Rule::Direction direction=Rule::MASTER2SLAVE) const
-    {  return execTransition(curr_state, target_state, direction);   }
+    Rule* move(              const std::string& curr_state, const std::string& target_state) const
+    {  return execTransition(curr_state, target_state);   }
     /// Helper function to add rules for transitions
-    Rule* move(               const State* curr_state, 
-			      const State* target_state, 
-			      Rule::Direction direction=Rule::MASTER2SLAVE) const
-    {  return execTransition(curr_state, target_state, direction);   }
+    Rule* move(               const State* curr_state, const State* target_state) const
+    {  return execTransition(curr_state, target_state);   }
+  };
+
+  struct AllChildrenOfType : public ObjectsOfType {
+    AllChildrenOfType(const Type* t) : ObjectsOfType(t,Rule::MASTER2SLAVE) {}
+    virtual ~AllChildrenOfType() {}
+  };
+  struct ParentOfType : public ObjectsOfType {
+    ParentOfType(const Type* t) : ObjectsOfType(t,Rule::SLAVE2MASTER) {}
+    virtual ~ParentOfType() {}
   };
 
 }      //  End namespace 

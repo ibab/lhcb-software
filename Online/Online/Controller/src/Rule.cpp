@@ -56,8 +56,17 @@ const State* Rule::currState ()  const      {
   return m_transition ? m_transition->from() : m_currState;
 }
 
+#if 0
 /// Check if a rule applies to a given slave state
-bool Rule::applies(const State* slave_state, Direction direction_flag)  const  {
+const Transition* Rule::applies(const Transition* transition, const State* slave_state, Direction direction_flag)  const  {
+  const Transition* tr = applies(slave_state,direction_flag);
+  if ( tr == transition ) return tr;
+  return 0;
+}
+#endif
+
+/// Check if a rule applies to a given slave state
+const Transition* Rule::applies(const State* slave_state, Direction direction_flag)  const  {
   const State* to = targetState();
   if ( slave_state->type() == m_type && m_direction == direction_flag )  {
     // If required slave state check it!
@@ -66,32 +75,32 @@ bool Rule::applies(const State* slave_state, Direction direction_flag)  const  {
       if ( tr->from() == slave_state )  {
 	display(NOLOG,"+++RULE: %s> Apply rule on slave: tr:%s --  %s -> %s",
 		c_name(),tr->c_name(),tr->from()->c_name(),to->c_name());
-	return true;
+	return tr;
       }
       display(NOLOG,"+++RULE: %s> Ignore rule on slave:  %s -> %s  [NO_TRANSITION]",
 	      c_name(),slave_state->c_name(),to->c_name());
-      return false;
+      return 0;
     }
     else if ( 0 != (tr=slave_state->findTrans(to)) )   {
       if ( !m_currState || (m_currState && m_currState == tr->from()) )  {
 	display(NOLOG,"+++RULE: %s> Apply rule on slave: tr:%s [%s] --  %s -> %s",
 		c_name(),tr->c_name(),m_currState ? m_currState->c_name() : "----",
 		slave_state->c_name(),to->c_name());
-	return true;
+	return tr;
       }
       display(NOLOG,"+++RULE: %s> Ignore rule on slave:  %s -> %s  (%s , %s) [STATE_MISMATCH]",
 	      c_name(),slave_state->c_name(),to->c_name(),
 	      m_currState ? m_currState->c_name() : "----",
 	      slave_state ? slave_state->c_name() : "----");
-      return false;
+      return 0;
     }
     display(NOLOG,"+++RULE: %s> Ignore rule on slave:  %s -> %s  [NO_TRANSITION]",
 	    c_name(),slave_state->c_name(),to->c_name());
-    return false;
+    return 0;
   }
   display(NOLOG,"+++RULE: %s> Ignore rule on slave:  %s -> %s",
 	  c_name(),slave_state->c_name(),to->c_name());
-  return false;
+  return 0;
 }
 
 /// Class Constructor
@@ -120,15 +129,17 @@ When::When(const Type *typ, const State* current, Multiplicity m, const States& 
 /// Standatrd destructor  
 When::~When()  {
 }
-
+#include <iostream>
 /// Check if a slave with a given state satisfies the predicate
 When::Result When::fires(const States& states)  const   {
   const State* to = m_rule.targetState();
   States::const_iterator i;
   if ( m_mult == ALL_IN_STATE )   {
     for(i=states.begin(); i!=states.end(); ++i)
-      if ( m_allowed.find(*i) == m_allowed.end() ) 
+      if ( m_allowed.find(*i) == m_allowed.end() ) {
+	//cout << (*i)->name() << " Not found! " << to->name() << endl;
 	return Result(0,Rule::NO_DIRECTION);
+      }
     return Result(to,m_rule.direction());
   }
   else if ( m_mult == ALL_NOT_IN_STATE )   {

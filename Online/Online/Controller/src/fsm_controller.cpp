@@ -71,12 +71,12 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
   Controller           ctrl(utgid,&mach);
   XmlTaskConfiguration cfg(partition,taskdefs,runinfo,mode,count);
   
-  ctrl.display(ctrl.ALWAYS,"%s> Selected running mode is:%s",utgid.c_str(),mode.c_str());
+  ctrl.display(ctrl.INFO,"%s> Selected running mode is:%s",utgid.c_str(),mode.c_str());
   if ( !cfg.attachTasks(mach,type) )  {
     ::fprintf(stderr,"Failed to interprete XML tasklist.\n");
     ::exit(EINVAL);
   }
-  ctrl.display(ctrl.ALWAYS,"Controller task started...");
+  ctrl.display(ctrl.INFO,"Controller task started...");
   ctrl.run();
   return 1;
 }

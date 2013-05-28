@@ -94,12 +94,12 @@ FSM::ErrCond Controller::publishSlaves()  {
 /// Publish state information when transition is completed
 FSM::ErrCond Controller::publish()  {
   string state = m_machine->c_state();
-  display(ALWAYS,"%s> Controller PUBLISH state %s",m_machine->c_name(),state.c_str());
+  display(INFO,"%s> Controller PUBLISH state %s",m_machine->c_name(),state.c_str());
   if ( state == "ERROR" )  {
     const Slaves slaves = m_machine->slaves();
     for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); ++i)  {
       const Slave* s = *i;
-      display(ALWAYS,"%s> Controller: Slave %s in state %s has meta-state:%s",
+      display(INFO,"%s> Controller: Slave %s in state %s has meta-state:%s",
 	      c_name(), s->c_name(), s->c_state(), s->metaStateName());
     }
   }
@@ -164,6 +164,7 @@ FSM::ErrCond Controller::invokeTransition(const string& transition)  {
 /// DimCommand overload: handle DIM commands
 void Controller::commandHandler()   {
   // Decouple as quickly as possible from the DIM command loop !
+  ErrCond status = FSM::SUCCESS;
   string cmd = getString();
   display(INFO,"%s> Received transition request:%s",c_name(),cmd.c_str());
   if ( !m_machine->isIdle() )  {
@@ -172,43 +173,43 @@ void Controller::commandHandler()   {
   }
   if ( cmd == "load"  )  {
     setTargetState(NOT_READY);
-    invokeTransition(cmd);
+    status = invokeTransition(cmd);
   }
   else if ( cmd == "configure")  {
     setTargetState(READY);
-    invokeTransition(cmd);
+    status = invokeTransition(cmd);
   }
   else if ( cmd == "start"    )  {
     setTargetState(RUNNING);
-    invokeTransition(cmd);
+    status = invokeTransition(cmd);
   }
   else if ( cmd == "stop"     )  {
     setTargetState(STOPPED);
-    invokeTransition(cmd);
+    status = invokeTransition(cmd);
   }
   else if ( cmd == "reset"    )  {
     setTargetState(NOT_READY);
-    invokeTransition(cmd);
+    status = invokeTransition(cmd);
   }
   else if ( cmd == "pause"    )  {
     setTargetState(PAUSED);
-    invokeTransition(cmd);
+    status = invokeTransition(cmd);
   }
   else if ( cmd == "continue" )  {
     setTargetState(RUNNING);
-    invokeTransition(cmd);
+    status = invokeTransition(cmd);
   }
   else if ( cmd == "recover" )  {
     setTargetState(OFFLINE);
-    invokeTransition(cmd);
+    status = invokeTransition(cmd);
   }
   else if ( cmd == "RESET" )  {
     setTargetState(OFFLINE);
-    invokeTransition(cmd);
+    status = invokeTransition(cmd);
   }
   else if ( cmd == "unload"   )  {
     setTargetState(OFFLINE);
-    invokeTransition(cmd);
+    status = invokeTransition(cmd);
   }
   else if ( cmd == "destroy"   )  {
     setTargetState(UNKNOWN);
@@ -220,5 +221,8 @@ void Controller::commandHandler()   {
     invokeTransition("UnknownTransition");
     return;
   }
-  declareSubState(EXEC_ACTION);
+  if ( status == FSM::TRANNOTFOUND )
+    publish();
+  else
+    declareSubState(EXEC_ACTION);
 }

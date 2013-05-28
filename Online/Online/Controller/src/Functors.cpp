@@ -63,19 +63,30 @@ void SlaveKiller::operator()(Slave* s)    {
 
 /// Operator invoked for each rule and invoke slave accordingly
 void InvokeSlave::operator()(Slave* s)   {
+  const Rule*  rule = 0;
   const State* slState = s->state();
   const Transition::Rules& r = object->rules();
+
+  if ( direction != Rule::MASTER2SLAVE ) return;
   if ( !object->checkLimbo() && s->isLimbo() ) return; 
+  // We favor identical transitions over artificial ones!
   for(Transition::Rules::const_iterator i=r.begin(); i!=r.end();++i)  {
-    const Rule* rule = (*i);
-    if ( rule->applies(slState,direction) )  {
-      FSM::ErrCond sc = s->apply(rule);
-      if      ( status == FSM::SUCCESS && sc == FSM::WAIT_ACTION ) status = sc;
-      else if ( sc == FSM::TRANNOTFOUND ) { /* Rule does not apply */ }
-      else if ( sc != FSM::SUCCESS      ) status = sc;
-      return;
-    }
+    rule = (*i);
+    const Transition* t = rule->transition();
+    if ( t == object && object->from() == slState ) 
+      goto Apply;
   }
+  for(Transition::Rules::const_iterator i=r.begin(); i!=r.end();++i)  {
+    rule = (*i);
+    if ( rule->applies(slState,direction) )
+      goto Apply;
+  }
+  return;
+ Apply:
+  FSM::ErrCond sc = s->apply(rule);
+  if      ( status == FSM::SUCCESS && sc == FSM::WAIT_ACTION ) status = sc;
+  else if ( sc == FSM::TRANNOTFOUND ) { /* Rule does not apply */ }
+  else if ( sc != FSM::SUCCESS      ) status = sc;
 }
 
 /// Operator invoked for each slave to be checked

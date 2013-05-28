@@ -60,6 +60,8 @@ FSM::ErrCond FmcSlave::start()  {
     fmc_args += m_fmcArgs[i] + " ";
   for(size_t i=0; i<m_argv.size();++i)
     cmd_args += m_argv[i] + " ";
+
+  // Start the process using the FMC task manager
   TaskManager::instance(RTL::nodeNameShort()).start(name(),fmc_args,m_cmd,cmd_args);
   return FSM::SUCCESS;
 }
