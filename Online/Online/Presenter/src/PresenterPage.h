@@ -145,10 +145,9 @@ private:
   std::vector<TrendingFile> m_trends;
   std::vector<PadContent> m_pads;
   std::vector<DisplayHistogram*> m_displayHistograms;
-  int m_msgBoxReturnCode;
-  TPad* m_bannerPad;
-  TText* m_bannerPageName;
-  TText* m_bannerSource;
+  TPad*       m_bannerPad;
+  TText*      m_bannerPageName;
+  TText*      m_bannerSource;
   std::string m_lastName;
   std::string m_lastTimePoint;
   std::string m_lastDuration;

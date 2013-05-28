@@ -4174,7 +4174,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                               m_intervalPickerData->startTimeString(),
                               m_intervalPickerData->durationString());
             std::cout << "Set time from " << m_intervalPickerData->startTimeString() << " end " 
-                      << m_intervalPickerData->durationString() << endmsg;
+                      << m_intervalPickerData->durationString() << std::endl;
             m_presenterInfo.setTimeC( m_intervalPickerData->startTimeString(),
                                       m_intervalPickerData->durationString(), true );
           }
