@@ -15,7 +15,8 @@ gaudi_depends_on_subdirs(Phys/CommonParticles
                          Phys/StrippingSettings
                          Phys/StrippingTCK
                          Phys/StrippingUtils
-                         Phys/TMVASelections)
+                         Phys/TMVASelections
+                         Phys/NeuroBayesTools)
 
 
 gaudi_add_test(QMTest QMTEST)
