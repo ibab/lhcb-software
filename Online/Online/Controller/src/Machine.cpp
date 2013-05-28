@@ -112,9 +112,14 @@ const char* Machine::currentMetaName()  const   {
   return _metaStateName(m_fsm.currentState());
 }
 
-/// Meta state name of target meta-state
+/// Meta state name of previous meta-state
 const char* Machine::previousMetaName()  const   {
   return _metaStateName(m_fsm.previousState());
+}
+
+/// Meta state name of target meta-state
+const char* Machine::targetMetaName()  const   {
+  return _metaStateName(m_fsm.targetState());
 }
 
 /// IOC and network handler

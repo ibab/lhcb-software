@@ -165,7 +165,8 @@ void PrintObject::operator()(const Machine* m) const  {
   const Type* typ = m->type();
   const Transition* tr = m->currTrans();
   m->display(flag,"%s+-------- FSMmachine: %s of type %s.",pref,m->c_name(),typ->c_name());
-  m->display(flag,"%s|  Meta transition:    %s  -> %s",pref,m->previousMetaName(),m->currentMetaName());
+  m->display(flag,"%s|  Meta transition:    Prev:%s  Curr:%s Target:%s",
+	     pref,m->previousMetaName(),m->currentMetaName(),m->targetMetaName());
   m->display(flag,"%s|  Current state:      %s",pref,m->c_state());
   m->display(flag,"%s|  Current Transition: %s",pref,tr ? tr->c_name()       : "----");
   m->display(flag,"%s|  Target  state:      %s",pref,tr ? tr->to()->c_name() : "----");

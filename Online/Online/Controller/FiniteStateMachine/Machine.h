@@ -113,8 +113,10 @@ namespace FiniteStateMachine {
     bool isIdle()  const                          {  return m_fsm.currentState() == MACH_IDLE; }
     /// Meta state name of current meta-state
     const char* currentMetaName()  const;
-    /// Meta state name of target meta-state
+    /// Meta state name of previous meta-state
     const char* previousMetaName()  const;
+    /// Meta state name of target meta-state
+    const char* targetMetaName()  const;
     
     /// Set all slave matching the meta state mask to the real FSM state.
     int  setSlaveState(int meta_mask, const State* state);

@@ -67,6 +67,8 @@ namespace FiniteStateMachine   {
     MicFSMState targetState()    const   { return m_targetState;   }
     MicFSMState currentState()   const   { return m_currentState;  }
     MicFSMState previousState()  const   { return m_previousState; }
+    /// Check if the transition from the current state to the target state exists
+    bool    hasTransitionTo(MicFSMState state) const;
     ErrCond addTransition   (MicFSMState from, MicFSMState to,const std::string& condition,const Callback& act);
     ErrCond removeTransition(MicFSMState from, MicFSMState to);
     ErrCond invokeTransition(MicFSMState state, const void* param=0);

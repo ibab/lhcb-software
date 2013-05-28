@@ -112,11 +112,21 @@ FSM::ErrCond FSM::removeTransition(MicFSMState from, MicFSMState to)    {
   return FSM::TRANNOTFOUND;             // return false (not found)
 }
 
+/// Check if the transition from the current state to the target state exists
+bool FSM::hasTransitionTo(MicFSMState target) const {
+  for(MicFSMTransition* tr = m_transitionHead; tr; tr = tr->next)  {
+    if( tr->from == m_currentState && tr->to == target )  {
+      return true;
+    }
+  }
+  return false;
+}
+
 //----------------------------------------------------------------------------
 FSM::ErrCond FSM::invokeTransition(MicFSMState target, const void* user_param)   {
   for(MicFSMTransition* tr = m_transitionHead; tr; tr = tr->next)  {
     if( tr->from == m_currentState && tr->to == target )  {
-      m_targetState = target;
+      m_targetState       = target;
       m_currentTransition = tr;              // Set the current transition 
       if( tr->action )        {              // Check if action routine exists 
         ErrCond status = ErrCond(tr->action.execute(user_param));
@@ -126,8 +136,8 @@ FSM::ErrCond FSM::invokeTransition(MicFSMState target, const void* user_param)  
         }
       }
       // Now do the transition (if action routine returns SUCCESS)
-      m_previousState = m_currentState;
-      m_currentState  = target;
+      m_previousState = tr->from;
+      m_currentState  = tr->to;
       return FSM::SUCCESS;                   // return success
     }
   }
