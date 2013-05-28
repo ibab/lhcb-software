@@ -378,7 +378,7 @@ StatusCode LLParticlesFromRecVertices::execute()
         BOOST_FOREACH( const LHCb::RecVertex* rv, recVertices )
         {
           if (m_verbose) { printRecVertexCandidateSummary( verbose(), rv, upPVZ ); }
-          if ( m_VERTEXCUT(rv) && ( m_Z(rv) > upPVZ ) ) {
+          if ( m_VERTEXCUT(rv) && ( m_Z(rv) >= upPVZ ) ) {
             if ( RecVertex2Particle(rv) ) { ++nAcceptedVertices; }
           }
         }

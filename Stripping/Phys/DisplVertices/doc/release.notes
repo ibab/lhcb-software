@@ -4,6 +4,11 @@
 ! Purpose     : Stripping and Offline algorithms and tools for the selection
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
+
+! 2013-05-28 - Veerle Heijne
+ - LLParticlesFromRecVertices.cpp: Ask for PV z position upstream or equal to candidate z, 
+   in order to be able to use PVs as candidates.
+
 ! 2013-05-15 - Veerle Heijne
  - LLParticlesFromRecVertices.cpp: Remove requirement of 'no backward tracks' for 
    displaced vertex candidate
