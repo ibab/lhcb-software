@@ -424,7 +424,7 @@ void ROFarmMonitor::update( )   {
                 const Clients& clients = (*ib).clients;
                 std::cout << "  Buffer " << (*ib).name << " prod " << (*ib).ctrl.tot_produced << std::endl;
                 for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-                  printf( "    Node %s  Buffer %s  Task %s Events %d  Part %4x\n",
+                  printf( "    Node %s  Buffer %s  Task %s Events %ld  Part %04x\n",
                           (*n).name, (*ib).name, (*ic).name, (*ic).events, (*ic).partitionID );
                 }
               }
@@ -482,7 +482,7 @@ void ROFarmMonitor::update( )   {
                 int  pID = (*ic).partitionID;
                 if ( myPartID != pID && 0 != pID ) continue;
                 if ( 1 < m_print ) {
-                  printf( "   Node %s  Buffer %s  Task %s Events %d  Part %4x Hlt%2d cal%2d Def%2d\n",
+                  printf( "   Node %s  Buffer %s  Task %s Events %ld  Part %04x Hlt%2d cal%2d Def%2d\n",
                           (*n).name, (*ib).name, (*ic).name, (*ic).events, pID, isHlt, isCalib, isDef );
                 }
                 const char* p = strchr((*ic).name,'_');
@@ -545,7 +545,7 @@ void ROFarmMonitor::update( )   {
                 int  pID = (*ic).partitionID;
                 if ( myPartID != pID ) continue;
                 if ( 1 < m_print ) {
-                  printf( "   Node %s  Buffer %s  Task %s Events %d  Part %4x\n",
+                  printf( "   Node %s  Buffer %s  Task %s Events %ld  Part %04x\n",
                           (*n).name, (*ib).name, (*ic).name, (*ic).events, pID );
                 }
                 if ( isMoni || isReco ) {              // only consumers, except the receiver
