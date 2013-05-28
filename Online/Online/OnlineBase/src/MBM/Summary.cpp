@@ -104,7 +104,7 @@ int Summary::show(BufferMemory* dsc, bool show_states)   {
     }
     if ( first )    {
       first = false;
-      ::printf(head);
+      ::puts(head);
     }
     if ( us->ev_produced>0 || us->get_sp_calls>0 )   {
       float perc = 0;

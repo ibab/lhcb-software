@@ -262,14 +262,14 @@ void BF_print(const void* field, int len, size_t ncols, bool prt_hdr)  {
   Bits::dumpWords(field, len, words);
   for(i = 0, k = 0; i < len/sizeof(int)/ncols; ++i )  {
     for(j = 0; j < ncols; ++j )  {
-      printf(words[i+ncols+j].c_str());
+      ::puts(words[i+ncols+j].c_str());
       if ( j < (ncols-1) ) printf (" ");
       ++k;
     }
     printf("\n");
   }
   while(k<sizeof(words))  {
-    printf(words[k++].c_str());
+    ::puts(words[k++].c_str());
   }
 }
 

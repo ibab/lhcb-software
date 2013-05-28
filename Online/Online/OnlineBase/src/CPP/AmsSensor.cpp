@@ -39,7 +39,7 @@ namespace {
     static char n[64] = "";
     if ( n[0] == 0 )  {
       ::lib_rtl_get_node_name(n,sizeof(n)-3);
-      ::strncat(n,"::",sizeof(n));
+      ::strncat(n,"::",3);
     }
     return n;
   }

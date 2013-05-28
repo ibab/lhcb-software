@@ -94,6 +94,7 @@ static bool match1(const char* pat, const char* str, bool case_sensitive) {
   goto loopStart;
 }
 
+#if 0
 static bool match0(const char *pattern, const char *candidate)  {
   switch (*pattern)   {
   case '\0':
@@ -106,6 +107,7 @@ static bool match0(const char *pattern, const char *candidate)  {
     return (*pattern == *candidate) && match0(pattern+1, candidate+1);   
   }
 }
+#endif
 
 int str_match_wild (const char *candidate_string, const char *pattern_string)   {
   return match1(pattern_string,candidate_string,true) ? STR_MATCH : STR_NOMATCH;
