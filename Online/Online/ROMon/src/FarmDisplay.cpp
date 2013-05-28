@@ -69,6 +69,7 @@ namespace ROMon {
 
 
 namespace {
+#if 0
   ScrDisplay* swapMouseSelector(Interactor* ia, ClusterDisplay* from, ClusterDisplay* to) {
     if ( from ) {
       MouseSensor::instance().remove(from->display());
@@ -83,6 +84,7 @@ namespace {
     }
     return 0;
   }
+#endif
 
   struct DisplayUpdate {
     Pasteboard* m_pb;

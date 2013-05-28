@@ -38,8 +38,6 @@ namespace ROMon {
     };
 
     typedef std::map<std::string,NodeMon*>  Monitors;
-    bool              m_inUse;
-
     std::string m_partition;
     Monitors   m_nodes;
     Monitors   m_history;

@@ -410,6 +410,7 @@ StorageClusterLine::StorageClusterLine(FarmLineDisplay* p, const string& partiti
 {
   m_lastUpdate = time(0);
   m_hasProblems = false;
+  m_numUpdate = 0;
   connect(strlower(m_name)+"/ROpublish");
 }
 
@@ -429,6 +430,7 @@ void StorageClusterLine::display() {
   int       num_cl[3] = {0,0,0}, num_sl[3] = {0,0,0};
 
   m_inUse = false;
+  ++m_numUpdate;
   for (Nodes::const_iterator n=c->nodes.begin(); n!=c->nodes.end(); n=c->nodes.next(n))  {
     bool recv_node = ::strncasecmp((*n).name,"storerecv",8) == 0;
     const Buffers& buffs = *(*n).buffers();
