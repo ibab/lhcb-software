@@ -3,6 +3,11 @@ Package     : StrippingSys
 Package Coordinator : Jibo He, Anton Poluektov
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v6r2p7 2013-05-28 =========================
+
+* Phys/StripArchive
+  - Add StrippingArchive entry for S20r2. This was missing from STRIPPING v6r2p6.
+
 ! 2013-05-28 - Chris Jones
  - Import package Phys/NeuroBayesTools from Phys
 

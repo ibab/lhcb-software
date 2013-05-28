@@ -1,5 +1,5 @@
 package  StrippingSys
-version           v6r2p6
+version           v6r2p7
 
 branches doc cmt tests
 
@@ -16,7 +16,7 @@ use  MvaPreSelB2DH               v1r5     Phys   # Sajan Easo
 ####################################################################
 # Stripping packages
 use  StrippingAlgs               v1r12    Phys   # Anton Poluektov
-use  StrippingArchive            v1r20    Phys   # Stripping coordinators
+use  StrippingArchive            v1r21    Phys   # Stripping coordinators
 use  StrippingConf               v4r8     Phys   # Anton Poluektov
 use  StrippingNeuroBayes         v1r8     Phys   # Ulrich Kerzel
 use  StrippingSelections         v3r25    Phys   # Stripping coordinators
@@ -27,7 +27,7 @@ use  StrippingUtils              v1r8     Phys   # Juan Palacios
 ####################################################################
 
 use  TMVASelections              v1r6     Phys   # Stripping coordinators 
-use  NeuroBayesTools             v1r2p2   Phys   # ???
+use  NeuroBayesTools             v1r3   Phys   # ???
 
 ####################################################################
 
