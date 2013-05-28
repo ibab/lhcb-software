@@ -77,7 +77,9 @@ private:
   double m_maxChi2PerHit;
   double m_maxChi2Short;
   bool   m_clearHits;
-  bool   m_closestToBeamKalmanFit ;
+  bool   m_stateClosestToBeamKalmanFit ;
+  bool   m_stateEndVeloKalmanFit ;
+  bool   m_addStateFirstLastMeasurementKalmanFit ;
 
   PatPixelTracks m_tracks;                  // list of tracks found by searchByPair()
   PatPixelTrack  m_track;

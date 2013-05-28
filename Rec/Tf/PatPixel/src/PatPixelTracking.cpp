@@ -47,8 +47,11 @@ DECLARE_ALGORITHM_FACTORY( PatPixelTracking )
   declareProperty( "DebugToolName",         m_debugToolName     = ""    );
   declareProperty( "WantedKey",             m_wantedKey         = -100  );
   declareProperty( "TimingMeasurement",     m_doTiming          = false );
-  declareProperty( "ClosestToBeamKalmanFit",  m_closestToBeamKalmanFit  = true ) ;
+  declareProperty( "ClosestToBeamStateKalmanFit", m_stateClosestToBeamKalmanFit  = true ) ;
+  declareProperty( "EndVeloStateKalmanFit",       m_stateEndVeloKalmanFit = false ) ;
+  declareProperty( "AddFirstLastMeasurementStatesKalmanFit", m_addStateFirstLastMeasurementKalmanFit = false ) ;
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -352,35 +355,62 @@ void PatPixelTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
       if ( (*itR)->z() > zMax ) zMax = (*itR)->z();           // find highest Z for all hits of this track
     }
 
-    LHCb::State state;
-
     //== Define backward as z closest to beam downstream of hits
     double zBeam = (*itT).zBeam();                            // Z where the track passes closest to the beam
     bool backward = zBeam > zMax;                             // decide: forward or backward track
     newTrack->setFlag( LHCb::Track::Backward, backward );
 
-    // set the state closest to beam
+    // get the state from the straight line fit
+    LHCb::State state;
     state.setLocation( LHCb::State::ClosestToBeam );
     state.setState( (*itT).state( zBeam ) );
-    if( m_closestToBeamKalmanFit ) {
+    state.setCovariance( (*itT).covariance( zBeam ) );
+
+    // parameters for kalmanfit scattering. calibrated on MC, shamelessly hardcoded:
+    const double tx = state.tx() ; const double ty = state.ty() ;
+    const double scat2 = 1e-8 + 7e-6*(tx*tx+ty*ty) ;
+
+    // the logic is a bit messy in the following, so I hope we got all cases right
+    if( m_stateClosestToBeamKalmanFit || m_addStateFirstLastMeasurementKalmanFit) {
       // run a K-filter with scattering to improve IP resolution
-      double tx = state.tx() ; double ty = state.ty() ;
-      // calibrated on MC, shamelessly hardcoded:
-      double scat2 = 1e-8 + 7e-6*(tx*tx+ty*ty) ;
-      (*itT).fitKalman( state, backward ? 1 : -1 , scat2 ) ;
-    } else {
-      state.setCovariance( (*itT).covariance( zBeam ) );
+      LHCb::State upstreamstate ;
+      (*itT).fitKalman( upstreamstate, backward ? 1 : -1 , scat2 ) ;
+      // add this state as state at first measurement if requested
+      if( m_addStateFirstLastMeasurementKalmanFit ) {
+	upstreamstate.setLocation( LHCb::State::FirstMeasurement ) ;
+	newTrack->addToStates( upstreamstate );
+      }
+      // transport the state to the closestToBeam position
+      if( m_stateClosestToBeamKalmanFit ) {
+	upstreamstate.setLocation( LHCb::State::ClosestToBeam );
+	upstreamstate.linearTransportTo( zBeam ) ;
+	newTrack->addToStates( upstreamstate );
+      }
     }
-    newTrack->addToStates( state );
-    
-    // set state at the end of the velo from unweighted straight line fit
-    if( !backward ) {
-      state.setLocation( LHCb::State::EndVelo ) ;
-      state.setState( (*itT).state( StateParameters::ZEndVelo ) ) ;
-      state.setCovariance( (*itT).covariance( state.z() ) );
+    if(!m_stateClosestToBeamKalmanFit) {
       newTrack->addToStates( state );
     }
     
+    // set state at last measurement, if requested
+    if( (!backward && m_stateEndVeloKalmanFit) || m_addStateFirstLastMeasurementKalmanFit ) {
+      LHCb::State downstreamstate ;
+      (*itT).fitKalman( downstreamstate, backward ? -1 : +1 , scat2 ) ;
+      if( m_addStateFirstLastMeasurementKalmanFit ) {
+	downstreamstate.setLocation( LHCb::State::LastMeasurement ) ;
+	newTrack->addToStates( downstreamstate );
+      }
+      if( m_stateEndVeloKalmanFit ) {
+	state = downstreamstate ;
+      }
+    } 
+    
+    // add state at end of velo
+    if( !backward ) {
+      state.setLocation( LHCb::State::EndVelo ) ;
+      state.linearTransportTo( StateParameters::ZEndVelo )  ;
+      newTrack->addToStates( state ) ;
+    }
+
     // set the chi2/dof
     newTrack->setNDoF(2*((*itT).hits().size()-2)); newTrack->setChi2PerDoF((*itT).chi2());
     outputTracks->insert( newTrack );
