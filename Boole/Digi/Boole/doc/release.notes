@@ -3,6 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - QMTest Changes
+   . Temporarily pointed the vl_compact qmtests to use inputfiles with the
+     optimised geometry.
+   . Updated references to match.
+
  - QMTest changes
    . Added vl_compact_tpg-ut-ft refrence
    . Corrected vl_compact_tpg-ut-ft qmtest
