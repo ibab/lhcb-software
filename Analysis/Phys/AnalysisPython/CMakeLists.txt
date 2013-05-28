@@ -6,7 +6,7 @@ gaudi_subdir(AnalysisPython v2r20)
 gaudi_depends_on_subdirs(GaudiPython
                          Kernel/LHCbMath)
 
-find_package(ROOT COMPONENTS Core Reflex Tree PyROOT RooFitCore Hist)
+find_package(ROOT COMPONENTS Core Reflex Tree PyROOT RooFitCore Hist TreePlayer)
 find_package(pyanalysis)
 find_package(pytools)
 
