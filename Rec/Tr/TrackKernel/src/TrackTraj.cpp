@@ -220,5 +220,33 @@ namespace LHCb
       states.push_back( StateVector((*it)->stateVector(),(*it)->z()) ) ;
     return states ;
   }
+
+  double TrackTraj::distTo1stError( double z, double tolerance, int pathDirection) const 
+  {
+    // WH: if timing is ever an issue, we should probably just return 'a' and not care about boundaries.
+    updatecache(z) ;
+    const double a  = m_cachedinterpolation.distTo1stError(z,tolerance,pathDirection) ;
+    const bool   extrapolate = z <=  m_states.front()->z() || z >= m_states.back()->z() ;
+    // add fudge factor to make sure we step across boundaries
+    const double fudgefactor = 1.01 ;
+    return fudgefactor * ( extrapolate ? a : 
+			   std::min( a, pathDirection > 0 ? 
+				     m_states[m_cachedindex]->z() - z : 
+				     z - m_states[m_cachedindex-1]->z() ) );
+  }
+
+  double TrackTraj::distTo2ndError( double z, double tolerance, int pathDirection) const 
+  {
+    // WH: if timing is ever an issue, we should probably just return 'a' and not care about boundaries.
+    updatecache(z) ;
+    const double a  = m_cachedinterpolation.distTo2ndError(z,tolerance,pathDirection) ;
+    const bool   extrapolate = z <=  m_states.front()->z() || z >= m_states.back()->z() ;
+    // add fudge factor to make sure we step across boundaries
+    const double fudgefactor = 1.01 ;
+    return fudgefactor *  ( extrapolate ? a : 
+			    std::min( a, pathDirection > 0 ? 
+				      m_states[m_cachedindex]->z() - z : 
+				      z - m_states[m_cachedindex-1]->z() ) );
+  }
   
 }

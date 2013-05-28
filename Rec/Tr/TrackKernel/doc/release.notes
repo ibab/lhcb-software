@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-05-028 - Wouter Hulsbergen
+ - Fixed old bug in LHCb::TrackTraj::distTo1stError and
+   LHCb::TrackTraj::distTo2ndError, exposed by previous commit.
+
 ! 2013-05-17 - Chris Jones
  - Fix operator precedence order issue for ? and + in 
    LHCb::TrackTraj::distTo1stError and LHCb::TrackTraj::distTo2ndError

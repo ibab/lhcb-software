@@ -169,29 +169,7 @@ namespace LHCb
     return m_cachedinterpolation.dArclengthDMu(z) ;
   }
 
-  inline double TrackTraj::distTo1stError( double z, double tolerance, int pathDirection) const 
-  {
-    updatecache(z) ;
-    const double a  = m_cachedinterpolation.distTo1stError(z,tolerance,pathDirection) ;
-    const bool   extrapolate = z <=  m_states.front()->z() || z >= m_states.back()->z() ;
-    // add tolerance to make sure we step across boundaries
-    return tolerance + ( extrapolate ? a : 
-                         std::min( a, pathDirection > 0 ? 
-                                   m_states[m_cachedindex+1]->z() - z : 
-                                   z - m_states[m_cachedindex]->z() ) );
-  }
 
-  inline double TrackTraj::distTo2ndError( double z, double tolerance, int pathDirection) const 
-  {
-    updatecache(z) ;
-    const double a  = m_cachedinterpolation.distTo2ndError(z,tolerance,pathDirection) ;
-    const bool   extrapolate = z <=  m_states.front()->z() || z >= m_states.back()->z() ;
-    // add tolerance to make sure we step across boundaries
-    return tolerance + ( extrapolate ? a : 
-                         std::min( a, pathDirection > 0 ? 
-                                   m_states[m_cachedindex+1]->z() - z : 
-                                   z - m_states[m_cachedindex]->z() ) );
-  }
 }
 
 #endif
