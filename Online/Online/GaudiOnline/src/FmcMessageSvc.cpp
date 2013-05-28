@@ -316,9 +316,8 @@ const char* LHCb::FmcMessageSvc::getPName()   {
     /*-------------------------------------------------------------------------*/
     len=readlink("/proc/self/exe",pathName,sizeof(pathName));
     if(len==-1)  {
-      snprintf(buf,BUF_SZ,"[ERROR] %s: readlink(): %s.",__func__,
-	       strerror(errno));
-      syslog(LOG_ERR|LOG_DAEMON,buf);
+      ::snprintf(buf,BUF_SZ,"[ERROR] %s: readlink(): %s.",__func__,strerror(errno));
+      syslog(LOG_ERR|LOG_DAEMON,"%s",buf);
       fprintf(stderr,"%s\n",buf);
       exit(1);
     }
@@ -384,46 +383,42 @@ int LHCb::FmcMessageSvc::printM(int out,int severity,const char* fName,const cha
 }
 /*****************************************************************************/
 /* send a message to the DIM logger */
-int LHCb::FmcMessageSvc::dimLoggerMsgSend(char *buf,int fifoFD)
-{
+int LHCb::FmcMessageSvc::dimLoggerMsgSend(char *buf,int fifoFD)    {
   if(fifoFD==NO_FIFO)return -1;
   return write(fifoFD,buf,strlen(buf));
 }
+
 /*****************************************************************************/
 /* send a message to the stderr */
-int LHCb::FmcMessageSvc::stdErrMsgSend(char *buf)
-{
+int LHCb::FmcMessageSvc::stdErrMsgSend(char *buf)    {
   return write(STDERR_FILENO,buf,strlen(buf));
 }
+
 /*****************************************************************************/
 /* send a message to the syslog */
 /* max syslog message length = SYSLOG_BUF_SZ */
-int LHCb::FmcMessageSvc::sysLogMsgSend(char *buf,int severity)
-{
-  if(strlen(buf)<SYSLOG_BUF_SZ)
-  {
-    if(severity==MSG::DEBUG)syslog(LOG_DEBUG|LOG_DAEMON,buf);
-    else if(severity==MSG::INFO)syslog(LOG_INFO|LOG_DAEMON,buf);
-    else if(severity==MSG::WARNING)syslog(LOG_WARNING|LOG_DAEMON,buf);
-    else if(severity==MSG::ERROR)syslog(LOG_ERR|LOG_DAEMON,buf);
-    else if(severity==MSG::FATAL)syslog(LOG_CRIT|LOG_DAEMON,buf);
-    else syslog(LOG_INFO|LOG_DAEMON,buf);
+int LHCb::FmcMessageSvc::sysLogMsgSend(char *buf,int severity)    {
+  if ( ::strlen(buf)<SYSLOG_BUF_SZ )  {
+    if     (severity==MSG::DEBUG   ) syslog(LOG_DEBUG|LOG_DAEMON,  "%s",buf);
+    else if(severity==MSG::INFO    ) syslog(LOG_INFO|LOG_DAEMON,   "%s",buf);
+    else if(severity==MSG::WARNING ) syslog(LOG_WARNING|LOG_DAEMON,"%s",buf);
+    else if(severity==MSG::ERROR   ) syslog(LOG_ERR|LOG_DAEMON,    "%s",buf);
+    else if(severity==MSG::FATAL   ) syslog(LOG_CRIT|LOG_DAEMON,   "%s",buf);
+    else                             syslog(LOG_INFO|LOG_DAEMON,   "%s",buf);
   }
-  else                     /* message is longer than SYSLOG_BUF_SZ. split it */
-  {
+  else    {                /* message is longer than SYSLOG_BUF_SZ. split it */
     char pBuf[SYSLOG_BUF_SZ]="";
     char *p=NULL;
-    for(p=buf;p-buf<(int)strlen(buf);p+=(SYSLOG_BUF_SZ-1))
-    {
-      memset(pBuf,0,SYSLOG_BUF_SZ);
-      strncpy(pBuf,p,SYSLOG_BUF_SZ-1);
-      if(!memchr(pBuf,0,SYSLOG_BUF_SZ))buf[SYSLOG_BUF_SZ-1]='\0';
-      if(severity==MSG::DEBUG)syslog(LOG_DEBUG|LOG_DAEMON,pBuf);
-      else if(severity==MSG::INFO)syslog(LOG_INFO|LOG_DAEMON,pBuf);
-      else if(severity==MSG::WARNING)syslog(LOG_WARNING|LOG_DAEMON,pBuf);
-      else if(severity==MSG::ERROR)syslog(LOG_ERR|LOG_DAEMON,pBuf);
-      else if(severity==MSG::FATAL)syslog(LOG_CRIT|LOG_DAEMON,pBuf);
-      else syslog(LOG_INFO|LOG_DAEMON,pBuf);
+    for(p=buf;p-buf<(int)strlen(buf);p+=(SYSLOG_BUF_SZ-1))    {
+      ::memset(pBuf,0,SYSLOG_BUF_SZ);
+      ::strncpy(pBuf,p,SYSLOG_BUF_SZ-1);
+      buf[SYSLOG_BUF_SZ-1]='\0';
+      if     (severity==MSG::DEBUG   ) syslog(LOG_DEBUG|LOG_DAEMON,  "%s",pBuf);
+      else if(severity==MSG::INFO    ) syslog(LOG_INFO|LOG_DAEMON,   "%s",pBuf);
+      else if(severity==MSG::WARNING ) syslog(LOG_WARNING|LOG_DAEMON,"%s",pBuf);
+      else if(severity==MSG::ERROR   ) syslog(LOG_ERR|LOG_DAEMON,    "%s",pBuf);
+      else if(severity==MSG::FATAL   ) syslog(LOG_CRIT|LOG_DAEMON,   "%s",pBuf);
+      else                             syslog(LOG_INFO|LOG_DAEMON,   "%s",pBuf);
     }
   }
   return 0;
