@@ -94,6 +94,8 @@ FSM::ErrCond Slave::iamHere()  {
   m_alive = true;
   m_meta  = SLAVE_ALIVE;
   m_state = type()->initialState();
+  if ( !m_machine->currTrans() )
+    return notifyMachine(SLAVE_TRANSITION);
   return m_machine->checkAliveSlaves();
 }
 
@@ -110,7 +112,6 @@ FSM::ErrCond Slave::iamDead()  {
 
 /// Callback, when transition was executed successfully
 FSM::ErrCond Slave::transitionDone(const State* state)  {
-  const Rule* r = m_rule;
   m_rule  = 0;
   m_alive = true;
   m_state = state;

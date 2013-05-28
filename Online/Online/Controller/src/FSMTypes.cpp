@@ -78,7 +78,7 @@ static Type* defineDAQType()    {
   Tr*  daq_err1  = daq->addTransition("daq_err",   ready,       error,     NO_CHECKS);
   Tr*  daq_err2  = daq->addTransition("daq_err",   running,     error,     NO_CHECKS);
   Tr*  daq_err3  = daq->addTransition("daq_err",   paused,      error,     NO_CHECKS);
-  Tr*  daq_err4  = daq->addTransition("daq_err",   offline,     error,     NO_CHECKS);
+  /*Tr*  daq_err4  =*/ daq->addTransition("daq_err",   offline,     error,     NO_CHECKS);
 
   Tr*  RESET0    = daq->addTransition("RESET",     error,       offline,   NO_CHECKS);
   Tr*  RESET1    = daq->addTransition("RESET",     running,     offline,   NO_CHECKS);
@@ -231,7 +231,7 @@ static Type* defineDAQSteerType() {
 
   Tr*  reset1    = typ->addTransition("reset",     ready,       not_ready);
   Tr*  recover0  = typ->addTransition("recover",   error,       offline);
-  Tr*  recover1  = typ->addTransition("recover",   not_ready,   offline);
+  /*Tr*  recover1  =*/ typ->addTransition("recover",   not_ready,   offline);
 
   Tr*  daq_err0  = typ->addTransition("error",     not_ready,   error,     NO_CHECKS);
   Tr*  daq_err1  = typ->addTransition("error",     ready,       error,     NO_CHECKS);
