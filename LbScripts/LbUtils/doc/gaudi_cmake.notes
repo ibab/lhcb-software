@@ -1,3 +1,83 @@
+! 2013-05-27 - Marco Clemencic (8f696e3)
+
+ - switch to LCG 65
+
+   
+
+! 2013-05-27 - Marco Clemencic (0afff3c)
+
+ - fixed a couple of problems after the changes in the env search path
+
+   
+
+! 2013-05-13 - Marco Clemencic (1f1ef56)
+
+ - added a search_path tag to EnvConfig XML
+
+   
+
+! 2013-05-07 - Marco Clemencic (0f74d54)
+
+ - simplified the logging in EnvConfig
+
+   Removed some unused code and replaced the Reporter with standard Python
+   logging (with a more flexible configuration).
+
+
+! 2013-05-06 - Marco Clemencic (cd1cf8c)
+
+ - fix to InheritHEPTools.cmake
+
+   
+
+! 2013-05-03 - Marco Clemencic (c2c1345)
+
+ - some minor changes in env.py and enforce the use of Python 2.6
+
+   
+
+! 2013-05-02 - Marco Clemencic (e458660)
+
+ - made EnvConfig.Script a class instead of a module
+
+   This deep change makes the logic of env.py script more modular and
+   extensible.
+
+
+! 2013-05-02 - Marco Clemencic (5d59172)
+
+ - moved the fixing of LD_LIBRARY_PATH to the makeEnv function
+
+   
+
+! 2013-05-02 - Marco Clemencic (2f3bf1a)
+
+ - improved passing of path to EnvConfig and added prompt for bash/sh
+
+   Use a mechanism like Python's sys.path to define the search path for XML 
+   files. If the command line to be executed contains 'bash' or 'sh' we set the 
+   PS1 environment variable to get a customized prompt (bash requires the
+   --norc option).
+
+
+! 2013-04-30 - Marco Clemencic (8146491)
+
+ - reorganized the env.py code as a module
+
+   
+
+! 2013-05-22 - Marco Clemencic (c18be61)
+
+ - enable genreflex i686 hack only on i686
+
+   
+
+! 2013-05-22 - Marco Clemencic (383c19a)
+
+ - fixed genreflex problem on i686
+
+   
+
 ! 2013-04-25 - Marco Clemencic (ba879be)
 
  - fixes for the use of C++11 standard

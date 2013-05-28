@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: ba879bef090ebdbe7311d72136a2437ec283803c
+# Commit Id: 8f696e3ad065c7ea00ffa6787b31334616ecf7b8
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -298,6 +298,19 @@ macro(gaudi_project project version)
 
   # (so far, the build and the release envirnoments are identical)
   set(project_build_environment ${project_environment})
+
+  # FIXME: this should not be needed, but there is a bug in genreflex
+  if(BINARY_TAG MATCHES "i686-.*")
+    # special environment variables for GCCXML
+    if(GCCXML_CXX_COMPILER)
+      set(project_build_environment ${project_build_environment}
+          SET GCCXML_COMPILER "${GCCXML_CXX_COMPILER}")
+    endif()
+    if(GCCXML_CXX_FLAGS)
+      set(project_build_environment ${project_build_environment}
+          SET GCCXML_CXXFLAGS "${GCCXML_CXX_FLAGS}")
+    endif()
+  endif()
 
   message(STATUS "  environment for local subdirectories")
   # - collect internal environment
@@ -2174,7 +2187,8 @@ function(gaudi_generate_env_conf filename)
 
   # include inherited environments
   foreach(other_project ${used_gaudi_projects})
-    set(data "${data}  <env:include hints=\"${${other_project}_DIR}\">${other_project}Environment.xml</env:include>\n")
+    set(data "${data}  <env:search_path>${${other_project}_DIR}</env:search_path>\n")
+    set(data "${data}  <env:include>${other_project}Environment.xml</env:include>\n")
   endforeach()
 
   set(commands ${ARGN})

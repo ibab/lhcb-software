@@ -12,10 +12,11 @@ function(guess_heptools_version var)
   file(TO_CMAKE_PATH "$ENV{CMAKE_PREFIX_PATH}" sp1)
   file(TO_CMAKE_PATH "$ENV{CMTPROJECTPATH}" sp2)
   set(projects_search_path ${CMAKE_PREFIX_PATH} ${sp1} ${sp2})
+  #message(STATUS "${projects_search_path}")
 
   # extract the list of projects we depend on
   file(READ CMakeLists.txt config_file)
-  string(REGEX MATCH "gaudi_project *\\(([^)]+)\\)" args ${config_file})
+  string(REGEX MATCH "[\r\n][ \t]*gaudi_project *\\(([^)]+)\\)" args ${config_file})
   set(args ${CMAKE_MATCH_1})
   # (replace space-type chars with spaces)
   string(REGEX REPLACE "[ \t\r\n]+" " " args "${args}")
