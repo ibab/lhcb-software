@@ -13,22 +13,16 @@ use GaudiObjDesc        v11r17
 #=======================================================
 # LHCb Online packages
 #=======================================================
-#use confDB              v1r6     Online
-#use confDBpython        v1r7     Online
-#macro CCPCHist_use "CCPCHist v2r6 Online" target-x86_64 ""
-#use $(CCPCHist_use)
 use Camera              v1r23    Online
 use Checkpointing       v0r12    Online
 macro CondDBServer_use "CondDBServer v1r4 Online" target-i686 ""
 use $(CondDBServer_use)
-###use CondDBServer        v1r4     Online
+use CondDBServer        v1r4     Online
+use Controller          v0r2     Online
+use ControllerTests     v0r2     Online
 use DailyReport         v1r2     Online
-
-###use DefHLTUtils         v1r2     Online
-
-
+use DefHLTUtils         v1r2     Online
 use DIM                 v19r36   Online
-####use ExampleGaucho       v3r4     Online
 use FarmMonitor         v2r11    Online
 use Gaucho              v7r29    Online
 use GauchoAppl          v1r8     Online
@@ -37,19 +31,15 @@ use GaudiOnline         v2r63    Online
 use GaudiRootCnvTests   v1r10    Online
 use GaudiSerialize      v0r11    Online
 use GaudiUPI            v1r15    Online
-#use Hugin              v1r6     Online
-#Obsolete: use HPDMonitor        v1r6     Online
 use HistDBPython        v1r7     Online
 use InsertDB            v1r9     Online
 use MBMDump             v1r15    Online
 use OMAlib              v4r2     Online
 use OnlineBase          v1r14    Online
-#Obsolete: use OnlineDummyReader v1r4     Online
 use OnlineHistDB        v8r1     Online
 use OnlineKernel        v2r11    Online
 use OnlineTools         v1r4     Online
 use OnlineTasks         v1r50    Online
-
 use Presenter           v3r6     Online
 use PresenterDoc        v1r0     Online
 use PyDIM               v2r11    Online
@@ -57,14 +47,23 @@ use RawBankSizes        v2r15    Online
 use RootCnv             v1r20    Online
 use ROMon               v1r40    Online
 use ROLogger            v0r24    Online
-##macro Stomp_use "" CERN "Stomp v1r2 Online"
+## Only at the pit: macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)
 
 use Trending            v2r1     Online
 use UPI                 v1r22    Online
 use UPIR                v1r4     Online
-#Obsolete: use Viewer            v1r5     Online
 use Writer              v1r46    Online
+use XML                 v0r1     Online
+
+#Obsolete: use confDB              v1r6     Online
+#Obsolete: use confDBpython        v1r7     Online
+#Obsolete: macro CCPCHist_use "CCPCHist v2r6 Online" target-x86_64 ""
+#Obsolete: use $(CCPCHist_use)
+#Obsolete  use Hugin              v1r6     Online
+#Obsolete: use HPDMonitor        v1r6     Online
+#Obsolete: use OnlineDummyReader v1r4     Online
+#Obsolete: use Viewer            v1r5     Online
 
 # Declare this as a container package
 apply_pattern container_package
