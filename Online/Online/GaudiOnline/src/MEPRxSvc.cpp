@@ -387,8 +387,7 @@ void MEPRx::incompleteEvent()
 
 void MEPRx::setupMDFBank(u_int32_t run, u_int32_t orbit, u_int32_t bunchID)
 {
-    uint mask[] =
-    { ~0, ~0, ~0, ~0 };
+    uint mask[] = { ~0u, ~0u, ~0u, ~0u };
     MDFHeader* hdr = (MDFHeader *) m_MDFBankHdr->data();
     hdr->setHdr(0);
     hdr->setSize(0);
