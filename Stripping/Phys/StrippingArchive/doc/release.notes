@@ -8,6 +8,7 @@
 
 ! 2013-05-28 - Stefano Perazzini
  - Added Stripping20r2, updated __init__.py
+ - Updated tests/refs/instantiate-all-strip.ref
 
 !========================= StrippingArchive v1r20 2013-05-07 =========================
 
