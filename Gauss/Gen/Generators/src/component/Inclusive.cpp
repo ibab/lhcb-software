@@ -97,8 +97,7 @@ StatusCode Inclusive::initialize( ) {
   else if ( charm ) m_lightestQuark = LHCb::ParticleID::charm ;
   else if (m_pids.size() > 2) return Error( "This case is not yet implemented" ) ;
 
-  info() << endmsg ;  
-  release( ppSvc ) ;
+  info() << endmsg ;
 
   // XML Log file
   m_xmlLogTool = tool< ICounterLogFile >( "XmlCounterLogFile" ) ;

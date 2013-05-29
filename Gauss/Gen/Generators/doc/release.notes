@@ -5,6 +5,9 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2013-05-29 - Patrick Robbe
+ - Inclusive.cpp: fix problem with release of particle property service
+
 !======================= Generators v14r3 2013-05-16 =========================
 ! 2013-05-14 - Aurelien Martens
  - move the call to setIsSignal() in SRH.cpp before the call of generateEvent
