@@ -17,6 +17,7 @@
 . ../cmt/setup.x86_64-slc5-gcc46-dbg.vars
 . ./preamble.sh
 export UTGID=${UTGID}
+export STATIC_OPTS=../options
 export DYNAMIC_OPTS=../options
 #
 eval `python <<EOF
@@ -38,9 +39,11 @@ while len(args):
 EOF`
 ##echo $UTGID -- $* Invoking script: ${2}.sh
 #
-export INFO_OPTIONS=${DYNAMIC_OPTS}/OnlineEnvironment.opts
-export MBM_SETUP_OPTIONS=${DYNAMIC_OPTS}/MBM_setup.opts
-export SUBFARM_OPTIONS=${DYNAMIC_OPTS}/PLUS04.opts
+export DATAINTERFACE=`python /group/online/dataflow/scripts/getDataInterface.py`
+export ONLINETASKS=/group/online/dataflow/templates;
+export INFO_OPTIONS=${DYNAMIC_OPTS}/OnlineEnvironment.opts;
+export MBM_SETUP_OPTIONS=${DYNAMIC_OPTS}/MBM_setup.opts;
+export SUBFARM_OPTIONS=${DYNAMIC_OPTS}/PLUS04.opts;
 #
 export LOGFIFO=/tmp/logSrv.fifo;
 #

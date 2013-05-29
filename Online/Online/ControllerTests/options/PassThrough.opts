@@ -1,31 +1,29 @@
 #include "$INFO_OPTIONS"
 #include "$MBM_SETUP_OPTIONS"
+#include "$STATIC_OPTS/SvcMapping.opts"
+#include "$STATIC_OPTS/Monitoring.opts"
+
 ApplicationMgr.HistogramPersistency  = "NONE";
-ApplicationMgr.SvcOptMapping        += {"LHCb::OnlineEvtSelector/EventSelector"};
-ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
-Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
+ApplicationMgr.Runable               = "Runable";
+Runable.MEPManager                   = "MEPManager";
 
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true;
-EventPersistencySvc.CnvServices      = { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+EventPersistencySvc.CnvServices      = { "RawDataCnvSvc" };
+MEPManager.ConnectWhen               = "start";
 MEPManager.PartitionBuffers          = true;
 MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.Buffers                   = @OnlineEnv.PassAll_Buffers;
-MEPManager.ConnectWhen               =  "start";
 EventSelector.Input                  = @OnlineEnv.PassAll_Input;
 
-MessageSvc.fifoPath                  = "$LOGFIFO";
-MessageSvc.LoggerOnly                = 1;
 HistogramPersistencySvc.Warnings     = 0;
 
-ApplicationMgr.ExtSvc               += { "MonitorSvc/MonitorSvc" };
-/*
 ApplicationMgr.ExtSvc               += { "LHCb::CheckpointSvc/CheckpointSvc" };
 // If the number of instances < 0: take the true number from the environment...
 CheckpointSvc.NumberOfInstances      = -1;
 CheckpointSvc.Partition              = @OnlineEnv.PartitionName;
-CheckpointSvc.FirstChild             = 1;
+CheckpointSvc.FirstChild             = 0;
 CheckpointSvc.ChildSleep             = 50;
 CheckpointSvc.TaskType               = "PassAll";
 CheckpointSvc.UtgidPattern           = "%P_%NN_%T_%02d";
@@ -34,7 +32,6 @@ CheckpointSvc.ChildSessions          = false;
 CheckpointSvc.DumpFiles              = false;
 CheckpointSvc.PrintLevel             = 3;
 CheckpointSvc.OutputLevel            = 2;
-*/
 EventSelector.REQ1                   = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
 
 //ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
@@ -68,3 +65,4 @@ Merger.BankLocation                  = "DAQ/RawEvent";
 Merger.RoutingBits                   = 1;
 Merger.Silent                        = False;
 Merger.TriggerMask                   = {0,4,0};
+#include "$STATIC_OPTS/MessageSvc.opts"

@@ -2,4 +2,4 @@
 //  Number of subfarms:10
 //
 // ---------------- Data sending information for sub-farm:HLTB07
-OnlineEnv.Target  = "STORERECV02-d1::LHCb_STORERECV02_SF06_HLT";
+OnlineEnv.Target  = "PLUS04::LHCb_PLUS04_Receiver_0";
