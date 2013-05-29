@@ -28,8 +28,7 @@ gaudisvn = rcs.connect(gaudiurl)
 
 # LHCb Script main body
 class SvnProjectDepsScript(Script):
-    """ Main scripts class for looking up dependencies.
-    It inherits from """
+    """ Script to list the dependencies of a project. """
 
     def defineOpts(self):
         """ Script specific options """
@@ -294,6 +293,7 @@ class SvnProjectDepsScript(Script):
 
 if __name__=='__main__':
     sUsage = """%prog [-r] project version
+
      Lists the dependencies of a project, in terms of other projects
      or in term of packages.
 
