@@ -1,3 +1,8 @@
+2013-05-29  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/scripts/svnProjectDeps: Updated to generate JSON file
+	for a nightly build slot
+
 2013-05-17  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* First version of SoftConfDB package
@@ -17,7 +22,7 @@
 
 2013-04-12  Ben Couturier <Ben.Couturier@cern.ch>
 
-	* python/scripts/svnProjectDeps: Script to list the dependencies of a 
+	* python/scripts/svnProjectDeps: Script to list the dependencies of a
 	project (projects or packages) from SVN.
 
 2013-02-11  Marco Clemencic  <Marco.Clemencic@cern.ch>

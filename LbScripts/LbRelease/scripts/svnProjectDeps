@@ -8,8 +8,9 @@ import logging
 import re
 import subprocess
 import sys
+import json
 
-
+from LbConfiguration.Project import getProject
 from LbConfiguration.Repository import getRepositories
 from LbUtils.Script import Script
 from LbRelease import rcs
@@ -49,6 +50,10 @@ class SvnProjectDepsScript(Script):
                           dest = "debug",
                           action = "store_true",
                           help = "Display debug output")
+        parser.add_option("-s",
+                          dest = "buildslot",
+                          action = "store_true",
+                          help = "Produce a JSON file usable by the nightlies")
 
     def main(self):
         """ Main method for bootstrap and parsing the options.
@@ -65,56 +70,156 @@ class SvnProjectDepsScript(Script):
             project   = args[0]
             version   = args[1]
 
+            # Only show projects if preparing a build slot JSON file
+            if self.options.buildslot:
+                self.options.projects = True
+
             # No need to list the project in its dependencies...
-            if self.options.projects:
+            if self.options.projects and not self.options.buildslot:
                 deps = []
             else:
                 # But lists its packages if requested
                 deps = [ (project.upper(), project.upper() + "_" + version)]
 
-            #
             if self.options.non_recursive:
+                # In non recursive mode, we only print the list...
                 deps += self.getDependencies(project, version)
+                self.printResults(deps)
             else:
-                deps += self.traverseDependencies(project, version)
-
-            # Now printing
-            for (p, v) in deps:
-                if self.options.projects:
-                    # In this case we print the list of projects
-                    print "%s\t%s" % (p, v)
+                # In recursive mode, we can use the dependency dictionnary as well
+                (tmpdeps, tmpdepsdict) = self.traverseDependencies(project, version)
+                deps += tmpdepsdict
+                if self.options.buildslot:
+                    self.produceSlotJSON(project, version, tmpdepsdict)
                 else:
-                    # Hack to separate the version number as the projects are versioned
-                    # PROJECT_version
-                    v = v.split("_")[1]
-                    allpacks = self.getPackages(p,v)
-                    if allpacks == None:
-                        continue
-                    for (pa, ve) in allpacks.items():
-                        if self.options.filter:
-                            if re.search(self.options.filter, pa):
-                                print "%s\t%s\t%s\t%s" % (p, v, pa, ve)
-                        else:
+                    self.printResults(deps)
+
+
+    def getCanonicalProjectName(self, project):
+        """ Returns the LHCb Project name, with proper case
+        or None if this is not a LHCb project """
+        pname = None
+        tmpp = getProject(project, True, False)
+        if tmpp != None:
+            pname = tmpp.Name()
+        return pname
+
+    # Now printing
+    def produceSlotJSON(self, project, version, depsdict):
+        """ Produce the Slot JSON file based on dependencies """
+
+        # Normalizing the project name
+        pname = self.getCanonicalProjectName(project)
+
+        # Common headers in the JSON dict
+        jsonout = {}
+        jsonout['slot'] = '%s_%s_slot' % (project, version)
+        jsonout['description'] = 'Nightly slot for %s %s' % (project, version)
+
+        # Iterating on projects to produce the list
+        projects = []
+        # Each project to be represented by the follwoing structure:
+        # {"name": "LHCb",
+        # "version": "HEAD",
+        # "overrides": {"Tools/EventIndexer": "HEAD"},
+        #  "dependencies": ["Gaudi"]},
+        for (p, v) in depsdict.keys():
+            # Normalizing the project name
+            pn = self.getCanonicalProjectName(p)
+
+            # If the project was not found, it's not a LHCb SVN project
+            # We can safely ignore...
+            if pn == None:
+                self.log.info("Ignoring project as not LHCb: %s %s" % (p, v))
+                continue
+
+            simple_deps = list()
+            deps = depsdict[(p, v)]
+            proj = dict()
+            proj["name"] = pn
+            proj["version"] = v
+            proj["overrides"] = dict()
+            for (dp, dv) in deps:
+                dpname = self.getCanonicalProjectName(dp)
+                if dpname == None:
+                    self.log.info("Ignoring project as dep as not LHCb: %s %s" % (dp, dv))
+                    continue
+                simple_deps.append(dpname)
+
+            proj["dependencies"] = simple_deps
+            projects.append(proj)
+
+        # Now adding the projects
+        jsonout['projects'] = projects
+        jsonout['default_platforms'] = ["x86_64-slc6-gcc46-opt", "x86_64-slc6-gcc46-dbg",
+                                        "x86_64-slc5-gcc46-opt", "x86_64-slc5-gcc46-dbg"]
+        jsonout["warning_exceptions"] = [".*/boost/.*",
+                                         "^--->> genreflex: WARNING:.*",
+                                         " note:",
+                                         "distcc\\[",
+                                         "^ *Error *$"]
+        jsonout["error_exceptions"] = ["distcc\\[", "::error::", "^ *Error *$"]
+
+        print json.dumps(jsonout, indent=4, sort_keys=False)
+
+    def printResults(self, deps):
+        """ Display the result of the command """
+        for (p, v) in deps:
+            if self.options.projects:
+                # In this case we print the list of projects
+                print "%s\t%s" % (p, v)
+            else:
+                # Hack to separate the version number as the projects are versioned
+                # PROJECT_version
+                allpacks = self.getPackages(p,v)
+                if allpacks == None:
+                    continue
+                for (pa, ve) in allpacks.items():
+                    if self.options.filter:
+                        if re.search(self.options.filter, pa):
                             print "%s\t%s\t%s\t%s" % (p, v, pa, ve)
+                    else:
+                        print "%s\t%s\t%s\t%s" % (p, v, pa, ve)
 
     def traverseDependencies(self, project, version, alreadyDone = []):
         """ Recursively traverse all dependencies.
         Dependencies are looked up from SVN using the getDependencyMethod.
         A complete list of tuples (project, version) is returned"""
+
         self.log.debug("TraverseDeps %s,%s" % (project, version))
         self.log.debug(alreadyDone)
-        deps = self.getDependencies(project, version)
+
+        # Getting the dependencies for this project...
+        mydeps = self.getDependencies(project, version)
         alreadyDone.append((project, version))
-        ndeps = deps
-        for d in deps:
+
+        # Adding it to the dict with direct dependencies
+        depsdict = dict()
+        depsdict[(project, version)] = mydeps
+
+        # The flat list contains everything, and it is a copy of the list...
+        ndeps = list(mydeps)
+
+        for d in mydeps:
+            # Make sure he are not looping...
             if not d in alreadyDone:
-                tmpDeps = self.traverseDependencies(d[0], d[1], alreadyDone)
+
+                # Actually traverse the dependencies...
+                (tmpDeps, tmpdepsdict) = self.traverseDependencies(d[0], d[1], alreadyDone)
+
+                # Copying the dictionnaries
+                for k in tmpdepsdict.keys():
+                    depsdict[k] = tmpdepsdict[k]
+
+                # Now gathering the result if necessary
                 for td in tmpDeps:
                     if not td in alreadyDone:
                         alreadyDone.append(td)
                     if not td in ndeps:
                         ndeps.append(td)
-        return ndeps
+
+        #print "%s %s" % (project, version), ndeps
+        return (ndeps, depsdict)
 
     def getDependencies(self, p, v):
         """ Get the dependencies for a single project """
@@ -131,6 +236,13 @@ class SvnProjectDepsScript(Script):
             if m != None:
                 dp = m.group(1)
                 dv = m.group(2)
+
+                # CLeaning the version from the project name if there
+                if "_" in dv:
+                    tmp = dv.split("_")
+                    if len(tmp) >1:
+                        dv = tmp[1]
+
                 deps.append((dp, dv))
         return deps
 
@@ -178,6 +290,8 @@ class SvnProjectDepsScript(Script):
         if rc == 0:
             pexists = True
         return pexists
+
+
 
 if __name__=='__main__':
     sUsage = """%prog [-r] project version
