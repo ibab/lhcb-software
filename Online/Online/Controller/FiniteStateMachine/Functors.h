@@ -43,6 +43,8 @@ namespace FiniteStateMachine {
   };
 
   template<typename T> struct ActionCounter : Functor<const T*> {
+    /// Base class type
+    typedef ActionCounter<T> Base;
     size_t count;
     size_t fail;
     size_t dead;
@@ -51,6 +53,8 @@ namespace FiniteStateMachine {
   };
 
   template <class T> struct FsmCheck : Functor<T> {
+    /// Base class type
+    typedef Functor<T> Base;
     /// Internal object status
     int status;
     /// Standard constructor
@@ -98,28 +102,28 @@ namespace FiniteStateMachine {
 
   struct SlaveStarter : public ActionCounter<Transition>  {
     /// Standard constructor
-    SlaveStarter (const Transition* t) : ActionCounter(t) {}
+    SlaveStarter (const Transition* t) : ActionCounter<Transition>(t) {}
     /// Operator invoked for each slave to be started
     void operator()(Slave* s);
   };
 
   struct SlaveKiller : public ActionCounter<Transition>  {
     /// Standard constructor
-    SlaveKiller (const Transition* t) : ActionCounter(t) {}
+    SlaveKiller (const Transition* t) : ActionCounter<Transition>(t) {}
     /// Operator invoked for each slave to be started
     void operator()(Slave* s);
   };
 
   struct SlaveLimboCount : public ActionCounter<void>  {
     /// Standard constructor
-    SlaveLimboCount() : ActionCounter(0) {}
+    SlaveLimboCount() : ActionCounter<void>(0) {}
     /// Operator invoked for each slave to be checked
     void operator()(const Slave* s);
   };
 
   struct CheckStateSlave : public ActionCounter<Transition>  {
     /// Standard constructor
-    CheckStateSlave(const Transition* t) : ActionCounter(t) {}
+    CheckStateSlave(const Transition* t) : ActionCounter<Transition>(t) {}
     /// Operator invoked for each slave being analyzed
     void operator()(const Slave* s);
   };
@@ -129,14 +133,14 @@ namespace FiniteStateMachine {
     int mask;
     /// Standard constructor. By default all slaves are acted on
     SetSlaveState(const State* new_state, int match_mask=Slave::SLAVE_NONE) 
-      : ActionCounter(new_state), mask(match_mask) {}
+      : ActionCounter<State>(new_state), mask(match_mask) {}
     /// Operator invoked for each predicate to check if it is fulfilled
     void operator()(Slave* s);
   };
 
   struct PredicateSlave : public FsmCheck<const Transition*> {
     /// Standard constructor
-    PredicateSlave(const Transition* t) : FsmCheck(t) {}
+    PredicateSlave(const Transition* t) : FsmCheck<const Transition*>(t) {}
     /// Operator invoked for each predicate to check if it is fulfilled
     void operator()(const Slave* s);
   };
@@ -145,7 +149,7 @@ namespace FiniteStateMachine {
     /// Flag to indicate if the transition is MASTER2SLAVE or SLAVE2MASTER (see Rule.h)
     Rule::Direction direction;
     /// Standard constructor
-    InvokeSlave(const Transition* t, Rule::Direction dir) : FsmCheck(t), direction(dir) {}
+    InvokeSlave(const Transition* t, Rule::Direction dir) : FsmCheck<const Transition*>(t), direction(dir) {}
     /// Operator invoked for each predicate to check if it is fulfilled
     void operator()(Slave* s);
   };

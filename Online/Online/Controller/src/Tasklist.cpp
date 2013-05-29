@@ -50,7 +50,7 @@ Tasklist::Tasklist() {
 
 /// Standard destructor
 Tasklist::~Tasklist()   {
-  for(typename Tasklist::Tasks::iterator i=tasks.begin(); i!=tasks.end(); ++i)
+  for (Tasklist::Tasks::iterator i=tasks.begin(); i!=tasks.end(); ++i)
     delete (*i);
   tasks.clear();
 }
