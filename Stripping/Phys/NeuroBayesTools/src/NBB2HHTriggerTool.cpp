@@ -22,7 +22,6 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( NBB2HHTriggerTool )
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -34,8 +33,14 @@ NBB2HHTriggerTool::NBB2HHTriggerTool( const std::string& type,
   m_DoPrecuts  (       false        ),
   m_UsePID     (       true         ),
   m_DoPlot     (       false        ),
-  m_nVar       (       16           )
+  m_DistCalc   (       NULL         ),
+  m_nVar       (       16           ),
+  m_HistoTool  (       NULL         ),
+  m_inArray    (       NULL         )
 {
+#ifdef __GNUC__ 
+  m_NBExpert = NULL;
+#endif
   declareProperty("Expertise"    , m_Expertise        , "NeuroBayes Expertise");
   declareProperty("NetworkCut"   , m_NetworkCut       , "Cut on Network output");
   declareProperty("DoPrecuts"    , m_DoPrecuts        , "Apply pre-cuts");

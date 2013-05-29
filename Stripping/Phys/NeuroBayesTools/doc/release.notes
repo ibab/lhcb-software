@@ -5,8 +5,8 @@
 !               the NeuroBayes neural network package
 !-----------------------------------------------------------------------------
 
-!========================= NeuroBayesTools v1r3 2013-05-28 =========================
-
+! 2013-05-28 - Chris Jones
+ - Properly initalise all data members in NBB2HHTriggerTool (Coverity UNINT_CTOR)
 
 ! 2013-05-24 - Chris Jones
  - Check value with lfin as well as lnan
