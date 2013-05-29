@@ -2,7 +2,9 @@ package DaVinciTests
 version v2r16
 
 branches doc cmt tests
+
 use GaudiConf v* -no_auto_imports
+use DaVinci   v* Phys
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest

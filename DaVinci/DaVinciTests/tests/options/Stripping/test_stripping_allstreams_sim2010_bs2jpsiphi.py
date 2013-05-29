@@ -54,5 +54,6 @@ DaVinci().DDDBtag="head-20100624"
 # bs->Jpsi, Phi
 from Gaudi.Configuration import * 
 
-EventSelector().Input   = [
-    "   DATAFILE='castor:/castor/cern.ch/user/r/rlambert/testfiles/MC2010_00008405_00000506_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+EventSelector().Input = [
+    "DATAFILE='castor:/castor/cern.ch/user/r/rlambert/testfiles/MC2010_00008405_00000506_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+    ]

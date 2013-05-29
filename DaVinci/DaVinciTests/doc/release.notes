@@ -3,9 +3,14 @@
 ! Responsible : Juan Palacios
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+
+! 2013-05-29 - Chris Jones
+ - Add 4 new tests to run Strippings as per AppConfig :-
+   Stripping20, Stripping20r1, Stripping20r0p1 and Stripping20r1p1.
+
 ! 2013-05-15 - Stefania Vecchi
- - updated reference file tagging.qms/test_tag_mc12.qmt according to the fix in the 
-   FT (r156852)
+ - Updated reference file tagging.qms/test_tag_mc12.qmt according to the 
+   fix in the FT (r156852)
 
 ! 2013-05-14 - Chris Jones
  - Update pid, packing and tagging options to read data from EOS freezer.
