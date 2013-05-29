@@ -19,17 +19,12 @@
 #include "CPP/IocSensor.h"
 
 // C/C++ include files
-#include <boost/assign/std/vector.hpp>
 #include <cstring>
-
-
 
 /* 
  *  FiniteStateMachine namespace declaration
  */
 namespace FiniteStateMachine {
-
-  using namespace boost::assign;
 
   IocSensor& ioc() {  return IocSensor::instance();  }
 
@@ -49,11 +44,15 @@ namespace FiniteStateMachine {
       m_killCmd = "destroy";
       cloneEnv();
       m_cmd   = gentest_path();
+      m_argv.push_back(nam);
+      m_argv.push_back("libController.so");
       if ( args.empty() )  {      
-	m_argv += nam,"libController.so","controller_fsm_test","-name="+nam;
+	m_argv.push_back("controller_fsm_test");
+	m_argv.push_back("-name="+nam);
       }
       else  {
-	m_argv += nam,"libController.so","fsm_ctrl","-type=NativeDimSlave";
+	m_argv.push_back("fsm_ctrl");
+	m_argv.push_back("-type=NativeDimSlave");
 	addArgs(args);
       }
       utgid = "UTGID="+name();

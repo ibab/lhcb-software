@@ -15,6 +15,7 @@
 #include "FiniteStateMachine/TestAutoTrans.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
+#include "RTL/rtl.h"
 #include <cstdio>
 
 using namespace FiniteStateMachine::DAQ;
@@ -56,7 +57,7 @@ void TestAutoTrans::print() const  {
 TestAutoTrans& TestAutoTrans::do_sleep(const string& transition)   {
   map<string,int>::const_iterator i = this->sleep.find(transition);
   if ( i != this->sleep.end() )  {
-    ::sleep((*i).second);
+    ::lib_rtl_sleep(1000*(*i).second);
   }
   return *this;
 }

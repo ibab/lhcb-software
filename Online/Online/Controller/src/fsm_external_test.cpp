@@ -8,25 +8,18 @@
 **
 **==========================================================*/
 // Framework include files
-#include "FiniteStateMachine/Slave.h"
 #include "FiniteStateMachine/Machine.h"
 #include "FiniteStateMachine/FSMTypes.h"
-//#include "FiniteStateMachine/Functors.h"
 #include "FiniteStateMachine/TestAutoTrans.h"
 #include "Controller/Controller.h"
 #include "Controller/NativeDimSlave.h"
 #include "CPP/IocSensor.h"
 #include "RTL/rtl.h"
-#include "dis.hxx"
 
 // C/C++ include files
-#include <boost/assign/std/vector.hpp>
-#include <iostream>
 #include <cstdio>
-#include <cerrno>
 
 using namespace std;
-using namespace boost::assign; // bring 'operator+=()' into scope
 using namespace FiniteStateMachine;
 using namespace FiniteStateMachine::DAQ;
 typedef FSM::ErrCond ErrCond;
@@ -35,7 +28,8 @@ namespace   {
   struct ExternalSlave : public NativeDimSlave {
     ExternalSlave(const Type* typ, const string& nam, Machine* machine) : NativeDimSlave(typ,nam,machine,false)   {
       m_cmd = controller_bindir() + "/external_fsm_client.exe";
-      m_argv += name(),"-name="+name();
+      m_argv.push_back(name());
+      m_argv.push_back("-name="+name());
       cloneEnv();
     }
     virtual ~ExternalSlave() {}

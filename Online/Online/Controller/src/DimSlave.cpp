@@ -19,10 +19,8 @@ extern "C" {
 }
 
 // C/C++ include files
-#include <boost/assign/std/vector.hpp>
 #include <cstring>
 
-using namespace boost::assign;
 using namespace FiniteStateMachine;
 using namespace std;
 
@@ -70,7 +68,7 @@ DimSlave& DimSlave::addArgs(const string& args)  {
   for( char* p = (char*)copy.c_str(), *savePtr=0;; p=0)  {
     char* token = ::strtok_r(p," ",&savePtr);
     if ( !token ) break;
-    m_argv += token;
+    m_argv.push_back(token);
   }
   return *this;
 }

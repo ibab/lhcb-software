@@ -18,10 +18,6 @@ extern "C" {
 #include "dim.h"
 }
 
-// C/C++ include files
-#include <boost/assign/std/vector.hpp>
-
-using namespace boost::assign;
 using namespace FiniteStateMachine;
 using namespace std;
 
@@ -48,7 +44,7 @@ DimSlave& FmcSlave::addFmcArgs(const string& args)  {
   for( char* p = (char*)copy.c_str(), *savePtr=0;; p=0)  {
     char* token = ::strtok_r(p," ",&savePtr);
     if ( !token ) break;
-    m_fmcArgs += token;
+    m_fmcArgs.push_back(token);
   }
   return *this;
 }
