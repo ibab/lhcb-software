@@ -4,6 +4,9 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-05-29 - Patrick Robbe
+ - GiGaPhysListModular.cpp: unregister properly physics lists
+
 !======================= GaussTools v18r1p1 2013-02-04 =======================
 ! 2013-01-15 - Patrick Robbe
  - Fix compilation warnings
