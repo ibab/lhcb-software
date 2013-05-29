@@ -53,7 +53,7 @@ class SvnProjectDepsScript(Script):
         parser.add_option("-s",
                           dest = "buildslot",
                           action = "store_true",
-                          help = "Produce a JSON file usable by the nightlies")
+                          help = "Produce a JSON file usable by the nightlies to build the project and its dependencies")
 
     def main(self):
         """ Main method for bootstrap and parsing the options.
@@ -65,6 +65,7 @@ class SvnProjectDepsScript(Script):
             self.log.setLevel(logging.DEBUG)
         if len(args) < 2:
             self.log.error("Not enough arguments")
+
             sys.exit(1)
         else :
             project   = args[0]
@@ -207,7 +208,7 @@ class SvnProjectDepsScript(Script):
                 # Actually traverse the dependencies...
                 (tmpDeps, tmpdepsdict) = self.traverseDependencies(d[0], d[1], alreadyDone)
 
-                # Copying the dictionnaries
+                # Copying the dictionaries
                 for k in tmpdepsdict.keys():
                     depsdict[k] = tmpdepsdict[k]
 
@@ -291,14 +292,13 @@ class SvnProjectDepsScript(Script):
             pexists = True
         return pexists
 
-
-
 if __name__=='__main__':
     sUsage = """%prog [-r] project version
-     -n: Not recursive, only lists first level.
-     -P: Show projects only
-     -f: Filter package by name
-     -d: Prints debug output.
+     Lists the dependencies of a project, in terms of other projects
+     or in term of packages.
+
+     It can also generate a nightly build slots JSON, for a project and all its dependencies,
+     with the -s option.
       """
     s = SvnProjectDepsScript(usage=sUsage)
     sys.exit(s.run())
