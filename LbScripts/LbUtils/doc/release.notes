@@ -1,3 +1,7 @@
+2013-04-23  Ben Couturier  <ben.couturier@cern.ch>
+
+	* python/LbUtils/HTMLDependencyManager.py: Fixed to ignore empty HTML files 
+
 2013-05-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmake: updated CMake support modules

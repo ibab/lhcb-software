@@ -165,7 +165,8 @@ class ProjectFile(object):
         try:
             obj.parseDepFile(fileContent)
         except:
-            print "Error parsing: %s - ignoring" % filename
+            print "ERROR parsing: %s - ignoring" % filename
+            return None
 
         return obj
 
@@ -354,8 +355,10 @@ class LHCbSoftwareDeps(object):
         for i, f in enumerate(allfiles):
             self.log.debug("%d - Processing %s" % (i,f))
             pf = ProjectFile.loadFromFile(self.distdir, htmlDir + os.sep + f)
-            self.projectFiles.append(pf)
-            #print pf
+            if pf != None:
+                self.projectFiles.append(pf)
+            else:
+                self.log.warning("%d - Ignoring %s" % (i,f))
         self.log.info ("Processed %s files" % len(allfiles))
 
     def loadDistFiles(self):
