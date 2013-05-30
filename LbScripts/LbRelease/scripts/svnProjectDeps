@@ -115,6 +115,7 @@ class SvnProjectDepsScript(Script):
         jsonout = {}
         jsonout['slot'] = '%s_%s_slot' % (project, version)
         jsonout['description'] = 'Nightly slot for %s %s' % (project, version)
+        jsonout['USE_CMT'] = True
 
         # Iterating on projects to produce the list
         projects = []

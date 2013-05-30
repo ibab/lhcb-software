@@ -1,3 +1,7 @@
+2013-05-30  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/scripts/svnProjectDeps: Added USE_CMT
+
 2013-05-29  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/scripts/svnProjectDeps: Updated to generate JSON file
