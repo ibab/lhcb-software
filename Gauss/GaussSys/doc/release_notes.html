@@ -4,6 +4,97 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v46r1">2013-05-30 - GaussSys v46r2</A></H1><PRE>
+<H2><A NAME="Note"For development and Upgrade studies. Synchronized for physics
+   to Gauss v45r3.
+    </A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v35r5 (and Gaudi v23r7)
+   AppConfig v3r*,
+   <b>DecFiles v27r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   pythia 6.427.2, lhapdf 5.8.5 
+   photos++ 2.6.1a and tauola++ 1.0.7 
+   pythia8 175 (via LCG_GeneratorsInterfaces),
+   HepMC 2.06.05 (via LCG_Interfaces),
+   <b>Geant4 v95r2p5g1 (based on geant4.9.5.p02 + patches for LHCb)</b> and 
+   Geant4Files v95r0, 
+   <b>XmlVis v1r16</b>,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.6.1a and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
+   rivet 1.8.2 (via LCG_GeneratorsInterfaces),
+   EvtGen v13r6 (private LHCb version),
+   BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r0 + GenXiccData v2r0 and 
+   HidValley v3r2 (private LHCb versions)
+</A></H3>
+
+! 2013-05-30 - Gloria Corti
+ - Use LoKiGen v10r12 to pick up new functors
+
+!========================== Gauss v46r2 2013-05-30 ===========================
+! 2013-05-08 - Paul Szczypka
+ - Add IT back into TrackingSystem list.
+
+! 2013-05-02 - Paul Szczypka
+ - Added SL code to configurable.
+
+!========================== GenCuts v3r4 2013-05-16 ========================== 
+! 2013-05-15 - Patrick Robbe
+ - SemilepCutForADS.cpp: fix compilation warning for gcc46
+
+!======================= Generators v14r3 2013-05-16 =========================
+! 2013-05-14 - Aurelien Martens
+ - move the call to setIsSignal() in SRH.cpp before the call of generateEvent
+this allows the production tool to know if it is generating a signal of pile up
+at the generatio time to avoid double storing of parton level HepMC
+
+!========================= LbPythia8 v7r2 2013-05-16 =========================
+! 2013-05-14 - Aurelien Martens
+ - do not store HepMC at the generateEvent call for pile-up events in case of 
+repeated hadronisation since already done at hadronisation level.
+
+!======================== LbHijing v9r0 2013-05-16 =========================
+! 2013-05-01 - Patrick Robbe
+ - src/Lib: import all HIJING source code from GENSER (version 1.383bs2)
+   and convert everything to double precision. Change LUJETS common
+   block to HILUJETS and RANSEED to HIRANSEED. 
+ - options: add options to configure Hijing for pA and Ap collisions and
+   add options to set up beam parameters
+
+!========================= GiGaCnv v20r2 2013-05-16 ==========================
+! 2013-05-15 - Patrick Robbe
+ - Fixed compilation warning in GiGaIsotopeCnv.cpp on gcc46
+
+!======================== GaussAlgs v6r2 2013-07-17 ===========================
+ - on v6b branch
+
+! 2013-05-17 - Gloria Corti
+ - Back-ported in branch v6b the modification below by Patrick from the trunk
+   (r156061). Cannot pick those later since they requires a change in 
+   the Event/MCEvent for SL hits
+
+! 2013-05-01 - Patrick Robbe (
+ - GenInit.cpp: set to 0 the event type of the GenHeader when creating it.
+   It will be filled to the correct value then in Generators/Generation.
+
+!========================= GenTune v1r2 2013-05-16 =========================
+! 2013-05-15 - Paul Szczypka
+ - Corrected same Gauss property name in tests/options/MC_Generics.py
+
+! 2013-05-04 - Patrick Spradlin
+ - Corrected a Guass property name referenced by example steering options
+   options/example/MC_LHCb_GENERIC.py,
+     -Gauss().Output = "NONE"
+     +Gauss().OutputType = "NONE"
+
+!=========================== XmlVis v1r16 ====================================
+! 2013-05-14 - Thomas Ruf
+  added minimal support for upgrade detectors
+
+!=============================================================================
 </PRE><H1><A NAME="v46r1">2013-04-25 - GaussSys v46r1</A></H1><PRE>
 <H2><A NAME="Note"For development and Upgrade studies. Synchronized for physics
    to Gauss v45r2.
