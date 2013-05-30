@@ -4,6 +4,11 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-05-30 - Chris Jones
+ - Update the new stripping tests to pick up their input data via PRConfig.
+ - Add another stripping test for Reco14 Stripping20r2 (Collision13 2.76TeV).
+ - Fix test names to not use capitols :((
+
 ! 2013-05-29 - Chris Jones
  - Add 4 new tests to run Strippings as per AppConfig :-
    Stripping20, Stripping20r1, Stripping20r0p1 and Stripping20r1p1.

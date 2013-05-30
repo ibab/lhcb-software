@@ -4,9 +4,9 @@
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="timeout"><integer>3600</integer></argument>
 <argument name="args"><set>
-  <text>$APPCONFIGOPTS/DaVinci/DV-Stripping20-Stripping.py</text>
-  <text>$APPCONFIGOPTS/DaVinci/DataType-2012.py</text> 
-  <text>$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py</text> 
+  <text>$APPCONFIGOPTS/DaVinci/DV-Stripping20r1p1-Stripping.py</text>
+  <text>$APPCONFIGOPTS/DaVinci/DataType-2011.py</text> 
+  <text>$PRCONFIGOPTS/DaVinci/Stripping/Collision11-3.5TeV-Reco14-FULLDST.py</text> 
   <text>../options/DaVinci-1000events.py</text>
 </set></argument>
 countErrorLines({"FATAL":0})
