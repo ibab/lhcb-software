@@ -37,7 +37,6 @@ use CaloDetXmlCnv  v*  Det            -no_auto_imports
 use DetDescSvc     v*  Det            -no_auto_imports
 use Magnet         v*  Det            -no_auto_imports
 use MDF            v*  DAQ            -no_auto_imports
-use L0DU           v*  L0             -no_auto_imports
 
 # The whole LBCOM project
 use LbcomSys  v*                      -no_auto_imports

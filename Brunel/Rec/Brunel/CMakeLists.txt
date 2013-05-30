@@ -14,7 +14,6 @@ gaudi_depends_on_subdirs(DAQ/MDF
                          GaudiKernel
                          Kernel/LHCbAlgs
                          LbcomSys
-			 L0/L0DU
                          RecSys
                          Sim/SimComponents
                          Tools/XmlTools)
