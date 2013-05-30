@@ -54,9 +54,6 @@ use StrippingSys v*
 #-- Analysis
 use AnalysisSys v*
 
-# Private
-#use B2D0hD2KsPiPiDalitz v* Phys
-
 #============================================================================
 
 # Allow the generation of QMTest summary 
