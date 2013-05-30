@@ -4,6 +4,9 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-05-30 - Chris Jones
+ - Add a specific ANNPID tuning for 2013 data, using "MC12TuneV2".
+
 ! 2013-05-09 - Chris Jones
  - Add a short info() level summary printout to ChargedProtoANNPIDAlg, to help
    identify the configuration in use from a log file.
