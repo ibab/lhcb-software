@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== Gauss v46r2 2013-05-30 ===========================
 ! 2013-05-08 - Paul Szczypka
  - Add IT back into TrackingSystem list.
 
