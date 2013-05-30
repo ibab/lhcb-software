@@ -9,7 +9,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-05-30 - Chris Jones
- - Add dependency on DBASE/PRConfig, for QM tests.
+ - Add dependency on PRConfig and QMTestFiles, for QM tests.
 
 !========================= DaVinci v33r4 2013-05-07 ===========================
 
