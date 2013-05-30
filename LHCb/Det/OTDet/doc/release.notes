@@ -2,6 +2,11 @@
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2013-05-30 - Alexandr Kozlinskiy
+ - Implementation of mono-layer alignment ('MonoAlignment' parameters
+   stored toghether with t0 parameters and describe offset and rotation
+   of each mono relative to nominal).
+
 !========================= OTDet v8r9 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

@@ -74,6 +74,8 @@ DeOTModule::DeOTModule(const std::string& name) :
   m_status()
 {
   /// Constructor
+  m_monoDx[0] = m_monoDx[1] = 0;
+  m_monoDdxdy[0] = m_monoDdxdy[1] = 0;
 }
 
 
@@ -509,6 +511,9 @@ StatusCode DeOTModule::cacheInfo() {
   /// Call it after all the trajectory stuff and after we've set some default tofs
   if ( !hasCondition( m_calibrationName ) ) fallbackDefaults();
 
+  m_monoDir[0] = Gaudi::XYZVector(m_dir.x() + m_monoDdxdy[0], m_dir.y(), m_dir.z()).Unit();
+  m_monoDir[1] = Gaudi::XYZVector(m_dir.x() + m_monoDdxdy[1], m_dir.y(), m_dir.z()).Unit();
+
   return StatusCode::SUCCESS;
 }
 
@@ -550,6 +555,26 @@ StatusCode DeOTModule::calibrationCallback() {
       }
     }
     else m_walkrelation = OTDet::WalkRelation();
+
+    m_monoDx[0] = m_monoDx[1] = 0;
+    m_monoDdxdy[0] = m_monoDdxdy[1] = 0;
+    if(m_calibration->exists("AlignmentMono"))
+    {
+      const std::vector<double>& alignmentMono = m_calibration->param< std::vector<double> >("AlignmentMono");
+      if(alignmentMono.size() == 4)
+      {
+        m_monoDx[0] = alignmentMono[0];
+        m_monoDx[1] = alignmentMono[1];
+        m_monoDdxdy[0] = alignmentMono[2] * 0.001;
+        m_monoDdxdy[1] = alignmentMono[3] * 0.001;
+      }
+      else
+      {
+        msg << MSG::ERROR << "There should be 4 mono alignment parameters: " << alignmentMono.size() << " provided" << endmsg;
+      }
+    }
+    m_monoDir[0] = Gaudi::XYZVector(m_dir.x() + m_monoDdxdy[0], m_dir.y(), m_dir.z()).Unit();
+    m_monoDir[1] = Gaudi::XYZVector(m_dir.x() + m_monoDdxdy[1], m_dir.y(), m_dir.z()).Unit();
 
     // how we set the straw t0 depends on the size of the vector.  we
     // allow that the calibration sets either every connected channel,
@@ -606,6 +631,7 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryFirstWire(int monolayer) c
   /// Default is 0 -> straw 1
   double lUwire = (monolayer == 1 ? localUOfStraw(m_nStraws+1) : localUOfStraw(1) );
   Gaudi::XYZPoint firstWire = m_midTraj[monolayer]->position(lUwire);
+  if(m_monoDdxdy[monolayer] != 0) return std::auto_ptr<LHCb::Trajectory>(new LineTraj(firstWire, m_monoDir[monolayer], m_range[monolayer], true));
   return std::auto_ptr<LHCb::Trajectory>(new LineTraj(firstWire, m_dir, m_range[monolayer], true));
 }
 
@@ -613,6 +639,7 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryLastWire(int monolayer) co
   /// Default is 1 -> straw 64(s3)/128
   double lUwire = (monolayer == 0 ? localUOfStraw(m_nStraws) : localUOfStraw(2*m_nStraws) );
   Gaudi::XYZPoint lastWire = m_midTraj[monolayer]->position(lUwire);
+  if(m_monoDdxdy[monolayer] != 0) return std::auto_ptr<LHCb::Trajectory>(new LineTraj(lastWire, m_monoDir[monolayer], m_range[monolayer], true));
   return std::auto_ptr<LHCb::Trajectory>(new LineTraj(lastWire, m_dir, m_range[monolayer], true));
 }
 
@@ -631,6 +658,7 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
 
   Gaudi::XYZPoint posWire = m_midTraj[mono]->position( localUOfStraw(aStraw) );
 
+  if(m_monoDdxdy[mono] != 0) return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_monoDir[mono], m_range[mono],true));
   return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_dir, m_range[mono],true));
 }
 

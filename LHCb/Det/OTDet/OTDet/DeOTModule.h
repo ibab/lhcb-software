@@ -501,6 +501,10 @@ public:
 
   double propagationTime(const LHCb::OTChannelID& channel, double arclen) const;
   double propagationTimeFromY(const LHCb::OTChannelID& channel, double globalY) const;
+private:
+  double m_monoDx[2];
+  double m_monoDdxdy[2];
+  Gaudi::XYZVector m_monoDir[2];
 };
 
 // -----------------------------------------------------------------------------
@@ -662,7 +666,7 @@ inline double DeOTModule::localUOfStraw(const unsigned int aStraw) const {
   //                     :-(0.5*m_nStraws-0.25))*m_xPitch;
   double uLeftStraw = ( !monoLayerB( aStraw ) ? double( m_nStraws ) + m_monoAXZero :
                         double( m_nStraws ) + m_monoBXZero )*-m_halfXPitch;
-  return uLeftStraw + tmpStraw * m_xPitch;
+  return uLeftStraw + tmpStraw * m_xPitch + m_monoDx[(!monoLayerB(aStraw) ? 0 : 1)];
 }
 
 inline double DeOTModule::localZOfStraw(const unsigned int aStraw) const {
