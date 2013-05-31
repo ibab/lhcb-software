@@ -118,6 +118,7 @@ GiGaRunManager::~GiGaRunManager()
   // increase the verbosity level for DEBUG mode 
 #ifdef GIGA_DEBUG 
   G4RunManager::SetVerboseLevel( 1000000 );
+  G4ParticleTable::GetParticleTable()->SetVerboseLevel( 0 ) ;
 #endif
   
   if( !m_delDetConstr   ) { G4RunManager::SetUserInitialization

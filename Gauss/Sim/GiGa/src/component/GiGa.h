@@ -45,6 +45,7 @@ class     IGiGaVisManager                 ;
 // from G4
 class     G4UImanager                     ; 
 class     G4VVisManager                   ;
+class     G4VExceptionHandler             ;
 
 /**  @class GiGa GiGa.h 
  *    
@@ -655,6 +656,8 @@ private:
   mutable Counter m_warnings   ; 
   /// counter of exceptions
   mutable Counter m_exceptions ; 
+  /// pointer to custom exception handler
+  G4VExceptionHandler * m_exceptionHandler ;
 };
 
 // ============================================================================

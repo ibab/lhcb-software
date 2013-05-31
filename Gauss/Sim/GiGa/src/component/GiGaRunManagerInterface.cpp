@@ -52,6 +52,7 @@ StatusCode GiGaRunManager::initialize ()
   { return Error("Could not initialize the base class " , sc ) ; }
   ///
   G4RunManager::SetVerboseLevel( m_verbosity );
+  G4ParticleTable::GetParticleTable()->SetVerboseLevel( 0 ) ;
   ///
   for( Names::const_iterator iname = 
          m_runToolsList.begin() ; m_runToolsList.end() != iname ; ++iname )

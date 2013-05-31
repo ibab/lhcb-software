@@ -195,7 +195,7 @@ StatusCode GiGa::initialize()
   if( 0 == m_runMgr ) { 
     return Error("Unable to create/locate GiGaRunManager " );
   }
-  
+
   // try to locate Physics List Object and make it known for GiGa 
   if( !m_GiGaPhysListName.empty() ) 
     { 
@@ -440,6 +440,8 @@ StatusCode GiGa::finalize()
   if( 0 != toolSvc  ()  ) { toolSvc   () -> release () ; m_toolSvc    = 0 ; } 
   if( 0 != chronoSvc()  ) { chronoSvc () -> release () ; m_chronoSvc  = 0 ; }
   if( 0 != geoSrc   ()  ) { geoSrc    () -> release () ; m_geoSrc     = 0 ; } 
+
+  
   ///  finalize the base class 
   return Service::finalize();
 }

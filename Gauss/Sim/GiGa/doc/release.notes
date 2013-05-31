@@ -9,6 +9,8 @@
 ! 2012-05-31 - Patrick Robbe
  - GiGa, GiGaRunManager, GiGaPhysConstructorBase, GiGaPhysListBase, 
    GiGaSensDetBase: fix unreleased tool issue
+ - Set G4 particle table verbose level to 0 to avoid G4 warnings about
+   unknown PDG Ids
 
 !========================== GiGa v20r1 2013-02-14 ============================
 ! 2012-02-07 - Patrick Robbe
