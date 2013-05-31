@@ -4,6 +4,10 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2013-05-31 - Paul Seyfert
+ - added protection against stable particles w/o proto particles
+   (shouldn't happen, but allowed from software side)
+
 !============================ Zoo v14r1p1 2013-05-13 =========================
 
 ! 2013-05-13 - Paul Seyfert

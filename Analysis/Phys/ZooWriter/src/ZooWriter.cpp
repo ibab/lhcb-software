@@ -945,7 +945,7 @@ ZooP* ZooWriter::GetSaved(const LHCb::Particle* p, const LHCb::RecVertex* recvtx
           m_writeCollectedHitPattern || !m_extraInfoList.empty()))
       writeTrackInfo(zp,p);
 
-    if (m_writeDLL) writeDLL(zp,p);
+    if (m_writeDLL && p->proto()) writeDLL(zp,p);
 
   } else {
 
