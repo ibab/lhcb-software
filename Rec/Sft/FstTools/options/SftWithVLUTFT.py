@@ -21,7 +21,7 @@ Brunel().InputType = 'DIGI'
 import os
 setting = os.getenv("TIM")
 if setting is None:
-    setting = "8"
+    setting = "3"
     
 Brunel().DatasetName = setting
 if setting == "1":
@@ -34,13 +34,14 @@ elif setting == "4":
     sample = {"mu": '3.8', "cooling": 'micro', "channel": 'minbias'}
 # High lumi
 elif setting == "5":
-    sample = {"mu": '7.6', "cooling": 'tpg', "channel": 'minbias'}
-elif setting == "6":
-    sample = {"mu": '7.6', "cooling": 'micro', "channel": 'minbias'}
-elif setting == "7":
     sample = {"mu": '7.6', "cooling": 'tpg', "channel": 'Kstmumu'}
-elif setting == "8":
+elif setting == "6":
     sample = {"mu": '7.6', "cooling": 'micro', "channel": 'Kstmumu'}
+elif setting == "7":
+    sample = {"mu": '7.6', "cooling": 'tpg', "channel": 'minbias'}
+elif setting == "8":
+    sample = {"mu": '7.6', "cooling": 'micro', "channel": 'minbias'}
+
 
 # Some privately generated samples, you still need to fill the sample
 # dictionary with sensible things for things to work

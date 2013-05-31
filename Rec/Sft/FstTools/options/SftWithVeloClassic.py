@@ -6,7 +6,7 @@
 ##############################################################################
 from Gaudi.Configuration import importOptions
 from Gaudi.Configuration import EventSelector, appendPostConfigAction
-from Configurables import Brunel, InputCopyStream
+from Configurables import Brunel, InputCopyStream, CondDB
 from FstTools.Configuration import FstConf
 
 importOptions('$FSTTOOLSROOT/options/Sft.py')
@@ -15,7 +15,7 @@ importOptions('$FSTTOOLSROOT/options/Sft.py')
 # Configure trigger emulation
 FstConf().TStationType = "IT+OT"
 FstConf().VeloType = "Velo"
-Brunel().EvtMax = 10000
+Brunel().EvtMax = 1000
 
 # Output DST
 output_fname = "/tmp/tim.dst"
@@ -23,13 +23,18 @@ InputCopyStream('DstWriter2').Output = "DATAFILE='PFN:%s'"%(output_fname)
 
 # No bias data taken in early 2012, format is MDF, not digi
 #EventSelector().Input =["DATAFILE='PFN:/afs/cern.ch/user/t/thead/w/private/HLT-emulation-data.raw' SVC='LHCb::MDFSelector' OPT='READ'"]
-EventSelector().Input =["DATAFILE='PFN:/dev/shm/HLT-emulation-data.raw' SVC='LHCb::MDFSelector' OPT='READ'"]
-Brunel().InputType = "MDF"
+EventSelector().Input =["DATAFILE='PFN:/afs/cern.ch/work/h/hschindl/public/Samples/MinimumBias/DIGI/Velo_Nu7.6_30000000_1_1000ev-Extended.digi' OPT='READ'"]
+Brunel().InputType = "DIGI"
 
+
+DDDBtag = "dddb-20130408"
+CondDBtag = "simcond-20121001-vc-md100"
+Brunel().DDDBtag = DDDBtag
+Brunel().CondDBtag = CondDBtag
+CondDB().Upgrade = True
 Brunel().DataType = "2012"
-Brunel().Simulation = False
-Brunel().DDDBtag = "head-20120126"
-Brunel().CondDBtag = "head-20120607"
+Brunel().Simulation = True
+
 Brunel().MCLinksSequence = []
 Brunel().MCCheckSequence = []
 
