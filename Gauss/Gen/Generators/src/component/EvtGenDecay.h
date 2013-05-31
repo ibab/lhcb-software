@@ -197,6 +197,12 @@ private:
   /// Minimum value for width. Below it is set to 0.
   double m_minwidth ;
 
+  /// Unit for TAULA output
+  int m_taulaUnit ;
+
+  /// Unit for PHOTOS output
+  int m_photosUnit ;
+
   /// Flag for polarized Lambda_b production (set by options)
   bool m_generatePolLambdab ;
 
