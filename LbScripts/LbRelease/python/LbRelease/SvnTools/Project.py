@@ -4,6 +4,8 @@ Module specific for interacting with Projects in the SVN repository
 __all__=["getProjectCmt","translateProject","isProject","containerFromProject","checkProject","diffProject"]
 
 from LbConfiguration.Repository import getRepositories
+from LbConfiguration.Project import getProject
+
 from LbRelease import rcs
 from LbUtils.CMT.Parse import parseReq
 from LbUtils.Processes import callCommand
@@ -25,18 +27,32 @@ def translateProject(project,version):
 
     Used to deal with silly capitalization in our software
     """
-    project=project.lower()
-    if project=="davinci":
-        project="DaVinci"
-    elif project=="lhcb":
-        project="LHCb"
-    elif project=="lbscripts":
+    #project=project.lower()
+    #if project=="davinci":
+    #    project="DaVinci"
+    #elif project=="lhcb":
+    #    project="LHCb"
+    #elif project=="lhcbdirac":
+    #   project="LHCbDirac"
+    #elif project=="lbscripts":
         # This is a temporary fix, we need to integrate with the list of projects from LbConfiguration
-        project="LbScripts"
-    else:
+    #    project="LbScripts"
+    #else:
+    #    project=project[0].upper()+project[1:]
+
+    # Integrate this class with the normal LHCb project list
+    try:
+        project = getProject(project, True).Name()
+    except:
+        # If that fails use the capitalized version
+        project = project.lower()
         project=project[0].upper()+project[1:]
+
+    # Cleaning up version from PROJECT string
     if '_' in version and project.upper() == version.split('_')[0].upper():
         version=version.split('_')[-1]
+
+
     return (project,version)
 
 

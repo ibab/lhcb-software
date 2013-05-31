@@ -20,6 +20,11 @@ lbsvn = rcs.connect(url)
 gaudiurl = str(getRepositories(protocol='anonymous')["gaudi"])
 gaudisvn = rcs.connect(gaudiurl)
 
+diracurl = str(getRepositories(protocol='anonymous')["dirac"])
+diracsvn = rcs.connect(diracurl)
+
+
+
 class AppImporter:
     """ Main scripts class for looking up dependencies.
     It inherits from """
@@ -33,7 +38,7 @@ class AppImporter:
         """ Recursively traverse all dependencies.
         Dependencies are looked up from SVN using the getDependencyMethod.
         A complete list of tuples (project, version) is returned"""
-        self.log.debug("TraverseDeps %s,%s" % (project, version))
+        self.log.warning("Traversing Deps for %s %s" % (project, version))
         self.log.debug(alreadyDone)
         deps = self.processDependencies(project, version)
         alreadyDone.append((project, version))
@@ -56,6 +61,8 @@ class AppImporter:
         tagpath = ""
         if proj.upper() == "GAUDI":
             tagpath = gaudisvn.url(proj,ver, isProject=True)
+        elif proj.upper() == "LHCBDIRAC" or proj.upper() == "DIRAC":
+            tagpath = diracsvn.url(proj,ver, isProject=True)
         else:
             tagpath=lbsvn.url(proj,ver, isProject=True)
         self.log.debug("SVN PATH:" + tagpath)
@@ -66,7 +73,7 @@ class AppImporter:
         self.log.warn(tagpath)
         deps = []
         for l in projcmt.splitlines():
-            m = re.match("\s*use\s+(\w+)\s+(\w+)", l)
+            m = re.match("\s*use\s+(\w+)\s+([\w\*]+)", l)
             if m != None:
                 dp = m.group(1)
                 dv = m.group(2)
@@ -78,7 +85,7 @@ class AppImporter:
             corver = ver.replace(proj + "_", "")
         proj = proj.upper()
 
-        self.log.warning("=====> Creating project %s %s" % (proj, ver))
+        self.log.warning("Creating project %s %s" % (proj, ver))
         node_parent = self.mConfDB.getOrCreatePV(proj, corver)
         rev = getPathLastRev(tagpath)
         node_parent["Rev"] = rev
@@ -88,9 +95,9 @@ class AppImporter:
             if dp in dv:
                 dv = dv.replace(dp + "_", "")
             dp = dp.upper()
-            self.log.warning("==> Find project %s %s" % (dp, dv))
+            self.log.warning("Find project %s %s" % (dp, dv))
             node_child = self.mConfDB.getOrCreatePV(dp, dv)
-            self.log.warning("==> Adding dependency (%s, %s)-[:REQUIRES]->(%s, %s)" % (proj, ver, dp, dv))
+            self.log.warning("Adding dependency (%s, %s)-[:REQUIRES]->(%s, %s)" % (proj, ver, dp, dv))
             self.mConfDB.addRequires(node_parent, node_child)
         return deps
 

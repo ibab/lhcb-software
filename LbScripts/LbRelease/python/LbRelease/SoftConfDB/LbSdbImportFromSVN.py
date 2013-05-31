@@ -11,12 +11,8 @@ from LbUtils.Script import Script
 from LbRelease import rcs
 from LbRelease.SoftConfDB.AppImporter import AppImporter
 
-# SVN Repositories definition
-url = str(getRepositories(protocol='anonymous')["lbsvn"])
-lbsvn = rcs.connect(url)
 
-gaudiurl = str(getRepositories(protocol='anonymous')["gaudi"])
-gaudisvn = rcs.connect(gaudiurl)
+
 
 class LbSdbImportProject(Script):
     """ Main scripts class for looking up dependencies.
@@ -28,7 +24,7 @@ class LbSdbImportProject(Script):
         parser.add_option("-r",
                           dest = "recursive",
                           action = "store_true",
-                          help = "Display dependencies recursively")
+                          help = "Import dependencies recursively")
         parser.add_option("-d",
                           dest = "debug",
                           action = "store_true",
@@ -53,7 +49,9 @@ class LbSdbImportProject(Script):
 
             # Creating the object to import dependencies
             self.mAppImporter = AppImporter()
+            self.options.recursive = True
 
+            self.log.warning("Processing %s %s" % (project, version))
             # Now get the dependencies
             if self.options.recursive:
                 self.mAppImporter.recurseDependencies(project, version)
@@ -62,7 +60,7 @@ class LbSdbImportProject(Script):
 
 if __name__=='__main__':
     sUsage = """%prog [-r] project version
-     -r: Recursively lists all dependencies.
+     -r: Recursively lists all dependencies
      -d: Prints debug output.
       """
     s = LbSdbImportProject(usage=sUsage)

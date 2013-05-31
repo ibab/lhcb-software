@@ -1,3 +1,8 @@
+2013-05-31  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbRelease/SoftConfDB: Proptotype now includes
+	version patterns and flags for used/active projects
+
 2013-05-30  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/scripts/svnProjectDeps: Added USE_CMT

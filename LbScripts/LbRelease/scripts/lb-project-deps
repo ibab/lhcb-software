@@ -183,6 +183,12 @@ class Deps(ProjectTool):
         # Now iterating on the list
         for pf in deps.projectFiles:
             # In any case checking who's referenced
+            try:
+                test = pf.filename
+            except AttributeError, e:
+                self.log.warning("Dependency without filename, ignoring:" + pf.htmlfilename)
+                continue
+
             if pf.filename in fileset:
                 refList[pf.filename] = 'refd'
             for dep in pf.getAllDependencies():

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ `echo $PYTHONPATH | grep -c pytools` = "0" ]; then
+	. SetupProject.sh -q LCGCMT pytools
+fi
+
+python ${LBRELEASEROOT}/python/LbRelease/SoftConfDB/LbSdbImportFromSVN.py $@
