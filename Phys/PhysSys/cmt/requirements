@@ -49,6 +49,10 @@ use Swimming                    v3r0     Phys    # Vava Gligorov, Roel Aaij
 
 #===================================================================
 
+use  NeuroBayesTools             v1r2p2   Phys   # ???
+
+#===================================================================
+
 # Temporary MC stuff.
 use DaVinciMCKernel v4r3p2 Phys
 
