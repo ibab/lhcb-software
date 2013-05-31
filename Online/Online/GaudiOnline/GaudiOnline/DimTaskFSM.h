@@ -96,6 +96,9 @@ namespace LHCb  {
     /// Translate integer state to string name
     static std::string stateName(int state);
 
+    /// Clear current state name
+    void clearState() { m_stateName = ""; } 
+
   public:
     /// Initializing constructor                       (OFFLINE     -> Inactive)
     DimTaskFSM(IInterface*);

@@ -101,6 +101,12 @@ namespace  {
         m_target->declareState(Target::ST_ERROR);
         return;
       }
+      else if ( cmd == "!state" )  {
+	std::string old_state = m_target->stateName();
+	m_target->clearState();
+        m_target->_declareState(old_state);
+        return;
+      }
       else   {
         m_target->declareState(Target::ST_ERROR);
         m_target->declareSubState(Target::UNKNOWN_ACTION);

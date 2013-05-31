@@ -131,6 +131,8 @@ namespace LHCb  {
     LHCb::IMEPManager*  m_mepMgr;
     /// Maximum retries for consecutive events before going to error
     int                 m_maxRetry;
+    /// Property: Name of the MEP manager (Defule=MEPManager)
+    std::string         m_mepManagerName;
     /// Current context
     mutable MBMContext* m_currContext;
   };
@@ -475,6 +477,7 @@ MBMEvtSelector::MBMEvtSelector(const string& nam, ISvcLocator* svc)
   m_input = "Events";
   m_decode = true;
   declareProperty("MaxRetry",m_maxRetry=-1);
+  declareProperty("MEPManager",m_mepManagerName="MEPManager");
 }
 
 // IService implementation: Db event selector override
@@ -484,7 +487,7 @@ StatusCode MBMEvtSelector::initialize()    {
   if ( !status.isSuccess() )    {
     return error("Error initializing base class OnlineBaseEvtSelector!");
   }
-  status = service("MEPManager",m_mepMgr);
+  status = service(m_mepManagerName,m_mepMgr);
   if ( !status.isSuccess() )   {
     return error("Failed to access service MEPManager.");
   }

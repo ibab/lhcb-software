@@ -68,7 +68,7 @@
 
 
 #define ERRMSG(a,x) do {  \
-  (a) << MSG::ERROR << (x) << " " << " in " << __PRETTY_FUNCTION__<< ":"  << __FILE__<< ":(" << __LINE__ << ")" << endmsg;} while(0);
+  (a) << MSG::ERROR << x << " " << " in " << __PRETTY_FUNCTION__<< ":"  << __FILE__<< ":(" << __LINE__ << ")" << endmsg;} while(0);
 
 #define PUBCNT(name, desc) do {m_ ## name = 0; m_MonSvc->declareInfo(#name, m_ ## name, desc, this);} while(0);
 #define PUBARRAYCNT(name, desc) do {m_MonSvc->declareInfo(#name, "I", & m_ ## name [0], m_ ## name.size() * sizeof(int), desc, this);} while(0);
@@ -439,16 +439,16 @@ if (!sc.isSuccess()) {
 
         // Open the raw socket for IP header management
         if ((m_ToHLTSock =  MEPRxSys::open_sock_udp(errmsg, m_SrcTestPort)) < 0)    {
-            ERRMSG(msgLog, "Failed to open socket:" + errmsg);
-            return StatusCode::FAILURE;
+	  ERRMSG(msgLog, "Failed to open socket:" << errmsg);
+	  return StatusCode::FAILURE;
         }
 
     }
     else {
     	// Open the raw socket for IP header management
         if ((m_ToHLTSock =  MEPRxSys::open_sock_arb_source(m_MEPProto, m_MEPBufSize, errmsg)) < 0)    {
-            ERRMSG(msgLog, "Failed to open socket:" + errmsg);
-   	    return StatusCode::FAILURE;
+	  ERRMSG(msgLog, "Failed to open socket:" << errmsg);
+	  return StatusCode::FAILURE;
         }
     }
 
@@ -470,24 +470,24 @@ if (!sc.isSuccess()) {
         msgLog << MSG::DEBUG << WHERE << "IP to send to odin : "<<m_OdinIfIPAddr << " interface : "<<m_OdinEthInterface << endmsg;
 
 	if ((m_FromOdinSock = MEPRxSys::open_sock(m_MEPProto, m_OdinBufSize * m_PackingFactor, m_OdinEthInterface, m_OdinIfIPAddr, false, errmsg)) < 0) {
-            ERRMSG(msgLog, "Failed to open socket:" + errmsg);
-            return StatusCode::FAILURE;
+	  ERRMSG(msgLog, "Failed to open socket:" << errmsg);
+	  return StatusCode::FAILURE;
 	}
 
         if ((m_FromHLTSock = MEPRxSys::open_sock(m_MEPReqProto,
                                               m_MEPReqBufSize,
 					      m_HLTEthInterface, m_HLTIfIPAddr,
                                               true, errmsg)) < 0) {
-            ERRMSG(msgLog, "Failed to open socket:" + errmsg);
-            return StatusCode::FAILURE;
+	  ERRMSG(msgLog, "Failed to open socket:" << errmsg);
+	  return StatusCode::FAILURE;
         }
 
         if ((m_ToOdinSock = MEPRxSys::open_sock(m_MEPReqProto,
                                               m_MEPReqBufSize,
                                               m_OdinEthInterface, m_OdinIfIPAddr,
                                               true, errmsg)) < 0) {
-            ERRMSG(msgLog, "Failed to open socket:" + errmsg);
-            return StatusCode::FAILURE;
+	  ERRMSG(msgLog, "Failed to open socket:" << errmsg);
+	  return StatusCode::FAILURE;
         }
 
         // Initializes IPC tools
@@ -1273,18 +1273,18 @@ StatusCode MEPInjector::readThenSend() {
 
             // Send all MEPs
             for(std::map<unsigned long, MEPEvent *>::iterator iteTell1ID = m_MapTell1MEPs.begin(); iteTell1ID != m_MapTell1MEPs.end(); ++iteTell1ID) {
-                me = iteTell1ID->second;
-    	        if(me != NULL) {
-                    sc = sendMEP(iteTell1ID->first, me);
-       	            if (sc.isFailure()) {
-                        msgLog << MSG::ERROR << WHERE << " sendMEP error for Tell1 IP " << iteTell1ID->first << endmsg;
-                        return StatusCode::FAILURE;
-                    }
-    	        }
-                else
-                    ERRMSG(msgLog, "NULL MEP pointer, not send : " + MEPRxSys::dotted_addr(iteTell1ID->first));
+	      me = iteTell1ID->second;
+	      if(me != NULL) {
+		sc = sendMEP(iteTell1ID->first, me);
+		if (sc.isFailure()) {
+		  msgLog << MSG::ERROR << WHERE << " sendMEP error for Tell1 IP " << iteTell1ID->first << endmsg;
+		  return StatusCode::FAILURE;
+		}
+	      }
+	      else
+		ERRMSG(msgLog, "NULL MEP pointer, not send : " << MEPRxSys::dotted_addr(iteTell1ID->first));
             } // end for
-
+	    
             m_TotEvtsSent += m_PackingFactor;
             if(++m_DatagramID == 0) ++m_DatagramID;
 
@@ -1820,12 +1820,11 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
             return StatusCode::SUCCESS;
         }
         if (n == -1) {
-            std::string strerr="MEP sending" + errno;
-            ERRMSG(msgLog, strerr);
-            perror("send_msg");
-            return StatusCode::FAILURE;
+	  ERRMSG(msgLog, "MEP sending" << errno);
+	  perror("send_msg");
+	  return StatusCode::FAILURE;
         }
-        ERRMSG(msgLog, " MEP corrupted on send! Sent length:" + n);
+        ERRMSG(msgLog, " MEP corrupted on send! Sent length:" << n);
         return StatusCode::FAILURE;
     }
 
@@ -1844,7 +1843,7 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
 	    ERRMSG(msgLog, " MEP sending ");
 	    return StatusCode::FAILURE;
 	}
-	ERRMSG(msgLog, " MEP corrupted on send! Sent length:" + n);
+	ERRMSG(msgLog, " MEP corrupted on send! Sent length:" << n);
         return StatusCode::FAILURE;
     }
 
@@ -1940,7 +1939,7 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
         msgLog << MSG::DEBUG << WHERE << endmsg;
 	return StatusCode::SUCCESS;
     }
-    ERRMSG(msgLog, " MEP corrupted on send! Sent length:" + n);
+    ERRMSG(msgLog, " MEP corrupted on send! Sent length:" << n);
     msgLog << MSG::DEBUG << WHERE << endmsg;
     return StatusCode::FAILURE;
 }
@@ -1961,8 +1960,8 @@ StatusCode MEPInjector::sendMEPReq(MEPReq * req) {
 	return StatusCode::SUCCESS;
     }
     if (n == -1) {
-	ERRMSG(msgLog, " Send MEP request, errno=" + errno);
-        return StatusCode::FAILURE;
+      ERRMSG(msgLog, " Send MEP request, errno=" << errno);
+      return StatusCode::FAILURE;
     }
     ERRMSG(msgLog, " MEPRequest corrupted on send!");
     msgLog << MSG::DEBUG << WHERE << endmsg;
