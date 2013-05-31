@@ -4,6 +4,14 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+
+! 2013-05-31 - Thomas Nikodem, Sascha Stahl
+ - Added possibility to write out Histograms
+ - Added Track Type option for Best Container
+
+! 2013-05-28 - Angelo Di Canto
+ - add a new checker for VeloUT studies
+
 !========================= PrMCTools v1r3 2013-03-22 =========================
 ! 2013-02-28 - Sascha Stahl
  - Added UT to PrTrackAssociator.

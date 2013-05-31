@@ -10,6 +10,8 @@
 #include "Event/Track.h"
 #include "Linker/LinkerTool.h"
 
+class IHistoTool;
+
 static const InterfaceID IID_PrCounter ( "PrCounter", 1, 0 );
 
 /** @class PrCounter PrCounter.h
@@ -37,22 +39,26 @@ public:
 
   virtual StatusCode finalize();
 
-  void initEvent();
+  void initEvent(const IHistoTool* htool, const int nPV);
 
   void setSelectId( int data )   { m_selectId = data; }
 
-  int count( const LHCb::MCParticle* part,
-             std::vector<bool> flags,
-             std::vector<LHCb::LHCbID>& ids );
+  int countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* part, std::vector<bool> flags,
+                       std::vector<LHCb::LHCbID>& ids, const int nPV);
+
 
   void setContainer( std::string name )  { m_container = name; }
+  void setTrackType( LHCb::Track::Types type)  { m_trackType = type; }
 
-  void addSelection ( std::string name );
+  void addSelection ( std::string name, bool writeHisto );
 
   void printStatistics();
 
   int  nbTrack() const { return m_nbTrack; }
   int  nbGhost() const { return m_nbGhost; }
+
+  void setWriteHistos(int write){ m_writeHistos = write; };
+  void setUseEta25Cut(bool cut){ m_eta25cut = cut;};
 protected:
 
 private:
@@ -69,10 +75,15 @@ private:
   const InvTable* m_invTable;
 
   std::string  m_container;
+  LHCb::Track::Types m_trackType;
   unsigned int m_titleSize;
   int          m_selectId;
 
   bool         m_validData;
+
+  int         m_writeHistos;
+  bool         m_eta25cut;
+
   // Event variables
   int          m_nbTrack;                 ///< Tracks for this event
   int          m_nbGhost;                 ///< Ghosts for this event
@@ -85,6 +96,7 @@ private:
   double       m_nEvent;
 
   std::vector<std::string> m_name;    ///< Name of the sub-counters
+  std::vector<bool>        m_writeHisto;    ///< Make histograms for this container
   std::vector<int>         m_wanted;  ///< Nb MC tracks measurable.
   std::vector<int>         m_counted; ///< counters for statistics
   std::vector<int>         m_clone;   ///< counters for clones

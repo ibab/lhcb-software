@@ -6,8 +6,16 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
+// from Gaudi
+#include "GaudiAlg/GaudiHistoAlg.h"
+
+
 // local
 #include "PrCounter.h"
+
+
+class IHistoTool ;
+
 
 /** @class PrChecker PrChecker.h
  *  Check the quality of the pattern, by comparing to MC information
@@ -38,7 +46,7 @@ public:
 
 
 
-class PrChecker : public GaudiAlgorithm {
+class PrChecker : public GaudiHistoAlg {
 public:
   /// Standard constructor
   PrChecker( const std::string& name, ISvcLocator* pSvcLocator );
@@ -67,11 +75,25 @@ private:
   PrCounter* m_tTrack;
   PrCounter* m_downTrack;
   PrCounter* m_best;
+  PrCounter* m_bestLong;
+  PrCounter* m_bestDownstream;
+
+
+  int  m_writeVeloHistos;      
+  int  m_writeForwardHistos;   
+  int  m_writeMatchHistos;     
+  int  m_writeSeedHistos;      
+  int  m_writeDownHistos;      
+  int  m_writeUpHistos;        
+  int  m_writeTTrackHistos;    
+  int  m_writeBestHistos;      
+
+  bool m_eta25cut;             
 
   //== Vector of the counters
   std::vector<PrCounter*> m_allCounters;
 
-  std::vector<EffCounter> m_counters;
+  const IHistoTool* m_histoTool;
 };
 
 #endif // PRCHECKER_H
