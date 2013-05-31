@@ -3,9 +3,6 @@ Package     : StrippingSys
 Package Coordinator : l.carson@imperial.ac.uk, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
-! 2013-05-28 - Chris Jones
- - Import package Phys/NeuroBayesTools from Phys
-
 !========================= StrippingSys v6r2p7 2013-05-28 =========================
 
 * Phys/StripArchive
