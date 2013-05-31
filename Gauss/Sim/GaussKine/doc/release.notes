@@ -4,6 +4,9 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-05-31 - Patrick Robbe
+ - GenerationToSimulation.cpp: switch off G4 printout of unknown PDG ID
+
 !========================= GaussKine v6r1 2012-10-19 =========================
 ! 2012-09-08 - Patrick Robbe
  - GenerationToSimulation.cpp: transfer correctly particles for Higgs events

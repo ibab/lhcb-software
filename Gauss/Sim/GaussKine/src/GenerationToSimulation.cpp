@@ -82,6 +82,8 @@ StatusCode GenerationToSimulation::initialize() {
 	
       G4ParticlePropertyTable* PPT = G4ParticlePropertyTable::GetParticlePropertyTable();
       G4ParticleTable * particleTable = G4ParticleTable::GetParticleTable() ;
+      // switch off output so that not to print unknown pdg from Gauss
+      particleTable -> SetVerboseLevel( 0 ) ;
       for ( int i = 0 ; i < particleTable -> size() ; ++i ) {
         G4ParticleDefinition * PDef = particleTable -> GetParticle( i ) ;
         const LHCb::ParticleProperty * pp = ppSvc->find( LHCb::ParticleID( PDef->GetPDGEncoding() ) ) ;
