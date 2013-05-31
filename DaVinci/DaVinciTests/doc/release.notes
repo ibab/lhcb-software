@@ -4,6 +4,14 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-05-31 - Chris Jones
+ - Increase the timeout from 3600 to 7200 for the new stripping tests,
+   to account for the longer processing times with debug builds.
+ - Turn off the slow LZMA compression of the output files in the 
+   stripping tests.
+ - Remove the obsolete stripping test 
+   test_stripping_allstreams_sim2010_bs2jpsiphi
+
 ! 2013-05-30 - Chris Jones
  - Update the new stripping tests to pick up their input data via PRConfig.
  - Add another stripping test for Reco14 Stripping20r2 (Collision13 2.76TeV).

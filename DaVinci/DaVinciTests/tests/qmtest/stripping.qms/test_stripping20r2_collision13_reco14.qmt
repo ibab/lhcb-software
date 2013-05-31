@@ -2,11 +2,12 @@
 <!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
 <argument name="program"><text>gaudirun.py</text></argument>
-<argument name="timeout"><integer>3600</integer></argument>
+<argument name="timeout"><integer>7200</integer></argument>
 <argument name="args"><set>
   <text>$APPCONFIGOPTS/DaVinci/DV-Stripping20r2-Stripping.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DataType-2013.py</text> 
   <text>$PRCONFIGOPTS/DaVinci/Stripping/Collision13-2.76TeV-Reco14-FULLDST.py</text> 
+  <text>$APPCONFIGOPTS/Persistency/Compression-ZLIB-1.py</text>
   <text>../options/DaVinci-1000events.py</text>
 </set></argument>
 countErrorLines({"FATAL":0})
