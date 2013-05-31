@@ -118,7 +118,7 @@ GiGaRunManager::~GiGaRunManager()
   // increase the verbosity level for DEBUG mode 
 #ifdef GIGA_DEBUG 
   G4RunManager::SetVerboseLevel( 1000000 );
-#endif 
+#endif
   
   if( !m_delDetConstr   ) { G4RunManager::SetUserInitialization
                               ( ( G4VUserDetectorConstruction*   ) 0 ) ; }
@@ -136,8 +136,7 @@ GiGaRunManager::~GiGaRunManager()
                               ( ( G4UserTrackingAction*          ) 0 ) ; }
   if( !m_delStepAction  ) { G4RunManager::SetUserAction 
                               ( ( G4UserSteppingAction*          ) 0 ) ; }
-
-
+  
   IGiGaRunManager::setInstance( (IGiGaRunManager*)0 );
 
 #ifdef GIGA_DEBUG

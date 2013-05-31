@@ -337,7 +337,7 @@ StatusCode GiGa::initialize()
     G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
     particleTable->DumpTable("all");
   }
-  
+
   return StatusCode::SUCCESS ; 
 }
 
@@ -348,7 +348,7 @@ StatusCode GiGa::finalize()
 {  
   Print("Finalization" , MSG::DEBUG , StatusCode::SUCCESS );
 
-  if (0 != toolSvc() && \
+  if (0 != toolSvc() &&
       SmartIF<IService>(toolSvc())->FSMState() >= Gaudi::StateMachine::INITIALIZED) {
     if(0 != m_visManager) {
       toolSvc()->releaseTool(m_visManager);
@@ -431,13 +431,14 @@ StatusCode GiGa::finalize()
   m_errors      .clear();
   m_warnings    .clear();
   m_exceptions  .clear();
+  
   // release the run manager (almost the last)
   if( 0 != runMgr   ()  && 0 != toolSvc() ) 
     { toolSvc() -> releaseTool( runMgr() ) ; m_runMgr    = 0 ; } 
   // release all used services 
   if( 0 != rndmSvc  ()  ) { rndmSvc   () -> release () ; m_rndmSvc    = 0 ; } 
   if( 0 != toolSvc  ()  ) { toolSvc   () -> release () ; m_toolSvc    = 0 ; } 
-  if( 0 != chronoSvc()  ) { chronoSvc () -> release () ; m_chronoSvc  = 0 ; } 
+  if( 0 != chronoSvc()  ) { chronoSvc () -> release () ; m_chronoSvc  = 0 ; }
   if( 0 != geoSrc   ()  ) { geoSrc    () -> release () ; m_geoSrc     = 0 ; } 
   ///  finalize the base class 
   return Service::finalize();
