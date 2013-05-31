@@ -104,12 +104,9 @@ StatusCode GiGaPhysListModular::initialize()
 // ============================================================================
 StatusCode GiGaPhysListModular::finalize () 
 {
-  // release all constructors 
-  for ( std::vector< IGiGaPhysicsConstructor *>::iterator it = 
-          m_constructors.begin() ; 
-        m_constructors.end() != it ; ++it ) {
-    RemovePhysics( (*it) -> physicsConstructor() ) ;
-  }
+  // reset G4 vector of physics lists (they have been destoyed by the Gaudi
+  // tool release methods 
+  physicsVector -> clear() ;
 
   return GiGaPhysListBase::finalize  ();
 };

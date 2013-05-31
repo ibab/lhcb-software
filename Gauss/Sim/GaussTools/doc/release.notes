@@ -4,6 +4,9 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-05-31 - Patrick Robbe
+ - GiGaPhysListBase: fix unreleased tool issues
+
 ! 2013-05-29 - Patrick Robbe
  - GiGaPhysListModular.cpp: unregister properly physics lists
 

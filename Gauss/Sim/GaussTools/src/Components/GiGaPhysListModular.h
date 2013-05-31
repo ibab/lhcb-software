@@ -43,10 +43,10 @@ public:
 
   ///
 public:
-  StatusCode initialize();
-  StatusCode finalize();
+  virtual StatusCode initialize();
+  virtual StatusCode finalize();
   
-  void SetCuts();
+  virtual void SetCuts();
   ///
 private:
   std::vector<std::string> m_physconstr;
