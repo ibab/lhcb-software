@@ -292,7 +292,7 @@ StatusCode PrChecker::execute() {
     bool strangeLong = false;
     bool strangeDown = false;
     bool fromB       = false;
-    bool zunder100   = part->originVertex()->position().Z() < 100.; 
+    //bool zunder100   = part->originVertex()->position().Z() < 100.; 
     bool eta25       = !m_eta25cut || (part->momentum().Eta() > 2 && part->momentum().Eta() < 5);
     
     if ( 0 != part->originVertex() ) {

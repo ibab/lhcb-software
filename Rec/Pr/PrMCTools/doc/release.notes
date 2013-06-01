@@ -4,6 +4,8 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-06-01 - Thomas Nikodem
+ - fixed compilation warning (unused variable)
 
 ! 2013-05-31 - Thomas Nikodem, Sascha Stahl
  - Added possibility to write out Histograms
