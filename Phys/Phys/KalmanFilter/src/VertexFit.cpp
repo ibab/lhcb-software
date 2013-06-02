@@ -164,20 +164,15 @@ namespace
     //
     const Gaudi::SymMatrix3x3& _pmcov = entry.m_p.posCovMatrix() ;
     //
-    if ( LoKi::KalmanFilter::GammaLikeParticle  == type ) 
+    if ( LoKi::KalmanFilter::  GammaLikeParticle == type  || 
+         LoKi::KalmanFilter::DiGammaLikeParticle == type   ) 
     { 
       Gaudi::Math::setToScalar ( entry.m_vxi , 0.0 ) ; 
       entry.m_vxi ( 0 , 0 ) = s_ERROR2_i [ 0 ] ;
       entry.m_vxi ( 1 , 1 ) = s_ERROR2_i [ 1 ]  ;
       entry.m_vxi ( 2 , 2 ) = s_ERROR2_i [ 2 ] ;
     }
-    else if ( LoKi::KalmanFilter::DiGammaLikeParticle  == type ) 
-    {
-      Gaudi::Math::setToScalar ( entry.m_vxi , 0.0 ) ; 
-      entry.m_vxi ( 0 , 0 ) = s_ERROR2_i [ 0 ] ;
-      entry.m_vxi ( 1 , 1 ) = s_ERROR2_i [ 1 ] ;
-      entry.m_vxi ( 2 , 2 ) = s_ERROR2_i [ 2 ] ;
-    }
+    // treat long-lived particles and unspecified  with the appropriate matrix 
     else if ( LoKi::KalmanFilter::LongLivedParticle == type  
               || 
               _pmcov ( 2 , 2 ) < 0.25 * ( _pmcov ( 0 , 0 ) + _pmcov ( 1 , 1 ) ) )
@@ -208,7 +203,7 @@ namespace
       entry.m_type = LoKi::KalmanFilter::LongLivedParticle ;
       //
     }
-    else // ShortLived Particle 
+    else // else assume it is ShortLived Particle 
     {
       // the regular particle:
       entry.m_vxi = _pmcov ;
@@ -257,70 +252,52 @@ namespace
   // ==========================================================================
 } //                                                 end of anonymous namespace
 // ============================================================================
-// Load the particle into "entry" representation"
-// ============================================================================
 StatusCode LoKi::KalmanFilter::load 
-( const LHCb::Particle&      particle , 
-  LoKi::KalmanFilter::Entry& entry    ) 
-{ 
-  entry.m_type = LoKi::KalmanFilter::UnspecifiedParticle ;
+( const LHCb::Particle&                  particle , 
+  const LoKi::KalmanFilter::ParticleType ptype    ,
+  LoKi::KalmanFilter::Entry&             entry    ) 
+{
+  entry.m_type =  ptype    ;
   entry.m_p0   = &particle ;
   entry.m_p    =  particle ;
   //
   return _update ( entry , entry.m_type ) ;
 }
+// ============================================================================
+// Load the particle into "entry" representation"
+// ============================================================================
+StatusCode LoKi::KalmanFilter::load 
+( const LHCb::Particle&      particle , 
+  LoKi::KalmanFilter::Entry& entry    ) 
+{ return load ( particle , LoKi::KalmanFilter::UnspecifiedParticle , entry ) ; }
 // ============================================================================
 // Load the particle into "entry" representation"
 // ============================================================================
 StatusCode LoKi::KalmanFilter::loadAsFlying
 ( const LHCb::Particle&      particle , 
   LoKi::KalmanFilter::Entry& entry    ) 
-{ 
-  entry.m_type = LoKi::KalmanFilter::LongLivedParticle ;
-  entry.m_p0   = &particle ;
-  entry.m_p    =  particle ;
-  //
-  return _update ( entry , entry.m_type ) ;
-}
+{ return load ( particle , LoKi::KalmanFilter::LongLivedParticle , entry ) ; }
 // ============================================================================
 // Load the particle into "entry" representation"
 // ============================================================================
 StatusCode LoKi::KalmanFilter::loadAsShortLived
 ( const LHCb::Particle&      particle , 
   LoKi::KalmanFilter::Entry& entry    ) 
-{ 
-  entry.m_type = LoKi::KalmanFilter::ShortLivedParticle ;
-  entry.m_p0   = &particle ;
-  entry.m_p    =  particle ;
-  //
-  return _update ( entry , entry.m_type ) ;
-}
+{ return load ( particle , LoKi::KalmanFilter::ShortLivedParticle , entry ) ; }
 // ============================================================================
 // Load the particle into "entry" representation"
 // ============================================================================
 StatusCode LoKi::KalmanFilter::loadAsGamma
 ( const LHCb::Particle&      particle , 
   LoKi::KalmanFilter::Entry& entry    ) 
-{ 
-  entry.m_type = LoKi::KalmanFilter::GammaLikeParticle ;
-  entry.m_p0   = &particle ;
-  entry.m_p    =  particle ;
-  //
-  return _update ( entry , entry.m_type ) ;
-}
+{ return load ( particle , LoKi::KalmanFilter::GammaLikeParticle , entry ) ; }
 // ============================================================================
 // Load the particle into "entry" representation"
 // ============================================================================
 StatusCode LoKi::KalmanFilter::loadAsDiGamma
 ( const LHCb::Particle&      particle , 
   LoKi::KalmanFilter::Entry& entry    ) 
-{ 
-  entry.m_type = LoKi::KalmanFilter::DiGammaLikeParticle ;
-  entry.m_p0   = &particle ;
-  entry.m_p    =  particle ;
-  //
-  return _update ( entry , entry.m_type ) ;
-}
+{ return load ( particle , LoKi::KalmanFilter::DiGammaLikeParticle , entry ) ; }
 // ============================================================================
 // transport the particle and update the entry
 // ============================================================================

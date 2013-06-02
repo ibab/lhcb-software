@@ -272,6 +272,23 @@ namespace LoKi
     // ========================================================================
     /** Load the particle into "entry" representation"
      *
+     *  Essentially it includes also the proper tarnsformation of the 
+     *  covariance matrix of the particle 
+     *
+     *  @param  particle (input)  the particle to be added 
+     *  @param  ptype    (input)  the particle type 
+     *  @param  entry    (output) the resulting entry 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-03-06
+     */
+    GAUDI_API 
+    StatusCode load 
+    ( const LHCb::Particle&                  particle , 
+      const LoKi::KalmanFilter::ParticleType ptype    ,
+      LoKi::KalmanFilter::Entry&             entry    ) ;
+    // ========================================================================
+    /** Load the particle into "entry" representation"
+     *
      *  Essentially it includes also the proper transformation 
      *  of the covariance matrix of the particle 
      *
