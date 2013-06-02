@@ -5,6 +5,10 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2013-06-02 - Vanya Belyaev
+
+ - finally, fix "feature" for chi2(doca) calcualtuos 
+
 ! 2013-05-27 - 
  - fix a bug with particle classification.
    essentially all cvalcuatino of DOCACHI2 with 

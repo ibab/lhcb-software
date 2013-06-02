@@ -864,36 +864,48 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   
   Gaudi::XYZPoint point1 ;
   Gaudi::XYZPoint point2 ;
+  //
   // make the evaluation of the distance:
+  //
   i_distance ( p1 , p2 , point1 , point2 ) ;
-  
+  //
   // evaluate the distance 
+  //
   dist = ( point1 - point2 ) . R () ;
-  
+  //
   // evaluate chi2 (if needed) 
+  //
   if ( 0 != chi2 ) 
   {
     // =======================================================================
     *chi2 = 1.e+10 ;
+    //
     // prepare the Kalman Filter machinery
+    //
     m_entries.resize(2) ;
     LoKi::KalmanFilter::Entries::iterator first  = m_entries.begin() ;
-    LoKi::KalmanFilter::Entries::iterator second = first + 1         ;   
-    
-    StatusCode sc = LoKi::KalmanFilter::load ( p1 , *first  ) ;
+    LoKi::KalmanFilter::Entries::iterator second = first + 1         ;
+    //
+    // load as long-lived particles: 
+    //
+    StatusCode sc = LoKi::KalmanFilter::load 
+      ( p1 , LoKi::KalmanFilter::LongLivedParticle , *first  ) ;
     if ( sc.isFailure() ) 
-    { return _Error ( "_distance(III): error from KalmanFilter::load(1)" , sc ) ; }
-    
-    sc =            LoKi::KalmanFilter::load ( p2 , *second ) ;
+    { return _Error ( "distance(III): error from KalmanFilter::load(1)" , sc ) ; }
+    //
+    sc            = LoKi::KalmanFilter::load 
+      ( p2 , LoKi::KalmanFilter::LongLivedParticle , *second ) ;
     if ( sc.isFailure() ) 
-    { return _Error ( "_distance(III): error from KalmanFilter::load(2)" , sc ) ; }
-    
+    { return _Error ( "distance(III): error from KalmanFilter::load(2)" , sc ) ; }
+    //
     // make the special step of Kalman filter 
+    //
     sc = LoKi::KalmanFilter::step ( *first  , *second , 0 ) ;
     if ( sc.isFailure() ) 
     { return _Error ( "distance(III): error from KalmanFilter::step(2)" , sc ) ; }
-    
+    //
     // get the final chi2 
+    //
     *chi2 = second->m_chi2 ;
     // ========================================================================
   }

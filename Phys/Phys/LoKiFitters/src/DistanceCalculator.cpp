@@ -1011,25 +1011,30 @@ StatusCode LoKi::DistanceCalculator::_distance
   double*               chi2 ) const 
 {
   using namespace Gaudi::Math::Operators ;
-  
+  //
   Gaudi::XYZPoint point1 ;
   Gaudi::XYZPoint point2 ;
+  //
   // make the evaluation of the distance:
+  //
   i_distance ( p1 , p2 , point1 , point2 ) ;
-  
+  //
   const LHCb::Particle* good1 = &p1 ;
   const LHCb::Particle* good2 = &p2 ;
-  
+  //
   double dz1 = ::fabs ( point1.Z() - good1 -> referencePoint().Z() ) ;
   double dz2 = ::fabs ( point2.Z() - good2 -> referencePoint().Z() ) ;
   double dz  = std::max ( dz1 , dz2 ) ;
-  
+  //
   // make iterations here (if needed)
+  //
   unsigned int nIter = 0 ;
   for ( unsigned int iIter = 0 ; 
         dz >= m_deltaZ && iIter <= m_nIter_max ; ++iIter ) 
   {
+    //
     // transport the first particle into new positions:
+    //
     StatusCode sc = transport 
       ( good1       ,    // what to transport 
         point1      ,    // where to transport 
@@ -1037,8 +1042,9 @@ StatusCode LoKi::DistanceCalculator::_distance
     if ( sc.isFailure() ) 
     { _Warning ( "distance(III):Error from ParticleTransporter, ignore" , sc ) ; }
     else { good1 = &m_particle1 ; } // the properly transported particles:
-    
+    //
     // transport the second particle into new positions:
+    //
     sc = transport 
       ( good2       ,    // what to transport 
         point2      ,    // where to transport 
@@ -1046,69 +1052,62 @@ StatusCode LoKi::DistanceCalculator::_distance
     if ( sc.isFailure() ) 
     { _Warning ( "distance(III):Error from ParticleTransporter, ignore" , sc ) ; }
     else { good2 = &m_particle2 ; } // the properly transported particles:
-    
+    //
     // make new (improved) evaluation of the distance:
+    //
     i_distance ( *good1 , *good2 , point1 , point2 ) ;
-    
+    //
     // check delta_Z 
+    //
     dz1 = ::fabs ( point1.Z () - good1 -> referencePoint().Z() ) ;
     dz2 = ::fabs ( point2.Z () - good2 -> referencePoint().Z() ) ;
     dz  = std::max ( dz1 , dz2 ) ;
     
     ++nIter ;
-  } /// end of iterations 
-
+  } /// end of iterations
+  //
   // check for  the convergency
+  //
   if ( dz >= m_deltaZ )
   { _Warning ( "There is no convergency-III", NoConvergency ) ; }  
+  //
   // evaluate the distance 
+  //
   dist = ( point1 - point2 ) . R () ;
+  //
   // evaluate chi2 (if needed) 
+  //
   if ( 0 != chi2 ) 
   {
     // ========================================================================
     *chi2 = 1.e+10 ;    
+    //
     // prepare the Kalman Filter machinery
+    //
     m_entries.resize(2) ;
     LoKi::KalmanFilter::Entries::iterator first  = m_entries.begin() ;
     LoKi::KalmanFilter::Entries::iterator second = first + 1         ;   
-    // load:
     //
-    StatusCode sc = StatusCode::SUCCESS ;
-    LoKi::KalmanFilter::ParticleType type1 = particleType ( good1 ) ;
-    switch ( type1 ) 
-    {
-      // load : 
-    case LoKi::KalmanFilter::LongLivedParticle  :
-      sc =            LoKi::KalmanFilter::loadAsFlying     ( *good1 , *first ) ; break ;
-    case LoKi::KalmanFilter::ShortLivedParticle :
-      sc =            LoKi::KalmanFilter::loadAsShortLived ( *good1 , *first ) ; break ;
-    default:
-      sc =            LoKi::KalmanFilter::load             ( *good1 , *first ) ; break ;      
-    }
+    // load as long-lived particles:   
+    //
+    StatusCode sc = LoKi::KalmanFilter::load 
+      (  *good1 , LoKi::KalmanFilter::LongLivedParticle , *first  ) ;
     if ( sc.isFailure() ) 
     { return _Error ( "distance(III): error from KalmanFilter::load(1)" , sc ) ; }
     //
-    LoKi::KalmanFilter::ParticleType type2 = particleType ( good1 ) ;
-    switch ( type2 ) 
-    {
-      // load : 
-    case LoKi::KalmanFilter::LongLivedParticle  :
-      sc =            LoKi::KalmanFilter::loadAsFlying     ( *good2 , *second ) ; break ;
-    case LoKi::KalmanFilter::ShortLivedParticle :
-      sc =            LoKi::KalmanFilter::loadAsShortLived ( *good2 , *second ) ; break ;
-    default:
-      sc =            LoKi::KalmanFilter::load             ( *good2 , *second ) ; break ;      
-    }
+    sc            = LoKi::KalmanFilter::load 
+      (  *good2 , LoKi::KalmanFilter::LongLivedParticle , *second ) ;
     if ( sc.isFailure() ) 
     { return _Error ( "distance(III): error from KalmanFilter::load(2)" , sc ) ; }
-    //
+    //    
     // make the special step of Kalman filter 
+    //
     sc = LoKi::KalmanFilter::step ( *first  , *second , 0 ) ;
     if ( sc.isFailure() ) 
     { return _Error ( "distance(III): error from KalmanFilter::step(2)" , sc ) ; }
     //
     // get the final chi2 
+    //
     *chi2 = second->m_chi2 ;
     // ========================================================================
   }
