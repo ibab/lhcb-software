@@ -1759,6 +1759,10 @@ class Gauss(LHCbConfigurableUser):
         if 'UT'      in self.getProp('DetectorSim')['Detectors'] : detlist += ['UT']
         if 'FT'      in self.getProp('DetectorSim')['Detectors'] : detlist += ['FT']
         if 'SL'    in self.getProp('DetectorSim')['Detectors'] : detlist += ['SL']
+        # if Skip4 then dont propagate the detector list
+        if "GenToMCTree" in self.getProp("Phases"):
+            detlist = []
+
         SimConf().setProp("Detectors",detlist)
 
 
@@ -2783,29 +2787,33 @@ class Gauss(LHCbConfigurableUser):
 #"""
     ##
     ##
-    def configureGiGa(self):
+    def configureGiGa(self , skipG4 = False ):
          """
          Set up the configuration for the G4 settings: physics list, cuts and actions
          """
          richPmt = False
+         giga = GiGa()
+
          # PSZ - Use self.getProp('DataType') in future
          if [det for det in ['Rich1Pmt', 'Rich2Pmt'] if det in self.getProp('DetectorSim')['Detectors']]:
              richPmt = True
          ## setup the Physics list and the productions cuts
+         if skipG4:
+             richPmt = False
          self.setPhysList(richPmt)
          
          ## Mandatory G4 Run action
-         giga = GiGa()
          giga.addTool( GiGaRunActionSequence("RunSeq") , name="RunSeq" )
          giga.RunAction = "GiGaRunActionSequence/RunSeq"
-         giga.RunSeq.addTool( TrCutsRunAction("TrCuts") , name = "TrCuts" )
-         giga.RunSeq.addTool( GiGaRunActionCommand("RunCommand") , name = "RunCommand" ) 
-         giga.RunSeq.Members += [ "TrCutsRunAction/TrCuts" ] 
-         giga.RunSeq.Members += [ "GiGaRunActionCommand/RunCommand" ]
-         giga.RunSeq.RunCommand.BeginOfRunCommands = [
-             "/tracking/verbose 0",
-             "/tracking/storeTrajectory  1",
-             "/process/eLoss/verbose -1" ]
+         if not skipG4:
+             giga.RunSeq.addTool( TrCutsRunAction("TrCuts") , name = "TrCuts" )
+             giga.RunSeq.Members += [ "TrCutsRunAction/TrCuts" ] 
+             giga.RunSeq.addTool( GiGaRunActionCommand("RunCommand") , name = "RunCommand" ) 
+             giga.RunSeq.Members += [ "GiGaRunActionCommand/RunCommand" ]
+             giga.RunSeq.RunCommand.BeginOfRunCommands = [
+                 "/tracking/verbose 0",
+                 "/tracking/storeTrajectory  1",
+                 "/process/eLoss/verbose -1" ]
 
          giga.EventAction = "GiGaEventActionSequence/EventSeq"
          giga.addTool( GiGaEventActionSequence("EventSeq") , name="EventSeq" ) 
@@ -2839,12 +2847,13 @@ class Gauss(LHCbConfigurableUser):
              if [det for det in ['Rich1', 'Rich2'] if det in self.getProp('DetectorSim')['Detectors']]:
                  importOptions("$GAUSSRICHROOT/options/Rich.opts")
              else:
-                 giga.ModularPL.addTool( GiGaPhysConstructorOp,
-                                         name = "GiGaPhysConstructorOp" )
-                 giga.ModularPL.addTool( GiGaPhysConstructorHpd,
-                                         name = "GiGaPhysConstructorHpd" )
-                 giga.ModularPL.GiGaPhysConstructorOp.RichOpticalPhysicsProcessActivate = False
-                 giga.ModularPL.GiGaPhysConstructorHpd.RichHpdPhysicsProcessActivate = False
+                 if not skipG4:
+                     giga.ModularPL.addTool( GiGaPhysConstructorOp,
+                                             name = "GiGaPhysConstructorOp" )
+                     giga.ModularPL.addTool( GiGaPhysConstructorHpd,
+                                             name = "GiGaPhysConstructorHpd" )
+                     giga.ModularPL.GiGaPhysConstructorOp.RichOpticalPhysicsProcessActivate = False
+                     giga.ModularPL.GiGaPhysConstructorHpd.RichHpdPhysicsProcessActivate = False
 
              if [det for det in ['Rich1', 'Rich2'] if det in self.getProp('DetectorSim')['Detectors']]:
                  giga.ModularPL.addTool( GiGaPhysConstructorOp,
@@ -2908,6 +2917,11 @@ class Gauss(LHCbConfigurableUser):
         if "GenToMCTree" not in self.getProp("Phases"):
             log.warning("No GenToMCTree phase.")
             return
+
+        # Do not do detector simulation in this case
+        self.getProp('DetectorSim')['Detectors'] = []
+        self.getProp('DetectorGeo')['Detectors'] = []
+        self.getProp('DetectorMoni')['Detectors'] = []
         
         ApplicationMgr().ExtSvc += [ "GiGa" ]
 
@@ -2915,7 +2929,7 @@ class Gauss(LHCbConfigurableUser):
         gaussSeq = GaudiSequencer("GaussSequencer")
         gaussSeq.Members += [ gaussSkipGeant4Seq ]
 
-        self.configureGiGa()
+        self.configureGiGa( True )
 
         for slot in SpillOverSlots:
 
@@ -2950,11 +2964,6 @@ class Gauss(LHCbConfigurableUser):
                 packing = GaudiSequencer(self.slotName(slot)+"EventDataPacking")
                 skipGeant4SlotSeq.Members += [ packing ]
                 SimConf().PackingSequencers[slot] = packing
-
-
-
-
-
 
 
 #"""

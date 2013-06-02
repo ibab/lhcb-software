@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension
+  PUBLIC '-//QM/2.4.1/Extension//EN'
+  'http://www.codesourcery.com/qm/dtds/2.4.1/-//qm/2.4.1/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="timeout"><integer>1800</integer></argument>
+<argument name="reference"><text/></argument>
+<argument name="stdout"><text/></argument>
+<argument name="prerequisites"><set/></argument>
+<argument name="args"><set>
+	<text>$GAUSSOPTS/Gauss-2012.py</text>
+	<text>$DECFILESROOT/options/42112002.py</text>
+	<text>$LBPYTHIAROOT/options/Pythia.py</text>
+	<text>$GAUSSOPTS/GenStandAlone.py</text>
+	<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
+  	<text>$GAUSSROOT/tests/options/testGauss-gen-100evts-defaults.py</text>
+</set></argument>
+<argument name="exit_code"><integer>0</integer></argument>
+<argument name="use_temp_dir"><enumeral>false</enumeral></argument>
+<argument name="error_reference"><text/></argument>
+<argument name="environment"><set/></argument>
+<argument name="unsupported_platforms"><set/></argument>
+<argument name="workdir"><text/></argument>
+<argument name="stderr"><text/></argument>
+<argument name="options"><text></text></argument>
+<argument name="validator"><text>
+expected_string = &quot;Application Manager Terminated successfully&quot;
+if stdout.find(expected_string) == -1:
+	causes.append('missing string')
+	result['GaudiTest.expected_string'] = result.Quote(expected_string)
+else:
+	expected_string2 = &quot;100 events processed&quot;
+	if stdout.find(expected_string2) == -1:
+		causes.append('missing string')
+		result['GaudiTest.expected_string'] = result.Quote(expected_string2)
+</text></argument>
+<argument name="resources"><set/></argument>
+<argument name="stdin"><text/></argument>
+</extension>

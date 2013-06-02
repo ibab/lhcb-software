@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-06-02 - Patrick Robbe
+ - python/Gauss/Configuration.py: clean configuration for .xgen file
+   generation
+ - QMTests: new sets of tests replacing the generator tests. Only the
+   output status is checked, not the standard out
+
 !========================== Gauss v46r2 2013-05-30 ===========================
 ! 2013-05-08 - Paul Szczypka
  - Add IT back into TrackingSystem list.
