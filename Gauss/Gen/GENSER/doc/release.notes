@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2013-06-02 - Patrick Robbe
+ - Use LHAPDF version 5.8.9 instead of 5.8.8
+
 !========================= GENSER v12r4p1 2013-04-04 =========================
 ! 2013-04-04 - Gloria Corti
  - Make a patch release with no difference with respect to v12r4 to allow 
