@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v17r10 2013-06-03 =========================
 ! 2013-05-28 - Chris Jones
  - Add explicit dependency on L0/L0DU to satisfy runtime requirement for 
    DAQ decoding.
