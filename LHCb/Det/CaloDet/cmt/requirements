@@ -1,6 +1,6 @@
-# =============================================================================
+# ========================================================================
 package           CaloDet 
-version           v10r16
+version           v10r16p1
 
 # =============== structure ===================================================
 branches         src cmt doc options CaloDet dict
@@ -23,7 +23,7 @@ library          CaloDetLib        Lib/*.cpp
 # =============== component library ===========================================
 library          CaloDet           component/*.cpp
 
-#================ patterns ====================================================
+#================ patterns ===================================================
 apply_pattern component_library library=CaloDet
 apply_pattern linker_library    library=CaloDetLib
 
