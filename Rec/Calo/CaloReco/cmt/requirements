@@ -1,6 +1,6 @@
-# =============================================================================
+# ========================================================================
 package            CaloReco
-version           v5r16
+version           v5r16p1
 
 # ================ structure ==================================================
 branches           cmt doc src options 
@@ -19,7 +19,7 @@ library            CaloReco    *.cpp
 # ================ standard patterns ==========================================
 apply_pattern      component_library library=CaloReco
 apply_pattern      install_python_modules
-# =============================================================================
+# ========================================================================
 
 # Set the default path for Brunel options.
 set CALORECOOPTS ${CALORECOROOT}/options

@@ -4,6 +4,7 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================= CaloReco v5r16p1 2013-06-03 =======================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warnings
 
