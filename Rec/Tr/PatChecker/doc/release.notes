@@ -4,6 +4,7 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================= PatChecker v3r14p1 2013-06-03 =========================
 ! 2013-05-24 - Marco Cattaneo
  - Add missing PatKernel dependency
 
