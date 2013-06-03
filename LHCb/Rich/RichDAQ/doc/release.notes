@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================= RichDAQ v3r41 2013-06-03 =========================
 ! 2013-05-20 - Chris Jones
  - Import Rich::DAQ::RawBufferToRichDigitsAlg from Rich/RichAlgorithms
 
