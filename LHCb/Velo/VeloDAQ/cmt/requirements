@@ -2,15 +2,15 @@
 # Maintainer : David Hutchcroft, Kurt Rinnert
 #
 package           VeloDAQ
-version           v6r9p1
+version           v6r10
 
 # Structure, i.e. directories to process. 
-#===========================================================================
+#=========================================================================
 branches cmt doc src 
 include_path none
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
-#============================================================================
+#=========================================================================
 use  VeloDet      v*  Det
 use  DAQEvent     v*  Event
 use  VeloEvent    v*  Event	-no_auto_imports
@@ -21,7 +21,7 @@ use  RecEvent     v*  Event
 
 
 # Component library building rule
-#============================================================================
+#=========================================================================
 library          VeloDAQ    ../src/*.cpp
 
 apply_pattern component_library library=VeloDAQ
