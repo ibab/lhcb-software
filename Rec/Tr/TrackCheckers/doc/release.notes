@@ -4,6 +4,7 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+!========================= TrackCheckers v4r17 2013-06-03 =========================
 ! 2013-05-24 - Marco Cattaneo
  - Add missing PatKernel dependency
 
