@@ -1,9 +1,9 @@
 #========================================================================
 # Created    : 2008-11-18
-# Maintainer : Olivier Callot, Chris Jones
+# Maintainer : Chris Jones
 #========================================================================
 package           EventPacker
-version           v3r0
+version           v3r1
 
 #========================================================================
 # Structure, i.e. directories to process.

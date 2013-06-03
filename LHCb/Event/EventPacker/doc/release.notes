@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v3r1 2013-06-03 =========================
 ! 2013-05-20 - Chris Jones
  - Fix bug in WritePackedDst where && insead of & was accidentally used.
 
