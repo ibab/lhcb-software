@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CondDBEntityResolver
 ################################################################################
-gaudi_subdir(CondDBEntityResolver v5r5)
+gaudi_subdir(CondDBEntityResolver v5r6)
 
 gaudi_depends_on_subdirs(Det/DetCond
                          Tools/XmlTools)
