@@ -2,7 +2,7 @@
 # Maintainer : Marco Cattaneo
 #
 package           MCEvent
-version           v2r25
+version           v2r26
 branches          cmt doc src xml Event dict
 
 # Used packages. 
