@@ -122,8 +122,10 @@ string DD4hep::XML::_toString(const XmlChar *toTranscode)  {
 namespace {
   Attribute attribute_node(XmlElement* n, const XmlChar* t) { return Attribute(_E(n)->getAttributeNode(t)); }
   const XmlChar* attribute_value(Attribute a)               { return Xml(a).a->getValue();           }
+#if 0
   int          node_type(XmlNode* n)                        { return Xml(n).n->getNodeType();        }
   int          node_type(Handle_t n)                        { return Xml(n.ptr()).n->getNodeType();  }
+#endif
 }
 
 string DD4hep::XML::_toString(Attribute attr)  {
