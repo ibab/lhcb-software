@@ -18,11 +18,12 @@ N.B.: Project dependencies have changed. Rec now depends on Lbcom
    Rich/RichHPDImageAnalysis v1r13p1, Rich/RichIFBAnalysis v1r4,
    Rich/RichParticleSearch v1r12, Rich/RichRecMCTools v2r31, 
    Rich/RichRecQC v2r62, Rich/RichRecTools v4r22, Rich/RichRecTrackTools v1r35,
-   Tf/PatPixel v1r1, Tf/PatVelo v3r28p1, Tf/PatVeloTT v4r0, Tf/TfTools v1r18p1,
-   Tf/TrackMatching v2r35p2, Tf/TrackSeeding v1r7p1, Tf/TrackSys v7r11p1,
-   Tf/TsaAlgorithms v3r27p2, Tr/PatChecker v3r14p1, Tr/TrackKernel v1r15,
-   Tr/TrackMCTools v3r4, Tr/TrackMonitors v1r44p1, Tr/TrackTools v4r24,
-   Tr/TrackUtils v1r52p1, Velo/VeloRecMonitors v2r25
+   Tf/PatAlgorithms v4r26p2, Tf/PatPixel v1r1, Tf/PatVelo v3r28p1,
+   Tf/PatVeloTT v4r0, Tf/TfTools v1r18p1, Tf/TrackMatching v2r35p2,
+   Tf/TrackSeeding v1r7p1, Tf/TrackSys v7r11p1, Tf/TsaAlgorithms v3r27p2,
+   Tr/PatChecker v3r14p1, Tr/TrackKernel v1r15, Tr/TrackMCTools v3r4,
+   Tr/TrackMonitors v1r44p1, Tr/TrackTools v4r24, Tr/TrackUtils v1r52p1,
+   Velo/VeloRecMonitors v2r25
 
 - In Calo/CaloPIDs v5r14
   . Remove 'do nothing' finalize methods
@@ -94,9 +95,10 @@ N.B.: Project dependencies have changed. Rec now depends on Lbcom
      Rec/LumiAlgs v8r1p2, Rec/RecoUpgrade v3r1p2, Rec/RecoUpgradeMC v2r1p1,
      Rich/RichHPDImageAnalysis v1r13p1, Rich/RichIFBAnalysis v1r4,
      Rich/RichRecMCTools v2r31, Rich/RichRecTools v4r22, 
-     Rich/RichRecTrackTools v1r35, Tf/PatVelo v3r28p1, Tf/TrackMatching v2r35p2,
-     Tf/TrackSeeding v1r7p1, Tf/TsaAlgorithms v3r27p2, Tr/TrackMonitors v1r44p1,
-     Tr/TrackTools v4r24, Tr/TrackUtils v1r52p1, Velo/VeloRecMonitors v2r25
+     Rich/RichRecTrackTools v1r35, Tf/PatAlgorithms v4r26p2, Tf/PatVelo v3r28p1,
+     Tf/TrackMatching v2r35p2, Tf/TrackSeeding v1r7p1, Tf/TsaAlgorithms v3r27p2,
+     Tr/TrackMonitors v1r44p1, Tr/TrackTools v4r24, Tr/TrackUtils v1r52p1,
+     Velo/VeloRecMonitors v2r25
   . Fix clang32 warnings
 
 </PRE><H1><A NAME=v14r6>2013-04-30 RecSys v14r6</A></H1><PRE>

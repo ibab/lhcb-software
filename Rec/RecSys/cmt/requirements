@@ -71,7 +71,7 @@ use FstTools             v1r0    Sft  # Yasmine Amhis
 
 # Tf packages: Track Pattern Recognition
 use FastVelo             v1r12   Tf   # ??
-use PatAlgorithms        v4r26p1 Tf   # Stephanie Hansmann-Menzemer
+use PatAlgorithms        v4r26p2 Tf   # Stephanie Hansmann-Menzemer
 use PatKernel            v2r6    Tf   # Stephanie Hansmann-Menzemer
 use PatPixel             v1r1    Tf   # Pavel Jalocha
 use PatVelo              v3r28p1 Tf   # David Hutchcroft
