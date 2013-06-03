@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackUtils
 ################################################################################
-gaudi_subdir(TrackUtils v1r52)
+gaudi_subdir(TrackUtils v1r52p1)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Det/OTDet
