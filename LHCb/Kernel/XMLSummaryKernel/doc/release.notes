@@ -4,6 +4,9 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2013-06-03 - Marco Cattaneo
+ - Follow move to python2.7 (LCG 56), changes format of <summary> entity 
+
 !========================= XMLSummaryKernel v1r10 2013-04-29 =========================
 ! 2013-04-23 - Marco Clemencic
  - Fixed Eclipse static analyzer warning.
