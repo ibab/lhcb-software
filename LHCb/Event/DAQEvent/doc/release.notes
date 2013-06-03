@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+!========================= DAQEvent v9r12p1 2013-06-03 =========================
 ! 2013-05-23 - Marco Cattaneo
  - Updated comment on ODIN::triggerConfigurationKey to alert users that this is
    the requested value but not necessarily the value actually used by Moore, 
