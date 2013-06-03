@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Event/LinkerEvent
-! Responsible : Olivier Callot
+! Responsible : 
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!========================= LinkerEvent v3r10p1 2013-06-03 =======================
 ! 2013-05-06 - Marco Cattaneo
  - Replace endreq by endmsg
 

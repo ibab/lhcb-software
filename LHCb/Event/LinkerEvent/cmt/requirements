@@ -1,30 +1,30 @@
-#============================================================================
+#=========================================================================
 # Created    : 2003-12-17
-# Maintainer : Olivier Callot
-#============================================================================
+# Maintainer : 
+#=========================================================================
 package           LinkerEvent
-version           v3r10
+version           v3r10p1
 
 branches          cmt doc src Event Linker xml
 
 # Used packages.
-#============================================================================
+#=========================================================================
 use LHCbKernel  v*  Kernel	
 private
 use GaudiObjDesc  v*   -no_auto_imports
 end_private
 
 # Produce Header-Files and from XML description
-#============================================================================
+#=========================================================================
 apply_pattern god_headers files=../xml/*.xml
 apply_pattern install_more_includes more=Event offset=Linker
 
 # Generate dictionaries with lcgdict via GOD
-#============================================================================
+#=========================================================================
 macro LinkerEventDict_dependencies LinkerEvent
 apply_pattern god_dictionary files=../xml/*.xml
 
 # Make the linker library
-#============================================================================
+#=========================================================================
 library          LinkerEvent    *.cpp
 apply_pattern    linker_library library=LinkerEvent
