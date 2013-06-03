@@ -1,10 +1,10 @@
-# =============================================================================
+# ========================================================================
 # Created    : 02/11/2001
 # Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
-# =============================================================================
+# ========================================================================
 package           CaloUtils
-version           v9r6
+version           v10r0
 
 # ================= structure =================================================
 branches            cmt doc src python CaloUtils
@@ -36,11 +36,6 @@ apply_pattern       reflex_dictionary                                     \
                     selectionfile=$(CALOUTILSROOT)/dict/CaloUtils.xml     \
                     options=" -U__MINGW32__ "
 
-# ================= patterns ==================================================
+# ================= patterns =================================================
 apply_pattern       linker_library library=CaloUtils
-
 macro_append CaloUtils_shlibflags " -lHist  -lGraf -lRIO  " WIN32 " libHist.lib libGraf.lib libRIO.lib"
-
-# ============================================================================
-# The END
-# ============================================================================
