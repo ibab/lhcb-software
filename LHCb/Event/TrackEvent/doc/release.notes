@@ -1,9 +1,10 @@
 !-------------------------------------------------------------------------------
 ! Package     : Event/TrackEvent
-! Responsible : M.Needham, W.Hulsbergen
+! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
 
+!========================= TrackEvent v5r22 2013-06-03 =========================
 ! 2013-05-27 - Wouter Hulsbergen
  - Added function State::linearTransportTo.
 
