@@ -207,8 +207,8 @@ int DialogMainDisplay::print (const string& printer)  {
       }
     }
     text[width()] = 0;
-    fprintf(destination, text);
-    fprintf(destination,"\n");
+    fputs(text,destination);
+    fputs("\n",destination);
   }
   if ( destination != stdout ) {
     string ThePrinterQueue(printer.empty() ? "LWACR$TEXT_132" : printer);
