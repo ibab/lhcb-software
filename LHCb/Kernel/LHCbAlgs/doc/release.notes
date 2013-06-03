@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v2r58 2013-06-03 =========================
 ! 2013-05-07 - Marco Cattaneo
  - Fix clang32 warnings, remove some unnecessary includes
 
