@@ -1,9 +1,9 @@
-# =============================================================================
+# ========================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version           v14r0
+version           v14r1
 
 branches cmt doc Event Kernel src xml
 
@@ -19,7 +19,7 @@ use GaudiAlg     v* -no_auto_imports
 end_private
 
 # Produce Header-Files from XML description, overriding default destination
-#============================================================================
+#=========================================================================
 macro LHCbKernelObj2Doth_GODflags " -s ../Kernel/ " \
       WIN32                       " -s ..\Kernel\ "
 apply_pattern  god_headers files=../xml/*.xml
@@ -27,22 +27,22 @@ apply_pattern  install_more_includes more=Kernel offset=Event
 apply_pattern  install_python_modules
 
 # Declare fragment for adding custom dictionary to GOD generated ones
-#============================================================================
+#=========================================================================
 make_fragment customdict -header=customdict_header -trailer=customdict_trailer
 
 # Make custom dictionary. Must be before GOD generation
-#============================================================================
+#=========================================================================
 document customdict LHCbKernelCustomDict ../dict/LHCbKernelDict.h
 macro_append LHCbKernelObj2Dict_dependencies LHCbKernelCustomDict
 
 # Generate remaining dictionaries with lcgdict via GOD
-#============================================================================
+#=========================================================================
 macro LHCbKernelObj2Dict_GODflags " -s ../Kernel/ " \
       WIN32                       " -s ..\Kernel\ "
 apply_pattern god_dictionary files=../xml/*.xml
 
 # Build linker library
-#============================================================================
+#=========================================================================
 library LHCbKernel     *.cpp          -import=GaudiAlg
 apply_pattern linker_library    library=LHCbKernel
 
@@ -59,7 +59,7 @@ macro_append LHCbKernel_dictionary_dict_pp_cppflags "" \
 macro_append Boost_linkopts " $(Boost_linkopts_system) "
 
 # RichSmartID Debug Application
-#============================================================================
+#=========================================================================
 application RichSmartIDTest ../src/Test/RichSmartIDTest/*.cpp
 macro_append RichSmartIDTest_dependencies " LHCbKernel "
 
