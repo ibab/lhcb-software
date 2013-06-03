@@ -4,6 +4,7 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+!========================= CaloPIDs v5r14 2013-06-03 =========================
 ! 2013-05-13 - Marco Cattaneo
  - Fix include paths following previous change
  - Remove 'do nothing' finalize methods
