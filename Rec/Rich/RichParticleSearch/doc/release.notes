@@ -4,6 +4,7 @@
 ! Purpose     : Find exotic particles with the RICHes. Get Nobel price.
 !-----------------------------------------------------------------------------
 
+!========================= RichParticleSearch v1r12 2013-06-03 ========================
 ! 2013-05-13 - Chris Jones
  - Fix an error in the argument order passed to plot1D.
  - Remove unused class data member.
