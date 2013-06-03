@@ -1,9 +1,9 @@
-#============================================================================
+#=========================================================================
 # Created    : 2005-04-22
 # Maintainer : Jeroen van Tilburg
-#============================================================================
+#=========================================================================
 package           STTools
-version           v4r14p1
+version           v4r14p2
 
 branches          cmt doc src options python
 include_path      none
@@ -21,9 +21,9 @@ use LinkerEvent       v*   Event
 use MCEvent          v* Event
 use STTELL1Event     v* ST
 
-#============================================================================
+#=========================================================================
 # Component library building rule
-#============================================================================
+#=========================================================================
 library          STTools    ../src/*.cpp -import=AIDA
 apply_pattern    install_python_modules
 apply_pattern    component_library library=STTools
