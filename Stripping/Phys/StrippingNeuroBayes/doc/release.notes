@@ -4,6 +4,9 @@ i!-----------------------------------------------------------------------------
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+! 2013-06-03 - Chris Jones
+ - Fix incorrect use of = instead of == in equality statement (clang warning).
+
 !========================= StrippingNeuroBayes v1r8 2013-04-05 =========================
 
 ! 2013-03-03 - Chris Jones
