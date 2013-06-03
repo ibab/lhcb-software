@@ -4,6 +4,7 @@
 ! Purpose     : Fit parameters for the pattern
 !-----------------------------------------------------------------------------
 
+!========================= PrFitParams v1r2 2013-06-03 =========================
 ! 2013-05-27 - Marco Cattaneo
  - Fix uninitialised variable (seen by both clang32 and Coverity)
  - Fix UNINIT_CTOR defects
