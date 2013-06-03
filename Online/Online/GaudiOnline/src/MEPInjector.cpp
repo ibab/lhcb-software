@@ -1366,7 +1366,8 @@ StatusCode MEPInjector::readThenSend() {
 int MEPInjector::getMTU(int netdev) {
     struct ifreq eth1req;
     char netdev_name[10];
-    sprintf(netdev_name, netdev < 0 ? "lo" : "eth%d", netdev);
+    if ( netdev<0 ) ::snprintf(netdev_name, sizeof(netdev_name), "lo");
+    else            ::snprintf(netdev_name, sizeof(netdev_name), "eth%d", netdev);
     strcpy(eth1req.ifr_name, netdev_name);
     ioctl(m_ToHLTSock, SIOCGIFMTU, &eth1req);
 
@@ -2048,7 +2049,7 @@ StatusCode MEPInjector::receiveMEPReq(char *req) {
     }
     if (len != MEP_REQ_LEN + IPHDRSZ) {
 	ERRMSG(msgLog, " Packet received is not a MEP Request ");
-        memset(req, 0, sizeof(req));
+        memset(req, 0, MEP_REQ_LEN + IPHDRSZ);
         return StatusCode::RECOVERABLE;
     }
     msgLog << MSG::DEBUG<<"MEP REQUEST RECEIVED"<<endmsg;

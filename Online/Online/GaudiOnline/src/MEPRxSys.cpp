@@ -209,7 +209,8 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
 #endif
     if (myaddr == INADDR_NONE) {
 #ifdef linux
-        sprintf(netdev_name, netdev < 0 ? "lo" : "eth%d", netdev);
+        if ( netdev<0 ) ::snprintf(netdev_name, sizeof(netdev_name), "lo");
+        else            ::snprintf(netdev_name, sizeof(netdev_name), "eth%d", netdev);
         if (setsockopt(retSockFd, SOL_SOCKET, SO_BINDTODEVICE, (void *) netdev_name,
                        1 + strlen(netdev_name))) {
             errmsg = "setsockopt SO_BINDTODEVICE";
@@ -448,7 +449,8 @@ open_sock_arb_source(int ipproto, int rxbufsiz, std::string &errmsg)
     }
     char netdev_name[10];
     int netdev = 1;
-    sprintf(netdev_name, netdev < 0 ? "lo" : "eth%d", netdev);
+    if ( netdev<0 ) ::snprintf(netdev_name, sizeof(netdev_name), "lo");
+    else            ::snprintf(netdev_name, sizeof(netdev_name), "eth%d", netdev);
 #ifndef _WIN32
     if (setsockopt(raw_socket, SOL_SOCKET, SO_BINDTODEVICE, (void *) netdev_name,
                    1 + strlen(netdev_name))) {
