@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MuonTools
 ################################################################################
-gaudi_subdir(MuonTools v5r4)
+gaudi_subdir(MuonTools v5r5)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Muon/MuonDAQ
