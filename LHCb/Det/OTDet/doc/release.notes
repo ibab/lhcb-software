@@ -1,7 +1,8 @@
 ! Package     : OTDet
-! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
+! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+!========================= OTDet v8r10 2013-06-03 =========================
 ! 2013-05-30 - Alexandr Kozlinskiy
  - Implementation of mono-layer alignment ('MonoAlignment' parameters
    stored toghether with t0 parameters and describe offset and rotation
