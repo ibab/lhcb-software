@@ -4,10 +4,11 @@
 ! Purpose     : HPD image analysis from accumulated hit maps
 !-----------------------------------------------------------------------------
 
+!========================= RichHPDImageAnalysis v1r13p1 2013-06-03 ====================
 ! 2013-05-13 - Chris Jones
  - Fix clang32 unused class data member warnings.
 
-!========================= RichHPDImageAnalysis v1r13 2012-11-28 =========================
+!========================= RichHPDImageAnalysis v1r13 2012-11-28 =====================
 ! 2012-11-26 - Chris Jones
  - Update HPD image alignment scripts.
 
@@ -15,7 +16,7 @@
  - Added CMake configuration file.
  - Modified requirements to simplify auto conversion to CMake.
 
-!========================= RichHPDImageAnalysis v1r12 2012-10-02 =========================
+!========================= RichHPDImageAnalysis v1r12 2012-10-02 =====================
 ! 2012-10-02 Chris Jones
  - Various updates to the image analysis code and scripts
 
