@@ -1,5 +1,5 @@
 package           DetCondExample
-version           v11r12
+version           v11r13
 
 branches doc src options cmt XMLDDDB python logs
 ignore_pattern package_stamps
