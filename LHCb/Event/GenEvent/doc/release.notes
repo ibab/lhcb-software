@@ -3,6 +3,7 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+!========================= GenEvent v6r7 2013-06-03 =========================
 ! 2013-04-30 - Chris Jones
  - Avoid multiple return statements in inline methods, as this effectively
    garantees the compiler will not inline the code.
