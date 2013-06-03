@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r62 2013-06-03 =========================
 ! 2013-05-28 - Chris Jones
  - Fix clang warning (incorrect use of + instead of << with ostringstream).
 
