@@ -4,35 +4,36 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+!========================= XMLSummaryKernel v1r11 2013-06-03 =======================
 ! 2013-06-03 - Marco Cattaneo
  - Follow move to python2.7 (LCG 56), changes format of <summary> entity 
 
-!========================= XMLSummaryKernel v1r10 2013-04-29 =========================
+!========================= XMLSummaryKernel v1r10 2013-04-29 =======================
 ! 2013-04-23 - Marco Clemencic
  - Fixed Eclipse static analyzer warning.
 
-!========================= XMLSummaryKernel v1r9 2012-11-26 =========================
+!========================= XMLSummaryKernel v1r9 2012-11-26 ========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= XMLSummaryKernel v1r8 2012-09-28 =========================
+!========================= XMLSummaryKernel v1r8 2012-09-28 ========================
 ! 2012-09-26 - Marco Clemencic
  - Removed transient QMTest directory.
 
 ! 2012-08-08 - Marco Clemencic
  - Added python/XMLSummaryKernel/__init__.py.
 
-!========================= XMLSummaryKernel v1r7 2012-07-24 =========================
+!========================= XMLSummaryKernel v1r7 2012-07-24 ========================
 ! 2012-07-20 - Rob Lambert
  - Add fillUsage in finalize to make sure the __final__ memory footprint is written.
 
-!========================= XMLSummaryKernel v1r6 2012-03-22 =========================
+!========================= XMLSummaryKernel v1r6 2012-03-22 ========================
 ! 2012-03-19 - Roel Aaij
  - Make the type of incident used for begin and end event configurable with a default
    to the standard types.
  - Remove UNLIKELY macros.
 
-!========================= XMLSummaryKernel v1r5 2012-02-28 =========================
+!========================= XMLSummaryKernel v1r5 2012-02-28 ========================
 ! 2012-02-14 - Marco Cattaneo
  - Use xrootd instead of rfio to read test file
  - Add missing QMTest run time dependency on DDDB

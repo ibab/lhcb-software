@@ -1,13 +1,11 @@
 # Created    : 07/07/2009
 # Maintainer : R. Lambert
-#
-
-#============================================================================
+#=========================================================================
 package           XMLSummaryKernel 
-version           v1r10
+version           v1r11
 
 # Structure, i.e. directories to process. 
-#============================================================================
+#=========================================================================
 branches          cmt doc src options python tests
 
 # Packages needed to compile and link the application
@@ -22,9 +20,7 @@ macro_append Boost_linkopts " $(Boost_linkopts_regex) "
 library XMLSummaryKernel *.cpp -import=Python
 
 # define link options
-#============================================================================
-#
-
+#=========================================================================
 apply_pattern component_library library=XMLSummaryKernel
 apply_pattern install_python_modules
 apply_pattern QMTest
