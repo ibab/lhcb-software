@@ -1,6 +1,6 @@
-# =============================================================================
+# ========================================================================
 package           DetCond
-version           v12r30
+version           v12r31
 
 # =========== structure =======================================================
 branches      DetCond doc cmt src
@@ -55,7 +55,7 @@ path_prepend PYTHONPATH ${DETCONDROOT}/genConf
 end_private
 apply_pattern install_python_modules
 
-# ==============================================================================
+# ========================================================================
 private
 
 macro_append DetCond_use_linkopts " $(Boost_linkopts_thread) $(Boost_linkopts_filesystem_mt) $(Boost_linkopts_date_time) "
