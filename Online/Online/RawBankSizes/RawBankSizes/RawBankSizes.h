@@ -73,7 +73,7 @@ namespace LHCb
     IHistogram1D *h_totev[HISTPERHIST];
     IProfile1D *p_banks[HISTPERHIST];
     IHistogram1D *h_HLTratio[HISTPERHIST];
-    IProfile1D *p_HLTratio[HISTPERHIST];
+    //IProfile1D *p_HLTratio[HISTPERHIST];
     int n_ev;
     bool first_few;
     int m_nRMS;
