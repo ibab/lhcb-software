@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r40 2013-06-03 =========================
 ! 2013-05-18 - Vanya Belyaev
  - Types.py: minor fix in symmatrix alias 
 
