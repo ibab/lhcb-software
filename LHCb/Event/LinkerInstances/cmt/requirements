@@ -3,7 +3,7 @@ package LinkerInstances
 author  Stefan Roiser
 manager Thomas Ruf
 
-version           v3r7
+version           v3r7p1
 branches cmt dict doc python xml 
 
 use LinkerEvent  v*    Event
