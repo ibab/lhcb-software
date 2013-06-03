@@ -1,7 +1,7 @@
 ################################################################################
 # Package: STAlgorithms
 ################################################################################
-gaudi_subdir(STAlgorithms v4r6)
+gaudi_subdir(STAlgorithms v4r6p1)
 
 gaudi_depends_on_subdirs(Det/STDet
                          Event/DigiEvent
