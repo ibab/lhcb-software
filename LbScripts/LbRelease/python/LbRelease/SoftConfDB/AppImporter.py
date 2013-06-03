@@ -4,6 +4,7 @@ A script to add a project to the Software Configuration DB
 
 """
 import logging
+import os
 import re
 
 from LbConfiguration.Repository import getRepositories
@@ -33,6 +34,7 @@ class AppImporter:
         # Creating the SoftConfDB Object
         self.mConfDB = SoftConfDB()
         self.log = logging.getLogger()
+        self.installArea = None
 
     def recurseDependencies(self, project, version, alreadyDone = []):
         """ Recursively traverse all dependencies.
@@ -59,18 +61,23 @@ class AppImporter:
         self.log.debug("getDeps %s %s" % (p, v))
         (proj,ver)=translateProject(p,v)
         tagpath = ""
-        if proj.upper() == "GAUDI":
-            tagpath = gaudisvn.url(proj,ver, isProject=True)
-        elif proj.upper() == "LHCBDIRAC" or proj.upper() == "DIRAC":
-            tagpath = diracsvn.url(proj,ver, isProject=True)
+
+        # Getting the project.cmt file with dependencies
+        if proj.upper() == "GANGA":
+            projcmt = self.getGangaProjectCMT(ver)
         else:
-            tagpath=lbsvn.url(proj,ver, isProject=True)
-        self.log.debug("SVN PATH:" + tagpath)
-        # Get the project.cmt file and parse it to retrieve the dependencies
-        #if not tagpath.endswith("cmt"):
-        #    tagpath += "/cmt"
-        projcmt=getProjectCmt(tagpath).strip()
-        self.log.warn(tagpath)
+            if proj.upper() == "GAUDI":
+                tagpath = gaudisvn.url(proj,ver, isProject=True)
+            elif proj.upper() == "LHCBDIRAC" or proj.upper() == "DIRAC":
+                tagpath = diracsvn.url(proj,ver, isProject=True)
+            else:
+                tagpath=lbsvn.url(proj,ver, isProject=True)
+            self.log.debug("SVN PATH:" + tagpath)
+            # Get the project.cmt file and parse it to retrieve the dependencies
+            #if not tagpath.endswith("cmt"):
+            #    tagpath += "/cmt"
+            projcmt=getProjectCmt(tagpath).strip()
+            self.log.warn(tagpath)
         deps = []
         for l in projcmt.splitlines():
             m = re.match("\s*use\s+(\w+)\s+([\w\*]+)", l)
@@ -100,6 +107,17 @@ class AppImporter:
             self.log.warning("Adding dependency (%s, %s)-[:REQUIRES]->(%s, %s)" % (proj, ver, dp, dv))
             self.mConfDB.addRequires(node_parent, node_child)
         return deps
+
+    def getGangaProjectCMT(self, gangaVersion):
+        """ Reads the Project.cmt file for Ganga """
+        if self.installArea == None:
+            raise Exception("Can only get Ganga dependencies from an install area! - Set it on the AppImporter first...")
+
+        pname = "GANGA"
+        f = open(os.path.join(self.installArea, pname, pname + "_" + gangaVersion, "cmt", "project.cmt"), "r")
+        txt = f.read()
+        f.close()
+        return txt
 
 def getPathLastRev(path):
     rev = None

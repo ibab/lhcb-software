@@ -1,3 +1,8 @@
+2013-06-03  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbRelease/SoftConfDB/AppImported.py: Added workaround
+	to find Ganga dependencies.
+
 2013-05-31  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbRelease/SoftConfDB: Proptotype now includes
