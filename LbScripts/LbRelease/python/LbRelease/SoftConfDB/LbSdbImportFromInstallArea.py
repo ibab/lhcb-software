@@ -27,6 +27,10 @@ class LbSdbImportFIA(Script):
                           action = "store",
                           default="30",
                           help = "Number of days to include in the search. Only the ones more recent are added. -1 means all of them")
+        parser.add_option("-c",
+                          dest = "checkactive",
+                          action = "store_true",
+                          help = "reset the active flag for all entries in the install area")
         parser.add_option("-a",
                           dest = "installarea",
                           action = "store",
@@ -59,23 +63,30 @@ class LbSdbImportFIA(Script):
             self.log.error("Could not find install area to process")
             sys.exit(1)
         self.log.warn("Processing Install Area: %s" % installareapath)
+        self.installareapath = installareapath
 
         # Setting the number of days
         nbdays = int(opts.nbdays)
-        self.log.warn("Importing projects newer than %s days" % nbdays)
 
         # Creating the object to import dependencies
         self.mAppImporter = AppImporter()
+        self.mAppImporter.installArea = self.installareapath
 
         if len(args) > 0 and len(args) < 2:
-            self.log.error("PLease specify the -t option or a project and version")
+            self.log.error("Please specify the -c or -t options, or a project and version")
             sys.exit(1)
 
         projects = []
         if len(args) > 0:
             projects.append((args[0].upper(), args[1]))
         else:
-            projects = self.findRecentReleases(installareapath, nbdays)
+            if self.options.checkactive:
+                self.log.warn("Checking the install area to know which projects are installed" % nbdays)
+                projects = self.resetActiveFlag(installareapath)
+                sys.exit(0)
+            else:
+                self.log.warn("Importing projects newer than %s days" % nbdays)
+                projects = self.findRecentReleases(installareapath, nbdays)
 
         for (p, v) in projects:
             if opts.blank:
@@ -119,9 +130,44 @@ class LbSdbImportFIA(Script):
         return ret
 
 
+    def resetActiveFlag(self, path):
+        """ Set the Active flag correctly based on an install area """
+
+        # First clear everything...
+        # We use a btach to submit all actions at the same time
+        confDB = self.mAppImporter.mConfDB
+        batch = confDB.getWriteBatch()
+        confDB.deleteActiveLinks(batch)
+
+        projCounter = 0
+        # First find projects
+        for projdir in os.listdir(path):
+            # Checking if this corresponds to an existing project...
+            proj = None
+            try:
+                proj = getProject(projdir)
+            except:
+                pass
+
+            # If yes, then process it...
+            if proj != None:
+                releases = self.findRecentReleasesForProject(os.path.join(path, projdir), projdir, -1)
+                for (p,v) in releases:
+                    try:
+                        confDB.setPVActive(p, v, batch)
+                        projCounter += 1
+                    except:
+                        self.log.warning("Ignoring %s %s" % (p, v))
+        # Now submitting the batch
+        batch.submit()
+        self.log.warning("Added %s projects" %projCounter)
+
+
+
+
     def findRecentReleasesForProject(self, path, project, nbdays):
         """ Iterate though the projects directories
-        newer than nbdays """
+        newer than nbdays (-1 means all...)"""
         ret = []
         now = datetime.now()
         delta =timedelta (days = nbdays)

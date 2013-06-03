@@ -32,6 +32,10 @@ class SoftConfDB(object):
         # Only lookup the main nodes/indices if needed
         self.setupDone = False
 
+    def getWriteBatch(self):
+        """ Returns a write batch for this DB """
+        return neo4j.WriteBatch(self.mNeoDB)
+
 
     def runCypher(self, query, handler):
         ''' Run a cypher query on the Neo4j DB'''
@@ -252,7 +256,6 @@ class SoftConfDB(object):
             elif r.is_type("PATTERN"):
                 patternNodes[r.end_node.get_properties()["version"]] = r.end_node
 
-
         for p in patternNodes.keys():
 
             node_pattern = patternNodes[p]
@@ -272,15 +275,18 @@ class SoftConfDB(object):
                 node_version = versionNodes[vmatch]
                 self.addRequires(node_pattern, node_version)
 
-
-    def deleteActiveLinks(self):
+    def deleteActiveLinks(self, batch = None):
         """ delete the active nodes in the graph """
         self.setupDB()
         # Iterating on all the proper version nodes to find all normal version
         # and pattern nodes
         for r in self.node_status.get_relationships(neo4j.Direction.OUTGOING):
             if r.is_type("ACTIVE"):
-                r.delete()
+                if batch:
+                    self.log.warning("deleting relationships in batch")
+                    batch.delete_relationship(r)
+                else:
+                    r.delete()
 
     def deleteUsedLinks(self):
         """ delete the used nodes in the graph """
@@ -304,7 +310,7 @@ class SoftConfDB(object):
         if not self.node_used.has_relationship_with(node_pv):
             self.mNeoDB.get_or_create_relationships((self.node_used, "USED", node_pv))
 
-    def setPVActive(self, project, version):
+    def setPVActive(self, project, version, batch=None):
         ''' Set the used link for a project version '''
         self.setupDB()
 
@@ -314,7 +320,10 @@ class SoftConfDB(object):
             raise Exception("%s %s not found" % (project, version))
 
         if not self.node_status.has_relationship_with(node_pv):
-            self.mNeoDB.get_or_create_relationships((self.node_status, "ACTIVE", node_pv))
+            if batch:
+                batch.get_or_create_relationships((self.node_status, "ACTIVE", node_pv))
+            else:
+                self.mNeoDB.get_or_create_relationships((self.node_status, "ACTIVE", node_pv))
 
 
     def matchAndSortVersions(self, pattern, vers):

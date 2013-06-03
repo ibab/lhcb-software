@@ -5,6 +5,7 @@ Created on May 6, 2013
 '''
 from SoftConfDB import SoftConfDB
 from LbUtils.Script import Script
+from LbConfiguration.Version import sortVersions
 
 import collections
 import logging
@@ -88,8 +89,19 @@ class LbSdbQuery(Script):
             self.log.error("Please specify a project name")
             sys.exit(1)
 
-        for p in sorted(self.mConfDB.listVersions(args[0].upper())):
-            print "%s\t%s" %  p
+        allvs = self.mConfDB.listVersions(args[0].upper())
+        if len(allvs) > 0:
+            proj =  allvs[0][0]
+            if allvs[0][1].startswith("v"):
+                # Checking if we have LHCb Ordering
+                vs = sortVersions([ t[1] for t in allvs ], safe=True)
+            else:
+                # Or the normal sorting order
+                vs = sorted([ t[1] for t in allvs ])
+
+            # Now print out the results
+            for v in vs:
+                print "%s %s" %  (proj, v)
 
     def cmdlistStackPlatforms(self, args):
         ''' The project versions available in the stack '''
