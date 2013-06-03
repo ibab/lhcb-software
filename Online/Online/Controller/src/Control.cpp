@@ -233,7 +233,7 @@ void Control::write_message(const char* fmt,...)   {
   va_end (args);
   str[il+len]   = '\n';
   str[il+len+1] = '\0';
-  ::printf(str);
+  ::puts(str);
 }
 
 /// Static routine to execute the I/O Thread
