@@ -2,7 +2,7 @@ summary class successful
 parsed example xml OK
 <?xml version="1.0" encoding="UTF-8"?>
 
-<summary version="1.0" xsi:noNamespaceSchemaLocation="XMLSummary.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<summary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:noNamespaceSchemaLocation="XMLSummary.xsd">
   <success>true</success>
   <step>finalize</step>
   <usage>
@@ -29,7 +29,7 @@ parsed example xml OK
 extra methods tested
 <?xml version="1.0" encoding="UTF-8"?>
 
-<summary version="1.0" xsi:noNamespaceSchemaLocation="XMLSummary.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<summary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:noNamespaceSchemaLocation="XMLSummary.xsd">
   <success>false</success>
   <step>none</step>
   <usage />
@@ -49,7 +49,7 @@ printing/writing tested
 merge OK
 <?xml version="1.0" encoding="UTF-8"?>
 
-<summary version="1.0" xsi:noNamespaceSchemaLocation="$XMLSUMMARYBASEROOT/xml/XMLSummary.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<summary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:noNamespaceSchemaLocation="$XMLSUMMARYBASEROOT/xml/XMLSummary.xsd">
 	<success>True</success>
 	<step>finalize</step>
 	<usage>
