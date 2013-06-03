@@ -1,7 +1,9 @@
+!----------------------------------------------------------------------------
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
 
+!========================= PhysEvent v11r20 2013-06-03 =========================
 ! 2012-05-03 - Chris Jones
  - Change the data members of the Flavour tagging classes, to reduce their
    persistency sizes, by changing ints to short ints and doubles to floats.
