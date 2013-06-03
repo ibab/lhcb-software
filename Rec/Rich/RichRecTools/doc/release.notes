@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!========================= RichRecTools v4r22 2013-06-03 =========================
 ! 2013-05-13 - Chris Jones
  - Remove unused class data member in Rich::Rec::PIDPlots
 
