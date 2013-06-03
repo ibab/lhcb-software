@@ -1,15 +1,12 @@
 # Created    : 07/07/2009
 # Maintainer : R. Lambert
-#
-
-#============================================================================
+#=========================================================================
 package XMLSummaryBase 
-version           v1r4
+version           v1r5
 
 # Structure, i.e. directories to process. 
-#============================================================================
+#=========================================================================
 branches          cmt doc python tests xml
-
 
 #private use statement such that 
 #this package will not overpolute the environment
@@ -18,7 +15,3 @@ private
   apply_pattern install_python_modules
   apply_pattern QMTest
 end_private
-
-# define link options
-#============================================================================
-#

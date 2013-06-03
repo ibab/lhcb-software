@@ -4,6 +4,7 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
+!========================= XMLSummaryBase v1r5 2013-06-03 =========================
 ! 2013-06-03 - Marco Cattaneo
  - Follow move to python2.7 (LCG 56), changes format of <summary> entity 
 
