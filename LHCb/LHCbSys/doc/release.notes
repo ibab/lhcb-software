@@ -16,7 +16,7 @@ This version uses Gaudi v23r8 and LCG_65
    DAQ/MDF v3r38, Det/CaloDet v10r16p1, Det/DetCond v12r31, Det/DetDesc v18r32p1,
    Det/Magnet v7r6p1, Det/MuonDet v9r12, Det/OTDet v8r10, Det/VeloDet v13r19p1,
    Event/DAQEvent v9r12p1, Event/EventPacker v3r1, Event/FTEvent v1r4,
-   Event/GenEvent v6r7, Event/LinkerEvent v3r10p1, Event/LinkerInstances v3r6p1,
+   Event/GenEvent v6r7, Event/LinkerEvent v3r10p1, Event/LinkerInstances v3r7p1,
    Event/MCEvent v2r26, Event/PhysEvent v11r20, Event/RecEvent v2r47,
    Event/TrackEvent v5r22, Ex/DetCondExample v11r13, Ex/IOExample v4r11,
    GaudiConf v17r10, GaudiMTTools v1r2p1, Kernel/LHCbAlgs v2r58,
@@ -77,9 +77,9 @@ This version uses Gaudi v23r8 and LCG_65
   . Avoid multiple return statements in inline methods, as this effectively
     guarantees the compiler will not inline the code.
 
-- In Event/LinkerInstances v3r6p1
-  . Fix CMakeLists.txt
-
+- In Event/LinkerInstances v3r7, v3r7p1
+  . Added support for Upgrade cluster classes
+ 
 - In Event/MCEvent v2r26
   . Added SL hit locations.
 
