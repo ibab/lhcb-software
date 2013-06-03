@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MuonDet
 ################################################################################
-gaudi_subdir(MuonDet v9r11)
+gaudi_subdir(MuonDet v9r12)
 
 gaudi_depends_on_subdirs(Det/DetDescCnv
                          GaudiAlg
