@@ -5,10 +5,178 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v36r0>2013-06-05 LHCbSys v36r0</A></H1><PRE>
+This version uses Gaudi v23r8 and LCG_65
+
 - Packages removed: Muon/MuonInterfaces, Rich/RichRecBase, Tf/PatKernel,
                     Tr/TrackKernel (all moved to Rec)
 - Packages added:   L0/L0Calo, L0/L0DU, L0/L0Muon, Rich/RichDAQ, ST/STDAQ,
                     Velo/VeloDAQ (all moved from Lbcom)
+- Packages modified: Calo/CaloDAQ v4r34, Calo/CaloUtils v10r0, DAQ/DAQSys v7r0,
+   DAQ/MDF v3r38, Det/CaloDet v10r16p1, Det/DetCond v12r31, Det/DetDesc v18r32p1,
+   Det/Magnet v7r6p1, Det/MuonDet v9r12, Det/OTDet v8r10, Det/VeloDet v13r19p1,
+   Event/DAQEvent v9r12p1, Event/EventPacker v3r1, Event/FTEvent v1r4,
+   Event/GenEvent v6r7, Event/LinkerEvent v3r10p1, Event/LinkerInstances v3r6p1,
+   Event/MCEvent v2r26, Event/PhysEvent v11r20, Event/RecEvent v2r47,
+   Event/TrackEvent v5r22, Ex/DetCondExample v11r13, Ex/IOExample v4r11,
+   GaudiConf v17r10, GaudiMTTools v1r2p1, Kernel/LHCbAlgs v2r58,
+   Kernel/LHCbKernel v14r1, Kernel/LHCbMath v3r40, Kernel/MCInterfaces v1r17,
+   Kernel/XMLSummaryBase v1r5, Kernel/XMLSummaryKernel v1r11, L0/L0Calo v11r11,
+   L0/L0DU v10r28, Muon/MuonDAQ v4r18, OT/OTDAQ v7r16p1, Phys/LoKiCore v11r13,
+   Phys/LoKiMC v10r8p1, Rich/RichDAQ v3r41, Tf/TfKernel v2r24p1,
+   Tools/CondDBEntityResolver v5r6, Tools/CondDBUI v3r23,
+   Tools/EventIndexer v1r1, Velo/VeloDAQ v6r10
+
+- In Calo/CaloDAQ v4r34
+  . CaloDigitsFilterTool : bug fix in getMask() method
+  . Fix inappropriate use of endmsg with an ostringstream
+
+- In Calo/CaloUtils v10r0
+  . Move CaloTrackAlg/Match/Tool.{cpp,h} to CaloPIDs
+  . Remove "use TrackInterfaces" from requirements
+
+- In DAQ/DAQSys v7r0
+  . Add dependency on L0Calo, L0DU. L0Muon. RichDAQ, STDAQ, VeloDAQ
+
+- In DAQ/MDF v3r38
+  . Fix compile warnings
+
+- In Det/DetCond v12r31
+  . Moved the class CondDBCompression to Tools/CondDBEntityResolver
+  . Removed one defunct line to please Coverity. 
+  . Added in GaudiException() to handle LZMA errors
+
+- In Det/MuonDet v9r12, Muon/MuonDAQ v4r18
+  . Several fixes to allow configurations without M1
+
+- In Det/MuonDet v9r12
+  . Patched some hardcoded variable initialization.
+
+- In Det/OTDet v8r10
+  . Implementation of mono-layer alignment
+
+- In Event/DAQEvent v9r12p1
+  . Updated comment on ODIN::triggerConfigurationKey to alert users that this is
+    the requested value but not necessarily the value actually used by Moore, 
+    which is in LHCb::HltDecReports::configuredTCK
+
+- In Event/EventPacker v3r1
+  . Fix bug in WritePackedDst where && insead of & was accidentally used.
+  . Add some additional counters to the ParticlesAndVertices unpacker
+  . Add new PackedFlavourTag classes to support packing during the stripping
+  . Update PackParticlesAndVertices, UnpackParticlesAndVertices, 
+    ParticlesAndVerticesMapper to include FlavourTagging objects
+  . Addition of SL code.
+
+- In Event/FTEvent v1r4
+  . Add xml/lcgdict/lcg_selection.xml and dict/lcgDict.h for python compatibility
+  . In FTRawCluster, fix bug in SiDataFunctor::CompareByChannel argument 
+                     redefinition of the Cluster location name
+
+- In Event/GenEvent v6r7
+  . Avoid multiple return statements in inline methods, as this effectively
+    guarantees the compiler will not inline the code.
+
+- In Event/LinkerInstances v3r6p1
+  . Fix CMakeLists.txt
+
+- In Event/MCEvent v2r26
+  . Added SL hit locations.
+
+- In Event/PhysEvent v11r20
+  . Change the data members of the Flavour tagging classes, to reduce their
+    persistency sizes, by changing ints to short ints and doubles to floats.
+    Never been made persistent, so no compatibility issues.
+
+- In Event/RecEvent v2r47
+  . Fix bug in clusterLocateDigit where assignment instead of equality 
+    operator was being used.
+
+- In Event/TrackEvent v5r22
+  . Added function State::linearTransportTo.
+
+- In Ex/IOExample v4r11
+  . Fix references following changes to DoD for DST unpacking
+
+- In GaudiConf v17r8, v17r9, v17r10
+  . Add explicit dependency on L0/L0DU to satisfy runtime requirement for 
+    DAQ decoding.
+  . DecodeRawEvent.py, added support for dataondemand for FT/VL/VP clusters  
+  . Add Ecal and Hcal linkers back to standard DSTs, as they are needed for MC
+    matching in DaVinci
+
+- In Kernel/LHCbAlgs v2r58
+  . Added SL to known detectors.
+
+- In Kernel/LHCbKernel v14r1
+  . Move the RichSmartIDTest code into the src/Test directory (to allow the tests
+    directory to instead be used for a new QM test.
+  . Add new QM test to run RichSmartIDTest.exe
+  . Fix LHCbID <-> RichSmartID conversion, which broke when support for MaPMTs
+    was added to the RichSmartID class.
+
+ - In Kernel/LHCbMath v3r40
+   . Types.py: minor fix in symmatrix alias 
+   . Add gamma-dist and loggamma-dist functions 
+   . Speed up the integration 
+
+- In Kernel/MCInterfaces v1r17
+  . Introduce return values in ghost classification tools
+    (replace exception by status code in case of missing data on TES)
+
+- In Kernel/XMLSummaryBase v1r5, Kernel/XMLSummaryKernel v1r11
+  . In tests, follow move to python2.7 (LCG 56), changes format of <summary>
+    entity 
+
+- In L0/L0Calo v11r11
+  . L0CaloAlg: add two options (false by default) to:
+    * mask the HCAL hot cells in the Hadron trigger emulation (MaskHotCells)
+    * force the use of options instead of database (IgnoreDatabase)
+
+- In L0/L0DU v10r28
+  . Add missing dependency on CaloDAQ
+
+- In Phys/LoKiCore v11r13
+  . Fix a bug in addMomenta in Kinematics.h where the Predicate cut was not 
+    being properly applied.
+
+- In Rich/RichDAQ v3r41
+  . Import Rich::DAQ::RawBufferToRichDigitsAlg from Rich/RichAlgorithms
+
+- In Tools/CondDBEntityResolver v5r6
+  . Fixed a bug in the requirements file.
+  . Imported the class CondDBCompression from Det/DetCond, including dictionary
+    and tests.
+
+- In Tools/CondDBUI v3r23
+  . __init__.py: Before any (de)compression operation, check the existence of the
+   'data' key in the DB payload
+
+- In Tools/EventIndexer v1r1
+  . Modified the test to match the new logic.
+  . Added an extra field for the stream name and fill it from the file name,
+    while the Stripping name must always be provided via options.
+
+- In Det/CaloDet v10r16p1, Det/Magnet v7r6p1, Det/MuonDet v9r12,
+     Det/VeloDet v13r19p1, Ex/DetCondExample v11r13, GaudiMTTools v1r2p1, 
+     Kernel/LHCbAlgs v2r58, L0/L0Calo v11r11, L0/L0DU v10r28, OT/OTDAQ v7r16p1, 
+     Velo/VeloDAQ v6r10
+  . Fix clang32 warnings
+
+- In Calo/CaloUtils v10r0, Det/DetDesc v18r32p1, Phys/LoKiMC v10r8p1
+  . Fix trivial gcc48 warnings
+
+- In Calo/CaloDAQ v4r34, Det/CaloDet v10r16p1, Ex/DetCondExample v11r13
+  . Remove unused finalize() method
+
+- In Calo/CaloUtils v10r0, Det/VeloDet v13r19p1, Ex/DetCondExample v11r13,
+     Velo/VeloDAQ v6r10
+  . Fix UNINIT_CTOR defect
+
+- In Calo/CaloUtils v10r0, Event/LinkerEvent v3r10p1, Ex/DetCondExample v11r13,
+     Tf/TfKernel v2r24p1
+  . Replace endreq by endmsg
+
 
 </PRE><H1><A NAME=v35r6>2013-04-30 LHCbSys v35r6</A></H1><PRE>
 This version uses Gaudi v23r7 and LCG_64d
