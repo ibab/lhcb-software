@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!========================= TfKernel v2r24p1 2013-06-03 =======================
 ! 2013-05-06 - Marco Cattaneo
  - Replace endreq by endmsg
 
