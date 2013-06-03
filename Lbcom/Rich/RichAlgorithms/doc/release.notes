@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= RichAlgorithms v1r7 2013-06-03 =========================
 ! 2013-05-20 - Chris Jones
  - Move Rich::DAQ::RawBufferToRichDigitsAlg to Rich/RichDAQ
 

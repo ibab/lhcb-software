@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichAlgorithms
 ################################################################################
-gaudi_subdir(RichAlgorithms v1r6)
+gaudi_subdir(RichAlgorithms v1r7)
 
 gaudi_depends_on_subdirs(Det/RichDet
                          Rich/RichKernel)
