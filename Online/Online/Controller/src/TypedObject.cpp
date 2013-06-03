@@ -26,7 +26,7 @@ TypedObject::~TypedObject()    {
 }
 
 static void _the_printer(void*, const char* text)  {
-  ::fprintf(stdout,text);
+  ::fputs(text,stdout);
   ::fflush(stdout);
 }
 
