@@ -4,6 +4,7 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================= CaloDAQ v4r34 2013-06-03 =========================
 ! 2013-05-10 - Olivier Deschamps
   - CaloDigitsFilterTool : bug fix in getMask() method
 
