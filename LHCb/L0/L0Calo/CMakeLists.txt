@@ -1,7 +1,7 @@
 ################################################################################
 # Package: L0Calo
 ################################################################################
-gaudi_subdir(L0Calo v11r10)
+gaudi_subdir(L0Calo v11r11)
 
 gaudi_depends_on_subdirs(Calo/CaloDAQ
                          Calo/CaloUtils
