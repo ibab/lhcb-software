@@ -2,9 +2,6 @@
 // local
 #include "ChargedProtoANNPIDCommonBase.h"
 
-// GaudiAlg
-#include "GaudiAlg/CheckForNaN.h"
-
 // Boost
 #include "boost/assign/list_of.hpp"
 

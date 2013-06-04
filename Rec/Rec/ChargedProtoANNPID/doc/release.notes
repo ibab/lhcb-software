@@ -4,6 +4,9 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-06-04 - Chris Jones
+ - Remove unused CheckForNaN.h header causing clang unused method warnings.
+
 !========================= ChargedProtoANNPID v2r2 2013-06-03 =======================
 ! 2013-05-30 - Chris Jones
  - Add a specific ANNPID tuning for 2013 data, using "MC12TuneV2".
