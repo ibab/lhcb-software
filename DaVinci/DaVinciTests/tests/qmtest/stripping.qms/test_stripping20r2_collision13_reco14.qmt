@@ -4,6 +4,7 @@
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="timeout"><integer>7200</integer></argument>
 <argument name="args"><set>
+  <text>-T</text>
   <text>$APPCONFIGOPTS/DaVinci/DV-Stripping20r2-Stripping.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DataType-2012.py</text> 
   <text>$PRCONFIGOPTS/DaVinci/Stripping/Collision13-2.76TeV-Reco14-FULLDST.py</text> 
