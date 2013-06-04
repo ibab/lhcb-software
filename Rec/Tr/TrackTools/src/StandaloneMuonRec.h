@@ -79,8 +79,15 @@ private:
   int m_stationL1Stop[5];
 // for pad decoding
   unsigned int m_M1Tell1;
-  std::string m_basePath[5];
-  const std::string& getBasePath(int station) { return m_basePath[station]; }
+
+  //GP
+  // fix for no M1 configurations
+  std::map<std::string, std::string> m_basePath;
+  //  std::string m_basePath[5];
+  //GP
+  // fix for no M1 configurations
+  const std::string getBasePath(std::string statname){ return m_basePath[statname]; }
+  //  const std::string& getBasePath(int station) { return m_basePath[station]; }
   std::vector<LHCb::MuonTileID> m_mapPad[20];
 
 

@@ -91,26 +91,39 @@ StatusCode StandaloneMuonRec::initialize() {
   m_nStation= basegeometry.getStations();
   m_nRegion = basegeometry.getRegions();
   unsigned int i=0;
+
   while( i < m_nStation ){  
     m_stationNames.push_back( basegeometry.getStationName(i) );
     i++;
   }
 
+  //GP
+  m_basePath["M1"]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M1/";
+  m_basePath["M2"]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M2/";
+  m_basePath["M3"]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M3/";
+  m_basePath["M4"]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M4/";
+  m_basePath["M5"]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M5/";
+
+  //GP as is this won't work without M1
+  /*
   m_basePath[0]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M1/";
   m_basePath[1]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M2/"; 
   m_basePath[2]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M3/";
   m_basePath[3]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M4/";
   m_basePath[4]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M5/";
-
+  */
 
  //how many tell1
   m_totL1Board = 0;  
   m_stationL1Start[0]=0;
   
-  for(int station=0;station<5;station++){
+  for(int station=0;station<m_nStation;station++){
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug()<<"station number "<<station<<endmsg;    
-    std::string cablingBasePath=getBasePath(station);    
+    // GP changed argument in getBasePath
+    std::string cablingBasePath=getBasePath(basegeometry.getStationName(station));    
+
+
     std::string cablingPath=cablingBasePath+"Cabling";
     SmartDataPtr<MuonStationCabling>  cabling(detSvc(), cablingPath);
     if( 0 == cabling ) {
@@ -564,7 +577,6 @@ StatusCode StandaloneMuonRec::crossStrips(unsigned int station, unsigned int reg
           
           m_iPosTool-> calcTilePos(pad,x, dx,y, dy,z, dz);
           thisRegion->addPoint( x, y,pad );          
-//               info()<<"pad "<<pad.station()<<" "<<x<<" "<<y<<endmsg;
           
           //          padTiles.push_back( pad );
         }
@@ -592,7 +604,7 @@ StatusCode StandaloneMuonRec::crossStrips(unsigned int station, unsigned int reg
           //pad.setLayer(0);
           //pad.setReadout(0);
           double x,y,z,dx,dy,dz;
-          
+
           m_iPosTool-> calcTilePos(pad,x, dx,y, dy,z, dz);
           thisRegion->addPoint( x, y,pad );          
 //                   info()<<"pad "<<pad.station()<<" "<<x<<" "<<y<<endmsg;
@@ -858,6 +870,7 @@ for (int test=0;test<1;test++){
   
   for(iList=pads.begin();iList!=pads.end();iList++){
      for(iPad=(*iList)->begin();iPad!=(*iList)->end();iPad++){
+
        StatusCode sc=m_iPosTool-> calcTilePos(*iPad,x, dx,y, dy,z, dz);
        if(sc.isFailure())break;
        int region=iPad->region();
@@ -879,11 +892,18 @@ StatusCode StandaloneMuonRec::initializeLogChanDecoding()
  //how many tell1
 
   unsigned int countL1=0;
-  
+  // GP needed to call correctly getBasePath when no M1
+  MuonBasicGeometry basegeometry( detSvc(),msgSvc());
+
   for(int station=0;station<5;station++){
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
       debug()<<"station number "<<station<<endmsg;    
-    std::string cablingBasePath=getBasePath(station);    
+
+    //GP
+    //  changed argument in getBasePath
+    std::string cablingBasePath=getBasePath(basegeometry.getStationName(station));    
+
+
     std::string cablingPath=cablingBasePath+"Cabling";
     SmartDataPtr<MuonStationCabling>  cabling(detSvc(), cablingPath);
     if( 0 == cabling ) {
