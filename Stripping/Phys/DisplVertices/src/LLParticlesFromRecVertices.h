@@ -82,7 +82,6 @@ private:
   double m_LLPMinSumPT;                   ///< Minimal sum-PT of the LLP
 
   double m_LLPMinR;                       ///< Minimal LLP RHO distance to the beam line
-  double m_LLPMaxR;                       ///< Maximal LLP RHO distance to the beam line
 
   int    m_LLPMinNumTracks;               ///< Minimal number of daughter tracks of the LLP
 
