@@ -4,6 +4,9 @@
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v9r12 2013-06-03 =========================
+! 2013-06-04 - Giovanni PASSALEVA
+ - fixed a wrong mapping in MuonDAQHelper.cpp. 
+
 ! 2013-05-17 - Giovanni PASSALEVA
  - Several fixes to allow configurations without M1. mainly removed hardcoded
    parameters replaced with parametric ones.

@@ -451,8 +451,8 @@ StatusCode MuonDAQHelper::initMaps()
       }
 
       m_TELL1Name.push_back(L1Path); // array of TELL1 names
-      // load TELL1 numbers per station
-      m_tellPerStation[station].push_back(l1->L1Number()); // <-- modify it !!!
+      // load list of TELL1 serial numbers for each station
+      m_tellPerStation[station].push_back(l1->L1Number()); 
 
       for(unsigned int i=0; i < MuonDAQHelper_linkNumber; i++){ // loop over TELL1 inputs
 	//
@@ -462,7 +462,8 @@ StatusCode MuonDAQHelper::initMaps()
 	//
 
 	// load optical link map per TELL1
-        m_linkInTell1[Tell1Number].push_back(l1->getLinkConnection(i)); // <-- modify it !!!
+	//        m_linkInTell1[Tell1Number].push_back(l1->getLinkConnection(i)); // <-- modify it !!!
+        m_linkInTell1[l1->L1Number()].push_back(l1->getLinkConnection(i)); // <-- modify it !!!
 
       } // end of loop over TELL1 inputs
 
@@ -569,7 +570,7 @@ StatusCode MuonDAQHelper::initMaps()
 // 
 //
 //------------------------------------------------------------------------
-
+/*
 StatusCode MuonDAQHelper::initLUTCrossing()
 {
   int Tell1Number=m_M1Tell1;
@@ -663,7 +664,7 @@ StatusCode MuonDAQHelper::initLUTCrossing()
   }
   return StatusCode::SUCCESS;
 }
-
+*/
 //------------------------------------------------------------------------
 //
 // Initialize TELL1/ODE mapping by quadrant. Useful to retrieve
@@ -2074,3 +2075,90 @@ StatusCode  MuonDAQHelper::initODENames()
     msgStream()<<MSG::DEBUG<<" step odename "<<endmsg;
   if(sc.isFailure())return sc;
   */
+		       //StatusCode MuonDAQHelper::initializeLUTCrossing() 
+StatusCode MuonDAQHelper::initLUTCrossing() 
+{ 
+  int countTell1=m_M1Tell1; 
+ 
+  for(int station=1;station<m_nStations;station++){ 
+    //debug()<<"station number "<<station<<endmsg; 
+    std::string cablingBasePath=getBasePath(m_basegeometry->getStationName(station)); // hardwired at the moment
+    //    std::string cablingBasePath=getBasePath(station); 
+    std::string cablingPath=cablingBasePath+"Cabling"; 
+    SmartDataPtr<MuonStationCabling>  cabling(m_detSvc, cablingPath); 
+    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){ 
+      //debug()<<"L1 number "<<cabling->getL1Name(0)<<endmsg; 
+      std::string L1path=cablingBasePath+ 
+        cabling->getL1Name(L1Board); 
+      SmartDataPtr<MuonL1Board>  l1(m_detSvc,L1path); 
+      //      unsigned totODE=0; 
+      for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){ 
+        std::string ODEpath=cablingBasePath 
+          +l1->getODEName(ODEBoard); 
+        SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEpath); 
+        //build LUT with ode ID --> MuonTileID 
+        unsigned int region=ode->region(); 
+        MuonTSMap*  FirstTSMap=NULL; 
+ 
+        for(int TS=0;TS<ode->getTSNumber();TS++){ 
+          std::string  TSPath= cablingBasePath+ 
+            ode->getTSName(TS); 
+          unsigned int quadrant= ode->getTSQuadrant(TS); 
+          unsigned int TSLayoutX=ode->getTSLayoutX(); 
+          unsigned int TSLayoutY=ode->getTSLayoutY(); 
+          unsigned int TSGridX=ode->getTSGridX(TS); 
+          unsigned int TSGridY=ode->getTSGridY(TS); 
+          unsigned int digitOffSetX=0; 
+          unsigned int digitOffSetY=0; 
+          SmartDataPtr<MuonTSMap>  TSMap(m_detSvc,TSPath); 
+          //debug()<<"trigger sector "<<TSPath<<endmsg; 
+          if(TS==0){ 
+            FirstTSMap=static_cast<MuonTSMap*>( TSMap); 
+ 
+          } 
+ 
+          std::vector<LHCb::MuonTileID> digitInTS; 
+          std::vector<LHCb::MuonTileID> wrongdigitInTS; 
+          for(int i=0;i<TSMap->numberOfOutputSignal();i++){ 
+            //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endmsg; 
+            unsigned int layout=TSMap->layoutOutputChannel(i); 
+            unsigned int  layoutX=TSMap->gridXLayout(layout); 
+            unsigned int  layoutY=TSMap->gridYLayout(layout); 
+            digitOffSetX=layoutX*TSGridX; 
+            digitOffSetY=layoutY*TSGridY; 
+            unsigned int digitX=digitOffSetX+TSMap->gridXOutputChannel(i); 
+            unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i); 
+            MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY); 
+            MuonTileID muontile(station,lay,region, 
+                                quadrant,digitX,digitY); 
+            digitInTS.push_back(muontile); 
+ 
+            unsigned int wrongDigitX=digitOffSetX+FirstTSMap->gridXOutputChannel(i); 
+            unsigned int wrongDigitY=digitOffSetY+FirstTSMap->gridYOutputChannel(i); 
+ 
+            MuonTileID wrongmuontile(station,lay,region, 
+                                     quadrant,wrongDigitX,wrongDigitY); 
+            wrongdigitInTS.push_back(wrongmuontile); 
+ 
+          } 
+          std::vector<LHCb::MuonTileID> crossAddressDC06 
+            =DoPadDC06(digitInTS,TSMap); 
+          std::vector<LHCb::MuonTileID> crossAddressV1 
+            =DoPadV1(digitInTS,wrongdigitInTS,TSMap); 
+          std::vector<LHCb::MuonTileID>::iterator itPad; 
+          for(itPad=crossAddressDC06.begin();itPad<crossAddressDC06.end(); 
+              itPad++){ 
+            m_mapPadDC06[countTell1].push_back(*itPad); 
+          } 
+          for(itPad=crossAddressV1.begin();itPad<crossAddressV1.end(); 
+              itPad++){ 
+            m_mapPadV1[countTell1].push_back(*itPad); 
+          } 
+        } 
+      } 
+      countTell1++; 
+    } 
+  } 
+  return StatusCode::SUCCESS; 
+ 
+} 
