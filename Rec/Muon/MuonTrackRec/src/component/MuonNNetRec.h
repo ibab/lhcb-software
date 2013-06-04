@@ -64,7 +64,7 @@ public:
     MuonTrackRec::IsPhysics = AssumePhysics;
     if(AssumePhysics) MuonTrackRec::IsCosmic = false;
   }
-  virtual void setSeedStation(int seedS){seedS=seedS;}
+  virtual void setSeedStation(int seedS){m_seedStation=seedS;}
   virtual void setSkipStation(int skipS){m_skipStation=skipS;}
   virtual StatusCode copyToLHCbTracks();
 
@@ -135,6 +135,7 @@ private:
   float m_XtalkRadius;
   /// LHCb tracks output location in TES
   std::string m_trackOutputLoc ;
-    
+  // this is useless; only to comply with the virtual interface
+  int m_seedStation;
 };
 #endif // MUONNNETREC_H
