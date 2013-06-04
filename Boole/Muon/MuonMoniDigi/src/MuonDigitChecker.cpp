@@ -29,7 +29,8 @@ DECLARE_ALGORITHM_FACTORY( MuonDigitChecker )
 MuonDigitChecker::MuonDigitChecker( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ),
-    m_hitMonitor   ( false )
+    m_hitMonitor   ( false ),
+    m_base(NULL)
 {
   declareProperty( "hitMonitor"              ,m_hitMonitor );
   //  setProperty( "NTupleProduce", "false" );
@@ -41,7 +42,7 @@ MuonDigitChecker::MuonDigitChecker( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonDigitChecker::~MuonDigitChecker() {delete m_base;}
+MuonDigitChecker::~MuonDigitChecker() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -457,6 +458,11 @@ StatusCode MuonDigitChecker::finalize() {
       }
       info()<<" R"<<r+1<<endmsg;
     }
+  }
+
+  if(  NULL != m_base ) {
+    delete m_base;
+    m_base = NULL;
   }
   
   // Execute the base class finalize
