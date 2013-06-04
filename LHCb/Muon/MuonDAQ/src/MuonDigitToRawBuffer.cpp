@@ -661,21 +661,22 @@ StatusCode MuonDigitToRawBuffer::ProcessDigitV1()
     long L1Number=0;
     long ODENumber=0;
     unsigned int ODEAdd=0;
-
-
-    //    info()<<"Processing V1 digit: "<<digitTile.toString()<<" time "<<time<<endmsg;
-    continue;
-
+    
+    
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      debug()<<"Processing V1 digit: "<<digitTile.toString()<<" time "<<time<<endmsg;
+    //    continue;
+    
     long DigitOutputPosition=(m_muonDet->getDAQInfo())->DAQaddressInL1(digitTile,L1Number,ODENumber,ODEAdd);
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug()<<" L1 add "<<L1Number<<" "<<ODENumber<<endmsg;
-
+    
     long DigitOutputPositionInODE=(m_muonDet->getDAQInfo())->DAQaddressInODE(digitTile,L1Number,ODENumber,false);
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
       debug()<<"L1Number "<<L1Number<<" "<<ODENumber<<endmsg;
       debug()<<" digitOutputPosition "<<DigitOutputPosition<<endmsg;
     }
-unsigned int pp_num=(m_muonDet->getDAQInfo())->getPPNumber(L1Number,ODENumber);
+    unsigned int pp_num=(m_muonDet->getDAQInfo())->getPPNumber(L1Number,ODENumber);
     unsigned int digitInDAQ=0;
     MuonHLTDigitFormat temp(MuonBankVersion::v1);
     temp.setAddress(DigitOutputPosition);
@@ -691,12 +692,12 @@ unsigned int pp_num=(m_muonDet->getDAQInfo())->getPPNumber(L1Number,ODENumber);
     tempode.setAddress(DigitOutputPositionInODE);
     tempode.setTime(time);
     digitInDAQ=tempode.getWord();
-
+    
     m_digitsInODE[ODENumber-1].push_back(digitInDAQ);
-
+    
     firedInODE[ODENumber-1]++;
-
-
+    
+    
   }
   //  debug()<<" tot ODE "<<m_TotODEBoard<<endmsg;
 
