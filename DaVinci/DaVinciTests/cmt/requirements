@@ -1,13 +1,17 @@
 package DaVinciTests
 version v2r16
 
-branches doc cmt tests
+branches doc cmt tests python
 
 use GaudiConf v* -no_auto_imports
 use DaVinci   v* Phys
+use PRConfig  v*
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
+
+# Python modules
+apply_pattern install_python_modules

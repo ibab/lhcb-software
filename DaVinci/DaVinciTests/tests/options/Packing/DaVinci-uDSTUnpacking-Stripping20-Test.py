@@ -55,6 +55,3 @@ DaVinci().UserAlgorithms += [
                              MaxVersion = 999,
                              OutputLevel = 3 )
     ]
-
-from GaudiConf import IOHelper
-IOHelper().inputFiles(['PFN:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision12/BHADRON.MDST/00021211/0000/00021211_00001955_1.bhadron.mdst'])

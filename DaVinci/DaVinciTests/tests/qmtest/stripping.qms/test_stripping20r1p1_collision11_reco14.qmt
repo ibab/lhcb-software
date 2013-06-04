@@ -4,11 +4,17 @@
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="timeout"><integer>7200</integer></argument>
 <argument name="args"><set>
+  <text>-T</text>
   <text>$APPCONFIGOPTS/DaVinci/DV-Stripping20r1p1-Stripping.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DataType-2011.py</text> 
   <text>$PRCONFIGOPTS/DaVinci/Stripping/Collision11-3.5TeV-Reco14-FULLDST.py</text> 
   <text>$APPCONFIGOPTS/Persistency/Compression-ZLIB-1.py</text>
   <text>../options/DaVinci-1000events.py</text>
 </set></argument>
+<argument name="reference"><text>../refs/test_stripping20r1p1_collision11_reco14.ref</text></argument>
+<argument name="validator"><text>
+from DaVinciTests.QMTest.DaVinciExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
 countErrorLines({"FATAL":0})
 </extension>

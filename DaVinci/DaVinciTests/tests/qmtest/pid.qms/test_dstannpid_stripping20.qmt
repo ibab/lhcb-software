@@ -4,6 +4,7 @@
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="args"><set>
   <text>../options/PID/DaVinci-DST-ANNPID-Stripping20-Test.py</text>
+  <text>$PRCONFIGOPTS/DaVinci/Stripping/Collision12-4TeV-Reco14-Stripping20-BHADRONCOMPLETEEVENT.DST.py</text>
 </set></argument>
 <argument name="reference"><text>../refs/test_dstannpid_stripping20.ref</text></argument>
 <argument name="validator"><text>
