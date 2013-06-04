@@ -81,7 +81,7 @@ StatusCode B2DHMvaPreSelectionAlg::initialize() {
 
   resetSelectionCounters();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================

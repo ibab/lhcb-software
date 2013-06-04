@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-06-04 - Chris Jones
+ - Fix clang warnings.
+ - Properly call base class initialize() methods from inherited classes.
+
 !========================= MvaPreSelB2DH v1r5 2013-04-05 =========================
 
 ! 2013-02-28 - Chris Jones

@@ -36,9 +36,10 @@ B2DHMvaPreSelectionCutsTool::B2DHMvaPreSelectionCutsTool( const std::string& typ
 B2DHMvaPreSelectionCutsTool::~B2DHMvaPreSelectionCutsTool() {} 
 
 //=============================================================================
-StatusCode B2DHMvaPreSelectionCutsTool::initialize() {
-
-  StatusCode sc = StatusCode::SUCCESS; 
+StatusCode B2DHMvaPreSelectionCutsTool::initialize() 
+{
+  const StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
 
   m_B2DHMvaPreSelectionParamTool = tool<IB2DHMvaPreSelectionParamTool> ("B2DHMvaPreSelectionParamTool");
   

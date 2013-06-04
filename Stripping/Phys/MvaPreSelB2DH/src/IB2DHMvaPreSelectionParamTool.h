@@ -26,7 +26,8 @@ public:
   static const InterfaceID& interfaceID() { return IID_IB2DHMvaPreSelectionParamTool; }
   virtual int get_current_B2DH_channel_Number() =0;
   virtual void set_current_B2DH_channel_Number(int ach ) =0;
-  virtual StatusCode BookMvaForFisherD(std::string WeightFileName,std::string ClassifierName )=0;
+  virtual StatusCode BookMvaForFisherD(const std::string& WeightFileName,
+                                       const std::string& ClassifierName )=0;
   virtual void initializeLocalParam()=0;
   virtual StatusCode acquireSelectionParams(const LHCb::Particle* b, const  LHCb::RecVertex* aPV)=0;
   virtual double evaluateFisherDProb()=0;

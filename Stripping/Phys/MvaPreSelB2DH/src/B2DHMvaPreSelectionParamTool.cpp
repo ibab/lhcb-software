@@ -33,7 +33,6 @@ B2DHMvaPreSelectionParamTool::B2DHMvaPreSelectionParamTool( const std::string& t
     m_dva(0),
     m_B2DHPreselMvaUtilityTool(0),
     m_B2DHFisherDReader(0),
-    m_maxNumPhysicsChannelsToSelect(2),
     m_current_B2DH_channel_Number(0),
     m_classifierName(std::string("Fisher method")),
     m_weightFileName(std::string("MyFileName")),
@@ -86,11 +85,13 @@ B2DHMvaPreSelectionParamTool::~B2DHMvaPreSelectionParamTool() {
   if(m_B2DHFisherDReader) delete m_B2DHFisherDReader;
 
 }
+
 //=============================================================================
 
-
-StatusCode B2DHMvaPreSelectionParamTool::initialize() {
-  StatusCode sc = StatusCode::SUCCESS;
+StatusCode B2DHMvaPreSelectionParamTool::initialize() 
+{
+  const StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
 
   m_dva=Gaudi::Utils::getIDVAlgorithm(contextSvc(),this);
   if (0 == m_dva) {
@@ -100,11 +101,9 @@ StatusCode B2DHMvaPreSelectionParamTool::initialize() {
 
 
   m_distanceCalculator = m_dva->distanceCalculator();
-  if(! m_distanceCalculator) {
-    Error (" B2DHSelectionParamTool Unable to retrieve DistanceCalculator");
-    return StatusCode::FAILURE;
+  if ( !m_distanceCalculator) {
+    return Error (" B2DHSelectionParamTool Unable to retrieve DistanceCalculator");
   }
-
 
   m_B2DHPreselMvaUtilityTool = tool<IB2DHPreselMvaUtilityTool> ("B2DHPreselMvaUtilityTool");
 
@@ -114,11 +113,13 @@ StatusCode B2DHMvaPreSelectionParamTool::initialize() {
   // BookMvaForFisherD(m_weightFileName,m_classifierName);
 
   return sc;
-
-
 }
+
 //=============================================================================
-StatusCode B2DHMvaPreSelectionParamTool::BookMvaForFisherD(std::string WeightFileName, std::string ClassifierMethodName ){
+
+StatusCode B2DHMvaPreSelectionParamTool::BookMvaForFisherD(const std::string& WeightFileName, 
+                                                           const std::string& ClassifierMethodName )
+{
   StatusCode sc = StatusCode::SUCCESS;
 
 
@@ -329,7 +330,10 @@ StatusCode B2DHMvaPreSelectionParamTool::getSelectionCutsParamForBsParticle(cons
   return sc;
 }
 
-StatusCode B2DHMvaPreSelectionParamTool::getSelectionParamsForDsDaughterOfBs(const LHCb::Particle* b,const  LHCb::RecVertex* aPV){
+StatusCode 
+B2DHMvaPreSelectionParamTool::getSelectionParamsForDsDaughterOfBs(const LHCb::Particle* b,
+                                                                  const  LHCb::RecVertex* aPV)
+{
   StatusCode sc = StatusCode::SUCCESS;
 
 
@@ -432,18 +436,14 @@ StatusCode B2DHMvaPreSelectionParamTool::getSelectionParamsForBachelorDaughterOf
     if(aPidVal < 0 ) aPidVal = aPidVal * (-1);
 
     if(m_current_B2DH_channel_Number == 0) {
-      if (  ( aPidVal ==   (m_B2DHPreselMvaUtilityTool-> pdgKaonValue()  ) ) ) { // this is kaon
-        aBachelorKaonCount++;
-
-
+      if ( aPidVal == m_B2DHPreselMvaUtilityTool->pdgKaonValue() ) { // this is kaon
+        ++aBachelorKaonCount;
       }
 
     }else if (  m_current_B2DH_channel_Number == 1) {
 
-      if (   aPidVal ==   (m_B2DHPreselMvaUtilityTool-> pdgPionValue() )) { // this is pion
-        aBachelorPionCount++;
-
-
+      if ( aPidVal == m_B2DHPreselMvaUtilityTool->pdgPionValue() ) { // this is pion
+        ++aBachelorPionCount;
       }
 
     }

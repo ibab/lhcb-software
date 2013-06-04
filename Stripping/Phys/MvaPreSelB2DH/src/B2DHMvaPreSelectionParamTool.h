@@ -24,8 +24,12 @@ class IDVAlgorithm;
  *  @author Sajan EASO
  *  @date   2010-07-16
  */
-class B2DHMvaPreSelectionParamTool : public GaudiTool, virtual public IB2DHMvaPreSelectionParamTool {
+class B2DHMvaPreSelectionParamTool : public GaudiTool, 
+                                     virtual public IB2DHMvaPreSelectionParamTool
+{
+
 public:
+
   /// Standard constructor
   B2DHMvaPreSelectionParamTool( const std::string& type,
                                 const std::string& name,
@@ -33,13 +37,16 @@ public:
 
   virtual ~B2DHMvaPreSelectionParamTool( ); ///< Destructor
   virtual StatusCode  initialize();
+
+
   virtual int get_current_B2DH_channel_Number()
   {    return  m_current_B2DH_channel_Number;}
   virtual void set_current_B2DH_channel_Number(int ach )
   { m_current_B2DH_channel_Number=ach; }
 
 
-  virtual StatusCode BookMvaForFisherD(std::string WeightFileName, std::string ClassifierName);
+  virtual StatusCode BookMvaForFisherD(const std::string& WeightFileName, 
+                                       const std::string& ClassifierName);
 
   virtual StatusCode acquireSelectionParams(const LHCb::Particle* b,
                                             const  LHCb::RecVertex* aPV);
@@ -138,9 +145,6 @@ private:
   IClassifierReader*   m_B2DHFisherDReader;
 
   //   TMVA::Reader * m_B2DHFisherDReader;
-
-  int m_maxNumPhysicsChannelsToSelect;
-
 
   int m_current_B2DH_channel_Number; // this is set to 0 for Bs2DsK, 1 for Bs2DsPi.
 
