@@ -6,6 +6,7 @@ i!-----------------------------------------------------------------------------
 
 ! 2013-06-03 - Chris Jones
  - Fix incorrect use of = instead of == in equality statement (clang warning).
+ - Clean up warnings a bit.
 
 !========================= StrippingNeuroBayes v1r8 2013-04-05 =========================
 

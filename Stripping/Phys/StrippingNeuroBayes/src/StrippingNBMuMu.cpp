@@ -1,11 +1,6 @@
 // $Id: $
 // Include files
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-
-#include "math.h"
-
 // local
 #include "StrippingNBMuMu.h"
 
@@ -51,7 +46,7 @@ StrippingNBMuMu::~StrippingNBMuMu() {}
 //=============================================================================
 StatusCode StrippingNBMuMu::initialize()
 {
-  StatusCode sc = DaVinciHistoAlgorithm::initialize();
+  const StatusCode sc = DaVinciHistoAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   //
@@ -112,13 +107,11 @@ StatusCode StrippingNBMuMu::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode StrippingNBMuMu::execute() {
+StatusCode StrippingNBMuMu::execute() 
+{
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "==> Execute" << endmsg;
-
-
-  StatusCode sc = StatusCode::SUCCESS;
 
 #ifdef __GNUC__
 
@@ -127,17 +120,15 @@ StatusCode StrippingNBMuMu::execute() {
 
   // get particles - DiMu candidate
   const LHCb::Particle::ConstVector& cands = this->i_particles();
-  const int nCand = cands.size();
 
-  if ( msgLevel(MSG::VERBOSE) ) {
-    verbose() << "got # particles from local storage " << nCand << endmsg;
-  }
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "got # particles from local storage " << cands.size() << endmsg;
 
   for ( LHCb::Particle::ConstVector::const_iterator iCand = cands.begin();
         iCand != cands.end(); ++iCand )
   {
 
-    sc = StrippingNBMuMu::getInputVar(*(*iCand));
+    const StatusCode sc = StrippingNBMuMu::getInputVar(*(*iCand));
 
     if ( sc.isSuccess() )
     {
@@ -151,10 +142,9 @@ StatusCode StrippingNBMuMu::execute() {
       const double netOut = m_NBExpert->nb_expert(m_inArray);
       const double prob   = (1.0 + netOut)*0.5;
 
-      if ( msgLevel(MSG::DEBUG) ) {
+      if ( msgLevel(MSG::DEBUG) )
         debug() << "MuMu cand: Network output " << netOut
                 << " probability " << prob << endmsg;
-      }
 
       const double mass = (*iCand)->measuredMass()/Gaudi::Units::GeV;
 
@@ -165,10 +155,12 @@ StatusCode StrippingNBMuMu::execute() {
       } //if
 
       // accept candidate?
-      if (prob > m_NetworkCut) {
+      if ( prob > m_NetworkCut ) 
+      {
         if ( msgLevel(MSG::DEBUG) )
           debug() << "MuMu cand pass cut "  << m_NetworkCut << endmsg;
-        if (m_PlotHisto) {
+        if (m_PlotHisto) 
+        {
           plot1D(mass  , "mAcc"        , "mass, acc cand"                         ,   m_PlotMassMin, m_PlotMassMax, m_PlotNBins);
           plot1D(prob  , "MuMuProbAcc" , "NeuroBayes MuMu network prob acc cand"  ,  0.0           , 1.0          ,         120);
         } //if
@@ -178,10 +170,10 @@ StatusCode StrippingNBMuMu::execute() {
         particle->addInfo(LHCb::Particle::LastGlobal +  2, prob);
         this->markNewTree(particle);
       } // if prob
-    } // if sc
-  } // for iCand
 
-  return sc;
+    } // if sc
+
+  } // for iCand
 
 #endif
   return StatusCode::SUCCESS;
@@ -207,17 +199,20 @@ StatusCode StrippingNBMuMu::finalize() {
 }
 
 //=============================================================================
-StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
+StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) 
+{
 
   StatusCode sc = StatusCode::SUCCESS;
 
 #ifdef __GNUC__
   // get daughters
-  const SmartRefVector< LHCb::Particle > &muons = particle.endVertex()->outgoingParticles();
+  const SmartRefVector<LHCb::Particle> &muons = particle.endVertex()->outgoingParticles();
 
-  if (muons.size() != 2) {
-    warning() << "number of daughters at vertex, skip candidate " << muons.size() << endmsg;
-    return StatusCode::FAILURE;
+  if ( muons.size() != 2 )
+  {
+    std::ostringstream mess;
+    mess << "number of daughters at vertex, skip candidate " << muons.size();
+    return Warning( mess.str() );
   }//if #Kaons
 
   const LHCb::Particle* muPlus  = NULL;
@@ -239,12 +234,10 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
   }//for iKaon
 
   // sanity check
-  if (!muPlus || !muMinus) {
-    warning() << " Muons obtained from not valid, skip candidate" << endmsg;
-    return StatusCode::FAILURE;
+  if ( !muPlus || !muMinus ) 
+  {
+    return Warning( "Muons obtained from not valid, skip candidate" );
   }// if
-
-
 
   //
   // get input variables, move "spikes" to -999
@@ -402,9 +395,9 @@ StatusCode  StrippingNBMuMu::getInputVar(const LHCb::Particle& particle) {
     filledInput = true;
   } // if NoIP net
 
-  if (!filledInput) {
-    warning() << "StrippingNBMuMu::getInputVar: Input variables not filled - which network?" << endmsg;
-    return StatusCode::FAILURE;
+  if ( !filledInput ) 
+  {
+    return Warning( "::getInputVar: Input variables not filled - which network?" );
   } //if
 
 #endif
@@ -452,10 +445,14 @@ double StrippingNBMuMu::minIPChi2(const LHCb::Particle& particle){
   returnValue = minChi2;
 
 #ifdef __GNUC__
-  if ( isnan(returnValue)     ||
-       abs(isinf(returnValue)))
-    warning() << "StrippingNBMuMu::minIPChi2: something went wrong, minIP not valid " << returnValue << endmsg;
-  returnValue = -999;
+  if ( isnan(returnValue) ||
+       abs(isinf(returnValue)) )
+  {
+    std::ostringstream mess;
+    mess << "::minIPChi2: something went wrong, minIP not valid " << returnValue;
+    Warning( mess.str() ).ignore();
+    returnValue = -999;
+  }
 #endif
 
   if(msgLevel(MSG::VERBOSE))

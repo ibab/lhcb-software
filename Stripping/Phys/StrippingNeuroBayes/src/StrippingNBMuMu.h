@@ -5,7 +5,12 @@
 #include "Kernel/DaVinciHistoAlgorithm.h"
 #include "Kernel/FPEGuard.h"
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
+#include "math.h"
 #include <string>
+#include <sstream>
 
 // NeuroBayes (only on linux with gcc for the moment)
 #ifdef __GNUC__
@@ -33,8 +38,6 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
 
 private:
 
