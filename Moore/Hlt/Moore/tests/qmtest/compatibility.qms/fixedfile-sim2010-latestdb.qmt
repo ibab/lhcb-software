@@ -6,7 +6,7 @@
     <text>$MOOREROOT/tests/options/Moore-Offline.py</text>
     <text>$MOOREROOT/tests/options/db-latest-2010.py</text>
     <text>--option</text>
-    <text>from Moore.Configuration import *; from Configurables import LHCbApp; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v21r9/00007107_00000001_2.digi' TYP='POOL_ROOTTREE' OPT='READ'"]; Moore().DataType="2010"; Moore().Simulation=True; Moore().EvtMax=100;</text>
+    <text>from Configurables import Moore; from PRConfig import TestFileDB; TestFileDB.test_file_db["2010_digi_default"].run(configurable=Moore()); Moore().EvtMax=100;</text>
   </set></argument>
   <argument name="validator"><text>
 #print stdout

@@ -4,13 +4,14 @@
   <argument name="timeout"><integer>1200</integer></argument>
   <argument name="args"><set>
     <text>$MOOREROOT/tests/options/Moore-Offline.py</text>
+    <text>$MOOREROOT/tests/options/db-latest-2010.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; from PRConfig import TestFileDB; TestFileDB.test_file_db["2010_raw_default"].run(configurable=Moore()); Moore().EvtMax=100; </text>
+    <text>from Configurables import Moore; from PRConfig import TestFileDB; TestFileDB.test_file_db["2010_raw_default"].run(withDB=False,configurable=Moore()); Moore().EvtMax=100;</text>
   </set></argument>
   <argument name="validator"><text>
 #print stdout
 #from Brunel.QMTest.BrunelExclusions import preprocessor
 #validateWithReference(preproc = preprocessor)
-countErrorLines({"FATAL":0, "WARNING":2, "ERROR":2})
+countErrorLines({"FATAL":0, "WARNING":1, "ERROR":2})
 </text></argument>
 </extension>

@@ -5,7 +5,7 @@
   <argument name="args"><set>
     <text>$MOOREROOT/tests/options/Moore-Offline.py</text>
     <text>--option</text>
-    <text>from Moore.Configuration import *; Moore().inputFiles=['castor:/castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75161/075161_0000000282.raw']; Moore().DDDBtag='head-20101026'; Moore().CondDBtag='head-20101112'; Moore().DataType="2010"; Moore().EvtMax=100; Moore().Simulation=False;</text>
+    <text>from Configurables import Moore; from PRConfig import TestFileDB; TestFileDB.test_file_db["2010_raw_default"].run(configurable=Moore()); Moore().EvtMax=100;</text>
   </set></argument>
   <argument name="validator"><text>
 #print stdout

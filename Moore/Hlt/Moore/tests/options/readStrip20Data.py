@@ -50,8 +50,8 @@ RecombineRawEvent()
 
 ################ dataset #################
 # Input data
-from GaudiConf import IOHelper
-IOHelper().inputFiles(['/castor/cern.ch/user/n/ntorr/test/00022726_00111043_1.CharmToBeSwum.dst'], clear=True)
+from PRConfig import TestFileDB
+TestFileDB.test_file_db["Charm_Strip20_Test"].run(withDB=False,configurable=Moore())
 
 
 

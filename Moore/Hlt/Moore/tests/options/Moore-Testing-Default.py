@@ -56,5 +56,6 @@ appendPostConfigAction(d.witnessTheFirepowerOfThisFullyArmedAndOperationalBattle
 
 ############# prepend a "input data" ############
 
-from GaudiConf import IOHelper
-IOHelper('MDF').inputFiles(['castor:/castor/cern.ch/user/e/evh/131883/131883_0x0046_NB_L0Phys_00.raw','castor:/castor/cern.ch/user/e/evh/131884/131884_0x0046_NB_L0Phys_00.raw','castor:/castor/cern.ch/user/e/evh/131885/131885_0x0046_NB_L0Phys_00.raw']) #2012 data instead
+
+from PRConfig import TestFileDB
+TestFileDB.test_file_db["2012_raw_default"].run(withDB=False,configurable=Moore())

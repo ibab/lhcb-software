@@ -26,6 +26,7 @@ use FieldMap            v5r*                -no_auto_imports
 use HltTCK              v*      TCK         -no_auto_imports
 use L0TCK               v*      TCK         -no_auto_imports
 use AppConfig           v3r*                -no_auto_imports
+use PRConfig            v*    
 
 # Patches
 

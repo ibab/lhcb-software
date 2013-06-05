@@ -5,7 +5,7 @@
   <argument name="args"><set>
     <text>$MOOREROOT/tests/options/Moore-Offline.py</text>
     <text>--option</text>
-    <text>from Moore.Configuration import *; Moore().DDDBtag="head-20100624"; Moore().CondDBtag="sim-20100624-vc-md100"; from Configurables import CondDB; CondDB().LocalTags['SIMCOND']=['online-20101006']; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v21r9/00007107_00000001_2.digi' TYP='POOL_ROOTTREE' OPT='READ'"]; Moore().DataType="2010"; Moore().Simulation=True; Moore().EvtMax=100;</text>
+    <text>from Configurables import Moore; from PRConfig import TestFileDB; TestFileDB.test_file_db["2010_digi_default"].run(configurable=Moore()); Moore().EvtMax=100;</text>
   </set></argument>
   <argument name="validator"><text>
 #print stdout

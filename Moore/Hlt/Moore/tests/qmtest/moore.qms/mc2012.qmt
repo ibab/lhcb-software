@@ -8,7 +8,7 @@
     <text>$APPCONFIGOPTS/L0/L0TCK-0x0045.py</text>
     <text>../options/default-threshold.py</text>
     <text>--option</text>
-    <text>from Gaudi.Configuration import *; from GaudiConf import IOHelper; IOHelper().inputFiles(["PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Tests/Tests-v42r4/HepMCYes-10000000-100ev-20130225.digi","PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Tests/Tests-v42r4/HepMCNo-10000000-100ev-20130304.digi"]); from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20120831"; LHCbApp().CondDBtag="sim-20121025-vc-md100"; from Configurables import L0MuonAlg; L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"</text>
+    <text>from Gaudi.Configuration import *; from PRConfig import TestFileDB; TestFileDB.test_file_db["Sim08_2012_ForMoore"].run(); from Configurables import L0MuonAlg; L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"</text>
   </set></argument>
   <argument name="validator"><text>
 countErrorLines({"FATAL":0, "ERROR":0, "WARNING" :1})

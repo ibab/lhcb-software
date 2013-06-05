@@ -8,6 +8,5 @@ LHCbApp().DDDBtag="dddb-20120831";
 LHCbApp().CondDBtag="sim-20121025-vc-md100";
 
 ############# "input data" ############
-
-from GaudiConf import IOHelper
-IOHelper().inputFiles(["PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Tests/Tests-v42r4/HepMCYes-10000000-100ev-20130225.digi","PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Tests/Tests-v42r4/HepMCNo-10000000-100ev-20130304.digi"]);
+from PRConfig import TestFileDB
+TestFileDB.test_file_db["Sim08_2012_ForMoore"].run(withDB=False,configurable=Moore())

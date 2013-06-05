@@ -4,6 +4,12 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-06-05 - Rob Lambert
+ - Update all tests to work directly from PRConfig
+ - add tests running pass-through with latest database tags, 
+   2010, 2011 and 2012 data.
+ - recover the compatibility tests to a better state
+
 ! 2013-05-20 - Rob Lambert
  - new MC test, new L0TCK test prototypes
  - finished L0CK test, using threads to improve runtime... hope that's OK
