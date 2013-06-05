@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2013-06-05 - Murilo Rangel
+ - Added JEC uncertainty support
+
 ! 2013-05-17 - Chris Jones
  - Remove unused data members, to fix clang 3.2 warnings.
 

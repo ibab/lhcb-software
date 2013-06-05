@@ -73,6 +73,7 @@ namespace LoKi
       , m_maker     ( 0   )
       , m_associate2Vertex ( false  )
       , m_applyJEC ( false  )
+      , m_shiftJEC ( 0.  )
     { 
       // 
       declareProperty 
@@ -89,6 +90,9 @@ namespace LoKi
       declareProperty("ApplyJEC"  , 
 		      m_applyJEC = false ,
 		      "Apply jet energy corrections");
+      declareProperty("ShiftJEC"  , 
+		      m_shiftJEC = 0. ,
+		      "Shift jet energy correction by n sigma");
       declareProperty("PFParticleTypes"  , 
 		      m_inputTypes  ,
 		      "Type of particles to consider");
@@ -173,6 +177,7 @@ namespace LoKi
     bool m_associate2Vertex      ; // make jet per vertex
     /// apply JEC
     bool m_applyJEC              ;
+    float m_shiftJEC             ;
     /// append Jet ID
     bool m_applyJetID              ; // append jet ID info
     /// histograms for JEC
@@ -525,10 +530,13 @@ StatusCode LoKi::PFJetMaker::JEC( LHCb::Particle* jet )
   if(jeteta>4.8) jeteta=4.8;
   double cor = 1.;
   if (jetpt>5.) cor = histo->Interpolate(jetpt, jeteta, jetcpf);
+  double corerr = histo->GetBinError(histo->FindBin(jetpt,jeteta,jetcpf));
+  cor+=m_shiftJEC*corerr;
   // Store the uncorrected kinematics
 
   jet->addInfo ( 9100 , cor );
   jet->addInfo ( 9101 , PV);
+  jet->addInfo ( 9102 , corerr );
 
   Gaudi::LorentzVector newMom(cor*LoKi::Cuts::PX(jet),cor*LoKi::Cuts::PY(jet),cor*LoKi::Cuts::PZ(jet),cor*LoKi::Cuts::E(jet));
   jet->setMomentum(newMom);
