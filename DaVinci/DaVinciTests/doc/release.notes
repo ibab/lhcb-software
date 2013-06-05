@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-06-05 - Chris Jones
+ - Update flavour tagging options to take input data from PRConfig.
+
 ! 2013-06-04 - Chris Jones
  - Update PID and Packing tests to use data files from SWTEST EOS area, as 
    defined in options files in the PRConfig package.

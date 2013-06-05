@@ -4,7 +4,9 @@
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="timeout"><integer>3600</integer></argument>
 <argument name="args"><set>
+  <text>-T</text>
   <text>../options/Tagging/DVTestTagging-MC12.py</text>
+  <text>$PRCONFIGOPTS/DaVinci/FlavourTagging/MC12-B2JPsiMuMuK.py</text> 
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
