@@ -44,6 +44,10 @@ static int checkpointing_area_skip(const Area& a) {
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: Skip  /var/db/nscd/passwd:");
     return 1;
   }
+  else if ( m_strncmp(a.name,"/var/run/nscd/",14) == 0 ) { // since slc5 (somehow new)
+    checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: Skip  /var/run/nscd/");
+    return 1;
+  }
   return 0;
 }
 
