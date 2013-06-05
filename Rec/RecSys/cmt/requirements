@@ -22,7 +22,7 @@ use MuonTools            v5r5    Muon # Alessia Satta
 use MuonTrackAlign       v1r9    Muon # Silvia Pozzi
 use MuonInterfaces       v1r4    Muon # Giovanni Passaleva
 use MuonTrackMonitor     v2r7p1  Muon # Giacomo Graziani
-use MuonTrackRec         v3r8    Muon # Giacomo Graziani
+use MuonTrackRec         v3r9    Muon # Giacomo Graziani
 
 # Pr packages: Track Pattern Recognition for upgrade detectors
 use PrAlgorithms         v1r5    Pr   # Yasmine Amhis, Sascha Stahl
