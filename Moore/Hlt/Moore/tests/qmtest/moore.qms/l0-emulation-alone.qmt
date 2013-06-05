@@ -1,0 +1,19 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>python</text></argument>
+  <argument name="timeout">
+    <integer>3600</integer>
+  </argument>
+  <argument name="args"><set>
+    <text>../options/L0TCKs_Thread_Alone.py</text>
+  </set></argument>
+  <argument name="validator"><text>
+#print "YES"
+#reftable
+if "FAIL" in stdout:
+    causes.append('Failed to emulate a l0TCK')
+    result['moore.l0-emulation-mc.fail']=result.Quote("\n".join([line/strip() for line in stdout.split('\n') if "TEST RESULT" in line and "FAIL" in line]))
+result['moore.l0-emulation-mc.pass']=result.Quote("\n".join([line.strip() for line in stdout.split('\n') if "TEST RESULT" in line and "PASS" in line]))
+</text></argument>
+</extension>
+
