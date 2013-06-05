@@ -12,12 +12,13 @@ gaudi_depends_on_subdirs(Det/OTDet
                          Kernel/LHCbKernel
                          OT/OTDAQ
                          Tf/PatKernel
+                         Tf/TsaKernel
                          Tf/TfKernel)
 
 find_package(Boost)
 
 gaudi_add_module(TfTools
                  src/component/*.cpp
-                 INCLUDE_DIRS Boost OT/OTDAQ Tf/PatKernel Tf/TfKernel
-                 LINK_LIBRARIES Boost OTDetLib STDetLib VeloDetLib TrackEvent GaudiAlgLib GaudiKernel LHCbKernel)
+                 INCLUDE_DIRS Boost OT/OTDAQ Tf/PatKernel Tf/TfKernel Tf/TsaKernel
+                 LINK_LIBRARIES Boost OTDetLib STDetLib VeloDetLib TrackEvent GaudiAlgLib GaudiKernel LHCbKernel TsaKernel)
 

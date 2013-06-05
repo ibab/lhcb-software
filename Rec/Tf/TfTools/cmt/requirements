@@ -25,6 +25,7 @@ use     GaudiKernel     v*
 use     OTDAQ           v*      OT
 use     PatKernel       v*      Tf
 use     TfKernel        v*      Tf
+use     TsaKernel       v*      Tf
 use     Boost           v*      LCG_Interfaces
 
 #=========================================================================
