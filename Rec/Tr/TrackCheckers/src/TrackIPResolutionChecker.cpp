@@ -203,7 +203,7 @@ void TrackIPResolutionChecker::createResolutionProfile( const HistoID& inputname
   const TH2* h2 = Gaudi::Utils::Aida2ROOT::aida2root ( histo2D( inputname ) ) ;
   // create the 1D histogram
   if( !h2 ) {
-    error() << "Cannot find histogram with name: " << inputname << endreq ;
+    debug() << "Cannot find histogram with name: " << inputname << endreq ;
   } else {
     std::string title = h2->GetTitle() ;
     size_t ipos = title.find(" versus") ;
@@ -235,13 +235,17 @@ void TrackIPResolutionChecker::createResolutionProfile( const HistoID& inputname
 StatusCode TrackIPResolutionChecker::finalize()
 {
   // fill some resolution profiles
-  createResolutionProfile( "IP/IP3DVsInvTruePtH2","IP/IP3DResolutionVsInvTruePt") ;
-  createResolutionProfile( "IP/IPxVsInvTruePtH2","IP/IPxResolutionVsInvTruePt") ;
-  createResolutionProfile( "IP/IPyVsInvTruePtH2","IP/IPyResolutionVsInvTruePt") ;
+  const char names[3][256] = { "IP/Velo/","IP/Long/","IP/Backward/" } ;
+  for(int i=0; i<3; ++i) {
+    std::string prefix(names[i]) ;
+    createResolutionProfile( prefix + "IP3DVsInvTruePtH2", prefix + "IP3DResolutionVsInvTruePt") ;
+    createResolutionProfile( prefix + "IPxVsInvTruePtH2",  prefix + "IPxResolutionVsInvTruePt") ;
+    createResolutionProfile( prefix + "IPyVsInvTruePtH2",  prefix + "IPyResolutionVsInvTruePt") ;
+  }
   createResolutionProfile( "PV/dxVersusNTrk","PV/PVXResolutionVsNTrk") ;
   createResolutionProfile( "PV/dyVersusNTrk","PV/PVYResolutionVsNTrk") ;
   createResolutionProfile( "PV/dzVersusNTrk","PV/PVZResolutionVsNTrk") ;
-
+  
   return GaudiHistoAlg::finalize();
 }
 
@@ -273,11 +277,14 @@ StatusCode TrackIPResolutionChecker::execute()
     if( mcparticle && mcparticle->originVertex() ) {
       // make some selection for the IP study
       if(mcparticle->momentum().Pz()>0 ) {
+	
+	std::string prefix = std::string("IP/") + Gaudi::Utils::toString(track->type()) + "/" ;
+
 	double trueptGeV = mcparticle->momentum().Pt() / Gaudi::Units::GeV ;
-	plot1D( trueptGeV, "IP/TruePtH1", "true Pt in GeV", 0, 5 ) ;
-	plot1D( mcparticle->p() / Gaudi::Units::GeV, "IP/TruePH1", "true momentum in GeV", 0, 100 ) ;
+	plot1D( trueptGeV, prefix + "TruePtH1", "true Pt in GeV", 0, 5 ) ;
+	plot1D( mcparticle->p() / Gaudi::Units::GeV, prefix + "TruePH1", "true momentum in GeV", 0, 100 ) ;
 	int trackWasFitted = track->fitResult() && !track->fitResult()->nodes().empty() ;
-	plot1D( trackWasFitted, "IP/TrackWasFittedH1","track was fitted by K-filter",-0.5,1.5,2) ;
+	plot1D( trackWasFitted, prefix + "TrackWasFittedH1","track was fitted by K-filter",-0.5,1.5,2) ;
           
 	if( trueptGeV > 0.2 ) {
 	  double truephi = mcparticle->momentum().Phi() ;
@@ -285,9 +292,9 @@ StatusCode TrackIPResolutionChecker::execute()
 	  
 	  plot(track->lhcbIDs().size(),"NumLHCBIDs","Number of LHCbIDs",-0.5,40.5,41) ;
 	  Gaudi::XYZPoint trueorigin = mcparticle->originVertex()->position() ;
-	  plot(trueorigin.z(),"IP/TrueOriginZ","True origin z",-100,100) ;
-	  plot(trueorigin.x(),"IP/TrueOriginX","True origin x",-0.5,0.5) ;
-	  plot(trueorigin.y(),"IP/TrueOriginY","True origin y",-0.5,0.5) ;
+	  plot(trueorigin.z(),prefix + "TrueOriginZ","True origin z",-100,100) ;
+	  plot(trueorigin.x(),prefix + "TrueOriginX","True origin x",-0.5,0.5) ;
+	  plot(trueorigin.y(),prefix + "TrueOriginY","True origin y",-0.5,0.5) ;
 	  
 	  // for now, the track state is simply firststate
 	  const LHCb::State& firststate = track->firstState() ;
@@ -299,21 +306,21 @@ StatusCode TrackIPResolutionChecker::execute()
 	  double IPx = state.x() - trueorigin.x() ;
 	  double IPy = state.y() - trueorigin.y() ;
 	  double IP3D = std::sqrt( (IPx*IPx+IPy*IPy)/(1 + tx*tx + ty*ty) ) ;
-	  plot2D( invtrueptGeV, IPx, "IP/IPxVsInvTruePtH2", "IPx versus 1/pt_true", 0, maxinvpt, -maxip, maxip, nbinsinvpt, 200 ) ;
-	  plot2D( invtrueptGeV, IPy, "IP/IPyVsInvTruePtH2", "IPy versus 1/pt_true", 0, maxinvpt, -maxip, maxip, nbinsinvpt, 200 ) ;
-	  plot2D( invtrueptGeV, IP3D, "IP/IP3DVsInvTruePtH2", "IP versus 1/pt_true", 0, maxinvpt, 0, maxip, nbinsinvpt, 200 ) ;
+	  plot2D( invtrueptGeV, IPx, prefix + "IPxVsInvTruePtH2", "IPx versus 1/pt_true", 0, maxinvpt, -maxip, maxip, nbinsinvpt, 200 ) ;
+	  plot2D( invtrueptGeV, IPy, prefix + "IPyVsInvTruePtH2", "IPy versus 1/pt_true", 0, maxinvpt, -maxip, maxip, nbinsinvpt, 200 ) ;
+	  plot2D( invtrueptGeV, IP3D, prefix + "IP3DVsInvTruePtH2", "IP versus 1/pt_true", 0, maxinvpt, 0, maxip, nbinsinvpt, 200 ) ;
 	  
 	  if( trueptGeV > 0.5 ) {
 	    const double pi = M_PI ;
-	    plot2D( truephi, IPx, "IP/IPxVsTruePhiH2", "IPx versus phi_{true}", -pi, pi, -maxip, maxip, 24, 100 ) ;
-	    plot2D( truephi, IPy, "IP/IPyVsTruePhiH2", "IPy versus phi_{true}", -pi, pi, -maxip, maxip, 24, 100 ) ;
+	    plot2D( truephi, IPx, prefix + "IPxVsTruePhiH2", "IPx versus phi_{true}", -pi, pi, -maxip, maxip, 24, 100 ) ;
+	    plot2D( truephi, IPy, prefix + "IPyVsTruePhiH2", "IPy versus phi_{true}", -pi, pi, -maxip, maxip, 24, 100 ) ;
 	  }
 	  
-	  plot1D( IPx, "IP/IPxH1","IP x", -maxip,maxip) ;
-	  plot1D( IPy, "IP/IPyH1","IP y", -maxip,maxip) ;
-	  plot1D( IP3D, "IP/IP3DH1","IP 3D",0,maxip) ;
-	  plot1D( IPx/std::sqrt( state.covariance()(0,0) ), "IP/IPxPullH1","IP x pull", -5,5) ;
-	  plot1D( IPy/std::sqrt( state.covariance()(1,1) ), "IP/IPyPullH1","IP y pull", -5,5) ;
+	  plot1D( IPx, prefix + "IPxH1","IP x", -maxip,maxip) ;
+	  plot1D( IPy, prefix + "IPyH1","IP y", -maxip,maxip) ;
+	  plot1D( IP3D, prefix + "IP3DH1","IP 3D",0,maxip) ;
+	  plot1D( IPx/std::sqrt( state.covariance()(0,0) ), prefix + "IPxPullH1","IP x pull", -5,5) ;
+	  plot1D( IPy/std::sqrt( state.covariance()(1,1) ), prefix + "IPyPullH1","IP y pull", -5,5) ;
 	}
       }
     }

@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2013-06-05 - Wouter Hulsbergen
+ - Split histograms by track type in TrackIPResolutionChecker
+
 !========================= TrackCheckers v4r17 2013-06-03 =========================
 ! 2013-05-24 - Marco Cattaneo
  - Add missing PatKernel dependency
