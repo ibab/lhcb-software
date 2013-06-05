@@ -76,11 +76,13 @@ use PatKernel            v2r6    Tf   # Stephanie Hansmann-Menzemer
 use PatPixel             v1r1    Tf   # Pavel Jalocha
 use PatVelo              v3r28p1 Tf   # David Hutchcroft
 use PatVeloTT            v4r0    Tf   # Mariusz Witek
+use TfKernel             v2r24p1 Tf   # Stephanie Hansmann-Menzemer
 use TfTools              v1r18p1 Tf   # Stephanie Hansmann-Menzemer
 use TrackMatching        v2r35p2 Tf   # Eduardo Rodrigues
 use TrackSeeding         v1r7p1  Tf   # Eduardo Rodrigues, Henk Jan Bulten
 use TrackSys             v7r11p1 Tf   # Stephanie Hansmann-Menzemer
 use TsaAlgorithms        v3r27p2 Tf   # Matt Needham
+use TsaKernel            v3r7    Tf   # Matt Needham
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
 use PatChecker           v3r14p1 Tr   # David Hutchcroft
