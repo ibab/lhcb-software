@@ -1,7 +1,6 @@
 project HLT
 
-use PHYS PHYS_v16r5
-use LBCOM LBCOM_v13r5
+use PHYS PHYS_v16r6
 
 container      HltSys
 build_strategy with_installarea
