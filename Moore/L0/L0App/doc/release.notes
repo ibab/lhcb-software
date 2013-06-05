@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : L0/L0App
+! Responsible : Rob Lambert
+! Purpose     : An LHCb application to run L0 Emulation
+!-----------------------------------------------------------------------------
+
+! 2013-06-05 - Rob Lambert
+ - Create package for the first time
