@@ -13,7 +13,6 @@
 
 // from DigiEvent
 #include "Event/STCluster.h"
-#include "TsaKernel/Line.h"
 
 // local
 #include "TrackMatchVeloSeed.h"
