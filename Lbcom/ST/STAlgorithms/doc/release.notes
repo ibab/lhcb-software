@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2013-06-05 - Marco Cattaneo
+ - STCosmicsFilter moved to Tf/TsaAlgorithms, to remove TsaKernel dependency
+
 !========================= STAlgorithms v4r6p1 2013-06-03 =======================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warning
