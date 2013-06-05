@@ -94,8 +94,6 @@ gaudi_depends_on_subdirs(Associators/MCAssociators
                          ST/STTELL1Event
                          Si/SiDAQ
                          Sim/SimComponents
-                         Tf/TfKernel
-                         Tf/TsaKernel
                          Tools/CondDBEntityResolver
                          Tools/CondDBUI
 			 Tools/EventIndexer

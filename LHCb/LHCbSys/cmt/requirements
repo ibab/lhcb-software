@@ -132,9 +132,6 @@ use STDAQ                 v4r2    ST      # Mark Tobin
 use STKernel              v2r12   ST      # Mark Tobin
 use STTELL1Event          v1r12   ST      # Matt Needham
 
-use TfKernel              v2r24p1 Tf      # Stephanie Hansmann-Menzemer
-use TsaKernel             v3r7    Tf      # Matt Needham
-
 use CondDBEntityResolver  v5r6    Tools   # Marco Clemencic
 use CondDBUI              v3r23   Tools   # Marco Clemencic
 use EventIndexer          v1r1    Tools   # Marco Clemencic
