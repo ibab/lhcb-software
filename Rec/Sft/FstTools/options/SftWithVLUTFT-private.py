@@ -12,7 +12,7 @@ from GaudiConf import IOHelper
 from FstTools.Configuration import FstConf
 from Gaudi.Configuration import *
 
-#importOptions("$APPCONFIGOPTS/Brunel/MC-WithTruth.py")
+importOptions("$APPCONFIGOPTS/Brunel/MC-WithTruth.py")
 importOptions('$FSTTOOLSROOT/options/Sft.py')
 
 
@@ -30,9 +30,9 @@ if setting == "3":
 elif setting == "4":
     sample = {"mu": '3.8', "cooling": 'micro', "channel": 'minbias'}
 # High lumi
-elif setting == "5":
+elif setting == "7":
     sample = {"mu": '7.6', "cooling": 'tpg', "channel": 'minbias'}
-elif setting == "6":
+elif setting == "8":
     sample = {"mu": '7.6', "cooling": 'micro', "channel": 'minbias'}
 
 # Some privately generated samples, you still need to fill the sample

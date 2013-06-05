@@ -9,6 +9,7 @@ from Gaudi.Configuration import EventSelector, appendPostConfigAction
 from Configurables import Brunel, InputCopyStream, CondDB
 from FstTools.Configuration import FstConf
 
+importOptions("$APPCONFIGOPTS/Brunel/MC-WithTruth.py")
 importOptions('$FSTTOOLSROOT/options/Sft.py')
 
 
@@ -23,7 +24,11 @@ InputCopyStream('DstWriter2').Output = "DATAFILE='PFN:%s'"%(output_fname)
 
 # No bias data taken in early 2012, format is MDF, not digi
 #EventSelector().Input =["DATAFILE='PFN:/afs/cern.ch/user/t/thead/w/private/HLT-emulation-data.raw' SVC='LHCb::MDFSelector' OPT='READ'"]
-EventSelector().Input =["DATAFILE='PFN:/afs/cern.ch/work/h/hschindl/public/Samples/MinimumBias/DIGI/Velo_Nu7.6_30000000_1_1000ev-Extended.digi' OPT='READ'"]
+
+# Velo classic produced privately at 7.6
+#EventSelector().Input =["DATAFILE='PFN:/afs/cern.ch/work/h/hschindl/public/Samples/MinimumBias/DIGI/Velo_Nu7.6_30000000_1_1000ev-Extended.digi' OPT='READ'"]
+# Velo classic produced privately at 3.8
+EventSelector().Input =["DATAFILE='PFN:rfio:///castor/cern.ch/user/h/hschindl/VLSamples/MinimumBias/Velo_Nu3.8_30000000_1_1000ev-Extended.digi' OPT='READ'"]
 Brunel().InputType = "DIGI"
 
 
@@ -41,12 +46,14 @@ Brunel().MCCheckSequence = []
 # Does this remove non L0 events?
 Brunel().RecL0Only = True
 
-
+Brunel().MCLinksSequence = ["Unpack", "Tr"]
+Brunel().MCCheckSequence = ["Pat"]
 def setup_mc_truth_matching():
    from Configurables import GaudiSequencer, PrTrackAssociator, PrChecker
    GaudiSequencer("CaloBanksHandler").Members = []
    GaudiSequencer("DecodeTriggerSeq").Members = []
-   GaudiSequencer("MCLinksTrSeq").Members = [ "PrLHCbID2MCParticle", "PrTrackAssociator"]
+   GaudiSequencer("MCLinksTrSeq").Members = ["UnpackMCParticle", "UnpackMCVertex"]
+   GaudiSequencer("MCLinksTrSeq").Members += [ "PrLHCbID2MCParticle", "PrTrackAssociator"]
    PrTrackAssociator().RootOfContainers = "/Event/Fst/Track"
    GaudiSequencer("CheckPatSeq" ).Members = [ "PrChecker" ]
    PrChecker().VeloTracks = "/Event/Fst/Track/Velo"

@@ -32,6 +32,7 @@ elif setting == "3":
     sample = {"mu": '3.8', "cooling": 'poco', "channel": 'minbias'}
 elif setting == "4":
     sample = {"mu": '3.8', "cooling": 'micro', "channel": 'minbias'}
+# High lumi datasets
 elif setting == "5":
     sample = {"mu": '7.6', "cooling": 'poco', "channel": 'Kstmumu'}
 elif setting == "6":
@@ -84,21 +85,31 @@ def setup_truth_matching():
    from Configurables import PatPixelTracking
    GaudiSequencer("CaloBanksHandler").Members = []
    GaudiSequencer("DecodeTriggerSeq").Members = []
-   #GaudiSequencer("MCLinksTrSeq").Members = ["UnpackMCParticle", "UnpackMCVertex"]
-   GaudiSequencer("MCLinksTrSeq").Members = []#"PrLHCbID2MCParticle", "PrTrackAssociator"]
+   GaudiSequencer("MCLinksTrSeq").Members = ["UnpackMCParticle", "UnpackMCVertex"]
+   GaudiSequencer("MCLinksTrSeq").Members += ["PrLHCbID2MCParticle", "PrTrackAssociator"]
    PrTrackAssociator().RootOfContainers = "/Event/Fst/Track"
    writer = InputCopyStream('DstWriter2')
-   GaudiSequencer("CheckPatSeq").Members = []#"PrChecker", "PrDebugTrackingLosses"]#,writer]
+   GaudiSequencer("CheckPatSeq").Members = ["PrChecker", "PrDebugTrackingLosses"]#, writer]
    PrChecker().VeloTracks = "/Event/Fst/Track/Velo"
    PrChecker().ForwardTracks = "/Event/Fst/Track/Forward"
+
+   # Debugging of the PatPixelTracking
+   XXX="""
    #PrDebugTrackingLosses().Velo = True
    #PrDebugTrackingLosses().Clone = True
    #PrDebugTrackingLosses().VeloName = PatPixelTracking("FstPixel").OutputTracksName
    pix_tracking = PatPixelTracking("FstPixel")
+   pix_tracking.ExtraStep = 2
+   #pix_tracking.MaxChi2ToAdd = 200 # 60
+   #pix_tracking.ExtraTol = 1.0 # 0.2
+   #pix_tracking.MaxChi2PerHit = 70 # 12
+   # turn off Wouter's K-filter
+   #pix_tracking.ClosestToBeamStateKalmanFit = False
+   
    #pix_tracking.DebugToolName = "PatPixelDebugTool"
    #pix_tracking.WantedKey = 588
    #pix_tracking.MaxChi2ToAdd = 150
    #pix_tracking.ExtraTol = 0.8 #mm
-   print pix_tracking
+   print pix_tracking"""
    
 appendPostConfigAction(setup_truth_matching)
