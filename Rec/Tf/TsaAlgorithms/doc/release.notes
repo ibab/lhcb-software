@@ -4,15 +4,18 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
-!========================= TsaAlgorithms v3r27p2 2013-06-03 =========================
+! 2013-06-05 - Marco Cattaneo
+ - STCosmicsFilter moved here, from ST/STAlgorithms
+
+!========================= TsaAlgorithms v3r27p2 2013-06-03 =====================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warnings
 
-!========================= TsaAlgorithms v3r27p1 2013-04-30 =========================
+!========================= TsaAlgorithms v3r27p1 2013-04-30 =====================
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 
-!========================= TsaAlgorithms v3r27 2012-11-28 =========================
+!========================= TsaAlgorithms v3r27 2012-11-28 =======================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
 
@@ -26,7 +29,7 @@
  - Do not MeasureTime by default in TsaSeed
  - Fix UNINIT_CTOR defects
 
-!========================= TsaAlgorithms v3r26 2012-03-27 =========================
+!========================= TsaAlgorithms v3r26 2012-03-27 =======================
 ! 2012-03-07 - Marco Cattaneo
  - Use std:stable_sort instead of std::sort everywhere, fixes differences 
    between gcc43 and gcc46
