@@ -4,8 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
-! 2013-05-27 - Giovanni Passaleva
+! 2013-06-05 - Giovanni Passaleva
  - Fixes to allow configurations without M1 (e.g. upgrade )
+ - Fixed compilation warning
 
 !========================= TrackTools v4r24 2013-06-03 =========================
 ! 2013-05-27 - Marco Cattaneo

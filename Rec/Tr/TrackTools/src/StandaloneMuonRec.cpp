@@ -117,7 +117,7 @@ StatusCode StandaloneMuonRec::initialize() {
   m_totL1Board = 0;  
   m_stationL1Start[0]=0;
   
-  for(int station=0;station<m_nStation;station++){
+  for(unsigned int station=0;station<m_nStation;station++){
     if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug()<<"station number "<<station<<endmsg;    
     // GP changed argument in getBasePath
