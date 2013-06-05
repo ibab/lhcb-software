@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-06-05 - Eric van Herwijnen
+ - Fix bug in install_TCK_manifest.py (rstrip removes all characters,
+   not just the suffix. hence v20r1p1 became v20r).
+
 ! 2013-06-05 - Rob Lambert
  - Update all tests to work directly from PRConfig
  - add tests running pass-through with latest database tags, 

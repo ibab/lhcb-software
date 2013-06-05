@@ -27,6 +27,6 @@ if not cpManifest(manifest,target) :
         cpManifest(manifest,target)
     for suffix in [ 'p1','p2','p3','p4','p5' ] :
         if manifest.endswith(suffix) :
-            manifest = manifest.rstrip(suffix)
+	    manifest = manifest[0:len(manifest)-2]
             cpManifest(manifest,target)
             continue
