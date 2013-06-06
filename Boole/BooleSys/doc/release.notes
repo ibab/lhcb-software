@@ -3,6 +3,43 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v26r6>2013-06-07 Boole v26r6</A></H1><PRE>
+This version uses projects LCGCMT 65, Gaudi v23r8, LHCb v36r0, Lbcom v14r0
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Changes to external packages (LCGCMT 65). Main changes:
+   . ROOT 5.34.07a (was 5.34.05)
+   . Boost 1.50.0 (was 1.48.0)
+   . HepMC 2.06.08 (was 2.06.05)
+   . Python 2.7.3 (was 2.5.5p2)
+   . Full list at http://lcgsoft.cern.ch/index.py?chkbox0=64d&chkbox1=65&show=diffs&page=compare
+
+ - Functionality changes
+   . Supports configurations without M1
+     (MuonAlgs v6r12, MuonBackground v2r14, MuonMoniDigi v2r7, MuonDet v9r12)
+   . Modified StalledEventMonitor to be able to print a stack trace of the 
+     stalled process and abort the execution (GaudiUtils v4r5)
+
+ - Performance optimisation
+   . Use getIfExists (OTSimulation v5r5, HltDAQ v2r17)
+   . No more Ntuple creation by default (MuonMoniDigi v2r14)
+   . Remove unused finalize methods
+     (VPAlgorithms v3r3, LbcomSys v14r0, LHCbSys v36r0)
+
+ - Bug fixes
+   . Fix clang32 and gcc48 warnings, UNINIT_CTOR defects (BooleUMC v2r2,
+     OTSimulation v5r5, VPAlgorithms v3r3, LbcomSys v14r0, LHCbSys v36r0)
+   . Fix untested StatusCode (OTSimulation v5r5)
+   . Fix bug in sequencer timer (GaudiAlg v14r5)
+
+ - Changes to tests
+   . vl_compact tests updated to use the new optimised geometry
+     (local tag VL-CompactOptimize-Local-20130527)
+   . Fixed bug in vl_compact_tpg-ut-ft qmtest (was using wrong reference)
+
+ - Changes to references to follow changes in underlying packages
+   . Fixes for configurations without M1 (Muon packages)
+
 </PRE><H1><A NAME=v26r5>2013-05-02 Boole v26r5</A></H1><PRE>
 This version uses projects LCGCMT 64d, Gaudi v23r7, LHCb v35r6, Lbcom v13r6p1
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
