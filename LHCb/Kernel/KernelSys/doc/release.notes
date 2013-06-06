@@ -4,6 +4,9 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
+! 2013-06-06 - Marco Cattaneo
+ - Remove TfKernel dependency
+
 !========================= KernelSys v12r2 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

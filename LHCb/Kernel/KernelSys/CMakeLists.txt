@@ -13,6 +13,5 @@ gaudi_depends_on_subdirs(Calo/CaloKernel
                          L0/ProcessorKernel
                          Muon/MuonKernel
                          Rich/RichKernel
-                         ST/STKernel
-                         Tf/TfKernel)
+                         ST/STKernel)
 
