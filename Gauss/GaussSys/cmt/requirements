@@ -1,5 +1,5 @@
 package GaussSys
-version v46r2
+version v46r2p1
 
 branches cmt doc
 
@@ -7,11 +7,8 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 
-# Temporarily to pick up new features in LoKiGen
-use LoKiGen             v10r12 Phys
-
 # Gauss application: the application is not built on Win32
-use Gauss               v46r2   Sim
+use Gauss               v46r2p1 Sim
 
 # LCG interfaces to generators, until available in LCGCMT
 use LCG_Settings        v64r4p1 
