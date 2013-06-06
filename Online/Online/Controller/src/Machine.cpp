@@ -68,7 +68,7 @@ Machine::Machine(const Type *typ, const string& nam)
   : TypedObject(typ,nam), m_fsm(MACH_IDLE), m_currState(0), 
     m_currTrans(0), m_direction(Rule::MASTER2SLAVE)
 {
-  display(DEBUG,"FSMmachine: creating machine %s of type %s",c_name(),typ->c_name());
+  display(DEBUG,c_name(),"FSMmachine: creating machine %s of type %s",typ->c_name());
   setState(m_type->initialState()).setTarget(0);
   Callback cb(this);
   m_fsm.setCurrentState(MACH_IDLE);
@@ -145,22 +145,22 @@ void Machine::handleIoc(const Event& event)   {
   ErrCond status = FSM::SUCCESS;
   switch(event.type)  {
   case Slave::SLAVE_ALIVE:
-    status = m_fsm.invokeTransition(MACH_ACTIVE,this);
+    status = invokeMetaTransition(MACH_ACTIVE,this);
     break;
   case Slave::SLAVE_LIMBO:
-    status = m_fsm.invokeTransition(MACH_CHK_SLV,event.data);
+    status = invokeMetaTransition(MACH_CHK_SLV,event.data);
     break;
   case Slave::SLAVE_FINISHED:
-    status = m_fsm.invokeTransition(MACH_CHK_SLV,event.data);
+    status = invokeMetaTransition(MACH_CHK_SLV,event.data);
     break;
   case Slave::SLAVE_TRANSITION:   /// State change by slave. Handle the request.
-    display(INFO,"%s> Machine got SLAVE_TRANSITION in state:%s/%s - evaluate WHENs. Idle:%s",
-	    c_name(), c_state(), currentMetaName(), isIdle() ? "Yes" : "No");
+    display(INFO,c_name(),"Machine got SLAVE_TRANSITION in state:%s/%s - evaluate WHENs. Idle:%s",
+	    c_state(), currentMetaName(), isIdle() ? "Yes" : "No");
 #if 0
     for(Slaves::const_iterator i=m_slaves.begin(); i!= m_slaves.end(); ++i)  {
       const Slave* s = *i;
-      display(ALWAYS,"%s> Controller Slave %s in state %s/%s",
-	      c_name(), s->c_name(), s->c_state(), s->metaStateName());
+      display(ALWAYS,c_name(),"Controller Slave %s in state %s/%s",
+	      s->c_name(), s->c_state(), s->metaStateName());
     }
 #endif
     if ( isIdle() ) {
@@ -169,16 +169,15 @@ void Machine::handleIoc(const Event& event)   {
     break;
   case Slave::SLAVE_FAILED:
     if ( FSM::TRANNOTFOUND == checkSlaves() )  {
-      display(WARNING,"%s> Machine got SLAVE_FAILED in meta state:%s - evaluate WHENs. Idle:%s",
-	      c_name(), currentMetaName(), isIdle() ? "Yes" : "No");
+      display(WARNING,c_name(),"Machine got SLAVE_FAILED in meta state:%s - evaluate WHENs. Idle:%s",
+	      currentMetaName(), isIdle() ? "Yes" : "No");
       evaluateWhens();
     }
     break;
   case Machine::MACH_EXEC_ACT:
-    status = m_fsm.invokeTransition(MACH_EXEC_ACT,this);
-    break;
+  case Machine::MACH_OUTACTION:
   default:
-    status = m_fsm.invokeTransition(event.type,this);
+    status = invokeMetaTransition(event.type,this);
     break;
   }
   if ( status != FSM::SUCCESS )  {
@@ -210,20 +209,20 @@ void Machine::evaluateWhens()  {
     for(Slaves::const_iterator is=m_slaves.begin(); is!=m_slaves.end(); ++is)
       state_names << (*is)->name() << "@" << (*is)->c_state() << "  ";
 
-    display(INFO,"%s> Machine Idle:%s EvaluateWhen: Check %d when clauses.",
-	    c_name(),isIdle() ? " YES " : " NO ",int(whens.size()));
-    display(DEBUG,"%s> Slave state names:%s",c_name(),state_names.str().c_str());
+    display(INFO,c_name(),"Machine Idle:%s EvaluateWhen: Check %d when clauses.",
+	    isIdle() ? " YES " : " NO ",int(whens.size()));
+    display(DEBUG,c_name(),"Slave state names:%s",state_names.str().c_str());
     for(State::Whens::const_iterator iw=whens.begin(); iw != whens.end(); ++iw)  {
       const When* w = (*iw);
       When::Result res = w->fires(states);
       if ( res.first && res.first != state() )  {
-	display(INFO,"%s> WHEN clause: %s fired. Invoke tramsition to:%s",
-		c_name(),w->c_name(),res.first->c_name());
+	display(INFO,c_name(),"WHEN clause: %s fired. Invoke tramsition to:%s",
+		w->c_name(),res.first->c_name());
 	invokeTransition(res.first,res.second);
 	return;
       }
       else  {
-	display(DEBUG,"%s> WHEN clause: %s rejected.",c_name(),w->c_name());
+	display(DEBUG,c_name(),"WHEN clause: %s rejected.",w->c_name());
       }
     }
   }
@@ -231,17 +230,24 @@ void Machine::evaluateWhens()  {
 
 /// Callback executed on a failure of a metastate change
 ErrCond Machine::metaTransitionFail() {
-  display(ALWAYS,"FSM[%s]> FAILED ACTION from state:%d [%s] to state %d [%s]",
-	  RTL::processName().c_str(),int(m_fsm.currentState()),_metaStateName(m_fsm.currentState()),
+  display(ALWAYS,c_name(),"FSM> FAILED ACTION from state:%d [%s] to state %d [%s]",
+	  int(m_fsm.currentState()),_metaStateName(m_fsm.currentState()),
 	  int(m_fsm.targetState()),_metaStateName(m_fsm.targetState()));
   return FSM::SUCCESS;
 }
 
 /// Callback executed if the current transition is not availible
 ErrCond Machine::metaTransitionMissing() {
-  display(ALWAYS,"FSM[%s]> UNKNOWN TRANSITION  from state:%d [%s] to state %d [%s]",
-	  RTL::processName().c_str(),int(m_fsm.currentState()),_metaStateName(m_fsm.currentState()),
+  for(const FSM::MicFSMTransition* tr = m_fsm.head(); tr; tr = tr->next())  {
+    display(ALWAYS,c_name(),"FSM> FAILED Transition %s from state:%d [%s] to state %d [%s]",
+	    tr->condition().c_str(),
+	    int(tr->from()),_metaStateName(tr->from()),
+	    int(tr->to()),_metaStateName(tr->to()));
+  }
+  display(ALWAYS,c_name(),"FSM> UNKNOWN TRANSITION  from state:%d [%s] to state %d [%s]",
+	  int(m_fsm.currentState()),_metaStateName(m_fsm.currentState()),
 	  int(m_fsm.targetState()),_metaStateName(m_fsm.targetState()));
+
   return FSM::SUCCESS;
 }
 
@@ -252,7 +258,7 @@ ErrCond Machine::invokeTransition (const Transition* transition, Rule::Direction
     m_direction = direction;
     m_fsm.setCurrentState(MACH_IDLE);
     for_each(m_slaves.begin(),m_slaves.end(),SlaveReset());
-    return m_fsm.invokeTransition(MACH_OUTACTION,this);
+    return ret_success(this,MACH_OUTACTION);
   }
   return FSM::TRANNOTFOUND;
 }
@@ -275,6 +281,16 @@ ErrCond Machine::invokeTransition (const State* target_state, Rule::Direction di
 /// Invoke FSM transition to target state
 ErrCond Machine::invokeTransition(const std::string& target_state, Rule::Direction direction)   {
   return invokeTransition(type()->state(target_state),direction);
+}
+
+/// Invoke meta transition on FSM object
+ErrCond Machine::invokeMetaTransition(unsigned int target, const void* param)  {
+#if 0
+  display(DEBUG,c_name(),"FSM> EXEC META TRANSITION  from state:%d [%s] to state %d [%s]",
+	  int(m_fsm.currentState()),_metaStateName(m_fsm.currentState()),
+	  int(target),_metaStateName(target));
+#endif
+  return m_fsm.invokeTransition(target,param);
 }
 
 /// Finish lengthy state leave action
@@ -341,8 +357,8 @@ ErrCond Machine::checkSlaves()   {
   if ( tr )  {
     // Here we only enter in the presence of slaves!
     CheckStateSlave check = for_each(sl.begin(),sl.end(),CheckStateSlave(tr));
-    display(DEBUG,"%s> Executing %s. Count:%d Fail:%d Dead:%d Size:%d",
-	    c_name(),tr->c_name(), int(check.count), int(check.fail), int(check.dead),int(sl.size()));
+    display(DEBUG,c_name(),"Executing %s. Count:%d Fail:%d Dead:%d Size:%d",
+	    tr->c_name(), int(check.count), int(check.fail), int(check.dead),int(sl.size()));
 
     if ( tr->killActive() && check.dead < sl.size() )
       return FSM::WAIT_ACTION;
@@ -358,8 +374,8 @@ ErrCond Machine::checkSlaves()   {
     else if ( !tr->checkLimbo() && check.fail==0 && check.dead+check.count==sl.size() )
       return ret_success(this,MACH_EXEC_ACT);
     else if ( check.fail>0 && check.count+check.fail == sl.size() )   {
-      display(INFO,"%s> Executing %s. Invoke MACH_FAIL. count:%d fail:%d dead:%d",
-	      c_name(),tr->c_name(), int(check.count), int(check.fail), int(check.dead));
+      display(INFO,c_name(),"Executing %s. Invoke MACH_FAIL. count:%d fail:%d dead:%d",
+	      tr->c_name(), int(check.count), int(check.fail), int(check.dead));
       return ret_failure(this);
     }
     else if ( check.fail>0 ) 
@@ -378,14 +394,14 @@ ErrCond Machine::startTransition()  {
     if ( !sl.empty() )  {
       PredicateSlave pred = for_each(sl.begin(),sl.end(),PredicateSlave(tr));
       if ( pred.ok() )   {
-	display(DEBUG,"%s> Executing %s. Predicates checking finished successfully. Dir:%s",c_name(),tr->c_name(),dir(m_direction));
+	display(DEBUG,c_name(),"Executing %s. Predicates checking finished successfully. Dir:%s",tr->c_name(),dir(m_direction));
 	m_meta.execute(this);
 	InvokeSlave func = for_each(sl.begin(),sl.end(),InvokeSlave(tr,m_direction));
 	if ( func.status == FSM::WAIT_ACTION )  {
 	  return FSM::SUCCESS;
 	}
 	else if ( !func.ok() )  {
-	  display(INFO,"%s> Executing %s. Failed to invoke slaves according to rules.",c_name(),tr->c_name());
+	  display(INFO,c_name(),"Executing %s. Failed to invoke slaves according to rules.",tr->c_name());
 	  return ret_failure(this);
 	}
 	return ret_success(this,MACH_EXEC_ACT);
@@ -466,7 +482,7 @@ ErrCond Machine::finishTransition (const void* user_param)  {
   setState(tr->to()).setTarget(0);
   if ( i != m_transActions.end() ) (*i).second.completion().execute(user_param);
   m_completion.execute(user_param);
-  display(INFO,"%s> Executing %s. Finished transition. Current state:%s",c_name(),tr->c_name(),tr->to()->c_name());
+  display(INFO,c_name(),"Executing %s. Finished transition. Current state:%s",tr->c_name(),tr->to()->c_name());
   m_direction = Rule::MASTER2SLAVE;
   return FSM::SUCCESS;
 }

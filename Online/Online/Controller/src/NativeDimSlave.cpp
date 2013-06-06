@@ -69,19 +69,19 @@ FSM::ErrCond NativeDimSlave::start()  {
 void NativeDimSlave::handleUnloadTimeout()  {
   int status = 0;
   if ( m_timerID.second == SLAVE_UNLOAD_TIMEOUT ) {
-    display(ERROR,"%s> unload command unsuccessful. Send SIGTERM. State:%s",c_name(),metaStateName());	  
+    display(ERROR,c_name(),"unload command unsuccessful. Send SIGTERM. State:%s",metaStateName());	  
     ::kill(m_pid,SIGTERM);
     pid_t pid = ::waitpid(-1,&status,WNOHANG);
     if ( pid < 0 ) startTimer(SLAVE_TERMINATE_TIMEOUT);
     else m_pid = 0;
   }
   else if ( m_timerID.second == SLAVE_TERMINATE_TIMEOUT ) {
-    display(ERROR,"%s> unload command unsuccessful. Send SIGKILL. State:%s",c_name(),metaStateName());	  
+    display(ERROR,c_name(),"unload command unsuccessful. Send SIGKILL. State:%s",metaStateName());	  
     m_timerID = TimerID(0,0);
     ::kill(m_pid,SIGKILL);
     pid_t pid = ::waitpid(-1,&status,0);
     if ( pid < 0 )    {
-      display(ERROR,"%s> FAILED to kill slave. Curr State:%s",c_name(),metaStateName());	  
+      display(ERROR,c_name(),"FAILED to kill slave. Curr State:%s",metaStateName());	  
     }
     m_pid = 0;
   }

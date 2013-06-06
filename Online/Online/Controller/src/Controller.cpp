@@ -63,13 +63,13 @@ Controller::~Controller() {
 FSM::ErrCond Controller::fail()  {
   const Transition* tr = m_machine->currTrans();
   const Slaves slaves = m_machine->slaves();
-  display(ALWAYS,"%s::%s> Controller: FAILED to invoke transition %s from %s.",
-	  c_name(), m_machine->type()->c_name(), tr ? tr->c_name() : "??Unknown??",m_machine->c_state());
+  display(ALWAYS,c_name(),"%s> Controller: FAILED to invoke transition %s from %s.",
+	  m_machine->type()->c_name(), tr ? tr->c_name() : "??Unknown??",m_machine->c_state());
   m_machine->setSlaveState(Slave::SLAVE_FAILED,m_errorState);
   for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); ++i)  {
     const Slave* s = *i;
-    display(ALWAYS,"%s> Controller: Slave %s in state %s has meta-state:%s",
-	    c_name(), s->c_name(), s->c_state(), s->metaStateName());
+    display(ALWAYS,c_name(),"Controller: Slave %s in state %s has meta-state:%s",
+	    s->c_name(), s->c_state(), s->metaStateName());
   }
   return publishSlaves();
 }
@@ -94,13 +94,13 @@ FSM::ErrCond Controller::publishSlaves()  {
 /// Publish state information when transition is completed
 FSM::ErrCond Controller::publish()  {
   string state = m_machine->c_state();
-  display(INFO,"%s> Controller PUBLISH state %s",m_machine->c_name(),state.c_str());
+  display(INFO,c_name(),"%s> Controller PUBLISH state %s",m_machine->c_name(),state.c_str());
   if ( state == "ERROR" )  {
     const Slaves slaves = m_machine->slaves();
     for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); ++i)  {
       const Slave* s = *i;
-      display(INFO,"%s> Controller: Slave %s in state %s has meta-state:%s",
-	      c_name(), s->c_name(), s->c_state(), s->metaStateName());
+      display(INFO,c_name(),"Controller: Slave %s in state %s has meta-state:%s",
+	      s->c_name(), s->c_state(), s->metaStateName());
     }
   }
   publishSlaves();
@@ -131,8 +131,8 @@ void Controller::handle(const Event& ev)    {
       m_machine->invokeTransition(m_errorState,Rule::SLAVE2MASTER);
       break;
     default:
-      display(ALWAYS,"Controller: %s> ERROR: Invoke transition from %s action:%d",
-	      c_name(),m_machine->c_state(),ev.type);
+      display(ALWAYS,c_name(),"Controller: ERROR: Invoke transition from %s action:%d",
+	      m_machine->c_state(),ev.type);
       //m_machine->invokeTransition((const State*)ev.data);
       break;
     }
@@ -155,7 +155,7 @@ FSM::ErrCond Controller::invokeTransition(const string& transition)  {
   if ( ret != FSM::SUCCESS )   {
     //setTargetState(ERROR);
     //ret = m_machine->invokeTransition(ST_NAME_ERROR,Rule::SLAVE2MASTER);
-    //display(ALWAYS,"Unknown transition:%s from state %s. Moving to ERROR!",
+    //display(ALWAYS,c_name(),"Unknown transition:%s from state %s. Moving to ERROR!",
     //    transition.c_str(),state->c_name());
   }
   return ret;
@@ -166,9 +166,9 @@ void Controller::commandHandler()   {
   // Decouple as quickly as possible from the DIM command loop !
   ErrCond status = FSM::SUCCESS;
   string cmd = getString();
-  display(INFO,"%s> Received transition request:%s",c_name(),cmd.c_str());
+  display(INFO,c_name(),"Received transition request:%s",cmd.c_str());
   if ( !m_machine->isIdle() )  {
-    display(ERROR,"%s> Machine is not idle!",c_name());
+    display(ERROR,c_name(),"Machine is not idle!");
     m_machine->goIdle();
   }
   if ( cmd == "load"  )  {

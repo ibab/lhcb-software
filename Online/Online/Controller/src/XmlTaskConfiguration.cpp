@@ -49,7 +49,7 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
   DD4hep::XML::_toDictionary(Unicode("NUMBER_OF_INSTANCES"),Unicode(instances_text));
   xml_h inventory = DD4hep::XML::DocumentHandler().load(m_config).root();
   xml_coll_t(inventory,_Unicode(task)).for_each(analyzer);
-  machine.display(print_level,"------------------------------------ Task list -------------------------------------");
+  machine.display(print_level,"XmlConfig","------------------------------------ Task list -------------------------------------");
   for(Tasklist::Tasks::const_iterator i=tasks.begin(); i!=tasks.end(); ++i)  {
     Tasklist::Task* t = *i;
     size_t instances  = t->instances;
@@ -77,7 +77,7 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
 
       instance_args += " -instances ";
       instance_args += (forking) ? instances_text : "0";
-      machine.display(print_level,"+---- Task:%s UTGID: %s. %s %s",
+      machine.display(print_level,"XmlConfig","+---- Task:%s UTGID: %s. %s %s",
 		      t->name.c_str(), instance_utgid.c_str(),
 		      forking && (i == 0) ? "Total number of processes to be forked:" : "",
 		      forking && (i == 0) ? instances_text : "");
@@ -85,13 +85,13 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
 	slave = new NativeDimSlave(type,instance_utgid,&machine,forking && (i != 0));
 	char wd[PATH_MAX];
 	if ( 0 == ::getcwd(wd,sizeof(wd)) )  {
-	  machine.display(print_level,"|     CANNOT attach slave %s. Failed to retrieve current working directory: %s",
+	  machine.display(print_level,"XmlConfig","|     CANNOT attach slave %s. Failed to retrieve current working directory: %s",
 			  instance_utgid.c_str(),RTL::errorString());
 	  return false;
 	}
 	cmd = wd + string("/") + t->command;
 	if ( 0 != ::access(cmd.c_str(),X_OK) )  {
-	  machine.display(print_level,"|     CANNOT attach slave %s. File %s is not executable: %s",
+	  machine.display(print_level,"XmlConfig","|     CANNOT attach slave %s. File %s is not executable: %s",
 			  instance_utgid.c_str(),cmd.c_str(),RTL::errorString());
 	  return false;
 	}
@@ -103,7 +103,7 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
 	s->setFmcArgs(instance_fmc);
 	s->setArgs(instance_args);
 	slave = s;
-	machine.display(print_level,"|     tmStart -m %s %s %s %s",node.c_str(),instance_fmc.c_str(),
+	machine.display(print_level,"XmlConfig","|     tmStart -m %s %s %s %s",node.c_str(),instance_fmc.c_str(),
 			cmd.c_str(),instance_args.c_str());
       }
       slave->setCommand(cmd);
@@ -127,8 +127,8 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
 	  }
 	}
 	if ( !found )  {
-	  machine.display(machine.ERROR,"%s> Type: %s -- Cannot set timeout for action %s = %d seconds [%s]",
-			  slave->c_name(), type->c_name(), it->action.c_str(), tmo, "No transition found");
+	  machine.display(machine.ERROR,slave->c_name(),"Type: %s -- Cannot set timeout for action %s = %d seconds [%s]",
+			  type->c_name(), it->action.c_str(), tmo, "No transition found");
 	}
       }
     }

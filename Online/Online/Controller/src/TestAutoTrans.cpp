@@ -83,7 +83,7 @@ ErrCond TestAutoTrans::reset()     {
 ErrCond TestAutoTrans::load()      {
   print(); 
   if ( rounds > 0 && cnt >= rounds ) {
-    TypedObject::display(TypedObject::ALWAYS,"%s> Number of rounds reached limit: %d",m_machine->c_name(),cnt);
+    TypedObject::display(TypedObject::ALWAYS,m_machine->c_name(),"Number of rounds reached limit: %d",cnt);
     ::exit(0);
   }
   return do_sleep("load").go_to(ST_NAME_NOT_READY); 

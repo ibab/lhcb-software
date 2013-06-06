@@ -73,33 +73,33 @@ const Transition* Rule::applies(const State* slave_state, Direction direction_fl
     const Transition* tr = m_transition;
     if ( tr )  {
       if ( tr->from() == slave_state )  {
-	display(NOLOG,"+++RULE: %s> Apply rule on slave: tr:%s --  %s -> %s",
-		c_name(),tr->c_name(),tr->from()->c_name(),to->c_name());
+	display(NOLOG,c_name(),"+++RULE: Apply rule on slave: tr:%s --  %s -> %s",
+		tr->c_name(),tr->from()->c_name(),to->c_name());
 	return tr;
       }
-      display(NOLOG,"+++RULE: %s> Ignore rule on slave:  %s -> %s  [NO_TRANSITION]",
-	      c_name(),slave_state->c_name(),to->c_name());
+      display(NOLOG,c_name(),"+++RULE: Ignore rule on slave:  %s -> %s  [NO_TRANSITION]",
+	      slave_state->c_name(),to->c_name());
       return 0;
     }
     else if ( 0 != (tr=slave_state->findTrans(to)) )   {
       if ( !m_currState || (m_currState && m_currState == tr->from()) )  {
-	display(NOLOG,"+++RULE: %s> Apply rule on slave: tr:%s [%s] --  %s -> %s",
-		c_name(),tr->c_name(),m_currState ? m_currState->c_name() : "----",
+	display(NOLOG,c_name(),"+++RULE: Apply rule on slave: tr:%s [%s] --  %s -> %s",
+		tr->c_name(),m_currState ? m_currState->c_name() : "----",
 		slave_state->c_name(),to->c_name());
 	return tr;
       }
-      display(NOLOG,"+++RULE: %s> Ignore rule on slave:  %s -> %s  (%s , %s) [STATE_MISMATCH]",
-	      c_name(),slave_state->c_name(),to->c_name(),
+      display(NOLOG,c_name(),"+++RULE: Ignore rule on slave:  %s -> %s  (%s , %s) [STATE_MISMATCH]",
+	      slave_state->c_name(),to->c_name(),
 	      m_currState ? m_currState->c_name() : "----",
 	      slave_state ? slave_state->c_name() : "----");
       return 0;
     }
-    display(NOLOG,"+++RULE: %s> Ignore rule on slave:  %s -> %s  [NO_TRANSITION]",
-	    c_name(),slave_state->c_name(),to->c_name());
+    display(NOLOG,c_name(),"+++RULE: Ignore rule on slave:  %s -> %s  [NO_TRANSITION]",
+	    slave_state->c_name(),to->c_name());
     return 0;
   }
-  display(NOLOG,"+++RULE: %s> Ignore rule on slave:  %s -> %s",
-	  c_name(),slave_state->c_name(),to->c_name());
+  display(NOLOG,c_name(),"+++RULE: Ignore rule on slave:  %s -> %s",
+	  slave_state->c_name(),to->c_name());
   return 0;
 }
 

@@ -68,7 +68,7 @@ FSM::ErrCond CommandTarget::declareState(const std::string& new_state, const std
   ::dim_lock();
   m_stateName = new_state;
   ::dim_unlock();
-  display(INFO,"%s> Declare state:%s  %s",c_name(),m_stateName.c_str(),opt.c_str());
+  display(INFO,c_name(),"Declare state:%s  %s",m_stateName.c_str(),opt.c_str());
   ::dis_update_service(m_service);
   if ( new_state == ST_NAME_ERROR )
     declareSubState(FAILED_ACTION);
@@ -140,14 +140,14 @@ void DAQCommandTarget::setTargetState(int target) {
 void DAQCommandTarget::commandHandler()   {
   // Decouple as quickly as possible from the DIM command loop !
   std::string cmd = getString();
-  display(NOLOG,"%s> Received transition request:%s",c_name(),cmd.c_str());
+  display(NOLOG,c_name(),"Received transition request:%s",cmd.c_str());
   if ( m_timeout )  {
-    display(WARNING,"%s> Ignore transition request:%s for TIMEOUT",c_name(),cmd.c_str());
+    display(WARNING,c_name(),"Ignore transition request:%s for TIMEOUT",cmd.c_str());
     m_timeout = false;
     return;
   }
   else if ( cmd == "timeout" )  {
-    display(WARNING,"%s> Will TIMEOUT next request.",c_name());
+    display(WARNING,c_name(),"Will TIMEOUT next request.");
     m_timeout = true;
     return;
   }

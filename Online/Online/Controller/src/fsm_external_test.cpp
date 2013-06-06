@@ -49,8 +49,8 @@ extern "C" int external_fsm_client(int argc, char** argv)  {
   cli.getopt("print",     1, print);
   cli.getopt("instances", 1, num_instance);
   TypedObject::setPrintLevel(print);
-  TypedObject::display(TypedObject::ALWAYS,"%s> Starting. Should fork %d children.",
-		       dim_name.c_str(),num_instance);
+  TypedObject::display(TypedObject::ALWAYS,dim_name.c_str(),
+		       "Starting. Should fork %d children.",num_instance);
   DAQCommandTarget target(dim_name);
   target.run();
   return 1;
@@ -95,7 +95,7 @@ extern "C" int controller_fsm_test(int argc, char** argv)  {
     mac->addSlave(new ExternalSlave(daq,make_slave_name(i),mac));
 
   Controller* target = new Controller(dim_name,mac);
-  target->display(target->ALWAYS,"Controller task started...");
+  target->display(target->ALWAYS,dim_name.c_str(),"Controller task started...");
   target->publish();
   target->run();
   return 1;

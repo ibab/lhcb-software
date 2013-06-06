@@ -84,6 +84,7 @@ namespace FiniteStateMachine {
     Callback            m_meta;
     /// Falg to indicate command reversal
     Rule::Direction     m_direction;
+
   public:
     /** Class Constructor
      *
@@ -141,6 +142,8 @@ namespace FiniteStateMachine {
     /// IOC handler
     virtual void handleIoc(const Event& event);
     
+    /// Invoke meta transition on FSM object
+    ErrCond invokeMetaTransition(unsigned int target, const void* param);
     /// Invoke FSM transition
     ErrCond invokeTransition(const Transition* transition, Rule::Direction dir=Rule::MASTER2SLAVE);
     /// Invoke FSM transition to target state

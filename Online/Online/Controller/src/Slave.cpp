@@ -83,7 +83,7 @@ FSM::ErrCond Slave::send(int code, const State* state)   const {
 }
 
 FSM::ErrCond Slave::notifyMachine(int meta_state)  {
-  display(DEBUG,"Slave %s> notify machine: %s State:%s",c_name(),m_machine->c_name(),metaStateName());
+  display(DEBUG,c_name(),"Slave %s> notify machine: %s State:%s",m_machine->c_name(),metaStateName());
   IocSensor::instance().send((Interactor*)m_machine,meta_state,(void*)this); 
   return FSM::SUCCESS;
 }
@@ -150,8 +150,7 @@ FSM::ErrCond Slave::apply(const Rule* rule)  {
   if ( tr )  {
     m_rule = rule;
     m_meta = SLAVE_EXECUTING;
-    display(INFO,"%s> Send request \"%s\" to target process:%s",
-	    m_machine->c_name(), tr->c_name(), c_name());
+    display(INFO,c_name(),"%s sending '%s' to target.",m_machine->c_name(),tr->c_name());
     if ( isInternal() ) {
       return send(SLAVE_FINISHED,tr->to());
     }
@@ -201,9 +200,8 @@ Slave& Slave::removeTimeout(const Transition* param)  {
 /// Handle timeout according to timer ID
 void Slave::handleTimeout()  {
   int st = currentState();
-  display(ALWAYS,"%s> Slave %s Received new message TIMEOUT. State:%08X [%s] timer value:%08X [%s]",
-	  RTL::processName().c_str(),c_name(),st,metaStateName(),
-	  m_timerID.second,_metaStateName(m_timerID.second));
+  display(ALWAYS,c_name(),"Slave TIMEOUT. State:%08X [%s] value:%08X [%s]",
+	  st,metaStateName(),m_timerID.second,_metaStateName(m_timerID.second));
   if ( isLimbo() )  {
     transitionFailed();
   }
@@ -215,8 +213,8 @@ void Slave::handleTimeout()  {
 /// Handle timeout on unload transition according to timer ID
 void Slave::handleUnloadTimeout()  {
   if ( m_timerID.second == SLAVE_UNLOAD_TIMEOUT )   {
-    display(ERROR,"%s> unload command unsuccessful. FAILURE - [%s]. State:%s",
-	    c_name(),"Insufficient Implementation",metaStateName());	  
+    display(ERROR,c_name(),"Unload command unsuccessful. FAILURE - [%s]. State:%s",
+	    "Insufficient Implementation",metaStateName());	  
   }
 }
 
@@ -228,16 +226,14 @@ void Slave::handleState(const string& msg)  {
   stopTimer();
   if ( m.empty() )    {  // No-link ?
     if ( !starting )  {
-      display(NOLOG,"%s::%s> Slave DEAD. Curr State:%s",
-	      RTL::processName().c_str(),c_name(),metaStateName());
+      display(NOLOG,c_name(),"Slave DEAD. Curr State:%s",metaStateName());
       iamDead();
     }
     return;
   }
   else if ( m == "UNKNOWN" ) {
 #if 0
-    display(ALWAYS,"%s::%s> IGNORE Slave state:%s",
-	    RTL::processName().c_str(),c_name(),m.c_str());
+    display(ALWAYS,c_name(),"IGNORE Slave state:%s",m.c_str());
     return;
 #endif
     m = "OFFLINE";
@@ -247,9 +243,8 @@ void Slave::handleState(const string& msg)  {
   // After fork slaves do not answer with OFFLINE of NOT_READY!
   starting &= (m == "OFFLINE");// || m == "NOT_READY");
 
-  display(INFO,"%s> Received new message from %p %s %s  starting:%s state:%p transition:%p",
-	  m_machine->c_name(), this, c_name(), m.c_str(),
-	  starting ? "YES" : "NO", state,transition);
+  display(INFO,c_name(),"Received new message %s starting:%s state:%p transition:%p",
+	  m.c_str(), starting ? "YES" : "NO", state, transition);
 
   if ( starting )
     iamHere();

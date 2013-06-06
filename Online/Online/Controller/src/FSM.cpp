@@ -22,16 +22,6 @@
 using namespace std;
 using namespace FiniteStateMachine;
 
-namespace FiniteStateMachine  {
-  struct MicFSMTransition {                // Transition type is an structure
-    MicFSMTransition*  next;               // Pointer to the next
-    FSM::MicFSMState   from;               // Transition starting state
-    FSM::MicFSMState   to;                 // Transition ending state
-    string             condition;          // Text string condition
-    Callback           action;             // Function pointer to be called
-  };
-}
-
 // Standard constructor
 FSM::FSM()  {
   m_targetState       = 0;
@@ -53,7 +43,7 @@ FSM::FSM(MicFSMState curr)  {
 // Standard destructor
 FSM::~FSM()  {
   while(m_transitionHead)  {
-    removeTransition(m_transitionHead->from,m_transitionHead->to);
+    removeTransition(m_transitionHead->m_from,m_transitionHead->m_to);
   }
 }
 
@@ -72,16 +62,15 @@ FSM::ErrCond FSM::addTransition(MicFSMState from, MicFSMState to,
 				const string& condition, const Callback& action)
 {
   MicFSMTransition* tr = new MicFSMTransition;
-  tr->next       = 0;                    // Initialize the forward pointer
-  tr->from       = from;                 // Set the from state
-  tr->to         = to;                   // Set the to state
-  tr->condition  = condition;            // Copy the condit. string
-  tr->action     = action;               // Set the action address
+  tr->m_next       = 0;                    // Initialize the forward pointer
+  tr->m_from       = from;                 // Set the from state
+  tr->m_to         = to;                   // Set the to state
+  tr->m_condition  = condition;            // Copy the condit. string
+  tr->m_action     = action;               // Set the action address
   if( m_transitionHead )    {            // Check if the list is not empty
     MicFSMTransition* t;                 // Find the last element
-    for( t = m_transitionHead; t->next; t = t->next );
-    t->next  = tr;                       // Add the new transition at the end 
-    tr->next = 0;                        // Initialize the next pointer to zero 
+    for( t = m_transitionHead; t->m_next; t = t->m_next );
+    t->m_next  = tr;                       // Add the new transition at the end
   }
   else       {                           // If the list was empty 
     m_transitionHead = tr;               // Add the transition in the head 
@@ -93,17 +82,17 @@ FSM::ErrCond FSM::addTransition(MicFSMState from, MicFSMState to,
 FSM::ErrCond FSM::removeTransition(MicFSMState from, MicFSMState to)    {
   MicFSMTransition* tr = m_transitionHead;
   // Check if the headlist is the desired element
-  if( tr->from == from && tr->to == to)   {
+  if( tr->m_from == from && tr->m_to == to)   {
     m_transitionHead = 0;               // Delete the head of the list
     delete tr;
     return FSM::SUCCESS;                // return true
   }
   else    {                             // If it is not the list head
-    for( ;tr->next; tr= tr->next)   {   // scan list until last element
+    for( ;tr->m_next; tr= tr->m_next)   {   // scan list until last element
       // Check if it is the element we are looking for
-      if( tr->next->from == from && tr->next->to == to )   {
-        tr->next = tr->next->next;      // bypassed
-        tr = tr->next;
+      if( tr->m_next->m_from == from && tr->m_next->m_to == to )   {
+        tr->m_next = tr->m_next->m_next;      // bypassed
+        tr = tr->m_next;
         delete tr;
         return FSM::SUCCESS;            // return success
       }
@@ -114,33 +103,36 @@ FSM::ErrCond FSM::removeTransition(MicFSMState from, MicFSMState to)    {
 
 /// Check if the transition from the current state to the target state exists
 bool FSM::hasTransitionTo(MicFSMState target) const {
-  for(MicFSMTransition* tr = m_transitionHead; tr; tr = tr->next)  {
-    if( tr->from == m_currentState && tr->to == target )  {
+  for(MicFSMTransition* tr = m_transitionHead; tr; tr = tr->m_next)  {
+    if( tr->m_from == m_currentState && tr->m_to == target )  {
       return true;
     }
   }
   return false;
 }
 
+
+//#include "RTL/rtl.h"
 //----------------------------------------------------------------------------
 FSM::ErrCond FSM::invokeTransition(MicFSMState target, const void* user_param)   {
-  for(MicFSMTransition* tr = m_transitionHead; tr; tr = tr->next)  {
-    if( tr->from == m_currentState && tr->to == target )  {
+  for(MicFSMTransition* tr = m_transitionHead; tr; tr = tr->m_next)  {
+    if( tr->m_from == m_currentState && tr->m_to == target )  {
       m_targetState       = target;
       m_currentTransition = tr;              // Set the current transition 
-      if( tr->action )        {              // Check if action routine exists 
-        ErrCond status = ErrCond(tr->action.execute(user_param));
+      if( tr->m_action )        {              // Check if action routine exists 
+        ErrCond status = ErrCond(tr->m_action.execute(user_param));
         if( status != FSM::SUCCESS )   {     // Check for success 
 	  m_failCall.execute(user_param);
           return status;                     // Return the same status 
         }
       }
       // Now do the transition (if action routine returns SUCCESS)
-      m_previousState = tr->from;
-      m_currentState  = tr->to;
+      m_previousState = tr->m_from;
+      m_currentState  = tr->m_to;
       return FSM::SUCCESS;                   // return success
     }
   }
   m_noTransCall.execute(user_param);
   return FSM::TRANNOTFOUND;                  // return false (not found)
 }
+

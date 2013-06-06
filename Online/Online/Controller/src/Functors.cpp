@@ -120,7 +120,7 @@ void CheckStateSlave::operator()(const Slave* s)   {
     ++dead;  // Count the number of dead slaves.
   }
   else if ( s->currentState() == Slave::SLAVE_EXECUTING ) { 
-    //s->display(s->ALWAYS,"%s> EXECUTING - ignore Metastate:%s",s->c_name(),s->metaStateName());
+    //s->display(s->ALWAYS,s->c_name(),"EXECUTING - ignore Metastate:%s",s->metaStateName());
   }
   else   {  // Check if all rules for this type are fulfilled
     for(Transition::Rules::const_iterator i=r.begin(); i != r.end(); ++i)  {
@@ -132,8 +132,8 @@ void CheckStateSlave::operator()(const Slave* s)   {
 	else if ( !slRule ) ++count; // There was nothing to be done.
 	else {
 	  ++fail;  // What can I do: there was a rule, but the slave did not go to the target state
-	  s->display(s->ALWAYS,"%s FAILED Metastate:%s [Rule not fulfilled] State:%s",
-		     s->c_name(),s->metaStateName(),slState->c_name());
+	  s->display(s->ALWAYS,s->c_name(),"FAILED Metastate:%s [Rule not fulfilled] State:%s",
+		     s->metaStateName(),slState->c_name());
 	}
 	break;
       }
@@ -164,15 +164,15 @@ void PrintObject::operator()(const Machine* m) const  {
   const char* pref = prefix.c_str();
   const Type* typ = m->type();
   const Transition* tr = m->currTrans();
-  m->display(flag,"%s+-------- FSMmachine: %s of type %s.",pref,m->c_name(),typ->c_name());
-  m->display(flag,"%s|  Meta transition:    Prev:%s  Curr:%s Target:%s",
-	     pref,m->previousMetaName(),m->currentMetaName(),m->targetMetaName());
-  m->display(flag,"%s|  Current state:      %s",pref,m->c_state());
-  m->display(flag,"%s|  Current Transition: %s",pref,tr ? tr->c_name()       : "----");
-  m->display(flag,"%s|  Target  state:      %s",pref,tr ? tr->to()->c_name() : "----");
+  m->display(flag,pref,"+-------- FSMmachine: %s of type %s.",m->c_name(),typ->c_name());
+  m->display(flag,pref,"|  Meta transition:    Prev:%s  Curr:%s Target:%s",
+	     m->previousMetaName(),m->currentMetaName(),m->targetMetaName());
+  m->display(flag,pref,"|  Current state:      %s",m->c_state());
+  m->display(flag,pref,"|  Current Transition: %s",tr ? tr->c_name()       : "----");
+  m->display(flag,pref,"|  Target  state:      %s",tr ? tr->to()->c_name() : "----");
   PrintObject slave_printer("|++"+prefix);
   for_each(m->slaves().begin(),m->slaves().end(),slave_printer);
-  m->display(flag,"%s+----------------------------------------------------------------------",pref);
+  m->display(flag,pref,"+----------------------------------------------------------------------");
 }
 
 /// Operator invoked for each Machine object printout.
@@ -180,15 +180,16 @@ void PrintObject::operator()(const MachineHandle& h) const  {
   const Machine*     m = h.ptr;
   const Type*        t = m->type();
   const Transition* tr = m->currTrans();
-  m->display(TypedObject::ALWAYS,"%s+- FSMmachine: %s of type %s State:%-12s [%s] %s %s",
-	     prefix.c_str(),m->c_name(),t->c_name(),m->c_state(),m->currentMetaName(),
+  m->display(TypedObject::ALWAYS,prefix.c_str(),"+- FSMmachine: %s of type %s State:%-12s [%s] %s %s",
+	     m->c_name(),t->c_name(),m->c_state(),m->currentMetaName(),
 	     tr ? "Executing transition" : "Idle", tr ? tr->c_name() : "----");
 }
 
 /// Operator invoked for each machine during printing.
 void PrintObject::operator()(const Slave* s) const  {
-  s->display(TypedObject::ALWAYS,"%s+  Slave: %-32s of type %s: State:%-12s Meta-state:%-14s managed by %s",
-	     prefix.c_str(),s->c_name(),s->type()->c_name(),s->c_state(),
+  s->display(TypedObject::ALWAYS,prefix.c_str(),
+	     "+  Slave: %-32s of type %s: State:%-12s Meta-state:%-14s managed by %s",
+	     s->c_name(),s->type()->c_name(),s->c_state(),
 	     s->metaStateName(),s->c_machine());
 }
 
@@ -200,14 +201,14 @@ void PrintObject::operator()(const Transition* t) const   {
   const Transition::Predicates& p=t->predicates();
   PrintObject rule_printer(prefix+"| ->");
 
-  t->display(flag,"%s+----------------FSMtransition----------------",pref);
-  t->display(flag,"%s| TRANSITION:%s #Rules:%d #Predicates:%d Target:%s",pref,
+  t->display(flag,pref,"+----------------FSMtransition----------------");
+  t->display(flag,pref,"| TRANSITION:%s #Rules:%d #Predicates:%d Target:%s",
 	     t->c_name(), int(r.size()),int(p.size()),t->to()->c_name());
-  t->display(flag,"%s|-------------FSMtransition::Rules------------",pref);
+  t->display(flag,pref,"|-------------FSMtransition::Rules------------");
   for_each(r.begin(),r.end(),rule_printer);
-  t->display(flag,"%s|----------FSMtransition::Predicates----------",pref);
+  t->display(flag,pref,"|----------FSMtransition::Predicates----------");
   for_each(p.begin(),p.end(),rule_printer);
-  t->display(flag,"%s+----------End of FSMtransition Dump----------",pref);
+  t->display(flag,pref,"+----------End of FSMtransition Dump----------");
 }
 
 /// Operator invoked for each State object printout.
@@ -218,20 +219,20 @@ void PrintObject::operator()(const State* s) const  {
   const State::Transitions& out=s->outgoing();
   PrintObject transition_printer(prefix+"| ->");
 
-  s->display(flag,"%s+--------------------- FSMstate -----------+",pref);
-  s->display(flag,"%s| Name : %s ",pref,s->c_name());
-  s->display(flag,"%s| Transient: %d ",pref,s->isTransient());
-  s->display(flag,"%s| Out trans #%d",pref,int(out.size()));
+  s->display(flag,pref,"+--------------------- FSMstate -----------+");
+  s->display(flag,pref,"| Name : %s ",s->c_name());
+  s->display(flag,pref,"| Transient: %d ",s->isTransient());
+  s->display(flag,pref,"| Out trans #%d",int(out.size()));
   for_each(out.begin(),out.end(),transition_printer);
-  s->display(flag,"%s| In  trans #%d",pref,int(in.size()));
+  s->display(flag,pref,"| In  trans #%d",int(in.size()));
   for_each(in.begin(),in.end(),transition_printer);
-  s->display(flag,"%s+------------------------------------------+",pref);
+  s->display(flag,pref,"+------------------------------------------+");
 }
 
 /// Operator invoked for each State object printout.
 void PrintObject::operator()(const StateHandle& s) const  {
-  TypedObject::display(TypedObject::ALWAYS,"%s+--------------------- FSMstate: %s -----------+",
-		       prefix.c_str(),s.ptr->c_name());
+  TypedObject::display(TypedObject::ALWAYS,prefix.c_str(),
+		       "+--------------------- FSMstate: %s -----------+",s.ptr->c_name());
 }
 
 /// Operator invoked for each Predicate object printout.
@@ -239,8 +240,8 @@ void PrintObject::operator()(const Predicate* p) const  {
   string states = "";
   const Predicate::States st = p->allowed();
   for(Predicate::States::const_iterator i=st.begin();i!= st.end();++i) states += (*i)->name()+" ";
-  TypedObject::display(TypedObject::ALWAYS,"%s| FSMrule/Pred %s: Allowed states:%s\n",
-		       prefix.c_str(),p->type()->c_name(),states.c_str());
+  TypedObject::display(TypedObject::ALWAYS,prefix.c_str(),"| FSMrule/Pred %s: Allowed states:%s\n",
+		       p->type()->c_name(),states.c_str());
 }
 
 /// Operator invoked for each Rule object printout.
@@ -248,7 +249,7 @@ void PrintObject::operator()(const Rule* /*r*/) const  {
 #if 0
   int flag = TypedObject::ALWAYS;
   const char* pref = prefix.c_str();
-  r->display(flag,"%s| FSMrule/Pred %s==%s [%s]\n",pref,r->type()->c_name(),r->state()->c_name(),
+  r->display(flag,pref,"| FSMrule/Pred %s==%s [%s]\n",r->type()->c_name(),r->state()->c_name(),
 	     r->direction() == Rule::MASTER2SLAVE ? "Master->Task" : "Task->Master");
 #endif
 }

@@ -70,7 +70,7 @@ namespace FiniteStateMachine {
 
 	::pipe(m_out);
 	handler->startSlaveIO();
-	display(ALWAYS,"%s> Slave is forking child process.....",c_name());
+	display(ALWAYS,c_name(),"Slave is forking child process.....");
 	::snprintf(text,sizeof(text),"-slaves=%d",handler->numSlaves());
 
 	for(size_t i=0; i<m_argv.size();++i) {
@@ -182,11 +182,16 @@ static void clean_str(char* n,size_t len)  {
   n[len-1] = 0;
   if ( ::strchr(n,' ') ) *::strchr(n,' ') = 0;
 }
-static void print_routine(void* param, const char* text) {
+static size_t print_routine(void* param, int, const char* src, const char* text) {
   Control* c = (Control*)param;
   char* t = (char*)text;
-  *(t+strlen(text)-1) = 0;
-  ioc().send(c,CMD_WRITE_MESSAGE,::strdup(text));
+  size_t len = strlen(text)-1;
+  *(t+len) = 0;
+  string msg = src;
+  msg += ">";
+  msg += text;
+  ioc().send(c,CMD_WRITE_MESSAGE,::strdup(msg.c_str()));
+  return len;
 }
 
 /// Standard constructor with object setup through parameters
@@ -198,7 +203,7 @@ Control::Control(const std::string& config, int prt)
   TypedObject::setPrinter(this,print_routine);
   m_config_exists = 0 == ::access(config.c_str(),R_OK);
   if ( 0 == ::getcwd(wd,sizeof(wd)) )  {
-    TypedObject::display(TypedObject::ALWAYS,"CANNOT retrieve current working directory: %s",RTL::errorString());
+    TypedObject::display(TypedObject::ALWAYS,"Control","CANNOT retrieve current working directory: %s",RTL::errorString());
     throw runtime_error("CANNOT retrieve current working directory");
   }
   m_currWD = wd;

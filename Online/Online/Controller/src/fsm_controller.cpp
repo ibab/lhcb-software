@@ -19,6 +19,7 @@
 #include <cstdio>
 #include <cerrno>
 #include <cstdarg>
+#include <memory>
 
 using namespace std;
 using namespace FiniteStateMachine;
@@ -46,8 +47,27 @@ static void invalid_arg(const char* fmt, ...) {
   help_ctrl();
 }
 
+namespace Online {
+  struct FMCLogger {
+    typedef size_t (*print_function_t)(void*, int, const char*, const char*);
+    std::string m_program;
+    std::string m_proc;
+    std::string m_node;
+    int         m_fifoFD;
+
+  protected:
+    static size_t print_func(void* arg, int severity, const char* src, const char* str);
+  public:
+    FMCLogger(const std::string& exe);
+    virtual ~FMCLogger();
+    print_function_t printer() const { return print_func; }
+    size_t print(int typ, const char* src, const char* text);
+  };
+}
+
 /// Test routine
 extern "C" int fsm_ctrl(int argc, char** argv)  {
+  auto_ptr<Online::FMCLogger> logger;
   string utgid = RTL::processName(), runinfo, taskdefs, mode, partition, type="FmcSlave";
   int    print = 0, count=-1;
   RTL::CLI cli(argc, argv, help_ctrl);
@@ -58,6 +78,13 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
   cli.getopt("runinfo",2,runinfo);
   cli.getopt("partition",2,partition);
   cli.getopt("taskconfig",2,taskdefs);
+
+  if ( type == "FmcSlave" ) {
+    /// Need to install a proper printer, which directy writes in the 
+    /// proper format to the FCM fifo
+    logger = auto_ptr<Online::FMCLogger>(new Online::FMCLogger("CTRL"));
+    TypedObject::setPrinter(logger.get(),logger->printer());
+  }
 
   if      ( utgid.substr(0,3)=="P00" ) invalid_arg("Invalid UTGID environment='%s'\n",utgid.c_str());
   else if ( partition.empty() ) invalid_arg("Invalid argument -partition='%s'\n",partition.c_str());
@@ -71,12 +98,58 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
   Controller           ctrl(utgid,&mach);
   XmlTaskConfiguration cfg(partition,taskdefs,runinfo,mode,count);
   
-  ctrl.display(ctrl.INFO,"%s> Selected running mode is:%s",utgid.c_str(),mode.c_str());
+  ctrl.display(ctrl.INFO,utgid.c_str(),"Selected running mode is:%s",mode.c_str());
   if ( !cfg.attachTasks(mach,type) )  {
     ::fprintf(stderr,"Failed to interprete XML tasklist.\n");
     ::exit(EINVAL);
   }
-  ctrl.display(ctrl.INFO,"Controller task started...");
+  ctrl.display(ctrl.INFO,utgid.c_str(),"Controller task started...");
   ctrl.run();
   return 1;
+}
+
+#include "RTL/rtl.h"
+#include "RTL/strdef.h"
+
+using namespace Online;
+
+FMCLogger::FMCLogger(const std::string& exe)
+  : m_program(exe)
+{
+  string tmp = RTL::nodeNameShort();
+  m_proc     = RTL::processName();
+  m_node     = RTL::str_lower(tmp);
+  m_fifoFD   = ::fileno(stderr);
+}
+
+FMCLogger::~FMCLogger() {
+}
+
+size_t FMCLogger::print(int typ, const char* src, const char* text) {
+  static const char *sl[8]={"[NIL]  ","[VERB] ","[DEBUG]","[INFO] ","[WARN] ","[ERROR]",
+			    "[FATAL]", "[INFO]"};
+  char buffer[4096];
+  struct tm lNow;
+  time_t now = ::time(0);
+  ::localtime_r(&now,&lNow);
+  size_t len = ::strftime(buffer,sizeof(buffer),"%b%d-%H%M%S",&lNow);
+  typ = (typ>int(sizeof(sl)/sizeof(sl[0]))) ? (sizeof(sl)/sizeof(sl[0]))-1 : (typ<0 ? 0 : typ);
+  len += ::snprintf(buffer+len,sizeof(buffer)-len,"%s%s: %s(%s): %s: %s\n",
+		    sl[typ],m_node.c_str(),m_program.c_str(),m_proc.c_str(),src,text);
+  buffer[len] = 0;
+  buffer[sizeof(buffer)-1] = 0;
+  for(size_t written = 0; written < len; ) {
+    int w = ::write(m_fifoFD,buffer+written,len-written);
+    if ( errno != EAGAIN ) break;
+    written += w;
+  }
+#if 0
+  size_t len = ::fputs(str,stdout);
+  ::fflush(stdout);
+#endif
+  return len;
+}
+
+size_t FMCLogger::print_func(void* arg, int severity, const char* src, const char* text) {
+  return ((FMCLogger*)arg)->print(severity, src, text);
 }

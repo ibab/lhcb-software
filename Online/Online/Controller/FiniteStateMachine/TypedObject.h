@@ -43,7 +43,7 @@ namespace FiniteStateMachine {
       FATAL,
       ALWAYS
     };
-    typedef void (*dump_function_t)(void*, const char*);
+    typedef size_t (*dump_function_t)(void*, int severity, const char*, const char*);
 
   protected:
     /// Object name
@@ -76,7 +76,7 @@ namespace FiniteStateMachine {
      *  @arg fmt        [string,read-only]   Format string for ellipsis args
      *  @return Status code indicating success or failure
      */
-    static Status display(int severity, const char* fmt...);
+    static Status display(int severity, const char* src, const char* fmt, ...);
 
     /// Set new print level. Returns the old print level
     static int setPrintLevel(int new_level);

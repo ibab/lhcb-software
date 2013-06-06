@@ -45,6 +45,17 @@ namespace FiniteStateMachine   {
       WAIT_ACTION
     };
     typedef long ErrCond;
+    struct MicFSMTransition {                // Transition type is an structure
+      MicFSMTransition*  m_next;               // Pointer to the next
+      FSM::MicFSMState   m_from;               // Transition starting state
+      FSM::MicFSMState   m_to;                 // Transition ending state
+      std::string        m_condition;          // Text string condition
+      Callback           m_action;             // Function pointer to be called
+      const MicFSMTransition* next()   const    {  return m_next;      }
+      FSM::MicFSMState        from()   const    {  return m_from;      }
+      FSM::MicFSMState        to()     const    {  return m_to;        }
+      const std::string&      condition() const {  return m_condition; }
+    };
   protected:
     MicFSMState        m_currentState;           // Current state
     MicFSMState        m_previousState;          // Previous state
@@ -67,6 +78,7 @@ namespace FiniteStateMachine   {
     MicFSMState targetState()    const   { return m_targetState;   }
     MicFSMState currentState()   const   { return m_currentState;  }
     MicFSMState previousState()  const   { return m_previousState; }
+    const MicFSMTransition* head() const { return m_transitionHead;}
     /// Check if the transition from the current state to the target state exists
     bool    hasTransitionTo(MicFSMState state) const;
     ErrCond addTransition   (MicFSMState from, MicFSMState to,const std::string& condition,const Callback& act);
