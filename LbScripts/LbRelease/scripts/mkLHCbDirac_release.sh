@@ -8,8 +8,10 @@ distribute=False
 
 if [ $narg -lt 2 ] ; then
   echo "Usage : $0 [option] version"
-  echo "      : -D to relase Dirac"
+  echo "      : -D to release Dirac"
+  echo "      : -M to release VMDirac"
   echo "      : -L to release LHCBDirac"
+  echo "      : -V to release LHCbVMDirac"
   echo "      : -W to release LHCbWebDirac"
   echo "      : -t to create the tar ball"
   echo "      : version to be release"
@@ -21,6 +23,13 @@ while [ $nar -lt $narg ] ; do
        -D )
           lbpackage=Dirac
           package=DIRAC
+          shift
+          version=$1
+          shift
+          ;;
+       -M )
+          lbpackage=VMDirac
+          package=VMDIRAC
           shift
           version=$1
           shift
@@ -68,6 +77,8 @@ echo "We will prepare the release for $package $version"
 
 if [ $package == "DIRAC" ] ; then
   lhcb-import-dirac-release -r $version
+else if [ $package == "VMDIRAC" ] ; then
+  lhcb-import-vmdirac-release -r $version
 else
   dirac-create-svn-tag -p $package -v $version
 fi
