@@ -3,7 +3,67 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v44r5>2013-06-07 Brunel v44r5</A></H1><PRE>
+This version uses projects LCG 65, Gaudi v23r8, LHCb v36r0, Lbcom v14r0,
+ Rec v15r0 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Development release for Upgrade productions
+
+- Changes to external packages (LCGCMT 65). Main changes:
+  . ROOT 5.34.07a (was 5.34.05)
+  . Boost 1.50.0 (was 1.48.0)
+  . HepMC 2.06.08 (was 2.06.05)
+  . Python 2.7.3 (was 2.5.5p2)
+  . Full list at http://lcgsoft.cern.ch/index.py?chkbox0=64d&chkbox1=65&show=diffs&page=compare
+
+- Functionality changes
+  . Supports configurations without M1
+    (TrackTools v4r24, MuonDet v9r12)
+  . Modified StalledEventMonitor to be able to print a stack trace of the 
+    stalled process and abort the execution (GaudiUtils v4r5)
+
+- New tuning
+  . PatVeloTTTool by default now returns one track per velo candidate even
+    if no TT match is found (PatVeloTT v4r0)
+  . PrForward track now picks up state closest to the end of velo
+    (PrAlgorithms v1r5, also in Brunel v44r4p1)
+  . Modifications after change of stereo angles
+    (PrVL v1r3, also in Brunel v44r4p)
+  . Add a specific ANNPID tuning for 2013 data, using "MC12TuneV2"
+    (ChargedProtoANNPID v2r2)
+  . Implemented a simple fixed-noise kalman filter to improve IP resolution
+    (PatPixel v1r1)
+ 
+- Persistency changes
+  . Fix bug in WritePackedDst where && insead of & was accidentally used
+    (EventPacker v3r1)
+  . Add Ecal and Hcal linkers back to standard DSTs, as they are needed for MC
+    matching in DaVinci (GaudiConf v17r10)
+
+- Performance optimisation
+  . Use getIfExists (HltDAQ v2r17)
+  . Remove unused finalize methods
+    (CaloPIDs v5r14, CaloTools v6r5p1, CaloDAQ v4r34, CaloDet v10r16p1)
+
+- Bug fixes
+  . Fix in PrForwardTool when using momentum estimate
+    (PrAlgorithms v1r5, also in Brunel v44r4p1) 
+  . Fixed old bug in LHCb::TrackTraj::distTo1stError and
+    LHCb::TrackTraj::distTo2ndError (TrackKernel v1r15)
+  . Fixed operator precedence order issue for ? and + in 
+    LHCb::TrackTraj::distTo1stError and LHCb::TrackTraj::distTo2ndError
+    (TrackKernel v1r15)
+  . Bugfix for VL (TrackKernel v1r15)
+  . Fix clang32 and gcc48 warnings, UNINIT_CTOR defects
+    (RecSys v15r0, LbcomSys v14r0, LHCbSys v36r0)
+  . Fix bug in sequencer timer (GaudiAlg v14r5)
+
 - Changes to tests
+  . vl_compact tests updated to use the new optimised geometry
+    (local tag VL-CompactOptimize-Local-20130527, also in Brunel v44r4p1)
+  . Add exclusion for MC12TuneV2 INFO messages from ANNPID (introduced in
+    ChargedProtoANNPID) in all Rec/Brunel tests. Their existence is tested
+    with a reference block in the brunelsys test.
   . In brunelsys.qmt, added a reference block to check existence of 
     MC12TuneV2 INFO messages from ANNPID
 
