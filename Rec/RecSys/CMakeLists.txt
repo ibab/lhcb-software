@@ -6,6 +6,7 @@ gaudi_subdir(RecSys v15r0)
 gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Calo/CaloPIDs
                          Calo/CaloReco
+                         Calo/CaloTools
                          Hlt/HltMonitors
                          Muon/MuonID
 			 Muon/MuonInterfaces

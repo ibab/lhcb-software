@@ -11,6 +11,7 @@ branches cmt doc tests
 use CaloMoniDst          v5r13   Calo # Olivier Deschamps
 use CaloPIDs             v5r14   Calo # Victor Egorychev, Vanya Belyaev
 use CaloReco             v5r16p1 Calo # Olivier Deschamps
+use CaloTools            v6r5p1  Calo # Olivier Deschamps
 
 # Hlt
 use HltMonitors          v1r6p1  Hlt  # Roel Aaij

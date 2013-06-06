@@ -6,6 +6,7 @@ Purpose: LHCb reconstruction packages.
          by one or more LHCb applications.
 
 - Packages added:    Tf/TfKernel, Tf/TsaKernel (moved from LHCb)
+                     Calo/CaloTools            (moved from Lbcom)
 
 </PRE><H1><A NAME=v15r0>2013-06-05 RecSys v15r0</A></H1><PRE>
 This version uses Gaudi v23r8, LHCb v36r0 and Lbcom v14r0
