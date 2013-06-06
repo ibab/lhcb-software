@@ -3,6 +3,7 @@
 ! Package manager : Lucia Grillo
 !--------------------------------------------------------------------------
 
+!========================= OTSimulation v5r5 2013-06-06 =========================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warning
  - Fix UNINIT_CTOR and FORWARD_NULL warnings
