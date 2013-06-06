@@ -1,4 +1,3 @@
-// $Id: Calo2Dview.h,v 1.10 2009-11-08 18:12:50 odescham Exp $
 #ifndef CALODAQ_CALO2DVIEW_H 
 #define CALODAQ_CALO2DVIEW_H 1
 
@@ -35,7 +34,6 @@ public:
   virtual ~Calo2Dview( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   void bookCalo2D(const HistoID& unit,const std::string title, std::string name ,int area =-1);
   void bookCalo2D(const HistoID& unit,const std::string title, unsigned  int calo , int area = -1);

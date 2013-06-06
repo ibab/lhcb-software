@@ -3,6 +3,11 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2013-06-06 - Marco Cattaneo
+ - Remove CaloHistoTrackAlh.{h,cpp}, no longer used
+ - Remove no longer necessary TrackEvent dependency
+ - Remove empty Calo2DView::finalize() method
+
 !========================= CaloUtils v10r0 2013-06-03 =========================
 ! 2013-05-26 - Marco Cattaneo
  - Fix trivial gcc48 warnings

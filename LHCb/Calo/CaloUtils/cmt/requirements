@@ -16,7 +16,6 @@ use CaloDet          v*      Det
 use LHCbMath         v*      Kernel
 use PhysEvent        v*      Event
 use RecEvent         v*      Event
-use TrackEvent       v*      Event
 use MCEvent          v*      Event
 use DigiEvent        v*      Event
 use L0Event          v*      Event

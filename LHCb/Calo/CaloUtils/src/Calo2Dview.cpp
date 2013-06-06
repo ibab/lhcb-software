@@ -139,16 +139,6 @@ StatusCode Calo2Dview::initialize() {
 
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode Calo2Dview::finalize() {
-
-  if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiHistoAlg::finalize();  // must be called after all other actions
-}
-
-//=============================================================================
 void Calo2Dview::getCaloParam(unsigned int calo){
 
   if((int)calo == m_caloType)return;
