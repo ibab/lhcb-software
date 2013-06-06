@@ -10,11 +10,11 @@
 <argument name="prerequisites"><set/></argument>
 <argument name="args"><set>
 	<text>$GAUSSOPTS/Gauss-2012.py</text>
-	<text>$DECFILESROOT/options/28102062.py</text>
-	<text>$LBPYTHIAROOT/options/Pythia.py</text>
+	<text>$DECFILESROOT/options/11174204.py</text>
+	<text>$LBPYTHIA8ROOT/options/Pythia8.py</text>
 	<text>$GAUSSOPTS/GenStandAlone.py</text>
 	<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
-  	<text>$GAUSSROOT/tests/options/testGauss-gen-10evts-defaults.py</text>
+  	<text>$GAUSSROOT/tests/options/testGauss-gen-100evts-defaults.py</text>
 </set></argument>
 <argument name="exit_code"><integer>0</integer></argument>
 <argument name="use_temp_dir"><enumeral>false</enumeral></argument>
@@ -30,7 +30,7 @@ if stdout.find(expected_string) == -1:
 	causes.append('missing string')
 	result['GaudiTest.expected_string'] = result.Quote(expected_string)
 else:
-	expected_string2 = &quot;10 events processed&quot;
+	expected_string2 = &quot;100 events processed&quot;
 	if stdout.find(expected_string2) == -1:
 		causes.append('missing string')
 		result['GaudiTest.expected_string'] = result.Quote(expected_string2)

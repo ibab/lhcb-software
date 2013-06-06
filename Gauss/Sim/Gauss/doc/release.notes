@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-06-06 - Patrick Robbe
+ - QMTests: add pythia8 QMTests and clean obsolete reference files
+
 ! 2013-06-02 - Patrick Robbe
  - python/Gauss/Configuration.py: clean configuration for .xgen file
    generation
