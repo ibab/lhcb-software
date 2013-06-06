@@ -20,7 +20,7 @@ use   HltEvent           v*    Event
 use   TrackFitEvent      v*    Tr
 use   TrackKernel        v*    Tr
 use   TrackInterfaces    v*    Tr
-ues   TfKernel           v*    Tf
+use   TfKernel           v*    Tf
 use   LHCbMath           v*    Kernel
 use   PartProp           v*    Kernel
 use   STDet              v*    Det
