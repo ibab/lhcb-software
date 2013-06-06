@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MuonAlgs
 ################################################################################
-gaudi_subdir(MuonAlgs v6r11)
+gaudi_subdir(MuonAlgs v6r12)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/DigiEvent
