@@ -6,6 +6,8 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+- Packages removed: Calo/CaloTools (moved to Rec)
+
 </PRE><H1><A NAME=v14r0>2013-06-05 LbcomSys v14r0</A></H1><PRE>
 This version uses Gaudi v23r8 and LHCb v36r0
 

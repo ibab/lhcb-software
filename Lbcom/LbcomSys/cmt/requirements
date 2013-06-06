@@ -12,7 +12,6 @@ use Associators       v3r8     Associators # Matt Needham
 
 # Calorimeter
 use CaloAssociators   v6r12p1  Calo      # Olivier Deschamps
-use CaloTools         v6r5p1   Calo      # Olivier Deschamps
 
 # DAQ
 use DAQMonitors       v1r9     DAQ       # Olivier Deschamps
