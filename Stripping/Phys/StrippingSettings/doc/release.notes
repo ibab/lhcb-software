@@ -4,6 +4,15 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-06-07 - Philip Hunt
+ - Added PID calibration lines for kaons, pion, protons, muons and electrons to the 
+   Stripping20r3 dictionary.
+   * Prescales are currently set to those used in Stripping20r1. These will need to 
+     be updated once Reco14 proton-ion test samples are available.
+   * In addition to the S20r1 RICH PID lines (D*, Lam0 and KS0), the inclusive 
+     phi->KK line has been included as an alternative source of no-PID kaons for 
+     open charm cross-section measurements.
+
 !========================= StrippingSettings v2r25 2013-05-22 =========================
 
 ! 2013-05-21 - Stefano Perazzini
