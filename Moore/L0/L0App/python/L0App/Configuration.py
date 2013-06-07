@@ -39,6 +39,18 @@ class L0App(LHCbConfigurableUser):
         , "outputFile" :       'output filename, automatically selects MDF or InputCopyStream'
         , 'WriteFSR'    :  'copy FSRs as required'
         }
+    def _safeSet(self,conf,param):
+        """
+        Propagate a property only if it is set, and only if the underlying configurable has not been set
+        """
+        #print "WAAAAAAAAAAAAAHHHHHHHHHHHHHHHH"
+        for p in param:
+            if (not self.isPropertySet(p)) or conf.isPropertySet(p):
+                #print "skipping", p
+                continue
+            
+            conf.setProp(p,self.getProp(p))
+            #print "setting", p
     
     def _configureOutput(self):
         """ Copied from Moore, handle output to DST or MDF
@@ -67,17 +79,15 @@ class L0App(LHCbConfigurableUser):
             IOHelper("MDF","MDF").outStream(fname,writer,writeFSR=False)
         else : 
             from Configurables import InputCopyStream
-            writer = InputCopyStream("Writer"
-                                    , RequireAlgs = self.getProp('WriterRequires')
-                                    )
+            writer = InputCopyStream("Writer")
             IOHelper(persistency,persistency).outStream(fname,writer,writeFSR=self.getProp('WriteFSR'))
     
     def __apply_configuration__(self):
         
+        #print "WAAAAAAAAAAAAAHHHHHHHHHHHHHHHH"
+        
         ############## Set other properties ###########
-        app = LHCbApp()
-        self.setOtherProps( app, ['EvtMax','SkipEvents','Simulation', 'DataType' , 'Persistency'] )
-        self.setOtherProps( app, ['CondDBtag','DDDBtag'])
+        self._safeSet( LHCbApp(), ['EvtMax','SkipEvents','Simulation', 'DataType' , 'Persistency', 'CondDBtag','DDDBtag'] )
         
         ############## The raw event ##################
         

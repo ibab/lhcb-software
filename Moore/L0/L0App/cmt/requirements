@@ -8,6 +8,8 @@ version v1r0
 branches doc cmt options python tests
 
 use GaudiPolicy v*
+use GaudiKernel v*
+
 
 #########################################
 # explicitly declare all L0 dependencies 
@@ -26,6 +28,17 @@ use ProcessorKernel v* L0
 
 use CaloDet v* Det
 use MuonDet v* Det
+
+#########################################
+# Configurable (python) dependencies
+#########################################
+
+use LHCbAlgs    v* Kernel
+use GaudiConf   v*
+
+#########################################
+# DBASE
+#########################################
 
 use L0TCK       v* TCK
 use DDDB        v* Det

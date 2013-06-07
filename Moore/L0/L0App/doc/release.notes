@@ -4,6 +4,9 @@
 ! Purpose     : An LHCb application to run L0 Emulation
 !-----------------------------------------------------------------------------
 
+! 2013-06-07 - Rob Lambert
+ - Tests added, tests pass great. First working version of this application.
+
 ! 2013-06-05 - Rob Lambert
  - Create package for the first time
  - Made a L0App configurable, copy of certain parts of Moore and Brunel
