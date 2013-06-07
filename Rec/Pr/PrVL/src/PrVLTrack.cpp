@@ -105,10 +105,10 @@ unsigned int PrVLTrack::rZone(double z, bool& right) {
   const double zRatio = (z - (*it0)->z()) / ((*it1)->z() - (*it0)->z());
   if (zRatio < 0.5) {
     right = (*it0)->right();
-    return (*it0)->zone();
+    return (*it0)->rZone();
   }
   right = (*it1)->right();
-  return (*it1)->zone();
+  return (*it1)->rZone();
 
 }
 

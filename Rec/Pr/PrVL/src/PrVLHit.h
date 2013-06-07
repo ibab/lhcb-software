@@ -15,7 +15,7 @@ class PrVLHit {
 public:
   /// Constructor
   PrVLHit() : 
-      m_sensor(0), m_strip(0), m_zone(0), 
+      m_sensor(0), m_strip(0), m_rzone(0), m_phizone(0), 
       m_right(false), m_fraction(0.), m_adcHigh(false), 
       m_x(0.), m_y(0.), m_z(0.), m_r(0.), m_phi(0.), 
       m_weight(0.), m_phiWeight(0.), 
@@ -28,14 +28,16 @@ public:
   /// Destructor
   virtual ~PrVLHit() {}
 
-  void setHit(const LHCb::VLLiteCluster cluster, const unsigned int zone, 
+  void setHit(const LHCb::VLLiteCluster cluster, 
+              const unsigned int rzone, const unsigned int phizone, 
               const bool right, const double z, const double r, const double weight) {
     m_id = cluster.channelID();
     m_sensor = cluster.channelID().sensor();
     m_strip = cluster.channelID().strip();
     m_fraction = cluster.interStripFraction();
     m_adcHigh = cluster.highThreshold();
-    m_zone = zone;
+    m_rzone = rzone;
+    m_phizone = phizone;
     m_right = right;
     m_r = float(r);
     m_x = m_y = 0.; 
@@ -45,14 +47,15 @@ public:
     m_nUsed = 0;
     m_a = m_b = 0.;
     m_c = 1.;
-    m_xStripCentre = m_yStripCentre = m_rStripCentre = 0.;
+    m_xStripCentre = m_yStripCentre = 0.;
     m_xSensorCentre = m_ySensorCentre = 0.;
   }
 
   LHCb::LHCbID lhcbID() const {return m_id;}
   unsigned int sensor() const {return m_sensor;}
   unsigned int strip() const {return m_strip;}
-  unsigned int zone() const {return m_zone;}
+  unsigned int rZone() const {return m_rzone;}
+  unsigned int phiZone() const {return m_phizone;}
   bool right() const {return m_right;}
   double fraction() const {return m_fraction;}
   bool adcHigh() const {return m_adcHigh;}
@@ -94,7 +97,6 @@ public:
   double c() const {return m_c;}
   double xStripCentre() const {return m_xStripCentre;}
   double yStripCentre() const {return m_yStripCentre;}
-  double rStripCentre() const {return m_rStripCentre;}
   void setLineParameters(const double a, const double b, const double c, 
                          const double xs, const double ys) {
     m_a = a;
@@ -102,7 +104,6 @@ public:
     m_c = c;
     m_xStripCentre = xs;
     m_yStripCentre = ys;
-    m_rStripCentre = sqrt(xs * xs + ys * ys);
   }
 
   double distance(const double x, const double y) const {
@@ -153,7 +154,8 @@ private:
   LHCb::LHCbID m_id;
   unsigned int m_sensor;
   unsigned int m_strip;
-  unsigned int m_zone;
+  unsigned int m_rzone;
+  unsigned int m_phizone;
   bool m_right;
   float m_fraction;
   bool m_adcHigh;
@@ -169,7 +171,6 @@ private:
   float m_a, m_b, m_c;
   float m_xStripCentre;
   float m_yStripCentre;
-  float m_rStripCentre;
   float m_xSensorCentre;
   float m_ySensorCentre;
 };

@@ -129,8 +129,7 @@ private:
   /// Number of zones in a Phi sensor
   unsigned int m_nZonesPhi;
   /// Bisectors and phi ranges of R zones
-  std::vector<double> m_cosPhi;
-  std::vector<double> m_sinPhi;
+  std::vector<double> m_ctrPhi;
   std::vector<double> m_tolPhi;
   /// Hits of an event grouped by sensor and zone
   std::vector<std::vector<PrVLHits> > m_hits;

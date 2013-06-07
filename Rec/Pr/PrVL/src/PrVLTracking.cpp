@@ -35,29 +35,28 @@ PrVLTracking::PrVLTracking(const std::string& name, ISvcLocator* pSvcLocator) :
   declareProperty("Forward",  m_forward = true);
   declareProperty("Backward", m_backward = true);
 
-  declareProperty("ZVertexMin", m_zVertexMin = -170. * Gaudi::Units::mm);
-  declareProperty("ZVertexMax", m_zVertexMax = +120. * Gaudi::Units::mm);
+  declareProperty("ZVertexMin", m_zVertexMin = -220. * Gaudi::Units::mm);
+  declareProperty("ZVertexMax", m_zVertexMax = +170. * Gaudi::Units::mm);
   // Parameters for RZ tracking
   declareProperty("MaxRSlope4", m_maxRSlope4 = 0.4);
   declareProperty("MaxRSlope3", m_maxRSlope3 = 0.6);
   declareProperty("RTol4",      m_rTol4       = 0.75);
-  declareProperty("RTol3",      m_rTol3       = 1.2);
+  declareProperty("RTol3",      m_rTol3       = 1.3);
   declareProperty("RTolExtra",  m_rTolExtra   = 3.0);
-  declareProperty("RTolOverlap", m_rTolOverlap = 0.7);
+  declareProperty("RTolOverlap", m_rTolOverlap = 0.6);
   declareProperty("MaxMissed",   m_maxMissed = 1);
   declareProperty("MinToTag",    m_minToTag = 4);
   // Parameters for space tracking
-  declareProperty("XTolOverlap", m_xTolOverlap = 0.9);
-  declareProperty("PhiTol",      m_phiTol = 0.04);
+  declareProperty("XTolOverlap", m_xTolOverlap = 0.6);
+  declareProperty("PhiTol",      m_phiTol = 0.033);
   declareProperty("XYTol",       m_xyTol = 0.45);
-  declareProperty("MaxQPhi",     m_maxQPhi = 3.);
-  declareProperty("MaxQXy",      m_maxQXy = 5.);
-  declareProperty("MaxQRPhi",    m_maxQRPhi = 9.);
+  declareProperty("MaxQXy",      m_maxQXy = 5.5);
+  declareProperty("MaxQRPhi",    m_maxQRPhi = 8.);
   declareProperty("MaxQXyFull",  m_maxQXyFull = 10.);
   declareProperty("FractionPhi",    m_fractionPhi = 0.7);
   declareProperty("FractionShared", m_fractionShared = 0.7);
   declareProperty("FractionUsed",   m_fractionUsed = 0.6);
-  declareProperty("MaxChi2PerHit",  m_maxChi2PerHit = 18.);
+  declareProperty("MaxChi2PerHit",  m_maxChi2PerHit = 14.);
   // Parameters for merging clones
   declareProperty("FractionForMerge", m_fractionForMerge = 0.6);
   declareProperty("MaxChi2ToAdd",     m_maxChi2ToAdd = 20.);
@@ -95,8 +94,7 @@ StatusCode PrVLTracking::initialize() {
   m_nZonesR = rSensor->numberOfZones();
   m_nZonesPhi = phiSensor->numberOfZones();
   // Calculate the bisectors of the R zones.
-  m_cosPhi.resize(2 * m_nZonesR);
-  m_sinPhi.resize(2 * m_nZonesR);
+  m_ctrPhi.resize(2 * m_nZonesR);
   m_tolPhi.resize(2 * m_nZonesR);
   const double dphi = Gaudi::Units::pi / double(m_nZonesR);
   // Get the angle of the first strip to determine the overlap phi range.
@@ -106,15 +104,14 @@ StatusCode PrVLTracking::initialize() {
     double phi = -0.5 * Gaudi::Units::pi + (0.5 + i) * dphi;
     if (0 == i % m_nZonesR) {
       phi -= dphiOverlap / 2.;
-      m_tolPhi[i] = sin(0.5 * (dphi + dphiOverlap));
+      m_tolPhi[i] = 0.5 * (dphi + dphiOverlap);
     } else if (m_nZonesR - 1 == i % m_nZonesR) {
       phi += dphiOverlap / 2.;
-      m_tolPhi[i] = sin(0.5 * (dphi + dphiOverlap));
+      m_tolPhi[i] = 0.5 * (dphi + dphiOverlap);
     } else {
-      m_tolPhi[i] = sin(0.5 * dphi);
+      m_tolPhi[i] = 0.5 * dphi;
     }
-    m_cosPhi[i] = cos(phi);
-    m_sinPhi[i] = sin(phi);
+    m_ctrPhi[i] = phi;
     info() << "Zone " << i << ": phi = " << phi <<  " +/- " << m_tolPhi[i] << endmsg;
   }
   // Determine the highest sensor number.
@@ -162,7 +159,7 @@ StatusCode PrVLTracking::initialize() {
     m_timeFwd3    = m_timerTool->addTimer("PrVL find fwd. triplets");
     m_timeBwd3    = m_timerTool->addTimer("PrVL find bwd. triplets");
     m_timeSpace   = m_timerTool->addTimer("PrVL find space tracks");
-    m_timeUnused  = m_timerTool->addTimer("PrVL unused phi hits");
+    m_timeUnused  = m_timerTool->addTimer("PrVL unused hits");
     m_timeFinal   = m_timerTool->addTimer("PrVL make LHCb tracks");
     m_timerTool->decreaseIndent();
   }
@@ -255,15 +252,6 @@ StatusCode PrVLTracking::execute() {
     if (2 == status) findSpaceTracksXY(*itt);
   }
   m_rzTracks.clear();
-  for (itt = m_rzTracks.begin(); itt != m_rzTracks.end(); ++itt) {
-    if (m_debug) {
-      info() << "Track " << itt - m_rzTracks.begin() << endmsg;
-      printRZTrack(*itt);
-    }
-    findPhiHits(*itt, false);
-    findSpaceTracksXY(*itt);
-  }
-  m_rzTracks.clear();
   if (m_timing) m_timerTool->stop(m_timeSpace);
   if (m_debug) {
     info() << "Made " << m_spaceTracks.size() << " space tracks" << endmsg;
@@ -274,7 +262,6 @@ StatusCode PrVLTracking::execute() {
   if (m_forward) {
     const bool forward = true;
     if (m_debug) info() << "Looking for unused R hits" << endmsg;
-    if (m_timing) m_timerTool->start(m_timeFwd3);
     std::vector<DeVLRSensor*>::const_iterator it;
     for (it = rSensors.begin(); it != rSensors.end(); ++it) {
       if ((*it)->z() < zMin) continue;
@@ -285,12 +272,10 @@ StatusCode PrVLTracking::execute() {
   for (itt = m_rzTracks.begin(); itt != m_rzTracks.end(); ++itt) {
     findPhiHits(*itt, true);
     int status = findSpaceTracksPhi(*itt);
-    if (2 != status) continue;
-    findPhiHits(*itt, false);
-    findSpaceTracksXY(*itt);
+    if (2 == status) findSpaceTracksXY(*itt);
   } 
 
-  // Perform the recovery.
+  // Try to find track seeds from unused Phi hits.
   if (nTracksRZ < m_maxRZForExtra && 
       (m_rzTracks.size() * 0.5 <= m_spaceTracks.size() ||
        m_rzTracks.size() < 20)) {
@@ -305,8 +290,8 @@ StatusCode PrVLTracking::execute() {
   if (m_timing) m_timerTool->start(m_timeFinal);
   // Cleanup tracks with different R, same Phi hits.
   if (m_spaceTracks.size() >= 2) {
-    mergeSpaceClones(true);
-    mergeSpaceClones(false);
+    if (m_forward) mergeSpaceClones(true);
+    // if (m_backward) mergeSpaceClones(false);
   }
   // Store the track candidates as LHCb tracks.
   makeLHCbTracks();
@@ -408,7 +393,6 @@ void PrVLTracking::findQuadruplets(DeVLRSensor* sensor0, const bool forward) {
       const double z1 = sensor1->z();
       const double z2 = sensor2->z();
       const double z3 = sensor3->z();
-      // Avoid extrapolation over too large distance.
       const double zFrac = (z2 - z0) / (z3 - z0);
       double rMin = 0., rMax = 0.;
       // Loop over the hits in the first sensor.
@@ -460,7 +444,6 @@ void PrVLTracking::findQuadruplets(DeVLRSensor* sensor0, const bool forward) {
             newTrack.setRZone(iz);
           }
           // Calculate expected radius and tolerance at the second sensor.
-          // const double r1 = newTrack.rPred(z1);
           const double r1 = newTrack.rInterpolated(z1);
           double tol1 = m_rTol4 * sensor1->rPitchOfRadius(r1);
           if (m_debug && (matchKey(*it0) || matchKey(*it3) || matchKey(h2))) {
@@ -486,41 +469,6 @@ void PrVLTracking::findQuadruplets(DeVLRSensor* sensor0, const bool forward) {
             if (m_debug) {
               info() << "    " << newTrack.nbUsedRHits() << "/"
                       << newTrack.nbRHits() << " are used." << endmsg;
-            }
-            // Check for a possible clone.
-            PrVLTracks::iterator itt;
-            for (itt = m_rzTracks.begin(); itt != m_rzTracks.end(); ++itt) {
-              if ((*itt).backward() == forward) continue; 
-              if ((*itt).nbRHits() < newTrack.nbUsedRHits()) continue;
-              unsigned int nCommon = 0;
-              PrVLHits::const_iterator ith;
-              for (ith = (*itt).rHits().begin(); ith != (*itt).rHits().end(); ++ith) {
-                if (std::find(newTrack.rHits().begin(),
-                              newTrack.rHits().end(),
-                              *ith) != newTrack.rHits().end()) {
-                  ++nCommon;
-                }
-              }
-              if (nUsed == nCommon) {
-                if (m_debug) {
-                  info() << "    " << nCommon << " hits shared with track "
-                          << itt - m_rzTracks.begin() << endmsg;
-                  info() << "    Chi2: " << newTrack.rChi2() << " (new), "
-                          << (*itt).rChi2() << " (" << itt - m_rzTracks.begin()
-                          << ")" << endmsg;
-                }
-                if (newTrack.rChi2() < (*itt).rChi2()) {
-                  if (m_debug) {
-                    info() << "    Replacing track "
-                            << itt - m_rzTracks.begin() << endmsg;
-                  }
-                  for (ith = newTrack.rHits().begin(); ith != newTrack.rHits().end(); ++ith) {
-                    if ((*ith)->nUsed() < 1) (*ith)->setUsed();
-                  }
-                  (*itt) = newTrack;
-                }
-                break;
-              }
             }
             continue;
           }
@@ -734,7 +682,7 @@ void PrVLTracking::findTriplets(DeVLRSensor* sensor0, const bool forward) {
 void PrVLTracking::findPhiHits(PrVLTrack& seed, const bool unused) {
 
   // Reset the list of hits.
-  for (int i = 0; i < m_nStations; ++i) m_phiHits[i].clear();
+  for (int i = m_nStations; i--;) m_phiHits[i].clear();
   if (seed.overlap()) {
     findPhiHitsOverlap(seed, unused);
     return;
@@ -766,8 +714,7 @@ void PrVLTracking::findPhiHits(PrVLTrack& seed, const bool unused) {
     }
     if (right) rZone += m_nZonesR;
     // Get the bisector of the R zone.
-    const double cPhiR = m_cosPhi[rZone];
-    const double sPhiR = m_sinPhi[rZone];
+    const double phiR = m_ctrPhi[rZone];
     const unsigned int station = sensor->station();
     for (unsigned int j = 0; j < m_nZonesPhi; ++j) {
       if (rPred < sensor->rMin(j)) break;
@@ -775,20 +722,19 @@ void PrVLTracking::findPhiHits(PrVLTrack& seed, const bool unused) {
       for (ith = m_hits[i][j].begin(); ith != m_hits[i][j].end(); ++ith) {
         if (m_debug && matchKey(*ith)) printHit(*ith, "");
         if (unused && (*ith)->nUsed() >= (*ith)->nMaxUsed()) continue;
+        // Skip hits which are incompatible with the R sector of the track.
+        if ((*ith)->rZone() < 900 && (*ith)->rZone() != rZone) continue; 
         // Calculate global phi at the predicted radius.
         float phiS = sensor->phiOfStrip((*ith)->strip(), (*ith)->fraction(), rPred);
-        if (!sensor->isDownstream()) phiS = -phiS; 
+        if (!sensor->isDownstream()) phiS = -phiS;
         if ((*ith)->right()) phiS += Gaudi::Units::pi;
-        const float cPhiS = cos(phiS);
-        const float sPhiS = sin(phiS);
-        // Compute the sine of the angle between hit and R zone bisector.
-        const double d = sPhiS * cPhiR - cPhiS * sPhiR;
-        if (fabs(d) > m_tolPhi[rZone]) continue;
+        // Check if the global phi is compatible with the R sector.
+        if (fabs(phiS - phiR) > m_tolPhi[rZone]) continue;
         if (m_debug && matchKey(*ith)) {
           info() << "  Passed angular cut." << endmsg;
         }
-        const double x = rPred * cPhiS;
-        const double y = rPred * sPhiS;
+        const double x = rPred * cos(phiS);
+        const double y = rPred * sin(phiS);
         (*ith)->setX(x);
         (*ith)->setY(y);
         (*ith)->setZ(sensor->z(x, y));
@@ -831,20 +777,19 @@ void PrVLTracking::findPhiHitsOverlap(PrVLTrack& seed, const bool unused) {
       for (ith = m_hits[i][j].begin(); ith != m_hits[i][j].end(); ++ith) {
         if (m_debug && matchKey(*ith)) printHit(*ith, "");
         if (unused && (*ith)->nUsed() >= (*ith)->nMaxUsed()) continue;
-        // Calculate global phi at the predicted radius.
-        float phiS = sensor->phiOfStrip((*ith)->strip(), (*ith)->fraction(), rPred);
-        if (!sensor->isDownstream()) phiS = -phiS; 
-        if ((*ith)->right()) phiS += Gaudi::Units::pi;
-        const float cPhiS = cos(phiS);
-        const float sPhiS = sin(phiS);
-        const double x = rPred * cPhiS;
-        const double y = rPred * sPhiS;
-        if (fabs(x) > m_xTolOverlap) continue;
-        if (y < 0.) {
+        if ((*ith)->yStripCentre() < 0.) {
           if (seed.rZone() != 0 && seed.rZone() != 2 * m_nZonesR - 1) continue;
         } else {
           if (seed.rZone() != m_nZonesR - 1 && seed.rZone() != m_nZonesR) continue;
         }
+        if (fabs((*ith)->xStripCentre()) > 5 * m_xTolOverlap) continue;
+        // Calculate global phi at the predicted radius.
+        float phiS = sensor->phiOfStrip((*ith)->strip(), (*ith)->fraction(), rPred);
+        if (!sensor->isDownstream()) phiS = -phiS; 
+        if ((*ith)->right()) phiS += Gaudi::Units::pi;
+        const double x = rPred * cos(phiS);
+        const double y = rPred * sin(phiS);
+        if (fabs(x) > m_xTolOverlap) continue;
         (*ith)->setX(x);
         (*ith)->setY(y);
         (*ith)->setZ(sensor->z(x, y));
@@ -1013,7 +958,7 @@ int PrVLTracking::findSpaceTracksPhi(PrVLTrack& seed) {
   }
   if (nFound > 0) return 0; 
   // No candidate found.
-  return 2;
+  return 1;
 
 }
 
@@ -1029,16 +974,6 @@ bool PrVLTracking::findSpaceTracksXY(PrVLTrack& seed) {
       if (station == firstStation) ++firstStation;
     } else {
       lastStation = station;
-      if (m_phiHits[station].size() > 1) {
-        std::sort(m_phiHits[station].begin(), m_phiHits[station].end(),
-                  PrVLHit::IncreasingByPhi());
-      }
-      if (m_debug) {
-        PrVLHits::iterator ith;
-        for (ith = m_phiHits[station].begin(); ith != m_phiHits[station].end(); ++ith) {
-          if (matchKey(*ith)) printHit(*ith, " ");
-        }
-      }
     }
   }
   if (firstStation > lastStation) return false;
@@ -1054,6 +989,9 @@ bool PrVLTracking::findSpaceTracksXY(PrVLTrack& seed) {
   unsigned int nStations = abs(lastStation - firstStation) + 1;
   if (nStations < 3) return false;
   unsigned int minNbPhi = std::min(nStations, seed.nbRHits());
+  if (seed.overlap()) {
+    minNbPhi = std::min(nStations, (seed.nbRHits() / 2));
+  }
   minNbPhi = int(m_fractionPhi * minNbPhi);
   if (minNbPhi < 3) minNbPhi = 3;
   if (m_debug) {
@@ -1108,10 +1046,8 @@ bool PrVLTracking::findSpaceTracksXY(PrVLTrack& seed) {
             const double x3 = (*ith3)->x();
             const double y3 = (*ith3)->y();
             const double z3 = (*ith3)->z();
-            const double xp = x0 + tx * z3;
-            const double yp = y0 + ty * z3;
-            const double dx = xp - x3;
-            const double dy = yp - y3;
+            const double dx = x0 + tx * z3 - x3;
+            const double dy = y0 + ty * z3 - y3;
             if (fabs(dx) > m_xyTol || fabs(dy) > m_xyTol) continue;
             hits[s3].push_back(*ith3);
             allHits.push_back(*ith3);
@@ -1175,7 +1111,7 @@ bool PrVLTracking::findSpaceTracksXY(PrVLTrack& seed) {
         tracks.push_back(track);
       }
     }
-    if (!tracks.empty()) break;
+    if (!tracks.empty() || seed.nbRHits() < 5) break;
   }
 
   if (tracks.empty()) {
@@ -1213,7 +1149,7 @@ bool PrVLTracking::findSpaceTracksXY(PrVLTrack& seed) {
 /// Fit the Phi hits in phi/z and xy (r set from RZ track).
 /// Can delete hits from the track if bad fit initially.
 //============================================================================
-bool PrVLTracking::fitProtoTrack(PrVLHits &hits, const unsigned int nMin,
+bool PrVLTracking::fitProtoTrack(PrVLHits& hits, const unsigned int nMin,
                                  const unsigned int nR,
                                  double& qxy, double& x0, double& y0,
                                  double& tx, double& ty) {
@@ -1221,8 +1157,8 @@ bool PrVLTracking::fitProtoTrack(PrVLHits &hits, const unsigned int nMin,
   double qmax = m_maxQXy;
   if (nR > 5 && hits.size() >= nR) qmax = m_maxQXyFull;
 
-  double sx  = 0., sy  = 0., sp  = 0.;
-  double sxz = 0., syz = 0., spz = 0.;
+  double sx  = 0., sy  = 0.;
+  double sxz = 0., syz = 0.;
   double s0  = 0., sz  = 0., szz = 0.;
   if (m_debug) {
     info() << "  === " << hits.size() << " Phi hits ===" << endmsg;
@@ -1233,14 +1169,11 @@ bool PrVLTracking::fitProtoTrack(PrVLHits &hits, const unsigned int nMin,
     const double x = (*ith)->x();
     const double y = (*ith)->y();
     const double z = (*ith)->z();
-    const double p = (*ith)->phi();
     const double w = (*ith)->weight();
     sx += w * x;
     sy += w * y;
-    sp += w * p;
     sxz += w * x * z;
     syz += w * y * z;
-    spz += w * p * z;
     s0 += w;
     sz += w * z;
     szz += w * z * z;
@@ -1250,43 +1183,20 @@ bool PrVLTracking::fitProtoTrack(PrVLHits &hits, const unsigned int nMin,
   ty = (syz * s0 - sy * sz) / det;
   x0 = (sx * szz - sxz * sz) / det;
   y0 = (sy * szz - syz * sz) / det;
-  const double tphi = (spz * s0 - sp * sz) / det;
-  const double phi0 = (sp * szz - spz * sz) / det;
   // Calculate the chi2.
   qxy = 0.;
-  double qphi = 0.;
   double worstQXy = 0.;
-  double worstQPhi = 0.;
   PrVLHits::iterator worstHitXy = hits.end();
-  PrVLHits::iterator worstHitPhi = hits.end();
   for (ith = hits.begin(); ith != hits.end(); ++ith) {
     const double z = (*ith)->z();
     const double w = (*ith)->weight();
     const double dx = x0 + tx * z - (*ith)->x();
     const double dy = y0 + ty * z - (*ith)->y();
-    const double dphi = phi0 + tphi * z - (*ith)->phi();
-    qxy += w * (dx * dx + dy * dy);
-    qphi += w * dphi * dphi;
-    if (w * (dx * dx + dy * dy) > worstQXy) {
-      worstQXy = w * (dx * dx + dy * dy);
+    const double dd = w * (dx * dx + dy * dy);
+    qxy += dd;
+    if (dd > worstQXy) {
+      worstQXy = dd;
       worstHitXy = ith;
-    }
-    if (w * dphi * dphi > worstQPhi) {
-      worstQPhi = w * dphi * dphi;
-      worstHitPhi = ith;
-    }
-  }
-  qphi /= (hits.size() - 2.);
-  if (qphi > m_maxQPhi) {
-    if (m_debug) info() << "  >> chi2 (phi) = " << qphi << endmsg;
-    if (nMin <= hits.size()) {
-      // Try to rescue this combination by dropping one hit.
-      hits.erase(worstHitPhi);
-      // Recurse with shorter phi list
-      return fitProtoTrack(hits, nMin, nR, qxy, x0, y0, tx, ty);
-    } else {
-      // Too few hits
-      return false;
     }
   }
   qxy /= (2. * hits.size() - 4.);
@@ -1304,10 +1214,11 @@ bool PrVLTracking::fitProtoTrack(PrVLHits &hits, const unsigned int nMin,
   }
   // Found OK phi combination
   return true;
+
 }
 
 //============================================================================
-/// Sort and try to improve quality of RZ tracks.
+/// Sort RZ tracks.
 //============================================================================
 void PrVLTracking::cleanupRZ() {
 
@@ -1336,29 +1247,6 @@ void PrVLTracking::cleanupRZ() {
       (*itt).setOverlap(false);
     }
   }
-  /*
-  PrVLTracks::iterator itt1, itt2;
-  for (itt1 = m_rzTracks.begin(); itt1 != m_rzTracks.end(); ++itt1) {
-    if (!(*itt1).overlap()) continue;
-    if (!(*itt1).valid()) continue;
-    for (itt2 = m_rzTracks.begin(); itt2 != m_rzTracks.end(); ++itt2) {
-      if ((*itt2).overlap()) continue;
-      if (!(*itt2).valid()) continue;
-      if ((*itt2).rZone() % m_nZonesR != 0 && 
-          (*itt2).rZone() % m_nZonesR != m_nZonesR - 1) {
-        continue;
-      }
-      unsigned int nShared = 0;
-      PrVLHits::iterator ith1;
-      for (ith1 = (*itt1).rHits().begin(); ith1 != (*itt1).rHits().end(); ++ith1) {
-        if (std::find((*itt2).rHits().begin(), (*itt2).rHits().end(),
-                      *ith1) != (*itt2).rHits().end()) {
-          ++nShared;
-        }
-      }
-    } 
-  }
-  */
   std::stable_sort(m_rzTracks.begin(), m_rzTracks.end(), 
                    PrVLTrack::DecreasingByRLength());
 
@@ -1645,7 +1533,7 @@ void PrVLTracking::findUnusedR(DeVLRSensor* sensor0, const bool forward) {
             r3 += slope * (z3 - z2);
             const double tol = sensor3->rPitchOfRadius(r3);
             double minDist = 0.;
-            const int zone2 = h2->zone();
+            const int zone2 = h2->rZone();
             for (int zone3 = zone2 - 1; zone3 <= zone2 + 1; ++zone3) {
               if (zone3 < 0 || zone3 >= nZones) continue;
               if (m_hits[s3][zone3].empty()) continue;
@@ -1865,7 +1753,7 @@ void PrVLTracking::buildHits() {
       const bool right = phiSensor->isRight();
       const double pitch = phiSensor->phiPitchOfStrip(strip);
       const double weight = 12. / (pitch * pitch);
-      hit->setHit(*it, zone, right, phiSensor->z(), 0, weight);
+      // Get the line parameterisation and strip centre in global coordinates.
       double a, b, c;
       double xs, ys;
       if (f > 0.) {
@@ -1882,16 +1770,35 @@ void PrVLTracking::buildHits() {
         ys = (1. - f) * ys1 + f * ys2;
       } else {
         phiSensor->lineParameters(strip, a, b, c, xs, ys);
-      } 
+      }
+      // Find the R sector corresponding to this strip.
+      unsigned int rzone = 999;
+      if (fabs(xs) > 2.) {
+        const double rs = sqrt(xs * xs + ys * ys);
+        float phiS = phiSensor->phiOfStrip(strip, f, rs);
+        if (!phiSensor->isDownstream()) phiS = -phiS;
+        if (phiSensor->isRight()) phiS += Gaudi::Units::pi;
+        for (unsigned int i = 2 * m_nZonesR; i--;) {
+          // Get the bisector of the R zone.
+          const double phiR = m_ctrPhi[i];
+          // Compute the sine of the angle between hit centre and R zone bisector.
+          if (fabs(phiR - phiS) < 0.8 * m_tolPhi[i]) {
+            rzone = i;
+            break;
+          }
+        }
+      }
+      hit->setHit(*it, rzone, zone, right, phiSensor->z(), 0, weight);
       hit->setLineParameters(a, b, c, xs, ys);
     } else if (channel.isRType()) {
       const DeVLRSensor* rSensor = m_det->rSensor(sensor);
       zone = rSensor->globalZoneOfStrip(strip);
+      const unsigned int phizone = 0;
       const bool right = rSensor->isRight();
       const double radius = rSensor->rOfStrip(strip, f);
       double pitch = rSensor->rPitchOfRadius(radius);
       const double weight = 12. / (pitch * pitch);
-      hit->setHit(*it, zone, right, rSensor->z(), radius, weight);
+      hit->setHit(*it, zone, phizone, right, rSensor->z(), radius, weight);
     } 
     m_hits[sensor][zone].push_back(hit);
   }
@@ -2132,17 +2039,19 @@ PrVLHit* PrVLTracking::closestPhiHit(PrVLHits& hits,
                                      const double tol,
                                      const bool unused) {
 
-  double minDist = 2 * tol;
+  const double tol2 = tol * tol;
+  double d2Min = 2 * tol2;
   PrVLHit* best = 0;
   for (PrVLHits::const_iterator it = hits.begin(); it != hits.end(); ++it) {
     const double dx = (*it)->x() - x;
+    if (fabs(dx) > tol) continue;
     const double dy = (*it)->y() - y;
-    if (fabs(dx) > tol || fabs(dy) > tol) continue;
-    const double d = sqrt(dx * dx + dy * dy);
-    if (d > tol) continue;
-    if (d > minDist) continue;
+    if (fabs(dy) > tol) continue;
+    const double d2 = dx * dx + dy * dy;
+    if (d2 > tol2) continue;
+    if (d2 > d2Min) continue;
     if (unused && (*it)->nUsed() >= (*it)->nMaxUsed()) continue;
-    minDist = d;
+    d2Min = d2;
     best = *it;
   }
   return best;
@@ -2155,9 +2064,10 @@ PrVLHit* PrVLTracking::closestPhiHit(PrVLHits& hits,
 void PrVLTracking::printHit(const PrVLHit* hit, const std::string title) {
 
   if (!m_debug) return;
+  const unsigned int zone = hit->sensor() < 64 ? hit->rZone() : hit->phiZone();
   info() << title 
          << format("sensor %3d z %5.1f zone %1d strip %4d + %3.2f radius %6.3f phi %5.3f x %6.3f y %6.3f used %1d/%1d ",
-                   hit->sensor(), hit->z(), hit->zone(), hit->strip(), 
+                   hit->sensor(), hit->z(), zone, hit->strip(), 
                    hit->fraction(), hit->r(), hit->phi(),
                    hit->x(), hit->y(),
                    hit->nUsed(), hit->nMaxUsed());
