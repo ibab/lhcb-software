@@ -21,7 +21,7 @@ project_names = [ "Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                   "Panoramix", "LbScripts", "Dirac", "LHCbGrid", "Panoptes",
                   "Curie", "Vetra", "VetraTB", "Compat", "VanDerMeer", "Ganga",
                   "LHCbDirac", "Integration", "Erasmus", "Feicim",
-                  "Stripping", "LHCbExternals", "Urania" ]
+                  "Stripping", "LHCbExternals", "Urania", "VMDirac", "LHCbVMDirac" ]
 
 afs_volume_short_names = { "Gaudi"      : "GA",
                            "LHCb"       : "LH",
@@ -58,6 +58,8 @@ afs_volume_short_names = { "Gaudi"      : "GA",
                            "Erasmus"    : "ER",
                            "Feicim"     : "FE",
                            "Stripping"  : "ST",
+                           "VMDirac"    : "VM",
+                           "LHCbVMDirac": "LV",
                            "Urania"     : "UR"}
 
 # ------------------------------------------------------------------------------------
@@ -469,12 +471,22 @@ Dirac.disableSetenvAlias()#IGNORE:E0602
 Dirac.disableSetupAlias()#IGNORE:E0602
 Dirac.setFullSize(500000)#IGNORE:E0602
 
+# VMDirac
+VMDirac.disableSetenvAlias()#IGNORE:E0602
+VMDirac.disableSetupAlias()#IGNORE:E0602
+VMDirac.setFullSize( 500000 )#IGNORE:E0602
+
 
 # LHCbDirac
 LHCbDirac.disableSetenvAlias()#IGNORE:E0602
 LHCbDirac.setFullSize(15000000)#IGNORE:E0602
 LHCbDirac.setAFSVolumeName("LBDIRAC")#IGNORE:E0602
 LHCbDirac.setLCGTarBallName("LCGGrid")#IGNORE:E0602
+
+# LHCbVMDirac
+LHCbVMDirac.disableSetenvAlias()#IGNORE:E0602
+LHCbVMDirac.setFullSize( 15000000 )#IGNORE:E0602
+LHCbVMDirac.setAFSVolumeName( "LVDIRAC" )#IGNORE:E0602
 
 # Erasmus
 Erasmus.setAFSVolumeName("ERASM")#IGNORE:E0602
