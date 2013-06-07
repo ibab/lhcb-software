@@ -6,9 +6,11 @@
 #include "MBM/bmstruct.h"
 #include "MBM/bmdef.h"
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 using namespace RTL;
+extern "C" int mbm_summary(int argc, char** argv);
 
 static std::string command() {
   string cmd = ::lib_rtl_getenv("ONLINEKERNELROOT");
@@ -18,11 +20,50 @@ static std::string command() {
   return cmd;
 }
 
+extern "C" int mbm_install_test_bm(int argc , char** argv) {
+  try  {
+    std::vector<char*> opts;
+    std::vector<ServerBMID> bmids;
+    char type[64] = "mbm_install";
+    ServerBMID bmid;
+    for(size_t i=0; i<size_t(argc); ++i)  {
+      char c0 = argv[i][0];
+      char c1 = ::toupper(argv[i][1]);
+      opts.push_back(argv[i]);
+      if ( (c0 == '-' || c0 == '/') && (c1 == 'C' || c1 == 'A') ) {
+	bmid = mbm_install_server(opts.size(), &opts[0]);
+	if ( !bmid )  {
+	  ::lib_rtl_output(LIB_RTL_ERROR,"Unable to install MBM buffers...\n");
+	  throw std::runtime_error("Unable to install MBM buffers...");
+	}
+	bmids.push_back(bmid);
+	opts.clear();
+	opts.push_back(type);
+      }
+    }
+    if ( !opts.empty() )  {
+      //opts.push_front("dummy");
+      RTL::CLI cli(opts.size(),&opts[0],0);
+      int sleep = 10000;
+      bool summary = cli.getopt("summary",3);
+      cli.getopt("sleep",3,sleep);
+      ::lib_rtl_sleep(sleep*1000);
+      if ( summary )   {
+	return mbm_summary(opts.size(),&opts[0]);
+      }
+    }
+  }
+  catch (std::exception& e)  {
+    ::lib_rtl_output(LIB_RTL_ERROR,"++mbm_install++ MBM initialization failed: %s\n",e.what());
+  }
+  return MBM_ERROR;
+}
+
 extern "C" int mbm_simple_test(int argc, char** /* argv */)  {
   ProcessGroup pg;
   Process* p[10] = {0,0,0,0,0,0,0,0,0,0};
   const char* output = argc>1 ? "" : "/dev/null";
-  const char *a1[]={"mbm_install","-s=8096","-e=64","-u=64","-i=0","-f",0};
+  const char *a1[]={"mbm_install_test_bm","-s=8096","-e=64","-u=64","-i=0","-f","-c","-sleep=30",0};
   const char *a2[]={"mbm_cons","-name=cons_s_0",0};
   const char *a4[]={"mbm_cons","-name=cons_o_0","-one",0};
   const char *a8[]={"mbm_prod","-name=prod_0","-m=50000","-s=3500",0};
