@@ -106,14 +106,14 @@ extern "C" int mbm_full_test(int argc, char** /* argv */)  {
   ProcessGroup pg;
   Process* p[10] = {0,0,0,0,0,0,0,0,0,0};
   const char* output = argc>1 ? "" : "/dev/null";
-  const char *a1[]={"mbm_install","-s=8096","-e=64","-u=64","-i=0",0};
+  const char *a1[]={"mbm_install_test_bm","-s=8096","-e=8","-u=64","-i=0","-c","-sleep=30",0};
   const char *a2[]={"mbm_cons","-name=cons_s_0",0};
   const char *a3[]={"mbm_cons","-name=cons_s_1",0};
   const char *a4[]={"mbm_cons","-name=cons_o_0","-one",0};
   const char *a5[]={"mbm_cons","-name=cons_o_1","-one",0};
   const char *a6[]={"mbm_cons","-name=cons_u_0","-s=1",0};
   const char *a7[]={"mbm_cons","-name=cons_u_1","-s=1",0};
-  const char *a8[]={"mbm_prod","-name=prod_0","-m=10000","-s=3500",0};
+  const char *a8[]={"mbm_prod","-name=prod_0","-m=5000","-s=3500",0};
   const char *a9[]={"mbm_summary",0};
 
   ::mbm_qmtest_check_start();
