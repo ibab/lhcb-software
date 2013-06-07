@@ -69,7 +69,7 @@ int Summary::show(BufferMemory* dsc, bool show_states)   {
   static const char* fmt_def  = " %-20s%5x%5s          %40s%5s%7s\n";
   static const char* fmt_prod = " %-20s%5x%5s%6s%11d   %3.0f%32s%7s\n";
   static const char* fmt_cons = " %-20s%5x%5s%6s               %12d   %3.0f%5s%7s\n";
-  static const char* head=" Name            Partition Type State   Produced %%prod     #seen %%seen Reqs Buffer\n";
+  static const char* head=" Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer\n";
   char txt[256];
   USER*    us, *utst=(USER*)~0x0;
   CONTROL* ctr = dsc->ctrl;

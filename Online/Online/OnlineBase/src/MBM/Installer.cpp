@@ -319,21 +319,7 @@ ServerBMID mbm_install_server(int argc , char** argv) {
   }
   return 0;
 }
-#if 0
-extern "C" int mbm_install(int argc , char** argv) {
-  try  {
-    ServerBMID bm = mbm_install_server(argc,argv);
-    if ( bm ) {
-      delete bm;
-      return MBM_NORMAL;
-    }
-  }
-  catch (std::exception& e)  {
-    ::lib_rtl_output(LIB_RTL_ERROR,"++mbm_install++ MBM initialization failed: %s\n",e.what());
-  }
-  return MBM_ERROR;
-}
-#endif
+
 extern "C" int mbm_deinstall(int argc , char** argv) {
   MBM::Installer inst(argc, argv);
   return inst.deinstall();
@@ -353,7 +339,6 @@ std::vector<ServerBMID> mbm_multi_install(int argc , char** argv) {
   std::vector<char*> opts;
   std::vector<ServerBMID> bmids;
   static char type[64] = "mbm_install";
-  opts.push_back(type);
   for(size_t i=0; i<size_t(argc); ++i)  {
     char c0 = argv[i][0];
     char c1 = ::toupper(argv[i][1]);
