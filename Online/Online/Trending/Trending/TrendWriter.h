@@ -25,7 +25,7 @@ public:
   /// Standard constructor
   TrendWriter( );
 
-  ~TrendWriter( ); ///< Destructor
+  virtual ~TrendWriter( ); ///< Destructor
 
   bool openWrite( std::string name, std::vector<std::string> tags );
 
@@ -82,8 +82,8 @@ private:
   int                      m_ptDir;
   int                      m_ptData;
   bool                     m_hasSelection;
-  int                      m_requestedTagNumber;
-  int                      m_tagNumber;
+  //int                      m_requestedTagNumber;
+  //int                      m_tagNumber;
   unsigned int             m_lastTime;
   unsigned int             m_averageTime;
   std::vector<float>       m_sumForAverage;
@@ -102,7 +102,8 @@ TrendWriter::TrendWriter( ) :
   , m_dataAddressInFile( -1 )
   , m_file( NULL )
   , m_hasSelection( false )
-  , m_requestedTagNumber( -1 )
+			//, m_requestedTagNumber( -1 )
+			//, m_tagNumber( -1 )
   , m_lastTime( 0xffffffff )
   , m_averageTime( 0 )
   , m_maxTimeNoWrite( 0)
