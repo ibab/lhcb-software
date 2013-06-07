@@ -1,0 +1,28 @@
+# ========================================================================
+# Created    : 2008-05-08
+# Maintainer : Olivier Deschamps odescham@in2p3.fr
+# =========================================================================
+package           CaloTools
+version           v6r5p1
+
+# ================= structure =================================================
+branches            cmt doc src
+
+# ================= dependencies ==============================================
+use GaudiAlg         v*
+use CaloInterfaces   v*      Calo 
+use CaloUtils        v*      Calo 
+use TrackInterfaces  v*      Tr
+use CaloDet          v*      Det 
+use RecEvent         v*      Event
+use TrackEvent       v*      Event
+use LHCbMath         v*      Kernel
+use LHCbKernel       v*      Kernel
+use Relations	     v*      Kernel
+
+# ================= constituents: linker library ==============================
+library             CaloTools *.cpp
+
+# ================= patterns ==================================================
+apply_pattern       component_library library=CaloTools
+# =============================================================================

@@ -1,0 +1,267 @@
+!-------------------------------------------------------------------------------
+! Package     : CaloUtils
+! Responsible : Olivier Deschamps odescham@in2p3.fr
+!-------------------------------------------------------------------------------
+
+!========================= CaloTools v6r5p1 2013-06-03 =======================
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warning
+ - Remove 'do nothing' finalize methods
+
+!========================= CaloTools v6r5 2012-11-28 =========================
+! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+ - Fixed a warning (-pedantic).
+
+! 2012-10-19 - Marco Cattaneo
+ - Fix gcc -pedantic warnings
+ - Use getItExists where appropriate
+
+!========================= CaloTools v6r4 2012-06-25 =========================
+! 2012-05-29 - Marco Cattaneo
+ - Fix unused variable in previous commit
+ - Fix UNINIT_CTOR defects
+
+! 2012-05-22 - Olivier Deschamps for Miriam Calvo 
+ - GammaPi0SeparationTool  : new version of the tool (incl. Prs info)
+
+! 2012-05-14 - Olivier Deschamps
+ - new algorithm : CheckCaloHypoRef - check CaloHypo->CaloCluster* smart 
+                                      reference backward compatibility 
+
+! 2012-05-10 - Olivier Deschamps
+ - L0Calo2Calo tool : default clusterization level set to 2 
+                      (5x5 area for merged pi0)
+
+!========================= CaloTools v6r3p1 2011-12-14 =========================
+! 2011-11-23 - Marco Cattaneo
+ - Fix trivial gcc warnings and icc remarks
+
+!========================= CaloTools v6r3 2011-07-27 =========================
+! 2011-07-22 - Marco Cattaneo
+ - Create debug() messages only when output level requires it,
+   also using UNLIKELY macro
+ - Replace all endreq by endmsg
+
+! 2011-06-17 - Olivier Deschamps
+  - fix window compilation warning
+
+!========================= CaloTools v6r2 2011-06-15 =========================
+! 2011-06-14 - Olivier Deschamps
+ - extend CaloHypoEstimator : more Prs info + Gamma/pi0 separation info
+ - new GammaPi0SeparationTool + related MLP files
+
+! 2011-05-16 - Olivier Deschamps
+ - L0Calo2Calo tool : clusterize around right seedID
+
+! 2011-05-13 - Olivier Deschamps
+ - L0Calo2Calo tool : allow for managing the cluster on TES externally (new default)
+
+!========================= CaloTools v6r1 2011-02-01 =========================
+! 2011-01-21 - Olivier Deschamps
+ - Fix Calo2MCTool initialization
+
+! 2011-01-19 - Marco Cattaneo
+ - Fix ICC warnings and remarks
+
+!========================= CaloTools v6r0 2010-10-25 =========================
+
+! 2010-10-07 - Dmitry Golubkov
+ - CaloHypo2Calo: change passing parameteres by value to const references
+ - increment version to v6r0 due to the change in the interface
+
+!========================== CaloTools v5r17 2010-09-28 =========================
+! 2010-09-01 - Olivier Deschamps
+  - fix compilation error on windows
+  - improve Track2Calo & CaloHypoEstimator
+
+! 2010-08-31 - Olivier Deschamps
+  - fix compilation warning on slc4
+
+! 2010-08-27 - O. Deschamps
+ - new tool CaloHypoEstimator + update CaloHypo2Calo
+
+!========================== CaloTools v5r16p1 2010-06-21 =======================
+! 2010-06-10 - Marco Cattaneo
+ - Fix Windows compilation warnings
+
+!========================== CaloTools v5r16 2010-03-18 =========================
+! 2010-03-08 - Olivier Deschamps
+	- CaloHypoToCalo: Implement new virtual method _setProperty
+
+!========================== CaloTools v5r15 2010-02-15 =========================
+! 2010-02-13 - Olivier Deschamps
+	- Track2Calo : switch HeraBExtrapolator to RungeKutta
+
+!========================== CaloTools v5r14 2009-11-27 =========================
+! 2009-11-17 - Olivier Deschamps
+ - Calo2MCTool : 
+  - new methods :
+      isCalo(particle) 
+      isPureNeutralCalo(particle) 
+      findMCOrBest(string/ParticleID,threshold)
+  - complete the code (still not fully completed)
+
+!========================== CaloTools v5r13 2009-11-13 =========================
+! 2009-11-05 - Dmitry GOLUBKOV
+ - L0Calo2CaloTool : bugfix - make storage of all created clusters on TES the
+   only supported behaviour (therefore remove the 'DuplicateClustersOnTES' property),
+   use CaloFunctors::neighbours() instead of look_neig()
+ - cmt/requirements version increment to v5r13
+
+!========================== CaloTools v5r12 2009-10-20 =========================
+! 2009-12-21 - Olivier Deschamps
+  -  adapt to change in CaloDAQ
+  -  improve Calo2MCTool.{cpp,h} : not yet complete but usable 
+
+! 2009-09-15 - Olivier Deschamps
+  - new tool : Calo2MCTool.{cpp,h} : handle Calo object->MC relation
+							 (interface CaloInterfaces/ICalo2MCTool.h)
+      - preliminary (incomplete) version of the tool
+  - use Relations in requirements
+
+! 2009-09-14 - Olivier Deschamps
+  - adapt to change in CaloDAQ/CaloReadoutTool 
+    (->CaloCosmicsTool & CaloGetterTool & L0Calo2CaloTool)
+
+! 2009-09-11 - Olivier Deschamps
+ - Calo2Calo.cpp : 
+   - make use of CaloAlgUtils.h to define context-dependent TES I/O 
+   - caloGetterTool : public -> private tool
+   - use caloGetterTool in isLocMax(id) method
+
+
+! 2009-09-11 - Olivier Deschamps
+ - CalOGetterTool.cpp : make use of CaloAlgUtils.h to define context-dependent TES I/O 
+
+! 2009-09-04 - Dmitry Golubkov
+ - cmt/requirements version increment to v5r12
+ - release.notes : fix the order of the comments 2009-08-02
+ - L0Calo2CaloTool.cpp: decrease error level for invalid ur/dr/ul cells
+
+!========================== CaloTools v5r11 2009-09-03 =========================
+! 2009-09-03 - Marco Cattaneo
+ - Remove obsolete file src/CaloTools_dll.cpp
+
+! 2009-08-05 - Stephanie Hansmann-Menzemer
+ - remove filling of track-extra info, according to changes in Track.xml class
+
+!========================== CaloTools v5r10p1 2009-09-07 =========================
+! 2009-09-04 - Dmitry Golubkov
+ - L0Calo2CaloTool.cpp: decrease error level for invalid ur/dr/ul cells
+
+!========================== CaloTools v5r10 2009-08-31 =========================
+
+! 2009-12-10 - Olivier Deschamps
+ - adapt to change in CaloDAQ
+
+! 2009-08-10 - Vanya BELYAEV
+ - Calo2Calo & CaloGetter 
+    fix the problem of mandatory "update" 
+
+! 2009-08-05 - Vanya BELYAEV
+ - fix the signature 
+
+! 2009-08-02 - Dmitry GOLUBKOV
+ - L0Calo2CaloTool.cpp: method to return CaloClusters around the CaloCellID
+
+! 2009-07-31 - Dmitry Golubkov
+ - L0Calo2CaloTool.cpp - fix compilation warnings on slc4
+
+! 2009-07-29 - Dmitry GOLUBKOV
+ - Add a new tool to get a list of CaloClusters for the input L0CaloCandidate(s)
+  L0Calo2CaloTool.cpp, L0Calo2CaloTool.h
+ - cmt/requirements verison increment to v5r10
+
+!========================== CaloTools v5r9 2009-06-03 =========================
+! 2009-06-03 - Marco Cattaneo
+ - Add missing CaloTools_dll.cpp file
+
+! 2009-05-19 - Marco Cattaneo
+ - Add missing #include "Event/Particle.h" following removal from IPart2Calo.h
+ - Replace endreq by endmsg
+
+! 2009-05-10 - Vanya Belyaev
+ - a bit more statistical prinout  
+ - cmt/requirements
+     verison increment to v5r9
+
+!========================== CaloTools v5r8 2009-05-08 =========================
+! 2008-04-17 - Olivier Deschamps
+ - new tool CaloGetterTool : helps to speed-up CaloReco processing
+ - Calo2Calo/CaloHypo2Calo : get digits data via CaloGetterTool
+
+! 2009-04-16 Olivier Deschamps
+ - Calo2Calo/CaloHypo2Calo : speed-up processing + new property ('IdealGeometry')
+   when perfect alignment is assumed
+
+!========================== CaloTools v5r7 2009-03-10 =========================
+! 2009-03-09 Olivier Deschamps
+ - Fix bad default setting for CaloHypo2Calo.cpp (Seed=false -> true)  + minor bug fix
+
+! 2009-03-05 Olivier Deschamps
+ - improve verbosity for CaloCosmics stuff
+
+!========================== CaloTools v5r6 2009-01-12 =========================
+! 2008-12-10 - Marco Cattaneo
+ - Fix gcc 4.3 warnings
+
+! 2008-12-05 - Olivier Deschamps
+ - CaloCosmicsTrackTool :: fix bug in Hcal timing 
+
+!========================== CaloTools v5r5 2008-10-01 =========================
+! 2008-09-11 - Olivier Deschamps
+ - Calo2Calo :: add multiplicity method
+ - new tool : CaloHypo2Calo : specialized version of Calo2Calo
+
+!========================== CaloTools v5r4 2008-09-04 =========================
+! 2008-08-21 - Olivier Deschamps
+ - CaloCosmicsTrackAlg : add monitoring histo for cosmics track (theta,phi) parameters
+ - CaloCosmicsTool : add cellId vector in the output ntuple
+
+!========================== CaloTools v5r3 2008-07-29 =========================
+! 2008-07-21 - Marco Cattaneo
+ - Adapt to new location of IEventTimeDecoder.h (needs Gaudi v20r2)
+
+!========================== CaloTools v5r2 2008-07-02 =========================
+! 2008-06-30 - Olivier Deschamps
+ - add asymmetry monitoring in CaloCosmicsTrackAlg
+ - add 'kernel' variable computation in CaloCosmicsTool 
+
+! 2008-06-26 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v5r2
+ - src/CaloCosmicsTool.cpp
+ - src/CaloCosmicsTrackTool.cpp
+ - src/Track2Calo.cpp
+  . Change all Gaudi::XYZLine and Gaudi::Line for Gaudi::Math::XYZLine and
+    Gaudi::Math::XYZLine respectively (adapting to Kernel/LHCbMath v3)
+
+!========================== CaloTools v5r1 2008-06-05 =========================
+! 2008-06-05 - Marco Cattaneo
+  - Fix acos() for windows (cannot take an int argument)
+  
+! 2008-06-04 - Deschamps Olivier
+  - tune the verbosity
+
+! 2008-06-03 - Marco Cattaneo
+ - In CaloCosmicsTool.cpp: fix compiler warning, add missing include
+ - In CaloCosmicsTrackTool.cpp, CaloCosmicsTrackAlg.cpp: add missing includes
+
+! 2008-05-29 - Deschamps Olivier
+  - use dedicated TrackEvent/Track flags
+
+! 2008-05-29 - Deschamps Olivier
+  - add more monitoring histo (split monitoring according to forward/backward cosmics tracks)
+
+! 2008-05-27 - Deschamps Olivier
+  - fix bug in CaloCosmicsTrackTool.cpp (Hcal state replicated Ecal state)
+
+! 2008-05-22 - Deschamps Olivier
+  - Add new tools and alg for cosmics track reconstruction in calorimeter : 
+	CaloCosmicsTool, CaloCosmicsTrackTool, CaloCosmicsTrackAlg
+
+!========================== CaloTools v5r0 2008-05-08 =========================
+! 2008-05-08 - Marco Cattaneo
+ - Resurrect CaloTools package (declared obsolete in 2002). It is now a
+   component library for Calorimeter Tools, previously in CaloUtils link library
