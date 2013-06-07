@@ -13,7 +13,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
  'Explorer': {'AccessForeign': True,
               'Load': True,
               'OutputLevel': 3,
-              'PrintFreq': 0.00021000000000000001},
+              'PrintFreq': 0.00021},
  'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
  'IODataManager': {'AgeLimit': 1, 'OutputLevel': 3},
  'Writer_0': {'ChecksumType': 0,
@@ -25,18 +25,16 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'Connection': 'file://mep_data_1.dat',
               'PackingFactor': 10}}
 +-------------------> Start processing events
-EventPersistenc...   INFO  'CnvServices':[ 'LHCb::RawDataCnvSvc/RawDataCnvSvc' ]
 Writer_0             INFO Initialize MDFWriter
 Writer_0             INFO Received event request connection.
 Writer_1             INFO Initialize MDFWriter
 Writer_1             INFO Received event request connection.
 EventLoopMgr      WARNING Unable to locate service "EventSelector"
 EventLoopMgr      WARNING No events will be processed from external input.
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-Explorer             INFO ========= /Event[0x1f1b5c0@EventDataSvc]:
+Explorer             INFO ========= /Event[0xa479cc0@EventDataSvc]:
 Explorer             INFO +--> /Event [No Address]  DataObject
 Explorer             INFO   +--> /DAQ [No Address]  DataObject
 Explorer             INFO     +--> /RawEvent [No Address]  LHCb::RawEvent

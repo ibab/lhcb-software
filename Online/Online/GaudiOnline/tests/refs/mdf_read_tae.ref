@@ -27,7 +27,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
  'Explorer': {'AccessForeign': True,
               'Load': True,
               'OutputLevel': 3,
-              'PrintFreq': 0.00021000000000000001},
+              'PrintFreq': 0.00021},
  'FileCatalog': {'Catalogs': ['xmlcatalog_file:ROOTIO.xml']},
  'IODataManager': {'AgeLimit': 1, 'OutputLevel': 3},
  'JobOptionSvc': {'OutputLevel': 4},
@@ -55,7 +55,7 @@ R__unzip: too small target
 EventSelector.D...   INFO Retry with increased buffer space of 185208 bytes.
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
-Explorer             INFO ========= /Event[0x30ab510@EventDataSvc]:
+Explorer             INFO ========= /Event[0x390afd0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | +--> /Prev5 [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
@@ -89,7 +89,6 @@ Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa0000
 Explorer             INFO   +--> /Next5 [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO       +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
-IODataManager        INFO Referring to dataset taeROOT.dat by its file ID:8E728EEF-5EBC-E111-9AB6-001E4F3E563A
 EventSelector     SUCCESS Reading Event record 201. Record number within stream 1: 201
 EventSelector     SUCCESS Reading Event record 401. Record number within stream 1: 401
 EventSelector     SUCCESS Reading Event record 601. Record number within stream 1: 601
@@ -111,30 +110,29 @@ ApplicationMgr       INFO Application Manager Stopped successfully
 TAEMini              INFO Events output: 3000
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
-RootCnvSvc           INFO Disconnected data IO:8E728EEF-5EBC-E111-9AB6-001E4F3E563A [taeROOT.dat]
-XMLCatalog           INFO File 'ROOTIO.xml' does not exist. New file created.
+RootCnvSvc           INFO Disconnected data IO:1040468F-8ACF-E211-B3AD-003048F0E01A [taeROOT.dat]
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-Dump:EndRun          INFO Time User   : Tot=    0 [us]                                             #=  1
 TAEMini:Stop         INFO Time User   : Tot=    0 [us]                                             #=  1
-Dump:Stop            INFO Time User   : Tot=    0 [us]                                             #=  1
 Explorer:BeginRun    INFO Time User   : Tot=    0 [us]                                             #=  1
 Explorer:EndRun      INFO Time User   : Tot=    0 [us]                                             #=  1
 TAEMini:Start        INFO Time User   : Tot=    0 [us]                                             #=  1
 Explorer:Finalize    INFO Time User   : Tot=    0 [us]                                             #=  1
 Explorer:Start       INFO Time User   : Tot=    0 [us]                                             #=  1
 Explorer:Stop        INFO Time User   : Tot=    0 [us]                                             #=  1
-Dump:BeginRun        INFO Time User   : Tot=    0 [us]                                             #=  1
 Dump:Finalize        INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:BeginRun        INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:EndRun          INFO Time User   : Tot=    0 [us]                                             #=  1
 Dump:Start           INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:Stop            INFO Time User   : Tot=    0 [us]                                             #=  1
 Dump:Initialize      INFO Time User   : Tot=    0 [us]                                             #=  1
 TAEMini:Finalize     INFO Time User   : Tot=    0 [us]                                             #=  1
-Explorer:Initia...   INFO Time User   : Tot=    0 [us]                                             #=  1
-Explorer:Execute     INFO Time User   : Tot=   33 [ms] Ave/Min/Max=   11(+-  104)/    0/1e+03 [us] #=3000
-Dump:Execute         INFO Time User   : Tot=  135 [ms] Ave/Min/Max=   45(+-  207)/    0/1e+03 [us] #=3000
-TAEMini:Initialize   INFO Time User   : Tot=  325 [ms]                                             #=  1
-TAEMini:Execute      INFO Time User   : Tot= 7.51  [s] Ave/Min/Max=  2.5(+- 23.3)/    0/  272 [ms] #=3000
+Explorer:Initia...   INFO Time User   : Tot=    4 [ms]                                             #=  1
+Explorer:Execute     INFO Time User   : Tot=   63 [ms] Ave/Min/Max=   21(+-  150)/    0/3e+03 [us] #=3000
+Dump:Execute         INFO Time User   : Tot=  364 [ms] Ave/Min/Max=  121(+-  326)/    0/1e+03 [us] #=3000
+TAEMini:Initialize   INFO Time User   : Tot=  390 [ms]                                             #=  1
+TAEMini:Execute      INFO Time User   : Tot= 1.79  [s] Ave/Min/Max=0.597(+- 2.13)/    0/   63 [ms] #=3000
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully

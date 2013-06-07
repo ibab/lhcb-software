@@ -40,7 +40,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
  'Explorer': {'AccessForeign': True,
               'Load': True,
               'OutputLevel': 3,
-              'PrintFreq': 0.00021000000000000001},
+              'PrintFreq': 0.00021},
  'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
  'IODataManager': {'AgeLimit': 1, 'OutputLevel': 3},
  'JobOptionSvc': {'OutputLevel': 4},
@@ -60,7 +60,7 @@ ApplicationMgr       INFO Application Manager Started successfully
 EventSelector.D...   INFO Compression:0 Checksum:0
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
-Explorer             INFO ========= /Event[0x1bd8d2f0@EventDataSvc]:
+Explorer             INFO ========= /Event[0xe591e80@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -95,7 +95,7 @@ EventSelector     SUCCESS Reading Event record 4001. Record number within stream
 EventSelector     SUCCESS Reading Event record 4201. Record number within stream 3: 201
 EventSelector     SUCCESS Reading Event record 4401. Record number within stream 3: 401
 EventSelector     SUCCESS Reading Event record 4601. Record number within stream 3: 601
-Explorer             INFO ========= /Event[0x1beef600@EventDataSvc]:
+Explorer             INFO ========= /Event[0xdcea470@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -129,7 +129,7 @@ EventSelector     SUCCESS Reading Event record 8801. Record number within stream
 EventSelector     SUCCESS Reading Event record 9001. Record number within stream 5: 1001
 EventSelector     SUCCESS Reading Event record 9201. Record number within stream 5: 1201
 EventSelector     SUCCESS Reading Event record 9401. Record number within stream 5: 1401
-Explorer             INFO ========= /Event[0x1bea5d90@EventDataSvc]:
+Explorer             INFO ========= /Event[0xe585590@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -170,7 +170,7 @@ EventSelector        INFO Stream:EventSelector.DataStreamTool_8 Def:DATA='PFN:ro
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 14001. Record number within stream 8: 1
 EventSelector     SUCCESS Reading Event record 14201. Record number within stream 8: 201
-Explorer             INFO ========= /Event[0x1beebcd0@EventDataSvc]:
+Explorer             INFO ========= /Event[0xcd0f1f0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -204,7 +204,7 @@ EventSelector     SUCCESS Reading Event record 18401. Record number within strea
 EventSelector     SUCCESS Reading Event record 18601. Record number within stream 10: 601
 EventSelector     SUCCESS Reading Event record 18801. Record number within stream 10: 801
 EventSelector     SUCCESS Reading Event record 19001. Record number within stream 10: 1001
-Explorer             INFO ========= /Event[0x1bef11b0@EventDataSvc]:
+Explorer             INFO ========= /Event[0xe48ce80@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -240,21 +240,21 @@ ROOTMini:Stop        INFO Time User   : Tot=    0 [us]                          
 Explorer:BeginRun    INFO Time User   : Tot=    0 [us]                                             #=  1
 Explorer:EndRun      INFO Time User   : Tot=    0 [us]                                             #=  1
 ROOTMini:Start       INFO Time User   : Tot=    0 [us]                                             #=  1
+Explorer:Stop        INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:EndRun          INFO Time User   : Tot=    0 [us]                                             #=  1
 Explorer:Finalize    INFO Time User   : Tot=    0 [us]                                             #=  1
 Explorer:Start       INFO Time User   : Tot=    0 [us]                                             #=  1
-Explorer:Stop        INFO Time User   : Tot=    0 [us]                                             #=  1
-Dump:BeginRun        INFO Time User   : Tot=    0 [us]                                             #=  1
-Dump:EndRun          INFO Time User   : Tot=    0 [us]                                             #=  1
 Dump:Finalize        INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:BeginRun        INFO Time User   : Tot=    0 [us]                                             #=  1
 Dump:Start           INFO Time User   : Tot=    0 [us]                                             #=  1
 Dump:Stop            INFO Time User   : Tot=    0 [us]                                             #=  1
 Dump:Initialize      INFO Time User   : Tot=    0 [us]                                             #=  1
-Explorer:Initia...   INFO Time User   : Tot=    0 [us]                                             #=  1
-ROOTMini:Finalize    INFO Time User   : Tot=    0 [us]                                             #=  1
-Explorer:Execute     INFO Time User   : Tot=  180 [ms] Ave/Min/Max= 8.18(+- 90.1)/    0/1e+03 [us] #=22000
-ROOTMini:Initia...   INFO Time User   : Tot=  222 [ms]                                             #=  1
-Dump:Execute         INFO Time User   : Tot= 1.05  [s] Ave/Min/Max= 47.8(+-  214)/    0/2e+03 [us] #=22000
-ROOTMini:Execute     INFO Time User   : Tot=   22  [s] Ave/Min/Max=0.998(+- 9.36)/    0/  140 [ms] #=22000
+ROOTMini:Finalize    INFO Time User   : Tot=    1 [ms]                                             #=  1
+Explorer:Initia...   INFO Time User   : Tot=    3 [ms]                                             #=  1
+Explorer:Execute     INFO Time User   : Tot=  376 [ms] Ave/Min/Max= 17.1(+-  130)/    0/1e+03 [us] #=22000
+ROOTMini:Initia...   INFO Time User   : Tot=  387 [ms]                                             #=  1
+Dump:Execute         INFO Time User   : Tot= 2.45  [s] Ave/Min/Max=  111(+-  315)/    0/2e+03 [us] #=22000
+ROOTMini:Execute     INFO Time User   : Tot= 5.54  [s] Ave/Min/Max=  252(+-  721)/    0/3.2e+04 [us] #=22000
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully

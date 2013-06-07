@@ -30,7 +30,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
  'Explorer': {'AccessForeign': True,
               'Load': True,
               'OutputLevel': 3,
-              'PrintFreq': 0.00021000000000000001},
+              'PrintFreq': 0.00021},
  'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
  'IODataManager': {'AgeLimit': 1, 'OutputLevel': 3},
  'MessageSvc': {'OutputLevel': 3},
@@ -86,11 +86,11 @@ EventLoopMgr      WARNING No events will be processed from external input.
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-Explorer             INFO ========= /Event[0x1bd2c870@EventDataSvc]:
+Explorer             INFO ========= /Event[0xa4db290@EventDataSvc]:
 Explorer             INFO +--> /Event [No Address]  DataObject
 Explorer             INFO   +--> /DAQ [No Address]  DataObject
 Explorer             INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
-RawDataCnvSvc        INFO Opened(NEW)  MDF stream:PFN:root:file://mdfData_0.dat ID:0x1bf18ff0
+RawDataCnvSvc        INFO Opened(NEW)  MDF stream:PFN:root:file://mdfData_0.dat ID:0xa6e47a0
 +-------------------> Finished processing events
 ApplicationMgr       INFO Application Manager Stopped successfully
 Writer_0             INFO Events output: 2000
@@ -105,6 +105,6 @@ Writer_8             INFO Size: 1761540 Output:root:file://./mdfData_8.dat MD5 s
 Writer_9             INFO Size: 1761540 Output:root:file:./mdfData_9.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
 Writer_10            INFO Size: 1761540 Output:./mdfData_10.dat MD5 sum:9c3a50e4faca76b296d3a0b7703fa7fb
 EventLoopMgr         INFO Histograms converted successfully according to request.
-RawDataCnvSvc        INFO Closed connected MDF stream:PFN:root:file://mdfData_0.dat ID:0x1bf18ff0
+RawDataCnvSvc        INFO Closed connected MDF stream:PFN:root:file://mdfData_0.dat ID:0xa6e47a0
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

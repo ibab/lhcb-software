@@ -19,14 +19,12 @@ ApplicationMgr       INFO Application Manager Configured successfully
  'Explorer': {'AccessForeign': True,
               'Load': True,
               'OutputLevel': 3,
-              'PrintFreq': 0.00021000000000000001},
+              'PrintFreq': 0.00021},
  'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
  'IODataManager': {'AgeLimit': 5, 'OutputLevel': 3}}
 +-------------------> Start processing events
-EventPersistenc...   INFO  'CnvServices':[ 'LHCb::RawDataCnvSvc/RawDataCnvSvc' ]
 MIFSelector       SUCCESS Connected to:file://mifData.dat file://mifData.dat
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATA='file://mifData.dat' SVC='LHCb::MIFSelector'
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
@@ -34,7 +32,7 @@ MIFSelector       SUCCESS Connected to:58AD91C1-1FEA-DC11-A5AA-000423D950B0 file
 EventSelector.D...   INFO Compression:0 Checksum:0
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
-Explorer             INFO ========= /Event[0xb895950@EventDataSvc]:
+Explorer             INFO ========= /Event[0x10ae6150@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -48,7 +46,7 @@ IODataManager       ERROR You may not be able to navigate back to the input file
 MIFSelector       SUCCESS Connected to:root:file:mdfData_2.dat root:file:mdfData_2.dat
 EventSelector.D...   INFO Compression:0 Checksum:1
 EventSelector     SUCCESS Reading Event record 4001. Record number within stream 1: 4001
-Explorer             INFO ========= /Event[0xb897620@EventDataSvc]:
+Explorer             INFO ========= /Event[0x10aedff0@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -61,7 +59,7 @@ MIFSelector       SUCCESS Connected to:0494F4E9-BC1E-DE11-A8FC-000423D9A21A root
 EventSelector.D...   INFO Compression:2 Checksum:0
 EventSelector     SUCCESS Reading Event record 8001. Record number within stream 1: 8001
 EventSelector     SUCCESS Reading Event record 9001. Record number within stream 1: 9001
-Explorer             INFO ========= /Event[0xb898540@EventDataSvc]:
+Explorer             INFO ========= /Event[0x10ab8d70@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -82,7 +80,7 @@ IODataManager       ERROR You may not be able to navigate back to the input file
 MIFSelector       SUCCESS Connected to:root:./mdfData_7.dat root:./mdfData_7.dat
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 14001. Record number within stream 1: 14001
-Explorer             INFO ========= /Event[0xb8b4c60@EventDataSvc]:
+Explorer             INFO ========= /Event[0x10ae7930@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
@@ -97,7 +95,7 @@ MIFSelector       SUCCESS Connected to:361FF6E9-BC1E-DE11-A8FC-000423D9A21A root
 EventSelector.D...   INFO Compression:2 Checksum:1
 EventSelector     SUCCESS Reading Event record 18001. Record number within stream 1: 18001
 EventSelector     SUCCESS Reading Event record 19001. Record number within stream 1: 19001
-Explorer             INFO ========= /Event[0xb8b4c30@EventDataSvc]:
+Explorer             INFO ========= /Event[0x10aedf60@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO   +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO     +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent

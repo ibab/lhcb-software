@@ -29,7 +29,7 @@ ApplicationMgr       INFO Application Manager Configured successfully
  'Explorer': {'AccessForeign': True,
               'Load': True,
               'OutputLevel': 3,
-              'PrintFreq': 0.00021000000000000001},
+              'PrintFreq': 0.00021},
  'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
  'IODataManager': {'AgeLimit': 1, 'OutputLevel': 3},
  'MessageSvc': {'OutputLevel': 3},
@@ -40,18 +40,16 @@ ApplicationMgr       INFO Application Manager Configured successfully
               'ForceTAE': True,
               'GenerateMD5': True}}
 +-------------------> Start processing events
-EventPersistenc...   INFO  'CnvServices':[ 'LHCb::RawDataCnvSvc/RawDataCnvSvc' ]
 Writer_0             INFO Initialize MDFWriter
 Writer_0             INFO Received event request connection.
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATA='LFN:/user/frank/markus/mdf_1.dat' SVC='LHCb::MDFSelector'
-HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 EventSelector.D...   INFO Compression:0 Checksum:0
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
 EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
-Explorer             INFO ========= /Event[0x1ef75630@EventDataSvc]:
+Explorer             INFO ========= /Event[0x130f4c10@EventDataSvc]:
 Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
 Explorer             INFO | | +--> /RawEvent [No Address]  LHCb::RawEvent
