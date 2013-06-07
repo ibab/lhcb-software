@@ -6,8 +6,8 @@ from Configurables import L0App
 
 L0App().ReplaceL0Banks=True
 
-L0App().DDDBtag= 'head-20120413'; #from RunDB
-L0App().CondDBtag= 'head-20120420'; #from RunDB
+#L0App().DDDBtag= 'head-20120413'; #from RunDB
+#L0App().CondDBtag= 'head-20120420'; #from RunDB
 
 L0App().TCK='0x0045' #default for testing
 
@@ -23,5 +23,5 @@ L0App().EvtMax=100
 
 
 from PRConfig import TestFileDB
-TestFileDB.test_file_db["2012_raw_default"].run(withDB=False,configurable=L0App())
+TestFileDB.test_file_db["2012_raw_default"].run(configurable=L0App())
 #sets Simulation, DataType and DDB/CondDB for me... I hope

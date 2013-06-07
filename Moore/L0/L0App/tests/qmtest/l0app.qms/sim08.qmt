@@ -8,7 +8,7 @@
     <text>../options/L0-Testing-MC.py</text>
   </set></argument>
   <argument name="validator"><text>
-countErrorLines({"FATAL":0, "WARNING":1, "ERROR":0)
+countErrorLines({"FATAL":0, "WARNING":0, "ERROR":0})
 </text></argument>
 </extension>
 

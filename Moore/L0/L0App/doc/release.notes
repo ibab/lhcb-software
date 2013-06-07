@@ -5,7 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-06-07 - Rob Lambert
- - Tests added, tests pass great. First working version of this application.
+ - Tests added. First working version of this application.
+ - Possible problem with processing on the real data, some errors about cabling layouts, need consultation with Julien.
+ - see task #42380
 
 ! 2013-06-05 - Rob Lambert
  - Create package for the first time
