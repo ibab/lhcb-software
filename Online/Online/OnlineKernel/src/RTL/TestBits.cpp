@@ -74,32 +74,3 @@ extern "C" int rtl_testbits(int,char **) {
   BF_print(txt,sizeof(txt));
   return 0;
 }
-
-extern "C" int rtl_testbits2(int,char **) {
-#define VALSIZE 1000
-  unsigned long long randvals[VALSIZE];
-  int i, j;
-  int pos, size;
-
-  for(i=0;i<VALSIZE;i++) {
-    // randvals[i] = (((unsigned long long )rand())  << 32)| rand();
-    randvals[i] = 0xe000000000000001LL;
-    //cout << randvals[i] << "  ";
-  }
-
-  for(i=0;i<100000;i++) {
-    for(j=0;j<VALSIZE;j++) {
-      if(!BF_count((const char*)&randvals[j], sizeof(long long) * 8, &pos, &size)) {
-        std::cout << "Problem!!" << std::endl;
-        exit(-1);
-      } else if(i==0) {
-        std::vector<std::string> words;
-        Bits::dumpWords((const char*)&randvals[j], sizeof(long long) * 8,words);
-        std::cout << std::setw(16) << randvals[j]
-          << " val," << std::setw(2) << pos << ":" << std::setw(2) << size << " "
-          << words[0] << "." << words[1] << std::endl;
-      }
-    }
-  }
-  return 0;
-}
