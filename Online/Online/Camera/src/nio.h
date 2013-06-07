@@ -19,7 +19,7 @@
 class nio{
   
  public: 
-  
+  virtual ~nio() {}
   virtual int rdend()=0;
   virtual int wrend()=0;
   virtual int rd(char *,int)=0;

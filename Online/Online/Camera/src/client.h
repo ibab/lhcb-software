@@ -58,6 +58,7 @@ public:
 #endif
   }
   client(const char * host, unsigned short int port);
+  virtual ~client() {}
   int Connect();
  
   int Go();
