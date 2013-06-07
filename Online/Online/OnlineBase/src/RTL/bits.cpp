@@ -239,38 +239,39 @@ int BF_free(char* base,int pos, int len) {
 
 void BF_print(const void* field, int len, size_t ncols, bool prt_hdr)  {
   size_t i, j, k, n;
+  FILE* output = stdout;
   if ( prt_hdr )  {
     printf("\n");
     for(j=0, n=0; j < ncols; ++j )  {
       for(k=0; k<32; ++k, ++n)  {
 	char c = (char)((n+1))%10 == 0 ? (n+1)/10+'0' : ' ';
-        printf("%c",c);
+        ::printf("%c",c);
       }
-      if ( j < (ncols-1) ) printf (" ");
+      if ( j < (ncols-1) ) ::fputc(' ',output);
     }
     printf("\n");
     for(j=0, n=0; j < 4; ++j )  {
       for(k=0; k<32; ++k, ++n)  {
-        printf("%d",int((n+1)%10));
+        ::printf("%d",int((n+1)%10));
       }
-      if ( j < (ncols-1) ) printf (" ");
+      if ( j < (ncols-1) ) ::fputc(' ',output);
     }
-    printf("\n");
-    printf("\n");
+    ::fputs("\n\n",output);
   }
   std::vector<std::string> words;
   Bits::dumpWords(field, len, words);
   for(i = 0, k = 0; i < len/sizeof(int)/ncols; ++i )  {
     for(j = 0; j < ncols; ++j )  {
-      ::puts(words[i+ncols+j].c_str());
+      ::fputs(words[i+ncols+j].c_str(),output);
       if ( j < (ncols-1) ) printf (" ");
       ++k;
     }
-    printf("\n");
+    ::fputs("\n",output);
   }
   while(k<sizeof(words))  {
-    ::puts(words[k++].c_str());
+    ::fputs(words[k++].c_str(),stdout);
   }
+  ::fputs("\n",output);
 }
 
 void Bits::dumpWords(const void* field, int len, std::vector<std::string>& words)  {
