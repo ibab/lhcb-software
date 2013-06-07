@@ -11,6 +11,6 @@
 #print stdout
 #from Brunel.QMTest.BrunelExclusions import preprocessor
 #validateWithReference(preproc = preprocessor)
-countErrorLines({"FATAL":0, "WARNING":1, "ERROR":24)
+countErrorLines({"FATAL":0, "WARNING":1, "ERROR":4)
 </text></argument>
 </extension>
