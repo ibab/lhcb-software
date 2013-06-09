@@ -3,6 +3,21 @@
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+! 2013-06-09 - Vanya Belyaev
+
+ - add some logic on ParticleTransporter constructor for 
+   automatic selection of proper track extrapolator 
+
+ - add new particle transporter:  DaVinci::ParticleTransporter
+   It relies on ITrackStateProvider for better treatment of 
+   track states.  
+   For single use it could be slower, btu in case of 
+   coherent usage of the same public instance it 
+   could be even faster due to smart caching implemented 
+   by Wouter in TrackStateProvider tool.
+   The treatment of electrons is still not satisfactory,
+   some fixes in BremmAdder are needed for proper treatment [todo]
+
 ! 2013-05-23 - Chris Jones
  - Check value using lnan as well as lfin
 

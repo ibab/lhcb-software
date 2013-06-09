@@ -12,20 +12,29 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ParticleTransporter::ParticleTransporter( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent )
+ParticleTransporter::ParticleTransporter
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent )
   : GaudiTool ( type, name , parent )
-  , m_trackExtrapolator(NULL)
-  , m_ppSvc(NULL)
-  , m_particle2State(NULL)
-  , m_eID(0)
+  , m_trackExtrapolator     ( NULL )
+  , m_trackExtrapolatorName ( "TrackParabolicExtrapolator:PUBLIC" )
+  , m_ppSvc          ( NULL )
+  , m_particle2State ( NULL )
+  , m_eID            ( 0    )
 {
+  //
+  if      ( std::string::npos != name.find ( "Master"     ) ) 
+  { m_trackExtrapolatorName = "TrackMasterExtrapolator:PUBLIC"     ; }
+  else if ( std::string::npos != name.find ( "RungeKutta" ) ) 
+  { m_trackExtrapolatorName = "TrackRungeKuttaExtrapolator:PUBLIC" ; }
+  //
   declareInterface<IParticleTransporter>(this);
-  declareProperty("TrackExtrapolator",
-                  m_trackExtrapolatorName = "TrackParabolicExtrapolator");
+  declareProperty
+    ( "TrackExtrapolator"                  , 
+      m_trackExtrapolatorName              ,
+      "Extrapolator to be use for tracks"  ) ;
 }
-
 //=============================================================================
 // Destructor
 //=============================================================================
