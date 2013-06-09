@@ -125,29 +125,11 @@ StatusCode LoKi::VertexFitter::_load
 ( const LHCb::Particle*     particle , 
   LoKi::VertexFitter::Entry& entry    ) const 
 {
+  //
   if ( 0 == particle ) 
   { return _Warning ( "_load(): invalid particle" , InvalidParticle ) ; } // RETURN 
   //
-  switch ( particleType ( particle ) ) 
-  {
-    //
-  case LoKi::KalmanFilter::LongLivedParticle   :
-    return LoKi::KalmanFilter::loadAsFlying     ( *particle  , entry ) ; // RETURN 
-    //
-  case LoKi::KalmanFilter::ShortLivedParticle  : 
-    return LoKi::KalmanFilter::loadAsShortLived ( *particle  , entry ) ; // RETURN 
-    //
-  case LoKi::KalmanFilter::GammaLikeParticle   : 
-    return LoKi::KalmanFilter::loadAsGamma      ( *particle  , entry ) ; // RETURN 
-    //
-  case LoKi::KalmanFilter::DiGammaLikeParticle : 
-    return LoKi::KalmanFilter::loadAsDiGamma    ( *particle  , entry ) ; // RETURN 
-    //
-  default:
-    return LoKi::KalmanFilter::load             ( *particle  , entry ) ; // RETURN 
-  }
-  //
-  return LoKi::KalmanFilter::load ( *particle  , entry ) ;  
+  return LoKi::KalmanFilter::load ( *particle , particleType ( particle ) , entry ) ;
 }
 // ============================================================================
 // add one particle at the end of the queue
@@ -326,11 +308,13 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
   const Gaudi::XYZPoint&     p = vertex->position  () ;
   const Gaudi::SymMatrix3x3& c = vertex->covMatrix () ;
   
-  if ( m_seedZmin < p.Z()   && 
-       m_seedZmax > p.Z()   && 
-       m_seedRho  > p.Rho() && 
-       s_small2 < Gaudi::Math::min_diagonal ( c ) && 
-       s_large2 > Gaudi::Math::max_diagonal ( c )   ) 
+  //
+  if ( seedOK ( p ) 
+       && 0 < c ( 0 , 0 ) && c ( 0 , 0 ) <   1 * Gaudi::Units::cm2 
+       && 0 < c ( 1 , 1 ) && c ( 1 , 1 ) <   1 * Gaudi::Units::cm2 
+       && 0 < c ( 2 , 2 ) && c ( 2 , 2 ) < 100 * Gaudi::Units::cm2 
+       && s_small2 < Gaudi::Math::min_diagonal ( c ) 
+       && s_large2 > Gaudi::Math::max_diagonal ( c )  ) 
   {
     // use the vertex parameters as the proper seed 
     Gaudi::Math::geo2LA  ( p , m_seed ) ;
@@ -340,47 +324,120 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
     {
       // properly scale the seed matrix 
       Gaudi::Math::scale ( m_seedci , s_scale2 ) ;
+      ++counter("Seed:case(0)") ;
       return StatusCode::SUCCESS ;                            // RETURN 
     } 
   }
   //
-  StatusCode sc = LoKi::KalmanFilter::seed 
-    ( m_entries , m_seed , m_seedci , s_scale2 ) ;  
+  const bool massage = forMassage ( m_entries ) ;
   //
-  if ( sc.isFailure() ) 
-  { 
-    m_seed[0] = 0.0 ; m_seed[1] = 0.0 ; m_seed [2] = 0.0 ;
-    Gaudi::Math::setToUnit ( m_seedci , 1.0/s_middle2 ) ;
-    m_seedci(2,2) = 1.0/s_large2 ;
-    _Warning ( "_seed(): error in matrix inversion" , sc ) ; 
+  const Entries* entries = 0 ;
+  //
+  Entries e_good ;
+  if ( massage ) 
+  {
+    // pick up good entries:
+    for ( EIT entry = m_entries.begin() ; m_entries.end() != entry ; ++entry ) 
+    { if ( !forMassage ( entry->m_p0 ) ) { e_good.push_back ( *entry ) ; } }
+    //
+    entries = &e_good ;
   }
-  /// check the validity of the seed 
-  Gaudi::XYZPoint pnt ( m_seed[0] , m_seed[1] , m_seed[2] ) ;
-  if ( m_seedZmin > pnt.Z() ) 
-  { 
-    _Warning ("_seed(): Seed is outside of 'Zmin' fiducial volume " , sc ) ; 
-    m_seed[2] = 0.5 * ( 0.0 + m_seedZmin ) ; 
-    m_seedci(0,2) = 0 ; m_seedci(1,2) = 0 ;
-    m_seedci(2,2) = 4.0/m_seedZmin/m_seedZmin;
+  else { entries = &m_entries ; }
+  //
+  // relatively obvious case:
+  //
+  if ( LoKi::KalmanFilter::okForVertex ( *entries ) ) 
+  {
+    // estimate "seed" using only good components 
+    StatusCode sc = LoKi::KalmanFilter::seed ( *entries , m_seed , m_seedci , s_scale2 ) ;  
+    if ( sc.isSuccess() && seedOK ( m_seed ) ) 
+    { 
+      sc = _transport ( m_seed ) ; 
+      if ( sc.isSuccess() ) 
+      {
+        // adjust seed using all entries 
+        sc = LoKi::KalmanFilter::seed ( m_entries , m_seed , m_seedci , s_scale2 ) ;  
+        if ( sc.isSuccess () && seedOK ( m_seed ) ) 
+        { 
+          ++counter("Seed:case(1)") ;
+          return StatusCode::SUCCESS ; 
+        }  
+      }
+    } 
   }
-  if ( m_seedZmax < pnt.Z() ) 
-  { 
-    _Warning ("_seed(): Seed is outside of 'Zmax' fiducial volume " , sc ) ; 
-    m_seed[2] = 0.5 * ( 0.0 + m_seedZmax ) ; 
-    m_seedci(0,2) = 0 ; m_seedci(1,2) = 0 ;
-    m_seedci(2,2) = 4.0/m_seedZmax/m_seedZmax;
+  //
+  // less trivial case: perform soem "massage" action 
+  //
+  if ( massage && !m_massage.empty() ) 
+  {
+    //
+    Gaudi::Vector3      p_seed     ;
+    Gaudi::SymMatrix3x3 ci_seed    ;
+    unsigned short      n_seed     ;
+    //
+    for ( std::vector<double>::const_iterator iz = m_massage.begin() ; 
+          m_massage.end() != iz ; ++iz ) 
+    {
+      //
+      if ( *iz > m_seedZmax || *iz < m_seedZmin ) { continue ; }
+      // transport all? - think a bit more... 
+      StatusCode sc = _transport ( Gaudi::XYZPoint ( 0 , 0 , *iz ) ) ;
+      if ( sc.isFailure()      ) { continue ; } 
+      sc = LoKi::KalmanFilter::seed ( m_entries , m_seed , m_seedci , s_scale2 ) ;
+      if ( sc.isFailure()      ) { continue ; }
+      if ( !seedOK ( m_seed )  ) { continue ; }
+      //
+      ci_seed += m_seedci          ;
+      p_seed  += m_seedci * m_seed ;
+      ++n_seed ;
+      //
+    }
+    //
+    counter("Seed:massage") += n_seed ;
+    //
+    int ifail =  0  ;
+    Gaudi::SymMatrix3x3  c = ci_seed.Inverse ( ifail ) ;
+    if ( 0 == ifail ) 
+    {
+      m_seed = c * p_seed ; 
+      if ( seedOK ( m_seed ) ) 
+      {
+        // transport all ?
+        StatusCode sc = _transport ( m_seed ) ;
+        if ( sc.isSuccess() ) 
+        {
+          // make proper seed from all components 
+          sc = LoKi::KalmanFilter::seed ( m_entries , m_seed , m_seedci , s_scale2 ) ;
+          if ( sc.isSuccess() && seedOK ( m_seed ) ) 
+          { 
+            ++counter("Seed:case(2)") ;
+            return StatusCode::SUCCESS ;
+          }
+        }   
+      }
+    } 
+  } 
+  //
+  // the basic case 
+  //
+  StatusCode sc = LoKi::KalmanFilter::seed ( m_entries , m_seed , m_seedci , s_scale2 ) ;  
+  if ( sc.isSuccess() && seedOK ( m_seed ) ) 
+  {
+    ++counter("Seed:case(3)") ;
+    return StatusCode::SUCCESS ; 
   }
-  if ( m_seedRho  < pnt.Rho() ) 
-  { 
-    _Warning ("_seed(): Seed is outside of 'Rho'  fiducial volume " , sc ) ; 
-    m_seed[0]     = 0.0 ; m_seed[1] = 0.0 ; 
-    m_seedci(0,1) = 0   ; m_seedci(0,2) = 0 ; 
-    m_seedci(1,2) = 0   ; m_seedci(0,2) = 0 ;
-    m_seedci(0,0) = 4.0/m_seedRho/m_seedRho ;
-    m_seedci(1,1) = m_seedci(0,0);
-  }  
-  return StatusCode::SUCCESS ;
-}  
+  //
+  m_seed[0] =   0                    ;
+  m_seed[1] =   0                    ;
+  m_seed[2] = 100 * Gaudi::Units::mm ;
+  //
+  Gaudi::Math::setToUnit ( m_seedci , 1.0/s_middle2 ) ;
+  m_seedci(2,2) = 1.0/s_large2 ;
+  //
+  ++counter("Seed:case(4)") ;
+  //
+  return _Warning("No proper seed is found" , StatusCode::SUCCESS  ) ;
+}
 // ============================================================================
 // The vertex fitting method without creation of a Particle
 // ============================================================================
@@ -436,9 +493,7 @@ StatusCode LoKi::VertexFitter::fit
   }
   // keep for future tracing
   m_vertex = &vertex ;
-  if ( m_seedZmin > vertex.position().Z()  
-    || m_seedZmax < vertex.position().Z() 
-    || m_seedRho  < vertex.position().Rho() ) 
+  if ( !seedOK ( vertex.position() ) ) 
   { _Warning ( "fit(): Vertex is outside of fiducial volume " ) ; }
   //
   return sc ;
@@ -624,12 +679,8 @@ StatusCode LoKi::VertexFitter::add
   // keep for future tracing
   m_vertex = &vertex ;
   // check for positions
-  if ( m_seedZmin > vertex.position().Z() ) 
-  { _Warning ( "fit():Vertex is outside of 'Zmin' fiducial volume " , sc ) ; }
-  if ( m_seedZmax < vertex.position().Z() ) 
-  { _Warning ( "fit():Vertex is outside of 'Zmax' fiducial volume " , sc ) ; }
-  if ( m_seedRho  < vertex.position().Rho() ) 
-  { _Warning ( "fit():Vertex is outside of 'Rho'  fiducial volume " , sc ) ; }
+  if ( !seedOK ( vertex.position() ) ) 
+  { _Warning ( "fit():Vertex is outside of fiducial volume " , sc ) ; }
   //
   return StatusCode::SUCCESS ;
 } 
@@ -694,18 +745,19 @@ LoKi::VertexFitter::VertexFitter
   const IInterface*  parent ) 
   : base_class ( type , name , parent )
 /// maximal number of iteration for vertex fit  
-  , m_nIterMaxI           ( 10 ) // maximal number of iteration for vertex fit  
+  , m_nIterMaxI            ( 10 ) // maximal number of iteration for vertex fit  
 /// maximal number of iteration for "add" 
-  , m_nIterMaxII          (  5 ) // maximal number of iteration for "add" 
+  , m_nIterMaxII           (  5 ) // maximal number of iteration for "add" 
 /// maximal number of iteration for "remove"    
-  , m_nIterMaxIII         (  5 ) // maximal number of iteration for "remove"    
-  , m_DistanceMax         ( 1.0 * Gaudi::Units::micrometer ) 
-  , m_DistanceChi2        ( 1.0 * Gaudi::Units::perCent    ) 
-  , m_transporterName     ( "ParticleTransporter:PUBLIC")  
-  , m_transporter         ( 0 )
-  , m_seedZmin            ( -1.5 * Gaudi::Units::meter      ) 
-  , m_seedZmax            (  3.0 * Gaudi::Units::meter      ) 
-  , m_seedRho             ( 50.0 * Gaudi::Units::centimeter )
+  , m_nIterMaxIII          (  5 ) // maximal number of iteration for "remove"    
+  , m_DistanceMax          ( 1.0 * Gaudi::Units::micrometer ) 
+  , m_DistanceChi2         ( 1.0 * Gaudi::Units::perCent    ) 
+  , m_transporterName      ( "ParticleTransporter:PUBLIC")  
+  , m_transporter          ( 0 )
+  , m_seedZmin             ( -1.0 * Gaudi::Units::meter      ) 
+  , m_seedZmax             (  3.0 * Gaudi::Units::meter      ) 
+  , m_seedRhoZmax          ( 80.0 * Gaudi::Units::centimeter )
+  , m_seedRhoZmin          ( 20.0 * Gaudi::Units::centimeter )
 /// Use the special branch for   two-body decays ?
   , m_use_twobody_branch   ( true   ) // Use the special branch for   two-body decays?
 /// Use the special branch for three-body decays ?
@@ -715,9 +767,10 @@ LoKi::VertexFitter::VertexFitter
 /// Allow "rho+"-like particles ?
   , m_use_rho_like_branch  ( true   ) // allow "rho+"-like particles ?
 /// The transport tolerance  
-  , m_transport_tolerance ( 10 * Gaudi::Units::micrometer ) 
+  , m_transport_tolerance  ( 10 * Gaudi::Units::micrometer ) 
 /// number of prints 
-  , m_prints              ( 2 )
+  , m_prints               ( 2     )
+  , m_massage              (       ) 
 /// pure technical stuff: 
   , m_entries (   ) 
   , m_vertex  ( 0 )
@@ -729,6 +782,25 @@ LoKi::VertexFitter::VertexFitter
   , m_mpcov   (   ) 
   , m_mm_c    (   )
 {
+  //
+  if ( std::string::npos != name.find ( "Massage"    ) || 
+       std::string::npos != name.find ( "Downstream" ) || 
+       std::string::npos != name.find ( "DD"         ) || 
+       std::string::npos != name.find ( "V0"         ) || 
+       std::string::npos != name.find ( "KS"         ) || 
+       std::string::npos != name.find ( "Ks"         ) || 
+       std::string::npos != name.find ( "K0S"        ) || 
+       std::string::npos != name.find ( "Lam"        ) || 
+       std::string::npos != name.find ( "L0"         ) || 
+       std::string::npos != name.find ( "State"      ) || 
+       std::string::npos != name.find ( "Master"     )  ) 
+  {
+    m_massage.push_back ( 180 * Gaudi::Units::cm ) ;
+    m_massage.push_back ( 120 * Gaudi::Units::cm ) ;    
+    m_massage.push_back (  60 * Gaudi::Units::cm ) ;    
+    m_massage.push_back (  10 * Gaudi::Units::cm ) ;    
+    m_transporterName   = "DaVinci::ParticleTransporter:PUBLIC" ;
+  }
   // ==========================================================================
   declareProperty 
     ( "MaxIterations"      , 
@@ -777,6 +849,11 @@ LoKi::VertexFitter::VertexFitter
       "Maximal number of prints "        ) ;
   // ===========================================================================
   declareProperty 
+    ( "Massage"          , 
+      m_massage          , 
+      "Z-coordiates for downstream track massage" ) ;
+  // ===========================================================================
+  declareProperty 
     ( "SeedZmin"         , 
       m_seedZmin         ,
       "Allowed Z-min   for seed-vertex "       ) ;
@@ -785,13 +862,17 @@ LoKi::VertexFitter::VertexFitter
       m_seedZmax         , 
       "Allowed Z-max   for seed-vertex "       ) ;
   declareProperty 
-    ( "SeedRho"          , 
-      m_seedRho          ,
-      "Allowed Rho-max for seed-vertex "       ) ;
+    ( "SeedRhoZmax"      , 
+      m_seedRhoZmax      ,
+      "Allowed Rho (at Zmax) for seed-vertex " ) ;
+  declareProperty 
+    ( "SeedRhoZmin"      , 
+      m_seedRhoZmin      ,
+      "Allowed Rho (at Zmin) for seed-vertex " ) ;
   declareProperty 
     ( "Transporter"      , 
       m_transporterName  , 
-      "The typename of tranporter to bee used" ) ;
+      "The typename of transporter to be used" ) ;
   // ==========================================================================
 } 
 // ============================================================================
@@ -846,6 +927,17 @@ StatusCode LoKi::VertexFitter::initialize()
       m_transport_tolerance << endmsg ;
   }
   //
+  if ( !m_massage.empty() && std::string::npos == m_transporterName.find("DaVinci::") ) 
+  {
+    warning() << "The transporter '" << m_transporterName 
+              << "'is not optimal for activated ``massage''-option" 
+              << " ``Massage'' is OFF"
+              << endmsg ;
+    m_massage.clear() ;
+  }
+  //
+  if ( !m_massage.empty() ) { info() << "``Massage''-option is ON" << endmsg ; }
+  //
   return StatusCode::SUCCESS ;
 }
 // ========================================================================
@@ -864,9 +956,12 @@ StatusCode LoKi::VertexFitter::_transport
   const double parZ      = entry.m_parx [2]               ;
   //
   // for short-lived particles one needs to transport them into their decay vertex
+  //
   if ( LoKi::KalmanFilter::ShortLivedParticle == entry.m_type )
   {
+    //
     // get the end-vertex 
+    //
     const LHCb::VertexBase* vertex = entry.m_p0->endVertex() ;
     if ( 0 != vertex ) 
     {
@@ -880,12 +975,16 @@ StatusCode LoKi::VertexFitter::_transport
         ( entry , vertex->position() , transporter () ) ;             // RETURN
     }
   }
+  //
   // no need for transport?
+  //
   if ( std::fabs ( refPointZ - point.Z () ) < m_transport_tolerance && 
        std::fabs ( parZ      - point.Z () ) < m_transport_tolerance  ) 
   { return StatusCode::SUCCESS ; }                                    // RETURN 
+  //
   // finally: transport it! 
-  return LoKi::KalmanFilter::transport ( entry , point , transporter() ) ; 
+  //
+  return LoKi::KalmanFilter::transport ( entry , point , transporter () ) ; 
 }  
 // ============================================================================
 /// the factory needed for instantiation

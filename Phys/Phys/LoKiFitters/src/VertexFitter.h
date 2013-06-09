@@ -514,10 +514,34 @@ namespace LoKi
       }
       return StatusCode::SUCCESS ;
     }
+    /// transport all data to a certain position 
+    StatusCode _transport ( const Gaudi::Vector3& p ) const 
+    { return _transport ( Gaudi::XYZPoint( p[0] , p[1] , p[2] ) ) ; }
     /// make few Kalman filter iterations 
-    StatusCode _iterate ( const size_t nMax , const Gaudi::Vector3& x ) const ;
+    StatusCode  _iterate   ( const size_t nMax , const Gaudi::Vector3& x ) const ;
     /// make a seed 
-    StatusCode _seed ( const LHCb::Vertex* vertex  ) const ;
+    StatusCode  _seed      ( const LHCb::Vertex* vertex  ) const ;
+    /// is seed ok?
+    inline bool  seedOK    ( const Gaudi::XYZPoint& seed  ) const  
+    {
+      return
+        seed.Z     () < m_seedZmax && 
+        seed.Z     () > m_seedZmin && 
+        seed.Perp2 () < rho2max ( seed.Z() ) ;
+    }
+    //
+    inline bool  seedOK    ( const Gaudi::Vector3&  seed  ) const  
+    { return seedOK ( Gaudi::XYZPoint ( seed[0] , seed[1] , seed[2] ) ) ; }
+    /// get maximal allowed value of rho^2 for given z 
+    inline double rho2max ( const double z ) const
+    {
+      //
+      const double rho =
+        ( m_seedRhoZmax * ( z - m_seedZmin ) - 
+          m_seedRhoZmin * ( z - m_seedZmax ) ) / ( m_seedZmax - m_seedZmax ) ;
+      //
+      return rho * rho ;
+    }
     // ========================================================================
   protected:
     // ========================================================================
@@ -565,6 +589,31 @@ namespace LoKi
       return m_transporter ;
     } 
     // ========================================================================
+    // 
+    inline bool forMassage ( const LHCb::Track* t ) const 
+    {
+      return 0 != t && ( LHCb::Track::Long  != t->type() && 
+                         LHCb::Track::Velo  != t->type() && 
+                         LHCb::Track::VeloR != t->type() ) ;  
+    }
+    //
+    inline bool forMassage ( const LHCb::ProtoParticle* p ) const 
+    { return 0 != p && forMassage ( p -> track () ) ; }
+    // not electron! 
+    inline bool forMassage ( const LHCb::Particle*      p ) const 
+    { return 0 != p && 11 != p->particleID().abspid() && forMassage ( p -> proto () ) ; }
+    //
+    inline bool forMassage ( const Entry&   entry    ) const 
+    { return forMassage ( entry.m_p0 )  ; }
+    //
+    inline bool forMassage ( const Entries& entries  ) const 
+    {
+      for  ( Entries::const_iterator ientry = entries.begin() ; 
+             entries.end() != ientry ; ++ientry ) 
+      { if ( forMassage ( *ientry ) ) { return true ; } }  
+      return false ;
+    }
+    // ========================================================================
   private:
     // ========================================================================
     /// maximal number of iterations for the vertex fit 
@@ -577,14 +626,17 @@ namespace LoKi
     double         m_DistanceMax  ; // distance (stop-iteration criterion)
     /// chi2 distance (stop iteration criterion)
     double         m_DistanceChi2 ; // chi2 distance (stop iteration criterion)
+    //
     /// propagator/extrapolator/transporter name
     std::string                        m_transporterName ;
     /// the transporter itself
-    mutable IParticleTransporter*      m_transporter     ;
+    mutable IParticleTransporter*      m_transporter     ;    
+    //
     /// fiducial volume for valid seed/vertex 
     double                             m_seedZmin        ;
     double                             m_seedZmax        ;
-    double                             m_seedRho         ;
+    double                             m_seedRhoZmax     ;
+    double                             m_seedRhoZmin     ;
     /// use the special branch for   two-body decays 
     bool m_use_twobody_branch    ; // use the special branch for   two-body decays 
     /// use the special branch for three-body decays 
@@ -597,6 +649,11 @@ namespace LoKi
     double m_transport_tolerance ; // the transport tolerance 
     /// # of prints 
     unsigned int m_prints ;                                      // # of prints 
+    // ========================================================================
+  private:
+    // ========================================================================
+    // some action for track massage, induced by Edwige's findings 
+    std::vector<double>  m_massage           ;
     // ========================================================================
   private:
     // ========================================================================

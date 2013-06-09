@@ -5,13 +5,23 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2013-06-09 - Vanya Belyaev
+
+ - VertexFitter:
+
+    1. add some functionality to improve fits with downstream tracks.
+       in particular allow the use of new ParticleTransporter 
+    2. use a little bit different logic for seeding 
+    3. redefine the fiducial volume for seeding 
+
+
 ! 2013-06-02 - Vanya Belyaev
 
  - finally, fix "feature" for chi2(doca) calcualtuos 
 
 ! 2013-05-27 - 
  - fix a bug with particle classification.
-   essentially all cvalcuatino of DOCACHI2 with 
+   essentially all calculation of DOCACHI2 with 
    participation of K0S was wrong.
    Many thanks to Matt Reid for reporting the problem.
 
