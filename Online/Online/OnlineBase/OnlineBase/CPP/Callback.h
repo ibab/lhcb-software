@@ -110,7 +110,10 @@ struct Callback  {
 	Functor(const void* f)  { *(mfunc_t*)ptr = *(mfunc_t*)f; }
 	Functor(pmf_t f)        { pmf = f;                       }
       };
-      static mfunc_t pmf (pmf_t f)  { return Functor(f).ptr;   }
+      static mfunc_t pmf(pmf_t f)  {
+	const Functor func(f); 
+	return mfunc_t(func.ptr[0],func.ptr[1]);
+      }
       static ulong   call(void* o, const void* f, const void*) {
 	pmf_t pmf = Functor(f).pmf;
 	R res = (cast<T>(o)->*pmf)(); 
