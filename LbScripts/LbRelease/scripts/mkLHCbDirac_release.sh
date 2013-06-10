@@ -77,7 +77,7 @@ echo "We will prepare the release for $package $version"
 
 if [ $package == "DIRAC" ] ; then
   lhcb-import-dirac-release -r $version
-else if [ $package == "VMDIRAC" ] ; then
+elif [ $package == "VMDIRAC" ] ; then
   lhcb-import-vmdirac-release -r $version
 else
   dirac-create-svn-tag -p $package -v $version
