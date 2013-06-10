@@ -1,7 +1,6 @@
-
 #include "RTL/Thread.h"
 
-RTL::Thread::Thread() : m_id(0) {
+RTL::Thread::Thread() /* : m_id(0) */ {
   //  m_status = lib_rtl_create_thread(m_id);
   if ( !lib_rtl_is_success(m_status) )   {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Cannot aquire Thread. Status=%d", m_status);
