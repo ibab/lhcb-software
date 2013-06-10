@@ -349,10 +349,7 @@ bool StrippingNBBhh::getInputVar(const LHCb::Particle& particle) {
 
 
   double cosTheta        = LoKi::Cuts::LV01(&particle);
-  if (lnan(cosTheta))
-    cosTheta = -999;
-
-
+  if ( lnan(cosTheta) || !lfin(cosTheta) ) { cosTheta = -999; }
 
 
 
