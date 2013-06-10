@@ -27,8 +27,10 @@ DECLARE_ALGORITHM_FACTORY(PrVLTracking)
 PrVLTracking::PrVLTracking(const std::string& name, ISvcLocator* pSvcLocator) :
 //    GaudiAlgorithm(name, pSvcLocator),
     GaudiTupleAlg(name, pSvcLocator),
-    m_det(0),
-    m_debugTool(0) {
+    m_det(NULL),
+    m_debugTool(NULL),
+    m_timerTool(NULL)
+ {
 
   declareProperty("TrackLocation", m_trackLocation = TrackLocation::Velo);
 

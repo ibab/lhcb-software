@@ -22,7 +22,7 @@ PrVLTrack::PrVLTrack() :
     m_sa2(0.), m_sa2z(0.), m_sa2z2(0.),
     m_sab(0.), m_sabz(0.), m_sabz2(0.),
     m_sb2(0.), m_sb2z(0.), m_sb2z2(0.),
-    m_sac(0.), m_sacz(0.), m_sbc(0.), m_sbcz(0.) {
+    m_sac(0.), m_sacz(0.), m_sbc(0.), m_sbcz(0.), m_phiChi2(0.) {
   m_rHits.reserve(20);
   m_phiHits.reserve(20);
 }

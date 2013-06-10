@@ -105,7 +105,7 @@ private:
   double m_maxChi2ToAdd;
   double m_maxQXy;
   double m_maxQXyFull;
-  double m_maxQPhi;
+  //  double m_maxQPhi;
   double m_maxQRPhi;
 
   /// Parameters for clone merging

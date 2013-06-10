@@ -3,6 +3,10 @@
 ! Purpose     : Track reconstruction for VL
 !-----------------------------------------------------------------------------
 
+! 2013-06-10 - Marco Cattaneo
+ - Fix clang32 warning
+ - Fix UNINIT_CTOR defects
+
 ! 2013-06-07 - Heinrich Schindler
  - Reduce calls to phiOfStrip by pre-calculating R sector of each Phi hit
  - Modifications of default parameters (in particular for space tracking) 
