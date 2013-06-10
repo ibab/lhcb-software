@@ -4,6 +4,13 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2013-06-10 - Marco Cattaneo
+ - Fix clang32 warnings
+ - Fix UNINT_CTOR defects
+ - Fix an UNUSED_VALUE defect
+ - Add protection for a DIVIDE_BY_ZERO defect
+ - Replace endreq by endmsg
+
 !========================= PatVelo v3r28p1 2013-06-03 =========================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warnings

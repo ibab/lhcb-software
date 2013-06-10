@@ -22,6 +22,8 @@ namespace Tf {
 Tf::PatVeloResetClusterUsed::PatVeloResetClusterUsed( const std::string& name,
     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_rHitManager(NULL)
+  , m_phiHitManager(NULL)
 {
   declareProperty( "RHitManagerName", m_rHitManagerName="PatVeloRHitManager");
   declareProperty( "PhiHitManagerName", m_phiHitManagerName="PatVeloPhiHitManager");

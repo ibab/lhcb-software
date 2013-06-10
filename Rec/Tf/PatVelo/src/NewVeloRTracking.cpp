@@ -22,6 +22,10 @@ DECLARE_ALGORITHM_FACTORY( NewVeloRTracking )
 NewVeloRTracking::NewVeloRTracking( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_velo(NULL)
+  , m_hitManager(NULL)
+  , m_debugTool(NULL)
+  , m_timer(NULL)
 {
   declareProperty( "ZVertexMin"      , m_zVertexMin = -170. *Gaudi::Units::mm );
   declareProperty( "ZVertexMax"      , m_zVertexMax = +120. *Gaudi::Units::mm );

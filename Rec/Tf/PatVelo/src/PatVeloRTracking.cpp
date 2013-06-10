@@ -29,6 +29,10 @@ namespace Tf {
   PatVeloRTracking::PatVeloRTracking( const std::string& name,
       ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator )
+    , m_hitManager(NULL)
+    , m_trackTool(NULL)
+    , m_velo(NULL)
+    , m_timerTool(NULL)
     {
       declareProperty( "ZVertexMin"      , m_zVertexMin = -170. *Gaudi::Units::mm );
       declareProperty( "ZVertexMax"      , m_zVertexMax = +120. *Gaudi::Units::mm );
@@ -80,7 +84,7 @@ namespace Tf {
     m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
     if( msgLevel( MSG::DEBUG ) ){
-      debug() << "========" << name() << " initialised ========" << endreq;
+      debug() << "========" << name() << " initialised ========" << endmsg;
     }
     if ( m_zVertexMin >= m_zVertexMax ){
       return Error("No overlap between forward and backward track z ranges",
@@ -108,7 +112,7 @@ namespace Tf {
   //=============================================================================
   StatusCode PatVeloRTracking::execute() {
 
-    if(m_isDebug) {debug() << "==> Execute" << endreq;}
+    if(m_isDebug) {debug() << "==> Execute" << endmsg;}
 
     if ( m_doTiming ) m_timerTool->start( m_veloRZTime );
     
@@ -191,7 +195,7 @@ namespace Tf {
     // Backwards tracks
     //==========================================================================
     if(!m_onlyForward){
-      if(m_isDebug){debug() << "========= Backwards tracks ==========" << endreq;}
+      if(m_isDebug){debug() << "========= Backwards tracks ==========" << endmsg;}
 
       //== Loop on velo halfs
       for (unsigned int half=0; half<2; ++half) {
@@ -263,7 +267,7 @@ namespace Tf {
             << " as only " <<nbOver << " of "
             <<  nbClus << " clusters were above the threshold of "
             << m_chargeThreshold << " min=" << m_highChargeFract*nbClus
-            << endreq;
+            << endmsg;
         }
         tr->setValid( false );
       }
@@ -330,7 +334,7 @@ namespace Tf {
       //debug() << "Stored " << m_outputTracks->size() << " tracks in "
       debug() << "Stored " << outputTracks->size() << " tracks in "
         << m_outputLocation << " from " << rzTracks.size()
-        << " rz tracks found" << endreq;
+        << " rz tracks found" << endmsg;
     }
 
 
@@ -468,7 +472,7 @@ namespace Tf {
           << " nbCoord " << (*station0)->size(zone0)
           << " " << (*station1)->size(zone1)
           << " " << (*station2)->size(zone2)
-          << endreq;
+          << endmsg;
       }
 
       // to get the pitch later.
@@ -553,7 +557,7 @@ namespace Tf {
               m_hitManager->stationIterHalf( newTrack.minSensor() );
             if( msgLevel( MSG::VERBOSE) ) {
               verbose() << "Extend into sens "<< (*station2Outer)->sensor()->sensorNumber()
-                << " sector " << outerZone << endreq;
+                << " sector " << outerZone << endmsg;
             }
             nMiss += extendTrack(newTrack, station2Outer, outerZone, nbUsed, 
                 m_rExtraTol, forward , 0);
@@ -564,13 +568,13 @@ namespace Tf {
           // require at least 2 previously unused
 
           if ( 1 >= newTrack.nbCoords() - nbUsed ) {
-            if( msgLevel( MSG::VERBOSE) ) verbose() << "Killed too few new hits" << endreq;
+            if( msgLevel( MSG::VERBOSE) ) verbose() << "Killed too few new hits" << endmsg;
             continue;
           }
           // if only 3 hits found, all 3 must be unused
           if ( 3 == newTrack.nbCoords() && 0 != nbUsed ) {
             if( msgLevel( MSG::VERBOSE) ) {
-              verbose() << "Killed all three hits should be new" << endreq;
+              verbose() << "Killed all three hits should be new" << endmsg;
             }
             continue;
           }
@@ -607,7 +611,7 @@ namespace Tf {
           //== Store. Tag hits if long enough
           rzTracks.push_back( newTrack );
           if ( m_isVerbose ) {
-            verbose() << "      -- stored n=" << rzTracks.size()-1 << endreq;
+            verbose() << "      -- stored n=" << rzTracks.size()-1 << endmsg;
           }
           if ( m_minToTag <= newTrack.nbCoords() ) {
             newTrack.tagUsedCoords();
@@ -686,7 +690,7 @@ namespace Tf {
         verbose() << "  in sensor " << (*station)->sensor()->sensorNumber()
           << " pred " << rPred << " tol " << tol
           << " z " << z
-          << endreq;
+          << endmsg;
       }
 
       if ( (*station)->sensor()->rMin(zone) > rPred ) break;  // no longer inside.
@@ -747,7 +751,7 @@ namespace Tf {
         }
         if ( m_isDebug ) {
           debug() << " ... Added " << extraCoords.size()
-            << " extra R cooridnates" << endreq;
+            << " extra R cooridnates" << endmsg;
         }
       }
     }
@@ -758,7 +762,7 @@ namespace Tf {
     msg << format( " Strip%4d.%4d used%2d size%2d signal%6.0f", 
         clus->sensor()->sensorNumber(), clus->strip(), clus->isUsed(), 
         clus->size(), clus->signal() );
-    msg << endreq;
+    msg << endmsg;
   }
 
   //=========================================================================
@@ -788,12 +792,12 @@ namespace Tf {
         if ( m_nCommonToMerge <= nCommon ) {
           if ( msgLevel( MSG::DEBUG ) ) {
             debug() << "***** Found " << nCommon << " cluster in " << nCommonSensor 
-              << " common sensors" << endreq;
-            debug() << " Track 1" << endreq;
+              << " common sensors" << endmsg;
+            debug() << " Track 1" << endmsg;
             for ( itC1 = (*it1).coords()->begin(); (*it1).coords()->end() != itC1; ++itC1 ) {
               printCluster( (*itC1)->hit(), debug() );
             }
-            debug() << " Track 2" << endreq;
+            debug() << " Track 2" << endmsg;
             for ( itC2 = (*it2).coords()->begin(); (*it2).coords()->end() != itC2; ++itC2 ) {
               printCluster( (*itC2)->hit(), debug() );
             }
@@ -811,7 +815,7 @@ namespace Tf {
                 VeloRHit::DecreasingByZ() );
             (*it2).setValid(false);
             if ( msgLevel( MSG::DEBUG ) ) {
-              debug() << "---> Tracks are merged <--- Resulting track: " << endreq;
+              debug() << "---> Tracks are merged <--- Resulting track: " << endmsg;
               for ( itC1 = (*it1).coords()->begin(); (*it1).coords()->end() != itC1; ++itC1 ) {
                 printCluster( (*itC1)->hit(), debug() );
               }

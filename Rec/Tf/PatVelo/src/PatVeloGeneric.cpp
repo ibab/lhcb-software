@@ -25,6 +25,11 @@ namespace Tf {
       ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator )
     , m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
+    , m_rHitManager(NULL)
+    , m_phiHitManager(NULL)
+    , m_PatVeloTrackTool(NULL)
+    , m_velo(NULL)
+    , m_outputTracks(NULL)
     {
       declareProperty( "SigmaTol",    m_sigma = 4.0 );
       declareProperty( "RAliTol",     m_rOff = 0.0 );
@@ -84,25 +89,25 @@ namespace Tf {
     m_velo = getDet<DeVelo>( DeVeloLocation::Default );
     m_nEvt = 0;
 
-    info() << "========== Algorithm parameters ======"           << endreq
-      << "Tolerance in sigma        = " << m_sigma          << endreq
-      << "R alignment tolerance     = " << m_rOff           << endreq
-      << "Phi alignment tolerance   = " << m_pOff           << endreq
-      << "Maximum skip              = " << m_nSkip          << endreq
-      << "Minimum number of modules = " << m_nMin           << endreq
-      << "Cleaning seeds            = " << m_cleanSeeds     << endreq
-      << "Private best candidate    = " << m_privateBest    << endreq
-      << "Kalman seeding state      = " << m_kalmanState    << endreq
-      << "Cluster cut               = " << m_clusterCut     << endreq
-      << "Use own cluster alignment = " << m_align          << endreq
-      << "Forward propagation       = " << m_forward        << endreq
-      << "Only sensors in readout   = " << m_checkIfSensorIsReadOut << endreq
-      << "ACDC flag (real data)     = " << m_acdc           << endreq
-      << "Output path               = " << m_outputTracksLocation << endreq
-      << "Do not re-fit tracks      = " << m_doNotRefit     << endreq
-      << "Left half x-offset        = " << m_velo->halfBoxOffset(0).x() << " mm"<< endreq
-      << "Right half x-offset       = " << m_velo->halfBoxOffset(1).x() << " mm"<< endreq
-      << "======================================"           << endreq;
+    info() << "========== Algorithm parameters ======"           << endmsg
+      << "Tolerance in sigma        = " << m_sigma          << endmsg
+      << "R alignment tolerance     = " << m_rOff           << endmsg
+      << "Phi alignment tolerance   = " << m_pOff           << endmsg
+      << "Maximum skip              = " << m_nSkip          << endmsg
+      << "Minimum number of modules = " << m_nMin           << endmsg
+      << "Cleaning seeds            = " << m_cleanSeeds     << endmsg
+      << "Private best candidate    = " << m_privateBest    << endmsg
+      << "Kalman seeding state      = " << m_kalmanState    << endmsg
+      << "Cluster cut               = " << m_clusterCut     << endmsg
+      << "Use own cluster alignment = " << m_align          << endmsg
+      << "Forward propagation       = " << m_forward        << endmsg
+      << "Only sensors in readout   = " << m_checkIfSensorIsReadOut << endmsg
+      << "ACDC flag (real data)     = " << m_acdc           << endmsg
+      << "Output path               = " << m_outputTracksLocation << endmsg
+      << "Do not re-fit tracks      = " << m_doNotRefit     << endmsg
+      << "Left half x-offset        = " << m_velo->halfBoxOffset(0).x() << " mm"<< endmsg
+      << "Right half x-offset       = " << m_velo->halfBoxOffset(1).x() << " mm"<< endmsg
+      << "======================================"           << endmsg;
 
     std::vector<DeVeloPhiType*>::const_iterator phiIt = m_velo->phiSensorsBegin();  
     m_inner2 = m_binary*(*phiIt)->phiPitch( (unsigned int)1 ); 
@@ -124,7 +129,7 @@ namespace Tf {
     debug() << "==> Execute" << endmsg;
 
     ++m_nEvt;
-    debug() << "Event number " << m_nEvt << endreq;
+    debug() << "Event number " << m_nEvt << endmsg;
 
     // create output track container on TES, if it does not exist
     if ( exist<LHCb::Tracks>( m_outputTracksLocation ) ) {
@@ -258,7 +263,7 @@ namespace Tf {
             }
           }
 
-          debug() << "There is " << trackSeeds.size() << " track seeds." << endreq;    
+          debug() << "There is " << trackSeeds.size() << " track seeds." << endmsg;    
 
           // =========================================
           // Cleaning and propagation of track seeds
@@ -409,7 +414,7 @@ namespace Tf {
             PatGenericFitter* fitter = &(*itTrack);
 
             debug() << " Seed has " << fitter->entries() 
-              << " entries after propagation." << endreq;
+              << " entries after propagation." << endmsg;
 
             if ( !(fitter->isValid()) ) continue;
             if ( fitter->entries() < m_nMin ) continue;
@@ -468,7 +473,7 @@ namespace Tf {
               track->setNDoF( tr.rCoords()->size() + tr.phiCoords()->size() );
 
               debug() << "Saving track with Chi2 " <<  track->chi2() 
-                << " and dof " << track->nDoF() << endreq;  
+                << " and dof " << track->nDoF() << endmsg;  
 
             } 
 
@@ -563,7 +568,7 @@ namespace Tf {
       } // end of loop over R-sensors is here
     } // end of loop over VELO halfs is here
 
-  debug() << "Number of stored tracks: " << m_outputTracks->size() << endreq;  
+  debug() << "Number of stored tracks: " << m_outputTracks->size() << endmsg;  
 
   return StatusCode::SUCCESS;
 }

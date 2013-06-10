@@ -26,6 +26,8 @@ namespace Tf {
   PatVeloAlignTrackFilter::PatVeloAlignTrackFilter( const std::string& name,
       ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator )
+    , m_rHitManager(NULL)
+    , m_phiHitManager(NULL)
     {
       declareProperty( "RHitManagerName", m_rHitManagerName="DefaultVeloRHitManager" );
       declareProperty( "PhiHitManagerName", m_phiHitManagerName="DefaultVeloPhiHitManager" );
@@ -71,11 +73,11 @@ namespace Tf {
     m_phiHitManager = tool<DefaultVeloPhiHitManager>( "Tf::DefaultVeloPhiHitManager", m_phiHitManagerName  );
 
     if ( m_nBinsPhi > 72 ) {
-      warning() << "Phi binning is too fine, will be limited to 72" << endreq;
+      warning() << "Phi binning is too fine, will be limited to 72" << endmsg;
       m_nBinsPhi = 72;
     }
     if ( m_nBinsR > 72 ) {
-      warning() << "R binning is too fine, will be limited to 72" << endreq;
+      warning() << "R binning is too fine, will be limited to 72" << endmsg;
       m_nBinsR = 72;
     }
     return StatusCode::SUCCESS;
@@ -116,7 +118,7 @@ namespace Tf {
     // loop over all hits to find space points
     for (unsigned int half=0; half < 2; ++half) {
 
-      if ( m_debugLevel ) debug() << "Looking for hits in half " << half << endreq;
+      if ( m_debugLevel ) debug() << "Looking for hits in half " << half << endmsg;
 
       DefaultVeloRHitManager::StationIterator        rStationsBegin        = m_rHitManager->stationsHalfBegin(half);
       DefaultVeloRHitManager::StationIterator        rStationsEnd          = m_rHitManager->stationsHalfEnd(half);
@@ -137,7 +139,7 @@ namespace Tf {
             stationP0 = m_phiHitManager->station(stationR0->sensor()->associatedPhiSensor()->sensorNumber());
             if (stationP0->empty(zoneP0)) continue;
 
-            if ( m_verboseLevel ) verbose() << "Looking for r/phi hits" << endreq;
+            if ( m_verboseLevel ) verbose() << "Looking for r/phi hits" << endmsg;
 
             VeloRHitRange hitsR0 = stationR0->hits(zoneR0);
             for(cR0 = hitsR0.begin(); hitsR0.end() != cR0; ++cR0) {
@@ -146,7 +148,7 @@ namespace Tf {
 
               double r = (*cR0)->rHalfBox();
               int r_coord = (int)floor( ( r - m_radiusOffset ) * m_nBinsR / 36. );
-              if ( m_verboseLevel ) verbose() << "R coord matching: " << (*cR0)->rHalfBox() << " " << r_coord << endreq;
+              if ( m_verboseLevel ) verbose() << "R coord matching: " << (*cR0)->rHalfBox() << " " << r_coord << endmsg;
               m_rhits[ r_coord ]++;
 
               VeloPhiHitRange hitsP0 = stationP0->hits(zoneP0);
@@ -157,11 +159,11 @@ namespace Tf {
                 double phi = (*cP0)->sortCoordHalfBox();
                 if ( Gaudi::Units::pi < phi ) phi -= 2 * Gaudi::Units::pi;
                 if ( m_verboseLevel ) {
-                  verbose() << "Found r/phi hit at " << r << " " << phi << endreq;
+                  verbose() << "Found r/phi hit at " << r << " " << phi << endmsg;
                   verbose() << "R range " << stationP0->sensor()->halfboxRRange( zoneP0 ).first 
-                            << " " << stationP0->sensor()->halfboxRRange( zoneP0 ).second << endreq;
+                            << " " << stationP0->sensor()->halfboxRRange( zoneP0 ).second << endmsg;
                   verbose() << "Phi range " << stationR0->sensor()->halfboxPhiRange( zoneR0 ).first 
-                            << " " << stationR0->sensor()->halfboxPhiRange( zoneR0 ).second << endreq;
+                            << " " << stationR0->sensor()->halfboxPhiRange( zoneR0 ).second << endmsg;
                 }
 
                 // check whether r and phi information matches
@@ -179,7 +181,7 @@ namespace Tf {
                 if ( ( r_coord < 0 ) || ( r_coord >= m_nBinsR ) || ( phi_coord < 0 ) || ( phi_coord >= m_nBinsPhi ) ) {
                   Warning("coordinate(s) out of range",StatusCode::SUCCESS,0).ignore();
                   if(msgLevel(MSG::DEBUG)) 
-                    debug() << "coordinate(s) out of range: r = " << r_coord << ", phi = " << phi_coord << endreq;
+                    debug() << "coordinate(s) out of range: r = " << r_coord << ", phi = " << phi_coord << endmsg;
                 }
                 else {
                   m_3Dhits[ r_coord ][ phi_coord ][ (*cR0)->sensor()->sensorNumber() ]++;
@@ -202,55 +204,55 @@ namespace Tf {
     for ( int i = 0; i < m_nBinsR; i++ ) {
       verbose() << (int)( i / 10 ) << " ";
     }
-    verbose() << endreq;
+    verbose() << endmsg;
     verbose() << "   ";
     for ( int i = 0; i < m_nBinsR; i++ ) {
       verbose() << (int)( i % 10 ) << " ";
     }
-    verbose() << endreq;
-    verbose() << "-----------------------------------------------------------------------------------" << endreq;
+    verbose() << endmsg;
+    verbose() << "-----------------------------------------------------------------------------------" << endmsg;
     for ( int i = 0; i < m_nBinsPhi; i++ ) {
       verbose() << (int)( i / 10 ) << (int)( i % 10 ) << " ";
       for ( int j = 0; j < m_nBinsR; j++ ) {
         verbose() << m_hits[ j ][ i ] << " ";
       }
-      verbose() << endreq;
+      verbose() << endmsg;
     }
-    verbose() << "-----------------------------------------------------------------------------------" << endreq;
+    verbose() << "-----------------------------------------------------------------------------------" << endmsg;
     for ( int i = 0; i < m_nBinsR; i++ ) {
       verbose() << m_rhits[ i ] << " ";
     }
-    verbose() << endreq;
-    verbose() << "-----------------------------------------------------------------------------------" << endreq;
-    verbose() << m_tothits << endreq;
+    verbose() << endmsg;
+    verbose() << "-----------------------------------------------------------------------------------" << endmsg;
+    verbose() << m_tothits << endmsg;
   }
 
   // check event for possible track parallel to the beam
   if ( ( m_tothits >= m_min_tot ) && ( m_tothits <= m_max_tot ) ) {
     for ( int i = 0; i < m_nBinsR; i++ ) {
       if ( m_rhits[ i ] < m_min_rslice ) {
-        if ( m_verboseLevel ) verbose() << "Not enough hits in r slice" << endreq;
+        if ( m_verboseLevel ) verbose() << "Not enough hits in r slice" << endmsg;
         continue;
       }
       for ( int j = 0; j < m_nBinsPhi; j++ ) {
         if ( ( m_hits[ i ][ j ] < m_min_cell ) || ( m_hits[ i ][ j ] > m_max_cell ) ) {
-          if ( m_verboseLevel ) verbose() << "Number of hits in cell out of range" << endreq;
+          if ( m_verboseLevel ) verbose() << "Number of hits in cell out of range" << endmsg;
           continue;
         }
         int cell_cluster_hits = hitsInCell( i, j );
         if ( m_verboseLevel ) {
-          verbose() << "Cell " << i << ", " << j << " has " << m_hits[ i ][ j ] << endreq;
-          verbose() << "Cell cluster " << i << ", " << j << " has " << cell_cluster_hits << endreq;
+          verbose() << "Cell " << i << ", " << j << " has " << m_hits[ i ][ j ] << endmsg;
+          verbose() << "Cell cluster " << i << ", " << j << " has " << cell_cluster_hits << endmsg;
         }
         if ( 0 <= m_max_diff_cell ) {
           if ( ( cell_cluster_hits - m_hits[ i ][ j ] ) > m_max_diff_cell ) {
-            if ( m_debugLevel ) debug() << "Too many hits around interesting cell" << endreq;
+            if ( m_debugLevel ) debug() << "Too many hits around interesting cell" << endmsg;
             continue;
           }
         }
         else {
           if ( ( cell_cluster_hits - m_hits[ i ][ j ] ) > m_hits[ i ][ j ] ) {
-            if ( m_debugLevel ) debug() << "More hits around interesting cell than inside" << endreq;
+            if ( m_debugLevel ) debug() << "More hits around interesting cell than inside" << endmsg;
             continue;
           }
         }
@@ -260,23 +262,23 @@ namespace Tf {
         for ( int k = 0; k < m_nStations; k++ ) {
           hits = sensorHitsInCell( i, j, k );
           if ( m_verboseLevel ) verbose() << "Cell cluster " << i << ", " << j 
-                                          << " has " << hits << " at station " << k << endreq;
+                                          << " has " << hits << " at station " << k << endmsg;
           if ( hits > max_hits ) max_hits = hits;
           if ( hits > 0 ) n_sensors_with_hits++;
         }
         if ( max_hits > m_max_sensor ) {
-          if ( m_debugLevel ) debug() << "Too many hits on single sensor: " << max_hits << endreq;
+          if ( m_debugLevel ) debug() << "Too many hits on single sensor: " << max_hits << endmsg;
           continue;
         }
         if ( n_sensors_with_hits < m_min_cell ) {
-          if ( m_debugLevel ) debug() << "Too few sensors with hits: " << n_sensors_with_hits << endreq; 
+          if ( m_debugLevel ) debug() << "Too few sensors with hits: " << n_sensors_with_hits << endmsg; 
           continue;
         }
 
         // at this point the event should be kept
         if ( m_debugLevel ) debug() << "Found track with " << m_hits[ i ][ j ] 
                                     << " cell hits, " << cell_cluster_hits 
-                                    << " cell cluster hits on " << n_sensors_with_hits << " sensors" << endreq;
+                                    << " cell cluster hits on " << n_sensors_with_hits << " sensors" << endmsg;
 
         if ( !m_overlaps ) {
           setFilterPassed(true);
@@ -286,7 +288,7 @@ namespace Tf {
           int hitsL = hitsInLeftCell( i, j );
           // check whether there are enough hits on either side
           if ( ( m_min_overlap < hitsR ) && ( m_min_overlap < hitsL ) ) {
-            if ( m_debugLevel ) debug() << "Found overlap track" << endreq;
+            if ( m_debugLevel ) debug() << "Found overlap track" << endmsg;
             setFilterPassed(true);
           }
         }

@@ -14,7 +14,11 @@ Tf::PatVeloTraversingTracking::
 PatVeloTraversingTracking( const std::string& name,
                            ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
-  ,  m_veloDet ( 0 )
+  , m_halfDistanceX(NULL)
+  , m_halfDistanceY(NULL)
+  , m_halfSigmaX(NULL)
+  , m_halfSigmaY(NULL)
+  , m_veloDet(NULL)
 {
   //Theta criterion
   declareProperty( "ThetaCut",            m_thetaCut=0.01);
@@ -94,14 +98,14 @@ StatusCode Tf::PatVeloTraversingTracking::execute() {
   std::vector< std::vector<LHCb::Track*> > traversingTrackContainer;
   findTracks(chosen_sets,trackContainer,traversingTrackContainer);
 
-  //Book place in TES:
-  LHCb::Tracks* outputTracks;
-  if ( exist<LHCb::Tracks>( m_outputTracksLocation ) ) {
-    outputTracks = get<LHCb::Tracks>( m_outputTracksLocation );
-  } else {
-    outputTracks = new LHCb::Tracks();
-    put(outputTracks, m_outputTracksLocation );
-  }
+  //Book place in TES - commented out MC 20130610, done inside saveTrackInTES
+  //  LHCb::Tracks* outputTracks;
+  //  if ( exist<LHCb::Tracks>( m_outputTracksLocation ) ) {
+  //    outputTracks = get<LHCb::Tracks>( m_outputTracksLocation );
+  //  } else {
+  //    outputTracks = new LHCb::Tracks();
+  //    put(outputTracks, m_outputTracksLocation );
+  //  }
 
   //Plot x-distance and save to TES:
   debug()<<"Number of good candidate "<<chosen_sets.size()<<endmsg;

@@ -52,10 +52,10 @@ StatusCode Tf::PatVeloLiteClusterPromoter::initialize(){
   m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager", 
 						m_phiHitManagerName );
 
-  info() << "=== Tool " << name() << " param. ==="<< endreq
+  info() << "=== Tool " << name() << " param. ==="<< endmsg
 	 << "Will put faked VELO clusters here " << m_fakeVELOClusterLocation
-	 << endreq
-	 << "================================================="<< endreq;
+	 << endmsg
+	 << "================================================="<< endmsg;
 
   return StatusCode::SUCCESS;
 }

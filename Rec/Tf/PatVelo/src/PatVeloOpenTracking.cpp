@@ -29,6 +29,11 @@ DECLARE_ALGORITHM_FACTORY( PatVeloOpenTracking )
 PatVeloOpenTracking::PatVeloOpenTracking( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_rHitManager(NULL)
+  , m_phiHitManager(NULL)
+  , m_trackTool(NULL)
+  , m_debugTool(NULL)
+  , m_velo(NULL)
 {
   declareProperty( "rMatchTol"     , m_rMatchTol       = 0.90  );
   declareProperty( "rExtrapTol"    , m_rExtrapTol      = 1.5   );
@@ -78,7 +83,7 @@ StatusCode PatVeloOpenTracking::initialize() {
 StatusCode PatVeloOpenTracking::execute() {
 
   bool isDebug   = msgLevel( MSG::DEBUG   );
-  debug() << "==> Execute" << endreq;
+  debug() << "==> Execute" << endmsg;
 
   //std::vector<PatVeloSpaceTrack> myTracks;
   std::vector<PatVeloOpenTrack> myTracks;
@@ -201,7 +206,7 @@ StatusCode PatVeloOpenTracking::execute() {
         if ( isDebug ) {
           info() << format( "=== Sensor R0=%2d sect %2d nCoord%3d    R2=%2d sect %2d nCoord %3d",
                             sensorR0->sensorNumber(), zone0, stationR0->size(sectorR0),
-                            sensorR2->sensorNumber(), zone2, stationR2->size(sectorR2) ) << endreq;
+                            sensorR2->sensorNumber(), zone2, stationR2->size(sectorR2) ) << endmsg;
           printRCoords( stationR0, sectorR0, "R0" );
           printRCoords( stationR2, sectorR2, "R2" );
         }
@@ -224,14 +229,14 @@ StatusCode PatVeloOpenTracking::execute() {
               isDebug = msgLevel( MSG::DEBUG );
               if ( matchKey( *cR0 ) && matchKey( *cR2 ) ) isDebug = true;
               if ( isDebug ) {
-                info() << "==== Found good R pair: matching key " << m_wantedKey << " ===" << endreq;
+                info() << "==== Found good R pair: matching key " << m_wantedKey << " ===" << endmsg;
                 printCoord( *cR0, "R0" );
                 printCoord( *cR2, "R2" );
               }
             }
 
             // loop on phi sensors, get the proper sector each time.
-            if ( isDebug ) info() << "... try  r0 " << r0 << " r2 " << r2 << endreq;
+            if ( isDebug ) info() << "... try  r0 " << r0 << " r2 " << r2 << endmsg;
 
             PatVeloOpenTrack bestTrack;
 
@@ -259,9 +264,9 @@ StatusCode PatVeloOpenTracking::execute() {
 
             if ( isDebug ) {
               info() << format( "  phi0 range ok%2d phiMin%8.3f phiMax%8.3f",
-                                hasRange, range0.first, range0.second ) << endreq;
+                                hasRange, range0.first, range0.second ) << endmsg;
               info() << format( "  phi2 range ok%2d phiMin%8.3f phiMax%8.3f",
-                                hasRange, range2.first, range2.second ) << endreq;
+                                hasRange, range2.first, range2.second ) << endmsg;
             }
 
             Tf::PatVeloPhiHitRange hitsPhi0 = stationPhi0->hits( sectorPhi0 );
@@ -295,18 +300,18 @@ StatusCode PatVeloOpenTracking::execute() {
                 if ( isDebug ) {
                   info() << format( "  0: z%7.1f  r%7.3f    Phi: n%5d phi%8.4f dir%8.4f dist%6.2f",
                                     zR0, r0, (*cPhi0)->stripNumber(), coordPhi0,
-                                    (*cPhi0)->referencePhi(), (*cPhi0)->referenceR() ) << endreq;
+                                    (*cPhi0)->referencePhi(), (*cPhi0)->referenceR() ) << endmsg;
                   info() << format( "  2: z%7.1f  r%7.3f    Phi: n%5d phi%8.4f dir%8.4f dist%6.2f",
                                     zR2, r2, (*cPhi2)->stripNumber() , coordPhi2,
-                                    (*cPhi2)->referencePhi(), (*cPhi2)->referenceR() ) << endreq;
+                                    (*cPhi2)->referencePhi(), (*cPhi2)->referenceR() ) << endmsg;
                   printCoord( *cR0,   "R0   " );
                   printCoord( *cR2,   "R2   " );
                   printCoord( *cPhi0, "Phi0 " );
                   printCoord( *cPhi2, "Phi2 " );
                   info() << format( "     x0%8.3f tx%10.6f y0%8.3f ty%10.6f",
-                                    newTrack.x0(), newTrack.tx(), newTrack.y0(), newTrack.ty() ) << endreq;
+                                    newTrack.x0(), newTrack.tx(), newTrack.y0(), newTrack.ty() ) << endmsg;
                   info() << "   Search R1 z " << zR1 << " rPred " << rPred << " tol " << rTol
-                         << " in sensor " << stationR1->sensorNumber() << endreq;
+                         << " in sensor " << stationR1->sensorNumber() << endmsg;
                 }
 
                 //== Search if enough R coordinates should have been found earlier in the search
@@ -320,7 +325,7 @@ StatusCode PatVeloOpenTracking::execute() {
                   sensNb += 2;
                 }
                 if ( m_maxMissedR <= nPrevR ) {
-                  if ( isDebug ) info() << "... missed " << nPrevR << " R measures " << endreq;
+                  if ( isDebug ) info() << "... missed " << nPrevR << " R measures " << endmsg;
                   continue;
                 }
 
@@ -350,14 +355,14 @@ StatusCode PatVeloOpenTracking::execute() {
                 if ( isDebug ) {
                   info() << " For phi:  zone " << sectorPhi1 << " rPredPhi " << rPredPhi 
                          << " hasRange " << hasRange
-                         << " phiMin " << range1.first << " PhiMax " << range1.second << endreq;
+                         << " phiMin " << range1.first << " PhiMax " << range1.second << endmsg;
                 }
                 if ( !hasRange ) continue;
 
                 phiPred = circularRange.sub( newTrack.phiAtZ( zPhi1 ), offset1);
                 double phiTol = m_phiMatchTol * stationPhi1->sensor()->phiPitch(rPredPhi);
 
-                if ( isDebug ) info() << "  Phi1Pred " << phiPred << " phiTol " << phiTol  << endreq;
+                if ( isDebug ) info() << "  Phi1Pred " << phiPred << " phiTol " << phiTol  << endmsg;
 
                 Tf::PatVeloPhiHit* bestPhic1 = stationPhi1->closestHitHalfBox( sectorPhi1, phiPred, phiTol);
                 if (0 == bestPhic1) continue;
@@ -369,12 +374,12 @@ StatusCode PatVeloOpenTracking::execute() {
                 dp = dp / phiTol;
                 double chi2 = 9. * ( dr * dr + dp * dp );  // tol = +- 3 sigmas
                 if ( m_maxChi2 < chi2 ) {
-                  if ( isDebug ) info() << "... Chi2 too big : " << chi2 << endreq;
+                  if ( isDebug ) info() << "... Chi2 too big : " << chi2 << endmsg;
                   continue;
                 }
                  
                 if ( isDebug ) {
-                  info() << "  **** Found space triplet chi2 " << chi2 << " ****" << endreq;
+                  info() << "  **** Found space triplet chi2 " << chi2 << " ****" << endmsg;
                   printCoord( *cR0,      "R0   " );
                   printCoord( bestRc1,   "R1   " );
                   printCoord( *cR2,      "R2   " );
@@ -409,7 +414,7 @@ StatusCode PatVeloOpenTracking::execute() {
                   // double phi = newTrack.phiAtZ( zR );
                   int zoneR  = sectorR2;
                   rPred = newTrack.rAtZ( zR );
-                  if ( isDebug ) info() << "Search in zone " << zoneR << " at r= " << rPred << endreq;
+                  if ( isDebug ) info() << "Search in zone " << zoneR << " at r= " << rPred << endmsg;
 
                   double rTol = m_rExtrapTol * sensorR->rPitch(rPred) * newTrack.rCoords()->size() / 3.;
 
@@ -475,7 +480,7 @@ StatusCode PatVeloOpenTracking::execute() {
                   store = true;
                 }
                 if ( store ) {
-                  if ( isDebug ) info() << " ...keep it as best, chi2 = " << newTrack.chi2() << endreq;
+                  if ( isDebug ) info() << " ...keep it as best, chi2 = " << newTrack.chi2() << endmsg;
                   bestTrack = newTrack;
                 }
               }
@@ -493,7 +498,7 @@ StatusCode PatVeloOpenTracking::execute() {
                                         << " chi2 " << bestTrack.chi2()
                                         << " firstZ " << bestTrack.firstZ()
                                         << " Backward " << bestTrack.backward()
-                                        << endreq;
+                                        << endmsg;
                   std::vector<Tf::PatVeloRHit*>::const_iterator itC;
                   for ( itC = bestTrack.rCoords()->begin(); bestTrack.rCoords()->end() != itC; ++itC ) {
                     if ( isDebug ) printCoord( *itC, "R   " );

@@ -1,4 +1,3 @@
-// $Id: PatVeloOpenTracking.h,v 1.6 2008-12-04 09:05:56 cattanem Exp $
 #ifndef PATVELOOPENTRACKING_H
 #define PATVELOOPENTRACKING_H 1
 
@@ -38,7 +37,7 @@ protected:
   void printRCoords( Tf::PatVeloRHitManager::Station* station, int zone, std::string title ) {
     std::vector<Tf::PatVeloRHit*>::const_iterator itC;
     info() << " ... coordinates in " << title << " sensor " << station->sensor()->sensorNumber() 
-           << " zone " << zone << " ..." << endreq;
+           << " zone " << zone << " ..." << endmsg;
     for ( itC = station->hits(zone).begin(); station->hits(zone).end() != itC; ++itC ) {
       printCoord( *itC, " ");
     }
@@ -47,7 +46,7 @@ protected:
   void printPhiCoords( Tf::PatVeloPhiHitManager::Station* station, int zone, std::string title ) {
     std::vector<Tf::PatVeloPhiHit*>::const_iterator itC;
     info() << " ... coordinates in " << title << " sensor " << station->sensor()->sensorNumber() 
-            << " zone " << zone << " ..." << endreq;
+            << " zone " << zone << " ..." << endmsg;
     for ( itC = station->hits(zone).begin(); station->hits(zone).end() != itC; ++itC ) {
       printCoord( *itC, " ");
     }
@@ -60,7 +59,7 @@ protected:
                       hit->hit()->coordHalfBox(), hit->hit()->isUsed() );
     LHCb::LHCbID myId =  hit->hit()->lhcbID();
     if ( 0 != m_debugTool ) m_debugTool->printKey( info(), myId );
-    info() << endreq;
+    info() << endmsg;
   }
   
   template<class TYPE> bool matchKey( TYPE* coord ) {

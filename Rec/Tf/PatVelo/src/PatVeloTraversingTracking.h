@@ -1,4 +1,3 @@
-// $Id: PatVeloTraversingTracking.h,v 1.4 2009-10-12 09:24:19 siborghi Exp $
 #ifndef TF_PATVELOTRAVERSINGTRACKING_H 
 #define TF_PATVELOTRAVERSINGTRACKING_H 1
 
@@ -71,7 +70,7 @@ namespace Tf
      */
     class TraversingTrackSet{
     public:
-      TraversingTrackSet(){}; ///< Empty constructor
+      TraversingTrackSet() : m_t1(NULL), m_t2(NULL) {}; ///< Empty constructor
 
       /// set parameters from two tracks
       void Init(double distx, double sigmax,

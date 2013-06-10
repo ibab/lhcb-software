@@ -89,7 +89,7 @@ StatusCode NewVeloSpaceTool::initialize ( ) {
     m_timer->decreaseIndent();
   }
 
-  info() << "Print Tracks = " << m_printTracks << endreq;
+  info() << "Print Tracks = " << m_printTracks << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -170,7 +170,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
            << " double " << isDouble
            << " minNbPhi " << minNbPhi
            << " wanted = " << m_wantedKey
-           << endreq;
+           << endmsg;
     for ( std::vector<Tf::PatVeloRHit*>::iterator itC = track->rCoords()->begin();
           track->rCoords()->end() != itC; ++itC ) {
       printCoord( *itC, "R  " );
@@ -219,7 +219,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
     double r = track->rInterpolated( z );
 
     if ( m_isDebug ) info() << ".. sens " << sensor->sensor()->sensorNumber()
-                            << " z " << z << " r " << r  << endreq;
+                            << " z " << z << " r " << r  << endmsg;
 
     //== Get the phi zone of this r. Some tolerance at boundary...
     const DeVeloPhiType* veloSensor = sensor->sensor();
@@ -307,7 +307,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
   itH2 = itH1 + 2;
   prevItH2 = itH1;
 
-  if ( m_isDebug ) info() << "== Search list with minimum size 3" << endreq;
+  if ( m_isDebug ) info() << "== Search list with minimum size 3" << endmsg;
 
   //== Find a good range
   while ( itH1 <= allHits.end() - 3 ) {
@@ -334,7 +334,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
         info() << "Candidate zone from " << (*itH1)->referencePhi()
                << " to " << (*itH2)->referencePhi()
                << " = " << (*itH2)->referencePhi() - (*itH1)->referencePhi()
-               << " n " << itH2 - itH1 + 1 << endreq;
+               << " n " << itH2 - itH1 + 1 << endmsg;
         for ( itH = candidate.begin(); candidate.end() != itH ; ++itH ) {
           info() << format( "   chi2 %8.2f  dPhi %8.4f", candidate.dist2( *itH ), candidate.dPhi( *itH ) );
           printCoord( *itH, "" );
@@ -354,20 +354,20 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
            fabs( candidate.averagePhi() + Gaudi::Units::halfpi ) > 0.2 ) {
         if ( candidate.end() - candidate.begin() < minNbPhi ) {
           if ( m_isDebug ) info() << "Rejected , not enough phi = " 
-                                  << candidate.end() - candidate.begin() << " for " << minNbPhi << endreq;
+                                  << candidate.end() - candidate.begin() << " for " << minNbPhi << endmsg;
           ok = false;
         }
       }      
 
       //== Overall quality should be good enough...
       if ( m_maxQFactor < candidate.qFactor() ) {
-        if ( m_isDebug ) info() << "Rejected , qFactor = " << candidate.qFactor() << endreq;
+        if ( m_isDebug ) info() << "Rejected , qFactor = " << candidate.qFactor() << endmsg;
         ok = false;
       }
         
       if ( ok ) {  //== Store it.
         if ( m_isDebug ) {
-          info() << "**** Accepted , qFactor = " << candidate.qFactor() << " ****" << endreq;
+          info() << "**** Accepted , qFactor = " << candidate.qFactor() << " ****" << endmsg;
           for ( itH = candidate.begin() ; candidate.end() != itH ; ++itH ) {
             info() << format( "   chi2 %8.2f", candidate.dist2( *itH ) );
             printCoord( *itH, "" );
@@ -379,7 +379,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
     ++itH1;
   }
 
-  if ( m_isDebug ) info() << "Found " << newTracks.size() << " candidates." << endreq;
+  if ( m_isDebug ) info() << "Found " << newTracks.size() << " candidates." << endmsg;
 
   if ( m_measureTime ) {
     m_timer->stop ( m_mainTime );
@@ -388,7 +388,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
 
   //== If no candidate: Take only the unused hits on both lists and try...
   if ( 0 ==  newTracks.size() ) {
-    if ( m_isDebug ) info() << "Try with only unused hits " << endreq;
+    if ( m_isDebug ) info() << "Try with only unused hits " << endmsg;
     std::vector< Tf::PatVeloPhiHit*> unusedHits;
     for ( itH = allHits.begin(); allHits.end() != itH; ++itH ) {
       if ( !(*itH)->hit()->isUsed() ) unusedHits.push_back( *itH );
@@ -421,7 +421,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
             info() << "Candidate zone from " << (*itH1)->referencePhi()
                    << " to " << (*itH2)->referencePhi()
                    << " = " << (*itH2)->referencePhi() - (*itH1)->referencePhi()
-                   << " n " << itH2 - itH1 + 1 << endreq;
+                   << " n " << itH2 - itH1 + 1 << endmsg;
             for ( itH = candidate.begin(); candidate.end() != itH ; ++itH ) {
               info() << format( "   chi2 %8.2f  dPhi %8.4f", candidate.dist2( *itH ), candidate.dPhi( *itH ) );
               printCoord( *itH, "" );
@@ -442,20 +442,20 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
                fabs( candidate.averagePhi() + Gaudi::Units::halfpi ) > 0.2 ) {
             if ( candidate.end() - candidate.begin() < minNbPhi ) {
               if ( m_isDebug ) info() << "Rejected , not enough phi = " 
-                                      << candidate.end() - candidate.begin() << " for " << minNbPhi << endreq;
+                                      << candidate.end() - candidate.begin() << " for " << minNbPhi << endmsg;
               ok = false;
             }
           }
         
           //== Overall quality should be good enough...
           if ( m_maxQFactor < candidate.qFactor() ) {
-            if ( m_isDebug ) info() << "Rejected , qFactor = " << candidate.qFactor() << endreq;
+            if ( m_isDebug ) info() << "Rejected , qFactor = " << candidate.qFactor() << endmsg;
             ok = false;
           }
 
           if ( ok ) {  
             if ( m_isDebug ) {
-            info() << "**** Accepted , qFactor = " << candidate.qFactor() << " ****" << endreq;
+            info() << "**** Accepted , qFactor = " << candidate.qFactor() << " ****" << endmsg;
               for ( itH = candidate.begin() ; candidate.end() != itH ; ++itH ) {
                 info() << format( "   chi2 %8.2f", candidate.dist2( *itH ) );
                 printCoord( *itH, "" );
@@ -528,7 +528,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
     if ( !(*itTr).isValid() ) continue;
     if ( m_isDebug ) {
       info() << "Test track " << itTr - newTracks.begin() << " nbHits " << (*itTr).nbHits() << " (min " << minExpected
-             << ") qFact " << (*itTr).qFactor() << " (max " << maxQual << ")" << endreq;
+             << ") qFact " << (*itTr).qFactor() << " (max " << maxQual << ")" << endmsg;
     }
     if ( minExpected > (*itTr).nbHits() ) continue;
     if ( maxQual     < (*itTr).qFactor() ) continue;
@@ -540,7 +540,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
 
     if ( m_isDebug ) {
       info() << "Track with nPhi = " << tempTrack.phiCoords()->size()
-             << " nR " << tempTrack.nbCoords() << endreq;
+             << " nR " << tempTrack.nbCoords() << endmsg;
       for ( itH = tempTrack.phiCoords()->begin();
             tempTrack.phiCoords()->end() != itH; ++itH ) {
         printCoord( *itH, "  " );
@@ -567,7 +567,7 @@ StatusCode NewVeloSpaceTool::tracksFromTrack ( const LHCb::Track& in,
 
   delete track;
 
-  if ( m_isDebug ) info() << "Returned " << out.size() << " candidates" << endreq;
+  if ( m_isDebug ) info() << "Returned " << out.size() << " candidates" << endmsg;
 
   if ( m_measureTime ) {
      m_timer->stop ( m_storeTime );

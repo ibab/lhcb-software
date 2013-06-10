@@ -55,7 +55,7 @@ namespace Tf {
     m_phiHitManager = tool<PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager", m_phiHitManagerName );
 
     if( msgLevel( MSG::DEBUG ) ){
-      debug() << "=== Tool " << name() << " initialised ==="<< endreq;
+      debug() << "=== Tool " << name() << " initialised ==="<< endmsg;
     }
 
     m_velo = getDet<DeVelo>( DeVeloLocation::Default );
@@ -70,7 +70,7 @@ namespace Tf {
 			unsigned int fullErrorPoints ) const {
     bool isVerbose = msgLevel( MSG::VERBOSE );
 
-    if(isVerbose) verbose() << "Cleaning R overlap hits from track" <<endreq;
+    if(isVerbose) verbose() << "Cleaning R overlap hits from track" <<endmsg;
 
     bool refit = false;
     std::vector<PatVeloRHit*>* rCoords = tr->rCoords();
@@ -96,7 +96,7 @@ namespace Tf {
         (*iR)->sensor()->veloHalfBoxToLocal(halfBoxPoint);
       if ( !(*iR)->sensor()->isInActiveArea(localPoint) ) {
         if(isVerbose) {
-          verbose() << "deleting cluster " << iR - rCoords->begin() << endreq;
+          verbose() << "deleting cluster " << iR - rCoords->begin() << endmsg;
         }
         iR = rCoords->erase(iR); //delete R coord, get pointer to next cluster
         refit = true;
@@ -109,7 +109,7 @@ namespace Tf {
         if(isVerbose){
           verbose()
             << "Removed too many R clusters from track: set to invalid"
-            << endreq;
+            << endmsg;
         }
         tr->setValid(false);
         return false;
@@ -190,7 +190,7 @@ namespace Tf {
         if ( 0 == coord ) {
           err() << "PatVeloRhit not found. id " << id
             << " sensor " << sensorNumber << " zone " << zone
-            << endreq;
+            << endmsg;
           delete newTrack;
           return 0;
         } else {
@@ -233,12 +233,12 @@ namespace Tf {
                   << " to "
                   <<format("xyz (%6.3f,%6.3f,%8.3f) (tx,ty)*10^3 (%6.1f,%6.1f)",
                            state.x(),state.y(),state.z(),1e3*state.tx(),1e3*state.ty())
-                  << endreq;
+                  << endmsg;
       }
     }else{
       state.setState(patTrack->point().x(),patTrack->point().y(),patTrack->point().z(),
 		     patTrack->slopeX(),patTrack->slopeY(),0.); // q/p unknown from the VELO
-      if (msgLevel( MSG::VERBOSE )) verbose() << "Ignore box offset" << endreq;
+      if (msgLevel( MSG::VERBOSE )) verbose() << "Ignore box offset" << endmsg;
     }
     state.setCovariance( covariance );
     newTrack->addToStates( state );

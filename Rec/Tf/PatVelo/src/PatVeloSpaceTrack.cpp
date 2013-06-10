@@ -143,15 +143,17 @@ namespace Tf {
     //== Average the sine/cosine to avoid 2Pi problems...
     double cosPhi = 0.;
     double sinPhi = 0.;
-    int nbMeas = 0;
+    unsigned int nbMeas = 0;
     for ( std::vector<PatVeloPhiHit*>::reverse_iterator itC = m_phiCoord.rbegin() ; m_phiCoord.rend() != itC ; ++itC ) {
       cosPhi += (*itC)->cosPhi();
       sinPhi += (*itC)->sinPhi();
       ++nbMeas;
     }
 
-    cosPhi /= nbMeas;
-    sinPhi /= nbMeas;
+    if( 1 < nbMeas ) {
+      cosPhi /= nbMeas;
+      sinPhi /= nbMeas;
+    }
     double norm = sqrt( cosPhi*cosPhi + sinPhi * sinPhi );
     cosPhi /= norm;
     sinPhi /= norm;

@@ -76,7 +76,7 @@ namespace Tf {
                                          m_trackToolName );
 
     if(msgLevel(MSG::DEBUG))
-      debug() << "========== Tool " << name() << "====== "<< endreq;
+      debug() << "========== Tool " << name() << "====== "<< endmsg;
     return StatusCode::SUCCESS;
   }
 
@@ -205,7 +205,7 @@ namespace Tf {
         << " zone "  << zone
         << " first " << (*firstRStationIter)->sensor()->sensorNumber()
         << " last "  << (*lastRStationIter)->sensor()->sensorNumber()
-        << endreq;
+        << endmsg;
 
     // dump any old phi lists
     m_phiPt.clear();
@@ -231,7 +231,7 @@ namespace Tf {
       double r = track.rInterpolated( z );
 
       if (isDebug) debug() << ".. sens " << station->sensor()->sensorNumber()
-        << " z " << z << " r " << r  << endreq;
+        << " z " << z << " r " << r  << endmsg;
 
       const DeVeloPhiType* sensor = station->sensor();
       if ( sensor->outerRadius() < r ) {
@@ -291,7 +291,7 @@ namespace Tf {
           station->sensor()->sensorNumber(), r, range.first, range.second )
           << " PhiPt size " << m_phiPt.size()
           << " nStations " << nStationsTried
-          << endreq;
+          << endmsg;
 
       //== Match to the list of existing PhiList candidates.
       //== One stores only the best per list, and create a new list
@@ -313,13 +313,13 @@ namespace Tf {
         if(isVerbose)verbose()<<format(" sensor %3d list #%2d phi%7.4f size %2d",
             station->sensor()->sensorNumber(), iPhiList-m_phiPt.begin(),
             iPhiList->phi(), iPhiList->size() )
-            << endreq;
+            << endmsg;
       }
     } // end of loop over phi sensors for this RZ track
 
     if( getBestPhiList(track,nStationsTried, accepted) ){
       if ( isDebug ) debug() << "Good track, nAccepted ="
-        << accepted.size() << endreq;
+        << accepted.size() << endmsg;
     }
 
     return;
@@ -411,7 +411,7 @@ namespace Tf {
 
     if ( msgLevel(MSG::DEBUG) ) debug() << "nStationsTried " << nStationsTried
       << " request " << minExpected
-        << " phi clusters " << endreq;
+        << " phi clusters " << endmsg;
 
     // All acceptable combinations of phi clusters: start with 1st
     PatVeloPhiLists::iterator iPhiList;
@@ -439,7 +439,7 @@ namespace Tf {
       if ( msgLevel(MSG::DEBUG) ) {
         debug() << format( "Philist #%2d phi= %7.4f n%3d minExp%3d unused%3d chisq%7.3f",
             iPhiList -m_phiPt.begin(), iPhiList->phi(), nbFound, minExpected,
-            iPhiList->nbUnused(), iPhiList->chiSq() ) << endreq;
+            iPhiList->nbUnused(), iPhiList->chiSq() ) << endmsg;
       }
       if ( iPhiList->size() < 5 && 0 ==  iPhiList->nbUnused()  ) continue;
       if ( minExpected > nbFound       ) continue;
@@ -460,12 +460,12 @@ namespace Tf {
 
     if ( msgLevel( MSG::DEBUG ) &&
         accepted.size() > 1 ) {
-      debug() << "Multiple solutions for same R" << endreq;
+      debug() << "Multiple solutions for same R" << endmsg;
       for ( std::vector<PatVeloSpaceTrack*>::iterator itT = accepted.begin();
 	    accepted.end() != itT; ++itT ) {
         int indx =  itT - accepted.begin();
         debug() << "... track " << indx << " Chisq/dof " << (*itT)->chi2Dof()
-		<< endreq;
+		<< endmsg;
       }
     }
 
@@ -524,7 +524,7 @@ namespace Tf {
               << GSL_MAX(n1,n2)
               << " and list " << iShort-m_phiPt.begin() << " size "
               << GSL_MIN(n1,n2)
-              << " " << nCommon << " shared hits." << endreq;
+              << " " << nCommon << " shared hits." << endmsg;
           }
           for ( itHShort = (*iShort).coords().begin();
               (*iShort).coords().end() != itHShort; ++itHShort  ) {

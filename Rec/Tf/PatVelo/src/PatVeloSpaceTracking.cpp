@@ -20,6 +20,11 @@ namespace Tf {
   PatVeloSpaceTracking::PatVeloSpaceTracking( const std::string& name,
       ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator )
+    , m_trackSelector(NULL)
+    , m_PatVeloSpaceTool(NULL)
+    , m_inputTracks(NULL)
+    , m_outputTracks(NULL)
+    , m_timerTool(NULL)
     {
       declareProperty( "InputTracksName",
           m_inputTracksLocation = LHCb::TrackLocation::RZVelo );
@@ -78,7 +83,7 @@ namespace Tf {
     bool ok =  m_trackSelector->accept(track);
     if( msgLevel( MSG::VERBOSE ) ) verbose() << " accepting track "
       << track.key()<< " "
-        << ok << endreq;
+        << ok << endmsg;
     return ok;
   }
 
@@ -113,7 +118,7 @@ namespace Tf {
 
     if( msgLevel( MSG::VERBOSE ) ){
       info() <<"Retrieved " << m_inputTracks->size()
-        << " tracks from " << m_inputTracksLocation << endreq;
+        << " tracks from " << m_inputTracksLocation << endmsg;
     }
 
     std::vector<LHCb::Track*> output;
@@ -156,7 +161,7 @@ namespace Tf {
         << " new 3D VELO tracks, in total "
         << m_outputTracks->size() << " in "
         << m_outputTracksLocation
-        << endreq;
+        << endmsg;
 
     if ( m_doTiming ) m_timerTool->stop( m_veloSpaceTime );
 

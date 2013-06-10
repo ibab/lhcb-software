@@ -23,12 +23,19 @@ namespace Tf {
 
 Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
                                                     ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ), m_Num3DCreated(0), m_NumEvt(0)
+  : GaudiAlgorithm ( name , pSvcLocator )
+  , m_rHitManager(NULL)
+  , m_phiHitManager(NULL)
+  , m_velo(NULL)
+  , m_PatVeloTrackTool(NULL)
+  , m_Num3DCreated(0)
+  , m_NumEvt(0)
   , m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
   , m_XOffsetTop(0)
   , m_XOffsetBottom(0)
   , m_YOffsetTop(0)
   , m_YOffsetBottom(0)
+  , m_timerTool(NULL)
 {
 
   declareProperty( "OutputTracksLocation" , 
@@ -251,7 +258,7 @@ build3DClusters(int zone,
               << " outer " << phiStation->hits(1).size()
               << " # points " 
               << createdPoints[rStation->sensor()->sensorNumber()].size() 
-              << endreq;
+              << endmsg;
   if( createdPoints[rStation->sensor()->sensorNumber()].size() > m_ZoneMaxPoints ){
     createdPoints[rStation->sensor()->sensorNumber()].clear();
     Warning( "Very hot VELO sector, removing coordinates",
@@ -292,7 +299,7 @@ findTracks(PointsContainer &points,
 
     if(m_isVerbose) verbose() << "Search for triplets in " 
                               << iS0->first << ", " << iS1->first
-                              << ", " << iS2->first << endreq;
+                              << ", " << iS2->first << endmsg;
 
     std::vector<PointsList> triplets;
     // using these three stations make tripets of comptaible clusters
@@ -302,7 +309,7 @@ findTracks(PointsContainer &points,
     if(m_isVerbose) verbose() << "Found " << triplets.size() 
                               << " viable triplets" 
                               << (overlap ? " for overlap" : "")
-                              << endreq;
+                              << endmsg;
     for( std::vector<PointsList>::iterator iT = triplets.begin();
          iT != triplets.end(); ++iT ){      
       if(!iT->vaild()) continue; // skip killed triplets
@@ -357,7 +364,7 @@ makeAllGoodTriplets(std::vector<PatVeloLocalPoint> &one,
           verbose() << "Very hot VELO triplet, reducing search windows" <<endmsg;
           verbose() << "Number of middle sensor compatible hits was " 
                     << iTwoEnd - iTwoBegin 
-                    << " dPredX " << dPredX << " dPredY " << dPredY << endreq;
+                    << " dPredX " << dPredX << " dPredY " << dPredY << endmsg;
         }
   
         dPredX /= 2.;
@@ -412,7 +419,7 @@ bool Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
   // maintain an seperate linear X/Y fit 
   PatVeloSpaceTrackLocal::FrameParam xFit,yFit;
 
-  if( m_isVerbose) verbose() << "Extending track " << endreq;
+  if( m_isVerbose) verbose() << "Extending track " << endmsg;
 
   bool leftSideSeed = m_isLeftRSens[trackPoints.points()[0]->rSensorNumber()];
 
@@ -440,7 +447,7 @@ bool Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
       << (*iPoint)->rHit()->stripNumber() << "] and ["
       << (*iPoint)->phiHit()->sensorNumber() << "," 
       << (*iPoint)->phiHit()->stripNumber() << "]"
-      << endreq;
+      << endmsg;
   }
 
   PointsContainer::reverse_iterator iPCont;
@@ -483,7 +490,7 @@ bool Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
     if(m_isVerbose) verbose() 
       << "X range  ( " << xPred << " +- " << (predScale * xPredErr)
       << " ) has " << iPEnd - iPBegin << " points in R sensor " 
-      << iPCont->first << endreq;
+      << iPCont->first << endmsg;
 
     // put the best match here, if there is one
     PatVeloLocalPoint* bestPoint = 0;
@@ -515,7 +522,7 @@ bool Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
         << bestPoint->rHit()->stripNumber() << "] and ["
         << bestPoint->phiHit()->sensorNumber() << "," 
         << bestPoint->phiHit()->stripNumber() << "]"
-        << endreq;
+        << endmsg;
 
       xFit.increment(1./gsl_pow_2(bestPoint->deltaX()),
                      bestPoint->x(),bestPoint->z());
@@ -542,7 +549,7 @@ bool Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
           << removePoint->rHit()->stripNumber() << "] and ["
           << removePoint->phiHit()->sensorNumber() << "," 
           << removePoint->phiHit()->stripNumber() << "]"
-          << endreq; 
+          << endmsg; 
 
         xFit.increment(-1./gsl_pow_2(removePoint->deltaX()),
                        removePoint->x(),removePoint->z());
@@ -762,9 +769,9 @@ StatusCode Tf::PatVeloGeneralTracking::finalize() {
   if( m_isDebug ) debug() << "==> Finalize" << endmsg;
   if( 0 < m_NumEvt ){
     info() << "Created an average of " << (double)m_Num3DCreated / (double)m_NumEvt 
-           << " 3D Velo Points per event" << endreq;
+           << " 3D Velo Points per event" << endmsg;
   }else{
-    info() << "No events processed" << endreq;
+    info() << "No events processed" << endmsg;
   }
   return GaudiAlgorithm::finalize();
 }
