@@ -14,7 +14,7 @@ namespace RTL  {
     /// Thread status
     int            m_status;
     /// Thread identifier
-    lib_rtl_thread_t m_id;
+    //lib_rtl_thread_t m_id;
   public:
     /// Initializing constructor
     Thread();

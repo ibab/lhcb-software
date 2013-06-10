@@ -1,7 +1,4 @@
-/*
-** QUEUE ROUTINES BY TIM CHARITY - Sep 89
-*/
-#include "RTL/rtl.h"
+
 #include "RTL/Thread.h"
 
 RTL::Thread::Thread() : m_id(0) {
