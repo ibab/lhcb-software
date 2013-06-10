@@ -33,7 +33,7 @@ library dim conn_handler.c copy_swap.c dic.c dim_thr.c dis.c dll.c dna.c \
             utilities.c diccpp.cxx dimcpp.cxx discpp.cxx tokenstring.cxx
 
 apply_pattern linker_library library=dim 
-macro_append dim_shlibflags " -pthread -lrt " WIN32 " "
+macro_append dim_shlibflags " -shared -pthread -lrt " WIN32 " "
 
 apply_pattern dim_exe name=dns files=dns.c 
 apply_pattern dim_exe name=did files="did/make_did.c"
@@ -70,7 +70,7 @@ macro_append  use_includes ' $(ppcmd)"$(DIMROOT)/dim" '
 # temporary fixes
 macro cdebugflags   "$(cppdebugflags)"
 macro clinkflags    "$(cpplinkflags)"
-macro_append DIM_cflags " -Df2cFortran -fPIC -shared -D_GNU_SOURCE"  WIN32 " $(cppflags) /TC"
+macro_append DIM_cflags " -Df2cFortran -fPIC -D_GNU_SOURCE"  WIN32 " $(cppflags) /TC"
 macro_append DIM_cflags " -Dlinux -Dunix -pipe -ansi -Wall -pthread  -Wno-unused "  WIN32 ""
 
 
@@ -88,9 +88,9 @@ macro_append DIM_cflags " -Dlinux -Dunix -pipe -ansi -Wall -pthread  -Wno-unused
 # Switch off deprecation warnings for VC9
 # Switch off POSIX warnings for VC9
 macro_append DIM_cflags "" \
-	target-gcc      " -Wextra " \
+	target-gcc      " -shared -Wextra " \
 	target-vc9      " -wd4996 " \
-	target-icc      " -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 "
+	target-icc      " -shared -wd111 -wd180 -wd188 -wd310 -wd981 -wd1418 -wd1419 -wd1599 -wd2259 "
 
 macro_append DIM_cppflags "" \
 	target-gcc      " -Wextra " \
