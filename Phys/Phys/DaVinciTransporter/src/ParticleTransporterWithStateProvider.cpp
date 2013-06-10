@@ -232,7 +232,7 @@ StatusCode DaVinci::ParticleTransporter::transport
  *  @see IParticleTransporter::transportAndProject
  */
 // ============================================================================
-StatusCode DaVinci::ParticleTransporter:transportAndProject
+StatusCode DaVinci::ParticleTransporter::transportAndProject
 ( const LHCb::Particle* particle    , 
   const double          znew        ,
   LHCb::Particle&       transported ) 

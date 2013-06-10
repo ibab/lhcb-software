@@ -3,6 +3,9 @@
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+! 2013-06-10 - Vanya Belyaev
+ - bug fix 
+
 ! 2013-06-09 - Vanya Belyaev
 
  - add some logic on ParticleTransporter constructor for 
