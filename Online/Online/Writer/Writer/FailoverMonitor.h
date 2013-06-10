@@ -51,7 +51,6 @@ namespace LHCb {
 
       std::list<NodeState*> m_nodeStates;    /**<< A list of all the nodes discovered.*/
       std::list<NodeState*>::iterator m_currState; /**<< Marks current position.*/
-      pthread_mutex_t m_monitorLock;  /**<< A lock to protect the node states above.*/
       pthread_t m_monitorThread;      /**<< The thread handle.*/
       volatile bool m_stopUrgently;      /**<< Tells the thread to start or stop.*/
       Connection *m_conn;              /**<< The associated connection object.*/
