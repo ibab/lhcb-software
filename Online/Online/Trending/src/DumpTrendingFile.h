@@ -32,7 +32,7 @@ private:
   long             m_tagAddressInFile;
   long             m_dirAddressInFile;
   long             m_dataAddressInFile;
-  int              m_ptDir;
+  //int              m_ptDir; // unused!
   int              m_ptData;
   int              m_nbTag;
   int              m_nbMask;
