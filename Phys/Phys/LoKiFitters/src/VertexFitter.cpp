@@ -371,9 +371,9 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
   if ( massage && !m_massage.empty() ) 
   {
     //
-    Gaudi::Vector3      p_seed     ;
-    Gaudi::SymMatrix3x3 ci_seed    ;
-    unsigned short      n_seed     ;
+    Gaudi::Vector3      p_seed      ;
+    Gaudi::SymMatrix3x3 ci_seed     ;
+    unsigned short      n_seed  = 0 ;
     //
     for ( std::vector<double>::const_iterator iz = m_massage.begin() ; 
           m_massage.end() != iz ; ++iz ) 
