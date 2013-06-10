@@ -319,11 +319,10 @@ public:
 
 class OverflowStatSvc: public DimService {
     MEPRxSvc *m_mepRxObj;
-    IMessageSvc *m_msgSvc;
 public:
-    OverflowStatSvc(MEPRxSvc *mepRxObj, IMessageSvc *log, const std::string& svc_name)
-        : DimService(std::string(svc_name + "/OverflowStatus").c_str(), (char *)"C"),
-          m_mepRxObj(mepRxObj), m_msgSvc(log) {
+    OverflowStatSvc(MEPRxSvc *mepRxObj, IMessageSvc* /* log */, const std::string& svc_name)
+      : DimService(std::string(svc_name + "/OverflowStatus").c_str(), (char *)"C"),
+      m_mepRxObj(mepRx) {
     }
     virtual ~OverflowStatSvc() {}
     virtual void serviceHandler();
