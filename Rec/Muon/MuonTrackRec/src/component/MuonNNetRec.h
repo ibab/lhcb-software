@@ -1,4 +1,3 @@
-// $Id: MuonNNetRec.h,v 1.14 2010-02-17 14:59:29 ggiacomo Exp $
 #ifndef MUONNNETREC_H 
 #define MUONNNETREC_H 1
 
@@ -78,7 +77,7 @@ private:
   bool m_recDone;
   bool m_recOK;
   bool m_tooManyHits;
-  bool m_forceResetDAQ;
+  //  bool m_forceResetDAQ;
 
   std::vector< MuonNeuron* > m_useneurons;
   std::vector< MuonNeuron* > m_allneurons;
@@ -94,7 +93,7 @@ private:
   int m_timeinitNet;
   int m_timeconvNet;
   int m_timefitTrack;
-  int m_timeTile2xyz;
+  //  int m_timeTile2xyz;
 
   // job options
   double m_aa;    // head-tail weight scale factor

@@ -1,4 +1,3 @@
-// $Id: MuonCombRec.h,v 1.7 2010-02-10 19:20:17 ggiacomo Exp $
 #ifndef COMPONENT_MUONCOMBREC_H 
 #define COMPONENT_MUONCOMBREC_H 1
 
@@ -124,7 +123,7 @@ private:
   bool m_recOK;
   bool m_hitsDone; // MuonHit container filled
   bool m_sortDone; // MuonHit-s sorted
-  bool m_tooManyHits;
+  //  bool m_tooManyHits;
 
   std::vector<float> m_xFOIs;
   std::vector<float> m_yFOIs;
@@ -144,7 +143,7 @@ private:
   int m_timeLoad;
   int m_timePad;
   int m_timeMuon;              
-  int m_timeTag;
+  //  int m_timeTag;
   int m_timeMuonStore;
 
   // pad sizes are hardwired to speed up the algorithm
@@ -153,14 +152,14 @@ private:
 
   
   // counters
-  int m_countEvents;
-  int m_countMuCandidates;
+  //  int m_countEvents;
+  //  int m_countMuCandidates;
 
   // properties
 
 
   // maximum number of tracks axcepted
-  int m_maxMuonFound;  
+  //  int m_maxMuonFound;  
   // enable timers
   bool m_measureTime;  
   // enable clone finding and killing

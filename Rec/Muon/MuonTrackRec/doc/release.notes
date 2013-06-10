@@ -8,6 +8,9 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2013-06-10 - Marco Cattaneo
+ - Fix clang32 warnings
+
 !========================= MuonTrackRec v3r9 2013-06-05 =========================
 ! 2013-06-04 - Giovanni Passaleva
  - Fixed wrong assignment in MuonNNetRec.h
