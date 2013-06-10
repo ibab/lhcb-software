@@ -161,7 +161,7 @@ int PrCounter::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* part
   int clone = 0;
   int key = -1;
 
-  if ( (m_trackType==LHCb::Track::TypeUnknown)){
+  if ( LHCb::Track::TypeUnknown == m_trackType ){
     if ( trackList.size() != 0 ) {
       found = true;
       clone = trackList.size() - 1;

@@ -29,7 +29,8 @@ DECLARE_ALGORITHM_FACTORY( PrDebugTrackingLosses )
 PrDebugTrackingLosses::PrDebugTrackingLosses( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_ppSvc(NULL)
+    m_ppSvc(NULL),
+    m_eventNumber(0)
 {
   declareProperty( "Velo",        m_velo        = false );
   declareProperty( "Forward",     m_forward     = false );
@@ -59,7 +60,6 @@ StatusCode PrDebugTrackingLosses::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
-  m_eventNumber = 0;
   return StatusCode::SUCCESS;
 }
 

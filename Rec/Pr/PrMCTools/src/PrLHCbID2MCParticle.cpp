@@ -37,7 +37,9 @@ DECLARE_ALGORITHM_FACTORY( PrLHCbID2MCParticle )
     : GaudiAlgorithm ( name , pSvcLocator ),
       m_otHitCreator("Tf::OTHitCreator/OTHitCreator"),
       m_linker(NULL),
-      m_detectorLink(NULL)
+      m_detectorLink(NULL),
+      m_debug(false),
+      m_otReady(false)
 {
   declareProperty( "TargetName",  m_targetName = "Pr/LHCbID" );
 }
@@ -55,7 +57,6 @@ StatusCode PrLHCbID2MCParticle::initialize() {
 
   m_debug = msgLevel( MSG::DEBUG );
   if( m_debug ) debug() << "==> Initialize" << endmsg;
-  m_otReady = false;
   m_stClusterNames.push_back( LHCb::STClusterLocation::TTClusters );
   m_stClusterNames.push_back( LHCb::STClusterLocation::ITClusters );
   m_stClusterNames.push_back( LHCb::STClusterLocation::UTClusters );

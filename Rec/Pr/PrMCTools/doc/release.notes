@@ -4,6 +4,11 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-06-10 - Marco Cattaneo
+ - Fix a clang32 warning
+ - Add protection for a DIVIDE_BY_ZERO defect
+ - Fix UNINIT_CTOR defects
+
 !========================= PrMCTools v1r4 2013-06-03 =========================
 ! 2013-06-01 - Thomas Nikodem
  - fixed compilation warning (unused variable)

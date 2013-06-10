@@ -52,8 +52,8 @@ PrChecker::PrChecker( const std::string& name,
     m_writeUpHistos(-1),
     m_writeTTrackHistos(-1),
     m_writeBestHistos(-1),
-    m_eta25cut(false)
-
+    m_eta25cut(false),
+    m_histoTool(NULL)
 {
   declareProperty( "VeloTracks",        m_veloTracks      = LHCb::TrackLocation::Velo       );
   declareProperty( "ForwardTracks",     m_forwardTracks   = LHCb::TrackLocation::Forward    );

@@ -106,7 +106,7 @@ StatusCode PrTrackAssociator::execute() {
       m_truthCounters.clear();
 
       // Loop over the LHCbIDs of the Track
-      int nMeas = 0;
+      unsigned int nMeas = 0;
       for( std::vector<LHCb::LHCbID>::const_iterator iId = tr->lhcbIDs().begin();
            tr->lhcbIDs().end() != iId; ++iId ) {
 
@@ -226,7 +226,7 @@ StatusCode PrTrackAssociator::execute() {
                   << endmsg;
 
         //=== Decision. Fill Linker
-        if( veloOK && tOK && ttOK ) {
+        if( veloOK && tOK && ttOK && (0 < nMeas) ) {
           ratio = ( (*it).nVelo + (*it).nTT + (*it).nT ) / nMeas;
           myLinker.link( tr, (*it).particle, ratio );
         }
