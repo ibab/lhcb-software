@@ -4,6 +4,10 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+! 2013-06-10 - Rob Lambert
+ - Split off database into new DBase package.
+ - Add new configurable to juggle all the raw event formats.
+
 ! 2013-05-27 - Rob Lambert
  - Expand 1.0 configuration, interpret as search paths
 

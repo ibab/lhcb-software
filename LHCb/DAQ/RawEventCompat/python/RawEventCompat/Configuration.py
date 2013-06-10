@@ -6,113 +6,10 @@ RecombineWholeEvent: Function. Add up all raw event locations into DAQ/RawEvent
 
 RecombineEventByMap: Function. Add up specific banks from raw event locations
 
+Uses dictionaries from RawEventFormat, which is in DBASE
 
 """
 from Gaudi.Configuration import *
-
-####################################################
-# Dictionaries
-####################################################
-
-#at some point this dictionary will be set from a DBASE package
-
-#dictionary of version: <bank, location>
-# if a list of locations is given, treat as a search path, <bank, [location1, location2...] >
-__locations__={
-    #the original raw event, as in the pit, and Boole, put everything in DAQ/RawEvent, input for Trigger.
-    0.0 : {
-        'ODIN': "DAQ/RawEvent",
-        'L0DU': "DAQ/RawEvent",
-        'L0Calo': "DAQ/RawEvent",
-        'L0CaloFull': "DAQ/RawEvent",
-        'L0DU': "DAQ/RawEvent",
-        'L0Muon': "DAQ/RawEvent",
-        'L0MuonProcCand': "DAQ/RawEvent",
-        'L0PU': "DAQ/RawEvent",
-        'HltSelReports': "DAQ/RawEvent",
-        'HltDecReports': "DAQ/RawEvent",
-        'HltRoutingBits': "DAQ/RawEvent",
-        'HltVertexReports': "DAQ/RawEvent",
-        'Rich': "DAQ/RawEvent",
-        'Muon': "DAQ/RawEvent",
-        'PrsE': "DAQ/RawEvent",
-        'EcalE': "DAQ/RawEvent",
-        'HcalE': "DAQ/RawEvent",
-        'PrsTrig': "DAQ/RawEvent",
-        'EcalTrig': "DAQ/RawEvent",
-        'HcalTrig': "DAQ/RawEvent",
-        'EcalPacked': "DAQ/RawEvent",
-        'HcalPacked': "DAQ/RawEvent",
-        'PrsPacked': "DAQ/RawEvent",
-        'EcalPackedError': "DAQ/RawEvent",
-        'HcalPackedError': "DAQ/RawEvent",
-        'PrsPackedError': "DAQ/RawEvent"
-        },
-    #stripping 17-like, all in DAQ/RawEvent, and some things also in Trigger/RawEvent
-    1.0 : {
-        'ODIN': ["Trigger/RawEvent","DAQ/RawEvent"],
-        'L0DU': ["Trigger/RawEvent","DAQ/RawEvent"],
-        'L0Calo': ["Trigger/RawEvent","DAQ/RawEvent"],
-        'L0CaloFull': ["Trigger/RawEvent","DAQ/RawEvent"],
-        'L0DU': ["Trigger/RawEvent","DAQ/RawEvent"],
-        'L0Muon': ["Trigger/RawEvent","DAQ/RawEvent"],
-        'L0MuonProcCand': ["Trigger/RawEvent","DAQ/RawEvent"],
-        'L0PU': ["Trigger/RawEvent","DAQ/RawEvent"],
-        'HltSelReports': ["Trigger/RawEvent","DAQ/RawEvent"],
-        'HltDecReports': ["Trigger/RawEvent","DAQ/RawEvent"],
-        'HltRoutingBits': ["Trigger/RawEvent","DAQ/RawEvent"],
-        'HltVertexReports': ["Trigger/RawEvent","DAQ/RawEvent"],
-        'Rich': "DAQ/RawEvent",
-        'Muon': "DAQ/RawEvent",
-        'PrsE': "DAQ/RawEvent",
-        'EcalE': "DAQ/RawEvent",
-        'HcalE': "DAQ/RawEvent",
-        'PrsTrig': "DAQ/RawEvent",
-        'EcalTrig': "DAQ/RawEvent",
-        'HcalTrig': "DAQ/RawEvent",
-        'EcalPacked': "DAQ/RawEvent",
-        'HcalPacked': "DAQ/RawEvent",
-        'PrsPacked': "DAQ/RawEvent",
-        'EcalPackedError': "DAQ/RawEvent",
-        'HcalPackedError': "DAQ/RawEvent",
-        'PrsPackedError': "DAQ/RawEvent"
-        },
-    #stripping 20-like, NO DAQ/RawEvent, everything split up into different places
-    2.0 : {
-        'ODIN': "Trigger/RawEvent",
-        'L0DU': "Trigger/RawEvent",
-        'L0Calo': "Trigger/RawEvent",
-        'L0CaloFull': "Trigger/RawEvent",
-        'L0DU': "Trigger/RawEvent",
-        'L0Muon': "Trigger/RawEvent",
-        'L0MuonProcCand': "Trigger/RawEvent",
-        'L0PU': "Trigger/RawEvent",
-        'HltSelReports': "Trigger/RawEvent",
-        'HltDecReports': "Trigger/RawEvent",
-        'HltRoutingBits': "Trigger/RawEvent",
-        'HltVertexReports': "Trigger/RawEvent",
-        'Rich': "Rich/RawEvent",
-        'Muon': "Muon/RawEvent",
-        'PrsE': "Calo/RawEvent",
-        'EcalE': "Calo/RawEvent",
-        'HcalE': "Calo/RawEvent",
-        'PrsTrig': "Calo/RawEvent",
-        'EcalTrig': "Calo/RawEvent",
-        'HcalTrig': "Calo/RawEvent",
-        'EcalPacked': "Calo/RawEvent",
-        'HcalPacked': "Calo/RawEvent",
-        'PrsPacked': "Calo/RawEvent",
-        'EcalPackedError': "Calo/RawEvent",
-        'HcalPackedError': "Calo/RawEvent",
-        'PrsPackedError': "Calo/RawEvent"
-        }
-    }
-
-
-#at some point this dictionary will be set from a DBASE package
-
-#dictionary of Reco and stripping pass : version
-__reco_dict__={ "Reco14" : 2.0, "Strip20" : 2.0, "Reco12" : 1.0, "Strip17" :1.0, "Pit" : 0.0 , "LHCb" : 0.0 , "Moore" : 0.0}
 
 ####################################################
 # Helpers to avoid code duplications
@@ -140,12 +37,16 @@ def _dod(myCombiner):
     DataOnDemandSvc().NodeMap[ "DAQ" ]    = "DataObject"
 
 def _getDict(locations=None,recodict=None):
-    "Find the latest dictionaries"
+    "Find the latest dictionaries, using the configurable"
     #find the latest dictionaries
     if locations is None:
-        locations = RawEventFormat().getProp("Locations")
+        if not RawEventFormatConf().isPropertySet("Locations"):
+            raise ValueError("RawEventFormatConf Locations not yet specified.To force the loading from a dictionary use RawEventFormatConf().forceLoad()")
+        locations = RawEventFormatConf().getProp("Locations")
     if recodict is None:
-        recodict = RawEventFormat().getProp("RecoDict")
+        if not RawEventFormatConf().isPropertySet("RecoDict"):
+            raise ValueError("RawEventFormatConf RecoDict not yet specified.To force the loading from a dictionary use RawEventFormatConf().forceLoad()")
+        recodict = RawEventFormatConf().getProp("RecoDict")
     return locations,recodict
 
 ####################################################
@@ -263,22 +164,55 @@ def RecombineWholeEvent(version,DoD=True, regex=".*", locations=None, recodict=N
     return myCombiner
 
 ####################################################
-# Configurables
+# Lowest level configurable, interrogates the DB
 ####################################################
-class RawEventFormat(ConfigurableUser):
+class RawEventFormatConf(ConfigurableUser):
     "A simple configurable to hold the dictionaries of which event locations are stored where. A configurable is one way to do this, allowing users to modify things, or maybe some python shelved dictionary with a method to get at it"
     __slots__ = {
-        "Locations" : __locations__ #which locations have been where
-        , "RecoDict" : __reco_dict__ #which reco version goes to which RawEvent version
+        "Locations" : None #which locations have been where
+        , "RecoDict" : None #which reco version goes to which RawEvent version
         }
+    _propertyDocDct={
+        "Locations" : "which banks have been where, loaded from a databse in RawEventFormat in DBASE."  #Simple or Map combiner
+        , "RecoDict" : "which reco version goes to which RawEvent version, loaded from a databse in RawEventFormat in DBASE."
+        }
+    def forceLoad(self):
+        """
+        Force to get the dictionary from the database when called
+        """
+        try:
+            import RawEventFormat
+        except ImportError:
+            raise ImportError("No RawEventFormat module found, needed for RawEventFormatConf, unless you specify the raw event location dictionaries explicitly")
+        self.setProp("Locations",RawEventFormat.Raw_location_db)
+        self.setProp("RecoDict",RawEventFormat.Reco_dict_db)
+        
     def __apply_configuration__(self):
-        pass
+        #don't do anything if explicitly configured
+        if self.isPropertySet("Locations") and self.isPropertySet("RecoDict"):
+            return
+        
+        #get default dictionaries from DBASE
+        try:
+            import RawEventFormat
+        except ImportError:
+            raise ImportError("No RawEventFormat module found, needed for RawEventFormatConf, unless you specify the raw event location dictionaries explicitly")
+        if not self.isPropertySet("Locations"):
+            self.setProp("Locations",RawEventFormat.Raw_location_db)
+        if not self.isPropertySet("RecoDict"):
+            self.setProp("RecoDict",RawEventFormat.Reco_dict_db)
+        
 
+
+####################################################
+# Higher level configurables, for setting up actions
+####################################################
 class RecombineRawEvent(ConfigurableUser):
     """A simple configurable to add the raw event recreation to the DoD service
     Only used to recreate the original raw event location for the trigger."""
     #not sure if this is the correct specification here... 
-    __used_configurables__ = [RawEventFormat]
+    #__used_configurables__ = [RawEventFormat]
+    __queried_configurables__ = [RawEventFormatConf]
     
     __slots__ = {
         "Method" : "Simple"  #Simple or Map combiner
@@ -311,3 +245,173 @@ class RecombineRawEvent(ConfigurableUser):
             recodict=rec
             )
 
+class RawEventJuggler(ConfigurableUser):
+    """
+    A complex configurable ...
+    Juggle around raw event locations, will split up and/or combine anything from anywhere to anywhere else using maps.
+    
+    Aimed for use during the juggling currently performed in Brunel, and for future use in MC between different Moore versions
+
+    Can configure writers, sequecers and/or DoD
+    
+    """
+    __queried_configurables__ = [RawEventFormatConf]
+    
+    __slots__ = {
+        "Input" : 2.0  #Raw event location to start with
+        , "Output" : 0.0 #Raw Event location to go to
+        , "KillInputBanksBefore" : None #Regex of banks to kill BEFORE copying around, from input locations
+        , "KillInputBanksAfter" : None #Regex of banks to kill AFTER copying around, from input locations
+        , "KillExtraNodes" : False #Bool, whether to remove nodes which don't exist in target format
+        , "WriterOptItemList" : None #append a writer here to add output locations as OptItemList
+        , "WriterItemList" : None #append a writer here to add output locations as ItemList
+        , "Sequencer" : None #send in a sequencer to add the juggling into
+        , "DataOnDemand" : False #Add juggling into DoD?
+        , "TCK" : None
+        , "Depth" : "#1"
+        , "TCKReplacePattern" : "#TCK#"
+        }
+    
+    def __TCKWrap__(self, aloc):
+        if self.getProp("TCKReplacePattern") in aloc:
+            return aloc.replace(self.getProp("TCKReplacePattern"),self.getProp("TCK"))
+        return aloc
+    
+    def __opWrap__(self,loc):
+        return [self.__TCKWrap__(aloc) +self.getProp(Depth) for aloc in loc]
+    
+    def __apply_configuration__(self):
+        locs,rec=_getDict()
+        added_locations=[]
+        output_locations=ReverseDict(self.getProp("Output"),locs,rec)
+        input_locations=ReverseDict(self.getProp("Input"),locs,rec)
+        #check if a Trigger TCK is needed
+        
+        if "#TCK#" in input_locations or "#TCK#" in output_locations:
+            if not self.isPropertySet("TCK"):
+                raise AttributeError("The raw event version you specified requires a TCK to be given. Set RawEventJuggler().TCK")
+
+        killBefore=[]
+        loc_to_alg_dict={}
+        killAfter=[]
+        
+        ######################################
+        # Stage 1: KillBefore if requested
+        ######################################
+        if self.isPropertySet("KillInputBanksBefore"):
+            #if KillBanks or KillNodes... has been requested, I can't use DoD, it's unsafe. I don't know what's "before" and "after"
+            if self.getProp("DataOnDemand"):
+                raise AttributeError("You have asked for some killing of banks, and asked for DoD, which is not a safe way to run. Either cope with the extra banks, or use a sequencer instead of DoD")
+            import re
+            for loc in input_locations:
+                #see if this location has banks to kill
+                killBanks=[abank for abank in input_locations[bank] if re.match(self.getProp("KillInputBanksBefore"),abank)]
+                if not len(killBanks):
+                    continue
+                loc=self.__TCKWrap__(loc)
+                bk=BankKiller("killBefore"+loc.replace("/",""))
+                killBefore.append(bk)
+                bk.RawEventLocations=[loc]
+                bk.BankTypes=killBanks
+        
+        ##################################
+        # The part which does the juggling
+        ##################################
+        if self.getProp("Input")!=self.getProp("Output"):
+            ######################################
+            # Stage 2: Check options
+            ######################################
+            #if a bank is needed to be added to an existing location, I can't do that.
+            for loc in input_locations:
+                if loc in output_locations:
+                    extra=[abank for abank in output_locations[loc] if abank not in input_locations[loc]]
+                    if len(extra):
+                        raise ValueError("I can't add banks to an already existing location right now. Think of another way to do it for "+loc)
+            #if banks need to be juggled, tell me how to do it, sequencer or DoD
+            if not (self.getProp("DataOnDemand") or self.isPropertySet("Sequencer")):
+                raise AttributeError("You have asked for some juggling, but not told me where to put the algorithms. Set either DataOnDemand or pass a Sequencer")
+            #if banks need to be juggled, tell me how to do it, sequencer or DoD
+            if self.getProp("DataOnDemand") and self.isPropertySet("Sequencer"):
+                raise AttributeError("You asked for DoD and also gave a sequencer, I can't do both at the same time")
+            
+            #if KillBanks or KillNodes... has been requested, I can't use DoD, it's unsafe. I don't know what's "before" and "after"
+            if self.getProp("DataOnDemand")  and (self.getProp("KillExtraNodes") or self.getProp("KillInputBanksBefore") or self.getProp("KillInputBanksAfter")):
+                raise AttributeError("You have asked for some killing of banks, and asked for DoD, which is not a safe way to run. Either cope with the extra banks, ro use a sequencer instead of DoD")
+            
+            #raise import error if you don't have the correct requirements
+            from Configurables import RawEventMapCombiner, EventNodeKiller, BankKiller
+            
+            ###############################################
+            # Stage 3: Recombine banks from given locations
+            ###############################################
+            
+            #for each new location, add a RawEventMapCombiner to the DoD or to the sequencer
+            loc_to_alg_dict={}
+            for loc in output_locations:
+                if loc not in input_locations:
+                    loc=self.__TCKWrap__(loc)
+                    loc_to_alg_dict[loc]=RawEventMapCombiner("create"+loc.replace("/",""))
+                    loc_to_alg_dict[loc].OutputRawEventLocation=loc
+                    loc_to_alg_dict[loc].RawBanksToCopy={}
+                    
+                    added_locations.append(loc)
+                    
+                    for abank in output_locations[loc]:
+                        loc_to_alg_dict[loc].RawBanksToCopy[abank]=WhereBest(abank,self.getProp("Input"),locs,rec)
+            
+            
+            ###############################################
+            # Stage 4: Clean up, kill after if requested
+            ###############################################
+            
+            
+            killAfter=[]
+            if self.isPropertySet("KillInputBanksAfter"):
+                import re
+                for loc in input_locations:
+                    #see if this location has banks to kill
+                    killBanks=[abank for abank in input_locations[bank] if re.match(self.getProp("KillInputBanksAfter"),abank)]
+                    if not len(killBanks):
+                        continue
+                    loc=self.__TCKWrap__(loc)
+                    bk=BankKiller("killAfter"+loc.replace("/",""))
+                    killBefore.append(bk)
+                    bk.RawEventLocations=[loc]
+                    bk.BankTypes=killBanks
+            
+            #for each missing location, kill that location?
+            if self.getProp("KillExtraNodes"):
+                if len([loc for loc in input_locations if loc not in output_locations])>0:
+                    enk=EventNodeKiller("KillRawEventNodes")
+                    enk.Nodes=[]
+                    killAfter.append(enk)
+                    for loc in input_locations:
+                        if loc not in output_locations:
+                            enk.Nodes.append(self.__TCKWrap__(loc))
+            
+        ###############################################
+        # Stage 5: Add to sequence or DoD
+        ###############################################
+        if self.getProp("DataOnDemand"):
+            if len(loc_to_alg_dict):
+                from Configurables import DataOnDemandSvc
+                ApplicationMgr().ExtSvc=["DataOnDemandSvc"]+[svc for svc in ApplicationMgr().ExtSvc if svc is not "DataOnDemandSvc"]
+                for loc in loc_to_alg_dict:
+                    DataOnDemandSvc().AlgMap[loc]=loc_to_alg_dict[loc]
+        else:
+            for alg in killBefore:
+                self.getProp("Sequencer").Members.append(alg)
+            for loc in loc_to_alg_dict:
+                self.getProp("Sequencer").Members.append(loc_to_alg_dict[loc])
+            for alg in killAfter:
+                self.getProp("Sequencer").Members.append(alg)
+            
+        ###############################################
+        # Stage 6: now handle the writers if appended
+        ###############################################
+        if self.isPropertySet("WriterOptItemList"):
+            self.getProp("WriterOptItemList").OptItemList+=self.__opWrap__(output_locations.keys())
+        if self.isPropertySet("WriterItemList"):
+            self.getProp("WriterItemList").ItemList+=self.__opWrap__(output_locations.keys())
+        
+        
