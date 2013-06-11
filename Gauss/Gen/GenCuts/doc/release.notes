@@ -4,6 +4,9 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-05-15 - Jibo He
+ - Added BcNoCut, to generate Bc in full phase space
+
 !========================== GenCuts v3r4 2013-05-16 ========================== 
 ! 2013-05-15 - Patrick Robbe
  - SemilepCutForADS.cpp: fix compilation warning for gcc46
