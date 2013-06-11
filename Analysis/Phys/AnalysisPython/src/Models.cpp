@@ -1723,6 +1723,49 @@ Double_t Analysis::Models::Log10GammaDist::evaluate() const
 // ============================================================================
 
 
+// ============================================================================
+// constructor from all parameters
+// ============================================================================
+Analysis::Models::Product::Product 
+( const char* name  , 
+  const char* title ,
+  RooAbsPdf&  pdf1  , 
+  RooAbsPdf&  pdf2  ) 
+  : RooAbsPdf  (name ,title ) 
+//
+  , m_pdf1    ( "pdf1"  , "PDF1"  , this , pdf1 ) 
+  , m_pdf2    ( "pdf2"  , "PDF2"  , this , pdf2 ) 
+{}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::Product::Product
+( const Analysis::Models::Product& right ,
+  const char*                      name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_pdf1  ( "pdf1" , this , right.m_pdf1  ) 
+  , m_pdf2  ( "pdf2" , this , right.m_pdf2  ) 
+{}
+// ============================================================================
+// destrcutor 
+// ============================================================================
+Analysis::Models::Product::~Product(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Product*
+Analysis::Models::Product::clone( const char* name ) const 
+{ return new Analysis::Models::Product ( *this , name) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Product::evaluate() const 
+{ return m_pdf1 * m_pdf2 ; }
+
+
+
+
 
 // ============================================================================
 // The END 

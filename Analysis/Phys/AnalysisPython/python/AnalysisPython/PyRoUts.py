@@ -5625,6 +5625,22 @@ ROOT.RooRealVar . __ge__   = _rrv_ge_
 ROOT.RooRealVar . __eq__   = _rrv_eq_
 ROOT.RooRealVar . __ne__   = _rrv_ne_
 
+## product of two PDFs 
+def _pdf_mul_ ( pdf1 , pdf2 ) :
+    """
+    Easy contruct for the product of two PDFs:
+    
+    >>> pdf1 = ...
+    >>> pdf2 = ...
+    
+    >>> product = pdf1 * pdf2 
+    """
+    return cpp.Analysis.Models.Product ( '%s*%s'             % ( pdf1.GetName  () ,
+                                                                 pdf2.GetName  () ) ,
+                                         'Product: %s & %s ' % ( pdf1.GetTitle () ,
+                                                                 pdf2.GetTitle () ) ,
+                                         pdf1 , pdf2 )
+ROOT.RooAbsPdf . __mul__  = _pdf_mul_ 
 
 # =============================================================================
 ## further decoration
