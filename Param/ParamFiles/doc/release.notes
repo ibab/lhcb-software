@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : ParamFiles
 ! Responsible : Gloria Corti, Marco Cattaneo
-! Purpose     : distribution of parametrization  data files used during 
-!               simulation and digitization
+! Purpose     : Distribution of parametrization data files
 !-----------------------------------------------------------------------------
+
+!======================= ParamFiles v8r10 2013-06-11 =========================
 
 ! 2013-06-11 - Murilo Rangel
  - Updated jet energy correction file
