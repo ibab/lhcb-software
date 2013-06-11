@@ -87,8 +87,8 @@ namespace DecayTreeFitter
     /// Add a constraint to a mass different from the property table mass
     void setMassConstraint ( const LHCb::ParticleID& pid  , double mass ) ;
     /// Fit the decay tree
-    void fit ( int     maxNumberOfIterations  = 10   , 
-               double deltaChisquareConverged = 0.01 ) ;
+    void fit ( int    maxNumberOfIterations  = 10   , 
+               double relDeltaChisquareConverged = 0.01 ) ;
     /// Fit just one step
     void fitOneStep() ;
     /// Print the result of the fit

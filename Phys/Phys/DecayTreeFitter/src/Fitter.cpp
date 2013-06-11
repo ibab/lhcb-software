@@ -125,7 +125,7 @@ namespace DecayTreeFitter
   }
 
   void
-  Fitter::fit(int nitermax, double dChisqConv)
+  Fitter::fit(int nitermax, double reldChisqConv)
   {
     m_map.clear() ;
 
@@ -152,6 +152,7 @@ namespace DecayTreeFitter
 
       int ndiverging=0 ;
       bool finished = false ;
+      double prevabsdeltachisq=-1 ;
 
       for(m_niter=0; m_niter<nitermax && !finished; ++m_niter) {
         HepVector prevpar = m_fitparams->par() ;
@@ -160,15 +161,16 @@ namespace DecayTreeFitter
         double chisq = m_fitparams->chiSquare() ;
         double deltachisq = chisq - m_chiSquare ;
         // if chi2 increases by more than this --> fit failed
-        const double dChisqQuit = std::max(double(2*nDof()),2*m_chiSquare) ;
-
-        // if(m_errCode.failure()) {
+	int ndof = nDof() ;
+	const double dChisqQuit = std::max(double(2*ndof),2*m_chiSquare) ;
+	const double dChisqConv = reldChisqConv * std::max(double(ndof),std::min(chisq,m_chiSquare)) ;
+	
         if( 0 != m_errCode ) {
           finished = true ;
           m_status = Failed ;
         } else {
           if( m_niter>0 ) {
-            if( fabs( deltachisq ) < dChisqConv ) {
+            if( std::abs( deltachisq ) < dChisqConv ) {
               m_chiSquare = chisq ;
               m_status = Success ;
               finished = true ;
@@ -177,21 +179,24 @@ namespace DecayTreeFitter
               m_status  = Failed ;
               m_errCode = ErrCode::fastdivergingfit ;
               finished = true ;
-            } else if( deltachisq > 0 && ++ndiverging>=maxndiverging) {
+            } else if( m_niter>2 && std::abs(deltachisq) > prevabsdeltachisq && ++ndiverging>=maxndiverging) {
               m_fitparams->par() = prevpar ;
               m_status = NonConverged ;
               m_errCode = ErrCode::slowdivergingfit ;
               finished = true ;
             } else if( deltachisq > 0 ) {
-              // make a half step and reduce stepsize
+              // make a half step and reduce stepsize to prevent oscillations
               m_fitparams->par()   += prevpar ;
               m_fitparams->par()   *= 0.5 ;
               //if( m_niter>10) m_fitparams->scale() *= 0.5 ;
             }
           }
           if ( deltachisq < 0 ) ndiverging=0 ; // start over with counting
-          if(!finished) m_chiSquare = chisq ;
-        }
+	  if(!finished) {
+	    m_chiSquare = chisq ;
+	    prevabsdeltachisq = std::abs(deltachisq) ;
+	  }
+	}
 
         if(vtxverbose>=1) {
           std::cout << "step, chiSquare: "
