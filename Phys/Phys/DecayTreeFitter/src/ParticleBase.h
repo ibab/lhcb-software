@@ -125,6 +125,7 @@ namespace DecayTreeFitter
 
     ChiSquare chiSquare( const FitParams& params ) const ;
 
+    bool hasMassConstraint() const { return m_hasMassConstraint ; }
   protected:
     static double pdtCLifeTime(const LHCb::Particle& bc)  ;
     static bool isAResonance(const LHCb::ParticleProperty& bc) ;
@@ -132,7 +133,6 @@ namespace DecayTreeFitter
     ErrCode initTau(FitParams* par) const ;
     void makeName(const LHCb::Particle& bc)  ;
     daucontainer& daughters() { return m_daughters ; }
-    bool hasMassConstraint() const { return m_hasMassConstraint ; }
   protected:
     void setIndex(int i) { m_index = i ; }
     void setName(const std::string& n) { m_name = n ; }
