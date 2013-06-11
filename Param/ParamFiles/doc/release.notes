@@ -5,6 +5,9 @@
 !               simulation and digitization
 !-----------------------------------------------------------------------------
 
+! 2013-06-11 - Murilo Rangel
+ - Updated jet energy correction file
+
 !======================= ParamFiles v8r9 2013-03-07 ==========================
 ! 2013-02-06 - Victor Coco
  - remove the data/JetEnergyCorrections_Reco12.root since it has never been
