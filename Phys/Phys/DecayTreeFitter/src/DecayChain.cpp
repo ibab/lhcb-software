@@ -108,7 +108,7 @@ namespace DecayTreeFitter
 
     if(m_mergedconstraintlist.empty() ) {
       for( ParticleBase::constraintlist::const_iterator it = m_constraintlist.begin() ;
-	   it != m_constraintlist.end(); ++it) {
+	   it != m_constraintlist.end() && !status.failure() ; ++it) {
 	status |= it->filter(par,reference) ;
 	if( vtxverbose>=2 && status.failure() ) {
 	  std::cout << "status is failure after parsing constraint: " ;
