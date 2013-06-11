@@ -16,7 +16,8 @@ namespace DecayTreeFitter
 		 badsetup=8,
 		 divergingconstraint=16,
 		 slowdivergingfit=32,
-		 fastdivergingfit=64} ;
+		 fastdivergingfit=64,
+		 filtererror=128} ;
 
     ErrCode() : _flag(success) {}
 

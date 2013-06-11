@@ -15,6 +15,7 @@ namespace DecayTreeFitter
       if(flag&ErrCode::divergingconstraint) os << "divergingconstraint " ;
       if(flag&ErrCode::slowdivergingfit) os << "slowdivergingfit " ;
       if(flag&ErrCode::fastdivergingfit) os << "fastdivergingfit " ;
+      if(flag&ErrCode::fastdivergingfit) os << "filtererror " ;
     } else {
       os << "success " ;
     }

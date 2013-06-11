@@ -143,8 +143,10 @@ namespace DecayTreeFitter
       kalman.updatePar( fitpar ) ;
       kalman.updateCov( fitpar ) ;
       fitpar.addChiSquare( kalman.chisq(), m_dim, p.particle() ) ;
+      if( fitpar.cov( m_node->index()+1 ) < 0 || kalman.chisq()<0 ) 
+	status |= ErrCode::filtererror ;
     }
-    if( status.failure())
+    if( status.failure() && vtxverbose>=1)
       std::cout << "error filtering constraint: "
                 << name() << " " << status << std::endl ;
 

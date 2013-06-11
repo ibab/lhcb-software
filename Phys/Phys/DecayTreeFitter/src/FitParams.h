@@ -24,6 +24,7 @@ namespace DecayTreeFitter
     HepSymMatrix& cov() { return m_cov ; }
     HepVector& par() { return m_par ; }
     double& par(int row) { return m_par(row) ; }
+    double cov(int row) const { return m_cov.fast(row,row) ; }
     
     HepSymMatrix cov(const std::vector<int>& indexVec) const ;
     HepVector par(const std::vector<int>& indexVec) const ;
