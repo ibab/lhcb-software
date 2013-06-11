@@ -1,3 +1,32 @@
+Removing the constraint list.
+
+Now that we use a reference, the whole idea of 'constraints' and
+'mergedconstraints' is no longer needed. So, we can get rid of this
+functionality again, which will clean up the code by quite a bit.
+
+Furthermore, we'd like to find a way to add the chi2 contribution of a
+constraint at the right place.
+
+These are the steps
+
+- make all 'project functions take a HepVector (or typedef of) rather
+than a FitParams object. That makes more sense now that we have a
+reference.
+
+- implement 
+   'virtual ErrCode ParticleBase::Filter( FitParams& fitparams,
+                                          const ParamVector&reference)'
+  this will replace 
+
+     addToConstraintList
+     projectConstraint(Constraint::Type type,
+				      const FitParams& fitparams, 
+				      Projection& p) const 
+
+- we'd like to keep the projectConstraint functions as they are
+
+----------------------------------------------------
+
 PROPOSAL for changes to Particle
 
 I don't know what is possible. I don't know what is helpful.
