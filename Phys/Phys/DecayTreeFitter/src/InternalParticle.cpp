@@ -278,7 +278,8 @@ namespace DecayTreeFitter
     for(daucontainer::const_iterator it = begin() ; it != end() ; ++it) {
       int daumomindex = (*it)->momIndex() ;
       double e2(0) ;
-      int maxrow = (*it)->hasEnergy() && !hasMassConstraint() ? 4 : 3 ;
+      //int maxrow = (*it)->hasEnergy() && !(*it)->hasMassConstraint() ? 4 : 3 ; 
+      int maxrow = (*it)->hasEnergy() ? 4 : 3 ;
       for(int irow=1; irow<=maxrow; ++irow) {
         double px = fitparams->par()(daumomindex+irow) ;
         e2 += px*px ;
@@ -286,9 +287,22 @@ namespace DecayTreeFitter
       }
       if(maxrow==3) {
         double mass = (*it)->pdtMass() ;
-        fitparams->par(momindex+4) += sqrt(e2+mass*mass) ;
+        fitparams->par(momindex+4) += std::sqrt(e2+mass*mass) ;
       }
     }
+
+    // if there is a mass constraint, ignore what we have just
+    // computed for the energy, and just insert the mass
+    if( hasMassConstraint()  ) {
+      double mass = pdtMass() ;
+      double p2 = 0 ;
+      for( int irow=1; irow<=3; ++irow) {
+	double px = fitparams->par(momindex+irow) ;
+	p2 += px*px ;
+      }
+      fitparams->par(momindex+4) = std::sqrt(p2+mass*mass) ;
+    }
+
     return ErrCode::success ;
   }
 
