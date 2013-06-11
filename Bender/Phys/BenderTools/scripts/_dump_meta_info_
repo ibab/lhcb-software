@@ -1,0 +1,148 @@
+#!/usr/bin/env python
+# =============================================================================
+# $Id:$ 
+# =============================================================================
+## @file 	
+#  Simple  script to extract meta-info from the data file
+#
+#  @author Vanya BELYAEV Ivan/Belyaev@itep.ru
+#  @date   2013-06-11
+#
+#                    $Revision:$
+#  Last modification $Date:$
+#                 by $Author:$
+#
+# =============================================================================
+"""
+Simple script to extract DB-tags from the file
+
+"""
+__author__  = "Vanya BELYAEV, Ivan.Belyaev@itep.ru"
+__date__    = "2013-06-11"
+__version__ = "$Revision:$"
+# =============================================================================
+## helper function to get meta-info 
+#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+#  @date  2013-06-11
+def _get_meta_info_ ( files ) :
+    """
+    Helper function to get meta-info 
+    """
+    info = {}
+
+    from GaudiConf.IOHelper import IOHelper
+    evtsel = IOHelper().inputFiles ( files )
+
+    from Configurables import LHCbApp
+    app = LHCbApp()
+
+    #
+    ## some action to get ODIN
+    #
+    from Configurables import OdinTimeDecoder, ODINDecodeTool
+    otd = OdinTimeDecoder()
+    otd.addTool( ODINDecodeTool, 'ODINDecodeTool' )
+    otd.ODINDecodeTool.RawEventLocations+= [ '/Event/Trigger/RawEvent' ]
+    from Configurables import createODIN
+    from Configurables import DataOnDemandSvc, ApplicationMgr 
+    dod = DataOnDemandSvc( Dump = True )
+    dod.AlgMap.update ( { '/Event/DAQ/ODIN' : createODIN() } ) 
+    
+    mgr = ApplicationMgr()
+    mgr.ExtSvc += [ dod ]
+    
+    from Configurables import IODataManager 
+    IODataManager  ( 'IODataManager' , OutputLevel = 6 ,
+                     AgeLimit = 1    , UseGFAL = False )
+    
+    from GaudiPython.Bindings import AppMgr
+    import Bender.Fixes_Gaudi
+    
+    gaudi = AppMgr( outputlevel = 6 )
+    
+    gaudi.run(1)
+    evtsvc = gaudi.evtSvc()
+
+    for i in range (0,5) : print 100*'*'
+
+    for header in ( '/Event/Gen/Header' ,
+                    '/Event/MC/Header'  ,
+                    '/Event/Rec/Header' ) : 
+
+        try    :
+            hdr = evtsvc [ header ]
+        except :
+            continue 
+        
+        if not hdr : continue
+        try :
+            info[ hdr.applicationName() ] = hdr.applicationVersion () 
+            info[ 'Run'                 ] = hdr.runNumber          () 
+            info[ 'Time'                ] = hdr.gpsTime            () 
+            info[ 'UUID'                ] = hdr.rawID              () 
+        except :
+            pass
+        
+        tgs = hdr.condDBTags()
+        for t in tgs :
+            tag = t.first
+            val = t.second 
+            if not info.has_key( tag ) : info [ tag ] = set()
+            info[tag] . add ( val )
+
+
+    try :
+        
+        odin = evtsvc[ '/Event/DAQ/ODIN' ]
+        if odin :
+            info[ 'Time'                ] = odin.gpsTime                () 
+            info[ 'TCK'                 ] = odin.triggerConfigurationKey()
+            info[ 'Run'                 ] = odin.runNumber              () 
+            
+    except: pass 
+        
+    gaudi.stop     ()
+    gaudi.finalize ()    
+    del gaudi
+    
+    return info 
+    
+
+# =============================================================================
+## helper function to get meta-info
+#  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+#  @date  2013-02-18
+def get_meta_info ( silent = True , files = [] ) :
+    """
+    Helper function to get meta-info
+    """
+    import sys 
+    if not files :
+        if len(sys.argv) > 1 : 
+            files = sys.argv[1:] 
+
+    ## no valid 
+    if not files : return {}
+    
+    info = {}
+    
+    try:
+    
+        from AnalysisPython.Utils import mute
+        with mute ( silent , silent ) :
+            info = _get_meta_info_ ( files )
+            
+    except:
+        info = {}
+                    
+    return info
+
+
+# =============================================================================
+if __name__ == '__main__' :
+    
+    print 'MetaInfo: %s ' % get_meta_info ( silent = True  ) 
+        
+# =============================================================================
+# The END 
+# =============================================================================

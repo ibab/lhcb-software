@@ -5,6 +5,11 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2013-06-11 - Vanya Belyaev
+
+ - add scripts for extraction of metainfo from data
+
+
 ! 2013-05-26 - Vanya Belyaev
 
  - many tiny modifications 

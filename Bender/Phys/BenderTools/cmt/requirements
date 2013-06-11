@@ -35,25 +35,29 @@ apply_pattern       install_python_modules
 apply_pattern       install_scripts
 
 # ================= aliases ===================================================
-alias dstExplorer  "dst_explorer"
-alias dst_Explorer "dst_explorer"
-alias Dst_Explorer "dst_explorer"
-alias check_trg    "trg_check" 
+alias dstExplorer   "dst_explorer"
+alias dst_Explorer  "dst_explorer"
+alias Dst_Explorer  "dst_explorer"
+alias check_trg     "trg_check" 
 #
-alias dst-dump     "dst-dump.py" 
-alias dst_dump     "dst-dump.py" 
-alias dump-dst     "dst-dump.py" 
-alias dump_dst     "dst-dump.py" 
+alias dst-dump      "dst-dump.py" 
+alias dst_dump      "dst-dump.py" 
+alias dump-dst      "dst-dump.py" 
+alias dump_dst      "dst-dump.py" 
 #       
-alias dst_content  "dst-dump.py" 
-alias dst-content  "dst-dump.py" 
+alias dst_content   "dst-dump.py" 
+alias dst-content   "dst-dump.py" 
 # 
-alias get_dbtags   "get_dbtags.py" 
-alias get-dbtags   "get_dbtags.py" 
-alias get_db_tags  "get_dbtags.py" 
-alias get-db-tags  "get_dbtags.py" 
-alias db_tags      "get_dbtags.py" 
-alias db-tags      "get_dbtags.py" 
+alias get_dbtags    "get_dbtags.py" 
+alias get-dbtags    "get_dbtags.py" 
+alias get_db_tags   "get_dbtags.py" 
+alias get-db-tags   "get_dbtags.py" 
+alias db_tags       "get_dbtags.py" 
+alias db-tags       "get_dbtags.py" 
+alias get-meta-info "get_metainfo.py" 
+alias get-metainfo  "get_metainfo.py" 
+alias get_metainfo  "get_metainfo.py" 
+alias get_meta_info "get_metainfo.py" 
 
 # =============================================================================
 # The END

@@ -34,6 +34,14 @@ __author__  = "Thomas RUF, Vanya BELYAEV"
 __date__    = "2012-10-24"
 __version__ = "$Revision$"
 # =============================================================================
+__all__     = (
+    'useDBTagsFromData' , 
+    'getDBTags'         ,
+    'getMetaInfo'       ,
+    'extractTags'       ,
+    'extractMetaInfo'       
+    )
+# =============================================================================
 ## logging
 # =============================================================================
 from Bender.Logger import getLogger 
@@ -110,6 +118,7 @@ def useDBTagsFromData (
 
     return tags
     
+
 # =============================================================================
 ## get DB-tags from the data
 #  @author Thomas RUF 
@@ -166,6 +175,62 @@ def getDBTags ( file_name      ,
             
     return tags 
 
+
+# =============================================================================
+## get Meta-info from the data
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-06-11  
+def getMetaInfo ( file_name      ,
+                  castor = True  ,
+                  grid   = ''    , 
+                  debug  = False ) :
+    
+    import os
+    
+    file_name = os.path.expandvars ( file_name ) 
+    file_name = os.path.expanduser ( file_name ) 
+    file_name = os.path.expandvars ( file_name ) 
+
+    if not os.path.exists ( file_name ) :
+        
+        from Bender.DataUtils import extendfile1
+        file_name = extendfile1     ( file_name , castor , grid )
+
+    logger.info ( "Use the file %s " % file_name )
+
+    from subprocess import Popen, PIPE
+    
+    with open ( '/dev/null' ) as serr :
+        
+        pipe = Popen ( [ '_dump_meta_info_'  , file_name ] ,
+                       env    = os.environ ,
+                       stdout = PIPE       ,
+                       stderr = serr       )
+        
+        stdout = pipe.stdout
+        
+        ## Format = 'DBTags: { dictionary} '
+        key  = 'MetaInfo:'
+        info = {} 
+        for line in stdout :
+
+            if debug : logger.info ( line ) 
+
+            ## good line? 
+            p = line.find ( key )
+            if not 0 <= p : continue
+
+            try : 
+                dct    = line[ p + len(key) : ]
+                value  = eval ( dct )
+                if not isinstance ( value , dict ) : continue
+                info   = value
+                if not info : continue 
+            except :
+                continue 
+            
+    return info
+    
 # =============================================================================
 ## extract DB-tags form the files
 #  @author Vanya BELYAEV 
@@ -231,6 +296,88 @@ def extractTags ( args ) :
         print '%11s : %-s ' % ( k , tags[k] ) 
     print 12*'-'+'+'+77*'-'
 
+
+# =============================================================================
+## extract MetaInfo from the files
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-06-11   
+def extractMetaInfo ( args ) :
+    """
+    Extract MetaInfo-tags from the files 
+    """
+    
+    from optparse import OptionParser as OptParser
+    
+    parser = OptParser( usage   = __doc__                 ,
+                        version = ' %prog ' + __version__ )
+    
+    ##
+    parser.add_option (
+        '-g'                       ,
+        '--grid'                   ,
+        type    = 'str'            , 
+        dest    = 'Grid'           ,
+        help    = "Grid-site to access LFN-files (has precedence over -c, but grid proxy is needed)" ,
+        default = ''
+        )
+    ##
+    parser.add_option (
+        '-c'                          ,
+        '--castor'                    ,
+        action  = "store_true"        ,
+        dest    = 'Castor'            ,
+        help    = "Enable direct access to Castor Grid Storage to access LFN-files" ,
+        default = True   
+        )
+    
+    parser.add_option (
+        '-v'                           ,
+        '--verbose'                    ,
+        action  = "store_false"        ,
+        dest    = 'Verbose'            ,
+        help    = "Verbose processing" ,
+        default = False   
+        )
+    
+    ##
+    options , arguments = parser.parse_args ( args )
+    
+    if not arguments : parser.error ( 'No input files are specified' )
+
+    info = {}
+    for f in arguments  :
+        
+        logger.info ( "Try the file %s " % f )
+        
+        info = getMetaInfo ( f               ,
+                             options.Castor  ,
+                             options.Grid    , 
+                             options.Verbose ) 
+        if info : break
+
+
+    
+    print 12*'-'+'+'+77*'-'
+    print ' MetaInfo: '
+    print 12*'-'+'+'+77*'-'
+    keys = info.keys()
+    keys.sort()
+    
+    from GaudiPython.Bindings import gbl as cpp
+    Time = cpp.Gaudi.Time 
+    for k in keys :
+        if  0<= k.find('Time') :
+            ## @attention: note 1000 here! 
+            time   = Time ( 1000 * info [k] )
+            print '%11s : %-s (%s) ' % ( k , info[k] , time.format(False) )
+        elif 'TCK'  == k or 'Tck' == k :
+            print '%11s : 0x%08x '   % ( k ,        info[k]   )            
+        elif isinstance ( info[k] , set ) : 
+            print '%11s : %-s '      % ( k , list ( info[k] ) ) 
+        else : 
+            print '%11s : %-s '      % ( k ,        info[k]   )
+            
+    print 12*'-'+'+'+77*'-'
 
 # =============================================================================
 if '__main__' == __name__ :
