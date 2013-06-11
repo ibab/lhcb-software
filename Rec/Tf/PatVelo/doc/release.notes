@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2013-06-11 - Marco Cattaneo
+ - Undo clang32 fix, unused fields in PatGenericFitter are initialised via 
+   constructor arguments. Need to see usage before removing them
+
 ! 2013-06-10 - Marco Cattaneo
  - Fix clang32 warnings
  - Fix UNINT_CTOR defects

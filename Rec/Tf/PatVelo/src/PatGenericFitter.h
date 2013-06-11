@@ -74,9 +74,8 @@ namespace Tf {
       double pseudoPhi(const PatVeloPhiHit* hit);
       
     private:
-
-    //      PatVeloRHitManager*   m_rHitManager;
-    //      PatVeloPhiHitManager* m_phiHitManager;
+      PatVeloRHitManager*   m_rHitManager;
+      PatVeloPhiHitManager* m_phiHitManager;
 
       CircularRangeUtils<double> m_angleUtils;
       
