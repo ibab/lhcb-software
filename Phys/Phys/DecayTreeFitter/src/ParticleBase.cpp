@@ -457,20 +457,19 @@ namespace DecayTreeFitter
       assert(momposindex>=0) ; // check code logic: no mother -> no tau
       //assert(fitparams->par(momposindex+1)!=0 ||fitparams->par(momposindex+2)!=0
       //      ||fitparams->par(momposindex+3)!=0) ; // mother must be initialized
-
-      HepVector dX(3),mom(3) ;
+      double momdX(0) ;
       double mom2(0) ;
       for(int irow=1; irow<=3; ++irow) {
-        dX(irow)  = fitparams->par(posindex+irow) - fitparams->par(momposindex+irow) ;
+	double dx = fitparams->par(posindex+irow) - fitparams->par(momposindex+irow) ;
         double px = fitparams->par(momindex+irow) ;
-        mom(irow) = px ;
+	momdX += px*dx ;
         mom2 += px*px ;
       }
-      double tau = dot(dX,mom)/mom2 ;
-      // we don't like 0 and we don't like very negative values
-      if( tau==0 ) tau=pdtTau() ;
+      double len = momdX / std::sqrt(mom2) ;
+      // FIXME: we don't like 0 and we don't like very negative values
+      //if( tau==0 ) tau=pdtTau() ;
       //tau = tau==0 ? pdtTau() : std::max(tau,-pdtTau()) ;
-      fitparams->par(lenindex+1) = tau ;
+      fitparams->par(lenindex+1) = len ;
     }
     return ErrCode::success ;
   }
