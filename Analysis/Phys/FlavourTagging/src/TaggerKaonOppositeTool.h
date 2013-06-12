@@ -9,12 +9,18 @@
 // from Event
 #include "Event/FlavourTag.h"
 #include "Kernel/ITagger.h"
+// from ROOT
+#include <TROOT.h>
 
 // from local
 #include "INNetTool.h"
 #include "Kernel/IParticleDescendants.h"
 #include "ITaggingUtils.h"
+#include <list>
+#include <utility>
+#include <string>
 
+#include "MultiplePersonalityCall.h"
 /** @class TaggerKaonOppositeTool TaggerKaonOppositeTool.h
  *
  *  Tool to tag the B flavour with a KaonOpposite Tagger
@@ -35,9 +41,29 @@ public:
   StatusCode initialize();    ///<  initialization
 
   //-------------------------------------------------------------
-  virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,
-                            std::vector<const LHCb::Vertex*>&,
-                            LHCb::Particle::ConstVector&);
+  MultiplePersonalityCall<boost::function<
+  LHCb::Tagger(
+               const LHCb::Particle*, 
+               const LHCb::RecVertex*,
+               std::vector<const LHCb::Vertex*>&, 
+               LHCb::Particle::ConstVector&) > > 
+  m_tag;
+
+  virtual LHCb::Tagger  tag( const LHCb::Particle*, 
+                             const LHCb::RecVertex*,
+                             std::vector<const LHCb::Vertex*>&, 
+                             LHCb::Particle::ConstVector&);
+
+  virtual LHCb::Tagger  tagReco12( const LHCb::Particle*, 
+                             const LHCb::RecVertex*,
+                             std::vector<const LHCb::Vertex*>&, 
+                             LHCb::Particle::ConstVector&);
+
+  virtual LHCb::Tagger  tagReco14( const LHCb::Particle*, 
+                             const LHCb::RecVertex*,
+                             std::vector<const LHCb::Vertex*>&, 
+                             LHCb::Particle::ConstVector&);
+
   //-------------------------------------------------------------
 
 private:
@@ -55,15 +81,24 @@ private:
   double m_lcs_kaon;
   double m_AverageOmega;
   double m_ghost_cut;
-  double m_PID_k_cut;
+  double m_PIDk_cut;
   double m_PIDkp_cut;
   double m_ipPU_cut_kaon;
   double m_distPhi_cut_kaon;
+
+  double m_PIDNNm_cut_kaon;
+  double m_PIDNNe_cut_kaon;
+  double m_PIDNNk_cut_kaon;
+  double m_PIDNNpi_cut_kaon;
+  double m_PIDNNp_cut_kaon; 
+  double m_PIDNNkp_cut_kaon;
+  double m_PIDNNkpi_cut_kaon;
+  double m_ghostProb_kaon;
   double m_ProbMin_kaon;
   double m_P0_Cal_kaon ;
   double m_P1_Cal_kaon ;
   double m_Eta_Cal_kaon ;
-
+  std::string m_personality;
 
 };
 

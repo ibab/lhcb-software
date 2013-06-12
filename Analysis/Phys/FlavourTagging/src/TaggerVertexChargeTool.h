@@ -13,10 +13,17 @@
 #include "Event/FlavourTag.h"
 #include "Kernel/ITagger.h"
 #include "Kernel/ISecondaryVertexTool.h"
+// from ROOT
+#include <TROOT.h>
 
 // from local
 #include "ITaggingUtils.h"
 #include "INNetTool.h"
+#include <list>
+#include <utility>
+#include <string>
+
+#include "MultiplePersonalityCall.h"
 
 
 /** @class TaggerVertexChargeTool TaggerVertexChargeTool.h
@@ -39,9 +46,28 @@ public:
   StatusCode initialize();    ///<  initialization
 
   //-------------------------------------------------------------
-  virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,
-                            std::vector<const LHCb::Vertex*>&,
-                            LHCb::Particle::ConstVector& );
+  MultiplePersonalityCall<boost::function<
+  LHCb::Tagger(
+               const LHCb::Particle*, 
+               const LHCb::RecVertex*,
+               std::vector<const LHCb::Vertex*>&, 
+               LHCb::Particle::ConstVector&) > > 
+  m_tag;
+
+  virtual LHCb::Tagger  tag( const LHCb::Particle*, 
+                             const LHCb::RecVertex*,
+                             std::vector<const LHCb::Vertex*>&, 
+                             LHCb::Particle::ConstVector&);
+
+  virtual LHCb::Tagger  tagReco12( const LHCb::Particle*, 
+                             const LHCb::RecVertex*,
+                             std::vector<const LHCb::Vertex*>&, 
+                             LHCb::Particle::ConstVector&);
+
+  virtual LHCb::Tagger  tagReco14( const LHCb::Particle*, 
+                             const LHCb::RecVertex*,
+                             std::vector<const LHCb::Vertex*>&, 
+                             LHCb::Particle::ConstVector&);
   //-------------------------------------------------------------
 
 private:
@@ -60,7 +86,7 @@ private:
   double m_P1_Cal_vtx ;
   double m_Eta_Cal_vtx ;
   double m_wSameSign2, m_wSameSignMoreThan2, m_P0, m_P1, m_Gt075;
-
+  std::string m_personality;
 };
 
 //===============================================================//

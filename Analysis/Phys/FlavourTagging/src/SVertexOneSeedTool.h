@@ -10,6 +10,9 @@
 #include "Kernel/IVertexFit.h"
 #include "Kernel/ISecondaryVertexTool.h" // Interface
 #include "ITaggingUtils.h"
+#include <string>
+
+#include "MultiplePersonalityCall.h"
 
 /** @class SVertexOneSeedTool SVertexOneSeedTool.h SVertexOneSeedTool.h
  *  
@@ -33,8 +36,18 @@ public:
   StatusCode initialize();
   
   //----------------------------------------------------------------
-  std::vector<LHCb::Vertex> buildVertex ( const LHCb::RecVertex&, 
-					  const LHCb::Particle::ConstVector& );
+  MultiplePersonalityCall<boost::function< 
+  std::vector<LHCb::Vertex>(
+                            const LHCb::RecVertex&,
+                            const LHCb::Particle::ConstVector& ) > >
+  m_buildVertex;
+
+  std::vector<LHCb::Vertex> buildVertex( const LHCb::RecVertex&,
+                                         const LHCb::Particle::ConstVector& );
+  std::vector<LHCb::Vertex> buildVertexReco12( const LHCb::RecVertex&,
+                                         const LHCb::Particle::ConstVector& );
+  std::vector<LHCb::Vertex> buildVertexReco14( const LHCb::RecVertex&,
+                                         const LHCb::Particle::ConstVector& );
   //----------------------------------------------------------------
 
 private:
@@ -51,9 +64,8 @@ private:
   double m_lcs_Upstream_cut;
   double m_lcs_vtxaddedtracks_cut;
   double m_maxprobf, m_ptmin, m_ipsmin, m_dphimin;
-  
-
+  double m_ghostProb_vtx;  
   bool m_noclones;
-
+  std::string m_personality;
 };
 #endif // SVERTEXTOOL_H

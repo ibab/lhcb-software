@@ -6,6 +6,11 @@
 #include "GaudiKernel/AlgTool.h"
 #include "INNetTool.h"            // Interface
 
+#include <list>
+#include "TString.h"
+#include <string>
+#include <TROOT.h>
+
 /** @class NNetTool_MLP NNetTool_MLP.h NNetTool_MLP.h
  *
  * Neural Net returns wrong tag fraction for a given tagger.
@@ -27,12 +32,20 @@ public:
 
   virtual ~NNetTool_MLP( ); ///< Destructor
 
+  StatusCode initialize();
+  StatusCode finalize();
+
   virtual double MLPm(std::vector<double>&);
   virtual double MLPe(std::vector<double>&);
   virtual double MLPk(std::vector<double>&);
   virtual double MLPkS(std::vector<double>&);
   virtual double MLPpS(std::vector<double>&);
   virtual double MLPvtx(std::vector<double>&);
+  
+  virtual double MLPmTMVA(std::list<std::pair<std::string, Float_t> >&);
+  virtual double MLPeTMVA(std::list<std::pair<std::string, Float_t> >&);
+  virtual double MLPkaonTMVA(std::list<std::pair<std::string, Float_t> >&);
+  virtual double MLPvtxTMVA(std::list<std::pair<std::string, Float_t> >&);
 
 private:
 
@@ -44,14 +57,16 @@ private:
   double pol2(double x, double a0, double a1);
   double pol3(double x, double a0, double a1, double a2);
   double pol4(double x, double a0, double a1, double a2, double a3);
+  double func(double x, double a0, double a1, double a2, double a3);
 
-private:
+  double m_P0mu, m_P1mu, m_P2mu, m_P3mu; 
+  double m_P0e,  m_P1e,  m_P2e,  m_P3e; 
+  double m_P0k,  m_P1k,  m_P2k,  m_P3k; 
+  double m_P0vtx,m_P1vtx,m_P2vtx,m_P3vtx;  
+  double m_P0ps, m_P1ps, m_P2ps, m_P3ps;  
+  double m_P0ks, m_P1ks, m_P2ks, m_P3ks;
 
-  double m_P0mu, m_P1mu, m_P2mu, m_P3mu;
-  double m_P0e, m_P1e, m_P2e;
-  double m_P0k, m_P1k, m_P2k, m_P3k;
-  double m_P0ps, m_P1ps, m_P2ps;
-  double m_P0ks, m_P1ks, m_P2ks, m_P0vtx, m_P1vtx;
+  std::string m_NNetWeights_mu, m_NNetWeights_ele, m_NNetWeights_kaon, m_NNetWeights_vtx, m_XML_dir;
 
 };
 

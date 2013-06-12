@@ -5,6 +5,7 @@
 // Include files
 // from STL
 #include <string>
+#include <TROOT.h>
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
@@ -28,6 +29,10 @@ public:
   virtual double MLPkS(std::vector<double>&)=0;
   virtual double MLPpS(std::vector<double>&)=0;
   virtual double MLPvtx(std::vector<double>&)=0;
+  virtual double MLPmTMVA(std::list<std::pair<std::string, Float_t> >&  )=0;
+  virtual double MLPeTMVA(std::list<std::pair<std::string, Float_t> >&  )=0;
+  virtual double MLPkaonTMVA(std::list<std::pair<std::string, Float_t> >&  )=0;
+  virtual double MLPvtxTMVA(std::list<std::pair<std::string, Float_t> >& )=0;
 
 };
 #endif // NNETTOOL_INNETTOOL_H

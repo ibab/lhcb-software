@@ -84,11 +84,11 @@ private:
                    const LHCb::Particle::Range& parts,
                    const LHCb::RecVertex::ConstVector& PileUpVtx);
   const LHCb::Particle::ConstVector
-  chooseCandidates2012(const LHCb::Particle* AXB,
+  chooseCandidatesReco14(const LHCb::Particle* AXB,
                    const LHCb::Particle::Range& parts,
                    const LHCb::RecVertex::ConstVector& PileUpVtx);
   const LHCb::Particle::ConstVector
-  chooseCandidates2011(const LHCb::Particle* AXB,
+  chooseCandidatesReco12(const LHCb::Particle* AXB,
                    const LHCb::Particle::Range& parts,
                    const LHCb::RecVertex::ConstVector& PileUpVtx);
 
@@ -99,6 +99,7 @@ private:
 
   ITagger *m_taggerMu, *m_taggerEle, *m_taggerKaon, *m_taggerVtxCh;
   ITagger *m_taggerKaonS, *m_taggerPionS, *m_taggerVtx, *m_taggerJetS;
+  ITagger *m_taggerNNetKaon, *m_taggerNNetKaonS;
   ICombineTaggersTool *m_combine;
   IPVReFitter* m_pvReFitter;
 
@@ -108,14 +109,14 @@ private:
 
   //properties ----------------
   double m_thetaMin, m_distphi_cut;
-  double m_IPPU_cut;
+  double m_IPPU_cut, m_ghostprob_cut ;
 
   std::string m_taggerLocation, m_CombineTaggersName, m_ChoosePV;
   std::string m_ForceSignalID;
 
   bool m_EnableMuon,m_EnableElectron,m_EnableKaonOS;
   bool m_EnableKaonSS,m_EnablePionSS,m_EnableVertexCharge;
-  bool m_EnableJetSame;
+  bool m_EnableJetSame,m_EnableNNetKaonOS,m_EnableNNetKaonSS;
 
   bool m_UseVtxOnlyWithoutOS, m_UseReFitPV;
   std::string m_personality;

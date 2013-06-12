@@ -4,6 +4,17 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2013-06-12 - Stefania Vecchi
+ - deleted part of the code in BTaggingTool.cpp that was never used and was wrong:
+   selected by UseVtxOnlyWithoutOS
+ - included new code for Reco14 (selected by personality="Reco14"). Old code can
+   still run selecting personality=Reco12
+   files involved: BTaggingTool, TaggerMuonTool, TaggerElectronTool, 
+   TaggerKaonOppositeTool, SVertexOneSeedTool, TaggerVertexTool,NNetTool_MLP
+ - BTaggingTool added property to select NNetKaonTools run time (NEWKaonOpposite and
+   NETKaonSame)
+ - configuration file python/FlavourTagging/Tunings.py updated 
+   
 
 ! 2013-05-27 - Manuel Tobias Schiller
  - add the changes in ITaggingUtils I forgot in my last commit

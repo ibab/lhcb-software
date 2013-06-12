@@ -131,8 +131,6 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if ( msgLevel(MSG::VERBOSE) )
       verbose()<<" Pion P="<< P <<" Pt="<< Pt <<endreq;
 
-    //double cloneDist = (*ipart)->proto()->track()->info(LHCb::Track::CloneDist, -1.);
-    //if (cloneDist!=-1) continue;
 
     const Track* track = proto->track();
     const double lcs = track->chi2PerDoF();
@@ -151,7 +149,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     const double IPsig = std::fabs(IP/IPerr);
     if(IPsig > m_IPs_cut_pionS)  continue;
 
-    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,100000.); // retrieve the stored information of IP significance wrt PU, saved in BTaggingTool.cpp
+    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,100000.);
     if(ippu < m_ipPU_cut_pS) continue;
 
 

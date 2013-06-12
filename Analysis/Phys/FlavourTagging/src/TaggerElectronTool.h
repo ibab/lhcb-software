@@ -9,11 +9,15 @@
 // from Event
 #include "Kernel/ITagger.h"
 #include "CaloUtils/ICaloElectron.h"
+//from ROOT
+#include <TROOT.h>
 
 // from local
 #include "ITaggingUtils.h"
 #include "INNetTool.h"
 #include "Kernel/IParticleDescendants.h"
+
+#include "MultiplePersonalityCall.h"
 
 /** @class TaggerElectronTool TaggerElectronTool.h
  *
@@ -34,10 +38,29 @@ public:
   virtual ~TaggerElectronTool( ); ///< Destructor
   StatusCode initialize();    ///<  initialization
 
-  //-------------------------------------------------------------
-  virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,
-                            std::vector<const LHCb::Vertex*>&,
-                            LHCb::Particle::ConstVector&);
+ //-------------------------------------------------------------
+  MultiplePersonalityCall<boost::function<
+  LHCb::Tagger(
+               const LHCb::Particle*, 
+               const LHCb::RecVertex*,
+               std::vector<const LHCb::Vertex*>&, 
+               LHCb::Particle::ConstVector&) > > 
+  m_tag;
+  
+  virtual LHCb::Tagger  tag( const LHCb::Particle*, 
+                             const LHCb::RecVertex*,
+                             std::vector<const LHCb::Vertex*>&, 
+                             LHCb::Particle::ConstVector&);
+  
+  virtual LHCb::Tagger  tagReco12( const LHCb::Particle*, 
+                                   const LHCb::RecVertex*,
+                                   std::vector<const LHCb::Vertex*>&, 
+                                   LHCb::Particle::ConstVector&);
+  
+  virtual LHCb::Tagger  tagReco14( const LHCb::Particle*, 
+                                   const LHCb::RecVertex*,
+                                   std::vector<const LHCb::Vertex*>&, 
+                                   LHCb::Particle::ConstVector&);
   //-------------------------------------------------------------
 
 private:
@@ -54,7 +77,7 @@ private:
   double m_IPs_cut_ele;
   double m_VeloChMin;
   double m_VeloChMax;
-  double m_EoverP, m_lcs_cut_ele;
+  double m_EoverP, m_EoverPmax, m_lcs_cut_ele;
   double m_AverageOmega;
   double m_ghost_cut_ele;
   double m_PIDe_cut;
@@ -64,6 +87,15 @@ private:
   double m_P0_Cal_ele ;
   double m_P1_Cal_ele ;
   double m_Eta_Cal_ele ;
+
+  double m_ghostProb_ele;
+  double m_PIDNNk_cut_ele;
+  double m_PIDNNp_cut_ele;
+  double m_PIDNNpi_cut_ele;
+  double m_PIDNNe_cut_ele;
+  double m_PIDNNepi_cut_ele;
+  
+  std::string m_personality;
 
 };
 

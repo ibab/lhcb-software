@@ -53,10 +53,14 @@ DECLARE_TOOL_FACTORY( BTaggingTool )
   declareProperty( "EnablePionTagger",        m_EnablePionSS  = true );
   declareProperty( "EnableVertexChargeTagger",m_EnableVertexCharge= true);
   declareProperty( "EnableJetSameTagger",     m_EnableJetSame = false );
+  // NNet tagging algorithms
+  declareProperty( "EnableNNetKaonOSTagger",   m_EnableNNetKaonOS  = false );
+  declareProperty( "EnableNNetKaonSSTagger",   m_EnableNNetKaonSS  = false );
 
-  declareProperty( "ForceSignalID",           m_ForceSignalID  = " "); //force signal B as Bu, Bd, Bs
-  declareProperty( "UseVtxChargeWithoutOS",   m_UseVtxOnlyWithoutOS = false ); //use vtcxch only when no other OS tagger is active
-  declareProperty( "Personality", m_personality = "2012");
+  declareProperty( "ForceSignalID",           m_ForceSignalID  = " "); //force signal B as Bu, Bd, B
+
+  declareProperty( "Personality",             m_personality = "Reco14");
+  declareProperty( "ghostprob_cut",           m_ghostprob_cut = 0.5); // default preselection for Reco 14
 
   m_util    = 0;
   m_descend = 0;
@@ -64,7 +68,8 @@ DECLARE_TOOL_FACTORY( BTaggingTool )
   m_dva =0;
   m_combine = 0;
   m_taggerMu=m_taggerEle=m_taggerKaon=0;
-  m_taggerKaonS=m_taggerPionS=m_taggerVtx=0 ;
+  m_taggerKaonS=m_taggerPionS=m_taggerVtx=0;
+  m_taggerNNetKaonS=m_taggerNNetKaon=0 ;
 }
 
 BTaggingTool::~BTaggingTool() { }
@@ -93,8 +98,12 @@ StatusCode BTaggingTool::initialize()
 
   m_taggerJetS = tool<ITagger> ("TaggerJetSameTool", this);
 
-  m_combine = tool<ICombineTaggersTool> (m_CombineTaggersName, this);
- 
+  m_taggerNNetKaon = tool<ITagger> ("TaggerNEWKaonOppositeTool", this);
+
+  m_taggerNNetKaonS = tool<ITagger> ("TaggerNEWKaonSameTool", this);
+
+  m_combine = tool<ICombineTaggersTool> (m_CombineTaggersName, this);  
+
   if(m_UseReFitPV)
   {
     if ( msgLevel(MSG::DEBUG) )
@@ -111,11 +120,12 @@ StatusCode BTaggingTool::initialize()
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
                              StatusCode::FAILURE);
 
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug()<<" BTaggingTool configured to run with tuning "<<m_personality<<endreq;
+
   // register (multiple) personalities of chooseCandidates
-  m_chooseCandidates.registerPersonality("2011",
-	  this, &BTaggingTool::chooseCandidates2011);
-  m_chooseCandidates.registerPersonality("2012",
-	  this, &BTaggingTool::chooseCandidates2012);
+  m_chooseCandidates.registerPersonality("Reco12",this, &BTaggingTool::chooseCandidatesReco12);
+  m_chooseCandidates.registerPersonality("Reco14",this, &BTaggingTool::chooseCandidatesReco14);
 
   // select personality
   // (this throws an exception if the personality chosen by the user is not
@@ -128,6 +138,7 @@ StatusCode BTaggingTool::initialize()
       return StatusCode::FAILURE;
   };
 
+  
   return sc;
 }
 
@@ -168,12 +179,18 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   {
     if( msgLevel(MSG::DEBUG) )
     {
-      debug()<<"--> RecVert z=" << RecVert->position().z()/mm <<"  "<<m_ChoosePV<<endreq;
+      debug()<<"--> RecVert (x,y,z)=(" << 
+        RecVert->position().x()/mm<<","<< 
+        RecVert->position().y()/mm<<","<< 
+        RecVert->position().z()/mm <<")  "<<m_ChoosePV<<endreq;
       if(m_UseReFitPV)
         debug() <<"-->     refitRecVert z=" << RefitRecVert.position().z()/mm <<endreq;
       for(RecVertex::ConstVector::const_iterator iv=PileUpVtx.begin();
           iv!=PileUpVtx.end(); iv++) {
-        debug()<<"--> PileUpPV at z="<<(*iv)->position().z()/mm<<endreq;
+        debug()<<"--> PileUpPV at (x,y,z)=("<<
+          (*iv)->position().x()/mm<<","<<
+          (*iv)->position().y()/mm<<","<<
+          (*iv)->position().z()/mm<<") "<<endreq;
       }
     }
   }
@@ -186,8 +203,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   //loop over Particles, preselect candidates ///////////
   theTag.setTaggedB( AXB );
   if(vtags.empty()) vtags = chooseCandidates(AXB, parts, PileUpVtx);
-
-
+    
   //AXB is the signal B from selection
   bool isBd = AXB->particleID().hasDown();
   bool isBs = AXB->particleID().hasStrange();
@@ -202,34 +218,16 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   if (msgLevel(MSG::DEBUG)) debug() <<"evaluate taggers" <<endreq;
 
   Tagger muon, elec, kaon, kaonS, pionS, vtxCh, jetS;
-  if(m_EnableMuon)     muon = m_taggerMu   -> tag(AXB, RecVert, allVtx, vtags);
-  if(m_EnableElectron) elec = m_taggerEle  -> tag(AXB, RecVert, allVtx, vtags);
-  if(m_EnableKaonOS)   kaon = m_taggerKaon -> tag(AXB, RecVert, allVtx, vtags);
-  if(m_EnableKaonSS)   kaonS= m_taggerKaonS-> tag(AXB, RecVert, allVtx, vtags);
-  if(m_EnablePionSS)   pionS= m_taggerPionS-> tag(AXB, RecVert, allVtx, vtags);
-  if(m_EnableJetSame)  jetS = m_taggerJetS -> tag(AXB, RecVert, allVtx, vtags);
-  if(m_EnableVertexCharge)
-  {
-    Particle::ConstVector vtagsPlusOS(0);
-    for ( Particle::ConstVector::const_iterator i=vtags.begin(); i!=vtags.end(); ++i )
-    {
-      const ProtoParticle* iproto = (*i)->proto();
-      if( m_UseVtxOnlyWithoutOS )
-      {
-        if(muon.type()!=0)
-          if(muon.taggerParts().at(0)->proto() == iproto )
-            vtagsPlusOS.push_back(*i);
-        if(elec.type()!=0)
-          if(elec.taggerParts().at(0)->proto() == iproto )
-            vtagsPlusOS.push_back(*i);
-        if(kaon.type()!=0)
-          if(kaon.taggerParts().at(0)->proto() == iproto )
-            vtagsPlusOS.push_back(*i);
-      }
-      vtagsPlusOS.push_back(*i);
-    }
-    vtxCh = m_taggerVtxCh -> tag(AXB, RecVert, allVtx, vtagsPlusOS);
-  }
+  if(m_EnableMuon)            muon = m_taggerMu    -> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnableKaonOS)          kaon = m_taggerKaon  -> tag(AXB, RecVert, allVtx, vtags);
+  else if(m_EnableNNetKaonOS) kaon = m_taggerNNetKaon -> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnableElectron)        elec = m_taggerEle   -> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnableKaonSS)          kaonS= m_taggerKaonS -> tag(AXB, RecVert, allVtx, vtags);
+  else if(m_EnableNNetKaonSS) kaonS= m_taggerNNetKaonS-> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnablePionSS)          pionS= m_taggerPionS-> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnableJetSame)         jetS = m_taggerJetS  -> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnableVertexCharge)   vtxCh = m_taggerVtxCh -> tag(AXB, RecVert, allVtx, vtags);
+  
 
   std::vector<Tagger*> taggers;
   taggers.reserve(6);
@@ -282,6 +280,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   {    
     Particle* c = const_cast<Particle*>(*i);
     if( c->hasInfo(LHCb::Particle::LastGlobal+1) ) c->eraseInfo(LHCb::Particle::LastGlobal+1);    
+    if( c->hasInfo(LHCb::Particle::LastGlobal+2) ) c->eraseInfo(LHCb::Particle::LastGlobal+2);    
   }
 
 return StatusCode::SUCCESS;
@@ -478,7 +477,7 @@ BTaggingTool::chooseCandidates(const Particle* AXB,
 }
 //=============================================================================
 const Particle::ConstVector 
-BTaggingTool::chooseCandidates2011(const Particle* AXB,
+BTaggingTool::chooseCandidatesReco12(const Particle* AXB,
                                const Particle::Range& parts,
                                const RecVertex::ConstVector& PileUpVtx) {
 
@@ -505,17 +504,24 @@ BTaggingTool::chooseCandidates2011(const Particle* AXB,
     //calculate the min IP wrt all pileup vtxs
     double ippu, ippuerr;
     m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
-    //eliminate from vtags all parts coming from a pileup vtx
-
-    
+    //eliminate from vtags all parts coming from a pileup vtx    
     if(ippuerr) {
-      if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts 
+      if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts      
       Particle* c = const_cast<Particle*>(*ip);
-      c->addInfo(1, ippu/ippuerr);
-      verbose()<<"particle p="<<(*ip)->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
-    }else debug()<<"particle p="<<(*ip)->p()<<" ippu NAN ****"<<endmsg; // happens only when there is 1 PV 
-      
-    
+      if( c->hasInfo(LHCb::Particle::LastGlobal+1) )
+      {
+        Error("LastGlobal+1 info already set: erasing it");
+        c->eraseInfo(LHCb::Particle::LastGlobal+1);
+      }      
+      c->addInfo(LHCb::Particle::LastGlobal+1, ippu/ippuerr); // store the information on the IPPU of the tagging particle
+      if (msgLevel(MSG::VERBOSE)) 
+        verbose()<<"particle p="<<(*ip)->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
+    }
+    else
+    {      
+      if (msgLevel(MSG::DEBUG)) 
+        debug()<<"particle p="<<(*ip)->p()<<" ippu NAN ****"<<endmsg; // happens only when there is 1 PV    
+    }
     
     bool dup=false;
     Particle::ConstVector::const_iterator ik;
@@ -533,7 +539,7 @@ BTaggingTool::chooseCandidates2011(const Particle* AXB,
       }
     }
     if(dup) continue; 
- 
+
     ////////////////////////////////
     vtags.push_back(*ip);         // store tagger candidate
     ////////////////////////////////
@@ -552,7 +558,7 @@ BTaggingTool::chooseCandidates2011(const Particle* AXB,
 
 //=============================================================================
 const Particle::ConstVector
-BTaggingTool::chooseCandidates2012(const Particle* AXB,
+BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
                                const Particle::Range& parts,
                                const RecVertex::ConstVector& PileUpVtx)
 {
@@ -564,19 +570,20 @@ BTaggingTool::chooseCandidates2012(const Particle* AXB,
   std::vector<const LHCb::Particle*> clones;
   for (Particle::Range::const_iterator ip = parts.begin(); parts.end() != ip; ++ip)
   {
-    const LHCb::Particle* p = *ip;
+    const LHCb::Particle*    p = *ip;
     const ProtoParticle* proto = p->proto();
-    if ( !proto || !proto->track() ) continue;
-    if ( 0 == p->charge() ) continue;
+    if ( !proto || !proto->track() )                          continue;
+    if ( 0 == p->charge() )                                   continue;
     // for now, only allow long tracks
     const bool trackTypeOK =
       (proto->track()->type() == LHCb::Track::Long) ||
       (proto->track()->type() == LHCb::Track::Upstream);
-    if (!trackTypeOK) continue;
-    if( p->p()/GeV < 2.0 || p->p()/GeV  > 200. ) continue;
-    if( p->pt()/GeV >  10. ) continue;
+    if (!trackTypeOK)                                         continue;
+    if( p->p()/GeV < 2.0 || p->p()/GeV  > 200. )              continue;
+    if( p->pt()/GeV >  10. )                                  continue;
     // exclude tracks too close to the beam line
-    if( p->momentum().theta() < m_thetaMin ) continue;
+    if( p->momentum().theta() < m_thetaMin )                  continue;
+    if( proto->track()->ghostProbability() > m_ghostprob_cut )continue;
     // exclude "trivial" clones: particles with same protoparticle or same
     // underlying track
     //
@@ -622,6 +629,20 @@ BTaggingTool::chooseCandidates2012(const Particle* AXB,
     // exclude tracks too close to the signal
     if( distphi < m_distphi_cut ) continue;
 
+    // CRJ : This is not really allowed -- SV reintroduced for Local FT use
+    Particle* c = const_cast<Particle*>(p);
+    if( c->hasInfo(LHCb::Particle::LastGlobal+1) )
+    {
+      Error("LastGlobal+1 info already set: erasing it");
+      c->eraseInfo(LHCb::Particle::LastGlobal+1);
+    }
+    if( c->hasInfo(LHCb::Particle::LastGlobal+2) )
+    {
+      Error("LastGlobal+2 info already set: erasing it");
+      c->eraseInfo(LHCb::Particle::LastGlobal+2);
+    }
+
+
     // calculate the min IP wrt all pileup vtxs
     double ippu(0), ippuerr(0);
     m_util->calcIP( p, PileUpVtx, ippu, ippuerr );
@@ -629,13 +650,6 @@ BTaggingTool::chooseCandidates2012(const Particle* AXB,
     if(ippuerr) 
     {
       if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts
-      // CRJ : This is not really allowed -- SV reintroduced for Local FT use
-      Particle* c = const_cast<Particle*>(p);
-      if( c->hasInfo(LHCb::Particle::LastGlobal+1) )
-      {
-        Error("LastGlobal+1 info already set: erasing it");
-        c->eraseInfo(LHCb::Particle::LastGlobal+1);
-      }
       
       c->addInfo(LHCb::Particle::LastGlobal+1, ippu/ippuerr);
       if( msgLevel(MSG::VERBOSE) )

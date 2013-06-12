@@ -5,7 +5,7 @@
 #
 #============================================================================
 package      FlavourTagging
-version      v12r13
+version      v12r11
 
 # Structure, i.e. directories to process.
 #============================================================================
@@ -24,9 +24,10 @@ use PhysEvent       v*   Event
 use DaVinciKernel   v*   Phys
 use CaloInterfaces  v*   Calo
 
+
 private
-macro_append   ROOT_linkopts   " -lMLP -lGraf -lHist -lMatrix -lTreePlayer -lGpad -lGraf3d" \
- WIN32   " libMLP.lib libGraf.lib libHist.lib libMatrix.lib libTreePlayer.lib libGpad.lib libGraf3d.lib"
+macro_append   ROOT_linkopts   " -lMLP -lGraf -lHist -lMatrix -lTreePlayer -lGpad -lGraf3d -lTMVA" \
+ WIN32   " libMLP.lib libGraf.lib libHist.lib libMatrix.lib libTreePlayer.lib libGpad.lib libGraf3d.lib libTMVA.lib"
 end_private
 
 # Component library building rule

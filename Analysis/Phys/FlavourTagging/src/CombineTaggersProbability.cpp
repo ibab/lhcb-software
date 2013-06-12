@@ -23,17 +23,21 @@ DECLARE_TOOL_FACTORY( CombineTaggersProbability )
   declareProperty( "OmegaMaxBin", m_omegamaxbin  = 0.38 );
   declareProperty( "OmegaScale",  m_omegascale  = 0.07 );
 
-  declareProperty( "ProbMin",     m_ProbMin     = 0.);
-  declareProperty( "ProbMin_OS",  m_ProbMin_OS  = 0.);
+  declareProperty( "ProbMin",     m_ProbMin     = 0.5);
+  declareProperty( "ProbMin_OS",  m_ProbMin_OS  = 0.5);
   // Tuning Moriond 2012
   //declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.392);
   //declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.921);
   //declareProperty( "Eta_Cal_OS",  m_Eta_Cal_OS  = 0.363);
   // Tuning 1fb-1 paper
-  declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.392);
-  declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.953);
-  declareProperty( "Eta_Cal_OS",  m_Eta_Cal_OS  = 0.362);
-
+  //declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.392);
+  //declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.953);
+  //declareProperty( "Eta_Cal_OS",  m_Eta_Cal_OS  = 0.362);
+  // Tuning for Reco14
+  declareProperty( "P0_Cal_OS",   m_P0_Cal_OS   = 0.390);
+  declareProperty( "P1_Cal_OS",   m_P1_Cal_OS   = 0.899);
+  declareProperty( "Eta_Cal_OS",  m_Eta_Cal_OS  = 0.365);
+  
 }
 
 CombineTaggersProbability::~CombineTaggersProbability(){}
@@ -63,7 +67,8 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   for( int i = 0; i != vtgsize; ++i ) 
   { //multiply all probabilities
     if(! vtg.at(i)) continue;
-    if( vtg.at(i)->type() == (Tagger::SS_Pion) || vtg.at(i)->type() == (Tagger::SS_Kaon) ) continue;  // Just combine the prob of OS
+    if( vtg.at(i)->type() == (Tagger::SS_Pion) || 
+        vtg.at(i)->type() == (Tagger::SS_Kaon) ) continue;  // Just combine the prob of OS
     const double mtag = vtg.at(i)->decision();
     if(!mtag) continue;
     const double pn   = 1-(vtg.at(i))->omega(); //probability of 'right'

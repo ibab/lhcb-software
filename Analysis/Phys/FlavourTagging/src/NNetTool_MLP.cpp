@@ -10,6 +10,7 @@
 #include "NeuralNet/NNkaonS.cxx"
 #include "NeuralNet/NNpionS.cxx"
 #include "NeuralNet/NNvtx.cxx"
+#include "MyReader.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : NNetTool_MLP v1.3
@@ -21,46 +22,74 @@
 
 // Declaration of the Algorithm Factory
 DECLARE_TOOL_FACTORY( NNetTool_MLP )
-
 //=============================================================================
   NNetTool_MLP::NNetTool_MLP( const std::string& type,
-                              const std::string& name,
-                              const IInterface* parent ) :
+                            const std::string& name,
+                            const IInterface* parent ) :
     GaudiTool ( type, name, parent )
 {
   declareInterface<INNetTool>(this);
 
-  declareProperty( "P0_mu_scale", m_P0mu =  -1.73872);
-  declareProperty( "P1_mu_scale", m_P1mu =  12.1473);
-  declareProperty( "P2_mu_scale", m_P2mu =  -20.966);
-  declareProperty( "P3_mu_scale", m_P3mu =  10.9829);
+  // cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1
+  //mu scaleX=-5.47039 scaleY=1.23885 offsetY=-0.00793716 pivotX=0.647253
+  declareProperty( "P0_mu_scale", m_P0mu =  -5.47039);
+  declareProperty( "P1_mu_scale", m_P1mu =  1.23885);
+  declareProperty( "P2_mu_scale", m_P2mu =  -0.00793716);
+  declareProperty( "P3_mu_scale", m_P3mu =  0.647253);
+  
+  //e scaleX=-3.04032 scaleY=1.7055 offsetY=-0.136785 pivotX=0.646733
+  declareProperty( "P0_e_scale", m_P0e =  -3.04032);  
+  declareProperty( "P1_e_scale", m_P1e =  1.7055);
+  declareProperty( "P2_e_scale", m_P2e =  -0.136785);
+  declareProperty( "P3_e_scale", m_P3e =  0.646733);
+  //k scaleX=-5.12122 scaleY=1.21427 offsetY=0.088854 pivotX=0.573943
+  declareProperty( "P0_k_scale", m_P0k =  -5.12122);
+  declareProperty( "P1_k_scale", m_P1k =  1.21427);
+  declareProperty( "P2_k_scale", m_P2k =  0.088854);
+  declareProperty( "P3_k_scale", m_P3k =  0.573943);
+  //vtx scaleX=-5.77134 scaleY=1.11591 offsetY=0.113682 pivotX=0.570684
+  declareProperty( "P0_vtx_scale", m_P0vtx =  -5.77134);
+  declareProperty( "P1_vtx_scale", m_P1vtx =  1.11591);
+  declareProperty( "P2_vtx_scale", m_P2vtx =  0.113682);
+  declareProperty( "P3_vtx_scale", m_P3vtx =  0.570684);
 
-  declareProperty( "P0_e_scale",  m_P0e  =  1.32902);
-  declareProperty( "P1_e_scale",  m_P1e  =  -2.32922);
-  declareProperty( "P2_e_scale",  m_P2e  =  1.17439);
-
-  declareProperty( "P0_k_scale",  m_P0k  = -3.66218);
-  declareProperty( "P1_k_scale",  m_P1k  = 20.5552);
-  declareProperty( "P2_k_scale",  m_P2k  = -32.958);
-  declareProperty( "P3_k_scale",  m_P3k  = 16.7165);
-
-  //  declareProperty( "P0_ks_scale", m_P0ks =  0.8562); //dec2011_v1
-  //  declareProperty( "P1_ks_scale", m_P1ks = -0.6897);
-  //  declareProperty( "P2_ks_scale", m_P2ks = -0.1932);
   declareProperty( "P0_ks_scale", m_P0ks =  1.22418); //dec2011_v2
   declareProperty( "P1_ks_scale", m_P1ks = -1.63297);
   declareProperty( "P2_ks_scale", m_P2ks =  0.401361);
+  declareProperty( "P3_ks_scale", m_P3ks =  0.);
 
   declareProperty( "P0_ps_scale", m_P0ps =  1.22123);
   declareProperty( "P1_ps_scale", m_P1ps = -1.76027);
   declareProperty( "P2_ps_scale", m_P2ps =  0.651766);
+  declareProperty( "P3_ps_scale", m_P3ps =  0.);
 
-  declareProperty( "P0_vtx_scale", m_P0vtx =  0.945773 );
-  declareProperty( "P1_vtx_scale", m_P1vtx = -0.93411 );
+  declareProperty( "XML_dir",          m_XML_dir   = "$FLAVOURTAGGINGROOT/src/NeuralNet/weights/"  );
+  declareProperty( "NNetWeights_mu",   m_NNetWeights_mu   = "muon__muonMLPBNN.weights.xml"  );
+  declareProperty( "NNetWeights_ele",  m_NNetWeights_ele  = "ele__eleMLPBNN.weights.xml"  );
+  declareProperty( "NNetWeights_kaon", m_NNetWeights_kaon = "kaon__kaonMLPBNN.weights.xml"  );
+  declareProperty( "NNetWeights_vtx",  m_NNetWeights_vtx  = "vtx__vtxMLPBNN.weights.xml"  );
 
 }
 
 NNetTool_MLP::~NNetTool_MLP(){}
+//=============================================================================
+StatusCode NNetTool_MLP::initialize() { 
+  StatusCode sc = GaudiTool::initialize(); 
+  std::string dir = m_XML_dir;
+  if(dir.compare(0,1,"$")==0 ) {
+    int i = dir.find_first_of("/");
+    int len = dir.length();
+    const std::string env = dir.substr(1, i-1);
+    m_XML_dir = ( std::string(getenv(env.c_str())) + dir.substr(i,len-i+1));
+    debug()<< " directory "<< dir << " resolved "<<m_XML_dir<<endreq;    
+  }else {
+    debug()<< " directory not starting with and evniromental variable "<<m_XML_dir<<" "<<dir.at(0)<< endreq;
+  }
+  return sc;
+}
+//=============================================================================
+
+StatusCode NNetTool_MLP::finalize()   { return GaudiTool::finalize(); }
 
 //=============================================================================
 double NNetTool_MLP::pol2(double x, double a0, double a1)
@@ -74,6 +103,13 @@ double NNetTool_MLP::pol3(double x, double a0, double a1, double a2)
 double NNetTool_MLP::pol4(double x, double a0, double a1, double a2, double a3) 
 {
   return a0+a1*x+a2*x*x+a3*x*x*x;
+}
+double NNetTool_MLP::func(double x, double a0=0, double a1=0., double a2=0., double a3=0.)
+{
+  // arcTAN = atan((x-[3])*[0])+1.5)*[1]*0.17+[2]
+  double arg = ((x-a3)*a0);
+  double res = ((atan(arg))+1.5)*a1*0.17+a2;
+  return res;
 }
 //=============================================================================
 
@@ -255,4 +291,88 @@ double NNetTool_MLP::MLPvtx(std::vector<double>& par)
   return pn;
 }
 
+//============================================================================
+
+//=============================================================================
+// New NNet trained on DATA 2012  !!!!!!!!!!!
+//=============================================================================
+double NNetTool_MLP::MLPmTMVA(std::list<std::pair<std::string, Float_t> >& par) { 
+
+  double rnet = 0.5;  
+  double pn = 0.5;  
+
+  TString weightfile(m_XML_dir+m_NNetWeights_mu);
+  TString methodName = TString("MLPBNN")+TString("method");
+  static MyReader reader(methodName, weightfile, par);  
+  rnet = reader.eval(par);
+  
+  if (rnet>=0 && rnet<=1) {
+    pn = 1.0 -func(rnet, m_P0mu, m_P1mu, m_P2mu, m_P3mu);
+  } else {
+    debug()<<"**********************BAD TRAINING muon"<<rnet<<endmsg;
+    pn = -1.;
+  }
+  return pn;
+}; 
+//=============================================================================
+double NNetTool_MLP::MLPeTMVA(std::list<std::pair<std::string, Float_t> >& par) {
+
+  double rnet = 0.5;
+  double pn = 0.5;
+
+  TString weightfile(m_XML_dir+m_NNetWeights_ele);
+  TString methodName = TString("MLPBNN")+TString("method");
+  static MyReader reader(methodName, weightfile, par);
+  rnet = reader.eval(par);
+  
+  if (rnet>=0 && rnet<=1) {    
+    pn = 1.0 -func(rnet, m_P0e, m_P1e, m_P2e, m_P3e);
+  } else {
+    debug()<<"**********************BAD TRAINING ele"<<rnet<<endmsg;    
+    pn = -1.;
+  }
+  return pn;
+};
+
+//=============================================================================
+double NNetTool_MLP::MLPkaonTMVA(std::list<std::pair<std::string, Float_t> >& par) {
+
+  double rnet = 0.5;  
+  double pn = 0.5;  
+
+  TString weightfile(m_XML_dir+m_NNetWeights_kaon);
+  TString methodName = TString("MLPBNN")+TString("method");
+  static MyReader reader(methodName, weightfile, par);
+  rnet = reader.eval(par);
+
+  if (rnet>=0 && rnet <=1){
+    pn = 1.0 -func(rnet, m_P0k, m_P1k, m_P2k, m_P3k);    
+  }
+  else{    
+    debug()<<"**********************BAD TRAINING kaon"<<rnet<<endmsg;
+    pn = -1.;
+  }
+  return pn;
+
+};
+
+//=============================================================================
+double NNetTool_MLP::MLPvtxTMVA(std::list<std::pair<std::string, Float_t> >& par) {
+
+  double rnet = 0.5;  
+  double pn = 0.5;  
+
+  TString weightfile(m_XML_dir+m_NNetWeights_vtx);
+  TString methodName = TString("MLPBNN")+TString("method");
+  static MyReader reader(methodName, weightfile, par);
+  rnet = reader.eval(par);
+  
+  if (rnet>=0 && rnet<=1) {
+    pn = 1.0 -func(rnet, m_P0vtx, m_P1vtx, m_P2vtx, m_P3vtx);    
+  } else {
+    debug()<<"**********************BAD TRAINING vtx"<<rnet<<endmsg;
+    pn = -1.;    
+  }  
+  return pn;
+};
 //============================================================================

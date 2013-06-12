@@ -34,7 +34,7 @@ public:
   StatusCode initialize();
 
   //----------------------------------------------------------------
-  std::vector<LHCb::Vertex> buildVertex ( const LHCb::RecVertex&,
+  std::vector<LHCb::Vertex> buildVertex ( const LHCb::RecVertex&, 
                                           const LHCb::Particle::ConstVector& );
   //----------------------------------------------------------------
 
