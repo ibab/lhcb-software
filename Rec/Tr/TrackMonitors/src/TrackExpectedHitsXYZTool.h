@@ -69,7 +69,6 @@ class TrackExpectedHitsXYZTool : public GaudiTool
 	virtual ~TrackExpectedHitsXYZTool(); ///< Destructor
 
 	virtual StatusCode initialize(); ///< Tool initialization
-	virtual StatusCode   finalize(); ///< Tool finalize
 
 	/// represent points in each layer where we expect a hit (approx. positions)
 	struct HitPatternXYZ {

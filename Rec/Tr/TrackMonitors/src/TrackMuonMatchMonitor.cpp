@@ -166,16 +166,5 @@ StatusCode TrackMuonMatchMonitor::execute() {
   
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode TrackMuonMatchMonitor::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiHistoAlg::finalize();  // must be called after all other actions
-}
-
 //=============================================================================
 

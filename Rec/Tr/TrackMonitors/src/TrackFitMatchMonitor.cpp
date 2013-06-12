@@ -24,9 +24,6 @@ public:
   /** Algorithm initialize */
   virtual StatusCode initialize();
 
-  /** Algorithm finalize */
-  virtual StatusCode finalize();
-
   /** Algorithm execute */
   virtual StatusCode execute();
 
@@ -103,13 +100,6 @@ StatusCode TrackFitMatchMonitor::initialize()
 }
 
 //=============================================================================
-// Initialization
-//=============================================================================
-StatusCode TrackFitMatchMonitor::finalize() 
-{
-  return GaudiHistoAlg::finalize() ;
-}
-
 inline void TrackFitMatchMonitor::myPlot1D(double x, const std::string& path,
 					   const std::string& title, double xmin, double xmax) 
 {

@@ -57,16 +57,6 @@ StatusCode PitchResTool::initialize()
 }
 
 //=============================================================================
-// Finalize
-//=============================================================================
-StatusCode PitchResTool::finalize()
-{
-  if(msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
-
-
-  return GaudiTool::finalize();  // must be called after all other actions
-}
-
 std::vector<std::pair<LHCb::OTChannelID, double> > PitchResTool::calcPitchResiduals(
     const LHCb::Track* track) const
 {

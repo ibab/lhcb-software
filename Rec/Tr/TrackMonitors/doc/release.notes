@@ -4,14 +4,18 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
-!========================= TrackMonitors v1r44p1 2013-06-03 =========================
+! 2013-06-12 - Marco Cattaneo
+ - Fix gcc48 warning
+ - Remove empty finalize methods
+
+!========================= TrackMonitors v1r44p1 2013-06-03 ======================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warnings
 
 ! 2013-05-24 - Marco Cattaneo
  - Add missing PatKernel dependency
 
-!========================= TrackMonitors v1r44 2013-04-30 =========================
+!========================= TrackMonitors v1r44 2013-04-30 ========================
 ! 2013-04-25 - Sascha Stahl
  - Added protections to ConfiguredTrackMonitors in case detector does
    not exist.
@@ -29,7 +33,7 @@
 ! 2013-03-22 - Wouter Hulsbergen
  - fixes in TrackMonitor and TrackVertexMonitor to make them working for upgrade
 
-!========================= TrackMonitors v1r43 2013-03-22 =========================
+!========================= TrackMonitors v1r43 2013-03-22 ========================
 ! 2013-03-18 - Jack Wimberley
 - Fixed accidently deleted portion of release notes
 
@@ -45,7 +49,7 @@
 ! 2013-03-11 - Marco Clemencic 
 - Fixed compilation with C++11. 	 	  
 
-!========================= TrackMonitors v1r42 2013-02-14 ========================= 
+!========================= TrackMonitors v1r42 2013-02-14 ========================
 ! 2013-01-30 - Jianchun Wang 
 - Add UT Monitor. 
 	 	 

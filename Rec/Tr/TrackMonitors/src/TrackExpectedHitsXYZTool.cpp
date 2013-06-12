@@ -124,16 +124,6 @@ StatusCode TrackExpectedHitsXYZTool::initialize()
 }
 
 //=============================================================================
-// Finalize
-//=============================================================================
-StatusCode TrackExpectedHitsXYZTool::finalize()
-{
-    if(msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
-
-
-    return GaudiTool::finalize();  // must be called after all other actions
-}
-
 // we'll need a few helpers to convert triples (reg, sta, lay) into
 // consecutive layer numbers and select the right field in HitPatternXYZ
 
@@ -242,7 +232,6 @@ void TrackExpectedHitsXYZTool::collectLineHits(HITMANAGER* hitman,
 {
     typedef typename HITMANAGER::Hits::value_type HITP;
     typedef typename boost::remove_pointer<HITP>::type HIT;
-    typedef Tf::increasingByXAtYEq0<HIT> SORTER;
     IndexHelper idx(pat);
     hitman->prepareHits();
     for (unsigned reg = regMin; regMax >= reg; ++reg) {

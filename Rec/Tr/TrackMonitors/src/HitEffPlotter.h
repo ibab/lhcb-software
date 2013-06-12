@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef INCLUDE_HITEFFPLOTTER_H
 #define INCLUDE_HITEFFPLOTTER_H 1
 
@@ -32,7 +31,6 @@ class HitEffPlotter : public GaudiHistoAlg
 
 	virtual StatusCode initialize(); ///< Algorithm initialization
 	virtual StatusCode    execute(); ///< Algorithm event execution
-	virtual StatusCode   finalize(); ///< Algorithm finalize
 
     protected:
 

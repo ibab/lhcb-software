@@ -1,4 +1,3 @@
-// $Id: PitchResTool.h,v 1.2 2009-11-05 09:12:50 jblouw Exp $
 #ifndef INCLUDE_PITCHRESTOOL_H
 #define INCLUDE_PITCHRESTOOL_H 1
 
@@ -34,7 +33,6 @@ public:
   virtual ~PitchResTool(); ///< Destructor
 
   virtual StatusCode initialize(); ///< Tool initialization
-  virtual StatusCode   finalize(); ///< Tool finalize
 
   /// return a vector of pairs of (layer, pitch residual) from the OT hits on the track
   std::vector<std::pair<LHCb::OTChannelID, double> > calcPitchResiduals(const LHCb::Track* track) const;
