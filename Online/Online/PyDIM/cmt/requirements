@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           PyDIM 
-version           v2r11
+version           v2r12
 #============================================================================
 branches          cmt doc src python
 use DIM           v* Online
