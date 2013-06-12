@@ -6,13 +6,13 @@
 //
 //=======================================
 
-
 DECLARE_ALGORITHM_FACTORY( FilterJet )
+
 //=============================================================================
 // Constructor
 FilterJet::FilterJet(const std::string& name,
-		     ISvcLocator* pSvcLocator)
-  : DaVinciAlgorithm(name,pSvcLocator) 
+                     ISvcLocator* pSvcLocator)
+: DaVinciAlgorithm(name,pSvcLocator)
   , m_tagToolName ("LoKi__TopoTag")
   , m_tagTool     ( 0   )
   , m_save_all (false)
@@ -20,78 +20,76 @@ FilterJet::FilterJet(const std::string& name,
   , m_start_addinfo(-1)
   , m_SubPID("")
   , m_cut(-10000.0)
-  
+
 {
-  
   declareProperty ( "tagToolName"        ,  m_tagToolName   ) ;
   declareProperty ( "saveAllJetWithInfo"        ,  m_save_all   ) ;
   declareProperty ( "saveTaggerInfo"        ,  m_save_addinfo   ) ;
   declareProperty ( "startNumberForAddInfo"        ,  m_start_addinfo  ) ;
   declareProperty ( "setNewPID"       ,  m_SubPID  ) ;
   declareProperty ( "Cut"       ,  m_cut  ) ;
-
-} 
-
+}
 
 //=============================================================================
 // Initalise
 StatusCode  FilterJet::initialize ()
 {
-  StatusCode sc = DaVinciAlgorithm::initialize(); 
+  const StatusCode sc = DaVinciAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
- 
-  
+
   m_tagTool = tool<IJetTagTool>(m_tagToolName, this);
-  if(m_tagTool == 0)
-    return Error("Couldn't get requested jet tag tool", StatusCode::SUCCESS);
-  
-  
-  return StatusCode::SUCCESS ;
-} 
-
-
-
+ 
+  return sc;
+}
 
 StatusCode FilterJet::execute()
-{ 
+{
 
   i_markedParticles.clear();
 
   const LHCb::Particle::ConstVector& jets = i_particles () ;
 
-  LHCb::Particle::ConstVector::const_iterator ijet;
-  for ( ijet = jets.begin(); jets.end() != ijet ;++ijet ) {
+  for ( LHCb::Particle::ConstVector::const_iterator ijet = jets.begin(); 
+        jets.end() != ijet ;++ijet ) 
+  {
     const LHCb::Particle* jet = *ijet;
 
-    std::map<std::string,double> property;      
-    bool tagBool =   m_tagTool->calculateJetProperty(jet, property);
-    if((tagBool && property["Tag"] > m_cut )|| m_save_all){
-      
+    std::map<std::string,double> property;
+    const bool tagBool = m_tagTool->calculateJetProperty(jet, property);
+    if ((tagBool && property["Tag"] > m_cut )|| m_save_all)
+    {
+
       LHCb::Particle* tagJet = jet->clone();
-      
-      
-      if(m_SubPID != ""){
-	LHCb::IParticlePropertySvc* ppSvc = 
-	  svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
-	const LHCb::ParticleProperty* pp = ppSvc->find ( m_SubPID ) ;
-	tagJet->setParticleID(pp->particleID());
-	
+
+      if ( !m_SubPID.empty() )
+      {
+        LHCb::IParticlePropertySvc* ppSvc =
+          svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true);
+        const LHCb::ParticleProperty* pp = ppSvc->find ( m_SubPID ) ;
+        tagJet->setParticleID(pp->particleID());
       }
+
       const LHCb::VertexBase* bestPV = getStoredBestPV(jet);
       if ( 0!= bestPV ) { this->relate ( tagJet , bestPV ) ; }
       if(m_save_addinfo){
-	int infokey = property["extraInfo"];
-	if(m_start_addinfo>0)	    
-	  infokey = m_start_addinfo;
-	typedef std::map<std::string, double>::iterator it_type;
-	for( std::map<std::string, double>::iterator  it = property.begin();  it != property.end(); it++) {
-	  if(!tagJet->hasInfo(infokey)){
-	    if(it->first != "extraInfo")
-	      tagJet->addInfo(infokey++, (it->second));
-	  } else
-	    warning() << "Info Key" << infokey << " already used... please check the starting point." << endmsg;
+        int infokey = property["extraInfo"];
+        if(m_start_addinfo>0)
+          infokey = m_start_addinfo;
+        for ( std::map<std::string, double>::iterator it = property.begin();  
+              it != property.end(); ++it )
+        {
+          if(!tagJet->hasInfo(infokey)){
+            if(it->first != "extraInfo")
+              tagJet->addInfo(infokey++, (it->second));
+          } 
+          else
+          {
+            warning() << "Info Key" << infokey 
+                      << " already used... please check the starting point." 
+                      << endmsg;
+          }
 
-	}
+        }
 
       }
 
@@ -119,16 +117,17 @@ StatusCode FilterJet::_save ( ) const
   put ( p_tes ,    particleOutputLocation () ) ;
 
 
-  for ( std::vector<LHCb::Particle*>::const_iterator ip = i_markedParticles.begin(); ip != i_markedParticles.end(); ++ip )
-    {
-      //
-      LHCb::Particle* p = *ip ;
-      if ( NULL == p ) { continue ; } // CONTINUE
+  for ( std::vector<LHCb::Particle*>::const_iterator ip = i_markedParticles.begin(); 
+        ip != i_markedParticles.end(); ++ip )
+  {
+    //
+    LHCb::Particle* p = *ip ;
+    if ( NULL == p ) { continue ; } // CONTINUE
 
-      p_tes -> insert ( p ) ;
-      //
-   
-    }
+    p_tes -> insert ( p ) ;
+    //
+
+  }
 
   return ( i_markedParticles.size() != p_tes->size() ?
            StatusCode::FAILURE : StatusCode::SUCCESS   );
@@ -141,9 +140,9 @@ StatusCode FilterJet::_save ( ) const
 StatusCode FilterJet::_saveInTES ()
 {
   if (msgLevel(MSG::VERBOSE))
-    {
-      verbose() << "FilterJet::_saveInTES " << i_markedParticles.size() << " Particles" << endmsg;
-    }
+  {
+    verbose() << "FilterJet::_saveInTES " << i_markedParticles.size() << " Particles" << endmsg;
+  }
   return this -> _save<LHCb::Particle::Container> ();
 }
 // ============================================================================
@@ -152,7 +151,6 @@ StatusCode FilterJet::_saveInTES ()
 // ============================================================================
 void FilterJet::writeEmptyTESContainers()
 {
-
   return true ?
     writeEmptyKeyedContainers()  :
     writeEmptySharedContainers() ;
@@ -163,22 +161,10 @@ void FilterJet::writeEmptyKeyedContainers() const
 {
   LHCb::Particle::Container* container = new LHCb::Particle::Container();
   put(container, particleOutputLocation());
-  return;
 }
 // ============================================================================
 void FilterJet::writeEmptySharedContainers() const
 {
   LHCb::Particle::Selection* container = new LHCb::Particle::Selection();
   put(container, particleOutputLocation());
-  return;
-}
-
-//=============================================================================
-// Finalization
-//=============================================================================
-StatusCode FilterJet::finalize() {
-
-  if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
-  return DaVinciAlgorithm::finalize () ;
-
 }

@@ -54,7 +54,6 @@ class FilterJet :  public DaVinciAlgorithm
   
   /// destructor
   virtual ~FilterJet( ){};
-  virtual StatusCode finalize();
   virtual StatusCode initialize ();
 
   /** standard execution of the algorithm

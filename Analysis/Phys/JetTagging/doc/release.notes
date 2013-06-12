@@ -4,6 +4,9 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+! 2013-06-12 - Chris Jones
+ - Remove unused typedefs (gcc 4.8 warning).
+
 ! 2013-05-24 - Chris Jones
  - Check values with lfin as well as lnan
 
