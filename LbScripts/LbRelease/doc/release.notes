@@ -1,5 +1,11 @@
 2013-06-03  Ben Couturier <Ben.Couturier@cern.ch>
 
+	Added scripts to check if a given step is useable in DIRAC:
+	* python/LbRelease/DiracStepChecker.py
+	* scripts/lb-dirac-check-app-use
+
+2013-06-03  Ben Couturier <Ben.Couturier@cern.ch>
+
 	* python/LbRelease/SoftConfDB/AppImporter.py: Added workaround
 	to find Ganga dependencies.
 	Added Active/Used flags:
