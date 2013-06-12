@@ -1,5 +1,5 @@
 package ControllerTests
-version v0r0
+version v0r2
 author "Markus Frank"
 
 branches cmt doc scripts
