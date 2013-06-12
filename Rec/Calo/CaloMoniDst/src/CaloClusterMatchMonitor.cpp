@@ -67,7 +67,6 @@ public:
     return StatusCode::SUCCESS;
   }
   virtual StatusCode execute();
-  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
@@ -139,10 +138,4 @@ StatusCode CaloClusterMatchMonitor::execute()
   } // end of loop over containers
   counter("Monitor " + inputData() )+= table->relations().size();
   return StatusCode::SUCCESS;
-}
-
-
-StatusCode CaloClusterMatchMonitor::finalize() {
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  return CaloMoniAlg::finalize();
 }

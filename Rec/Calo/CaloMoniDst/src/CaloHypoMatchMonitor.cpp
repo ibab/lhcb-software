@@ -69,7 +69,6 @@ public:
   }
   /// standard algorithm execution
   virtual StatusCode execute();
-  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
@@ -141,10 +140,4 @@ StatusCode CaloHypoMatchMonitor::execute()
   } // end of loop over containers 
   counter("Monitor " + inputData() )+= table->relations().size();
   return StatusCode::SUCCESS;
-}
-
-
-StatusCode CaloHypoMatchMonitor::finalize() {
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  return CaloMoniAlg::finalize();
 }

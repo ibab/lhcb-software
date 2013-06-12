@@ -1,4 +1,3 @@
-// $Id: CaloProtoElectronMonitor.h,v 1.3 2010/05/20 09:55:38 odescham Exp $
 #ifndef CALOPROTOELECTRONMONITOR_H 
 #define CALOPROTOELECTRONMONITOR_H 1
 
@@ -24,7 +23,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 
   ITrackExtrapolator* extrapolator(){return m_extrapolator;};

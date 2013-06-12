@@ -191,16 +191,4 @@ bool CaloNtpBase::acceptTrack(const LHCb::Track* track){
     }
 return m_tracks.empty() ? true : false;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloNtpBase::finalize() {
-
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-    debug() << "==> Finalize" << endmsg;
-
-  return GaudiTupleAlg::finalize();  // must be called after all other actions
-}
-
 //=============================================================================

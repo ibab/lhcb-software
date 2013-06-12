@@ -91,11 +91,11 @@ StatusCode CaloHypoNtp::execute(){
 
   
   // SpdMult
-  m_spdMult = 0;
+  int spdMult = 0;
   std::string l0loc = LHCb::L0DUReportLocation::Default;
   if( exist<LHCb::L0DUReport>( l0loc)){
     LHCb::L0DUReport* l0   = get<LHCb::L0DUReport>( l0loc );
-    m_spdMult = (int) l0->dataValue("Spd(Mult)");
+    spdMult = (int) l0->dataValue("Spd(Mult)");
   }
 
   // vertices&tracks
@@ -210,7 +210,7 @@ StatusCode CaloHypoNtp::execute(){
         sc=ntp->column("NTracks", nTrack);
         
         // #SpdMult
-        sc=ntp->column("spdMult", m_spdMult);
+        sc=ntp->column("spdMult", spdMult);
 
         // Checker Mode (MC info)
         if( m_checker ){
@@ -236,13 +236,6 @@ StatusCode CaloHypoNtp::execute(){
   if( sc.isFailure())Warning("Error with ntupling",StatusCode::SUCCESS).ignore();
   return StatusCode::SUCCESS;
 }
-
-StatusCode CaloHypoNtp::finalize() {
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  return GaudiTupleAlg::finalize();
-}
-
-
 
 bool CaloHypoNtp::inRange( std::pair<double,double> range, double value){
   return ( value >= range.first) && (value <= range.second);

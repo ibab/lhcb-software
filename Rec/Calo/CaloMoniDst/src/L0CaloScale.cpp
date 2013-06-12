@@ -42,7 +42,6 @@ public:
     return StatusCode::SUCCESS;
   }
   virtual StatusCode execute();
-  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
@@ -168,10 +167,4 @@ StatusCode L0CaloScale::execute(){
   }
   
   return StatusCode::SUCCESS;
-}
-
-
-StatusCode L0CaloScale::finalize() {
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  return CaloMoniAlg::finalize();
 }

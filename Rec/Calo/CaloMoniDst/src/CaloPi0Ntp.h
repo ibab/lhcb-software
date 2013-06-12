@@ -13,7 +13,6 @@ public:
   virtual ~CaloPi0Ntp();
   virtual StatusCode initialize();
   virtual StatusCode execute();
-  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name

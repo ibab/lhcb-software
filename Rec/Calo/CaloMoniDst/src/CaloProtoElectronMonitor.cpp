@@ -215,15 +215,4 @@ StatusCode CaloProtoElectronMonitor::execute() {
   fillCounters("1");
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloProtoElectronMonitor::finalize() {
-
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-
-  return CaloMoniAlg::finalize();  // must be called after all other actions
-}
-
 //=============================================================================

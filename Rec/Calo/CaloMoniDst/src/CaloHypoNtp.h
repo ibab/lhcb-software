@@ -16,7 +16,6 @@ public:
   virtual ~CaloHypoNtp();
   virtual StatusCode initialize();
   virtual StatusCode execute();
-  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
@@ -50,7 +49,6 @@ private:
   std::string m_trkLoc;
   std::string m_tabLoc;
   std::vector<std::string> m_locs;
-  int m_spdMult;
   bool m_checker;
   ICalo2MCTool* m_2MC;
   ICalo2MCTool* calo2MC(){return m_2MC;}

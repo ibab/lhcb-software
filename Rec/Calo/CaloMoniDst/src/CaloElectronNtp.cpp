@@ -330,15 +330,4 @@ StatusCode CaloElectronNtp::execute() {
   }
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloElectronNtp::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiTupleAlg::finalize();  // must be called after all other actions
-}
-
 //=============================================================================

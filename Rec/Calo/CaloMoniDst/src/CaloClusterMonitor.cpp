@@ -64,7 +64,6 @@ public:
 
     return StatusCode::SUCCESS;
   }
-  virtual StatusCode finalize();
   virtual StatusCode execute();
 protected:
   /** Standard constructor
@@ -154,11 +153,4 @@ StatusCode CaloClusterMonitor::execute(){
   fillCounters("1");
 
   return StatusCode::SUCCESS;
-}
-
-
-
-StatusCode CaloClusterMonitor::finalize() {
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  return CaloMoniAlg::finalize();
 }

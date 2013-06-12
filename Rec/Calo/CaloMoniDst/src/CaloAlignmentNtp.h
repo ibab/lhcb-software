@@ -1,4 +1,3 @@
-// $Id: CaloAlignmentNtp.h,v 1.1 2010/05/20 09:55:38 odescham Exp $
 #ifndef CALOALIGNEMENTNTP_H 
 #define CALOALIGNEMENTNTP_H 1
 
@@ -26,7 +25,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

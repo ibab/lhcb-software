@@ -1,4 +1,3 @@
-// $Id: CaloElectronNtp.h,v 1.1 2010/05/20 09:55:38 odescham Exp $
 #ifndef CALOELECTRONNTP_H 
 #define CALOELECTRONNTP_H 1
 
@@ -27,8 +26,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
 
   ITrackExtrapolator* extrapolator(){return m_extrapolator;};
 

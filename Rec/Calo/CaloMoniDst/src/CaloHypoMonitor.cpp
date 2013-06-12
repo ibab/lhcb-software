@@ -71,7 +71,6 @@ public:
     return StatusCode::SUCCESS;
   }
   virtual StatusCode execute();
-  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
@@ -200,10 +199,4 @@ StatusCode CaloHypoMonitor::execute(){
   hFill1("14",frac);
   
   return StatusCode::SUCCESS;
-}
-
-
-StatusCode CaloHypoMonitor::finalize() {
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  return CaloMoniAlg::finalize();
 }

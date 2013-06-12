@@ -37,7 +37,6 @@ public:
   CaloMoniAlg( const std::string &name, ISvcLocator *pSvcLocator );  
   virtual ~CaloMoniAlg();
   virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode finalize();    ///< Algorithm initialization
   
 // address/location/name in Transient Store of input data container
   const std::string              &inputData() const { return m_inputData; }

@@ -123,11 +123,3 @@ StatusCode CaloMoniAlg::initialize() {
 
   return StatusCode::SUCCESS;
 }
-
-StatusCode CaloMoniAlg::finalize() {
-
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-
-  return Calo2Dview::finalize();
-}
-

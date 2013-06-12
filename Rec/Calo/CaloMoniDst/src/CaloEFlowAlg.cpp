@@ -292,13 +292,3 @@ StatusCode CaloEFlowAlg::execute() {
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloEFlowAlg::finalize() {
-
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-
-  return CaloMoniAlg::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

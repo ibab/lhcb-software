@@ -4,6 +4,11 @@
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2013-06-12 - Marco Cattaneo
+ - Fix gcc48 warning
+ - Change a global variable to local, fixes UNINIT_CTOR warning
+ - Remove empty finalize methods
+
 !========================= CaloMoniDst v5r13 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.

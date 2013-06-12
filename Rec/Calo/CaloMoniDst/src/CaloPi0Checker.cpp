@@ -78,7 +78,6 @@ public:
   
   /// standard algorithm execution
   virtual StatusCode execute();
-  virtual StatusCode finalize();
 
 protected:
   /** Standard constructor
@@ -200,10 +199,4 @@ StatusCode CaloPi0Checker::execute(){
     } // end of loop over second photon
   } // end of loop over first photon
   return StatusCode::SUCCESS;
-}
-
-
-StatusCode CaloPi0Checker::finalize() {
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  return CaloMoniAlg::finalize();
 }

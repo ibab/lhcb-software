@@ -63,7 +63,6 @@ public:
   }
   /// standard algorithm execution
   virtual StatusCode execute();
-  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
@@ -135,10 +134,4 @@ StatusCode CaloClusterChecker::execute()
     } // end of loop over clusters
   } // end of loop over containers
   return StatusCode::SUCCESS;
-}
-
-
-StatusCode CaloClusterChecker::finalize() {
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  return CaloMoniAlg::finalize();
 }

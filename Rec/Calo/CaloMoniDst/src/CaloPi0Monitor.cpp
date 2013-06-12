@@ -56,7 +56,6 @@ public:
     return StatusCode::SUCCESS;
   }
   virtual StatusCode execute();
-  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
@@ -108,7 +107,6 @@ DECLARE_ALGORITHM_FACTORY( CaloPi0Monitor )
 // ============================================================================
 StatusCode CaloPi0Monitor::execute()
 { typedef const LHCb::CaloHypo::Container    Hypos;
-  typedef const LHCb::CaloHypo               Photon;
   typedef std::vector<const LHCb::CaloHypo*> Photons;
   typedef Photons::const_iterator            photon;
 
@@ -228,12 +226,4 @@ StatusCode CaloPi0Monitor::execute()
   }  
   fillCounters("1");
   return StatusCode::SUCCESS;
-}
-
-
-
-
-StatusCode CaloPi0Monitor::finalize() {
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  return CaloMoniAlg::finalize();
 }

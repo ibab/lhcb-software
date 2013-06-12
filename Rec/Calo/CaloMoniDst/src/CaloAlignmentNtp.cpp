@@ -579,15 +579,4 @@ StatusCode CaloAlignmentNtp::execute() {
   }
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloAlignmentNtp::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiTupleAlg::finalize();  // must be called after all other actions
-}
-
 //=============================================================================

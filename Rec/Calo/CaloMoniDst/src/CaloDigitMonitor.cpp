@@ -43,7 +43,6 @@ public:
   /// standard algorithm initialization 
   virtual StatusCode initialize();
   virtual StatusCode execute();
-  virtual StatusCode finalize();
 protected:
   /** Standard constructor
    *  @param   name        algorithm name
@@ -176,10 +175,4 @@ StatusCode CaloDigitMonitor::execute(){
   }
   fillCounters("1");  
   return StatusCode::SUCCESS;
-}
-
-StatusCode CaloDigitMonitor::finalize() {
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-    debug() << "==> Finalize" << endmsg;
-  return CaloMoniAlg::finalize();
 }

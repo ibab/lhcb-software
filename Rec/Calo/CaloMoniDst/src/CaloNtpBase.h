@@ -30,7 +30,6 @@ public:
   virtual ~CaloNtpBase( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   ICaloHypo2Calo* toSpd(){return m_toSpd;} ;   
   ICaloHypo2Calo* toPrs(){return m_toPrs;} ;

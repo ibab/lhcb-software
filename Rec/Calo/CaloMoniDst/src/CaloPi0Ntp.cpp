@@ -333,13 +333,6 @@ StatusCode CaloPi0Ntp::execute(){
   return StatusCode::SUCCESS;
 }
 
-StatusCode CaloPi0Ntp::finalize() {
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-  return GaudiTupleAlg::finalize();
-}
-
-
-
 bool CaloPi0Ntp::inRange( std::pair<double,double> range, double value){
   return ( value >= range.first) && (value <= range.second);
 }
