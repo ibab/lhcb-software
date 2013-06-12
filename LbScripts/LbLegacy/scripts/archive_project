@@ -85,6 +85,13 @@ if !(-r ${rel_dir}/$PACKAGE/$VERSION) then
    exit 0
 endif
 
+# Checking if there are still DIRAC active steps
+lb-dirac-check-app-use $project $version
+if ( $? == 1 ) then
+	echo "Project $project $version is used in a DIRAC Usable step and cannot be archived"
+    exit 1
+endif
+
 # Archiving the distribution files
 echo "===> Archiving the distribution files"
 lb-project-archive-dist $project $version

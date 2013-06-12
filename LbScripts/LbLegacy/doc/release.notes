@@ -1,3 +1,8 @@
+2013-06-12  Ben Couturier  <Ben.Couturier@cern.ch>
+
+	* scripts/archive_project: Added check to prevent archiving of applications used
+	by DIRAC.
+
 2013-04-23  Ben Couturier  <Ben.Couturier@cern.ch>
 
         * cmt/requirements: release of version v5r7p1
