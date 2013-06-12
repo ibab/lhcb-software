@@ -1,5 +1,5 @@
 package RawBankSizes
-version v2r15
+version v2r16
 branches cmt doc src
 use GaudiKernel v*
 use AIDA v* LCG_Interfaces
