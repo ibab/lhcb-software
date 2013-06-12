@@ -345,8 +345,13 @@ void PrAddUTCoord::calculateChi2(PrUTHits& goodUT, double& chi2, const double& b
     }
 
 
-    chi2 /= nDoF;
-
+    // -- Fix a coverity warning (division by zero)
+    if( nDoF > 0 ){
+      chi2 /= nDoF;
+    }else{
+      if (  msgLevel( MSG::DEBUG ) ) debug() << "nDoF is zero" << endmsg;
+    }
+    
     if (  msgLevel( MSG::DEBUG ) && worstDiff > 0. ) {
       info() << format( " chi2 %10.2f nDoF%2d wors %8.2f proj %6.2f offset %8.3f slope %10.6f offsetY %10.6f",
                         chi2, nDoF, worstDiff, (*worst)->projection(), offset, slope, offsetY)

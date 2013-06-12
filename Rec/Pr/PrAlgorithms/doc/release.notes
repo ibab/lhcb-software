@@ -3,6 +3,8 @@
 ! Responsible : Olivier Callot
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+! 2013-06-12 - Michel De Cian
+ - Fix a coverity warning in PrAddUTCoord.cpp
 
 !========================= PrAlgorithms v1r5 2013-05-28 =========================
 ! 2013-05-27 - Sascha Stahl
