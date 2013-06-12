@@ -3,6 +3,9 @@
 ! Responsible : Juan Palacios
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+! 2013-06-12 - Stefania Vecchi
+ - updated reference file tagging.qms/test_tag_mc12.qmt according to the latest 
+   cut optimization for Reco14
 
 ! 2013-06-05 - Chris Jones
  - Update flavour tagging options to take input data from PRConfig.
