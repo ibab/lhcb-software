@@ -146,7 +146,6 @@ void LoKi::PartonicJets2HepMCJets::makeRelation( const IJets2Jets::Jets&   parto
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts  ;
 
-  typedef std::vector<const LHCb::Particle*> ConstVectPart;
   typedef LHCb::Relation2D< LHCb::Particle,HepMC::GenParticle* >  Table2DHepMC2Part ;
   typedef LoKi::GenTypes::GenContainer Container ;
   // create the relation table and register it into TES

@@ -203,7 +203,6 @@ void LoKi::MCJets2Jets::makeRelation( const IRelateJets::Jets& StdPrimaryJets,
   using namespace LoKi        ;
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts  ;
-  typedef std::vector<const LHCb::Particle*> Parts;
 
   if ( !m_loaded ) { addTables ( m_matcher ) ; m_loaded = true ; }
 

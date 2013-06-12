@@ -344,10 +344,7 @@ StatusCode LoKi::MCJetMaker::analyse   ()
 {
   using namespace LoKi        ;
   using namespace LoKi::Types ;
-  using namespace LoKi::Cuts ; 
-
-  typedef LoKi::GenTypes::GenContainer Container  ;
-  typedef LoKi::GenTypes::GenVContainer VContainer;
+  using namespace LoKi::Cuts  ; 
 
   typedef LHCb::Relation1D< LHCb::Particle, LHCb::MCParticle > Table ;
 
