@@ -25,6 +25,8 @@ class ILHCbMagnetSvc : virtual public IMagneticFieldSvc
 {
 
 public:
+  /// Virtual destructor
+  virtual ~ILHCbMagnetSvc() {}
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ILHCbMagnetSvc; }
