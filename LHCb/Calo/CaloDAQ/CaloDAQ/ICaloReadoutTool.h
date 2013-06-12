@@ -1,4 +1,3 @@
-// $Id: ICaloReadoutTool.h,v 1.3 2009-09-16 16:02:46 odescham Exp $
 #ifndef CALODAQ_ICALOREADOUTTOOL_H 
 #define CALODAQ_ICALOREADOUTTOOL_H 1
 
@@ -26,8 +25,6 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ICaloReadoutTool; }
 
-  
-  //virtual StatusCode getCaloBanksFromRaw()=0;
   virtual std::string _rootInTES()=0;
   virtual StatusCode  _setProperty(const std::string& p,const std::string& v)=0;
   virtual bool getBanks()=0;
@@ -38,6 +35,10 @@ public:
   virtual void putStatusOnTES()=0;
   virtual bool ok()=0;
   virtual DeCalorimeter* deCalo()=0;
+
+  /// virtual destructor
+  virtual ~ICaloReadoutTool() {}
+  
 protected:
 
 private:
