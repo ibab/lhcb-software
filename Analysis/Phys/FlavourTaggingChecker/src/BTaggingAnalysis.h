@@ -106,7 +106,7 @@ private:
   IVertexFit *               m_fitter;
   const MCParticle*          m_BS;
 
-  double m_IPPU_cut, m_distphi_cut, m_thetaMin;
+  double m_IPPU_cut, m_distphi_cut, m_thetaMin, m_ghostprob_cut;
 
   //properties ----------------
   bool m_requireTrigger, m_requireTisTos;

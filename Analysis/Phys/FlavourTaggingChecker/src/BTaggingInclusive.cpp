@@ -278,8 +278,8 @@ StatusCode BTaggingInclusive::finalize() {
     if(rtag+wtag == 0) continue;         //empty category
 
     double omtag = wtag/(rtag+wtag);
-    double eftag = (rtag+wtag)/nsele;           // tagging efficiency
-    double epsil = eftag*pow(1-2*omtag,2);      // effective efficiency
+    double eftag = (rtag+wtag)/nsele;                  // tagging efficiency
+    double epsil = eftag*(1-2*omtag)*(1-2*omtag);      // effective efficiency
     if(rtag<wtag) epsil= -epsil;
 
     rtt      += rtag;
@@ -288,15 +288,18 @@ StatusCode BTaggingInclusive::finalize() {
     effe_tot += epsil;
 
     //errors on efficiency and omega
-     
     double eftag_err= sqrt((rtag*utag + utag*wtag)/nsele)/nsele;
     double omtag_err= sqrt( rtag*wtag /(rtag+wtag) ) / (rtag+wtag);
+    double diff_tag = (rtag - wtag);
+    double sum_tag  = (rtag + wtag);
 
-    epsilerr = sqrt((pow(rtag - wtag,2)*
-                     (-(pow(rtag - wtag,2)*(rtag +wtag))+nsele
-                      *(pow(rtag,2) +14*rtag*wtag+ pow(wtag,2))))
-                    /(pow(rtag+wtag+utag,3)*pow(rtag + wtag,3)));
-    epsilerrtot = sqrt(pow(epsilerrtot,2)+pow(epsilerr,2));
+    
+    epsilerr = sqrt(( diff_tag*diff_tag*
+                     (-(diff_tag*diff_tag*sum_tag)+nsele
+                      *(rtag*rtag +14*rtag*wtag+ wtag*wtag)))
+                    /(nsele*nsele*nsele*sum_tag*sum_tag*sum_tag));
+    epsilerrtot = sqrt(epsilerrtot*epsilerrtot+epsilerr*epsilerr);
+
 
   
     info()<< tagname <<    " "

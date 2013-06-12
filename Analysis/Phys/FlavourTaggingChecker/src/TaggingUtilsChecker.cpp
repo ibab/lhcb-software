@@ -1,6 +1,6 @@
 // Include files 
 #include "TaggingUtilsChecker.h"
-
+#include "TaggingHelpers.h"
 //--------------------------------------------------------------------
 // Implementation file for class : TaggingUtilsChecker
 //
@@ -182,18 +182,51 @@ StatusCode TaggingUtilsChecker::calcIPPU( const Particle* axp,
 int TaggingUtilsChecker::countTracks( Particle::ConstVector& vtags ) {
   
   int nr = 0;
-  Particle::ConstVector::const_iterator ipart, jpart;
-  for( ipart = vtags.begin(); ipart != vtags.end(); ++ipart ) {
+
+  typedef Particle::ConstVector::const_iterator Iterator;
+  using TaggingHelpers::SameTrackStatus;
+  using TaggingHelpers::isSameTrack;
+  for (Iterator ipart = vtags.begin(); vtags.end() != ipart; ++ipart ) {
     bool duplic=false;
-    for( jpart = ipart+1; jpart != vtags.end(); ++jpart ) {
-      if((*jpart)->proto()==(*ipart)->proto()) { 
+    for( Iterator jpart = vtags.begin(); ipart != jpart; ++jpart ) {
+      SameTrackStatus isSame = isSameTrack(**ipart, **jpart);
+      if (isSame) {
         duplic=true; 
         break; 
       }
     }
-    if(!duplic) ++nr;
+    if (!duplic) ++nr;
   }
+
   return nr;
+}
+//============================================================================
+bool TaggingUtilsChecker::isinTree(const Particle* axp, 
+			    Particle::ConstVector& sons, 
+                            double& dist_phi){
+  dist_phi = std::numeric_limits<double>::max();
+
+  for (Particle::ConstVector::iterator ip = sons.begin(); ip != sons.end(); ++ip) {
+    using TaggingHelpers::SameTrackStatus;
+    using TaggingHelpers::isSameTrack;
+    using TaggingHelpers::toString;
+    using TaggingHelpers::dphi;
+    
+    const double deltaphi =
+      fabs(dphi(axp->momentum().phi(), (*ip)->momentum().phi()));
+    if (dist_phi > deltaphi) dist_phi = deltaphi;
+    SameTrackStatus isSame = isSameTrack(*axp, **ip);
+    if (isSame) {
+      if (msgLevel(MSG::VERBOSE)) 
+        verbose() << " particle is: " << toString(isSame)
+                  << " isinTree part: " << axp->particleID().pid() 
+                  << " with p="<< axp->p()/Gaudi::Units::GeV 
+                  << " pt="<< axp->pt()/Gaudi::Units::GeV 
+                  << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto() << endreq;
+      return true;
+    }
+  }
+  return false;
 }
 //============================================================================
 const Particle* TaggingUtilsChecker::motherof( const Particle* axp,
@@ -215,38 +248,6 @@ const MCParticle* TaggingUtilsChecker::originof( const MCParticle* product ) {
   if ( (!mother) || product->particleID().hasBottom() ) return product; 
   else return originof( mother );
 }
-
-//============================================================================
-bool TaggingUtilsChecker::isinTree( const Particle* axp, 
-                                    Particle::ConstVector& sons, 
-                                    double& dist_phi ) {
-  double p_axp  = axp->p();
-  double pt_axp = axp->pt();
-  double phi_axp= axp->momentum().phi();
-  dist_phi=1000.;
-
-  for( Particle::ConstVector::iterator ip = sons.begin(); 
-       ip != sons.end(); ++ip ){
-
-    double dphi = fabs(phi_axp-(*ip)->momentum().phi()); 
-    if(dphi>3.1416) dphi=6.283-dphi;
-    dist_phi= std::min(dist_phi, dphi);
-
-    if( (    fabs(p_axp -(*ip)->p()) < 0.1 
-             && fabs(pt_axp-(*ip)->pt())< 0.01 
-             && fabs(dphi)< 0.1 )
-             //&& fabs(phi_axp-(*ip)->momentum().phi())< 0.1 )
-        || axp->proto()==(*ip)->proto() ) {
-      debug() << "excluding signal part: " << axp->particleID().pid() 
-              << " with p="<<p_axp/Gaudi::Units::GeV 
-              << " pt="<<pt_axp/Gaudi::Units::GeV 
-              << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto()<<endreq;
-      return true;
-    }
-  }
-  return false;
-}
-
 //=============================================================================
 //return a vector containing all daughters of signal 
 Particle::ConstVector TaggingUtilsChecker::FindDaughters( const Particle* axp ) {
@@ -483,7 +484,7 @@ int TaggingUtilsChecker::comes_from_excitedB(const MCParticle* BS,
   MCParticle::ConstVector::iterator iexc;
   debug()<<" TaggingUtilsChecker::comes_from_excitedB is not supported anymore BS="<< *BS <<" mcp="<<*mcp<<endreq;
   int origin=0;
-   return origin;
+  return origin;
 }
 //=============================================================================
 StatusCode TaggingUtilsChecker::finalize() { return StatusCode::SUCCESS; }

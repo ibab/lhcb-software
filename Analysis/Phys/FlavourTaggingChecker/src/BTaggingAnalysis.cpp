@@ -2,6 +2,7 @@
 #include "BTaggingAnalysis.h"
 
 #include "Event/ODIN.h" // event & run number
+#include "TaggingHelpers.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : BTaggingAnalysis
 //
@@ -52,6 +53,7 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
   declareProperty( "IPPU_cut",                m_IPPU_cut    = 3.0 );
   declareProperty( "distphi_cut",             m_distphi_cut = 0.005 );
   declareProperty( "thetaMin_cut",            m_thetaMin    = 0.012 );
+  declareProperty( "ghostprob_cut",           m_ghostprob_cut = 0.5 );
 }
 
 BTaggingAnalysis::~BTaggingAnalysis() {}
@@ -235,7 +237,12 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> column ("RVx",  RecVert->position().x()/mm);
   tuple -> column ("RVy",  RecVert->position().y()/mm);
   tuple -> column ("RVz",  RecVert->position().z()/mm);
-  debug()<<" **** RecVertex z: "<<RecVert->position().z()/mm <<", IPPVBS: " <<ipPVBS<< ", PU size: "<<verts.size()<<endreq;
+  debug()<<" **** RecVertex z: "<<RecVert->position().z()/mm <<", IPPVBS: " <<ipPVBS<< ", PU size: "<<verts.size();
+  for(unsigned int ivtx=0; ivtx<PileUpVtx.size(); ++ivtx) 
+      debug()<<" PU (x,y,z)="<<PileUpVtx[ivtx]->position().x()<<","<<
+                               PileUpVtx[ivtx]->position().y()<<","<<
+	                       PileUpVtx[ivtx]->position().z()<<") ";
+  debug()<<endreq;
   //lifetime fitter
   double ct=0., ctErr=0., ctChi2=0.;
   StatusCode sc = m_pLifetimeFitter->fit(*RecVert, *AXBS, ct, ctErr, ctChi2);
@@ -296,7 +303,7 @@ StatusCode BTaggingAnalysis::execute() {
   debug()<<"Fill tagger info, vtags: "<<vtags.size()<<endreq;
 
   std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), pipsign(0), piperr(0), pipPU(0), pPl(0), ptheta(0);
-  std::vector<float> ptrtyp(0), plcs(0), pcloneDist(0), ptsal(0), pgprob(0), pdistPhi(0), pveloch(0), pEOverP(0);
+  std::vector<float> ptrtyp(0), plcs(0), pcloneDist(0), ptsal(0), pgprob(0),  pNNgprob(0), pdistPhi(0), pveloch(0), pEOverP(0);
   std::vector<float> pPIDe(0), pPIDm(0), pPIDk(0), pPIDp(0),pPIDfl(0);
   std::vector<float> pPIDNNe(0), pPIDNNm(0), pPIDNNk(0), pPIDNNp(0),pPIDNNpi(0);
   std::vector<float> pMCID(0), pMCP(0), pMCPt(0), pMCphi(0), pMCx(0), pMCy(0), pMCz(0), pMCPl(0),
@@ -321,15 +328,15 @@ StatusCode BTaggingAnalysis::execute() {
     const ProtoParticle* proto = axp->proto();
     const Track* track = proto->track();
 
+    using TaggingHelpers::dphi;
     //calculate some useful vars
     long   ID  = axp->particleID().pid(); 
     double P   = axp->p()/GeV;
     double Pt  = axp->pt()/GeV;
     double Pl  = axp->momentum().Dot(AXBS->momentum())/GeV;
-    double deta= fabs(log(tan(AXBS->momentum().theta()/2.)/tan(asin(Pt/P)/2.)));
-    double dphi= fabs(axp->momentum().phi() - AXBS->momentum().phi()); 
-    if(dphi>3.1416) dphi=6.2832-dphi;
-    double dQ  = ((AXBS->momentum() + axp->momentum()).M() - AXBS->momentum().M()) /GeV;
+    double delta_eta= fabs(log(tan(AXBS->momentum().theta()/2.)/tan(asin(Pt/P)/2.)));
+    double delta_phi= fabs(dphi(axp->momentum().phi() , AXBS->momentum().phi())); 
+    double delta_Q  = ((AXBS->momentum() + axp->momentum()).M() - AXBS->momentum().M()) /GeV;
     double lcs = track->chi2PerDoF();
     double cloneDist = track->info(LHCb::Track::CloneDist, -1.) ;
     double trackxfirst = track->position().x();
@@ -381,7 +388,7 @@ StatusCode BTaggingAnalysis::execute() {
       debug()<<" secondary vertices information ============= "<<endreq;    
       Vertex mySV = svertices.at(0);
       verbose()<< " vertex size: "<<svertices.size()<<endreq;    
-      verbose()<< " svpart1 "<<SVpart1->pt()/GeV<<endreq;
+      verbose()<< " svpart1 "<<SVpart1->pt()/GeV<<" svpart2 "<<SVpart2->pt()/GeV<<endreq;
       if( proto != SVpart1->proto() && proto != SVpart2->proto()){ 
         m_util->calcIP( axp, &mySV, ipSV, iperrSV );
         ipSV=fabs(ipSV);
@@ -389,12 +396,15 @@ StatusCode BTaggingAnalysis::execute() {
         verbose()<<" svpart for doca! svpart1 pt: "<<SVpart1->pt()/GeV<<endreq;
         m_util->calcDOCAmin( axp, SVpart1, SVpart2, docaSV, docaErrSV);
         debug()<<" doca: "<<docaSV<<endreq;
+      }else{
+        debug()<<" proto is = to the SEED particles "<<endreq;
       }
     }
 
     //Fill NTP info -------------------------------------------------------   
     ptsal       .push_back(track->likelihood());
     pgprob      .push_back(track->ghostProbability());
+    pNNgprob    .push_back(proto->info( ProtoParticle:: ProbNNghost, -1000.0 ) );
     ptrtyp      .push_back(trtyp);
     pID         .push_back(ID);
     pP          .push_back(P);
@@ -418,9 +428,9 @@ StatusCode BTaggingAnalysis::execute() {
     pIPSVerr    .push_back(iperrSV);
     pDOCA       .push_back(docaSV);
     pDOCAerr    .push_back(docaErrSV);
-    pdeta       .push_back(deta);
-    pdphi       .push_back(dphi);
-    pdQ         .push_back(dQ);
+    pdeta       .push_back(delta_eta);
+    pdphi       .push_back(delta_phi);
+    pdQ         .push_back(delta_Q);
     ppionCombinedMass.push_back(pionCombinedMass);
     //different PU studies
     pipmean     .push_back(ipmean);
@@ -520,7 +530,7 @@ StatusCode BTaggingAnalysis::execute() {
     //debug
     if (msgLevel(MSG::DEBUG)) {
       debug() << " --- trtyp="<<trtyp<<" ID="<<ID<<" P="<<P<<" Pt="<<Pt  
-              << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ 
+              << " delta_eta="<<delta_eta << " delta_phi="<<delta_phi << " delta_Q="<<delta_Q 
               << " IPsig="<<(IPerr!=0 ? fabs(IP/IPerr) : -999)
               << " IPPU="<<IPPU;
       if(vFlag) debug() << "Found to be in SVTX ------------";
@@ -654,6 +664,7 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("trackp", ptrackp, "N", 200);
   tuple -> farray ("tsal",    ptsal, "N", 200);
   tuple -> farray ("gprob",   pgprob, "N", 200);
+  tuple -> farray ("NNgprob", pNNgprob, "N", 200);
   tuple -> farray ("distPhi", pdistPhi, "N", 200);
   tuple -> farray ("veloch",  pveloch, "N", 200);
   tuple -> farray ("EOverP",  pEOverP, "N", 200);
@@ -852,50 +863,160 @@ const Particle::ConstVector
 BTaggingAnalysis::chooseCandidates(const Particle::Range& parts,
                                    Particle::ConstVector axdaugh,
                                    const RecVertex::ConstVector PileUpVtx) {
-
-  //loop over Particles, preselect tags 
+  
   double distphi;
-  Particle::ConstVector vtags(0);
-  Particle::Range::const_iterator ip, jp;
+  Particle::ConstVector vtags;
+  vtags.reserve(32);
+  std::vector<const LHCb::Particle*> clones;
+
+  Particle::Range::const_iterator ip;
+  //loop over Particles, preselect tags 
   for ( ip = parts.begin(); ip != parts.end(); ++ip){
-    
+    const LHCb::Particle* p    = *ip;    
     const ProtoParticle* proto = (*ip)->proto();
-    if( !proto )                                  continue;
-    if( ! proto->track() )                        continue;
-    if( proto->track()->type() < 3 )              continue; 
-    if( proto->track()->type() > 4 )              continue; 
-    if( (*ip)->p() < 2000 )                       continue;  
-    if( (*ip)->momentum().theta()  < m_thetaMin ) continue;   
-    if( (*ip)->charge() == 0 )                    continue;                
-    if( (*ip)->p()  > 200000 ) continue;
-    if( (*ip)->pt() >  10000 ) continue;
-    if( m_util->isinTree(*ip, axdaugh, distphi) ) continue ; 
-    if( distphi < m_distphi_cut ) continue;
+    if( !proto )                                     continue;
+    if( !proto->track() )                            continue;
+    if( p->charge() == 0 )                           continue;                
+    bool trackTypeOK = (proto->track()->type() == LHCb::Track::Long) || 
+                       (proto->track()->type() == LHCb::Track::Upstream);
+    if( !trackTypeOK )                               continue; 
+    if( p->p()/GeV < 2.0 || p->p()/GeV  > 200. )     continue;
+    if( p->pt()/GeV >  10. )                         continue;
+    if( p->momentum().theta()  < m_thetaMin )        continue;
+    if( proto->track()->ghostProbability() > m_ghostprob_cut ) continue;
+    // remove tracks compatible with the signal
+    if( m_util->isinTree(*ip, axdaugh, distphi) )    continue;  
+    if (distphi < m_distphi_cut )                    continue;
 
     //calculate the min IP wrt all pileup vtxs
+    //eliminate  all parts coming from a pileup vtx
     double ippu, ippuerr;
     m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
-    if(ippuerr) if( ippu/ippuerr < m_IPPU_cut ) continue; //eliminate  all parts coming from a pileup vtx
-
-    bool dup=false;
-    double partp= (*ip)->p();
-    Particle::Range::const_iterator ik;
-    for ( ik = ip+1; ik != parts.end(); ++ik) {
-      if((*ik)->proto() == proto ) { 
-        dup=true; 
-        break; 
-      }
-      if( (*ik)->p() == partp )  { 
-       	warning()<<"Same particle momentum but different protoparticle"<<endreq;
-       	dup=true; 
-       	break; 
+    if(ippuerr) if( ippu/ippuerr < m_IPPU_cut )      continue; 
+    
+    // exclude "trivial" clones: particles with same protoparticle or same
+    // underlying track
+    //
+    // FIXME: this uses the first such track for now, since they have the same
+    // hit content, this should be ok...
+    using TaggingHelpers::SameTrackStatus;
+    using TaggingHelpers::isSameTrack;
+    using TaggingHelpers::toString;
+    SameTrackStatus isSame = TaggingHelpers::DifferentParticles;
+    clones.clear();
+    BOOST_FOREACH(const LHCb::Particle* q, vtags) {
+      isSame = isSameTrack(*p, *q);
+      if (!isSame) continue;
+      // only skip all the rest if actually same track
+      if (isSame >= TaggingHelpers::SameTrack) break;
+      // otherwise, we may need some form of clone killing, because tracks
+      // may be slightly different and we want to pick the "best" one, so
+      // save the other contenders for "best track"
+      clones.push_back(q);
+    }
+    if (isSame) {
+      counter(std::string("clone/") + toString(isSame))++;
+      // if it's actually the same underlying track object, we can throw away
+      // this candidate because it is already in vtags
+      if (isSame >= TaggingHelpers::SameTrack) continue;
+    }
+    // exclude pre-flagged clones we did not catch ourselves
+    if (proto->track()->hasInfo(LHCb::Track::CloneDist)) {
+      if (proto->track()->info(LHCb::Track::CloneDist, 999999.) < 5000.) {
+        counter("clone/KL-clone")++;
+        continue;
       }
     }
-    if(dup) continue; 
+  
+    // ok, if p is a potential clone, we need to find the "best" track and keep
+    // only that one
+    if (clones.empty()) {
+        // no clone, so just store tagger candidate
+      vtags.push_back(p);
+    } else { // choose among clones the one to keep
+      // complete list of clones
+      clones.push_back(p);
+      counter("clones.size()") += clones.size();
 
-    /////////////////////////////////////
-    vtags.push_back(*ip);              // Fill container of candidates
-    /////////////////////////////////////
+      // functor to sort by quality (want to keep "best" track)
+      struct dummy {
+        static bool byIncreasingQual(const LHCb::Particle* p, const LHCb::Particle* q){
+          if (p->proto() && q->proto()) {
+            if (p->proto()->track() && q->proto()->track()) {
+              const LHCb::Track &t1 = *p->proto()->track();
+              const LHCb::Track &t2 = *q->proto()->track();
+              // prefer tracks which have more subdetectors in
+              // where TT counts as half a subdetector
+              const unsigned nSub1 = (t1.hasVelo() ? 2 : 0) +
+                (t1.hasTT() ? 1 : 0) + (t1.hasT() ? 2 : 0);
+              const unsigned nSub2 = (t2.hasVelo() ? 2 : 0) +
+                (t2.hasTT() ? 1 : 0) + (t2.hasT() ? 2 : 0);
+              if (nSub1 < nSub2) return true;
+              if (nSub1 > nSub2) return false;
+              // if available, prefer lower ghost probability
+              const double ghProb1 = t1.ghostProbability();
+              const double ghProb2 = t2.ghostProbability();
+              if (-0. <= ghProb1 && ghProb1 <= 1. &&
+                  -0. <= ghProb2 && ghProb2 <= 1.) {
+                if (ghProb1 > ghProb2) return true;
+                if (ghProb1 < ghProb2) return false;
+              }
+              // prefer longer tracks
+              if (t1.nLHCbIDs() < t2.nLHCbIDs()) return true;
+              if (t1.nLHCbIDs() > t2.nLHCbIDs()) return false;
+              // for same length tracks, have chi^2/ndf decide
+              const double chi1 = t1.chi2() / double(t1.nDoF());
+              const double chi2 = t2.chi2() / double(t2.nDoF());
+              if (chi1 > chi2) return true;
+              if (chi1 < chi2) return false;
+            }
+          }
+          // fall back on a pT comparison (higher is better) as last resort
+          return p->pt() < q->pt();
+        }
+      };
+      // sort clones by quality (stable_sort since byIncreasingQual does not
+      // impose a total ordering, so use stable_sort to ensure that the
+      // resulting order does not depend on sort implementation)
+      std::stable_sort(clones.begin(), clones.end(),dummy::byIncreasingQual);
+      // remove all potential clones from vtags
+      BOOST_FOREACH(const LHCb::Particle* q, clones) {
+        // find potential clone in vtags
+        Particle::ConstVector::iterator it =
+          std::find(vtags.begin(), vtags.end(), q);
+        // if in vtags, remove
+        if (vtags.end() != it) vtags.erase(it);
+      }
+      // get rid of the clones
+
+      // make a disjoint set of tracks by removing the worst track which
+      // is a clone of another track until the set is clone-free
+      for (std::vector<const LHCb::Particle*>::iterator it = clones.begin(); clones.end() != it; ) {
+        bool elim = false;
+        for (std::vector<const LHCb::Particle*>::iterator jt = it + 1; clones.end() != jt; ++jt) {
+          SameTrackStatus status = isSameTrack(*(*it), *(*jt));
+          if (status) {
+            // it is a redundant track, remove it from clones and
+            // start over
+            if (status == TaggingHelpers::ConvertedGamma) {
+              // if we have a converted photon, remove the other leg
+              // as well
+              jt = clones.erase(jt);
+            }
+            it = clones.erase(it);
+            elim = true;
+            break;
+          }
+        }
+        if (elim) continue;
+        ++it;
+      }      
+      // insert disjoint set of tracks into vtags
+      if (!clones.empty()) vtags.insert(vtags.end(), clones.begin(), clones.end());      
+    }
+    
+    
+
 
     if (msgLevel(MSG::DEBUG)) 
       debug() <<"   part ID="<<(*ip)->particleID().pid()
@@ -905,15 +1026,15 @@ BTaggingAnalysis::chooseCandidates(const Particle::Range& parts,
               <<" PIDe="<<proto->info( ProtoParticle::CombDLLe, 0)
               <<" PIDk="<<proto->info( ProtoParticle::CombDLLk, 0)
               <<" proto="<<proto<<endreq;
-  }
-
+  }    
+  counter("nCands") += vtags.size();
   return vtags;
 }
 
 //=============================================================================
 const ProtoParticle::ConstVector BTaggingAnalysis::tagevent (Tuple& tuple, 
                                                              const Particle* AXBS ) {
-                                                             //const Particle* AXBS, const RecVertex* PV ) { //to select ourselves the PV
+                                                             //const Particle* AXBS, const RecVertex* PV ) { //to select ourselves the P
   ProtoParticle::ConstVector partsInSV(0);
 
   bool foundb = false;
@@ -977,8 +1098,7 @@ const ProtoParticle::ConstVector BTaggingAnalysis::tagevent (Tuple& tuple,
   for(size_t i=0; i<taggers.size(); ++i) {
     Tagger itagger = taggers.at(i);
     if( itagger.decision() ) {
-      debug()<<"Tagger "<<itagger.type()
-             <<" decision= "<<itagger.decision()<<endreq;
+      debug()<<"Tagger "<<itagger.type()<<" decision= "<<itagger.decision()<<endreq;
       tagtype.push_back(itagger.type());
       tagdecision.push_back(itagger.decision());
       tagomega.push_back(itagger.omega());
@@ -1310,7 +1430,7 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
   SVpart1=0;
   SVpart2=0; 
   
-  std::vector<Vertex>::const_iterator isv;
+
   if(m_svtool) svertices = m_svtool -> buildVertex( *RecVert, vtags ); // SVertexOneSeedTool from FT
 
   debug() << "  Look seed vertex position " <<endreq;
@@ -1319,6 +1439,7 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
   Vertex tmpseed, tmp_BOvtx;
   int seeds=0;
   //save NEW seed vertex positions
+  std::vector<Vertex>::const_iterator isv;
   for (isv=svertices.begin(); isv!=svertices.end(); ++isv) {
     
     //We keep only the first two tracks, which are the ones which 

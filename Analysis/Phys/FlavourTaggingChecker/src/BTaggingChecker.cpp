@@ -150,9 +150,9 @@ StatusCode BTaggingChecker::execute()
             << std::setw(4) << bkgcat << endreq;
 
   //count rights and wrongs
-  nsele++;
-  if     (tagdecision ==  truetag) nrt[ix]++;
-  else if(tagdecision == -truetag) nwt[ix]++;
+  ++nsele;
+  if     (tagdecision ==  truetag) ++nrt[ix];
+  else if(tagdecision == -truetag) ++nwt[ix];
 
   setFilterPassed( true );
   return StatusCode::SUCCESS;
@@ -165,11 +165,8 @@ StatusCode BTaggingChecker::finalize()
   req.setf(std::ios::fixed);
 
   // calculate effective efficiency in categories with errors
-  double rtt=0;
-  double wtt=0;
-  double rtag(0),wtag(0),utag(0);
-  double ef_tot=0;
-  double effe_tot=0;
+  double rtt(0), wtt(0), rtag(0), wtag(0), utag(0);
+  double ef_tot(0), effe_tot(0);
   double epsilerr(0), epsilerrtot(0);
 
   info()<<"======================================================="<<endreq;
@@ -177,7 +174,7 @@ StatusCode BTaggingChecker::finalize()
   info()<< " Category            EFF.          Etag         Wrong TF"
         << "      r       w       "<<endreq;
 
-  for( int it=1; it < 19; it++ ) {
+  for( int it=1; it < 19; ++it ) {
     rtag = wtag = 0;
     std::string cats;
     if(it== 1) cats =  "   mu only";
@@ -208,8 +205,8 @@ StatusCode BTaggingChecker::finalize()
 
     utag = nsele-rtag-wtag;       // untagged
     double omtag = wtag/(rtag+wtag);
-    double eftag = (rtag+wtag)/nsele;           // tagging efficiency
-    double epsil = eftag*pow(1-2*omtag,2);      // effective efficiency
+    double eftag = (rtag+wtag)/nsele;                 // tagging efficiency
+    double epsil = eftag*(1-2*omtag)*(1-2*omtag);     // effective efficiency
     if(rtag<wtag) epsil= -epsil;
 
     if(it<13){
@@ -222,12 +219,15 @@ StatusCode BTaggingChecker::finalize()
     //errors on efficiency and omega
     double eftag_err= sqrt((rtag*utag + utag*wtag)/nsele)/nsele;
     double omtag_err= sqrt( rtag*wtag /(rtag+wtag) ) / (rtag+wtag);
+    double diff_tag = (rtag - wtag);
+    double sum_tag  = (rtag + wtag);
 
-    epsilerr = sqrt((pow(rtag - wtag,2)*
-                     (-(pow(rtag - wtag,2)*(rtag +wtag))+nsele
-                      *(pow(rtag,2) +14*rtag*wtag+ pow(wtag,2))))
-                    /(pow(rtag+wtag+utag,3)*pow(rtag + wtag,3)));
-    if(it<13) epsilerrtot = sqrt(pow(epsilerrtot,2)+pow(epsilerr,2));
+    
+    epsilerr = sqrt(( diff_tag*diff_tag*
+                     (-(diff_tag*diff_tag*sum_tag)+nsele
+                      *(rtag*rtag +14*rtag*wtag+ wtag*wtag)))
+                    /(nsele*nsele*nsele*sum_tag*sum_tag*sum_tag));
+    if(it<13) epsilerrtot = sqrt(epsilerrtot*epsilerrtot+epsilerr*epsilerr);
 
     //PRINT: ----------------------------------
     req.setf(std::ios::fixed);
