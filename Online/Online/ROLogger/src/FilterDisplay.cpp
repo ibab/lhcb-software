@@ -250,7 +250,6 @@ void FilterDisplay::loadFilters(const string& fname) {
 }
 
 void FilterDisplay::handle(const Event& ev) { 
-  typedef vector<string> _SV;
   IocSensor& ioc = IocSensor::instance();
   switch(ev.eventtype) {
   case IocEvent:

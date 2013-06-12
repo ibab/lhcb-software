@@ -253,7 +253,6 @@ void ErrShowDisplay::saveMessages() {
 }
 
 void ErrShowDisplay::handle(const Event& ev) {
-  typedef vector<string> _SV;
   IocSensor& ioc = IocSensor::instance();
   ioc_data data(ev.data);
   switch(ev.eventtype) {
