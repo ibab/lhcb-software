@@ -1,4 +1,3 @@
-// $Id: IPart2Calo.h,v 1.5 2009-05-19 13:49:32 cattanem Exp $
 #ifndef IPART2CALO_H 
 #define IPART2CALO_H 1
 
@@ -29,6 +28,9 @@ public:
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IPart2Calo; }
+
+  /// virtual destructor
+  virtual ~IPart2Calo() {}  
 
   virtual StatusCode         initialize() = 0;
 

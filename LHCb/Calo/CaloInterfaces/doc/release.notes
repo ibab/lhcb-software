@@ -3,6 +3,11 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2013-06-12 - Marco Cattaneo
+ - Add virtual destructor to ICaloSubClusterTag and IPart2Calo interface classes.
+   Fixes gcc48 warning virtual-move-assign, 
+   see explanation in https://sft.its.cern.ch/jira/CFHEP-87
+
 !========================= CaloInterfaces v8r5 2012-11-26 =========================
 ! 2012-11-20 - Marco Clemencic
  - Fixed a warning.
