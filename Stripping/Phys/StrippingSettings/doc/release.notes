@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-06-12 - Lucio Anderlini (BandQ)
+ - Added a looser version of the DiMuonForXsection as used in Stripping18 for the 
+   ICHEP stream to Stripping20r2 dictionaries. Cuts: 
+    (MINTREE('mu+'==ABSID,PT)>0.5*GeV) & (VFASPF(VCHI2PDOF)<20) & (MM>2.9*GeV)
+
 ! 2013-06-07 - Philip Hunt
  - Added PID calibration lines for kaons, pion, protons, muons and electrons to the 
    Stripping20r3 dictionary.
