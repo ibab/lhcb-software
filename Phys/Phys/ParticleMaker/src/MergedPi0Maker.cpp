@@ -40,7 +40,7 @@ DECLARE_ALGORITHM_FACTORY( MergedPi0Maker )
     , m_useShowerShape   ()
     , m_useClusterMass   ()
                                 // cut
-    , m_clCut        ()
+    , m_clCut      ()
     , m_gPtCut     ()
     , m_ggDistCut  ()
     , m_parMas()
@@ -254,9 +254,6 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
 // ============================================================================
 double MergedPi0Maker::confLevel( const LHCb::ProtoParticle* pp ) const
 {
-  // avoid long typing
-  typedef const std::vector<std::pair<int,double> >  PIDs  ;
-
   if( 0 == pp )
   { Error("confLevel(): ProtoParticle* points to NULL!"); return -1 ; };
 

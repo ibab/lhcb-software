@@ -243,13 +243,13 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
     if ( 0 != momentum.status()  ) { continue ; }
 
     double pT = momentum.pt();
-    double E = momentum.e();
-    double px= momentum.px();
-    double py= momentum.py();
-    double pz= momentum.pz();
-    double p = E;
+    double E  = momentum.e();
+    double px = momentum.px();
+    double py = momentum.py();
+    double pz = momentum.pz();
+    double p  = E;
     // Massive object or Hcal correction
-    if( m_addHcal || m_mas > 0 )
+    if ( m_addHcal || m_mas > 0 )
     {
       if( m_addHcal )
       {
@@ -260,9 +260,9 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
         pT *= (1. + eHcal);
         p  = E;
       }
-      if( m_mas > 0 )
+      if ( m_mas > 0 )
       {
-        p  = std::sqrt( E*E - m_mas*m_mas);
+        p  = std::sqrt( E*E - m_mas*m_mas );
         px *= (p/E);
         py *= (p/E);
         pz *= (p/E);
@@ -346,9 +346,6 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
 // ============================================================================
 double PhotonMaker::confLevel( const LHCb::ProtoParticle* pp ) const
 {
-  // avoid long typing
-  typedef const std::vector<std::pair<int,double> >  PIDs  ;
-
   if( 0 == pp )
   { Error("confLevel(): ProtoParticle* points to NULL!"); return -1 ; };
 
@@ -360,7 +357,7 @@ double PhotonMaker::confLevel( const LHCb::ProtoParticle* pp ) const
     if ( pp->hasInfo(LHCb::ProtoParticle::CaloTrMatch) )
     {
       // assume gaussian distribution (it is wrong!)
-      CL *= ( 1.0 - exp( -0.5 * pp->info(LHCb::ProtoParticle::CaloTrMatch,-999.) )) ;
+      CL *= ( 1.0 - std::exp( -0.5 * pp->info(LHCb::ProtoParticle::CaloTrMatch,-999.) )) ;
     }
     else
     {
@@ -400,8 +397,8 @@ double PhotonMaker::confLevel( const LHCb::ProtoParticle* pp ) const
     if ( pp->hasInfo(LHCb::ProtoParticle::ClusterMass) )
     {
       // assume exponential distribution (it is wrong!)
-      CL *= exp( -0.5 * pp->info(LHCb::ProtoParticle::ClusterMass,0.)
-                 / ( 25 * Gaudi::Units::MeV ) ) ;
+      CL *= std::exp( -0.5 * pp->info(LHCb::ProtoParticle::ClusterMass,0.)
+                      / ( 25 * Gaudi::Units::MeV ) ) ;
     }  // Update CL
     else
     {
@@ -415,7 +412,7 @@ double PhotonMaker::confLevel( const LHCb::ProtoParticle* pp ) const
     if ( pp->hasInfo(LHCb::ProtoParticle::PhotonID) ) 
     {
       double pid = pp->info(LHCb::ProtoParticle::PhotonID, 1.  ) ;
-      CL *= 0.5*(tanh(pid)+1);
+      CL *= 0.5*(std::tanh(pid)+1);
     }
     else
     {
