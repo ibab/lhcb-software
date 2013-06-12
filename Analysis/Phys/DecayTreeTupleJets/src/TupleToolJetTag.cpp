@@ -22,11 +22,11 @@ DECLARE_TOOL_FACTORY(TupleToolJetTag)
 
 //=============================================================================
 // Constructor
-  TupleToolJetTag::TupleToolJetTag(const std::string& type,
-                                   const std::string& name,
-                                   const IInterface* parent)
-    : TupleToolJetsBase(type, name , parent)
-    , m_TagTool(0)
+TupleToolJetTag::TupleToolJetTag(const std::string& type,
+                                 const std::string& name,
+                                 const IInterface* parent)
+: TupleToolJetsBase(type, name , parent)
+  , m_TagTool(NULL)
 {
   declareInterface<IParticleTupleTool>(this);
 
@@ -48,14 +48,12 @@ DECLARE_TOOL_FACTORY(TupleToolJetTag)
 // Initalise
 StatusCode TupleToolJetTag::initialize()
 {
-  if(!TupleToolBase::initialize())
-    return StatusCode::FAILURE;
-
+  const StatusCode sc = TupleToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
+  
   m_TagTool = tool<IJetTagTool>(m_tagToolName,m_tagToolName, this);
-  if(m_TagTool == 0)
-    return Error("Couldn't get requested jet tag tool", StatusCode::SUCCESS);
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 
@@ -66,10 +64,11 @@ StatusCode TupleToolJetTag::fill(const LHCb::Particle*,
                                  const std::string& head,
                                  Tuples::Tuple& tuple)
 {
-  const std::string prefix = fullName(head);
   bool result = true;
-  if(jet)
+  if ( jet )
   {
+    const std::string prefix = fullName(head);
+
     // Run jet tag tool
     std::map<std::string,double> property;
 
@@ -78,14 +77,12 @@ StatusCode TupleToolJetTag::fill(const LHCb::Particle*,
     if(property.empty())
       if(msgLevel(MSG::ERROR))  debug() << "Write tag to ntuple --- not found "<< endmsg;
 
-
-    typedef std::map<std::string, double>::iterator it_type;
-    for( std::map<std::string, double>::iterator  it = property.begin();  it != property.end(); it++) {
+    for( std::map<std::string, double>::iterator  it = property.begin();  
+         it != property.end(); ++it )
+    {
       if(it->first != "extraInfo")
         result &= (tuple)->column(prefix + "_" + m_tagToolLabel +"_" + (it->first) , (it->second));
-
-
-
+      
     }
   }
 
