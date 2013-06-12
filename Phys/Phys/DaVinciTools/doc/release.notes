@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-06-12 - Chris Jones
+ - Fix a few gcc 4.8 warnings (unused typedefs).
+
 ! 2013-05-22 - Chris Jones
  - Fix various clang 3.2 warnings.
 
