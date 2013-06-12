@@ -837,7 +837,6 @@ StatusCode LHCb::decodeMEP( const MEPEvent* me,
                             map<unsigned int,vector<RawBank*> >& events)
 {
   typedef vector<RawBank*> _Banks;
-  typedef map<unsigned int,_Banks> _Evt;
   unsigned int evID, eid_h = 0, eid_l = 0;
   const RawBank *prev = 0, *l = 0;
   RawBank* curr = 0;
@@ -898,7 +897,6 @@ LHCb::decodeMEP2EventFragments( const MEPEvent* me,
                             unsigned int&   partitionID,
                             map<unsigned int, vector<MEPFragment*> >& events)
 {
-  typedef map<unsigned int, vector<MEPFragment*> > Events;
   unsigned int evID, eid_h = 0, eid_l = 0;
   for (MEPMultiFragment* mf = me->first(); mf<me->last(); mf=me->next(mf)) {
     bool first = true;
@@ -923,7 +921,6 @@ LHCb::decodeMEP2EventBanks( const MEPEvent* me,
                             unsigned int&   partitionID,
                             map<unsigned int, vector<RawBank*> >& events)
 {
-  typedef map<unsigned int, vector<MEPFragment*> > Events;
   unsigned int evID, eid_h = 0, eid_l = 0;
   const RawBank *prev = 0;
   try {
