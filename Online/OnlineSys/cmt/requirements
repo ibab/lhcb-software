@@ -39,7 +39,7 @@ use OnlineBase          v1r15    Online
 use OnlineHistDB        v8r1     Online
 use OnlineKernel        v2r12    Online
 use OnlineTools         v1r4     Online
-use OnlineTasks         v1r50    Online
+use OnlineTasks         v1r51    Online
 use Presenter           v3r7     Online
 use PresenterDoc        v1r0     Online
 use PyDIM               v2r12    Online

@@ -6,6 +6,46 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r0>2013-06-12 OnlineSys v5r0</A></H1>
+<PRE>
+  New and imcompatible version of Online software.
+  This version includes the new buffer manager and also
+  supports the concept of subfarm-controller tasks.
+
+  Please note:
+  THIS IS A TEST RELEASE FOR THE ONLINE GROUP.
+  DO NOT USE IT! 
+
+  Updated/new packages:
+      MDF                 v3r39    DAQ
+      Camera              v1r24    Online
+      Checkpointing       v0r13    Online
+      CondDBServer        v1r4     Online
+      Controller          v0r3     Online
+      ControllerTests     v0r2     Online
+      DefHLTUtils         v1r2     Online
+      DIM                 v19r37   Online
+      FarmMonitor         v2r12    Online
+      GaudiOnline         v2r64    Online
+      GaudiUPI            v1r16    Online
+      OnlineBase          v1r15    Online
+      OnlineKernel        v2r12    Online
+      OnlineTasks         v1r51    Online
+      Presenter           v3r7     Online
+      PyDIM               v2r12    Online
+      RawBankSizes        v2r16    Online
+      ROMon               v1r41    Online
+      ROLogger            v0r25    Online
+      Trending            v2r2     Online
+      Writer              v1r47    Online
+      XML                 v0r1     Online
+</PRE>
+
+<H1><A NAME=v4r69>2013-05-20 OnlineSys v4r69</A></H1>
+<PRE>
+   Like v4r67, but based in Gaudi v23r7.
+</PRE>
+
 <H1><A NAME=v4r68>2012-09-13 OnlineSys v4r68</A></H1>
 <PRE>
    Like v4r67, but based in Gaudi v23r3.
