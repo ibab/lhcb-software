@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2013-06-12 - Chris Jones
+ - Suppress a gcc 4.8 warning in SnellsLawRefraction
+
 !========================= RichTools v2r41 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
  - Added CMake configuration file.

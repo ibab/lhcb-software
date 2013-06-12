@@ -98,7 +98,7 @@ StatusCode SnellsLawRefraction::aeroUpdate()
 void SnellsLawRefraction::buildAeroPlaneInfo() const
 {
   // load the radiator tool
-  const IRadiatorTool * radiatorTool;
+  const IRadiatorTool * radiatorTool = NULL;
   acquireTool( "RichRadiatorTool", radiatorTool );
 
   // get three points in exit plane
