@@ -2,6 +2,9 @@
 ! Package     : VLDet
 !-------------------------------------------------------------------------
 
+! 2013-06-07  Heinrich Schindler
+ - fixed globalToLocal transformation in DeVLPhiSensor::pointToChannel
+
 !========================= VLDet v1r6 2013-04-29 =========================
 ! 2013-04-28 - Heinrich Schindler
  - Removed unused functions

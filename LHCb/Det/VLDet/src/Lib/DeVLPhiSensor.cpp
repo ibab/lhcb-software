@@ -253,7 +253,7 @@ StatusCode DeVLPhiSensor::pointToChannel(const Gaudi::XYZPoint& point,
                                          double& pitch) const {
 
   // Transform to the local frame.                                         
-  Gaudi::XYZPoint localPoint = localToGlobal(point);
+  Gaudi::XYZPoint localPoint = globalToLocal(point);
   // Check boundaries.
   StatusCode sc = isInActiveArea(localPoint);
   if (!sc.isSuccess()) return sc;
