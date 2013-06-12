@@ -26,5 +26,8 @@ namespace ROMon {
     DimReverseLock();
     ~DimReverseLock();
   };
+  template <typename A, typename B> inline A ro_min(const A& a, const B& b) {
+    return a < b ? a : b;
+  }
 }
 #endif // ROMON_ROMONDEF_H

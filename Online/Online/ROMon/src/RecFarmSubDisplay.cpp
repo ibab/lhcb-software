@@ -165,15 +165,15 @@ void RecFarmSubDisplay::handle(const Event& ev) {
 /// Update display content
 void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
   char txt[128], text[128];
-  long long int evt_prod[2]={0,0}, min_prod[2]={LNG_max,LNG_max};
+  long long int evt_prod[2]={0,0}, min_prod[2]  = {LNG_max,LNG_max};
   long int free_space[2]  = {0,0}, min_space[2] = {LNG_max,LNG_max};
   long int used_slots[2]  = {0,0}, min_slots[2] = {LNG_max,LNG_max};
   long int buf_clients[2] = {0,0};
   float fspace[2]    = {FLT_max,FLT_max};
   float fslots[2]    = {FLT_max,FLT_max};
-  long int evt_sent       = LNG_max;
-  long int evt_reco       = LNG_max;
-  long int evt_recv       = LNG_max;
+  long int evt_sent  = LNG_max;
+  long int evt_reco  = LNG_max;
+  long int evt_recv  = LNG_max;
   bool inuse         = false;
   int numNodes       = 0;
   int numBuffs       = 0;
@@ -197,11 +197,11 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
       default:                        continue;
       }
       inuse = true;
-      fspace[idx]       = min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size)); 
-      fslots[idx]       = min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
-      min_space[idx]    = min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
-      min_slots[idx]    = min(min_slots[idx],ctrl.p_emax-ctrl.i_events);
-      min_prod[idx]     = min(min_prod[idx],ctrl.tot_produced);
+      fspace[idx]       = ro_min(fspace[idx],float(ctrl.i_space)/float(ctrl.bm_size)); 
+      fslots[idx]       = ro_min(fslots[idx],float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax));
+      min_space[idx]    = ro_min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
+      min_slots[idx]    = ro_min(min_slots[idx],ctrl.p_emax-ctrl.i_events);
+      min_prod[idx]     = ro_min(min_prod[idx],ctrl.tot_produced);
       evt_prod[idx]    += ctrl.tot_produced;
       free_space[idx]  += (ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024;
       used_slots[idx]  += (ctrl.p_emax-ctrl.i_events);
@@ -216,20 +216,20 @@ void RecFarmSubDisplay::updateContent(const Nodeset& ns) {
         if ( p ) p = ::strchr(++p,'_');
         if ( p ) {
           if ( b==INPUT_BUFFER && p[4] == REC_TASK )  {
-            node_evt_reco = min(node_evt_reco,(*ic).events);
+            node_evt_reco = ro_min(node_evt_reco,(*ic).events);
           }
           else if ( b==INPUT_BUFFER && p[8] == REC_RECEIVER_TASK )  {
             node_evt_recv += (*ic).events;
           }
           else if ( b==OUTPUT_BUFFER && p[8] == REC_SENDER_TASK )  {
-            node_evt_sent = min(node_evt_sent,(*ic).events);
+            node_evt_sent = ro_min(node_evt_sent,(*ic).events);
           }
         }
       }
     }
-    evt_reco = min(evt_reco,node_evt_reco);
-    evt_recv = min(evt_recv,node_evt_recv);
-    evt_sent = min(evt_sent,node_evt_sent);
+    evt_reco = ro_min(evt_reco,node_evt_reco);
+    evt_recv = ro_min(evt_recv,node_evt_recv);
+    evt_sent = ro_min(evt_sent,node_evt_sent);
   }
   char b1[64];
   TimeStamp frst=ns.firstUpdate();

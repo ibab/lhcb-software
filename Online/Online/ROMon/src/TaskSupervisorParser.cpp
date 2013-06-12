@@ -53,8 +53,6 @@ TaskSupervisorParser::~TaskSupervisorParser()   {
 }
 // ----------------------------------------------------------------------------
 void TaskSupervisorParser::getNodes(DOMNode* fde, Cluster& cluster) const {
-  typedef Cluster::Node::Tasks Tasks;
-  typedef Cluster::Node::Connections Connections;
   XMLElement elt(fde);
   cluster.name   = elt.attr(Attr_name);
   cluster.time   = elt.attr(Attr_time);
@@ -151,14 +149,9 @@ void TaskSupervisorParser::getClusters(Clusters& clusters) const {
 void TaskSupervisorParser::getInventory(Inventory& inv) const {
   typedef Inventory::Task              _T;
   typedef Inventory::TaskList          _TL;
-  typedef Inventory::TaskListMap       _TLM;
   typedef Inventory::ConnectionList    _CL;
-  typedef Inventory::ConnectionListMap _CLM;
   typedef Inventory::NodeType          _NT;
-  typedef Inventory::NodeTypeMap       _NTM;
   typedef Inventory::NodeCollection    _NC;
-  typedef Inventory::NodeCollectionMap _NCM;
-
   DOMNode* fde = getDoc(true)->getElementsByTagName(XMLStr("*"))->item(0);
 
   for(XMLCollection c(child(fde,"Task"), false, "Task"); c; ++c) {

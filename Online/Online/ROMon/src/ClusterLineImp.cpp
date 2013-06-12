@@ -446,11 +446,11 @@ void StorageClusterLine::display() {
           numClients    += (*ib).clients.size();
           num_cl[idx]   += (*ib).clients.size();
           num_sl[idx]   += ctrl.p_emax - ctrl.i_events;
-          min_prod[idx]  = min(min_prod[idx],ctrl.tot_produced);
+          min_prod[idx]  = ro_min(min_prod[idx],ctrl.tot_produced);
 	  fsp = float(ctrl.i_space)/float(ctrl.bm_size);
 	  fsl = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-          fspace[idx]    = min(fspace[idx],fsp);
-          fslots[idx]    = min(fslots[idx],fsl);
+          fspace[idx]    = ro_min(fspace[idx],fsp);
+          fslots[idx]    = ro_min(fslots[idx],fsl);
           if ( fsl < SLOTS_MIN || fsp < SPACE_MIN ) bad_nodes.insert((*n).name);
           m_inUse = true;
         }
@@ -579,11 +579,11 @@ void MonitoringClusterLine::display() {
 	  tot_prod[idx] += ctrl.tot_produced;
 	  num_cl[idx]   += ncl;
 	  num_sl[idx]   += ctrl.p_emax - ctrl.i_events;
-          min_prod[idx]  = min(min_prod[idx],ctrl.tot_produced);
+          min_prod[idx]  = ro_min(min_prod[idx],ctrl.tot_produced);
 	  fsl            = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
 	  fsp            = float(ctrl.i_space)/float(ctrl.bm_size);
-          fspace[idx]    = min(fspace[idx],fsp);
-          fslots[idx]    = min(fslots[idx],fsl);
+          fspace[idx]    = ro_min(fspace[idx],fsp);
+          fslots[idx]    = ro_min(fslots[idx],fsl);
           if ( fsl < SLOTS_MIN || fsp < SPACE_MIN ) {
             bad_nodes.insert((*n).name);
           }
@@ -741,11 +741,11 @@ void FarmClusterLine::display() {
       m_inUse = true;
       fsp               = float(ctrl.i_space)/float(ctrl.bm_size);
       fsl               = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-      fspace[idx]       = min(fspace[idx],fsp); 
-      fslots[idx]       = min(fslots[idx],fsl);
-      min_space[idx]    = min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
-      min_slots[idx]    = min(min_slots[idx],ctrl.p_emax-ctrl.i_events);
-      min_prod[idx]     = min(min_prod[idx],ctrl.tot_produced);
+      fspace[idx]       = ro_min(fspace[idx],fsp); 
+      fslots[idx]       = ro_min(fslots[idx],fsl);
+      min_space[idx]    = ro_min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
+      min_slots[idx]    = ro_min(min_slots[idx],ctrl.p_emax-ctrl.i_events);
+      min_prod[idx]     = ro_min(min_prod[idx],ctrl.tot_produced);
       evt_prod[idx]    += ctrl.tot_produced;
       free_space[idx]  += (ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024;
       free_slots[idx]  += (ctrl.p_emax-ctrl.i_events);
@@ -765,27 +765,27 @@ void FarmClusterLine::display() {
           break;
         case SENDER_TASK:
           if( b == RES_BUFFER || b == SND_BUFFER )  {
-            node_evt_sent = min(node_evt_sent,(*ic).events);
+            node_evt_sent = ro_min(node_evt_sent,(*ic).events);
           }
           break;
         case MOORE_TASK:
           //  Normal  and        TAE event processing
           if( b == EVT_BUFFER || b == MEP_BUFFER )  {
-            node_evt_moore = min(node_evt_moore,(*ic).events);
+            node_evt_moore = ro_min(node_evt_moore,(*ic).events);
           }
           break;
         case OVLWR_TASK:
-	  node_evt_ovl = min(node_evt_ovl,(*ic).events);
+	  node_evt_ovl = ro_min(node_evt_ovl,(*ic).events);
           break;
         default:
           break;
         }
       }
     }
-    evt_moore = min(evt_moore,node_evt_moore);
-    evt_built = min(evt_built,node_evt_mep);
-    evt_sent  = min(evt_sent,node_evt_sent);
-    evt_ovl   = min(evt_ovl,node_evt_ovl);
+    evt_moore = ro_min(evt_moore,node_evt_moore);
+    evt_built = ro_min(evt_built,node_evt_mep);
+    evt_sent  = ro_min(evt_sent,node_evt_sent);
+    evt_ovl   = ro_min(evt_ovl,node_evt_ovl);
   }
 
   RTL::Lock lock(InternalDisplay::screenLock());

@@ -153,10 +153,10 @@ void SubfarmStatCollector::updateMBM(const Nodeset& ns) {
     result += ":";
     for(Node::Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       const MBMBuffer::Control& ctrl = (*ib).ctrl;
-      ::sprintf(text,"{%s:%d#%d#%d#%ld#%d#%ld}",(*ib).name,
+      ::sprintf(text,"{%s:%d#%d#%ld#%ld#%ld#%ld}",(*ib).name,
                 int((ctrl.bm_size*ctrl.bytes_p_Bit)/1024),int((ctrl.i_space*ctrl.bytes_p_Bit)/1024),
-                ctrl.p_emax,ctrl.i_events,
-                ctrl.p_umax,ctrl.i_users);
+                long(ctrl.p_emax),long(ctrl.i_events),
+		long(ctrl.p_umax),long(ctrl.i_users));
       result += text;
     }
     result += "]";

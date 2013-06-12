@@ -185,17 +185,17 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   static const float     FLT_max = numeric_limits<float>::max();
 
   char txt[128], text[128];
-  long long int evt_prod[4]    = {0,0,0,0}, min_prod[4]  = {LNG_max,LNG_max,LNG_max,LNG_max};
-  long int free_space[4]  = {0,0,0,0}, min_space[4] = {LNG_max,LNG_max,LNG_max,LNG_max};
-  long int free_slots[4]  = {0,0,0,0}, min_slots[4] = {LNG_max,LNG_max,LNG_max,LNG_max};
+  long long int evt_prod[4] = {0,0,0,0}, min_prod[4]  = {LNG_max,LNG_max,LNG_max,LNG_max};
+  long int free_space[4]    = {0,0,0,0}, min_space[4] = {LNG_max,LNG_max,LNG_max,LNG_max};
+  long int free_slots[4]    = {0,0,0,0}, min_slots[4] = {LNG_max,LNG_max,LNG_max,LNG_max};
   int buf_clients[4] = {0,0,0,0};
   float fspace[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
   float fslots[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
   float fsl, fsp;
-  long int evt_ovl        = LNG_max;
-  long int evt_sent       = LNG_max;
-  long int evt_moore      = LNG_max;
-  long int evt_built      = LNG_max;
+  long int evt_ovl   = LNG_max;
+  long int evt_sent  = LNG_max;
+  long int evt_moore = LNG_max;
+  long int evt_built = LNG_max;
   bool inuse         = false;
   int numNodes       = 0;
   int numBuffs       = 0;
@@ -225,11 +225,11 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
       inuse = true;
       fsp               = float(ctrl.i_space)/float(ctrl.bm_size);
       fsl               = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-      fspace[idx]       = min(fspace[idx],fsp); 
-      fslots[idx]       = min(fslots[idx],fsl);
-      min_space[idx]    = min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
-      min_slots[idx]    = min(min_slots[idx],ctrl.p_emax-ctrl.i_events);
-      min_prod[idx]     = min(min_prod[idx],ctrl.tot_produced);
+      fspace[idx]       = ro_min(fspace[idx],fsp); 
+      fslots[idx]       = ro_min(fslots[idx],fsl);
+      min_space[idx]    = ro_min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
+      min_slots[idx]    = ro_min(min_slots[idx],ctrl.p_emax-ctrl.i_events);
+      min_prod[idx]     = ro_min(min_prod[idx],ctrl.tot_produced);
       evt_prod[idx]    += ctrl.tot_produced;
       free_space[idx]  += (ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024;
       free_slots[idx]  += (ctrl.p_emax-ctrl.i_events);
@@ -251,19 +251,19 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
         case SENDER_TASK:
 	  //  Orig.MEP schema    MEP or DeferHLT schema
           if( b == RES_BUFFER || b == SND_BUFFER )  {
-            node_evt_sent = min(node_evt_sent,(*ic).events);
+            node_evt_sent = ro_min(node_evt_sent,(*ic).events);
           }
           break;
         case MOORE_TASK:
           //  Normal  and        TAE event processing
 	  //  MEP or DeferHLT    Orig.MEP schmema
           if( b == EVT_BUFFER || b == MEP_BUFFER )  {
-            node_evt_moore = min(node_evt_moore,long((*ic).events));
+            node_evt_moore = ro_min(node_evt_moore,long((*ic).events));
           }
           break;
         case OVLWR_TASK:
           if( b == OVL_BUFFER )  {
-            node_evt_ovl = min(node_evt_ovl,long((*ic).events));
+            node_evt_ovl = ro_min(node_evt_ovl,long((*ic).events));
           }
           break;
         default:
@@ -271,10 +271,10 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
         }
       }
     }
-    evt_ovl   = min(evt_ovl,node_evt_ovl);
-    evt_moore = min(evt_moore,node_evt_moore);
-    evt_built = min(evt_built,node_evt_mep);
-    evt_sent  = min(evt_sent,node_evt_sent);
+    evt_ovl   = ro_min(evt_ovl,node_evt_ovl);
+    evt_moore = ro_min(evt_moore,node_evt_moore);
+    evt_built = ro_min(evt_built,node_evt_mep);
+    evt_sent  = ro_min(evt_sent,node_evt_sent);
   }
   char b1[64];
   TimeStamp frst=ns.firstUpdate();
