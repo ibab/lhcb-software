@@ -85,6 +85,30 @@ if !(-r ${rel_dir}/$PACKAGE/$VERSION) then
    exit 0
 endif
 
+# Setting up the DIRAC environment
+if ! $?LHCBDIRACSYSROOT then
+  unsetenv User_release_area
+  source `which SetupProject.csh` LHCbDirac >&! /dev/null
+  if $SetupProjectStatus != 0 then
+    echo Problem to set the LHCbDirac environment
+  endif
+endif
+
+# Checking if the user has a grid proxy with admin rights
+# ask for one if needed
+set pinfo = `which lhcb-proxy-info`
+set isadmin = `$pinfo | grep -c '/lhcb/Role=lcgadmin' `
+if ( $isadmin == 0 ) then
+
+	`which lhcb-proxy-init` -g lhcb_admin
+	set rc_dirac = $status
+	if ($rc_dirac != 0 ) then
+	   	echo problem to generate the Proxy
+	endif
+else
+	echo "Grid proxy found"
+endif
+
 # Checking if there are still DIRAC active steps
 lb-dirac-check-app-use $project $version
 if ( $? == 1 ) then
@@ -178,29 +202,6 @@ endif
 #remove the GRID entry if necessary
 echo "Check if the package should be removed from the GRID"
 echo " "
-
-if ! $?LHCBDIRACSYSROOT then
-  unsetenv User_release_area
-  source `which SetupProject.csh` LHCbDirac >&! /dev/null
-  if $SetupProjectStatus != 0 then
-    echo Problem to set the LHCbDirac environment
-  endif
-endif
-
-# Checking if the user has a grid proxy with admin rights
-# ask for one if needed
-set pinfo = `which lhcb-proxy-info`
-set isadmin = `$pinfo | grep -c '/lhcb/Role=lcgadmin' `
-if ( $isadmin == 0 ) then
-
-	`which lhcb-proxy-init` -g lhcb_admin
-	set rc_dirac = $status
-	if ($rc_dirac != 0 ) then
-	   	echo problem to generate the Proxy
-	endif
-else
-	echo "Grid proxy found"
-endif
 
 `which dirac-lhcb-check-software` $packageIni $version
 if ( $status == 0 ) then
