@@ -34,6 +34,9 @@ public:
   /// InterfaceID
   DeclareInterfaceID(ICondDBReader, 2, 1);
 
+  /// virtual destructor
+  virtual ~ICondDBReader() {}
+
   typedef boost::shared_ptr<const cool::IRecord> DataPtr;
 
   /// Helper class to easily manage an interval of validity as a pair of Gaudi::Time
