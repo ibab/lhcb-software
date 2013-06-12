@@ -1,5 +1,5 @@
 package Writer
-version v1r46
+version v1r47
 #============================================================================
 
 branches          cmt src Writer
