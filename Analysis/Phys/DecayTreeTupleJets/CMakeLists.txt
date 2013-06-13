@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DecayTreeTupleJets
 ################################################################################
-gaudi_subdir(DecayTreeTupleJets v1r1)
+gaudi_subdir(DecayTreeTupleJets v1r1p2)
 
 gaudi_depends_on_subdirs(Phys/DecayTreeTupleBase
                          Phys/LoKiArrayFunctors

@@ -4,6 +4,8 @@
 ! Purpose     : Jet related Tuple Tools
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTupleJets v1r1p2 2013-06-13 =========================
+
 ! 2013-06-12 - Chris Jones
  - Remove unused typedefs (gcc 4.8 warning).
 
