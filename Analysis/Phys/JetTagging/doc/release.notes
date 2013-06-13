@@ -4,6 +4,8 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+!========================= JetTagging v1r1p1 2013-06-13 =========================
+
 ! 2013-06-12 - Chris Jones
  - Remove unused typedefs (gcc 4.8 warning).
 
