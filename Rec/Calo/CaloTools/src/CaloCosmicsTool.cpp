@@ -384,14 +384,18 @@ StatusCode CaloCosmicsTool::fit2D(){
       ssx2 += sx2;
     }
   }}
-  m_kernel = kernel / (double) m_adcSum;
-  
 
+  if( 0 == m_adcSum ) {
+    m_kernel = 0;
+  }
+  else {
+    m_kernel = kernel / (double) m_adcSum;  
+  }
+  
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << " m_cosmicsADCs.size() " << m_cosmicsADCs.size() << endmsg;
   if(m_cosmicsADCs.size()== 0){
-    Warning( "Empty 2D segment - fit failed").ignore();
-    return StatusCode::FAILURE;
+    return Warning( "Empty 2D segment - fit failed", StatusCode::FAILURE );
   }
 
   // ADC sum thresholds

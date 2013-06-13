@@ -173,7 +173,7 @@ StatusCode L0Calo2CaloTool::putClustersOnTES( std::vector<LHCb::CaloCluster*>& c
   LHCb::CaloClusters* output = getOrCreate<LHCb::CaloClusters, LHCb::CaloClusters>( m_clusterLocation );
   output -> setVersion( 2 ); // update the version number (needed for serialization)
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "0: LHCb::CaloClusters at " << m_clusterLocation << " size = " << ( output ? (long) output->size() : -1 )
+    debug() << "0: LHCb::CaloClusters at " << m_clusterLocation << " size = " << (long) output->size()
             << " v=" << (int) output->version() << " newly found clusters.size() = " << clusters.size() << endmsg; ///////
 
   // populate the CaloClusters TS container 
@@ -189,7 +189,7 @@ StatusCode L0Calo2CaloTool::putClustersOnTES( std::vector<LHCb::CaloCluster*>& c
     output -> insert ( cl ) ;
   }
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "1: LHCb::CaloClusters at " << m_clusterLocation << " size = " << ( output ? long( output->size() ) : -1 ) << endmsg; ////////////
+  if ( msgLevel(MSG::DEBUG) ) debug() << "1: LHCb::CaloClusters at " << m_clusterLocation << " size = " << long( output->size() ) << endmsg;
  
   return StatusCode::SUCCESS;
 }
@@ -235,7 +235,7 @@ const LHCb::CaloDigits* L0Calo2CaloTool::makeDigits
   LHCb::CaloDigits* digits = getOrCreate<LHCb::CaloDigits, LHCb::CaloDigits>( m_digitLocation ) ;
   if ( msgLevel(MSG::DEBUG) )
      debug() << "1: data at " << m_digitLocation << " does" << ( exist<LHCb::CaloDigits>( m_digitLocation ) ? "" : " NOT") << " exist"
-             << " digits->size() = " << ( digits ? long( digits->size() ) : -1 ) << endmsg;
+             << " digits->size() = " << long( digits->size() ) << endmsg;
 
   if ( m_decodedSources.find( -1 ) != m_decodedSources.end() ){
     if ( msgLevel(MSG::DEBUG) ) debug() << " full Ecal (source =-1) has been already decoded" << endmsg;
