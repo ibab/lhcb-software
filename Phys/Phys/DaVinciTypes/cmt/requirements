@@ -4,7 +4,7 @@
 # Maintainer : Juan Palacios
 # =============================================================================
 package           DaVinciTypes
-version           v2r6p1
+version           v2r6p2
 
 # =============================================================================
 # Structure, i.e. directories to process. 

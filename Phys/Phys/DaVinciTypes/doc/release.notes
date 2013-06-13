@@ -5,6 +5,8 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciTypes v2r6p2 2013-06-13 =========================
+
 ! 2013-05-13 - Chris Jones
  - Fix clang 3.2 warning by removing unused methods.
 
