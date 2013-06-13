@@ -52,13 +52,16 @@ private:
   /// Property: List of additional file paths where analyses should be looked for, e.g. add os.path.abspath('.') when analysis lib is in option file directory ([]).
   vector<string> m_analysisPaths;
 
-  /// Property: Indicates whether the cross-section is to be read from data (True).
-  bool m_reqCrossSection;
+  /// Indicates whether the cross-section is needed by any of the analyses run in job (false).
+  bool _reqCrossSection;
 
-  /// Property: The externally provided cross-section for the present run (mb or mub!?); ignored when read from data (-1.).
+  /// Property: Forces GenTune to set the cross-section to the value provided externally in each event (False).
+  bool m_forceCrossSection;
+
+  /// Property: The externally provided cross-section for the present run [picobarn]; ignored when read from data (-1.).
   double m_crossSection;
 
-  /// Switch that controls the transformation of status ID of particles (given by EvtGen) back to Pythia defaults (False).
+  /// Property: Switch that controls the transformation of status ID of particles (given by EvtGen) back to Pythia defaults (False).
   bool m_modStatusID;
 
   /// When crossing angle presence is detected these flags are true.
@@ -104,7 +107,8 @@ private:
   /// Property: Internal statistical message print-out suppression hard limit (200).
   long unsigned int m_logHardLimit;
 
-  void compatSetCrossSection();
+  /// Internal function: Set cross-section for each event when cross-section value provided in options
+  void compatSetCrossSection(HepMC::GenEvent*);
 
   /// Checks whether messages specific to internal flag statId are suppressed or not.
   bool statLogEnabled(unsigned int statId);

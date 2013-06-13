@@ -48,7 +48,8 @@ rivet.AnalysisPath += [os.path.abspath('.'),]
 # the following options allow setting externally 
 # a cross-section value when it cannot be read from HepMC
 # (mostly necessary if/when using HepMC 2.04)
-rivet.xSectionNeeded = False
+rivet.forceXSection = False
+#rivet.forceXSection = True
 rivet.xSectionValue = 32.123
 # instruct the algorithm to correct the particle status IDs and 
 # apply the crossing angle correction when necessary

@@ -39,3 +39,9 @@ page presenting all the histograms:
 
 $ rivet-mkhtml myRivetGaussMC.aida
 $ firefox ./plots/index.html &
+
+The setEnvRivet BASH script is provided to properly set the environment before 
+running either an analysis plugin in GenTune itself (e.g. overriding plugin meta-
+information) or using the auxiliary Rivet tools to further process the output 
+histograms. See the Rivet manual for more specific information on these 
+environment variables.

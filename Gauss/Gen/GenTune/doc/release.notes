@@ -5,6 +5,30 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
+!========================= GenTune v2r0 2013-06-13 =========================
+! 2013-06-13 - Alex Grecu
+ - added scripts/lhcbLFT2StdMap.py script to help plugin developers with 
+   dumping the LHCb particle lifetimes to a std::map<int, double> indexed 
+   by the particle PDG id 
+ - corrected options/LHCb_MB_MC-Generics.py for the change of the 'Output' 
+   Gauss property 
+ - introduced a set of beam option files in options/beamOpts which are made
+   compatible with the Python interface changes in Gauss v45 and later. The 
+   options are mainly needed to setup the beam energy and fix the number of 
+   primary interactions
+ - modified cmt/requirements to include the dependence on the fastjet 3.*
+   library needed by the main Rivet library
+ - generated new reference files for the qmtests on x86_64-slc[5-6]-gcc4[3|6]
+   architecture
+ - corrected the mechanism of providing and forcing external value of the 
+   event production cross-section in RivetAnalysisHandler algorithm; Python 
+   interface changed to reflect the logic in code: xSectionNeeded eliminated,
+   replaced by forceXSection (default: False) which allows user to overwrite
+   the production cross-section even when provided by the MC generator
+ - introduced a check in RivetAnalysisHandler to prevent the algorithm from 
+   running if job setup is incompatible with all the plugins in the provided
+   list
+
 !========================= GenTune v1r2 2013-05-16 =========================
 ! 2013-05-15 - Paul Szczypka
  - Corrected same Gauss property name in tests/options/MC_Generics.py

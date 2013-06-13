@@ -33,8 +33,8 @@ rivet.Analyses = ["MC_GENERIC","MC_IDENTIFIED"]
 rivet.StreamName = "/Rivet"
 #to search Rivet plugins in current directory
 #rivet.AnalysisPath += [os.path.abspath('.'),]
-rivet.xSectionNeeded = False
-rivet.xSectionValue = 32.123
+#rivet.forceXSection = True
+rivet.xSectionValue = 32.123 #mb
 rivet.CorrectStatusID = True
 rivet.CorrectCrossingAngles = True
 

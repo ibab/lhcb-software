@@ -26,10 +26,11 @@ GaussGen = GenInit("GaussGen")
 GaussGen.RunNumber = 1082
 LHCbApp().EvtMax = 10000
 #LHCbApp().setProp("OutputLevel", 3)
-LHCbApp().setProp("OutputLevel", 4)
-#show from errors up!
+#LHCbApp().setProp("OutputLevel", 4)
+LHCbApp().OutputLevel = WARNING
+
 Gauss().Histograms = "NONE"
-Gauss().Output = "NONE"
+Gauss().OutputType = "NONE"
 Gauss().DatasetName = "GaussDevWHepMC"
 #force head on collisions:
 #Gauss().BeamCrossingAngle = 0.0
@@ -44,8 +45,9 @@ rivet.Analyses = ["MC_GENERIC","MC_IDENTIFIED"]
 rivet.StreamName = "/Rivet"
 #to search Rivet plugins in current directory
 #rivet.AnalysisPath += [os.path.abspath('.'),]
-rivet.xSectionNeeded = False
-rivet.xSectionValue = 32.123
+rivet.forceXSection = False
+#rivet.forceXSection = True
+rivet.xSectionValue = 32.123 #mb (!) depends on beam options
 rivet.CorrectStatusID = True
 #rivet.CorrectCrossingAngles = False
 rivet.CorrectCrossingAngles = True

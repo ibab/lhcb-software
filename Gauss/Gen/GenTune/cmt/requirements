@@ -1,9 +1,9 @@
 #============================================================================
 # Created    : 2011-08-27
-# Maintainer : Alex Grecu
+# Maintainer : Alex Grecu <alexandru.grecu@nipne.ro>
 #============================================================================
 package           GenTune
-version           v1r2
+version           v2r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -22,6 +22,7 @@ use GenEvent          v*     Event
 use Generators        v*     Gen  
 
 # Packages needed to resolve external dependencies at run time
+use fastjet           v*     LCG_Interfaces -no_auto_imports  #this should be transferred in the GENSER/rivet CMT interface
 use Python            v*     LCG_Interfaces -no_auto_imports
 use HepMC             v*     LCG_Interfaces -no_auto_imports
 use Boost             v*     LCG_Interfaces -no_auto_imports
@@ -33,7 +34,6 @@ use rivet             v*     LCG_GeneratorsInterfaces -auto_imports
 #============================================================================
 # Component library building rule
 #============================================================================
-#library          GenTune     ../src/*.cpp
 library          GenTune     ../src/*.cpp -import=AIDA
 
 #============================================================================
@@ -41,7 +41,7 @@ library          GenTune     ../src/*.cpp -import=AIDA
 #============================================================================
 apply_pattern    component_library library=GenTune
 
-# Allow to run the QMTests
+# Allow to run the QMTests e.g. `cmt do TestPackage`
 apply_pattern QMTest
 
 # Allow the generation of QMTest summary
