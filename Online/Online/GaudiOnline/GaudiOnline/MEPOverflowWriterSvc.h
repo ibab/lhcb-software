@@ -104,7 +104,8 @@ namespace LHCb
     std::string m_errBuffer;
     /// Property: MEP manager service name/type
     std::string m_mepMgrName;
-
+    /// Name of the data input buffer
+    std::string m_input;
     /// Cached minimal allocation size for multi burst mode
     int m_minAlloc;
     /// Monitoring quantity: Number of MEPs processed

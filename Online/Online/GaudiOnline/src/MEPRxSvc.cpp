@@ -24,6 +24,7 @@
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IUpdateable.h"
+#include "GaudiKernel/xtoa.h"
 #include "GaudiOnline/MEPRxSvc.h"
 #include "GaudiOnline/MEPHdr.h"
 #include "GaudiOnline/MEPRxSys.h"
@@ -179,8 +180,7 @@ using namespace LHCb;
 #define FULLNAME(id) m_parent->m_srcName[id] + " (" + m_parent->m_srcDottedAddr[id] + ")"
 #define HOSTNAME(id) m_parent->m_srcName[id]
 
-MEPBuf::MEPBuf(const std::string &bufnam, const std::string &nam,
-               int partitionID) :
+MEPBuf::MEPBuf(const std::string &bufnam, const std::string &nam, int partitionID) :
     MBM::Producer(bufnam, nam, partitionID)
 {
 }
@@ -193,12 +193,27 @@ MEPRx::MEPRx(const string &nam, MEPRxSvc *parent) :
         parent->spaceSize()), m_nSrc(parent->numberOfSources()), m_log(
             parent->msgSvc(), nam), m_ovflBuf(0)
 {
-    m_liveBuf = new MEPBuf(parent->m_nameLiveBuf, nam, parent->partitionID());
-    m_ovflBuf = new MEPBuf(parent->m_nameOverflowBuf, nam, parent->partitionID());
+    std::string liveBufName = parent->m_nameLiveBuf;
+    std::string overBufName = parent->m_nameOverflowBuf;
+    if ( parent->m_partitionBuffers ) {
+	liveBufName += "_";
+	overBufName += "_";
+	if ( !parent->m_partitionName.empty() )  {
+	  liveBufName += parent->m_partitionName;
+	  overBufName += parent->m_partitionName;
+	}
+	else {
+          char txt[32];
+	  liveBufName += _itoa(parent->m_partitionID,txt,16);
+	  overBufName += _itoa(parent->m_partitionID,txt,16);
+	}
+    }
+    m_liveBuf = new MEPBuf(liveBufName, nam, parent->partitionID());
+    if ( !parent->m_nameOverflowBuf.empty() ) {
+	m_ovflBuf = new MEPBuf(overBufName, nam, parent->partitionID());
+    }
     m_buf = m_liveBuf;
-    //m_bmid = m_mepID->mepBuffer;
     m_log << MSG::DEBUG << std::hex << std::showbase
-          //<< "MEP    buffer start: " << m_mepID->mepStart << endmsg
           << "Buffer space:        " << m_spaceSize << " bytes" << endmsg;
     m_eventType = EVENT_TYPE_MEP;
     m_rawBufHdr = (class RawBank*) new u_int8_t[sizeof(RawBank) + 16];
@@ -224,8 +239,8 @@ MEPRx::~MEPRx()
 {
     delete[] (u_int8_t *) m_rawBufHdr;
     delete[] (u_int8_t *) m_MDFBankHdr;
-    delete m_liveBuf;
-    delete m_ovflBuf;
+    if ( m_liveBuf ) delete m_liveBuf;
+    if ( m_ovflBuf ) delete m_ovflBuf;
 }
 
 int MEPRx::spaceRearm(int)
@@ -237,14 +252,15 @@ int MEPRx::spaceRearm(int)
     memset(m_seen, 0, m_nSrc * sizeof(int));
     m_parent->m_overflowActive = false;
     if (m_parent->m_overflow) {
-        sc = m_liveBuf->getSpaceTry(m_spaceSize);
+        sc = m_ovflBuf ? m_liveBuf->getSpaceTry(m_spaceSize) 
+	    : m_liveBuf->getSpace(m_spaceSize);
         if (sc == MBM_REQ_CANCEL)
             return sc;
         if (sc == MBM_NORMAL) {
             m_buf = m_liveBuf;
             return sc;
         }
-        if (sc == MBM_NO_ROOM) {
+        if (m_ovflBuf && sc == MBM_NO_ROOM) {
             // Assign variable first. Otherwise Cancel on stop
             // goes to the wrong buffer ....
             m_buf = m_ovflBuf;
@@ -686,6 +702,8 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc) :
     declareProperty("IPProtoIn", m_IPProtoIn = IP_PROTO_HLT);
     declareProperty("sockBuf", m_sockBuf = 0x100000);
     declareProperty("partitionID", m_partitionID);
+    declareProperty("partitionName", m_partitionName);
+    declareProperty("partitionBuffers", m_partitionBuffers = false);
     declareProperty("refCount", m_refCount = 2);
     declareProperty("MEPBufSize", m_MEPBufSize = 0x400000); // 4 MB
     declareProperty("ownAddress", m_ownAddress = 0xFFFFFFFF);

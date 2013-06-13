@@ -54,6 +54,7 @@ MEPOverflowWriterSvc::MEPOverflowWriterSvc(const string& nam, ISvcLocator* svc) 
       m_receiveEvts(false), m_RunNumber(0),m_FileDesc(0)
 {
   m_mepIn =  m_mepOut = m_minAlloc = 0;
+  declareProperty("Input", m_input="None");
   declareProperty("PrintFreq", m_freq = 0.);
   declareProperty("Requirements", m_req);
   declareProperty("MEPManager", m_mepMgrName = "LHCb::MEPManager/MEPManager");
@@ -101,20 +102,18 @@ void MEPOverflowWriterSvc::handle(const Incident& inc)
 StatusCode MEPOverflowWriterSvc::initialize()
 {
   StatusCode sc = OnlineService::initialize();
+  MsgStream log(msgSvc(), name());
   m_BytesOut = 0;
   m_NumFiles = 0;
   m_node = RTL::nodeNameShort();
-  MsgStream log(msgSvc(), name());
   if (sc.isSuccess())
   {
-
     if (service(m_mepMgrName, m_mepMgr).isSuccess())
     {
       try
       {
-        m_consumer = m_mepMgr->createConsumer("Overflow",m_mepMgr->processName());
-        for (Requirements::iterator i = m_req.begin(); i != m_req.end(); ++i)
-        {
+        m_consumer = m_mepMgr->createConsumer(m_input,m_mepMgr->processName());
+        for (Requirements::iterator i = m_req.begin(); i != m_req.end(); ++i)  {
           Requirement r;
           r.parse(*i);
           m_consumer->addRequest(r);
@@ -164,7 +163,6 @@ StatusCode MEPOverflowWriterSvc::run()
   m_receiveEvts = true;
   for (int sc = m_consumer->getEvent(); sc == MBM_NORMAL && m_receiveEvts; sc = m_consumer->getEvent())
   {
-//    unsigned int pid = id->partitionID;
     const EventDesc& e = m_consumer->event();
     MEPEVENT* ev = (MEPEVENT*) e.data;
     MEPEvent* me = (MEPEvent*) ev->data;
@@ -269,7 +267,7 @@ void MEPOverflowWriterSvc::CreateMonitoringInfo(unsigned int runn)
   std::string namePref;
   char cRunNo[255];
   sprintf(cRunNo,"%d/",runn);
-  namePref = "Overflow/";
+  namePref = m_input+"/";
   namePref +=cRunNo;
   std::string comm;
   comm ="Number of Files";

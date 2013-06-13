@@ -108,6 +108,8 @@ public:
     unsigned int                m_MEPRecvTimeout;     /* Select timeout for waiting for a MEP.*/
     std::string                 m_nameLiveBuf;
     std::string                 m_nameOverflowBuf;
+    bool                        m_partitionBuffers;
+    std::string                 m_partitionName;
     u_int32_t                   m_partitionID;
     u_int32_t                   m_IPOdin;
     u_int32_t                   m_odinIPAddr;
