@@ -5,8 +5,10 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+!========================= KalmanFilter v1r5 2013-06-13 =========================
+
 ! 2013-06-02 - Vanya Belyaev
- - add a variant of "load" method with an explicit particle type 
+ - Add a variant of "load" method with an explicit particle type.
 
 !========================= KalmanFilter v1r4p1 2012-11-30 =========================
 
