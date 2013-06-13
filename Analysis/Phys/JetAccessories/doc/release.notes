@@ -4,6 +4,8 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessories v2r2 2013-06-13 =========================
+
 ! 2013-06-05 - Murilo Rangel
  - Added JEC uncertainty support
 
