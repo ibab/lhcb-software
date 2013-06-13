@@ -245,7 +245,7 @@ void Slave::handleState(const string& msg)  {
   display(INFO,c_name(),"Received new message %s starting:%s state:%s transition:%s",
 	  m.c_str(), starting ? "YES" : "NO", State::c_name(state), Transition::c_name(transition));
   if ( m == "ERROR" ) {
-    lib_rtl_sleep(100);
+    lib_rtl_sleep(10); // Put in some code to set breakpoint for debugging
   }
 
   if ( starting )
