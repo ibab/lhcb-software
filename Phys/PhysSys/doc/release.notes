@@ -3,6 +3,61 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v17r0>2013-06-13 Phys v17r0 </A></H1><PRE>
+Development release, based on Rec v15r0, LHCb v36r0 and Gaudi v23r8.
+
+- Packages Updated :
+   SelectionLine, DaVinciTools, DaVinciTransporter, DaVinciTypes,
+   DecayTreeFitter, KalmanFilter, LoKiFitters, LoKiJets, LoKiPhys, 
+   LoKiProtoParticles, NeuroBayesTools, ParticleMaker, PhysConf,
+   TisTosTobbing, Swimming, VertexFit
+
+In DaVinciTransporter :
+ . Add some logic on ParticleTransporter constructor for 
+   automatic selection of proper track extrapolator.
+ . Add new particle transporter:  DaVinci::ParticleTransporter
+   It relies on ITrackStateProvider for better treatment of 
+   track states.  
+   For single use it could be slower, but in case of 
+   coherent usage of the same public instance it 
+   could be even faster due to smart caching implemented 
+   by Wouter in TrackStateProvider tool.
+   The treatment of electrons is still not satisfactory,
+   some fixes in BremmAdder are needed for proper treatment [todo].
+
+In DecayTreeFitter :
+ . Fixed bug in initialization of decay length.
+ . Improved initialization of momentum for particles with mass constraint.
+ . Improved identification of poorly converging fits.
+ . Changed convergence criterion to a relative change in chisq 
+   (rather than absolute change).
+
+In KalmanFilter :
+ . Add a variant of "load" method with an explicit particle type.
+
+In LoKiFitters :
+ . VertexFitter:
+   + Add some functionality to improve fits with downstream tracks,
+     in particular allow the use of new ParticleTransporter. 
+   + Use a little bit different logic for seeding.
+   + Redefine the fiducial volume for seeding.
+ . Fix a "feature" in chi2(doca) calculations.
+ . Fix a bug with particle classification.
+   essentially all calculation of DOCACHI2 with 
+   participation of K0S was wrong.
+   Many thanks to Matt Reid for reporting the problem.
+
+In LoKiPhys :
+ . (Re)Enable very important error message for IDistanceCalculator::distance.
+
+In NeuroBayesTools :
+ . Properly initalise all data members in NBB2HHTriggerTool 
+   (Coverity UNINT_CTOR)
+
+In PhysConf :
+ . Do not force verbose printout from DataOnDemandSvc. If a user wants 
+   this, they should activate it themselves...
+
 </PRE><H1><A NAME=v16r6>2013-05-07 Phys v16r6 </A></H1><PRE>
 Development release, based on Rec v14r6, LHCb v35r6.
 

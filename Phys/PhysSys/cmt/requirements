@@ -1,28 +1,28 @@
 package PhysSys
-version v16r6
+version v17r0
 
 branches doc cmt
 
 #===================================================================
 
 use  DaVinciInterfaces          v2r18    Phys    # Juan Palacios
-use  DaVinciTypes               v2r6p1   Phys    # Juan Palacios
+use  DaVinciTypes               v2r6p2   Phys    # Juan Palacios
 use  DaVinciUtils               v1r1p1   Phys    # Juan Palacios
 use  DaVinciKernel              v11r4    Phys    # Juan Palacios
-use  SelectionLine              v1r0p3   Kernel  # Gerhard Raven
+use  SelectionLine              v1r0p4   Kernel  # Gerhard Raven
 use  SelPy                      v4r2p2   Phys    # Juan Palacios
 use  PhysSelPython              v9r4     PhysSel # Juan Palacios
 
 #===================================================================
 
-use  PhysConf                   v1r21    Phys    # Patrick Koppenburg
+use  PhysConf                   v1r22    Phys    # Patrick Koppenburg
 use  ProtoParticleFilter        v1r7p2   Phys    # Chris Jones
-use  DaVinciTools       	v23r8    Phys    # Juan Palacios
-use  DaVinciTransporter 	v3r10p2  Phys    # Juan Palacios
-use  ParticleMaker      	v6r7p2   Phys    # Chris Jones
-use  VertexFit			v6r15    Phys    # Yuehong Xie
-use  LoKiFitters                v4r5     Phys    # Vanya Belyaev
-use  DecayTreeFitter            v1r14    Phys    # Wouter Hulsbergen
+use  DaVinciTools       	v23r8p1  Phys    # Juan Palacios
+use  DaVinciTransporter 	v3r11    Phys    # Juan Palacios
+use  ParticleMaker      	v6r7p3   Phys    # Chris Jones
+use  VertexFit			v6r15p1  Phys    # Yuehong Xie
+use  LoKiFitters                v4r6     Phys    # Vanya Belyaev
+use  DecayTreeFitter            v1r15    Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2p3   Phys    # Juan Palacios
 use  HighPtJets                 v1r8p1   Phys    # Marcin Kucharczyk
 use  BBDecTreeTool              v1r6p2   Phys    # Mike Williams
@@ -30,26 +30,26 @@ use  BBDecTreeTool              v1r6p2   Phys    # Mike Williams
 #===================================================================
 
 use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
-use  LoKiJets                   v6r8p1   Phys    # Vanya Belyaev, Victor Coco
+use  LoKiJets                   v6r8p2   Phys    # Vanya Belyaev, Victor Coco
 use  LoKiAlgo                   v9r8p2   Phys    # Vanya Belyaev
 use  LoKiArrayFunctors          v10r1    Phys    # Vanya Belyaev
-use  LoKiPhys                   v10r14   Phys    # Vanya Belyaev
-use  LoKiProtoParticles         v2r1p2   Phys    # Vanya Belyaev
+use  LoKiPhys                   v10r15   Phys    # Vanya Belyaev
+use  LoKiProtoParticles         v2r1p3   Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
 use  LoKiTracks                 v2r8p4   Phys    # Vanya Belyaev
-use  KalmanFilter               v1r4p1   Phys    # Vanya Belyaev
+use  KalmanFilter               v1r5     Phys    # Vanya Belyaev
 
 #===================================================================
 
-use TisTosTobbing		v7r8p3   Phys	 # Tomasz Skwarnicki
+use TisTosTobbing		v7r8p4   Phys	 # Tomasz Skwarnicki
 
 #===================================================================
 
-use Swimming                    v3r0     Phys    # Vava Gligorov, Roel Aaij
+use Swimming                    v3r0p1   Phys    # Vava Gligorov, Roel Aaij
 
 #===================================================================
 
-use  NeuroBayesTools             v1r2p2   Phys   # ???
+use NeuroBayesTools             v1r2p3   Phys   # ???
 
 #===================================================================
 
