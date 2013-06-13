@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MicroDSTAlgorithm
 ################################################################################
-gaudi_subdir(MicroDSTAlgorithm v5r7)
+gaudi_subdir(MicroDSTAlgorithm v5r8)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          Event/HltEvent
