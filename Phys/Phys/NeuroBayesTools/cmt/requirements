@@ -3,8 +3,8 @@
 # Created    :
 # Maintainer :
 #============================================================================
-package           NeuroBayesTool
-version           v1r2p2
+package           NeuroBayesTools
+version           v1r2p3
 
 # Structure
 #============================================================================
