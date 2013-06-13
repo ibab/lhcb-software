@@ -3,7 +3,7 @@
 # Maintainer : Patrick ROBBE, Gloria CORTI
 #============================================================================
 package GENSER
-version v12r4p1
+version v12r5
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -24,7 +24,7 @@ set LHAPATH $(lhapdf_path)/share/lhapdf/PDFsets
 #-- Herwig++ and ThePeg
 # Set native versions of required software.
 #============================================================================
-macro herwigpp_native_version "2.6.1a"
+macro herwigpp_native_version "2.6.1b"
 macro thepeg_native_version   "1.8.1"
 
 

@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2013-06-13 - Gloria Corti
+ - Change version of herwigpp from 2.6.1a to 2.6.1b as not yet used in 
+   production
+
 ! 2013-06-02 - Patrick Robbe
  - Use LHAPDF version 5.8.9 instead of 5.8.8
  - change back on June 5
