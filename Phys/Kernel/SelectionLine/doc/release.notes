@@ -5,6 +5,8 @@
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= SelectionLine v1r0p4 2013-06-13 =========================
+
 ! 2013-05-14 - Chris Jones
  - Fix a few icc11 warnings from Selection::Line, plus a little tidy up.
 
