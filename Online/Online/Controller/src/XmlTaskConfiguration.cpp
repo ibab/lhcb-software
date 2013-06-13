@@ -75,7 +75,7 @@ bool XmlTaskConfiguration::attachTasks(Machine& machine, const string& slave_typ
       string instance_fmc = RTL::str_replace(fmc_start,"${INSTANCE}",text)+ " -DUTGID="+instance_utgid;
       string cmd = t->command;
 
-      instance_args += " -instances ";
+      instance_args += " -instances=";
       instance_args += (forking) ? instances_text : "0";
       machine.display(print_level,"XmlConfig","+---- Task:%s UTGID: %s. %s %s",
 		      t->name.c_str(), instance_utgid.c_str(),

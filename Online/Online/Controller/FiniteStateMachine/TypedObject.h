@@ -71,6 +71,9 @@ namespace FiniteStateMachine {
     /// Accessor: object type - pointer to FSMtype structure the object belongs
     const Type* type()   const        { return m_type; }
 
+    /// Pointer safe name access - return [UNKNOWN] if pointer is NULL
+    static const char* c_name(const TypedObject* object);
+
     /** Calls the display action
      *  @arg severity   [int,read-only]      Display severity flag
      *  @arg fmt        [string,read-only]   Format string for ellipsis args

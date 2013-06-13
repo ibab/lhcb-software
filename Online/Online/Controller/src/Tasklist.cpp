@@ -37,7 +37,7 @@ string Tasklist::Task::arguments() const  {
   string res;
   for(Params::const_iterator i=args.begin(); i!=args.end(); )  {
     res += (*i).first;
-    if ( !(*i).second.empty() ) res += " "+(*i).second;
+    if ( !(*i).second.empty() ) res += "="+(*i).second;
     ++i;
     if ( i != args.end() ) res += " ";
   }

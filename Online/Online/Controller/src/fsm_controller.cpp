@@ -35,7 +35,9 @@ static void help_ctrl() {
 	    "          -mode=[string]            Run configuration.                      \n"
 	    "                                    One of [NORMAL,FORKING,CHECKPOINTING].  \n"
 	    "          -taskconfig=[string]      Path to xml file with slave information.\n"
-	    "          -count=[number]           Number of Moore processes to be forked. \n");
+	    "          -count=[number]           Number of Moore processes to be forked. \n"
+	    "          -sleep=[number]           Sleep a number of seconds at startup    \n"
+	    "                                    to enable debugging.                    \n");
   ::exit(EINVAL);
 }
 
@@ -69,7 +71,7 @@ namespace Online {
 extern "C" int fsm_ctrl(int argc, char** argv)  {
   auto_ptr<Online::FMCLogger> logger;
   string utgid = RTL::processName(), runinfo, taskdefs, mode, partition, type="FmcSlave";
-  int    print = 0, count=-1;
+  int    print = 0, count=-1, secs_sleep=0;
   RTL::CLI cli(argc, argv, help_ctrl);
   cli.getopt("mode",2,mode);
   cli.getopt("type",2,type);
@@ -78,7 +80,12 @@ extern "C" int fsm_ctrl(int argc, char** argv)  {
   cli.getopt("runinfo",2,runinfo);
   cli.getopt("partition",2,partition);
   cli.getopt("taskconfig",2,taskdefs);
+  cli.getopt("sleep",2,secs_sleep);
 
+  if ( secs_sleep > 0 ) {
+    for(secs_sleep *= 1000; secs_sleep >= 0; secs_sleep -= 100)
+      ::lib_rtl_sleep(100);
+  }
   if ( type == "FmcSlave" ) {
     /// Need to install a proper printer, which directy writes in the 
     /// proper format to the FCM fifo

@@ -25,6 +25,14 @@ TypedObject::TypedObject(const Type *typ,const string& nam)
 TypedObject::~TypedObject()    {
 }
 
+/// Pointer safe name access - return [UNKNOWN] if pointer is NULL
+const char* TypedObject::c_name(const TypedObject* object) {
+  if ( object ) {
+    return object->c_name();
+  }
+  return "UNKNOWN";
+}
+
 static size_t _the_printer(void*, int, const char* src, const char* text)  {
   size_t len = ::fputs(src,stdout);
   len += fputs(": ",stdout);

@@ -205,13 +205,13 @@ void Machine::evaluateWhens()  {
   if ( !whens.empty() )  {
     stringstream state_names;
     const Machine::States states = slaveStates();
-    state_names << "States:";
+    state_names << "Slave states:";
     for(Slaves::const_iterator is=m_slaves.begin(); is!=m_slaves.end(); ++is)
       state_names << (*is)->name() << "@" << (*is)->c_state() << "  ";
 
     display(INFO,c_name(),"Machine Idle:%s EvaluateWhen: Check %d when clauses.",
 	    isIdle() ? " YES " : " NO ",int(whens.size()));
-    display(DEBUG,c_name(),"Slave state names:%s",state_names.str().c_str());
+    display(DEBUG,c_name(),"%s",state_names.str().c_str());
     for(State::Whens::const_iterator iw=whens.begin(); iw != whens.end(); ++iw)  {
       const When* w = (*iw);
       When::Result res = w->fires(states);

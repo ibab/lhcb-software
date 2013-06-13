@@ -68,7 +68,7 @@ static Type* defineDAQType()    {
   error->when    (  allChildrenInState(not_ready,ready,paused,running), moveTo(not_ready));
   error->when    (  allChildrenInState(offline,not_ready,ready,paused,running), moveTo(offline));
 
-  Tr*  reset0    = daq->addTransition("reset",     not_ready,   not_ready);
+  Tr*  reset0    = daq->addTransition("reset",     not_ready,   not_ready, NO_CHECKS);
   Tr*  reset1    = daq->addTransition("reset",     ready,       not_ready, NO_CHECKS);
   Tr*  reset3    = daq->addTransition("reset",     offline,     offline,   NO_CHECKS);
 

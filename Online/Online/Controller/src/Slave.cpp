@@ -67,13 +67,13 @@ const char* Slave::metaStateName() const  {
 /// Retrieve reference to current State structure name
 const char* Slave::c_state ()  const
 {
-  return m_state ? m_state->c_name() : "----";  
+  return State::c_name(m_state);
 }
 
 /// Retrieve reference to managing machine structure name
 const char* Slave::c_machine ()  const
 {
-  return m_machine ? m_machine->c_name() : "----";  
+  return Machine::c_name(m_machine);
 }
 
 /// Send IOC interrupt to slave
@@ -83,7 +83,7 @@ FSM::ErrCond Slave::send(int code, const State* state)   const {
 }
 
 FSM::ErrCond Slave::notifyMachine(int meta_state)  {
-  display(DEBUG,c_name(),"Slave %s> notify machine: %s State:%s",m_machine->c_name(),metaStateName());
+  display(DEBUG,c_name(),"Slave [%s] notify machine: %s",metaStateName(),m_machine->c_name());
   IocSensor::instance().send((Interactor*)m_machine,meta_state,(void*)this); 
   return FSM::SUCCESS;
 }
@@ -112,7 +112,6 @@ FSM::ErrCond Slave::iamDead()  {
 
 /// Callback, when transition was executed successfully
 FSM::ErrCond Slave::transitionDone(const State* state)  {
-  m_rule  = 0;
   m_alive = true;
   m_state = state;
   m_meta  = SLAVE_ALIVE;
@@ -124,7 +123,6 @@ FSM::ErrCond Slave::transitionDone(const State* state)  {
 /// Callback, when the slave invoked a transition himself
 FSM::ErrCond Slave::transitionSlave(const State* state)  {
   if ( state )  {
-    m_rule  = 0;
     m_alive = true;
     m_state = state;
     m_meta  = SLAVE_ALIVE;
@@ -138,7 +136,6 @@ FSM::ErrCond Slave::transitionSlave(const State* state)  {
 FSM::ErrCond Slave::transitionFailed()  {
   m_meta  = SLAVE_FAILED;
   m_state = m_rule ? m_rule->currState() : 0;
-  m_rule  = 0;
   return notifyMachine(SLAVE_FAILED);
 }
 
@@ -150,7 +147,9 @@ FSM::ErrCond Slave::apply(const Rule* rule)  {
   if ( tr )  {
     m_rule = rule;
     m_meta = SLAVE_EXECUTING;
-    display(INFO,c_name(),"%s sending '%s' to target.",m_machine->c_name(),tr->c_name());
+    display(INFO,c_name(),"%s sending '%s' to move from %s to %s. Rule:%s",
+	    m_machine->c_name(),tr->c_name(),State::c_name(m_state),State::c_name(tr->to()),
+	    Rule::c_name(m_rule));
     if ( isInternal() ) {
       return send(SLAVE_FINISHED,tr->to());
     }
@@ -243,8 +242,11 @@ void Slave::handleState(const string& msg)  {
   // After fork slaves do not answer with OFFLINE of NOT_READY!
   starting &= (m == "OFFLINE");// || m == "NOT_READY");
 
-  display(INFO,c_name(),"Received new message %s starting:%s state:%p transition:%p",
-	  m.c_str(), starting ? "YES" : "NO", state, transition);
+  display(INFO,c_name(),"Received new message %s starting:%s state:%s transition:%s",
+	  m.c_str(), starting ? "YES" : "NO", State::c_name(state), Transition::c_name(transition));
+  if ( m == "ERROR" ) {
+    lib_rtl_sleep(100);
+  }
 
   if ( starting )
     iamHere();
@@ -293,5 +295,5 @@ FSM::ErrCond Slave::kill()   {
 /// Virtual method -- must be overloaded -- Send transition request to the slave
 FSM::ErrCond Slave::sendRequest(const Transition* tr)  {
   throw runtime_error(name()+"> Slave::sendRequest -- invalid base class implementation called. Transition="+
-		      string(tr ? tr->name() : "----"));
+		      string(Transition::c_name(tr)));
 }

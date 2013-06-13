@@ -14,6 +14,7 @@
 #include "FiniteStateMachine/Machine.h"
 #include "FiniteStateMachine/Functors.h"
 #include "FiniteStateMachine/Transition.h"
+#include <cstdio>
 
 using namespace FiniteStateMachine;
 using namespace std;
@@ -120,20 +121,29 @@ void CheckStateSlave::operator()(const Slave* s)   {
     ++dead;  // Count the number of dead slaves.
   }
   else if ( s->currentState() == Slave::SLAVE_EXECUTING ) { 
-    //s->display(s->ALWAYS,s->c_name(),"EXECUTING - ignore Metastate:%s",s->metaStateName());
+    // Nothing to do: Slave has not yet answered
+  }
+  else if ( slRule && slRule->currState() == slState )  {
+    // Nothing to do: Slave has not yet answered
+  }
+  else if ( slRule && slRule->targetState() == slState )  {
+    ++count;  // Slave fulfills state criteria according to rule
+  }
+  else if ( slState && slState == object->to() ) {
+    ++count;  // Slave of same fulfills state criteria
   }
   else   {  // Check if all rules for this type are fulfilled
     for(Transition::Rules::const_iterator i=r.begin(); i != r.end(); ++i)  {
       const Rule* rule = (*i);
       if ( rule->type() == slType )  {
-	if      ( slRule==rule && slState==rule->targetState() )	++count;  // Slave fulfills state criteria
-	else if ( slState == rule->targetState() )  ++count;  // Slave fulfills state criteria
-	else if ( slState == rule->currState() )  {}   // Slave fulfills state criteria, has not yet answered
-	else if ( !slRule ) ++count; // There was nothing to be done.
+	if      ( slState == object->to() && slState == rule->targetState() )  
+	  ++count;  // Slave fulfills state criteria
 	else {
+	  char text[128];
+	  ::snprintf(text,sizeof(text),"%s",Rule::c_name(rule));
 	  ++fail;  // What can I do: there was a rule, but the slave did not go to the target state
-	  s->display(s->ALWAYS,s->c_name(),"FAILED Metastate:%s [Rule not fulfilled] State:%s",
-		     s->metaStateName(),slState->c_name());
+	  s->display(s->ALWAYS,s->c_name(),"FAILED Metastate:%s [Rule not fulfilled] State:%s to:%s Rule:%s",
+		     s->metaStateName(),State::c_name(slState),object->to()->c_name(),text);
 	}
 	break;
       }
