@@ -5,6 +5,8 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+!========================= PhysConf v1r22 2013-06-13 =========================
+
 ! 2013-05-13 - Chris Jones
  - Do not force verbose printout from DataOnDemandSvc. If a user wants 
    this, they should activate it themselves...
