@@ -3,7 +3,7 @@
 # Maintainer : Vladimir Gligorov
 #============================================================================
 package           Swimming
-version           v3r0
+version           v3r0p1
 
 #============================================================================
 # Structure, i.e. directories to process. 
