@@ -4,6 +4,9 @@
 ! Purpose     : Velo UT tracking
 !-----------------------------------------------------------------------------
 
+! 2013-06-13 - Michel De Cian
+ - Added a protection for a division by zero in PrVeloUTTool.cpp
+
 !========================= PrVeloUT v1r1 2013-03-22 =========================
 ! 2013-03-22 - Espen Eie Bowen
  - Added extra protection when Velo track has no state at end of Velo.

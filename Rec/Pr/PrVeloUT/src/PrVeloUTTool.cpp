@@ -286,7 +286,8 @@ void PrVeloUTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PrVUTTrack
     PrVUTTrack candidate( veloTr );
 
     PrUTHits theClusters = *itheSolutions;
-
+    if( theClusters.size() == 0 ) continue; // catch a possible division by zero in 'saveCandidate'
+    
     if(m_debug){
       debug() << " the solution " << itheSolutions - theSolutions.begin()
               << " has " << (*itheSolutions).size() << " clusters : ";
