@@ -5,11 +5,14 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+
+!========================= FlavourTaggingChecker v7r0 2013-06-13 =========================
+
 ! 2013-06-12 - Stefania Vecchi
- - latest update for Reco14: store PIDNN variables, updated tagger preselection (like in 
-   chooseCandidateReco14 in FT)
- - new version of the FTC/root tarfile = newFTCroot.tar for offline optimization and calibration
-   of taggers
+ - Latest update for Reco14: store PIDNN variables, updated tagger preselection
+   (like in chooseCandidateReco14 in FT)
+ - New version of the FTC/root tarfile = newFTCroot.tar for offline optimization
+   and calibration of taggers
 
 ! 2013-05-16 - Chris Jones
  - Fix various clang 3.2 compilation warnings
@@ -21,10 +24,10 @@
  - A few little optimisations ..
 
 ! 2013-05-14 - Stefania Vecchi
- - changes in the code to substitute ForcedBDecayTool (based on HepMC classes no 
-   longer available in MC12) with BDecayTool
-   Affected : BOppositeMonitoring, BTaggingAnalysis, BTaggingChecker, BTaggingInclusive 
-              and the CheatedSelection, TaggingUtilsChecker
+ - Changes in the code to substitute ForcedBDecayTool (based on HepMC classes 
+   no longer available in MC12) with BDecayTool.
+   Affected : BOppositeMonitoring, BTaggingAnalysis, BTaggingChecker, 
+              BTaggingInclusive, CheatedSelection and TaggingUtilsChecker
 
 !========================= FlavourTaggingChecker v6r13p1 2013-05-07 =========================
 
