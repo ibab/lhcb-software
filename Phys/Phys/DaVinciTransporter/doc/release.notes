@@ -3,18 +3,19 @@
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+!========================= DaVinciTransporter v3r11 2013-06-13 =========================
+
 ! 2013-06-10 - Vanya Belyaev
  - bug fix 
 
 ! 2013-06-09 - Vanya Belyaev
+ - Add some logic on ParticleTransporter constructor for 
+   automatic selection of proper track extrapolator.
 
- - add some logic on ParticleTransporter constructor for 
-   automatic selection of proper track extrapolator 
-
- - add new particle transporter:  DaVinci::ParticleTransporter
+ - Add new particle transporter:  DaVinci::ParticleTransporter
    It relies on ITrackStateProvider for better treatment of 
    track states.  
-   For single use it could be slower, btu in case of 
+   For single use it could be slower, but in case of 
    coherent usage of the same public instance it 
    could be even faster due to smart caching implemented 
    by Wouter in TrackStateProvider tool.

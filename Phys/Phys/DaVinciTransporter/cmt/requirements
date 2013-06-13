@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTransporter
-version           v3r10p2
+version           v3r11
 
 # Structure, i.e. directories to process. 
 #============================================================================
