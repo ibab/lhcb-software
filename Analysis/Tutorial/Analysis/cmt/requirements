@@ -6,7 +6,7 @@
 # Maintainer : P. Koppenburg
 # ============================================================================
 package           Analysis
-version           v10r4p2
+version           v10r5
 
 # ============================================================================
 # Structure, i.e. directories to process. 
