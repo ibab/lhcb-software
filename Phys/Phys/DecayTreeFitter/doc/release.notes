@@ -8,11 +8,14 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeFitter v1r15 2013-06-13 =========================
+
 ! 2013-06-11 - Wouter Hulsbergen
- - fixed bug in initialization of decay length
- - improved initialization of momentum for particles with mass constraint
- - improved identification of poorly converging fits
- - changed convergence criterion to a relative change in chisq (rather than absolute change)
+ - Fixed bug in initialization of decay length.
+ - Improved initialization of momentum for particles with mass constraint.
+ - Improved identification of poorly converging fits.
+ - Changed convergence criterion to a relative change in chisq 
+   (rather than absolute change).
 
 ! 2013-05-16 - Chris Jones
  - Remove unused m_nHidden data member from Projection class (clang 3.2 warning)
