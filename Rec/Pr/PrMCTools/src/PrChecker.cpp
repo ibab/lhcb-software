@@ -94,6 +94,13 @@ StatusCode PrChecker::initialize()
 
   IHistoTool* htool = tool<IHistoTool>( "HistoTool","PrCheckerHistos",this ) ;
   GaudiHistoTool* ghtool = dynamic_cast<GaudiHistoTool*>(htool) ;
+  
+  // -- catch the possible failure of the dynamic cast
+  if( ghtool == NULL){
+    error() << "Dynamic cast of Gaudi Histogramming Tool failed!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
   ghtool->setHistoDir("Track/PrChecker") ;
   m_histoTool = htool;
 

@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-06-13 - Michel De Cian
+ - Fix a possible failure of a dynamic cast in PrChecker.cpp
+
 ! 2013-06-10 - Marco Cattaneo
  - Fix a clang32 warning
  - Add protection for a DIVIDE_BY_ZERO defect
