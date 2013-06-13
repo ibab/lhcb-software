@@ -9,7 +9,7 @@
  */
 //--------------------------------------------------------------------------------
 
-#ifndef RICHKERNEL_RICHSMARTIDHASHFUNCS_H 
+#ifndef RICHKERNEL_RICHSMARTIDHASHFUNCS_H
 #define RICHKERNEL_RICHSMARTIDHASHFUNCS_H 1
 
 // GaudiKernel
@@ -33,8 +33,18 @@ namespace __gnu_cxx
   { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
 }
 
+// hash_value function for Boost 1.53
+namespace LHCb
+{
+  inline std::size_t hash_value( const LHCb::RichSmartID& s )
+  {
+    boost::hash<LHCb::RichSmartID::KeyType> hasher;
+    return hasher( s.key() );
+  }
+}
+
 // GaudiUtils::Hash
-namespace GaudiUtils 
+namespace GaudiUtils
 {
   template <> struct Hash<LHCb::RichSmartID>
   { inline size_t operator() ( const LHCb::RichSmartID& s ) const { return (size_t)s.key(); } };
