@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DecayTreeTupleReco
 ################################################################################
-gaudi_subdir(DecayTreeTupleReco v1r2)
+gaudi_subdir(DecayTreeTupleReco v1r3)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/HltEvent

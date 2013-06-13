@@ -4,6 +4,8 @@
 ! Purpose     : Reconstruction related tuple tools
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTupleReco v1r3 2013-06-13 =========================
+
 ! 2013-05-13 - Chris Jones
  - TupleToolVELOClusters
   . Fix inappropriate return values causing compilation warnings with icc11.
