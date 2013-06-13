@@ -4,7 +4,7 @@
 # Maintainer : Juan PALACIOS
 #============================================================================
 package           DSTWriters
-version           v4r8
+version           v4r9
 
 #============================================================================
 # Structure, i.e. directories to process. 
