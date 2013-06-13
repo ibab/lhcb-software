@@ -4,44 +4,47 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
-! 2013-06-12 - Stefania Vecchi
- - deleted part of the code in BTaggingTool.cpp that was never used and was wrong:
-   selected by UseVtxOnlyWithoutOS
- - included new code for Reco14 (selected by personality="Reco14"). Old code can
-   still run selecting personality=Reco12
-   files involved: BTaggingTool, TaggerMuonTool, TaggerElectronTool, 
-   TaggerKaonOppositeTool, SVertexOneSeedTool, TaggerVertexTool,NNetTool_MLP
- - BTaggingTool added property to select NNetKaonTools run time (NEWKaonOpposite and
-   NETKaonSame)
- - configuration file python/FlavourTagging/Tunings.py updated 
-   
 
+!========================= FlavourTagging v13r0 2013-06-13 =========================
+
+! 2013-06-12 - Stefania Vecchi
+ - Deleted part of the code in BTaggingTool.cpp that was never used and was 
+   wrong: selected by UseVtxOnlyWithoutOS
+ - Included new code for Reco14 (selected by personality="Reco14"). 
+   Old code can still run selecting personality=Reco12
+   Files involved: BTaggingTool, TaggerMuonTool, TaggerElectronTool, 
+   TaggerKaonOppositeTool, SVertexOneSeedTool, TaggerVertexTool,NNetTool_MLP
+ - BTaggingTool added property to select NNetKaonTools run time 
+   (NEWKaonOpposite and NETKaonSame)
+ - Configuration file python/FlavourTagging/Tunings.py updated 
+   
 ! 2013-05-27 - Manuel Tobias Schiller
- - add the changes in ITaggingUtils I forgot in my last commit
+ - Add the changes in ITaggingUtils I forgot in my last commit
 
 ! 2013-05-26 - Manuel Tobias Schiller
- - introduce MultiplePersonalityCall class - a templated class which allows
+ - Introduce MultiplePersonalityCall class - a templated class which allows
    callable objects of identical signature to be called; this class
    multiplexes calls to the different implementations ("personalities")
    registered by the caller
- - change BTaggingTool and TaggingUtils to provide a personality property,
+ - Change BTaggingTool and TaggingUtils to provide a personality property,
    changed functionality is implemented using the MultiplePersonalityCall
    class
 
 ! 2013-05-23 - Katharina Kreplin
  - Fixed one ambiguity in TaggerNEWKaonOppositeTool.cpp
-   (number of tracks after PID preselection) and
-   no asserts...
- - Needs changes to BTagingTool to restore old preselection before it runs 
-   correctly, too! (stripping 17, reco 12)
+   (number of tracks after PID preselection) and no asserts...
+  + Needs changes to BTagingTool to restore old preselection before it runs 
+    correctly, too! (stripping 17, reco 12)
 
 ! 2013-05-23 - Georg Krocker
  - Added new NN based SameSide Kaon Tagger. Needs changes to BTagingTool to
    restore old preselection before it runs correctly!
 
 ! 2013-05-15 - Stefania Vecchi
- - restored the storage of IPPUs in info(LastGlobal+1) for FT internal use (commented in v12r13 by Chris)
- - updated final SSpi calibration constants for Reco12 D*munu analysis with correct B+ fraction 
+ - Restored the storage of IPPUs in info(LastGlobal+1) for FT internal use 
+   (commented in v12r13 by Chris).
+ - Updated final SSpi calibration constants for Reco12 D*munu analysis with 
+   correct B+ fraction.
 
 !========================= FlavourTagging v12r13 2013-05-07 =========================
 
