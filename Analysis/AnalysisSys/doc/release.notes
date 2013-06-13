@@ -3,6 +3,97 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v11r0>2013-06-13 Analysis v11r0 </A></H1><PRE>
+New development release, built against Phys v17r0.
+
+- Packages Updated :
+   MicroDSTAlgorithm, MicroDSTTools, AnalysisPython, DSTWriters,
+   DaVinciAssociators, DaVinciMCTools, DaVinciMonitors,
+   DaVinciTrackScaling, DecayTreeTuple, DecayTreeTupleJets,
+   DecayTreeTupleMC, DecayTreeTupleMuonCalib, DecayTreeTupleReco,
+   DisplVerticesMC, FlavourTagging, FlavourTaggingChecker,
+   JetAccessories, JetAccessoriesMC, JetTagging, KaliCalo,
+   TrackSmearing, Tutorial/Analysis
+
+In MicroDSTAlgorithm, MicroDSTTools, DSTWriters :
+ . Improvements to support Flavour Tags.
+
+In AnalysisPython :
+ . Add the slicing for exes and histos 
+ . Add (log&log10)gamma distribution models.
+ . Add the function for bining according to the density.
+ . Add (python) comparison operators for RooRealVar
+ . (py)minuit: improments in cor&cov methods 
+ . Many small improvements for python selectors, 
+   especially selector swith embedded cuts.
+
+In DaVinciTrackScaling :
+ . Helper scripts to fill CONDDB: Remove "comment" attribute 
+   for Condition object.
+
+In DecayTreeTuple :
+ . TupleToolTagging.cpp: Changed in order to retrieve the flavour tagging 
+   informations if they are present (for uDST/DST persistency).
+
+In DecayTreeTupleMC :
+ . Patch TupleToolGeneration to not throw an exception if a NULL LHCb::HepMCEvent
+   pointer is found, as this is now normal in MC12 data (and thus this tool 
+   currently does not work for these MC samples, and needs updating...).
+
+In DecayTreeTupleReco :
+ . TupleToolVELOClusters
+  . Fix inappropriate return values causing compilation warnings with icc11.
+  . Do not load the RecSummary object, as not actually used.
+
+In FlavourTagging :
+ . Deleted part of the code in BTaggingTool.cpp that was never used and was 
+   wrong: selected by UseVtxOnlyWithoutOS
+ . Included new code for Reco14 (selected by personality="Reco14"). 
+   Old code can still run selecting personality=Reco12
+   Files involved: BTaggingTool, TaggerMuonTool, TaggerElectronTool, 
+   TaggerKaonOppositeTool, SVertexOneSeedTool, TaggerVertexTool,NNetTool_MLP
+ . BTaggingTool added property to select NNetKaonTools run time 
+   (NEWKaonOpposite and NETKaonSame)
+ . Configuration file python/FlavourTagging/Tunings.py updated 
+ . Introduce MultiplePersonalityCall class - a templated class which allows
+   callable objects of identical signature to be called; this class
+   multiplexes calls to the different implementations ("personalities")
+   registered by the caller
+ . Change BTaggingTool and TaggingUtils to provide a personality property,
+   changed functionality is implemented using the MultiplePersonalityCall
+   class
+ . Fixed one ambiguity in TaggerNEWKaonOppositeTool.cpp
+   (number of tracks after PID preselection) and no asserts...
+ . Restored the storage of IPPUs in info(LastGlobal+1) for FT internal use 
+   (commented in v12r13 by Chris).
+ . Updated final SSpi calibration constants for Reco12 D*munu analysis with 
+   correct B+ fraction.
+
+In FlavourTaggingChecker :
+ . Latest update for Reco14: store PIDNN variables, updated tagger preselection
+   (like in chooseCandidateReco14 in FT)
+ . New version of the FTC/root tarfile = newFTCroot.tar for offline optimization
+   and calibration of taggers
+ . Suppress info message printed each event by BTaggingChecker to debug. 
+   Needed to minimise log file size in nightly tests.
+ . Using Warning( ... ) for warning messages printed during the event loop.
+ . Changes in the code to substitute ForcedBDecayTool (based on HepMC classes 
+   no longer available in MC12) with BDecayTool.
+   Affected : BOppositeMonitoring, BTaggingAnalysis, BTaggingChecker, 
+              BTaggingInclusive, CheatedSelection and TaggingUtilsChecker
+
+In JetAccessories :
+ . Added JEC uncertainty support
+ . Fix composite particle treatment for sub-resonnance in charged particles
+ . Remove the hard coded pt cut in JEC
+ . Add the possibility to only save jets containing a B particle
+
+In KaliCalo :
+ . Fix data paths in KaliPi0.py to read data from EOS instead of castor.
+
+In Tutorial/Analysis :
+ . Remove use of DVAlgorithm from solution of DaVinci1   
+
 </PRE><H1><A NAME=v10r6>2013-05-07 Analysis v10r6 </A></H1><PRE>
 New development release, built against Phys v16r6.
 

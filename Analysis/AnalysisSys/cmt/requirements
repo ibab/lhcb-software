@@ -1,47 +1,47 @@
 package AnalysisSys
-version v10r6
+version v11r0
 
 branches doc cmt
 
 ####################################################################
 
 use  AnalysisConf               v2r2p1   Phys   # Patrick Koppenburg
-use  DSTWriters                 v4r8     Phys   # Chris Jones
+use  DSTWriters                 v4r9     Phys   # Chris Jones
 use  DSTWriterTests             v2r4p2   Phys   # Chris Jones
 
-use  FlavourTagging             v12r13   Phys   # Marc Grabalosa
+use  FlavourTagging             v13r0    Phys   # Marc Grabalosa
 
-use  DaVinciMonitors            v1r19p4  Phys   # Patrick Koppenburg
+use  DaVinciMonitors            v1r19p5  Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r7p1   Rich   # Chris Jones
-use  KaliCalo                   v4r13p2  Phys   # Vanya Belyaev
+use  KaliCalo                   v4r14    Phys   # Vanya Belyaev
 
 ####################################################################
 
-use  DaVinciMCTools     	v10r7p2  Phys   # Chris Jones
+use  DaVinciMCTools     	v10r7p3  Phys   # Chris Jones
 use  LoKiAlgoMC                 v9r5p2   Phys   # Vanya Belyaev
 use  LoKiGenMC                  v9r1p2   Phys   # Vanya Belyaev
 use  LoKiPhysMC                 v9r6p2   Phys   # Vanya Belyaev
-use  DaVinciAssociators         v9r5p1   Phys   # Vladimir Gligorov
+use  DaVinciAssociators         v9r5p2   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r5     Phys   # Chris Jones
 use  VertexFitCheck             v1r8p3   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r3p1   Phys   # Juan Palacios
-use  FlavourTaggingChecker      v6r13p1  Phys   # Marc Grabalosa
+use  FlavourTaggingChecker      v7r0     Phys   # Marc Grabalosa
 use  ParticleMakerChecker       v1r5p1   Phys   # Chris Jones
-use  DisplVerticesMC            v1r4p4   Phys   # Victor Coco
-use  JetTagging                 v1r1     Phys   # Cedric Potterat
-use  JetAccessories		v2r1     Phys   # Victor Coco, Cedric Potterat
-use  JetAccessoriesMC		v2r3	 Phys   # Victor Coco, Cedric Potterat
+use  DisplVerticesMC            v1r4p5   Phys   # Victor Coco
+use  JetTagging                 v1r1p1   Phys   # Cedric Potterat
+use  JetAccessories		v2r2     Phys   # Victor Coco, Cedric Potterat
+use  JetAccessoriesMC		v2r3p1   Phys   # Victor Coco, Cedric Potterat
 
 ####################################################################
 
-use  DecayTreeTuple             v4r1     Phys   # Rob Lambert
+use  DecayTreeTuple             v4r2     Phys   # Rob Lambert
 use  DecayTreeTupleBase         v1r1     Phys
-use  DecayTreeTupleReco         v1r2     Phys   
+use  DecayTreeTupleReco         v1r3     Phys   
 use  DecayTreeTupleDalitz       v1r0     Phys
-use  DecayTreeTupleJets         v1r1p1   Phys
-use  DecayTreeTupleMC           v1r2     Phys
+use  DecayTreeTupleJets         v1r1p2   Phys
+use  DecayTreeTupleMC           v1r3     Phys
 use  DecayTreeTupleTrigger      v1r1     Phys
-use  DecayTreeTupleMuonCalib    v1r2     Phys
+use  DecayTreeTupleMuonCalib    v1r2p1   Phys
 
 ####################################################################
 
@@ -49,28 +49,28 @@ use  HltSelChecker              v12r1p4  Hlt    # Patrick Koppenburg
 
 ####################################################################
 
-use  AnalysisPython             v2r20    Phys
+use  AnalysisPython             v2r21    Phys
 use  PyAna                      v1r3p1   Analysis
 
 ####################################################################
 
 use  MicroDSTBase        	v3r3p1   MicroDST # Chris Jones
 use  MicroDSTInterfaces  	v1r7p1   MicroDST # Chris Jones
-use  MicroDSTTools      	v2r9     MicroDST # Chris Jones
-use  MicroDSTAlgorithm   	v5r7     MicroDST # Chris Jones
+use  MicroDSTTools      	v2r10    MicroDST # Chris Jones
+use  MicroDSTAlgorithm   	v5r8     MicroDST # Chris Jones
 use  MicroDSTConf               v2r10p2  MicroDST # Chris Jones
 
 ####################################################################
 
-use  Analysis                   v10r4p2 Tutorial   # P. Koppenburg
+use  Analysis                   v10r5   Tutorial   # P. Koppenburg
 use  LoKiExample                v8r8p4  Ex         # Vanya Belyaev
 use  MicroDSTExample            v2r14p1 Ex         # Chris Jones
 
 ####################################################################
 
-use  TrackSmearing              v1r6    Phys   # Alex Shires
+use  TrackSmearing              v1r6p1  Phys   # Alex Shires
 use  DaVinciTrackRefitting      v1r4    Phys   # Matt Needham
-use  DaVinciTrackScaling        v1r0    Phys   # Vanya Belyaev
+use  DaVinciTrackScaling        v1r1    Phys   # Vanya Belyaev
 
 ####################################################################
 
