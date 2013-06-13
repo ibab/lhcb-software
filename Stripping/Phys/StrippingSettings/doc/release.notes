@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-06-13 - Stefano Perazzini
+ - Corrected Stripping20r2 dbase
+
 ! 2013-06-12 - Lucio Anderlini (BandQ)
  - Added a looser version of the DiMuonForXsection as used in Stripping18 for the 
    ICHEP stream to Stripping20r2 dictionaries. Cuts: 
