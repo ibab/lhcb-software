@@ -1,11 +1,8 @@
 // Include files:
-// GSL
-#include "gsl/gsl_math.h"
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Kernel
 #include "Kernel/VPChannelID.h"
-#include "Kernel/FastClusterContainer.h"
 // Event
 #include "Event/VPLiteCluster.h"
 #include "Event/VPCluster.h"
@@ -34,6 +31,7 @@ DECLARE_ALGORITHM_FACTORY(VPRawBankToPartialCluster)
 VPRawBankToPartialCluster::VPRawBankToPartialCluster(const std::string& name,
                                                  ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
+  , m_isDebug(false)
   , m_vPelDet(NULL)
 {
   declareProperty( "RawEventLocation",  m_rawEventLocation = "",
@@ -59,7 +57,6 @@ StatusCode VPRawBankToPartialCluster::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   m_isDebug = msgLevel(MSG::DEBUG);
-  m_isVerbose = msgLevel(MSG::VERBOSE);
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
   m_vPelDet = getDet<DeVP>(DeVPLocation::Default);
   // Initialise the RawEvent locations
@@ -125,8 +122,7 @@ StatusCode VPRawBankToPartialCluster::decodeRawBanks(RawEvent* rawEvt,
   
   const std::vector<RawBank*>& tBanks = rawEvt->banks(LHCb::RawBank::VP);
   if(tBanks.size() == 0) {
-    Warning("No VP RawBanks found");
-    return StatusCode::SUCCESS;
+    return Warning("No VP RawBanks found",  StatusCode::SUCCESS);
   }
   // Loop over VP RawBanks  
   int nrClu = 0;
@@ -157,7 +153,7 @@ StatusCode VPRawBankToPartialCluster::decodeRawBanks(RawEvent* rawEvt,
       }
       if (isUsed){
         if (iterPat != decoderPattern.posEnd()) ++iterPat;
-        Warning("Duplicated channelID there should be a bug in the digitization of VP");
+        Warning("Duplicated channelID there should be a bug in the digitization of VP").ignore();
         continue;
       }
       testDouybleId.push_back(pixelClu);
@@ -200,12 +196,4 @@ void VPRawBankToPartialCluster::createPartialCluster(
   
   if (achan_central.pixel()!=achan.pixel())info()<<"Barycenter channelID different from central channelID"<<endmsg;
   return;
-}
-
-
-//============================================================================
-StatusCode VPRawBankToPartialCluster::finalize() {
-
-  return GaudiAlgorithm::finalize();
-
 }

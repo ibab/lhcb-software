@@ -1,6 +1,4 @@
 // Include files:
-// GSL
-#include "gsl/gsl_math.h"
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Kernel
@@ -35,6 +33,10 @@ DECLARE_ALGORITHM_FACTORY(PrepareVPRawBank)
 PrepareVPRawBank::PrepareVPRawBank(const std::string& name,
                                              ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
+  , m_bankVersion(1)
+  , m_bankSizeInBytes(0)
+  , m_isDebug(false)
+  , m_isVerbose(false)
   , m_vPelDet(NULL)
 {
   declareProperty("ClusterLocation", m_clusterLocation = 
@@ -137,7 +139,6 @@ void PrepareVPRawBank::storeBank(int sensor,
 {
   // Create new raw buffer in raw data cache, old one is cleared
   makeBank(begin,end);
-  m_bankVersion = 1;
   if(m_vPelDet->sensor(sensor)) {
     if(m_isDebug) debug() << "Sensor = " << sensor << endmsg;
     LHCb::RawBank* newBank =
@@ -257,7 +258,7 @@ long PrepareVPRawBank::findPattern(LHCb::VPChannelID centrChanID,
   std::vector<LHCb::VPChannelID> neighbsVec; neighbsVec.clear();
   StatusCode channelsValid;
   channelsValid = sensor->channelToNeighbours(centrChanID,neighbsVec);
-  if(!channelsValid) Warning("channelToNeighbours failure");
+  if(!channelsValid) Warning("channelToNeighbours failure").ignore();
   neighbsVec.push_back(centrChanID);
   std::sort(neighbsVec.begin(),neighbsVec.end(),sortLessByChannel);
   std::vector<int> patternVec; patternVec.clear();
@@ -282,12 +283,4 @@ long PrepareVPRawBank::findPattern(LHCb::VPChannelID centrChanID,
     if(*ip != 0) pattern = pattern | (1 << num);
   }
   return pattern;
-}
-
-
-//============================================================================
-StatusCode PrepareVPRawBank::finalize() {
-
-  return GaudiAlgorithm::finalize();
-
 }

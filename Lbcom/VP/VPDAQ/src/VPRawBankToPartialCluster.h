@@ -1,4 +1,3 @@
-// $Id: VPRawBankToPartialCluster.h,v 1.1 2010-03-01 10:51:28 cocov Exp $
 #ifndef VPRAWBANKTOPARTIALCLUSTER_H 
 #define VPRAWBANKTOPARTIALCLUSTER_H 1
 #include <vector>
@@ -7,20 +6,17 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiAlg/GaudiAlgorithm.h"
 // Event
-#include "Event/RawEvent.h"
 #include "Event/VPLiteCluster.h"
-// VPelDet
-#include "VPDet/DeVP.h"
-// Si
-#include "SiDAQ/SiHeaderWord.h"
-#include "SiDAQ/SiRawBufferWord.h"
-#include "SiDAQ/SiADCBankTraits.h"
 // Local
 #include "VPClusterWord.h"
 #include "VPPatternWord.h"
 
+// Forward declarations
+class DeVP;
+namespace LHCb {
+  class RawEvent ;
+}
 /** @class VPRawBankToPartialCluster.h 
  *  VPAlgorithms/VPRawBankToPartialCluster.h
  *
@@ -36,7 +32,6 @@ public:
   virtual ~VPRawBankToPartialCluster();   ///< Destructor
   virtual StatusCode initialize();          ///< Algorithm initialization
   virtual StatusCode execute   ();          ///< Algorithm execution
-  virtual StatusCode finalize  ();          ///< Algorithm finalise
 
 private:
 
@@ -58,7 +53,6 @@ private:
   std::vector<std::string> m_rawEventLocations;
 
   bool m_isDebug; 
-  bool m_isVerbose;
   DeVP* m_vPelDet;
 
 };

@@ -4,6 +4,12 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2013-06-13 - Marco Cattaneo
+ - Fix UNINIT_CTOR defects
+ - Fix untested StatusCode from Warning() messages
+ - Clean up unnecessary includes
+ - Remove empty finalize methods
+
 !========================= VPDAQ v2r2 2013-04-22 =========================
 ! 2013-04-11 - Sascha Stahl
  - Added back acccdidentally removed protection for RawEventLocations.

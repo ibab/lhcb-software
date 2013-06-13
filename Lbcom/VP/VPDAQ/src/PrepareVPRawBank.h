@@ -1,22 +1,21 @@
-// $Id: PrepareVPRawBank.h,v 1.1.1.1 2010-01-21 13:16:41 marcin Exp $
 #ifndef PREPAREVPRAWBANK_H 
 #define PREPAREVPRAWBANK_H 1
 #include <vector>
 #include <algorithm>
 #include <string>
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 // Event
 #include "Event/VPCluster.h"
 #include "Event/VPLiteCluster.h"
-// VPelDet
-#include "VPDet/DeVP.h"
 // Si
 #include "SiDAQ/SiHeaderWord.h"
 #include "SiDAQ/SiRawBufferWord.h"
 #include "SiDAQ/SiADCBankTraits.h"
+
+// Forward declarations
+class DeVP;
 
 /** @class PrepareVPRawBank.h 
  *  VPAlgorithms/PrepareVPRawBank.h
@@ -41,7 +40,6 @@ public:
   virtual ~PrepareVPRawBank();     ///< Destructor
   virtual StatusCode initialize();      ///< Algorithm initialization
   virtual StatusCode execute   ();      ///< Algorithm execution
-  virtual StatusCode finalize  ();      ///< Algorithm finalise
 
 private:
 

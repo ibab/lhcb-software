@@ -1,11 +1,8 @@
 // Include files:
-// GSL
-#include "gsl/gsl_math.h"
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Kernel
 #include "Kernel/VPChannelID.h"
-#include "Kernel/FastClusterContainer.h"
 // Event
 #include "Event/VPLiteCluster.h"
 #include "Event/RawEvent.h"
@@ -33,6 +30,7 @@ DECLARE_ALGORITHM_FACTORY(VPRawBankToLiteCluster)
 VPRawBankToLiteCluster::VPRawBankToLiteCluster(const std::string& name,
                                                  ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
+  , m_isDebug(false)
 {
   declareProperty( "RawEventLocation",  m_rawEventLocation = "",
                    "OBSOLETE. Use RawEventLocations instead" );
@@ -56,7 +54,6 @@ StatusCode VPRawBankToLiteCluster::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   m_isDebug = msgLevel(MSG::DEBUG);
-  m_isVerbose = msgLevel(MSG::VERBOSE);
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
  
 
@@ -130,8 +127,7 @@ StatusCode VPRawBankToLiteCluster::decodeRawBanks(RawEvent* rawEvt,
 {
   const std::vector<RawBank*>& tBanks = rawEvt->banks(LHCb::RawBank::VP);
   if(tBanks.size() == 0) {
-    Warning("No VP RawBanks found");
-    return StatusCode::SUCCESS;
+    return Warning("No VP RawBanks found", StatusCode::SUCCESS);
   }
   // VPLiteCluster::VPLiteClusters* clusCont_tmp;
   
@@ -177,12 +173,4 @@ void VPRawBankToLiteCluster::createLiteCluster(
   clusCont->push_back(newCluster);
 
   return;
-}
-
-
-//============================================================================
-StatusCode VPRawBankToLiteCluster::finalize() {
-
-  return GaudiAlgorithm::finalize();
-
 }
