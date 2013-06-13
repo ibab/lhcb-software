@@ -4,6 +4,8 @@
 ! Purpose     : MC tuple tools
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTupleMC v1r3 2013-06-13 =========================
+
 ! 2013-05-17 - Chris Jones
  - Remove unused data members to fix clang warnings.
 
