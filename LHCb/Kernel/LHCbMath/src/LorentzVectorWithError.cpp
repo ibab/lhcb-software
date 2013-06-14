@@ -1,4 +1,3 @@
-// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -11,7 +10,6 @@
 #include "LHCbMath/LorentzVectorWithError.h"
 #include "LHCbMath/MatrixTransforms.h"
 #include "LHCbMath/SymPosDefMatrixInverter.h"
-#include "LHCbMath/MatrixInversion.h"
 #include "LHCbMath/Kinematics.h"
 // ============================================================================
 /** @file
@@ -240,7 +238,7 @@ double Gaudi::Math::LorentzVectorWithError::chi2
   Covariance s_cov2 ( cov2() ) ;
   s_cov2 += right.cov2() ;
   // use Manuel's inverter:
-  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  const bool ok = s_cov2.InvertChol() ;
   if  ( !ok ) { return -1 ; }                                 // RETURN  
   /// calculate chi2 
   return Gaudi::Math::Similarity ( vector4d() - right.vector4d() , s_cov2 ) ;
@@ -253,7 +251,7 @@ double Gaudi::Math::LorentzVectorWithError::chi2
 {
   Covariance s_cov2 ( cov2() ) ;
   // use Manuel's inverter:
-  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  const bool ok = s_cov2.InvertChol() ;
   if  ( !ok ) { return -1 ; }                                 // RETURN  
   /// calculate chi2 
   return Gaudi::Math::Similarity ( vector4d() - right , s_cov2 ) ;
@@ -268,7 +266,7 @@ double Gaudi::Math::LorentzVectorWithError::chi2
   Covariance s_cov2 ( cov2() ) ;
   s_cov2 += right.cov2() ;
   // use Manuel's inverter:
-  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  const bool ok = s_cov2.InvertChol() ;
   if  ( !ok ) { return -1 ; }                                 // RETURN  
   /// calculate chi2
   Vector vct ;
@@ -285,7 +283,7 @@ double Gaudi::Math::LorentzVectorWithError::chi2
 {
   Covariance s_cov2 ( cov2() ) ;
   // use Manuel's inverter:
-  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  const bool ok = s_cov2.InvertChol() ;
   if  ( !ok ) { return -1 ; }                                 // RETURN  
   /// calculate chi2 
   Vector vct ;

@@ -1,5 +1,3 @@
-// $Id$
-// ============================================================================
 #ifndef LHCBMATH_SVECTORWITHERROR_ICPP 
 #define LHCBMATH_SVECTORWITHERROR_ICPP 1
 // ============================================================================
@@ -14,7 +12,6 @@
 // ============================================================================
 #include "LHCbMath/SVectorWithError.h"
 #include "LHCbMath/SymPosDefMatrixInverter.h"
-#include "LHCbMath/MatrixInversion.h"
 #include "LHCbMath/MatrixUtils.h"
 // ============================================================================
 /** @file 
@@ -31,7 +28,7 @@ Gaudi::Math::SVectorWithError<N,SCALAR>::chi2
   Covariance s_cov2 ( this->cov2() ) ;
   s_cov2 += right.cov2() ;
   /// use Manuel's inverter:
-  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  const bool ok = s_cov2.InvertChol() ;
   if  ( !ok ) { return -1 ; }                                        // RETURN  
   /// calculate chi2 
   return ROOT::Math::Similarity ( value() - right.value() , s_cov2 ) ;
@@ -44,7 +41,7 @@ Gaudi::Math::SVectorWithError<N,SCALAR>::chi2
 {
   Covariance s_cov2 ( this->cov2() ) ;
   /// use Manuel's inverter:
-  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  const bool ok = s_cov2.InvertChol() ;
   if  ( !ok ) { return -1 ; }                                        // RETURN  
   /// calculate chi2 
   return ROOT::Math::Similarity ( value() - right , s_cov2 ) ;
@@ -58,7 +55,7 @@ Gaudi::Math::SVectorWithError<N,SCALAR>::chi2
 {
   Covariance s_cov2 ( this->cov2() ) ;
   /// use Manuel's inverter:
-  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  const bool ok = s_cov2.InvertChol() ;
   if  ( !ok ) { return -1 ; }                                        // RETURN  
   /// calculate chi2 
   return ROOT::Math::Similarity ( value() - right , s_cov2 ) ;

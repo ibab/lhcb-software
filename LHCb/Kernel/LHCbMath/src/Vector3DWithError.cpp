@@ -1,4 +1,3 @@
-// $Id$
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -12,7 +11,6 @@
 #include "LHCbMath/Point3DWithError.h"
 #include "LHCbMath/MatrixTransforms.h"
 #include "LHCbMath/SymPosDefMatrixInverter.h"
-#include "LHCbMath/MatrixInversion.h"
 // ============================================================================
 /** @file 
  *  Implementation file for class Gaudi::Math::PointWithError
@@ -158,7 +156,7 @@ double Gaudi::Math::Vector3DWithError::chi2
   Covariance s_cov2 ( cov2() ) ;
   s_cov2 += right.cov2() ;
   // use Manuel's inverter:
-  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  const bool ok = s_cov2.InvertChol() ;
   if  ( !ok ) { return -1 ; }                                 // RETURN  
   /// calculate chi2 
   return Gaudi::Math::Similarity ( vector3d() - right.vector3d() , s_cov2 ) ;
@@ -172,7 +170,7 @@ double Gaudi::Math::Vector3DWithError::chi2
 {
   Covariance s_cov2 ( cov2() ) ;
   // use Manuel's inverter:
-  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  const bool ok = s_cov2.InvertChol() ;
   if  ( !ok ) { return -1 ; }                                 // RETURN  
   /// calculate chi2 
   return Gaudi::Math::Similarity ( vector3d() - right , s_cov2 ) ;
@@ -187,7 +185,7 @@ double Gaudi::Math::Vector3DWithError::chi2
   Covariance s_cov2 ( cov2() ) ;
   s_cov2 += right.cov2() ;
   // use Manuel's inverter:
-  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  const bool ok = s_cov2.InvertChol() ;
   if  ( !ok ) { return -1 ; }                                 // RETURN  
   //
   /// calculate chi2 
@@ -206,7 +204,7 @@ double Gaudi::Math::Vector3DWithError::chi2
 {
   Covariance s_cov2 ( cov2() ) ;
   // use Manuel's inverter:
-  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  const bool ok = s_cov2.InvertChol() ;
   if  ( !ok ) { return -1 ; }                                 // RETURN  
   /// calculate chi2 
   //
