@@ -4,6 +4,10 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2013-06-14 - Chris Jones
+ - Add various missing virtual destructors in Kernel/ParticlePredicates.h, 
+   to silence gcc 4.8 warnings.
+
 !========================= DaVinciKernel v11r4 2013-04-05 =========================
 
 ! 2013-03-25 - Chris Jones

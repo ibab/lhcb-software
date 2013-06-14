@@ -1,63 +1,76 @@
 // $Id: $
-#ifndef KERNEL_PARTICLEPREDICATES_H 
+#ifndef KERNEL_PARTICLEPREDICATES_H
 #define KERNEL_PARTICLEPREDICATES_H 1
 
 // Include files
 #include "Event/Particle.h"
 
-/** @namespace DaVinci::Utils Kernel/ParticlePredicates.h
- *  
+/** @namespace DaVinci Kernel/ParticlePredicates.h
+ *
  *
  *  @author Juan Palacios
  *  @date   2011-01-10
  */
-namespace DaVinci {
-  
-  namespace Utils {
-  
+namespace DaVinci
+{
+
+  /** @namespace Utils Kernel/ParticlePredicates.h
+   *
+   *
+   *  @author Juan Palacios
+   *  @date   2011-01-10
+   */
+  namespace Utils
+  {
+
     class IParticlePredicate
     {
     public:
-      virtual bool operator()(const LHCb::Particle*) const = 0;
+      virtual ~IParticlePredicate() { }
+    public:
+      virtual bool operator() ( const LHCb::Particle* obj ) const = 0;
+
     };
 
     ///  Functor to check if a Particle is in the TES.
-    //  template <class T> 
-    struct ParticleInTES : virtual public IParticlePredicate,
-                           public std::unary_function<const LHCb::Particle*, bool> 
+    class ParticleInTES : virtual public IParticlePredicate,
+                          public std::unary_function<const LHCb::Particle*, bool>
     {
-
-      inline bool operator() (const LHCb::Particle* obj) const    
+    public:
+      virtual ~ParticleInTES() { }
+    public:
+      inline bool operator() ( const LHCb::Particle* obj ) const
       {
-        //        std::cout << "DaVinci::Utils::InTES!!!!" << std::endl;
-        return ( 0!=obj && 0!=obj->parent()) ;
+        return ( obj && obj->parent() );
       }
-    
     };
 
-    struct ParticleTrue : virtual public IParticlePredicate,
-                          public std::unary_function<const LHCb::Particle*, bool> 
+    class ParticleTrue : virtual public IParticlePredicate,
+                         public std::unary_function<const LHCb::Particle*, bool>
     {
-      inline bool operator() (const LHCb::Particle* ) const
+    public:
+      virtual ~ParticleTrue() { }
+    public:
+      inline bool operator() ( const LHCb::Particle* ) const
       {
         return true;
       }
- 
     };
 
-    struct ParticleFalse : virtual public IParticlePredicate,
-                           public std::unary_function<const LHCb::Particle*, bool> 
+    class ParticleFalse : virtual public IParticlePredicate,
+                          public std::unary_function<const LHCb::Particle*, bool>
     {
-      inline bool operator() (const LHCb::Particle* ) const
+    public:
+      virtual ~ParticleFalse() { }
+    public:
+      inline bool operator() ( const LHCb::Particle* ) const
       {
         return false;
       }
- 
     };
 
-  
   }
-  
+
 }
 
 #endif // KERNEL_PARTICLEPREDICATES_H
