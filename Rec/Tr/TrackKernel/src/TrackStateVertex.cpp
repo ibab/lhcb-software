@@ -1,6 +1,5 @@
 #include "TrackKernel/TrackStateVertex.h"
 #include "Event/TrackFunctor.h"
-#include "LHCbMath/MatrixInversion.h"
 #include "LHCbMath/MatrixTransforms.h"
 
 namespace std {
@@ -23,9 +22,9 @@ namespace LHCb
 
       /// set the state
       void setState( const LHCb::State& state ) {
-	m_state = state ; 
-	m_G = state.covariance() ;
-	Gaudi::Math::invertPosDefSymMatrix( m_G ) ;
+        m_state = state ; 
+        m_G = state.covariance() ;
+        m_G.InvertChol();
       }
       
       /// compute chisq derivatives
@@ -140,7 +139,7 @@ namespace LHCb
 
       // compute the weight matrix (inverse of V)
       m_G = state.covariance() ;
-      Gaudi::Math::invertPosDefSymMatrix( m_G ) ;
+      m_G.InvertChol();
       // set the initial momentum
       m_q(0) = state.tx() ;
       m_q(1) = state.ty() ;
@@ -188,7 +187,7 @@ namespace LHCb
       
       // Matrix W (Fruhwirth)
       m_W = ROOT::Math::Similarity( Transpose(m_B), m_G ) ;
-      Gaudi::Math::invertPosDefSymMatrix( m_W ) ;
+      m_W.InvertChol();
 
       // now we need to be careful with the track weight. in
       // principle, we just reweight m_G. However, if the weight is
@@ -325,7 +324,7 @@ namespace LHCb
     double dchisq = -1 ;
     m_chi2      = -1 ;
     m_poscov = halfD2ChisqDX2 ;
-    const bool ok = Gaudi::Math::invertPosDefSymMatrix(m_poscov) ;
+    const bool ok = m_poscov.InvertChol();
     if( !ok ) {
       m_fitStatus = FitFailure ;
     } else {
