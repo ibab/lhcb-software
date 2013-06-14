@@ -78,7 +78,7 @@
  *  @date   2012-04-25
  */
 
-static const CLID CLID_DeFTLayer = 8604;
+static const CLID CLID_DeFTLayer = 8605;
 
 typedef std::pair<LHCb::FTChannelID, double> FTPair;
 typedef std::vector< FTPair > VectFTPairs;

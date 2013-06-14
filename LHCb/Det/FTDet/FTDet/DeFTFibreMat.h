@@ -17,7 +17,7 @@
  *  @date   2012-04-25
  */
 
-static const CLID CLID_DeFTFibreMat = 8607;
+static const CLID CLID_DeFTFibreMat = 8608;
 
 class DeFTFibreMat : public DetectorElement {
 
