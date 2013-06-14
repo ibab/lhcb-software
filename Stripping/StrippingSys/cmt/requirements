@@ -11,16 +11,16 @@ use  StandardParticles           v2r2     Phys   # Juan Palacios
 ####################################################################
 # Internal Packages
 use  DisplVertices 		 v7r15	  Phys	 # Neal Gauvin
-use  MvaPreSelB2DH               v1r5     Phys   # Sajan Easo
+use  MvaPreSelB2DH               v1r6     Phys   # Sajan Easo
 
 ####################################################################
 # Stripping packages
 use  StrippingAlgs               v1r12    Phys   # Anton Poluektov
-use  StrippingArchive            v1r21    Phys   # Stripping coordinators
+use  StrippingArchive            v1r22    Phys   # Stripping coordinators
 use  StrippingConf               v4r8     Phys   # Anton Poluektov
-use  StrippingNeuroBayes         v1r8     Phys   # Ulrich Kerzel
+use  StrippingNeuroBayes         v1r9     Phys   # Ulrich Kerzel
 use  StrippingSelections         v3r25    Phys   # Stripping coordinators
-use  StrippingSettings           v2r25    Phys   # Stripping coordinators
+use  StrippingSettings           v2r26    Phys   # Stripping coordinators
 use  StrippingTCK                v1r4     Phys   # Anton Poluektov
 use  StrippingUtils              v1r8     Phys   # Juan Palacios
 
