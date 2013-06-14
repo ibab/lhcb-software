@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-06-14 - Chris Jones
+ - Add various missing virtual destructors, to silence gcc 4.8 warnings.
+
 !========================= DaVinciInterfaces v2r18 2013-05-07 =========================
 
 ! 2013-04-22 - Chris Jones

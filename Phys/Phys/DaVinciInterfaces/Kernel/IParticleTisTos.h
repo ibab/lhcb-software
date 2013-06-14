@@ -38,7 +38,11 @@ class GAUDI_API IParticleTisTos : virtual public ITisTos
 
 public:
 
+  /// Interface ID
   DeclareInterfaceID(IParticleTisTos, 1, 0);
+
+  /// Destructor
+  virtual ~IParticleTisTos() { }
 
 public:
 

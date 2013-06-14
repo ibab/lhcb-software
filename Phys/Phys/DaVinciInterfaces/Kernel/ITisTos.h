@@ -32,7 +32,11 @@ class GAUDI_API ITisTos : virtual public IAlgTool
 
 public: 
 
+  /// Interface ID
   DeclareInterfaceID ( ITisTos, 1 , 0 ) ;
+
+  /// Destructor
+  virtual ~ITisTos() { }
 
 public:
 
