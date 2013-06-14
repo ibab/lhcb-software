@@ -2,16 +2,13 @@
 #ifndef KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H 
 #define KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H 1
 
-// Include files
 // from STL
 #include <string>
 
-
-//
 #include "Kernel/Particle2MCParticle.h"
 #include "Kernel/IParticle2MCAssociator.h"
 
-/** @class IParticle2MCWeightedAssociator IParticle2MCWeightedAssociator.h Kernel/IParticle2MCWeightedAssociator.h
+/** @class IParticle2MCWeightedAssociator Kernel/IParticle2MCWeightedAssociator.h
  *  
  *  Tool interface to generate weighted associations between an 
  *  LHCb::Particle and return them to the user. The
@@ -26,9 +23,16 @@
  */
 class GAUDI_API IParticle2MCWeightedAssociator : virtual public IParticle2MCAssociator
 {
+
 public: 
 
+  /// Interface ID
   DeclareInterfaceID(IParticle2MCWeightedAssociator, 1, 0);
+
+  /// Destructor
+  virtual ~IParticle2MCWeightedAssociator() { }
+
+public:
 
   /**
    *
@@ -96,4 +100,5 @@ public:
               const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
 
 };
+
 #endif // KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H

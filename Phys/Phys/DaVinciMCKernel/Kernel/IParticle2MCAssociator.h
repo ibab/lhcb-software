@@ -1,41 +1,46 @@
 // $Id$
-#ifndef KERNEL_IPARTICLE2MCASSOCIATOR_H 
+#ifndef KERNEL_IPARTICLE2MCASSOCIATOR_H
 #define KERNEL_IPARTICLE2MCASSOCIATOR_H 1
 
-// Include files
 // from STL
 #include <string>
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/MCParticle.h"
+
 namespace LHCb
 {
   class Particle;
   class MCParticle;
 }
 
-
-
-
-/** @class IParticle2MCAssociator IParticle2MCAssociator.h Kernel/IParticle2MCAssociator.h
- *  
- *  Tool interface to generate a single association between an 
+/** @class IParticle2MCAssociator Kernel/IParticle2MCAssociator.h
+ *
+ *  Tool interface to generate a single association between an
  *  LHCb::Particle and return them to the user. The
  *  user is in control of the resulting association and invoking the interface
  *  methods should have no side-effects. TES access should be read-only.
  *  Interface implementations should not populate the TES with their results
  *  directly or indirectly, and should not have any runtime configuration
- *  that alters the result, except for the assumed TES location of the 
+ *  that alters the result, except for the assumed TES location of the
  *  LHCb::MCParticles for the relevant methods.
- * 
+ *
  *  @author Juan PALACIOS
  *  @date   2009-01-19
  */
-class GAUDI_API IParticle2MCAssociator : virtual public IAlgTool {
-public: 
+class GAUDI_API IParticle2MCAssociator : virtual public IAlgTool 
+{
 
-DeclareInterfaceID( IParticle2MCAssociator, 1, 0 );
+ public:
+
+  /// Interface ID
+  DeclareInterfaceID( IParticle2MCAssociator, 1, 0 );
+
+  /// Destructor
+  virtual ~IParticle2MCAssociator() { }
+
+ public:
 
   /**
    * Calculate and return the LHCb::MCParticle associated to an
@@ -48,8 +53,8 @@ DeclareInterfaceID( IParticle2MCAssociator, 1, 0 );
    * @date   2009-03-25
    *
    **/
-  virtual const LHCb::MCParticle* 
-  relatedMCP(const LHCb::Particle*) const = 0;
+  virtual const LHCb::MCParticle*
+    relatedMCP(const LHCb::Particle*) const = 0;
 
 
   /**
@@ -63,8 +68,8 @@ DeclareInterfaceID( IParticle2MCAssociator, 1, 0 );
    * @date   2009-05-07
    *
    **/
-  virtual const LHCb::MCParticle* 
-  operator() (const LHCb::Particle*) const = 0;
+  virtual const LHCb::MCParticle*
+    operator() (const LHCb::Particle*) const = 0;
 
   /**
    * Calculate and return the LHCb::MCParticle associated to an
@@ -79,8 +84,8 @@ DeclareInterfaceID( IParticle2MCAssociator, 1, 0 );
    *
    **/
   virtual const LHCb::MCParticle*
-  relatedMCP(const LHCb::Particle*,
-             const std::string& mcParticleLocation) const = 0;
+    relatedMCP(const LHCb::Particle*,
+               const std::string& mcParticleLocation) const = 0;
 
   /**
    * Calculate and return the LHCb::MCParticle associated to an
@@ -95,8 +100,8 @@ DeclareInterfaceID( IParticle2MCAssociator, 1, 0 );
    *
    **/
   virtual const LHCb::MCParticle*
-  relatedMCP(const LHCb::Particle* particles,
-             const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
+    relatedMCP(const LHCb::Particle* particles,
+               const LHCb::MCParticle::ConstVector& mcParticles) const = 0;
 
   /**
    * Calculate and return the LHCb::MCParticle associated to an
@@ -111,9 +116,9 @@ DeclareInterfaceID( IParticle2MCAssociator, 1, 0 );
    *
    **/
   virtual const LHCb::MCParticle*
-  relatedMCP(const LHCb::Particle* particles,
-             const LHCb::MCParticle::Container& mcParticles) const = 0;
-
+    relatedMCP(const LHCb::Particle* particles,
+               const LHCb::MCParticle::Container& mcParticles) const = 0;
 
 };
+
 #endif // KERNEL_IPARTICLE2MCASSOCIATOR_H

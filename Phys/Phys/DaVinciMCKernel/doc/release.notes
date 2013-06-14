@@ -5,6 +5,9 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+! 2013-06-14 - Chris Jones
+ - Add various missing virtual destructors, to silence gcc 4.8 warnings.
+
 !========================= DaVinciMCKernel v4r3p2 2013-05-07 =========================
 
 ! 2013-05-07 - Chris Jones
