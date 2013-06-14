@@ -11,16 +11,23 @@ namespace LHCb
   class SwimmingReport;
 }
 
-/** @class ICloneSwimmingReport ICloneSwimmingReport.h MicroDST/ICloneSwimmingReport.h
+/** @class ICloneSwimmingReport MicroDST/ICloneSwimmingReport.h
  *  
  *
  *  @author Roel Aaij
  *  @date   2011-10-09
  */
-class GAUDI_API ICloneSwimmingReport : virtual public MicroDST::ICloner<LHCb::SwimmingReport> {
+class GAUDI_API ICloneSwimmingReport : virtual public MicroDST::ICloner<LHCb::SwimmingReport>
+{
+
 public: 
 
+  /// Interface ID
   DeclareInterfaceID(ICloneSwimmingReport, 1, 0 );
 
+  /// Destructor
+  virtual ~ICloneSwimmingReport() { }
+
 };
+
 #endif // MICRODST_ICLONESWIMMINGREPORT_H

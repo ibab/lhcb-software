@@ -7,6 +7,9 @@
 ! $Id: release.notes,v 1.20 2010-08-20 13:36:19 jpalac Exp $
 !-----------------------------------------------------------------------------
 
+! 2013-06-14 - Chris Jones
+ - Add various missing virtual destructors, to suppress gcc 4.8 warnings.
+
 !========================= MicroDSTInterfaces v1r7p1 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

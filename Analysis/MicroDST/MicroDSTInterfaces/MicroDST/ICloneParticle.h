@@ -13,15 +13,24 @@ namespace LHCb
   class Particle;
 }
 
-/** @class ICloneParticle ICloneParticle.h MicroDST/ICloneParticle.h
+/** @class ICloneParticle MicroDST/ICloneParticle.h
  *  
  *
  *  @author Juan PALACIOS
  *  @date   2007-11-30
  */
 
-class GAUDI_API ICloneParticle : virtual public MicroDST::ICloner<LHCb::Particle> {
+class GAUDI_API ICloneParticle : virtual public MicroDST::ICloner<LHCb::Particle> 
+{
+
 public: 
+
+  /// Interface ID
   DeclareInterfaceID(ICloneParticle, 2, 0 );
+
+  /// Destructor
+  virtual ~ICloneParticle() { }
+
 };
+
 #endif // MICRODST_ICLONEPARTICLE_H

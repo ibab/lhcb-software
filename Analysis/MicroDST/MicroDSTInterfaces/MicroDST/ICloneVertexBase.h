@@ -11,16 +11,23 @@ namespace LHCb
   class VertexBase;
 }
 
-/** @class ICloneVertexBase ICloneVertexBase.h MicroDST/ICloneVertexBase.h
+/** @class ICloneVertexBase MicroDST/ICloneVertexBase.h
  *  
  *
  *  @author Juan PALACIOS
  *  @date   2009-07-29
  */
-class GAUDI_API ICloneVertexBase : virtual public MicroDST::ICloner<LHCb::VertexBase> {
+class GAUDI_API ICloneVertexBase : virtual public MicroDST::ICloner<LHCb::VertexBase> 
+{
+
 public: 
 
+  /// Interface ID
   DeclareInterfaceID(ICloneVertexBase, 2, 0 );
 
+  /// Destructor
+  virtual ~ICloneVertexBase() { }
+
 };
+
 #endif // MICRODST_ICLONEVERTEXBASE_H

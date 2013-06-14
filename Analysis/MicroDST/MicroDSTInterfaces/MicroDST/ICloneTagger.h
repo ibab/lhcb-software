@@ -13,14 +13,23 @@ namespace LHCb
   class Tagger;
 }
 
-/** @class ICloneTagger ICloneTagger.h MicroDST/ICloneTagger.h
+/** @class ICloneTagger MicroDST/ICloneTagger.h
  *  
  *
  *  @author Juan PALACIOS
  *  @date   2009-11-17
  */
-class GAUDI_API ICloneTagger : virtual public MicroDST::ICloner<LHCb::Tagger> {
+class GAUDI_API ICloneTagger : virtual public MicroDST::ICloner<LHCb::Tagger>
+{
+
 public: 
+
+  /// Interface ID
   DeclareInterfaceID(ICloneTagger, 1, 0 );
+
+  /// Destructor
+  virtual ~ICloneTagger() { }
+
 };
+
 #endif // MICRODST_ICLONETAGGER_H

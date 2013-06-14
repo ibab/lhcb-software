@@ -16,10 +16,17 @@ namespace LHCb
  *  @author Juan PALACIOS
  *  @date   2007-11-30
  */
-class GAUDI_API ICloneVertex : virtual public MicroDST::ICloner<LHCb::Vertex> {
+class GAUDI_API ICloneVertex : virtual public MicroDST::ICloner<LHCb::Vertex> 
+{
+
 public: 
 
+  /// Interface ID
   DeclareInterfaceID(ICloneVertex, 2, 0 );
 
+  /// Destructor
+  virtual ~ICloneVertex() { }
+
 };
+
 #endif // ICLONEVERTEX_H

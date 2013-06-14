@@ -16,10 +16,17 @@ namespace LHCb
  *  @author Juan PALACIOS
  *  @date   2010-10-03
  */
-class GAUDI_API ICloneWeightsVector : virtual public MicroDST::ICloner<LHCb::WeightsVector> {
-public: 
+class GAUDI_API ICloneWeightsVector : virtual public MicroDST::ICloner<LHCb::WeightsVector>
+{
 
+ public: 
+
+  /// Interface ID
   DeclareInterfaceID(ICloneWeightsVector, 1, 0 );
 
+  /// Destructor
+  virtual ~ICloneWeightsVector() { }
+
 };
+
 #endif // MICRODST_ICLONEWEIGHTSVECTOR_H
