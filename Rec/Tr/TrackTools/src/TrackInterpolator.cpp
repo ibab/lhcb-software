@@ -7,7 +7,6 @@
 
 // From LHCbMath
 #include "LHCbMath/MatrixManip.h"
-#include "LHCbMath/MatrixInversion.h"
 
 // from TrackEvent
 #include "Event/TrackUnitsConverters.h"
@@ -189,19 +188,19 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   // Get the predicted downstream state and invert the covariance matrix
   const TrackVector& stateDownX = stateDown.stateVector();
   TrackSymMatrix invStateDownC = stateDown.covariance();
-  if ( !Gaudi::Math::invertPosDefSymMatrix( invStateDownC ) )
+  if ( !invStateDownC.InvertChol() )
     return Warning( "Failure inverting matrix in smoother",StatusCode::FAILURE,0 );
 
   // Get the predicted upstream state and invert the covariance matrix
   const TrackVector& stateUpX = stateUp.stateVector();
   TrackSymMatrix invStateUpC = stateUp.covariance();
-  if ( !Gaudi::Math::invertPosDefSymMatrix( invStateUpC ) )
+  if ( !invStateUpC.InvertChol() )
     return Warning( "Failure inverting matrix in smoother",StatusCode::FAILURE,0 );
 
   // Add the inverted matrices
   TrackSymMatrix& stateC = state.covariance();
   stateC = invStateDownC + invStateUpC;
-  if ( !Gaudi::Math::invertPosDefSymMatrix( stateC ) )
+  if ( !stateC.InvertChol() )
     return Warning( "Failure inverting matrix in smoother",StatusCode::FAILURE,0 );
   
   // Get the state by calculating the weighted mean

@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2013-06-14 - Marco Cattaneo
+ - Replace use of obsolete wrapper class Gaudi::Math::invertPosDefSymMatrix
+   with direct call to SMatrix InvertChol() method. Fixes gcc48 warning
+
 !========================= TrackTools v4r24 2013-06-05 =========================
 ! 2013-06-05 - Giovanni Passaleva
  - Fixes to allow configurations without M1 (e.g. upgrade )
