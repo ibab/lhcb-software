@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-06-14 - Marco Cattaneo
+ - Fix another gc48 warning (remove also some unnecessary Boost includes)
+
 ! 2013-06-12 - Marco Cattaneo
  - Fix gcc48 warning
  - Remove empty finalize methods

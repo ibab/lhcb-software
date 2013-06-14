@@ -1,6 +1,6 @@
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/ToolHandle.h"
-#include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
@@ -8,8 +8,6 @@
 #include "TrackInterfaces/ITrackVertexer.h"
 #include "TrackInterfaces/IPVOfflineTool.h"
 
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
 #include <algorithm>
 #include <boost/foreach.hpp>
 

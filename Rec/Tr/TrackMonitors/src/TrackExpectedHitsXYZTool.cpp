@@ -230,8 +230,6 @@ template<typename HITMANAGER, typename IndexHelper,
 void TrackExpectedHitsXYZTool::collectLineHits(HITMANAGER* hitman,
 	const LHCb::TrackTraj& ttraj, HitPatternXYZ& pat) const
 {
-    typedef typename HITMANAGER::Hits::value_type HITP;
-    typedef typename boost::remove_pointer<HITP>::type HIT;
     IndexHelper idx(pat);
     hitman->prepareHits();
     for (unsigned reg = regMin; regMax >= reg; ++reg) {
