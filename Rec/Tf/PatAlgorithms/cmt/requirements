@@ -32,3 +32,4 @@ library          PatAlgorithms    ../src/*.cpp
 #=========================================================================
 apply_pattern    install_python_modules
 apply_pattern    component_library library=PatAlgorithms
+macro_append PatAlgorithms_cppflags " -g -UNDEBUG"

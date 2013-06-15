@@ -1097,7 +1097,7 @@ void PatSeedingTool::collectITOT(
 
       //== Some data in OT ??
       for (unsigned ista = 0; ista < 3; ++ista ) {
-        unsigned sta = stationorder[ITSta][ista];
+        const unsigned sta = stationorder[ITSta][ista];
 	// skip station used to produce the seed (we used all hits there)
 	if ( sta == ITSta ) continue;
 	unsigned nbPlanes = track.nPlanes();
@@ -1162,8 +1162,8 @@ void PatSeedingTool::collectITOT(
       if ( (3 > track.nStations()) || doOverlaps ) {
 	unsigned minReg = (doOverlaps) ? (m_nOTReg) : (reg);
 	unsigned maxReg = (doOverlaps) ? (m_nReg) : (reg + 1);
-	for (unsigned ista = 0, sta = stationorder[ITSta][ista]; ista < 3;
-	    sta = stationorder[ITSta][++ista]) {
+	for (unsigned ista = 0; ista < 3; ++ista) {
+	  const unsigned sta = stationorder[ITSta][ista];
 	  for ( unsigned testReg = minReg; maxReg > testReg; ++testReg) {
 	    if ( sta == ITSta && reg == testReg) continue;
 	    for ( unsigned lay = 0 ; 4 > lay ; ++lay ) {
