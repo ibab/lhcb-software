@@ -17,7 +17,7 @@
  *  @date   2012-04-25
  */
 
-static const CLID CLID_DeFTModule = 8606;
+static const CLID CLID_DeFTModule = 8605;
 
 class DeFTModule : public DetectorElement {
 

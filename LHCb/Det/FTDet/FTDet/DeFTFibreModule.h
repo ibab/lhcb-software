@@ -17,7 +17,7 @@
  *  @date   2012-04-25
  */
 
-static const CLID CLID_DeFTFibreModule = 8607;
+static const CLID CLID_DeFTFibreModule = 8606;
 
 class DeFTFibreModule : public DetectorElement {
 
