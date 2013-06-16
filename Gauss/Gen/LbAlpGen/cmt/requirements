@@ -107,6 +107,8 @@ macro_append LbAlpGentop_use_linkopts " -lLbAlpGenLibtop "
 ##macro_append AlpGen4Q_use_linkopts " -lLbAlpGenLib4q "
 ##macro_append AlpGenZbb_use_linkopts " -lLbAlpGenLibzbb "
 
+macro_remove alpgen_linkopts "/archive"
+
 end_private
 # =============================================================================
 
