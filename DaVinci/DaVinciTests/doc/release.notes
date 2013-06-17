@@ -3,8 +3,11 @@
 ! Responsible : Juan Palacios
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+
+!========================= DaVinciTests v2r17 2013-06-17 =========================
+
 ! 2013-06-12 - Stefania Vecchi
- - updated reference file tagging.qms/test_tag_mc12.qmt according to the latest 
+ - Updated reference file tagging.qms/test_tag_mc12.qmt according to the latest 
    cut optimization for Reco14
 
 ! 2013-06-05 - Chris Jones
