@@ -21,8 +21,8 @@ MuonDAQHelper::MuonDAQHelper(  ) : m_msgStream(NULL),
     m_detSvc(0),
     m_msgSvc(0),
     m_TotTell1(0),
-    m_M1Tell1(0)
-//    m_TotODEBoard(0)
+    m_M1Tell1(0),
+    m_basegeometry(NULL)
 {
 
 }

@@ -1,4 +1,3 @@
-// $Id: MuonChamberLayout.h,v 1.5 2009-10-08 15:20:47 asatta Exp $
 #ifndef PUBLIC_MUONCHAMBERLAYOUT_H 
 #define PUBLIC_MUONCHAMBERLAYOUT_H 1
 
@@ -229,8 +228,6 @@ private:
 
   //My data provider
   IDataProviderSvc* m_detSvc;
-
-  unsigned int offset[4];
 
   // size of logical channels
   std::vector<unsigned int> m_logVertGridX;
