@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-06-17 - Andrea Contu
+ - Added StrippingChargedHypernon to s20r3 dictionaries
+
 ! 2013-06-13 - Stefano Perazzini
  - Corrected Stripping20r2 dbase
 
