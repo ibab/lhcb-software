@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinci
 ################################################################################
-gaudi_subdir(DaVinci v33r4)
+gaudi_subdir(DaVinci v33r5)
 
 gaudi_depends_on_subdirs(AnalysisSys
                          Calo/CaloDAQ
@@ -15,7 +15,9 @@ gaudi_depends_on_subdirs(AnalysisSys
                          PhysSys
                          RecSys
                          Sim/SimComponents
-                         StrippingSys)
+                         StrippingSys
+                         PRConfig
+                         QMTestFiles)
 
 find_package(HepMC)
 
