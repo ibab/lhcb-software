@@ -51,16 +51,16 @@ namespace Gaudi
      *  @param matrix symmetric positive definite matrix
      *  @return true if inversion was sucessful, false otherwise
      */
-    template<class T> inline bool invertPosDefSymMatrix(T& matrix)
-    {
-      /* make sure we break in the typedefs below if the user calls this
-       * method with an unsuitable type T */
-      enum { N = T::kRows };
-      typedef typename T::value_type F;
-      typedef typename ROOT::Math::MatRepSym<F, N> R;
-      typedef typename ROOT::Math::SMatrix<F, N, N, R> M;
-      return matrix.InvertChol();
-    }
+    //    template<class T> inline bool invertPosDefSymMatrix(T& matrix)
+    //    {
+    //      /* make sure we break in the typedefs below if the user calls this
+    //       * method with an unsuitable type T */
+    //      enum { N = T::kRows };
+    //      typedef typename T::value_type F;
+    //      typedef typename ROOT::Math::MatRepSym<F, N> R;
+    //      typedef typename ROOT::Math::SMatrix<F, N, N, R> M;
+    //      return matrix.InvertChol();
+    //    }
     /** invert symmetric matrices
      *
      *  For matrix dimensions N <= 6, hand-optimized template specializations
