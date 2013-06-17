@@ -45,7 +45,7 @@ namespace FiniteStateMachine {
     bool hasValue() const         { return  hasAttr(_U(value));           }
     std::string value() const     { return  attr<std::string>(_U(value)); }
     std::string action() const    { return  attr<std::string>(_U(action)); }
-    int timeout() const           { return  attr<int>(_U(timeout)); }
+    int timeout() const           { return  attr<int>(_U(value)); }
   };
 }
 
@@ -58,6 +58,8 @@ void TasklistPrinter::operator()(const xml_h& h)  {
   xml_coll_t(t,_U(ioparam)).for_each(Args());
   cout << endl << "|   Args:   ";
   xml_coll_t(t,_U(argument)).for_each(Args());
+  cout << endl << "|   TMO:    ";
+  xml_coll_t(t,_U(timeout)).for_each(Timeouts());
   cout << endl << "|   FMC:    ";
   xml_coll_t(t,_U(fmcparam)).for_each(Params());
   cout << endl 
@@ -108,6 +110,7 @@ void TasklistAnalyzer::operator()(const xml_h& h)  {
   xml_coll_t(t,_U(argument)).for_each(Args(task));
   xml_coll_t(t,_U(fmcparam)).for_each(Params(task));
   xml_coll_t(t,_U(ioparam)).for_each(Params(task));
+  xml_coll_t(t,_U(timeout)).for_each(Timeouts(task));
 }
 
 /// Action operator when analyzing data

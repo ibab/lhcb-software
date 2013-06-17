@@ -64,8 +64,8 @@ namespace FiniteStateMachine   {
     virtual ErrCond publish();
     /// Publish state information of the slaves
     virtual FSM::ErrCond publishSlaves();
-    /// State enter action for READY: Reset all internal slaves to external ones
-    virtual ErrCond ready();
+    /// Transition pre-action for start: Reset all internal slaves to external ones
+    virtual ErrCond start();
     /// Invoke single transition request on machine
     virtual ErrCond invokeTransition(const std::string& tr);
     /// Set transition target state

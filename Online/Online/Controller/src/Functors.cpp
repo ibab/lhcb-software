@@ -114,6 +114,7 @@ void CheckStateSlave::operator()(const Slave* s)   {
   const Type*  slType  = s->type();
   const Rule*  slRule  = s->rule();
   const Transition::Rules& r = object->rules();
+
   if ( s->currentState() == Slave::SLAVE_FAILED ) { 
     ++fail;  // Must be first check: Slave may have failed on start while limbo....
   }
@@ -123,27 +124,37 @@ void CheckStateSlave::operator()(const Slave* s)   {
   else if ( s->currentState() == Slave::SLAVE_EXECUTING ) { 
     // Nothing to do: Slave has not yet answered
   }
-  else if ( slRule && slRule->currState() == slState )  {
-    // Nothing to do: Slave has not yet answered
-  }
-  else if ( slRule && slRule->targetState() == slState )  {
+  else if ( slRule && slState && slRule->targetState() == slState )  {
     ++count;  // Slave fulfills state criteria according to rule
   }
   else if ( slState && slState == object->to() ) {
     ++count;  // Slave of same fulfills state criteria
   }
+  else if ( slRule && slState && slRule->currState() == slState )  {
+    // Nothing to do: Slave has not yet answered
+  }
+  else if ( slState && object->from() == slState )  {
+    // Nothing to do: Slave has not yet answered
+  }
   else   {  // Check if all rules for this type are fulfilled
     for(Transition::Rules::const_iterator i=r.begin(); i != r.end(); ++i)  {
       const Rule* rule = (*i);
       if ( rule->type() == slType )  {
-	if      ( slState == object->to() && slState == rule->targetState() )  
+	if      ( slRule  == rule && slState == object->to() && slState==rule->targetState() )
 	  ++count;  // Slave fulfills state criteria
+	else if ( slState == object->to() && slState == rule->targetState() )  
+	  ++count;  // Slave fulfills state criteria
+	else if ( slState == object->to() )
+	  ++count; // There was nothing to be done.
 	else {
-	  char text[128];
-	  ::snprintf(text,sizeof(text),"%s",Rule::c_name(rule));
+	  char text1[128], text2[128];
+	  ::snprintf(text1,sizeof(text1),"%s",Rule::c_name(rule));
+	  ::snprintf(text2,sizeof(text2),"%s",Rule::c_name(slRule));
 	  ++fail;  // What can I do: there was a rule, but the slave did not go to the target state
-	  s->display(s->ALWAYS,s->c_name(),"FAILED Metastate:%s [Rule not fulfilled] State:%s to:%s Rule:%s",
-		     s->metaStateName(),State::c_name(slState),object->to()->c_name(),text);
+	  s->display(s->ALWAYS,s->c_name(),"FAILED Metastate:%s [Rule not fulfilled] State:%s",
+		     s->metaStateName(),State::c_name(slState));
+	  s->display(s->ALWAYS,s->c_name(),"Tr:%s from:%s to:%s Rule:%s -- %s",
+		     object->c_name(),State::c_name(object->from()),State::c_name(object->to()),text1,text2);
 	}
 	break;
       }

@@ -40,6 +40,10 @@ Rule::Rule(const Type* typ, const Transition* tr, Direction dir)
   : TypedObject(typ,makeName(tr->type(),tr->from(),tr->to())), 
     m_currState(0), m_targetState(0), m_transition(tr), m_direction(dir)
 {
+  if ( tr ) {
+    m_currState = tr->from();
+    m_targetState = tr->to();
+  }
 }
 
 /// Standatrd destructor  

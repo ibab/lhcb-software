@@ -391,10 +391,18 @@ ErrCond Machine::startTransition()  {
   if ( st == MACH_ACTIVE )  {
     const Slaves&     sl = slaves();
     const Transition* tr = currTrans();
+    TransitionActionMap::const_iterator i = m_transActions.find(tr);
+    if ( i != m_transActions.end() )  {
+      int sc = (*i).second.pre().execute(this);
+      if ( sc != FSM::SUCCESS )  {
+	return ret_failure(this);
+      }
+    }
     if ( !sl.empty() )  {
       PredicateSlave pred = for_each(sl.begin(),sl.end(),PredicateSlave(tr));
       if ( pred.ok() )   {
-	display(DEBUG,c_name(),"Executing %s. Predicates checking finished successfully. Dir:%s",tr->c_name(),dir(m_direction));
+	display(DEBUG,c_name(),"Executing %s. Predicates checking finished successfully. Dir:%s",
+		tr->c_name(),dir(m_direction));
 	m_meta.execute(this);
 	InvokeSlave func = for_each(sl.begin(),sl.end(),InvokeSlave(tr,m_direction));
 	if ( func.status == FSM::WAIT_ACTION )  {
@@ -444,12 +452,8 @@ ErrCond Machine::doAction (const void* user_param)  {
   TransitionActionMap::const_iterator i = m_transActions.find(tr);
   m_meta.execute(this);
   if ( i != m_transActions.end() )  {
-    int sc = (*i).second.pre().execute(user_param);
-    if ( sc == FSM::SUCCESS )  {
-      sc = (*i).second.action().execute(user_param);
-      return finishAction(sc);
-    }
-    return ret_failure(this);
+    int sc = (*i).second.action().execute(user_param);
+    return finishAction(sc);
   }
   return finishAction(FSM::SUCCESS);
 }

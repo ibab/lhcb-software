@@ -90,7 +90,6 @@ FSM::ErrCond Slave::notifyMachine(int meta_state)  {
 
 /// Callback on alive signs of slave process
 FSM::ErrCond Slave::iamHere()  {
-  m_rule  = 0;
   m_alive = true;
   m_meta  = SLAVE_ALIVE;
   m_state = type()->initialState();
@@ -242,7 +241,7 @@ void Slave::handleState(const string& msg)  {
   // After fork slaves do not answer with OFFLINE of NOT_READY!
   starting &= (m == "OFFLINE");// || m == "NOT_READY");
 
-  display(INFO,c_name(),"Received new message %s starting:%s state:%s transition:%s",
+  display(DEBUG,c_name(),"Received new message %s starting:%s state:%s transition:%s",
 	  m.c_str(), starting ? "YES" : "NO", State::c_name(state), Transition::c_name(transition));
   if ( m == "ERROR" ) {
     lib_rtl_sleep(10); // Put in some code to set breakpoint for debugging
@@ -264,12 +263,15 @@ void Slave::handle(const Event& event)   {
   const State* state = (const State*)event.data;
   switch(event.type)  {
   case Slave::SLAVE_ALIVE:
+    display(DEBUG,c_name(),"Received IAMHERE from internal slave. rule:%s",Rule::c_name(m_rule));
     iamHere();
     break;
   case Slave::SLAVE_LIMBO:
     iamDead();
     break;
   case Slave::SLAVE_FINISHED:
+    display(DEBUG,c_name(),"Received message from internal slave. rule:%s State:%s",
+	    Rule::c_name(m_rule),State::c_name(state));
     transitionDone(state);
     break;
   default:

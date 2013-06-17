@@ -44,13 +44,13 @@ static void feed(void* tag, void** buff, int* size, int* /* first */) {
 Controller::Controller(const string&  nam, Machine* m)
   : CommandTarget(nam), m_errorState(0), m_machine(m)
 {
-  const Type*  typ = m_machine->type();
-  const State* rdy = typ->state(ST_NAME_READY);
+  const Type* typ = m_machine->type();
+  const Transition* start = typ->transition(ST_NAME_READY,ST_NAME_RUNNING);
   m_errorState = typ->state(ST_NAME_ERROR);
   m->setFailAction(Callback::make(this,&Controller::fail));
   m->setCompletionAction(Callback::make(this,&Controller::publish));
   m->setMetaStateAction(Callback::make(this,&Controller::publishSlaves));
-  m->setInAction(rdy,Callback::make(this,&Controller::ready));
+  m->setPreAction(start,Callback::make(this,&Controller::start));
   m_fsmTasks = ::dis_add_service((char*)(nam+"/tasks").c_str(),(char*)"C",0,0,feed,(long)&m_taskInfo);
 }
 
@@ -62,11 +62,11 @@ Controller::~Controller() {
 /// Publish state information when transition failed. 
 FSM::ErrCond Controller::fail()  {
   const Transition* tr = m_machine->currTrans();
-  const Slaves slaves = m_machine->slaves();
+  const Slaves      sl = m_machine->slaves();
   display(ALWAYS,c_name(),"%s> Controller: FAILED to invoke transition %s from %s.",
 	  m_machine->type()->c_name(), tr ? tr->c_name() : "??Unknown??",m_machine->c_state());
   m_machine->setSlaveState(Slave::SLAVE_FAILED,m_errorState);
-  for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); ++i)  {
+  for(Slaves::const_iterator i=sl.begin(); i!= sl.end(); ++i)  {
     const Slave* s = *i;
     display(ALWAYS,c_name(),"Controller: Slave %s in state %s has meta-state:%s",
 	    s->c_name(), s->c_state(), s->metaStateName());
@@ -104,11 +104,14 @@ FSM::ErrCond Controller::publish()  {
     }
   }
   publishSlaves();
+  const Transition* tr = m_machine->currTrans();
+  display(WARNING,c_name(),"Declare new state:          %s %s %s",state.c_str(),
+	  tr ? "after transition" : "", tr ? tr->c_name() : "");
   return declareState(state);
 }
 
-/// State enter action for READY: Reset all internal slaves to external ones
-FSM::ErrCond Controller::ready()  {
+/// Transition pre-action for start: Reset all internal slaves to external ones
+FSM::ErrCond Controller::start()  {
   for(Machine::Slaves::iterator i=m_machine->slaves().begin(); i!= m_machine->slaves().end(); ++i)  {
     Slave* s = *i;
     if ( s->isInternal() )  {
@@ -166,7 +169,7 @@ void Controller::commandHandler()   {
   // Decouple as quickly as possible from the DIM command loop !
   ErrCond status = FSM::SUCCESS;
   string cmd = getString();
-  display(INFO,c_name(),"Received transition request:%s",cmd.c_str());
+  display(WARNING,c_name(),"Received transition request:%s",cmd.c_str());
   if ( !m_machine->isIdle() )  {
     display(ERROR,c_name(),"Machine is not idle!");
     m_machine->goIdle();
