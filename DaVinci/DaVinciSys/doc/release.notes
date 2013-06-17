@@ -3,6 +3,77 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v33r5>2013-06-17 DaVinci v33r5</A></H1><PRE>
+
+New development release based on the LHCb v35r7 stack.
+
+Changed Packages :- DaVinciTests
+
+In DaVinciTests :
+ . New stripping tests, that run explicit strippings from AppConfig 
+   and compare the output to reference log files.
+ . New tests for the Reco14 ANNPID Recalibration.
+ . Updated Flavourtagging tests for Reco14
+ . Input data now taken from PRConfig package.
+
+Executive Summary of Phys and Analysis Changes :-
+
+DaVinciTransporter :-
+ . Add some logic on ParticleTransporter constructor for 
+   automatic selection of proper track extrapolator.
+ . Add new particle transporter:  DaVinci::ParticleTransporter
+   It relies on ITrackStateProvider for better treatment of 
+   track states.  
+
+DecayTreeFitter :-
+ . Fixed bug in initialization of decay length.
+ . Improved initialization of momentum for particles with mass constraint.
+ . Improved identification of poorly converging fits.
+ . Changed convergence criterion to a relative change in chisq 
+   (rather than absolute change).
+
+LoKiFitters :-
+ . Add some functionality to improve fits with downstream tracks,
+   in particular allow the use of new ParticleTransporter. 
+ . Fix a bug with particle classification.
+   Essentially all calculation of DOCACHI2 with 
+   participation of K0S was wrong.
+
+DecayTreeTuple :-
+ . TupleToolTagging.cpp: Changed in order to retrieve the flavour tagging 
+   information deom TES if they are present (for uDST/DST persistency).
+ . Patch TupleToolGeneration to not throw an exception if a NULL 
+   LHCb::HepMCEvent pointer is found, as this is now normal in MC12 data.
+
+FlavourTagging :-
+ . Included new code for Reco14 (selected by personality="Reco14"). 
+   Old code can still run selecting personality=Reco12
+ . BTaggingTool added property to select NNetKaonTools run time 
+   (NEWKaonOpposite and NETKaonSame)
+ . Introduce MultiplePersonalityCall class - a templated class which allows
+   callable objects of identical signature to be called; this class
+   multiplexes calls to the different implementations ("personalities")
+   registered by the caller
+ . Change BTaggingTool and TaggingUtils to provide a personality property,
+   changed functionality is implemented using the MultiplePersonalityCall
+   class.
+ . Fixed one ambiguity in TaggerNEWKaonOppositeTool.cpp
+   (number of tracks after PID preselection) and no asserts...
+ . Updated final SSpi calibration constants for Reco12 D*munu analysis with 
+   correct B+ fraction.
+
+FlavourTaggingChecker :-
+ . Latest update for Reco14: store PIDNN variables, updated tagger preselection
+   (like in chooseCandidateReco14 in FT).
+
+JetAccessories :-
+ . Added JEC uncertainty support
+ . Fix composite particle treatment for sub-resonnance in charged particles
+ . Remove the hard coded pt cut in JEC
+ . Add the possibility to only save jets containing a B particle
+
+Package Changes :-
+
 ! 2013-05-09 - Chris Jones
  - Update davincisys QM test reference for new timing table 
    indentation levels.
