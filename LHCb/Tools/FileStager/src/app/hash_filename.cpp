@@ -75,12 +75,12 @@ int main( int argc, char* argv[] )
    string command;
    bool success = false;
    boost::iterator_range< string::iterator > result;
-   if ( result = ba::find_first( file, "LFN:" ) ) {
+   if ( ( result = ba::find_first( file, "LFN:" ) ) ) {
       // convert LFN to lowercase
       ba::erase_range( file, result );
       remote = file;
       success = FileStager::createLFN( remote, command );
-   } else if ( result = ba::find_first( file, "PFN:" ) ) {
+   } else if ( ( result = ba::find_first( file, "PFN:" ) ) ) {
       // strip PFN
       ba::erase_range( file, result );
       remote = file;
@@ -99,7 +99,7 @@ int main( int argc, char* argv[] )
    fs::path p(remote);
    stringstream temp;
    string extension = p.extension().string();
-   if ( result = ba::find_first( extension, "?" ) ) {
+   if ( ( result = ba::find_first( extension, "?" ) ) ) {
       boost::iterator_range< string::iterator > range( result.begin(), extension.end() );
       ba::erase_range( extension, range );
    }
