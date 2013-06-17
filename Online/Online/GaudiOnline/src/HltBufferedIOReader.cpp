@@ -111,6 +111,7 @@ namespace LHCb
 //#include "GaudiOnline/HltBufferedIOReader.h"
 #include "GaudiOnline/MEPManager.h"
 #include "MDF/MEPEvent.h"
+#include "MDF/MDFHeader.h"
 #include "RTL/rtl.h"
 #include "RTL/readdir.h"
 #include <fcntl.h>
@@ -369,6 +370,7 @@ void HltBufferedIOReader::safeRestOfFile(int file_handle)     {
 
 /// IRunable implementation : Run the class implementation
 StatusCode HltBufferedIOReader::i_run()  {
+  const RawBank* bank = (RawBank*)this;
   int file_handle = 0;
   bool files_processed = false;
   bool m_goto_paused = true;
@@ -406,66 +408,92 @@ StatusCode HltBufferedIOReader::i_run()  {
         }
       }
       if (file_handle)  {
-        int evt_size;
-        int status = ::file_read(file_handle, (char*) &evt_size, sizeof(evt_size));
+        int size_buf[3];
+        int status = ::file_read(file_handle, (char*)size_buf, sizeof(size_buf));
         if (status <= 0)   {
           ::close(file_handle);
           file_handle = 0;
           m_current = "";
           continue;
         }
+	bool is_mdf   = size_buf[0] == size_buf[1] && size_buf[0] == size_buf[2];
+	int  evt_size = size_buf[0];
+	int  buf_size = evt_size + (is_mdf ? bank->hdrSize() : sizeof(MEPEVENT) + sizeof(int));
         // Careful here: sizeof(int) MUST match me->sizeOf() !
         // The problem is that we do not (yet) have a valid data pointer!
         try   {
-          status = m_producer->spaceRearm(sizeof(MEPEVENT) + sizeof(int) + evt_size);
+          status = m_producer->spaceRearm(buf_size);
         }
         catch (const exception& e)        {
-          error("Exception while reading MEP files (spaceRearm): " + string(e.what())+" Skipping rest of file: "+m_current);
+          error("Exception while reading Input files (spaceRearm): "+string(e.what())+
+		" Skipping rest of file: "+m_current);
           ::close(file_handle);
           file_handle = 0;
           m_current = "";
           continue;
         }
         if (status == MBM_NORMAL)        {
-          static int id = -1;
-          MBM::EventDesc& dsc = m_producer->event();
-          MEPEVENT* e = (MEPEVENT*) dsc.data;
-          MEPEvent* me = (MEPEvent*) e->data;
-          me->setSize(evt_size);
-          e->refCount = m_refCount;
-          e->evID = ++id;
-          e->begin = long(e) - long(m_producer->bufferAddress());
-          e->packing = -1;
-          e->valid = 1;
-          e->magic = mep_magic_pattern();
-          for (size_t j = 0; j < MEP_MAX_PACKING; ++j)   {
-            e->events[j].begin = 0;
-            e->events[j].evID = 0;
-            e->events[j].status = EVENT_TYPE_OK;
-            e->events[j].signal = 0;
-          }
-          status = ::file_read(file_handle, (char*) me->start(), me->size());
-          if (status <= 0)   {
-            ::close(file_handle);
-            file_handle = 0;
-            m_current = "";
-            continue;
-          }
-          if (status == MBM_NORMAL)  {
-            dsc.len = sizeof(MEPEVENT) + me->sizeOf() + me->size();
-            //cout << "Event length:" << dsc.len << endl;
-            dsc.mask[0] = m_mepMgr->partitionID();
-            dsc.mask[1] = ~0x0;
-            dsc.mask[2] = ~0x0;
-            dsc.mask[3] = ~0x0;
-            dsc.type = EVENT_TYPE_MEP;
-            m_producer->declareEvent();
-            status = m_producer->sendSpace();
-            if (status == MBM_NORMAL)    {
-              m_evtCount++;
-            }
-          }
-        }
+	  MBM::EventDesc& dsc = m_producer->event();
+	  char*  read_ptr = 0;
+	  size_t read_len = 0;
+	  if ( is_mdf ) {
+	    RawBank* b = (RawBank*)dsc.data;
+	    char* p = b->begin<char>();
+	    b->setMagic();
+	    b->setType(RawBank::DAQ);
+	    b->setSize(MDFHeader::sizeOf(3));
+	    b->setVersion(DAQ_STATUS_BANK);
+	    read_ptr = b->begin<char>();
+	    ::memcpy(read_ptr,size_buf,sizeof(size_buf));
+	    read_ptr += sizeof(size_buf);
+	    read_len = evt_size-sizeof(size_buf);
+	    dsc.len  = evt_size+b->hdrSize();
+	    dsc.type = EVENT_TYPE_EVENT;
+	  }
+	  else {
+	    static int id = -1;
+	    MEPEVENT* e = (MEPEVENT*) dsc.data;
+	    MEPEvent* me = (MEPEvent*) e->data;
+	    me->setSize(evt_size);
+	    e->refCount = m_refCount;
+	    e->evID = ++id;
+	    e->begin = long(e) - long(m_producer->bufferAddress());
+	    e->packing = -1;
+	    e->valid = 1;
+	    e->magic = mep_magic_pattern();
+	    for (size_t j = 0; j < MEP_MAX_PACKING; ++j)   {
+	      e->events[j].begin = 0;
+	      e->events[j].evID = 0;
+	      e->events[j].status = EVENT_TYPE_OK;
+	      e->events[j].signal = 0;
+	    }
+	    read_ptr = (char*)me->start() + 2*sizeof(int);
+	    ::memcpy(read_ptr,size_buf+1,2*sizeof(size_buf[0]));
+	    read_ptr += 2*sizeof(size_buf[0]);
+	    read_len = me->size() - 2*sizeof(int);
+	    dsc.len  = sizeof(MEPEVENT) + me->sizeOf() + me->size();
+	    dsc.type = EVENT_TYPE_MEP;
+	  }
+	  status = ::file_read(file_handle,read_ptr, read_len);
+	  if (status <= 0)   {
+	    ::close(file_handle);
+	    file_handle = 0;
+	    m_current = "";
+	    continue;
+	  }
+	  if (status == MBM_NORMAL)  {
+	    //cout << "Event length:" << dsc.len << endl;
+	    dsc.mask[0] = m_mepMgr->partitionID();
+	    dsc.mask[1] = ~0x0;
+	    dsc.mask[2] = ~0x0;
+	    dsc.mask[3] = ~0x0;
+	    m_producer->declareEvent();
+	    status = m_producer->sendSpace();
+	    if (status == MBM_NORMAL)    {
+	      m_evtCount++;
+	    }
+	  }
+	}
         else if (file_handle)   {
           // undo reading of the first integer before saving rest of file
           ::lseek(file_handle, -sizeof(evt_size), SEEK_CUR);
