@@ -30,7 +30,11 @@
 // Standard constructor, initializes variables
 //=============================================================================
 MuonChamberLayout::MuonChamberLayout()
-  : m_msgStream(NULL), m_msgSvc(NULL),  m_detSvc(NULL), m_baseGeom(NULL)
+  : m_msgStream(NULL)
+  , m_msgSvc(NULL)
+  , m_detSvc(NULL)
+  , m_isM1defined(false)
+  , m_baseGeom(NULL)
 {
 
   MuonLayout R1(1,1);
@@ -74,13 +78,10 @@ StatusCode MuonChamberLayout::initialize( ) {
     return sc ;
   }
 
-  SmartDataPtr<DeMuonDetector> 
-    MuonDe(m_detSvc,DeMuonLocation::Default);
-  bool  isM1defined = MuonDe->isM1defined();
+  SmartDataPtr<DeMuonDetector> MuonDe(m_detSvc,DeMuonLocation::Default);
+  m_isM1defined = MuonDe->isM1defined();
   if (debug)
-    msgStream()<<MSG::INFO<< "Retrieved M1 definition status: " << isM1defined <<endmsg;
-
-  m_isM1defined = isM1defined;
+    msgStream()<<MSG::INFO<< "Retrieved M1 definition status: " << m_isM1defined <<endmsg;
 
   m_baseGeom = new MuonBasicGeometry(m_detSvc, m_msgSvc);
 

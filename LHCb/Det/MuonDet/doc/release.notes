@@ -4,7 +4,8 @@
 !----------------------------------------------------------------------------
 
 ! 2013-06-17 - Marco Cattaneo
- - Fix clang32 warnings (same as fix on 2013-05-07, lost in 2013-05-17 commit...)
+ - Put back the fixes from v9r11 and from the commit on 2013-05-07, lost in
+   2013-05-17 commit...
  - Fix a FORWARD_NULL and two UNINIT_CTOR defects
 
 !========================= MuonDet v9r12 2013-06-03 =========================
