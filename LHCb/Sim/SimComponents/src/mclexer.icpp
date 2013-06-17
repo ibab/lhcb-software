@@ -1316,7 +1316,7 @@ register char *yy_bp;
 
 
 #ifdef __cplusplus
-static int yyinput()
+static inline  int yyinput()
 #else
 static int input()
 #endif
