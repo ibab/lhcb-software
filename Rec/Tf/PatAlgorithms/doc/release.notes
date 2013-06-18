@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2013-06-18 - Marco Cattaneo
+ - Add missing dependency on TrackInterfaces
+
 ! 2013-06-15 - Manuel Tobias Schiller
  - fix segfault in gcc 4.8 optimised build
 
