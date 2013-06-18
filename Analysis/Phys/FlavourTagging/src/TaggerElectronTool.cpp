@@ -265,7 +265,7 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
     const ProtoParticle* proto = (*ipart)->proto();
     const Track*         track = (*ipart)->proto()->track();
     
-    bool inHcalACC= proto->info(ProtoParticle::InAccHcal, false);
+    bool inHcalACC = 0 != proto->info(ProtoParticle::InAccHcal,0);
     if(!inHcalACC)                                         continue;
 
     if(track->type() != Track::Long)                       continue;

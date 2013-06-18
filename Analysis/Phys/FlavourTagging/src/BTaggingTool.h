@@ -39,7 +39,7 @@ class DaVinciAlgorithm;
  */
 
 class BTaggingTool : public GaudiTool,
-                     virtual public IBTaggingTool 
+                     virtual public IBTaggingTool
 {
 
 public:
@@ -51,8 +51,7 @@ public:
 
   virtual ~BTaggingTool( ); ///< Destructor
 
-  StatusCode initialize();    ///<  initialization
-  StatusCode finalize  ();    ///<  finalization
+  StatusCode initialize();  ///< initialization
 
   //-------------------------------------------------------------
   StatusCode tag( LHCb::FlavourTag& theTag, const LHCb::Particle* );
@@ -68,16 +67,15 @@ private:
 
   const LHCb::RecVertex::ConstVector
   choosePrimary(const LHCb::Particle* AXB,
-	  const LHCb::RecVertex::Range& verts,
-	  const LHCb::RecVertex*& RecVert,
-	  LHCb::RecVertex& RefitRecVert);
+                const LHCb::RecVertex::Range& verts,
+                const LHCb::RecVertex*& RecVert,
+                LHCb::RecVertex& RefitRecVert);
 
   MultiplePersonalityCall<boost::function<
-      const LHCb::Particle::ConstVector(
-	      const LHCb::Particle* /* AXB */,
-	      const LHCb::Particle::Range& /* parts */,
-	      const LHCb::RecVertex::ConstVector& /* PileUpVtx*/) > >
-      m_chooseCandidates;
+                            const LHCb::Particle::ConstVector(const LHCb::Particle* /* AXB */,
+                                                              const LHCb::Particle::Range& /* parts */,
+                                                              const LHCb::RecVertex::ConstVector& /* PileUpVtx*/) > >
+  m_chooseCandidates;
 
   const LHCb::Particle::ConstVector
   chooseCandidates(const LHCb::Particle* AXB,
@@ -85,12 +83,12 @@ private:
                    const LHCb::RecVertex::ConstVector& PileUpVtx);
   const LHCb::Particle::ConstVector
   chooseCandidatesReco14(const LHCb::Particle* AXB,
-                   const LHCb::Particle::Range& parts,
-                   const LHCb::RecVertex::ConstVector& PileUpVtx);
+                         const LHCb::Particle::Range& parts,
+                         const LHCb::RecVertex::ConstVector& PileUpVtx);
   const LHCb::Particle::ConstVector
   chooseCandidatesReco12(const LHCb::Particle* AXB,
-                   const LHCb::Particle::Range& parts,
-                   const LHCb::RecVertex::ConstVector& PileUpVtx);
+                         const LHCb::Particle::Range& parts,
+                         const LHCb::RecVertex::ConstVector& PileUpVtx);
 
 private:
 
@@ -105,8 +103,6 @@ private:
 
   IDVAlgorithm* m_dva;
 
-  //  IRelatedPVFinder* m_pFinder;
-
   //properties ----------------
   double m_thetaMin, m_distphi_cut;
   double m_IPPU_cut, m_ghostprob_cut ;
@@ -118,7 +114,7 @@ private:
   bool m_EnableKaonSS,m_EnablePionSS,m_EnableVertexCharge;
   bool m_EnableJetSame,m_EnableNNetKaonOS,m_EnableNNetKaonSS;
 
-  bool m_UseVtxOnlyWithoutOS, m_UseReFitPV;
+  bool m_UseReFitPV;
   std::string m_personality;
 
 };

@@ -26,10 +26,10 @@ using namespace Gaudi::Units;
 DECLARE_TOOL_FACTORY( BTaggingTool )
 
 //=========================================================================
-  BTaggingTool::BTaggingTool( const std::string& type,
-                              const std::string& name,
-                              const IInterface* parent ) :
-    GaudiTool ( type, name, parent )
+BTaggingTool::BTaggingTool( const std::string& type,
+                            const std::string& name,
+                            const IInterface* parent ) :
+GaudiTool ( type, name, parent )
 {
 
   declareInterface<IBTaggingTool>(this);
@@ -62,14 +62,14 @@ DECLARE_TOOL_FACTORY( BTaggingTool )
   declareProperty( "Personality",             m_personality = "Reco14");
   declareProperty( "ghostprob_cut",           m_ghostprob_cut = 0.5); // default preselection for Reco 14
 
-  m_util    = 0;
-  m_descend = 0;
-  m_pvReFitter = 0;
-  m_dva =0;
-  m_combine = 0;
-  m_taggerMu=m_taggerEle=m_taggerKaon=0;
-  m_taggerKaonS=m_taggerPionS=m_taggerVtx=0;
-  m_taggerNNetKaonS=m_taggerNNetKaon=0 ;
+  m_util= NULL;
+  m_descend = NULL;
+  m_pvReFitter = NULL;
+  m_dva = NULL;
+  m_combine = NULL;
+  m_taggerMu = m_taggerEle=m_taggerKaon = NULL;
+  m_taggerKaonS = m_taggerPionS=m_taggerVtx = NULL;
+  m_taggerNNetKaonS = m_taggerNNetKaon = NULL;
 }
 
 BTaggingTool::~BTaggingTool() { }
@@ -102,7 +102,7 @@ StatusCode BTaggingTool::initialize()
 
   m_taggerNNetKaonS = tool<ITagger> ("TaggerNEWKaonSameTool", this);
 
-  m_combine = tool<ICombineTaggersTool> (m_CombineTaggersName, this);  
+  m_combine = tool<ICombineTaggersTool> (m_CombineTaggersName, this);
 
   if(m_UseReFitPV)
   {
@@ -117,10 +117,10 @@ StatusCode BTaggingTool::initialize()
   }
 
   m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
-                             StatusCode::FAILURE);
+  if (!m_dva) return Error("Couldn't get parent DVAlgorithm",
+                           StatusCode::FAILURE);
 
-  if ( msgLevel(MSG::DEBUG) ) 
+  if ( msgLevel(MSG::DEBUG) )
     debug()<<" BTaggingTool configured to run with tuning "<<m_personality<<endreq;
 
   // register (multiple) personalities of chooseCandidates
@@ -128,17 +128,18 @@ StatusCode BTaggingTool::initialize()
   m_chooseCandidates.registerPersonality("Reco14",this, &BTaggingTool::chooseCandidatesReco14);
 
   // select personality
-  // (this throws an exception if the personality chosen by the user is not
-  // known)
-  try {
-      m_chooseCandidates.setPersonality(m_personality);
-  } catch (const std::exception& e) {
-      error() << "Caught exception while setting chooseCandidates "
-	  "personality: " << e.what() << endmsg;
-      return StatusCode::FAILURE;
-  };
+  // (this throws an exception if the personality chosen by the user is not known)
+  try 
+  {
+    m_chooseCandidates.setPersonality(m_personality);
+  } 
+  catch ( const std::exception& e ) 
+  {
+    error() << "Caught exception while setting chooseCandidates "
+            << "personality: " << e.what() << endmsg;
+    return StatusCode::FAILURE;
+  }
 
-  
   return sc;
 }
 
@@ -158,8 +159,8 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   //Load vertices and particles
   const Particle::Range  parts=get<Particle::Range>(m_taggerLocation+"/Particles");
   const RecVertex::Range verts=get<RecVertex::Range>(RecVertexLocation::Primary);
-  if(msgLevel(MSG::DEBUG)) debug()<<" Nr Vertices: "<< verts.size()
-                                  <<" Nr Particles: "<<parts.size()<<endreq;
+  if(msgLevel(MSG::DEBUG)) debug() << " Nr Vertices: "<< verts.size()
+                                   << " Nr Particles: "<<parts.size()<<endreq;
 
   Vertex::ConstVector allVtx;
   allVtx.reserve( verts.size() );
@@ -179,9 +180,9 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   {
     if( msgLevel(MSG::DEBUG) )
     {
-      debug()<<"--> RecVert (x,y,z)=(" << 
-        RecVert->position().x()/mm<<","<< 
-        RecVert->position().y()/mm<<","<< 
+      debug()<<"--> RecVert (x,y,z)=(" <<
+        RecVert->position().x()/mm<<","<<
+        RecVert->position().y()/mm<<","<<
         RecVert->position().z()/mm <<")  "<<m_ChoosePV<<endreq;
       if(m_UseReFitPV)
         debug() <<"-->     refitRecVert z=" << RefitRecVert.position().z()/mm <<endreq;
@@ -203,7 +204,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   //loop over Particles, preselect candidates ///////////
   theTag.setTaggedB( AXB );
   if(vtags.empty()) vtags = chooseCandidates(AXB, parts, PileUpVtx);
-    
+
   //AXB is the signal B from selection
   bool isBd = AXB->particleID().hasDown();
   bool isBs = AXB->particleID().hasStrange();
@@ -227,7 +228,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   if(m_EnablePionSS)          pionS= m_taggerPionS-> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableJetSame)         jetS = m_taggerJetS  -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableVertexCharge)   vtxCh = m_taggerVtxCh -> tag(AXB, RecVert, allVtx, vtags);
-  
+
 
   std::vector<Tagger*> taggers;
   taggers.reserve(6);
@@ -277,13 +278,13 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
 
   ///Cancel vtags info-------
   for ( Particle::ConstVector::const_iterator i=vtags.begin(); i!=vtags.end(); ++i )
-  {    
+  {
     Particle* c = const_cast<Particle*>(*i);
-    if( c->hasInfo(LHCb::Particle::LastGlobal+1) ) c->eraseInfo(LHCb::Particle::LastGlobal+1);    
-    if( c->hasInfo(LHCb::Particle::LastGlobal+2) ) c->eraseInfo(LHCb::Particle::LastGlobal+2);    
+    if( c->hasInfo(LHCb::Particle::LastGlobal+1) ) c->eraseInfo(LHCb::Particle::LastGlobal+1);
+    if( c->hasInfo(LHCb::Particle::LastGlobal+2) ) c->eraseInfo(LHCb::Particle::LastGlobal+2);
   }
 
-return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS;
 }
 //==========================================================================
 StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB )
@@ -309,16 +310,16 @@ BTaggingTool::choosePrimary(const Particle* AXB,
 
 
   RecVertex::ConstVector PileUpVtx(0); //will contain all the other primary vtx's
-  if( RecVert ) 
+  if( RecVert )
   {                                      //PV was given by the user
     if( msgLevel(MSG::DEBUG) )
       debug()<<"Will use the PV given by the user."<<endreq;
-    if(m_UseReFitPV) 
+    if(m_UseReFitPV)
     {  //----------------------------- Refit PV without B tracks
       RecVertex newPV(*RecVert);
       Particle newPart(*AXB);
       StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);
-      if(!sc) { Error("ReFitter fails!"); } // Should we stop the execution? 
+      if(!sc) { Error("ReFitter fails!"); } // Should we stop the execution?
       if( msgLevel(MSG::DEBUG) ) debug()<<" Refitted PV "<<endreq;
       RefitRecVert = newPV;
     }
@@ -337,12 +338,12 @@ BTaggingTool::choosePrimary(const Particle* AXB,
       return PileUpVtx;
     }
 
-    if(m_UseReFitPV) 
+    if(m_UseReFitPV)
     {  //----------------------------- Refit PV without B tracks
       RecVertex newPV(*RecVert);
       Particle newPart(*AXB);
       const StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);
-      if(!sc) { Error("ReFitter fails!"); } // Should we stop the execution? 
+      if(!sc) { Error("ReFitter fails!"); } // Should we stop the execution?
       if( msgLevel(MSG::DEBUG) ) debug()<<" Refitted PV "<<endreq;
       RefitRecVert = newPV;
     }
@@ -359,7 +360,7 @@ BTaggingTool::choosePrimary(const Particle* AXB,
     {
       RecVertex newPV(**iv);
       double var, ip, iperr;
-      if(m_UseReFitPV) 
+      if(m_UseReFitPV)
       {  //----------------------------- Refit PV without B tracks
         Particle newPart(*AXB);
         const StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);
@@ -367,8 +368,8 @@ BTaggingTool::choosePrimary(const Particle* AXB,
         if(!sc) { err()<<"ReFitter fails!"<<endreq; continue; }
         m_util->calcIP(AXB, &newPV, ip, iperr);
         var=fabs(ip);
-      } 
-      else 
+      }
+      else
       {
         m_util->calcIP(AXB, *iv, ip, iperr);
       }
@@ -376,8 +377,8 @@ BTaggingTool::choosePrimary(const Particle* AXB,
       { //cheated sel needs this
         if( msgLevel(MSG::DEBUG) ) debug()<<"Will use the PVbyIP criteria "<<endreq;
         var=fabs(ip);
-      } 
-      else if(m_ChoosePV=="PVbyIPs") 
+      }
+      else if(m_ChoosePV=="PVbyIPs")
       {
         if( msgLevel(MSG::DEBUG) ) debug()<<"Will use the PVbyIPs criteria "<<endreq;
         if(!iperr)
@@ -386,19 +387,19 @@ BTaggingTool::choosePrimary(const Particle* AXB,
           continue;
         }
         var=fabs(ip/iperr);
-      } 
+      }
       else
       {
         err()<<"Invalid option ChoosePVCriterium: "<<m_ChoosePV<<endreq;
         return PileUpVtx;
       }
-      if( var < kdmin ) 
+      if( var < kdmin )
       {
         kdmin = var;
         RecVert = (*iv);
         if(m_UseReFitPV) RefitRecVert = newPV;
       }
-      if( ! RecVert ) 
+      if( ! RecVert )
       {
         err() <<"No Reconstructed Vertex! Skip. "
               <<"(If using CheatedSelection, set ChoosePVCriterium to PVbyIP !)"<<endreq;
@@ -425,13 +426,13 @@ BTaggingTool::choosePrimary(const Particle* AXB,
 
     if(chiPV < min_chiPV) min_chiPV = chiPV;
 
-    if(chiPV < 3) 
+    if(chiPV < 3)
     {
       the_chiPV = chiPV;
       nPV++;
       continue;
 
-    } 
+    }
     else
     {
       PileUpVtx.push_back(*jv);
@@ -469,17 +470,17 @@ BTaggingTool::choosePrimary(const Particle* AXB,
 }
 
 //=============================================================================
-const Particle::ConstVector 
+const Particle::ConstVector
 BTaggingTool::chooseCandidates(const Particle* AXB,
                                const Particle::Range& parts,
                                const RecVertex::ConstVector& PileUpVtx) {
- return m_chooseCandidates(AXB, parts, PileUpVtx);
+  return m_chooseCandidates(AXB, parts, PileUpVtx);
 }
 //=============================================================================
-const Particle::ConstVector 
+const Particle::ConstVector
 BTaggingTool::chooseCandidatesReco12(const Particle* AXB,
-                               const Particle::Range& parts,
-                               const RecVertex::ConstVector& PileUpVtx) {
+                                     const Particle::Range& parts,
+                                     const RecVertex::ConstVector& PileUpVtx) {
 
   double distphi;
   Particle::ConstVector vtags(0);
@@ -491,11 +492,11 @@ BTaggingTool::chooseCandidatesReco12(const Particle* AXB,
     const ProtoParticle* proto = (*ip)->proto();
     if( !proto )                                 continue;
     if( !proto->track() )                        continue;
-    if( proto->track()->type() < 3 )             continue; 
+    if( proto->track()->type() < 3 )             continue;
     if( proto->track()->type() > 4 )             continue;
-    if( (*ip)->p()/GeV < 2.0 )                   continue;               
+    if( (*ip)->p()/GeV < 2.0 )                   continue;
     if( (*ip)->momentum().theta() < m_thetaMin ) continue;
-    if( (*ip)->charge() == 0 )                   continue;               
+    if( (*ip)->charge() == 0 )                   continue;
     if( (*ip)->p()/GeV  > 200 )                  continue;
     if( (*ip)->pt()/GeV >  10 )                  continue;
     if( m_util->isinTree( *ip, axdaugh, distphi ) ) continue ;//exclude signal
@@ -504,32 +505,32 @@ BTaggingTool::chooseCandidatesReco12(const Particle* AXB,
     //calculate the min IP wrt all pileup vtxs
     double ippu, ippuerr;
     m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
-    //eliminate from vtags all parts coming from a pileup vtx    
+    //eliminate from vtags all parts coming from a pileup vtx
     if(ippuerr) {
-      if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts      
+      if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts
       Particle* c = const_cast<Particle*>(*ip);
       if( c->hasInfo(LHCb::Particle::LastGlobal+1) )
       {
         Error("LastGlobal+1 info already set: erasing it");
         c->eraseInfo(LHCb::Particle::LastGlobal+1);
-      }      
+      }
       c->addInfo(LHCb::Particle::LastGlobal+1, ippu/ippuerr); // store the information on the IPPU of the tagging particle
-      if (msgLevel(MSG::VERBOSE)) 
+      if (msgLevel(MSG::VERBOSE))
         verbose()<<"particle p="<<(*ip)->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
     }
     else
-    {      
-      if (msgLevel(MSG::DEBUG)) 
-        debug()<<"particle p="<<(*ip)->p()<<" ippu NAN ****"<<endmsg; // happens only when there is 1 PV    
+    {
+      if (msgLevel(MSG::DEBUG))
+        debug()<<"particle p="<<(*ip)->p()<<" ippu NAN ****"<<endmsg; // happens only when there is 1 PV
     }
-    
+
     bool dup=false;
     Particle::ConstVector::const_iterator ik;
     double partp = (*ip)->p();
     for ( ik = ip+1; ik != parts.end(); ik++) {
-      if((*ik)->proto() == proto) { 
-        dup=true; 
-        break; 
+      if((*ik)->proto() == proto) {
+        dup=true;
+        break;
       }
       //more duplicates
       if((*ik)->p()==partp){
@@ -538,13 +539,13 @@ BTaggingTool::chooseCandidatesReco12(const Particle* AXB,
         break;
       }
     }
-    if(dup) continue; 
+    if(dup) continue;
 
     ////////////////////////////////
     vtags.push_back(*ip);         // store tagger candidate
     ////////////////////////////////
 
-    if (msgLevel(MSG::DEBUG)) 
+    if (msgLevel(MSG::DEBUG))
       debug() <<"part ID="<<(*ip)->particleID().pid()
               <<" p="<<(*ip)->p()/GeV
               <<" pt="<<(*ip)->pt()/GeV
@@ -559,8 +560,8 @@ BTaggingTool::chooseCandidatesReco12(const Particle* AXB,
 //=============================================================================
 const Particle::ConstVector
 BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
-                               const Particle::Range& parts,
-                               const RecVertex::ConstVector& PileUpVtx)
+                                     const Particle::Range& parts,
+                                     const RecVertex::ConstVector& PileUpVtx)
 {
 
   Particle::ConstVector vtags;
@@ -647,10 +648,10 @@ BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
     double ippu(0), ippuerr(0);
     m_util->calcIP( p, PileUpVtx, ippu, ippuerr );
     // eliminate from vtags all parts coming from a pileup vtx
-    if(ippuerr) 
+    if(ippuerr)
     {
       if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts
-      
+
       c->addInfo(LHCb::Particle::LastGlobal+1, ippu/ippuerr);
       if( msgLevel(MSG::VERBOSE) )
         verbose()<<"particle p="<<p->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
@@ -667,7 +668,7 @@ BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
     {
       // no clone, so just store tagger candidate
       vtags.push_back(p);
-    } 
+    }
     else
     {
       // complete list of clones
@@ -676,7 +677,7 @@ BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
       counter("clones.size()") += clones.size();
 #endif
       // functor to sort by quality (want to keep "best" track)
-      struct dummy 
+      struct dummy
       {
         static bool byIncreasingQual(const LHCb::Particle* p, const LHCb::Particle* q)
         {
@@ -778,7 +779,7 @@ BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
           {
             // it is a redundant track, remove it from clones and
             // start over
-            if (status == TaggingHelpers::ConvertedGamma) 
+            if (status == TaggingHelpers::ConvertedGamma)
             {
               // if we have a converted photon, remove the other leg
               // as well
@@ -798,7 +799,7 @@ BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
         // print overview in order
         std::printf("Clone track list after filtering:\n");
         for (std::vector<const LHCb::Particle*>::const_iterator it = clones.begin();
-             clones.end() != it; ++it) 
+             clones.end() != it; ++it)
         {
           const LHCb::Track* t = (*it)->proto() ? ((*it)->proto()->track() ?
                                                    (*it)->proto()->track() : 0) : 0;
@@ -843,9 +844,3 @@ BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
 }
 
 //=========================================================================
-StatusCode BTaggingTool::finalize()
-{
-    return GaudiTool::finalize();
-}
-
-
