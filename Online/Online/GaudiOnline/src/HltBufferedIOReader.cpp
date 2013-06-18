@@ -438,7 +438,6 @@ StatusCode HltBufferedIOReader::i_run()  {
 	  size_t read_len = 0;
 	  if ( is_mdf ) {
 	    RawBank* b = (RawBank*)dsc.data;
-	    char* p = b->begin<char>();
 	    b->setMagic();
 	    b->setType(RawBank::DAQ);
 	    b->setSize(MDFHeader::sizeOf(3));
