@@ -5,6 +5,7 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+- Packages added:   Tr/LHCbTrackInterfaces
 - Packages removed: Tf/TfKernel, Tf/TsaKernel (moved to Rec)
 
 </PRE><H1><A NAME=v36r0>2013-06-05 LHCbSys v36r0</A></H1><PRE>

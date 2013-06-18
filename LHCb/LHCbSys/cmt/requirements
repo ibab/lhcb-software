@@ -138,6 +138,7 @@ use EventIndexer          v1r1    Tools   # Marco Clemencic
 use FileStager            v1r10   Tools   # Roel Aaij
 use XmlTools              v6r8    Tools   # Marco Clemencic
 
+use LHCbTrackInterfaces   v1r0    Tr      # Marco Cattaneo
 use TrackInterfaces       v4r24   Tr      # Matt Needham
 
 use VeloDAQ               v6r10   Velo    # Kurt Rinnert
