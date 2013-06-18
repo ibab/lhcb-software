@@ -13,7 +13,7 @@ include_path none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 
-use  TrackInterfaces v*  Tr
+use  LHCb≈ßTrackInterfaces v*  Tr
 use  DigiEvent       v*  Event
 use  VPDet           v*  Det
 use  GaudiAlg        v*  

@@ -1,8 +1,11 @@
 !--------------------------------------------------------------------------
-! Package     : VeloPix/VeloPixTools
+! Package     : VP/VPTools
 ! Responsible : Victor Coco
-! Purpose     : Ease the computation based on VeloPix
+! Purpose     : Ease the computation based on Velo Pixel detector
 !--------------------------------------------------------------------------
+
+! 2013-06-18 - Marco Cattaneo
+ - Change TrackInterfaces dependency to LHCbTrackInterfaces
 
 !========================= VPTools v2r1 2012-11-28 =========================
 ! 2012-11-21 - Marco Clemencic
