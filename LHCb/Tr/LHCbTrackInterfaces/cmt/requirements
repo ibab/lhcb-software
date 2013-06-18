@@ -8,7 +8,7 @@ version           v1r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc LHCbTrackInterfaces
+branches          cmt doc TrackInterfaces
 
 # =============== dependencies ==============================================
 use RecEvent         v* Event

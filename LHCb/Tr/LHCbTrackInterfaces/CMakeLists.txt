@@ -15,5 +15,5 @@ gaudi_add_dictionary(LHCbTrackInterfaces
                      LINK_LIBRARIES DetDescLib RecEvent TrackEvent GaudiKernel LHCbKernel
                      OPTIONS "-U__MINGW32__")
 
-gaudi_install_headers(LHCbTrackInterfaces)
+gaudi_install_headers(TrackInterfaces)
 
