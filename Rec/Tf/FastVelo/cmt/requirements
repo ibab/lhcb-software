@@ -1,6 +1,6 @@
 #============================================================================
 # Created    : 2010-09-08
-# Maintainer : Olivier Callot
+# Maintainer : 
 #============================================================================
 package           FastVelo
 version           v1r12
@@ -10,8 +10,7 @@ version           v1r12
 #============================================================================
 branches          cmt doc src
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages
 #============================================================================
 use     VeloDet         v*      Det
 use     STDet           v*      Det
@@ -20,6 +19,7 @@ use     DigiEvent       v*      Event
 use     RecEvent        v*      Event
 use     TrackEvent      v*      Event
 use     PatKernel       v*      Tf
+use 	TrackInterfaces v*	Tr
 use     GaudiAlg        v*
 
 include_path      none

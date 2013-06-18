@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2013-06-18 - Marco Cattaneo
+ - Add missing TrackInterfaces dependency
+
 !========================= FastVelo v1r12 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
