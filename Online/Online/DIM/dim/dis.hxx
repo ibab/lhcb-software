@@ -63,7 +63,7 @@ public:
 	DimServerDns(const char *node, int port, char *name);
 	~DimServerDns();
 	void init(const char *node, int port);
-	long getDnsId();
+	dim_long getDnsId();
 	void setName(const char *name);
 	char *getName();
 	void clearName();
@@ -75,7 +75,7 @@ public:
 private:
 	char *itsNode;
 	int itsPort;
-	long itsDnsId;
+	dim_long itsDnsId;
 	char *itsName;
 	int autoStart;
 	int *itsServiceIdList;
@@ -118,8 +118,8 @@ public:
 	static void addErrorHandler(DimErrorHandler *handler);
 	static int setDnsNode(const char *node);
 	static int setDnsNode(const char *node, int port);
-	static long addDns(const char *node, int port);
-	static void stopDns(long dnsid);
+	static dim_long addDns(const char *node, int port);
+	static void stopDns(dim_long dnsid);
 	static char *getDnsNode();
 	static int getDnsPort();
 	static void setWriteTimeout(int secs);
@@ -226,6 +226,7 @@ public :
 private :
 	char *itsName;
 	int itsId;
+	int itsTagId;
 	void declareIt(char *name, char *format, DimServiceHandler *handler, DimServerDns *dns);
 	void storeIt(void *data, int size);
 	DimServerDns *itsDns;
@@ -287,6 +288,7 @@ public :
 private :
 	char *itsName;
 	int itsId;
+	int itsTagId;
 	char *itsFormat;
 	void declareIt(char *name, char *format, DimCommandHandler *handler, DimServerDns *dns);
 	CmndInfo *currCmnd;

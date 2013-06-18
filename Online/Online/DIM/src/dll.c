@@ -52,7 +52,7 @@ DLL *dll_search( DLL* head, char *data, int size )
  
 	DISABLE_AST
 	while( auxp!= head ) {
-		if( !memcmp(auxp->user_info, data, size) ) {
+		if( !memcmp(auxp->user_info, data, (size_t)size) ) {
 			ENABLE_AST
 			return(auxp);
 		}
@@ -116,7 +116,7 @@ DLL *dll_search_next_remove( DLL* head, int offset, char *data, int size )
  
 	DISABLE_AST
 	while( auxp!= head ) {
-		if( !memcmp(&(auxp->user_info[offset]), data, size) ) {
+		if( !memcmp(&(auxp->user_info[offset]), data, (size_t)size) ) {
 			retp = auxp;
 		}
 		auxp = auxp->next;

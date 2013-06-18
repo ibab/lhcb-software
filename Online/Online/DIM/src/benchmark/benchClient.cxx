@@ -22,7 +22,7 @@ class Service : public DimInfo
 	  NReceived++;
 	}
 public :
-	Service(char *name) : DimInfo(name,"--") {/*nReceived = 0;*/}
+	Service(char *name) : DimInfo(name,(char *)"--") {/*nReceived = 0;*/}
 };
 
 int main(int argc, char *argv[])
@@ -33,6 +33,8 @@ int main(int argc, char *argv[])
 	DimBrowser br;
 	char *name, *format, *cltptr, *srvptr, clientName[128];
 
+	if(argc){}
+	if(argc){}
 	br.getServices("BENCH_SERVICE_*");
 
 	while(br.getNextService(name, format)!= 0)
@@ -46,7 +48,7 @@ int main(int argc, char *argv[])
 	  services[i++] = new Service(name);
 	}
 	dic_get_id(clientName);
-	if(cltptr = strchr(clientName,'@'))
+	if((cltptr = strchr(clientName,'@')))
 		cltptr++;
 	sleep(5);
 	NReceived = 0;
@@ -54,7 +56,7 @@ int main(int argc, char *argv[])
 	sleep(TEST_TIME);
 
 	mps = NReceived/TEST_TIME;
-	if(srvptr = strchr(ServerName,'@'))
+	if((srvptr = strchr(ServerName,'@')))
 		srvptr++;
 	cout << "Benchmark from "<< srvptr << " to " << cltptr << " :" << endl;
 	cout << "Server publishes " << nServices << " services of " << MsgSize << " bytes each"<< endl;

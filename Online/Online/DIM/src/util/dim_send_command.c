@@ -60,7 +60,7 @@ char **argv;
 				silent = 1;
 		}
 	}
-	dic_cmnd_callback(str,data,strlen(data)+1, rout, silent);
+	dic_cmnd_callback(str,data,(int)strlen(data)+1, rout, silent);
 	while(!received)
 	  dim_wait();
 	sleep(1);
@@ -134,7 +134,7 @@ int dns_port = 0;
 	}
 	else
 	{
-		dic_cmnd_callback(str,data,strlen(data)+1, rout, silent);
+		dic_cmnd_callback(str,data,(int)strlen(data)+1, rout, silent);
 	}
 	while(!received)
 	  dim_wait();

@@ -71,7 +71,7 @@ class JeffRpcStruct : public DimRpc
 		pout.i1 = counter++;
 		pout.c1 = pin->c1;
 		strcpy(pout.str,pin->str);
-		setData(&pout, strlen(pout.str)+1+5);
+		setData(&pout, (int)strlen(pout.str)+1+5);
 	}
 public:
 	JeffRpcStruct(char *name): DimRpc(name,"C:1;C:1;C:1;C",

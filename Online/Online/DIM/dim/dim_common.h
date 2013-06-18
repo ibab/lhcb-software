@@ -42,13 +42,19 @@ typedef enum { SRC_NONE, SRC_DIS, SRC_DIC, SRC_DNS, SRC_DNA, SRC_USR }SRC_TYPES;
 #endif
 #endif
 
-#ifdef WIN32
+#if defined (_WIN64)
 typedef __int64		longlong;
+typedef longlong dim_long;
+#elif defined(WIN32)
+typedef __int64		longlong;
+typedef long	dim_long;
 #elif defined(__linux__)
 typedef long long int longlong;
+typedef long dim_long;
 #else
 #include <sys/types.h> 
 typedef int64_t	longlong;
+typedef long dim_long;
 #endif
 
 #endif
@@ -117,12 +123,26 @@ typedef int64_t	longlong;
 #include <signal.h>
 #include <unistd.h>
 
-#define DISABLE_AST     sigset_t set, oset; sigemptyset(&set);\
+extern int DIM_Threads_OFF;
+
+#define DISABLE_SIG     sigset_t set, oset; if (DIM_Threads_OFF) {\
+                                                sigemptyset(&set);\
+												sigaddset(&set,SIGIO);\
+												sigaddset(&set,SIGALRM);\
+												sigprocmask(SIG_BLOCK,&set,&oset);}
+#define ENABLE_SIG       if (DIM_Threads_OFF) {\
+                                                sigprocmask(SIG_SETMASK,&oset,0);}
+
+/*
+#define DISABLE_SIG     sigset_t set, oset; sigemptyset(&set);\
 						sigaddset(&set,SIGIO);\
 						sigaddset(&set,SIGALRM);\
-						sigprocmask(SIG_BLOCK,&set,&oset);\
-						DIM_LOCK
-#define ENABLE_AST      DIM_UNLOCK sigprocmask(SIG_SETMASK,&oset,0);
+						sigprocmask(SIG_BLOCK,&set,&oset);
+#define ENABLE_SIG      sigprocmask(SIG_SETMASK,&oset,0);
+*/
+
+#define DISABLE_AST     DISABLE_SIG DIM_LOCK
+#define ENABLE_AST      DIM_UNLOCK ENABLE_SIG
 
 #ifdef VxWorks
 #define DIM_LOCK taskLock();
@@ -141,6 +161,7 @@ _DIM_PROTOE( void dim_signal_cond,	() );
 #define DIM_UNLOCK	dim_unlock();
 
 #else
+#include <time.h>
 #define DIM_LOCK
 #define DIM_UNLOCK
 #endif
@@ -181,7 +202,7 @@ _DIM_PROTOE( int dim_get_priority,		(int dim_thread, int prio) );
 _DIM_PROTOE( int dim_set_priority,		(int dim_thread, int *prio) );
 _DIM_PROTOE( int dim_set_scheduler_class,		(int sched_class) );
 _DIM_PROTOE( int dim_get_scheduler_class,		(int *sched_class) );
-_DIM_PROTOE( long dim_start_thread,    (void(*rout)(void*), void *tag) );
+_DIM_PROTOE( dim_long dim_start_thread,    (void(*rout)(void*), void *tag) );
 _DIM_PROTOE( int dic_set_dns_node,		(char *node) );
 _DIM_PROTOE( int dic_get_dns_node,		(char *node) );
 _DIM_PROTOE( int dic_set_dns_port,		(int port) );
@@ -191,9 +212,9 @@ _DIM_PROTOE( int dis_get_dns_node,		(char *node) );
 _DIM_PROTOE( int dis_set_dns_port,		(int port) );
 _DIM_PROTOE( int dis_get_dns_port,		() );
 _DIM_PROTOE( void dim_stop,				() );
-_DIM_PROTOE( int dim_stop_thread,		(long tid) );
-_DIM_PROTOE( long dis_add_dns,		(char *node, int port) );
-_DIM_PROTOE( long dic_add_dns,		(char *node, int port) );
+_DIM_PROTOE( int dim_stop_thread,		(dim_long tid) );
+_DIM_PROTOE( dim_long dis_add_dns,		(char *node, int port) );
+_DIM_PROTOE( dim_long dic_add_dns,		(char *node, int port) );
 _DIM_PROTOE( int dim_get_env_var,		(char *env_var, char *value, int value_size) );
 _DIM_PROTOE( int dim_set_write_buffer_size,		(int bytes) );
 _DIM_PROTOE( int dim_get_write_buffer_size,		() );

@@ -101,7 +101,7 @@ int get_node_addr(char *node_addr)
 struct hostent *host;
 #endif
 char node_name[MAX_NODE_NAME];
-unsigned char *ptr;
+char *ptr;
 
 #ifdef WIN32
 	init_sock();
@@ -116,7 +116,7 @@ unsigned char *ptr;
 		node_addr[3] = 0;
 		return(0);
 	}
-    ptr = (unsigned char *)host->h_addr;
+    ptr = (char *)host->h_addr;
     node_addr[0] = *ptr++;
     node_addr[1] = *ptr++;
     node_addr[2] = *ptr++;
@@ -149,7 +149,7 @@ void dim_print_date_time()
 #endif
 */
 	my_ctime(&t, str, 128);
-	str[strlen(str)-1] = '\0';
+	str[(int)strlen(str)-1] = '\0';
 	printf("PID %d - ",getpid());
 	printf("%s - ",str );
 }
@@ -171,7 +171,7 @@ void dim_print_date_time_millis()
 #else
 	tz = 0;
 	gettimeofday(&tv, tz);
-	millies = tv.tv_usec / 1000;
+	millies = (int)tv.tv_usec / 1000;
 #endif
 	dim_print_date_time();
 	printf("milliseconds: %d ", millies);
@@ -232,13 +232,13 @@ int dim_get_env_var( char *env_var, char *value, int len )
 	if( (p = getenv(env_var)) == NULL )
 		return(0);
 	else {
-		tot = strlen(p)+1;
+		tot = (int)strlen(p)+1;
 		if(value != 0)
 		{
 			sz = tot;
 			if(sz > len)
 				sz = len;
-			strncpy(value, p, sz);
+			strncpy(value, p, (size_t)sz);
 			if((sz == len) && (len > 0))
 				value[sz-1] = '\0';
 		}

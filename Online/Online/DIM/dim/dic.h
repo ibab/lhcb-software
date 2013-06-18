@@ -24,14 +24,14 @@
 _DIM_PROTOE( unsigned dic_info_service, (char *service_name, int req_type,
 				    int req_timeout, void *service_address,
 				    int service_size, void (*usr_routine)(void*, void*, int*),
-				    long tag, void *fill_addr, int fill_size) );
+				    dim_long tag, void *fill_addr, int fill_size) );
 _DIM_PROTOE( unsigned dic_info_service_stamped, (char *service_name, int req_type,
 				    int req_timeout, void *service_address,
 				    int service_size, void (*usr_routine)(void*, void*, int*),
-				    long tag, void *fill_addr, int fill_size) );
+				    dim_long tag, void *fill_addr, int fill_size) );
 _DIM_PROTOE( int dic_cmnd_callback,      (char *service_name, void *service_address,
 				    int service_size, void (*usr_routine)(void*, int*),
-				    long tag) );
+				    dim_long tag) );
 _DIM_PROTOE( int dic_cmnd_service,      (char *service_name, void *service_address,
 				    int service_size) );
 _DIM_PROTOE( void dic_change_address,  (unsigned service_id, void *service_address,

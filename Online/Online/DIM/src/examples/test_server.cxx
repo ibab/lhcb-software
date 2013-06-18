@@ -56,7 +56,7 @@ class CmndServ : public DimCommand, public DimTimer
 
 public :
 	CmndServ() : DimCommand("TEST/CMND","C"), 
-				 servstr("TEST/STRVAL","empty") {};
+				 servstr("TEST/STRVAL",(char *)"empty") {};
 /*
 	void handleIt()
 	{
@@ -87,6 +87,7 @@ void add_serv(const int & ival)
 	DimService *abc;
 
 	abc = new DimService("TEST/INTVAL_CONST",(int &)ival);
+	if(abc){}
 }
 
 void add_serv_str(const string & s1)
@@ -94,6 +95,7 @@ void add_serv_str(const string & s1)
 	DimService *abc;
 
 	abc = new DimService("TEST/STRINGVAL_CONST",(char *)s1.c_str());
+	if(abc){}
 }
 
 DimService *bool_serv[10];
@@ -135,9 +137,9 @@ int main()
 //	delete dim;
 
 	DimServer::start("TEST");
-	extraDns = DimUtil::getEnvVar("EXTRA_DNS_NODE");
+	extraDns = DimUtil::getEnvVar((char *)"EXTRA_DNS_NODE");
 	if(extraDns)
-		newDns = new DimServerDns(extraDns, 0, "new_TEST");
+		newDns = new DimServerDns(extraDns, 0, (char *)"new_TEST");
 
 /*
 	int i, arr[15000];
@@ -162,9 +164,10 @@ int main()
 	add_serv_bool(boolval);
 	CmndServ cmdsvr;
 
-	testServ = new ServWithHandler("MY_NEW_TEST_SERVICE_WITH_HANDLER");
+	testServ = new ServWithHandler((char *)"MY_NEW_TEST_SERVICE_WITH_HANDLER");
+	if(testServ){}
 
-//	farr[0] = 1.2;
+	//	farr[0] = 1.2;
 //	farr[1] = 2.3;
 //	farrp = new DimService("/PCITCO147/sensors/fan/input","F", farr, sizeof(farr));
 
@@ -204,8 +207,8 @@ int main()
 		ival++;
 		bool_serv[1]->updateService();
 		
-		int inCallback = DimServer::inCallback();
-		cout << "main: In callback "<< inCallback << endl; 
+//		int inCallback = DimServer::inCallback();
+//		cout << "main: In callback "<< inCallback << endl; 
 		servint.updateService();
 		if(extraDns)
 			new_servint->updateService();

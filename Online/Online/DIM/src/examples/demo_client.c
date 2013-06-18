@@ -29,6 +29,6 @@ char **argv;
 	{
 		scanf("%s",cmnd);
 		printf("Sending Command: %s\n",cmnd);
-		dic_cmnd_service(aux,cmnd,strlen(cmnd)+1);
+		dic_cmnd_service(aux,cmnd,(int)strlen(cmnd)+1);
 	}
 }

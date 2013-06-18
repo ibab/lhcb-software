@@ -128,7 +128,7 @@ char w_name[MAX_NAME];
 	XtSetArg(arglist[n], XmNpacking, XmPACK_COLUMN);  n++;
         XtSetArg(arglist[n], XmNadjustLast, False); n++;
 	sprintf(w_name,"matrix_row");
-	row_col_id = XmCreateRowColumn(top_id,w_name,arglist,n);
+	row_col_id = XmCreateRowColumn(top_id,w_name,arglist,(Cardinal)n);
 	XtManageChild(row_col_id);
 	Matrix_id[Curr_matrix] = row_col_id;
 	/*
@@ -301,7 +301,7 @@ int n;
 		   
     XtSetArg ( ar[n], XmNscrollingPolicy, XmAUTOMATIC); n++;
 
-    sl = XmCreateScrolledWindow ( f, "ScrollWin", ar, n );
+    sl = XmCreateScrolledWindow ( f, "ScrollWin", ar, (Cardinal)n );
     /*
     XtVaSetValues ( sl, 
         XmNtopAttachment,           XmATTACH_FORM,
@@ -362,7 +362,7 @@ Widget create_separator(Widget parent_id)
 	int n = 0;
 
 	w = XmCreateSeparator(parent_id, "separator",
-		arglist,n);
+		arglist,(Cardinal)n);
 	XtManageChild(w);
 	return(w);
 }
@@ -757,7 +757,7 @@ Arg arglist[6];
     XtSetArg ( arglist[n], XmNtitle, "xDid");  n++;
     XtSetArg ( arglist[n], XmNtraversalOn,True); n++;
     return XtAppCreateShell(argv[0], NULL, applicationShellWidgetClass,
-                            display, arglist, n);
+                            display, arglist, (Cardinal)n);
      
 }
 
@@ -859,7 +859,7 @@ int main(int argc, char *argv[])
 						ptr = argv[2];
 				}
 				for(i = 0;*ptr; ptr++, i++)
-					Curr_view_opt_par[i] = toupper(*ptr);
+					Curr_view_opt_par[i] = (char)toupper((int)*ptr);
 				Curr_view_opt_par[i] = '\0';
 			}
 		}
@@ -1032,8 +1032,8 @@ void get_server_node()
 {
 Widget id,sel_id;
 int i, j, n_nodes, curr_index = 0;
-char nodes_str[MAX_NODE_NAME*MAX_CONNS], max_str[MAX_NODE_NAME];
-char *ptr, *nodeptrs[MAX_CONNS], *curr_str, *sptr;
+char nodes_str[MAX_NODE_NAME*MAX_CONNS*2], max_str[MAX_NODE_NAME];
+char *ptr, *nodeptrs[MAX_CONNS*2], *curr_str, *sptr;
 int get_nodes();
 
 	sel_id = put_selection(DID_SEL_NODE,"Node Selection");
@@ -1051,9 +1051,9 @@ int get_nodes();
 		nodeptrs[i] = ptr;
 		sptr = ptr;
 		ptr = strchr(ptr,'\n');
-		for(j = 0; j < (int)strlen(sptr); j++)
-		  sptr[j] = tolower(sptr[j]);
 		*ptr++ = '\0';
+		for(j = 0; j < (int)strlen(sptr); j++)
+		  sptr[j] = (char)tolower((int)sptr[j]);
 	}
 	strcpy(max_str,"zzzzzzzzzzzzzzzzzzzzzzzzzzzz");
 	for(i=0;i<n_nodes; i++)
@@ -1168,7 +1168,7 @@ void get_service_format()
 		    ptr++;
 		    ptr1 = strchr(ptr,'|');
 		}
-	    strncpy(Curr_service_format,ptr,(int)(ptr1 - ptr));
+	    strncpy(Curr_service_format,ptr,(size_t)(ptr1 - ptr));
 	    Curr_service_format[(int)(ptr1-ptr)] = '\0';
 	}
 }
@@ -1182,9 +1182,9 @@ void recv_service_info(int *tag, int *buffer, int *size)
 	void print_service_formatted();
 
 	if(tag){}
-	Service_content_str = malloc(1024 + (*size)*16);
-	Service_buffer = malloc(*size);
-	memcpy(Service_buffer, (char *)buffer, *size);
+	Service_content_str = malloc((size_t)(1024 + (*size)*16));
+	Service_buffer = malloc((size_t)*size);
+	memcpy(Service_buffer, (char *)buffer, (size_t)*size);
 	Service_size = *size;
 	get_service_format();
 	if((*size == 4 ) && (*buffer == -1))
@@ -1302,60 +1302,60 @@ int size, psize;
     case 'l':
       strcat(Service_content_str," L");
       if(!num)
-	size = ssize/sizeof(int);
+	size = ssize/(int)sizeof(int);
       else
 	size = num;
-      psize = size * sizeof(int);
+      psize = size * (int)sizeof(int);
       print_service_standard(ptr, size);
       break;
     case 'I':
     case 'i':
       strcat(Service_content_str," I");
       if(!num)
-	size = ssize/sizeof(int);
+	size = ssize/(int)sizeof(int);
       else
 	size = num;
-      psize = size * sizeof(int);
+      psize = size * (int)sizeof(int);
       print_service_standard(ptr, size);
       break;
     case 'S':
     case 's':
       strcat(Service_content_str," S");
       if(!num)
-	size = ssize/sizeof(short);
+	size = ssize/(int)sizeof(short);
       else
 	size = num;
-      psize = size * sizeof(short);
+      psize = size * (int)sizeof(short);
       print_service_short(ptr, size);
       break;
     case 'F':
     case 'f':
       strcat(Service_content_str," F");
       if(!num)
-	size = ssize/sizeof(float);
+	size = ssize/(int)sizeof(float);
       else
 	size = num;
-      psize = size * sizeof(float);
+      psize = size * (int)sizeof(float);
       print_service_float(ptr, size);
       break;
     case 'D':
     case 'd':
       strcat(Service_content_str," D");
       if(!num)
-	size = ssize/sizeof(double);
+	size = ssize/(int)sizeof(double);
       else
 	size = num;
-      psize = size * sizeof(double);
+      psize = size * (int)sizeof(double);
       print_service_double(ptr, size);
       break;
     case 'X':
     case 'x':
       strcat(Service_content_str," X");
       if(!num)
-	size = ssize/sizeof(longlong);
+	size = ssize/(int)sizeof(longlong);
       else
 	size = num;
-      psize = size * sizeof(longlong);
+      psize = size * (int)sizeof(longlong);
       print_service_standard(ptr, size*2);
       break;
     case 'C':
@@ -1456,10 +1456,12 @@ int last[4];
 void print_service_standard(int *buff, int size)
 {
 int i,j;
-char *asc, *ptr, str[80], tmp[256];
+char *ptr, str[80], tmp[256];
 int last[4];
-
+/*
+char *asc;
 	asc = (char *)buff;
+*/
 	ptr = Service_content_str;
 	ptr += strlen(Service_content_str);
 	for( i = 0; i < size; i++)
@@ -1511,7 +1513,9 @@ int last[4];
 				strcat(tmp,str);
 			}
 			strcat(tmp,"\n");
+/*
 			asc = (char *)&buff[i+1];
+*/
 		}
 		strcpy(ptr, tmp);
 		ptr += strlen(tmp);
@@ -1523,10 +1527,12 @@ int last[4];
 void print_service_longlong(longlong *buff, int size)
 {
 int i,j;
-char *asc, *ptr, str[80], tmp[256];
+char *ptr, str[80], tmp[256];
 longlong last[4];
-
+/*
+char *asc;
 	asc = (char *)buff;
+*/
 	ptr = Service_content_str;
 	ptr += strlen(Service_content_str);
 	for( i = 0; i < size; i++)
@@ -1557,7 +1563,9 @@ longlong last[4];
 				strcat(tmp,str);
 			}
 			strcat(tmp,"\n");
+/*
 			asc = (char *)&buff[i+1];
+*/
 		}
 		strcpy(ptr, tmp);
 		ptr += strlen(tmp);
@@ -1569,10 +1577,12 @@ longlong last[4];
 void print_service_short(short *buff, int size)
 {
 int i,j;
-char *asc, *ptr, str[80], tmp[256];
+char *ptr, str[80], tmp[256];
 short last[8];
-
+/*
+char *asc; 
 	asc = (char *)buff;
+*/
 	ptr = Service_content_str;
 	ptr += strlen(Service_content_str);
 	for( i = 0; i < size; i++)
@@ -1624,7 +1634,9 @@ short last[8];
 				strcat(tmp,str);
 			}
 			strcat(tmp,"\n");
+/*
 			asc = (char *)&buff[i+1];
+*/
 		}
 		strcpy(ptr, tmp);
 		ptr += strlen(tmp);
@@ -1637,8 +1649,9 @@ void print_service_char(char *buff, int size)
 {
 int i,j;
 char *asc, *ptr, str[80], tmp[256];
+/*
 char last[16];
-
+*/
 	asc = (char *)buff;
 	ptr = Service_content_str;
 	ptr += strlen(Service_content_str);
@@ -1661,8 +1674,8 @@ char last[16];
 */
 		strcat(tmp," ");
 		strcat(tmp,&str[strlen(str)-2]);
-		last[i%16] = buff[i];
 		/*
+		last[i%16] = buff[i];
 		if(i%4 == 3)
 		  strcat(tmp," ");
 		*/
@@ -1983,7 +1996,7 @@ void did_read_string(char, int, void **, char **);
    {
       if(last_size)
 	free(last_buffer);
-      last_buffer = malloc(full_size);
+      last_buffer = malloc((size_t)full_size);
       last_size = full_size;
    }
    buffer_ptr = last_buffer;
@@ -2129,8 +2142,8 @@ char cc;
 	{
 	  strp++;
 	}
-	num = strlen(strp)+1;
-	strncpy((char *)ptr,strp,num);
+	num = (int)strlen(strp)+1;
+	strncpy((char *)ptr,strp,(size_t)num);
 	if( (ptr1 = (char *)strchr((char *)ptr,'\"')) )
 	{
 	  num--;
@@ -2184,7 +2197,7 @@ void cancel_pop_up (Widget w, int tag, unsigned long *reason)
 		      dic_release_service(Curr_service_id);
 		      Curr_service_id = 0;
 		  }
-		  Curr_service_id = dic_info_service_stamped(Curr_service_name,
+		  Curr_service_id = (int)dic_info_service_stamped(Curr_service_name,
 						     MONITORED,10,0,0,
 						     recv_service_info,0,
 						     &no_link_int,4);
@@ -2204,7 +2217,7 @@ void cancel_pop_up (Widget w, int tag, unsigned long *reason)
 		      dic_release_service(Curr_service_id);
 		      Curr_service_id = 0;
 		  }
-		  Curr_service_id = dic_info_service_stamped(Curr_service_name,
+		  Curr_service_id = (int)dic_info_service_stamped(Curr_service_name,
 						     MONITORED,0,0,0,
 						     recv_service_info,0,
 						     &no_link_int,4);
@@ -2390,9 +2403,9 @@ char str[MAX_NAME], sname[MAX_NAME], *ptr;
 		}
 		if(n_services != -1)
 		{
-			service_size = n_services*sizeof(DNS_SERVICE_INFO);
-			servp->service_ptr = (DNS_SERVICE_INFO *)malloc(service_size);
-			memcpy(servp->service_ptr, buffer->services, service_size);
+			service_size = n_services*(int)sizeof(DNS_SERVICE_INFO);
+			servp->service_ptr = (DNS_SERVICE_INFO *)malloc((size_t)service_size);
+			memcpy(servp->service_ptr, buffer->services, (size_t)service_size);
 			N_services += n_services;
 		}
 		servp->busy = 1;
@@ -2525,18 +2538,21 @@ void put_label();
 				case 0 :
 				  strcpy(node, server_ptr->node);
 				  strcpy(par, Curr_view_opt_par);
-				  ptr = strchr(node, '.');
-				  if(ptr)
-				    *ptr = '\0';
-				  ptr = strchr(par,'.');
-				  if(ptr)
-				    *ptr = '\0';
+				  if(!isdigit(node[0]))
+				  {
+					ptr = strchr(node, '.');
+					if(ptr)
+						*ptr = '\0';
+					ptr = strchr(par,'.');
+					if(ptr)
+						*ptr = '\0';
+				  }
 				  ptr = node;
 				  for(i = 0; i < (int)strlen(ptr); i++)
-				    ptr[i] = tolower(ptr[i]);
+				    ptr[i] = (char)tolower((int)ptr[i]);
 				  ptr = par;
 				  for(i = 0; i < (int)strlen(ptr); i++)
-				    ptr[i] = tolower(ptr[i]);
+				    ptr[i] = (char)tolower((int)ptr[i]);
 					 if(!strcmp(/*server_ptr->*/node, /*Curr_view_opt_*/par))
 					{
 						servp->button_id = create_button(/*server_ptr->task*/servp->name, servp);
@@ -2626,14 +2642,19 @@ void put_label();
 Widget create_button(char *name, SERVER *servp)
 {
 Arg arglist[10];
-int n, n_services = -1;
+int n;
+/*
+int n_services = -1;
+*/
 Widget w, ww, w_id;
 void activate_services(), activate_clients();
 char w_name[MAX_NAME];
 	
 	w_name[0] = 0;
+/*
 	if(servp)
 		n_services = servp->server.n_services;
+*/
     strcpy(w_name,name);
 	if(strlen(w_name) >= MAX_TASK_NAME - 4)
 	  w_name[16] = '\0';
@@ -2642,7 +2663,7 @@ char w_name[MAX_NAME];
     XtSetArg(arglist[n], XmNentryAlignment, XmALIGNMENT_CENTER);  n++;
 	w_id = w = XmCreateMenuBar(Matrix_id[Curr_matrix],
 				(String)XmStringCreateLtoR ( w_name,XmSTRING_DEFAULT_CHARSET),
-				arglist,n);
+				arglist,(Cardinal)n);
 /*				
 	if(n_services == -1)
 		set_color(w, XmNbackground, RED);
@@ -2656,7 +2677,7 @@ char w_name[MAX_NAME];
 	XtSetArg(arglist[n], XmNfontList, did_server_font);  n++;
 	w = XmCreateCascadeButton(w,
 				(String)XmStringCreateLtoR ( w_name,XmSTRING_DEFAULT_CHARSET),
-				arglist,n);
+				arglist,(Cardinal)n);
 	set_something(w,XmNlabelString,name);
 	set_something(w,XmNalignment,XmALIGNMENT_CENTER);
 /*
@@ -2670,7 +2691,7 @@ char w_name[MAX_NAME];
 		n = 0;
 		ww = XmCreatePulldownMenu(w_id,
 				(String)XmStringCreateLtoR ( w_name,XmSTRING_DEFAULT_CHARSET),
-				arglist,n);
+				arglist,(Cardinal)n);
 		set_something(w,XmNsubMenuId,ww);
 		XtManageChild(w);
 		strcat(w_name,"1"); 
@@ -2678,7 +2699,7 @@ char w_name[MAX_NAME];
 		XtSetArg(arglist[n], XmNfontList, did_default_font);  n++;
 		w = XmCreatePushButton(ww,
 				(String)XmStringCreateLtoR ( w_name,XmSTRING_DEFAULT_CHARSET),
-				arglist,n);
+				arglist,(Cardinal)n);
 
 		set_something(w,XmNlabelString,"Services");
 	if(servp)
@@ -2690,7 +2711,7 @@ char w_name[MAX_NAME];
 		XtSetArg(arglist[n], XmNfontList, did_default_font);  n++;
 		w = XmCreatePushButton(ww,
 				(String)XmStringCreateLtoR ( w_name,XmSTRING_DEFAULT_CHARSET),
-				arglist,n);
+				arglist,(Cardinal)n);
 
 		set_something(w,XmNlabelString,"Clients");
 		XtAddCallback(w,XmNactivateCallback, activate_clients, servp);
@@ -2838,7 +2859,7 @@ void delete_str();
 	strcpy(svc_str,"SVC: ");
 
 	service_ptr = servp->service_ptr;
-	service_list = (DID_SLOT *)malloc(ptr->n_services * MAX_NAME);
+	service_list = (DID_SLOT *)malloc((size_t)(ptr->n_services * MAX_NAME));
 	n_services = ptr->n_services;
 
 	for(i=0;i<n_services; i++)
@@ -2911,15 +2932,16 @@ void do_show_clients(SERVER *servp)
 {
 int i = 0;
 char str[2048], *strp, *strp1;
-DNS_SERVER_INFO *ptr;
 XmString xstr;
 void delete_str();
 
+/*
+DNS_SERVER_INFO *ptr;
 	ptr = &servp->server;
-	/*
 	sel_id = servp->pop_widget_id[1];
 	id = (Widget)XmSelectionBoxGetChild(sel_id,XmDIALOG_LIST_LABEL);
-	*/
+*/
+	if(servp){}
 	if(Curr_client_list[0] == -1) 
 	{
 		sprintf(str,"Information not available\n");
@@ -2979,7 +3001,9 @@ void delete_str();
 
 void activate_clients(Widget w, SERVER *servp, unsigned long *reason)
 {
+/*
 DNS_SERVER_INFO *ptr;
+*/
 char str[100];
 void show_clients();
 void kick_it_again();
@@ -2988,7 +3012,9 @@ Widget id,sel_id;
 	if(w) {}
 	if(reason){}
 	Curr_servp = servp;
+/*
 	ptr = &servp->server;
+*/
 	if(servp->pop_widget_id[1])
 	  {
 		XtDestroyWidget(servp->pop_widget_id[1]);
@@ -3107,15 +3133,19 @@ Widget put_selection(int tag, char *title)
 void check_put_label(int tag)
 {
 	static int old_n_services = 0;
+/*
 	static int changing = 0;
+*/
 	void put_label();
 
 	if(tag){}
 	if(N_services != old_n_services)
 	{
 		put_label();
+/*
 		if(N_services > old_n_services)
 		  changing = 1;
+*/
 		old_n_services = N_services;
 	
 #ifdef linux
@@ -3272,7 +3302,7 @@ int n;
       {
       XtSetArg(ar[n],XmNselectionLabelString, xmSelection); n++;
       }
-    sd = XmCreateSelectionDialog ( toplevel_widget, "Selection", ar, n );
+    sd = XmCreateSelectionDialog ( toplevel_widget, "Selection", ar, (Cardinal)n );
     XmStringFree(xmList);
     XmStringFree(xmOk);
     XmStringFree(xmApply);
@@ -3310,7 +3340,7 @@ int n;
     XtSetArg(ar[n],XmNborderWidth, 1); n++;
     XtSetArg(ar[n],XmNwidth, 500); n++;
     XtSetArg(ar[n],XmNdirMask, xm1); n++;
-    sd = XmCreateFileSelectionDialog ( toplevel_widget, "FileSelection", ar, n );
+    sd = XmCreateFileSelectionDialog ( toplevel_widget, "FileSelection", ar, (Cardinal)n );
     
     XmStringFree(xm1);
 
@@ -3339,7 +3369,7 @@ int n;
     XtSetArg(ar[n],XmNresizePolicy, XmRESIZE_NONE); n++;
     */
     XtSetArg(ar[n],XmNselectionLabelString, xm1); n++;
-    sd = XmCreatePromptDialog ( toplevel_widget, "Prompt", ar, n );
+    sd = XmCreatePromptDialog ( toplevel_widget, "Prompt", ar, (Cardinal)n );
     
     XmStringFree(xm1);
 
@@ -3368,7 +3398,7 @@ int n;
     XtSetArg(ar[n],XmNresizePolicy, XmRESIZE_NONE); n++;
     */
     XtSetArg(ar[n],XmNmessageString, xm1); n++;
-    sd = XmCreateQuestionDialog ( toplevel_widget, "Question", ar, n );
+    sd = XmCreateQuestionDialog ( toplevel_widget, "Question", ar, (Cardinal)n );
     
     XmStringFree(xm1);
 
@@ -3391,7 +3421,7 @@ unsigned long reason;
     n = 0; 
     XtSetArg(ar[n],XmNborderWidth, 1); n++;
     XtSetArg(ar[n],XmNresizePolicy, XmRESIZE_ANY); n++;
-    fd = XmCreateFormDialog ( toplevel_widget, "Form", ar, n );
+    fd = XmCreateFormDialog ( toplevel_widget, "Form", ar, (Cardinal)n );
     XtManageChild(fd);
 
     /* create rowcolumn */
@@ -3406,7 +3436,7 @@ unsigned long reason;
     XtSetArg(ar[n],XmNtopOffset, 0); n++;
     XtSetArg(ar[n],XmNleftAttachment, XmATTACH_FORM); n++;
     XtSetArg(ar[n],XmNleftOffset, 0); n++;
-    rc = XmCreateRowColumn ( fd, "rowcol", ar, n );
+    rc = XmCreateRowColumn ( fd, "rowcol", ar, (Cardinal)n );
     XtManageChild(rc);
 
     /* create scrolled window */
@@ -3416,7 +3446,7 @@ unsigned long reason;
     XtSetArg ( ar[n], XmNscrollBarDisplayPolicy, XmAS_NEEDED); n++;
     XtSetArg ( ar[n], XmNscrollingPolicy, XmAUTOMATIC); n++;
 
-    sw = XmCreateScrolledWindow ( rc, "ScrollWin", ar, n );
+    sw = XmCreateScrolledWindow ( rc, "ScrollWin", ar, (Cardinal)n );
     XtManageChild ( sw );
 
     /* create label */
@@ -3425,7 +3455,7 @@ unsigned long reason;
     XtSetArg(ar[n],XmNfontList, did_small_font); n++;
     XtSetArg(ar[n],XmNlabelString, xm1); n++;
     XtSetArg(ar[n],XmNalignment, XmALIGNMENT_BEGINNING); n++;
-    lb = XmCreateLabel ( sw, "label", ar, n );
+    lb = XmCreateLabel ( sw, "label", ar, (Cardinal)n );
     XtManageChild(lb);
     XmStringFree(xm1);
     par = 1;
@@ -3439,7 +3469,7 @@ unsigned long reason;
     XtSetArg(ar[n],XmNorientation, XmVERTICAL); n++;
     XtSetArg(ar[n],XmNnumColumns, 3); n++;
     XtSetArg(ar[n],XmNpacking, XmPACK_COLUMN); n++;
-    rc1 = XmCreateRowColumn ( rc, "buttons", ar, n );
+    rc1 = XmCreateRowColumn ( rc, "buttons", ar, (Cardinal)n );
     XtManageChild(rc1);
     /*    
     create_push_button(rc1,"View Standard",MAX_POP_UPS+1); 
@@ -3468,7 +3498,7 @@ int n;
     XtSetArg(ar[n],XmNalignment, XmALIGNMENT_CENTER); n++;
     XtSetArg(ar[n],XmNfontList, did_default_font); n++;
     XtSetArg(ar[n],XmNlabelString, xm1); n++;
-    b = XmCreatePushButton ( parent, "button", ar, n );
+    b = XmCreatePushButton ( parent, "button", ar, (Cardinal)n );
  
     XtManageChild(b);
     XmStringFree(xm1);
@@ -3477,7 +3507,4 @@ int n;
 		(XtCallbackProc)cancel_pop_up, (XtPointer)tag ); 
     return(b);
 }
-
-
-
 

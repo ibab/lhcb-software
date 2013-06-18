@@ -112,7 +112,6 @@ void dim_init()
 {
 	pthread_t t_id;
 	void ignore_sigpipe();
-	int ret;
 	extern int dna_init();
 /*
 #ifdef LYNXOS
@@ -121,6 +120,11 @@ void dim_init()
 /*
 #endif
 */
+    if(DIM_Threads_OFF)
+    {
+		dim_no_threads();
+		return;
+    }
 	if(!DIM_THR_init_done)
 	{
 	  /*
@@ -136,7 +140,7 @@ void dim_init()
 		MAIN_thread = INIT_thread;
 		
 #ifndef darwin 	
-		sem_init(&DIM_INIT_Sema, 0, INIT_count);
+		sem_init(&DIM_INIT_Sema, 0, (unsigned int)INIT_count);
 		/*
 		sem_init(&DIM_WAIT_Sema, 0, WAIT_count);
 		*/
@@ -161,9 +165,9 @@ void dim_init()
 		pthread_create(&t_id, &attr, dim_dtq_thread, 0);
 #endif
 #ifndef darwin
-		ret = sem_wait(&DIM_INIT_Sema);
+		sem_wait(&DIM_INIT_Sema);
 #else
-		ret = sem_wait(DIM_INIT_Semap);
+		sem_wait(DIM_INIT_Semap);
 #endif
 #if defined (LYNXOS) && !defined (__Lynx__)
 		pthread_create(&t_id, attr, dim_tcpip_thread, 0);
@@ -171,9 +175,9 @@ void dim_init()
 		pthread_create(&t_id, &attr, dim_tcpip_thread, 0);
 #endif
 #ifndef darwin
-		ret = sem_wait(&DIM_INIT_Sema);
+		sem_wait(&DIM_INIT_Sema);
 #else
-		ret = sem_wait(DIM_INIT_Semap);
+		sem_wait(DIM_INIT_Semap);
 #endif
 		INIT_thread = 0;
 	}
@@ -224,7 +228,7 @@ void dim_stop()
 	DIM_THR_init_done = 0;
 }
 
-long dim_start_thread(void *(*thread_ast)(void *), long tag)
+dim_long dim_start_thread(void *(*thread_ast)(void *), dim_long tag)
 {
 	pthread_t t_id;
     pthread_attr_t attr;
@@ -236,10 +240,10 @@ long dim_start_thread(void *(*thread_ast)(void *), long tag)
 	pthread_attr_init(&attr);
 	pthread_create(&t_id, &attr, thread_ast, (void *)tag);
 #endif
-	return((long)t_id);
+	return((dim_long)t_id);
 }	
 
-int dim_stop_thread(long t_id)
+int dim_stop_thread(dim_long t_id)
 {
 	int ret;
 	ret = pthread_cancel((pthread_t)t_id);
@@ -532,15 +536,18 @@ int dim_wait()
   return(-1);
 }
 
-long dim_start_thread(void (*thread_ast)(), long tag)
+dim_long dim_start_thread(void (*thread_ast)(), dim_long tag)
 
 {
+	if(thread_ast){}
+	if(tag){}
 	printf("dim_start_thread: not available\n");
-	return (long)0;
+	return (dim_long)0;
 }
 
-int dim_stop_thread(long t_id)
+int dim_stop_thread(dim_long t_id)
 {
+	if(t_id){}
 	printf("dim_stop_thread: not available\n");
 	return 0;
 }
@@ -562,14 +569,14 @@ void dim_tcpip_stop(), dim_dtq_stop();
 
 typedef struct{
 	void (*thread_ast)();
-	long tag;
+	dim_long tag;
 	
 }THREAD_PARAMS;
 
 #ifndef STDCALL
-long dim_start_thread(void (*thread_ast)(), long tag)
+dim_long dim_start_thread(void (*thread_ast)(), dim_long tag)
 #else
-long dim_start_thread(unsigned long (*thread_ast)(void *), void *tag)
+dim_long dim_start_thread(dim_long (*thread_ast)(void *), void *tag)
 #endif
 {
 DWORD threadid = 0;
@@ -592,11 +599,11 @@ HANDLE hthread;
         0,                           /* use default creation flags		*/
         &threadid);					 /* returns the thread identifier	*/
 #endif
-	return (long)hthread;
+	return (dim_long)hthread;
 }
 
 
-int dim_stop_thread(long thread_id)
+int dim_stop_thread(dim_long thread_id)
 {
 	int ret;
 
@@ -707,7 +714,7 @@ int dim_set_scheduler_class(int pclass)
 {
 	HANDLE hProc;
 	int ret;
-	DWORD p;
+	DWORD p = 0;
 
 #ifndef PXI
 	hProc = GetCurrentProcess();
@@ -775,8 +782,8 @@ int dim_get_scheduler_class(int *pclass)
 
 int dim_set_priority(int threadId, int prio)
 {
-	HANDLE id;
-	int ret, p;
+	HANDLE id = 0;
+	int ret, p = 0;
 
 #ifndef PXI
 	if(threadId == 1)
@@ -812,8 +819,8 @@ int dim_set_priority(int threadId, int prio)
 
 int dim_get_priority(int threadId, int *prio)
 {
-	HANDLE id;
-	int ret, p;
+	HANDLE id = 0;
+	int ret, p = 0;
 
 #ifndef PXI
 	if(threadId == 1)

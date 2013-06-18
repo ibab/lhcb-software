@@ -175,7 +175,7 @@ int copy_swap_buffer_out(int format, FORMAT_STR *format_data, void *buff_out, vo
 	if(format){}
 	if(!format_data->par_bytes) {
 		if(buff_in != buff_out)
-			memcpy( buff_out, buff_in, size );
+			memcpy( buff_out, buff_in, (size_t)size );
 		return(size);
 	}
 	next_par_bytes = format_data->par_bytes;
@@ -195,7 +195,7 @@ int copy_swap_buffer_out(int format, FORMAT_STR *format_data, void *buff_out, vo
 				num = get_curr_bytes(curr_par_num,
 					size - curr_size, SIZEOF_CHAR);
 
-				memcpy( buff_out, buff_in, num);
+				memcpy( buff_out, buff_in, (size_t)num);
 				inc_pter( buff_in, num);
 				inc_pter( buff_out, num);
 				curr_out += num;
@@ -212,7 +212,7 @@ int copy_swap_buffer_out(int format, FORMAT_STR *format_data, void *buff_out, vo
 						curr_size += pad_num;
 					}
 				}
-				memcpy( buff_out, buff_in, num);
+				memcpy( buff_out, buff_in, (size_t)num);
 				inc_pter( buff_in, num);
 				inc_pter( buff_out, num);
 				curr_out += num;
@@ -229,7 +229,7 @@ int copy_swap_buffer_out(int format, FORMAT_STR *format_data, void *buff_out, vo
 						curr_size += pad_num;
 					}
 				}
-				memcpy( buff_out, buff_in, num);
+				memcpy( buff_out, buff_in, (size_t)num);
 				inc_pter( buff_in, num);
 				inc_pter( buff_out, num);
 				curr_out += num;
@@ -250,7 +250,7 @@ int copy_swap_buffer_out(int format, FORMAT_STR *format_data, void *buff_out, vo
 						curr_size += pad_num;
 					}
 				}
-				memcpy( buff_out, buff_in, num);
+				memcpy( buff_out, buff_in, (size_t)num);
 				inc_pter( buff_in, num);
 				inc_pter( buff_out, num);
 				curr_out += num;
@@ -275,7 +275,7 @@ int copy_swap_buffer_in(FORMAT_STR *format_data, void *buff_out, void *buff_in, 
 	num = 0;
 	if(!format_data->par_bytes) {
 		if(buff_in != buff_out)
-			memcpy( buff_out, buff_in, size );
+			memcpy( buff_out, buff_in, (size_t)size );
 		return(size);
 	}
 	next_par_bytes = format_data->par_bytes;
@@ -321,7 +321,7 @@ int copy_swap_buffer_in(FORMAT_STR *format_data, void *buff_out, void *buff_in, 
 				}
 
 				if(buff_in != buff_out)
-					memcpy( buff_out, buff_in, num);
+					memcpy( buff_out, buff_in, (size_t)num);
 				inc_pter( buff_in, num);
 				inc_pter( buff_out, num);
 				curr_out += num;

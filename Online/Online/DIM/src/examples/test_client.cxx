@@ -44,7 +44,7 @@ class StrService : public DimInfo
 		cout << "infoHandler: In callback "<< inCallback << endl; 
 	}
 public :
-	StrService() : DimInfo("TEST/STRVAL","not available") {};
+	StrService() : DimInfo("TEST/STRVAL",(char *)"not available") {};
 };
 
 int main()

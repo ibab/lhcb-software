@@ -56,19 +56,19 @@ void conn_arr_create(SRC_TYPES type)
 	{
 	case SRC_DIC :
 		Dic_conns = (DIC_CONNECTION *)
-				calloc( Curr_N_Conns, sizeof(DIC_CONNECTION) );
+				calloc( (size_t)Curr_N_Conns, sizeof(DIC_CONNECTION) );
 		My_type = type;
 		break;
 	case SRC_DNS :
 		Dns_conns = (DNS_CONNECTION *)
-				calloc( Curr_N_Conns, sizeof(DNS_CONNECTION) );
+				calloc( (size_t)Curr_N_Conns, sizeof(DNS_CONNECTION) );
 		My_type = type;
 		break;
 	case SRC_DNA :
 		Dna_conns = (DNA_CONNECTION *)
-				calloc( Curr_N_Conns, sizeof(DNA_CONNECTION) );
+				calloc( (size_t)Curr_N_Conns, sizeof(DNA_CONNECTION) );
 		Net_conns = (NET_CONNECTION *)
-				calloc( Curr_N_Conns, sizeof(NET_CONNECTION) );
+				calloc( (size_t)Curr_N_Conns, sizeof(NET_CONNECTION) );
 		break;
 	default:
 		break;
@@ -127,8 +127,8 @@ void *arr_increase(void *conn_ptr, int conn_size, int n_conns)
 {
 	register char *new_ptr;
 
-	new_ptr = realloc( conn_ptr, conn_size * n_conns );
-	memset( new_ptr + conn_size * Curr_N_Conns, 0, conn_size * CONN_BLOCK );
+	new_ptr = realloc( conn_ptr, (size_t)(conn_size * n_conns) );
+	memset( new_ptr + conn_size * Curr_N_Conns, 0, (size_t)(conn_size * CONN_BLOCK) );
 	return(new_ptr);
 }
 
@@ -136,7 +136,7 @@ void id_arr_create()
 {
 
 	Curr_N_Ids = ID_BLOCK;
-	Id_arr = (void *) calloc( Curr_N_Ids, sizeof(ID_ITEM));
+	Id_arr = (void *) calloc( (size_t)Curr_N_Ids, sizeof(ID_ITEM));
 }
 
 
@@ -144,8 +144,8 @@ void *id_arr_increase(void *id_ptr, int id_size, int n_ids)
 {
 	register char *new_ptr;
 
-	new_ptr = realloc( id_ptr, id_size * n_ids );
-	memset( new_ptr + id_size * Curr_N_Ids, 0, id_size * ID_BLOCK );
+	new_ptr = realloc( id_ptr, (size_t)(id_size * n_ids) );
+	memset( new_ptr + id_size * Curr_N_Ids, 0, (size_t)(id_size * ID_BLOCK) );
 	return(new_ptr);
 }
 

@@ -3,6 +3,7 @@
 #ifdef WIN32
 #include <process.h>
 #endif
+#include <stdio.h>
 
 int main(int argc, char *argv[])
 {
@@ -10,6 +11,7 @@ int main(int argc, char *argv[])
 	char *msg, servName[64];
 	DimService **services;
 
+	if(argc){}
 	sscanf(argv[1],"%d",&msgSize);
 	sscanf(argv[2],"%d",&nServices);
 	msg = new char[msgSize];

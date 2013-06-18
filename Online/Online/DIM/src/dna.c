@@ -247,7 +247,7 @@ int dna_start_read(int conn_id, int size)
 	if(size > dna_connp->buffer_size) 
 	{
 		dna_connp->buffer =
-				(int *) realloc(dna_connp->buffer, size);
+				(int *) realloc(dna_connp->buffer, (size_t)size);
 		dna_connp->buffer_size = size;
 	}
 	dna_connp->curr_buffer = (char *) dna_connp->buffer;
@@ -427,7 +427,7 @@ int dna_write_nowait(int conn_id, void *buffer, int size)
 
 	header_p->header_size = htovl(READ_HEADER_SIZE);
 	header_p->data_size = htovl(size);
-	header_p->header_magic = htovl(HDR_MAGIC);
+	header_p->header_magic = (int)htovl(HDR_MAGIC);
 	tcpip_code = dna_write_bytes(conn_id, &header_pkt, READ_HEADER_SIZE, 1);
 	if(tcpip_failure(tcpip_code)) 
 	{
@@ -461,13 +461,13 @@ int dna_write(int conn_id, void *buffer, int size)
 
 	DISABLE_AST
 
-	pktp = malloc(READ_HEADER_SIZE+size);
+	pktp = malloc((size_t)(READ_HEADER_SIZE+size));
 	headerp = &(pktp->header);
 	headerp->header_size = htovl(READ_HEADER_SIZE);
 	headerp->data_size = htovl(size);
-	headerp->header_magic = htovl(HDR_MAGIC);
+	headerp->header_magic = (int)htovl(HDR_MAGIC);
 
-	memcpy(pktp->data, (char *)buffer, size);
+	memcpy(pktp->data, (char *)buffer, (size_t)size);
 
 	newp = malloc(sizeof(WRITE_ITEM));
 	newp->conn_id = conn_id;
@@ -504,7 +504,7 @@ static void ast_conn_h(int handle, int svr_conn_id, int protocol)
 		conn_free(conn_id);
 	} else {
 		dna_connp->state = RD_HDR;
-		dna_connp->buffer = (int *)malloc(TCP_RCV_BUF_SIZE);
+		dna_connp->buffer = (int *)malloc((size_t)TCP_RCV_BUF_SIZE);
 /*
 		if(!dna_connp->buffer)
 		{
@@ -622,7 +622,8 @@ static int ins_pend_conn( char *node, char *task, int port, SRC_TYPES src_type, 
 	register PENDING_OPEN *pending_connp;
 	register int i, size;
 	time_t oldest;
-	int oldesti;
+	int oldesti = 0;
+	extern time_t time();
 
 	if(type == 0)
 	{
@@ -802,7 +803,7 @@ int dna_open_client(char *server_node, char *server_task, int port, int server_p
 	}
 	dna_connp->state = RD_HDR;
 	dna_connp->writing = FALSE;
-	dna_connp->buffer = (int *)malloc(TCP_RCV_BUF_SIZE);
+	dna_connp->buffer = (int *)malloc((size_t)TCP_RCV_BUF_SIZE);
 /*
 	if(!dna_connp->buffer)
 	{
@@ -814,7 +815,7 @@ int dna_open_client(char *server_node, char *server_task, int port, int server_p
 	dna_connp->read_ast = read_ast;
 	dna_connp->saw_init = TRUE;	/* we send it! */
 	dna_start_read(conn_id, READ_HEADER_SIZE);
-	local_buffer.code = htovl(OPN_MAGIC);
+	local_buffer.code = (int)htovl(OPN_MAGIC);
 	get_node_name(local_buffer.node);
 	get_proc_name(local_buffer.task);
 	tcpip_code = dna_write_nowait(conn_id, &local_buffer, sizeof(local_buffer));

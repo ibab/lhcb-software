@@ -289,7 +289,7 @@ int dim_tcpip_init(int thr_flag)
 #ifdef WIN32
 		if(DIM_IO_path[0] == -1)
 		{
-			if( (DIM_IO_path[0] = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) 
+			if( (DIM_IO_path[0] = (int)socket(AF_INET, SOCK_STREAM, 0)) == -1 ) 
 			{
 				perror("socket");
 				return(0);
@@ -368,7 +368,7 @@ static int enable_sig(int conn_id)
 */
 		closesock(DIM_IO_path[0]);
 		DIM_IO_path[0] = -1;
-		if( (DIM_IO_path[0] = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) 
+		if( (DIM_IO_path[0] = (int)socket(AF_INET, SOCK_STREAM, 0)) == -1 ) 
 		{
 			perror("socket");
 			return(1);
@@ -567,7 +567,7 @@ void tcpip_pipe_sig_handler( int num )
 
 static int get_bytes_to_read(int conn_id)
 {
-	int i, ret, count;
+	int i, ret, count = 0;
 	
 	for(i = 0; i < 3; i++)
 	{
@@ -615,9 +615,9 @@ static int do_read( int conn_id )
 /*
 		would this be better? not sure afterwards...
 		nbytes = (size < count) ? size : count;
-		if( (len = readsock(Net_conns[conn_id].channel, p, nbytes, 0)) <= 0 ) 
+		if( (len = readsock(Net_conns[conn_id].channel, p, (size_t)nbytes, 0)) <= 0 ) 
 */
-		if( (len = readsock(Net_conns[conn_id].channel, p, size, 0)) <= 0 ) 
+		if( (len = (int)readsock(Net_conns[conn_id].channel, p, (size_t)size, 0)) <= 0 ) 
 		{	/* Connection closed by other side. */
 			Net_conns[conn_id].read_rout( conn_id, -1, 0 );
 			return 0;
@@ -653,8 +653,8 @@ void do_accept( int conn_id )
 	int			othersize;
 
 	othersize = sizeof(other);
-	memset( (char *) &other, 0, othersize );
-	Net_conns[conn_id].mbx_channel = accept( Net_conns[conn_id].channel,
+	memset( (char *) &other, 0, (size_t)othersize );
+	Net_conns[conn_id].mbx_channel = (int)accept( Net_conns[conn_id].channel,
 						 (struct sockaddr*)&other, (unsigned int *)&othersize );
 	if( Net_conns[conn_id].mbx_channel < 0 ) 
 	{
@@ -841,7 +841,7 @@ int check_node_addr( char *node, unsigned char *ipaddr)
 unsigned char *ptr;
 int ret;
 
-	ptr = (unsigned char *)node+strlen(node)+1;
+	ptr = (unsigned char *)node+(int)strlen(node)+1;
     ipaddr[0] = *ptr++;
     ipaddr[1] = *ptr++;
     ipaddr[2] = *ptr++;
@@ -899,10 +899,10 @@ int tcpip_open_client( int conn_id, char *node, char *task, int port )
 	if(isdigit(node[0]))
 	{
 		sscanf(node,"%d.%d.%d.%d",&a, &b, &c, &d);
-	    ipaddr[0] = a;
-	    ipaddr[1] = b;
-	    ipaddr[2] = c;
-	    ipaddr[3] = d;
+	    ipaddr[0] = (unsigned char)a;
+	    ipaddr[1] = (unsigned char)b;
+	    ipaddr[2] = (unsigned char)c;
+	    ipaddr[3] = (unsigned char)d;
 	    host_number = 1;
 #ifndef VxWorks
 		if( gethostbyaddr(ipaddr, sizeof(ipaddr), AF_INET) == (struct hostent *)0 )
@@ -927,7 +927,7 @@ int tcpip_open_client( int conn_id, char *node, char *task, int port )
 			return(0);
 		host_number = 1;
 /*
-          ptr = (unsigned char *)node+strlen(node)+1;
+          ptr = (unsigned char *)node+(int)strlen(node)+1;
           ipaddr[0] = *ptr++;
           ipaddr[1] = *ptr++;
           ipaddr[2] = *ptr++;
@@ -960,7 +960,7 @@ int tcpip_open_client( int conn_id, char *node, char *task, int port )
 	printf("node %s addr: %x\n",node, host_addr);
 #endif
 
-	if( (path = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) 
+	if( (path = (int)socket(AF_INET, SOCK_STREAM, 0)) == -1 ) 
 	{
 		perror("socket");
 		return(0);
@@ -1052,7 +1052,7 @@ int tcpip_open_server( int conn_id, char *task, int *port )
 	int path, val, ret_code, ret;
 
     dim_tcpip_init(0);
-	if( (path = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) 
+	if( (path = (int)socket(AF_INET, SOCK_STREAM, 0)) == -1 ) 
 	{
 		return(0);
 	}
@@ -1256,7 +1256,7 @@ int tcpip_write( int conn_id, char *buffer, int size )
 	 */
 	int	wrote;
 
-	wrote = writesock( Net_conns[conn_id].channel, buffer, size, 0 );
+	wrote = (int)writesock( Net_conns[conn_id].channel, buffer, (size_t)size, 0 );
 	if( wrote == -1 ) {
 /*
 		Net_conns[conn_id].read_rout( conn_id, -1, 0 );
@@ -1305,7 +1305,7 @@ int tcpip_write_nowait( int conn_id, char *buffer, int size )
 	int tcpip_would_block();
 	
 	set_non_blocking(Net_conns[conn_id].channel);
-	wrote = writesock( Net_conns[conn_id].channel, buffer, size, 0 );
+	wrote = (int)writesock( Net_conns[conn_id].channel, buffer, (size_t)size, 0 );
 #ifndef WIN32
 	ret = errno;
 #else
@@ -1331,7 +1331,7 @@ printf("Writing %d, ret = %d\n", size, ret);
 			selret = select(FD_SETSIZE, NULL, &wfds, NULL, &timeout);
 			if(selret > 0)
 			{
-				wrote = writesock( Net_conns[conn_id].channel, buffer, size, 0 );
+				wrote = (int)writesock( Net_conns[conn_id].channel, buffer, (size_t)size, 0 );
 				if( wrote == -1 ) 
 				{
 /*

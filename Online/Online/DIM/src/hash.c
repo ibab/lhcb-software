@@ -27,13 +27,13 @@ int HashFunction(char *name, int max)
    int i    = 0;
    int len;
 
-   len = strlen(name);
+   len = (int)strlen(name);
 
    for(i = 0; i < len; name++, i++)
    {
-      hash = hash*a+(*name);
+      hash = hash*a+(unsigned)(*name);
       a = a*b;
    }
 
-   return (hash % max);
+   return ((int)(hash % (unsigned)max));
 }

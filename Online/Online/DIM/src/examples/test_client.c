@@ -56,7 +56,7 @@ void rout_list( int *tag, char *buf, int *size )
 void version_rout( int *tag, int *buf, int *size)
 {
 	if(tag){}
-	printf("Received VERSION %lx, %d\n", (long)buf, *size);
+	printf("Received VERSION %lx, %d\n", (dim_long)buf, *size);
 }
 
 void rout( tag, buf, size )
@@ -82,13 +82,13 @@ int *tag, *size;
 		dic_get_dns_node(node);
 		printf("DNS node = %s\n",node);
 		printf("size = %d\n",*size);
-		memcpy(&t, buf, *size);
+		memcpy(&t, buf, (size_t)*size);
 		printf("t.i = %d, t.d = %2.2f, t.s = %d, t.c = %c, t.f = %2.2f, t.str = %s\n",
 			t.i,t.d,t.s,t.c,t.f,t.str);
 		dic_get_timestamp(0, &secs, &millis);
 		tsecs = secs;
 		my_ctime(&tsecs, str, 128);
-		str[strlen(str)-1] = '\0';
+		str[(int)strlen(str)-1] = '\0';
 		printf("timestamp = %s.%d\n",str,millis);
 
 		return;

@@ -37,7 +37,7 @@ SLL *sll_search( SLL* head, char *data, int size )
 	DISABLE_AST
 	while( (head = head->next) )
 	{
-		if( !memcmp(head->user_info, data, size) )
+		if( !memcmp(head->user_info, data, (size_t)size) )
 		{
 			break;
 		}
@@ -122,7 +122,7 @@ SLL *sll_search_next_remove( SLL* item, int offset, char *data, int size )
 	DISABLE_AST
 	while( (auxp = item->next) )
 	{
-		if( !memcmp(&(auxp->user_info[offset]), data, size) )
+		if( !memcmp(&(auxp->user_info[offset]), data, (size_t)size) )
 		{
 			item->next = auxp->next;
 			break;

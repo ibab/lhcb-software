@@ -16,6 +16,8 @@ int DimServer::autoStart = 1;
 //int DimServer::itsNServices = 0;
 
 extern "C" {
+extern void dis_init();
+
 static void user_routine( void *tagp, void **buf, int *size, int *first_time)
 {
 //	int *tag = (int *)tagp;
@@ -38,7 +40,7 @@ static void user_routine( void *tagp, void **buf, int *size, int *first_time)
 		DimCore::inCallback = 0;
 	}
 	if( t->itsType == DisSTRING)
-			t->itsSize = strlen((char *)t->itsData)+1;
+			t->itsSize = (int)strlen((char *)t->itsData)+1;
 	*buf = t->itsData;
 	*size = t->itsSize;
 }
@@ -48,7 +50,7 @@ void DimService::declareIt(char *name, char *format, DimServiceHandler *handler,
 {
 //	itsTagId = 0;
 	itsDns = dns;
-	itsName = new char[strlen(name)+1];
+	itsName = new char[(int)strlen(name)+1];
 	itsDataSize = 0;
 	strcpy( itsName, name);
 	if(handler)
@@ -56,18 +58,23 @@ void DimService::declareIt(char *name, char *format, DimServiceHandler *handler,
 	else
 		itsServiceHandler = 0;
 //	itsTagId = id_get((void *)this, SRC_DIS);
+	dis_init();
 	if(itsDns == 0)
 	{
+		DISABLE_AST
 		itsId = dis_add_service( name, format, NULL, 0, 
 //				user_routine, itsTagId);
-				user_routine, (long)this);
+				user_routine, (dim_long)this);
+		ENABLE_AST
 		DimServer::start();
 	}
 	else
 	{
+		DISABLE_AST
 		itsId = dis_add_service_dns( itsDns->getDnsId(), name, format, NULL, 0, 
 //				user_routine, itsTagId);
-				user_routine, (long)this);
+				user_routine, (dim_long)this);
+		ENABLE_AST
 //		itsDns->addServiceId(itsId);
 		DimServer::start(itsDns);
 	}
@@ -87,7 +94,7 @@ void DimService::storeIt(void *data, int size)
 		itsData = new char[size];
 		itsDataSize = size;
 	}
-	memcpy(itsData, data, size);
+	memcpy(itsData, data, (size_t)size);
 	itsSize = size;
 }
 
@@ -124,9 +131,9 @@ void DimCommand::declareIt(char *name, char *format, DimCommandHandler *handler,
 {
 //	itsTagId = 0;
 	itsDns = dns;
-	itsName = new char[strlen(name)+1];
+	itsName = new char[(int)strlen(name)+1];
 	strcpy( itsName, name);
-	itsFormat = new char[strlen(format)+1];
+	itsFormat = new char[(int)strlen(format)+1];
 	strcpy( itsFormat, format);
 	currCmnd = 0;
 	if(handler)
@@ -134,18 +141,23 @@ void DimCommand::declareIt(char *name, char *format, DimCommandHandler *handler,
 	else
 		itsCommandHandler = 0;
 //	itsTagId = id_get((void *)this, SRC_DIS);
+	dis_init();
 	if(!itsDns)
 	{
+		DISABLE_AST
 		itsId = dis_add_cmnd( name, format, command_routine,
 //				itsTagId);
-				(long)this);
+				(dim_long)this);
+		ENABLE_AST
 		DimServer::start();
 	}
 	else
 	{
+		DISABLE_AST
 		itsId = dis_add_cmnd_dns( itsDns->getDnsId(), name, format, command_routine,
 //			itsTagId);
-			(long)this);
+			(dim_long)this);
+		ENABLE_AST
 //		itsDns->addServiceId(itsId);
 		DimServer::start(itsDns);
 	}
@@ -229,12 +241,12 @@ void DimRpc::declareIt(char *name, char *formatin, char *formatout, DimServerDns
 {
 //	itsTagId = 0;
 	itsDns = dns;
-	itsName = new char[strlen(name)+1];
+	itsName = new char[(int)strlen(name)+1];
 	strcpy( itsName, name);
-	itsNameIn = new char[strlen(name)+1+10];
+	itsNameIn = new char[(int)strlen(name)+1+10];
 	strcpy( itsNameIn, name);
 	strcat(itsNameIn,(char *)"/RpcIn");
-	itsNameOut = new char[strlen(name)+1+10];
+	itsNameOut = new char[(int)strlen(name)+1+10];
 	strcpy( itsNameOut, name);
 	strcat(itsNameOut,(char *)"/RpcOut");
 	itsDataOut = new char[1];
@@ -243,24 +255,29 @@ void DimRpc::declareIt(char *name, char *formatin, char *formatout, DimServerDns
 	itsTimeout = 0;
 	
 //	itsTagId = id_get((void *)this, SRC_DIS);
+	dis_init();
 	if(!itsDns)
 	{
+		DISABLE_AST
 		itsIdIn = dis_add_cmnd( itsNameIn, formatin, 
 //			rpcin_routine, itsTagId);
-			rpcin_routine, (long)this);
+			rpcin_routine, (dim_long)this);
 		itsIdOut = dis_add_service( itsNameOut, formatout, 0,0, 
 //			rpcout_routine, itsTagId);
-			rpcout_routine, (long)this);
+			rpcout_routine, (dim_long)this);
+		ENABLE_AST
 		DimServer::start();
 	}
 	else
 	{
+		DISABLE_AST
 		itsIdIn = dis_add_cmnd_dns( itsDns->getDnsId(), itsNameIn, formatin, 
 //			rpcin_routine, itsTagId);
-			rpcin_routine, (long)this);
+			rpcin_routine, (dim_long)this);
 		itsIdOut = dis_add_service_dns( itsDns->getDnsId(), itsNameOut, formatout, 0,0, 
 //			rpcout_routine, itsTagId);
-			rpcout_routine, (long)this);
+			rpcout_routine, (dim_long)this);
+		ENABLE_AST
 //		itsDns->addServiceId(itsIdIn);
 //		itsDns->addServiceId(itsIdOut);
 		DimServer::start(itsDns);
@@ -281,7 +298,7 @@ void DimRpc::storeIt(void *data, int size)
 		itsDataOut = new char[size];
 		itsDataOutSize = size;
 	}
-	memcpy(itsDataOut, data, size);
+	memcpy(itsDataOut, data, (size_t)size);
 	itsSizeOut = size;
 }
 
@@ -313,7 +330,7 @@ void DimServerDns::init(const char *node, int port)
 {
 //	if(!itsNode)
 //	{
-		itsNode = new char[strlen(node)+1];
+		itsNode = new char[(int)strlen(node)+1];
 		strcpy(itsNode,node);
 //	}
 	itsPort = port;
@@ -334,7 +351,7 @@ void DimServerDns::addServiceId(int id)
 	if((itsNServiceIds + 2) > itsServiceIdListSize)
 	{
 		tmp = new int[itsServiceIdListSize + DisDnsIdBlock];
-		memcpy(tmp, itsServiceIdList, itsServiceIdListSize*sizeof(int));
+		memcpy(tmp, itsServiceIdList, (size_t)itsServiceIdListSize*sizeof(int));
 		delete itsServiceIdList;
 		itsServiceIdList = tmp;
 		itsServiceIdListSize += DisDnsIdBlock;
@@ -368,7 +385,7 @@ DimServerDns::~DimServerDns()
 		delete[] itsNode;
 }
 
-long DimServerDns::getDnsId()
+dim_long DimServerDns::getDnsId()
 {
 	return itsDnsId;
 }
@@ -377,7 +394,7 @@ void DimServerDns::setName(const char *name)
 {
 	if(!itsName)
 	{
-		itsName = new char[strlen(name)+1];
+		itsName = new char[(int)strlen(name)+1];
 		strcpy(itsName,name);
 	}
 }
@@ -436,7 +453,7 @@ void DimServer::start(const char *name)
 {
 	if(!itsName)
 	{
-		itsName = new char[strlen(name)+1];
+		itsName = new char[(int)strlen(name)+1];
 		strcpy(itsName,name);
 	}
 	dis_start_serving(itsName);
@@ -444,13 +461,16 @@ void DimServer::start(const char *name)
 
 void DimServer::start(DimServerDns *dns, const char *name)
 {
-	long dnsid;
+	dim_long dnsid;
 
+	dis_init();
+	{
 	DISABLE_AST
 	dns->setName(name);
 	dnsid = dns->getDnsId();
 	dis_start_serving_dns(dnsid, (char *)name /*, dns->getServiceIdList()*/);
 	ENABLE_AST
+	}
 }
 /*
 void DimServer::threadHandler()
@@ -486,10 +506,12 @@ void DimServer::start()
 
 void DimServer::start(DimServerDns *dns)
 {
-	long dnsid;
+	dim_long dnsid;
 	char *name;
 	int isAuto;
 
+	dis_init();
+	{
 	DISABLE_AST
 //	dns->itsNServices++;
 
@@ -502,6 +524,7 @@ void DimServer::start(DimServerDns *dns)
 		dis_start_serving_dns(dnsid, (char *)name /*, dns->getServiceIdList()*/);
 	}
 	ENABLE_AST
+	}
 }
 
 void DimServer::stop()
@@ -668,7 +691,7 @@ int DimServer::setDnsNode(const char *node, int port)
 	return dis_set_dns_node((char *)node); 
 }
 
-long DimServer::addDns(const char *node, int port) 
+dim_long DimServer::addDns(const char *node, int port) 
 {
 	return dis_add_dns((char *)node, port); 
 }
@@ -797,7 +820,7 @@ DimService::DimService(const char *name, short &value)
 DimService::DimService(const char *name, char *string)
 {
 	itsData = string;
-	itsSize = strlen(string)+1;
+	itsSize = (int)strlen(string)+1;
 	itsType = DisSTRING;
 	declareIt((char *)name, (char *)"C", 0, 0);
 }
@@ -879,7 +902,7 @@ DimService::DimService(DimServerDns *dns, const char *name, short &value)
 DimService::DimService(DimServerDns *dns, const char *name, char *string)
 {
 	itsData = string;
-	itsSize = strlen(string)+1;
+	itsSize = (int)strlen(string)+1;
 	itsType = DisSTRING;
 	declareIt((char *)name, (char *)"C", 0, dns);
 }
@@ -986,7 +1009,7 @@ int DimService::updateService( char *string )
 	if( itsType == DisSTRING)
 	{
 		itsData = string;
-		itsSize = strlen(string)+1;
+		itsSize = (int)strlen(string)+1;
 		return dis_update_service( itsId );
 	}
 	return -1;
@@ -1105,7 +1128,7 @@ int DimService::selectiveUpdateService( char *string, int *cids )
 	if( itsType == DisSTRING)
 	{
 		itsData = string;
-		itsSize = strlen(string)+1;
+		itsSize = (int)strlen(string)+1;
 		if( cids == 0)
 		{
 			int ids[2];
@@ -1178,7 +1201,7 @@ void DimService::setData(short &data)
 
 void DimService::setData(char *data)
 {
-	storeIt(data, strlen(data)+1);
+	storeIt(data, (int)strlen(data)+1);
 }
 
 char *DimService::getName()
@@ -1203,7 +1226,7 @@ CmndInfo::CmndInfo(void *data, int datasize, int tsecs, int tmillisecs)
 	itsDataSize = datasize;
 	secs = tsecs;
 	millisecs = tmillisecs;
-	memcpy(itsData, data, datasize);
+	memcpy(itsData, data, (size_t)datasize);
 }
 
 CmndInfo::~CmndInfo()
@@ -1464,7 +1487,7 @@ void DimRpc::setData(short &data)
 
 void DimRpc::setData(char *data)
 {
-	storeIt(data,strlen(data)+1);
+	storeIt(data,(int)strlen(data)+1);
 }
 
 char *DimRpc::getName()

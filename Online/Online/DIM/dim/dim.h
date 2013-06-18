@@ -13,7 +13,7 @@
 
 #include "dim_common.h"
 
-#define DIM_VERSION_NUMBER 1936
+#define DIM_VERSION_NUMBER 2007
 
 
 #define MY_LITTLE_ENDIAN	0x1
@@ -374,7 +374,7 @@ typedef struct timer_entry{
 	int time;
 	int time_left;
 	void (*user_routine)();
-	long tag;
+	dim_long tag;
 } TIMR_ENT;
 
 typedef struct {
@@ -441,7 +441,7 @@ typedef struct {
 	int old_n_services;
 	TIMR_ENT *timr_ent;
 	int already;
-	char long_task_name[MAX_TASK_NAME*2];
+	char long_task_name[MAX_NAME];
 } DNS_CONNECTION;
 
 extern DllExp DIM_NOSHARE DNS_CONNECTION *Dns_conns;
@@ -470,7 +470,7 @@ typedef struct dic_serv {
 	int *fill_address;
 	int fill_size;
 	void (*user_routine)();
-	long tag;
+	dim_long tag;
 	TIMR_ENT *timer_ent;
 	int conn_id;
 	PENDING_STATES pending;
@@ -516,7 +516,7 @@ _DIM_PROTOE( void tcpip_report_error,   (int code) );
 _DIM_PROTOE( int dtq_create,          (void) );
 _DIM_PROTOE( int dtq_delete,          (int queue_id) );
 _DIM_PROTOE( TIMR_ENT *dtq_add_entry, (int queue_id, int time,
-                                  void (*user_routine)(), long tag) );
+                                  void (*user_routine)(), dim_long tag) );
 _DIM_PROTOE( int dtq_clear_entry,     (TIMR_ENT *entry) );
 _DIM_PROTOE( int dtq_rem_entry,       (int queue_id, TIMR_ENT *entry) );
 

@@ -145,6 +145,19 @@ char node[MAX_DNS_NODE];
 	return(port);
 }
 
+void rand_tmout_init()
+{
+	char pid_str[MAX_TASK_NAME];
+	int ip, pid;
+	extern int get_node_addr();
+	extern int get_proc_name();
+
+	get_node_addr((char *)&ip);
+	get_proc_name(pid_str);
+	sscanf(pid_str,"%d",&pid);
+	srand((unsigned)(ip+pid));
+}
+
 int rand_tmout( int min, int max )
 {
 	int aux;
@@ -159,7 +172,7 @@ void init_dns_list()
 {
 	char node[MAX_DNS_NODE];
 	int port;
-	long sid, cid;
+	dim_long sid, cid;
 
 	DISABLE_AST
 	if(!DNS_conn_head) 
@@ -173,6 +186,7 @@ void init_dns_list()
 		cid = dic_add_dns(node, port);
 		DNS_ids[SRC_DIS] = (DNS_CONN *)sid;
 		DNS_ids[SRC_DIC] = (DNS_CONN *)cid;
+		rand_tmout_init();
 	}
 	ENABLE_AST
 }
@@ -220,7 +234,7 @@ DNS_CONN *find_dns(char *node_name, int port_number, SRC_TYPES src_type)
 	return (DNS_CONN *)0;
 }
 
-long dis_add_dns(char *node_name, int port_number)
+dim_long dis_add_dns(char *node_name, int port_number)
 {
 	DNS_CONN *connp;
 
@@ -238,10 +252,10 @@ long dis_add_dns(char *node_name, int port_number)
 		connp->connecting = 0;
 		dll_insert_queue( (DLL *) DNS_conn_head, (DLL *) connp );
 	}
-	return (long)connp;
+	return (dim_long)connp;
 }
 
-long dic_add_dns(char *node_name, int port_number)
+dim_long dic_add_dns(char *node_name, int port_number)
 {
 	DNS_CONN *connp;
 
@@ -259,7 +273,7 @@ long dic_add_dns(char *node_name, int port_number)
 		connp->connecting = 0;
 		dll_insert_queue( (DLL *) DNS_conn_head, (DLL *) connp );
 	}
-	return (long)connp;
+	return (dim_long)connp;
 }
 
 DNS_CONN *get_dns(DNS_CONN *connp, SRC_TYPES src_type)
@@ -281,7 +295,7 @@ DNS_CONN *get_dns(DNS_CONN *connp, SRC_TYPES src_type)
 	return p;
 }
 
-int close_dns(long dnsid, SRC_TYPES src_type)
+int close_dns(dim_long dnsid, SRC_TYPES src_type)
 {
 	DNS_CONN *connp;
 
@@ -296,7 +310,7 @@ int close_dns(long dnsid, SRC_TYPES src_type)
 	return 1;
 }
 
-int open_dns(long dnsid, void (*recv_rout)(), void (*error_rout)(), int tmout_min, int tmout_max, SRC_TYPES src_type )
+int open_dns(dim_long dnsid, void (*recv_rout)(), void (*error_rout)(), int tmout_min, int tmout_max, SRC_TYPES src_type )
 {
 	char nodes[MAX_DNS_NODE];
 	char node_info[MAX_NODE_NAME+4];
@@ -330,7 +344,7 @@ int open_dns(long dnsid, void (*recv_rout)(), void (*error_rout)(), int tmout_mi
 			}
 			strcpy(node_info,dns_node);
 			for(i = 0; i < 4; i ++)
-				node_info[strlen(node_info)+i+1] = (char)0xff;
+				node_info[(int)strlen(node_info)+i+1] = (char)0xff;
 			connp->conn_id = 0;
 			connp->connecting = 1;
 			conn_id = dna_open_client( node_info, DNS_TASK, dns_port,
@@ -344,7 +358,7 @@ int open_dns(long dnsid, void (*recv_rout)(), void (*error_rout)(), int tmout_mi
 		connp->conn_id = conn_id;
 		if(!conn_id)
 		{
-			strncpy(connp->task_name, DNS_TASK, MAX_TASK_NAME); 
+			strncpy(connp->task_name, DNS_TASK, (size_t)MAX_TASK_NAME); 
 			connp->recv_rout = recv_rout;
 			connp->error_rout = error_rout;
 			connp->pending = 1;
@@ -387,7 +401,7 @@ void retry_dns_connection( DNS_CONN *connp )
 			}
 			strcpy(node_info,dns_node);
 			for(i = 0; i < 4; i ++)
-				node_info[strlen(node_info)+i+1] = (char)0xff;
+				node_info[(int)strlen(node_info)+i+1] = (char)0xff;
 			connp->conn_id = 0;
 			connp->connecting = 1;
 			conn_id = dna_open_client( node_info, connp->task_name,
@@ -409,7 +423,7 @@ void retry_dns_connection( DNS_CONN *connp )
 	retrying = 0;
 }	
 
-long dns_get_dnsid(int conn_id, SRC_TYPES src_type)
+dim_long dns_get_dnsid(int conn_id, SRC_TYPES src_type)
 {
 	DNS_CONN *connp;
 	int found = 0;
@@ -434,12 +448,12 @@ long dns_get_dnsid(int conn_id, SRC_TYPES src_type)
 	{
 		if(connp == DNS_ids[src_type])
 		{
-			return (long)0;
+			return (dim_long)0;
 		}
 		else
 		{
-			return (long)connp;
+			return (dim_long)connp;
 		}
 	}
-	return (long)-1;
+	return (dim_long)-1;
 }

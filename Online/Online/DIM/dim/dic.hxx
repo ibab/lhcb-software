@@ -56,9 +56,9 @@ public :
 	DimInfo(const char *name, int time, short nolink) 
 		{ subscribe((char *)name, time, &nolink, sizeof(short), 0); };
 	DimInfo(const char *name, char *nolink) 
-		{ subscribe((char *)name, 0, nolink, strlen(nolink)+1, 0); };
+		{ subscribe((char *)name, 0, nolink, (int)strlen(nolink)+1, 0); };
 	DimInfo(const char *name, int time, char *nolink) 
-		{ subscribe((char *)name, time, nolink, strlen(nolink)+1, 0); };
+		{ subscribe((char *)name, time, nolink, (int)strlen(nolink)+1, 0); };
 	DimInfo(const char *name, void *nolink, int nolinksize) 
 		{ subscribe((char *)name, 0, nolink, nolinksize, 0); };
 	DimInfo(const char *name, int time, void *nolink, int nolinksize) 
@@ -85,9 +85,9 @@ public :
 	DimInfo(const char *name, int time, short nolink, DimInfoHandler *handler) 
 		{ subscribe((char *)name, time, &nolink, sizeof(short), handler); };
 	DimInfo(const char *name, char *nolink, DimInfoHandler *handler) 
-		{ subscribe((char *)name, 0, nolink, strlen(nolink)+1, handler); };
+		{ subscribe((char *)name, 0, nolink, (int)strlen(nolink)+1, handler); };
 	DimInfo(const char *name, int time, char *nolink, DimInfoHandler *handler) 
-		{ subscribe((char *)name, time, nolink, strlen(nolink)+1, handler); };
+		{ subscribe((char *)name, time, nolink, (int)strlen(nolink)+1, handler); };
 	DimInfo(const char *name, void *nolink, int nolinksize, DimInfoHandler *handler) 
 		{ subscribe((char *)name, 0, nolink, nolinksize, handler); };
 	DimInfo(const char *name, int time, void *nolink, int nolinksize, DimInfoHandler *handler) 
@@ -157,9 +157,9 @@ public :
 	DimStampedInfo(const char *name, int time, short nolink) 
 	{ subscribe((char *)name, time, &nolink, sizeof(short), 0); };
 	DimStampedInfo(const char *name, char *nolink) 
-	{ subscribe((char *)name, 0, nolink, strlen(nolink)+1, 0); };
+	{ subscribe((char *)name, 0, nolink, (int)strlen(nolink)+1, 0); };
 	DimStampedInfo(const char *name, int time, char *nolink) 
-	{ subscribe((char *)name, time, nolink, strlen(nolink)+1, 0); };
+	{ subscribe((char *)name, time, nolink, (int)strlen(nolink)+1, 0); };
 	DimStampedInfo(const char *name, void *nolink, int nolinksize) 
 	{ subscribe((char *)name, 0, nolink, nolinksize, 0); };
 	DimStampedInfo(const char *name, int time, void *nolink, int nolinksize) 
@@ -186,9 +186,9 @@ public :
 	DimStampedInfo(const char *name, int time, short nolink, DimInfoHandler *handler) 
 	{ subscribe((char *)name, time, &nolink, sizeof(short), handler); };
 		DimStampedInfo(const char *name, char *nolink, DimInfoHandler *handler) 
-	{ subscribe((char *)name, 0, nolink, strlen(nolink)+1, handler); };
+	{ subscribe((char *)name, 0, nolink, (int)strlen(nolink)+1, handler); };
 	DimStampedInfo(const char *name, int time, char *nolink, DimInfoHandler *handler) 
-	{ subscribe((char *)name, time, nolink, strlen(nolink)+1, handler); };
+	{ subscribe((char *)name, time, nolink, (int)strlen(nolink)+1, handler); };
 	DimStampedInfo(const char *name, void *nolink, int nolinksize, DimInfoHandler *handler) 
 	{ subscribe((char *)name, 0, nolink, nolinksize, handler); };
 	DimStampedInfo(const char *name, int time, void *nolink, int nolinksize, DimInfoHandler *handler) 
@@ -229,9 +229,9 @@ public :
 	DimUpdatedInfo(const char *name, int time, short nolink) 
 	{ subscribe((char *)name, time, &nolink, sizeof(short), 0); };
 	DimUpdatedInfo(const char *name, char *nolink) 
-	{ subscribe((char *)name, 0, nolink, strlen(nolink)+1, 0); };
+	{ subscribe((char *)name, 0, nolink, (int)strlen(nolink)+1, 0); };
 	DimUpdatedInfo(const char *name, int time, char *nolink) 
-	{ subscribe((char *)name, time, nolink, strlen(nolink)+1, 0); };
+	{ subscribe((char *)name, time, nolink, (int)strlen(nolink)+1, 0); };
 	DimUpdatedInfo(const char *name, void *nolink, int nolinksize) 
 	{ subscribe((char *)name, 0, nolink, nolinksize, 0); };
 	DimUpdatedInfo(const char *name, int time, void *nolink, int nolinksize) 
@@ -258,9 +258,9 @@ public :
 	DimUpdatedInfo(const char *name, int time, short nolink, DimInfoHandler *handler) 
 	{ subscribe((char *)name, time, &nolink, sizeof(short), handler); };
 	DimUpdatedInfo(const char *name, char *nolink, DimInfoHandler *handler) 
-	{ subscribe((char *)name, 0, nolink, strlen(nolink)+1, handler); };
+	{ subscribe((char *)name, 0, nolink, (int)strlen(nolink)+1, handler); };
 	DimUpdatedInfo(const char *name, int time, char *nolink, DimInfoHandler *handler) 
-	{ subscribe((char *)name, time, nolink, strlen(nolink)+1, handler); };
+	{ subscribe((char *)name, time, nolink, (int)strlen(nolink)+1, handler); };
 	DimUpdatedInfo(const char *name, void *nolink, int nolinksize, DimInfoHandler *handler) 
 	{ subscribe((char *)name, 0, nolink, nolinksize, handler); };
 	DimUpdatedInfo(const char *name, int time, void *nolink, int nolinksize, DimInfoHandler *handler) 
@@ -309,7 +309,7 @@ public :
 	DimCurrentInfo(const char *name, short nolink) { 
 		subscribe((char *)name, 0, &nolink, sizeof(short)); };
 	DimCurrentInfo(const char *name, char *nolink) { 
-		subscribe((char *)name, 0, nolink, strlen(nolink)+1); };
+		subscribe((char *)name, 0, nolink, (int)strlen(nolink)+1); };
 	DimCurrentInfo(const char *name, void *nolink, int nolinksize) { 
 		subscribe((char *)name, 0, nolink, nolinksize); };
 	DimCurrentInfo(const char *name, int time, int nolink) { 
@@ -323,7 +323,7 @@ public :
 	DimCurrentInfo(const char *name, int time, short nolink) { 
 		subscribe((char *)name, time, &nolink, sizeof(short)); };
 	DimCurrentInfo(const char *name, int time, char *nolink) { 
-		subscribe((char *)name, time, nolink, strlen(nolink)+1); };
+		subscribe((char *)name, time, nolink, (int)strlen(nolink)+1); };
 	DimCurrentInfo(const char *name, int time, void *nolink, int nolinksize) { 
 		subscribe((char *)name, time, nolink, nolinksize); };
 
@@ -376,7 +376,7 @@ public :
 	DimRpcInfo(const char *name, short nolink) { 
 		subscribe((char *)name, 0, 0, &nolink, sizeof(short), 0); };
 	DimRpcInfo(const char *name, char *nolink) { 
-		subscribe((char *)name, 0, 0, nolink, strlen(nolink)+1, 0); };
+		subscribe((char *)name, 0, 0, nolink, (int)strlen(nolink)+1, 0); };
 	DimRpcInfo(const char *name, void *nolink, int nolinksize) { 
 		subscribe((char *)name, 0, 0, nolink, nolinksize, 0); };
 
@@ -391,7 +391,7 @@ public :
 	DimRpcInfo(const char *name, int time, short nolink) { 
 		subscribe((char *)name, 0, 0, &nolink, sizeof(short), time); };
 	DimRpcInfo(const char *name, int time, char *nolink) { 
-		subscribe((char *)name, 0, 0, nolink, strlen(nolink)+1, time); };
+		subscribe((char *)name, 0, 0, nolink, (int)strlen(nolink)+1, time); };
 	DimRpcInfo(const char *name, int time, void *nolink, int nolinksize) { 
 		subscribe((char *)name, 0, 0, nolink, nolinksize, time); };
 	
@@ -416,7 +416,7 @@ public :
 	void setData(double &data) { doIt(&data, sizeof(double)); } ;
 	void setData(longlong &data) { doIt(&data, sizeof(longlong)); } ;
 	void setData(short &data) { doIt(&data, sizeof(short)); } ;
-	void setData(char *data)  { doIt(data, strlen(data)+1); } ;
+	void setData(char *data)  { doIt(data, (int)strlen(data)+1); } ;
 
 private :
 	char *itsName;

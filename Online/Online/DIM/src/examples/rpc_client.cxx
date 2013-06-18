@@ -40,7 +40,7 @@ void do_work(void *tag)
 	char name[64];
 	int out, in;
 	
-	sprintf(name,"TESTRPC%d/INT",(long)tag);
+	sprintf(name,"TESTRPC%d/INT",(dim_long)tag);
 	myRpc = new DimRpcInfo(name, 10, -1);
 //	myRpc = new Rpc(name);
 
@@ -53,7 +53,7 @@ void do_work(void *tag)
 		in = myRpc->getInt();
 dim_lock();
 dim_print_date_time();
-cout << "Instance "<<(long)tag<<" sent "<<out<< " got "<<in <<endl;
+cout << "Instance "<<(dim_long)tag<<" sent "<<out<< " got "<<in <<endl;
 dim_unlock();
 		out++;
 	}

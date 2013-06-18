@@ -63,13 +63,13 @@ float atlas_arr[10];
 */
 int main(int argc, char **argv)
 {
-	int i, id, *ptr/*, big_ids[20]*/;
+	int i, id/*, big_ids[20]*/;
 	char aux[80];
 	char name[84]/*, name1[132]*/;
 /*
 	int on = 0;
 */
-	long dnsid = 0;
+	dim_long dnsid = 0;
 	char extra_dns[128];
 	int new_dns = 0;
 	int index = 0;
@@ -96,6 +96,7 @@ dis_set_debug_on();
 	new_dns = dim_get_env_var("EXTRA_DNS_NODE", extra_dns, sizeof(extra_dns));
 	if(new_dns)
 		dnsid = dis_add_dns(extra_dns,0);
+	if(dnsid){}
 /*
 	buf_sz = dim_get_write_buffer_size();
 	dim_set_write_buffer_size(10000000);
@@ -108,7 +109,7 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 	for(i = 0; i< 10; i++)
 	{
 		sprintf(str[i],"%s/Service_%03d",argv[1],i);
-		dis_add_service( str[i], "C", str[i], strlen(str[i])+1, 
+		dis_add_service( str[i], "C", str[i], (int)strlen(str[i])+1, 
 			(void *)0, 0 );
 	}
 	t.i = 123;
@@ -119,12 +120,12 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 	t.t = 12;
 	t.c = 'a';
 	t.f = (float)4.56;
-	ptr = (int *)&t;
 	strcpy(t.str,"hello world");
 
 	sprintf(aux,"%s/TEST_SWAP",argv[1]);
 	id = dis_add_service( aux, "l:3;d:1;s:1;c:1;s:1;f:1;c:20", &t, sizeof(t), 
 		(void *)0, 0 );
+	if(id){}
 	sprintf(aux,"%s/TEST_CMD",argv[1]);
 	dis_add_cmnd(aux,"l:3;d:1;s:1;c:1;s:1;f:1;c:20",cmnd_rout, 0);
 
@@ -177,7 +178,9 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 		pause();
 		*/
 		sleep(10);
+/*
 		dis_update_service(id);
+*/
 /*		
 		for(i = 1; i <= 200; i++)
 		{
@@ -191,7 +194,7 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 			{
 				sprintf(more_str[curr_more_index],"%s/More_Service_%03d",argv[1],curr_more_index);
 				more_ids[curr_more_index] = dis_add_service( more_str[curr_more_index], "C", 
-					more_str[curr_more_index], strlen(more_str[curr_more_index])+1, 
+					more_str[curr_more_index], (int)strlen(more_str[curr_more_index])+1, 
 					(void *)0, 0 );
 printf("Adding service %s\n",more_str[curr_more_index]);
 				curr_more_index++;

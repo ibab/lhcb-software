@@ -19,18 +19,30 @@ static void user_routine(void *tagp, void *bufp, int *size)
 	t = * (DimInfo **)tagp;
 	if(DimClient::getNoDataCopy() == 0)
 	{
-		if(!t->itsDataSize)
+		if(*size > 0)
 		{
-			t->itsData = new char[*size];
-			t->itsDataSize = *size;
+			if(!t->itsDataSize)
+			{
+				t->itsData = new char[*size];
+				t->itsDataSize = *size;
+			}
+			else if(t->itsDataSize < *size)
+			{
+				delete[] (char *)(t->itsData);
+				t->itsData = new char[*size];
+				t->itsDataSize = *size;
+			}
+			memcpy(t->itsData, buf, (size_t)*size);
 		}
-		else if(t->itsDataSize < *size)
+		else if (*size == 0)
 		{
-			delete[] (char *)(t->itsData);
-			t->itsData = new char[*size];
-			t->itsDataSize = *size;
+			if(t->itsDataSize)
+			{
+				delete[] (char *)(t->itsData);
+				t->itsDataSize = 0;
+			}
+			t->itsData = buf;
 		}
-		memcpy(t->itsData, buf, *size);
 	}
 	else
 	{
@@ -70,7 +82,7 @@ void DimInfo::infoHandler()
 			itsData = new char[itsSize];
 			itsDataSize = itsSize;
 		}
-		memcpy(itsData, data, itsSize);
+		memcpy(itsData, data, (size_t)itsSize);
 	}
 }
 
@@ -82,7 +94,7 @@ void DimInfo::doIt()
 //	itsTagId = id_get((void *)this, SRC_DIC);
 	itsId = dic_info_service(itsName,itsType,itsTime, 0, 0,
 //		user_routine, itsTagId, 
-		user_routine, (long)this, 
+		user_routine, (dim_long)this, 
 		itsNolinkBuf, itsNolinkSize);
 	ENABLE_AST
 }
@@ -112,17 +124,17 @@ char *DimInfo::getFormat()
 
 	if(itsFormat)
 	{
-		len = strlen(itsFormat)+1;
+		len = (int)strlen(itsFormat)+1;
 		if(len > 1)
 			return itsFormat;
 	}
 	def = dic_get_format(itsId);
-	new_len = strlen(def)+1;
+	new_len = (int)strlen(def)+1;
 	if(new_len > len)
 	{
 		if(itsFormat)
 			delete[] itsFormat;
-		itsFormat = new char[strlen(def)+1];
+		itsFormat = new char[(int)strlen(def)+1];
 	}
 	strcpy(itsFormat, def);
 	return itsFormat;
@@ -133,7 +145,7 @@ void DimInfo::timerHandler()
 //	itsTagId = id_get((void *)this, SRC_DIC);
 	itsId = dic_info_service(itsName,itsType,itsTime, 0, 0,
 //		user_routine, itsTagId, 
-		user_routine, (long)this, 
+		user_routine, (dim_long)this, 
 		itsNolinkBuf, itsNolinkSize);
 }
 
@@ -153,13 +165,15 @@ void DimInfo::subscribe(char *name, int time, void *nolink, int nolinksize,
 	{
 		return;
 	}
-	itsName = new char[strlen(name)+1];
+	itsName = new char[(int)strlen(name)+1];
 	strcpy(itsName,name);
+	itsNolinkBuf = nolink;
+	itsNolinkSize = nolinksize;
 	if(nolinksize > 0)
 	{
 		itsNolinkBuf = new char[nolinksize];
 		itsNolinkSize = nolinksize;
-		memcpy(itsNolinkBuf, nolink, nolinksize);
+		memcpy(itsNolinkBuf, nolink, (size_t)nolinksize);
 	}
 	if(!time)
 	{
@@ -217,7 +231,7 @@ void DimStampedInfo::doIt()
 //	itsTagId = id_get((void *)this, SRC_DIC);
 	itsId = dic_info_service_stamped(itsName,itsType,itsTime, 0, 0,
 //		user_routine, itsTagId, 
-		user_routine, (long)this, 
+		user_routine, (dim_long)this, 
 		itsNolinkBuf, itsNolinkSize);
 	ENABLE_AST
 }
@@ -238,13 +252,15 @@ void DimStampedInfo::subscribe(char *name, int time, void *nolink, int nolinksiz
 	{
 		return;
 	}
-	itsName = new char[strlen(name)+1];
+	itsName = new char[(int)strlen(name)+1];
 	strcpy(itsName,name);
+	itsNolinkBuf = nolink;
+	itsNolinkSize = nolinksize;
 	if(nolinksize > 0)
 	{
 		itsNolinkBuf = new char[nolinksize];
 		itsNolinkSize = nolinksize;
-		memcpy(itsNolinkBuf, nolink, nolinksize);
+		memcpy(itsNolinkBuf, nolink, (size_t)nolinksize);
 	}
 	if(!time)
 	{
@@ -275,7 +291,7 @@ void DimUpdatedInfo::doIt()
 //	itsTagId = id_get((void *)this, SRC_DIC);
 	itsId = dic_info_service_stamped(itsName,itsType,itsTime, 0, 0,
 //		user_routine, itsTagId, 
-		user_routine, (long)this, 
+		user_routine, (dim_long)this, 
 		itsNolinkBuf, itsNolinkSize);
 	ENABLE_AST
 }
@@ -296,13 +312,15 @@ void DimUpdatedInfo::subscribe(char *name, int time, void *nolink, int nolinksiz
 	{
 		return;
 	}
-	itsName = new char[strlen(name)+1];
+	itsName = new char[(int)strlen(name)+1];
 	strcpy(itsName,name);
+	itsNolinkBuf = nolink;
+	itsNolinkSize = nolinksize;
 	if(nolinksize > 0)
 	{
 		itsNolinkBuf = new char[nolinksize];
 		itsNolinkSize = nolinksize;
-		memcpy(itsNolinkBuf, nolink, nolinksize);
+		memcpy(itsNolinkBuf, nolink, (size_t)nolinksize);
 	}
 	if(!time)
 	{
@@ -331,18 +349,30 @@ static void data_user_routine(void *tagp, void *bufp, int *size)
 
 //	t = (DimCurrentInfo *)id_get_ptr(id, SRC_DIC);
 	t = * (DimCurrentInfo **)tagp;
-	if(!t->itsDataSize)
+	if(*size > 0)
 	{
-		t->itsData = new char[*size];
-		t->itsDataSize = *size;
+		if(!t->itsDataSize)
+		{
+			t->itsData = new char[*size];
+			t->itsDataSize = *size;
+		}
+		else if(t->itsDataSize < *size)
+		{
+			delete[] (char *)(t->itsData);
+			t->itsData = new char[*size];
+			t->itsDataSize = *size;
+		}
+		memcpy(t->itsData, buf, (size_t)*size);
 	}
-	else if(t->itsDataSize < *size)
+	else if (*size == 0)
 	{
-		delete[] (char *)(t->itsData);
-		t->itsData = new char[*size];
-		t->itsDataSize = *size;
+		if(t->itsDataSize)
+		{
+			delete[] (char *)(t->itsData);
+			t->itsDataSize = 0;
+		}
+		t->itsData = buf;
 	}
-	memcpy(t->itsData, buf, *size);
 	t->itsSize = *size;
 	t->wakeUp = 1;
 #ifdef __VMS
@@ -373,13 +403,15 @@ void DimCurrentInfo::subscribe(char *name, int time, void *nolink, int nolinksiz
 	{
 		return;
 	}
-	itsName = new char[strlen(name)+1];
+	itsName = new char[(int)strlen(name)+1];
 	strcpy(itsName,name);
+	itsNolinkBuf = nolink;
+	itsNolinkSize = nolinksize;
 	if(nolinksize > 0)
 	{
 		itsNolinkBuf = new char[nolinksize];
 		itsNolinkSize = nolinksize;
-		memcpy(itsNolinkBuf, nolink, nolinksize);
+		memcpy(itsNolinkBuf, nolink, (size_t)nolinksize);
 	}
 	if(!time)
 		timeout = 10;
@@ -389,7 +421,7 @@ void DimCurrentInfo::subscribe(char *name, int time, void *nolink, int nolinksiz
 //	itsTagId = id_get((void *)this, SRC_DIC);
 	dic_info_service(itsName,ONCE_ONLY,timeout, 0, 0,
 //		data_user_routine, itsTagId, 
-		data_user_routine, (long)this, 
+		data_user_routine, (dim_long)this, 
 		itsNolinkBuf, itsNolinkSize);
 }
 
@@ -463,7 +495,7 @@ int DimCmnd::send(char *name, void *data, int datasize)
 //		id = id_get((void *)this, SRC_DIC);
 		dic_cmnd_callback(name, data, datasize, 
 //			cmnd_done, id);
-			cmnd_done, (long)this);
+			cmnd_done, (dim_long)this);
 		while(!wakeUp)
 		{
 #ifdef __VMS
@@ -502,16 +534,27 @@ static void rpc_user_routine(void *tagp, void *bufp, int *sizep)
 	}
 	if(DimClient::getNoDataCopy() == 0)
 	{
-		if(!t->itsDataSize)
+		if(size > 0)
 		{
-			t->itsData = new char[size];
-			t->itsDataSize = size;
+			if(!t->itsDataSize)
+			{
+				t->itsData = new char[size];
+				t->itsDataSize = size;
+			}
+			else if(t->itsDataSize < size)
+			{
+				delete[] (char *)(t->itsData);
+				t->itsData = new char[size];
+				t->itsDataSize = size;
+			}
 		}
-		else if(t->itsDataSize < size)
+		else if (size == 0)
 		{
-			delete[] (char *)(t->itsData);
-			t->itsData = new char[size];
-			t->itsDataSize = size;
+			if(t->itsDataSize)
+			{
+				delete[] (char *)(t->itsData);
+				t->itsDataSize = 0;
+			}
 		}
 	}
 	if(!t->itsConnected)
@@ -524,7 +567,12 @@ static void rpc_user_routine(void *tagp, void *bufp, int *sizep)
 //dim_print_date_time();
 //printf("DIM RPC: Stopped Timer, Data Received for %s\n", t->getName());
 		if(DimClient::getNoDataCopy() == 0)
-			memcpy(t->itsData, buf, size);
+		{
+			if(size > 0)
+				memcpy(t->itsData, buf, (size_t)size);
+			else
+				t->itsData = buf;
+		}
 		else
 			t->itsData = buf;
 		t->itsSize = size;
@@ -556,22 +604,38 @@ void DimRpcInfo::timerHandler()
 
 	if(DimClient::getNoDataCopy() == 0)
 	{
-		if(!itsDataSize)
+		if(size > 0)
 		{
-			itsData = new char[size];
-			itsDataSize = size;
+			if(!itsDataSize)
+			{
+				itsData = new char[size];
+				itsDataSize = size;
+			}
+			else if(itsDataSize < size)
+			{
+				delete[] (char *)(itsData);
+				itsData = new char[size];
+				itsDataSize = size;
+			}
 		}
-		else if(itsDataSize < size)
+		else if (size == 0)
 		{
-			delete[] (char *)(itsData);
-			itsData = new char[size];
-			itsDataSize = size;
+			if(itsDataSize)
+			{
+				delete[] (char *)(itsData);
+				itsDataSize = 0;
+			}
 		}
 	}
 	if(itsWaiting)
 	{
 		if(DimClient::getNoDataCopy() == 0)
-			memcpy(itsData, buf, size);
+		{
+			if(size > 0)
+				memcpy(itsData, buf, (size_t)size);
+			else
+				itsData = buf;
+		}
 		else
 			itsData = buf;
 		itsSize = size;
@@ -611,7 +675,7 @@ void DimRpcInfo::rpcInfoHandler()
 			itsData = new char[itsSize];
 			itsDataSize = itsSize;
 		}
-		memcpy(itsData, data, itsSize);
+		memcpy(itsData, data, (size_t)itsSize);
 	}
 }
 
@@ -623,20 +687,25 @@ void DimRpcInfo::subscribe(char *name, void *data, int size,
 //	itsTagId = 0;
 	itsInit = 0;
 	itsWaiting = 0;
-	itsName = new char[strlen(name)+1];
+	itsName = new char[(int)strlen(name)+1];
 	strcpy(itsName,name);
 	itsHandler = this;
 	itsDataSize = 0;
 	itsData = 0;
 	itsDataOutSize = 0;
 	itsDataOut = 0;
-	itsNolinkBuf = new char[nolinksize];
+	itsNolinkBuf = nolink;
 	itsNolinkSize = nolinksize;
-	memcpy(itsNolinkBuf, nolink, nolinksize);
-	itsNameOut = new char[strlen(name)+1+10];
+	if(nolinksize > 0)
+	{
+		itsNolinkBuf = new char[nolinksize];
+		itsNolinkSize = nolinksize;
+		memcpy(itsNolinkBuf, nolink, (size_t)nolinksize);
+	}
+	itsNameOut = new char[(int)strlen(name)+1+10];
 	strcpy(itsNameOut,name);
 	strcat(itsNameOut,(char *)"/RpcIn");
-	itsNameIn = new char[strlen(name)+1+10];
+	itsNameIn = new char[(int)strlen(name)+1+10];
 	strcpy(itsNameIn,name);
 	strcat(itsNameIn,(char *)"/RpcOut");
 	itsTimeout = timeout;
@@ -652,7 +721,7 @@ void DimRpcInfo::subscribe(char *name, void *data, int size,
 			itsId = dic_info_service_stamped(itsNameIn,MONIT_FIRST,itsTimeout, 
 				0, 0,
 //				rpc_user_routine, itsTagId, 
-				rpc_user_routine, (long)itsHandler, 
+				rpc_user_routine, (dim_long)itsHandler, 
 				itsNolinkBuf, itsNolinkSize);
 //			dim_usleep(200000);
 			itsInit = 1;
@@ -682,7 +751,7 @@ void DimRpcInfo::doIt(void *data, int size)
 			itsDataOut = new char[size];
 			itsDataOutSize = size;
 		}
-		memcpy(itsDataOut, data, size);
+		memcpy(itsDataOut, data, (size_t)size);
 	}
 	else
 	{
@@ -703,7 +772,7 @@ void DimRpcInfo::doIt(void *data, int size)
 //dim_print_date_time();
 //printf("DIM RPC: Stopped Timer, Command failed for %s\n", itsName);
 //		rpc_user_routine((int *)&itsTagId, itsNolinkBuf, &itsNolinkSize);
-		rpc_user_routine((long *)&itsHandler, itsNolinkBuf, &itsNolinkSize);
+		rpc_user_routine((dim_long *)&itsHandler, itsNolinkBuf, &itsNolinkSize);
 	}
 /*
 	else
@@ -813,7 +882,7 @@ int DimBrowser::getServers(int timeout)
 	int size, totsize;
 	DimCurrentInfo srv((char *)"DIS_DNS/SERVER_LIST", timeout, (char *)"\0");
 	str = srv.getString();
-	size = strlen(str)+1;
+	size = (int)strlen(str)+1;
 	totsize = srv.getSize();
 
 	if(itsData[1])
@@ -824,7 +893,7 @@ int DimBrowser::getServers(int timeout)
 		return(0);
 	if(totsize > size)
 	{
-		pid_str = str + strlen(str) + 1;
+		pid_str = str + (int)strlen(str) + 1;
 		if(itsData[4])
 			delete itsData[4];
 		itsData[4] = new TokenString(pid_str,(char *)"|"); 
@@ -840,7 +909,7 @@ int DimBrowser::getServerServices(const char *serverName)
 int DimBrowser::getServerServices(const char *serverName, int timeout) 
 {
 	char *str;
-	char *name = new char[strlen(serverName) + 20];
+	char *name = new char[(int)strlen(serverName) + 20];
 	strcpy(name,(char *)serverName);
 	strcat(name,(char *)"/SERVICE_LIST");
 	DimCurrentInfo srv(name, timeout, (char *)"\0");
@@ -863,7 +932,7 @@ int DimBrowser::getServerClients(const char *serverName)
 int DimBrowser::getServerClients(const char *serverName, int timeout) 
 {
 	char *str;
-	char *name = new char[strlen(serverName) + 20];
+	char *name = new char[(int)strlen(serverName) + 20];
 	strcpy(name,(char *)serverName);
 	strcat(name,(char *)"/CLIENT_LIST");
 	DimCurrentInfo srv(name, timeout, (char *)"\0");
@@ -1059,7 +1128,7 @@ int DimClient::sendCommand(const char *name, short data)
 int DimClient::sendCommand(const char *name, const char *data)
 { 
 	DimCmnd a;
-	return a.send((char *)name, (char *)data, strlen(data)+1);
+	return a.send((char *)name, (char *)data, (int)strlen(data)+1);
 }
 
 int DimClient::sendCommand(const char *name, void *data, int datasize)
@@ -1101,7 +1170,7 @@ void DimClient::sendCommandNB(const char *name, short data)
 void DimClient::sendCommandNB(const char *name, char *data)
 {
 	DimCmnd a;
-	a.sendNB((char *)name, data, strlen(data)+1);
+	a.sendNB((char *)name, data, (int)strlen(data)+1);
 }
 
 void DimClient::sendCommandNB(const char *name, void *data, int datasize)
@@ -1114,7 +1183,7 @@ int DimClient::setExitHandler(const char *srvName)
 {
 	DimCmnd a;
 	int ret, tag = 1;
-	char *name = new char[strlen(srvName) + 20];
+	char *name = new char[(int)strlen(srvName) + 20];
 	strcpy(name,(char *)srvName);
 	strcat(name,"/SET_EXIT_HANDLER");
 	ret =  a.send(name, &tag, sizeof(int));
@@ -1126,7 +1195,7 @@ int DimClient::killServer(const char *srvName)
 {
 	DimCmnd a;
 	int ret, tag = 1;
-	char *name = new char[strlen(srvName) + 20];
+	char *name = new char[(int)strlen(srvName) + 20];
 	strcpy(name,(char *)srvName);
 	strcat(name,"/EXIT");
 	ret = a.send(name, &tag, sizeof(int));

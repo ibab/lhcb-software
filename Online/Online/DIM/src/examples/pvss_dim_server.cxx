@@ -226,7 +226,7 @@ int main()
 //		simpleData += (float)1;
 //		simpleService.updateService();
 
-		if(strlen(cData.str) < 16)
+		if((int)strlen(cData.str) < 16)
 			strcat(cData.str," abc");
 		cTestService.updateService();
 	}

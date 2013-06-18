@@ -3,7 +3,7 @@
 
 TokenString::TokenString(char *str)
 {
-	token_buff = new char[(strlen(str)+1)*2];
+	token_buff = new char[((int)strlen(str)+1)*2];
 	token_ptr = token_buff;
 	token_seps = 0;
 	store_str(str);
@@ -13,9 +13,9 @@ TokenString::TokenString(char *str)
 
 TokenString::TokenString(char *str, char *seps)
 {
-	token_buff = new char[(strlen(str)+1)*2];
+	token_buff = new char[((int)strlen(str)+1)*2];
 	token_ptr = token_buff;
-	token_seps = new char[(strlen(seps)+1)];
+	token_seps = new char[((int)strlen(seps)+1)];
 	strcpy(token_seps,seps);
 	store_str(str);
 	token_ptr = token_buff;
@@ -153,7 +153,7 @@ int TokenString::getToken(char *&token)
 	}
 
 	curr_token_ptr = token_ptr;
-    token_ptr += strlen(curr_token_ptr)+1;
+    token_ptr += (int)strlen(curr_token_ptr)+1;
 	token = curr_token_ptr;
 
 	return(1);

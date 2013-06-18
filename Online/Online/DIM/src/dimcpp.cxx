@@ -93,7 +93,7 @@ int DimThread::start()
 {
 	if(!itsId)
 	{
-		itsId = dim_start_thread(thread_user_routine, this);
+		itsId = (long)dim_start_thread(thread_user_routine, this);
 		return 1;
 	}
 	return 0;
