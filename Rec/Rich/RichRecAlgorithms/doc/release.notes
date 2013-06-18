@@ -4,6 +4,9 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2013-06-18 - Marco Cattaneo
+ - Add missing dependency on TrackInterfaces
+
 !========================= RichRecAlgorithms v2r20 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.

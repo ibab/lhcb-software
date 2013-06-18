@@ -17,6 +17,7 @@ include_path      none
 # Used packages
 #============================================================================
 use RichRecBase       v*  Rich
+use TrackInterfaces   v*  Tr
 
 #============================================================================
 # Component library building rule
