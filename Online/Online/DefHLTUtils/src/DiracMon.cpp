@@ -419,10 +419,9 @@ int find_lhcbprod_tmsrv()
     string filen = "/proc/"+procs[i]+"/cmdline";
     FILE *f=fopen(filen.c_str(),"r");
     if (f == 0) continue;
-//      char *stat = fgets(line,sizeof(line),f);
     size_t cnt = fread(line,1,sizeof(line),f);
     fclose(f);
-    if (stat == 0) continue;
+    if (cnt == 0) continue;
     cmdline.assign(line,cnt);
     for (unsigned int j=0;j<cmdline.size();j++)
     {
