@@ -24,7 +24,7 @@ use Controller          v0r3     Online
 use ControllerTests     v0r2     Online
 use DailyReport         v1r2     Online
 use DefHLTUtils         v1r3     Online
-use DIM                 v19r37   Online
+use DIM                 v20r7    Online
 use FarmMonitor         v2r12    Online
 use Gaucho              v7r29    Online
 use GauchoAppl          v1r8     Online
