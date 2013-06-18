@@ -8,7 +8,7 @@
 #include <vector>
 #include "Event/RecVertex.h"
 #include "Event/VertexBase.h"
-
+#include "Event/TwoProngVertex.h"
 // end include files
 
 namespace 
@@ -20,6 +20,7 @@ namespace
     std::vector<const LHCb::VertexBase*> _i2;
     std::pair<int,float>                 _i3;
     std::vector<std::pair<int,float> >   _i4;
+    Gaudi::SymMatrix9x9                  _i5;
     // end instantiations
   };
 }
