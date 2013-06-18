@@ -31,6 +31,9 @@ macro_append  DefUtil_shlibflags ${ROOT_linkopts}
 
 #macro_append HLTFileEqualizer_linkopts " -lDefHLTUtils " WIN32 " libHist.lib "
 
+application DiracMon ../src/DiracMon.cpp
+macro_append  DiracMon_linkopts    ' -pthread '
+
 application HLTFileEqualizer ../src/HLTFileEqualizer.cpp
 macro_append  HLTFileEqualizer_dependencies    " DefUtil "
 #macro_append  HLTFileEqualizer_linkopts    " -lDefUtil "
@@ -47,6 +50,5 @@ application DefHltPlot ../src/DefHltPlot.cpp
 #macro_append  DefHltPlot_dependencies   " GaucholLib "
 macro_append  DefHltPlot_dependencies    " DefUtil "
 #macro_append  DefHltPlot_linkopts    " -lDefUtil "
-
 # component library
 
