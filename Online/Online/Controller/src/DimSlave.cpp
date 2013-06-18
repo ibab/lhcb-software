@@ -105,9 +105,9 @@ FSM::ErrCond DimSlave::inquireState() {
 
 /// Start the slave's transition timeout
 DimSlave& DimSlave::startTimer(int reason, const void* param)   {
-  const TypedObject* p = (const TypedObject*)param;
   TimeoutTable::const_iterator i=m_timeouts.find(param);
   int tmo = i==m_timeouts.end() ? m_tmo : (*i).second;
+  //const TypedObject* p = (const TypedObject*)param;
   //display(WARNING,c_name(),"Start timer with %d seconds on %p -- %s",tmo,p,TypedObject::c_name(p));
   if ( m_timerID.first ) ::dtq_stop_timer(m_timerID.first);
   m_timerID = TimerID(this,reason);
