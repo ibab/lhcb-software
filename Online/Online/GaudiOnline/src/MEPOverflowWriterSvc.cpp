@@ -34,7 +34,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdio.h>
-#include <time.h>
+#include "time.h"
 #include <errno.h>
 #include "dic.hxx"
 
@@ -48,6 +48,34 @@ using namespace LHCb;
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPOverflowWriterSvc)
 
+extern "C"
+{
+  void *CloseFiles(void *a)
+  {
+    std::list<FileDescr*>::iterator i;
+    MEPOverflowWriterSvc *tis = (MEPOverflowWriterSvc*)a;
+    while (!tis->m_texit)
+    {
+      tis->LockList();
+      i = tis->m_FileCloseList.begin();
+      time_t now = time(0);
+      while (i != tis->m_FileCloseList.end())
+      {
+        if (now > (*i)->m_CloseAt)
+        {
+          close ((*i)->m_Handle);
+        }
+        tis->m_FileCloseList.erase(i);
+        delete (*i);
+        i = tis->m_FileCloseList.begin();
+      }
+      tis->UnlockList();
+      sleep(10);
+    }
+    return 0;
+  }
+}
+
 // Standard Constructor
 MEPOverflowWriterSvc::MEPOverflowWriterSvc(const string& nam, ISvcLocator* svc) :
   OnlineService(nam, svc), m_mepMgr(0), m_consumer(0),
@@ -59,14 +87,21 @@ MEPOverflowWriterSvc::MEPOverflowWriterSvc(const string& nam, ISvcLocator* svc) 
   declareProperty("Requirements", m_req);
   declareProperty("MEPManager", m_mepMgrName = "LHCb::MEPManager/MEPManager");
   declareProperty("RoutingBits", m_routingBits = 0x400);
-  declareProperty("FilePrefix", m_FilePrefix="/localdisk/overflow/Run_");
+  declareProperty("MEPFilePrefix", m_FilePrefixMEP="/localdisk/overflow/Run_");
+  declareProperty("EvtFilePrefix", m_FilePrefixEvt="/localdisk/HLT1/Run_");
   declareProperty("SizeLimit", m_SizeLimit=250);
+  declareProperty("FileCloseDelay",m_FileCloseDelay=10);
   m_RunList.clear();
+  m_texit = false;
+  pthread_mutex_init(&m_listlock,0);
+  pthread_create(&m_tid,NULL,&CloseFiles,this);
 }
 
 // Standard Destructor
 MEPOverflowWriterSvc::~MEPOverflowWriterSvc()
 {
+  pthread_cancel(m_tid);
+  pthread_mutex_destroy(&m_listlock);
 }
 
 // IInterface implementation: Query interface
@@ -164,63 +199,135 @@ StatusCode MEPOverflowWriterSvc::run()
   for (int sc = m_consumer->getEvent(); sc == MBM_NORMAL && m_receiveEvts; sc = m_consumer->getEvent())
   {
     const EventDesc& e = m_consumer->event();
-    MEPEVENT* ev = (MEPEVENT*) e.data;
-    MEPEvent* me = (MEPEvent*) ev->data;
-    m_mepIn++;
-    unsigned int runnr = getRunNumber(me);
-    if (m_RunNumber == 0)
+    switch (e.type)
     {
-      m_RunNumber = runnr;
-      RunDesc *r = new RunDesc;
-      r->m_RunNumber = m_RunNumber;
-      r->m_Files = 0;
-      m_RunList[m_RunNumber] = r;
-      m_FileDesc = openFile(m_RunNumber);
-      CreateMonitoringInfo(m_RunNumber);
-    }
-    else
-    {
-      if (m_RunNumber != runnr)
+      case EVENT_TYPE_MEP:
       {
-        close(m_FileDesc->m_Handle);
-        m_FileDesc->state = C_CLOSED;
-        m_RunNumber = runnr;
-        RunDesc *r = new RunDesc;
-        r->m_RunNumber = m_RunNumber;
-        r->m_Files = 0;
-        m_RunList[m_RunNumber] = r;
-        m_FileDesc = openFile(m_RunNumber);
-        CreateMonitoringInfo(m_RunNumber);
+        MEPEVENT* ev = (MEPEVENT*) e.data;
+        MEPEvent* me = (MEPEvent*) ev->data;
+        m_mepIn++;
+        unsigned int runnr = getRunNumber(me);
+        if (m_RunNumber == 0)
+        {
+          m_RunNumber = runnr;
+          RunDesc *r = new RunDesc;
+          r->m_RunNumber = m_RunNumber;
+          r->m_Files = 0;
+          m_RunList[m_RunNumber] = r;
+          m_FileDesc = openFile(m_RunNumber,FILETYPE_MEP);
+          CreateMonitoringInfo(m_RunNumber);
+        }
+        else
+        {
+          if (m_RunNumber != runnr)
+          {
+            Markclose(m_FileDesc);
+            m_FileDesc->state = C_CLOSED;
+            m_RunNumber = runnr;
+            RunDesc *r = new RunDesc;
+            r->m_RunNumber = m_RunNumber;
+            r->m_Files = 0;
+            m_RunList[m_RunNumber] = r;
+            m_FileDesc = openFile(m_RunNumber,FILETYPE_MEP);
+            CreateMonitoringInfo(m_RunNumber);
+          }
+        }
+        RunDesc *r = m_RunList[m_RunNumber];
+        m_FileDesc = r->m_CurrentFileDescr;
+        ssize_t status;
+        size_t towrite = me->size()+me->sizeOf();
+        status = Write(m_FileDesc->m_Handle, me, towrite);
+        if (status == -1)
+        {
+          continue;
+        }
+        else
+        {
+          m_BytesOut += me->m_size;
+          r->m_MEPs++;
+          m_mepOut++;
+          m_FileDesc->m_BytesWritten += me->size();
+          m_FileDesc->m_BytesWritten += me->sizeOf();
+          r->m_BytesWritten += me->size();
+          r->m_BytesWritten += me->sizeOf();
+          if (m_FileDesc->m_BytesWritten >this->m_SizeLimit)
+          {
+            Markclose(m_FileDesc);
+            m_FileDesc->state = C_CLOSED;
+            m_FileDesc = openFile(m_RunNumber,FILETYPE_MEP);
+          }
+          continue;
+        }
+        break;
       }
-    }
-    RunDesc *r = m_RunList[m_RunNumber];
-    m_FileDesc = r->m_CurrentFileDescr;
-    ssize_t status;
-    size_t towrite = me->size()+me->sizeOf();
-    status = Write(m_FileDesc->m_Handle, me, towrite);
-    if (status == -1)
-    {
-      continue;
-    }
-    else
-    {
-      m_BytesOut += me->m_size;
-      r->m_MEPs++;
-      m_mepOut++;
-      m_FileDesc->m_BytesWritten += me->size();
-      m_FileDesc->m_BytesWritten += me->sizeOf();
-      r->m_BytesWritten += me->size();
-      r->m_BytesWritten += me->sizeOf();
-      if (m_FileDesc->m_BytesWritten >this->m_SizeLimit)
+      case EVENT_TYPE_EVENT:
       {
-        close(m_FileDesc->m_Handle);
-        m_FileDesc->state = C_CLOSED;
-        m_FileDesc = openFile(m_RunNumber);
+        RawBank *ev = (RawBank*)e.data;
+        MDFHeader *mdf = (MDFHeader*)ev->data();
+        m_EvIn++;
+        unsigned int runnr = mdf->subHeader().H1->runNumber();
+        if (m_RunNumber == 0)
+        {
+          m_RunNumber = runnr;
+          RunDesc *r = new RunDesc;
+          r->m_RunNumber = m_RunNumber;
+          r->m_Files = 0;
+          m_RunList[m_RunNumber] = r;
+          m_FileDesc = openFile(m_RunNumber,FILETYPE_EVENT);
+          CreateMonitoringInfo(m_RunNumber);
+        }
+        else
+        {
+          if (m_RunNumber != runnr)
+          {
+//            close(m_FileDesc->m_Handle);
+//            m_FileDesc->state = C_CLOSED;
+            Markclose(m_FileDesc);
+            m_RunNumber = runnr;
+            RunDesc *r = new RunDesc;
+            r->m_RunNumber = m_RunNumber;
+            r->m_Files = 0;
+            m_RunList[m_RunNumber] = r;
+            m_FileDesc = openFile(m_RunNumber,FILETYPE_EVENT);
+            CreateMonitoringInfo(m_RunNumber);
+          }
+        }
+        RunDesc *r = m_RunList[m_RunNumber];
+        m_FileDesc = r->m_CurrentFileDescr;
+        ssize_t status;
+        size_t towrite = e.len - ev->hdrSize();
+        status = Write(m_FileDesc->m_Handle, mdf, towrite);
+        if (status == -1)
+        {
+          continue;
+        }
+        else
+        {
+          m_BytesOut += towrite;
+          r->m_MEPs++;
+          m_mepOut++;
+          m_FileDesc->m_BytesWritten += towrite;
+          r->m_BytesWritten += towrite;
+          if (m_FileDesc->m_BytesWritten >this->m_SizeLimit)
+          {
+            Markclose(m_FileDesc);
+            m_FileDesc->state = C_CLOSED;
+            m_FileDesc = openFile(m_RunNumber,FILETYPE_EVENT);
+          }
+          continue;
+        }
+        break;
       }
-      continue;
     }
   }
   return StatusCode::SUCCESS;
+}
+void MEPOverflowWriterSvc::Markclose(FileDescr* d)
+{
+  d->m_CloseAt = time(0)+m_FileCloseDelay;
+  LockList();
+  this->m_FileCloseList.push_back(d);
+  UnlockList();
 }
 unsigned int MEPOverflowWriterSvc::getRunNumber(MEPEvent *me)
 {
@@ -238,17 +345,25 @@ unsigned int MEPOverflowWriterSvc::getRunNumber(MEPEvent *me)
   }
   return 0;
 }
-FileDescr *MEPOverflowWriterSvc::openFile(unsigned int runn)
+FileDescr *MEPOverflowWriterSvc::openFile(unsigned int runn, FTYPE t)
 {
   RunDesc *r = m_RunList[runn];
   int seq = r->m_Files;
   seq++;
   r->m_Files++;
-  FileDescr *f = new FileDescr;
+  FileDescr *f = new FileDescr(t);
   r->m_CurrentFileDescr = f;
   f->m_Sequence = seq;
   char fname[255];
-  std::string format = m_FilePrefix+"%07d_%s.%s.MEP";
+  std::string format;
+  if (t == FILETYPE_MEP)
+  {
+    format = m_FilePrefixMEP+"%07d_%s.%s.MEP";
+  }
+  else
+  {
+    format = m_FilePrefixEvt+"%07d_%s.%s.mdf";
+  }
   std::string ftim = FileTime();
   sprintf(fname,format.c_str(),runn,ftim.c_str(),m_node.c_str());
   f->m_BytesWritten = 0;
