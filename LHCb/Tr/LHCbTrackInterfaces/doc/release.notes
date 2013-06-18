@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/LHCbTrackInterfaces
+! Responsible : Marco Cattaneo
+! Purpose     : Interfaces previously in TrackInterfaces but needed in Lbcom
+!-----------------------------------------------------------------------------
+
+! 2013-06-18 - Marco Cattaneo
+ - Initial version 

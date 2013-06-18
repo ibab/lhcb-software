@@ -1,0 +1,28 @@
+#============================================================================
+# Created    : 2013-06-18
+# Maintainer : Marco Cattaneo
+#============================================================================
+package           LHCbTrackInterfaces
+
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc LHCbTrackInterfaces
+
+# =============== dependencies ==============================================
+use RecEvent         v* Event
+use TrackEvent       v* Event
+use LHCbKernel       v* Kernel
+use DetDesc          v* Det
+use GaudiKernel      v*
+
+# =============== include directories =======================================
+apply_pattern install_more_includes more=LHCbTrackInterfaces
+
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                                 \
+              dictionary=LHCbTrackInterfaces                                    \
+              headerfiles=$(LHCBTRACKINTERFACESROOT)/dict/LHCbTrackInterfacesDict.h     \
+              selectionfile=$(LHCBTRACKINTERFACESROOT)/dict/LHCbTrackInterfacesDict.xml \
+              options="-U__MINGW32__"
