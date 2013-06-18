@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           GaudiOnline 
-version           v2r64
+version           v2r65
 #============================================================================
 branches          cmt doc src GaudiOnline 
 # dependency list
