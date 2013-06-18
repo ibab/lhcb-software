@@ -19,7 +19,6 @@
 #include "TrackInterfaces/IPtTransporter.h"
 #include "TrackInterfaces/IPVOfflineTool.h"
 #include "TrackInterfaces/IStateCorrectionTool.h"
-#include "TrackInterfaces/ISTClusterPosition.h"
 #include "TrackInterfaces/ITrackCaloMatch.h"
 #include "TrackInterfaces/ITrackChi2Calculator.h"
 #include "TrackInterfaces/ITrackCloneFinder.h"
@@ -41,8 +40,6 @@
 #include "TrackInterfaces/ITrajectoryProvider.h"
 #include "TrackInterfaces/ITrajFitter.h"
 #include "TrackInterfaces/IVeloExpectation.h"
-#include "TrackInterfaces/IVeloClusterPosition.h"
-#include "TrackInterfaces/IVPClusterPosition.h"
 #include "TrackInterfaces/IPitchResTool.h"
 #include "TrackInterfaces/ITrackStateProvider.h"
 

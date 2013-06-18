@@ -17,7 +17,6 @@
   <class name    = "IPVOfflineTool"          />
   <class name    = "IRecVertexFunctionTool"  />
   <class name    = "IStateCorrectionTool"    />
-  <class name    = "ISTClusterPosition"      />
   <class name    = "ITrackCaloMatch"         />
   <class name    = "ITrackChi2Calculator"    />
   <class name    = "ITrackCloneFinder"       />
@@ -41,8 +40,6 @@
   <class name    = "ITrajFitter"             />
   <class name    = "IVeloExpectation"        />
   <struct name   = "IVeloExpectation::Info"  />
-  <class name    = "IVeloClusterPosition"    />
-  <class name    = "IVPClusterPosition" />
   <class name    = "IPitchResTool"           />
   <class name    = "ITrackStateProvider"     />
 </lcgdict>
