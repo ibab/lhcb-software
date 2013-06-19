@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 
 - Packages added:   Tr/LHCbTrackInterfaces
-- Packages removed: Tf/TfKernel, Tf/TsaKernel (moved to Rec)
+- Packages removed: Tf/TfKernel, Tf/TsaKernel, Tr/TrackInterfaces (moved to Rec)
 
 </PRE><H1><A NAME=v36r0>2013-06-05 LHCbSys v36r0</A></H1><PRE>
 This version uses Gaudi v23r8 and LCG_65

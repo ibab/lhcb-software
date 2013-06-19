@@ -99,7 +99,6 @@ gaudi_depends_on_subdirs(Associators/MCAssociators
 			 Tools/EventIndexer
                          Tools/FileStager
                          Tools/XmlTools
-                         Tr/TrackInterfaces
 			 Velo/VeloDAQ)
 
 
