@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+! 2013-06-19 - Marco Clemencic
+ - Fixed generation of dictionary for Gaudi::SymMatrix9x9.
+
 !========================= RecEvent v2r47 2013-06-03 =========================
 ! 2013-05-13 - Chris Jones
  - Fix bug in clusterLocateDigit where assignment instead of equality 
