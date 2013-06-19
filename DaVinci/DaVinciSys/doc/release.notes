@@ -5,7 +5,7 @@ Purpose             : LHCb physics analysis application
 
 </PRE><H1><A NAME=v33r5>2013-06-17 DaVinci v33r5</A></H1><PRE>
 
-New development release based on the LHCb v35r7 stack.
+New development release based on the LHCb v36r0 stack.
 
 Changed Packages :- DaVinciTests
 
@@ -17,6 +17,9 @@ In DaVinciTests :
  . Input data now taken from PRConfig package.
 
 Executive Summary of Phys and Analysis Changes :-
+
+MicroDSTAlgorithm, MicroDSTTools, DSTWriters :
+ . Improvements to support persisting Flavour Tag objects to (u)DSTs.
 
 DaVinciTransporter :-
  . Add some logic on ParticleTransporter constructor for 
