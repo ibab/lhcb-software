@@ -18,7 +18,7 @@ namespace MBM {
    */
   struct Manager  {
     /// BM identifier
-    ServerBMID m_bm;
+    ServerBMID    m_bm;
     /// Global section module name for the control sections
     char          ctrl_mod[32];
     /// Global section module name for the buffer data

@@ -192,6 +192,7 @@ int MBM::Installer::install()  {
   ctrl->p_umax       = p_umax;
   ctrl->p_emax       = p_emax;
   ctrl->p_tmax       = p_tmax;
+  
   ctrl->buff_size    = p_size<<10; /* in bytes*/
   ctrl->tot_produced = 0;
   ctrl->tot_actual   = 0;
@@ -339,6 +340,8 @@ std::vector<ServerBMID> mbm_multi_install(int argc , char** argv) {
   std::vector<char*> opts;
   std::vector<ServerBMID> bmids;
   static char type[64] = "mbm_install";
+
+  opts.push_back(type);
   for(size_t i=0; i<size_t(argc); ++i)  {
     char c0 = argv[i][0];
     char c1 = ::toupper(argv[i][1]);
