@@ -5,6 +5,19 @@ Line config dictionaries for proton-ion data stripping.
 from GaudiKernel.SystemOfUnits import *
 #from GaudiKernel.SystemOfUnits import as units
 
+#ProtonIonMinBias
+ProtonIonMinBias = {
+    'BUILDERTYPE'  : 'ProtonIonMinBiasConf',
+    'CONFIG'       : {
+    'ProtonIonMinBiasLine_RE' : "(HLT_PASS('Hlt2PassThroughDecision'))",
+    'ProtonIonMinBiasLine_Prescale' : 0.10,
+    'ProtonIonMinBiasLine_CondDB' : True 
+    },
+    'WGs' : [ 'QEE' ],   
+    'STREAMS' : [ 'ALL' ]
+    }
+
+
 #Z02MuMu
 Z02MuMu = {
     'BUILDERTYPE'  : 'Z02MuMuConf',
@@ -210,128 +223,6 @@ SingleTrackTIS = {
     'STREAMS' : [ 'ALL' ] 
     }
 
-#DisplVertices
-DisplVertices = {
-    'BUILDERTYPE'  : 'DisplVerticesLinesConf',
-    'CONFIG'       : {
-    ## Velo tracks filter
-    "FilterVelo"              : { "Apply"                : True
-                                , "MinIP"                : 0.1*mm
-                                , "MinIPChi2"            : -1.0
-                                , "MinNumTracks"         : 4
-                                , "PVLocation"           : "Rec/Vertex/Primary"
-                                , "RejectSplashEvents"   : False
-                                , "RemoveBackwardTracks" : True
-                                }
-
-    #==========        SELECTION CUT VALUES         ==========#
-
-    ## Velo reconstruction
-    , "RV2PWithVelo"            : { "MinRho"               :  0.4*mm
-                                  , "MinMass"              :  3.0*GeV
-                                  , "MinSumPT"             :  0.0*GeV
-                                  , "MinNumTracks"         :  5
-                                  , "MaxFractE1Track"      :  10.
-                                  , "MaxFractTrwHitBefore" :  10.
-                                  , "ApplyMatterVeto"      :  False
-                                  ## Reco only
-                                  , "MaxChi2NonVeloOnly"   : 5.0
-                                  , "UseVeloTracks"        : False
-                                  , "ComputeMatterVeto"    : True
-                                  , "FirstPVMaxRho"        : 0.3*mm
-                                  , "FirstPVMinZ"          : -300.0*mm
-                                  , "FirstPVMaxZ"          : 500.0*mm
-                                  , "FirstPVMinNumTracks"  : 10
-                                  }
-    ## Single LLP line
-    , "SingleSelection"         : { "PreScale"             :  1.0
-                                                             #       HighMass,         Medium,         HighFD
-                                  , "MinRho"               : [  1.0*mm ,  2.*mm ,  4.*mm  ]
-                                  , "MinMass"              : [ 8.*GeV,  6.5*GeV,  4.5*GeV ]
-                                  , "MinSumPT"             :  3.0*GeV
-                                  , "MinNumTracks"         : [  8            ,  7            ,  7             ]
-                                  , "ApplyMatterVeto"      : True
-                                  , "MaxFractE1Track"      :  0.8
-                                  , "MaxFractTrwHitBefore" :  0.49
-                                  }
-    # prescaled
-    , "SinglePSSelection"       : { "PreScale"             :  0.01 ##changed from 0.005
-                                  , "MinRho"               :  0.5*mm
-                                  , "MinMass"              :  3.0*GeV
-                                  , "MinSumPT"             :  0.0*GeV
-                                  , "MinNumTracks"         :  5
-                                  , "ApplyMatterVeto"      :  False
-                                  , "MaxFractE1Track"      :  10.
-                                  , "MaxFractTrwHitBefore" :  10.
-                                  }
-
-    ## Double LLP line
-    , "DoubleSelection"         : { "PreScale"             :  1.0
-                                  , "MinRho"               :  0.6*mm
-                                  , "MinMass"              :  3.0*GeV
-                                  , "MinSumPT"             :  3.0*GeV
-                                  , "MinNumTracks"         :  6
-                                  , "ApplyMatterVeto"      :  False
-                                  , "MaxFractE1Track"      :  0.8
-                                  , "MaxFractTrwHitBefore" :  0.49
-                                  ## Double only
-                                  , "MinHighestMass"       : 3.0*GeV
-                                  , "ApplyMatterVetoOne"   : True
-                                  }
-    ## Downstream reconstruction
-    , "RV2PDown"                : { "MinRho"               :  2.0*mm
-                                  , "MinMass"              :  3.0*GeV
-                                  , "MinSumPT"             :  0.0*GeV
-                                  , "MinNumTracks"         :  4
-                                  , "MaxFractE1Track"      :  10.
-                                  , "MaxFractTrwHitBefore" :  10.
-                                  , "ApplyMatterVeto"      :  False
-                                  ## Reco only
-                                  , "MaxChi2NonVeloOnly"   : 5.0
-                                  , "UseVeloTracks"        : False
-                                  , "ComputeMatterVeto"    : False
-                                  , "FirstPVMaxRho"        : 0.3*mm
-                                  , "FirstPVMinZ"          : -300.0*mm
-                                  , "FirstPVMaxZ"          : 500.0*mm
-                                  , "FirstPVMinNumTracks"  : 10
-                                  }
-    , "SingleDownSelection"     : { "PreScale"             :  1.0
-                                  , "MinRho"               :  2.0*mm
-                                  , "MinMass"              :  3.0*GeV
-                                  , "MinSumPT"             :  0.0*GeV
-                                  , "MinNumTracks"         :  4
-                                  , "ApplyMatterVeto"      : False
-                                  , "MaxFractE1Track"      :  10.
-                                  , "MaxFractTrwHitBefore" :  10.
-                                  # Down only
-                                  , "MinZ"                 :  170.*mm
-                                  }
-    #========== Other lines for efficiency studies ==========#
-    , "HLTPS"             : { "PreScale"             :  1.0 }
-    , "HltEffCharmHLTSelection"  : { "PreScale"             :  1.0
-                                   , "MinRho"               :  0.6*mm
-                                   , "MinMass"              :  6.*GeV
-                                   , "MinSumPT"             :  3.0*GeV
-                                   , "MinNumTracks"         :  6
-                                   , "ApplyMatterVeto"      : False
-                                   , "MaxFractE1Track"      :  10.
-                                   , "MaxFractTrwHitBefore" :  10.
-                                   }
-
-    #==========     HLT filters for all lines      ==========#
-    , "HLT"                     : { "CharmHLT"     : "HLT_PASS('Hlt2CharmHadD02HH_D02KPiDecision')"
-                                  , "HLTPS"        : [ ( ("0x001c0028", "0x002f002c"), "HLT_PASS_RE('Hlt2DisplVerticesSinglePostScaledDecision')" )
-                                                     , ( ("0x00340032", "0x00730035"), "HLT_PASS_RE('Hlt2DisplVerticesSinglePostScaledDecision')" )
-                                                     , ( ("0x00750037", "0x007b0038"), "HLT_PASS_RE('Hlt2DisplVertices(Single|Double|SingleMV)PostScaledDecision')" )
-                                                     , ( ("0x007e0039", "0x0097003d"), "HLT_PASS_RE('Hlt2DisplVertices(Single|Double|SingleMV)PostScaledDecision')" )
-                                                     , ( ("0x00990042", "0x40000000"), "HLT_PASS_RE('Hlt2DisplVertices(Single|SingleLoose|Double)PSDecision')" )
-                                                     ]
-                                  }
-    },                              
-    'WGs' : [ 'QEE' ],
-    'STREAMS' : [ 'ALL' ]
-    }
-
     
 #HighPtJets
 HighPtJets = {
@@ -365,28 +256,6 @@ InclbJets = {
     ,  'SumMomSVCut'      : 3.0
     ,  'VtxChi2Cut'       : 20.0
     ,  'scale'            : 0.05
-    },
-    'WGs' : [ 'QEE' ],
-    'STREAMS' : [ 'ALL' ]
-    }
-
-#A1MuMu
-A1MuMu = {
-    'BUILDERTYPE'  : 'A1MuMuConf',
-    'CONFIG'       : {
-    'A1MuMu_LinePrescale'  : 1.0,
-    'A1MuMu_LinePostscale'              : 1.0,
-    'A1MuMu_checkPV'                    : False,
-    ###
-    'DIMUON_LOW_MASS'                   : '5000.0',    # MeV/c2
-    #'DIMUON_HIGH_MASS'                 : not set,     # MeV/c2
-    ###
-    'PT_MUON_MIN'                       : '2500.0',    # MeV/c
-    'P_MUON_MIN'                        : '2500.0',    # MeV/c (de facto no cut)
-    'TRACKCHI2_MUON_MAX'                : '10',        # dl
-    ###
-    'PT_DIMUON_MIN'                     : '7500.0',    # MeV/c
-    'VCHI2_DIMUON_MAX'                  : '12'         # dl
     },
     'WGs' : [ 'QEE' ],
     'STREAMS' : [ 'ALL' ]
@@ -462,9 +331,6 @@ StrangeBaryons = {
     'STREAMS':[ 'ALL' ]
     }
 
-
-##PLEASE NOTE:
-##Lines below here MUST be moved to a new stream if RICH RAW information is removed from the EW DST.
 
 #LowMult
 LowMult = {
@@ -589,7 +455,8 @@ LLP2MuX = {
     }
 
 DiMuonpA = {
-    'BUILDERTYPE'  : 'DiMuonpAConf',
+    #'BUILDERTYPE'  : 'DiMuonpAConf',
+    'BUILDERTYPE'  : 'DiMuonForXsectionConf',
     'CONFIG'       : {
     'TotalCuts'  :  """
     (MINTREE('mu+'==ABSID,PT)>0.60*GeV)
