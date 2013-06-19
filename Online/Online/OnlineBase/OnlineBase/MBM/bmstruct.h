@@ -231,7 +231,7 @@ struct BMDESCRIPT : public qentry_t  {
   int              fifo;
   int              reqFifo;
   int              cancelled;
-  char             fifoName[BM_BUFF_NAME_LEN+16];
+  char             fifoName[BM_USER_NAME_LEN+BM_BUFF_NAME_LEN+16];
   char             name[BM_USER_NAME_LEN];     // user name
   char             bm_name[BM_BUFF_NAME_LEN];  // buffer name
   USER*            user;
@@ -251,7 +251,7 @@ struct ServerBMID_t : public BufferMemory {
   lib_rtl_lock_t   lockid;
   struct Server {
     int              fifo;
-    char             fifoName[64];
+    char             fifoName[BM_BUFF_NAME_LEN+32];
     int              poll;
     lib_rtl_thread_t dispatcher;
   } server[BM_MAX_THREAD];

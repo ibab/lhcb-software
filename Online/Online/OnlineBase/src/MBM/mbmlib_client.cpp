@@ -218,6 +218,10 @@ BMID mbm_include(const char* bm_name, const char* name, int partid) {
   bm->pid    = ::lib_rtl_pid();
   bm->partID = partid;
 
+  // Debugging:
+  //bool wt = true;
+  //while(wt) lib_rtl_sleep(10);
+
   ::snprintf(text,sizeof(text),"/tmp/bm_%s_server_0",bm->bm_name);
   if( (bm->reqFifo=::open(text, O_WRONLY|O_NONBLOCK)) < 0 ) {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Cannot open server fifo '%s' for MBM buffer %s.",
