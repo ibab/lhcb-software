@@ -53,7 +53,8 @@ package_names = ['XmlDDDB',
                  'B2OCConfig',
                  'MCStatTools',
                  'GDMLData',
-                 'QMTestFiles']
+                 'QMTestFiles',
+                 'Ariadne']
 
 class PackageConfException(Exception):
     pass
@@ -346,3 +347,5 @@ GDMLData.setHat("Det")#IGNORE:E0602$
 GDMLData.setProject("DBASE")#IGNORE:E0602$
 
 QMTestFiles.setProject("PARAM")#IGNORE:E0602
+
+Ariadne.setProject('TOOLS')#IGNORE:E0602

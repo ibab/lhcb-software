@@ -1,3 +1,7 @@
+2013-06-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/Package.py: Added new package Ariadne
+
 2013-04-30 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Project.py: Set LHCb AFS volume size to 20G
@@ -12,7 +16,7 @@
 
 2013-04-19 Ben Couturier <Ben.Couturier@cern.ch>
 
-	* python/LbConfiguration/Package.py: Added new package QMTestFiles 
+	* python/LbConfiguration/Package.py: Added new package QMTestFiles
 
 2013-02-19 Ben Couturier <Ben.Couturier@cern.ch>
 
