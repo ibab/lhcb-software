@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-06-19 - Ronan Wallace
+ - Added ProtonIonMinBias configuration dictionary to Stripping20r3.
+ - Removed A1MuMu and DisplVertices configuration dictionaries from Stripping20r3.
+ - Renamed DiMuonpAConf to DiMuonForXsectionConf in DiMuonpA configuration dictionary in Stripping20r3..
+
 ! 2013-06-17 - Andrea Contu
  - Added StrippingChargedHypernon to s20r3 dictionaries
 
