@@ -73,6 +73,7 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Tr/TrackFitEvent
                          Tr/TrackFitter
                          Tr/TrackIdealPR
+                         Tr/TrackInterfaces
 			 Tr/TrackKernel
                          Tr/TrackMCTools
                          Tr/TrackMonitors

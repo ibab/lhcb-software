@@ -94,6 +94,7 @@ use TrackExtrapolators   v2r33   Tr   # Eduardo Rodrigues
 use TrackFitEvent        v5r22   Tr   # Eduardo Rodrigues
 use TrackFitter          v4r10p1 Tr   # Wouter Hulsbergen
 use TrackIdealPR         v2r20   Tr   # Eduardo Rodrigues
+use TrackInterfaces      v4r24   Tr   # Wouter Hulsbergen
 use TrackKernel          v1r15   Tr   # Wouter Hulsbergen
 use TrackMCTools         v3r4    Tr   # Eduardo Rodrigues
 use TrackMonitors        v1r44p1 Tr   # Wouter Hulsbergen, Stephanie Menzemer
