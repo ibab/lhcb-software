@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. SetupProject.sh --silent Tools --runtime LCGCMT --use Ariadne
+
+if [ "$SetupProjectStatus" != 0 ] ; then
+    echo "ERROR: Cannot prepare the environment to use Ariadne."
+    exit 1
+fi
+
+ariadne_query.py "$@"

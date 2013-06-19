@@ -1,3 +1,9 @@
+2013-06-19  Illya Shapoval <Illya.Shapoval@cern.ch>
+
+	Added bash wrappers for the Ariadne admin and query tools
+	* scripts/ariadne_add.py
+	* scripts/ariadne_query.py
+
 2013-06-03  Ben Couturier <Ben.Couturier@cern.ch>
 
 	Added scripts to check if a given step is useable in DIRAC:
