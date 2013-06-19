@@ -113,6 +113,7 @@ import StrippingLLP2MuX
 import StrippingHighPtGamma
 
 import StrippingMiniBias
+import StrippingProtonIonMinBias
 
 import StrippingNoPIDDstarWithD02RSKPi
 
