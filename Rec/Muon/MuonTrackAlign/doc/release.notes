@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.24 2010-03-24 13:29:02 rlambert Exp $
 ! Package     : MuonTrackAlign
 ! Responsible : Alessia Satta
 ! Purpose     : Track reconstruction for Muon Alignment purposes
 !---------------------------------------------------------------------
+
+! 2013-06-19 - Marco Cattaneo
+ - Add missing TrackInterfaces dependency
+ - Fix some UNINT_CTOR defects
+ - Remove empty finalize method
+ - Replace endreq by endmsg
 
 !========================= MuonTrackAlign v1r9 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic

@@ -1,4 +1,3 @@
-// $Id: MuonRead.cpp,v 1.9 2010-03-22 01:20:06 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -33,6 +32,8 @@ DECLARE_ALGORITHM_FACTORY( MuonRead )
 MuonRead::MuonRead( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator )
+  , m_muonDet(NULL)
+  , m_muonBuffer(NULL)
 {
  declareProperty( "MuonTracksName" ,
                    m_muonTracksName="/Event/Rec/Muon/MuonsForAlignment");
@@ -52,7 +53,7 @@ StatusCode MuonRead::initialize() {
   debug() << "==> Initialize" << endmsg;
   m_muonDet=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
-  if (!m_muonBuffer) info()<<"error retrieving MuonRawBuffer "<<endreq;
+  if (!m_muonBuffer) info()<<"error retrieving MuonRawBuffer "<<endmsg;
 
 
   return StatusCode::SUCCESS;
@@ -70,7 +71,7 @@ StatusCode MuonRead::execute() {
 
   LHCb::Tracks* muonTracks=get<LHCb::Tracks>(m_muonTracksName);
 
-  debug()<<"muon track size "<<muonTracks->size()<<endreq;
+  debug()<<"muon track size "<<muonTracks->size()<<endmsg;
 
   
   StatusCode sc=m_muonBuffer->getTile(m_muonDigit);  //return a vector of MuonTileID
@@ -99,7 +100,7 @@ StatusCode MuonRead::execute() {
       debug()<<" node information "<< node->z();
       
       if ( node->z() > 11900 && node->type()!=LHCb::Node::Outlier  ) {
-        debug() << " ----  in the Muon detector "<< endreq;
+        debug() << " ----  in the Muon detector "<< endmsg;
         const LHCb::State& state =node->state();
 	
         Fx.push_back(state.x());
@@ -145,7 +146,7 @@ StatusCode MuonRead::execute() {
       Simone->fill("Fchi2",Fchi2);  
       Simone->fill("ndof",float((*it)->nDoF())) ;
       Simone->fill("status",float((*it)->fitStatus())) ;
-    } else info() << "More than 30 pads per track" << endreq;
+    } else info() << "More than 30 pads per track" << endmsg;
 
     int p = 1;
     
@@ -157,11 +158,11 @@ StatusCode MuonRead::execute() {
         m_muonDet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
         vchambers = m_muonDet->Tile2Chamber(tile);
         Chamber.push_back(float(vchambers[0]->chamberNumber()));
-        debug()<<"*** tile position ***"<<tile<<endreq;
-        debug()<<" x = "<<x<<" y = "<<y<<" z = "<<z<<endreq;
-        debug()<<" dx = "<<dx<<" dy ="<<dy<<" dz = "<<dz<<endreq;
-        debug()<<" region "<<tile.region()<<" station "<<tile.station()<<endreq;
-        debug()<<"*********************"<<tile<<endreq;
+        debug()<<"*** tile position ***"<<tile<<endmsg;
+        debug()<<" x = "<<x<<" y = "<<y<<" z = "<<z<<endmsg;
+        debug()<<" dx = "<<dx<<" dy ="<<dy<<" dz = "<<dz<<endmsg;
+        debug()<<" region "<<tile.region()<<" station "<<tile.station()<<endmsg;
+        debug()<<"*********************"<<tile<<endmsg;
         
         Vxm.push_back(x);
         Vym.push_back(y);
@@ -176,17 +177,17 @@ StatusCode MuonRead::execute() {
         LHCb::MCParticle* pp=NULL;
         searchNature(tile,pp);
         if (pp!=NULL){
-          debug() << "MC particle linked to tile " << pp->particleID().pid() << endreq;
+          debug() << "MC particle linked to tile " << pp->particleID().pid() << endmsg;
           MCID.push_back(double(pp->particleID().pid()));
           if (pp->mother()!=0) {
-            debug() << " found a mother "<<endreq;  
+            debug() << " found a mother "<<endmsg;  
             MCmothID.push_back(double(pp->mother()->particleID().pid()));
           } else {
 	    MCmothID.push_back(0);
 	  }
           
           MCp.push_back(pp->p());
-          debug() << "MCParticle momentum "<<pp->momentum()<<endreq;
+          debug() << "MCParticle momentum "<<pp->momentum()<<endmsg;
           
           MCtx.push_back(pp->momentum().px()/pp->momentum().pz());
           MCty.push_back(pp->momentum().py()/pp->momentum().pz());
@@ -194,7 +195,7 @@ StatusCode MuonRead::execute() {
           MCVy.push_back(pp->originVertex()->position().y());
           MCVz.push_back(pp->originVertex()->position().z());
         } else {
-	  debug() << " No MC particle linked to tile" << endreq;
+	  debug() << " No MC particle linked to tile" << endmsg;
 	  
 	  MCp.push_back(0);
 	  MCtx.push_back(0);
@@ -205,7 +206,7 @@ StatusCode MuonRead::execute() {
 	  
         }
         
-      } else   debug()<<" this LHCbID is not a MuonTile "<<endreq;
+      } else   debug()<<" this LHCbID is not a MuonTile "<<endmsg;
       
     }
     
@@ -279,20 +280,10 @@ StatusCode MuonRead::execute() {
 
     Simone->write();
     debug()<<" The muon track has "
-	   << list_of_tile.size()<<" Tiles and "<<  (*it)->nodes().size()<<" nodes "<< endreq;
+	   << list_of_tile.size()<<" Tiles and "<<  (*it)->nodes().size()<<" nodes "<< endmsg;
   }
   
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MuonRead::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-  
-  return GaudiTupleAlg::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
@@ -319,7 +310,7 @@ StatusCode MuonRead::searchNature(LHCb::MuonTileID tile,LHCb::MCParticle*& pp)
   for (iDigit = m_muonDigit.begin(); iDigit != m_muonDigit.end(); iDigit++){
     LHCb::MuonTileID digitile=(*iDigit);
     if ((digitile.intercept(tile)).isValid()){
-      debug()<<" find the digit corresponding to tile "<<first<<endreq;
+      debug()<<" find the digit corresponding to tile "<<first<<endmsg;
        pp = myLink.first( digitile );   
        if (first){
          ppfirst=pp;
@@ -329,7 +320,7 @@ StatusCode MuonRead::searchNature(LHCb::MuonTileID tile,LHCb::MCParticle*& pp)
          if (pp!=NULL&&pp==ppfirst)  return StatusCode::SUCCESS;
        }
     } else {
-      debug()<<"digitile.intercept(tile)) is NOT Valid"<<endreq;
+      debug()<<"digitile.intercept(tile)) is NOT Valid"<<endmsg;
     }
     
     
@@ -341,7 +332,7 @@ StatusCode MuonRead::searchNature(LHCb::MuonTileID tile,LHCb::MCParticle*& pp)
     }
 
   }
-  debug() << "MCParticle not found" << endreq;
+  debug() << "MCParticle not found" << endmsg;
   
 
            

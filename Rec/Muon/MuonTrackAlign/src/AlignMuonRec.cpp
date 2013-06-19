@@ -1,6 +1,3 @@
-////////// Brunel v32r7 ///////////////
-
-// $Id: AlignMuonRec.cpp,v 1.11 2010-03-22 01:20:06 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -119,14 +116,14 @@ StatusCode AlignMuonRec::initialize() {
   m_extrapolator      = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator",this );
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
   if (!m_muonBuffer) info()<<"error retrieving the muon raw buffer tool "
-			  <<endreq;
+			  <<endmsg;
   
   //retrieve the pointer to the muon detector 
   m_muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
 
   //calculate the transverse momentum  
   m_fCalcMomentum = tool<ITrackMomentumEstimate>("TrackPtKick");
-  debug() << "In init, PTKick from geometry " << endreq;
+  debug() << "In init, PTKick from geometry " << endmsg;
   
 
   
@@ -159,7 +156,7 @@ StatusCode AlignMuonRec::initialize() {
     m_station[station].setZ( zSta );
 
     //set cut for muon reconstruction
-    debug() << " station " << endreq;
+    debug() << " station " << endmsg;
     if (station==0){
       m_station[station].setMaxY(30.0,0);
       m_station[station].setMaxX(100.0,0);
@@ -236,7 +233,7 @@ StatusCode AlignMuonRec::execute() {
   LHCb::Tracks* bestCont = get<Tracks>(TrackLocation::Default ); 
   
   m_countMuCandidates += m_muonTracks.size();
-  debug()<<"m_muonTracks.size() "<<m_muonTracks.size()<<endreq;
+  debug()<<"m_muonTracks.size() "<<m_muonTracks.size()<<endmsg;
 
   // create the container for storing muon tracks
   LHCb::Tracks* muonsContainer = new LHCb::Tracks;
@@ -290,16 +287,16 @@ StatusCode AlignMuonRec::execute() {
 		    << "\n pow(Tiledx,2.) = " <<  pow(Tiledx,2.)
 		    << "\n err2xFirst = " << err2x[i]
 		    << "\n pow(Tiledy,2.) = " <<  pow(Tiledy,2.)
-		    << "\n err2yFirst = " << err2y[i] << endreq;
+		    << "\n err2yFirst = " << err2y[i] << endmsg;
 	  
-	  debug() << " ista = " << istation[i] << endreq;
+	  debug() << " ista = " << istation[i] << endmsg;
 	  
 	}
       }
 
       double txref = ( x[0] - x[1] ) / ( z[0] - z[1] );
       double tyref = ( y[0] - y[1] ) / ( z[0] - z[1] );  
-      verbose() << "slope muon x,y = " << txref << " " << tyref << endreq;
+      verbose() << "slope muon x,y = " << txref << " " << tyref << endmsg;
 
 
       // Add the long track
@@ -326,7 +323,7 @@ StatusCode AlignMuonRec::execute() {
 	  if(sc.isFailure() )   debug() << "Extrapolating to zFirst = " << z[0] << " failed "<<endmsg;
 	}
 	bestTrack = testTrack;
-	verbose() << "bestState = " << bestState << endreq;
+	verbose() << "bestState = " << bestState << endmsg;
 		
 	double slopeLong_x = bestState.tx();
 	double slopeLong_y = bestState.ty();
@@ -346,13 +343,13 @@ StatusCode AlignMuonRec::execute() {
 	  + pow(y[0]-bestState.y(),2.)/err2_y;
 
 	if (Chisq < m_matchChisq && Chisq < bestChisq) {
-	  verbose() << " m_matchChisq = " <<  m_matchChisq << endreq;
-	  debug() << "Match found: Chisq = " << Chisq << endreq;
+	  verbose() << " m_matchChisq = " <<  m_matchChisq << endmsg;
+	  debug() << "Match found: Chisq = " << Chisq << endmsg;
 	  flag = true;
 	  mytr = bestTrack->clone();
 	  bestChisq =  Chisq;
 	}else {
-	  debug() << "Chisquare too big " << Chisq << endreq;
+	  debug() << "Chisquare too big " << Chisq << endmsg;
 	}
       }
 
@@ -361,7 +358,7 @@ StatusCode AlignMuonRec::execute() {
       }
 
       for (ista = istation[0]; ista < m_nStation; ista++){
-	debug() <<" new muon track passing by station "<<ista+1<<endreq;
+	debug() <<" new muon track passing by station "<<ista+1<<endmsg;
 	std::vector<AlignMuonPoint> vpoint = itMuonTrack->points(ista);
 	m_hitM->fill(ista+1,vpoint.size());
 	for(std::vector<AlignMuonPoint>::const_iterator iV=vpoint.begin(); iV != vpoint.end(); iV++) {
@@ -409,9 +406,9 @@ StatusCode AlignMuonRec::execute() {
       m_p->fill(momenta);
       m_states->fill(trgTr->nStates());
 
-      debug() << " # states in the long track = " << mytr->nStates() << endreq;
-      debug() << " # of IDs in the long track = " << mytr->nLHCbIDs() << endreq;
-      debug() << " long track type = " <<  mytr->type() << endreq;
+      debug() << " # states in the long track = " << mytr->nStates() << endmsg;
+      debug() << " # of IDs in the long track = " << mytr->nLHCbIDs() << endmsg;
+      debug() << " long track type = " <<  mytr->type() << endmsg;
       
       trgTr->setType( Track::Muon );      
       trgTr->setPatRecStatus( Track::PatRecIDs ) ; 
@@ -441,7 +438,7 @@ StatusCode AlignMuonRec::execute() {
 
   
   m_muonTracks.clear();
-  debug()<<" stored candidates "<<m_countMuonCandidates<<endreq; 
+  debug()<<" stored candidates "<<m_countMuonCandidates<<endmsg; 
   
   return StatusCode::SUCCESS;
 }
@@ -453,9 +450,9 @@ StatusCode AlignMuonRec::finalize() {
   
   debug() << "==> Finalize" << endmsg;
   
-  debug () << "Number of events processed: " << double(m_countEvents) << endreq;
+  debug () << "Number of events processed: " << double(m_countEvents) << endmsg;
   debug () << "Average number of muon tracks: " 
-          << double(m_countMuCandidates)/double(m_countEvents) << endreq;
+          << double(m_countMuCandidates)/double(m_countEvents) << endmsg;
   
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
@@ -486,7 +483,7 @@ StatusCode AlignMuonRec::muonSearch() {
     bool CT_flag = true;
     
     for( CT_itM5 = CT_Points[4].begin(); CT_itM5<CT_Points[4].end(); CT_itM5++){
-      debug() <<" Hit already used for another seed"<<endreq;
+      debug() <<" Hit already used for another seed"<<endmsg;
       if ((*CT_itM5).tile()==(*itM5m).tile()) CT_flag = false;
     }
           
@@ -513,8 +510,8 @@ StatusCode AlignMuonRec::muonSearch() {
     double x = M5x/n * m_station[3].z()/m_station[4].z();
     double y = M5y/n * m_station[3].z()/m_station[4].z();
     
-    debug() <<(*itM5).x()<<" "<<M5x/n<<endreq; 
-    debug() <<(*itM5).y()<<" "<<M5y/n<<endreq;
+    debug() <<(*itM5).x()<<" "<<M5x/n<<endmsg; 
+    debug() <<(*itM5).y()<<" "<<M5y/n<<endmsg;
     
     double distance = 0;
     double mindistance = sqrt(pow((PADsizeX[0]+PADsizeX[1]+PADsizeX[2]+PADsizeX[3]),2)+
@@ -529,15 +526,15 @@ StatusCode AlignMuonRec::muonSearch() {
       }
     }
     
-    debug() <<" +++++++++++++++++++ new seed "<<endreq;          
-    debug() <<"seed "<<M5x/n<<" "<<M5y/n<<" REGION "<< regionM5<<endreq;          
+    debug() <<" +++++++++++++++++++ new seed "<<endmsg;          
+    debug() <<"seed "<<M5x/n<<" "<<M5y/n<<" REGION "<< regionM5<<endmsg;          
     m_station[3].findCoincidence(x,y,regionM5,CandidateM4);
     if(CandidateM4.size()==0) continue;
     //if(CandidateM4.size()>1) continue;         //--- uncomment to avoid cross talk hits
     AlignMuonPoint* bestCandidateM4=&CandidateM4[0];
     debug() << "M4 concidence  x = " << x << " y = "<< y
 	    << " BCx = "<< bestCandidateM4->x()
-	    << " BCy = "<< bestCandidateM4->y() <<endreq;
+	    << " BCy = "<< bestCandidateM4->y() <<endmsg;
       
       x=-(M5x/n-bestCandidateM4->x())+bestCandidateM4->x(); 
       y=(bestCandidateM4)->y()*m_station[2].z()/m_station[3].z();
@@ -550,7 +547,7 @@ StatusCode AlignMuonRec::muonSearch() {
       AlignMuonPoint* bestCandidateM3=&CandidateM3[0];
       debug() << "M3 concidence  x = " << x << " y = " << y
 	      << " BCx = " << bestCandidateM3->x()
-	      << " BCy = " << bestCandidateM3->y() <<endreq;
+	      << " BCy = " << bestCandidateM3->y() <<endmsg;
 
       if(m_Bfield){
         x=-(bestCandidateM4->x()-bestCandidateM3->x())+bestCandidateM3->x();
@@ -569,7 +566,7 @@ StatusCode AlignMuonRec::muonSearch() {
       AlignMuonPoint* bestCandidateM2=&CandidateM2[0];
       debug() << "M2 concidence  x = " << x << " y = " << y
 	      << " BCx = " << bestCandidateM2->x()
-	      << " BCy = " << bestCandidateM2->y() <<endreq;
+	      << " BCy = " << bestCandidateM2->y() <<endmsg;
       
       x=-(2.55 * (bestCandidateM3->x()-bestCandidateM2->x()))+bestCandidateM2->x();
       y=(bestCandidateM2)->y()*m_station[0].z()/m_station[1].z();
@@ -584,7 +581,7 @@ StatusCode AlignMuonRec::muonSearch() {
 	AlignMuonPoint* bestCandidateM1=&CandidateM1[0];
 	debug() << "M1 concidence  x = " << x << " y = " << y
 		<< " BCx = " << bestCandidateM1->x()
-		<< " BCy = " << bestCandidateM1->y() <<endreq;
+		<< " BCy = " << bestCandidateM1->y() <<endmsg;
       }
       
       AlignMuonTrack muon;
@@ -599,7 +596,7 @@ StatusCode AlignMuonRec::muonSearch() {
       m_muonTracks.push_back(muon);      
   }
  
-  debug()<<"number of muon Tracks "<<m_muonTracks.size()<<endreq;
+  debug()<<"number of muon Tracks "<<m_muonTracks.size()<<endmsg;
   return StatusCode::SUCCESS;
   
 }
@@ -645,10 +642,10 @@ StatusCode AlignMuonRec::detectClone()
 	double distdue=sqrt(pow((itMuonTrackSecond->point(4).x()-x_extra5),2)+pow((itMuonTrackSecond->point(4).y()-y_extra5),2));
 	if(distuno>distdue){
 	  itMuonTrackFirst->setClone();
-	  debug()<< " Clone First track "<<endreq;
+	  debug()<< " Clone First track "<<endmsg;
 	}else{
 	  itMuonTrackSecond->setClone();
-	  debug()<< " Clone Second track "<<endreq;
+	  debug()<< " Clone Second track "<<endmsg;
 	}
       }
     }
@@ -700,10 +697,10 @@ StatusCode AlignMuonRec::strongCloneKiller()
 	
 	if(distuno>distdue){
 	  itMuonTrackFirst->setClone();
-	  debug()<<" kill first "<<itMuonTrackFirst->point(4).x()<<endreq;
+	  debug()<<" kill first "<<itMuonTrackFirst->point(4).x()<<endmsg;
 	}else{
 	  itMuonTrackSecond->setClone();  
-	  debug()<<" kill second "<<itMuonTrackSecond->point(4).x()<<endreq;
+	  debug()<<" kill second "<<itMuonTrackSecond->point(4).x()<<endmsg;
 	}       
       }     
     }
@@ -723,7 +720,7 @@ StatusCode AlignMuonRec::printOut()
 	    << itMuonTrack->point(1).y() << " " 
 	    << itMuonTrack->point(2).x() << " " << itMuonTrack->point(2).y() << " " 
 	    << itMuonTrack->point(3).x() << " " << itMuonTrack->point(3).y() << " " 
-	    << itMuonTrack->point(4).x() << " " << itMuonTrack->point(4).y() << endreq;
+	    << itMuonTrack->point(4).x() << " " << itMuonTrack->point(4).y() << endmsg;
   }  
   return StatusCode::SUCCESS;
   

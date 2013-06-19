@@ -1,10 +1,8 @@
-// $Id: MuonRead.h,v 1.1.1.1 2007-07-23 07:14:36 asatta Exp $
 #ifndef MUONREAD_H 
 #define MUONREAD_H 1
 
 // Include files
 // from Gaudi
-//#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiAlg/GaudiTupleAlg.h" //add sim 01.03.07
 #include "MuonDet/DeMuonDetector.h"
 #include "Event/MCParticle.h"
@@ -28,7 +26,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
   StatusCode searchNature(LHCb::MuonTileID tile,LHCb::MCParticle*& pp);
   
 protected:

@@ -18,7 +18,7 @@
 class AlignMuonStationRec {
 public:
   /// Standard constructor
-  AlignMuonStationRec( IMessageSvc *svc, IRndmGenSvc* rnd_svc ) {p_svc=svc; p_rnd=rnd_svc;}; 
+  AlignMuonStationRec( IMessageSvc *svc, IRndmGenSvc* rnd_svc ) : m_flatDistribution(NULL) {p_svc=svc; p_rnd=rnd_svc;}; 
 
   virtual ~AlignMuonStationRec( ) {}; ///< Destructor
 
