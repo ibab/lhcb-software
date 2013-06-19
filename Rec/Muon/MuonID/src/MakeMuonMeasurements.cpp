@@ -104,13 +104,3 @@ StatusCode MakeMuonMeasurements::execute() {
 }
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MakeMuonMeasurements::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

@@ -11,6 +11,7 @@ use GaudiAlg           v*
 use RecEvent           v* Event
 use TrackEvent         v* Event
 use MuonDet            v* Det
+use TrackInterfaces    v* Tr
 use ROOT               v* LCG_Interfaces
 
 

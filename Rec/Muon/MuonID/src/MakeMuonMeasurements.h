@@ -1,4 +1,3 @@
-// $Id: MakeMuonMeasurements.h,v 1.1 2009-07-01 18:27:11 polye Exp $
 #ifndef MAKEMUONMEASUREMENTS_H 
 #define MAKEMUONMEASUREMENTS_H 1
 
@@ -24,7 +23,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

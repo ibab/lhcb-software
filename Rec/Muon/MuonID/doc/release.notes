@@ -3,6 +3,11 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2013-06-19 - Marco Cattaneo
+ - Add missing TrackInterfaces dependency
+ - Remove empty finalize method
+ - Fix DIVIDE_BY_ZERO defects
+
 !========================= MuonID v9r5p1 2013-04-30 =========================
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake

@@ -91,7 +91,7 @@ StatusCode DistMuIDTool::computeDistance(const LHCb::Track& muTrack, double& dis
   std::vector<LHCb::LHCbID> lhcbIDs=muTrack.lhcbIDs();
   //initialize distance^2
   double dist2=0.0;
-  int nsts=0;
+  unsigned int nsts=0;
   //for each lhcbid in new track, add up distance^2
   if (msgLevel(MSG::DEBUG) ) debug()<<"for each lhcbid in new track, add up distance^2"<<endmsg;
   for (std::vector<LHCb::LHCbID>::const_iterator it = lhcbIDs.begin();
@@ -134,7 +134,13 @@ StatusCode DistMuIDTool::computeDistance(const LHCb::Track& muTrack, double& dis
   delete mym.second;
   
   //return distance divided by number of stations added
-  dist= dist2/nsts;
+  if( 0 < nsts ) {
+    dist= dist2/nsts;
+  }
+  else {
+    dist = 0.;
+  }
+  
   return StatusCode::SUCCESS;
 }
 

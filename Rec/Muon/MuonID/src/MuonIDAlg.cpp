@@ -1874,7 +1874,7 @@ StatusCode MuonIDAlg::calcMuonLL(LHCb::MuonPID * muonid){
     return StatusCode::FAILURE;
   }
 
-  int nhits=0;
+  unsigned int nhits=0;
   double dist = 0.;
   std::vector<LHCb::MuonCoord*> & mcoord = m_muonMap[muonid];
   std::vector<LHCb::MuonCoord*>::const_iterator iCoord;
@@ -1897,7 +1897,7 @@ StatusCode MuonIDAlg::calcMuonLL(LHCb::MuonPID * muonid){
     }
   }
 
-  dist = dist / nhits;
+  if( 0 < nhits ) dist = dist / nhits;
   //EP: Store dist to fill Muon Track extra info
   m_dist_out=dist;
 
