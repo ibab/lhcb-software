@@ -4,6 +4,10 @@
 ! Purpose     : High level Muon Monitoring after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2013-06-19 - Marco Cattaneo
+ - Add missing TrackInterfaces dependency
+ - Remove empty finalize method
+
 !========================= MuonTrackMonitor v2r7p1 2013-04-30 =======================
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake

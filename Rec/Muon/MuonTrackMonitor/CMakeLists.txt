@@ -9,6 +9,7 @@ gaudi_depends_on_subdirs(Det/MuonDet
                          Event/MCEvent
                          Event/RecEvent
                          Event/TrackEvent
+                         Tr/TrackInterfaces
                          GaudiAlg
                          Tf/TrackSys
                          Tr/TrackFitter
@@ -18,7 +19,7 @@ find_package(AIDA)
 
 gaudi_add_module(MuonTrackMonitor
                  src/*.cpp
-                 INCLUDE_DIRS AIDA
+                 INCLUDE_DIRS AIDA Tr/TrackInterfaces
                  LINK_LIBRARIES MuonDetLib HltEvent LinkerEvent MCEvent RecEvent TrackEvent GaudiAlgLib)
 
 gaudi_install_python_modules()

@@ -1,4 +1,3 @@
-// $Id: MuonTrackAligMonitor.h,v 1.1 2010-05-05 07:57:01 ggiacomo Exp $
 #ifndef MUONTRACKALIHMONITOR_H 
 #define MUONTRACKALIGMONITOR_H 1
 
@@ -24,7 +23,6 @@ public:
   
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
     
 private:
   AIDA::IHistogram1D  *m_h_chi2,  *m_h_p;

@@ -418,11 +418,3 @@ StatusCode MuonTrackAligMonitor::execute() {
   setFilterPassed(true);  
   return StatusCode::SUCCESS;
 }
-
-
-StatusCode MuonTrackAligMonitor::finalize() {
-
-  return   GaudiHistoAlg::finalize();
-}
-
-
