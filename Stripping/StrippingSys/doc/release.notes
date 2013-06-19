@@ -5,6 +5,22 @@ Purpose     : LHCb stripping packages
 
 !========================= StrippingSys v7r0 2013-06-14 =========================
 
+* Version for future development
+
+* Phys/CommonParticles
+  - Removed mass cut in StdLooseDetachedDiElectron
+  - Added StdLooseDownMuons
+  - Fixed StdV0FromBrunel
+
+* Phys/DisplVertices
+  - LLParticlesFromRecVertices.cpp: Ask for PV z position upstream or equal to 
+    candidate z, in order to be able to use PVs as candidates.
+  - LLParticlesFromRecVertices.cpp: Remove requirement of 'no backward tracks' 
+    for displaced vertex candidate
+
+* Phys/MvaPreSelB2DH
+  - Fix clang warnings.
+  - Properly call base class initialize() methods from inherited classes.
 
 !========================= StrippingSys v6r2p7 2013-05-28 =========================
 
