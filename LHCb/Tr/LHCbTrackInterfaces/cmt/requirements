@@ -18,7 +18,7 @@ use DetDesc          v* Det
 use GaudiKernel      v*
 
 # =============== include directories =======================================
-apply_pattern install_more_includes more=LHCbTrackInterfaces
+apply_pattern install_more_includes more=TrackInterfaces
 
 # =============== LCG Dictionaries ============================================
 apply_pattern reflex_dictionary                                                 \
