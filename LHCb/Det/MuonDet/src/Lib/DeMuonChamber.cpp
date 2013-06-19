@@ -77,7 +77,8 @@ StatusCode DeMuonChamber::initialize()
 
   // for now with MWPCs and RPCs this is a good formula
   setGridName(m_chmbGrid);
-  msgStream()<<MSG::DEBUG<<"Initialising DeMuonChamber: "<<name <<" "<<sta<<" "<<reg<<" "<<chm<<endmsg;
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+    msgStream()<<MSG::DEBUG<<"Initialising DeMuonChamber: "<<name <<" "<<sta<<" "<<reg<<" "<<chm<<endmsg;
   return sc;
 }
 

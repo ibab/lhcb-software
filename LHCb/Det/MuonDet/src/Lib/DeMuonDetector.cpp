@@ -1386,10 +1386,12 @@ void DeMuonDetector::fillGeoArray()
   for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
     //get the dimensions of the inner rectangular
 
-    msgStream()<<MSG::DEBUG<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+      msgStream()<<MSG::DEBUG<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
     if (testForFilter(*itSt) == true)
       continue;
-    msgStream()<<MSG::DEBUG<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
+    if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
+      msgStream()<<MSG::DEBUG<<"DeMuonDetector::fillGeoArray station: " << station <<endmsg;
 
     double minX=100000;
     double minY=100000;
