@@ -17,7 +17,7 @@ test_locations={
         "Bank_A" : "FooBar",
         "Bank_B" : ["FooBar","Spam"],
         "Bank_C" : "FooBar",
-        "Bank_D" : "Foo/Bar"
+        "Bank_D" : "Foo/#BAR#"
         }
     }
 
@@ -54,6 +54,7 @@ RawEventJuggler().KillInputBanksAfter=".*_C"
 RawEventJuggler().WriterOptItemList=ics("WriteAsOptItems")
 RawEventJuggler().WriterItemList=os("WriteAsItems")
 RawEventJuggler().TCK="Null"
+RawEventJuggler().GenericReplacePatterns={"#BAR#":"Bar"}
 RawEventJuggler().__apply_configuration__()
 
 if [ent.getFullName() for ent in GS("JuggleRawEvent").Members] != ['bankKiller/killBeforeFooBar', 'RawEventMapCombiner/createFoo', 'RawEventMapCombiner/createBar', 'RawEventMapCombiner/createFooBarNull', 'bankKiller/killAfterFooBar', 'EventNodeKiller/KillRawEventNodes']:

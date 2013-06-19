@@ -275,15 +275,20 @@ class RawEventJuggler(ConfigurableUser):
         , "TCK" : None
         , "Depth" : "#1"
         , "TCKReplacePattern" : "#TCK#"
+        , "GenericReplacePatterns" : {}
         }
     
-    def __TCKWrap__(self, aloc):
-        if self.getProp("TCKReplacePattern") in aloc:
-            return aloc.replace(self.getProp("TCKReplacePattern"),self.getProp("TCK"))
+    def __replaceWrap__(self, aloc):
+        #print "looking at", aloc
+        for pattern in self.getProp("GenericReplacePatterns"):
+            #print "looking for", pattern
+            if pattern in aloc:
+                #print "replacing", pattern
+                return aloc.replace(pattern,self.getProp("GenericReplacePatterns")[pattern])
         return aloc
     
     def __opWrap__(self,loc):
-        return [self.__TCKWrap__(aloc) +self.getProp("Depth") for aloc in loc]
+        return [self.__replaceWrap__(aloc) +self.getProp("Depth") for aloc in loc]
     
     def __apply_configuration__(self):
         #make sure the dictionaries are there... Hack! %TODO -> Remove this!
@@ -298,7 +303,11 @@ class RawEventJuggler(ConfigurableUser):
         if len([loc for loc in input_locations if self.getProp("TCKReplacePattern") in loc]) or len([loc for loc in output_locations if self.getProp("TCKReplacePattern") in loc]):
             if not self.isPropertySet("TCK"):
                 raise AttributeError("The raw event version you specified requires a TCK to be given. Set RawEventJuggler().TCK")
-
+            else:
+                newdict=self.getProp("GenericReplacePatterns")
+                newdict[self.getProp("TCKReplacePattern")]=self.getProp("TCK")
+                self.setProp("GenericReplacePatterns",newdict)
+        
         killBefore=[]
         loc_to_alg_dict={}
         killAfter=[]
@@ -317,7 +326,7 @@ class RawEventJuggler(ConfigurableUser):
                 killBanks=[abank for abank in input_locations[loc] if re.match(self.getProp("KillInputBanksBefore"),abank)]
                 if not len(killBanks):
                     continue
-                loc=self.__TCKWrap__(loc)
+                loc=self.__replaceWrap__(loc)
                 bk=bankKiller("killBefore"+loc.replace("/",""))
                 killBefore.append(bk)
                 bk.RawEventLocations=[loc]
@@ -358,7 +367,7 @@ class RawEventJuggler(ConfigurableUser):
             loc_to_alg_dict={}
             for loc in output_locations:
                 if loc not in input_locations:
-                    wloc=self.__TCKWrap__(loc)
+                    wloc=self.__replaceWrap__(loc)
                     loc_to_alg_dict[wloc]=RawEventMapCombiner("create"+wloc.replace("/",""))
                     loc_to_alg_dict[wloc].OutputRawEventLocation=wloc
                     loc_to_alg_dict[wloc].RawBanksToCopy={}
@@ -366,7 +375,7 @@ class RawEventJuggler(ConfigurableUser):
                     added_locations.append(wloc)
                     
                     for abank in output_locations[loc]:
-                        loc_to_alg_dict[wloc].RawBanksToCopy[abank]=WhereBest(abank,self.getProp("Input"),locs,rec)
+                        loc_to_alg_dict[wloc].RawBanksToCopy[abank]=self.__replaceWrap__(WhereBest(abank,self.getProp("Input"),locs,rec))
             
             
             ###############################################
@@ -382,7 +391,7 @@ class RawEventJuggler(ConfigurableUser):
                     killBanks=[abank for abank in input_locations[loc] if re.match(self.getProp("KillInputBanksAfter"),abank)]
                     if not len(killBanks):
                         continue
-                    loc=self.__TCKWrap__(loc)
+                    loc=self.__replaceWrap__(loc)
                     bk=bankKiller("killAfter"+loc.replace("/",""))
                     killAfter.append(bk)
                     bk.RawEventLocations=[loc]
@@ -396,7 +405,7 @@ class RawEventJuggler(ConfigurableUser):
                     killAfter.append(enk)
                     for loc in input_locations:
                         if loc not in output_locations:
-                            enk.Nodes.append(self.__TCKWrap__(loc))
+                            enk.Nodes.append(self.__replaceWrap__(loc))
             
         elif self.isPropertySet("KillInputBanksAfter") or self.getProp("KillExtraNodes"):
             raise AttributeError("You've asked to kill something from the input *after* copying, but you aren't actually doing any copying. Please kill them yourself without this configurable, or use KillInputBanksBefore!")
