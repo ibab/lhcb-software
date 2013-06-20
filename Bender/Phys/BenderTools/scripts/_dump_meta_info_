@@ -65,9 +65,10 @@ def _get_meta_info_ ( files ) :
 
     for i in range (0,5) : print 100*'*'
 
-    for header in ( '/Event/Gen/Header' ,
-                    '/Event/MC/Header'  ,
-                    '/Event/Rec/Header' ) : 
+    for header in ( '/Event/Gen/Header'     ,
+                    '/Event/MC/Header'      ,
+                    '/Event/MC/DigiHeader'  ,
+                    '/Event/Rec/Header'     ) : 
 
         try    :
             hdr = evtsvc [ header ]
@@ -75,12 +76,26 @@ def _get_meta_info_ ( files ) :
             continue 
         
         if not hdr : continue
+        
         try :
-            info[ hdr.applicationName() ] = hdr.applicationVersion () 
-            info[ 'Run'                 ] = hdr.runNumber          () 
-            info[ 'Time'                ] = hdr.gpsTime            () 
-            info[ 'UUID'                ] = hdr.rawID              () 
+            
+            if hasattr ( hdr , 'applicationName' ) and hasattr ( hdr , 'applicationVersion' ) : 
+                info[ hdr.applicationName() ] = hdr.applicationVersion ()
+                
+            if hasattr ( hdr , 'runNumber' ) :                 
+                info[ 'Run'                 ] = hdr.runNumber          ()
+                
+            if hasattr ( hdr , 'gpsTime'   ) :                                 
+                info[ 'Time'                ] = hdr.gpsTime            () 
+                
+            if hasattr ( hdr , 'rawID'     ) :                                 
+                info[ 'UUID'                ] = hdr.rawID              ()
+
+            if hasattr ( hdr , 'evType'    ) :
+                info [ 'EvtType' ] = hdr.evType() 
+                    
         except :
+            
             pass
         
         tgs = hdr.condDBTags()
@@ -89,7 +104,6 @@ def _get_meta_info_ ( files ) :
             val = t.second 
             if not info.has_key( tag ) : info [ tag ] = set()
             info[tag] . add ( val )
-
 
     try :
         
@@ -141,7 +155,7 @@ def get_meta_info ( silent = True , files = [] ) :
 # =============================================================================
 if __name__ == '__main__' :
     
-    print 'MetaInfo: %s ' % get_meta_info ( silent = True  ) 
+    print 'MetaInfo: %s ' % get_meta_info ( silent = False  ) 
         
 # =============================================================================
 # The END 
