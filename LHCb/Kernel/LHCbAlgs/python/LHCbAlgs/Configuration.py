@@ -19,7 +19,6 @@ class LHCbApp(LHCbConfigurableUser):
        ,"LocalDataTypes": []
        ,"DDDBtag"       : ""
        ,"CondDBtag"     : ""
-       ,"CondDBUpgrade" : False
        ,"DQFLAGStag"    : ""
        ,"Simulation"    : False
        ,"Monitors"      : []
@@ -38,7 +37,6 @@ class LHCbApp(LHCbConfigurableUser):
        ,"LocalDataTypes" : """ Set of Local DataTypes uses to set DB """
        ,'DDDBtag'     : """ Tag for DDDB. Default as set in DDDBConf for DataType """
        ,'CondDBtag'   : """ Tag for CondDB. Default as set in DDDBConf for DataType """
-       ,'CondDBtag'   : """ Use Upgrade CondDB (Default False) """
        ,"DQFLAGStag"  : """ Tag for DQFLAGS. Default as set in DDDBConf for DataType """
        ,'Simulation'  : """ Flag to indicate usage of simulation conditions """
        ,'Monitors'    : """ List of monitors to execute """
