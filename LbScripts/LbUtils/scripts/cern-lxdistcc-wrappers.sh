@@ -51,10 +51,6 @@ setup_clang() {
         LD_LIBRARY_PATH="${_lib}${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}"
         PATH="${_bin}${PATH:+:}${PATH}"
 
-        # clang does not have the nice lcg-* links
-        _self=${_self#*-}
-        _self=${_self%-*}
-
         export LD_LIBRARY_PATH
         export PATH
         export COMPILER_PATH
