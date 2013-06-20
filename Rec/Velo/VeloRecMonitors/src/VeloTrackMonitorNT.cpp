@@ -1106,7 +1106,7 @@ void Velo::VeloTrackMonitorNT::FillVeloEvNtuple(LHCb::Tracks* tracks,int n_pv,
     righttracks =  myselect(pvtracks,TrackVeloSidePredicate(-1)) ;
   }
   else if (selectmethod ==1){
-    for (int i = 0; i < pvtracks.size(); ++i){
+    for (unsigned int i = 0; i < pvtracks.size(); ++i){
       unsigned int m_sideLeft=0, m_sideRight=0;
       LHCb::Track::ConstNodeRange nodes = pvtracks.at(i)->nodes();
       for(LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin();

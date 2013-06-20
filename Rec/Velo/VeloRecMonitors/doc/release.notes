@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2013-06-20 - Michel De Cian
+ - Fix a warning due to int <-> unsigned int comparison in VeloTrackMonitorNT
+
 !========================= VeloRecMonitors v2r25 2013-06-03 =========================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warnings
