@@ -23,6 +23,15 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v22r6> 2013-06-20 Bender v22r7 based on the DaVinci v33r5</A>
+
+It is very similar to to v22r6*, but based on the fresh DaVinci v33r5
+picking up a lot of new goodies and zillions of bug-fixes 
+in underlying software stack. 
+
+New script <c>get-meta-info</c> is added to pick up meta-information 
+from data files 
+
 <A NAME=v22r6> 2013-05-10 Bender v22r6 based on the DaVinci v33r4</A>
 
 It is identical to v22r5*, but based on the fresh DaVinci v33r4 (newer LHCb-stack)
