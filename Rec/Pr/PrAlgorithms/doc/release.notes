@@ -3,6 +3,10 @@
 ! Responsible : Olivier Callot
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+
+! 2013-06-20 - Marco Cattaneo
+ - Add missing dependency on Tr/TrackInterfaces
+
 ! 2013-06-12 - Michel De Cian
  - Fix a coverity warning in PrAddUTCoord.cpp
 
