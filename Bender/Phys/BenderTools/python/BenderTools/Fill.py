@@ -76,6 +76,7 @@ def _fill_initialize ( self ) :
     self._protons       = LoKi.Child.Selector ( 'p+'    == ABSID )
     self._muons         = LoKi.Child.Selector ( 'mu+'   == ABSID )
     self._gamma         = LoKi.Child.Selector ( 'gamma' == ID    )
+    self._digamma       = LoKi.Child.Selector ( DECTREE ( ' ( pi0 | eta ) -> <gamma> <gamma>' ) ) 
     self._pi0           = LoKi.Child.Selector ( 'pi0'   == ID    )
     self._tracks        = LoKi.Child.Selector (       HASTRACK   )
     self._basic         = LoKi.Child.Selector (        ISBASIC   )
@@ -134,6 +135,7 @@ def _fill_finalize   ( self ) :
     self._protons      = None 
     self._muons        = None 
     self._gamma        = None 
+    self._digamma      = None 
     self._pi0          = None 
     self._tracks       = None 
     self._basic        = None 
@@ -295,6 +297,33 @@ def treatPhotons ( self         ,
                   LHCb.Particle.Range ( good ) ,
                   'n_photon'    + suffix       , 10        )
 
+# ==============================================================================
+## add di-gamma information into n-tuple
+#  @param tup   n-tuple
+#  @param p     the particle 
+def treatDiGamma ( self         ,
+                   tup          ,
+                   p            ,
+                   suffix  = '' ) :
+    
+    ## 
+    if hasattr ( p , 'particle' ) : p = p.particle() 
+    #
+    ## get all protons form decay tree
+    #
+    good   = LHCb.Particle.ConstVector()
+    p.children ( self._digamma , good ) 
+    #
+    tup.fArrayP ( 'e_digamma'    + suffix       , P   / GeV , 
+                  'et_digamma'   + suffix       , PT  / GeV , 
+                  'ID_digamma'   + suffix       , ID        ,
+                  LHCb.Particle.Range ( good ) ,
+                  'n_digamma'    + suffix       , 10        )
+    tup.fArrayP ( 'm_digamma'    + suffix       , M   / GeV , 
+                  'lv01_digamma' + suffix       , LV01      ,
+                  LHCb.Particle.Range ( good ) ,
+                  'n_digamma'    + suffix       , 10        )
+    
 # ==============================================================================
 ## add muon information into n-tuple
 #  @param tup   n-tuple
@@ -520,6 +549,7 @@ LoKi.Algo.treatPhotons    =  treatPhotons
 LoKi.Algo.treatMuons      =  treatMuons
 LoKi.Algo.treatTracks     =  treatTracks
 LoKi.Algo.treatKine       =  treatKine
+LoKi.Algo.treatDiGamma    =  treatDiGamma
 
 LoKi.Algo.fillMasses      =  fillMasses
 

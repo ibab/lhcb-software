@@ -63,11 +63,14 @@ logger = getLogger( __name__ )
 ## suppress unnesessary printout in Gaudi
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-06-11
-def silence ( lst = [ 'HcalDet.Quality'       ,
-                      'EcalDet.Quality'       ,
-                      'MagneticFieldSvc'      ,
-                      'PropertyConfigSvc'     ,
-                      'IntegrateBeamCrossing' ] ) :
+def silence ( lst = [ 'HcalDet.Quality'          ,
+                      'EcalDet.Quality'          ,
+                      'MagneticFieldSvc'         ,
+                      'PropertyConfigSvc'        ,
+                      'IntegrateBeamCrossing'    ,
+                      'ToolSvc.L0DUConfig'       ,
+                      'ToolSvc.L0CondDBProvider' , 
+                      'L0MuonFromRaw'            ] ) :
     """    
     Suppress some unnesessary printout form Gaudi
     
@@ -82,6 +85,7 @@ def silence ( lst = [ 'HcalDet.Quality'       ,
         ## use configurables 
         from Configurables import MessageSvc
         msg = MessageSvc()
+        
     else :
         ## use GaudiPython 
         msg = _gaudi.service('MessageSvc')
