@@ -72,6 +72,7 @@ Velo::VeloTrackMonitorNT::VeloTrackMonitorNT(const std::string& name,
   m_expectTool(0),
   m_clusterTool(0),
   m_asctTable ( 0 ),
+  m_vertexer(NULL),
   m_tracksFitter(0)
 {
   declareProperty( "TracksInContainer", m_tracksInContainer = LHCb::TrackLocation::Default );
