@@ -114,7 +114,7 @@ def _get_meta_info_ ( files ) :
             info[ 'Run'                 ] = odin.runNumber              () 
             
     except: pass 
-        
+
     gaudi.stop     ()
     gaudi.finalize ()    
     del gaudi
