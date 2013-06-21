@@ -268,6 +268,17 @@ namespace LHCb
     fit( maxdchisq, maxnumiter ) ;
   }
 
+  TrackStateVertex::TrackStateVertex( const LHCb::State& stateA,
+				      const LHCb::State& stateB,
+				      double maxdchisq, size_t maxnumiter)
+    : m_fitStatus(UnFitted), m_chi2(-1)
+  {
+    for(size_t i=0; i<PositionParameters::kSize; ++i) m_pos(i) = 0 ;
+    addTrack( stateA ) ;
+    addTrack( stateB ) ;
+    fit( maxdchisq, maxnumiter ) ;
+  }
+
   TrackStateVertex::TrackStateVertex( const Gaudi::XYZPoint& reference,
 				      const Gaudi::SymMatrix3x3& refcovariance,
 				      bool isweightmatrix )

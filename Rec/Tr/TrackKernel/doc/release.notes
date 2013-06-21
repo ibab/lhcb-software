@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-06-21 - Wouter Hulsbergen
+ - Added fast methods to compute ipchi2, twotrackchi2 and doca to TrackVertexUtils
+ - Added constructor that takes two states to TrackStateVertex
+
 ! 2013-06-14 - Marco Cattaneo
  - Replace use of obsolete wrapper class Gaudi::Math::invertPosDefSymMatrix
    with direct call to SMatrix InvertChol() method. Fixes gcc48 warning

@@ -35,6 +35,9 @@ namespace LHCb
     /// Construct vertex from set of states. also fits the vertex.
     TrackStateVertex(const std::vector<const LHCb::State*>& states, double maxdchisq=0.01, size_t maxiterations=10) ;
 
+    /// Construct vertex from two states. also fits the vertex
+    TrackStateVertex(const LHCb::State& state1, const LHCb::State& state2, double maxdchisq=0.01, size_t maxiterations=10) ;
+
     /// Construct from a reference vertex. Then add track states
     /// later. If you use inverse of cov matrix, specify 'isweight=true'.
     TrackStateVertex(const Gaudi::XYZPoint& refposition, const Gaudi::SymMatrix3x3& refcovariance, bool isweight=false) ;

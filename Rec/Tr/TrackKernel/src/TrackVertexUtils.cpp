@@ -10,11 +10,118 @@ namespace LHCb
 {
   namespace TrackVertexUtils {
 
+    ///////////////////////////////////////////////////////////////////////////
+    /// Return the chi2 of a track state with respect to a
+    /// vertex. This is also known as the 'IPCHI2'.
+    ///////////////////////////////////////////////////////////////////////////
+    double vertexChi2(const LHCb::State& state, 
+		      const Gaudi::XYZPoint& vertexpos,
+		      const Gaudi::SymMatrix3x3& vertexcov)
+    {  
+      double tx = state.tx() ;
+      double ty = state.ty() ;
+      double dz = vertexpos.z() - state.z() ;
+      double dx = state.x() + dz * tx - vertexpos.x() ;
+      double dy = state.y() + dz * ty - vertexpos.y() ;
+      const Gaudi::SymMatrix5x5& trkcov = state.covariance() ;
+      
+      // compute the covariance matrix. first only the trivial parts:
+      double cov00 = vertexcov(0,0) + trkcov(0,0) ;
+      double cov10 = vertexcov(1,0) + trkcov(1,0) ;
+      double cov11 = vertexcov(1,1) + trkcov(1,1) ;
+      
+      // add the contribution from the extrapolation
+      cov00 += dz*dz*trkcov(2,2) + 2*dz*trkcov(2,0) ;
+      cov10 += dz*dz*trkcov(3,2) + dz*(trkcov(3,0)+trkcov(2,1)) ;
+      cov11 += dz*dz*trkcov(3,3) + 2*dz*trkcov(3,1) ;
+      
+      // add the contribution from pv Z
+      cov00 += tx*tx*vertexcov(2,2)  -  2*tx*vertexcov(2,0) ;
+      cov10 += tx*ty*vertexcov(2,2)  -  ty*vertexcov(2,0) - tx*vertexcov(2,1) ;
+      cov11 += ty*ty*vertexcov(2,2)  -  2*ty*vertexcov(2,1) ;
+      
+      // invert the covariance matrix
+      double D = cov00*cov11 - cov10*cov10 ;
+      double invcov00 = cov11 / D ;
+      double invcov10 = -cov10 / D ;
+      double invcov11 = cov00 / D ;
+      
+      return dx*dx * invcov00 + 2*dx*dy * invcov10 + dy*dy * invcov11 ;
+    }
+ 
+    ///////////////////////////////////////////////////////////////////////////
+    /// Return the chi2 of the vertex of two track states
+    ///////////////////////////////////////////////////////////////////////////
+    double vertexChi2( const LHCb::State& stateA, const LHCb::State& stateB )
+    {
+      // first compute the cross product of the directions. we'll need this in any case
+      const double txA = stateA.tx() ;
+      const double tyA = stateA.ty() ;
+      const double txB = stateB.tx() ;
+      const double tyB = stateB.ty() ;
+      double nx = tyA - tyB ; //   y1 * z2 - y2 * z1
+      double ny = txB - txA ; // - x1 * z2 + x2 * z1
+      double nz = txA * tyB - tyA * txB ; //   x1 * y2 - x2 * y1
+      // double n2 = nx*nx + ny*ny + nz*nz ;
+      
+      // compute doca. we don't divide by the normalization to save time. we call it 'ndoca'
+      double dx = stateA.x() - stateB.x() ;
+      double dy = stateA.y() - stateB.y() ;
+      double dz = stateA.z() - stateB.z() ;
+      double ndoca = dx*nx + dy*ny + dz*nz;
+      
+      // the hard part: compute the jacobians :-)
+      Gaudi::Vector4 jacA, jacB ;
+      jacA(0) = nx ;
+      jacA(1) = ny ;
+      jacA(2) = -dy + dz*tyB ;
+      jacA(3) = +dx - dz*txB ;
+      jacB(0) = -nx ;
+      jacB(1) = -ny ;
+      jacB(2) = +dy - dz*tyA ;
+      jacB(3) = -dx + dz*txA ;
+      
+      // compute the variance on ndoca
+      const Gaudi::TrackSymMatrix& covA = stateA.covariance() ;
+      const Gaudi::TrackSymMatrix& covB = stateB.covariance() ;    
+      double varndoca = 
+	ROOT::Math::Similarity( jacA, covA.Sub<Gaudi::SymMatrix4x4>(0,0) ) +
+	ROOT::Math::Similarity( jacB, covB.Sub<Gaudi::SymMatrix4x4>(0,0) ) ;
+      
+      // return the chi2
+      return ndoca*ndoca / varndoca ;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// Return the doca between two track states
+    ///////////////////////////////////////////////////////////////////////////
+    double doca( const LHCb::State& stateA, const LHCb::State& stateB ) 
+    {
+      // first compute the cross product of the directions.
+      const double txA = stateA.tx() ;
+      const double tyA = stateA.ty() ;
+      const double txB = stateB.tx() ;
+      const double tyB = stateB.ty() ;
+      double nx = tyA - tyB ; //   y1 * z2 - y2 * z1
+      double ny = txB - txA ; // - x1 * z2 + x2 * z1
+      double nz = txA * tyB - tyA * txB ; //   x1 * y2 - x2 * y1
+      double n  = std::sqrt(nx*nx + ny*ny + nz*nz) ;
+      // compute the doca
+      double dx = stateA.x() - stateB.x() ;
+      double dy = stateA.y() - stateB.y() ;
+      double dz = stateA.z() - stateB.z() ;
+      double ndoca = dx*nx + dy*ny + dz*nz;
+      return ndoca / n ;
+    }   
+
+    /////////////////////////////////////////////////////////////////////////
+    /// Compute the chi2 and decaylength of a 'particle' with respect
+    /// to a vertex. This should probably go into LHCb math.
+    /////////////////////////////////////////////////////////////////////////
     inline Gaudi::Vector3 transform( const Gaudi::XYZVector& vec)
     {
       return Gaudi::Vector3(vec.X(),vec.Y(),vec.Z()) ;
     }
-
     int computeChiSquare(const Gaudi::XYZPoint&  pos,
 			 const Gaudi::XYZVector& vec,
 			 const Gaudi::SymMatrix6x6& cov6,
