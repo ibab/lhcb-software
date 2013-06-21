@@ -4,6 +4,9 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+! 2013-06-21 - Rob Lambert
+ - fix bug when DoD is set.
+
 ! 2013-06-19 - Rob Lambert
  - Added a generic search/replace capability to the Juggler, to handle
    future cases of splitting up L0, HLT1 and HLT2.

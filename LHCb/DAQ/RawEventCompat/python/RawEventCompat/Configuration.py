@@ -353,7 +353,7 @@ class RawEventJuggler(ConfigurableUser):
                 raise AttributeError("You asked for DoD and also gave a sequencer, I can't do both at the same time")
             
             #if KillBanks or KillNodes... has been requested, I can't use DoD, it's unsafe. I don't know what's "before" and "after"
-            if self.getProp("DataOnDemand")  and (self.getProp("KillExtraNodes") or self.getProp("KillInputBanksBefore") or self.getProp("KillInputBanksAfter")):
+            if self.getProp("DataOnDemand")  and (self.getProp("KillExtraNodes") or self.isPropertySet("KillInputBanksBefore") or self.isPropertySet("KillInputBanksAfter")):
                 raise AttributeError("You have asked for some killing of banks, and asked for DoD, which is not a safe way to run. Either cope with the extra banks, ro use a sequencer instead of DoD")
             
             #raise import error if you don't have the correct requirements
