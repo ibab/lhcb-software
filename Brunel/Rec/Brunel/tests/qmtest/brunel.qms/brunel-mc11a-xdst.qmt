@@ -9,7 +9,7 @@ from Configurables import LHCbApp
 LHCbApp().DDDBtag="head-20110914"
 LHCbApp().CondDBtag="sim-20111020-vc-md100"
 
-EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/MC/2011/XDST/00012935/0000/00012935_00000827_3.xdst?svcClass=lhcbdisk'"]
+EventSelector().Input = ["DATAFILE='PFN:root://eoslhcb.cern.ch//eos/lhcb/swtest/lhcb/MC/2011/XDST/00012935/0000/00012935_00000827_3.xdst"]
 
 from Brunel.Configuration import *
 Brunel().EvtMax   = 10

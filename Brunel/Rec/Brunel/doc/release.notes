@@ -9,6 +9,7 @@ Purpose: LHCb reconstruction program
 - Changes to tests
   . Fix a bug in the exclusions file, introduced in v44r5, that meant that
     comparisons with reference were always successful.
+  . Pick up input files from CERN-SWTEST (EOS), new location for 'freezer'
 
 </PRE><H1><A NAME=v44r5>2013-06-07 Brunel v44r5</A></H1><PRE>
 This version uses projects LCG 65, Gaudi v23r8, LHCb v36r0, Lbcom v14r0,
