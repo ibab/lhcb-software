@@ -29,12 +29,12 @@ DECLARE_TOOL_FACTORY( TaggerNEWKaonSameTool )
   // preselection
   declareProperty( "Kaon_PIDk_cut",     m_PID_k_cut     =  0.75);
   declareProperty( "Kaon_PIDkp_cut",    m_PIDkp_cut     = -8.5 );
-  declareProperty( "Kaon_ghost_cut",    m_ghost_cut     = -999.0 );
+  declareProperty( "Kaon_ghost_cut",    m_ghost_cut     = 1000000. );
   declareProperty( "Kaon_distPhi_cut",  m_distPhi_cut_kaon= 0.005 );
 
-  declareProperty( "Kaon_P0_Cal",        m_P0_Cal_kaon   = 0.4083 );
-  declareProperty( "Kaon_P1_Cal",        m_P1_Cal_kaon   = 0.851 );
-  declareProperty( "Kaon_AverageOmega",  m_AverageOmega  = 0.4296 );
+  declareProperty( "Kaon_P0_Cal",        m_P0_Cal_kaon   = 0.4060 );
+  declareProperty( "Kaon_P1_Cal",        m_P1_Cal_kaon   = 0.88);
+  declareProperty( "Kaon_AverageOmega",  m_AverageOmega  = 0.4302 );
   declareProperty( "Kaon_ProbMin",       m_ProbMin_kaon  = 0.5 );
   declareProperty( "Kaon_ProbMax",       m_ProbMax_kaon  = 0.5 );
 
@@ -144,8 +144,8 @@ Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
     //const double cloneDist = (*ipart)->proto()->track()->info(LHCb::Track::CloneDist, -1.);
     //if (cloneDist!=-1) continue;
 
-    const double tsa = (*ipart)->proto()->track()->likelihood();
-    if( tsa < m_ghost_cut ) continue;
+    const double ghostProb = (*ipart)->proto()->track()->ghostProbability();
+    if( ghostProb > m_ghost_cut ) continue;
 
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
     if( distphi < m_distPhi_cut_kaon ) continue;
@@ -301,7 +301,23 @@ Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
     //values.push_back(pos_sign_tag.at(3)*pos_rnet_opp.at(3));
     //values.push_back(pos_sign_tag.at(3)*pos_pidk.at(3)    );
 
-    m_nn_2 = mynn2_reader->GetMvaValue(values);
+    std::vector<double> valuescc;
+    valuescc.push_back(cands_nn_2                           );
+    valuescc.push_back(no_vtx                               );
+    valuescc.push_back(log(B_Pt)                            );
+    valuescc.push_back(-1. * pos_sign_tag.at(0)*pos_rnet_opp.at(0));
+    valuescc.push_back(-1. * pos_sign_tag.at(0)*pos_pidk.at(0)    );
+    valuescc.push_back(-1. * pos_sign_tag.at(1)*pos_rnet_opp.at(1));
+    valuescc.push_back(-1. * pos_sign_tag.at(1)*pos_pidk.at(1)    );
+    valuescc.push_back(-1. * pos_sign_tag.at(2)*pos_rnet_opp.at(2));
+    valuescc.push_back(-1. * pos_sign_tag.at(2)*pos_pidk.at(2)    );
+    //valuescc.push_back(-1. * pos_sign_tag.at(3)*pos_rnet_opp.at(3));
+    //valuescc.push_back(-1. * pos_sign_tag.at(3)*pos_pidk.at(3)    );
+
+    double nn_2 =  mynn2_reader->GetMvaValue(values);
+    double nn_2cc =  mynn2_reader->GetMvaValue(valuescc);
+
+    m_nn_2 = (nn_2 + (1. - nn_2cc))* 0.5;
 
     my_os_k_eta = m_nn_2;
 
@@ -320,8 +336,6 @@ Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
 
   if( ! ikaon ) return tkaon;
 
-  my_os_k_eta = m_P0_Cal_kaon + m_P1_Cal_kaon * (my_os_k_eta  - m_AverageOmega);
-
   if(my_os_k_eta >= m_ProbMax_kaon)
     my_os_k_dec = 1;
 
@@ -331,6 +345,8 @@ Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
   if(my_os_k_eta > 0.5)
     my_os_k_eta = 1. - my_os_k_eta;
 
+  my_os_k_eta = m_P0_Cal_kaon + m_P1_Cal_kaon * (my_os_k_eta  - m_AverageOmega);
+  
   tkaon.setOmega( my_os_k_eta );
   tkaon.setDecision( my_os_k_dec );
   tkaon.setType( Tagger::SS_Kaon);

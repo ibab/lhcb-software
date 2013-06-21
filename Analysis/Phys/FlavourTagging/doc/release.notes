@@ -5,6 +5,13 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2013-06-21 - Georg Krocker
+ - Added Bugfix for conditional probabilities in TaggerNEWKaonSameTool.cpp
+ - Added possibility for TaggerNEWKaonSameTool.cpp to run on Reco14 using ghost
+   probability
+ - Changed order of calibration/tag decision so that first decision is made, then
+   the calibration is performed (was wrong before)
+
 ! 2013-06-18 - Chris Jones
  - Fix a couple clang 3.2 warnings.
  - Remove empty finalize() method from BTaggingTool.
