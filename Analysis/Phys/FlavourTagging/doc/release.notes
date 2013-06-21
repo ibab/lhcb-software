@@ -5,6 +5,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2013-06-21 - Chris Jones
+ - Fix some new -pedantic warnings from NNetTool_MLP
+
 ! 2013-06-21 - Georg Krocker
  - Added Bugfix for conditional probabilities in TaggerNEWKaonSameTool.cpp
  - Added possibility for TaggerNEWKaonSameTool.cpp to run on Reco14 using ghost

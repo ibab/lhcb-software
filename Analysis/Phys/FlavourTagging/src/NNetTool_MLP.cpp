@@ -23,10 +23,10 @@
 // Declaration of the Algorithm Factory
 DECLARE_TOOL_FACTORY( NNetTool_MLP )
 //=============================================================================
-  NNetTool_MLP::NNetTool_MLP( const std::string& type,
+NNetTool_MLP::NNetTool_MLP( const std::string& type,
                             const std::string& name,
-                            const IInterface* parent ) :
-    GaudiTool ( type, name, parent )
+                            const IInterface* parent )
+: GaudiTool ( type, name, parent )
 {
   declareInterface<INNetTool>(this);
 
@@ -36,9 +36,9 @@ DECLARE_TOOL_FACTORY( NNetTool_MLP )
   declareProperty( "P1_mu_scale", m_P1mu =  1.23885);
   declareProperty( "P2_mu_scale", m_P2mu =  -0.00793716);
   declareProperty( "P3_mu_scale", m_P3mu =  0.647253);
-  
+
   //e scaleX=-3.04032 scaleY=1.7055 offsetY=-0.136785 pivotX=0.646733
-  declareProperty( "P0_e_scale", m_P0e =  -3.04032);  
+  declareProperty( "P0_e_scale", m_P0e =  -3.04032);
   declareProperty( "P1_e_scale", m_P1e =  1.7055);
   declareProperty( "P2_e_scale", m_P2e =  -0.136785);
   declareProperty( "P3_e_scale", m_P3e =  0.646733);
@@ -73,16 +73,20 @@ DECLARE_TOOL_FACTORY( NNetTool_MLP )
 
 NNetTool_MLP::~NNetTool_MLP(){}
 //=============================================================================
-StatusCode NNetTool_MLP::initialize() { 
-  StatusCode sc = GaudiTool::initialize(); 
+StatusCode NNetTool_MLP::initialize() 
+{
+  StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
   std::string dir = m_XML_dir;
-  if(dir.compare(0,1,"$")==0 ) {
+  if ( dir.compare(0,1,"$")==0 ) 
+  {
     int i = dir.find_first_of("/");
     int len = dir.length();
     const std::string env = dir.substr(1, i-1);
     m_XML_dir = ( std::string(getenv(env.c_str())) + dir.substr(i,len-i+1));
-    debug()<< " directory "<< dir << " resolved "<<m_XML_dir<<endreq;    
-  }else {
+    debug()<< " directory "<< dir << " resolved "<<m_XML_dir<<endreq;
+  } else
+  {
     debug()<< " directory not starting with and evniromental variable "<<m_XML_dir<<" "<<dir.at(0)<< endreq;
   }
   return sc;
@@ -96,11 +100,11 @@ double NNetTool_MLP::pol2(double x, double a0, double a1)
 {
   return a0+a1*x;
 }
-double NNetTool_MLP::pol3(double x, double a0, double a1, double a2) 
+double NNetTool_MLP::pol3(double x, double a0, double a1, double a2)
 {
   return a0+a1*x+a2*x*x;
 }
-double NNetTool_MLP::pol4(double x, double a0, double a1, double a2, double a3) 
+double NNetTool_MLP::pol4(double x, double a0, double a1, double a2, double a3)
 {
   return a0+a1*x+a2*x*x+a3*x*x*x;
 }
@@ -108,14 +112,14 @@ double NNetTool_MLP::func(double x, double a0=0, double a1=0., double a2=0., dou
 {
   // arcTAN = atan((x-[3])*[0])+1.5)*[1]*0.17+[2]
   double arg = ((x-a3)*a0);
-  double res = ((atan(arg))+1.5)*a1*0.17+a2;
+  double res = ((std::atan(arg))+1.5)*a1*0.17+a2;
   return res;
 }
 //=============================================================================
 
-void NNetTool_MLP::normaliseOS(std::vector<double>& par) 
+void NNetTool_MLP::normaliseOS(std::vector<double>& par)
 {
-  if(msgLevel(MSG::DEBUG)) 
+  if(msgLevel(MSG::DEBUG))
     debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
            <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)<<" "<<par.at(7)
            <<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
@@ -148,9 +152,9 @@ void NNetTool_MLP::normalisepSS(std::vector<double>& par)
   par.at(7) /= 12.;  //nndq
   if(par.at(7)>1.) par.at(7) = 1.;
 }
-void NNetTool_MLP::normaliseVtx(std::vector<double>& par) 
+void NNetTool_MLP::normaliseVtx(std::vector<double>& par)
 {
-  if(msgLevel(MSG::DEBUG)) 
+  if(msgLevel(MSG::DEBUG))
     debug()<<"par vtx = "<<par.at(0)<<" "<<par.at(1)<<" "<<par.at(2)
            <<" "<<par.at(3)<<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
            <<" "<<par.at(7)<<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(10)<<endreq;
@@ -166,12 +170,12 @@ void NNetTool_MLP::normaliseVtx(std::vector<double>& par)
   par.at(10)/= 6.;  //SVM
 }
 //=============================================================================
-double NNetTool_MLP::MLPm(std::vector<double>& par) {
-
+double NNetTool_MLP::MLPm(std::vector<double>& par)
+{
   normaliseOS(par);
   NNmuon net;
   const double rnet = net.value(0, par.at(2),par.at(3),par.at(8),
-                          par.at(1),par.at(4));
+                                par.at(1),par.at(4));
 
   const double pn = 1.0-pol4(rnet, m_P0mu, m_P1mu, m_P2mu, m_P3mu);// <=========
 
@@ -192,11 +196,11 @@ double NNetTool_MLP::MLPe(std::vector<double>& par)
   normaliseOS( par );
   NNele net;
   const double rnet = net.value(0, par.at(2),par.at(3),par.at(8),
-                          par.at(1),par.at(4));
+                                par.at(1),par.at(4));
 
   const double pn = 1.0-pol3(rnet, m_P0e, m_P1e, m_P2e);// <=========
 
-  if(msgLevel(MSG::DEBUG)) 
+  if(msgLevel(MSG::DEBUG))
   {
     debug()<<"ele: par = "<<par.at(2)<<" "<<par.at(3)
            <<" "<<par.at(8)<<" "<<par.at(1)<<" "<<par.at(4)<<endreq;
@@ -212,8 +216,8 @@ double NNetTool_MLP::MLPk(std::vector<double>& par )
   normaliseOS( par );
   NNkaon net;
   const double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(8),
-                          par.at(1),par.at(4));
-  
+                                par.at(1),par.at(4));
+
   const double pn = 1.0-pol4(rnet, m_P0k, m_P1k, m_P2k, m_P3k);// <=========
 
   if(msgLevel(MSG::DEBUG))
@@ -249,17 +253,17 @@ double NNetTool_MLP::MLPkS(std::vector<double>& par)
 }
 
 //=============================================================================
-double NNetTool_MLP::MLPpS(std::vector<double>& par) {
-
+double NNetTool_MLP::MLPpS(std::vector<double>& par) 
+{
   normaliseOS( par );
   normalisepSS( par );
   NNpionS net;
   const double rnet = net.value(0,par.at(0),par.at(3),par.at(4),
-                          par.at(8),par.at(1),par.at(7),par.at(5));
+                                par.at(8),par.at(1),par.at(7),par.at(5));
 
   const double pn = 1.0-pol3(rnet, m_P0ps, m_P1ps, m_P2ps);// <=========
 
-  if(msgLevel(MSG::DEBUG)) 
+  if(msgLevel(MSG::DEBUG))
   {
     debug()<<"pS: par = "<<par.at(0)<<" "<<par.at(3)<<" "<<par.at(4)
            <<" "<<par.at(8)<<" "<<par.at(1)<<" "<<par.at(7)<<" "<<par.at(5)<<endreq;
@@ -272,15 +276,14 @@ double NNetTool_MLP::MLPpS(std::vector<double>& par) {
 //=============================================================================
 double NNetTool_MLP::MLPvtx(std::vector<double>& par)
 {
-  
   normaliseVtx( par );
   NNvtx net;
   const double rnet = net.value(0,par.at(0),par.at(1),par.at(2),par.at(3),par.at(4),
-                          par.at(5),par.at(9),par.at(10));
+                                par.at(5),par.at(9),par.at(10));
 
   const double pn = 1.0-pol2(rnet, m_P0vtx, m_P1vtx);// <=========
-  
-  if(msgLevel(MSG::DEBUG)) 
+
+  if(msgLevel(MSG::DEBUG))
   {
     debug()<<"vtx: par = "<<par.at(0)<<" "<<par.at(1)<<" "<<par.at(2)
            <<" "<<par.at(3)<<" "<<par.at(4)<<" "<<par.at(5)<<" "
@@ -296,16 +299,16 @@ double NNetTool_MLP::MLPvtx(std::vector<double>& par)
 //=============================================================================
 // New NNet trained on DATA 2012  !!!!!!!!!!!
 //=============================================================================
-double NNetTool_MLP::MLPmTMVA(std::list<std::pair<std::string, Float_t> >& par) { 
-
-  double rnet = 0.5;  
-  double pn = 0.5;  
+double NNetTool_MLP::MLPmTMVA(std::list<std::pair<std::string, Float_t> >& par) 
+{
+  double rnet = 0.5;
+  double pn = 0.5;
 
   TString weightfile(m_XML_dir+m_NNetWeights_mu);
   TString methodName = TString("MLPBNN")+TString("method");
-  static MyReader reader(methodName, weightfile, par);  
+  static MyReader reader(methodName, weightfile, par);
   rnet = reader.eval(par);
-  
+
   if (rnet>=0 && rnet<=1) {
     pn = 1.0 -func(rnet, m_P0mu, m_P1mu, m_P2mu, m_P3mu);
   } else {
@@ -313,10 +316,10 @@ double NNetTool_MLP::MLPmTMVA(std::list<std::pair<std::string, Float_t> >& par) 
     pn = -1.;
   }
   return pn;
-}; 
+}
 //=============================================================================
-double NNetTool_MLP::MLPeTMVA(std::list<std::pair<std::string, Float_t> >& par) {
-
+double NNetTool_MLP::MLPeTMVA(std::list<std::pair<std::string, Float_t> >& par) 
+{
   double rnet = 0.5;
   double pn = 0.5;
 
@@ -324,21 +327,21 @@ double NNetTool_MLP::MLPeTMVA(std::list<std::pair<std::string, Float_t> >& par) 
   TString methodName = TString("MLPBNN")+TString("method");
   static MyReader reader(methodName, weightfile, par);
   rnet = reader.eval(par);
-  
-  if (rnet>=0 && rnet<=1) {    
+
+  if (rnet>=0 && rnet<=1) {
     pn = 1.0 -func(rnet, m_P0e, m_P1e, m_P2e, m_P3e);
   } else {
-    debug()<<"**********************BAD TRAINING ele"<<rnet<<endmsg;    
+    debug()<<"**********************BAD TRAINING ele"<<rnet<<endmsg;
     pn = -1.;
   }
   return pn;
-};
+}
 
 //=============================================================================
-double NNetTool_MLP::MLPkaonTMVA(std::list<std::pair<std::string, Float_t> >& par) {
-
-  double rnet = 0.5;  
-  double pn = 0.5;  
+double NNetTool_MLP::MLPkaonTMVA(std::list<std::pair<std::string, Float_t> >& par) 
+{
+  double rnet = 0.5;
+  double pn = 0.5;
 
   TString weightfile(m_XML_dir+m_NNetWeights_kaon);
   TString methodName = TString("MLPBNN")+TString("method");
@@ -346,33 +349,32 @@ double NNetTool_MLP::MLPkaonTMVA(std::list<std::pair<std::string, Float_t> >& pa
   rnet = reader.eval(par);
 
   if (rnet>=0 && rnet <=1){
-    pn = 1.0 -func(rnet, m_P0k, m_P1k, m_P2k, m_P3k);    
+    pn = 1.0 -func(rnet, m_P0k, m_P1k, m_P2k, m_P3k);
   }
-  else{    
+  else{
     debug()<<"**********************BAD TRAINING kaon"<<rnet<<endmsg;
     pn = -1.;
   }
   return pn;
-
-};
+}
 
 //=============================================================================
-double NNetTool_MLP::MLPvtxTMVA(std::list<std::pair<std::string, Float_t> >& par) {
-
-  double rnet = 0.5;  
-  double pn = 0.5;  
+double NNetTool_MLP::MLPvtxTMVA(std::list<std::pair<std::string, Float_t> >& par)
+{
+  double rnet = 0.5;
+  double pn = 0.5;
 
   TString weightfile(m_XML_dir+m_NNetWeights_vtx);
   TString methodName = TString("MLPBNN")+TString("method");
   static MyReader reader(methodName, weightfile, par);
   rnet = reader.eval(par);
-  
+
   if (rnet>=0 && rnet<=1) {
-    pn = 1.0 -func(rnet, m_P0vtx, m_P1vtx, m_P2vtx, m_P3vtx);    
+    pn = 1.0 -func(rnet, m_P0vtx, m_P1vtx, m_P2vtx, m_P3vtx);
   } else {
     debug()<<"**********************BAD TRAINING vtx"<<rnet<<endmsg;
-    pn = -1.;    
-  }  
+    pn = -1.;
+  }
   return pn;
-};
+}
 //============================================================================
