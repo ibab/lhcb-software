@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-06-21 - Rob Lambert
+ - New features to clean up extra banks. 
+ - Tests for DoD and tests for new features which can clean up extra banks
+
+! 2013-06-21 - Rob Lambert
  - fix bug when DoD is set.
 
 ! 2013-06-19 - Rob Lambert

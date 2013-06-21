@@ -263,10 +263,11 @@ class RawEventJuggler(ConfigurableUser):
     __queried_configurables__ = [RawEventFormatConf]
     
     __slots__ = {
-        "Input" : 2.0  #Raw event location to start with
-        , "Output" : 0.0 #Raw Event location to go to
+        "Input" : None  #Raw event location to start with
+        , "Output" : None #Raw Event location to go to
         , "KillInputBanksBefore" : None #Regex of banks to kill BEFORE copying around, from input locations
         , "KillInputBanksAfter" : None #Regex of banks to kill AFTER copying around, from input locations
+        , "KillExtraBanks" : False #Bool, whether or not to remove banks which don't exist in target format
         , "KillExtraNodes" : False #Bool, whether to remove nodes which don't exist in target format
         , "WriterOptItemList" : None #append a writer here to add output locations as OptItemList
         , "WriterItemList" : None #append a writer here to add output locations as ItemList
@@ -296,6 +297,10 @@ class RawEventJuggler(ConfigurableUser):
         #then get them ...
         locs,rec=_getDict()
         added_locations=[]
+        
+        if not self.isPropertySet("Output") or  not self.isPropertySet("Input"):
+            raise AttributeError("You must set bith the input and the output version, this can be a version number (float, int) or a name, see: "+rec.__str__())
+        
         output_locations=ReverseDict(self.getProp("Output"),locs,rec)
         input_locations=ReverseDict(self.getProp("Input"),locs,rec)
         #check if a Trigger TCK is needed
@@ -327,7 +332,7 @@ class RawEventJuggler(ConfigurableUser):
                 if not len(killBanks):
                     continue
                 loc=self.__replaceWrap__(loc)
-                bk=bankKiller("killBefore"+loc.replace("/",""))
+                bk=bankKiller(("kill_"+loc.replace("/","_")+"_Before").replace("__","_"))
                 killBefore.append(bk)
                 bk.RawEventLocations=[loc]
                 bk.BankTypes=killBanks
@@ -353,8 +358,8 @@ class RawEventJuggler(ConfigurableUser):
                 raise AttributeError("You asked for DoD and also gave a sequencer, I can't do both at the same time")
             
             #if KillBanks or KillNodes... has been requested, I can't use DoD, it's unsafe. I don't know what's "before" and "after"
-            if self.getProp("DataOnDemand")  and (self.getProp("KillExtraNodes") or self.isPropertySet("KillInputBanksBefore") or self.isPropertySet("KillInputBanksAfter")):
-                raise AttributeError("You have asked for some killing of banks, and asked for DoD, which is not a safe way to run. Either cope with the extra banks, ro use a sequencer instead of DoD")
+            if self.getProp("DataOnDemand")  and (self.getProp("KillExtraNodes") or self.isPropertySet("KillInputBanksBefore") or self.isPropertySet("KillInputBanksAfter") or self.getProp("KillExtraBanks")):
+                raise AttributeError("You have asked for some killing of banks, and asked for DoD, which is not a safe way to run. Either cope with the extra banks, or use a sequencer instead of DoD")
             
             #raise import error if you don't have the correct requirements
             from Configurables import RawEventMapCombiner, EventNodeKiller, bankKiller
@@ -367,14 +372,21 @@ class RawEventJuggler(ConfigurableUser):
             loc_to_alg_dict={}
             for loc in output_locations:
                 if loc not in input_locations:
+                    #if none of the banks are available, skip
+                    if len([abank for abank in output_locations[loc] if abank in locs[self.getProp("Input")]])==0:
+                        print "#WARNING, nowhere to copy any banks for "+loc+" from, skipping"
+                        continue
                     wloc=self.__replaceWrap__(loc)
-                    loc_to_alg_dict[wloc]=RawEventMapCombiner("create"+wloc.replace("/",""))
+                    loc_to_alg_dict[wloc]=RawEventMapCombiner(("create_"+wloc.replace("/","_")).replace("__","_").rstrip("_"))
                     loc_to_alg_dict[wloc].OutputRawEventLocation=wloc
                     loc_to_alg_dict[wloc].RawBanksToCopy={}
                     
                     added_locations.append(wloc)
                     
                     for abank in output_locations[loc]:
+                        if abank not in locs[self.getProp("Input")]:
+                            print "#WARNING, nowhere to copy "+abank+" from, skipping"
+                            continue
                         loc_to_alg_dict[wloc].RawBanksToCopy[abank]=self.__replaceWrap__(WhereBest(abank,self.getProp("Input"),locs,rec))
             
             
@@ -384,15 +396,19 @@ class RawEventJuggler(ConfigurableUser):
             
             
             killAfter=[]
-            if self.isPropertySet("KillInputBanksAfter"):
+            if self.isPropertySet("KillInputBanksAfter") or self.getProp("KillExtraBanks"):
                 import re
                 for loc in input_locations:
                     #see if this location has banks to kill
-                    killBanks=[abank for abank in input_locations[loc] if re.match(self.getProp("KillInputBanksAfter"),abank)]
+                    killBanks=[]
+                    if self.isPropertySet("KillInputBanksAfter"):
+                        killBanks+=[abank for abank in input_locations[loc] if re.match(self.getProp("KillInputBanksAfter"),abank)]
+                    if self.getProp("KillExtraBanks"):
+                        killBanks+=[abank for abank in input_locations[loc] if (loc in output_locations and abank not in output_locations[loc])]
                     if not len(killBanks):
                         continue
                     loc=self.__replaceWrap__(loc)
-                    bk=bankKiller("killAfter"+loc.replace("/",""))
+                    bk=bankKiller(("kill_"+loc.replace("/","_")+"_After").replace("__","_"))
                     killAfter.append(bk)
                     bk.RawEventLocations=[loc]
                     bk.BankTypes=killBanks
@@ -407,7 +423,7 @@ class RawEventJuggler(ConfigurableUser):
                         if loc not in output_locations:
                             enk.Nodes.append(self.__replaceWrap__(loc))
             
-        elif self.isPropertySet("KillInputBanksAfter") or self.getProp("KillExtraNodes"):
+        elif self.isPropertySet("KillInputBanksAfter") or self.getProp("KillExtraNodes") or self.isPropertySet("KillExtraBanks"):
             raise AttributeError("You've asked to kill something from the input *after* copying, but you aren't actually doing any copying. Please kill them yourself without this configurable, or use KillInputBanksBefore!")
         
         ###############################################
