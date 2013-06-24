@@ -149,6 +149,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
                               const RecVertex* RecVert,
                               Particle::ConstVector& vtags )
 {
+  m_extraInfoToClear.clear();
 
   theTag.setDecision( FlavourTag::none );
   if ( !AXB )
@@ -857,6 +858,7 @@ void BTaggingTool::clearExtraInfo()
     if ( (*iC)->hasInfo(LHCb::Particle::LastGlobal+1) ) (*iC)->eraseInfo(LHCb::Particle::LastGlobal+1);
     if ( (*iC)->hasInfo(LHCb::Particle::LastGlobal+2) ) (*iC)->eraseInfo(LHCb::Particle::LastGlobal+2);
   }
+  m_extraInfoToClear.clear();
 }
 
 //=========================================================================
