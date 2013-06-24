@@ -1,4 +1,3 @@
-// $Id: VPDigit2MCHitLinker.cpp,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Linker
@@ -142,12 +141,4 @@ void VPDigit2MCHitLinker::refsToRelate(std::vector<HitPair>& selectedRefs,
   }
   // printf("\n");
   return;
-}
-
-
-//============================================================================
-StatusCode VPDigit2MCHitLinker::finalize() {
-
-  return GaudiAlgorithm::finalize();
-
 }

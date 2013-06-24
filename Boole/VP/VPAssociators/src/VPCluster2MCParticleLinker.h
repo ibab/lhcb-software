@@ -1,14 +1,9 @@
-// $Id: VPCluster2MCParticleLinker.h,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
 #ifndef VPCLUSTER2MCPARTICLELINKER_H
 #define VPCLUSTER2MCPARTICLELINKER_H 1
 // Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 // Event
 #include "Event/MCParticle.h"
-
-namespace LHCb {
-  class MCParticle;
-};
 
 /** @class VPCluster2MCParticleLinker VPCluster2MCParticleLinker.h
  *  @Based on ST code
@@ -28,7 +23,6 @@ public:
   virtual ~VPCluster2MCParticleLinker(); ///< Destructor
   virtual StatusCode initialize();            ///< Algorithm initialization
   virtual StatusCode execute   ();            ///< Algorithm execution
-  virtual StatusCode finalize  ();            ///< Algorithm finalise
   typedef std::pair<const LHCb::MCParticle*,double> PartPair;
   typedef std::map<const LHCb::MCParticle*,double> ParticleMap;
   // Path to put table
@@ -56,10 +50,3 @@ inline std::string VPCluster2MCParticleLinker::outputData() const {
 }
 
 #endif // VPCLUSTER2MCPARTICLELINKER_H
-
-
-
-
-
-
-

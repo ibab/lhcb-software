@@ -1,4 +1,3 @@
-// $Id: VPDigit2MCHitLinker.h,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
 #ifndef VPDIGIT2MCHITLINKER_H
 #define VPDIGIT2MCHITLINKER_H 1
 // from Gaudi
@@ -23,7 +22,6 @@ public:
   virtual ~VPDigit2MCHitLinker(); ///< Destructor
   virtual StatusCode initialize();     ///< Algorithm initialization
   virtual StatusCode execute   ();     ///< Algorithm execution
-  virtual StatusCode finalize  ();     ///< Algorithm finalise
   typedef std::pair<const LHCb::MCHit*,double> HitPair;
   typedef std::map<const LHCb::MCHit*,double> HitMap;
   // Path to put table

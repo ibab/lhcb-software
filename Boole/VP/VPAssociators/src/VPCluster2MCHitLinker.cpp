@@ -1,4 +1,3 @@
-// $Id: VPCluster2MCHitLinker.cpp,v 1.3 2010-02-25 12:15:09 marcin Exp $
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Linker
@@ -28,6 +27,7 @@ DECLARE_ALGORITHM_FACTORY(VPCluster2MCHitLinker);
 VPCluster2MCHitLinker::VPCluster2MCHitLinker(const std::string& name,
                             ISvcLocator* pSvcLocator) 
   : GaudiAlgorithm(name, pSvcLocator),
+    m_digitCont(NULL),
     m_hitLocation("MC/VP/Hits"),
     m_asctLocation(LHCb::VPDigitLocation::VPDigitLocation + "2MCHits")
 {
@@ -171,11 +171,4 @@ StatusCode VPCluster2MCHitLinker::associateToTruth(
   }
 
   return StatusCode::SUCCESS;
-}
-
-
-//============================================================================
-StatusCode VPCluster2MCHitLinker::finalize() {
-
-  return GaudiAlgorithm::finalize();
 }

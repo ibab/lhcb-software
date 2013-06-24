@@ -1,4 +1,3 @@
-// $Id: VPCluster2MCHitLinker.h,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
 #ifndef VPCLUSTER2MCHITLINKER_H
 #define VPCLUSTER2MCHITLINKER_H 1
 // Gaudi
@@ -24,7 +23,6 @@ public:
   virtual ~VPCluster2MCHitLinker(); ///< Destructor
   virtual StatusCode initialize();       ///< Algorithm initialization
   virtual StatusCode execute   ();       ///< Algorithm execution
-  virtual StatusCode finalize  ();       ///< Algorithm finalise
   typedef std::pair<const LHCb::MCHit*,double> HitPair;
   typedef std::map<const LHCb::MCHit*,double> HitMap;
   // Path to put table

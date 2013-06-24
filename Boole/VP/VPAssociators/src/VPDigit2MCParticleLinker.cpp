@@ -1,4 +1,3 @@
-// $Id: VPDigit2MCParticleLinker.cpp,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Linker
@@ -136,12 +135,4 @@ void VPDigit2MCParticleLinker::refsToRelate(
     ++iterMap;
   }
   return;
-}
-
-
-//============================================================================
-StatusCode VPDigit2MCParticleLinker::finalize() {
-
-  return GaudiAlgorithm::finalize();
-
 }

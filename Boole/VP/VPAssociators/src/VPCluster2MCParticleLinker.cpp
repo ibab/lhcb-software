@@ -1,4 +1,3 @@
-// $Id: VPCluster2MCParticleLinker.cpp,v 1.3 2010-02-25 12:15:20 marcin Exp $
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // Linker
@@ -143,11 +142,4 @@ StatusCode VPCluster2MCParticleLinker::associateToTruth(
   }
   partMap[0] += 1.0 - foundCharge;
   return StatusCode::SUCCESS;
-}
-
-
-//============================================================================
-StatusCode VPCluster2MCParticleLinker::finalize() {
-
-  return GaudiAlgorithm::finalize();
 }

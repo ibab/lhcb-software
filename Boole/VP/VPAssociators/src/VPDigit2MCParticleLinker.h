@@ -1,4 +1,3 @@
-// $Id: VPDigit2MCParticleLinker.h,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
 #ifndef VPDIGIT2MCPARTICLELINKER_H
 #define VPDIGIT2MCPARTICLELINKER_H 1
 // from Gaudi
@@ -24,7 +23,6 @@ public:
   virtual ~VPDigit2MCParticleLinker(); ///< Destructor
   virtual StatusCode initialize();          ///< Algorithm initialization
   virtual StatusCode execute   ();          ///< Algorithm execution
-  virtual StatusCode finalize  ();          ///< Algorithm finalise
   typedef std::pair<const LHCb::MCParticle*,double> PartPair;
   typedef std::map<const LHCb::MCParticle*,double> ParticleMap;
   // Path to put table
