@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+
+! 2013-06-24 - Thomas Blake
+ - Updated B2LLK stripping line to use MergedSelection
+
 !========================= StrippingSelections v3r25 2013-05-17 =========================
 
 ! 2013-06-19 - Ronan Wallace

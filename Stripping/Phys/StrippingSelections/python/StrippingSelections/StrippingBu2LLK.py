@@ -27,12 +27,12 @@ __all__ = ('Bu2LLKConf', 'makeDiLepton', 'makeB2LLK' )
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand
+from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLooseKaons
 
-name = "B2LLK"
+default_name = "B2LLK"
 
 class Bu2LLKConf(LineBuilder) :
     """
@@ -200,9 +200,14 @@ def makeB2LLK(name, dileptonSel, kaonSel, kstarSel, _combcut, _bcut ):
     _Combine = CombineParticles(DecayDescriptors = _Decays,
                                 CombinationCut = _combcut,
                                 MotherCut = _bcut)
+    
+    _Merge   = MergedSelection("Merge"+name, 
+                               RequiredSelections = [ kaonSel, kstarSel ])
+    
+    
     return Selection(name,
                      Algorithm = _Combine,
-                     RequiredSelections = [ kaonSel, kstarSel, dileptonSel ] )
+                     RequiredSelections = [ _Merge, dileptonSel ]) 
 
 #####################################################
 def makeKaons(name, KaonIPCHI2, KaonPT):
