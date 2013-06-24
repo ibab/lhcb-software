@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-06-24 - Patrick Robbe
- - requirements: change definition of LHAPATH for LCG 65
+ - requirements: remove definition of LHAPATH
 
 ! 2013-06-13 - Gloria Corti
  - Change version of herwigpp from 2.6.1a to 2.6.1b as not yet used in 
