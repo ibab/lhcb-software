@@ -197,6 +197,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   }
   else
   {
+    clearExtraInfo();
     return Error( "No Vertex found! Skip." );
   }
 
@@ -283,6 +284,8 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
     if( c->hasInfo(LHCb::Particle::LastGlobal+1) ) c->eraseInfo(LHCb::Particle::LastGlobal+1);
     if( c->hasInfo(LHCb::Particle::LastGlobal+2) ) c->eraseInfo(LHCb::Particle::LastGlobal+2);
   }
+  
+  clearExtraInfo();
 
   return StatusCode::SUCCESS;
 }
@@ -515,6 +518,7 @@ BTaggingTool::chooseCandidatesReco12(const Particle* AXB,
         c->eraseInfo(LHCb::Particle::LastGlobal+1);
       }
       c->addInfo(LHCb::Particle::LastGlobal+1, ippu/ippuerr); // store the information on the IPPU of the tagging particle
+      m_extraInfoToClear.push_back( c );
       if (msgLevel(MSG::VERBOSE))
         verbose()<<"particle p="<<(*ip)->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
     }
@@ -643,7 +647,6 @@ BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
       c->eraseInfo(LHCb::Particle::LastGlobal+2);
     }
 
-
     // calculate the min IP wrt all pileup vtxs
     double ippu(0), ippuerr(0);
     m_util->calcIP( p, PileUpVtx, ippu, ippuerr );
@@ -653,6 +656,7 @@ BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
       if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts
 
       c->addInfo(LHCb::Particle::LastGlobal+1, ippu/ippuerr);
+      m_extraInfoToClear.push_back( c );
       if( msgLevel(MSG::VERBOSE) )
         verbose()<<"particle p="<<p->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
     }
@@ -841,6 +845,18 @@ BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
   counter("nCands") += vtags.size();
 #endif
   return vtags;
+}
+
+//=========================================================================
+
+void BTaggingTool::clearExtraInfo()
+{
+  for ( std::vector<LHCb::Particle*>::iterator iC = m_extraInfoToClear.begin();
+        iC != m_extraInfoToClear.end(); ++iC )
+  {
+    if ( (*iC)->hasInfo(LHCb::Particle::LastGlobal+1) ) (*iC)->eraseInfo(LHCb::Particle::LastGlobal+1);
+    if ( (*iC)->hasInfo(LHCb::Particle::LastGlobal+2) ) (*iC)->eraseInfo(LHCb::Particle::LastGlobal+2);
+  }
 }
 
 //=========================================================================

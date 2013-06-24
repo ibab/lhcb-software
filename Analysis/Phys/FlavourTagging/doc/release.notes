@@ -7,6 +7,8 @@
 
 ! 2013-06-24 - Chris Jones
  - Make the TMVA::Reader silent in MyReader.h
+ - Add some additional logic to make sure any added extra info is cleared after
+   each particle is tagged.
 
 ! 2013-06-21 - Chris Jones
  - Fix some new -pedantic warnings from NNetTool_MLP

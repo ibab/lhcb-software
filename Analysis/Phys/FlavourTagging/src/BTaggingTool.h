@@ -28,7 +28,7 @@
 
 #include "MultiplePersonalityCall.h"
 
-class DaVinciAlgorithm;
+//class DaVinciAlgorithm;
 
 /** @class BTaggingTool BTaggingTool.h
  *
@@ -90,6 +90,8 @@ private:
                          const LHCb::Particle::Range& parts,
                          const LHCb::RecVertex::ConstVector& PileUpVtx);
 
+  void clearExtraInfo();
+
 private:
 
   ITaggingUtils* m_util;
@@ -116,6 +118,8 @@ private:
 
   bool m_UseReFitPV;
   std::string m_personality;
+
+  std::vector<LHCb::Particle*> m_extraInfoToClear; ///< Particles to clear extra info from
 
 };
 
