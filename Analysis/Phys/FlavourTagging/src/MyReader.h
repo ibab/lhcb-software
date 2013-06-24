@@ -17,7 +17,7 @@ public:
   typedef std::list<std::pair<std::string, Float_t> > ParListType;
   MyReader(const TString& method, const TString& weightfile, const ParListType& par):
     m_method(method),
-    m_reader(new TMVA::Reader("!Color:!Silent")),
+    m_reader(new TMVA::Reader("!Color:Silent")),
     m_vars(new Float_t[par.size()])
   {
     Float_t *var = m_vars;

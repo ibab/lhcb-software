@@ -5,6 +5,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2013-06-24 - Chris Jones
+ - Make the TMVA::Reader silent in MyReader.h
+
 ! 2013-06-21 - Chris Jones
  - Fix some new -pedantic warnings from NNetTool_MLP
 
