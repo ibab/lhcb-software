@@ -1,4 +1,3 @@
-// $Id: VeloTrackMonitorNT.h,v 1.4 2010-03-23 13:19:00 szumlat Exp $
 #ifndef VELOTRACKMONITORNT_H 
 #define VELOTRACKMONITORNT_H 1
 
@@ -78,7 +77,6 @@ namespace Velo
     std::string m_clusterCont;///< Input Clusters container location
     std::string m_pvContainerName;///< Input PV container location
     std::string m_fitterName;
-    float m_minocchighocc;
     bool m_clntuple;
     bool m_trntuple;
     bool m_evntuple;
