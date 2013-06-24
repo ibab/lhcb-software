@@ -13,8 +13,7 @@
 // Event model
 
 // Forward declaration
-class DeBcm;
-class DeBcmSens;
+//class DeBcm;
 
 class BcmDigitization : public GaudiAlgorithm {
 public:
@@ -23,17 +22,15 @@ public:
 
   StatusCode initialize();
   StatusCode execute();
-  StatusCode finalize();
   
 private:
-  std::string m_bcmUpDetLocation;
-  std::string m_bcmDownDetLocation;
+  //  std::string m_bcmUpDetLocation;
+  //  std::string m_bcmDownDetLocation;
   std::string m_bcmHitsLocation;
   std::string m_bcmDigitLocation;
   std::string m_bcmMCDigitLocation;
-  DeBcm* m_bcmUpDet;
-  DeBcm* m_bcmDownDet;
-  LHCb::MCHits* m_bcmMCHits;
+  //  DeBcm* m_bcmUpDet;
+  //  DeBcm* m_bcmDownDet;
   bool m_bcmMCDigits;
 };
 
