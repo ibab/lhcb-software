@@ -27,9 +27,9 @@ HLTFileEqualizer::HLTFileEqualizer()
   m_NodeListDiff = 0;
   for (row='a';row<='e';row++)
   {
-    for (int rack=1;rack<=11;rack++)
+    for (int rack=1;rack<=10;rack++)
     {
-      if (rack==5) continue;
+//      if (rack==5) continue;
       sprintf(sf,"/RO/hlt%c%02d/ROpublish/HLTDefer",row,rack);
       sfinfo = new DimUpdatedInfo(sf,(void*)&NoLink,sizeof(int),m_InfoHandler);
       m_infoMap.insert(std::make_pair(std::string(sf),sfinfo));
@@ -40,22 +40,22 @@ HLTFileEqualizer::HLTFileEqualizer()
       fprintf(outf,"%s\n",sf);
       sprintf(sf,"hlt%c%02d",row,rack);
       m_AllpFarms.insert(std::string(sf));
-      for (int j=1;j<=4;j++)
+      for (int j=1;j<=32;j++)
       {
         sprintf(sf,"hlt%c%02d%02d",row,rack,j);
         m_AllpNodes.insert(std::string(sf));
       }
-      for (int j=12;j<=32;j++)
-      {
-        sprintf(sf,"hlt%c%02d%02d",row,rack,j);
-        m_AllpNodes.insert(std::string(sf));
-      }
+//      for (int j=12;j<=32;j++)
+//      {
+//        sprintf(sf,"hlt%c%02d%02d",row,rack,j);
+//        m_AllpNodes.insert(std::string(sf));
+//      }
     }
   }
   row = 'f';
   for (int rack=1;rack<=7;rack++)
   {
-    if (rack==5) continue;
+//    if (rack==5) continue;
     sprintf(sf,"/RO/hlt%c%02d/ROpublish/HLTDefer",row,rack);
     sfinfo = new DimUpdatedInfo(sf,(void*)&NoLink,sizeof(int),m_InfoHandler);
     m_infoMap.insert(std::make_pair(std::string(sf),sfinfo));
