@@ -60,11 +60,12 @@ StatusCode MCFTDigitCreator::initialize() {
 //=============================================================================
 StatusCode MCFTDigitCreator::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if ( msgLevel( MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // retrieve FTDeposits
   const MCFTDeposits* mcDepositsCont = get<MCFTDeposits>(m_inputLocation);
-  debug() <<"mcDepositsCont->size() : " << mcDepositsCont->size()<< endmsg;
+  if ( msgLevel( MSG::DEBUG) )
+    debug() <<"mcDepositsCont->size() : " << mcDepositsCont->size()<< endmsg;
 
 
   // define digits container
@@ -153,15 +154,6 @@ StatusCode MCFTDigitCreator::execute() {
     } 
   }
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MCFTDigitCreator::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

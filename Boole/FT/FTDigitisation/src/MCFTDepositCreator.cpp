@@ -34,6 +34,7 @@ DECLARE_ALGORITHM_FACTORY( MCFTDepositCreator );
 MCFTDepositCreator::MCFTDepositCreator( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
+  , m_deFT(NULL)
 {
   
   declareProperty( "InputLocation" ,  m_inputLocation  = LHCb::MCHitLocation::FT, "Path to input MCHits");
@@ -204,7 +205,8 @@ StatusCode MCFTDepositCreator::execute() {
 
   // retrieve Hits
   const MCHits* mcHitsCont = get<MCHits>(m_inputLocation);
-  debug() << "mcHitsCont->size() : " << mcHitsCont->size()<< endmsg;
+  if ( msgLevel( MSG::DEBUG) )
+    debug() << "mcHitsCont->size() : " << mcHitsCont->size()<< endmsg;
 
   // define deposits container
   MCFTDeposits *depositCont = new MCFTDeposits();
@@ -320,14 +322,5 @@ StatusCode MCFTDepositCreator::execute() {
   }
 
   return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-//  
-//=========================================================================
-StatusCode MCFTDepositCreator::finalize() {
-
-
-  return GaudiAlgorithm::finalize();
 }
 //=========================================================================

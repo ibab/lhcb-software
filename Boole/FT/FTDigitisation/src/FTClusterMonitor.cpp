@@ -55,7 +55,8 @@ StatusCode FTClusterMonitor::execute() {
 
   // retrieve FTCluster
   const FTClusters* clustersCont = get<FTClusters>(m_clusterLocation);
-  debug() <<"clustersCont->size() : " << clustersCont->size()<< endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() <<"clustersCont->size() : " << clustersCont->size()<< endmsg;
 
 
   // Loop over FTCluster
@@ -82,15 +83,4 @@ StatusCode FTClusterMonitor::execute() {
 
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode FTClusterMonitor::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiHistoAlg::finalize();  // must be called after all other actions
-}
-
 //=============================================================================

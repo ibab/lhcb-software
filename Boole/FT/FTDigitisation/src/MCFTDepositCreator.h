@@ -23,9 +23,6 @@
 #include "Kernel/FTChannelID.h"
 
 
-
-
-
 class MCFTDepositCreator : public GaudiHistoAlg {
 
   typedef std::pair<LHCb::FTChannelID, double> FTDoublePair;
@@ -39,7 +36,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
   // Locations

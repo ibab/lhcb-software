@@ -4,6 +4,11 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2013-06-25 - Marco Cattaneo
+ - Fix UNINIT_CTOR and DIVIDE_BY_ZERO defects
+ - Fix unprotected debug()
+ - Remove empty finalize methods
+
 !========================= FTDigitisation v1r4 2013-04-30 =========================
 ! 2013-04-29 - Eric Cogneras
  - Plot of the number of cluster per SiPM, needed by electronics

@@ -57,7 +57,8 @@ StatusCode MCFTDigitMonitor::execute() {
 
   // retrieve FTDigits
   const MCFTDigits* mcDigitsCont = get<MCFTDigits>(m_digitLocation);
-  debug() <<"mcDigitsCont->size() : " << mcDigitsCont->size()<< endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() <<"mcDigitsCont->size() : " << mcDigitsCont->size()<< endmsg;
 
 
   // Loop over MCFTDigits
@@ -87,16 +88,6 @@ StatusCode MCFTDigitMonitor::execute() {
   }
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MCFTDigitMonitor::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiHistoAlg::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

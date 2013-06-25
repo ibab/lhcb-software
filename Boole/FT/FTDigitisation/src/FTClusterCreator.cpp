@@ -1,4 +1,3 @@
-// $Id$
 // Include files
 //#include <iterator>
 #include <sstream>
@@ -35,6 +34,9 @@ DECLARE_ALGORITHM_FACTORY( FTClusterCreator )
   FTClusterCreator::FTClusterCreator( const std::string& name,
                                       ISvcLocator* pSvcLocator)
     : GaudiHistoAlg ( name , pSvcLocator )
+    , m_nCluster(0)
+    , m_sumCharge(0.)
+    , m_evtNbCluster64(0)
 {
   declareProperty("InputLocation" ,     m_inputLocation     = LHCb::MCFTDigitLocation::Default, "Path to input MCDigits");
   declareProperty("OutputLocation" ,    m_outputLocation    = LHCb::FTClusterLocation::Default, "Path to output Clusters");
@@ -87,7 +89,8 @@ StatusCode FTClusterCreator::execute() {
   
   // retrieve FTDigits
   const MCFTDigits* mcDigitsCont = get<MCFTDigits>(m_inputLocation);
-  debug() <<"mcDigitsCont->size() : " << mcDigitsCont->size()<< endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() <<"mcDigitsCont->size() : " << mcDigitsCont->size()<< endmsg;
 
   // define clusters container
   FTClusters *clusterCont = new FTClusters();
@@ -201,7 +204,8 @@ StatusCode FTClusterCreator::execute() {
         //          << endmsg;
         //}
       }
-      meanPosition =(*seedDigitIter)->channelID() + meanPosition/totalCharge;
+      if( 0 < totalCharge)
+        meanPosition =(*seedDigitIter)->channelID() + meanPosition/totalCharge;
 
 
       // Before Cluster record, checks :

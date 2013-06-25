@@ -34,6 +34,7 @@ DECLARE_ALGORITHM_FACTORY( MCFTDepositMonitor )
   MCFTDepositMonitor::MCFTDepositMonitor( const std::string& name,
                                           ISvcLocator* pSvcLocator)
     : GaudiHistoAlg ( name , pSvcLocator )
+    , m_deFT(NULL)
 {
   declareProperty("HitLocation" , m_hitLocation = LHCb::MCHitLocation::FT, "Path to  MCHits");
   declareProperty("DepositLocation" , m_depositLocation =  LHCb::MCFTDepositLocation::Default, "Path to MCFTDeposits");
@@ -54,7 +55,7 @@ StatusCode MCFTDepositMonitor::initialize() {
 
   /// Retrieve and initialize DeFT
   m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
-  if (m_deFT) { debug() << "Successfully retrieved DeFT" << endmsg; }
+  if( (NULL!=m_deFT) && msgLevel(MSG::DEBUG) ) { debug() << "Successfully retrieved DeFT" << endmsg; }
   else { error() << "Error getting DeFT" << endmsg; }
 
   return StatusCode::SUCCESS;
@@ -69,7 +70,8 @@ StatusCode MCFTDepositMonitor::execute() {
 
   // retrieve Hits
   const MCHits* mcHitsCont = get<MCHits>(m_hitLocation);
-  debug() <<"mcHitsCont->size() : " << mcHitsCont->size()<< endmsg;
+  if ( msgLevel( MSG::DEBUG) ) 
+    debug() <<"mcHitsCont->size() : " << mcHitsCont->size()<< endmsg;
   
 
   MCHits::const_iterator iterHit = mcHitsCont->begin();
@@ -132,7 +134,8 @@ StatusCode MCFTDepositMonitor::execute() {
   
   // retrieve FTDeposits
   const MCFTDeposits* mcDepositsCont = get<MCFTDeposits>(m_depositLocation);
-  debug() <<"mcDepositsCont->size() : " << mcDepositsCont->size()<< endmsg;
+  if ( msgLevel( MSG::DEBUG) ) 
+    debug() <<"mcDepositsCont->size() : " << mcDepositsCont->size()<< endmsg;
   MCFTDeposits::const_iterator iterDeposit = mcDepositsCont->begin();
   for (; iterDeposit!=mcDepositsCont->end();++iterDeposit){
     plot((double)(*iterDeposit)->channelID(), "DepFiredChannel","Fired Channel; ChannelID" , 0. , 1000000., 10000);
@@ -162,16 +165,6 @@ StatusCode MCFTDepositMonitor::execute() {
 
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode MCFTDepositMonitor::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiHistoAlg::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
