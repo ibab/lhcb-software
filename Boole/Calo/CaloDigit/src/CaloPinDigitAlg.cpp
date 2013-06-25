@@ -1,4 +1,3 @@
-// $Id: CaloPinDigitAlg.cpp,v 1.6 2009-04-07 09:54:24 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -31,7 +30,8 @@ DECLARE_ALGORITHM_FACTORY( CaloPinDigitAlg );
 CaloPinDigitAlg::CaloPinDigitAlg( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-    , m_rndmSvc           (  0    )
+  , m_calo(NULL)
+  , m_rndmSvc(NULL)
 {
 
   m_detectorName = name.substr( 0 , 4 );
@@ -60,11 +60,7 @@ StatusCode CaloPinDigitAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
-
-
-
-
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
   if ( "Spd" == m_detectorName ) {
     m_calo  = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd );
@@ -74,7 +70,7 @@ StatusCode CaloPinDigitAlg::initialize() {
     m_iNoise = 0.0;
 
     if(m_signal.size() != 1 || m_spread.size() != 1 ){
-      error() << "Spd : requires only 1 LED signal  per PMT " << endreq;
+      error() << "Spd : requires only 1 LED signal  per PMT " << endmsg;
     return StatusCode::FAILURE;
     }
 
@@ -86,7 +82,7 @@ StatusCode CaloPinDigitAlg::initialize() {
     m_iNoise = 1.0;
 
     if(m_signal.size() != 1 || m_spread.size() != 1 ){
-      error() << "Prs : requires only 1 LED signal  per PMT " << endreq;
+      error() << "Prs : requires only 1 LED signal  per PMT " << endmsg;
     return StatusCode::FAILURE;
     }
 
@@ -98,7 +94,7 @@ StatusCode CaloPinDigitAlg::initialize() {
     m_iNoise = 1.2;
 
     if(m_signal.size() != 1 || m_spread.size() != 1 ){
-      error() << "Ecal : requires only 1 LED signal  per PMT " << endreq;
+      error() << "Ecal : requires only 1 LED signal  per PMT " << endmsg;
     return StatusCode::FAILURE;
     }
 
@@ -110,7 +106,7 @@ StatusCode CaloPinDigitAlg::initialize() {
     m_iNoise = 1.2;
 
     if(m_signal.size() > 2 || m_signal.size() < 1 || m_spread.size() != m_signal.size() ){
-      error() << "Hcal : requires  1 or 2 LED  signal per PMT " << endreq;
+      error() << "Hcal : requires  1 or 2 LED  signal per PMT " << endmsg;
     return StatusCode::FAILURE;
     }
 
@@ -135,12 +131,12 @@ StatusCode CaloPinDigitAlg::initialize() {
 //=============================================================================
 StatusCode CaloPinDigitAlg::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   ++m_count;
 
   
   if( m_count >= m_rate)m_count = 0;
-  debug() << " Sequence " << m_count << "/" << m_rate << endreq;
+  if(msgLevel(MSG::DEBUG)) debug() << " Sequence " << m_count << "/" << m_rate << endmsg;
   // Init
   Rndm::Numbers normale( rndmSvc() , Rndm::Gauss( 0.0 , 1.0) );
   
@@ -153,22 +149,22 @@ StatusCode CaloPinDigitAlg::execute() {
     LHCb::L0PrsSpdHits* prsBank = get<LHCb::L0PrsSpdHits>( LHCb::L0PrsSpdHitLocation::Prs );
     prsBank->clear();// remove trigger on noise
     spdBank->clear();// remove trigger on noise
-    debug() << "Name " << m_detectorName << adcs->size() << endreq;
+    if(msgLevel(MSG::DEBUG)) debug() << "Name " << m_detectorName << adcs->size() << endmsg;
     // Trivial monitoring system for Prs/Spd : 1 Led -> 1 Cell !!!
     // loop over Cells
     for(LHCb::CaloAdcs::const_iterator iCell = adcs->begin() ; iCell != adcs->end() ; ++iCell ) {
       int index = iCell - adcs->begin();
-      debug() << " Prs/Spd " << index  << " " << m_count << endreq;
+      if(msgLevel(MSG::DEBUG)) debug() << " Prs/Spd " << index  << " " << m_count << endmsg;
       if( index-m_count < 0 )continue;
       if( 0 !=  m_rate*( (int) (index-m_count)/m_rate)-(index-m_count) )continue;
       double signal = m_signal[0];
       double spread = normale() *  m_spread[0];
       int newAdc = (*iCell)->adc() + (int) floor( signal + spread +0.5 ) ;
       if ( newAdc > m_saturateAdc ) { newAdc = m_saturateAdc ; } 
-      debug() << " Prs/Spd Add signal " << newAdc << endreq;
+      if(msgLevel(MSG::DEBUG)) debug() << " Prs/Spd Add signal " << newAdc << endmsg;
       (*iCell)->setAdc( newAdc );
       if ( newAdc > 0 ){
-        debug() << "  insert SPD/Prs" << endreq;
+        if(msgLevel(MSG::DEBUG)) debug() << "  insert SPD/Prs" << endmsg;
         LHCb::CaloCellID prsId = (*iCell)->cellID();
         LHCb::CaloCellID spdId(0,prsId.area(),prsId.col(),prsId.row());
         LHCb::L0PrsSpdHit* spdHit = new LHCb::L0PrsSpdHit( spdId );
@@ -205,36 +201,36 @@ StatusCode CaloPinDigitAlg::execute() {
     const LHCb::CaloCellID   id    = pin.id();
     int pinSignal  = (int) floor( cNoise + rndINoise() + 0.5 ); 
     std::vector<int> leds = pin.leds();
-    debug() << " PIN " << iPin-caloPins.begin() << " id " << id 
-            << " pedestal : " << pinSignal << " Leds : " << leds << endreq;
+    if(msgLevel(MSG::DEBUG)) debug() << " PIN " << iPin-caloPins.begin() << " id " << id 
+                                     << " pedestal : " << pinSignal << " Leds : " << leds << endmsg;
     LHCb::CaloAdc* pinAdc = new LHCb::CaloAdc(id , pinSignal );
     pinAdcs->insert( pinAdc ); 
   }
-  debug() << " Initialized : " << pinAdcs->size() << " ADCs for pin Diode " << endreq;
+  if(msgLevel(MSG::DEBUG)) debug() << " Initialized : " << pinAdcs->size() << " ADCs for pin Diode " << endmsg;
 
   // ================//
   // Create LED data //
   // ================//
   const std::vector<CaloLed>&  caloLeds = m_calo->caloLeds();
 
-  debug() << " Get " << caloLeds.size() << " LEDs " << endreq;
+  if(msgLevel(MSG::DEBUG)) debug() << " Get " << caloLeds.size() << " LEDs " << endmsg;
   
 
   // loop over LEDs
   for(std::vector<CaloLed>::const_iterator iLed = caloLeds.begin() ; iLed != caloLeds.end() ; ++iLed ) {
     CaloLed led = *iLed;
     int index = led.number();
-    debug() << "Led index " << index << endreq;
+    if(msgLevel(MSG::DEBUG)) debug() << "Led index " << index << endmsg;
     // LED firing : use m_rate & m_count
     if( index-m_count < 0 )continue;
     if( 0 !=  m_rate*( (int) (index-m_count)/m_rate)-(index-m_count) )continue;
-    debug() << "---> is fired" << endreq;
+    if(msgLevel(MSG::DEBUG)) debug() << "---> is fired" << endmsg;
     const std::vector<LHCb::CaloCellID>& cells = led.cells();
     //if( !ledIsFired ) continue;
     CaloPin cPin = caloPins[led.pin()];
-    debug () << "-----> LED id " << led.number() 
-             << " => "  << cells.size()  << " cells "
-             << " => PIN id " << led.pin() <<  " => " << cPin.cells().size() <<" cells"<< endreq; 
+    if(msgLevel(MSG::DEBUG)) debug () << "-----> LED id " << led.number() 
+                                      << " => "  << cells.size()  << " cells "
+                                      << " => PIN id " << led.pin() <<  " => " << cPin.cells().size() <<" cells"<< endmsg; 
     
 
     //
@@ -246,13 +242,13 @@ StatusCode CaloPinDigitAlg::execute() {
     }
     
 
-    debug() << " -----> Add data value " << data << endreq;
+    if(msgLevel(MSG::DEBUG)) debug() << " -----> Add data value " << data << endmsg;
     // Add data to cells ADCs
-    debug() << cells.size() << " connected cells " << endreq;
+    if(msgLevel(MSG::DEBUG)) debug() << cells.size() << " connected cells " << endmsg;
     for ( std::vector<LHCb::CaloCellID>::const_iterator iCell = cells.begin(); iCell != cells.end() ; ++iCell){
       LHCb::CaloAdc* adc = adcs->object( *iCell );
       if( NULL == adc){
-        warning() << " ADC not found for cell " << *iCell << endreq;
+        warning() << " ADC not found for cell " << *iCell << endmsg;
         continue;
       }
       int newAdc = data[0] + adc->adc();
@@ -264,11 +260,11 @@ StatusCode CaloPinDigitAlg::execute() {
           newAdc = data[ index ] + adc->adc();
         }
         else{
-          warning() << " # Led signal requested does not match with # LED per PMT " << endreq;
+          warning() << " # Led signal requested does not match with # LED per PMT " << endmsg;
         }        
       }
       if ( newAdc > m_saturateAdc ) { newAdc = m_saturateAdc ; } 
-      verbose() << " -----> cell Adc " << *iCell <<" : " <<adc->adc() << " -> " << newAdc << endreq;
+      if(msgLevel(MSG::VERBOSE)) verbose() << " -----> cell Adc " << *iCell <<" : " <<adc->adc() << " -> " << newAdc << endmsg;
       adc->setAdc( newAdc );
     }
 
@@ -283,27 +279,15 @@ StatusCode CaloPinDigitAlg::execute() {
         newAdc = data[index] + pinAdc->adc();
         }
       else{
-        warning() << " # Led index does not match with LedSignal size " << endreq;
+        warning() << " # Led index does not match with LedSignal size " << endmsg;
       }        
     }
     
     
     if ( newAdc > m_saturateAdc ) { newAdc = m_saturateAdc ; }  
     pinAdc->setAdc ( newAdc ); 
-    debug() << " -----> pin Adc " << newAdc << endreq;
+    if(msgLevel(MSG::DEBUG)) debug() << " -----> pin Adc " << newAdc << endmsg;
   } 
-  verbose() << " The End " << endreq;
+  if(msgLevel(MSG::VERBOSE)) verbose() << " The End " << endmsg;
   return StatusCode::SUCCESS; 
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloPinDigitAlg::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

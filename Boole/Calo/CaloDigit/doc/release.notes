@@ -4,6 +4,12 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2013-06-25 - Marco Cattaneo
+ - Fix UNINIT_CTOR and FORWARD_NULL defects
+ - Protect unprotected debug()
+ - Replace endreq by endmsg
+ - Remove empty finalize method
+
 !========================= CaloDigit v3r3 2012-12-12 =========================
 ! 2012-12-11 - Marco Clemencic
  - Added CMake configuration file.

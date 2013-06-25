@@ -1,4 +1,3 @@
-// $Id: CaloPinDigitAlg.h,v 1.1 2007-02-22 23:57:20 odescham Exp $
 #ifndef CALOPINDIGITALG_H 
 #define CALOPINDIGITALG_H 1
 
@@ -22,7 +21,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

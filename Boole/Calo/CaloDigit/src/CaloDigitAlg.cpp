@@ -1,5 +1,3 @@
-// $Id: CaloDigitAlg.cpp,v 1.31 2010-01-22 17:49:07 robbep Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
@@ -40,12 +38,13 @@ DECLARE_ALGORITHM_FACTORY( CaloDigitAlg );
 CaloDigitAlg::CaloDigitAlg( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator            )
-    , m_inputPrevData     ( ""    )
-    , m_rndmSvc           ( 0     )
-    , m_gainError         ( 0.01  )
-    , m_deadCellFraction  ( 0.00  )
-    , m_monitorNoise     ( false )
-    , m_useAdvancedNoise ( false )
+  , m_inputPrevData    ( ""    )
+  , m_calo             ( NULL  )
+  , m_rndmSvc          ( NULL  )
+  , m_gainError        ( 0.01  )
+  , m_deadCellFraction ( 0.00  )
+  , m_monitorNoise     ( false )
+  , m_useAdvancedNoise ( false )
 {
   //** Declare the algorithm's properties which can be set at run time and
   //** their default values
@@ -209,14 +208,15 @@ StatusCode CaloDigitAlg::initialize() {
       const std::vector< std::vector<double> >& advancedNoise = m_advancedNoise[area];
       int low = 0xFFFF; // low limit of the monitoring histogram
       int high = -0xFFFF; // high limit of the monitoring histogram
-      debug() << "advanced noise parameters for " << areas[area] << " area:" << endreq;
+      if(msgLevel(MSG::DEBUG))
+        debug() << "advanced noise parameters for " << areas[area] << " area:" << endmsg;
       double& noiseIntegral = m_noiseIntegral[area];
       noiseIntegral = 0;
       for(int i = 0, size = advancedNoise.size(); i < size; i++){
-        debug() << "gaus " << i + 1 << ": " <<
+        if(msgLevel(MSG::DEBUG)) debug() << "gaus " << i + 1 << ": " <<
           "[ integral = " << advancedNoise[i][GAUS_INTEGRAL] <<
           ", mean = " << advancedNoise[i][GAUS_MEAN] <<
-          ", sigma = " << advancedNoise[i][GAUS_SIGMA] << " ]" << endreq;
+          ", sigma = " << advancedNoise[i][GAUS_SIGMA] << " ]" << endmsg;
         // check value of the sigma
         if(advancedNoise[i][GAUS_SIGMA] <= 0)
           return Error("Sigma is negative.", StatusCode::FAILURE);
@@ -244,7 +244,7 @@ StatusCode CaloDigitAlg::initialize() {
 
   // Printout
   // --------
-  info() << "----- Detector parameters (from condDB) ------------------" << endreq;
+  info() << "----- Detector parameters (from condDB) ------------------" << endmsg;
   // int icalo = CaloCellCode::CaloNumFromName( name() );;
   int icalo = CaloCellCode::caloNum ( name() );;
   for( unsigned int iarea = 0 ; iarea < m_calo->numberOfAreas() ; ++iarea)
@@ -252,35 +252,35 @@ StatusCode CaloDigitAlg::initialize() {
     // std::string area = CaloCellCode::CaloAreaFromNum( icalo , iarea);
     std::string area = CaloCellCode::caloArea( icalo , iarea);
     info() << format("Nominal gain parameters for %8s region :  %5.1f + %5.1f x sin(theta)"
-                     , area.c_str() , m_calo->maxEtInCenter(iarea), m_calo->maxEtSlope(iarea)) << endreq; 
+                     , area.c_str() , m_calo->maxEtInCenter(iarea), m_calo->maxEtSlope(iarea)) << endmsg; 
   }
   if( !m_useAdvancedNoise )
-    info() << format( "Noise          : %5.1f + %5.1f (coherent) counts.",m_incoherentNoise, m_coherentNoise ) << endreq;
+    info() << format( "Noise          : %5.1f + %5.1f (coherent) counts.",m_incoherentNoise, m_coherentNoise ) << endmsg;
   else
-    info() << "Advanced noise simulation is applied " << endreq;
-  info() << format( "Pedestal shift : %5.2f counts", m_pedestalShift ) << endreq;
-  info() << format( "Actual dynamics saturation : %6.2f x ADCMax ", m_sat ) << endreq;
-  if ( "" != m_inputPrevData   ) info() << format( "Subtract %6.4f of previous BX ", m_fracPrev) << endreq;
-  if(m_mip != 0)info() << format(" MIP deposit    : %6.2f MeV" , m_mip) << endreq;
+    info() << "Advanced noise simulation is applied " << endmsg;
+  info() << format( "Pedestal shift : %5.2f counts", m_pedestalShift ) << endmsg;
+  info() << format( "Actual dynamics saturation : %6.2f x ADCMax ", m_sat ) << endmsg;
+  if ( "" != m_inputPrevData   ) info() << format( "Subtract %6.4f of previous BX ", m_fracPrev) << endmsg;
+  if(m_mip != 0)info() << format(" MIP deposit    : %6.2f MeV" , m_mip) << endmsg;
   for( unsigned  int iarea = 0 ; iarea < m_calo->numberOfAreas() ; ++iarea){
     // std::string area = CaloCellCode::CaloAreaFromNum( icalo , iarea);
     std::string area = CaloCellCode::caloArea( icalo , iarea);
       if( m_calo->numberOfPhotoElectrons(iarea) != 0)
         info() << format("Number of photo-electrons per MIP for %8s region :  %6.2f "
-                         , area.c_str() , m_calo->numberOfPhotoElectrons(iarea) ) << endreq;
+                         , area.c_str() , m_calo->numberOfPhotoElectrons(iarea) ) << endmsg;
   }  
-  if(m_zSup)info() << format( "Zero-suppression threshold : %6.2f ADC ", m_zSupThreshold ) << endreq;
-  info() << format( "L0 trigger suppression     : %6.2f ADC ", m_triggerThreshold ) << endreq;
+  if(m_zSup)info() << format( "Zero-suppression threshold : %6.2f ADC ", m_zSupThreshold ) << endmsg;
+  info() << format( "L0 trigger suppression     : %6.2f ADC ", m_triggerThreshold ) << endmsg;
   for( unsigned  int iarea = 0 ; iarea < m_calo->numberOfAreas() ; ++iarea){ 
     // std::string area = CaloCellCode::CaloAreaFromNum( icalo , iarea);
     std::string area = CaloCellCode::caloArea ( icalo , iarea);
     if( m_calo->l0EtCorrection(iarea) != 0)
       info() << format("L0 trigger ADC correction for %8s region :  %6.2f "
-                       , area.c_str() , m_calo->l0EtCorrection(iarea) ) << endreq;
+                       , area.c_str() , m_calo->l0EtCorrection(iarea) ) << endmsg;
   }
-  info() << "----- Digitization parameters (from CaloDigitAlg configuration) ------------------" << endreq;
-  info() << format("Additional %4.1f%% of the cells as dead (gain=0)." , 100.*m_deadCellFraction )<< endreq;
-  info() << format("Additional gain error %4.1f%%", m_gainError*100. ) << endreq;
+  info() << "----- Digitization parameters (from CaloDigitAlg configuration) ------------------" << endmsg;
+  info() << format("Additional %4.1f%% of the cells as dead (gain=0)." , 100.*m_deadCellFraction )<< endmsg;
+  info() << format("Additional gain error %4.1f%%", m_gainError*100. ) << endmsg;
 
   return StatusCode::SUCCESS;
 };
@@ -323,7 +323,7 @@ StatusCode CaloDigitAlg::execute() {
   }
 
 
-  debug() << "Processing " << mcDigits->size() << " mcDigits" << endreq;
+  if(isDebug) debug() << "Processing " << mcDigits->size() << " mcDigits" << endmsg;
 
   // == prepare buffers for energies and tags. Size is only real cells.
   // == fill with MCCaloDigit, using the calibration activeToTotal
@@ -438,7 +438,7 @@ StatusCode CaloDigitAlg::execute() {
         double cor = m_fracPrev * prevEnergy / gain;
         adcValue -= cor;
         if ( isDebug && .5 < cor ) 
-          debug() << id << format( " adc%7.1f correct%7.1f => %7.1f",adcValue, cor, adcValue-cor )<< endreq;        
+          debug() << id << format( " adc%7.1f correct%7.1f => %7.1f",adcValue, cor, adcValue-cor )<< endmsg;        
 
       }
     }
@@ -455,44 +455,48 @@ StatusCode CaloDigitAlg::execute() {
       LHCb::CaloAdc* adc = new LHCb::CaloAdc( id, intAdc );
       adcs->insert( adc ) ;
       //}else {
-      //debug() << "ADC not stored " << id << " " << intAdc << endreq;
+      //debug() << "ADC not stored " << id << " " << intAdc << endmsg;
     }
 
     // L0 ADC/bit
-    int trigVal   = 0;
-    if ( m_triggerIsBit ) {
-      if ( m_triggerThreshold < (double) intAdc ) {
-        LHCb::L0PrsSpdHit* myHit = new LHCb::L0PrsSpdHit( id );
-        bitsBank->insert( myHit );
-        if ( isDebug )
-          debug() << id << " -> " <<format( "energy%8.1f adc%6d  trigAdc%3d",energy, intAdc, 1 )<< endreq;
-      }
-    } else {
-      double et = intAdc * gain * m_calo->l0EtCorrection( id.area() ) * m_calo->cellSine( id );
-      trigVal = caloTriggerFromAdc( intAdc , id ) ;
-      if ( 255 < trigVal ) trigVal = 255;
-      if ( 0   > trigVal ) trigVal = 0;
-      if ( 0 < trigVal ) {
-        LHCb::L0CaloAdc* trigAdc = new LHCb::L0CaloAdc( id, trigVal );
-        trigBank->insert( trigAdc );
-        if ( isDebug )
-          debug() << id << " -> " <<format( "energy%8.1f adc%6d et%8.1f trigAdc%4d",energy, intAdc, et, trigVal )<< endreq;
+    if ( "" != m_triggerName ) {
+      if ( m_triggerIsBit ) {
+        if ( m_triggerThreshold < (double) intAdc ) {
+          LHCb::L0PrsSpdHit* myHit = new LHCb::L0PrsSpdHit( id );
+          bitsBank->insert( myHit );
+          if ( isDebug )
+            debug() << id << " -> " <<format( "energy%8.1f adc%6d  trigAdc%3d",energy, intAdc, 1 )<< endmsg;
+        }
+      } else {
+        double et = intAdc * gain * m_calo->l0EtCorrection( id.area() ) * m_calo->cellSine( id );
+        int trigVal = caloTriggerFromAdc( intAdc , id ) ;
+        if ( 255 < trigVal ) trigVal = 255;
+        if ( 0   > trigVal ) trigVal = 0;
+        if ( 0 < trigVal ) {
+          LHCb::L0CaloAdc* trigAdc = new LHCb::L0CaloAdc( id, trigVal );
+          trigBank->insert( trigAdc );
+          if ( isDebug )
+            debug() << id << " -> " <<format( "energy%8.1f adc%6d et%8.1f trigAdc%4d",energy, intAdc, et, trigVal )<< endmsg;
+        }
       }
     }
   }
 
-  // bank size 
+  // bank size
   int trigSize = 0;
-  if ( m_triggerIsBit ) {
-    trigSize = bitsBank->size();
-  } else {
-    trigSize = trigBank->size();
+  if ( "" != m_triggerName ) {
+    if ( m_triggerIsBit ) {
+      trigSize = bitsBank->size();
+    } else {
+      trigSize = trigBank->size();
+    }
   }
-
+  
   // Final printout
-  debug() << format( "Have digitized and stored %5d adcs and %5d trigger from %5d MCDigits.",
-                     adcs->size(), trigSize, mcDigits->size() )
-          << endreq;
+  if ( isDebug )
+    debug() << format( "Have digitized and stored %5d adcs and %5d trigger from %5d MCDigits.",
+                       adcs->size(), trigSize, mcDigits->size() )
+            << endmsg;
 
   return StatusCode::SUCCESS;
 };
@@ -538,11 +542,11 @@ StatusCode CaloDigitAlg::finalize()
       rootHist->Fit("noiseFunc", "INQ");
 
       // print obtained component fractions and chisquare
-      info() << "noise fit (" << areas[area] << " area):" << endreq;
-      info() << "  chisquare = " << func.GetChisquare() << "/" << func.GetNDF() << endreq;
+      info() << "noise fit (" << areas[area] << " area):" << endmsg;
+      info() << "  chisquare = " << func.GetChisquare() << "/" << func.GetNDF() << endmsg;
       for(int i = 0, size = 3 * advancedNoise.size(); i < size; i++){
         if(i % 3 == 0) info() << "  amplitude for gaus #" << 1 + i / 3 << " = " << func.GetParameter(i) 
-                              << " +- " << func.GetParError(i) << " ( " << pars[i] << " )" << endreq;
+                              << " +- " << func.GetParError(i) << " ( " << pars[i] << " )" << endmsg;
       }
       delete[] pars;
     }

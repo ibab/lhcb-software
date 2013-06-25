@@ -1,14 +1,8 @@
-// $Id: MCCaloLED.cpp,v 1.1 2007-03-05 15:57:55 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
 // ============================================================================
 // Include files
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
@@ -46,7 +40,9 @@ protected:
     , m_caloName ( DeCalorimeterLocation::Ecal   )
     , m_mean     ( 5.00 * Gaudi::Units::GeV      ) // add 5 Gev of transverse energy
     , m_sigma    ( 0.25 * Gaudi::Units::perCent  ) // sigma is aroun 5 channel per mean 2000 channels
-    , m_fraction ( 1.0 / 16.0                    ) // fraction of cells to be fired 
+    , m_fraction ( 1.0 / 16.0                    ) // fraction of cells to be fired
+    , m_calo(NULL)
+    , m_rndmSvc(NULL) 
   {
     declareProperty ( "Output"      , m_output   ) ;
     declareProperty ( "Calorimeter" , m_caloName ) ;
@@ -175,7 +171,7 @@ StatusCode MCCaloLED::initialize()
   }
   //
   if ( propsPrint() || msgLevel( MSG::DEBUG ) ) 
-  { info() << "Number of valid cells: " << m_cells.size() << endreq ; }
+  { info() << "Number of valid cells: " << m_cells.size() << endmsg ; }
   //
   return StatusCode::SUCCESS ;
 }

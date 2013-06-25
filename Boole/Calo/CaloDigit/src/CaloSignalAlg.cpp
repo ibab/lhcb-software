@@ -1,5 +1,3 @@
-// $Id: CaloSignalAlg.cpp,v 1.18 2007-12-10 22:20:22 odescham Exp $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
@@ -39,6 +37,8 @@ DECLARE_ALGORITHM_FACTORY( CaloSignalAlg );
 CaloSignalAlg::CaloSignalAlg( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ) 
+  , m_calo(NULL)
+  , m_rndmSvc(NULL) 
 {
   //** Declare the algorithm's properties which can be set at run time and 
   //** default values
@@ -102,7 +102,7 @@ StatusCode CaloSignalAlg::initialize() {
   info() << "Initialised. ";
   if ( m_storePrevious )  info() << "Store also previous BX. ";
   if ( m_ignoreTimeInfo ) info() << "Ignore time information. ";
-  info() << endreq;
+  info() << endmsg;
 
   return StatusCode::SUCCESS;
 };
@@ -116,8 +116,8 @@ StatusCode CaloSignalAlg::execute() {
   bool isVerbose = ( MSG::VERBOSE >= msgLevel() );
 
   // some trivial printout
-  debug() << "Perform signal processing from "
-          << m_inputData << " to " << rootInTES()+ m_outputData << endmsg;
+  if(msgLevel(MSG::DEBUG)) debug() << "Perform signal processing from "
+                                   << m_inputData << " to " << rootInTES()+ m_outputData << endmsg;
   
   // prepare the output container
   LHCb::MCCaloDigits* mcDigits = new LHCb::MCCaloDigits();
@@ -282,16 +282,16 @@ StatusCode CaloSignalAlg::execute() {
     if( 0 != digit ) mcDigits->insert( digit );
   }
 
-  debug() << "-- Stored " << mcDigits->size() << " MCDigits";
+  if(msgLevel(MSG::DEBUG)) debug() << "-- Stored " << mcDigits->size() << " MCDigits";
 
   if ( m_storePrevious ) {
     for( vi = mcPrevDigitPtr.begin(); mcPrevDigitPtr.end() != vi; ++vi ){
       LHCb::MCCaloDigit* digit = *vi ;
       if( 0 != digit )  mcPrevDigits->insert( digit );
     }
-    debug() << " (plus " << mcPrevDigits->size() << " in Prev container)";
+    if(msgLevel(MSG::DEBUG)) debug() << " (plus " << mcPrevDigits->size() << " in Prev container)";
   }
-  debug() << endreq;
+  if(msgLevel(MSG::DEBUG)) debug() << endmsg;
   
   return StatusCode::SUCCESS;
 };
