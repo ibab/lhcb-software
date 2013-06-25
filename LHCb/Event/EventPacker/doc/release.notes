@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2013-06-25 - Anton Poluektov 
+ - Store stripping TCK in packed DecReports
+
 !========================= EventPacker v3r1 2013-06-03 =========================
 ! 2013-05-20 - Chris Jones
  - Fix bug in WritePackedDst where && insead of & was accidentally used.

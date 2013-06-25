@@ -59,6 +59,12 @@ StatusCode PackDecReport::execute()
 
   // Get the input
   LHCb::HltDecReports* reports = getOrCreate<LHCb::HltDecReports,LHCb::HltDecReports>( m_inputName );
+  
+  out->setConfiguredTCK( reports->configuredTCK() ); 
+  if ( msgLevel( MSG::DEBUG ) ) 
+  {
+    debug() << "TCK = " << out->configuredTCK() << endmsg;
+  }
 
   // loop and pack
   for ( LHCb::HltDecReports::Container::const_iterator itR = reports->decReports().begin();

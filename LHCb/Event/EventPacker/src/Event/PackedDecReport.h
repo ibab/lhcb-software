@@ -33,13 +33,17 @@ namespace LHCb {
     virtual const CLID& clID()        const { return PackedDecReport::classID(); }
     static  const CLID& classID()           { return CLID_PackedDecReport;       }
     void addReport( unsigned int kk )                { m_data.push_back(kk); }
+    void setConfiguredTCK( unsigned int value )      { m_configuredTCK = value; }
     std::vector<unsigned int>& reports()             { return m_data; }
     const std::vector<unsigned int>& reports() const { return m_data; }
+    unsigned int configuredTCK() const               { return m_configuredTCK; }
 
   protected:
     
   private:
     std::vector<unsigned int> m_data;
+    unsigned int m_configuredTCK;
+    
   };
   
 }

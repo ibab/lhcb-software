@@ -51,7 +51,10 @@ StatusCode UnpackDecReport::execute()
   LHCb::HltDecReports* newReport = new LHCb::HltDecReports();
   put( newReport, m_outputName );
 
-  newReport->setConfiguredTCK( 0 );
+  newReport->setConfiguredTCK( dst->configuredTCK() );
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Unpacked TCK = " << newReport->configuredTCK() << endmsg;     
+  
   newReport->setTaskID( 0 );
   for ( std::vector<unsigned int>::const_iterator itR = dst->reports().begin(); 
         dst->reports().end() != itR; ++itR ) 
