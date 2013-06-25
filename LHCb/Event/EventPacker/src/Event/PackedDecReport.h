@@ -22,10 +22,14 @@ namespace LHCb {
     static const std::string& Default = "pStrip/Phys/DecReports";
   }
 
-  class PackedDecReport : public DataObject {
+  class PackedDecReport : public DataObject
+  {
+  
   public: 
+  
     /// Standard constructor
-    PackedDecReport( ) {
+    PackedDecReport( ) : m_configuredTCK(0)
+    {
       m_data.reserve(1000); 
     }
     
@@ -38,9 +42,8 @@ namespace LHCb {
     const std::vector<unsigned int>& reports() const { return m_data; }
     unsigned int configuredTCK() const               { return m_configuredTCK; }
 
-  protected:
-    
   private:
+
     std::vector<unsigned int> m_data;
     unsigned int m_configuredTCK;
     

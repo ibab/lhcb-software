@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2013-06-25 - Chris Jones
+ - Initialise the TCK data member in the previous commit to 0.
+
 ! 2013-06-25 - Anton Poluektov 
  - Store stripping TCK in packed DecReports
 
