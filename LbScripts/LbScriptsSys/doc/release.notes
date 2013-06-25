@@ -1,3 +1,53 @@
+2013-06-25 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v7r8
+
+	LbConfiguration
+	* python/LbConfiguration/Project.py: Added projects Noether and Tesla 
+	* python/LbConfiguration/Package.py: Added package  RawEventFormat
+	* python/LbConfiguration/Package.py: Added new package Ariadne
+	* python/LbConfiguration/Project.py: Set LHCb AFS volume size to 20G
+
+	LbRelease
+	Added bash wrappers for the Ariadne admin and query tools
+	* scripts/ariadne_add.py
+	* scripts/ariadne_query.py
+	Added scripts to check if a given step is useable in DIRAC:
+	* python/LbRelease/DiracStepChecker.py
+	* scripts/lb-dirac-check-app-use
+	Added the Neo4j DB of Software configurations:
+	* python/LbRelease/SoftConfDB/AppImporter.py: Added workaround
+	to find Ganga dependencies.
+	Added Active/Used flags:
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/LbSdbImportFromInstallArea.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+	* python/LbRelease/SoftConfDB: Prototype now includes
+	version patterns and flags for used/active projects
+	* python/scripts/svnProjectDeps: Added USE_CMT
+	* python/scripts/svnProjectDeps: Updated to generate JSON file
+	for a nightly build slot
+	First version of SoftConfDB package:
+	* python/LbRelease/SoftConfDB/LbSdbImportProject.py
+	* python/LbRelease/SoftConfDB/LbSdbImportAll.py
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/__init__.py
+	* python/LbRelease/SoftConfDB/AppImporter.py
+	* python/LbRelease/SoftConfDB/LbSdbAddPlatform.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+	* scripts/lb-sdb-query
+	Fixed archive classes:
+	* python/LbRelease/Archive/ProjectManager.py
+
+	LbLegacy:
+	* scripts/archive_project: Added check to prevent archiving of applications used
+	by DIRAC.
+
+	LbUtils:
+	* scripts/cern-lxdistcc-wrappers.sh: improved wrapper script for clang
+	* python/LbUtils/HTMLDependencyManager.py: Fixed to ignore empty HTML files
+	* cmake: updated CMake support modules
+
 2013-04-23 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r7p1
