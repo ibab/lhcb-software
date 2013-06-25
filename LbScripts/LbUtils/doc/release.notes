@@ -1,3 +1,7 @@
+2013-06-25  Ben Couturier  <ben.couturier@cern.ch>
+
+	* cmt/requirements: release of version v3r14
+
 2013-06-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/cern-lxdistcc-wrappers.sh: improved wrapper script for clang
