@@ -48,7 +48,7 @@ StatusCode MCRichHitsToRawBufferAlg::initialize()
   // acquire tools
   acquireTool( "RichRawDataFormatTool", m_rawFormatT, 0, true );
 
-  info() << "Using RICH Level1 buffer format : " << m_version << endreq;
+  info() << "Using RICH Level1 buffer format : " << m_version << endmsg;
 
   return sc;
 }

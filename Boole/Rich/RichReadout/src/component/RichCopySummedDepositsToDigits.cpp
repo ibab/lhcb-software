@@ -39,7 +39,7 @@ StatusCode CopySummedDepositsToDigits::execute()
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Successfully located " << SummedDeposits->size()
-            << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endreq;
+            << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endmsg;
 
   // make new mcrichdigits
   LHCb::MCRichDigits* mcRichDigits = new LHCb::MCRichDigits();
@@ -76,7 +76,7 @@ StatusCode CopySummedDepositsToDigits::execute()
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Created " << mcRichDigits->size() << " MCRichDigits at "
-            << m_mcRichDigitsLocation << endreq;
+            << m_mcRichDigitsLocation << endmsg;
 
   return StatusCode::SUCCESS;
 }

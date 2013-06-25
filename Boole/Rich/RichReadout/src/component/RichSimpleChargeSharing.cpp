@@ -22,6 +22,7 @@ DECLARE_ALGORITHM_FACTORY( SimpleChargeSharing )
 SimpleChargeSharing::SimpleChargeSharing( const std::string& name,
                                           ISvcLocator* pSvcLocator )
   : Rich::AlgBase ( name, pSvcLocator )
+  , m_smartIDTool(NULL)
 {
   declareProperty( "DepositLocation",
                    m_RichDepositLocation = LHCb::MCRichDepositLocation::Default );
@@ -46,14 +47,14 @@ StatusCode SimpleChargeSharing::initialize()
   acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
 
   // printout
-  info() << "Will add charge sharing at " << 100*m_shareFrac << " % level" << endreq;
+  info() << "Will add charge sharing at " << 100*m_shareFrac << " % level" << endmsg;
 
   return sc;
 }
 
 StatusCode SimpleChargeSharing::execute()
 {
-  debug() << "Execute" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Execute" << endmsg;
 
   // Get containers of MCRichDeposits
   LHCb::MCRichDeposits * deps = get<LHCb::MCRichDeposits>( m_RichDepositLocation );
@@ -99,7 +100,7 @@ StatusCode SimpleChargeSharing::execute()
         }
 
       } // while loop
-      if ( nTries >= 100 ) { Warning( "Charge sharing loop maxed out !" ); continue; }
+      if ( nTries >= 100 ) { Warning( "Charge sharing loop maxed out !" ).ignore(); continue; }
 
       // Create new deposit with same info
       LHCb::MCRichDeposit * newDep = new LHCb::MCRichDeposit( *iDep );
@@ -129,7 +130,7 @@ StatusCode SimpleChargeSharing::execute()
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Created " << depsToAdd.size()
-            << " new charge share MCRichDeposits" << endreq;
+            << " new charge share MCRichDeposits" << endmsg;
 
   return StatusCode::SUCCESS;
 }

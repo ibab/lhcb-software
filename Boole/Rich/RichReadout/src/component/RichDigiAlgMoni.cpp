@@ -1,5 +1,3 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.19 2010-02-12 07:35:52 jonrob Exp $
-
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
 
@@ -77,7 +75,7 @@ StatusCode AlgMoni::initialize()
 // Main execution
 StatusCode AlgMoni::execute()
 {
-  debug() << "Execute" << endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Execute" << endmsg;
 
   // Maps for number of pe's
   PhotMap ckPhotMapHit;
@@ -87,8 +85,9 @@ StatusCode AlgMoni::execute()
   // Locate MCRichDigits
   // ================================================================================
   LHCb::MCRichDigits * mcRichDigits = get<LHCb::MCRichDigits>( m_mcdigitTES );
-  debug() << "Successfully located " << mcRichDigits->size()
-          << " MCRichDigits at " << m_mcdigitTES << endreq;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Successfully located " << mcRichDigits->size()
+              << " MCRichDigits at " << m_mcdigitTES << endmsg;
 
   // PD occupancy
   PDMulti pdMult;
@@ -147,7 +146,7 @@ StatusCode AlgMoni::execute()
     if ( mcHits.empty() )
     {
       warning() << "MCRichDigit " << (int)(*iMcDigit)->key()
-                << " has no MCRichHits..." << endreq;
+                << " has no MCRichHits..." << endmsg;
     }
 
     // hit mult per digit
@@ -237,12 +236,14 @@ StatusCode AlgMoni::execute()
   SmartDataPtr<LHCb::MCRichDeposits> deps( eventSvc(), m_mcdepTES );
   if ( !deps )
   {
-    debug() << "Cannot locate MCRichDeposits at " << m_mcdepTES << endreq;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Cannot locate MCRichDeposits at " << m_mcdepTES << endmsg;
   }
   else
   {
-    debug() << "Successfully located " << deps->size()
-            << " MCRichDeposits at " << m_mcdepTES << endreq;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Successfully located " << deps->size()
+              << " MCRichDeposits at " << m_mcdepTES << endmsg;
 
     std::vector<unsigned int> nChargedTracks(Rich::NRiches,0);
 
@@ -281,7 +282,7 @@ StatusCode AlgMoni::execute()
           const Gaudi::XYZPoint locpoint =
             m_smartIDTool->globalToPDPanel( (*iDep)->parentHit()->entry() );
           verbose() << (*iDep)->smartID() << " glo=" << (*iDep)->parentHit()->entry()
-                    << " loc=" << locpoint << " mcp=" << (*iDep)->parentHit()->mcParticle() << endreq;
+                    << " loc=" << locpoint << " mcp=" << (*iDep)->parentHit()->mcParticle() << endmsg;
         }
       }
 
@@ -314,7 +315,8 @@ StatusCode AlgMoni::execute()
   // ================================================================================
   SmartDataPtr<LHCb::MCRichHits> hits( eventSvc(), m_mchitTES );
   if ( !hits ) {
-    debug() << "Cannot locate MCRichHits at " << m_mchitTES << endreq;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Cannot locate MCRichHits at " << m_mchitTES << endmsg;
   } else {
 
     // Hit mult counters
@@ -423,7 +425,8 @@ void AlgMoni::fillHPDPlots( const PartMap & pmap,
   // count for each RICH
   std::vector<unsigned int> nHPDs(Rich::NRiches,0);
 
-  debug() << "Filling plots for " << plotsName << endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Filling plots for " << plotsName << endmsg;
 
   // plots for each HPD
   for ( PartMap::const_iterator iP = pmap.begin(); iP != pmap.end(); ++iP )
@@ -444,7 +447,8 @@ void AlgMoni::fillHPDPlots( const PartMap & pmap,
     std::string Hid = plotsDir+"/"+boost::lexical_cast<std::string>( m_ID++ );
     // loop over deposits
     Rich::Map<LHCb::RichSmartID,bool> uniqueIDs;
-    debug() << "Found " << (*iP).second.size() << " Deposits for " << Hid << " " << HPD.str() << endreq;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Found " << (*iP).second.size() << " Deposits for " << Hid << " " << HPD.str() << endmsg;
     for ( std::vector<const LHCb::MCRichDeposit*>::const_iterator iD = (*iP).second.begin();
           iD != (*iP).second.end(); ++iD )
     {

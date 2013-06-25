@@ -23,6 +23,8 @@ DECLARE_ALGORITHM_FACTORY( SimpleFrontEndResponse )
   SimpleFrontEndResponse::SimpleFrontEndResponse( const std::string& name,
                                                   ISvcLocator* pSvcLocator )
     : Rich::AlgBase ( name, pSvcLocator ),
+      actual_base   ( NULL ),
+      SummedDeposits( NULL ),
       m_AdcCut      ( 85 )
 {
 
@@ -74,7 +76,7 @@ StatusCode SimpleFrontEndResponse::execute()
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Successfully located " << SummedDeposits->size()
-            << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endreq;
+            << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endmsg;
 
   // Run the Simple treatment
   Simple();
@@ -135,7 +137,7 @@ StatusCode SimpleFrontEndResponse::Simple()
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Created " << mcRichDigits->size() << " MCRichDigits at "
-            << m_mcRichDigitsLocation << endreq;
+            << m_mcRichDigitsLocation << endmsg;
 
   return StatusCode::SUCCESS;
 }

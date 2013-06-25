@@ -78,7 +78,7 @@ StatusCode Signal::initialize()
 
 StatusCode Signal::execute()
 {
-  debug() << "Execute" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Execute" << endmsg;
 
   // Form new container of MCRichDeposits
   m_mcDeposits = new LHCb::MCRichDeposits();
@@ -104,7 +104,7 @@ StatusCode Signal::execute()
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Created overall " << m_mcDeposits->size()
-            << " MCRichDeposits at " << m_RichDepositLocation << endreq;
+            << " MCRichDeposits at " << m_RichDepositLocation << endmsg;
   }
 
   return sc;
@@ -125,7 +125,7 @@ StatusCode Signal::ProcessEvent( const std::string & hitLoc,
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Successfully located " << hits->size()
-            << " MCRichHits at " << hitLoc << " : Pointer=" << hits << endreq;
+            << " MCRichHits at " << hitLoc << " : Pointer=" << hits << endmsg;
   }
 
   unsigned int nDeps(0);
@@ -206,7 +206,7 @@ StatusCode Signal::ProcessEvent( const std::string & hitLoc,
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Created " << nDeps << " MCRichDeposits for " << hitLoc << endreq;
+    debug() << "Created " << nDeps << " MCRichDeposits for " << hitLoc << endmsg;
   }
 
   return StatusCode::SUCCESS;

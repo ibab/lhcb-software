@@ -25,6 +25,7 @@ DetailedFrontEndResponse::DetailedFrontEndResponse( const std::string& name,
   : Rich::AlgBase ( name, pSvcLocator ),
     actual_base   ( NULL ),
     theRegistry   ( NULL ),
+    m_summedDeposits(NULL),
     m_timeShift   ( Rich::NRiches )
 {
 
@@ -64,7 +65,8 @@ StatusCode DetailedFrontEndResponse::initialize()
   const Rich::ISmartIDTool * smartIDs(NULL);
   acquireTool( "RichSmartIDTool" , smartIDs, 0, true );
   const LHCb::RichSmartID::Vector & pixels = smartIDs->readoutChannelList();
-  debug() << "Retrieved " << pixels.size() << " pixels in active list" << endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Retrieved " << pixels.size() << " pixels in active list" << endmsg;
   theRegistry = new RichRegistry();
   actual_base = theRegistry->GetNewBase( pixels );
   if ( !actual_base )
@@ -79,7 +81,7 @@ StatusCode DetailedFrontEndResponse::initialize()
 
   releaseTool( smartIDs );
 
-  info() << "Time Calibration (Rich1/RICH2) = " << m_timeShift << endreq;
+  info() << "Time Calibration (Rich1/RICH2) = " << m_timeShift << endmsg;
  
   return sc;
 }
@@ -100,13 +102,13 @@ StatusCode DetailedFrontEndResponse::finalize()
 
 StatusCode DetailedFrontEndResponse::execute()
 {
-  debug() << "Execute" << endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Execute" << endmsg;
 
   m_summedDeposits = get<LHCb::MCRichSummedDeposits>( m_mcRichSummedDepositsLocation );
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Successfully located " << m_summedDeposits->size()
-            << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endreq;
+            << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endmsg;
   }
 
   // Clear time sample cache
@@ -123,7 +125,7 @@ StatusCode DetailedFrontEndResponse::execute()
 
 StatusCode DetailedFrontEndResponse::Analog()
 {
-  debug() << "Analogue Simulation" << endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Analogue Simulation" << endmsg;
 
   for ( LHCb::MCRichSummedDeposits::const_iterator iSumDep = m_summedDeposits->begin();
         iSumDep != m_summedDeposits->end(); ++iSumDep )
@@ -131,7 +133,7 @@ StatusCode DetailedFrontEndResponse::Analog()
 
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "Summed Deposit " << (*iSumDep)->key() << endreq;
+      verbose() << "Summed Deposit " << (*iSumDep)->key() << endmsg;
     }
 
     RichPixelProperties* props = actual_base->DecodeUniqueID( (*iSumDep)->key() );
@@ -148,7 +150,7 @@ StatusCode DetailedFrontEndResponse::Analog()
     {
       std::ostringstream mess;
       mess << "ID " << (*iSumDep)->key() << " has no RichPixelReadout";
-      Warning( mess.str(), StatusCode::FAILURE, 0 );
+      Warning( mess.str(), StatusCode::FAILURE, 0 ).ignore();
       continue;
     }
 
@@ -172,9 +174,9 @@ StatusCode DetailedFrontEndResponse::Analog()
         if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << " Deposit " << (*iDep)->key()
-                    << " from '" << objectLocation( (*iDep)->parentHit()->parent() ) << "'" << endreq
-                    << "  -> TOF     = " << (*iDep)->time() << endreq
-                    << "  -> Energy  = " << (*iDep)->energy() << endreq;
+                    << " from '" << objectLocation( (*iDep)->parentHit()->parent() ) << "'" << endmsg
+                    << "  -> TOF     = " << (*iDep)->time() << endmsg
+                    << "  -> Energy  = " << (*iDep)->energy() << endmsg;
         }
 
         const Rich::DetectorType rich = (*iDep)->parentHit()->rich();
@@ -210,7 +212,7 @@ StatusCode DetailedFrontEndResponse::Analog()
     } // if shape
     else
     {
-      Warning( "Summed deposit has no associated RichShape" );
+      Warning( "Summed deposit has no associated RichShape" ).ignore();
     }
 
   }
@@ -220,7 +222,7 @@ StatusCode DetailedFrontEndResponse::Analog()
 
 StatusCode DetailedFrontEndResponse::Digital()
 {
-  debug() << "Digital Simulation" << endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Digital Simulation" << endmsg;
 
   // new RichDigit container to Gaudi data store
   LHCb::MCRichDigits * mcRichDigits = new LHCb::MCRichDigits();
@@ -264,7 +266,7 @@ StatusCode DetailedFrontEndResponse::Digital()
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Registered " << mcRichDigits->size()
-            << " MCRichDigits at " << m_mcRichDigitsLocation << endreq;
+            << " MCRichDigits at " << m_mcRichDigitsLocation << endmsg;
   }
 
   return StatusCode::SUCCESS;

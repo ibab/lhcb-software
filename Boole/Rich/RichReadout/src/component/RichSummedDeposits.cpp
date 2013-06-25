@@ -50,14 +50,14 @@ StatusCode SummedDeposits::initialize()
 
 StatusCode SummedDeposits::execute()
 {
-  debug() << "Execute" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Execute" << endmsg;
 
   // Get containers of MCRichDeposits
   LHCb::MCRichDeposits * deps = get<LHCb::MCRichDeposits>( m_RichDepositLocation );
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Located " << deps->size() << " MCRichDeposts at " << m_RichDepositLocation
-            << endreq;
+            << endmsg;
   }
 
   // Form new containers of MCSummedDeposits
@@ -74,21 +74,21 @@ StatusCode SummedDeposits::execute()
     // RichSmartID for this deposit
     const LHCb::RichSmartID id = (*iDep)->smartID();
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "Deposit ID " << id << endreq;
+      verbose() << "Deposit ID " << id << endmsg;
 
     // Find out if we already have a hit for this super-pixel
     LHCb::MCRichSummedDeposit * sumDep = sumDeps->object(id);
     if ( (*iDep)->history().prevPrevEvent() && sumDep )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " --> simulating dead sub-pixels in PrevPrev" << endreq;
+        verbose() << " --> simulating dead sub-pixels in PrevPrev" << endmsg;
       // Toss a coin to see if we add this hit to the existing deposits
       // Simulate a 1/8 chance of additional hit falling in same sub-pixel as
       // already existing hit
       if ( 0 != static_cast<int>(m_rndm()*8.) )
       {
         if ( msgLevel(MSG::VERBOSE) )
-          verbose() << "   --> Dumping deposit" << endreq;
+          verbose() << "   --> Dumping deposit" << endmsg;
         continue;
       }
     }
@@ -97,14 +97,14 @@ StatusCode SummedDeposits::execute()
     if ( !sumDep )
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " --> No Summed deposit. Creating one" << endreq;
+        verbose() << " --> No Summed deposit. Creating one" << endmsg;
       sumDep = new LHCb::MCRichSummedDeposit();
       sumDeps->insert( sumDep, id );
     }
     else
     {
       if ( msgLevel(MSG::VERBOSE) )
-        verbose() << " --> Found existing Summed deposit" << endreq;
+        verbose() << " --> Found existing Summed deposit" << endmsg;
       ++nDuplicateDeps;
     }
 
@@ -127,8 +127,8 @@ StatusCode SummedDeposits::execute()
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Created " << sumDeps->size() << " MCRichSummedDeposits from "
-            << deps->size() << " MCRichDeposts" << endreq
-            << "Found " << nDuplicateDeps << " deposits in the same pixel" << endreq;
+            << deps->size() << " MCRichDeposts" << endmsg
+            << "Found " << nDuplicateDeps << " deposits in the same pixel" << endmsg;
   }
 
   return StatusCode::SUCCESS;
