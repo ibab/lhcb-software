@@ -1,5 +1,6 @@
 2013-06-25 Ben Couturier <Ben.Couturier@cern.ch>
 
+	* cmt/requirements: release of version v7r8
 	* python/LbConfiguration/Project.py: Added projects Noether and Tesla 
 	* python/LbConfiguration/Package.py: Added package  RawEventFormat
 
