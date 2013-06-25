@@ -21,7 +21,7 @@ project_names = [ "Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                   "Panoramix", "LbScripts", "Dirac", "LHCbGrid", "Panoptes",
                   "Curie", "Vetra", "VetraTB", "Compat", "VanDerMeer", "Ganga",
                   "LHCbDirac", "Integration", "Erasmus", "Feicim",
-                  "Stripping", "LHCbExternals", "Urania", "VMDirac", "LHCbVMDirac" ]
+                  "Stripping", "LHCbExternals", "Urania", "VMDirac", "LHCbVMDirac", "Noether", "Tesla" ]
 
 afs_volume_short_names = { "Gaudi"      : "GA",
                            "LHCb"       : "LH",
@@ -60,6 +60,8 @@ afs_volume_short_names = { "Gaudi"      : "GA",
                            "Stripping"  : "ST",
                            "VMDirac"    : "VM",
                            "LHCbVMDirac": "LV",
+                           "Noether"    : "NO",
+                           "Tesla"      : "TE",
                            "Urania"     : "UR"}
 
 # ------------------------------------------------------------------------------------
@@ -590,3 +592,9 @@ VanDerMeer.setAFSVolumeName("VDM")#IGNORE:E0602
 
 # VetraTB
 VetraTB.setAFSVolumeName("VETRTB")#IGNORE:E0602
+
+# Noether
+Noether.setAFSVolumeName("NOET")#IGNORE:E0602
+
+# Tesla
+Tesla.setAFSVolumeName("TESL")#IGNORE:E0602
