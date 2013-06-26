@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-06-26 - Chris Jones
+ - Change the TES location for Downstream MuonPID objects created by
+   StrippingTrackEffDownMuon.py from "Rec/Muon/MuonPID/Downstream" to
+   "Rec/Muon/DownstreamMuonPID". The problem with the original location is
+   "Rec/Muon/MuonPID" is the standard location for the main Muon PID data
+   objects, and consquently should not be used as a TES node (directory)
+   for other data objects.
+
 ! 2013-06-24 - Thomas Blake
  - Updated B2LLK stripping line to use MergedSelection
 

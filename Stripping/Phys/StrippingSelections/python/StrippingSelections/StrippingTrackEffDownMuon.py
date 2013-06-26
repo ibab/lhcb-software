@@ -133,7 +133,7 @@ def selMuonPParts(name, DataType, downstreamSeq):
    cm=ConfiguredMuonIDs.ConfiguredMuonIDs( DataType ) #data=DaVinci().getProp("DataType"))
    cm.configureMuonIDAlg(idalg)
    idalg.TrackLocation = "Rec/Downstream/FittedTracks"
-   idalg.MuonIDLocation = "Rec/Muon/MuonPID/Downstream"
+   idalg.MuonIDLocation = "Rec/Muon/DownstreamMuonPID"
    idalg.MuonTrackLocation = "Rec/Track/MuonForDownstream" # I would call it FromDownstream
 
    downprotoseq = GaudiSequencer(name+"ProtoPSeq")
@@ -156,7 +156,7 @@ def selMuonPParts(name, DataType, downstreamSeq):
 	ts.MaxChi2Cut = 10
 
    addmuonpid = ChargedProtoParticleAddMuonInfo(name+"addmuoninfo")
-   addmuonpid.InputMuonPIDLocation = "Rec/Muon/MuonPID/Downstream"
+   addmuonpid.InputMuonPIDLocation = "Rec/Muon/DownstreamMuonPID"
    addmuonpid.ProtoParticleLocation = "Rec/ProtoP/"+name+"ProtoPMaker/ProtoParticles"
    #addmuonpid.OutputLevel = 0
    combinedll = ChargedProtoCombineDLLsAlg(name+"CombineDLL")
