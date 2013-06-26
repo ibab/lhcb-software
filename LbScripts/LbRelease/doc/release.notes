@@ -1,5 +1,9 @@
 2013-06-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* data/DataPkgEnvs: added environment for MIBData v3r2
+
+2013-06-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* python/LbRelease/LHCbDoc.py: renew the AFS token before each build
 
 2013-06-25  Ben Couturier <Ben.Couturier@cern.ch>
