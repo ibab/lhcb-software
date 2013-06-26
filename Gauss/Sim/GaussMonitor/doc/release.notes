@@ -4,6 +4,9 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-06-26 - Patrick Robbe
+ - Remove obsolete GeneratorFullMonitor algorithm from Gauss
+
 !====================== GaussMonitor v6r12 2013-03-21 ========================
 ! 2013-03-21 - Gloria Corti
  - Increase boundaries of histograms for primary vertex in generator monitor

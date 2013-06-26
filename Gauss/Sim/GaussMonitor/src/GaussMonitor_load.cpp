@@ -18,7 +18,6 @@ DECLARE_FACTORY_ENTRIES(GaussMonitor) {
   DECLARE_ALGORITHM( MCTruthFullMonitor );
   DECLARE_ALGORITHM( MCTruthMonitor );
   DECLARE_ALGORITHM( MCDecayCounter );
-  DECLARE_ALGORITHM( GeneratorFullMonitor );
   DECLARE_ALGORITHM( GenMonitorAlg );
   DECLARE_ALGORITHM( GeneratorAnalysis );
   DECLARE_ALGORITHM( ProductionAnalysis );
