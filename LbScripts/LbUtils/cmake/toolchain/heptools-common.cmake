@@ -23,7 +23,12 @@
 function(lcg_find_host_arch)
   if(NOT LCG_HOST_ARCH)
     if(CMAKE_HOST_SYSTEM_PROCESSOR)
-      set(arch ${CMAKE_HOST_SYSTEM_PROCESSOR})
+      # Fix to get the right value for MacOSX
+      if( (CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin") AND (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "i386") )
+        execute_process(COMMAND uname -m OUTPUT_VARIABLE arch OUTPUT_STRIP_TRAILING_WHITESPACE)
+      else()
+        set(arch ${CMAKE_HOST_SYSTEM_PROCESSOR})
+      endif()
     else()
       if(UNIX)
         execute_process(COMMAND uname -p OUTPUT_VARIABLE arch OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -133,7 +138,10 @@ endfunction()
 function(lcg_get_target_platform)
   if(NOT BINARY_TAG)
     # Take the target system id from the environment
-    if(NOT "$ENV{CMAKECONFIG}" STREQUAL "")
+    if(NOT "$ENV{BINARY_TAG}" STREQUAL "")
+      set(tag $ENV{BINARY_TAG})
+      set(tag_source BINARY_TAG)
+    elseif(NOT "$ENV{CMAKECONFIG}" STREQUAL "")
       set(tag $ENV{CMAKECONFIG})
       set(tag_source CMAKECONFIG)
     elseif(NOT "$ENV{CMTCONFIG}" STREQUAL "")
@@ -359,8 +367,10 @@ macro(LCG_prepare_paths)
   set(Python_ADDITIONAL_VERSIONS ${Python_config_version_twodigit})
 
   # Note: this is needed because FindBoost.cmake requires both if the patch version is 0.
-  string(REGEX MATCH "[0-9]+\\.[0-9]+" Boost_config_version_twodigit ${Boost_config_version})
-  set(Boost_ADDITIONAL_VERSIONS ${Boost_config_version} ${Boost_config_version_twodigit})
+  if (Boost_config_version)
+    string(REGEX MATCH "[0-9]+\\.[0-9]+" Boost_config_version_twodigit ${Boost_config_version})
+    set(Boost_ADDITIONAL_VERSIONS ${Boost_config_version} ${Boost_config_version_twodigit})
+  endif()
 
   # Useful for RedHat-derived platforms
   set_property(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS TRUE)
@@ -368,16 +378,18 @@ macro(LCG_prepare_paths)
   #===============================================================================
   # Special cases that require a special treatment
   #===============================================================================
-  if(NOT APPLE)
-    # FIXME: this should be automatic... see FindBoost.cmake documentation
-    # Get Boost compiler id from LCG_system
-    string(REGEX MATCHALL "[^-]+" out ${LCG_SYSTEM})
-    list(GET out 2 syscomp)
-    set(Boost_COMPILER -${syscomp})
-    #message(STATUS "Boost compiler: ${LCG_SYSTEM} -> ${syscomp}")
+  if (Boost_config_version)
+    if(NOT APPLE)
+      # FIXME: this should be automatic... see FindBoost.cmake documentation
+      # Get Boost compiler id from LCG_system
+      string(REGEX MATCHALL "[^-]+" out ${LCG_SYSTEM})
+      list(GET out 2 syscomp)
+      set(Boost_COMPILER -${syscomp})
+      #message(STATUS "Boost compiler: ${LCG_SYSTEM} -> ${syscomp}")
+    endif()
+    set(Boost_NO_BOOST_CMAKE ON)
+    set(Boost_NO_SYSTEM_PATHS ON)
   endif()
-  set(Boost_NO_BOOST_CMAKE ON)
-  set(Boost_NO_SYSTEM_PATHS ON)
 
   # These externals require the version of python appended to their version.
   foreach(external Boost pytools pygraphics pyanalysis QMtest)

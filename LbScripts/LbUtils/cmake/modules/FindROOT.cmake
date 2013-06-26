@@ -18,12 +18,14 @@ if(NOT ROOT_INCLUDE_DIR)
             HINTS ${ROOTSYS}/include $ENV{ROOTSYS}/include
             PATH_SUFFIXES root root/include
             ${ROOT_OVERRIDE_PATH})
-  if(ROOT_INCLUDE_DIR MATCHES "include$")
-    # ROOTSYS-style installation
-    get_filename_component(ROOTSYS ${ROOT_INCLUDE_DIR} PATH)
-    set(ROOTSYS ${ROOTSYS} CACHE PATH "Location of the installation of ROOT" FORCE)
-  else()
-    set(ROOT_NO_ROOTSYS TRUE CACHE BOOL "ROOT is installed with system packages and not in a ROOTSYS")
+  if(ROOT_INCLUDE_DIR)
+    if(ROOT_INCLUDE_DIR MATCHES "include$")
+      # ROOTSYS-style installation
+      get_filename_component(ROOTSYS ${ROOT_INCLUDE_DIR} PATH)
+      set(ROOTSYS ${ROOTSYS} CACHE PATH "Location of the installation of ROOT" FORCE)
+    else()
+      set(ROOT_NO_ROOTSYS TRUE CACHE BOOL "ROOT is installed with system packages and not in a ROOTSYS")
+    endif()
   endif()
 endif()
 
@@ -70,7 +72,7 @@ while(ROOT_FIND_COMPONENTS)
   list(REMOVE_AT ROOT_FIND_COMPONENTS 0)
   # look for the library if not found yet
   if(NOT ROOT_${component}_LIBRARY)
-    find_library(ROOT_${component}_LIBRARY NAMES ${component}
+    find_library(ROOT_${component}_LIBRARY NAMES ${component} lib${component}
                  HINTS ${ROOTSYS}/lib
                  PATH_SUFFIXES root
                  ${ROOT_OVERRIDE_PATH})
@@ -90,7 +92,9 @@ while(ROOT_FIND_COMPONENTS)
     list(REMOVE_DUPLICATES ROOT_FIND_COMPONENTS)
   endif()
   #message(STATUS "ROOT_FIND_COMPONENTS=${ROOT_FIND_COMPONENTS}")
-  set(ROOT_LIBRARIES ${ROOT_LIBRARIES} ${ROOT_${component}_LIBRARY})
+  if(ROOT_${component}_LIBRARY)
+    set(ROOT_LIBRARIES ${ROOT_LIBRARIES} ${ROOT_${component}_LIBRARY})
+  endif()
 endwhile()
 
 # Locate the tools

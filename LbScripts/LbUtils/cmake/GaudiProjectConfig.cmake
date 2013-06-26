@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: 8f696e3ad065c7ea00ffa6787b31334616ecf7b8
+# Commit Id: 1fa219ac51f0626e0e86adb52b19efafa7ee26e6
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -312,8 +312,24 @@ macro(gaudi_project project version)
     endif()
   endif()
 
-  message(STATUS "  environment for local subdirectories")
   # - collect internal environment
+  message(STATUS "  environment for the project")
+  #   - installation dirs
+  set(project_environment ${project_environment}
+        PREPEND PATH \${.}/scripts
+        PREPEND PATH \${.}/bin
+        PREPEND LD_LIBRARY_PATH \${.}/lib
+        PREPEND PYTHONPATH \${.}/python
+        PREPEND PYTHONPATH \${.}/python/lib-dynload)
+  #     (installation dirs added to build env to be able to test pre-built bins)
+  set(project_build_environment ${project_build_environment}
+        PREPEND PATH ${CMAKE_INSTALL_PREFIX}/scripts
+        PREPEND PATH ${CMAKE_INSTALL_PREFIX}/bin
+        PREPEND LD_LIBRARY_PATH ${CMAKE_INSTALL_PREFIX}/lib
+        PREPEND PYTHONPATH ${CMAKE_INSTALL_PREFIX}/python
+        PREPEND PYTHONPATH ${CMAKE_INSTALL_PREFIX}/python/lib-dynload)
+
+  message(STATUS "  environment for local subdirectories")
   #   - project root (for relocatability)
   string(TOUPPER ${project} _proj)
   #set(project_environment ${project_environment} SET ${_proj}_PROJECT_ROOT "${CMAKE_SOURCE_DIR}")
@@ -373,20 +389,13 @@ macro(gaudi_project project version)
     endif()
   endforeach()
 
-  message(STATUS "  environment for the project")
-  #   - installation dirs
-  set(project_environment ${project_environment}
-        PREPEND PATH \${.}/scripts
-        PREPEND PATH \${.}/bin
-        PREPEND LD_LIBRARY_PATH \${.}/lib
-        PREPEND PYTHONPATH \${.}/python
-        PREPEND PYTHONPATH \${.}/python/lib-dynload)
   #   - build dirs
   set(project_build_environment ${project_build_environment}
       PREPEND PATH ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
       PREPEND LD_LIBRARY_PATH ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
       PREPEND PYTHONPATH ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
       PREPEND PYTHONPATH ${CMAKE_BINARY_DIR}/python)
+
   # - produce environment XML description
   #   release version
   gaudi_generate_env_conf(${env_release_xml} ${project_environment})
@@ -435,6 +444,8 @@ macro(gaudi_project project version)
   set(CPACK_SYSTEM_NAME ${BINARY_TAG})
 
   set(CPACK_GENERATOR TGZ)
+
+  set(CPACK_SOURCE_IGNORE_FILES "/InstallArea/;/build\\\\..*/;/\\\\.svn/;/\\\\.settings/;\\\\..*project;\\\\.gitignore")
 
   include(CPack)
 
@@ -499,18 +510,20 @@ macro(_gaudi_use_other_projects)
                    PATH_SUFFIXES ${suffixes})
       if(${other_project}_FOUND)
         message(STATUS "  found ${other_project} ${${other_project}_VERSION} ${${other_project}_DIR}")
-        if(NOT heptools_version STREQUAL ${other_project}_heptools_version)
-          if(${other_project}_heptools_version)
-            set(hint_message "with the option '-DCMAKE_TOOLCHAIN_FILE=.../heptools-${${other_project}_heptools_version}.cmake'")
-          else()
-            set(hint_message "without the option '-DCMAKE_TOOLCHAIN_FILE=...'")
-          endif()
-          message(FATAL_ERROR "Incompatible versions of heptools toolchains:
+        if(heptools_version)
+          if(NOT heptools_version STREQUAL ${other_project}_heptools_version)
+            if(${other_project}_heptools_version)
+              set(hint_message "with the option '-DCMAKE_TOOLCHAIN_FILE=.../heptools-${${other_project}_heptools_version}.cmake'")
+            else()
+              set(hint_message "without the option '-DCMAKE_TOOLCHAIN_FILE=...'")
+            endif()
+            message(FATAL_ERROR "Incompatible versions of heptools toolchains:
   ${CMAKE_PROJECT_NAME} -> ${heptools_version}
   ${other_project} ${${other_project}_VERSION} -> ${${other_project}_heptools_version}
 
   You need to call cmake ${hint_message}
 ")
+          endif()
         endif()
         if(NOT LCG_SYSTEM STREQUAL ${other_project}_heptools_system)
           message(FATAL_ERROR "Incompatible values of LCG_SYSTEM:
@@ -1669,20 +1682,38 @@ endfunction()
 # gaudi_add_unit_test(<name>
 #                     source1 source2 ...
 #                     LINK_LIBRARIES library1 library2 ...
-#                     INCLUDE_DIRS dir1 package2 ...)
+#                     INCLUDE_DIRS dir1 package2 ...
+#                     [ENVIRONMENT variable[+]=value ...]
+#                     [TIMEOUT seconds]
+#                     [TYPE Boost|CppUnit])
 #
 # Special version of gaudi_add_executable which automatically adds the dependency
 # on CppUnit.
+# If special environment settings are needed, they can be specified in the
+# section ENVIRONMENT as <var>=<value> or <var>+=<value>, where the second format
+# prepends the value to the PATH-like variable.
+# The default TYPE is CppUnit and Boost can also be specified.
 #---------------------------------------------------------------------------------------------------
 function(gaudi_add_unit_test executable)
   if(GAUDI_BUILD_TESTS)
-    gaudi_common_add_build(${ARGN})
 
-    find_package(CppUnit QUIET REQUIRED)
+    CMAKE_PARSE_ARGUMENTS(${executable}_UNIT_TEST "" "TYPE;TIMEOUT" "ENVIRONMENT" ${ARGN})
+
+    gaudi_common_add_build(${${executable}_UNIT_TEST_UNPARSED_ARGUMENTS})
+
+    if(NOT ${executable}_UNIT_TEST_TYPE)
+      set(${executable}_UNIT_TEST_TYPE CppUnit)
+    endif()
+
+    if (${${executable}_UNIT_TEST_TYPE} STREQUAL "Boost")
+      find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+    else()
+      find_package(${${executable}_UNIT_TEST_TYPE} QUIET REQUIRED)
+    endif()
 
     gaudi_add_executable(${executable} ${srcs}
-                         LINK_LIBRARIES ${ARG_LINK_LIBRARIES} CppUnit
-                         INCLUDE_DIRS ${ARG_INCLUDE_DIRS} CppUnit)
+                         LINK_LIBRARIES ${ARG_LINK_LIBRARIES} ${${executable}_UNIT_TEST_TYPE}
+                         INCLUDE_DIRS ${ARG_INCLUDE_DIRS} ${${executable}_UNIT_TEST_TYPE})
 
     gaudi_get_package_name(package)
 
@@ -1690,11 +1721,29 @@ function(gaudi_add_unit_test executable)
     if(NOT exec_suffix)
       set(exec_suffix)
     endif()
+
+    foreach(var ${${executable}_UNIT_TEST_ENVIRONMENT})
+      string(FIND ${var} "+=" is_prepend)
+      if(NOT is_prepend LESS 0)
+        # the argument contains +=
+        string(REPLACE "+=" "=" var ${var})
+        set(extra_env ${extra_env} -p ${var})
+      else()
+        set(extra_env ${extra_env} -s ${var})
+      endif()
+    endforeach()
+
     add_test(${package}.${executable}
-             ${env_cmd} --xml ${env_xml}
+             ${env_cmd} ${extra_env} --xml ${env_xml}
                ${executable}${exec_suffix})
+
+    if(${executable}_UNIT_TEST_TIMEOUT)
+      set_property(TEST ${package}.${executable} PROPERTY TIMEOUT ${${executable}_UNIT_TEST_TIMEOUT})
+    endif()
+
   endif()
 endfunction()
+
 
 #-------------------------------------------------------------------------------
 # gaudi_add_test(<name>
@@ -1710,7 +1759,7 @@ endfunction()
 #  QMTEST - run the QMTest tests in the standard directory
 #  COMMAND - execute a command
 # If special environment settings are needed, they can be specified in the
-# section ENVIRONMENT as <var>=<value> or <var>+=<value>, where the secon format
+# section ENVIRONMENT as <var>=<value> or <var>+=<value>, where the second format
 # prepends the value to the PATH-like variable.
 # Great flexibility is given by the following options:
 #  FAILS - the tests succeds if the command fails (return code !=0)

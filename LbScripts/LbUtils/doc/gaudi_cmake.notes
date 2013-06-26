@@ -1,3 +1,60 @@
+! 2013-06-25 - Marco Clemencic (1fa219a)
+
+ - fixes to FindROOT.cmake imported from LHCbMasterclass
+
+   
+
+! 2013-06-11 - Marco Clemencic (f916b68)
+
+ - Merge Hubert Degaudenzi's patches into dev/cmake
+
+   * commit '35431ea505d94b771cbf09f7491594f4fc860448':
+    Added exclusion patterns for the creation of the source tgz
+    fix mac osx arch detection
+    added the possibility to use the env variable BINARY_TAG
+    fixed some cppcheck warnings
+    Added ChangeLog to the .gitignore file
+    modifications in the gaudi_add_unit_test function
+    fixed heptools compatibility check if heptools is not used at all
+    Added protection in heptools-common if Boost_config_version is not defined.
+    Modified createProjVersHeader.py to understand only the LHCb, ATLAS and
+   plain version styles.
+
+   Conflicts:
+   GaudiCoreSvc/doc/release.notes
+   GaudiPolicy/doc/release.notes
+
+
+! 2013-06-11 - Marco Clemencic (2380aaf)
+
+ - moved setting of build local environment
+
+   Prepend the build local directories very late so that they correctly
+   override the content of the install are and package directories.
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7225
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2013-06-11 - Marco Clemencic (905b207)
+
+ - modified the build environment to include install prefix
+
+   This change allows testing of pre-built binaries, by picking up the
+   libraries and executables etc. from the InstallArea unless they have been
+   built locally.
+
+   To be noted that in the path the InstallArea has lower priority than the
+   local build directories.
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7223
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
 ! 2013-05-27 - Marco Clemencic (8f696e3)
 
  - switch to LCG 65
@@ -120,6 +177,12 @@
 
    
 
+! 2013-04-17 - Hubert Degaudenzi (35431ea)
+
+ - Added exclusion patterns for the creation of the source tgz
+
+   
+
 ! 2013-04-16 - Marco Clemencic (1d20a7a)
 
  - fixed setting of GCCXML_CXX_COMPILER for clang
@@ -143,6 +206,41 @@
  - Improved FindAIDA and FindROOT, and removed special code in heptools-common.cmake
 
    
+
+! 2013-04-11 - Hubert Degaudenzi (782b562)
+
+ - fix mac osx arch detection
+
+   
+
+! 2013-04-10 - Hubert Degaudenzi (f91c4db)
+
+ -  added the possibility to use the env variable BINARY_TAG
+
+   The BINARY_TAG env variable has priority on   CMAKECONFIG and CMTCONFIG
+
+
+! 2013-04-09 - Hubert Degaudenzi (ae4e233)
+
+ - modifications in the gaudi_add_unit_test function
+
+   - added the possibility to use Boost unit tests
+   - added the possibility to pass a TIMEOUT parameter (in seconds)
+   - added the possibility to pass some environment variables
+
+
+! 2013-03-26 - Hubert Degaudenzi (74c1b6e)
+
+ - fixed heptools compatibility check if heptools is not used at all
+
+   
+
+! 2013-03-22 - Hubert Degaudenzi (054ae63)
+
+ - Added protection in heptools-common if Boost_config_version is not defined.
+
+   This is the case when using Boost from the system instead of the LCG stack
+
 
 ! 2013-03-22 - Marco Clemencic (395e415)
 
