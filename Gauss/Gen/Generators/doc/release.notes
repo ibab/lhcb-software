@@ -5,6 +5,9 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2013-06-26 - Patrick Robbe
+ - Fix coverity warnings
+
 ! 2013-05-31 - Patrick Robbe
  - Add interface code to TAULA and PHOTOS to suppress part of their outputs:
    . src/Lib/LbTaula.cpp

@@ -107,7 +107,8 @@ StatusCode ExternalGenerator::initialize( ) {
   if ( "" != m_cutToolName ) 
     m_cutTool = tool< IGenCutTool >( m_cutToolName , this ) ;
 
-  m_productionTool -> initializeGenerator();
+  if ( 0 != m_productionTool ) 
+    m_productionTool -> initializeGenerator();
 
   // now debug printout of Production Tool 
   // has to be after all initializations to be sure correct values are printed
