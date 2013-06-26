@@ -18,7 +18,7 @@ class DeMuonDetector;
 class MuonDetectorResponse  {
 public:
 //constructor
-MuonDetectorResponse(){};
+  MuonDetectorResponse() : m_toolSvc(NULL), m_muonDetector(NULL) {};
   void initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
                       IDataProviderSvc* detSvc, IMessageSvc * msgSvc);
   void finalize();

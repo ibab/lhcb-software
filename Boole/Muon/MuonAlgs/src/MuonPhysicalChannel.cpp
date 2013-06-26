@@ -36,6 +36,8 @@ void MuonPhysicalChannel::applyTimeJitter(){
 }
 
 void MuonPhysicalChannel::applyGeoInefficiency(){
+  /* MC 2013-06-26: commenting out, since this code has no effect.
+   * See Coverity defect 17443
   std::vector<MuonHitTraceBack>::iterator iter ;
   bool drop=false;
   for (iter= m_Hits.begin();iter< m_Hits.end();iter++){
@@ -46,8 +48,8 @@ void MuonPhysicalChannel::applyGeoInefficiency(){
           setGeometricalNotAcceptedHitHistory((unsigned int)1);
       }
     }	 
-  }	 	 		
-	;
+  }
+  */
 }
 	
 void MuonPhysicalChannel::applyChamberInefficiency(){

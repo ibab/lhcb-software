@@ -16,6 +16,6 @@ MuonHitTraceBack::MuonHitTraceBack(  ) {
   m_cordinate[1]=0;
   m_cordinate[2]=0;
   m_cordinate[3]=0;
-  m_hitArrivalTime=0;  
+  m_hitArrivalTime=0;
 }
 
