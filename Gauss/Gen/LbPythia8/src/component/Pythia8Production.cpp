@@ -209,7 +209,10 @@ StatusCode Pythia8Production::generateEvent( HepMC::GenEvent * theEvent ,
   // Generate Event
   m_pythia->next();
 
-  // not needed in all cases
+  debug() << theEvent << " " << theCollision << endmsg;
+  for (int i =0;i<100000;i++) {};
+  
+  //not needed in all cases
   if (!m_pythia->flag("HadronLevel:all")) m_event = m_pythia->event;  
 
   // Update event counter
@@ -553,11 +556,16 @@ StatusCode Pythia8Production::setupForcedFragmentation( const int
 StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    , 
                                         LHCb::GenCollision * theCollision ){
   StatusCode sc = StatusCode::SUCCESS ;
+
+  debug() <<  theEvent << " and " << theCollision << endmsg;
+  
+
   
   //Convert from Pythia8 format to HepMC format
   HepMC::I_Pythia8 conversion ;
   debug() << "momentum unit is " << theEvent->momentum_unit() << endmsg;
-  
+
+
   // Force the verification of the HEPEVT  record 
   if ( m_validate_HEPEVT ) 
   { 
@@ -592,13 +600,19 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
   if (!(conversion.fill_next_event( *m_pythia , theEvent ))) 
     return Error( "Cannot convert Pythia8 event to HepMC" ) ;
   
-  // Now convert to LHCb units:
+  debug() << m_pythia << " " << theEvent << endmsg;
+  
+
+    // Now convert to LHCb units:
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
         p != theEvent -> particles_end() ; ++p ) {
   
+    debug() << (*p) -> status() <<  " "  << (*p) -> pdg_id() << endmsg;
+    
+    
     int status = (*p) -> status() ;
 
-    if (status>3 && status<20)
+    /*if (status>3 && status<20)
       (*p) -> set_status( LHCb::HepMCEvent::DocumentationParticle );
     else if (status>19 && status<80)
       (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );
@@ -606,17 +620,22 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
       if ((*p) -> end_vertex()!=0)
         (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );
       else
-	(*p) -> set_status( LHCb::HepMCEvent::StableInProdGen );
+        (*p) -> set_status( LHCb::HepMCEvent::StableInProdGen );
     }
     else if (status==93 || status==94)
       (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen );
     else if (status==99)
+      (*p) -> set_status( LHCb::HepMCEvent::DocumentationParticle );
+    */
+    if (status>3) 
       (*p) -> set_status( LHCb::HepMCEvent::DocumentationParticle );
     else if (status!=LHCb::HepMCEvent::DecayedByProdGen
              && status!=LHCb::HepMCEvent::StableInProdGen
              && status!=LHCb::HepMCEvent::DocumentationParticle)
       warning() << "Unknown status rule " << status << " for particle" << (*p)->pdg_id() << endmsg;
 
+    debug() << " " << (*p) -> status() <<  " "  << (*p) -> pdg_id() << endmsg;
+        
     //convert the pdgId to a correct value.
     //consistency between pdgId and pythiaId was not present in the past
     //with pythia8 it is the case, but one takes the old particletable it creates an issue.
