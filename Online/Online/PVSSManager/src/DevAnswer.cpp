@@ -11,6 +11,8 @@
 #include "PVSS/DevAnswer.h"
 
 using namespace PVSS;
+#include <cstdlib>
+#include <cstring>
 
 void DevAnswer::clear()  {
   if ( m_nerrs > 0 )  {

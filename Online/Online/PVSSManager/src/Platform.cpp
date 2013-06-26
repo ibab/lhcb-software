@@ -9,6 +9,8 @@
 // $Id: Platform.cpp,v 1.5 2007-10-01 14:46:55 frankm Exp $
 
 #include "PVSS/Internals.h"
+#include <cstring>
+#include <memory>
 #include <string>
 
 /// Access to global lock object

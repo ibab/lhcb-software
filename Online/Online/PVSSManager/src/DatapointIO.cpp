@@ -23,7 +23,7 @@
 
 using namespace PVSS;
 
-template <class T> void pvss_simple_conversion(const Variable* var, T& val)  {
+template <class T> static void pvss_simple_conversion(const Variable* var, T& val)  {
   switch(var->isA())  {
   case BIT_VAR:      val = T(((BitVar*)var)->getValue()==PVSS_TRUE ? 1 : 0); return;
   case CHAR_VAR:     val = T(((CharVar*)var)->getValue());                   return;
@@ -36,7 +36,7 @@ template <class T> void pvss_simple_conversion(const Variable* var, T& val)  {
   throw "Invalid variable type for data conversion";
 }
 
-template <> static void pvss_simple_conversion<bool>(const Variable* var, bool& v)  {
+template <> void pvss_simple_conversion<bool>(const Variable* var, bool& v)  {
   char v0;
   pvss_simple_conversion<char>(var,v0);
   v = v0 != 0;
