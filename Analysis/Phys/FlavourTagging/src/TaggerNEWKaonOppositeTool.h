@@ -63,7 +63,6 @@ private:
 
   double m_AverageOmega;
   double m_ProbMin_kaon;
-  double m_ProbMax_kaon;
   double m_P0_Cal_kaon ;
   double m_P1_Cal_kaon ;
 
@@ -72,6 +71,7 @@ private:
 
   double m_nn_1;
   double m_nn_2;
+  double m_nn_2_flip;
 
 
 };

@@ -1,5 +1,6 @@
 // Include files 
 #include "TaggerNEWKaonOppositeTool.h"
+#include "TaggingHelpers.h"
 
 //--------------------------------------------------------------------
 // Implementation file for class : TaggerNEWKaonOppositeTool
@@ -31,17 +32,17 @@ DECLARE_TOOL_FACTORY( TaggerNEWKaonOppositeTool )
   declareProperty( "Kaon_ghost_cut",    m_ghost_cut     = -999.0 );
   declareProperty( "Kaon_distPhi_cut",  m_distPhi_cut_kaon= 0.005 );
 
-  declareProperty( "Kaon_P0_Cal",        m_P0_Cal_kaon   = 0.4513 );
-  declareProperty( "Kaon_P1_Cal",        m_P1_Cal_kaon   = 1.0514 );
+  declareProperty( "Kaon_P0_Cal",        m_P0_Cal_kaon   = 0.4486 );
+  declareProperty( "Kaon_P1_Cal",        m_P1_Cal_kaon   = 1.0650 );
   declareProperty( "Kaon_AverageOmega",  m_AverageOmega  = 0.4484 );
-  declareProperty( "Kaon_ProbMin",       m_ProbMin_kaon  = 0.47 );
-  declareProperty( "Kaon_ProbMax",       m_ProbMax_kaon  = 0.53 );
+  declareProperty( "Kaon_ProbMin",       m_ProbMin_kaon  = 0.48 );
 
   declareProperty( "Kaon_ipPU_cut", m_ipPU_cut_kaon      = 7.5 );
   declareProperty( "Kaon_NN1_cut",  m_NN1_cut_kaon       = 0.4 );
 
   m_nn_1      = 0.;
   m_nn_2      = 0.;
+  m_nn_2_flip = 0.;
 
   m_util = 0;
   m_descend = 0;
@@ -67,11 +68,11 @@ StatusCode TaggerNEWKaonOppositeTool::initialize()
   std::vector<std::string> variable_names;
   variable_names.push_back("log(k_p)");
   variable_names.push_back("log(k_pt)");
-  variable_names.push_back("log(k_ipsig)");
-  variable_names.push_back("log(k_ip)");
+  variable_names.push_back("log(abs(k_ipsig))");
+  variable_names.push_back("log(abs(k_ip))");
   variable_names.push_back("log(k_lcs)");
   variable_names.push_back("k_diff_eta");
-  variable_names.push_back("k_diff_phi");
+  variable_names.push_back("k_delta_phi");
   variable_names.push_back("log(B_pt)");
   variable_names.push_back("log(cands)");
   variable_names.push_back("no_vtx");
@@ -195,11 +196,13 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
     const double IPsig = fabs(IP/IPerr);
     const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,100000.);
 
+    if(ippu < m_ipPU_cut_kaon)  continue;
+
     const double eta = (*ipart)->momentum().Eta();
     const double phi = (*ipart)->momentum().Phi();
 
     const double diff_eta = B_eta - eta;
-    const double diff_phi = B_phi - phi;
+    const double delta_phi = TaggingHelpers::dphi(B_phi, phi);
 
     std::vector<double> values;
     values.push_back(log(P)          );
@@ -208,14 +211,12 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
     values.push_back(log(IP)         );
     values.push_back(log(lcs)        );
     values.push_back(diff_eta        );
-    values.push_back(diff_phi        );
+    values.push_back(delta_phi       );
     values.push_back(log(B_Pt)       );
     values.push_back(log(cands_nn_1) );
     values.push_back(no_vtx          );
 
     m_nn_1 = mymc_reader->GetMvaValue(values);
-
-    if(ippu < m_ipPU_cut_kaon)  continue;
 
     if(m_nn_1 < m_NN1_cut_kaon) continue;
 
@@ -271,6 +272,7 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
     }
 
     std::vector<double> values;
+    std::vector<double> values_2;
     values.push_back(pos_sign_tag.at(0)*pos_rnet_opp.at(0));
     values.push_back(pos_sign_tag.at(1)*pos_rnet_opp.at(1));
     values.push_back(pos_sign_tag.at(2)*pos_rnet_opp.at(2));
@@ -283,12 +285,28 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
     values.push_back(no_vtx                               );
     values.push_back(cands_nn_2                           );
 
+    values_2.push_back((-1.) * pos_sign_tag.at(0)*pos_rnet_opp.at(0));
+    values_2.push_back((-1.) * pos_sign_tag.at(1)*pos_rnet_opp.at(1));
+    values_2.push_back((-1.) * pos_sign_tag.at(2)*pos_rnet_opp.at(2));
+    values_2.push_back((-1.) * pos_sign_tag.at(3)*pos_rnet_opp.at(3));
+    values_2.push_back((-1.) * pos_sign_tag.at(0)*pos_pidk.at(0)    );
+    values_2.push_back((-1.) * pos_sign_tag.at(1)*pos_pidk.at(1)    );
+    values_2.push_back((-1.) * pos_sign_tag.at(2)*pos_pidk.at(2)    );
+    values_2.push_back((-1.) * pos_sign_tag.at(3)*pos_pidk.at(3)    );
+    values_2.push_back(B_Pt                                         );
+    values_2.push_back(no_vtx                                       );
+    values_2.push_back(cands_nn_2                                   );
+
     m_nn_2 = mydata_reader->GetMvaValue(values);
 
-    my_os_k_eta = m_nn_2;
+	m_nn_2_flip = mydata_reader->GetMvaValue(values_2);
+
+	// Interpret the conditional probability right:
+	// important and significant, if sample split in B or anti-B categories
+    my_os_k_eta = (m_nn_2 + (1. - m_nn_2_flip)) / 2.;
 
     if ( msgLevel(MSG::DEBUG) )
-      debug () << " NN 2     " << m_nn_2 << endmsg;
+      debug () << " NN 2     " << my_os_k_eta << endmsg;
 
     myMap.clear();
 
@@ -301,13 +319,15 @@ Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
 
   if( ! ikaon ) return tkaon;
 
-  my_os_k_eta = m_P0_Cal_kaon + m_P1_Cal_kaon * (my_os_k_eta  - m_AverageOmega);
-
-  if(my_os_k_eta > m_ProbMax_kaon)
+  if(my_os_k_eta > (1. - m_ProbMin_kaon))
     my_os_k_dec = 1;
 
   if(my_os_k_eta < m_ProbMin_kaon)
     my_os_k_dec = -1;
+
+  // set tag decision before calibration:
+  // same decision as used to determine the calibration parameters!
+  my_os_k_eta = m_P0_Cal_kaon + m_P1_Cal_kaon * (my_os_k_eta  - m_AverageOmega);
 
   if(my_os_k_eta > 0.5)
     my_os_k_eta = 1. - my_os_k_eta;
