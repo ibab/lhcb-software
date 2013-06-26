@@ -27,7 +27,8 @@ from microdstelements import ( CloneRecHeader,
                                PackRecObjects,
                                PackMCInfo,
                                CleanEmptyEventNodes,
-                               PackTrackingClusters )
+                               PackTrackingClusters,
+                               PrintTESContents )
 
 def stripMicroDSTElements( pack=True, saveTrackClusters=True, isMC=False ) :
     '''
@@ -57,6 +58,7 @@ def stripMicroDSTElements( pack=True, saveTrackClusters=True, isMC=False ) :
         if isMC :
             elements += [ PackMCInfo() ]
         elements += [ CleanEmptyEventNodes() ] # Must be last
+        #elements += [ PrintTESContents() ] # For debugging
     return elements
 
 def stripMicroDSTStreamConf( pack=True, isMC=False ) :

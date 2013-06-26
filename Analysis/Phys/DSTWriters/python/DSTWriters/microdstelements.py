@@ -433,7 +433,7 @@ class PackParticlesAndVertices(MicroDSTElement) :
         packer = PackPsVs( name = self.personaliseName(sel,"PackPsAndVs"),
                            InputStream        = self.branch,
                            DeleteInput        = True,
-                           EnableCheck        = True,
+                           EnableCheck        = False,
                            AlwaysCreateOutput = False,
                            VetoedContainers = ["/Event/"+self.branch+"/Rec/Vertex/Primary"] )
         return [packer]
@@ -458,7 +458,7 @@ class PackRecObjects(MicroDSTElement) :
 
         deleteInput = True
 
-        testPacking = True
+        testPacking = False
 
         algs = [ ]
 
@@ -585,3 +585,16 @@ class CleanEmptyEventNodes(MicroDSTElement) :
         cleaner = EmptyEventNodeCleaner( name = self.personaliseName(sel,"EmptyNodeCleaner"),
                                          InputStream = self.branch )
         return [cleaner]
+
+class PrintTESContents(MicroDSTElement) :
+    """
+    Debug element. Prints the TES contents...
+    """
+    def __call__(self, sel):
+        from Configurables import StoreExplorerAlg
+        sag = StoreExplorerAlg( name = self.personaliseName(sel,"StoreExplorer"),
+                                PrintEvt      = 9999999,
+                                Load          = True,
+                                TestAccess    = True,
+                                ExploreRelations = True )
+        return [sag]

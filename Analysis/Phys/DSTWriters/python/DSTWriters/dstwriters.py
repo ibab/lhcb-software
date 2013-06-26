@@ -39,6 +39,8 @@ class DSTWriterSelectionSequence(object) :
         writer=conf.streamType(conf.name+'_OStream')
         writer.OptItemList += conf.extraItems
         if len(conf.vetoItems) > 0 : writer.TESVetoList += conf.vetoItems
+
+        #writer.OutputLevel = 1
         
         algs = ioh.outputAlgs(filename=dstName, writer=writer, writeFSR=writeFSR)
         
