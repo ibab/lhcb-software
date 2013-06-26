@@ -127,10 +127,11 @@ namespace FiniteStateMachine {
     /// Predicate container definition
     typedef std::set<Predicate*> Predicates;
     enum TransitionFlags {
-      NO_CHECKS    = 0,
-      CREATE       = 1<<0,
-      CHECK        = 1<<1,
-      KILL         = 1<<2,
+      NO_CHECKS       = 0,
+      CREATE          = 1<<0,
+      CHECK           = 1<<1,
+      KILL            = 1<<2,
+      ON_TIMEOUT_KILL = 1<<3,
       ___BLA
     };
 
@@ -143,12 +144,8 @@ namespace FiniteStateMachine {
     Rules        m_rules;
     /// Set of transition predicates
     Predicates   m_predicates;
-    /// flag to kill tasks before invoking the transition
-    bool         m_kill;
-    /// flag to create tasks before invoking the transition
-    bool         m_create;
-    /// flag to fail the transiiton in case there are limbo tasks
-    bool         m_checkLimbo;
+    /// Transition flags
+    int          m_flags;
     /// flag to ignore any slave actions
     bool         m_ignoreSlaves;
 
@@ -167,20 +164,23 @@ namespace FiniteStateMachine {
     virtual ~Transition ();
 
     /// Return set of predicates attached to the FSM transition
-    const Predicates& predicates () const   { return m_predicates;   }
+    const Predicates& predicates () const   { return m_predicates;             }
     /// Return set of rules attached to the FSM transition
-    const Rules& rules () const             { return m_rules;        }
+    const Rules& rules () const             { return m_rules;                  }
 
     /// Return pointer to initial state of FSM transition structure
-    const State* from()  const              { return m_from;         }
-    /// Return pointer to target state of FSM transition structure
-    const State* to()  const                { return m_to;           }
+    const State* from()  const              { return m_from;                   }
+    /// Return pointer to target state of FSM transition structure  
+    const State* to()  const                { return m_to;                     }
     /// Return flag to create tasks before invoking the transition
-    bool create () const                    { return m_create;       }
+    bool create () const                    { return (m_flags&CREATE)==CREATE; }
     /// Return flag to fail the transiiton in case there are limbo tasks
-    bool checkLimbo() const                 { return m_checkLimbo;   }
+    bool checkLimbo() const                 { return (m_flags&CHECK)==CHECK;   }
     /// Return flag to check if slaves should be killed before invoking transition
-    bool killActive() const                 { return m_kill;         }
+    bool killActive() const                 { return (m_flags&KILL)==KILL;     }
+    /// Return flag to check if slaves should be killed on timeout
+    bool onTimeoutKill() const
+    { return (m_flags&ON_TIMEOUT_KILL)==ON_TIMEOUT_KILL;                       }
 
     /// Add a new predicate to a transition defining the allowed states of slaves for satisfication
     const Predicate* addPredicate(const Predicate::States& allowed);

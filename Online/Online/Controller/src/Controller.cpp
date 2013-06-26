@@ -71,6 +71,12 @@ FSM::ErrCond Controller::fail()  {
     display(ALWAYS,c_name(),"Controller: Slave %s in state %s has meta-state:%s",
 	    s->c_name(), s->c_state(), s->metaStateName());
   }
+  // Invoke special actions for certain transitions
+  if ( tr ) {
+    display(ERROR,c_name(),"Controller: Special action on failed transition %s needed.",tr->c_name());
+    if ( tr->name() == "recover" )  {
+    }
+  }
   return publishSlaves();
 }
 

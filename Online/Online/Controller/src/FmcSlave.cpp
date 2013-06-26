@@ -64,5 +64,11 @@ FSM::ErrCond FmcSlave::start()  {
 
 /// Handle timeout on unload transition according to timer ID
 void FmcSlave::handleUnloadTimeout()  {
+  forceKill();
+}
+
+/// Force slave killing
+FSM::ErrCond FmcSlave::forceKill()  {
   TaskManager::instance(RTL::nodeNameShort()).stop(name(),SIGTERM,15);
+  return FSM::SUCCESS;
 }

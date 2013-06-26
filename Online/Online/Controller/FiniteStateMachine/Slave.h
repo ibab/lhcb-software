@@ -156,6 +156,8 @@ namespace FiniteStateMachine {
     virtual ErrCond startSlave();
     /// Start slave process
     virtual ErrCond killSlave();
+    /// Force slave killing  (kill -9 or equivalent)
+    virtual ErrCond forceKill();
 
     /// Virtual method -- must be overloaded -- Send transition request to the slave
     virtual ErrCond sendRequest(const Transition* tr);

@@ -13,6 +13,7 @@
 #include "FiniteStateMachine/Machine.h"
 
 // C/C++ include files
+#include <cerrno>
 #include <unistd.h>
 #include <signal.h>
 #include <sys/types.h>
@@ -65,25 +66,49 @@ FSM::ErrCond NativeDimSlave::start()  {
   return FSM::SUCCESS;
 }
 
+/// Force slave killing
+FSM::ErrCond NativeDimSlave::forceKill() {
+  if ( m_pid ) {
+    int status = 0;
+    if ( 0 == ::kill(m_pid,SIGKILL) ) {
+      pid_t pid = ::waitpid(-1,&status,0);
+      if ( pid < 0 )    {
+	display(ERROR,c_name(),"FAILED to kill slave. Curr State:%s",metaStateName());	  
+      }
+      m_pid = 0;
+    }
+    else if ( errno == ESRCH ) {    // Non-existing process
+      m_pid = 0;
+    }
+    else if ( errno == EINVAL )  {  // Bad signal number ???!!!!
+      return FSM::FAIL;             // Controller probably fucked
+    }
+    else if ( errno == EPERM )  {   // Cannot be my process
+      m_pid = 0;
+      return FSM::FAIL;
+    }
+  }
+  return FSM::SUCCESS;
+}
+
 /// Handle timeout on unload transition according to timer ID
 void NativeDimSlave::handleUnloadTimeout()  {
   int status = 0;
   if ( m_timerID.second == SLAVE_UNLOAD_TIMEOUT ) {
     display(ERROR,c_name(),"unload command unsuccessful. Send SIGTERM. State:%s",metaStateName());	  
-    ::kill(m_pid,SIGTERM);
-    pid_t pid = ::waitpid(-1,&status,WNOHANG);
-    if ( pid < 0 ) startTimer(SLAVE_TERMINATE_TIMEOUT);
-    else m_pid = 0;
+    if ( 0 == ::kill(m_pid,SIGTERM) ) {
+      pid_t pid = ::waitpid(-1,&status,WNOHANG);
+      if ( pid < 0 ) startTimer(SLAVE_TERMINATE_TIMEOUT);
+      else m_pid = 0;
+    }
+    else if ( errno == ESRCH ) {    // Non-existing process
+      m_pid = 0;
+    }
   }
   else if ( m_timerID.second == SLAVE_TERMINATE_TIMEOUT ) {
     display(ERROR,c_name(),"unload command unsuccessful. Send SIGKILL. State:%s",metaStateName());	  
     m_timerID = TimerID(0,0);
-    ::kill(m_pid,SIGKILL);
-    pid_t pid = ::waitpid(-1,&status,0);
-    if ( pid < 0 )    {
-      display(ERROR,c_name(),"FAILED to kill slave. Curr State:%s",metaStateName());	  
-    }
-    m_pid = 0;
+    forceKill();
   }
 }
 

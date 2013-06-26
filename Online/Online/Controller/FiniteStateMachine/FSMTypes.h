@@ -26,10 +26,11 @@ namespace FiniteStateMachine   {
   class Type;
 
   enum TransitionFlags {
-    NO_CHECKS     = Transition::NO_CHECKS,
-    CREATE        = Transition::CREATE,
-    CHECK         = Transition::CHECK,
-    KILL          = Transition::KILL
+    NO_CHECKS       = Transition::NO_CHECKS,
+    CREATE          = Transition::CREATE,
+    CHECK           = Transition::CHECK,
+    KILL            = Transition::KILL,
+    ON_TIMEOUT_KILL = Transition::ON_TIMEOUT_KILL
   };
   namespace DAQ {
     const char ST_NAME_UNKNOWN[]      = {"UNKNOWN"};

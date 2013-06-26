@@ -42,6 +42,8 @@ namespace FiniteStateMachine   {
     virtual ~NativeDimSlave();
     /// Start slave process
     virtual ErrCond start();
+    /// Force slave killing
+    virtual ErrCond forceKill();
     /// Handle timeout on unload transition according to timer ID
     virtual void handleUnloadTimeout();
     /// Handle state updates for a particular slave

@@ -195,16 +195,28 @@ Slave& Slave::removeTimeout(const Transition* param)  {
   return *this;
 }
 
+static inline bool _onTimeoutKill(const Rule* r) {
+  if ( r && r->transition() && r->transition()->onTimeoutKill() ) return true;
+  return false;
+}
+
 /// Handle timeout according to timer ID
 void Slave::handleTimeout()  {
   int st = currentState();
   display(ALWAYS,c_name(),"Slave TIMEOUT. State:%08X [%s] value:%08X [%s]",
 	  st,metaStateName(),m_timerID.second,_metaStateName(m_timerID.second));
-  if ( isLimbo() )  {
+  if ( isLimbo() )  {  // Slave died in between
     transitionFailed();
   }
+  else if ( m_timerID.second == SLAVETIMEOUT && SLAVE_EXECUTING == st )  {
+    if ( _onTimeoutKill(m_rule) ) {
+      forceKill();
+    }
+    else
+      transitionFailed();
+  }
   else if ( SLAVE_EXECUTING == st )  {
-    m_timerID.second == SLAVETIMEOUT ? (void)transitionFailed() : handleUnloadTimeout();
+    handleUnloadTimeout();
   }
 }
 
@@ -292,6 +304,11 @@ FSM::ErrCond Slave::start()  {
 /// Kill slave process. Base class implementation will throw an exception
 FSM::ErrCond Slave::kill()   {
   throw runtime_error(name()+"> Slave::kill -- invalid base class implementation called.");
+}
+
+/// Kill slave process. Base class implementation will throw an exception
+FSM::ErrCond Slave::forceKill()   {
+  throw runtime_error(name()+"> Slave::forceKill -- invalid base class implementation called.");
 }
 
 /// Virtual method -- must be overloaded -- Send transition request to the slave

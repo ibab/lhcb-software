@@ -61,13 +61,9 @@ TransitionActions& TransitionActions::setCompletionAction(const Callback& cb)   
 }
 
 /// Class Constructor
-Transition::Transition (const Type* typ, const string& nam, 
-			const State* from, const State* to, int flags)
-  : TypedObject(typ,nam), m_from(from), m_to(to), m_create(false), m_checkLimbo(false)
+Transition::Transition(const Type* typ, const string& nam, const State* from, const State* to, int flags)
+  : TypedObject(typ,nam), m_from(from), m_to(to), m_flags(flags)
 {
-  m_kill = (flags&KILL)==KILL;
-  m_create = (flags&CREATE)==CREATE;
-  m_checkLimbo = (flags&CHECK)==CHECK;
 }
 
 /// Standatrd destructor  

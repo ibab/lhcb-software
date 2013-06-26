@@ -68,11 +68,11 @@ static Type* defineDAQType()    {
   error->when    (  allChildrenInState(not_ready,ready,paused,running), moveTo(not_ready));
   error->when    (  allChildrenInState(offline,not_ready,ready,paused,running), moveTo(offline));
 
-  Tr*  reset0    = daq->addTransition("reset",     not_ready,   not_ready, NO_CHECKS);
-  Tr*  reset1    = daq->addTransition("reset",     ready,       not_ready, NO_CHECKS);
-  Tr*  reset3    = daq->addTransition("reset",     offline,     offline,   NO_CHECKS);
+  Tr*  reset0    = daq->addTransition("reset",     not_ready,   not_ready, NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  reset1    = daq->addTransition("reset",     ready,       not_ready, NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  reset3    = daq->addTransition("reset",     offline,     offline,   NO_CHECKS|ON_TIMEOUT_KILL);
 
-  Tr*  recover0  = daq->addTransition("recover",   error,       offline,   NO_CHECKS);
+  Tr*  recover0  = daq->addTransition("recover",   error,       offline,   NO_CHECKS|ON_TIMEOUT_KILL);
 
   Tr*  daq_err0  = daq->addTransition("daq_err",   not_ready,   error,     NO_CHECKS);
   Tr*  daq_err1  = daq->addTransition("daq_err",   ready,       error,     NO_CHECKS);
@@ -80,12 +80,12 @@ static Type* defineDAQType()    {
   Tr*  daq_err3  = daq->addTransition("daq_err",   paused,      error,     NO_CHECKS);
   /*Tr*  daq_err4  =*/ daq->addTransition("daq_err",   offline,     error,     NO_CHECKS);
 
-  Tr*  RESET0    = daq->addTransition("RESET",     error,       offline,   NO_CHECKS);
-  Tr*  RESET1    = daq->addTransition("RESET",     running,     offline,   NO_CHECKS);
-  Tr*  RESET2    = daq->addTransition("RESET",     ready,       offline,   NO_CHECKS);
-  Tr*  RESET3    = daq->addTransition("RESET",     not_ready,   offline,   NO_CHECKS);
-  Tr*  RESET4    = daq->addTransition("RESET",     offline,     offline,   NO_CHECKS);
-  Tr*  RESET5    = daq->addTransition("RESET",     paused,      offline,   NO_CHECKS);
+  Tr*  RESET0    = daq->addTransition("RESET",     error,       offline,   NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  RESET1    = daq->addTransition("RESET",     running,     offline,   NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  RESET2    = daq->addTransition("RESET",     ready,       offline,   NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  RESET3    = daq->addTransition("RESET",     not_ready,   offline,   NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  RESET4    = daq->addTransition("RESET",     offline,     offline,   NO_CHECKS|ON_TIMEOUT_KILL);
+  Tr*  RESET5    = daq->addTransition("RESET",     paused,      offline,   NO_CHECKS|ON_TIMEOUT_KILL);
 
   daq->addTransition("When-Rule",     error,       not_ready, CHECK);
   daq->addTransition("When-Rule",     error,       ready,     CHECK);
