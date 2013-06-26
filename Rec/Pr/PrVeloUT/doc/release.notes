@@ -3,6 +3,8 @@
 ! Responsible : Jianchun Wang
 ! Purpose     : Velo UT tracking
 !-----------------------------------------------------------------------------
+! 2013-06-26 - Espen Eie Bowen
+ - Added pT dependent window and printout in PrVeloUTTool.
 
 ! 2013-06-13 - Michel De Cian
  - Added a protection for a division by zero in PrVeloUTTool.cpp
