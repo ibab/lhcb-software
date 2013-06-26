@@ -1,8 +1,14 @@
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDigi
-! Responsible : Vanya BELYAEV belyaev@lapp.in2p3.fr
-! Purpose     : monitoring of Calo content for Digi tape 
+! Responsible : Olivier Deschamps
+! Purpose     : monitoring of Calo content for Boole output
 ! -----------------------------------------------------------------------------
+
+! 2013-06-26 - Marco Cattaneo
+ - Fix an UNINIT_CTOR defect
+ - Protect unprotected debug()
+ - Remove empty finalize methods
+ - Replace endreq by endmsg
 
 !========================= CaloMoniDigi v2r5 2012-12-12 =========================
 ! 2012-12-12 - Marco Cattaneo

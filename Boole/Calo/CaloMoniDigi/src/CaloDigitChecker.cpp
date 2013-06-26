@@ -1,6 +1,4 @@
-// $Id:
 // ============================================================================
-//CLHEP
 // Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/SystemOfUnits.h"
@@ -45,7 +43,7 @@ CaloDigitChecker::~CaloDigitChecker() {};
 StatusCode CaloDigitChecker::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  debug() << " >>> Initialize" << endreq;
+  if(msgLevel(MSG::DEBUG)) debug() << " >>> Initialize" << endmsg;
   
   m_nameOfHits     = "MC/"  + m_nameOfDetector + "/Hits"   ;
   m_nameOfMCDigits = "MC/"  + m_nameOfDetector + "/Digits" ;
@@ -54,7 +52,7 @@ StatusCode CaloDigitChecker::initialize() {
   info()      << "Monitoring Hits " << m_nameOfHits 
               << "   MC Digit   " << m_nameOfMCDigits
               << "   Digit   " << m_nameOfDigits
-              << ", Histograms booked" << endreq;
+              << ", Histograms booked" << endmsg;
 
   return StatusCode::SUCCESS; 
 };
@@ -63,7 +61,7 @@ StatusCode CaloDigitChecker::initialize() {
 // Main execution
 //=============================================================================
 StatusCode CaloDigitChecker::execute() {
-  debug() << " >>> Execute" << endreq;
+  if(msgLevel(MSG::DEBUG)) debug() << " >>> Execute" << endmsg;
 
 /**  
  * Counting the MCCaloHit objects.
@@ -132,17 +130,9 @@ StatusCode CaloDigitChecker::execute() {
            , 0.,  m_maxEnergy       , 100 , 1.) ;
   }
   
-  debug()      << "#Hits=" << nbHit << " E=" << sumHit << " GeV, " 
-               << "#MCDigit=" << nbMCDigit << " E=" <<  sumMCDigit << " GeV, " 
-               << "#Digits " << nbDigit << " E=" << sumDigit << " GeV" << endreq;
+  if(msgLevel(MSG::DEBUG)) debug() << "#Hits=" << nbHit << " E=" << sumHit << " GeV, " 
+                                   << "#MCDigit=" << nbMCDigit << " E=" <<  sumMCDigit << " GeV, " 
+                                   << "#Digits " << nbDigit << " E=" << sumDigit << " GeV" << endmsg;
   
   return StatusCode::SUCCESS; 
 };
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloDigitChecker::finalize() {
-  
-  debug() << " >>> Finalize" << endreq;
-  return GaudiHistoAlg::finalize();  // must be called after all other actions
-}

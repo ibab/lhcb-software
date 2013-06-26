@@ -1,4 +1,3 @@
-//$id: MCCaloChannel.h 8 Mars 2007 
 #ifndef CaloDigitChannel_H
 #define CaloDigitChannel_H 1
 //
@@ -32,7 +31,6 @@ public:
   virtual ~CaloDigitChannel( ); ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
   DeCalorimeter* m_calo;
