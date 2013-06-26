@@ -142,7 +142,7 @@ StatusCode MuonDigitChecker::execute() {
 	  int region  = muonD->regionID(MyDetID);   
 	  int chamber = muonD->chamberID(MyDetID);        
 	  
-	  debug()<<" region:: " <<region<<endmsg;
+	  if(msgLevel(MSG::DEBUG)) debug()<<" region:: " <<region<<endmsg;
 	  
 	  float xpos=(float)(((*iter)->entry().x()+(*iter)->exit().x())/2.0);
 	  float ypos=(float)(((*iter)->entry().y()+(*iter)->exit().y())/2.0);
@@ -242,7 +242,7 @@ StatusCode MuonDigitChecker::execute() {
     // Timestamp is one of the 8 intervals (8 digits) in which
     // the 20ns acceptance window is subdivided after beam crossing
     StatusCode sc=muonD->Tile2XYZ((*jdigit)->key(),x,dx,y,dy,z,dz);
-    if(sc.isFailure())debug()<<"error in tile "<<endmsg;
+    if(sc.isFailure() && msgLevel(MSG::DEBUG)) debug()<<"error in tile "<<endmsg;
     m_digit_x.push_back((float)x);
     m_digit_y.push_back((float)y);
     m_digit_z.push_back((float)z);
@@ -253,9 +253,9 @@ StatusCode MuonDigitChecker::execute() {
     
     //Match with "true" MC digit    
     LHCb::MCMuonDigit * MCmd = mcdigit->object((*jdigit)->key());
-    if(!mcdigit) {
+    if( NULL == MCmd ) {
       error() << "Could not find the match for " << (*jdigit)->key()
-	      << " in " << LHCb::MCMuonDigitLocation::MCMuonDigit << endreq;
+	      << " in " << LHCb::MCMuonDigitLocation::MCMuonDigit << endmsg;
       return StatusCode::FAILURE;
     }
     
@@ -280,7 +280,7 @@ StatusCode MuonDigitChecker::execute() {
     m_digit_multi.push_back( (float)MCmd->mcHits().size());
     //if(Deve) 
     tnDhit[Dsta][Dreg][Dcon]++;
-    //if(globalTimeOffset()>0)info()<<" qui "<<Dcon<<" "<<Dfir<<" "<<Deve<<" "<<Dsta<<" "<<Dreg<<endreq;
+    //if(globalTimeOffset()>0)info()<<" qui "<<Dcon<<" "<<Dfir<<" "<<Deve<<" "<<Dsta<<" "<<Dreg<<endmsg;
   }
   
   //Looking at mean number of hits
@@ -297,90 +297,58 @@ StatusCode MuonDigitChecker::execute() {
     
     longlong m_evt = evt->evtNumber();  
     StatusCode sc=nt1->column("Event",m_evt,0LL,10000LL);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    if(sc.isFailure() && msgLevel(MSG::DEBUG)) debug() << "nt error" << endmsg;
+    
     nt1->farray("is", m_sta ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("ir", m_reg ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("ch", m_cha ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("ic", m_con ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("x",  m_x   ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("y",  m_y   ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("z",  m_z   ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("t",  m_time,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("id", m_id  ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("px", m_px  ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("py", m_py  ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("pz", m_pz  ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("E",  m_E   ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("xv", m_xv  ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("yv", m_yv  ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("zv", m_zv  ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("tv", m_tv  ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("idm",m_mom ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("pl", m_ple ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("he", m_hen ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("dx", m_dix ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("xz", m_dxz ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     nt1->farray("yz", m_dyz ,"Nhits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt1->write();  
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    if(sc.isFailure() && msgLevel(MSG::DEBUG))
+      debug() << "Failure writing nt1" << endmsg;
 
     Tuple nt2 = nTuple(42,"DIGITS",CLID_ColumnWiseTuple);
     
     longlong m_digit_evt = evt->evtNumber();
     //    StatusCode sc=nt2->column("Event", m_digit_evt, 0LL,10000LL);
     sc=nt2->column("Event", m_digit_evt, 0LL,10000LL);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    if(sc.isFailure())debug()<<" nt2 error "<<endmsg;
+
     sc=nt2->farray("is",    m_digit_s,      "Ndigits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt2->farray("ir",    m_digit_r,      "Ndigits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt2->farray("x" ,    m_digit_x,      "Ndigits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt2->farray("y" ,    m_digit_y,      "Ndigits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt2->farray("z" ,    m_digit_z,      "Ndigits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt2->farray("dx",    m_digit_dx,     "Ndigits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt2->farray("dy",    m_digit_dy,     "Ndigits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt2->farray("dz",    m_digit_dz,     "Ndigits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt2->farray("t" ,    m_digit_time,   "Ndigits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt2->farray("origin",m_digit_origin, "Ndigits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt2->farray("bx"    ,m_digit_bx,     "Ndigits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt2->farray("firing",m_digit_firing, "Ndigits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt2->farray("multip",m_digit_multi,  "Ndigits",1000);
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
     sc=nt2->write();  
-    if(sc.isFailure())debug()<<" nt error "<<endmsg;
+    if(sc.isFailure() && msgLevel(MSG::DEBUG))
+      debug() << "Failure writing nt2" << endmsg;
   }  
   return StatusCode::SUCCESS;
 }
