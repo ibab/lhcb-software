@@ -37,6 +37,7 @@ DECLARE_ALGORITHM_FACTORY( CaloSignalAlg );
 CaloSignalAlg::CaloSignalAlg( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ) 
+  , m_storePrevious(false)
   , m_calo(NULL)
   , m_rndmSvc(NULL) 
 {

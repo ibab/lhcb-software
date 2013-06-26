@@ -31,6 +31,8 @@ CaloPinDigitAlg::CaloPinDigitAlg( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_calo(NULL)
+  , m_saturateAdc(0)
+  , m_count(-1)
   , m_rndmSvc(NULL)
 {
 
