@@ -34,6 +34,8 @@ DECLARE_ALGORITHM_FACTORY( MCFTDepositCreator );
 MCFTDepositCreator::MCFTDepositCreator( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
+  , m_nXSteps(2)
+  , m_nYSteps(2)
   , m_deFT(NULL)
 {
   
