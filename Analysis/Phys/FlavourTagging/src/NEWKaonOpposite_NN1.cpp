@@ -4,7 +4,7 @@
 //
 namespace MyMCSpace 
 {
-#include "TMVAClassification/NN1_MC.dat/TMVAClassification_MLPBNN.class.C"
+#include "TMVAClassification/NN1_OSK.dat/TMVAClassification_MLPBNN.class.C"
 }
 
 MCReaderCompileWrapper::MCReaderCompileWrapper(std::vector<std::string> & names) :

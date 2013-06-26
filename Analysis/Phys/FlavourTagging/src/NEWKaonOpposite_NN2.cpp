@@ -4,7 +4,7 @@
 //
 namespace MyDataSpace
 {
-#include "TMVAClassification/NN2_data_cut_04_NN1.dat/TMVAClassification_MLPBNN.class.C"
+#include "TMVAClassification/NN2_OSK.dat/TMVAClassification_MLPBNN.class.C"
 }
 
 DataReaderCompileWrapper::DataReaderCompileWrapper(std::vector<std::string> & names) :

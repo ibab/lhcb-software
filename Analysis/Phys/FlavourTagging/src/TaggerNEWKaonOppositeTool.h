@@ -14,11 +14,14 @@
 //#include "ITMVANNetTool.h"
 #include "Kernel/IParticleDescendants.h"
 #include "ITaggingUtils.h"
+#include "MultiplePersonalityCall.h"
 
 #include <tr1/array>
 
 #include "NEWKaonOpposite_NN1.h"
 #include "NEWKaonOpposite_NN2.h"
+#include "NEWKaonOpposite_NN1_reco14.h"
+#include "NEWKaonOpposite_NN2_reco14.h"
 
 /** @class TaggerNEWKaonOppositeTool TaggerNEWKaonOppositeTool.h
  *
@@ -40,9 +43,29 @@ public:
   StatusCode initialize();    ///<  initialization
 
   //-------------------------------------------------------------
-  virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,
-                            std::vector<const LHCb::Vertex*>&,
-                            LHCb::Particle::ConstVector&);
+  MultiplePersonalityCall<boost::function<
+  LHCb::Tagger(
+               const LHCb::Particle*,
+               const LHCb::RecVertex*,
+               std::vector<const LHCb::Vertex*>&,
+               LHCb::Particle::ConstVector&) > >
+  m_tag;
+
+  virtual LHCb::Tagger  tag( const LHCb::Particle*,
+                             const LHCb::RecVertex*,
+                             std::vector<const LHCb::Vertex*>&,
+                             LHCb::Particle::ConstVector&);
+
+  virtual LHCb::Tagger  tagReco12( const LHCb::Particle*,
+                             const LHCb::RecVertex*,
+                             std::vector<const LHCb::Vertex*>&,
+                             LHCb::Particle::ConstVector&);
+
+  virtual LHCb::Tagger  tagReco14( const LHCb::Particle*,
+                             const LHCb::RecVertex*,
+                             std::vector<const LHCb::Vertex*>&,
+                             LHCb::Particle::ConstVector&);
+
   //-------------------------------------------------------------
 
 private:
@@ -55,11 +78,15 @@ private:
   MCReaderCompileWrapper*   mymc_reader;
   DataReaderCompileWrapper* mydata_reader;
 
+  MCReaderCompileWrapper_reco14*   mymc_reader_reco14;
+  DataReaderCompileWrapper_reco14* mydata_reader_reco14;
+
 
   double m_PID_k_cut;
   double m_PIDkp_cut;
+  double m_tsa_cut;
   double m_ghost_cut;
-  double m_distPhi_cut_kaon;
+  double m_distPhi_cut;
 
   double m_AverageOmega;
   double m_ProbMin_kaon;
@@ -73,6 +100,7 @@ private:
   double m_nn_2;
   double m_nn_2_flip;
 
+  std::string m_personality;
 
 };
 

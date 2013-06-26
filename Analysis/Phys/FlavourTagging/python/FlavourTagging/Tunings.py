@@ -18,6 +18,7 @@ tunings = {
         "TaggerMuonTool.Personality" : "'Reco14'",        
         "TaggerElectronTool.Personality" : "'Reco14'",        
         "TaggerKaonOppositeTool.Personality" : "'Reco14'",        
+        "TaggerNEWKaonOppositeTool.Personality": "'Reco14'",
         "TaggerVertexChargeTool.Personality" : "'Reco14'",        
         "SVertexOneSeedTool.Personality" : "'Reco14'",        
         "IPPU_cut" : 3.0,
@@ -101,6 +102,18 @@ tunings = {
         "TaggerKaonOppositeTool.Kaon_Eta_Cal" :       0.0,
         "TaggerKaonOppositeTool.Kaon_ProbMin" :       0.0,
         "TaggerKaonOppositeTool.Kaon_AverageOmega" : 0.33,
+
+        "TaggerNEWKaonOppositeTool.Kaon_PIDk_cut":     0.75,
+        "TaggerNEWKaonOppositeTool.Kaon_PIDkp_cut":   -3.,
+        "TaggerNEWKaonOppositeTool.Kaon_distPhi_cut":  0.005,
+        "TaggerNEWKaonOppositeTool.Kaon_tsa_cut":   -999.0, # formerly Kaon_ghost_cut
+        "TaggerNEWKaonOppositeTool.Kaon_ipPU_cut":     7.5,
+        "TaggerNEWKaonOppositeTool.Kaon_ghost_cut":    0.5,
+        "TaggerNEWKaonOppositeTool.Kaon_NN1_cut":      0.3,
+        "TaggerNEWKaonOppositeTool.Kaon_ProbMin":      0.48,
+        "TaggerNEWKaonOppositeTool.Kaon_P0_Cal":       0.4520, #+/- 0.0008
+        "TaggerNEWKaonOppositeTool.Kaon_P1_Cal":       1.0470, #+/- 0.0179
+        "TaggerNEWKaonOppositeTool.Kaon_AverageOmega": 0.4496,
 
         "TaggerKaonSameTool.KaonSame_Pt_cut" : 850,
         "TaggerKaonSameTool.KaonSame_P_cut"  : 5250,
@@ -200,6 +213,7 @@ tunings = {
         "TaggerMuonTool.Personality" : "'Reco12'",        
         "TaggerElectronTool.Personality" : "'Reco12'",        
         "TaggerKaonOppositeTool.Personality" : "'Reco12'",        
+        "TaggerNEWKaonOppositeTool.Personality": "'Reco12'",
         "TaggerVertexChargeTool.Personality" : "'Reco12'",        
         "SVertexOneSeedTool.Personality" : "'Reco12'",        
         "IPPU_cut" : 3.0,
@@ -282,6 +296,18 @@ tunings = {
         "TaggerKaonOppositeTool.Kaon_PIDNNkp_cut" :  -1,  # no
         "TaggerKaonOppositeTool.Kaon_PIDNNkpi_cut" : -1,  # no
         "TaggerKaonOppositeTool.Kaon_ghostProb_cut" : 2., # no
+
+        "TaggerNEWKaonOppositeTool.Kaon_PIDk_cut":     0.75,
+        "TaggerNEWKaonOppositeTool.Kaon_PIDkp_cut":   -3.,
+        "TaggerNEWKaonOppositeTool.Kaon_distPhi_cut":  0.005,
+        "TaggerNEWKaonOppositeTool.Kaon_tsa_cut":   -999.0, # formerly Kaon_ghost_cut
+        "TaggerNEWKaonOppositeTool.Kaon_ipPU_cut":     7.5,
+        "TaggerNEWKaonOppositeTool.Kaon_ghost_cut":    0.5, # no
+        "TaggerNEWKaonOppositeTool.Kaon_NN1_cut":      0.4,
+        "TaggerNEWKaonOppositeTool.Kaon_ProbMin":      0.48,
+        "TaggerNEWKaonOppositeTool.Kaon_P0_Cal":       0.4485, #+/- 0.0013
+        "TaggerNEWKaonOppositeTool.Kaon_P1_Cal":       1.0638, #+/- 0.0273
+        "TaggerNEWKaonOppositeTool.Kaon_AverageOmega": 0.4484,
 
         "TaggerKaonSameTool.KaonSame_Pt_cut" : 850,
         "TaggerKaonSameTool.KaonSame_P_cut" : 5250,

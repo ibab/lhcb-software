@@ -8,7 +8,8 @@
 !========================= FlavourTagging v13r1 2013-06-24 =========================
 
 ! 2013-06-26 - Katharina Kreplin
- - TaggerNEWKaonOppositeTool: reco 12 final version
+ - TaggerNEWKaonOppositeTool: - reco 12 final version
+                              - reco 14 final version 
 
 ! 2013-06-24 - Chris Jones
  - Make the TMVA::Reader silent in MyReader.h
