@@ -22,6 +22,7 @@
 #include "PVSS/Printer.h"
 #include "PVSS/Internals.h"
 #include "RTL/rtl.h"
+#include <cstring>
 
 using namespace PVSS;
 

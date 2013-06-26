@@ -11,6 +11,7 @@
 
 // C++ include files
 #include <memory>
+#include <string>
 
 /*
  *   PVSS namespace declaration

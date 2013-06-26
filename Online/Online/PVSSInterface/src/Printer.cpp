@@ -105,85 +105,88 @@ namespace PVSS {
 
 using namespace PVSS;
 #include <iostream>
-template <> bool ObjectPrint<CfgAttribute>::operator()(const CfgAttribute* obj)  const {
-  m_stream << m_ident << m_prefix 
-           << "  [id=" << obj->id() << "]" 
-           << obj->name() 
-           << std::endl;
-  return true;
-}
-template <> bool ObjectPrint<CfgDetail>::operator()(const CfgDetail* obj) const {
-  m_stream << m_ident << m_prefix << obj->name() << "  [id=" << obj->id() << "]" << std::endl;
-  return true;
-}
-template <> bool ObjectPrint<CfgType>::operator()(const CfgType* obj) const {
-  m_stream << m_ident << m_prefix << obj->name() << "  [id=" << obj->id() << "]" 
-    << " No.Attr:" << obj->attributes().size()
-    << " No.Detail:" << obj->details().size()
-    << std::endl;
-  if ( obj->attributes().empty() )  {
-    m_stream << "    NO Attributes found" << std::endl;
-  }
-  else  {
-    m_stream << "    " << obj->attributes().size() << " Attributes:" << std::endl;
-    std::for_each(obj->attributes().begin(),obj->attributes().end(),ObjectPrint<CfgAttribute>(m_stream,"      ",""));
-  }
-  if ( obj->details().empty() )  {
-    m_stream << "    NO Details found" << std::endl;
-  }
-  else  {
-    m_stream << "    " << obj->details().size() << " Details:" << std::endl;
-    std::for_each(obj->details().begin(),obj->details().end(),ObjectPrint<CfgDetail>(m_stream,"      ",""));
-  }
-  m_stream << std::flush;
-  return true;
-}
 
-template <> bool ObjectPrint<DevType>::operator()(const DevType* obj) const {
-  m_stream << m_ident << m_prefix << obj->name() << "  [id=" << obj->id() << "]" 
-    << " No.Elements:" << obj->elements().size() << std::endl;
-  if ( obj->elements().empty() )  {
-    m_stream << "    NO Elements found" << std::endl;
+namespace PVSS {
+  template <> bool ObjectPrint<CfgAttribute>::operator()(const CfgAttribute* obj)  const {
+    m_stream << m_ident << m_prefix 
+	     << "  [id=" << obj->id() << "]" 
+	     << obj->name() 
+	     << std::endl;
+    return true;
   }
-  else  {
-    m_stream << "    " << obj->elements().size() << " Types:" << std::endl;
-    std::for_each(obj->elements().begin(),obj->elements().end(),ObjectPrint<DevTypeElement>(m_stream,"      ",""));
+  template <> bool ObjectPrint<CfgDetail>::operator()(const CfgDetail* obj) const {
+    m_stream << m_ident << m_prefix << obj->name() << "  [id=" << obj->id() << "]" << std::endl;
+    return true;
   }
-  return true;
-}
-template <> bool ObjectPrint<DevTypeElement>::operator()(const DevTypeElement* obj) const {
-  m_stream << m_ident << m_prefix 
-    << "ID=" << std::setw(4) << std::left << obj->id() << "   " 
-    //<< " DevType:" << std::setw(16) << obj->type()->name() 
-    << " Type[" << std::setw(2) << std::left << obj->content() << "]:" 
-    << std::setw(22) << std::left << obj->typeName()
-    << obj->name() 
-    << std::endl;
-  return true;
-}
-template <> bool ObjectPrint<CfgManager>::operator()(const CfgManager* obj) const {
-  m_stream << m_ident << m_prefix << obj->name() << "  [id=" << obj->id() << "]" << std::endl;
-  return true;
-}
-template <> bool ObjectPrint<DevTypeManager>::operator()(const DevTypeManager* obj) const {
-  m_stream << m_ident << m_prefix << obj->name() << "  [id=" << obj->id() << "]" << std::endl;
-  if ( obj->types().empty() )  {
-    m_stream << "    NO Known device types." << std::endl;
+  template <> bool ObjectPrint<CfgType>::operator()(const CfgType* obj) const {
+    m_stream << m_ident << m_prefix << obj->name() << "  [id=" << obj->id() << "]" 
+	     << " No.Attr:" << obj->attributes().size()
+	     << " No.Detail:" << obj->details().size()
+	     << std::endl;
+    if ( obj->attributes().empty() )  {
+      m_stream << "    NO Attributes found" << std::endl;
+    }
+    else  {
+      m_stream << "    " << obj->attributes().size() << " Attributes:" << std::endl;
+      std::for_each(obj->attributes().begin(),obj->attributes().end(),ObjectPrint<CfgAttribute>(m_stream,"      ",""));
+    }
+    if ( obj->details().empty() )  {
+      m_stream << "    NO Details found" << std::endl;
+    }
+    else  {
+      m_stream << "    " << obj->details().size() << " Details:" << std::endl;
+      std::for_each(obj->details().begin(),obj->details().end(),ObjectPrint<CfgDetail>(m_stream,"      ",""));
+    }
+    m_stream << std::flush;
+    return true;
   }
-  else {
-    m_stream << "    Device Types [" << obj->types().size() << "]:" << std::endl;
-    std::for_each(obj->types().begin(),obj->types().end(),
-                  ObjectPrint<DevType>(m_stream,"  ","Type:"));
+
+  template <> bool ObjectPrint<DevType>::operator()(const DevType* obj) const {
+    m_stream << m_ident << m_prefix << obj->name() << "  [id=" << obj->id() << "]" 
+	     << " No.Elements:" << obj->elements().size() << std::endl;
+    if ( obj->elements().empty() )  {
+      m_stream << "    NO Elements found" << std::endl;
+    }
+    else  {
+      m_stream << "    " << obj->elements().size() << " Types:" << std::endl;
+      std::for_each(obj->elements().begin(),obj->elements().end(),ObjectPrint<DevTypeElement>(m_stream,"      ",""));
+    }
+    return true;
   }
-  return true;
-}
-template <> bool ObjectPrint<ControlsManager>::operator()(const ControlsManager* obj) const {
-  m_stream << m_ident << m_prefix << obj->name() << "  [id=" << obj->id() << "]" << std::endl;
-  return true;
-}
-template <> bool ObjectPrint<NamedIdentified>::operator()(const NamedIdentified* obj) const {
-  m_stream << m_ident << m_prefix << obj->name() << "  [id=" << obj->id() << "]" << std::endl;
-  return true;
+  template <> bool ObjectPrint<DevTypeElement>::operator()(const DevTypeElement* obj) const {
+    m_stream << m_ident << m_prefix 
+	     << "ID=" << std::setw(4) << std::left << obj->id() << "   " 
+      //<< " DevType:" << std::setw(16) << obj->type()->name() 
+	     << " Type[" << std::setw(2) << std::left << obj->content() << "]:" 
+	     << std::setw(22) << std::left << obj->typeName()
+	     << obj->name() 
+	     << std::endl;
+    return true;
+  }
+  template <> bool ObjectPrint<CfgManager>::operator()(const CfgManager* obj) const {
+    m_stream << m_ident << m_prefix << obj->name() << "  [id=" << obj->id() << "]" << std::endl;
+    return true;
+  }
+  template <> bool ObjectPrint<DevTypeManager>::operator()(const DevTypeManager* obj) const {
+    m_stream << m_ident << m_prefix << obj->name() << "  [id=" << obj->id() << "]" << std::endl;
+    if ( obj->types().empty() )  {
+      m_stream << "    NO Known device types." << std::endl;
+    }
+    else {
+      m_stream << "    Device Types [" << obj->types().size() << "]:" << std::endl;
+      std::for_each(obj->types().begin(),obj->types().end(),
+		    ObjectPrint<DevType>(m_stream,"  ","Type:"));
+    }
+    return true;
+  }
+  template <> bool ObjectPrint<ControlsManager>::operator()(const ControlsManager* obj) const {
+    m_stream << m_ident << m_prefix << obj->name() << "  [id=" << obj->id() << "]" << std::endl;
+    return true;
+  }
+  template <> bool ObjectPrint<NamedIdentified>::operator()(const NamedIdentified* obj) const {
+    m_stream << m_ident << m_prefix << obj->name() << "  [id=" << obj->id() << "]" << std::endl;
+    return true;
+  }
 }
 
 std::auto_ptr<Printer> PVSS::createAsciiPrinter(std::ostream& os)    {

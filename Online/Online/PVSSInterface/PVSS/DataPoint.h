@@ -18,6 +18,7 @@
 #include <list>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include <typeinfo>
 
 // Forward declarations
@@ -107,6 +108,7 @@ namespace PVSS {
     /// PVSS Type id
     static int type_id();
   };
+
 
   template <typename T> 
   int Value::type_id(const T&) { return DataValue<T>::type_id();  }

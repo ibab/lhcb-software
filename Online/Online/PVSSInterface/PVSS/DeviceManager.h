@@ -16,6 +16,7 @@
 // C++ include files
 #include <map>
 #include <set>
+#include <memory>
 
 /*
  *   PVSS namespace declaration

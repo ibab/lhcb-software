@@ -18,6 +18,7 @@
 #include "RTL/rtl.h"
 
 #include <cfloat>
+#include <climits>
 
 using namespace PVSS;
 namespace PVSS {

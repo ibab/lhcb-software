@@ -18,7 +18,7 @@
 
 using namespace PVSS;
 
-namespace PVSS { namespace {
+namespace PVSS { namespace ns_ReadTransaction {
 
   struct Actor : public HotLinkCallback  {
     typedef std::pair<int,void*>          Entry;
@@ -62,7 +62,7 @@ namespace PVSS { namespace {
 
 /// Initializing constructor
 ReadTransaction::ReadTransaction(ControlsManager* mgr) 
-: m_manager(mgr), m_actor(new Actor)
+  : m_manager(mgr), m_actor(new ns_ReadTransaction::Actor)
 {
 }
 

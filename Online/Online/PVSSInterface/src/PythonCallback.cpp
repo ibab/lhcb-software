@@ -78,7 +78,7 @@ void PythonCall::operator()(const char* attr)  {
     PyObject* r = 0;
     st = PyThreadState_New(s_mainThreadState->interp);
     PyEval_AcquireThread(st);
-    r = PyObject_CallMethod(m_call, (char*)attr, "");
+    r = PyObject_CallMethod(m_call, (char*)attr, (char*)"");
     if ( r == 0 )  {
       PyErr_Print(); 
       PyErr_Clear();

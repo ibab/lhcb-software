@@ -3,6 +3,7 @@
 #define __REAL_COMP
 #include "Python.h"
 #endif
+#include <typeinfo>
 #include <iostream>
 #include <ctime>
 #include <map>

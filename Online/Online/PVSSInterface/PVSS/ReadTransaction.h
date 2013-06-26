@@ -25,7 +25,7 @@ namespace PVSS {
   class DataPoint;
   class DPRef;
   class DPTime;
-  namespace {  struct Actor;    }
+  namespace ns_ReadTransaction {  struct Actor;    }
 
   /** @class ReadTransaction   ReadTransaction.h  PVSS/ReadTransaction.h
     *
@@ -41,7 +41,7 @@ namespace PVSS {
     /// Reference to the controls manager
     ControlsManager *m_manager;
     /// Transaction context/actor (dpID-value list)
-    Actor           *m_actor;
+    ns_ReadTransaction::Actor           *m_actor;
 
     /// Initializing constructor
     ReadTransaction(ControlsManager* mgr);

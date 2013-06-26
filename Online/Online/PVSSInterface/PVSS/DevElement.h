@@ -14,6 +14,7 @@
 
 // C++ include files
 #include <vector>
+#include <memory>
 
 /*
  *   PVSS namespace declaration

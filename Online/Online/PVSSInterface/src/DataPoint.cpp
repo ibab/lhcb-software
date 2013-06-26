@@ -26,49 +26,47 @@
 #include <memory>
 #include <vector>
 
-// PVSS namespace usage
-using namespace PVSS;
-
 namespace {
-  DpID s_nullDP(0);
+  PVSS::DpID s_nullDP(0);
   struct _Init {
     _Init()  {  pvss_setup_null_dp(&s_nullDP,sizeof(s_nullDP));    }
   };
   _Init s_init;
 }
-
-template <> int DataValue<bool>::type_id()                         { return DevTypeElement::BIT;       }
-template <> int DataValue<char>::type_id()                         { return DevTypeElement::CHAR;      }
-template <> int DataValue<unsigned char>::type_id()                { return DevTypeElement::CHAR;      }
-template <> int DataValue<short>::type_id()                        { return DevTypeElement::NOELEMENT; }
-template <> int DataValue<unsigned short>::type_id()               { return DevTypeElement::NOELEMENT; }
-template <> int DataValue<int>::type_id()                          { return DevTypeElement::INT;       }
-template <> int DataValue<unsigned int>::type_id()                 { return DevTypeElement::UINT;      }
-template <> int DataValue<long>::type_id()                         { return DevTypeElement::NOELEMENT; }
-template <> int DataValue<unsigned long>::type_id()                { return DevTypeElement::NOELEMENT; }
-template <> int DataValue<float>::type_id()                        { return DevTypeElement::FLOAT;     }
-template <> int DataValue<double>::type_id()                       { return DevTypeElement::NOELEMENT; }
-//template <> int DataValue<time_t>::type_id()                     { return DevTypeElement::TIME;    }
-template <> int DataValue<std::string>::type_id()                  { return DevTypeElement::TEXT;      }
-template <> int DataValue<DpID>::type_id()                         { return DevTypeElement::DPID;      }
-template <> int DataValue<DPTime>::type_id()                       { return DevTypeElement::TIME;      }
-template <> int DataValue<DPRef>::type_id()                        { return DevTypeElement::NOELEMENT; }
-template <> int DataValue<std::vector<bool> >::type_id()           { return DevTypeElement::DYNBIT;    }
-template <> int DataValue<std::vector<char> >::type_id()           { return DevTypeElement::DYNCHAR;   }
-template <> int DataValue<std::vector<unsigned char> >::type_id()  { return DevTypeElement::DYNCHAR;   }
-template <> int DataValue<std::vector<short> >::type_id()          { return DevTypeElement::NOELEMENT; }
-template <> int DataValue<std::vector<unsigned short> >::type_id() { return DevTypeElement::NOELEMENT; }
-template <> int DataValue<std::vector<int> >::type_id()            { return DevTypeElement::DYNINT;    }
-template <> int DataValue<std::vector<unsigned int> >::type_id()   { return DevTypeElement::DYNUINT;   }
-template <> int DataValue<std::vector<long> >::type_id()           { return DevTypeElement::NOELEMENT; }
-template <> int DataValue<std::vector<unsigned long> >::type_id()  { return DevTypeElement::NOELEMENT; }
-template <> int DataValue<std::vector<float> >::type_id()          { return DevTypeElement::DYNFLOAT;  }
-template <> int DataValue<std::vector<double> >::type_id()         { return DevTypeElement::NOELEMENT; }
-//template <> int DataValue<std::vector<time_t> >::type_id()       { return DevTypeElement::DYNTIME;   }
-template <> int DataValue<std::vector<std::string> >::type_id()    { return DevTypeElement::DYNTEXT;   }
-template <> int DataValue<std::vector<DpID> >::type_id()           { return DevTypeElement::DYNDPID;   }
-template <> int DataValue<std::vector<DPTime> >::type_id()         { return DevTypeElement::DYNTIME;   }
-template <> int DataValue<std::vector<DPRef> >::type_id()          { return DevTypeElement::NOELEMENT; }
+namespace PVSS {
+  template <> int DataValue<bool>::type_id()                         { return DevTypeElement::BIT;       }
+  template <> int DataValue<char>::type_id()                         { return DevTypeElement::CHAR;      }
+  template <> int DataValue<unsigned char>::type_id()                { return DevTypeElement::CHAR;      }
+  template <> int DataValue<short>::type_id()                        { return DevTypeElement::NOELEMENT; }
+  template <> int DataValue<unsigned short>::type_id()               { return DevTypeElement::NOELEMENT; }
+  template <> int DataValue<int>::type_id()                          { return DevTypeElement::INT;       }
+  template <> int DataValue<unsigned int>::type_id()                 { return DevTypeElement::UINT;      }
+  template <> int DataValue<long>::type_id()                         { return DevTypeElement::NOELEMENT; }
+  template <> int DataValue<unsigned long>::type_id()                { return DevTypeElement::NOELEMENT; }
+  template <> int DataValue<float>::type_id()                        { return DevTypeElement::FLOAT;     }
+  template <> int DataValue<double>::type_id()                       { return DevTypeElement::NOELEMENT; }
+  //template <> int DataValue<time_t>::type_id()                     { return DevTypeElement::TIME;    }
+  template <> int DataValue<std::string>::type_id()                  { return DevTypeElement::TEXT;      }
+  template <> int DataValue<DpID>::type_id()                         { return DevTypeElement::DPID;      }
+  template <> int DataValue<DPTime>::type_id()                       { return DevTypeElement::TIME;      }
+  template <> int DataValue<DPRef>::type_id()                        { return DevTypeElement::NOELEMENT; }
+  template <> int DataValue<std::vector<bool> >::type_id()           { return DevTypeElement::DYNBIT;    }
+  template <> int DataValue<std::vector<char> >::type_id()           { return DevTypeElement::DYNCHAR;   }
+  template <> int DataValue<std::vector<unsigned char> >::type_id()  { return DevTypeElement::DYNCHAR;   }
+  template <> int DataValue<std::vector<short> >::type_id()          { return DevTypeElement::NOELEMENT; }
+  template <> int DataValue<std::vector<unsigned short> >::type_id() { return DevTypeElement::NOELEMENT; }
+  template <> int DataValue<std::vector<int> >::type_id()            { return DevTypeElement::DYNINT;    }
+  template <> int DataValue<std::vector<unsigned int> >::type_id()   { return DevTypeElement::DYNUINT;   }
+  template <> int DataValue<std::vector<long> >::type_id()           { return DevTypeElement::NOELEMENT; }
+  template <> int DataValue<std::vector<unsigned long> >::type_id()  { return DevTypeElement::NOELEMENT; }
+  template <> int DataValue<std::vector<float> >::type_id()          { return DevTypeElement::DYNFLOAT;  }
+  template <> int DataValue<std::vector<double> >::type_id()         { return DevTypeElement::NOELEMENT; }
+  //template <> int DataValue<std::vector<time_t> >::type_id()       { return DevTypeElement::DYNTIME;   }
+  template <> int DataValue<std::vector<std::string> >::type_id()    { return DevTypeElement::DYNTEXT;   }
+  template <> int DataValue<std::vector<DpID> >::type_id()           { return DevTypeElement::DYNDPID;   }
+  template <> int DataValue<std::vector<DPTime> >::type_id()         { return DevTypeElement::DYNTIME;   }
+  template <> int DataValue<std::vector<DPRef> >::type_id()          { return DevTypeElement::NOELEMENT; }
+}
 
 namespace PVSS {
   template <class T, class Q> Q convertValue(Value* v) {    return (Q)((DataValue<T>*)v)->data(); }
@@ -90,26 +88,27 @@ namespace PVSS {
   template <typename T> inline void checkBasicTypeCompatibility(const Value* v1, const DataValue<T>* )  {
     checkBasicTypeCompatibility(v1,DataValue<T>::type_id());
   }
-  template <typename T> void checkTypeCompatibility(const Value* v1, const DataValue<T>* v2)  
-  { checkBasicTypeCompatibility(v1,v2);    }
-  template <> static void checkTypeCompatibility(const Value* v1, const DataValue<std::vector<char> >* v2)  {
+  template <typename T> void checkTypeCompatibility(const Value* v1, const DataValue<T>* v2)    { 
+    checkBasicTypeCompatibility(v1,v2);
+  }
+  template <> void checkTypeCompatibility(const Value* v1, const DataValue<std::vector<char> >* v2)  {
     if ( !(v1 && v2 && (chk(v1,v2) || v1->type()==DataValue<std::vector<unsigned char> >::type_id()) ) )
       checkBasicTypeCompatibility(v1,v2);    
   }
-  template <> static void checkTypeCompatibility(const Value* v1, const DataValue<std::vector<unsigned char> >* v2)  {
+  template <> void checkTypeCompatibility(const Value* v1, const DataValue<std::vector<unsigned char> >* v2)  {
     if ( !(v1 && v2 && (chk(v1,v2) || v1->type()==DataValue<std::vector<char> >::type_id()) ) )
       checkBasicTypeCompatibility(v1,v2);    
   }
-  template <> static void checkTypeCompatibility(const Value* v1, const DataValue<std::vector<int> >* v2)  {
+  template <> void checkTypeCompatibility(const Value* v1, const DataValue<std::vector<int> >* v2)  {
     if ( !(v1 && v2 && (chk(v1,v2) || v1->type()==DataValue<std::vector<unsigned int> >::type_id()) ) )
       checkBasicTypeCompatibility(v1,v2);    
   }
-  template <> static void checkTypeCompatibility(const Value* v1, const DataValue<std::vector<unsigned int> >* v2)  {
+  template <> void checkTypeCompatibility(const Value* v1, const DataValue<std::vector<unsigned int> >* v2)  {
     if ( !(v1 && v2 && (chk(v1,v2) || v1->type()==DataValue<std::vector<int> >::type_id()) ) )
       checkBasicTypeCompatibility(v1,v2);    
   }
   /// Allocate data buffer
-  static PVSS::Value* createValue(int typ)   {
+  Value* createValue(int typ)   {
     switch(typ)  {
     case DevTypeElement::DYNDPID:
       return new DataValue<std::vector<DpID> >(typ);
@@ -151,6 +150,9 @@ namespace PVSS {
   }
 }
 
+// PVSS namespace usage
+using namespace PVSS;
+
 // Some hacks due to comipler hickup!
 #ifdef _WIN32
 template <typename T> struct GetRef   {   
@@ -180,9 +182,10 @@ template <typename T> struct GetRef   {
 
 #define BASIC_SPECIALIZATIONS(x)   namespace PVSS {             \
   template <> int Value::type_id< x > (const x&);               \
-  template <> int DataValue< x >::type_id();                    \
   template <> DataValue< x > createDataValue< x >(const x& o);} \
   REF_SPECIALIZATIONS(x)
+
+  //template <> int DataValue< x >::type_id();
 
 #define SPECIALIZATIONS(x)          BASIC_SPECIALIZATIONS(x) DATA_SPECIALIZATIONS(x)
 
@@ -294,7 +297,7 @@ std::string DataPoint::dpname(const std::string& dp)    {
 
 /// Extract name of datapoint from online/original name
 std::string DataPoint::dpname(const DpID& dpid)    {
-  char* nam = "";
+  char* nam = (char*)"";
   if ( !pvss_lookup_name(*(DpID*)&dpid,nam) )  {
     return "";
   }
@@ -361,7 +364,7 @@ bool DataPoint::exists(const std::string& name)   {
   return pvss_lookup_dpid(name.c_str(),id);
 }
 
-template <class T> T PVSS::DataPoint::data()  {
+template <class T> T DataPoint::data()  {
   if ( m_val )  {
     switch(m_val->type())  {
       case DevTypeElement::FLOAT: return convertValue<float,T>(m_val);
