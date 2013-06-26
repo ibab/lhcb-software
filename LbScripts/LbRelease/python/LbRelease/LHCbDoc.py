@@ -7,7 +7,7 @@ __author__ = "Marco Clemencic"
 import os, re
 import shutil
 from datetime import datetime, timedelta
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, call
 from stat import ST_SIZE
 from LbUtils.afs.directory import isAFSDir, isMountPoint
 from LbConfiguration.External import doxygen_version as doxygen_default_version
@@ -77,6 +77,7 @@ def _which(cmd, path = None):
     return None
 
 _has_AFS = bool(_which("afs_admin"))
+_has_kinit = bool(_which('kinit'))
 
 def _makedocdir(path):
     """
@@ -1145,6 +1146,10 @@ def makeDocs(projects, root = None, no_build = False, doxygen_versions = (None, 
 
     # Build all the documentations marked as to be built
     for doc in filter(lambda d: d.toBeBuilt, docs):
+        if _has_kinit:
+            # ensure that we have got a fresh token (if possible) before each
+            # new build
+            call(['kinit', '-R'])
         if no_build:
             # if we should not run doxygen, at least generate the doxygen configuration
             doc._generateDoxyConf()
