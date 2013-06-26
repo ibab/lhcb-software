@@ -55,8 +55,10 @@ StatusCode MCFTDepositMonitor::initialize() {
 
   /// Retrieve and initialize DeFT
   m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
-  if( (NULL!=m_deFT) && msgLevel(MSG::DEBUG) ) { debug() << "Successfully retrieved DeFT" << endmsg; }
-  else { error() << "Error getting DeFT" << endmsg; }
+  if( NULL!=m_deFT) {
+    if(msgLevel(MSG::DEBUG)) debug() << "Successfully retrieved DeFT" << endmsg;
+  }  
+  else { return Error("Could not retrieve " + DeFTDetectorLocation::Default); }
 
   return StatusCode::SUCCESS;
 }
