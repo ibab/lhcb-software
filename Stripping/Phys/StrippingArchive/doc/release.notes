@@ -4,6 +4,8 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r21p1 2013-06-26 =========================
+
 ! 2013-06-26 - Chris Jones
  - Backport fix for inappropriate downstream Muon PID TES locations in 
    StrippingTrackEffDownMuon.py to the various Stripping20rXpY archives.
