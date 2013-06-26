@@ -6,6 +6,9 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 2013-06-26 - Patrick Robbe
+ - Fix gcc47 compilation problems
+
 ! 2013-05-08 - Jack Benton
  - Added direct D0->4pi decay to NamedDecayTreeList.cpp
 

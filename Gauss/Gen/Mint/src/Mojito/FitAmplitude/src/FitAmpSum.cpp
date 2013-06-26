@@ -180,7 +180,7 @@ std::complex<double> FitAmpSum::getVal(){
   
   std::complex<double> result(sqrt(fabs(efficiency()))*sum);
   double resultSq = norm(result);
-  bool invalid = (! isfinite(resultSq)) || isnan(resultSq);
+  bool invalid = (! isfinite(resultSq)) || std::isnan(resultSq);
   if(dbThis || invalid){
     cout << "\n---------------------------" << endl;
     cout << "sqrt(efficiency())*sum = "
