@@ -4,6 +4,8 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v4r10 2013-06-26 =========================
+
 ! 2013-06-26 - Chris Jones
  - Disable packing checks for Stripping data.
  - Add new optional element to print the TES content, for debugging.
