@@ -169,7 +169,7 @@ def selMuonPParts(name, DataType, downstreamSeq):
 #        
    DataOnDemandSvc().AlgMap.update( {
                 "/Event/Rec/Downstream/Tracks" : unpacker.getFullName(),
-                "/Event/Rec/Muon/MuonPID/Downstream" : idalg.getFullName(),
+                "/Event/Rec/Muon/DownstreamMuonPID" : idalg.getFullName(),
 #                "/Event/Rec/ProtoP/"+name+"ProtoPMaker" : downprotoseq.getFullName()
 		} )
 
