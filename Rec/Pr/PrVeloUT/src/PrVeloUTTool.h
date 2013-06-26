@@ -68,6 +68,7 @@ static const InterfaceID IID_PrVeloUTTool ( "PrVeloUTTool", 1, 0 );
     double m_maxXSize;
     double m_maxYSize;
     double m_minMomentum;
+    double m_minPT;
     double m_maxPseudoChi2;
     int m_maxSolutionsPerTrack;
     double m_xTol;

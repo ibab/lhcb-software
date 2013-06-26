@@ -38,6 +38,7 @@ PrVeloUTTool::PrVeloUTTool( const std::string& type,
   declareProperty("centralHoleSize"    , m_centralHoleSize  = 28.1 * Gaudi::Units::mm);
   // Momentum determination
   declareProperty("minMomentum"        , m_minMomentum      = 0.8*Gaudi::Units::GeV);
+  declareProperty("minPT"              , m_minPT            = 0.0*Gaudi::Units::GeV);
   declareProperty("maxPseudoChi2"      , m_maxPseudoChi2          = 10000.);
   declareProperty("maxSolutionsPerTrack"  , m_maxSolutionsPerTrack = 3);
   // Tolerances for extrapolation
@@ -98,6 +99,24 @@ StatusCode PrVeloUTTool::initialize ( ) {
     debug() << " zMidUT             = " << m_zMidUT           << " mm"  << endmsg;
   }
 
+  info() << " MaxXSize           = " << m_maxXSize         << " mm"  << endmsg;
+  info() << " MaxYSize           = " << m_maxYSize         << " mm"  << endmsg;
+  info() << " MaxXSlope          = " << m_maxXSlope                  << endmsg;
+  info() << " MaxYSlope          = " << m_maxYSlope                  << endmsg;
+  info() << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
+  info() << " minMomentum        = " << m_minMomentum      << " MeV" << endmsg;
+  info() << " minPT              = " << m_minPT            << " MeV" << endmsg;
+  info() << " maxPseudoChi2      = " << m_maxPseudoChi2    << "   "  << endmsg;
+  info() << " distToMomentum     = " << distToMomentum               << endmsg;
+  info() << " zMidField          = " << zMidField          << " mm"  << endmsg;
+  info() << " xTolerance         = " << m_xTol             << " mm"  << endmsg;
+  info() << " xTolSlope          = " << m_xTolSlope        << " mm"  << endmsg;
+  info() << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
+  info() << " YTolSlope          = " << m_yTolSlope                  << endmsg;
+  info() << " DxGroupTol         = " << m_dxGroupTol       << " mm " << endmsg;
+  info() << " DxGroupFactor      = " << m_dxGroupFactor    << "    " << endmsg;
+  info() << " zMidUT             = " << m_zMidUT           << " mm"  << endmsg;
+
   std::vector<double> nfact;
   for (double dydz = -0.3; dydz < 0.3; dydz+=0.02) {
     double dxdz = 0.0;
@@ -138,39 +157,42 @@ void PrVeloUTTool::recoVeloUT(LHCb::Track & velotrack, std::vector<LHCb::Track*>
 void PrVeloUTTool::getCandidates( LHCb::Track& veloTrack, std::vector<PrVUTTrack>& vttTracks){
 
   if(m_debug) debug() << "Entering getCandidates" << endmsg;
-
-  double distToMomentum = m_PrUTMagnetTool->averageDist2mom();
-  double maxTol = fabs(1. / ( distToMomentum * m_minMomentum ));
-
-
-
-  if(m_debug) debug() << " maxWindow: " << maxTol << endmsg;
-
+  
   //===========================================================================
   //== try to match
   //===========================================================================
-
+    
   LHCb::Track* veloTr = &veloTrack;
-
   if( m_debug ) debug() << "Input Velo track address: " << veloTr << endmsg;
-
+  
   const LHCb::State& state = veloTr->hasStateAt(LHCb::State::EndVelo) ?
     *(veloTr->stateAt(LHCb::State::EndVelo)) :
     (veloTr->closestState(LHCb::State::EndVelo)) ;
-  
 
   double slX = state.tx();
   double slY = state.ty();
 
   // skip tracks outside UT
   if( m_maxXSlope < fabs( slX ) || m_maxYSlope < fabs( slY ) ) return;
-
+  
   double xAtMidUT = state.x() + slX*(m_zMidUT-state.z());
   double yAtMidUT = state.y() + slY*(m_zMidUT-state.z());
 
   // skip tracks pointing into central hole of UT
   if(xAtMidUT*xAtMidUT + yAtMidUT*yAtMidUT < m_centralHoleSize*m_centralHoleSize) return;
 
+  double theta = sqrt(slX*slX+slY*slY);
+  // protect against unphysical angles, should not happen
+  if(theta < 0.002) theta = 0.002;
+
+  double distToMomentum = m_PrUTMagnetTool->averageDist2mom();
+
+  double minP = ((m_minPT/theta)>m_minMomentum) ? (m_minPT/theta):m_minMomentum;
+    
+  double maxTol = fabs(1. / ( distToMomentum * minP ));
+
+  if(m_debug) debug() << " maxWindow: " << maxTol << endmsg;
+    
   if( m_debug )   debug() << " Start with the track" << " tx,ty  " << slX << " " << slY  << endmsg;
 
 
