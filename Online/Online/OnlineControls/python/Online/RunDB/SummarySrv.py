@@ -168,7 +168,8 @@ class RunDB:
             str(self.lhcState.data)+'/'+str(self.b1Intensity.data)+'/'+\
             str(self.b2Intensity.data)+'/'+str(self.energy.data)+'/'+\
             str(self.lumi[9].data)+'/'+str(l)
-        #print 'Current fill:',s
+        if _debug:
+          print 'Current fill:',s
         return s
     
     # ===========================================================================
