@@ -7,6 +7,7 @@
 ! 2013-06-26 - Patrick Robbe
  - MonitorInDetail.opts: remove GeneratorFullMonitor which is not
    supported anymore.
+ - qmtests: increase the time limit for pythia8 tests to 3600s
 
 ! 2013-06-06 - Patrick Robbe
  - QMTests: add pythia8 QMTests and clean obsolete reference files
