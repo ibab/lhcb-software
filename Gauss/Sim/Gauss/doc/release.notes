@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-06-26 - Patrick Robbe
+ - MonitorInDetail.opts: remove GeneratorFullMonitor which is not
+   supported anymore.
+
 ! 2013-06-06 - Patrick Robbe
  - QMTests: add pythia8 QMTests and clean obsolete reference files
 

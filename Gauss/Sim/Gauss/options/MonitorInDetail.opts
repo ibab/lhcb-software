@@ -3,6 +3,7 @@
 /** @file 
  * 
  *  File containing options to study in detail a production.
+
  *
  *  @author G.Corti
  *  @date 2005-07-04
@@ -14,9 +15,6 @@
 //------------------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "NTupleSvc" }; 
 NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.root' TYP='ROOT' OPT='NEW'"};
-
-// Algorithm filling detailed info in an ntuple from HepMC
-GenMonitor.Members       += { "GeneratorFullMonitor" };
 
 // Algorithm filling histograms for detailed analysis of Generators
 GenMonitor.Members      += { "GeneratorAnalysis" };
