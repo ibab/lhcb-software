@@ -2,11 +2,24 @@
 #ifndef MCTUPLETOOLINTERACTIONS_H
 #define MCTUPLETOOLINTERACTIONS_H 1
 
-// Include files
+#include <math.h>
+
 // from Gaudi
-#include "DecayTreeTupleBase/TupleToolBase.h"
+#include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
-#include "Kernel/IEventTupleTool.h"            // Interface
+
+#include "DecayTreeTupleBase/TupleToolBase.h"
+#include "Kernel/IEventTupleTool.h"
+
+#include "Event/GenHeader.h"
+#include "Event/MCHeader.h"
+#include "Kernel/ParticleID.h"
+#include <Event/RecVertex.h>
+
+#include "GaudiAlg/Tuple.h"
+#include "GaudiAlg/ITupleTool.h"
+
+#include "GaudiKernel/IRegistry.h" // IOpaqueAddress
 
 class ITupleTool;
 
@@ -15,16 +28,16 @@ class ITupleTool;
  * \brief Number of interactions. This TupleTool will allow the calculation of a scaling factor
  *          as an event-by-event weight. When applied to events it will approximate a different mean number of
  *          interactions per event.
- *        The starting mean number of interactions will by default be taken from the GenHeader. 
+ *        The starting mean number of interactions will by default be taken from the GenHeader.
  *        If this is not available it will set to the DC06 default
  *        The mean can be overwritten by setting the option "Mean" as below
  *
  * Tuple columns:
- * 
+ *
  *  EVT_Int_I    unsigned int   number of interactions
  *  EVT_Int_Mean double         mean number of interactions
  *  EVT_Int_Prob double         probability of generating this number of interactions
- *  
+ *
  * If the scaling option (AdjustMean) is set
  *  EVT_Int_AdjustMean    double         mean number of interactions to weight to
  *  EVT_Int_AdjustProb    double         probability of this event in the adjusted case
@@ -57,17 +70,19 @@ class ITupleTool;
  *  @author R. Lambert
  *  @date   2009-05-01
  */
-class MCTupleToolInteractions : public TupleToolBase, virtual public IEventTupleTool {
+class MCTupleToolInteractions : public TupleToolBase, virtual public IEventTupleTool
+{
+
 public:
+
   /// Standard constructor
   MCTupleToolInteractions( const std::string& type,
-		      const std::string& name,
-		      const IInterface* parent);
+                           const std::string& name,
+                           const IInterface* parent);
 
   virtual ~MCTupleToolInteractions( ){}; ///< Destructor
 
   StatusCode fill( Tuples::Tuple& );
-  virtual StatusCode initialize();
 
 private :
 
@@ -78,15 +93,35 @@ private :
   bool m_useRecPV; ///<use the #of reconstructed PVs, rather than the MC Collisions. set by the option UseRecPV.
   //bool m_fillDetails; ///<fill extra information on MCPV, MC Collisions and Reconstructed PVs. set by the option FillDetails.
   std::string m_RecPVLocation; ///<mean number of interactions to weight to. set by the option AdjustMean. Default of zero will not calculate the adjustment.
- 
+
+private:
+
   ///calculate the probability of n interactions given that the mean is mu
   double poisson(const double mu, const unsigned int n);
   ///calculate the ratio of the probabilities for n interactions with the two means mu1, mu2
   double weight(const double mu1, const double mu2, const unsigned int n);
   ///calculate the factorial of n
   double factorial(const unsigned int n);
-  ///calculate a^x
-  double power(const double a, const unsigned int x);
 
 };
+
+inline double MCTupleToolInteractions::factorial( const unsigned int n )
+{
+  return (double) ( (n == 1 || n == 0) ? 1 : factorial( n - 1 ) * n );
+}
+
+inline double MCTupleToolInteractions::poisson(const double mu, const unsigned int n)
+{
+  return std::exp(-mu)*std::pow(mu,n)/factorial(n);
+}
+
+inline double MCTupleToolInteractions::weight( const double mu1,
+                                               const double mu2,
+                                               const unsigned int n )
+{
+  return std::exp(mu1-mu2)*std::pow(mu2/mu1,n);
+}
+
+
+
 #endif // MCTUPLETOOLINTERACTIONS_H
