@@ -4,6 +4,7 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v18r2 2013-06-27 ========================
 ! 2013-05-31 - Patrick Robbe
  - GiGaPhysListBase: fix unreleased tool issues
 
