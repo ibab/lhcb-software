@@ -73,7 +73,7 @@ class StrippingLambdac2PKPiForXSecConf(LineBuilder): # {
     ##   of StrippingLine
     def _strippingLine ( self,
                           name             ,   # the base name for the Line
-                          prescale  = 1.0  ,   # prescale factor
+                          prescale  = 1  ,   # prescale factor
                           ODIN      = None ,   # ODIN predicate
                           L0DU      = None ,   # L0DU predicate
                           HLT       = None ,   # HltDecReports predicate
@@ -358,10 +358,11 @@ default_config = {
                    , 'Lambdac_VCHI2VDOF_MAX'    :   25.0
                    , 'Lambdac_acosBPVDIRA_MAX'  :   35.0 * mrad
                    , 'Lambdac_PVDispCut'        : "((BPVVDCHI2 > 4.0)|(BPVLTIME() > 0.075 * picosecond))"
-                   , 'HltFilter'                :  None
-                   , 'PrescaleLambdac2PKPi'     :    1.0
+                   , 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
+                   #, 'HltFilter'                :  None
+                   , 'PrescaleLambdac2PKPi'     :    0.1
                    , 'PostscaleLambdac2PKPi'    :    1.0
-                   , 'PrescaleLambdac2PKK'      :    1.0
+                   , 'PrescaleLambdac2PKK'      :    0.1
                    , 'PostscaleLambdac2PKK'     :    1.0
                    , 'PrescaleLambdac2PPiPi'    :   -1.0
                    , 'PostscaleLambdac2PPiPi'   :   -1.0
