@@ -4,6 +4,7 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+!====================== EvtGenExtras v3r6p1 2013-06-27 =======================
 ! 2013-06-26 - Patrick Robbe
  - Fix coverity warnings
 
