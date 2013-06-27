@@ -6,16 +6,34 @@ from GaudiKernel.SystemOfUnits import *
 #from GaudiKernel.SystemOfUnits import as units
 
 #ProtonIonMinBias
+#ProtonIonMinBias = {
+#    'BUILDERTYPE'  : 'ProtonIonMinBiasConf',
+#    'CONFIG'       : {
+#    'ProtonIonMinBiasLine_RE' : "(HLT_PASS('Hlt2PassThroughDecision'))",
+#    'ProtonIonMinBiasLine_Prescale' : 0.10,
+#    'ProtonIonMinBiasLine_CondDB' : True 
+#    },
+#    'WGs' : [ 'QEE' ],   
+#    'STREAMS' : [ 'ALL' ]
+#    }
 ProtonIonMinBias = {
     'BUILDERTYPE'  : 'ProtonIonMinBiasConf',
     'CONFIG'       : {
-    'ProtonIonMinBiasLine_RE' : "(HLT_PASS('Hlt2PassThroughDecision'))",
-    'ProtonIonMinBiasLine_Prescale' : 0.10,
-    'ProtonIonMinBiasLine_CondDB' : True 
+    'ProtonIonMinBiasLine_RE'       : "(HLT_PASS('Hlt2PassThroughDecision'))",
+    'ProtonIonMagDownMinBiasLine_RunNumbers'            :  "(ODIN_RUNNUMBER(135576,136212))",
+    'ProtonIonMagUpMinBiasLine_RunNumbers'            :  "(ODIN_RUNNUMBER(136237,136341))",
+    'IonProtonMagDownMinBiasLine_RunNumbers'            :  "(ODIN_RUNNUMBER(136799,137045))",
+    'IonProtonMagUpMinBiasLine_RunNumbers'            :  "(ODIN_RUNNUMBER(136417,136758))",
+    'ProtonIonMagDownMinBiasLine_Prescale' : 0.025,
+    'ProtonIonMagUpMinBiasLine_Prescale' : 0.11,
+    'IonProtonMagDownMinBiasLine_Prescale' : 0.08,
+    'IonProtonMagUpMinBiasLine_Prescale' : 0.09,
+    'ProtonIonMinBiasLine_CondDB' : True
     },
-    'WGs' : [ 'QEE' ],   
+    'WGs' : [ 'QEE' ],
     'STREAMS' : [ 'ALL' ]
     }
+
 
 
 #Z02MuMu
@@ -488,10 +506,10 @@ D2HHHForXSec = {
                   , 'D_VCHI2VDOF_MAX'           :   25.0
                   , 'D_acosBPVDIRA_MAX'         :   35.0 * mrad
                   , 'D_PVDispCut'               : "((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150 * picosecond))"
-                  , 'HltFilter'                 : None
-                  #, 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
-                  , 'PrescaleD2KPP'             :    1.0
-                  , 'PrescaleD2KKP'             :    1.0
+                  #, 'HltFilter'                 : None
+                  , 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
+                  , 'PrescaleD2KPP'             :    0.01
+                  , 'PrescaleD2KKP'             :    0.01
                   , 'PrescaleD2KKK'             :   -1.0
                   , 'PrescaleD2PPP'             :   -1.0
                   , 'PrescaleD2KPPDCS'          :   -1.0
@@ -520,10 +538,10 @@ D2PhiPiForXSec = {
                   , 'D_VCHI2VDOF_MAX'           :   25.0
                   , 'D_acosBPVDIRA_MAX'         :   35.0 * mrad
                   , 'D_PVDispCut'               : "((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150 * picosecond))"
-                  , 'HltFilter'                 : None
-                  #, 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
+                  #, 'HltFilter'                 : None
+                  , 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
                   #
-                  , 'PrescaleD2PhiPi'           :    1.0
+                  , 'PrescaleD2PhiPi'           :    0.01
                   , 'PostscaleD2PhiPi'          :    1.0
     },
     'WGs' : [ 'Charm' ],
@@ -549,11 +567,11 @@ Lambdac2PKPiForXSec = {
                    , 'Lambdac_VCHI2VDOF_MAX'    :   25.0
                    , 'Lambdac_acosBPVDIRA_MAX'  :   35.0 * mrad
                    , 'Lambdac_PVDispCut'        : "((BPVVDCHI2 > 4.0)|(BPVLTIME() > 0.075 * picosecond))"
-                   , 'HltFilter'                :  None
-                   #, 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
-                   , 'PrescaleLambdac2PKPi'     :    1.0
+                   #, 'HltFilter'                :  None
+                   , 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
+                   , 'PrescaleLambdac2PKPi'     :    0.1
                    , 'PostscaleLambdac2PKPi'    :    1.0
-                   , 'PrescaleLambdac2PKK'      :    1.0
+                   , 'PrescaleLambdac2PKK'      :    0.1
                    , 'PostscaleLambdac2PKK'     :    1.0
                    , 'PrescaleLambdac2PPiPi'    :   -1.0
                    , 'PostscaleLambdac2PPiPi'   :   -1.0
@@ -586,11 +604,11 @@ D02K3PiForXSec = {
                   , 'Dstar_AMDiff_MAX'          :  160.0 * MeV
                   , 'Dstar_VCHI2VDOF_MAX'       :  100.0
                   #
-                  , 'HltFilter'                 : None
-                  #, 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
+                  #, 'HltFilter'                 : None
+                  , 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
                   #
-                  , 'PrescaleD02K3Pi'             :  1.0
-                  , 'PrescaleDstar2D0Pi_D02K3Pi'  :  1.0
+                  , 'PrescaleD02K3Pi'             :  0.01
+                  , 'PrescaleDstar2D0Pi_D02K3Pi'  :  0.01
                   , 'PostscaleD02K3Pi'            :  1.0
                   , 'PostscaleDstar2D0Pi_D02K3Pi' :  1.0
     },
@@ -610,11 +628,11 @@ D02KPiGeoForXSec = {
                   , 'Dstar_AMDiff_MAX'    : 160.0 * MeV
                   , 'Dstar_VCHI2VDOF_MAX' : 100.0
                   , 'Dstar_MDiff_MAX'     : 155.0 * MeV
-                  , 'HltFilter'           : None
-                  #, 'HltFilter'           : "HLT_PASS_RE('Hlt1MB.*')"
+                  #, 'HltFilter'           : None
+                  , 'HltFilter'           : "HLT_PASS_RE('Hlt1MB.*')"
                   #
-                  , 'PrescaleD02HH'             :   1.0
-                  , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
+                  , 'PrescaleD02HH'             :   0.1
+                  , 'PrescaleDstar2D0Pi_D02HH'  :   0.1
                   , 'PostscaleD02HH'            :   1.0
                   , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
@@ -637,11 +655,11 @@ D02HHForXSec = {
                   , 'Dstar_AMDiff_MAX'          : 160.0*MeV
                   , 'Dstar_VCHI2VDOF_MAX'       : 100.0
                   #
-                  , 'HltFilter'          : None
-                  #, 'HltFilter'           : "HLT_PASS_RE('Hlt1MB.*')"
+                  #, 'HltFilter'          : None
+                  , 'HltFilter'           : "HLT_PASS_RE('Hlt1MB.*')"
                   #
-                  , 'PrescaleD02HH'             :   1.0
-                  , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
+                  , 'PrescaleD02HH'             :   0.1
+                  , 'PrescaleDstar2D0Pi_D02HH'  :   0.1
                   , 'PostscaleD02HH'            :   1.0
                   , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
