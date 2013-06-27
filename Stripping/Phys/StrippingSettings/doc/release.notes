@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-06-27 - Ronan Wallace
+ - Changed prescales and Hlt filters in *ForXSec.py lines updated in Stripping20r3 configuration.
+ - Parameters for pA MinBias lines added to Stripping20r3 configuration. 
+ 
+
 ! 2013-06-19 - Ronan Wallace
  - Added ProtonIonMinBias configuration dictionary to Stripping20r3.
  - Removed A1MuMu and DisplVertices configuration dictionaries from Stripping20r3.
