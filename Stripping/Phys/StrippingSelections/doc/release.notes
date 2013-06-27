@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-06-27 - Ronan Wallace
+ - 4 lines now in StrippingProtonIonMinBias.py for pA,Ap,MU,MD configurations. Prescales according to run number.
+ - Prescales in *ForXSec.py lines. 
+ - HltFilter set to 'Hlt1MB.*' in *ForXSec.py lines.
+
 ! 2013-06-26 - Chris Jones
  - Change the TES location for Downstream MuonPID objects created by
    StrippingTrackEffDownMuon.py from "Rec/Muon/MuonPID/Downstream" to
