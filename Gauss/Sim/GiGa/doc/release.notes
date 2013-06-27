@@ -6,6 +6,7 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
+!========================== GiGa v20r2 2013-06-27 ============================
 ! 2012-05-31 - Patrick Robbe
  - GiGa, GiGaRunManager, GiGaPhysConstructorBase, GiGaPhysListBase, 
    GiGaSensDetBase: fix unreleased tool issue
