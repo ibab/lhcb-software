@@ -56,7 +56,7 @@ class StrippingD02HHForXSecConf(LineBuilder): # {
     ##   of StrippingLine
     def _strippingLine ( self,
                           name             ,   # the base name for the Line
-                          prescale  = 1.0  ,   # prescale factor
+                          prescale  = 1  ,   # prescale factor
                           ODIN      = None ,   # ODIN predicate
                           L0DU      = None ,   # L0DU predicate
                           HLT       = None ,   # HltDecReports predicate
@@ -248,10 +248,11 @@ default_config = {
                   , 'Dstar_AMDiff_MAX'          : 160.0*MeV
                   , 'Dstar_VCHI2VDOF_MAX'       : 100.0
                   #
-                  , 'HltFilter'          : None
+                  , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
+                  #, 'HltFilter'          : none
                   #
-                  , 'PrescaleD02HH'             :   1.0
-                  , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
+                  , 'PrescaleD02HH'             :   0.1
+                  , 'PrescaleDstar2D0Pi_D02HH'  :   0.1
                   , 'PostscaleD02HH'            :   1.0
                   , 'PostscaleDstar2D0Pi_D02HH' :   1.0
                  }
