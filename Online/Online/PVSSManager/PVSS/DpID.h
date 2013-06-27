@@ -9,6 +9,20 @@
 #ifndef ONLINE_PVSS_DPID_H
 #define ONLINE_PVSS_DPID_H
 
+#ifdef _WIN32
+typedef __int8   int8_t;
+typedef __int16  int16_t;
+typedef __int32  int32_t;
+typedef __int64  int64_t;
+
+typedef unsigned __int8   uint8_t;
+typedef unsigned __int16  uint16_t;
+typedef unsigned __int32  uint32_t;
+typedef unsigned __int64  uint64_t;
+#else
+#include <stdint.h>
+#endif
+
 // Forward declarations
 class DpIdentifier;
 class __ostream;
@@ -34,13 +48,14 @@ namespace PVSS {
   class DpID  {
   protected:
     enum ConfigNo { ZERO, ONE , TWO };
-    unsigned long    systemID;
-    unsigned long    dpID;
-    signed short int elmentID;
+    uint32_t         systemID;
+    uint32_t         dpID;
+    int16_t          elmentID;
     ConfigNo         configNo;
-    signed short int detailNo;
-    signed long      attrNo;
-    signed short     dpTypeID;
+    int16_t          detailNo;
+    int32_t          attrNo;
+    int16_t          dpTypeID;
+
   public:
 
     unsigned long    system() const { return systemID;  }

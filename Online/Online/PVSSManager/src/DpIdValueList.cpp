@@ -9,6 +9,7 @@
 // $Id: DpIdValueList.cpp,v 1.8 2009-02-10 19:32:35 frankb Exp $
 #include <memory>
 #include <iostream>
+#include <cstdio>
 #include <stdint.h>
 
 #include "PVSS/Internals.h"
@@ -89,7 +90,7 @@ std::auto_ptr<DynVar> get_dyn_var_text(const PVSS::Array* arr)  {
   for(int i=0; i<arr->size; ++i)  {
     TextVar* v = new TextVar((const char*)arr->load(arr,i));
     if ( !(var->append(v) == PVSS_TRUE) )  {
-      ::printf("PVSS> Variables do not match type TextVar!\n");
+      ::puts("PVSS> Variables do not match type TextVar!\n");
     }
   }
   return var;

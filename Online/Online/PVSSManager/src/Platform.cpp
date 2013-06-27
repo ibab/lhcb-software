@@ -10,6 +10,7 @@
 
 #include "PVSS/Internals.h"
 #include <cstring>
+#include <cstdio>
 #include <memory>
 #include <string>
 
@@ -167,7 +168,7 @@ int PVSS::pvss_start_thread(void (*fun)(void*), void* arg)  {
 }
 
 /// Terminate native thread
-int PVSS::pvss_end_thread(int exit_code) {
+int PVSS::pvss_end_thread(int /* exit_code */) {
   return 1;
 }
 

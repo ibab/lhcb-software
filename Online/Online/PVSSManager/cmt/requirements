@@ -2,20 +2,26 @@ package PVSSManager
 version v1r0
 
 branches  cmt doc
-use PVSS v* Online -no_auto_imports
+use GaudiPolicy v*
+use OnlineBase  v* Online
+use PVSS        v* Online -no_auto_imports
 
 apply_pattern install_more_includes more=PVSSManager offset=PVSS
 
 library PVSSManager *.cpp -import=PVSS
-apply_pattern       linker_library library=PVSSManager
-macro_append        PVSSManager_shlibflags $(PVSS_link)
+apply_pattern linker_library library=PVSSManager
+macro_append  PVSSManager_shlibflags $(PVSS_link)
 
-application  PVSS00api  ../main/*.cpp
+application  PVSS00api  ../main/main.cpp
+macro_append PVSS00api_use_linkopts  " $(PVSS_link) -lPVSSManager " WIN32 ""
+macro_append PVSS00api_dependencies  " PVSSManager "
+
+application  check_DpID  ../main/check_dpID.cpp
+macro_append check_DpID_use_linkopts " $(PVSS_link) -lPVSSManager " WIN32 ""
+macro_append check_DpID_dependencies " PVSSManager "
+
 set PVSS00api "$(PVSSMANAGERROOT)/$(CMTCONFIG)/PVSS00api.exe"
 
 private
 macro_remove cppflags                  "-W "
-macro_append PVSS00api_cppflags        " -m32 " WIN32 ""
-macro_append PVSS00apilinkopts         " -m32  $(PVSS_link) " WIN32 ""
-macro_append PVSS00api_dependencies    " PVSSManager "
 

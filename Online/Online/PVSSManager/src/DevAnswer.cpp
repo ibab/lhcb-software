@@ -13,6 +13,7 @@
 using namespace PVSS;
 #include <cstdlib>
 #include <cstring>
+#include <cstdio>
 
 void DevAnswer::clear()  {
   if ( m_nerrs > 0 )  {

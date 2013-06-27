@@ -8,7 +8,7 @@
 //  ====================================================================
 // $Id: DpIdentList.cpp,v 1.4 2009-02-10 19:32:35 frankb Exp $
 
-#include <iostream.h>
+#include <iostream>
 
 #include "PVSS/Internals.h"
 #include "PVSS/DpID.h"
