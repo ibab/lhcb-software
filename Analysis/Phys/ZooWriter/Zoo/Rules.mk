@@ -707,8 +707,8 @@ endef
 # targets which work by descending into subdirectories
 SUBDIRRULES = all dep clean distclean strip
 # synthesize rules to descend into subdirectories for these targets
-$(foreach subdirrule,$(SUBDIRRULES),$(eval \
-    $(call SUBDIRRULE_TEMPLATE,$(subdirrule),$(SUBDIRS))))
+$(foreach subdirrule,$(SUBDIRRULES),$(foreach subdir,$(SUBDIRS),$(eval \
+    $(call SUBDIRRULE_TEMPLATE,$(subdirrule),$(subdir)))))
 else
 subdirs-all::
 subdirs-dep::
