@@ -54,7 +54,7 @@ class StrippingD2PhiPiForXSecConf(LineBuilder): # {
     ##   of StrippingLine
     def _strippingLine ( self,
                           name             ,   # the base name for the Line
-                          prescale  = 1.0  ,   # prescale factor
+                          prescale  = 1  ,   # prescale factor
                           ODIN      = None ,   # ODIN predicate
                           L0DU      = None ,   # L0DU predicate
                           HLT       = None ,   # HltDecReports predicate
@@ -227,9 +227,10 @@ default_config = {
                   , 'D_VCHI2VDOF_MAX'           :   25.0
                   , 'D_acosBPVDIRA_MAX'         :   35.0 * mrad
                   , 'D_PVDispCut'               : "((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150 * picosecond))"
-                  , 'HltFilter'                 : None
+                  , 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
+                  #, 'HltFilter'                 : None
                   #
-                  , 'PrescaleD2PhiPi'           :    1.0
+                  , 'PrescaleD2PhiPi'           :    0.01
                   , 'PostscaleD2PhiPi'          :    1.0
                  }
 
