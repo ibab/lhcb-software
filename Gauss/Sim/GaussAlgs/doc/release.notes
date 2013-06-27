@@ -4,6 +4,7 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+!======================== GaussAlgs v7r0 2013-06-27 ===========================
 ! 2013-05-08 - Paul Szczypka
  - commented out SL hitsTracker line such that it isn't run by default.
 
