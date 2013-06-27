@@ -2,14 +2,11 @@ package PVSS
 version v3r1
 
 branches  cmt doc
-use LCG_Settings v* 
 use GaudiPolicy  v*
-#macro PVSS_installation "$(SITEROOT)/lhcb/online/control/pvss/3.8" \
-#  WIN32         "C:/PGM/PVSS2_3.8"
-macro PVSS_installation "/opt/pvss/pvss2_v3.8"
+macro PVSS_installation "/opt/WinCC_OA/3.11"
 
-macro PVSS_major_version "V38"
-macro PVSS_native_version $(PVSS_major_version)_320
+macro PVSS_major_version "V311"
+macro PVSS_native_version $(PVSS_major_version)
 macro PVSS_api   "$(PVSS_installation)/api"
 macro PVSS_inc   "$(PVSS_api)/include"
 set PVSS_II      '/localdisk/pvss/STORAGE/config/config'
@@ -32,16 +29,14 @@ macro_append PVSS_cppflags " -DLINUX2_6 -DGLIBC2_3 "\
 macro_append PVSS_cppflags \
 ' -I"$(PVSS_inc)/Basics/DpBasics" -I"$(PVSS_inc)/Basics/Utilities" -I"$(PVSS_inc)/Basics/Variables" -I"$(PVSS_inc)/Basics/NoPosix" -I"$(PVSS_inc)/Ctrl" -I"$(PVSS_inc)/BCMNew" -I"$(PVSS_inc)/Configs" -I"$(PVSS_inc)/Datapoint" -I"$(PVSS_inc)/Messages" -I"$(PVSS_inc)/Manager"'
 
-macro_append PVSS_cppflags " -D__PC -D__UNIX -DHAS_TEMPLATES=1 -DBC_DESTRUCTOR -Dbcm_boolean_h -DOS_LINUX -DLINUX -DLINUX2 -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -Wno-deprecated -DDLLEXP_BASICS= -DDLLEXP_DATAPOINT= -DDLLEXP_CONFIGS= -DDLLEXP_MANAGER=  -DDLLEXP_MESSAGES= -DDLLEXP_CTRL= -DGCC3 -DUSES_NEW_IOSTREAMS -m32 " \
+macro_append PVSS_cppflags " -D__PC -D__UNIX -DHAS_TEMPLATES=1 -DBC_DESTRUCTOR -Dbcm_boolean_h -DOS_LINUX -DLINUX -D__STDC_LIMIT_MACROS -D__STDC_FORMAT_MACROS -Wno-deprecated -DDLLEXP_BASICS= -DDLLEXP_DATAPOINT= -DDLLEXP_CONFIGS= -DDLLEXP_MANAGER=  -DDLLEXP_MESSAGES= -DDLLEXP_CTRL= -DGCC3 -DUSES_NEW_IOSTREAMS " \
   WIN32 ' -I"$(PVSS_inc)/winnt/pvssincl" '
 
-macro PVSS_link "-lstdc++ -lc  $(PVSS_installation)/bin/libwklin.so -L$(PVSS_api)/lib.linux -lManager$(PVSS_native_version) -lMessages$(PVSS_native_version) -lDatapoint$(PVSS_native_version) -lBasics$(PVSS_native_version) -lbcm$(PVSS_native_version) -lConfigs$(PVSS_native_version) -lPVSSUtil$(PVSS_major_version) -lV24 -lm -m32 -lpthread -lrt " \
+macro PVSS_link "-lstdc++ -lc -L$(PVSS_installation)/bin/libwklin.so -L$(PVSS_installation)/api/lib.linux -lManager$(PVSS_native_version) -lMessages$(PVSS_native_version) -lDatapoint$(PVSS_native_version) -lBasics$(PVSS_native_version) -lbcm$(PVSS_native_version) -lConfigs$(PVSS_native_version) -lUtil$(PVSS_major_version) -lV24 -lm -lpthread -lrt " \
   WIN32 ' /LIBPATH:"$(PVSS_api)/lib.winnt" libManager.lib libMessages.lib libDatapoint.lib libBasics.lib bcm.lib'
 
 macro PVSS_link_Ctrl -lCtrl$(PVSS_native_version) 
 
-#macro cpp 'gcc32 -m32 '
-#macro shlibbuilder 'g++32 -m32 $(cmt_installarea_linkopts) '
 macro_remove libraryshr_linkopts "-Wl,--as-needed"
 
 # libCtrl.lib libConfigs.lib 
