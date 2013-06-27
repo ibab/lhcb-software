@@ -5,7 +5,7 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
-!========================= GenTune v2r0 2013-06-13 =========================
+!========================= GenTune v2r0 2013-06-27 =========================
 ! 2013-06-13 - Alex Grecu
  - added scripts/lhcbLFT2StdMap.py script to help plugin developers with 
    dumping the LHCb particle lifetimes to a std::map<int, double> indexed 
