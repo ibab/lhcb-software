@@ -56,7 +56,7 @@ macro_remove pythia6_linkopts " -lpythia6_pdfdummy " \
 #-- Rivet for reference analysis with comparison with published data and
 #-- Professor for tuning
 #============================================================================
-macro rivet_native_version "1.8.2"
+macro rivet_native_version "1.8.3"
 
 #-- Redefine symbols of MCGenerators libraries
 #-- Pythia 6

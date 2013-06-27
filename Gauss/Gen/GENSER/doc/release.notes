@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v12r5 2013-06-27 ==========================
+! 2013-06-27 - Gloria Corti
+ - Newer version of rivet (from 1.8.2 to 1.8.3) as not used in production
+
 ! 2013-06-24 - Patrick Robbe
  - requirements: remove definition of LHAPATH
 
