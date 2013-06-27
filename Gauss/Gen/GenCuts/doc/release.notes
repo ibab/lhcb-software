@@ -4,6 +4,7 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+!========================== GenCuts v3r5 2013-06-27 ========================== 
 ! 2013-05-15 - Jibo He
  - Added BcNoCut, to generate Bc in full phase space
 
