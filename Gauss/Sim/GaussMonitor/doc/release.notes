@@ -4,6 +4,7 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!======================= GaussMonitor v7r0 2013-06-27 ========================
 ! 2013-06-26 - Patrick Robbe
  - Remove obsolete GeneratorFullMonitor algorithm from Gauss
 
