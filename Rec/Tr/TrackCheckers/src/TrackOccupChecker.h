@@ -85,10 +85,13 @@ class TrackOccupChecker : public TrackCheckerBase {
   static const unsigned int m_nRegIT = Tf::RegionID::ITIndex::kNRegions;
   static const unsigned int m_nReg = m_nRegOT + m_nRegIT;
 
-  unsigned int m_OTChannels;
+  // Detectors
+  DeVelo *m_Velo;
+  DeSTDetector *m_IT;
+  DeOTDetector *m_OT;
+
   unsigned int m_ITChannels;
-
-
+  unsigned int m_OTChannels;
 
   inline bool isRegionOT(const unsigned reg) const
   { return (reg == 0 || reg == 1); }

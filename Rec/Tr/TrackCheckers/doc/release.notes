@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2013-06-27 - Maurizio Martinelli
+ - Fixed coverity defects and optimized TrackOccupChecker
+
 ! 2013-06-05 - Wouter Hulsbergen
  - Split histograms by track type in TrackIPResolutionChecker
 

@@ -51,15 +51,25 @@ DECLARE_ALGORITHM_FACTORY( TrackOccupChecker )
 // Standard constructor, initializes variables
 //=============================================================================
 TrackOccupChecker::TrackOccupChecker(const std::string& name,
-                           ISvcLocator* pSvcLocator ) :
-TrackCheckerBase( name , pSvcLocator ){
-
+				     ISvcLocator* pSvcLocator ) 
+  : TrackCheckerBase( name , pSvcLocator )
+  , m_tHitManager(0)
+  , m_rHitManager(0)
+  , m_phiHitManager(0)
+  , m_Velo(0)
+  , m_IT(0)
+  , m_OT(0)
+  , m_ITChannels(0)
+  , m_OTChannels(0)
+{
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackOccupChecker::~TrackOccupChecker() {}
+TrackOccupChecker::~TrackOccupChecker() 
+{
+}
 
 StatusCode TrackOccupChecker::initialize()
 {
@@ -71,6 +81,16 @@ StatusCode TrackOccupChecker::initialize()
   m_tHitManager = tool<Tf::TStationHitManager<PatForwardHit> >("PatTStationHitManager");
   m_rHitManager = tool<Tf::DefaultVeloRHitManager>("Tf::DefaultVeloRHitManager");
   m_phiHitManager = tool<Tf::DefaultVeloPhiHitManager>("Tf::DefaultVeloPhiHitManager");
+
+  // get detector information locations
+  m_Velo = getDet<DeVelo>(DeVeloLocation::Default);
+  m_IT = getDet<DeSTDetector>(DeSTDetLocation::IT);
+  m_OT = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
+
+  // Number of IT/OT channels
+  m_ITChannels = m_IT->nStrip();
+  m_OTChannels = m_OT->nChannels();
+  debug() << "nChan IT: " << m_ITChannels << ", nChan OT: " << m_OTChannels << endmsg;
 
   return StatusCode::SUCCESS;
 
@@ -89,10 +109,9 @@ StatusCode TrackOccupChecker::execute()
   }
 
   // access Velo
-  DeVelo *Velo = getDet<DeVelo>(DeVeloLocation::Default);
   long nstrips = 0;
-  for (std::vector<DeVeloSensor*>::const_iterator it = Velo->sensorsBegin();
-       it != Velo->sensorsEnd(); ++it){
+  for (std::vector<DeVeloSensor*>::const_iterator it = m_Velo->sensorsBegin();
+       it != m_Velo->sensorsEnd(); ++it){
 
     debug() << "Station: " << (*it)->station()
             << ", at z: " << (*it)->z()
@@ -117,14 +136,7 @@ StatusCode TrackOccupChecker::execute()
 
 void TrackOccupChecker::occupInfo() {
 
-  DeSTDetector *IT = getDet<DeSTDetector>(DeSTDetLocation::IT);
-  DeOTDetector *OT = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
   int nVert = visPrimVertTool()->countVertices();
-
-  m_ITChannels = IT->nStrip();
-  m_OTChannels = OT->nChannels();
-  debug() << "nChan IT: " << m_ITChannels;  
-  debug() << ", nChan OT: " << m_OTChannels << endmsg;
 
   LinkedTo<LHCb::MCParticle>
     otLink(evtSvc(),msgSvc(),LHCb::OTTimeLocation::Default);
@@ -182,24 +194,20 @@ void TrackOccupChecker::occupInfo() {
             if (0 != othit) { 
               unsigned int mod = othit->module().moduleID();
               hitsInMod[int(mod)]++;
-              if ( 1 || fullDetail() == true ) {
-                plot(mod, "OTmoduleFromOTHit", 0, 10, 10); 
-                unsigned int tdct = othit->rawhit().channel().tdcTime();
-                plot (tdct, "tdcTimeFromOTHit", 0., 300., 300);
-                // get spillover hits
-                OTChannelID otID = othit->rawhit().channel();
-                MCParticle* mcp = otLink.first( otID );
-                if (0==mcp) {
-                  // spillover+crosstalk+noise
-                  plot (tdct, "spillover", 0., 300., 300);
-                  hitsInModSpill[int(mod)]++;
-                  //hitsVert[nVert]++; // global counter! see .h
-                  nHitsSpill++;
-                }
-                else plot (tdct, "signal", 0., 300., 300);
-              } // 0!=othit
-            } // fullDetail
-            
+	      plot(mod, "OTmoduleFromOTHit", 0, 10, 10); 
+	      unsigned int tdct = othit->rawhit().channel().tdcTime();
+	      plot (tdct, "tdcTimeFromOTHit", 0., 300., 300);
+	      // get spillover hits
+	      OTChannelID otID = othit->rawhit().channel();
+	      MCParticle* mcp = otLink.first( otID );
+	      if (0==mcp) {
+		// spillover+crosstalk+noise
+		plot (tdct, "spillover", 0., 300., 300);
+		hitsInModSpill[int(mod)]++;
+		//hitsVert[nVert]++; // global counter! see .h
+		nHitsSpill++;
+	      } else plot (tdct, "signal", 0., 300., 300);
+	    } // 0!=othit
           } // HitRange
         } // OT region
         
