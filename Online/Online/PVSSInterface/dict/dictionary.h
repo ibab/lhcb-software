@@ -9,11 +9,12 @@
 #include <map>
 #include <list>
 #include <vector>
+#include <cstdio>
 
 namespace PVSS {
   struct TestVector {
     template <class T> static void set(const T& c)  
-    {  printf("Entered an object of type:%s\n",typeid(c).name());    }
+    {  ::printf("Entered an object of type:%s\n",typeid(c).name());    }
   };
   struct TestVectorDict {
     TestVectorDict()  {

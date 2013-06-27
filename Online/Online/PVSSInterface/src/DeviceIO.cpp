@@ -16,6 +16,7 @@
 #include "PVSS/DeviceIO.h"
 #include "PVSS/PVSSIO.h"
 #include <stdexcept>
+#include <cstdio>
 
 using namespace PVSS;
 

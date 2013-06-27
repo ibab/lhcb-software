@@ -17,6 +17,8 @@
 #include "PVSS/DevAnswer.h"
 #include "PVSS/Internals.h"
 #include <algorithm>
+#include <cstdio>
+
 namespace PVSS {
   template <> struct DevManip<Device>  {
     static inline Device* create(DeviceManager* m,const DevType* typ, const std::string& n)  

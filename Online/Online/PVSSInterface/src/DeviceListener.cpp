@@ -13,6 +13,7 @@
 #include "PVSS/DeviceSensor.h"
 #include "CPP/Event.h"
 // C++ include files
+#include <cstdio>
 #include <iostream>
 #include <stdexcept>
 using namespace PVSS;

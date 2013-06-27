@@ -16,6 +16,8 @@
 #include "PVSS/DataPoint.h"
 #include "PVSS/Internals.h"
 
+#include <cstdio>
+
 using namespace PVSS;
 
 namespace PVSS { namespace ns_ReadTransaction {

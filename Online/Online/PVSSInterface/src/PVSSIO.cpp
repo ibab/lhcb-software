@@ -17,6 +17,7 @@
 #include "PVSS/DevTypeElement.h"
 
 // C++ include files
+#include <cstdio>
 #include <stdexcept>
 
 namespace PVSS {
