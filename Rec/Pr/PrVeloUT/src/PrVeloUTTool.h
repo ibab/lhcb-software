@@ -84,6 +84,7 @@ static const InterfaceID IID_PrVeloUTTool ( "PrVeloUTTool", 1, 0 );
     PrUTMagnetTool*    m_PrUTMagnetTool;  ///< Multipupose tool for Bdl and deflection
     bool m_debug;
     bool m_verbose;
+    bool m_PrintVariables;
 
   };
 

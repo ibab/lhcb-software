@@ -49,6 +49,7 @@ PrVeloUTTool::PrVeloUTTool( const std::string& type,
   // Grouping tolerance
   declareProperty("DxGroupTol"         , m_dxGroupTol       = 0.8 * Gaudi::Units::mm);
   declareProperty("DxGroupFactor"      , m_dxGroupFactor    = 0.25);
+  declareProperty("PrintVariables"      , m_PrintVariables    = false);
 
 
 }
@@ -99,24 +100,27 @@ StatusCode PrVeloUTTool::initialize ( ) {
     debug() << " zMidUT             = " << m_zMidUT           << " mm"  << endmsg;
   }
 
-  info() << " MaxXSize           = " << m_maxXSize         << " mm"  << endmsg;
-  info() << " MaxYSize           = " << m_maxYSize         << " mm"  << endmsg;
-  info() << " MaxXSlope          = " << m_maxXSlope                  << endmsg;
-  info() << " MaxYSlope          = " << m_maxYSlope                  << endmsg;
-  info() << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
-  info() << " minMomentum        = " << m_minMomentum      << " MeV" << endmsg;
-  info() << " minPT              = " << m_minPT            << " MeV" << endmsg;
-  info() << " maxPseudoChi2      = " << m_maxPseudoChi2    << "   "  << endmsg;
-  info() << " distToMomentum     = " << distToMomentum               << endmsg;
-  info() << " zMidField          = " << zMidField          << " mm"  << endmsg;
-  info() << " xTolerance         = " << m_xTol             << " mm"  << endmsg;
-  info() << " xTolSlope          = " << m_xTolSlope        << " mm"  << endmsg;
-  info() << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
-  info() << " YTolSlope          = " << m_yTolSlope                  << endmsg;
-  info() << " DxGroupTol         = " << m_dxGroupTol       << " mm " << endmsg;
-  info() << " DxGroupFactor      = " << m_dxGroupFactor    << "    " << endmsg;
-  info() << " zMidUT             = " << m_zMidUT           << " mm"  << endmsg;
-
+  if(m_PrintVariables)
+  {
+    info() << " MaxXSize           = " << m_maxXSize         << " mm"  << endmsg;
+    info() << " MaxYSize           = " << m_maxYSize         << " mm"  << endmsg;
+    info() << " MaxXSlope          = " << m_maxXSlope                  << endmsg;
+    info() << " MaxYSlope          = " << m_maxYSlope                  << endmsg;
+    info() << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
+    info() << " minMomentum        = " << m_minMomentum      << " MeV" << endmsg;
+    info() << " minPT              = " << m_minPT            << " MeV" << endmsg;
+    info() << " maxPseudoChi2      = " << m_maxPseudoChi2    << "   "  << endmsg;
+    info() << " distToMomentum     = " << distToMomentum               << endmsg;
+    info() << " zMidField          = " << zMidField          << " mm"  << endmsg;
+    info() << " xTolerance         = " << m_xTol             << " mm"  << endmsg;
+    info() << " xTolSlope          = " << m_xTolSlope        << " mm"  << endmsg;
+    info() << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
+    info() << " YTolSlope          = " << m_yTolSlope                  << endmsg;
+    info() << " DxGroupTol         = " << m_dxGroupTol       << " mm " << endmsg;
+    info() << " DxGroupFactor      = " << m_dxGroupFactor    << "    " << endmsg;
+    info() << " zMidUT             = " << m_zMidUT           << " mm"  << endmsg;
+  }
+  
   std::vector<double> nfact;
   for (double dydz = -0.3; dydz < 0.3; dydz+=0.02) {
     double dxdz = 0.0;
