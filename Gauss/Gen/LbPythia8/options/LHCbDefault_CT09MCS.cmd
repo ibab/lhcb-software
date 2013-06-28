@@ -29,6 +29,8 @@ Next:numberCount = 0
 # process selection
 # -------------------------------
 SoftQCD:all = on
+Charmonium:all = on
+Bottomonium:all = on
 # -------------------------------
 # couplings and scales
 # -------------------------------
