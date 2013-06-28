@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2013-06-28 - Rob Lambert
+ - Fix Boost list_of, see task #42876
+
 
 !========================= Hlt1Muons v1r5p2 2013-04-09 =========================
 ! 2013-03-25 - Rob Lambert

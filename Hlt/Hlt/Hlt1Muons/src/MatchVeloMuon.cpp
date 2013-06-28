@@ -65,7 +65,8 @@ MatchVeloMuon::MatchVeloMuon( const std::string& type,
 
    declareProperty( "SetQOverP", m_setQOverP = false );
    
-   m_order = list_of( 3 )( 4 )( 5 )( 2 );
+   std::vector<unsigned int> tmp=list_of( 3 )( 4 )( 5 )( 2 );
+   m_order = tmp;
 }
 
 //=============================================================================

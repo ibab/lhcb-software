@@ -51,10 +51,10 @@ HltGenConfig::HltGenConfig( const string& name, ISvcLocator* pSvcLocator)
   , m_accessSvc(0)
   , m_configSvc(0)
 {
-    declareProperty("ConfigTop", m_topConfig = list_of( string("Hlt") ) );
-    declareProperty("ConfigSvc", m_svcConfig = list_of( string("ToolSvc") )
-                                                      ( string("HltANNSvc") )
-                                                      ( string("Hlt::Service") ) );
+    std::vector<std::string> tmp=list_of( string("ToolSvc") )( string("HltANNSvc") ) ( string("Hlt::Service") );
+  
+    declareProperty("ConfigTop", m_topConfig = std::vector<std::string>(1,string("Hlt")) );
+    declareProperty("ConfigSvc", m_svcConfig = tmp );
     declareProperty("ConfigAccessSvc",   s_accessSvc = "ConfigTarFileAccessSvc");
     declareProperty("PropertyConfigSvc", s_configSvc = "PropertyConfigSvc");
     declareProperty("HltType", m_hltType );

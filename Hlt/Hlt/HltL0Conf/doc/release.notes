@@ -4,6 +4,9 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-06-28 - Rob Lambert
+ - Fix Boost list_of, see task #42876
+
 
 !========================= HltL0Conf v3r0p3 2013-04-09 =========================
 ! 2013-03-25 - Rob Lambert

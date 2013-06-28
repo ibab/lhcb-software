@@ -42,10 +42,15 @@ ElectronSeedTool::ElectronSeedTool(const std::string& type,
   declareProperty("debugMode",m_debugMode = false);
   
   // Resolution of the L0Cand at T3, tune JA 2007-03-22
-  declareProperty("sigmaX2", m_sigmaX2 = boost::assign::list_of(9.)(30.25)(225.) );
-  declareProperty("sigmaY2", m_sigmaY2 = boost::assign::list_of(4.)(12.25)(64.) );
-  declareProperty("sigmaTx2", m_sigmaTx2 = boost::assign::list_of(9.e-6)(9.e-6)(36.e-6) );
-  declareProperty("sigmaTy2", m_sigmaTy2 = boost::assign::list_of(25.e-6)(49.e-6)(64.e-6) );
+  std::vector<double> tmpx2=boost::assign::list_of(9.)(30.25)(225.) ;
+  std::vector<double> tmpy2=boost::assign::list_of(4.)(12.25)(64.);
+  std::vector<double> tmptx2=boost::assign::list_of(9.e-6)(9.e-6)(36.e-6);
+  std::vector<double> tmpty2=boost::assign::list_of(25.e-6)(49.e-6)(64.e-6);
+  
+  declareProperty("sigmaX2", m_sigmaX2 =  tmpx2);
+  declareProperty("sigmaY2", m_sigmaY2 =  tmpy2);
+  declareProperty("sigmaTx2", m_sigmaTx2 =  tmptx2);
+  declareProperty("sigmaTy2", m_sigmaTy2 =  tmpty2);
   clearElectronVariables();
 
 }

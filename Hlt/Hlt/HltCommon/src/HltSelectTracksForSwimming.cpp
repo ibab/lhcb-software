@@ -26,7 +26,7 @@ HltSelectTracksForSwimming::HltSelectTracksForSwimming( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
   , m_selections(*this)
 {
-  declareProperty("OfflineTrackIDs", m_offlineTrackIDs=boost::assign::list_of((unsigned int) 0)); 
+  declareProperty("OfflineTrackIDs", m_offlineTrackIDs=std::vector<unsigned int>(1,0)); 
   m_selections.declareProperties();
 }
 

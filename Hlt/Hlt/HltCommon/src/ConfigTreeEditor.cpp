@@ -8,7 +8,6 @@
 // boost
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/construct.hpp"
-#include "boost/lambda/bind.hpp"
 #include "boost/ref.hpp"
 #include "boost/regex.hpp"
 
@@ -21,7 +20,16 @@
 
 using namespace std;
 using namespace boost;
+
+//C++11 from our own twiki page...
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+#include <functional>
+using std::bind;
+using namespace std::placeholders;
+#else
+#include <boost/lambda/bind.hpp>
 using namespace boost::lambda;
+#endif
 
 namespace {
     static const std::string empty;
@@ -162,7 +170,7 @@ public:
         if (visitor.descend(*this)) {
               for_each(m_deps.begin(),
                        m_deps.end(),
-                       bind(&ConfigTree::visit,_1,ref(visitor)));
+                       bind(&ConfigTree::visit,_1,boost::ref(visitor)));
         }
         visitor.post(*this);
    }

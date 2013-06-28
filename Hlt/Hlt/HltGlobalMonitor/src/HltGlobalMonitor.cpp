@@ -108,11 +108,12 @@ HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
    declareProperty("Hlt1DecName", m_hlt1Decision = "Hlt1Global" );
    declareProperty("Hlt2DecName", m_hlt2Decision = "Hlt2Global" );
    declareProperty( "RawEventLocation"   , m_rawEventLocation = LHCb::RawEventLocation::Default );
-
-   declareProperty("CorrelateCPUWith", m_correlateCPU = boost::assign::list_of<std::pair<std::string,Gaudi::Histo1DDef> >
-                   ("Hlt/Vertex/PV3D",Gaudi::Histo1DDef("PV3D", -0.5,10.5,11    ) )
-                   ("Hlt/Track/Velo",Gaudi::Histo1DDef("Velo", -0.5,599.5,120  ) )
-                   ("Hlt2/Track/Forward",Gaudi::Histo1DDef("Forward", -0.5,599.5,120  ) ) );
+   std::map<std::string,Gaudi::Histo1DDef> tmp=boost::assign::list_of<std::pair<std::string,Gaudi::Histo1DDef> >
+     ("Hlt/Vertex/PV3D",Gaudi::Histo1DDef("PV3D", -0.5,10.5,11    ))
+     ("Hlt/Track/Velo",Gaudi::Histo1DDef("Velo", -0.5,599.5,120  ) )
+     ("Hlt2/Track/Forward",Gaudi::Histo1DDef("Forward", -0.5,599.5,120 ));
+   
+   declareProperty("CorrelateCPUWith", m_correlateCPU = tmp);
 
    declareProperty( "VertexLocations", m_vertexLocations );
 }

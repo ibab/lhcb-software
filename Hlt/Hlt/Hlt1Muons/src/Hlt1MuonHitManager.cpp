@@ -57,11 +57,17 @@ Hlt1MuonHitManager::Hlt1MuonHitManager(const std::string& type,
    m_regions.resize( 5 );
    // Define the regions, the last ones are increased a little to make sure
    // everything is caught.
-   m_regions[ 0 ] = list_of( -3840 )( -1920 )( -960 )( -480 )( 480 )( 960 )( 1920 )( 3940 );
-   m_regions[ 1 ] = list_of( -4800 )( -1200 )( -600 )( 600 )( 1200 )( 4900 );
-   m_regions[ 2 ] = list_of( -5180 )( -1292 )( -644 )( 644 )( 1292 )( 5280 );
-   m_regions[ 3 ] = list_of( -5556 )( -1392 )( -696 )( 696 )( 1392 )( 5656 );
-   m_regions[ 4 ] = list_of( -5952 )( -1488 )( -744 )( 744 )( 1488 )( 6052 );
+   std::vector< double > tmp0=list_of( -3840 )( -1920 )( -960 )( -480 )( 480 )( 960 )( 1920 )( 3940 );
+   std::vector< double > tmp1=list_of( -4800 )( -1200 )( -600 )( 600 )( 1200 )( 4900 );
+   std::vector< double > tmp2=list_of( -5180 )( -1292 )( -644 )( 644 )( 1292 )( 5280 );
+   std::vector< double > tmp3=list_of( -5556 )( -1392 )( -696 )( 696 )( 1392 )( 5656 );
+   std::vector< double > tmp4=list_of( -5952 )( -1488 )( -744 )( 744 )( 1488 )( 6052 );
+
+   m_regions[ 0 ] = tmp0;
+   m_regions[ 1 ] = tmp1;
+   m_regions[ 2 ] = tmp2;
+   m_regions[ 3 ] = tmp3;
+   m_regions[ 4 ] = tmp4;
 
    m_nHits.resize( 5, 0 );
 

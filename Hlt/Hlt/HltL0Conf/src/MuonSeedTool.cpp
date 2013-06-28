@@ -52,16 +52,26 @@ MuonSeedTool::MuonSeedTool( const std::string& type,
   declareProperty("momentumToolName",m_momentumToolName="FastMomentumEstimate");
 
   //resolution for track hypothesis taken from muon stations M1 and M2 
-  declareProperty("sigmaX2", m_sigmaX2 = boost::assign::list_of(64.)(225.)(841.)(2916.) );
-  declareProperty("sigmaY2", m_sigmaY2 = boost::assign::list_of(36.)(100.)(400.)(1600.) );
-  declareProperty("sigmaTx2", m_sigmaTx2 = boost::assign::list_of(9.e-6)(16.e-6)(49.e-6)(169.e-6) );
-  declareProperty("sigmaTy2", m_sigmaTy2 = boost::assign::list_of(16.e-6)(36.e-6)(64e-6)(100.e-6) );
+  std::vector<double> tmpx2=boost::assign::list_of(64.)(225.)(841.)(2916.);
+  std::vector<double> tmpy2=boost::assign::list_of(36.)(100.)(400.)(1600.);
+  std::vector<double> tmptx2=boost::assign::list_of(9.e-6)(16.e-6)(49.e-6)(169.e-6);
+  std::vector<double> tmpty2=boost::assign::list_of(16.e-6)(36.e-6)(64e-6)(100.e-6);
+  
+  declareProperty("sigmaX2", m_sigmaX2 = tmpx2);
+  declareProperty("sigmaY2", m_sigmaY2 =  tmpy2);
+  declareProperty("sigmaTx2", m_sigmaTx2 =  tmptx2);
+  declareProperty("sigmaTy2", m_sigmaTy2 =  tmpty2);
 
   //resolution for track hypothesis taken from muon stations M2 and M3 
-  declareProperty("sigmaX2NoM1", m_sigmaX2NoM1 = boost::assign::list_of(484.)(1849.)(7396.)(25600.) );
-  declareProperty("sigmaY2NoM1", m_sigmaY2NoM1 = boost::assign::list_of(81.)(529.)(1936.)(2209.) );
-  declareProperty("sigmaTx2NoM1", m_sigmaTx2NoM1 = boost::assign::list_of(16.e-6)(64.e-6)(225e-6)(529.e-6) );
-  declareProperty("sigmaTy2NoM1", m_sigmaTy2NoM1 = boost::assign::list_of(16.e-6)(49.e-6)(64e-6)(100.e-6) );
+  std::vector<double> tmpx2N=boost::assign::list_of(484.)(1849.)(7396.)(25600.);
+  std::vector<double> tmpy2N=boost::assign::list_of(81.)(529.)(1936.)(2209.);
+  std::vector<double> tmptx2N=boost::assign::list_of(16.e-6)(64.e-6)(225e-6)(529.e-6);
+  std::vector<double> tmpty2N=boost::assign::list_of(16.e-6)(49.e-6)(64e-6)(100.e-6);
+  
+  declareProperty("sigmaX2NoM1", m_sigmaX2NoM1 = tmpx2N );
+  declareProperty("sigmaY2NoM1", m_sigmaY2NoM1 =  tmpy2N);
+  declareProperty("sigmaTx2NoM1", m_sigmaTx2NoM1 =  tmptx2N);
+  declareProperty("sigmaTy2NoM1", m_sigmaTy2NoM1 =  tmpty2N);
   declareProperty("recalculateP", m_recalculateP = true );
 }
 //=============================================================================
