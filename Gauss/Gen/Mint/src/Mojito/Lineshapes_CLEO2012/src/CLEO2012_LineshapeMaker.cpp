@@ -29,22 +29,10 @@ ILineshape* CLEO2012_LineshapeMaker(const AssociatedDecayTree* tree
 			   , IDalitzEventAccess* events
 			   , const std::string& lopt
 			   ){
-  bool dbThis=false;
-  if(0 == tree) return 0;
-  
-  if(dbThis){
-    cout << "CLEO2012_LineshapeMaker called with " 
-	 << tree->getVal().pdg() 
-	 << " lopt = " << lopt << endl;
 
-    cout << tree->getVal().pdg() << ", "
-	 << (abs(tree->getVal().pdg())%1000)
-	 << endl;
-  }
-      
+  if(0 == tree) return 0;
 
   if(A_is_in_B("ALWAYS_BW", lopt)){
-    if(dbThis) cout << "CLEO2012_LineshapeMaker returns CLEO2012_BW_BW" << endl;
     return new CLEO2012_BW_BW(*tree, events);
   }
 
@@ -56,7 +44,6 @@ ILineshape* CLEO2012_LineshapeMaker(const AssociatedDecayTree* tree
       return new CLEO2012_CrystalBarrelFOCUS(*tree, events);
       //return new CLEO2012_BW_BW(*tree, events);
     }else if((abs(tree->getVal().pdg())%1000)==113 && A_is_in_B("GS", lopt)){
-      if(dbThis) cout << "CLEO2012_LineshapeMaker: return GS lineshape" << endl;
       return new CLEO2012_GounarisSakurai(*tree, events);
     }else{
       cout << "WARNING: CLEO2012_LineshapeMaker:"
@@ -101,7 +88,6 @@ ILineshape* CLEO2012_LineshapeMaker(const AssociatedDecayTree* tree
       return new CLEO2012_BW_BW(*tree, events);
     }
   }else{
-    if(dbThis) cout << "CLEO2012_LineshapeMaker returns CLEO2012_BW_BW" << endl;
     return new CLEO2012_BW_BW(*tree, events);
   }
 

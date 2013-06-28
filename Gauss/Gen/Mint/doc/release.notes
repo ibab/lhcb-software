@@ -6,6 +6,10 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+
+! 2013-06-28 - Patrick Robbe 
+ - Fix coverity warnings
+
 ! 2013-02-20 - Matthew Coombes
  - Added CLEO-c model for D->KK¹¹ decays.
  - Added alternative models from arXiv:1201.5716
