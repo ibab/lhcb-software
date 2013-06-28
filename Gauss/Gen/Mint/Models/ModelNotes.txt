@@ -18,7 +18,7 @@ a refernce to the model publication and whether it has been tested
 *======================================================
 
 *=====================================================
-*Date: 25/01/2013
+*Date: 28/06/2013
 *FileName: KKPiPi_CLEO_alt2.txt, KKPiPi_CLEO_alt3.txt,
 		   KKPiPi_CLEO_alt4.txt, KKPiPi_CLEO_alt5.txt,
 		   KKPiPi_CLEO_alt6.txt, KKPiPi_CLEO_alt7.txt,
@@ -28,7 +28,7 @@ a refernce to the model publication and whether it has been tested
 *Version:1 
 *Paper: arXiv:1201.5716
 *
-*Tested: Yes. 25/01/2013
+*Tested: Yes. 28/06/2013
 *Comments: Alternative models from Table XIX
 *
 *======================================================
