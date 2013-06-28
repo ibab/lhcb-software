@@ -3,6 +3,8 @@
 ! Responsible : Mark WHITEHEAD, Patrick ROBBE
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
+! 2013-06-28 - Patrick Robbe
+ - Fix coverity warnings
 
 !====================== EvtGenExtras v3r6p1 2013-06-27 =======================
 ! 2013-06-26 - Patrick Robbe
