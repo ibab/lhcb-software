@@ -118,7 +118,7 @@ class DDDBConf(ConfigurableUser):
 
         log.info("Querying Ariadne for a configuration thread...")
         log.debug("Question to Ariadne: %s"%question)
-        response = proxy.queryAriadne(question, criterion)
+        response = proxy.aquery(question, criterion)
         log.info("Got response from Ariadne, configuring CondDB..")
         log.debug("Response from Ariadne is: %s" %question)
 
