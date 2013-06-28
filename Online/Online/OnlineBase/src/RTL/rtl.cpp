@@ -109,7 +109,7 @@ void RTL::ExitSignalHandler::init()  {
   new_action.sa_sigaction = handler;
   new_action.sa_flags     = SA_SIGINFO;
   INSTALL_SIGNAL(SIGILL,   new_action);
-  INSTALL_SIGNAL(SIGINT,   new_action);
+  //INSTALL_SIGNAL(SIGINT,   new_action);
   INSTALL_SIGNAL(SIGTERM,  new_action);
   INSTALL_SIGNAL(SIGHUP,   new_action);
   // INSTALL_SIGNAL(SIGPIPE,  new_action);
