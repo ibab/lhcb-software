@@ -61,7 +61,9 @@ lhcb_projects = {'GAUDI':'Gaudi',
                    'LHCBGRID':'LHCbGrid',
                    'VANDERMEER': 'VanDerMeer',
                    'LHCBDIRAC': 'LHCbDirac',
-                   'INTEGRATION': 'Integration'}
+                   'INTEGRATION': 'Integration',
+                   'NOETHER': 'Noether',
+                   'TESLA': 'Tesla'}
 
 applications = {'GAUSS':'Sim/Gauss',
                 'BOOLE':'Digi/Boole',
