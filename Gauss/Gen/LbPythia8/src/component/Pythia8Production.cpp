@@ -209,7 +209,6 @@ StatusCode Pythia8Production::generateEvent( HepMC::GenEvent * theEvent ,
   // Generate Event
   m_pythia->next();
 
-  debug() << theEvent << " " << theCollision << endmsg;
   for (int i =0;i<100000;i++) {};
   
   //not needed in all cases
@@ -218,8 +217,6 @@ StatusCode Pythia8Production::generateEvent( HepMC::GenEvent * theEvent ,
   // Update event counter
   ++m_nEvents ;
   
-  debug() << m_pythia->flag("HadronLevel:all") << " " << theCollision->isSignal() << endmsg;
-
   if (theCollision->isSignal() || m_pythia->flag("HadronLevel:all")) return toHepMC( theEvent, theCollision ) ;
   else return StatusCode::SUCCESS;
 }
@@ -557,14 +554,9 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
                                         LHCb::GenCollision * theCollision ){
   StatusCode sc = StatusCode::SUCCESS ;
 
-  debug() <<  theEvent << " and " << theCollision << endmsg;
-  
-
   
   //Convert from Pythia8 format to HepMC format
   HepMC::I_Pythia8 conversion ;
-  debug() << "momentum unit is " << theEvent->momentum_unit() << endmsg;
-
 
   // Force the verification of the HEPEVT  record 
   if ( m_validate_HEPEVT ) 
@@ -600,16 +592,10 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
   if (!(conversion.fill_next_event( *m_pythia , theEvent ))) 
     return Error( "Cannot convert Pythia8 event to HepMC" ) ;
   
-  debug() << m_pythia << " " << theEvent << endmsg;
-  
-
-    // Now convert to LHCb units:
+  // Now convert to LHCb units:
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
         p != theEvent -> particles_end() ; ++p ) {
   
-    debug() << (*p) -> status() <<  " "  << (*p) -> pdg_id() << endmsg;
-    
-    
     int status = (*p) -> status() ;
 
     /*if (status>3 && status<20)
@@ -634,8 +620,6 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
              && status!=LHCb::HepMCEvent::DocumentationParticle)
       warning() << "Unknown status rule " << status << " for particle" << (*p)->pdg_id() << endmsg;
 
-    debug() << " " << (*p) -> status() <<  " "  << (*p) -> pdg_id() << endmsg;
-        
     //convert the pdgId to a correct value.
     //consistency between pdgId and pythiaId was not present in the past
     //with pythia8 it is the case, but one takes the old particletable it creates an issue.
