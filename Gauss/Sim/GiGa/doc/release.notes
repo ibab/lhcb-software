@@ -6,6 +6,9 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
+! 2013-06-28 - Patrick Robbe
+ - Fix coverity warnings
+
 !========================== GiGa v20r2 2013-06-27 ============================
 ! 2012-05-31 - Patrick Robbe
  - GiGa, GiGaRunManager, GiGaPhysConstructorBase, GiGaPhysListBase, 

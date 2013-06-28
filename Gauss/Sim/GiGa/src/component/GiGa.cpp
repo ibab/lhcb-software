@@ -77,6 +77,7 @@ GiGa::GiGa( const std::string& name, ISvcLocator* svcloc )
   , m_errors()
   , m_warnings()
   , m_exceptions()
+  , m_exceptionHandler( 0 ) 
 {
   /// name of runmanager  
   declareProperty( "RunManager",          
