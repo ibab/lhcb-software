@@ -40,6 +40,7 @@ PatVeloTTTool::PatVeloTTTool( const std::string& type,
   declareProperty("centralHoleSize"    , m_centralHoleSize  =  39. * Gaudi::Units::mm);
   // Momentum determination
   declareProperty("minMomentum"        , m_minMomentum      = 0.8*Gaudi::Units::GeV);
+  declareProperty("minPT"              , m_minPT            = 0.0*Gaudi::Units::GeV);
   declareProperty("maxPseudoChi2"      , m_maxPseudoChi2          = 10000.);
   declareProperty("maxSolutionsPerTrack"  , m_maxSolutionsPerTrack = 3);
   // Tolerances for extrapolation
@@ -50,8 +51,8 @@ PatVeloTTTool::PatVeloTTTool( const std::string& type,
   // Grouping tolerance
   declareProperty("DxGroupTol"         , m_dxGroupTol       = 0.8 * Gaudi::Units::mm);
   declareProperty("DxGroupFactor"      , m_dxGroupFactor    = 0.25);
-  declareProperty("passUnmatched"      , m_passUnmatched    = true);
-
+  declareProperty("passUnmatched"      , m_passUnmatched    = false);
+  declareProperty("PrintVariables"     , m_PrintVariables    = false);
 
 }
 //=============================================================================
@@ -99,6 +100,29 @@ StatusCode PatVeloTTTool::initialize ( ) {
     debug() << " DxGroupTol         = " << m_dxGroupTol       << " mm " << endmsg;
     debug() << " DxGroupFactor      = " << m_dxGroupFactor    << "    " << endmsg;
     debug() << " zMidTT             = " << m_zMidTT           << " mm"  << endmsg;
+    debug() << " passUnmatched      = " << m_passUnmatched    << "   "  << endmsg;
+  }
+
+  if(m_PrintVariables)
+  {
+    info() << " MaxXSize           = " << m_maxXSize         << " mm"  << endmsg;
+    info() << " MaxYSize           = " << m_maxYSize         << " mm"  << endmsg;
+    info() << " MaxXSlope          = " << m_maxXSlope                  << endmsg;
+    info() << " MaxYSlope          = " << m_maxYSlope                  << endmsg;
+    info() << " centralHoleSize    = " << m_centralHoleSize  << " mm"  << endmsg;
+    info() << " minMomentum        = " << m_minMomentum      << " MeV" << endmsg;
+    info() << " minPT              = " << m_minPT            << " MeV" << endmsg;
+    info() << " maxPseudoChi2      = " << m_maxPseudoChi2    << "   "  << endmsg;
+    info() << " distToMomentum     = " << distToMomentum               << endmsg;
+    info() << " zMidField          = " << zMidField          << " mm"  << endmsg;
+    info() << " xTolerance         = " << m_xTol             << " mm"  << endmsg;
+    info() << " xTolSlope          = " << m_xTolSlope        << " mm"  << endmsg;
+    info() << " yTolerance         = " << m_yTol             << " mm"  << endmsg;
+    info() << " YTolSlope          = " << m_yTolSlope                  << endmsg;
+    info() << " DxGroupTol         = " << m_dxGroupTol       << " mm " << endmsg;
+    info() << " DxGroupFactor      = " << m_dxGroupFactor    << "    " << endmsg;
+    info() << " zMidTT             = " << m_zMidTT           << " mm"  << endmsg;
+    info() << " passUnmatched      = " << m_passUnmatched    << "   "  << endmsg;
   }
 
   std::vector<double> nfact;
@@ -149,13 +173,7 @@ void PatVeloTTTool::getCandidates( const LHCb::Track& veloTrack, std::vector<Pat
 
   if(m_debug) debug() << "Entering getCandidates" << endmsg;
 
-  double distToMomentum = m_PatTTMagnetTool->averageDist2mom();
-  double maxTol = fabs(1. / ( distToMomentum * m_minMomentum ));
-
-
-
-  if(m_debug) debug() << " maxWindow: " << maxTol << endmsg;
-
+  
   //===========================================================================
   //== try to match
   //===========================================================================
@@ -177,6 +195,18 @@ void PatVeloTTTool::getCandidates( const LHCb::Track& veloTrack, std::vector<Pat
 
   // skip tracks pointing into central hole of TT
   if(fabs(xAtMidTT) < m_centralHoleSize && fabs(yAtMidTT) < m_centralHoleSize) return;
+  
+  double theta = sqrt(slX*slX+slY*slY);
+  // protect against unphysical angles, should not happen
+  if(theta < 0.002) theta = 0.002;
+
+  double distToMomentum = m_PatTTMagnetTool->averageDist2mom();
+
+  double minP = ((m_minPT/theta)>m_minMomentum) ? (m_minPT/theta):m_minMomentum;
+  
+  double maxTol = fabs(1. / ( distToMomentum * minP ));
+
+  if(m_debug) debug() << " maxWindow: " << maxTol << endmsg;
 
   if( m_debug )   debug() << " Start with the track" << " tx,ty  " << slX << " " << slY  << endmsg;
 

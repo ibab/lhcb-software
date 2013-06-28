@@ -74,6 +74,7 @@ public:
     double m_maxXSize;
     double m_maxYSize;
     double m_minMomentum;
+    double m_minPT;
     double m_maxPseudoChi2;
     int m_maxSolutionsPerTrack;
     double m_xTol;
@@ -90,6 +91,7 @@ public:
     bool m_debug;
     bool m_verbose;
     bool m_passUnmatched;                   ///< flag to toggle passing unmatched velo candidates to output (default=true) 
+    bool m_PrintVariables;
 
   };
 
