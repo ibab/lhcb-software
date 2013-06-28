@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-06-28 - Patrick Robbe
+ - Fix gcc47 compilation problems
+
 !========================== EvtGen v13r6 2013-03-14 ==========================
 ! 2013-03-14 - John Back
  - Added a check in EvtPhotosEngine::doDecay to skip Photos if a given particle 

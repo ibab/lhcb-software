@@ -27,6 +27,7 @@
 class EvtSemiLeptonicFF{
 
 public:
+  virtual ~EvtSemiLeptonicFF( ) { } ;
 
   virtual void getscalarff( EvtId parent, EvtId daught,
 			    double t, double mass, double *fpf,
