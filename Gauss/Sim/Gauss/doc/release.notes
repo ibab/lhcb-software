@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-06-28 - Patrick Robbe
+ - QMTests: increase time limit for Lambda_b Pythia8 test (15874100)
+
 !========================== Gauss v46r3 2013-06-27 ===========================
 ! 2013-06-26 - Patrick Robbe
  - MonitorInDetail.opts: remove GeneratorFullMonitor which is not
