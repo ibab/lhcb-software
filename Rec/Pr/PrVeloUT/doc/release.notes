@@ -3,6 +3,9 @@
 ! Responsible : Jianchun Wang
 ! Purpose     : Velo UT tracking
 !-----------------------------------------------------------------------------
+! 2013-06-28 - Espen Eie Bowen
+ - Reduced verbosity in PrVeloUTTool, use PrintVariables flag.
+
 ! 2013-06-26 - Espen Eie Bowen
  - Added pT dependent window and printout in PrVeloUTTool.
 
