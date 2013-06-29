@@ -5,6 +5,8 @@ Purpose: LHCb reconstruction program
 
 - Changes to references to reflect changes since v44r5
   . Follow changes to default parameters for VL tracking (PrVL)
+  . In PatVeloTTTool, set passUnmatched default to false (reverts change
+    made in v45r0) (PatVeloTT)
 
 - Changes to tests
   . Fix a bug in the exclusions file, introduced in v44r5, that meant that
@@ -19,7 +21,7 @@ This version uses projects LCG 65, Gaudi v23r8, LHCb v36r0, Lbcom v14r0,
 
 - Changes to references to reflect changes since v44r4
   . PatVeloTTTool by default now returns one track per velo candidate even
-    if no TT match is found (VeloTT)
+    if no TT match is found (PatVeloTT)
 
 - Changes to tests
   . vl_compact tests updated to use the new optimised geometry
