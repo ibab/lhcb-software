@@ -7,6 +7,9 @@
 
 !========================= FlavourTagging v13r1 2013-06-24 =========================
 
+! 2013-07-01 - Katharina Kreplin
+ - Tunings.py: ++ tool.BTaggingTool.addTool ( TaggerNEWKaonOppositeTool )
+
 ! 2013-06-26 - Katharina Kreplin
  - TaggerNEWKaonOppositeTool: - reco 12 final version
                               - reco 14 final version 
