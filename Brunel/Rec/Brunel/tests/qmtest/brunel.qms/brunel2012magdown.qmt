@@ -10,9 +10,11 @@
   </set></argument>
   <argument name="reference"><text>../refs/brunel2012magdown.ref</text></argument>
   <argument name="validator"><text>
-from Brunel.QMTest.BrunelExclusions import preprocessor
+from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
+preprocessor = BrunelPreprocessor + \
+  RegexpReplacer(r'mdf:\S*(/lhcb/data\S*\.raw)(\?\S*)?',r'\1')
 validateWithReference(preproc = preprocessor)
-block = """
+findReferenceBlock("""
 ChargedProtoANN...SUCCESS List of booked 1D histograms in directory         "PROTO/ChargedProtoANNPIDMoni" :-
  | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
  | Downstream/ElectronANN    | "Downstream Electron ANN PID"                 |   3963  |   0.055975 | 0.16703    |     4.0557 |     16.481 |
@@ -33,7 +35,6 @@ ChargedProtoANN...SUCCESS List of booked 1D histograms in directory         "PRO
  | Upstream/MuonANN          | "Upstream Muon ANN PID"                       |   1363  |  0.0043546 | 0.020965   |      33.76 |       1203 |
  | Upstream/PionANN          | "Upstream Pion ANN PID"                       |   1363  |    0.38536 | 0.27789    |     0.2678 |    -1.2351 |
  | Upstream/ProtonANN        | "Upstream Proton ANN PID"                     |   1363  |   0.031445 | 0.049975   |     3.2967 |     15.303 |
-"""
-findReferenceBlock(block)
+""", id = "ChargedProtoANN" )
 </text></argument>
 </extension>
