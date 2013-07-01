@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-07-01 - Stefano Perazzini
+ - Created dbase for Stripping20r3
+
 ! 2013-06-27 - Ronan Wallace
  - Changed prescales and Hlt filters in *ForXSec.py lines updated in Stripping20r3 configuration.
  - Parameters for pA MinBias lines added to Stripping20r3 configuration. 
