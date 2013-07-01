@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-07-01 - Stefano Perazzini
+ - Updated tests/test_allstreams_instantiation.py and tests/test_stream_output_locations.py
+ 
 ! 2013-06-27 - Ronan Wallace
  - 4 lines now in StrippingProtonIonMinBias.py for pA,Ap,MU,MD configurations. Prescales according to run number.
  - Prescales in *ForXSec.py lines. 
