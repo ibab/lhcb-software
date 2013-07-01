@@ -6,6 +6,11 @@
 
 !========================= StrippingArchive v1r21p1 2013-06-26 =========================
 
+! 2013-07-01 - Stefano Perazzini
+ - Created StrippingArchive for Stripping20r3
+ - Added Stripping20r3, updated __init__.py
+ - Updated tests/refs/instantiate-all-strip.ref 
+
 ! 2013-06-26 - Chris Jones
  - Backport fix for inappropriate downstream Muon PID TES locations in 
    StrippingTrackEffDownMuon.py to the various Stripping20rXpY archives.
