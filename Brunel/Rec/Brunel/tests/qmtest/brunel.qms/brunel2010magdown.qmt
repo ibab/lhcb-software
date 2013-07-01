@@ -1,9 +1,9 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
-  <argument name="timeout"><integer>2400</integer></argument>
+  <argument name="timeout"><integer>3600</integer></argument>
   <argument name="args"><set>
-    <text>$BRUNELOPTS/COLLISION10-Beam3500GeV-VeloClosed-MagDown.py</text>
+    <text>$PRCONFIGOPTS/Brunel/PR-COLLISION10-Beam3500GeV-VeloClosed-MagDown.py</text>
     <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
     <text>--option</text>
     <text>from Brunel.Configuration import *; Brunel().EvtMax=200;Brunel().Monitors=["SC","FPE"]; Brunel().OutputType="SDST"; Brunel().PackType="MDF" </text>

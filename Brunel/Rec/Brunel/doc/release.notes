@@ -8,7 +8,11 @@ Purpose: LHCb reconstruction program
   . In PatVeloTTTool, set passUnmatched default to false (reverts change
     made in v45r0) (PatVeloTT)
 
+- Changes to example options
+  . Remove COLLISION10-Beam3500GeV-VeloClosed-MagDown.py, now in PRConfig
+
 - Changes to tests
+  . Increase timeout to 3600 seconds for long tests, avoids timeout in dbg tests
   . Fix a bug in the exclusions file, introduced in v44r5, that meant that
     comparisons with reference were always successful.
   . Pick up input files from CERN-SWTEST (EOS), new location for 'freezer'
