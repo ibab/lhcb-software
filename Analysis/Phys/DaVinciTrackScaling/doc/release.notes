@@ -4,6 +4,9 @@
 ! Purpose     : Track scaling and smearing
 !-----------------------------------------------------------------------------
 
+! 2013-06-01 - M Needham
+ - Allow momentum calibration to applied also to downstream tracks
+
 !========================= DaVinciTrackScaling v1r1 2013-06-13 =========================
 
 ! 2013-05-26 - Vanya Belyaev

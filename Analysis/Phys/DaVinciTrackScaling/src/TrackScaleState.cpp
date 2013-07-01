@@ -229,6 +229,10 @@ private: //
    *  @param run new run number 
    */
   void       new_run      ( const unsigned int run ) ; 
+
+  /// which track types are allowed
+  bool allowedType(const LHCb::Track* track) const;
+
   // ==========================================================================
 private:
   // ==========================================================================
@@ -834,8 +838,10 @@ StatusCode TrackScaleState::execute ()
     if ( 0 == track ) { continue ; }
     //
     // scale only LONG tracks 
-    if ( LHCb::Track::Long != track->type () ) { continue ; } // scale only Long tracks 
+    if ( allowedType(track ) == false ) { continue ; } // scale only Long tracks 
     //
+    // std::cout << "Type " << track->type() << std::endl;
+
     typedef std::vector<LHCb::State*> STATES ;
     const STATES& states = track->states();
     //
@@ -881,6 +887,14 @@ StatusCode TrackScaleState::execute ()
   //
   return StatusCode::SUCCESS;
 }
+
+bool TrackScaleState::allowedType(const LHCb::Track* track) const{
+
+  if (track->type() == LHCb::Track::Long) return true;
+  if (track->type() == LHCb::Track::Downstream) return true; 
+  return false;
+}
+
 // ============================================================================
 // The factory 
 // ============================================================================
@@ -888,3 +902,5 @@ DECLARE_ALGORITHM_FACTORY( TrackScaleState )
 // ============================================================================
 // The END 
 // ============================================================================
+
+
