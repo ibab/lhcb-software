@@ -4,6 +4,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2013-07-02 - Anton Poluektov 
+ - Added EnableFlavourTagging=True/False flag to StrippingLine to run the 
+   BTagging tool in stripping. 
+
 !========================= StrippingConf v4r8 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

@@ -319,6 +319,7 @@ class StrippingLine(object):
                    MaxCandidates = "Override",   # Maxumum number of candidates for CombineParticles
                    MaxCombinations = "Override", # Maxumum number of combinations for CombineParticles
                    HDRLocation = None,  # if None, defined by stream name
+                   EnableFlavourTagging = False, # If True, run FlavourTaggingTool to store FT info
                    **args           ) : # other configuration parameters
 
         if algos and selection :
@@ -350,6 +351,7 @@ class StrippingLine(object):
         self._FILTER    = FILTER
         self._checkPV   = checkPV
         self._HDRLocation = HDRLocation
+        self._EnableFlavourTagging = EnableFlavourTagging
         
         if callable(postscale) : postscale = postscale( self.name() )
         self._postscale = postscale
@@ -411,6 +413,7 @@ class StrippingLine(object):
         self._members   += _boundMembers.members()
         self._outputloc  = _boundMembers.outputLocation()
         self._selection = _boundMembers.selection()
+
         # register into the local storage of all created Lines
         _add_to_stripping_lines_( self ) 
 
@@ -452,32 +455,20 @@ class StrippingLine(object):
         if self._L0DU   : mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , Code = self._L0DU   )  } )
         if self._HLT    : mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , Code = self._HLT    ) } )
 
+	# Add flavour tagging tool to the end of line sequence if needed
+	if self._EnableFlavourTagging : 
+	    if not self.outputLocation() or self.outputLocation == "" : 
+                raise AttributeError, "Line %s does not have output, cannot do flavour tagging" % self.name()
+	    from Configurables import BTagging
+	    btag = BTagging("BTag_"+self.name(), Inputs = [ self.outputLocation() ] ) 
+	    self._members.append(btag)
+
         if self._members : 
-#            last = self._members[-1]
-#            while hasattr(last,'Members') : 
-#                last = getattr(last,'Members')[-1]
-
-#            members = self._members
-
-            ## TODO: check if 'last' is a FilterDesktop, CombineParticles, or something else...
-#            needsCopy = [ 'CombineParticles', 'FilterDesktop', 'Hlt2DisplVertices' ]
-#            knownLastMembers = needsCopy + [ 'HltCopySelection<LHCb::Track>' ]
-#            if last.getType() not in knownLastMembers :
-#              log.warning( 'last item in line ' + self.name() + ' is ' + last.getName() + ' with type ' + last.getType() )
-#            if last.getType() in needsCopy :
-
-
-#	    if self.outputLocation() : 
-#        	members += [ HltCopyParticleSelection( decisionName( line, 'Stripping')
-#                                                     , InputSelection = 'TES:/Event/Strip/%s/Particles'%self.outputLocation()
-#                                                     , OutputSelection = decisionName(line, 'Stripping')) ]
-
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = self._members, OutputLevel = WARNING ) })
             
         mdict.update( { 'HltDecReportsLocation' : self.fullHDRLocation } )
         if (self.outputLocation()) : 
     	    mdict.update( { 'OutputLocation' : self.outputLocation() } )
-#        mdict.update( { 'ANNSvc' : 'StripANNSvc' } )
         
         __mdict = deepcopy ( mdict ) 
         from Configurables import StrippingAlg
