@@ -50,6 +50,10 @@ TestFileDB.test_file_db[options.Data].run(withDB=False,configurable=Moore())
 
 EventSelector().PrintFreq = 100
 
+from Configurables import TimingAuditor, SequencerTimerTool
+TimingAuditor('TIMER').addTool(SequencerTimerTool, name="TIMER")
+TimingAuditor('TIMER').TIMER.NameSize=80
+
 ## GaudiPython
 from GaudiPython.Bindings import AppMgr
 appMgr = AppMgr()

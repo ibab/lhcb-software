@@ -25,6 +25,10 @@ Moore().Simulation= False;
 Moore().CondDBtag= 'head-20120420'; #from RunDB
 Moore().ThresholdSettings="Physics_September2012"
 
+from Configurables import TimingAuditor, SequencerTimerTool
+TimingAuditor('TIMER').addTool(SequencerTimerTool, name="TIMER")
+TimingAuditor('TIMER').TIMER.NameSize=80
+
 ########### L0-related things #######################
 
 Moore().ForceSingleL0Configuration = False

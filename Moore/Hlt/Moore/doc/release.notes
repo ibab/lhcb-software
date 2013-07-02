@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-07-01 - Rob Lambert
+ - Update 2012 reference for very long names!
+
 ! 2013-06-07 - Rob Lambert
  - Move L0App tests to L0App package
 
