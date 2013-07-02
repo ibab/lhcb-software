@@ -27,7 +27,7 @@ Moore().ThresholdSettings="Physics_September2012"
 
 from Configurables import TimingAuditor, SequencerTimerTool
 TimingAuditor('TIMER').addTool(SequencerTimerTool, name="TIMER")
-TimingAuditor('TIMER').TIMER.NameSize=80
+TimingAuditor('TIMER').TIMER.NameSize=150
 
 ########### L0-related things #######################
 
