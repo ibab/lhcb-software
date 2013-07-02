@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-07-02 - Paul Szczypka
+ - QMTests: clear upgrade test expected stderr file. (empty file now)
+
 ! 2013-06-28 - Patrick Robbe
  - QMTests: increase time limit for Lambda_b Pythia8 test (15874100)
 
