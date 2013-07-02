@@ -557,6 +557,11 @@ class Moore(LHCbConfigurableUser):
 	# L0 decoding to look in a single place  
         # L0Conf().RawEventLocations = ['DAQ/RawEvent']        
         #L0DUFromRawAlg("L0DUFromRaw").Hlt1 = True 
+        
+        #turn off LoKi::Distance print outs, which are very frequent!
+        #todo: put this in a "quiet" option of Moore
+        from Configurables import LoKi__DistanceCalculator
+        LoKi__DistanceCalculator().MaxPrints=0
 	
         if not self.getProp("RunOnline") : self._l0()
         if self.getProp("RunOnline") : 

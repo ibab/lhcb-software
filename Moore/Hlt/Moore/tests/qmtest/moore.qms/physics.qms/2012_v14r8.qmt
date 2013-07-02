@@ -72,7 +72,7 @@ if refresult.strip().rstrip()!=timing.strip().rstrip():
 	if len(lineFailureDiff):
 	    result['moore.physics.2012_v14r8.e_failure'] = result.Quote("zero events: " + str(len(lineFailureDiff)))
 	if len(tenPercentDiffs):
-	    result['moore.physics.2012_v14r8.f_10pc'] = result.Quote("+/- &lt;10%: " + str(len(tenPercentDiffs)))
+	    result['moore.physics.2012_v14r8.f_10pc'] = result.Quote("+/- &lt;10\%: " + str(len(tenPercentDiffs)))
 	if len(rest):
 	    result['moore.physics.2012_v14r8.g_different'] = result.Quote("Rest: " + str(len(rest)))
 	
@@ -86,7 +86,7 @@ if refresult.strip().rstrip()!=timing.strip().rstrip():
 	if len(lineFailureDiff):
             result['moore.physics.2012_v14r8.e_failure'] = result.Quote("zero events:\n\t" +',\n\t'.join([r+':'+str(refresultdict[r])+'-&gt;'+str(timingdict[r]) for r in lineFailureDiff]))
 	if len(tenPercentDiffs):
-            result['moore.physics.2012_v14r8.f_10pc'] = result.Quote("+/- &lt;10%:\n\t" + ',\n\t'.join([r+':'+str(refresultdict[r])+'-&gt;'+str(timingdict[r]) for r in tenPercentDiffs]))
+            result['moore.physics.2012_v14r8.f_10pc'] = result.Quote("+/- &lt;10\%:\n\t" + ',\n\t'.join([r+':'+str(refresultdict[r])+'-&gt;'+str(timingdict[r]) for r in tenPercentDiffs]))
 	if len(rest):
             result['moore.physics.2012_v14r8.g_different'] = result.Quote("Rest:\n\t" + ',\n\t'.join([r+':'+str(refresultdict[r])+'-&gt;'+str(timingdict[r]) for r in rest]))
 

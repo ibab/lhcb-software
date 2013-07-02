@@ -5,6 +5,10 @@
 !============================================
 
 ! 2013-07-02 - Rob Lambert
+ - see task #42700, suppress warning print outs for LoKi Distance Calculator
+ - in the future, I'll want the wrap this in my "quiet" configuration
+
+! 2013-07-02 - Rob Lambert
  - Make the print out of the physics.2012 test a little bit nicer.
 
 ! 2013-07-01 - Rob Lambert
