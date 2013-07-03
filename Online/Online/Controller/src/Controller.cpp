@@ -84,7 +84,7 @@ FSM::ErrCond Controller::fail()  {
 FSM::ErrCond Controller::publishSlaves()  {
   stringstream info;
   const Slaves slaves = m_machine->slaves();
-  for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); ++i)  {
+  for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); )  {
     Slave* s = *i;
     info << s->name() << "/" << s->c_state() << "/" << string(s->metaStateName());
     if ( ++i == slaves.end() ) break;
