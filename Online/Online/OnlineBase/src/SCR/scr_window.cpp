@@ -335,8 +335,10 @@ int scrc_show_window (Window *w, Display *d)    {
   Screen *s = System.cur;
   int scr, shift, row, col;
 
-  if (s && (ww = s->wind.cur))  {
-    switch (ww->type)    {
+  if ( s )  {
+    ww =  s->wind.cur;
+    if ( ww )  {
+      switch (ww->type)    {
       case PULLDOWN_WINDOW :
         if (w != ww)        {
           if (ww->on_screen != ww->title && !ww->iconified)     {
@@ -350,6 +352,7 @@ int scrc_show_window (Window *w, Display *d)    {
       case DETACHED_WINDOW :
         if (w->type != DETACHED_WINDOW) scrc_hide_screen (s);
         break;
+      }
     }
   }
     
