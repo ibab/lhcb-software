@@ -4,7 +4,7 @@
   'http://www.codesourcery.com/qm/dtds/2.4.1/-//qm/2.4.1/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
 <argument name="program"><text>gaudirun.py</text></argument>
-<argument name="timeout"><integer>3600</integer></argument>
+<argument name="timeout"><integer>600</integer></argument>
 <argument name="reference"><text/></argument>
 <argument name="stdout"><text/></argument>
 <argument name="prerequisites"><set/></argument>
@@ -15,7 +15,7 @@
 	<text>$LBBCVEGPYROOT/options/BcVegPyPythia8.py</text>
 	<text>$GAUSSOPTS/GenStandAlone.py</text>
 	<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
-  	<text>$GAUSSROOT/tests/options/testGauss-gen-100evts-defaults.py</text>
+  	<text>$GAUSSROOT/tests/options/testGauss-gen-10evts-defaults.py</text>
 </set></argument>
 <argument name="exit_code"><integer>0</integer></argument>
 <argument name="use_temp_dir"><enumeral>false</enumeral></argument>
@@ -31,7 +31,7 @@ if stdout.find(expected_string) == -1:
 	causes.append('missing string')
 	result['GaudiTest.expected_string'] = result.Quote(expected_string)
 else:
-	expected_string2 = &quot;100 events processed&quot;
+	expected_string2 = &quot;10 events processed&quot;
 	if stdout.find(expected_string2) == -1:
 		causes.append('missing string')
 		result['GaudiTest.expected_string'] = result.Quote(expected_string2)
