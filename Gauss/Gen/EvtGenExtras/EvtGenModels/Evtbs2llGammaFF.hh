@@ -26,18 +26,18 @@ class EvtId;       // see H.Schildt, p.297 (in russian)
 class EvtComplex;
 
 class Evtbs2llGammaFF{
-
   public:
-
-    virtual void getPhotonFF(int /*decay_id*/, double /*fb*/, EvtId /*parent*/, 
-                             double /*q2*/, double /*M1*/, double /*mb*/, 
-                             double /*mq*/, EvtComplex /*c7gam*/, EvtComplex /*a1*/,  
-                             EvtComplex /*lambda_qu */, EvtComplex /*lambda_qc*/, 
-                             EvtComplex& /*Fv*/,  EvtComplex& /*Fa*/, 
-                             EvtComplex& /*Ftv*/, EvtComplex& /*Fta*/) {return;};   
+  virtual ~Evtbs2llGammaFF( ) { } ;
   
-    virtual double getQuarkMass(int /*i*/) {return 0.0;};
-
+  virtual void getPhotonFF(int /*decay_id*/, double /*fb*/, EvtId /*parent*/, 
+                           double /*q2*/, double /*M1*/, double /*mb*/, 
+                           double /*mq*/, EvtComplex /*c7gam*/, EvtComplex /*a1*/,  
+                           EvtComplex /*lambda_qu */, EvtComplex /*lambda_qc*/, 
+                           EvtComplex& /*Fv*/,  EvtComplex& /*Fa*/, 
+                           EvtComplex& /*Ftv*/, EvtComplex& /*Fta*/) {return;};   
+  
+  virtual double getQuarkMass(int /*i*/) {return 0.0;};
+  
 };
 
 #endif

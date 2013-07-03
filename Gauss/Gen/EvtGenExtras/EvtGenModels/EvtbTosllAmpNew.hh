@@ -30,9 +30,10 @@ class EvtbTosllWilsCoeffNLO;
 class EvtbTosllAmpNew{
 
  public:
+  virtual ~EvtbTosllAmpNew( ) { } ;
 
   virtual void CalcAmp( EvtParticle *parent, EvtAmp& amp,
-	 	        EvtbTosllFFNew *formFactors, 
+                        EvtbTosllFFNew *formFactors, 
                         EvtbTosllWilsCoeffNLO *WilsCoeff,
                         double /* mu */, int /* Nf */,   
                         int /* res_swch */, int /* ias */, 

@@ -3,6 +3,10 @@
 ! Responsible : Mark WHITEHEAD, Patrick ROBBE
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
+
+! 2013-07-03 - Patrick Robbe
+ - Fix gcc47 warnings
+
 ! 2013-06-28 - Patrick Robbe
  - Fix coverity warnings
 

@@ -26,7 +26,8 @@ class EvtId;  // see H.Schildt, p.297 (in russian)
 class EvtbTosllFFNew{
 
  public:
-
+  virtual ~EvtbTosllFFNew( ) { } ;
+    
   virtual void getScalarFF(EvtId /*parent*/, EvtId /*daught*/,double /*t*/, 
                            double& /*fp*/,double& /*f0*/,
                            double& /*ft*/) {return;}
