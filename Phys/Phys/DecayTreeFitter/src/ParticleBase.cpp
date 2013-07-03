@@ -107,7 +107,9 @@ namespace DecayTreeFitter
 
     // We refit invalid fits, kinematic fits and composites with beamspot
     // constraint if not at head of tree.
-    bool validfit = !config.forceFitAll() && particle.endVertex() != 0 ;
+    bool validfit = !config.forceFitAll() && particle.endVertex() != 0 
+      && particle.endVertex()->nDoF() > 0 
+      && particle.endVertex()->position() != Gaudi::XYZPoint(0,0,0) ;
     bool iscomposite = particle.daughters().size()>0 ;
     bool isresonance = iscomposite && prop && isAResonance(*prop) ;
 
@@ -186,7 +188,7 @@ namespace DecayTreeFitter
       particles.push_back( this ) ;
     for( daucontainer::const_iterator idau = daughters().begin() ;
          idau != daughters().end() ; ++idau )
-      collectVertexDaughters(particles,posindex ) ;
+      (*idau)->collectVertexDaughters(particles,posindex ) ;
   }
 
   ErrCode

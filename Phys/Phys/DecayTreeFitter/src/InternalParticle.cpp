@@ -90,10 +90,11 @@ namespace DecayTreeFitter
     if( fitparams->par()(posindex+1)==0 && fitparams->par()(posindex+2)==0 &&
         fitparams->par()(posindex+3)==0 ) {
 
-      const LHCb::Vertex* vtx(0) ;
-      if( (vtx = particle().endVertex())
-          // && vtx->technique() ==
-          ) {
+      const LHCb::Vertex* vtx = particle().endVertex() ;
+      if( vtx 
+	  && vtx->position() != Gaudi::XYZPoint(0,0,0)
+	  // && vtx->technique() ==
+	  ) {
         // we found an existing valid vertex. that's fine as well ...
         Gaudi::XYZPoint point = vtx->position() ;
         fitparams->par(posindex+1) = point.x() ;
@@ -116,9 +117,12 @@ namespace DecayTreeFitter
         // resonances.)
         daucontainer alldaughters ;
         collectVertexDaughters( alldaughters, posindex ) ;
-        std::cout << "number of daughters for initializing vertex: "
-                  << name() << " " << alldaughters.size() << std::endl ;
-
+	if( vtxverbose>=2) {
+	  std::cout << "number of daughters for initializing vertex: "
+		    << name() << " " << alldaughters.size() << std::endl ;
+	  if(vtx) std::cout << "Original vertex pos: " << vtx->position() << std::endl ;
+	}
+	
         // select daughters that are either charged, or have an initialized vertex
         daucontainer vtxdaughters ;
         std::vector<RecoTrack*> trkdaughters ;
@@ -157,7 +161,7 @@ namespace DecayTreeFitter
           dau2->setFlightLength( mu2 ) ;
 
         } else if(trkdaughters.size()+vtxdaughters.size()>=2)  {
-          std::cout << "VtkInternalParticle: Not yet done!!"<< std::endl ;
+          std::cout << "VtkInternalParticle: To be implemented!!"<< std::endl ;
           /*
 
           // that's unfortunate: no enough charged tracks from this
