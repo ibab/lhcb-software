@@ -5,6 +5,13 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
+</PRE><H1><A NAME=v20r2>2013-07-03 HltSys v20r2</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v36r0 stack. Depends on Rec v15r0 via Phys v16r5. Based on Gaudi v23r8.
+
+The Project structure has been re-arranged. Now we have a different definition of the content of LHCb, Lbcom. Lbcom is now included directly in Rec.
+
+There are minor changes in this version to address compilation on slc6 gcc47. See task #42876. This HLT version replaced v20r1p1 as the main development version.
+
 </PRE><H1><A NAME=v20r1p1>2013-05-16 HltSys v20r1p1</A></H1><PRE>
 Moore/HLT LS1 development version. LHCb v35r5 stack. Depends on Rec v14r5 via Phys v16r5. Based on Gaudi v23r7.
 
