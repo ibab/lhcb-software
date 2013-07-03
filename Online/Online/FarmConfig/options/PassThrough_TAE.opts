@@ -1,0 +1,2 @@
+#include "$STATIC_OPTS/PassThrough.opts"
+EventSelector.Decode = false;

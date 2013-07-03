@@ -1,0 +1,8 @@
+ApplicationMgr.SvcOptMapping        += {"LHCb::EventRunable/Runable",
+					"LHCb::OnlineEvtSelector/EventSelector", 
+					"LHCb::RawDataCnvSvc/RawDataCnvSvc",
+					"LHCb::SocketDataReceiver/ReceiverSvc",
+					"LHCb::MEPManager/MEPManager", 
+					"Gaudi::MultiFileCatalog/FileCatalog", 
+					"Gaudi::IODataManager/IODataManager" 
+};

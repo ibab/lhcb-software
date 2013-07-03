@@ -1,0 +1,5 @@
+//  Auto generated options for partition:LHCb activity:EOF_CALIB  Wed May 15 17:20:03 2013
+//  Number of subfarms:10
+//
+// ---------------- Data sending information for sub-farm:HLTB07
+OnlineEnv.Target  = "PLUS04::LHCb_PLUS04_Receiver_0";

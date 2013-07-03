@@ -1,0 +1,6 @@
+#include "$STATIC_OPTS/Moore_Passthrough.opts"
+MEPManager.Buffers                   = @OnlineEnv.Moore1_Buffers;
+Merger.Buffer                        = @OnlineEnv.Moore1_Output;
+EventSelector.Decode                 = true;  // Reading MEP buffers from MBM. Decoding necessary
+EventSelector.Input                  = @OnlineEnv.Moore1_Input;
+EventSelector.REQ1                   = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";

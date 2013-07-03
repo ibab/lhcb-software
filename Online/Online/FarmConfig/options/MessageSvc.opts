@@ -1,0 +1,13 @@
+//
+// Message service setup
+MessageSvc.fifoPath                  = "$LOGFIFO";
+MessageSvc.LoggerOnly                = true;  // Set to false for stdout
+MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+//
+EventLoopMgr.OutputLevel             = 5;
+EventLoopMgr.Warnings                = false;
+//
+// Disable histogram persistency
+HistogramPersistencySvc.OutputLevel  = 5;
+HistogramPersistencySvc.Warnings     = false;

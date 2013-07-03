@@ -1,0 +1,25 @@
+#include "$INFO_OPTIONS"
+#include "$MBM_SETUP_OPTIONS"
+#include "$STATIC_OPTS/SvcMapping.opts"
+#include "$STATIC_OPTS/Monitoring.opts"
+//
+ApplicationMgr.Runable               = "LHCb::HltBufferedIOReader/Runable";
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EventLoopMgr";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.HistogramPersistency  = "NONE";
+//
+EventLoopMgr.Wait                    = 1;
+//
+Runable.Buffer                       = @OnlineEnv.DskReader_Output;
+Runable.DeleteFiles                  =  true;
+Runable.Directory                    = "/localdisk/overflow";
+Runable.AllowedRuns                  = @OnlineEnv.DeferredRuns;
+Runable.BrokenHosts                  = "/group/online/dataflow/brokendisks";
+//
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.Buffers                   = @OnlineEnv.DskReader_Buffers;
+MEPManager.PartitionBuffers          = @OnlineEnv.PartitionBuffers;
+MEPManager.ConnectWhen               = "initialize";
+//
+#include "$STATIC_OPTS/MessageSvc.opts"

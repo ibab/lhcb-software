@@ -1,0 +1,30 @@
+#include "$INFO_OPTIONS"
+#include "$MBM_SETUP_OPTIONS"
+#include "$STATIC_OPTS/Monitoring.opts"
+
+ApplicationMgr.SvcOptMapping         = {"LHCb::OnlineRunable/EmptyEventLoop" };
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::MEPOverflowWriterSvc/OverflowWr";
+ApplicationMgr.ExtSvc               += { "IncidentSvc", "LHCb::MEPManager/MepManager"};
+//
+MEPManager.PartitionBuffers          = @OnlineEnv.PartitionBuffers;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.Buffers                   = @OnlineEnv.DskWriter_Buffers;
+//
+OverflowWr.Input                     = @OnlineEnv.DskWriter_Input;
+OverflowWr.SizeLimit                 = 1000;
+OverflowWr.PrintFreq                 = 1.0;
+OverflowWr.Requirements         = {
+"EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
+"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+};
+OverflowWr.MEPFilePrefix         = "/localdisk/overflow/Run_";
+OverflowWr.EvtFilePrefix         = "/localdisk/overflow/Run_";
+MessageSvc.fifoPath              = "$LOGFIFO";
+MessageSvc.LoggerOnly            = 1;
+MessageSvc.OutputLevel           = @OnlineEnv.OutputLevel;
+MonitorSvc.CounterUpdateInterval = 5;
+HistogramPersistencySvc.Warnings = 0;

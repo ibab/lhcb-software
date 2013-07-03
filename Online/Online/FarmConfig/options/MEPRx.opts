@@ -1,0 +1,54 @@
+#pragma print off
+// 
+// MEPRxSvc.opts
+// $Id: MEPRxSvc.opts,v 1.8 2010-11-02 15:47:18 niko Exp $
+// Sample options for the eventbuilder service MEPRxSvc as of v4r57
+// niko.neufeld@cern.ch
+//
+#include "$INFO_OPTIONS"
+#include "$MBM_SETUP_OPTIONS"
+#include "$TELL1BOARDS"
+//
+ApplicationMgr.SvcOptMapping        += { "Gaudi::IODataManager/IODataManager",
+                                         "Gaudi::MultiFileCatalog/FileCatalog",
+                                         "LHCb::OnlineRunable/EmptyEventLoop", 
+					 "LHCb::MEPRxSvc/Runable" 
+				       };
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::MEPRxSvc/Runable";
+ApplicationMgr.ExtSvc                = { "IncidentSvc", "MonitorSvc" };
+//
+MEPManager.PartitionBuffers          = @OnlineEnv.PartitionBuffers;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.Buffers                   = @OnlineEnv.MEPRx_Buffers;
+//
+Runable.OutputLevel                  = 1;
+Runable.MEPBuffers                   = 4;           // concurrently built events
+Runable.InitialMEPReqs               = 3;           // how many MEPs to send initially 
+Runable.maxMsForGetSpace             = 100;         // milliseconds to wait to get buffer memory from BM
+Runable.partitionID                  = @OnlineEnv.PartitionID;
+Runable.partitionName                = @OnlineEnv.PartitionName;
+Runable.partitionBuffers             = @OnlineEnv.PartitionBuffers;
+Runable.MEPBufSize                   = 4097152;     // how much memory to allocate for an event 1 MB (large!!)
+Runable.sockBuf                      = 30000000;    // this must be supported by the kernel! 
+Runable.refCount                     = 2;
+Runable.maxEventAge                  = 10000000;    // (us) - put at least 10000, 0 to switch off
+Runable.MEPRecvTimeout               = 10000000;    // (us) to wait in select call for new packet
+Runable.alwaysSendMEPReq             = true;        // always send a MEPReq for any incomplete packet
+Runable.createDAQErrorMEP            = false;       // do not create a summary bank about event-building errors
+Runable.resetCountersOnRunChange     = true;        // reset all counters and histograms when a run-change is seen
+//
+Runable.nameLiveBuf                  = @OnlineEnv.MEPRx_Output;
+Runable.nameOverflowBuf              = "";
+Runable.overflow                     = false;
+//Runable.ethInterface               = 0;        // interface number for data input eth"0" eth"1" etc...
+Runable.rxIPAddr                     = "$IP_DATAINTERFACE";
+Runable.IPSrc                        = @OnlineEnv.Tell1Boards;
+//Runable.rxIPAddr                   = "0.0.0.0";
+Runable.IPNameOdin                   = @OnlineEnv.ODIN_IP;
+//
+MonitorSvc.CounterUpdateInterval     = 5;
+#include "$STATIC_OPTS/MessageSvc.opts"

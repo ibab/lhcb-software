@@ -1,0 +1,73 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+#include "$INFO_OPTIONS"
+
+ApplicationMgr.ExtSvc               += {"MonitorSvc",
+					"AdderSvc/GauchoHistAdder",
+					"AdderSvc/GauchoCountAdder",
+					"AdderSvc/MEPrxHistAdder",
+					"AdderSvc/MEPrxCountAdder",
+					"AdderSvc/EVTProdCountAdder",
+					"AdderSvc/DiskWRCountAdder",
+					"AdderSvc/OverflowAdder",
+                                        "BusySvc"
+					};
+
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+
+Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
+
+MessageSvc.fifoPath                  = "$LOGFIFO";
+MessageSvc.LoggerOnly                = true;  // Set to false for stdout
+MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+HistogramPersistencySvc.Warnings     = false;
+
+GauchoHistAdder.MyName               = "<node>_GauchoJob";
+GauchoHistAdder.TaskPattern          = "<node>_GauchoJob_";
+GauchoHistAdder.ServicePattern       = "MON_<node>_GauchoJob_(.*)/Histos/";
+GauchoHistAdder.AdderClass           = "hists";
+
+GauchoCountAdder.MyName              = "<node>_GauchoJob";
+GauchoCountAdder.TaskPattern         = "<node>_GauchoJob_";
+GauchoCountAdder.ServicePattern      = "MON_<node>_GauchoJob_(.*)/Counter/";
+GauchoCountAdder.AdderClass          = "Counter";
+
+OverflowAdder.MyName                 = "<node>_OverflowWr";
+OverflowAdder.TaskPattern            = "<node>_OverflowWr_";
+OverflowAdder.ServicePattern         = "MON_<node>_OverflowWr_(.*)/Counter/";
+OverflowAdder.AdderClass             = "Counter";
+
+MEPrxHistAdder.MyName                = "<node>_MEPrx";
+MEPrxHistAdder.ServicePattern        = "MON_<node>_MEPrx_(.*)/Histos/";
+MEPrxHistAdder.TaskPattern           = "<node>_MEPRx_";
+MEPrxHistAdder.AdderClass            = "hists";
+
+MEPrxCountAdder.MyName               = "<node>_MEPrx";
+MEPrxCountAdder.ServicePattern       = "MON_<node>_MEPrx_(.*)/Counter/";
+MEPrxCountAdder.TaskPattern          = "<node>_MEPRx_";
+MEPrxCountAdder.AdderClass           = "Counter";
+
+EVTProdCountAdder.MyName             = "<node>_EVTProd";
+EVTProdCountAdder.ServicePattern     = "MON_<node>_EvtProd_(.*)/Counter/";
+EVTProdCountAdder.TaskPattern        = "<node>_EVTProd_";
+EVTProdCountAdder.AdderClass         = "Counter";
+
+DiskWRCountAdder.MyName              = "<node>_DiskWR";
+DiskWRCountAdder.ServicePattern      = "MON_<node>_DiskWR_(.*)/Counter/";
+DiskWRCountAdder.TaskPattern         = "<node>_DiskWR_";
+DiskWRCountAdder.AdderClass          = "Counter";
+
+MEPrxCountAdder.ReceiveTimeout       = 2;
+GauchoHistAdder.ReceiveTimeout       = 3;
+GauchoCountAdder.ReceiveTimeout      = 3;
+MEPrxHistAdder.ReceiveTimeout        = 3;
+EVTProdCountAdder.ReceiveTimeout     = 3;
+DiskWRCountAdder.ReceiveTimeout      = 2;
+OverflowAdder.ReceiveTimeout         = 3;
+
+BusySvc.BogusMips                    = 0.0;
+MonitorSvc.CounterUpdateInterval     = 5;

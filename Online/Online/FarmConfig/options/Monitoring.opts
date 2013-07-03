@@ -1,0 +1,4 @@
+ApplicationMgr.ExtSvc               += { "MonitorSvc/MonitorSvc" };
+MonitorSvc.UniqueServiceNames        = 1;
+MonitorSvc.ExpandCounterServices     = 1;
+MonitorSvc.ExpandNameInfix           = "<proc>/";

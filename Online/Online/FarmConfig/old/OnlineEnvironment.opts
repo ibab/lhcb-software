@@ -1,0 +1,7 @@
+#pragma print off
+OnlineEnv.PartitionID       = 333;
+OnlineEnv.PartitionName     = "LHCb";
+OnlineEnv.OutputLevel        = 4;
+OnlineEnv.DeferredRuns       = {"*"};
+OnlineEnv.passThroughDelay   = 0;
+OnlineEnv.AcceptRate         = 0.00001;

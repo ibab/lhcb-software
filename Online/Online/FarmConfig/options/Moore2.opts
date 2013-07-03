@@ -1,0 +1,6 @@
+#include "$STATIC_OPTS/Moore_Passthrough.opts"
+MEPManager.Buffers                   = @OnlineEnv.Moore2_Buffers;
+Merger.Buffer                        = @OnlineEnv.Moore2_Output;
+EventSelector.Decode                 = false;  // Reading MDF banks from MBM. No decoding necessary
+EventSelector.Input                  = @OnlineEnv.Moore2_Input;
+EventSelector.REQ1                   = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
