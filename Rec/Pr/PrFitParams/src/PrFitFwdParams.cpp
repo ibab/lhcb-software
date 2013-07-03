@@ -156,8 +156,8 @@ StatusCode PrFitFwdParams::execute() {
   LHCb::MCParticle* myMCPart;
   xSeed = 0.;
 
-  double zMagnet;
-  double xMagnet;
+  double zMagnet = 0.0;
+  double xMagnet = 0.0;
 
   for ( pItr = partCtnr->begin(); partCtnr->end() != pItr; pItr++ ) {
     myMCPart = *pItr;
