@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-07-03 - Michel De Cian
+ - Fix uninitialised variable in TrackMonitor.cpp
+
 ! 2013-06-14 - Marco Cattaneo
  - Fix another gc48 warning (remove also some unnecessary Boost includes)
 

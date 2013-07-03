@@ -237,7 +237,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(nUTHits, type+"/117", "# UT hits",  -0.5, 10.5 ,11);
   
   size_t numoutliers(0) ;
-  HitType mtype ;
+  HitType mtype = VeloR; // initialize to avoid compiler warning
   if( track.nodes().size()>0 ) {
     LHCb::Track::ConstNodeRange nodes = track.nodes() ;
     for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
