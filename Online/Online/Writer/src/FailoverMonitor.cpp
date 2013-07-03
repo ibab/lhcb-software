@@ -30,12 +30,10 @@ using namespace LHCb;
 FailoverMonitor::FailoverMonitor(std::string &serverAddr, int serverPort,
   Connection *conn, MsgStream *log)
 {
-  int ret;
-
+  int ret = -1;
   m_log = new MsgStream(*log);
   m_conn = conn;
   m_stopUrgently = false;
-
   m_currAddr.sin_family = AF_INET;
   m_currAddr.sin_port = htons(serverPort);
 
