@@ -263,8 +263,8 @@ int upic_key_action (unsigned int /* event */, void*)
 //---------------------------------------------------------------------------
 {
   Menu* m = Sys.menu.cur;
-  Page* d;
-  Item* i;
+  Page* d = 0;
+  Item* i = 0;
   Routine action;
 
   if (!m || !(d = m->page.cur) || !(i = d->item.cur)) return UPI_SS_INVMENU;
@@ -627,8 +627,7 @@ int upic_key_action (unsigned int /* event */, void*)
     if (Moving_window)    {
       Moving_window = 0;
       if ((m->condition & CALL_ON_DRAG))  {
-        if (m->callback) (*m->callback)(m->id, i->id,
-          CALL_ON_DRAG, m->arg);
+        if (m->callback) (*m->callback)(m->id,i->id,CALL_ON_DRAG,m->arg);
       }
     }
     else   {
