@@ -61,7 +61,8 @@ XmString str;
 
 void set_something(w, resource, value)
     Widget w;
-    char *resource, *value;
+    char *resource;
+    void *value;
 {
     Arg al[1];
 	int free = 0;
@@ -73,7 +74,7 @@ DISABLE_AST
 		(!strcmp(resource,XmNselectionLabelString)) )
 	{
 		free = 1;
-		value = (char *)get_str(value);
+		value = get_str(value);
 	}
     XtSetArg(al[0], resource, value);
     XtSetValues(w, al, 1);
@@ -93,7 +94,8 @@ ENABLE_AST
 
 void get_something(w, resource, value)
     Widget w;
-    char *resource, *value;
+    char *resource;
+    void *value;
 {
 
     Arg al[1];
