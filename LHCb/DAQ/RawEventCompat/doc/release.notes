@@ -4,6 +4,7 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+!========================= RawEventCompat v1r0 2013-07-03 =========================
 ! 2013-06-21 - Rob Lambert
  - New features to clean up extra banks. 
  - Tests for DoD and tests for new features which can clean up extra banks
