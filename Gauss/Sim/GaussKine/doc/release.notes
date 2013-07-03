@@ -4,6 +4,10 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-07-03 - Patrick Robbe
+ - GenerationToSimulation.cpp: select switch off of G4 printout for 
+   unknown PDG Ids from the algorithm message service output level
+
 !========================= GaussKine v6r2 2013-06-27 =========================
 ! 2013-05-31 - Patrick Robbe
  - GenerationToSimulation.cpp: switch off G4 printout of unknown PDG ID
