@@ -220,53 +220,55 @@ StatusCode LHCb::FmcMessageSvc::finalize()  {
 // msg = the message string
 void LHCb::FmcMessageSvc::report(int typ,const std::string& src,const std::string& msg)
 {
-  const char *sl[8]={"[NIL]  ","[VERB] ","[DEBUG]","[INFO] ","[WARN] ","[ERROR]",
-               "[FATAL]", "[ALWAYS]"};
-  time_t now;
-  struct tm lNow;
-  char sNow[32];                                           /* Oct12-134923\0 */
-  char header[BUF_SZ/2];/* Oct12-134923[DEBUG]pcdom: psSrv(psSrv_0): main(): */
-  size_t msgLen=0;
-  size_t bufAvailLen=0;
-  std::string logMsg;
+  if ( typ < m_outputLevel ) return;
+  else if ( typ==MSG::ALWAYS && !m_printAlways ) return;
+  else {
+    const char *sl[8]={"[NIL]  ","[VERB] ","[DEBUG]","[INFO] ","[WARN] ","[ERROR]",
+		       "[FATAL]", "[ALWAYS]"};
+    time_t now;
+    struct tm lNow;
+    char sNow[32];                                           /* Oct12-134923\0 */
+    char header[BUF_SZ/2];/* Oct12-134923[DEBUG]pcdom: psSrv(psSrv_0): main(): */
+    size_t msgLen=0;
+    size_t bufAvailLen=0;
+    std::string logMsg;
 
-  /*-------------------------------------------------------------------------*/
-  /* time string */
-  now=time(NULL);
-  localtime_r(&now,&lNow);
-  strftime(sNow,sizeof(sNow),"%b%d-%H%M%S",&lNow);
-  sNow[sizeof(sNow)-1] = 0;
-  /*-------------------------------------------------------------------------*/
-  /* compose message header */
-  typ = (typ>int(sizeof(sl)/sizeof(sl[0]))) ? (sizeof(sl)/sizeof(sl[0]))-1 : (typ<0 ? 0 : typ);
-  snprintf(header,BUF_SZ/2,"%s%s%s: %s(%s): %s: ",sNow,sl[typ],RTL::nodeNameShort().c_str(),
-           getPName(),RTL::processName().c_str(),src.c_str());
-  /* NULL-terminate header if truncated */
-  if(!memchr(header,0,BUF_SZ/2))header[BUF_SZ/2-1]='\0';
-  /*-------------------------------------------------------------------------*/
-  msgLen=msg.size();
-  bufAvailLen=BUF_SZ-2-strlen(header);                           /* -2: \n\0 */
-  /*-------------------------------------------------------------------------*/
-  for(int i=0;i*bufAvailLen<msgLen;i++)  {
-    int tryC;
-    struct timespec delay={0,1000000};                            /* 0.001 s */
-    logMsg=header+msg.substr(i*bufAvailLen,bufAvailLen)+"\n";
-    for(tryC=0;tryC<m_tryN;tryC++)    {
-      int written=write(fifoFD,logMsg.c_str(),logMsg.size());
-      if(written!=-1||errno!=EAGAIN)break;
-      nanosleep(&delay,NULL);
-      delay.tv_sec*=2;
-      delay.tv_nsec*=2;
-      if(delay.tv_nsec>999999999){delay.tv_sec+=1;delay.tv_nsec-=1000000000;}
+    /*-------------------------------------------------------------------------*/
+    /* time string */
+    now=time(NULL);
+    localtime_r(&now,&lNow);
+    strftime(sNow,sizeof(sNow),"%b%d-%H%M%S",&lNow);
+    sNow[sizeof(sNow)-1] = 0;
+    /*-------------------------------------------------------------------------*/
+    /* compose message header */
+    typ = (typ>int(sizeof(sl)/sizeof(sl[0]))) ? (sizeof(sl)/sizeof(sl[0]))-1 : (typ<0 ? 0 : typ);
+    snprintf(header,BUF_SZ/2,"%s%s%s: %s(%s): %s: ",sNow,sl[typ],RTL::nodeNameShort().c_str(),
+	     getPName(),RTL::processName().c_str(),src.c_str());
+    /* NULL-terminate header if truncated */
+    if(!memchr(header,0,BUF_SZ/2))header[BUF_SZ/2-1]='\0';
+    /*-------------------------------------------------------------------------*/
+    msgLen=msg.size();
+    bufAvailLen=BUF_SZ-2-strlen(header);                           /* -2: \n\0 */
+    /*-------------------------------------------------------------------------*/
+    for(int i=0;i*bufAvailLen<msgLen;i++)  {
+      int tryC;
+      struct timespec delay={0,1000000};                            /* 0.001 s */
+      logMsg=header+msg.substr(i*bufAvailLen,bufAvailLen)+"\n";
+      for(tryC=0;tryC<m_tryN;tryC++)    {
+	int written=write(fifoFD,logMsg.c_str(),logMsg.size());
+	if(written!=-1||errno!=EAGAIN)break;
+	nanosleep(&delay,NULL);
+	delay.tv_sec*=2;
+	delay.tv_nsec*=2;
+	if(delay.tv_nsec>999999999){delay.tv_sec+=1;delay.tv_nsec-=1000000000;}
+      }
+      if(tryC==m_tryN)    {
+	dropped=true;
+	droppedN++;
+      }
+      else dropped=false;
     }
-    if(tryC==m_tryN)    {
-      dropped=true;
-      droppedN++;
-    }
-    else dropped=false;
   }
-  /*-------------------------------------------------------------------------*/
-  return;
 }
 
 /*****************************************************************************/

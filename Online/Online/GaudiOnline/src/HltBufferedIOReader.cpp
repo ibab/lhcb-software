@@ -495,7 +495,7 @@ StatusCode HltBufferedIOReader::i_run()  {
 	}
         else if (file_handle)   {
           // undo reading of the first integer before saving rest of file
-          ::lseek(file_handle, -sizeof(evt_size), SEEK_CUR);
+          ::lseek(file_handle, -3*sizeof(int), SEEK_CUR);
         }
       }
     }
