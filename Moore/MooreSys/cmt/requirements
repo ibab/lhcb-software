@@ -1,19 +1,22 @@
 package MooreSys
-version           v20r1p1
+version           v20r2
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v20r1p1    Hlt
+use  Moore               v20r2      Hlt
 use  IndependenceTests   v1r4       Hlt
 use  HltMonitor          v1r2	    Hlt   # Diego Martinez
-use  Swimming            v3r0	    Phys  # Nick Torr
+use  Swimming            v3r0p1     Phys  # Nick Torr
 use  L0App               v1r0       L0    # Rob Lambert
 
+#Temporary until it makes it to the full stack:
 
-# Bug fixes on top of LHCb v35r4 release stack
+use RawEventCompat       v1r0       DAQ   # Rob Lambert
+
+# Bug fixes on top of LHCb v36r0 release stack
 
 
 # Declare this as a container package

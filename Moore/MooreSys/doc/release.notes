@@ -3,7 +3,17 @@ Package     : MooreSys
 Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
 
-Add L0App to handle L0 emulation
+
+</PRE><H1><A NAME=v20r2>2013-07-03 Moore v20r2</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v36r0 stack. Depends on Rec v15r0 via Phys v16r5. Based on Gaudi v23r8.
+
+New packages:
+   . Add L0/L0App to handle L0 emulation, see task #42380
+   . DAQ/RawEventCompat, (depends on new DBase package) to juggle around raw events.
+
+The Project structure has been re-arranged. Now we have a different definition of the content of LHCb, Lbcom. Lbcom is now included directly in Rec.
+
+There are minor changes in this version to address compilation on slc6 gcc47. See task #42876. This HLT version replaces v20r1p1 as the main development version.
 
 </PRE><H1><A NAME=v20r1p1>2013-05-16 Moore v20r1p1</A></H1><PRE>
 Moore/HLT LS1 development version. LHCb v35r5 stack. Depends on Rec v14r5 via Phys v16r5. Based on Gaudi v23r7.
