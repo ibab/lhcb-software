@@ -4,6 +4,7 @@
 ! Purpose     : An LHCb application to run L0 Emulation
 !-----------------------------------------------------------------------------
 
+!========================= L0App v1r0 2013-07-03 =========================
 ! 2013-06-07 - Rob Lambert
  - Tests added. First working version of this application.
  - Possible problem with processing on the real data, some errors about cabling layouts, need consultation with Julien.
