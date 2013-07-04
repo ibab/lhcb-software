@@ -3,6 +3,8 @@
 ! Responsible : Patrick Koppenburg, Gerhard Raven
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
+
+!========================= HltSettings v6r1 2013-07-04 =========================
 ! 2013-05-22 - Sebastian Neubert
  - Added new Settings for running with VeloTT tracking lines
 
