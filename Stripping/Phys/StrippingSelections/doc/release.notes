@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+!========================= StrippingSelections v3r26 2013-07-04 =========================
+
 ! 2013-07-01 - Stefano Perazzini
  - Updated tests/test_allstreams_instantiation.py and tests/test_stream_output_locations.py
  
