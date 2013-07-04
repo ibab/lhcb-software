@@ -14,6 +14,8 @@ Summary of changes:
 
 . There are minor changes in this version to address compilation on slc6 gcc47. See task #42876. This HLT version replaced v20r1p1 as the main development version.
 
+. A problem with warnings on slc6 has been fixed, see task #44041, requiring Kernel/SelectionLine to temporarily be absorbed here.
+
 . VeloTT lines have been added, there may be some residual independence problems between lines when run in parallel with VeloTT.
 
 For more information and links to changesets, see:
