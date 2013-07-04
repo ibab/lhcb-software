@@ -63,7 +63,7 @@ def WhereAll(bank,version,locations=None,recodict=None):
         return [loc]
     else:
         return loc
-    
+
 def WhereBest(bank,version,locations=None,recodict=None):
     """Return one location, where best to find a given bank in a given processing"""
     return WhereAll(bank,version,locations,recodict)[0]
@@ -90,7 +90,7 @@ def ReverseDict(version,locations=None,recodict=None):
                 reversed[aloc].append(key)
             else:
                 reversed[aloc]=[key]
-    
+
     return reversed
 
 def RecombineEventByMap(version,regex=".*",DoD=True, locations=None, recodict=None):
@@ -123,7 +123,7 @@ def RecombineEventByMap(version,regex=".*",DoD=True, locations=None, recodict=No
     for abank in locations[version]:
         if re.match(regex,abank):
             toCopy[abank]=WhereBest(abank,version,locations,recodict)
-    
+
     myCombiner.RawBanksToCopy=toCopy
 
     #configure DoD if required
@@ -173,7 +173,7 @@ class RawEventFormatConf(ConfigurableUser):
         , "RecoDict" : None #which reco version goes to which RawEvent version
         }
     _propertyDocDct={
-        "Locations" : "which banks have been where, loaded from a databse in RawEventFormat in DBASE." 
+        "Locations" : "which banks have been where, loaded from a databse in RawEventFormat in DBASE."
         , "RecoDict" : "which reco version goes to which RawEvent version, loaded from a database in RawEventFormat in DBASE."
         }
     def forceLoad(self):
@@ -186,7 +186,7 @@ class RawEventFormatConf(ConfigurableUser):
             raise ImportError("No RawEventFormat module found, needed for RawEventFormatConf, unless you specify the raw event location dictionaries explicitly")
         self.setProp("Locations",RawEventFormat.Raw_location_db)
         self.setProp("RecoDict",RawEventFormat.Reco_dict_db)
-        
+
     def loadIfRequired(self):
         """
         Only take the dictionary from the DB if it hasn't been explicitly set
@@ -201,12 +201,12 @@ class RawEventFormatConf(ConfigurableUser):
             self.setProp("Locations",RawEventFormat.Raw_location_db)
         if not self.isPropertySet("RecoDict"):
             self.setProp("RecoDict",RawEventFormat.Reco_dict_db)
-        
+
     def __apply_configuration__(self):
         #don't do anything if explicitly configured
         print "############ CONFIGURING RawEventFormatConf!! ###############"
         self.loadIfRequired()
-        
+
 
 
 ####################################################
@@ -215,10 +215,10 @@ class RawEventFormatConf(ConfigurableUser):
 class RecombineRawEvent(ConfigurableUser):
     """A simple configurable to add the raw event recreation to the DoD service
     Only used to recreate the original raw event location for the trigger."""
-    #not sure if this is the correct specification here... 
+    #not sure if this is the correct specification here...
     #__used_configurables__ = [RawEventFormat]
     __queried_configurables__ = [RawEventFormatConf]
-    
+
     __slots__ = {
         "Method" : "Simple"  #Simple or Map combiner
         , "Regex" : ".*"  #locations or RawBanks to copy.
@@ -229,18 +229,21 @@ class RecombineRawEvent(ConfigurableUser):
         , "Regex" : "locations or RawBanks to copy. A regular expression such that you can ignore certain locations or bank names. Default .*"  #locations or RawBanks to copy.
         , "Version" : "Version to copy from, float. Default 2.0" #version to copy from
         }
-    
+
     __known_methods__={
         "Simple": RecombineWholeEvent,
         "Map" : RecombineEventByMap
         }
-    
+
     def __apply_configuration__(self):
         #check arguments
         if self.getProp("Method") not in self.__known_methods__:
             raise KeyError("You have asked for an undefined method ", self.getProp("Method"))
         if self.getProp("Version") in [0.0,1.0]:
             raise KeyError("Versions 0.0 and 1.0 anyway have a combined raw event... why would you want to do this? ", self.getProp("Version"))
+        #make sure the dictionaries are there... Hack! %TODO -> Remove this!
+        RawEventFormatConf().loadIfRequired()
+        #then get them
         loc,rec=_getDict()
         #call correct method
         self.__known_methods__[self.getProp("Method")](
@@ -254,14 +257,14 @@ class RawEventJuggler(ConfigurableUser):
     """
     A complex configurable ...
     Juggle around raw event locations, will split up and/or combine anything from anywhere to anywhere else using maps.
-    
+
     Aimed for use during the juggling currently performed in Brunel, and for future use in MC between different Moore versions
 
     Can configure writers, sequecers and/or DoD
-    
+
     """
     __queried_configurables__ = [RawEventFormatConf]
-    
+
     __slots__ = {
         "Input" : None  #Raw event location to start with
         , "Output" : None #Raw Event location to go to
@@ -278,7 +281,7 @@ class RawEventJuggler(ConfigurableUser):
         , "TCKReplacePattern" : "#TCK#"
         , "GenericReplacePatterns" : {}
         }
-    
+
     def __replaceWrap__(self, aloc):
         #print "looking at", aloc
         for pattern in self.getProp("GenericReplacePatterns"):
@@ -287,24 +290,24 @@ class RawEventJuggler(ConfigurableUser):
                 #print "replacing", pattern
                 return aloc.replace(pattern,self.getProp("GenericReplacePatterns")[pattern])
         return aloc
-    
+
     def __opWrap__(self,loc):
         return [self.__replaceWrap__(aloc) +self.getProp("Depth") for aloc in loc]
-    
+
     def __apply_configuration__(self):
         #make sure the dictionaries are there... Hack! %TODO -> Remove this!
         RawEventFormatConf().loadIfRequired()
         #then get them ...
         locs,rec=_getDict()
         added_locations=[]
-        
+
         if not self.isPropertySet("Output") or  not self.isPropertySet("Input"):
             raise AttributeError("You must set bith the input and the output version, this can be a version number (float, int) or a name, see: "+rec.__str__())
-        
+
         output_locations=ReverseDict(self.getProp("Output"),locs,rec)
         input_locations=ReverseDict(self.getProp("Input"),locs,rec)
         #check if a Trigger TCK is needed
-        
+
         if len([loc for loc in input_locations if self.getProp("TCKReplacePattern") in loc]) or len([loc for loc in output_locations if self.getProp("TCKReplacePattern") in loc]):
             if not self.isPropertySet("TCK"):
                 raise AttributeError("The raw event version you specified requires a TCK to be given. Set RawEventJuggler().TCK")
@@ -312,11 +315,11 @@ class RawEventJuggler(ConfigurableUser):
                 newdict=self.getProp("GenericReplacePatterns")
                 newdict[self.getProp("TCKReplacePattern")]=self.getProp("TCK")
                 self.setProp("GenericReplacePatterns",newdict)
-        
+
         killBefore=[]
         loc_to_alg_dict={}
         killAfter=[]
-        
+
         ######################################
         # Stage 1: KillBefore if requested
         ######################################
@@ -336,7 +339,7 @@ class RawEventJuggler(ConfigurableUser):
                 killBefore.append(bk)
                 bk.RawEventLocations=[loc]
                 bk.BankTypes=killBanks
-        
+
         ##################################
         # The part which does the juggling
         ##################################
@@ -356,18 +359,18 @@ class RawEventJuggler(ConfigurableUser):
             #if banks need to be juggled, tell me how to do it, sequencer or DoD
             if self.getProp("DataOnDemand") and self.isPropertySet("Sequencer"):
                 raise AttributeError("You asked for DoD and also gave a sequencer, I can't do both at the same time")
-            
+
             #if KillBanks or KillNodes... has been requested, I can't use DoD, it's unsafe. I don't know what's "before" and "after"
             if self.getProp("DataOnDemand")  and (self.getProp("KillExtraNodes") or self.isPropertySet("KillInputBanksBefore") or self.isPropertySet("KillInputBanksAfter") or self.getProp("KillExtraBanks")):
                 raise AttributeError("You have asked for some killing of banks, and asked for DoD, which is not a safe way to run. Either cope with the extra banks, or use a sequencer instead of DoD")
-            
+
             #raise import error if you don't have the correct requirements
             from Configurables import RawEventMapCombiner, EventNodeKiller, bankKiller
-            
+
             ###############################################
             # Stage 3: Recombine banks from given locations
             ###############################################
-            
+
             #for each new location, add a RawEventMapCombiner to the DoD or to the sequencer
             loc_to_alg_dict={}
             for loc in output_locations:
@@ -380,21 +383,21 @@ class RawEventJuggler(ConfigurableUser):
                     loc_to_alg_dict[wloc]=RawEventMapCombiner(("create_"+wloc.replace("/","_")).replace("__","_").rstrip("_"))
                     loc_to_alg_dict[wloc].OutputRawEventLocation=wloc
                     loc_to_alg_dict[wloc].RawBanksToCopy={}
-                    
+
                     added_locations.append(wloc)
-                    
+
                     for abank in output_locations[loc]:
                         if abank not in locs[self.getProp("Input")]:
                             print "#WARNING, nowhere to copy "+abank+" from, skipping"
                             continue
                         loc_to_alg_dict[wloc].RawBanksToCopy[abank]=self.__replaceWrap__(WhereBest(abank,self.getProp("Input"),locs,rec))
-            
-            
+
+
             ###############################################
             # Stage 4: Clean up, kill after if requested
             ###############################################
-            
-            
+
+
             killAfter=[]
             if self.isPropertySet("KillInputBanksAfter") or self.getProp("KillExtraBanks"):
                 import re
@@ -412,7 +415,7 @@ class RawEventJuggler(ConfigurableUser):
                     killAfter.append(bk)
                     bk.RawEventLocations=[loc]
                     bk.BankTypes=killBanks
-            
+
             #for each missing location, kill that location?
             if self.getProp("KillExtraNodes"):
                 if len([loc for loc in input_locations if loc not in output_locations])>0:
@@ -422,10 +425,10 @@ class RawEventJuggler(ConfigurableUser):
                     for loc in input_locations:
                         if loc not in output_locations:
                             enk.Nodes.append(self.__replaceWrap__(loc))
-            
+
         elif self.isPropertySet("KillInputBanksAfter") or self.getProp("KillExtraNodes") or self.isPropertySet("KillExtraBanks"):
             raise AttributeError("You've asked to kill something from the input *after* copying, but you aren't actually doing any copying. Please kill them yourself without this configurable, or use KillInputBanksBefore!")
-        
+
         ###############################################
         # Stage 5: Add to sequence or DoD
         ###############################################
@@ -442,7 +445,7 @@ class RawEventJuggler(ConfigurableUser):
                 self.getProp("Sequencer").Members.append(loc_to_alg_dict[loc])
             for alg in killAfter:
                 self.getProp("Sequencer").Members.append(alg)
-            
+
         ###############################################
         # Stage 6: now handle the writers if appended
         ###############################################
@@ -450,5 +453,5 @@ class RawEventJuggler(ConfigurableUser):
             self.getProp("WriterOptItemList").OptItemList+=self.__opWrap__(output_locations.keys())
         if self.isPropertySet("WriterItemList"):
             self.getProp("WriterItemList").ItemList+=self.__opWrap__(output_locations.keys())
-        
-        
+
+

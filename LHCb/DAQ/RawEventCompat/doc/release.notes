@@ -5,8 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !========================= RawEventCompat v1r0 2013-07-03 =========================
+! 2013-07-04 - Rob Lambert
+ - LoadIfRequired also for RecombineRawEvent
+
 ! 2013-06-21 - Rob Lambert
- - New features to clean up extra banks. 
+ - New features to clean up extra banks.
  - Tests for DoD and tests for new features which can clean up extra banks
 
 ! 2013-06-21 - Rob Lambert
@@ -19,7 +22,7 @@
 ! 2013-06-11 - Rob Lambert
  - Added test suite, unit tests now check all functions and configurables
    technically do what is expected.
- - gaudirun test checks that a DST with re-arranged RawEvent can be 
+ - gaudirun test checks that a DST with re-arranged RawEvent can be
    created and read in a second validator test.
 
 ! 2013-06-10 - Rob Lambert
