@@ -5,6 +5,11 @@
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2013-07-04 - Sebastian Neubert
+ - Protect timing histograms against log(dt=0) entires.
+   If the line finishes quicker than the timing resolution of the system call (1mus)
+   then the lowest bin of the histo is filled 
+
 !========================= SelectionLine v1r0p4 2013-06-13 =========================
 
 ! 2013-05-14 - Chris Jones

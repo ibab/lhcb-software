@@ -269,7 +269,7 @@ StatusCode Selection::Line::initialize()
 
   //== Create the monitoring histograms
   m_errorHisto = book1D("error",name()+" error",-0.5,7.5,8);
-  m_timeHisto  = book1D("walltime",name()+" log(wall time/ms)",-3,6);
+  m_timeHisto  = book1D("walltime",name()+" log(wall time/ms)",m_timeHistoLowerBound,6);
   m_stepHisto  = book1D("rejection stage", name()+ " rejection stage",
                         -0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
   m_candHisto  = bookProfile1D("candidates accepted", name()+" candidates accepted",
@@ -316,7 +316,7 @@ StatusCode Selection::Line::initialize()
 //=============================================================================
 StatusCode Selection::Line::execute() 
 {
-  const longlong startClock = System::currentTime( System::microSec );
+  const longlong startClock = System::currentTime( System::nanoSec );
 
   /// lock the context
   Gaudi::Utils::AlgContext lock1 ( this , contextSvc() ) ;
@@ -360,9 +360,12 @@ StatusCode Selection::Line::execute()
     if ( !accept ) break;
     report.setExecutionStage( i+1 );
   }
-  // plot the wall clock time spent...
-  const double elapsedTime = double(System::currentTime( System::microSec ) - startClock);
-  fill( m_timeHisto, log10(elapsedTime)-3 ,1.0); // convert to millisec
+  // plot the wall clock time spent..
+  const double elapsedTime = double(System::currentTime( System::nanoSec) - startClock);
+  // protect against 0 and convert nanosec --> to millisec
+  const double logElapsedTimeMS = elapsedTime > 0 ? log10(elapsedTime)-6 : m_timeHistoLowerBound;
+  
+  fill( m_timeHisto, logElapsedTimeMS ,1.0); // converted to millisec
   if (elapsedTime>m_slowThreshold) report.setErrorBits( report.errorBits() | 0x4 );
 
   // did not(yet) accept, but something bad happened...
@@ -409,6 +412,7 @@ StatusCode Selection::Line::execute()
     }
   }
   fill( m_stepHisto, std::distance(m_subAlgo.begin(),last), 1.0);
+  
   for ( SubAlgos::iterator i = m_subAlgo.begin(); i != last; ++i )
   {
     fill(m_candHisto,std::distance(m_subAlgo.begin(),i),numberOfCandidates(i->first),1.0);
