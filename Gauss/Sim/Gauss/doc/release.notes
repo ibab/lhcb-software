@@ -7,6 +7,10 @@
 ! 2013-07-02 - Paul Szczypka
  - QMTests: clear upgrade test expected stderr file. (empty file now)
 
+! 2013-07-04 - Patrick Robbe
+ - Set as unsupported the Pythia8 QMTests for 43900004, 42511100, 
+   42112002, 42112000, 40911011, 18412431, 28102062
+
 ! 2013-07-03 - Patrick Robbe
  - QMTests: reduce the number of events to 10 for Pythia8 tests, and 
    divide the time limit by 5

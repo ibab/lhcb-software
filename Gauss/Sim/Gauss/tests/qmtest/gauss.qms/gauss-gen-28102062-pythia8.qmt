@@ -20,7 +20,7 @@
 <argument name="use_temp_dir"><enumeral>false</enumeral></argument>
 <argument name="error_reference"><text/></argument>
 <argument name="environment"><set/></argument>
-<argument name="unsupported_platforms"><set/></argument>
+<argument name="unsupported_platforms"><set><text>.*</text></set></argument>
 <argument name="workdir"><text/></argument>
 <argument name="stderr"><text/></argument>
 <argument name="options"><text></text></argument>
