@@ -1,8 +1,57 @@
+! 2013-07-04 - Marco Clemencic (c5a1e30)
+
+ - Merge branch 'dev/cmake'
+
+   * dev/cmake:
+    commented out CMake-related "externals" in heptools-65.cmake
+    added test for System::currentTime
+    Fixed CFHEP-78: configurables created after applyConfigurableUser()
+    fixes to FindROOT.cmake imported from LHCbMasterclass
+    added .eclipse/ directories to .gitignore
+    Added exclusion patterns for the creation of the source tgz
+    fix mac osx arch detection
+    added the possibility to use the env variable BINARY_TAG
+    fixed some cppcheck warnings
+    Added ChangeLog to the .gitignore file
+    modifications in the gaudi_add_unit_test function
+    fixed heptools compatibility check if heptools is not used at all
+    Added protection in heptools-common if Boost_config_version is not defined.
+    Modified createProjVersHeader.py to understand only the LHCb, ATLAS and
+   plain version styles.
+
+   Conflicts:
+   GaudiPolicy/doc/release.notes
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7228
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2013-07-04 - Marco Clemencic (b1aa717)
+
+ - commented out CMake-related "externals" in heptools-65.cmake
+
+   CMake binary and modules should not be in the externals because they are 
+   needed to find the externals. This chicken and egg problem is easily solved
+   by separating the build infrastructure from the externals.
+
+
 ! 2013-06-25 - Marco Clemencic (1fa219a)
 
  - fixes to FindROOT.cmake imported from LHCbMasterclass
 
    
+
+! 2013-06-20 - Marco Clemencic (a9480de)
+
+ - use -Og when compiling in debug mode with gcc 4.8
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7227
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
 
 ! 2013-06-11 - Marco Clemencic (f916b68)
 
