@@ -27,11 +27,5 @@ export SUBFARM_OPTIONS=${DYNAMIC_OPTS}/${PARTITION_NAME}_${DIM_DNS_NODE}_HLT.opt
 #
 #
 #
-if test "${NBOFSLAVES}" = "0"
-then
-    . ../cmt/setup.x86_64-slc5-gcc46-dbg.vars;
-else
-    . ../cmt/setup.x86_64-slc5-gcc46-dbg.vars;
-fi;
 . ./preamble.sh;
 . ./${TASK_TYPE}.sh;
