@@ -4,7 +4,7 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
-!========================= RawEventCompat v1r0 2013-07-03 =========================
+!========================= RawEventCompat v1r0 2013-07-04 =========================
 ! 2013-07-04 - Rob Lambert
  - LoadIfRequired also for RecombineRawEvent
 
