@@ -4,7 +4,7 @@
 # Maintainer : Gerhard Raven 
 #============================================================================
 package           SelectionLine
-version           v1r0p4
+version           v1r0p5
 # Structure
 #============================================================================
 branches          cmt doc src Kernel
