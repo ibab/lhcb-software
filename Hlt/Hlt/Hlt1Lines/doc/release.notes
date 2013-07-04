@@ -5,6 +5,7 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Lines v7r1 2013-07-04 =========================
 ! 2013-05-21 - Sebastian Neubert
  - Added two new VeloTT tracking lines. 
    Should be used with Tf/PatVeloTT later than r156982
