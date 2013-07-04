@@ -33,7 +33,7 @@ selector = trackSelector ( algorithm )
 # protoparticle filter:
 fltr = protoFilter ( algorithm , ProtoParticleCALOFilter, 'Proton' )
 #fltr.Selection = [ "RequiresDet='RICH' ProbNNp>'0.125'" ]
-fltr.Selection = [ "ProbNNp>'0.021'" ]
+fltr.Selection = [ "ProbNNp>'0.02'" ]
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )

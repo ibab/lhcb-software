@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2013-07-04 - Chris Jones
+ - Update ANNPID Stable Common Particles with new cut values tuned for the
+   latest "MC12TuneV2" tuning.
+
 !========================= CommonParticles v8r13 2013-04-05 =========================
 
 ! 2013-03-29 - Jibo He

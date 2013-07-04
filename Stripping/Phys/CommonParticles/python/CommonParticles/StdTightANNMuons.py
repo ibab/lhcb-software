@@ -34,7 +34,7 @@ selector = trackSelector ( algorithm )
 # protoparticle filter:
 fltr = protoFilter ( algorithm , ProtoParticleMUONFilter, 'Muon' )
 #fltr.Selection = [ "RequiresDet='MUON' IsMuon=True ProbNNmu>'0.1'" ]
-fltr.Selection = [ "ProbNNmu>'0.1'" ]
+fltr.Selection = [ "ProbNNmu>'0.01'" ]
 
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )
