@@ -5,10 +5,10 @@
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= SelectionLine v1r0p5 2013-07-05 =========================
 ! 2013-07-05 - Sebastian Neubert
  - switch units of elapsed time back to microSec (had been set to nanoSec in v1r0p5)  
-
-!========================= SelectionLine v1r0p5 2013-07-04 =========================
+ - (caused every event to be marked as too slow, due to the factor of 1000)
 
 ! 2013-07-04 - Sebastian Neubert
  - Protect timing histograms against log(dt=0) entires.
