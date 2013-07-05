@@ -103,10 +103,15 @@ StatusCode MCTupleToolKinematic::fill( const LHCb::MCParticle*
       const LHCb::MCVertex * mcV = NULL;
       if ( !endVertices.empty() )
       {
-        mcV = endVertices.front(); // the first item, the other are discarded.
-      }
-      else
-      {
+        for ( SmartRefVector<LHCb::MCVertex>::const_iterator v =
+                endVertices.begin(); v != endVertices.end(); ++v ){
+          if( (*v)->type() == LHCb::MCVertex::DecayVertex || (*v)->type() == LHCb::MCVertex::OscillatedAndDecay 
+              || (*v)->type() == LHCb::MCVertex::HadronicInteraction ){
+            mcV = *v; 
+            break;
+          } 
+        }
+      }else{
         Warning( "No end vertices for " + prefix ).ignore();
       }
 
