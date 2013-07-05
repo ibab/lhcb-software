@@ -41,7 +41,7 @@ class GAUDI_API Particle2MCAssociatorBase : public extends1<GaudiTool,
                                                             IParticle2MCWeightedAssociator>
 {
 
-public:
+ public:
 
   /// Standard constructor
   Particle2MCAssociatorBase( const std::string& type,
@@ -51,39 +51,39 @@ public:
   virtual ~Particle2MCAssociatorBase( );
 
   virtual const LHCb::MCParticle*
-  relatedMCP(const LHCb::Particle*) const ;
+    relatedMCP(const LHCb::Particle*) const ;
 
   virtual const LHCb::MCParticle*
-  operator()(const LHCb::Particle*) const ;
+    operator()(const LHCb::Particle*) const ;
 
   virtual const LHCb::MCParticle*
-  relatedMCP(const LHCb::Particle*,
-             const std::string& mcParticleLocation) const ;
+    relatedMCP(const LHCb::Particle*,
+               const std::string& mcParticleLocation) const ;
 
   virtual const LHCb::MCParticle*
-  relatedMCP(const LHCb::Particle* particles,
-             const LHCb::MCParticle::ConstVector& mcParticles) const ;
+    relatedMCP(const LHCb::Particle* particles,
+               const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
   virtual const LHCb::MCParticle*
-  relatedMCP(const LHCb::Particle* particles,
-             const LHCb::MCParticle::Container& mcParticles) const ;
+    relatedMCP(const LHCb::Particle* particles,
+               const LHCb::MCParticle::Container& mcParticles) const ;
 
   virtual Particle2MCParticle::ToVector
-  relatedMCPs(const LHCb::Particle* particle) const ;
+    relatedMCPs(const LHCb::Particle* particle) const ;
 
   virtual Particle2MCParticle::ToVector
-  relatedMCPs(const LHCb::Particle* particle,
-              const std::string& mcParticleLocation) const ;
+    relatedMCPs(const LHCb::Particle* particle,
+                const std::string& mcParticleLocation) const ;
 
   virtual Particle2MCParticle::ToVector
-  relatedMCPs(const LHCb::Particle* particle,
-              const LHCb::MCParticle::Container& mcParticles) const ;
+    relatedMCPs(const LHCb::Particle* particle,
+                const LHCb::MCParticle::Container& mcParticles) const ;
 
   virtual Particle2MCParticle::ToVector
-  relatedMCPs(const LHCb::Particle* particle,
-              const LHCb::MCParticle::ConstVector& mcParticles) const ;
+    relatedMCPs(const LHCb::Particle* particle,
+                const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
-private:
+ private:
 
   /**
    *
@@ -121,21 +121,21 @@ private:
    * @date   2009-27-03
    **/
   virtual Particle2MCParticle::ToVector
-  relatedMCPsImpl(const LHCb::Particle* particle,
-                  const LHCb::MCParticle::ConstVector& mcParticles) const ;
+    relatedMCPsImpl(const LHCb::Particle* particle,
+                    const LHCb::MCParticle::ConstVector& mcParticles) const ;
 
   inline LHCb::MCParticle::Container*
-  i_MCParticles(const std::string& location) const
+    i_MCParticles(const std::string& location) const
   {
-    LHCb::MCParticle::Container * mcps = 
-      ( exist<LHCb::MCParticle::Container>(location) ?
-        get<LHCb::MCParticle::Container>(location) : NULL );
-    return mcps;
+    LHCb::MCParticle::Container * mcps =
+      getIfExists<LHCb::MCParticle::Container>(location,false);
+    return ( mcps ? mcps :
+             getIfExists<LHCb::MCParticle::Container>(location,true) );
   }
 
   inline Particle2MCParticle::ToVector
-  i_relatedMCPs(const LHCb::Particle* particle,
-                const std::string& mcParticleLocation) const
+    i_relatedMCPs(const LHCb::Particle* particle,
+                  const std::string& mcParticleLocation) const
   {
     LHCb::MCParticle::Container * mcps = i_MCParticles(mcParticleLocation);
     return ( mcps ?
@@ -144,28 +144,26 @@ private:
   }
 
   inline const LHCb::MCParticle*
-  i_bestMCPWithCheck(const Particle2MCParticle::ToVector& assoc) const
+    i_bestMCPWithCheck(const Particle2MCParticle::ToVector& assoc) const
   {
     return ( !assoc.empty() ? assoc.back().to() : NULL );
   }
 
   template <typename Iter>
-  Particle2MCParticle::ToVector
-  i_relatedMCPs( const LHCb::Particle* particle,
-                 Iter begin,
-                 Iter end     ) const
+    Particle2MCParticle::ToVector
+    i_relatedMCPs( const LHCb::Particle* particle,
+                   Iter begin,
+                   Iter end     ) const
   {
     Particle2MCParticle::ToVector associations =
-      relatedMCPsImpl(particle,
-                      LHCb::MCParticle::ConstVector(begin, end));
+      relatedMCPsImpl( particle, LHCb::MCParticle::ConstVector(begin,end) );
     i_normalise(associations);
     i_sort(associations);
     return associations;
   }
 
-
   inline void
-  i_normalise(Particle2MCParticle::ToVector& associations) const
+    i_normalise(Particle2MCParticle::ToVector& associations) const
   {
     const double weight_sum = std::accumulate( associations.begin(),
                                                associations.end(),
@@ -175,19 +173,19 @@ private:
           iAssoc!=associations.end(); ++iAssoc )
     {
       iAssoc->weight() /= weight_sum;
-    }    
+    }
   }
 
 
   inline void
-  i_sort(Particle2MCParticle::ToVector& associations) const
+    i_sort(Particle2MCParticle::ToVector& associations) const
   {
     std::stable_sort( associations.begin() ,
                       associations.end() ,
                       Particle2MCParticle::SortByWeight() ) ;
   }
 
-private:
+ private:
 
   std::string m_defMCLoc;
 

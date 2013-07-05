@@ -5,6 +5,9 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+! 2013-07-05 - Chris Jones
+ - Particle2MCAssociatorBase : Fix access to MCParticles when RootInTES is set.
+
 ! 2013-06-14 - Chris Jones
  - Add various missing virtual destructors, to silence gcc 4.8 warnings.
 

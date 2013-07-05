@@ -30,7 +30,7 @@ Particle2MCAssociatorBase::Particle2MCAssociatorBase( const std::string& type,
 const LHCb::MCParticle*
 Particle2MCAssociatorBase::relatedMCP(const LHCb::Particle* particle) const
 {
-  return i_bestMCPWithCheck(i_relatedMCPs(particle,m_defMCLoc) );
+  return i_bestMCPWithCheck( i_relatedMCPs(particle,m_defMCLoc) );
 }
 
 //=============================================================================
@@ -38,7 +38,7 @@ Particle2MCAssociatorBase::relatedMCP(const LHCb::Particle* particle) const
 const LHCb::MCParticle*
 Particle2MCAssociatorBase::operator()(const LHCb::Particle* particle) const
 {
-  return i_bestMCPWithCheck(i_relatedMCPs(particle,m_defMCLoc) );
+  return i_bestMCPWithCheck( i_relatedMCPs(particle,m_defMCLoc) );
 }
 
 //=============================================================================
