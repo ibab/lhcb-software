@@ -65,6 +65,7 @@ StatusCode BTaggingAnalysis::initialize() {
   if ( sc.isFailure() ) return sc;
 
   m_assoc = tool<IParticle2MCAssociator>("MCMatchObjP2MCRelator", this);
+
   if( !m_assoc ) {
     fatal() << "Unable to retrieve Link Associator tool"<<endreq;
     return StatusCode::FAILURE;
@@ -279,7 +280,7 @@ StatusCode BTaggingAnalysis::execute() {
     int bcat = -1;
     if(AXBS) if(m_bkgCategory) if( ! AXBS->isBasicParticle() ){
       bcat = (int) m_bkgCategory->category(AXBS);
-      debug() << "Result of BackgroundCategory is: " << bcat << endreq;
+      debug() << "Result of BackgroundCategory is: " << bcat << "signal m_BS: " << m_BS << endreq;
     }
     tuple -> column ("bkgCat", bcat);
   }
@@ -541,18 +542,20 @@ StatusCode BTaggingAnalysis::execute() {
     if (m_EnableMC) {
       float MCP= 0.0, MCPt= 0.0, MCPl=0.0, MCphi=-999.0, MCx= -999.0, MCy= -999.0, MCz= -999.0;
       long  MCID = 0, mothID= 0, ancID = 0, bFlag = 0, xFlag = 0, MC_OS_muon_type = -1;
-      
+      debug()<<" Going to look for associated MC particles "<<endreq;      
       const MCParticle* mcp = m_assoc->relatedMCP( axp );
       if( mcp ) {
+        MCID = mcp->particleID().pid();
+        debug()<< " Associated MCParticle PID="<<MCID<<endreq;
         MCP = mcp->momentum().P()/GeV;
         MCPt = mcp->pt()/GeV;
-        MCPl = mcp->momentum().Dot(m_BS->momentum())/GeV;
+        if(m_BS) MCPl = mcp->momentum().Dot(m_BS->momentum())/GeV;
         MCphi = mcp->momentum().phi();
-        MCID = mcp->particleID().pid();
-	
+        
         const MCParticle* mother = mcp->mother();
         if(mother) {
           mothID = mother->particleID().pid();
+          debug()<< " Associated Mother PID="<<mothID<<endreq;
           const SmartRefVector<MCVertex>& motherVtx = mother->endVertices();
           if(motherVtx.size()) {
             MCx = motherVtx.at(0)->position().x()/mm;
@@ -562,19 +565,21 @@ StatusCode BTaggingAnalysis::execute() {
         }
 
         const MCParticle* ancestor = m_util->originof(mcp) ;
-        ancID = ancestor->particleID().pid();
-        if( ancestor->particleID().hasBottom() ) {
-          bFlag = 1;  
-
-          if(m_BS) if( ancestor == m_BS ) {
-            bFlag = -1;
-            debug() <<" Warning: tag from signal! ID=" << mcp->particleID().pid() 
-                    <<" P="<< mcp->momentum().P() << endreq;
+        if (ancestor){          
+          ancID = ancestor->particleID().pid();
+          debug()<< " Associated ancestor PID="<<ancID<<endreq;
+          if( ancestor->particleID().hasBottom() ) {
+            bFlag = 1;            
+            if(m_BS) if( ancestor == m_BS ) {
+              bFlag = -1;
+              debug() <<" Warning: tag from signal! ID=" << mcp->particleID().pid() 
+                      <<" P="<< mcp->momentum().P() << endreq;
+            }
           }
+          if(m_BS) xFlag = m_util->comes_from_excitedB(m_BS, mcp);
+          if(xFlag) debug()<<" comes_from_excitedB="<< xFlag << endreq;
         }
-        if(m_BS) xFlag = m_util->comes_from_excitedB(m_BS, mcp);
-        if(xFlag) debug()<<" comes_from_excitedB="<< xFlag << endreq;
-
+        
         //Check direct mother of particle to see if it is the OSB. Excludes secondary OS muons.
         bool isTruePrimaryOS = (mcp->mother() && mcp->mother()->particleID().hasBottom());
         bool isTrueSecondaryOS = (mcp->mother() && mcp->mother()->mother() && mcp->mother()->mother()->particleID().hasBottom());
@@ -764,7 +769,7 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
       double var(0), ip(0), iperr(0);
       if(m_ChoosePV == "CheatPV") {//mc vertex
         debug()<<"CheatPV criteria";
-        if (m_EnableMC) {
+        if (m_EnableMC && m_BS) {
           var = fabs( m_BS->primaryVertex()->position().z() - (*iv)->position().z() );
           debug()<<" distance from true PV="<<var<<endreq;
         } else warning()<<"MC disable and try to use CheatPV -> Change ChoosePVCriterium!"<<endreq;
@@ -1086,10 +1091,8 @@ const ProtoParticle::ConstVector BTaggingAnalysis::tagevent (Tuple& tuple,
 
   tuple -> column ("Tag",     theTag->decision());
   tuple -> column ("Omega",   theTag->omega());
-  tuple -> column ("TagCat",  theTag->category());
   tuple -> column ("TagOS",   theTag->decisionOS());
   tuple -> column ("OmegaOS", theTag->omegaOS());
-  tuple -> column ("TagCatOS",theTag->categoryOS());
 
   debug()<<"looking at taggers --------------- "<<endreq;
   std::vector<float> tagtype, tagdecision, tagomega;

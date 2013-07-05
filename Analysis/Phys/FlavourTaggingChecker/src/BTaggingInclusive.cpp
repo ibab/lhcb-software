@@ -280,7 +280,7 @@ StatusCode BTaggingInclusive::finalize() {
     double omtag = wtag/(rtag+wtag);
     double eftag = (rtag+wtag)/nsele;                  // tagging efficiency
     double epsil = eftag*(1-2*omtag)*(1-2*omtag);      // effective efficiency
-    if(rtag<wtag) epsil= -epsil;
+    //    if(rtag<wtag) epsil= -epsil;  // Who wrote this ????
 
     rtt      += rtag;
     wtt      += wtag;

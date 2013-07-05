@@ -89,15 +89,24 @@ StatusCode BTaggingChecker::execute()
       P = (*ti)->taggedB();
       pmax=(*ti)->taggedB()->p();
       tagdecision = (*ti)->decision();
-      ix          = (*ti)->category();
-
+      ix = 0;
       if ( !tagdecision ) continue;
-
+      double omega=(*ti)->omega();
+      if(      omega > 0.40   ) ix=1;
+      else if( omega > 0.33   ) ix=2;
+      else if( omega > 0.26   ) ix=3;
+      else if( omega > 0.19   ) ix=4;
+      else                      ix=5;
       const std::vector<Tagger>& mytaggers = (*ti)->taggers();
+
       for ( std::vector<Tagger>::const_iterator itag = mytaggers.begin();
             itag != mytaggers.end(); ++itag )
-      {
+      {        
         const int taggdec = itag->decision();
+        /* 
+        if(taggdec==truetag) ++nrtag[(int) itag->type()];
+        else                 ++nwtag[(int) itag->type()];
+        */
         switch ( itag->type() ) 
         {
         case Tagger::OS_Muon    : (taggdec==truetag ? ++nrtag[1] : ++nwtag[1]); break;
@@ -106,11 +115,12 @@ StatusCode BTaggingChecker::execute()
         case Tagger::SS_Kaon    : (taggdec==truetag ? ++nrtag[4] : ++nwtag[4]); break;
         case Tagger::SS_Pion    : (taggdec==truetag ? ++nrtag[5] : ++nwtag[5]); break;
         case Tagger::VtxCharge  : (taggdec==truetag ? ++nrtag[6] : ++nwtag[6]); break;
+        case Tagger::OS_nnetKaon: (taggdec==truetag ? ++nrtag[7] : ++nwtag[7]); break;
+        case Tagger::SS_nnetKaon: (taggdec==truetag ? ++nrtag[8] : ++nwtag[8]); break;
         }
       }
-
       if(msgLevel(MSG::DEBUG)) m_debug->printTree( (*ti)->taggedB() );
-    }
+    }    
 
   }
 
@@ -149,7 +159,7 @@ StatusCode BTaggingChecker::execute()
     debug() << "BTAGGING MON "<< std::setw(3) << trig << std::setw(4) << truetag
             << std::setw(4) << bkgcat << endreq;
 
-  //count rights and wrongs
+  //count rights and wrongs in categories
   ++nsele;
   if     (tagdecision ==  truetag) ++nrt[ix];
   else if(tagdecision == -truetag) ++nwt[ix];
@@ -174,28 +184,32 @@ StatusCode BTaggingChecker::finalize()
   info()<< " Category            EFF.          Etag         Wrong TF"
         << "      r       w       "<<endreq;
 
-  for( int it=1; it < 19; ++it ) {
+  for( int it=1; it < 21; ++it ) {
     rtag = wtag = 0;
     std::string cats;
-    if(it== 1) cats =  "   mu only";
-    if(it== 2) cats =  "    e only";
-    if(it== 3) cats =  "    k only";
-    if(it== 4) cats =  "    mu + k";
-    if(it== 5) cats =  "     e + k";
-    if(it== 6) cats =  "  vtx only";
-    if(it== 7) cats =  "     ps/ks";
-    if(it== 8) cats =  "   mu + ks";
-    if(it== 9) cats =  "    e + ks";
-    if(it==10) cats =  "    k + ks";
-    if(it==11) cats =  "   mu+k+ks";
-    if(it==12) cats =  "    e+k+ks";
-    if(it==13) { cats =  "  OS muons"; rtag = nrtag[1]; wtag = nwtag[1]; }
-    if(it==14) { cats =  "  OS elect"; rtag = nrtag[2]; wtag = nwtag[2]; }
-    if(it==15) { cats =  "  OS kaons"; rtag = nrtag[3]; wtag = nwtag[3]; }
-    if(it==16) { cats =  "  SS kaon "; rtag=  nrtag[4]; wtag = nwtag[4]; }
-    if(it==17) { cats =  "  SS pion "; rtag=  nrtag[5]; wtag = nwtag[5]; }
-    if(it==18) { cats =  "  VertexCh"; rtag = nrtag[6]; wtag = nwtag[6]; }
-    if(it<13) cats =  "  NNet ";
+    //  --- PID categories not in use ----
+    //if(it== 1) cats =  "   mu only";
+    //if(it== 2) cats =  "    e only";
+    //if(it== 3) cats =  "    k only";
+    //if(it== 4) cats =  "    mu + k";
+    //if(it== 5) cats =  "     e + k";
+    //if(it== 6) cats =  "  vtx only";
+    //if(it== 7) cats =  "     ps/ks";
+    //if(it== 8) cats =  "   mu + ks";
+    //if(it== 9) cats =  "    e + ks";
+    //if(it==10) cats =  "    k + ks";
+    //if(it==11) cats =  "   mu+k+ks";
+    //if(it==12) cats =  "    e+k+ks";
+    
+    if(it==13) { cats =  "    OS muon"; rtag = nrtag[1]; wtag = nwtag[1]; }
+    if(it==14) { cats =  "    OS elec"; rtag = nrtag[2]; wtag = nwtag[2]; }
+    if(it==15) { cats =  "    OS kaon"; rtag = nrtag[3]; wtag = nwtag[3]; }
+    if(it==16) { cats =  "    SS kaon"; rtag=  nrtag[4]; wtag = nwtag[4]; }
+    if(it==17) { cats =  "    SS pion"; rtag=  nrtag[5]; wtag = nwtag[5]; }
+    if(it==18) { cats =  "   VertexCh"; rtag = nrtag[6]; wtag = nwtag[6]; }
+    if(it==19) { cats =  "OS nnetkaon"; rtag = nrtag[7]; wtag = nwtag[7]; }
+    if(it==20) { cats =  "SS nnetkaon"; rtag=  nrtag[8]; wtag = nwtag[8]; }
+    if(it<13) cats =  "  Category ";
     else if(it==13)
       info()<<"---------------------------------------------------------"<<endreq;
 
@@ -207,7 +221,7 @@ StatusCode BTaggingChecker::finalize()
     double omtag = wtag/(rtag+wtag);
     double eftag = (rtag+wtag)/nsele;                 // tagging efficiency
     double epsil = eftag*(1-2*omtag)*(1-2*omtag);     // effective efficiency
-    if(rtag<wtag) epsil= -epsil;
+    //    if(rtag<wtag) epsil= -epsil;  // Who wrote this???
 
     if(it<13){
       rtt      += rtag;
