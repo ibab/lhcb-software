@@ -4,6 +4,9 @@
 ! Purpose     : MC tuple tools
 !-----------------------------------------------------------------------------
 
+! 2013-07-05 - Chris Jones
+ - Clean up TupleToolMCTruth a bit.
+
 ! 2013-06-27 - Chris Jones
  - Clean up a bit MCTupleToolInteractions ...
 

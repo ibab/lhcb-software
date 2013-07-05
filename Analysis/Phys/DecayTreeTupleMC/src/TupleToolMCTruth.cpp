@@ -32,8 +32,8 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
   : TupleToolBase ( type, name , parent )
   , m_toolList(1,"MCTupleToolKinematic")
 {
+  // interface
   declareInterface<IParticleTupleTool>(this);
-
   // The names of MCTupleTools to use on the associated mcp
   declareProperty( "ToolList", m_toolList  );
   // MC associators to try, in order
@@ -50,15 +50,19 @@ StatusCode TupleToolMCTruth::initialize()
   if ( sc.isFailure() ) return sc;
 
   // the MC associators
+  m_p2mcAssocs.clear();
   for ( std::vector<std::string>::const_iterator iMCAss = m_p2mcAssocTypes.begin();
         iMCAss != m_p2mcAssocTypes.end(); ++iMCAss )
   {
     m_p2mcAssocs.push_back( tool<IParticle2MCAssociator>(*iMCAss,this) );
   }
+  if ( m_p2mcAssocs.empty() ) { return Error("No MC associators configured"); }
 
-  // initialise the tuple tools
+  // remove duplicate tools from the list
   std::sort( m_toolList.begin(), m_toolList.end() );
   m_toolList.erase( std::unique(m_toolList.begin(),m_toolList.end()), m_toolList.end() );
+  
+  // initialise the tuple tools
   for ( std::vector<std::string>::const_iterator it = m_toolList.begin();
         m_toolList.end()!=it ; ++it )
   {
@@ -74,7 +78,7 @@ StatusCode TupleToolMCTruth::initialize()
     }
   }
 
-  if (msgLevel(MSG::VERBOSE))
+  if ( msgLevel(MSG::VERBOSE) )
   {
     verbose() << "Completed TupleTool intialisation, "
               << m_mcTools.size()
@@ -86,20 +90,16 @@ StatusCode TupleToolMCTruth::initialize()
 
 //=============================================================================
 
-StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
-                                   , const LHCb::Particle* P
-                                   , const std::string& head
-                                   , Tuples::Tuple& tuple )
+StatusCode TupleToolMCTruth::fill( const LHCb::Particle*,
+                                   const LHCb::Particle* P,
+                                   const std::string& head,
+                                   Tuples::Tuple& tuple )
 {
   const std::string prefix = fullName(head);
 
-  Assert( !m_p2mcAssocs.empty(),
-          "The DaVinci smart associator(s) have not been initialized!");
-
-  int mcPid = 0;
   bool test = true;
-  const LHCb::MCParticle* mcp(NULL);
 
+  const LHCb::MCParticle* mcp(NULL);
   if ( P )
   {
     //assignedPid = P->particleID().pid();
@@ -114,24 +114,25 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
       verbose() << "Got mcp " << mcp << endmsg ;
   }
 
-  // pointer is ready, prepare the values:
-  if( mcp )
-  {
-    mcPid=mcp->particleID().pid();
-  }
+  // pointer is ready, prepare the values
+  const int mcPid = ( mcp ? mcp->particleID().pid() : 0 );
 
   // fill the tuple:
   test &= tuple->column( prefix+"_TRUEID", mcPid );
 
   // fill all requested MCTools
-  for(std::vector< IMCParticleTupleTool* >::const_iterator it=m_mcTools.begin(); it!=m_mcTools.end(); it++)
-    test &=(*it)->fill(NULL,mcp,prefix,tuple);
-
+  for ( std::vector< IMCParticleTupleTool* >::const_iterator it = m_mcTools.begin(); 
+        it != m_mcTools.end(); ++it )
+  {
+    test &= (*it)->fill(NULL,mcp,prefix,tuple);
+  }
+  
   return StatusCode(test);
 }
 
 //=============================================================================
 
 // Declaration of the Tool Factory
-// actually acts as a using namespace TupleTool
 DECLARE_TOOL_FACTORY( TupleToolMCTruth )
+
+//=============================================================================
