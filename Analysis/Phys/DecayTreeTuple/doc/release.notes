@@ -3,6 +3,8 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+! 2013-07-07 - Stefania Vecchi
+  - TupleToolTagging.cpp: no more filling of the Tagging Category 
 
 !========================= DecayTreeTuple v4r2 2013-06-13 =========================
 

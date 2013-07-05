@@ -56,11 +56,11 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
   m_tagger_map[(int)Tagger::OS_Kaon]="OS_Kaon";
   m_tagger_map[(int)Tagger::SS_Kaon]="SS_Kaon";
   m_tagger_map[(int)Tagger::SS_Pion]="SS_Pion";
-  m_tagger_map[(int)Tagger::jetCharge]="jetCharge";
-  m_tagger_map[(int)Tagger::OS_jetCharge]="OS_jetCharge";
-  m_tagger_map[(int)Tagger::SS_jetCharge]="SS_jetCharge";
   m_tagger_map[(int)Tagger::VtxCharge]="VtxCharge";
   m_tagger_map[(int)Tagger::Topology]="Topology";
+  m_tagger_map[(int)Tagger::jetCharge]="jetCharge";
+  m_tagger_map[(int)Tagger::OS_nnetKaon]="OS_nnetKaon";
+  m_tagger_map[(int)Tagger::SS_nnetKaon]="SS_nnetKaon";
 
   for(std::map<int, std::string>::const_iterator t=m_tagger_map.begin();
       t!=m_tagger_map.end(); t++)
@@ -75,7 +75,8 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
   m_activeTaggers.push_back("SS_Kaon");
   m_activeTaggers.push_back("SS_Pion");
   m_activeTaggers.push_back("VtxCharge");
-
+  m_activeTaggers.push_back("OS_nnetKaon");
+  m_activeTaggers.push_back("SS_nnetKaon");
 
   declareProperty("TaggingToolName", m_toolName = "",
                   "The Tagging Tool, if empty string, the tool will be retrieved from the parent DVAlg");
@@ -127,6 +128,11 @@ StatusCode TupleToolTagging::fill( const Particle* mother
   // nothing to tag on something which is not a B
   if( !P->particleID().hasBottom() ) return StatusCode::SUCCESS;
 
+  if( msgLevel( MSG::DEBUG ) ){
+    debug() << " Going to Save Tagging information for B candidate "
+            << endreq;
+  }
+
   FlavourTag theTag;
   FlavourTags* tags = NULL;
   bool check = false;
@@ -157,19 +163,15 @@ StatusCode TupleToolTagging::fill( const Particle* mother
     }
   }
   // try to find unphysical defaults
-  int dec = 0;//-1000
-  int cat = -1;
-  double omega = 0.5;//-2
+  int dec = 0;
+  double omega = 0.5;
   int decOS = 0;
-  int catOS = -1;
   double omegaOS = 0.5;
 
   if( sc ){
     dec = theTag.decision();
-    cat = theTag.category();
     omega = theTag.omega(); // predicted wrong tag fraction.
     decOS = theTag.decisionOS();
-    catOS = theTag.categoryOS();
     omegaOS = theTag.omegaOS(); // predicted wrong tag fraction.
   }
   else {
@@ -178,20 +180,21 @@ StatusCode TupleToolTagging::fill( const Particle* mother
 
   bool test = true;
   test &= tuple->column( prefix+"_TAGDECISION" , dec );
-  test &= tuple->column( prefix+"_TAGCAT" , cat );
   test &= tuple->column( prefix+"_TAGOMEGA" , omega );
   test &= tuple->column( prefix+"_TAGDECISION_OS" , decOS );
-  test &= tuple->column( prefix+"_TAGCAT_OS" , catOS );
   test &= tuple->column( prefix+"_TAGOMEGA_OS" , omegaOS );
 
   int taggers_code = 0;
   // intialize tagger by tagger W :
 
   std::vector<Tagger> taggers = theTag.taggers();
+
   for(size_t i=0; i<taggers.size(); ++i) {
     int tdec = taggers[i].decision();
 
     if(tdec) switch ( taggers[i].type() ) {
+    case Tagger::OS_nnetKaon : taggers_code +=1000000 *(tdec+2); break;
+    case Tagger::SS_nnetKaon : taggers_code += 100000 *(tdec+2); break;
     case Tagger::OS_Muon     : taggers_code +=  10000 *(tdec+2); break;
     case Tagger::OS_Electron : taggers_code +=   1000 *(tdec+2); break;
     case Tagger::OS_Kaon     : taggers_code +=    100 *(tdec+2); break;
@@ -201,17 +204,18 @@ StatusCode TupleToolTagging::fill( const Particle* mother
 
     }
   }
-
+  
   test &= tuple->column( prefix+"_TAGGER" , taggers_code);
-
+  
   if(isVerbose())
   {
+    
     //intitialize a map to some unphysical defaults
     std::map< std::string, std::pair<int, double > > tag_results;
     for(std::vector<std::string>::const_iterator t=m_activeTaggers.begin();
         t!=m_activeTaggers.end(); t++)
     {
-      tag_results[*t]=std::pair<int, double >(0,0.5);//-1000,-2
+      tag_results[*t]=std::pair<int, double >(0,0.5);
     }
     //fill the map for the taggers which were used
     for(size_t i=0; i<taggers.size(); ++i)
@@ -231,9 +235,7 @@ StatusCode TupleToolTagging::fill( const Particle* mother
 
   if( msgLevel( MSG::DEBUG ) ){
     debug() << "Tagging summary: decision: " << dec
-            << ", category: " << cat
-            << ", omega=" << omega
-            << endreq;
+            << ", omega=" << omega << endreq;
   }
 
   return StatusCode(test);
