@@ -27,8 +27,8 @@ P2MCPFromProtoP::P2MCPFromProtoP( const std::string& type,
 //=============================================================================
 StatusCode P2MCPFromProtoP::initialize() 
 {
-  StatusCode sc = Particle2MCAssociatorBase::initialize();
-  if (sc.isFailure()) return sc;
+  const StatusCode sc = Particle2MCAssociatorBase::initialize();
+  if ( sc.isFailure() ) return sc;
 
   if ( m_PP2MC.empty() )
   {
@@ -75,10 +75,11 @@ P2MCPFromProtoP::relatedMCPsImpl(const LHCb::Particle* particle,
   }
   else 
   {
-    Warning("Composite or ProtoParticle-less association not implemented!", StatusCode::SUCCESS, 10);
+    Warning( "Composite or ProtoParticle-less association not implemented!", 
+             StatusCode::SUCCESS, 10 );
   }
 
-  // check if the associaited MCPs are in the input container, if not,
+  // check if the associated MCPs are in the input container, if not,
   // remove the association!
 
   return Particle2MCParticle::FilterMCAssociations(associations,mcps);
@@ -91,8 +92,9 @@ void P2MCPFromProtoP::loadTables() const
   for ( Addresses::const_iterator item = m_PP2MC.begin(); item!=m_PP2MC.end(); ++item )
   {
     const std::string& address = *item;
-    LoKi::Types::TablePP2MC * table = getIfExists<LoKi::Types::TablePP2MC>(address);
-    if ( table ) 
+    LoKi::Types::TablePP2MC * table = getIfExists<LoKi::Types::TablePP2MC>(address,false);
+    if ( !table ) { table = getIfExists<LoKi::Types::TablePP2MC>(address,true); }
+    if (  table ) 
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << "Adding table " << address << endmsg;

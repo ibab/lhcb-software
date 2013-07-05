@@ -24,7 +24,7 @@ using namespace LHCb;
 DaVinciSmartAssociator::DaVinciSmartAssociator( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
-  : Particle2MCAssociatorBase( type, name , parent ),
+  : Particle2MCAssociatorBase( type, name, parent ),
     m_weightedAssociation ( NULL ),
     m_bkg                 ( NULL ),
     m_calo2MC             ( NULL )

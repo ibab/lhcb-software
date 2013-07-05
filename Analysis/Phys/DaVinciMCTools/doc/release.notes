@@ -4,6 +4,9 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2013-06-06 - Chris Jones
+ - Try and load the PP2MC tables in P2MCPFromProtoP with and without RootInTES
+
 !========================= DaVinciMCTools v10r7p3 2013-06-13 =========================
 
 ! 2013-05-17 - Chris Jones
