@@ -316,7 +316,7 @@ StatusCode Selection::Line::initialize()
 //=============================================================================
 StatusCode Selection::Line::execute() 
 {
-  const longlong startClock = System::currentTime( System::nanoSec );
+  const longlong startClock = System::currentTime( System::microSec );
 
   /// lock the context
   Gaudi::Utils::AlgContext lock1 ( this , contextSvc() ) ;
@@ -361,9 +361,9 @@ StatusCode Selection::Line::execute()
     report.setExecutionStage( i+1 );
   }
   // plot the wall clock time spent..
-  const double elapsedTime = double(System::currentTime( System::nanoSec) - startClock);
+  const double elapsedTime = double(System::currentTime( System::microSec) - startClock);
   // protect against 0 and convert nanosec --> to millisec
-  const double logElapsedTimeMS = elapsedTime > 0 ? log10(elapsedTime)-6 : m_timeHistoLowerBound;
+  const double logElapsedTimeMS = elapsedTime > 0 ? log10(elapsedTime)-3 : m_timeHistoLowerBound;
   
   fill( m_timeHisto, logElapsedTimeMS ,1.0); // converted to millisec
   if (elapsedTime>m_slowThreshold) report.setErrorBits( report.errorBits() | 0x4 );
