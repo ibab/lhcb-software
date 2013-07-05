@@ -39,7 +39,7 @@
       <constructor
         desc = "Copy Constructor"
         argList  = "const FlavourTag&amp; c"
-        initList = "KeyedObject&lt;int&gt;(), m_decision(c.decision()), m_category(c.category()), m_omega(c.omega()), m_taggers(c.taggers()), m_decisionOS(c.decisionOS()), m_categoryOS(c.categoryOS()), m_omegaOS(c.omegaOS()), m_taggedB(c.taggedB())">
+        initList = "KeyedObject&lt;int&gt;(), m_decision(c.decision()), m_omega(c.omega()), m_taggers(c.taggers()), m_decisionOS(c.decisionOS()), m_omegaOS(c.omegaOS()), m_taggedB(c.taggedB())">
         <code/>
       </constructor>
 
@@ -56,8 +56,6 @@
              m_omegaOS    = rhs.m_omegaOS;
              m_taggers    = rhs.m_taggers;
              m_decisionOS = rhs.m_decisionOS;
-             m_category   = rhs.m_category;
-             m_categoryOS = rhs.m_categoryOS;
              m_taggedB    = rhs.m_taggedB;
           }
           return *this;
@@ -79,13 +77,6 @@
       />
 
       <attribute
-        desc = "Category of tag"
-        name = "category"
-        type = "unsigned short int"
-        init = "0"
-      />
-
-      <attribute
         desc = "Wrong tag fraction (predicted)"
         name = "omega"
         type = "float"
@@ -102,13 +93,6 @@
 	desc = "decision of opposite side taggers only"
 	name = "decisionOS"
 	type = "short int"
-        init = "0"
-      />
-
-      <attribute
-        desc = "Category of tag using opposite side only"
-        name = "categoryOS"
-        type = "unsigned short int"
         init = "0"
       />
 

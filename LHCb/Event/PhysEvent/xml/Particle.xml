@@ -70,6 +70,7 @@
         <enumval name="Chi2OfVertexConstrainedFit"    value="12" desc="Chi2 of Vertex  Constrained Fit"   />
         <enumval name="Chi2OfParticleReFitter"        value="15" desc="Chi2 From Particle ReFitter"       />
         <enumval name="HasBremAdded"                  value="16" desc="particle momentum is brem-corrected (0/1)"      />
+        <enumval name="FlavourTaggingIndex"  value="8000"       desc="First index allocated for FlavourTagging internal use"   />
         <enumval name="Cone1Angle" value="9000"                 desc="Cone angle, cone size 1" />
         <enumval name="Cone1Mult"  value="Cone1Angle+1"         desc="Cone multiplicity, cone size 1" />
         <enumval name="Cone1PX" value="Cone1Angle+2"            desc="Cone Px, cone size 1" />
