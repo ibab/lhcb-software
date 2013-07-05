@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2013-07-05 - Chris Jones
+ - Adapt PackedFlavourTag to removal of 'category' data members from the
+   transient LHCb::FlavourTag class.
+
 ! 2013-06-25 - Chris Jones
  - Initialise the TCK data member in the previous commit to 0.
 

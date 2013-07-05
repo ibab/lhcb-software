@@ -17,12 +17,10 @@ void FlavourTagPacker::pack( const Data & ft,
 
   // Decision
   pft.decision = ft.decision();
-  pft.category = ft.category();
   pft.omega    = m_pack.fraction( ft.omega() );
  
   // OS decision
   pft.decisionOS = ft.decisionOS();
-  pft.categoryOS = ft.categoryOS();
   pft.omegaOS    = m_pack.fraction( ft.omegaOS() );
 
   // tagging particle
@@ -99,12 +97,10 @@ void FlavourTagPacker::unpack( const PackedData       & pft,
   
   // Decision
   ft.setDecision( pft.decision );
-  ft.setCategory( pft.category );
   ft.setOmega   ( m_pack.fraction(pft.omega) );
 
   // OS Decision
   ft.setDecisionOS( pft.decisionOS );
-  ft.setCategoryOS( pft.categoryOS );
   ft.setOmegaOS   ( m_pack.fraction(pft.omegaOS) );
 
   // Tagging B
@@ -198,15 +194,11 @@ StatusCode FlavourTagPacker::check( const Data & dataA,
 
   // decision
   ok &= ch.compareInts( "Decision", dataA.decision(), dataB.decision() );
-  // category
-  ok &= ch.compareInts( "Category", dataA.category(), dataB.category() );
   // omega
   ok &= ch.compareFloats( "Omega", dataA.omega(), dataB.omega(), 1e-4 );
 
   // decisionOS
   ok &= ch.compareInts( "DecisionOS", dataA.decisionOS(), dataB.decisionOS() );
-  // categoryOS
-  ok &= ch.compareInts( "CategoryOS", dataA.categoryOS(), dataB.categoryOS() );
   // omegaOS
   ok &= ch.compareFloats( "OmegaOS", dataA.omegaOS(), dataB.omegaOS(), 1e-4 );
 

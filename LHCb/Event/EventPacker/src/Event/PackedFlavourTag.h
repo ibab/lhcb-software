@@ -33,8 +33,8 @@ namespace LHCb
     /// Default constructor
     PackedFlavourTag()
       : key(0),
-        decision(0),   category(0),   omega(0),
-        decisionOS(0), categoryOS(0), omegaOS(0),
+        decision(0),   omega(0),
+        decisionOS(0), omegaOS(0),
         taggedB(-1),
         firstTagger(0), lastTagger(0)
     { }
@@ -44,11 +44,9 @@ namespace LHCb
     long long key;         ///< reference to the original container + key
 
     short int           decision;   ///< The result of the tagging algorithm
-    unsigned short int  category;   ///< Category of tag
     short int           omega;      ///< Wrong tag fraction (predicted)
 
     short int           decisionOS; ///< decision of opposite side taggers only
-    unsigned short int  categoryOS; ///< Category of tag using opposite side only
     short int           omegaOS;    ///< Wrong tag fraction (predicted) using opposite side only
 
     long long taggedB;    ///< The B for which this tag has been made
