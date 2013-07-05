@@ -24,3 +24,5 @@ gaudi_add_dictionary(RootCnv dict/RootCnv_dict.h  dict/RootCnv_dict.xml LINK_LIB
 
 gaudi_add_executable(gaudi_merge merge/merge.cpp
                      LINK_LIBRARIES RootCnvLib)
+gaudi_add_executable(extract_event merge/extractEvt.cpp
+                     LINK_LIBRARIES RootCnvLib)
