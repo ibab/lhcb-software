@@ -21,8 +21,6 @@ DECLARE_TOOL_FACTORY( CombineTaggersNN )
     : GaudiTool ( type, name , parent )
 {
   declareInterface<ICombineTaggersTool>(this);
-  declareProperty( "OmegaMaxBin", m_omegamaxbin = 0.36 );
-  declareProperty( "OmegaScale",  m_omegascale  = 0.06 );
   declareProperty( "ProbMin",     m_ProbMin     = 0.55 );
 
   declareProperty( "P0_NN",   m_P0_NN   = 1.01714 );
@@ -34,7 +32,7 @@ CombineTaggersNN::~CombineTaggersNN(){}
 
 //=============================================================================
 int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
-                                     std::vector<Tagger*>& vtg , int signalType){
+                                     std::vector<Tagger*>& vtg , int signalType,  bool m_nnetTaggers){
   if( vtg.empty() ) return 0;
 
   fatal() << "WARNING: update the code according to the new variable signalType !!!!!! "
@@ -132,32 +130,17 @@ int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
     tagdecision = 0;
   }
 
-  //sort decision into categories ------------------
-  //cat=1 will be least reliable, cat=5 most reliable
-  //ProbMin is a small offset to adjust for range of pnsum
-  int category = 0;
-  double omega = fabs(1-pnsum);
-  if(      omega > m_omegamaxbin                ) category=1;
-  else if( omega > m_omegamaxbin-m_omegascale   ) category=2;
-  else if( omega > m_omegamaxbin-m_omegascale*2 ) category=3;
-  else if( omega > m_omegamaxbin-m_omegascale*3 ) category=4;
-  else                                            category=5;
-  if( !tagdecision ) category=0;
-
-  //info
   if ( msgLevel(MSG::DEBUG) ) 
   {
     debug() << "Final 1-w = " << pnsum <<endreq;
     debug() << "TagDecision = " << tagdecision <<endreq;
-    debug() << "Category = " << category <<endreq;
-    debug() << "Omega = " << omega <<endreq;
+    debug() << "Omega = " << 1-pnsum <<endreq;
   }
 
   ///fill FlavourTag object
   if(      tagdecision ==  1 ) theTag.setDecision( FlavourTag::bbar );
   else if( tagdecision == -1 ) theTag.setDecision( FlavourTag::b );
   else theTag.setDecision( FlavourTag::none );
-  theTag.setCategory( category );
   theTag.setOmega( 1-pnsum );
 
   //fill in taggers info into FlavourTag object
@@ -167,7 +150,7 @@ int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
     if(itag) theTag.addTagger(*(vtg.at(j)));
   }
 
-  return category;
+  return theTag.decision();
 }
 //=============================================================================
 

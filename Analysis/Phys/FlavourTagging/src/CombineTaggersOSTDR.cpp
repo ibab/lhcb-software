@@ -26,12 +26,13 @@ CombineTaggersOSTDR::~CombineTaggersOSTDR(){}
 //=============================================================================
 int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag, 
                                         std::vector<Tagger*>& vtg, 
-                                        int signalType)
+                                        int signalType, bool m_nnetTaggers)
 {
 
-  if ( msgLevel(MSG::DEBUG) ) 
-    debug() << "Running CombineTaggersOSTDR::combineTaggers signalTpye" <<signalType<< endmsg;
-
+  if ( msgLevel(MSG::DEBUG) ) {    
+    debug() << "Running CombineTaggersOSTDR::combineTaggers signalTpye" <<signalType<<endreq;
+    debug()<<"NB: m_nnetTaggers="<<m_nnetTaggers<<" has no influence here"<<endreq;
+  }
   //Want to combine opposite side muon, electron, kaon, vertex
   int catt=0;
   double tagdecision=0;
@@ -106,14 +107,14 @@ int CombineTaggersOSTDR::combineTaggers(FlavourTag& theTag,
 
   if(tagdecision) tagdecision = tagdecision>0 ? 1 : -1;
   if(!tagdecision) catt = 0;
-
+  if( msgLevel(MSG::VERBOSE) ) verbose()<< " Category="<<catt<<endmsg;
   ///fill Result of FlavourTag object
   if(      tagdecision ==  1 ) theTag.setDecision( FlavourTag::bbar );
   else if( tagdecision == -1 ) theTag.setDecision( FlavourTag::b );
   else theTag.setDecision( FlavourTag::none );
-  theTag.setCategory( catt );
+
   theTag.setOmega( 0.5 );
 
-  return catt;
+  return theTag.decision();
 }
 //=============================================================================

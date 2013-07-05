@@ -346,61 +346,57 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
     }
     pn = 1 - omega;
   }
-  std::list<std::pair<std::string, Float_t> > NNinputList;    
+
   if(m_CombinationTechnique == "NNet") {
-    NNinputList.push_back(std::pair<std::string, Float_t>("mult",     m_util->countTracks(vtags)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("nnkrec",   allVtx.size()));
-    NNinputList.push_back(std::pair<std::string, Float_t>("ptB",      log(AXB0->pt()/GeV)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("vflag",    vflagged));
-    NNinputList.push_back(std::pair<std::string, Float_t>("ptmean",   log(Vptmean)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("ipsmean",  log(Vipsmean)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("vcharge",  fabs(Vch)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("svm",      log(SVM)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("svp",      log(SVP)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("BDphiDir", BDphiDir));
-    NNinputList.push_back(std::pair<std::string, Float_t>("svtau",    log(SVtau)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("docamax",  Vdocamax));
+    std::vector<std::string> inputVars;
+    std::vector<double> inputVals;
+    inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));
+    inputVars.push_back("nnkrec");      inputVals.push_back( (double)allVtx.size());
+    inputVars.push_back("ptB");         inputVals.push_back( (double)log(AXB0->pt()/GeV));
+    inputVars.push_back("vflag");       inputVals.push_back( (double)vflagged);
+    inputVars.push_back("ptmean");      inputVals.push_back( (double)log(Vptmean));
+    inputVars.push_back("ipsmean");     inputVals.push_back( (double)log(Vipsmean));
+    inputVars.push_back("vcharge");     inputVals.push_back( (double)fabs(Vch));
+    inputVars.push_back("svm");         inputVals.push_back( (double)log(SVM));
+    inputVars.push_back("svp");         inputVals.push_back( (double)log(SVP));
+    inputVars.push_back("BDphiDir");    inputVals.push_back( (double)BDphiDir );
+    inputVars.push_back("svtau");       inputVals.push_back( (double)log(SVtau));
+    inputVars.push_back("docamax");     inputVals.push_back( (double)Vdocamax);
+
+    omega = 1. - m_nnet->MLPvtxTMVA(inputVars,inputVals);
     
-    omega = 1 - m_nnet->MLPvtxTMVA( NNinputList);
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts" <<", omega= "<< omega <<endreq;
     
-  }
-
-
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts" <<", omega= "<< omega <<endreq;
-  
-  //Calibration (w=1-pn) w' = p0 + p1(w-eta)
-  omega =  m_P0_Cal_vtx + m_P1_Cal_vtx * ( omega-m_Eta_Cal_vtx);
-  if ( msgLevel(MSG::DEBUG) ) 
-    debug() << " Vtx pn="<< pn <<" w="<<omega<<endmsg;
-  
-  if( omega < 0 || omega > 1 ) {
-    if ( msgLevel(MSG::DEBUG) )
-      debug()<<"===> Something wrong with VTX Training "<<omega<<endreq;    
-    return tVch;  
-  }
-  
-  if( 1-omega < m_ProbMin_vtx ) return tVch;
-
-  if(omega>0.5){
-    omega = 1-omega;
-    sign=-1;
-  }
-  pn = 1. - omega;
-
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug()<<" TaggerVertex: "<<sign*Vch<<" omega="<<1-pn;
+    //Calibration (w=1-pn) w' = p0 + p1(w-eta)
+    omega =  m_P0_Cal_vtx + m_P1_Cal_vtx * ( omega-m_Eta_Cal_vtx);
+    if ( msgLevel(MSG::DEBUG) ) 
+      debug() << " Vtx pn="<< pn <<" w="<<omega<<endmsg;
     
-    typedef std::list<std::pair<std::string, Float_t> > ParListType;
-    for(ParListType::const_iterator p = NNinputList.begin(); p != NNinputList.end(); p++) {
-      debug() << p->second<<" ";
+    if( omega < 0 || omega > 1 ) {
+      if ( msgLevel(MSG::DEBUG) )
+        debug()<<"===> Something wrong with VTX Training "<<omega<<endreq;    
+      return tVch;  
     }
-    debug()<<endreq;
-  }
+    
+    if( 1-omega < m_ProbMin_vtx ) return tVch;
+    
+    if(omega>0.5){
+      omega = 1-omega;
+      sign=-1;
+    }
+    pn = 1. - omega;
+    
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug()<<" TaggerVertex: "<<sign*Vch<<" omega="<<1-pn;
+      for(unsigned int iloop=0; iloop<inputVals.size(); iloop++){
+        debug() << inputVals[iloop]<<" ";
+      }
+      debug()<<endreq;
+    }
+  }  
   
-
-
   tVch.setDecision( sign*Vch>0 ? -1 : 1 );
   tVch.setOmega( omega );
   tVch.setType( Tagger::VtxCharge ); 

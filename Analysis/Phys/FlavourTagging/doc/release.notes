@@ -4,8 +4,14 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
-
-!========================= FlavourTagging v13r1 2013-06-24 =========================
+! 2013-07-02 - Stefania Vecchi
+ - Replaced LastGlobal with FlavourTaggingIndex (updated in Event/Particle)
+ - Some changes suggested by Marco C. to improve timing
+ - Import NNet weights including C++ class instead of reading xml file
+ - Dropped tagging category information
+ - Set running of TaggerNEWKaonOppositeTool and TaggerNEWKaonSameTool by default
+ - Added CombineWithNNetTagger property to make the combination with
+   cut-based (default) or nnet taggers 
 
 ! 2013-07-01 - Katharina Kreplin
  - Tunings.py: ++ tool.BTaggingTool.addTool ( TaggerNEWKaonOppositeTool )
@@ -13,6 +19,9 @@
 ! 2013-06-26 - Katharina Kreplin
  - TaggerNEWKaonOppositeTool: - reco 12 final version
                               - reco 14 final version 
+
+!========================= FlavourTagging v13r1 2013-06-24 =========================
+
 
 ! 2013-06-24 - Chris Jones
  - Make the TMVA::Reader silent in MyReader.h

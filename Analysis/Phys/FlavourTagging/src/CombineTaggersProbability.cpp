@@ -20,9 +20,6 @@ DECLARE_TOOL_FACTORY( CombineTaggersProbability )
 {
   declareInterface<ICombineTaggersTool>(this);
 
-  declareProperty( "OmegaMaxBin", m_omegamaxbin  = 0.38 );
-  declareProperty( "OmegaScale",  m_omegascale  = 0.07 );
-
   declareProperty( "ProbMin",     m_ProbMin     = 0.5);
   declareProperty( "ProbMin_OS",  m_ProbMin_OS  = 0.5);
   // Tuning Moriond 2012
@@ -56,7 +53,7 @@ StatusCode CombineTaggersProbability::initialize()
 //=============================================================================
 int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
                                               std::vector<Tagger*>& vtg ,
-                                              int signalType)
+                                              int signalType, bool m_nnetTaggers)
 {
   if( vtg.empty() ) return 0;
 
@@ -64,11 +61,18 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   double pnsum_a= 0.50;  //hypothesis of truetag=+1
   double pnsum_b= 0.50;  //hypothesis of truetag=-1
   int vtgsize = vtg.size();
+
   for( int i = 0; i != vtgsize; ++i ) 
   { //multiply all probabilities
     if(! vtg.at(i)) continue;
     if( vtg.at(i)->type() == (Tagger::SS_Pion) || 
-        vtg.at(i)->type() == (Tagger::SS_Kaon) ) continue;  // Just combine the prob of OS
+        vtg.at(i)->type() == (Tagger::SS_Kaon) || 
+        vtg.at(i)->type() == (Tagger::SS_nnetKaon) 
+        ) continue; // Just combine the prob of OS
+    
+    if(!m_nnetTaggers &&  vtg.at(i)->type() == (Tagger::OS_nnetKaon) ) continue;
+    if(m_nnetTaggers &&  vtg.at(i)->type() == (Tagger::OS_Kaon) ) continue;
+    
     const double mtag = vtg.at(i)->decision();
     if(!mtag) continue;
     const double pn   = 1-(vtg.at(i))->omega(); //probability of 'right'
@@ -98,23 +102,10 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "Final OS 1-w = " << pnsum <<endreq;
 
-  //sort decision into categories ------------------
-  //cat=1 will be least reliable, cat=5 most reliable
-  //ProbMin is a small offset to adjust for range of pnsum
-  int category = 0;
-  const double omega = fabs(1-pnsum);
-  if(      omega > m_omegamaxbin                ) category=1;
-  else if( omega > m_omegamaxbin-m_omegascale   ) category=2;
-  else if( omega > m_omegamaxbin-m_omegascale*2 ) category=3;
-  else if( omega > m_omegamaxbin-m_omegascale*3 ) category=4;
-  else                                            category=5;
-  if( !tagdecision ) category=0;
-
   ///fill FlavourTag object
   if(      tagdecision ==  1 ) theTag.setDecisionOS( FlavourTag::bbar );
   else if( tagdecision == -1 ) theTag.setDecisionOS( FlavourTag::b );
   else theTag.setDecisionOS( FlavourTag::none );
-  theTag.setCategoryOS( category );
   theTag.setOmegaOS( 1-pnsum );
 
   //###################################
@@ -126,7 +117,9 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   { //multiply all probabilities
     if(! vtg.at(i)) continue;
     if( (signalType == 1 && vtg.at(i)->type() == (Tagger::SS_Pion)) ||
-        (signalType == 2 && vtg.at(i)->type() == (Tagger::SS_Kaon)) ) 
+        (signalType == 2 && !m_nnetTaggers && vtg.at(i)->type() == (Tagger::SS_Kaon)) ||
+        (signalType == 2 && m_nnetTaggers && vtg.at(i)->type() == (Tagger::SS_nnetKaon))
+        )
     {
       const double mtagss = vtg.at(i)->decision();
       if(!mtagss) continue;
@@ -149,23 +142,10 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "Final 1-w = " << SSeOS_pnsum <<endreq;
 
-  //sort decision into categories ------------------
-  //cat=1 will be least reliable, cat=5 most reliable
-  //ProbMin is a small offset to adjust for range of pnsum
-  int SSeOS_category = 0;
-  double SSeOS_omega = std::fabs(1-SSeOS_pnsum);
-  if(      SSeOS_omega > m_omegamaxbin                ) SSeOS_category=1;
-  else if( SSeOS_omega > m_omegamaxbin-m_omegascale   ) SSeOS_category=2;
-  else if( SSeOS_omega > m_omegamaxbin-m_omegascale*2 ) SSeOS_category=3;
-  else if( SSeOS_omega > m_omegamaxbin-m_omegascale*3 ) SSeOS_category=4;
-  else                                            SSeOS_category=5;
-  if( !SSeOS_tagdecision ) SSeOS_category=0;
-
   ///fill FlavourTag object
   if(      SSeOS_tagdecision ==  1 ) theTag.setDecision( FlavourTag::bbar );
   else if( SSeOS_tagdecision == -1 ) theTag.setDecision( FlavourTag::b );
   else theTag.setDecision( FlavourTag::none );
-  theTag.setCategory( SSeOS_category );
   theTag.setOmega( 1-SSeOS_pnsum );
 
   //fill in taggers info into FlavourTag object
@@ -175,6 +155,6 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
     if(itag) theTag.addTagger(*(vtg.at(j)));
   }
 
-  return category;
+  return theTag.decision();
 }
 //=============================================================================

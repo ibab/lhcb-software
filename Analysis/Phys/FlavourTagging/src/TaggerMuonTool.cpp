@@ -165,7 +165,7 @@ Tagger TaggerMuonTool::tagReco12( const Particle* AXB0, const RecVertex* RecVert
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " IPsig="<< IPsig <<endreq;
 
-    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,100000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIndex+1,100000.);
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " ippu="<< ippu <<endreq;
     if(ippu < m_ipPU_cut_muon) continue;
@@ -242,8 +242,8 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
   //select muon tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
   const Particle* imuon=0;
-  Float_t ptmaxm = -99.0, ncand=0;
-  Float_t save_IPPU=-10, save_IPs=-10, save_PIDNNm=-10.;
+  double ptmaxm = -99.0, ncand=0;
+  double save_IPPU=-10, save_IPs=-10, save_PIDNNm=-10.;
   //save_pidm=-10,save_PIDNNpi=-10.;
 
   
@@ -276,7 +276,7 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
     const double lcs = track->chi2PerDoF();
     if(lcs>m_lcs_cut_muon)                           continue;
 
-    if(axp->info(LHCb::Particle::LastGlobal+2,-1.) > 0 )continue; // already tagged
+    if(axp->info(LHCb::Particle::FlavourTaggingIndex+2,-1.) > 0 )continue; // already tagged
 
     if(track->ghostProbability() > m_ghostprob_cut )  continue; 
 
@@ -298,7 +298,7 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
     double IPsig = IP/IPerr;
     if(fabs(IPsig) < m_IPs_cut_muon)                 continue;
     
-    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,10000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIndex+1,10000.);
     if(ippu < m_ipPU_cut_muon)                       continue;
     //distphi
     if( m_util->isinTree( *ipart, axdaugh, distphi)) continue;
@@ -307,7 +307,7 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
     ++ncand;
 
     Particle* c = const_cast<Particle*>(*ipart);
-    c->addInfo(LHCb::Particle::LastGlobal+2,13); // store the information that the muon tagger is found // new
+    c->addInfo(LHCb::Particle::FlavourTaggingIndex+2,13); // store the information that the muon tagger is found // new
     
     if( Pt > ptmaxm ) { //Pt ordering
       imuon = axp;
@@ -324,22 +324,23 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
   //calculate omega
   double pn = 1. - m_AverageOmega;
   double sign=1.;
-  std::list<std::pair<std::string, Float_t> > NNinputList;    
   if(m_CombinationTechnique == "NNet") {
     if ( msgLevel(MSG::DEBUG) ) debug()<< allVtx.size()<< endreq;
 
-    NNinputList.push_back(std::pair<std::string, Float_t>("mult",   m_util->countTracks(vtags)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("partP",  log(imuon->p()/GeV)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("partPt", log(imuon->pt()/GeV)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("ptB",    log(AXB0->pt()/GeV)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("IPs",    log(fabs(save_IPs))));
-    NNinputList.push_back(std::pair<std::string, Float_t>("partlcs",log(imuon->proto()->track()->chi2PerDoF())));
-    NNinputList.push_back(std::pair<std::string, Float_t>("PIDNNm", save_PIDNNm));
-    NNinputList.push_back(std::pair<std::string, Float_t>("ghostProb",log(imuon->proto()->track()->ghostProbability())));
-    NNinputList.push_back(std::pair<std::string, Float_t>("IPPU",   log(save_IPPU)));    
-
-    pn = m_nnet->MLPmTMVA( NNinputList); 
-
+    std::vector<std::string> inputVars;
+    std::vector<double> inputVals;
+    inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));
+    inputVars.push_back("partP");       inputVals.push_back( (double)log(imuon->p()/GeV));
+    inputVars.push_back("partPt");      inputVals.push_back( (double)log(imuon->pt()/GeV));
+    inputVars.push_back("ptB");         inputVals.push_back( (double)log(AXB0->pt()/GeV));
+    inputVars.push_back("IPs");         inputVals.push_back( (double)log(fabs(save_IPs)));
+    inputVars.push_back("partlcs");     inputVals.push_back( (double)log(imuon->proto()->track()->chi2PerDoF()));
+    inputVars.push_back("PIDNNm");      inputVals.push_back( (double)save_PIDNNm );
+    inputVars.push_back("ghostProb");   inputVals.push_back( (double)log(imuon->proto()->track()->ghostProbability()));
+    inputVars.push_back("IPPU");        inputVals.push_back( (double)log(save_IPPU));
+    
+    pn = m_nnet->MLPmTMVA(inputVars,inputVals);
+    
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     pn = 1. - m_P0_Cal_muon - m_P1_Cal_muon * ( (1.-pn)-m_Eta_Cal_muon);
 
@@ -354,17 +355,16 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
       pn = 1. - pn;
       sign = -1.;
     }
-  }
-
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug()<<" TaggerMuon: "<<sign*imuon->charge()<<" omega="<<1-pn;
     
-    typedef std::list<std::pair<std::string, Float_t> > ParListType;
-    for(ParListType::const_iterator p = NNinputList.begin(); p != NNinputList.end(); p++) {
-      debug() << p->second<<" ";
+    
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug()<<" TaggerMuon: "<<sign*imuon->charge()<<" omega="<<1-pn;
+      for(unsigned int iloop=0; iloop<inputVals.size(); iloop++){
+        debug() << inputVals[iloop]<<" ";
+      }
+      debug()<<endreq;
     }
-    debug()<<endreq;
   }
   
   

@@ -132,7 +132,7 @@ StatusCode CombineTaggersPID::initialize()
 //=============================================================================
 int CombineTaggersPID::combineTaggers(FlavourTag& theTag,
                                       std::vector<Tagger*>& vtg, 
-                                      int signalType)
+                                      int signalType, bool m_nnetTaggers)
 {
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Running CombineTaggersPID::combineTaggers" << endmsg;
@@ -263,12 +263,11 @@ int CombineTaggersPID::combineTaggers(FlavourTag& theTag,
   if(      tagdecision ==  1 ) theTag.setDecision( FlavourTag::bbar );
   else if( tagdecision == -1 ) theTag.setDecision( FlavourTag::b );
   else theTag.setDecision( FlavourTag::none );
-  theTag.setCategory( catt );
   theTag.setOmega( 0.5 );
 
   //fill in taggers info into FlavourTag object
   for (int j=0; j!=5; ++j) if(itag.at(j)) theTag.addTagger(*(vtg.at(j)));
 
-  return catt;
+  return theTag.decision();
 }
 //=============================================================================

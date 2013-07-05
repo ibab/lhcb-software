@@ -164,7 +164,7 @@ Tagger TaggerElectronTool::tagReco12( const Particle* AXB0, const RecVertex* Rec
     const double IPsig = IP/IPerr;
     if(fabs(IPsig) < m_IPs_cut_ele) continue;
 
-    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,100000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIndex+1,100000.);
     if(ippu < m_ipPU_cut_ele) continue;
     //distphi
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
@@ -256,7 +256,7 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
   Float_t ptmaxe = -99.0,  save_IPs=-10, save_IPPU=-10., 
     //save_PIDe=-10.,   save_PIDNNe=-10.,  save_PIDNNk=-10., 
     //save_PIDNNp=-10., save_PIDNNpi=-10., save_veloch = -10., 
-    save_eOverP=-10,    save_ghostProb=-10.;
+    save_eOverP=-10;//,    save_ghostProb=-10.;
   
   for( Particle::ConstVector::const_iterator ipart = vtags.begin();
        ipart != vtags.end(); ++ipart ) 
@@ -281,7 +281,7 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
     if(proto->muonPID() != 0) 
       if(proto->muonPID()->IsMuon() != 0 )                 continue;
     
-    if(axp->info(LHCb::Particle::LastGlobal+2,-1.) > 0 )    continue; // already tagger by muon or kaon
+    if(axp->info(LHCb::Particle::FlavourTaggingIndex+2,-1.) > 0 )    continue; // already tagger by muon or kaon
     
     const double PIDNNpi = proto->info( ProtoParticle::ProbNNpi, -1000.0);    
     if(PIDNNpi > m_PIDNNpi_cut_ele  )                      continue;
@@ -313,7 +313,7 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
     const double IPsig = IP/IPerr;
     if(fabs(IPsig) < m_IPs_cut_ele)                        continue;
 
-    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,10000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIndex+1,10000.);
     if(ippu < m_ipPU_cut_ele)                              continue;
     //distphi
     if( m_util->isinTree( *ipart, axdaugh, distphi ) )     continue ;//exclude signal
@@ -333,7 +333,7 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
           verbose() << " Elec veloch=" << veloch << endreq;
 
          Particle* c = const_cast<Particle*>(*ipart);
-         c->addInfo(LHCb::Particle::LastGlobal+2,11); // store the info that this particle pass the tagger selection
+         c->addInfo(LHCb::Particle::FlavourTaggingIndex+2,11); // store the info that this particle pass the tagger selection
          
          if( Pt > ptmaxe ) { 
            iele = (*ipart);
@@ -347,7 +347,7 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
            //save_PIDNNpi = PIDNNpi; 
            save_eOverP = eOverP;
            //save_veloch = veloch;
-           save_ghostProb = track->ghostProbability();
+           //save_ghostProb = track->ghostProbability();
            
          }
       }
@@ -358,22 +358,23 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
   //calculate omega
   double sign = 1.;  
   double pn = 1-m_AverageOmega;
-    std::list<std::pair<std::string, Float_t> > NNinputList;    
+
   if(m_CombinationTechnique == "NNet") {
     if ( msgLevel(MSG::DEBUG) ) debug()<< allVtx.size()<< endreq;
-
-    NNinputList.push_back(std::pair<std::string, Float_t>("mult",   m_util->countTracks(vtags)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("partP",  log(iele->p()/GeV)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("partPt", log(iele->pt()/GeV)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("ptB",    log(AXB0->pt()/GeV)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("IPs",    log(save_IPs)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("partlcs",log(iele->proto()->track()->chi2PerDoF())));
-    NNinputList.push_back(std::pair<std::string, Float_t>("eOverP", save_eOverP));
-    NNinputList.push_back(std::pair<std::string, Float_t>("ghostProb",log(save_ghostProb)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("IPPU",   log(save_IPPU)));
-
+    std::vector<std::string> inputVars;
+    std::vector<double> inputVals;
+    inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));
+    inputVars.push_back("partP");       inputVals.push_back( (double)log(iele->p()/GeV));
+    inputVars.push_back("partPt");      inputVals.push_back( (double)log(iele->pt()/GeV));
+    inputVars.push_back("ptB");         inputVals.push_back( (double)log(AXB0->pt()/GeV));
+    inputVars.push_back("IPs");         inputVals.push_back( (double)log(fabs(save_IPs)));
+    inputVars.push_back("partlcs");     inputVals.push_back( (double)log(iele->proto()->track()->chi2PerDoF()));
+    inputVars.push_back("eOverP");      inputVals.push_back( (double)save_eOverP );
+    inputVars.push_back("ghostProb");   inputVals.push_back( (double)log(iele->proto()->track()->ghostProbability()));
+    inputVars.push_back("IPPU");        inputVals.push_back( (double)log(save_IPPU));
     
-    pn = m_nnet->MLPeTMVA( NNinputList ); 
+    pn = m_nnet->MLPeTMVA(inputVars,inputVals);
+
 
     if(msgLevel(MSG::VERBOSE)) verbose() << " Elec pn=" << pn << endreq;
 
@@ -382,7 +383,7 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
 
     if( pn < 0 || pn > 1 ) {
       if ( msgLevel(MSG::DEBUG) )      
-        debug()<<" ===> Something wrong with MUON Training "<<pn<<endmsg;
+        debug()<<" ===> Something wrong with ELECTRON Training "<<pn<<endmsg;
       return tele;
     }
     
@@ -391,18 +392,17 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
       pn = 1. - pn;
       sign = -1.;
     }
+  
 
-  }
-
-  if ( msgLevel(MSG::DEBUG) )
-  {    
-    debug()<<" TaggerElectron: "<<sign*iele->charge()<<" omega="<<1-pn<<" NNinputs:";
-    
-    typedef std::list<std::pair<std::string, Float_t> > ParListType;
-    for(ParListType::const_iterator p = NNinputList.begin(); p != NNinputList.end(); p++) {
-      debug() << p->second<<" ";
-    }  
-    debug()<<endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+    {    
+      debug()<<" TaggerElectron: "<<sign*iele->charge()<<" omega="<<1-pn<<" NNinputs:";
+      
+      for(unsigned int iloop=0; iloop<inputVals.size(); iloop++){
+        debug() << inputVals[iloop]<<" ";
+      }
+      debug()<<endmsg;
+    }
   }
   
 

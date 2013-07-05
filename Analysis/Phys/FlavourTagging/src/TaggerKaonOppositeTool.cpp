@@ -159,7 +159,7 @@ Tagger TaggerKaonOppositeTool::tagReco12( const Particle* AXB0,
     if (fabs(IP) > m_IP_cut_kaon) continue;
     if (IPsig < m_IPs_cut_kaon) continue;
 
-    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,100000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIndex+1,100000.);
 
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " Kaon IPs="<< IPsig <<" IP="<<fabs(IP)<<" IPPU="<<ippu<<endmsg;
@@ -253,7 +253,7 @@ Tagger TaggerKaonOppositeTool::tagReco14( const Particle* AXB0,
     const double lcs = track->chi2PerDoF();
     if(lcs > m_lcs_kaon)                                    continue;
     
-    if(axp->info(LHCb::Particle::LastGlobal+2,-1.) > 0 )    continue; // already tagger by muon   // new
+    if(axp->info(LHCb::Particle::FlavourTaggingIndex+2,-1.) > 0 )    continue; // already tagger by muon   // new
     if(proto->muonPID() ) if(proto->muonPID()->IsMuon()!= 0)continue; // new
   
     const double tsa = track->likelihood();
@@ -300,7 +300,7 @@ Tagger TaggerKaonOppositeTool::tagReco14( const Particle* AXB0,
     if (fabs(IP) > m_IP_cut_kaon)                           continue;
     if (IPsig < m_IPs_cut_kaon)                             continue;
  
-    const double ippu=axp->info(LHCb::Particle::LastGlobal+1,10000.);
+    const double ippu=axp->info(LHCb::Particle::FlavourTaggingIndex+1,10000.);
     if(ippu < m_ipPU_cut_kaon)                              continue;
 
     if ( msgLevel(MSG::VERBOSE) )
@@ -311,7 +311,7 @@ Tagger TaggerKaonOppositeTool::tagReco14( const Particle* AXB0,
     if( distphi < m_distPhi_cut_kaon )                      continue;
 
     Particle* c = const_cast<Particle*>(*ipart);
-    c->addInfo(LHCb::Particle::LastGlobal+2,321);      // store the information that the kaon tagger is found    // new
+    c->addInfo(LHCb::Particle::FlavourTaggingIndex+2,321);      // store the information that the kaon tagger is found    // new
 	
     if( Pt > ptmaxk ) { 
       ikaon = axp;
@@ -331,24 +331,25 @@ Tagger TaggerKaonOppositeTool::tagReco14( const Particle* AXB0,
   double pn = 1-m_AverageOmega;
   double sign = 1.;
   
-  std::list<std::pair<std::string, Float_t> > NNinputList;    
+  std::vector<std::string> inputVars;
+  std::vector<double> inputVals;
   if(m_CombinationTechnique == "NNet") {
-    
-    NNinputList.push_back(std::pair<std::string, Float_t>("mult",   m_util->countTracks(vtags)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("partP",  log(ikaon->p()/GeV)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("partPt", log(ikaon->pt()/GeV)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("nnkrec", allVtx.size()));
-    NNinputList.push_back(std::pair<std::string, Float_t>("ptB",    log(AXB0->pt()/GeV)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("IPs",    log(save_IPs)));
-    NNinputList.push_back(std::pair<std::string, Float_t>("partlcs",log(ikaon->proto()->track()->chi2PerDoF())));
-    NNinputList.push_back(std::pair<std::string, Float_t>("PIDNNk", save_PIDNNk));
-    NNinputList.push_back(std::pair<std::string, Float_t>("PIDNNpi",save_PIDNNpi));
-    NNinputList.push_back(std::pair<std::string, Float_t>("PIDNNp", save_PIDNNp));
-    NNinputList.push_back(std::pair<std::string, Float_t>("ghostProb",log(ikaon->proto()->track()->ghostProbability())));
-    NNinputList.push_back(std::pair<std::string, Float_t>("IPPU",   log(save_IPPU)));
-  
-    pn = m_nnet->MLPkaonTMVA( NNinputList );
 
+    inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));
+    inputVars.push_back("partP");       inputVals.push_back( (double)log(ikaon->p()/GeV));
+    inputVars.push_back("partPt");      inputVals.push_back( (double)log(ikaon->pt()/GeV));
+    inputVars.push_back("nnkrec");      inputVals.push_back( (double)allVtx.size());
+    inputVars.push_back("ptB");         inputVals.push_back( (double)log(AXB0->pt()/GeV));
+    inputVars.push_back("IPs");         inputVals.push_back( (double)log(fabs(save_IPs)));
+    inputVars.push_back("partlcs");     inputVals.push_back( (double)log(ikaon->proto()->track()->chi2PerDoF()));
+    inputVars.push_back("PIDNNk");      inputVals.push_back( (double)save_PIDNNk );
+    inputVars.push_back("PIDNNpi");     inputVals.push_back( (double)save_PIDNNpi );
+    inputVars.push_back("PIDNNp");      inputVals.push_back( (double)save_PIDNNp );
+    inputVars.push_back("ghostProb");   inputVals.push_back( (double)log(ikaon->proto()->track()->ghostProbability()));
+    inputVars.push_back("IPPU");        inputVals.push_back( (double)log(save_IPPU));
+  
+    pn = m_nnet->MLPkaonTMVA(inputVars,inputVals);
+ 
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " Kaon pn="<< pn <<endmsg;
 
@@ -366,18 +367,17 @@ Tagger TaggerKaonOppositeTool::tagReco14( const Particle* AXB0,
       pn = 1. - pn;
       sign = -1.;
     }
-  }
   
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    
-    debug()<<" TaggerKaon: "<<sign*ikaon->charge()<<" omega="<<1-pn;
-    
-    typedef std::list<std::pair<std::string, Float_t> > ParListType;
-    for(ParListType::const_iterator p = NNinputList.begin(); p != NNinputList.end(); p++) {
-    debug() << p->second<<" ";
+  
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      
+      debug()<<" TaggerKaon: "<<sign*ikaon->charge()<<" omega="<<1-pn;
+      for(unsigned int iloop=0; iloop<inputVals.size(); iloop++){
+        debug() << inputVals[iloop]<<" ";
+      }
+      debug()<<endreq;
     }
-    debug()<<endreq;
   }
   
   tkaon.setOmega( 1-pn );

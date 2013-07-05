@@ -10,7 +10,11 @@
 #include "NeuralNet/NNkaonS.cxx"
 #include "NeuralNet/NNpionS.cxx"
 #include "NeuralNet/NNvtx.cxx"
-#include "MyReader.h"
+
+#include "NeuralNet/weights/muon__muonMLPBNN.class.C"
+#include "NeuralNet/weights/ele__eleMLPBNN.class.C"
+#include "NeuralNet/weights/kaon__kaonMLPBNN.class.C"
+#include "NeuralNet/weights/vtx__vtxMLPBNN.class.C"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : NNetTool_MLP v1.3
@@ -299,15 +303,13 @@ double NNetTool_MLP::MLPvtx(std::vector<double>& par)
 //=============================================================================
 // New NNet trained on DATA 2012  !!!!!!!!!!!
 //=============================================================================
-double NNetTool_MLP::MLPmTMVA(std::list<std::pair<std::string, Float_t> >& par) 
+double NNetTool_MLP::MLPmTMVA(std::vector <std::string>& inputVars, std::vector<double>& inputVals) 
 {
   double rnet = 0.5;
   double pn = 0.5;
 
-  TString weightfile(m_XML_dir+m_NNetWeights_mu);
-  TString methodName = TString("MLPBNN")+TString("method");
-  static MyReader reader(methodName, weightfile, par);
-  rnet = reader.eval(par);
+  Read_muonMLPBNN *reader = new Read_muonMLPBNN(inputVars);  
+  rnet = reader->GetMvaValue(inputVals);
 
   if (rnet>=0 && rnet<=1) {
     pn = 1.0 -func(rnet, m_P0mu, m_P1mu, m_P2mu, m_P3mu);
@@ -317,16 +319,15 @@ double NNetTool_MLP::MLPmTMVA(std::list<std::pair<std::string, Float_t> >& par)
   }
   return pn;
 }
+
 //=============================================================================
-double NNetTool_MLP::MLPeTMVA(std::list<std::pair<std::string, Float_t> >& par) 
+double NNetTool_MLP::MLPeTMVA(std::vector <std::string>& inputVars, std::vector<double>& inputVals) 
 {
   double rnet = 0.5;
   double pn = 0.5;
 
-  TString weightfile(m_XML_dir+m_NNetWeights_ele);
-  TString methodName = TString("MLPBNN")+TString("method");
-  static MyReader reader(methodName, weightfile, par);
-  rnet = reader.eval(par);
+  Read_eleMLPBNN *reader = new Read_eleMLPBNN(inputVars); 
+  rnet = reader->GetMvaValue(inputVals);
 
   if (rnet>=0 && rnet<=1) {
     pn = 1.0 -func(rnet, m_P0e, m_P1e, m_P2e, m_P3e);
@@ -338,15 +339,13 @@ double NNetTool_MLP::MLPeTMVA(std::list<std::pair<std::string, Float_t> >& par)
 }
 
 //=============================================================================
-double NNetTool_MLP::MLPkaonTMVA(std::list<std::pair<std::string, Float_t> >& par) 
+double NNetTool_MLP::MLPkaonTMVA(std::vector <std::string>& inputVars, std::vector<double>& inputVals) 
 {
   double rnet = 0.5;
   double pn = 0.5;
 
-  TString weightfile(m_XML_dir+m_NNetWeights_kaon);
-  TString methodName = TString("MLPBNN")+TString("method");
-  static MyReader reader(methodName, weightfile, par);
-  rnet = reader.eval(par);
+  Read_kaonMLPBNN *reader = new Read_kaonMLPBNN(inputVars); 
+  rnet = reader->GetMvaValue(inputVals);
 
   if (rnet>=0 && rnet <=1){
     pn = 1.0 -func(rnet, m_P0k, m_P1k, m_P2k, m_P3k);
@@ -359,15 +358,13 @@ double NNetTool_MLP::MLPkaonTMVA(std::list<std::pair<std::string, Float_t> >& pa
 }
 
 //=============================================================================
-double NNetTool_MLP::MLPvtxTMVA(std::list<std::pair<std::string, Float_t> >& par)
+double NNetTool_MLP::MLPvtxTMVA(std::vector <std::string>& inputVars, std::vector<double>& inputVals) 
 {
   double rnet = 0.5;
   double pn = 0.5;
 
-  TString weightfile(m_XML_dir+m_NNetWeights_vtx);
-  TString methodName = TString("MLPBNN")+TString("method");
-  static MyReader reader(methodName, weightfile, par);
-  rnet = reader.eval(par);
+  Read_vtxMLPBNN *reader = new Read_vtxMLPBNN(inputVars); 
+  rnet = reader->GetMvaValue(inputVals);
 
   if (rnet>=0 && rnet<=1) {
     pn = 1.0 -func(rnet, m_P0vtx, m_P1vtx, m_P2vtx, m_P3vtx);

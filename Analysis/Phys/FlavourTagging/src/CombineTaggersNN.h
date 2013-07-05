@@ -29,12 +29,11 @@ public:
 
   virtual ~CombineTaggersNN( ); ///< Destructor
 
-  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>&, int );
+  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>&, int,  bool  );
 
 private:
 
-  double m_ProbMin, m_omegascale, m_omegamaxbin;
-  double m_P0_NN, m_P1_NN, m_P2_NN;
+  double m_P0_NN, m_P1_NN, m_P2_NN, m_ProbMin;
   float pmu, pe, pk, pss, pvtx;
 
 };

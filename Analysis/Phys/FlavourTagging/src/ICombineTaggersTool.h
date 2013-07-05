@@ -24,7 +24,7 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_ICombineTaggersTool; };
  
-  virtual int combineTaggers( LHCb::FlavourTag&, std::vector<LHCb::Tagger*>& , int ) =0; // new interface
+  virtual int combineTaggers( LHCb::FlavourTag&, std::vector<LHCb::Tagger*>& , int, bool ) =0; // new interface
 
 
 };

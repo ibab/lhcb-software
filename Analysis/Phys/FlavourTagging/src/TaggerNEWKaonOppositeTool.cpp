@@ -207,6 +207,7 @@ Tagger TaggerNEWKaonOppositeTool::tagReco12( const Particle* AXB0,
     const double tsa = (*ipart)->proto()->track()->likelihood();
     if( tsa < m_tsa_cut ) continue;
 
+    if( tsa > m_ghost_cut ) continue;
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
     if( distphi < m_distPhi_cut ) continue;
 
@@ -251,7 +252,7 @@ Tagger TaggerNEWKaonOppositeTool::tagReco12( const Particle* AXB0,
     IP = fabs(IP);
     if(!IPerr) continue;
     const double IPsig = fabs(IP/IPerr);
-    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,100000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIndex+1,100000.);
 
     if(ippu < m_ipPU_cut_kaon)  continue;
 
@@ -389,9 +390,13 @@ Tagger TaggerNEWKaonOppositeTool::tagReco12( const Particle* AXB0,
   if(my_os_k_eta > 0.5)
     my_os_k_eta = 1. - my_os_k_eta;
 
+
+  if( my_os_k_dec == 0 ) return tkaon;
+  
+
   tkaon.setOmega( my_os_k_eta );
   tkaon.setDecision( my_os_k_dec );
-  tkaon.setType( Tagger::jetCharge);
+  tkaon.setType( Tagger::OS_nnetKaon);
   tkaon.addToTaggerParts(ikaon);
 
   return tkaon;
@@ -492,7 +497,7 @@ Tagger TaggerNEWKaonOppositeTool::tagReco14( const Particle* AXB0,
     IP = fabs(IP);
     if(!IPerr) continue;
     const double IPsig = fabs(IP/IPerr);
-    const double ippu=(*ipart)->info(LHCb::Particle::LastGlobal+1,100000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIndex+1,100000.);
 
     if(ippu < m_ipPU_cut_kaon)  continue;
 
@@ -536,6 +541,9 @@ Tagger TaggerNEWKaonOppositeTool::tagReco14( const Particle* AXB0,
     event_map.push_back(ev_pair);
 
   }
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << " vtags_sel.size()="<<  vtags_sel.size() <<" myMap.size()"<<myMap.size()<<endmsg;
 
   count = 0;
 
@@ -631,8 +639,11 @@ Tagger TaggerNEWKaonOppositeTool::tagReco14( const Particle* AXB0,
 
   tkaon.setOmega( my_os_k_eta );
   tkaon.setDecision( my_os_k_dec );
-  tkaon.setType( Tagger::jetCharge);
+  tkaon.setType( Tagger::OS_nnetKaon);
+
   tkaon.addToTaggerParts(ikaon);
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << " NNetOSK decision="<<  my_os_k_dec <<" omega="<< my_os_k_eta<<endmsg;
 
   return tkaon;
 }

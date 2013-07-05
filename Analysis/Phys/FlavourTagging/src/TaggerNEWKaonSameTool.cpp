@@ -245,6 +245,8 @@ Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
     event_map.push_back(ev_pair);
 
   }
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << " vtags_sel.size()="<<  vtags_sel.size() <<" myMap.size()"<<myMap.size()<<endmsg;
 
   count = 0;
 
@@ -349,8 +351,10 @@ Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
   
   tkaon.setOmega( my_os_k_eta );
   tkaon.setDecision( my_os_k_dec );
-  tkaon.setType( Tagger::SS_Kaon);
+  tkaon.setType( Tagger::SS_nnetKaon);
   tkaon.addToTaggerParts(ikaon);
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << " NNetSSK decision="<<  my_os_k_dec <<" omega="<< my_os_k_eta<<endmsg;
 
   return tkaon;
 }

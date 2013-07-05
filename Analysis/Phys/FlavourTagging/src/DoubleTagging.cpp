@@ -160,11 +160,13 @@ StatusCode DoubleTagging::execute()
           else ptaggers.push_back( &(taggers[i]) );
         }
         int signalType=1;
-
+        bool m_CombineWithNNetTagger = false;        
         warning() << " WARNING: make combination assuming Bu or Bd (with SSpion!!) fix it!!!"
                   << signalType<<endmsg;
+        warning() << " WARNING: make combination assuming nnetTagger or cut-based tagger fix it!!!"
+                  << m_CombineWithNNetTagger <<endmsg;
 
-        const unsigned int category = m_oscombine->combineTaggers(*OSTag,ptaggers,signalType);
+        const unsigned int category = m_oscombine->combineTaggers(*OSTag,ptaggers,signalType,m_CombineWithNNetTagger);
         const std::vector<Tagger> OStaggers = OSTag->taggers();
 
         if( sskaondec == 0 || category == 0 ) continue;

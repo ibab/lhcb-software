@@ -133,6 +133,8 @@ void BTagging::performTagging(const std::string & location)
           case Tagger::SS_jetCharge: tts="SS_jetCharge";break;
           case Tagger::VtxCharge   : tts="VtxCharge";   break;
           case Tagger::Topology    : tts="Topology";    break;
+          case Tagger::OS_nnetKaon : tts="OS_nnetKaon"; break;
+          case Tagger::SS_nnetKaon : tts="SS_nnetKaon"; break;
           }
           debug() << "--> tagger type: " << tts <<endreq;
           debug() << "    decision = "

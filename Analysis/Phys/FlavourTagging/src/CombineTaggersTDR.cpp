@@ -27,14 +27,15 @@ CombineTaggersTDR::~CombineTaggersTDR(){}
 //=======================================================================
 int CombineTaggersTDR::combineTaggers(FlavourTag& theTag,
                                       std::vector<Tagger*>& vtg , 
-                                      int signalType)
+                                      int signalType, bool m_nnetTaggers)
 {
 
   if( vtg.empty() ) return 0;
 
-  if ( msgLevel(MSG::DEBUG) )
+  if ( msgLevel(MSG::DEBUG) ){
     debug()<<"entering TDR/PID type combination"<<endreq;
-
+    debug()<<"NB: m_nnetTaggers="<<m_nnetTaggers<<" has no influence here"<<endreq;
+  }
   fatal()<<" WARNING: update the code according to the new variable signalType !!!!!! "
          <<signalType<<endmsg;
   ///////////////////////////////////////////////////////////////////////////
@@ -102,11 +103,13 @@ int CombineTaggersTDR::combineTaggers(FlavourTag& theTag,
   if(      tagdecision ==  1 ) theTag.setDecision( FlavourTag::bbar );
   else if( tagdecision == -1 ) theTag.setDecision( FlavourTag::b );
   else theTag.setDecision( FlavourTag::none );
-  theTag.setCategory( category );
+
   theTag.setOmega( 0.5 );
   //fill in taggers info into FlavourTag object
   for( int j=1; j!=6; j++ ) if(itag.at(j)) theTag.addTagger(*(vtg.at(j-1)));
+  if ( msgLevel(MSG::DEBUG) )
+       debug()<<"Tagging category is="<<category<<endreq;
 
-  return category;
+  return theTag.decision();
 }
 //==========================================================================

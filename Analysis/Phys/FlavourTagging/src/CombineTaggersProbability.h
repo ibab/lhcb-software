@@ -27,12 +27,11 @@ public:
   /// Initialize
   StatusCode initialize();
 
-  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>&, int signalType );
+  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>&, int signalType,  bool m_nnetTaggers );
 
 private:
 
   double m_ProbMin, m_ProbMin_OS;
-  double m_omegascale, m_omegamaxbin;
   double m_P0_Cal_OS, m_P1_Cal_OS, m_Eta_Cal_OS;
 
 };

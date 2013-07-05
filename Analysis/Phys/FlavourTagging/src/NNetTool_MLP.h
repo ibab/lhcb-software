@@ -42,10 +42,14 @@ public:
   virtual double MLPpS(std::vector<double>&);
   virtual double MLPvtx(std::vector<double>&);
   
-  virtual double MLPmTMVA(std::list<std::pair<std::string, Float_t> >&);
-  virtual double MLPeTMVA(std::list<std::pair<std::string, Float_t> >&);
-  virtual double MLPkaonTMVA(std::list<std::pair<std::string, Float_t> >&);
-  virtual double MLPvtxTMVA(std::list<std::pair<std::string, Float_t> >&);
+  virtual double MLPmTMVA(std::vector<std::string>&, std::vector<double>&);
+  virtual double MLPeTMVA(std::vector<std::string>&, std::vector<double>&);
+  virtual double MLPkaonTMVA(std::vector<std::string>&, std::vector<double>&);
+  virtual double MLPvtxTMVA(std::vector<std::string>&, std::vector<double>&);
+  //virtual double MLPmTMVA(std::list<std::pair<std::string, Float_t> >&);
+  //virtual double MLPeTMVA(std::list<std::pair<std::string, Float_t> >&);
+  //virtual double MLPkaonTMVA(std::list<std::pair<std::string, Float_t> >&);
+  //virtual double MLPvtxTMVA(std::list<std::pair<std::string, Float_t> >&);
 
 private:
 

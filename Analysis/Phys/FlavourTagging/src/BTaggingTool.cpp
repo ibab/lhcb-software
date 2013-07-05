@@ -44,6 +44,7 @@ GaudiTool ( type, name, parent )
 
   declareProperty( "CombineTaggersName",      m_CombineTaggersName = "CombineTaggersProbability" );
   declareProperty( "TaggerLocation",          m_taggerLocation = "Phys/TaggingParticles" );
+  declareProperty( "CombineWithNNetTagger",   m_CombineWithNNetTagger = false );
 
   //choose active taggers
   declareProperty( "EnableMuonTagger",        m_EnableMuon    = true );
@@ -54,8 +55,8 @@ GaudiTool ( type, name, parent )
   declareProperty( "EnableVertexChargeTagger",m_EnableVertexCharge= true);
   declareProperty( "EnableJetSameTagger",     m_EnableJetSame = false );
   // NNet tagging algorithms
-  declareProperty( "EnableNNetKaonOSTagger",   m_EnableNNetKaonOS  = false );
-  declareProperty( "EnableNNetKaonSSTagger",   m_EnableNNetKaonSS  = false );
+  declareProperty( "EnableNNetKaonOSTagger",   m_EnableNNetKaonOS  = true );
+  declareProperty( "EnableNNetKaonSSTagger",   m_EnableNNetKaonSS  = true );
 
   declareProperty( "ForceSignalID",           m_ForceSignalID  = " "); //force signal B as Bu, Bd, B
 
@@ -82,11 +83,11 @@ StatusCode BTaggingTool::initialize()
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
 
-  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  m_descend    = tool<IParticleDescendants> ( "ParticleDescendants", this );
 
-  m_taggerMu = tool<ITagger> ("TaggerMuonTool", this);
+  m_taggerMu   = tool<ITagger> ("TaggerMuonTool", this);
 
-  m_taggerEle = tool<ITagger> ("TaggerElectronTool", this);
+  m_taggerEle  = tool<ITagger> ("TaggerElectronTool", this);
 
   m_taggerKaon = tool<ITagger> ("TaggerKaonOppositeTool", this);
 
@@ -94,11 +95,11 @@ StatusCode BTaggingTool::initialize()
 
   m_taggerPionS = tool<ITagger> ("TaggerPionSameTool", this);
 
-  m_taggerVtxCh= tool<ITagger> ("TaggerVertexChargeTool", this);
+  m_taggerVtxCh = tool<ITagger> ("TaggerVertexChargeTool", this);
 
-  m_taggerJetS = tool<ITagger> ("TaggerJetSameTool", this);
+  m_taggerJetS  = tool<ITagger> ("TaggerJetSameTool", this);
 
-  m_taggerNNetKaon = tool<ITagger> ("TaggerNEWKaonOppositeTool", this);
+  m_taggerNNetKaon  = tool<ITagger> ("TaggerNEWKaonOppositeTool", this);
 
   m_taggerNNetKaonS = tool<ITagger> ("TaggerNEWKaonSameTool", this);
 
@@ -220,44 +221,48 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   ///Choose Taggers ------------------------------------------------------
   if (msgLevel(MSG::DEBUG)) debug() <<"evaluate taggers" <<endreq;
 
-  Tagger muon, elec, kaon, kaonS, pionS, vtxCh, jetS;
+  Tagger muon, elec, kaon, kaonS, pionS, vtxCh, jetS, nnetkaon, nnetkaonS;
   if(m_EnableMuon)            muon = m_taggerMu    -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableKaonOS)          kaon = m_taggerKaon  -> tag(AXB, RecVert, allVtx, vtags);
-  else if(m_EnableNNetKaonOS) kaon = m_taggerNNetKaon -> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnableNNetKaonOS)  nnetkaon = m_taggerNNetKaon -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableElectron)        elec = m_taggerEle   -> tag(AXB, RecVert, allVtx, vtags);
-  if(m_EnableKaonSS)          kaonS= m_taggerKaonS -> tag(AXB, RecVert, allVtx, vtags);
-  else if(m_EnableNNetKaonSS) kaonS= m_taggerNNetKaonS-> tag(AXB, RecVert, allVtx, vtags);
-  if(m_EnablePionSS)          pionS= m_taggerPionS-> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnableKaonSS)         kaonS = m_taggerKaonS -> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnableNNetKaonSS) nnetkaonS = m_taggerNNetKaonS-> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnablePionSS)         pionS = m_taggerPionS-> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableJetSame)         jetS = m_taggerJetS  -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableVertexCharge)   vtxCh = m_taggerVtxCh -> tag(AXB, RecVert, allVtx, vtags);
 
 
   std::vector<Tagger*> taggers;
-  taggers.reserve(6);
+  taggers.reserve(8);
   taggers.push_back(&muon);
   taggers.push_back(&elec);
   taggers.push_back(&kaon);
   taggers.push_back(&kaonS);
   taggers.push_back(&pionS);
   taggers.push_back(&vtxCh);
+  taggers.push_back(&nnetkaon);
+  taggers.push_back(&nnetkaonS);
+      
 
   //----------------------------------------------------------------------
-  //Now combine the individual tagger decisions into
-  //one final B flavour tagging decision. Such decision
-  //can be made and categorised in two ways: the "PID"
-  //approach is based on the particle type, while the
-  //"Prob" approach is based on the wrong tag fraction
+  //Now combine the individual tagger decisions into one final B flavour tagging decision. 
+  //There are different methods that can be used.
+  //CombineTaggersProbability.cpp  --> combines according individual probabilities (default)
+  //CombineTaggersNN.cpp ---> combines using a NNEt that used individual probabilities
+  //CombineTaggersOSTDR.cpp
+  //CombineTaggersTDR.cpp
+  //CombineTaggersPID.cpp --> based on the particle type
+
   int signalType =0;
   if(isBu || isBd ) signalType=1;
   else if(isBs) signalType=2;
 
-
-  if (msgLevel(MSG::DEBUG)) debug() <<"combine taggers "<< taggers.size() <<endreq;
-  m_combine -> combineTaggers( theTag, taggers , signalType);
+  m_combine -> combineTaggers( theTag, taggers , signalType,  m_CombineWithNNetTagger);
   if (msgLevel(MSG::DEBUG))
   {
-    debug()<<"omega: "<<theTag.omega()<<endreq;
-    debug()<<"omegaOS: "<<theTag.omegaOS()<<endreq;
+    debug() <<"combine taggers "<< taggers.size() <<
+    "omega: "<<theTag.omega()<<"omegaOS: "<<theTag.omegaOS()<<endreq;
   }
 
   ///OUTPUT to Logfile ---------------------------------------------------
@@ -266,24 +271,35 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   if (msgLevel(MSG::DEBUG)) debug() << "BTAGGING TAG   "
                                     << std::setw(9) << evt->runNumber()
                                     << std::setw(9) << evt->evtNumber()
-                                    << std::setw(5) << theTag.decision()
-                                    << std::setw(3) << theTag.category()
-                                    << std::setw(5) << theTag.decisionOS()
-                                    << std::setw(3) << theTag.categoryOS()
-                                    << std::setw(5) << muon.decision()
-                                    << std::setw(3) << elec.decision()
-                                    << std::setw(3) << kaon.decision()
-                                    << std::setw(3) << kaonS.decision()
-                                    << std::setw(3) << pionS.decision()
-                                    << std::setw(3) << vtxCh.decision()
+                                    << std::setw(3) << theTag.decision()<<" "
+                                    << std::setw(6) << theTag.omega()
+                                    << std::setw(3) << theTag.decisionOS()<<" "
+                                    << std::setw(6) << theTag.omegaOS()
+                                    << " * "
+                                    << std::setw(3) << muon.decision()<<" "
+                                    << std::setw(6) << muon.omega()
+                                    << std::setw(3) << elec.decision()<<" "
+                                    << std::setw(6) << elec.omega()
+                                    << std::setw(3) << kaon.decision()<<" "
+                                    << std::setw(6) << kaon.omega()
+                                    << std::setw(3) << kaonS.decision()<<" "
+                                    << std::setw(6) << kaonS.omega()
+                                    << std::setw(3) << pionS.decision()<<" "
+                                    << std::setw(6) << pionS.omega()
+                                    << std::setw(3) << vtxCh.decision()<<" "
+                                    << std::setw(6) << vtxCh.omega()
+                                    << std::setw(3) << nnetkaon.decision()<<" "
+                                    << std::setw(6) << nnetkaon.omega()
+                                    << std::setw(3) << nnetkaonS.decision()<<" "
+                                    << std::setw(6) << nnetkaonS.omega()
                                     << endmsg;
 
   ///Cancel vtags info-------
   for ( Particle::ConstVector::const_iterator i=vtags.begin(); i!=vtags.end(); ++i )
   {
     Particle* c = const_cast<Particle*>(*i);
-    if( c->hasInfo(LHCb::Particle::LastGlobal+1) ) c->eraseInfo(LHCb::Particle::LastGlobal+1);
-    if( c->hasInfo(LHCb::Particle::LastGlobal+2) ) c->eraseInfo(LHCb::Particle::LastGlobal+2);
+    if( c->hasInfo(LHCb::Particle::FlavourTaggingIndex+1) ) c->eraseInfo(LHCb::Particle::FlavourTaggingIndex+1);
+    if( c->hasInfo(LHCb::Particle::FlavourTaggingIndex+2) ) c->eraseInfo(LHCb::Particle::FlavourTaggingIndex+2);
   }
   
   clearExtraInfo();
@@ -413,37 +429,37 @@ BTaggingTool::choosePrimary(const Particle* AXB,
   }//else bestPV
 
   //build a vector of pileup vertices --------------------------
-  double min_chiPV=1000;
-  double the_chiPV=1000;
+  double min_chi2PV=1000;
+  double the_chi2PV=1000;
   int nPV=0;
-
+  
   RecVertex::Range::const_iterator jv;
   for(jv=verts.begin(); jv!=verts.end(); jv++)
   {
     const double dx = RecVert->position().x()-(*jv)->position().x();
     const double dy = RecVert->position().y()-(*jv)->position().y();
     const double dz = RecVert->position().z()-(*jv)->position().z();
-
-    const double chiPV = sqrt(dx * dx / RecVert->covMatrix()(0,0) +
-                              dy * dy / RecVert->covMatrix()(1,1) +
-                              dz * dz / RecVert->covMatrix()(2,2));
-
-    if(chiPV < min_chiPV) min_chiPV = chiPV;
-
-    if(chiPV < 3)
+    
+    const double chi2PV = dx * dx / RecVert->covMatrix()(0,0) +
+                          dy * dy / RecVert->covMatrix()(1,1) +
+                          dz * dz / RecVert->covMatrix()(2,2);
+  
+    if(chi2PV < min_chi2PV) min_chi2PV = chi2PV;
+    
+    if(chi2PV < 3)
     {
-      the_chiPV = chiPV;
+      the_chi2PV = chi2PV;
       nPV++;
       continue;
-
+      
     }
     else
     {
       PileUpVtx.push_back(*jv);
     }
-
   }
-  if(min_chiPV!=the_chiPV || nPV!=1 )
+  
+  if( fabs(min_chi2PV/the_chi2PV-1.)>1.e-5 || nPV > 1 )
   {
     PileUpVtx.clear();
     for(jv=verts.begin(); jv!=verts.end(); jv++)
@@ -451,19 +467,19 @@ BTaggingTool::choosePrimary(const Particle* AXB,
       const double dxx = RecVert->position().x()-(*jv)->position().x();
       const double dyy = RecVert->position().y()-(*jv)->position().y();
       const double dzz = RecVert->position().z()-(*jv)->position().z();
-      const double chiPV = sqrt(dxx * dxx / RecVert->covMatrix()(0,0) +
-                                dyy * dyy / RecVert->covMatrix()(1,1) +
-                                dzz * dzz / RecVert->covMatrix()(2,2));
+      const double chi2PV = dxx * dxx / RecVert->covMatrix()(0,0) +
+                            dyy * dyy / RecVert->covMatrix()(1,1) +
+                            dzz * dzz / RecVert->covMatrix()(2,2);
 
-      if(chiPV == min_chiPV) continue;
+      if(fabs(chi2PV/min_chi2PV -1.)<1.e-5) continue;  // this is the PV
       else PileUpVtx.push_back(*jv);
     }
   }
-
+  
   //UseReFitPV means that it will use the refitted pV for the ip calculation
   //of taggers and SV building. Do not move this line above PileUpVtx building
   if( m_UseReFitPV ) RecVert = (&RefitRecVert);
-
+  
   if( ! RecVert )
   {
     Error( "No Reconstructed Vertex!! Skip." ).ignore();
@@ -513,12 +529,12 @@ BTaggingTool::chooseCandidatesReco12(const Particle* AXB,
     if(ippuerr) {
       if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts
       Particle* c = const_cast<Particle*>(*ip);
-      if( c->hasInfo(LHCb::Particle::LastGlobal+1) )
+      if( c->hasInfo(LHCb::Particle::FlavourTaggingIndex+1) )
       {
-        Error("LastGlobal+1 info already set: erasing it");
-        c->eraseInfo(LHCb::Particle::LastGlobal+1);
+        Error("FlavourTaggingIndex+1 info already set: erasing it");
+        c->eraseInfo(LHCb::Particle::FlavourTaggingIndex+1);
       }
-      c->addInfo(LHCb::Particle::LastGlobal+1, ippu/ippuerr); // store the information on the IPPU of the tagging particle
+      c->addInfo(LHCb::Particle::FlavourTaggingIndex+1, ippu/ippuerr); // store the information on the IPPU of the tagging particle
       m_extraInfoToClear.push_back( c );
       if (msgLevel(MSG::VERBOSE))
         verbose()<<"particle p="<<(*ip)->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
@@ -637,15 +653,15 @@ BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
 
     // CRJ : This is not really allowed -- SV reintroduced for Local FT use
     Particle* c = const_cast<Particle*>(p);
-    if( c->hasInfo(LHCb::Particle::LastGlobal+1) )
+    if( c->hasInfo(LHCb::Particle::FlavourTaggingIndex+1) )
     {
-      Error("LastGlobal+1 info already set: erasing it");
-      c->eraseInfo(LHCb::Particle::LastGlobal+1);
+      Error("FlavourTaggingIndex+1 info already set: erasing it");
+      c->eraseInfo(LHCb::Particle::FlavourTaggingIndex+1);
     }
-    if( c->hasInfo(LHCb::Particle::LastGlobal+2) )
+    if( c->hasInfo(LHCb::Particle::FlavourTaggingIndex+2) )
     {
-      Error("LastGlobal+2 info already set: erasing it");
-      c->eraseInfo(LHCb::Particle::LastGlobal+2);
+      Error("FlavourTaggingIndex+2 info already set: erasing it");
+      c->eraseInfo(LHCb::Particle::FlavourTaggingIndex+2);
     }
 
     // calculate the min IP wrt all pileup vtxs
@@ -656,7 +672,7 @@ BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
     {
       if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts
 
-      c->addInfo(LHCb::Particle::LastGlobal+1, ippu/ippuerr);
+      c->addInfo(LHCb::Particle::FlavourTaggingIndex+1, ippu/ippuerr);
       m_extraInfoToClear.push_back( c );
       if( msgLevel(MSG::VERBOSE) )
         verbose()<<"particle p="<<p->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
@@ -855,8 +871,8 @@ void BTaggingTool::clearExtraInfo()
   for ( std::vector<LHCb::Particle*>::iterator iC = m_extraInfoToClear.begin();
         iC != m_extraInfoToClear.end(); ++iC )
   {
-    if ( (*iC)->hasInfo(LHCb::Particle::LastGlobal+1) ) (*iC)->eraseInfo(LHCb::Particle::LastGlobal+1);
-    if ( (*iC)->hasInfo(LHCb::Particle::LastGlobal+2) ) (*iC)->eraseInfo(LHCb::Particle::LastGlobal+2);
+    if ( (*iC)->hasInfo(LHCb::Particle::FlavourTaggingIndex+1) ) (*iC)->eraseInfo(LHCb::Particle::FlavourTaggingIndex+1);
+    if ( (*iC)->hasInfo(LHCb::Particle::FlavourTaggingIndex+2) ) (*iC)->eraseInfo(LHCb::Particle::FlavourTaggingIndex+2);
   }
   m_extraInfoToClear.clear();
 }

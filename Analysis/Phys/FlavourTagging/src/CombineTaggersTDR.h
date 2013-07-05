@@ -24,7 +24,7 @@ public:
 
   virtual ~CombineTaggersTDR( ); ///< Destructor
 
-  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>& , int);
+  int combineTaggers(LHCb::FlavourTag& theTag, std::vector<LHCb::Tagger*>& , int, bool);
 
 };
 #endif // COMBINETAGGERSTDR_H
