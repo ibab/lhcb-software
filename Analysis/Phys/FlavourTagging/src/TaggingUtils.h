@@ -72,13 +72,13 @@ private:
       bool(const LHCb::Particle*,
 	      const LHCb::Particle::ConstVector&, double&) > > m_isinTree;
 
-  int countTracks2011(const LHCb::Particle::ConstVector& );
-  int countTracks2012(const LHCb::Particle::ConstVector& );
+  int countTracksReco12(const LHCb::Particle::ConstVector& );
+  int countTracksReco14(const LHCb::Particle::ConstVector& );
 
-  bool isinTree2011(const LHCb::Particle*,
+  bool isinTreeReco12(const LHCb::Particle*,
                  const LHCb::Particle::ConstVector& , double& );
 
-  bool isinTree2012(const LHCb::Particle*,
+  bool isinTreeReco14(const LHCb::Particle*,
                  const LHCb::Particle::ConstVector& , double& );
 };
 

@@ -21,6 +21,7 @@ tunings = {
         "TaggerNEWKaonOppositeTool.Personality": "'Reco14'",
         "TaggerVertexChargeTool.Personality" : "'Reco14'",        
         "SVertexOneSeedTool.Personality" : "'Reco14'",        
+        "TaggingUtils.Personality" : "'Reco14'",        
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
 
@@ -216,6 +217,7 @@ tunings = {
         "TaggerNEWKaonOppositeTool.Personality": "'Reco12'",
         "TaggerVertexChargeTool.Personality" : "'Reco12'",        
         "SVertexOneSeedTool.Personality" : "'Reco12'",        
+        "TaggingUtils.Personality" : "'Reco12'",        
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
         #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
@@ -1389,7 +1391,7 @@ tunings = {
 
 def TuneTool(tool, version):
 
-    from Configurables import BTagging, BTaggingTool, TaggerMuonTool, TaggerElectronTool, TaggerKaonSameTool, TaggerNEWKaonOppositeTool, TaggerKaonOppositeTool, TaggerPionSameTool, TaggerVertexChargeTool, CombineTaggersProbability, SVertexOneSeedTool,NNetTool_MLP
+    from Configurables import BTagging, BTaggingTool, TaggerMuonTool, TaggerElectronTool, TaggerKaonSameTool, TaggerNEWKaonOppositeTool, TaggerKaonOppositeTool, TaggerPionSameTool, TaggerVertexChargeTool, CombineTaggersProbability, SVertexOneSeedTool,NNetTool_MLP, TaggingUtils
     
     tool.addTool ( BTaggingTool, name='BTaggingTool')
     tool.BTaggingTool.addTool ( CombineTaggersProbability )
@@ -1407,6 +1409,8 @@ def TuneTool(tool, version):
     tool.BTaggingTool.TaggerVertexChargeTool.addTool(NNetTool_MLP)
     tool.BTaggingTool.addTool ( SVertexOneSeedTool )
     tool.BTaggingTool.addTool ( TaggerNEWKaonOppositeTool )
+    tool.BTaggingTool.addTool ( TaggingUtils )
+
 
     for cut in tunings[version]:
         exec("tool.BTaggingTool."+cut+'='+str(tunings[version][cut]))

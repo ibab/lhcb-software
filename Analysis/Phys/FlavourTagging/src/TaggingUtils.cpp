@@ -29,7 +29,7 @@ DECLARE_TOOL_FACTORY( TaggingUtils )
     m_dva(0)
 {
   declareProperty( "ChoosePVCriterium", m_ChoosePV = "PVbyIPs");
-  declareProperty( "Personality", m_personality = "2012" );
+  declareProperty( "Personality", m_personality = "Reco14" );
   declareInterface<ITaggingUtils>(this);
 }
 
@@ -57,14 +57,14 @@ StatusCode TaggingUtils::initialize()
   }
   
   // register multiple personalities
-  m_countTracks.registerPersonality("2011",
-	  this, &TaggingUtils::countTracks2011);
-  m_countTracks.registerPersonality("2012",
-	  this, &TaggingUtils::countTracks2012);
-  m_isinTree.registerPersonality("2011",
-	  this, &TaggingUtils::isinTree2011);
-  m_isinTree.registerPersonality("2012",
-	  this, &TaggingUtils::isinTree2012);
+  m_countTracks.registerPersonality("Reco12",
+	  this, &TaggingUtils::countTracksReco12);
+  m_countTracks.registerPersonality("Reco14",
+	  this, &TaggingUtils::countTracksReco14);
+  m_isinTree.registerPersonality("Reco12",
+	  this, &TaggingUtils::isinTreeReco12);
+  m_isinTree.registerPersonality("Reco14",
+	  this, &TaggingUtils::isinTreeReco14);
 
   // select personality
   // (this throws an exception if the personality chosen by the user is not
@@ -153,7 +153,7 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
 int TaggingUtils::countTracks( const LHCb::Particle::ConstVector& vtags )
 { return m_countTracks(vtags); }
 //=========================================================================
-int TaggingUtils::countTracks2011( const LHCb::Particle::ConstVector& vtags ) {
+int TaggingUtils::countTracksReco12( const LHCb::Particle::ConstVector& vtags ) {
 
   int nr = 0;
 
@@ -174,7 +174,7 @@ int TaggingUtils::countTracks2011( const LHCb::Particle::ConstVector& vtags ) {
   return nr;
 }
 //=========================================================================
-int TaggingUtils::countTracks2012( const LHCb::Particle::ConstVector& vtags ) {
+int TaggingUtils::countTracksReco14( const LHCb::Particle::ConstVector& vtags ) {
 
   int nr = 0;
 
@@ -205,7 +205,7 @@ bool TaggingUtils::isinTree(const LHCb::Particle* axp,
     return m_isinTree(axp, sons, *(&dist_phi));
 }
 //============================================================================
-bool TaggingUtils::isinTree2011(const LHCb::Particle* axp, 
+bool TaggingUtils::isinTreeReco12(const LHCb::Particle* axp, 
 			    const LHCb::Particle::ConstVector& sons, 
                             double& dist_phi){
   double p_axp  = axp->p();
@@ -234,7 +234,7 @@ bool TaggingUtils::isinTree2011(const LHCb::Particle* axp,
   return false;
 }
 //============================================================================
-bool TaggingUtils::isinTree2012(const LHCb::Particle* axp,
+bool TaggingUtils::isinTreeReco14(const LHCb::Particle* axp,
                             const LHCb::Particle::ConstVector& sons,
                             double& dist_phi)
 {
