@@ -3,6 +3,9 @@
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
 
+! 2013-07-06 - Francesco Dettori 
+ - Restore Marco Cattaneo bug fix, previously removed by mistake.
+
 !========================= OTMonitor v3r6 2013-06-03 =========================
 ! 2013-05-27 - Francesco Dettori 
  - Small bug fix in OTChannelMonitor 

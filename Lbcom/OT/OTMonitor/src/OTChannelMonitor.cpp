@@ -40,10 +40,11 @@ DECLARE_ALGORITHM_FACTORY( OTChannelMonitor )
 OTChannelMonitor::OTChannelMonitor( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator ),
-    m_numEvents(0),
-    m_isOnline(false),
-    m_scaleHistos(true),
-    m_decoder("OTRawBankDecoder")
+  m_otdet(NULL),
+  m_numEvents(0),
+  m_isOnline(false),
+  m_scaleHistos(true),
+  m_decoder("OTRawBankDecoder")
 {
   declareProperty( "RawBankDecoder",m_decoder ) ;
   declareProperty( "scaleHistos", m_scaleHistos) ; 
@@ -133,8 +134,7 @@ StatusCode OTChannelMonitor::initialize() {
   }// Station
   
   
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
