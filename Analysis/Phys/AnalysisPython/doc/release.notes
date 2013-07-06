@@ -5,13 +5,17 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-07-06 - Vanya Belyaev
+
+ - fix file descriptor leak in MuteC-utilitities 
+
 !========================= AnalysisPython v2r21 2013-06-13 =========================
 
 ! 2013-05-28 - Marco Clemencic
  - Fixed compilation with CMake.
 
 ! 2013-05-26 - Vanya Belyaev
- - Add the slicing for exes and histos 
+ - Add the slicing for axes and histos 
 
 ! 2013-05-17 - Chris Jones
  - Remove unused methods from HStats.cpp to fix clang 3.2 warning
@@ -30,7 +34,7 @@
 
 ! 2013-05-09 - Vanya Belyaev
  - Many small improvements for python selectors, 
-   especially selector swith embedded cuts 
+   especially selectors with embedded cuts 
 
 !========================= AnalysisPython v2r20 2013-05-07 =========================
 

@@ -338,7 +338,11 @@ class MutePy(object):
         
 # ============================================================================
 ## @class MuteC
-#  context manager to suppress pythion prinout 
+#  context manager to suppress pythion prinout
+#  the actual code is stallen from
+#  http://stackoverflow.com/questions/11130156/suppress-stdout-stderr-print-from-python-functions
+#  A fix is added for "IOError: [Errno 24] Too many open files" :
+#  original code leaks the file descriptors
 class MuteC(object):
     """
     A context manager for doing a ``deep suppression'' of stdout and stderr in 
@@ -351,36 +355,72 @@ class MuteC(object):
     stallen from  
     http://stackoverflow.com/questions/11130156/suppress-stdout-stderr-print-from-python-functions
     """
+    #
+    ## class variables: dev-null device & instance counter 
+    _devnull = 0
+    _cnt     = 0
+    
     def __init__( self , out = True , err = False ):
+        
         self._out = out
         self._err = err
-    def __enter__(self):
-        #
-        ## C/C++
-        # 
-        # Open a pair of null files
-        self.null_fds = [ os.open ( os.devnull , os.O_RDWR ) for x in range(2) ]
-        # Save the actual stdout (1) and stderr (2) file descriptors.
-        self.save_fds = ( os.dup(1), os.dup(2) )
 
-        if self._out : os.dup2 ( self.null_fds[0] , 1 )  ## C/C++
-        if self._err : os.dup2 ( self.null_fds[1] , 2 )  ## C/C++
-    def __exit__(self, *_):        
-        # Re-assign the real stdout/stderr back to (1) and (2)  (C/C++_)
-        os.dup2 ( self.save_fds[0] , 1 )
-        os.dup2 ( self.save_fds[1] , 2 )
+        # increment instance counter 
+        self.__class__._cnt += 1
+
+        # create dev-null if not done yet 
+        if not self.__class__._devnull :
+            self.__class__._devnull = os.open ( os.devnull , os.O_WRONLY )            
+
+    def __del__  ( self ) :
+
         
-        # Close the null files  (C/C++_
-        os.close ( self.null_fds[0] )
-        os.close ( self.null_fds[1] )
+        # decrement instance counter 
+        self.__class__._cnt -= 1
+        
+        # close dev-null if not done yet 
+        if self.__class__._cnt <= 0 and self.__class__._devnull : 
+            os.close ( self.__class__._devnull  )
+            self.__class__._devnull = 0
+            
 
+    ## context-manager 
+    def __enter__(self):
+        
+        #
+        ## Save the actual stdout (1) and stderr (2) file descriptors.
+        #
+        self.save_fds =  os.dup(1), os.dup(2)  # leak was here !!!
+        
+        #
+        ## mute it!
+        #
+        if self._out : os.dup2 ( self.__class__._devnull , 1 )  ## C/C++
+        if self._err : os.dup2 ( self.__class__._devnull , 2 )  ## C/C++
 
+    ## context-manager 
+    def __exit__(self, *_):
+        
+        #
+        # Re-assign the real stdout/stderr back to (1) and (2)  (C/C++)
+        #
+        
+        if self._err : os.dup2 ( self.save_fds[1] , 2 )
+        if self._out : os.dup2 ( self.save_fds[0] , 1 )
+        
+        # fix the  file descriptor leak
+        # (there were no such line in example, and it causes
+        #      the sad:  "IOError: [Errno 24] Too many open files"
+        
+        os.close ( self.save_fds[1] ) 
+        os.close ( self.save_fds[0] )
+                
 # ============================================================================
 ## @class MuteAll
 #  context manager to suppress All (C/C++/Python) printout
 class MuteAll(object):
     """
-    A context manager to suppress a;; (C/C++/Python) printout
+    A context manager to suppress All  (C/C++/Python) printout
     """    
     def __init__( self , out = True , err = False ):
         self._c    = MuteC  ( out , err ) 
@@ -388,13 +428,13 @@ class MuteAll(object):
         
     def __enter__(self):
 
-        self._c .__enter__()
-        self._py.__enter__()
+        self._c .__enter__ ( )
+        self._py.__enter__ ( )
         
     def __exit__(self, *_):
         
-        self._c .__exit__ ( *_ )
-        self._py.__exit__ ( *_ )
+        self._py.__exit__  ( *_ )
+        self._c .__exit__  ( *_ )
         
 # =============================================================================
 ## simple context manager to suppress all(C/C++/Python) printout
@@ -455,6 +495,44 @@ silence_all = mute_all # ditto
 
 mute        = mute_all # ditto  
 silence     = mute     # ditto
+
+# =============================================================================
+## get all open file descriptors
+#  The actual code is copied from http://stackoverflow.com/a/13624412
+def get_open_fds():
+    """
+    Get all open file descriptors
+    
+    The actual code is copied from http://stackoverflow.com/a/13624412
+    """
+    #
+    import resource
+    import fcntl
+    #
+    fds = []
+    soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+    for fd in range(0, soft):
+        try:
+            flags = fcntl.fcntl(fd, fcntl.F_GETFD)
+        except IOError:
+            continue
+        fds.append(fd)
+    return fds
+
+# =============================================================================
+## get the actual fiel name form file descriptor 
+#  The actual code is copied from http://stackoverflow.com/a/13624412
+#  @warning: it is likely to be "Linux-only" function
+def get_file_names_from_file_number(fds):
+    """
+    Get the actual file name from file descriptor 
+    The actual code is copied from http://stackoverflow.com/a/13624412 
+    """
+    names = []
+    for fd in fds:
+        names.append(os.readlink('/proc/self/fd/%d' % fd))
+    return names
+
 
 # =============================================================================
 if '__main__' == __name__ :

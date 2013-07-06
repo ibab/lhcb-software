@@ -4399,6 +4399,7 @@ def _red_  ( self ) : return _color_( self , 2 )
 #  @date   2013-01-21 
 def _blue_ ( self ) : return _color_( self , 4 ) 
 
+
 ROOT.TH1D. level = _level_
 ROOT.TH1F. level = _level_
 ROOT.TH1D. null  = _null_
@@ -4414,7 +4415,7 @@ ROOT.TH1F. blue   = _blue_
 
 
 # =============================================================================
-## add some spline&interpoaliton stuff
+## add some spline&interpolation stuff
 # =============================================================================
 ## create spline object for the histogram
 #  @see Gaudi::Math::Spline 
@@ -4649,6 +4650,157 @@ def _iter_cuts_ ( self , cuts , first = 0 , last = _large ) :
 
 ROOT.TTree .withCuts  = _iter_cuts_ 
 ROOT.TChain.withCuts  = _iter_cuts_ 
+
+# =============================================================================
+## help project method for ROOT-trees and chains 
+#
+#  @code 
+#    >>> h1   = ROOT.TH1D(... )
+#    >>> tree.Project ( h1.GetName() , 'm', 'chi2<10' ) ## standart ROOT 
+#    
+#    >>> h1   = ROOT.TH1D(... )
+#    >>> tree.project ( h1.GetName() , 'm', 'chi2<10' ) ## ditto 
+#    
+#    >>> h1   = ROOT.TH1D(... )
+#    >>> tree.project ( h1           , 'm', 'chi2<10' ) ## use histo
+#  @endcode
+#
+#  @see TTree::Project
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-07-06
+def _tt_project_ ( tree , histo , what , *args ) :
+    """
+    Helper project method
+
+    >>> tree = ...
+    
+    >>> h1   = ROOT.TH1D(... )
+    >>> tree.Project ( h1.GetName() , 'm', 'chi2<10' ) ## standart ROOT 
+    
+    >>> h1   = ROOT.TH1D(... )
+    >>> tree.project ( h1.GetName() , 'm', 'chi2<10' ) ## ditto 
+    
+    >>> h1   = ROOT.TH1D(... )
+    >>> tree.project ( h1           , 'm', 'chi2<10' ) ## use histo 
+    
+    """
+    #
+    if hasattr (  histo , 'GetName' ) : histo = histo.GetName()
+    #
+    return tree.Project ( histo , what , *args )
+
+ROOT.TTree.project = _tt_project_
+
+# =============================================================================
+## Helper project method for RooDataSet
+#
+#  @code 
+#    
+#    >>> h1   = ROOT.TH1D(... )
+#    >>> dataset.project ( h1.GetName() , 'm', 'chi2<10' ) ## project variable into histo
+#    
+#    >>> h1   = ROOT.TH1D(... )
+#    >>> dataset.project ( h1           , 'm', 'chi2<10' ) ## use histo
+#
+#  @endcode
+#
+#  @see RooDataSet 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-07-06
+def _ds_project_  ( dataset , histo , what , *args ) :
+    """
+    Helper project method for RooDataSet
+    
+    >>> h1   = ROOT.TH1D(... )
+    >>> dataset.project ( h1.GetName() , 'm', 'chi2<10' ) ## project varibale into histo
+    
+    >>> h1   = ROOT.TH1D(... )
+    >>> dataset.project ( h1           , 'm', 'chi2<10' ) ## use histo
+    """
+    store = dataset.store()
+    
+    if store :
+        tree = store.tree()
+        if tree : return tree.project ( histo , what , *args ) 
+        
+    raise AttributeError( "Can't ``project'' data set , probably wrong StorageType" ) 
+
+    
+# =============================================================================
+## Helper draw method for RooDataSet
+#
+#  @code 
+#    
+#    >>> dataset.draw ( 'm', 'chi2<10' ) ## use histo
+#
+#  @endcode
+#
+#  @see RooDataSet 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-07-06
+def _ds_draw_ ( dataset , what , *args ) :
+    """
+    Helper draw method for RooDataSet
+    
+    >>> dataset.draw ( 'm', 'chi2<10' ) ## use histo
+    
+    """
+    store = dataset.store()
+    if store :
+        tree = store.tree()
+        if tree : return tree.Draw( what , *args )
+        
+    raise AttributeError( "Can't ``draw'' data set , probably wrong StorageType" )
+
+# =============================================================================
+## print method for RooDatSet
+#  @code
+#
+#   >>> print dataset
+#
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-07-06
+def _ds_print_ ( dataset , opts = 'v' ) :
+    """
+    Helper print method:
+    
+    >>> print dataset 
+    """
+    #
+    dataset.Print( opts )
+    #
+    return dataset.GetName() 
+
+ROOT.RooDataSet.draw     = _ds_draw_
+ROOT.RooDataSet.project  = _ds_project_
+ROOT.RooDataSet.__repr__ = _ds_print_
+
+# ==============================================================================
+## print ROOT file (altually a combination of ls&Print)
+#  @code
+#
+#  >>> f = ROOT.TFile(... )
+#  >>> print f
+#
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-07-06
+def _rf_print_ ( rfile , opts = '') :
+    """
+    Print ROOT file (altually a combination of ls&Print)
+    
+    >>> f = ROOT.TFile(... )
+    >>> print f
+    """
+    #
+    rfile.ls    ( opts  )
+    #
+    rfile.Print ( 'v'   )
+    #
+    return rfile.GetName()
+    
+ROOT.TFile.__repr__ = _rf_print_
     
 # =============================================================================
 logger.info ( 'Some useful decorations for TMinuit objects')
@@ -5725,19 +5877,24 @@ for t in ( ROOT.TH1D       ,
 
 # =============================================================================
 ## define simplified print for TCanvas 
-def _cnv_print_ ( cnv , fname , exts = [ 'eps' , 'pdf' , 'png' ] ) :
+def _cnv_print_ ( cnv , fname , exts = [ 'pdf' , 'png' , 'eps', 'C' ] ) :
     """
     A bit simplified version for TCanvas print
 
     >>> canvas.print ( 'fig' )    
     """
+    #
     p = fname.rfind ('.')
-    if    0 < p and p+4   == len ( fname ) : cnv.Print ( fname )
-    elif  0 < p and p[p:] == '.ps'         : cnv.Print ( fname )
-    else :
-        for e in exts :
-            cnv.Print ( fname + '.' + e )
-            
+    #
+    if 0 < p :
+        
+        if p+4 == len ( fname ) or fname[p:] in ( '.C', '.ps', '.jpeg', '.JPEG') :
+            cnv.Print( fname )
+            return cnv 
+
+    for e in exts :
+        cnv.Print ( fname + '.' + e )
+        
     return cnv 
 
 # =============================================================================
