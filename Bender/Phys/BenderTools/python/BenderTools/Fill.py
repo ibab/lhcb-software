@@ -97,6 +97,12 @@ def _fill_initialize ( self ) :
     self._min_dll_Ppi   = MINTREE ( 'p+'  == ABSID   , PIDp  - PIDpi ) 
     self._min_dll_Mu    = MINTREE ( 'mu+' == ABSID   , PIDmu - PIDpi )
     #
+    self._min_annpid_K  = MINTREE ( 'K+'  == ABSID     , PROBNNk      ) 
+    self._min_annpid_Pi = MINTREE ( 'pi+' == ABSID     , PROBNNpi     ) 
+    self._min_annpid_Mu = MINTREE ( 'mu+' == ABSID     , PROBNNmu     ) 
+    self._min_annpid_E  = MINTREE ( 'e+'  == ABSID     , PROBNNe      )
+    self._min_annpid_P  = MINTREE ( 'p+'  == ABSID     , PROBNNp      )
+    #
     self._min_Pt        = MINTREE ( ISBASIC & HASTRACK , PT  ) / GeV 
     self._min_Eta       = MINTREE ( ISBASIC & HASTRACK , ETA ) 
     self._max_Eta       = MAXTREE ( ISBASIC & HASTRACK , ETA )
@@ -104,10 +110,11 @@ def _fill_initialize ( self ) :
     self._min_CL_gamma  = MINTREE ( 'gamma' == ID , CL ) 
     self._min_Et_gamma  = MINTREE ( 'gamma' == ID , PT ) / GeV 
     #
-    self._maxTrChi2     = MAXTREE ( ISBASIC & HASTRACK , TRCHI2DOF    )
-    self._maxTrGhost    = MAXTREE ( ISBASIC & HASTRACK , TRGHOSTPROB  )
-    self._minTrKL       = MINTREE ( ISBASIC & HASTRACK , CLONEDIST    ) 
-    self._minTrIPchi2   = MINTREE ( ISBASIC & HASTRACK , BPVIPCHI2()  )
+    self._maxTrChi2       = MAXTREE ( ISBASIC & HASTRACK , TRCHI2DOF    )
+    self._maxTrGhost      = MAXTREE ( ISBASIC & HASTRACK , TRGHOSTPROB  )
+    self._minTrKL         = MINTREE ( ISBASIC & HASTRACK , CLONEDIST    ) 
+    self._minTrIPchi2     = MINTREE ( ISBASIC & HASTRACK , BPVIPCHI2()  )
+    self._max_anngh_track = MAXTREE ( ISBASIC & HASTRACK , PROBNNghost  )
     #
     ##
     self._EtC           = PINFO   ( 55001 , -100 * GeV ) 
@@ -130,43 +137,50 @@ def _fill_finalize   ( self ) :
     """
     Finalie the internal machinery 
     """
-    self._pions        = None 
-    self._kaons        = None 
-    self._protons      = None 
-    self._muons        = None 
-    self._gamma        = None 
-    self._digamma      = None 
-    self._pi0          = None 
-    self._tracks       = None 
-    self._basic        = None 
+    self._pions         = None 
+    self._kaons         = None 
+    self._protons       = None 
+    self._muons         = None 
+    self._gamma         = None 
+    self._digamma       = None 
+    self._pi0           = None 
+    self._tracks        = None 
+    self._basic         = None 
     #
-    self._ctau         = None 
-    self._ctau_9       = None 
-    self._ctau_25      = None 
-    self._lv01         = None 
-    self._vchi2        = None 
-    self._vchi2ndf     = None 
-    self._dtfchi2      = None 
-    self._ipchi2       = None 
-    self._dls          = None 
+    self._ctau          = None 
+    self._ctau_9        = None 
+    self._ctau_25       = None 
+    self._lv01          = None 
+    self._vchi2         = None 
+    self._vchi2ndf      = None 
+    self._dtfchi2       = None 
+    self._ipchi2        = None 
+    self._dls           = None 
     #
-    self._min_dll_K    = None 
-    self._min_dll_Pi   = None 
-    self._min_dll_PK   = None 
-    self._min_dll_Ppi  = None 
-    self._min_dll_Mu   = None
+    self._min_dll_K     = None 
+    self._min_dll_Pi    = None 
+    self._min_dll_PK    = None 
+    self._min_dll_Ppi   = None 
+    self._min_dll_Mu    = None
     #
-    self._min_Pt       = None 
-    self._min_Eta      = None 
-    self._max_Eta      = None
+    self._min_annpid_K  = None 
+    self._min_annpid_Pi = None 
+    self._min_annpid_Mu = None 
+    self._min_annpid_E  = None 
+    self._min_annpid_P  = None 
+
+    self._min_Pt        = None 
+    self._min_Eta       = None 
+    self._max_Eta       = None
     #
-    self._min_Et_gamma = None 
-    self._min_CL_gamma = None 
+    self._min_Et_gamma  = None 
+    self._min_CL_gamma  = None 
     #
-    self._maxTrChi2    = None 
-    self._maxTrGhost   = None 
-    self._minTrKL      = None 
-    self._minTrIPchi2  = None 
+    self._maxTrChi2       = None 
+    self._maxTrGhost      = None 
+    self._minTrKL         = None 
+    self._minTrIPchi2     = None 
+    self._max_anngh_track = None 
     #
     self._EtC          = None 
     self._PtC          = None 
@@ -200,14 +214,20 @@ def treatPions ( self         ,
     good  = LHCb.Particle.ConstVector()
     p.children ( self._pions , good ) 
     #
-    sc = tup.column_float ( 'mindll_piK' + suffix , self._min_dll_Pi ( p ) ) 
+    sc = tup.column_float ( 'mindll_piK' + suffix , self._min_dll_Pi    ( p ) ) 
+    sc = tup.column_float ( 'minann_pi'  + suffix , self._min_annpid_Pi ( p ) ) 
     #
-    return tup.fArrayP ( 'p_pion'   + suffix          , P   / GeV    ,  
-                         'pt_pion'  + suffix          , PT  / GeV    , 
-                         'eta_pion' + suffix          , ETA          , 
-                         'pid_pion' + suffix          , PIDpi - PIDK ,  
-                         LHCb.Particle.Range ( good ) ,
-                         'n_pion'   + suffix          , 10           )
+    tup.fArrayP (
+        'p_pion'   + suffix          , P   / GeV    ,  
+        'pt_pion'  + suffix          , PT  / GeV    , 
+        'eta_pion' + suffix          , ETA          , 
+        LHCb.Particle.Range ( good ) ,
+        'n_pion'   + suffix          , 10           )
+    return tup.fArrayP (
+        'pid_pion' + suffix          , PIDpi - PIDK ,  
+        'ann_pion' + suffix          , PROBNNpi     ,  
+        LHCb.Particle.Range ( good ) ,
+        'n_pion'   + suffix          , 10           )
 
 # ==============================================================================
 ## add kaon information into n-tuple
@@ -226,14 +246,20 @@ def treatKaons ( self         ,
     good  = LHCb.Particle.ConstVector()
     p.children ( self._kaons , good ) 
     #
-    sc = tup.column_float ( 'mindll_K' + suffix , self._min_dll_K  ( p ) ) 
+    sc = tup.column_float ( 'mindll_K' + suffix , self._min_dll_K     ( p ) ) 
+    sc = tup.column_float ( 'minann_K' + suffix , self._min_annpid_K  ( p ) ) 
     #
-    return tup.fArrayP ( 'p_kaon'   + suffix          , P   / GeV    , 
-                         'pt_kaon'  + suffix          , PT  / GeV    , 
-                         'eta_kaon' + suffix          , ETA          , 
-                         'pid_kaon' + suffix          , PIDK - PIDpi ,  
-                         LHCb.Particle.Range ( good ) ,
-                         'n_kaon'   + suffix          , 10        )
+    tup.fArrayP (
+        'p_kaon'   + suffix          , P   / GeV    , 
+        'pt_kaon'  + suffix          , PT  / GeV    , 
+        'eta_kaon' + suffix          , ETA          , 
+        LHCb.Particle.Range ( good ) ,
+        'n_kaon'   + suffix          , 10        )
+    return tup.fArrayP (
+        'pid_kaon' + suffix          , PIDK - PIDpi ,  
+        'ann_kaon' + suffix          , PROBNNk      ,  
+        LHCb.Particle.Range ( good ) ,
+        'n_kaon'   + suffix          , 10        )
 
 # ==============================================================================
 ## add proton information into n-tuple
@@ -252,19 +278,22 @@ def treatProtons ( self         ,
     good   = LHCb.Particle.ConstVector()
     p.children ( self._protons , good ) 
     #
-    sc = tup.column_float ( 'mindll_pK'  + suffix , self._min_dll_PK  ( p ) ) 
-    sc = tup.column_float ( 'mindll_ppi' + suffix , self._min_dll_Ppi ( p ) ) 
+    sc = tup.column_float ( 'mindll_pK'  + suffix , self._min_dll_PK   ( p ) ) 
+    sc = tup.column_float ( 'mindll_ppi' + suffix , self._min_dll_Ppi  ( p ) ) 
+    sc = tup.column_float ( 'minann_P'   + suffix , self._min_annpid_P ( p ) ) 
     #
-    tup.fArrayP ( 'p_proton'    + suffix       , P   / GeV , 
-                  'pt_proton'   + suffix       , PT  / GeV , 
-                  'eta_proton'  + suffix       , ETA       , 
-                  LHCb.Particle.Range ( good ) ,
-                  'n_proton'    + suffix       , 10        )
-    
-    return tup.fArrayP ( 'pid_proton_pi' + suffix , PIDp - PIDpi ,
-                         'pid_proton_K'  + suffix , PIDp - PIDK  ,
-                         LHCb.Particle.Range ( good ) ,
-                         'n_proton'    + suffix       , 10        )
+    tup.fArrayP (
+        'p_proton'    + suffix       , P   / GeV , 
+        'pt_proton'   + suffix       , PT  / GeV , 
+        'eta_proton'  + suffix       , ETA       , 
+        LHCb.Particle.Range ( good ) ,
+        'n_proton'    + suffix       , 10        )
+    return tup.fArrayP (
+        'pid_proton_pi' + suffix , PIDp - PIDpi ,
+        'pid_proton_K'  + suffix , PIDp - PIDK  ,
+        'ann_proton'    + suffix , PROBNNp      ,
+        LHCb.Particle.Range ( good ) ,
+        'n_proton'    + suffix       , 10        )
 
 # ==============================================================================
 ## add photon information into n-tuple
@@ -286,17 +315,19 @@ def treatPhotons ( self         ,
     sc = tup.column_float ( 'minEt_gamma'  + suffix , self._min_Et_gamma ( p ) ) 
     sc = tup.column_float ( 'minCl_gamma'  + suffix , self._min_CL_gamma ( p ) ) 
     #
-    tup.fArrayP ( 'e_photon'    + suffix       , P   / GeV , 
-                  'et_photon'   + suffix       , PT  / GeV , 
-                  'CL_photon'   + suffix       , CL        , 
-                  LHCb.Particle.Range ( good ) ,
-                  'n_photon'    + suffix       , 10        )
-    tup.fArrayP ( 'eta_photon'  + suffix       , ETA       , 
-                  'tx_photon'   + suffix       , PX / PZ   , 
-                  'ty_photon'   + suffix       , PY / PZ   , 
-                  LHCb.Particle.Range ( good ) ,
-                  'n_photon'    + suffix       , 10        )
-
+    tup.fArrayP (
+        'e_photon'    + suffix       , P   / GeV , 
+        'et_photon'   + suffix       , PT  / GeV , 
+        'CL_photon'   + suffix       , CL        , 
+        LHCb.Particle.Range ( good ) ,
+        'n_photon'    + suffix       , 10        )
+    return tup.fArrayP (
+        'eta_photon'  + suffix       , ETA       , 
+        'tx_photon'   + suffix       , PX / PZ   , 
+        'ty_photon'   + suffix       , PY / PZ   , 
+        LHCb.Particle.Range ( good ) ,
+        'n_photon'    + suffix       , 10        )
+    
 # ==============================================================================
 ## add di-gamma information into n-tuple
 #  @param tup   n-tuple
@@ -314,16 +345,18 @@ def treatDiGamma ( self         ,
     good   = LHCb.Particle.ConstVector()
     p.children ( self._digamma , good ) 
     #
-    tup.fArrayP ( 'e_digamma'    + suffix       , P   / GeV , 
-                  'et_digamma'   + suffix       , PT  / GeV , 
-                  'ID_digamma'   + suffix       , ID        ,
-                  LHCb.Particle.Range ( good ) ,
-                  'n_digamma'    + suffix       , 10        )
-    tup.fArrayP ( 'm_digamma'    + suffix       , M   / GeV , 
-                  'lv01_digamma' + suffix       , LV01      ,
-                  LHCb.Particle.Range ( good ) ,
-                  'n_digamma'    + suffix       , 10        )
-    
+    tup.fArrayP (
+        'e_digamma'    + suffix       , P   / GeV , 
+        'et_digamma'   + suffix       , PT  / GeV , 
+        'ID_digamma'   + suffix       , ID        ,
+        LHCb.Particle.Range ( good ) ,
+        'n_digamma'    + suffix       , 10        )
+    return tup.fArrayP (
+        'm_digamma'    + suffix       , M   / GeV , 
+        'lv01_digamma' + suffix       , LV01      ,
+        LHCb.Particle.Range ( good ) ,
+        'n_digamma'    + suffix       , 10        )
+
 # ==============================================================================
 ## add muon information into n-tuple
 #  @param tup   n-tuple
@@ -342,17 +375,21 @@ def treatMuons ( self         ,
     p.children ( self._muons , good ) 
     #
     sc = tup.column_float ( 'mindll_mu'   + suffix , self._min_dll_Mu    ( p ) ) 
+    sc = tup.column_float ( 'minann_mu'   + suffix , self._min_annpid_Mu ( p ) ) 
     #
-    sc = tup.fArrayP   ( 'p_mu'       + suffix          , P   / GeV     ,  
-                         'pt_mu'      + suffix          , PT  / GeV     , 
-                         'eta_mu'     + suffix          , ETA           , 
-                         'pid_mu'     + suffix         , PIDmu - PIDpi ,  
-                         LHCb.Particle.Range ( good ) ,
-                         'n_muon'     + suffix ,  10  )
-    return tup.fArrayP ( 'eEcal_mu'   + suffix , self._EcalE ,
-                         'eHcal_mu'   + suffix , self._HcalE ,
-                         LHCb.Particle.Range ( good )        ,
-                         'n_muon'     + suffix , 10          )
+    sc = tup.fArrayP   (
+        'p_mu'       + suffix          , P   / GeV     ,  
+        'pt_mu'      + suffix          , PT  / GeV     , 
+        'eta_mu'     + suffix          , ETA           , 
+        LHCb.Particle.Range ( good ) ,
+        'n_muon'     + suffix ,  10  )
+    return tup.fArrayP (
+        'eEcal_mu'   + suffix , self._EcalE      ,
+        'eHcal_mu'   + suffix , self._HcalE      ,
+        'pid_mu'     + suffix , PIDmu - PIDpi    ,  
+        'ann_mu'     + suffix         , PROBNNmu ,  
+        LHCb.Particle.Range ( good )        ,
+        'n_muon'     + suffix , 10          )
 
 # ==============================================================================
 ## add tracks information into n-tuple
@@ -389,25 +426,30 @@ def treatTracks ( self         ,
             m2    = self._delta_m2 ( p_i , p_j )
             m2min = min ( m2min , m2 )
             
-    sc = tup.column_float ( 'm2min_track'     + suffix , m2min                  )    
-    sc = tup.column_float ( 'minPt_track'     + suffix , self._min_Pt     ( p ) )
-    sc = tup.column_float ( 'minEta_track'    + suffix , self._min_Eta    ( p ) )
-    sc = tup.column_float ( 'maxEta_track'    + suffix , self._max_Eta    ( p ) )
-    sc = tup.column_float ( 'maxChi2_track'   + suffix , self._maxTrChi2  ( p ) )
-    sc = tup.column_float ( 'maxTrGh_track'   + suffix , self._maxTrGhost ( p ) )
-    sc = tup.column_float ( 'minKL_track'     + suffix , self._minTrKL    ( p ) )
+    sc = tup.column_float ( 'm2min_track'     + suffix , m2min                       )    
+    sc = tup.column_float ( 'minPt_track'     + suffix , self._min_Pt          ( p ) )
+    sc = tup.column_float ( 'minEta_track'    + suffix , self._min_Eta         ( p ) )
+    sc = tup.column_float ( 'maxEta_track'    + suffix , self._max_Eta         ( p ) )
+    sc = tup.column_float ( 'maxChi2_track'   + suffix , self._maxTrChi2       ( p ) )
+    sc = tup.column_float ( 'maxTrGh_track'   + suffix , self._maxTrGhost      ( p ) )
+    sc = tup.column_float ( 'minKL_track'     + suffix , self._minTrKL         ( p ) )
+    sc = tup.column_float ( 'maxAnnGh_track'  + suffix , self._max_anngh_track ( p ) )
     
-    sc = tup.fArrayP ( 'p_track'     + suffix        , P   / GeV  , 
-                       'pt_track'    + suffix        , PT  / GeV  , 
-                       'eta_track'   + suffix        , ETA        , 
-                       'PChi2_track' + suffix        , TRPCHI2    , 
-                       LHCb.Particle.Range ( good )               , 
-                       'n_track'     + suffix        , 20         )
+    sc = tup.fArrayP (
+        'p_track'     + suffix        , P   / GeV  , 
+        'pt_track'    + suffix        , PT  / GeV  , 
+        'eta_track'   + suffix        , ETA        , 
+        'phi_track'   + suffix        , PHI        ,                        
+        LHCb.Particle.Range ( good )               , 
+        'n_track'     + suffix        , 20         )
     
-    sc = tup.fArrayP ( 'chi2_track'  + suffix        , TRCHI2DOF ,
-                       'phi_track'   + suffix        , PHI       ,                        
-                       LHCb.Particle.Range ( good )              , 
-                       'n_track'     + suffix        , 20        )
+    sc = tup.fArrayP (
+        'chi2_track'  + suffix        , TRCHI2DOF   ,
+        'PChi2_track' + suffix        , TRPCHI2     , 
+        'ann_track'   + suffix        , PROBNNghost ,                        
+        LHCb.Particle.Range ( good )                , 
+        'n_track'     + suffix        , 20          )
+    
     return sc
 
 # =============================================================================

@@ -5,6 +5,10 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2013-07-06 - Vanya Belyaev
+
+ - minor update in fill: add PROBNN-variables 
+
 ! ==================== Phys/BenderTools v22r7    2013-06-20 ====================
 
 ! 2013-06-11 - Vanya Belyaev
