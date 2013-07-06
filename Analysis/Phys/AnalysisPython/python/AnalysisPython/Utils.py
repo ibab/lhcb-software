@@ -3,7 +3,11 @@
 # $Id$
 # =============================================================================
 ## @file
-#  Module with some simple but useful utilities 
+#  Module with some simple but useful utilities
+#   - timing
+#   - memory
+#   - suppression of stdout/stderr 
+#   - dumpting of stdout/stderr into file 
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-02-10
@@ -28,6 +32,8 @@ __all__     = (
     'clocks'         , ## context manager to count clocks 
     'timing'         , ## context manager to count time 
     'timer'          , ## ditto
+    'tee'            , ## tee for Python's printouts
+    'output'         , ## redirect stdout/stderr into the file 
     'mute_c'         , ## contex manager to suppress stdout/strerr printout 
     'silence_c'      , ## ditto 
     'mute_py'        , ## contex manager to suppress stdout/strerr printout 
@@ -84,13 +90,11 @@ class Memory(object):
         self.name   = name
     def __enter__ ( self ) :
         self.memory = cpp.System.virtualMemory()
-    def __exit__  ( self, exc_type, exc_value, traceback) :
-        if not exc_type :
-            if not  exc_value :
-                if not traceback :
-                    self.delta = cpp.System.virtualMemory() - self.memory
-                    print  '%s Memory %.1fMB ' % ( self.name , 0.001*self.delta ) 
-
+    def __exit__  ( self, *_ ) :
+        if not _ : 
+            self.delta = cpp.System.virtualMemory() - self.memory
+            print  '%s Memory %.1fMB ' % ( self.name , 0.001*self.delta ) 
+            
 
 # ============================================================================
 ## create the context manager to monitor the virtual memory increase  
@@ -156,12 +160,10 @@ class Clock(object):
         self.name   = name
     def __enter__ ( self ) :
             self.clock = time.clock() 
-    def __exit__  ( self, exc_type, exc_value, traceback) :
-        if not exc_type :
-            if not  exc_value :
-                if not traceback :
-                    self.delta = time.clock() - self.clock
-                    print  '%s Clocks %s ' % ( self.name , self.delta ) 
+    def __exit__  ( self, *_ ) :
+        if not _ : 
+            self.delta = time.clock() - self.clock
+            print  '%s Clocks %s ' % ( self.name , self.delta ) 
 
 # =============================================================================
 ## @class Timer
@@ -208,13 +210,11 @@ class Timer(object):
         self.name   = name
     def __enter__ ( self ) :
         self.time = time.time() 
-    def __exit__  ( self, exc_type, exc_value, traceback) :
-        if not exc_type :
-            if not  exc_value :
-                if not traceback :
-                    self.delta = time.time() - self.time
-                    print  '%s Time   %s ' % ( self.name , self.delta ) 
-                    
+    def __exit__  ( self, *_ ) :
+        if not _ :
+            self.delta = time.time() - self.time
+            print  '%s Time   %s ' % ( self.name , self.delta ) 
+            
 
 # =============================================================================
 ## Simple context manager to measure the clock counts
@@ -303,7 +303,7 @@ timer = timing   # ditto
 
 # ============================================================================
 ## @class MutePy
-#  context manager to suppress python printout 
+#  Very simple context manager to suppress python printout 
 class MutePy(object):
     """
     A context manager for doing a ``deep suppression'' of stdout and stderr in 
@@ -328,6 +328,7 @@ class MutePy(object):
 
         self.stdout = sys.stdout
         self.stderr = sys.stderr
+        
         if self._out : sys.stdout = Silent() 
         if self._err : sys.stderr = Silent() 
 
@@ -418,6 +419,8 @@ class MuteC(object):
 # ============================================================================
 ## @class MuteAll
 #  context manager to suppress All (C/C++/Python) printout
+#  @see MuteC
+#  @see MutePy
 class MuteAll(object):
     """
     A context manager to suppress All  (C/C++/Python) printout
@@ -435,7 +438,162 @@ class MuteAll(object):
         
         self._py.__exit__  ( *_ )
         self._c .__exit__  ( *_ )
+
+# =============================================================================
+## dump all stdout/stderr information (including C/C++) into separate file
+#  @code
+#  with output ('output.txt') :
+#           print 'ququ!'
+#  @endcode 
+#  @see MuteC 
+class OutputC(object) :
+    """
+    Dump all stdout/stderr information into separate file:
+    
+    >>  with output ('output.txt') :
+    ...             print 'ququ!'
+    
+    """
+
+    ## constructor: file name 
+    def __init__ ( self , filename , out = True , err = False ) : 
+        """
+        Constructor
+        """
+        self._out  = out 
+        self._err  = out
+        self._file = file ( filename , 'w' ) 
+            
+    ## context-manager 
+    def __enter__(self):
         
+        self._file.__enter__ () 
+        #
+        ## Save the actual stdout (1) and stderr (2) file descriptors.
+        #
+        self.save_fds =  os.dup(1), os.dup(2)  # leak was here !!!
+        
+        #
+        ## mute it!
+        #
+        if self._out : os.dup2 ( self._file.fileno() , 1 )  ## C/C++
+        if self._err : os.dup2 ( self._file.fileno() , 2 )  ## C/C++
+        
+    ## context-manager 
+    def __exit__(self, *_):
+            
+        #
+        # Re-assign the real stdout/stderr back to (1) and (2)  (C/C++)
+        #
+        
+        if self._err : os.dup2 ( self.save_fds[1] , 2 )
+        if self._out : os.dup2 ( self.save_fds[0] , 1 )
+        
+        # fix the  file descriptor leak
+        # (there were no such line in example, and it causes
+        #      the sad:  "IOError: [Errno 24] Too many open files"
+        
+        os.close ( self.save_fds[1] ) 
+        os.close ( self.save_fds[0] )
+        
+        self._file.__exit__ ( *_ )
+
+# =============================================================================
+## very simple context manager to duplicate Python-printout into file ("tee")
+#  into separate file
+#  @code
+#  with tee('tee.txt') :
+#           print 'ququ!'
+#  @endcode
+#  @attention: only Python printouts are grabbed 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  date 2012-07-06
+class TeePy(object) :
+    """
+    Very simple context manager to duplicate Python-printout into file ("tee")
+    #into separate file
+
+    >>>  with tee('tee.txt') :
+    ...        print 'ququ!'
+    
+    Unfortunately only Python printouts are grabbed 
+    """
+    ## constructor 
+    def __init__( self , filename ):
+        
+        self._file = file ( filename , 'w' ) 
+    ## context manager 
+    def __enter__(self):
+        #
+        
+        self._file . __enter__ ()
+        
+        ## helper class to define empty stream 
+        class _Tee(object):
+            def __init__ ( self , the_file , the_stream ) :
+                
+                self._stream = the_stream 
+                self._log    = the_file
+                
+            def write(self,*args) :
+                
+                self._stream .write ( *args ) 
+                self._log    .write ( *args )
+                
+        self.stdout =  sys.stdout        
+        sys.stdout  = _Tee ( self._file , self.stdout ) 
+                
+    ## context manager 
+    def __exit__(self, *_):
+
+        self._file.flush  ()
+        self.stdout.flush ()
+        
+        sys.stdout = self.stdout
+        
+        self._file.__exit__ ( *_ )
+
+# =============================================================================
+## very simple context manager to duplicate Python-printout into file ("tee")
+#  into separate file
+#  @code
+#  with tee('tee.txt') :
+#           print 'ququ!'
+#  @endcode
+#  @attention: only Python prinouts are grabbed 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  date 2012-07-06
+def tee ( filename ) :
+    """
+    very simple context manager to duplicate Python-printout into file ("tee")
+    into separate file
+    
+    >>> with tee('tee.txt') :
+    ...        print 'ququ!'
+
+    Unfortunately only Python printouts are grabbed 
+    """
+    return TeePy ( filename ) 
+    
+# =============================================================================
+## simple context manager to redirect all (C/C++/Python) printotu
+#  into separate file
+#  @code
+#  with output ('output.txt') :
+#           print 'ququ!'
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  date 2012-07-06
+def output ( fname , cout = True , cerr = False ) :
+    """
+    Simple context manager to redirect all (C/C++/Python) printotu
+    
+    >>> with output ('output.txt') :
+    ...               print 'ququ!'
+    
+    """
+    return OutputC ( fname  , cout , cerr )
+
 # =============================================================================
 ## simple context manager to suppress all(C/C++/Python) printout
 #
@@ -520,7 +678,7 @@ def get_open_fds():
     return fds
 
 # =============================================================================
-## get the actual fiel name form file descriptor 
+## get the actual file name form file descriptor 
 #  The actual code is copied from http://stackoverflow.com/a/13624412
 #  @warning: it is likely to be "Linux-only" function
 def get_file_names_from_file_number(fds):
