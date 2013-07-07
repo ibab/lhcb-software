@@ -4,9 +4,11 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2013-07-07 - Stefania Vecchi
+ - Fix compilation warnings
+
 ! 2013-07-06 - Stefania Vecchi
  - Fix personality in TaggingUtils (and Tunings.py)
-
 
 ! 2013-07-05 - Stefania Vecchi
  - Replaced LastGlobal with FlavourTaggingIndex (updated in Event/Particle)

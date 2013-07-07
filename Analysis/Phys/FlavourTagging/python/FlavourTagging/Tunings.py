@@ -1392,7 +1392,7 @@ tunings = {
 def TuneTool(tool, version):
 
     from Configurables import BTagging, BTaggingTool, TaggerMuonTool, TaggerElectronTool, TaggerKaonSameTool, TaggerNEWKaonOppositeTool, TaggerKaonOppositeTool, TaggerPionSameTool, TaggerVertexChargeTool, CombineTaggersProbability, SVertexOneSeedTool,NNetTool_MLP, TaggingUtils
-    
+        
     tool.addTool ( BTaggingTool, name='BTaggingTool')
     tool.BTaggingTool.addTool ( CombineTaggersProbability )
     tool.BTaggingTool.addTool ( TaggerMuonTool )
@@ -1410,7 +1410,6 @@ def TuneTool(tool, version):
     tool.BTaggingTool.addTool ( SVertexOneSeedTool )
     tool.BTaggingTool.addTool ( TaggerNEWKaonOppositeTool )
     tool.BTaggingTool.addTool ( TaggingUtils )
-
 
     for cut in tunings[version]:
         exec("tool.BTaggingTool."+cut+'='+str(tunings[version][cut]))

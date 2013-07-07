@@ -36,7 +36,7 @@ int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
   if( vtg.empty() ) return 0;
 
   fatal() << "WARNING: update the code according to the new variable signalType !!!!!! "
-          <<signalType<<endmsg;
+          <<signalType<<" and m_nnetTaggers"<<m_nnetTaggers<< endmsg;
   ///////////////////////////////////////////////////////////////////////////
   // WARNING: update the code according to the new variable signalType !!!!!!
   ///////////////////////////////////////////////////////////////////////////
@@ -58,7 +58,8 @@ int CombineTaggersNN::combineTaggers(FlavourTag& theTag,
     if (type==2) {
       pmu = 1-(vtg.at(i))->omega(); //probability of 'right' mu
       mutag = vtg.at(i)->decision();
-      if ( msgLevel(MSG::DEBUG) ) debug()<<"muon -> pmu: "<<pmu<<", mutag:"<<mutag<<endreq;
+      if ( msgLevel(MSG::DEBUG) ) 
+	debug()<<"muon -> pmu: "<<pmu<<", mutag:"<<mutag<<endreq;
     }
     else if (type==3) {
       pe = 1-(vtg.at(i))->omega(); //probability of 'right' e
