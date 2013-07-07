@@ -5,6 +5,10 @@ $! $Id: release.notes,v 1.167 2010-09-19 09:03:47 robbep Exp $
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+! 2013-07-07 - Patrick Robbe
+ - src/components/SaveSignalBInformation.h/.cpp : algorithm to save
+ in locate "Gen/BInfo" the string from which the B signal comes from
+
 !======================= Generators v14r4 2013-06-27 =========================
 ! 2013-06-26 - Patrick Robbe
  - Fix coverity warnings
