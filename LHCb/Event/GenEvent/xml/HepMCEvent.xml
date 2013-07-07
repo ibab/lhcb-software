@@ -13,6 +13,7 @@
       &KeyedObject;
       <import name="string" std="TRUE"/>
       <location name="Signal"     place="Gen/SignalDecayTree"  />
+      <location name="BInfo"      place="Gen/BInfo"            />
       <enum
 	desc="Status code in HepMC::GenParticle"
         name="statusType"
