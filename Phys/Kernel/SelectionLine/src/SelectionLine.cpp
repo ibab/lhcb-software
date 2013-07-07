@@ -49,6 +49,11 @@ using namespace HistogramUtilities;
 #include "Kernel/SelectionLine.h"
 // ============================================================================
 
+namespace {
+  static const double timeHistoLowBound = -3;  
+}
+
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltLine
 //
@@ -269,7 +274,7 @@ StatusCode Selection::Line::initialize()
 
   //== Create the monitoring histograms
   m_errorHisto = book1D("error",name()+" error",-0.5,7.5,8);
-  m_timeHisto  = book1D("walltime",name()+" log(wall time/ms)",m_timeHistoLowerBound,6);
+  m_timeHisto  = book1D("walltime",name()+" log(wall time/ms)",timeHistoLowBound,6);
   m_stepHisto  = book1D("rejection stage", name()+ " rejection stage",
                         -0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
   m_candHisto  = bookProfile1D("candidates accepted", name()+" candidates accepted",
@@ -363,7 +368,7 @@ StatusCode Selection::Line::execute()
   // plot the wall clock time spent..
   const double elapsedTime = double(System::currentTime( System::microSec) - startClock);
   // protect against 0 and convert nanosec --> to millisec
-  const double logElapsedTimeMS = elapsedTime > 0 ? log10(elapsedTime)-3 : m_timeHistoLowerBound;
+  const double logElapsedTimeMS = elapsedTime > 0 ? log10(elapsedTime)-3 : timeHistoLowBound;
   
   fill( m_timeHisto, logElapsedTimeMS ,1.0); // converted to millisec
   if (elapsedTime>m_slowThreshold) report.setErrorBits( report.errorBits() | 0x4 );
