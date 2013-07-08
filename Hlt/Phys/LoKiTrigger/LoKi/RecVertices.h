@@ -58,6 +58,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      MaxDOCA() { }
       /// MANDATORY: virtual destructor 
       virtual ~MaxDOCA () ;
       /// MANDATORY: clone method ("virtual constructor")
@@ -98,6 +100,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      MaxDOCAChi2() { }
       /// MANDATORY: virtual destructor 
       virtual ~MaxDOCAChi2 () ;
       /// MANDATORY: clone method ("virtual constructor")

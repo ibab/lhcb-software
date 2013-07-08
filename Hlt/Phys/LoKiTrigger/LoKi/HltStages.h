@@ -70,6 +70,8 @@ namespace LoKi
     { 
     public:
       // ======================================================================
+      /// Default Constructor
+      IsTrack() { }
       /// MANDATORY: virtual destructor 
       virtual ~IsTrack() ;
       /// MANDATORY: clone method ("virtual constructor") 
@@ -91,6 +93,8 @@ namespace LoKi
     { 
     public:
       // ======================================================================
+      /// Default Constructor
+      IsL0Muon() { }
       /// MANDATORY: virtual destructor 
       virtual ~IsL0Muon () ;
       /// MANDATORY: clone method ("virtual constructor") 
@@ -112,6 +116,8 @@ namespace LoKi
     { 
     public:
       // =======================================================================
+      /// Default Constructor
+      IsL0DiMuon() { }
       /// MANDATORY: virtual destructor 
       virtual ~IsL0DiMuon () ;
       /// MANDATORY: clone method ("virtual constructor") 
@@ -133,6 +139,8 @@ namespace LoKi
     { 
     public:
       // ======================================================================
+      /// Default Constructor
+      IsL0Calo() { }
       /// MANDATORY: virtual destructor 
       virtual ~IsL0Calo () ;
       /// MANDATORY: clone method ("virtual constructor") 
@@ -154,6 +162,8 @@ namespace LoKi
     { 
     public:
       // ======================================================================
+      /// Default Constructor
+      IsVertex() { }
       /// MANDATORY: virtual destructor 
       virtual ~IsVertex () ;
       /// MANDATORY: clone method ("virtual constructor") 
@@ -175,6 +185,8 @@ namespace LoKi
     { 
     public:
       // ======================================================================
+      /// Default Constructor
+      IsMultiTrack() { }
       /// MANDATORY: virtual destructor 
       virtual ~IsMultiTrack () ;
       /// MANDATORY: clone method ("virtual constructor") 
@@ -196,6 +208,8 @@ namespace LoKi
     { 
     public:
       // ======================================================================
+      /// Default Constructor
+      IsStage() { }
       /// MANDATORY: virtual destructor 
       virtual ~IsStage () ;
       /// MANDATORY: clone method ("virtual constructor") 
@@ -218,6 +232,8 @@ namespace LoKi
     { 
     public:
       // ======================================================================
+      /// Default Constructor
+      Type() { }
       /// MANDATORY: virtual destructor 
       virtual ~Type () ;
       /// MANDATORY: clone method ("virtual constructor") 
@@ -314,6 +330,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default Constructor
+      Locked() { }
       /// MANDATORY: virtual descructor 
       virtual ~Locked() ;
       /// MANDATORY: clone method ("virtual destructor")

@@ -4,9 +4,13 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2013-07-08 - Chris Jones
+ - Add various missing default constructors. Fixes clang32 compilation errors.
+ - Remove obsolete LoKiTrigger_dll.cpp
+
 !========================= LoKiTrigger v13r0 2013-07-04 =========================
 ! 2013-05-15 - Vanya Belyaev
- - *Conf - classes: move operator sform global namesapce to Loki::Hlt1
+ - *Conf - classes: move operators from global namesapce to Loki::Hlt1
 
 ! 2013-04-23 - Roel Aaij
  - Add check to ensure the number of previously upgraded tracks found in the TES

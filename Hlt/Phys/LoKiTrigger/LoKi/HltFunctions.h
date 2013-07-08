@@ -65,6 +65,8 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function
     {
     public:
+      /// Default Constructor
+      DistanceOfClosestApproach() { }
       /// MANDATORY: virtual destrcutor  
       virtual ~DistanceOfClosestApproach () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -93,6 +95,8 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function
     {
     public:
+      /// Default constructor
+      DeltaP() { }
       /// MANDATORY: virtual destructor
       virtual ~DeltaP() {} ;
       /// MANDATORY: clone method ("virtual constructor")  
@@ -121,6 +125,8 @@ namespace LoKi
     {
     public:
       // ======================================================================
+      /// Default constructor
+      DeltaE() { }
       /// MANDATORY: virtual destructor
       virtual ~DeltaE() {} ;
       /// MANDATORY: clone method ("virtual constructor")  
@@ -184,6 +190,8 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackVertexPair>::Function
     {
     public:
+      /// Default constructor
+      ImpactParameter() { }
       /// MANDATORY: virtual destructor 
       virtual ~ImpactParameter() {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -210,6 +218,8 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function
     {
     public:
+      /// Default constructor
+      MatchIDsFraction() { }
       /// MANDATORY: virtual destructor 
       virtual ~MatchIDsFraction() {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -236,6 +246,8 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::TrackTypes::TrackPair>::Function
     {
     public:
+      /// Default constructor
+      DeltaAngle() { }
       /// MANDATORY: virtual destructor 
       virtual ~DeltaAngle ()  {}
       /// MANDATORY: clone method ("virtual constructor")  
