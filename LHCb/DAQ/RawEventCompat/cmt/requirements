@@ -16,5 +16,11 @@ apply_pattern QMTest
 #at least GaudiConf for IOHelper and LHCbApp
 private
   macro PRConfig_use "" QMTest "PRConfig v* --no-auto-imports"
+  macro SQL_use "" QMTest "SQLDDDB v* Det --no-auto-imports"
+  macro LHCbAlgs_use "" QMTest "LHCbAlgs v* Kernel --no-auto-imports"
+  macro GaudiConf_use "" QMTest "GaudiConf v* --no-auto-imports"
   use $(PRConfig_use)
+  use $(SQL_use)
+  use $(LHCbAlgs_use)
+  use $(GaudiConf_use)
 end_private
