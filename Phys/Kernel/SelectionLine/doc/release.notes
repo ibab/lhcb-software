@@ -5,11 +5,11 @@
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= SelectionLine v1r0p5 2013-07-08 =========================
 ! 2013-07-05 - Sebastian Neubert
  - moved definition of static const double timeHistoLowBound from class declaration
    to unnamed namespace in order to fix compiler errors under gcc4.7/4.8
 
-!========================= SelectionLine v1r0p5 2013-07-05 =========================
 ! 2013-07-05 - Sebastian Neubert
  - switch units of elapsed time back to microSec (had been set to nanoSec in v1r0p5)  
  - (caused every event to be marked as too slow, due to the factor of 1000)
