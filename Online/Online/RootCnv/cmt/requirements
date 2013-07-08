@@ -29,6 +29,7 @@ macro_append  RootCnv_dependencies  " RootCnvLib "
 application  gaudi_merge ../merge/merge.cpp
 macro_append gaudi_merge_dependencies  " RootCnvLib "
 application  extract_event ../merge/extractEvt.cpp
+macro_append extract_event_dependencies  " RootCnvLib "
 
 macro RootCnv_ext_linkopts  ' -lRootCnvLib ' WIN32 ' RootCnvLib.lib '
 

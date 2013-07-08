@@ -4,6 +4,19 @@
 ! Purpose     : Root based persistency
 !-----------------------------------------------------------------------------
 
+! 2013-07-08 - Marco Clemencic
+ - Fixed dependency problem with event extractor.
+
+! 2013-07-05 - Marco Clemencic
+ - Updated CMake configuration.
+
+!========================= RootCnv v1r20 2013-05-23 =========================
+! 2013-04-25 - Markus Frank
+ - Fix compiler warnings for gcc47
+
+! 2012-11-22 - Markus Frank
+ - Add event extractor
+
 !========================= RootCnv v1r19 2012-11-16 =========================
 ! 2012-11-16 - Marco Clemencic
  - Added CMake configuration file.
