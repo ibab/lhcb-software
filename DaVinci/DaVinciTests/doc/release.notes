@@ -3,6 +3,10 @@
 ! Responsible : Juan Palacios
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+
+! 2013-07-08 - Chris Jones
+ - Add new test for Stripping20r3.
+
 ! 2013-07-07 - Stefania Vecchi
  - Updated reference file tagging.qms/test_tag_mc12.qmt to monitor also nnetKaonOpposite
    and nnetKaonSame Tagging algorithms + some changes in the Category definition
