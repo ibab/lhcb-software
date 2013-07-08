@@ -4,9 +4,10 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
-!========================= RawEventCompat v1r0 2013-07-04 =========================
+!========================= RawEventCompat v1r0 2013-07-08 =========================
 ! 2013-07-04 - Rob Lambert
  - LoadIfRequired also for RecombineRawEvent
+ - Add CMT private uses for tests
 
 ! 2013-06-21 - Rob Lambert
  - New features to clean up extra banks.
