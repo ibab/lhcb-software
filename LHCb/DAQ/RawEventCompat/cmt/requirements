@@ -16,4 +16,5 @@ apply_pattern QMTest
 #at least GaudiConf for IOHelper and LHCbApp
 private
   macro PRConfig_use "" QMTest "PRConfig v* --no-auto-imports"
+  use $(PRConfig_use)
 end_private
