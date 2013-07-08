@@ -83,6 +83,11 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::BreitWigner& function() const { return m_bw ; }
+      // ======================================================================
     protected:
       // ======================================================================
       RooRealProxy m_x     ;
@@ -176,6 +181,11 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Flatte& function() const { return m_flatte ; }
+      // ======================================================================
     protected:
       // ======================================================================
       RooRealProxy m_x     ;
@@ -268,6 +278,11 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::PhaseSpace2& function() const { return m_ps2 ; }
+      // ======================================================================
     protected:
       // ======================================================================
       RooRealProxy m_x     ;
@@ -310,6 +325,11 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::PhaseSpaceLeft& function() const { return m_left ; }
       // ======================================================================
     protected:
       // ======================================================================
@@ -356,6 +376,11 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::PhaseSpaceRight& function() const { return m_right ; }
+      // ======================================================================
     protected:
       // ======================================================================
       RooRealProxy m_x         ;
@@ -401,6 +426,11 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::PhaseSpaceNL& function() const { return m_ps ; }
       // ======================================================================
     protected:
       // ======================================================================
@@ -467,6 +497,11 @@ namespace Analysis
       // the actual evaluation of function 
       Double_t evaluate() const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::PhaseSpace23L& function() const { return m_ps23L ; }
+      // ======================================================================
     protected:
       // ======================================================================
       RooRealProxy m_x     ;
@@ -517,6 +552,11 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::LASS23L& function() const { return m_lass ; }
       // ======================================================================
     protected:
       // ======================================================================
@@ -590,6 +630,11 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Needham& function() const { return m_needham ; }
+      // ======================================================================
     protected:
       // ======================================================================
       RooRealProxy m_x      ;
@@ -647,6 +692,12 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::CrystalBallDoubleSided& function() const 
+      { return m_cb2 ; }
+      // ======================================================================
     protected:
       // ======================================================================
       RooRealProxy m_x      ;
@@ -700,6 +751,11 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::GramCharlierA& function() const { return m_gca ; }
+      // ======================================================================
     protected:
       // ======================================================================
       RooRealProxy m_x      ;
@@ -752,6 +808,11 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Bukin& function() const { return m_bukin ; }
+      // ======================================================================
     protected:
       // ======================================================================
       RooRealProxy m_x      ;
@@ -802,6 +863,11 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Voigt& function() const { return m_voigt ; }
       // ======================================================================
     protected:
       // ======================================================================
@@ -903,6 +969,11 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Positive& function() const { return m_positive ; }
       // ======================================================================
     protected :
       // ======================================================================
@@ -1066,6 +1137,11 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::StudentT& function() const { return m_stt ; }
+      // ======================================================================
     protected: 
       // ======================================================================
       RooRealProxy m_x        ;
@@ -1114,6 +1190,11 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::GammaDist& function() const { return m_gamma ; }
       // ======================================================================
     protected: 
       // ======================================================================
@@ -1164,6 +1245,11 @@ namespace Analysis
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::LogGammaDist& function() const { return m_gamma ; }
+      // ======================================================================
     protected: 
       // ======================================================================
       RooRealProxy m_x        ;
@@ -1212,6 +1298,11 @@ namespace Analysis
       // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Log10GammaDist& function() const { return m_gamma ; }
       // ======================================================================
     protected: 
       // ======================================================================

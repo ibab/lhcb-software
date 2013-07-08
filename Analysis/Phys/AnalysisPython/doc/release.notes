@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-07-08 - Vanya Belyaev
+ - minor improvements in functions 
+
 ! 2013-07-06 - Vanya Belyaev
  - add output & tee context managers  
 
