@@ -124,7 +124,45 @@ class PowhegProduction : public LbPythia::ReadLHE
   int m_vdecaymodeZ1; 		// PDG code for charged decay product of the vector boson (11:e-; -11:e+; ...)
   int m_vdecaymodeZ2; 		// PDG code for charged decay product of the vector boson (11:e-; -11:e+; ...)
   //double m_mllmin;		// Minimum invariant mass of lepton pairs from Z decay
-
+  
+  // heavy quark production parameters  ( bb, tt )
+  //=============================================================================
+  int m_ndns1; 			// pdf for hadron 1 (hvqpdf numbering)
+  int m_ndns2;			// pdf for hadron 2
+  double m_qmass;			// mass of heavy quark in GeV
+  int m_facscfact;		// factorization scale factor: mufact=muref*facscfact
+  int m_renscfact; 		// renormalization scale factor: muren=muref*renscfact
+  int m_iymax; 			// <= 10, normalization of upper bounding function in iunorm X iunorm square in y, log(m2qq)
+  int m_ixmax; 			// <= 10, normalization of upper bounding function in iunorm X iunorm square in y, log(m2qq)
+  int m_xupbound;			// increase upper bound for radiation generation
+  int m_topdecaymode;		//an integer of 5 digits that are either 0, or 2, representing in 
+					// the order the maximum number of the following particles(antiparticles)
+					// in the final state: e  mu tau up charm
+					// For example
+					// 22222    All decays (up to 2 units of everything)
+					// 20000    both top go into b l nu (with the appropriate signs)
+					// 10011    one top goes into electron (or positron), the other into (any) hadrons,
+					//          or one top goes into charm, the other into up
+					// 00022    Fully hadronic
+					// 00002    Fully hadronic with two charms
+					// 00011    Fully hadronic with a single charm
+					// 00012    Fully hadronic with at least one charm
+  
+  // Parameters for the generation of spin correlations in t tbar decays
+  double m_tdec_wmass; 		//  W mass for top decay
+  double m_tdec_wwidth;
+  double m_tdec_bmass;
+  double m_tdec_twidth;
+  double m_tdec_elbranching;
+  double m_tdec_emass;
+  double m_tdec_mumass;
+  double m_tdec_taumass;
+  double m_tdec_dmass;
+  double m_tdec_umass;
+  double m_tdec_smass;
+  double m_tdec_cmass;
+  double m_tdec_sin2cabibbo;
+  
 } ;
 
 #endif // LBPOWHEG_POWHEGPRODUCTION_H 

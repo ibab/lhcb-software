@@ -95,6 +95,31 @@
     //declareProperty( "mllmin", m_mllmin = 20 , "minimum invariant mass of lepton pairs from Z decay");
     
    
+    // heavy quark production parameters  ( bb, tt )
+    //=============================================================================
+    declareProperty( "ndns1", m_ndns1 = 131 , "pdf for hadron 1 (hvqpdf numbering)");
+    declareProperty( "ndns2", m_ndns2 = 131 , "pdf for hadron 2 ");
+    declareProperty( "qmass", m_qmass = 172 ,"mass of heavy quark in GeV");
+    declareProperty( "facscfact", m_facscfact = 1 ,"factorization scale factor: mufact=muref*facscfact");
+    declareProperty( "renscfact", m_renscfact = 1 , "renormalization scale factor: muren=muref*renscfact");
+    declareProperty( "iymax", m_iymax = 1 , "<= 10, normalization of upper bounding function in iunorm X iunorm square in y, log(m2qq)");
+    declareProperty( "ixmax", m_ixmax = 1 , "<= 10, normalization of upper bounding function in iunorm X iunorm square in y, log(m2qq)");
+    declareProperty( "xupbound", m_xupbound = 2 , "increase upper bound for radiation generation");
+    declareProperty( "topdecaymode", m_topdecaymode = 20000 , "particles(antiparticles) in the final state: 20000 : both top go into b l nu (with the appropriate signs)");
+    declareProperty( "tdec_wmass", m_tdec_wmass = 80.4 ,"Parameter for the generation of spin correlations in t tbar decays: W mass for top decay");
+    declareProperty( "tdec_wwidth", m_tdec_wwidth = 2.141 , "Parameter for the generation of spin correlations in t tbar decays");
+    declareProperty( "tdec_bmass", m_tdec_bmass = 5 , "Parameter for the generation of spin correlations in t tbar decays");
+    declareProperty( "tdec_twidth", m_tdec_twidth = 1.31 , "Parameter for the generation of spin correlations in t tbar decays");
+    declareProperty( "tdec_elbranching", m_tdec_elbranching = 0.108 , "Parameter for the generation of spin correlations in t tbar decays");
+    declareProperty( "tdec_emass", m_tdec_emass = 0.00051 , "Parameter for the generation of spin correlations in t tbar decays");
+    declareProperty( "tdec_mumass", m_tdec_mumass = 0.1057 , "Parameter for the generation of spin correlations in t tbar decays");
+    declareProperty( "tdec_taumass", m_tdec_taumass = 1.777 , "Parameter for the generation of spin correlations in t tbar decays");
+    declareProperty( "tdec_dmass", m_tdec_dmass = 0.100 , "Parameter for the generation of spin correlations in t tbar decays");
+    declareProperty( "tdec_umass", m_tdec_umass = 0.100 , "Parameter for the generation of spin correlations in t tbar decays");
+    declareProperty( "tdec_smass", m_tdec_smass = 0.200 , "Parameter for the generation of spin correlations in t tbar decays");
+    declareProperty( "tdec_cmass", m_tdec_cmass = 1.5 , "Parameter for the generation of spin correlations in t tbar decays");
+    declareProperty( "tdec_sin2cabibbo", m_tdec_sin2cabibbo = 0.051 , "Parameter for the generation of spin correlations in t tbar decays");
+    
     setProperty ( "InputFile" , "pwgevents.lhe" ) ;
   }
 
@@ -121,7 +146,7 @@ StatusCode PowhegProduction::initialize (const char *process_name)
       << "lhans1 " << m_lhans1 << std::endl
       << "lhans2 " << m_lhans2 << std::endl
       << "withnegweights " << m_withnegweights << std::endl
-      << "iseed " << m_iseed << std::endl			/// remake to use Gauss seeds
+      << "iseed " << m_iseed << std::endl			/// ToDo: remake to use Gauss seeds
       << "foldcsi " << m_foldcsi << std::endl
       << "foldphi " << m_foldphi << std::endl
       << "foldy " << m_foldy << std::endl
@@ -174,6 +199,50 @@ if ( process_name == "ZZ" )
       << "vdecaymodeZ2 " << m_vdecaymodeZ2 << std::endl
       << "mllmin " << m_mllmin << std::endl;
   }
+  
+if ( process_name == "bb" )					/// ToDo: verify output !!!
+  {
+    g << "qmass " <<m_qmass << std::endl
+	<< "facscfact " <<m_facscfact << std::endl
+	<< "renscfact " <<m_renscfact << std::endl   
+	<< "ncall1 " << 1000000 << std::endl
+      << "itmx1 " << 5 << std::endl
+      << "ncall2 " << 1000000 << std::endl
+      << "itmx2 " << 5 << std::endl
+      << "nubound " << 10000 << std::endl
+      << "iymax " << m_iymax << std::endl
+      << "ixmax " << m_ixmax << std::endl
+      << "xupbound " << m_xupbound << std::endl;
+  }
+  
+if ( process_name == "tt" )					/// ToDo: verify output !!!
+  {
+    g << "qmass " << m_qmass << std::endl
+	<< "facscfact " << m_facscfact << std::endl
+	<< "renscfact " << m_renscfact << std::endl
+	<< "topdecaymode " << m_topdecaymode << std::endl
+	<< "tdec/wmass " << m_tdec_wmass << std::endl
+	<< "tdec/wwidth " << m_tdec_wwidth << std::endl
+	<< "tdec/bmass " << m_tdec_bmass << std::endl
+	<< "tdec/twidth " << m_tdec_twidth << std::endl
+	<< "tdec/elbranching " << m_tdec_elbranching << std::endl
+	<< "tdec/emass " << m_tdec_emass << std::endl
+	<< "tdec/mumass " << m_tdec_mumass << std::endl
+	<< "tdec/taumass " << m_tdec_taumass << std::endl
+	<< "tdec/dmass " << m_tdec_dmass << std::endl
+	<< "tdec/umass " << m_tdec_umass << std::endl
+	<< "tdec/smass " << m_tdec_smass << std::endl
+	<< "tdec/cmass  " << m_tdec_cmass  << std::endl
+	<< "tdec/sin2cabibbo  " << m_tdec_sin2cabibbo  << std::endl
+	<< "ncall1 " << 10000 << std::endl
+      << "itmx1 " << 5 << std::endl
+      << "ncall2 " << 100000 << std::endl
+      << "itmx2 " << 5 << std::endl
+      << "nubound " << 100000 << std::endl
+      << "iymax " << m_iymax << std::endl
+      << "ixmax " << m_ixmax << std::endl
+      << "xupbound " << m_xupbound << std::endl;
+  }
 
   g.close() ;
   
@@ -192,7 +261,7 @@ if ( process_name == "ZZ" )
 StatusCode PowhegProduction::finalize ()
 { 
   // Do some cleaning of files
-  boost::filesystem::remove( boost::filesystem::path( "powheg.input" ) ) ;
+  // boost::filesystem::remove( boost::filesystem::path( "powheg.input" ) ) ;
   boost::filesystem::remove( boost::filesystem::path( "pwgborngrid.top" ) ) ;
   boost::filesystem::remove( boost::filesystem::path( "pwgbtlgrid.top" ) ) ;
   boost::filesystem::remove( boost::filesystem::path( "pwgcounters.dat" ) ) ;
@@ -237,7 +306,11 @@ StatusCode PowhegProduction::generateLHE(const char *process_name){
     if ( "UNKNOWN" != System::getEnv( "POWHEGEXE" ) ) {
  	std::string powhegexe ;
 	// POWHEGEXE is defined at requirement file of LbPowheg package
-	powhegexe = System::getEnv( "POWHEGEXE" )+"/"+ (std::string)process_name;
+	
+	if ((process_name == "tt") || (process_name == "bb"))
+	  powhegexe = System::getEnv( "POWHEGHVQEXE" )+"/"+"hvq";				// heavy quark production
+	else 
+	  powhegexe = System::getEnv( "POWHEGEXE" )+"/"+ (std::string)process_name;
 	
 	// needed for execl:
 	pwhgexe = (char*)malloc( sizeof( char ) *(powhegexe.length() +1) );
