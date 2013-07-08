@@ -43,14 +43,20 @@
   <class name = "Analysis::Models::LogGammaDist"    />
   <class name = "Analysis::Models::Log10GammaDist"  />
   <class name = "Analysis::Models::Product"         />
-
+  
   <class name = "Gaudi::Utils::HStats"              />
   <class name = "Gaudi::Utils::Mute"                />
+  <class name = "Gaudi::Utils::Tee"                 />
   
   <exclusion>
     <class name="Gaudi::Utils::Mute">
       <field name="m_output" />
       <field name="m_buffer" />
+    </class>
+    <class name="Gaudi::Utils::Tee">
+      <field name="m_file"   />
+      <field name="m_buffer" />
+      <field name="m_keep"   />
     </class>
   </exclusion>
   

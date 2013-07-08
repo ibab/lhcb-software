@@ -1,13 +1,14 @@
-// $Id$ 
+// $Id:$ 
 // ============================================================================
-#ifndef ANALYSIS_MUTE_H 
-#define ANALYSIS_MUTE_H 1
+#ifndef ANALYSIS_TEE_H 
+#define ANALYSIS_TEE_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// STD& STL 
+// STD& STDL
 // ============================================================================
-#include <fstream>
+#include <memory>
+#include <ostream>
 #include <streambuf>
 // ============================================================================
 // GaudiKernel
@@ -16,59 +17,58 @@
 // ============================================================================
 namespace Gaudi
 {
-  // ==========================================================================
+  // ===========================================================================
   namespace Utils 
   {
-    // ========================================================================
-    /** @class Mute Mute.h Analysis/Mute.h
-     *
-     *  Helper utility to mute output (or redirect it to the file)
-     *
-     *  @see Gaudi::Utils::Tee
+    /** @class Tee Tee.h Analysis/Tee.h
+     *  Helper utility for "tee"
+     *  @see Gaudi::Utils::Mute 
      *  @author Vanya Belyaev
-     *  @date   2013-02-19
+     *  @date   2013-07-07
      */
-    class GAUDI_API Mute 
+    class GAUDI_API Tee 
     {
-    public:
+    public: 
       // ======================================================================
-      /// constructor with file name 
-      Mute  ( const std::string& fname        , 
-              const bool         out   = true ) ; 
-      /// default consructor ( redirect output to "dev/null") 
-      Mute  ( const bool         out   = true ) ; // default consructor
-      ///  destructor 
-      ~Mute ( ) ;            //  destructor 
+      /// constructor from filename 
+      Tee  ( const std::string&  filename   = "tee.out" ) ; 
+      /// constructor from the stream 
+      Tee  ( std::ostream& filestream ) ; 
+      // destructor 
+      ~Tee ( ) ;
       // ======================================================================
-    private: 
+    private:
       // ======================================================================
       /// copy     constructor is disabled 
-      Mute ( const Mute& ) ;                 // copy    constructor is disabled 
+      Tee ( const Tee& ) ;                   // copy    constructor is disabled 
       /// assignement operator is disabled 
-      Mute & operator=( const Mute& ) ;     // assignement operator is disabled 
+      Tee& operator=( const Tee& );         // assignement operator is disabled 
       // ======================================================================
-    public: // helper functions for implementation of ContextManager in python
+    public: // helper stuff to use it in python as Context Manager 
       // ======================================================================
-      /** helper (empty) function to implement __enter__   
-       *  the action is performed in constructor
+      /** helper function to implement python's __enter__  
+       *  the action is performed in constructor 
        */
-      void enter () ;
-      /// helper         function to implement __exit__   
-      void exit  () ;
+      void   enter () ;
+      /// helper function to implement python's __exit__
+      void   exit  () ;
       // ======================================================================
     private: 
       // ======================================================================
-      bool            m_cout   ;
-      std::ofstream   m_output ;
-      std::streambuf* m_buffer ;
+      /// the file itself 
+      std::auto_ptr<std::ostream>   m_file   ; // the file itself 
+      /// is the file owned?
+      bool                          m_own    ; // is the file owned?
+      std::auto_ptr<std::streambuf> m_buffer ;
+      std::streambuf*               m_keep   ; // keep the standard buffer 
       // ======================================================================
     };
     // ========================================================================
   } //                                            end of namespace Gaudi::Utils 
   // ==========================================================================
-} //                                                     end of namespace Gaudi
+} //                                                     end of namespace Gaudi 
 // ============================================================================
-//                                                                      The END 
+//                                                                      The END
 // ============================================================================
-#endif // ANALYSIS_MUTE_H
+#endif // ANALYSIS_TEE_H
 // ============================================================================

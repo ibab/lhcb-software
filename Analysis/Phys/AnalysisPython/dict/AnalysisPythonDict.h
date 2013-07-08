@@ -15,6 +15,7 @@
 #include "Analysis/SFactor.h"
 #include "Analysis/Models.h"
 #include "Analysis/Mute.h"
+#include "Analysis/Tee.h"
 #include "Analysis/Formula.h"
 #include "Analysis/PyIterator.h"
 // ============================================================================

@@ -32,13 +32,13 @@ __all__     = (
     'clocks'         , ## context manager to count clocks 
     'timing'         , ## context manager to count time 
     'timer'          , ## ditto
-    'tee'            , ## tee for Python's printouts
+    #
+    'tee_py'         , ## tee for Python's printouts
+    'tee_cpp'        , ## tee for C++'s    printouts
     'output'         , ## redirect stdout/stderr into the file 
-    'mute_c'         , ## contex manager to suppress stdout/strerr printout 
-    'silence_c'      , ## ditto 
-    'mute_py'        , ## contex manager to suppress stdout/strerr printout 
+    'mute_py'        , ## suppress stdout/strerr Python printout 
     'silence_py'     , ## ditto 
-    'mute'           , ## contex manager to suppress stdout/strerr printout 
+    'mute'           , ## context manager to suppress stdout/strerr printout 
     'silence'        , ## ditto 
     )    
 # =============================================================================
@@ -416,28 +416,6 @@ class MuteC(object):
         os.close ( self.save_fds[1] ) 
         os.close ( self.save_fds[0] )
                 
-# ============================================================================
-## @class MuteAll
-#  context manager to suppress All (C/C++/Python) printout
-#  @see MuteC
-#  @see MutePy
-class MuteAll(object):
-    """
-    A context manager to suppress All  (C/C++/Python) printout
-    """    
-    def __init__( self , out = True , err = False ):
-        self._c    = MuteC  ( out , err ) 
-        self._py   = MutePy ( out , err ) 
-        
-    def __enter__(self):
-
-        self._c .__enter__ ( )
-        self._py.__enter__ ( )
-        
-    def __exit__(self, *_):
-        
-        self._py.__exit__  ( *_ )
-        self._c .__exit__  ( *_ )
 
 # =============================================================================
 ## dump all stdout/stderr information (including C/C++) into separate file
@@ -554,16 +532,45 @@ class TeePy(object) :
         self._file.__exit__ ( *_ )
 
 # =============================================================================
+## very simple context manager to duplicate C++-printout into file ("tee")
+#  into separate file
+#  @code
+#  >>> with tee_cpp('tee.txt') :
+#  ...         some_cpp_function() 
+#  @endcode
+#  @see Gaudi::Utils::Tee
+#  @attention: Python&C-printouts probably  are not affected 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  date 2012-07-07
+class TeeCpp(cpp.Gaudi.Utils.Tee) :
+    """
+    very simple context manager to duplicate C++-printout into file 
+    into separate file
+    
+    >>> with tee_cpp('tee.txt') :
+    ...         some_cpp_function()
+    
+    """
+    def __init__ ( self , fname ) :
+        cpp.Gaudi.Utils.Tee.__init__ ( self , fname )
+
+    ## context manager
+    def __enter__ ( self      ) : self.enter ()
+    ## context manager
+    def __exit__  ( self , *_ ) : self.exit  ()
+
+
+# =============================================================================
 ## very simple context manager to duplicate Python-printout into file ("tee")
 #  into separate file
 #  @code
-#  with tee('tee.txt') :
-#           print 'ququ!'
+#  >>> with tee_py ('tee.txt') :
+#  ...         print 'ququ!'
 #  @endcode
 #  @attention: only Python prinouts are grabbed 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  date 2012-07-06
-def tee ( filename ) :
+def tee_py ( filename ) :
     """
     very simple context manager to duplicate Python-printout into file ("tee")
     into separate file
@@ -576,11 +583,33 @@ def tee ( filename ) :
     return TeePy ( filename ) 
     
 # =============================================================================
+## very simple context manager to duplicate C++-printout into file ("tee")
+#  into separate file
+#  @code
+#  >>> with tee_cpp ('tee.txt') :
+#  ...         print 'ququ!'
+#  @endcode
+#  @attention: only Python prinouts are grabbed 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  date 2012-07-06
+def tee_cpp ( filename ) :
+    """
+    very simple context manager to duplicate C++-printout into file ("tee")
+    into separate file
+    
+    >>> with tee_cpp('tee.txt') :
+    ...        print 'ququ!'
+
+    Unfortunately only Python printouts are grabbed 
+    """
+    return TeeCpp ( filename ) 
+    
+# =============================================================================
 ## simple context manager to redirect all (C/C++/Python) printotu
 #  into separate file
 #  @code
-#  with output ('output.txt') :
-#           print 'ququ!'
+#  >>> with output ('output.txt') :
+#  ...         print 'ququ!'
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  date 2012-07-06
@@ -595,36 +624,18 @@ def output ( fname , cout = True , cerr = False ) :
     return OutputC ( fname  , cout , cerr )
 
 # =============================================================================
-## simple context manager to suppress all(C/C++/Python) printout
-#
-#  @code
-#  with mute_all () :
-#          <some code here>
-#  @endcode 
-def mute_all ( cout = True , cerr = False )   :
-    """
-    Simple context manager to suppress All printout
-    
-    with mute_all () :
-    # <some code here>
-    #
-    """
-    return MuteAll ( cout , cerr )
-
-# =============================================================================
 ## simple context manager to suppressC/C++-printout
 #
 #  @code
-#  with mute_c () :
-#          <some code here>
+#  >>> with mute () :
+#  ...        <some code here>
 #  @endcode 
-def mute_c ( cout = True , cerr = False )   :
+def mute ( cout = True , cerr = False )   :
     """
     Simple context manager to suppress All printout
     
-    with mute_c () :
-    # <some code here>
-    #
+    >>> with mute () :
+    ...     <some code here>
     """
     return MuteC ( cout , cerr )
 
@@ -632,26 +643,22 @@ def mute_c ( cout = True , cerr = False )   :
 ## simple context manager to suppress Python-printout
 #
 #  @code
-#  with mute_py () :
-#          <some code here>
+#  >>> with mute_py () :
+#  ...        <some code here>
 #  @endcode 
 def mute_py ( cout = True , cerr = False )   :
     """
     Simple context manager to suppress All printout
     
-    with mute_Py () :
-    # <some code here>
-    #
+    >>> with mute_py () :
+    ...    <some code here>
+    
     """
     return MutePy ( cout , cerr )
 
 # ==============================================================================
 ## ditto 
-silence_c   = mute_c   # ditto
 silence_py  = mute_py  # ditto
-silence_all = mute_all # ditto
-
-mute        = mute_all # ditto  
 silence     = mute     # ditto
 
 # =============================================================================
