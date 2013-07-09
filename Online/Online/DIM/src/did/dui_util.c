@@ -184,9 +184,9 @@ DISABLE_AST
 	if(resource == XmNbackgroundPixmap)
 */
 	if(!strcmp(resource,XmNbackgroundPixmap))
-		set_something(w,resource,pixmap_colors[color]);
+	  set_something(w,resource,(void*)pixmap_colors[color]);
 	else
-		set_something(w,resource,rgb_colors[color]);
+		set_something(w,resource,(void*)rgb_colors[color]);
 ENABLE_AST
 }
 	
@@ -194,27 +194,27 @@ void set_watch(w, color)
 Widget w;
 int color;
 {
-	set_something(w,XmNbackgroundPixmap,watch_colors[color]);
+	set_something(w,XmNbackgroundPixmap,(void*)watch_colors[color]);
 }
 	
 void set_lock(w, color) 
 Widget w;
 int color;
 {
-	set_something(w,XmNbackgroundPixmap,locks[color]);
+	set_something(w,XmNbackgroundPixmap,(void*)locks[color]);
 }
 	
 void set_unlock(w) 
 Widget w;
 {
-	set_something(w,XmNbackgroundPixmap,unlock);
+	set_something(w,XmNbackgroundPixmap,(void*)unlock);
 }
 	
 void set_face(w, color) 
 Widget w;
 int color;
 {
-	set_something(w,XmNbackgroundPixmap,faces[color]);
+	set_something(w,XmNbackgroundPixmap,(void*)faces[color]);
 }
 	
 void get_all_colors(display, w)
