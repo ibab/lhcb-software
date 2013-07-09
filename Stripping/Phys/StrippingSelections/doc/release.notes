@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-07-09 - Stefano Perazzini
+ - Added EnableFlavourTagging = True to the striping lines defined in StrippingHb2Charged2Body.py and StrippingB2HHBDT.py
+
 !========================= StrippingSelections v3r26 2013-07-04 =========================
 
 ! 2013-07-01 - Stefano Perazzini

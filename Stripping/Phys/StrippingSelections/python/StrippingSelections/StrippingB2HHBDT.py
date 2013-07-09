@@ -94,7 +94,8 @@ class B2HHBDTLines( LineBuilder ) :
 
         self.lineB2HHBDT = StrippingLine( B2HHBDTName+"Line",
                                           prescale  = config['PrescaleB2HHBDT'],
-                                          selection = self.CutBDT )
+                                          selection = self.CutBDT,
+                                          EnableFlavourTagging = True )
         
         self.registerLine(self.lineB2HHBDT)
 

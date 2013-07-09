@@ -143,35 +143,43 @@ class Hb2Charged2BodyLines( LineBuilder ) :
         
         self.lineB2Charged2Body = StrippingLine( B2Charged2BodyName+"Line",
                                                  prescale  = config['PrescaleB2Charged2Body'],
-                                                 selection = self.B2Charged2Body )
+                                                 selection = self.B2Charged2Body,
+                                                 EnableFlavourTagging = True )
         
         self.lineB2KPlusPiMinus  = StrippingLine( B2KPlusPiMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
-                                                  selection = self.B2KPlusPiMinus )
+                                                  selection = self.B2KPlusPiMinus,
+                                                  EnableFlavourTagging = True )
         
         self.lineB2PiPlusKMinus  = StrippingLine( B2PiPlusKMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
-                                                  selection = self.B2PiPlusKMinus )
+                                                  selection = self.B2PiPlusKMinus,
+                                                  EnableFlavourTagging = True )
         
         self.lineBs2KPlusKMinus  = StrippingLine( Bs2KPlusKMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
-                                                  selection = self.Bs2KPlusKMinus )
+                                                  selection = self.Bs2KPlusKMinus,
+                                                  EnableFlavourTagging = True )
         
         self.lineLb2PPlusPiMinus = StrippingLine( Lb2PPlusPiMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
-                                                  selection = self.Lb2PPlusPiMinus )
+                                                  selection = self.Lb2PPlusPiMinus,
+                                                  EnableFlavourTagging = True )
         
         self.lineLb2PiPlusPMinus = StrippingLine( Lb2PiPlusPMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
-                                                  selection = self.Lb2PiPlusPMinus )
+                                                  selection = self.Lb2PiPlusPMinus,
+                                                  EnableFlavourTagging = True )
         
         self.lineLb2PPlusKMinus  = StrippingLine( Lb2PPlusKMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
-                                                  selection = self.Lb2PPlusKMinus )
+                                                  selection = self.Lb2PPlusKMinus,
+                                                  EnableFlavourTagging = True )
         
         self.lineLb2KPlusPMinus  = StrippingLine( Lb2KPlusPMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
-                                                  selection = self.Lb2KPlusPMinus )
+                                                  selection = self.Lb2KPlusPMinus,
+                                                  EnableFlavourTagging = True )
         
         self.registerLine(self.lineB2Charged2Body)
         self.registerLine(self.lineB2KPlusPiMinus)
