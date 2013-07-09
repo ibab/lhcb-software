@@ -6,6 +6,9 @@
 
 !========================= LbPowheg v1r0 2013-05-24 ==========================
 
+! 2013-07-09 - Marcin Kucharczyk
+ - Remove cteq6m from Lib and get it from LCG lhapdf
+
 ! 2013-07-08 - Marcin Kucharczyk
  - Add processes for heavy quarks (bb, tt)
  - Add separate options to run each process

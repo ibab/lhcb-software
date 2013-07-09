@@ -261,7 +261,7 @@ if ( process_name == "tt" )					/// ToDo: verify output !!!
 StatusCode PowhegProduction::finalize ()
 { 
   // Do some cleaning of files
-  // boost::filesystem::remove( boost::filesystem::path( "powheg.input" ) ) ;
+  boost::filesystem::remove( boost::filesystem::path( "powheg.input" ) ) ;
   boost::filesystem::remove( boost::filesystem::path( "pwgborngrid.top" ) ) ;
   boost::filesystem::remove( boost::filesystem::path( "pwgbtlgrid.top" ) ) ;
   boost::filesystem::remove( boost::filesystem::path( "pwgcounters.dat" ) ) ;
@@ -308,7 +308,7 @@ StatusCode PowhegProduction::generateLHE(const char *process_name){
 	// POWHEGEXE is defined at requirement file of LbPowheg package
 	
 	if ((process_name == "tt") || (process_name == "bb"))
-	  powhegexe = System::getEnv( "POWHEGHVQEXE" )+"/"+"hvq";				// heavy quark production
+	  powhegexe = System::getEnv( "POWHEGEXE" )+"/"+"hvq";				// heavy quark production
 	else 
 	  powhegexe = System::getEnv( "POWHEGEXE" )+"/"+ (std::string)process_name;
 	
@@ -345,8 +345,8 @@ StatusCode PowhegProduction::Makelink2PDFfile()
   
   // get cteq6m location
   std::string arg ;
-  if ( "UNKNOWN" != System::getEnv( "LBPOWHEGROOT" ) ) {
-    arg = System::getEnv( "LBPOWHEGROOT" )+"/src/Lib/cteq6m";
+if ( "UNKNOWN" != System::getEnv( "CTEQPDF" ) ) {
+    arg = System::getEnv( "CTEQPDF" )+"/cteq6m.LHpdf";
   }
   char* link_cteq6m = (char*)malloc( sizeof( char ) * (arg.length() +1) );
   strcpy( link_cteq6m, arg.c_str() );
