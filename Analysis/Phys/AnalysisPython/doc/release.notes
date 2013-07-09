@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-07-09 - Vanya Belyaev
+ - and context manager for suppression of RooFit prints 
+
 ! 2013-07-08 - Vanya Belyaev
  - minor improvements in functions 
 

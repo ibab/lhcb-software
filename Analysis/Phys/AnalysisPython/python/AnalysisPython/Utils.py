@@ -559,6 +559,72 @@ class TeeCpp(cpp.Gaudi.Utils.Tee) :
     ## context manager
     def __exit__  ( self , *_ ) : self.exit  ()
 
+# =============================================================================
+## very simple context manager to suppress RooFit printout
+#
+#  @code
+#
+#  >>> with rooSilent( 4 , False ) :
+#  ...        some_RooFit_code_here()
+#
+#  @endcode
+#  @see RooMgsService
+#  @see RooMgsService::globalKillBelow
+#  @see RooMgsService::silentMode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-07-09
+class RooSilent(object) :
+    """
+    very simple context manager to suppress RooFit printout
+    
+    >>> with rooSilent( 4 , False ) :
+    ...        some_RooFit_code_here ()
+    
+    """
+    ## constructor
+    #  @param level  (INPUT) print level 
+    #  @param silent (print level 
+    # 
+    def __init__ ( self , level = ROOT.RooFit.ERROR , silent = True ) :
+        """
+        Constructor
+        
+        @param level  (INPUT) print level 
+        @param silent (print level 
+        
+        >>> with rooSilent( ROOT.RooFit.ERROR , True  ) :
+        ...        some_RooFit_code_here ()
+        
+        
+        >>> with rooSilent( ROOT.RooFit.INFO , False  ) :
+        ...        some_RooFit_code_here ()
+        
+        
+        """
+        #
+        if level > ROOT.RooFit.FATAL : level = ROOT.RooFit.FATAL 
+        if level < ROOT.RooFit.DEBUG : level = ROOT.RooFit.DEBUG 
+        #
+        self._level  = level 
+        self._silent = True if silent else False  
+        self._svc    = ROOT.RooMsgService.instance()
+        
+    ## context manager
+    def __enter__ ( self ) :
+
+        self._prev_level  = self._svc.globalKillBelow  () 
+        self._prev_silent = self._svc.silentMode       () 
+        
+        self._svc.setGlobalKillBelow  ( self._level      )
+        self._svc.setSilentMode       ( self._silent     )
+        
+        
+    ## context manager 
+    def __exit__ ( self , *_ ) : 
+            
+        self._svc.setSilentMode      ( self._prev_silent )
+        self._svc.setGlobalKillBelow ( self._prev_level  )
+        
 
 # =============================================================================
 ## very simple context manager to duplicate Python-printout into file ("tee")
@@ -660,6 +726,31 @@ def mute_py ( cout = True , cerr = False )   :
 ## ditto 
 silence_py  = mute_py  # ditto
 silence     = mute     # ditto
+
+
+# =============================================================================
+## very simple context manager to suppress RooFit printout
+#
+#  @code
+#
+#  >>> with rooSilent( 4 , False ) :
+#  ...        some_RooFit_code_here()
+#
+#  @endcode
+#  @see RooMgsService
+#  @see RooMgsService::globalKillBelow
+#  @see RooMgsService::silentMode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-07-09
+def rooSilent ( level = ROOT.RooFit.ERROR , silent = True ) :
+    """
+    very simple context manager to suppress RooFit printout
+    
+    >>> with rooSilent( 4 , False ) :
+    ...        some_RooFit_code_here()
+    
+    """
+    return RooSilent ( level , silent ) 
 
 # =============================================================================
 ## get all open file descriptors
