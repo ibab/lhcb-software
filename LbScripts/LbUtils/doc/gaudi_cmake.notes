@@ -1,3 +1,11 @@
+! 2013-07-09 - Marco Clemencic (c0c8bde)
+
+ - modified the __init__.py used in builds to support 'python.zip'
+
+   To run the tests with CMake from a an installation without building, the 
+   special __init__.py used in the Python packages in the build directory must
+   support the special 'python.zip' entry in the PYTHONPATH.
+
 ! 2013-07-04 - Marco Clemencic (c5a1e30)
 
  - Merge branch 'dev/cmake'

@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: c5a1e30581aaa4698498ea2ef615b3c5a26d80f6
+# Commit Id: c0c8bde994ffc9ae72a08821c05e564988ed81b4
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -374,8 +374,11 @@ macro(gaudi_project project version)
       # from different copies of the package
       get_filename_component(packname ${package} NAME)
       file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/python/${packname})
-      file(WRITE ${CMAKE_BINARY_DIR}/python/${packname}/__init__.py
-           "\nimport os, sys\n__path__ = filter(os.path.exists, [os.path.join(d, '${packname}') for d in sys.path if d])\n")
+      file(WRITE ${CMAKE_BINARY_DIR}/python/${packname}/__init__.py "
+import os, sys
+__path__ = [d for d in [os.path.join(d, '${packname}') for d in sys.path if d]
+            if os.path.exists(d) or 'python.zip' in d]
+")
       if(EXISTS ${CMAKE_SOURCE_DIR}/${package}/python/${packname}/__init__.py)
         file(READ ${CMAKE_SOURCE_DIR}/${package}/python/${packname}/__init__.py _py_init_content)
         file(APPEND ${CMAKE_BINARY_DIR}/python/${packname}/__init__.py
