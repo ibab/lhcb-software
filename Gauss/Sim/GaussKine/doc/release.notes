@@ -4,6 +4,9 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-07-10 - Patrick Robbe
+ - GenerationToSimulation.cpp: save b and c quarks in MCParticles
+
 ! 2013-07-03 - Patrick Robbe
  - GenerationToSimulation.cpp: select switch off of G4 printout for 
    unknown PDG Ids from the algorithm message service output level

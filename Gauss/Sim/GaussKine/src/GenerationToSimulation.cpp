@@ -76,7 +76,7 @@ StatusCode GenerationToSimulation::initialize() {
   
     // If requested by option, update Geant4 particle properties
     // from Gaudi/LHCb ParticlePropertySvc
-    if ( m_updateG4ParticleProperties ) {
+    if ( m_updateG4ParticleProperties ) { 
       LHCb::IParticlePropertySvc * ppSvc = 
         svc< LHCb::IParticlePropertySvc >( "LHCb::ParticlePropertySvc", true );
 	
@@ -237,8 +237,8 @@ bool GenerationToSimulation::keep( const HepMC::GenParticle * particle ) const {
     case LHCb::ParticleID::down    : return false ;
     case LHCb::ParticleID::up      : return false ;
     case LHCb::ParticleID::strange : return false ;
-    case LHCb::ParticleID::charm   : return false ;
-    case LHCb::ParticleID::bottom  : return false ;
+    case LHCb::ParticleID::charm   : return true  ;
+    case LHCb::ParticleID::bottom  : return true  ;
     case LHCb::ParticleID::top     : return false ;
       //
     case                   21      : return false ;  // gluon
