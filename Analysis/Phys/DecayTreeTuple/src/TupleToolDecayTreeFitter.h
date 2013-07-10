@@ -6,7 +6,7 @@
 
  * -  Usage   : One can plug this Tool in DecayTreeTuple. It is advised to give it to a branch and not to try to run
  *    it on all the tree. To get full functionality use several instances.
- *    The instance name will be used as prefix. See example.
+ *    Always give it an instance name which will be used as prefix. See example.
  *  - Configuration :
  @code
  constrainToOriginVertex = False          # save a fit to compute the lifetime.

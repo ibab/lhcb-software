@@ -124,6 +124,14 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
     return Error("Do not call TupleToolDecayTreeFitter for basic particles. Use Branches. See doxygen.");
   }
   const std::string prefix=fullName(head);
+  if (msgLevel(MSG::DEBUG)) debug() << "head ''" << head << "'' prefix ''" << prefix 
+                                    << "'' extraname ''" << m_extraName << "''" <<endmsg;
+  if (m_extraName.empty()){
+    err() << "Extraname is empty. Always give an instance name to TupleToolDecayTreeFitter! See doxygen." << endmsg ;
+    // return StatusCode::FAILURE is not enough.
+    Exception("Extraname is empty. Always give an instance name to TupleToolDecayTreeFitter! See doxygen.");
+  }
+  
   const ITrackStateProvider* stateprovider = m_stateprovider.empty() ? 0 : &(*m_stateprovider) ;
 
   TupleMap tMap ; // the temporary data map
