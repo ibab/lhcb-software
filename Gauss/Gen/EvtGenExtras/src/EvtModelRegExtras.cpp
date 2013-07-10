@@ -9,6 +9,7 @@
 #include "EvtGenModels/EvtbsToLLLLHyperCP.hh"
 #include "EvtGenModels/EvtFlatSqDalitz.hh"
 #include "EvtGenModels/EvtBcVHad.hh"
+#include "EvtGenModels/EvtPhspFlatLifetime.hh"
 
 //we use auto_ptr here to show explicit transfer of ownership
 std::auto_ptr<const EvtModelList> EvtModelRegExtras::getModels(){
@@ -23,6 +24,7 @@ std::auto_ptr<const EvtModelList> EvtModelRegExtras::getModels(){
         models -> push_back( new EvtbsToLLLLHyperCP() );
 	models -> push_back( new EvtFlatSqDalitz() );
 	models -> push_back( new EvtBcVHad() );
+  models -> push_back( new EvtPhspFlatLifetime() ) ;
 	return std::auto_ptr<const EvtModelList>(models);
 	
 }
