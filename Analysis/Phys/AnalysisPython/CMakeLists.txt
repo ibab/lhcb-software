@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AnalysisPython
 ################################################################################
-gaudi_subdir(AnalysisPython v2r21)
+gaudi_subdir(AnalysisPython v2r22)
 
 gaudi_depends_on_subdirs(GaudiPython
                          Kernel/LHCbMath)

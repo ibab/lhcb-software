@@ -5,18 +5,19 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+!========================= AnalysisPython v2r22 2013-07-10 =========================
+
 ! 2013-07-09 - Vanya Belyaev
- - and context manager for suppression of RooFit prints 
+ - Add context manager for suppression of RooFit prints 
 
 ! 2013-07-08 - Vanya Belyaev
- - minor improvements in functions 
+ - Minor improvements in functions 
 
 ! 2013-07-06 - Vanya Belyaev
- - add output & tee context managers  
+ - Add output & tee context managers  
 
 ! 2013-07-06 - Vanya Belyaev
-
- - fix file descriptor leak in MuteC-utilitities 
+ - Fix file descriptor leak in MuteC-utilitities 
 
 !========================= AnalysisPython v2r21 2013-06-13 =========================
 
