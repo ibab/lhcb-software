@@ -4,6 +4,9 @@
 !------------------------------------------------------------------------------
 
 ! 2013-07-10 - Rob Lambert
+ - Simplify IOHelper with the new Manipulator module
+
+! 2013-07-10 - Rob Lambert
  - Added new module, manipulations.py, for adding functions for manipulating configurables. Simplifies IOHelper and will enable production outputlevel global settings.
 
 !========================= GaudiConf v17r10 2013-06-03 =========================

@@ -3,11 +3,13 @@ Configure IO persistency and TES.
 
 IOHelper class for whan you know the persistency services you want
 
-IOExtention if you want to be clever and get the
+IOExtention if you want to be clever and guess the service type from the file extension
 """
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 #from Gaudi.Configuration import *
+
+from Manipulations import fullNameConfigurables, nameFromConfigurable, configurableInstanceFromString, removeConfigurables
 
 class IOHelper(object):
     '''
@@ -253,66 +255,7 @@ class IOHelper(object):
                 retlist.append(service)
 
         return retlist
-
-    def _removeConfigurables(self, conf_list):
-        '''Helper: get rid of all configurables from a list'''
-        from Gaudi.Configuration import allConfigurables
-        conftodel=[k for k in allConfigurables if allConfigurables[k] in conf_list]
-        for k in conftodel:
-            del allConfigurables[k]
-
-    def _fullNameConfigurables(self):
-        import Gaudi.Configuration as GaudiConfigurables
-        retdict={}
-        for key in GaudiConfigurables.allConfigurables:
-            retdict[GaudiConfigurables.allConfigurables[key].getFullName()]=GaudiConfigurables.allConfigurables[key]
-        return retdict
     
-    def _nameFromConfigurable(self,conf):
-        if type(conf) is str:
-            return conf
-        elif hasattr(conf, "getFullName"):
-            return conf.getFullName()
-        return None
-    
-    def _configurableInstanceFromString(self, config):
-        '''Get a configurable instance given only the string'''
-
-        import Gaudi.Configuration as GaudiConfigurables
-
-        #if it's in Gaudi.Configuration
-
-        if config in self._fullNameConfigurables():
-            return self._fullNameConfigurables()[config]
-
-        if config in GaudiConfigurables.allConfigurables:
-            return GaudiConfigurables.allConfigurables[config]
-
-        config=config.replace('::','__')
-
-        #if it's in Gaudi.Configuration
-
-        if config in self._fullNameConfigurables():
-            return self._fullNameConfigurables()[config]
-
-        if config in GaudiConfigurables.allConfigurables:
-            return GaudiConfigurables.allConfigurables[config]
-
-        wclass=None
-
-        if hasattr(GaudiConfigurables, config.split('/')[0]):
-            wclass = getattr(GaudiConfigurables,config.split('/')[0])
-        else:
-            import Configurables
-            wclass = getattr(Configurables,config.split('/')[0])
-            #otherwise it must be a configurable
-
-        #check if it has an instance name
-        if '/' not in config:
-            return wclass()
-        else:
-            return wclass(name=config.split('/')[-1])
-
     def _isDressed(self, filename):
         '''Determine if a string is dressed or not
         '''
@@ -533,7 +476,7 @@ class IOHelper(object):
         '''Services: Return services configured irrespective of the persistency type '''
         retlist=[]
 
-        allConfigurables=self._fullNameConfigurables()
+        allConfigurables=fullNameConfigurables()
 
         for key in allConfigurables:
             for extsvc in self._externalPerServices:
@@ -583,7 +526,7 @@ class IOHelper(object):
             if hasattr(svc, "CnvServices") or "CnvServices" in svc.__slots__:
                 svc.CnvServices=[asvc for asvc in svc.CnvServices if asvc not in active]
 
-        self._removeConfigurables(active)
+        removeConfigurables(active)
 
     def servicesExist(self):
         '''Services:  Check if any of the the services required for this persistency are set up'''
@@ -871,7 +814,7 @@ class IOHelper(object):
             streams+=ApplicationMgr().OutStream
 
         #all defined configurables which match my expressions are output streams
-        allConfigurables=self._fullNameConfigurables()
+        allConfigurables=fullNameConfigurables()
         for key in allConfigurables:
             if self._isOutputStream(key):
                 if key not in streams and allConfigurables[key] not in streams:
@@ -883,7 +826,7 @@ class IOHelper(object):
                 if (not hasattr(allConfigurables[sequencer], "Members")) or (allConfigurables[sequencer].Members is None):
                     continue
                 for member in allConfigurables[sequencer].Members:
-                    membername=self._nameFromConfigurable(member)
+                    membername=nameFromConfigurable(member)
                     if self._isOutputStream(membername):
                         if member not in streams and membername not in streams:
                             streams.append(member)
@@ -922,7 +865,7 @@ class IOHelper(object):
                 continue
 
             if type(stream) is str:
-                stream=self._configurableInstanceFromString(stream)
+                stream=configurableInstanceFromString(stream)
 
             #redo FSR streams completely so that they have all the right options
             if self.detectStreamType(stream) in ["FSR"]:
@@ -978,7 +921,7 @@ class IOHelper(object):
         import Gaudi.Configuration as GaudiConfigurables
 
         if type(writer) is str:
-            winstance=self._configurableInstanceFromString(writer)
+            winstance=configurableInstanceFromString(writer)
         else:
             winstance=writer
             writer=writer.getFullName()
@@ -1020,7 +963,7 @@ class IOHelper(object):
         winstance=None
 
         if type(writer) is str:
-            winstance=self._configurableInstanceFromString(writer)
+            winstance=configurableInstanceFromString(writer)
         else:
             winstance=writer
             writer=writer.getFullName()

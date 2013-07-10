@@ -77,6 +77,13 @@ def configurableInstanceFromString(config):
     else:
         return wclass(name=config.split('/')[-1])
 
+def removeConfigurables(conf_list):
+    '''Helper: get rid of all configurables from a list'''
+    from Gaudi.Configuration import allConfigurables
+    conftodel=[k for k in allConfigurables if allConfigurables[k] in conf_list]
+    for k in conftodel:
+        del allConfigurables[k]
+
 # Copied from HLT Conf, setting given configurables with a dictionary:
 
 def forAllConf( head, prop_value_dict, types=[], force=False ) :
