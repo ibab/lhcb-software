@@ -29,11 +29,9 @@ MCRichDigitsToRawBufferAlg::MCRichDigitsToRawBufferAlg( const std::string& name,
   : Rich::AlgBase ( name, pSvcLocator ),
     m_rawFormatT  ( NULL )
 {
-
   declareProperty( "MCRichDigitsLocation",
                    m_digitsLoc = LHCb::MCRichDigitLocation::Default );
   declareProperty( "DataVersion", m_version = Rich::DAQ::LHCb2 );
-
 }
 
 // Destructor
@@ -42,7 +40,7 @@ MCRichDigitsToRawBufferAlg::~MCRichDigitsToRawBufferAlg() {}
 // Initialisation.
 StatusCode MCRichDigitsToRawBufferAlg::initialize()
 {
-  // intialise base lcass
+  // intialise base class
   const StatusCode sc = Rich::AlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
@@ -64,6 +62,7 @@ StatusCode MCRichDigitsToRawBufferAlg::execute()
   LHCb::RichSmartID::Vector smartIDs;
 
   // Loop over digits and fill smartIDs into vector
+  smartIDs.reserve( digits->size() );
   for ( LHCb::MCRichDigits::const_iterator iDigit = digits->begin();
         iDigit != digits->end(); ++iDigit )
   {

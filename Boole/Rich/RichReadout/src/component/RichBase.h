@@ -89,7 +89,7 @@ namespace Rich
 
         void cleanUp();
 
-        long size() const { return m_activePixels.size(); }
+        unsigned int size() const { return m_activePixels.size(); }
 
         RichPixelProperties* DecodeUniqueID(const LHCb::RichSmartID id) const;
 

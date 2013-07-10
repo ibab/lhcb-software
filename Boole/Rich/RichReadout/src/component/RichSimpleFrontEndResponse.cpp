@@ -49,7 +49,7 @@ StatusCode SimpleFrontEndResponse::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // create a collection of all pixels
-  const Rich::ISmartIDTool * smartIDs;
+  const Rich::ISmartIDTool * smartIDs = NULL;
   acquireTool( "RichSmartIDTool" , smartIDs, 0, true );
   const LHCb::RichSmartID::Vector & pixels = smartIDs->readoutChannelList();
   actual_base = theRegistry.GetNewBase( pixels );

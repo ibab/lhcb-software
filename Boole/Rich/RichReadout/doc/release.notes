@@ -4,6 +4,11 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2013-07-10 - Chris Jones
+ - Fix gcc warning about possibly uninitialized pointer in 
+   RichSimpleFrontEndResponse.cpp
+ - Miscellaneous other clean ups and minor improvements.
+
 ! 2013-06-25 - Marco Cattaneo
  - Fix UNINIT_CTOR defects
  - Protect unprotected debug()

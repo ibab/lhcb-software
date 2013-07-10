@@ -160,7 +160,7 @@ StatusCode Signal::ProcessEvent( const std::string & hitLoc,
         const StatusCode sc = m_smartIDTool->globalPosition( id, detectP );
         if ( sc.isFailure() )
         {
-          Warning( "Problem translated RichSmartID into global position" ).ignore();
+          Warning( "Problem translating RichSmartID into global position" ).ignore();
         }
         else
         {
