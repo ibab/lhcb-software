@@ -297,7 +297,7 @@ class ZooWriter : public DVAlgorithm
     HitManVeloR* m_hitManagerVeloR;
     HitManVeloPhi* m_hitManagerVeloPhi;
 
-    const LHCb::RecVertex calculateSecondIP(ZooP* zp, const LHCb::Particle* p, const LHCb::RecVertex* myBestVertex) ;
+    const LHCb::RecVertex calculateIP(ZooP* zp, const LHCb::Particle* p, const LHCb::RecVertex* myBestVertex) ;
     ZooP *GetSaved(const LHCb::Particle* p, const LHCb::RecVertex* recvtx = NULL); 
 
     void writeMC();

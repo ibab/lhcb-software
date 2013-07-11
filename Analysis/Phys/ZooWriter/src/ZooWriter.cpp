@@ -102,7 +102,7 @@ const int PREVIOUSVERTEXKEY = 978123;
 
   }
 
-const LHCb::RecVertex ZooWriter::calculateSecondIP(ZooP* zp, const LHCb::Particle* p, const LHCb::RecVertex* myBestVertex) {
+const LHCb::RecVertex ZooWriter::calculateIP(ZooP* zp, const LHCb::Particle* p, const LHCb::RecVertex* myBestVertex) {
   LHCb::RecVertex pv;
   bool gotavertex = (NULL!=myBestVertex);
   double best_ipSig = 999.0;
@@ -208,7 +208,7 @@ const LHCb::RecVertex ZooWriter::calculateSecondIP(ZooP* zp, const LHCb::Particl
   } // A) or B)
 
   return (gotavertex?(*myBestVertex):pv);
-} // calculateSecondIP
+} // calculateIP
 
 
 ZooWriter::ZooWriterContext::ZooWriterContext(const std::string& filename,
@@ -907,8 +907,8 @@ ZooP* ZooWriter::GetSaved(const LHCb::Particle* p, const LHCb::RecVertex* recvtx
   }
 
   {
-    pv = (calculateSecondIP(zp,p,(m_intelligentPV?recvtx:(const LHCb::RecVertex*)this->bestPV(p))));
-    hasBestPV = true; // FIXME can calculateSecondIP return a NULL pointer?
+    pv = (calculateIP(zp,p,(m_intelligentPV?recvtx:(const LHCb::RecVertex*)this->bestPV(p))));
+    hasBestPV = true; // FIXME can calculateIP return a NULL pointer?
   }
 
 
@@ -995,7 +995,7 @@ ZooP* ZooWriter::GetSaved(const LHCb::Particle* p, const LHCb::RecVertex* recvtx
           if (!m_lifetimeFitter->fit(newPV,*p,ct,ctErr,ctChi2))
             ct = ctErr = ctChi2 = nan;
         }
-        //// do IP setting in calculateSecondIP() method
+        //// do IP setting in calculateIP() method
         ////if (!m_dist->distance(p, &newPV, IP, chi2))
         ////  IP = IPSig = nan;
         ////else

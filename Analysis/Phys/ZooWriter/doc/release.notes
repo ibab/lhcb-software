@@ -4,6 +4,10 @@
 ! Purpose     : write events and particles to an analysis tree
 !-----------------------------------------------------------------------------
 
+! 2013-07-11 - Paul Seyfert
+ - rename calculateSecondIP to calculateIP because it's actually computing
+   the IP (and the secondIP if required)
+
 ! 2013-06-27 - Paul Seyfert
  - small bugfix in Rules.mk for multi subdirectory projects
    (waiting for review)
