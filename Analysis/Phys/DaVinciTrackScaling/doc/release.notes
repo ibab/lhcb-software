@@ -4,6 +4,12 @@
 ! Purpose     : Track scaling and smearing
 !-----------------------------------------------------------------------------
 
+! 2013-07-10 M Needham
+ - Add the old momentum smearing code that allows simple access to rootfile containing histogram. 
+   This code is well tested and works. I hope in the future this functionality will be provided by 
+   the official code, allowing this hack to be depreciated.
+
+
 ! 2013-06-01 - M Needham
  - Allow momentum calibration to applied also to downstream tracks
 

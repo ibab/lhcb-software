@@ -37,6 +37,7 @@
 // DAQEvent
 // ============================================================================
 #include "Event/ODIN.h"
+#include "Event/RecHeader.h"
 // ============================================================================
 // DetDesc 
 // ============================================================================
@@ -819,7 +820,9 @@ StatusCode TrackScaleState::execute ()
   { return Warning ( "No tracks at location '" + m_input + "'" , StatusCode::SUCCESS ) ; }
   //
   /// perform the action for new run 
-  const LHCb::ODIN* odin = get<LHCb::ODIN>( evtSvc() , LHCb::ODINLocation::Default) ;
+  //  const LHCb::ODIN* odin = get<LHCb::ODIN>( evtSvc() , LHCb::ODINLocation::Default) ;
+   LHCb::RecHeader* odin =  get<LHCb::RecHeader>(LHCb::ProcessHeaderLocation::Rec,false);
+
   //
   if ( m_new_run || ( m_current_run != odin->runNumber () ) )
   { new_run ( odin->runNumber () ) ; }
