@@ -9,8 +9,8 @@ removed.
 '''
 
 __author__ = ['Sean Benson']
-__date__ = '04/09/2012'
-__version__ = '2.3'
+__date__ = '11/07/2013'
+__version__ = '2.4'
 
 __all__ = ( 'Bs2Q2Body4piConf',
             'mkDiTrackList',
@@ -80,7 +80,7 @@ class Bs2Q2Body4piConf(LineBuilder) :
 
         self.Q2B4piLine = StrippingLine( Bs2Q2BName+"Line",
                                          prescale = config['Q2BPrescale'],
-                                         selection = self.B2CharmlessQ2B4pi )
+                                         selection = self.B2CharmlessQ2B4pi , EnableFlavourTagging = True)
 
         self.registerLine(self.Q2B4piLine)
 

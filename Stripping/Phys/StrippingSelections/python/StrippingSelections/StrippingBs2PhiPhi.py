@@ -14,8 +14,8 @@ Both lines are build by the function _Bs2PhiPhi_X_Line, which accepts the name a
 '''
 
 __author__  = [ 'Sean Benson' ]
-__date__    = '2012/09/04'
-__version__    = '2.3'
+__date__    = '2013/07/11'
+__version__    = '2.4'
 
 
 '''
@@ -133,5 +133,5 @@ class StrippingBs2PhiPhiConf(LineBuilder):
               , prescale = ps
               , postscale = 1
               , selection = Bs2PhiPhi
-              )
+              , EnableFlavourTagging = True)
 
