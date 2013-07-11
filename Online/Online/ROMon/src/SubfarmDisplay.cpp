@@ -16,6 +16,7 @@
 // C++ include files
 #include <cstdlib>
 #include <iostream>
+#include <limits>
 
 // Framework include files
 #include "RTL/Lock.h"
@@ -28,26 +29,33 @@
 
 using namespace ROMon;
 using namespace std;
-static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
 
 typedef Nodeset::Nodes               Nodes;
 typedef Node::Buffers                Buffers;
 typedef MBMBuffer::Clients           Clients;
 typedef Node::Tasks                  Tasks;
 
-static void getBuffInfo(const MBMBuffer::Control& c, int info[3], int tot[3]) {
-  tot[0] += (info[0] = c.tot_produced);
-  tot[1] += (info[1] = c.p_emax-c.i_events);
-  tot[2] += (info[2] = (c.i_space*c.bytes_p_Bit)/1024);
-  return;
+namespace {
+  struct Info {
+    long data[5];
+    Info() { 
+      data[0]=data[1]=data[2]=data[3]=data[4]=0;
+    }
+    Info(const Info& c) { 
+      data[0]=c.data[0];
+      data[1]=c.data[1];
+      data[2]=c.data[2];
+      data[3]=c.data[3];
+      data[4]=c.data[4];
+    }
+  };
 }
 
 static void help() {
   cout <<"  romon_subfarm -option [-option]" << endl
        <<"       -h[eaderheight]=<number>     Height of the header        display.                      " << endl
-       <<"       -n[odesheight]=<number>      Height of the Nodes         display.                      " << endl
-       <<"       -m[ooresheight]=<number>     Height of the MOORE tasks   display.                      " << endl
        <<"       -d[elay]=<number>            Time delay in millisecond between 2 updates.              " << endl
+       <<"       -p[artition]=<name>          Partition name for buffer filtering.                      " << endl
        <<"       -s[ervicename]=<name>        Name of the DIM service  providing monitoring information." << endl
        << endl;
 }
@@ -72,230 +80,114 @@ SubfarmDisplay::SubfarmDisplay(int argc, char** argv)   {
 
 void SubfarmDisplay::init(int argc, char** argv)   {
   RTL::CLI cli(argc,argv,help);
-  int hdr_height, nodes_height, moores_height, pr_width, eb_width;
-  cli.getopt("headerheight",  1, hdr_height    =    5);
-  cli.getopt("nodesheight",   1, nodes_height  =   31);
-  cli.getopt("mooresheight",  1, moores_height =   18);
-  cli.getopt("delay",         1, m_delay       = 1000);
-  cli.getopt("servicename",   1, m_svcName     = "/hlte07/ROpublish");
+  int hdr_height;
 
+  cli.getopt("headerheight",  1, hdr_height    =    5);
+  cli.getopt("delay",         1, m_delay       = 1000);
+  cli.getopt("partition",     1, m_partition   = "*");
+  cli.getopt("servicename",   1, m_svcName     = "/hlte07/ROpublish");
+  if ( m_partition == "*" ) m_partition = "";
+  if ( m_partition == "ALL" ) m_partition = "";
+  if ( cli.getopt("debug", 5) ) {
+    printf("To start debugger type:  gdb --pid %d\n",::lib_rtl_pid());
+    ::lib_rtl_sleep(30*1000);
+  }
   setup_window();
-  int width    = m_area.width;
   int posx     = m_position.x-2;
   int posy     = m_position.y-2;
-  eb_width = width/2-10;
-  pr_width = width/3-1;
-  m_moores     = 0;
-  m_builders   = 0;
-  m_holders    = 0;
-  m_senders    = 0;
-  m_nodes      = createSubDisplay(Position(posx,posy+hdr_height),            Area(width,nodes_height),"Node Information");
-  int bottom = m_nodes->bottom();
-  if ( moores_height > 0 ) {
-    m_moores   = createSubDisplay(Position(posx,bottom),          Area(width,moores_height),"Moore Processes");
-    bottom     = m_moores->bottom();
-  }
-  m_builders   = createSubDisplay(Position(posx,bottom),         Area(eb_width,posy+m_area.height-bottom),"Event builders");
-  m_holders    = createSubDisplay(Position(posx+eb_width,bottom),Area(pr_width,posy+m_area.height-bottom),"Event overflow");
-  m_senders    = createSubDisplay(Position(posx+eb_width+pr_width,bottom),Area(width-eb_width-pr_width,posy+m_area.height-bottom),"Event Senders");
+  m_nodes      = createSubDisplay(Position(posx,posy+hdr_height),
+				  Area(m_area.width,m_area.height - hdr_height),
+				  "Node Information");
   end_update();
+  m_measure = 0;
 }
 
 /// Standard destructor
 SubfarmDisplay::~SubfarmDisplay()  {
   begin_update();
   if ( m_nodes    ) delete m_nodes;
-  if ( m_moores   ) delete m_moores;
-  if ( m_builders ) delete m_builders;
-  if ( m_holders  ) delete m_holders;
-  if ( m_senders  ) delete m_senders;
   end_update();
 }
 
 /// Display the node information
 void SubfarmDisplay::showNodes(const Nodeset& ns)  {
   MonitorDisplay* disp = m_nodes;
-  const char* p;
-  const char* fmt = " %-12s%5d %12d%6d%7d %12d%11d%6d%7d %12d%6d%7d %12d";
-  int mep_tot[3] = {0,0,0}, evt_tot[3] = {0,0,0}, res_tot[3] = {0,0,0}, ovl_tot[3] = {0,0,0};
-  int accept_tot=0, cons_tot=0, ntsk_tot=0;
+  const char* fmt = " %-12s%5d %s";
+  char buff_text[256], text1[256], text2[256];
+  map<string,Info> totals;
+  vector<string>   buffers;
+  long ntsk_tot = 0;
+  bool partitioned = m_partition.empty();
 
-  disp->draw_line_reverse("           - MBM -     ----- Overflow ------     ----------- Events -------------     -------- Send -------    -- Since last Stop --");
-  disp->draw_line_bold(   " Node      Clients     Produced Slots  Space     Produced   Consumed Slots  Space     Produced Slots  Space    Sent to Storage");
+  ::snprintf(text1,sizeof(text1),"           - MBM -  ");
+  ::snprintf(text2,sizeof(text2)," Node      Clients ");
+  const char* pattern = "  ----------------------------------- ";
 
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
-    int mep_info[3] = {0,0,0}, evt_info[3] = {0,0,0}, res_info[3] = {0,0,0}, ovl_info[3] = {0,0,0};
-    int out=0, consumed=0, ntsk=0;
     const Buffers& buffs = *(*n).buffers();
+    buff_text[0] = 0;
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-      char b = (*ib).name[0];
-      const Clients& clients = (*ib).clients;
-      switch(b) {
-      case RES_BUFFER:
-      case SND_BUFFER: getBuffInfo((*ib).ctrl, res_info, res_tot); break;
-      case MEP_BUFFER: getBuffInfo((*ib).ctrl, mep_info, mep_tot); break;
-      case EVT_BUFFER: getBuffInfo((*ib).ctrl, evt_info, evt_tot); break;
-      case OVL_BUFFER: getBuffInfo((*ib).ctrl, ovl_info, ovl_tot); break;
-      default:                                                     break;
+      if ( !partitioned || strstr((*ib).name,m_partition.c_str()) ) {
+	size_t len = ::strlen(text1);
+	::snprintf(text1+len,sizeof(text1),pattern);
+	::snprintf(text1+len+12,sizeof(text1),(*ib).name);
+	text1[len+11] = ' ';
+	text1[len+12+strlen((*ib).name)] = ' ';
+	::snprintf(text2+len,sizeof(text2),"%11s%11s%6s%8s%2s","Produced","Consumed","Slots","Space","");
       }
-      for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-        ++ntsk;
-        p = strchr((*ic).name,'_');
-        if ( p ) {
-          switch(*(++p)) {
-          case SENDER_TASK:
-            if(b==RES_BUFFER||b==SND_BUFFER)  {
-              out   += (*ic).events;
-              accept_tot += (*ic).events;
-            }
-            break;
-          case MOORE_TASK:
-            //  Normal  and        TAE event processing
-            if(b==EVT_BUFFER || b==MEP_BUFFER)  {
-              consumed += (*ic).events;
-              cons_tot += (*ic).events;
-            }
-            break;
-          default:
-            break;
-          }
-        }
+    }
+    break;
+  }
+  disp->draw_line_reverse(text1);
+  disp->draw_line_bold(   text2);
+  ++m_measure;
+  for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
+    map<string,map<string,pair<long,long> > >::iterator in = m_minimal.find((*n).name);
+    const Buffers& buffs = *(*n).buffers();
+    size_t ntsk = 0;
+    buff_text[0] = 0;
+    if ( in == m_minimal.end() ) in = m_minimal.insert(make_pair((*n).name,map<string,pair<long,long> >())).first;
+    for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
+      Info info;
+      if ( !partitioned || strstr((*ib).name,m_partition.c_str()) ) {
+	map<string,pair<long,long> >::iterator ibuf = (*in).second.find((*ib).name);
+	const Clients&             clients = (*ib).clients;
+	const MBMBuffer::Control&  ctrl = (*ib).ctrl;
+
+	if ( ibuf == (*in).second.end() ) ibuf = (*in).second.insert(make_pair((*ib).name,make_pair(0,0))).first;
+	info.data[0] = ctrl.tot_produced;
+	info.data[1] = ctrl.p_emax-ctrl.i_events;
+	info.data[2] = (ctrl.i_space*ctrl.bytes_p_Bit)/1024;
+	long min_task  = numeric_limits<long>::max();
+	for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
+	  ++ntsk;
+	  if ( (*ic).type == 'C' ) info.data[3] += (*ic).events;
+	  if ( (*ic).type == 'P' ) info.data[4] += (*ic).events;
+	  if ( (*ic).events < min_task && ::strncmp((*ic).name,"MEPRx",5) != 0 )min_task = (*ic).events;
+	}
+	size_t len = ::strlen(buff_text);
+	if ( (m_measure%5)==0 ) {
+	  (*ibuf).second.second = min_task <= (*ibuf).second.first ? 1 : 0;
+	  (*ibuf).second.first  = min_task;
+	}
+	if ( 0 == len ) buffers.push_back((*ib).name);
+	for(size_t k=0; k<5; ++k) totals[(*ib).name].data[k] += info.data[k];
+	::snprintf(buff_text+len,sizeof(buff_text)-len,"%11ld%11ld%6ld%8ld%s",
+		   info.data[4],info.data[4],info.data[1],info.data[2],(*ibuf).second.second ? "/S" : "  ");
       }
     }
     ntsk_tot += ntsk;
-    const int *cnt = mep_info[0]==0 ? ovl_info : mep_info;
-    disp->draw_line_normal(fmt, (*n).name, ntsk, cnt[0], cnt[1], cnt[2],
-			   evt_info[0], consumed, evt_info[1], evt_info[2],
-			   res_info[0], res_info[1], res_info[2], out);
+    disp->draw_line_normal(fmt, (*n).name, ntsk, buff_text);
   }
   disp->draw_line_normal("");
-  const int *cnt = mep_tot[0]==0 ? ovl_tot : mep_tot;
-  disp->draw_line_bold(fmt, "Total:", ntsk_tot, cnt[0], cnt[1], cnt[2],
-		       evt_tot[0], cons_tot, evt_tot[1], evt_tot[2],
-		       res_tot[0], res_tot[1], res_tot[2], accept_tot);
-}
-
-/// Show the event builder information
-void SubfarmDisplay::showTasks(const Nodeset& ns) {
-  map<string,TaskIO> moores, builders;
-  string nam;
-  char txt[1024];
-  int nTsk = 0;
-  int eb_width = m_area.width/3;
-
-  m_builders->draw_line_reverse (" EVENTBUILDER 1/Prod Events 2/Prod Events 3/Prod Events    ");
-  m_senders->draw_line_reverse  (" SENDER           Sent Pend Send        ");
-  m_holders->draw_line_reverse  (" OVERFLOW        Seen   Produced Overflow"); // Was: PRODUCERS
-
-  if ( m_moores ) {
-    ::memset(txt,' ',sizeof(txt));
-    for(int i=0; i<3;++i ) {
-      ::sprintf(txt+eb_width*i," MOORE              Seen  Accept EVT RES   ");
-      txt[strlen(txt)] = ' ';
-    }
-    txt[3*eb_width+3] = 0;
-    m_moores->draw_line_reverse(txt);
+  buff_text[0] = 0;
+  for(size_t i=0; i<totals.size(); ++i)  {
+    size_t len = ::strlen(buff_text);
+    Info& info = totals[buffers[i]];
+    ::snprintf(buff_text+len,sizeof(buff_text)-len,"%11ld%11ld%6ld%8ld  ",
+	       info.data[4],info.data[4],info.data[1],info.data[2]);
   }
-  for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
-    const Buffers& buffs = *(*n).buffers();
-    string prod_name;
-    TaskIO prod;
-    builders.clear();
-    for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-      const Buffers::value_type::Control& c = (*ib).ctrl;
-      const Clients& clients = (*ib).clients;
-      char b = (*ib).name[0];
-      for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
-        Clients::const_reference cl = (*ic);
-        if(strncmp(cl.name,"MEPRx",5)==0 && (b == MEP_BUFFER||b == EVT_BUFFER) ) {
-          string nn = (*n).name;
-          nn += '_';
-          nn += cl.name+5;
-          builders[cl.name+5].in = c.tot_produced;
-          builders[cl.name+5].out = cl.events;
-          builders[cl.name+5].st_out = cl.state;
-          continue;
-        }
-        const char* p = strchr(cl.name,'_');
-        if ( p ) {
-          nam = string(cl.name).substr(0,p-cl.name);
-          nam += '_';
-          const char* q = strchr(p+1,'_');
-          if ( q ) nam += q+1;
-          ++p;
-          switch(*p) {
-          case SENDER_TASK:
-            if ( b==RES_BUFFER || b==SND_BUFFER ) {
-              m_senders->draw_line_normal(" %-10s %9d%5d %3s        ",nam.c_str(),cl.events,c.i_events,sstat[size_t(cl.state)]);
-            }
-            break;
-          case 'E':
-	  case OVLWR_TASK:
-            if ( m_holders && b==MEP_BUFFER && strncmp(p,"EvtHolder",9)==0) {
-              // m_holders->draw_line_normal( " %-10s %9d        ",nam.c_str(),cl.events);
-            }
-            else if ( b==OVL_BUFFER ) {
-              prod_name    = nam;
-              prod.in     += cl.events;
-              prod.st_in   = cl.state;
-            }
-            else if ( b==EVT_BUFFER && strncmp(p,"EvtProd",7)==0) {
-              prod_name    = nam;
-              prod.out    += cl.events;
-              prod.st_out  = cl.state;
-            }
-            break;
-          case MOORE_TASK:
-            if ( m_moores ) {
-              //  Normal  and        TAE event processing
-              if ( b==EVT_BUFFER || b==MEP_BUFFER )  {
-                moores[nam].in     += cl.events;
-                moores[nam].st_in   = cl.state;
-              }
-              else if ( b==RES_BUFFER || b==SND_BUFFER ) {
-                moores[nam].out    += cl.events;
-                moores[nam].st_out  = cl.state;
-              }
-            }
-            break;
-          default:
-            break;
-          }
-        }
-      }
-    }
-    if ( !prod_name.empty() ) {
-      m_holders->draw_line_normal(" %-10s%9d%11d %3s %3s  ",prod_name.c_str(),prod.in,prod.out,
-                                  sstat[prod.st_in],sstat[prod.st_out]);
-    }
-    txt[0] = 0;
-    ::sprintf(txt," %-8s  ", builders.size()>0 ? (*n).name : "");
-    for(map<string,TaskIO>::const_iterator bb=builders.begin(); bb != builders.end(); ++bb) {
-      const TaskIO& m = (*bb).second;
-      ::sprintf(txt+strlen(txt)-1,"%10d %3s ",m.out,sstat[m.st_out]);
-    }
-    m_builders->draw_line_normal(txt);
-  }
-  if ( m_moores ) {
-    ::memset(txt,' ',sizeof(txt));
-    txt[m_area.width] = 0;
-    for(map<string,TaskIO>::const_iterator i=moores.begin(); i!=moores.end();++i) {
-      const TaskIO& m = (*i).second;
-      ::sprintf(txt+eb_width*nTsk," %-12s%11d%8d %3s %3s   ",(*i).first.c_str(),m.in,m.out,sstat[m.st_in],sstat[m.st_out]);
-      if ( ++nTsk == 3 ) {
-        txt[3*eb_width+3] = 0;
-        m_moores->draw_line_normal(txt);
-        ::memset(txt,' ',sizeof(txt));
-        txt[sizeof(txt)-1] = 0;
-        nTsk = 0;
-      }
-      else {
-        txt[strlen(txt)] = ' ';
-      }
-    }
-    txt[m_area.width] = 0;
-    m_moores->draw_line_normal(txt);
-  }
+  disp->draw_line_bold(fmt, "Total:", ntsk_tot, buff_text);
 }
 
 /// Update header information
@@ -306,7 +198,10 @@ void SubfarmDisplay::showHeader(const Nodeset& ns)   {
   ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
   ::strftime(b2,sizeof(b1),"%H:%M:%S",::localtime(&t2));
   draw_line_normal ("");
-  draw_line_reverse("         HLT monitoring on %s   [%s]", ns.name, ::lib_rtl_timestr());    
+  
+  draw_line_reverse("         HLT monitoring on %s   [%s]   %s %s", ns.name, ::lib_rtl_timestr(),
+		    m_partition.empty() ? "" : "Partition:",
+		    m_partition.empty() ? "" : m_partition.c_str());
   draw_line_bold   ("         Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
 }
 
@@ -351,20 +246,9 @@ string SubfarmDisplay::nodeName(size_t offset) {
 void SubfarmDisplay::updateDisplay(const Nodeset& ns)   {
   begin_update();
   m_nodes->begin_update();
-  if ( m_moores   ) m_moores->begin_update();
-  if ( m_builders ) m_builders->begin_update();
-  if ( m_holders  ) m_holders->begin_update();
-  if ( m_senders  ) m_senders->begin_update();
-
   showHeader(ns);
   showNodes(ns);
-  showTasks(ns);
-
   m_nodes->end_update();
-  if ( m_moores   ) m_moores->end_update();
-  if ( m_builders ) m_builders->end_update();
-  if ( m_holders  ) m_holders->end_update();
-  if ( m_senders  ) m_senders->end_update();
   end_update();
 }
 

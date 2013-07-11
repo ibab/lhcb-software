@@ -39,7 +39,6 @@ namespace ROMon {
     SubDisplays                      m_lines;
     Listeners                        m_listeners;
     std::auto_ptr<InternalDisplay>   m_summaryDisplay;
-    std::string                      m_partition;
     std::string                      m_match;
     
     int                              m_height;

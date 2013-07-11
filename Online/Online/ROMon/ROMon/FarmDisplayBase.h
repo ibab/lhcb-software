@@ -102,9 +102,12 @@ namespace ROMon {
   protected:
     /// Node number in node set
     int m_node;
+    /// Partition name for filtering output
+    std::string m_partition;
+
   public:
     /// Initializing constructor
-    BufferDisplay(InternalDisplay* parent, const std::string& title);
+    BufferDisplay(InternalDisplay* parent, const std::string& title, const std::string& part_name="");
     /// Standard destructor
     virtual ~BufferDisplay() {}
     /// Set the node number for the display
@@ -178,6 +181,8 @@ namespace ROMon {
     size_t                           m_subPosCursor;
     /// Flag to setup reverse colors in display
     bool                             m_reverse;
+    /// Partition name if output filtering should be applied
+    std::string                      m_partition;
 
     /// Standard constructor
     FarmDisplayBase();

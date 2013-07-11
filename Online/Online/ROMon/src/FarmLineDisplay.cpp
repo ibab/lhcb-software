@@ -66,7 +66,7 @@ namespace {
 FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
   : FarmDisplayBase(), m_currentLine(0)
 {
-  char txt[128];
+  char txt[512];
   vector<string> listeners;
   string anchor, prefix, tmp;
   RTL::CLI cli(argc,argv,help);
@@ -78,6 +78,7 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
   cli.getopt("sdh",         2, m_subDisplayHeight);
   cli.getopt("node-height", 7, m_subDisplayHeight);
 
+  if ( m_name!="*" && m_name!="ALL" ) m_partition = m_name;
   m_dense = 0 != cli.getopt("dense",3);
   m_reverse = 0 != cli.getopt("reverse",3);
   m_mode = HLT_MODE;
@@ -215,14 +216,17 @@ FarmLineDisplay::FarmLineDisplay(int argc, char** argv)
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
   else {
-    ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s  %35s%47s%47s",
+    ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s  %35s %-27s  %-27s  %-27s  %-27s",
 	      "","Last","No.of","No.of","Num.of","<<------------------------------>>",
-	      "<<------------- Summ Counters ------------->>",
-	      "<<------------ Minimum Counters ----------->>");
+	      "<<----------------------->>",
+	      "<<----------------------->>",
+	      "<<----------------------->>",
+	      "<<----------------------->>");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-2,1,1);
-    ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s  %-33s  %10s%5s%10s%7s%10s%5s %9s%5s%11s%6s%10s%5s",
+    ::sprintf(txt," %-10s %-8s %-6s %-6s %-6s  %-33s   %-11s%10s%6s  %-11s%10s%6s  %-11s%10s%6s  %-11s%10s%6s",
 	      "Subfarm","Update","Nodes", "Buffer","Client","          Subfarm status         ",
-	      "Overflow","Sl","Events","Sl","Send","Sl","Overflow","Sl","Events","Sl","Send","Sl");
+	      "Buffer Name","Events","Slots","Buffer Name","Events","Slots",
+	      "Buffer Name","Events","Slots","Buffer Name","Events","Slots");
     ::scrc_put_chars(m_display,txt,BG_BLUE|FG_WHITE|BOLD,CLUSTERLINE_FIRSTPOS-1,1,1);
   }
 

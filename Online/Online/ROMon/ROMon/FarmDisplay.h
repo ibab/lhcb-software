@@ -106,7 +106,6 @@ namespace ROMon {
     typedef std::vector<std::string> Farms;
     SubDisplays                      m_farmDisplays;
     std::auto_ptr<PartitionListener> m_listener;
-    std::string                      m_partition;
     std::string                      m_match;
     int                              m_height;
     int                              m_width;

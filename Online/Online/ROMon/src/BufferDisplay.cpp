@@ -16,6 +16,7 @@
 // Framework include files
 #include "ROMon/FarmDisplay.h"
 #include "ROMon/CPUMon.h"
+#include "RTL/strdef.h"
 #include "CPP/Event.h"
 #include "SCR/scr.h"
 #include "sstat.h"
@@ -33,10 +34,26 @@ typedef MBMBuffer::Clients           Clients;
 typedef Node::Tasks                  Tasks;
 typedef vector<string>               StringV;
 
-BufferDisplay::BufferDisplay(InternalDisplay* parent, const string& title) 
-  : InternalDisplay(parent,title), m_node(0)
+namespace {
+  const char* _procNam(const string& part, const char* nam) {
+    const char* p = part.c_str();
+    if (0 != ::strstr(nam,"MEPRx") ) return nam;
+    if (0 != ::strncmp(nam,p,part.length())) return 0;
+    p = ::strchr(nam,'_');
+    if ( 0 != p ) {
+      const char* q = ::strchr(++p,'_');
+      if ( 0 != q ) return ++q;
+      return p;
+    }
+    return "Unknown";
+  }
+}
+
+
+BufferDisplay::BufferDisplay(InternalDisplay* parent, const string& title, const string& part) 
+  : InternalDisplay(parent,title+" Partition:"+part), m_node(0), m_partition(part)
 {
-  ::scrc_create_display(&m_display,55,130,MAGENTA,ON,"MBM Monitor display for node:");
+  ::scrc_create_display(&m_display,55,138,MAGENTA,ON,"MBM Monitor display for node:");
 }
 
 void BufferDisplay::update(const void* data) {
@@ -44,27 +61,29 @@ void BufferDisplay::update(const void* data) {
   char txt[1024], name[128];
   int line = 0, node = 0;
   if ( 0 != ns ) {
-    string key;
-    map<string,string> entries;
+    string key, nam, bnam_str;
     StringV lines;
-    string nam;
-    char *p, *cnam;
+    //char *p;
     Nodes::const_iterator n;
+    map<string,string> entries;
+    bool partitioned = !(m_partition.empty() || m_partition=="*" || RTL::str_upper(m_partition)=="ALL");
 
     for (n=ns->nodes.begin(), line=1; n!=ns->nodes.end(); n=ns->nodes.next(n), ++node)  {
       if ( node == m_node ) {
         time_t tim = (*n).time;
         const Buffers& buffs = *(*n).buffers();
+	bool hlt = ::strncmp((*n).name,"hlt",3)==0;
         ::strftime(name,sizeof(name),"%H:%M:%S",::localtime(&tim));
-        ::sprintf(txt,"MBM Monitor display for node:%s  [%s]",(*n).name,name);
+        ::sprintf(txt,"MBM Monitor display for node:%s  [%s]  %s %s",
+		  (*n).name,name,partitioned ? "Partition:""" : "",
+		  partitioned ? m_partition.c_str() : "");
         ::scrc_set_border(m_display,txt,BLUE|INVERSE);
         for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
           const Buffers::value_type::Control& c = (*ib).ctrl;
           const char* bnam = (char*)(*ib).name;
-          //if ( ::strlen(bnam)>10 ) {
-          //  p = strchr(bnam,'_');
-          //  if ( p ) *p = 0;
-          //}
+	  if ( partitioned )  {
+	    if ( 0 == ::strstr(bnam,m_partition.c_str()) ) continue;
+	  }
           ::sprintf(name," Buffer \"%s\"",bnam);
           ::sprintf(txt,"%-26s  Events: Produced:%lld Actual:%lld Seen:%lld Pending:%ld Max:%d",
                     name, c.tot_produced, c.tot_actual, c.tot_seen, c.i_events, c.p_emax);
@@ -83,7 +102,7 @@ void BufferDisplay::update(const void* data) {
       }
     }
     if ( line > 1 ) {
-      ::sprintf(txt,"%-22s%5s%6s %4s%12s %-4s %s","   Name","Part","PID","State","Seen/Prod","REQ","Buffer");
+      ::sprintf(txt,"%-26s%5s%6s %4s%12s %-4s %s","   Name","Part","PID","State","Seen/Prod","REQ","Buffer");
       ::scrc_put_chars(m_display,txt,INVERSE,++line,1,0);
       ::scrc_put_chars(m_display,txt,INVERSE,line,3+m_display->cols/2,1);
     }
@@ -97,39 +116,37 @@ void BufferDisplay::update(const void* data) {
     for (n=ns->nodes.begin(), node=0; n!=ns->nodes.end(); n=ns->nodes.next(n), ++node)  {
       if ( node == m_node ) {
         const Buffers& buffs = *(*n).buffers();
+	bool hlt = ::strncmp((*n).name,"hlt",3)==0;
         for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
           const Clients& clients = (*ib).clients;
           const char* bnam = (const char*)(*ib).name;
-          if ( ::strncmp(bnam,"Events_",7)==0 ) bnam += 7;
-          if ( ::strncmp(bnam,"Output_",7)==0 ) bnam = "Output";
-          if ( ::strncmp(bnam,"Input_",6)==0  ) bnam = "Input";
+	  if ( hlt && partitioned )  {
+	    if ( 0 == ::strstr(bnam,m_partition.c_str()) ) continue;
+	    bnam_str = bnam;
+	    size_t idx = bnam_str.find(m_partition);
+	    bnam_str = bnam_str.substr(0,idx-1);
+	    bnam = bnam_str.c_str();
+	  }
+          else if ( ::strncmp(bnam,"Events_",7)==0 && hlt ) bnam = "Events";
+          else if ( ::strncmp(bnam,"Events_",7)==0 ) bnam += 7;
+          else if ( ::strncmp(bnam,"Output_",7)==0 ) bnam = "Output";
+          else if ( ::strncmp(bnam,"Input_",6)==0  ) bnam = "Input";
           for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
             Clients::const_reference c = (*ic);
-            cnam = (char*)c.name;
-	    size_t mx_len = 20;
-            if ( ::strlen(cnam)>mx_len && (p=::strchr(cnam,'_')) ) {// Cleanup name if too long to be displayed properly...
-              cnam = ++p;
-              if ( ::strlen(cnam)>mx_len && (p=::strchr(cnam,'_')) ) {
-                cnam = ++p;
-                if ( ::strlen(cnam)>mx_len && (p=::strchr(cnam,'_')) ) {
-                  cnam = ++p;
-                  if ( ::strlen(cnam)>mx_len && (p=::strchr(cnam,'_')) ) {
-                    cnam = ++p;
-                  }
-                }
-              }
-            }
-            if ( c.type == 'C' )
-              ::sprintf(txt,"%-22s%5X%6d C%4s%12ld %c%c%c%c %s",cnam,c.partitionID,c.processID,
-                        sstat[(size_t)c.state],c.events,c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],bnam);
-            else if ( c.type == 'P' )
-              ::sprintf(txt,"%-22s%5X%6d P%4s%12ld %4s %s",cnam,c.partitionID,c.processID,
-                        sstat[(size_t)c.state],c.events,"",bnam);
-            else
-              ::sprintf(txt,"%-22s%5X%6d ?%4s%12s %4s %s",cnam,c.partitionID,c.processID,"","","",bnam);
-            key = bnam;
-            key += c.name;
-            entries[key] = txt;
+            const char* cnam = (partitioned) ? _procNam(m_partition,c.name) : c.name;
+	    if ( cnam ) {
+	      if ( c.type == 'C' )
+		::sprintf(txt,"%-26s%5X%6d C%4s%12ld %c%c%c%c %s",cnam,c.partitionID,c.processID,
+			  sstat[(size_t)c.state],c.events,c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],bnam);
+	      else if ( c.type == 'P' )
+		::sprintf(txt,"%-26s%5X%6d P%4s%12ld %4s %s",cnam,c.partitionID,c.processID,
+			  sstat[(size_t)c.state],c.events,"",bnam);
+	      else
+		::sprintf(txt,"%-26s%5X%6d ?%4s%12s %4s %s",cnam,c.partitionID,c.processID,"","","",bnam);
+	      key = bnam;
+	      key += c.name;
+	      entries[key] = txt;
+	    }
           }
         }
         break;

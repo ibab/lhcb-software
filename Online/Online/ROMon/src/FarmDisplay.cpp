@@ -133,6 +133,7 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
       ::printf("No valid anchor position given.\n");
     }
   }
+  if ( m_name!="*" && m_name!="ALL" ) m_partition = m_name;
   if ( !prefix.empty() ) InternalDisplay::setSvcPrefix(prefix);
   if ( m_reverse       ) InternalDisplay::setCreateFlags(INVERSE);
   s_fd = this;

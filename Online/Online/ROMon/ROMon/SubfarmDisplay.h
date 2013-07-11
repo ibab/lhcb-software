@@ -18,6 +18,8 @@
 
 // Framework includes
 #include "ROMon/ClusterDisplay.h"
+// C/C++ include files
+#include <map>
 
 /*
  *   ROMon namespace declaration
@@ -36,17 +38,13 @@ namespace ROMon {
     /// reference to the node display
     MonitorDisplay* m_nodes;
 
-    /// Reference to the display showing the MOORE tasks
-    MonitorDisplay* m_moores;
+    /// Partition name
+    std::string     m_partition;
 
-    /// Reference to the display showing the event builder tasks
-    MonitorDisplay* m_builders;
+    /// Counter with minimal values
+    std::map<std::string,std::map<std::string,std::pair<long,long> > > m_minimal;
 
-    /// Reference to the display showing the event holder tasks
-    MonitorDisplay* m_holders;
-
-    /// Reference to the display showing the event sender tasks
-    MonitorDisplay* m_senders;
+    long m_measure;
 
     /// Initialize window
     void init(int argc, char** arv);
@@ -86,9 +84,6 @@ namespace ROMon {
 
     /// Display the node information
     void showNodes(const Nodeset& ns);
-
-    /// Show the event builder information
-    void showTasks(const Nodeset& ns);
 
     /// Update all displays
     virtual void updateDisplay(const Nodeset& ns);

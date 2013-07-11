@@ -19,6 +19,7 @@
 
 // C++ include files
 #include <set>
+#include <limits>
 
 /*
  *   ROMon namespace declaration
@@ -34,14 +35,27 @@ namespace ROMon {
    *   @author M.Frank
    */
   class FarmClusterLine : public ClusterLine  {
-    long long int     m_evtBuilt;
-    long long int     m_evtMoore;
-    long long int     m_evtSent;
-    long long int     m_evtOvl;
-    long long int     m_totBuilt;
-    long long int     m_totMoore;
-    long long int     m_totSent;
-    long long int     m_totOvl;
+    struct Info {
+      long free_slots, buf_clients, task_evt_tot, task_evt_min;
+      float min_free_slots, min_free_space;
+      Info()   {
+	free_slots=buf_clients=task_evt_tot=0;
+	task_evt_min   = std::numeric_limits<long>::max();
+	min_free_slots = std::numeric_limits<float>::max();
+	min_free_space = std::numeric_limits<float>::max();
+      }
+      Info(const Info& c) { 
+	free_slots=c.free_slots;
+	min_free_slots = c.min_free_slots;
+	buf_clients=c.buf_clients;
+	task_evt_tot=c.task_evt_tot;
+	task_evt_min=c.task_evt_min;
+	min_free_space = c.min_free_space;
+	min_free_slots = c.min_free_slots;
+      }
+    };
+    std::vector<Info> m_history;
+
     int               m_numUpdate;
     /// Flag to indicate probles with entity
     bool              m_hasProblems;
@@ -194,6 +208,7 @@ namespace ROMon {
 #include "ROMon/FarmLineDisplay.h"
 #include "CPP/IocSensor.h"
 #include "RTL/Lock.h"
+#include "RTL/strdef.h"
 #include "WT/wtdef.h"
 #include "SCR/scr.h"
 #include "ROMonDefs.h"
@@ -233,7 +248,11 @@ namespace {
     const char* p;
     if (0 != ::strstr(nam,"MEPRx") ) return nam;
     p = ::strchr(nam,'_');
-    if ( 0 != p ) return ++p;
+    if ( 0 != p ) {
+      const char* q = ::strchr(++p,'_');
+      if ( 0 != q ) return ++q;
+      return p;
+    }
     return "Unknown";
   }
 }
@@ -469,18 +488,18 @@ void StorageClusterLine::display() {
   }
 
   if ( tot_prod[0] != 0 )
-    ::sprintf(txt,"Evt:%10lld Cl:%4d Sl:%4d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
+    ::sprintf(txt,"%13lld%6d  %8s%4d%17s",tot_prod[0],num_sl[0],"Clients:",num_cl[0],"");
   else
-    ::sprintf(txt,"%14s%8s%9s%64s","--","--","--","");
-  ::scrc_put_chars(dis," Receive:",BOLD,pos,77+CLUSTERLINE_START,0);
+    ::sprintf(txt,"%13s%6s  %8s%4s%17s","--","--","","","");
+  ::scrc_put_chars(dis," Recv:   ",BOLD,pos,77+CLUSTERLINE_START,0);
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+9+CLUSTERLINE_START,0);
 
   if ( tot_prod[1] != 0 )
-    ::sprintf(txt,"Evt:%10lld Cl:%4d Sl:%4d%17s",tot_prod[1],num_cl[1],num_sl[1],"");
+    ::sprintf(txt,"%13lld%6d  %8s%4d%17s",tot_prod[1],num_sl[1],"Clients:",num_cl[1],"");
   else
-    ::sprintf(txt,"%14s%8s%9s%64s","--","--","--","");
-  ::scrc_put_chars(dis,"  Stream:",BOLD,pos,77+40+CLUSTERLINE_START,0);
-  ::scrc_put_chars(dis,txt,NORMAL,pos,77+49+CLUSTERLINE_START,0);
+    ::sprintf(txt,"%14s%8s  %8s%4s%17s","--","--","","","");
+  ::scrc_put_chars(dis,"  Stream:  ",BOLD,pos,77+57+CLUSTERLINE_START,0);
+  ::scrc_put_chars(dis,txt,NORMAL,pos,77+67+CLUSTERLINE_START,0);
 
   m_hasProblems = true;
   if ( now-m_lastUpdate > UPDATE_TIME_MAX ) {
@@ -605,21 +624,23 @@ void MonitoringClusterLine::display() {
   m_hasProblems = true;
 
   if ( tot_prod[0] != 0 )
-    ::sprintf(txt,"Evt:%10lld Cl:%4d Sl:%4d%64s",tot_prod[0],num_cl[0],num_sl[0],"");
+    ::sprintf(txt,"%13lld%6d  %8s%4d %64s",tot_prod[0],num_sl[0],"Clients:",num_cl[0],"");
   else
-    ::sprintf(txt,"%14s%8s%9s%64s","--","--","--","");
-  ::scrc_put_chars(dis,"   Relay:",BOLD,pos,77+CLUSTERLINE_START,0);
+    ::sprintf(txt,"%13s%6s  %8s%4s %64s","--","--","","","");
+  ::scrc_put_chars(dis," Relay: ",BOLD,pos,77+CLUSTERLINE_START,0);
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+9+CLUSTERLINE_START,0);
 
   if ( tot_prod[1] != 0 && tot_prod[2] != 0 )
-    ::sprintf(txt,"Evt:%10lld Cl:%4d Sl:%4d Evt:%10lld Cl:%4d Sl:%4d%64s",
-	      tot_prod[1],num_cl[1],num_sl[1],tot_prod[2],num_cl[2],num_sl[2],"");
+    ::sprintf(txt,"%13lld%6d  %8s%4d %30s %10lld%6d %8s%4d %64s",
+	      tot_prod[1],num_sl[1],"Clients:",num_cl[1],"",
+	      tot_prod[2],num_sl[2],"Clients:",num_cl[2],"");
   else if ( tot_prod[1] != 0 )
-    ::sprintf(txt,"Evt:%10lld Cl:%4d Sl:%4d  %-62s",tot_prod[1],num_cl[1],num_sl[1],"No Output streams");
+    ::sprintf(txt,"%13lld%6d  %8s%4d  %10s %-62s",tot_prod[1],num_sl[1],
+	      "Clients:",num_cl[1],"","No Output streams");
   else
-    ::sprintf(txt,"%14s%8s%9s%64s","--","--","--","");
-  ::scrc_put_chars(dis,"  Worker:",BOLD,pos,77+40+CLUSTERLINE_START,0);
-  ::scrc_put_chars(dis,txt,NORMAL,pos,77+49+CLUSTERLINE_START,0);
+    ::sprintf(txt,"%13s%6s  %8s%4s%64s","--","--","","","");
+  ::scrc_put_chars(dis,"  Worker:  ",BOLD,pos,77+57+CLUSTERLINE_START,0);
+  ::scrc_put_chars(dis,txt,NORMAL,pos,77+67+CLUSTERLINE_START,0);
   
   int col = NORMAL;
   if ( now-m_lastUpdate > UPDATE_TIME_MAX ) {
@@ -674,14 +695,13 @@ void MonitoringClusterLine::display() {
 }
 
 
+namespace {
+}
+
 FarmClusterLine::FarmClusterLine(FarmLineDisplay* p, const string& partition, const std::string& n)
 : ClusterLine(p,partition,n)
 {
   m_numUpdate  = 0;
-  m_evtOvl     = m_totOvl = 0;
-  m_evtSent    = m_totSent = 0;
-  m_evtMoore   = m_totMoore = 0;
-  m_evtBuilt   = m_totBuilt = 0;
   m_lastUpdate = time(0);
   m_hasProblems = false;
   connect(strlower(m_name)+"/ROpublish");
@@ -693,99 +713,63 @@ void FarmClusterLine::display() {
   Display*       dis = m_parent->display();
   const Nodeset*   c = data<Nodeset>();
   const Nodes& nodes = c->nodes;
-  long long int evt_prod[4]    = {0,0,0,0}, min_prod[4]  = {INT_max,INT_max,INT_max,INT_max};
-  long int free_space[4]  = {0,0,0,0}, min_space[4] = {INT_max,INT_max,INT_max,INT_max};
-  long int free_slots[4]  = {0,0,0,0}, min_slots[4] = {INT_max,INT_max,INT_max,INT_max};
-  long int buf_clients[4] = {0,0,0,0};
-  float fspace[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
-  float fslots[4]    = {FLT_max,FLT_max,FLT_max,FLT_max};
-  float fsl, fsp;
-  long int evt_ovl   = INT_max;
-  long int evt_sent  = INT_max;
-  long int evt_moore = INT_max;
-  long int evt_built = INT_max;
-  int numNodes       = 0;
-  int numBuffs       = 0;
-  int numClients     = 0;
+  int numNodes=0, numBuffs=0, numClients=0, col=NORMAL;
+  bool slots_min = false, space_min = false;
   set<string> bad_nodes;
-  int col = NORMAL;
+  map<string,Info> vals;
+  Info totals;
+  bool partitioned = !(m_partition.empty() || m_partition=="*" || RTL::str_upper(m_partition)=="ALL");
 
   m_inUse = false;
   for (Nodes::const_iterator n=nodes.begin(); n!=nodes.end(); n=nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
-    numNodes++;
-    long int node_evt_ovl = 0;
-    long int node_evt_mep = 0;
-    long int node_evt_sent = INT_max;
-    long int node_evt_moore = INT_max;
-
     const char* nn = (*n).name;
+    Info* info;
     txt[1] = nn[0];
     txt[2] = nn[1];
-    col = NORMAL;
-    ::sprintf(txt," %s ",nn+((::strncmp(nn,c->name,::strlen(c->name)+2) == 0) ? 0 : ::strlen(nn)-2));
-
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
-      int idx = 0;
-      char b = (*ib).name[0];
+      string b = (*ib).name, bnam = b.substr(0,partitioned ? b.find('_') : string::npos);
       const MBMBuffer::Control& ctrl = (*ib).ctrl;
-      ++numBuffs;
-      switch(b) {
-      case MEP_BUFFER:        idx = 0; break;
-      case EVT_BUFFER:        idx = 1; break;
-      case RES_BUFFER:
-      case SND_BUFFER:        idx = 2; break;
-      case OVL_BUFFER:        idx = 3; break;
-      default:                continue;
-      }
+      float fsp = float(ctrl.i_space)/float(ctrl.bm_size);
+      float fsl = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
+      long min_task  = numeric_limits<long>::max();
+      map<string,Info>::iterator  i_info = vals.find(bnam);
+      if ( i_info == vals.end() ) i_info = vals.insert(make_pair(bnam,Info())).first;
+
       m_inUse = true;
-      fsp               = float(ctrl.i_space)/float(ctrl.bm_size);
-      fsl               = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-      fspace[idx]       = ro_min(fspace[idx],fsp); 
-      fslots[idx]       = ro_min(fslots[idx],fsl);
-      min_space[idx]    = ro_min(min_space[idx],(ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024);
-      min_slots[idx]    = ro_min(min_slots[idx],ctrl.p_emax-ctrl.i_events);
-      min_prod[idx]     = ro_min(min_prod[idx],ctrl.tot_produced);
-      evt_prod[idx]    += ctrl.tot_produced;
-      free_space[idx]  += (ctrl.i_space*ctrl.bytes_p_Bit)/1024/1024;
-      free_slots[idx]  += (ctrl.p_emax-ctrl.i_events);
-      buf_clients[idx] += ctrl.i_users;
+      info = &((*i_info).second);
+      info->free_slots     += (ctrl.p_emax-ctrl.i_events);
+      info->buf_clients    += ctrl.i_users;
+      info->min_free_slots  = min(info->min_free_slots,fsl);
+      info->min_free_space  = min(info->min_free_slots,fsp);
+      totals.free_slots    += (ctrl.p_emax-ctrl.i_events);
+      totals.buf_clients   += ctrl.i_users;
+      totals.min_free_slots = min(totals.min_free_slots,fsl);
+      totals.min_free_space = min(totals.min_free_slots,fsp);
       if ( fsl < SLOTS_MIN || fsp < SPACE_MIN ) {
-        bad_nodes.insert((*n).name);
+        bad_nodes.insert(nn);
       }
+      if ( fsl < SLOTS_MIN ) slots_min |= (fsl<SLOTS_MIN);
+      if ( fsp < SPACE_MIN ) space_min |= (fsp<SPACE_MIN);
       const Clients& clients = (*ib).clients;
       for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
+	if ( 0 == ::strncasecmp((*ic).name,"MEPRx",5) ) continue;
+	info->task_evt_tot   += (*ic).events;
+	info->task_evt_min    = ro_min(info->task_evt_min,(*ic).events);
+	totals.task_evt_tot  += (*ic).events;
+	totals.task_evt_min   = ro_min(totals.task_evt_min,(*ic).events);
+	if ( (*ic).events < min_task ) min_task = (*ic).events;
         ++numClients;
-        const char* p = _procNam((*ic).name);
-        switch(*p) {
-        case BUILDER_TASK:
-          if( b == MEP_BUFFER || b == EVT_BUFFER ) {
-            node_evt_mep += (*ic).events;
-          }
-          break;
-        case SENDER_TASK:
-          if( b == RES_BUFFER || b == SND_BUFFER )  {
-            node_evt_sent = ro_min(node_evt_sent,(*ic).events);
-          }
-          break;
-        case MOORE_TASK:
-          //  Normal  and        TAE event processing
-          if( b == EVT_BUFFER || b == MEP_BUFFER )  {
-            node_evt_moore = ro_min(node_evt_moore,(*ic).events);
-          }
-          break;
-        case OVLWR_TASK:
-	  node_evt_ovl = ro_min(node_evt_ovl,(*ic).events);
-          break;
-        default:
-          break;
-        }
       }
+#if 0
+      if ( (m_measure%5)==0 ) {
+	info->stuck = min_task <= info->task_evt_min ? 1 : 0;
+	(*ibuf).second.first  = min_task;
+      }
+#endif
+      ++numBuffs;
     }
-    evt_moore = ro_min(evt_moore,node_evt_moore);
-    evt_built = ro_min(evt_built,node_evt_mep);
-    evt_sent  = ro_min(evt_sent,node_evt_sent);
-    evt_ovl   = ro_min(evt_ovl,node_evt_ovl);
+    ++numNodes;
   }
 
   RTL::Lock lock(InternalDisplay::screenLock());
@@ -798,14 +782,11 @@ void FarmClusterLine::display() {
     m_lastUpdate = t1;
   }
   m_hasProblems = true;
-
-  bool slots_min = fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN || 
-    fslots[2] < SLOTS_MIN || fslots[3] < SLOTS_MIN;
-  bool space_min = fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN || 
-    fspace[2] < SPACE_MIN || fspace[3] < SPACE_MIN;
+  while( m_history.size()<5 ) m_history.push_back(totals);
 
   col = NORMAL;
-  string err = "";
+  string err = "", tag = "";
+  const Info& history = m_history[4];
   if ( prev_update-m_lastUpdate > UPDATE_TIME_MAX ) {
     err = " No update information available", col = RED|INVERSE|BOLD;
   }
@@ -815,68 +796,55 @@ void FarmClusterLine::display() {
   else if ( !m_inUse ) {
     err = " Subfarm not used by any partition....", col = NORMAL|INVERSE|GREEN;
   }
-  else if ( evt_built <= m_evtBuilt && evt_prod[0]<m_totBuilt ) {
-    err = " Some MEPRx(s) stuck.", col = BOLD|RED|INVERSE;
-  }
-  else if ( evt_built <= m_evtBuilt && evt_prod[0] == m_totBuilt ) {
+  else if ( totals.task_evt_min <= history.task_evt_min && totals.task_evt_tot == history.task_evt_tot )  {
     err = " No DAQ activity visible.", col = BOLD|RED;
+    tag = "IDLE";
   }
-  else if ( evt_moore+2 <= m_evtMoore && evt_prod[1] > m_totMoore ) {
-    err = " Some MOORE(s) stuck.", col = BOLD|RED|INVERSE;
-  }
-  else if ( evt_moore <= m_evtMoore && evt_prod[1] == m_totMoore ) {
-    err = " No HLT activity visible.", col = BOLD|RED;
-  }
-  else if ( evt_sent+2 <= m_evtSent && evt_prod[2] > m_totSent ) {
-    err = " Some Sender(s) stuck.", col = BOLD|RED|INVERSE;
-  }
-  else if ( evt_sent <= m_evtSent && evt_prod[0] == m_totSent ) {
-    err = " No STORAGE activity visible.", col = BOLD|RED;
+  else if ( totals.task_evt_min <= history.task_evt_min ) {
+    err = " Some Task(s) stuck.", col = BOLD|RED|INVERSE;
+    tag = "STUCK";
   }
   else if ( slots_min  ) {
     int nbad = int(bad_nodes.size());
-    ::sprintf(txt,"SLOTS at limit:");
-    if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"MEP ");
-    if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"EVENT ");
-    if ( fslots[2] < SLOTS_MIN ) ::strcat(txt,"RES/SEND ");
-    if ( fslots[3] < SLOTS_MIN ) ::strcat(txt,"OVL ");
-    ::sprintf(txt+strlen(txt),"[%d nodes]",nbad);
-    // We have 11 slow nodes in a farm: if these are full, this is no error
+    ::sprintf(txt," SLOTS at limit [%d nodes]",nbad);
     err = txt, col = INVERSE|(nbad>0 ? GREEN : RED);
   }
   else if ( space_min  ) {
     int nbad = int(bad_nodes.size());
-    ::sprintf(txt,"SPACE at limit:");
-    if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"MEP ");
-    if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"EVENT ");
-    if ( fspace[2] < SPACE_MIN ) ::strcat(txt,"RES/SEND ");
-    if ( fspace[3] < SPACE_MIN ) ::strcat(txt,"OVL ");
-    ::sprintf(txt+strlen(txt),"[%d nodes]",nbad);
-    // We have 11 slow nodes in a farm: if these are full, this is no error
+    ::sprintf(txt," SPACE at limit [%d nodes]",nbad);
     err = txt, col = INVERSE|(nbad>0 ? GREEN : RED);
   }
   else  {
     err = " No obvious Errors detected....", col=NORMAL|INVERSE|GREEN;
     m_hasProblems = false;
   }
-  m_evtBuilt  = evt_built;
-  m_evtMoore  = evt_moore;
-  m_evtSent   = evt_sent;
-  m_evtOvl    = evt_ovl;
-  m_totBuilt  = evt_prod[0];
-  m_totMoore  = evt_prod[1];
-  m_totSent   = evt_prod[2];
-  m_totOvl    = evt_prod[3];
   err = err + "                                                                 ";
   ::scrc_put_chars(dis,err.substr(0,35).c_str(),col,pos,42+CLUSTERLINE_START,0);
-  if ( evt_prod[0] || evt_prod[1] )
-    ::sprintf(txt,"%10lld%5ld%11lld%6ld%10lld%5ld",
-              evt_prod[3],free_slots[3],
-              evt_prod[1],free_slots[1],
-              evt_prod[2],free_slots[2]);
-  else
-    ::sprintf(txt,"%10s%5s%10s%7s%10s%5s","--","--","--","--","--","--");
-  ::scrc_put_chars(dis,txt,NORMAL,pos,77+CLUSTERLINE_START,0);
+  txt[0] = 0;
+  int sp = 77+CLUSTERLINE_START, nam_len = partitioned ? 10 : 15;
+  for(map<string,Info>::const_iterator i=vals.begin(); i!=vals.end(); ++i) {
+    const Info& info = (*i).second;
+    ::snprintf(txt,sizeof(txt)," %-30s",((*i).first+":").c_str());
+    ::scrc_put_chars(dis,txt,NORMAL|BOLD,pos,sp,0);
+    sp += nam_len;
+    if ( info.min_free_slots < SLOTS_MIN )
+      col=BOLD|RED, ::snprintf(txt,sizeof(txt),"%12ld %-20s ",info.task_evt_tot,"SLOTS");
+    else if ( info.min_free_space < SPACE_MIN )
+      col=BOLD|RED, ::snprintf(txt,sizeof(txt),"%12ld %-20sss ",info.task_evt_tot,"SPACE");
+    else if ( info.task_evt_min <= history.task_evt_min && totals.task_evt_tot == history.task_evt_tot )
+      col=NORMAL,   ::snprintf(txt,sizeof(txt),"%12ld %5ld %15s ",info.task_evt_tot,info.free_slots,"");
+    else if ( info.task_evt_min <= history.task_evt_min )
+      col=BOLD|RED, ::snprintf(txt,sizeof(txt),"%12ld %-20s ",info.task_evt_tot,tag.empty() ? "IDLE" : tag.c_str());
+    else if ( info.task_evt_tot > 0 )
+      col=NORMAL,   ::snprintf(txt,sizeof(txt),"%12ld %5ld %15s",info.task_evt_tot,info.free_slots,"");
+    else
+      col=NORMAL,   ::snprintf(txt,sizeof(txt),"%12s %5s %15s","--","--","");
+
+    ::scrc_put_chars(dis,txt,col,pos,sp,0);
+    sp += 19;
+  }
+  ::scrc_put_chars(dis,"",NORMAL,pos,sp,1);
+#if 0
   if ( min_prod[0] != INT_max || min_prod[1] != INT_max ) {
     if ( min_prod[3]  == INT_max ) min_prod[3] = 0;  // if not existing....
     if ( min_slots[3] == INT_max ) min_slots[3] = 0; // if not existing....
@@ -889,6 +857,12 @@ void FarmClusterLine::display() {
     ::sprintf(txt,"%10s%5s%10s%7s%10s%5s","--","--","--","--","--","--");
   }
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+47+CLUSTERLINE_START,0);
+#endif
+  m_history[4] = m_history[3];
+  m_history[3] = m_history[2];
+  m_history[2] = m_history[1];
+  m_history[1] = m_history[0];
+  m_history[0] = totals;
   end_update();
 }
 

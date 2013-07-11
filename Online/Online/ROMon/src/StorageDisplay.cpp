@@ -140,7 +140,7 @@ void StorageDisplay::init(int flag, int argc, char** argv)   {
   hlt_height = m_area.height-hdr_height;
   m_select = 0;
   if ( flag ) {
-    m_select  = createSubDisplay(Position(posx,posy+hdr_height),Area(hlt_width, 6),"  Node Selector");
+    m_select  = createSubDisplay(Position(posx,posy+hdr_height-hdr_height),Area(hlt_width, 6+hdr_height),"  Node Selector");
     hlt_posy += 7;
     hlt_height -= 7;
   }
@@ -412,14 +412,16 @@ void StorageDisplay::showBuffers(const Nodeset& ns) {
 /// Update header information
 void StorageDisplay::showHeader(const Nodeset& ns)   {
   char b1[64], b2[64];
+  const char* fill = m_select ? "                  " : "";
   TimeStamp frst=ns.firstUpdate(), last=ns.lastUpdate();
   time_t t1 = frst.first, t2 = last.first;
   ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
   ::strftime(b2,sizeof(b1),"%H:%M:%S",::localtime(&t2));
   draw_line_normal ("");
-  draw_line_reverse("                     Storage Monitor for partition %s on %s   [%s]",
-                    m_partName.c_str(), RTL::nodeNameShort().c_str(), ::lib_rtl_timestr());    
-  draw_line_bold   ("                     Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
+  draw_line_reverse("  %s                   Storage Monitor for partition %s on %s   [%s]",
+                    fill,m_partName.c_str(), RTL::nodeNameShort().c_str(), ::lib_rtl_timestr());    
+  draw_line_bold   ("  %s                   Information updates date between: %s.%03d and %s.%03d",
+		    fill,b1,frst.second,b2,last.second);
   draw_line_normal ("");
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     char* c = ::strchr((char*)(*n).name,'.');
@@ -430,8 +432,13 @@ void StorageDisplay::showHeader(const Nodeset& ns)   {
 /// Update selector information
 void StorageDisplay::showSelector(const Nodeset& /* ns */)   {
   if ( m_select )    {
+    size_t i, hdr_height = m_select->height()-1-2-2;
+    for(i=1; i<hdr_height/2; ++i)
+      m_select->draw_line_normal("");
     m_select->draw_line_normal("Move curser, then command");
     m_select->draw_line_normal("CTRL-H for help");
+    for(; i<hdr_height; ++i)
+      m_select->draw_line_normal("");
     m_select->draw_line_bold  ("  storerecv01");
     m_select->draw_line_bold  ("  storerecv02");    
     m_select->draw_line_bold  ("  storestrm01");

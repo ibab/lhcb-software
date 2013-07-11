@@ -293,7 +293,7 @@ int FarmDisplayBase::showMbmWindow() {
     m_mbmDisplay = auto_ptr<BufferDisplay>(0);
   }
   else if ( m_subfarmDisplay ) {
-    m_mbmDisplay = auto_ptr<BufferDisplay>(new BufferDisplay(this,"MBM Monitor display"));
+    m_mbmDisplay = auto_ptr<BufferDisplay>(new BufferDisplay(this,"MBM Monitor display",m_partition));
     m_mbmDisplay->setNode(m_subPosCursor);
     m_mbmDisplay->update(m_subfarmDisplay->data().pointer);
     m_mbmDisplay->show(m_anchorY+5,m_anchorX+12);
@@ -414,7 +414,7 @@ int FarmDisplayBase::showSysWindow() {
   string dnam = selectedCluster();
   if ( !dnam.empty() ) {
     string node = "-node="+strupper(dnam);
-    string svc = "-servicename="+svcPrefix()+strupper(dnam)+"/TaskSupervisor/Status";
+    string svc  = "-servicename="+svcPrefix()+strupper(dnam)+"/TaskSupervisor/Status";
     const char* argv[] = {"", svc.c_str(), node.c_str(), "-delay=300"};
     ClusterDisplay* disp = createCtrlSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX+3,m_anchorY,3,(char**)argv);
     m_sysDisplay = auto_ptr<ClusterDisplay>(disp);
@@ -439,7 +439,8 @@ int FarmDisplayBase::showReadoutWindow() {
   string dnam = selectedCluster();
   if ( !dnam.empty() ) {
     string svc = "-servicename="+svcPrefix()+strlower(dnam)+"/ROpublish";
-    const char* argv[] = {"", svc.c_str(), "-delay=300", "-mooresheight=-1", "-nodesheight=31"};
+    string part = "-partition="+m_partition;
+    const char* argv[] = {"", svc.c_str(), part.c_str(), "-delay=300"};
     ClusterDisplay* disp = createSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,5,(char**)argv);
     m_roDisplay = auto_ptr<ClusterDisplay>(disp);
     m_roDisplay->initialize();

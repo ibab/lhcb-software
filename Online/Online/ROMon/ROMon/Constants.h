@@ -67,7 +67,7 @@ namespace ROMon {
     TASK_FSM_STATE_RUNNING =      'R',
 
     SUBFARM_HEIGHT =              68,
-    SUBFARM_WIDTH =              132,
+    SUBFARM_WIDTH =              155,
     SUBFARM_NODE_OFFSET =          8,
     SUBFARM_DISP_WIDTH =          48,
     SUBFARM_DISP_HEIGHT_NORMAL =   5,
