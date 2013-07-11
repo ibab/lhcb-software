@@ -5,6 +5,12 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-07-11 - Vanya Belyaev
+
+ - PyRoUts.py &Utils.py
+
+   eliminate unnesessary imports from GaudiPython 
+
 !========================= AnalysisPython v2r22 2013-07-10 =========================
 
 ! 2013-07-09 - Vanya Belyaev

@@ -42,8 +42,8 @@ __all__     = (
     'silence'        , ## ditto 
     )    
 # =============================================================================
-import ROOT, time, os,sys  
-from   GaudiPython.Bindings   import gbl as cpp
+import ROOT, time, os,sys, PyCintex   
+cpp = PyCintex.makeNamespace('')
 # =============================================================================
 ## @class Memory
 #  Simple context manager to measure the virtual memory increase

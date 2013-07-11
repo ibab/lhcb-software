@@ -62,7 +62,11 @@ __all__     = (
     )
 # =============================================================================
 import ROOT
-from   GaudiPython.Bindings   import gbl as cpp
+##from   GaudiPython.Bindings   import gbl as cpp
+##
+import PyCintex
+cpp = PyCintex.makeNamespace('')
+
 import LHCbMath.Types
 Gaudi          = cpp.Gaudi
 VE             = Gaudi.Math.ValueWithError
@@ -5796,9 +5800,12 @@ ROOT.RooAbsPdf . __mul__  = _pdf_mul_
 
 # =============================================================================
 ## further decoration
-import GaudiPython.HistoUtils
-logger.info ( 'Histogram utilities from GaudiPython.HistoUtils' )
-
+try : 
+    import GaudiPython.HistoUtils
+    logger.info    ( 'Histogram utilities from GaudiPython.HistoUtils' )
+except:
+    logger.warning ( 'Histogram utilities from GaudiPython.HistoUtils are not loaded' )
+    
 # =============================================================================
 _HS = cpp.Gaudi.Utils.Histos.HistoStrings
 # =============================================================================
