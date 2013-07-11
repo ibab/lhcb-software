@@ -6,6 +6,13 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2013-07-11 - Vanya Belyaev
+
+ - python/LHCbMath/Types.py
+   python/LHCbMath/Math.py
+
+   eliminate unnesessary imports from GaudiPython 
+
 ! 2013-06-17 - Marco Cattaneo
  - Remove Gaudi::Math::invertPosDefSymMatrix altogether
 
