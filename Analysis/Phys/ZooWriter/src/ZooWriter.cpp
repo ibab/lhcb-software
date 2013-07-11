@@ -434,6 +434,7 @@ ZooWriter::ZooWriter(const std::string& name, ISvcLocator *svc) :
   declareProperty( "WriteCollectedHitPattern", m_writeCollectedHitPattern = false);
   declareProperty( "ExtraInfoList",	     m_extraInfoList);
   declareProperty( "WriteTrackInfo",       m_writeTrackInfo = false);
+  declareProperty( "WriteGhostCategory",   m_writeGhostCat = false);
   declareProperty( "PackedStatesList",     m_packedStatesList);
   declareProperty( "PackedStatesExtrapolate",
       m_packedStatesExtrapolate = true);
@@ -1044,15 +1045,21 @@ ZooP* ZooWriter::GetSaved(const LHCb::Particle* p, const LHCb::RecVertex* recvtx
       GetSaved(buffer);
     }
 
-    ZooGhostCategory * ghostCat = zp->AddInfo<ZooGhostCategory>(*objman());
-    ghostCat->m_ghostCategory = 0;
-    // don't ask for ghost classification in case of neutral particle
-    if ( p->isBasicParticle() && !zmcp && p->proto() && p->proto()->track()){
-      LHCb::GhostTrackInfo gInfo;
-      m_ghostClassification->info(*(p->proto()->track()),gInfo);
-      ghostCat->m_ghostCategory = (gInfo.classification());
+    if (m_writeGhostCat) {
+      ZooGhostCategory * ghostCat = zp->AddInfo<ZooGhostCategory>(*objman());
+      ghostCat->m_ghostCategory = 0;
+      // don't ask for ghost classification in case of neutral particle
+      if ( p->isBasicParticle() && !zmcp && p->proto() && p->proto()->track()){
+        LHCb::GhostTrackInfo gInfo;
+        #if DV_VER > 334
+        m_ghostClassification->info(*(p->proto()->track()),gInfo).ignore();
+        #else
+        m_ghostClassification->info(*(p->proto()->track()),gInfo);
+        #endif
+        ghostCat->m_ghostCategory = (gInfo.classification());
+      }
+      zp->AssignInfo(ghostCat);
     }
-    zp->AssignInfo(ghostCat);
   }
 
   return zp;

@@ -7,6 +7,7 @@
 ! 2013-07-11 - Paul Seyfert
  - rename calculateSecondIP to calculateIP because it's actually computing
    the IP (and the secondIP if required)
+ - generate GhostCategory only on demand
 
 ! 2013-06-27 - Paul Seyfert
  - small bugfix in Rules.mk for multi subdirectory projects

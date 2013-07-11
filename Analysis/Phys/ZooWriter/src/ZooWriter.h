@@ -237,6 +237,7 @@ class ZooWriter : public DVAlgorithm
     bool                     m_intelligentPV;
     bool                     m_secondIpSig;
     bool                     m_onlyTreefitter;
+    bool                     m_writeGhostCat;
     int                      m_minTracksPV;
 
     /// pids for which to write a ZooPackedParticle info block, negative values mean all
