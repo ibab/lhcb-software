@@ -47,7 +47,9 @@
 // ROOT 
 // ============================================================================
 #include "TH1D.h"
+#include "TFile.h"
 #include "TGraph.h"
+#include "TGraphErrors.h"
 // ============================================================================
 /** @class TrackSmearState TrackSmearState.h
  *
@@ -77,44 +79,69 @@
  *  - "Input"       : TES location of input tracks (no need to redefine)
  *  - "Fudge"       : fudge factor for momenutm smearing 
  * 
- *  Properties that allows to modify the parameters from CONDDB 
- *  - "CONDDBpath"  : the path in CONDB
+ *  Property that allows to read data from ROOT-file 
+ *  - "RootFile"    : the name of exisiting root file with TGraph "res;1"
  * 
+ *  Property that allows to spedcifi histogram as options
  *  - "SmearHisto"    : \f$\delta p/p\f$-histogram for smearing 
- * 
- *  CondDB is activated in case : 
- *  - NO VALID OPTIONS for histograms are specified 
- *  - valid CONDD path is specifiede
  *
- *  OPTION is activated in case 
+ *  Property that allows to modify the parameters from CONDDB 
+ *  - "CONDDBpath"  : the path in CONDB
+ *
+ *  RootFile has a precedence 
+ *
+ *  OPTION is activated in case                                       
+ *  - no RootFile is specified 
  *  - valid input histogram is specified - it overrides CONDB access 
+ *
+ *  CondDB is activated in case : 
+ *  - NO INPUT ROOT file is specified 
+ *  - NO VALID OPTIONS for histograms are specified 
+ *  - valid CONDD path is specified 
  *
  * How to specify the histograms as options? 
  *  
  *  @code 
  * 
- *  iport  ROOT 
+ *  import  ROOT 
  *  import AnalysisPython.PyRoUts ## well, a bit lighter version also exists..
  *  
- *  root_file = TFile( ... , 'READ')
+ *  root_file = ROOT.TFile( ... , 'READ')
  *
  *  ## get Matt's graph 
  *  graph    = root_file.Get('res' ) 
  *
- *  ## convert it to the histogram
+ *  # convert it to the histogram
  *  histo  = graph.GetHistogram ()
+ *  # unfortunately here 'histo' could be of type 
+ *  # TH1F histiogram, need to convert it to TH1D histgram:
+ *  # in case histo is already of type TH1D, next two lines are not needed at all.  
+ *  from AnalysisPython.PyRoUts import h1_axis
+ *  histo  = h1_axis ( histo.GetXaxis() , 'Momentum smear' , double = True ) 
+ *  
  *  histo += graph                  ## NB!!!
- * 
+ *
  *  from Configurables import TrackSmearState as SMEAR
  *
  *  smear = SMEAR() 
  *  smear.SmearHisto    = histo.toString() 
  * 
  *  ## as alternatively one can use XML:
- *  smear.SmearHisto    = histo.toXml () 
+ *  #smear.SmearHisto    = histo.toXml () 
  *
  *  @endcode 
  *
+ *  How to specify input RootFile with graph object? 
+ *  
+ *  @code 
+ * 
+ *  from Configurables import TrackSmearState as SMEAR
+ *
+ *  smear = SMEAR () 
+ *  smear.RootFile = "smear12.root"
+ *
+ *  @endcode 
+ *  
  */
 class TrackSmearState : public extends1<GaudiAlgorithm,IIncidentListener>
 {
@@ -177,23 +204,28 @@ private: // properties
   /// input location for tracks          (property) 
   std::string m_input       ;  // input location for tracks          (property) 
   // ==========================================================================
+  // the file name to read the graph
+  std::string m_filename    ;
+  // ==========================================================================
 private: // data 
   // ==========================================================================
   /// the histogram for scaler     (property) 
   TH1D                  m_h           ;      // the histogram      
   /// the graph iself (for interpolation)
   std::auto_ptr<TGraph> m_graph       ;      // the graph iself (for interpolation)
+  /// the file (if needed)
+  std::auto_ptr<TFile>  m_rootfile    ;      // the file (if needed) 
   /// the condition itself 
-  Condition*            m_condition   ;     // the condition itself 
+  Condition*            m_condition   ;      // the condition itself 
   /// random numbers supplier 
-  mutable Rndm::Numbers m_gauss       ;     // random numbers supplier 
+  mutable Rndm::Numbers m_gauss       ;      // random numbers supplier 
   // ==========================================================================
 };
 // ============================================================================
 // SOME MACROS
 // ============================================================================
-#define ON_DEBUG   if (UNLIKELY(outputLevel() <= MSG::DEBUG))
-#define ON_VERBOSE if (UNLIKELY(outputLevel() <= MSG::VERBOSE))
+// #define ON_DEBUG   if (UNLIKELY(outputLevel() <= MSG::DEBUG))
+// #define ON_VERBOSE if (UNLIKELY(outputLevel() <= MSG::VERBOSE))
 // ============================================================================
 // Standard constructor
 // ============================================================================
@@ -203,15 +235,17 @@ TrackSmearState::TrackSmearState
   : base_class ( name , pSvc )
 //
   , m_cond_path     ( "/dd/Conditions/Calibration/LHCb/MomentumSmear" ) 
-  , m_h_str         (   ) // the histogram for state smear (as text)
-  , m_fudge         ( 1 ) // the fudge factor 
+  , m_h_str         (    ) // the histogram for state smear (as text)
+  , m_fudge         ( 1  ) // the fudge factor 
   , m_input         ( LHCb::TrackLocation::Default ) // input tracks 
+  , m_filename      ( "" )
 //
   , m_h             () 
   , m_graph         () 
+  , m_rootfile      () 
 //
   , m_condition     ( 0 )  // condiiton itself 
-  , m_gauss         (   )  // random numbers provider (initiaally invalid) 
+  , m_gauss         (   )  // random numbers provider (initially invalid) 
 //
 {
   //
@@ -219,6 +253,11 @@ TrackSmearState::TrackSmearState
     ( "CONDDBpath" , 
       m_cond_path  ,
       "The path in CONDDB with calibration data" ) ;
+  //
+  declareProperty 
+    ( "RootFile"  , 
+      m_filename  ,
+      "The name of Root-file where Graph 'res' is placed" ) ;
   //
   declareProperty 
     ( "SmearHisto" , 
@@ -250,10 +289,24 @@ StatusCode TrackSmearState::initialize()
   //
   // if all histograms from the options are fine, just use them  
   //
-  if ( Gaudi::Parsers::parse ( m_h , m_h_str ).isSuccess () ) 
+  if ( !m_filename.empty() ) 
+  {
+    m_rootfile.reset ( TFile::Open ( m_filename.c_str() , "READ" ) ) ;
+    if ( 0 == m_rootfile.get() ) 
+    { return Error( "Unable to open RootFile '" + m_filename + "'"  ) ; }   // RETURN 
+    TObject* o = m_rootfile->Get("res;1") ;
+    if ( 0 == o ) { return Error( "Unable to access 'res;1'-object" ) ; }   // RETURN
+    TGraph* g = dynamic_cast<TGraph*>( o ) ;
+    if ( 0 == g ) { return Error( "'res;1'-object if not TGraph"    ) ; }   // RETURN
+    m_graph.reset ( g  ) ;
+    info() << "Use the momentum smearing from root-file '"
+           << m_filename << "'"
+           << endreq ;
+  }
+  else if ( Gaudi::Parsers::parse ( m_h , m_h_str ).isSuccess () ) 
   {
     //
-    info() << "Use the momentum calibration from options" << endreq ;
+    info() << "Use the momentum smearing from options" << endreq ;
   }
   else if ( !m_cond_path.empty() && existDet<DataObject>( detSvc() , m_cond_path ) ) 
   {
@@ -271,7 +324,7 @@ StatusCode TrackSmearState::initialize()
     sc = runUpdate () ;
     if ( sc.isFailure() ) { return Error ( "Unable update Run" , sc ) ; }
     //
-    info() << "Use the momentum smearing    from CONDDB"  << endreq ;
+    info() << "Use the momentum smearing from CONDDB"  << endreq ;
   }
   else 
   {
@@ -307,6 +360,8 @@ StatusCode TrackSmearState::initialize()
 // ============================================================================ 
 StatusCode TrackSmearState::finalize () 
 {
+  //
+  if ( 0 != m_rootfile.get() ) { m_graph.release() ; }
   //
   m_gauss.finalize () ;
   //
