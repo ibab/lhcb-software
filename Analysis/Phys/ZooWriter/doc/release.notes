@@ -27,6 +27,12 @@
 
 ! 2013-05-07 - Paul Seyfert
  - tagged as pseyfert_20130507
+ - see: https://naf-lhcb.physi.uni-heidelberg.de/index.php?q=node/95
+ - default settings are now:
+     IntelligentPV = True
+     SecondIpSig   = True
+   this can be undesired for studies out of the main research focus of our
+   group
 
 ! 2013-05-03 - Paul Seyfert
  - new PV handling, developed by Thomas Nikodem
@@ -51,6 +57,7 @@
  - added trigger lines for 2011 and 2012 data
    (2012 until 0x9a0042, excluding 0x97003c)
  - this is tag pseyfert_20121022
+ - see: https://naf-lhcb.physi.uni-heidelberg.de/index.php?q=node/90
 
 ! 2012-09-25 - Paul Seyfert
  - uninitialised memory in ZooDLL::m_isMuon
