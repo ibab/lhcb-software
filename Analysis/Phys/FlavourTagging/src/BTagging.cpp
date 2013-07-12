@@ -45,18 +45,22 @@ StatusCode BTagging::execute()
 
 void BTagging::performTagging(const std::string & location)
 {
+
+  const std::string particlesLocation = location+"/Particles";
+
   //look in location where Selection has put the B candidates
-  if ( !exist<LHCb::Particle::Range>(location+"/Particles") )
+  if ( !exist<LHCb::Particle::Range>(particlesLocation) )
   {
     if ( msgLevel(MSG::DEBUG) )
-      debug()<<("No selection found in "+ location+"/Particles")<<endreq;
+      debug() << "No selection found in " << particlesLocation << endreq;
     return;
   }
 
-  const Particle::Range parts = get<Particle::Range>( location+"/Particles" );
+  const Particle::Range parts = get<Particle::Range>( particlesLocation );
+
   if ( parts.empty() )
   {
-    Warning("No particles found at "+ location+"/Particles",
+    Warning("No particles found at " + particlesLocation,
             StatusCode::SUCCESS,10).ignore();
     return;
   }
@@ -159,16 +163,15 @@ void BTagging::performTagging(const std::string & location)
   }
 
   // Output to TES, if tags is not empty
-  const std::string tagLocation = location+"/"+m_TagLocation;
   if ( tags->empty() )
   {
     delete tags;
   }
   else
   {
-    put( tags, tagLocation );
+    put( tags, location+"/"+m_TagLocation );
   }
-
+  
 }
 
 //==========================================================================

@@ -1,12 +1,5 @@
 // Include files 
 #include "BTaggingTool.h"
-#include "Event/Track.h"
-
-#include <boost/foreach.hpp>
-#include <algorithm>
-#include <cstdio>
-
-#include "TaggingHelpers.h"
 
 #undef DEBUG_CLONES
 // uncomment line below to fill clone killing debug counters
@@ -130,11 +123,11 @@ StatusCode BTaggingTool::initialize()
 
   // select personality
   // (this throws an exception if the personality chosen by the user is not known)
-  try 
+  try
   {
     m_chooseCandidates.setPersonality(m_personality);
-  } 
-  catch ( const std::exception& e ) 
+  }
+  catch ( const std::exception& e )
   {
     error() << "Caught exception while setting chooseCandidates "
             << "personality: " << e.what() << endmsg;
@@ -159,8 +152,8 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   }
 
   //Load vertices and particles
-  const Particle::Range  parts=get<Particle::Range>(m_taggerLocation+"/Particles");
-  const RecVertex::Range verts=get<RecVertex::Range>(RecVertexLocation::Primary);
+  const Particle::Range  parts = get<Particle::Range>(m_taggerLocation+"/Particles");
+  const RecVertex::Range verts = get<RecVertex::Range>(RecVertexLocation::Primary);
   if(msgLevel(MSG::DEBUG)) debug() << " Nr Vertices: "<< verts.size()
                                    << " Nr Particles: "<<parts.size()<<endreq;
 
@@ -182,18 +175,19 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   {
     if( msgLevel(MSG::DEBUG) )
     {
-      debug()<<"--> RecVert (x,y,z)=(" <<
-        RecVert->position().x()/mm<<","<<
-        RecVert->position().y()/mm<<","<<
-        RecVert->position().z()/mm <<")  "<<m_ChoosePV<<endreq;
+      debug()<<"--> RecVert (x,y,z)=(" 
+             << RecVert->position().x()/mm<<","
+             << RecVert->position().y()/mm<<","
+             << RecVert->position().z()/mm <<")  "<<m_ChoosePV<<endreq;
       if(m_UseReFitPV)
         debug() <<"-->     refitRecVert z=" << RefitRecVert.position().z()/mm <<endreq;
       for(RecVertex::ConstVector::const_iterator iv=PileUpVtx.begin();
-          iv!=PileUpVtx.end(); iv++) {
-        debug()<<"--> PileUpPV at (x,y,z)=("<<
-          (*iv)->position().x()/mm<<","<<
-          (*iv)->position().y()/mm<<","<<
-          (*iv)->position().z()/mm<<") "<<endreq;
+          iv!=PileUpVtx.end(); ++iv) 
+      {
+        debug()<<"--> PileUpPV at (x,y,z)=("
+               <<(*iv)->position().x()/mm<<","
+               <<(*iv)->position().y()/mm<<","
+               <<(*iv)->position().z()/mm<<") "<<endreq;
       }
     }
   }
@@ -214,9 +208,9 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   bool isBu = AXB->particleID().hasUp();
 
   ///ForceSignalID
-  if (m_ForceSignalID=="Bd") { isBd = true; isBu = false; isBs = false; }
-  if (m_ForceSignalID=="Bu") { isBd = false; isBu = true; isBs = false; }
-  if (m_ForceSignalID=="Bs") { isBd = false; isBu = false; isBs = true; }
+  if      (m_ForceSignalID=="Bd") { isBd = true;  isBu = false; isBs = false; }
+  else if (m_ForceSignalID=="Bu") { isBd = false; isBu = true;  isBs = false; }
+  else if (m_ForceSignalID=="Bs") { isBd = false; isBu = false; isBs = true;  }
 
   ///Choose Taggers ------------------------------------------------------
   if (msgLevel(MSG::DEBUG)) debug() <<"evaluate taggers" <<endreq;
@@ -243,10 +237,10 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   taggers.push_back(&vtxCh);
   taggers.push_back(&nnetkaon);
   taggers.push_back(&nnetkaonS);
-      
+
 
   //----------------------------------------------------------------------
-  //Now combine the individual tagger decisions into one final B flavour tagging decision. 
+  //Now combine the individual tagger decisions into one final B flavour tagging decision.
   //There are different methods that can be used.
   //CombineTaggersProbability.cpp  --> combines according individual probabilities (default)
   //CombineTaggersNN.cpp ---> combines using a NNEt that used individual probabilities
@@ -261,47 +255,50 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   m_combine -> combineTaggers( theTag, taggers , signalType,  m_CombineWithNNetTagger);
   if (msgLevel(MSG::DEBUG))
   {
-    debug() <<"combine taggers "<< taggers.size() <<
-    "omega: "<<theTag.omega()<<"omegaOS: "<<theTag.omegaOS()<<endreq;
+    debug() << "combine taggers "<< taggers.size()
+            << "omega: "<<theTag.omega()<<"omegaOS: "<<theTag.omegaOS()<<endreq;
   }
 
   ///OUTPUT to Logfile ---------------------------------------------------
 
-  RecHeader* evt = get<RecHeader> (RecHeaderLocation::Default);
-  if (msgLevel(MSG::DEBUG)) debug() << "BTAGGING TAG   "
-                                    << std::setw(9) << evt->runNumber()
-                                    << std::setw(9) << evt->evtNumber()
-                                    << std::setw(3) << theTag.decision()<<" "
-                                    << std::setw(6) << theTag.omega()
-                                    << std::setw(3) << theTag.decisionOS()<<" "
-                                    << std::setw(6) << theTag.omegaOS()
-                                    << " * "
-                                    << std::setw(3) << muon.decision()<<" "
-                                    << std::setw(6) << muon.omega()
-                                    << std::setw(3) << elec.decision()<<" "
-                                    << std::setw(6) << elec.omega()
-                                    << std::setw(3) << kaon.decision()<<" "
-                                    << std::setw(6) << kaon.omega()
-                                    << std::setw(3) << kaonS.decision()<<" "
-                                    << std::setw(6) << kaonS.omega()
-                                    << std::setw(3) << pionS.decision()<<" "
-                                    << std::setw(6) << pionS.omega()
-                                    << std::setw(3) << vtxCh.decision()<<" "
-                                    << std::setw(6) << vtxCh.omega()
-                                    << std::setw(3) << nnetkaon.decision()<<" "
-                                    << std::setw(6) << nnetkaon.omega()
-                                    << std::setw(3) << nnetkaonS.decision()<<" "
-                                    << std::setw(6) << nnetkaonS.omega()
-                                    << endmsg;
+  if (msgLevel(MSG::DEBUG))
+  {
+    const RecHeader* evt = get<RecHeader> (RecHeaderLocation::Default);
+    debug() << "BTAGGING TAG   "
+            << std::setw(9) << evt->runNumber()
+            << std::setw(9) << evt->evtNumber()
+            << std::setw(3) << theTag.decision()<<" "
+            << std::setw(6) << theTag.omega()
+            << std::setw(3) << theTag.decisionOS()<<" "
+            << std::setw(6) << theTag.omegaOS()
+            << " * "
+            << std::setw(3) << muon.decision()<<" "
+            << std::setw(6) << muon.omega()
+            << std::setw(3) << elec.decision()<<" "
+            << std::setw(6) << elec.omega()
+            << std::setw(3) << kaon.decision()<<" "
+            << std::setw(6) << kaon.omega()
+            << std::setw(3) << kaonS.decision()<<" "
+            << std::setw(6) << kaonS.omega()
+            << std::setw(3) << pionS.decision()<<" "
+            << std::setw(6) << pionS.omega()
+            << std::setw(3) << vtxCh.decision()<<" "
+            << std::setw(6) << vtxCh.omega()
+            << std::setw(3) << nnetkaon.decision()<<" "
+            << std::setw(6) << nnetkaon.omega()
+            << std::setw(3) << nnetkaonS.decision()<<" "
+            << std::setw(6) << nnetkaonS.omega()
+            << endmsg;
+  }
 
   ///Cancel vtags info-------
-  for ( Particle::ConstVector::const_iterator i=vtags.begin(); i!=vtags.end(); ++i )
+  for ( Particle::ConstVector::const_iterator i = vtags.begin(); i != vtags.end(); ++i )
   {
     Particle* c = const_cast<Particle*>(*i);
     if( c->hasInfo(LHCb::Particle::FlavourTaggingIndex+1) ) c->eraseInfo(LHCb::Particle::FlavourTaggingIndex+1);
     if( c->hasInfo(LHCb::Particle::FlavourTaggingIndex+2) ) c->eraseInfo(LHCb::Particle::FlavourTaggingIndex+2);
   }
-  
+
   clearExtraInfo();
 
   return StatusCode::SUCCESS;
@@ -338,8 +335,8 @@ BTaggingTool::choosePrimary(const Particle* AXB,
     {  //----------------------------- Refit PV without B tracks
       RecVertex newPV(*RecVert);
       Particle newPart(*AXB);
-      StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);
-      if(!sc) { Error("ReFitter fails!"); } // Should we stop the execution?
+      const StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);
+      if(!sc) { Error("ReFitter fails!").ignore(); } // Should we stop the execution?
       if( msgLevel(MSG::DEBUG) ) debug()<<" Refitted PV "<<endreq;
       RefitRecVert = newPV;
     }
@@ -363,7 +360,7 @@ BTaggingTool::choosePrimary(const Particle* AXB,
       RecVertex newPV(*RecVert);
       Particle newPart(*AXB);
       const StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);
-      if(!sc) { Error("ReFitter fails!"); } // Should we stop the execution?
+      if(!sc) { Error("ReFitter fails!").ignore(); } // Should we stop the execution?
       if( msgLevel(MSG::DEBUG) ) debug()<<" Refitted PV "<<endreq;
       RefitRecVert = newPV;
     }
@@ -374,9 +371,9 @@ BTaggingTool::choosePrimary(const Particle* AXB,
       debug()<<"Will NOT use the bestPV criteria. Loop over the "
              <<verts.size()<<" vertices"<<endreq;
     double kdmin = 1000000;
-    RecVertex::Range::const_iterator iv;
     // -------------------------------------------------- Loop over the PV-vertices
-    for(iv=verts.begin(); iv!=verts.end(); iv++)
+    for ( RecVertex::Range::const_iterator iv = verts.begin(); 
+          iv != verts.end(); ++iv )
     {
       RecVertex newPV(**iv);
       double var, ip, iperr;
@@ -385,7 +382,7 @@ BTaggingTool::choosePrimary(const Particle* AXB,
         Particle newPart(*AXB);
         const StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);
         if( msgLevel(MSG::DEBUG) ) debug()<<" Refitted PV "<<endreq;
-        if(!sc) { err()<<"ReFitter fails!"<<endreq; continue; }
+        if(!sc) { Error( "ReFitter fails!" ).ignore(); continue; }
         m_util->calcIP(AXB, &newPV, ip, iperr);
         var=fabs(ip);
       }
@@ -403,14 +400,14 @@ BTaggingTool::choosePrimary(const Particle* AXB,
         if( msgLevel(MSG::DEBUG) ) debug()<<"Will use the PVbyIPs criteria "<<endreq;
         if(!iperr)
         {
-          err()<<"IPerror zero or nan, skip vertex: "<<iperr<<endreq;
+          Error( "IPerror zero or nan, skip vertex" ).ignore();
           continue;
         }
         var=fabs(ip/iperr);
       }
       else
       {
-        err()<<"Invalid option ChoosePVCriterium: "<<m_ChoosePV<<endreq;
+        Error( "Invalid option ChoosePVCriterium: " + m_ChoosePV ).ignore();
         return PileUpVtx;
       }
       if( var < kdmin )
@@ -419,10 +416,10 @@ BTaggingTool::choosePrimary(const Particle* AXB,
         RecVert = (*iv);
         if(m_UseReFitPV) RefitRecVert = newPV;
       }
-      if( ! RecVert )
+      if( !RecVert )
       {
-        err() <<"No Reconstructed Vertex! Skip. "
-              <<"(If using CheatedSelection, set ChoosePVCriterium to PVbyIP !)"<<endreq;
+        Error( "No Reconstructed Vertex! Skip. "
+               "(If using CheatedSelection, set ChoosePVCriterium to PVbyIP !)").ignore();
         return PileUpVtx;
       }
     }
@@ -432,33 +429,34 @@ BTaggingTool::choosePrimary(const Particle* AXB,
   double min_chi2PV=1000;
   double the_chi2PV=1000;
   int nPV=0;
-  
+
   RecVertex::Range::const_iterator jv;
   for(jv=verts.begin(); jv!=verts.end(); jv++)
   {
     const double dx = RecVert->position().x()-(*jv)->position().x();
     const double dy = RecVert->position().y()-(*jv)->position().y();
     const double dz = RecVert->position().z()-(*jv)->position().z();
+
+    const double chi2PV = 
+      dx * dx / RecVert->covMatrix()(0,0) +
+      dy * dy / RecVert->covMatrix()(1,1) +
+      dz * dz / RecVert->covMatrix()(2,2) ;
     
-    const double chi2PV = dx * dx / RecVert->covMatrix()(0,0) +
-                          dy * dy / RecVert->covMatrix()(1,1) +
-                          dz * dz / RecVert->covMatrix()(2,2);
-  
     if(chi2PV < min_chi2PV) min_chi2PV = chi2PV;
-    
+
     if(chi2PV < 3)
     {
       the_chi2PV = chi2PV;
       nPV++;
       continue;
-      
+
     }
     else
     {
       PileUpVtx.push_back(*jv);
     }
   }
-  
+
   if( fabs(min_chi2PV/the_chi2PV-1.)>1.e-5 || nPV > 1 )
   {
     PileUpVtx.clear();
@@ -468,18 +466,18 @@ BTaggingTool::choosePrimary(const Particle* AXB,
       const double dyy = RecVert->position().y()-(*jv)->position().y();
       const double dzz = RecVert->position().z()-(*jv)->position().z();
       const double chi2PV = dxx * dxx / RecVert->covMatrix()(0,0) +
-                            dyy * dyy / RecVert->covMatrix()(1,1) +
-                            dzz * dzz / RecVert->covMatrix()(2,2);
+        dyy * dyy / RecVert->covMatrix()(1,1) +
+        dzz * dzz / RecVert->covMatrix()(2,2);
 
       if(fabs(chi2PV/min_chi2PV -1.)<1.e-5) continue;  // this is the PV
       else PileUpVtx.push_back(*jv);
     }
   }
-  
+
   //UseReFitPV means that it will use the refitted pV for the ip calculation
   //of taggers and SV building. Do not move this line above PileUpVtx building
   if( m_UseReFitPV ) RecVert = (&RefitRecVert);
-  
+
   if( ! RecVert )
   {
     Error( "No Reconstructed Vertex!! Skip." ).ignore();

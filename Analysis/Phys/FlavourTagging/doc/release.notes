@@ -4,6 +4,13 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2013-07-12 - Chris Jones
+ - Various minor CPU related improvements
+  . Do not load RecHeader until really needed.
+  . Avoid some string manipulations.
+ - Use Error(...) intead of err() << ... for message suppressions.
+
 ! 2013-07-07 - Stefania Vecchi
  - Fix compilation warnings
 

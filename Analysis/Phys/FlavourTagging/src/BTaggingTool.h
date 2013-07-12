@@ -6,27 +6,36 @@
 #include <fstream>
 #include <string>
 #include <math.h>
+#include <algorithm>
+#include <cstdio>
+
+// Boost
+#include <boost/foreach.hpp>
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
+
 // from Event
 #include "Event/FlavourTag.h"
 #include "Event/RecHeader.h"
+#include "Event/Track.h"
 
-#include "ICombineTaggersTool.h"
+// Kernels
 #include "Kernel/ITagger.h"
 #include "Kernel/IBTaggingTool.h"
 #include "Kernel/IParticleDescendants.h"
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/IRelatedPVFinder.h"
-
-#include "ITaggingUtils.h"
-//
 #include <Kernel/IDVAlgorithm.h>
 #include <Kernel/GetIDVAlgorithm.h>
 
+// local
+#include "ICombineTaggersTool.h"
+#include "ITaggingUtils.h"
 #include "MultiplePersonalityCall.h"
+#include "TaggingHelpers.h"
 
 //class DaVinciAlgorithm;
 
