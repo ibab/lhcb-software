@@ -39,6 +39,13 @@ library            FTDet           ../src/component/*.cpp
 apply_pattern      linker_library      library=FTDetLib
 apply_pattern      component_library   library=FTDet
 
+#==========================================================================
+# Build a library with development/test components
+#==========================================================================
+#note that this library should include also the xml converters in src/component
+#library            FTDetDevelLib   ../src/component/*.cpp ../src/devel/*.cpp
+#apply_pattern      component_library      library=FTDetDevelLib
+
 #========================================================================
 # LCG Dictionaries
 #========================================================================

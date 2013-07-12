@@ -1,11 +1,18 @@
 !--------------------------------------------------------------------------
 ! Package     : Det/FTDet
 ! Purpose     : Interface to the xml description
-! Responsible : Plamen Hopchev
+! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
-! 2013-05-15 - Paul Szczypka
- - Revert classIDs to original. Should be compatible with existing geo now.
+
+!========================= FTDet v1r3 2013-07-12 =========================
+! 2013-07-12 - Diego Milanes 
+- Adaptation of the code to new geometry. DRASTIC CHANGES! Detector with more granularity
+  and therefore more detailed description implemented. Full set of new classes to describe 
+  new detector elements in the database. Backward compatibility intended to be able to run on
+  previous detector configuration. Please note version() method of DeFTDetector will be used as 
+  main switch for changing throuwithin detector versions. Full description of the new detector 
+  almost done and few minor changes to be implemented, also documentation to be improved.  		 
 
 !========================= FTDet v1r3 2013-02-04 =========================
 ! 2012-11-27 - Olivier Callot

@@ -79,6 +79,10 @@ StatusCode DeFTTestAlg::execute() {
     }
     */
 
+    //break if not current FTversion
+    if ( m_deFT->version() != 20 )   return StatusCode::SUCCESS;
+
+
     /// Points of the real MCHits
     const LHCb::MCHits* hitsCont = get<LHCb::MCHits>(m_mcHitsLocation);
     /// Iterate over the first few hits and test the calculateHits method
@@ -105,20 +109,30 @@ StatusCode DeFTTestAlg::execute() {
       lVolName = (pStation ? pStation->geometry()->lvolumeName() : "");
       debug() << "Found Station: " << lVolName << endmsg;
 
-      /// test findBiLayer method
-      const DeFTBiLayer* pBiLayer = m_deFT->findBiLayer(pMid);
-      lVolName = (pBiLayer ? pBiLayer->geometry()->lvolumeName() : "");
-      debug() << "Found BiLayer: " << lVolName << endmsg;
-
       /// test findLayer method
       const DeFTLayer* pLayer = m_deFT->findLayer(pMid);
       lVolName = (pLayer ? pLayer->geometry()->lvolumeName() : "");
       debug() << "Found Layer  : " << lVolName << endmsg;
 
-      if ( pLayer != 0 ) {
+      /// test findLayer method
+      const DeFTModule* pModule = m_deFT->findModule(pMid);
+      lVolName = (pModule ? pModule->geometry()->lvolumeName() : "");
+      debug() << "Found Module  : " << lVolName << endmsg;
+
+      /// test findLayer method
+      const DeFTFibreModule* pFibreModule = m_deFT->findFibreModule(pMid);
+      lVolName = (pFibreModule ? pFibreModule->geometry()->lvolumeName() : "");
+      debug() << "Found FibreModule  : " << lVolName << endmsg;
+
+      /// test findLayer method
+      const DeFTFibreMat* pFibreMat = m_deFT->findFibreMat(pMid);
+      lVolName = (pFibreMat ? pFibreMat->geometry()->lvolumeName() : "");
+      debug() << "Found FibreMat  : " << lVolName << endmsg;
+
+      if ( pFibreMat != 0 ) {
         std::vector< std::pair<LHCb::FTChannelID, double> > vectChanAndFrac;
         debug() << "Test of function calculateHits:\n" << endmsg;
-        pLayer->calculateHits(*aHit, vectChanAndFrac);
+        pFibreMat->calculateHits(*aHit, vectChanAndFrac);
         debug() << "Size of the vector of FT pairs after the call of"
                 << "function calculateHits: " << vectChanAndFrac.size() << endmsg;
       }

@@ -6,6 +6,9 @@
 #include "DetDesc/SolidBox.h"
 #include "DetDesc/SolidCons.h"
 
+// Smartrefs
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/ISvcLocator.h"
 // Gaudi/LHCb Math
 #include "GaudiKernel/Plane3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
@@ -91,6 +94,16 @@ StatusCode DeFTLayer::initialize(){
   /// Create a MsgStream object with an add-hoc name (the second argument),
   /// instead of the ususual name(), which gives a too long string
   if ( 0 == m_msg ) m_msg = new MsgStream( msgSvc(), "DeFTLayer" );
+
+  //necessary for backward compatibility
+  SmartDataPtr<DetectorElement> fibretracker (dataSvc(),"/dd/Structure/LHCb/AfterMagnetRegion/T/FT");
+  if( fibretracker ){  
+    if( fibretracker -> exists( "FTversion" )) {
+    int version = fibretracker -> param<int>("FTversion");
+    if( version == 20 ) 
+      return StatusCode::SUCCESS;
+    }
+  }
 
   debug() << "==> Initialize DeFTLayer" << endmsg;
   
