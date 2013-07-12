@@ -72,7 +72,7 @@ void BufferDisplay::update(const void* data) {
       if ( node == m_node ) {
         time_t tim = (*n).time;
         const Buffers& buffs = *(*n).buffers();
-	bool hlt = ::strncmp((*n).name,"hlt",3)==0;
+	//bool hlt = ::strncmp((*n).name,"hlt",3)==0;
         ::strftime(name,sizeof(name),"%H:%M:%S",::localtime(&tim));
         ::sprintf(txt,"MBM Monitor display for node:%s  [%s]  %s %s",
 		  (*n).name,name,partitioned ? "Partition:""" : "",
