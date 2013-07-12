@@ -1,5 +1,5 @@
 package OnlineSys
-version v5r1
+version v5r2
 ###
 ### last v4 release: v4r69 based on Gaudi v23r7
 ###
@@ -20,12 +20,12 @@ use Checkpointing       v0r13    Online
 macro CondDBServer_use "CondDBServer v1r4 Online" target-i686 ""
 use $(CondDBServer_use)
 use CondDBServer        v1r4     Online
-use Controller          v0r4     Online
+use Controller          v0r5     Online
 use ControllerTests     v0r2     Online
 use DailyReport         v1r2     Online
 use DefHLTUtils         v1r4     Online
-use DIM                 v20r7    Online
-use FarmConfig          v0r0     Online
+use DIM                 v20r7p1  Online
+use FarmConfig          v0r1     Online
 use FarmMonitor         v2r12    Online
 use Gaucho              v7r29    Online
 use GauchoAppl          v1r8     Online
@@ -38,7 +38,7 @@ use HistDBPython        v1r7     Online
 use InsertDB            v1r9     Online
 use MBMDump             v1r15    Online
 use OMAlib              v4r2     Online
-use OnlineBase          v1r16    Online
+use OnlineBase          v1r17    Online
 use OnlineHistDB        v8r1     Online
 use OnlineKernel        v2r12    Online
 use OnlineTools         v1r4     Online
@@ -47,14 +47,14 @@ use Presenter           v3r7     Online
 use PresenterDoc        v1r0     Online
 use PyDIM               v2r12    Online
 use RawBankSizes        v2r16    Online
-use RootCnv             v1r20    Online
-use ROMon               v1r41    Online
+use RootCnv             v1r21    Online
+use ROMon               v1r42    Online
 use ROLogger            v0r25    Online
 ## Only at the pit: macro Stomp_use "" CERN "Stomp v1r2 Online"
 ##use $(Stomp_use)
 
 use Trending            v2r2     Online
-use UPI                 v1r22    Online
+use UPI                 v1r23    Online
 use UPIR                v1r4     Online
 use Writer              v1r47    Online
 use XML                 v0r1     Online
