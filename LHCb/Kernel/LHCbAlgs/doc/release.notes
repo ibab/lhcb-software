@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2013-07-12 - Paul Szczypka
+ - Removed superfluous code from LHCbAlgs Configuration
+
 ! 2013-06-20 - Paul Szczypka
  - Remove unused property "CondDBUpgrade" from Configuration.
  - Correct docStrings
