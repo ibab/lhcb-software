@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-07-12 - Vanya Belyaev
+
+ - minor improvement in Utils.py 
+
 ! 2013-07-11 - Vanya Belyaev
 
  - PyRoUts.py &Utils.py

@@ -44,7 +44,7 @@ namespace
   /// define local "bad" value 
   const double s_bad      = -1 * std::numeric_limits<float>::max() ;
   /// define local "bad" value 
-  const long   s_long_bad =      std::numeric_limits<int>::min() ;
+  const long   s_long_bad =      std::numeric_limits<int>::min()   ;
   // ==========================================================================
 }
 // ============================================================================

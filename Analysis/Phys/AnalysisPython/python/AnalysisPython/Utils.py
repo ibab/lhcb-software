@@ -40,6 +40,7 @@ __all__     = (
     'silence_py'     , ## ditto 
     'mute'           , ## context manager to suppress stdout/strerr printout 
     'silence'        , ## ditto 
+    'rooSilent'      , ## control RooFit verbosity 
     )    
 # =============================================================================
 import ROOT, time, os,sys, PyCintex   
