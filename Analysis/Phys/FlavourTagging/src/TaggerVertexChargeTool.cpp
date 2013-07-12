@@ -181,7 +181,7 @@ Tagger TaggerVertexChargeTool::tagReco12( const Particle* AXB0,
   const double SVGP = SVP/(0.16*SVM+0.12);
   const double SVtau = std::sqrt(BoppDir.Mag2())*5.28/SVGP/0.299792458;
   if ( msgLevel(MSG::DEBUG) ) 
-    debug()<<"BoppDir.Mag2: "<<sqrt(BoppDir.Mag2())<<", SVGP: "<<SVGP<<", SVtau: "<<SVtau<<endreq;
+    debug()<<"BoppDir.Mag2: "<<std::sqrt(BoppDir.Mag2())<<", SVGP: "<<SVGP<<", SVtau: "<<SVtau<<endreq;
   if ( Vptmean < m_Ptmean_vtx)              return tVch;
   if ( Vptmean*vflagged < m_Ptsum_vtx)      return tVch;
   if (Vipsmean*vflagged < m_IPSsum_vtx)     return tVch;
@@ -289,7 +289,7 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
     if ( msgLevel(MSG::DEBUG) ) 
       debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endreq;
     SVmomentum += (*ip)->momentum();
-    double a = pow((*ip)->pt()/GeV, m_PowerK);
+    double a = std::pow((*ip)->pt()/GeV, m_PowerK);
     Vch += (*ip)->charge() * a;
     norm+= a;
     ++vflagged;
@@ -321,9 +321,9 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
   double SVP = SVmomentum.P()/GeV;
   double SVM = SVmomentum.M()/GeV;
   double SVGP = SVP/(0.16*SVM+0.12);
-  double SVtau = sqrt(BoppDir.Mag2())*5.28/SVGP/0.299792458;
+  double SVtau = std::sqrt(BoppDir.Mag2())*5.28/SVGP/0.299792458;
   if ( msgLevel(MSG::DEBUG) ) 
-    debug()<<"BoppDir.Mag2: "<<sqrt(BoppDir.Mag2())<<", SVGP: "<<SVGP<<", SVtau: "<<SVtau<<endreq;
+    debug()<<"BoppDir.Mag2: "<<std::sqrt(BoppDir.Mag2())<<", SVGP: "<<SVGP<<", SVtau: "<<SVtau<<endreq;
   if ( Vptmean < m_Ptmean_vtx)               return tVch;
   if ( Vptmean*vflagged < m_Ptsum_vtx)       return tVch;
   if ( Vipsmean*vflagged < m_IPSsum_vtx)     return tVch;

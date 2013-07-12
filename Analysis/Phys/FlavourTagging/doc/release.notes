@@ -9,6 +9,7 @@
  - Various minor CPU related improvements
   . Do not load RecHeader until really needed.
   . Avoid some string manipulations.
+  . Use std::pow instead of pow
  - Use Error(...) intead of err() << ... for message suppressions.
 
 ! 2013-07-07 - Stefania Vecchi
