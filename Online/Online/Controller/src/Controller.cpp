@@ -25,7 +25,7 @@ using namespace FiniteStateMachine;
 using namespace FiniteStateMachine::DAQ;
 
 typedef Machine::Slaves Slaves;
-
+#define ERROR_CONTROL (-9999)
 
 /// Feed data to DIS when updating data
 static void feed(void* tag, void** buff, int* size, int* /* first */) {
@@ -40,6 +40,36 @@ static void feed(void* tag, void** buff, int* size, int* /* first */) {
   *size = 1;
 }
 
+static void error_call(int severity, int error_code, char* message) {
+  static int enabled = 1;
+  if ( severity == ERROR_CONTROL ) {
+    enabled = error_code;
+    return;
+  }
+  else if ( !enabled ) {
+    return;
+  }
+  else {
+    switch(severity) { 
+    case DIM_INFO:
+      TypedObject::display(TypedObject::INFO,"DIM",message);
+      break;
+    case DIM_WARNING:
+      TypedObject::display(TypedObject::WARNING,"DIM",message);
+      break;
+    case DIM_ERROR:
+      TypedObject::display(TypedObject::ERROR,"DIM",message);
+      break;
+    case DIM_FATAL:
+      TypedObject::display(TypedObject::FATAL,"DIM",message);
+      break;
+    default:
+      TypedObject::display(TypedObject::FATAL,"DIM",message);
+      break;
+    }
+  }
+}
+
 /// Constructor
 Controller::Controller(const string&  nam, Machine* m)
   : CommandTarget(nam), m_errorState(0), m_machine(m)
@@ -52,6 +82,9 @@ Controller::Controller(const string&  nam, Machine* m)
   m->setMetaStateAction(Callback::make(this,&Controller::publishSlaves));
   m->setPreAction(start,Callback::make(this,&Controller::start));
   m_fsmTasks = ::dis_add_service((char*)(nam+"/tasks").c_str(),(char*)"C",0,0,feed,(long)&m_taskInfo);
+  error_call(ERROR_CONTROL,0,(char*)this);
+  ::dis_add_error_handler(error_call);
+  ::dic_add_error_handler(error_call);
 }
 
 /// Standard destructor
@@ -84,6 +117,13 @@ FSM::ErrCond Controller::fail()  {
 FSM::ErrCond Controller::publishSlaves()  {
   stringstream info;
   const Slaves slaves = m_machine->slaves();
+  const Transition* trans = m_machine->currTrans();
+  if ( trans && trans->name() == "unload" ) {
+    error_call(ERROR_CONTROL,0,"Disable DIM error printing");
+  }
+  else {
+    error_call(ERROR_CONTROL,1,"Enable DIM error printing");
+  }
   for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); )  {
     Slave* s = *i;
     info << s->name() << "/" << s->c_state() << "/" << string(s->metaStateName());
@@ -111,7 +151,7 @@ FSM::ErrCond Controller::publish()  {
   }
   publishSlaves();
   const Transition* tr = m_machine->currTrans();
-  display(WARNING,c_name(),"Declare new state:          %s %s %s",state.c_str(),
+  display(INFO,c_name(),"Declare new state:          %s %s %s",state.c_str(),
 	  tr ? "after transition" : "", tr ? tr->c_name() : "");
   return declareState(state);
 }
@@ -175,9 +215,9 @@ void Controller::commandHandler()   {
   // Decouple as quickly as possible from the DIM command loop !
   ErrCond status = FSM::SUCCESS;
   string cmd = getString();
-  display(WARNING,c_name(),"Received transition request:%s",cmd.c_str());
+  display(INFO,c_name(),"Received transition request:%s",cmd.c_str());
   if ( !m_machine->isIdle() )  {
-    display(ERROR,c_name(),"Machine is not idle!");
+    display(WARNING,c_name(),"Machine is not idle! Force idle state manually.");
     m_machine->goIdle();
   }
   if ( cmd == "load"  )  {
