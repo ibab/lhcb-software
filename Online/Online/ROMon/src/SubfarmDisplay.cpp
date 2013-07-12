@@ -129,8 +129,8 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       if ( !partitioned || strstr((*ib).name,m_partition.c_str()) ) {
 	size_t len = ::strlen(text1);
-	::snprintf(text1+len,sizeof(text1),pattern);
-	::snprintf(text1+len+12,sizeof(text1),(*ib).name);
+	::snprintf(text1+len,sizeof(text1),"%s",pattern);
+	::snprintf(text1+len+12,sizeof(text1),"%s",(*ib).name);
 	text1[len+11] = ' ';
 	text1[len+12+strlen((*ib).name)] = ' ';
 	::snprintf(text2+len,sizeof(text2),"%11s%11s%6s%8s%2s","Produced","Consumed","Slots","Space","");

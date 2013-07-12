@@ -243,7 +243,7 @@ namespace {
   ClusterLineFactory<CtrlFarmClusterLine>   s_ctrlFarmLineFactory("CtrlFarm");
   ClusterLineFactory<FarmClusterLine>       s_farmLineFactory("Farm");
   ClusterLineFactory<HltDeferLine>          s_hltDeferFactory("HLT");
-
+#if 0
   const char* _procNam(const char* nam) {
     const char* p;
     if (0 != ::strstr(nam,"MEPRx") ) return nam;
@@ -255,6 +255,7 @@ namespace {
     }
     return "Unknown";
   }
+#endiffff
 }
 
 /// Standard constructor
