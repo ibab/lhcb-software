@@ -40,7 +40,7 @@ static void feed(void* tag, void** buff, int* size, int* /* first */) {
   *size = 1;
 }
 
-static void error_call(int severity, int error_code, char* message) {
+static void error_call(int severity, int error_code, const char* message) {
   static int enabled = 1;
   if ( severity == ERROR_CONTROL ) {
     enabled = error_code;
