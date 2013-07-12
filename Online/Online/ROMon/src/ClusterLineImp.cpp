@@ -255,7 +255,7 @@ namespace {
     }
     return "Unknown";
   }
-#endiffff
+#endif
 }
 
 /// Standard constructor
