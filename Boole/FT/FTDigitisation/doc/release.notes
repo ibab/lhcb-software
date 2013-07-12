@@ -3,6 +3,15 @@
 ! Responsible : Eric Cogneras
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
+! 2013-07-12 - Eric Cogneras
+ - MCFTDepositCreator : adapt the call of function converting 'hit to ftchannel' to have  backward 
+   compatibility between old and new detector description
+ - MCFTDepositCreator : A bug in Det/FTDet package produces fired FTChannel with layerID above 11, inducing a
+   crash at RawBankEncoder level
+   Bug fix TEMPORARY recording only fired FTChannel with layer() < 12 (limit was previously set to 15, which 
+   corresponds to unsensitive parts of SiPMs)
+ - FTClusterCreator : (bug fix) type of meanChanPosition variable moved from 'int' to 'uint' to avoid max
+   value of type 'int' to be reached
 
 ! 2013-06-25 - Marco Cattaneo
  - Fix UNINIT_CTOR and DIVIDE_BY_ZERO defects

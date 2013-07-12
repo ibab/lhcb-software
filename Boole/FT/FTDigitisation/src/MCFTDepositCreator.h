@@ -18,7 +18,7 @@
 
 // from Event
 #include "Event/MCHit.h"
-
+#include "Event/MCFTDeposit.h"
 // LHCbKernel
 #include "Kernel/FTChannelID.h"
 
@@ -37,11 +37,16 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
+  StatusCode HitToChannelConversion_OldGeometry(LHCb::MCHit* ftHit, LHCb::MCFTDeposits *depositCont);
+  StatusCode HitToChannelConversion_NewGeometry(LHCb::MCHit* ftHit, LHCb::MCFTDeposits *depositCont);
 private:
   // Locations
   std::string m_inputLocation;     ///< FT MCHits Location
   std::string m_outputLocation;    ///< FT energy deposit Location
 
+  // FT Geometry version
+  int m_ftGeomVersion;
+  
   // Fibre properties
   float       m_shortAttenuationLength; ///< Attenuation lengh of the light along the fibre : short component
   float       m_longAttenuationLength;  ///< Attenuation lengh of the light along the fibre : long component

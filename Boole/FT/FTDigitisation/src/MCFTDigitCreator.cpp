@@ -33,6 +33,7 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
   declareProperty("SiPMGain",             m_sipmGain             = 2.0  );
   declareProperty("SiPMGainVariation",    m_sipmGainVariation    = 0.05 );  // relative fluctuation of the gain
   declareProperty("ADCNoise",             m_adcNoise             = 0.5  );
+  //declareProperty("ChannelNoiseEnabled",  m_channelNoiseEnabled  = false );
 }
 //=============================================================================
 // Destructor
@@ -60,7 +61,15 @@ StatusCode MCFTDigitCreator::initialize() {
 //=============================================================================
 StatusCode MCFTDigitCreator::execute() {
 
-  if ( msgLevel( MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  debug() << "[MCFTDigitCreator] ==> Execute NEW EVENT" << endmsg;
+
+  // If channel noise is considered, call Noise Tool
+  //std::list<FTChannelID> NoisyChannelList;
+  //if(m_channelNoiseEnabled) 
+  //{
+  //
+  //}
+  
 
   // retrieve FTDeposits
   const MCFTDeposits* mcDepositsCont = get<MCFTDeposits>(m_inputLocation);

@@ -83,7 +83,7 @@ StatusCode FTClusterCreator::initialize() {
 //=============================================================================
 StatusCode FTClusterCreator::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "[FTClusterCreator] ==> Execute NEW EVENT" << endmsg;
 
  
   
@@ -198,15 +198,26 @@ StatusCode FTClusterCreator::execute() {
       for(std::vector<int>::const_iterator i = clusterADCDistribution.begin();i != clusterADCDistribution.end(); ++i){
         totalCharge += *i;
         meanPosition += (i-clusterADCDistribution.begin()) * (*i);
-        //if(msgLevel(MSG::DEBUG)){
-        //  debug() <<"- Distance="<< (i-clusterADCDistribution.begin())
-        //          <<" adc="<<*i << " totalCharge=" << totalCharge
-        //          << endmsg;
-        //}
+        if(msgLevel(MSG::DEBUG)){
+          debug() <<"- Distance="<< (i-clusterADCDistribution.begin())
+                  <<" adc="<<*i << " totalCharge=" << totalCharge 
+                  << " meanposition="<<meanPosition
+                  << endmsg;
+        }
       }
-      if( 0 < totalCharge)
-        meanPosition =(*seedDigitIter)->channelID() + meanPosition/totalCharge;
-
+      if(msgLevel(MSG::DEBUG)){
+        debug() <<"(*seedDigitIter)->channelID()="<< (*seedDigitIter)->channelID()
+                <<" meanPosition="<<meanPosition << " totalCharge=" << totalCharge
+                << endmsg;
+      }
+ 
+      meanPosition =(*seedDigitIter)->channelID() + meanPosition/totalCharge;
+      if(msgLevel(MSG::DEBUG)){std::floor(meanPosition),
+          debug() << format( "==> Final meanPosition==%10.2f; floor=%10.2f; fractionnalPart=%2.5f\n", 
+                             meanPosition,std::floor(meanPosition),
+                             (meanPosition-std::floor(meanPosition)));
+      }
+      
 
       // Before Cluster record, checks :
       // - total ADC charge of the cluster is over threshold and
@@ -247,10 +258,15 @@ StatusCode FTClusterCreator::execute() {
         }
 
         // Define Cluster(channelID, fraction, width, charge)  and save it
-        int meanChanPosition = std::floor(meanPosition);
+        uint meanChanPosition = std::floor(meanPosition);
         double fractionChanPosition = (meanPosition-std::floor(meanPosition));
 
         // Define Cluster(channelID, fraction, width, charge)  and save it
+       if ( msgLevel( MSG::DEBUG) ) {
+          debug() <<"+ Define new cluster with meanChanPosition="<< meanChanPosition
+                  <<" fractionChanPosition="<<fractionChanPosition <<" width="<<(lastDigitIter-seedDigitIter)
+                  <<" totalCharge=" << totalCharge << endmsg;
+       }
         FTCluster *newCluster = new FTCluster(meanChanPosition,fractionChanPosition,(lastDigitIter-seedDigitIter),totalCharge);
 
         // draw cluster channelID
@@ -296,6 +312,19 @@ StatusCode FTClusterCreator::execute() {
           
         }
          
+        // DEBUG
+        if ( msgLevel( MSG::DEBUG) ) {
+          debug() <<"+ Finish clustering from : "<<(*seedDigitIter)->channelID()
+                  <<" (ADC = "<<(*seedDigitIter)->adcCount() <<" ) to "<<(*(lastDigitIter-1))->channelID()
+                  <<" (ADC = "<<(*(lastDigitIter-1))->adcCount() <<")"<< endmsg;
+
+          debug() <<"= Cluster is : "<<newCluster->channelID()
+                  <<" Charge = "<<newCluster->charge()
+                  << " Width = " << newCluster->size()
+                  << " Fraction = " <<newCluster->fraction()
+                  << endmsg;
+        }
+
 
         clusterCont->insert(newCluster);
 
@@ -311,18 +340,7 @@ StatusCode FTClusterCreator::execute() {
 //           }
         }
 
-        // DEBUG
-        if ( msgLevel( MSG::DEBUG) ) {
-          debug() <<"+ Finish clustering from : "<<(*seedDigitIter)->channelID()
-                  <<" (ADC = "<<(*seedDigitIter)->adcCount() <<" ) to "<<(*(lastDigitIter-1))->channelID()
-                  <<" (ADC = "<<(*(lastDigitIter-1))->adcCount() <<")"<< endmsg;
 
-          debug() <<"= Cluster is : "<<newCluster->channelID()
-                  <<" Charge = "<<newCluster->charge()
-                  << " Width = " << newCluster->size()
-                  << " Fraction = " <<newCluster->fraction()
-                  << endmsg;
-        }
 
       }
       seedDigitIter = (lastDigitIter-1);

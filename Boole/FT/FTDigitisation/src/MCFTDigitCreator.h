@@ -51,6 +51,7 @@ private:
   double m_sipmGain;             ///< SiPM gain, in adccount per photoelectron
   double m_sipmGainVariation;    ///< SiPM gain relative fluctuation
   double m_adcNoise;             ///< Sigma of the noise in the ADC.
+  //bool m_channelNoiseEnabled;    ///< Boolean to en/disable channel noise 
 
   Rndm::Numbers m_gauss;
   Rndm::Numbers m_flat;

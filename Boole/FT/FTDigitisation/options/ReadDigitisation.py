@@ -2,7 +2,7 @@
 from ROOT import gROOT, TFile, TCanvas, TH1D,kBlue,kRed,gStyle, TLine, TF1,TLatex
 
 class Read:
-    def __init__(self, files=  ["Bs_mumu_v6_nu325_EC-histos.root"], outtype = ".gif"):
+    def __init__(self, files= ["MiniBias_v20_nu25_EC-histos.root"], outtype = ".gif"):
         self.ListOfFiles = files
         self.OutFileType = outtype
         self.XMax = 3210 # in mm
@@ -56,49 +56,67 @@ class Read:
             # 2D plots
             FibreAttenuationMap.Draw("colz")
             self.DrawQuarterEdge()
+            #for Extension in self.OutFileType : 
             Depositcvs.SaveAs(OutFileMantisse+"_FibreAttenuationMap"+Extension)
 
             RadiationAttMap.Draw("colz")
             self.DrawQuarterEdge()
+            #for Extension in self.OutFileType : 
             Depositcvs.SaveAs(OutFileMantisse+"_RadiationAttMap"+Extension)
 
             ReflectionContributionMap.Draw("colz")
             self.DrawQuarterEdge()
+            #for Extension in self.OutFileType : 
             Depositcvs.SaveAs(OutFileMantisse+"_ReflectionContributionMap"+Extension)
 
             ReflectionAttenuationMap.Draw("colz")
             self.DrawQuarterEdge()
+            #for Extension in self.OutFileType : 
             Depositcvs.SaveAs(OutFileMantisse+"ReflectionAttenuationMap"+Extension)
             
             FinalAttenuationMap.Draw("colz")
             self.DrawQuarterEdge()
+            #for Extension in self.OutFileType : 
             Depositcvs.SaveAs(OutFileMantisse+"_FinalAttenuationMap"+Extension)
 
             HitEntryPosition.Draw("colz")
+            #for Extension in self.OutFileType : 
             Depositcvs.SaveAs(OutFileMantisse+"_HitEntryPosition"+Extension)
 
             # 1D plots linear scale
-            LayerHalfSizeY.SetMarkerStyle(8)
-            LayerHalfSizeY.SetMarkerColor(kBlue)
-            LayerHalfSizeY.Draw("P")
+           # LayerHalfSizeY.SetMarkerStyle(8)
+           # LayerHalfSizeY.SetMarkerColor(kBlue)
+           # LayerHalfSizeY.Draw("P")
+            #for Extension in self.OutFileType : 
             Depositcvs.SaveAs(OutFileMantisse+"_LayerHalfSizeY"+Extension)
 
-            LayerStereoAngle.SetMarkerStyle(8)
-            LayerStereoAngle.SetMarkerColor(kBlue)
-            LayerStereoAngle.Draw("P")
-            Depositcvs.SaveAs(OutFileMantisse+"_LayerStereoAngle"+Extension)
-                
-            LayerHoleRadius.SetMarkerStyle(8)
-            LayerHoleRadius.SetMarkerColor(kBlue)
-            LayerHoleRadius.Draw("P")
-            Depositcvs.SaveAs(OutFileMantisse+"_LayerHoleRadius"+Extension)
+            if(LayerStereoAngle):
+                LayerStereoAngle.SetMarkerStyle(8)
+                LayerStereoAngle.SetMarkerColor(kBlue)
+                LayerStereoAngle.Draw("P")
+                #for Extension in self.OutFileType : 
+                Depositcvs.SaveAs(OutFileMantisse+"_LayerStereoAngle"+Extension)
+            else:
+                print "!!!!! BEWARE : LayerStereoAngle NOT FOUND"
+
+            if(LayerHoleRadius):
+                LayerHoleRadius.SetMarkerStyle(8)
+                LayerHoleRadius.SetMarkerColor(kBlue)
+                LayerHoleRadius.Draw("P")
+                #for Extension in self.OutFileType : 
+                Depositcvs.SaveAs(OutFileMantisse+"_LayerHoleRadius"+Extension)
+            else:
+                print "!!!!! BEWARE : LayerHoleRadius NOT FOUND"
             
             # Empty !!!!
-            FibreLengh.SetMarkerStyle(8)
-            FibreLengh.SetMarkerColor(kBlue)
-            FibreLengh.Draw("P")
-            Depositcvs.SaveAs(OutFileMantisse+"_FibreLengh"+Extension)
-                
+            if(FibreLengh):
+                FibreLengh.SetMarkerStyle(8)
+                FibreLengh.SetMarkerColor(kBlue)
+                FibreLengh.Draw("P")
+                #for Extension in self.OutFileType : 
+                Depositcvs.SaveAs(OutFileMantisse+"_FibreLengh"+Extension)
+            else:
+                print "!!!!! BEWARE : FibreLengh NOT FOUND"                
             # Plots in linear and log scales
             for i in range(2):
                 if i==1:
@@ -115,12 +133,13 @@ class Read:
                 EnergyOfHitZOOM.Draw("P")
                 Depositcvs.SaveAs(OutFileMantisse+"_EnergyOfHitZOOM"+Extension)
 
-
-                CheckNbChannel.SetMarkerStyle(8)
-                CheckNbChannel.SetMarkerColor(kBlue)
-                CheckNbChannel.Draw("P")
-                Depositcvs.SaveAs(OutFileMantisse+"_CheckNbChannel"+Extension)
-                
+                if(CheckNbChannel):
+                    CheckNbChannel.SetMarkerStyle(8)
+                    CheckNbChannel.SetMarkerColor(kBlue)
+                    CheckNbChannel.Draw("P")
+                    Depositcvs.SaveAs(OutFileMantisse+"_CheckNbChannel"+Extension)
+                else:
+                    print "!!!!! BEWARE : CheckNbChannel NOT FOUND"       
 
                 FibreFraction.SetMarkerStyle(8)
                 FibreFraction.SetMarkerColor(kBlue)
@@ -154,7 +173,12 @@ class Read:
             OutFileMantisse = files[:files.find('-histos')]
 
             
-
+#            ChanNoise_nb                  = tfile.Get('MCFTDigitCreator/ChanNoise_nb')
+#            ChanNoise_layer               = tfile.Get('MCFTDigitCreator/ChanNoise_layer')
+#            ChanNoise_module              = tfile.Get('MCFTDigitCreator/ChanNoise_module')
+#            ChanNoise_fibermat            = tfile.Get('MCFTDigitCreator/ChanNoise_fibermat')
+#            ChanNoise_sipm                = tfile.Get('MCFTDigitCreator/ChanNoise_sipm')            
+#            ChanNoise_channel             = tfile.Get('MCFTDigitCreator/ChanNoise_channel')
             FiredChannelID                = tfile.Get('MCFTDigitCreator/FiredChannelID')
             HitPerChannel                 = tfile.Get('MCFTDigitCreator/HitPerChannel')
             EnergyPerHitPerChannel        = tfile.Get('MCFTDigitCreator/EnergyPerHitPerChannel')
@@ -165,7 +189,8 @@ class Read:
             EnergyPerChannelBIGZOOM       = tfile.Get('MCFTDigitCreator/EnergyPerChannelBIGZOOM')
             ADCPerChannel                 = tfile.Get('MCFTDigitCreator/ADCPerChannel')
             ADCGain                       = tfile.Get('MCFTDigitCreator/ADCGain')
-
+            ADCGainZOOM                   = tfile.Get('MCFTDigitCreator/ADCGainZOOM')           
+            ADCGainBIGZOOM                = tfile.Get('MCFTDigitCreator/ADCGainBIGZOOM')
             Digitcvs= TCanvas("Digitcvs","Digitcvs")
             Extension = self.OutFileType
 
@@ -183,6 +208,36 @@ class Read:
             Digitcvs.SaveAs(OutFileMantisse+"_ADCGain"+Extension)
 
             # 1D plots linear scale
+#            ChanNoise_nb.SetMarkerStyle(8)
+#            ChanNoise_nb.SetMarkerColor(kBlue)
+#            ChanNoise_nb.Draw("P")
+#            Digitcvs.SaveAs(OutFileMantisse+"_ChanNoise_nb"+Extension)
+
+#            ChanNoise_layer.SetMarkerStyle(8)
+#            ChanNoise_layer.SetMarkerColor(kBlue)
+#            ChanNoise_layer.Draw("P")
+#            Digitcvs.SaveAs(OutFileMantisse+"_ChanNoise_layer"+Extension)
+
+#            ChanNoise_module.SetMarkerStyle(8)
+#            ChanNoise_module.SetMarkerColor(kBlue)
+#            ChanNoise_module.Draw("P")
+#            Digitcvs.SaveAs(OutFileMantisse+"_ChanNoise_module"+Extension)
+
+#            ChanNoise_fibermat.SetMarkerStyle(8)
+#            ChanNoise_fibermat.SetMarkerColor(kBlue)
+#            ChanNoise_fibermat.Draw("P")
+#            Digitcvs.SaveAs(OutFileMantisse+"_ChanNoise_fibermat"+Extension)
+
+#            ChanNoise_sipm.SetMarkerStyle(8)
+#            ChanNoise_sipm.SetMarkerColor(kBlue)
+#            ChanNoise_sipm.Draw("P")
+#            Digitcvs.SaveAs(OutFileMantisse+"_ChanNoise_sipm"+Extension)
+
+#            ChanNoise_channel.SetMarkerStyle(8)
+#            ChanNoise_channel.SetMarkerColor(kBlue)
+#            ChanNoise_channel.Draw("P")
+#            Digitcvs.SaveAs(OutFileMantisse+"_ChanNoise_channel"+Extension)
+            
             FiredChannelID.SetMarkerStyle(8)
             FiredChannelID.SetMarkerColor(kBlue)
             FiredChannelID.Draw("P")
@@ -315,10 +370,14 @@ class Read:
                 Clustercvs.SaveAs(OutFileMantisse+"_ClusterPerSiPM"+Extension)
         
 def main():
-    t = Read()
+    #t = Read()
+   # t = Read(["Bs_mumu_v6_nu325_EC-histos.root","Bs_mumu_v6_nu65_EC-histos.root","MiniBias_v6_nu325_EC-histos.root","MiniBias_v6_nu65_EC-histos.root"],".eps")
+    t = Read(["MiniBias_v20_nu25_EC-histos.root"])
+    #t = Read(["Bs_mumu_v6_nu65_EC-histos.root"])
     #t = Read(["Bs_mumu_v6_nu325_EC-histos.root","Bs_mumu_v6_nu65_EC-histos.root","MiniBias_v6_nu325_EC-histos.root","MiniBias_v6_nu65_EC-histos.root"])
-    #t.DepositPlots()
-    #t.DigitPlots()
+    #t = Read( ["MiniBias_v6_nu325_EC-histos.root"] )
+    t.DepositPlots()
+    t.DigitPlots()
     t.ClusterPlots()
     
 if __name__ == "__main__":

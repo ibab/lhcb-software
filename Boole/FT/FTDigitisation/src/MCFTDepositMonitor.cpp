@@ -11,7 +11,7 @@
 
 // from FTEvent
 #include "Event/MCFTDeposit.h"
-#include "FTDet/DeFTLayer.h"
+#include "FTDet/DeFTFibreMat.h"
 
 // local
 #include "MCFTDepositMonitor.h"
@@ -87,7 +87,7 @@ StatusCode MCFTDepositMonitor::execute() {
     plot(ftHit->energy(),"CheckEnergyPerHit", "Energy deposited [Hit level]; Energy [MeV];Number of hits" , 0 , 10 );  
 
     // ( call of calculateHits method) 
-    const DeFTLayer* pL = m_deFT->findLayer(ftHit->midPoint());
+    const DeFTFibreMat* pL = m_deFT->findFibreMat(ftHit->midPoint());
     FTDoublePairs energyDistribution;
     
     double fibrelengh =0 ;
