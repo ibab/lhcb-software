@@ -119,14 +119,14 @@ int strcase_match_wild (const char *candidate_string, const char *pattern_string
 
 /// C++ version to convert a string to lower case
 std::string RTL::str_lower(const std::string& str) {
-  std::string res = str;
+  std::string res = str.c_str();
   for(char* p=(char*)res.c_str(); *p; ++p) *p = ::tolower(*p);
   return res;
 }
 
 /// C++ version to convert a string to upper case
 std::string RTL::str_upper(const std::string& str) {
-  std::string res = str;
+  std::string res = str.c_str();
   for(char* p=(char*)res.c_str(); *p; ++p) *p = ::toupper(*p);
   return res;
 }
