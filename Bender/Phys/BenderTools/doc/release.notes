@@ -5,6 +5,9 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2013-07-12 - Vanya Belyaev
+ - prepare next release 
+
 ! 2013-07-06 - Vanya Belyaev
 
  - minor update in fill: add PROBNN-variables 
