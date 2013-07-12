@@ -1083,8 +1083,8 @@ int get_nodes();
 		XmListAddItem(id,create_str(node),i+1);
 	}
 	*/
-	set_something(id,XmNlistItemCount,i);
-	set_something(id,XmNlistVisibleItemCount,(i < 8) ? i : 8);
+	set_something(id,XmNlistItemCount,(void*)i);
+	set_something(id,XmNlistVisibleItemCount,(void*)(i < 8) ? i : 8);
 }	
 
 void get_server_service()
@@ -2679,7 +2679,7 @@ char w_name[MAX_NAME];
 				(String)XmStringCreateLtoR ( w_name,XmSTRING_DEFAULT_CHARSET),
 				arglist,(Cardinal)n);
 	set_something(w,XmNlabelString,name);
-	set_something(w,XmNalignment,XmALIGNMENT_CENTER);
+	set_something(w,XmNalignment,(void*)XmALIGNMENT_CENTER);
 /*
 	if(n_services == -1)
 		set_color(w, XmNbackground, RED);
@@ -2792,8 +2792,8 @@ void kick_it();
 	XmListAddItem(id,create_str(
           "Ordering services alphabeticaly, please be patient..."),1);
 
-	set_something(id,XmNlistItemCount,1);
-	set_something(id,XmNlistVisibleItemCount,1);
+	set_something(id,XmNlistItemCount,(void*)1);
+	set_something(id,XmNlistVisibleItemCount,(void*)1);
 	
 	sprintf(str,"%s/SERVICE_LIST",/*ptr->task*/servp->name);
 	dic_info_service(str,ONCE_ONLY,20,0,0,
@@ -2902,8 +2902,8 @@ void delete_str();
 	}
 	free(service_list);
 	
-	set_something(id,XmNlistItemCount,i);
-	set_something(id,XmNlistVisibleItemCount,(i < 20) ? i : 20);
+	set_something(id,XmNlistItemCount,(void*)i);
+	set_something(id,XmNlistVisibleItemCount,(void*)(i < 20) ? i : 20);
 }
 
 void show_clients(SERVER **servp_ptr, char *buffer, int *size)
