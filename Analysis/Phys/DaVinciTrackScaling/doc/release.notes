@@ -4,6 +4,10 @@
 ! Purpose     : Track scaling and smearing
 !-----------------------------------------------------------------------------
 
+! 2013-07-12 M Needham
+ 
+ - Fix some warnings
+
 ! 2013-07-11 - Vanya Belyaev
 
  - TrackSmearState: add property RootFile to read TGraph-"res;1" 

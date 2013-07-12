@@ -72,16 +72,16 @@ StatusCode OldTrackSmearState::execute(){
     const std::vector<LHCb::State*>& theStates = (*iterT)->states();
     double q =  (*iterT)->charge();
     double rndmVal = m_gaussDist->shoot();
-    double smearAngleX = m_gaussDist->shoot()*m_smearAngle;
-    double smearAngleY = m_gaussDist->shoot()*m_smearAngle;
+    //double smearAngleX = m_gaussDist->shoot()*m_smearAngle;
+    // double smearAngleY = m_gaussDist->shoot()*m_smearAngle;
 
     for (std::vector<LHCb::State*>::const_iterator iterState = theStates.begin(); iterState != theStates.end(); ++iterState ) {
       double p = (*iterState)->p();
       double smear = m_graph->Eval(p)*p *m_fudgeFactor; //graph is dp/p
       double smearedVal =p + smear*rndmVal; 
       (*iterState)->setQOverP(q/smearedVal);
-      double tx = (*iterState)->tx();
-      double ty = (*iterState)->ty();
+      //double tx = (*iterState)->tx();
+      //  double ty = (*iterState)->ty();
 //      (*iterState)->setTx(tx + smearAngleX);
 //     (*iterState)->setTy(ty + smearAngleY);
       //      std::cout << " smear value " << smear << " "  <<  " p " << p  <<  " " << smearedVal << std::endl;   
