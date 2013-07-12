@@ -2,6 +2,10 @@ Package     : Hlt/IndepenceTests
 Package Coordinator : Mika Vesterinen
 Purpose     : HLT application to test indepence of Hlt lines
 
+
+! 2013-07-12 - Mika Vesterinen 
+ - Fix the nightly test. Changes to DecisionMap.cpp, test_independence.py, Tasks.py, test_independence.qmt.
+
 !========================= IndependenceTests v1r4 2013-02-28 =========================
 ! 2012-06-26 - Mika Vesterinen
  - Change treatment of technical lines

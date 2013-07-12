@@ -22,8 +22,6 @@ from IndependenceTests.Tasks import DecisionReporter, time_string
 from HltMonitor.Base import ProcessWrapper
 
 from GaudiPython.Bindings import gbl
-dm = { 'all'    : gbl.DecisionMap(),
-       'single' : gbl.DecisionMap() }
 
 def index( seq, item ):
     """Return the index of the first item in seq."""
@@ -46,16 +44,24 @@ def remove( lines ):
     return lines
     
 def find_lines( options, args ):
-    print 'Determining available lines'
+    
+
+    
     jobArgs = [ '-d', options.DataType,
-                '-n', str( options.EvtMax ),
+                '-n', str( int(options.EvtMax) ),
                 '--dddbtag', options.DDDBtag,
                 '--conddbtag', options.CondDBtag,
-                '--settings', args[ 0 ] ]
+                '--settings', options.Settings ] #args[ 0 ] ]
 
     command = os.path.expandvars( '$INDEPENDENCETESTSROOT/scripts/lines.sh' )
+
+    if options.debug:
+        print 'Popen'
     p = subprocess.Popen( [command] + jobArgs, stdout = subprocess.PIPE,
                           stderr = subprocess.STDOUT )
+    if options.debug:
+        print 'communicate'
+
     o = p.communicate()[ 0 ]
     if ( p.returncode ):
         print "failed finding lines"
@@ -66,7 +72,9 @@ def find_lines( options, args ):
     for line in o.split( "\n" ):
         if len( line.strip() ):
             output.append( line )
-
+        if options.debug:
+            print line
+        
     hlt1Lines = set()
     for m in output[ index( output, "HLT1LINES" ) + 1 : index( output, "HLT2LINES" ) ]:
         hlt1Lines.add( m )
@@ -80,14 +88,9 @@ def find_lines( options, args ):
 def run( options, args ):
 
     evtMax = options.EvtMax
-
-    EventSelector().Input = [
-        "DATAFILE='PFN:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/user/a/apuignav/81349_0x002a_MBNB_L0Phys.raw?svcClass=lhcbuser&castorVersion=2' SVC='LHCb::MDFSelector'",
-        "DATAFILE='PFN:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/user/a/apuignav/80881_0x002a_MBNB_L0Phys.raw?svcClass=lhcbuser&castorVersion=2' SVC='LHCb::MDFSelector'",
-        "DATAFILE='PFN:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/user/a/apuignav/79647_0x002a_MBNB_L0Phys.raw?svcClass=lhcbuser&castorVersion=2' SVC='LHCb::MDFSelector'",
-        "DATAFILE='PFN:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/user/a/apuignav/79646_0x002a_MBNB_L0Phys.raw?svcClass=lhcbuser&castorVersion=2' SVC='LHCb::MDFSelector'"
-        ]
-
+    
+    EventSelector().Input = ["DATA='castor:/castor/cern.ch/user/e/evh/131883/131883_0x0046_NB_L0Phys_00.raw' SVC='LHCb::MDFSelector'"]
+    
     # Put the options into a dictionary
     reporterConfig = dict()
     reporterConfig[ 'EvtMax' ] = options.EvtMax
@@ -97,19 +100,23 @@ def run( options, args ):
     reporterConfig[ 'CondDBtag' ] = options.CondDBtag
     reporterConfig[ 'Simulation' ] = options.Simulation
     reporterConfig[ 'DataType' ] = options.DataType
-    reporterConfig[ 'ThresholdSettings' ] = args[ 0 ]
+    reporterConfig[ 'ThresholdSettings' ] = options.Settings #args[ 0 ]
     reporterConfig[ 'Input' ]  = EventSelector().Input
     reporterConfig[ 'Catalogs' ] = FileCatalog().Catalogs
+    from Configurables import Moore
+    from Configurables import CondDB
+    from Configurables import L0Conf, HltConf
+    reporterConfig["UseTCK"] = False
+    reporterConfig["L0"]=options.L0
     if options.L0:
-        reporterConfig[ 'L0' ] = True
         reporterConfig[ 'ReplaceL0BanksWithEmulated' ] = True
-
-    ## Don't wait after each event
-    reporterConfig[ 'Wait' ] = False
+        reporterConfig["ForceSingleL0Configuration"]=False
+    reporterConfig[ 'Wait' ] = False     ## Don't wait after each event
     
     # Find all lines in this configuration
+    print 'Determining available lines'
     all1Lines, all2Lines = find_lines( options, args )
-
+    
     hlt1Lines = set()
     # Process the options to setup Hlt lines to be run
     if options.Hlt1Lines == 'none':
@@ -121,7 +128,7 @@ def run( options, args ):
         for line in options.Hlt1Lines.split( ";" ):
             if ( len( line.strip() ) ):
                 hlt1Lines.add( line )
-
+                
     hlt2Lines = set()
     if options.Hlt2Lines == 'none':
         pass
@@ -131,7 +138,7 @@ def run( options, args ):
         for line in options.Hlt2Lines.split( ";" ):
             if ( len( line.strip() ) ):
                 hlt2Lines.add( line )
-
+                
     if options.Verbose:
         for line in hlt1Lines:
             print line
@@ -168,51 +175,54 @@ def run( options, args ):
         wrappers[ lineName ] = ProcessWrapper( i, DecisionReporter, lineName, config,
                                                options.Verbose )
 
-    # Setup the processes running a single Hlt2 line
-    for lineName in hlt2Lines:
-        i += 1
-        config = reporterConfig.copy()
-        config[ 'Hlt1Lines' ] = list( hlt1Lines )
-        config[ 'Hlt2Lines' ] = [ lineName ]
-        wrappers[ lineName ] = ProcessWrapper( i, DecisionReporter, lineName, config,
-                                               options.Verbose )
-
     # Keep track of jobs that have completed
     completed = set()
     running = set()
     todo = set()
 
     # start the allLines process first
+    
+    print 'starting allLines process'
     wrappers[ 'allLines' ].start()
-    print 'Running allLines'
     running.add( 'allLines' )
+        
+    # keep track of the decisions
+    dm = { 'pass'   : gbl.DecisionMap(),
+           'all'    : gbl.DecisionMap(),
+           'single' : gbl.DecisionMap() }
 
     # start the rest of the processes
+    print 'starting rest of processes'
     for name, wrapper in wrappers.iteritems():
+        if name == "allLines": continue
         if len( running ) == options.NProcesses:
             break
         wrapper.start()
         running.add( name )
     todo = set( wrappers.keys() ).difference( running )
 
+    
+    if options.debug:
+        print 'running %s' %running
+        print 'completed %s' %completed
+        print 'todo %s' %todo
+    
     while True:
+        if len( completed ) == len( wrappers ):
+            break
         ready = None
         try:
             ( ready, [], [] ) = select.select( [ wrappers[ name ] for name in running ], [], [] )
-
             for wrapper in ready:
                 data = wrapper.getData( False )
                 if data == None:
                     continue
                 elif type( data ) == type( "" ):
-                    # Message
                     if data == 'DONE':
-                        print '%s done' % wrapper.name()
                         completed.add( wrapper.name() )
                         wrapper.join()
                         if len( todo ) != 0:
                             to_start = todo.pop()
-                            print 'Running %s' % to_start
                             wrappers[ to_start ].start()
                             running.add( to_start )
                         running.difference_update( completed )
@@ -221,30 +231,45 @@ def run( options, args ):
                     event = data.pop( 'event' )
                     name = wrapper.name()
                     if name == 'allLines':
-                        dm_all = dm[ 'all' ]
+                        dm['pass'].addDecision( run, event, "dummy_line", True )
                         for line, dec in data.iteritems():
-                            dm_all.addDecision( run, event, line, dec )
+                            dm['all'].addDecision( run, event, line, dec )
                     else:
-                        name = name + 'Decision'
-                        dm_single = dm[ 'single' ]
-                        dm_single.addDecision( run, event, name, data[ name ] )
-
-            if len( completed ) == len( wrappers ):
-                break
-
+                        line = name+'Decision'
+                        dec = data[ line]
+                        if options.fake_rate > 0:
+                            if random.random() < options.fake_rate: dec = True
+                        dm['single'].addDecision( run, event, line, dec )
         except select.error:
+            if options.debug:
+                print 'sleeping'
             sleep( 5 )
 
     mismatches = defaultdict(set)
-    dm_all = dm[ 'all' ]
-    dm_single = dm[ 'single' ]
-    events = dm_all.events()
-    for entry in events:
+    
+    print 'processed %s events' %len(dm['pass'].events())
+
+    if options.debug:
+        print 'pass events = %s' %len(dm['pass'].events())
+        print 'all events = %s' %len(dm['all'].events())
+        print 'single events = %s' %len(dm['single'].events())
+
+    iEntry = -1
+    for entry in dm['pass'].events():
+        iEntry = iEntry + 1
+        if options.debug:
+            print '\n'
+            print 'Entry: %s/%s' %(iEntry,len(dm['pass'].events()))
+            print '%s %s' %(entry.first, entry.second) 
         for line in hlt1Lines.union( hlt2Lines ):
-            all_dec = dm_all.decision( entry.first, entry.second, line )
-            single_dec = dm_single.decision( entry.first, entry.second, line )
+            all_dec = dm['all'].decision( entry.first, entry.second, line+'Decision' )
+            single_dec = dm['single'].decision( entry.first, entry.second, line+'Decision' )
+            if options.debug:
+                print 'line = %s' %line
+                print 'single_dec = %s' %(single_dec)
+                print 'all_dec = %s' %(all_dec)
             if all_dec != single_dec:
-                mismatches[ line ].add( entry )
+                  mismatches[ line ].add( entry )
 
     if len( mismatches ):
         print 'Found mismatches:'
@@ -260,29 +285,51 @@ if __name__ == "__main__":
     # Setup the option parser
     usage = "usage: %prog settings"
     parser = optparse.OptionParser( usage = usage )
+    
     parser.add_option( "-d", "--datatype", action="store", dest="DataType", 
-                       default="2011", help="DataType to run on.")
+                       default="2012", help="DataType to run on.")
+    
     parser.add_option( "-n", "--evtmax", action = "store", type = 'int',
-                       dest = "EvtMax", default = 1e4, help = "Number of events to run" )
+                       dest = "EvtMax", default = 1e3, help = "Number of events to run" )
+    
+    parser.add_option( "--Settings", action = "store", dest = "Settings",
+                       default = "Physics_September2012", help = "Threshold settings" )
+    
     parser.add_option( "--nprocesses", action = "store", type = 'int',
                        dest = "NProcesses", default = 8,
                        help = "Number of simultaneous processes to run." )
+    
     parser.add_option( "--dddbtag", action="store", dest="DDDBtag",
-                       default='MC09-20090602', help="DDDBTag to use" )
+                       default='head-20120413', help="DDDBTag to use" )
+    
     parser.add_option( "--conddbtag", action = "store", dest = "CondDBtag",
-                       default = 'sim-20090402-vc-md100', help = "CondDBtag to use" )
+                       default = 'head-20120420', help = "CondDBtag to use" )
+
     parser.add_option( "-s", "--simulation", action = "store_true", dest = "Simulation",
                        default = False, help = "Run on simulated data")
+    
     parser.add_option( "--dbsnapshot", action = "store_true", dest = "UseDBSnapshot",
                        default = False, help = "Use a DB snapshot" )
+    
     parser.add_option( "-v", "--verbose", action = "store_true", dest = "Verbose",
                        default = False, help = "Verbose output" )
+    
     parser.add_option( "--hlt1lines", action = "store", dest = "Hlt1Lines",
-                       default = "", help = "Colon seperated list of additional hlt1 lines" )
+                       default = "Hlt1TrackAllL0;Hlt1TrackMuon", help = "Colon seperated list of additional hlt1 lines" )
+    
     parser.add_option( "--hlt2lines", action = "store", dest = "Hlt2Lines",
-                       default = "", help = "Colon seperated list of additional hlt2 lines" )
+                       default = "none", help = "Colon seperated list of additional hlt2 lines" )
+    
     parser.add_option( "--l0", action="store_true", dest="L0",
-                       default=False, help="Rerun L0" )
+                       default=True, help="Rerun L0" )
+    
+    parser.add_option( "--debug", action="store_true", dest="debug",
+                       default=False, help="debug" )
+
+    parser.add_option( "--fake_rate", action = "store", type = 'float',
+                       dest = "fake_rate", default = -1,
+                       help = "Fraction of random dummy triggers to simulate non independence.")
+    
 
     # Parse the command line arguments
     (options, args) = parser.parse_args()
@@ -291,8 +338,8 @@ if __name__ == "__main__":
     ## logger = multiprocessing.get_logger()
     ## logger.setLevel(logging.INFO)
 
-    if not len( args ):
-        print "No settings specified"
-        exit( 1 )
+    #if not len( args ):
+    #    print "No settings specified"
+    #    exit( 1 )
 
     sys.exit( run( options, args ) )

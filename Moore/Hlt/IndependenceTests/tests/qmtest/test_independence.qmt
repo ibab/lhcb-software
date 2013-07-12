@@ -8,14 +8,10 @@
   <argument name="args"><set>
     <text>-n</text>
     <text>10000</text>
-    <text>-s</text>
-    <text>--dddbtag=head-20110302</text>
-    <text>--conddbtag=head-20110622</text>
     <text>--hlt1lines=all</text>
-    <text>--hlt2lines=all</text>
-    <text>--l0</text>
+    <text>--hlt2lines=none</text>
     <text>--nprocesses=8</text>
-    <text>Physics_Sept2011</text>
+    <text>--Settings=Physics_September2012</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>

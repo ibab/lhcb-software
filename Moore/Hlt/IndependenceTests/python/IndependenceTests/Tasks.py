@@ -178,9 +178,9 @@ class DecisionReporter( Task ):
         hlt1Lines = self._config[ 'Hlt1Lines' ]
         hlt2Lines = self._config[ 'Hlt2Lines' ]
 
-        if 'L0' in self._config and self._config[ 'L0' ]:
-            from Configurables import L0MuonAlg
-            L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
+        #if 'L0' in self._config and self._config[ 'L0' ]:
+            #from Configurables import L0MuonAlg
+            #L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"
 
         EventSelector().Input = self._config[ 'Input' ]
         EventSelector().PrintFreq = 100

@@ -49,7 +49,8 @@ bool DecisionMap::decision( const unsigned int runNumber,
    } else {
       eventKey_t key( runNumber, eventNumber );
       it = m_map->find( key );
-      if ( it == m_map->end() ) throw runtime_error( "Event not in map" );
+      if ( it == m_map->end() ) return false;
+      //throw runtime_error( "Event not in map" );
       m_runNumber = runNumber;
       m_eventNumber = eventNumber;
       m_cached = it;
