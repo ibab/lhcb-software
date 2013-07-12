@@ -1083,8 +1083,8 @@ int get_nodes();
 		XmListAddItem(id,create_str(node),i+1);
 	}
 	*/
-	set_something(id,XmNlistItemCount,(void*)i);
-	set_something(id,XmNlistVisibleItemCount,(void*)(i < 8) ? i : 8);
+	set_something(id,XmNlistItemCount,(void*)(long)i);
+	set_something(id,XmNlistVisibleItemCount,(void*)(long)(i < 8) ? i : 8);
 }	
 
 void get_server_service()
@@ -2902,8 +2902,8 @@ void delete_str();
 	}
 	free(service_list);
 	
-	set_something(id,XmNlistItemCount,(void*)i);
-	set_something(id,XmNlistVisibleItemCount,(void*)(i < 20) ? i : 20);
+	set_something(id,XmNlistItemCount,(void*)(long)i);
+	set_something(id,XmNlistVisibleItemCount,(void*)(long)(i < 20) ? i : 20);
 }
 
 void show_clients(SERVER **servp_ptr, char *buffer, int *size)
