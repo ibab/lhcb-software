@@ -6,6 +6,20 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r0>2013-07-13 OnlineSys v5r2</A></H1>
+<PRE>
+  Bug fix release of v5r1.
+  Use new Gaudi v23r8
+  Updated/new packages:
+      Controller          v0r5     Online
+      DIM                 v20r7p1  Online
+      FarmConfig          v0r1     Online
+      OnlineBase          v1r17    Online
+      RootCnv             v1r21    Online
+      ROMon               v1r42    Online
+      UPI                 v1r23    Online
+</PRE>
+
 <H1><A NAME=v5r0>2013-07-03 OnlineSys v5r1</A></H1>
 <PRE>
   Bug fix release of v5r0.
