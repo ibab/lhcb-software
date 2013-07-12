@@ -210,8 +210,8 @@ StatusCode FTClusterCreator::execute() {
                 <<" meanPosition="<<meanPosition << " totalCharge=" << totalCharge
                 << endmsg;
       }
- 
-      meanPosition =(*seedDigitIter)->channelID() + meanPosition/totalCharge;
+      if( 0 < totalCharge) 
+        meanPosition =(*seedDigitIter)->channelID() + meanPosition/totalCharge;
       if(msgLevel(MSG::DEBUG)){std::floor(meanPosition),
           debug() << format( "==> Final meanPosition==%10.2f; floor=%10.2f; fractionnalPart=%2.5f\n", 
                              meanPosition,std::floor(meanPosition),

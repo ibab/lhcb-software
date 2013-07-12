@@ -61,7 +61,8 @@ StatusCode MCFTDigitCreator::initialize() {
 //=============================================================================
 StatusCode MCFTDigitCreator::execute() {
 
-  debug() << "[MCFTDigitCreator] ==> Execute NEW EVENT" << endmsg;
+  if ( msgLevel( MSG::DEBUG) )  
+    debug() << "[MCFTDigitCreator] ==> Execute NEW EVENT" << endmsg;
 
   // If channel noise is considered, call Noise Tool
   //std::list<FTChannelID> NoisyChannelList;

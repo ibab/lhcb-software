@@ -286,15 +286,6 @@ StatusCode MCFTDepositCreator::execute() {
 }
 
 //=========================================================================
-//  
-//=========================================================================
-StatusCode MCFTDepositCreator::finalize() {
-   
-
-  return GaudiAlgorithm::finalize();
-}
-
-//=========================================================================
 StatusCode MCFTDepositCreator::HitToChannelConversion_OldGeometry(LHCb::MCHit* ftHit,LHCb::MCFTDeposits *depositCont) {
   const DeFTLayer* pL = m_deFT->findLayer(ftHit->midPoint());
   FTDoublePairs channels;
