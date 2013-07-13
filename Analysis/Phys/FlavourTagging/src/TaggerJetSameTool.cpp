@@ -33,7 +33,7 @@ TaggerJetSameTool::~TaggerJetSameTool() {}
 //=====================================================================
 Tagger TaggerJetSameTool::tag( const Particle* AXB0, 
                                const RecVertex* RecVert,
-                               std::vector<const Vertex*>& allVtx,
+                               const int nPV,
                                Particle::ConstVector& vtags ) 
 {
   Tagger tjetS;
@@ -46,7 +46,7 @@ Tagger TaggerJetSameTool::tag( const Particle* AXB0,
 
   if ( msgLevel(MSG::VERBOSE) )
   {
-    verbose() << " allVtxsize=" << allVtx.size() <<endreq;
+    verbose() << " n.PV=" << nPV <<endreq;
     verbose() << " RecVert=" << RecVert->position().z() <<endreq;
   }
 

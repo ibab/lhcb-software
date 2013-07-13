@@ -31,8 +31,9 @@ public:
   virtual ~TaggerJetSameTool( ); ///< Destructor
 
   //-------------------------------------------------------------
-  virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex* ,
-                            std::vector<const LHCb::Vertex*>&,
+  virtual LHCb::Tagger tag( const LHCb::Particle*, 
+                            const LHCb::RecVertex*,
+                            const int,
                             LHCb::Particle::ConstVector& );
   //-------------------------------------------------------------
 

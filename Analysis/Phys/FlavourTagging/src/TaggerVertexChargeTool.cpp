@@ -97,16 +97,16 @@ StatusCode TaggerVertexChargeTool::initialize()
 //=====================================================================
 Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
                                     const RecVertex* RecVert,
-                                    Vertex::ConstVector& allVtx,
+                                    const int nPV,
                                     Particle::ConstVector& vtags ) 
 {
-  return m_tag(AXB0, RecVert, allVtx, vtags); 
+  return m_tag(AXB0, RecVert, nPV, vtags); 
 }
 
 //=====================================================================
 Tagger TaggerVertexChargeTool::tagReco12( const Particle* AXB0,
                                           const RecVertex* RecVert,
-                                          Vertex::ConstVector& allVtx,
+                                          const int nPV,
                                           Particle::ConstVector& vtags ) 
 {
   Tagger tVch;
@@ -208,7 +208,7 @@ Tagger TaggerVertexChargeTool::tagReco12( const Particle* AXB0,
   {
     std::vector<double> NNinputs(11);
     NNinputs.at(0) = m_util->countTracks(vtags);
-    NNinputs.at(1) = allVtx.size();
+    NNinputs.at(1) = nPV;
     NNinputs.at(2) = AXB0->pt()/GeV;;
     NNinputs.at(3) = vflagged;
     NNinputs.at(4) = Vptmean;
@@ -248,7 +248,7 @@ Tagger TaggerVertexChargeTool::tagReco12( const Particle* AXB0,
 //=====================================================================
 Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0, 
                                           const RecVertex* RecVert,
-                                          Vertex::ConstVector& allVtx, 
+                                          const int nPV,
                                           Particle::ConstVector& vtags ) 
 {
   Tagger tVch;
@@ -351,7 +351,7 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
     std::vector<std::string> inputVars;
     std::vector<double> inputVals;
     inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));
-    inputVars.push_back("nnkrec");      inputVals.push_back( (double)allVtx.size());
+    inputVars.push_back("nnkrec");      inputVals.push_back( (double)nPV);
     inputVars.push_back("ptB");         inputVals.push_back( (double)log(AXB0->pt()/GeV));
     inputVars.push_back("vflag");       inputVals.push_back( (double)vflagged);
     inputVars.push_back("ptmean");      inputVals.push_back( (double)log(Vptmean));

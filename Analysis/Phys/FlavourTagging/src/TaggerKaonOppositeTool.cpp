@@ -90,15 +90,15 @@ StatusCode TaggerKaonOppositeTool::initialize()
 }
 //================================================================================
 Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0, const RecVertex* RecVert,
-                            std::vector<const Vertex*>& allVtx,
-                            Particle::ConstVector& vtags )
+                                    const int nPV,
+                                    Particle::ConstVector& vtags )
 {
-  return m_tag(AXB0, RecVert, allVtx, vtags); 
+  return m_tag(AXB0, RecVert, nPV, vtags); 
 }
 //=====================================================================
 Tagger TaggerKaonOppositeTool::tagReco12( const Particle* AXB0,
                                           const RecVertex* RecVert,
-                                          std::vector<const Vertex*>& allVtx,
+                                          const int nPV,
                                           Particle::ConstVector& vtags )
 {
   Tagger tkaon;
@@ -194,7 +194,7 @@ Tagger TaggerKaonOppositeTool::tagReco12( const Particle* AXB0,
     NNinputs.at(2) = ikaon->p()/GeV;
     NNinputs.at(3) = ikaon->pt()/GeV;
     NNinputs.at(4) = IP/IPerr;
-    NNinputs.at(8) = allVtx.size();
+    NNinputs.at(8) = nPV;
 
     pn = m_nnet->MLPk( NNinputs );
 
@@ -223,8 +223,8 @@ Tagger TaggerKaonOppositeTool::tagReco12( const Particle* AXB0,
 
 //==========================================================================
 Tagger TaggerKaonOppositeTool::tagReco14( const Particle* AXB0, 
-                                          const RecVertex* RecVert,
-                                          std::vector<const Vertex*>& allVtx, 
+                                          const RecVertex* RecVert, 
+                                          const int nPV,
                                           Particle::ConstVector& vtags ){
   Tagger tkaon;
   if(!RecVert) return tkaon;
@@ -338,7 +338,7 @@ Tagger TaggerKaonOppositeTool::tagReco14( const Particle* AXB0,
     inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));
     inputVars.push_back("partP");       inputVals.push_back( (double)log(ikaon->p()/GeV));
     inputVars.push_back("partPt");      inputVals.push_back( (double)log(ikaon->pt()/GeV));
-    inputVars.push_back("nnkrec");      inputVals.push_back( (double)allVtx.size());
+    inputVars.push_back("nnkrec");      inputVals.push_back( (double)nPV);
     inputVars.push_back("ptB");         inputVals.push_back( (double)log(AXB0->pt()/GeV));
     inputVars.push_back("IPs");         inputVals.push_back( (double)log(fabs(save_IPs)));
     inputVars.push_back("partlcs");     inputVals.push_back( (double)log(ikaon->proto()->track()->chi2PerDoF()));

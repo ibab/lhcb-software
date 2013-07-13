@@ -96,14 +96,14 @@ StatusCode TaggerMuonTool::initialize()
 }
 //================================================================================
 Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
-                            std::vector<const Vertex*>& allVtx,
+                            const int nPV,
                             Particle::ConstVector& vtags )
 {
-  return m_tag(AXB0, RecVert, allVtx, vtags); 
+  return m_tag(AXB0, RecVert, nPV, vtags); 
 }
 //================================================================================
 Tagger TaggerMuonTool::tagReco12( const Particle* AXB0, const RecVertex* RecVert,
-                                  std::vector<const Vertex*>& allVtx,
+                                  const int nPV,
                                   Particle::ConstVector& vtags )
 {
   Tagger tmu;
@@ -202,7 +202,7 @@ Tagger TaggerMuonTool::tagReco12( const Particle* AXB0, const RecVertex* RecVert
     NNinputs.at(2) = imuon->p()/GeV;
     NNinputs.at(3) = imuon->pt()/GeV;
     NNinputs.at(4) = IP/IPerr;
-    NNinputs.at(8) = allVtx.size();
+    NNinputs.at(8) = nPV;
 
     pn = m_nnet->MLPm( NNinputs );
     if ( msgLevel(MSG::VERBOSE) )
@@ -228,7 +228,7 @@ Tagger TaggerMuonTool::tagReco12( const Particle* AXB0, const RecVertex* RecVert
 //====================================================================
 //=====================================================================
 Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert,
-                                  std::vector<const Vertex*>& allVtx, 
+                                  const int nPV,
                                   Particle::ConstVector& vtags ){
   Tagger tmu;
   if(!RecVert) return tmu;
@@ -325,7 +325,7 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
   double pn = 1. - m_AverageOmega;
   double sign=1.;
   if(m_CombinationTechnique == "NNet") {
-    if ( msgLevel(MSG::DEBUG) ) debug()<< allVtx.size()<< endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug()<< nPV<< endreq;
 
     std::vector<std::string> inputVars;
     std::vector<double> inputVals;

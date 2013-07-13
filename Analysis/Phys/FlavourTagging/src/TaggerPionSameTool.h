@@ -37,9 +37,10 @@ public:
   StatusCode initialize();    ///<  initialization
 
   //-------------------------------------------------------------
-  virtual LHCb::Tagger tag( const LHCb::Particle*, const LHCb::RecVertex*,
-                            std::vector<const LHCb::Vertex*>&, LHCb::
-                            Particle::ConstVector&);
+  virtual LHCb::Tagger tag( const LHCb::Particle*, 
+                            const LHCb::RecVertex*,
+                            const int,
+                            LHCb::Particle::ConstVector&);
   //-------------------------------------------------------------
 
 private:

@@ -83,8 +83,8 @@ StatusCode TaggerPionSameTool::initialize()
 }
 
 //=====================================================================
-Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
-                                std::vector<const Vertex*>& allVtx,
+Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert, 
+                                const int nPV,
                                 Particle::ConstVector& vtags )
 {
 
@@ -209,7 +209,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     NNinputs.at(4) = fabs(IP/IPerr);
     NNinputs.at(5) = dR;
     NNinputs.at(7) = dQ/GeV;
-    NNinputs.at(8) = allVtx.size();
+    NNinputs.at(8) = nPV;
 
     pn = m_nnet->MLPpS( NNinputs );
     if ( msgLevel(MSG::VERBOSE) )

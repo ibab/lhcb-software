@@ -26,20 +26,20 @@ DECLARE_TOOL_FACTORY( TaggerNEWKaonSameTool )
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName", m_NeuralNetName    = "NNetTool_MLP" );
 
-  // preselection
+  // preselection  for Reco14
   declareProperty( "Kaon_PIDk_cut",     m_PID_k_cut     =  0.75);
   declareProperty( "Kaon_PIDkp_cut",    m_PIDkp_cut     = -8.5 );
-  declareProperty( "Kaon_ghost_cut",    m_ghost_cut     = 1000000. );
+  declareProperty( "Kaon_ghost_cut",    m_ghost_cut     = 0.3 );     // 10.(no cut) Reco 12
   declareProperty( "Kaon_distPhi_cut",  m_distPhi_cut_kaon= 0.005 );
 
-  declareProperty( "Kaon_P0_Cal",        m_P0_Cal_kaon   = 0.4060 );
-  declareProperty( "Kaon_P1_Cal",        m_P1_Cal_kaon   = 0.88);
-  declareProperty( "Kaon_AverageOmega",  m_AverageOmega  = 0.4302 );
+  declareProperty( "Kaon_P0_Cal",        m_P0_Cal_kaon   = 0.4080 ); // 0.408 Reco12
+  declareProperty( "Kaon_P1_Cal",        m_P1_Cal_kaon   = 0.86);    // 0.86 Reco12
+  declareProperty( "Kaon_AverageOmega",  m_AverageOmega  = 0.4302 ); // 0.4302 Reco12
   declareProperty( "Kaon_ProbMin",       m_ProbMin_kaon  = 0.5 );
   declareProperty( "Kaon_ProbMax",       m_ProbMax_kaon  = 0.5 );
 
   //declareProperty( "Kaon_ipPU_cut", m_ipPU_cut_kaon      = 7.5 );
-  declareProperty( "Kaon_NN1_cut",  m_NN1_cut_kaon       = 0.65 );
+  declareProperty( "Kaon_NN1_cut",  m_NN1_cut_kaon       = 0.7 );  // 0.65 Reco12
 
   m_nn_1      = 0.;
   m_nn_2      = 0.;
@@ -100,9 +100,9 @@ StatusCode TaggerNEWKaonSameTool::initialize()
 
 //=====================================================================
 Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
-                                       const RecVertex* RecVert,
-                                       std::vector<const Vertex*>& allVtx,
-                                       Particle::ConstVector& vtags )
+                                   const RecVertex* RecVert,
+                                   const int nPV,
+                                   Particle::ConstVector& vtags )
 {
 
   Tagger tkaon;
@@ -112,7 +112,7 @@ Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
     verbose()<<"--NEW NN Kaon SameSide Tagger--"<<endreq;
 
   const double B_Pt     = AXB0->pt();
-  const int    no_vtx   = allVtx.size();
+  const int    no_vtx   = nPV;
   Gaudi::LorentzVector ptotB = AXB0->momentum();
 
   //fill auxdaugh for distphi

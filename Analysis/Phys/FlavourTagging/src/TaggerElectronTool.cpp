@@ -96,16 +96,16 @@ StatusCode TaggerElectronTool::initialize()
   return sc;
 }
 //================================================================================
-Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
-                                std::vector<const Vertex*>& allVtx,
+Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert, 
+                                const int nPV,
                                 Particle::ConstVector& vtags )
 {
-  return m_tag(AXB0, RecVert, allVtx, vtags);
+  return m_tag(AXB0, RecVert, nPV, vtags);
 }
 
 //=====================================================================
-Tagger TaggerElectronTool::tagReco12( const Particle* AXB0, const RecVertex* RecVert,
-                                      std::vector<const Vertex*>& allVtx,
+Tagger TaggerElectronTool::tagReco12( const Particle* AXB0, const RecVertex* RecVert, 
+                                      const int nPV,
                                       Particle::ConstVector& vtags )
 {
   
@@ -211,7 +211,7 @@ Tagger TaggerElectronTool::tagReco12( const Particle* AXB0, const RecVertex* Rec
     NNinputs.at(3) = iele->pt()/GeV;
     //    NNinputs.at(4) = fabs(IP/IPerr);
     NNinputs.at(4) = IP/IPerr;
-    NNinputs.at(8) = allVtx.size();
+    NNinputs.at(8) = nPV;
 
     pn = m_nnet->MLPe( NNinputs );
     if ( msgLevel(MSG::VERBOSE) )
@@ -235,8 +235,8 @@ Tagger TaggerElectronTool::tagReco12( const Particle* AXB0, const RecVertex* Rec
 }
 
 //====================================================================
-Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert,
-                                      std::vector<const Vertex*>& allVtx,
+Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert, 
+                                      const int nPV,
                                       Particle::ConstVector& vtags )
 {
   Tagger tele;
@@ -360,7 +360,7 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
   double pn = 1-m_AverageOmega;
 
   if(m_CombinationTechnique == "NNet") {
-    if ( msgLevel(MSG::DEBUG) ) debug()<< allVtx.size()<< endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug()<< nPV<< endreq;
     std::vector<std::string> inputVars;
     std::vector<double> inputVals;
     inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));

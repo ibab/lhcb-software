@@ -152,16 +152,16 @@ StatusCode TaggerNEWKaonOppositeTool::initialize()
 //=====================================================================
 Tagger TaggerNEWKaonOppositeTool::tag( const Particle* AXB0,
                                        const RecVertex* RecVert,
-                                       std::vector<const Vertex*>& allVtx,
+                                       const int nPV,
                                        Particle::ConstVector& vtags )
 {
-  return m_tag(AXB0, RecVert, allVtx, vtags);
+  return m_tag(AXB0, RecVert, nPV, vtags);
 }
 //=====================================================================
 Tagger TaggerNEWKaonOppositeTool::tagReco12( const Particle* AXB0,
-                                       const RecVertex* RecVert,
-                                       std::vector<const Vertex*>& allVtx,
-                                       Particle::ConstVector& vtags )
+                                             const RecVertex* RecVert,
+                                             const int nPV,
+                                             Particle::ConstVector& vtags )
 {
 
   Tagger tkaon;
@@ -173,7 +173,7 @@ Tagger TaggerNEWKaonOppositeTool::tagReco12( const Particle* AXB0,
   const double B_Pt     = AXB0->pt();
   const double B_eta    = AXB0->momentum().Eta();
   const double B_phi    = AXB0->momentum().Phi();
-  const int    no_vtx   = allVtx.size();
+  const int    no_vtx   = nPV;
 
   //fill auxdaugh for distphi
   double distphi;
@@ -403,9 +403,9 @@ Tagger TaggerNEWKaonOppositeTool::tagReco12( const Particle* AXB0,
 }
 //=====================================================================
 Tagger TaggerNEWKaonOppositeTool::tagReco14( const Particle* AXB0,
-                                       const RecVertex* RecVert,
-                                       std::vector<const Vertex*>& allVtx,
-                                       Particle::ConstVector& vtags )
+                                             const RecVertex* RecVert,
+                                             const int nPV,
+                                             Particle::ConstVector& vtags )
 {
 
   Tagger tkaon;
@@ -417,7 +417,7 @@ Tagger TaggerNEWKaonOppositeTool::tagReco14( const Particle* AXB0,
   const double B_Pt     = AXB0->pt();
   const double B_eta    = AXB0->momentum().Eta();
   const double B_phi    = AXB0->momentum().Phi();
-  const int    no_vtx   = allVtx.size();
+  const int    no_vtx   = nPV;
 
   //fill auxdaugh for distphi
   double distphi;

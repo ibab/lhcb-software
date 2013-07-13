@@ -43,25 +43,51 @@ public:
   LHCb::Tagger(
                const LHCb::Particle*, 
                const LHCb::RecVertex*,
-               std::vector<const LHCb::Vertex*>&, 
+               const int,
                LHCb::Particle::ConstVector&) > > 
   m_tag;
   
   virtual LHCb::Tagger  tag( const LHCb::Particle*, 
                              const LHCb::RecVertex*,
-                             std::vector<const LHCb::Vertex*>&, 
+                             const int,
                              LHCb::Particle::ConstVector&);
   
   virtual LHCb::Tagger  tagReco12( const LHCb::Particle*, 
                                    const LHCb::RecVertex*,
-                                   std::vector<const LHCb::Vertex*>&, 
+                                   const int,
                                    LHCb::Particle::ConstVector&);
   
+
   virtual LHCb::Tagger  tagReco14( const LHCb::Particle*, 
                                    const LHCb::RecVertex*,
-                                   std::vector<const LHCb::Vertex*>&, 
+                                   const int,
                                    LHCb::Particle::ConstVector&);
-  //-------------------------------------------------------------
+  /*
+  MultiplePersonalityCall<boost::function<
+  LHCb::Tagger(
+               const LHCb::Particle*, 
+               const LHCb::RecVertex*,
+               LHCb::Vertex::ConstVector&,
+               LHCb::Particle::ConstVector&) > > 
+  m_tagOLD;
+  
+  virtual LHCb::Tagger  tag( const LHCb::Particle*, 
+                             const LHCb::RecVertex*,
+                             LHCb::Vertex::ConstVector&,
+                             LHCb::Particle::ConstVector&);
+  
+  virtual LHCb::Tagger  tagReco12( const LHCb::Particle*, 
+                                   const LHCb::RecVertex*,
+                                   LHCb::Vertex::ConstVector&,
+                                   LHCb::Particle::ConstVector&);
+  
+
+  virtual LHCb::Tagger  tagReco14( const LHCb::Particle*, 
+                                   const LHCb::RecVertex*,
+                                   LHCb::Vertex::ConstVector&,
+                                   LHCb::Particle::ConstVector&);
+  */
+ //-------------------------------------------------------------
 
 private:
   INNetTool* m_nnet;

@@ -157,16 +157,12 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   if(msgLevel(MSG::DEBUG)) debug() << " Nr Vertices: "<< verts.size()
                                    << " Nr Particles: "<<parts.size()<<endreq;
 
-  Vertex::ConstVector allVtx;
-  allVtx.reserve( verts.size() );
-  for ( RecVertex::Range::const_iterator iv = verts.begin();
-        iv != verts.end(); ++iv )
-  {
-    if ( msgLevel(MSG::DEBUG) )
-      debug()<<"PV found at z="<<(*iv)->position().z()/mm<<endreq;
-    allVtx.push_back(AXB->endVertex());
-  }
-
+  const int allVtx=verts.size();
+  if ( msgLevel(MSG::DEBUG) ){    
+    for ( RecVertex::Range::const_iterator iv = verts.begin();
+          iv != verts.end(); ++iv )
+     debug()<<"PV found at z="<<(*iv)->position().z()/mm<<endreq;
+  }  
   //////////////////////////////////////////////////////////////////////////////
   //choose RecVert PV and pileup vertices taking into account refitting ///////
   RecVertex RefitRecVert(0);

@@ -74,8 +74,8 @@ StatusCode TaggerKaonSameTool::initialize()
 
 //=====================================================================
 Tagger TaggerKaonSameTool::tag( const Particle* AXB0, 
-                                const RecVertex* RecVert,
-                                std::vector<const Vertex*>& allVtx,
+                                const RecVertex* RecVert, 
+                                const int nPV,
                                 Particle::ConstVector& vtags )
 {
   Tagger tkaonS;
@@ -196,7 +196,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
     NNinputs.at(5) = deta;
     NNinputs.at(6) = save_dphi;
     NNinputs.at(7) = save_dQ/GeV;
-    NNinputs.at(8) = allVtx.size();
+    NNinputs.at(8) = nPV;
     NNinputs.at(9) = dR;
 
     pn = m_nnet->MLPkS( NNinputs );

@@ -133,6 +133,16 @@ tunings = {
         "TaggerKaonSameTool.KaonSame_P1_Cal"   : 0.51,
         "TaggerKaonSameTool.KaonSame_Eta_Cal"  : 0.324,
 
+        "TaggerNEWKaonSameTool.Kaon_PIDk_cut"   :    0.75,
+        "TaggerNEWKaonSameTool.Kaon_PIDkp_cut"  :   -8.5,
+        "TaggerNEWKaonSameTool.Kaon_ghost_cut"  :    0.3,
+        "TaggerNEWKaonSameTool.Kaon_distPhi_cut":    0.75,
+        "TaggerNEWKaonSameTool.Kaon_NN1_cut"    :    0.7,
+        "TaggerNEWKaonSameTool.Kaon_P0_Cal"     :    0.4060,
+        "TaggerNEWKaonSameTool.Kaon_P1_Cal"     :    0.88,
+        "TaggerNEWKaonSameTool.Kaon_AverageOmega":   0.4302,
+        
+
         "TaggerPionSameTool.PionSame_Pt_cut"  : 600,
         "TaggerPionSameTool.PionSame_P_cut"   : 4000,
         "TaggerPionSameTool.PionSame_IPs_cut" : 9.,
@@ -327,6 +337,15 @@ tunings = {
         "TaggerKaonSameTool.KaonSame_P0_Cal" : 0.350,
         "TaggerKaonSameTool.KaonSame_P1_Cal" : 0.51,
         "TaggerKaonSameTool.KaonSame_Eta_Cal" : 0.324,
+
+        "TaggerNEWKaonSameTool.Kaon_PIDk_cut"   :    0.75,
+        "TaggerNEWKaonSameTool.Kaon_PIDkp_cut"  :   -8.5,
+        "TaggerNEWKaonSameTool.Kaon_ghost_cut"  :    100000.,
+        "TaggerNEWKaonSameTool.Kaon_distPhi_cut":    0.75,
+        "TaggerNEWKaonSameTool.Kaon_NN1_cut"    :    0.65,
+        "TaggerNEWKaonSameTool.Kaon_P0_Cal"     :    0.4080,
+        "TaggerNEWKaonSameTool.Kaon_P1_Cal"     :    0.86,
+        "TaggerNEWKaonSameTool.Kaon_AverageOmega":   0.4302,
 
         "TaggerPionSameTool.PionSame_Pt_cut" : 600,
         "TaggerPionSameTool.PionSame_P_cut" : 4000,
@@ -1391,7 +1410,7 @@ tunings = {
 
 def TuneTool(tool, version):
 
-    from Configurables import BTagging, BTaggingTool, TaggerMuonTool, TaggerElectronTool, TaggerKaonSameTool, TaggerNEWKaonOppositeTool, TaggerKaonOppositeTool, TaggerPionSameTool, TaggerVertexChargeTool, CombineTaggersProbability, SVertexOneSeedTool,NNetTool_MLP, TaggingUtils
+    from Configurables import BTagging, BTaggingTool, TaggerMuonTool, TaggerElectronTool, TaggerKaonSameTool, TaggerNEWKaonOppositeTool, TaggerKaonOppositeTool, TaggerPionSameTool, TaggerNEWKaonSameTool, TaggerVertexChargeTool, CombineTaggersProbability, SVertexOneSeedTool,NNetTool_MLP, TaggingUtils
         
     tool.addTool ( BTaggingTool, name='BTaggingTool')
     tool.BTaggingTool.addTool ( CombineTaggersProbability )
