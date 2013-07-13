@@ -32,7 +32,7 @@ public:
 
   virtual LHCb::Tagger tag( const LHCb::Particle*,
                             const LHCb::RecVertex*,
-                            LHCb::Vertex::ConstVector&, 
+                            const int, 
                             LHCb::Particle::ConstVector&) = 0;
 
 };

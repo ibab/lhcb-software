@@ -3,6 +3,9 @@
 ! Responsible : Juan Palacios
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
+! 2013-07-13 - Stefania Vecchi
+ - Change in ITagger.h interface
+   std::vector<const Vertex*>& allVtx --> int nPV   
 
 ! 2013-06-14 - Chris Jones
  - Add various missing virtual destructors, to silence gcc 4.8 warnings.
