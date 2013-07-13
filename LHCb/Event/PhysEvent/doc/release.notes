@@ -2,7 +2,10 @@
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
-! 2012-07-05 - Stefania Vecchi
+! 2013-07-13 - Stefania Vecchi
+ - Changed the info FlavourTaggingIndex-->FlavourTaggingIPPUs, FlavourTaggingTaggerID
+
+! 2013-07-05 - Stefania Vecchi
  - Changes in data member of FlavourTagging class (remove category and categoryOS)
    which are redoundant
  - Added two new Tagger types (OS_nnetKaon and SS_nnetKaon) for two new taggers
