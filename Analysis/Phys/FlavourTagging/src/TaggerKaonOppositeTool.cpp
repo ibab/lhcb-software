@@ -159,7 +159,7 @@ Tagger TaggerKaonOppositeTool::tagReco12( const Particle* AXB0,
     if (fabs(IP) > m_IP_cut_kaon) continue;
     if (IPsig < m_IPs_cut_kaon) continue;
 
-    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIndex+1,100000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIPPUs,100000.);
 
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " Kaon IPs="<< IPsig <<" IP="<<fabs(IP)<<" IPPU="<<ippu<<endmsg;
@@ -253,7 +253,7 @@ Tagger TaggerKaonOppositeTool::tagReco14( const Particle* AXB0,
     const double lcs = track->chi2PerDoF();
     if(lcs > m_lcs_kaon)                                    continue;
     
-    if(axp->info(LHCb::Particle::FlavourTaggingIndex+2,-1.) > 0 )    continue; // already tagger by muon   // new
+    if(axp->info(LHCb::Particle::FlavourTaggingTaggerID,-1.) > 0 )    continue; // already tagger by muon   // new
     if(proto->muonPID() ) if(proto->muonPID()->IsMuon()!= 0)continue; // new
   
     const double tsa = track->likelihood();
@@ -300,7 +300,7 @@ Tagger TaggerKaonOppositeTool::tagReco14( const Particle* AXB0,
     if (fabs(IP) > m_IP_cut_kaon)                           continue;
     if (IPsig < m_IPs_cut_kaon)                             continue;
  
-    const double ippu=axp->info(LHCb::Particle::FlavourTaggingIndex+1,10000.);
+    const double ippu=axp->info(LHCb::Particle::FlavourTaggingIPPUs,10000.);
     if(ippu < m_ipPU_cut_kaon)                              continue;
 
     if ( msgLevel(MSG::VERBOSE) )
@@ -311,7 +311,7 @@ Tagger TaggerKaonOppositeTool::tagReco14( const Particle* AXB0,
     if( distphi < m_distPhi_cut_kaon )                      continue;
 
     Particle* c = const_cast<Particle*>(*ipart);
-    c->addInfo(LHCb::Particle::FlavourTaggingIndex+2,321);      // store the information that the kaon tagger is found    // new
+    c->addInfo(LHCb::Particle::FlavourTaggingTaggerID,321);      // store the information that the kaon tagger is found    // new
 	
     if( Pt > ptmaxk ) { 
       ikaon = axp;

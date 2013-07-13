@@ -165,7 +165,7 @@ Tagger TaggerMuonTool::tagReco12( const Particle* AXB0, const RecVertex* RecVert
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " IPsig="<< IPsig <<endreq;
 
-    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIndex+1,100000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIPPUs,100000.);
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " ippu="<< ippu <<endreq;
     if(ippu < m_ipPU_cut_muon) continue;
@@ -276,7 +276,7 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
     const double lcs = track->chi2PerDoF();
     if(lcs>m_lcs_cut_muon)                           continue;
 
-    if(axp->info(LHCb::Particle::FlavourTaggingIndex+2,-1.) > 0 )continue; // already tagged
+    if(axp->info(LHCb::Particle::FlavourTaggingTaggerID,-1.) > 0 )continue; // already tagged
 
     if(track->ghostProbability() > m_ghostprob_cut )  continue; 
 
@@ -298,7 +298,7 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
     double IPsig = IP/IPerr;
     if(fabs(IPsig) < m_IPs_cut_muon)                 continue;
     
-    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIndex+1,10000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIPPUs,10000.);
     if(ippu < m_ipPU_cut_muon)                       continue;
     //distphi
     if( m_util->isinTree( *ipart, axdaugh, distphi)) continue;
@@ -307,7 +307,7 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
     ++ncand;
 
     Particle* c = const_cast<Particle*>(*ipart);
-    c->addInfo(LHCb::Particle::FlavourTaggingIndex+2,13); // store the information that the muon tagger is found // new
+    c->addInfo(LHCb::Particle::FlavourTaggingTaggerID,13); // store the information that the muon tagger is found // new
     
     if( Pt > ptmaxm ) { //Pt ordering
       imuon = axp;

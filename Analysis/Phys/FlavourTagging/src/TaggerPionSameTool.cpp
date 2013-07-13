@@ -149,7 +149,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     const double IPsig = std::fabs(IP/IPerr);
     if(IPsig > m_IPs_cut_pionS)  continue;
 
-    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIndex+1,100000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIPPUs,100000.);
     if(ippu < m_ipPU_cut_pS) continue;
 
 

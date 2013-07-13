@@ -291,8 +291,8 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   for ( Particle::ConstVector::const_iterator i = vtags.begin(); i != vtags.end(); ++i )
   {
     Particle* c = const_cast<Particle*>(*i);
-    if( c->hasInfo(LHCb::Particle::FlavourTaggingIndex+1) ) c->eraseInfo(LHCb::Particle::FlavourTaggingIndex+1);
-    if( c->hasInfo(LHCb::Particle::FlavourTaggingIndex+2) ) c->eraseInfo(LHCb::Particle::FlavourTaggingIndex+2);
+    if( c->hasInfo(LHCb::Particle::FlavourTaggingIPPUs) ) c->eraseInfo(LHCb::Particle::FlavourTaggingIPPUs);
+    if( c->hasInfo(LHCb::Particle::FlavourTaggingTaggerID) ) c->eraseInfo(LHCb::Particle::FlavourTaggingTaggerID);
   }
 
   clearExtraInfo();
@@ -523,12 +523,12 @@ BTaggingTool::chooseCandidatesReco12(const Particle* AXB,
     if(ippuerr) {
       if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts
       Particle* c = const_cast<Particle*>(*ip);
-      if( c->hasInfo(LHCb::Particle::FlavourTaggingIndex+1) )
+      if( c->hasInfo(LHCb::Particle::FlavourTaggingIPPUs) )
       {
-        Error("FlavourTaggingIndex+1 info already set: erasing it");
-        c->eraseInfo(LHCb::Particle::FlavourTaggingIndex+1);
+        Error("FlavourTaggingIPPUs info already set: erasing it");
+        c->eraseInfo(LHCb::Particle::FlavourTaggingIPPUs);
       }
-      c->addInfo(LHCb::Particle::FlavourTaggingIndex+1, ippu/ippuerr); // store the information on the IPPU of the tagging particle
+      c->addInfo(LHCb::Particle::FlavourTaggingIPPUs, ippu/ippuerr); // store the information on the IPPU of the tagging particle
       m_extraInfoToClear.push_back( c );
       if (msgLevel(MSG::VERBOSE))
         verbose()<<"particle p="<<(*ip)->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
@@ -647,15 +647,15 @@ BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
 
     // CRJ : This is not really allowed -- SV reintroduced for Local FT use
     Particle* c = const_cast<Particle*>(p);
-    if( c->hasInfo(LHCb::Particle::FlavourTaggingIndex+1) )
+    if( c->hasInfo(LHCb::Particle::FlavourTaggingIPPUs) )
     {
-      Error("FlavourTaggingIndex+1 info already set: erasing it");
-      c->eraseInfo(LHCb::Particle::FlavourTaggingIndex+1);
+      Error("FlavourTaggingIPPUs info already set: erasing it");
+      c->eraseInfo(LHCb::Particle::FlavourTaggingIPPUs);
     }
-    if( c->hasInfo(LHCb::Particle::FlavourTaggingIndex+2) )
+    if( c->hasInfo(LHCb::Particle::FlavourTaggingTaggerID) )
     {
-      Error("FlavourTaggingIndex+2 info already set: erasing it");
-      c->eraseInfo(LHCb::Particle::FlavourTaggingIndex+2);
+      Error("FlavourTaggingTaggerID info already set: erasing it");
+      c->eraseInfo(LHCb::Particle::FlavourTaggingTaggerID);
     }
 
     // calculate the min IP wrt all pileup vtxs
@@ -666,7 +666,7 @@ BTaggingTool::chooseCandidatesReco14(const Particle* AXB,
     {
       if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection cuts
 
-      c->addInfo(LHCb::Particle::FlavourTaggingIndex+1, ippu/ippuerr);
+      c->addInfo(LHCb::Particle::FlavourTaggingIPPUs, ippu/ippuerr);
       m_extraInfoToClear.push_back( c );
       if( msgLevel(MSG::VERBOSE) )
         verbose()<<"particle p="<<p->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
@@ -865,8 +865,8 @@ void BTaggingTool::clearExtraInfo()
   for ( std::vector<LHCb::Particle*>::iterator iC = m_extraInfoToClear.begin();
         iC != m_extraInfoToClear.end(); ++iC )
   {
-    if ( (*iC)->hasInfo(LHCb::Particle::FlavourTaggingIndex+1) ) (*iC)->eraseInfo(LHCb::Particle::FlavourTaggingIndex+1);
-    if ( (*iC)->hasInfo(LHCb::Particle::FlavourTaggingIndex+2) ) (*iC)->eraseInfo(LHCb::Particle::FlavourTaggingIndex+2);
+    if ( (*iC)->hasInfo(LHCb::Particle::FlavourTaggingIPPUs) ) (*iC)->eraseInfo(LHCb::Particle::FlavourTaggingIPPUs);
+    if ( (*iC)->hasInfo(LHCb::Particle::FlavourTaggingTaggerID) ) (*iC)->eraseInfo(LHCb::Particle::FlavourTaggingTaggerID);
   }
   m_extraInfoToClear.clear();
 }

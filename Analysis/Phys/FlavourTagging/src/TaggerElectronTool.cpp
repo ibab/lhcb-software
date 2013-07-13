@@ -164,7 +164,7 @@ Tagger TaggerElectronTool::tagReco12( const Particle* AXB0, const RecVertex* Rec
     const double IPsig = IP/IPerr;
     if(fabs(IPsig) < m_IPs_cut_ele) continue;
 
-    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIndex+1,100000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIPPUs,100000.);
     if(ippu < m_ipPU_cut_ele) continue;
     //distphi
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
@@ -281,7 +281,7 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
     if(proto->muonPID() != 0) 
       if(proto->muonPID()->IsMuon() != 0 )                 continue;
     
-    if(axp->info(LHCb::Particle::FlavourTaggingIndex+2,-1.) > 0 )    continue; // already tagger by muon or kaon
+    if(axp->info(LHCb::Particle::FlavourTaggingTaggerID,-1.) > 0 )    continue; // already tagger by muon or kaon
     
     const double PIDNNpi = proto->info( ProtoParticle::ProbNNpi, -1000.0);    
     if(PIDNNpi > m_PIDNNpi_cut_ele  )                      continue;
@@ -313,7 +313,7 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
     const double IPsig = IP/IPerr;
     if(fabs(IPsig) < m_IPs_cut_ele)                        continue;
 
-    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIndex+1,10000.);
+    const double ippu=(*ipart)->info(LHCb::Particle::FlavourTaggingIPPUs,10000.);
     if(ippu < m_ipPU_cut_ele)                              continue;
     //distphi
     if( m_util->isinTree( *ipart, axdaugh, distphi ) )     continue ;//exclude signal
@@ -333,7 +333,7 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
           verbose() << " Elec veloch=" << veloch << endreq;
 
          Particle* c = const_cast<Particle*>(*ipart);
-         c->addInfo(LHCb::Particle::FlavourTaggingIndex+2,11); // store the info that this particle pass the tagger selection
+         c->addInfo(LHCb::Particle::FlavourTaggingTaggerID,11); // store the info that this particle pass the tagger selection
          
          if( Pt > ptmaxe ) { 
            iele = (*ipart);
