@@ -22,10 +22,12 @@
 #
 # =============================================================================
 package       BenderSys
-version       v22r7
+version       v22r7p1
 
 author        Vanya BELYAEV
 
+# =========== TEMPORARY! ======================================================
+use           AnalysisPython v2r22   Phys 
 
 # =========== Bender Application itself =======================================
 use           Bender         v22r7   Phys 

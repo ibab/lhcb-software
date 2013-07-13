@@ -23,7 +23,12 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
-<A NAME=v22r6> 2013-06-20 Bender v22r7 based on the DaVinci v33r5</A>
+<A NAME=v22r7p1> 2013-07-13 Bender v22r7p1 based on the DaVinci v33r5</A>
+
+It is very similar to to v22r7, also based on the DaVinci v33r5.
+There are few minor additions for <c>BenderTools.Fill</c> module.
+
+<A NAME=v22r7> 2013-06-20 Bender v22r7 based on the DaVinci v33r5</A>
 
 It is very similar to to v22r6*, but based on the fresh DaVinci v33r5
 picking up a lot of new goodies and zillions of bug-fixes 
