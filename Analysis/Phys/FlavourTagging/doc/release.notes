@@ -4,6 +4,9 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2013-07-14 - Stefania Vecchi
+ - Fix nightlies updating Tunings.py
+
 ! 2013-07-13 - Stefania Vecchi
  - changed ITagger interface and the tagger methods: 
    std::vector<const Vertex*>& allVtx --> int nPV
