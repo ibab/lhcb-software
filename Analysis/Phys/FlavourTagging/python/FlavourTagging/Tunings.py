@@ -1428,6 +1428,7 @@ def TuneTool(tool, version):
     tool.BTaggingTool.TaggerVertexChargeTool.addTool(NNetTool_MLP)
     tool.BTaggingTool.addTool ( SVertexOneSeedTool )
     tool.BTaggingTool.addTool ( TaggerNEWKaonOppositeTool )
+    tool.BTaggingTool.addTool ( TaggerNEWKaonSameTool )
     tool.BTaggingTool.addTool ( TaggingUtils )
 
     for cut in tunings[version]:
