@@ -83,7 +83,7 @@ void XmlCounterLogFile::addCrossSection( const std::string & name ,
                                          const unsigned int number , 
                                          const double value ) 
 {
-  m_file << "  <crosssection id = " << processId << ">" << std::endl 
+  m_file << "  <crosssection id = \"" << processId << "\">" << std::endl 
          << "    <description> \""<< name << "\" </description>" << std::endl
          << "    <generated> " << number << " </generated>" << std::endl 
          << "    <value> " << format( "%.5g" , value ) << " </value>" << std::endl 
