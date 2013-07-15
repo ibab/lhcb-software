@@ -4,7 +4,11 @@
 ! Purpose     : Implementation of the powheg-box in Gauss
 !-----------------------------------------------------------------------------
 
-!========================= LbPowheg v1r0 2013-05-24 ==========================
+! 2013-07-15 - Gloria Corti
+ - Fix CTEQPDF environment variable to remove explicit version number of lhapdf
+ - Use powheg=box interface package as it has been committed and adapt 
+   POWHEGEXE environment variable accordingly
+ - Remove directive for windows as no longer supported
 
 ! 2013-07-09 - Marcin Kucharczyk
  - Remove cteq6m from Lib and get it from LCG lhapdf
@@ -16,3 +20,4 @@
 ! 2013-05-24 - Marcin Kucharczyk
  - First import of the package
 
+!=============================================================================
