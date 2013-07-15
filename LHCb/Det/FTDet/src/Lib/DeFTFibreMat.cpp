@@ -237,8 +237,9 @@ StatusCode DeFTFibreMat::initialize(){
   m_nSipmPerModule = int(  2.*m_fibreMatHalfSizeX/m_sipmPitchX );
   m_SipmGapInModule = 0.5*(-m_nSipmPerModule + 2.*m_fibreMatHalfSizeX/m_sipmPitchX);
   double fullModuleGapX =  m_SipmGapInModule + m_moduleGapV;
+  debug()<<fullModuleGapX<<endmsg;
   
-  return StatusCode::SUCCESS;
+    return StatusCode::SUCCESS;
 }
 
 //=============================================================================
