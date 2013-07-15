@@ -31,12 +31,12 @@ DECLARE_ALGORITHM_FACTORY( FTClusterCreator )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  FTClusterCreator::FTClusterCreator( const std::string& name,
-                                      ISvcLocator* pSvcLocator)
-    : GaudiHistoAlg ( name , pSvcLocator )
-    , m_nCluster(0)
-    , m_sumCharge(0.)
-    , m_evtNbCluster64(0)
+FTClusterCreator::FTClusterCreator( const std::string& name,
+                                    ISvcLocator* pSvcLocator)
+: GaudiHistoAlg ( name , pSvcLocator )
+  , m_nCluster(0)
+  , m_sumCharge(0.)
+  , m_evtNbCluster64(0)
 {
   declareProperty("InputLocation" ,     m_inputLocation     = LHCb::MCFTDigitLocation::Default, "Path to input MCDigits");
   declareProperty("OutputLocation" ,    m_outputLocation    = LHCb::FTClusterLocation::Default, "Path to output Clusters");
@@ -160,7 +160,7 @@ StatusCode FTClusterCreator::execute() {
     
 
       /** Construction of the cluster from its first (seedDigit) to last (lastDigit) channel
-      */
+       */
       int NbOfHitInvolvedInCluster = 0;
       MCFTDigits::const_iterator lastDigitIter = seedDigitIter;
       do{
@@ -212,10 +212,11 @@ StatusCode FTClusterCreator::execute() {
       }
       if( 0 < totalCharge) 
         meanPosition =(*seedDigitIter)->channelID() + meanPosition/totalCharge;
-      if(msgLevel(MSG::DEBUG)){std::floor(meanPosition),
-          debug() << format( "==> Final meanPosition==%10.2f; floor=%10.2f; fractionnalPart=%2.5f\n", 
-                             meanPosition,std::floor(meanPosition),
-                             (meanPosition-std::floor(meanPosition)));
+      if(msgLevel(MSG::DEBUG)){
+          debug() << format("==> Final meanPosition==%10.2f; floor=%10.2f; fractionnalPart=%2.5f",meanPosition,
+                            std::floor(meanPosition),
+                            ( meanPosition-std::floor(meanPosition)) )
+                  << endmsg;
       }
       
 
@@ -262,11 +263,11 @@ StatusCode FTClusterCreator::execute() {
         double fractionChanPosition = (meanPosition-std::floor(meanPosition));
 
         // Define Cluster(channelID, fraction, width, charge)  and save it
-       if ( msgLevel( MSG::DEBUG) ) {
+        if ( msgLevel( MSG::DEBUG) ) {
           debug() <<"+ Define new cluster with meanChanPosition="<< meanChanPosition
                   <<" fractionChanPosition="<<fractionChanPosition <<" width="<<(lastDigitIter-seedDigitIter)
                   <<" totalCharge=" << totalCharge << endmsg;
-       }
+        }
         FTCluster *newCluster = new FTCluster(meanChanPosition,fractionChanPosition,(lastDigitIter-seedDigitIter),totalCharge);
 
         // draw cluster channelID
@@ -296,17 +297,17 @@ StatusCode FTClusterCreator::execute() {
         if ( msgLevel( MSG::DEBUG) ) {
           if (newCluster->size() ==64 ){
             debug() << "|||| Event with newCluster->size() ==64 : Event ="
-                                                << endmsg;
+                    << endmsg;
             std::stringstream plotName;
             plotName << "Cluster64_" << m_evtNbCluster64;//(*seedDigitIter)->channelID();
             m_evtNbCluster64++;
             int sipmChannel = 0;
             
-             for(std::vector<int>::const_iterator i = clusterADCDistribution.begin();i != clusterADCDistribution.end(); ++i){
-               plot(sipmChannel,plotName.str().c_str(),"Cluster with size = 64;Cluster channels;ADC Count" , 0. , 70., 70, *i);
-               sipmChannel++;
+            for(std::vector<int>::const_iterator i = clusterADCDistribution.begin();i != clusterADCDistribution.end(); ++i){
+              plot(sipmChannel,plotName.str().c_str(),"Cluster with size = 64;Cluster channels;ADC Count" , 0. , 70., 70, *i);
+              sipmChannel++;
                
-             }
+            }
              
           }
           
@@ -332,12 +333,12 @@ StatusCode FTClusterCreator::execute() {
         // Define second member of mcContributionMap as the fraction of energy corresponding to each involved MCParticle
         for(std::map<const LHCb::MCParticle*,double>::iterator i = mcContributionMap.begin(); i != mcContributionMap.end(); ++i){
           mcToClusterLink.link(newCluster, (i->first), (i->second)/totalEnergyFromMC ) ;
-//           if ( msgLevel( MSG::DEBUG) ) {
-//             debug() << "Linked ClusterChannel=" << newCluster->channelID()
-//                     << " to MCIndex="<<i->first->index()
-//                     << " with EnergyFraction=" << (i->second)/totalEnergyFromMC
-//                     << endmsg;
-//           }
+          //           if ( msgLevel( MSG::DEBUG) ) {
+          //             debug() << "Linked ClusterChannel=" << newCluster->channelID()
+          //                     << " to MCIndex="<<i->first->index()
+          //                     << " with EnergyFraction=" << (i->second)/totalEnergyFromMC
+          //                     << endmsg;
+          //           }
         }
 
 
