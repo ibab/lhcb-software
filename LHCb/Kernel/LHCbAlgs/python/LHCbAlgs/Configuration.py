@@ -67,6 +67,31 @@ class LHCbApp(LHCbConfigurableUser):
         'tr'      # Added "Tr" -> "tr" to remove extra warnings when running Boole, Brunel, etc.
         ]
 
+    __dtMapping = { 
+        "velo"       : "Velo", 
+        "puveto"     : "PuVeto", 
+        "muon"       : "Muon", 
+        "muonnom1"   : "MuonNoM1", 
+        "it"         : "IT", 
+        "ot"         : "OT", 
+        "tt"         : "TT", 
+        "ut"         : "UT", 
+        "ft"         : "FT", 
+        "vp"         : "VP", 
+        "vl"         : "VL", 
+        "rich"       : "Rich", 
+        "richpmt"    : "RichPmt", 
+        "rich1"      : "Rich1", 
+        "rich2"      : "Rich2", 
+        "rich1pmt"   : "Rich1Pmt", 
+        "rich2pmt"   : "Rich2Pmt", 
+        "rich1horiz" : "Rich1Horiz", 
+        "magnet"     : "Magnet", 
+        "compact"    : "Compact", 
+        "sl"         : "SL", 
+        "ot"         : "OT" 
+        } 
+
     def createDetList(self):
         detList = []
         if hasattr(self, "Detectors"):
