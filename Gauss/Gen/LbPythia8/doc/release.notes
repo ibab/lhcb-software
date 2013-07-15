@@ -4,6 +4,10 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2013-07-15 - Patrick Robbe 
+ - Set b and c quarks with status 2 so that they are saved in 
+   MCParticle format
+
 !========================= LbPythia8 v7r3 2013-06-28 =========================
 ! 2013-06-28 - Aurelien Martens
  - add Charmonium and Bottomonium in std. minbias generation 
