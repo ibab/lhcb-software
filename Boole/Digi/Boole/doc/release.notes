@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Configuration Changes
+   . Adapted configuration to accommodate no SPD/PRS
+
  - QMTest Changes
    . boole-upgrade-ft and ref changed to use new FT geo. Needs to be changed once
      the geo is in the official DB.

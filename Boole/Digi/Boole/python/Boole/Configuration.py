@@ -234,13 +234,14 @@ class Boole(LHCbConfigurableUser):
             if [det for det in ["Rich1Pmt","Rich2Pmt"] if det in self.getProp("DetectorMoni")]:
                 detListMoni += ["Rich"]
             
-        if [det for det in ['Prs','Spd','Ecal','Hcal'] if det in self.getProp("DetectorDigi")]:
-            detListDigi += ['Calo']
-            if [det for det in ['Prs','Spd','Ecal','Hcal'] if det in self.getProp("DetectorLink")]:
-                detListLink += ['Calo']
-            if [det for det in ['Prs','Spd','Ecal','Hcal'] if det in self.getProp("DetectorMoni")]:
-                detListMoni += ['Calo']
-
+        if True:
+            if [det for det in ['Prs','Spd','Ecal','Hcal'] if det in self.getProp("DetectorDigi")]:
+                detListDigi += ['Calo']
+                if [det for det in ['Prs','Spd','Ecal','Hcal'] if det in self.getProp("DetectorLink")]:
+                    detListLink += ['Calo']
+                if [det for det in ['Prs','Spd','Ecal','Hcal'] if det in self.getProp("DetectorMoni")]:
+                    detListMoni += ['Calo']
+                
         if False:
             if 'Prs' in self.getProp("DetectorDigi") :
                 detListDigi += ['Prs']
@@ -388,7 +389,7 @@ class Boole(LHCbConfigurableUser):
         if "OT"      in digiDets : self.configureDigiOT(      GaudiSequencer("DigiOTSeq"), "" )
         if "FT"      in digiDets : self.configureDigiFT(      GaudiSequencer("DigiFTSeq"), "" )
         if "Rich"    in digiDets : self.configureDigiRich(    GaudiSequencer("DigiRichSeq"), "")
-        if "Calo"    in digiDets : self.configureDigiCalo(    GaudiSequencer("DigiCaloSeq"), "" )
+        if "Calo"    in digiDets : self.configureDigiCalo(    GaudiSequencer("DigiCaloSeq"), "" )        
         if "Muon"    in digiDets : self.configureDigiMuon(    GaudiSequencer("DigiMuonSeq"), "" )
         if "L0"      in digiDets : self.configureDigiL0(      GaudiSequencer("DigiL0Seq"), "" )
 
@@ -569,25 +570,32 @@ class Boole(LHCbConfigurableUser):
             raise RuntimeError("TAE not implemented for RICHMaPMT")
             
     def configureDigiCalo(self, seq, tae ):
-        # PSZ - this will need updating if we ever remove the Spd and Prs
         # Calorimeter digitisation
         from Configurables import CaloSignalAlg, CaloDigitAlg, CaloFillPrsSpdRawBuffer, CaloFillRawBuffer
         if tae != "":
             seq.Context = "TAE"
-        seq.Members += [CaloSignalAlg("SpdSignal%s"%tae),
-                        CaloSignalAlg("PrsSignal%s"%tae),
-                        CaloSignalAlg("EcalSignal%s"%tae),
+
+        if "Spd" in self.getProp("DetectorDigi"):
+            seq.Members += [CaloSignalAlg("SpdSignal%s"%tae),
+                            CaloDigitAlg("SpdDigit%s"%tae)]
+        if "Prs" in self.getProp("DetectorDigi"):
+            seq.Members += [CaloSignalAlg("PrsSignal%s"%tae),
+                            CaloDigitAlg("PrsDigit%s"%tae)]
+
+        seq.Members += [CaloSignalAlg("EcalSignal%s"%tae),
                         CaloSignalAlg("HcalSignal%s"%tae),
-                        CaloDigitAlg("SpdDigit%s"%tae),
-                        CaloDigitAlg("PrsDigit%s"%tae),
                         CaloDigitAlg("EcalDigit%s"%tae),
                         CaloDigitAlg("HcalDigit%s"%tae) ]
-        rawPrsSpd = CaloFillPrsSpdRawBuffer( "CaloFillPrsSpdRawBuffer%s"%tae, DataCodingType = 3 )
+
+        if [det for det in ["Spd","Prs"] if det in self.getProp("DetectorDigi")]:
+            rawPrsSpd = CaloFillPrsSpdRawBuffer( "CaloFillPrsSpdRawBuffer%s"%tae, DataCodingType = 3 )
+            seq.Members += [ rawPrsSpd ]
+
         rawEcal = CaloFillRawBuffer( "EcalFillRawBuffer%s"%tae, DataCodingType = 2 )
         rawHcal = CaloFillRawBuffer( "HcalFillRawBuffer%s"%tae, DataCodingType = 2 )
-        seq.Members += [ rawPrsSpd, rawEcal, rawHcal ]
+        seq.Members += [ rawEcal, rawHcal ]
 
-
+        # DigiCaloSeq          INFO Member list: CaloSignalAlg/SpdSignal, CaloSignalAlg/PrsSignal, CaloSignalAlg/EcalSignal, CaloSignalAlg/HcalSignal, CaloDigitAlg/SpdDigit, CaloDigitAlg/PrsDigit, CaloDigitAlg/EcalDigit, CaloDigitAlg/HcalDigit, CaloFillPrsSpdRawBuffer, CaloFillRawBuffer/EcalFillRawBuffer, CaloFillRawBuffer/HcalFillRawBuffer
 
     def configureDigiMuon(self, seq, tae ):
         from Configurables import MuonDigitization, MuonDigitToRawBuffer
@@ -768,7 +776,7 @@ class Boole(LHCbConfigurableUser):
         if "L0" in linkDets and doWriteTruth:
             from Configurables import L0Conf
             L0Conf().LinkSequencer = GaudiSequencer("LinkL0Seq")
-
+ 
 
     def enableTAE(self):
         """
@@ -827,7 +835,8 @@ class Boole(LHCbConfigurableUser):
                 self.configureDigiRichPmt( GaudiSequencer("Digi%sRichSeq"%taeSlot), taeSlot )
                 #self.configureDigiRichPmt( GaudiSequencer("Digi%sRichSeq"%taeSlot), taeSlot )
             if [det for det in taeDets if det in ['Spd','Prs','Ecal','Hcal']]:
-                self.configureDigiCalo( GaudiSequencer("Digi%sCaloSeq"%taeSlot), taeSlot )
+                caloTAEDets = [det for det in taeDets if det in ['Spd','Prs','Ecal','Hcal']]
+                self.configureDigiCalo( GaudiSequencer("Digi%sCaloSeq"%taeSlot), taeSlot, caloTAEDets )
             if "Muon" in taeDets:
                 self.configureDigiMuon( GaudiSequencer("Digi%sMuonSeq"%taeSlot), taeSlot )
             if "L0" in taeDets:
@@ -1094,6 +1103,7 @@ class Boole(LHCbConfigurableUser):
             # decode the L0 raw banks (needed by the monitors
             L0Conf().DecodeL0 = True
 
+    # Problem comes in here !!
     def _setupPhase( self, name, knownDets ):
         seq = self.getProp("%sSequence"%name)
         if len( seq ) == 0:
