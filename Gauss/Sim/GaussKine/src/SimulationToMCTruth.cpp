@@ -161,6 +161,8 @@ StatusCode SimulationToMCTruth::execute() {
       primVtx->setPosition( Gaudi::XYZPoint( g4Vertex -> GetPosition() ) );
       primVtx->setTime( g4Vertex->GetT0() );
       primVtx->setType( LHCb::MCVertex::ppCollision );
+
+      // if this is a b- or c-quark, give it a different vertex type
       
       m_mcHeader -> addToPrimaryVertices( primVtx ) ;
     }  
@@ -192,9 +194,9 @@ StatusCode SimulationToMCTruth::execute() {
         oscillbar.end() != iosc ; ++iosc ) {   
     LHCb::MCParticle * mcp = table[ *iosc ].particle() ;
     for( SmartRefVector<LHCb::MCVertex>::const_iterator endV = mcp->endVertices().begin();
-	 mcp->endVertices().end() != endV ; ++endV ) {
+         mcp->endVertices().end() != endV ; ++endV ) {
       if( (*endV)->type() == LHCb::MCVertex::DecayVertex ) {
-      // Note - const const needed here to allow "addToEndVertices" below
+        // Note - const const needed here to allow "addToEndVertices" below
         const LHCb::MCVertex* mcvc = *endV ;
         LHCb::MCVertex* mcv = const_cast< LHCb::MCVertex * >( mcvc ) ;
         mcv -> setType( LHCb::MCVertex::OscillatedAndDecay );
@@ -282,31 +284,31 @@ void SimulationToMCTruth::convert( const HepMC::GenParticle * part ,
       // if the particle is a primary particle, then the tree has already been
       // attached to the primary vertex in GenerationToSimulation
       if ( ! isPrimary ) {
-	// update vertex position because the root particle may be a long lived
-	// charged particle traveling in the magnetic field
-	linkedVertex -> setPosition ( Gaudi::XYZPoint( part -> production_vertex() ->point3d()) ) ;
-	// and link this mother to the prodvertex of the root particle of the linkedMother
-	// decay tree, except if this MCParticle has already been treated.
-	bool treatTree = ! std::binary_search( m_treatedParticles.begin() , 
-					       m_treatedParticles.end() ,
-					       linkedMother -> key() ) ;
-	if ( treatTree ) m_treatedParticles.insert( linkedMother -> key() ) ;
-	while ( treatTree && ( 0 != linkedMother -> mother() ) ) {
-	  linkedMother = const_cast< LHCb::MCParticle *>( linkedMother -> mother() ) ;
-	  treatTree = ! std::binary_search( m_treatedParticles.begin() , 
-					    m_treatedParticles.end() ,
-	                                    linkedMother -> key() ) ;
-	  if ( treatTree ) {
-	    m_treatedParticles.insert( linkedMother -> key() ) ;
-	    linkedVertex = 
-	      const_cast< LHCb::MCVertex *>(linkedMother -> endVertices().front().data()) ;
-	    linkedVertex -> setPosition ( Gaudi::XYZPoint( part -> production_vertex() ->point3d()) ) ;
-	  }
-	}
-	if ( treatTree ) { 
-	  linkedMother -> setOriginVertex( prodvertex ) ;
+        // update vertex position because the root particle may be a long lived
+        // charged particle traveling in the magnetic field
+        linkedVertex -> setPosition ( Gaudi::XYZPoint( part -> production_vertex() ->point3d()) ) ;
+        // and link this mother to the prodvertex of the root particle of the linkedMother
+        // decay tree, except if this MCParticle has already been treated.
+        bool treatTree = ! std::binary_search( m_treatedParticles.begin() , 
+                                               m_treatedParticles.end() ,
+                                               linkedMother -> key() ) ;
+        if ( treatTree ) m_treatedParticles.insert( linkedMother -> key() ) ;
+        while ( treatTree && ( 0 != linkedMother -> mother() ) ) {
+          linkedMother = const_cast< LHCb::MCParticle *>( linkedMother -> mother() ) ;
+          treatTree = ! std::binary_search( m_treatedParticles.begin() , 
+                                            m_treatedParticles.end() ,
+                                            linkedMother -> key() ) ;
+          if ( treatTree ) {
+            m_treatedParticles.insert( linkedMother -> key() ) ;
+            linkedVertex = 
+              const_cast< LHCb::MCVertex *>(linkedMother -> endVertices().front().data()) ;
+            linkedVertex -> setPosition ( Gaudi::XYZPoint( part -> production_vertex() ->point3d()) ) ;
+          }
+        }
+        if ( treatTree ) { 
+          linkedMother -> setOriginVertex( prodvertex ) ;
           prodvertex -> addToProducts( linkedMother ) ;
-	}
+        }
       }  
     } else {
       mcpart -> setOriginVertex ( prodvertex ) ;

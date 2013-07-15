@@ -54,9 +54,10 @@ private:
   bool keep( const HepMC::GenParticle * particle ) const ;
   
   /// Convert a GenParticle either into a MCParticle or G4PrimaryParticle
-  void convert( HepMC::GenParticle *& particle , G4PrimaryVertex * pvertexg4 ,
-		LHCb::MCVertex * originVertex , G4PrimaryParticle * motherg4 ,
-		LHCb::MCParticle * mothermcp ) ;
+  void convert( HepMC::GenParticle *& particle , 
+                G4PrimaryVertex * pvertexg4 ,
+                LHCb::MCVertex * originVertex , G4PrimaryParticle * motherg4 ,
+                LHCb::MCParticle * mothermcp ) ;
 		
   /// decides if the particle should be transfered to Geant4 or only MCParticle
   unsigned char transferToGeant4( const HepMC::GenParticle * p ) const ;
