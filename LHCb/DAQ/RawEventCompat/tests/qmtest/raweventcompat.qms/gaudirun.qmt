@@ -12,17 +12,20 @@
     <text>from PRConfig import TestFileDB; TestFileDB.test_file_db['2012_raw_default'].run();from Configurables import LHCbApp; LHCbApp().EvtMax=10;</text>
   </set></argument>
   <argument name="validator"><text>
-countErrorLines({"FATAL":0, "ERROR":2, "WARNING" :0})
 
-findReferenceBlock("""StoreExplorerAlg     INFO | +--> /Calo [No Address]  DataObject
+findReferenceBlock("""StoreExplorerAlg     INFO | +--> /Other [No Address]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [No Address]  LHCb::RawEvent
 StoreExplorerAlg     INFO | +--> /Muon [No Address]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [No Address]  LHCb::RawEvent
 StoreExplorerAlg     INFO | +--> /Trigger [No Address]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [No Address]  LHCb::RawEvent
-StoreExplorerAlg     INFO   +--> /Rich [No Address]  DataObject
+StoreExplorerAlg     INFO | +--> /Rich [No Address]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [No Address]  LHCb::RawEvent
+StoreExplorerAlg     INFO   +--> /Calo [No Address]  DataObject
 StoreExplorerAlg     INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
 """, stdout, result, causes, signature_offset =0)
+
+countErrorLines({"FATAL":0, "ERROR":2, "WARNING" :0})
 
 </text></argument>
 </extension>
