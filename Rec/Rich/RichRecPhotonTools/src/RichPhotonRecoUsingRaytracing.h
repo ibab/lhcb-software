@@ -35,13 +35,15 @@
 // RichKernel
 #include "RichKernel/RichTrackSegment.h"
 #include "RichKernel/RichGeomPhoton.h"
-#include "RichKernel/FastMaths.h"
 
 // RichDet
 #include "RichDet/Rich1DTabFunc.h"
 
 // GSL
 #include "gsl/gsl_math.h"
+
+// VDT
+#include "vdt/atan2.h"
 
 namespace Rich
 {

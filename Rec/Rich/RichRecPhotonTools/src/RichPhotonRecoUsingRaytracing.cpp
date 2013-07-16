@@ -127,10 +127,8 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
   Gaudi::XYZPoint locpos;
   Gaudi::XYZVector sv;
-  //naive phi
-  //USE Rich::Maths::atan2_f LATER IF POSSIBLE
 
-  double tphi = Rich::Maths::atan2_f(dy,dx);
+  double tphi = vdt::fast_atan2f(dy,dx);
   double phi0 = tphi;
 
   //estimate the length of the photon path ERL
@@ -296,7 +294,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
 
 
-    phi1 = /*Gaudi::Units::pi + */Rich::Maths::atan2_f( yi-my, xi-mx);
+    phi1 = /* Gaudi::Units::pi + */ vdt::fast_atan2f( yi-my, xi-mx);
 
     dphi = phi1-phil;
     dtheta = theta1-thetal;

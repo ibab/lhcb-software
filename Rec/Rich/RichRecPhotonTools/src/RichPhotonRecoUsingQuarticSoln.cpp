@@ -477,7 +477,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
   }
   if ( m_checkPhotCrossSides[radiator] && !sameSide(radiator,sphReflPoint,emissionPoint) )
   {
-    //return Warning( Rich::text(radiator)+" : Photon cross between detector sides" );
+    //return Warning( Rich::text(radiator)+" : Photon crosses between detector sides" );
     return StatusCode::FAILURE;
   }
   // --------------------------------------------------------------------------------------
