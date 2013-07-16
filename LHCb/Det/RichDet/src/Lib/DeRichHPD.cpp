@@ -28,8 +28,10 @@
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichSystem.h"
 
-// RichKernel
-#include "RichKernel/FastMaths.h"
+// VDT
+#include "vdt/atan2.h"
+#include "vdt/sin.h"
+#include "vdt/cos.h"
 
 //=============================================================================
 
@@ -688,8 +690,11 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
   if ( !photoCathodeSide ) rCathode += extraRadiusForRefraction(rCathode);
   
   // calculate angle phi
+  // Full slow libm
   //double anodePhi = std::atan2( detectPoint.Y(), detectPoint.X() );
-  double anodePhi = Rich::Maths::atan2_f( detectPoint.Y(), detectPoint.X() );
+  // fast VDT implementation
+  double anodePhi = vdt::fast_atan2( detectPoint.Y(), detectPoint.X() );
+
   if ( detectPoint.Y() < 0 ) anodePhi += Gaudi::Units::twopi;
 
   const double result_phi = magnification_RtoPhi(field)->value( rAnode );
@@ -700,8 +705,12 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
   const double& winRadius = ( photoCathodeSide ? m_winInR : m_winOutR );
   if ( winRadius < rCathode ) return StatusCode::FAILURE;
 
-  const double xWindow = rCathode * std::cos(new_phi);
-  const double yWindow = rCathode * std::sin(new_phi);
+  // Full libm
+  //const double xWindow = rCathode * std::cos(new_phi);
+  //const double yWindow = rCathode * std::sin(new_phi);
+  // fast VDT
+  const double xWindow = rCathode * vdt::fast_cos(new_phi);
+  const double yWindow = rCathode * vdt::fast_sin(new_phi);
 
   const double& winRadiusSq = ( photoCathodeSide ? m_winInRsq : m_winOutRsq );
   detectPoint = ( m_fromWindowToGlobal *

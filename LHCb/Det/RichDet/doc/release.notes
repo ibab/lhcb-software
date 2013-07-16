@@ -4,12 +4,19 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2013-07-16 - Chris Jones
+ - Replace use of private Rich::Maths::atan2 function with alternative from 
+   the VDT library, which are more accurate.
+ - Use VDT for a couple cos and sin calculations in 
+   DeRichHPD::magnifyToGlobalMagnetON.
+
 !========================= RichDet v16r17 2013-04-29 =========================
 ! 2013-04-29 - Marco Cattaneo
  - Replace endreq by endmsg
 
 ! 2013-04-09 - Chris Jones
- - Some minor CPU optimisations
+ - Various small CPU optimisations. Replace std::atan2 with faster, but 
+   slightly less accurate Rich::Maths::atan2_f in DeRichHPD.
 
 ! 2013-03-25 - Antonis Papanestis
  - Fix a bug introduced in DeRichPMTPanel
