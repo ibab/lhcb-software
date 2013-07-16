@@ -3,9 +3,15 @@
 ! package manager : Marco Clemencic
 ! ========================================================================
 
+! 2013-07-16 - Illya Shapoval
+ - AriadneAdmin_InitialImport.py is made compliant with new Ariadne API, plus
+   other minor changes.
+ - Ariadne RecoType and SimType initial images (at doc/Ariadne/) are updated.
+
 !========================= CondDBUI v3r23 2013-06-03 =========================
 ! 2013-05-13 - Liang Sun
- - __init__.py: Before any (de)compression operation, check the existence of the 'data' key in the DB payload
+ - __init__.py: Before any (de)compression operation, check the existence of the
+   'data' key in the DB payload
 
 !========================= CondDBUI v3r22 2013-04-29 =========================
 ! 2013-04-25 - Illya Shapoval

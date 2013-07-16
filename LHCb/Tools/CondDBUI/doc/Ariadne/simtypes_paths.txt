@@ -1,31 +1,42 @@
-#
+# The information provided here was collected at multiple sources.
+
 {'type': 'application', 'name': 'Gauss', 'version': 'v41r1'}--{'type': 'sim_type', 'name': 'Sim05'}
-{'type': 'sim_type', 'name': 'Sim05'}--{'type': 'tag', 'name': 'MC11-20111102', 'partition':'DDDB', 'release_date':'20111102'}
-{'type': 'sim_type', 'name': 'Sim05'}--{'type': 'tag', 'name': 'sim-20111111-vc-mu100', 'partition':'SIMCOND', 'release_date':'20111111'}
-{'type': 'sim_type', 'name': 'Sim05'}--{'type': 'tag', 'name': 'sim-20111111-vc-md100', 'partition':'SIMCOND', 'release_date':'20111111'}
+{'type': 'sim_type', 'name': 'Sim05'}--{'type': 'tag', 'name': 'MC11-20111102', 'partition':'DDDB', 'release_date':'2011-11-02'}
+{'type': 'sim_type', 'name': 'Sim05'}--{'type': 'tag', 'name': 'sim-20111111-vc-mu100', 'partition':'SIMCOND', 'release_date':'2011-11-11'}
+{'type': 'sim_type', 'name': 'Sim05'}--{'type': 'tag', 'name': 'sim-20111111-vc-md100', 'partition':'SIMCOND', 'release_date':'2011-11-11'}
 
 {'type': 'application', 'name': 'Gauss', 'version': 'v41r2'}--{'type': 'sim_type', 'name': 'Sim05a'}
 {'type': 'application', 'name': 'Gauss', 'version': 'v41r3'}--{'type': 'sim_type', 'name': 'Sim05a'}
-{'type': 'sim_type', 'name': 'Sim05a'}--{'type': 'tag', 'name': 'MC11-20111102', 'partition':'DDDB', 'release_date':'20111102'}
-{'type': 'sim_type', 'name': 'Sim05a'}--{'type': 'tag', 'name': 'sim-20111111-vc-mu100', 'partition':'SIMCOND', 'release_date':'20111111'}
-{'type': 'sim_type', 'name': 'Sim05a'}--{'type': 'tag', 'name': 'sim-20111111-vc-md100', 'partition':'SIMCOND', 'release_date':'20111111'}
+{'type': 'sim_type', 'name': 'Sim05a'}--{'type': 'tag', 'name': 'MC11-20111102', 'partition':'DDDB', 'release_date':'2011-11-02'}
+{'type': 'sim_type', 'name': 'Sim05a'}--{'type': 'tag', 'name': 'sim-20111111-vc-mu100', 'partition':'SIMCOND', 'release_date':'2011-11-11'}
+{'type': 'sim_type', 'name': 'Sim05a'}--{'type': 'tag', 'name': 'sim-20111111-vc-md100', 'partition':'SIMCOND', 'release_date':'2011-11-11'}
 
 {'type': 'application', 'name': 'Gauss', 'version': 'v41r4'}--{'type': 'sim_type', 'name': 'Sim05b'}
-{'type': 'sim_type', 'name': 'Sim05b'}--{'type': 'tag', 'name': 'MC11-20111102', 'partition':'DDDB', 'release_date':'20111102'}
-{'type': 'sim_type', 'name': 'Sim05b'}--{'type': 'tag', 'name': 'sim-20111111-vc-mu100', 'partition':'SIMCOND', 'release_date':'20111111'}
-{'type': 'sim_type', 'name': 'Sim05b'}--{'type': 'tag', 'name': 'sim-20111111-vc-md100', 'partition':'SIMCOND', 'release_date':'20111111'}
+{'type': 'sim_type', 'name': 'Sim05b'}--{'type': 'tag', 'name': 'MC11-20111102', 'partition':'DDDB', 'release_date':'2011-11-02'}
+{'type': 'sim_type', 'name': 'Sim05b'}--{'type': 'tag', 'name': 'sim-20111111-vc-mu100', 'partition':'SIMCOND', 'release_date':'2011-11-11'}
+{'type': 'sim_type', 'name': 'Sim05b'}--{'type': 'tag', 'name': 'sim-20111111-vc-md100', 'partition':'SIMCOND', 'release_date':'2011-11-11'}
 
 {'type': 'application', 'name': 'Gauss', 'version': 'v41r4'}--{'type': 'sim_type', 'name': 'Sim05c'}
-{'type': 'sim_type', 'name': 'Sim05c'}--{'type': 'tag', 'name': 'MC2011-20120727', 'partition':'DDDB', 'release_date':'20111102'}
-{'type': 'sim_type', 'name': 'Sim05c'}--{'type': 'tag', 'name': 'MC2011-20120727-vc-mu100', 'partition':'SIMCOND', 'release_date':'20120727'}
-{'type': 'sim_type', 'name': 'Sim05c'}--{'type': 'tag', 'name': 'MC2011-20120727-vc-md100', 'partition':'SIMCOND', 'release_date':'20120727'}
+{'type': 'sim_type', 'name': 'Sim05c'}--{'type': 'tag', 'name': 'MC2011-20120727', 'partition':'DDDB', 'release_date':'2012-07-27'}
+{'type': 'sim_type', 'name': 'Sim05c'}--{'type': 'tag', 'name': 'MC2011-20120727-vc-mu100', 'partition':'SIMCOND', 'release_date':'2012-07-27'}
+{'type': 'sim_type', 'name': 'Sim05c'}--{'type': 'tag', 'name': 'MC2011-20120727-vc-md100', 'partition':'SIMCOND', 'release_date':'2012-07-27'}
 
 {'type': 'application', 'name': 'Gauss', 'version': 'v41r4'}--{'type': 'sim_type', 'name': 'Sim05d'}
-{'type': 'sim_type', 'name': 'Sim05d'}--{'type': 'tag', 'name': 'MC2011-20120727', 'partition':'DDDB', 'release_date':'20111102'}
-{'type': 'sim_type', 'name': 'Sim05d'}--{'type': 'tag', 'name': 'MC2011-20120727-vc-mu100', 'partition':'SIMCOND', 'release_date':'20120727'}
-{'type': 'sim_type', 'name': 'Sim05d'}--{'type': 'tag', 'name': 'MC2011-20120727-vc-md100', 'partition':'SIMCOND', 'release_date':'20120727'}
+{'type': 'sim_type', 'name': 'Sim05d'}--{'type': 'tag', 'name': 'MC2011-20120727', 'partition':'DDDB', 'release_date':'2012-07-27'}
+{'type': 'sim_type', 'name': 'Sim05d'}--{'type': 'tag', 'name': 'MC2011-20120727-vc-mu100', 'partition':'SIMCOND', 'release_date':'2012-07-27'}
+{'type': 'sim_type', 'name': 'Sim05d'}--{'type': 'tag', 'name': 'MC2011-20120727-vc-md100', 'partition':'SIMCOND', 'release_date':'2012-07-27'}
 
 {'type': 'application', 'name': 'Gauss', 'version': 'v41r4'}--{'type': 'sim_type', 'name': 'Sim08'}
-{'type': 'sim_type', 'name': 'Sim08'}--{'type': 'tag', 'name': 'MC2011-20120727', 'partition':'DDDB', 'release_date':'20111102'}
-{'type': 'sim_type', 'name': 'Sim08'}--{'type': 'tag', 'name': 'MC2011-20120727-vc-mu100', 'partition':'SIMCOND', 'release_date':'20120727'}
-{'type': 'sim_type', 'name': 'Sim08'}--{'type': 'tag', 'name': 'MC2011-20120727-vc-md100', 'partition':'SIMCOND', 'release_date':'20120727'}
+{'type': 'sim_type', 'name': 'Sim08'}--{'type': 'tag', 'name': 'MC2011-20120727', 'partition':'DDDB', 'release_date':'2012-07-27'}
+{'type': 'sim_type', 'name': 'Sim08'}--{'type': 'tag', 'name': 'MC2011-20120727-vc-mu100', 'partition':'SIMCOND', 'release_date':'2012-07-27'}
+{'type': 'sim_type', 'name': 'Sim08'}--{'type': 'tag', 'name': 'MC2011-20120727-vc-md100', 'partition':'SIMCOND', 'release_date':'2012-07-27'}
+
+{'type': 'application', 'name': 'Gauss', 'version': 'v45r3'}--{'type': 'sim_type', 'name': 'Sim08a'}
+{'type': 'application', 'name': 'Gauss', 'version': 'v46r2'}--{'type': 'sim_type', 'name': 'Sim08a'}
+{'type': 'application', 'name': 'Gauss', 'version': 'v46r2p1'}--{'type': 'sim_type', 'name': 'Sim08a'}
+{'type': 'sim_type', 'name': 'Sim08a'}--{'type': 'tag', 'name': 'Sim08-20130503', 'partition':'DDDB', 'release_date':'2013-05-03'}
+{'type': 'sim_type', 'name': 'Sim08a'}--{'type': 'tag', 'name': 'Sim08-20130503-1', 'partition':'DDDB', 'release_date':'2013-05-03'}
+{'type': 'sim_type', 'name': 'Sim08a'}--{'type': 'tag', 'name': 'Sim08-20130503-vc-mu100', 'partition':'SIMCOND', 'release_date':'2013-05-03'}
+{'type': 'sim_type', 'name': 'Sim08a'}--{'type': 'tag', 'name': 'Sim08-20130503-vc-md100', 'partition':'SIMCOND', 'release_date':'2013-05-03'}
+{'type': 'sim_type', 'name': 'Sim08a'}--{'type': 'tag', 'name': 'Sim08-20130503-1-vc-mu100', 'partition':'SIMCOND', 'release_date':'2013-05-03'}
+{'type': 'sim_type', 'name': 'Sim08a'}--{'type': 'tag', 'name': 'Sim08-20130503-1-vc-md100', 'partition':'SIMCOND', 'release_date':'2013-05-03'}

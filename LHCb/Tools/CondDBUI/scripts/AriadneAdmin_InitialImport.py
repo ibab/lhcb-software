@@ -81,7 +81,7 @@ def main():
     parser.add_option("-a", "--application", type = "string",
                       help = "Application family to inject (e.g., Brunel), including "
                       "its all available versions, computing platforms, CondDB tag "
-                      "nodes and relations to them."
+                      "nodes and relationships to them."
                       )
     parser.add_option("-i", "--input-file", type = "string",
                       help = "A file to import containing regular strings per line each describing a graph path."
@@ -134,21 +134,21 @@ def main():
     # Process the application requested and all the CondDB tag nodes
     if application:
         partitions = ['DDDB', 'LHCBCOND', 'SIMCOND', 'DQFLAGS']
-        appfam_node = adb.get_or_create_AriadneNode({"type": "application_family", "name": application})
+        appfam_node = adb.get_or_create_anode({"type": "application_family", "name": application})
 
         log.info("Getting all known versions and platforms of %s application.." %application)
         version_nodes = []
         platforms_nodes = []
         versions = _getApplicationVersions(application)
         for v in versions:
-            version_node = adb.get_or_create_AriadneNode({"type": "application", "name": application, "version": v})
+            version_node = adb.get_or_create_anode({"type": "application", "name": application, "version": v})
             version_nodes.append(version_node)
             platforms = _getApplicationPlatforms(application, v)
             for p in platforms:
-                p_node = adb.get_or_create_AriadneNode({"type": "platform", "name": p})
+                p_node = adb.get_or_create_anode({"type": "platform", "name": p})
                 if p_node not in platforms_nodes:
                     platforms_nodes.append(p_node)
-            adb.interconnectNodeGroups([version_node], platforms_nodes, "BUILT_FOR")
+            adb.interconnect_anode_groups([version_node], platforms_nodes, "BUILT_FOR")
 
         log.info("Creating 'detector_type' nodes..")
         detector_types_nodes = []
@@ -157,7 +157,7 @@ def main():
             if 'BK' in detector_types: detector_types.remove('BK')
             if 'HLT' in detector_types: detector_types.remove('HLT')
             for detector_type in detector_types:
-                dt_node = adb.get_or_create_AriadneNode({"type": "detector_type", "name": detector_type})
+                dt_node = adb.get_or_create_anode({"type": "detector_type", "name": detector_type})
                 if dt_node not in detector_types_nodes: detector_types_nodes.append(dt_node)
         log.debug("Following detector_types nodes are created: %s"%detector_types_nodes)
 
@@ -173,28 +173,29 @@ def main():
                 log.debug("Partition: %s, DetectorType: %s, %s global tags:\n%s" %(partition, detector_type, len(tags), tags))
                 for tag in tags:
                     date = tag.split('-')[1]
-                    conddb_node = adb.get_or_create_AriadneNode({"type": "tag", "partition": partition, "name": tag, "release_date":date})
+                    date = date[:4] + '-' + date[4:6] + '-' + date[6:]
+                    conddb_node = adb.get_or_create_anode({"type": "tag", "partition": partition, "name": tag, "release_date":date})
                     if conddb_node not in conddb_nodes[partition]: conddb_nodes[partition].append(conddb_node)
         log.debug("%s 'CondDB tag' nodes have been created"%len(detector_types_nodes))
 
         # Interconnect the nodes just created
-        zero_node = adb.db.get_node(0)
-        adb.db.get_or_create_relationships((zero_node, "COMPATIBLE", appfam_node))
+        #zero_node = adb.db.get_node(0)
+        #adb.db.get_or_create_relationships((zero_node, "COMPATIBLE", appfam_node))
 
-        adb.interconnectNodeGroups([appfam_node], version_nodes, "COMPATIBLE", _nodesCompatible_rn)
-        adb.interconnectNodeGroups(version_nodes, detector_types_nodes, "COMPATIBLE", _nodesCompatible_rn)
+        adb.interconnect_anode_groups([appfam_node], version_nodes, "COMPATIBLE", _nodesCompatible_rn)
+        adb.interconnect_anode_groups(version_nodes, detector_types_nodes, "COMPATIBLE", _nodesCompatible_rn)
 
-        adb.interconnectNodeGroups(detector_types_nodes, conddb_nodes['DDDB'], "COMPATIBLE", _nodesCompatible_rn)
-        adb.interconnectNodeGroups(detector_types_nodes, conddb_nodes['LHCBCOND'], "COMPATIBLE", _nodesCompatible_rn)
-        adb.interconnectNodeGroups(detector_types_nodes, conddb_nodes['SIMCOND'], "COMPATIBLE", _nodesCompatible_rn)
-        adb.interconnectNodeGroups(detector_types_nodes, conddb_nodes['DQFLAGS'], "COMPATIBLE", _nodesCompatible_rn)
+        adb.interconnect_anode_groups(detector_types_nodes, conddb_nodes['DDDB'], "COMPATIBLE", _nodesCompatible_rn)
+        adb.interconnect_anode_groups(detector_types_nodes, conddb_nodes['LHCBCOND'], "COMPATIBLE", _nodesCompatible_rn)
+        adb.interconnect_anode_groups(detector_types_nodes, conddb_nodes['SIMCOND'], "COMPATIBLE", _nodesCompatible_rn)
+        adb.interconnect_anode_groups(detector_types_nodes, conddb_nodes['DQFLAGS'], "COMPATIBLE", _nodesCompatible_rn)
 
-        adb.interconnectNodeGroups(version_nodes, conddb_nodes['DDDB'], "COMPATIBLE", _nodesCompatible_rn)
-        adb.interconnectNodeGroups(version_nodes, conddb_nodes['LHCBCOND'], "COMPATIBLE", _nodesCompatible_rn)
-        adb.interconnectNodeGroups(version_nodes, conddb_nodes['SIMCOND'], "COMPATIBLE", _nodesCompatible_rn)
+        adb.interconnect_anode_groups(version_nodes, conddb_nodes['DDDB'], "COMPATIBLE", _nodesCompatible_rn)
+        adb.interconnect_anode_groups(version_nodes, conddb_nodes['LHCBCOND'], "COMPATIBLE", _nodesCompatible_rn)
+        adb.interconnect_anode_groups(version_nodes, conddb_nodes['SIMCOND'], "COMPATIBLE", _nodesCompatible_rn)
 
-        adb.interconnectNodeGroups(conddb_nodes['DDDB'], conddb_nodes['LHCBCOND'], "COMPATIBLE", _nodesCompatible_rn)
-        adb.interconnectNodeGroups(conddb_nodes['DDDB'], conddb_nodes['SIMCOND'], "COMPATIBLE", _nodesCompatible_rn)
+        adb.interconnect_anode_groups(conddb_nodes['DDDB'], conddb_nodes['LHCBCOND'], "COMPATIBLE", _nodesCompatible_rn)
+        adb.interconnect_anode_groups(conddb_nodes['DDDB'], conddb_nodes['SIMCOND'], "COMPATIBLE", _nodesCompatible_rn)
 
     # Process the input file
     if options.input_file:
@@ -204,7 +205,7 @@ def main():
                 line = line.strip()
                 if line and not line.startswith('#'):
                     node_spec_list = [ast.literal_eval(node_str.strip()) for node_str in line.split('--')]
-                    adb.get_or_create_AriadnePath(node_spec_list, "COMPATIBLE")
+                    adb.get_or_create_apath(node_spec_list, "COMPATIBLE")
         log.info("Done.")
 
 if __name__ == '__main__':

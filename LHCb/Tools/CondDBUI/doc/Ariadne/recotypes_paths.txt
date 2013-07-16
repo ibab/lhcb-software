@@ -1,141 +1,154 @@
+# The information provided here was collected at multiple sources.
+
 # 2013 data
-{'type': 'application', 'name': 'Brunel', 'version': 'v43r2p3'}--{'type': 'reco_type', 'name': 'Reco13i'}
-{'type': 'reco_type', 'name': 'Reco13i'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'20120831'}
-{'type': 'reco_type', 'name': 'Reco13i'}--{'type': 'tag', 'name': 'cond-20130114', 'partition':'LHCBCOND', 'release_date':'20130114'}
+{'type': 'application', 'name': 'Brunel', 'version': 'v43r2p7'}--{'type': 'reco_type', 'name': 'Reco14a'}
+{'type': 'reco_type', 'name': 'Reco14a'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'2012-08-31'}
+{'type': 'reco_type', 'name': 'Reco14a'}--{'type': 'tag', 'name': 'cond-20130404', 'partition':'LHCBCOND', 'release_date':'2013-04-04'}
+
+{'type': 'application', 'name': 'Brunel', 'version': 'v43r2p6'}--{'type': 'reco_type', 'name': 'Reco14'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'2012-08-31'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20130404', 'partition':'LHCBCOND', 'release_date':'2013-04-04'}
 
 # 2012 data
 {'type': 'application', 'name': 'Brunel', 'version': 'v43r2p2'}--{'type': 'reco_type', 'name': 'Reco14'}
 {'type': 'application', 'name': 'Brunel', 'version': 'v43r2p3'}--{'type': 'reco_type', 'name': 'Reco14'}
-{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'20120831'}
-{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20120831', 'partition':'LHCBCOND', 'release_date':'20120831'}
-{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20120927', 'partition':'LHCBCOND', 'release_date':'20120927'}
-{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20121008', 'partition':'LHCBCOND', 'release_date':'20121008'}
-{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20121016', 'partition':'LHCBCOND', 'release_date':'20121016'}
-{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20121025', 'partition':'LHCBCOND', 'release_date':'20121025'}
-{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20121108', 'partition':'LHCBCOND', 'release_date':'20121108'}
-{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20121116', 'partition':'LHCBCOND', 'release_date':'20121116'}
-{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20121208', 'partition':'LHCBCOND', 'release_date':'20121208'}
-{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20121211', 'partition':'LHCBCOND', 'release_date':'20121211'}
-{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20130114', 'partition':'LHCBCOND', 'release_date':'20130114'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'2012-08-31'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20120831', 'partition':'LHCBCOND', 'release_date':'2012-08-31'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20120927', 'partition':'LHCBCOND', 'release_date':'2012-09-27'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20121008', 'partition':'LHCBCOND', 'release_date':'2012-10-08'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20121016', 'partition':'LHCBCOND', 'release_date':'2012-10-16'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20121025', 'partition':'LHCBCOND', 'release_date':'2012-10-25'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20121108', 'partition':'LHCBCOND', 'release_date':'2012-11-08'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20121116', 'partition':'LHCBCOND', 'release_date':'2012-11-16'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20121208', 'partition':'LHCBCOND', 'release_date':'2012-12-08'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20121211', 'partition':'LHCBCOND', 'release_date':'2012-12-11'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20130114', 'partition':'LHCBCOND', 'release_date':'2013-01-14'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v43r2p2'}--{'type': 'reco_type', 'name': 'Reco13f'}
-{'type': 'reco_type', 'name': 'Reco13f'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'20120831'}
-{'type': 'reco_type', 'name': 'Reco13f'}--{'type': 'tag', 'name': 'cond-20120917', 'partition':'LHCBCOND', 'release_date':'20120917'}
+{'type': 'reco_type', 'name': 'Reco13f'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'2012-08-31'}
+{'type': 'reco_type', 'name': 'Reco13f'}--{'type': 'tag', 'name': 'cond-20120917', 'partition':'LHCBCOND', 'release_date':'2012-09-17'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v43r2p2'}--{'type': 'reco_type', 'name': 'Reco13g'}
-{'type': 'reco_type', 'name': 'Reco13g'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'20120831'}
-{'type': 'reco_type', 'name': 'Reco13g'}--{'type': 'tag', 'name': 'cond-20121025', 'partition':'LHCBCOND', 'release_date':'20121025'}
+{'type': 'reco_type', 'name': 'Reco13g'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'2012-08-31'}
+{'type': 'reco_type', 'name': 'Reco13g'}--{'type': 'tag', 'name': 'cond-20121025', 'partition':'LHCBCOND', 'release_date':'2012-10-25'}
 
 # 2011 data
 {'type': 'application', 'name': 'Brunel', 'version': 'v43r2p3'}--{'type': 'reco_type', 'name': 'Reco14'}
-{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'20120831'}
-{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20130114', 'partition':'LHCBCOND', 'release_date':'20130114'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'dddb-20130111', 'partition':'DDDB', 'release_date':'2013-01-11'}
+{'type': 'reco_type', 'name': 'Reco14'}--{'type': 'tag', 'name': 'cond-20130114', 'partition':'LHCBCOND', 'release_date':'2013-01-14'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v40r1'}--{'type': 'reco_type', 'name': 'Reco11a'}
-{'type': 'reco_type', 'name': 'Reco11a'}--{'type': 'tag', 'name': 'head-20110823', 'partition':'DDDB', 'release_date':'20110823'}
-{'type': 'reco_type', 'name': 'Reco11a'}--{'type': 'tag', 'name': 'head-20110901', 'partition':'LHCBCOND', 'release_date':'20110901'}
+{'type': 'reco_type', 'name': 'Reco11a'}--{'type': 'tag', 'name': 'head-20110823', 'partition':'DDDB', 'release_date':'2011-08-23'}
+{'type': 'reco_type', 'name': 'Reco11a'}--{'type': 'tag', 'name': 'head-20110901', 'partition':'LHCBCOND', 'release_date':'2011-09-01'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v39r4'}--{'type': 'reco_type', 'name': 'Reco10'}
-{'type': 'reco_type', 'name': 'Reco10'}--{'type': 'tag', 'name': 'head-20110302', 'partition':'DDDB', 'release_date':'20110302'}
-{'type': 'reco_type', 'name': 'Reco10'}--{'type': 'tag', 'name': 'head-20110524', 'partition':'LHCBCOND', 'release_date':'20110524'}
+{'type': 'reco_type', 'name': 'Reco10'}--{'type': 'tag', 'name': 'head-20110302', 'partition':'DDDB', 'release_date':'2011-03-02'}
+{'type': 'reco_type', 'name': 'Reco10'}--{'type': 'tag', 'name': 'head-20110524', 'partition':'LHCBCOND', 'release_date':'2011-05-24'}
 
 # 2010 data
 {'type': 'application', 'name': 'Brunel', 'version': 'v37r8p4'}--{'type': 'reco_type', 'name': 'Reco08'}
-{'type': 'reco_type', 'name': 'Reco08'}--{'type': 'tag', 'name': 'head-20101026', 'partition':'DDDB', 'release_date':'20101026'}
-{'type': 'reco_type', 'name': 'Reco08'}--{'type': 'tag', 'name': 'head-20101112', 'partition':'LHCBCOND', 'release_date':'20101112'}
+{'type': 'reco_type', 'name': 'Reco08'}--{'type': 'tag', 'name': 'head-20101026', 'partition':'DDDB', 'release_date':'2010-10-26'}
+{'type': 'reco_type', 'name': 'Reco08'}--{'type': 'tag', 'name': 'head-20101112', 'partition':'LHCBCOND', 'release_date':'2010-11-12'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v37r8p4'}--{'type': 'reco_type', 'name': 'Reco08-14-nb-For-Minimum-Bias'}
-{'type': 'reco_type', 'name': 'Reco08-14-nb-For-Minimum-Bias'}--{'type': 'tag', 'name': 'head-20101026', 'partition':'DDDB', 'release_date':'20101026'}
-{'type': 'reco_type', 'name': 'Reco08-14-nb-For-Minimum-Bias'}--{'type': 'tag', 'name': 'head-20101112', 'partition':'LHCBCOND', 'release_date':'20101112'}
+{'type': 'reco_type', 'name': 'Reco08-14-nb-For-Minimum-Bias'}--{'type': 'tag', 'name': 'head-20101026', 'partition':'DDDB', 'release_date':'2010-10-26'}
+{'type': 'reco_type', 'name': 'Reco08-14-nb-For-Minimum-Bias'}--{'type': 'tag', 'name': 'head-20101112', 'partition':'LHCBCOND', 'release_date':'2010-11-12'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v37r8'}--{'type': 'reco_type', 'name': 'Reco07'}
-{'type': 'reco_type', 'name': 'Reco07'}--{'type': 'tag', 'name': 'head-20101003', 'partition':'DDDB', 'release_date':'20101003'}
-{'type': 'reco_type', 'name': 'Reco07'}--{'type': 'tag', 'name': 'head-20101010', 'partition':'LHCBCOND', 'release_date':'20101010'}
+{'type': 'reco_type', 'name': 'Reco07'}--{'type': 'tag', 'name': 'head-20101003', 'partition':'DDDB', 'release_date':'2010-10-03'}
+{'type': 'reco_type', 'name': 'Reco07'}--{'type': 'tag', 'name': 'head-20101010', 'partition':'LHCBCOND', 'release_date':'2010-10-10'}
 
 # Previous (N-1) processing pass
 
+# 2013 data
+# OBSOLETE: superseded by Reco14a
+{'type': 'application', 'name': 'Brunel', 'version': 'v43r2p3'}--{'type': 'reco_type', 'name': 'Reco13i'}
+{'type': 'reco_type', 'name': 'Reco13i'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'2012-08-31'}
+{'type': 'reco_type', 'name': 'Reco13i'}--{'type': 'tag', 'name': 'cond-20130114', 'partition':'LHCBCOND', 'release_date':'2013-01-14'}
+
 # 2012 data
 {'type': 'application', 'name': 'Brunel', 'version': 'v42r2p2'}--{'type': 'reco_type', 'name': 'Reco13'}
-{'type': 'reco_type', 'name': 'Reco13'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'DDDB', 'release_date':'20120413'}
-{'type': 'reco_type', 'name': 'Reco13'}--{'type': 'tag', 'name': 'head-20120420', 'partition':'LHCBCOND', 'release_date':'20120420'}
+{'type': 'reco_type', 'name': 'Reco13'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'DDDB', 'release_date':'2012-04-13'}
+{'type': 'reco_type', 'name': 'Reco13'}--{'type': 'tag', 'name': 'head-20120420', 'partition':'LHCBCOND', 'release_date':'2012-04-20'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v42r3'}--{'type': 'reco_type', 'name': 'Reco13a'}
 {'type': 'application', 'name': 'Brunel', 'version': 'v42r3p2'}--{'type': 'reco_type', 'name': 'Reco13a'}
-{'type': 'reco_type', 'name': 'Reco13a'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'DDDB', 'release_date':'20120413'}
-{'type': 'reco_type', 'name': 'Reco13a'}--{'type': 'tag', 'name': 'head-20120420', 'partition':'LHCBCOND', 'release_date':'20120420'}
+{'type': 'reco_type', 'name': 'Reco13a'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'DDDB', 'release_date':'2012-04-13'}
+{'type': 'reco_type', 'name': 'Reco13a'}--{'type': 'tag', 'name': 'head-20120420', 'partition':'LHCBCOND', 'release_date':'2012-04-20'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v43r0'}--{'type': 'reco_type', 'name': 'Reco13c'}
-{'type': 'reco_type', 'name': 'Reco13c'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'DDDB', 'release_date':'20120413'}
-{'type': 'reco_type', 'name': 'Reco13c'}--{'type': 'tag', 'name': 'cond-20120710', 'partition':'LHCBCOND', 'release_date':'20120710'}
+{'type': 'reco_type', 'name': 'Reco13c'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'DDDB', 'release_date':'2012-04-13'}
+{'type': 'reco_type', 'name': 'Reco13c'}--{'type': 'tag', 'name': 'cond-20120710', 'partition':'LHCBCOND', 'release_date':'2012-07-10'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v43r1p1'}--{'type': 'reco_type', 'name': 'Reco13d'}
-{'type': 'reco_type', 'name': 'Reco13d'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'DDDB', 'release_date':'20120413'}
-{'type': 'reco_type', 'name': 'Reco13d'}--{'type': 'tag', 'name': 'cond-20120730', 'partition':'LHCBCOND', 'release_date':'20120730'}
+{'type': 'reco_type', 'name': 'Reco13d'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'DDDB', 'release_date':'2012-04-13'}
+{'type': 'reco_type', 'name': 'Reco13d'}--{'type': 'tag', 'name': 'cond-20120730', 'partition':'LHCBCOND', 'release_date':'2012-07-30'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v43r2'}--{'type': 'reco_type', 'name': 'Reco13e'}
-{'type': 'reco_type', 'name': 'Reco13e'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'DDDB', 'release_date':'20120413'}
-{'type': 'reco_type', 'name': 'Reco13e'}--{'type': 'tag', 'name': 'cond-20120730', 'partition':'LHCBCOND', 'release_date':'20120730'}
+{'type': 'reco_type', 'name': 'Reco13e'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'DDDB', 'release_date':'2012-04-13'}
+{'type': 'reco_type', 'name': 'Reco13e'}--{'type': 'tag', 'name': 'cond-20120730', 'partition':'LHCBCOND', 'release_date':'2012-07-30'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v43r2p2'}--{'type': 'reco_type', 'name': 'Reco13e'}
-{'type': 'reco_type', 'name': 'Reco13e'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'DDDB', 'release_date':'20120413'}
-{'type': 'reco_type', 'name': 'Reco13e'}--{'type': 'tag', 'name': 'cond-20120829', 'partition':'LHCBCOND', 'release_date':'20120829'}
+{'type': 'reco_type', 'name': 'Reco13e'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'DDDB', 'release_date':'2012-04-13'}
+{'type': 'reco_type', 'name': 'Reco13e'}--{'type': 'tag', 'name': 'cond-20120829', 'partition':'LHCBCOND', 'release_date':'2012-08-29'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v43r2p2'}--{'type': 'reco_type', 'name': 'Reco13f'}
-{'type': 'reco_type', 'name': 'Reco13f'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'20120831'}
-{'type': 'reco_type', 'name': 'Reco13f'}--{'type': 'tag', 'name': 'cond-20120831', 'partition':'LHCBCOND', 'release_date':'20120831'}
-{'type': 'reco_type', 'name': 'Reco13f'}--{'type': 'tag', 'name': 'cond-20121025', 'partition':'LHCBCOND', 'release_date':'20121025'}
+{'type': 'reco_type', 'name': 'Reco13f'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'2012-08-31'}
+{'type': 'reco_type', 'name': 'Reco13f'}--{'type': 'tag', 'name': 'cond-20120831', 'partition':'LHCBCOND', 'release_date':'2012-08-31'}
+{'type': 'reco_type', 'name': 'Reco13f'}--{'type': 'tag', 'name': 'cond-20121025', 'partition':'LHCBCOND', 'release_date':'2012-10-25'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v43r2p2'}--{'type': 'reco_type', 'name': 'Reco13g'}
-{'type': 'reco_type', 'name': 'Reco13g'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'20120831'}
-{'type': 'reco_type', 'name': 'Reco13g'}--{'type': 'tag', 'name': 'cond-20121025', 'partition':'LHCBCOND', 'release_date':'20121025'}
+{'type': 'reco_type', 'name': 'Reco13g'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'2012-08-31'}
+{'type': 'reco_type', 'name': 'Reco13g'}--{'type': 'tag', 'name': 'cond-20121025', 'partition':'LHCBCOND', 'release_date':'2012-10-25'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v43r2p2'}--{'type': 'reco_type', 'name': 'Reco13h'}
-{'type': 'reco_type', 'name': 'Reco13h'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'20120831'}
-{'type': 'reco_type', 'name': 'Reco13h'}--{'type': 'tag', 'name': 'cond-20121211', 'partition':'LHCBCOND', 'release_date':'20121211'}
+{'type': 'reco_type', 'name': 'Reco13h'}--{'type': 'tag', 'name': 'dddb-20120831', 'partition':'DDDB', 'release_date':'2012-08-31'}
+{'type': 'reco_type', 'name': 'Reco13h'}--{'type': 'tag', 'name': 'cond-20121211', 'partition':'LHCBCOND', 'release_date':'2012-12-11'}
 
 # 2011 data
 {'type': 'application', 'name': 'Brunel', 'version': 'v41r1'}--{'type': 'reco_type', 'name': 'Reco12'}
-{'type': 'reco_type', 'name': 'Reco12'}--{'type': 'tag', 'name': 'head-20110914', 'partition':'DDDB', 'release_date':'20110914'}
-{'type': 'reco_type', 'name': 'Reco12'}--{'type': 'tag', 'name': 'head-20110914', 'partition':'LHCBCOND', 'release_date':'20110914'}
-{'type': 'reco_type', 'name': 'Reco12'}--{'type': 'tag', 'name': 'head-20111102', 'partition':'LHCBCOND', 'release_date':'20111102'}
-{'type': 'reco_type', 'name': 'Reco12'}--{'type': 'tag', 'name': 'head-20111111', 'partition':'LHCBCOND', 'release_date':'20111111'}
+{'type': 'reco_type', 'name': 'Reco12'}--{'type': 'tag', 'name': 'head-20110914', 'partition':'DDDB', 'release_date':'2011-09-14'}
+{'type': 'reco_type', 'name': 'Reco12'}--{'type': 'tag', 'name': 'head-20110914', 'partition':'LHCBCOND', 'release_date':'2011-09-14'}
+{'type': 'reco_type', 'name': 'Reco12'}--{'type': 'tag', 'name': 'head-20111102', 'partition':'LHCBCOND', 'release_date':'2011-11-02'}
+{'type': 'reco_type', 'name': 'Reco12'}--{'type': 'tag', 'name': 'head-20111111', 'partition':'LHCBCOND', 'release_date':'2011-11-11'}
 
 # Obsolete processing passes
 
 # 2012 data
-{'type': 'application', 'name': 'Brunel', 'version': 'v42r2p1'}--{'type': 'reco_type', 'name': 'Reco13'}
-{'type': 'reco_type', 'name': 'Reco13'}--{'type': 'tag', 'name': 'head-20120316', 'partition':'DDDB', 'release_date':'20120316'}
-{'type': 'reco_type', 'name': 'Reco13'}--{'type': 'tag', 'name': 'head-20120316', 'partition':'LHCBCOND', 'release_date':'20120316'}
+{'type': 'application', 'name': 'Brunel', 'version': 'v42r2'}--{'type': 'reco_type', 'name': 'PreReco13'}
+{'type': 'application', 'name': 'Brunel', 'version': 'v42r2p1'}--{'type': 'reco_type', 'name': 'PreReco13'}
+{'type': 'reco_type', 'name': 'Reco13'}--{'type': 'tag', 'name': 'head-20120316', 'partition':'DDDB', 'release_date':'2012-03-16'}
+{'type': 'reco_type', 'name': 'Reco13'}--{'type': 'tag', 'name': 'head-20120316', 'partition':'LHCBCOND', 'release_date':'2012-03-16'}
 
-{'type': 'application', 'name': 'Brunel', 'version': 'v42r2p1'}--{'type': 'reco_type', 'name': 'Reco13a'}
-{'type': 'reco_type', 'name': 'Reco13a'}--{'type': 'tag', 'name': 'head-20120316', 'partition':'DDDB', 'release_date':'20120316'}
-{'type': 'reco_type', 'name': 'Reco13a'}--{'type': 'tag', 'name': 'head-20120316', 'partition':'LHCBCOND', 'release_date':'20120316'}
+{'type': 'application', 'name': 'Brunel', 'version': 'v42r2p1'}--{'type': 'reco_type', 'name': 'PreReco13a'}
+{'type': 'reco_type', 'name': 'Reco13a'}--{'type': 'tag', 'name': 'head-20120316', 'partition':'DDDB', 'release_date':'2012-03-16'}
+{'type': 'reco_type', 'name': 'Reco13a'}--{'type': 'tag', 'name': 'head-20120316', 'partition':'LHCBCOND', 'release_date':'2012-03-16'}
 
-{'type': 'application', 'name': 'Brunel', 'version': 'v42r2p2'}--{'type': 'reco_type', 'name': 'Reco13b'}
-{'type': 'reco_type', 'name': 'Reco13b'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'DDDB', 'release_date':'20120413'}
-{'type': 'reco_type', 'name': 'Reco13b'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'LHCBCOND', 'release_date':'20120413'}
+{'type': 'application', 'name': 'Brunel', 'version': 'v42r2p2'}--{'type': 'reco_type', 'name': 'PreReco13b'}
+{'type': 'reco_type', 'name': 'Reco13b'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'DDDB', 'release_date':'2012-04-13'}
+{'type': 'reco_type', 'name': 'Reco13b'}--{'type': 'tag', 'name': 'head-20120413', 'partition':'LHCBCOND', 'release_date':'2012-04-13'}
 
 # 2011 data
 {'type': 'application', 'name': 'Brunel', 'version': 'v40r1'}--{'type': 'reco_type', 'name': 'Reco11a'}
-{'type': 'reco_type', 'name': 'Reco11a'}--{'type': 'tag', 'name': 'head-20110722', 'partition':'DDDB', 'release_date':'20110722'}
-{'type': 'reco_type', 'name': 'Reco11a'}--{'type': 'tag', 'name': 'head-20110823', 'partition':'DDDB', 'release_date':'20110823'}
-{'type': 'reco_type', 'name': 'Reco11a'}--{'type': 'tag', 'name': 'head-20110901', 'partition':'LHCBCOND', 'release_date':'20110901'}
+{'type': 'reco_type', 'name': 'Reco11a'}--{'type': 'tag', 'name': 'head-20110722', 'partition':'DDDB', 'release_date':'2011-07-22'}
+{'type': 'reco_type', 'name': 'Reco11a'}--{'type': 'tag', 'name': 'head-20110823', 'partition':'DDDB', 'release_date':'2011-08-23'}
+{'type': 'reco_type', 'name': 'Reco11a'}--{'type': 'tag', 'name': 'head-20110901', 'partition':'LHCBCOND', 'release_date':'2011-09-01'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v40r0'}--{'type': 'reco_type', 'name': 'Reco11'}
-{'type': 'reco_type', 'name': 'Reco11'}--{'type': 'tag', 'name': 'head-20110302', 'partition':'DDDB', 'release_date':'20110302'}
-{'type': 'reco_type', 'name': 'Reco11'}--{'type': 'tag', 'name': 'head-20110622', 'partition':'LHCBCOND', 'release_date':'20110622'}
+{'type': 'reco_type', 'name': 'Reco11'}--{'type': 'tag', 'name': 'head-20110302', 'partition':'DDDB', 'release_date':'2011-03-02'}
+{'type': 'reco_type', 'name': 'Reco11'}--{'type': 'tag', 'name': 'head-20110622', 'partition':'LHCBCOND', 'release_date':'2011-06-22'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v39r4'}--{'type': 'reco_type', 'name': 'Reco10'}
-{'type': 'reco_type', 'name': 'Reco10'}--{'type': 'tag', 'name': 'head-20110302', 'partition':'DDDB', 'release_date':'20110302'}
-{'type': 'reco_type', 'name': 'Reco10'}--{'type': 'tag', 'name': 'head-20110512', 'partition':'LHCBCOND', 'release_date':'20110512'}
-{'type': 'reco_type', 'name': 'Reco10'}--{'type': 'tag', 'name': 'head-20110524', 'partition':'LHCBCOND', 'release_date':'20110524'}
-{'type': 'reco_type', 'name': 'Reco10'}--{'type': 'tag', 'name': 'head-20110622', 'partition':'LHCBCOND', 'release_date':'20110622'}
+{'type': 'reco_type', 'name': 'Reco10'}--{'type': 'tag', 'name': 'head-20110302', 'partition':'DDDB', 'release_date':'2011-03-02'}
+{'type': 'reco_type', 'name': 'Reco10'}--{'type': 'tag', 'name': 'head-20110512', 'partition':'LHCBCOND', 'release_date':'2011-05-12'}
+{'type': 'reco_type', 'name': 'Reco10'}--{'type': 'tag', 'name': 'head-20110524', 'partition':'LHCBCOND', 'release_date':'2011-05-24'}
+{'type': 'reco_type', 'name': 'Reco10'}--{'type': 'tag', 'name': 'head-20110622', 'partition':'LHCBCOND', 'release_date':'2011-06-22'}
 
 # 2010 data
 {'type': 'application', 'name': 'Brunel', 'version': 'v37r3'}--{'type': 'reco_type', 'name': 'Reco04'}
-{'type': 'reco_type', 'name': 'Reco04'}--{'type': 'tag', 'name': 'head-20100518', 'partition':'DDDB', 'release_date':'20100518'}
-{'type': 'reco_type', 'name': 'Reco04'}--{'type': 'tag', 'name': 'head-20100531', 'partition':'LHCBCOND', 'release_date':'20100531'}
+{'type': 'reco_type', 'name': 'Reco04'}--{'type': 'tag', 'name': 'head-20100518', 'partition':'DDDB', 'release_date':'2010-05-18'}
+{'type': 'reco_type', 'name': 'Reco04'}--{'type': 'tag', 'name': 'head-20100531', 'partition':'LHCBCOND', 'release_date':'2010-05-31'}
 
 {'type': 'application', 'name': 'Brunel', 'version': 'v37r2p2'}--{'type': 'reco_type', 'name': 'Reco03'}
-{'type': 'reco_type', 'name': 'Reco03'}--{'type': 'tag', 'name': 'head-20100407', 'partition':'DDDB', 'release_date':'20100407'}
-{'type': 'reco_type', 'name': 'Reco03'}--{'type': 'tag', 'name': 'head-20100509', 'partition':'LHCBCOND', 'release_date':'head-20100509'}
+{'type': 'reco_type', 'name': 'Reco03'}--{'type': 'tag', 'name': 'head-20100407', 'partition':'DDDB', 'release_date':'2010-04-07'}
+{'type': 'reco_type', 'name': 'Reco03'}--{'type': 'tag', 'name': 'head-20100509', 'partition':'LHCBCOND', 'release_date':'2010-05-09'}
