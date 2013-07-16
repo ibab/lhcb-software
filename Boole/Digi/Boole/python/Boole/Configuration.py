@@ -836,7 +836,7 @@ class Boole(LHCbConfigurableUser):
                 #self.configureDigiRichPmt( GaudiSequencer("Digi%sRichSeq"%taeSlot), taeSlot )
             if [det for det in taeDets if det in ['Spd','Prs','Ecal','Hcal']]:
                 caloTAEDets = [det for det in taeDets if det in ['Spd','Prs','Ecal','Hcal']]
-                self.configureDigiCalo( GaudiSequencer("Digi%sCaloSeq"%taeSlot), taeSlot, caloTAEDets )
+                self.configureDigiCalo( GaudiSequencer("Digi%sCaloSeq"%taeSlot), taeSlot )
             if "Muon" in taeDets:
                 self.configureDigiMuon( GaudiSequencer("Digi%sMuonSeq"%taeSlot), taeSlot )
             if "L0" in taeDets:

@@ -5,6 +5,7 @@ Purpose: LHCb Digitization program
 
  - Configuration Changes
    . Adapted configuration to accommodate no SPD/PRS
+   . Corrected configureDigiCalo call to have correct number of arguments.
 
  - QMTest Changes
    . boole-upgrade-ft and ref changed to use new FT geo. Needs to be changed once
