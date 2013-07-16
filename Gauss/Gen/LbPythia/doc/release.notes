@@ -4,6 +4,9 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-07-16 - Patrick Robbe
+ - Move ReadLHE to src/Lib and the header file to LbPythia
+
 !========================= LbPythia v14r0 2013-02-07 =========================
  - v13r0 is on a branch
 
