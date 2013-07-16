@@ -27,7 +27,6 @@
 #include "Event/RichRecSegment.h"
 
 // RichKernel
-#include "RichKernel/FastMaths.h"
 #include "RichKernel/RichMap.h"
 
 // boost
