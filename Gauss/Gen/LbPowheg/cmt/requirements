@@ -7,7 +7,7 @@ version           v1r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          LbPowheg cmt doc src options
+branches          cmt doc src options
 
 # Environment
 # Treat symbol as an environment variable. 
@@ -33,14 +33,11 @@ apply_pattern install_more_includes more=LbPowheg
 
 # Linker and Component library building rule
 #============================================================================
-library       LbPowhegLib       Lib/*.cpp Lib/*.F
 library       LbPowheg          component/*.cpp
 
 # define component library link options
 #============================================================================
 apply_pattern component_library library=LbPowheg 
-apply_pattern linker_library    library=LbPowhegLib 
-apply_pattern library_stamps    library=LbPowhegLib 
 
 # define component and linker library options (the order is essential!)
 #============================================================================

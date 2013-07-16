@@ -40,11 +40,8 @@
 // Initialize method
 //=============================================================================
 StatusCode PowhegProductiontt::initialize() {
-    
-  
-  
-  return PowhegProduction::initialize ("tt");
-  
+  powhegInitialize ("tt");
+  return PowhegProduction::initialize() ;
 }
 
 //=============================================================================

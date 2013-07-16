@@ -21,27 +21,26 @@
 //=============================================================================
 // Standard constructor
 //=============================================================================
-  PowhegProductionZZ::PowhegProductionZZ
-  ( const std::string& type,
-    const std::string& name,
-    const IInterface* parent ) 
-    : PowhegProduction ( type , name , parent ) 
-  {
-    declareInterface< IProductionTool >( this ) ; 
-  }
-  
+PowhegProductionZZ::PowhegProductionZZ
+( const std::string& type,
+  const std::string& name,
+  const IInterface* parent ) 
+  : PowhegProduction ( type , name , parent ) 
+{
+  declareInterface< IProductionTool >( this ) ; 
+}
+
 //=============================================================================
 // Destructor 
 //=============================================================================
-  PowhegProductionZZ::~PowhegProductionZZ() {}
+PowhegProductionZZ::~PowhegProductionZZ() {}
   
 // =========================================================================
 // Initialize method
 //=============================================================================
 StatusCode PowhegProductionZZ::initialize() {
-    
-  return PowhegProduction::initialize ("ZZ");
-  
+  powhegInitialize ("ZZ");
+  return PowhegProduction::initialize() ;
 }
 
 //=============================================================================

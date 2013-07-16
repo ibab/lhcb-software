@@ -18,10 +18,7 @@
 #include "LbPythia/Pythia.h"
 #include "LbPythia/PythiaProduction.h"
 #include "LbPythia/ReadFile.h"
-// Local 
-// ============================================================================
-#include "LbPowheg/ReadLHE.h"
-//#include "LbPowheg/Powheg.h"
+#include "LbPythia/ReadLHE.h"
 // ============================================================================
 /** @class PowhegProduction PowhegProduction.h
  */
@@ -31,46 +28,49 @@ class PowhegProduction : public LbPythia::ReadLHE
   /// friend factory for instantiation
   friend class ToolFactory<PowhegProduction> ;
   // =========================================================================
-  public:
+public:
   // =========================================================================
   /** standard constructor 
    *  @param type tool type (?)
    *  @param name tool name 
    *  @param parent tool parent 
    */
-  PowhegProduction
-    ( const std::string& type,
-	const std::string& name,
-	const IInterface* parent );
+  PowhegProduction ( const std::string& type,
+                     const std::string& name,
+                     const IInterface* parent );
   
-
+  
   virtual ~PowhegProduction() ; ///< destructor
   
-  virtual StatusCode initialize( const char *process_name ) ;   ///< Initialize method
-
+  virtual StatusCode initialize( ) ;   ///< Initialize method
+  
   virtual StatusCode finalize( ) ; ///< Finalize method
-    
-  private:
-    // the default constructor is disabled 
-    PowhegProduction() ;
-    // the copy constructor is disabled 
-    PowhegProduction ( const PowhegProduction& ) ;
-    // assignement operator is disabled 
-    PowhegProduction& operator=( const PowhegProduction& ) ;
- 
-    /// logical file unit  (F77)
-    int         m_LUN     ;                         // logical file unit  (F77)
-    
-    StatusCode generateLHE(const char *process_name) ;
-    
-    StatusCode Makelink2PDFfile();
+  
+protected: 
+  /// specific initialization
+  void powhegInitialize( const std::string& processName ) ;
+  
+private:
+  // the default constructor is disabled 
+  PowhegProduction() ;
+  // the copy constructor is disabled 
+  PowhegProduction ( const PowhegProduction& ) ;
+  // assignement operator is disabled 
+  PowhegProduction& operator=( const PowhegProduction& ) ;
 
+  /// logical file unit  (F77)
+  int         m_LUN     ;                         // logical file unit  (F77)
+  
+  StatusCode generateLHE(const std::string& process_name) ;
+  
+  StatusCode Makelink2PDFfile();
+  
   //=============================================================================    
   // POWHEG - BOX simulation parameters
   //=============================================================================
-    
+  
   // Nomenclature: Use "m_" + same variable names as has to be used in powheg.input
-    
+  
   int m_numevts; 	// number of events to be generated
   int m_ih1;		// hadron 1 (1 for protons, -1 for antiprotons)
   int m_ih2;		// hadron 2 (1 for protons, -1 for antiprotons)

@@ -40,11 +40,8 @@
 // Initialize method
 //=============================================================================
 StatusCode PowhegProductionWbb::initialize() {
-    
-  
-  
-  return PowhegProduction::initialize ("Wbb");
-  
+  powhegInitialize ("Wbb");
+  return PowhegProduction::initialize() ;
 }
 
 //=============================================================================

@@ -3,6 +3,9 @@
 ! Responsible	: Bartek Rachwal, Marcin Kucharczyk
 ! Purpose     : Implementation of the powheg-box in Gauss
 !-----------------------------------------------------------------------------
+! 2013-07-16 - Patrick Robbe
+ - Remove code which is already in Gen/LbPythia
+ - Use strings instead of chars to avoid compilation warnings
 
 ! 2013-07-15 - Gloria Corti
  - Fix CTEQPDF environment variable to remove explicit version number of lhapdf

@@ -17,9 +17,7 @@
 // ============================================================================
 // Local 
 // ============================================================================
-//#include "LbPowheg/Powheg.h"
 #include "PowhegProduction.h"
-#include "LbPowheg/ReadLHE.h"
 // ============================================================================
 /** @class PowhegProduction PowhegProduction.cpp
  */
@@ -128,12 +126,23 @@
 //=============================================================================
 // Destructor 
 //============================================================================= 
-   PowhegProduction::~PowhegProduction() {} ///< destructor 
+PowhegProduction::~PowhegProduction() {} ///< destructor 
 
 // ============================================================================
 // tool initialization 
 // ============================================================================
-StatusCode PowhegProduction::initialize (const char *process_name)
+StatusCode PowhegProduction::initialize( ) {
+  //Initialize of Pythia done here
+  StatusCode sc = LbPythia::ReadLHE::initialize( ) ;
+  
+  if ( sc.isFailure() ) return sc ;
+  return sc ; 
+}
+
+// ============================================================================
+// Specific initialization goes here
+// ============================================================================
+void PowhegProduction::powhegInitialize(const std::string &process_name)
 {
   // Prepare input file for POWHEG - BOX
   
@@ -248,15 +257,9 @@ if ( process_name == "tt" )					/// ToDo: verify output !!!
   
   Makelink2PDFfile();
   generateLHE(process_name);
-
-  //Initialize of Pythia done here
-  StatusCode sc = LbPythia::ReadLHE::initialize( ) ;
-
-
-  if ( sc.isFailure() ) return sc ;
-
-  return sc ;
 }
+
+
 
 StatusCode PowhegProduction::finalize ()
 { 
@@ -286,7 +289,7 @@ StatusCode PowhegProduction::finalize ()
 //============================================================================
 // Generate  events with Powheg-BOX and wrtite to .lhe file
 //============================================================================
-StatusCode PowhegProduction::generateLHE(const char *process_name){
+StatusCode PowhegProduction::generateLHE(const std::string & process_name){
   
   pid_t pid; 
   int status;
@@ -320,7 +323,7 @@ StatusCode PowhegProduction::generateLHE(const char *process_name){
 		exit (-1);
 		}	
 		// RUN POWHEG-BOX
-		if(execl(pwhgexe, process_name, NULL) == -1){
+		if(execl(pwhgexe, process_name.c_str(), NULL) == -1){
 			 exit(status);
 		}
 		else { 

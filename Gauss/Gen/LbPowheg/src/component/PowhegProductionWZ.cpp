@@ -39,9 +39,9 @@
 // Initialize method
 //=============================================================================
 StatusCode PowhegProductionWZ::initialize() {
-    
-  return PowhegProduction::initialize ("WZ");
   
+  powhegInitialize ("WZ");
+  return PowhegProduction::initialize() ;
 }
 
 //=============================================================================
