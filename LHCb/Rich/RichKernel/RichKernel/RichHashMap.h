@@ -4,9 +4,6 @@
  *
  *  Header file for utility hash map for the RICH : Rich::HashMap
  *
- *  CVS Log :-
- *  $Id: RichHashMap.h,v 1.9 2007-02-02 17:39:44 jonrob Exp $
- *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-11
  */

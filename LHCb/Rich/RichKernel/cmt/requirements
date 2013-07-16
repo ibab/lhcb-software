@@ -14,6 +14,7 @@ use DAQEvent           v*   Event
 use LHCbKernel         v*   Kernel
 use GaudiAlg           v*
 use GaudiUtils         v*
+use vdt                v*   LCG_Interfaces
 use Boost              v*   LCG_Interfaces
 use AIDA               v*   LCG_Interfaces
 private
