@@ -576,15 +576,17 @@ class Boole(LHCbConfigurableUser):
             seq.Context = "TAE"
 
         if "Spd" in self.getProp("DetectorDigi"):
-            seq.Members += [CaloSignalAlg("SpdSignal%s"%tae),
-                            CaloDigitAlg("SpdDigit%s"%tae)]
+            seq.Members += [CaloSignalAlg("SpdSignal%s"%tae)]
         if "Prs" in self.getProp("DetectorDigi"):
-            seq.Members += [CaloSignalAlg("PrsSignal%s"%tae),
-                            CaloDigitAlg("PrsDigit%s"%tae)]
-
+            seq.Members += [CaloSignalAlg("PrsSignal%s"%tae)]
         seq.Members += [CaloSignalAlg("EcalSignal%s"%tae),
-                        CaloSignalAlg("HcalSignal%s"%tae),
-                        CaloDigitAlg("EcalDigit%s"%tae),
+                        CaloSignalAlg("HcalSignal%s"%tae)]
+
+        if "Spd" in self.getProp("DetectorDigi"):
+            seq.Members += [CaloDigitAlg("SpdDigit%s"%tae)]
+        if "Prs" in self.getProp("DetectorDigi"):
+            seq.Members += [CaloDigitAlg("PrsDigit%s"%tae)]
+        seq.Members += [CaloDigitAlg("EcalDigit%s"%tae),
                         CaloDigitAlg("HcalDigit%s"%tae) ]
 
         if [det for det in ["Spd","Prs"] if det in self.getProp("DetectorDigi")]:
