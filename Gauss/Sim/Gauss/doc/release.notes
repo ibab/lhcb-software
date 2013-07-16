@@ -8,6 +8,9 @@
  - QMTests: Added new gauss-upgrade-ft qmtest, currently points to my public area
    for the DDDB location. Needs to be updated once the geo is in the official DB.
 
+! 2013-07-16 - Patrick Robbe
+ - CaloOnly.py: add option to switch off RichCuts
+
 ! 2013-07-02 - Paul Szczypka
  - QMTests: clear upgrade test expected stderr file. (empty file now)
 
