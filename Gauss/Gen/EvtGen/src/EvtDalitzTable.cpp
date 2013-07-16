@@ -78,8 +78,10 @@ void EvtDalitzTable::readXMLDecayFile(const std::string dec_name, bool verbose){
   _readFiles.push_back(dec_name);
 
   EvtDalitzDecayInfo* dalitzDecay = 0;
+  double probMax = 0;
   EvtId ipar;
   std::string decayParent = "";
+  std::string daugStr = "";
   EvtId daughter[3];
 
   EvtDalitzPlot dp;
@@ -89,6 +91,10 @@ void EvtDalitzTable::readXMLDecayFile(const std::string dec_name, bool verbose){
   EvtSpinType::spintype spinType(EvtSpinType::SCALAR);
   double mass(0.), width(0.), FFp(0.), FFr(0.);
   std::vector<EvtFlatteParam> flatteParams;
+  //Nonres parameters
+  double alpha(0.);
+  //LASS parameters
+  double aLass(0.), rLass(0.), BLass(0.), phiBLass(0.), RLass(0.), phiRLass(0.), cutoffLass(-1.);
 
   EvtParserXml parser;
   parser.open(dec_name);
@@ -102,8 +108,8 @@ void EvtDalitzTable::readXMLDecayFile(const std::string dec_name, bool verbose){
         int nDaughters = 0;
 
         decayParent = parser.readAttribute("particle");
-        std::string daugStr = parser.readAttribute("daughters");
-        double probMax = parser.readAttributeDouble("probMax");
+        daugStr = parser.readAttribute("daughters");
+        probMax = parser.readAttributeDouble("probMax",-1);
 
         checkParticle(decayParent);
         ipar=EvtPDL::getId(decayParent);
@@ -129,7 +135,6 @@ void EvtDalitzTable::readXMLDecayFile(const std::string dec_name, bool verbose){
         dp = EvtDalitzPlot( m_d1, m_d2, m_d3, M );
 
         dalitzDecay = new EvtDalitzDecayInfo(daughter[0],daughter[1],daughter[2]);
-        dalitzDecay->setProbMax(probMax);
 
       } else if(parser.getTagTitle() == "copyDalitz") {
         int nDaughters = 0;
@@ -138,7 +143,7 @@ void EvtDalitzTable::readXMLDecayFile(const std::string dec_name, bool verbose){
         EvtId copyDaughter[3];
 
         decayParent = parser.readAttribute("particle");
-        std::string daugStr = parser.readAttribute("daughters");
+        daugStr = parser.readAttribute("daughters");
 
         std::string copyParent = parser.readAttribute("copy");
         std::string copyDaugStr = parser.readAttribute("copyDaughters");
@@ -250,6 +255,20 @@ void EvtDalitzTable::readXMLDecayFile(const std::string dec_name, bool verbose){
         FFp = parser.readAttributeDouble("BlattWeisskopfFactorParent",0.0);
         FFr = parser.readAttributeDouble("BlattWeisskopfFactorResonance",1.5);
 
+        //Shape specific attributes
+        if(shape=="NonRes_Exp") {
+          alpha = parser.readAttributeDouble("alpha",0.0);
+        }
+        if(shape=="LASS") {
+          aLass = parser.readAttributeDouble("a",0.0);
+          rLass = parser.readAttributeDouble("r",0.0);
+          BLass = parser.readAttributeDouble("B",0.0);
+          phiBLass = parser.readAttributeDouble("phiB",0.0);
+          RLass = parser.readAttributeDouble("R",0.0);
+          phiRLass = parser.readAttributeDouble("phiR",0.0);
+          cutoffLass = parser.readAttributeDouble("cutoff",-1.0);
+        }
+
         //Daughter pairs for resonance
         angAndResPairs.clear();
 
@@ -299,11 +318,17 @@ void EvtDalitzTable::readXMLDecayFile(const std::string dec_name, bool verbose){
           std::vector< std::pair<EvtCyclic3::Pair,EvtCyclic3::Pair> >::iterator it = angAndResPairs.begin();
           for( ; it != angAndResPairs.end(); it++) {
             std::pair<EvtCyclic3::Pair,EvtCyclic3::Pair> pairs = *it;
-            EvtDalitzReso resonance = getResonance(shape, dp, pairs.first, pairs.second, spinType, mass, width, FFp, FFr);
+            EvtDalitzReso resonance = getResonance(shape, dp, pairs.first, pairs.second, spinType, mass, width, FFp, FFr, alpha, aLass, rLass, BLass, phiBLass, RLass, phiRLass, cutoffLass);
             dalitzDecay->addResonance(cAmp,resonance);
           }
         }
       } else if(parser.getTagTitle() == "/dalitzDecay") {
+        if(probMax < 0) {
+          report(INFO,"EvtGen") << "probMax is not defined for " << decayParent << " -> " << daugStr << endl;
+          report(INFO,"EvtGen") << "Will now estimate probMax. This may take a while. Once probMax is calculated, update the XML file to skip this step in future." << endl;
+          probMax = calcProbMax(dp,dalitzDecay);
+        }
+        dalitzDecay->setProbMax(probMax);
         addDecay(ipar, *dalitzDecay);
         delete dalitzDecay;
         dalitzDecay = 0;
@@ -323,7 +348,7 @@ void EvtDalitzTable::readXMLDecayFile(const std::string dec_name, bool verbose){
         std::vector< std::pair<EvtCyclic3::Pair,EvtCyclic3::Pair> >::iterator it = angAndResPairs.begin();
         for( ; it != angAndResPairs.end(); it++) {
           std::pair<EvtCyclic3::Pair,EvtCyclic3::Pair> pairs = *it;
-          EvtDalitzReso resonance = getResonance(shape, dp, pairs.first, pairs.second, spinType, mass, width, FFp, FFr);
+          EvtDalitzReso resonance = getResonance(shape, dp, pairs.first, pairs.second, spinType, mass, width, FFp, FFr, alpha, aLass, rLass, BLass, phiBLass, RLass, phiRLass, cutoffLass);
 
           std::vector<EvtFlatteParam>::iterator flatteIt = flatteParams.begin();
           for( ; flatteIt != flatteParams.end(); flatteIt++) {
@@ -405,15 +430,22 @@ std::vector<EvtDalitzDecayInfo> EvtDalitzTable::getDalitzTable(const EvtId& pare
 
 
 EvtDalitzReso EvtDalitzTable::getResonance(std::string shape, EvtDalitzPlot dp, EvtCyclic3::Pair angPair, EvtCyclic3::Pair resPair,
-                                           EvtSpinType::spintype spinType, double mass, double width, double FFp, double FFr) {
+                                           EvtSpinType::spintype spinType, double mass, double width, double FFp, double FFr, double alpha,
+                                           double aLass, double rLass, double BLass, double phiBLass, double RLass, double phiRLass, double cutoffLass) {
   if( shape=="RBW" || shape=="RBW_CLEO") {
     return EvtDalitzReso( dp, angPair, resPair, spinType, mass, width, EvtDalitzReso::RBW_CLEO, FFp, FFr );
   } else if( shape=="RBW_CLEO_ZEMACH" ) {
     return EvtDalitzReso( dp, angPair, resPair, spinType, mass, width, EvtDalitzReso::RBW_CLEO_ZEMACH, FFp, FFr );
-  }else if( shape=="Flatte" ) {
+  } else if( shape=="Flatte" ) {
     return EvtDalitzReso( dp, resPair, mass );
+  } else if( shape=="LASS" ) {
+    return EvtDalitzReso( dp, resPair, mass, width, aLass, rLass, BLass, phiBLass, RLass, phiRLass, cutoffLass, true );
   } else if( shape=="NonRes" ) {
     return EvtDalitzReso( );
+  } else if( shape=="NonRes_Linear" ) {
+    return EvtDalitzReso( dp, resPair, EvtDalitzReso::NON_RES_LIN );
+  } else if( shape=="NonRes_Exp" ) {
+    return EvtDalitzReso( dp, resPair, EvtDalitzReso::NON_RES_EXP, alpha );
   } else { //NBW
     return EvtDalitzReso( dp, angPair, resPair, spinType, mass, width, EvtDalitzReso::NBW, FFp, FFr );
   }
@@ -442,3 +474,81 @@ int EvtDalitzTable::getDaughterPairs(EvtId* resDaughter, EvtId* daughter, std::v
   return n;
 }
 
+double EvtDalitzTable::calcProbMax(EvtDalitzPlot dp, EvtDalitzDecayInfo* model) {
+
+  double factor = 1.2; //factor to increase our final answer by
+  int nStep(1000);      //number of steps - total points will be 3*nStep*nStep
+
+  double maxProb(0);
+  double min(0), max(0), step(0), min2(0), max2(0), step2(0);
+
+  //first do AB, BC
+  min = dp.qAbsMin(EvtCyclic3::AB);
+  max = dp.qAbsMax(EvtCyclic3::AB);
+  step = (max-min)/nStep;
+  for(int i=0; i<nStep; ++i) {
+    double qAB = min + i*step;
+    min2 = dp.qMin(EvtCyclic3::BC,EvtCyclic3::AB,qAB);
+    max2 = dp.qMax(EvtCyclic3::BC,EvtCyclic3::AB,qAB);
+    step2 = (max2-min2)/nStep;
+    for(int j=0; j<nStep; ++j) {
+      double qBC = min2+ j*step2;
+      EvtDalitzCoord coord(EvtCyclic3::AB,qAB,EvtCyclic3::BC,qBC);
+      EvtDalitzPoint point(dp,coord);
+      double prob = calcProb(point,model);
+      if(prob > maxProb) maxProb = prob;
+    }
+  }
+
+  //next do BC, CA
+  min = dp.qAbsMin(EvtCyclic3::BC);
+  max = dp.qAbsMax(EvtCyclic3::BC);
+  step = (max-min)/nStep;
+  for(int i=0; i<nStep; ++i) {
+    double qBC = min + i*step;
+    min2 = dp.qMin(EvtCyclic3::CA,EvtCyclic3::BC,qBC);
+    max2 = dp.qMax(EvtCyclic3::CA,EvtCyclic3::BC,qBC);
+    step2 = (max2-min2)/nStep;
+    for(int j=0; j<nStep; ++j) {
+      double qCA = min2+ j*step2;
+      EvtDalitzCoord coord(EvtCyclic3::BC,qBC,EvtCyclic3::CA,qCA);
+      EvtDalitzPoint point(dp,coord);
+      double prob = calcProb(point,model);
+      if(prob > maxProb) maxProb = prob;
+    }
+  }
+
+  //finally do CA, AB
+  min = dp.qAbsMin(EvtCyclic3::CA);
+  max = dp.qAbsMax(EvtCyclic3::CA);
+  step = (max-min)/nStep;
+  for(int i=0; i<nStep; ++i) {
+    double qCA = min + i*step;
+    min2 = dp.qMin(EvtCyclic3::AB,EvtCyclic3::CA,qCA);
+    max2 = dp.qMax(EvtCyclic3::AB,EvtCyclic3::CA,qCA);
+    step2 = (max2-min2)/nStep;
+    for(int j=0; j<nStep; ++j) {
+      double qAB = min2+ j*step2;
+      EvtDalitzCoord coord(EvtCyclic3::CA,qCA,EvtCyclic3::AB,qAB);
+      EvtDalitzPoint point(dp,coord);
+      double prob = calcProb(point,model);
+      if(prob > maxProb) maxProb = prob;
+    }
+  }
+  report(INFO,"EvtGen") << "Largest probability found was " << maxProb << endl;
+  report(INFO,"EvtGen") << "Setting probMax to " << factor*maxProb << endl;
+  return factor*maxProb;
+}
+
+double EvtDalitzTable::calcProb(EvtDalitzPoint point, EvtDalitzDecayInfo* model) {
+
+  std::vector<std::pair<EvtComplex,EvtDalitzReso> > resonances = model->getResonances();
+
+  EvtComplex amp(0,0);
+  std::vector<std::pair<EvtComplex,EvtDalitzReso> >::iterator i = resonances.begin();
+  for( ; i!= resonances.end(); i++) {
+    std::pair<EvtComplex,EvtDalitzReso> res = (*i);
+    amp += res.first * res.second.evaluate( point );
+  }
+  return abs2(amp);
+}

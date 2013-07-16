@@ -20,6 +20,7 @@
 // 
 #include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtPatches.hh"
+#include <stdlib.h>
 #include <fstream>
 #include <sstream>
 #include <string.h>
@@ -41,8 +42,13 @@ EvtParserXml::~EvtParserXml(){
 }
 
 
-bool EvtParserXml::open(const std::string filename){
+bool EvtParserXml::open(std::string filename){
   
+  if(!expandEnvVars(filename)) {
+    report(ERROR,"EvtGen") << "Error while expanding environment variables in file name '"<<filename.c_str()<<"'"<<endl;
+    return false;
+  }
+
   _fin.open(filename.c_str());
   if (!_fin) {
     report(ERROR,"EvtGen") << "Could not open file '"<<filename.c_str()<<"'"<<endl;
@@ -196,4 +202,63 @@ bool EvtParserXml::processTagTree() {
     _tagTree.push_back(_tagTitle);
   }
   return true;
+}
+
+bool EvtParserXml::expandEnvVars(std::string& str) {
+  while(str.find('$') != std::string::npos) {
+    size_t varStart = str.find('$');
+    size_t varNameLength;
+    std::string varName;
+    
+    //if this is the last character then just remove the $
+    if(varStart == str.length()-1) {
+      str.erase(varStart);
+      return true;
+    }
+    
+    if(str[varStart+1] == '{') {
+      //deal with environment variables in {}s
+      size_t braceStart = varStart+1;
+      size_t braceEnd = str.find('}',braceStart);
+      
+      if(braceEnd == std::string::npos) {
+        report(ERROR,"EvtGen")
+          << "Incomplete environment variable found in text: "<<str<<endl;
+        report(ERROR,"EvtGen")
+          << "Will terminate execution!"<<endl;
+          return false;
+      }
+
+      varName = str.substr(braceStart+1,braceEnd-braceStart-1);
+      varNameLength = braceEnd-varStart;
+
+    } else {
+      //deal with everything else
+      varNameLength=0;
+
+      while(varNameLength + varStart + 1 < str.length() && isAlphaNum(str[varStart+varNameLength+1])) {
+        ++varNameLength;
+      }
+
+      varName = str.substr(varStart+1,varNameLength);
+    }
+
+    char* envVar = getenv(varName.c_str());
+
+    if(envVar) str.replace(varStart,varNameLength+1,envVar);
+    else {
+      report(WARNING,"EvtGen")
+        << "Undefined environment variable found in text: "<<varName<<endl;
+      str.replace(varStart,varNameLength+1,"");
+    }
+  }
+  return true;
+}
+
+bool EvtParserXml::isAlphaNum(char c) {
+  if(c>='0' && c<='9') return true;
+  if(c>='A' && c<='Z') return true;
+  if(c>='a' && c<='z') return true;
+  if(c=='_') return true;
+  return false;
 }

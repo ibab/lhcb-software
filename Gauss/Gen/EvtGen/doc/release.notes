@@ -4,6 +4,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v13r7 2013-07-16 ==========================
+! 2013-07-16 - John Back
+ - Code changes from Daniel Craik:
+   EvtParserXml now accepts file names containing environment variables;
+   exponential non-resonant shape in EvtDalitzReso now defined as 
+   exp(-alpha*m^2); LASS shape in EvtDalitzReso now takes a cutoff parameter. 
+   Added flag to turn on scaling of LASS amplitude by M/q in EvtDalitzReso.
+
 ! 2013-06-28 - Patrick Robbe
  - Fix gcc47 compilation problems
 

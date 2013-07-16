@@ -31,7 +31,7 @@ public:
   EvtParserXml();
   ~EvtParserXml();
 
-  bool open(const std::string filename);
+  bool open(std::string filename);
   bool close();
 
   bool readNextTag();
@@ -58,6 +58,9 @@ private:
   std::vector<std::string> _tagTree;
 
   bool processTagTree();
+
+  bool expandEnvVars(std::string& str);
+  bool isAlphaNum(char c);
 }; 
 
 #endif

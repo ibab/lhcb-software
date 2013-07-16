@@ -39,7 +39,8 @@ public:
   enum NumType { NBW            = 0 , RBW_ZEMACH        = 1 , RBW_KUEHN  = 2 , RBW_CLEO        = 3 ,
 		 RBW_ZEMACH2    = 4 , GS_CLEO           = 5 , K_MATRIX   = 6 , RBW_CLEO_ZEMACH = 7 ,
 		 GS_CLEO_ZEMACH = 8 , LASS              = 9 , K_MATRIX_I = 10, K_MATRIX_II     = 11,
-		 GAUSS_CLEO     = 12, GAUSS_CLEO_ZEMACH = 13, FLATTE = 14, NON_RES = 15 };
+		 GAUSS_CLEO     = 12, GAUSS_CLEO_ZEMACH = 13, FLATTE = 14, NON_RES = 15,
+     NON_RES_LIN    = 16, NON_RES_EXP       = 17 };
 
   // Coupling type
   //  ChgPion : pi+ pi-
@@ -52,6 +53,8 @@ public:
   enum CouplingType {Undefined=0,PicPic=1,PizPiz,PiPi,KcKc,KzKz,KK,EtaPic,EtaPiz,PicPicKK,WA76};
 
   EvtDalitzReso() : _typeN(NON_RES) {};
+
+  EvtDalitzReso(const EvtDalitzPlot& dp, EvtCyclic3::Pair pairRes, NumType typeN, double alpha=0.0) : _dp(dp), _pairRes(pairRes), _typeN(typeN), _alpha(alpha) {};
 
   EvtDalitzReso(const EvtDalitzPlot& dp, EvtCyclic3::Pair pairAng, EvtCyclic3::Pair pairRes, 
 		EvtSpinType::spintype spin, double m0, double g0, NumType typeN, double f_b=0.0, double f_d=1.5);
@@ -69,7 +72,7 @@ public:
 
   // LASS
   EvtDalitzReso(const EvtDalitzPlot& dp, EvtCyclic3::Pair pairRes, double m0, double g0,
-		double a, double r, double B, double phiB, double R, double phiR);
+		double a, double r, double B, double phiB, double R, double phiR, double cutoff=-1, bool scaleByMOverQ=false);
 
   //Flatte
   EvtDalitzReso(const EvtDalitzPlot& dp, EvtCyclic3::Pair pairRes, double m0);
@@ -157,6 +160,11 @@ private:
   double _phiB;
   double _R;
   double _phiR;
+  double _cutoff;
+  bool _scaleByMOverQ;
+
+  //Nonresonant
+  double _alpha;
 
   // Flatte
   std::vector<EvtFlatteParam> _flatteParams;
