@@ -7,6 +7,7 @@ Purpose: LHCb reconstruction program
   . Follow changes to default parameters for VL tracking (PrVL)
   . In PatVeloTTTool, set passUnmatched default to false (reverts change
     made in v45r0) (PatVeloTT)
+  . Follow addition of HistoCountersPrint slot in GaudiHistos
 
 - Changes to example options
   . Remove COLLISION10-Beam3500GeV-VeloClosed-MagDown.py, now in PRConfig
