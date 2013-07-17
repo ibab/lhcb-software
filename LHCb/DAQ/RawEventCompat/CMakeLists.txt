@@ -1,0 +1,11 @@
+################################################################################
+# Package: RawEventCompat
+################################################################################
+gaudi_subdir(RawEventCompat v1r1)
+
+gaudi_depends_on_subdirs(GaudiKernel
+                         DAQ/DAQUtils)
+
+gaudi_install_python_modules()
+
+gaudi_add_test(QMTest QMTEST)
