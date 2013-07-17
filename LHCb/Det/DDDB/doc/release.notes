@@ -4,6 +4,7 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================= DDDB v1r63 2013-07-17 =========================
 ! 2013-06-28 - Illya Shapoval
  - minor refactoring of 'autotags' feature to make it compliant with revised
    Ariadne XMLRPC API. 
