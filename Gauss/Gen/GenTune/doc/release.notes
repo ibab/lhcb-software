@@ -5,6 +5,20 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
+!========================= GenTune v2r0p1 2013-07-17 =======================
+! 2013-07-17 - Alex Grecu
+ - added scripts/listAnalysisInfo.py to list Rivet plugin info files given 
+   partial analysis names; also very nice example of using the Rivet/Python
+   interface
+ - corrected qmtests and optimized number of generated events for speed
+ - negative invariant mass particles are detected and reported only at DEBUG level
+ - cross-section values provided by user in option files need units and are 
+   automatically converted to picobarns (default unit in HepMC)
+ - RivetAnalysisHandler promptly detects and reports number of collision in 
+   event if 'fix1' beam options not used. Only first collision will be sent 
+   to analysis plugins.
+ - various other mods improvide code aesthetic.
+
 !========================= GenTune v2r0 2013-06-27 =========================
 ! 2013-06-13 - Alex Grecu
  - added scripts/lhcbLFT2StdMap.py script to help plugin developers with 

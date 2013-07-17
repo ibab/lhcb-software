@@ -1,4 +1,5 @@
 #Configuration file for generic RIVET analyses run on LHCb MB events
+from GaudiKernel import SystemOfUnits as units
 from Gaudi.Configuration import *
 from Gauss.Configuration import *
 from Configurables import Generation
@@ -47,7 +48,7 @@ rivet.StreamName = "/Rivet"
 #rivet.AnalysisPath += [os.path.abspath('.'),]
 rivet.forceXSection = False
 #rivet.forceXSection = True
-rivet.xSectionValue = 32.123 #mb (!) depends on beam options
+rivet.xSectionValue = 32.123 units.millibarn
 rivet.CorrectStatusID = True
 #rivet.CorrectCrossingAngles = False
 rivet.CorrectCrossingAngles = True

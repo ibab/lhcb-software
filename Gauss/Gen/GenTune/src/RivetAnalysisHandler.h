@@ -26,6 +26,8 @@ private:
 
   std::pair<HepMC::GenParticle*,HepMC::GenParticle*> findBeamParticles(HepMC::GenEvent* hEvent);
 
+  double getTotalXSection();
+
   bool detectBeamCrossingAngles(HepMC::GenEvent* hEvent);
 
   /// Property: The base file name (prefix of filenames) to write results to ("MyRivet").
@@ -54,6 +56,9 @@ private:
 
   /// Indicates whether the cross-section is needed by any of the analyses run in job (false).
   bool _reqCrossSection;
+
+  /// Indicates which source should be queried for cross-section value when needed (0 - invalid). Sources are: 1 - HepMC event; 2 - External cross-section value; 3 - BeamParameters total cross-section value
+  int _xsectionSource;
 
   /// Property: Forces GenTune to set the cross-section to the value provided externally in each event (False).
   bool m_forceCrossSection;

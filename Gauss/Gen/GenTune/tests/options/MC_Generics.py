@@ -1,21 +1,22 @@
 #Configuration file for MC generic RIVET analyses run on LHCb MB events
-from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
 from Gauss.Configuration import *
-from Configurables import Generation
+from GaudiKernel.Configurable import *
+from GaudiKernel import SystemOfUnits
 from Configurables import RivetAnalysisHandler
 #Needed to add local directory path to RivetAnalysisHandler options
 import os
-importOptions("$GAUSSOPTS/Gauss-DEV.py")
+
+importOptions("$GENTUNEROOT/options/beamOpts/Beam3500GeV-md100-2011-nominalBeamLine-fix1.py")
+importOptions("$GAUSSOPTS/GenStandAlone.py")
 importOptions("$DECFILESROOT/options/30000000.py")
 importOptions("$LBPYTHIAROOT/options/Pythia.py")
-importOptions("$GAUSSOPTS/GenStandAlone.py")
-#importOptions("$DECFILESROOT/options/SwitchOffEvtGen.py")
-importOptions("$GAUSSOPTS/Gauss-Job.py")
+importOptions("$DECFILESROOT/options/SwitchOffEvtGen.py")
 
-#GaussGen = GenInit("GaussGen")
-#GaussGen.RunNumber = 1082
-LHCbApp().EvtMax = 1000
+GaussGen = GenInit("GaussGen")
+GaussGen.FirstEventNumber = 1
+GaussGen.RunNumber        = 1082
+
+LHCbApp().EvtMax = 250
 LHCbApp().OutputLevel = WARNING
 Gauss().Histograms = "NONE"
 Gauss().OutputType = "NONE"
@@ -32,9 +33,9 @@ rivet.RunName = "LHCbMBPy6"
 rivet.Analyses = ["MC_GENERIC","MC_IDENTIFIED"]
 rivet.StreamName = "/Rivet"
 #to search Rivet plugins in current directory
-#rivet.AnalysisPath += [os.path.abspath('.'),]
-#rivet.forceXSection = True
-rivet.xSectionValue = 32.123 #mb
+rivet.AnalysisPath += [os.path.abspath('.'),]
+rivet.forceXSection = True
+rivet.xSectionValue = 91.1*SystemOfUnits.millibarn
 rivet.CorrectStatusID = True
 rivet.CorrectCrossingAngles = True
 
