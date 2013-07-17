@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v3r2 2013-07-17 =========================
 ! 2013-07-05 - Chris Jones
  - Adapt PackedFlavourTag to removal of 'category' data members from the
    transient LHCb::FlavourTag class.
