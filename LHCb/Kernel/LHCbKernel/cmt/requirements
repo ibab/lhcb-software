@@ -3,7 +3,7 @@ package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version           v14r1
+version           v14r2
 
 branches cmt doc Event Kernel src xml
 

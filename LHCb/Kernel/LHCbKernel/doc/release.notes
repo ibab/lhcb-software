@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v14r2 2013-07-17 =========================
 ! 2013-06-13 - Chris Jones
  - Add a new hash_value method to RichSmartIDHashFuncs.h for Boost 1.53
 
