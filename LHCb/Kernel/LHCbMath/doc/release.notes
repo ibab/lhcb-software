@@ -6,8 +6,8 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r41 2013-07-17 =========================
 ! 2013-07-11 - Vanya Belyaev
-
  - python/LHCbMath/Types.py
    python/LHCbMath/Math.py
 
