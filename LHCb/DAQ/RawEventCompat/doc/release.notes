@@ -4,6 +4,7 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+!========================= RawEventCompat v1r1 2013-07-17 =========================
 ! 2013-07-17 - Marco Cattaneo
  - Add missing CMakeLists.txt file
 
