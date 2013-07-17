@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r32 2013-07-17 =========================
 ! 2013-06-12 - Marco Cattaneo
  - Add virtual destructor to ICondDBReader interface class. Fixes gcc48 warning
    virtual-move-assign, see explanation in https://sft.its.cern.ch/jira/CFHEP-87
