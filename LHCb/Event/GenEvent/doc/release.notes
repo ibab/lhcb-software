@@ -3,6 +3,7 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+!========================= GenEvent v6r8 2013-07-17 =========================
 ! 2013-07-07 - Patrick Robbe
  - Add non default location for HepMCEvents: "Gen/BInfo" to store the
   signal B information for tagging studies.
