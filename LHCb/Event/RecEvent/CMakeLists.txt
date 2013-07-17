@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RecEvent
 ################################################################################
-gaudi_subdir(RecEvent v2r47)
+gaudi_subdir(RecEvent v2r48)
 
 gaudi_depends_on_subdirs(Event/DigiEvent
                          Event/EventBase
