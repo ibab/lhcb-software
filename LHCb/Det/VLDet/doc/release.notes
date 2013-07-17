@@ -2,6 +2,7 @@
 ! Package     : VLDet
 !-------------------------------------------------------------------------
 
+!========================= VLDet v1r7 2013-07-17 =========================
 ! 2013-06-07  Heinrich Schindler
  - fixed globalToLocal transformation in DeVLPhiSensor::pointToChannel
 
