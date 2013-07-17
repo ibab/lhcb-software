@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic
 ! ========================================================================
 
+!========================= CondDBUI v3r24 2013-07-17 =========================
 ! 2013-07-16 - Illya Shapoval
  - AriadneAdmin_InitialImport.py is made compliant with new Ariadne API, plus
    other minor changes.
