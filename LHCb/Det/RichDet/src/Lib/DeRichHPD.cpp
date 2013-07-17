@@ -30,8 +30,7 @@
 
 // VDT
 #include "vdt/atan2.h"
-#include "vdt/sin.h"
-#include "vdt/cos.h"
+#include "vdt/sincos.h"
 
 //=============================================================================
 
@@ -709,8 +708,10 @@ StatusCode DeRichHPD::magnifyToGlobalMagnetON( Gaudi::XYZPoint& detectPoint,
   //const double xWindow = rCathode * std::cos(new_phi);
   //const double yWindow = rCathode * std::sin(new_phi);
   // fast VDT
-  const double xWindow = rCathode * vdt::fast_cos(new_phi);
-  const double yWindow = rCathode * vdt::fast_sin(new_phi);
+  double vdtsin(0), vdtcos(0);
+  vdt::fast_sincos(new_phi,vdtsin,vdtcos); // Compute both at once via VDT
+  const double xWindow = rCathode * vdtcos;
+  const double yWindow = rCathode * vdtsin;
 
   const double& winRadiusSq = ( photoCathodeSide ? m_winInRsq : m_winOutRsq );
   detectPoint = ( m_fromWindowToGlobal *
