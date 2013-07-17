@@ -4,8 +4,7 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
-
-!========================= FTDet v1r3 2013-07-12 =========================
+!========================= FTDet v2r0 2013-07-17 =========================
 ! 2013-07-12 - Diego Milanes 
 - Adaptation of the code to new geometry. DRASTIC CHANGES! Detector with more granularity
   and therefore more detailed description implemented. Full set of new classes to describe 
