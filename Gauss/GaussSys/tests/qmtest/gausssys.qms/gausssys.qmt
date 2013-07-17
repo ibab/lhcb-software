@@ -1,42 +1,33 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
-  <argument name="program"><text>gaudirun.py</text></argument>
-  <argument name="args"><set>
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
     <text>$GAUSSOPTS/Gauss-DEV.py</text>
     <text>$DECFILESROOT/options/30000000.py</text>
     <text>$LBPYTHIAROOT/options/Pythia.py</text> 
     <text>$GAUSSSYSROOT/tests/options/testGaussSys-defaults.py</text>
-  </set></argument>
-  <argument name="timeout"><integer>1800</integer></argument>
-  <argument name="reference"><text>$GAUSSSYSROOT/tests/refs/testGaussSys-DEV.ref</text></argument>
-  <argument name="error_reference"><text>$GAUSSSYSROOT/tests/refs/testGaussSys-DEV-err.ref</text></argument>
-  <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
-  <argument name="validator"><text>
-preprocessor = normalizeExamples + \
-    RegexpReplacer(when = "Connected to database",
-        orig = r"(\"sqlite_file:)(.*/)([\w.]+/[0-9A-Z_]{1,8}\")",
-        repl = r"\1\3") + \
-    LineSkipper(["INFO Using TAG", "TimingAuditor.T", "ToolSvc.SequencerTime", "Gauss-"]) + \
-    LineSkipper(["Total CPU time elapsed for geometry optimisation"]) + \
-    LineSkipper(["INFO Connected to database"]) + \
-    LineSkipper(["INFO Disconnect from database after being idle"]) + \
-    LineSkipper(["INFO Loading simulation attributes file"]) + \
-    LineSkipper(["INFO Opened magnetic field file"]) + \
-    LineSkipper(["Generation.FixedLumi","Simulation                 INFO Member list"]) + \
-    LineSkipper(["ChronoStatSvc.f...   INFO  Service finalized succes"]) 
-strippedOutput = []
-skipping = False
-firstLineToSkip = "Voxelisation: top CPU users:"
-lastLineToSkip = "Start Run processing"
-for l in stdout.splitlines():
-    if skipping:
-        print "skipped line", l
-        preprocessor = preprocessor + LineSkipper([l])
-        if lastLineToSkip in l:
-            skipping = False
-    else:
-        if firstLineToSkip in l:
-            skipping = True
-validateWithReference(preproc = preprocessor)
-</text></argument> 
+</set></argument>
+<argument name="timeout"><integer>1800</integer></argument>
+<argument name="reference"><text/></argument>
+<argument name="error_reference"><text/></argument>
+<argument name="use_temp_dir"><enumeral>true</enumeral></argument>
+<argument name="exit_code"><integer>0</integer></argument>
+<argument name="environment"><set/></argument>
+<argument name="unsupported_platforms"><set/></argument>
+<argument name="workdir"><text/></argument>
+<argument name="stderr"><text/></argument>
+<argument name="options"><text></text></argument>
+<argument name="validator"><text>
+expected_string = &quot;Application Manager Terminated successfully&quot;
+if stdout.find(expected_string) == -1:
+	causes.append('missing string')
+	result['GaudiTest.expected_string'] = result.Quote(expected_string)
+else:
+	expected_string2 = &quot;1 events processed&quot;
+	if stdout.find(expected_string2) == -1:
+		causes.append('missing string')
+		result['GaudiTest.expected_string'] = result.Quote(expected_string2)
+</text></argument>
+<argument name="resources"><set/></argument>
+<argument name="stdin"><text/></argument>
 </extension>
