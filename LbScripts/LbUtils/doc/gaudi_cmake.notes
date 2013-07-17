@@ -1,3 +1,23 @@
+! 2013-07-17 - Marco Clemencic (c9b322b)
+
+ - added FindVDT.cmake module
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7241
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2013-07-17 - Marco Clemencic (7535b3a)
+
+ - using LCGCMT 65a
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7240
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
 ! 2013-07-09 - Marco Clemencic (c0c8bde)
 
  - modified the __init__.py used in builds to support 'python.zip'
