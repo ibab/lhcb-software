@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichKernel
 ################################################################################
-gaudi_subdir(RichKernel v7r53)
+gaudi_subdir(RichKernel v7r54)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          GaudiAlg
