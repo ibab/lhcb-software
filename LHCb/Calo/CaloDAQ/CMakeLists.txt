@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CaloDAQ
 ################################################################################
-gaudi_subdir(CaloDAQ v4r34)
+gaudi_subdir(CaloDAQ v4r35)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          DAQ/DAQUtils
