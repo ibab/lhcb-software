@@ -3,6 +3,7 @@
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output)
 !-----------------------------------------------------------------------------
 
+!========================= MCEvent v2r27 2013-07-17 =========================
 ! 2013-07-10 - Patrick Robbe
  - MCVertex.xml: add "StringFragmentation" vertex type
 
