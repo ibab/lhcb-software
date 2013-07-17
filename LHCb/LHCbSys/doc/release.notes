@@ -5,8 +5,118 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-- Packages added:   Tr/LHCbTrackInterfaces
-- Packages removed: Tf/TfKernel, Tf/TsaKernel, Tr/TrackInterfaces (moved to Rec)
+- Packages added: Tr/LHCbTrackInterfaces v1r0: 
+                  . Interfaces previously in TrackInterfaces but needed in Lbcom
+                  DAQ/RawEventCompat v1r1:
+                  . To hold configurables for splitting/joining raw events
+- Packages removed:  Tf/TfKernel, Tf/TsaKernel, Tr/TrackInterfaces (moved to Rec)
+- Packages modified: Calo/CaloDAQ v4r35, Calo/CaloInterfaces v8r6, 
+    Calo/CaloUtils v10r1, DAQ/MDF v3r39, Det/DDDB v1r63, Det/DetCond v12r32,
+    Det/FTDet v2r0, Det/MuonDet v9r13, Det/RichDet v16r18, Det/VLDet v1r7,
+    Event/EventPacker v3r2, Event/GenEvent v6r8, Event/MCEvent v2r27,
+    Event/PhysEvent v11r21, Event/RecEvent v2r48, GaudiConf v17r11,
+    Kernel/KernelSys v12r3, Kernel/LHCbAlgs v2r59, Kernel/LHCbKernel v14r2,
+    Kernel/LHCbMath v3r41, Rich/RichKernel v7r54, Sim/SimComponents v2r24p1,
+    Tools/CondDBUI v3r24, Tools/FileStager v1r11
+
+- In Calo/CaloDAQ v4r35, Calo/CaloInterfaces v8r6, Det/DetCond v12r32,
+     Kernel/LHCbKernel v14r2
+  . Add virtual destructor to ICaloReadoutTool, ICaloSubClusterTag,  
+    IPart2Calointerface, ICondDBReader, ILHCbMagnetSvc classes.
+    Fixes gcc48 warning virtual-move-assign, 
+    see explanation in https://sft.its.cern.ch/jira/CFHEP-87
+
+- In Calo/CaloUtils v10r1
+  . Remove CaloHistoTrackAlh.{h,cpp}, no longer used
+  . Remove no longer necessary TrackEvent dependency
+  . Remove empty Calo2DView::finalize() method
+
+- In DAQ/MDF v3r39
+  . Fix compile warnings for gcc48
+
+- In Det/DDDB v1r63
+  . minor refactoring of 'autotags' feature to make it compliant with revised
+    Ariadne XMLRPC API. 
+
+- In Det/FTDet v2r0
+  . Adaptation of the code to new geometry. DRASTIC CHANGES! Detector with more
+    granularity and therefore more detailed description implemented. Full set of
+    new classes to describe new detector elements in the database. Backward
+    compatibility intended to be able to run on previous detector configuration.
+    Please note version() method of DeFTDetector will be used as main switch for
+    changing throuwithin detector versions.
+
+- In Det/MuonDet v9r13
+  . Put back the fixes from v9r11 accidentally overwritten in v9r12
+  . Fix a FORWARD_NULL and two UNINIT_CTOR defects
+
+- In Det/RichDet v16r18
+  . Replace use of private Rich::Maths::atan2 function with alternative from 
+    the VDT library, which are more accurate.
+  . Use VDT for a couple cos and sin calculations in 
+    DeRichHPD::magnifyToGlobalMagnetON.
+
+- In Det/VLDet v1r7
+  . fixed globalToLocal transformation in DeVLPhiSensor::pointToChannel
+
+- In Event/EventPacker v3r2
+  . Adapt PackedFlavourTag to removal of 'category' data members from the
+    transient LHCb::FlavourTag class.
+  . Store stripping TCK in packed DecReports
+
+- In Event/GenEvent v6r8
+  . Add non default location for HepMCEvents: "Gen/BInfo" to store the
+    signal B information for tagging studies.
+
+- In Event/MCEvent v2r27
+  . MCVertex.xml: add "StringFragmentation" vertex type
+
+- In Event/PhysEvent v11r21
+  . Changed the info FlavourTaggingIndex-->FlavourTaggingIPPUs, 
+    FlavourTaggingTaggerID
+  . Changes in data member of FlavourTagging class
+    (remove category and categoryOS which are redundant)
+  . Added two new Tagger types (OS_nnetKaon and SS_nnetKaon) for two new taggers
+  . Dedicate FlavourTaggingIndex=8000 to store FTagging information for
+    private use
+
+- In Event/RecEvent v2r48
+  . attempt to fix generation of dictionary for Gaudi::SymMatrix9x9.
+
+- In GaudiConf v17r11
+  . Added new module, manipulations.py, for adding functions for manipulating
+    configurables. Use it to simplify IOHelper. Will enable production
+    outputlevel global settings.
+
+- In Kernel/KernelSys v12r3
+  . Remove TfKernel dependency
+
+- In Kernel/LHCbAlgs v2r59
+  . Removed superfluous code from LHCbAlgs Configuration
+  . Remove unused property "CondDBUpgrade" from Configuration.
+  . Correct docStrings
+
+- In Kernel/LHCbKernel v14r2
+  . Add a new hash_value method to RichSmartIDHashFuncs.h for Boost 1.53
+
+- In Kernel/LHCbMath v3r41
+  . Eliminate unnesessary imports from GaudiPython 
+  . Remove obsolete wrapper Gaudi::Math::invertPosDefSymMatrix and use 
+    direct call to SMatrix InvertChol() method. Fixes gcc48 warning
+
+- In Rich/RichKernel v7r54
+  . Add VDT math library to dependencies.
+
+- In Sim/SimComponents v2r24p1
+  . Fix clang32 warning
+
+- In Tools/CondDBUI v3r24
+  . AriadneAdmin_InitialImport.py is made compliant with new Ariadne API, plus
+    other minor changes.
+  . Ariadne RecoType and SimType initial images (at doc/Ariadne/) are updated.
+
+- In Tools/FileStager v1r11
+  . Fixed several clang warnings (-Wparentheses).
 
 </PRE><H1><A NAME=v36r0>2013-06-05 LHCbSys v36r0</A></H1><PRE>
 This version uses Gaudi v23r8 and LCG_65
