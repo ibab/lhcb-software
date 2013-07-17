@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v16r18 2013-07-17 =========================
 ! 2013-07-16 - Chris Jones
  - Replace use of private Rich::Maths::atan2 function with alternative from 
    the VDT library, which are more accurate.
