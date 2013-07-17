@@ -8,6 +8,7 @@ Purpose: LHCb reconstruction program
   . In PatVeloTTTool, set passUnmatched default to false (reverts change
     made in v45r0) (PatVeloTT)
   . Follow addition of HistoCountersPrint slot in GaudiHistos
+  . Follow move to use of VDT library in Rich code (RichDet, RichRecPhotonTools)
 
 - Changes to example options
   . Remove COLLISION10-Beam3500GeV-VeloClosed-MagDown.py, now in PRConfig
