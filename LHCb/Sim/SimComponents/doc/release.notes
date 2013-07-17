@@ -5,6 +5,7 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!========================= SimComponents v2r24p1 2013-07-17 ======================
 ! 2013-06-17 - Marco Cattaneo
  - Fix clang32 warning
 
