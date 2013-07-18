@@ -3,6 +3,7 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+!========================= MuonID v9r6 2013-07-18 =========================
 ! 2013-06-19 - Marco Cattaneo
  - Add missing TrackInterfaces dependency
  - Remove empty finalize method
