@@ -5,9 +5,109 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
-- Packages added:    Tf/TfKernel, Tf/TsaKernel,
-                     Tr/TrackInterfaces        (all moved from LHCb)
+</PRE><H1><A NAME=v15r1>2013-07-22 RecSys v15r1</A></H1><PRE>
+This version uses Gaudi v23r9, LHCb v36r1 and Lbcom v14r1
+
+- Packages added:    Tf/TfKernel, Tf/TsaKernel, Tr/TrackInterfaces
+                     (all moved from LHCb)
                      Calo/CaloTools            (moved from Lbcom)
+- Packages modified: Calo/CaloMoniDst v5r14, Calo/CaloTools v6r6,
+    Muon/MuonID v9r6, Muon/MuonTrackAlign v1r10, Muon/MuonTrackMonitor v2r8,
+    Muon/MuonTrackRec v3r9p1, Pr/PrAlgorithms v1r6, Pr/PrFitParams v1r3,
+    Pr/PrMCTools v1r5, Pr/PrVL v1r4, Pr/PrVeloUT v1r2, 
+    Rec/ChargedProtoANNPID v2r3, Rich/RichRecAlgorithms v2r20p1,
+    Rich/RichRecPhotonTools v1r11, Rich/RichRecTools v4r23, Tf/FastVelo v1r12p1,
+    Tf/PatAlgorithms v4r27, Tf/PatVelo v3r29, Tf/PatVeloTT v4r1,
+    Tf/TfTools v1r18p2, Tf/TrackMatching v2r35p3, Tf/TsaAlgorithms v3r28,
+    Tr/TrackCheckers v4r18, Tr/TrackInterfaces v4r25, Tr/TrackKernel v1r16,
+    Tr/TrackMonitors v1r45, Tr/TrackTools v4r25, Tr/TrackUtils v1r52p2,
+    Velo/VeloRecMonitors v2r26
+
+- In Pr/PrVL v1r4
+  . Reduce calls to phiOfStrip by pre-calculating R sector of each Phi hit
+  . Modifications of default parameters (in particular for space tracking) 
+
+- In Pr/PrVeloUT v1r2
+  . Reduced verbosity in PrVeloUTTool, use PrintVariables flag.
+  . Added pT dependent window and printout in PrVeloUTTool
+
+- In Rec/ChargedProtoANNPID v2r3
+  . Remove unused CheckForNaN.h header causing clang unused method warnings.
+
+- In Rich/RichRecPhotonTools v1r11
+  . Use vdt library instead of private 'RichKernel/FastMaths.h'
+
+- In Rich/RichRecTools v4r23
+  . Remove unused RichKernel/FastMaths.h include (to be deprecated).
+
+- In Tf/PatAlgorithms v4r27
+  . Fix segfault in gcc 4.8 optimised build
+
+- In Tf/PatVeloTT v4r1
+  . Added pT window, optional printout, and set passUnmatched default to false
+
+- In Tf/TrackMatching v2r35p3
+  . Remove unnecessary TsaKernel include
+
+- In Tf/TsaAlgorithms v3r28
+  . Add STCosmicsFilter, moved here from ST/STAlgorithms
+
+- In Tr/TrackCheckers v4r18, v4r17
+  . Split histograms by track type in TrackIPResolutionChecker
+  . Add missing PatKernel dependency
+  . Pick up changes in ITrackGhostClassification
+
+- In Tr/TrackInterfaces v4r25, Tr/TrackTools v4r25
+  . Remove ISTClusterPosition.h, IVeloClusterPosition.h, IVLClusterPosition.h,
+    IVPClusterPosition.h (moved to LHCbTrackInterfaces)
+
+- In Tr/TrackKernel v1r16
+  . Added fast methods to compute ipchi2, twotrackchi2 and doca to
+    TrackVertexUtils
+  . Added constructor that takes two states to TrackStateVertex
+  . Replace use of obsolete wrapper class Gaudi::Math::invertPosDefSymMatrix
+    with direct call to SMatrix InvertChol() method. Fixes gcc48 warning
+
+- In Velo/VeloRecMonitors v2r26
+  . Added selection for overlap tracks with track quality cuts (ll 659). 
+  . Added different approach for left-right tracks. 
+    selectmethod 0: Select Left/Righttracks by direction of slope,
+                 1: Select Left/Righttracks by number of hits in Velo Half,
+    Left/Righttracks are tracks that have only hits in the left/right half.
+  . Added plots that show the hits on the first sensor a track hits
+  . Fix a warning due to int <-> unsigned int comparison in VeloTrackMonitorNT
+
+- In Muon/MuonID v9r6, Muon/MuonTrackAlign v1r10, Muon/MuonTrackMonitor v2r8,
+     Pr/PrAlgorithms v1r6, Rich/RichRecAlgorithms v2r20p1, Tf/FastVelo v1r12p1
+     Tf/PatAlgorithms v4r27
+  . Add missing TrackInterfaces dependency
+
+- In Tf/TfTools v1r18p2
+  . Add missing TsaKernel dependency
+
+- In Tr/TrackUtils v1r52p2
+  . Add missing TfKernel dependency
+
+- In Calo/CaloMoniDst v5r14, Tr/TrackMonitors v1r45
+  . Fix gcc48 warnings
+
+- In Muon/MuonTrackRec v3r9p1, Pr/PrMCTools v1r5, Pr/PrVL v1r4, Tf/PatVelo v3r29,
+     Velo/VeloRecMonitors v2r26
+  . Fix clang32 warnings
+
+- In Calo/CaloMoniDst v5r14, Calo/CaloTools v6r6, Muon/MuonTrackAlign v1r10,
+     Pr/PrAlgorithms v1r6, Pr/PrFitParams v1r3, Pr/PrMCTools v1r5, Pr/PrVL v1r4,
+     Pr/PrVeloUT v1r2, Tf/PatVelo v3r29, Tr/TrackCheckers v4r18,
+     Tr/TrackMonitors v1r45
+  . Fix Coverity UNINIT, UNINIT_CTOR, UNUSED_VALUE, DIVIDE_BY_ZERO and
+    FORWARD_NULL defects 
+
+- In Calo/CaloMoniDst v5r14, Muon/MuonID v9r6, Muon/MuonTrackAlign v1r10,
+     Muon/MuonTrackMonitor v2r8, Tr/TrackMonitors v1r45
+  . Remove empty finalize methods
+
+- In Muon/MuonTrackAlign v1r10, Tf/PatVelo v3r29
+  . Replace endreq by endmsg
 
 </PRE><H1><A NAME=v15r0>2013-06-05 RecSys v15r0</A></H1><PRE>
 This version uses Gaudi v23r8, LHCb v36r0 and Lbcom v14r0
