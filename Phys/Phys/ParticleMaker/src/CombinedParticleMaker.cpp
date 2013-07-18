@@ -1,3 +1,4 @@
+
 //-----------------------------------------------------------------------------
 /** @file CombinedParticleMaker.cpp
  *
@@ -10,23 +11,18 @@
 
 // from Gaudi
 #include "CaloUtils/CaloMomentum.h"
+
 // local
 #include "CombinedParticleMaker.h"
-
-// namespaces
-using namespace LHCb;
-
-//-----------------------------------------------------------------------------
-
-// Declaration of the Tool Factory
-
-DECLARE_ALGORITHM_FACTORY( CombinedParticleMaker )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  CombinedParticleMaker::CombinedParticleMaker( const std::string& name, ISvcLocator* pSvcLocator )
-    : ChargedParticleMakerBase (  name , pSvcLocator )
+CombinedParticleMaker::CombinedParticleMaker( const std::string& name,
+                                              ISvcLocator* pSvcLocator )
+  : ChargedParticleMakerBase ( name , pSvcLocator ),
+    m_protoTool              ( NULL ),
+    m_partProp               ( NULL )
 {
   // ProtoParticle filters to use for each type
   declareProperty( "ElectronFilter", m_elProtoFilter = "ProtoParticleCALOFilter" );
@@ -38,6 +34,8 @@ DECLARE_ALGORITHM_FACTORY( CombinedParticleMaker )
   // Test PID info consistency
   declareProperty( "CheckPIDConsistency", m_testPIDinfo = true );
 }
+
+//=============================================================================
 
 CombinedParticleMaker::~CombinedParticleMaker( ) { }
 
@@ -135,7 +133,7 @@ StatusCode CombinedParticleMaker::finalize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts )
+StatusCode CombinedParticleMaker::makeParticles( LHCb::Particle::Vector & parts )
 {
 
   // Load the ProtoParticles
@@ -143,12 +141,15 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts )
   if (msgLevel(MSG::DEBUG)) debug() << "Making Particles from " << pps.size()
                                     << " ProtoParticles at "<< m_input << endmsg;
 
+  // reserve size
+  parts.reserve( pps.size() );
+
   // loop over ProtoParticles
   for ( LHCb::ProtoParticle::ConstVector::const_iterator iProto = pps.begin();
         pps.end() != iProto; ++iProto )
   {
     // get point to track (should always exist for charged tracks)
-    const Track * track = (*iProto)->track();
+    const LHCb::Track * track = (*iProto)->track();
     if ( !track ) return Error( "Charged ProtoParticle has null track reference !" );
 
     TrackTally & tally = m_nTracks[ track->type() ];
@@ -159,7 +160,7 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts )
 
     if (track->states().empty())
     {
-      Warning("Track has empty states. This is likely to be bug https://savannah.cern.ch/bugs/index.php?70979");
+      Warning("Track has empty states. This is likely to be bug https://savannah.cern.ch/bugs/index.php?70979").ignore();
       continue ;
     }
     if ( !trSel()->accept(*track) ) continue;
@@ -179,12 +180,12 @@ StatusCode CombinedParticleMaker::makeParticles( Particle::Vector & parts )
     if ( selected )
     {
       // make a new Particle
-      Particle * part = new Particle();
+      LHCb::Particle * part = new LHCb::Particle();
       // fill Parameters
       const StatusCode sc = fillParticle( *iProto, m_partProp, part );
       if ( sc.isFailure() )
       {
-        Warning( "Failed to fill Particle -> rejected" );
+        Warning( "Failed to fill Particle -> rejected" ).ignore();
         delete part;
       }
       else
@@ -229,17 +230,17 @@ void CombinedParticleMaker::checkPIDInfo( const LHCb::ProtoParticle * proto ) co
 //=========================================================================
 // Fill particles parameters
 //=========================================================================
-StatusCode 
-CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
+StatusCode
+CombinedParticleMaker::fillParticle( const LHCb::ProtoParticle* proto,
                                      const LHCb::ParticleProperty* pprop,
-                                     Particle* particle ) const
+                                     LHCb::Particle* particle ) const
 {
   // Start filling particle with orgininating ProtoParticle
   particle->setProto(proto);
 
   // ParticleID
   const int pID = pprop->particleID().pid() * (int)(proto->charge());
-  particle->setParticleID( ParticleID( pID ) );
+  particle->setParticleID( LHCb::ParticleID( pID ) );
 
   // Confidence level
   setConfLevel(proto,pprop,particle);
@@ -266,15 +267,16 @@ CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
 //=========================================================================
 //  set conf level
 //=========================================================================
-void CombinedParticleMaker::setConfLevel( const LHCb::ProtoParticle * proto,
-                                          const LHCb::ParticleProperty    * pprop,
-                                          LHCb::Particle            * particle ) const
+void
+CombinedParticleMaker::setConfLevel( const LHCb::ProtoParticle * proto,
+                                     const LHCb::ParticleProperty * pprop,
+                                     LHCb::Particle * particle ) const
 {
   // Definition of confidence level needs to be re-assessed
-  const double ve  = proto->info( ProtoParticle::CombDLLe,  -999.0 );
-  const double vmu = proto->info( ProtoParticle::CombDLLmu, -999.0 );
-  const double vk  = proto->info( ProtoParticle::CombDLLk,  -999.0 );
-  const double vp  = proto->info( ProtoParticle::CombDLLp,  -999.0 );
+  const double ve  = proto->info( LHCb::ProtoParticle::CombDLLe,  -999.0 );
+  const double vmu = proto->info( LHCb::ProtoParticle::CombDLLmu, -999.0 );
+  const double vk  = proto->info( LHCb::ProtoParticle::CombDLLk,  -999.0 );
+  const double vp  = proto->info( LHCb::ProtoParticle::CombDLLp,  -999.0 );
   double confLevel = 1.0/(1.0+ve+vmu+vk+vp); // conf level for pion
   if ( "e+" == pprop->particle() )
   {
@@ -294,3 +296,10 @@ void CombinedParticleMaker::setConfLevel( const LHCb::ProtoParticle * proto,
   }
   particle->setConfLevel( confLevel );
 }
+
+//-----------------------------------------------------------------------------
+
+// Declaration of the Tool Factory
+DECLARE_ALGORITHM_FACTORY( CombinedParticleMaker )
+
+//-----------------------------------------------------------------------------

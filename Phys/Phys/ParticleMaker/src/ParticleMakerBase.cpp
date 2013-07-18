@@ -39,7 +39,7 @@ ParticleMakerBase::ParticleMakerBase( const std::string& name,
 //========================================================================
 StatusCode ParticleMakerBase::initialize ( )
 {
-  StatusCode sc = DaVinciAlgorithm::initialize();
+  const StatusCode sc = DaVinciAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
   if ( getDecayDescriptor() == "" ) setDecayDescriptor(m_pid) ;
@@ -69,7 +69,7 @@ ParticleMakerBase::~ParticleMakerBase() {}
 //=============================================================================
 StatusCode ParticleMakerBase::execute()
 {
-  LHCb::Particle::Vector newParts ;
+  LHCb::Particle::Vector newParts;
 
   StatusCode sc = makeParticles(newParts);
   if ( sc.isFailure() ) return sc;

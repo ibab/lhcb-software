@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+! 2013-07-18 - Chris Jones
+ - Fix a couple coverity UNINT_CTOR warnings.
+ - Clean up CombinedParticleMaker a bit
+
 !========================= ParticleMaker v6r7p3 2013-06-13 =========================
 
 ! 2013-06-12 - Chris Jones
