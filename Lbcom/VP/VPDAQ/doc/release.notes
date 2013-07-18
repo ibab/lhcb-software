@@ -4,6 +4,7 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+!========================= VPDAQ v2r3 2013-07-18 =========================
 ! 2013-06-13 - Marco Cattaneo
  - Fix UNINIT_CTOR defects
  - Fix untested StatusCode from Warning() messages
