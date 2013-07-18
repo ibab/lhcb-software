@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r27 2013-07-18 =========================
 ! 2013-06-18 - Marco Cattaneo
  - Add missing dependency on TrackInterfaces
 
