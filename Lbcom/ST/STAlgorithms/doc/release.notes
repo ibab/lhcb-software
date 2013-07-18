@@ -2,6 +2,7 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!========================= STAlgorithms v4r7 2013-07-18 =========================
 ! 2013-06-05 - Marco Cattaneo
  - STCosmicsFilter moved to Tf/TsaAlgorithms, to remove TsaKernel dependency
 
