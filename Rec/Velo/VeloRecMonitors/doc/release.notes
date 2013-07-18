@@ -4,11 +4,13 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+!========================= VeloRecMonitors v2r26 2013-07-18 =========================
 ! 2013-06-24 - Marco Cattaneo
  - Fix clang32 warning
 
-! 2013-06-20
-	- Added selection for overlap tracks with track quality cuts (ll 659). For selecting overlap-tracks uncomment l 660 (Will implement an more elegent way soon).	- Added different approch for left-right tracks. selectmethod 0: Select Left/Righttracks by direction of slope, 1: Select Left/Righttracks by number of hits in Velo Half, selectmethod 1: Left/Righttracks are tracks that have only hits in the left/right half. To select change l 1097 (An more elegant way will be implemented)
+! 2013-06-20 - Christoph Hombach
+	- Added selection for overlap tracks with track quality cuts (ll 659). For selecting overlap-tracks uncomment l 660 (Will implement an more elegant way soon).
+	- Added different approach for left-right tracks. selectmethod 0: Select Left/Righttracks by direction of slope, 1: Select Left/Righttracks by number of hits in Velo Half, selectmethod 1: Left/Righttracks are tracks that have only hits in the left/right half. To select change l 1097 (An more elegant way will be implemented)
 	- Added plots that show the hits on the first sensor a track hits
 
 ! 2013-06-20 - Michel De Cian

@@ -3,7 +3,7 @@
 # Maintainer : 
 #=========================================================================
 package           VeloRecMonitors
-version           v2r25
+version           v2r26
 
 # Structure, i.e. directories to process.
 #=========================================================================
