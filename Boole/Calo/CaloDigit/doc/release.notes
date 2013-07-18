@@ -4,6 +4,7 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!========================= CaloDigit v3r4 2013-07-18 =========================
 ! 2013-06-25 - Marco Cattaneo
  - Fix UNINIT_CTOR and FORWARD_NULL defects
  - Protect unprotected debug()
