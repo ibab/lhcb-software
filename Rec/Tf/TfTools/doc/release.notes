@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!========================= TfTools v1r18p2 2013-07-18 =========================
 ! 2013-06-05 - Marco Cattaneo
  - Add missing TsaKernel dependency
 
