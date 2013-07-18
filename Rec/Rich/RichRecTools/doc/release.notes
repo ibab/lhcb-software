@@ -4,8 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!========================= RichRecTools v4r23 2013-07-18 =========================
 ! 2013-07-16 - Chris Jones
- - Remove unused RichKernel/FastMaths.h include (to be depreciated).
+ - Remove unused RichKernel/FastMaths.h include (to be deprecated).
 
 !========================= RichRecTools v4r22 2013-06-03 =========================
 ! 2013-05-13 - Chris Jones
