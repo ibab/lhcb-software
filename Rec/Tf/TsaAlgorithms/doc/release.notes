@@ -4,6 +4,7 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+!========================= TsaAlgorithms v3r28 2013-07-18 =========================
 ! 2013-06-05 - Marco Cattaneo
  - STCosmicsFilter moved here, from ST/STAlgorithms
 
