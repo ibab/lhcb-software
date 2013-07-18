@@ -28,7 +28,7 @@
 #endif
 
 // disable unused parameter warning (appears in libRivet)
-//#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 
 // from Rivet (LCG)
 #include <Rivet/Rivet.hh>
