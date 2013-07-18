@@ -3,6 +3,7 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+!========================= CaloTools v6r6 2013-07-18 =========================
 ! 2013-06-13 - Marco Cattaneo
  - Fix Coverity DIVIDE_BY_ZERO and FORWARD_NULL defects
 
