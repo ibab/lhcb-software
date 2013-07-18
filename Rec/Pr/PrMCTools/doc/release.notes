@@ -4,6 +4,7 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrMCTools v1r5 2013-07-18 =========================
 ! 2013-06-13 - Michel De Cian
  - Fix a possible failure of a dynamic cast in PrChecker.cpp
 

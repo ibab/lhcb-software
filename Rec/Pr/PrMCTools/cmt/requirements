@@ -1,9 +1,9 @@
 #=========================================================================
 # Created    : 2012-03-22
-# Maintainer : Olivier Callot
+# Maintainer : Michel De Cian
 #=========================================================================
 package           PrMCTools
-version           v1r4
+version           v1r5
 
 #=========================================================================
 # Structure, i.e. directories to process. 
