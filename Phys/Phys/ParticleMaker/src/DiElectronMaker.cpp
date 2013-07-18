@@ -20,8 +20,13 @@ DiElectronMaker::DiElectronMaker( const std::string& name,
                                   ISvcLocator* pSvcLocator )
   : ChargedParticleMakerBase ( name , pSvcLocator ),
     m_trSel   ( NULL ),
-    m_transporter()
-  , m_transporterName ("ParticleTransporter:PUBLIC")
+    m_pFilter ( NULL ),
+    m_caloElectron ( NULL ),
+    m_calo    ( NULL ),
+    m_ePps    ( NULL ),
+    m_gPps    ( NULL ),
+    m_transporter( NULL ),
+    m_transporterName ("ParticleTransporter:PUBLIC")
 {
   declareProperty("ProtoFilter"        , m_toolType = "ProtoParticleCALOFilter");
   declareProperty("ProtoFilterName"    , m_toolName = "Electron"); // Electron PID filter is the default (for ProtoP Input only)
@@ -482,7 +487,9 @@ double DiElectronMaker::ConfLevel( LHCb::Particle* electron)
   return confLevel;
 }
 
-std::pair<double,double> DiElectronMaker::getY(const LHCb::ProtoParticle* proto, double m_zcalo) {
+std::pair<double,double> DiElectronMaker::getY(const LHCb::ProtoParticle* proto, 
+                                               double m_zcalo)
+{
   const LHCb::Track* tr = proto->track();
   const LHCb::State& nstate = tr->firstState();
   const double ty=nstate.ty();
@@ -493,7 +500,9 @@ std::pair<double,double> DiElectronMaker::getY(const LHCb::ProtoParticle* proto,
   return std::make_pair(y,covy);
 }
 
-Gaudi::XYZPoint DiElectronMaker::getPoCA(LHCb::Particle* particle, const Gaudi::XYZPoint PVpos){
+Gaudi::XYZPoint DiElectronMaker::getPoCA(LHCb::Particle* particle, 
+                                         const Gaudi::XYZPoint PVpos)
+{
   const Gaudi::XYZPoint& pref = particle->referencePoint();
   const Gaudi::LorentzVector& mom = particle->momentum();
   const double mom2=particle->p()*particle->p();
@@ -504,8 +513,11 @@ Gaudi::XYZPoint DiElectronMaker::getPoCA(LHCb::Particle* particle, const Gaudi::
   return Gaudi::XYZPoint(x,y,z);
 }
 
-StatusCode DiElectronMaker::combinepair(LHCb::Particle* ele1, LHCb::Particle* ele2, LHCb::Particle & mother, LHCb::Vertex & vertex ){
-
+StatusCode DiElectronMaker::combinepair(LHCb::Particle* ele1, 
+                                        LHCb::Particle* ele2, 
+                                        LHCb::Particle & mother,
+                                        LHCb::Vertex & vertex )
+{
   if ( msgLevel(MSG::DEBUG) ) debug() <<"in combinepair" <<endmsg;
 
   StatusCode sc = StatusCode::SUCCESS;
@@ -521,7 +533,8 @@ StatusCode DiElectronMaker::combinepair(LHCb::Particle* ele1, LHCb::Particle* el
   double znew=z1;
   if (z2 > z1) znew=z2;
   double dist12=distmin;
-  for (int i=0 ; (znew>-dz && dist12==distmin); i++){
+  for (int i=0 ; (znew>-dz && dist12==distmin); ++i ) 
+  {
     sc = m_transporter->transport(&transele1, znew, transParticle1);
     if ( sc.isFailure() ) { 
       Warning( "Transporter returned failure",StatusCode::SUCCESS ).ignore();
@@ -536,10 +549,10 @@ StatusCode DiElectronMaker::combinepair(LHCb::Particle* ele1, LHCb::Particle* el
     }
     const Gaudi::XYZPoint& pos1=transParticle1.referencePoint();
     const Gaudi::XYZPoint& pos2=transParticle2.referencePoint();
-    //    dist12 = sqrt((pos1.X()-pos2.X())*(pos1.X()-pos2.X())+(pos1.Y()-pos2.Y())*(pos1.Y()-pos2.Y()));
+    //    dist12 = std::sqrt((pos1.X()-pos2.X())*(pos1.X()-pos2.X())+(pos1.Y()-pos2.Y())*(pos1.Y()-pos2.Y()));
     distY =fabs(pos1.Y()-pos2.Y()); 
     distX =fabs(pos1.X()-pos2.X());
-    dist12 = sqrt(distX*distX + distY*distY);
+    dist12 = std::sqrt(distX*distX + distY*distY);
     if ( msgLevel(MSG::DEBUG) ) debug() <<"Transport to "<<znew<<" dist= "<<dist12<<endmsg;
     if (dist12<distmin){
       distmin = dist12;
@@ -552,7 +565,7 @@ StatusCode DiElectronMaker::combinepair(LHCb::Particle* ele1, LHCb::Particle* el
     znew-=dz;
   }
 
-  if (distmin> m_maxdistpair || distYmin >m_maxdistpair/2) {  return StatusCode::FAILURE ;}
+  if (distmin> m_maxdistpair || distYmin >m_maxdistpair/2) { return StatusCode::FAILURE; }
 
   Gaudi::SymMatrix3x3 posCov;
   posCov[0][0]=(distXmin/2)*(distXmin/2); posCov[1][1]=(distYmin/2)*(distYmin/2); posCov[2][2]= (dz/2)*(dz/2);
@@ -583,9 +596,11 @@ StatusCode DiElectronMaker::combinepair(LHCb::Particle* ele1, LHCb::Particle* el
   vct /= mass ;
   
   const double massErr2 = ROOT::Math::Similarity ( covariance , vct ) ;
-  mother.setMeasuredMassErr ( sqrt( massErr2 ) );
+  mother.setMeasuredMassErr ( std::sqrt( massErr2 ) );
 
-  if ( msgLevel(MSG::DEBUG) ) debug() <<"Created mother: momentum="<<mother.momentum()<<", mass= "<<mother.measuredMass()<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Created mother: momentum=" << mother.momentum() << ", mass= " << mother.measuredMass()
+            << endmsg;
 
   //  warning() <<"Created mother: momentum="<<mother.momentum()<<", mass= "<<mother.measuredMass()<<endmsg;
 
