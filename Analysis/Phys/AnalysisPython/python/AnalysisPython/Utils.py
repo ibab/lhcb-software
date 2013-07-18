@@ -92,10 +92,9 @@ class Memory(object):
     def __enter__ ( self ) :
         self.memory = cpp.System.virtualMemory()
     def __exit__  ( self, *_ ) :
-        if not _ : 
-            self.delta = cpp.System.virtualMemory() - self.memory
-            print  '%s Memory %.1fMB ' % ( self.name , 0.001*self.delta ) 
-            
+        self.delta = cpp.System.virtualMemory() - self.memory
+        print  '%s Memory %.1fMB ' % ( self.name , 0.001*self.delta ) 
+        
 
 # ============================================================================
 ## create the context manager to monitor the virtual memory increase  
@@ -160,12 +159,11 @@ class Clock(object):
     def __init__  ( self , name = '' ) :
         self.name   = name
     def __enter__ ( self ) :
-            self.clock = time.clock() 
+        self.clock = time.clock() 
     def __exit__  ( self, *_ ) :
-        if not _ : 
-            self.delta = time.clock() - self.clock
-            print  '%s Clocks %s ' % ( self.name , self.delta ) 
-
+        self.delta = time.clock() - self.clock
+        print  '%s Clocks %s ' % ( self.name , self.delta ) 
+        
 # =============================================================================
 ## @class Timer
 #  Simple context manager to measure the time 
@@ -212,10 +210,9 @@ class Timer(object):
     def __enter__ ( self ) :
         self.time = time.time() 
     def __exit__  ( self, *_ ) :
-        if not _ :
-            self.delta = time.time() - self.time
-            print  '%s Time   %s ' % ( self.name , self.delta ) 
-            
+        self.delta = time.time() - self.time
+        print  '%s Time   %s ' % ( self.name , self.delta ) 
+        
 
 # =============================================================================
 ## Simple context manager to measure the clock counts

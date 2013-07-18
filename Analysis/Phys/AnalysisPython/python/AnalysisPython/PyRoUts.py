@@ -186,10 +186,36 @@ def _prec_ ( s )  :
     #
     return c/v
 
+# =============================================================================
+## get the precision with some  error estimation 
+#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @date   2012-10-15
+def _prec2_ ( s )  :
+    """
+    Get precision with ``some'' error estimate 
 
-VE . b2s       = _b2s_
-VE . prec      = _prec_
-VE . precision = _prec_
+    >>> v = ...
+    >>> p = v.prec2() 
+    
+    """
+    if not hasattr ( s , 'value' ) :
+        return _prec_ ( VE ( s , 0 ) )
+    #
+    c =       s.error ()
+    v = abs ( s.value () ) 
+    #
+    if     c <  0 or v == 0  : return VE(-1,0)
+    elif   c == 0            : return VE( 0,0)
+    #
+    return c/abs(s) 
+
+
+VE . b2s        = _b2s_
+VE . prec       = _prec_
+VE . precision  = _prec_
+
+VE . prec2      = _prec2_
+VE . precision2 = _prec2_
 
 
 # =============================================================================
@@ -4655,6 +4681,8 @@ def _iter_cuts_ ( self , cuts , first = 0 , last = _large ) :
 ROOT.TTree .withCuts  = _iter_cuts_ 
 ROOT.TChain.withCuts  = _iter_cuts_ 
 
+ROOT.TTree. __len__   = lambda s : s.GetEntries()
+
 # =============================================================================
 ## help project method for ROOT-trees and chains 
 #
@@ -4779,6 +4807,9 @@ def _ds_print_ ( dataset , opts = 'v' ) :
 ROOT.RooDataSet.draw     = _ds_draw_
 ROOT.RooDataSet.project  = _ds_project_
 ROOT.RooDataSet.__repr__ = _ds_print_
+
+ROOT.RooDataHist.__repr__ = _ds_print_
+ROOT.RooDataHist.__len__  = lambda s : s.numEntries() 
 
 # ==============================================================================
 ## print ROOT file (altually a combination of ls&Print)
@@ -5561,6 +5592,27 @@ ROOT.RooRealVar   . fix     = _fix_par_
 ROOT.RooRealVar   . Fix     = _fix_par_
 ROOT.RooRealVar   . release = _rel_par_
 ROOT.RooRealVar   . Release = _rel_par_
+
+# ============================================================================
+## make a histogram for RooRealVar
+#  @see RooRealVar
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-07-14
+def _rrv_as_H1_ ( v , bins = 100 , double = True ) :
+    """
+    Make TH1 histogram from RooRealVar
+
+    >>> variable = ...
+    >>> histo = variable.histo ( 100 )
+    
+    """
+    _hT = ROOT.TH1D if double else ROOT.TH1F 
+    _h  = _hT ( hID() , v.GetTitle() , bins , v.getMin()  , v.getMax() )
+    _h.Sumw2()
+    return _h 
+
+ROOT.RooRealVar   . histo = _rrv_as_H1_
+ROOT.RooRealVar   . asH1  = _rrv_as_H1_
 
 # ============================================================================
 ## Addition of RooRealVar and ``number''
