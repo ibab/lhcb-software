@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackMatching
 ################################################################################
-gaudi_subdir(TrackMatching v2r35p2)
+gaudi_subdir(TrackMatching v2r35p3)
 
 gaudi_depends_on_subdirs(Det/STDet
                          Event/DigiEvent
