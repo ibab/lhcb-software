@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!========================= RichTools v2r42 2013-07-18 =========================
 ! 2013-06-12 - Chris Jones
  - Suppress a gcc 4.8 warning in SnellsLawRefraction
 
