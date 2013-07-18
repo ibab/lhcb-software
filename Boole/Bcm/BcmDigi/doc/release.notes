@@ -4,6 +4,7 @@
 ! Purpose     : Create BcmDigits and MCBcmDigits from hits on the BCM
 !-----------------------------------------------------------------------------
 
+!========================= BcmDigi v1r2 2013-07-18 =========================
 ! 2013-06-24 - Marco Cattaneo
  - Big code cleanup:
    . Remove unused variables and properties (and fix an UNINIT_CTOR)
