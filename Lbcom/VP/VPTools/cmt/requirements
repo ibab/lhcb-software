@@ -2,16 +2,16 @@
 # Maintainer : Victor Coco
 #
 package           VPTools
-version           v2r1
+version           v2r1p1
 
 # Structure, i.e. directories to process. 
-#============================================================================
+#=========================================================================
 branches          cmt doc src
 
 include_path none
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
-#============================================================================
+#=========================================================================
 
 use  LHCbTrackInterfaces v*  Tr
 use  DigiEvent           v*  Event
@@ -21,7 +21,7 @@ use  GaudiGSL            v*
 use  TrackEvent          v*  Event
 
 # Component library building rule
-#============================================================================
+#=========================================================================
 library          VPTools      ../src/*.cpp 
 
 apply_pattern component_library library=VPTools
