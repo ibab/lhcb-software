@@ -3,6 +3,8 @@
 ! Responsible : Eric Cogneras
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
+
+!========================= FTDigitisation v1r5 2013-07-18 =========================
 ! 2013-07-12 - Eric Cogneras
  - MCFTDepositCreator : adapt the call of function converting 'hit to ftchannel' to have  backward 
    compatibility between old and new detector description
