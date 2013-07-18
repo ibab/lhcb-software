@@ -4,6 +4,7 @@
 ! Purpose     : Fit parameters for the pattern
 !-----------------------------------------------------------------------------
 
+!========================= PrFitParams v1r3 2013-07-18 =========================
 ! 2013-07-03 - Michel De Cian
  - Fix (maybe) uninitialised variable in PrFitFwdParams
 
