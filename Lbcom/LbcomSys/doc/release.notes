@@ -6,10 +6,30 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-- Packages removed: Calo/CaloTools (moved to Rec)
+</PRE><H1><A NAME=v14r1>2013-07-18 LbcomSys v14r1</A></H1><PRE>
+This version uses Gaudi v23r9 and LHCb v36r1
 
-- Changes to tests:
-  . Update configurables.ref to follow move of CaloTools to Rec
+- Packages removed:  Calo/CaloTools (moved to Rec)
+- Packages modified: OT/OTMonitor v3r6p1, Rich/RichTools v2r42,
+    ST/STAlgorithms v4r7, VP/VPDAQ v2r3, VP/VPTools v2r1p1
+
+- In OT/OTMonitor v3r6p1
+  . Restore v3r5p1 fixes, removed in v3r6 by mistake.
+
+- In Rich/RichTools v2r42
+  . Suppress a gcc 4.8 warning in SnellsLawRefraction
+
+- In ST/STAlgorithms v4r7
+  . STCosmicsFilter moved to Tf/TsaAlgorithms, to remove TsaKernel dependency
+
+- In VP/VPDAQ v2r3
+  . Fix UNINIT_CTOR defects
+  . Fix untested StatusCode from Warning() messages
+  . Clean up unnecessary includes
+  . Remove empty finalize methods
+
+- In VP/VPTools v2r1p1
+  . Change TrackInterfaces dependency to LHCbTrackInterfaces
 
 </PRE><H1><A NAME=v14r0>2013-06-05 LbcomSys v14r0</A></H1><PRE>
 This version uses Gaudi v23r8 and LHCb v36r0
