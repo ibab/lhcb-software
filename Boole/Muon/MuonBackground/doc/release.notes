@@ -5,6 +5,7 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+!========================= MuonBackground v2r15 2013-07-18 ========================
 ! 2013-06-24 - Marco Cattaneo
  - Fix a gcc48 warning
  - Protect debug and verbose messages
