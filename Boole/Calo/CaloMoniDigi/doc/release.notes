@@ -4,6 +4,7 @@
 ! Purpose     : monitoring of Calo content for Boole output
 ! -----------------------------------------------------------------------------
 
+!========================= CaloMoniDigi v2r6 2013-07-18 =========================
 ! 2013-06-26 - Marco Cattaneo
  - Fix an UNINIT_CTOR defect
  - Protect unprotected debug()
