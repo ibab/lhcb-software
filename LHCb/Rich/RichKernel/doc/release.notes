@@ -4,10 +4,10 @@
 ! Purpose     : General purpose RICH classes
 !------------------------------------------------------------------------------
 
+!========================= RichKernel v7r54 2013-07-18 =========================
 ! 2013-07-17 - Marco Clemencic
  - Minor change to CMake configuration.
 
-!========================= RichKernel v7r54 2013-07-17 =========================
 ! 2013-07-16 - Chris Jones
  - Add VDT math library to dependencies.
 
