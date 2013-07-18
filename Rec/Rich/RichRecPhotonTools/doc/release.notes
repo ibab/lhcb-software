@@ -4,6 +4,7 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecPhotonTools v1r11 2013-07-18 =======================
 ! 2013-07-16 - Chris Jones
  - Use vdt library instead of private 'RichKernel/FastMaths.h'.
 
