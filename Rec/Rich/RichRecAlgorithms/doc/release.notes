@@ -4,17 +4,18 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+!========================= RichRecAlgorithms v2r20p1 2013-07-18 ======================
 ! 2013-06-18 - Marco Cattaneo
  - Add missing dependency on TrackInterfaces
 
-!========================= RichRecAlgorithms v2r20 2012-11-28 =========================
+!========================= RichRecAlgorithms v2r20 2012-11-28 ========================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
 
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= RichRecAlgorithms v2r19 2011-08-31 =========================
+!========================= RichRecAlgorithms v2r19 2011-08-31 ========================
 ! 2011-08-25 - Chris Jones
  - Load the background tool privately.
 
