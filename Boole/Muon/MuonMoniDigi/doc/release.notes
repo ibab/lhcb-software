@@ -3,6 +3,7 @@
 !Package manager : A Sarti
 !-----------------------------------------------------------------------------
 
+!========================= MuonMoniDigi v2r8 2013-07-18 =========================
 ! 2013-06-26 - Marco Cattaneo
  - Fix REVERSE_INULL defect
  - Protect unprotected debug()
