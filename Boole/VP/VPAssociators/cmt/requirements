@@ -2,16 +2,16 @@
 # Maintainer : Marcin Kucharczyk
 #
 package           VPAssociators
-version           v2r1
+version           v2r2
 
 # Structure, i.e. directories to process. 
-#============================================================================
+#=========================================================================
 branches          cmt doc src
 
 include_path none
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
-#============================================================================
+#=========================================================================
 use  LHCbKernel    v*  Kernel
 use  MCEvent       v*  Event
 use  DigiEvent     v*  Event
@@ -24,6 +24,6 @@ use  GSL           v*  LCG_Interfaces
 use  DAQEvent      v*  Event
 
 # Component library building rule
-#============================================================================
+#=========================================================================
 library          VPAssociators      ../src/*.cpp -import=AIDA
 apply_pattern component_library library=VPAssociators
