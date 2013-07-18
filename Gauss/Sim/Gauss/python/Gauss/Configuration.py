@@ -2831,6 +2831,8 @@ class Gauss(LHCbConfigurableUser):
                  GiGaPhysConstructorOpCkv,
                  GiGaPhysConstructorPhotoDetector
                  )
+             # Line to remove AEROGEL warnings
+             SimulationSvc().SimulationDbLocation = "$GAUSSROOT/xml/SimulationRICHesOff.xml"
              importOptions("$GAUSSCHERENKOVROOT/options/GaussCherenkov.opts")
              # richPmt False unless there's > 1 upgrade Rich
              giga.ModularPL.addTool( GiGaPhysConstructorOpCkv,
@@ -2844,6 +2846,7 @@ class Gauss(LHCbConfigurableUser):
                  GiGaPhysConstructorOp,
                  GiGaPhysConstructorHpd
                  )
+             SimulationSvc().SimulationDbLocation = "$GAUSSROOT/xml/Simulation.xml"
              if [det for det in ['Rich1', 'Rich2'] if det in self.getProp('DetectorSim')['Detectors']]:
                  importOptions("$GAUSSRICHROOT/options/Rich.opts")
              else:
@@ -2881,7 +2884,7 @@ class Gauss(LHCbConfigurableUser):
          giga.TrackSeq.PostTrack.StoredOwnProcesses = [ "Decay" ]
          giga.StepSeq.Members += [ "GaussStepAction/GaussStep" ]
 
-         SimulationSvc().SimulationDbLocation = "$GAUSSROOT/xml/Simulation.xml"
+
          giga.addTool( GiGaRunManager("GiGaMgr") , name="GiGaMgr" ) 
          giga.GiGaMgr.RunTools += [ "GiGaSetSimAttributes" ]
          giga.GiGaMgr.RunTools += [ "GiGaRegionsTool" ]

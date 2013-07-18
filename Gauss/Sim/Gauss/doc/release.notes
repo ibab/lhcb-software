@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-07-18 - Paul Szczypka
+ - Updated Configuration to remove the now-annoying AEROGEL WARNINGS.
+
 ! 2012-07-12 - Paul Szczypka
  - QMTests: Added new gauss-upgrade-ft qmtest, currently points to my public area
    for the DDDB location. Needs to be updated once the geo is in the official DB.
