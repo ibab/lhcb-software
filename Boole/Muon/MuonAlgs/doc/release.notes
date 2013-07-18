@@ -4,6 +4,7 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= MuonAlgs v6r13 2013-07-18 =========================
 ! 2013-06-26 - Marco Cattaneo
  - Fix several Coverity defects
  - Protect unprotected debug()
