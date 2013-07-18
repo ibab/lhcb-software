@@ -3,12 +3,6 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
- - QMTest Changes
-   . updated the following references:
-     - boole-upgrade-minimal
-     - boole-upgrade-ut
-     - boole-upgrade-vp_compact_microchannel-ut-ft
-
 </PRE><H1><A NAME=v26r7>2013-07-22 Boole v26r7</A></H1><PRE>
 This version uses projects LCGCMT 65a, Gaudi v23r9, LHCb v36r1, Lbcom v14r1
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
@@ -20,6 +14,10 @@ This version uses projects LCGCMT 65a, Gaudi v23r9, LHCb v36r1, Lbcom v14r1
    . boole-upgrade-ft and ref changed to use new FT geo. Needs to be changed once
      the geo is in the official DB.
    . added local tag options to ut and ft tests.
+   . updated the following references:
+     - boole-upgrade-minimal
+     - boole-upgrade-ut
+     - boole-upgrade-vp_compact_microchannel-ut-ft
 
  - Changes to references to follow changes in underlying packages
    . New FT monitoring histograms
