@@ -22,6 +22,7 @@ RichPhotInfo::RichPhotInfo() :
   m_QW2PCreflFlagSave(0),
   m_PhotonHpdReflectionFlag(0),
   m_HpdQWPhotIncidentPosition(0),
+  m_PmtLensPhotIncidentPosition(0),
   m_PhotonSourceInfo(0)
    {; }
 

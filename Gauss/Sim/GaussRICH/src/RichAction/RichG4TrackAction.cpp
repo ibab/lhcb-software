@@ -2,7 +2,7 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+//#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"
@@ -27,7 +27,7 @@
 #include "GaudiKernel/PropertyMgr.h"
 
 // local
-#include "RichG4TrackAction.h"
+#include "GaussRICH/RichG4TrackAction.h"
 #include "GaussRICH/RichG4AnalysisConstGauss.h"
 
 //-----------------------------------------------------------------------------
@@ -37,8 +37,8 @@
 // 2007-01-11 : Gloria Corti, modified for Gaudi v19
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( RichG4TrackAction );
+// Declaration of the Tool Factory. moved to Factories.cpp
+//DECLARE_TOOL_FACTORY( RichG4TrackAction );
 
 
 //=============================================================================

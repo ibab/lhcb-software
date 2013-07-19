@@ -2,7 +2,7 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+//#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // Geant4
 #include "G4Track.hh"
@@ -32,7 +32,7 @@
 #include "GaussRICH/RichG4AnalysisConstGauss.h"
 #include "GaussRICH/RichG4GaussPathNames.h"
 #include "GaussRICH/RichG4SvcLocator.h"
-#include "RichG4TrackActionAerogelPhoton.h"
+#include "GaussRICH/RichG4TrackActionAerogelPhoton.h"
 #include "GaussRICH/RichG4MatRadIdentifier.h"
 #include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
 
@@ -44,8 +44,10 @@
 // 2007-01-11 : Gloria Corti, modified for Gaudi v19
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( RichG4TrackActionAerogelPhoton );
+// Declaration of the Tool Factory. moved to Facotries.cpp
+
+//DECLARE_TOOL_FACTORY( RichG4TrackActionAerogelPhoton );
+
 
 
 //=============================================================================

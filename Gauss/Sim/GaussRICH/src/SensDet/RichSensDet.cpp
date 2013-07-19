@@ -5,7 +5,7 @@
 #include "CLHEP/Geometry/Point3D.h"
 
 // Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+//#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 
@@ -28,7 +28,7 @@
 #include "GaussTools/GaussTrackInformation.h"
 
 // local
-#include "RichSensDet.h"
+#include "GaussRICH/RichSensDet.h"
 #include "GaussRICH/RichInfo.h"
 #include "GaussRICH/RichPEInfo.h"
 #include "GaussRICH/RichPhotoElectron.h"
@@ -41,8 +41,8 @@ using namespace std;
 // 2007-01-11 : Gloria Corti, adapt to Gaudi v19 (compatible also with v18)
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( RichSensDet );
+// Declaration of the Tool Factory moved to Factories.cpp
+//DECLARE_TOOL_FACTORY( RichSensDet );
 
 
 //=============================================================================

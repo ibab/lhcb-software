@@ -16,7 +16,7 @@
 
 //
 /// GaudiKernel
-#include "GaudiKernel/DeclareFactoryEntries.h"
+//#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IValidity.h"
@@ -34,7 +34,7 @@
 #include "GaussTools/GaussTrackInformation.h"
 
 // local
-#include "RichG4StepAnalysis3.h"
+#include "GaussRICH/RichG4StepAnalysis3.h"
 #include "GaussRICH/RichG4AnalysisConstGauss.h"
 #include "GaussRICH/RichG4GaussPathNames.h"
 #include "GaussRICH/RichG4Counters.h"
@@ -48,7 +48,8 @@
 //
 // 2003-06-07 : Sajan EASO
 //-----------------------------------------------------------------------------
-DECLARE_TOOL_FACTORY(RichG4StepAnalysis3);
+// moved to Factores.cpp
+//DECLARE_TOOL_FACTORY(RichG4StepAnalysis3);
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -375,6 +376,8 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
                 G4int   aPeRadiatorNumber =  -1;
                 // the following variable not used for now.
+                //G4int   aMotherChTkId = -1;
+
 
                 G4VUserTrackInformation* aUserTrackinfo=
                   aTrack->GetUserInformation();
@@ -396,7 +399,8 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
                         aPeRadiatorNumber =
                           aPEInfo->PhotOriginRadiatorNumber();
-                        aPEInfo-> MotherOfPhotonId();
+                        //  aMotherChTkId
+                        //  = aPEInfo-> MotherOfPhotonId();
 
                       }
                     }

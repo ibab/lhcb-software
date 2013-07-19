@@ -21,11 +21,11 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Bootstrap.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
+//#include "GaudiKernel/DeclareFactoryEntries.h"
 // GiGa
 #include <math.h>
 #include "GaussTools/GaussTrackInformation.h"
-#include "RichG4StepAnalysis6.h"
+#include "GaussRICH/RichG4StepAnalysis6.h"
 #include "GaussRICH/RichG4AnalysisConstGauss.h"
 #include "GaussRICH/RichG4GaussPathNames.h"
 #include "GaussRICH/RichG4HpdReflectionFlag.h"
@@ -37,7 +37,7 @@
 //
 // 2007-10-30 : Sajan EASO
 //-----------------------------------------------------------------------------
-DECLARE_TOOL_FACTORY(RichG4StepAnalysis6);
+//DECLARE_TOOL_FACTORY(RichG4StepAnalysis6); // moved to Factories.cpp
 
 
 //=============================================================================

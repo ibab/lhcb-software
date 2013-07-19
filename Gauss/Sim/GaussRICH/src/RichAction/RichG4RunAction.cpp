@@ -2,13 +2,14 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+//#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // G4
 #include "G4UImanager.hh"
 
 // Local
-#include "RichG4RunAction.h"
+
+#include "GaussRICH/RichG4RunAction.h"
 #include "GaussRICH/RichG4HistoDefineSet1.h"
 #include "RichG4HistoDefineSet2.h"
 #include "GaussRICH/RichG4HistoDefineSet3.h"
@@ -27,8 +28,8 @@
 // 2007-01-11 : Gloria Corti, modified for Gaudi v19
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( RichG4RunAction );
+// Declaration of the Tool Factory moved to factories.cpp
+//DECLARE_TOOL_FACTORY( RichG4RunAction );
 
 
 //=============================================================================

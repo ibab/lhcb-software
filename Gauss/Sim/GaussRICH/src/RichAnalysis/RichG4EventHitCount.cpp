@@ -436,6 +436,8 @@ bool RichG4EventHitCount::Rich1TrajTraverse
   bool aTravRich1Fid= false;
   bool Rich1ProjFid= false;
   int aTravRich1FiducialCount=0;
+  //  bool  TooFewTrajPoint=false;
+  //bool AllOutsideRich1=false;
 
 
   for (int itraj=0; itraj<  n_trajectories ; itraj++ ) {
@@ -474,6 +476,7 @@ bool RichG4EventHitCount::Rich1TrajTraverse
         //   G4cout<<"Rich1Traj itrajID NumTrajPt =  "
         //      << trajId<<"  "<< NumTjPoints<<G4endl;
         if( NumTjPoints <= 1 ) {
+          // TooFewTrajPoint = true;
           //  G4cout<<" Rich1Traj itraj Toofew traj "<< itraj
           //       <<"   "<<NumTjPoints<< G4endl;
 
@@ -486,6 +489,7 @@ bool RichG4EventHitCount::Rich1TrajTraverse
           const G4ThreeVector & aTjPosLast=aTjPointLast -> GetPosition() ;
           if(  ( aTjPosFirst.z() >    Rich1FiducialDnstrZ)  ||
                ( aTjPosLast.z() < Rich1FiducialUpstrZ ) ){
+            // AllOutsideRich1= true;
             //  G4cout<<" Rich1Traj AllOutsiderich1 first last traj "<<
             //     aTjPosFirst.z()<<"  "<<aTjPosLast.z()
             //      <<"  "<< itraj <<G4endl;
@@ -669,6 +673,8 @@ bool RichG4EventHitCount::Rich1AgelTrajTraverse
   bool aTravRich1AgelFid= false;
   bool Rich1AgelProjFid= false;
   int aTravRich1AgelFiducialCount=0;
+  // bool  TooFewTrajPoint=false;
+  // bool AllOutsideRich1Agel=false;
 
 
   for (int itraj=0; itraj<  n_trajectories ; itraj++ ) {
@@ -702,6 +708,7 @@ bool RichG4EventHitCount::Rich1AgelTrajTraverse
         int NumTjPoints = CurTraj-> GetPointEntries();
 
         if( NumTjPoints <= 1 ) {
+          // TooFewTrajPoint = true;
           //  G4cout<<" Rich1Traj itraj Toofew traj "<< itraj
           //       <<"   "<<NumTjPoints<< G4endl;
 
@@ -714,6 +721,7 @@ bool RichG4EventHitCount::Rich1AgelTrajTraverse
           const G4ThreeVector & aTjPosLast=aTjPointLast -> GetPosition() ;
           if(  ( aTjPosFirst.z() >    Rich1AgelFiducialDnstrZ)  ||
                ( aTjPosLast.z() < Rich1AgelFiducialUpstrZ ) ){
+            //AllOutsideRich1Agel= true;
             //    G4cout<<" Rich1Traj AllOutsiderich1Agel first last traj "<<
             //     aTjPosFirst.z()<<"  "<<aTjPosLast.z()
             //      <<"  "<< itraj <<G4endl;
@@ -875,6 +883,10 @@ bool RichG4EventHitCount::Rich2TrajTraverse
   bool aTravRich2Fid= false;
   bool Rich2ProjFid= false;
   int aTravRich2FiducialCount=0;
+  //  bool TooFewTrajPoint=false;
+
+  //  bool AllOutsideRich2=false;
+
 
   for (int itraj=0; itraj<  n_trajectories ; itraj++ ) {
 
@@ -913,6 +925,7 @@ bool RichG4EventHitCount::Rich2TrajTraverse
 
 
         if( NumTjPoints <= 1 ) {
+          // TooFewTrajPoint = true;
           // G4cout<<" Rich2Traj itraj Toofew trajid "<< trajId
           //       <<"   "<<NumTjPoints<< G4endl;
 
@@ -925,6 +938,7 @@ bool RichG4EventHitCount::Rich2TrajTraverse
           const G4ThreeVector & aTjPosLast=aTjPointLast -> GetPosition() ;
           if(  ( aTjPosFirst.z() >    Rich2FiducialDnstrZ)  ||
                ( aTjPosLast.z() < Rich2FiducialUpstrZ ) ){
+            // AllOutsideRich2= true;
             //    G4cout<<" Rich2Traj AllOutsiderich2 first last itraj "
             //      << aTjPosFirst.z()<<"  "<<aTjPosLast.z()
             //      <<"   "<< trajId <<G4endl;
@@ -2037,10 +2051,21 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
 
             G4int aRadiatorNum=  aHit->GetRadiatorNumber();
             // Momentum of charged track in MeV
+            // G4double aChTrackTotMom =  aHit->ChTrackTotMom() ;
             // G4double CkvTheta=      aHit->  ThetaCkvAtProd();
             G4int ChtkId =  aHit-> GetChTrackID();
-            G4int aPhotonSource= aHit->PhotonSourceProcessInfo();
+            // G4double ChTkPDGMass =  aHit->RichChTrackMass();
 
+            G4int aPhotonSource= aHit->PhotonSourceProcessInfo();
+            
+            //G4double ChTkEnergy =
+            //  pow( (ChTkPDGMass*ChTkPDGMass+ aChTrackTotMom* aChTrackTotMom),0.5);
+            // G4double ChTkBeta=0.0;
+
+            //            if( ChTkEnergy > 0.0 ) {
+
+              //ChTkBeta = aChTrackTotMom/ChTkEnergy;
+            //            }
 
             //    cout<<" RichEventHitCount RadNum ChTkId=   "
             //    << aRadiatorNum

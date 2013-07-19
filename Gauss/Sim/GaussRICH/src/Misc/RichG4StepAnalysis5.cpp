@@ -29,7 +29,7 @@
 
 
 // local
-#include "RichG4StepAnalysis5.h"
+#include "GaussRICH/RichG4StepAnalysis5.h"
 #include "GaussRICH/RichG4AnalysisConstGauss.h"
 #include "GaussRICH/RichG4GaussPathNames.h"
 #include "GaussRICH/RichG4MirrorReflPointTag.h"
@@ -39,7 +39,7 @@
 //
 // 2004-05-27 : Sajan EASO
 //-----------------------------------------------------------------------------
-DECLARE_TOOL_FACTORY(RichG4StepAnalysis5);
+//DECLARE_TOOL_FACTORY(RichG4StepAnalysis5); //moved to factories.cpp
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -108,6 +108,9 @@ void RichG4StepAnalysis5::UserSteppingAction( const G4Step* aStep )
        
         int aCurrentCopyNum=  aPostStepPoint->GetPhysicalVolume()->GetCopyNo();        
         int aCurrentCopyNumPreVol=  aPreStepPoint->GetPhysicalVolume()->GetCopyNo();        
+
+        //        int CurrentRichDetnum=0;
+        
         
         // now for rich1.        
         if( prePos.z() >= ZUpsRich1Analysis &&
@@ -147,6 +150,8 @@ void RichG4StepAnalysis5::UserSteppingAction( const G4Step* aStep )
          {
            //           G4cout<<"step analysis5  rich2 post vol name "<< aPostVolName<<G4endl;
            // G4cout<<"step analysis5  rich2 pre vol name "<< aPreVolName<<G4endl;
+
+           // CurrentRichDetnum=1;
            G4String  aPreVolNameM2 =std::string(aPreVolName,0,57);
            G4String  aPostVolNameM2 =std::string(aPostVolName,0,53);
            std::string::size_type aPreVolNameSubStrSize=0;

@@ -25,6 +25,9 @@ RichG4HitCoordResult::RichG4HitCoordResult(  )
   m_DetPtInPhDetFromPixelNum = Gaudi::XYZPoint (0,0,0);
   m_DetPtInPhDetFromTrueLocalHit = Gaudi::XYZPoint (0,0,0);
   m_DetPtInPhDetFromGlobalPhCathode = Gaudi::XYZPoint (0,0,0);
+  m_SphReflPtD2E1 = Gaudi::XYZPoint (0,0,0);
+  m_SphReflPtD3E1 = Gaudi::XYZPoint (0,0,0);
+
 
 }
 //=============================================================================

@@ -2,10 +2,10 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+//#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // local
-#include "RichG4EventAction.h"
+#include "GaussRICH/RichG4EventAction.h"
 #include "GaussRICH/RichG4Hit.h"
 #include "GaussRICH/RichG4Counters.h"
 #include "RichG4EventHitCount.h"
@@ -34,8 +34,8 @@
 // 2007-01-11 : Gloria Corti, modified for Gaudi v19
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( RichG4EventAction );
+// Declaration of the Tool Factory moved to Factories.cpp
+//DECLARE_TOOL_FACTORY( RichG4EventAction );
 
 
 //=============================================================================

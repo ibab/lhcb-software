@@ -2,10 +2,10 @@
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h"
+//#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
-#include "GetMCRichHitsAlg.h"
+#include "GaussRICH/GetMCRichHitsAlg.h"
 #include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
 
 // namespaces
@@ -18,8 +18,8 @@ using namespace LHCb;
 // 2007-01-11 : Gloria Corti, adapt to Gaudi v19 (also compatible with v18)
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GetMCRichHitsAlg );
+// Declaration of the Algorithm Factory moved to Factories.cpp
+//DECLARE_ALGORITHM_FACTORY( GetMCRichHitsAlg );
 
 //=============================================================================
 // Standard constructor, initializes variables

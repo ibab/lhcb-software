@@ -2,10 +2,10 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+//#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // local
-#include "GetMCRichSegmentsAlg.h"
+#include "GaussRICH/GetMCRichSegmentsAlg.h"
 
 // namespaces
 using namespace LHCb;
@@ -17,8 +17,8 @@ using namespace LHCb;
 // 2007-01-11 : Gloria Corti, adapt to Gaudi v19 (also compatible with v18)
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GetMCRichSegmentsAlg );
+// Declaration of the Algorithm Factory moved to Factories.cpp
+//DECLARE_ALGORITHM_FACTORY( GetMCRichSegmentsAlg );
 
 
 //=============================================================================

@@ -163,6 +163,10 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
         const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
         const G4Material* aMaterial = aTrack.GetMaterial();
+        G4MaterialPropertiesTable* aMaterialPropertiesTable =
+                               aMaterial->GetMaterialPropertiesTable();
+        if (!aMaterialPropertiesTable)
+           return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 
 	G4StepPoint* pPreStepPoint  = aStep.GetPreStepPoint();
 	G4StepPoint* pPostStepPoint = aStep.GetPostStepPoint();
@@ -172,8 +176,10 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
   //              GetPhysicalVolume()->GetLogicalVolume()->GetName();
   // G4String  pPostVolName=  pPostStepPoint->
   //             GetPhysicalVolume()->GetLogicalVolume()->GetName();
-  // G4cout<<"G4Cerenkov: PreVol PostVol Names: "<<pPreVolName<<"    "
-  //       << pPostVolName<<G4endl;
+  //      G4String aMaterialName= aMaterial->GetName();
+  // G4cout<<"G4Cerenkov: PreVol PostVol Material Names: "<<pPreVolName<<"    "
+  //       << pPostVolName<<"   "<< aMaterialName<< G4endl;
+
 
   // end of test printout by SE
 
@@ -181,10 +187,6 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
         G4ThreeVector p0 = aStep.GetDeltaPosition().unit();
 	G4double t0 = pPreStepPoint->GetGlobalTime();
 
-        G4MaterialPropertiesTable* aMaterialPropertiesTable =
-                               aMaterial->GetMaterialPropertiesTable();
-        if (!aMaterialPropertiesTable)
-           return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 
        //Change by SE to produce photons only within a limited range of RefIndex.
         //	const G4MaterialPropertyVector* Rindex = 

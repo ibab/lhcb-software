@@ -24,13 +24,13 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/Bootstrap.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
+//#include "GaudiKernel/DeclareFactoryEntries.h"
 // GiGa
 #include <math.h>
 #include "GaussTools/GaussTrackInformation.h"
 
 // local
-#include "RichG4StepAnalysis4.h"
+#include "GaussRICH/RichG4StepAnalysis4.h"
 #include "GaussRICH/RichG4AnalysisConstGauss.h"
 #include "GaussRICH/RichG4GaussPathNames.h"
 #include "RichG4AgelExitTag.h"
@@ -42,7 +42,7 @@
 //
 // 2003-10-29 : Sajan EASO
 //-----------------------------------------------------------------------------
-DECLARE_TOOL_FACTORY(RichG4StepAnalysis4);
+//DECLARE_TOOL_FACTORY(RichG4StepAnalysis4); // moved to Factoreis.cpp
 
 //=============================================================================
 // Standard constructor, initializes variables

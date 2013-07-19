@@ -2,7 +2,7 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+//#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/MsgStream.h"
 
@@ -22,7 +22,7 @@
 #include "G4MaterialTable.hh"
 
 // local
-#include "GiGaPhysConstructorOp.h"
+#include "GaussRICH/GiGaPhysConstructorOp.h"
 #include "GaussRICH/RichPhotoElectron.h"
 #include "G4Electron.hh"
 #include "G4Transportation.hh"
@@ -45,8 +45,8 @@
 // 2007-01-11 : Gloria Corti, modified for Gaudi v19
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaPhysConstructorOp );
+// Declaration of the Tool Factory moved to Factories.cpp
+//DECLARE_TOOL_FACTORY( GiGaPhysConstructorOp );
 
 
 //=============================================================================

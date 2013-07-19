@@ -107,7 +107,8 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk,const G4Three
 	          CurRichPEInfo->setMirror1PhotDetCopyNum(aPhotInfo->Mirror1DetCopyNum());
 	          CurRichPEInfo->setMirror2PhotDetCopyNum(aPhotInfo->Mirror2DetCopyNum());
             CurRichPEInfo->setHpdQWExtPhotIncidentPosition(aPhotInfo->HpdQWPhotIncidentPosition() );
-
+            CurRichPEInfo->setPmtLensPhotIncidentPosition(aPhotInfo->PmtLensPhotIncidentPosition() );
+            
 
           }
 

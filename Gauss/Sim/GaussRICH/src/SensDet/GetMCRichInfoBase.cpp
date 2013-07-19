@@ -2,7 +2,7 @@
 // Include files
 
 // local
-#include "GetMCRichInfoBase.h"
+#include "GaussRICH/GetMCRichInfoBase.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : GetMCRichInfoBase

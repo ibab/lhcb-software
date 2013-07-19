@@ -26,6 +26,7 @@ RichPEInfo::RichPEInfo() :
  m_PhotoElectricFlag(0),
  m_HpdPhotonReflectionFlag(0),
  m_HpdQWExtPhotIncidentPosition(0),
+ m_PmtLensPhotIncidentPosition(0),
  m_HpdPeLocalOriginPosition(0),
  m_PhotonSourceInformation(0)
 {; }
