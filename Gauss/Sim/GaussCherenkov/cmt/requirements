@@ -27,6 +27,7 @@ use  LinkerEvent  v*   Event
 library          GaussCherenkov    ../src/*.cpp             \
                                 ../src/SensDet/*.cpp     \ 
                               ../src/CherenkovPhysProcess/*.cpp \
+                              ../src/CkvPhysPhotDet/*.cpp \
                               ../src/srcG4Ckv/*.cc       \
                               ../src/CherenkovAction/*.cpp \
                               ../src/CherenkovAnalysis/*.cpp \
@@ -46,7 +47,7 @@ apply_pattern    component_library library=GaussCherenkov
 
 # define options directory
 #============================================================================
-macro_append GaussCherenkov_linkopts "-lGaussRICH"
+#macro_append GaussCherenkov_linkopts "-lGaussRICH"
 # special linking for genConf (see GaudiTools)
 #============================================================================
 private
@@ -56,6 +57,7 @@ private
 include_dirs     $(GAUSSCHERENKOVROOT) \
                  $(GAUSSCHERENKOVROOT)/src/SensDet \
                  $(GAUSSCHERENKOVROOT)/src/CherenkovPhysProcess \
+                 $(GAUSSCHERENKOVROOT)/src/CkvPhysPhotDet \
                  $(GAUSSCHERENKOVROOT)/src/srcG4Ckv \
                  $(GAUSSCHERENKOVROOT)/src/CherenkovAction \
                  $(GAUSSCHERENKOVROOT)/src/CherenkovAnalysis \
