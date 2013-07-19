@@ -5,10 +5,11 @@
 // Include files
 
 #include "CherenkovG4CkvRecon.h"
-#include "GaussRICH/RichG4ReconFlatMirr.h"
+//#include "GaussRICH/RichG4ReconFlatMirr.h"
 #include "CherenkovG4HistoFillSet4.h"
 #include "CherenkovG4HistoFillSet5.h"
 #include "GaussRICH/RichG4HitCoordResult.h"
+#include "GaussCherenkov/CkvG4ReconFlatMirr.h"
 
 #include "G4Event.hh"
 
@@ -41,7 +42,7 @@ public:
   }
 
   void   setRichG4FlatMirr();
-  RichG4ReconFlatMirr* getRichG4ReconFlatMirr();
+  CkvG4ReconFlatMirr* getRichG4ReconFlatMirr();
 
   CherenkovG4HistoFillSet4* RichG4HistoFillSet4Ckv()
   {
@@ -105,7 +106,7 @@ public:
 private:
 
   CherenkovG4CkvRecon* m_RichG4CkvRec;
-  RichG4ReconFlatMirr* m_RichG4ReconFlatMirr;
+  CkvG4ReconFlatMirr* m_RichG4ReconFlatMirr;
   CherenkovG4HistoFillSet4* m_RichG4HistoFillSet4Ckv;
   CherenkovG4HistoFillSet5* m_CherenkovG4HistoFillSet5Occp;
   RichG4ReconResult* m_RichG4ReconResult;
@@ -125,6 +126,9 @@ private:
   bool m_activateMinMomForTrackRecon;
   double m_minMomTracksForReconR1Gas;
   double m_minMomTracksForReconR2Gas;
- 
+  double m_MaxRich1TrackPreStepPosZ;
+  double m_MinRich1TrackPostStepPosZ;
+  
+
 };
 #endif // RICHANALYSIS_CHERENKOVG4HITRECON_H

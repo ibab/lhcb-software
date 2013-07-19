@@ -8,7 +8,7 @@
 #include "G4ios.hh"
 
 
-#include "RichPmtQE.h"
+#include "GaussCherenkov/RichPmtQE.h"
 
 
 

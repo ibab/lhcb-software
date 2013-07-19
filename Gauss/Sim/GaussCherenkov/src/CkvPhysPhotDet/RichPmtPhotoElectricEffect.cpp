@@ -29,7 +29,11 @@ RichPmtPhotoElectricEffect::RichPmtPhotoElectricEffect(const GiGaBase* /*gigabas
                                                        G4ProcessType   aType)
   : G4VDiscreteProcess(processName, aType ),
     m_numTotPmt(std::vector<int>(2)),
-    m_PmtQESourceTable(0)
+    m_PmtQESourceTable(0),
+    m_PmtModuleSupFlag3(false),
+    m_PmtModuleSupFlag4(false),
+    m_PmtModuleSupFlag5(false),
+    m_PmtModuleSupFlag6(false)
 {
     //  G4cout << GetProcessName() << " is created " << G4endl;
 }
@@ -50,6 +54,10 @@ void RichPmtPhotoElectricEffect::setPmtPhElecParam()
     //    m_PmtProperty -> setUsingPmtMagneticFieldDistortion((bool) m_UsePmtMagDistortions );
      m_PmtProperty -> setUseNominalPmtQE( (bool) m_PmtQEUsingNominalTable );
      m_PmtProperty -> SetCurQETableSourceOption ( m_PmtQESourceTable);
+     m_PmtProperty ->setActivatePmtModuleSuppressSet3(m_PmtModuleSupFlag3);
+     m_PmtProperty ->setActivatePmtModuleSuppressSet4(m_PmtModuleSupFlag4);
+     m_PmtProperty ->setActivatePmtModuleSuppressSet5(m_PmtModuleSupFlag5);
+     m_PmtProperty ->setActivatePmtModuleSuppressSet6(m_PmtModuleSupFlag6);
      
     m_PmtProperty -> InitializePmtProperties( );
 
@@ -57,6 +65,8 @@ void RichPmtPhotoElectricEffect::setPmtPhElecParam()
     m_PhCathodeToSilDetMaxDist=m_PmtProperty->RichPmtQWToSiDist();
     m_PrePhotoElectricLogVolName=m_PmtProperty->PmtQWLogVolName();
     m_PostPhotoElectricLogVolName=m_PmtProperty->PmtPhCathodeLogVolName();
+    m_PrePhotoElectricLogVolNameWLens=m_PmtProperty->LPmtQWLogVolName();
+    m_PostPhotoElectricLogVolNameWLens=m_PmtProperty->LPmtPhCathodeLogVolName();
     m_PrePhotoElectricMatNameSec= RichPmtVacName;
     m_NumRichDet=m_PmtProperty->numberOfRichDetectors();
     if((int) m_numTotPmt.size() != m_NumRichDet )
@@ -66,15 +76,20 @@ void RichPmtPhotoElectricEffect::setPmtPhElecParam()
     m_Rich2PhysVolNameA= Rich2PhysVolGeomName;
     m_Rich1PhysVolNameB= Rich1DeStructurePathName;
     m_Rich2PhysVolNameB= Rich2DeStructurePathName;
+    m_SuperRichPhysVolNameA= SuperRichPhysVolGeomName;
+    m_SuperRichPhysVolNameB =SuperRichDeStructurePathName;
+    
 
     m_MaxZHitInRich1=  m_PmtProperty->Rich1MaxZHitZCoord();
     m_MaxAnyPmtQEff =   m_PmtProperty-> PmtMaxQuantumEff();
     
-    // G4cout<<" Pmt Ph elect Names "<<m_PrePhotoElectricLogVolName<<"  "<<
+    //G4cout<<" Pmt Ph elect Names "<<m_PrePhotoElectricLogVolName<<"  "<<
     //  m_PostPhotoElectricLogVolName<<"   "
     //      <<m_PrePhotoElectricMatNameSec<<G4endl;
     
-
+    // G4cout<<" Pmt Ph elect Names with lens "<< m_PrePhotoElectricLogVolNameWLens<<"  "
+    //       <<m_PostPhotoElectricLogVolNameWLens<<G4endl;
+     
 
 }
 
@@ -96,7 +111,7 @@ RichPmtPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
   G4String PostPhName= pPostStepPoint -> GetPhysicalVolume() ->
     GetLogicalVolume() -> GetName();
 
-  //  G4cout<<" Pmt Ph elec PrePh PostPh Names "<<PrePhName<<"  "
+  //    G4cout<<" Pmt Ph elec Proc PrePh PostPh Names "<<PrePhName<<"  "
   //      <<PostPhName<<G4endl;
   
   //   if(( (PrePhName == m_PrePhotoElectricLogVolName) &&
@@ -107,16 +122,17 @@ RichPmtPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
      if(( (PrePhName == m_PrePhotoElectricLogVolName) &&
         (PostPhName == m_PostPhotoElectricLogVolName) ) ||
         ( (PrePhName == m_PrePhotoElectricMatNameSec )  &&
-          (PostPhName == m_PostPhotoElectricLogVolName) )) {
-
-
-
+          (PostPhName == m_PostPhotoElectricLogVolName) ) ||
+        ( (PrePhName == m_PrePhotoElectricLogVolNameWLens) &&
+          (PostPhName == m_PostPhotoElectricLogVolNameWLens) ) ||   
+        ( (PrePhName == m_PrePhotoElectricMatNameSec )  &&
+          (PostPhName == m_PostPhotoElectricLogVolNameWLens) ))  {
   // temporary test with only qw-pc photons allowed to convert
   //if  if(( PostPhName == m_PostPhotoElectricLogVolName ) ) {
     // end of temporary test
 
-       //    G4cout<<"RichPmtPhElec effect PreVol Post Vol "<<PrePhName
-       // <<"   "<<PostPhName<<G4endl;
+       //       G4cout<<"RichPmtPhElec effect PreVol Post Vol "<<PrePhName
+       //  <<"   "<<PostPhName<<G4endl;
   }else {
 
 
@@ -161,33 +177,44 @@ RichPmtPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
   G4int currentRichDetNumber=0;
 
   //Current Rich Det is found by checking the global Z coordinate
-  // of the hit.
-  G4double CurrentZCoord = pPreStepPoint->GetPosition().z();
-  //G4cout<<" Pmt Ph elect Current Z coord "<<CurrentZCoord <<G4endl;
+  // of the hit. Added SuperRICH option as well
 
-  if(CurrentZCoord <= 0.0 ) {
+  G4double CurrentZCoord = pPreStepPoint->GetPosition().z();
+
+    RichPmtProperties*  m_PmtProperty = PmtProperty();
+  bool isSuperRich= m_PmtProperty-> getSuperRichFlag() ;
+  
+  //  G4cout<<" Pmt Ph elect Current Z coord "<<CurrentZCoord <<G4endl;
+  if(isSuperRich ) {
+    currentRichDetNumber=2;
+  }else {
+    
+  
+     if(CurrentZCoord <= 0.0 ) {
     // 0 or negative global Z coord. Something wrong.
 
-    G4cout<<" zero or negative photon Z coord at Photocathode  "
-          <<CurrentZCoord <<"     in Pmt  "<<currentPmtNumber<<G4endl;
+              G4cout<<" zero or negative photon Z coord at Photocathode  "
+             <<CurrentZCoord <<"     in Pmt  "<<currentPmtNumber<<G4endl;
+     }else if(CurrentZCoord < m_MaxZHitInRich1 ){
+          
+               // we are in Rich1
+       currentRichDetNumber=0;
+     }else{
+        // we are in Rich2
+       currentRichDetNumber=1;
+     }
+     
   }
-  else if(CurrentZCoord < m_MaxZHitInRich1 )
-  {
-    // we are in Rich1
-    currentRichDetNumber=0;
-  }
-  else
-  {
-    // we are in Rich2
-    currentRichDetNumber=1;
-  }
-
+  
+  
   // G4cout<<"Pmt phot elec effect Z coord RichDetnum  "<< CurrentZCoord <<"  "<<currentRichDetNumber<<G4endl;
   
   // now make extra tests for the detector number.
   // These tests can be removed in the future for optimization.
   //G4cout<<" PmtPhElect  Current richdet number "<<currentRichDetNumber<<G4endl;
-  
+  //      currentRichDetPhysName != m_SuperRichVolNameA &&
+  //     currentRichDetPhysName != m_SuperRichVolNameB ){
+ 
   G4String currentRichDetPhysName;
   if( currentRichDetNumber == 0 ) {
     // for rich1
@@ -199,14 +226,13 @@ RichPmtPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     currentRichDetPhysName = CurTT -> GetVolume(7)->GetName();
 
     if(currentRichDetPhysName != m_Rich1PhysVolNameA &&
-       currentRichDetPhysName != m_Rich1PhysVolNameB ){
-      G4cout << "hpd phot elec Proc: Unknown RICH1 det Phys Name "
+       currentRichDetPhysName != m_Rich1PhysVolNameB ) {    
+            G4cout << "hpd phot elec Proc: Unknown RICH1 det Phys Name "
              << currentRichDetPhysName << G4endl;
-      return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
+            return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
     }
-  }
-  else if (currentRichDetNumber==1 )
-  {
+    
+  }else if (currentRichDetNumber==1 ){
     // the following modif done for the new G4 version. SE Nov,2005.
 
     //  CurTT -> MoveUpHistory(2);
@@ -225,13 +251,30 @@ RichPmtPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
              << currentRichDetPhysName << G4endl;
       return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
     }
+    
 
     // modif to accomodate the hpd copy numbering scheme in rich2 db. 26-10-2006
 
     currentPmtNumber -= m_numTotPmt[0];     
     //    G4cout<<"Current Pmt copy num in Rich2" <<currentPmtNumber <<G4endl;
     
+  }else if ( currentRichDetNumber==2     ) {
+    currentRichDetPhysName = CurTT -> GetVolume(7)->GetName();
+    
+    if(currentRichDetPhysName != m_SuperRichPhysVolNameA &&
+       currentRichDetPhysName != m_SuperRichPhysVolNameB ){
+    
+      G4cout << "pmt phot elec: Unknown SuperRICH det Phys Name "
+             << currentRichDetPhysName << G4endl;
+      return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
+  
+    }
+    
   }
+  
+  
+  
+  
   // end of the extra tests that can be removed for optimization.
 
 
@@ -240,7 +283,7 @@ RichPmtPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
           <<currentPmtNumber
           <<"  for richdetnum  "<<currentRichDetNumber 
           <<"     Please check the XMLDDDB Version " <<G4endl;
-    G4cout<<" Max Num Pmt in Rich1 Rich2 "<<m_numTotPmt[0]<<" "<<m_numTotPmt[1]<<G4endl;
+    G4cout<<" Max Num Pmt in Rich1 Rich2 SuperRich "<<m_numTotPmt[0]<<" "<<m_numTotPmt[1]<< "  "<<m_numTotPmt[2] << G4endl;
     return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
   }
 
@@ -343,7 +386,7 @@ RichPmtPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     //   "    "<<      LocalElectronOrigin.z()<<"   "<<
     //    LocalElectronDirection.x()<<"   "<<   LocalElectronDirection.y()<<
     //   "    "<< LocalElectronDirection.z()<<G4endl;
-
+    //
     //normalize this vector and then transform back to global coord system.
     LocalElectronDirection = LocalElectronDirection.unit();
 
@@ -417,7 +460,7 @@ RichPmtPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     G4Track* aTaggedSecPETrack = RichPEInfoAttach(aTrack,aSecPETrack,LocalElectronOrigin);
     aParticleChange.AddSecondary(aTaggedSecPETrack);
 
-    // G4cout<<" RichPmtPhotoelectric effect : Now created a photoelectron with energy =  "      << ElecKineEnergy<<G4endl;
+    //   G4cout<<" RichPmtPhotoelectric effect : Now created a photoelectron with energy =  "      << ElecKineEnergy<<G4endl;
 
 
     // Kill the incident photon when it has converted to photoelectron.

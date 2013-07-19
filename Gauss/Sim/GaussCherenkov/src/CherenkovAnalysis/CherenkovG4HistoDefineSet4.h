@@ -42,8 +42,14 @@ private:
   IHistogram1D* m_hCkvRich1GasD3E1;
   IHistogram1D* m_hCkvRich1GasD3E1A;
   IHistogram1D* m_hCkvRich1GasD4E1;
+  IHistogram2D*  m_hCkvRich1GasD4E1VsPhi;
+  
+
   IHistogram1D* m_hCkvRich1GasD1E4;
+  IHistogram1D* m_hCkvRich1GasD1E4Rst;
   IHistogram1D*  m_hCkvRich1GasQwPh;
+  IHistogram1D* m_hCkvRich2GasD8E4;
+  IHistogram1D* m_hCkvRich1GasD8E4;
 
 
   IHistogram1D* m_hCkvRich1GasGen;
@@ -52,8 +58,13 @@ private:
   IHistogram1D* m_hCkvRich1AgelGen;
   IHistogram1D* m_hCkvRich2GasD3E1;
   IHistogram1D* m_hCkvRich2GasD3E1A;
+
   IHistogram1D* m_hCkvRich2GasD4E1;
+  IHistogram2D* m_hCkvRich2GasD4E1VsPhi;
+
   IHistogram1D* m_hCkvRich2GasD1E4;
+  IHistogram1D* m_hCkvRich2GasD1E4Rst;
+
   IHistogram1D*  m_hCkvRich2GasQwPh;
 
   IHistogram1D* m_hCkvRich2GasGen;
@@ -79,12 +90,38 @@ private:
   IHistogram1D*   m_hCkvRich1AgelResPsf;
   IHistogram1D*   m_hCkvRich2GasResPsf;
   IHistogram1D*   m_hCkvRich1GasResTotal;
+  IHistogram1D*  m_hCkvRich1GasResChr;
+  
   IHistogram1D*   m_hCkvRich1AgelResTotal;
   IHistogram1D*   m_hCkvRich2GasResTotal;
+  IHistogram1D*   m_hCkvRich2GasResChr;
   
   IHistogram1D*  m_hCkvRich1AgelExitResRefraction;
 
+  IHistogram1D* m_hFocalDistR1;
+  IHistogram1D* m_hFocalDistR2;
+
+  IHistogram1D* m_hCkvRich1GasD4E1Prim;
+  IHistogram1D* m_hCkvRich1GasD4E1MinusGen;
+
+  IHistogram1D* m_hCkvRich1GasD9E1MinusGen;
+
+  IHistogram1D* m_hCkvRich1GasD4E4MinusGen;
+  IHistogram1D* m_hCkvRich1GasD4E4MinusGenPrim;
+  IHistogram1D*  m_hCkvRich1GasD4E4;
+
+  IHistogram1D*  m_hCkvRich1GasD9E1MinusGenTFTS;
+
+
+  IHistogram1D* m_hCkvRich1GasResEmisD4 ;
+  IHistogram1D* m_hCkvRich1GasResEmisD4Prim;
+  IHistogram1D* m_hCkvRich1GasResEmisD4Rst ;
+
+
+
+
   
+
 
 };
 #endif // RICHANALYSIS_RICHG4HISTODEFINESET4_H

@@ -81,7 +81,13 @@ private:
   std::string  m_Rich2PmtPanelName1;
   std::string m_Rich2PmtN2EnclName0;
   std::string m_Rich2PmtN2EnclName1;
+  std::string m_Rich1PmtModuleMasterNamePrefClassic;
+  std::string m_Rich1PmtModuleMasterNamePrefLens;
+  std::vector<std::string> m_Rich1PmtModuleMasterNameSuf;
 
+  std::string m_Rich1PhtDetSupName0;
+  std::string m_Rich1PhtDetSupName1;
+  
 
   //  int  m_Rich1MagShPvIndexH0;
   // int   m_Rich1MagShPvIndexH1;

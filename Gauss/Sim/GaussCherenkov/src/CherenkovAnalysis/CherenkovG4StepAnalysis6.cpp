@@ -97,9 +97,26 @@ void CherenkovG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
 
                if(PhotCurDir.z() > 0.0 ) {
 
-                  RichG4PmtQWIncidentTag((* aTrack), postPos );
+                 RichG4PmtQWIncidentTag((* aTrack), postPos,0 ); // zero indicates that it is for QW point
                 
-               }}}}
+               }
+             }
+
+
+             if( (aPreVolName == LogVolLPmtSMasterNameAnalysis || iPmtSMStrPrePos0 != std::string::npos )  &&
+               aPostVolName ==  LogVolPmtLensNameAnalysis){
+
+               if(PhotCurDir.z() > 0.0 ) {
+
+                 RichG4PmtQWIncidentTag((* aTrack), postPos,1); // 1 indicates that it is for lens point.
+                
+               }
+             }
+
+
+
+             
+       }}
     }}}
    
 

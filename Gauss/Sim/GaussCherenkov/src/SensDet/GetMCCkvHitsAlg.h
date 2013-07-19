@@ -6,7 +6,7 @@
 #include <sstream>
 
 // base class
-#include "GetMCCkvInfoBase.h"
+#include "GaussCherenkov/GetMCCkvInfoBase.h"
 
 // RichDet
 #include "RichDet/DeRich.h"

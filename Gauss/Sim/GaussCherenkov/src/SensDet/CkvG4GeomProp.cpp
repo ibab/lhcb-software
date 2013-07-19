@@ -4,6 +4,8 @@
 //local
 #include "CkvG4GeomProp.h"
 #include "GaussRICH/RichG4GaussPathNames.h"
+#include "GaussCherenkov/CkvG4GaussPathNames.h"
+//#include "GaussSuperRich/SRG4GaussPathNames.h"
 
 /// GaudiKernel
 #include "GaudiKernel/Kernel.h"
@@ -14,6 +16,7 @@
 
 #include "G4ios.hh"
 #include <vector>
+#include "GaussCherenkov/CkvGeometrySetupUtil.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CkvG4GeomProp
@@ -28,33 +31,52 @@ CkvG4GeomProp::CkvG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
 
   // Now to get the total number of HPDs and the Z
   MsgStream log( msgSvc , "GeomProp" );
-  SmartDataPtr<DetectorElement> Rich1DESD(detSvc,Rich1DeStructurePathName  );
 
-  if( !Rich1DESD )
+  DetectorElement*  RichDESD;
+  
+  CkvGeometrySetupUtil * aCkvGeometrySetup=CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance() ;
+  bool isSuperRich = aCkvGeometrySetup->isSuperRich();
+  if( isSuperRich) {
+    SmartDataPtr<DetectorElement> SuperRichDESD(detSvc,SuperRichDeStructurePathName );
+    RichDESD = SuperRichDESD;
+  }else {
+    SmartDataPtr<DetectorElement> Rich1DESD(detSvc,Rich1DeStructurePathName  );
+    RichDESD = Rich1DESD;
+    m_NumberOfPMTsInRich1 = RichDESD->param<int>("Rich1TotNumPmt");
+    m_NumberOfPMTsInRich2 = RichDESD->param<int>("Rich2TotNumPmt");
+    m_NumberOfPMTModulesInRich1= RichDESD->param<int>("Rich1TotNumModules");
+    m_NumberOfPMTModulesInRich2= RichDESD->param<int>("Rich2TotNumModules");
+    m_NumberOfDetSectionsInRich1= RichDESD->param<int>("Rich1NumberOfDetSections");
+    m_NumberOfDetSectionsInRich2= RichDESD->param<int>("Rich2NumberOfDetSections");
+    m_MaxZHitInRich1Det = RichDESD->param<double>("Rich1MaxDownstreamZHitCoord");
+    
+  }
+  
+  if( !RichDESD )
   {
     log << MSG::ERROR
-        << "Can't retrieve "+ Rich1DeStructurePathName+ " from RichGeomProp" << endreq;
+        << "Can't retrieve "+ Rich1DeStructurePathName+ " or "+  SuperRichDeStructurePathName +  " from RichGeomProp" << endreq;
   }
   else
   {
     // the following lines modified to be compatible with the recent changes in DeDesc.
     // SE 16-6-2005 
-    m_NumberOfRichDet= Rich1DESD->param<int>("RichNumberOfDetectors");
-    m_NumberOfDetSectionsInRich1= Rich1DESD->param<int>("Rich1NumberOfDetSections");
-    m_NumberOfDetSectionsInRich2= Rich1DESD->param<int>("Rich2NumberOfDetSections");
-
-    m_NumberOfPMTsInRich1 = Rich1DESD->param<int>("Rich1TotNumPmt");
-    m_NumberOfPMTsInRich2 = Rich1DESD->param<int>("Rich2TotNumPmt");
-    m_NumberOfPMTModulesInRich1= Rich1DESD->param<int>("Rich1TotNumModules");
-    m_NumberOfPMTModulesInRich2= Rich1DESD->param<int>("Rich2TotNumModules");
-    m_NumberOfPMTsInAModule= Rich1DESD->param<int>("RichTotNumPmtInModule");
+    m_NumberOfRichDet= RichDESD->param<int>("RichNumberOfDetectors");
+    m_NumberOfPMTsInAModule= RichDESD->param<int>("RichTotNumPmtInModule");
     
 
-    m_NumberOfPixelColInPMT=Rich1DESD->param<int>("RichPmtNumPixelCol" );
-    m_NumberOfPixelRowInPMT=Rich1DESD->param<int>("RichPmtNumPixelRow" );
-    m_PmtPixelXsize=Rich1DESD->param<double>("RichPmtPixelXsize");
-    m_PmtPixelYsize=Rich1DESD->param<double>("RichPmtPixelYsize");
-    m_PmtPixelGap= Rich1DESD->param<double>("RichPmtPixelGap");
+    m_NumberOfPixelColInPMT=RichDESD->param<int>("RichPmtNumPixelCol" );
+    m_NumberOfPixelRowInPMT=RichDESD->param<int>("RichPmtNumPixelRow" );
+
+    m_PmtPixelXsize=RichDESD->param<double>("RichPmtPixelXsize");
+    m_PmtPixelYsize=RichDESD->param<double>("RichPmtPixelYsize");
+    m_PmtPixelGap= RichDESD->param<double>("RichPmtPixelGap");
+
+     if( isSuperRich) {
+       m_NumberOfPmtsInSuperRich = RichDESD->param<double> ( "SuperRichTotNumPmt" );
+       
+     }
+ 
     
    // m_PixelXBoundarySize=m_NumberOfPixelColInHPD+1;
   //  m_PixelYBoundarySize=m_NumberOfPixelRowInHPD+1;
@@ -77,8 +99,8 @@ CkvG4GeomProp::CkvG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
   //    m_PixelYBoundary.push_back(CurPixelBoundaryY+ipc*m_PixelYsize);
    // }
 
-    G4double CurPmtPixelBoundaryX=-0.5*Rich1DESD->param<double>("RichPmtAnodeXSize");
-    G4double CurPmtPixelBoundaryY=-0.5*Rich1DESD->param<double>("RichPmtAnodeYSize");
+    G4double CurPmtPixelBoundaryX=-0.5*RichDESD->param<double>("RichPmtAnodeXSize");
+    G4double CurPmtPixelBoundaryY=-0.5*RichDESD->param<double>("RichPmtAnodeYSize");
     
     for(int ipd=0; ipd<m_PmtPixelXBoundarySize; ipd++)
     {
@@ -106,7 +128,6 @@ CkvG4GeomProp::CkvG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
 
     // the following line modified to be compatible with recent changes in DetDesc
     // Se 16-6-2005.
-    m_MaxZHitInRich1Det = Rich1DESD->param<double>("Rich1MaxDownstreamZHitCoord");
     //    m_MaxZHitInRich1Det = Rich1DESD->userParameterAsDouble("Rich1MaxDownstreamZHitCoord");
 
     //  log << MSG::DEBUG << "Total Number of pmts in Rich1 from RichGeomProp=  "
@@ -136,7 +157,7 @@ CkvG4GeomProp::CkvG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
   //    <<m_PmtPixelYBoundary[6] <<"   "<<m_PmtPixelYBoundary[7]<<endreq;
 
 
-  SmartDataPtr<DetectorElement> Rich2DESD(detSvc, Rich2DeStructurePathName);
+  //  SmartDataPtr<DetectorElement> Rich2DESD(detSvc, Rich2DeStructurePathName);
 //  if( !Rich2DESD )
 //  {
 //    log << MSG::ERROR
@@ -247,4 +268,15 @@ G4int CkvG4GeomProp::PixelPosFinder(G4double Xc,
   
   return CPixel;
 }
+
+G4int CkvG4GeomProp::GetPixelNumInPmt( int PixelXNum, int PixelYNum) 
+{
+  return (PixelXNum + (m_NumberOfPixelColInPMT * PixelYNum));
+  
+  
+}
+
+
+
+
 

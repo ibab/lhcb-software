@@ -65,7 +65,14 @@ CkvG4Hit::CkvG4Hit(const CkvG4Hit & right  )
     m_PhotoElectricProductionFlag(right.m_PhotoElectricProductionFlag),
     m_RichHpdPhotonReflectionFlag(right.m_RichHpdPhotonReflectionFlag),
     m_HpdQuartzWindowExtSurfPhotIncidentPosition(right.m_HpdQuartzWindowExtSurfPhotIncidentPosition),
-    m_PhotonSourceProcessInfo(right.m_PhotonSourceProcessInfo)   
+    m_HpdQuartzWindowExtSurfPhotIncidentLocalPosition(right.m_HpdQuartzWindowExtSurfPhotIncidentLocalPosition),
+    m_PmtLensPhotIncidentPosition(right.m_PmtLensPhotIncidentPosition),
+    m_PmtLensPhotIncidentLocalPosition(right.m_PmtLensPhotIncidentLocalPosition),
+    m_pdWithLens(right.m_pdWithLens),
+    m_PhotonSourceProcessInfo(right.m_PhotonSourceProcessInfo),   
+    m_SuperRichHit(right.m_SuperRichHit),
+    m_OptHorizontalRich1Hit(right.m_OptHorizontalRich1Hit),
+    m_FlagHitAsDuplicate(right.m_FlagHitAsDuplicate)
 { }
 
 const CkvG4Hit& CkvG4Hit::operator=(const CkvG4Hit &right)
@@ -110,8 +117,15 @@ const CkvG4Hit& CkvG4Hit::operator=(const CkvG4Hit &right)
   m_PhotoElectricProductionFlag=right.m_PhotoElectricProductionFlag;
   m_RichHpdPhotonReflectionFlag=right.m_RichHpdPhotonReflectionFlag;
   m_HpdQuartzWindowExtSurfPhotIncidentPosition=right.m_HpdQuartzWindowExtSurfPhotIncidentPosition;
+  m_HpdQuartzWindowExtSurfPhotIncidentLocalPosition=right.m_HpdQuartzWindowExtSurfPhotIncidentLocalPosition;
+  m_PmtLensPhotIncidentPosition=right.m_PmtLensPhotIncidentPosition;
+  m_PmtLensPhotIncidentLocalPosition=right.m_PmtLensPhotIncidentLocalPosition;
+  m_pdWithLens = right.m_pdWithLens;
   m_PhotonSourceProcessInfo=right.m_PhotonSourceProcessInfo;
- 
+  m_SuperRichHit=right.m_SuperRichHit;
+  m_OptHorizontalRich1Hit = right.m_OptHorizontalRich1Hit;
+  m_FlagHitAsDuplicate = right.m_FlagHitAsDuplicate;
+  
   return *this;
   
 }
@@ -244,9 +258,19 @@ void CkvG4Hit::Print()
           <<"   "<<m_HpdQuartzWindowExtSurfPhotIncidentPosition.y()<<"    "
           << m_HpdQuartzWindowExtSurfPhotIncidentPosition.z()  <<G4endl;
 
+    G4cout<<"RichG4Hit  Hpd QW Incidence Local Point "<<m_HpdQuartzWindowExtSurfPhotIncidentLocalPosition.x()
+          <<"   "<<m_HpdQuartzWindowExtSurfPhotIncidentLocalPosition.y()<<"    "
+          << m_HpdQuartzWindowExtSurfPhotIncidentLocalPosition.z()  <<G4endl;
+
+    G4cout<<" Rich G4 hit LensHit flag and Lens Incident position "<<m_pdWithLens<<"   "<<m_PmtLensPhotIncidentPosition<<G4endl;
+    G4cout<<" Rich G4 hit LensHit flag and Lens Incident local  position "
+         <<m_pdWithLens<<"   "<<m_PmtLensPhotIncidentLocalPosition<<G4endl;
+    
     G4cout<<" RichG4Hit source process info "<<m_PhotonSourceProcessInfo<<G4endl;
     
-  
+    G4cout<<" SuperRich Hit "<<  m_SuperRichHit <<G4endl;
+    G4cout<<" Horizontal optimized Rich1  Hit "<< m_OptHorizontalRich1Hit <<G4endl;
+    G4cout<<" Hit flagged  as duplicate " <<m_FlagHitAsDuplicate <<G4endl;
   } 
 }
 std::vector<bool>  CkvG4Hit::DecodeRichHpdReflectionFlag() const

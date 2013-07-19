@@ -72,7 +72,11 @@ GiGaPhysConstructorOpCkv::GiGaPhysConstructorOpCkv
     m_RichApplyScintillationYieldScaleFactor(true),
     m_RichScintillationYieldScaleFactor(1.0),
     m_PmtQESource(0),
-    m_activateTorchTestBeamSimulation(false)
+    m_activateTorchTestBeamSimulation(false),
+    m_activatePmtModuleSupSet3(false),
+    m_activatePmtModuleSupSet4(false),
+    m_activatePmtModuleSupSet5(false),
+    m_activatePmtModuleSupSet6(false)
 {
   // in the above 3 is for the three radiators.
 
@@ -106,6 +110,15 @@ GiGaPhysConstructorOpCkv::GiGaPhysConstructorOpCkv
   // Now for the TORCH Testebeam
 
   declareProperty("ActivateTorchTBSimulation", m_activateTorchTestBeamSimulation );
+
+  // now for Rich PMT suppression studies
+
+  declareProperty("ActivatePmtModuleSuppressSet3",m_activatePmtModuleSupSet3);
+  declareProperty("ActivatePmtModuleSuppressSet4",m_activatePmtModuleSupSet4);
+  declareProperty("ActivatePmtModuleSuppressSet5",m_activatePmtModuleSupSet5);
+  declareProperty("ActivatePmtModuleSuppressSet6",m_activatePmtModuleSupSet6);
+
+  
   
 }
 
@@ -141,7 +154,7 @@ void GiGaPhysConstructorOpCkv::ConstructProcess()
    //  setRICHOpticalPhysProcActivation(false); 
    // }
   
-   msg << MSG::DEBUG <<"RICH Optical Process activation status "<< activateRICHOpticalPhysProcStatus ()<<endreq;
+   msg << MSG::INFO <<"RICH Optical Process activation status "<< activateRICHOpticalPhysProcStatus ()<<endreq;
   
   //  ConstructPeProcess();
   if( activateRICHOpticalPhysProcStatus () )  ConstructOp();
@@ -244,7 +257,7 @@ void GiGaPhysConstructorOpCkv::ConstructOp() {
 
   MsgStream msg(msgSvc(), name());
   
-  msg << MSG::DEBUG <<" Activation for verbose Output in Rich Optical Proc = "
+  msg << MSG::INFO <<" Activation for verbose Output in Rich Optical Proc = "
       << m_RichActivateVerboseProcessInfoTag << endreq;
 
   RichG4Cerenkov*   theCerenkovProcess = 
@@ -299,6 +312,11 @@ void GiGaPhysConstructorOpCkv::ConstructOp() {
     //  theRichPmtPhotoElectricProcess->setPSFPreDc06Flag(m_IsPSFPreDc06Flag);
     theRichPmtPhotoElectricProcess->setPmtQEUsingNominalTable(m_PmtQEUseNominalTable);
     theRichPmtPhotoElectricProcess->SetPmtQESourceTable(m_PmtQESource);
+    theRichPmtPhotoElectricProcess->setPmtModuleSupFlag3(m_activatePmtModuleSupSet3);
+    theRichPmtPhotoElectricProcess->setPmtModuleSupFlag4(m_activatePmtModuleSupSet4);
+    theRichPmtPhotoElectricProcess->setPmtModuleSupFlag5(m_activatePmtModuleSupSet5);
+    theRichPmtPhotoElectricProcess->setPmtModuleSupFlag6(m_activatePmtModuleSupSet6);
+
     theRichPmtPhotoElectricProcess->setPmtPhElecParam();
 
  
@@ -405,6 +423,11 @@ void GiGaPhysConstructorOpCkv::ConstructOp() {
             // this modif to be similar to that G4.9.1 onwards. SE 5-8-2008
             pmanager->AddProcess(theCerenkovProcess);
             pmanager->SetProcessOrdering(theCerenkovProcess,idxPostStep);
+
+
+            // msg<<MSG::DEBUG <<"Activaed Cherenkov Process   "<<endreq;
+
+
           }
 
         if(   m_activateRICHCF4Scintillation ) {

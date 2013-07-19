@@ -3,7 +3,7 @@
 #define SENSDET_GETMCCKVOPTICALPHOTONSALG_H 1
 
 // base class
-#include "GetMCCkvInfoBase.h"
+#include "GaussCherenkov/GetMCCkvInfoBase.h"
 
 // rich kernel
 #include "RichKernel/RichMap.h"

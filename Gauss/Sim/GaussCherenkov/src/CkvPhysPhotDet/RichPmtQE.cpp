@@ -1,4 +1,4 @@
-#include "RichPmtQE.h"
+#include "GaussCherenkov/RichPmtQE.h"
 #include "G4ios.hh"
 
 // initialize the QE vectors with 20 bins are adjust the

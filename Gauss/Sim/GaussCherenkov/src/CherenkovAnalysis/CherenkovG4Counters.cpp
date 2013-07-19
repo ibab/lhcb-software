@@ -4,7 +4,7 @@
 
 
 // local
-#include "CherenkovG4Counters.h"
+#include "GaussCherenkov/CherenkovG4Counters.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CherenkovG4Counters
@@ -21,7 +21,8 @@ CherenkovG4Counters::CherenkovG4Counters():
 m_RichPmtHitArray(std::vector<int> (302*16)),
 m_NumPmtsRich1(120*16), 
 m_NumPmtsRich2(182*16),
-m_NumPmtInModuleRich(16) {
+m_NumPmtInModuleRich(16),
+m_NumPmtsSuperRich(3000) {
   // the dummy values above adjusted from DB 
 }
 //=============================================================================
@@ -44,6 +45,13 @@ void CherenkovG4Counters::InitCherenkovG4Counters()
 {
   m_RichPmtHitArray.clear();
   m_RichPmtHitArray.resize(m_NumPmtsRich1+m_NumPmtsRich2);
+  
+}
+
+void CherenkovG4Counters::InitCherenkovG4CountersSR() 
+{
+  m_RichPmtHitArray.clear();
+  m_RichPmtHitArray.resize(m_NumPmtsSuperRich);
   
 }
 

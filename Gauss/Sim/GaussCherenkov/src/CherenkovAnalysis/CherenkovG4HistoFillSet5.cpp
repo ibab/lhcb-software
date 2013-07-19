@@ -25,7 +25,8 @@
 #include "AIDA/IHistogram2D.h"
 //#include "AIDA/IProfile.h"
 #include "GaussRICH/RichG4SvcLocator.h"
-#include "CherenkovG4Counters.h"
+#include "GaussCherenkov/CherenkovG4Counters.h"
+
 
 
 // local
@@ -72,20 +73,52 @@ void CherenkovG4HistoFillSet5::FillRichG4HistoSet5NumH()
   
 }
 
-void CherenkovG4HistoFillSet5::FillRichG4HistoSet5Coord( CkvG4Hit* adHit, Gaudi::XYZPoint aHitCoordInPmtPlane){
+void CherenkovG4HistoFillSet5::FillRichG4HistoSet5Coord( CkvG4Hit* adHit, Gaudi::XYZPoint aHitCoordInPmtPlane,
+         Gaudi::XYZPoint aHitCoordOnLensInPmtPlane    ){
         double xC=  aHitCoordInPmtPlane.x();
         double yC=  aHitCoordInPmtPlane.y();
+
+        double xCH= xC;
+        double yCH= yC;
+        
+        double xCRaw=  adHit-> GetGlobalPos().x();
+        double yCRaw=  adHit-> GetGlobalPos().y();
+    
+        double xCLens= aHitCoordOnLensInPmtPlane.x();
+        double yCLens= aHitCoordOnLensInPmtPlane.y();
+ 
+        double xCLensH= xCLens;
+        double yCLensH =yCLens;
+        
+       
         int aPmtNumA =  (int) ( adHit-> CurPmtNum()) ;
+        int OptHorizR1 = (int) (adHit ->OptHorizontalRich1Hit());
+        
+
+
         
   //  IHistogramSvc* CurrentHistoSvc;
   IHistogramSvc* CurrentHistoSvc = RichG4SvcLocator::RichG4HistoSvc();
+  SmartDataPtr<IHistogram2D> hXYRawHitLocationRich1Gas (CurrentHistoSvc, "RICHG4HISTOSET5/360");
   SmartDataPtr<IHistogram2D> hXYHitLocationRich1Gas (CurrentHistoSvc, "RICHG4HISTOSET5/361");
+  SmartDataPtr<IHistogram2D> hXYHitLocationRich1GasBinary (CurrentHistoSvc, "RICHG4HISTOSET5/362");
+
   SmartDataPtr<IHistogram2D> hXYHitLocationRich2Gas (CurrentHistoSvc, "RICHG4HISTOSET5/381");
+  SmartDataPtr<IHistogram2D> hXYHitLocationRich2GasBinary (CurrentHistoSvc, "RICHG4HISTOSET5/387");
   SmartDataPtr<IHistogram2D> hXYHitLocationNoScintRich2Gas (CurrentHistoSvc, "RICHG4HISTOSET5/382");
+
+  SmartDataPtr<IHistogram2D> hXYHitLocationLensRich1Gas(CurrentHistoSvc, "RICHG4HISTOSET5/391");
 
   SmartDataPtr<IHistogram2D> hXYHitLocationRich1Mirror1 (CurrentHistoSvc, "RICHG4HISTOSET5/366");
   SmartDataPtr<IHistogram2D> hXYHitLocationRich1Mirror2 (CurrentHistoSvc, "RICHG4HISTOSET5/368");
-   
+ 
+  SmartDataPtr<IHistogram2D> hXYHitLocationPMTQWRich1Gas(CurrentHistoSvc, "RICHG4HISTOSET5/395");
+  SmartDataPtr<IHistogram2D> hXYHitLocationPMTQWRich2Gas(CurrentHistoSvc, "RICHG4HISTOSET5/393");
+
+  SmartDataPtr<IHistogram2D> hXYHitLocationCF4Rich2Gas(CurrentHistoSvc, "RICHG4HISTOSET5/394");
+
+
+  
   int curRdet =   adHit-> GetCurRichDetNum();
   int curRichSect=  adHit-> GetCurSectorNum();
   int curHitProc= adHit-> PhotonSourceProcessInfo();
@@ -93,36 +126,117 @@ void CherenkovG4HistoFillSet5::FillRichG4HistoSet5Coord( CkvG4Hit* adHit, Gaudi:
   const G4ThreeVector curHitMirror2= adHit->Mirror2PhotonReflPosition();
   double Rich1Mirror2XC=curHitMirror2.x();
   double Rich1Mirror2YC=curHitMirror2.y();
+  int curRadiatorNum =  adHit-> GetRadiatorNumber();
+  const bool curHitDuplicateFlag=  adHit->FlagHitAsDuplicate();
   
   
   if( curRdet == 0 ) {
     SmartDataPtr<IHistogram1D> hHitOccpR1(CurrentHistoSvc, "RICHG4HISTOSET5/365");
+    SmartDataPtr<IHistogram1D> hHitOccpR1Binary(CurrentHistoSvc, "RICHG4HISTOSET5/566");
+
+  SmartDataPtr<IHistogram1D> hPmtOccpGasQWRich1(CurrentHistoSvc, "RICHG4HISTOSET5/402");
+  SmartDataPtr<IHistogram1D> hPmtOccpPmtQWRich1  (CurrentHistoSvc, "RICHG4HISTOSET5/404");
+
+
     hHitOccpR1->fill(aPmtNumA*1.0);
+    if((!curHitDuplicateFlag)  && hHitOccpR1Binary ) hHitOccpR1Binary ->fill(aPmtNumA*1.0);
+
+    if(hPmtOccpGasQWRich1 &&  (curRadiatorNum==6) ) hPmtOccpGasQWRich1->fill (aPmtNumA*1.0);
+    if(hPmtOccpPmtQWRich1 && (curRadiatorNum==32) ) hPmtOccpPmtQWRich1->fill (aPmtNumA*1.0);
     
     m_TotNumHitR1InCurEv++;
 
       if( curRichSect ==0 ) {
-        //yC += 650.0;
-        //yC += 450.0;
-        //yC += 400.0;
-        //yC += 200.0;
-        yC += 400.0;
-        Rich1Mirror2YC -= 345.0;
-        
+          
+          yC += 400.0;
+          Rich1Mirror2YC -= 345.0;
+          yCLens += 400.0;
+
+          if(   OptHorizR1 == 1 ) {
+            
+            //       yCH += 450.0;
+            // yCLensH +=450.0;
+
+            xCH += 450.0;
+            xCLensH +=450.0;
+            
+          }
+          
+         
       }else if (curRichSect ==1 ) {
 
         yC -= 400.0;
+        yCLens -= 400.0;
 
-
-            //    yC -= 200.0;  
-            //    yC -= 400.0;  
-        //    yC -= 450.0;  
-        //yC -= 650.0;  
         Rich1Mirror2YC += 345.0;
+
+         if(   OptHorizR1 == 1 ) {
+            
+           //  yCH -= 450.0;
+           // yCLensH -=450.0;
+
+
+            xCH -= 450.0;
+            xCLensH -=450.0;
+            
+          }
+
+
+
+
       }      
+
+
+
+
+
+      if( hXYRawHitLocationRich1Gas)  hXYRawHitLocationRich1Gas->fill(xCRaw,yCRaw);
+
+
+
       if(hXYHitLocationRich1Gas) {
-        hXYHitLocationRich1Gas->fill (xC,yC);
+
+        if(OptHorizR1 == 0 ) {
+          hXYHitLocationRich1Gas->fill (xC,yC);
+          if((!curHitDuplicateFlag )  &&  hXYHitLocationRich1GasBinary)hXYHitLocationRich1GasBinary->fill (xC,yC);
+          if(hXYHitLocationPMTQWRich1Gas && (curRadiatorNum==32)  ) {
+           hXYHitLocationPMTQWRich1Gas ->fill (xC,yC);
+           
+          }
+          
+        }else if (OptHorizR1 == 1 ) {
+         
+          
+
+
+
+          // hXYHitLocationRich1Gas->fill (yCH,xCH);
+          hXYHitLocationRich1Gas->fill (xCH,yCH);
+          if((!curHitDuplicateFlag ) && hXYHitLocationRich1GasBinary )hXYHitLocationRich1GasBinary->fill (xCH,yCH);
+
+          if(hXYHitLocationPMTQWRich1Gas && (curRadiatorNum==32)  ) {
+            // hXYHitLocationPMTQWRich1Gas ->fill (yCH,xCH);           
+            //hXYHitLocationPMTQWRich1Gas ->fill (yCH,-1.0*xCH);           
+           hXYHitLocationPMTQWRich1Gas ->fill (xCH,yCH);           
+          }
+            
+        }
+        
       }
+      if(hXYHitLocationLensRich1Gas) {
+        if(OptHorizR1 == 0 ) {
+          hXYHitLocationLensRich1Gas->fill (xCLens,yCLens);
+        }else {
+          
+          // hXYHitLocationLensRich1Gas->fill (yCLensH,xCLensH);
+          // hXYHitLocationLensRich1Gas->fill (yCLensH,-1.0*xCLensH);
+          hXYHitLocationLensRich1Gas->fill (xCLensH,yCLensH);
+          
+        }
+        
+        
+      }
+
 
       if(hXYHitLocationRich1Mirror1) hXYHitLocationRich1Mirror1->fill(curHitMirror1.x(),  curHitMirror1.y());
       if(hXYHitLocationRich1Mirror2) hXYHitLocationRich1Mirror2->fill(Rich1Mirror2XC, Rich1Mirror2YC);
@@ -135,13 +249,25 @@ void CherenkovG4HistoFillSet5::FillRichG4HistoSet5Coord( CkvG4Hit* adHit, Gaudi:
   int aSizeR1= aCherenkovG4Counters->NumPmtsRich1();
   int aPmtNumR2= aPmtNumA-aSizeR1;
   SmartDataPtr<IHistogram1D> hHitOccpR2(CurrentHistoSvc, "RICHG4HISTOSET5/385");
+  SmartDataPtr<IHistogram1D> hHitOccpR2Binary(CurrentHistoSvc, "RICHG4HISTOSET5/567");
+
   SmartDataPtr<IHistogram1D> hHitOccpNoScintR2(CurrentHistoSvc, "RICHG4HISTOSET5/386");
+  SmartDataPtr<IHistogram1D> hPmtOccpGasQWRich2(CurrentHistoSvc, "RICHG4HISTOSET5/407");
+  SmartDataPtr<IHistogram1D> hPmtOccpPmtQWRich2  (CurrentHistoSvc, "RICHG4HISTOSET5/408");
+
+
   if(hHitOccpR2) hHitOccpR2->fill( aPmtNumR2*1.0);
+  if((!curHitDuplicateFlag)  && hHitOccpR2Binary )  hHitOccpR2Binary->fill( aPmtNumR2*1.0);
+
   if(curHitProc != 2 ) {
     if(hHitOccpNoScintR2)hHitOccpNoScintR2->fill(aPmtNumR2*1.0);
     m_TotNumHitR2NoScintInCurEv++;
     
   }
+
+  if( hPmtOccpGasQWRich2 &&   (curRadiatorNum==6) ) hPmtOccpGasQWRich2->fill( aPmtNumR2*1.0);
+  if( hPmtOccpPmtQWRich2 &&   (curRadiatorNum==32) ) hPmtOccpPmtQWRich2 ->fill( aPmtNumR2*1.0);
+
   
 
     m_TotNumHitR2InCurEv++;
@@ -151,18 +277,37 @@ void CherenkovG4HistoFillSet5::FillRichG4HistoSet5Coord( CkvG4Hit* adHit, Gaudi:
       }else if (curRichSect ==1 ) {
         xC -= 450.0;  
       }      
-      if(hXYHitLocationRich2Gas) {
+      
         if(hXYHitLocationRich2Gas)hXYHitLocationRich2Gas->fill( xC, yC);
+      
       if(curHitProc != 2 ) {
         if(hXYHitLocationNoScintRich2Gas )
-                            hXYHitLocationNoScintRich2Gas->fill(xC, yC); 
+          hXYHitLocationNoScintRich2Gas->fill(xC, yC); 
       }
       
+      if( (!curHitDuplicateFlag) && hXYHitLocationRich2GasBinary ){ 
+        hXYHitLocationRich2GasBinary->fill( xC, yC);
       }
-    
-    
+      
+       if(hXYHitLocationPMTQWRich2Gas && (curRadiatorNum==32)  ) {
+           hXYHitLocationPMTQWRich2Gas ->fill (xC,yC);
+       }
+       if(hXYHitLocationCF4Rich2Gas && (curRadiatorNum==2)  ) {
+           hXYHitLocationCF4Rich2Gas->fill (xC,yC);
+           
+       }
+       
+       
+       
+      
+      
+      
+       
   }
   
   
-
+  
+  
+  
 }
+

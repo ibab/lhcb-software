@@ -26,7 +26,8 @@ public:
   virtual ~CherenkovG4HistoFillSet5( ); ///< Destructor
   void InitCherenkovG4HistoFillSet5();
   void FillRichG4HistoSet5NumH();
-  void FillRichG4HistoSet5Coord(CkvG4Hit* adHit, Gaudi::XYZPoint aHitCoordInPmtPlane);
+  void FillRichG4HistoSet5Coord(CkvG4Hit* adHit, 
+       Gaudi::XYZPoint aHitCoordInPmtPlane,Gaudi::XYZPoint aHitCoordOnLensInPmtPlane  );
   
 protected:
 

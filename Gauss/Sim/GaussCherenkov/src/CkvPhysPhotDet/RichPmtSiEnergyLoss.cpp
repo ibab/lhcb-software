@@ -15,7 +15,7 @@
 #include <vector>
 #include "G4ProcessVector.hh"
 #include "G4ProcessManager.hh"
-#include "RichPmtProperties.h"
+#include "GaussCherenkov/RichPmtProperties.h"
 
 RichPmtSiEnergyLoss::RichPmtSiEnergyLoss(const G4String& processName,
                                         G4ProcessType   aType )
@@ -70,7 +70,7 @@ RichPmtSiEnergyLoss::RichPmtSiEnergyLoss(const G4String& processName,
 
     if ( EnvelopeMaterialName == (*theMaterialTable)[iMatk]->GetName()){
       fMatIndexPmtEnvelopeKovar=(*theMaterialTable)[iMatk]->GetIndex();
-      //              G4cout<<"Pmt Si energy Loss construt Material "<<EnvelopeMaterialName
+      //             G4cout<<"Pmt Si energy Loss construct Material "<<EnvelopeMaterialName
       //          <<"   "<< fMatIndexPmtEnvelopeKovar<<G4endl;
       break;
     }
@@ -83,7 +83,7 @@ RichPmtSiEnergyLoss::RichPmtSiEnergyLoss(const G4String& processName,
 
   }
    
-  //       G4cout<<GetProcessName() <<" is created "<<G4endl;
+  //   G4cout<<GetProcessName() <<" is created "<<G4endl;
 
 }
 RichPmtSiEnergyLoss::~RichPmtSiEnergyLoss() {; }
@@ -152,14 +152,15 @@ G4double  RichPmtSiEnergyLoss::GetMeanFreePath(const G4Track& /*track*/,
 
 }
 G4VParticleChange*  RichPmtSiEnergyLoss::PostStepDoIt(const G4Track& aTrack,
-                                                      const G4Step& aStep) {
+                                                      const G4Step& aStep ) {
   // Do nothing
   aParticleChange.Initialize(aTrack) ;
   return G4VContinuousDiscreteProcess::PostStepDoIt(aTrack,aStep);
 
 }
+
 G4VParticleChange* RichPmtSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
-                                                      const G4Step& /*aStep*/) {
+                                                      const G4Step& /*aStep*/ ) {
 
   aParticleChange.Initialize(aTrack);
 
@@ -312,7 +313,7 @@ G4VParticleChange* RichPmtSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   
   G4double EnergyTransfer=
     EnegydepositMultFactor* RichPmtSiEnergyDeposit(Eloss);
-  // G4cout<<"EnergyTransfer in sidetEloss " << EnergyTransfer<<G4endl;
+  //    G4cout<<"EnergyTransfer in sidetEloss " << EnergyTransfer<<G4endl;
 
 
   if(   EnergyTransfer > 0.0 ) {

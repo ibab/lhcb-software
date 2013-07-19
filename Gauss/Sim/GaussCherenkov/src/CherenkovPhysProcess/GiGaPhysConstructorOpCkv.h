@@ -148,6 +148,10 @@ private:
   double m_RichScintillationYieldScaleFactor;
   int m_PmtQESource;
   bool m_activateTorchTestBeamSimulation;
+  bool m_activatePmtModuleSupSet3;
+  bool m_activatePmtModuleSupSet4;
+  bool m_activatePmtModuleSupSet5;
+  bool m_activatePmtModuleSupSet6;
   
   
     

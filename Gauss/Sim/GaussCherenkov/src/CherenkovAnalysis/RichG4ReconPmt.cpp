@@ -19,7 +19,7 @@
 #include "GaussCherenkov/CkvG4SvcLocator.h"
 
 // local
-#include "RichG4ReconPmt.h"
+#include "GaussCherenkov/RichG4ReconPmt.h"
 
 // RichDet
 #include "RichDet/DeRich.h"
@@ -90,6 +90,15 @@ RichG4ReconPmt::RichG4ReconPmt(){
       Rich1DE->param<double> ("RichPmtPhCathZLocation" );
     m_PmtQwSurfaceZLocation =
       Rich1DE->param<double> ("RichPmtQWExternalZPos" );
+    m_PmtLensMagnificationRatio= 1.6;
+    if(  Rich1DE-> exists("RichPmtLensMagnficationFactor"))
+       m_PmtLensMagnificationRatio=   Rich1DE->param<double>("RichPmtLensMagnficationFactor");
+    m_PmtLensRoc= 20.0;
+    if( Rich1DE-> exists("RichPmtLensRoc" )) 
+      m_PmtLensRoc=Rich1DE->param<double>("RichPmtLensRadiusofCurvature");
+    m_PmtQWToCenterZDist=10.0;
+    if(Rich1DE-> exists("RichPmtQwToAnodeZDist"))
+      m_PmtQWToCenterZDist=Rich1DE->param<double>("RichPmtQwToAnodeZDist");
     
 
     //   RichG4PmtReconlog << MSG::INFO<<" Pmt local Z location of Si sisurface phcath Qw external "  
@@ -140,3 +149,49 @@ RichG4ReconPmt::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLoc
 
 
 //=============================================================================
+Gaudi::XYZPoint  RichG4ReconPmt::ReconHitOnLensSurfaceFromPhCathCoord( const Gaudi::XYZPoint & aLocalPhCathCoord) 
+{
+   double aPhCaRsq_Coord =
+    (aLocalPhCathCoord.x() * aLocalPhCathCoord.x() + aLocalPhCathCoord.y() * aLocalPhCathCoord.y() );
+   double  aPhCaR_Coord =  (aPhCaRsq_Coord>0.0) ? sqrt(aPhCaRsq_Coord) : 0.0;
+   double aPhCaRsq_Phi = atan(  aLocalPhCathCoord.y()/aLocalPhCathCoord.x());
+   double aXSignLocal= (( aLocalPhCathCoord.x()) > 0) ? 1 : -1;
+   double aYSignLocal= (( aLocalPhCathCoord.y()) > 0) ? 1 : -1;
+
+   double aLensRecXLocal = fabs((aPhCaR_Coord*m_PmtLensMagnificationRatio)*cos( aPhCaRsq_Phi ))* aXSignLocal;
+   double aLensRecYLocal = fabs((aPhCaR_Coord*m_PmtLensMagnificationRatio)*sin( aPhCaRsq_Phi ))* aYSignLocal;
+   double Rsq= (aPhCaR_Coord*m_PmtLensMagnificationRatio )*(aPhCaR_Coord*m_PmtLensMagnificationRatio);
+   
+   double aLensRecZStd =  aLocalPhCathCoord.z()+sqrt((m_PmtLensRoc*m_PmtLensRoc)- Rsq );
+
+   return  Gaudi::XYZPoint(aLensRecXLocal,aLensRecYLocal,aLensRecZStd);
+}
+
+
+Gaudi::XYZPoint  RichG4ReconPmt::ReconHitOnLensSurfaceCheatedFromPhCathCoord( const Gaudi::XYZPoint & aLocalPhCathCoord,
+                                      const Gaudi::XYZPoint & aLocallLensExtCoord   ) 
+{
+   double aPhCaRsq_Coord =
+    (aLocalPhCathCoord.x() * aLocalPhCathCoord.x() + aLocalPhCathCoord.y() * aLocalPhCathCoord.y() );
+   double  aPhCaR_Coord =  (aPhCaRsq_Coord>0.0) ? sqrt(aPhCaRsq_Coord) : 0.0;
+   // double aPhCaRsq_Phi = atan(  aLocalPhCathCoord.y()/aLocalPhCathCoord.x());
+   double aXSignLocal= (( aLocalPhCathCoord.x()) > 0) ? 1 : -1;
+   double aYSignLocal= (( aLocalPhCathCoord.y()) > 0) ? 1 : -1;
+
+   double aLenRsq_Coord =
+  ( aLocallLensExtCoord.x() * aLocallLensExtCoord.x() +aLocallLensExtCoord.y() * aLocallLensExtCoord.y());
+
+   double aLenR_Coord = aLenRsq_Coord > 0.0 ? sqrt(aLenRsq_Coord) : 0.0 ;
+   double aLenRsq_Phi = atan( aLocallLensExtCoord.y()/aLocallLensExtCoord.x());
+   double aMagnificationRatio =  ( aPhCaR_Coord > 0.0) ?  (aLenR_Coord / aPhCaR_Coord ): 0.0;
+
+
+   double aLensRecXLocal = fabs((aPhCaR_Coord*aMagnificationRatio)*cos( aLenRsq_Phi ))* aXSignLocal;
+   double aLensRecYLocal = fabs((aPhCaR_Coord*aMagnificationRatio)*sin( aLenRsq_Phi ))* aYSignLocal;
+   double Rsq= (aPhCaR_Coord*aMagnificationRatio )*(aPhCaR_Coord*aMagnificationRatio);
+   
+   double aLensRecZStd =  aLocalPhCathCoord.z()+sqrt((m_PmtLensRoc*m_PmtLensRoc)- Rsq );
+
+   return  Gaudi::XYZPoint(aLensRecXLocal,aLensRecYLocal,aLensRecZStd);
+}
+

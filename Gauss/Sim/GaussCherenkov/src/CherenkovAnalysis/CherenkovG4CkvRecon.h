@@ -31,8 +31,8 @@
 
 #include "RichG4ReconTransformPmt.h"
 #include "GaussRICH/RichG4TransformPhDet.h"
-#include "RichG4ReconPmt.h"
-#include "GaussRICH/RichG4ReconFlatMirr.h"
+#include "GaussCherenkov/RichG4ReconPmt.h"
+#include "GaussCherenkov/CkvG4ReconFlatMirr.h"
 #include "GaussCherenkov/CkvG4Hit.h"
 #include <complex>
 #include "GaussRICH/RichSolveQuarticEqn.h"
@@ -98,14 +98,18 @@ public:
     m_curReflPt = aReflPt;
   }
 
-  Gaudi::XYZPoint GetCoordInPhDelPanelPlane( const Gaudi::XYZPoint & aLocalHitCoordA);
+  Gaudi::XYZPoint GetCoordInPhDetPanelPlane( const Gaudi::XYZPoint & aLocalHitCoordA,G4int aPmtLensFlag );
 
   Gaudi::XYZPoint ReconPhCoordFromLocalCoord( const Gaudi::XYZPoint & aLocalHitCoord);
 
-
+  Gaudi::XYZPoint ReconPhCoordDetPlaneFromLocalCoord (const Gaudi::XYZPoint & aLocalHitCoord,int aLensFlag ,
+                   int aRegReconFlag,const Gaudi::XYZPoint & aLensSurfaceCoord  );
+  
+  Gaudi::XYZPoint  LensCoordFromPeOrigin (const Gaudi::XYZPoint &  aLocalPhCathCoord);
+  
   Gaudi::XYZPoint ReconReflectionPointOnSPhMirror(const Gaudi::XYZPoint & aDetectionPoint,
                                              const Gaudi::XYZPoint & aEmissionPoint , const Gaudi::XYZPoint & aQwPoint,
-                                             int aRichDetNum, int aFlatMirrNum  );
+                                                  int aRichDetNum, int aFlatMirrNum , int TFlag=0 );
 
   Gaudi::XYZPoint ReconReflectionPointOnSPhMirrorStdInput();
   //  void SolveQuartic ( std::vector<std::complex<double> > & z,
@@ -170,9 +174,9 @@ public:
   double CherenkovThetaInAerogel(const Gaudi::XYZPoint & aReflPoint,
                                  const Gaudi::XYZPoint & aEmisPt );
 
-  RichG4ReconFlatMirr* getCurReconFlatMirr() {
+  CkvG4ReconFlatMirr* getCurReconFlatMirr() {
     return m_CurReconFlatMirr;}
-  void setCurReconFlatMirr( RichG4ReconFlatMirr* aCurReconFlatMirr) {
+  void setCurReconFlatMirr( CkvG4ReconFlatMirr* aCurReconFlatMirr) {
     m_CurReconFlatMirr = aCurReconFlatMirr;}
   RichG4TransformPhDet* getCurPhDetTrans(int aSect) 
   {
@@ -227,7 +231,8 @@ private:
   double m_PmtAnodePixelXSize;
   double m_PmtAnodePixelYSize;  
   double m_PmtAnodePixelGap;
-
+  double m_PmtPhCathZFromPMTCenter;
+  
   int  m_PmtNumPixelX;
   int  m_PmtNumPixelY;
   
@@ -238,7 +243,7 @@ private:
 
   double m_c4f10nominalrefrativeindex;
   double m_agelnominalrefractiveindex;
-  RichG4ReconFlatMirr* m_CurReconFlatMirr;
+  CkvG4ReconFlatMirr* m_CurReconFlatMirr;
 };
 
 #endif // RICHANALYSIS_RICHG4CKVRECON_H

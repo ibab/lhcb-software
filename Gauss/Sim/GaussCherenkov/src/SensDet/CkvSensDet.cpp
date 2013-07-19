@@ -1,4 +1,4 @@
-// $Id: CkvSensDet.cpp,v 1.24 2009-07-17 13:46:13 jonrob Exp $
+//$Id: CkvSensDet.cpp,v 1.24 2009-07-17 13:46:13 jonrob Exp $
 // Include files
 
 // from CLHEP
@@ -28,13 +28,14 @@
 #include "GaussTools/GaussTrackInformation.h"
 
 // local
-#include "CkvSensDet.h"
+#include "GaussCherenkov/CkvSensDet.h"
 #include "GaussRICH/RichInfo.h"
 #include "GaussRICH/RichPEInfo.h"
 #include "GaussRICH/RichPhotoElectron.h"
 #include "GaussCherenkov/CkvG4Hit.h"
-
-
+#include "GaussCherenkov/CherenkovPmtLensUtil.h"
+#include "GaussCherenkov/CkvGeometrySetupUtil.h"
+using namespace std;
 
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( CkvSensDet );
@@ -47,8 +48,17 @@ CkvSensDet::CkvSensDet( const std::string& type   ,
                           const std::string& name   ,
                           const IInterface*  parent )
   : G4VSensitiveDetector ( name  ),  
-    GiGaSensDetBase      ( type , name , parent )
+    GiGaSensDetBase      ( type , name , parent ),
+    m_RichPmtAviodDuplicateHitsActivate(false),
+    m_RichPmtFlagDuplicateHitsActivate(true),
+    m_TotNumPmtsInRich(5000),
+    m_RichPmtAlreadyHit(std::vector<bool>(m_TotNumPmtsInRich))
 {
+ // the above dummey value 5000 is set to the correct value below.
+
+  declareProperty("RichPmtAviodDuplicateHitsActivate", m_RichPmtAviodDuplicateHitsActivate);
+  declareProperty("RichPmtFlagDuplicateHitsactivate", m_RichPmtFlagDuplicateHitsActivate);
+
 
 
 }
@@ -71,8 +81,17 @@ StatusCode CkvSensDet::initialize()
     m_RichGeomProperty= new
       CkvG4GeomProp(detSvc,msgSvc()) ;
 
+    CkvGeometrySetupUtil * aCkvGeometrySetup= CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance();
+   m_SuperRichFlag = aCkvGeometrySetup ->isSuperRich();
+   m_OptHorizRichFlag =  aCkvGeometrySetup ->hasOptimizedHorizontalRich1();
+   
+    
     m_RichG4HCName= new RichG4HitCollName();
+    if(m_SuperRichFlag) m_RichG4HCName->setCollConfigWithSuperRich();
     m_NumberOfHCInRICH=m_RichG4HCName->NumberOfHCollectionInRICH();
+    //G4cout<<" Number of HC in SuperRich superrichglag  "<< m_NumberOfHCInRICH<< "  "<<
+    //  m_SuperRichFlag<<  G4endl;
+    
     m_PhdHCID.reserve(m_NumberOfHCInRICH);
     m_RichHC.reserve(m_NumberOfHCInRICH);
 
@@ -85,8 +104,16 @@ StatusCode CkvSensDet::initialize()
       m_PhdHCID.push_back(-1);
 
     }
+    G4int m_TotNumPmtsInRich =(!m_SuperRichFlag ) ?  (( m_RichGeomProperty-> NumberOfPMTsInRich1() ) +
+                                                      ( m_RichGeomProperty-> NumberOfPMTsInRich2())) 
+                                                      : m_RichGeomProperty->NumberOfPmtsInSuperRich() ;
 
+    m_RichPmtAlreadyHit.resize(m_TotNumPmtsInRich);
+    ResetPmtMapInCurrentEvent();
+
+    
   }
+  
 
   
   return sc;
@@ -116,7 +143,7 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
   // Create a hit only when there is
   // non-zero energy deposit.  SE June 2003.
 
-  // G4cout<<"Rich SensDet CurEdep "<< CurEdep<<G4endl;
+  //   G4cout<<"Rich SensDet CurEdep "<< CurEdep<<G4endl;
 
   //if ( CurEdep <= 0.1 ) { return false; }
   if(  CurEdep <= 0.001 ) { return false; }
@@ -130,8 +157,10 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
   G4TouchableHistory* CurTT =
     (G4TouchableHistory*)(prePosPoint->GetTouchable());
 
-  G4VPhysicalVolume*  CurPV =   CurTT->GetVolume();
-  G4LogicalVolume*    CurLV =   CurPV->GetLogicalVolume();
+  //  G4VPhysicalVolume*  CurPV =   CurTT->GetVolume();
+  // G4LogicalVolume*    CurLV =   CurPV->GetLogicalVolume();
+  //G4cout<<" Ckv SensDet  PV LV "<<   CurPV->GetName()<<"   "<<CurLV ->GetName()<<G4endl;
+  
   // Now get the charged track (ie. photoelectron or backscattered electron or the mip)
   // which created the  hit.
   G4Track* aTrack = aStep->GetTrack();
@@ -160,35 +189,71 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
 
   MsgStream log( msgSvc() , name() );
 
-  log << MSG::DEBUG << "Now in ProcessHits() for CkvSensDet"
-      << " Pos=("  << CurGlobalPos.x() << "," << CurGlobalPos.y()
-      << "," << CurGlobalPos.z() << ")"
-      << " PV="    << CurPV->GetName()
-      << " LV="    << CurLV->GetName()
-      << " edep in MeV ="  << CurEdep << endreq;
-  log << MSG::DEBUG << " PE Origin X Y Z "<<CurPEOrigin.x()
-      <<"   "<<CurPEOrigin.y()<<"   "<<CurPEOrigin.z()<<endreq;
+  // log << MSG::INFO << "Now in ProcessHits() for CkvSensDet"
+  //    << " Pos=("  << CurGlobalPos.x() << "," << CurGlobalPos.y()
+  //    << "," << CurGlobalPos.z() << ")"
+  //    << " PV="    << CurPV->GetName()
+  //    << " LV="    << CurLV->GetName()
+  //    << " edep in MeV ="  << CurEdep << endreq;
+  // log << MSG::INFO << " PE Origin X Y Z "<<CurPEOrigin.x()
+  //     <<"   "<<CurPEOrigin.y()<<"   "<<CurPEOrigin.z()<<endreq;
 
   G4double CurGlobalZ=CurGlobalPos.z();
 
+
   int CurrentRichDetNumber =-1;
+
 
   if( CurGlobalZ <= 0.0 ) {
     log << MSG::ERROR << "Inadmissible Rich Hit Z coordinate = "
         <<  CurGlobalZ <<endreq;
-  }else if ( CurGlobalZ < MaxZHitInRich1Detector() ) {
-    // hit coordinate in Rich1
-    CurrentRichDetNumber=0;
   }else {
-    // hit coordinate in Rich2
-    CurrentRichDetNumber= 1;
+    
+    if(m_SuperRichFlag) {
+      
+           CurrentRichDetNumber=2;
+    
+    }else {
+      
+    
+
+     if ( CurGlobalZ < MaxZHitInRich1Detector() ) {
+           // hit coordinate in Rich1
+         CurrentRichDetNumber=0;
+      }else {
+      // hit coordinate in Rich2
+       CurrentRichDetNumber= 1;
+     }
+    }
+    
+    
   }
+  
+
+
+  
   G4int CurrentPmtNumber= CurTT -> GetReplicaNumber(2);
   G4int CurrentPmtModuleNumber=  CurTT -> GetReplicaNumber(3);
 
-  //  log<< MSG::VERBOSE<<" SensDet PmtNumber Module RichDet Number "<< CurrentPmtNumber <<"   "
-  //   << CurrentPmtModuleNumber<<"  "<<CurrentRichDetNumber<< endreq;
-  
+   bool CurModuleWithLensFlag = false;
+   if( m_SuperRichFlag  ) { 
+      CurModuleWithLensFlag=true; 
+   }else {
+    CherenkovPmtLensUtil * aCherenkovPmtLensUtil =  CherenkovPmtLensUtil::getInstance();   
+    CurModuleWithLensFlag= aCherenkovPmtLensUtil->isPmtModuleWithLens(CurrentPmtModuleNumber);
+   }
+   
+    log<< MSG::DEBUG<<" SensDet PmtNumber Module RichDet Number  LensFlag "<< CurrentPmtNumber <<"   "
+      << CurrentPmtModuleNumber<<"  "<<CurrentRichDetNumber<<"  "<<CurModuleWithLensFlag<< endreq;
+
+   G4int curSuperRichDet =0;
+   
+   if( m_SuperRichFlag) curSuperRichDet =1;
+
+   G4int curHorizRich1Det =0;
+   if(m_OptHorizRichFlag && (CurrentRichDetNumber ==0)) curHorizRich1Det=1;
+   
+   
   
   G4int CurrentRichDetSector = CurTT ->GetReplicaNumber(4);
 
@@ -214,20 +279,24 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
   G4ThreeVector CurPEOriginLocal = theNavigator->
     GetGlobalToLocalTransform().
     TransformPoint(CurPEOrigin);
+
+  
+
   //test print
-  //if(CurrentRichDetNumber == 1 ) {
+  //if(CurrentRichDetNumber == 0 ) {
   //  
-  //  log << MSG::INFO << "Now in ProcessHits() of CkvSensDet LocalPos X Y Z "
-  //    <<CurLocalPos.x() <<"  "<<CurLocalPos.y()<<"   "<<CurLocalPos.z()<<endreq;
+    //   log << MSG::INFO << "Now in ProcessHits() of CkvSensDet LocalPos X Y Z "
+    //   <<CurLocalPos.x() <<"  "<<CurLocalPos.y()<<"   "<<CurLocalPos.z()<<endreq;
 
-  //   log << MSG::INFO << "Now in ProcessHits() of CkvSensDet Global Pos X Y Z "
-  //    <<CurGlobalPos.x() <<"  "<<CurGlobalPos.y()<<"   "<<CurGlobalPos.z()<<endreq;
+    //     log << MSG::INFO << "Now in ProcessHits() of CkvSensDet Global Pos X Y Z "
+    //  <<CurGlobalPos.x() <<"  "<<CurGlobalPos.y()<<"   "<<CurGlobalPos.z()<<endreq;
 
-  //   log << MSG::INFO<<" Pe origin localxyz global xyz "<< CurPEOriginLocal.x()<<"   "
-  //     <<CurPEOriginLocal.y()<<"   "<< CurPEOriginLocal.z()<<"   "
-  //     <<CurPEOrigin.x()<<"   "<<CurPEOrigin.y()<<"   "<<CurPEOrigin.z()<<"   "<<endreq;
+    //     log << MSG::INFO<<" Pe origin localxyz global xyz "<< CurPEOriginLocal.x()<<"   "
+    //   <<CurPEOriginLocal.y()<<"   "<< CurPEOriginLocal.z()<<"   "
+    //   <<CurPEOrigin.x()<<"   "<<CurPEOrigin.y()<<"   "<<CurPEOrigin.z()<<"   "<<endreq;
     
   // }
+  
   // end test print
   
   G4int CurrentPixelXNum=  PixelXNum(CurLocalPos.x());
@@ -272,8 +341,21 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
   G4int CurPhotoElectricFlag=0;
   G4int CurHpdReflectionFlag=0;
   G4ThreeVector CurHpdQwPhotIncidentPosition;
+  G4int CurpdLens=0;
+  G4ThreeVector CurLensIncidentPosition;
   G4int CurPhotonSourceProcInfo=0;
+  G4ThreeVector CurQWExtSurfaceCoordLocal;
+  G4ThreeVector CurLensExtSurfaceCoordLocal;
   
+
+
+
+
+
+
+  
+  //  if(CurModuleWithLensFlag )CurpdLens=1;
+  if( m_SuperRichFlag) CurpdLens=1;
 
 
   G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
@@ -310,7 +392,6 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
             CurHpdReflectionFlag=aPEInfo->HpdPhotonReflectionFlag();
             CurPEOriginLocal= aPEInfo->HpdPeLocalOriginPosition();
             CurPhotonSourceProcInfo=aPEInfo->PhotonSourceInformation();
-            
    
             log << MSG::DEBUG << "Now in ProcessHits()  "
                 <<" Track id of charged tk opt phot pe "
@@ -343,6 +424,23 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
               CurMirror1PhotonDetectorCopyNum=aPEInfo->Mirror1PhotDetCopyNum();
               CurMirror2PhotonDetectorCopyNum=aPEInfo->Mirror2PhotDetCopyNum();
               CurHpdQwPhotIncidentPosition=aPEInfo->HpdQWExtPhotIncidentPosition();
+              CurLensIncidentPosition=aPEInfo->PmtLensPhotIncidentPosition();
+              if(CurModuleWithLensFlag && ( CurLensIncidentPosition.z() > 500.0) ) CurpdLens=1;
+              
+              CurQWExtSurfaceCoordLocal =  
+                 theNavigator->GetGlobalToLocalTransform().TransformPoint(CurHpdQwPhotIncidentPosition );
+              CurLensExtSurfaceCoordLocal = 
+                 theNavigator->GetGlobalToLocalTransform().TransformPoint(CurLensIncidentPosition);
+              // if(CurpdLens >0  ) {
+              //  log<<MSG::VERBOSE<<" SensDet Lens global local coord  "<< CurLensIncidentPosition <<"   "
+              //     <<CurLensExtSurfaceCoordLocal<<endmsg;                
+              //  log<<MSG::VERBOSE<<" SensDet QW global local coord  "<<CurHpdQwPhotIncidentPosition  <<"   "
+              //    <<CurQWExtSurfaceCoordLocal <<endmsg;                
+              //  
+              // }
+               
+              
+
               //if(CurrentRichDetNumber == 1 ) {
                 //  log << MSG::INFO<<" Mirr1 xyz  Mirr2 xyz "<<CurMirror1PhotonReflPosition<<"  "
                 //    << CurMirror2PhotonReflPosition<<endreq;
@@ -404,12 +502,18 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
   newHit ->  setPhotoElectricProductionFlag(CurPhotoElectricFlag);
   newHit->   setRichHpdPhotonReflectionFlag(CurHpdReflectionFlag);
   newHit->   setHpdQuartzWindowExtSurfPhotIncidentPosition (CurHpdQwPhotIncidentPosition);
+  newHit->   setHpdQuartzWindowExtSurfPhotIncidentLocalPosition ( CurQWExtSurfaceCoordLocal );  
   newHit ->  setPhotonSourceProcessInfo( CurPhotonSourceProcInfo );
-
+  newHit ->  setpdWithLens(CurpdLens );
+  newHit -> setPmtLensPhotIncidentPosition(CurLensIncidentPosition );
+  newHit -> setPmtLensPhotIncidentLocalPosition ( CurLensExtSurfaceCoordLocal ); 
 
    newHit->SetCurModuleNum(CurrentPmtModuleNumber );
    newHit->SetCurHitInPixelGap(CurrentHitInPixelGap);
    newHit->SetCurPmtNum (CurrentPmtNumber);
+   newHit-> setSuperRichHit( curSuperRichDet   );
+   newHit-> setOptHorizontalRich1Hit(curHorizRich1Det );
+   
 
   // for now the trackID from the Gausshit base class.
   // if the mother of the corresponding optical photon exists it is set
@@ -420,7 +524,8 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
   // if( CurElectronBackScatFlag > 0 ) {
   //  G4cout<<" RichsensDet Backsct eln Mothertrackid currentTrackid "<<CurOptPhotMotherChTrackID<<"  "<<CurPETrackID<<G4endl;
   //}
-
+  // G4cout<<" RichsensDet superrich flgag pdlensflag "<<newHit->  SuperRichHit() <<"  "<<newHit->pdWithLens()<<G4endl;
+   
   if(aRichPETrackInfo) aRichPETrackInfo->setCreatedHit(true);
   newHit ->setTrackID(CurOptPhotMotherChTrackID); // this covers all the normal cases
                                                   // like Charged track -> Cherenkov photon -> photoelectron-> hit
@@ -467,23 +572,83 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
     } else {
       CurrentRichCollectionSet=3;
     }
-  }
+  }else if (CurrentRichDetNumber == 2 ) { 
+  
+    if ( CurrentRichDetSector == 0 ) {
+      CurrentRichCollectionSet=0;
 
+    } else {
+      CurrentRichCollectionSet=1;
+    }
+    
+  }
+  
+  
   
 
   if ( CurrentRichCollectionSet >= 0 ) {
-    int NumHitsInCurHC =m_RichHC[CurrentRichCollectionSet] ->insert( newHit );
+    bool EnableThisHitStore=true;
+    G4bool FlagThisHitAsDuplicate=false;
+    log << MSG::VERBOSE<<" Avoid duplicate  Hits  "<< m_RichPmtAviodDuplicateHitsActivate
+           <<"   "<<m_RichPmtFlagDuplicateHitsActivate<< endreq;
+    G4int CurPixelNumInPmt = m_RichGeomProperty ->GetPixelNumInPmt( CurrentPixelXNum, CurrentPixelYNum);
+
+    if(m_RichPmtAviodDuplicateHitsActivate || m_RichPmtFlagDuplicateHitsActivate  ) { 
+      if(  m_RichPmtAlreadyHit[CurrentPmtNumber] ) {
+        pair<multimap<G4int, G4int>::iterator, multimap<G4int,G4int>::iterator> ppp= 
+                                    m_RichPmtToPixelNumMap.equal_range(CurrentPmtNumber);
+        multimap<G4int,G4int>::iterator ipm= ppp.first;
+        while( (ipm !=ppp.second ) &&   ( EnableThisHitStore ) ) {
+          if((*ipm).second == CurPixelNumInPmt) {
+               FlagThisHitAsDuplicate=true;
+               if(m_RichPmtAviodDuplicateHitsActivate )EnableThisHitStore=false;
+          }
+          ++ipm;
+        }
+        
+      }// end test pmt already hit
+      
+    }
+    
+    //test print 
+    if( FlagThisHitAsDuplicate ) {
+      log << MSG::VERBOSE<<" Rich PMT Duplicate hit "<<CurrentPmtNumber<<"  "<<CurPixelNumInPmt<<endreq;
+    }
+    
+
+    // end test print
 
 
+    newHit -> setCurrentHitAsDuplicate( FlagThisHitAsDuplicate);
+    int NumHitsInCurHC =0;
+    
+    if(EnableThisHitStore) {
+      
+     NumHitsInCurHC =m_RichHC[CurrentRichCollectionSet] ->insert( newHit );
+
+      if(m_RichPmtAviodDuplicateHitsActivate || m_RichPmtFlagDuplicateHitsActivate ) { 
+         m_RichPmtAlreadyHit[CurrentPmtNumber]=true;
+         m_RichPmtToPixelNumMap.insert(pair<G4int,G4int>(CurrentPmtNumber, CurPixelNumInPmt));
+      }
+      
+      
+    }
+    
+    
         log << MSG::VERBOSE
         << "CkvSensdet: Current collection set AuxSet and Hit number stored = "
         << CurrentRichCollectionSet << "  " 
         <<NumHitsInCurHC << "   " <<endreq;
-
+        
   }
+  
+    
+  
 
   return true;
 }
+
+  
 
 //=============================================================================
 // clear (G4VSensitiveDetector method)
@@ -507,10 +672,10 @@ void CkvSensDet::Initialize(G4HCofThisEvent*  HCE) {
 
   MsgStream log( msgSvc() , name() );
 
-  log << MSG::DEBUG << "Cherenkovsensdet: Initialize. SensDetName, colName: "
-      <<SensitiveDetectorName<<"  "<<collectionName[0]
-      <<"  "<<collectionName[1]<<"  "
-      <<collectionName[2]<<"  "<<collectionName[3]<<endreq;
+  //  log << MSG::DEBUG << "Cherenkovsensdet: Initialize. SensDetName, colName: "
+  //    <<SensitiveDetectorName<<"  "<<collectionName[0]
+  //    <<"  "<<collectionName[1]<<"  "
+  //    <<collectionName[2]<<"  "<<collectionName[3]<<endreq;
 
   // G4String CurCollName;
   CkvG4HitsCollection* CurColl;
@@ -558,6 +723,16 @@ void CkvSensDet::Initialize(G4HCofThisEvent*  HCE) {
 //}
 
 //=============================================================================
+void CkvSensDet::ResetPmtMapInCurrentEvent() {
+    m_RichPmtAlreadyHit.assign(m_TotNumPmtsInRich,false);
+    m_RichPmtToPixelNumMap.clear();
+
+
+}
+
+
+
+
 
 
 

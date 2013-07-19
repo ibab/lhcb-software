@@ -16,7 +16,7 @@
 // 2011-04-19 : Sajan Easo
 //-----------------------------------------------------------------------------
 
-extern void   RichG4PmtQWIncidentTag(const G4Track& aPhotonTk, const G4ThreeVector & aPmtQWPoint ){
+extern void   RichG4PmtQWIncidentTag(const G4Track& aPhotonTk, const G4ThreeVector & aPmtQWPoint, int aQWLensFlag ){
 
    G4VUserTrackInformation* aUserTrackInfo=aPhotonTk.GetUserInformation();
    GaussTrackInformation* aRichPhotTrackInfo
@@ -32,8 +32,16 @@ extern void   RichG4PmtQWIncidentTag(const G4Track& aPhotonTk, const G4ThreeVect
         if( aRichPhotInfo ) {
           // now add the info
           if( aRichPhotInfo -> VerbosePhotTagFlag() ) {
-           
-	    aRichPhotInfo ->setHpdQWPhotIncidentPosition(aPmtQWPoint);
+            if(    aQWLensFlag == 0 ) {
+              
+        	    aRichPhotInfo ->setHpdQWPhotIncidentPosition(aPmtQWPoint);
+            }else {
+        	    aRichPhotInfo ->setPmtLensPhotIncidentPosition(aPmtQWPoint);
+            
+  
+            }
+            
+            
 
 	  }
 	}

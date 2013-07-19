@@ -12,7 +12,7 @@
 
 #include "GiGa/GiGaBase.h"
 
-#include "RichPmtProperties.h"
+#include "GaussCherenkov/RichPmtProperties.h"
 
 //
 //  The class definition should access the class for
@@ -131,6 +131,14 @@ public:
   G4bool PSFPreDc06Flag() {return m_PSFPreDc06Flag;}
   G4bool PmtQEUsingNominalTable()  {  return m_PmtQEUsingNominalTable;}
   void  SetPmtQESourceTable(int asou);
+  void setPmtModuleSupFlag3(G4bool aFlag3) 
+  { m_PmtModuleSupFlag3=aFlag3;}
+  void setPmtModuleSupFlag4(G4bool aFlag4)
+  { m_PmtModuleSupFlag4=aFlag4;}
+  void setPmtModuleSupFlag5(G4bool aFlag5) 
+  { m_PmtModuleSupFlag5=aFlag5;}
+  void setPmtModuleSupFlag6(G4bool aFlag6)
+  { m_PmtModuleSupFlag6=aFlag6;}
   
 private:
 
@@ -144,6 +152,9 @@ private:
   G4String m_PrePhotoElectricLogVolName;
   G4String m_PostPhotoElectricLogVolName;
   G4String m_PrePhotoElectricMatNameSec;
+
+  G4String m_PrePhotoElectricLogVolNameWLens;
+  G4String m_PostPhotoElectricLogVolNameWLens;
   
   double m_PmtPhElectronKE;
   double m_PhCathodeToSilDetMaxDist;
@@ -154,6 +165,9 @@ private:
   G4String  m_Rich2PhysVolNameA;
   G4String  m_Rich1PhysVolNameB;
   G4String  m_Rich2PhysVolNameB;
+  G4String  m_SuperRichPhysVolNameA;
+  G4String  m_SuperRichPhysVolNameB;
+  
 
   double m_MaxZHitInRich1;
   double  m_MaxAnyPmtQEff;
@@ -166,6 +180,12 @@ private:
   G4bool m_PmtQEUsingNominalTable; // if true using old Nominal QE Table for all pmts from sqldddb
                                    // if false using the new measured QE tables for the Pmts. 
   G4int m_PmtQESourceTable;
+
+  G4bool m_PmtModuleSupFlag3;
+  G4bool m_PmtModuleSupFlag4;
+  G4bool m_PmtModuleSupFlag5;
+  G4bool m_PmtModuleSupFlag6;
+
          
 };
 

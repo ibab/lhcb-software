@@ -84,9 +84,19 @@ void CherenkovStepAnalysis7::UserSteppingAction( const G4Step* aStep )
         const G4ThreeVector & prePos=aPreStepPoint->GetPosition();
         const G4ThreeVector & postPos=aPostStepPoint->GetPosition();
         const G4ThreeVector & PhotCurDir = aTrack->GetMomentumDirection().unit();
+             bool r1Det=false;
+             bool r2Det=false;
+             bool r1A=false;
+             bool r2A=false;
+     
 
-        if( ( prePos.z() >= ZUpsRich1Analysis &&
-            postPos.z() <= ZDnsRich1Analysis ) ) {
+             if( ( prePos.z() >= ZUpsRich1Analysis) &&
+                 (postPos.z() <= ZDnsRich1Analysis ) ) r1Det=true;
+        
+             if( (prePos.z() >= ZUpsRich2Analysis) &&
+                 (postPos.z() <= ZDnsRich2Analysis) ) r2Det=true;
+             if(r1Det || r2Det ) {
+
              
              const G4String & aPreVolName=
                               aPreStepPoint->GetPhysicalVolume()->
@@ -97,9 +107,15 @@ void CherenkovStepAnalysis7::UserSteppingAction( const G4Step* aStep )
              // G4cout<<"UserStepSeven Pre Post vol "<<aPreVolName<<"  "
              //      << aPostVolName<<G4endl;
              
-
+             
              if( (aPreVolName == LogVolRich1MagShH0NameAnalysis  )  && 
-                   aPostVolName == LogVolRich1PhDetSupFrameH0NameAnalysis ) {
+                 (aPostVolName == LogVolRich1PhDetSupFrameH0NameAnalysis) ) r1A=true;
+             
+             if( (aPreVolName == LogVolRich2N2Encl0NameAnalysis  )  && 
+                 (aPostVolName == LogVolRich2HPDPanel0NameAnalysis) ) r2A=true;
+             
+
+             if(r1A || r2A ) {
                     G4Navigator* theNavigator =
                        G4TransportationManager::GetTransportationManager()->
                                                     GetNavigatorForTracking();                     
@@ -111,28 +127,43 @@ void CherenkovStepAnalysis7::UserSteppingAction( const G4Step* aStep )
                   G4double PdotN=  PhotCurDir * theGlobalNormal;
 
                   IHistogramSvc* CurrentHistoSvc = RichG4SvcLocator::RichG4HistoSvc();
-                  SmartDataPtr<IHistogram1D> m_hHistoPhotDirInPhDetFrame(CurrentHistoSvc,"RICHG4HISTOSET5/601");
-                  if(!m_hHistoPhotDirInPhDetFrame) {
-                    m_hHistoPhotDirInPhDetFrame=CurrentHistoSvc->book("RICHG4HISTOSET5/601", "PhdetPhotonDir",
+                  SmartDataPtr<IHistogram1D> m_hHistoPhotDirInPhDetFrameR1(CurrentHistoSvc,"RICHG4HISTOSET5/601");
+                  SmartDataPtr<IHistogram1D> m_hHistoPhotDirInPhDetFrameR2(CurrentHistoSvc,"RICHG4HISTOSET5/701");
+                  if(!m_hHistoPhotDirInPhDetFrameR1) {
+                    m_hHistoPhotDirInPhDetFrameR1=CurrentHistoSvc->book("RICHG4HISTOSET5/601", "PhdetPhotonDirRich1",
+                                                                      300,-1.0,1.0);
+                    
+                  }
+                  if(!m_hHistoPhotDirInPhDetFrameR2) {
+                    m_hHistoPhotDirInPhDetFrameR2=CurrentHistoSvc->book("RICHG4HISTOSET5/701", "PhdetPhotonDirRich2",
                                                                       300,-1.0,1.0);
                     
                   }
 
-                  // G4cout<<" PhDet dir PdotN "<<  PhotCurDir <<"  "<<  theGlobalNormal <<"  "<<PdotN<<G4endl;
+                  // G4cout<<" PhDet dir PdotN "<<r1A <<"  "<<r2A<<"  "
+                  // <<  PhotCurDir <<"  "<<  theGlobalNormal <<"  "<<PdotN<<G4endl;
                   
-                  if(m_hHistoPhotDirInPhDetFrame) m_hHistoPhotDirInPhDetFrame->fill(acos(PdotN));
+                  if(m_hHistoPhotDirInPhDetFrameR1 && r1A) m_hHistoPhotDirInPhDetFrameR1->fill(acos(PdotN));
+                  if(m_hHistoPhotDirInPhDetFrameR2 && r2A) m_hHistoPhotDirInPhDetFrameR2->fill(acos(PdotN));
                   
                   
              }
              
              
              
-        }
-        
+             
+             }
+             
+             
       }
       
+      
     }
+    
     }
+    
    }
+   
 }
+
 

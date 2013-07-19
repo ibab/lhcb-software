@@ -46,6 +46,9 @@ public:
 
   G4bool PixelGapFinderX( const G4double Xc );
   G4bool PixelGapFinderY( const G4double Yc );
+  G4int NumberOfPmtsInSuperRich()  {  return    m_NumberOfPmtsInSuperRich;}
+  G4int GetPixelNumInPmt( int PixelXNum, int PixelYNum);
+  
   
 private:
 
@@ -88,6 +91,8 @@ private:
   G4int m_PmtPixelXBoundarySize;
   G4int m_PmtPixelYBoundarySize;
 
+  G4int m_NumberOfPmtsInSuperRich;
+  
 
 };
 

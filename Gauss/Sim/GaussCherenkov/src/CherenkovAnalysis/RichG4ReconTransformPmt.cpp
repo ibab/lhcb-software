@@ -1,5 +1,8 @@
 // $Id: RichG4ReconTransformHpd.cpp,v 1.11 2008-06-24 15:56:35 jonrob Exp $
 // Include files
+#include <boost/lexical_cast.hpp>
+
+
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -9,6 +12,8 @@
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/RegistryEntry.h"
+#include "GaudiKernel/SmartDataPtr.h"
+
 
 
 #include "GaudiKernel/MsgStream.h"
@@ -19,7 +24,6 @@
 #include "DetDesc/Material.h"
 
 #include "DetDesc/DetectorElement.h"
-#include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/TabulatedProperty.h"
 
 // RichDet
@@ -33,6 +37,8 @@
 // local
 #include "RichG4ReconTransformPmt.h"
 #include "GaussCherenkov/CkvG4SvcLocator.h"
+#include "GaussCherenkov/CherenkovPmtLensUtil.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4ReconTransformPmt
@@ -52,10 +58,17 @@ RichG4ReconTransformPmt::~RichG4ReconTransformPmt(  ) {
 
 void RichG4ReconTransformPmt::initialise() {
 
+  IDataProviderSvc* detSvc = CkvG4SvcLocator::RichG4detSvc();
+  //  IMessageSvc*  msgSvc = CkvG4SvcLocator::RichG4MsgSvc ();
+
+
  m_Rich1SubMasterPvIndex=0;
   m_Rich1MagShPvName0 = "pvRich1MagShH0:0";
   m_Rich1MagShPvName1 = "pvRich1MagShH1:1";
-  m_Rich1PhotDetSupPvIndex=1;
+  m_Rich1PhtDetSupName0 = "pvRich1PhDetSupFrameH0:0";
+  m_Rich1PhtDetSupName1 = "pvRich1PhDetSupFrameH1:1";
+  
+  //  m_Rich1PhotDetSupPvIndex=1;
   m_RichPmtInModuleStartIndex=0;
   m_PmtSMasterIndex=0;
   m_Rich2PmtPanelName0="pvRich2HPDPanel:0";
@@ -66,10 +79,17 @@ void RichG4ReconTransformPmt::initialise() {
   // m_Rich2N2EnclIndex1=4;
   // m_Rich2PmtPanelIndex0=0;
   // m_Rich2PmtPanelIndex1=0;
-
   m_Rich1PmtModuleMaxH0=84;
   m_Rich2PmtModuleMaxH0=91;
 
+  SmartDataPtr<DetectorElement> Rich1DE(detSvc, Rich1DeStructurePathName);
+  if(Rich1DE) {
+    m_Rich1PmtModuleMaxH0=(Rich1DE->param<int>("Rich1TotNumModules"))/2;
+    m_Rich2PmtModuleMaxH0=(Rich1DE->param<int>("Rich2TotNumModules"))/2;
+  }
+
+  m_Rich1PmtModuleMasterNamePrefClassic="pvRichPMTModuleMaster";
+  m_Rich1PmtModuleMasterNamePrefLens="pvRichPMTLensModuleMaster";
   //  m_Rich1PmtModuleMaxH0=60;
   // m_Rich2PmtModuleMaxH0=91;
   m_RichNumPmtInModule=16;
@@ -79,7 +99,17 @@ void RichG4ReconTransformPmt::initialise() {
   // the following 2 not used for now.
   //  m_Rich1MagShPvIndexH0=20;
   // m_Rich1MagShPvIndexH1=21;
-
+  m_Rich1PmtModuleMasterNameSuf.resize(2.0*m_Rich1PmtModuleMaxH0);
+  for (int i=0; i<(int)m_Rich1PmtModuleMasterNameSuf.size();++i) {
+    std::string ss= boost::lexical_cast<std::string> (i);
+    std::string suf= "00";
+    if(i>9) suf="0";
+    if(i>99) suf="";
+    std::string sIndex=suf+ss+":"+ss;
+    m_Rich1PmtModuleMasterNameSuf[i]=sIndex;
+    
+  }
+  
 
 }
 
@@ -178,22 +208,25 @@ RichG4ReconTransformPmt::RichG4ReconTransformPmt( int aRichDetNum,
           const Gaudi::Transform3D & apvbTrans= apvb->matrix();
           const Gaudi::Transform3D & apvbTransInv= apvb->matrixInv();
 
-          const IPVolume* apvc = apvb->lvolume()
-            ->pvolume(m_Rich1PhotDetSupPvIndex);
+          //const IPVolume* apvc = apvb->lvolume()
+          //  ->pvolume(m_Rich1PhotDetSupPvIndex);
+
+
+         const IPVolume* apvc= (aPmtModuleNumber < m_Rich1PmtModuleMaxH0) ?   
+           apvb->lvolume()->pvolume(m_Rich1PhtDetSupName0):
+           apvb->lvolume()->pvolume(m_Rich1PhtDetSupName1);
+         
+
           if(apvc) {
 
-            //   RichG4ReconTransformPmtlog<<MSG::INFO
+            //  RichG4ReconTransformPmtlog<<MSG::INFO
             //         << " Rich1PhotDetSup pvol lvol "
-            //                      <<apvc->name() <<"   "
+            //                       <<apvc->name() <<"   "
             //                      <<apvc->lvolumeName()
             //                      <<endreq;
             // now account for the fact that the index is
             // restarted int he bottom ph det sup vol.
 
-            int aPmtModuleIndex =  aPmtModuleNumber;
-            if( aPmtModuleNumber >= m_Rich1PmtModuleMaxH0 ){
-              aPmtModuleIndex = aPmtModuleNumber-m_Rich1PmtModuleMaxH0;
-            }
 
             const Gaudi::Transform3D & apvcTrans= apvc->matrix();
             const Gaudi::Transform3D & apvcTransInv= apvc->matrixInv();
@@ -206,17 +239,40 @@ RichG4ReconTransformPmt::RichG4ReconTransformPmt( int aRichDetNum,
             //                          apvbTransInv* apvcTransInv*
             //                          apvdTransInv;
 
+            // int aPmtModuleIndex =  aPmtModuleNumber;
+            //  if( aPmtModuleNumber >= m_Rich1PmtModuleMaxH0 ){
+            //   aPmtModuleIndex = aPmtModuleNumber-m_Rich1PmtModuleMaxH0;
+            //  }
 
+
+
+            //            const IPVolume* apvd = apvc->lvolume()
+            //->pvolume( aPmtModuleIndex);
+            //            RichG4ReconTransformPmtlog<<MSG::INFO<<"Module Num Index Name"
+            //                          <<aPmtModuleIndex<<"  "<<aPmtModuleNumber<<"   "
+            //                          <<m_Rich1PmtModuleMasterNameSuf[aPmtModuleNumber]<<endreq;
+
+            CherenkovPmtLensUtil* aCherenkovPmtLensUtil= CherenkovPmtLensUtil::getInstance();
+            bool isLensModule= aCherenkovPmtLensUtil->isPmtModuleWithLens(aPmtModuleNumber);
+            std::string aPrefStr= isLensModule? m_Rich1PmtModuleMasterNamePrefLens:m_Rich1PmtModuleMasterNamePrefClassic;
+            //    RichG4ReconTransformPmtlog<<MSG::INFO<<" Now look for Module "
+            //                          <<aPrefStr+m_Rich1PmtModuleMasterNameSuf[aPmtModuleNumber]<<endreq;
+            
+            
             const IPVolume* apvd = apvc->lvolume()
-              ->pvolume( aPmtModuleIndex);
+              ->pvolume(aPrefStr+m_Rich1PmtModuleMasterNameSuf[aPmtModuleNumber] );
             if(apvd) {
-              // RichG4ReconTransformPmtlog<<MSG::INFO
-              //         << " Rich1Pmtmaster pvol lvol num index "
+              //      RichG4ReconTransformPmtlog<<MSG::INFO
+              //         << " Rich1PmtModulemaster pvol lvol num index "
               //                    <<apvd->name() <<"   "
               //                    <<apvd->lvolumeName()
-              //                    <<"  "<< aPmtModuleNumber
-              //                    <<"  "<< aPmtModuleIndex
-              //                    <<endreq;
+              //                              <<"  "<< aPmtModuleNumber<<endreq;
+                  
+                  //                                  <<"  "<< aPmtModuleIndex
+                  //                <<endreq;
+              //   RichG4ReconTransformPmtlog<<MSG::INFO<<" Pmt num in Module  "
+              //      <<aPmtModuleNumber<<"  "<<aPmtNumberInModule<<endreq;
+               
 
               const Gaudi::Transform3D & apvdTrans= apvd->matrix();
               const Gaudi::Transform3D & apvdTransInv= apvd->matrixInv();
@@ -229,7 +285,9 @@ RichG4ReconTransformPmt::RichG4ReconTransformPmt( int aRichDetNum,
                 const Gaudi::Transform3D & apvfTrans= apvf->matrix();
                 const Gaudi::Transform3D & apvfTransInv= apvf->matrixInv();
               
-
+                // RichG4ReconTransformPmtlog<<MSG::INFO<<" Pmt num in Module Vol names "<<
+                //  aPmtNumberInModule << apvf->name()<<"   "<<apvf->lvolumeName()<<endreq;
+                
 
                 const IPVolume* apvg =  apvf->lvolume()
                     ->pvolume(m_PmtSMasterIndex);

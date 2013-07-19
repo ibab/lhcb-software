@@ -37,7 +37,7 @@
 #include "GaussCherenkov/CkvG4GaussPathNames.h"
 #include "CkvG4TrackActionPhotOpt.h"
 #include "GaussRICH/RichG4SvcLocator.h"
-#include "RichPmtProperties.h"
+#include "GaussCherenkov/RichPmtProperties.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CkvG4TrackActionPhotOpt

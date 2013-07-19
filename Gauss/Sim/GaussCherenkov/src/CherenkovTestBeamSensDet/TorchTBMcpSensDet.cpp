@@ -18,7 +18,7 @@
 
 // GiGa
 #include "GiGa/GiGaBase.h"
-#include "CkvSensDet.h"
+#include "GaussCherenkov/CkvSensDet.h"
 #include "GaussRICH/RichInfo.h"
 #include "GaussRICH/RichPEInfo.h"
 #include "GaussRICH/RichPhotoElectron.h"

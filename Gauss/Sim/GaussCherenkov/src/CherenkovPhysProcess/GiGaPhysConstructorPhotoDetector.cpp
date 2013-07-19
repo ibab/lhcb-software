@@ -21,6 +21,7 @@
 // local
 #include "GiGaPhysConstructorPhotoDetector.h"
 #include "GaussRICH/RichPhotoElectron.h"
+#include "GaussCherenkov/CkvGeometrySetupUtil.h"
 
 //#include "GaussRICH/RichG4GaussPathNames.h"
 //#include "DetDesc/DetectorElement.h"
@@ -102,12 +103,20 @@ void GiGaPhysConstructorPhotoDetector::ConstructProcess()
 
 
     ConstructPeGenericProcess();
-    msg << MSG::DEBUG <<" RICHPmtPhysProcess Activation status  " << activateRICHPmtPhysProcStatus() << endreq;
+    msg << MSG::INFO <<" RICHPmtPhysProcess Activation status  " << activateRICHPmtPhysProcStatus() << endreq;
     
 
     if( activateRICHPmtPhysProcStatus() || ActivateTorchTBMcpEnergyLossProc()  ){    
 
+      // CkvGeometrySetupUtil * aCkvGeometrySetup=CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance();
+     //  if(! (aCkvGeometrySetup->isSuperRich() ) ) {  
+       // temporarily deactivate for superrich for test.
+       
+
       ConstructPmtSiEnLoss();
+      
+      //     }
+     
     }
   
 }

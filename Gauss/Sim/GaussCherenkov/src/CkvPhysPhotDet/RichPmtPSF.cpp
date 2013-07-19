@@ -1,4 +1,4 @@
-#include "RichPmtPSF.h"
+#include "GaussCherenkov/RichPmtPSF.h"
 
 
 RichPmtPSF::RichPmtPSF()

@@ -9,6 +9,7 @@
 
 #include "GaussCherenkov/CkvG4Hit.h"
 #include "GaussRICH/RichG4ReconResult.h"
+#include "GaussRICH/RichG4HitCoordResult.h"
 
 /** @class CherenkovG4HistoFillSet4 CherenkovG4HistoFillSet4.h RichAnalysis/CherenkovG4HistoFillSet4.h
  *
@@ -26,6 +27,10 @@ public:
 
   void FillRichG4HistoSet4(CkvG4Hit* acHit,
                            RichG4ReconResult* aRichG4ReconResult );
+
+  void FillRichG4CoordHistoSet4(CkvG4Hit* adHit, 
+                                RichG4HitCoordResult* bReconCoordResult) ;
+  
 
 protected:
 

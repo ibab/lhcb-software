@@ -37,7 +37,8 @@ private:
   CherenkovStepAnalysis7(const CherenkovStepAnalysis7& );
   CherenkovStepAnalysis7& operator=(const CherenkovStepAnalysis7& );
 
-  IHistogram1D* m_hHistoPhotDirInPhDetFrame;
+  IHistogram1D* m_hHistoPhotDirInPhDetFrameR1;
+  IHistogram1D* m_hHistoPhotDirInPhDetFrameR2;
   
 
 };

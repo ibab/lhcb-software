@@ -15,6 +15,7 @@
 #include "RichDet/DeRichPDPanel.h"
 #include "RichDet/DeRichPMTPanel.h"
 #include "RichDet/DeRichSystem.h"
+#include "GaussCherenkov/CherenkovPmtLensUtil.h"
 
 // namespaces
 using namespace LHCb;
@@ -60,10 +61,10 @@ StatusCode GetMCCkvHitsAlg::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Get RichDet objects
-  if ( richIsActive(Rich::Rich1) )
-    m_richDets[Rich::Rich1] = getDet<DeRich>( DeRichLocations::Rich1 );
-  if ( richIsActive(Rich::Rich2) )
-    m_richDets[Rich::Rich2] = getDet<DeRich>( DeRichLocations::Rich2 );
+  // if ( richIsActive(Rich::Rich1) )
+  //   m_richDets[Rich::Rich1] = getDet<DeRich>( DeRichLocations::Rich1 );
+  // if ( richIsActive(Rich::Rich2) )
+  //  m_richDets[Rich::Rich2] = getDet<DeRich>( DeRichLocations::Rich2 );
 
   return sc;
 }
@@ -126,7 +127,8 @@ StatusCode GetMCCkvHitsAlg::execute()
         return Warning( "Null RICH hit collection "+colName, StatusCode::SUCCESS );
       }
       const int numberofhits = myCollection->entries();  // num of hits in this collection
-
+      //info()<<"GetMcHitsAlg Numhits "<<numberofhits<<"  "<<colName<<endreq;
+      
       // reserve space
       totalSize += numberofhits;  // count the total num of hits in all collections.
 
@@ -219,6 +221,10 @@ StatusCode GetMCCkvHitsAlg::execute()
 
         // Photon produced by Scintilation process 
         mchit->setRadScintillation   ( ( g4hit-> PhotonSourceProcessInfo()) == 2 );
+
+        // The hit went through the curvsed surface of a PMT lens, theirby got focussed onto a PMT.
+        bool refractAtPdLens=  (g4hit->pdWithLens() > 0 ) ? true : false ;
+        mchit-> setPmtLensFlag(refractAtPdLens);
         
 
         // HPD reflections
@@ -369,6 +375,12 @@ LHCb::RichSmartID GetMCCkvHitsAlg::assembleMCPmtRichSmartID(const CkvG4Hit * aHi
   const int CurPiY = aHit ->GetCurPixelYNum();  
   Rich::DetectorType iRich = Rich::Rich1;
   Rich::Side iSide = Rich::top;
+  //   const int CurPdLensFlag=(int)  aHit->pdWithLens() ;
+   
+  // CherenkovPmtLensUtil * aCherenkovPmtLensUtil =  CherenkovPmtLensUtil::getInstance();
+  // bool CurModuleWithLensFlag =aCherenkovPmtLensUtil->isPmtModuleWithLens(CurM);
+  //  const int CurPdLensFlag =  (CurModuleWithLensFlag) ? 1 : 0;
+  
   if(CurRich == 0 ) {
     iRich = Rich::Rich1;
     if(CurSide == 0 ) {
@@ -383,18 +395,38 @@ LHCb::RichSmartID GetMCCkvHitsAlg::assembleMCPmtRichSmartID(const CkvG4Hit * aHi
     }else if (CurSide == 1 ) {
       iSide = Rich::right;
     }
-
+    
+  }else if( CurRich == 2 ) {
+  
+    iRich = Rich::Rich2;
+    //    iRich = Rich::SuperRich;
+    if(CurSide == 0 ) {
+      iSide = Rich::left;  
+    }else if (CurSide == 1 ) {
+      iSide = Rich::right;
+    }
+    
   }
-
+  
   // test print
   //  info()<<"Local hit pos "<<aHit-> GetLocalPos() <<endmsg;
   // info()<<"Global hit pos "<< aHit->GetGlobalPos() <<endmsg;
-  
-  //  info()<<"smartIdInput from Pmt  rich side M P PxX PxY "<<iRich<<"   "<<iSide<<"  "
-  //        <<CurPInM<<"   "<<CurM<<"   "<<CurPiX<<"   "<<CurPiY<<endmsg; 
 
-  //    const LHCb::RichSmartID asmartID = LHCb::RichSmartID (iRich,iSide, CurPInM, CurM,
-  //                                                 CurPiY,CurPiX,LHCb::RichSmartID::MaPMTID );
+  // info()<<"smartIdAssembly  RichDet side "<<   CurRich <<"   "<<CurSide<<endreq;
+  
+  // info()<<"smartIdInput from Pmt  rich side M P PxX PxY lensflag "<<iRich<<"   "<<iSide<<"  "
+  //       <<CurPInM<<"   "<<CurM<<"   "<<CurPiX<<"   "<<CurPiY<<" CurPdLensFlag  "<<CurPdLensFlag<<endmsg; 
+
+   //    LHCb::RichSmartID asmartID_PM_test = LHCb::RichSmartID (iRich,iSide, CurPInM, CurM,
+   //                                              LHCb::RichSmartID::MaPMTID );
+  //      LHCb::RichSmartID asmartID_withPixelNum_test = LHCb::RichSmartID (iRich,iSide, CurPInM, CurM,CurPiX,CurPiY,
+  //                                                LHCb::RichSmartID::MaPMTID );
+  //     asmartID_PM_test.setRichLensFlag(CurPdLensFlag );
+  //     asmartID_withPixelNum_test.setRichLensFlag(CurPdLensFlag ); 
+  //    info()<<" RichSmarid Pixel "<<asmartID_withPixelNum_test.rich()  <<"  "<<asmartID_withPixelNum_test.panel()   <<"  "
+  //           << asmartID_withPixelNum_test.pdNumInCol()   <<"   "<<asmartID_withPixelNum_test.pdCol()  <<"   "<<CurPdLensFlag<<" "
+  //           <<"  "<<asmartID_withPixelNum_test.key()<< endmsg;
+  //      
   //  info()<<" now det richdet info "<<endmsg;
     
     
@@ -472,10 +504,18 @@ LHCb::RichSmartID GetMCCkvHitsAlg::assembleMCPmtRichSmartID(const CkvG4Hit * aHi
     
     
 
-  //end test print  
+  //end test print
 
-  return ( LHCb::RichSmartID (iRich,iSide, CurPInM, CurM,
-            CurPiY,CurPiX,LHCb::RichSmartID::MaPMTID ) );
+  //   LHCb::RichSmartID asmartID_withPixelNum = LHCb::RichSmartID (iRich,iSide, CurPInM, CurM,CurPiY,CurPiX,
+  //                                               LHCb::RichSmartID::MaPMTID );
+   // asmartID_withPixelNum.setRichLensFlag(CurPdLensFlag );
+
+   //  return ( LHCb::RichSmartID (iRich,iSide, CurPInM, CurM,
+   //                           CurPiY,CurPiX,CurPdLensFlag,LHCb::RichSmartID::MaPMTID ) );
+  //  return ( asmartID_withPixelNum  );
+
+   return ( LHCb::RichSmartID (iRich,iSide, CurPInM, CurM,
+                             CurPiY,CurPiX,LHCb::RichSmartID::MaPMTID ) );
 }
 
 //=============================================================================
@@ -483,14 +523,19 @@ LHCb::RichSmartID GetMCCkvHitsAlg::assembleMCPmtRichSmartID(const CkvG4Hit * aHi
 //=============================================================================
 StatusCode GetMCCkvHitsAlg::finalize()
 {
+  // info()<<" Now start GetMCCkvHitsAlgFinalize" <<endmsg;
+  
   const Rich::StatDivFunctor occ("%7.2f +-%5.2f");
   //   RichG4RadiatorMaterialIdValues* aRMIdValues= 
   //          RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
+  //info()<<" Now in GetMCCkvHitsAlgFinalize   "<<m_nEvts<<endmsg;
+  
 
   info() << "Av. # Invalid RICH flags              = "
          << occ(m_invalidRichHits,m_nEvts)
          << endmsg;
-
+  //  info()<<" Now in GetMCCkvHitsAlgFinalize doing printstat   "<<endmsg;
+  
   printStat( "Av. # MCRichHits",              m_hitTally );
   printStat( "Av. # Invalid radiator hits",   m_invalidRadHits );
   printStat( "Av. # Signal Hits",             m_signalTally );
@@ -534,23 +579,42 @@ void GetMCCkvHitsAlg::printStat( std::string name, DMap & a )
 {
   const Rich::StatDivFunctor    occ("%7.2f +-%5.2f");
   const Rich::PoissonEffFunctor eff("%6.2f +-%4.2f");
+  //  info() << "Now in printStat Dmap  "<<SuperRichFlag()<<"  "<<  name <<"   "<<m_nEvts<<endreq;
+  
   name.resize(30,' ');
+  if(!SuperRichFlag() ) {
+    
   info() << name 
          << ": Rich1 = " << occ(a[Rich::Rich1],m_nEvts)
          << " (" << eff(a[Rich::Rich1],m_hitTally[Rich::Rich1]) << "%)"
          << " Rich2 = "  << occ(a[Rich::Rich2],m_nEvts)
          << " (" << eff(a[Rich::Rich2],m_hitTally[Rich::Rich2]) << "%)"
          << endmsg;
+  }else {
+    
+  info() << name 
+         << ": SuperRich = " 
+           << occ(a[Rich::Rich2],m_nEvts)
+         << " (" << eff(a[Rich::Rich2],m_hitTally[Rich::Rich2]) << "%)"
+         << endmsg;
+    
+  }
+  
+  
 }
+
 
 void GetMCCkvHitsAlg::printStat( std::string name, RMap & a )
 {
   const Rich::StatDivFunctor    occ("%7.2f +-%5.2f");
   const Rich::PoissonEffFunctor eff("%6.2f +-%4.2f");
+  //  info() << "Now in printStat Rmap "<<SuperRichFlag()<<"  "<< name <<"  "<<m_nEvts<<endreq;
+
   name.resize(30,' ');
   //  info() << name
   //       << ": Aero  = " << occ(a[Rich::Aerogel],m_nEvts)
   //        << " (" << eff(a[Rich::Aerogel],m_hitTally[Rich::Rich1]) << "%)"
+  if(!SuperRichFlag() ) {
 
   info() << name
          << " C4F10 = "  << occ(a[Rich::C4F10],m_nEvts)
@@ -558,6 +622,20 @@ void GetMCCkvHitsAlg::printStat( std::string name, RMap & a )
          << " CF4 = "    << occ(a[Rich::CF4],m_nEvts)
          << " (" << eff(a[Rich::CF4],m_hitTally[Rich::Rich2]) << "%)"
          << endmsg;
+  }else {
+    
+  info() << name
+         << " C4F10 = "  << occ(a[Rich::C4F10],m_nEvts)
+         << " (" << eff(a[Rich::C4F10],m_hitTally[Rich::Rich2]) << "%)"
+         << " CF4 = "    << occ(a[Rich::CF4],m_nEvts)
+         << " (" << eff(a[Rich::CF4],m_hitTally[Rich::Rich2]) << "%)"
+         << endmsg;
+    
+  }
+  
+  
 }
+
+
 
 //=============================================================================
