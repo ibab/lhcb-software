@@ -1082,7 +1082,8 @@ StatusCode DeRichPMTPanel::getPanelInterSection ( const Gaudi::XYZPoint& pGlobal
 
   if ( fabs(scalar) < 1e-5 )
   {
-    sc =  sc &&  StatusCode::FAILURE;
+    //sc =  sc &&  StatusCode::FAILURE;
+    sc =  StatusCode::FAILURE;
   }
   else
   {
