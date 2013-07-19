@@ -1,3 +1,7 @@
+2013-07-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmake: updated CMake support modules
+
 2013-07-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* cmake: updated CMake support modules

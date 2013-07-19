@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: dd3b5243ca46915da72d26e46554cd1e5e20710e
+# Commit Id: 4f5db2dcf59da1df3bee0c5b3dcd70d8886aa4cc
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -117,6 +117,7 @@ macro(gaudi_project project version)
   option(GAUDI_BUILD_TESTS "Set to OFF to disable the build of the tests (libraries and executables)." ON)
   option(GAUDI_HIDE_WARNINGS "Turn on or off options that are used to hide warning messages." ON)
   option(GAUDI_USE_EXE_SUFFIX "Add the .exe suffix to executables on Unix systems (like CMT does)." ON)
+  option(GAUDI_CHECK_MISSING_CONFIGS "Check that all the packages have the CMakeLists.txt." ON)
   #-------------------------------------------------------------------------------------------------
   set(GAUDI_DATA_SUFFIXES DBASE;PARAM;EXTRAPACKAGES CACHE STRING
       "List of (suffix) directories where to look for data packages.")
@@ -934,6 +935,15 @@ function(gaudi_get_packages var)
   endforeach()
   list(SORT var)
   set(${var} ${packages} PARENT_SCOPE)
+  if (GAUDI_CHECK_MISSING_CONFIGS)
+    file(GLOB_RECURSE requirements_files RELATIVE ${CMAKE_SOURCE_DIR} requirements)
+    foreach(r ${requirements_files})
+      string(REPLACE cmt/requirements CMakeLists.txt c ${r})
+      if(NOT EXISTS ${CMAKE_SOURCE_DIR}/${c})
+        message(WARNING "found ${r} but no ${c}")
+      endif()
+    endforeach()
+  endif()
 endfunction()
 
 

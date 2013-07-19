@@ -1,3 +1,15 @@
+! 2013-07-19 - Marco Clemencic (4f5db2d)
+
+ - check that all the requirements have a matching CMakeLists.txt
+
+   
+
+! 2013-07-19 - Marco Clemencic (8beeebb)
+
+ - fixed mistake in heptools-65a
+
+   
+
 ! 2013-07-17 - Marco Clemencic (c9b322b)
 
  - added FindVDT.cmake module
