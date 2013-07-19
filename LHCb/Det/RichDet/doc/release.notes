@@ -3,6 +3,8 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
+2013-07-19 - Sajan Easo
+- Minor fix in DeRichPMTPanel.cpp to avoid compilation warnings in some platforms
 
 !========================= RichDet v16r18 2013-07-17 =========================
 ! 2013-07-17 - Chris Jones
