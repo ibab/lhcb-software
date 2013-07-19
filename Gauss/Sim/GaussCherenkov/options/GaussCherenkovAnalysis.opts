@@ -1,10 +1,11 @@
 // Rich specific Analysis job options
 
-//GiGa.StepSeq.Members             += { "RichG4StepAnalysis3/CkvStep4" } ;
-//GiGa.StepSeq.Members             += { "CherenkovStepAnalysis7/CkvStep7" } ;
-GiGa.StepSeq.Members             += { "RichG4StepAnalysis3/RichStep" } ;
+GiGa.StepSeq.Members             += { "RichG4StepAnalysis3/CkvStep4" } ;
+GiGa.StepSeq.Members             += { "CherenkovStepAnalysis7/CkvStep7" } ;
+//GiGa.StepSeq.Members  += {"CkvG4StepAnalysis11/Rich1G4StepAna11" } ;
+
 //GiGa.StepSeq.Members             += { "CherenkovStepAnalysis8/CkvStep8" } ; //for debug
-///GiGa.StepSeq.Members             += {"CkvG4StepAnalysis9/CkvG4Step9" } ; // for debug
+//GiGa.StepSeq.Members             += {"CkvG4StepAnalysis9/CkvG4Step9" } ; // for debug
 //GiGa.TrackSeq.Members      += { "RichG4TrackAction/RichTrack" } ;
 GiGa.EventSeq.Members     += { "CherenkovG4EventAction/RichG4Event" } ;
 //GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 3 ;
@@ -32,7 +33,6 @@ GiGa.EventSeq.RichG4Event.RichG4HitReconUseHighMomTk=true;
  GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet4=false;
  GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet5=false;
 // GiGa.RunSeq.RichG4Run.ActivateRichG4HistoSet8=true; //debug
-
 
 // GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=true;
 // GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=true;

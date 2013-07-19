@@ -86,6 +86,13 @@ GiGa.TrackSeq.Members      += { "CkvG4TrackActionPhotOpt/RichG4PhotOpt" } ;
 //GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichPmtQESource=1;
 GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichPmtQESource=0;
 
+//GiGa.ModularPL.GiGaPhysConstructorOpCkv.ActivatePmtModuleSuppressSet3=true;
+//GiGa.ModularPL.GiGaPhysConstructorOpCkv.ActivatePmtModuleSuppressSet4=true;
+
+
+//GiGaGeo.RichPMTAnodeSensDet.RichPmtAviodDuplicateHitsActivate=true;
+GiGaGeo.RichPMTAnodeSensDet.RichPmtFlagDuplicateHitsactivate=true
+
 
 // To print RICH hits on the screen, uncomment the line with RichG4EventAction/RichG4Event
 // and the line with RichEventActionVerbose=3
