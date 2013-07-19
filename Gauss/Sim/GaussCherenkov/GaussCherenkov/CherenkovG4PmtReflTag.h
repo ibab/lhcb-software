@@ -14,7 +14,7 @@
  *  @author Sajan Easo
  *  @date   2011-04-19
  */
-extern void RichG4PmtQWIncidentTag(const G4Track& aPhotonTk, const G4ThreeVector & aPmtQWPoint );
+extern void RichG4PmtQWIncidentTag(const G4Track& aPhotonTk, const G4ThreeVector & aPmtQWPoint, int aQWLensFlag );
 
 
 #endif // GAUSSCHERENKOV_CHERENKOVG4PMTREFLTAG_H

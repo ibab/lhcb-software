@@ -144,11 +144,25 @@ private:
                                        // if it is zero, no reflection occured, which is the normal case for signal hits.
                                        // if it is non zero one can unpack the bits to see where it reflected.
 
-  G4ThreeVector m_HpdQuartzWindowExtSurfPhotIncidentPosition; // Photon incidence point on the external surface of the HPD Quartz Window.
+  G4ThreeVector m_HpdQuartzWindowExtSurfPhotIncidentPosition; // Photon incidence point on the external surface of the PMT Quartz Window.
+  G4ThreeVector m_HpdQuartzWindowExtSurfPhotIncidentLocalPosition; // Photon incidence point on the external surface of the PMT quartz window in locall cooord
+
+  G4ThreeVector m_PmtLensPhotIncidentPosition; // Photon incident point on the lens curved surface.
+  G4ThreeVector m_PmtLensPhotIncidentLocalPosition; //  Photon incident point on the lens curved surface in local coord
+
+  G4int m_pdWithLens ; // 1 means the corresponding photon which went through a lens in front of the Photodetector.
+                       // 0 means the corresponding photon did not go through a lens in front of the Photodetector.
   G4int m_PhotonSourceProcessInfo; // 0 means unknown, 1 means Cherenkov process, 2 means Scintillation process
                                    // This is the process which created the corresponding optical photon.
                                    // for hits from backscattered pe, this is 0.
-  
+  G4int m_SuperRichHit;  // 0 means classic rich1, rich2hit
+                         //1 means superrich hit
+  G4int m_OptHorizontalRich1Hit ;  // 1 means horizontal optimized rich1 hit
+                                  // 0 means it is not a horizontal rich1 hit. 
+
+  G4bool m_FlagHitAsDuplicate; // if true the hit is a duplicate hit. If false it is a unique hit which is the case for most of the hits.
+                              // this helps to study the effect of binary readout
+
   
 public:
   inline void SetCurModuleNum(const G4int cm) 
@@ -357,6 +371,38 @@ public:
     m_HpdQuartzWindowExtSurfPhotIncidentPosition=aHpdQuartzWindowExtSurfPhotIncidentPosition;
   }
 
+
+  inline const G4ThreeVector & HpdQuartzWindowExtSurfPhotIncidentLocalPosition () const
+  {return   m_HpdQuartzWindowExtSurfPhotIncidentLocalPosition;}
+
+  void setHpdQuartzWindowExtSurfPhotIncidentLocalPosition 
+    (const G4ThreeVector & aHpdQuartzWindowExtSurfPhotIncidentLocalPosition) {
+    m_HpdQuartzWindowExtSurfPhotIncidentLocalPosition=aHpdQuartzWindowExtSurfPhotIncidentLocalPosition;
+  }
+
+
+  void setPmtLensPhotIncidentPosition(const G4ThreeVector & aPmtLensPhotIncidentPosition ) 
+  {m_PmtLensPhotIncidentPosition = aPmtLensPhotIncidentPosition;}
+  inline const  G4ThreeVector &  PmtLensPhotIncidentPosition() 
+  {  return m_PmtLensPhotIncidentPosition;}  
+
+  void setPmtLensPhotIncidentLocalPosition(const G4ThreeVector & aPmtLensPhotIncidentLocalPosition ) 
+  {m_PmtLensPhotIncidentLocalPosition = aPmtLensPhotIncidentLocalPosition;}
+  inline const  G4ThreeVector &  PmtLensPhotIncidentLocalPosition() 
+  {  return m_PmtLensPhotIncidentLocalPosition;}  
+
+
+
+  void setpdWithLens(G4int aFlag){ m_pdWithLens = aFlag;}
+
+  void setSuperRichHit(G4int asrf ) {  m_SuperRichHit = asrf;}
+  void setOptHorizontalRich1Hit(G4int asoh)  {m_OptHorizontalRich1Hit = asoh;}
+  
+    
+
+
+  inline G4int  pdWithLens() const {  return m_pdWithLens ;}    
+
   inline G4int PhotonSourceProcessInfo() const 
   {
     return m_PhotonSourceProcessInfo;
@@ -368,10 +414,29 @@ public:
 
   inline Rich::DetectorType detectorType() const
   {
-    return ( GetCurRichDetNum() < 0 ?
-             (GetGlobalPos().z() < 4000 ? Rich::Rich1 : Rich::Rich2) :
-             static_cast<Rich::DetectorType>(GetCurRichDetNum()) );
+    if(GetCurRichDetNum() == 2 ) {
+
+      return Rich::TRID;
+
+    }else if( GetCurRichDetNum() == 0 ) {
+      
+      return Rich::Rich1;
+
+    }else if( GetCurRichDetNum() == 1 ) {
+      
+      return Rich::Rich2;
+
+    }else {
+      return   Rich::InvalidDetector;
+      
+    }    
+
+    //    return ( GetCurRichDetNum() < 0 ?
+    //         (GetGlobalPos().z() < 4000 ? Rich::Rich1 : Rich::Rich2) :
+    //         static_cast<Rich::DetectorType>(GetCurRichDetNum()) );
   }
+  
+  
 
   Rich::RadiatorType radiatorType() const;
 
@@ -416,7 +481,19 @@ public:
   inline G4int  CurHitInPixelGap()  const   {  return  m_CurHitInPixelGap;}
   inline G4int CurPmtNum() const {return m_CurPmtNum; }
 
+  inline G4int SuperRichHit() const {return m_SuperRichHit;}
+  
+  inline G4int OptHorizontalRich1Hit() const {return  m_OptHorizontalRich1Hit;}
+  
+  void setCurrentHitAsDuplicate(G4bool aDupFlag )
+  {
+    m_FlagHitAsDuplicate=aDupFlag;
+  }
 
+  inline bool FlagHitAsDuplicate() const
+  {
+    return ( (bool) m_FlagHitAsDuplicate);
+  }
 
 
 

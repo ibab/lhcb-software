@@ -14,8 +14,12 @@ static const G4double AgelXBeginAnalysis=-398.0*mm;
 static const G4double AgelXEndAnalysis=398.0*mm;
 static const G4double AgelYBeginAnalysis=-281.0*mm;
 static const G4double AgelYEndAnalysis=281.0*mm;
-static const G4double Rich1AnalysisXHalfSize = 1.25*m;
-static const G4double Rich1AnalysisYHalfSize = 1.80*m;
+//static const G4double Rich1AnalysisXHalfSize = 1.25*m;
+//static const G4double Rich1AnalysisYHalfSize = 1.80*m;
+
+static const G4double Rich1AnalysisXHalfSize = 2.5*m;
+static const G4double Rich1AnalysisYHalfSize = 2.5*m;
+
 static const G4double HpdSupPlaneTiltcosy=500;
 static const G4double HpdSupPlaneTiltcosz=260;
 static const G4double HpdSupPlaneYMid=1190.0*mm;

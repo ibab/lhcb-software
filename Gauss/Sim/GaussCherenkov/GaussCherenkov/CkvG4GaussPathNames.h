@@ -37,6 +37,14 @@ static const G4String LogVolRich1PhDetSupFrameH1NameAnalysis = "/dd/Geometry/Bef
 static const G4String LogVolRich1MagShH0NameAnalysis = "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1MagShH0";
 static const G4String LogVolRich1MagShH1NameAnalysis = "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRich1MagShH1";
 
+static const G4String LogVolRich2N2Encl0NameAnalysis = "/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2HPDN2Encl0";
+static const G4String LogVolRich2HPDPanel0NameAnalysis="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2HPDPanel0";
+static const G4String LogVolRich2N2Encl1NameAnalysis = "/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2HPDN2Encl1";
+static const G4String LogVolRich2HPDPanel1NameAnalysis="/dd/Geometry/AfterMagnetRegion/Rich2/lvRich2HPDPanel1";
+
+
+
+
 
 static const G4String RichPmtModuleSuppressSet3Path="/dd/Materials/RichMaterialTabProperties/Rich1PMTModuleAnnulationSet3";
 static const G4String RichPmtModuleSuppressSet4Path="/dd/Materials/RichMaterialTabProperties/Rich1PMTModuleAnnulationSet4";
@@ -61,7 +69,11 @@ static const G4String LogVolPmtAnodeNameAnalysis =
 static const G4String LogVolPmtAnodeNameAnalysisStrPrefix =
                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichPMTAnode";
 
+static const G4String LogVolLPmtSMasterNameAnalysis =
+                     "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichLPMTSMaster";
 
+static const G4String LogVolPmtLensNameAnalysis =
+                     "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichPMTLens";
 
 static const G4String RichPmtQWMatName=
                             "/dd/Materials/RichMaterials/RichPmtQuartzMaterial" ;
@@ -73,7 +85,22 @@ static const G4String RichPmtVacName=
 
 static const G4String RichPmtQwDeSubPathName="/Rich1FirstPmtQW";
 static const G4String RichPmtPhCathDeSubPathname="/Rich1FirstPmtPhCathode";
+static const G4String RichLPmtQwDeSubPathName="/Rich1FirstLPmtQW";
+static const G4String RichLPmtPhCathDeSubPathname="/Rich1FirstLPmtPhCathode";
+static const G4String RichLPmtLensDeSubPathName="/Rich1FirstLPmtLens";
+
 static const G4String RichPmtAnodeSensDetNamePrefix="RichPMTAnodeSensDet";
 
+
+static const G4String RichAfterMagnetRegionStructurePathName="/dd/Structure/LHCb/AfterMagnetRegion";
+static const G4String RichBeforeMagnetRegionStructurePathName="/dd/Structure/LHCb/BeforeMagnetRegion";
+static const G4String Rich1ClassicDeStructurePathName = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1";
+static const G4String Rich2ClassicDeStructurePathName = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2";
+static const G4String SuperRichDeStructurePathName = "/dd/Structure/LHCb/AfterMagnetRegion/SuperRich";
+static const G4String SuperRichSystemDeStructurePathName="/dd/Structure/LHCb/AfterMagnetRegion/SuperRich/SuperRichSystem";
+static const G4String SuperRichLPmtQwDeSubPathName="/SuperRichFirstLPmtQW";
+static const G4String SuperRichLPmtPhCathDeSubPathname="/SuperRichFirstLPmtPhCathode";
+static const G4String SuperRichLPmtLensDeSubPathName="/SuperRichFirstLPmtLens";
+static const G4String SuperRichPhysVolGeomName = "/dd/Geometry/LHCb/AfterMagnetRegion/lvAfterMagnetRegion#pvSuperRichMaster";
 
 #endif // GAUSSCHERENKOV_CKVG4GAUSSPATHNAMES_H

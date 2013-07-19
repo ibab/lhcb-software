@@ -1,0 +1,24 @@
+inline int RichPmtOccp(int Pmt)
+{ return m_RichPmtHitArray [Pmt];}
+inline void bumpRichPmtOccp(int aPmt) 
+{ m_RichPmtHitArray[aPmt]++; }
+inline void setNumPmtsRich(int aM1, int aM2) 
+{ 
+  m_NumPmtsRich1=aM1;
+  m_NumPmtsRich2=aM2;
+  
+}
+inline void setNumPmtsInModuleRich(int aP ) 
+{
+  m_NumPmtInModuleRich=aP;
+  
+}
+inline int NumPmtsRich1(){  return m_NumPmtsRich1;}
+inline int NumPmtsRich2(){  return m_NumPmtsRich2;}
+
+inline void setNumPmtsSuperRich(int aM1S) 
+{ 
+  m_NumPmtsSuperRich=aM1S;
+  
+}
+inline int NumPmtsSuperRich(){  return m_NumPmtsSuperRich;}
