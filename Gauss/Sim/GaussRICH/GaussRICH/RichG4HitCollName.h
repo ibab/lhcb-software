@@ -42,7 +42,15 @@ public:
   {m_InitCollectListNumForOutput=aInit;}
   void SetFinalCollectListNumForOutput(int aFinal)
   {m_FinalCollectListNumForOutput= aFinal;}  
+
+  void setSuperRichFlag(bool aFlag) 
+  { 
+    m_SuperRichFlag= aFlag;
     
+  }
+  void setCollConfigWithSuperRich();
+  
+  
 private:
 
   int m_NumberOfHCollectionInRICH;
@@ -50,6 +58,9 @@ private:
   std::vector<G4String> m_RichHCName;
   int m_InitCollectListNumForOutput;
   int m_FinalCollectListNumForOutput;
+
+  bool m_SuperRichFlag;
+  
   
 };  
 

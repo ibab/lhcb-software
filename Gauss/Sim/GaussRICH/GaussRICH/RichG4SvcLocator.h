@@ -2,7 +2,7 @@
 #define GaussRICH_RichG4SvcLocator_H 1
 
 /// STD & STL 
-#include <string>
+//#include <string>
 /// GaudiKernel
 class IDataProviderSvc;
 class IMessageSvc;

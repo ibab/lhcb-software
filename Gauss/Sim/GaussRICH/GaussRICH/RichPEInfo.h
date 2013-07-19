@@ -138,6 +138,13 @@ public:
     m_HpdQWExtPhotIncidentPosition=  aHpdQWExtPhotIncidentPosition;    
   }  
 
+
+  G4ThreeVector PmtLensPhotIncidentPosition () {return m_PmtLensPhotIncidentPosition;}
+  void setPmtLensPhotIncidentPosition (const G4ThreeVector & aPmtLensPhotIncidentPosition ) 
+  { m_PmtLensPhotIncidentPosition = aPmtLensPhotIncidentPosition;}
+  
+  
+
   G4ThreeVector HpdPeLocalOriginPosition()
   { return m_HpdPeLocalOriginPosition;}
   void setHpdPeLocalOriginPosition(const  G4ThreeVector & aHpdPeOriginLocalLocation ) 
@@ -181,6 +188,8 @@ private:
   G4int m_HpdPhotonReflectionFlag;
   
   G4ThreeVector m_HpdQWExtPhotIncidentPosition;
+  G4ThreeVector m_PmtLensPhotIncidentPosition;
+
   G4ThreeVector m_HpdPeLocalOriginPosition;
   G4int m_PhotonSourceInformation; // 0 mean unknown, 1 mean cherenkov process , 2 mean scintillation process.
   

@@ -39,6 +39,8 @@ public:
 
   inline double ckvAngleD1E4() const { return  m_ckvAngleD1E4; }
 
+  inline double ckvAngleD8E4() const { return  m_ckvAngleD8E4; }
+
   inline double ckvAngleD1E3() const { return  m_ckvAngleD1E3; }
 
   inline double ckvAngleD2E3() const { return  m_ckvAngleD2E3; }
@@ -60,6 +62,12 @@ public:
   inline double ckvAngleD5E3() const  {  return m_ckvAngleD5E3;}
   inline double ckvAngleD6E3() const  {  return m_ckvAngleD6E3;}
   inline double ckvAngleD7E3() const  {  return m_ckvAngleD7E3;}
+
+  inline double ckvAngleD9E1() const  {  return m_ckvAngleD9E1;}
+  inline double ckvAngleD9E1TS() const  {  return m_ckvAngleD9E1TS;}
+
+  inline double ckvAngleD9E4() const  {  return m_ckvAngleD9E4;}
+  inline double ckvAngleD9E4TS() const  {  return m_ckvAngleD9E4TS;}
 
 
   
@@ -103,6 +111,10 @@ public:
   {
     m_ckvAngleD1E4= ackvD1E4;
   }
+  void setckvAngleD8E4( const double ackvD8E4)
+  {
+    m_ckvAngleD8E4= ackvD8E4;
+  }
 
   void setckvAngleD1E3( const double ackvD1E3)
   {
@@ -123,6 +135,27 @@ public:
   {
     m_ckvAngleD4E1= ackvD4E1;
   }
+
+  void setckvAngleD9E1( const double ackvD9E1)
+  {
+    m_ckvAngleD9E1= ackvD9E1;
+  }
+
+  void setckvAngleD9E1TS( const double ackvD9E1TS)
+  {
+    m_ckvAngleD9E1TS= ackvD9E1TS;
+  }
+
+  void setckvAngleD9E4( const double ackvD9E4)
+  {
+    m_ckvAngleD9E4= ackvD9E4;
+  }
+  void setckvAngleD9E4TS( const double ackvD9E4TS)
+  {
+    m_ckvAngleD9E4TS= ackvD9E4TS;
+  }
+
+
   void setckvAngleD4E3( const double ackvD4E3)
   {
     m_ckvAngleD4E3= ackvD4E3;
@@ -153,6 +186,9 @@ public:
   void setckvAngleD7E3(const double ackvD7E3) 
   {m_ckvAngleD7E3=ackvD7E3;}
 
+  
+    
+    
 
 protected:
 
@@ -167,6 +203,7 @@ private:
   double m_ckvAngleD1E2;
   double m_ckvAngleD3E4;
   double m_ckvAngleD1E4;
+  double m_ckvAngleD8E4;
 
   double m_ckvAngleD1E3;
   double m_ckvAngleD2E3;
@@ -186,7 +223,13 @@ private:
   double  m_ckvAngleD6E3;
   double  m_ckvAngleD7E3;
 
-  // D1,D2,D3,D4 refer to the detection point determined from
+  double  m_ckvAngleD9E1;
+  double  m_ckvAngleD9E4;
+  double  m_ckvAngleD9E1TS;  
+  double  m_ckvAngleD9E4TS;
+
+ 
+  // D1,D2,D3,D4, D9 refer to the detection point determined from
   // pixelnum, true hit coord, global phcathode QwExt coord respectively.
   // D5 D6 D7 refer to the hit coord from pixel num, true hit and ph cat hit all with
   // the refraction correction applied.

@@ -46,6 +46,15 @@ public:
   Gaudi::XYZPoint DetPtInPhDetFromGlobalPhCathode()
   {return m_DetPtInPhDetFromGlobalPhCathode;}
   
+
+  inline Gaudi::XYZPoint  SphReflPtD2E1() const 
+  {  return m_SphReflPtD2E1;}
+
+  inline Gaudi::XYZPoint SphReflPtD3E1() const 
+  {  return m_SphReflPtD3E1;}
+
+
+
   void setDetPtFromPixelNum( Gaudi::XYZPoint ap1 ) 
   {m_DetPtFromPixelNum = ap1; 
   }
@@ -65,6 +74,12 @@ public:
   {m_DetPtInPhDetFromGlobalPhCathode=ap6;
   }
   
+  void   setSphReflPtD2E1(Gaudi::XYZPoint abt )
+  {m_SphReflPtD2E1=abt;}
+  void  setSphReflPtD3E1(Gaudi::XYZPoint apt ) 
+  {m_SphReflPtD3E1= apt;}
+  
+    
     
     
     
@@ -81,7 +96,9 @@ private:
   Gaudi::XYZPoint m_DetPtInPhDetFromPixelNum;
   Gaudi::XYZPoint m_DetPtInPhDetFromTrueLocalHit;
   Gaudi::XYZPoint m_DetPtInPhDetFromGlobalPhCathode;
+  Gaudi::XYZPoint m_SphReflPtD2E1;
+  Gaudi::XYZPoint m_SphReflPtD3E1;
   
-
+   
 };
 #endif // GAUSSRICH_RICHG4HITCOORDRESULT_H
