@@ -268,9 +268,48 @@ const DeFTLayer* DeFTDetector::findLayer ( const LHCb::FTChannelID id ) const {
 
 
 const DeFTFibreMat* DeFTDetector::findFibreMat ( const LHCb::FTChannelID id ) const {
-  unsigned int layerId = id.layer();
+
+  double cellPitch = 0.25;
+  double sipmPitch = 32.75;
+  double moduleSize = 540.; //includes dead regions
+
+  unsigned int layer = id.layer();
+  unsigned int quadrant = id.quarter();
+  unsigned int numSiPm = id.sipmId();
+  unsigned int numCell = id.sipmCell();
+
+  int topbottom = 0;
+  if(quadrant==0 || quadrant==1) topbottom = 1;
+
+  bool isLeft = false;
+  if(quadrant==3 || quadrant==1) isLeft = true;
+
+  double sipmDist = fabs(numSiPm)*sipmPitch;
+  double sensRegion = sipmDist+(fabs(numCell)+1.)*cellPitch;
+
+
+  int modIdx = -99;
+  for(modIdx=1; modIdx<7 ; modIdx++) {
+    if(modIdx*moduleSize>=sensRegion) break;
+  }
+
+  if(modIdx<0){
+     *m_msg << MSG::FATAL << "You are not able to catch the modulId: that's bad! Check PrFTHitManager"  << endmsg;
+  }
+
+  unsigned int module = 99;
+  if(!isLeft) {
+    if(modIdx==1) module = 11;
+    if(modIdx>1) module = modIdx+3;
+  }
+  if(isLeft) {
+    if(modIdx==1) module = 10;
+    if(modIdx>1) module = 6-modIdx;
+  }
+
+  unsigned int fibreMatID = topbottom+100*module+10000*layer;
   for ( FibreMats:: const_iterator iL = m_fibremats.begin(); iL != m_fibremats.end(); ++iL) {
-    if ( layerId == (*iL)->FibreMatID() ) return *iL;
+    if ( fibreMatID == (*iL)->FibreMatID() ) return *iL;
   }
   return NULL;
 }

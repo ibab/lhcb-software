@@ -178,15 +178,15 @@ StatusCode DeFTFibreMat::initialize(){
 
   Gaudi::XYZPoint fibreMatCenter = this->geometry()->toGlobal( Gaudi::XYZPoint(0.,0.,0.) );
 
-  m_fibreMatMinX =  fibreMatCenter.x() - m_fibreMatHalfSizeX; 
-  m_fibreMatMaxX =  fibreMatCenter.x() + m_fibreMatHalfSizeX; 
-  m_fibreMatMinY =  fibreMatCenter.y() - m_fibreMatHalfSizeY; 
-  m_fibreMatMaxY =  fibreMatCenter.y() + m_fibreMatHalfSizeY; 
-  m_fibreMatMinZ =  fibreMatCenter.z() - m_fibreMatHalfSizeZ; 
-  m_fibreMatMaxZ =  fibreMatCenter.z() + m_fibreMatHalfSizeZ; 
-  m_layerPosZ  = fibreMatCenter.z();
+  m_fibreMatMinX = fibreMatCenter.x() - m_fibreMatHalfSizeX; 
+  m_fibreMatMaxX = fibreMatCenter.x() + m_fibreMatHalfSizeX; 
+  m_fibreMatMinY = fibreMatCenter.y() - m_fibreMatHalfSizeY; 
+  m_fibreMatMaxY = fibreMatCenter.y() + m_fibreMatHalfSizeY; 
+  m_fibreMatMinZ = fibreMatCenter.z() - m_fibreMatHalfSizeZ; 
+  m_fibreMatMaxZ = fibreMatCenter.z() + m_fibreMatHalfSizeZ; 
+  m_layerPosZ    = fibreMatCenter.z();
 
-  double CarHoneyKapWidth = 0.15 + 20 + 0.05;
+  double CarHoneyKapWidth = 0.15 + 20. + 0.05;
 
   m_sipmPitchX    = m_sipmSizeX + 2*m_sipmEdgeSizeX;
   m_layerHalfSizeX =  12.*( m_fibreMatHalfSizeX + m_moduleEdgeSizeX );
@@ -271,7 +271,7 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit*  fthit,
   debug() << "Entry Point in Global / Local: " << fthit->entry() << enP << endmsg;
   debug() << "Exit  Point in Global / Local: " << fthit->exit() << exP << endmsg;
 
-  unsigned int hitLayer = this->FibreMatID();
+  unsigned int hitLayer = this->layer();
   debug() << "LayerID = " << hitLayer
           << ", Stereo angle = " << this->angle() << endmsg;
 
@@ -628,7 +628,7 @@ FTChannelID DeFTFibreMat::createChannel(unsigned int hitLayer,
   /// Create and push_back the corresponding FT pair
   if ( netCellID > (m_sipmNChannels-1) ) {
     debug() << "Gross cellID " << grossCellID << " corresponds to insensitive cell."
-            << " Creating invalid FT channel (the signature is: FibreMatID=15)." << endmsg;
+            << " Creating invalid FT channel (the signature is: layer=15)." << endmsg;
     channel = FTChannelID( 15, 0, 0, 0 );
   }
   else {
@@ -696,16 +696,16 @@ double DeFTFibreMat::cellUCoordinate(const FTChannelID& channel) const {
 // the cell u-coordinate and quarterID.
 //=============================================================================
 void DeFTFibreMat::cellIDCoordinates( const double  uCoord,
-                                   unsigned int  quarter,
-                                   unsigned int& sipmID,
-                                   unsigned int& cellID,
-                                   double&       fracDistCellCenter ) const
+				      unsigned int  quarter,
+				      unsigned int& sipmID,
+				      unsigned int& cellID,
+				      double&       fracDistCellCenter ) const
 {
   /// Get sipmID and local position of its right edge
 	sipmID = (unsigned int) ((uCoord - m_sipmOriginX[quarter]) / m_sipmStepX[quarter]);
 	double sipmREdgeU = m_sipmOriginX[quarter] + (sipmID + !(quarter%2)) * m_sipmStepX[quarter];
-  debug() << "quarter, sipmID, sipmREdgeU = "
-          << quarter << ", "<< sipmID << ", " << sipmREdgeU << endmsg;
+	debug() << "quarter, sipmID, sipmREdgeU = "
+		<< quarter << ", "<< sipmID << ", " << sipmREdgeU << endmsg;
   
   /// Get cellID inside the SiPM
   double distSipmREdge = uCoord - sipmREdgeU;

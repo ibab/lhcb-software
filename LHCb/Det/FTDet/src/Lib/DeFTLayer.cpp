@@ -95,6 +95,13 @@ StatusCode DeFTLayer::initialize(){
   /// instead of the ususual name(), which gives a too long string
   if ( 0 == m_msg ) m_msg = new MsgStream( msgSvc(), "DeFTLayer" );
 
+  debug() << "==> Initialize DeFTLayer" << endmsg;
+  
+  /// Set the layer ID and stereo angle: take them from the xml DDDB
+  m_angle = this->params()->param<double>("stereoAngle");
+  m_tanAngle = tan(m_angle);
+  m_layerID = this->params()->param<int>("layerID");
+
   //necessary for backward compatibility
   SmartDataPtr<DetectorElement> fibretracker (dataSvc(),"/dd/Structure/LHCb/AfterMagnetRegion/T/FT");
   if( fibretracker ){  
@@ -105,12 +112,7 @@ StatusCode DeFTLayer::initialize(){
     }
   }
 
-  debug() << "==> Initialize DeFTLayer" << endmsg;
-  
-  /// Set the layer ID and stereo angle: take them from the xml DDDB
-  m_angle = this->params()->param<double>("stereoAngle");
-  m_tanAngle = tan(m_angle);
-  m_layerID = this->params()->param<int>("layerID");
+
 
   /// Get geometrical limits of the layer
   /// Note that the following approach is not robust in the sense that every
