@@ -6,9 +6,10 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v14r1>2013-07-18 LbcomSys v14r1</A></H1><PRE>
+</PRE><H1><A NAME=v14r1>2013-07-21 LbcomSys v14r1</A></H1><PRE>
 This version uses Gaudi v23r9 and LHCb v36r1
 
+- Packages added:    Det/FTDet v2r1 (added temporarily to fix bugs in v2r0)
 - Packages removed:  Calo/CaloTools (moved to Rec)
 - Packages modified: OT/OTMonitor v3r6p1, Rich/RichTools v2r42,
     ST/STAlgorithms v4r7, VP/VPDAQ v2r3, VP/VPTools v2r1p1

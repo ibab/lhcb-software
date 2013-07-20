@@ -7,6 +7,9 @@ branches doc cmt tests
 # LHCb packages shared by Boole and other applications
 #===============================================================
 
+# Patches: additional packages to override what is in LHCb v36r1 release
+use FTDet v2r1 Det
+
 # Common
 use Associators       v3r8     Associators # Matt Needham
 
