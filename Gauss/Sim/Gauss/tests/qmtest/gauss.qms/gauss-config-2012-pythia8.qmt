@@ -13,7 +13,7 @@
 	<integer>1800</integer>
 </argument>
 <argument name="reference">
-	<text>$GAUSSROOT/tests/refs/testGauss-config-10000000.ref</text>
+	<text>$GAUSSROOT/tests/refs/testGauss-config-2012-pythia8.ref</text>
 </argument>
 <argument name="error_reference">
 	<text>$GAUSSROOT/tests/refs/testGauss-err.ref</text>
@@ -26,11 +26,12 @@
 </argument>
 <argument name="args">
 	<set>
-		<text>$GAUSSOPTS/Gauss-2011.py</text>
+		<text>$GAUSSOPTS/Gauss-2012.py</text>
 		<text>$DECFILESROOT/options/10000000.py</text>
-		<text>$LBPYTHIAROOT/options/Pythia.py</text>
+		<text>$LBPYTHIA8ROOT/options/Pythia8.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-config-defaults.py</text>
+                <text>$GAUSSROOT/tests/options/testGauss-QMTests.py</text>
 	</set>
 </argument>
 <argument name="exit_code">
@@ -40,7 +41,9 @@
 	<enumeral>false</enumeral>
 </argument>
 <argument name="environment">
-	<set/>
+	<set>
+	  <text>GFORTRAN_UNBUFFERED_PRECONNECTED=y</text>
+	</set>
 </argument>
 <argument name="unsupported_platforms">
 	<set/>
@@ -55,24 +58,33 @@
 	<text/>
 </argument>
 <argument name="validator"><text>
+def replacenumbers(m):
+  res = m.groups()[0]
+  for i in m.groups()[1].lstrip().split():
+    res = res + " {0:f}".format( float( i ) )
+  return res
 
 preprocessor = (normalizeExamples + 
      RegexpReplacer(when = "Connected to database",
          orig = r"(\"sqlite_file:)(.*/)([\w.]+/[0-9A-Z_]{1,8}\")",
          repl = r"\1\3") + 
-     LineSkipper(["INFO Using TAG", "TimingAuditor.T", "ToolSvc.SequencerTime",
-                  "Gauss-"]) + 
-     LineSkipper(["INFO Connected to database"]) + 
+     RegexpReplacer(when = "RFileCnv                   INFO opening Root file",
+         orig = r"(opening Root file \")(.*/)([\w]+/[a-z.]{1,14}\")",
+         repl = r"\1\3") + 
+     RegexpReplacer(when = "HistogramDataSvc           INFO Added stream file",
+         orig = r"(Added stream file:)(.*/)([\w.]+/[a-z]{1,10})(.root)",
+         repl = r"\1\3") + 
+     RegexpReplacer(when = "MagneticFieldSvc           INFO Opened magnetic field file",
+         orig = r"(Opened magnetic field file : )(.*/)([\w.]+/[0-9a-z_]{1,14})(.cdf)",
+         repl = r"\1\3\4") + 
+     RegexpReplacer(when = "  KORB:" ,
+         orig = r"(  KORB: [a-zA-Z0-9*]+\s*=|  KORB: [A-Z0-9- ]+:)([0-9. \t-E]+)\n",
+         repl = replacenumbers ) +
+     LineSkipper(["TimingAuditor.TIMER", "ToolSvc.SequencerTime..."]) + 
      LineSkipper(["INFO Disconnect from database after being idle"]) +
-     LineSkipper(["Generation.FixedLumi"]) + 
-     LineSkipper(["GaussGen.GaussGenMemory"]) + 
-     LineSkipper(["PDFset"]) + 
-     LineSkipper(["ChronoStatSvc.f...   INFO  from GaudiConf.QMTesService finalized succes"])  + 
-     LineSkipper(["RFileCnv                   INFO opening Root file"]) + 
-     LineSkipper(["HistogramDataSvc           INFO Added stream file"]) +
-     LineSkipper(regexps=[r"GiGaGeo.HpdSiliconSen...\s*DEBUG Now in ProcessHits().*",
-                         r"MainEventGaussSim\s*DEBUG event.*",
-                         r"GaussGen\s*DEBUG event.*"]) + 
+     LineSkipper(["G4Transportation constructor> set fShortStepOptimisation to false"]) +
+     LineSkipper(regexps=[r"MainEventGaussSim\s*DEBUG event 1 memory.*",
+                          r"GaussGen\s*DEBUG event 1 memory.*"]) + 
      RegexpReplacer(when = "Loading simulation attributes",
          orig = r"(\")(.*/)([\w.]+\")",
          repl = r"\1.../\3"))

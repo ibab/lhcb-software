@@ -16,6 +16,7 @@
 	<text>$DECFILESROOT/options/30000000.py</text>
 	<text>$LBPYTHIAROOT/options/Pythia.py</text>
 	<text>$GAUSSOPTS/Gauss-Job.py</text>
+        <text>$GAUSSROOT/tests/options/testGauss-QMTests.py</text>
 </set>
 </argument>
 <argument name="exit_code"><integer>0</integer></argument>
@@ -23,41 +24,55 @@
 <argument name="error_reference">
 	<text>$GAUSSROOT/tests/refs/testGauss-err.ref</text>
 </argument>
-<argument name="environment"><set/></argument>
+<argument name="environment">
+	<set>
+	  <text>GFORTRAN_UNBUFFERED_PRECONNECTED=y</text>
+	</set>
+</argument>
 <argument name="unsupported_platforms"><set/></argument>
 <argument name="workdir"><text/></argument>
 <argument name="stderr"><text/></argument>
 <argument name="options"><text/></argument>
-<argument name="validator"><text>preprocessor = normalizeExamples + \
-    RegexpReplacer(when = &quot;Connected to database&quot;,
-        orig = r&quot;(\&quot;sqlite_file:)(.*/)([\w.]+/[0-9A-Z_]{1,8}\&quot;)&quot;,
-        repl = r&quot;\1\3&quot;) + \
-    LineSkipper([&quot;INFO Using TAG&quot;, &quot;TimingAuditor.T&quot;, &quot;ToolSvc.SequencerTime&quot;, &quot;Gauss-&quot;]) + \
-    LineSkipper([&quot;SUCCESS  Add/Modify the particle&quot;, &quot;WARNING Setting DECFILESROOT&quot;]) + \
-    LineSkipper([&quot;Properties have beed redefined&quot;]) + \
-    LineSkipper([&quot;Total CPU time elapsed for geometry optimisation&quot;]) + \
-    LineSkipper([&quot;INFO Connected to database&quot;]) + \
-    LineSkipper([&quot;INFO Disconnect from database after being idle&quot;]) + \
-    LineSkipper([&quot;INFO Loading simulation attributes file&quot;, &quot;UserDecayFile&quot;]) + \
-    LineSkipper([&quot;INFO Opened magnetic field file&quot;,&quot;EvtGen:In readDecayFile&quot;]) + \
-    LineSkipper([&quot;Generation.FixedLumi&quot;,&quot;Simulation                 INFO Member list&quot;]) + \
-    LineSkipper([&quot;PDFset&quot;]) + \
-    LineSkipper([&quot;RFileCnv&quot;]) + \
-    LineSkipper([&quot;HistogramDataSvc           INFO Added stream file:&quot;]) + \
-    LineSkipper([&quot;ChronoStatSvc.f...   INFO  Service finalized succes&quot;]) 
-strippedOutput = []
-skipping = False
-firstLineToSkip = &quot;Voxelisation: top CPU users:&quot;
-lastLineToSkip = &quot;Start Run processing&quot;
-for l in stdout.splitlines():
-    if skipping:
-        print &quot;skipped line&quot;, l
-        preprocessor = preprocessor + LineSkipper([l])
-        if lastLineToSkip in l:
-            skipping = False
-    else:
-        if firstLineToSkip in l:
-            skipping = True
+<argument name="validator"><text>
+def replacenumbers(m):
+  res = m.groups()[0]
+  for i in m.groups()[1].lstrip().split():
+    res = res + " {0:f}".format( float( i ) )
+  return res
+
+preprocessor = (normalizeExamples + 
+     RegexpReplacer(when = "Connected to database",
+         orig = r"(\"sqlite_file:)(.*/)([\w.]+/[0-9A-Z_]{1,8}\")",
+         repl = r"\1\3") + 
+     RegexpReplacer(when = "RFileCnv                   INFO opening Root file",
+         orig = r"(opening Root file \")(.*/)([\w]+/[a-z.]{1,14}\")",
+         repl = r"\1\3") + 
+     RegexpReplacer(when = "HistogramDataSvc           INFO Added stream file",
+         orig = r"(Added stream file:)(.*/)([\w.]+/[a-z]{1,10})(.root)",
+         repl = r"\1\3") + 
+     RegexpReplacer(when = "MagneticFieldSvc           INFO Opened magnetic field file",
+         orig = r"(Opened magnetic field file : )(.*/)([\w.]+/[0-9a-z_]{1,14})(.cdf)",
+         repl = r"\1\3\4") + 
+     RegexpReplacer(when = "  KORB:" ,
+         orig = r"(  KORB: [a-zA-Z0-9*]+\s*=|  KORB: [A-Z0-9- ]+:)([0-9. \t-E]+)\n",
+         repl = replacenumbers ) +
+     RegexpReplacer(when = "RootHistSvc                INFO Writing ROOT histograms to",
+         orig = r"(Writing ROOT histograms to: Gauss-30000000-5ev-)(\d{8})(-histos.root)",
+         repl = r"\1\3") +
+     RegexpReplacer(when = "GaussTape                  INFO Data source: EventDataSvc output",
+         orig = r"(Data source: EventDataSvc output: DATAFILE=\'Gauss-30000000-5ev-)(\d{8})(.sim\')",
+         repl = r"\1\3") +
+     RegexpReplacer(when = "FSROutputStreamGaussTape   INFO Data source: FileRecordDataSvc output",
+         orig = r"(Data source: FileRecordDataSvc output: DATAFILE='Gauss-30000000-5ev-)(\d{8})(.sim\')",
+         repl = r"\1\3") +
+     LineSkipper(["TimingAuditor.TIMER", "ToolSvc.SequencerTime..."]) + 
+     LineSkipper(["INFO Disconnect from database after being idle"]) +
+     LineSkipper(["G4Transportation constructor> set fShortStepOptimisation to false"]) +
+     LineSkipper(["PDFset name"]) + 
+     RegexpReplacer(when = "Loading simulation attributes",
+         orig = r"(\")(.*/)([\w.]+\")",
+         repl = r"\1.../\3"))
+
 validateWithReference(preproc = preprocessor)
 </text></argument>
 <argument name="resources"><set/></argument>

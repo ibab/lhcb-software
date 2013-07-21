@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2012-07-21 - Patrick Robbe
+ - QMTests: merge changes from v45b
+
 ! 2012-07-18 - Paul Szczypka
  - Updated Configuration to remove the now-annoying AEROGEL WARNINGS.
 
