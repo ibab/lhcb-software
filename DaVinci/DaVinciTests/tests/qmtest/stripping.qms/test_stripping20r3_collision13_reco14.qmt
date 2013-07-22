@@ -10,6 +10,8 @@
   <text>$PRCONFIGOPTS/DaVinci/Stripping/Protonion13-Reco14-FULLDST.py</text> 
   <text>$APPCONFIGOPTS/Persistency/Compression-ZLIB-1.py</text>
   <text>../options/DaVinci-1000events.py</text>
+  <text>--option</text>
+  <text>from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20120413"; LHCbApp().CondDBtag="cond-20120730";</text>
 </set></argument>
 <argument name="reference"><text>../refs/test_stripping20r3_collision13_reco14.ref</text></argument>
 <argument name="validator"><text>

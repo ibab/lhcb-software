@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-07-22 - Chris Jones
+ - Run the stripping tests with the DDDB and CondDB tags set to the same as
+   the reference logs.
+
 ! 2013-07-08 - Chris Jones
  - Add new test for Stripping20r3.
 
