@@ -123,7 +123,7 @@ private:
   std::vector< std::string > m_compositeParticleLocations ;
   std::vector< std::string > m_banCandidatesLocations     ;
 
-  std::map< std::string , std::vector< LHCb::Particles* > > m_particleContainers;
+  std::map< std::string , std::vector< LHCb::Particle::Range > >  m_particleContainers;
 
   std::map< std::string , const LHCb::CaloClusters* > m_clusterContainers;
 
@@ -174,7 +174,14 @@ private:
   std::map< int , const LHCb::Track* > m_trackKeyToBan ;
 
   double m_minHCALE ;
+  double m_minHCALEt ;
+  double m_minHCALEt4Eta4 ;
 
+  double m_minIsoPhotonEt;
+  double m_minPhotonEt;
+  double m_minBadPhotonEt;
+  double m_minBadPhotonMatchingTEt; 
+  
   bool  m_banFromTTrack ;
   
   double m_Chi2ECALCutTT;
@@ -201,6 +208,7 @@ private:
   TF1* m_HCALHadron_MC; 
   
   double m_MinE;
+  double m_MinEt;
   double m_maxfractionofE;
   bool m_MC;
   bool m_doNotUseInfMominNR ;

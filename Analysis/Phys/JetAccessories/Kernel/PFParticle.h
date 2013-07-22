@@ -95,48 +95,54 @@ namespace LHCb {
     };
 
     /// Constructor from particle
-    PFParticle( const Particle& p , bool isDaughter = false ) : Particle(p),
-                                                                m_type( Unknown ),
+    PFParticle( const Particle& p , bool isDaughter = false , int type = Unknown) : Particle(p),
+                                                                m_type( type ),
                                                                 m_nbSaturatedECALCaloCell ( 0 ),
                                                                 m_nbSaturatedHCALCaloCell ( 0 )
     {
-      int ptype(Unknown);
+      if ( m_type == Unknown ){
+        
+        int ptype(Unknown);
 
-      if(this->particleID().isHadron() && this->particleID().hasCharm() ){
-        ptype = D;
+        if(this->particleID().isHadron() && this->particleID().hasCharm() ){
+          ptype = D;
+        }
+        else if(this->particleID().isHadron() && this->particleID().hasBottom() ){
+          ptype = B;
+        }
+        else if ( this->particleID().isHadron() && this->particleID().threeCharge () == 0 && this->particleID().hasStrange() ){
+          ptype = V0;
+        }
+        else if ( this->particleID().isHadron() && this->particleID().threeCharge ()!=0 ){
+          ptype = ChargedHadron ;
+        }
+        else if ( this->particleID().isHadron() && this->particleID().threeCharge () ==0 ){
+          ptype = Pi0 ;
+        }
+        else if ( this->particleID().threeCharge () ==0 ){
+          ptype = Photon ;
+        }
+        else if ( this->particleID().isLepton() ){
+          if( this->particleID().abspid()==11 )ptype = Electron;
+          else ptype = Muon;
+        }
+        //Extra info can be set only if not unknown
+        
+        if ( ptype!=Unknown && !isDaughter ) {
+          m_type = ptype ;
+          this->addInfo(PFParticle::Type,(double)ptype);
+        }
+        else if ( ptype!=Unknown ){
+          m_type = Daughter ;
+          m_typeDaug = ptype ;
+          this->addInfo(PFParticle::Type,(double)Daughter);
+          this->addInfo(PFParticle::DaughterType,(double)ptype);
+        }
       }
-      else if(this->particleID().isHadron() && this->particleID().hasBottom() ){
-        ptype = B;
+      else{
+        this->addInfo(PFParticle::Type,type);
       }
-      else if ( this->particleID().isHadron() && this->particleID().threeCharge () == 0 && this->particleID().hasStrange() ){
-        ptype = V0;
-      }
-      else if ( this->particleID().isHadron() && this->particleID().threeCharge ()!=0 ){
-        ptype = ChargedHadron ;
-      }
-      else if ( this->particleID().isHadron() && this->particleID().threeCharge () ==0 ){
-        ptype = Pi0 ;
-      }
-      else if ( this->particleID().threeCharge () ==0 ){
-        ptype = Photon ;
-      }
-      else if ( this->particleID().isLepton() ){
-        if( this->particleID().abspid()==11 )ptype = Electron;
-        else ptype = Muon;
-      }
-      //Extra info can be set only if not unknown
-
-      if ( ptype!=Unknown && !isDaughter ) {
-        m_type = ptype ;
-        this->addInfo(PFParticle::Type,(double)ptype);
-      }
-      else if ( ptype!=Unknown ){
-        m_type = Daughter ;
-        m_typeDaug = ptype ;
-        this->addInfo(PFParticle::Type,(double)Daughter);
-        this->addInfo(PFParticle::DaughterType,(double)ptype);
-      }
-
+      
     };
 
     /// Copy constructor
@@ -165,6 +171,7 @@ namespace LHCb {
     /// Private member accessor: set type of PFParticle
     void setPFType( int type ){
       this->m_type = type ;
+      this->eraseInfo( PFParticle::Type);
       this->addInfo(PFParticle::Type,(double)type);
     }
     /// Private member accessor: get type of PFParticle
@@ -175,11 +182,13 @@ namespace LHCb {
     /// Private member accessor: set number of saturated ECAL cells
     void setNSaturatedCellsECAL( int nsat ){
       this->m_nbSaturatedECALCaloCell = nsat ;
+      this->eraseInfo( PFParticle::NSatECAL );
       this->addInfo(PFParticle::NSatECAL,nsat);
     }
     /// Private member accessor: set number of saturated HCAL cells
     void setNSaturatedCellsHCAL( int nsat ){
       this->m_nbSaturatedHCALCaloCell = nsat ;
+      this->eraseInfo( PFParticle::NSatHCAL );
       this->addInfo(PFParticle::NSatHCAL,nsat);
     }
     /// Private member accessor: get number of saturated ECAL cells

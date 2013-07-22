@@ -3,7 +3,7 @@ __author__  = "Victor Coco <Victor.Coco@cern.ch>"
 
 from LHCbKernel.Configuration import *
 
-from Configurables import ( GaudiSequencer, TrackSelector, DelegatingTrackSelector, ParticleFlow, CellularAutomatonAlg, CaloClusterizationTool,CaloClusterCovarianceAlg,ClusterSpreadTool,ClusterCovarianceMatrixTool, CaloPhotonMatch , PhotonMatchAlg , CaloClusterMCTruth,CaloDigit2MCLinks2Table,NeutralPP2MC , PVRelatorAlg, ChargedProtoParticleMaker)
+from Configurables import ( GaudiSequencer, TrackSelector, DelegatingTrackSelector, ParticleFlow, CellularAutomatonAlg, CaloClusterizationTool,CaloClusterCovarianceAlg,ClusterSpreadTool,ClusterCovarianceMatrixTool, CaloPhotonMatch , PhotonMatchAlg , CaloClusterMCTruth,CaloDigit2MCLinks2Table,NeutralPP2MC , PVRelatorAlg, ChargedProtoParticleMaker, FilterDesktop)
 
 
 class ParticleFlowConf:
@@ -16,30 +16,35 @@ class ParticleFlowConf:
              "PFOutputLocation"   : "Phys/PFParticles/Particles" ,
              "PFProtoParticlesOutputLocation": "Rec/ProtoP/PF" ,
              "PFCaloHypoOutputLocation": "Rec/Calo/Hadrons",
-             "ParticleLocations": "Phys/PFParticles/Particles",
+             "ParticleLocations": [],
              "CompositeParticleLocations": [],
              "CandidateToBanLocation": [],
              "VerticesLocation": "Rec/Vertex/Primary" ,
              ### Tracks selection
              # For track selector
-             'TrackType':['Downstream','Long','Upstream'],
-             'Chi2MaxLong': 5. , 'PtMinLong': 0. , 'AcceptClone': False ,
-             'Chi2MaxDown': 10. ,'PtMinDown': 0. ,
-             'Chi2MaxUp': 10. , 'PtMinUp': 0. ,
-             'Chi2MaxVelo': 10. ,
-             "UseTTHits" : False ,
+             'TrackSelector':{'Downstream':      {'Chi2Max': 1.5 , 'PtMin': 0. , 'MaxGhostProb': 10.},
+                              'Long':{'Chi2Max': 5.  , 'PtMin': 0. , 'MaxGhostProb': 0.5},
+                              'Upstream':  {'Chi2Max': 1.5 , 'PtMin': 100.}},
+             'TrackVelo':{'Chi2Max': 10.},
+             #"UseTTHits" : False ,
              "MinInfMomentumCut": 10. ,
-             "MinInfMomentumCutDown": 0. ,
-             "MinInfMomentumCutUp": 10. ,
-             "MaxChi2NoTT": 5. ,
-             "UseVelo": False ,
+             "MinInfMomentumCutDown": 10. ,
+             "MinInfMomentumCutUp": 2. ,
+             ##"MaxChi2NoTT": 5. ,
+             "UseVelo": True ,
              ## Neutral selection
              "MinPhotonID4Photon": -1. ,
              "MinPhotonID4PhotonTtrack": -2. ,
              "MinPhotonIDMax4ResolvedPi0" : -4. ,
              "MinPhotonIDMin4ResolvedPi0": -2.,
+             "MinIsoPhotonEt":200.,
+             "MinPhotonEt":200.,
+             "MinBadPhotonEt":2000.,
+             "MinBadPhotonMatchingTEt":2000.,
              "UseHCAL" : True,
-             "MinHCALE":2000.,
+             "MinHCALE":0.,
+             "MinHCALEt":500.,
+             "MinHCALEt4Eta4":1000.,
              "UseTTrackBanning": True,
              ### Neutral recovery
              "MaxMatchECALTr" : 25. ,
@@ -50,14 +55,17 @@ class ParticleFlowConf:
              "MaxMatchHCALTrMediumE": 16. ,
              "MaxMatchHCALTrLargeE" : 16. ,
              "NeutralRecovery": True ,
-             "MinE": 1000.,
+             "MinE": 0.,
+             "MinEt": 500.,
              "MC_recovery": True,
-             "MaximumFracNeutrReco":1.5,
+             "MaximumFracNeutrReco":1.8,
              "BanInfMomentumFromNR": False,
-             "OnlyBestCaloMatchForNR": True
+             "OnlyBestCaloMatchForNR": True,
+             "scalingANDsmearing" : False
              }
          # set the datafile
          self.MCCor = _MCCor
+         self.PFSeq = GaudiSequencer("PFSeq",IgnoreFilterPassed = True)
          self.algorithms = []
          self.setupParam(_params)
          self.setupPF()
@@ -78,97 +86,108 @@ class ParticleFlowConf:
                     ts.setProp("Min"+name,cut[0])
                     ts.setProp("Max"+name,cut[1])
 
+
+    
+        
+
+                    
+
     def setupParam(self,params):
-        for key in self.paramDef.keys():
-            
-            if params.has_key(key):
-                self.__dict__[key] = params[key]
-            else:
-                self.__dict__[key] = self.paramDef[key]
-        if "Velo" in self.TrackType and not self.UseVelo: self.UseVelo=True
-
-
+        self.paramDef.update(params)
+                 
     
     ## Configure the jet maker
     def setupPF(self ):
-        ## List of algorithms to put in the sequencer
-        
+      
+
         ## set the algorithm
         alg = ParticleFlow ( self.name )
+
+        if "Velo" in self.paramDef['TrackSelector'].keys() and not self.paramDef['UseVelo']: self.paramDef['UseVelo'] = True
+        
+        # set all params
+        for prop, value in self.paramDef.items():
+            if prop != 'TrackSelector' and  prop != 'TrackVelo' and prop!= "scalingANDsmearing":            
+                setattr(alg, prop, value)
+            else:
+                self.__dict__[prop] = value
+
+
+
+        ## List of algorithms to put in the sequencer
+        if self.scalingANDsmearing:
+            from Configurables import TrackScaleState as SCALER
+            scaler= SCALER('PFStateScale')
+            self.PFSeq.Members+= [scaler]
+            if self.MCCor:
+                from Configurables import TrackSmearState as SMEAR
+                smear= SMEAR('PFStateSmear')
+                self.PFSeq.Members+= [  smear ]
+
+
+
         
         ## Definition of cuts to apply to input tracks for inputselection
         TrackCuts = {}
-        if self.UseVelo and not "Velo" in self.TrackType:
-            self.TrackType.append("Velo")
-        for trtype in self.TrackType:
+        if self.paramDef['UseVelo'] and not "Velo" in self.TrackSelector.keys():
+            self.TrackSelector["Velo"] = self.TrackVelo
+
+        for trtype in self.TrackSelector.keys():
             if trtype == "Long":
-                TrackCuts["Long"]={   "Chi2Cut" : [0,self.Chi2MaxLong]  , "MinPtCut": self.PtMinLong, "CloneDistCut" : [5000, 9e+99 ],"AcceptClones" : self.AcceptClone }
+                TrackCuts[trtype]={   "Chi2Cut" : [0,self.TrackSelector[trtype]['Chi2Max']]  ,
+                                      "MinPtCut": self.TrackSelector[trtype]['PtMin'],
+                                      "MaxGhostProbCut": self.TrackSelector[trtype]['MaxGhostProb']}
             if trtype == "Downstream":
-                TrackCuts["Downstream"]={  "Chi2Cut" : [0,self.Chi2MaxDown]   , "MinPtCut": self.PtMinDown }
+                TrackCuts[trtype]={  "Chi2Cut" : [0,self.TrackSelector[trtype]['Chi2Max']]   ,
+                                     "MinPtCut": self.TrackSelector[trtype]['PtMin'] ,
+                                     "MaxGhostProbCut": self.TrackSelector[trtype]['MaxGhostProb']}
             if trtype == "Upstream":
-                TrackCuts["Upstream"]={  "Chi2Cut" : [0,self.Chi2MaxUp]     , "MinPtCut": self.PtMinUp }
+                TrackCuts[trtype]={  "Chi2Cut" : [0,self.TrackSelector[trtype]['Chi2Max']],
+                                     "MinPtCut": self.TrackSelector[trtype]['PtMin'] }
             if trtype == "Velo":
-                TrackCuts["Velo"]={  "Chi2Cut" : [0,self.Chi2MaxVelo]    }
+                TrackCuts[trtype]={  "Chi2Cut" : [0,self.TrackSelector[trtype]['Chi2Max']]    }
+                
                 protos = ChargedProtoParticleMaker("VeloProtoPMaker")
                 protos.Inputs = ["Rec/Track/Best"]
                 protos.Output = "Rec/ProtoP/VeloProtoPMaker"
                 protos.addTool( DelegatingTrackSelector, name="TrackSelector" )
                 protos.TrackSelector.TrackTypes = ["Velo"]
                 self.setupTypeTrackSelector( "Velo" , protos.TrackSelector ,TrackCuts["Velo"] )
-                self.algorithms.append(  protos )   
-                
+                self.PFSeq.Members+= [ protos ]
+
+               
         
-        ## Neutral related cuts
         pLocations = []
         pCompLocations = []
         alg.MC_recovery = self.MCCor
 
-        alg.UseVelo = self.UseVelo
-        alg.UseTTrackBanning       = self.UseTTrackBanning
-        alg.CandidateToBanLocation = self.CandidateToBanLocation
-        alg.VerticesLocation       = self.VerticesLocation
-        alg.PFOutputLocation       = self.PFOutputLocation
-        alg.PFProtoParticlesOutputLocation = self.PFProtoParticlesOutputLocation
-        alg.PFCaloHypoOutputLocation = self.PFCaloHypoOutputLocation
+
+
+        #re set default to false
+        alg.UseHCAL = False
+        alg.NeutralRecovery = False
         
         for t in self.InputParticles:
             if t=='Photons':
                 pLocations.append('Phys/StdLooseAllPhotons/Particles')
-                alg.MinPhotonID4Photon = self.MinPhotonID4Photon
-                alg.MinPhotonID4PhotonTtrack = self.MinPhotonID4PhotonTtrack
         
             elif t=='NeutralHadrons':
                 ## Set the HCAL uses
-                alg.UseHCAL = self.UseHCAL
+                alg.UseHCAL = True
                 self.setupHCAL()
-                alg.MinHCALE = self.MinHCALE
-                ## Match track and clusters
-                alg.MaxMatchHCALLowEValue = self.MaxMatchHCALLowEValue 
-                alg.MaxMatchHCALHighEValue = self.MaxMatchHCALHighEValue 
-                alg.MaxMatchHCALTrSmallE = self.MaxMatchHCALTrSmallE 
-                alg.MaxMatchHCALTrMediumE = self.MaxMatchHCALTrMediumE 
-                alg.MaxMatchHCALTrLargeE = self.MaxMatchHCALTrLargeE
                 
             elif t=='Charged':
                ## Track selector
                 alg.TrackSelectorType = "DelegatingTrackSelector"
                 alg.addTool( DelegatingTrackSelector, name="TrackSelector" )
                 tracktypes = TrackCuts.keys()
-                alg.TrackSelector.TrackTypes = self.TrackType
+                alg.TrackSelector.TrackTypes = self.TrackSelector.keys()
                 for type in tracktypes : self.setupTypeTrackSelector( type, alg.TrackSelector,TrackCuts )
                 
-                ## Track related cuts
-                alg.MinInfMomentumCut = self.MinInfMomentumCut
-                alg.MaxChi2NoTT = self.MaxChi2NoTT
-                alg.UseTTHits = self.UseTTHits 
-                alg.MaxMatchECALTr = self.MaxMatchECALTr 
-                alg.MaxMatchECALTr_T = self.MaxMatchECALTr_T
-                
+    
             elif t=='Pi0s':               
                 pLocations.append('Phys/StdLooseResolvedPi0/Particles')
                 pLocations.append('Phys/StdLooseMergedPi0/Particles')
-                alg.MinPhotonIDMax4ResolvedPi0 = self.MinPhotonIDMax4ResolvedPi0 
-                alg.MinPhotonIDMin4ResolvedPi0 = self.MinPhotonIDMin4ResolvedPi0 
                 
             elif t=='V0s':
                 pCompLocations.append("Phys/StdKs2PiPiLL/Particles" )
@@ -178,19 +197,19 @@ class ParticleFlowConf:
 
             elif t=='PFNeutrals':
                 alg.NeutralRecovery = True
-                alg.MinE = self.MinE
-                alg.MaximumFracNeutrReco = self.MaximumFracNeutrReco
+                
             else :
                 print t,"are not supported!"
                 exit(1)
                 
-            if len( self.CompositeParticleLocations)>0.5:
-                for t in self.CompositeParticleLocations:
+            if len( self.paramDef['CompositeParticleLocations']) > 0.5:
+                for t in self.paramDef['CompositeParticleLocations']:
                     pCompLocations.append(t)
                 
         alg.ParticleLocations = pLocations
         alg.CompositeParticleLocations = pCompLocations
-        self.algorithms.append(alg)
+        self.PFSeq.Members += [alg]
+        self.algorithms.append(self.PFSeq)
                 
 
     def setupHCAL(self):
@@ -200,7 +219,7 @@ class ParticleFlowConf:
         hcalClus.OutputData = 'Rec/Calo/HcalClusters'
         hcalClus.addTool(CaloClusterizationTool,name="CaloClusterizationTool")
         hcalClus.CaloClusterizationTool.CellSelectorForEnergy = '2x2'
-        self.algorithms.append(hcalClus)
+        self.PFSeq.Members += [hcalClus]
         ## Get the covariance matrix
         clustCov = CaloClusterCovarianceAlg('HcalCov')
         clustCov.InputData =  'Rec/Calo/HcalClusters'
@@ -214,7 +233,7 @@ class ParticleFlowConf:
         clustCov.addTool(ClusterCovarianceMatrixTool,name ='HcalCovarTool' )
         clustCov.HcalCovarTool.Detector= '/dd/Structure/LHCb/DownstreamRegion/Hcal'
         #clustCov.SubClusterType = "SubClusterSelector3x3"
-        self.algorithms.append(clustCov)
+        self.PFSeq.Members += [clustCov]
         
         ## Get Association to tracks
         hcal2Track = PhotonMatchAlg("Hcal2TrackMatching")
@@ -228,24 +247,24 @@ class ParticleFlowConf:
         hcal2Track.HcalMatch.Tolerance= "60"   
         hcal2Track.HcalMatch.Extrapolator= "TrackRungeKuttaExtrapolator/Regular" 
         
-        self.algorithms.append(hcal2Track)
+        self.PFSeq.Members += [hcal2Track]
                 
 
     def setupHCALMC(self):
         caloDigitMC= CaloDigit2MCLinks2Table('CaloDigit2MCLinks2TableHCAL')
         caloDigitMC.Inputs+=['Raw/Hcal/Digits']
         caloDigitMC.Output = 'Relations/Raw/Hcal/Digits'
-        self.algorithms.append(caloDigitMC)
+        self.PFSeq.Members += [caloDigitMC]
         caloClusterMC= CaloClusterMCTruth('CaloClusterMCTruthHCAL')
         caloClusterMC.Clusters += ['Rec/Calo/HcalClusters']
         caloClusterMC.Input = 'Relations/Raw/Hcal/Digits'
         caloClusterMC.Output = 'Relations/Rec/Calo/HcalClusters' 
-        self.algorithms.append(caloClusterMC)
+        self.PFSeq.Members += [caloClusterMC]
         HCALPP2MC = NeutralPP2MC('NeutralPP2MCHCAL')
         HCALPP2MC.OutputTable = 'Relations/Rec/ProtoP/Neutrals'
         HCALPP2MC.MCCaloTable = 'Relations/Rec/Calo/HcalClusters'
         HCALPP2MC.InputData = ['Rec/ProtoP/PF','Rec/ProtoP/Neutrals']
-        self.algorithms.append(HCALPP2MC)
+        self.PFSeq.Members += [HCALPP2MC]
 
 
         
