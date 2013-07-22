@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2013-07-22 - Alexey Zhelezov
+ - Added ZIP file writing functionality
+
 !========================= HltDAQ v2r17 2013-06-03 =========================
 ! 2013-05-27 - Marco Cattaneo
  - Fix a clang32 warning
