@@ -4,6 +4,177 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v46r3">2013-07-22 - GaussSys v46r3</A></H1><PRE>
+<H2><A NAME="Note"For development and Upgrade studies. 
+    </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v36r0</b> (and Gaudi v23r8)
+   AppConfig v3r*,
+   <b>DecFiles v27r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   pythia 6.427.2, lhapdf 5.8.5 
+   photos++ 2.6.1a and tauola++ 1.0.7 
+   pythia8 175 (via LCG_GeneratorsInterfaces),
+   HepMC 2.06.05 (via LCG_Interfaces),
+   <b>Geant4 v95r2p5g3</b> (based on geant4.9.5.p02 + patches for LHCb) and 
+   Geant4Files v95r0, 
+   XmlVis v1r16,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
+   <b>herwig++ 2.6.1b</b> and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
+   <b>rivet 1.8.3</b> (via LCG_GeneratorsInterfaces),
+   EvtGen v13r6 (private LHCb version),
+   BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r0 + GenXiccData v2r0 and 
+   HidValley v3r2 (private LHCb versions)
+</A></H3>
+
+! 2013-07-22 - Gloria Corti
+ - Changes in LCG_Setting to port to that of LCGCMT65 the necessary changes to
+   have the generators interface packages directly in Gauss
+ - Changes in LCG_GeneratorsInterfaces packages: 
+   . herwigpp, photospp and tauolapp modified to point to hergwig++, photos++
+     and tauola++ libraries in MCGenerators_lcgcmt65 to avoid soft links.
+   . alpgen to fix link statement for new structure as in MCGenerators_lcgcmt65 
+   . hijing, lhapdf, pythia6, pythia8, rivet and thepeg are identical as
+     v64r3p1 and only tagged as v65r0p1 to indicate they refer to to the same 
+     packages in LCGCMT65
+ 
+!========================== Gauss v46r3 2013-06-27 ===========================
+! 2013-06-26 - Patrick Robbe
+ - MonitorInDetail.opts: remove GeneratorFullMonitor which is not
+   supported anymore.
+ - qmtests: increase the time limit for pythia8 tests to 3600s
+
+! 2013-06-06 - Patrick Robbe
+ - QMTests: add pythia8 QMTests and clean obsolete reference files
+
+! 2013-06-02 - Patrick Robbe
+ - python/Gauss/Configuration.py: clean configuration for .xgen file
+   generation
+ - QMTests: new sets of tests replacing the generator tests. Only the
+   output status is checked, not the standard out
+
+!========================== GenCuts v3r5 2013-06-27 ========================== 
+! 2013-05-15 - Jibo He
+ - Added BcNoCut, to generate Bc in full phase space
+
+!========================== GENSER v12r5 2013-06-27 ==========================
+! 2013-06-27 - Gloria Corti
+ - Newer version of rivet (from 1.8.2 to 1.8.3) as not used in production
+
+! 2013-06-24 - Patrick Robbe
+ - requirements: remove definition of LHAPATH
+
+! 2013-06-13 - Gloria Corti
+ - Change version of herwigpp from 2.6.1a to 2.6.1b as not yet used in 
+   production
+
+! 2013-06-02 - Patrick Robbe
+ - Use LHAPDF version 5.8.9 instead of 5.8.8
+ - change back on June 5
+
+!====================== EvtGenExtras v3r6p1 2013-06-27 =======================
+! 2013-06-26 - Patrick Robbe
+ - Fix coverity warnings
+
+!======================= Generators v14r4 2013-06-27 =========================
+! 2013-06-26 - Patrick Robbe
+ - Fix coverity warnings
+
+! 2013-05-31 - Patrick Robbe
+ - Add interface code to TAULA and PHOTOS to suppress part of their outputs:
+   . src/Lib/LbTaula.cpp
+   . src/Lib/LBTAULA.F
+   . src/Lib/LbPhotos.cpp
+   . src/Lib/LBPHOTOS.F
+   . Generators/LbPhotos.h
+   . Generators/LbTaula.h
+ - EvtGenDecay: suppress PHOTOS and TAULA outputs
+
+! 2013-05-29 - Patrick Robbe
+ - Inclusive.cpp: fix problem with release of particle property service
+
+!========================= LbPythia8 v7r3 2013-06-28 =========================
+! 2013-06-28 - Aurelien Martens
+ - add Charmonium and Bottomonium in std. minbias generation 
+ (does not seem to break anything at xgen level)
+
+! 2013-06-28 - Aurelien Martens
+ - cleanup debug commands
+
+! 2013-06-26 - Aurelien Martens
+ - update handling of HepMC status codes conversion to LHCb::Statuses 
+   (move many DecayedByProdGen in DocParticle) fixing an issue for Jpsi 
+   prompt production
+
+!========================== GiGa v20r2 2013-06-27 ============================
+! 2012-05-31 - Patrick Robbe
+ - GiGa, GiGaRunManager, GiGaPhysConstructorBase, GiGaPhysListBase, 
+   GiGaSensDetBase: fix unreleased tool issue
+ - Set G4 particle table verbose level to 0 to avoid G4 warnings about
+   unknown PDG Ids
+
+!========================== GiGa v20r1 2013-02-14 ============================
+! 2012-02-07 - Patrick Robbe
+ - GiGaRunManager.h: Fix release method to avoid compilation warnings
+
+! 2012-02-05 - Patrick Robbe
+ - Fix release method to avoid compilation warnings when create configurables
+   in GiGaPhysConstructorBase.cpp, GiGaPhysListBase.cpp and GiGaSensDetBase.cpp 
+
+!========================= GaussKine v6r2 2013-06-27 =========================
+! 2013-05-31 - Patrick Robbe
+ - GenerationToSimulation.cpp: switch off G4 printout of unknown PDG ID
+
+!======================== GaussAlgs v7r0 2013-06-27 ===========================
+! 2013-05-08 - Paul Szczypka
+ - commented out SL hitsTracker line such that it isn't run by default.
+
+! 2013-05-02 - Paul Szczypka
+ - Added SL hit information.
+
+! 2013-05-01 - Patrick Robbe
+ - GenInit.cpp: set to 0 the event type of the GenHeader when creating it.
+   It will be filled to the correct value then in Generators/Generation.
+
+!======================== GaussTools v18r2 2013-06-27 ========================
+! 2013-05-31 - Patrick Robbe
+ - GiGaPhysListBase: fix unreleased tool issues
+
+! 2013-05-29 - Patrick Robbe
+ - GiGaPhysListModular.cpp: unregister properly physics lists
+
+!======================= GaussMonitor v7r0 2013-06-27 ========================
+! 2013-06-26 - Patrick Robbe
+ - Remove obsolete GeneratorFullMonitor algorithm from Gauss
+
+!========================= GenTune v2r0 2013-06-27 =========================
+! 2013-06-13 - Alex Grecu
+ - added scripts/lhcbLFT2StdMap.py script to help plugin developers with 
+   dumping the LHCb particle lifetimes to a std::map<int, double> indexed 
+   by the particle PDG id 
+ - corrected options/LHCb_MB_MC-Generics.py for the change of the 'Output' 
+   Gauss property 
+ - introduced a set of beam option files in options/beamOpts which are made
+   compatible with the Python interface changes in Gauss v45 and later. The 
+   options are mainly needed to setup the beam energy and fix the number of 
+   primary interactions
+ - modified cmt/requirements to include the dependence on the fastjet 3.*
+   library needed by the main Rivet library
+ - generated new reference files for the qmtests on x86_64-slc[5-6]-gcc4[3|6]
+   architecture
+ - corrected the mechanism of providing and forcing external value of the 
+   event production cross-section in RivetAnalysisHandler algorithm; Python 
+   interface changed to reflect the logic in code: xSectionNeeded eliminated,
+   replaced by forceXSection (default: False) which allows user to overwrite
+   the production cross-section even when provided by the MC generator
+ - introduced a check in RivetAnalysisHandler to prevent the algorithm from 
+   running if job setup is incompatible with all the plugins in the provided
+   list
+
+!=============================================================================
 </PRE><H1><A NAME="v46r2p1">2013-06-06 - GaussSys v46r2p1</A></H1><PRE>
 <H2><A NAME="Note"For development and Upgrade studies. Synchronized for physics
    to Gauss v45r3. Identical to Gauss v46r2 but depends on LHCb v35r6.
@@ -19,7 +190,7 @@ Purpose: LHCb Simulation program
    photos++ 2.6.1a and tauola++ 1.0.7 
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.05 (via LCG_Interfaces),
-   Geant4 v95r2p5g1 (based on geant4.9.5.p02 + patches for LHCb) and 
+   <b>Geant4 v95r2p5g2</b> (based on geant4.9.5.p02 + patches for LHCb) and 
    Geant4Files v95r0, 
    XmlVis v1r16,
    hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
