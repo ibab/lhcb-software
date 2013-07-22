@@ -30,7 +30,7 @@
 		<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-Upgrade-DBTags.py</text>
 		<text>--option</text>
-		<text>from Configurables import CondDB; from Configurables import DDDBConf; DDDBConf(DbRoot = "/afs/cern.ch/user/s/szczypka/public/FT_DDDB/lhcb.xml"); CondDB().Upgrade     = True;from Configurables import Gauss; Gauss().DetectorGeo  = { "Detectors": ['Velo', 'PuVeto', 'TT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DetectorSim  = { "Detectors": ['Velo', 'PuVeto', 'TT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DetectorMoni  = { "Detectors": ['Velo', 'PuVeto', 'TT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DataType = "Upgrade";</text>
+		<text>from Configurables import CondDB;CondDB().AllLocalTagsByDataType = ["FT_MonoLayer"]; CondDB().Upgrade     = True;from Configurables import Gauss; Gauss().DetectorGeo  = { "Detectors": ['Velo', 'PuVeto', 'TT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DetectorSim  = { "Detectors": ['Velo', 'PuVeto', 'TT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DetectorMoni  = { "Detectors": ['Velo', 'PuVeto', 'TT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DataType = "Upgrade";</text>
 	</set>
 </argument>
 <argument name="exit_code">

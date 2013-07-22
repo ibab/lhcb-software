@@ -4,13 +4,18 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-! 2012-07-21 - Patrick Robbe
+! 2013-07-22 - Paul Szczypka
+ - Correct some recent release notes to have proper date (2013 vs. 2012)
+ - Updated gauss-upgrade-ft to read DEV DB and use new FT_MonoLayer geo from there.
+ - Updated upgrade qmtests to use latest global tags as default.
+
+! 2013-07-21 - Patrick Robbe
  - QMTests: merge changes from v45b
 
-! 2012-07-18 - Paul Szczypka
+! 2013-07-18 - Paul Szczypka
  - Updated Configuration to remove the now-annoying AEROGEL WARNINGS.
 
-! 2012-07-12 - Paul Szczypka
+! 2013-07-12 - Paul Szczypka
  - QMTests: Added new gauss-upgrade-ft qmtest, currently points to my public area
    for the DDDB location. Needs to be updated once the geo is in the official DB.
 
