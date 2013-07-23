@@ -4,10 +4,13 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+! 2013-07-23 - Rob Lambert
+ - Adapt methods for DAQSys fix one small bug exposed in DAQSys
+
 ! 2013-07-19 - Marco Clemencic
  - Added empty python/RawEventCompat/__init__.py.
 
-!========================= RawEventCompat v1r1 2013-07-17 =========================
+!========================= RawEventCompat v1r1 2013-07-17 =====================
 ! 2013-07-17 - Marco Cattaneo
  - Add missing CMakeLists.txt file
 

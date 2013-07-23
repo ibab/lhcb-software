@@ -49,9 +49,27 @@ def _getDict(locations=None,recodict=None):
         recodict = RawEventFormatConf().getProp("RecoDict")
     return locations,recodict
 
+def _replaceWrap(aloc):
+    """
+    Replace strings in the given location
+    """
+    c=RawEventFormatConf()
+    for pattern in c.getProp("GenericReplacePatterns"):
+        #print "looking for", pattern
+        if pattern in aloc:
+            #print "replacing", pattern
+            aloc=aloc.replace(pattern,c.getProp("GenericReplacePatterns")[pattern])
+        if c.getProp("TCKReplacePattern") in aloc:
+            if not c.isPropertySet("TCK"):
+                raise AttributeError("TCK for replacement has not been set!")
+            aloc=aloc.replace(c.getProp("TCKReplacePattern"),c.getProp("TCK"))
+    return aloc
+    
+
 ####################################################
 # Simple python functions
 ####################################################
+
 def WhereAll(bank,version,locations=None,recodict=None):
     """Return a search path, all possible places to find a bank in a given version"""
     #find dictionaries
@@ -60,9 +78,9 @@ def WhereAll(bank,version,locations=None,recodict=None):
     version=_checkv(version, locations,recodict)
     loc=locations[version][bank]
     if type(loc) is str:
-        return [loc]
+        return [_replaceWrap(loc)]
     else:
-        return loc
+        return [_replaceWrap(l) for l in loc]
 
 def WhereBest(bank,version,locations=None,recodict=None):
     """Return one location, where best to find a given bank in a given processing"""
@@ -171,11 +189,18 @@ class RawEventFormatConf(ConfigurableUser):
     __slots__ = {
         "Locations" : None #which locations have been where
         , "RecoDict" : None #which reco version goes to which RawEvent version
+        , "TCK" : None
+        , "TCKReplacePattern" : "#TCK#"
+        , "GenericReplacePatterns" : {}
         }
     _propertyDocDct={
         "Locations" : "which banks have been where, loaded from a databse in RawEventFormat in DBASE."
         , "RecoDict" : "which reco version goes to which RawEvent version, loaded from a database in RawEventFormat in DBASE."
+        , "TCK" : "A TCK with which to replace any TCK strings"
+        , "TCKReplacePattern" : "#TCK#"
+        , "GenericReplacePatterns" : "A dictionary to use to replace other strings{}"
         }
+    
     def forceLoad(self):
         """
         Force to get the dictionary from the database when called
@@ -201,7 +226,7 @@ class RawEventFormatConf(ConfigurableUser):
             self.setProp("Locations",RawEventFormat.Raw_location_db)
         if not self.isPropertySet("RecoDict"):
             self.setProp("RecoDict",RawEventFormat.Reco_dict_db)
-
+    
     def __apply_configuration__(self):
         #don't do anything if explicitly configured
         print "############ CONFIGURING RawEventFormatConf!! ###############"
@@ -229,7 +254,7 @@ class RecombineRawEvent(ConfigurableUser):
         , "Regex" : "locations or RawBanks to copy. A regular expression such that you can ignore certain locations or bank names. Default .*"  #locations or RawBanks to copy.
         , "Version" : "Version to copy from, float. Default 2.0" #version to copy from
         }
-
+    
     __known_methods__={
         "Simple": RecombineWholeEvent,
         "Map" : RecombineEventByMap
@@ -276,33 +301,27 @@ class RawEventJuggler(ConfigurableUser):
         , "WriterItemList" : None #append a writer here to add output locations as ItemList
         , "Sequencer" : None #send in a sequencer to add the juggling into
         , "DataOnDemand" : False #Add juggling into DoD?
-        , "TCK" : None
         , "Depth" : "#1"
+        , "TCK" : None
         , "TCKReplacePattern" : "#TCK#"
         , "GenericReplacePatterns" : {}
         }
-
-    def __replaceWrap__(self, aloc):
-        #print "looking at", aloc
-        for pattern in self.getProp("GenericReplacePatterns"):
-            #print "looking for", pattern
-            if pattern in aloc:
-                #print "replacing", pattern
-                return aloc.replace(pattern,self.getProp("GenericReplacePatterns")[pattern])
-        return aloc
-
+    def __safeset__(self,other, prop):
+        if self.isPropertySet(prop) and not other.isPropertySet(prop):
+            other.setProp(prop,self.getProp(prop))
+    
     def __opWrap__(self,loc):
-        return [self.__replaceWrap__(aloc) +self.getProp("Depth") for aloc in loc]
-
+        return [_replaceWrap(aloc) +self.getProp("Depth") for aloc in loc]
+    
     def __apply_configuration__(self):
         #make sure the dictionaries are there... Hack! %TODO -> Remove this!
         RawEventFormatConf().loadIfRequired()
         #then get them ...
         locs,rec=_getDict()
         added_locations=[]
-
+        
         if not self.isPropertySet("Output") or  not self.isPropertySet("Input"):
-            raise AttributeError("You must set bith the input and the output version, this can be a version number (float, int) or a name, see: "+rec.__str__())
+            raise AttributeError("You must set both the input and the output version, this can be a version number (float, int) or a name, see: "+rec.__str__())
 
         output_locations=ReverseDict(self.getProp("Output"),locs,rec)
         input_locations=ReverseDict(self.getProp("Input"),locs,rec)
@@ -311,10 +330,8 @@ class RawEventJuggler(ConfigurableUser):
         if len([loc for loc in input_locations if self.getProp("TCKReplacePattern") in loc]) or len([loc for loc in output_locations if self.getProp("TCKReplacePattern") in loc]):
             if not self.isPropertySet("TCK"):
                 raise AttributeError("The raw event version you specified requires a TCK to be given. Set RawEventJuggler().TCK")
-            else:
-                newdict=self.getProp("GenericReplacePatterns")
-                newdict[self.getProp("TCKReplacePattern")]=self.getProp("TCK")
-                self.setProp("GenericReplacePatterns",newdict)
+        for prop in ["TCK","GenericReplacePatterns","TCKReplacePattern"]:
+            self.__safeset__(RawEventFormatConf(),prop)
 
         killBefore=[]
         loc_to_alg_dict={}
@@ -334,7 +351,7 @@ class RawEventJuggler(ConfigurableUser):
                 killBanks=[abank for abank in input_locations[loc] if re.match(self.getProp("KillInputBanksBefore"),abank)]
                 if not len(killBanks):
                     continue
-                loc=self.__replaceWrap__(loc)
+                loc=_replaceWrap(loc)
                 bk=bankKiller(("kill_"+loc.replace("/","_")+"_Before").replace("__","_"))
                 killBefore.append(bk)
                 bk.RawEventLocations=[loc]
@@ -370,7 +387,7 @@ class RawEventJuggler(ConfigurableUser):
             ###############################################
             # Stage 3: Recombine banks from given locations
             ###############################################
-
+            
             #for each new location, add a RawEventMapCombiner to the DoD or to the sequencer
             loc_to_alg_dict={}
             for loc in output_locations:
@@ -379,25 +396,25 @@ class RawEventJuggler(ConfigurableUser):
                     if len([abank for abank in output_locations[loc] if abank in locs[self.getProp("Input")]])==0:
                         print "#WARNING, nowhere to copy any banks for "+loc+" from, skipping"
                         continue
-                    wloc=self.__replaceWrap__(loc)
+                    wloc=_replaceWrap(loc)
                     loc_to_alg_dict[wloc]=RawEventMapCombiner(("create_"+wloc.replace("/","_")).replace("__","_").rstrip("_"))
                     loc_to_alg_dict[wloc].OutputRawEventLocation=wloc
                     loc_to_alg_dict[wloc].RawBanksToCopy={}
-
+                    
                     added_locations.append(wloc)
-
+                    
                     for abank in output_locations[loc]:
                         if abank not in locs[self.getProp("Input")]:
                             print "#WARNING, nowhere to copy "+abank+" from, skipping"
                             continue
-                        loc_to_alg_dict[wloc].RawBanksToCopy[abank]=self.__replaceWrap__(WhereBest(abank,self.getProp("Input"),locs,rec))
-
-
+                        loc_to_alg_dict[wloc].RawBanksToCopy[abank]=WhereBest(abank,self.getProp("Input"),locs,rec)
+                        
+            
             ###############################################
             # Stage 4: Clean up, kill after if requested
             ###############################################
-
-
+            
+            
             killAfter=[]
             if self.isPropertySet("KillInputBanksAfter") or self.getProp("KillExtraBanks"):
                 import re
@@ -410,7 +427,7 @@ class RawEventJuggler(ConfigurableUser):
                         killBanks+=[abank for abank in input_locations[loc] if (loc in output_locations and abank not in output_locations[loc])]
                     if not len(killBanks):
                         continue
-                    loc=self.__replaceWrap__(loc)
+                    loc=_replaceWrap(loc)
                     bk=bankKiller(("kill_"+loc.replace("/","_")+"_After").replace("__","_"))
                     killAfter.append(bk)
                     bk.RawEventLocations=[loc]
@@ -424,11 +441,11 @@ class RawEventJuggler(ConfigurableUser):
                     killAfter.append(enk)
                     for loc in input_locations:
                         if loc not in output_locations:
-                            enk.Nodes.append(self.__replaceWrap__(loc))
+                            enk.Nodes.append(_replaceWrap(loc))
 
         elif self.isPropertySet("KillInputBanksAfter") or self.getProp("KillExtraNodes") or self.isPropertySet("KillExtraBanks"):
             raise AttributeError("You've asked to kill something from the input *after* copying, but you aren't actually doing any copying. Please kill them yourself without this configurable, or use KillInputBanksBefore!")
-
+        
         ###############################################
         # Stage 5: Add to sequence or DoD
         ###############################################
