@@ -76,3 +76,6 @@ DaVinci().MoniSequence = [   #PrintDecayTree()
                             ,tagcheck
                             ]  # The algorithms
 
+from GaudiConf import IOHelper 
+IOHelper().inputFiles(['PFN:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/MC/2012/ALLSTREAMS.DST/00021062/0000/00021062_00000001_1.allstreams.dst']) # Bu2JpsiK 
+

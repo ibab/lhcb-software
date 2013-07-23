@@ -3,6 +3,9 @@
 ! Responsible : Juan Palacios
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+! 2013-07-24 - Stefania Vechi
+ - updated reference file tagging.qms/test_tag_mc12.qmt according to the change in
+  FT/python/FT/Tunings.py in NNetSSK tuning
 
 ! 2013-07-23 - Marco Clemencic
  - Fixed CMake configuration.

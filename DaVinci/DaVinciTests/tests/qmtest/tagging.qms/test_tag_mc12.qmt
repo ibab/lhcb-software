@@ -26,7 +26,7 @@ BTaggingChecker                            INFO  **     SS kaon     0.37+-0.61  
 BTaggingChecker                            INFO  **     SS pion     0.66+-0.85      8.1+-1.5       36+-9.1      18      10
 BTaggingChecker                            INFO  **    VertexCh      3.9+-1.9       17+-2       26+-5.7      43      15
 BTaggingChecker                            INFO  ** OS nnetkaon      1.8+-1.4       23+-2.3       36+-5.4      51      29
-BTaggingChecker                            INFO  ** SS nnetkaon      1.1+-1.1       15+-1.9       63+-6.7      19      33
+BTaggingChecker                            INFO  ** SS nnetkaon    0.042+-0.22        2+-0.76       57+-19       3       4
 BTaggingChecker                            INFO ---------------------------------------------------------
 BTaggingChecker                            INFO Tagging efficiency =     34 +/- 2.5 %
 BTaggingChecker                            INFO Wrong Tag fraction =     26 +/- 4.2 %
