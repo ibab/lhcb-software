@@ -20,7 +20,7 @@ Boole().DataType = "Upgrade"
 #DDDBConf().DbRoot = "/afs/cern.ch/user/p/phopchev/public/FT/DDDBSlice_FT_v3/lhcb.xml"
 #POLCI
 #DDDBConf().DbRoot = "$HOME/panoramix/DDDB/DDDBSlice_FT_v20_test/lhcb.xml"
-DDDBConf().DbRoot = "/afs/cern.ch/user/o/ogruenbe/public/FT_upgrade/test_DDDBupgrade_FT_v20/lhcb.xml"
+DDDBConf().DbRoot = "/afs/cern.ch/user/o/ogruenbe/public/FT_upgrade/static_DDDBupgrade_FT_v20/lhcb.xml"
 #EventSelector().Input = ["DATAFILE='PFN:root://castorlhcb.cern.ch//castor/cern.ch/user/o/ogruenbe/Bs_mumu.sim?svcClass=default' TYP='POOL_ROOTTREE' OPT='READ'"]
 #EventSelector().Input = ["DATAFILE='/castor/cern.ch/user/o/ogruenbe/Bs_mumu_v3.sim' TYP='POOL_ROOTTREE'"]
 #POLCI

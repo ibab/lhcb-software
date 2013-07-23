@@ -265,8 +265,18 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit*  fthit,
                                     VectFTPairs&         vectChanAndEnergy) const
 {
 
-  Gaudi::XYZPoint enP = this->geometry()->toLocal(fthit->entry());
-  Gaudi::XYZPoint exP = this->geometry()->toLocal(fthit->exit());
+  double entryX = fthit->entry().x();
+  double entryY = fthit->entry().y();
+
+  double exitX = fthit->exit().x();
+  double exitY = fthit->exit().y();
+
+  Gaudi::XYZPoint enP( cos(m_angle)*entryX+sin(m_angle)*entryY, -sin(m_angle)*entryX+cos(m_angle)*entryY, fthit->entry().z() );
+  Gaudi::XYZPoint exP( cos(m_angle)*exitX+sin(m_angle)*exitY  , -sin(m_angle)*exitX+cos(m_angle)*exitY  , fthit->exit().z() );
+
+
+  //Gaudi::XYZPoint enP = this->geometry()->toLocal(fthit->entry());
+  //Gaudi::XYZPoint exP = this->geometry()->toLocal(fthit->exit());
   
   debug() << "Entry Point in Global / Local: " << fthit->entry() << enP << endmsg;
   debug() << "Exit  Point in Global / Local: " << fthit->exit() << exP << endmsg;
