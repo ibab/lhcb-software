@@ -69,7 +69,7 @@ def fileMD5(file):
 # Mirror alignment
 upAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors/MagUp"
 dnAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors/MagDown"
-dbFileName = "2012MirrorAlign"
+dbFileName = "2013MirrorAlign"
 
 # Mirror alignment RICH1 only
 #upAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors-RICH1/MagUp"
@@ -148,19 +148,26 @@ field = { }
 #stop = datetime.datetime(  2011,  12,   31,   23,   59,  59  )
 
 # 2012                     Year  Month  Day   Hour  Min  Sec
-field[ datetime.datetime(  2012,   4,    1,    1,    0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2012,   5,    1,   19,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2012,   5,    2,   22,   20,   0  ) ] = dnAlign
-field[ datetime.datetime(  2012,   5,   16,   20,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2012,   6,    1,   13,    0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2012,   6,   11,   12,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2012,   7,   26,    2,    0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2012,   8,   12,    1,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2012,   8,   30,   15,   30,   0  ) ] = dnAlign
-field[ datetime.datetime(  2012,   9,   14,   12,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2012,  10,   12,    1,    0,   0  ) ] = dnAlign
-field[ datetime.datetime(  2012,  10,   25,    1,    0,   0  ) ] = upAlign
-field[ datetime.datetime(  2012,  11,    9,    0,    1,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,   4,    1,    1,    0,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,   5,    1,   19,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2012,   5,    2,   22,   20,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,   5,   16,   20,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2012,   6,    1,   13,    0,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,   6,   11,   12,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2012,   7,   26,    2,    0,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,   8,   12,    1,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2012,   8,   30,   15,   30,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,   9,   14,   12,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2012,  10,   12,    1,    0,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,  10,   25,    1,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2012,  11,    9,    0,    1,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,  12,    4,    1,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2012,  12,   14,   22,    0,   0  ) ] = dnAlign
+
+# 2013                     Year  Month  Day   Hour  Min  Sec
+field[ datetime.datetime(  2013,   1,    1,    0,    0,   0  ) ] = dnAlign
+field[ datetime.datetime(  2013,   1,   29,   18,    0,   0  ) ] = upAlign
+field[ datetime.datetime(  2013,   2,    6,    0,    1,   0  ) ] = dnAlign
 
 # Long way away ...
 stop = datetime.datetime(  2100,  12,   31,   23,   59,  59  )

@@ -52,7 +52,7 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 print "(n-1) Scale Rich1 =",r1,"Rich2",r2
             
                 # Make a job object
-                j = Job( application = Brunel( version = 'v43r1p1' ) )
+                j = Job( application = Brunel( version = 'v43r2p2' ) )
 
                 # name
                 j.name = "RefInControl"
@@ -104,11 +104,11 @@ def submitControlJobs(name="",pickedRuns="Run71813-LFNs.pck.bz2"):
                 j.submit()
 
 ## Submits DB calibration jobs
-def submitCalibrationJobs(name="",BrunelVer="v43r1p1",pickledRunsList=[]):
+def submitCalibrationJobs(name="",BrunelVer="v43r2p2",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInCalib")
 
 ## Submit DB Verification Jobs
-def submitVerificationJobs(name="",BrunelVer="v43r1p1",pickledRunsList=[]):
+def submitVerificationJobs(name="",BrunelVer="v43r2p2",pickledRunsList=[]):
     submitRecoJobs(name,BrunelVer,pickledRunsList,"RefInVerify")
 
 ## Real underlying method
@@ -177,13 +177,19 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
     #dbFiles += ["MDCS-RICH1-26092012"]
 
     # Mirror alignment
-    #dbFiles += ["2012MirrorAlign-09112012"]
+    dbFiles += ["2013MirrorAlign-06022013"]
 
     # HPD image calibration
     #dbFiles += ["2012-RootFiles-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-02102012"]
 
     # HPD occs
     #dbFiles += ["2012-RootFiles-V2-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-02102012"]
+
+    # 2011 alignments and calibrations
+    #dbFiles += ["Tracking_v6.2series_20110425_20111031"]
+    #dbFiles += ["2011-RootFiles-V1-RunAligned-Sobel-Smoothed0.5hours-HPDOcc-12122012"]
+    #dbFiles += ["2011-RootFiles-V1-RunAligned-Sobel-Smoothed1.0hours-HPDAlign-12122012"]
+    #dbFiles += ["2011_MirrAlign-20122012"]
 
     # Only for Calibration jobs only
     if jobType == "RefInCalib" :
@@ -192,8 +198,8 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
 
     # For verification jobs only, use custom DB Slice for n-1 corrections
     if jobType == "RefInVerify" :
-        pass
-        #dbFiles += ["RefInCalib-2012-Repro1-V2_BR-v43r1p1-02102012"]
+        #pass
+        dbFiles += ["RefInCalib-2011-Repro-V1_BR-v43r1p1-12122012"]
 
     # Configure additional DBs
     for dbFile in dbFiles :
@@ -297,7 +303,7 @@ def submitRecoJobs(name,BrunelVer,pickledRunsList,jobType):
                     j.do_auto_resubmit = True
 
                     # Turn off bulk submission
-                    j.splitter.bulksubmit = False
+                    #j.splitter.bulksubmit = False
 
                     # Add to jobtree
                     addToJobTree(j,basejobname)
@@ -327,232 +333,266 @@ def makeAllColumnFits(jobs,rad='Rich1Gas',polarity=''):
             for n in [0,1,2,3,4,5,6,7,8]:
                 refractiveIndexCalib(jobs,rad,polarity,'Rich2-'+panel+'-Col'+str(n))
 
-def refractiveIndexCalib(jobs,rad='Rich1Gas',polarity='',pdCol='') :
+def refractiveIndexCalib(jobs,rads=['Rich1Gas','Rich2Gas'],polarity='',pdCol='') :
 
-    from ROOT import TFile, TGraphErrors, TF1, TH1, TH1F, gROOT
+    from ROOT import TFile, TGraphErrors, TF1, TH1, TH1F, gROOT, gStyle, TText, TLatex
     from Ganga.GPI import Job
     from array import array
     import pickle, bz2
 
     if len(jobs) == 0 : return
 
-    # File name root
-    fileNameRoot = rad+"_"+getJobCaliName(jobs[0])
+    # loop over radiators
+    for rad in rads :
 
-    # Start a PDF file
-    fname = "results/"+fileNameRoot
-    if polarity != '' : fname += "-"+polarity
-    if pdCol    != '' : fname += "-"+pdCol
-    globals()["imageFileName"] = fname+".pdf"
-    printCanvas('[')
+        # File name root
+        fileNameRoot = rad+"_"+getJobCaliName(jobs[0])
 
-    # Dictionary to store the calibration data
-    calibrations = { }
+        # Start a PDF file
+        fname = "results/"+fileNameRoot
+        if polarity != '' : fname += "-"+polarity
+        if pdCol    != '' : fname += "-"+pdCol
+        globals()["imageFileName"] = fname+".pdf"
+        printCanvas('[')
 
-    # Keep tabs on min and max values (for plots)
-    minMaxScale = [999.0,-999.0]
-    if 'Rich1Gas' == rad :
-        minMaxCKRes = (0.0014,0.00185)
-        maxDeltaTheta = 0.00003
-    else:
-        minMaxCKRes = (0.00063,0.00075)
-        maxDeltaTheta = 0.00001
+        # Dictionary to store the calibration data
+        calibrations = { }
 
-    # Raw mean and sigma
-    ckmeans  = { }
-    cksigmas = { }
-    ckraws   = { }
-    ckexpect = { }
-
-    if pdCol == '' :
-        resPlot = 'ckResAll'
-    else:
-        resPlot = 'PDCols/'+pdCol
-
-    # Max/min run range
-    #minMaxRun = [ 0, 99999999 ]
-    minMaxRun = [ 87657, 99999999 ] # Skip first runs of 2011 with bad gas mixtures
-    #minMaxRun = [ 101372, 99999999 ] # Second phase of 2011 RePro
-    #minMaxRun = [ 103936, 99999999 ] # Third phase of 2011 RePro
-
-    # Bad runs to always skip
-    badRuns = [ ]
-    badRuns += [ 89537 ]  # Not sure why
-    badRuns += [ 111730 ] # RICH signals missing for unknown reason
-    
-    # Loop over jobs
-    FailedFits = [ ]
-    print "Looping over the runs ..."
-    for j in jobs :
-
-        # Run Number
-        run = int(getInfoFromJob(j,'Run'))
-        if ( run >= minMaxRun[0] and run <= minMaxRun[1] and
-             run not in badRuns and
-             ( polarity == '' or polarity == getFieldPolarity(run) ) ) :
-
-            # Root file
-            rootfile = getRootFile(j)
-
-            if rootfile :
-            
-                # Fits
-                fitResultRes = fitCKThetaHistogram(rootfile,run,rad,resPlot)
-                fitResultRaw = fitCKThetaHistogram(rootfile,run,rad,'thetaRec',-1)
-                fitResultExp = fitCKExpectedHistogram(rootfile,run,rad)
-
-                if fitResultRes['OK'] and fitResultRaw['OK'] and fitResultExp['OK'] :
-                    scale = nScaleFromShift(fitResultRes,rad)
-                    if scale[0] < minMaxScale[0] : minMaxScale[0] = scale[0]
-                    if scale[0] > minMaxScale[1] : minMaxScale[1] = scale[0]
-                    calibrations[run] = { "ScaleFactor" : scale, "ThetaShift" : fitResultRes['Mean'] }
-                    ckmeans[run]  = fitResultRes['Mean']
-                    cksigmas[run] = fitResultRes['Sigma']
-                    ckraws[run]   = fitResultRaw['Mean']
-                    ckexpect[run] = fitResultExp['Mean']
-                else:
-                    FailedFits += [j.id]
-                    print "WARNING : fits failed for run", run
-                    print "        : CK resolution :", fitResultRes['Message']
-                    print "        : CK theta      :", fitResultRaw['Message']
-                    print "        : CK expected   :", fitResultExp['Message']
-
-                # Close the root file
-                rootfile.Close()
-
+        # Keep tabs on min and max values (for plots)
+        minMaxScale = [999.0,-999.0]
+        if 'Rich1Gas' == rad :
+            minMaxCKRes = (1.4,1.8)
+            maxDeltaTheta = 0.03
         else:
-            print " -> Skipping run", run
+            minMaxCKRes = (0.62,0.72)
+            maxDeltaTheta = 0.01
 
-    # Write out calibrations to a pickled python file
-    calibfilename = fname+".pck.bz2"
-    print "Writting calibrations to", calibfilename
-    file = bz2.BZ2File(calibfilename,"w")
-    pickle.dump(calibrations,file)
-    file.close()
+        # Raw mean and sigma
+        ckmeans  = { }
+        cksigmas = { }
+        ckraws   = { }
+        ckexpect = { }
 
-    # 1D Plot of scale factors
-    scaleHist = TH1F( "scaleFactors", rad+" (n-1) Scale Factors",
-                      100, 0.999*minMaxScale[0], 1.0001*minMaxScale[1] )
-    scaleHist.GetXaxis().SetTitle("(n-1) corrections")
+        if pdCol == '' :
+            resPlot = 'ckResAll'
+        else:
+            resPlot = 'PDCols/'+pdCol
 
-    # 1D Plot of theta shifts
-    dThetaHist = TH1F( "deltaTheta", rad+" <Delta CK Theta>",
-                       100, -1.001*maxDeltaTheta, 1.001*maxDeltaTheta )
-    dThetaHist.GetXaxis().SetTitle("<Delta CK Theta> / mrad")
+        # Max/min run range
+        #minMaxRun = [ 0, 99999999 ]
+        minMaxRun = [ 87657, 99999999 ] # Skip first runs of 2011 with bad gas mixtures
+        #minMaxRun = [ 101372, 99999999 ] # Second phase of 2011 RePro
+        #minMaxRun = [ 103936, 99999999 ] # Third phase of 2011 RePro
 
-    # 1D Plot of Fitted CK resolutions
-    ckResHist = TH1F( "ckRes", rad+" Delta CK Theta Resolution",
-                      100, 0.99*minMaxCKRes[0], 1.001*minMaxCKRes[1] )
-    ckResHist.GetXaxis().SetTitle("Delta CK Theta Resolution / mrad")
+        # Bad runs to always skip
+        badRuns = [ ]
+        badRuns += [ 89537 ]  # Not sure why
+        badRuns += [ 111730 ] # RICH signals missing for unknown reason
 
-    # Open text file for shifts
-    textFileName = fname+".txt"
-    print "Opening text file", textFileName
-    textShifts = open(textFileName,'w')
-    writeLegionsToTextFile(textShifts)
-  
-    # For plots (manually make sure sorted by run)
-    runs      = array('d')
-    runsErr   = array('d')
-    scales    = array('d')
-    scalesErr = array('d')
-    means     = array('d')
-    meansErr  = array('d')
-    sigmas    = array('d')
-    sigmasErr = array('d')
-    ckraw     = array('d')
-    ckrawErr  = array('d')
-    ckexp     = array('d')
-    ckexpErr  = array('d')
-    for run in sorted(calibrations.keys()):
-        scale   = calibrations[run]["ScaleFactor"]
-        ckmean  = ckmeans[run]
-        cksigma = cksigmas[run]
-        raw     = ckraws[run]
-        exp     = ckexpect[run]
-        # Write to text file
-        writeInfoToTextFile(textShifts,run,raw,exp,ckmean,cksigma,scale)
-        # plots
-        runs.append(float(run))
-        runsErr.append(0.0)
-        scales.append(scale[0])
-        scalesErr.append(scale[1])
-        means.append(ckmean[0])
-        meansErr.append(ckmean[1])
-        sigmas.append(cksigma[0])
-        sigmasErr.append(cksigma[1])
-        ckraw.append(raw[0])
-        ckrawErr.append(raw[1])
-        ckexp.append(exp[0])
-        ckexpErr.append(exp[1])
-        # Fill 1D histo(s)
-        scaleHist.Fill(scale[0])
-        ckResHist.Fill(cksigma[0])
-        dThetaHist.Fill(ckmean[0])
+        # Loop over jobs
+        FailedFits = [ ]
+        print "Looping over the runs ..."
+        for j in jobs :
 
-    # Make the plots
-    if len(runs) > 0 :
+            # Run Number
+            run = int(getInfoFromJob(j,'Run'))
+            if ( run >= minMaxRun[0] and run <= minMaxRun[1] and
+                 run not in badRuns and
+                 ( polarity == '' or polarity == getFieldPolarity(run) ) ) :
 
-        linearFit = TF1("AverageFit","pol0",runs[0],runs[len(runs)-1])
-        linearFit.SetParName(0,"Mean")
+                # Root file
+                rootfile = getRootFile(j)
 
-        ckrawTrend = TGraphErrors( len(runs),runs,ckraw,runsErr,ckrawErr )
-        ckrawTrend.SetTitle( rad+" Peak CK Theta by Run" )
-        ckrawTrend.GetXaxis().SetTitle("LHCb Run Number")
-        ckrawTrend.GetYaxis().SetTitle("Peak CK Theta / mrad")
-        ckrawTrend.Draw("ALP")
-        printCanvas()
+                if rootfile :
 
-        ckexpTrend = TGraphErrors( len(runs),runs,ckexp,runsErr,ckexpErr )
-        ckexpTrend.SetTitle( rad+" <Expected CK Theta> by Run" )
-        ckexpTrend.GetXaxis().SetTitle("LHCb Run Number")
-        ckexpTrend.GetYaxis().SetTitle("<Expected CK Theta> / mrad")
-        ckexpTrend.Draw("ALP")
-        printCanvas()
+                    # Fits
+                    fitResultRes = fitCKThetaHistogram(rootfile,run,rad,resPlot)
+                    fitResultRaw = fitCKThetaHistogram(rootfile,run,rad,'thetaRec',-1)
+                    fitResultExp = fitCKExpectedHistogram(rootfile,run,rad)
 
-        meanFitFunc = TF1("CKMean"+rad,"gaus",-maxDeltaTheta,maxDeltaTheta)
-        dThetaHist.Fit(meanFitFunc,"QR")
-        dThetaHist.Draw('E')
-        printCanvas()
+                    if fitResultRes['OK'] and fitResultRaw['OK'] and fitResultExp['OK'] :
+                        scale = nScaleFromShift(fitResultRes,rad)
+                        if scale[0] < minMaxScale[0] : minMaxScale[0] = scale[0]
+                        if scale[0] > minMaxScale[1] : minMaxScale[1] = scale[0]
+                        calibrations[run] = { "ScaleFactor" : scale, "ThetaShift" : fitResultRes['Mean'] }
+                        ckmeans[run]  = fitResultRes['Mean']
+                        cksigmas[run] = fitResultRes['Sigma']
+                        ckraws[run]   = fitResultRaw['Mean']
+                        ckexpect[run] = fitResultExp['Mean']
+                    else:
+                        FailedFits += [j.id]
+                        print "WARNING : fits failed for run", run
+                        print "        : CK resolution :", fitResultRes['Message']
+                        print "        : CK theta      :", fitResultRaw['Message']
+                        print "        : CK expected   :", fitResultExp['Message']
+
+                    # Close the root file
+                    rootfile.Close()
+
+            else:
+                print " -> Skipping run", run
+
+        # Write out calibrations to a pickled python file
+        calibfilename = fname+".pck.bz2"
+        print "Writting calibrations to", calibfilename
+        file = bz2.BZ2File(calibfilename,"w")
+        pickle.dump(calibrations,file)
+        file.close()
+
+        nBins = 100
+
+        # 1D Plot of scale factors
+        scaleHist = TH1F( "scaleFactors", rad+" (n-1) Scale Factors",
+                          nBins, 0.999*minMaxScale[0], 1.0001*minMaxScale[1] )
+        scaleHist.GetXaxis().SetTitle("(n-1) corrections")
+        scaleHist.GetXaxis().SetTitleOffset(1.5)
+        scaleHist.GetYaxis().SetTitle("Entries")
+
+        # 1D Plot of theta shifts
+        dThetaHist = TH1F( "deltaTheta", rad+" <Delta CK Theta>",
+                           nBins, -1.001*maxDeltaTheta, 1.001*maxDeltaTheta )
+        dThetaHist.GetXaxis().SetTitle("<Delta CK Theta> / mrad")
+        dThetaHist.GetXaxis().SetTitleOffset(1.5)
+        binSize = (2*maxDeltaTheta)/nBins
+        dThetaHist.GetYaxis().SetTitle("Entries / ( "+str(binSize) + " mrad )")
+
+        # 1D Plot of Fitted CK resolutions
+        ckResHist = TH1F( "ckRes", rad+" Delta CK Theta Resolution",
+                          nBins, minMaxCKRes[0], minMaxCKRes[1] )
+        ckResHist.SetTitle( " " )
+        ckResHist.GetXaxis().SetTitle(rad+" Cherenkov Theta Resolution / mrad")
+        ckResHist.GetXaxis().SetTitleOffset(1.5)
+        binSize = (minMaxCKRes[1]-minMaxCKRes[0])/nBins
+        ckResHist.GetYaxis().SetTitle("Entries / ( "+str(binSize) + " mrad )")
+        ckResHist.SetStats(0)
+
+        # Open text file for shifts
+        textFileName = fname+".txt"
+        print "Opening text file", textFileName
+        textShifts = open(textFileName,'w')
+        writeLegionsToTextFile(textShifts)
+
+        # TText object
+        text = TLatex()
+        text.SetNDC()
+        text.SetTextSize(0.03)
+
+        # For plots (manually make sure sorted by run)
+        runs      = array('d')
+        runsErr   = array('d')
+        scales    = array('d')
+        scalesErr = array('d')
+        means     = array('d')
+        meansErr  = array('d')
+        sigmas    = array('d')
+        sigmasErr = array('d')
+        ckraw     = array('d')
+        ckrawErr  = array('d')
+        ckexp     = array('d')
+        ckexpErr  = array('d')
+        for run in sorted(calibrations.keys()):
+            scale   = calibrations[run]["ScaleFactor"]
+            ckmean  = ckmeans[run]
+            cksigma = cksigmas[run]
+            raw     = ckraws[run]
+            exp     = ckexpect[run]
+            # Write to text file
+            writeInfoToTextFile(textShifts,run,raw,exp,ckmean,cksigma,scale)
+            # plots
+            runs.append(float(run))
+            runsErr.append(0.0)
+            scales.append(scale[0])
+            scalesErr.append(scale[1])
+            means.append(1000*ckmean[0])
+            meansErr.append(1000*ckmean[1])
+            sigmas.append(1000*cksigma[0])
+            sigmasErr.append(1000*cksigma[1])
+            ckraw.append(raw[0])
+            ckrawErr.append(raw[1])
+            ckexp.append(exp[0])
+            ckexpErr.append(exp[1])
+            # Fill 1D histo(s)
+            scaleHist.Fill(scale[0])
+            ckResHist.Fill(1000*cksigma[0])
+            dThetaHist.Fill(1000*ckmean[0])
+
+        # Make the plots
+        if len(runs) > 0 :
+
+            linearFit = TF1("AverageFit","pol0",runs[0],runs[len(runs)-1])
+            linearFit.SetParName(0,"Mean")
+
+            ckrawTrend = TGraphErrors( len(runs),runs,ckraw,runsErr,ckrawErr )
+            ckrawTrend.SetTitle( rad+" Peak CK Theta by Run" )
+            ckrawTrend.GetXaxis().SetTitle("LHCb Run Number")
+            ckrawTrend.GetYaxis().SetTitle("Peak CK Theta / mrad")
+            ckrawTrend.Draw("ALP")
+            printCanvas()
+
+            ckexpTrend = TGraphErrors( len(runs),runs,ckexp,runsErr,ckexpErr )
+            ckexpTrend.SetTitle( rad+" <Expected CK Theta> by Run" )
+            ckexpTrend.GetXaxis().SetTitle("LHCb Run Number")
+            ckexpTrend.GetYaxis().SetTitle("<Expected CK Theta> / mrad")
+            ckexpTrend.Draw("ALP")
+            printCanvas()
+
+            meanFitFunc = TF1("CKMean"+rad,"gaus",-maxDeltaTheta,maxDeltaTheta)
+            dThetaHist.Fit(meanFitFunc,"QR")
+            dThetaHist.Draw('E')
+            printCanvas()
+
+            meanTrend = TGraphErrors( len(runs),runs,means,runsErr,meansErr )
+            meanTrend.SetTitle( rad+" <Delta CK Theta> by Run" )
+            meanTrend.GetXaxis().SetTitle("LHCb Run Number")
+            meanTrend.GetYaxis().SetTitle("<Delta CK Theta> / mrad")
+            meanTrend.Draw("ALP")
+            printCanvas()
             
-        meanTrend = TGraphErrors( len(runs),runs,means,runsErr,meansErr )
-        meanTrend.SetTitle( rad+" <Delta CK Theta> by Run" )
-        meanTrend.GetXaxis().SetTitle("LHCb Run Number")
-        meanTrend.GetYaxis().SetTitle("<Delta CK Theta> / mrad")
-        meanTrend.Draw("ALP")
-        printCanvas()
+            ckFitFunc = TF1("CKRes"+rad,"gaus",minMaxCKRes[0],minMaxCKRes[1])
+            ckResHist.Fit(ckFitFunc,"QR")
+            ckResHist.Draw('E')
+            printCanvas()
 
-        ckFitFunc = TF1("CKRes"+rad,"gaus",minMaxCKRes[0],minMaxCKRes[1])
-        ckResHist.Fit(ckFitFunc,"QR")
-        ckResHist.Draw('E')
-        printCanvas()
+            # Turn off fit stats box
+            gStyle.SetOptFit(0)
 
-        sigmaTrend = TGraphErrors( len(runs),runs,sigmas,runsErr,sigmasErr )
-        sigmaTrend.SetTitle( rad+" Delta CK Theta Resolution by Run" )
-        sigmaTrend.GetXaxis().SetTitle("LHCb Run Number")
-        sigmaTrend.GetYaxis().SetTitle("Delta CK Theta Resolution / mrad")
-        sigmaTrend.Fit(linearFit,"QRS")
-        sigmaTrend.Draw("ALP")
-        printCanvas()
+            sigmaTrend = TGraphErrors( len(runs),runs,sigmas,runsErr,sigmasErr )
+            #sigmaTrend.SetTitle( rad+" Cherenkov Theta Resolution by Run" )
+            sigmaTrend.SetTitle( " " )
+            sigmaTrend.GetXaxis().SetTitle("LHCb Run Number")
+            sigmaTrend.GetXaxis().SetTitleOffset(1.5)
+            sigmaTrend.GetYaxis().SetTitle(rad+" Cherenkov Theta Resolution / mrad")
+            sigmaTrend.GetYaxis().SetTitleOffset(1.5)
+            fitRes = sigmaTrend.Fit(linearFit,"MQRS")
+            sigmaTrend.Draw("AP")
+            text.DrawLatex( 0.44, 0.82, "#LT#sigma_{#Delta#theta}#GT = " +
+                            str("%0.3f"%fitRes.Value(0)) +
+                            #" +- " + str("%0.3f"%fitRes.ParError(0)) +
+                            " mrad" )
+            if rad == "Rich1Gas" :
+                text.DrawText( 0.15, 0.85, "a)" )
+            else:
+                text.DrawText( 0.15, 0.85, "b)" )
+            printCanvas()
 
-        fitFunc = TF1("Scale"+rad,"gaus",minMaxScale[0],minMaxScale[1])
-        scaleHist.Fit(fitFunc,"QR")
-        scaleHist.Draw('E')
-        printCanvas()
+            fitFunc = TF1("Scale"+rad,"gaus",minMaxScale[0],minMaxScale[1])
+            scaleHist.Fit(fitFunc,"QR")
+            scaleHist.Draw('E')
+            printCanvas()
 
-        scaleTrend = TGraphErrors( len(runs),runs,scales,runsErr,scalesErr )
-        scaleTrend.SetTitle( rad+" (n-1) corrections by Run" )
-        scaleTrend.GetXaxis().SetTitle("LHCb Run Number")
-        scaleTrend.GetYaxis().SetTitle("(n-1) Scale Factor")
-        #scaleTrend.Fit(linearFit,"QRS")
-        scaleTrend.Draw("ALP")
-        printCanvas()
-       
-    # Close PDF file
-    printCanvas(']')
+            scaleTrend = TGraphErrors( len(runs),runs,scales,runsErr,scalesErr )
+            scaleTrend.SetTitle( rad+" (n-1) corrections by Run" )
+            scaleTrend.GetXaxis().SetTitle("LHCb Run Number")
+            scaleTrend.GetYaxis().SetTitle("(n-1) Scale Factor")
+            scaleTrend.Fit(linearFit,"QRS")
+            scaleTrend.Draw("ALP")
+            printCanvas()
 
-    if len(FailedFits) > 0 :
-        print "WARNING :", len(FailedFits), "histogram fits failed. Job IDs = ", FailedFits
+        # Close PDF file
+        printCanvas(']')
+
+        if len(FailedFits) > 0 :
+            print "WARNING :", len(FailedFits), "histogram fits failed. Job IDs = ", FailedFits
 
 def writeLegionsToTextFile(file):
     text = "Run Fill Description StartDate StartTime StopDate StopTime CKRaw CKRawErr CKExp CKExpErr CKMean CKMeanErr CKSigma CKSigmaErr ScaleFactor ScaleFactorErr"
@@ -914,15 +954,15 @@ def getListOfJobs(tag,name,BrunelVer,statuscodes,MinRun=0,MaxRun=99999999,desc="
     for d in sorted(dict.keys()) : cJobs += [dict[d]]
     return cJobs
 
-def getCalibrationJobList(name="",BrunelVer="v43r1p1",statuscodes=['completed'],
+def getCalibrationJobList(name="",BrunelVer="v43r2p2",statuscodes=['completed'],
                           MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInCalib',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getVerificationJobList(name="",BrunelVer="v43r1p1",statuscodes=['completed'],
+def getVerificationJobList(name="",BrunelVer="v43r2p2",statuscodes=['completed'],
                            MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInVerify',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
-def getControlJobList(name="",BrunelVer="v43r1p1",statuscodes=['completed'],
+def getControlJobList(name="",BrunelVer="v43r2p2",statuscodes=['completed'],
                       MinRun=0,MaxRun=99999999,desc=""):
     return getListOfJobs('RefInControl',name,BrunelVer,statuscodes,MinRun,MaxRun,desc)
 
@@ -1016,11 +1056,6 @@ def printCanvas(tag=''):
         print "Opening file", imageFileName
     if tag != "[" and tag != "]" : canvas.Update()
     canvas.Print(imageFileName+tag,imageType)
-    # ROOT built in PDFs look crappy. Better to make PS and convert with ps2pdf ...
-    if tag == ']' and imageType == 'ps' :
-        print "Converting", imageFileName, "to PDF"
-        os.system('ps2pdf '+imageFileName)
-        os.remove(imageFileName)
 
 def fitCKExpectedHistogram(rootfile,run,rad='Rich1Gas'):
 
@@ -1103,7 +1138,7 @@ def fitCKForFile(filename,plot='ckResAll',outfile="CKFit.pdf"):
 def checkCKThetaStats(hist,minEntries=5000):
     return hist.GetEntries() >= minEntries
         
-def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=3):
+def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=4):
 
     from ROOT import TH1F, TF1, TH1, TText, gROOT
 
@@ -1190,7 +1225,7 @@ def fitCKThetaHistogram(rootfile,run,rad='Rich1Gas',plot='ckResAll',nPolFull=3):
                         if nPol > 1 : nParamsToSet = 3+nPol
                         for p in xrange(0,nParamsToSet) :
                             fFitF.SetParameter(p,lastFitF.GetParameter(p))
-                        hist.Fit(fFitF,"QRSE0")
+                        hist.Fit(fFitF,"MQRSE0")
                         lastFitF = fFitF
                         # Fit OK ?
                         maxErrorForOK = 1e-3
@@ -1425,7 +1460,7 @@ def filesPerJob(nFiles):
     if nFiles < 100 : return 6
     return 10
 
-def removeCalibrationDataSet(name,BrunelVer="v43r1p1"):
+def removeCalibrationDataSet(name,BrunelVer="v43r2p2"):
     from Ganga.GPI import jobtree
     js = getCalibrationJobList(name,BrunelVer,
                                statuscodes=['completed','running','submitted','failed'])
@@ -1434,7 +1469,7 @@ def removeCalibrationDataSet(name,BrunelVer="v43r1p1"):
     if jobtree.exists(path) : jobtree.rm(path)
     jobtree.cd('/RichCalibration')
 
-def removeVerificationDataSet(name,BrunelVer="v43r1p1"):
+def removeVerificationDataSet(name,BrunelVer="v43r2p2"):
     from Ganga.GPI import jobtree
     js = getVerificationJobList(name,BrunelVer,
                                 statuscodes=['completed','running','submitted','failed'])

@@ -37,7 +37,9 @@ elif 2010 == year :
 elif 2011 == year :
   ConfigV = ['Collision11','Collision11_25']
 elif 2012 == year :
-  ConfigV = ['Collision12','Protonion12']
+  ConfigV = ['Collision12','Protonion12','Collision12hl','Collision12_25']
+elif 2013 == year :
+  ConfigV = ['Collision13','Protonion13','Ionproton13','Ionsmog']
 else:
   print 'Unknown year', year
   DIRAC.exit(2)
@@ -91,6 +93,8 @@ else:
         if config == 'Collision11_25' : # No express for 2011 25ns tests
           type = 90000000 # FULL Stream
         if config == 'Protonion12' : # (Currently) no express stream for pA data
+          type = 90000000 # FULL Stream
+        if config == 'Protonion13' or config == 'Ionproton13' :
           type = 90000000 # FULL Stream
 
         typeS = "EXPRESS"
