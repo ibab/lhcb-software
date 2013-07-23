@@ -6,7 +6,7 @@
 
 ! 2013-07-23 - Chris Jones
  - DumpRichHitsToTextFileAlg.cpp + DumpRichTracksToTextFileAlg.cpp
-  + Update ostream opening options to ovewrite existing files
+  + Update ofstream opening options to ovewrite existing files
 
 !========================= RichRecMCAlgorithms v1r4 2012-11-28 =========================
 ! 2012-11-22 - Marco Clemencic
