@@ -84,7 +84,7 @@ DumpRichHitsToTextFileAlg::dumpToTextfile( const Rich::DetectorType rich,
 
   // open file
   info() << "Creating data text file : " << filename.str() << endmsg;
-  std::ofstream file(filename.str().c_str(),std::ios::app);
+  std::ofstream file( filename.str().c_str(), std::ios_base::out | std::ios_base::trunc );
 
   // Iterate over pixels
   const IPixelCreator::PixelRange range = pixelCreator()->range( rich, panel );

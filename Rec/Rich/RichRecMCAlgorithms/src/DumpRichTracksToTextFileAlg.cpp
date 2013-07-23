@@ -51,7 +51,7 @@ StatusCode DumpRichTracksToTextFileAlg::initialize()
   // text file
   const std::string fileName = "RichTracks.txt";
   info() << "Creating data text file : " << fileName << endmsg;
-  m_textFile = new std::ofstream(fileName.c_str(),std::ios::app);
+  m_textFile = new std::ofstream( fileName.c_str(), std::ios_base::out | std::ios_base::trunc );
 
   return sc;
 }
