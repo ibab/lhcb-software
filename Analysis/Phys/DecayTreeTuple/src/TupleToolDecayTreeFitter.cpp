@@ -93,6 +93,12 @@ StatusCode TupleToolDecayTreeFitter::initialize()
     if ( "TupleToolDecayTreeFitter" == m_extraName )  m_extraName = ""; // user has not chanegd instance name
     info() << "All fields will be prepended with ``" << m_extraName << "''" <<endmsg;
   }
+  
+  if ( m_extraName.empty() )
+  {
+    return Error( "Extraname is empty. Always give an instance name "
+                  "to TupleToolDecayTreeFitter! See doxygen." );
+  }
 
   if ( !m_map.empty() )
   {
@@ -105,9 +111,9 @@ StatusCode TupleToolDecayTreeFitter::initialize()
 
 StatusCode TupleToolDecayTreeFitter::finalize()
 {
-  if( !m_stateprovider.empty() )
-    m_stateprovider.release().ignore() ;
-  return TupleToolBase::finalize() ;
+  StatusCode sc = StatusCode::SUCCESS;
+  if ( !m_stateprovider.empty() ) { sc = m_stateprovider.release(); }
+  return TupleToolBase::finalize() && sc ;
 }
 
 //=============================================================================
@@ -126,13 +132,8 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
   const std::string prefix=fullName(head);
   if (msgLevel(MSG::DEBUG)) debug() << "head ''" << head << "'' prefix ''" << prefix 
                                     << "'' extraname ''" << m_extraName << "''" <<endmsg;
-  if (m_extraName.empty()){
-    err() << "Extraname is empty. Always give an instance name to TupleToolDecayTreeFitter! See doxygen." << endmsg ;
-    // return StatusCode::FAILURE is not enough.
-    Exception("Extraname is empty. Always give an instance name to TupleToolDecayTreeFitter! See doxygen.");
-  }
   
-  const ITrackStateProvider* stateprovider = m_stateprovider.empty() ? 0 : &(*m_stateprovider) ;
+  const ITrackStateProvider* stateprovider = ( m_stateprovider.empty() ? NULL : &(*m_stateprovider) );
 
   TupleMap tMap ; // the temporary data map
 

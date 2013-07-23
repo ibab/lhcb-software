@@ -4,6 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2013-07-23 - Chris Jones
+ - Update previous commit to check once during initialize() instead of 
+   during every call to fill(...).
+
 ! 2013-07-10 - Patrick Koppenburg
  - TupleToolDecayTreeFitter: Bug #102007 : always require an instance name.
 
