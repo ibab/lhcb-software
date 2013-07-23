@@ -4,6 +4,11 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-07-23 - Rob Lambert
+ - First full implementation of drop-in replacement for DecodeRawEvent.py
+ - Requires manipulators module of GaudiConf, and latest DAQ/RawEventCompat.
+ - Test suite added which demonstrates the key behaviours.
+
 !========================= DAQSys v7r0 2013-06-03 =========================
 ! 2013-05-24 - Marco Cattaneo
  - Add dependency on L0Calo, L0DU. L0Muon. RichDAQ, STDAQ, VeloDAQ

@@ -1,7 +1,7 @@
 package DAQSys
 version           v7r0
 
-branches doc cmt
+branches doc cmt python tests
 
 # LHCb DAQ buffer libraries
 
@@ -14,4 +14,22 @@ use OTDAQ       v*  OT
 use RichDAQ     v*  Rich
 use SiDAQ       v*  Si
 use STDAQ       v*  ST
+use FTDAQ       v*  FT
 use VeloDAQ     v*  Velo
+use VLDAQ       v*  VL
+use VPDAQ       v*  VP
+use LHCbAlgs    v*  Kernel
+
+use GaudiConf   v*
+
+use RawEventCompat v* DAQ
+use RawEventFormat v*
+
+apply_pattern install_python_modules
+apply_pattern QMTest
+
+#at least GaudiConf for IOHelper and LHCbApp
+private
+  macro PRConfig_use "" QMTest "PRConfig v* -no_auto_imports"
+  use $(PRConfig_use)
+end_private
