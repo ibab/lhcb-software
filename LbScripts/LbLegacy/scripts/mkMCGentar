@@ -218,6 +218,7 @@ def get_MCGen_tar_name(root,gen,native,bin):
     # Looking for the file...
     tmpname = gen+'-'+native+'-'+bin+'.tgz'
     tmpfullfilename = os.path.join(rootdef, tmpname)
+    print ' get_MCGen_tar_name Expected filename:  %s'% tmpfullfilename
     if os.path.exists(tmpfullfilename):
         print ' get_MCGen_tar_name Found %s'% tmpfullfilename
         name = tmpname
@@ -375,7 +376,8 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version, 
                     #
 
                     extra_pdfs = [ '/share/lhapdf/PDFsets/CT09MCS.LHgrid', '/share/lhapdf/PDFsets/CT10nlo.LHgrid',
-                                  '/share/lhapdf/PDFsets/MSTW2008lo68cl.LHgrid', '/share/lhapdf/PDFsets/MSTW2008nlo68cl.LHgrid']
+                                  '/share/lhapdf/PDFsets/MSTW2008lo68cl.LHgrid', '/share/lhapdf/PDFsets/MSTW2008nlo68cl.LHgrid',
+                                  '/share/lhapdf/PDFsets/cteq6m.LHpdf']
                     for p in extra_pdfs:
                         cmd = 'tar --extract --ungzip --file '+fullfile+' '+key_value + p
                         if debug_flag == 1:
