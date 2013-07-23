@@ -15,7 +15,8 @@
 // namespaces
 using namespace Rich::Rec::GlobalPID;
 
-namespace { // Parameters
+namespace 
+{ // Parameters
   const double limitA = 0.001;
   const double limitB = 0.01;
   const double limitC = 0.1;

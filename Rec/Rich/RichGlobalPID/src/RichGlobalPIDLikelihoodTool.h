@@ -164,7 +164,7 @@ namespace Rich
                                    const Rich::ParticleIDType newHypo ) const;
 
         /// Implementation of log( e^x -1 )
-        inline double logExp( const double x ) const;
+        double logExp( const double x ) const;
 
         /// Returns log( exp(x) - 1 ) or an approximation for small signals
         inline double sigFunc( const double x ) const
