@@ -6,9 +6,8 @@
 
 !========================= FTDet v2r1 2013-07-23 =========================
 ! 2013-12-23 - Diego Milanes
--Changes odd behavior on getting local coordinates on the layer construccion from a FibreMat
+-Changes odd behaviour on getting local coordinates on the layer construction from a FibreMat
 
-!========================= FTDet v2r1 2013-07-20 =========================
 ! 2012-12-20 - Diego Milanes
 -Changes in main classes to cope with errors at the level reconstruction, associated to th new geometry. 
 
