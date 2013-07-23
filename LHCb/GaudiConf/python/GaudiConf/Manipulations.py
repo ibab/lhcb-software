@@ -21,8 +21,8 @@ def fullNameConfigurables():
     """
     import Gaudi.Configuration as GaudiConfigurables
     retdict={}
-    for key in GaudiConfigurables.allConfigurables:
-        retdict[GaudiConfigurables.allConfigurables[key].getFullName()]=GaudiConfigurables.allConfigurables[key]
+    for key,con in GaudiConfigurables.allConfigurables.iteritems():
+        retdict[con.getFullName()]=con
     return retdict
     
 def nameFromConfigurable(conf):
@@ -34,6 +34,38 @@ def nameFromConfigurable(conf):
     elif hasattr(conf, "getFullName"):
         return conf.getFullName()
     return None
+
+def configurableClassFromString(config):
+    '''Get a configurable class given only the string'''
+    import Gaudi.Configuration as GaudiConfigurables
+    #Since I didn't find it, I need to create it:
+    config=config.replace('::','__')
+    wclass=None
+
+    if hasattr(GaudiConfigurables, config.split('/')[0]):
+        wclass = getattr(GaudiConfigurables,config.split('/')[0])
+    else:
+        import Configurables
+        wclass = getattr(Configurables,config.split('/')[0])
+        #otherwise it must be a configurable
+    
+    return wclass
+
+def addPrivateToolFromString(amother,atool):
+    '''
+    Add a private tool correctly and return it, given a tool as "Type/InstanceName"
+    If it already exists and is of the correct type, great.
+    '''
+    if type(amother) is str:
+        amother=configurableInstanceFromString(amother)
+    toolClass=configurableClassFromString(atool)
+    toolName=atool.split("/")[-1]
+    if hasattr(amother,toolName):
+        if getattr(amother,toolName).getType()==toolClass.getType():
+            return getattr(amother,toolName)
+        raise TypeError("This configurable already has a private tool with that name, but of a different type! " + amother.getFullName() + " Expected: " + toolClass.getType() + " got " + getattr(amother,toolName).getType())
+    amother.addTool(toolClass,name=toolName)
+    return getattr(amother,toolName)
 
 def configurableInstanceFromString(config):
     '''Get a configurable instance given only the string
@@ -62,15 +94,8 @@ def configurableInstanceFromString(config):
         return GaudiConfigurables.allConfigurables[config]
     
     #Since I didn't find it, I need to create it:
-    wclass=None
-
-    if hasattr(GaudiConfigurables, config.split('/')[0]):
-        wclass = getattr(GaudiConfigurables,config.split('/')[0])
-    else:
-        import Configurables
-        wclass = getattr(Configurables,config.split('/')[0])
-        #otherwise it must be a configurable
-        
+    wclass=configurableClassFromString(config)
+    
     #check if it has an instance name
     if '/' not in config:
         return wclass()
