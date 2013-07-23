@@ -359,7 +359,7 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
     
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug()<<" TaggerMuon: "<<sign*imuon->charge()<<" omega="<<1-pn;
+      debug()<<" TaggerMuon: "<<sign*imuon->charge()<<" omega="<<1-pn<<" ";
       for(unsigned int iloop=0; iloop<inputVals.size(); iloop++){
         debug() << inputVals[iloop]<<" ";
       }

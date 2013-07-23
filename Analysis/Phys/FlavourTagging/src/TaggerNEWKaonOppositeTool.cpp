@@ -276,6 +276,15 @@ Tagger TaggerNEWKaonOppositeTool::tagReco12( const Particle* AXB0,
 
     m_nn_1 = mymc_reader->GetMvaValue(values);
 
+    if ( msgLevel(MSG::DEBUG)) {      
+      debug()<<" TaggerNNetOSK NN1="<<m_nn_1<<" NNinputs:";
+      for(unsigned int i=0; i<values.size(); ++i) debug() << values.at(i)<<" ";      
+      debug()<<endmsg;
+    }
+    
+
+
+
     if(m_nn_1 < m_NN1_cut_kaon) continue;
 
     const myPair pair = std::make_pair(m_nn_1, count); // sort tracks by NN1 output, highest first
@@ -357,7 +366,13 @@ Tagger TaggerNEWKaonOppositeTool::tagReco12( const Particle* AXB0,
 
     m_nn_2 = mydata_reader->GetMvaValue(values);
 
-	m_nn_2_flip = mydata_reader->GetMvaValue(values_2);
+    m_nn_2_flip = mydata_reader->GetMvaValue(values_2);
+
+    if ( msgLevel(MSG::DEBUG) ) {      
+      debug()<<" TaggerNNetOSK NN2="<<m_nn_2<<" & "<<m_nn_2_flip<<" NNinputs:";
+      for(unsigned int i=0; i<values_2.size(); ++i) debug() << values_2.at(i)<<" ";      
+      debug()<<endmsg;
+    }
 
 	// Interpret the conditional probability right:
 	// important and significant, if sample split in B or anti-B categories
@@ -524,6 +539,12 @@ Tagger TaggerNEWKaonOppositeTool::tagReco14( const Particle* AXB0,
 
     m_nn_1 = mymc_reader_reco14->GetMvaValue(values);
 
+    if ( msgLevel(MSG::DEBUG)) {      
+      debug()<<" TaggerNNetOSK NN1="<<m_nn_1<<" NNinputs:";
+      for(unsigned int i=0; i<values.size(); ++i) debug() << values.at(i)<<" ";      
+      debug()<<endmsg;
+    }
+
     if(m_nn_1 < m_NN1_cut_kaon) continue;
 
     const myPair pair = std::make_pair(m_nn_1, count); // sort tracks by NN1 output, highest first
@@ -603,8 +624,15 @@ Tagger TaggerNEWKaonOppositeTool::tagReco14( const Particle* AXB0,
     values_2.push_back(cands_nn_2                                   );
 
     m_nn_2 = mydata_reader_reco14->GetMvaValue(values);
+    
+    m_nn_2_flip = mydata_reader_reco14->GetMvaValue(values_2);
 
-	m_nn_2_flip = mydata_reader_reco14->GetMvaValue(values_2);
+    if ( msgLevel(MSG::DEBUG) ) {      
+      debug()<<" TaggerNNetOSK NN2="<<m_nn_2<<" & "<<m_nn_2_flip<<" NNinputs:";
+      for(unsigned int i=0; i<values_2.size(); ++i) debug() << values_2.at(i)<<" ";      
+      debug()<<endmsg;
+    }
+
 
 	// Interpret the conditional probability right:
 	// important and significant, if sample split in B or anti-B categories

@@ -153,6 +153,8 @@ Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
     const int type =(*ipart)->proto()->track()->type();
     if( type != 3 )   continue;
 
+    // in future should be changed: use TaggingHelpers:dphi BUT FOR NOW NOT: 
+    //need to check the sign and the NNEt is stable
     double diff_phi  = fabs((*ipart)->momentum().Phi() - AXB0->momentum().Phi());
     if(diff_phi>3.1416) diff_phi=6.2832-diff_phi;
     if(diff_phi>=1.5) continue; 
@@ -225,6 +227,12 @@ Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
     values.push_back(log(lcs)        );
 
     m_nn_1 = mynn1_reader->GetMvaValue(values);
+
+    if ( msgLevel(MSG::DEBUG)) {      
+      debug()<<" TaggerNNetSSK NN1="<<m_nn_1<<" NNinputs:";
+      for(unsigned int i=0; i<values.size(); ++i) debug() << values.at(i)<<" ";      
+      debug()<<endreq;
+    }
     
     //if(ippu < m_ipPU_cut_kaon)  continue;
 
@@ -318,6 +326,12 @@ Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
 
     double nn_2 =  mynn2_reader->GetMvaValue(values);
     double nn_2cc =  mynn2_reader->GetMvaValue(valuescc);
+
+    if ( msgLevel(MSG::DEBUG)) {      
+      debug()<<" TaggerNNetSSK NN2="<<nn_2<<" & "<<nn_2cc<<" NNinputs:";
+      for(unsigned int i=0; i<valuescc.size(); ++i) debug() << valuescc.at(i)<<" ";      
+      debug()<<endreq;
+    }
 
     m_nn_2 = (nn_2 + (1. - nn_2cc))* 0.5;
 

@@ -12,16 +12,9 @@ __version__ = '$Revision: 1.0 $'
 from Gaudi.Configuration import *
 
 tunings = {
-    #use cuts optimized and calibrated with Strip17 (2011 data 1fb-1)
+    #use cuts optimized and calibrated with Strip20 (2012 data 2fb-1)
     'Reco14_2012' : { 
-        "Personality": "'Reco14'",
-        "TaggerMuonTool.Personality" : "'Reco14'",        
-        "TaggerElectronTool.Personality" : "'Reco14'",        
-        "TaggerKaonOppositeTool.Personality" : "'Reco14'",        
-        "TaggerNEWKaonOppositeTool.Personality": "'Reco14'",
-        "TaggerVertexChargeTool.Personality" : "'Reco14'",        
-        "SVertexOneSeedTool.Personality" : "'Reco14'",        
-        "TaggingUtils.Personality" : "'Reco14'",        
+        "Personality": "'Reco14'",  # it is then propagated to all other tools
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
 
@@ -132,15 +125,15 @@ tunings = {
         "TaggerKaonSameTool.KaonSame_P0_Cal"   : 0.350,
         "TaggerKaonSameTool.KaonSame_P1_Cal"   : 0.51,
         "TaggerKaonSameTool.KaonSame_Eta_Cal"  : 0.324,
-
+        # Same tuning as Reco12_2011, different calibration 
         "TaggerNEWKaonSameTool.Kaon_PIDk_cut"   :    0.75,
         "TaggerNEWKaonSameTool.Kaon_PIDkp_cut"  :   -8.5,
-        "TaggerNEWKaonSameTool.Kaon_ghost_cut"  :    0.3,
+        "TaggerNEWKaonSameTool.Kaon_ghost_cut"  :    1000,
         "TaggerNEWKaonSameTool.Kaon_distPhi_cut":    0.75,
-        "TaggerNEWKaonSameTool.Kaon_NN1_cut"    :    0.7,
-        "TaggerNEWKaonSameTool.Kaon_P0_Cal"     :    0.4060,
-        "TaggerNEWKaonSameTool.Kaon_P1_Cal"     :    0.88,
-        "TaggerNEWKaonSameTool.Kaon_AverageOmega":   0.4302,
+        "TaggerNEWKaonSameTool.Kaon_NN1_cut"    :    0.65,
+        "TaggerNEWKaonSameTool.Kaon_P0_Cal"     :    0.436,
+        "TaggerNEWKaonSameTool.Kaon_P1_Cal"     :    0.900,
+        "TaggerNEWKaonSameTool.Kaon_AverageOmega":   0.430,
         
 
         "TaggerPionSameTool.PionSame_Pt_cut"  : 600,
@@ -165,12 +158,12 @@ tunings = {
         "TaggerPionSameTool.PionSame_P2_Cal" : -1.99,
         "TaggerPionSameTool.PionSame_Eta_Cal" : 0.3908,
 
-        "SVertexOneSeedTool.MinSeedProbability" : 0.42,
-        "SVertexOneSeedTool.MinSeedPtmin"       : 0.1,
-        "SVertexOneSeedTool.MinSeedIPSmin"      : 2.5,
-        "SVertexOneSeedTool.MinSeedDphimin"     : 0.,
-        #"SVertexOneSeedTool.MinSeedDphimax"     : 5,
-        "SVertexOneSeedTool.ghostProb_cut"      : 0.37,  # new
+        "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedProbability" : 0.42,
+        "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedPtmin"       : 0.1,
+        "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedIPSmin"      : 2.5,
+        "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedDphimin"     : 0.,
+        #"TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedDphimax"     : 5,
+        "TaggerVertexChargeTool.SVertexOneSeedTool.ghostProb_cut"      : 0.37,  # new
         "TaggerVertexChargeTool.Vtx_PowerK"     : 0.55,
         "TaggerVertexChargeTool.Vtx_MinimumVCharge" : 0.2,
         "TaggerVertexChargeTool.Vtx_Ptsum"      : 2.2,
@@ -220,14 +213,7 @@ tunings = {
 
     #use cuts optimized and calibrated with Strip17 (2011 data 1fb-1)
     'Reco12_2011' : {
-        "Personality": "'Reco12'",
-        "TaggerMuonTool.Personality" : "'Reco12'",        
-        "TaggerElectronTool.Personality" : "'Reco12'",        
-        "TaggerKaonOppositeTool.Personality" : "'Reco12'",        
-        "TaggerNEWKaonOppositeTool.Personality": "'Reco12'",
-        "TaggerVertexChargeTool.Personality" : "'Reco12'",        
-        "SVertexOneSeedTool.Personality" : "'Reco12'",        
-        "TaggingUtils.Personality" : "'Reco12'",        
+        "Personality": "'Reco12'",  # it is then propagated to all other tools
         "IPPU_cut" : 3.0,
         "distphi_cut" : 0.005,
         #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
@@ -369,11 +355,11 @@ tunings = {
         "TaggerPionSameTool.PionSame_P2_Cal" : -1.99,
         "TaggerPionSameTool.PionSame_Eta_Cal" : 0.3908,  
 
-        "SVertexOneSeedTool.MinSeedProbability" : 0.42,
-        "SVertexOneSeedTool.MinSeedPtmin"       : 0.1,
-        "SVertexOneSeedTool.MinSeedIPSmin"      : 2.5,
-        "SVertexOneSeedTool.MinSeedDphimin"     : 0.,
-        "SVertexOneSeedTool.ghostProb_cut"      : 2.,  # no cut
+        "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedProbability" : 0.42,
+        "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedPtmin"       : 0.1,
+        "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedIPSmin"      : 2.5,
+        "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedDphimin"     : 0.,
+        "TaggerVertexChargeTool.SVertexOneSeedTool.ghostProb_cut"      : 2.,  # no cut
         "TaggerVertexChargeTool.Vtx_PowerK" : 0.55,
         "TaggerVertexChargeTool.Vtx_MinimumVCharge" : 0.2,
         "TaggerVertexChargeTool.Vtx_Ptsum" : 1.55,
@@ -520,7 +506,7 @@ tunings = {
         "TaggerPionSameTool.PionSame_P2_Cal" : 0.,
         "TaggerPionSameTool.PionSame_Eta_Cal" : 0.,
 
-        "SVertexOneSeedTool.MinSeedProbability" : 0.42,
+        "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedProbability" : 0.42,
         "TaggerVertexChargeTool.Vtx_PowerK" : 0.55,
         "TaggerVertexChargeTool.Vtx_MinimumVCharge" : 0.2,
         "TaggerVertexChargeTool.Vtx_Ptsum" : 1.55,
@@ -638,7 +624,7 @@ tunings = {
         "TaggerPionSameTool.PionSame_P2_Cal" : 0.,
         "TaggerPionSameTool.PionSame_Eta_Cal" : 0.,
 
-        "SVertexOneSeedTool.MinSeedProbability" : 0.42,
+        "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedProbability" : 0.42,
         "TaggerVertexChargeTool.Vtx_PowerK" : 0.55,
         "TaggerVertexChargeTool.Vtx_MinimumVCharge" : 0.2,
         "TaggerVertexChargeTool.Vtx_Ptsum" : 1.55,
@@ -1408,31 +1394,69 @@ tunings = {
     
     }
 
-def TuneTool(tool, version):
+def TuneTool(tool, version, fttoolname = 'BTaggingTool'):
 
     from Configurables import BTagging, BTaggingTool, TaggerMuonTool, TaggerElectronTool, TaggerKaonSameTool, TaggerNEWKaonOppositeTool, TaggerKaonOppositeTool, TaggerPionSameTool, TaggerNEWKaonSameTool, TaggerVertexChargeTool, CombineTaggersProbability, SVertexOneSeedTool,NNetTool_MLP, TaggingUtils
         
-    tool.addTool ( BTaggingTool, name='BTaggingTool')
-    tool.BTaggingTool.addTool ( CombineTaggersProbability )
-    tool.BTaggingTool.addTool ( TaggerMuonTool )
-    tool.BTaggingTool.TaggerMuonTool.addTool(NNetTool_MLP)
-    tool.BTaggingTool.addTool ( TaggerElectronTool )
-    tool.BTaggingTool.TaggerElectronTool.addTool(NNetTool_MLP)
-    tool.BTaggingTool.addTool ( TaggerKaonOppositeTool )
-    tool.BTaggingTool.TaggerKaonOppositeTool.addTool(NNetTool_MLP)
-    tool.BTaggingTool.addTool ( TaggerKaonSameTool )
-    tool.BTaggingTool.TaggerKaonSameTool.addTool(NNetTool_MLP)
-    tool.BTaggingTool.addTool ( TaggerPionSameTool )
-    tool.BTaggingTool.TaggerPionSameTool.addTool(NNetTool_MLP)
-    tool.BTaggingTool.addTool ( TaggerVertexChargeTool )
-    tool.BTaggingTool.TaggerVertexChargeTool.addTool(NNetTool_MLP)
-    tool.BTaggingTool.addTool ( SVertexOneSeedTool )
-    tool.BTaggingTool.addTool ( TaggerNEWKaonOppositeTool )
-    tool.BTaggingTool.addTool ( TaggerNEWKaonSameTool )
-    tool.BTaggingTool.addTool ( TaggingUtils )
+
+
+    tool.addTool ( BTaggingTool, name=fttoolname)
+    fttool = eval('tool.%s' % fttoolname)
+    fttool.addTool(TaggingUtils, name = 'TaggingUtils')
+    fttool.addTool ( CombineTaggersProbability )
+    fttool.addTool ( TaggerMuonTool )
+    fttool.TaggerMuonTool.addTool(NNetTool_MLP)
+    fttool.TaggerMuonTool.addTool(TaggingUtils, name = 'TaggingUtils')
+    fttool.addTool ( TaggerElectronTool )
+    fttool.TaggerElectronTool.addTool(NNetTool_MLP)
+    fttool.TaggerElectronTool.addTool(TaggingUtils, name = 'TaggingUtils')
+    fttool.addTool ( TaggerKaonOppositeTool )
+    fttool.TaggerKaonOppositeTool.addTool(NNetTool_MLP)
+    fttool.TaggerKaonOppositeTool.addTool(TaggingUtils, name = 'TaggingUtils')
+    fttool.addTool ( TaggerKaonSameTool )
+    fttool.TaggerKaonSameTool.addTool(NNetTool_MLP)
+    fttool.TaggerKaonSameTool.addTool(TaggingUtils, name = 'TaggingUtils')
+    fttool.addTool ( TaggerPionSameTool )
+    fttool.TaggerPionSameTool.addTool(NNetTool_MLP)
+    fttool.TaggerPionSameTool.addTool(TaggingUtils, name = 'TaggingUtils')
+    fttool.addTool ( TaggerVertexChargeTool )
+    fttool.TaggerVertexChargeTool.addTool(NNetTool_MLP)
+    fttool.TaggerVertexChargeTool.addTool(TaggingUtils, name = 'TaggingUtils')
+    fttool.TaggerVertexChargeTool.addTool( SVertexOneSeedTool )
+    fttool.TaggerVertexChargeTool.SVertexOneSeedTool.addTool(TaggingUtils, name = 'TaggingUtils')
+    fttool.addTool ( TaggerNEWKaonOppositeTool )
+    fttool.TaggerNEWKaonOppositeTool.addTool(TaggingUtils, name = 'TaggingUtils')
+    fttool.addTool ( TaggerNEWKaonSameTool )
+    fttool.TaggerNEWKaonSameTool.addTool(TaggingUtils, name = 'TaggingUtils')
+    fttool.addTool ( TaggingUtils )
 
     for cut in tunings[version]:
-        exec("tool.BTaggingTool."+cut+'='+str(tunings[version][cut]))
+        exec("fttool."+cut+'='+str(tunings[version][cut]))
 
-
-
+    """
+    toollist = [TaggerMuonTool, TaggerElectronTool, TaggerKaonOppositeTool,  TaggerVertexChargeTool, TaggerNEWKaonOppositeTool, TaggerNEWKaonSameTool, TaggerPionSameTool]
+    for tool in toollist :
+        exec("fttool."+tool+".addTool(TaggingUtils, name = 'TaggingUtils')")
+        exec("fttool."+tool+".TaggingUtils.Personality = fttool.Personality")
+        print   "fttool."+tool+".TaggingUtils.Personality, " = ", fttool.Personality"
+    """
+    fttool.TaggerMuonTool.Personality = fttool.Personality
+    fttool.TaggerElectronTool.Personality = fttool.Personality
+    fttool.TaggerKaonOppositeTool.Personality = fttool.Personality
+    #fttool.TaggerKaonSameTool.Personality = fttool.Personality  # not yet implemented
+    #fttool.TaggerPionSameTool.Personality = fttool.Personality  # not yet implemented
+    #fttool.TaggerNEWKaonSameTool.Personality = fttool.Personality # not yet implemented
+    fttool.TaggerNEWKaonOppositeTool.Personality = fttool.Personality
+    fttool.TaggerVertexChargeTool.Personality = fttool.Personality
+    fttool.TaggerVertexChargeTool.SVertexOneSeedTool.Personality = fttool.Personality
+    #
+    fttool.TaggingUtils.Personality = fttool.Personality
+    fttool.TaggerMuonTool.TaggingUtils.Personality = fttool.Personality
+    fttool.TaggerElectronTool.TaggingUtils.Personality = fttool.Personality
+    fttool.TaggerKaonOppositeTool.TaggingUtils.Personality = fttool.Personality
+    fttool.TaggerKaonSameTool.TaggingUtils.Personality = fttool.Personality
+    fttool.TaggerPionSameTool.TaggingUtils.Personality = fttool.Personality
+    fttool.TaggerNEWKaonSameTool.TaggingUtils.Personality = fttool.Personality
+    fttool.TaggerNEWKaonOppositeTool.TaggingUtils.Personality = fttool.Personality
+    fttool.TaggerVertexChargeTool.TaggingUtils.Personality = fttool.Personality
+    fttool.TaggerVertexChargeTool.SVertexOneSeedTool.TaggingUtils.Personality = fttool.Personality
