@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackFitEvent
 ################################################################################
-gaudi_subdir(TrackFitEvent v5r22)
+gaudi_subdir(TrackFitEvent v5r23)
 
 gaudi_depends_on_subdirs(Det/FTDet
                          Det/MuonDet

@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackFitEvent v5r23 2013-07-24 =========================
 ! 2013-07-24 - Francesco Polci
  - Added a switch between old and new detector geometry needed in FTMeasurement.cpp
 
