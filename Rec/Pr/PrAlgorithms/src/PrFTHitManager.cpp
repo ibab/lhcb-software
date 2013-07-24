@@ -144,7 +144,7 @@ void PrFTHitManager::decodeData ( ) {
   } else { //NEW DETECTOR
    debug() << "I HAVE THE NEW DETECTOR VERSION" << endmsg;
     for ( FTRawClusters::iterator itC = clus->begin(); clus->end() != itC; ++itC ) {
-      always() << "IN THE LOOP CHANNELID LAYER" << (*itC).channelID().layer() << endmsg;
+      debug() << "IN THE LOOP CHANNELID LAYER" << (*itC).channelID().layer() << endmsg;
       ftMat = m_ftDet->findFibreMat( (*itC).channelID() );
       debug() << "MYFIBERMAT " << ftMat->FibreMatID() << endmsg;
       if( ftMat->FibreMatID() != oldFibreMat ) {  
