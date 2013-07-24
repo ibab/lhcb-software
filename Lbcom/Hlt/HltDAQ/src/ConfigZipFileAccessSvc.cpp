@@ -383,10 +383,10 @@ namespace ConfigZipFileAccessSvc_details {
 
 	/* End of central directory record */
 	/* uint32_t sig = 0x06054b50 */
-	/* uint16_t diskNumber === 0 */;
-	/* uint16_t diskStart === 0 */;
+	/* uint16_t diskNumber === 0 */
+	/* uint16_t diskStart === 0 */
 	/* uint16_t entriesThisDisk ; lower part from ZIP64 ECD or 0xffff */
-	/* uint16_t entriesTotal === entriesThisDisk */;
+	/* uint16_t entriesTotal === entriesThisDisk */
 	/* uint32_t size;   lower part from ZIP64 ECD or 0xffffffff */
 	/* uint32_t offset; lower part from ZIP64 ECD or 0xffffffff */
 	uint16_t comment_length;
@@ -521,6 +521,7 @@ namespace ConfigZipFileAccessSvc_details {
 	    cerr << "ZIP: multifile archives are not supported" << endl;
 	    return false;
 	  }
+	  return true;
 	}
 
 	bool read_from(istream &is){
