@@ -4,6 +4,7 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= GaussKine v6r3 2013-07-24 =========================
 ! 2013-07-15 - Patrick Robbe
  - Reorder according to barcodes the HepMC particles before sending
    them to G4, this should help reproducing the events
