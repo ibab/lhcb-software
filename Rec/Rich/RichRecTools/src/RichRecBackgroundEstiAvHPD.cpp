@@ -1,4 +1,3 @@
-
 //--------------------------------------------------------------------------
 /** @file RichRecBackgroundEstiAvHPD.cpp
  *
@@ -11,6 +10,7 @@
 
 // local
 #include "RichRecBackgroundEstiAvHPD.h"
+#include "RichDet/DeRich1.h"
 
 // All code is in general Rich reconstruction namespace
 using namespace Rich::Rec;
@@ -37,8 +37,10 @@ BackgroundEstiAvHPD::BackgroundEstiAvHPD( const std::string& type,
   declareProperty( "MaxBackgroundNormIterations", m_maxBkgIterations = 10,
                    "Maximum number of iterations in background normalisation" );
 
-  declareProperty( "PixelsPerPD", m_nPixelsPerPD = 784.763611,
-                   "Number of active pixels per PD - To be got from XML eventually" );
+    declareProperty( "PixelsPerPD", m_nPixelsPerPD = 784.763611, "Number of active pixels per PD" );
+
+  //declareProperty( "PixelsPerPD", m_nPixelsPerPD = 64,
+  //                 "Number of active pixels per PD - To be got from XML eventually" );
 
   declareProperty( "MinPixelBackground", m_minPixBkg = 0.0,
                    "Minimum pixel background" );
@@ -59,6 +61,20 @@ StatusCode BackgroundEstiAvHPD::initialize()
   // Sets up various tools and services
   const StatusCode sc = Rich::Rec::ToolBase::initialize();
   if ( sc.isFailure() ) { return Error( "Failed to initialize base class", sc ); }
+
+  DeRich1* aRich1= getDet<DeRich1> ( DeRichLocations::Rich1 );
+
+  if(aRich1 ->RichPhotoDetConfig() == Rich::HPDConfig ) {
+
+    m_nPixelsPerPD = (aRich1->exists("RichEffectiveActiveNumPixelPerHpd"))? ((aRich1 ->param<int>("RichEffectiveActiveNumPixelPerHpd"))*1.0) :  784.763611;
+
+  }else if (aRich1 ->RichPhotoDetConfig() == Rich::PMTConfig ) {
+
+    m_nPixelsPerPD = (aRich1->exists("RichPmtTotNumPixel"))? ((aRich1 ->param<int>("RichPmtTotNumPixel"))*1.0) : 64.0;
+    
+  }  
+  if ( msgLevel(MSG::INFO) ) info()<<" RichRecbackgrEst :  NumPixel per PD "<<m_nPixelsPerPD<<endmsg;
+  
 
   // Acquire instances of tools
   acquireTool( "RichExpectedTrackSignal", m_tkSignal );
