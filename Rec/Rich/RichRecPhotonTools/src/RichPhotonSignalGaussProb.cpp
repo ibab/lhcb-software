@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file RichPhotonSignalGaussProb.cpp
  *
@@ -59,11 +58,16 @@ StatusCode PhotonSignalGaussProb::initialize()
   m_radiusCurv[Rich::Rich1] = Rich1DE->sphMirrorRadius();
   m_radiusCurv[Rich::Rich2] = Rich2DE->sphMirrorRadius();
 
+  const bool PmtActivate= (Rich1DE -> RichPhotoDetConfig() == Rich::PMTConfig) ? true : false;
+  
+  
   // area of pixel in mm^2
-  const double xSize      = Rich1DE->param<double>("RichHpdPixelXsize"); // 0.5*mm
-  const double ySize      = Rich1DE->param<double>("RichHpdPixelYsize"); // 0.5*mm
+  const double xSize      = (!PmtActivate) ? Rich1DE->param<double>("RichHpdPixelXsize"): Rich1DE->param<double>("RichPmtPixelYSize");
+                                                     // 0.5*mm for hpd, 2.78bmm for pmt.
+  const double ySize      = (!PmtActivate) ? Rich1DE->param<double>("RichHpdPixelYsize"):Rich1DE->param<double>("RichPmtPixelYSize")  ; 
+                                                       // 0.5*mm for hpd , 2.78 mm for pmt
   //const double demagScale       = Rich1DE->param<double>("HPDDemagScaleFactor"); // 4.8
-  const double demagScale       = 4.8;
+  const double demagScale       =  (!PmtActivate) ? 4.8 : 1.0 ;
   m_pixelArea = demagScale*xSize * demagScale*ySize;
 
   // exp params
@@ -112,6 +116,15 @@ PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
     if      ( pixelSignal > maxSignal ) { pixelSignal = maxSignal; }
     else if ( pixelSignal < minSignal ) { pixelSignal = minSignal; }
 
+    if(pixelSignal < maxSignal && pixelSignal > minSignal ) {
+      
+      if ( msgLevel(MSG::VERBOSE) )   verbose()<< " det predicted signal theta activefr pixelsignal "<<det<<"  "
+          <<thetaReco<<"  "<<photon->geomPhoton().activeSegmentFraction()
+            <<"    "<<pixelSignal<<" signalProb  "<<signalProb(photon, id)<<"    "
+                                               << "scatterprob "<<scatterProb(photon, id)<<  endmsg;
+    }
+    
+    
     // save final result
     photon->setExpPixelSignalPhots( id, (LHCb::RichRecPhoton::FloatType)(pixelSignal) );
 
@@ -141,6 +154,8 @@ PhotonSignalGaussProb::signalProb( LHCb::RichRecPhoton * photon,
 
   // Expected Cherenkov theta angle resolution
   const double thetaExpRes = m_ckRes->ckThetaResolution(photon->richRecSegment(),id);
+
+  
 
   // The difference between reco and expected
   const double thetaDiff = photon->geomPhoton().CherenkovTheta() - thetaExp;
