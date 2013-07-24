@@ -3,11 +3,14 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
-!2013-07-19 - Sajan Easo
-- Adaptions for re-use in RICH upgrade. Several minor changes in different parts so that
-  they can be used in RICH upgrade studies. 
+
+!========================= GaussRICH v14r0 2013-07-24 ========================
+! 2013-07-19 - Sajan Easo
+ - Adaptions for re-use in RICH upgrade. Several minor changes in different
+   parts so that they can be used in RICH upgrade studies. 
  - Several files re-arranged within source code 
-   sub directories to avoid compilation warnings. Created another source code subdirectory
+   sub directories to avoid compilation warnings. 
+   Created another source code subdirectory
    named PhysPhotDet as part of re-organization of the source code locations. 
  - This is compatible with Gauss-v46r2p1 onwards.
 
