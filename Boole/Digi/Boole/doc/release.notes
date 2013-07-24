@@ -4,8 +4,10 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
  - QMTest updates:
-   . FT test updated to actually point to new MonoLayer geo in DEV DB
-   . FT reference updated.
+   . FT_MonoLayer test added.
+   . FT test now accesses old FT geometry again.
+   . FT and FT_MonoLayer references updated.
+   . VP_Compact_Microchannel tests now use FT_MonoLayer geometry.
    . All upgrade tests now use latest global tags.
 
 </PRE><H1><A NAME=v26r7>2013-07-22 Boole v26r7</A></H1><PRE>
