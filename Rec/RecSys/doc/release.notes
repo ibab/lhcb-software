@@ -19,9 +19,12 @@ This version uses Gaudi v23r9, LHCb v36r1 and Lbcom v14r1
     Rich/RichRecPhotonTools v1r11, Rich/RichRecTools v4r23, Tf/FastVelo v1r12p1,
     Tf/PatAlgorithms v4r27, Tf/PatVelo v3r29, Tf/PatVeloTT v4r1,
     Tf/TfTools v1r18p2, Tf/TrackMatching v2r35p3, Tf/TsaAlgorithms v3r28,
-    Tr/TrackCheckers v4r18, Tr/TrackInterfaces v4r25, Tr/TrackKernel v1r16,
-    Tr/TrackMonitors v1r45, Tr/TrackTools v4r25, Tr/TrackUtils v1r52p2,
-    Velo/VeloRecMonitors v2r26
+    Tr/TrackCheckers v4r18, Tr/TrackFitEvent v5r23, Tr/TrackInterfaces v4r25,
+    Tr/TrackKernel v1r16, Tr/TrackMonitors v1r45, Tr/TrackTools v4r25,
+    Tr/TrackUtils v1r52p2, Velo/VeloRecMonitors v2r26
+
+- In Pr/PrAlgorithms v1r6, Tr/TrackFitEvent v5r23, Tr/TrackTools v4r25
+  . Added a switch between old and new FT detector geometry
 
 - In Pr/PrVL v1r4
   . Reduce calls to phiOfStrip by pre-calculating R sector of each Phi hit
