@@ -53,8 +53,10 @@ public:
     return StatusCode::FAILURE ;
   }
 
+
 private:
   const DeFTDetector* m_det;
+  DeFTFibreMat* m_Mat;
   mutable FastClusterContainer<LHCb::FTRawCluster,int>* m_clusters;
 } ;
 
@@ -164,12 +166,24 @@ LHCb::Measurement* FTMeasurementProvider::measurement( const LHCb::LHCbID& id,
 double FTMeasurementProvider::nominalZ( const LHCb::LHCbID& id ) const {
   double z(0) ;
   LHCb::FTChannelID ftid = id.ftID() ;
-  const DeFTLayer* layer = m_det->findLayer( ftid ) ;
-  if ( NULL == layer ) {
-    error() << "Cannot find FT layer for ID = " << ftid << endmsg ;
+
+  if(m_det->version() != 20) { 
+    const DeFTLayer* layer = m_det->findLayer( ftid ) ;
+    if ( NULL == layer ) {
+      error() << "Cannot find FT layer for ID = " << ftid << endmsg ;
+    } else {
+      z = layer->layerCenterZ();
+    }
   } else {
-    z = layer->layerCenterZ();
+   const DeFTFibreMat* fibreMat = m_det->findFibreMat(ftid);
+    if ( NULL == fibreMat ) {
+      error() << "Cannot find FT fibreMat for ID = " << ftid << endmsg ;
+    } else {
+      z = fibreMat->layerCenterZ() ;
+    }
   }
+  
+  
   return z ;
 }
 
@@ -185,4 +199,6 @@ void FTMeasurementProvider::addToMeasurements( const std::vector<LHCb::LHCbID>& 
        id != lhcbids.end(); ++id)
     measurements.push_back( measurement(*id,reftraj,false) ) ;
 }
+
+
 
