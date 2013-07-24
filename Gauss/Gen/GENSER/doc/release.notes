@@ -4,6 +4,12 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================= GENSER v12r6g1 2013-07-24 =========================
+! 2013-07-24 - Gloria Corti
+ - Identical to v12r4 but with 'g1' tag to allow to pick up the generators
+   distributions from the MCGenerators_lcgcmt65a area as needed by LHCB v36r1
+   and Gaudi v23r9
+
 !========================== GENSER v12r6 2013-07-24 ==========================
 ! 2013-07-24 - Gloria Corti
  - Introduce new macro for powheg_box native version and set it to r2092
@@ -27,7 +33,7 @@
 ! 2013-04-04 - Gloria Corti
  - Make a patch release with no difference with respect to v12r4 to allow 
    picking up the generators distributions from the MCGenerators_lcgcmt64d
-   area as needed by LHCB v35r5 and Gaudi v27r3
+   area as needed by LHCB v35r5 and Gaudi v23r7
 
 !========================== GENSER v12r4 2013-03-15 ==========================
 ! 2013-03-15 - Gloria Corti
