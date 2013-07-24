@@ -1,7 +1,9 @@
 2013-07-24  Ben Couturier  <Ben.Couturier@cern.ch>
 
-        * python/LbLegacy/install_project.py: Fix to get LCGCMT for shared tarball for current CMTCONFIG,
-	even if unknown to Platform.py 
+        * cmt/requirements: release of version v5r8p2
+        * python/LbLegacy/install_project.py:  release of LbScripts version v7r8p2
+        * python/LbLegacy/install_project.py: Fix to get LCGCMT for shared tarball for 
+				current CMTCONFIG, even if it not known to Platform.py 
 
 2013-07-23  Ben Couturier  <Ben.Couturier@cern.ch>
 
