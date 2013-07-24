@@ -1,10 +1,15 @@
 // $Id: $
+#include <boost/lexical_cast.hpp>
 
 // DetDesc
 #include "DetDesc/SolidSubtraction.h"
 #include "DetDesc/SolidChild.h"
 #include "DetDesc/SolidBox.h"
 #include "DetDesc/SolidCons.h"
+
+// Smartrefs
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/ISvcLocator.h"
 
 // Gaudi/LHCb Math
 #include "GaudiKernel/Plane3DTypes.h"
@@ -16,6 +21,7 @@
 
 // FTDet
 #include "FTDet/DeFTFibreMat.h"
+
 
 /** @file DeFTFibreMat.cpp
  *
@@ -208,6 +214,8 @@ StatusCode DeFTFibreMat::initialize(){
   Gaudi::XYZPoint tmpGlobPoint2 = this->geometry()->toGlobal( tmpLocPoint2 );
   m_dzDy = (tmpGlobPoint2.z() - tmpGlobPoint1.z()) / (tmpGlobPoint2.y() - tmpGlobPoint1.y());
 
+  debug() << "mdzdy = " << m_dzDy << endmsg; 
+
   /*
   debug() << "Derived parameters:"
           << "\n\tpitch X: " << m_sipmPitchX
@@ -265,16 +273,29 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit*  fthit,
                                     VectFTPairs&         vectChanAndEnergy) const
 {
 
+
+  /*
+  //local coord option 1, depending on u, v angles it might generate troubles
   double entryX = fthit->entry().x();
   double entryY = fthit->entry().y();
-
   double exitX = fthit->exit().x();
   double exitY = fthit->exit().y();
+  Gaudi::XYZPoint enP( cos(-m_angle)*entryX+sin(-m_angle)*entryY, -sin(-m_angle)*entryX+cos(-m_angle)*entryY, fthit->entry().z() );
+  Gaudi::XYZPoint exP( cos(-m_angle)*exitX+sin(-m_angle)*exitY  , -sin(-m_angle)*exitX+cos(-m_angle)*exitY  , fthit->exit().z() );
+  */
 
-  Gaudi::XYZPoint enP( cos(m_angle)*entryX+sin(m_angle)*entryY, -sin(m_angle)*entryX+cos(m_angle)*entryY, fthit->entry().z() );
-  Gaudi::XYZPoint exP( cos(m_angle)*exitX+sin(m_angle)*exitY  , -sin(m_angle)*exitX+cos(m_angle)*exitY  , fthit->exit().z() );
-
-
+  
+  //local coord option 2 -- stable
+  std::string station = 
+    ( m_layer >= 0 && m_layer <= 3  )? "T1" : 
+    ( m_layer >= 4 && m_layer <= 7  )? "T2" : 
+    ( m_layer >= 8 && m_layer <= 11 )? "T3" : ""; 
+  std::string loc = "/dd/Structure/LHCb/AfterMagnetRegion/T/FT/" + station + "/MonoLayer" + boost::lexical_cast<std::string>( m_layer );
+  SmartDataPtr<DetectorElement> layer ( dataSvc(), loc.c_str() );
+  Gaudi::XYZPoint enP = layer -> geometry() -> toLocal( fthit -> entry() );
+  Gaudi::XYZPoint exP = layer -> geometry() -> toLocal( fthit -> exit()  );
+  
+  //returns local hit points wrt fibremat
   //Gaudi::XYZPoint enP = this->geometry()->toLocal(fthit->entry());
   //Gaudi::XYZPoint exP = this->geometry()->toLocal(fthit->exit());
   
