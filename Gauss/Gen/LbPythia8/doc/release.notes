@@ -4,6 +4,7 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia8 v7r4 2013-07-24 =========================
 ! 2013-07-15 - Patrick Robbe 
  - Set b and c quarks with status 2 so that they are saved in 
    MCParticle format
