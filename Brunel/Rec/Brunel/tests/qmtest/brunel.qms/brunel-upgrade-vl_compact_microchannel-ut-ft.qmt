@@ -4,13 +4,12 @@
   <argument name="timeout"><integer>2400</integer></argument>
   <argument name="args"><set>
     <text>$APPCONFIGOPTS/Brunel/Default.py</text>
-    <text>$APPCONFIGOPTS/Brunel/DataType-Upgrade.py</text>
     <text>$APPCONFIGOPTS/Brunel/MC-WithTruth.py</text>
     <text>$APPCONFIGOPTS/Brunel/Brunel-Upgrade-VL-UT-FT.py</text>
     <text>$APPCONFIGOPTS/Brunel/Upgrade-RichPmt.py</text>
     <text>$APPCONFIGOPTS/Brunel/patchUpgrade1.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130722"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BrunelStep/VL_Compact_MicroChannel-UT-FT/VL_Compact_MicroChannel_A-UT-FT.xdigi'"]; CondDB().AllLocalTagsByDataType = ["VL_Compact_MicroChannel+UT","FT"];</text>
+    <text>from Brunel.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130722"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BrunelStep/VL_Compact_MicroChannel-UT-FT/VL_Compact_MicroChannel_A-UT-FT.xdigi'"]; CondDB().AllLocalTagsByDataType = ["VL_Compact_MicroChannel+UT","FT"];from Configurables import Brunel; Brunel().DataType  = "Upgrade";</text>
     </set></argument>
   <argument name="reference"><text>../refs/brunel-upgrade-vl_compact_microchannel-ut-ft.ref</text></argument>
   <argument name="validator"><text>

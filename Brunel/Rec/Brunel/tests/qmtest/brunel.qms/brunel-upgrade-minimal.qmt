@@ -4,13 +4,12 @@
   <argument name="timeout"><integer>2400</integer></argument>
   <argument name="args"><set>
     <text>$APPCONFIGOPTS/Brunel/Default.py</text>
-    <text>$APPCONFIGOPTS/Brunel/DataType-Upgrade.py</text>
     <text>$APPCONFIGOPTS/Brunel/MC-WithTruth.py</text>
     <text>$APPCONFIGOPTS/Brunel/Brunel-Upgrade-Reference.py</text>
     <text>$APPCONFIGOPTS/Brunel/Upgrade-RichPmt.py</text>
     <text>$APPCONFIGOPTS/Brunel/patchUpgrade1.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130124"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BrunelStep/Minimal/Minimal.xdigi'"];</text>
+    <text>from Brunel.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130124"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BrunelStep/Minimal/Minimal.xdigi'"];from Configurables import Brunel; Brunel().DataType  = "Upgrade";</text>
     </set></argument>
   <argument name="reference"><text>../refs/brunel-upgrade-minimal.ref</text></argument>
   <argument name="validator"><text>
