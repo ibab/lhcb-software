@@ -4,6 +4,219 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v46r4">2013-07-24 - GaussSys v46r4</A></H1><PRE>
+<H2><A NAME="Note"For development and Upgrade studies. 
+    </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v36r1</b> (and Gaudi v23r9)
+   AppConfig v3r*,
+   <b>DecFiles v27r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   pythia 6.427.2, lhapdf 5.8.5 
+   photos++ 2.6.1a and tauola++ 1.0.7 
+   pythia8 175 (via LCG_GeneratorsInterfaces),
+   HepMC 2.06.05 (via LCG_Interfaces),
+   <b>Geant4 v95r2p5g3</b> (based on geant4.9.5.p02 + patches for LHCb) and 
+   Geant4Files v95r0, 
+   <b>XmlVis v1r16</b>,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.6.1b and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
+   rivet 1.8.3 (via LCG_GeneratorsInterfaces),
+   <b>EvtGen v13r7</b> (private LHCb version),
+   BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r0 + GenXiccData v2r0 and 
+   HidValley v3r2 (private LHCb versions)
+</A></H3>
+
+! 2013-07-24 - Gloria Corti
+ - LCG_settings and all LCG_GeneratorsInterfaces packages are identintial as
+   v65r0p1 and only tagged as v65r0p1 to indicate they refer to  
+   packages in LCGCMT65a
+ - Temporarily use Det/FTDet v2r1 to pick up fixes as for Boole and Brunel
+ - New generator interface package LCG_GeneratorsInterfaces/powheg-box
+
+!========================== Gauss v46r4 2013-07-24 ===========================
+! 2013-07-24 - Paul Szczypka
+ - Added gauss-upgrade-ft_mono, reverted gauss-upgrade-ft to use FT_BiLayer.
+
+! 2013-07-22 - Paul Szczypka
+ - Correct some recent release notes to have proper date (2013 vs. 2012)
+ - Updated gauss-upgrade-ft to read DEV DB and use new FT_MonoLayer geo 
+   from there.
+ - Updated upgrade qmtests to use latest global tags as default.
+
+! 2013-07-21 - Patrick Robbe
+ - QMTests: merge changes from v45b
+
+! 2013-07-18 - Paul Szczypka
+ - Updated Configuration to remove the now-annoying AEROGEL WARNINGS.
+
+! 2013-07-12 - Paul Szczypka
+ - QMTests: Added new gauss-upgrade-ft qmtest, currently points to my public 
+   area for the DDDB location. Needs to be updated once the geo is in the 
+   official DB.
+
+! 2013-07-16 - Patrick Robbe
+ - CaloOnly.py: add option to switch off RichCuts
+
+! 2013-07-02 - Paul Szczypka
+ - QMTests: clear upgrade test expected stderr file. (empty file now)
+
+! 2013-07-04 - Patrick Robbe
+ - Set as unsupported the Pythia8 QMTests for 43900004, 42511100, 
+   42112002, 42112000, 40911011, 18412431, 28102062
+
+! 2013-07-03 - Patrick Robbe
+ - QMTests: reduce the number of events to 10 for Pythia8 tests, and 
+   divide the time limit by 5
+
+! 2013-06-28 - Patrick Robbe
+ - QMTests: increase time limit for Lambda_b Pythia8 test (15874100)
+
+!========================= GENSER v12r6g1 2013-07-24 =========================
+! 2013-07-24 - Gloria Corti
+ - Identical to v12r4 but with 'g1' tag to allow to pick up the generators
+   distributions from the MCGenerators_lcgcmt65a area as needed by LHCB v36r1
+   and Gaudi v23r9
+
+!========================== GENSER v12r6 2013-07-24 ==========================
+! 2013-07-24 - Gloria Corti
+ - Introduce new macro for powheg_box native version and set it to r2092
+
+!========================== EvtGen v13r7 2013-07-16 ==========================
+! 2013-07-16 - John Back
+ - Code changes from Daniel Craik:
+   EvtParserXml now accepts file names containing environment variables;
+   exponential non-resonant shape in EvtDalitzReso now defined as 
+   exp(-alpha*m^2); LASS shape in EvtDalitzReso now takes a cutoff parameter. 
+   Added flag to turn on scaling of LASS amplitude by M/q in EvtDalitzReso.
+
+! 2013-06-28 - Patrick Robbe
+ - Fix gcc47 compilation problems
+
+!=========================== Mint v2r1 2013-07-24 ============================
+! 2013-06-28 - Patrick Robbe 
+ - Fix coverity warnings
+
+! 2013-02-20 - Matthew Coombes
+ - Added CLEO-c model for D->KK?? decays.
+ - Added alternative models from arXiv:1201.5716
+ - See Models/ModelNotes.txt
+
+! 2013-06-26 - Patrick Robbe
+ - Fix gcc47 compilation problems
+
+! 2013-05-08 - Jack Benton
+ - Added direct D0->4pi decay to NamedDecayTreeList.cpp
+
+!======================= EvtGenExtras v3r7 2013-07-24 ========================
+! 2013-07-10 - Patrick Robbe
+ - Add new EvtGen model to generate decays with PHSP and a flat 
+   lifetime distribution: EvtPhspFlatLifetime
+
+! 2013-07-03 - Patrick Robbe
+ - Fix gcc47 warnings
+
+! 2013-06-28 - Patrick Robbe
+ - Fix coverity warnings
+
+!======================= Generators v14r5 2013-07-23 =========================
+! 2013-07-15 - Patrick Robbe
+ - src/components/XmlCounterLogFile.cpp: fix cross-section format
+
+! 2013-07-07 - Patrick Robbe
+ - src/components/SaveSignalBInformation.h/.cpp : algorithm to save
+ in locate "Gen/BInfo" the string from which the B signal comes from
+
+!========================= LbPythia v14r1 2013-07-24 =========================
+! 2013-07-16 - Patrick Robbe
+ - Move ReadLHE to src/Lib and the header file to LbPythia
+
+!========================== LbPowheg v1r0 2013-07-24 =========================
+! 2013-07-16 - Patrick Robbe
+ - Remove code which is already in Gen/LbPythia
+ - Use strings instead of chars to avoid compilation warnings
+
+! 2013-07-15 - Gloria Corti
+ - Fix CTEQPDF environment variable to remove explicit version number of lhapdf
+ - Use powheg=box interface package as it has been committed and adapt 
+   POWHEGEXE environment variable accordingly
+ - Remove directive for windows as no longer supported
+
+! 2013-07-09 - Marcin Kucharczyk
+ - Remove cteq6m from Lib and get it from LCG lhapdf
+
+! 2013-07-08 - Marcin Kucharczyk
+ - Add processes for heavy quarks (bb, tt)
+ - Add separate options to run each process
+
+! 2013-05-24 - Marcin Kucharczyk
+ - First import of the package
+
+!========================= LbPythia8 v7r4 2013-07-24 =========================
+! 2013-07-15 - Patrick Robbe 
+ - Set b and c quarks with status 2 so that they are saved in 
+   MCParticle format
+
+!========================= GiGa v20r2p1 2013-07-24 ===========================
+! 2013-06-28 - Patrick Robbe
+ - Fix coverity warnings
+
+!========================= GaussKine v6r3 2013-07-24 =========================
+! 2013-07-15 - Patrick Robbe
+ - Reorder according to barcodes the HepMC particles before sending
+   them to G4, this should help reproducing the events
+ - Transfer to Geant4 top quarks
+ - Give vertex code "StringFragmentation" to daughters of b and c quarks
+
+! 2013-07-10 - Patrick Robbe
+ - GenerationToSimulation.cpp: save b and c quarks in MCParticles
+
+! 2013-07-03 - Patrick Robbe
+ - GenerationToSimulation.cpp: select switch off of G4 printout for 
+   unknown PDG Ids from the algorithm message service output level
+
+!========================= GaussRICH v14r0 2013-07-24 ========================
+! 2013-07-19 - Sajan Easo
+ - Adaptions for re-use in RICH upgrade. Several minor changes in different
+   parts so that they can be used in RICH upgrade studies. 
+ - Several files re-arranged within source code 
+   sub directories to avoid compilation warnings. 
+   Created another source code subdirectory
+   named PhysPhotDet as part of re-organization of the source code locations. 
+ - This is compatible with Gauss-v46r2p1 onwards.
+
+!===================== GaussCherenkov v4r0 2013-07-24 ========================
+! 2013-07-19 - Sajan Easo
+ - Adapations for RICH-2019 upgrade studies. Added new files mainly for the 
+   analysis part.
+ - Rearrangeed source code in different subdirectories to avoid compilation 
+   warnings. Created another source code subdirectory named CkvPhysPhotDet 
+   as part of re-organization of source code.
+ - This is all compatible with Gauss v46r1p1 onwards
+
+!========================= GenTune v2r0p1 2013-07-17 =======================
+! 2013-07-17 - Alex Grecu
+ - added scripts/listAnalysisInfo.py to list Rivet plugin info files given 
+   partial analysis names; also very nice example of using the Rivet/Python
+   interface
+ - corrected qmtests and optimized number of generated events for speed
+ - negative invariant mass particles are detected and reported only at DEBUG 
+   level
+ - cross-section values provided by user in option files need units and are 
+   automatically converted to picobarns (default unit in HepMC)
+ - RivetAnalysisHandler promptly detects and reports number of collision in 
+   event if 'fix1' beam options not used. Only first collision will be sent 
+   to analysis plugins.
+ - various other mods improvide code aesthetic.
+
+!=========================== XmlVis v1r17 ====================================
+! 2013-07-14 - Thomas Ruf
+  more support for upgrade detectors
+
+!=============================================================================
 </PRE><H1><A NAME="v46r3">2013-07-22 - GaussSys v46r3</A></H1><PRE>
 <H2><A NAME="Note"For development and Upgrade studies. 
     </A></H2>
@@ -18,7 +231,7 @@ Purpose: LHCb Simulation program
    photos++ 2.6.1a and tauola++ 1.0.7 
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.05 (via LCG_Interfaces),
-   <b>Geant4 v95r2p5g3</b> (based on geant4.9.5.p02 + patches for LHCb) and 
+   <b>Geant4 v95r2p5g2</b> (based on geant4.9.5.p02 + patches for LHCb) and 
    Geant4Files v95r0, 
    XmlVis v1r16,
    hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
@@ -190,7 +403,7 @@ Purpose: LHCb Simulation program
    photos++ 2.6.1a and tauola++ 1.0.7 
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.05 (via LCG_Interfaces),
-   <b>Geant4 v95r2p5g2</b> (based on geant4.9.5.p02 + patches for LHCb) and 
+   <b>Geant4 v95r2p5g1</b> (based on geant4.9.5.p02 + patches for LHCb) and 
    Geant4Files v95r0, 
    XmlVis v1r16,
    hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
