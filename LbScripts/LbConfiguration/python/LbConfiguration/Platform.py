@@ -156,7 +156,9 @@ binary_opt_list = ["slc4_ia32_gcc34", "slc4_amd64_gcc34",
                    "x86_64-slc5-gcc46-opt", "i686-slc5-gcc46-opt",
                    "win32_vc71", "i686-winxp-vc9-opt",
                    "x86_64-slc5-icc11-opt", "i686-slc5-icc11-opt",
-                   "x86_64-slc6-gcc46-opt", "i686-slc6-gcc46-opt" ]
+                   "x86_64-slc6-gcc46-opt", "i686-slc6-gcc46-opt",
+                   "x86_64-slc6-gcc47-opt", "x86_64-slc6-gcc48-opt",
+                   "x86_64-slc6-icc13-opt", "x86_64-slc6-clang32-opt"]
 # future possible supported binaries
 extra_binary_opt_list = ["slc3_ia32_gcc323",
                          "x86_64-slc5-gcc34-opt", "i686-slc5-gcc34-opt",
@@ -271,7 +273,7 @@ arch_runtime_compatiblity = {
                                 }
 
 flavor_runtime_equivalence = {
-                              "slc6"  : ["slc6"],
+                              "slc6"  : ["slc6", "co6", "rhel6"],
                               "slc5"  : ["slc5", "co5", "rhel5", "ub9", "fc13", "fc12", "fc11", "fc10"],
                               "slc4"  : ["slc4", "co4", "rhel4", "deb4"],
                               "slc3"  : ["slc3", "suse90", "suse100"],
@@ -283,7 +285,7 @@ flavor_runtime_equivalence = {
                              }
 
 supported_compilers = {
-                       "slc6"   : ["gcc46","gcc45", "gcc44"],
+                       "slc6"   : ["gcc46","gcc45", "gcc44", "gcc47", "gcc48", "icc11", "icc13", "clang32"],
                        "slc5"   : ["gcc46", "gcc43", "gcc45", "icc11"] ,
                        "slc4"   : ["gcc34"],
                        "slc3"   : ["gcc323"],

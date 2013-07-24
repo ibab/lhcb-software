@@ -1,3 +1,7 @@
+2013-07-24  Ben Couturier  <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Platform.py: Added new compilers and platforms 
+
 2013-06-28 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r8p1
