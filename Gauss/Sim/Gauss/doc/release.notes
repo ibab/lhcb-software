@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-07-24 - Paul Szczypka
+ - Added gauss-upgrade-ft_mono, reverted gauss-upgrade-ft to use FT_BiLayer.
+
 ! 2013-07-22 - Paul Szczypka
  - Correct some recent release notes to have proper date (2013 vs. 2012)
  - Updated gauss-upgrade-ft to read DEV DB and use new FT_MonoLayer geo from there.
