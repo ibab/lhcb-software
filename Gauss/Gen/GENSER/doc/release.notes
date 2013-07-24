@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v12r6 2013-07-24 ==========================
+! 2013-07-24 - Gloria Corti
+ - Introduce new macro for powheg_box native version and set it to r2092
+
 !========================== GENSER v12r5 2013-06-27 ==========================
 ! 2013-06-27 - Gloria Corti
  - Newer version of rivet (from 1.8.2 to 1.8.3) as not used in production

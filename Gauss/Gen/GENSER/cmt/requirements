@@ -27,10 +27,14 @@ macro herwigpp_native_version "2.6.1b"
 macro thepeg_native_version   "1.8.1"
 
 
-#-- AlpGen (until interface package exist in LCG)
+#-- AlpGen
 #============================================================================
 macro alpgen_native_version "2.1.4"
 
+
+#-- Powheg-box
+#============================================================================
+macro powheg-box_native_version "r2092"
 
 #-- Photos++ and Taula++ 
 #============================================================================
