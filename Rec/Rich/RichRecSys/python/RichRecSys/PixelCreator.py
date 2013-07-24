@@ -23,6 +23,7 @@ class RichPixelCreatorConfig(RichConfigurableUser):
     ## Default options
     __slots__ = {
         "Context"                : "Offline"   # The context within which to run
+       ,"DataType"               : ""          # Type of data, propagated from application
        ,"Detectors"              : [ True, True ] # Which RICH detectors to use (RICH1/RICH2)
        ,"PixelCleaning"          : "HotHPDs" # Turn on RICH pixel cleaning (hot HPDs etc.)
        ,"FindClusters"           : True # Find clusters in the HPD data
@@ -38,8 +39,8 @@ class RichPixelCreatorConfig(RichConfigurableUser):
     ## Initialize 
     def initialize(self):
         # default values
-        self.setRichDefaults ( "MaxPixels",  { "Offline" : 30000, 
-                                               "HLT"     : 30000 } )
+        self.setRichDefaults ( "MaxPixels", { "Offline" : 30000, 
+                                              "HLT"     : 30000 } )
 
     ## @brief Check the configuration is OK
     #

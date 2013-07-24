@@ -33,17 +33,29 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
     def initialize(self):
         # default values
         self.setRichDefaults ( "Radiators", { "Offline" : [True,True,True], 
-                                              "HLT"     : [True,True,True] } )
+                                              "HLT"     : [False,True,True] } )
         self.setRichDefaults ( "MaxPhotons", { "Offline" : 250000, 
                                                "HLT"     : 250000 } )
+
+    ## @brief Apply any tweeks to the default configuration that vary by DataType
+    def dataTypeTweeks(self):
+
+        if not self.getProp("Simulation") :
+            self.richTools().photonReco().CKThetaQuartzRefractCorrections = [ 0,0,0 ]
+
+        # Get the DataType
+        dataType = self.getProp("DataType")
+
+        ## if dataType == "Upgrade" :
+        ##     # Shouldn't be needed really. Needs some tuning for the upgrade
+        ##     if not self.isPropertySet("SelectionMode") :
+        ##         self.setProp("SelectionMode","All")
 
     ## Apply configurations
     def applyConf(self):
 
-        from Configurables import RichTools
-
-        if not self.getProp("Simulation") :
-            self.richTools().photonReco().CKThetaQuartzRefractCorrections = [ 0,0,0 ]
+        # DataType specific tweeks
+        self.dataTypeTweeks()
 
         # Context
         context = self.getProp("Context")

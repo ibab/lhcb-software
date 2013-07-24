@@ -30,6 +30,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
     ## The default options
     __slots__ = {
         "Context"                 : "Offline",
+        "DataType"                : "", # Type of data, propagated from application
         "Mode"                    : "Full",
         "Radiators"               : [], # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
         "InitAlgorithms"          : True,
@@ -99,6 +100,9 @@ class RichGlobalPIDConfig(RichConfigurableUser):
     #  @param sequence The sequencer to add the PID algorithms to
     def applyConf(self):
 
+        # DataType specific tweeks
+        self.dataTypeTweeks()
+
         # Are we properly configured
         if not self.isPropertySet("PidSequencer") :
             raise RuntimeError("ERROR : PID Sequence not set")
@@ -107,6 +111,17 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         # Setup the tools and algs
         if self.getProp("InitAlgorithms") : self.applyConfAlgs(sequence)
         if self.getProp("InitTools")      : self.applyConfTools()
+
+    ## @brief Apply any tweeks to the default configuration that vary by DataType
+    def dataTypeTweeks(self):
+
+        # Get the DataType
+        dataType = self.getProp("DataType")
+
+        # Different cuts for early data
+        if dataType == "2009" or dataType == "2010" :
+            if not self.isPropertySet("MaxUsedPixels") :
+                self.setProp( "MaxUsedPixels", 20000 )
 
     ## @brief Configure the algorithms, adding them to the supplied sequencer
     #  @param sequence The sequencer to add the PID algorithms to

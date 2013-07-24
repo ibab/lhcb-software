@@ -69,7 +69,7 @@ class RichRecSysConf(RichConfigurableUser):
                                                    "proton","belowThreshold"])
         self.setRichDefault("Particles","HLT",    ["pion","kaon"] )
         self.setRichDefault("Radiators","Offline", ["Aerogel","Rich1Gas","Rich2Gas"] )
-        self.setRichDefault("Radiators","HLT",     ["Aerogel","Rich1Gas","Rich2Gas"] )
+        self.setRichDefault("Radiators","HLT",     ["Rich1Gas","Rich2Gas"] )
 
     ## Shortcut to the cosmics option
     def cosmics(self) : return "cosmics" in self.getProp("SpecialData")
@@ -106,6 +106,32 @@ class RichRecSysConf(RichConfigurableUser):
     ## Access the global PID configurable
     def gpidConfig(self) : return self.getRichCU(RichGlobalPIDConfig)
 
+    ## @brief Apply any tweeks to the default configuration that vary by DataType
+    def dataTypeTweeks(self):
+
+        # Get the DataType
+        dataType = self.getProp("DataType")
+        dataType = "Upgrade"
+
+        # Tweeks for the Upgrade
+        if dataType == "Upgrade" :
+
+            # No Aerogel in the upgrade
+            if not self.isPropertySet("Radiators") :
+                self.setProp( "Radiators", ["Rich1Gas","Rich2Gas"] )
+
+            # Fudge factors for the photon reconstruction.
+            # Need to understand why these are required, as they indicate
+            # some small biases probably exist in the reconstruction.
+            self.richTools().photonReco().CKThetaQuartzRefractCorrections = [ -0.00625, 0.0001, 2.9e-5 ]
+
+            # Scale factors for the Cherenkov resolution tool.
+            # Needed as the upgrade has better resolutions.
+            # Longer term, the tools needs a proper retuning for the upgrade
+            self.richTools().ckResolution().ScaleFactor = [0.57, 0.57,0.7]
+                
+            
+
     ## @brief Apply the configuration to the configured GaudiSequencer
     def applyConf(self) :
 
@@ -114,19 +140,15 @@ class RichRecSysConf(RichConfigurableUser):
             raise RuntimeError("ERROR : Reconstruction Sequence not set")
         recoSequencer = self.getProp("RecoSequencer")
 
-        # Change default cuts for 2009 and 2010 data.
-        # need to find a cleaner way to handle this sort of thing longer term
-        dataType = self.getProp("DataType")
-        if dataType == "2009" or dataType == "2010":
-            self.gpidConfig().MaxUsedPixels = 20000
-            if self.getProp("Context") == "Offline" :
-                self.trackConfig().MaxUsedTracks = 500
-            else:
-                self.trackConfig().MaxUsedTracks = 400
+        # DataType specific tweeks
+        self.dataTypeTweeks()
 
         # Pass some settings to used configurables
         self.setOtherProps( self.photonConfig(), ["DataType"] )
-        
+        self.setOtherProps( self.pixelConfig(),  ["DataType"] )
+        self.setOtherProps( self.trackConfig(),  ["DataType"] )
+        self.setOtherProps( self.gpidConfig(),   ["DataType"] )
+         
         # Tools. (Should make this automatic in the base class somewhere)
         self.setOtherProps(self.richTools(),["Context","OutputLevel"])
 

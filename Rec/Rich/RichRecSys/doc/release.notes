@@ -4,6 +4,12 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2013-07-24 - Chris Jones
+ - Import some Upgrade specific tunings and tweeks. Applied automatically
+   when the DataType property is set to "Upgrade". 
+   This is work in progress, as some of them indicate some possible issues in 
+   the code that need to be looked into.
+
 !========================= RichRecSys v4r7p1 2013-04-30 =========================
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake

@@ -24,7 +24,8 @@ class RichTrackCreatorConfig(RichConfigurableUser):
 
     # Steering options
     __slots__ = {
-        "Context":       "Offline"  # The context within which to run
+        "Context"        : "Offline"  # The context within which to run
+       ,"DataType"       : ""         # Type of data, propagated from application
        ,"Radiators": [True,True,True] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
        ,"SpecialData"    : []   # Various special data processing options. See KnownSpecialData in RecSys for all options
        ,"InputTracksLocation" : "" # The input location for tracks
@@ -61,6 +62,32 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         if self.isPropertySet("OutputLevel") :
             conponent.OutputLevel = self.getProp("OutputLevel")
 
+    ## @brief Apply any tweeks to the default configuration that vary by DataType
+    def dataTypeTweeks(self):
+
+        # Get the DataType
+        dataType = self.getProp("DataType")
+
+        # Different cuts for early data
+        if dataType == "2009" or dataType == "2010":
+            
+            if not self.isPropertySet("MaxUsedTracks") :
+                if self.getProp("Context") == "Offline" :
+                    self.setProp( "MaxUsedTracks", 500 )
+                else:
+                    self.setProp( "MaxUsedTracks", 400 )
+
+        ## elif dataType == "Upgrade" :
+
+        ##     # Temporarily add ghost prob cuts
+        ##     if not self.isPropertySet("TrackCuts") :
+        ##         self.setProp( "TrackCuts", { "Forward" : { "GhostProbCut": [0.0,0.3], "Chi2Cut" : [0,5], "PCut" : [0,9999999] } ,
+        ##                                      "Match"   : { "GhostProbCut": [0.0,0.3], "Chi2Cut" : [0,5], "PCut" : [0,9999999] } ,
+        ##                                      "Seed"    : { "GhostProbCut": [0.0,0.3], "Chi2Cut" : [0,5], "PCut" : [0,9999999] } ,
+        ##                                      "VeloTT"  : { "GhostProbCut": [0.0,0.3], "Chi2Cut" : [0,5], "PCut" : [0,9999999] } ,
+        ##                                      "KsTrack" : { "GhostProbCut": [0.0,0.3], "Chi2Cut" : [0,5], "PCut" : [0,9999999] } } )
+            
+
     ## @brief Apply the configuration
     #
     def applyConf(self):
@@ -68,6 +95,9 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         # segments
         segConf = self.getRichCU(RichSegmentCreatorConf)
         self.setOtherProp(segConf,"Context")
+
+        # DataType specific tweeks
+        self.dataTypeTweeks()
 
         # Configure the tracking tools
         nickname = "RichTrackCreator"
