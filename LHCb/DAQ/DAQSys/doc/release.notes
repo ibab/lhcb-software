@@ -6,6 +6,7 @@
 
 ! 2013-07-24 - Rob Lambert
  - Minor renaming after Core soft meeting. See task #19106
+ - Adapt test for new warning in DecodeRawEvent.py
 
 ! 2013-07-23 - Rob Lambert
  - First full implementation of drop-in replacement for DecodeRawEvent.py

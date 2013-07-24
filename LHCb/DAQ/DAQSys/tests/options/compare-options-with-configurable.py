@@ -33,6 +33,9 @@ def parse(stdout):
         if not len(block):
             continue
         lines=[l.lstrip().rstrip() for l in block.split("\n") if len(l)>1]
+        if len(lines)<3:
+            print block
+            continue
         dest=lines[0]
         algname=lines[1]
         #print lines[2]
