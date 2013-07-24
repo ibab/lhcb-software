@@ -24,8 +24,8 @@ class DecodeRawEvent(ConfigurableUser):
         if self.isPropertySet("DecoderDB"):
             db=self.getProp("DecoderDB")
         if db is None:
-            from DAQSys.Decoders import decoder_db
-            db=decoder_db
+            from DAQSys.Decoders import DecoderDB
+            db=DecoderDB
         return db
         
     def allBanks(self):

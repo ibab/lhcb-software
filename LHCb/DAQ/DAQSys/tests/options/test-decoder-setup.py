@@ -1,10 +1,10 @@
 import DAQSys
-from DAQSys.Decoders import decoder_db
+from DAQSys.Decoders import DecoderDB
 from DAQSys.DecoderClass import validate
 
-validate(decoder_db)
+validate(DecoderDB)
 
-for k,v in decoder_db.items():
+for k,v in DecoderDB.items():
     if v.Active:
         if len(v.listInputs())==0:
             raise ValueError("Decoder "+v.FullName+" input location unknown.")
@@ -20,7 +20,7 @@ for k,v in decoder_db.items():
             raise ValueError("Decoder "+v.FullName+" banks unknown.")
 
 #check the setup
-for k,decoder in decoder_db.items():
+for k,decoder in DecoderDB.items():
     if decoder.Active:
         decoder.setup()
 

@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-07-24 - Rob Lambert
+ - Minor renaming after Core soft meeting. See task #19106
+
 ! 2013-07-23 - Rob Lambert
  - First full implementation of drop-in replacement for DecodeRawEvent.py
  - Requires manipulators module of GaudiConf, and latest DAQ/RawEventCompat.

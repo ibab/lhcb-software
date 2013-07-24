@@ -1,39 +1,39 @@
 import DAQSys
-from DAQSys.DecoderClass import decoder
+from DAQSys.DecoderClass import Decoder
 from DAQSys.DecoderClass import validate
 
-#test features of the decoder class
+#test features of the Decoder class
 
 test_db={}
 
 thednames=["GaudiSequencer/SomeCrazyAlg","GaudiSequencer/SomeOtherCrazyAlg","GaudiSequencer/Acounter","GaudiSequencer/FishSticks","GaudiSequencer/FishSticks2"]
 
-d1=decoder(thednames[0],
+d1=Decoder(thednames[0],
            active=True, banks=["Barclays"],
            properties={"Members":["Something","AnotherThing"]},
            conf=test_db)
 
-d2=decoder(thednames[1],
+d2=Decoder(thednames[1],
            active=True, banks=["Lloyds"],
            properties={"OutputLevel":7},
            inputs={"Members":["Blah","Blah"]},
            outputs={"Members":["Blah","Blah"]},
            conf=test_db)
 
-d3=decoder(thednames[2],
+d3=Decoder(thednames[2],
            active=True, banks=["TSB"],
            properties={"OutputLevel":7},
            outputs={"Members":["Blah","Blah"]},
            publicTools=[thednames[3]],
            conf=test_db)
 
-d4=decoder(thednames[3],
+d4=Decoder(thednames[3],
            active=False,
            properties={"OutputLevel":6},
            inputs={"Members":["Blah","Blah"]},
            conf=test_db)
 
-d5=decoder(thednames[4],
+d5=Decoder(thednames[4],
            active=True,
            properties={"OutputLevel":6},
            inputs={"Members":None},
@@ -124,7 +124,7 @@ if d2.listOutputs()!=["Blah"]:
 
 
 #now validate the whole DB
-from DAQSys.Decoders import decoder_db
-validate(decoder_db)
+from DAQSys.Decoders import DecoderDB
+validate(DecoderDB)
 
 print "Pass"

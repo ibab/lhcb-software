@@ -1,13 +1,13 @@
 """
 Module to hold the configurabloid python class for decoder-like objects.
-class: decoder
+class: Decoder
 and also simple manipulators of the database it creates:
 validate(db), decodersForBank(db,bank,ignoreActive=False), decoderToLocation(db,location,ignoreActive=False)
 """
 from GaudiConf.Manipulations import configurableInstanceFromString, addPrivateToolFromString
 
 
-class decoder(object):
+class Decoder(object):
     """
     A sort of configurabloid which adds itself to a database of possible decoders to configure.
     
@@ -72,7 +72,7 @@ class decoder(object):
             op=dict(op)
         if type(pr) is dict:
             pr=dict(pr)
-        return decoder(newname,self.Active,self.Banks,ip,op,pr,self.PrivateTools,self.PublicTools,self.__db__)
+        return Decoder(newname,self.Active,self.Banks,ip,op,pr,self.PrivateTools,self.PublicTools,self.__db__)
     def __setprop__(self,top,prop,val):
         """
         Handle tool handles? not 100% sure...

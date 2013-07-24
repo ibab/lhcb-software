@@ -1,4 +1,4 @@
-from DAQSys.Decoders import decoder_db as ddb
+from DAQSys.Decoders import DecoderDB as ddb
 from DAQSys.DecoderClass import decodersForBank
 from Configurables import GaudiSequencer, DecodeRawEvent, DataOnDemandSvc
 
