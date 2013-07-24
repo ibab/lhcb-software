@@ -4,10 +4,10 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
+!========================= FTDet v2r1 2013-07-24 =========================
 ! 2013-12-24 - Diego Milanes
 - bug fix. Inverted of U-V stereo angles, which causing Sipm for those layers to be shifted wrt those in X layers
 
-!========================= FTDet v2r1 2013-07-23 =========================
 ! 2013-12-23 - Diego Milanes
 -Changes odd behaviour on getting local coordinates on the layer construction from a FibreMat
 
