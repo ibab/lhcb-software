@@ -1,0 +1,91 @@
+!-----------------------------------------------------------------------------
+! Package     : Pr/PrAlgorithms
+! Responsible : Yasmin Amhis
+! Purpose     : Pattern reconstruction for the upgrade
+!-----------------------------------------------------------------------------
+
+! 2013-07-24 - Francesco Polci
+ - Added switch between old and new detector needed in PrFTHitManager.cpp
+
+!========================= PrAlgorithms v1r6 2013-07-18 =========================
+! 2013-06-20 - Marco Cattaneo
+ - Add missing dependency on Tr/TrackInterfaces
+
+! 2013-06-12 - Michel De Cian
+ - Fix a coverity warning in PrAddUTCoord.cpp
+
+!========================= PrAlgorithms v1r5 2013-05-28 =========================
+! 2013-05-27 - Sascha Stahl
+ - PrForward track now picks up state closest to the end of velo.
+ - Bugfix when using momentum estimate.
+
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warnings
+
+!========================= PrAlgorithms v1r4 2013-04-30 =========================
+! 2013-04-22 - Sascha Stahl
+ - Added check for backward velo tracks in PrForwardTracking.
+
+!========================= PrAlgorithms v1r3 2013-03-25 =========================
+! 2013-03-25 - Marco Cattaneo
+ - Use stable_sort in PrSeedingXLayers, to get same results in gcc43 and gcc46
+
+! 2013-03-21 - Amhis Yasmine 
+ - Delete from svn PrSeedingNew.cpp/h 
+	
+! 2013-03-21 - Amhis Yasmine 
+ - Rename PrSeedingNew to PrSeedingXLayers to make it default 
+   in reconstruction upgrade sequence 	
+
+! 2013-03-18 - Sascha Stahl
+ - Fixed track type (Long -> Ttrack) in PrSeedingAlgorithm and PrSeedNew.
+
+! 2013-02-27 - Thomas Nikodem
+ - Added PrAddUTCoord to PrForwardTool.
+
+
+! 2013-02-27 - Sascha Stahl
+ - Changed interface of PrAddUTCoord to IAddTTClusterTool.h.
+
+
+! 2013-02-20 - Olivier Callot
+ - New algorithm PrSeedingNew for FT seeding, prototype for tests.
+
+!========================= PrAlgorithms v1r2 2013-02-14 =========================
+! 2013-02-07 - Sascha Stahl
+ - Enabled finding of T-Tracks in PrSeeding.
+
+! 2013-02-05 - Sascha Stahl
+ - Added PrDownstream and PrAddUTCoord to PrAlgorithms.
+
+! 2012-11-21 - Olivier Callot
+ - Better parameterisation of momentum and pprojections
+ - New parameterisation of the zone to look at in the T stations for a given Pt.
+   The same parameters could be used to rpedict the position if te hmomentum is known.
+
+!========================= PrAlgorithms v1r1 2012-11-28 =========================
+! 2012-11-22 - Marco Clemencic
+ - Added CMake configuration file.
+
+!========================= PrAlgorithms v1r0 2012-10-01 =========================
+! 2012-09-12 - Marco Cattaneo
+ - Fix an i686 compilation warning in PrForwardTool.cpp
+
+! 2012-09-04 - Olivier Callot
+ - Remove a useless line in PrSeedQuadruplet.h
+
+! 2012-08-14 - Olivier Callot
+ - Remove the cut on cy, loosing too much at low stereo angle.
+
+! 2012-08-13 - Olivier Callot
+ - Better ghost rejection by fixing some bugs in stereo processing
+
+! 2012-07-31 - Olivier Callot
+ - Many improvements. Interface for IPrForwardTool. second implementation (worse)
+
+! 2012-06-25 - Olivier Callot
+ - Add the seeding algorithm, and related auxilliary classes.
+ - Modify the geometry tool to give momentum for seed tracks too.
+
+! 2012-06-18 - Olivier Callot
+ - Initial creation, first version of the Forward tracking
