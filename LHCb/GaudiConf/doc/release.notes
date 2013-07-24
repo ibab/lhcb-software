@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-07-24 - Rob Lambert
+ - Add obsolete warning into DecodeRawEvent.py
+
 ! 2013-07-23 - Rob Lambert
  - Add new manipulator methods for use in DAQSys, fix one small bug in previous method
 

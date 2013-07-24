@@ -1,5 +1,6 @@
 
 # Job options to configure the data on demand service for decoding the RawEvent
+print "# WARNING: You have imported DecodeRawEvent.py, there is now a configurable doing the same job. See savannah task #19106."
 
 from Gaudi.Configuration import *
 from Configurables import ( DataOnDemandSvc,
