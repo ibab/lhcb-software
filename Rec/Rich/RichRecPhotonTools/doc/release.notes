@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
+!2013-07-24 - Sajan Easo
+ - Updated RichPhotonSignalGaussProb.cpp for using with pmt reconstruction in RICH upgrade.
+   Switches are set up so that it can run with hpd and pmt configurations.
 
 !========================= RichRecPhotonTools v1r11 2013-07-18 =======================
 ! 2013-07-16 - Chris Jones
