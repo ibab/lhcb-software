@@ -66,7 +66,7 @@ class RichRecQCConf(RichConfigurableUser):
     ## Steering options
     __slots__ = {
         "Context"  : "Offline"  # The context within which to run
-       ,"DataType" : "2012"     # Data type, can be ['2008',2009','2010','2011','2012']
+       ,"DataType" : "2012"     # Data type, can be ['2008',2009','2010','2011','2012','Upgrade']
        ,"MoniSequencer" : None  # The sequencer to add the RICH monitoring algorithms to
        ,"Monitors" : { "Expert"         : [ "DBConsistencyCheck", "L1SizeMonitoring",
                                             "DataDecodingErrors", "ODIN",
@@ -158,7 +158,7 @@ class RichRecQCConf(RichConfigurableUser):
     ## Initialize 
     def initialize(self):
         self.setRichDefault("Radiators","Offline", ["Aerogel","Rich1Gas","Rich2Gas"] )
-        self.setRichDefault("Radiators","HLT",     ["Aerogel","Rich1Gas","Rich2Gas"] )
+        self.setRichDefault("Radiators","HLT",     ["Rich1Gas","Rich2Gas"] )
 
     ## @brief The RICH radiators to use
     #  @return a vector of bools indicating if (Aerogel,Rich1Gas,Rich2Gas) should be used
@@ -302,8 +302,23 @@ class RichRecQCConf(RichConfigurableUser):
             if mon not in self.__known_monitors__ :
                 raise RuntimeError("Unknown monitor '%s'"%mon)
 
+    ## @brief Apply any tweeks to the default configuration that vary by DataType
+    def dataTypeTweeks(self):
+
+        # Get the DataType
+        dataType = self.getProp("DataType")
+
+        if dataType == "Upgrade" :
+
+            # No Aerogel in the upgrade
+            if not self.isPropertySet("Radiators") :
+                self.setProp( "Radiators", ["Rich1Gas","Rich2Gas"] )
+
     ## Apply the configuration to the given sequence
     def applyConf(self):
+
+        # DataType specific tweeks
+        self.dataTypeTweeks()
 
         ## Sanity checks
         self.sanityChecks()

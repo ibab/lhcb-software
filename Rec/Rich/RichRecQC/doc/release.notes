@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2013-07-24 - Chris Jones
+ - Add some specific tuning options for DataType="Upgrade".
+   Currently just disables the use of Aerogel.
+
 !========================= RichRecQC v2r62 2013-06-03 =========================
 ! 2013-05-28 - Chris Jones
  - Fix clang warning (incorrect use of + instead of << with ostringstream).
