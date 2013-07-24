@@ -1,13 +1,18 @@
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GaussCherenkov
 ! Responsible	: Sajan Easo 
-! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH Upgrade
+! Purpose     : collection of sensitive detectors, G4 actions, 
+!               etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
-2013-07-19 - Sajan Easo
-- Adapations for RICH-2019 upgrade studies. Added new files mainly for the analysis part.
-- Rearrangeed source code in different subdirectories to avoid compilation warnings. Created
-  another source code subdirectory named CkvPhysPhotDet as part of re-organization of source code.
-- This is all compatible with Gauss v46r1p1 onwards
+
+!===================== GaussCherenkov v4r0 2013-07-24 ========================
+! 2013-07-19 - Sajan Easo
+ - Adapations for RICH-2019 upgrade studies. Added new files mainly for the 
+   analysis part.
+ - Rearrangeed source code in different subdirectories to avoid compilation 
+   warnings. Created another source code subdirectory named CkvPhysPhotDet 
+   as part of re-organization of source code.
+ - This is all compatible with Gauss v46r1p1 onwards
 
 !===================== GaussCherenkov v3r1 2013-03-07 ========================
 ! 2013-02-15 - Patrick Robbe
