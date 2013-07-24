@@ -4,12 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== Gauss v46r4 2013-07-24 ===========================
 ! 2013-07-24 - Paul Szczypka
  - Added gauss-upgrade-ft_mono, reverted gauss-upgrade-ft to use FT_BiLayer.
 
 ! 2013-07-22 - Paul Szczypka
  - Correct some recent release notes to have proper date (2013 vs. 2012)
- - Updated gauss-upgrade-ft to read DEV DB and use new FT_MonoLayer geo from there.
+ - Updated gauss-upgrade-ft to read DEV DB and use new FT_MonoLayer geo 
+   from there.
  - Updated upgrade qmtests to use latest global tags as default.
 
 ! 2013-07-21 - Patrick Robbe
@@ -19,8 +21,9 @@
  - Updated Configuration to remove the now-annoying AEROGEL WARNINGS.
 
 ! 2013-07-12 - Paul Szczypka
- - QMTests: Added new gauss-upgrade-ft qmtest, currently points to my public area
-   for the DDDB location. Needs to be updated once the geo is in the official DB.
+ - QMTests: Added new gauss-upgrade-ft qmtest, currently points to my public 
+   area for the DDDB location. Needs to be updated once the geo is in the 
+   official DB.
 
 ! 2013-07-16 - Patrick Robbe
  - CaloOnly.py: add option to switch off RichCuts
@@ -40,6 +43,7 @@
  - QMTests: increase time limit for Lambda_b Pythia8 test (15874100)
 
 !========================== Gauss v46r3 2013-06-27 ===========================
+
 ! 2013-06-26 - Patrick Robbe
  - MonitorInDetail.opts: remove GeneratorFullMonitor which is not
    supported anymore.
