@@ -1,3 +1,18 @@
+2013-07-24 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v7r8p2
+
+	LbConfiguration
+	* python/LbConfiguration/Platform.py: Added new compilers and platforms 
+
+	LbUtils
+	* cmake: updated CMake support modules
+
+	Lblegacy
+	* python/LbLegacy/install_project.py: Fix to get LCGCMT for shared tarball for 
+	current CMTCONFIG, even if it not known to Platform.py 
+	* scripts/mkMCGentar: Added cteq6m.LHpdf
+	
 2013-06-25 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r8p1
