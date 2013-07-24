@@ -71,6 +71,8 @@ void PrFTHitManager::buildGeometry ( ) {
 //=========================================================================
 void PrFTHitManager::decodeData ( ) {
   
+  debug() << "I AM IN DECODEDATA " << endmsg;
+
   typedef FastClusterContainer<LHCb::FTRawCluster,int> FTRawClusters;
   FTRawClusters* clus = get<FTRawClusters>( LHCb::FTRawClusterLocation::Default );
   DeFTLayer* myLayer = NULL;
@@ -142,56 +144,56 @@ void PrFTHitManager::decodeData ( ) {
     }
     
   } else { //NEW DETECTOR
-   debug() << "I HAVE THE NEW DETECTOR VERSION" << endmsg;
+    debug() << "I HAVE THE NEW DETECTOR VERSION" << endmsg;
     for ( FTRawClusters::iterator itC = clus->begin(); clus->end() != itC; ++itC ) {
       debug() << "IN THE LOOP CHANNELID LAYER" << (*itC).channelID().layer() << endmsg;
       ftMat = m_ftDet->findFibreMat( (*itC).channelID() );
-      debug() << "MYFIBERMAT " << ftMat->FibreMatID() << endmsg;
-      if( ftMat->FibreMatID() != oldFibreMat ) {  
-	//oldFibreMat =(*itC).channelID().layer();
-	//giveMeFibreMat((*itC).channelID(),myFibreMat);  
-	oldFibreMat= ftMat->FibreMatID();
-	debug() << "FIBERMATID = " <<ftMat->FibreMatID() << endmsg;
-	if ( NULL == ftMat ) {
-	  info() << "FiberMat not found for FT channelID " << (*itC).channelID() << endmsg;    
-	  oldFibreMat = -1000;
+      if ( NULL == ftMat ) {
+	info() << "FiberMat not found for FT channelID " << (*itC).channelID() << endmsg; 
+	oldFibreMat = -1000;   
+      } else {
+	debug() << "MYFIBERMAT " << ftMat->FibreMatID() << endmsg;
+	if( ftMat->FibreMatID() != oldFibreMat ) {  
+	  oldFibreMat= ftMat->FibreMatID();
+	  debug() << "FIBERMATID = " <<ftMat->FibreMatID() << endmsg;
+	  ////SMEARING OF BILAYER NOW SHOULD BE DONE AT WHICH LEVEL???
+	  // unsigned int biLayer = (*itC).channelID().layer()/2;  
+	  // if ( m_zSmearing > 0. && biLayer != oldBiLayer ) {
+	  //   oldBiLayer = biLayer;
+	  //   zDisplacement = m_zSmearing * m_gauss();
+	  //   if ( msgLevel( MSG::DEBUG ) ) {
+	  //     debug () << "Bilayer " << biLayer << " z displacement " << zDisplacement << endmsg;
+	  //   }
 	}
-	////SMEARING OF BILAYER NOW SHOULD BE DONE AT WHICH LEVEL???
-	// unsigned int biLayer = (*itC).channelID().layer()/2;  
-	// if ( m_zSmearing > 0. && biLayer != oldBiLayer ) {
-	//   oldBiLayer = biLayer;
-	//   zDisplacement = m_zSmearing * m_gauss();
-	//   if ( msgLevel( MSG::DEBUG ) ) {
-	//     debug () << "Bilayer " << biLayer << " z displacement " << zDisplacement << endmsg;
-	//   }
-	//}
-      }
-      float fraction = (*itC).fraction() + 0.125;   // Truncated to 4 bits = 0.25. Add half of it
-      LHCb::FTChannelID id = (*itC).channelID();
-      seg = ftMat->createDetSegment( id, fraction );   //create detector segment  
-    
-      //== Add some smearing if needed
-      if ( m_xSmearing > 0. || m_zSmearing > 0. ) {
-	float x0 = seg.x(0.);
-	float z0 = seg.z(0.);
-	float dxDy = 0.001 * ( seg.x(1000.)-seg.x(0.) );
-	float dzDy = 0.001 * ( seg.z(1000.)-seg.z(0.) );
-	float yMin = seg.yMin();
-	float yMax = seg.yMax();
 	
-	if ( m_xSmearing > 0. ) x0 = x0 + m_xSmearing * m_gauss();
-	if ( m_zSmearing > 0. ) z0 = z0 + zDisplacement;
-	DetectorSegment tmp( x0, z0, dxDy, dzDy, yMin, yMax );
-	seg = tmp;
-      }
+	float fraction = (*itC).fraction() + 0.125;   // Truncated to 4 bits = 0.25. Add half of it
+	LHCb::FTChannelID id = (*itC).channelID();
+	seg = ftMat->createDetSegment( id, fraction );   //create detector segment  
+	
+	
+	//== Add some smearing if needed
+	if ( m_xSmearing > 0. || m_zSmearing > 0. ) {
+	  float x0 = seg.x(0.);
+	  float z0 = seg.z(0.);
+	  float dxDy = 0.001 * ( seg.x(1000.)-seg.x(0.) );
+	  float dzDy = 0.001 * ( seg.z(1000.)-seg.z(0.) );
+	  float yMin = seg.yMin();
+	  float yMax = seg.yMax();
+	  
+	  if ( m_xSmearing > 0. ) x0 = x0 + m_xSmearing * m_gauss();
+	  if ( m_zSmearing > 0. ) z0 = z0 + zDisplacement;
+	  DetectorSegment tmp( x0, z0, dxDy, dzDy, yMin, yMax );
+	  seg = tmp;
+	}
 
-      int lay  = (*itC).channelID().layer();   
-      int zone = ( (*itC).channelID().quarter() > 1 ) ? 1 : 0; 
-      int code = 2*lay + zone;
-      PrHit* aHit = newHitInZone( code );
-      float errX = 0.05 + .03 * (*itC).size();
-      aHit->setHit( LHCb::LHCbID( (*itC).channelID() ), (*itC).size(), (*itC).charge(), seg, errX , zone, lay );
-      debug() << " .. hit " << (*itC).channelID() << " zone " << zone << " x " << seg.x(0.) << endmsg;
+	int lay  = (*itC).channelID().layer();   
+	int zone = ( (*itC).channelID().quarter() > 1 ) ? 1 : 0; 
+	int code = 2*lay + zone;
+	PrHit* aHit = newHitInZone( code );
+	float errX = 0.05 + .03 * (*itC).size();
+	aHit->setHit( LHCb::LHCbID( (*itC).channelID() ), (*itC).size(), (*itC).charge(), seg, errX , zone, lay );
+	debug() << " .. hit " << (*itC).channelID() << " zone " << zone << " x " << seg.x(0.) << endmsg;
+      }
     }
 
     /*  
@@ -204,8 +206,7 @@ void PrFTHitManager::decodeData ( ) {
     for ( unsigned int lay = 0; nbZones() > lay ; ++lay ) {
       std::sort( zone(lay)->hits().begin(), zone(lay)->hits().end(), PrHit::LowerByCoord() );
     }
-    
-  }  
+  } //end switch to new det 
   
 }
 //=============================================================================
