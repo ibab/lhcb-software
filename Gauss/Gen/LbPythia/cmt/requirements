@@ -7,7 +7,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package       LbPythia
-version       v14r0
+version       v14r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
