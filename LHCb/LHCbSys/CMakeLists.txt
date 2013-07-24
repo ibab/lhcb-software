@@ -57,6 +57,7 @@ gaudi_depends_on_subdirs(Associators/MCAssociators
                          Ex/DetCondExample
                          Ex/DetDescExample
                          Ex/IOExample
+                         FT/FTDAQ
                          GaudiConf
                          GaudiConfUtils
                          GaudiMTTools
@@ -99,7 +100,9 @@ gaudi_depends_on_subdirs(Associators/MCAssociators
 			 Tools/EventIndexer
                          Tools/FileStager
                          Tools/XmlTools
-			 Velo/VeloDAQ)
+			 Velo/VeloDAQ
+			 VL/VLDAQ
+			 VP/VPDAQ)
 
 
 gaudi_add_test(QMTest QMTEST)

@@ -143,6 +143,11 @@ use LHCbTrackInterfaces   v1r0    Tr      # Marco Cattaneo
 
 use VeloDAQ               v6r10   Velo    # Kurt Rinnert
 
+# Upgrade DAQ
+use FTDAQ             v1r3     FT        #
+use VLDAQ             v1r4     VL        # Heinrich Schindler
+use VPDAQ             v2r3     VP        # Marcin Kucharczyk
+
 # Declare this as a container package
 apply_pattern container_package
 
