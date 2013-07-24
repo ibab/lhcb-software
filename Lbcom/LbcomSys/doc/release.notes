@@ -6,6 +6,8 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+Moved VL/VLDAQ, VP/VPDAQ and FT/FTDAQ to LHCb for RawEventDecoding.
+
 </PRE><H1><A NAME=v14r1>2013-07-21 LbcomSys v14r1</A></H1><PRE>
 This version uses Gaudi v23r9 and LHCb v36r1
 
@@ -47,7 +49,7 @@ This version uses Gaudi v23r8 and LHCb v36r0
     instead of exist/get checks
 
 - In OT/OTMonitor v3r6
-  . Small bug fix in OTChannelMonitor 
+  . Small bug fix in OTChannelMonitor
 
 - In Rich/RichAlgorithms v1r7
   . Move Rich::DAQ::RawBufferToRichDigitsAlg to Rich/RichDAQ
@@ -105,9 +107,9 @@ This version uses Gaudi v23r7 and LHCb v35r5
 This version uses Gaudi v23r6 and LHCb v35r4
 
 - Packages modified: DAQ/DAQMonitors v1r9, FT/FTDAQ v1r2, L0/L0DU v10r27,
-    L0/L0Muon v9r12, L0/PuVeto v7r9, Muon/MuonAssociators v3r5, 
+    L0/L0Muon v9r12, L0/PuVeto v7r9, Muon/MuonAssociators v3r5,
     OT/OTMonitor v3r5, Rich/RichAlgorithms v1r6, ST/STAlgorithms v4r6,
-    ST/STDAQ v4r2, ST/STMonitors v4r2, Velo/VeloDAQ v6r9, 
+    ST/STDAQ v4r2, ST/STMonitors v4r2, Velo/VeloDAQ v6r9,
     Velo/VeloSimulation v3r14, VL/VLDAQ v1r3
 
 - In FT/FTDAQ v1r2
@@ -120,15 +122,15 @@ This version uses Gaudi v23r6 and LHCb v35r4
       The writing on the TES being done by the L0 decoding setup in Moore.
     o L0DUFromRawTool: For backward compatibility, reintroduce the RawLocation.
       Empty by default. If set, added in first position of the RawLocations list.
-  . Following Savannah bug #99253 : 
+  . Following Savannah bug #99253 :
     o L0Conf & L0DUFromRawAlg: Add new property EnsureKnownTCK, default True.
       If True, the L0DU decoding (L0DUFromRawAlg) will return an error if the
       TCK in use is not recognized
 
 - In L0/L0Muon v9r12
   . L0MuonOutputs : fix bug discovered by Coverity
-                    (was affecting debug printout only)  
-  . L0MuonModifyInputTool : new tool to allow removal of some hits used in the 
+                    (was affecting debug printout only)
+  . L0MuonModifyInputTool : new tool to allow removal of some hits used in the
                             L0Muon emulation for special studies
   . L0MuonAlg : modified to use this tool if the new property ModifyDigits
     is set to True (False by default)
@@ -176,7 +178,7 @@ This version uses Gaudi v23r5 and LHCb v35r3
 - This version introduces support for CMake. All packages have been modified
   to add CMake configuration files
 
-- Packages with modifications other than CMake support: 
+- Packages with modifications other than CMake support:
    Associators/Associators v3r8, Calo/CaloAssociators v6r12, Calo/CaloTools v6r5,
    FT/FTDAQ v1r1, Hlt/HltDAQ v2r16, L0/L0Calo v11r9, L0/L0DU v10r25,
    L0/L0Muon v9r11, L0/PuVeto v7r8, Muon/MuonAssociators v3r4,
@@ -213,7 +215,7 @@ This version uses Gaudi v23r5 and LHCb v35r3
   . Fix potential memory leak in VPRawBankToLiteCluster and do not return
     StatusCode::FAILURE from execute
 
-- In CaloAssociators v6r12, CaloTools v6r5, L0Calo v11r9, L0Muon v9r11, 
+- In CaloAssociators v6r12, CaloTools v6r5, L0Calo v11r9, L0Muon v9r11,
      STTools v4r14, VeloAlgorithms v5r7, VeloSimulation v3r13, VPDAQ v2r1
   . Use getIfExists instead of separate exist and get calls
 
@@ -221,18 +223,18 @@ This version uses Gaudi v23r5 and LHCb v35r3
      STTools v4r14, VLDAQ v1r2
   . Fixed build with C++11.
 
-- In Associators v3r8, CaloAssociators v6r12, CaloTools v6r5, FTDAQ v1r1, 
+- In Associators v3r8, CaloAssociators v6r12, CaloTools v6r5, FTDAQ v1r1,
      HltDAQ v2r16, L0Calo v11r9, L0Muon v9r11, PuVeto v7r8, MuonAssociators v3r4,
      OTAssociators v4r6, OTMonitor v3r4, SiTools v1r9, STAlgorithms v4r5,
-     STAssociators v1r7, STCheckers v4r1, STTools v4r14, VeloAlgorithms v5r7, 
+     STAssociators v1r7, STCheckers v4r1, STTools v4r14, VeloAlgorithms v5r7,
      VeloSimulation v3r13, VPDAQ v2r1, VPTools v2r1
   . Fix gcc -pedantic warnings
 
-- In Associators v3r8, STAssociators v1r7, 
+- In Associators v3r8, STAssociators v1r7,
   . Remove obsolete file <package>_dll.cpp
 
-- In Associators v3r8, FTDAQ v1r1, HltDAQ v2r16, L0Calo v11r9, PuVeto v7r8, 
-     MuonAssociators v3r4, STTools v4r14, VeloAlgorithms v5r7, VPDAQ v2r1, 
+- In Associators v3r8, FTDAQ v1r1, HltDAQ v2r16, L0Calo v11r9, PuVeto v7r8,
+     MuonAssociators v3r4, STTools v4r14, VeloAlgorithms v5r7, VPDAQ v2r1,
      VPTools v2r1
   . Fix unprotected debug() and verbose()
 
@@ -246,7 +248,7 @@ This version uses Gaudi v23r5 and LHCb v35r3
 </PRE><H1><A NAME=v13r2>2012-10-02 LbcomSys v13r2</A></H1><PRE>
 This version uses Gaudi v23r4 and LHCb v35r2
 
-- Development release 
+- Development release
 
 - Packages added: FT/FTDAQ   v1r0 - Raw data encoding/decoding for Fibre Tracker
                   VP/VPDAQ   v2r0 - Raw data encoding/decoding for Velo Pixel
@@ -335,7 +337,7 @@ This version uses Gaudi v23r3 and LHCb v35r0
     according to their Et before storing them in the data store.
 
 - In L0DU v10r21
-  . L0Conf : 
+  . L0Conf :
     o add default setting (LUT version) for L0Muon emulation for DataType 2012
     o add new property to be used by Moore : ForceSingleL0Configuration
       (makes all L0 algorithms request the same type of L0 config provider)
@@ -396,11 +398,11 @@ This version uses Gaudi v23r2 and LHCb v34r3
 
 - Production release for 2012 data taking
 
-- Packages updated: DAQ/DAQMonitors v1r5, L0/L0Calo v11r7, L0/L0DU v10r20, 
+- Packages updated: DAQ/DAQMonitors v1r5, L0/L0Calo v11r7, L0/L0DU v10r20,
     L0/L0Muon v9r10, ST/STMonitors v3r9, ST/STTools v4r12
 
 - In DAQMonitors v1r5
-  . RawBankSizeMonitor : add 1D histogram and global profile (per bankType) + 
+  . RawBankSizeMonitor : add 1D histogram and global profile (per bankType) +
     counters. Convert banksize in Bytes
 
 - In L0Calo v11r7
@@ -425,7 +427,7 @@ This version uses Gaudi v23r2 and LHCb v34r3
     all strips.
 
 - In STTools v4r12
-  . Implement methods to return pedestal subtracted noise in noise 
+  . Implement methods to return pedestal subtracted noise in noise
     calculation tools.
 
 </PRE><H1><A NAME=v12r2>2012-03-27 LbcomSys v12r2</A></H1><PRE>
@@ -480,7 +482,7 @@ This version uses Gaudi v23r0 and LHCb v34r0
     ST/STMonitors v3r7p2, Velo/VeloAlgorithms v5r6, Velo/VeloSimulation v3r12
 
 - In HltDAQ v2r14p1
-  . Fix warning: variable set but not used 
+  . Fix warning: variable set but not used
 
 - In L0DU v10r17p1, L0MuonMonitor v2r2p1, STMonitors v3r7p2
   . Remove unnecessary build dependency, fixes annoying warning from
@@ -506,7 +508,7 @@ This version uses Gaudi v23r0 and LHCb v34r0
 - In VeloSimulation v3r12
   . Added simulation of intra-sensor crosstalk seen in R sensors in 2011 data
     Requires updates to DeVelo in VeloDet v13r18. Necessary simulation conditions
-    are defined as from SIMCOND+DDDB tag velo-20120120, ignored otherwise 
+    are defined as from SIMCOND+DDDB tag velo-20120120, ignored otherwise
 
 - In L0DU v10r17p1, L0MuonMonitor v2r2p1, OTMonitor v3r3p1, STCheckers v3r3p1,
      STMonitors v3r7p2, VeloAlgorithms v5r6, VeloSimulation v3r12
@@ -657,7 +659,7 @@ This version uses Gaudi v22r4 and LHCb v33r0
 
 - Production release for 2011 end of year reprocessing and MC11
 
-- Packages updated: HltDAQ v2r12, L0Calo v11r5, L0Muon v9r6, OTMonitor v3r3, 
+- Packages updated: HltDAQ v2r12, L0Calo v11r5, L0Muon v9r6, OTMonitor v3r3,
     RichTools v2r37, STCheckers v3r3, STMonitors v3r6, STTools v4r8
 
 - In Hlt/HltDAQ v2r12
@@ -701,7 +703,7 @@ This version uses Gaudi v22r4 and LHCb v33r0
 </PRE><H1><A NAME=v10r5>2011-07-28 LbcomSys v10r5</A></H1><PRE>
 This version uses Gaudi v22r2 and LHCb v32r5
 
-- Production release for 2011 August data, 
+- Production release for 2011 August data,
              developments for 2011 MC and end of year reprocessing
 
 - Packages updated: CaloTools v6r3, HltDAQ v2r11, L0Calo v11r4, L0DU v10r16,
@@ -716,7 +718,7 @@ This version uses Gaudi v22r2 and LHCb v32r5
   . Updated HltSelReportsDecoder to get Chi2PerDoF and nDoF from the SelReports
 
 - In L0/L0Calo v11r4
-  . L0CaloAlg.cpp: switch default from UseNewElectron = False (2010 and 2009 
+  . L0CaloAlg.cpp: switch default from UseNewElectron = False (2010 and 2009
     data types) to True (2011 data)
 
 - In L0/L0DU v10r16
@@ -771,19 +773,19 @@ This version uses Gaudi v22r2 and LHCb v32r4
   . Make bzip2 conditional on 'not being on windows' in ConfigZipFileAccessSvc
 
 - In L0DU v10r15
-  . L0DUFromRawTool : new interfaced method datas() returns <string,value> 
+  . L0DUFromRawTool : new interfaced method datas() returns <string,value>
                       data map
   . Add default L0TCK for 2011 data (0x0032)
   . Change default TCK when DataType is not supplied
   . Remove default TCK for DC06 data type
 
-- In L0Muon v9r5 
+- In L0Muon v9r5
   . L0MuonAlg.cpp : fix sprintf statements to please Coverity
   . L0MuonFromRawTrans : fix (?) bug found by coverity (use too much stack space)
   . L0MuonOutput : Fix an other bug found by Coverity (affecting only debug
                    output)
   . L0MuonOutput : Try to fix "bugs" found by Coverity (local variable exceed
-    allowed stack space). Faulty variables are now using pointers so that the 
+    allowed stack space). Faulty variables are now using pointers so that the
     used memory is taken from the heap.
 
 - In RichTools v2r35
@@ -904,7 +906,7 @@ This version uses Gaudi v22r1 and LHCb v32r1
 
 - Production candidate for 2011 data-taking
 
-- Packages updated: DAQMonitors v1r3, HltDAQ v2r7, L0DU v10r12, 
+- Packages updated: DAQMonitors v1r3, HltDAQ v2r7, L0DU v10r12,
     RichAlgorithms v1r3, RichDAQ v3r31, RichMCMonitors v1r8, RichMCTools v3r15,
     RichTools v2r32, STMonitors v3r4, STTools v4r7, VeloDAQ v6r2
 
@@ -942,7 +944,7 @@ This version uses Gaudi v22r0 and LHCb v32r0
     STTools v4r6, VeloDAQ v6r1
 
 - Functionality changes:
-  . change default for HltRoutingBitsWriter().GetStartOfRunFromCondDB from 
+  . change default for HltRoutingBitsWriter().GetStartOfRunFromCondDB from
     false to true (HltDAQ v2r6)
   . Update RichRawBufferToSmartIDsTool to implement methods to obtain the number
     of hits in RICH1 and RICH2 separately (RichDAQ v3r30)
@@ -1004,7 +1006,7 @@ This version uses Gaudi v21r11 and LHCb v31r7
   . Parameters m_hitSigmas and m_incSigmas have been changed accordingly
     to follow the values used to calculate thresholds in the pit
   . Add ThresholdMaker predicate class used in hit and inclusion thresholds
-    calculation   
+    calculation
 
 - In Velo/VeloSimulation v3r8
   . MC 2010 tuning: now the default BiasVoltage is set to 150 V

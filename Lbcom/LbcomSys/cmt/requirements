@@ -19,9 +19,6 @@ use CaloAssociators   v6r12p1  Calo      # Olivier Deschamps
 # DAQ
 use DAQMonitors       v1r9     DAQ       # Olivier Deschamps
 
-# Fibre tracker
-use FTDAQ             v1r3     FT        # 
-
 # HLT
 use HltDAQ            v2r17    Hlt       # Tomasz Skwarnicki
 
@@ -58,17 +55,13 @@ use VeloAssociators   v2r5     Velo      # Tomasz Szumlak
 use VeloSimulation    v3r14    Velo      # Tomasz Szumlak
 use VeloTools         v4r2     Velo      # Tomasz Szumlak
 
-# VeloLite
-use VLDAQ             v1r4     VL        # Heinrich Schindler
-
 # Velo Pixel
-use VPDAQ             v2r3     VP        # Marcin Kucharczyk
 use VPTools           v2r1p1   VP        # Victor Coco
 
 # Declare this as a container package
 apply_pattern container_package
 
-# Allow the generation of QMTest summary 
+# Allow the generation of QMTest summary
 apply_pattern QMTestSummarize
 
 # Allow the generation of QMTests
