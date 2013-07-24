@@ -3,6 +3,8 @@
 ! Responsible	: Bartek Rachwal, Marcin Kucharczyk
 ! Purpose     : Implementation of the powheg-box in Gauss
 !-----------------------------------------------------------------------------
+
+!========================== LbPowheg v1r0 2013-07-24 =========================
 ! 2013-07-16 - Patrick Robbe
  - Remove code which is already in Gen/LbPythia
  - Use strings instead of chars to avoid compilation warnings
