@@ -1262,11 +1262,15 @@ def getProjectList(name, version, binary=None, recursive=True):
             if pack_ver[2] != cmtconfig:
                 del project_list[fname]
                 html_list.remove(fname)
-                if cmtconfig in LbConfiguration.Platform.binary_list:
-                    newbin = cmtconfig
-                    if LbConfiguration.Platform.isBinaryDbg(newbin) :
-                        newbin = LbConfiguration.Platform.getBinaryOpt(newbin)
-                    fname = fname.replace(pack_ver[2], newbin)
+
+                ## There was a condition for this update which was NOT necessary.
+                #if cmtconfig in LbConfiguration.Platform.binary_list:
+                ## At this point the platform has been checked and we have to consider it as valid,
+                ## in order to be able top use platforms unknow by Platform.py
+                newbin = cmtconfig
+                if LbConfiguration.Platform.isBinaryDbg(newbin) :
+                    newbin = LbConfiguration.Platform.getBinaryOpt(newbin)
+                fname = fname.replace(pack_ver[2], newbin)
                 project_list[fname] = "source"
                 html_list.append(fname)
 
