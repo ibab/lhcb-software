@@ -4,10 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!========================= TrackTools v4r25 2013-07-24 =========================
 ! 2013-07-24 - Francesco Polci
  - Added a switch between old and new detector geometry needed in FTMeasurementProvider.cpp
 
-!========================= TrackTools v4r25 2013-07-18 =========================
 ! 2013-06-14 - Marco Cattaneo
  - Replace use of obsolete wrapper class Gaudi::Math::invertPosDefSymMatrix
    with direct call to SMatrix InvertChol() method. Fixes gcc48 warning
