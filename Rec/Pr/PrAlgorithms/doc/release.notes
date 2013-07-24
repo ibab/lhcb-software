@@ -4,10 +4,10 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrAlgorithms v1r6 2013-07-24 =========================
 ! 2013-07-24 - Francesco Polci
  - Added switch between old and new detector needed in PrFTHitManager.cpp
 
-!========================= PrAlgorithms v1r6 2013-07-18 =========================
 ! 2013-06-20 - Marco Cattaneo
  - Add missing dependency on Tr/TrackInterfaces
 
