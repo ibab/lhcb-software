@@ -4,7 +4,8 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 - Changes to QMTests:
-  . Updates all upgrade tests to latest DEV DB tags.
+  . Updated all upgrade tests to latest DEV DB tags.
+  . Updated all upgrade tests to use "Upgrade" DataType (new AppConfigOpts file).
 
 - Changes to references to reflect changes since v44r5
   . Follow changes to default parameters for VL tracking (PrVL)
