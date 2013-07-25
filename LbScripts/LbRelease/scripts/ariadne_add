@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ `hostname -s` != lxbuild119 ]; then
+    printf "\nWARNING: this operation is allowed only from lxbuild119 machine. Exiting.\n\n"
+    exit 1
+fi
+
 . SetupProject.sh --silent Tools --runtime LCGCMT --use Ariadne
 
 if [ "$SetupProjectStatus" != 0 ] ; then
