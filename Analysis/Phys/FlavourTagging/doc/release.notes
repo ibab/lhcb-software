@@ -4,12 +4,20 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2013-07-25 - Chris Jones
+ - Add a new python Configurable, to replace the job of
+     importOptions("$FLAVOURTAGGINGROOT/options/BTaggingTool.py")
+   which is to be depreciated. The above file still exists, but now prints
+   a large depreciation warning, and then just imports the new Configurable.
+   Should be removed at some point.
+
 ! 2013-07-24 - Stefania Vecchi
  - Added some useful printouts for debugging the code
  - Updated Tunings.py with settings for NEWKaonOpposite and NEWKaonSame tools
  - Updated Tunings.py to propagate the "personality" to all sub tools 
  - Updated Tunings.py to allow more flexible configuration
-   (before one could only call a BTaggingTool istance) --> Manuel Schiller
+   (before one could only call a BTaggingTool instance) --> Manuel Schiller
 
 ! 2013-07-14 - Stefania Vecchi
  - Fix nightlies updating Tunings.py
