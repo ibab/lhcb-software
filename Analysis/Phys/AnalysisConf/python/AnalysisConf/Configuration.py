@@ -27,6 +27,7 @@ class AnalysisConf(LHCbConfigurableUser) :
     
     __used_configurables__ = (
         'CaloAssociatorsConf' ,
+        'FlavourTaggingConf'
         )
 #
 # configure reconstruction to be redone
@@ -45,7 +46,9 @@ class AnalysisConf(LHCbConfigurableUser) :
 # BTaggingTool configuration 
 #
     def tagging(self):
-        importOptions("$FLAVOURTAGGINGROOT/options/BTaggingTool.py")
+        from Configurables import FlavourTaggingConf
+        # Just create an instance. Nothing to configure as of yet
+        ftConf = FlavourTaggingConf()
         
 #
 # Set MC
