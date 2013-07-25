@@ -7,6 +7,7 @@ Purpose: LHCb reconstruction program
   . Updated all upgrade tests to latest DEV DB tags.
   . Updated all upgrade tests to use "Upgrade" DataType.
   . Updated upgrade references.
+  . Updated upgrade references now new RICH tuning is in place.
 
 - Changes to references to reflect changes since v44r5
   . Follow changes to default parameters for VL tracking (PrVL)
