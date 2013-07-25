@@ -3,11 +3,20 @@
 ! Responsible : Chris Jones
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
-!2013-07-24 - Sajan Easo
- - Updated RichPhotonSignalGaussProb.cpp for using with pmt reconstruction in RICH upgrade.
+
+! 2013-07-25 - Chris Jones
+ - Clean up a bit the previous commit.
+
+! 2013-07-24 - Sajan Easo
+ - Updated RichPhotonSignalGaussProb.cpp to support pmt reconstruction in 
+   the RICH upgrade.
    Switches are set up so that it can run with hpd and pmt configurations.
 
+! 2013-07-17 - Chris Jones
+ - Use vdt::fast_exp in PhotonSignalGaussProb.
+
 !========================= RichRecPhotonTools v1r11 2013-07-18 =======================
+
 ! 2013-07-16 - Chris Jones
  - Use vdt library instead of private 'RichKernel/FastMaths.h'.
 

@@ -30,7 +30,7 @@ DECLARE_TOOL_FACTORY( PhotonSignalGaussProb )
 PhotonSignalGaussProb::PhotonSignalGaussProb( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
-  : ToolBase ( type, name, parent )
+: ToolBase ( type, name, parent )
 {
   // interface
   declareInterface<IPhotonSignal>(this);
@@ -58,20 +58,23 @@ StatusCode PhotonSignalGaussProb::initialize()
   m_radiusCurv[Rich::Rich1] = Rich1DE->sphMirrorRadius();
   m_radiusCurv[Rich::Rich2] = Rich2DE->sphMirrorRadius();
 
-  const bool PmtActivate= (Rich1DE -> RichPhotoDetConfig() == Rich::PMTConfig) ? true : false;
-  
-  
+  // HPDs or PMTs
+  const bool PmtActivate= ( Rich1DE -> RichPhotoDetConfig() == Rich::PMTConfig );
+
   // area of pixel in mm^2
-  const double xSize      = (!PmtActivate) ? Rich1DE->param<double>("RichHpdPixelXsize"): Rich1DE->param<double>("RichPmtPixelYSize");
-                                                     // 0.5*mm for hpd, 2.78bmm for pmt.
-  const double ySize      = (!PmtActivate) ? Rich1DE->param<double>("RichHpdPixelYsize"):Rich1DE->param<double>("RichPmtPixelYSize")  ; 
-                                                       // 0.5*mm for hpd , 2.78 mm for pmt
+  const double xSize      = ( !PmtActivate ?
+                              Rich1DE->param<double>("RichHpdPixelXsize") :
+                              Rich1DE->param<double>("RichPmtPixelYSize") );
+  const double ySize      = ( !PmtActivate ?
+                              Rich1DE->param<double>("RichHpdPixelYsize") :
+                              Rich1DE->param<double>("RichPmtPixelYSize") );
   //const double demagScale       = Rich1DE->param<double>("HPDDemagScaleFactor"); // 4.8
-  const double demagScale       =  (!PmtActivate) ? 4.8 : 1.0 ;
+  const double demagScale       =  ( !PmtActivate ? 
+                                     Rich1DE->param<double>("HPDDemagScaleFactor") : 1.0 );
   m_pixelArea = demagScale*xSize * demagScale*ySize;
 
   // exp params
-  m_expMinArg = exp( m_minArg );
+  m_expMinArg = vdt::fast_exp( m_minArg );
 
   // Informational Printout
   debug() << " Mirror radii of curvature    = "
@@ -116,15 +119,6 @@ PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
     if      ( pixelSignal > maxSignal ) { pixelSignal = maxSignal; }
     else if ( pixelSignal < minSignal ) { pixelSignal = minSignal; }
 
-    if(pixelSignal < maxSignal && pixelSignal > minSignal ) {
-      
-      if ( msgLevel(MSG::VERBOSE) )   verbose()<< " det predicted signal theta activefr pixelsignal "<<det<<"  "
-          <<thetaReco<<"  "<<photon->geomPhoton().activeSegmentFraction()
-            <<"    "<<pixelSignal<<" signalProb  "<<signalProb(photon, id)<<"    "
-                                               << "scatterprob "<<scatterProb(photon, id)<<  endmsg;
-    }
-    
-    
     // save final result
     photon->setExpPixelSignalPhots( id, (LHCb::RichRecPhoton::FloatType)(pixelSignal) );
 
@@ -138,7 +132,8 @@ double PhotonSignalGaussProb::signalProbFunc( const double thetaDiff,
 {
   // See note LHCB/98-040 page 11 equation 18
   const double expArg = -0.5*thetaDiff*thetaDiff/(thetaExpRes*thetaExpRes);
-  return ( expArg>m_minArg ? exp(expArg) : m_expMinArg ) / ( root_two_pi*thetaExpRes ); 
+  return ( ( expArg>m_minArg ? vdt::fast_exp(expArg) : m_expMinArg ) /
+           ( root_two_pi*thetaExpRes ) );
 }
 
 double
@@ -155,15 +150,12 @@ PhotonSignalGaussProb::signalProb( LHCb::RichRecPhoton * photon,
   // Expected Cherenkov theta angle resolution
   const double thetaExpRes = m_ckRes->ckThetaResolution(photon->richRecSegment(),id);
 
-  
-
   // The difference between reco and expected
   const double thetaDiff = photon->geomPhoton().CherenkovTheta() - thetaExp;
   //if ( fabs(thetaDiff) > 30.0*thetaExpRes ) return 0.0;
 
   // return the expected signal contribution
   return this->signalProbFunc(thetaDiff,thetaExpRes) / (2.0*M_PI);
-
 }
 
 double
@@ -187,11 +179,11 @@ PhotonSignalGaussProb::scatterProb( LHCb::RichRecPhoton * photon,
     double fbkg = 0.0;
     if ( thetaRec < thetaExp )
     {
-      fbkg = ( exp(17.0*thetaRec) - 1.0 ) / ( exp(17.0*thetaExp) - 1.0 );
+      fbkg = ( std::exp(17.0*thetaRec) - 1.0 ) / ( std::exp(17.0*thetaExp) - 1.0 );
     }
     else if ( thetaRec < 0.5*M_PI + thetaExp - 0.04 )
     {
-      fbkg = cos( thetaRec - thetaExp + 0.04 );
+      fbkg = std::cos( thetaRec - thetaExp + 0.04 );
       fbkg = fbkg*fbkg/0.9984;
     }
     else

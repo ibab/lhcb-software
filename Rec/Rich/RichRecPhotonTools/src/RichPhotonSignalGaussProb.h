@@ -32,6 +32,9 @@
 #include "boost/numeric/conversion/bounds.hpp"
 #include "boost/limits.hpp"
 
+// VDT
+#include "vdt/exp.h"
+
 namespace Rich
 {
   namespace Rec
