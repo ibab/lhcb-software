@@ -30,7 +30,7 @@
 //#include <multimap>
 
 //#include "stdio.h"
-#include "dis.hxx"
+#include "dim/dis.hxx"
 #include <fstream>
 #include <iostream>
 //#include <string>
@@ -406,7 +406,7 @@ void get_cmd_line(int ipid,string &cmdline)
   }
 }
 
-int find_lhcbprod_tmsrv()
+int find_tmsrv(char *nam)
 {
   vector<string> procs;
   procs.clear();
@@ -428,13 +428,13 @@ int find_lhcbprod_tmsrv()
       if (cmdline[j]==0) cmdline[j] = ' ';
     }
     if (cmdline.find("tmSrv") == string::npos) continue;
-    if (cmdline.find("lhcbprod") == string::npos) continue;
-    printf ("tmSrv for lhcbprod found at PID %s\n",procs[i].c_str());
+    if (cmdline.find(nam) == string::npos) continue;
+    printf ("tmSrv for %s found at PID %s\n",nam,procs[i].c_str());
     int tmSrvPid;
     sscanf(procs[i].c_str(),"%d",&tmSrvPid);
     return tmSrvPid;
   }
-  printf("tmSrv for lhcbprod not found\n");
+  printf("tmSrv for %s not found\n",nam);
   return -1;
 }
 
@@ -703,14 +703,23 @@ int main(int argc, char**argv)
   pthread_t thID;
   vector<string> procs;
   BootTime = get_Boot_Time();
+  string ServiceName="DiracStatus";
 //  mmapit mit;
   if (argc >1)
   {
-    sscanf(argv[1],"%d",&tmSrv_PID);
+    if (strcmp(argv[1],"-p") == 0)
+    {
+      sscanf(argv[2],"%d",&tmSrv_PID);
+    }
+    else if (strcmp(argv[1],"-n")==0)
+    {
+      tmSrv_PID = find_tmsrv(argv[2]);
+    }
+    ServiceName = argv[3];
   }
   else
   {
-    tmSrv_PID = find_lhcbprod_tmsrv();
+    tmSrv_PID = find_tmsrv((char*)"lhcbprod");
   }
 //  curr_agents_pids.insert(tmSrv_PID);
   int rc = EXIT_SUCCESS;
@@ -770,7 +779,7 @@ int main(int argc, char**argv)
   int s = tm->Dump(b,true,false,0,char(1),1);
   b[s] = 0;
   s++;
-  string serverName = RTL::nodeNameShort()+"_DiracStatus";
+  string serverName = RTL::nodeNameShort()+"_"+ServiceName;
   StatusServer = new DimServer();
   StatusServer->autoStartOn();
   StatusServer->start(serverName.c_str());

@@ -5,8 +5,8 @@
  *      Author: Beat Jost
  */
 
-#ifndef HLTFILEEQUALIZER_H_
-#define HLTFILEEQUALIZER_H_
+#ifndef FARMSTATUS_H
+#define FARMSTATUS_H
 #include <map>
 #include <string>
 #include <list>
@@ -61,43 +61,22 @@ class MBMStat
       }
     }
 };
-class myNode
+class MyNode
 {
   public:
     std::string m_name;
     std::string m_subfarm;
-    int m_nofiles;
     int m_state;
-    char m_ROC_state;
-    RunMap m_runmap;
+    int m_badtasks;
+    int m_badconns;
     bool m_excl;
-    MBMStat Events;
-    MBMStat Overflow;
-    MBMStat Send;
-    MBMStat ProcPerf;
-    MBMStat Events_prev;
-    MBMStat Overflow_prev;
-    MBMStat Send_prev;
-    MBMStat ProcPerf_prev;
-    long ReadTime;
-    long ReadTime_prev;
-    float m_nodePerformance;
-    bool m_active;
-    float m_cfiles;
-    myNode(std::string n)
+    MyNode(std::string n)
     {
       m_name = n;
-      m_state = 1;
-      m_nofiles = 0;
-      m_subfarm = m_name.substr(0,6);
-      m_ROC_state = '?';
-      m_runmap.clear();
+      m_state = 0;
+      m_badtasks = 0;
+      m_badconns = 0;
       m_excl = false;
-      ReadTime_prev = 0;
-      ReadTime = 0;
-      m_nodePerformance = 0.0;
-      m_active = false;
-      m_cfiles = 0.0;
     };
 };
 class SFarm
@@ -106,21 +85,22 @@ class SFarm
     std::string m_svcnam;
 
 };
-class DefHltInfoHandler;
+typedef ROMon::SubfarmSummary _SFSumm;
+class StatusInfoHandler;
 class MBMInfoHandler;
-typedef std::map<std::string,myNode*> myNodeMap;
+typedef std::map<std::string,MyNode*> myNodeMap;
 typedef std::map<std::string,std::list<std::pair<std::string,int> > > myActionMap; //list of nodes per subfarm to execute an action on.
 typedef std::set<std::string> NodeSet;
 typedef std::map<std::string,float> NodePerfMap;
-class HLTFileEqualizer
+class FarmStatus
 {
   public:
     std::map<std::string,SFarm *> m_Farms;
     myNodeMap m_Nodes;
     myNodeMap m_AllNodes;
     nodemap M_PMap;
-    std::map<std::string,DimUpdatedInfo*> m_infoMap;
-    DefHltInfoHandler *m_InfoHandler;
+    std::map<std::string,DimInfo*> m_infoMap;
+    StatusInfoHandler *m_InfoHandler;
     MBMInfoHandler *m_MBMInfoHandler;
     int m_nnodes;
     int m_nfiles;
@@ -128,48 +108,41 @@ class HLTFileEqualizer
     int m_low;
     int m_high;
     DimInfo *m_DefStateInfo;
-    DimService *m_NodeList;
-    DimService *m_NodeListDiff;
-    DimService *m_NodesRunsFiles;
-    DimService *m_StatServ;
-    DimService *m_NodesBuffersEvents;
+    DimService *m_StatusService;
     std::string m_servdat;
-    std::string m_servdatDiff;
-    std::string m_servdatNodesRunsFiles;
-    std::string m_servdatNodesBuffersEvents;
     NodeSet m_enabledFarm;
     NodeSet m_recvNodes;
+    NodeSet m_everrecvd;
     NodeSet m_BufferrecvNodes;
     NodeSet m_exclNodes;
     std::set<std::string> m_AllpFarms;
     std::set<std::string> m_AllpNodes;
     NodePerfMap m_nodePerf;
-    HLTFileEqualizer();
+    FarmStatus();
     void Analyze();
     void Dump();
     void BufferDump();
 };
-typedef ROMon::DeferredHLTSubfarmStats _DHLTSF;
 typedef ROMon::Nodeset _MBMSF;
 
-class DefHltInfoHandler : public DimInfoHandler
+class StatusInfoHandler : public DimInfoHandler
 {
   public:
     SFarm *m_subfarm;
-    _DHLTSF *m_sfstatus;
+    _SFSumm *m_sfstatus;
     int m_bufsiz;
-    HLTFileEqualizer *m_Equalizer;
-    DefHltInfoHandler(HLTFileEqualizer *e);
+    FarmStatus *m_Equalizer;
+    StatusInfoHandler(FarmStatus *e);
     void infoHandler();
 };
 
 class LHCb1RunStatus : public DimInfo
 {
   public:
-    HLTFileEqualizer *m_equalizer;
+    FarmStatus *m_equalizer;
     int m_nolink;
     int m_state;
-    LHCb1RunStatus(char *name, int nolink,HLTFileEqualizer *e);
+    LHCb1RunStatus(char *name, int nolink,FarmStatus *e);
     void infoHandler();
 };
 
@@ -181,16 +154,6 @@ class ExclInfo : public DimInfo
     void infoHandler();
 };
 
-class MBMInfoHandler : public DimInfoHandler
-{
-  public:
-//    SFarm *m_subfarm;
-    _MBMSF *m_sfstatus;
-    int m_bufsiz;
-    HLTFileEqualizer *m_Equalizer;
-    MBMInfoHandler(HLTFileEqualizer *e);
-    void infoHandler();
-};
 
 
-#endif /* HLTFILEEQUALIZER_H_ */
+#endif /* FARMSTATUS_H */

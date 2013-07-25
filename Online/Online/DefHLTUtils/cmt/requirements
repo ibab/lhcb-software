@@ -24,6 +24,9 @@ macro_append  DefUtil_shlibflags ${ROOT_linkopts}
 application   DiracMon ../src/DiracMon.cpp
 macro_append  DiracMon_dependencies    " DefUtil "
 
+application   FarmStatus ../src/FarmStatus.cpp
+macro_append  FarmStatus_dependencies    " DefUtil "
+
 application   HLTFileEqualizer ../src/HLTFileEqualizer.cpp
 macro_append  HLTFileEqualizer_dependencies    " DefUtil "
 
