@@ -1,0 +1,313 @@
+!-------------------------------------------------------------------------------
+! Package     : Hlt/HltDAQ
+! Responsible : Tomasz Skwarnicki
+! Purpose     : Hlt RawBanks writers/decoders/monitors
+!-------------------------------------------------------------------------------
+
+! 2013-07-22 - Alexey Zhelezov
+ - Added ZIP file writing functionality
+
+!========================= HltDAQ v2r17 2013-06-03 =========================
+! 2013-05-27 - Marco Cattaneo
+ - Fix a clang32 warning
+
+! 2013-05-22 - Conor Fitzpatrick
+ - Modified HlDecReportsDecoder? and SelReportsDecoder? to use getIfExists instead of exist/get checks
+
+!========================= HltDAQ v2r16 2012-11-28 =========================
+! 2012-11-26 - Marco Clemencic & Ben Couturier
+ - Fixed build with C++11.
+
+! 2012-11-21 - Marco Clemencic
+ - Added CMake configuration file.
+ - Modified requirements to simplify auto conversion to CMake.
+ - Fixed a warning (-pedantic).
+
+! 2012-10-18 - Marco Cattaneo
+ - Fix unprotected debug() and verbose()
+
+!========================= HltDAQ v2r15 2012-06-25 =========================
+! 2012-05-21 - Gerhard Raven
+ - specify access mode when creating lockfile
+
+! 2012-05-03 - Gerhard Raven
+ - add low-level locking protocol to avoid multiple writers in different processes
+   to ConfigTarFileAccessSvc
+
+!========================= HltDAQ v2r14p1 2012-01-31 =========================
+! 2012-01-09 - A Mazurov
+ - Fix warning: variable ‘rv’ set but not used
+
+!========================= HltDAQ v2r14 2011-12-14 =========================
+! 2011-12-09 - Marco Cattaneo
+ - Add explicit Boost_linkopts for compatibility with Gaudi v23
+
+! 2011-12-07 - Marco Clemencic
+ - Fixed compilation with Boost 1.48 (filesystem V3) (for Gaudi v23)
+ - Enabled backward compatibility with Boost 1.44 (i.e. Gaudi v22r5)
+
+! 2011-12-06 - Marco Cattaneo
+ - Fix some unprotected debug() (in PropertyConfigSvc) and verbose()
+   (in ANNDispatchSvc) streams. Only those in non-const methods have been 
+   protected, because the msgLevel() function is not declared as const...
+
+! 2011-11-23 - Marco Cattaneo
+ - Fix a gcc46 warning
+
+! 2011-11-13 - Tomasz Skwarnicki
+ - equip all decoders with list of RawEvent locations to try, try both without and with RootInTES
+ - add RawEventLoocation::Trigger to the locations to try for RawEvent location in decoders
+
+!========================= HltDAQ v2r13 2011-11-08 =========================
+! 2011-11-07 - Gerhard Raven
+ - add some scaffolding needed for writing directly to zip files. Actual
+   writing is not yet implemented
+
+!========================= HltDAQ v2r11p1 2011-08-29 =========================
+! 2011-10-12 - Marco Cattaneo
+ - Mask icc warnings and fix icc remark
+
+!========================= HltDAQ v2r12p1 2011-09-22 =======================
+! 2011-08-29 - Eric v. Herwijnen
+ - Fix bug: float->floatFromInt in HltSelReportsDecoder
+
+!========================= HltDAQ v2r12 2011-08-31 =========================
+! 2011-08-29 - Eric v. Herwijnen
+ - Use htitle for rate counters.
+
+! 2011-08-26 - Alexander Mazurov
+ - Update of parser function in PropertyConfigSvc. This version works only with
+   Gaudi version > v22r2 (where the new parser model is provided)
+
+!========================= HltDAQ v2r11 2011-07-27 =========================
+! 2011-07-25 - Eric van Herwijnen
+ - Added a few lines from Gerhard to HltSelReportsDecoder to be able to get Chi2PerDoF
+   and nDoF from the SelReports
+
+!========================= HltDAQ v2r10 2011-06-15 =========================
+! 2011-06-13 - Tomasz Skwarnicki
+ - fix a bug in xml/HltSelRepRBHits.xml which was corrupting exactly one lhcbid
+   per event, for odd number of hit sequences saved.
+   Change bank version number to 1 in HltSelReportsWriter.
+   Make HltSelReportsDecoder omit corrupted hit for bank version 0.
+
+! 2011-06-10 - Gerhard Raven
+ - make HltDecReportsDecoder return StatusCode::FAILURE from execute in case
+   it encounters trouble while decoding...
+
+! 2011-05-09 - Gerhard Raven
+ - make HltSelReports decoder forward compatible for the case of adding additional
+   data words (i.e. new data is a pure superset of old data).
+
+! 2011-04-28 - Gerhard Raven
+ - fix windows compile error in ConfigZipFileAccessSvc
+ - make bzip2 conditional on 'not being on windows' in ConfigZipFileAccessSvc
+
+!========================= HltDAQ v2r9 2011-04-27 =========================
+! 2011-04-21 - Marco Cattaneo
+ - Disable ICC warnings (see also Savannah task 20188)
+
+! 2011-04-19 - Gerhard Raven
+ - funnel all file access in ConfigTarFileAccessSvc through a single member
+   function in order to prepare for closing/opening the file 'on demand'
+ - add ConfigZipFileAccessSvc
+ - silence coverity warnings in ConfigDBAccessSvc and PropertyConfigSvc
+   (neither of which is an actual bug)
+
+!========================= HltDAQ v2r8 2011-04-05 =========================
+! 2011-03-29 - Gerhard Raven
+ - HltVertexReportsDecoder: speed up decoding by not copying the rawbank into a temporary vector
+
+! 2011-03-28 - Gerhard Raven
+ - HltVertexReportsDecoder: remove windows cr/nl to not confuse me, no other change
+ - HltVertexReportsDecoder: only ask for ANN once we're about to decode something...
+ - HltVertexReportsDecoder: speed up mapping ID to name
+ - HltDecReportsDecoder: speed up mapping ID to name
+ - HltSelReportsDecoder: speed up mapping ID to name
+
+
+! 2011-03-15 - Gerhard Raven
+ - in ConfigTarFileAccessSvc, switch default for CompressOnWrite to true
+ - fix a potential out_of_range exception if filename is less than 3 characters
+
+!========================= HltDAQ v2r7 2011-02-25 =========================
+! 2011-02-22 - Gerhard Raven
+ - fix some of the ICC 'remarks'
+ - add transparent on-the-fly compression when writing through ConfigTarFileAccessSvc
+   (transparent on-the-fly decompression when reading has been supported for a long time)
+
+! 2011-02-17 - Chris Jones
+ - Various minor icc and coverity fixes
+
+!========================= HltDAQ v2r6 2011-02-01 =========================
+! 2011-01-27 - Marco Clemencic
+ - Fixed compilation error on VC9.
+
+! 2011-01-20 - Gerhard Raven
+ - replace the request in the requiremenents for HltTCK from v1r* to v*
+ - change default for HltRoutingBitsWriter().GetStartOfRunFromCondDB from false to true
+
+!========================= HltDAQ v2r5 2010-12-15 =========================
+! 2010-12-14 - Gerhard Raven
+ - PropertyConfigSvc: add possibility to apply transformations on properties just before
+   pushing them into the JobOptionsSrc
+
+! 2010-12-12 - Marco Cattaneo
+ - Add ANNSvc again, removed from HltInterfaces
+
+!========================= HltDAQ v2r4 2010-10-25 =========================
+! 2010-10-20 - Marco Cattaneo
+ - Move ANNSvc to HltInterfaces
+
+! 2010-10-19 - Gerhard Raven
+ - fix ANNSvc for compilation error with boost 1.44.
+
+! 2010-10-03 - Tomasz Skwarnicki
+ - Make HltSelReportsDecoder try decision_ID-decision_name mapping from HltDecReports
+   if ANNSvc fails to resolve the ID (this helps if HltDecReports was persisted with
+   strings i.e. not in RawBank)
+
+!========================== HltDAQ v2r3 2010-09-28 ============================
+! 2010-09-24 - Roel Aaij
+ - Fix unchecked StatusCodes in ANNDispatchSvc and HltDecReportsDecoder
+
+!========================== HltDAQ v2r2 2010-08-25 ============================
+! 2010-08-24 - Rob Lambert
+ - fix compiler warning about long long int from double in HltRoutingBitsWriter.cpp
+
+! 2010-08-17 - Gerhard Raven
+ - xml: properly declare signature of fillStream so that it is not neccessary
+   to do a const_cast...
+
+!========================== HltDAQ v2r1 2010-08-15 =============================
+
+! 2010-08-10 - Gerhard Raven
+ - src/HltRoutingBitsWriter
+   . add property to look up the time of start-of-run from the conditions DB
+     when making trend plots as a function of time since start-of-run.
+   . for now, default is to NOT query the conditions DB, to keep the 'old'
+     behaviour
+ - cmt/requirements
+   . add dependency on DetDesc needed to access conditions DB
+
+! 2010-08-10 - Juan Palacios
+ - src/ANNDispatchSvc.cpp
+  . Fix bug that did not allow setting of properties.
+ - cmt/requirements
+  . Increase to v2r0p3.
+
+! 2010-08-08 - Tomasz Skwarnicki
+ - fix the bug in HltDecReportsDecoder for non-standard RawEvent location
+
+!========================== HltDAQ v2r0p2 2010-06-21 ===========================
+! 2010-06-14 - Tomasz Skwarnicki
+ - cosmetic change in HltVertexReportsDecoder to avoid windows compiler warnings
+
+! 2010-06-10 - Marco Cattaneo
+ - Fix windows compiler warnings
+
+!========================== HltDAQ v2r0p1 2010-06-03 ===========================
+! 2010-06-03 - Gerhard Raven
+ - fix (I hope!) memory leak, see https://savannah.cern.ch/bugs/index.php?68285
+
+!========================== HltDAQ v2r0 2010-05-22 ===========================
+! 2010-05-05 - Gerhard Raven
+ - move HLT configuration implementation from HltCommon to here so it can
+   be used during readback without having a runtime dependency on the HLT
+   project
+
+!========================== HltDAQ v1r7p1 2010-05-21 ===========================
+! 2010-05-21 - Gerhard Raven
+ - DIM does not like histograms with long names...
+ - oops -- ODIN gpstime is in microseconds, not nanoseconds
+
+! 2010-05-19 - Gerhard Raven
+ - add trend plots of rates in HltRoutingBitsWriter
+ - minor speed up in HltSelReportsWriter
+
+! 2010-05-13 - Gerhard Raven
+ - make warning message less variable
+
+!========================== HltDAQ v1r7 2010-04-08 ===========================
+
+! 2010-04-07 - Juan Palacios
+ - HltDecReportsDecoder
+  . Look for RawEvent in locations given by RawEventLocation property, LHCb::RawEventLocation::Copied or LHCb::RawEventLocation::Default. Pick the first one found.
+ - increase to v1r7.
+
+!========================== HltDAQ v1r6 2010-04-07 ===========================
+
+! 2010-04-07 - Juan Palacios
+ - HltLumiWriter, HltRoutingBitsFilter:
+  . Look for RawEvent in locations given by RawEventLocation property, LHCb::RawEventLocation::Copied or LHCb::RawEventLocation::Default. Pick the first one found.
+
+! 2010-04-07 - Juan Palacios
+ - src/HltLumiWriter.h
+  . Bug fix: declare m_rawEventLocation.
+
+! 2010-04-07 - V. Gligorov
+ - Allow the user to set the raw event location in the ANNDispatchSvc.
+
+!========================== HltDAQ v1r5 2010-04-07 ===========================
+! 2010-04-07 - Gerhard Raven
+ - In HltRoutingBitsWriter, set bits [0,7] based on ODIN, bits [8,32] based on
+   L0DUReport
+
+!========================== HltDAQ v1r4 2010-03-18 ===========================
+! 2010-03-03 - Tomasz Skwarnicki
+ - add check of RawBank magic pattern in HltDec/Sel/VertexReportsDecoder,
+   HltRawBankMonitor
+
+!========================== HltDAQ v1r3 2010-01-21 ===========================
+! 2010-01-07 - V. Gligorov
+ - src/HltDecReportsDecoder.cpp
+   src/HltSelReportsDecoder.cpp
+   src/HltVertexReportsDecoder.cpp
+   src/HltRawDataMonitor.cpp
+   : update algorithms to use the dispatching ANN service.
+
+! 2009-12-21 - Tomasz Skwarnicki
+ - add selected-by and PV info to verbose printout in HltSelReportsDecoder
+
+!========================== HltDAQ v1r2 2009-11-27 ===========================
+! 2009-11-26 - Tomasz Skwarnicki
+ - HltVertexReportsWriter,Decoder: save covariance matrix in HltVertexReports
+   (bank version=1, previous was=0).
+   Old Decoder will not be compatibile with the new content.
+ - HltSelReportsDecoder: decode Particle2Vertex info in HltObjectSummary of selection.
+   Old Decoder will give warnings about new content (if present), but will work OK
+   (bank format not changed).
+
+!========================== HltDAQ v1r1p1 2009-11-13 =========================
+! 2009-11-07 - Gerhard Raven
+ - In HltRoutingBitsWriter, publish counters
+
+!========================== HltDAQ v1r1 2009-10-20 ===========================
+! 2009-10-14 - Marco Cattaneo
+ - Remove obsolete file HltDAQ_dll.cpp
+
+! 2009-10-09 - Marco Cattaneo
+ - HltRoutingBits filter does not fail if routing bits bank is missing, just
+   prints an error
+
+! 2009-10-09 - Gerhard Raven
+ - Add HltRoutingBitsFilter
+
+!========================== HltDAQ v1r0p2 2009-09-11 ===========================
+! 2009-09-11 - Gerhard Raven
+ - add counter for each routing bit
+
+!========================== HltDAQ v1r0p1 2009-08-20 ===========================
+! 2009-08-20 - Jaap Panman
+ - bug fix in HltLumiWriter
+
+!========================== HltDAQ v1r0 2009-06-29 ===========================
+! 2009-06-29 - Tomasz Skwarnicki
+ - add HltDAQ_dll.cpp
+
+! 2009-06-23 - Tomasz Skwarnicki
+ - initial version. Move Readers from HltRawData and rename them to Decoders.
+   They need to be in LBCOM library like this one. Also move all Writers here.
+
+
+!========================= HltDAQ v2r5 2010-12-15 =========================

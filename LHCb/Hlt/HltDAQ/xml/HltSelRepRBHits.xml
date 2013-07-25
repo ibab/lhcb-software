@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Tomasz Skwarnicki -->
+<!--- Created : 2008-07-30 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+
+  <package name='HltDAQ'>
+
+    <class 
+       name  = 'HltSelRepRBHits'
+       author= 'Tomasz Skwarnicki'
+       desc  = 'Manages the RawBank::HltSelReports hits sub-bank.
+The first short is a number of hit sequences.
+Folllowing shorts give relative location (in words) in the subbank body of the end() of each sequence.
+After a possible padding short, LHCbIDs follow.
+Random read access is supported. Bank must be initialized with number of sequences and hits.
+Then sequences must be pushed back in the sequencial order.'
+      >
+
+     <import name='HltSelRepRBEnums' />
+     <import name='GaudiKernel/GaudiException' />
+     <import name='Kernel/LHCbID' />
+     <import name='vector' std='TRUE' />
+
+     <attribute 
+	type = 'unsigned int*'
+	name = 'location'
+	desc = 'Location of the subbank body in the program memory'
+	init = '0' 
+        />
+
+     <attribute 
+	type = 'unsigned int'
+	name = 'length'
+	desc = 'length of the subbank (0=unknown)'
+	init = '0' 
+        />
+
+     <constructor
+        argList='unsigned int* pBankBody'
+        initList='m_location(pBankBody),m_length(0)'
+        desc='takes pointer to the memory location of the subbank body as input'
+	/>
+
+     <constructor
+        argList='unsigned int* pBankBody, unsigned int len'
+        initList='m_location(pBankBody),m_length(len)'
+        desc='takes pointer to the memory location of the subbank body and its length as input'
+	/>
+
+      <method
+        name = 'noBank'
+        type = 'void'
+        desc = 'throw exception on access to non-allocated bank'
+        const= 'TRUE'
+        >
+        <code>
+          if( !m_location )
+          throw GaudiException( "Accessing non-allocated bank in HltSelRepRBHits","HltSelRepRBHits",StatusCode::FAILURE );
+        </code>
+      </method>
+
+     <method
+        name = 'validateIndex'
+        type = 'void'
+        argList = 'unsigned int iSeq'
+        desc = 'throw exception if no Bank or index invalid'
+        const= 'TRUE'
+        >
+        <code>
+          noBank();
+          if( iSeq&gt;=numberOfSeq() )
+             throw GaudiException( "suquence index out of range in HltSelRepRBHits","HltSelRepRBHits",StatusCode::FAILURE );
+        </code>
+      </method>
+
+      <method
+          name ='numberOfSeq'
+          type ='unsigned int'
+          desc ='Number of hit sequences in the sub-banks'
+          const='TRUE'
+          >
+        <code>
+          noBank();
+          return (unsigned int)( m_location[0] &amp; 0xFFFFL );
+        </code>
+      </method>
+     
+      <method
+          name ='hitsLocation'
+          type ='unsigned int'
+          desc ='relative location of the first hit sequence in the subbank (0=means 1st word)'
+          const='TRUE'
+          >
+        <code>
+          noBank();
+          return (numberOfSeq()/2+1);
+        </code>
+      </method>
+     
+      <method
+          name ='seqEnd'
+          type ='unsigned int'
+          argList='unsigned int iSeq'
+          desc ='location of the hit suquence end() in the sub-bank body (0=means 1st word)'
+          const='TRUE'
+          >
+        <code>
+          if( ( numberOfSeq()==0 ) &amp;&amp; (iSeq==0 ) )return hitsLocation();
+          validateIndex(iSeq);
+          unsigned int iWord = (iSeq+1)/2;
+          unsigned int iPart = (iSeq+1)%2;
+          unsigned int bits = iPart*16;
+          unsigned int mask = 0xFFFFL &lt;&lt; bits;
+          return (unsigned int)(( m_location[iWord] &amp; mask ) &gt;&gt; bits);
+        </code>
+      </method>
+
+      <method
+          name ='seqBegin'
+          type ='unsigned int'
+          argList='unsigned int iSeq'
+          desc ='location of the hit suquence begin() in the sub-bank body (0=means 1st word)'
+          const='TRUE'
+          >
+        <code>
+          if( ( numberOfSeq()==0 ) &amp;&amp; (iSeq==0 ) )return hitsLocation();
+          validateIndex(iSeq);
+          if( iSeq )return seqEnd(iSeq-1);
+          return hitsLocation();
+        </code>
+      </method>
+
+      <method
+          name ='seqSize'
+          type ='unsigned int'
+          argList='unsigned int iSeq'
+          desc ='hit sequence size given its index'
+          const='TRUE'
+          >
+        <code>
+          return (seqEnd(iSeq)-seqBegin(iSeq));
+        </code>
+      </method>
+
+      <method
+          name ='size'
+          type ='unsigned int'
+          desc ='size of the subbank (can only be used after all sequences are in'
+          const='TRUE'
+          >
+        <code>
+          if( numberOfSeq() )return seqEnd(numberOfSeq()-1);
+          return seqEnd(0);
+        </code>
+      </method>
+
+      <method
+          name ='sequenceBegin'
+          type ='unsigned int*'
+          argList='unsigned int iSeq'
+          desc ='hit sequence begin() given its index'
+          const='TRUE'
+          >
+        <code>
+          validateIndex(iSeq);
+          unsigned int iBegin = seqBegin(iSeq);
+          validatePtr( iBegin );
+          return &amp;(m_location[iBegin]);
+        </code>
+      </method>
+ 
+      <method
+          name ='sequenceEnd'
+          type ='unsigned int*'
+          argList='unsigned int iSeq'
+          desc ='hit sequence begin() given its index'
+          const='TRUE'
+          >
+        <code>
+          validateIndex(iSeq);
+          unsigned int iEnd = seqEnd(iSeq);
+          validatePtr( iEnd-1 );
+          return &amp;(m_location[iEnd]);
+        </code>
+      </method>
+ 
+      <method
+          name ='sequence'
+          type ='std::vector&lt; LHCb::LHCbID &gt;'
+          argList='unsigned int iSeq'
+          desc ='hit sequence given its index'
+          const='TRUE'
+          >
+        <code>
+          validateIndex(iSeq);
+          //doesn't work on WIN32  return (std::vector&lt; LHCbID &gt;(sequenceBegin(iSeq),sequenceEnd(iSeq)));
+	  std::vector&lt; LHCbID &gt; hitseq;
+	  unsigned int* iend=sequenceEnd(iSeq);
+	  for(unsigned int* i=sequenceBegin(iSeq);i!=iend;++i){
+	        hitseq.push_back( LHCbID( *i ) );
+	  }
+	  return hitseq;
+        </code>
+      </method>
+ 
+      <method
+           name ='validatePtr'
+           type ='void'
+           argList ='unsigned int iPtr'
+           desc ='validate internal pointer'
+           const='TRUE'
+           >
+        <code>
+          if( iPtr &lt; hitsLocation() )
+          throw GaudiException( "Internal pointer out of range in HltSelRepRBHits","HltSelRepRBHits",StatusCode::FAILURE );
+          if( m_length &amp;&amp; ( iPtr &gt; m_length ) )
+          throw GaudiException( "Internal pointer out of range in HltSelRepRBHits","HltSelRepRBHits",StatusCode::FAILURE );
+        </code>
+      </method>
+
+       <method
+	   name ='integrityCode'
+	   type ='unsigned int'
+	   desc ='reports bank integrity level 0=OK'
+	   const='TRUE'
+	   >
+	<code>
+	  if( !m_location )return ((unsigned int)HltSelRepRBEnums::kNoBank); 
+	  //empty bank if OK: if( !numberOfSeq() )return ((unsigned int)HltSelRepRBEnums::kEmptyBank); 
+	  for( unsigned int iSeq=0; iSeq!=numberOfSeq(); ++iSeq ){
+	       unsigned int ie1 = seqEnd( iSeq );
+               if( ie1 &lt; hitsLocation() ) return ((unsigned int)HltSelRepRBEnums::kPtrOutOfRange);
+               if( m_length &amp;&amp; ( ie1 &gt; (m_length+1) ) )return ((unsigned int)HltSelRepRBEnums::kPtrOutOfRange);
+	       for( unsigned int jSeq=iSeq+1; jSeq!=numberOfSeq(); ++jSeq ){
+	            if( ie1 &gt; seqEnd( jSeq ) ) return ((unsigned int)HltSelRepRBEnums::kPtrOutOfSequence);
+               }
+	  } 
+          return ((unsigned int)HltSelRepRBEnums::kBankIsOK);
+	</code>
+      </method>
+
+      <!-- methods to set up the hit sub-bank -->
+      
+      <method
+        name='initialize'
+        type='void'
+        argList='unsigned int nSeq, unsigned int nHits'
+        desc='create and initilize new subbank to hold nSeq-uences and nHits (if we pointed to old bank it is not deleted)'
+        >
+        <code>
+          unsigned int len = nSeq/2 +1 + nHits;
+          if( len &gt; 0xFFFFL )
+             throw GaudiException( "requested initialize with bank too large HltSelRepRBHits","HltSelRepRBHits",StatusCode::FAILURE );
+          m_location = new unsigned int[len];
+          m_location[0] = 0L;
+          // set number of sequences
+          m_location[0] += nSeq;
+          // set end of the first sequence
+          m_location[0] |= ( seqBegin(0) &lt;&lt; 16 );
+          m_length = len;
+        </code>
+      </method>
+      
+
+      <method
+        name ='push_back'
+        type='void'
+        argList='const std::vector&lt; unsigned int &gt; hitvec'
+        desc='add hit sequence to the bank (must be initialized first)'
+        >
+        <code>
+          for(unsigned int iSeq=0;iSeq!=numberOfSeq();++iSeq){
+              if( 0==seqSize(iSeq) ){
+                 // set the sequence end
+                 unsigned int iWord = (iSeq+1)/2;
+                 unsigned int iPart = (iSeq+1)%2;
+                 unsigned int bits = iPart*16;
+                 unsigned int mask = 0xFFFFL &lt;&lt; bits;
+                 unsigned int begin = seqBegin(iSeq);
+                 unsigned int end = begin + hitvec.size();
+                 if( m_length &amp;&amp; ( end &gt; (m_length+1) ))
+          throw GaudiException( "Pushing too many hits to HltSelRepRBHits","HltSelRepRBHits",StatusCode::FAILURE );
+                 m_location[iWord]= ( m_location[iWord] &amp; ~mask ) | ( end &lt;&lt; bits );  
+                 ++iSeq;
+                 if( iSeq &lt; numberOfSeq() ){ 
+                   iWord = (iSeq+1)/2;
+                   iPart = (iSeq+1)%2;
+                   bits = iPart*16;
+                   mask = 0xFFFFL &lt;&lt; bits;
+                   m_location[iWord]= ( m_location[iWord] &amp; ~mask ) | ( end &lt;&lt; bits );  
+                 }   
+                 // copy hits
+                 unsigned int i=0;
+                 for( std::vector&lt; unsigned int &gt;::const_iterator iHit=hitvec.begin();
+                         iHit!=hitvec.end();++iHit,++i){
+                       m_location[begin+i]=*iHit;
+                 }
+                 return;
+              }
+          }
+          throw GaudiException( "Pushing too many hit sequences to HltSelRepRBHits","HltSelRepRBHits",StatusCode::FAILURE );
+        </code>
+      </method>
+          
+      <method
+        name ='deleteBank'
+        type ='void'
+        desc ='delete the bank from program memory'
+        >
+        <code>
+          delete[] m_location;
+        </code>
+      </method>
+
+      <!-- readable printout -->
+
+      <method
+        name='fillStream'
+        type='std::ostream&amp;'
+        desc='intelligent printout' 
+        const='TRUE' >
+        <arg name = "s" type="std::ostream" inout="BOTH"/>
+        <code>
+          unsigned int ic = integrityCode();
+          s &lt;&lt; " HltSelRepRBHits : { "  &lt;&lt; " nSeq " &lt;&lt; numberOfSeq() 
+            &lt;&lt; " size " &lt;&lt; size() 
+            &lt;&lt; " integrity code "  
+            &lt;&lt; ic &lt;&lt; (" "+HltSelRepRBEnums::IntegrityCodesToString( ic ))
+            &lt;&lt; std::endl;
+          if( 0==ic )
+          for(unsigned int iSeq=0;iSeq!=numberOfSeq();++iSeq){
+            s &lt;&lt; " seq : " &lt;&lt; iSeq &lt;&lt; " size " &lt;&lt; seqSize(iSeq);
+                 for( unsigned int iHit=seqBegin(iSeq);iHit!=seqEnd(iSeq);++iHit){
+                     s &lt;&lt; " " &lt;&lt; m_location[iHit];
+                 }
+            s &lt;&lt; std::endl;
+          }
+          s &lt;&lt; " }" &lt;&lt; std::endl;
+          return s;
+        </code>
+      </method>
+
+    </class>
+
+  </package>
+
+
+</gdd>
