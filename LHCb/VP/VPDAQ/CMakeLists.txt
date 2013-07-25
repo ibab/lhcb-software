@@ -3,7 +3,8 @@
 ################################################################################
 gaudi_subdir(VPDAQ v2r3)
 
-gaudi_depends_on_subdirs(Det/VPDet
+gaudi_depends_on_subdirs(DAQ/DAQUtils
+                         Det/VPDet
                          Det/VeloDet
                          Event/DAQEvent
                          Event/DigiEvent

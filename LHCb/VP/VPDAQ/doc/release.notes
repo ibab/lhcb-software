@@ -4,6 +4,9 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2013-07-25 - Rob Lambert
+ - Added DAQ/DAQUtils dependency to resolve build-order.
+
 !========================= VPDAQ v2r3 2013-07-18 =========================
 ! 2013-06-13 - Marco Cattaneo
  - Fix UNINIT_CTOR defects
@@ -24,12 +27,12 @@
  - Modified requirements to simplify auto conversion to CMake.
 
 ! 2012-10-19 - Marco Cattaneo
- - Fix potential memory leak in VPRawBankToLiteCluster and do not return 
+ - Fix potential memory leak in VPRawBankToLiteCluster and do not return
    StatusCode::FAILURE from execute
  - Use getItExists
  - Fix UNINIT_CTOR defects
  - Fix unprotected debug()
- - Fix gcc -pedantic warnings 
+ - Fix gcc -pedantic warnings
 
 !========================= VPDAQ v2r0 2012-10-01 =========================
 ! 2012-09-24 - Paul Szczypka
@@ -40,8 +43,8 @@
 ! 2011-03-17 -Wenbin Qian
  - remove some information output from previous change
 ! 2011-03-17 - Wenbin Qian
- - bug fix for VeloPixRawBankToLiteCluster.cpp 
- 
+ - bug fix for VeloPixRawBankToLiteCluster.cpp
+
 !=========================  VeloPixDAQ v1r3 2010-09-28 =======================
 ! 2010-09-22 - Victor Coco
  - Replace hardcoded container location by proper location definition
@@ -64,7 +67,7 @@
 
 !=========================  VeloPixDAQ v1r0 2010-01-25 =====================
 ! 2010-01-25 Marcin Kucharczyk
- -  Fix the problem with pattern in PrepareVeloPixRawBank 
+ -  Fix the problem with pattern in PrepareVeloPixRawBank
     corresponding to Windows compilation problems
 
 ! 2010-01-21 Marcin Kucharczyk
