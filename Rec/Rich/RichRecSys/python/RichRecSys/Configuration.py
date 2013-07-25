@@ -111,7 +111,6 @@ class RichRecSysConf(RichConfigurableUser):
 
         # Get the DataType
         dataType = self.getProp("DataType")
-        dataType = "Upgrade"
 
         # Tweeks for the Upgrade
         if dataType == "Upgrade" :
@@ -129,19 +128,17 @@ class RichRecSysConf(RichConfigurableUser):
             # Needed as the upgrade has better resolutions.
             # Longer term, the tools needs a proper retuning for the upgrade
             self.richTools().ckResolution().ScaleFactor = [0.57, 0.57,0.7]
-                
-            
 
     ## @brief Apply the configuration to the configured GaudiSequencer
     def applyConf(self) :
+
+        # DataType specific tweeks
+        self.dataTypeTweeks()
 
         # Check the sequencer is set
         if not self.isPropertySet("RecoSequencer") :
             raise RuntimeError("ERROR : Reconstruction Sequence not set")
         recoSequencer = self.getProp("RecoSequencer")
-
-        # DataType specific tweeks
-        self.dataTypeTweeks()
 
         # Pass some settings to used configurables
         self.setOtherProps( self.photonConfig(), ["DataType"] )

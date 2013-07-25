@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2013-07-25 - Chris Jones
+ - Fix a bug in the previous changes, that was causing some Upgrade tunings
+   to be wrongly applied in non-Upgrade scenarios.
+
 ! 2013-07-24 - Chris Jones
  - Import some Upgrade specific tunings and tweeks. Applied automatically
    when the DataType property is set to "Upgrade". 
