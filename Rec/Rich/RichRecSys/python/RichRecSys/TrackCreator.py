@@ -62,8 +62,8 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         if self.isPropertySet("OutputLevel") :
             conponent.OutputLevel = self.getProp("OutputLevel")
 
-    ## @brief Apply any tweeks to the default configuration that vary by DataType
-    def dataTypeTweeks(self):
+    ## @brief Apply any tweaks to the default configuration that vary by DataType
+    def dataTypeTweaks(self):
 
         # Get the DataType
         dataType = self.getProp("DataType")
@@ -96,8 +96,8 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         segConf = self.getRichCU(RichSegmentCreatorConf)
         self.setOtherProp(segConf,"Context")
 
-        # DataType specific tweeks
-        self.dataTypeTweeks()
+        # DataType specific tweaks
+        self.dataTypeTweaks()
 
         # Configure the tracking tools
         nickname = "RichTrackCreator"

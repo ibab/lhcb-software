@@ -100,8 +100,8 @@ class RichGlobalPIDConfig(RichConfigurableUser):
     #  @param sequence The sequencer to add the PID algorithms to
     def applyConf(self):
 
-        # DataType specific tweeks
-        self.dataTypeTweeks()
+        # DataType specific tweaks
+        self.dataTypeTweaks()
 
         # Are we properly configured
         if not self.isPropertySet("PidSequencer") :
@@ -112,8 +112,8 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         if self.getProp("InitAlgorithms") : self.applyConfAlgs(sequence)
         if self.getProp("InitTools")      : self.applyConfTools()
 
-    ## @brief Apply any tweeks to the default configuration that vary by DataType
-    def dataTypeTweeks(self):
+    ## @brief Apply any tweaks to the default configuration that vary by DataType
+    def dataTypeTweaks(self):
 
         # Get the DataType
         dataType = self.getProp("DataType")

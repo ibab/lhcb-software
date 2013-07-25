@@ -37,8 +37,8 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         self.setRichDefaults ( "MaxPhotons", { "Offline" : 250000, 
                                                "HLT"     : 250000 } )
 
-    ## @brief Apply any tweeks to the default configuration that vary by DataType
-    def dataTypeTweeks(self):
+    ## @brief Apply any tweaks to the default configuration that vary by DataType
+    def dataTypeTweaks(self):
 
         if not self.getProp("Simulation") :
             self.richTools().photonReco().CKThetaQuartzRefractCorrections = [ 0,0,0 ]
@@ -54,8 +54,8 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
     ## Apply configurations
     def applyConf(self):
 
-        # DataType specific tweeks
-        self.dataTypeTweeks()
+        # DataType specific tweaks
+        self.dataTypeTweaks()
 
         # Context
         context = self.getProp("Context")

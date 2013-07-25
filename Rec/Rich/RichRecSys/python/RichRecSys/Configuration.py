@@ -106,13 +106,13 @@ class RichRecSysConf(RichConfigurableUser):
     ## Access the global PID configurable
     def gpidConfig(self) : return self.getRichCU(RichGlobalPIDConfig)
 
-    ## @brief Apply any tweeks to the default configuration that vary by DataType
-    def dataTypeTweeks(self):
+    ## @brief Apply any tweaks to the default configuration that vary by DataType
+    def dataTypeTweaks(self):
 
         # Get the DataType
         dataType = self.getProp("DataType")
 
-        # Tweeks for the Upgrade
+        # Tweaks for the Upgrade
         if dataType == "Upgrade" :
 
             # No Aerogel in the upgrade
@@ -127,13 +127,13 @@ class RichRecSysConf(RichConfigurableUser):
             # Scale factors for the Cherenkov resolution tool.
             # Needed as the upgrade has better resolutions.
             # Longer term, the tools needs a proper retuning for the upgrade
-            self.richTools().ckResolution().ScaleFactor = [0.57, 0.57,0.7]
+            self.richTools().ckResolution().ScaleFactor = [ 0.57, 0.57, 0.7 ]
 
     ## @brief Apply the configuration to the configured GaudiSequencer
     def applyConf(self) :
 
-        # DataType specific tweeks
-        self.dataTypeTweeks()
+        # DataType specific tweaks
+        self.dataTypeTweaks()
 
         # Check the sequencer is set
         if not self.isPropertySet("RecoSequencer") :
