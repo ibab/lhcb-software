@@ -4,6 +4,9 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
+! 2013-07-25 - Francesco Polci
+- Modified function findFibreMat in DeFTDetector.cpp to avoid returning null fibermat at the borders of the layer.
+
 !========================= FTDet v2r1 2013-07-24 =========================
 ! 2013-12-24 - Diego Milanes
 - bug fix. Inverted of U-V stereo angles, which causing Sipm for those layers to be shifted wrt those in X layers

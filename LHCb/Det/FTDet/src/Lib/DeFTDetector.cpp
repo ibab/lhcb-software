@@ -271,7 +271,7 @@ const DeFTFibreMat* DeFTDetector::findFibreMat ( const LHCb::FTChannelID id ) co
 
   double cellPitch = 0.25;
   double sipmPitch = 32.75;
-  double moduleSize = 540.; //includes dead regions
+  double moduleSize = 540.; //includes dead regions at the border of each module
 
   unsigned int layer = id.layer();
   unsigned int quadrant = id.quarter();
@@ -279,23 +279,28 @@ const DeFTFibreMat* DeFTDetector::findFibreMat ( const LHCb::FTChannelID id ) co
   unsigned int numCell = id.sipmCell();
 
   int topbottom = 0;
-  if(quadrant==0 || quadrant==1) topbottom = 1;
+  if(quadrant==0 || quadrant==1) topbottom = 1; // if = 1, than is bottom of the layer
 
   bool isLeft = false;
   if(quadrant==3 || quadrant==1) isLeft = true;
 
-  double sipmDist = fabs(numSiPm)*sipmPitch;
-  double sensRegion = sipmDist+(fabs(numCell)+1.)*cellPitch;
-
+  double sipmDist = (fabs(numSiPm)+1.)*sipmPitch;  
+  double lastSiPmDist = 0.;
+  if(!isLeft)  lastSiPmDist = sipmPitch - (fabs(numCell)+1.)*cellPitch;
+  if(isLeft)  lastSiPmDist = (fabs(numCell)+1.)*cellPitch;
+  double sensRegion = sipmDist-sipmPitch+ lastSiPmDist; 
 
   int modIdx = -99;
   for(modIdx=1; modIdx<7 ; modIdx++) {
     if(modIdx*moduleSize>=sensRegion) break;
   }
-
-  if(modIdx<0){
-     *m_msg << MSG::FATAL << "You are not able to catch the modulId: that's bad! Check PrFTHitManager"  << endmsg;
+  if(modIdx>6) {
+    modIdx =-99;
   }
+  if(modIdx<0){
+    *m_msg << MSG::FATAL << "You are not able to catch the modulId: that's bad! Check PrFTHitManager"  << endmsg;
+  }
+
 
   unsigned int module = 99;
   if(!isLeft) {
@@ -306,6 +311,15 @@ const DeFTFibreMat* DeFTDetector::findFibreMat ( const LHCb::FTChannelID id ) co
     if(modIdx==1) module = 10;
     if(modIdx>1) module = 6-modIdx;
   }
+  //Case of border SiPm
+  if(numSiPm==98 && isLeft) module = 0;
+  if(numSiPm==98 && !isLeft) module = 9;
+  //
+  if(module>98){
+    std::cout << "You are not able to catch the module: that's bad! Check PrFTHitManager"  << std::endl;
+    return NULL;
+  }
+
 
   unsigned int fibreMatID = topbottom+100*module+10000*layer;
   for ( FibreMats:: const_iterator iL = m_fibremats.begin(); iL != m_fibremats.end(); ++iL) {
