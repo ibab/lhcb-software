@@ -1,14 +1,14 @@
 #=========================================================================
-# Created    : 2009-06-23
-# Maintainer : Tomasz Skwarnicki
+# Created    : 2013-07-25
+# Maintainer : Rob Lambert, Gerhard Raven
 #=========================================================================
-package           HltDAQ
-version           v2r17
+package           HltServices
+version           v1r0
 
 #=========================================================================
 # Structure, i.e. directories to process.
 #=========================================================================
-branches          cmt doc src xml
+branches          cmt doc src
 #=========================================================================
 # Used packages
 #=========================================================================
@@ -24,6 +24,7 @@ use AIDA                v*    LCG_Interfaces -no_auto_imports
 use GaudiAlg            v*
 use HltInterfaces       v*    Kernel
 use HltEvent            v*    Event
+use HltDAQ              v*    DAQ
 use DAQEvent            v*    Event
 use LoKiHlt             v*    Phys
 
@@ -36,18 +37,11 @@ use DetDesc             v*    Det
 use HltTCK              v*    TCK         -no_auto_imports
 
 # include_path      none
-#=========================================================================
-# Produce Header-Files from XML description
-#=========================================================================
-apply_pattern god_headers files=../xml/*.xml
-
-macro HltDAQObj2Doth_GODflags " -s ../src/ " \
-      WIN32                   " -s ..\src\ "
 
 #=========================================================================
 # Component library building rule
 #=========================================================================
-library          HltDAQ    ../src/*.cpp -import=AIDA
+library          HltServices    ../src/*.cpp -import=AIDA
 #=========================================================================
 # define component library link options
 #=========================================================================
