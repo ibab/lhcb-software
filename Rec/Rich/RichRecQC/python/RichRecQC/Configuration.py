@@ -292,7 +292,7 @@ class RichRecQCConf(RichConfigurableUser):
         # Disable any monitors for this histo set
         for monitor in self.__removed_monitors__ :
             if monitor in self.Monitors[histoset] : self.Monitors[histoset].remove(monitor)
-
+            
         # Check sequencer is set
         if not self.isPropertySet("MoniSequencer") :
             raise RuntimeError("ERROR : Monitor Sequencer not set")
@@ -302,8 +302,8 @@ class RichRecQCConf(RichConfigurableUser):
             if mon not in self.__known_monitors__ :
                 raise RuntimeError("Unknown monitor '%s'"%mon)
 
-    ## @brief Apply any tweeks to the default configuration that vary by DataType
-    def dataTypeTweeks(self):
+    ## @brief Apply any tweaks to the default configuration that vary by DataType
+    def dataTypeTweaks(self):
 
         # Get the DataType
         dataType = self.getProp("DataType")
@@ -317,8 +317,8 @@ class RichRecQCConf(RichConfigurableUser):
     ## Apply the configuration to the given sequence
     def applyConf(self):
 
-        # DataType specific tweeks
-        self.dataTypeTweeks()
+        # DataType specific tweaks
+        self.dataTypeTweaks()
 
         ## Sanity checks
         self.sanityChecks()
