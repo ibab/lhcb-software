@@ -62,24 +62,26 @@ StatusCode PhotonSignalGaussProb::initialize()
   const bool PmtActivate= ( Rich1DE -> RichPhotoDetConfig() == Rich::PMTConfig );
 
   // area of pixel in mm^2
-  const double xSize      = ( !PmtActivate ?
-                              Rich1DE->param<double>("RichHpdPixelXsize") :
-                              Rich1DE->param<double>("RichPmtPixelYSize") );
-  const double ySize      = ( !PmtActivate ?
-                              Rich1DE->param<double>("RichHpdPixelYsize") :
-                              Rich1DE->param<double>("RichPmtPixelYSize") );
-  //const double demagScale       = Rich1DE->param<double>("HPDDemagScaleFactor"); // 4.8
-  const double demagScale       =  ( !PmtActivate ? 
-                                     Rich1DE->param<double>("HPDDemagScaleFactor") : 1.0 );
-  m_pixelArea = demagScale*xSize * demagScale*ySize;
+  const double xSize = ( !PmtActivate ?
+                         Rich1DE->param<double>("RichHpdPixelXsize") :
+                         Rich1DE->param<double>("RichPmtPixelYSize") );
+  const double ySize = ( !PmtActivate ?
+                         Rich1DE->param<double>("RichHpdPixelYsize") :
+                         Rich1DE->param<double>("RichPmtPixelYSize") );
+  const double demagScale = ( !PmtActivate ?
+                              //Rich1DE->param<double>("HPDDemagScaleFactor") 
+                              4.8
+                              : 1.0 );
+  m_pixelArea = (demagScale*xSize) * (demagScale*ySize);
 
   // exp params
   m_expMinArg = vdt::fast_exp( m_minArg );
 
   // Informational Printout
-  debug() << " Mirror radii of curvature    = "
-          << m_radiusCurv[Rich::Rich1] << " " << m_radiusCurv[Rich::Rich2] << endmsg
-          << " Pixel area                   = " << m_pixelArea << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << " Mirror radii of curvature    = "
+            << m_radiusCurv[Rich::Rich1] << " " << m_radiusCurv[Rich::Rich2] << endmsg
+            << " Pixel area                   = " << m_pixelArea << endmsg;
 
   return sc;
 }
