@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2013-07-25 - Rob Lambert
+ - Split certain elements off into HltServices, see task #42384
+
 ! 2013-07-22 - Alexey Zhelezov
  - Added ZIP file writing functionality
 
