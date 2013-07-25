@@ -1,3 +1,4 @@
+
 //--------------------------------------------------------------------------
 /** @file RichRecBackgroundEstiAvHPD.cpp
  *
@@ -24,12 +25,12 @@ DECLARE_TOOL_FACTORY( BackgroundEstiAvHPD )
 BackgroundEstiAvHPD::BackgroundEstiAvHPD( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-    : Rich::Rec::ToolBase ( type, name, parent ),
-      m_tkSignal       ( NULL          ),
-      m_geomEff        ( NULL          ),
-      m_obsPDsignals   ( Rich::NRiches ),
-      m_expPDsignals   ( Rich::NRiches ),
-      m_expPDbkg       ( Rich::NRiches )
+: Rich::Rec::ToolBase ( type, name, parent ),
+  m_tkSignal       ( NULL          ),
+  m_geomEff        ( NULL          ),
+  m_obsPDsignals   ( Rich::NRiches ),
+  m_expPDsignals   ( Rich::NRiches ),
+  m_expPDbkg       ( Rich::NRiches )
 {
   // Define interface for this tool
   declareInterface<IPixelBackgroundEsti>(this);
@@ -37,16 +38,14 @@ BackgroundEstiAvHPD::BackgroundEstiAvHPD( const std::string& type,
   declareProperty( "MaxBackgroundNormIterations", m_maxBkgIterations = 10,
                    "Maximum number of iterations in background normalisation" );
 
-    declareProperty( "PixelsPerPD", m_nPixelsPerPD = 784.763611, "Number of active pixels per PD" );
-
-  //declareProperty( "PixelsPerPD", m_nPixelsPerPD = 64,
-  //                 "Number of active pixels per PD - To be got from XML eventually" );
+  declareProperty( "PixelsPerPD", m_nPixelsPerPD = 784.763611, 
+                   "Number of active pixels per PD - To be got from XML eventually" );
 
   declareProperty( "MinPixelBackground", m_minPixBkg = 0.0,
                    "Minimum pixel background" );
 
   declareProperty( "IgnoreExpectedSignals", m_ignoreExpSignal = false,
-                   "Ignore expectations when calculating backgrounds" );  
+                   "Ignore expectations when calculating backgrounds" );
 
   declareProperty( "MinHPDBckForInclusion", m_minHPDbckForInc = 0.0,
                    "Min HPD background level for setting background levels" );
@@ -62,19 +61,26 @@ StatusCode BackgroundEstiAvHPD::initialize()
   const StatusCode sc = Rich::Rec::ToolBase::initialize();
   if ( sc.isFailure() ) { return Error( "Failed to initialize base class", sc ); }
 
-  DeRich1* aRich1= getDet<DeRich1> ( DeRichLocations::Rich1 );
+  // Get Rich1
+  DeRich1 * aRich1 = getDet<DeRich1> ( DeRichLocations::Rich1 );
 
-  if(aRich1 ->RichPhotoDetConfig() == Rich::HPDConfig ) {
+  // HPDs or PMTs
+  if ( aRich1 ->RichPhotoDetConfig() == Rich::HPDConfig ) 
+  {
+    m_nPixelsPerPD = ( aRich1->exists("RichEffectiveActiveNumPixelPerHpd") ? 
+                       (double)(aRich1 ->param<int>("RichEffectiveActiveNumPixelPerHpd")) : 
+                       784.763611 );
 
-    m_nPixelsPerPD = (aRich1->exists("RichEffectiveActiveNumPixelPerHpd"))? ((aRich1 ->param<int>("RichEffectiveActiveNumPixelPerHpd"))*1.0) :  784.763611;
-
-  }else if (aRich1 ->RichPhotoDetConfig() == Rich::PMTConfig ) {
-
-    m_nPixelsPerPD = (aRich1->exists("RichPmtTotNumPixel"))? ((aRich1 ->param<int>("RichPmtTotNumPixel"))*1.0) : 64.0;
-    
-  }  
-  if ( msgLevel(MSG::INFO) ) info()<<" RichRecbackgrEst :  NumPixel per PD "<<m_nPixelsPerPD<<endmsg;
-  
+  }
+  else if ( aRich1 ->RichPhotoDetConfig() == Rich::PMTConfig ) 
+  {
+    m_nPixelsPerPD = ( aRich1->exists("RichPmtTotNumPixel") ?
+                       (double)(aRich1 ->param<int>("RichPmtTotNumPixel")) : 64.0 ); 
+  }
+  else
+  {
+    return Error( "Unknown PD type" );
+  }
 
   // Acquire instances of tools
   acquireTool( "RichExpectedTrackSignal", m_tkSignal );
@@ -84,7 +90,7 @@ StatusCode BackgroundEstiAvHPD::initialize()
     info() << "Will ignore expected signals when computing backgrounds" << endmsg;
 
   info() << "Minimum pixel background = " << m_minPixBkg << endmsg;
-  info() << "Min HPD background level for setting background levels = " 
+  info() << "Min HPD background level for setting background levels = "
          << m_minHPDbckForInc << endmsg;
 
   // pre-cache creator tools

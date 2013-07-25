@@ -3,10 +3,16 @@
 ! Responsible : Chris Jones   Christopher.Rob.Jones@cern.ch
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
+
+! 2013-07-25 - Chris Jones
+ - Clean up a bit the previous commit.
+
 !2013-07-24 - Sajan Easo
-- Updated RichRecBackgroundEstiAvHPD.cpp and RichNominalTabulatedSignalDetectionEff.cpp to
-  use in the RICH upgrade reconstruction with pmts. Switches are set up that it can run with
-  hpd configuration  and pmt configuration.
+- Updated RichRecBackgroundEstiAvHPD.cpp and 
+  RichNominalTabulatedSignalDetectionEff.cpp to support the RICH upgrade 
+  reconstruction with pmts. Switches are set up that it can run with
+  hpd configuration and pmt configuration.
+
 !========================= RichRecTools v4r23 2013-07-18 =========================
 ! 2013-07-16 - Chris Jones
  - Remove unused RichKernel/FastMaths.h include (to be deprecated).
