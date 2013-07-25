@@ -16,6 +16,7 @@ branches          cmt doc python src
 #============================================================================
 # use   Package			v1r*    Hat
 use     HltDAQ                  v*      Hlt
+use     HltServices             v*      Hlt
 use     GaudiKernel             v*
 use     GaudiAlg                v*
 use     HltEvent                v*      Event
