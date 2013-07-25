@@ -236,24 +236,28 @@ Decoder("RawBankToSTLiteClusterAlg/createUTLiteClusters",
         active=True, banks=["UT","UTPedestal","UTFull","UTError"],
         outputs=["Raw/UT/LiteClusters"],
         inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
-        publicTools=["STOfflinePosition/ToolSvc.UTClusterPosition"],
+        #publicTools=["STOfflinePosition/ToolSvc.UTClusterPosition"],
         properties={"DetType":"UT"},
         conf=DecoderDB)
 #outputs={"clusterLocation":"Raw/UT/LiteClusters"}, set logically in the code, resetting may not work...
+#"STOfflinePosition/ToolSvc.UTClusterPosition" is not part of decoding.
 
 Decoder("RawBankToSTClusterAlg/createUTClusters",
         active=True, banks=["UT","UTPedestal","UTFull","UTError"],
         outputs=["Raw/UT/Clusters"],
         inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
-        publicTools=["STOfflinePosition/ToolSvc.UTClusterPosition"],
+        #publicTools=["STOfflinePosition/ToolSvc.UTClusterPosition"],
         properties={"DetType":"UT"},
         conf=DecoderDB)
 #outputs={"clusterLocation":"Raw/IT/LiteClusters"}, set logically in the code, resetting may not work...
+#"STOfflinePosition/ToolSvc.UTClusterPosition" is not part of decoding.
 
-Decoder("STOfflinePosition/ToolSvc.UTClusterPosition",
-        active=False,
-        properties={"DetType":"UT"},
-        conf=DecoderDB)
+#Decoder("STOfflinePosition/ToolSvc.UTClusterPosition",
+#        active=False,
+#        properties={"DetType":"UT"},
+#        conf=DecoderDB)
+#"STOfflinePosition/ToolSvc.UTClusterPosition" is not part of decoding.
+
 
 #UPGRADE ===========FT===========
 Decoder("FTRawBankDecoder/createFTClusters",

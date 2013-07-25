@@ -4,6 +4,11 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-07-25 - Rob Lambert
+ - Suppress STOfflineTool configuration
+ - add tests without upgrade decoding
+ - creates a segfault!!
+
 ! 2013-07-24 - Rob Lambert
  - Minor renaming after Core soft meeting. See task #19106
  - Adapt test for new warning in DecodeRawEvent.py

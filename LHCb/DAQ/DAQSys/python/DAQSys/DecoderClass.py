@@ -59,6 +59,10 @@ class Decoder(object):
         if conf is not None:
             conf[self.FullName]=self
             self.__db__=conf
+    def activate(self):
+        self.Active=True
+    def deactivate(self):
+        self.Active=False
     def clone(self, newname):
         """return another copy of this guy with a new name
         deep copy dictionaries,  but not the DB!!"""

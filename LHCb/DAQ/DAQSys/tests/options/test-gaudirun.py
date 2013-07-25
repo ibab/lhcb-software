@@ -4,5 +4,6 @@ from Configurables import GaudiSequencer
 
 LHCbApp()
 mySeq=GaudiSequencer("Decoding")
+mySeq.OutputLevel=VERBOSE
 DecodeRawEvent().Sequencer=mySeq
-ApplicationMgr().TopAlg+=mySeq
+ApplicationMgr().TopAlg=[mySeq]
