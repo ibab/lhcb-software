@@ -4,6 +4,9 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+! 2013-07-26 - Rob Lambert
+ - Move over all HLT Services from HltDAQ
+
 ! 2013-07-25 - Rob Lambert
  - Creation of new package as split-off from HltDAQ.
  - see task #42384

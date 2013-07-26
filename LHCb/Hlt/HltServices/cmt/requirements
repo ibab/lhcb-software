@@ -21,7 +21,6 @@ use AIDA                v*    LCG_Interfaces -no_auto_imports
 use GaudiAlg            v*
 use HltInterfaces       v*    Kernel
 use HltEvent            v*    Event
-use HltDAQ              v*    Hlt
 use DAQEvent            v*    Event
 use LoKiHlt             v*    Phys
 

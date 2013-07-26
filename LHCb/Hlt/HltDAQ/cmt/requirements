@@ -26,6 +26,7 @@ use HltInterfaces       v*    Kernel
 use HltEvent            v*    Event
 use DAQEvent            v*    Event
 use LoKiHlt             v*    Phys
+use HltServices         v*    Hlt
 
 #### for CORAL access
 use DetCond             v*      Det

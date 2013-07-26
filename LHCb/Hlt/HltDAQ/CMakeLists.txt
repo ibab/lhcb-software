@@ -10,6 +10,7 @@ gaudi_depends_on_subdirs(Det/DetCond
                          GaudiAlg
                          GaudiKernel
                          GaudiObjDesc
+                         Hlt/HltServices
                          Kernel/HltInterfaces
                          Phys/LoKiHlt)
 

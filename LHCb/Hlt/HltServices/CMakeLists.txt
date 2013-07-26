@@ -9,7 +9,6 @@ gaudi_depends_on_subdirs(Det/DetCond
                          Event/HltEvent
                          GaudiAlg
                          GaudiKernel
-                         Hlt/HltDAQ
                          Kernel/HltInterfaces
                          Phys/LoKiHlt)
 
