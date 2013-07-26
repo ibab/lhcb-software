@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-07-26 - Rob Lambert
+ - Move UT position from DecodeRawEvent into STOfflineConf (STTools)
+
 ! 2013-07-24 - Rob Lambert
  - Add obsolete warning into DecodeRawEvent.py
 

@@ -48,9 +48,10 @@ RawBankToSTLiteClusterAlg("createITLiteClusters").DetType  = "IT"
 RawBankToSTClusterAlg("createUTClusters").DetType          = "UT"
 RawBankToSTLiteClusterAlg("createUTLiteClusters").DetType  = "UT"
 
-from Configurables import STOfflinePosition
-UT = STOfflinePosition('ToolSvc.UTClusterPosition')
-UT.DetType = "UT"
+#Moved to ST/STTools/python/STTools/STOfflineConf, as with TT and IT
+#from Configurables import STOfflinePosition
+#UT = STOfflinePosition('ToolSvc.UTClusterPosition')
+#UT.DetType = "UT"
 
 DecodeVeloRawBuffer("createVeloClusters").DecodeToVeloClusters     = True
 DecodeVeloRawBuffer("createVeloClusters").DecodeToVeloLiteClusters = False
