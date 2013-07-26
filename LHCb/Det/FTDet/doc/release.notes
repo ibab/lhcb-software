@@ -4,6 +4,7 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
+!========================= FTDet v2r2 2013-07-26 =========================
 ! 2013-07-25 - Francesco Polci
 - Modified function findFibreMat in DeFTDetector.cpp to avoid returning null fibermat at the borders of the layer.
 
