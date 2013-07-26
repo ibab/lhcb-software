@@ -19,9 +19,6 @@ use CaloAssociators   v6r12p1  Calo      # Olivier Deschamps
 # DAQ
 use DAQMonitors       v1r9     DAQ       # Olivier Deschamps
 
-# HLT
-use HltServices       v1r0     Hlt       # Tomasz Skwarnicki
-
 # L0 trigger simulation
 use L0MuonMonitor     v2r3     L0        # Julien Cogan
 use PuVeto            v7r9     L0        # Serena Oggero

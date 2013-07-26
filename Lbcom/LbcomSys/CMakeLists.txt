@@ -6,7 +6,6 @@ gaudi_subdir(LbcomSys v14r1)
 gaudi_depends_on_subdirs(Associators/Associators
                          Calo/CaloAssociators
                          DAQ/DAQMonitors
-                         Hlt/HltDAQ
                          L0/L0MuonMonitor
                          L0/PuVeto
                          Muon/MuonAssociators
