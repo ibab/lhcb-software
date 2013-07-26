@@ -3,6 +3,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2013-07-26 - Rob Lambert
+ - Move STOfflinePosition for UT from DecodeRawEvent.py to STOfflineConf
+
 !========================= STTools v4r14p2 2013-06-03 =========================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warning
