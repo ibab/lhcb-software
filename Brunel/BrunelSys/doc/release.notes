@@ -3,6 +3,52 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+
+</PRE><H1><A NAME=v44r6>2013-07-26 Brunel v44r6</A></H1><PRE>
+This version uses projects LCG 65a, Gaudi v23r9, LHCb v36r1, Lbcom v14r1,
+ Rec v15r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Development release for Fibre Tracker upgrade productions
+
+- New functionality
+  . Add support for new FT detector description, keeping support also for old
+    version (FTDet v2r2,PrAlgorithms v1r6, TrackFitEvent v5r23, TrackTools v4r25)
+
+- New tuning
+  . Modifications of default parameters (in particular for space tracking) 
+    (PrVL v1r4)
+  . Added pT dependent window and printout (PatVeloTT v4r1, PrVeloUT v1r2)
+
+- Bug fixes
+  . In PatVeloTTTool, set passUnmatched default to false
+	  (reverts change made in Brunel v45r0) (PatVeloTT v4r1)
+  . Fix segfault in gcc 4.8 optimised build (PatAlgorithms v4r27)
+
+- Performance optimisation
+  . Use VDT for a couple cos and sin calculations
+    (RichDet v16r18, RichRecPhotonTools v1r11)
+  . Remove empty finalize methods (CaloMoniDst v5r14, MuonID v9r6, 
+     MuonTrackAlign v1r10, MuonTrackMonitor v2r8, rackMonitors v1r45, VPDAQ v2r3)
+  . Remove empty finalize methods
+  . Reduce calls to phiOfStrip by pre-calculating R sector of each Phi hit
+    (PrVL v1r4)
+
+- Monitoring changes
+  . Add HistoCountersPrint property to GaudiHistos, to control printing of
+    booked histogram statistics in finalize() (GaudiAlg v14r6)
+  . Reduced verbosity in PrVeloUTTool, use PrintVariables flag (PrVeloUT v1r2)
+
+- Changes to example options
+  . Remove COLLISION10-Beam3500GeV-VeloClosed-MagDown.py, now in PRConfig
+
+- Changes to tests
+  . Increase timeout to 3600 seconds for long tests, avoids timeout in dbg tests
+  . Fix a bug in the exclusions file, introduced in v44r5, that meant that
+    comparisons with reference were always successful.
+  . Pick up input files from CERN-SWTEST (EOS), new location for 'freezer'
+  . Updated all upgrade tests to latest DEV DB tags.
+  . Updated all upgrade tests to use "Upgrade" DataType.
+
 </PRE><H1><A NAME=v44r5>2013-06-07 Brunel v44r5</A></H1><PRE>
 This version uses projects LCG 65, Gaudi v23r8, LHCb v36r0, Lbcom v14r0,
  Rec v15r0 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
