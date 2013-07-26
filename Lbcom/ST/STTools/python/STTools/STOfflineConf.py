@@ -23,7 +23,8 @@ class DefaultConfMC09(object):
 class DefaultConf(object):
     def configureTools(self,
                        IT=STOfflinePosition('ToolSvc.ITClusterPosition'),
-                       TT=STOfflinePosition('ToolSvc.STOfflinePosition')
+                       TT=STOfflinePosition('ToolSvc.STOfflinePosition'),
+                       UT=STOfflinePosition('ToolSvc.UTClusterPosition')
                        ):
         # New tune (JvT - 14.07.2010)
         if IT is not None:
@@ -53,3 +54,6 @@ class DefaultConf(object):
             #TT.LinSharingCorr4 = 0.67
             #TT.applyLorentzCorrection = False;
             #TT.ErrorVec =[ 0.196, 0.147, 0.177, 0.037 ]
+        if UT is not None:
+            UT.DetType="UT"
+
