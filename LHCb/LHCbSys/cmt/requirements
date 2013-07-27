@@ -15,6 +15,7 @@ use CaloInterfaces        v8r6    Calo    # Olivier Deschamps
 use CaloKernel            v6r4    Calo    # Olivier Deschamps
 use CaloUtils             v10r1   Calo    # Olivier Deschamps
 
+use HltServices           v1r0     Hlt    # Gerhard Raven
 use HltDAQ                v2r17    Hlt    # Tomasz Skwarnicki
 
 use DAQSys                v7r0    DAQ     # Marco Cattaneo

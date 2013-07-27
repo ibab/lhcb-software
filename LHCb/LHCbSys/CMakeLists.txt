@@ -62,6 +62,8 @@ gaudi_depends_on_subdirs(Associators/MCAssociators
                          GaudiConfUtils
                          GaudiMTTools
                          GaudiObjDesc
+                         Hlt/HltDAQ
+                         Hlt/HltServices
                          Kernel/FSRAlgs
                          Kernel/HltInterfaces
                          Kernel/KernelSys
