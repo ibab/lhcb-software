@@ -41,7 +41,7 @@ library          HltServices    ../src/*.cpp -import=AIDA
 #=========================================================================
 # define component library link options
 #=========================================================================
-apply_pattern    component_library library=HltDAQ
+apply_pattern    component_library library=HltServices
 macro_append Boost_linkopts " $(Boost_linkopts_iostreams)  $(Boost_linkopts_filesystem) "
 
 private
