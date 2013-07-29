@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-07-29
+ - Changed seeding station in StrippingTrackEffMuonTT for Z candidates to M5 (remains M3 for other decay channels)
+
 ! 2013-07-11 - Sean Benson
  - Added EnableFlavourTagging = True to the striping lines defined in StrippingBs2PhiPhi.py and StrippingBs2Q2B.py
 

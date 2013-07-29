@@ -207,10 +207,13 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
         # initialize all the general things 
         # idea: initialize the first object, that will be called, pass it to the second one, etc.
                                 
-        # make the muonTT tracks
-        self.SelMakeMuonTT = selMakeMuonTT(name, XTolParam = 25.0, MaxChi2TolParam = 7.0, MinAxProjParam = 5.5, MajAxProjParam = 25.0)
-        self.SelMuonTTPParts = selMuonTTPParts(name, muonTTTrackMaker = self.SelMakeMuonTT )
-        self.SelMuonTTParts = selMuonTTParts(name, protoParticlesMaker = self.SelMuonTTPParts )
+        # make the muonTT tracks (two instances, as the Z has a different seed station for the muon system than the rest)
+        self.SelMakeMuonTTJpsi = selMakeMuonTT(name+'Jpsi', XTolParam = 25.0, MaxChi2TolParam = 7.0, MinAxProjParam = 5.5, MajAxProjParam = 25.0, seedStation = 2)
+        self.SelMakeMuonTTZ = selMakeMuonTT(name+'Z', XTolParam = 25.0, MaxChi2TolParam = 7.0, MinAxProjParam = 5.5, MajAxProjParam = 25.0, seedStation = 4)
+        self.SelMuonTTPPartsJpsi = selMuonTTPParts(name+'Jpsi', muonTTTrackMaker = self.SelMakeMuonTTJpsi )
+        self.SelMuonTTPPartsZ = selMuonTTPParts(name+'Z', muonTTTrackMaker = self.SelMakeMuonTTZ )
+        self.SelMuonTTPartsJpsi = selMuonTTParts(name+'Jpsi', protoParticlesMaker = self.SelMuonTTPPartsJpsi )
+        self.SelMuonTTPartsZ = selMuonTTParts(name+'Z', protoParticlesMaker = self.SelMuonTTPPartsZ )
 
         self.SelFilterLongPartsMuJpsi = selFilterLongPartsMu(name+'Jpsi')
         self.SelFilterLongPartsMuUpsilonZ  = selFilterLongPartsMuUpsilonZ(name+'UpsilonZ')
@@ -221,8 +224,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
         self.SelHlt2JpsiMinus = selHlt2Jpsi(name+'JpsiMinus', hlt1Filter = self.SelHlt1JpsiMinus, triggers = config['JpsiHlt2Triggers'])
         self.SelHlt2JpsiPlus = selHlt2Jpsi(name+'JpsiPlus', hlt1Filter = self.SelHlt1JpsiPlus, triggers = config['JpsiHlt2Triggers'])
 
-        self.muonTTMinusJpsi = chargeFilter(name+'MuonTTJpsiMinus', trackAlgo =  'MuonTT',   partSource =  self.SelMuonTTParts , charge = -1)
-        self.muonTTPlusJpsi = chargeFilter(name+'MuonTTJpsiPlus', trackAlgo = 'MuonTT',  partSource = self.SelMuonTTParts,  charge = 1)
+        self.muonTTMinusJpsi = chargeFilter(name+'MuonTTJpsiMinus', trackAlgo =  'MuonTT',   partSource =  self.SelMuonTTPartsJpsi , charge = -1)
+        self.muonTTPlusJpsi = chargeFilter(name+'MuonTTJpsiPlus', trackAlgo = 'MuonTT',  partSource = self.SelMuonTTPartsJpsi,  charge = 1)
         self.longMinusJpsi = chargeFilter( name+'LongJpsiMinus', trackAlgo = 'LongMu',   partSource = self.SelHlt2JpsiMinus, charge = -1)
         self.longPlusJpsi = chargeFilter( name+'LongJpsiPlus', trackAlgo =  'LongMu',   partSource = self.SelHlt2JpsiPlus  , charge = 1)
         # ##########################################
@@ -232,8 +235,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
         self.SelHlt2UpsilonMinus = selHlt2Upsilon(name+'UpsilonMinus', hlt1Filter = self.SelHlt1UpsilonMinus, triggers = config['UpsilonHlt2Triggers'])
         self.SelHlt2UpsilonPlus = selHlt2Upsilon(name+'UpsilonPlus', hlt1Filter = self.SelHlt1UpsilonPlus, triggers = config['UpsilonHlt2Triggers'])
 
-        self.muonTTPlusUpsilon = chargeFilter(name+'MuonTTUpsilonPlus', trackAlgo = 'MuonTT',  partSource = self.SelMuonTTParts ,  charge = 1)
-        self.muonTTMinusUpsilon = chargeFilter(name+'MuonTTUpsilonMinus', trackAlgo =  'MuonTT',   partSource =  self.SelMuonTTParts , charge = -1)
+        self.muonTTPlusUpsilon = chargeFilter(name+'MuonTTUpsilonPlus', trackAlgo = 'MuonTT',  partSource = self.SelMuonTTPartsJpsi ,  charge = 1)
+        self.muonTTMinusUpsilon = chargeFilter(name+'MuonTTUpsilonMinus', trackAlgo =  'MuonTT',   partSource =  self.SelMuonTTPartsJpsi , charge = -1)
         self.longPlusUpsilon = chargeFilter( name+'LongUpsilonPlus', trackAlgo =  'LongMu',   partSource = self.SelHlt2UpsilonPlus  , charge = 1)
         self.longMinusUpsilon = chargeFilter( name+'LongUpsilonMinus', trackAlgo = 'LongMu',   partSource = self.SelHlt2UpsilonMinus, charge = -1)
         # ##########################################
@@ -243,8 +246,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
         self.SelHlt2ZMinus = selHlt2Z(name+'ZMinus', hlt1Filter = self.SelHlt1ZMinus, triggers = config['ZHlt2Triggers'])
         self.SelHlt2ZPlus = selHlt2Z(name+'ZPlus', hlt1Filter = self.SelHlt1ZPlus, triggers = config['ZHlt2Triggers'])
 
-        self.muonTTPlusZ = chargeFilter(name+'MuonTTZPlus', trackAlgo = 'MuonTT',  partSource = self.SelMuonTTParts ,  charge = 1)
-        self.muonTTMinusZ = chargeFilter(name+'MuonTTZMinus', trackAlgo =  'MuonTT',   partSource =  self.SelMuonTTParts , charge = -1)
+        self.muonTTPlusZ = chargeFilter(name+'MuonTTZPlus', trackAlgo = 'MuonTT',  partSource = self.SelMuonTTPartsZ ,  charge = 1)
+        self.muonTTMinusZ = chargeFilter(name+'MuonTTZMinus', trackAlgo =  'MuonTT',   partSource =  self.SelMuonTTPartsZ , charge = -1)
         self.longPlusZ = chargeFilter( name+'LongZPlus', trackAlgo =  'LongMu',   partSource = self.SelHlt2ZPlus  , charge = 1)
         self.longMinusZ = chargeFilter( name+'LongZMinus', trackAlgo = 'LongMu',   partSource = self.SelHlt2ZMinus, charge = -1)
         # ##########################################
@@ -259,8 +262,8 @@ class StrippingTrackEffMuonTTConf(LineBuilder) :
         self.SelFilterLongPartsBJpsiKK = selFilterLongPartsK(name+'BJpsiK')
         self.SelHlt2BJpsiKK = selHlt2BJpsiKK( name+'BJpsiK',longPartsFilter = self.SelFilterLongPartsBJpsiKK, triggers = config['BJpsiKHlt2TriggersTUS'])
         
-        self.muonTTPlusBJpsiK = chargeFilter(name+'MuonTTBJpsiKPlus', trackAlgo = 'MuonTT',  partSource = self.SelMuonTTParts ,  charge = 1)
-        self.muonTTMinusBJpsiK = chargeFilter(name+'MuonTTBJpsiKMinus', trackAlgo =  'MuonTT',   partSource =  self.SelMuonTTParts , charge = -1)
+        self.muonTTPlusBJpsiK = chargeFilter(name+'MuonTTBJpsiKPlus', trackAlgo = 'MuonTT',  partSource = self.SelMuonTTPartsJpsi ,  charge = 1)
+        self.muonTTMinusBJpsiK = chargeFilter(name+'MuonTTBJpsiKMinus', trackAlgo =  'MuonTT',   partSource =  self.SelMuonTTPartsJpsi , charge = -1)
         self.longPlusBJpsiK = chargeFilter( name+'LongBJpsiKPlus', trackAlgo =  'LongMu',   partSource = self.SelHlt2BJpsiKPlus  , charge = 1)
         self.longMinusBJpsiK = chargeFilter( name+'LongBJpsiKMinus', trackAlgo = 'LongMu',   partSource = self.SelHlt2BJpsiKMinus, charge = -1)
         # ##################################################################################################################1
@@ -546,7 +549,7 @@ def selFilterLongPartsK(name):
 # ########################################################################################
 # The pattern recognition -> muonTT track stuff
 # ########################################################################################
-def selMakeMuonTT(name, XTolParam, MaxChi2TolParam, MinAxProjParam, MajAxProjParam):
+def selMakeMuonTT(name, XTolParam, MaxChi2TolParam, MinAxProjParam, MajAxProjParam, seedStation):
     """
     Make a muonTT track out of hits in the muon station and TT, and give it some options to configure
     """
@@ -563,7 +566,7 @@ def selMakeMuonTT(name, XTolParam, MaxChi2TolParam, MinAxProjParam, MajAxProjPar
     MakeMuonTT.MuonCombRec.AssumeCosmics = False
     MakeMuonTT.MuonCombRec.AssumePhysics = True
     MakeMuonTT.MuonCombRec.StrongCloneKiller = False 
-    MakeMuonTT.MuonCombRec.SeedStation = 2 # default seet station is M5
+    MakeMuonTT.MuonCombRec.SeedStation = seedStation # default seet station is M5
     # #############################################################
     MakeMuonTT.addTool( PatAddTTCoord )
     MakeMuonTT.PatAddTTCoord.YTolSlope = 400000.0
