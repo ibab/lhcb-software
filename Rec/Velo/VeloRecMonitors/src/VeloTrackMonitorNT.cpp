@@ -56,7 +56,7 @@ using namespace std;
  
 typedef IVeloClusterPosition::Direction Direction;
 
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(Velo, VeloTrackMonitorNT )
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(Velo, VeloTrackMonitorNT)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -1418,7 +1418,7 @@ Gaudi::XYZPoint Velo::VeloTrackMonitorNT::extrapolateToZ(const LHCb::Track *trac
   return result;
 }
 
-double VeloTrackMonitorNT::projAngleR(const Direction& locDirection,
+double Velo::VeloTrackMonitorNT::projAngleR(const Direction& locDirection,
                                       const Gaudi::XYZPoint& aLocPoint)
 {
   if( msgLevel(MSG::DEBUG) )  
@@ -1440,7 +1440,7 @@ double VeloTrackMonitorNT::projAngleR(const Direction& locDirection,
   return ( projectedAngle );
 }
 
-double VeloTrackMonitorNT::projAnglePhi(const Direction& locDirection,
+double Velo::VeloTrackMonitorNT::projAnglePhi(const Direction& locDirection,
                                         const DeVeloPhiType* phiSensor,
                                         unsigned int centreStrip)
 {
@@ -1461,7 +1461,7 @@ double VeloTrackMonitorNT::projAnglePhi(const Direction& locDirection,
   return ( projectedAngle );
 }
 
-Direction VeloTrackMonitorNT::localTrackDirection(const Gaudi::XYZVector& gloTrackDir,
+Direction Velo::VeloTrackMonitorNT::localTrackDirection(const Gaudi::XYZVector& gloTrackDir,
                                                   const DeVeloSensor* sensor) const
 {
   if( msgLevel(MSG::DEBUG) )  
@@ -1482,7 +1482,7 @@ Direction VeloTrackMonitorNT::localTrackDirection(const Gaudi::XYZVector& gloTra
   return ( locTrackDir );
 }
 
-double VeloTrackMonitorNT::angleOfInsertion(const Direction& localSlopes,
+double Velo::VeloTrackMonitorNT::angleOfInsertion(const Direction& localSlopes,
                                             Gaudi::XYZVector& parallel2Track) const
 {
   if( msgLevel(MSG::DEBUG) )  
@@ -1507,7 +1507,7 @@ double VeloTrackMonitorNT::angleOfInsertion(const Direction& localSlopes,
       
 }
 
-const LHCb::MCHit* VeloTrackMonitorNT::getAssocMCHit(const LHCb::VeloCluster* clus) const
+const LHCb::MCHit* Velo::VeloTrackMonitorNT::getAssocMCHit(const LHCb::VeloCluster* clus) const
 {
   if( msgLevel(MSG::DEBUG) )  
     debug()<< " --> getAssocMCHit() " <<endmsg;
@@ -1525,7 +1525,7 @@ const LHCb::MCHit* VeloTrackMonitorNT::getAssocMCHit(const LHCb::VeloCluster* cl
 }
 
 //============================================================================
-VeloChannelID VeloTrackMonitorNT::weightedMean(const VeloCluster* cluster, double& isp)
+VeloChannelID Velo::VeloTrackMonitorNT::weightedMean(const VeloCluster* cluster, double& isp)
 {
   debug()<< " ==> weightedMean() " <<endmsg;
   //

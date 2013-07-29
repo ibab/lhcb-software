@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2013-07-29 - Marco Clemencic
+ - Fixed use of Velo namespace in VeloTrackMonitorNT.cpp, hidden by a leak in
+   the macro DECLARE_NAMESPACE_ALGORITHM_FACTORY.
+
 !========================= VeloRecMonitors v2r26 2013-07-18 =========================
 ! 2013-06-24 - Marco Cattaneo
  - Fix clang32 warning
