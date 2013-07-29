@@ -11,7 +11,7 @@
 #include "Event/MCParticle.h"
 #include "Kernel/IParticle2MCWeightedAssociator.h"            // Interface
 
-/** @class Particle2MCAssociatorBase Particle2MCAssociatorBase.h
+/** @class Particle2MCAssociatorBase Kernel/Particle2MCAssociatorBase.h
  *
  *  Common implementation for descendants of IParticle2MCWeightedAssociator.
  *  Mainly inline helper methods for common implementation of host of
