@@ -8,7 +8,7 @@
   <argument name="args"><set>
     <text>../options/test-gaudirun.py</text>
     <text>--option</text>
-    <text>from PRConfig import TestFileDB; TestFileDB.test_file_db['2012_raw_default'].run();from Configurables import LHCbApp; LHCbApp().EvtMax=10;  from DAQSys.Decoders import DecoderDB; [DecoderDB[k].deactivate()  for k in DecoderDB if (DecoderDB[k].Active and (('FT' in k) or ('UT' in k) or ('VL' in k) or ('VP' in k)))]; importOptions('$L0TCK/L0DUConfig.opts');</text>
+    <text>from PRConfig import TestFileDB; TestFileDB.test_file_db['2012_raw_default'].run();from Configurables import LHCbApp; LHCbApp().EvtMax=10;</text>
   </set></argument>
   <argument name="validator"><text>
 

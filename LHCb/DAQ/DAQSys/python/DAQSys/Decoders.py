@@ -41,6 +41,7 @@ Decoder("RawBankToSTLiteClusterAlg/createTTLiteClusters",
         active=True, banks=["TT","TTPedestal","TTFull","TTProcFull","TTError"],
         outputs={"clusterLocation":None},
         inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},#also set in the C++...
+        required=["createODIN"],
         conf=DecoderDB)
 #outputs={"clusterLocation":None}, set logically in the code, resetting may not work...
 
@@ -48,6 +49,7 @@ Decoder("RawBankToSTClusterAlg/createTTClusters",
         active=True, banks=["TT","TTPedestal","TTFull","TTProcFull","TTError"],
         outputs={"clusterLocation":None},
         inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},#also set in the C++...
+        required=["createODIN"],
         conf=DecoderDB)
 #outputs={"clusterLocation":None}, set logically in the code, resetting may not work...
 
@@ -82,6 +84,7 @@ Decoder("RawBankToSTLiteClusterAlg/createITLiteClusters",
         outputs=["Raw/IT/LiteClusters"],
         inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},#also set in the C++...
         properties={"DetType":"IT"},
+        required=["createODIN"],
         conf=DecoderDB)
 #outputs={"clusterLocation":"Raw/IT/LiteClusters"}, set logically in the code, resetting may not work...
 
@@ -90,6 +93,7 @@ Decoder("RawBankToSTClusterAlg/createITClusters",
         outputs=["Raw/IT/Clusters"],
         inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},#also set in the C++...
         properties={"DetType":"IT"},
+        required=["createODIN"],
         conf=DecoderDB)
 #outputs={"clusterLocation":"Raw/IT/LiteClusters"}, set logically in the code, resetting may not work...
 
@@ -238,6 +242,7 @@ Decoder("RawBankToSTLiteClusterAlg/createUTLiteClusters",
         inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
         #publicTools=["STOfflinePosition/ToolSvc.UTClusterPosition"],
         properties={"DetType":"UT"},
+        required=["createODIN"],
         conf=DecoderDB)
 #outputs={"clusterLocation":"Raw/UT/LiteClusters"}, set logically in the code, resetting may not work...
 #"STOfflinePosition/ToolSvc.UTClusterPosition" is not part of decoding.
@@ -248,6 +253,7 @@ Decoder("RawBankToSTClusterAlg/createUTClusters",
         inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
         #publicTools=["STOfflinePosition/ToolSvc.UTClusterPosition"],
         properties={"DetType":"UT"},
+        required=["createODIN"],
         conf=DecoderDB)
 #outputs={"clusterLocation":"Raw/IT/LiteClusters"}, set logically in the code, resetting may not work...
 #"STOfflinePosition/ToolSvc.UTClusterPosition" is not part of decoding.

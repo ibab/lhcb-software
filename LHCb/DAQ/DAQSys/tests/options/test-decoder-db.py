@@ -127,4 +127,44 @@ if d2.listOutputs()!=["Blah"]:
 from DAQSys.Decoders import DecoderDB
 validate(DecoderDB)
 
+#setup a new databse with tree of interdependencies
+
+test_db={}
+
+#          0
+#
+#    1        7 9  10
+#  /   \      |/
+#  2    3     8
+#  |    |\
+#  4   /  5
+#   \ /
+#    6
+#
+
+#Should run as 10 897 563421 0
+
+for n in range(11):
+    name=str(n)
+    Decoder(name,
+            active=True,
+            banks=[name],
+            inputs=[name],
+            outputs=[name],
+            conf=test_db)
+
+test_db["1"].Required=["2","3"]
+test_db["2"].Required=["4"]
+test_db["3"].Required=["6","5"]
+test_db["4"].Required=["6"]
+test_db["7"].Required=["8"]
+test_db["9"].Required=["8"]
+test_db["0"].Required=["1","7","9","10"]
+
+validate(test_db)
+
+if test_db["0"].listRequired()!=['10', '8', '9', '7', '5', '6', '3', '4', '2', '1']:
+    print test_db["0"].listRequired()
+    raise KeyError("Failed to flatten the tree correctly")
+
 print "Pass"

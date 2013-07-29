@@ -33,7 +33,8 @@ class Decoder(object):
     Properties={} # {Property: value dict of misc properties
     PrivateTools=[] #related private toolsmust also be in the DB at configuration time
     PublicTools=[] #related public tools, must also be in the DB at configuration time
-    def __init__(self,fullname,active,banks=[],inputs={},outputs={},properties={},privateTools=[],publicTools=[],conf=None):
+    Required=[] #related public tools, must also be in the DB at configuration time
+    def __init__(self,fullname,active,banks=[],inputs={},outputs={},properties={},privateTools=[],publicTools=[],required=[],conf=None):
         """
         Create a decoder configurabloid. Options:
         fullname: The full Gaudi name for this algorithm, Type/InstanceName
@@ -44,9 +45,11 @@ class Decoder(object):
         Properties: {Attribute: value}
         PrivateTools: list of possible decoder private tools, which should also be defined in the DB
         PublicTools: list of possible decoder public tools, which should also be defined in the DB
+        Required: list of possible decoders which must be run before me, should also be defined in the DB
         conf: a database of decoders, a dictionary to add myself to, keyed by my name, it's where I expect to find my tools
         
         PrivateTools and PublicTools are configured at the same time as this decoder, providing that they exist in the DB.
+        Required partners are not configured automatically, but must be declared active and configured separately.
         """
         self.FullName=fullname
         self.Active=active
@@ -56,9 +59,34 @@ class Decoder(object):
         self.Properties=properties
         self.PrivateTools=privateTools
         self.PublicTools=publicTools
+        self.Required=required
         if conf is not None:
             conf[self.FullName]=self
             self.__db__=conf
+    def listRequired(self):
+        """
+        Return a unique ordered list of the requirements, from lowest to highest level
+        """
+        retlist=[]
+        for alg in self.PrivateTools+self.PublicTools:
+            if alg not in self.__db__:
+                continue
+            res=self.__db__[alg].listRequired()
+            res.reverse()
+            retlist+=res
+        for alg in self.Required:
+            if alg not in self.__db__:
+                continue
+            retlist+=[alg]
+            res=self.__db__[alg].listRequired()
+            res.reverse()
+            retlist+=res
+        retlist.reverse()
+        unique=[]
+        for alg in retlist:
+            if alg not in unique:
+                unique.append(alg)
+        return unique
     def activate(self):
         self.Active=True
     def deactivate(self):
@@ -76,7 +104,7 @@ class Decoder(object):
             op=dict(op)
         if type(pr) is dict:
             pr=dict(pr)
-        return Decoder(newname,self.Active,self.Banks,ip,op,pr,self.PrivateTools,self.PublicTools,self.__db__)
+        return Decoder(newname,self.Active,self.Banks,ip,op,pr,self.PrivateTools,self.PublicTools,self.Required,self.__db__)
     def __setprop__(self,top,prop,val):
         """
         Handle tool handles? not 100% sure...
@@ -308,17 +336,32 @@ def validate(db):
         for tool in v.PublicTools+v.PrivateTools:
             if tool not in db:
                 raise KeyError("A decoder is asking for a tool which hasn't been put in this database... try again! "+adecoder.FullName+"-> "+tool)
+        for alg in v.Required:
+            if alg not in db:
+                raise KeyError("A decoder requires another decoder which is hasn't been put in this database... try again! "+adecoder.FullName+"-> "+alg)
+            if not db[alg].Active:
+                raise ValueError("A decoder requires another which isn't set as active! "+adecoder.FullName+"-> "+alg)
     return True
 
-def decodersForBank(db,bank,ignoreActive=False):
+def decodersForBank(db,bank,ignoreActive=False,addRequired=False):
     """
     Obtain a list of decoders for a given bank
+    options:
+    
+    ignoreActive: Whether to ignore active flags, by default False, only consider 'active' algs
+    addRequired: Whether to follow down to any required algs which might decode other banks,
+                 by default False, don't return required algs
+    
     """
     retlist=[]
     for k,v in db.items():
         if not ignoreActive and not v.Active:
             continue
         if bank in v.Banks:
+            if addRequired:
+                for l in v.listRequired():
+                    if l not in retlist:
+                        retlist.append(l)
             retlist.append(v)
     return retlist
 

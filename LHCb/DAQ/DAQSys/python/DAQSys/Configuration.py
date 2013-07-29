@@ -102,6 +102,9 @@ class DecodeRawEvent(ConfigurableUser):
             d.setup(onlyInputs=True)
     
     def __apply_configuration__(self):
+        #check the DB is self-consistent!
+        from DAQSys.DecoderClass import validate
+        validate(self.__db__())
         #only override input locations (if I was asked to)
         self.overrideIfRequired(setup=True)
         #if I was asked to override the locations, I must also propagate this to the configurables, not just the db
@@ -115,18 +118,32 @@ class DecodeRawEvent(ConfigurableUser):
         if self.isPropertySet("Sequencer") and self.getProp("DataOnDemand"):
             raise ValueError("You asked me to do the DoD service *and* a sequencer, but it only make sense to do one of these")
         #if DoD, check that no active algs want to write to the same location...
-        foundSoFar=[]
         for k,v in self.__db__().items():
             if not v.Active:
                 continue
             thedecoder=v.setup()
+            
+            #either add to a sequence, respecting dependencies
             if self.isPropertySet("Sequencer"):
-                self.getProp("Sequencer").Members+=[thedecoder]
+                if self.getProp("Sequencer").Members is None:
+                    self.getProp("Sequencer").Members=[]
+                if thedecoder in self.getProp("Sequencer").Members:
+                    continue
+                
+                #add any requirements first!
+                for alg in v.listRequired():
+                    depdecoder=self.__db__()[alg].setup()
+                    if depdecoder not in self.getProp("Sequencer").Members:
+                        self.getProp("Sequencer").Members.append(depdecoder)
+                
+                self.getProp("Sequencer").Members.append(thedecoder)
             #or DoD
             if self.getProp("DataOnDemand"):
+                if DataOnDemandSvc().AlgMap is None or type(DataOnDemandSvc().AlgMap) is not dict:
+                    DataOnDemandSvc().AlgMap={}
                 locs=v.listOutputs()
                 for loc in locs:
-                    if loc in foundSoFar:
+                    if loc in DataOnDemandSvc().AlgMap:
                         raise AttributeError("At least two active algs want to write to the same location. Check your DecoderDB! "+loc)
                     DataOnDemandSvc().AlgMap[loc]=thedecoder
         #Done :)

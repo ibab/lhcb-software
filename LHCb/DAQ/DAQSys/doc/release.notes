@@ -4,6 +4,10 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-07-29 - Rob Lambert
+ - Resolve dependency trees, declare that the ST decoders need createODIN
+ - see task #19106
+
 ! 2013-07-25 - Rob Lambert
  - Suppress STOfflineTool configuration
  - add tests without upgrade decoding

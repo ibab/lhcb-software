@@ -14,5 +14,7 @@ def append():
             if alg not in mySeq.Members:
                  mySeq.Members.append(alg)
 
+#make sure ODIN is first, to resolve ST dependencies manually...
+mySeq.Members=["createODIN"]
 append()
 ApplicationMgr().TopAlg=[mySeq]
