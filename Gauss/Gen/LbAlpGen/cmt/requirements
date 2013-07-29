@@ -25,7 +25,8 @@ use               Boost        v* LCG_Interfaces -no_auto_import
 macro alpgen_author_dir $(alpgen_path)/share/alpgen-author
 
 # =============== constituents ================================================
-#library           LbAlpGen       component/*.cpp
+library           LbAlpGenRead       component/ReadAlpGen.cpp
+library           LbAlpGenLibRead    Lib/alpsho.F Lib/Ahio.cpp Lib/gahio.F
 library           LbAlpGenzbb       component/AlpGenProduction.cpp component/AlpGenProductionzbb.cpp
 library           LbAlpGenLibzbb    Lib/*.cpp Lib/*.F $(alpgen_author_dir)/zqqlib/zqq.f zqq/*.F
 library           LbAlpGen4q        component/AlpGenProduction.cpp component/AlpGenProduction4q.cpp
@@ -55,6 +56,9 @@ library           LbAlpGenLibtop     Lib/*.cpp Lib/*.F $(alpgen_author_dir)/topl
 ##                              $(alpgen_author_dir)/zqqlib/zqq.f
 ##
 # =============== standard patterns ===========================================
+apply_pattern     component_library library=LbAlpGenRead
+apply_pattern     linker_library    library=LbAlpGenLibRead
+apply_pattern     library_stamps    library=LbAlpGenLibRead
 apply_pattern     component_library library=LbAlpGenzbb
 apply_pattern     linker_library    library=LbAlpGenLibzbb
 apply_pattern     library_stamps    library=LbAlpGenLibzbb
@@ -85,6 +89,7 @@ macro_remove LbAlpGen_linkopts "-lLbAlpGenLibzbb"
 macro_remove LbAlpGen_linkopts "-lLbAlpGenLib4q"
 macro_remove LbAlpGen_linkopts "-lLbAlpGenLibwqq"
 macro_remove LbAlpGen_linkopts "-lLbAlpGenLibtop"
+macro_remove LbAlpGen_linkopts "-lLbAlpGenLibRead"
 
 macro_prepend fincludes $(ppcmd)"$(alpgen_author_dir) "
 macro_prepend fincludes $(ppcmd)"$(alpgen_author_dir)/alplib "
@@ -97,11 +102,13 @@ macro LbAlpGenzbb_dependencies LbAlpGenLibzbb
 macro LbAlpGen4q_dependencies  LbAlpGenLib4q
 macro LbAlpGenwqq_dependencies LbAlpGenLibwqq
 macro LbAlpGentop_dependencies  LbAlpGenLibtop
+macro LbAlpGenRead_dependencies LbAlpGenLibRead
 
 macro_append LbAlpGenzbb_use_linkopts " -lLbAlpGenLibzbb "
 macro_append LbAlpGen4q_use_linkopts " -lLbAlpGenLib4q "
 macro_append LbAlpGenwqq_use_linkopts " -lLbAlpGenLibwqq "
 macro_append LbAlpGentop_use_linkopts " -lLbAlpGenLibtop "
+macro_append LbAlpGenRead_use_linkopts "  -lLbAlpGenLibRead "
 
 ##macro_append AlpGenFragm_use_linkopts " -lLbAlpGenLibzbb "
 ##macro_append AlpGen4Q_use_linkopts " -lLbAlpGenLib4q "
