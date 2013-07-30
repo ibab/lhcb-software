@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+! 2013-07-30 Maurizio Martinelli
+  - solved some compilation errors with gcc4.7.
+
 !========================= OTCalibration v1r5p1 2013-01-14 =========================
 ! 2013-01-10 Maurizio Martinelli
   - solved some compilation warnings.

@@ -30,10 +30,22 @@ DECLARE_ALGORITHM_FACTORY(OTModuleClbrAlg);
 
 OTModuleClbrAlg::OTModuleClbrAlg(const std::string& name, ISvcLocator* pSvcLocator): GaudiHistoAlg(name, pSvcLocator)
 {
+
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+  std::vector<std::string> sNames= list_of("T1")("T2")("T3");
+  std::vector<std::string> lNames= list_of("X1")("U")("V")("X2");
+  std::vector<std::string> qNames= list_of("Q0")("Q1")("Q2")("Q3");
+  std::vector<std::string> mNames= list_of("M1")("M2")("M3")("M4")("M5")("M6")("M7")("M8")("M9");
+  stationNames = sNames;
+  layerNames = lNames;
+  quarterNames = qNames;
+  moduleNames = mNames;
+#else
   stationNames = list_of("T1")("T2")("T3");
   layerNames = list_of("X1")("U")("V")("X2");
   quarterNames = list_of("Q0")("Q1")("Q2")("Q3");
   moduleNames = list_of("M1")("M2")("M3")("M4")("M5")("M6")("M7")("M8")("M9");
+#endif
 
   detector = 0;
 
@@ -51,19 +63,14 @@ OTModuleClbrAlg::OTModuleClbrAlg(const std::string& name, ISvcLocator* pSvcLocat
   declareProperty("UseOutliers", useOutliers = false, "Use outliers (default false)");
 
   declareProperty("HistDriftTime", histDriftTimeOpts, "Options for drift time histograms (default t = [-30, 70]/200)");
-  if(histDriftTimeOpts.size() != 3) histDriftTimeOpts= list_of(-30.0)(70.0)(200);
 
   declareProperty("HistDriftTimeResidual", histDriftTimeResidualOpts, "Options for drift time residual histograms (default t = [-50, 50]/200)");
-  if(histDriftTimeResidualOpts.size() != 3) histDriftTimeResidualOpts = list_of(-50.0)(50.0)(200);
 
   declareProperty("HistDriftTimeVsDist", histDriftTimeVsDistOpts, "Options for drift time VS distance histograms (default r = [-5, 5]/200 and t = [-30, 70]/200)");
-  if(histDriftTimeVsDistOpts.size() != 6) histDriftTimeVsDistOpts = list_of(-5.0)(5.0)(200)(-30.0)(70.0)(200);
 
   declareProperty("HistModuleDT0", histModuleDT0Opts, "Options for module dT0's histogram (default t = [-10, 20]/120)");
-  if(histModuleDT0Opts.size() != 3) histModuleDT0Opts = list_of(-10.0)(20.0)(120);
 
   declareProperty("HistModuleT0", histModuleT0Opts, "Options for module T0's histogram (default t = [-10, 20]/120)");
-  if(histModuleT0Opts.size() != 3) histModuleT0Opts = list_of(-10.0)(20.0)(120);
 
   declareProperty("PlotModuleDriftTime", plotModuleDriftTime = false, "Plot drift time histograms per module (default false)");
   declareProperty("PlotModuleDriftTimeVsDist", plotModuleDriftTimeVsDist = false, "Plot drift time VS distance histograms per module (default false)");
@@ -73,6 +80,26 @@ OTModuleClbrAlg::OTModuleClbrAlg(const std::string& name, ISvcLocator* pSvcLocat
 
   declareProperty("UseMinuit", useMinuit = true, "Use Minuit to fit TR-relation (default true)");
   declareProperty("FitTR", fitTR = false, "(default false)");
+
+  // Check options - reset to default if wrong or missing
+  #if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+  std::vector<double> dtOpts= list_of(-30.0)(70.0)(200);
+  std::vector<double> dtrOpts= list_of(-50.0)(50.0)(200);
+  std::vector<double> dtvdOpts= list_of(-5.0)(5.0)(200)(-30.0)(70.0)(200);
+  std::vector<double> dt0Opts= list_of(-10.0)(20.0)(120);  
+  std::vector<double> t0Opts= list_of(-10.0)(20.0)(120);
+  if(histDriftTimeOpts.size() != 3) histDriftTimeOpts= dtOpts;
+  if(histDriftTimeResidualOpts.size() != 3) histDriftTimeResidualOpts = dtrOpts;
+  if(histDriftTimeVsDistOpts.size() != 6) histDriftTimeVsDistOpts = dtvdOpts;
+  if(histModuleDT0Opts.size() != 3) histModuleDT0Opts = dt0Opts;
+  if(histModuleT0Opts.size() != 3) histModuleT0Opts = t0Opts;
+#else
+  if(histDriftTimeOpts.size() != 3) histDriftTimeOpts= list_of(-30.0)(70.0)(200);
+  if(histDriftTimeResidualOpts.size() != 3) histDriftTimeResidualOpts = list_of(-50.0)(50.0)(200);
+  if(histDriftTimeVsDistOpts.size() != 6) histDriftTimeVsDistOpts = list_of(-5.0)(5.0)(200)(-30.0)(70.0)(200);
+  if(histModuleDT0Opts.size() != 3) histModuleDT0Opts = list_of(-10.0)(20.0)(120);
+  if(histModuleT0Opts.size() != 3) histModuleT0Opts = list_of(-10.0)(20.0)(120);
+#endif
 
   for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++) for(int m = 0; m < 9; m++)
   {
@@ -685,7 +712,7 @@ StatusCode OTModuleClbrAlg::readCondXMLs()
                       >> *(
                           (
                               " name" >> *space_p >> '=' >> *space_p >> '\"'
-                              >> (+(anychar_p - '\"'))[ref(param) = construct<std::string>(arg1, arg2)]
+                              >> (+(anychar_p - '\"'))[boost::phoenix::ref(param) = construct<std::string>(arg1, arg2)]
                               >> '\"'
                           )
                           | (anychar_p - '>')
@@ -693,17 +720,17 @@ StatusCode OTModuleClbrAlg::readCondXMLs()
                   ]
                   >> +real_p // vector of values
                       [
-                          if_(ref(param) == "TRParameters")
-                              [ boost::phoenix::push_back(ref(cRt)   [ref(m)], arg1) ],
-                          if_(ref(param) == "STParameters")
-                              [ boost::phoenix::push_back(ref(cRtErr)[ref(m)], arg1) ],
-                          if_(ref(param) == "TZero")
-                              [ boost::phoenix::push_back(ref(cT0)   [ref(m)], arg1) ]
+                          if_(boost::phoenix::ref(param) == "TRParameters")
+                              [ boost::phoenix::push_back(boost::phoenix::ref(cRt)   [boost::phoenix::ref(m)], arg1) ],
+                          if_(boost::phoenix::ref(param) == "STParameters")
+                              [ boost::phoenix::push_back(boost::phoenix::ref(cRtErr)[boost::phoenix::ref(m)], arg1) ],
+                          if_(boost::phoenix::ref(param) == "TZero")
+                              [ boost::phoenix::push_back(boost::phoenix::ref(cT0)   [boost::phoenix::ref(m)], arg1) ]
                       ]
                   >> "</paramVector>"
-              )[ref(param) = ""]
+              )[boost::phoenix::ref(param) = ""]
               >> "</condition>"
-          )[ref(m) = -1]
+          )[boost::phoenix::ref(m) = -1]
           >> "</catalog>"
           >> "</DDDB>"
           >> end_p;

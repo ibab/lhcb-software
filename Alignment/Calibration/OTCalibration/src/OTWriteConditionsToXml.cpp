@@ -32,10 +32,19 @@ OTWriteConditionsToXml::OTWriteConditionsToXml( const std::string& name,
                                                 ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+  std::vector<std::string> names = boost::assign::list_of( "T1" )( "T2" )( "T3" )
+                                                         ( "X1" )( "U" )( "V" )( "X2" )
+                                                         ( "Q0" )( "Q1" )( "Q2" )( "Q3" )
+                                                         ( "M1" )( "M2" )( "M3" )( "M4" )( "M5" )( "M6" )( "M7" )( "M8" )( "M9" );
+    m_names = names;
+#else
   m_names = boost::assign::list_of( "T1" )( "T2" )( "T3" )
                                   ( "X1" )( "U" )( "V" )( "X2" )
                                   ( "Q0" )( "Q1" )( "Q2" )( "Q3" )
                                   ( "M1" )( "M2" )( "M3" )( "M4" )( "M5" )( "M6" )( "M7" )( "M8" )( "M9" );
+#endif
+
   declareProperty( "WriteCalibrationConditions", m_writeCalibration  = true                 );
   declareProperty( "CalibrationXmlPrefix"      , m_calibrationPrefix = "CalibrationModules" );
   declareProperty( "WriteStatusConditions"     , m_writeStatus       = false                );
