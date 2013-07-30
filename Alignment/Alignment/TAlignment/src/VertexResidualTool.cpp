@@ -114,7 +114,8 @@ namespace Al
     declareProperty("Extrapolator",m_extrapolator) ;
     declareProperty("MaxHitsPerTrackForCorrelations", m_maxHitsPerTrackForCorrelations) ;
     declareProperty("parentName", m_parentName = "J/psi(1S)");
-    declareProperty("daughterNames",  m_daughterNames = boost::assign::list_of("mu+")("mu+") );
+    std::vector<std::string> tmp = boost::assign::list_of("mu+")("mu+") ;
+    declareProperty("daughterNames",  m_daughterNames = tmp) ;
   }
   
   StatusCode VertexResidualTool::initialize()
@@ -503,7 +504,7 @@ namespace Al
       
       // invert the covariance matrix. cache it for later use
       tc.inputCovInv = tc.inputstate.covariance() ;
-      bool OK = Gaudi::Math::invertPosDefSymMatrix( tc.inputCovInv ) ;
+      bool OK = tc.inputCovInv.InvertChol() ;
       if(!OK) {
 	warning() << "Inversion error in VertexResidualTool::extrapolate" << endreq ;
 	sc = StatusCode::FAILURE ;

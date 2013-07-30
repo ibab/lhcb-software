@@ -41,6 +41,15 @@ TrackFilterAlg::TrackFilterAlg( const std::string& name,
     m_trackSelector(0)
 {
   /// Map strings to track types
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+  m_stringToTrackTypeMap = { {"Velo", Track::Velo},
+			     {"VeloR"     , Track::VeloR },
+			     {"Long"      , Track::Long  },
+			     {"Upstream"  , Track::Upstream },
+			     {"Downstream", Track::Downstream },
+			     {"Ttrack"    , Track::Ttrack    },
+			     {"Muon"      , Track::Muon } } ;
+#else
   m_stringToTrackTypeMap = map_list_of("Velo"      , Track::Velo      )
     ("VeloR"     , Track::VeloR     )
     ("Long"      , Track::Long      )
@@ -48,8 +57,18 @@ TrackFilterAlg::TrackFilterAlg( const std::string& name,
     ("Downstream", Track::Downstream)
     ("Ttrack"    , Track::Ttrack    )
     ("Muon"      , Track::Muon      );
+#endif
 
   /// And vice versa. I whish we had Boost::BiMap
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+  m_trackTypeToStringMap = { {Track::Velo, "Velo" },
+			     {Track::VeloR     , "VeloR"     },
+			     {Track::Long      , "Long"      },
+			     {Track::Upstream  , "Upstream"  },
+			     {Track::Downstream, "Downstream"},
+			     {Track::Ttrack    , "Ttrack"    },
+			     {Track::Muon      , "Muon"      }};
+#else
   m_trackTypeToStringMap = map_list_of(Track::Velo      , "Velo"      )
     (Track::VeloR     , "VeloR"     )
     (Track::Long      , "Long"      )
@@ -57,12 +76,21 @@ TrackFilterAlg::TrackFilterAlg( const std::string& name,
     (Track::Downstream, "Downstream")
     (Track::Ttrack    , "Ttrack"    )
     (Track::Muon      , "Muon"      );
+#endif
 
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+  m_lhcbDetChecks = { {"Velo", boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isVelo,_1))},
+		      {"TT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isTT  ,_1))},
+		      {"IT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isIT  ,_1))},
+		      {"OT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isOT  ,_1))},
+		      {"Muon", boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isMuon  ,_1))} };
+#else
   m_lhcbDetChecks = map_list_of("Velo", boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isVelo,_1)))
-    ("TT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isTT  ,_1)))
-    ("IT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isIT  ,_1)))
-    ("OT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isOT  ,_1)))
-    ("Muon", boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isMuon  ,_1)));
+		       ("TT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isTT  ,_1)))
+		       ("IT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isIT  ,_1)))
+		       ("OT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isOT  ,_1)))
+		       ("Muon", boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isMuon  ,_1))_;
+#endif
 
   declareProperty("TracksInputContainer"     , m_tracksInputContainer  = TrackLocation::Default    );
   declareProperty("TracksOutputContainer"    , m_tracksOutputContainer = "Alignment/FilteredTracks");
