@@ -298,7 +298,7 @@ const DeFTFibreMat* DeFTDetector::findFibreMat ( const LHCb::FTChannelID id ) co
     modIdx =-99;
   }
   if(modIdx<0){
-    *m_msg << MSG::FATAL << "You are not able to catch the modulId: that's bad! Check PrFTHitManager"  << endmsg;
+    *m_msg << MSG::DEBUG << "You are not able to catch the modulId: this is normally fixed by the specific treatement of the borders"  << endmsg;
   }
 
 
