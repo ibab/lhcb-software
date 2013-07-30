@@ -203,7 +203,7 @@ endif
 echo "Check if the package should be removed from the GRID"
 echo " "
 
-`which dirac-lhcb-check-software` $packageIni $version
+`which dirac-lhcb-view-software` --name=$packageIni --version=$version
 if ( $status == 0 ) then
    `which dirac-lhcb-remove-software` $packageIni $version
 endif

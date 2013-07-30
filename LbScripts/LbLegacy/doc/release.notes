@@ -1,9 +1,13 @@
-2013-07-24  Ben Couturier  <Ben.Couturier@cern.ch>
+2013-07-30  Ben Couturier  <Ben.Couturier@cern.ch>
+
+	* scripts/archive_project: Updated to use dirac-lhcb-view-software
+
+	2013-07-24  Ben Couturier  <Ben.Couturier@cern.ch>
 
         * cmt/requirements: release of version v5r8p2
         * python/LbLegacy/install_project.py:  release of LbScripts version v7r8p2
-        * python/LbLegacy/install_project.py: Fix to get LCGCMT for shared tarball for 
-				current CMTCONFIG, even if it not known to Platform.py 
+        * python/LbLegacy/install_project.py: Fix to get LCGCMT for shared tarball for
+				current CMTCONFIG, even if it not known to Platform.py
 
 2013-07-23  Ben Couturier  <Ben.Couturier@cern.ch>
 
@@ -37,16 +41,16 @@
 2013-03-26  Ben Couturier  <Ben.Couturier@cern.ch>
 
 	* scripts/mkMCGentar: Improved to take tar files from MCGenerators_lcgcmt
-	as well as from MCGenerators_hepmc (JIRA LBCORE-78) 
+	as well as from MCGenerators_hepmc (JIRA LBCORE-78)
 
 2013-02-27  Ben Couturier  <Ben.Couturier@cern.ch>
 
-	* scripts/archive_project: Fix invocation of grid installation checks. 
+	* scripts/archive_project: Fix invocation of grid installation checks.
 
 2013-02-21  Ben Couturier  <Ben.Couturier@cern.ch>
 
 	* scripts/mkMCGentar:Fixed with new layout on Genser tar files in
-	 subdirectories. 
+	 subdirectories.
 
 2013-01-22  Ben Couturier  <Ben.Couturier@cern.ch>
 
@@ -59,7 +63,7 @@
 	in project directory (parent dir to the version).
 
 2012-12-20  Ben Couturier  <Ben.Couturier@cern.ch>
-	
+
 	* scripts/mkMCGentar:Fixed to handled distribution problems with
 	packages having '++' in the name (herwigg++, tauola++, photos++),
 	until the Genser team fixes the distribution files.
@@ -69,9 +73,9 @@
 	* scripts/archive_project: Updated doc.
 
 2012-12-17  Ben Couturier  <Ben.Couturier@cern.ch>
-	
-	* scripts/mkLCGCMTtar: Fixed to bug  cauising processing to stop 
-	when a package is missing (e.g. uuid on slc6) 
+
+	* scripts/mkLCGCMTtar: Fixed to bug  cauising processing to stop
+	when a package is missing (e.g. uuid on slc6)
 
 2012-12-13  Ben Couturier  <Ben.Couturier@cern.ch>
 
@@ -83,7 +87,7 @@
 	* cmt/requirements: release of version v5r5
 	* python/LbLegacy/install_project.py:  release of LbScripts version v7r5
 	* scripts/archive_project: Extend volume before touching the not ready file.
-	and only call lhcb-proxy-init if needed, fix crash when removing user logs.  
+	and only call lhcb-proxy-init if needed, fix crash when removing user logs.
 
 2012-12-03  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
