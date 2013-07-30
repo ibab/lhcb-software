@@ -8,14 +8,20 @@
 # Options of the test job
 from Gaudi.Configuration import *
 
-from Configurables import EventIndexer, EventIndexerTest__FakeIndexerData as FakeIndexerData
+from Configurables import LHCbApp, EventIndexer, EventIndexerTest__FakeIndexerData as FakeIndexerData
+from Configurables import DstConf, UnpackDecReport
+DstConf().EnableUnpack = ['Reconstruction', 'Stripping']
+decConv = UnpackDecReport("Strip_pPhys_DecReports_Converter")
+decConv.InputName = "Strip/pPhys/DecReports"
+
+from Configurables import ApplicationMgr, DataOnDemandSvc
+ApplicationMgr().ExtSvc.append(DataOnDemandSvc())
+
+DstConf().EnableUnpack = ['Reconstruction', 'Stripping']
+
 
 ei = EventIndexer()
 #ei.OutputLevel = DEBUG
-
-fid = FakeIndexerData("FakeIndexerData")
-fid.FakeInputFiles = ["first_file.dst", "second_file.dst"]
-
 
 EventDataSvc(ForceLeaves=True)
 
@@ -39,30 +45,30 @@ out, err = root.communicate('index->Scan()\n')
 result['index_dump'] = result.Quote(out)
 
 findReferenceBlock("""
-************************************************************************************
-*    Row   * data.stri * data.stre *  data.lfn * data.posi * data.even * data.runN *
-************************************************************************************
-*        0 *           *           * first_fil *         1 *         1 *    123456 *
-*        1 *           *           * first_fil *         2 *         2 *    123456 *
-*        2 *           *           * first_fil *         3 *         3 *    123456 *
-*        3 *           *           * first_fil *         4 *         4 *    123456 *
-*        4 *           *           * first_fil *         5 *         5 *    123456 *
-*        5 *           *           * first_fil *         6 *         6 *    123456 *
-*        6 *           *           * first_fil *         7 *         7 *    123456 *
-*        7 *           *           * first_fil *         8 *         8 *    123456 *
-*        8 *           *           * first_fil *         9 *         9 *    123456 *
-*        9 *           *           * first_fil *        10 *        10 *    123456 *
-*       10 *           *           * second_fi *         1 *        11 *    123456 *
-*       11 *           *           * second_fi *         2 *        12 *    123456 *
-*       12 *           *           * second_fi *         3 *        13 *    123456 *
-*       13 *           *           * second_fi *         4 *        14 *    123456 *
-*       14 *           *           * second_fi *         5 *        15 *    123456 *
-*       15 *           *           * second_fi *         6 *        16 *    123456 *
-*       16 *           *           * second_fi *         7 *        17 *    123456 *
-*       17 *           *           * second_fi *         8 *        18 *    123456 *
-*       18 *           *           * second_fi *         9 *        19 *    123456 *
-*       19 *           *           * second_fi *        10 *        20 *    123456 *
-************************************************************************************
+************************************************************************************************
+*    Row   * data.stri * data.stre *  data.lfn * data.rawI * data.appl * data.appl * data.cond *
+************************************************************************************************
+*        0 *           * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        1 *           * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        2 *           * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        3 *           * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        4 *           * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        5 *           * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        6 *           * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        7 *           * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        8 *           * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        9 *           * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*       10 *           * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       11 *           * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       12 *           * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       13 *           * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       14 *           * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       15 *           * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       16 *           * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       17 *           * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       18 *           * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       19 *           * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+************************************************************************************************
 """, out, signature_offset=1)
 
 </text></argument>

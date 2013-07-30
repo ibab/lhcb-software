@@ -6,6 +6,8 @@
 
 // From LHCb
 #include "Event/RecHeader.h"
+#include "Event/RecSummary.h"
+#include "Event/HltDecReports.h"
 
 // local
 #include "FakeIndexerData.h"
@@ -73,6 +75,13 @@ StatusCode FakeIndexerData::execute() {
   rh->setEvtNumber(++m_eventNumber);
   put(rh, LHCb::RecHeaderLocation::Default);
   info() << "Run " << rh->runNumber() << ", Event " << rh->evtNumber() << endmsg;
+
+  LHCb::RecSummary *rsummary = new LHCb::RecSummary();
+  rsummary->addInfo(LHCb::RecSummary::nITClusters, 1);
+  put(rsummary, LHCb::RecSummaryLocation::Default);
+
+  LHCb::HltDecReports *rreports = new LHCb::HltDecReports();
+  put(rreports, "Strip/Phys/DecReports");
 
   return StatusCode::SUCCESS;
 }

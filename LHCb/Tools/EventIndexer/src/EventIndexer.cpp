@@ -6,6 +6,8 @@
 
 // From LHCb
 #include "Event/RecHeader.h"
+#include "Event/RecSummary.h"
+#include "Event/HltDecReports.h"
 
 // local
 #include "EventIndexer.h"
@@ -70,6 +72,34 @@ StatusCode EventIndexer::initialize() {
   return StatusCode::SUCCESS;
 }
 
+
+std::string pairs2dict(std::vector<LHCb::CondDBNameTagPair> v) {
+    std::stringstream result;
+    std::set <std::string> known_keys;
+    result << "{";
+
+    for (unsigned int i = 0; i < v.size(); i++) {
+        LHCb::CondDBNameTagPair it = v[i];
+        if (known_keys.insert(it.first).second) {
+            result << "\"" << it.first << "\": \"" << it.second << "\", ";
+        }
+    }
+    result << "}";
+    return result.str();
+}
+
+
+std::string stripping2dict(LHCb::HltDecReports *decReports) {
+    std::stringstream result;
+    result << "{";
+    for(LHCb::HltDecReports::Container::const_iterator it=decReports->begin(); it!=decReports->end(); ++it){
+        result << "\"" << it->first << "\": \"" << it->second.numberOfCandidates() << "\", ";
+    }
+    result << "}";
+    return result.str();
+}
+
+
 // ============================================================================
 // Main execution
 // ============================================================================
@@ -81,6 +111,39 @@ StatusCode EventIndexer::execute() {
   ++m_data.position; // increment the position counter (first event has got position == 1)
   m_data.eventNumber = rh->evtNumber();
   m_data.runNumber = rh->runNumber();
+  m_data.gpsTime = rh->gpsTime();
+  m_data.rawID = rh->rawID();
+  m_data.applicationName = rh->applicationName();
+  m_data.applicationVersion = rh->applicationVersion();
+  m_data.condDBTags_dict = pairs2dict(rh->condDBTags());
+
+  LHCb::RecSummary *rsummary = get<LHCb::RecSummary>(LHCb::RecSummaryLocation::Default);
+  m_data.nPVs = rsummary->info(LHCb::RecSummary::nPVs, -999);
+  m_data.nLongTracks = rsummary->info(LHCb::RecSummary::nLongTracks, -999);
+  m_data.nDownstreamTracks = rsummary->info(LHCb::RecSummary::nDownstreamTracks, -999);
+  m_data.nUpstreamTracks = rsummary->info(LHCb::RecSummary::nUpstreamTracks, -999);
+  m_data.nVeloTracks = rsummary->info(LHCb::RecSummary::nVeloTracks, -999);
+  m_data.nTTracks = rsummary->info(LHCb::RecSummary::nTTracks, -999);
+  m_data.nBackTracks = rsummary->info(LHCb::RecSummary::nBackTracks, -999);
+  m_data.nTracks = rsummary->info(LHCb::RecSummary::nTracks, -999);
+  m_data.nRich1Hits = rsummary->info(LHCb::RecSummary::nRich1Hits, -999);
+  m_data.nRich2Hits = rsummary->info(LHCb::RecSummary::nRich2Hits, -999);
+  m_data.nVeloClusters = rsummary->info(LHCb::RecSummary::nVeloClusters, -999);
+  m_data.nITClusters = rsummary->info(LHCb::RecSummary::nITClusters, -999);
+  m_data.nTTClusters = rsummary->info(LHCb::RecSummary::nTTClusters, -999);
+  m_data.nUTClusters = rsummary->info(LHCb::RecSummary::nUTClusters, -999);
+  m_data.nOTClusters = rsummary->info(LHCb::RecSummary::nOTClusters, -999);
+  m_data.nFTClusters = rsummary->info(LHCb::RecSummary::nFTClusters, -999);
+  m_data.nSPDhits = rsummary->info(LHCb::RecSummary::nSPDhits, -999);
+  m_data.nMuonCoordsS0 = rsummary->info(LHCb::RecSummary::nMuonCoordsS0, -999);
+  m_data.nMuonCoordsS1 = rsummary->info(LHCb::RecSummary::nMuonCoordsS1, -999);
+  m_data.nMuonCoordsS2 = rsummary->info(LHCb::RecSummary::nMuonCoordsS2, -999);
+  m_data.nMuonCoordsS3 = rsummary->info(LHCb::RecSummary::nMuonCoordsS3, -999);
+  m_data.nMuonCoordsS4 = rsummary->info(LHCb::RecSummary::nMuonCoordsS4, -999);
+  m_data.nMuonTracks = rsummary->info(LHCb::RecSummary::nMuonTracks, -999);
+
+  LHCb::HltDecReports *rreports = get<LHCb::HltDecReports>("Strip/Phys/DecReports");
+  m_data.stripping_lines_dict = stripping2dict(rreports);
 
   if (m_tree) m_tree->Fill();
 

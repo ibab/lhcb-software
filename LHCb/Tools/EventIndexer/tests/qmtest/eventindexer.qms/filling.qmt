@@ -8,7 +8,17 @@
 # Options of the test job
 from Gaudi.Configuration import *
 
-from Configurables import EventIndexer, EventIndexerTest__FakeIndexerData as FakeIndexerData
+from Configurables import LHCbApp, EventIndexer, EventIndexerTest__FakeIndexerData as FakeIndexerData
+from Configurables import DstConf, UnpackDecReport
+DstConf().EnableUnpack = ['Reconstruction', 'Stripping']
+decConv = UnpackDecReport("Strip_pPhys_DecReports_Converter")
+decConv.InputName = "Strip/pPhys/DecReports"
+
+from Configurables import ApplicationMgr, DataOnDemandSvc
+ApplicationMgr().ExtSvc.append(DataOnDemandSvc())
+
+DstConf().EnableUnpack = ['Reconstruction', 'Stripping']
+
 
 ei = EventIndexer()
 #ei.OutputLevel = DEBUG
@@ -36,30 +46,30 @@ out, err = root.communicate('index->Scan()\n')
 result['index_dump'] = result.Quote(out)
 
 findReferenceBlock("""
-************************************************************************************
-*    Row   * data.stri * data.stre *  data.lfn * data.posi * data.even * data.runN *
-************************************************************************************
-*        0 * Strip9876 * FakeStrea * first_fil *         1 *         1 *    123456 *
-*        1 * Strip9876 * FakeStrea * first_fil *         2 *         2 *    123456 *
-*        2 * Strip9876 * FakeStrea * first_fil *         3 *         3 *    123456 *
-*        3 * Strip9876 * FakeStrea * first_fil *         4 *         4 *    123456 *
-*        4 * Strip9876 * FakeStrea * first_fil *         5 *         5 *    123456 *
-*        5 * Strip9876 * FakeStrea * first_fil *         6 *         6 *    123456 *
-*        6 * Strip9876 * FakeStrea * first_fil *         7 *         7 *    123456 *
-*        7 * Strip9876 * FakeStrea * first_fil *         8 *         8 *    123456 *
-*        8 * Strip9876 * FakeStrea * first_fil *         9 *         9 *    123456 *
-*        9 * Strip9876 * FakeStrea * first_fil *        10 *        10 *    123456 *
-*       10 * Strip9876 * OtherStre * second_fi *         1 *        11 *    123456 *
-*       11 * Strip9876 * OtherStre * second_fi *         2 *        12 *    123456 *
-*       12 * Strip9876 * OtherStre * second_fi *         3 *        13 *    123456 *
-*       13 * Strip9876 * OtherStre * second_fi *         4 *        14 *    123456 *
-*       14 * Strip9876 * OtherStre * second_fi *         5 *        15 *    123456 *
-*       15 * Strip9876 * OtherStre * second_fi *         6 *        16 *    123456 *
-*       16 * Strip9876 * OtherStre * second_fi *         7 *        17 *    123456 *
-*       17 * Strip9876 * OtherStre * second_fi *         8 *        18 *    123456 *
-*       18 * Strip9876 * OtherStre * second_fi *         9 *        19 *    123456 *
-*       19 * Strip9876 * OtherStre * second_fi *        10 *        20 *    123456 *
-************************************************************************************
+************************************************************************************************
+*    Row   * data.stri * data.stre *  data.lfn * data.rawI * data.appl * data.appl * data.cond *
+************************************************************************************************
+*        0 * Strip9876 * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        1 * Strip9876 * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        2 * Strip9876 * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        3 * Strip9876 * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        4 * Strip9876 * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        5 * Strip9876 * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        6 * Strip9876 * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        7 * Strip9876 * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        8 * Strip9876 * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*        9 * Strip9876 * FakeStrea * first_fil *           *   Unknown *   Unknown *        {} *
+*       10 * Strip9876 * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       11 * Strip9876 * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       12 * Strip9876 * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       13 * Strip9876 * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       14 * Strip9876 * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       15 * Strip9876 * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       16 * Strip9876 * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       17 * Strip9876 * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       18 * Strip9876 * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+*       19 * Strip9876 * OtherStre * second_fi *           *   Unknown *   Unknown *        {} *
+************************************************************************************************
 """, out, signature_offset=1)
 </text></argument>
 </extension>

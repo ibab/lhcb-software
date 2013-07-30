@@ -6,20 +6,50 @@
 /// Class for the data to store in the tree
 class IndexerData {
 public:
-  /// Constructor.
-  IndexerData(): position(0), eventNumber(0), runNumber(0) {}
-  /// Version of the Stripping.
-  std::string stripping;
-  /// Stream name.
-  std::string stream;
-  /// Logical File Name (LFN)
-  std::string lfn;
-  /// Position of the event in the file.
-  long long position;
-  /// Event number
-  long long eventNumber;
-  /// Run number
-  long long runNumber;
+    /// Constructor.
+    IndexerData(): position(0), eventNumber(0), runNumber(0) {}
+    /// Version of the Stripping.
+    std::string stripping;
+    /// Stream name.
+    std::string stream;
+    /// Logical File Name (LFN)
+    std::string lfn;
+    std::string rawID;  // rawID
+    std::string applicationName;
+    std::string applicationVersion;
+    std::string condDBTags_dict;
+    /// Position of the event in the file.
+    long long position;
+    /// Event number
+    long long eventNumber;
+    /// Run number
+    long long runNumber;
+    unsigned long long gpsTime;
+    int nPVs;               // Number of reconstructed Primary Vertices
+    int nLongTracks;       // Number of reconstructed Long Tracks
+    int nDownstreamTracks; // Number of reconstructed Downstream Tracks
+    int nUpstreamTracks;   // Number of reconstructed Upstream Tracks
+    int nVeloTracks;       // Number of reconstructed VELO Tracks
+    int nTTracks;          // Number of reconstructed T-station Tracks
+    int nBackTracks;       // Number of reconstructed VELO backwards Tracks
+    int nTracks;           // Number of reconstructed Tracks
+    int nRich1Hits;        // Number of hits in RICH1
+    int nRich2Hits;        // Number of hits in RICH2
+    int nVeloClusters;     // Number of VELO clusters
+    int nITClusters;       // Number of IT clusters
+    int nTTClusters;       // Number of TT clusters
+    int nUTClusters;       // Number of UT clusters
+    int nOTClusters;       // Number of OT clusters
+    int nFTClusters;       // Number of FT clusters
+    int nSPDhits;          // Number of SPD hits
+    int nMuonCoordsS0;     // Number of Coords in Muon Station 0
+    int nMuonCoordsS1;     // Number of Coords in Muon Station 1
+    int nMuonCoordsS2;     // Number of Coords in Muon Station 2
+    int nMuonCoordsS3;     // Number of Coords in Muon Station 3
+    int nMuonCoordsS4;     // Number of Coords in Muon Station 4
+    int nMuonTracks;        // Number of Muon Tracks
+
+    std::string stripping_lines_dict;
 };
 
 // hide the complex part of the header to Cint
