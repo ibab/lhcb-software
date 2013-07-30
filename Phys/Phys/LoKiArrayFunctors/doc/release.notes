@@ -1,9 +1,18 @@
-$Id$ 
+\$Id$ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2013-07-30 Sebastian Neubert
+ - Added Dictionary Tools
+   MultiToolDictTool implements the same functionality as the Hybrid::TupleTool but
+   it writes the evaluated functors into the dictionary instead of the ntuple
+   Dict2TupleTool can write a Dict into the ntuple
+   DictTransformTool is a template class that provides the infrastructure to implement
+   arbitrary transformations on dictionaries. Transformations such as MVAClassifiers
+   have to implement the corresponding policy as demonstrated in DummyTransform.cpp 
 
 !========================= LoKiArrayFunctors v10r1 2013-05-07 =========================
 
