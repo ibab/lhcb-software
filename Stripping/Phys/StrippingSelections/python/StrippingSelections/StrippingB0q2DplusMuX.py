@@ -57,7 +57,7 @@ one=B0q2DplusMuXOneLineConf('B0q2DplusMuX'+'Tuned',confdict['Tuned'])
 """
 __author__ = [ 'Rob Lambert' ]
 __date__ = '2010-08-11'
-__version = '$Revision: 1.6 $'
+__version = '$Revision: 1.7 $'
 
 #### Which VertexFitter to use? ####
 
@@ -343,7 +343,8 @@ class B0q2DplusMuXOneLineConf(LineBuilder):
         B0qLine=StrippingLine(self._name,
                               prescale = config['Prescale'],
                               postscale = config['Postscale'],
-                              algos = [ self.B0Sel ]
+                              algos = [ self.B0Sel ],
+                              EnableFlavourTagging = True
                               )
         
         self.registerLine(B0qLine)

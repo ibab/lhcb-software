@@ -55,7 +55,7 @@ one=Bd2DstarMuNuOneLineConf("Bd2DstarMuNuLoose",confdict["Loose"])
 '''
 __author__ = [ 'Stefania Vecchi, Marta Calvi','Antonio Falabella' ]
 __date__ = '2011-11-08'
-__version = '$Revision: 1.6 $'
+__version = '$Revision: 1.7 $'
 
 #### Which VertexFitter to use? ####
 
@@ -304,7 +304,8 @@ class Bd2DstarMuNuOneLineConf(LineBuilder):
         B0dLine=StrippingLine(self._name,
                               prescale = config['Prescale'],
                               postscale = config['Postscale'],
-                              algos = [ self.B0Sel ]
+                              algos = [ self.B0Sel ],
+                              EnableFlavourTagging = True
                               )
         
         self.registerLine(B0dLine)

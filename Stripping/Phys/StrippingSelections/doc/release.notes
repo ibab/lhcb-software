@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-07-30 - Mika Vesterinen
+ - Switched on the flavour tagging for certain lines for the SL WG.
+   All lines in StrippingB0q2DplusMuX.py StrippingBd2DstarMuNu.py, 
+   and 3 lines (D->Kpipi, and double tagged D0->K3pi and D0->Kpi) in StrippingB2DMuNuX.py
+
 ! 2013-07-29
  - Changed seeding station in StrippingTrackEffMuonTT for Z candidates to M5 (remains M3 for other decay channels)
 

@@ -3,10 +3,13 @@ Module for constructing B semileptonic inclusive channels:
 B->D0XMuNu, D+XMuNu, Ds+XMuNu, Lc+XMuNu with
 D0->Kpi, D0->KK, D0->pipi, D+->Kpipi, KKPi, Ds+ -> KKPi and Lc+->PKPi, Ds->(Phi->KK)Pi
 D+->KKK (for mass measurement)
+The following three lines have flavour tagging enabled:
+- B->D* mu nu, D*->D0pi, D0->K3pi/Kpi
+- B->D mu nu, D->Kpipi
 """
 __author__ = ['Liming Zhang, Alessandra Borgia']
 __date__ = '23/07/2010'
-__version__ = '$Revision: 2.0 $'
+__version__ = '$Revision: 3.0 $'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -408,35 +411,86 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                  "Preambulo": ["from LoKiTracks.decorators import *"]}
 
         ########## D0 -> HH ###########
-        self.b2D0MuXLine = StrippingLine('b2D0MuX' + name + 'Line', prescale = config['PrescalD0Mu'], selection = self.selb2D0MuX)
-        self.b2D0MuXKpiDCSLine = StrippingLine('b2D0MuXKpiDCS' + name + 'Line', prescale = 1, selection = self.selb2D0MuXKpiDCS)
-        self.b2D0MuXKKLine = StrippingLine('b2D0MuXKK' + name + 'Line', prescale = 1, selection = self.selb2D0MuXKK)
-        self.b2D0MuXpipiLine = StrippingLine('b2D0MuXpipi' + name + 'Line', prescale = 1, selection = self.selb2D0MuXpipi)
+        self.b2D0MuXLine = StrippingLine('b2D0MuX' + name + 'Line', 
+                                         prescale = config['PrescalD0Mu'], 
+                                         selection = self.selb2D0MuX)
+
+        self.b2D0MuXKpiDCSLine = StrippingLine('b2D0MuXKpiDCS' + name + 'Line', 
+                                               prescale = 1, 
+                                               selection = self.selb2D0MuXKpiDCS)
+
+        self.b2D0MuXKKLine = StrippingLine('b2D0MuXKK' + name + 'Line', 
+                                           prescale = 1, 
+                                           selection = self.selb2D0MuXKK)
         
-        self.b2D0MuXDstLine = StrippingLine('b2D0MuXDst' + name + 'Line', selection = self.selb2D0MuXDst)
-        self.b2D0MuXKKDstLine = StrippingLine('b2D0MuXKKDst' + name + 'Line', selection = self.selb2D0MuXKKDst)
-        self.b2D0MuXpipiDstLine = StrippingLine('b2D0MuXpipiDst' + name + 'Line', selection = self.selb2D0MuXpipiDst)
+        self.b2D0MuXpipiLine = StrippingLine('b2D0MuXpipi' + name + 'Line', 
+                                             prescale = 1, 
+                                             selection = self.selb2D0MuXpipi)
         
-        ######## Lines for time integrated A_SL #########
-        self.b2DpMuXLine = StrippingLine('b2DpMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DpMuX)
-        self.b2DsMuXLine = StrippingLine('b2DsMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DsMuX)
-        self.b2DMuXKKKLine = StrippingLine('b2DMuXKKK' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DMuXKKK)
-        self.b2DsMuXPhiPiLine = StrippingLine('b2DsMuXPhiPi' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2DsMuXPhiPi)
+        self.b2D0MuXDstLine = StrippingLine('b2D0MuXDst' + name + 'Line', 
+                                            selection = self.selb2D0MuXDst,
+                                            EnableFlavourTagging = True)
+
+        self.b2D0MuXKKDstLine = StrippingLine('b2D0MuXKKDst' + name + 'Line', 
+                                              selection = self.selb2D0MuXKKDst)
+                                              
+        self.b2D0MuXpipiDstLine = StrippingLine('b2D0MuXpipiDst' + name + 'Line', 
+                                                selection = self.selb2D0MuXpipiDst)
+        
+        ########## D+ -> 3H ################
+        self.b2DpMuXLine = StrippingLine('b2DpMuX' + name + 'Line', 
+                                         prescale = 1, 
+                                         FILTER=GECs,
+                                         selection = self.selb2DpMuX,
+                                         EnableFlavourTagging = True)
+        
+        self.b2DsMuXLine = StrippingLine('b2DsMuX' + name + 'Line', 
+                                         prescale = 1, FILTER=GECs,
+                                         selection = self.selb2DsMuX)
+        
+        self.b2DMuXKKKLine = StrippingLine('b2DMuXKKK' + name + 'Line', 
+                                           prescale = 1, 
+                                           FILTER=GECs,
+                                           selection = self.selb2DMuXKKK)
+
+        self.b2DsMuXPhiPiLine = StrippingLine('b2DsMuXPhiPi' + name + 'Line', 
+                                              prescale = 1, 
+                                              FILTER=GECs,
+                                              selection = self.selb2DsMuXPhiPi)
+
         self.b2DsPi_PhiPi_fakesLine = StrippingLine('b2DsPi_PhiPi_fakes' + name + 'Line'
                                                     , HLT     = "HLT_PASS_RE('Hlt2IncPhi.*Decision')"
                                                     , prescale = config['PrescalDsPi_fakes']
                                                     , FILTER = GECs
-                                                    , selection = self.selb2DsPi_PhiPi_fakes
-                                                    )
+                                                    , selection = self.selb2DsPi_PhiPi_fakes)
 
-        ########### D0 -> HHHHH
-        self.b2D0MuXK3PiLine = StrippingLine('b2D0MuXK3Pi' + name + 'Line', prescale = 1, FILTER=GECs, selection = self.selb2D0MuXK3Pi)
-        self.b2D0MuXK3PiDstLine = StrippingLine('b2D0MuXK3PiDst' + name + 'Line', prescale = 1, FILTER=GECs, selection = self.selb2D0MuXK3PiDst)
-        self.b2D0MuX3KPiLine = StrippingLine('b2D0MuX3KPi' + name + 'Line', prescale = 1, FILTER=GECs, selection = self.selb2D0MuX3KPi)
-        self.b2D0MuX2K2PiLine = StrippingLine('b2D0MuX2K2Pi' + name + 'Line', prescale = 1, FILTER=GECs, selection = self.selb2D0MuX2K2Pi)
+        ########### D0 -> 4H
+        self.b2D0MuXK3PiLine = StrippingLine('b2D0MuXK3Pi' + name + 'Line', 
+                                             prescale = 1, 
+                                             FILTER=GECs, 
+                                             selection = self.selb2D0MuXK3Pi)
+        
+        self.b2D0MuXK3PiDstLine = StrippingLine('b2D0MuXK3PiDst' + name + 'Line', 
+                                                prescale = 1, 
+                                                FILTER=GECs, 
+                                                selection = self.selb2D0MuXK3PiDst,
+                                                EnableFlavourTagging = True)
+        
+        self.b2D0MuX3KPiLine = StrippingLine('b2D0MuX3KPi' + name + 'Line', 
+                                             prescale = 1, 
+                                             FILTER=GECs, 
+                                             selection = self.selb2D0MuX3KPi)
+
+        self.b2D0MuX2K2PiLine = StrippingLine('b2D0MuX2K2Pi' + name + 'Line', 
+                                              prescale = 1, 
+                                              FILTER=GECs, 
+                                              selection = self.selb2D0MuX2K2Pi)
         
         ########## Lambda_c+ -> p HH 
-        self.b2LcMuXLine = StrippingLine('b2LcMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2LcMuX)
+        self.b2LcMuXLine = StrippingLine('b2LcMuX' + name + 'Line', 
+                                         prescale = 1, 
+                                         FILTER=GECs,
+                                         selection = self.selb2LcMuX)
         
         ############## REGISTER THE LINES #####################
 
