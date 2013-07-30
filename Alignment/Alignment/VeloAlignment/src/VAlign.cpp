@@ -59,23 +59,34 @@ VAlign::VAlign( const std::string& name,
 // The following variables will be set via a joboptions files
 {
   declareProperty("Internal_Alignment"        , m_step1 = true);
-  declareProperty("Internal_Mod_Left"         , m_VELOmap_l = boost::assign::list_of(1)(1)(1)(1)(1)(1)
-                  (1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1));
-  declareProperty("Internal_Mod_Right"        , m_VELOmap_r =  boost::assign::list_of(1)(1)(1)(1)(1)(1)
-                  (1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1)(1));
-  declareProperty("Internal_DOF"              , m_align = boost::assign::list_of(1)(1)(1)(1)(1)(1));
+  declareProperty("Internal_Mod_Left"         , m_VELOmap_l = std::vector<bool>(20,1));
+  declareProperty("Internal_Mod_Right"        , m_VELOmap_r = std::vector<bool>(21,1));
+  declareProperty("Internal_DOF"              , m_align = std::vector<bool>(6,1));
+  declareProperty("Internal_EQs"              , m_constrain  =  std::vector<bool>(9,1));
+  declareProperty("Box_DOF"                   , m_alignb = std::vector<bool>(6,1));
+  // collect all the vectors initializations and run ifdef block for switching from and to C++11
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
+  std::vector<double> sigmaVec = boost::assign::list_of(0.01)(0.01)(0.005)(0.0005)(0.0005)(0.0002);
+  declareProperty("Internal_PTerms"           , m_sigma  =  sigmaVec);
+  std::vector<double> resCutVec = boost::assign::list_of(0.3)(0.06);
+  declareProperty("Internal_Residual_Cut"     , m_residual_cut = resCutVec);
+  std::vector<double> sigmabVec = boost::assign::list_of(10.0)(10.0)(10.0)(0.03)(0.03)(0.03);
+  declareProperty("Box_PTerms"                , m_sigmab = sigmabVec);
+  std::vector<bool> boxVec = boost::assign::list_of(1)(1)(1)(1)(1)(0);
+  declareProperty("Box_EQs"                   , m_constrainb = boxVec);
+  std::vector<double> resCutbVec = boost::assign::list_of(0.5)(0.4);
+  declareProperty("Box_Residual_Cut"          , m_residual_cutb = resCutbVec); 
+#else  
   declareProperty("Internal_PTerms"           , m_sigma  =  boost::assign::list_of(0.01)(0.01)(0.005)
                   (0.0005)(0.0005)(0.0002));
-  declareProperty("Internal_EQs"              , m_constrain  =  boost::assign::list_of(1)(1)(1)(1)(1)
-                  (1)(1)(1)(1));
   declareProperty("Internal_Residual_Cut"     , m_residual_cut = boost::assign::list_of(0.3)(0.06));
-  declareProperty("Box_Alignment"             , m_step2 = true);
-  declareProperty("Box_VELOopen"              , m_VELOopen = false);
-  declareProperty("Box_DOF"                   , m_alignb = boost::assign::list_of(1)(1)(1)(1)(1)(1));
   declareProperty("Box_PTerms"                , m_sigmab = boost::assign::list_of(10.0)(10.0)(10.0)
                   (0.03)(0.03)(0.03));
   declareProperty("Box_EQs"                   , m_constrainb =boost::assign::list_of(1)(1)(1)(1)(1)(0));
   declareProperty("Box_Residual_Cut"          , m_residual_cutb = boost::assign::list_of(0.5)(0.4)); 
+#endif
+  declareProperty("Box_Alignment"             , m_step2 = true);
+  declareProperty("Box_VELOopen"              , m_VELOopen = false);
   declareProperty("Box_MinTracks_perPV"       , m_PV_trackmin =10);
   declareProperty("General_Startfactor"       , m_starfactr= 100.0 );
   declareProperty("General_Maxtracks"         , m_maxtrack= 100 );
