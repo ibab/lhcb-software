@@ -1,0 +1,102 @@
+----------------------------------------------------------------------------
+! Package     : Phys/MVADictTools
+! Responsible : Sam Hall, Sebastian Neubert
+! Purpose     : Generic MVA classifier backends for DictTransformTool 
+!-----------------------------------------------------------------------------
+
+! 2013-07-30 - Sebastian Neubert
+ - Creating LHCb package Phys/MVADictTools
+
+! 2013-07-30 - Sebastian Neubert
+ - Cleaning up
+   Renamed several components
+   Moved Dict tools into LoKiArrayFunctors
+   Removed old stuff
+   Added better comments to opt/mvaexampleTMVA.py 
+	 Added example options file opt/dictexample.py
+
+! 2013-07-29 - Sam Hall
+ - TMVATransform works, complete with output
+
+! 2013-07-28 - Sam Hall
+ - Added TestPhi2KK.xml (mini test bdt)
+ - Options.h is now much better and TMVATransform is in a working state
+   except for the branch -> fucntor matching.
+
+! 2013-07-26 - Sebastian Neubert
+ - New options with the correct usage of the branch and variable naming
+
+! 2013-07-25 - Sebastian Neubert
+ - Added DictMergeTool
+
+! 2013-07-23 - Sebastian Neubert
+ - Added example how to apply dicttools to a branch with several LoKi functors
+   need to figure out how to solve the nameing issue for subbranches
+
+! 2013-07-21 - Sam Hall
+ - Added TMVATransform and rudimentary Options parser
+ - Options parser then simplified and TMVAClassifier works!
+   Well, the reader is initialized etc.
+
+! 2013-07-22 - Sebastian Neubert
+  - Added templated Dict2DictTool.
+	  offers a more generic way to implement an MVAClassifier
+    added info stream the Dict-Transform
+
+! 2013-07-19 - Sebastian Neubert
+ - Introducing new, more linear architecture
+ - Adding MVAClassifierBase and inheriting MVAClassifierDummy from this one
+
+! 2013-07-19 - Sam Hall
+ - Removal of ChangeVariableNames map in favour of using branches
+
+! 2013-07-19 - Sam Hall
+ - Protections for TMVA in place, for example non-existent xml files and 
+   mismatch between xml variables and those given to the tool
+ - Errors are thrown for any of the above, though not fatal, as the output can
+   be useful (eg variable names in the xml file).
+ - For any FAILURES the tuple is filled with 0.0 (perhaps this should be -1e10).
+ - ChangeVariableNames added (via declareProperty) in order to map names in the
+   given xml file to variable names in the ntuple.  This is done using an
+   additional map.
+ - Hopefully works(!), need a test BDT.
+
+! 2013-07-18 - Sebastian Neubert, Sam Hall
+ - Added MVAClassifierTMVA; added some protections for missing
+   components. This calss is still WorkInProgress
+
+! 2013-07-17 - Sebastian Neubert
+ - Added Dict2TupleTool and fixed some initialisation issues
+
+! 2013-07-11 - Sebastian Neubert
+ - Adding working options file. 
+   So far everything is still dummy implementation
+ 	 but tool structure is building and can be configured
+
+! 2013-07-10 - Sebastian Neubert
+ - Adding complete set of Interfaces
+ - The package depends on the new MultiToolDictTool which 
+   implements IParticleDictTool
+ - Workflow is designed as follows:
+ 	 Configure a DictTool to access the functors needed by the MVA
+   Configure an MVAClassifier (IDict2Val) 
+	 					 to use a specific MVAbackend
+						 load WeightFile into backend etc
+	 Configure a TupleToolMVAClassifier handing over 
+        - the DictTool
+        - the MVAClassifier
+   In the event loop:
+ 	 TupleToolMVAClassifier is applied to a particle
+	    Calls DictTool
+						Calls LoKi-Functors
+						Fills Dictionary 
+						returns Dictionary
+      Calls MVAClassifier through IDict2Val(Dict,)
+			      Calls MVABackend
+									return MVAresponse
+						return MVAresponse
+			Write MVAresponse into Tuple-Collumn
+  end		  
+
+! 2013-04-08 - Sebastian Neubert
+ - First import. Read doxygen for more information

@@ -1,0 +1,68 @@
+#============================================================================
+# Created    : 2013-04-08
+# Maintainer : Sebastian Neubert
+#============================================================================
+package           MVADictTools
+version           v1r0
+
+#============================================================================
+# Structure
+#============================================================================
+branches          cmt doc src python
+include_path      none
+
+#============================================================================
+# Used packages.
+#============================================================================
+use   DecayTreeTupleBase        v*    Phys
+use   DecayTreeFitter           v*    Phys
+# Depend on the various component packages, so they get built before the
+# python stuff below.
+use   DecayTreeTupleReco        v*    Phys
+use   DecayTreeTupleDalitz      v*    Phys
+use   DecayTreeTupleJets        v*    Phys
+use   DecayTreeTupleMC          v*    Phys
+use   DecayTreeTupleTrigger     v*    Phys
+use   DecayTreeTupleMuonCalib   v*    Phys
+
+use   LoKiPhys                  v*    Phys
+use   HepMC                     v*    LCG_Interfaces
+
+
+
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          MVADictTools     ../src/*.cpp 
+#application       utestInterface     ../src/utestInterface.cxx
+#application       utestExample     ../src/utestExample.cxx
+#apply_pattern    linker_library     library=DecayTreeMVATool
+apply_pattern    component_library  library=MVADictTools
+
+macro_append Boost_linkopts " -lboost_unit_test_framework-${Boost_compiler_version}-mt-${Boost_file_version}"
+
+#============================================================================
+# Python
+#============================================================================
+apply_pattern    install_more_includes    more=MVADictTools
+apply_pattern    install_python_modules
+macro_append MVADictToolsGenConfUser_dependencies MVADictToolsConfDbMerge
+
+
+#============================================================================
+# TMVA
+#============================================================================
+macro_append ROOT_linkopts " -lTMVA"
+
+
+#============================================================================
+# Test Suite
+#============================================================================
+apply_pattern QMTest
+
+#============================================================================
+# Private stuff
+#============================================================================
+#private
+#end_private
