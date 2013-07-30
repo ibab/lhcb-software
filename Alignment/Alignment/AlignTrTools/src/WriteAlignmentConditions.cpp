@@ -2,6 +2,7 @@
 
 // std
 #include <fcntl.h>
+#include <sys/stat.h>
 #include <errno.h>
 #include <sstream>
 #include <iostream>
