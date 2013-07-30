@@ -74,6 +74,10 @@ use  DaVinciTrackScaling        v1r1    Phys   # Vanya Belyaev
 
 ####################################################################
 
+use  MVADictTools               v1r0    Phys   # S.Neubert
+
+####################################################################
+
 # Declare this as a container package
 apply_pattern container_package
 

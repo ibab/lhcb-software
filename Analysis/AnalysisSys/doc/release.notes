@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+! 2013-06-30 - Chris Jones
+ - Add new package Phys/MVADictTools
+
 </PRE><H1><A NAME=v11r0>2013-06-13 Analysis v11r0 </A></H1><PRE>
 New development release, built against Phys v17r0.
 
@@ -16,7 +19,7 @@ New development release, built against Phys v17r0.
    TrackSmearing, Tutorial/Analysis
 
 In MicroDSTAlgorithm, MicroDSTTools, DSTWriters :
- . Improvements to support Flavour Tags.
+ . Improvements to support persisting Flavour Tags objects to (u)DSTs.
 
 In AnalysisPython :
  . Add the slicing for exes and histos 
@@ -33,7 +36,7 @@ In DaVinciTrackScaling :
 
 In DecayTreeTuple :
  . TupleToolTagging.cpp: Changed in order to retrieve the flavour tagging 
-   informations if they are present (for uDST/DST persistency).
+   information from the TES if they are present (for uDST/DST persistency).
 
 In DecayTreeTupleMC :
  . Patch TupleToolGeneration to not throw an exception if a NULL LHCb::HepMCEvent
@@ -61,7 +64,7 @@ In FlavourTagging :
    registered by the caller
  . Change BTaggingTool and TaggingUtils to provide a personality property,
    changed functionality is implemented using the MultiplePersonalityCall
-   class
+   class.
  . Fixed one ambiguity in TaggerNEWKaonOppositeTool.cpp
    (number of tracks after PID preselection) and no asserts...
  . Restored the storage of IPPUs in info(LastGlobal+1) for FT internal use 
@@ -71,7 +74,7 @@ In FlavourTagging :
 
 In FlavourTaggingChecker :
  . Latest update for Reco14: store PIDNN variables, updated tagger preselection
-   (like in chooseCandidateReco14 in FT)
+   (like in chooseCandidateReco14 in FT).
  . New version of the FTC/root tarfile = newFTCroot.tar for offline optimization
    and calibration of taggers
  . Suppress info message printed each event by BTaggingChecker to debug. 
