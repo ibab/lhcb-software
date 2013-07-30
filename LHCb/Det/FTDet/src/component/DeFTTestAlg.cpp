@@ -4,7 +4,7 @@
 #include "GaudiKernel/AlgFactory.h" 
 
 // FTDet
-#include "FTDet/DeFTDetector.h"
+#include "FTDet/DeFTDetector.h" 
 
 // Local
 #include "DeFTTestAlg.h"
@@ -28,7 +28,8 @@ DECLARE_ALGORITHM_FACTORY( DeFTTestAlg )
 // Standard constructor, initializes variables
 //=============================================================================
 DeFTTestAlg::DeFTTestAlg( const std::string& name, ISvcLocator* pSvcLocator ) :
-  GaudiAlgorithm ( name, pSvcLocator ),
+//GaudiAlgorithm ( name, pSvcLocator ), 
+  GaudiTupleAlg( name, pSvcLocator), 
   m_deFT(0),
   m_mcHitsLocation("")
 {
@@ -44,8 +45,14 @@ DeFTTestAlg::~DeFTTestAlg() {}
 // Initialization
 //=============================================================================
 StatusCode DeFTTestAlg::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  // StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  // if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+
+  // Mandatory initialization of GaudiAlgorithm
+  StatusCode sc = GaudiTupleAlg::initialize(); 
+  if ( sc.isFailure() ) { return sc; }   
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
@@ -82,6 +89,9 @@ StatusCode DeFTTestAlg::execute() {
     //break if not current FTversion
     if ( m_deFT->version() != 20 )   return StatusCode::SUCCESS;
 
+    // book tuple
+    Tuples::Tuple tuple = GaudiTupleAlg::nTuple("TestFTTree", "Events"); 
+
 
     /// Points of the real MCHits
     const LHCb::MCHits* hitsCont = get<LHCb::MCHits>(m_mcHitsLocation);
@@ -90,6 +100,19 @@ StatusCode DeFTTestAlg::execute() {
     for ( aHit=hitsCont->begin(); aHit != hitsCont->end(); ++aHit ) {
 
       Gaudi::XYZPoint pMid = (*aHit)->midPoint();
+      Gaudi::XYZPoint pIn =  (*aHit)->entry();
+      Gaudi::XYZPoint pOut = (*aHit)->exit();
+
+     tuple->column("Hit_X", pMid.X()); 
+     tuple->column("Hit_Y", pMid.Y()); 
+     tuple->column("Hit_Z", pMid.Z()); 
+     tuple->column("HitIn_X", pIn.X());
+     tuple->column("HitIn_Y", pIn.Y());
+     tuple->column("HitIn_Z", pIn.Z());
+     tuple->column("HitOut_X", pOut.X());
+     tuple->column("HitOut_Y", pOut.Y());
+     tuple->column("HitOut_Z", pOut.Z());
+    
 
       // Make DeFT checks
       debug() << "\n\n\n**************************\nMC Hit " << (*aHit)->index() << "\n"
@@ -103,28 +126,32 @@ StatusCode DeFTTestAlg::execute() {
       /// check isInside FT
       bool isInsideFT = m_deFT->isInside( pMid );
       debug() << "Global Point " << pMid << "; isInside =  " << isInsideFT << endmsg;
-
+      if(isInsideFT) {
+	tuple->column("InFT", 1); 
+      }else{
+	tuple->column("InFT", 0); 
+      }
       /// test findStation method
       const DeFTStation* pStation = m_deFT->findStation(pMid);
       lVolName = (pStation ? pStation->geometry()->lvolumeName() : "");
       debug() << "Found Station: " << lVolName << endmsg;
-
+      
       /// test findLayer method
       const DeFTLayer* pLayer = m_deFT->findLayer(pMid);
       lVolName = (pLayer ? pLayer->geometry()->lvolumeName() : "");
       debug() << "Found Layer  : " << lVolName << endmsg;
 
-      /// test findLayer method
+      /// test findModule method
       const DeFTModule* pModule = m_deFT->findModule(pMid);
       lVolName = (pModule ? pModule->geometry()->lvolumeName() : "");
       debug() << "Found Module  : " << lVolName << endmsg;
 
-      /// test findLayer method
+      /// test findFibreModule method
       const DeFTFibreModule* pFibreModule = m_deFT->findFibreModule(pMid);
       lVolName = (pFibreModule ? pFibreModule->geometry()->lvolumeName() : "");
       debug() << "Found FibreModule  : " << lVolName << endmsg;
 
-      /// test findLayer method
+      /// test findFibreMat method
       const DeFTFibreMat* pFibreMat = m_deFT->findFibreMat(pMid);
       lVolName = (pFibreMat ? pFibreMat->geometry()->lvolumeName() : "");
       debug() << "Found FibreMat  : " << lVolName << endmsg;
@@ -134,8 +161,34 @@ StatusCode DeFTTestAlg::execute() {
         debug() << "Test of function calculateHits:\n" << endmsg;
         pFibreMat->calculateHits(*aHit, vectChanAndFrac);
         debug() << "Size of the vector of FT pairs after the call of"
-                << "function calculateHits: " << vectChanAndFrac.size() << endmsg;
+                << " function calculateHits and yes I am using this file: " << vectChanAndFrac.size() << endmsg;
+
+	for (VectFTPairs::iterator itPair = vectChanAndFrac.begin(); itPair != vectChanAndFrac.end(); ++itPair) { 
+	  debug() << "AND THE LAYER IS...... " <<  (itPair->first).layer() << endmsg;
+
+	  tuple->column("layer", (itPair->first).layer());
+	  tuple->column("quarter",(itPair->first).quarter());
+	  tuple->column("fibermat_id",pFibreMat->FibreMatID());
+	  tuple->column("fibermat_layer",pFibreMat->layer());
+	  tuple->column("fibermat_angle",pFibreMat->angle());
+	  tuple->column("fibermat_module",pFibreMat->module());
+	  tuple->column("sipm",(itPair->first).sipmId());
+	  tuple->column("cell",(itPair->first).sipmCell());
+	  tuple->column("channel",(itPair->first).channelID());
+	  double xChan = -90000000.;
+	  xChan = pFibreMat->cellUCoordinate(itPair->first);
+	  tuple->column("Chan_X", xChan); 
+
+	} 
+
+	tuple->column("NFTchannels",vectChanAndFrac.size());
+
       }
+
+      // ok, write tuple row
+      StatusCode status = tuple->write(); 
+      if( status.isFailure() ) return Error( "Cannot fill ntuple" ); 
+
 
     }// end loop over hits
   }// end if( m_deFT != 0 )
@@ -154,6 +207,9 @@ StatusCode DeFTTestAlg::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+ return GaudiAlgorithm::finalize();   // must be called after all other actions
+
+  return GaudiTupleAlg::finalize();  
+
 }
 
