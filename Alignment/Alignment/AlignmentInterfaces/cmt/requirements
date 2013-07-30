@@ -12,16 +12,18 @@ branches          cmt dict doc AlignmentInterfaces
 # =============== dependencies ==============================================
 use GaudiKernel       v*
 use AlignKernel	      v*    Alignment
+use Boost             v*    LCG_Interfaces -no_auto_imports
 
 # =============== include directories =======================================
 apply_pattern	install_more_includes	more=AlignmentInterfaces
 
 # =============== LCG Dictionaries ============================================
+macro_append Boost_linkopts " $(Boost_linkopts_system)"
 apply_pattern reflex_dictionary                                                        \
               dictionary=AlignmentInterfaces                                            \
               headerfiles=$(ALIGNMENTINTERFACESROOT)/dict/AlignmentInterfacesDict.h     \
               selectionfile=$(ALIGNMENTINTERFACESROOT)/dict/AlignmentInterfacesDict.xml \
-              options="-U__MINGW32__"
+              options="-U__MINGW32__" imports=Boost
 
 # Hack for cmt v1r19 bug to link dictionary on windows
 macro AlignmentInterfacesDict_use_linkopts $(use_linkopts)
