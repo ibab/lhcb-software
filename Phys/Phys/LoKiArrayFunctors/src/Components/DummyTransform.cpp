@@ -3,6 +3,7 @@
 #include "GaudiKernel/MsgStream.h"
 
 #include <iostream>
+#include <boost/foreach.hpp>
 
 typedef std::map<std::string,std::string> optmap;
 
@@ -11,7 +12,7 @@ typedef std::map<std::string,std::string> optmap;
  *  Implements a prototype dictionary transform to be used with
  *  DictTransformTool
  *  fulfilling the following policy
- *  TransForm::Init(const std::map<std::string,std::string>& options)
+ *  TransForm::Init(const std::map<std::string,std::string>& options, MsgStream& info)
  *  TransForm::operator()(const IParticleDictTool::DICT& inDict, IParticleDictTool::Dict& outDict) const
  *
  *  The dummy transform will return the unchanged source dictionary and print its contents
@@ -33,6 +34,11 @@ public:
 bool
 DummyTransform::Init(optmap options, MsgStream& info){
   /// do something to configure the tool 
+  // print options
+  BOOST_FOREACH(optmap::value_type opt, options){
+    info << opt.first << " : " << opt.second << endmsg;
+  }
+
   info << "Initializing DummyTransform" << endmsg;
   return true; // true signals success
 }

@@ -75,12 +75,11 @@ public:
 // ======================================================================    
 
   virtual StatusCode  fill ( const LHCb::Particle* p , 
-                             const std::string& head, 
                              IParticleDictTool::DICT& dict ) const {
 
   /// request the dictionary s from the source DictTool
   IParticleDictTool::DICT sourceDict;
-  m_source->fill(p,head, sourceDict).ignore();
+  m_source->fill(p,sourceDict).ignore();
 
   /// apply the transformation to the dictionary
   /// this is delegated to the Transform
@@ -100,7 +99,8 @@ protected:
   IParticleDictTool* m_source;
   std::string m_sourcename;
   
-  Transform m_transform;
+  /// Templated worker class to encapsulate the transformation algorithm
+  Transform m_transform;  
   std::map<std::string,std::string> m_options;
   
 };

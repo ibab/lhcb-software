@@ -89,7 +89,6 @@ namespace LoKi
        *  @return status code                                                                       
        */
       virtual StatusCode  fill ( const LHCb::Particle* p , 
-				 const std::string& head, 
 				 IParticleDictTool::DICT& dict ) const;
       // ======================================================================                     
     public:
@@ -239,17 +238,14 @@ namespace LoKi
 // ======================================================================                     
 /** Fill the dictionary                                                                           
  *  @see IParticleDictTool                                                                                                       
- *  @param particle the particle about which some info are filled.      
- *  @param head prefix for the dictionary keys                                                    
+ *  @param particle the particle about which some info are filled.                                              
  *  @param dict the dictionary to fill                                                         
  *  @return status code                                                                       
  */
 StatusCode LoKi::Hybrid::MultiToolDictTool::fill(const LHCb::Particle* p,
-						 const std::string& head,
 						 IParticleDictTool::DICT& dict ) const 
 {
   if ( 0 == p  ) { Warning ( "LHCb::Particle*       points to NULL" ) ; }
-  
   //                                                                                                
   for ( Items::const_iterator item = m_items.begin();
         m_items.end() != item ; ++item ) {

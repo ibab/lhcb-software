@@ -125,15 +125,15 @@ StatusCode LoKi::Hybrid::Dict2TupleTool::fill
   //
   if ( !tuple.valid() ) { return Error ( "Invalid tuple " ) ; } 
   
-  // call the IParticleDictTool to aquire the dictionaire
- /// request the dictionary of variables from the DictTool
+  // call IParticleDictTool to aquire the dictionary
+ /// request the dictionary of variables from the source 
   IParticleDictTool::DICT dict;
-  m_source->fill(particle,head,dict).ignore();
+  m_source->fill(particle,dict).ignore();
   
-  // append the head of the current branch to the variable to make sure
+  // prepend the head of the current branch to the variable to make sure
   // columns are uniquely named
   std::string head_ = head + "_" ;
-  // Put the items in the dictionaire into the tuple
+  // Put the items in the dictionary into the tuple
   for ( IParticleDictTool::DICT::const_iterator item = dict.begin() ; 
         dict.end() != item ; ++item ) 
   {

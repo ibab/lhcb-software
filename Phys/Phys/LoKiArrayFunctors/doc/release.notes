@@ -5,6 +5,9 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2013-07-31 Sebastian Neubert
+ - Fixed compiler warnings by removing the "head" variable from IParticleDictTool
+
 ! 2013-07-30 Sebastian Neubert
  - Added Dictionary Tools
    MultiToolDictTool implements the same functionality as the Hybrid::TupleTool but
