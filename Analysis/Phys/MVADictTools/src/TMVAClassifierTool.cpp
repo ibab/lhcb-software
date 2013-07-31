@@ -29,6 +29,7 @@ class TMVATransform {
 private:
   bool m_debug;
   bool m_setup_success;
+  bool m_keep_all_vars;
   std::string m_reader_opts;
   std::string m_weightfile;
   std::string m_name;
@@ -114,14 +115,14 @@ TMVATransform::operator()(const IParticleDictTool::DICT& in, IParticleDictTool::
   if (!m_setup_success) {
     return false;
   }
-  out = in;
   // This works, but the ordering is missing, so use for loop
   //std::transform(in.begin(), in.end(), std::back_inserter(values), map2vec2);
   std::vector<double> values(m_variables.size()); // vector with correct size
   std::vector<double>::iterator value = values.begin();
   std::vector<std::string>::const_iterator varname = m_variables.begin();
   for (; value!=values.end(); ++varname, ++value) { *value = in[*varname]; }
-
+  if (m_keep_all_vars) { out = in; }
+  else { out.clear(); }
   out.insert(out.end(), m_name, m_reader->EvaluateMVA(values, m_name));
   return true;
 }
@@ -235,6 +236,8 @@ bool TMVATransform::parseOpts(optmap& options, MsgStream& info) {
       m_weightfile, info);
   parse.add<std::string>("TMVAOptions", "Must be Color, Silent, V",
       m_reader_opts, info, "Color");
+  parse.add<bool>("KeepVars", "Keep BDT input variables, \"1\" or \"0\"",
+      m_keep_all_vars, info, false);
   pass = parse.check(info);
   return pass;
 }

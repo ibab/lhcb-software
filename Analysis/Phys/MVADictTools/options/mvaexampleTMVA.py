@@ -72,7 +72,6 @@ tuple.RevertToPositiveID = False
 from Configurables import LoKi__Hybrid__MultiToolDictTool
 from Configurables import LoKi__Hybrid__Dict2TupleTool
 from Configurables import LoKi__Hybrid__DictTransformTool_TMVATransform_ as TMVAClassifier
-
 #We are going to add the MVA tools to the phi
 tuple.addBranches({
     "Phi" : "B_s0 -> (^phi(1020) -> K+ K-) ? ",
@@ -90,6 +89,7 @@ Phi_tmva.Source = "LoKi__Hybrid__DictTransformTool_TMVATransform_/TMVA"
 Phi_tmva.TMVA.Options = {
     "Name"       : "MyBDT",           # Name for the MVA response variable
     "XMLFile"    : "TestPhi2KK.xml",  # TMVA uses an xml file to load the classifier
+    "KeepVars"   : "1",
 }
 # Note that other dictionary transformations can easily be added by
 # implementing a new DictTransformationTool using the DictTransformation policies
@@ -139,7 +139,7 @@ DaVinci().Input = ['/afs/cern.ch/work/s/shall/dsts/00020198_00012742_1.dimuon.ds
 
 #save an ntuple with the luminosity
 DaVinci().Lumi=True
-DaVinci().EvtMax = -1
+DaVinci().EvtMax = 500
 DaVinci().UserAlgorithms = [SeqBs2JpsiPhi, tuple ]
 DaVinci().TupleFile = "DVNtuples.root"
 DaVinci().Simulation = simulation
