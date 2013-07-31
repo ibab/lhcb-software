@@ -5,6 +5,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2013-07-31 - Chris Jones
+ - Fix another clang32 warning.
+
 ! 2013-07-25 - Chris Jones
  - Add a new python Configurable, to replace the job of
      importOptions("$FLAVOURTAGGINGROOT/options/BTaggingTool.py")

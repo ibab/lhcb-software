@@ -116,7 +116,7 @@ private:
 
   //properties ----------------
   double m_thetaMin, m_distphi_cut;
-  double m_IPPU_cut, m_ghostprob_cut ;
+  double m_IPPU_cut, m_ghostprob_cut;
 
   std::string m_taggerLocation, m_CombineTaggersName, m_ChoosePV;
   std::string m_ForceSignalID;
@@ -124,7 +124,6 @@ private:
   bool m_EnableMuon,m_EnableElectron,m_EnableKaonOS;
   bool m_EnableKaonSS,m_EnablePionSS,m_EnableVertexCharge;
   bool m_EnableJetSame,m_EnableNNetKaonOS,m_EnableNNetKaonSS;
-  bool m_nnetTaggers;
   
   bool m_UseReFitPV,  m_CombineWithNNetTagger;
   std::string m_personality;
