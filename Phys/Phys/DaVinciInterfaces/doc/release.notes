@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-07-31 - Sebastian Neubert
+ - Removed head parameter from IParticleDictTool
+
 ! 2013-07-30 - Sebastian Neubert
 	- Added IParticleDictTool which is the basic interface for the new
     dictionary tools in LoKi

@@ -30,10 +30,9 @@ public:
   
   /** fill the dictionary: 
    *  @param p (INPUT) the particle
-   *  @param head (INPUT) prefix for ditionary variables
    *  @param dict (UPDATE) the dictionary to be filled  
    */
-  virtual StatusCode  fill ( const LHCb::Particle* p , const std::string& head, DICT& dict ) const =0;
+  virtual StatusCode  fill ( const LHCb::Particle* p , DICT& dict ) const =0;
 
 
 
