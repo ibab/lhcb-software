@@ -86,10 +86,10 @@ TrackFilterAlg::TrackFilterAlg( const std::string& name,
 		      {"Muon", boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isMuon  ,_1))} };
 #else
   m_lhcbDetChecks = map_list_of("Velo", boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isVelo,_1)))
-		       ("TT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isTT  ,_1)))
-		       ("IT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isIT  ,_1)))
-		       ("OT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isOT  ,_1)))
-		       ("Muon", boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isMuon  ,_1))_;
+    ("TT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isTT  ,_1)))
+    ("IT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isIT  ,_1)))
+    ("OT"  , boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isOT  ,_1)))
+    ("Muon", boost::function<bool (LHCb::LHCbID)>(bind<bool>(&LHCb::LHCbID::isMuon  ,_1)));
 #endif
 
   declareProperty("TracksInputContainer"     , m_tracksInputContainer  = TrackLocation::Default    );
