@@ -4,6 +4,11 @@
 ! Purpose     : Implementation of the powheg-box in Gauss
 !-----------------------------------------------------------------------------
 
+!========================= LbPowheg v1r0p1 2013-07-31 ========================
+! 2013-07-31 - Gloria Corti
+ - Fix setting of POWHEGEXE to match change in interface that did not resolve 
+   correctly in tcsh
+
 !========================== LbPowheg v1r0 2013-07-24 =========================
 ! 2013-07-16 - Patrick Robbe
  - Remove code which is already in Gen/LbPythia

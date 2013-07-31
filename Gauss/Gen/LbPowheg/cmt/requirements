@@ -14,7 +14,7 @@ branches          cmt doc src options
 # The symbol will be visible from the shell after executing SetupProject:
 #============================================================================
 set               LBPOWHEGOPTS $(LBPOWHEGROOT)/options 
-set               POWHEGEXE $(powheg-box_execs)
+set               POWHEGEXE $(powhegbox_execs)
 
 set            	  CTEQPDF $(LHAPATH)
 
