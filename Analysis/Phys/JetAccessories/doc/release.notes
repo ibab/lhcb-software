@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2013-07-31 - Chris Jones
+ - Fix new clang32 warning for unused data members.
+ - Minor optimisation, pass vectors by const reference instead of by value.
 
 ! 2013-07-22 - Cedric Potterat
  - New Particle Flow for Reco 14 -> move to v3r0
@@ -12,7 +15,6 @@
  - Adjust default cuts from the global scan of the parameters
  - tighter cuts on downstream tracks
  - add SplitJet Alg
-
 
 ! 2013-06-18 - Murilo Rangel
  - Changed default JEC file (Reco 12)
