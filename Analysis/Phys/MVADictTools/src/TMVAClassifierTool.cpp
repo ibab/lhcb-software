@@ -27,7 +27,6 @@ typedef std::map<std::string, std::string> optmap;
 //==============================================================================
 class TMVATransform {
 private:
-  bool m_debug;
   bool m_setup_success;
   bool m_keep_all_vars;
   std::string m_reader_opts;
@@ -63,8 +62,7 @@ public:
 // Costructor and Destructor
 //==============================================================================
 TMVATransform::TMVATransform()
-  : m_debug(false)
-  , m_setup_success(false)
+  : m_setup_success(false)
   , m_reader_opts("!Color") //Silent : none,  V : verbose, Color : colored
   , m_weightfile("")
   , m_name("")
