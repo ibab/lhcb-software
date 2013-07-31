@@ -2,7 +2,7 @@
 # Package    : Tools/EventIndexer
 # Maintainer : Marco Clemencic
 ################################################################################
-gaudi_subdir(EventIndexer v1r1)
+gaudi_subdir(EventIndexer v1r2)
 
 gaudi_depends_on_subdirs(GaudiAlg Event/RecEvent Event/HltEvent)
 

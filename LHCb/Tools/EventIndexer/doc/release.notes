@@ -4,6 +4,7 @@
 ! Purpose     : Components for generation of indexes of events.
 !-----------------------------------------------------------------------------
 
+!========================= EventIndexer v1r2 2013-07-31 =========================
 ! 2013-07-31 - Marco Clemencic
  - fixed compilation with CMake.
 
