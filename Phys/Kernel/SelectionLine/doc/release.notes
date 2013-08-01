@@ -6,19 +6,19 @@
 ! -----------------------------------------------------------------------------
 
 !========================= SelectionLine v1r0p5 2013-07-08 =========================
+
 ! 2013-07-05 - Sebastian Neubert
- - moved definition of static const double timeHistoLowBound from class declaration
+ - Moved definition of static const double timeHistoLowBound from class declaration
    to unnamed namespace in order to fix compiler errors under gcc4.7/4.8
 
 ! 2013-07-05 - Sebastian Neubert
- - switch units of elapsed time back to microSec (had been set to nanoSec in v1r0p5)  
- - (caused every event to be marked as too slow, due to the factor of 1000)
+ - Switch units of elapsed time back to microSec (had been set to nanoSec)
+   (caused every event to be marked as too slow, due to the factor of 1000)
 
 ! 2013-07-04 - Sebastian Neubert
- - Protect timing histograms against log(dt=0) entires.
+ - Protect timing histograms against log(dt=0) entries.
    If the line finishes quicker than the timing resolution of the system call (1mus)
-   then the lowest bin of the histo is filled 
- - see task #44041
+   then the lowest bin of the histo is filled. task #44041
 
 !========================= SelectionLine v1r0p4 2013-06-13 =========================
 
