@@ -23,7 +23,7 @@ use HltSettings         v6r1    Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v2r0p1  Hlt   # Tomasz Skwarnicki
 use HltTracking         v10r0   Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r11p1 Hlt   # Gerhard Raven
-use LoKiTrigger         v13r0   Phys  # Vanya Belyaev
+use LoKiTrigger         v13r0p1 Phys  # Vanya Belyaev
 
 #temporary
 use SelectionLine       v1r0p5 Kernel
