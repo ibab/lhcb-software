@@ -4,7 +4,8 @@ version v17r1
 branches doc cmt
 
 #===================================================================
-# Temporary. To be removed in the next release.
+# Temporary. To be removed in the next release. 
+# Remember CMake as well !!
 #===================================================================
 use  TrackMonitors              v1r45p1  Tr
 #===================================================================
