@@ -4,6 +4,7 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiTrigger v13r0p1 2013-08-01 =========================
 ! 2013-07-08 - Chris Jones
  - Add various missing default constructors. Fixes clang32 compilation errors.
  - Remove obsolete LoKiTrigger_dll.cpp
