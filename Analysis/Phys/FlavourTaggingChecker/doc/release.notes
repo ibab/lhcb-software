@@ -5,9 +5,13 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+
+!========================= FlavourTaggingChecker v7r1 2013-08-01 =========================
+
 ! 2013-07-07 - Stefania Vecchi
- - Few changes to match the inclusion of nnetOSKaon and nnetSSKaon taggers
-  + drop of "category" information 
+ - A few changes to match the inclusion of nnetOSKaon and nnetSSKaon taggers
+   and the drop of "category" information.
+
 !========================= FlavourTaggingChecker v7r0 2013-06-13 =========================
 
 ! 2013-06-12 - Stefania Vecchi
