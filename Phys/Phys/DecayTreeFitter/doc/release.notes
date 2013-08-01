@@ -8,8 +8,10 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeFitter v1r15p1 2013-08-01 =========================
+
 ! 2013-07-03 - Wouter Hulsbergen
- - Small fix in configuration to make sure that 'unfitted' vertices will not be reused
+ - Small fix in configuration to make sure that 'unfitted' vertices will not be reused.
 
 !========================= DecayTreeFitter v1r15 2013-06-13 =========================
 
