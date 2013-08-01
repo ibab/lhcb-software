@@ -4,16 +4,18 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTuple v4r3 2013-08-01 =========================
+
 ! 2013-07-23 - Chris Jones
  - Update previous commit to check once during initialize() instead of 
    during every call to fill(...).
 
 ! 2013-07-10 - Patrick Koppenburg
- - TupleToolDecayTreeFitter: Bug #102007 : always require an instance name.
+ - TupleToolDecayTreeFitter: Bug #102007 : Always require an instance name.
 
 ! 2013-07-07 - Stefania Vecchi
-  - TupleToolTagging.cpp: no more filling of the Tagging Category
-    . Requires  Event/PhysEvent 159384
+ - TupleToolTagging.cpp: no more filling of the Tagging Category
+   Requires  Event/PhysEvent 159384
 
 !========================= DecayTreeTuple v4r2 2013-06-13 =========================
 
