@@ -1,3 +1,7 @@
+2013-08-01  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/SvnChecker: improved error messages and added check of JSON in the nightly build configuration
+
 2013-07-25  Illya Shapoval <Illya.Shapoval@cern.ch>
 
         * scripts/ariadne_add: inform a commiter of lxbuild119 being the only allowed machine to commit from.

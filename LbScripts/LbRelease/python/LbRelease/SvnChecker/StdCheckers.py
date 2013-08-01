@@ -432,6 +432,44 @@ class ValidXml(PathChecker):
             self.log.debug("Bad XML")
             return (False, "\n".join(msg))
 
+class ValidJSON(PathChecker):
+    """
+    Path checker to validate the content of JSON files.
+
+    The implementation is very simple: just check if the JSON is syntactically
+    correct by trying to load it.
+    """
+    def __call__(self, txn, path):
+        if txn.change_kind(path) == 'D':
+            return (True, "No check on deleted files")
+        self.log.debug("check %s", path)
+        try:
+            try:
+                import json
+            except ImportError:
+                import simplejson as json
+            data = txn.file_contents(path)
+            json.loads(data)
+            self.log.debug("Parsable JSON")
+            return (True, "Parsable JSON in '%s'" % path)
+        except ImportError:
+            self.log.debug("Missing json module")
+            return (True, "Ignored JSON in '%s'" % path)
+        except Exception, x:
+            msg = ["Error parsing '%s': %s" % (path, x)]
+            try:
+                lines = data.splitlines()
+                line = lines[x.lineno-1]
+                msg.append(line)
+                # replace non-spaces with blanks to displace the marker
+                # so that tabs are correctly taken into account
+                marker = re.sub(r"\S", " ", line[:x.offset]) + "^"
+                msg.append(marker)
+            except:
+                pass
+            self.log.debug("Bad JSON")
+            return (False, "\n".join(msg))
+
 def checkEncoding(fileObj):
     '''
     Check that a file honors the declared encoding (default ASCII for Python 2

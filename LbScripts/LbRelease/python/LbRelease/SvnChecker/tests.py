@@ -10,7 +10,7 @@ import unittest
 
 import LHCbCheckers
 from Core import FakeTransaction
-from Core import Failure, Success, Not
+from Core import Failure, Success, Not, Rephrase
 from StdCheckers import AllowedUsers
 from StdCheckers import AllPaths, PackageTag, ProjectTag, TagRemoval
 from StdCheckers import MovePackage
@@ -342,6 +342,8 @@ print u'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
         # not
         self.assertCheckTxn(txn, -S("OK"), (False, "OK"))
         self.assertCheckTxn(txn, -F("BAD"), (True, "BAD"))
+        self.assertCheckTxn(txn, Not(S("OK")), (False, "OK"))
+        self.assertCheckTxn(txn, Not(F("BAD")), (True, "BAD"))
 
         # and
         self.assertCheckTxn(txn, S("First") * S("Second"), (True, "Second"))
@@ -363,6 +365,11 @@ print u'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
         self.assertCheckTxn(txn, F(a) + S(b) * F(c), (False, c))
         self.assertCheckTxn(txn, S(a) * S(b) * F(c), (False, c))
         self.assertCheckTxn(txn, F(a) + S(b) + F(c), (True, b))
+
+        # rephrase
+        self.assertCheckTxn(txn, Rephrase(S("OK"), "ok"), (True, "ok"))
+        self.assertCheckTxn(txn, Rephrase(F("BAD"), "bad"), (False, "bad"))
+
 
     def test_020_allowed_user(self):
         """allowed user"""

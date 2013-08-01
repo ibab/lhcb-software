@@ -347,6 +347,22 @@ class Failure(Checker):
     def __repr__(self):
         return "%s(%r)" % (self.__class__.__name__, self.msg)
 
+class Rephrase(Checker):
+    """
+    Checker to override the message returned by a checker, keeping the same
+    result.
+    """
+    def __init__(self, a, msg):
+        super(Rephrase, self).__init__()
+        self._operand = a
+        self._msg = msg
+    def __call__(self, *args):
+        r, m = self._operand(*args)
+        self.log.debug("Rephrase '%s' -> '%s'", m, self._msg)
+        return (r, self._msg)
+    def __repr__(self):
+        return "%s(%r, %r)" % (self.__class__.__name__,
+                               self._operand, self._msg)
 
 def run(checker, argv = None):
     """
@@ -360,5 +376,5 @@ def run(checker, argv = None):
     # check
     res, msg = checker(txn)
     if not res:
-        sys.stderr.write("Failure: %s\nTransaction:\n%s" % (msg, txn))
+        sys.stderr.write("\nFailure: %s\n\nTransaction:\n%s" % (msg, txn))
         sys.exit(1)
