@@ -4,7 +4,7 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
-!========================= JetAccessories v3r1 2013-08-01 =========================
+!========================= JetAccessories v3r0 2013-08-01 =========================
 
 ! 2013-07-31 - Chris Jones
  - Fix new clang32 warning for unused data members.
