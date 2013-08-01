@@ -3,6 +3,98 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v11r1>2013-08-01 Analysis v11r1 </A></H1><PRE>
+New development release, built against Phys v17r1.
+
+- New Packages : Phys/MVADictTools
+
+- Packages Updated :
+   AnalysisConf, AnalysisPython, DSTWriters, DaVinciMCTools, 
+   DaVinciTrackScaling, DecayTreeTuple, DecayTreeTupleMC,
+   FlavourTagging, FlavourTaggingChecker, JetAccessories
+
+In MVADictTools :
+ . New package providing tools for generic MVA selections. 
+   See package release notes for more details.
+
+In AnalysisConf :
+ . Replace 'importOptions' call to configure the flavour tagging, with use
+   of the new python Configurable.
+
+In AnalysisPython :
+ . Minor improvement in Utils.py 
+ . PyRoUts.py & Utils.py : Eliminate unnesessary imports from GaudiPython 
+ . Add context manager for suppression of RooFit prints 
+ . Minor improvements in functions 
+ . Add output & tee context managers  
+ . Fix file descriptor leak in MuteC-utilitities 
+
+In DSTWriters :
+ . Disable packing checks for Stripping data.
+ . Add new optional element to print the TES content, for debugging.
+
+In DaVinciMCTools :
+ . Try and load the PP2MC tables in P2MCPFromProtoP with and without 
+   RootInTES.
+
+In DaVinciTrackScaling :
+ . Allow momentum calibration to applied also to downstream tracks.
+ . TrackSmearState : Add property RootFile to read TGraph-"res;1" 
+                     from a file.
+
+In DecayTreeTuple :
+ . TupleToolTagging.cpp: No more filling of the Tagging Category
+ . TupleToolDecayTreeFitter: Bug #102007 : Always require an instance name.
+
+In DecayTreeTupleMC :
+ . Change MCTupleToolKinematic to choose end vertex as either a decay or 
+   hadronic interaction.
+ . Small clean ups to TupleToolMCTruth and MCTupleToolInteractions.
+
+In FlavourTagging :
+ . TaggerNEWKaonOppositeTool: - reco 12 final version
+                              - reco 14 final version 
+ . Replaced LastGlobal with FlavourTaggingIndex (updated in Event/Particle)
+ . Import NNet weights including C++ class instead of reading xml file
+ . Dropped tagging category information
+ . Set running of TaggerNEWKaonOppositeTool and TaggerNEWKaonSameTool by default
+ . Added CombineWithNNetTagger property to make the combination with
+   cut-based (default) or nnet taggers 
+ . Various minor CPU related improvements
+  . Do not load RecHeader until really needed.
+  . Avoid some string manipulations.
+  . Use std::pow instead of pow
+ . Use Error(...) intead of err() << ... for message suppressions.
+ . Changed ITagger interface and the tagger methods: 
+   std::vector<const Vertex*>& allVtx --> int nPV
+ . Changed the info FlavourTaggingIndex-->FlavourTaggingIPPUs, FlavourTaggingTaggerID
+ . updated Calibrations and cuts for NNetSSK Reco14 and Reco12
+ . Updated Tunings.py with settings for NEWKaonOpposite and NEWKaonSame tools
+ . Updated Tunings.py to propagate the "personality" to all sub tools 
+ . Updated Tunings.py to allow more flexible configuration
+   (before one could only call a BTaggingTool instance) --> Manuel Schiller
+ . Add a new python Configurable, to replace the job of
+     importOptions("$FLAVOURTAGGINGROOT/options/BTaggingTool.py")
+   which is to be depreciated. The above file still exists, but now prints
+   a large depreciation warning, and then just imports the new Configurable.
+   Should be removed at some point.
+
+In FlavourTaggingChecker :
+ . A few changes to match the inclusion of nnetOSKaon and nnetSSKaon taggers
+   and the drop of "category" information.
+
+In JetAccessories :
+ . New Particle Flow for Reco 14 -> move to v3r0
+ . New Config files for Particle Flow R14
+ . Add Cuts on V0 masses
+ . Adjust default cuts from the global scan of the parameters
+ . Tighter cuts on downstream tracks
+ . Add SplitJet Alg
+ . Changed default JEC file (Reco 12)
+
+
+
+
 ! 2013-06-30 - Chris Jones
  - Add new package Phys/MVADictTools
 

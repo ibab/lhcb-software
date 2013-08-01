@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AnalysisSys
 ################################################################################
-gaudi_subdir(AnalysisSys v11r0)
+gaudi_subdir(AnalysisSys v11r1)
 
 gaudi_depends_on_subdirs(Analysis/PyAna
                          Ex/LoKiExample
