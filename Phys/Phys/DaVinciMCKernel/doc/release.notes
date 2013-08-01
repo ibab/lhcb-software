@@ -5,6 +5,8 @@
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciMCKernel v4r4 2013-08-01 =========================
+
 ! 2013-07-05 - Chris Jones
  - Particle2MCAssociatorBase : Fix access to MCParticles when RootInTES is set.
 

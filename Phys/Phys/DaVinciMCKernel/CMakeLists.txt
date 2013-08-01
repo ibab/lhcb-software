@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciMCKernel
 ################################################################################
-gaudi_subdir(DaVinciMCKernel v4r3p2)
+gaudi_subdir(DaVinciMCKernel v4r4)
 
 gaudi_depends_on_subdirs(Associators/MCAssociators
                          Event/GenEvent
