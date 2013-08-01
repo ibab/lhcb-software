@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+!========================= ParticleMaker v6r8 2013-08-01 =========================
+
 ! 2013-07-18 - Chris Jones
  - Fix a couple coverity UNINT_CTOR warnings.
  - Clean up CombinedParticleMaker a bit
