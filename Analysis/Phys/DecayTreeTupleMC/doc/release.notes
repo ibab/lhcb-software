@@ -4,9 +4,11 @@
 ! Purpose     : MC tuple tools
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTupleMC v1r4 2013-08-01 =========================
 
 ! 2013-07-05 - S. Blusk
-- Change MCTupleToolKinematic to choose end vertex as either a decay or hadronic interaction
+- Change MCTupleToolKinematic to choose end vertex as either a decay or 
+  hadronic interaction.
 
 ! 2013-07-05 - Chris Jones
  - Clean up TupleToolMCTruth a bit.
