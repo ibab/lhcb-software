@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciMCTools
 ################################################################################
-gaudi_subdir(DaVinciMCTools v10r7p3)
+gaudi_subdir(DaVinciMCTools v10r8)
 
 gaudi_depends_on_subdirs(Calo/CaloInterfaces
                          Calo/CaloUtils
