@@ -10,6 +10,9 @@ Development release, based on Rec v15r1, LHCb v36r1 and Gaudi v23r9.
    SelectionLine, DaVinciInterfaces, DaVinciKernel, DaVinciMCKernel,
    DecayTreeFitter, LoKiArrayFunctors, ParticleMaker
 
+- Temporary (bug fix) packages :
+   TrackMonitors
+
 In SelectionLine :
  . Protect timing histograms against log(dt=0) entires. If the line
    finishes quicker than the timing resolution of the system call 
@@ -39,6 +42,10 @@ In LoKiArrayFunctors :
     infrastructure to implement arbitrary transformations on dictionaries. 
     Transformations such as MVAClassifiers have to implement the 
     corresponding policy as demonstrated in DummyTransform.cpp 
+
+In TrackMonitors :
+ . Fix uninitialized variable in ConfiguredTrackMonitors.
+ . Run all monitors if the LHCbApp property isn't set.
 
 </PRE><H1><A NAME=v17r0>2013-06-13 Phys v17r0 </A></H1><PRE>
 Development release, based on Rec v15r0, LHCb v36r0 and Gaudi v23r8.
