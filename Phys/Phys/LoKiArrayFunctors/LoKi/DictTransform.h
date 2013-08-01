@@ -16,7 +16,7 @@ namespace LoKi
   namespace Hybrid 
   {
     
-/** @class DictTransformTool
+/** @class DictTransform
  *  Generic implementation of a Dict->Dict Transformation
  *  The input dictionairy is aquired through an IParticleDictTool
  *  which has to be added to the tool
@@ -31,12 +31,12 @@ namespace LoKi
  */
 
 template<class Transform>
-class DictTransformTool : public GaudiTool, virtual public IParticleDictTool {
+class DictTransform : public GaudiTool, virtual public IParticleDictTool {
 public: 
  
 // ======================================================================    
   /// Standard constructor
-  DictTransformTool( const std::string& type, 
+  DictTransform( const std::string& type, 
 		 const std::string& name,
 		 const IInterface* parent) 
     : GaudiTool ( type, name , parent ), m_transform()
@@ -68,7 +68,7 @@ public:
       Error("Initialization of Transform failed.",StatusCode::FAILURE);
     }
   
-    Info("Successfully initialized DictTransformTool");
+    Info("Successfully initialized DictTransform");
     return StatusCode::SUCCESS;
   }
   
@@ -90,7 +90,7 @@ public:
 
 // ======================================================================    
 
-  virtual ~DictTransformTool( ){}; ///< Destructor
+  virtual ~DictTransform( ){}; ///< Destructor
 
 // ======================================================================    
 

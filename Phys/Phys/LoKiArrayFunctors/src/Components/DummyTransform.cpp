@@ -1,4 +1,4 @@
-#include "LoKi/DictTransformTool.h"
+#include "LoKi/DictTransform.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
 
@@ -10,7 +10,7 @@ typedef std::map<std::string,std::string> optmap;
 
 /** @class DummyTransform
  *  Implements a prototype dictionary transform to be used with
- *  DictTransformTool
+ *  DictTransform
  *  fulfilling the following policy
  *  TransForm::Init(const std::map<std::string,std::string>& options, MsgStream& info)
  *  TransForm::operator()(const IParticleDictTool::DICT& inDict, IParticleDictTool::Dict& outDict) const
@@ -64,11 +64,11 @@ DummyTransform::operator()(const IParticleDictTool::DICT& in, IParticleDictTool:
 
 ///---------------------------------------------------------------------------------------
 /** @class DictTransformDummy
- *  Implements a concrete DictTransformTool 
+ *  Implements a concrete DictTransform 
  *  @author Sebastian Neubert
  *  @date   2013-07-10
  */
 
-typedef LoKi::Hybrid::DictTransformTool<DummyTransform> DictTransformDummy;
+typedef LoKi::Hybrid::DictTransform<DummyTransform> DictTransformDummy;
 DECLARE_TOOL_FACTORY(DictTransformDummy)
 ///---------------------------------------------------------------------------------------

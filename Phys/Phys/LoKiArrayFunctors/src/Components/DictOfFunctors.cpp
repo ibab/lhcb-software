@@ -39,7 +39,7 @@ namespace LoKi
   {
     // ========================================================================  
     
-    /** @class MultiToolDictTool MultiToolDictTool.h
+    /** @class DictOfFunctors DictOfFunctors.h
      *  copies Hybrid::TupleTool functionality to
      *  create a dictionary of LoKi functors
      *  Hybrid::TupleTool should probably be implemented by using this class
@@ -48,11 +48,11 @@ namespace LoKi
      *  @date   2013-07-08
      */
     
-    class MultiToolDictTool : public GaudiTool, 
+    class DictOfFunctors : public GaudiTool, 
 			      virtual public IParticleDictTool {
     public: 
       /// friend class factory for instantiation
-      friend class ToolFactory<LoKi::Hybrid::MultiToolDictTool>;
+      friend class ToolFactory<LoKi::Hybrid::DictOfFunctors>;
 
       // ======================================================================                     
       /** helper class to keep the dictionary items                                                    
@@ -170,7 +170,7 @@ namespace LoKi
 
        protected:
       // ======================================================================                     
-      MultiToolDictTool
+      DictOfFunctors
       ( const std::string& type   ,
         const std::string& name   ,
         const IInterface*  parent )
@@ -185,33 +185,33 @@ namespace LoKi
         declareProperty
           ( "Factory" , m_factory ,
             "Type/Name for C++/Python Hybrid Factory" ) ->
-          declareUpdateHandler ( &LoKi::Hybrid::MultiToolDictTool::propHandler , this ) ;
+          declareUpdateHandler ( &LoKi::Hybrid::DictOfFunctors::propHandler , this ) ;
 
         //                                                                                          
         declareProperty
           ( "Variables" , m_vars ,
             "The {'name':'functor'}-map defining the dictionary " ) ->
-          declareUpdateHandler ( &LoKi::Hybrid::MultiToolDictTool::propHandler , this ) ;
+          declareUpdateHandler ( &LoKi::Hybrid::DictOfFunctors::propHandler , this ) ;
 
         // the preambulo                                                                            
         declareProperty
           ( "Preambulo" ,
             m_preambulo ,
             "The preambulo to be used for Bender/Python script" ) ->
-          declareUpdateHandler ( &LoKi::Hybrid::MultiToolDictTool::propHandler , this ) ;
+          declareUpdateHandler ( &LoKi::Hybrid::DictOfFunctors::propHandler , this ) ;
         //                                                                                          
       }
       // ======================================================================                     
       /// virtual & protected destructor                                                            
-      virtual ~MultiToolDictTool() {}
+      virtual ~DictOfFunctors() {}
       private:
       // ======================================================================                     
       /// the default constructor is disabled                                                       
-      MultiToolDictTool () ;                              // no default constructor                          
+      DictOfFunctors () ;                              // no default constructor                          
       /// the copy  constructor is disabled                                                         
-      MultiToolDictTool ( const MultiToolDictTool& ) ;            // no copy constructor                            
+      DictOfFunctors ( const DictOfFunctors& ) ;            // no copy constructor                            
       /// the assigenement operator is disabled                                                     
-      MultiToolDictTool& operator=( const MultiToolDictTool& ) ;  // no assignement                                 
+      DictOfFunctors& operator=( const DictOfFunctors& ) ;  // no assignement                                 
       // ======================================================================                     
     private:
       // ======================================================================                     
@@ -242,7 +242,7 @@ namespace LoKi
  *  @param dict the dictionary to fill                                                         
  *  @return status code                                                                       
  */
-StatusCode LoKi::Hybrid::MultiToolDictTool::fill(const LHCb::Particle* p,
+StatusCode LoKi::Hybrid::DictOfFunctors::fill(const LHCb::Particle* p,
 						 IParticleDictTool::DICT& dict ) const 
 {
   if ( 0 == p  ) { Warning ( "LHCb::Particle*       points to NULL" ) ; }
@@ -257,7 +257,7 @@ StatusCode LoKi::Hybrid::MultiToolDictTool::fill(const LHCb::Particle* p,
 }
 // ============================================================================                     
 /// Declaration of the Tool Factory                                                                 
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,MultiToolDictTool)
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,DictOfFunctors)
 // ============================================================================                     
 // The END                                                                                          
 // ============================================================================           

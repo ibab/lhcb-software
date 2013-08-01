@@ -25,19 +25,19 @@ namespace LoKi
   namespace Hybrid
   {
 
-/** @class Dict2TupleTool Dict2TupleTool.h Components/Dict2TupleTool.h
+/** @class Dict2Tuple Dict2Tuple.h Components/Dict2Tuple.h
  *  Writing a Dictionary into the ntuple
  *
  *  @author Sebastian Neubert
  *  @date   2013-07-11
  */
-class Dict2TupleTool : public GaudiTool, virtual public IParticleTupleTool {
+class Dict2Tuple : public GaudiTool, virtual public IParticleTupleTool {
 public: 
  /// friend class factory for instantiation
-  friend class ToolFactory<LoKi::Hybrid::Dict2TupleTool>;
+  friend class ToolFactory<LoKi::Hybrid::Dict2Tuple>;
 
   /// Standard constructor
-  Dict2TupleTool( const std::string& type, 
+  Dict2Tuple( const std::string& type, 
                   const std::string& name,
                   const IInterface* parent) :
     GaudiTool ( type, name , parent )
@@ -50,7 +50,7 @@ public:
 	"Type/Name for Source Dictionary Tool" );
   }
 
-  virtual ~Dict2TupleTool( ){}; ///< Destructor
+  virtual ~Dict2Tuple( ){}; ///< Destructor
 
 public:
   // ======================================================================
@@ -81,7 +81,7 @@ public:
 	m_source = tool<IParticleDictTool>(m_sourcename, this);
 	if(m_source == NULL) return Error("Unable to find the source DictTool " + m_sourcename , sc ) ;
 
-	info() << "Successfully initialized Dict2TupleTool" << endmsg;
+	info() << "Successfully initialized Dict2Tuple" << endmsg;
 
 	return StatusCode::SUCCESS;
 
@@ -114,7 +114,7 @@ private:
  *  @return status code
  */
 // ============================================================================
-StatusCode LoKi::Hybrid::Dict2TupleTool::fill
+StatusCode LoKi::Hybrid::Dict2Tuple::fill
 ( const LHCb::Particle* top      , 
   const LHCb::Particle* particle , 
   const std::string&    head     , 
@@ -148,4 +148,4 @@ StatusCode LoKi::Hybrid::Dict2TupleTool::fill
   } // end namespace Hybrid
 } // end namespace LoKi
 /// Declaration of the Tool Factory                                                                 
-DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,Dict2TupleTool)
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,Dict2Tuple)
