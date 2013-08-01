@@ -3,6 +3,43 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v17r1>2013-07-01 Phys v17r1 </A></H1><PRE>
+Development release, based on Rec v15r1, LHCb v36r1 and Gaudi v23r9.
+
+- Packages Updated :
+   SelectionLine, DaVinciInterfaces, DaVinciKernel, DaVinciMCKernel,
+   DecayTreeFitter, LoKiArrayFunctors, ParticleMaker
+
+In SelectionLine :
+ . Protect timing histograms against log(dt=0) entires. If the line
+   finishes quicker than the timing resolution of the system call 
+   (1mus) then the lowest bin of the histo is filled. task #44041
+
+In DaVinciInterfaces :
+ . Change in ITagger.h interface :-
+    std::vector<const Vertex*>& allVtx --> int nPV   
+ . Added IParticleDictTool which is the basic interface for the new 
+   dictionary tools in LoKi.
+
+In DaVinciMCKernel :
+ . Particle2MCAssociatorBase : Fix access to MCParticles when 
+   RootInTES is set.
+
+In DecayTreeFitter :
+ . Small fix in configuration to make sure that 'unfitted' vertices 
+   will not be reused.
+
+In LoKiArrayFunctors :
+ . Added Dictionary Tools :-			
+  + MultiToolDictTool implements the same functionality as the 
+    Hybrid::TupleTool but it writes the evaluated functors into the 
+    dictionary instead of the ntuple.
+  + Dict2TupleTool can write a Dict into the ntuple
+  + DictTransformTool is a template class that provides the 
+    infrastructure to implement arbitrary transformations on dictionaries. 
+    Transformations such as MVAClassifiers have to implement the 
+    corresponding policy as demonstrated in DummyTransform.cpp 
+
 </PRE><H1><A NAME=v17r0>2013-06-13 Phys v17r0 </A></H1><PRE>
 Development release, based on Rec v15r0, LHCb v36r0 and Gaudi v23r8.
 
@@ -43,7 +80,7 @@ In LoKiFitters :
    + Redefine the fiducial volume for seeding.
  . Fix a "feature" in chi2(doca) calculations.
  . Fix a bug with particle classification.
-   essentially all calculation of DOCACHI2 with 
+   Essentially all calculation of DOCACHI2 with 
    participation of K0S was wrong.
    Many thanks to Matt Reid for reporting the problem.
 

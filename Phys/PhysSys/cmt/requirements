@@ -1,15 +1,21 @@
 package PhysSys
-version v17r0
+version v17r1
 
 branches doc cmt
 
 #===================================================================
+# Temporary. To be removed in the next release.
+#===================================================================
+use  TrackMonitors              v1r45p1  Tr
+#===================================================================
 
-use  DaVinciInterfaces          v2r18    Phys    # Juan Palacios
+#===================================================================
+
+use  DaVinciInterfaces          v2r19    Phys    # Juan Palacios
 use  DaVinciTypes               v2r6p2   Phys    # Juan Palacios
 use  DaVinciUtils               v1r1p1   Phys    # Juan Palacios
-use  DaVinciKernel              v11r4    Phys    # Juan Palacios
-use  SelectionLine              v1r0p4   Kernel  # Gerhard Raven
+use  DaVinciKernel              v11r4p1  Phys    # Juan Palacios
+use  SelectionLine              v1r0p5   Kernel  # Gerhard Raven
 use  SelPy                      v4r2p2   Phys    # Juan Palacios
 use  PhysSelPython              v9r4     PhysSel # Juan Palacios
 
@@ -19,10 +25,10 @@ use  PhysConf                   v1r22    Phys    # Patrick Koppenburg
 use  ProtoParticleFilter        v1r7p2   Phys    # Chris Jones
 use  DaVinciTools       	v23r8p1  Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r11    Phys    # Juan Palacios
-use  ParticleMaker      	v6r7p3   Phys    # Chris Jones
+use  ParticleMaker      	v6r8     Phys    # Chris Jones
 use  VertexFit			v6r15p1  Phys    # Yuehong Xie
 use  LoKiFitters                v4r6     Phys    # Vanya Belyaev
-use  DecayTreeFitter            v1r15    Phys    # Wouter Hulsbergen
+use  DecayTreeFitter            v1r15p1  Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2p3   Phys    # Juan Palacios
 use  HighPtJets                 v1r8p1   Phys    # Marcin Kucharczyk
 use  BBDecTreeTool              v1r6p2   Phys    # Mike Williams
@@ -32,7 +38,7 @@ use  BBDecTreeTool              v1r6p2   Phys    # Mike Williams
 use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
 use  LoKiJets                   v6r8p2   Phys    # Vanya Belyaev, Victor Coco
 use  LoKiAlgo                   v9r8p2   Phys    # Vanya Belyaev
-use  LoKiArrayFunctors          v10r1    Phys    # Vanya Belyaev
+use  LoKiArrayFunctors          v10r2    Phys    # Vanya Belyaev
 use  LoKiPhys                   v10r15   Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v2r1p3   Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
@@ -54,7 +60,7 @@ use NeuroBayesTools             v1r2p3   Phys   # ???
 #===================================================================
 
 # Temporary MC stuff.
-use DaVinciMCKernel v4r3p2 Phys
+use DaVinciMCKernel v4r4 Phys
 
 # Declare this as a container package
 apply_pattern container_package
