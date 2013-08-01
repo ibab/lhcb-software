@@ -5,6 +5,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================= FlavourTagging v13r2 2013-08-01 =========================
+
 ! 2013-07-31 - Chris Jones
  - Fix another clang32 warning.
 
@@ -26,7 +28,7 @@
  - Fix nightlies updating Tunings.py
 
 ! 2013-07-13 - Stefania Vecchi
- - changed ITagger interface and the tagger methods: 
+ - Changed ITagger interface and the tagger methods: 
    std::vector<const Vertex*>& allVtx --> int nPV
  - Changed the info FlavourTaggingIndex-->FlavourTaggingIPPUs, FlavourTaggingTaggerID
  - updated Calibrations and cuts for NNetSSK Reco14 and Reco12
