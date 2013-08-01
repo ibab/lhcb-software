@@ -5,6 +5,8 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiArrayFunctors v10r2 2013-08-01 =========================
+
 ! 2013-07-31 Sebastian Neubert
  - Fixed compiler warnings by removing the "head" variable from IParticleDictTool
 
