@@ -3,7 +3,7 @@
 # Maintainer : Wouter Hulsbergen
 #=========================================================================
 package           TrackMonitors
-version           v1r45
+version           v1r45p1
 
 # Structure, i.e. directories to process. 
 #=========================================================================

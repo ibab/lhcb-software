@@ -4,6 +4,7 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+!========================= TrackMonitors v1r45p1 2013-08-01 =========================
 ! 2013-08-01 - Rob Lambert
  - Fix uninitialized variable in ConfiguredTrackMonitors
  - Run all monitors if the LHCbApp property isn't set
