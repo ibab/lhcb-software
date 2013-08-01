@@ -4,16 +4,18 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciInterfaces v2r19 2013-08-01 =========================
+
 ! 2013-07-31 - Sebastian Neubert
  - Removed head parameter from IParticleDictTool
 
 ! 2013-07-30 - Sebastian Neubert
-	- Added IParticleDictTool which is the basic interface for the new
-    dictionary tools in LoKi
+ - Added IParticleDictTool which is the basic interface for the new dictionary 
+   tools in LoKi.
 
 ! 2013-07-13 - Stefania Vecchi
- - Change in ITagger.h interface
-   std::vector<const Vertex*>& allVtx --> int nPV   
+ - Change in ITagger.h interface :-
+    std::vector<const Vertex*>& allVtx --> int nPV   
 
 ! 2013-06-14 - Chris Jones
  - Add various missing virtual destructors, to silence gcc 4.8 warnings.
