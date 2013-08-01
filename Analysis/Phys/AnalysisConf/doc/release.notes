@@ -5,6 +5,8 @@
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
 
+!========================= AnalysisConf v2r3 2013-08-01 =========================
+
 ! 2013-07-25 - Chris Jones
  - Replace 'importOptions' call to configure the flavour tagging, with use
    of the new python Configurable.

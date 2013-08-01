@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AnalysisConf
 ################################################################################
-gaudi_subdir(AnalysisConf v2r2p1)
+gaudi_subdir(AnalysisConf v2r3)
 
 gaudi_depends_on_subdirs(GaudiConf)
 
