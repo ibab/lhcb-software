@@ -1,4 +1,4 @@
-#include "LoKi/DictTransformTool.h"
+#include "LoKi/DictTransform.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
 
@@ -12,7 +12,7 @@
 #include "Options.h"
 
 /** @class TMVATransform 
- *  Policy class to be used by the DictTransformTool template
+ *  Policy class to be used by the DictTransform template
  *  Implementing the TMVA Reader backend
  *
  *  @author Sam Hall
@@ -242,6 +242,6 @@ bool TMVATransform::parseOpts(optmap& options, MsgStream& info) {
 
 
 ////==============================================================================
-typedef LoKi::Hybrid::DictTransformTool<TMVATransform> TMVAClassifierTool;
+typedef LoKi::Hybrid::DictTransform<TMVATransform> TMVAClassifierTool;
 DECLARE_TOOL_FACTORY(TMVAClassifierTool)
 //==============================================================================

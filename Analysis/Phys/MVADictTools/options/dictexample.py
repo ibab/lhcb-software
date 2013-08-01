@@ -69,25 +69,25 @@ tuple.RevertToPositiveID = False
 # The NEW MVA Dictionary Tools - Demo of dummy Dict transformation 
 ################################################################################
 # Imports
-from Configurables import LoKi__Hybrid__MultiToolDictTool
-from Configurables import LoKi__Hybrid__Dict2TupleTool
-from Configurables import LoKi__Hybrid__DictTransformTool_DummyTransform_ as DummyTransform
+from Configurables import LoKi__Hybrid__DictOfFunctors
+from Configurables import LoKi__Hybrid__Dict2Tuple
+from Configurables import LoKi__Hybrid__DictTransform_DummyTransform_ as DummyTransform
 
 #We are going to add the MVA tools to the phi
 tuple.addBranches({
     "Phi" : "B_s0 -> (^phi(1020) -> K+ K-) ? ",
     })
 
-# we are adding the Dict2TupleTool to the Phi branch. 
+# we are adding the Dict2Tuple to the Phi branch. 
 # this will write the result of the transformation into the ntuple
 # All variables in the dict will be prefixed with "Phi_" as they are written into the ntuple
-Phi=tuple.Phi.addTupleTool(LoKi__Hybrid__Dict2TupleTool, "Dummy2Tuple")
+Phi=tuple.Phi.addTupleTool(LoKi__Hybrid__Dict2Tuple, "Dummy2Tuple")
 
-# Add a DictTransfromTool to the Dict2TupleTool
+# Add a DictTransfromTool to the Dict2Tuple
 # the DummyTransform implements an indentity "transformation:" on a dictionary 
 # and prints the contents of the input dict to std::cout 
 Phi.addTool(DummyTransform,"Trafo")
-Phi.Source = "LoKi__Hybrid__DictTransformTool_DummyTransform_/Trafo"
+Phi.Source = "LoKi__Hybrid__DictTransform_DummyTransform_/Trafo"
 # Configure the  (options depend on which classifier is used)
 Phi.Trafo.Options = {
     "Name"       : "OysterSauce",      # DictTransforms can be configured with custom options
@@ -97,10 +97,10 @@ Phi.Trafo.Options = {
 # see Phys/LoKiArrayFunctors/src/Components/DummyTransform.cpp for a prototype
 
 
-# Add a MultiToolDictTool as the source of the transformation
+# Add a DictOfFunctors as the source of the transformation
 # the MultiTool will use LoKiFunctors to query the variables needed  
-Phi.Trafo.addTool(LoKi__Hybrid__MultiToolDictTool,"dict")
-Phi.Trafo.Source = "LoKi__Hybrid__MultiToolDictTool/dict"
+Phi.Trafo.addTool(LoKi__Hybrid__DictOfFunctors,"dict")
+Phi.Trafo.Source = "LoKi__Hybrid__DictOfFunctors/dict"
 # the variable names have to correspond exactly to what is needed by the transformation tool 
 # the prefixing with the node names has to be done manually here!
 Phi.Trafo.dict.Variables = {
@@ -114,8 +114,8 @@ Phi.Trafo.dict.Variables = {
 
 
 # How to write a dictionary directly into the ntuple:
-#tuple.addTupleTool(LoKi__Hybrid__Dict2TupleTool, "MVATuple")
-#tuple.MVATuple.addTool(LoKi__Hybrid__MultiToolDictTool, "MVADict2Tuple")
+#tuple.addTupleTool(LoKi__Hybrid__Dict2Tuple, "MVATuple")
+#tuple.MVATuple.addTool(LoKi__Hybrid__DictOfFunctors, "MVADict2Tuple")
 #tuple.MVATuple.Source = "MVADict2Tuple"
 #tuple.MVATuple.MVADict2Tuple.Variables = variables
 

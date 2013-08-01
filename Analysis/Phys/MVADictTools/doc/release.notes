@@ -4,6 +4,13 @@
 ! Purpose     : Generic MVA classifier backends for DictTransformTool 
 !-----------------------------------------------------------------------------
 
+! 2013-08-01 Sebastian Neubert
+ - renamed the dictionary tools in the LoKi::Hybrid:: namespace
+   MultiToolDictTool -> DictOfFunctors
+   Dict2TupleTool    -> Dict2Tuple
+   DictTransformTool -> DictTransform
+
+
 ! 2013-07-31 - Sam Hall
  - KeepVars added to TMVAClassifierTool
 

@@ -37,7 +37,7 @@ use   HepMC                     v*    LCG_Interfaces
 library          MVADictTools     ../src/*.cpp 
 #application       utestInterface     ../src/utestInterface.cxx
 #application       utestExample     ../src/utestExample.cxx
-#apply_pattern    linker_library     library=DecayTreeMVATool
+#apply_pattern    linker_library     library=MVADictTools
 apply_pattern    component_library  library=MVADictTools
 
 macro_append Boost_linkopts " -lboost_unit_test_framework-${Boost_compiler_version}-mt-${Boost_file_version}"

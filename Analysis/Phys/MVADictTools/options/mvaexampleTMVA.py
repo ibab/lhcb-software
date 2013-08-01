@@ -69,37 +69,37 @@ tuple.RevertToPositiveID = False
 # The NEW MVA Dictionary Tools used to implement an MVAClassifier
 ################################################################################
 # Imports
-from Configurables import LoKi__Hybrid__MultiToolDictTool
-from Configurables import LoKi__Hybrid__Dict2TupleTool
-from Configurables import LoKi__Hybrid__DictTransformTool_TMVATransform_ as TMVAClassifier
+from Configurables import LoKi__Hybrid__DictOfFunctors
+from Configurables import LoKi__Hybrid__Dict2Tuple
+from Configurables import LoKi__Hybrid__DictTransform_TMVATransform_ as TMVAClassifier
 #We are going to add the MVA tools to the phi
 tuple.addBranches({
     "Phi" : "B_s0 -> (^phi(1020) -> K+ K-) ? ",
     })
 
-# we are adding the Dict2TupleTool to the Phi branch. 
+# we are adding the Dict2Tuple to the Phi branch. 
 # this will write the MVA classifier response dictionary into the ntuple
 # All variables in the dict will be prefixed with "Phi_" as they are added to the ntuple
-Phi_tmva=tuple.Phi.addTupleTool(LoKi__Hybrid__Dict2TupleTool, "TMVA2Tuple")
+Phi_tmva=tuple.Phi.addTupleTool(LoKi__Hybrid__Dict2Tuple, "TMVA2Tuple")
 
-# Add the TMVAClassifier to the Dict2TupleTool
+# Add the TMVAClassifier to the Dict2Tuple
 Phi_tmva.addTool(TMVAClassifier,"TMVA")
-Phi_tmva.Source = "LoKi__Hybrid__DictTransformTool_TMVATransform_/TMVA"
-# Configure the classifier (options depend on which classifier is used)
+Phi_tmva.Source = "LoKi__Hybrid__DictTransform_TMVATransform_/TMVA"
+# Configure the classifier (available options depend on which classifier is used)
 Phi_tmva.TMVA.Options = {
     "Name"       : "MyBDT",           # Name for the MVA response variable
     "XMLFile"    : "TestPhi2KK.xml",  # TMVA uses an xml file to load the classifier
-    "KeepVars"   : "1",
+    "KeepVars"   : "0",               # Write out the input variables alongside the classifier response
 }
 # Note that other dictionary transformations can easily be added by
 # implementing a new DictTransformationTool using the DictTransformation policies
 # see Phys/LoKiArrayFunctors/src/Components/DummyTransform.cpp for a prototype
 
 
-# Add a MultiToolDictTool as the source of the classifier
+# Add a DictOfFunctors as the source of the classifier
 # the MultiTool will use LoKiFunctors to query the variables needed  
-Phi_tmva.TMVA.addTool(LoKi__Hybrid__MultiToolDictTool,"MVAdict3")
-Phi_tmva.TMVA.Source = "LoKi__Hybrid__MultiToolDictTool/MVAdict3"
+Phi_tmva.TMVA.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict3")
+Phi_tmva.TMVA.Source = "LoKi__Hybrid__DictOfFunctors/MVAdict3"
 # the variable names have to correspond exactly to what is needed by the classifier 
 # the prefixing with the node names has to be done manually here!
 Phi_tmva.TMVA.MVAdict3.Variables = {
@@ -110,12 +110,12 @@ Phi_tmva.TMVA.MVAdict3.Variables = {
     "lab2_IPCHI2_OWNPV"     : "CHILD(MIPCHI2DV(PRIMARY),1)",
     "lab3_IPCHI2_OWNPV"     : "CHILD(MIPCHI2DV(PRIMARY),2)",
     }
-# CombineParticles.MotherCut = "BPVIPCHI2()<25"
+# CombineParticles.MotherCut = "DICTCUT(TMVA,MyBDT >0.1)"
 
 
 # How to write a dictionary directly into the ntuple:
-#tuple.addTupleTool(LoKi__Hybrid__Dict2TupleTool, "MVATuple")
-#tuple.MVATuple.addTool(LoKi__Hybrid__MultiToolDictTool, "MVADict2Tuple")
+#tuple.addTupleTool(LoKi__Hybrid__Dict2Tuple, "MVATuple")
+#tuple.MVATuple.addTool(LoKi__Hybrid__DictOfFunctors, "MVADict2Tuple")
 #tuple.MVATuple.Source = "MVADict2Tuple"
 #tuple.MVATuple.MVADict2Tuple.Variables = variables
 
