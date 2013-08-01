@@ -5,14 +5,13 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiArrayFunctors v10r2 2013-08-01 =========================
 
 ! 2013-08-01 Sebastian Neubert
  - renamed the dictionary tools in the LoKi::Hybrid:: namespace
    MultiToolDictTool -> DictOfFunctors
    Dict2TupleTool    -> Dict2Tuple
    DictTransformTool -> DictTransform
-
-!========================= LoKiArrayFunctors v10r2 2013-08-01 =========================
 
 ! 2013-07-31 Sebastian Neubert
  - Fixed compiler warnings by removing the "head" variable from IParticleDictTool
