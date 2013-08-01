@@ -78,6 +78,7 @@ In FlavourTagging :
    which is to be depreciated. The above file still exists, but now prints
    a large depreciation warning, and then just imports the new Configurable.
    Should be removed at some point.
+ . Updated calibration and tunings for Reco14 in NewKaonSame
 
 In FlavourTaggingChecker :
  . A few changes to match the inclusion of nnetOSKaon and nnetSSKaon taggers
