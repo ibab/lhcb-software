@@ -6,6 +6,8 @@
 !-----------------------------------------------------------------------------
 
 !========================= FlavourTagging v13r2 2013-08-01 =========================
+! 2013-08-01 - Stefania Vecchi
+  updated calibration and tunings for Reco14 in NewKaonSame
 
 ! 2013-07-31 - Chris Jones
  - Fix another clang32 warning.

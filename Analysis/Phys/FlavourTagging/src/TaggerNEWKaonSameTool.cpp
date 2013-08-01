@@ -29,17 +29,17 @@ DECLARE_TOOL_FACTORY( TaggerNEWKaonSameTool )
   // preselection  for Reco14
   declareProperty( "Kaon_PIDk_cut",     m_PID_k_cut     =  0.75);
   declareProperty( "Kaon_PIDkp_cut",    m_PIDkp_cut     = -8.5 );
-  declareProperty( "Kaon_ghost_cut",    m_ghost_cut     = 0.3 );     // 10.(no cut) Reco 12
+  declareProperty( "Kaon_ghost_cut",    m_ghost_cut     = 10. );     // no cut Reco 12 & Reco14
   declareProperty( "Kaon_distPhi_cut",  m_distPhi_cut_kaon= 0.005 );
 
-  declareProperty( "Kaon_P0_Cal",        m_P0_Cal_kaon   = 0.4080 ); // 0.408 Reco12
-  declareProperty( "Kaon_P1_Cal",        m_P1_Cal_kaon   = 0.86);    // 0.86 Reco12
-  declareProperty( "Kaon_AverageOmega",  m_AverageOmega  = 0.4302 ); // 0.4302 Reco12
+  declareProperty( "Kaon_P0_Cal",        m_P0_Cal_kaon   = 0.436 ); // 0.408 Reco12
+  declareProperty( "Kaon_P1_Cal",        m_P1_Cal_kaon   = 0.90  );    // 0.86 Reco12
+  declareProperty( "Kaon_AverageOmega",  m_AverageOmega  = 0.430 ); // 0.4302 Reco12
   declareProperty( "Kaon_ProbMin",       m_ProbMin_kaon  = 0.5 );
   declareProperty( "Kaon_ProbMax",       m_ProbMax_kaon  = 0.5 );
 
   //declareProperty( "Kaon_ipPU_cut", m_ipPU_cut_kaon      = 7.5 );
-  declareProperty( "Kaon_NN1_cut",  m_NN1_cut_kaon       = 0.7 );  // 0.65 Reco12
+  declareProperty( "Kaon_NN1_cut",  m_NN1_cut_kaon       = 0.65 );  // Reco12 & Reco14
 
   m_nn_1      = 0.;
   m_nn_2      = 0.;
