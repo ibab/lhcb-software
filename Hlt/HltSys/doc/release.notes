@@ -10,6 +10,8 @@ Moore/HLT LS1 development version. LHCb v36r1 stack. Depends on Rec v15r1 via Ph
 
 First version released on gcc 4.7 platform, slc6 gcc47 is expected to be *much* faster than slc5 gcc43. Real changes are only minor in the projects beneath, no significant changes in Hlt itself.
 
+Kernel/SelectionLine now picked up from Phys.
+
 For more information, see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v20r3
 

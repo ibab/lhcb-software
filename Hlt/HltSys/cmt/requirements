@@ -26,7 +26,6 @@ use TCKUtils            v1r11p1 Hlt   # Gerhard Raven
 use LoKiTrigger         v13r0p1 Phys  # Vanya Belyaev
 
 #temporary
-use SelectionLine       v1r0p5 Kernel
 
 # Declare this as a container package
 apply_pattern container_package
