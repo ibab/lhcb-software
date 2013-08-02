@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r28 2013-08-02 =========================
+
 ! 2013-07-08 - Stefano Perazzini
  - Created scratch LineConfigDictionaries_XXX.py files for the dictionaries of Stripping20r{0,1}p2
 
