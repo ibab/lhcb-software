@@ -8,7 +8,7 @@ version           v1r0
 #============================================================================
 # Structure
 #============================================================================
-branches          cmt doc src python
+branches          cmt doc src 
 include_path      none
 
 #============================================================================
@@ -35,9 +35,9 @@ use   HepMC                     v*    LCG_Interfaces
 # Component library building rule
 #============================================================================
 library          MVADictTools     ../src/*.cpp 
-#application       utestInterface     ../src/utestInterface.cxx
+application       utesttmva     ../src/utesttmva.cxx
 #application       utestExample     ../src/utestExample.cxx
-#apply_pattern    linker_library     library=MVADictTools
+apply_pattern    linker_library     library=MVADictTools
 apply_pattern    component_library  library=MVADictTools
 
 macro_append Boost_linkopts " -lboost_unit_test_framework-${Boost_compiler_version}-mt-${Boost_file_version}"

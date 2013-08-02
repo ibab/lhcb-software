@@ -1,61 +1,13 @@
+#include "TMVAClassifierTool.h"
+
 #include "LoKi/DictTransform.h"
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
 
-#include "TMVA/Reader.h"
 #include "TXMLEngine.h"
 #include "TXMLDocument.h"
 #include "TXMLNode.h"
 
-#include <boost/lexical_cast.hpp>
 
-#include "Options.h"
-
-/** @class TMVATransform 
- *  Policy class to be used by the DictTransform template
- *  Implementing the TMVA Reader backend
- *
- *  @author Sam Hall
- *  @date   2013-07-29
- */
-
-
-typedef std::map<std::string, std::string> optmap;
-
-//==============================================================================
-// Forward decralration of class -- TMVATransform
-//==============================================================================
-class TMVATransform {
-private:
-  bool m_setup_success;
-  bool m_keep_all_vars;
-  std::string m_reader_opts;
-  std::string m_weightfile;
-  std::string m_name;
-  std::string m_branchname;
-  std::vector<std::string> m_spectator;
-  //std::vector<double> m_values; // because of const this is defined within operator()
- 
-  //std::map<std::string, OptionBase*> m_options;
-
-  // TMVA bits
-  TMVA::Reader* m_reader;
-
-  // Functions
-  void readWeightsFile(MsgStream&);
-  void setupReader(MsgStream&);
-  bool parseOpts(optmap&, MsgStream&);
-
-
-public:
-  std::vector<std::string> m_variables;
-  TMVATransform();
-  ~TMVATransform();
-
-  bool Init(optmap options, MsgStream& info);
-  bool operator()(const IParticleDictTool::DICT& in, IParticleDictTool::DICT& out) const;
-
-};
 
 
 //==============================================================================
@@ -82,7 +34,7 @@ TMVATransform::~TMVATransform() {
 // Implementation of required functions to fulfill the DictTransform policy
 //==============================================================================
 bool
-TMVATransform::Init(optmap options, MsgStream& info){
+TMVATransform::Init(optmap options, std::ostream& info){
   // parse options into member variables, also empties map
   m_setup_success = parseOpts(options, info);
   if (!m_setup_success) { return false ; }
@@ -129,7 +81,7 @@ TMVATransform::operator()(const IParticleDictTool::DICT& in, IParticleDictTool::
 //==============================================================================
 // Implementation of other functions
 //==============================================================================
-void TMVATransform::readWeightsFile(MsgStream& info) {
+void TMVATransform::readWeightsFile(std::ostream& info) {
   // Clear relavent variables
   m_variables.clear();
   m_spectator.clear();
@@ -203,7 +155,7 @@ void TMVATransform::readWeightsFile(MsgStream& info) {
 
 
 //==============================================================================
-void TMVATransform::setupReader(MsgStream& info) {
+void TMVATransform::setupReader(std::ostream& info) {
   // Check required variables
   if (m_variables.size() == 0) {
     info << "No variables set" << endmsg;
@@ -225,7 +177,7 @@ void TMVATransform::setupReader(MsgStream& info) {
 }
 
 //==============================================================================
-bool TMVATransform::parseOpts(optmap& options, MsgStream& info) {
+bool TMVATransform::parseOpts(optmap& options, std::ostream& info) {
   bool pass = true;
   Options parse(options);
   parse.add<std::string>("Name", "Name of output branch (Required)",

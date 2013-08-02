@@ -4,6 +4,13 @@
 ! Purpose     : Generic MVA classifier backends for DictTransformTool 
 !-----------------------------------------------------------------------------
 
+! 2013-08-02 - Sebastian Neubert
+ - changed DictTransform policies to use std::ostream
+ - Created header file for TMVAClassifierTool
+ - added unit test framework for TMVATransform
+ - added a first unit test
+ - added qmtest call to utest
+
 !========================= MVADictTools v1r0 2013-08-01 =========================
 
 ! 2013-08-01 - Marco Clemencic
