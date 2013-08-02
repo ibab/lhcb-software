@@ -3,6 +3,27 @@ Package     : StrippingSys
 Package Coordinator : l.carson@imperial.ac.uk, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v7r1 2013-08-02 =========================
+
+* Version for future development
+
+* Phys/CommonParticles
+  - Added "MC12TuneV2" tuning to ANNPID
+
+* Phys/StrippingArchive
+  - Backport fix for inappropriate downstream Muon PID TES locations in   StrippingTrackEffDownMuon.py to the various Stripping20rXpY archives.
+
+* Phys/StrippingConf
+  - Add EnableFlavourTagging flag
+
+* Phys/StrippingSelections
+  - Same Muon TES fix as in StrippingArchive above
+  - Adding EnableFlavourTagging = True to a few lines 
+
+* Phys/StrippingSettings
+  - Some late changes to settings for Stripping20r3
+  - Created scratch LineConfigDictionaries_XXX.py files for the dictionaries of    Stripping20r{0,1}p2
+
 !========================= StrippingSys v7r0 2013-06-14 =========================
 
 * Version for future development
