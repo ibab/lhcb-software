@@ -119,10 +119,10 @@ FSM::ErrCond Controller::publishSlaves()  {
   const Slaves slaves = m_machine->slaves();
   const Transition* trans = m_machine->currTrans();
   if ( trans && trans->name() == "unload" ) {
-    error_call(ERROR_CONTROL,0,"Disable DIM error printing");
+    error_call(ERROR_CONTROL,0,(char*)"Disable DIM error printing");
   }
   else {
-    error_call(ERROR_CONTROL,1,"Enable DIM error printing");
+    error_call(ERROR_CONTROL,1,(char*)"Enable DIM error printing");
   }
   for(Slaves::const_iterator i=slaves.begin(); i!= slaves.end(); )  {
     Slave* s = *i;
