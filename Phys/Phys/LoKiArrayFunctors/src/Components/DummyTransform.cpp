@@ -1,6 +1,6 @@
 #include "LoKi/DictTransform.h"
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
+//#include "GaudiKernel/MsgStream.h"
 
 #include <iostream>
 #include <boost/foreach.hpp>
@@ -12,7 +12,7 @@ typedef std::map<std::string,std::string> optmap;
  *  Implements a prototype dictionary transform to be used with
  *  DictTransform
  *  fulfilling the following policy
- *  TransForm::Init(const std::map<std::string,std::string>& options, MsgStream& info)
+ *  TransForm::Init(const std::map<std::string,std::string>& options, ostream& info)
  *  TransForm::operator()(const IParticleDictTool::DICT& inDict, IParticleDictTool::Dict& outDict) const
  *
  *  The dummy transform will return the unchanged source dictionary and print its contents
@@ -25,14 +25,14 @@ typedef std::map<std::string,std::string> optmap;
 class DummyTransform {
 public:
  
-  bool Init(optmap options, MsgStream& info);
+  bool Init(optmap options, std::ostream& info);
   bool operator()(const IParticleDictTool::DICT& in, IParticleDictTool::DICT& out) const;
   
 };
 
 ///---------------------------------------------------------------------------------------
 bool
-DummyTransform::Init(optmap options, MsgStream& info){
+DummyTransform::Init(optmap options, std::ostream& info){
   /// do something to configure the tool 
   // print options
   BOOST_FOREACH(optmap::value_type opt, options){

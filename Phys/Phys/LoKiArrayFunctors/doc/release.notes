@@ -5,6 +5,12 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2013-08-02 Sebastian Neubert
+ - simplified the DictTransform policy to use 
+   std::ostream instead of MsgStream to make dependencies lighter
+   and enable easy unit testing of the policy classes
+
+
 !========================= LoKiArrayFunctors v10r2 2013-08-01 =========================
 
 ! 2013-08-01 Sebastian Neubert

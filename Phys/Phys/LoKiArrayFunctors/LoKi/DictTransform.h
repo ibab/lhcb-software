@@ -23,7 +23,7 @@ namespace LoKi
  *  the transformed dictionary is returned through IParticleDictTool
  *  The transformation is templated
  *  The template parameter Transform needs to fulfill the following policy
- *  TransForm::Init(const std::map<std::string,std::string>& options)
+ *  TransForm::Init(const std::map<std::string,std::string>& options, ostream&)
  *  TransForm::operator()(const IParticleDictTool::DICT& inDict, IParticleDictTool::Dict& outDict) const
  *
  *  @author Sebastian Neubert
@@ -64,7 +64,7 @@ public:
     if(m_source == NULL) return Error("Unable to find the source DictTool " + m_sourcename , sc ) ;
 
     
-    if(!m_transform.Init(m_options,info())){
+    if(!m_transform.Init(m_options,info().stream())){
       Error("Initialization of Transform failed.",StatusCode::FAILURE);
     }
   
