@@ -1,3 +1,8 @@
+2013-08-02  Ben Couturier  <Ben.Couturier@cern.ch>
+
+	* z5/extra.sh: Add EOS to the path 
+	* z5/extra.csh: Add EOS to the path
+
 2013-04-02  Ben Couturier  <Ben.Couturier@cern.ch>
 
         * z5/group_bashrc: Remove forced call to CMTCONFIG 

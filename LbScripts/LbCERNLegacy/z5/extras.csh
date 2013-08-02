@@ -19,3 +19,11 @@ if ( ! $?CMTEXTRATAGS ) then
     endif
 endif
 endif
+
+# Adding EOS to the path for installations on AFS
+set EOS_LHCB=/afs/cern.ch/project/eos/installation/lhcb
+if ( -e  "${EOS_LHCB}" ) then
+    setenv PATH ${PATH}:${EOS_LHCB}/bin
+    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${EOS_LHCB}/lib64
+    setenv EOS_MGM_URL root://eoslhcb.cern.ch
+endif
