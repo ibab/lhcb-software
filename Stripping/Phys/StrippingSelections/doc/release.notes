@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+!========================= StrippingSelections v3r27 2013-08-02 =========================
+
 ! 2013-07-31 - Mika Vesterinen
  - New stripping module for phi->KsKs
 
