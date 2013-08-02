@@ -12,5 +12,10 @@ gaudi_add_module(MVADictTools
 		 INCLUDE_DIRS ROOT
                  LINK_LIBRARIES ROOT LoKiArrayFunctorsLib)
 
+gaudi_add_unit_test(utesttmva src/utesttmva.cxx src/*.cpp
+		    INCLUDE_DIRS ROOT
+                    LINK_LIBRARIES ROOT LoKiArrayFunctorsLib
+                    TYPE Boost)
+
 # gaudi_install_python_modules()
-# gaudi_add_test(QMTest QMTEST)
+gaudi_add_test(QMTest QMTEST)
