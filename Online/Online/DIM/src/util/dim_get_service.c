@@ -39,13 +39,14 @@ char **argv;
 
 	if(argc < 2)
 	{
-		printf("Service Name > ");
-		fflush(stdout);
-		scanf("%s", str);
+	  printf("Service Name > ");
+	  fflush(stdout);
+	  scanf("%s", str);
 	}
 	else
 	{
-		sprintf(str,argv[1]);
+	  strncpy(str,argv[1],sizeof(str));
+	  str[sizeof(str)-1] = 0;
 	}
 	dic_info_service(str,ONCE_ONLY,60,0,0,rout,0,&no_link,4);
 	while(!received)
