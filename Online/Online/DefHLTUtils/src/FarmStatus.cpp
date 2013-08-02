@@ -469,7 +469,7 @@ void ExclInfo::infoHandler()
   }
 }
 
-int main(int argc, char **argv)
+int main(int /* argc   */, char** /* argv */)
 {
   char *ofile = getenv("HLTEQ_LOGF");
   if (ofile == 0)
