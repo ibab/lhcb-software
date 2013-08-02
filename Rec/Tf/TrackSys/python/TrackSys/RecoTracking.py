@@ -39,12 +39,14 @@ def RecoTracking(exclude=[]):
    
    GaudiSequencer("RecoDecodingSeq").Members += [ createITClusters, createITLiteClusters ]
    
-
+   from Configurables import STOfflinePosition
+   IT = STOfflinePosition('ITClusterPosition')
+   IT.DetType = "IT"
+   TT = STOfflinePosition('TTClusterPosition')
+   TT.DetType = "TT"
+   
    from STTools import STOfflineConf
-   if TrackSys().MC09() :
-      STOfflineConf.DefaultConfMC09().configureTools()
-   else :
-      STOfflineConf.DefaultConf().configureTools()
+   STOfflineConf.DefaultConf().configureTools()
 
    #importOptions( "$STTOOLSROOT/options/Brunel.opts" )
    

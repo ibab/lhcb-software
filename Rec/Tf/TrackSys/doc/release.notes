@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2013-08-02 - Maurizio Martinelli
+ - added STOfflinePostion to standard tracking options.
+ - removed MC09 code options.
+
 !========================= TrackSys v7r11p1 2013-06-03 =========================
 ! 2013-05-07 - Paul Seyfert
  - entirely remove deprecated property from TrackAddNNGhostId (was commented
