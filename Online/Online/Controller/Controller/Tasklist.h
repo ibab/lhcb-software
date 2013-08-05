@@ -35,7 +35,13 @@ namespace FiniteStateMachine   {
       Timeout() : timeout(0) {}
       Timeout(const std::string& a, int t) : action(a), timeout(t) {}
       Timeout(const Timeout& c) : action(c.action), timeout(c.timeout) {}
-      Timeout& operator=(const Timeout& c) { action=c.action; timeout=c.timeout; return *this;}
+      Timeout& operator=(const Timeout& c) { 
+	if ( &c != this )  {
+	  action=c.action;
+	  timeout=c.timeout;
+	}
+	return *this;
+      }
     };
     /// Defintiion of the timeout container
     typedef std::vector<Timeout> Timeouts;

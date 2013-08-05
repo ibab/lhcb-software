@@ -103,11 +103,13 @@ namespace FiniteStateMachine {
 	if ( line ) delete line; 
       }
       SlaveTag& operator=(const SlaveTag& c) { 
-	ctrl=c.ctrl; 
-	line=c.line?strcpy(new char[strlen(c.line)+1],c.line):0; 
-	id=c.id; 
-	svc=c.svc; 
-	name=c.name; 
+	if ( this != &c )  {
+	  ctrl = c.ctrl; 
+	  line = c.line ? strcpy(new char[strlen(c.line)+1],c.line) : 0; 
+	  id   = c.id; 
+	  svc  = c.svc; 
+	  name = c.name; 
+	}
 	return *this;
       }
     };

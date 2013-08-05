@@ -36,7 +36,7 @@ namespace   {
   };
   static string make_slave_name(int i) {
     char text[32];
-    ::sprintf(text,"SLAVE_%d",i);
+    ::snprintf(text,sizeof(text),"SLAVE_%d",i);
     return text;
   }
 }

@@ -29,9 +29,9 @@ namespace FiniteStateMachine {
   IocSensor& ioc() {  return IocSensor::instance();  }
 
   struct CtrlNativeSlave : public NativeDimSlave {
-    int m_out[2];
+    int         m_out[2];
     std::string utgid;
-    Control* handler;
+    Control*    handler;
 
     /// Standard constructor
     CtrlNativeSlave(Control* handler,
@@ -41,6 +41,7 @@ namespace FiniteStateMachine {
 		    const std::string& args="")
       : NativeDimSlave(typ,nam,machine,false), handler(handler) 
     {
+      m_out[0] = m_out[1] = 0;
       m_killCmd = "destroy";
       cloneEnv();
       m_cmd   = gentest_path();

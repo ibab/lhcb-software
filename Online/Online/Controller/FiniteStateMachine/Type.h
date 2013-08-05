@@ -51,10 +51,11 @@ namespace FiniteStateMachine   {
   protected:
     /// Object name
     std::string m_name;
-
-  protected:
+    /// Initial state of this type object
     const State* m_initState;
+    /// States defined by this type object
     States       m_states;
+    /// State transitions defined by this type object
     Transitions  m_transitions;
 
   public:

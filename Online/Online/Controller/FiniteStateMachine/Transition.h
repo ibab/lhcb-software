@@ -146,11 +146,8 @@ namespace FiniteStateMachine {
     Predicates   m_predicates;
     /// Transition flags
     int          m_flags;
-    /// flag to ignore any slave actions
-    bool         m_ignoreSlaves;
 
   public:
-
     /** Class Constructor	    
      * @arg nam   [string,read-only]   Transition name
      * @arg typ   [string,read-only]   Name of FSM type

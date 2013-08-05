@@ -22,7 +22,7 @@ using namespace FiniteStateMachine;
 using namespace std;
 
 /// Class Constructor
-Type::Type(const string& nam) : m_name(nam)
+Type::Type(const string& nam) : m_name(nam), m_initState(0)
 {
 }
 
