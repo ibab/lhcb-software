@@ -3,15 +3,25 @@
 #include "WT/wtdef.h"
 
 namespace {
+
+  /// Function to display help text
   static void help()  {
     ::lib_rtl_output(LIB_RTL_INFO,"mbm_prod_a -opt [-opt]\n");
     ::lib_rtl_output(LIB_RTL_INFO,"    -n=<name>              Buffer member name\n");
     ::lib_rtl_output(LIB_RTL_INFO,"    -b=<name>              Buffer identifier \n");
     ::lib_rtl_output(LIB_RTL_INFO,"    -p(artition)=<number>  Partition ID\n");
   }
-  struct Prod  : public MBM::Producer  {
+
+  /** @class AsyncProd
+   *
+   *  Test class to test MBM functionality
+   * 
+   *  @author  M.Frank
+   *  @version 1.0
+   */
+  struct AsyncProd  : public MBM::Producer  {
     int trnumber;
-    Prod(const std::string& buff, const std::string& nam, int pid) : MBM::Producer(buff,nam,pid), trnumber(0)   {
+    AsyncProd(const std::string& buff, const std::string& nam, int pid) : MBM::Producer(buff,nam,pid), trnumber(0)   {
       setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
     }
     int spaceRearm(int) {
@@ -29,6 +39,7 @@ namespace {
   };
 }
 
+/// Main invokation routine to be called by test program
 extern "C" int mbm_prod_a(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
   std::string name = "producer", buffer="0";
@@ -39,5 +50,5 @@ extern "C" int mbm_prod_a(int argc,char **argv) {
   int status = wtc_init();
   if( status != WT_SUCCESS ) exit(status);
   ::lib_rtl_output(LIB_RTL_INFO,"Asynchronous Producer \"%s\" (pid:%d) included in buffer:\"%s\"\n",name.c_str(),Prod::pid(),buffer.c_str());
-  return Prod(buffer,name,partID).run();
+  return AsyncProd(buffer,name,partID).run();
 }
