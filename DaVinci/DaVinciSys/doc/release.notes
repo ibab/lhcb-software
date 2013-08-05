@@ -3,6 +3,51 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v33r6>2013-08-05 DaVinci v33r6</A></H1><PRE>
+
+New development release based on the LHCb v36r1 stack.
+
+Executive Summary of Phys and Analysis Changes :-
+
+DaVinciMCKernel :-
+ . Fix access to MCParticles when RootInTES is set.
+
+LoKiArrayFunctors, MVADictTools :-
+ . New components to allow more general access to LoKi Hybrid variables.
+
+DecayTreeTuple, DecayTreeTupleMC :-
+ . TupleToolTagging.cpp: No more filling of the Tagging Category
+ . TupleToolDecayTreeFitter: Bug #102007 : Always require an instance name.
+ . Change MCTupleToolKinematic to choose end vertex as either a decay or 
+   hadronic interaction.
+
+FlavourTagging :-
+ . New tunings for Reco12 and Reco14. 
+   See Analysis release notes for more details.
+
+JetAccessories :-
+ . New Particle Flow for Reco 14.
+   See Analysis release notes for more details.
+
+CommonParticles :-
+ . Update ANNPID Particles to "MC12TuneV2" tuning.
+
+StrippingConf :-
+ . Add EnableFlavourTagging flag, to allow a stripping line to run the 
+   flavour tagging.
+
+Changed Packages :- DaVinciTests
+
+In DaVinciTests :
+ . Updated reference file tagging.qms/test_tag_mc12.qmt according to 
+   the change in FT/python/FT/Tunings.py in NNetSSK tuning.
+ . Updated reference file tagging.qms/test_tag_mc12.qmt to monitor also 
+   nnetKaonOpposite and nnetKaonSame Tagging algorithms + some changes 
+   in the Category definition.
+ . Run the stripping tests with the DDDB and CondDB tags set to the same as
+   the reference logs.
+ . Add new test for Stripping20r3.
+
 </PRE><H1><A NAME=v33r5>2013-06-17 DaVinci v33r5</A></H1><PRE>
 
 New development release based on the LHCb v36r0 stack.
