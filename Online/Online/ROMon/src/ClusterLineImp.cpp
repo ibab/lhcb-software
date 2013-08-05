@@ -45,13 +45,23 @@ namespace ROMon {
 	min_free_space = std::numeric_limits<float>::max();
       }
       Info(const Info& c) { 
-	free_slots=c.free_slots;
+	free_slots     = c.free_slots;
 	min_free_slots = c.min_free_slots;
-	buf_clients=c.buf_clients;
-	task_evt_tot=c.task_evt_tot;
-	task_evt_min=c.task_evt_min;
+	buf_clients    = c.buf_clients;
+	task_evt_tot   = c.task_evt_tot;
+	task_evt_min   = c.task_evt_min;
 	min_free_space = c.min_free_space;
 	min_free_slots = c.min_free_slots;
+      }
+      Info& operator=(const Info& c) { 
+	free_slots     = c.free_slots;
+	min_free_slots = c.min_free_slots;
+	buf_clients    = c.buf_clients;
+	task_evt_tot   = c.task_evt_tot;
+	task_evt_min   = c.task_evt_min;
+	min_free_space = c.min_free_space;
+	min_free_slots = c.min_free_slots;
+	return *this;
       }
     };
     std::vector<Info> m_history;
@@ -311,7 +321,7 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
   ts.getClusterNodes(c);
 
   RTL::Lock lock(InternalDisplay::screenLock());
-  ::sprintf(txt,"%8s %6zu ",c.time.c_str()+11,c.nodes.size());
+  ::snprintf(txt,sizeof(txt),"%8s %6zu ",c.time.c_str()+11,c.nodes.size());
   begin_update(txt);
   pos = 87+CLUSTERLINE_START;
   for(Cluster::Nodes::const_iterator i=c.nodes.begin(), e=c.nodes.end(); i!=e;++i) {
@@ -344,26 +354,26 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
 
   col = (c.status=="ALIVE" || cl_good) ? NORMAL : (c.status=="MIXED") ? COL_WARNING : COL_ALARM;
   if ( missTaskCount>0 ) {
-    ::sprintf(txt,"%4zu/BAD ",missTaskCount);
+    ::snprintf(txt,sizeof(txt),"%4zu/BAD ",missTaskCount);
     ::scrc_put_chars(dis,txt,COL_ALARM,line,28,0);
     ::scrc_put_chars(dis," ",NORMAL,line,37,0);
   }
   else {
-    ::sprintf(txt,"%4zu ",taskCount);
+    ::snprintf(txt,sizeof(txt),"%4zu ",taskCount);
     ::scrc_put_chars(dis,txt,GREEN|INVERSE,line,28,0);
     ::scrc_put_chars(dis,"     ",NORMAL,line,33,0);
   }
   if ( missConnCount>0 ) {
-    ::sprintf(txt,"%4zu/BAD ",missConnCount);
+    ::snprintf(txt,sizeof(txt),"%4zu/BAD ",missConnCount);
     ::scrc_put_chars(dis,txt,COL_ALARM,line,37,0);  
     ::scrc_put_chars(dis," ",NORMAL,line,46,0);
   }
   else {
-    ::sprintf(txt,"%4zu ",connCount);
+    ::snprintf(txt,sizeof(txt),"%4zu ",connCount);
     ::scrc_put_chars(dis,txt,GREEN|INVERSE,line,37,0);  
     ::scrc_put_chars(dis,"     ",NORMAL,line,42,0);
   }
-  ::sprintf(txt,"  %-6s  ",c.status.c_str());
+  ::snprintf(txt,sizeof(txt),"  %-6s  ",c.status.c_str());
   ::scrc_put_chars(dis,txt,col|BOLD,line,45,0);
   //bg_black(pb);
   ::scrc_put_chars(dis,pvss_status>1?"ERROR":"   OK",pvss_status>1?COL_ALARM:GREEN,line,53,0);    
@@ -481,7 +491,7 @@ void StorageClusterLine::display() {
   RTL::Lock lock(InternalDisplay::screenLock());
   time_t now = ::time(0), t1 = numNodes == 0 ? now : c->firstUpdate().first;
   ::strftime(txt,sizeof(txt)," %H:%M:%S ",::localtime(&t1));
-  ::sprintf(txt+strlen(txt),"%6d %6d %6d   ",numNodes,numBuffs,numClients);
+  ::snprintf(txt+strlen(txt),sizeof(txt)-strlen(txt),"%6d %6d %6d   ",numNodes,numBuffs,numClients);
   begin_update(txt);
 
   if ( numNodes != 0 ) {
@@ -489,16 +499,16 @@ void StorageClusterLine::display() {
   }
 
   if ( tot_prod[0] != 0 )
-    ::sprintf(txt,"%13lld%6d  %8s%4d%17s",tot_prod[0],num_sl[0],"Clients:",num_cl[0],"");
+    ::snprintf(txt,sizeof(txt),"%13lld%6d  %8s%4d%17s",tot_prod[0],num_sl[0],"Clients:",num_cl[0],"");
   else
-    ::sprintf(txt,"%13s%6s  %8s%4s%17s","--","--","","","");
+    ::snprintf(txt,sizeof(txt),"%13s%6s  %8s%4s%17s","--","--","","","");
   ::scrc_put_chars(dis," Recv:   ",BOLD,pos,77+CLUSTERLINE_START,0);
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+9+CLUSTERLINE_START,0);
 
   if ( tot_prod[1] != 0 )
-    ::sprintf(txt,"%13lld%6d  %8s%4d%17s",tot_prod[1],num_sl[1],"Clients:",num_cl[1],"");
+    ::snprintf(txt,sizeof(txt),"%13lld%6d  %8s%4d%17s",tot_prod[1],num_sl[1],"Clients:",num_cl[1],"");
   else
-    ::sprintf(txt,"%14s%8s  %8s%4s%17s","--","--","","","");
+    ::snprintf(txt,sizeof(txt),"%14s%8s  %8s%4s%17s","--","--","","","");
   ::scrc_put_chars(dis,"  Stream:  ",BOLD,pos,77+57+CLUSTERLINE_START,0);
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+67+CLUSTERLINE_START,0);
 
@@ -513,17 +523,17 @@ void StorageClusterLine::display() {
     err = " Storage not used yet....", col = NORMAL|INVERSE|GREEN;
   }
   else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN ) {
-    ::sprintf(txt," SLOTS at limit:");
-    if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"Recv ");
-    if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"Stream ");
-    ::sprintf(txt+strlen(txt),"[%d nodes]",int(bad_nodes.size()));
+    ::snprintf(txt,sizeof(txt)," SLOTS at limit:");
+    if ( fslots[0] < SLOTS_MIN ) ::strncat(txt,"Recv ",sizeof(txt)-strlen(txt));
+    if ( fslots[1] < SLOTS_MIN ) ::strncat(txt,"Stream ",sizeof(txt)-strlen(txt));
+    ::snprintf(txt+strlen(txt),sizeof(txt)-strlen(txt),"[%d nodes]",int(bad_nodes.size()));
     err = txt, col = BOLD|RED|INVERSE;
   }
   else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN ) {
-    ::sprintf(txt," SPACE at limit:");
-    if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"Recv ");
-    if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"Stream ");
-    ::sprintf(txt+strlen(txt),"[%d nodes]",int(bad_nodes.size()));
+    ::strncpy(txt," SPACE at limit:",sizeof(txt));
+    if ( fspace[0] < SPACE_MIN ) ::strncat(txt,"Recv ",sizeof(txt)-strlen(txt));
+    if ( fspace[1] < SPACE_MIN ) ::strncat(txt,"Stream ",sizeof(txt)-strlen(txt));
+    ::snprintf(txt+strlen(txt),sizeof(txt)-strlen(txt),"[%d nodes]",int(bad_nodes.size()));
     err = txt, col = BOLD|RED|INVERSE;
   }
   else if ( min_prod[0] != INT_max && min_prod[0]>0 && min_prod[0] <= m_evtRecv ) {
@@ -616,7 +626,7 @@ void MonitoringClusterLine::display() {
   RTL::Lock lock(InternalDisplay::screenLock());
   time_t now = time(0), t1 = numNodes == 0 ? time(0) : c->firstUpdate().first;
   ::strftime(txt,sizeof(txt)," %H:%M:%S ",::localtime(&t1));
-  ::sprintf(txt+::strlen(txt),"%6d %6d %6d   ",numNodes,numBuffs,numClients);
+  ::snprintf(txt+::strlen(txt),sizeof(txt)-strlen(txt),"%6d %6d %6d   ",numNodes,numBuffs,numClients);
   begin_update(txt);
 
   if ( numNodes != 0 ) {
@@ -625,21 +635,21 @@ void MonitoringClusterLine::display() {
   m_hasProblems = true;
 
   if ( tot_prod[0] != 0 )
-    ::sprintf(txt,"%13lld%6d  %8s%4d %64s",tot_prod[0],num_sl[0],"Clients:",num_cl[0],"");
+    ::snprintf(txt,sizeof(txt),"%13lld%6d  %8s%4d %64s",tot_prod[0],num_sl[0],"Clients:",num_cl[0],"");
   else
-    ::sprintf(txt,"%13s%6s  %8s%4s %64s","--","--","","","");
+    ::snprintf(txt,sizeof(txt),"%13s%6s  %8s%4s %64s","--","--","","","");
   ::scrc_put_chars(dis," Relay: ",BOLD,pos,77+CLUSTERLINE_START,0);
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+9+CLUSTERLINE_START,0);
 
   if ( tot_prod[1] != 0 && tot_prod[2] != 0 )
-    ::sprintf(txt,"%13lld%6d  %8s%4d %30s %10lld%6d %8s%4d %64s",
+    ::snprintf(txt,sizeof(txt),"%13lld%6d  %8s%4d %30s %10lld%6d %8s%4d %64s",
 	      tot_prod[1],num_sl[1],"Clients:",num_cl[1],"",
 	      tot_prod[2],num_sl[2],"Clients:",num_cl[2],"");
   else if ( tot_prod[1] != 0 )
-    ::sprintf(txt,"%13lld%6d  %8s%4d  %10s %-62s",tot_prod[1],num_sl[1],
+    ::snprintf(txt,sizeof(txt),"%13lld%6d  %8s%4d  %10s %-62s",tot_prod[1],num_sl[1],
 	      "Clients:",num_cl[1],"","No Output streams");
   else
-    ::sprintf(txt,"%13s%6s  %8s%4s%64s","--","--","","","");
+    ::snprintf(txt,sizeof(txt),"%13s%6s  %8s%4s%64s","--","--","","","");
   ::scrc_put_chars(dis,"  Worker:  ",BOLD,pos,77+57+CLUSTERLINE_START,0);
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+67+CLUSTERLINE_START,0);
   
@@ -654,19 +664,19 @@ void MonitoringClusterLine::display() {
     err = " Monitoring cluster not used yet....", col = NORMAL|INVERSE|GREEN;
   }
   else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN || fslots[2] < SLOTS_MIN ) {
-    ::sprintf(txt," SLOTS at limit:");
-    if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"Relay ");
-    if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"Events ");
-    if ( fslots[2] < SLOTS_MIN ) ::strcat(txt,"Output ");
-    ::sprintf(txt+strlen(txt),"[%d nodes]",int(bad_nodes.size()));
+    ::snprintf(txt,sizeof(txt)," SLOTS at limit:");
+    if ( fslots[0] < SLOTS_MIN ) ::strncat(txt,"Relay ",sizeof(txt)-strlen(txt));
+    if ( fslots[1] < SLOTS_MIN ) ::strncat(txt,"Events ",sizeof(txt)-strlen(txt));
+    if ( fslots[2] < SLOTS_MIN ) ::strncat(txt,"Output ",sizeof(txt)-strlen(txt));
+    ::snprintf(txt+strlen(txt),sizeof(txt)-strlen(txt),"[%d nodes]",int(bad_nodes.size()));
     err = txt, col = BOLD|RED|INVERSE;
   }
   else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN || fspace[2] < SPACE_MIN  ) {
-    ::sprintf(txt," SPACE at limit:");
-    if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"Relay ");
-    if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"Events ");
-    if ( fspace[2] < SPACE_MIN ) ::strcat(txt,"Output ");
-    ::sprintf(txt+strlen(txt),"[%d nodes]",int(bad_nodes.size()));
+    ::snprintf(txt,sizeof(txt)," SPACE at limit:");
+    if ( fspace[0] < SPACE_MIN ) ::strncat(txt,"Relay ",sizeof(txt)-strlen(txt));
+    if ( fspace[1] < SPACE_MIN ) ::strncat(txt,"Events ",sizeof(txt)-strlen(txt));
+    if ( fspace[2] < SPACE_MIN ) ::strncat(txt,"Output ",sizeof(txt)-strlen(txt));
+    ::snprintf(txt+strlen(txt),sizeof(txt)-strlen(txt),"[%d nodes]",int(bad_nodes.size()));
     err = txt, col = BOLD|RED|INVERSE;
   }
   else if ( tot_prod[0]>0 && tot_prod[0] <= m_totRelay ) {
@@ -776,7 +786,7 @@ void FarmClusterLine::display() {
   RTL::Lock lock(InternalDisplay::screenLock());
   time_t t1 = numNodes == 0 ? time(0) : c->firstUpdate().first, prev_update=m_lastUpdate;
   ::strftime(txt,sizeof(txt)," %H:%M:%S ",::localtime(&t1));
-  ::sprintf(txt+::strlen(txt),"%6d %6d %6d   ",numNodes,numBuffs,numClients);
+  ::snprintf(txt+::strlen(txt),sizeof(txt)-strlen(txt),"%6d %6d %6d   ",numNodes,numBuffs,numClients);
   begin_update(txt);
 
   if ( numNodes != 0 ) {
@@ -807,12 +817,12 @@ void FarmClusterLine::display() {
   }
   else if ( slots_min  ) {
     int nbad = int(bad_nodes.size());
-    ::sprintf(txt," SLOTS at limit [%d nodes]",nbad);
+    ::snprintf(txt,sizeof(txt)," SLOTS at limit [%d nodes]",nbad);
     err = txt, col = INVERSE|(nbad>0 ? GREEN : RED);
   }
   else if ( space_min  ) {
     int nbad = int(bad_nodes.size());
-    ::sprintf(txt," SPACE at limit [%d nodes]",nbad);
+    ::snprintf(txt,sizeof(txt)," SPACE at limit [%d nodes]",nbad);
     err = txt, col = INVERSE|(nbad>0 ? GREEN : RED);
   }
   else  {
@@ -849,13 +859,13 @@ void FarmClusterLine::display() {
   if ( min_prod[0] != INT_max || min_prod[1] != INT_max ) {
     if ( min_prod[3]  == INT_max ) min_prod[3] = 0;  // if not existing....
     if ( min_slots[3] == INT_max ) min_slots[3] = 0; // if not existing....
-    ::sprintf(txt,"%10lld%5ld%11lld%6ld%10lld%5ld",
+    ::snprintf(txt,sizeof(txt),"%10lld%5ld%11lld%6ld%10lld%5ld",
               min_prod[3],min_slots[3],
               min_prod[1],min_slots[1],
               min_prod[2],min_slots[2]);
   }
   else {
-    ::sprintf(txt,"%10s%5s%10s%7s%10s%5s","--","--","--","--","--","--");
+    ::snprintf(txt,sizeof(txt),"%10s%5s%10s%7s%10s%5s","--","--","--","--","--","--");
   }
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+47+CLUSTERLINE_START,0);
 #endif
@@ -966,7 +976,7 @@ void HltDeferLine::display() {
   RTL::Lock lock(InternalDisplay::screenLock());
   time_t t1 = numNodes == 0 ? time(0) : s->firstUpdate().first;
   ::strftime(txt,sizeof(txt)," %H:%M:%S ",::localtime(&t1));
-  ::sprintf(txt+strlen(txt),"%6ld %6ld %6ld ",long(numNodes),long(numRuns),long(numFiles));
+  ::snprintf(txt+strlen(txt),sizeof(txt)-strlen(txt),"%6ld %6ld %6ld ",long(numNodes),long(numRuns),long(numFiles));
   begin_update(txt);
 
   if ( numNodes != 0 ) m_lastUpdate = t1;

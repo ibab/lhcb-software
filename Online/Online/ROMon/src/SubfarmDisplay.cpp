@@ -48,6 +48,14 @@ namespace {
       data[3]=c.data[3];
       data[4]=c.data[4];
     }
+    Info& operator=(const Info& c)  {
+      data[0]=c.data[0];
+      data[1]=c.data[1];
+      data[2]=c.data[2];
+      data[3]=c.data[3];
+      data[4]=c.data[4];
+      return *this;
+    }
   };
 }
 
@@ -67,14 +75,14 @@ ClusterDisplay* ROMon::createSubfarmDisplay(int width, int height, int posx, int
 
 /// Standard constructor
 SubfarmDisplay::SubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv)
-: ClusterDisplay(width, height)
+  : ClusterDisplay(width, height), m_nodes(0)
 {
   m_position = Position(posx,posy);
   init(argc, argv);
 }
 
 /// Standard constructor
-SubfarmDisplay::SubfarmDisplay(int argc, char** argv)   {
+SubfarmDisplay::SubfarmDisplay(int argc, char** argv) : ClusterDisplay(), m_nodes(0)   {
   init(argc, argv);
 }
 
@@ -117,7 +125,7 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
   map<string,Info> totals;
   vector<string>   buffers;
   long ntsk_tot = 0;
-  bool partitioned = m_partition.empty();
+  bool partitioned=m_partition.empty();
 
   ::snprintf(text1,sizeof(text1),"           - MBM -  ");
   ::snprintf(text2,sizeof(text2)," Node      Clients ");
@@ -125,6 +133,7 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
 
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     const Buffers& buffs = *(*n).buffers();
+    bool doBreak = false;
     buff_text[0] = 0;
     for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
       if ( !partitioned || strstr((*ib).name,m_partition.c_str()) ) {
@@ -134,9 +143,10 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
 	text1[len+11] = ' ';
 	text1[len+12+strlen((*ib).name)] = ' ';
 	::snprintf(text2+len,sizeof(text2),"%11s%11s%6s%8s%2s","Produced","Consumed","Slots","Space","");
+	doBreak = true;
       }
     }
-    break;
+    if ( doBreak ) break;
   }
   disp->draw_line_reverse(text1);
   disp->draw_line_bold(   text2);
