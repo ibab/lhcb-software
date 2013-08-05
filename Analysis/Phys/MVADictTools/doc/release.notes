@@ -4,6 +4,11 @@
 ! Purpose     : Generic MVA classifier backends for DictTransformTool 
 !-----------------------------------------------------------------------------
 
+! 2013-08-05 - Chris Jones
+ - Split code into a linker library and a component library, to allow
+   sharing between the Gaudi components and the test applications.
+ - Various other minor clean ups to the requirements and CMake files.
+
 ! 2013-08-02 - Marco Clemencic
  - Added the unit test in the CMake configuration. 
 

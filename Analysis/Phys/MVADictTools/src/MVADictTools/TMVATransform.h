@@ -1,5 +1,5 @@
-#ifndef TMVACLASSIFIERTOOL_H
-#define TMVACLASSIFIERTOOL_H
+#ifndef LIB_TMVATRANSFORM_H 
+#define LIB_TMVATRANSFORM_H 1
 
 
 //#include "GaudiKernel/MsgStream.h"
@@ -7,9 +7,7 @@
 #include "Kernel/IParticleDictTool.h"
 #include "TMVA/Reader.h"
 
-
-
-#include "Options.h"
+#include "MVADictTools/Options.h"
 
 /** @class TMVATransform 
  *  Policy class to be used by the DictTransform template
@@ -55,4 +53,4 @@ public:
 
 };
 
-#endif // TMVACLASSIFIERTOOL_H
+#endif // LIB_TMVATRANSFORM_H

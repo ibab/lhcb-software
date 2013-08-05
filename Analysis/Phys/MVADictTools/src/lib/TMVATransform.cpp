@@ -1,13 +1,11 @@
-#include "TMVAClassifierTool.h"
+// Include files 
 
-#include "LoKi/DictTransform.h"
-#include "GaudiKernel/ToolFactory.h"
+#include "MVADictTools/TMVATransform.h"
+
 
 #include "TXMLEngine.h"
 #include "TXMLDocument.h"
 #include "TXMLNode.h"
-
-
 
 
 //==============================================================================
@@ -192,8 +190,3 @@ bool TMVATransform::parseOpts(optmap& options, std::ostream& info) {
   return pass;
 }
 
-
-////==============================================================================
-typedef LoKi::Hybrid::DictTransform<TMVATransform> TMVAClassifierTool;
-DECLARE_TOOL_FACTORY(TMVAClassifierTool)
-//==============================================================================

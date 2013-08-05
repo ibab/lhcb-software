@@ -4,7 +4,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "TMVAClassifierTool.h"
+#include "MVADictTools/TMVATransform.h"
 
 ///-------- Basic Test: can we instantiate an object and call a method? ---
 bool inittest()
