@@ -11,8 +11,9 @@
   Bug fix release of v5r1.
   Use new Gaudi v23r8
   Updated/new packages:
-      Controller          v0r5     Online
-      DIM                 v20r7p1  Online
+      Controller          v0r6     Online
+      DIM                 v20r7p2  Online
+      DefHLTUtils         v1r5     Online
       FarmConfig          v0r1     Online
       OnlineBase          v1r17    Online
       RootCnv             v1r21    Online
