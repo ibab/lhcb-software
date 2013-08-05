@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <stdio.h>
+#include <string.h>
 #include <dic.h>
 
 int no_link = 0x0afefead;
