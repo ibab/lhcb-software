@@ -49,6 +49,7 @@ extern "C" int mbm_prod_a(int argc,char **argv) {
   cli.getopt("partitionid",1,partID);
   int status = wtc_init();
   if( status != WT_SUCCESS ) exit(status);
-  ::lib_rtl_output(LIB_RTL_INFO,"Asynchronous Producer \"%s\" (pid:%d) included in buffer:\"%s\"\n",name.c_str(),Prod::pid(),buffer.c_str());
+  ::lib_rtl_output(LIB_RTL_INFO,"Asynchronous Producer \"%s\" (pid:%d) included in buffer:\"%s\"\n",
+		   name.c_str(),AsyncProd::pid(),buffer.c_str());
   return AsyncProd(buffer,name,partID).run();
 }
