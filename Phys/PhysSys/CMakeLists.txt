@@ -33,5 +33,4 @@ gaudi_depends_on_subdirs(Kernel/SelectionLine
                          Phys/Swimming
                          Phys/TisTosTobbing
                          Phys/VertexFit
-                         Tr/TrackMonitors
                          PhysSel/PhysSelPython)
