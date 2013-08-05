@@ -3,8 +3,8 @@ B->charmless quasi 2-body selection
 '''
 
 __author__ = ['Fred Blanc', 'Albert Puig']
-__date__ = '04/09/2012'
-__version__ = '$Revision: 2.6 $'
+__date__ = '05/08/2013'
+__version__ = '$Revision: 2.7 $'
 
 __all__ = ( 'B2Quasi2BodyConf',
             'makeDiTrackList',
@@ -13,18 +13,18 @@ __all__ = ( 'B2Quasi2BodyConf',
 
 config_params = {'Q2BPrescale'     : 1.,
                  'Q2BTrkGhostProb' : 0.5,
-                 'Q2BTrkMinIPChi2' : 25.,
+                 'Q2BTrkMinIPChi2' : 16.,
                  'Q2BTrkMinHiPT'   : 1000.,
                  'Q2BResMinPT'     : 600.,
                  'Q2BResMinHiPT'   : 1000.,
-                 'Q2BResMaxMass'   : 1000.,
+                 'Q2BResMaxMass'   : 1100.,
                  'Q2BResVtxChi2DOF': 9.,
                  'Q2BBMinPT'       : 2500.,
-                 'Q2BBMinM4pi'     : 3800.,
-                 'Q2BBMinM3pi'     : 4400.,
-                 'Q2BBMaxM'        : 5700.,
-                 'Q2BBMaxCorrM'    : 6000.,
-                 'Q2BBVtxChi2DOF'  : 6.}
+                 'Q2BBMinM4pi'     : 3500.,
+                 'Q2BBMinM3pi'     : 4200.,
+                 'Q2BBMaxM'        : 6700.,
+                 'Q2BBMaxCorrM'    : 7000.,
+                 'Q2BBVtxChi2DOF'  : 9.}
 
 
 from Gaudi.Configuration import *
