@@ -524,15 +524,15 @@ void StorageClusterLine::display() {
   }
   else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN ) {
     ::snprintf(txt,sizeof(txt)," SLOTS at limit:");
-    if ( fslots[0] < SLOTS_MIN ) ::strncat(txt,"Recv ",sizeof(txt)-strlen(txt));
-    if ( fslots[1] < SLOTS_MIN ) ::strncat(txt,"Stream ",sizeof(txt)-strlen(txt));
+    if ( fslots[0] < SLOTS_MIN ) ::strncat(txt,"Recv ",sizeof(txt)-strlen(txt)-1);
+    if ( fslots[1] < SLOTS_MIN ) ::strncat(txt,"Stream ",sizeof(txt)-strlen(txt)-1);
     ::snprintf(txt+strlen(txt),sizeof(txt)-strlen(txt),"[%d nodes]",int(bad_nodes.size()));
     err = txt, col = BOLD|RED|INVERSE;
   }
   else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN ) {
     ::strncpy(txt," SPACE at limit:",sizeof(txt));
-    if ( fspace[0] < SPACE_MIN ) ::strncat(txt,"Recv ",sizeof(txt)-strlen(txt));
-    if ( fspace[1] < SPACE_MIN ) ::strncat(txt,"Stream ",sizeof(txt)-strlen(txt));
+    if ( fspace[0] < SPACE_MIN ) ::strncat(txt,"Recv ",sizeof(txt)-strlen(txt)-1);
+    if ( fspace[1] < SPACE_MIN ) ::strncat(txt,"Stream ",sizeof(txt)-strlen(txt)-1);
     ::snprintf(txt+strlen(txt),sizeof(txt)-strlen(txt),"[%d nodes]",int(bad_nodes.size()));
     err = txt, col = BOLD|RED|INVERSE;
   }
@@ -665,17 +665,17 @@ void MonitoringClusterLine::display() {
   }
   else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN || fslots[2] < SLOTS_MIN ) {
     ::snprintf(txt,sizeof(txt)," SLOTS at limit:");
-    if ( fslots[0] < SLOTS_MIN ) ::strncat(txt,"Relay ",sizeof(txt)-strlen(txt));
-    if ( fslots[1] < SLOTS_MIN ) ::strncat(txt,"Events ",sizeof(txt)-strlen(txt));
-    if ( fslots[2] < SLOTS_MIN ) ::strncat(txt,"Output ",sizeof(txt)-strlen(txt));
+    if ( fslots[0] < SLOTS_MIN ) ::strncat(txt,"Relay ", sizeof(txt)-strlen(txt)-1);
+    if ( fslots[1] < SLOTS_MIN ) ::strncat(txt,"Events ",sizeof(txt)-strlen(txt)-1);
+    if ( fslots[2] < SLOTS_MIN ) ::strncat(txt,"Output ",sizeof(txt)-strlen(txt)-1);
     ::snprintf(txt+strlen(txt),sizeof(txt)-strlen(txt),"[%d nodes]",int(bad_nodes.size()));
     err = txt, col = BOLD|RED|INVERSE;
   }
   else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN || fspace[2] < SPACE_MIN  ) {
     ::snprintf(txt,sizeof(txt)," SPACE at limit:");
-    if ( fspace[0] < SPACE_MIN ) ::strncat(txt,"Relay ",sizeof(txt)-strlen(txt));
-    if ( fspace[1] < SPACE_MIN ) ::strncat(txt,"Events ",sizeof(txt)-strlen(txt));
-    if ( fspace[2] < SPACE_MIN ) ::strncat(txt,"Output ",sizeof(txt)-strlen(txt));
+    if ( fspace[0] < SPACE_MIN ) ::strncat(txt,"Relay ", sizeof(txt)-strlen(txt)-1);
+    if ( fspace[1] < SPACE_MIN ) ::strncat(txt,"Events ",sizeof(txt)-strlen(txt)-1);
+    if ( fspace[2] < SPACE_MIN ) ::strncat(txt,"Output ",sizeof(txt)-strlen(txt)-1);
     ::snprintf(txt+strlen(txt),sizeof(txt)-strlen(txt),"[%d nodes]",int(bad_nodes.size()));
     err = txt, col = BOLD|RED|INVERSE;
   }
