@@ -4,6 +4,11 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v12r7 2013-08-06 ==========================
+! 2013-08-06 - Gloria Corti
+ - Introduce use of new LHAPDFSets data package where the PDF used by LHCb now
+   reside
+
 !========================= GENSER v12r6g1 2013-07-24 =========================
 ! 2013-07-24 - Gloria Corti
  - Identical to v12r4 but with 'g1' tag to allow to pick up the generators
