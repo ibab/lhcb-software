@@ -55,7 +55,8 @@ package_names = ['XmlDDDB',
                  'GDMLData',
                  'QMTestFiles',
                  'Ariadne',
-                 'RawEventFormat']
+                 'RawEventFormat',
+                 'LHAPDFSets']
 
 class PackageConfException(Exception):
     pass
@@ -352,4 +353,6 @@ QMTestFiles.setProject("PARAM")#IGNORE:E0602
 Ariadne.setProject('TOOLS')#IGNORE:E0602
 
 RawEventFormat.setProject("DBASE")#IGNORE:E0602
+
+LHAPDFSets.setProject("DBASE")#IGNORE:E0602
 
