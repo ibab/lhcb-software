@@ -88,10 +88,10 @@ void TMVATransform::readWeightsFile(std::ostream& info) {
   if (!fin.good()) { // check existence of WeightFile path
     if (m_weightfile == "") {
       info << "ERROR  ";
-      info << "WeightFile not given." << endmsg;
+      info << "WeightFile not given." << std::endl;
     } else {
-      info << "WeightFile \"" << m_weightfile << "\" not found." << endmsg;
-      info << "  TMVA will not be run.  The output will be 0 for each event." << endmsg;
+      info << "WeightFile \"" << m_weightfile << "\" not found." << std::endl;
+      info << "  TMVA will not be run.  The output will be 0 for each event." << std::endl;
     }
     m_setup_success &= false;
     return;
@@ -99,7 +99,7 @@ void TMVATransform::readWeightsFile(std::ostream& info) {
     m_setup_success &= true;
   }
   // Setup the XML parser
-  info << "Reading WeightFile \"" << m_weightfile << "\"" << endmsg;
+  info << "Reading WeightFile \"" << m_weightfile << "\"" << std::endl;
   TXMLEngine xmlparser;
   XMLDocPointer_t doc = xmlparser.ParseFile(m_weightfile.c_str());
   XMLNodePointer_t root = xmlparser.DocGetRootElement(doc);
@@ -115,33 +115,33 @@ void TMVATransform::readWeightsFile(std::ostream& info) {
   while (child != NULL) {
     nodename = xmlparser.GetNodeName(child);
     if (nodename == "GeneralInfo") { // Get general info
-      info << "Node name: " << nodename << endmsg;
+      info << "Node name: " << nodename << std::endl;
       gchild = xmlparser.GetChild(child);
       while (gchild != NULL) {
         name = xmlparser.GetAttr(gchild, "name");
         val = xmlparser.GetAttr(gchild, "value");
-        info << name << " : " << val << endmsg;
+        info << name << " : " << val << std::endl;
         gchild = xmlparser.GetNext(gchild);
       }
     } else if (nodename == "Variables") { // Get training variables
-      info << "Node name: " << nodename << endmsg;
+      info << "Node name: " << nodename << std::endl;
       nvar = atoi(xmlparser.GetAttr(child, "NVar"));
-      info << "Identified " << nvar << " training variables:" << endmsg;
+      info << "Identified " << nvar << " training variables:" << std::endl;
       gchild = xmlparser.GetChild(child);
       for (unsigned i=0; i<nvar; ++i) {
         exp = xmlparser.GetAttr(gchild, "Expression");
-        info << "  " << exp; // << endmsg;
+        info << "  " << exp; // << std::endl;
         m_variables.push_back(exp);
         gchild = xmlparser.GetNext(gchild);
       }
     } else if (nodename == "Spectators") { // Get spectator variables
-      info << "Node name: " << nodename << endmsg;
+      info << "Node name: " << nodename << std::endl;
       nvar = atoi(xmlparser.GetAttr(child, "NSpec"));
-      info << "Identified " << nvar << " spectator variables:" << endmsg;
+      info << "Identified " << nvar << " spectator variables:" << std::endl;
       gchild = xmlparser.GetChild(child);
       for (unsigned i=0; i<nvar; ++i) {
         exp = xmlparser.GetAttr(gchild, "Expression");
-        info << "  " << exp; // << endmsg;
+        info << "  " << exp; // << std::endl;
         m_spectator.push_back(exp);
         gchild = xmlparser.GetNext(gchild);
       }
@@ -156,10 +156,10 @@ void TMVATransform::readWeightsFile(std::ostream& info) {
 void TMVATransform::setupReader(std::ostream& info) {
   // Check required variables
   if (m_variables.size() == 0) {
-    info << "No variables set" << endmsg;
+    info << "No variables set" << std::endl;
   }
   if (m_weightfile == "") {
-    info << "No WeightFile set" << endmsg;
+    info << "No WeightFile set" << std::endl;
   }
   // Initialize new TMVA::Reader with training variables and reader options
   m_reader = new TMVA::Reader(m_variables, m_reader_opts.c_str());
