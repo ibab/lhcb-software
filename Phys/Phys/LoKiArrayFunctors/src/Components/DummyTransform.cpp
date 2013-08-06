@@ -36,10 +36,10 @@ DummyTransform::Init(optmap options, std::ostream& info){
   /// do something to configure the tool 
   // print options
   BOOST_FOREACH(optmap::value_type opt, options){
-    info << opt.first << " : " << opt.second << endmsg;
+    info << opt.first << " : " << opt.second << std::endl;
   }
 
-  info << "Initializing DummyTransform" << endmsg;
+  info << "Initializing DummyTransform" << std::endl;
   return true; // true signals success
 }
 ///---------------------------------------------------------------------------------------

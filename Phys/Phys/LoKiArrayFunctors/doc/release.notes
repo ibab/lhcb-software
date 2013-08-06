@@ -5,6 +5,9 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2013-08-06 Sebastian Neubert
+ - small fix: replaced endmsg with std::endl in DummyTransform
+
 ! 2013-08-02 Sebastian Neubert
  - simplified the DictTransform policy to use 
    std::ostream instead of MsgStream to make dependencies lighter
