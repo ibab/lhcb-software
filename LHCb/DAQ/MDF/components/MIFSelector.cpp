@@ -47,6 +47,7 @@ namespace LHCb  {
     *  @version 1.0
     */
   class MIFContext : public RawDataSelector::LoopContext, protected MDFIO {
+  protected:
     typedef Gaudi::IDataConnection Connection;
     typedef std::map<int,Connection*> FidMap;
 
@@ -58,11 +59,23 @@ namespace LHCb  {
     FidMap               m_fidMap;
     int                  m_mifFID;
     IMessageSvc*         m_msg;
+  private:
+    /// Usage of copy constructor is not allowed
+    MIFContext(const MIFContext&)  
+      : RawDataSelector::LoopContext(0), 
+        MDFIO(MDFIO::MDF_RECORDS,""), m_fileOffset(0), m_mifSel(0), m_mifFID(0)
+    {
+      m_header = 0;
+      m_msg = 0;
+    } 
+    /// Assignment is not allowed
+    MIFContext& operator=(const MIFContext&)  {
+      return *this;
+    }
   public:
     /// Standard constructor
     MIFContext(const MIFSelector* pSel) 
-      : RawDataSelector::LoopContext(pSel), 
-        MDFIO(MDFIO::MDF_RECORDS,pSel->name()), 
+      : RawDataSelector::LoopContext(pSel), MDFIO(MDFIO::MDF_RECORDS,pSel->name()), 
         m_fileOffset(0), m_mifSel(pSel), m_mifFID(0)
     { 
       m_header = (MIFHeader*)new char[1024];

@@ -77,7 +77,7 @@ StatusCode MDFWriter::initialize()   {
   m_connection = new RawDataConnection(this,con);
   status = m_ioMgr->connectWrite(m_connection,IDataConnection::RECREATE,"MDF");
   status.ignore();
-  if ( m_connection->isConnected() )
+  if ( m_connection && m_connection->isConnected() )
     log << MSG::INFO << "Received event request connection." << endmsg;
   else
     log << MSG::ERROR << "FAILED receiving event request connection." << endmsg;
@@ -90,7 +90,7 @@ StatusCode MDFWriter::finalize() {
     MsgStream log(msgSvc(), name());
     m_md5->Final();
     log << MSG::INFO << "Size:" << std::setw(8) << m_bytesWritten << " Output:" << m_connectParams
-  << " MD5 sum:" << m_md5->AsString() << endmsg;
+	<< " MD5 sum:" << m_md5->AsString() << endmsg;
   }
   if ( m_ioMgr )  {
     m_ioMgr->disconnect(m_connection).ignore();

@@ -57,7 +57,7 @@ void RawDataSelector::LoopContext::close()    {
 }
 
 RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcloc)
-  : Service( nam, svcloc), m_rootCLID(CLID_NULL), m_evtCount(0)
+  : Service( nam, svcloc), m_rootCLID(CLID_NULL), m_ioMgr(0), m_evtCount(0)
 {
   declareProperty("DataManager", m_ioMgrName="Gaudi::IODataManager/IODataManager");
   declareProperty("TriggerMask", m_trgMask);

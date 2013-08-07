@@ -15,16 +15,18 @@
 #include "TMD5.h"
 #include <ctime>
 #include <limits>
+#include <memory>
 
 enum { KBYTE=1024, MBYTE=1048576, GBYTE=1073741824 };
 
 using namespace LHCb;
 using namespace Gaudi;
+using namespace std;
 
 /// Initializing constructor
-RawDataFile::RawDataFile(Gaudi::IIODataManager* m, IInterface* owner, const std::string& fname, bool md5, unsigned int run_no, unsigned int orb)
+RawDataFile::RawDataFile(Gaudi::IIODataManager* m, IInterface* owner, const string& fname, bool md5, unsigned int run_no, unsigned int orb)
 : m_bytesWritten(0), m_name(fname), m_runNumber(run_no), 
-  m_firstOrbit(orb), m_lastOrbit(std::numeric_limits<unsigned int>::max()),
+  m_firstOrbit(orb), m_lastOrbit(numeric_limits<unsigned int>::max()),
   m_closeStamp(0), m_eventCounter(0), m_ioMgr(m), m_owner(owner)
 {
   m_connection = 0;
@@ -69,9 +71,9 @@ StatusCode RawDataFile::close()    {
   return StatusCode::SUCCESS;
 }
 /// Allocate space for IO buffer
-std::pair<char*,int> RawDataFile::getDataSpace(size_t len)  {
+pair<char*,int> RawDataFile::getDataSpace(size_t len)  {
   m_data.reserve(len);
-  return std::pair<char*,int>(m_data.data(), m_data.size());
+  return pair<char*,int>(m_data.data(), m_data.size());
 }
 
 /// Set last valid orbit. Only lower orbits are still accepted
@@ -81,8 +83,8 @@ void RawDataFile::setLastOrbit(unsigned int orbit)   {
 }
 
 /// Standard algorithm constructor
-RawDataWriter::RawDataWriter(const std::string& nam, ISvcLocator* pSvc)
-: Algorithm(nam, pSvc), MDFIO(MDFIO::MDF_RECORDS, nam), m_bytesWritten(0), m_fileNo(0)
+RawDataWriter::RawDataWriter(const string& nam, ISvcLocator* pSvc)
+  : Algorithm(nam, pSvc), MDFIO(MDFIO::MDF_RECORDS, nam), m_bytesWritten(0), m_fileNo(0), m_ioMgr(0)
 {
   declareProperty("MbytesPerFile",  m_MbytesPerFile);               // kBytes to be written per file
   declareProperty("Volume",         m_volume="/tmp");
@@ -129,7 +131,7 @@ StatusCode RawDataWriter::finalize() {
 }
 
 /// Allocate space for IO buffer
-std::pair<char*,int> RawDataWriter::getDataSpace(void* const ioDesc, size_t len)  {
+pair<char*,int> RawDataWriter::getDataSpace(void* const ioDesc, size_t len)  {
   RawDataFile* f = (RawDataFile*)ioDesc;
   return f->getDataSpace(len);
 }
@@ -154,7 +156,7 @@ RawDataFile* RawDataWriter::outputFile(unsigned int run_no, unsigned int orbit) 
   if ( the_first_orb < orbit || m_connections.empty() )   {
     static unsigned int last_run_no = 0;
     char txt[32];
-    std::string filePath = m_connectParams;
+    string filePath = m_connectParams;
     size_t idx;
 
     if ( last_run_no != run_no )  {
@@ -162,35 +164,34 @@ RawDataFile* RawDataWriter::outputFile(unsigned int run_no, unsigned int orbit) 
       m_fileNo = 0;
     }
     idx = filePath.find("%STREAM");
-    while ( idx != std::string::npos )  {
+    while ( idx != string::npos )  {
       filePath.replace(idx,7,m_stream.c_str());
       idx = filePath.find("%STREAM");
     }
     sprintf(txt,"%03d",m_fileNo++);
     idx = filePath.find("%FNO");
-    while ( idx != std::string::npos )  {
+    while ( idx != string::npos )  {
       filePath.replace(idx,4,txt);
       idx = filePath.find("%FNO");
     }
     sprintf(txt,"Run%08d",int(run_no));
     idx = filePath.find("%RNO");
-    while ( idx != std::string::npos )  {
+    while ( idx != string::npos )  {
       filePath.replace(idx,4,txt);
       idx = filePath.find("%RNO");
     }
-    RawDataFile* f = new RawDataFile(m_ioMgr,this,filePath, m_genMD5, run_no, orbit);
+    auto_ptr<RawDataFile> f(new RawDataFile(m_ioMgr,this,filePath,m_genMD5,run_no,orbit));
     if ( f->open().isSuccess() )  {
       /// register file with run database
-      if ( !submitRunDbOpenInfo(f, false).isSuccess() )  {
+      if ( !submitRunDbOpenInfo(f.get(), false).isSuccess() )  {
         MsgStream log(msgSvc(), name());
         log << MSG::ERROR << "Failed to register file:" << filePath 
             << " with run database." << endmsg;
         return 0;
       }
-      m_connections.push_back(f);
-      return f;
+      m_connections.push_back(f.get());
+      return f.release();
     }
-    delete f;
   }
   else  {
     // This means the event is soooooo late that the file already was closed...
@@ -236,7 +237,7 @@ StatusCode RawDataWriter::execute()    {
     if ( sc.isSuccess() )  {
       /// Mark the file to be used only for event, which were taken _before_ this one.
       if ( f->bytesWritten() > MBYTE*m_MbytesPerFile )  {
-        if ( f->lastOrbit() == std::numeric_limits<unsigned int>::max() )  {
+        if ( f->lastOrbit() == numeric_limits<unsigned int>::max() )  {
           f->setLastOrbit(h.H1->orbitNumber());
         }
       }

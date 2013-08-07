@@ -34,6 +34,11 @@ namespace LHCb  {
     /// Flag with recipe to access transient data
     int                  m_type;
 
+  private:
+    /// Assigment opertor is not allowed!
+    RawDataAddress& operator=(const RawDataAddress& ) {
+      return *this; 
+    }
   public:
     enum { NO_TYPE, DATA_TYPE, BANK_TYPE, MEP_TYPE, TAE_TYPE };
 

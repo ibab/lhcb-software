@@ -687,14 +687,12 @@ StatusCode
 LHCb::MDFIO::readBuffer(void* const /* ioDesc */, void* const /* data */, size_t /* len */)  {
   throw std::runtime_error("LHCb::MDFIO::readBuffer: "\
     "This is a default implementation which should never be called!");
-  return StatusCode::FAILURE;
 }
 
 StatusCode 
 LHCb::MDFIO::writeBuffer(void* const /* ioDesc */, const void* /* data */, size_t /* len */)  {
   throw std::runtime_error("LHCb::MDFIO::writeBuffer: "\
     "This is a default implementation which should never be called!");
-  return StatusCode::FAILURE;
 }
 
 // Pass raw banks to RawEvent object

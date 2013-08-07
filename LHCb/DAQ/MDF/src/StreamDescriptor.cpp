@@ -371,6 +371,7 @@ Access LHCb::StreamDescriptor::bind(const std::string& specs)  {
   Access result;
   std::string file, proto;
   Networking::sockaddr_in sin;
+  ::memset(&sin,0,sizeof(sin));
   result.type = char(::toupper(specs[0]));
   switch(result.type) {
     case 'I':          //  DATA='ip://137.138.142.82:8000'

@@ -178,30 +178,32 @@ namespace LHCb  {
     virtual ~RawDataSelector()  {}
 
   protected:
+    /// Definition of the masj type
+    typedef std::vector<unsigned int> Mask;
 
     // Data Members
     /// ROOT class ID in TES
-    CLID                m_rootCLID;
+    CLID                   m_rootCLID;
     /// Name of ROOT element in TES
-    std::string         m_rootName;
+    std::string            m_rootName;
     /// Property: name of the file manager service
-    std::string         m_ioMgrName;
+    std::string            m_ioMgrName;
     /// Property: input dataset name
-    std::string         m_input;
+    std::string            m_input;
     /// Pointer to file manager service
     Gaudi::IIODataManager* m_ioMgr;
     /// Property: First event to process
-    int                 m_skipEvents;
+    int                    m_skipEvents;
     /// Property: printout frequency
-    int                 m_printFreq;
+    int                    m_printFreq;
     /// Property: additional dataspace to be used to add data [KBYTES]. Default=0
-    int                 m_addSpace;
+    int                    m_addSpace;
     /// Property: required trigger mask from MDF header (only 128 bits significant)
-    std::vector<unsigned int>    m_trgMask;
+    Mask                   m_trgMask;
     /// Property: veto mask from MDF header (only 128 bits significant)
-    std::vector<unsigned int>    m_vetoMask;
+    Mask                   m_vetoMask;
     /// Event record count
-    mutable int         m_evtCount;
+    mutable int            m_evtCount;
   };
 }
 #endif  // MDF_RAWDATASELECTOR_H
