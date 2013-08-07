@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2013-08-07 - Victor Coco
+ - Add new partitionning procedure for jet maker with maximal IP cut.
+
 !========================= JetAccessories v3r0 2013-08-01 =========================
 
 ! 2013-07-31 - Chris Jones

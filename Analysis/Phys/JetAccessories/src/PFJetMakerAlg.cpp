@@ -73,7 +73,15 @@ namespace LoKi
       , m_maker     ( 0   )
       , m_associate2Vertex ( false  )
       , m_applyJEC ( false  )
-      , m_shiftJEC ( 0.  )
+      , m_onlysavewithB ( false  )
+      , m_minIPChi2PVassoc( false  )
+      , m_dist(0)
+      , m_minlogIPtoPV_Down(4.)
+      , m_minlogIPtoPV_Up(1.5)
+      , m_minlogIPtoPV_Long(1.5)
+      , m_minlogIPChi2toPV_Down(7.5)
+      , m_minlogIPChi2toPV_Up(9.5)
+      , m_minlogIPChi2toPV_Long(9.5)
     { 
       // 
       declareProperty 
@@ -99,6 +107,9 @@ namespace LoKi
       declareProperty("OnlySaveWithB"  , 
 		      m_onlysavewithB  ,
 		      "Only save jets containing a B meson");
+      declareProperty("PVassociationMinIPChi2"  , 
+		      m_minIPChi2PVassoc  ,
+		      "True: will use the minIPchi2 to associate particles with pointing info to the PV, False is more refined");
       
       declareProperty("HistoPath"  , m_histo_path = "JEC" , "The path of the JEC histograms" );
       //
@@ -187,10 +198,16 @@ namespace LoKi
     /// input particles to consider
     std::vector < int > m_inputTypes ;
     bool m_onlysavewithB;
-    
-    
-    
-    
+    bool m_minIPChi2PVassoc;
+    const IDistanceCalculator* m_dist;
+
+    double m_minlogIPtoPV_Down;
+    double m_minlogIPtoPV_Up;
+    double m_minlogIPtoPV_Long;
+    double m_minlogIPChi2toPV_Down;
+    double m_minlogIPChi2toPV_Up;
+    double m_minlogIPChi2toPV_Long;
+
     
     // ========================================================================    
   };
@@ -241,6 +258,12 @@ StatusCode LoKi::PFJetMaker::initialize ()
     m_inputTypes.push_back(LHCb::PFParticle::Charged0Momentum);
     m_inputTypes.push_back(LHCb::PFParticle::ChargedInfMomentum);
     m_inputTypes.push_back(LHCb::PFParticle::IsolatedPhoton);
+  }
+
+  m_dist   = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
+  if ( !m_dist ) {   
+    fatal() << "Distance Calculator Tool could not be found" << endreq;
+    return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS ;
 }
@@ -299,14 +322,140 @@ StatusCode LoKi::PFJetMaker::analyse   ()
       // Prepare the inputs
       IJetMaker::Input inputs;
       for (Range::const_iterator i_p = part.begin() ; part.end() != i_p ; i_p++ ){ 
+        //always()<<"here "<<endreq;
+        
        	if (!GoodInput(*i_p))continue;
-        if ( PerPVinputs(*i_p) && ( std::abs( bestVertexVZ(*i_p) - VZ(pv) ) > 1e-6 
+        //always()<<"there "<<m_minIPChi2PVassoc<<endreq;
+        if ( m_minIPChi2PVassoc && PerPVinputs(*i_p) && ( std::abs( bestVertexVZ(*i_p) - VZ(pv) ) > 1e-6 
                                     || std::abs( bestVertexVY(*i_p) - VY(pv) ) > 1e-6 
                                     || std::abs( bestVertexVX(*i_p) - VX(pv) ) > 1e-6 ) ){continue;}
-        else if ( PerPVinputs(*i_p) )	inputs.push_back(*i_p); 
-        else if ( AllPVinputs(*i_p) )	inputs.push_back(*i_p); 
-        else continue;
+        else if ( m_minIPChi2PVassoc && PerPVinputs(*i_p) )	inputs.push_back(*i_p);
+        else if ( m_minIPChi2PVassoc && AllPVinputs(*i_p) )	inputs.push_back(*i_p); 
+        else if (!m_minIPChi2PVassoc && PerPVinputs(*i_p)){
+          //always()<<"tag1"<<endreq;
+          
+          double ip(1e8), chi2(1e8);
+          StatusCode dist = m_dist->distance ( (*i_p), pv, ip, chi2 );
+          //always()<<"tag2"<<endreq;
+          if (ip<0. || chi2<0. ) continue;
+          //always()<<"tag3"<<endreq;
+          double thisPVchi2 = chi2;
+          // Cut for long tracks
+          if ( (*i_p)->proto()!= NULL && (*i_p)->proto()->track()->type()== LHCb::Track::Long && ip< TMath::Log( m_minlogIPtoPV_Long) &&  TMath::Log(chi2) <  m_minlogIPChi2toPV_Long ){
+            bool useIt = true;
+          //always()<<"tag4"<<endreq;
+            for ( LHCb::RecVertex::Range::const_iterator i_pv2 = pvs.begin() ; pvs.end() != i_pv2 ; i_pv2++ ){
+              if (i_pv2 == i_pv) continue;
+          //always()<<"tag5"<<endreq;
+              dist = m_dist->distance ( (*i_p), pv, ip, chi2 );
+          //always()<<"tag6"<<endreq;
+              if ( chi2<0. ) continue;
+          //always()<<"tag7"<<endreq;
+              if( chi2<thisPVchi2){
+                useIt = false;
+                break;
+              }
+          //always()<<"tag8"<<endreq;
+            }
+            if (useIt) inputs.push_back(*i_p);
+          }
+          else if( (*i_p)->proto()!= NULL && ((*i_p)->proto()->track()->type()== LHCb::Track::Upstream || (*i_p)->proto()->track()->type()== LHCb::Track::Velo) && 
+                   TMath::Log(ip) < m_minlogIPtoPV_Up &&  TMath::Log(chi2) < m_minlogIPChi2toPV_Up ){
+          //always()<<"tag9"<<endreq;
+           bool useIt = true;
+            for ( LHCb::RecVertex::Range::const_iterator i_pv2 = pvs.begin() ; pvs.end() != i_pv2 ; i_pv2++ ){
+              if (i_pv2 == i_pv) continue;
+          //always()<<"tag10"<<endreq;
+              dist = m_dist->distance ( (*i_p), pv, ip, chi2 );
+              if (ip<0. || chi2<0. ) continue;
+          //always()<<"tag11"<<endreq;
+              if( chi2<thisPVchi2){
+                useIt = false;
+                break;
+              }
+            }
+            if (useIt) inputs.push_back(*i_p);
+          }
+          else{
+           bool useIt = true;
+           //always()<<"tag12 "<<pvs.size()<<endreq;
+            for ( LHCb::RecVertex::Range::const_iterator i_pv2 = pvs.begin() ; pvs.end() != i_pv2 ; i_pv2++ ){
+              //always()<<" tagaaa"<<endreq;
+              if (i_pv2 == i_pv){
+                //always()<<"tag12a "<<endreq;
+                continue;
+              }
+              
+          //always()<<"tag13"<<endreq;
+              dist = m_dist->distance ( (*i_p), pv, ip, chi2 );
+          //always()<<"tag14"<<endreq;
+              if ( chi2<0. ) continue;
+              if( chi2<thisPVchi2){
+          //always()<<"tag15"<<endreq;
+                useIt = false;
+                break;
+              }
+          //always()<<"tag15a"<<endreq;
+            }
+          //always()<<"tag15b"<<endreq;
+            if (useIt) inputs.push_back(*i_p);
+          //always()<<"tag15c"<<endreq;
+          }
+          //always()<<"tag15d"<<endreq;
+          // make the ip selection
+        } 
+        else if (!m_minIPChi2PVassoc && AllPVinputs(*i_p)){
+          // make the ip selection for downstream
+          //always()<<"tag16a"<<endreq; 
+          if (  ( PFType(*i_p) > LHCb::PFParticle::Charged && PFType(*i_p) < LHCb::PFParticle::Neutral )
+                || ( PFType(*i_p) == LHCb::PFParticle::ChargedInfMomentum )
+                || ( PFType(*i_p) == LHCb::PFParticle::Charged0Momentum )){
+            
+            if( (*i_p)->proto()->track()->type()== LHCb::Track::Downstream){ 
+              //always()<<"tag16"<<endreq; 
+              double ip(1e8), chi2(1e8);
+              //always()<<"tag17"<<endreq; 
+              StatusCode dist = m_dist->distance ( (*i_p), pv, ip, chi2 );
+              //always()<<"tag18"<<endreq; 
+              double thisPVchi2 = chi2;
+              if ( chi2<0. ) continue;
+              //always()<<"tag19"<<endreq; 
+              if( TMath::Log(ip) < m_minlogIPtoPV_Down &&  TMath::Log(chi2) < m_minlogIPChi2toPV_Down ){
+                bool useIt = true;
+                //always()<<"tag20"<<endreq; 
+                for ( LHCb::RecVertex::Range::const_iterator i_pv2 = pvs.begin() ; pvs.end() != i_pv2 ; i_pv2++ ){
+                  if (i_pv2 == i_pv) continue;
+                  //always()<<"tag21"<<endreq; 
+                  dist = m_dist->distance ( (*i_p), pv, ip, chi2 );
+                  //always()<<"tag22"<<endreq; 
+                  if (ip<0. || chi2<0. ) continue;
+                  if( chi2<thisPVchi2){
+                    useIt = false;
+                    break;
+                  }
+                }
+                if (useIt) inputs.push_back(*i_p);
+              }
+            }
+          }
+          else{
+            inputs.push_back(*i_p);
+          }
+        }
+        
+        else if (m_minIPChi2PVassoc && AllPVinputs(*i_p)){
+            inputs.push_back(*i_p);
+        }
+
+        else{
+          continue;
+          
+          //always()<<"tag23bla"<<endreq; 
+        }
+        //always()<<"tag23blu"<<endreq; 
       }
+
+          //always()<<"tag23"<<endreq; 
       // ouput container
       IJetMaker::Jets jets ;
       // make the jets 
