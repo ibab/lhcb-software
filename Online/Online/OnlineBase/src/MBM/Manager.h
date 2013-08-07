@@ -20,14 +20,18 @@ namespace MBM {
     /// BM identifier
     ServerBMID    m_bm;
     /// Global section module name for the control sections
-    char          ctrl_mod[32];
+    char          ctrl_mod[64];
     /// Global section module name for the buffer data
-    char          buff_mod[32];
+    char          buff_mod[64];
     /// Buffer id
     const   char* bm_id;
     /// Global section handle to buffer inventory
     lib_rtl_gbl_t bm_all;
-
+  private:
+    /// A copy constructor cannot be provided
+    Manager(const Manager& c);
+    /// The assignment operator cannot be provided
+    Manager& operator=(const Manager& c);
   public:
     /// Default constructor
     Manager();

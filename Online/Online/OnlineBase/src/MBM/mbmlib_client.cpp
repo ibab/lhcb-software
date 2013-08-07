@@ -61,6 +61,7 @@ BMDESCRIPT::BMDESCRIPT() : qentry_t(0,0) {
   buffer_add        = 0;
   fifo              = -1;
   reqFifo           = -1;
+  fifoName[0]       = 0;
   name[0]           = 0;
   bm_name[0]        = 0;
   cancelled         = false;
@@ -211,9 +212,9 @@ BMID mbm_include(const char* bm_name, const char* name, int partid) {
   int status;
   char text[256];
   std::auto_ptr<BMDESCRIPT> bm(new BMDESCRIPT());
-  ::strncpy(bm->bm_name,bm_name,sizeof(bm->bm_name));
+  ::strncpy(bm->bm_name,bm_name,sizeof(bm->bm_name)-1);
   bm->bm_name[sizeof(bm->bm_name)-1] = 0;
-  ::strncpy(bm->name,name,sizeof(bm->name));
+  ::strncpy(bm->name,name,sizeof(bm->name)-1);
   bm->name[sizeof(bm->name)-1] = 0;
   bm->pid    = ::lib_rtl_pid();
   bm->partID = partid;
@@ -257,7 +258,7 @@ BMID mbm_include(const char* bm_name, const char* name, int partid) {
   // Exchange inclusion message with server instance
   MSG msg(MSG::INCLUDE);
   MSG::include_t& inc = msg.data.include;
-  ::strncpy(msg.data.include.name,bm->name,sizeof(msg.data.include.name));
+  ::strncpy(msg.data.include.name,bm->name,sizeof(msg.data.include.name)-1);
   inc.name[sizeof(inc.name)-1] = 0;
   inc.serverid = 0;
   inc.pid = bm->pid;
@@ -502,7 +503,7 @@ static int _mbm_declare_event (BMID bm, int len, int evtype, const unsigned int*
   evt.size = len;
   evt.wait = wait;
   evt.type = evtype;
-  ::strncpy(evt.dest,dst ? dst : "", sizeof(evt.dest));
+  ::strncpy(evt.dest,dst ? dst : "", sizeof(evt.dest)-1);
   ::memcpy(evt.trmask,trmask,sizeof(evt.trmask));
   *free_add = 0;
   *free_size = 0;
@@ -639,7 +640,7 @@ int mbm_space_in_buffer (BMID bm, int* total, int* large)  {
 int mbm_process_exists(BMID bm, const char* name, int* exists)  {
   MBM_CHECK_BMID(bm);
   MSG msg(MSG::PROCESS_EXISTS,bm->user);
-  ::strncpy(msg.data.process_exists.name,name,sizeof(msg.data.process_exists.name));
+  ::strncpy(msg.data.process_exists.name,name,sizeof(msg.data.process_exists.name)-1);
   msg.data.process_exists.name[sizeof(msg.data.process_exists.name)-1] = 0;
   if( msg.communicate(bm->reqFifo,bm->fifo) == MBM_NORMAL ) {
     *exists = msg.data.statistics;

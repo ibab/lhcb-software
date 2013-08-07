@@ -49,6 +49,7 @@ namespace Bits  {
     unsigned int m_mask[i];
     /// Default bitfield constructor
     BitMask() {
+      ::memset(m_mask, 0, i * sizeof(m_mask[0]));
     }
     /// Initializing bitfield constructor
     explicit BitMask(int def) {

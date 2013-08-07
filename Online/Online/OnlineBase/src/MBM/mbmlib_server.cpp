@@ -139,7 +139,7 @@ int _mbmsrv_get_ev(ServerBMID bm, USER* u);
 /// Send reply message to client
 int _mbmsrv_reply(ServerBMID bm, const MSG& msg, int fd);
 
-BufferMemory::BufferMemory() : qentry_t(0,0) {
+BufferMemory::BufferMemory() : qentry_t(0,0), gbl_add(0), buff_add(0) {
   magic             = MBM_USER_MAGIC;
   gbl               = 0;
   ctrl              = 0;
@@ -154,7 +154,7 @@ BufferMemory::BufferMemory() : qentry_t(0,0) {
   bm_name[0]        = 0;
 }
 
-ServerBMID_t::ServerBMID_t() : BufferMemory() {
+ServerBMID_t::ServerBMID_t() : BufferMemory(), client_thread(0) {
   ::memset(server,0,sizeof(server));
   free_event        = 0;
   free_event_param  = 0;
@@ -207,7 +207,7 @@ int mbmsrv_unmap_global_buffer_info(lib_rtl_gbl_t handle, bool remove)  {
 int _mbmsrv_map_buff_section(BufferMemory* bm)  {
   char text[128];
   const char* bm_name = bm->bm_name;
-  ::sprintf(text,"bm_buff_%s",bm_name);
+  ::snprintf(text,sizeof(text),"bm_buff_%s",bm_name);
   int status = ::lib_rtl_map_section(text,0,&bm->buff_add);
   if (!lib_rtl_is_success(status))    {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping buffer section for MBM buffer %s\n",
@@ -223,7 +223,7 @@ int _mbmsrv_map_ctrl_section(BufferMemory* bm)  {
   char text[128];
   size_t ctrl_len, evnt_len, user_len;
   const char* bm_name = bm->bm_name;
-  ::sprintf(text,"bm_ctrl_%s",bm_name);
+  ::snprintf(text,sizeof(text),"bm_ctrl_%s",bm_name);
   int status = ::lib_rtl_map_section(text,0,&bm->gbl_add);
   if (!lib_rtl_is_success(status))    {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping control section for MBM buffer %s",
@@ -311,9 +311,9 @@ int _mbmsrv_shutdown (void* /* param */) {
 	    if ( u->fifoName[0] ) ::unlink(u->fifoName);
 	  }
 	}
+	if ( bm->gbl        ) ::lib_rtl_delete_section(bm->gbl_add);
+	if ( bm->buffer_add ) ::lib_rtl_delete_section(bm->buff_add);
       }
-      if ( bm->gbl        ) ::lib_rtl_delete_section(bm->gbl_add);
-      if ( bm->buffer_add ) ::lib_rtl_delete_section(bm->buff_add);
     }
   }
   return MBM_NORMAL;
@@ -830,7 +830,7 @@ int mbmsrv_include (ServerBMID bm, MSG& msg) {
   bm->ctrl->i_users++;
   msg.user = u;
   inc.serverid = u->serverid;
-  ::sprintf(u->fifoName,"/tmp/bm_%s_%s",bm->bm_name,name);
+  ::snprintf(u->fifoName,sizeof(u->fifoName),"/tmp/bm_%s_%s",bm->bm_name,name);
   if( -1 == (u->fifo = ::open(u->fifoName, O_NONBLOCK | O_WRONLY ))) {
     ::lib_rtl_signal_message(LIB_RTL_OS,"[%s] Unable to open the answer fifo %s.\n",name,u->fifoName);
     return MBM_ERROR;

@@ -2,9 +2,22 @@
 #include "MBM/bmstruct.h"
 #include "bm_internals.h"
 #include "Manager.h"
+#include <stdexcept>
+
+/// A copy constructor cannot be provided
+MBM::Manager::Manager(const Manager&) : m_bm(0), bm_id(0), bm_all(0)
+{
+  ctrl_mod[0] = buff_mod[0] = 0;
+}
+
+/// The assignment operator cannot be provided
+MBM::Manager& MBM::Manager::operator=(const Manager&)   {
+  return *this;
+}
 
 /// Default constructor
 MBM::Manager::Manager() : m_bm(0), bm_id(0), bm_all(0) {
+  ctrl_mod[0] = buff_mod[0] = 0;
   bm_id = (char*)::getenv("BM_ID");
   if(!bm_id) bm_id = "0";
   m_bm = new ServerBMID_t();
@@ -20,9 +33,13 @@ MBM::Manager::~Manager()  {
 
 /// Setup manager
 void MBM::Manager::setup(const char* id)  {
-  if ( id ) bm_id = (char*)id;
-  ::strcat(strcpy(ctrl_mod, "bm_ctrl_"),bm_id);
-  ::strcat(strcpy(buff_mod, "bm_buff_"),bm_id);
+  if ( id )   {
+    bm_id = (char*)id;
+    ::snprintf(ctrl_mod, sizeof(ctrl_mod), "bm_ctrl_%s",id);
+    ::snprintf(buff_mod, sizeof(buff_mod), "bm_buff_%s",id);
+    return;
+  }
+  throw std::runtime_error("Invalid MBM buffer name supplied [NULL-string]");
 }
 
 /// Get installer options

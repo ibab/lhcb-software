@@ -139,7 +139,7 @@ int Monitor::updateDisplay() {
 
 size_t Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
   char txt[256];
-  sprintf(txt," Buffer \"%s\"",name);
+  ::snprintf(txt,sizeof(txt)," Buffer \"%s\"",name);
   display()->draw_line_normal("%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
     txt, ctr->tot_produced, ctr->tot_actual, ctr->tot_seen, ctr->i_events, ctr->p_emax);
   display()->draw_line_normal("%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]",
@@ -192,7 +192,7 @@ int Monitor::show_information()   {
         if ( us->ev_produced>0 || us->get_sp_calls>0 )   {
           float perc = 0;
           if ( ctr->tot_produced>0 ) perc = ((float)us->ev_produced/(float)ctr->tot_produced)*100;
-          ::sprintf(line,fmt_prod,
+          ::snprintf(line,sizeof(line),fmt_prod,
 		    us->serverid,us->name,us->partid,us->pid,"P",sstat[us->state+1],us->ev_produced,
 		    perc+0.1, spy_val, dsc->bm_name
             );
@@ -200,13 +200,13 @@ int Monitor::show_information()   {
         else if ( us->ev_actual>0 || us->get_ev_calls>0 || us->n_req>0 ) {
           float perc = 0;
           if ( ctr->tot_produced>0 ) perc = ((float)us->ev_seen/(float)ctr->tot_produced)*100;
-          ::sprintf(line,fmt_cons,
+          ::snprintf(line,sizeof(line),fmt_cons,
 		    us->serverid, us->name,us->partid,us->pid,"C",sstat[us->state+1],
 		    us->ev_seen, us->ev_freed, perc+0.1, spy_val, dsc->bm_name
             );
         }
         else        {
-          ::sprintf(line,fmt_def,us->serverid,us->name,us->partid,us->pid,"?","",spy_val, dsc->bm_name);    
+          ::snprintf(line,sizeof(line),fmt_def,us->serverid,us->name,us->partid,us->pid,"?","",spy_val, dsc->bm_name);    
         }
         display()->draw_line_normal(line);
       }
@@ -277,11 +277,7 @@ int Monitor::get_bm_list()   {
 int Monitor::drop_bm_list()   {
   if ( m_numBM > 0 ) {
     for (int i = 0; i < m_buffers->p_bmax; ++i)  {
-      //if ( m_buffers->buffers[i].used != 1 && m_bms[i].m_buff != 0 )  {
       if ( m_bms[i].m_buff != 0 )  {
-        // char txt[144];
-        // sprintf(txt,"Unmap section:%s",m_buffers->buffers[i].name);
-        // draw_line_normal(txt);
         m_bms[i].m_mgr.unmapSections();
         m_bms[i].m_buff = 0;
       }

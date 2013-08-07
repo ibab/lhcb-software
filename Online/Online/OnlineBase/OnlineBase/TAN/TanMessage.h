@@ -125,11 +125,13 @@ inline TanMessage::TanMessage (u_int func, const char* proc)  {
 }
 
 inline TanMessage& TanMessage::operator = (const TanMessage& cp)  {
-  m_sin       = cp.m_sin;
-  m_error     = cp.m_error;
-  m_length    = sizeof(cp);
-  m_function  = cp.m_function;
-  ::strncpy(m_name, cp.m_name, sizeof(m_name));
+  if ( &cp != this )  {
+    m_sin       = cp.m_sin;
+    m_error     = cp.m_error;
+    m_length    = sizeof(cp);
+    m_function  = cp.m_function;
+    ::strncpy(m_name, cp.m_name, sizeof(m_name));
+  }
   return *this;
 }
 

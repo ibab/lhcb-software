@@ -75,7 +75,7 @@ int Summary::show(BufferMemory* dsc, bool show_states)   {
   CONTROL* ctr = dsc->ctrl;
 
   ::printf("\n======================== MBM Bufer summary for buffer \"%s\" ========================\n\n",dsc->bm_name);
-  ::sprintf(txt," Buffer \"%s\"",dsc->bm_name);
+  ::snprintf(txt,sizeof(txt)," Buffer \"%s\"",dsc->bm_name);
   ::printf("%-26s  Events: Produced:%ld Seen:%ld Pending:%ld Max:%ld\n",
 	   txt, long(ctr->tot_produced), long(ctr->tot_seen), long(ctr->i_events), long(ctr->p_emax));
   ::printf("%-26s  Space(kB):[Tot:%ld Free:%ld] Users:[Tot:%ld Max:%ld]\n\n",
@@ -114,7 +114,7 @@ int Summary::show(BufferMemory* dsc, bool show_states)   {
 	prod_one.ev_produced += us->ev_produced;
 	prod_one.state  = 0;
 	prod_one.partid = us->partid;
-	::strcpy(prod_one.name,"PROD_ONE");
+	::strncpy(prod_one.name,"PROD_ONE",sizeof(prod_one.name)-1);
 	continue;
       }
       const char* st = show_states ? sstat[us->state+1] : "";
@@ -128,7 +128,7 @@ int Summary::show(BufferMemory* dsc, bool show_states)   {
 	cons_one.ev_seen += us->ev_seen;
 	cons_one.state    = 0;
 	cons_one.partid   = us->partid;
-	::strcpy(cons_one.name,"CONS_ONE");
+	::strncpy(cons_one.name,"CONS_ONE",sizeof(cons_one.name)-1);
 	continue;
       }
       if ( ctr->tot_produced>0 ) {

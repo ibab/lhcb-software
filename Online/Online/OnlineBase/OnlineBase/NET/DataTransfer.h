@@ -32,7 +32,7 @@ namespace DataTransfer  {
     unsigned int    magic;
     unsigned int    hash;
     char            name[128];
-    netheader_t() : size(0), msg_type(NET_MSG_DATA), facility(0), magic(NET_MAGIC), hash(0) {}
+    netheader_t() : size(0), msg_type(NET_MSG_DATA), facility(0), magic(NET_MAGIC), hash(0) { name[0]=0; }
     ~netheader_t() {}
     void net_to_host();
     void fill(const char* nam, unsigned int hash, size_t size, int fac, int mtype, const void *buf_ptr);
