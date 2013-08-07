@@ -5,7 +5,7 @@ Purpose     : LHCb analysis packages
 
 ! 2013-08-07 - Chris Jones
  - Add new package Phys/CommonMCParticles
- - Remove obsolete MCStandardParticles
+ - Remove obsolete Phys/MCStandardParticles
 
 </PRE><H1><A NAME=v11r1>2013-08-01 Analysis v11r1 </A></H1><PRE>
 New development release, built against Phys v17r1.
