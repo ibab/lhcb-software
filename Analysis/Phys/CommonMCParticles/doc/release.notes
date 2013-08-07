@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+
 ! 2013-07-31 - Conor Fitzpatrick
- -Created package
+ -Created package CommonMCParticles, designed to mirror CommonParticles but requiring full MC association and without additional cuts. Uses StdNoPIDsParticles for final states.  
  
+! 2013-08-07 - Conor Fitzpatrick
+ -Added qmtest, CMakeFile, rearranged modules to better reflect CommonParticles layout
+

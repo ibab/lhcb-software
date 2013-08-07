@@ -16,6 +16,8 @@ from Configurables       import FilterDesktop
 
 from CommonParticles.Utils import *
 
+from CommonParticles.StdNoPIDsProtons import *
+
 ## create the algorithm 
 algorithm = FilterDesktop( 'StdMCProtons',
                            Inputs = ["Phys/StdNoPIDsProtons/Particles"],

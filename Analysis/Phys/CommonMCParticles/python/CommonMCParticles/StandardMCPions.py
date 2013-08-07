@@ -15,6 +15,8 @@ from Configurables       import FilterDesktop
 
 
 from CommonParticles.Utils import *
+from CommonParticles.StdNoPIDsPions    import *
+
 
 ## create the algorithm 
 algorithm = FilterDesktop( 'StdMCPions',

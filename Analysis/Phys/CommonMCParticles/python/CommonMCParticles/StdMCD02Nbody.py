@@ -13,7 +13,7 @@ __all__ = (
     'StdMCD02KKAnyPi0' ,
     'StdMCD02KPiMergedPi0' ,
     'StdMCD02KPiResolvedPi0',
-    'StdMCD02KPiAnyPi0'
+    'StdMCD02KPiAnyPi0',
     'locations'	
 	  )
 from Gaudi.Configuration import *

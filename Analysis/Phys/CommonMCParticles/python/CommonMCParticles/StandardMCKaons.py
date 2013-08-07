@@ -15,6 +15,7 @@ from Configurables       import FilterDesktop
 
 
 from CommonParticles.Utils import *
+from CommonParticles.StdNoPIDsKaons    import *
 
 ## create the algorithm 
 algorithm = FilterDesktop( 'StdMCKaons',

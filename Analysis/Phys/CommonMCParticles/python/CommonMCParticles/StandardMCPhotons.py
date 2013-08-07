@@ -15,7 +15,7 @@ from Configurables       import FilterDesktop
 
 
 from CommonParticles.Utils import *
-
+from CommonParticles import StdLoosePhotons
 ## create the algorithm 
 algorithm = FilterDesktop( 'StdMCPhotons',
                            Inputs = ["Phys/StdLoosePhotons/Particles"],

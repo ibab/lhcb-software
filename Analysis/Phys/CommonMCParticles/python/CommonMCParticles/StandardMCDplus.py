@@ -9,9 +9,8 @@ __all__ = (
 		'StdMCDplus2KKPi' ,
 		'StdMCDplus2PiPiPi' ,
 		'StdMCDplus2KPiPiOppSignPi' ,
-		'StdMCDsplus2KKPi' ,
 		'StdMCDplus2KKK',
-		'StdMCDsplus2KKPiOppSign',
+		'StdMCDplus2KKPiOppSignK',
 		'locations'
 	  )
 from Gaudi.Configuration import *

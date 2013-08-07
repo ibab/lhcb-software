@@ -19,4 +19,5 @@ use GaudiPolicy v*
 use TrackTools  v* Tr
 
 apply_pattern install_python_modules
+apply_pattern QMTest
 

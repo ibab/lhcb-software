@@ -16,7 +16,6 @@ from Gaudi.Configuration import *
 from Configurables       import CombineParticles
 from CommonParticles.Utils import *
 from CommonMCParticles import StandardMCD02HH, StandardMCPions
-
 #locations of nopidsparticles: 
 
 nppions = "Phys/StdMCPions/Particles"
