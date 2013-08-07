@@ -4,7 +4,11 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
-!========================== GENSER v12r7 2013-08-06 ==========================
+!========================== GENSER v12r7 2013-08-08 ==========================
+! 2013-08-07 - Gloria Corti
+ - Adapt to change in interface package name for powhegbox instead of 
+   powheg-box that causes problems on bash
+
 ! 2013-08-06 - Gloria Corti
  - Introduce use of new LHAPDFSets data package where the PDF used by LHCb now
    reside
@@ -17,7 +21,7 @@
 
 !========================== GENSER v12r6 2013-07-24 ==========================
 ! 2013-07-24 - Gloria Corti
- - Introduce new macro for powheg_box native version and set it to r2092
+ - Introduce new macro for powheg-box native version and set it to r2092
 
 !========================== GENSER v12r5 2013-06-27 ==========================
 ! 2013-06-27 - Gloria Corti

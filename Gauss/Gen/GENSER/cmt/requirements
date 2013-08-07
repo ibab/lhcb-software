@@ -34,7 +34,7 @@ macro alpgen_native_version "2.1.4"
 
 #-- Powheg-box
 #============================================================================
-macro powheg-box_native_version "r2092"
+macro powhegbox_native_version "r2092"
 
 #-- Photos++ and Taula++ 
 #============================================================================
