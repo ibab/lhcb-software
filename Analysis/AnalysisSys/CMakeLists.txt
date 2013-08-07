@@ -38,11 +38,11 @@ gaudi_depends_on_subdirs(Analysis/PyAna
                          Phys/LoKiAlgoMC
                          Phys/LoKiGenMC
                          Phys/LoKiPhysMC
-                         Phys/MCStandardParticles
                          Phys/Particle2MCTruth
                          Phys/ParticleMakerChecker
                          Phys/TrackSmearing
                          Phys/VertexFitCheck
                          Phys/MVADictTools
+                         Phys/CommonMCParticles
                          Rich/RichPIDQC
                          Tutorial/Analysis)
