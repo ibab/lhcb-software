@@ -16,7 +16,7 @@ class JetMakerConf:
                  JetIDCut = True,
                  jetidnumber=98 ,
                  onlySaveB = False,
-                 pvassociationMinIPChi2 = True,
+                 pvassociationMinIPChi2 = False,
                  algtype="anti-kt"):
         
         jetname_dict = {"kt":0,"Cambridge":1,"anti-kt":2}
