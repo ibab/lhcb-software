@@ -42,6 +42,11 @@ namespace UPI {
     public:
       enum { CMD_CLOSE=1 };
 
+    private:
+      /// No copy constructor allowed
+      UpiDisplay(const UpiDisplay& d);
+      /// No assignment allowed
+      UpiDisplay& operator=(const UpiDisplay& d);
     public:
       /// Access to the display width in fixed size characters
       virtual size_t width() const                { return m_area.width;                 }

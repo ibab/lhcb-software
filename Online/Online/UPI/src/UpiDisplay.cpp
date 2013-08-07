@@ -14,6 +14,7 @@
 #include "CPP/TimeSensor.h"
 #include "CPP/Interactor.h"
 #include "SCR/scr.h"
+#include <stdexcept>
 
 #ifdef _WIN32
 #define vsnprintf _vsnprintf
@@ -206,6 +207,17 @@ UpiDisplay::UpiDisplay(size_t w, size_t h)
   m_lines = new char*[m_area.height+1];
   for(int i=0; i<=m_area.height; ++i) m_lines[i] = new char[m_area.width+1];
   m_quit = new ReallyClose(m_menuID,CMD_CLOSE);
+}
+
+
+/// No copy constructor allowed
+UpiDisplay::UpiDisplay(const UpiDisplay& /* display */)  {
+  throw std::runtime_error("UpiDisplay::UpiDisplay(const UPIDisplay& d) Call not allowed!");
+}
+
+/// No assignment allowed
+UpiDisplay& UpiDisplay::operator=(const UpiDisplay& /* display */)   {
+  throw std::runtime_error("UpiDisplay::operator=: Call not allowed!");
 }
 
 UpiDisplay::~UpiDisplay() {
