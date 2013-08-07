@@ -76,6 +76,10 @@ namespace DD4hep {
       XmlException(const std::string& m) : msg(m)      {        }
       XmlException(const XmlException& e) : msg(e.msg) {        }
       virtual ~XmlException()                          {        }
+      XmlException& operator=(const XmlException& c)  {
+	if ( &c != this ) msg = c.msg;
+	return *this;
+      }
     };
 #endif
 
@@ -176,6 +180,8 @@ namespace DD4hep {
       Strng_t(const char* c)           { m_xml=XmlString::transcode(c);          }
       /// Initializing constructor from STL string
       Strng_t(const std::string& c)    { m_xml=XmlString::transcode(c.c_str());  }
+      /// Copy constructor
+      Strng_t(const Strng_t& c)        { m_xml=XmlString::replicate(c.m_xml);    }
       /// Default destructor - release unicode string
       ~Strng_t()                       { if (m_xml) XmlString::release(&m_xml);  }
       /// Auto-conversion to unicode string
