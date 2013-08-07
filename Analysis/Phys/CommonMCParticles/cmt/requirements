@@ -1,0 +1,22 @@
+#============================================================================
+# Created    : 2013-07-31
+# Maintainer : Conor Fitzpatrick
+#============================================================================
+package           CommonMCParticles
+version           v1r0
+ 
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc python
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+use DaVinciKernel   v*   Phys
+use GaudiPolicy v*
+use TrackTools  v* Tr
+
+apply_pattern install_python_modules
+
