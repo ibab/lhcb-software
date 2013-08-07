@@ -7,15 +7,12 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 
-# Temporarily to pick up fix 
-use FTDet               v2r1    Det
-
 # Gauss application: the application is not built on Win32
 use Gauss               v46r4   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
 use LCG_Settings        v65r1p1 
-use lhapdf              v65r1p1 LCG_GeneratorsInterfaces
+use lhapdf              v65r1p2 LCG_GeneratorsInterfaces
 use photospp            v65r1p1 LCG_GeneratorsInterfaces
 use tauolapp            v65r1p1 LCG_GeneratorsInterfaces
 use pythia6             v65r1p1 LCG_GeneratorsInterfaces
@@ -25,14 +22,14 @@ use herwigpp            v65r1p1 LCG_GeneratorsInterfaces
 use rivet               v65r1p1 LCG_GeneratorsInterfaces
 use alpgen              v65r1p1 LCG_GeneratorsInterfaces
 use hijing              v65r1p1 LCG_GeneratorsInterfaces
-use powheg-box          v65r1p1 LCG_GeneratorsInterfaces
+use powhegbox           v65r1p2 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
 use GenCuts             v3r5    Gen
 use GENSER              v12r6g1 Gen
 use EvtGen              v13r7   Gen
 use Mint                v2r1    Gen
-use EvtGenExtras        v3r7    Gen
+use EvtGenExtras        v3r8    Gen
 use Generators          v14r5   Gen
 use LbPythia            v14r1   Gen
 
