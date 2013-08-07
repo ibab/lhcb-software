@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+! 2013-08-07 - Chris Jones
+ - Add new package Phys/CommonMCParticles
+
 </PRE><H1><A NAME=v11r1>2013-08-01 Analysis v11r1 </A></H1><PRE>
 New development release, built against Phys v17r1.
 
@@ -92,9 +95,6 @@ In JetAccessories :
  . Tighter cuts on downstream tracks
  . Add SplitJet Alg
  . Changed default JEC file (Reco 12)
-
-
-
 
 ! 2013-06-30 - Chris Jones
  - Add new package Phys/MVADictTools
