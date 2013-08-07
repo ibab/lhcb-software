@@ -9,7 +9,8 @@ enum EventType {
   QioEvent,
   TkEvent,
   PVSSEvent,
-  ScrMouseEvent
+  ScrMouseEvent,
+  NoEventType
 };
 
 class Message;
@@ -18,6 +19,10 @@ class Sensor;
 class Interactor;
 
 class Event {
+private:
+  friend class Sensor;
+  friend class Interactor;
+  Sensor*  sensor;
 public:
   Interactor* target;
   EventType   eventtype;
@@ -40,26 +45,36 @@ public:
   char*       buffer_ptr;
   int         buffer_len;
   /// Initializing constructor
-  Event(Interactor* tar, EventType typ) : target(tar), eventtype(typ) {}
+ Event(Interactor* tar, EventType typ) 
+   : sensor(0), target(tar), eventtype(typ),
+    timer_id(0), timer_data(0), 
+    message(0), source(0),
+    menu_id(0), command_id(0), param_id(0), index_id(0), 
+    type(0), data(0),
+    device(0), buffer_ptr(0), buffer_len(0)
+    {}
   /// Standard constructor
-  Event() {}
+  Event()
+    : sensor(0), target(0), eventtype(NoEventType),
+    timer_id(0), timer_data(0), 
+    message(0), source(0),
+    menu_id(0), command_id(0), param_id(0), index_id(0), 
+    type(0), data(0),
+    device(0), buffer_ptr(0), buffer_len(0)
+    {}
   /// Standard destructor
   ~Event() {}
-  int iocType() const             {  return type;                      }
-  template <typename T> T* iocPtr() const  {  return (T*)data;         }
-  template <typename T> T iocData() const  {  return (T)data;          }
-  unsigned long iocData() const   {  return (unsigned long)data;       }
-  int menu() const                {  return menu_id;                   }
-  int command() const             {  return command_id;                }
-  int param() const               {  return param_id;                  }
-  int index() const               {  return index_id;                  }
-  unsigned long timerID() const   {  return (unsigned long)timer_id;   }
-  unsigned long timerData() const {  return (unsigned long)timer_data; }
-  template <typename T> T* get()  {  return (T*)&timer_id;             }
-  template <typename T> const T* get() const  {  return (T*)&timer_id; }
-private:
-  friend class Sensor;
-  friend class Interactor;
-  Sensor*  sensor;
+  int iocType() const                        {  return type;                      }
+  template <typename T> T* iocPtr() const    {  return (T*)data;                  }
+  template <typename T> T iocData() const    {  return (T)data;                   }
+  unsigned long iocData() const              {  return (unsigned long)data;       }
+  int menu() const                           {  return menu_id;                   }
+  int command() const                        {  return command_id;                }
+  int param() const                          {  return param_id;                  }
+  int index() const                          {  return index_id;                  }
+  unsigned long timerID() const              {  return (unsigned long)timer_id;   }
+  unsigned long timerData() const            {  return (unsigned long)timer_data; }
+  template <typename T> T* get()             {  return (T*)&timer_id;             }
+  template <typename T> const T* get() const {  return (T*)&timer_id;             }
 };
 #endif

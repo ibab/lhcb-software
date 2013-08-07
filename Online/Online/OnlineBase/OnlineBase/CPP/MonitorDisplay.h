@@ -73,7 +73,7 @@ class MonitorDisplay {
   /// Draw a progress bar
   virtual size_t draw_bar(int x, int y,float ratio,int full_scale) = 0;
   /// Default Constructor
-  MonitorDisplay() : m_currLine(0) {}
+  MonitorDisplay() : m_client(0), m_currLine(0) {}
   /// Default destructor
   virtual ~MonitorDisplay() {}
 };

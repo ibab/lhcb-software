@@ -38,7 +38,11 @@ public:
   typedef ErrCond (FSM::*ActionFunc)();
 
   typedef unsigned int State;	     // State type is defined as unsigned int
-  struct Transition {	             // Transition type is an structure
+  class Transition {	             // Transition type is an structure
+  private:
+    Transition(const Transition&) : next(0), condition(0) {  }
+    Transition& operator=(const Transition&) { return *this; }
+  public:
     Transition(State from, State to, const char* cond, ActionFunc act);
     ~Transition();
     Transition* next;                // Pointer to the next transition

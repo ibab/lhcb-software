@@ -18,6 +18,9 @@ typedef void PaObject;
 protected:  
   /// Pointer to the actual PubArea object  
   PaObject* obj;
+private:
+  _PubArea(const _PubArea& c) : obj(c.obj) {}  //.............. Copy Constructor
+  _PubArea& operator=(const _PubArea&) { return *this; }  //.... Assignment oper
 public:  
   explicit _PubArea(const char* name);  //.......................... Constructor
   ~_PubArea(); //.................................................... Destructor
