@@ -746,6 +746,7 @@ class Brunel(LHCbConfigurableUser):
                 importOptions( "$TRACKSYSROOT/options/TrackChecking.opts" )
 
             if "CALO" in  checkSeq :
+                from Configurables import GaudiSequencer
                 GaudiSequencer("CheckCALOSeq").Members += [ "CaloDigit2MCLinks2Table", "CaloClusterMCTruth" ]
                 importOptions( "$STDOPTS/PreloadUnits.opts" )
                 importOptions( "$CALOMONIDSTOPTS/CaloChecker.opts" )
