@@ -5,6 +5,11 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2013-08-08 Sebastian Neubert
+ - Added DictValue tool which implements IParticleValue to return the value of a dictionary
+   entry for a given key.
+   Intended for use with the VALUE functor
+
 ! 2013-08-06 Sebastian Neubert
  - small fix: replaced endmsg with std::endl in DummyTransform
 
