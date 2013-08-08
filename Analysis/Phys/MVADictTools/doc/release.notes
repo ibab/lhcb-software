@@ -4,6 +4,15 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform 
 !-----------------------------------------------------------------------------
 
+! 2013-08-08 - Sebastian Neubert
+ - Added MVAManager algorithm. 
+   Holds one IParticleDictTool in order to avoid the
+   double lock problem during instantiation of LoKi functors
+   This class is only needed as a container for the tool.
+   It has no functionality of its own
+ - Added example how to cut on MVA output by using the VALUE functor
+   and and the LoKi::Hybrid::DictValue tool.  
+
 ! 2013-08-06 - Sebastian Neubert
  - small fix: replaced endmsg by std::endl  
 
