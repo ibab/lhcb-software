@@ -41,33 +41,33 @@ namespace LHCb
   {
   protected:
     /// Flag indicating that MBM event retrieval is active
-    bool m_receiveEvts;
+    bool                     m_receiveEvts;
     /// Lock handle
-    void* m_lock;
+    void*                    m_lock;
     /// Reference to MEP manager service
-    MEPManager* m_mepMgr;
+    MEPManager*              m_mepMgr;
     /// Reference to buffer manager producer
-    MBM::Producer* m_producer;
+    MBM::Producer*           m_producer;
     /// Current file name
-    std::string m_current;
+    std::string              m_current;
     /// List of files to process
-    std::set<std::string>      m_files;
+    std::set<std::string>    m_files;
 
     /// Property: Buffer name for data output
-    std::string m_buffer;
+    std::string              m_buffer;
     /// Property: Data directory name
-    std::string                m_directory;
+    std::string              m_directory;
     /// Property: Path to the file containing broken nodes, where no reading should happen
-    std::string                m_brokenHostsFile;
+    std::string              m_brokenHostsFile;
     /// Property: List of runs to be processed (as strings!)
-    std::vector<std::string>   m_allowedRuns;
+    std::vector<std::string> m_allowedRuns;
 
     /// Monitoring quantity: Number of events processed
-    int m_evtCount;
+    int                      m_evtCount;
     /// Flag to indicate if files should be deleted
-    bool m_deleteFiles;
+    bool                     m_deleteFiles;
     /// Flag to indicate if the node is in the broken hosts file and hence disabled
-    bool m_disabled;
+    bool                     m_disabled;
 
     // Helper routines
     size_t scanFiles();
@@ -156,8 +156,8 @@ static bool file_write(int file, const void* data, int len)   {
 
 /// Standard Constructor
 HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc) :
-  OnlineService(nam, svcLoc), m_receiveEvts(false), m_lock(0), m_producer(0),
-  m_evtCount(0), m_disabled(false)
+  OnlineService(nam, svcLoc), m_receiveEvts(false), m_lock(0), m+mepMgr(0), 
+  m_producer(0), m_evtCount(0), m_disabled(false)
 {
   declareProperty("Buffer",      m_buffer = "Mep");
   declareProperty("Directory",   m_directory = "/localdisk");
@@ -196,6 +196,9 @@ StatusCode HltBufferedIOReader::initialize()   {
     if ( 0 == ::stat(m_brokenHostsFile.c_str(),&file) ) {
       const std::string node = RTL::nodeNameShort();
       int   fd   = ::open(m_brokenHostsFile.c_str(),O_RDONLY);
+      if ( -1 == fd )  {
+	return error("Failed to access broken node file:"+m_brokenHostsFile+" [Error ignored]");
+      }
       char* data = new char[file.st_size+1];
       int rc = file_read(fd,data,file.st_size);
       if ( 1 == rc ) {
@@ -325,7 +328,7 @@ int HltBufferedIOReader::openFile()   {
     string fname = *i;
     m_files.erase(i);
     int fd = ::open(fname.c_str(), O_RDONLY | O_BINARY, S_IREAD);
-    if (fd)    {
+    if ( -1 != fd )    {
       if (m_deleteFiles)      {
         int sc = ::unlink(fname.c_str());
         if (sc != 0)        {
@@ -333,6 +336,7 @@ int HltBufferedIOReader::openFile()   {
           //::exit(EBADF);
           m_receiveEvts = false;
           incidentSvc()->fireIncident(Incident(name(),"DAQ_ERROR"));
+	  ::close(fd);
           return 0;
         }
       }
@@ -351,8 +355,9 @@ void HltBufferedIOReader::safeRestOfFile(int file_handle)     {
     char buffer[10 * 1024];
     info("Saving rest of file[%d]: %s",file_handle,m_current.c_str());
     int cnt = 0, ret, fd = ::open(m_current.c_str(), O_CREAT | O_BINARY | O_WRONLY, 0777);
-    if (fd < 0)    {
+    if ( -1 == fd )    {
       error("CANNOT Create file: " + m_current + ": " + RTL::errorString());
+      return;
     }
     while ((ret = ::read(file_handle, buffer, sizeof(buffer))) > 0)  {
       if (!file_write(fd, buffer, ret))      {
@@ -398,16 +403,16 @@ StatusCode HltBufferedIOReader::i_run()  {
     }
     // loop over the events
     while (m_receiveEvts)   {
-      if (0 == file_handle)  {
+      if (file_handle <= 0)  {
         file_handle = openFile();
-        if (0 == file_handle)   {
+        if ( file_handle <= 0 )   {
           files_processed = scanFiles() == 0;
           if ( files_processed )    {
             break;
           }
         }
       }
-      if (file_handle)  {
+      if ( file_handle > 0 )  {
         int size_buf[3];
         int status = ::file_read(file_handle, (char*)size_buf, sizeof(size_buf));
         if (status <= 0)   {

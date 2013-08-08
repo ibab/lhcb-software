@@ -26,6 +26,9 @@ namespace LHCb  {
   class SocketDataReceiver : public NetworkDataReceiver  {
   protected:
     bool m_finish;
+    /// Pointer to netplug device
+    NET*         m_netPlug;
+
     static void handle_death(netentry_t* /* e */, const netheader_t& hdr, void* param)  {
       int sc = gauditask_task_trylock();
       if ( sc == 1 ) {
@@ -83,12 +86,12 @@ namespace LHCb  {
       ::fprintf(stdout,"Loosing event....was finailize called ?\n");
       ::fflush(stdout);
     }
-    /// Pointer to netplug device
-    NET*         m_netPlug;
 
   public:
     /// Standard algorithm constructor
-    SocketDataReceiver(const std::string& nam, ISvcLocator* pSvc) : NetworkDataReceiver(nam, pSvc), m_finish(false) {}
+    SocketDataReceiver(const std::string& nam, ISvcLocator* pSvc) 
+      : NetworkDataReceiver(nam, pSvc), m_finish(false), m_netPlug(0) {
+    }
     /// Standard Destructor
     virtual ~SocketDataReceiver()   { }
     /// Subscribe to network requests

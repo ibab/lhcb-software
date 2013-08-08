@@ -28,7 +28,7 @@ static const std::string s_reqMsg("EVENT_REQUEST");
 NetworkDataReceiver::NetworkDataReceiver(const std::string& nam, ISvcLocator* pSvc)
 : OnlineService(nam,pSvc), m_recvReq(0), m_recvError(0), m_recvBytes(0), 
   m_backlog(0), m_lastbacklog(0), m_mepMgr(0), m_prod(0), m_evtSelector(0),
-  m_recvEvents(false)
+  m_lock(0), m_recvEvents(false)
 {
   ::wtc_init();
   ::lib_rtl_create_lock(0,&m_lock);
