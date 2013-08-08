@@ -13,18 +13,20 @@ __all__ = ( 'B2Quasi2BodyConf',
 
 config_params = {'Q2BPrescale'     : 1.,
                  'Q2BTrkGhostProb' : 0.5,
-                 'Q2BTrkMinIPChi2' : 16.,
+                 'Q2BTrkMinIPChi2' : 25.,
                  'Q2BTrkMinHiPT'   : 1000.,
                  'Q2BResMinPT'     : 600.,
                  'Q2BResMinHiPT'   : 1000.,
                  'Q2BResMaxMass'   : 1100.,
                  'Q2BResVtxChi2DOF': 9.,
                  'Q2BBMinPT'       : 2500.,
-                 'Q2BBMinM4pi'     : 3500.,
-                 'Q2BBMinM3pi'     : 4200.,
-                 'Q2BBMaxM'        : 6700.,
-                 'Q2BBMaxCorrM'    : 7000.,
-                 'Q2BBVtxChi2DOF'  : 9.}
+                 'Q2BBMinM3pi'     : 4300.,
+                 'Q2BBMinM4pi'     : 3600.,
+                 'Q2BBMaxM3pi'     : 6700.,
+                 'Q2BBMaxM4pi'     : 5700.,
+                 'Q2BBMaxCorrM3pi' : 7000.,
+                 'Q2BBMaxCorrM4pi' : 6000.,
+                 'Q2BBVtxChi2DOF'  : 9.}   
 
 
 from Gaudi.Configuration import *
@@ -52,8 +54,10 @@ class B2Quasi2BodyConf(LineBuilder) :
                                'Q2BBMinPT',
                                'Q2BBMinM4pi',
                                'Q2BBMinM3pi',
-                               'Q2BBMaxM',
-                               'Q2BBMaxCorrM',
+                               'Q2BBMaxM3pi',
+                               'Q2BBMaxM4pi',
+                               'Q2BBMaxCorrM3pi',
+                               'Q2BBMaxCorrM4pi',
                                'Q2BBVtxChi2DOF')
 
     __confdict__={}
@@ -90,8 +94,8 @@ class B2Quasi2BodyConf(LineBuilder) :
                                                diTrkList=self.DiTrackList,
                                                MinPTCut = config['Q2BBMinPT'],
                                                MinMassCut = config['Q2BBMinM4pi'],
-                                               MaxMassCut = config['Q2BBMaxM'],
-                                               MaxCorrMCut = config['Q2BBMaxCorrM'],
+                                               MaxMassCut = config['Q2BBMaxM4pi'],
+                                               MaxCorrMCut = config['Q2BBMaxCorrM4pi'],
                                                VtxChi2DOFCut = config['Q2BBVtxChi2DOF'] )
 
         self.Q2B4piLine = StrippingLine( B2Q2B4piName+"Line",
@@ -104,8 +108,8 @@ class B2Quasi2BodyConf(LineBuilder) :
                                                diTrkList=self.DiTrackList_HiPt,
                                                MinPTCut = config['Q2BBMinPT'],
                                                MinMassCut = config['Q2BBMinM3pi'],
-                                               MaxMassCut = config['Q2BBMaxM'],
-                                               MaxCorrMCut = config['Q2BBMaxCorrM'],
+                                               MaxMassCut = config['Q2BBMaxM3pi'],
+                                               MaxCorrMCut = config['Q2BBMaxCorrM3pi'],
                                                VtxChi2DOFCut = config['Q2BBVtxChi2DOF'] )
 
         self.Q2B3piLine = StrippingLine( B2Q2B3piName+"Line",

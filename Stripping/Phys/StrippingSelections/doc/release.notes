@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-08 - Fred Blanc
+ - Add config variables to StrippingB2CharmlessQuasi2Body.py
+
 ! 2013-08-05 - Fred Blanc
  - Added f0 and B_c selection to StrippingB2CharmlessQuasi2Body.py
  - loosened some cuts to increase signal retention rates
