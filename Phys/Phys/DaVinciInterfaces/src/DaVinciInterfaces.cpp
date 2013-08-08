@@ -23,6 +23,7 @@
 #include "Kernel/IExtraInfoTool.h"
 #include "Kernel/IDVAlgorithm.h"
 #include "Kernel/IParticleFilter.h"
+#include "Kernel/IParticleValue.h"
 #include "Kernel/IDecayTreeFit.h"
 #include "Kernel/ICheckOverlap.h"
 #include "Kernel/IParticleIsolation.h"
@@ -53,6 +54,7 @@ ITrackIsolation          :: ~ITrackIsolation          () {}
 IExtraInfoTool           :: ~IExtraInfoTool           () {}
 IDVAlgorithm             :: ~IDVAlgorithm             () {}
 IParticleFilter          :: ~IParticleFilter          () {}
+IParticleValue           :: ~IParticleValue           () {}
 IDecayTreeFit            :: ~IDecayTreeFit            () {}
 ICheckOverlap            :: ~ICheckOverlap            () {}
 IParticleIsolation       :: ~IParticleIsolation       () {}

@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-08-08 - Sebastian Neubert
+ - Added IParticleValue
+   analogous to IParticleCut but returns a double
+
 !========================= DaVinciInterfaces v2r19 2013-08-01 =========================
 
 ! 2013-07-31 - Sebastian Neubert
