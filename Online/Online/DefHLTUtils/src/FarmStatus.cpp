@@ -41,11 +41,6 @@ FarmStatus::FarmStatus()
         sprintf(sf,"HLT%c%02d%02d",row,rack,j);
         m_AllpNodes.insert(std::string(sf));
       }
-//      for (int j=12;j<=32;j++)
-//      {
-//        sprintf(sf,"hlt%c%02d%02d",row,rack,j);
-//        m_AllpNodes.insert(std::string(sf));
-//      }
     }
   }
   row = 'F';
@@ -64,6 +59,22 @@ FarmStatus::FarmStatus()
       sprintf(sf,"HLT%c%02d%02d",row,rack,j);
       m_AllpNodes.insert(std::string(sf));
     }
+  }
+  string otherNodes[]={"ECS03","ECS04","MONA08","MONA09","STORECTL01"};
+  int nothers = sizeof(otherNodes)/sizeof(string*);
+  for (int N=0;N<nothers;N++)
+  {
+    sprintf(sf,"/RO/%s/TaskSupervisor/Summary",otherNodes[N].c_str());
+//    sfinfo = new DimUpdatedInfo(sf,(void*)&NoLink,sizeof(int),m_InfoHandler);
+    sfinfo = new DimInfo(sf,(void*)&NoLink,sizeof(int),m_InfoHandler);
+    m_infoMap.insert(std::make_pair(std::string(sf),sfinfo));
+    fprintf(outf,"%s\n",sf);
+    m_AllpFarms.insert(otherNodes[N]);
+//    for (int j=1;j<=32;j++)
+//    {
+//      sprintf(sf,"HLT%c%02d%02d",row,rack,j);
+//      m_AllpNodes.insert(std::string(sf));
+//    }
   }
 //  m_enabledFarm.insert(std::string("hltb01"));
 //  m_enabledFarm.insert(std::string("hltb02"));
