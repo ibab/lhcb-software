@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! ========================================================================
 
+! 2013-08-08 - Liang Sun
+ - decompress_db_metadata.py: new script to decompress the content of a CondDB file. Still needed to keep a copy of uncompressed db files for backward compatibility.
+
 !========================= CondDBUI v3r24 2013-07-17 =========================
 ! 2013-07-16 - Illya Shapoval
  - AriadneAdmin_InitialImport.py is made compliant with new Ariadne API, plus
