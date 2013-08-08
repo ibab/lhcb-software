@@ -242,7 +242,7 @@ def get_MCGen_base(package_home, genname, genversion):
 #
 #  get tar files from lcg  ==================================================
 #
-def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version, mcgen_flavour):
+def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version, mcgen_flavour, include_lhapdf):
 
     if debug_flag == 1: print ' get_tar_files for GENSER %s %s '%(packages_versions['GENSER'],binary_dir)
 
@@ -292,7 +292,10 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version, 
         print "-----------------------------------"
 
         print 'get_tar_files Processing %s '%(file)
-
+        if key == 'lhapdf'  and include_lhapdf == False:
+            print "get_tar_files - LHAPDF will NOT include PDF Sets"
+        else:
+            print "get_tar_files - LHAPDF will include PDF Sets"
         #
         # Check that the file file actually exists
         # FAIL otherwise, we need to know...
@@ -328,7 +331,7 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version, 
                     os.symlink(key, orig_key)
 
                 # Extract a few PDFs from lhapdf main tar file
-                if key == 'lhapdf':
+                if key == 'lhapdf' and include_lhapdf == True:
 
                     #
                     # Extraction of PDFs cteq6ll/cteq6l
@@ -463,14 +466,15 @@ if __name__ == "__main__":
         help()
         sys.exit()
     try:
-        keys, values = getopt.getopt(arguments,'hdb:n:t:',
-                       ['help','debug','binary=','native=','target='])
+        keys, values = getopt.getopt(arguments,'hdb:n:t:l',
+                       ['help','debug','binary=','native=','target=', 'lhapdf'])
 
     except getopt.GetoptError:
         help()
         sys.exit()
 
     debug_flag = 0
+    include_lhapdf = False
     for key,value in keys:
         if key in ('-d', '--debug'):
             debug_flag = 1
@@ -480,6 +484,8 @@ if __name__ == "__main__":
             binary = value
         if key in ('-n', '--native'):
             native_version = value
+        if key in ('-l', '--lhapdf'):
+            include_lhapdf = True
         if key in ('-t', '--target'):
             print "output directory for tarfiles: %s" % value
             outputdir = value
@@ -509,4 +515,4 @@ if __name__ == "__main__":
     if packages_versions.has_key('GENSER') != 1:
         sys.exit()
     else:
-        rc = get_tar_files(packages_versions, packages_homes, binary, mcgen_version, MCGenerators_flavour)
+        rc = get_tar_files(packages_versions, packages_homes, binary, mcgen_version, MCGenerators_flavour, include_lhapdf)

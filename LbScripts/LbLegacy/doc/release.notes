@@ -1,3 +1,8 @@
+2013-08-08  Ben Couturier  <Ben.Couturier@cern.ch>
+
+        * scripts/mkMCGentar: Added option to enable/disable the inclusion
+        of LHAPDF Sets.
+
 2013-07-30  Ben Couturier  <Ben.Couturier@cern.ch>
 
 	* scripts/archive_project: Updated to use dirac-lhcb-view-software
