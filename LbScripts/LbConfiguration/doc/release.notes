@@ -1,3 +1,7 @@
+2013-08-07 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Package.py: Added package WG/BNoCConfig
+
 2013-08-06 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Package.py: Added package LHAPDFSets 

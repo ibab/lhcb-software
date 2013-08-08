@@ -56,7 +56,8 @@ package_names = ['XmlDDDB',
                  'QMTestFiles',
                  'Ariadne',
                  'RawEventFormat',
-                 'LHAPDFSets']
+                 'LHAPDFSets',
+                 'BNoCConfig']
 
 class PackageConfException(Exception):
     pass
@@ -356,3 +357,5 @@ RawEventFormat.setProject("DBASE")#IGNORE:E0602
 
 LHAPDFSets.setProject("DBASE")#IGNORE:E0602
 
+BNoCConfig.setHat("WG")#IGNORE:E0602$
+BNoCConfig.setProject("DBASE")#IGNORE:E0602$
