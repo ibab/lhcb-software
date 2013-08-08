@@ -47,14 +47,16 @@ ClusterDisplay* ROMon::createHltSubfarmDisplay(int width, int height, int posx, 
 
 /// Standard constructor
 HltSubfarmDisplay::HltSubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv)
-: ClusterDisplay(width, height)
+  : ClusterDisplay(width, height), m_nodes(0)
 {
   m_position = Position(posx,posy);
   init(argc, argv);
 }
 
 /// Standard constructor
-HltSubfarmDisplay::HltSubfarmDisplay(int argc, char** argv)   {
+HltSubfarmDisplay::HltSubfarmDisplay(int argc, char** argv)
+  : ClusterDisplay(), m_nodes(0)
+{
   init(argc, argv);
 }
 
