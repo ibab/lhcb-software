@@ -23,7 +23,7 @@ set            	  CTEQPDF $(LHAPATH)
 #============================================================================
 use           Generators    v*          Gen
 use           Boost         v*          LCG_Interfaces -no_auto_imports
-use           powheg-box    v*          LCG_GeneratorsInterfaces
+use           powhegbox     v*          LCG_GeneratorsInterfaces
 use           LbPythia      v* 	        Gen
 
 

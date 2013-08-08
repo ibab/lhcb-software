@@ -4,7 +4,10 @@
 ! Purpose     : Implementation of the powheg-box in Gauss
 !-----------------------------------------------------------------------------
 
-!========================= LbPowheg v1r0p1 2013-07-31 ========================
+!========================= LbPowheg v1r0p1 2013-08-08 ========================
+! 2013-08-08 - Gloria Corti
+ - Use powhegbox instead of powheg-box interface that cannot be used on bash
+
 ! 2013-07-31 - Gloria Corti
  - Fix setting of POWHEGEXE to match change in interface that did not resolve 
    correctly in tcsh
