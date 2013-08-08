@@ -5,6 +5,12 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2013-08-08 Sebastian Neubert
+ - Added VALUE functor. Simple adapter to IParticleValue tools
+   Receives a Particle; Returns a double 
+   First example application: cut on MVA classifier response through a 
+   DictValue tool (see package MVADictTools)
+
 !========================= LoKiPhys v10r15 2013-06-13 =========================
 
 ! 2013-05-27 - Vanya Belyaev 

@@ -447,6 +447,8 @@ TRHISTFIT= LoKi.Particles.TrackHistoryFit         ()
 TRSTATUS = LoKi.Particles.TrackStatus             () 
 ## @see LoKi::Cuts::FILTER    
 FILTER   = LoKi.Particles.Filter
+## @see LoKi::Cuts::VALUE    
+VALUE   = LoKi.Particles.Value
 ## @see LoKi::Cuts::DANG
 DANG     = LoKi.Particles.CosineDirectionAngle 
 ## @see LoKi::Cuts::DIRA

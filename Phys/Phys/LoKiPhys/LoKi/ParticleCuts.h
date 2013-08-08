@@ -6095,6 +6095,36 @@ namespace LoKi
      */
     typedef LoKi::Particles::TimeSignedDistance                        TSIGND ;
     // ========================================================================
+
+    /** @typedef VALUE
+     *  Simple adapter which allows to use the tool IParticleValue
+     *  as LoKi functor
+     * 
+     *  @code
+     * 
+     *  const LHCb::Particle* p = ... ;
+     *
+     *  // get the tool 
+     *  const IParticleValue* function = ... ;
+     *
+     *  // construct a function 
+     *  Fun func = VALUE( function ) ;
+     *
+     *  // alternatively get a tool by its name 
+     *  Fun func2 = VALUE( "mytool" );
+     *
+     *  // use it!
+     *  const double val = func ( p ) ;
+     *
+     *  @endcode
+     *
+     *  @see IParticleValue
+     *  @see LoKi::Cuts::VALUE
+     *  @author Sebastian Neubert
+     *  @date 2013-08-05
+     */
+    typedef LoKi::Particles::Value                                    VALUE ;    
+    // ========================================================================
     /** @typedef VD 
      *  Evaluator of the GEOMETRY 
      *  distance between the particle 
