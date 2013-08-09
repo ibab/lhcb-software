@@ -155,9 +155,9 @@ static bool file_write(int file, const void* data, int len)   {
 }
 
 /// Standard Constructor
-HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc) :
-  OnlineService(nam, svcLoc), m_receiveEvts(false), m_lock(0), m+mepMgr(0), 
-  m_producer(0), m_evtCount(0), m_disabled(false)
+HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
+  : OnlineService(nam, svcLoc), m_receiveEvts(false), m_lock(0), m_mepMgr(0), 
+    m_producer(0), m_evtCount(0), m_disabled(false)
 {
   declareProperty("Buffer",      m_buffer = "Mep");
   declareProperty("Directory",   m_directory = "/localdisk");
