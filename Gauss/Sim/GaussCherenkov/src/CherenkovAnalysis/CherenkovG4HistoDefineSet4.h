@@ -118,10 +118,12 @@ private:
   IHistogram1D* m_hCkvRich1GasResEmisD4Rst ;
 
 
+  IHistogram2D* m_hRich1GasResEmisAsTheta;
+  IHistogram2D* m_hRich2GasResEmisAsTheta;
 
-
+  IHistogram2D* m_hRich1GasResEmisAsTrPhi;
+  IHistogram2D* m_hRich2GasResEmisAsTrPhi;
   
-
 
 };
 #endif // RICHANALYSIS_RICHG4HISTODEFINESET4_H

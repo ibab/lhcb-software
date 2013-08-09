@@ -1,8 +1,6 @@
 // $Id: CherenkovG4HistoFillSet4.cpp,v 1.6 2009-07-03 11:59:49 seaso Exp $
 // Include files
 
-
-
 // local
 #include "CherenkovG4HistoFillSet4.h"
 #include "GaussRICH/RichG4Counters.h"
@@ -42,10 +40,11 @@
 // Standard constructor, initializes variables
 //=============================================================================
 CherenkovG4HistoFillSet4::CherenkovG4HistoFillSet4(  ) {
-
 }
+
 CherenkovG4HistoFillSet4::~CherenkovG4HistoFillSet4(  ) {
 }
+
 void CherenkovG4HistoFillSet4::FillRichG4CoordHistoSet4(CkvG4Hit* adHit, RichG4HitCoordResult* bReconCoordResult)
 {
   IHistogramSvc* CurrentHistoSvc = RichG4SvcLocator::RichG4HistoSvc();
@@ -228,9 +227,11 @@ void CherenkovG4HistoFillSet4::FillRichG4HistoSet4(CkvG4Hit* acHit,
 
 
 
-
-
-
+  SmartDataPtr<IHistogram2D> hRich1GasResEmisAsTheta( CurrentHistoSvc,"RICHG4HISTOSET4/1536" );
+  SmartDataPtr<IHistogram2D> hRich2GasResEmisAsTheta( CurrentHistoSvc,"RICHG4HISTOSET4/1736" );
+  
+  SmartDataPtr<IHistogram2D> hRich1GasResEmisAsTrPhi( CurrentHistoSvc,"RICHG4HISTOSET4/1537" );
+  SmartDataPtr<IHistogram2D> hRich2GasResEmisAsTrPhi( CurrentHistoSvc,"RICHG4HISTOSET4/1737" );
 
 
   RichG4RadiatorMaterialIdValues* aRMIdValues =
@@ -240,6 +241,9 @@ void CherenkovG4HistoFillSet4::FillRichG4HistoSet4(CkvG4Hit* acHit,
   int curRadiator= acHit-> GetRadiatorNumber();
   double genckv =   acHit-> ThetaCkvAtProd();
   double genckvphi = acHit->  PhiCkvAtProd();
+
+  double TrkTheta = acHit->ChTrackMomVect().theta();
+  double TrkPhi   = acHit->ChTrackMomVect().phi();
 
   bool aPrimTrack = false;
   double ChMom= acHit->ChTrackTotMom();
@@ -365,11 +369,13 @@ void CherenkovG4HistoFillSet4::FillRichG4HistoSet4(CkvG4Hit* acHit,
     if(hCkvRich1GasGen) hCkvRich1GasGen->fill(genckv) ;
     if(hCkvRich1GasRes) hCkvRich1GasRes->fill(aCkvRecD3E1-genckv) ;
     if(hCkvRich1GasResEmis)hCkvRich1GasResEmis->fill(aCkvRecD3E4-aCkvRecD3E1);
-    //if(hCkvRich1GasResEmis)hCkvRich1GasResEmis->fill(aCkvRecD4E4-aCkvRecD4E1);
+    //if(hCkvRich1GasResEmis)hCkvRich1GasResEmis->fill(aCkvRecD4E4-aCkvRecD4E1);    
 
-    
+    if(hCkvRich1GasResEmisD4)hCkvRich1GasResEmisD4->fill(aCkvRecD4E4-aCkvRecD4E1);
 
-      if(hCkvRich1GasResEmisD4)hCkvRich1GasResEmisD4->fill(aCkvRecD4E4-aCkvRecD4E1);
+    if( hRich1GasResEmisAsTheta ) hRich1GasResEmisAsTheta->fill(TrkTheta, aCkvRecD4E4-aCkvRecD4E1 );
+    if( hRich1GasResEmisAsTrPhi ) hRich1GasResEmisAsTheta->fill(TrkPhi,   aCkvRecD4E4-aCkvRecD4E1 );
+
      if(aPrimTrack) {
        if(hCkvRich1GasResEmisD4Prim)  hCkvRich1GasResEmisD4Prim->fill( aCkvRecD4E4-aCkvRecD4E1);   
      }
@@ -430,6 +436,10 @@ void CherenkovG4HistoFillSet4::FillRichG4HistoSet4(CkvG4Hit* acHit,
     if(hCkvRich2GasRes) hCkvRich2GasRes->fill(aCkvRecD3E1-genckv) ;
     //if(hCkvRich2GasResEmis)hCkvRich2GasResEmis->fill(aCkvRecD3E4-aCkvRecD3E1);
     if(hCkvRich2GasResEmis)hCkvRich2GasResEmis->fill(aCkvRecD4E4-aCkvRecD4E1);
+
+    if( hRich2GasResEmisAsTheta ) hRich2GasResEmisAsTheta->fill(TrkTheta, aCkvRecD4E4-aCkvRecD4E1 );
+    if( hRich2GasResEmisAsTrPhi ) hRich2GasResEmisAsTrPhi->fill(TrkPhi,   aCkvRecD4E4-aCkvRecD4E1 );
+
     if( hCkvRich2GasResPixel) hCkvRich2GasResPixel->
                                 fill(aCkvRecD1E1-aCkvRecD2E1);
 

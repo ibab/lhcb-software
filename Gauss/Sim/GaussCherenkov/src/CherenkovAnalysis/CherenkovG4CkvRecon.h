@@ -182,7 +182,8 @@ public:
   {
     return m_PhDetTransforms[aSect];
   }
- 
+  
+  double DistFromSphMirror( const Gaudi::XYZPoint& aSphRefPoint );
    
 protected:
 

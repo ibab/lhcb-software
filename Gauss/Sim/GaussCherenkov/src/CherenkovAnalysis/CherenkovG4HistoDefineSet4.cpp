@@ -286,10 +286,10 @@ void CherenkovG4HistoDefineSet4::bookRichG4HistogramsSet4()
       //                title,100,0.0,6.5,-0.001,0.001);
 
       // now for emission point error
-
+      
       title="Rich1Gas ReconsD3E4- Recons D3E1 Emiss error";
     
-     m_hCkvRich1GasResEmis = CurHistoSvc->book(m_RichG4HistoPathSet4+"1530",
+      m_hCkvRich1GasResEmis = CurHistoSvc->book(m_RichG4HistoPathSet4+"1530",
                                            title, 1000,-0.005,0.005);
 
 
@@ -398,6 +398,25 @@ void CherenkovG4HistoDefineSet4::bookRichG4HistogramsSet4()
       title= "Focal distance for Rich2" ;
       m_hFocalDistR1 = CurHistoSvc->book(m_RichG4HistoPathSet4+"2600",
                                          title,1000,3500.0,5500.0);
+
+
+      
+      title="Rich1 Emiss error vs Track polar angle";
+      m_hRich1GasResEmisAsTheta = CurHistoSvc->book(m_RichG4HistoPathSet4+"1536",
+                                                    title, 100, 0, 0.5, 100, -0.005,0.005);
+
+      title="Rich2 Emiss error vs Track polar angle";
+      m_hRich2GasResEmisAsTheta = CurHistoSvc->book(m_RichG4HistoPathSet4+"1736",
+                                                    title, 100, 0, 0.5, 100, -0.005,0.005); 
+
+      
+      title="Rich1 Emiss error vs Track azimuthal angle";
+      m_hRich1GasResEmisAsTrPhi = CurHistoSvc->book(m_RichG4HistoPathSet4+"1537",
+                                                    title, 128, -3.2, 3.2, 100, -0.005,0.005);
+
+      title="Rich2 Emiss error vs Track azimuthal angle";
+      m_hRich2GasResEmisAsTrPhi = CurHistoSvc->book(m_RichG4HistoPathSet4+"1737",
+                                                    title, 128, -3.2, 3.2, 100, -0.005,0.005); 
 
       
 }

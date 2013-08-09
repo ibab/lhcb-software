@@ -231,16 +231,22 @@ void CherenkovG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
 
   title="Number of Sat hits vs Track Polar Angle in Rich1Gas ";
-
-
   m_hNumHitVsAngC4F10FullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"352",
-                          title,100, 0.0, 0.4, 100,0.0,60.0);
+                          title,100, 0.0, 0.4, 100,0.0, 100.0);
   if(! m_hNumHitVsAngC4F10FullAcceptSat) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }
 
 
+  title="Number of Sat  Hits vs Tr phi in Rich1Gas ";
+  m_hNumHitVsTrPhiC4F10FullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"353",
+                                                         title, 128,-3.2, 3.2, 100, 0.0, 100.0);
+  if(!m_hNumHitVsTrPhiC4F10FullAcceptSat ) {
+
+    RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+    
+  }
 
 
   title="Total number of Non-scint Rich2 Hits in Rich2Gas per event ";
@@ -353,15 +359,28 @@ void CherenkovG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }
+
   title="Number of Sat  Hits vs polar Angle in Rich2Gas ";
-
-
   m_hNumHitVsAngCF4FullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"372",
-                     title,100,0.0,0.4,100,0.0,60.0);
+                                                     title,100,0.0,0.4,100,0.0, 100.0);
   if(!m_hNumHitVsAngCF4FullAcceptSat ) {
-  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
+    RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+    
   }
+
+
+  title="Number of Sat  Hits vs Tr phi in Rich2Gas ";
+  m_hNumHitVsTrPhiCF4FullAcceptSat = CurHistoSvc->book(m_RichG4HistoPathSet2+"373",
+                                                       title,128, -3.2, 3.2, 100,0.0, 100.0);
+  if(!m_hNumHitVsTrPhiCF4FullAcceptSat ) {
+
+    RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+    
+  }
+
+
+
 
   title="Total number of non radiator hits in RICH1 per event ";
 

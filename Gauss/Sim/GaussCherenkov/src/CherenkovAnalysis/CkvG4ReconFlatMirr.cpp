@@ -53,7 +53,7 @@ CkvG4ReconFlatMirr::CkvG4ReconFlatMirr(  )
        m_Rich1NumSecMirror(16),
        m_Rich2NumSecMirror(40),
        m_RichSecMirrCoCRad( m_Rich1NumSecMirror+m_Rich2NumSecMirror,
-                             std::vector<double> (m_RichNumSecMirrorCoCParam)),
+                            std::vector<double> (m_RichNumSecMirrorCoCParam)),
        m_Rich1Mirror2CommonPath(Rich1DeStructurePathName),
        m_Rich2Mirror2CommonPath(Rich2DeStructurePathName),
        m_Rich1Mirror2IndPathString(std::vector<std::string> (m_Rich1NumSecMirror)),
@@ -85,9 +85,10 @@ CkvG4ReconFlatMirr::CkvG4ReconFlatMirr(  )
   SmartDataPtr<DetectorElement> Rich1DE(detSvc, Rich1DeStructurePathName);
   SmartDataPtr<DetectorElement> Rich2DE(detSvc, Rich2DeStructurePathName);
 
-  std::string r1m2MPath []={"/Rich1Mirror2MasterTop/Rich1Mirror2Seg","/Rich1Mirror2MasterBot/Rich1Mirror2Seg" };
+  std::string r1m2MPath []={"/Rich1Mirror2MasterTop/Rich1Mirror2Seg",
+                            "/Rich1Mirror2MasterBot/Rich1Mirror2Seg" };
   if(m_Rich1HorizFlag ) {
-    r1m2MPath[0]= "/Rich1Mirror2MasterLeft/Rich1Mirror2Seg" ;
+    r1m2MPath[0] = "/Rich1Mirror2MasterLeft/Rich1Mirror2Seg" ;
     r1m2MPath[1] = "/Rich1Mirror2MasterRight/Rich1Mirror2Seg";    
   }
   
@@ -97,50 +98,53 @@ CkvG4ReconFlatMirr::CkvG4ReconFlatMirr(  )
                           "12:12","13:13","14:14","15:15"};
   for(int ii=0; ii<m_Rich1NumSecMirror; ++ii) {
     if(ii < 8 ) {
-     m_Rich1Mirror2IndPathString[ii]= m_Rich1Mirror2CommonPath+  r1m2MPath [0]+ r2mNum[ii];
+
+      m_Rich1Mirror2IndPathString[ii]= m_Rich1Mirror2CommonPath + r1m2MPath[0] + r2mNum[ii];
+
     }else {
-     m_Rich1Mirror2IndPathString[ii]= m_Rich1Mirror2CommonPath+  r1m2MPath [1]+ r2mNum[ii];     
+
+      m_Rich1Mirror2IndPathString[ii]= m_Rich1Mirror2CommonPath + r1m2MPath[1] + r2mNum[ii];     
+
+    }    
+  }
+
+
+  std::string mnum []= {"0","1","2","3","4","5","6","7","8","9","10",
+                        "11","12","13","14","15","16","17","18","19","20",
+                        "21","22","23","24","25","26","27","28","29","30",
+                        "31","32","33","34","35","36","37","38","39"};
+  
+  std::string Rich2Mirror2DetElemCont0= "/Rich2Gas/Rich2SecMirrorContainer_0";
+  std::string Rich2Mirror2DetElemCont1= "/Rich2Gas/Rich2SecMirrorContainer_1";
+  std::string Rich2Mirror2String= "/Rich2SecMirror:" ;
+  
+        
+  for(int ij=0; ij<m_Rich2NumSecMirror;++ij) {
+    if(ij< 20 ) {
+      
+      m_Rich2Mirror2IndPathString[ij]= m_Rich2Mirror2CommonPath + Rich2Mirror2DetElemCont0 + Rich2Mirror2String+mnum[ij];
+      
+    }else {
+      
+      m_Rich2Mirror2IndPathString[ij]= m_Rich2Mirror2CommonPath + Rich2Mirror2DetElemCont1 + Rich2Mirror2String+mnum[ij];
+      
     }
     
   }
 
-
-    std::string mnum []= {"0","1","2","3","4","5","6","7","8","9","10",
-                         "11","12","13","14","15","16","17","18","19","20",
-                          "21","22","23","24","25","26","27","28","29","30",
-                          "31","32","33","34","35","36","37","38","39"};
-
-    std::string Rich2Mirror2DetElemCont0= "/Rich2Gas/Rich2SecMirrorContainer_0";
-    std::string Rich2Mirror2DetElemCont1= "/Rich2Gas/Rich2SecMirrorContainer_1";
-    std::string Rich2Mirror2String= "/Rich2SecMirror:" ;
-    
-        
-    for(int ij=0; ij<m_Rich2NumSecMirror;++ij) {
-      if(ij< 20 ) {
-        
-        m_Rich2Mirror2IndPathString[ij]= m_Rich2Mirror2CommonPath+Rich2Mirror2DetElemCont0+Rich2Mirror2String+mnum[ij];
-      
-      }else {
-        
-        m_Rich2Mirror2IndPathString[ij]= m_Rich2Mirror2CommonPath+Rich2Mirror2DetElemCont1+Rich2Mirror2String+mnum[ij];
-        
-      }
-      
-    }
-    
- 
   if(Rich1DE) {
-    setRich1FlatMirrorParam();
+
+    setRich1FlatMirrorParam(); 
 
   }
+
   if(Rich2DE){
 
     setRich2FlatMirrorParam();
 
   }
-
-
 }
+
 CkvG4ReconFlatMirr::~CkvG4ReconFlatMirr(  ) {
 }
 
@@ -162,10 +166,7 @@ void CkvG4ReconFlatMirr::setRich1FlatMirrorParam( )
   if( Rich1DE) {
 
     //    std::vector<double> r1m2Nor = Rich1DE->param<std::vector<double> >("Rich1NominalFlatMirrorPlane");
-    std::vector<double> r1m2Nor = Rich1DE->param<std::vector<double> >("NominalSecMirrorPlane");
-    
-      
-    
+    std::vector<double> r1m2Nor = Rich1DE->param<std::vector<double> >("NominalSecMirrorPlane");    
 
     double r1m2A = r1m2Nor[0];
     double r1m2B = r1m2Nor[1];
@@ -187,16 +188,17 @@ void CkvG4ReconFlatMirr::setRich1FlatMirrorParam( )
     // now for horizontal rich1
 
    if(m_Rich1HorizFlag) {
+
       m_RichFlatMirrorNominalOrientation[1][0]= -1.0*r1m2A;
       m_RichFlatMirrorNominalOrientation[1][1]= r1m2B;
 
       std::vector<double> r1m2NorLeft ;
       std::vector<double> r1m2NorRight ;
       
-            
+      
       if(  Rich1DE->exists("NominalSecMirrorPlaneLeft"  )  && Rich1DE->exists("NominalSecMirrorPlaneRight")  ){
           r1m2NorLeft = Rich1DE->param<std::vector<double> >("NominalSecMirrorPlaneLeft");
-          r1m2NorRight= Rich1DE->param<std::vector<double> >("NominalSecMirrorPlaneLeft");
+          r1m2NorRight= Rich1DE->param<std::vector<double> >("NominalSecMirrorPlaneRight"); //!!! Something wrong!
           m_RichFlatMirrorNominalOrientation[0][0]= r1m2NorLeft[0];
           m_RichFlatMirrorNominalOrientation[0][1]= r1m2NorLeft[1];
           m_RichFlatMirrorNominalOrientation[0][2]= r1m2NorLeft[2];
@@ -210,43 +212,38 @@ void CkvG4ReconFlatMirr::setRich1FlatMirrorParam( )
           // CkvG4ReconFlatMirrlog << MSG::INFO<<"Horiz Rich1 Flat mirror orientation "<<
           //  r1m2NorLeft <<"   "<<r1m2NorRight<<endreq;
           
-        }
-           
-           
-      
+      }     
    }
+
+   CkvG4ReconFlatMirrlog << MSG::DEBUG
+                         << "Flat Mirr param in rich1  " 
+                         << r1m2A <<"  "
+                         << r1m2B <<"  "
+                         << r1m2C <<"  "
+                         << r1m2D 
+                         << endreq;
+    
+   // double r0c0X =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbXR0C0");
+   // double r0c0Y =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbYR0C0");
+   // double r0c0Z =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbZR0C0");
+    
+   // double r2c2X =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbXR2C2");
+   //  double r2c2Y =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbYR2C2");
+   //  double r2c2Z =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbZR2C2");
    
-     
-  
-    
-
-           CkvG4ReconFlatMirrlog << MSG::DEBUG
-               << "Flat Mirr param in rich1  " 
-                             << r1m2A<<"  "<<r1m2B
-                             <<"   "<<r1m2C
-                             <<"   "<<r1m2D<< endreq;
-    
-    //    double r0c0X =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbXR0C0");
-    // double r0c0Y =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbYR0C0");
-    // double r0c0Z =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbZR0C0");
-    
-    // double r2c2X =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbXR2C2");
-    //  double r2c2Y =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbYR2C2");
-    //  double r2c2Z =  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbZR2C2");
-
-    //    double r2delX =   Rich1DE->param<double>("Rich1Mirror2CoCNominalDeltaX");
-    // double r2delY =   Rich1DE->param<double>("Rich1Mirror2CoCNominalDeltaY");
-    // double r2delZ =   Rich1DE->param<double>("Rich1Mirror2CoCNominalDeltaZ");
-	  //    double r2rad=     Rich1DE->param<double>("Rich1Mirror2NominalRadiusC");
-	  //   CkvG4ReconFlatMirrlog << MSG::INFO<<"Rich1 Mirror2 nominal radius "<< r2rad<<endreq;
+   //    double r2delX =   Rich1DE->param<double>("Rich1Mirror2CoCNominalDeltaX");
+   // double r2delY =   Rich1DE->param<double>("Rich1Mirror2CoCNominalDeltaY");
+   // double r2delZ =   Rich1DE->param<double>("Rich1Mirror2CoCNominalDeltaZ");
+   //    double r2rad=     Rich1DE->param<double>("Rich1Mirror2NominalRadiusC");
+   //   CkvG4ReconFlatMirrlog << MSG::INFO<<"Rich1 Mirror2 nominal radius "<< r2rad<<endreq;
    
     
-    for(int im=0; im< m_Rich1NumSecMirror; ++im) { 
+   for(int im=0; im< m_Rich1NumSecMirror; ++im) { 
       //      std::string apath = m_Rich1Mirror2IndPathString[ii];
       //     SmartDataPtr<DetectorElement> Rich1M2(detSvc, apath);
-      DetectorElement* Rich1M2=getMirrorDetElem (0, im );
+     DetectorElement* Rich1M2=getMirrorDetElem (0, im );
       
-     if(!Rich1M2 ) {
+     if( !Rich1M2 ) {
 
        CkvG4ReconFlatMirrlog << MSG::ERROR<<       
        "Rich1 mirror2 detelem does not exist . Mirror num "<<im << endreq;
@@ -254,28 +251,23 @@ void CkvG4ReconFlatMirr::setRich1FlatMirrorParam( )
      }else {
        
      
-      Gaudi::XYZPoint zero(0.0,0.0,0.0);
-      Gaudi::XYZPoint mcoc = Rich1M2 ->geometry() ->toGlobal(zero);
-      const SolidSphere* aSphereSolid = getCurMirrorSolid (0,im );
+       Gaudi::XYZPoint zero(0.0,0.0,0.0);
+       Gaudi::XYZPoint mcoc = Rich1M2 ->geometry() ->toGlobal(zero);
+       const SolidSphere* aSphereSolid = getCurMirrorSolid (0,im );
           
-      double r2rad = aSphereSolid->insideRadius();
-      // CkvG4ReconFlatMirrlog << MSG::INFO<<"Rich1 Mirror2 nominal radius "<< r2rad<<endreq;
+       double r2rad = aSphereSolid->insideRadius();
+       // CkvG4ReconFlatMirrlog << MSG::INFO<<"Rich1 Mirror2 nominal radius "<< r2rad<<endreq;
       
-      m_RichSecMirrCoCRad[im] [0] = mcoc.x();
-      m_RichSecMirrCoCRad[im] [1] = mcoc.y();
-      m_RichSecMirrCoCRad[im] [2] = mcoc.z();
-      m_RichSecMirrCoCRad[im] [3] =  r2rad;    
-
-        CkvG4ReconFlatMirrlog << MSG::DEBUG<< "Rich1 Mirror2 num CoCxyz rad "<<
-                              im<<"  "<< mcoc.x()<<"  "
-      			     << mcoc.y()<<"  "<< mcoc.z()<<"  "<<r2rad <<endreq;
-     
-      
-
-      
-      
-     }
-     
+       m_RichSecMirrCoCRad[im] [0] = mcoc.x();
+       m_RichSecMirrCoCRad[im] [1] = mcoc.y();
+       m_RichSecMirrCoCRad[im] [2] = mcoc.z();
+       m_RichSecMirrCoCRad[im] [3] =  r2rad;    
+       
+       CkvG4ReconFlatMirrlog << MSG::DEBUG<< "Rich1 Mirror2 num CoCxyz rad "<< im 
+                             <<"  "<< mcoc.x()<<"  "
+                             << mcoc.y()<<"  "<< mcoc.z()<<"  "<<r2rad <<endreq;      
+       
+     }  
     }    
   }
 }
@@ -323,40 +315,36 @@ void CkvG4ReconFlatMirr::setRich2FlatMirrorParam( )
 
       //      std::string apath = aa+mnum[im];
       // SmartDataPtr<DetectorElement> Rich2M2(detSvc, apath);
-    if(!Rich2M2) {
-       CkvG4ReconFlatMirrlog << MSG::ERROR<<       
-      "Rich2 mirror2 detelem does not exist . Mirror num "<<im<< endreq;
-       
-    }else {
-      
-      Gaudi::XYZPoint zero(0.0,0.0,0.0);
-      Gaudi::XYZPoint mcoc = Rich2M2 ->geometry() ->toGlobal(zero);
-
-      const SolidSphere* aSphereSolid = getCurMirrorSolid (1,im );
-      
-     
-      double r2rad = aSphereSolid->insideRadius();
-             
-      m_RichSecMirrCoCRad[im+m_Rich1NumSecMirror] [0] = mcoc.x();
-      m_RichSecMirrCoCRad[im+m_Rich1NumSecMirror] [1] = mcoc.y();
-      m_RichSecMirrCoCRad[im+m_Rich1NumSecMirror] [2] = mcoc.z();
-      m_RichSecMirrCoCRad[im+m_Rich1NumSecMirror] [3] =  r2rad;    
-
-      //  CkvG4ReconFlatMirrlog << MSG::INFO<< "Rich2 Mirror2 num CoCxyz rad "<<
-      //                        im<<"  "<< mcoc.x()<<"  "
-      //                       << mcoc.y()<<"  "<< mcoc.z()<<"   "<<r2rad <<endreq; 
-      //
-    }    
+      if( !Rich2M2 ) {
+        CkvG4ReconFlatMirrlog << MSG::ERROR<<       
+          "Rich2 mirror2 detelem does not exist . Mirror num "<<im<< endreq;
+        
+      }else {
+        
+        Gaudi::XYZPoint zero(0.0,0.0,0.0);
+        Gaudi::XYZPoint mcoc = Rich2M2 ->geometry() ->toGlobal(zero);
+        
+        const SolidSphere* aSphereSolid = getCurMirrorSolid (1,im );     
+        double r2rad = aSphereSolid->insideRadius();
+        
+        m_RichSecMirrCoCRad[im+m_Rich1NumSecMirror] [0] = mcoc.x();
+        m_RichSecMirrCoCRad[im+m_Rich1NumSecMirror] [1] = mcoc.y();
+        m_RichSecMirrCoCRad[im+m_Rich1NumSecMirror] [2] = mcoc.z();
+        m_RichSecMirrCoCRad[im+m_Rich1NumSecMirror] [3] =  r2rad;    
+        
+        //  CkvG4ReconFlatMirrlog << MSG::INFO<< "Rich2 Mirror2 num CoCxyz rad "<<
+        //                        im<<"  "<< mcoc.x()<<"  "
+        //                       << mcoc.y()<<"  "<< mcoc.z()<<"   "<<r2rad <<endreq; 
+        //
+      }    
       
     }    
   }
   
-
-  
 }
 
 Gaudi::XYZPoint  CkvG4ReconFlatMirr::FlatMirrorReflect(const Gaudi::XYZPoint & HitCoordQw ,
-                                                   int FlatMirrorType)
+                                                       int FlatMirrorType)
 {
 
   IMessageSvc*  msgSvc = CkvG4SvcLocator::RichG4MsgSvc ();
@@ -366,14 +354,13 @@ Gaudi::XYZPoint  CkvG4ReconFlatMirr::FlatMirrorReflect(const Gaudi::XYZPoint & H
   //      << m_RichFlatMirrorNominalOrientation[FlatMirrorType] [3] <<endreq;
   
 
-  Gaudi::Plane3D aMPlane(   
-                 m_RichFlatMirrorNominalOrientation[FlatMirrorType][0],
-                 m_RichFlatMirrorNominalOrientation[FlatMirrorType][1],
-                 m_RichFlatMirrorNominalOrientation[FlatMirrorType][2],
-                 m_RichFlatMirrorNominalOrientation[FlatMirrorType][3]);
+  Gaudi::Plane3D aMPlane(m_RichFlatMirrorNominalOrientation[FlatMirrorType][0],
+                         m_RichFlatMirrorNominalOrientation[FlatMirrorType][1],
+                         m_RichFlatMirrorNominalOrientation[FlatMirrorType][2],
+                         m_RichFlatMirrorNominalOrientation[FlatMirrorType][3]);
   double adist =  aMPlane.Distance(HitCoordQw);
   Gaudi::XYZPoint virtDetPoint =
-         HitCoordQw - 2.0*adist * (aMPlane.Normal() );
+    HitCoordQw - 2.0*adist * (aMPlane.Normal() );
   
   // CkvG4ReconFlatMirrlog<<MSG::INFO<<" Now in Flat mirror reflect "<< FlatMirrorType<<"  "<< HitCoordQw 
   //                     <<"  "<<virtDetPoint<<endmsg;
@@ -381,21 +368,54 @@ Gaudi::XYZPoint  CkvG4ReconFlatMirr::FlatMirrorReflect(const Gaudi::XYZPoint & H
   return virtDetPoint;
   
 }
-Gaudi::XYZPoint CkvG4ReconFlatMirr::ConvertToLocal(const Gaudi::XYZPoint & aGlobalPoint, 
-     int aRichDetNum, int aMirrorNum ) 
+
+double CkvG4ReconFlatMirr::DistFromFlatMirror(const Gaudi::XYZPoint & HitCoordQw ,
+                                                       int FlatMirrorType )
 {
   
- DetectorElement* aMDet = getMirrorDetElem(aRichDetNum,aMirrorNum);
+  Gaudi::Plane3D aMPlane(m_RichFlatMirrorNominalOrientation[FlatMirrorType][0],
+                         m_RichFlatMirrorNominalOrientation[FlatMirrorType][1],
+                         m_RichFlatMirrorNominalOrientation[FlatMirrorType][2],
+                         m_RichFlatMirrorNominalOrientation[FlatMirrorType][3]);
+  double adist =  aMPlane.Distance(HitCoordQw);
+    
+  return adist;
+}
+
+double CkvG4ReconFlatMirr::AngleOnFlatMirror(const Gaudi::XYZPoint& HitCoordQw,
+                                             const Gaudi::XYZPoint& PtOnFM,
+                                             int FlatMirrorType)
+{
+  
+  Gaudi::Plane3D aMPlane(m_RichFlatMirrorNominalOrientation[FlatMirrorType][0],
+                         m_RichFlatMirrorNominalOrientation[FlatMirrorType][1],
+                         m_RichFlatMirrorNominalOrientation[FlatMirrorType][2],
+                         m_RichFlatMirrorNominalOrientation[FlatMirrorType][3]);
+
+  Gaudi::XYZVector v= (HitCoordQw-PtOnFM).unit();
+
+  return acos(v.Dot(aMPlane.Normal()));
+  
+}
+
+Gaudi::XYZPoint CkvG4ReconFlatMirr::ConvertToLocal(const Gaudi::XYZPoint & aGlobalPoint, 
+                                                   int aRichDetNum, 
+                                                   int aMirrorNum ) 
+{
+  
+  DetectorElement* aMDet = getMirrorDetElem(aRichDetNum,aMirrorNum);
   
   Gaudi::XYZPoint aLocp = aMDet->geometry()->toLocal( aGlobalPoint);
   
   return aLocp;
   
 }
+
 Gaudi::XYZPoint CkvG4ReconFlatMirr::ConvertToGlobal(const Gaudi::XYZPoint & aLocalPoint,
-     int aRichDetNum, int aMirrorNum )   
+                                                    int aRichDetNum, 
+                                                    int aMirrorNum )   
 {
- 
+  
   DetectorElement* aMDet = getMirrorDetElem(aRichDetNum,aMirrorNum);
   Gaudi::XYZPoint aGlop = aMDet->geometry()->toGlobal( aLocalPoint);
   return aGlop;
@@ -403,7 +423,9 @@ Gaudi::XYZPoint CkvG4ReconFlatMirr::ConvertToGlobal(const Gaudi::XYZPoint & aLoc
 }
 
 Gaudi::XYZPoint CkvG4ReconFlatMirr::FlatMirrorIntersection( const Gaudi::XYZPoint & aGlobalPoint1,
-                     const Gaudi::XYZPoint & aGlobalPoint2,int aRichDetNum,int aFlatMirrorNum) 
+                                                            const Gaudi::XYZPoint & aGlobalPoint2, 
+                                                            int aRichDetNum,
+                                                            int aFlatMirrorNum ) 
 {
 
 
@@ -418,12 +440,11 @@ Gaudi::XYZPoint CkvG4ReconFlatMirr::FlatMirrorIntersection( const Gaudi::XYZPoin
 
 
   const SolidSphere* aSphereSolid= getCurMirrorSolid (aRichDetNum,aFlatMirrorNum);
-   const unsigned int sphTicksSize = aSphereSolid->
-          intersectionTicks(aLocalPoint1, aVect, sphTicks);
+  const unsigned int sphTicksSize = aSphereSolid->intersectionTicks(aLocalPoint1, aVect, sphTicks);
 
   
-   const Gaudi::XYZPoint & aLocalIntersectionPoint = (sphTicksSize > 0 ) ? aLocalPoint1+ sphTicks[0] * aVect: aLocalPoint1;
-
+  const Gaudi::XYZPoint & aLocalIntersectionPoint = (sphTicksSize > 0 ) ? aLocalPoint1+ sphTicks[0] * aVect: aLocalPoint1;
+  
   const Gaudi::XYZPoint & aGlobalIntersectionPoint = ConvertToGlobal(aLocalIntersectionPoint,
                                                                      aRichDetNum,aFlatMirrorNum );
   return aGlobalIntersectionPoint;
@@ -436,29 +457,29 @@ const SolidSphere* CkvG4ReconFlatMirr::getCurMirrorSolid (int aRichDetNum, int a
   IMessageSvc*  msgSvc = CkvG4SvcLocator::RichG4MsgSvc ();
   MsgStream CkvG4ReconFlatMirrlog( msgSvc,"CkvG4ReconFlatMirr");
 
-   const SolidSphere* sphereSolid = 0;
+  const SolidSphere* sphereSolid = 0;
   DetectorElement* aMDet = getMirrorDetElem(aRichDetNum,aFlatMirrorNum);
   if(!aMDet ) {
-       CkvG4ReconFlatMirrlog << MSG::ERROR<<       
-         "Rich mirror detelem does not exist . richdet Mirror num "<< aRichDetNum
-                              << aFlatMirrorNum << endreq;
+    CkvG4ReconFlatMirrlog << MSG::ERROR<< "Rich mirror detelem does not exist . richdet Mirror num "
+                          << aRichDetNum
+                          << aFlatMirrorNum 
+                          << endreq;
       
   }else {
-    
-  
-     const ISolid* aSolid = aMDet ->geometry() ->lvolume()->solid();
-     const std::string type = aSolid->typeName();
-     if( type == "SolidSphere" ){
-       sphereSolid = dynamic_cast<const SolidSphere*>(aSolid);
-     }else {
-       // assume that the sphere segment boolean is always made with sphere as the
-       // staring vol.
-       const SolidBoolean* compSolid = dynamic_cast<const SolidBoolean*>(aSolid);
-       sphereSolid =  dynamic_cast<const SolidSphere*>(compSolid->first());   
-     }
+
+    const ISolid* aSolid = aMDet ->geometry() ->lvolume()->solid();
+    const std::string type = aSolid->typeName();
+    if( type == "SolidSphere" ){
+      sphereSolid = dynamic_cast<const SolidSphere*>(aSolid);
+    }else {
+      // assume that the sphere segment boolean is always made with sphere as the
+      // staring vol.
+      const SolidBoolean* compSolid = dynamic_cast<const SolidBoolean*>(aSolid);
+      sphereSolid =  dynamic_cast<const SolidSphere*>(compSolid->first());   
+    }
   }
   
-return  sphereSolid ;
+  return  sphereSolid ;
      
 }
 
@@ -468,31 +489,29 @@ DetectorElement* CkvG4ReconFlatMirr::getMirrorDetElem (int aRichDetNum, int aMir
   IMessageSvc*  msgSvc = CkvG4SvcLocator::RichG4MsgSvc ();
   MsgStream CkvG4ReconFlatMirrlog( msgSvc,"CkvG4ReconFlatMirr");
 
-
-  std::string apath = "NULL";
-  
-  
+  std::string apath = "NULL";  
   
   if( aRichDetNum == 0 ) {
     if( aMirrorNum < (int) m_Rich1Mirror2IndPathString.size() ) {
     
       apath = m_Rich1Mirror2IndPathString[aMirrorNum];
     }else {
-
+      
       CkvG4ReconFlatMirrlog << MSG::ERROR<<" Unknown sec mirror num in Rich1  "
-       << aMirrorNum<<endreq;
+                            << aMirrorNum 
+                            <<endreq;
       
     }
     
     
     
   } else if (aRichDetNum == 1 ) {
-
+    
     if( aMirrorNum < (int) m_Rich2Mirror2IndPathString.size() ) {
 
 
       apath =  m_Rich2Mirror2IndPathString[aMirrorNum];
-
+      
       // G4cout<<" Current rich2 flat mirror Path detelem "<< apath<<G4endl;
       
     }else {
@@ -507,30 +526,30 @@ DetectorElement* CkvG4ReconFlatMirr::getMirrorDetElem (int aRichDetNum, int aMir
        << aRichDetNum <<endreq;
     
   }
+
+  SmartDataPtr<DetectorElement> RichM2(detSvc, apath);
   
-  
-  
-  
-       SmartDataPtr<DetectorElement> RichM2(detSvc, apath);
-  
-       return RichM2;
+  return RichM2;
        
   
 }
-Gaudi::XYZPoint CkvG4ReconFlatMirr::FlatMirrorCoC( int  aRichDetNum, int aMirrorNum ) {
+
+
+Gaudi::XYZPoint CkvG4ReconFlatMirr::FlatMirrorCoC( int aRichDetNum, 
+                                                   int aMirrorNum ) {
 
   Gaudi::XYZPoint aPoint(0,0,0);
 
   if( aRichDetNum == 0 ) {
-    aPoint = Gaudi::XYZPoint (m_RichSecMirrCoCRad [aMirrorNum] [0],
-                              m_RichSecMirrCoCRad [aMirrorNum] [1],
-			      m_RichSecMirrCoCRad[aMirrorNum] [2]);
+    aPoint = Gaudi::XYZPoint (m_RichSecMirrCoCRad[aMirrorNum] [0],
+                              m_RichSecMirrCoCRad[aMirrorNum] [1],
+                              m_RichSecMirrCoCRad[aMirrorNum] [2]);
 
   }else if ( aRichDetNum == 1 ) {
 
-    aPoint = Gaudi::XYZPoint (m_RichSecMirrCoCRad [aMirrorNum+m_Rich1NumSecMirror] [0],
-                              m_RichSecMirrCoCRad [aMirrorNum+m_Rich1NumSecMirror] [1],
-			      m_RichSecMirrCoCRad[aMirrorNum+m_Rich1NumSecMirror] [2]);
+    aPoint = Gaudi::XYZPoint (m_RichSecMirrCoCRad[aMirrorNum+m_Rich1NumSecMirror] [0],
+                              m_RichSecMirrCoCRad[aMirrorNum+m_Rich1NumSecMirror] [1],
+                              m_RichSecMirrCoCRad[aMirrorNum+m_Rich1NumSecMirror] [2]);
 
   }
 

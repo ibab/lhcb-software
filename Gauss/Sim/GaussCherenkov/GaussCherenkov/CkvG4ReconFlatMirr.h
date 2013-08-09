@@ -28,7 +28,15 @@ public:
   void setRich2FlatMirrorParam( );
 
   Gaudi::XYZPoint FlatMirrorReflect(const Gaudi::XYZPoint & HitCoordQw ,
-                               int FlatMirrorType);
+                                    int FlatMirrorType);
+
+  double DistFromFlatMirror( const Gaudi::XYZPoint & HitCoordQw ,
+                             int FlatMirrorType);
+  
+  double AngleOnFlatMirror(const Gaudi::XYZPoint& HitCoordQw,
+                           const Gaudi::XYZPoint& PtOnFM,
+                           int FlatMirrorType);
+
 
   Gaudi::XYZPoint FlatMirrorIntersection( const Gaudi::XYZPoint & aGlobalPoint1,
                                           const Gaudi::XYZPoint & aGlobalPoint2,

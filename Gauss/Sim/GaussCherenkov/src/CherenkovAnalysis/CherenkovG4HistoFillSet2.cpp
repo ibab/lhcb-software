@@ -504,8 +504,8 @@ void CherenkovG4HistoFillSet2:: FillRichG4HistoSet2A()
     aRichCounter->NumHitSaturatedPerTrackRich2GasNoHpdReflNoScintHighMom();
 
 
-  int NumSatTrajRich1Gas =  (int) NumRich1GasSatHit.size();
-  int  NumSatTrajRich1Agel = (int) NumRich1AgelSatHit.size();
+  int NumSatTrajRich1Gas  = (int) NumRich1GasSatHit.size();
+  int NumSatTrajRich1Agel = (int) NumRich1AgelSatHit.size();
   //int  NumSatTrajRich1WithRlyAgel = (int) NumRich1AgelSatWithRlyHit.size();
   int NumSatTrajRich2Gas =  (int) NumRich2GasSatHit.size();
 
@@ -609,10 +609,17 @@ void CherenkovG4HistoFillSet2:: FillRichG4HistoSet2B( )
                                               "RICHG4HISTOSET2/322");
 
   SmartDataPtr<IHistogram2D>hNumHitVsAngC4F10FullAcceptSat(CurrentHistoSvc,
-                                               "RICHG4HISTOSET2/352");
+                                                           "RICHG4HISTOSET2/352");
+  
+  SmartDataPtr<IHistogram2D>hNumHitVsTrPhiC4F10FullAcceptSat(CurrentHistoSvc,
+                                                             "RICHG4HISTOSET2/353");
+  
 
   SmartDataPtr<IHistogram2D>hNumHitVsAngCF4FullAcceptSat(CurrentHistoSvc,
-                                             "RICHG4HISTOSET2/372");
+                                                         "RICHG4HISTOSET2/372");
+
+  SmartDataPtr<IHistogram2D>hNumHitVsTrPhiCF4FullAcceptSat(CurrentHistoSvc,
+                                                           "RICHG4HISTOSET2/373"); 
 
 
   RichG4Counters* aRichCounter = RichG4Counters::getInstance();
@@ -631,12 +638,11 @@ void CherenkovG4HistoFillSet2:: FillRichG4HistoSet2B( )
     aRichCounter->NumSignalHitFullAcceptSatPerTrackR2Gas();
   
   // The following not used for now and hence commented out.
-  //  const std::vector<G4ThreeVector> & NumRich1GasFullAcceptTrackMom =
-  //  aRichCounter->TrackMomFullAcceptRich1Gas();
+
+  const std::vector<G4ThreeVector> & NumRich1GasFullAcceptTrackMom = aRichCounter->TrackMomFullAcceptRich1Gas();
   //  const std::vector<G4ThreeVector> & NumRich1AgelFullAcceptTrackMom =
   //  aRichCounter->TrackMomFullAcceptRich1Agel() ;
-  // const std::vector<G4ThreeVector> & NumRich2GasFullAcceptTrackMom =
-  //  aRichCounter->TrackMomFullAcceptRich2Gas();
+  const std::vector<G4ThreeVector> & NumRich2GasFullAcceptTrackMom = aRichCounter->TrackMomFullAcceptRich2Gas();
 
 
   int NumSatTrajFullAcceptRich1Gas =  (int) NumRich1GasFullAcceptSatHit.size();
@@ -655,12 +661,17 @@ void CherenkovG4HistoFillSet2:: FillRichG4HistoSet2B( )
 
     if( nhita > 0) {
       if(hNumTotHitC4F10FullAcceptSat )hNumTotHitC4F10FullAcceptSat ->fill(nhita,1.0);
-      //  G4ThreeVector r1gasTrkMom=NumRich1GasFullAcceptTrackMom[ihtra];
-      //  double trackTheta1= r1gasTrkMom.theta();
-      // G4cout<<" track mom theta "<<  r1gasTrkMom <<"  "<<trackTheta1<<G4endl;
 
-      // if(hNumHitVsAngC4F10FullAcceptSat) hNumHitVsAngC4F10FullAcceptSat->fill(trackTheta1,nhita);
+      G4ThreeVector r1gasTrkMom=NumRich1GasFullAcceptTrackMom[ihtra];
+      double trackTheta1= r1gasTrkMom.theta();
       
+      // G4cout<<" track mom theta "<<  r1gasTrkMom <<"  "<<trackTheta1<<G4endl;
+      
+      //G4cout<<" track mom phi "<<  r1gasTrkMom <<"  "<<r1gasTrkMom.phi() <<G4endl;
+
+      if(hNumHitVsAngC4F10FullAcceptSat) hNumHitVsAngC4F10FullAcceptSat->fill(trackTheta1,nhita);
+
+      if(hNumHitVsTrPhiC4F10FullAcceptSat) hNumHitVsTrPhiC4F10FullAcceptSat->fill( r1gasTrkMom.phi(), nhita);
       
     }   
     
@@ -697,9 +708,11 @@ void CherenkovG4HistoFillSet2:: FillRichG4HistoSet2B( )
     int nhitc = NumRich2GasFullAcceptSatHit[ihtrc];
     if( nhitc > 0) {
       if(hNumTotHitCF4FullAcceptSat ) hNumTotHitCF4FullAcceptSat->fill(nhitc,1.0);
-      // G4ThreeVector r2gasTrkMom=NumRich2GasFullAcceptTrackMom[ihtrc];
-      //  double trackTheta2= r2gasTrkMom.theta();
-      // if(hNumHitVsAngCF4FullAcceptSat) hNumHitVsAngCF4FullAcceptSat->fill(trackTheta2,nhitc);
+      G4ThreeVector r2gasTrkMom=NumRich2GasFullAcceptTrackMom[ihtrc];
+      double trackTheta2= r2gasTrkMom.theta();
+
+      if(hNumHitVsAngCF4FullAcceptSat) hNumHitVsAngCF4FullAcceptSat->fill(trackTheta2,nhitc);
+      if(hNumHitVsTrPhiCF4FullAcceptSat) hNumHitVsTrPhiCF4FullAcceptSat->fill( r2gasTrkMom.phi(), nhitc);
 
     }
 

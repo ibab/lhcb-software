@@ -862,6 +862,31 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
              // G4cout<<" TrueFlatMirrrefl point "<<aTrueFlPtDir <<G4endl;
              
 
+             double trueFMDist = aFlatMirr->DistFromFlatMirror(aDetPointFlatMirrorTrue,
+                                                               aFlatMirrtype);
+
+             double trueSMDist = m_RichG4CkvRec->DistFromSphMirror(aDetPointSphMirrorTrue);
+             
+             double AngleOnFM = aFlatMirr->AngleOnFlatMirror( aHitOnQwFromGlobalQwExtCoord,
+                                                              aDetPointFlatMirrorTrue,
+                                                              aFlatMirrtype);
+
+             
+             double TrueAngleOnFM = aFlatMirr->AngleOnFlatMirror( aDetPointSphMirrorTrue,
+                                                                  aDetPointFlatMirrorTrue,
+                                                                  aFlatMirrtype);
+
+             CherenkovG4HitReconlog << MSG::DEBUG
+                                    << "Radiator #, " << aRadiatornum
+                                    << ", D4 point " <<  aHitOnQwFromGlobalQwExtCoord
+                                    << ", true fMirr: " << aDetPointFlatMirrorTrue 
+                                    << ", dist from fMirr plane: " << trueFMDist
+                                    << ", angle on fMirr: " << AngleOnFM
+                                    << ", true one: " << TrueAngleOnFM
+                                    << ", rec-true: " <<  AngleOnFM-TrueAngleOnFM
+                                    << "; dist from SphMirror: " << trueSMDist 
+                                    << endreq;
+
              
              
              // end test geom

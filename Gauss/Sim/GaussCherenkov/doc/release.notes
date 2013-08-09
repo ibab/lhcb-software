@@ -5,6 +5,17 @@
 !               etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
 
+! 2013-08-09 - Jibo He
+ - GaussCherenkov/CkvG4ReconFlatMirr.h
+   src/CherenkovAnalysis/CkvG4ReconFlatMirr.cpp
+  . Added functions to calculate distance to flat mirror plane
+ - src/CherenkovAnalysis/CherenkovG4CkvRecon
+  . Added functions to calculate distance to spherical mirror 
+ - src/CherenkovAnalysis/CherenkovG4Histo*Set2
+  . Added histos of numHits as function of track theta, phi 
+ - src/CherenkovAnalysis/CherenkovG4Histo*Set4
+  . Added histos of emis reso as function of track theta, phi
+
 !===================== GaussCherenkov v4r0 2013-07-24 ========================
 ! 2013-07-19 - Sajan Easo
  - Adapations for RICH-2019 upgrade studies. Added new files mainly for the 

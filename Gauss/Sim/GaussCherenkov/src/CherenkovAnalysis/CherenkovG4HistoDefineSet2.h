@@ -73,7 +73,9 @@ private:
   IHistogram2D*        m_hNumHitVsAngAgelFullAcceptSat;  
   IHistogram2D*        m_hNumHitVsAngC4F10FullAcceptSat;
   IHistogram2D*        m_hNumHitVsAngCF4FullAcceptSat;
-  
+
+  IHistogram2D*        m_hNumHitVsTrPhiC4F10FullAcceptSat;
+  IHistogram2D*        m_hNumHitVsTrPhiCF4FullAcceptSat;  
 
   std::string m_RichG4HistoPathSet2; ///< Histo path
   ISvcLocator* m_svcLocSet2;
