@@ -142,7 +142,7 @@ CherenkovG4CkvRecon::CherenkovG4CkvRecon()
     std::vector<double> r1NominalCoCXCoord (4);
     if( Rich1DE-> exists ("NominalSphMirrorXCOC") ){
                 
-      r1NominalCoCXCoord = Rich1DE->param<std::vector<double> >("NominalSphMirrorXCOC");
+         r1NominalCoCXCoord = Rich1DE->param<std::vector<double> >("NominalSphMirrorXCOC");
          m_SphMirrCC [0] [0]= r1NominalCoCXCoord[0];
          m_SphMirrCC [1] [0]= r1NominalCoCXCoord[1];
 
@@ -416,7 +416,7 @@ Gaudi::XYZPoint  CherenkovG4CkvRecon::GetCoordInPhDetPanelPlane(const Gaudi::XYZ
     //  CherenkovG4CkvReconlog << MSG::INFO<<"CoordInPhDetPanelPlane Phcath Detplane "<<curLocalHitPhCath<<"   "
     //                       << curLocalHitDetPlane<<endreq;
     
-    int mdu = m_CurrentPmtNum/16;
+    //int mdu = m_CurrentPmtNum/16;
     
     // if( m_CurrentRichDetNum == 0 ) {
       
@@ -933,7 +933,7 @@ void CherenkovG4CkvRecon::SolveQuartic(  gsl_complex z[4],
   //  double c[8] =  {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
   //  int ierr=0;
   // double resolv=0.0;
-  int asol=0;
+  //int asol=0;
 
 
   if( denom != 0.0 ) {
@@ -943,8 +943,13 @@ void CherenkovG4CkvRecon::SolveQuartic(  gsl_complex z[4],
 
     //    drteq4_(&b[0],&b[1],&b[2],&b[3],c,&resolv,&ierr);
 
-    asol = gsl_poly_complex_solve_quartic_eqn( b[0], b[1], b[2], b[3],
+    // asol = gsl_poly_complex_solve_quartic_eqn( b[0], b[1], b[2], b[3],
+    //				       &z[0], &z[1], &z[2], &z[3]);
+    
+
+    gsl_poly_complex_solve_quartic_eqn( b[0], b[1], b[2], b[3],
 					       &z[0], &z[1], &z[2], &z[3]);
+
 
     //    int j=0;
     //  for(int ii=0; ii< 4 ; ++ii) {
