@@ -17,7 +17,7 @@ __all__ = (
 #locations of nopidsparticles: 
 npmuons =  "Phys/StdMCMuons/Particles"
 #atchmuons = "mcMatch( '[mu+]cc' )"
-
+locations={}
 #create matching strings
 
 matchJpsi2MuMu   = "(mcMatch('J/psi(1S) ==> mu+ mu- '))"
@@ -41,7 +41,7 @@ StdMCJpsi2MuMu.Preambulo = [
     "from PartProp.Nodes import CC" ]
 
 ## configure Data-On-Demand service
-locations = updateDoD ( StdMCJpsi2MuMu    )
+locations.update(updateDoD ( StdMCJpsi2MuMu    ))
 
 ## create the algorithm
 StdMCpsi2s2MuMu = CombineParticles ("StdMCpsi2s2MuMu")
@@ -54,7 +54,7 @@ StdMCpsi2s2MuMu.Preambulo = [
     "from PartProp.Nodes import CC" ]
 
 ## configure Data-On-Demand service
-locations = updateDoD ( StdMCpsi2s2MuMu    )
+locations.update(updateDoD ( StdMCpsi2s2MuMu    ))
 
 
 

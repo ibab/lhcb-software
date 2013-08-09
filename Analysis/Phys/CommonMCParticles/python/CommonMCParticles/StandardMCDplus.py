@@ -23,7 +23,7 @@ nppions = "Phys/StdMCPions/Particles"
 #matchKaons = "mcMatch('[K+]cc')"
 #matchPions = "mcMatch('[pi+]cc')"
 
-
+locations={}
 
 #Create matching strings
 matchDpKPiPi   = "(mcMatch('[D- ==> K+ pi- pi-]CC'))"
@@ -45,7 +45,7 @@ StdMCDplus2KPiPi.MotherCut =  matchDpKPiPi
 StdMCDplus2KPiPi.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCDplus2KPiPi )
+locations.update( updateDoD ( StdMCDplus2KPiPi ) )
 
 
 StdMCDplus2KKPi=CombineParticles ('StdMCDplus2KKPi')
@@ -59,7 +59,7 @@ StdMCDplus2KKPi.MotherCut =  matchDpKKPi
 StdMCDplus2KKPi.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCDplus2KKPi )
+locations.update( updateDoD ( StdMCDplus2KKPi ) )
 
 
 StdMCDplus2KKK=CombineParticles ('StdMCDplus2KKK')
@@ -72,7 +72,9 @@ StdMCDplus2KKK.MotherCut =  matchDpKKK
 StdMCDplus2KKK.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCDplus2KKK )
+locations.update( updateDoD ( StdMCDplus2KKK ) )
+
+
 
 StdMCDplus2PiPiPi=CombineParticles ('StdMCDplus2PiPiPi')
 StdMCDplus2PiPiPi.Inputs = [ nppions]
@@ -84,8 +86,7 @@ StdMCDplus2PiPiPi.MotherCut =  matchDpPiPiPi
 StdMCDplus2PiPiPi.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCDplus2PiPiPi )
-
+locations.update( updateDoD ( StdMCDplus2PiPiPi ) )
 
 StdMCDplus2KPiPiOppSignPi=CombineParticles ('StdMCDplus2KPiPiOppSignPi')
 StdMCDplus2KPiPiOppSignPi.Inputs = [ npkaons, nppions]
@@ -98,7 +99,8 @@ StdMCDplus2KPiPiOppSignPi.MotherCut =  matchDpKPiPiOppSignPi
 StdMCDplus2KPiPiOppSignPi.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCDplus2KPiPiOppSignPi )
+locations.update( updateDoD ( StdMCDplus2KPiPiOppSignPi ) )
+
 
 
 StdMCDplus2KKPiOppSignK=CombineParticles ('StdMCDplus2KKPiOppSignK')
@@ -112,7 +114,8 @@ StdMCDplus2KKPiOppSignK.MotherCut =  matchDpKKPiOppSignK
 StdMCDplus2KKPiOppSignK.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCDplus2KKPiOppSignK )
+locations.update( updateDoD ( StdMCDplus2KKPiOppSignK ) )
+
 ## ============================================================================
 if '__main__' == __name__ :
 

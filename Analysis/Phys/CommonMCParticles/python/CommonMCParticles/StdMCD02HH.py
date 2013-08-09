@@ -19,7 +19,7 @@ from CommonMCParticles import StandardMCKs, StandardMCKaons, StandardMCPions
 #locations of nopidsparticles: 
 npkaons =  "Phys/StdMCKaons/Particles"
 nppions = "Phys/StdMCPions/Particles"
-
+locations={}
 #matchKaons = "mcMatch( '[K+]cc' )"
 #matchPions = "mcMatch( '[pi+]cc' )"
 
@@ -42,7 +42,7 @@ StdMCD02KPi.MotherCut =  matchD02KPi
 StdMCD02KPi.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCD02KPi )
+locations.update(updateDoD ( StdMCD02KPi ))
 
 StdMCD02KK=CombineParticles ('StdMCD02KK')
 StdMCD02KK.Inputs = [ npkaons]
@@ -54,7 +54,7 @@ StdMCD02KK.MotherCut =  matchD02KK
 StdMCD02KK.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCD02KK )
+locations.update(updateDoD ( StdMCD02KK ))
 
 StdMCD02PiPi=CombineParticles ('StdMCD02PiPi')
 StdMCD02PiPi.Inputs = [ nppions]
@@ -66,7 +66,7 @@ StdMCD02PiPi.MotherCut =  matchD02PiPi
 StdMCD02PiPi.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCD02PiPi )
+locations.update(updateDoD ( StdMCD02PiPi ))
 
 
 StdMCD02KPiDCS=CombineParticles ('StdMCD02KPiDCS')
@@ -80,7 +80,7 @@ StdMCD02KPiDCS.MotherCut = matchD02KPiDCS
 StdMCD02KPiDCS.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCD02KPiDCS )
+locations.update(updateDoD ( StdMCD02KPiDCS ))
 
 ## ============================================================================
 if '__main__' == __name__ :

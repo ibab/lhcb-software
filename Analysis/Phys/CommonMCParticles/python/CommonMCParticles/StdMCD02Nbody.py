@@ -26,8 +26,9 @@ npkaons =  "Phys/StdMCKaons/Particles"
 nppions = "Phys/StdMCPions/Particles"
 mpizeroes = "Phys/StdLooseMergedPi0/Particles"
 rpizeroes = "Phys/StdLooseResolvedPi0/Particles"
-mckshorts = "Phys/StdMCKs/Particles"
-
+mcksll = "Phys/StdMCKsLL/Particles"
+mcksdd = "Phys/StdMCKsDD/Particles"
+locations={}
 #matchKaons = "mcMatch( '[K+]cc' )"
 #matchPions = "mcMatch( '[pi+]cc' )"
 matchPizeroes = "mcMatch('pi0')"
@@ -55,11 +56,11 @@ StdMCD02KKPiPi.MotherCut =  matchD02KKPiPi
 StdMCD02KKPiPi.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCD02KKPiPi )
+locations.update(updateDoD ( StdMCD02KKPiPi ))
 
 #Algorithms
 StdMCD02KsKK=CombineParticles ('StdMCD02KsKK')
-StdMCD02KsKK.Inputs = [ npkaons, mckshorts]
+StdMCD02KsKK.Inputs = [ npkaons, mcksll, mcksdd]
 StdMCD02KsKK.DecayDescriptor = "[D0 -> KS0 K+ K-]cc"
 StdMCD02KsKK.MotherCut =  matchD02KsKK
 #StdMCD02KsKK.DaughtersCuts = {
@@ -69,10 +70,10 @@ StdMCD02KsKK.MotherCut =  matchD02KsKK
 StdMCD02KsKK.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCD02KsKK )
+locations.update(updateDoD ( StdMCD02KsKK ))
 
 StdMCD02KsPiPi=CombineParticles ('StdMCD02KsPiPi')
-StdMCD02KsPiPi.Inputs = [ nppions, mckshorts]
+StdMCD02KsPiPi.Inputs = [ nppions, mcksll, mcksdd]
 StdMCD02KsPiPi.DecayDescriptor = "[D0 -> KS0 pi+ pi-]cc"
 StdMCD02KsPiPi.MotherCut =  matchD02KsPiPi 
 #StdMCD02KsPiPi.DaughtersCuts = {
@@ -82,7 +83,7 @@ StdMCD02KsPiPi.MotherCut =  matchD02KsPiPi
 StdMCD02KsPiPi.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCD02KsPiPi )
+locations.update(updateDoD ( StdMCD02KsPiPi ))
 
 StdMCD02KKMergedPi0=CombineParticles ('StdMCD02KKMergedPi0')
 StdMCD02KKMergedPi0.Inputs = [ npkaons, mpizeroes]
@@ -95,7 +96,7 @@ StdMCD02KKMergedPi0.DaughtersCuts = {
 StdMCD02KKMergedPi0.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCD02KKMergedPi0 )
+locations.update(( StdMCD02KKMergedPi0 ))
 
 StdMCD02KKResolvedPi0=CombineParticles ('StdMCD02KKResolvedPi0')
 StdMCD02KKResolvedPi0.Inputs = [ npkaons, rpizeroes]
@@ -108,7 +109,7 @@ StdMCD02KKResolvedPi0.DaughtersCuts = {
 StdMCD02KKResolvedPi0.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCD02KKResolvedPi0 )
+locations.update(updateDoD ( StdMCD02KKResolvedPi0 ))
 
 StdMCD02KKAnyPi0=CombineParticles ('StdMCD02KKAnyPi0')
 StdMCD02KKAnyPi0.Inputs = [ npkaons]
@@ -120,7 +121,7 @@ StdMCD02KKAnyPi0.MotherCut =  matchD02KKAnyPi0
 StdMCD02KKAnyPi0.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCD02KKAnyPi0 )
+locations.update(updateDoD ( StdMCD02KKAnyPi0 ))
 
 StdMCD02KPiMergedPi0=CombineParticles ('StdMCD02KPiMergedPi0')
 StdMCD02KPiMergedPi0.Inputs = [ npkaons, nppions, mpizeroes]
@@ -134,7 +135,7 @@ StdMCD02KPiMergedPi0.DaughtersCuts = {
 StdMCD02KPiMergedPi0.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCD02KPiMergedPi0 )
+locations.update(updateDoD ( StdMCD02KPiMergedPi0 ))
 
 StdMCD02KPiResolvedPi0=CombineParticles ('StdMCD02KPiResolvedPi0')
 StdMCD02KPiResolvedPi0.Inputs = [ npkaons, nppions, rpizeroes]
@@ -148,7 +149,7 @@ StdMCD02KPiResolvedPi0.DaughtersCuts = {
 StdMCD02KPiResolvedPi0.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCD02KPiResolvedPi0 )
+locations.update(updateDoD ( StdMCD02KPiResolvedPi0 ))
 
 StdMCD02KPiAnyPi0=CombineParticles ('StdMCD02KPiAnyPi0')
 StdMCD02KPiAnyPi0.Inputs = [ npkaons, nppions]
@@ -161,7 +162,7 @@ StdMCD02KPiAnyPi0.MotherCut =  matchD02KPiAnyPi0
 StdMCD02KPiAnyPi0.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCD02KPiAnyPi0 )
+locations.update(updateDoD ( StdMCD02KPiAnyPi0 ))
 
 ## ============================================================================
 if '__main__' == __name__ :

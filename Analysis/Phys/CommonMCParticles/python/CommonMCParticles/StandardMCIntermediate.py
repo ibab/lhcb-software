@@ -42,7 +42,7 @@ if '__main__' == __name__ :
     print __doc__
     print __author__
     print __version__    
-    from CommonMCParticles.Utils import locationsDoD
+    from CommonParticles.Utils import locationsDoD
     print locationsDoD ( locations )
     
 # =============================================================================

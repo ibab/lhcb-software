@@ -20,6 +20,8 @@ npkaons =  "Phys/StdMCKaons/Particles"
 nppions = "Phys/StdMCPions/Particles"
 #matchKaons = "mcMatch( '[K+]cc' )"
 #matchPions = "mcMatch( '[pi+]cc' )"
+locations={}
+
 
 #Create matching strings
 matchDsPiPiPi = "(mcMatch('[D_s+ ==> pi- pi+ pi+]CC'))"
@@ -38,7 +40,7 @@ StdMCDsplus2PiPiPi.MotherCut =  matchDsPiPiPi
 StdMCDsplus2PiPiPi.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCDsplus2PiPiPi )
+locations.update(updateDoD ( StdMCDsplus2PiPiPi ))
 
 
 StdMCDsplus2KPiPi=CombineParticles ('StdMCDsplus2KPiPi')
@@ -52,7 +54,7 @@ StdMCDsplus2KPiPi.MotherCut =  matchDsKPiPi
 StdMCDsplus2KPiPi.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCDsplus2KPiPi )
+locations.update( updateDoD ( StdMCDsplus2KPiPi ))
 
 
 StdMCDsplus2KKPi=CombineParticles ('StdMCDsplus2KKPi')
@@ -66,7 +68,7 @@ StdMCDsplus2KKPi.MotherCut =  matchDsKKPi
 StdMCDsplus2KKPi.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCDsplus2KKPi )
+locations.update(updateDoD ( StdMCDsplus2KKPi ))
 ## ============================================================================
 if '__main__' == __name__ :
 

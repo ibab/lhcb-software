@@ -5,7 +5,9 @@ __author__  = "Patrick Koppenburg"
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = (
-    'StdMCKs' ,
+    'StdMCKsLL' ,
+    'StdMCKsDD' ,
+    'StdMCKsAny' ,
     'locations'
     )
 
@@ -16,24 +18,54 @@ from CommonParticles.Utils import *
 from CommonMCParticles import StandardMCPions
 
 #locations of nopidsparticles: 
-nppions =  "Phys/StdMCPions/Particles"
-#matchpions = "mcMatch( '[pi+]cc' )"
-#Create matching strings
 
+nppions =  "Phys/StdMCPions/Particles"
+npdownpions =  "Phys/StdMCDownPions/Particles"
+#Create matching strings
+locations={}
 matchKs = "(mcMatch('[KS0]cc ==> pi+ pi-'))"
 
 ## create the algorithm
-StdMCKs = CombineParticles("StdMCKs")
-StdMCKs.Inputs = [nppions]
-StdMCKs.DecayDescriptor = "[KS0 -> pi+ pi-]cc"
-StdMCKs.MotherCut = matchKs
-#StdMCKs.DaughtersCuts = {"pi+" : matchpions}
-StdMCKs.Preambulo = [
+StdMCKsLL = CombineParticles("StdMCKsLL")
+StdMCKsLL.Inputs = [nppions]
+StdMCKsLL.DecayDescriptor = "[KS0 -> pi+ pi-]cc"
+StdMCKsLL.MotherCut = matchKs
+#StdMCKsLL.DaughtersCuts = {"pi+" : matchpions}
+StdMCKsLL.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
 
 ## configure Data-On-Demand service
-locations = updateDoD ( StdMCKs )
+locations.update(updateDoD ( StdMCKsLL ))
+
+
+## create the algorithm
+StdMCKsDD = CombineParticles("StdMCKsDD")
+StdMCKsDD.Inputs = [npdownpions]
+StdMCKsDD.DecayDescriptor = "[KS0 -> pi+ pi-]cc"
+StdMCKsDD.MotherCut = matchKs
+#StdMCKsDD.DaughtersCuts = {"pi+" : matchpions}
+StdMCKsDD.Preambulo = [
+    "from LoKiPhysMC.decorators import *",
+    "from PartProp.Nodes import CC" ]
+
+## configure Data-On-Demand service
+locations.update(updateDoD ( StdMCKsDD ))
+
+
+## create the algorithm
+StdMCKsAny = CombineParticles("StdMCKsAny")
+StdMCKsAny.Inputs = [nppions, npdownpions]
+StdMCKsAny.DecayDescriptor = "[KS0 -> pi+ pi-]cc"
+StdMCKsAny.MotherCut = matchKs
+#StdMCKsDD.DaughtersCuts = {"pi+" : matchpions}
+StdMCKsAny.Preambulo = [
+    "from LoKiPhysMC.decorators import *",
+    "from PartProp.Nodes import CC" ]
+
+## configure Data-On-Demand service
+locations.update(updateDoD ( StdMCKsAny ))
+
 
 ## ============================================================================
 if '__main__' == __name__ :

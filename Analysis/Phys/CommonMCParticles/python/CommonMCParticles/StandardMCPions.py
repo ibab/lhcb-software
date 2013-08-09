@@ -1,46 +1,41 @@
 #!/usr/bin/env python
+# =============================================================================
+# $Id: StandardMCPions.py,v 1.4 2009-10-09 12:41:27 pkoppenb Exp $ 
+# =============================================================================
+## @file  CommonMCParticles/StandardMCPions.py
+#  configuration file for 'Standard MC Pions' 
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl, Conor Fitzpatrick
+#  @date 2009-01-14
+# =============================================================================
 """
-Configuration file for 'Standard MC Pions'
+Configuration file for 'Standard MC Pions' particles 
 """
-__author__  = "Conor Fitzpatrick"
+__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl, Conor Fitzpatrick"
 __version__ = "1.0"
 # =============================================================================
-__all__ = (
-    'StdMCPions' ,
-    'locations'
-    )
-# =============================================================================
-from Gaudi.Configuration import *
-from Configurables       import FilterDesktop
 
+_locations = {} 
 
-from CommonParticles.Utils import *
-from CommonParticles.StdNoPIDsPions    import *
+from CommonMCParticles.StdMCPions import *
+_locations.update ( locations )
 
+from CommonMCParticles.StdMCDownPions import *
+_locations.update ( locations )
 
-## create the algorithm 
-algorithm = FilterDesktop( 'StdMCPions',
-                           Inputs = ["Phys/StdNoPIDsPions/Particles"],
-                           Code = "(mcMatch('[pi+]cc'))",
-			   Preambulo = ["from LoKiPhysMC.decorators import *",
-			   "from PartProp.Nodes import CC" ]
-		)
-
-
-## configure Data-On-Demand service 
-locations = updateDoD ( algorithm )
-
-## finally: define the symbol 
-StdMCPions = algorithm 
+# redefine the locations 
+locations = _locations
 
 ## ============================================================================
 if '__main__' == __name__ :
 
     print __doc__
     print __author__
-    print __version__
-    print locationsDoD ( locations ) 
-
+    print __version__    
+    from CommonParticles.Utils import locationsDoD
+    print locationsDoD ( locations )
+    
 # =============================================================================
 # The END 
 # =============================================================================
+
+

@@ -20,7 +20,7 @@ nppions =  "Phys/StdMCPions/Particles"
 npprotons =  "Phys/StdMCProtons/Particles"
 #matchProtons = "mcMatch( '[p+]cc' )"
 #matchPions = "mcMatch( '[pi+]cc' )"
-
+locations={}
 #Create matching strings
 matchLambda02pPi  = "(mcMatch('[Lambda0 ==> p+ pi-]CC'))"
 
@@ -36,7 +36,7 @@ StdMCLambda02pPi.Preambulo = [
     "from PartProp.Nodes import CC" ]
 
 ## configure Data-On-Demand service
-locations = updateDoD ( StdMCLambda02pPi )
+locations.update(updateDoD ( StdMCLambda02pPi ))
 
 ## ============================================================================
 if '__main__' == __name__ :

@@ -20,7 +20,7 @@ nppions =  "Phys/StdMCPions/Particles"
 npkaons =  "Phys/StdMCKaons/Particles"
 #matchKaons = "mcMatch( '[K+]cc' )"
 #matchpions = "mcMatch( '[pi+]cc' )"
-
+locations={}
 #Create matching strings
 matchKstar = "(mcMatch('[K*(892)0 ==> K+ pi-]CC'))"
 
@@ -35,7 +35,7 @@ StdMCKstar.Preambulo = [
     "from PartProp.Nodes import CC" ]
 
 ## configure Data-On-Demand service
-locations = updateDoD ( StdMCKstar )
+locations.update(updateDoD ( StdMCKstar ))
 
 ## ============================================================================
 if '__main__' == __name__ :

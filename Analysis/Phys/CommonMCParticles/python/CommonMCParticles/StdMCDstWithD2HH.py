@@ -23,9 +23,9 @@ mcD02KPi = "Phys/StdMCD02KPi/Particles"
 mcD02KPiDCS = "Phys/StdMCD02KPiDCS/Particles"
 mcD02PiPi = "Phys/StdMCD02PiPi/Particles"
 mcD02KK = "Phys/StdMCD02KK/Particles"
-
-matchPions = "mcMatch( '[pi+]cc' )"
-matchD0 = "mcMatch( '[D0]cc' )"
+locations ={}
+#matchPions = "mcMatch( '[pi+]cc' )"
+#matchD0 = "mcMatch( '[D0]cc' )"
 
 #mothercut
 mothercut = "ALL"
@@ -46,7 +46,7 @@ StdMCDstarWithD02KPiDCS.MotherCut =  matchDstPiD0
 StdMCDstarWithD02KPiDCS.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCDstarWithD02KPiDCS )
+locations.update(updateDoD ( StdMCDstarWithD02KPiDCS ))
 
 
 
@@ -62,7 +62,7 @@ StdMCDstarWithD02KPi.MotherCut = matchDstPiD0
 StdMCDstarWithD02KPi.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCDstarWithD02KPi )
+locations.update(updateDoD ( StdMCDstarWithD02KPi ))
 
 
 ## create the algorithm 
@@ -77,7 +77,7 @@ StdMCDstarWithD02KK.MotherCut = matchDstPiD0
 StdMCDstarWithD02KK.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCDstarWithD02KK )
+locations.update(updateDoD ( StdMCDstarWithD02KK ))
 
 
 
@@ -93,7 +93,7 @@ StdMCDstarWithD02PiPi.MotherCut = matchDstPiD0
 StdMCDstarWithD02PiPi.Preambulo = [
     "from LoKiPhysMC.decorators import *",
     "from PartProp.Nodes import CC" ]
-locations = updateDoD ( StdMCDstarWithD02PiPi )
+locations.update(updateDoD ( StdMCDstarWithD02PiPi ))
 
 ## ============================================================================
 if '__main__' == __name__ :
