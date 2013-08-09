@@ -91,6 +91,13 @@ class B2DXBuilder(object):
         self._makeB2D0H('D2Pi0HHWSMerged',self.d.pi0hh_merged_ws)
         self.lines[-1].pre = 0.1 # last line is WS D line
         #self._makeB2D0H('D2Pi0HHMergedUP',self.d.pi0hh_merged_up)
+
+        # B+- -> D0(KSPi0HH) X (resolved & merged & LL & DD)
+        self._makeB2D0H('D2KSPi0HHLLResolved',self.d.kspi0hh_ll_resolved)
+        self._makeB2D0H('D2KSPi0HHLLMerged',self.d.kspi0hh_ll_merged)
+        self._makeB2D0H('D2KSPi0HHDDResolved',self.d.kspi0hh_dd_resolved)
+        self._makeB2D0H('D2KSPi0HHDDMerged',self.d.kspi0hh_dd_merged)
+        
         self._makeB02D0HH('D2Pi0KPiResolved',self.d.pi0kpi_resolved)
         self._makeB02D0HH('D2Pi0KPiMerged',self.d.pi0kpi_merged)
         #self._makeB02D0KS('D2Pi0KPiResolved',self.d.pi0kpi_resolved,'DD')
@@ -382,17 +389,17 @@ class B2DXBuilder(object):
         '''Makes RS B0 -> D0 p+p~- + c.c.'''
         config = deepcopy(self.config)
         config['AM_MIN'] = '4950*MeV'
-        config['AM_MAX'] = '6000*MeV'
+        config['AM_MAX'] = '5800*MeV'
         config['B2CBBDT_MIN'] = '0.3'
         config['DZ1_MIN'] = '-1.5*mm'
         decays = { 'B02D0PPbar': ["B0 -> D0 rho(770)0"]}
-        inputs = { 'B02D0PPbar': d2x+self.hh.ppbar_pid_tighter}
+        inputs = { 'B02D0PPbar': d2x+self.hh.ppbar_Mcut_pid_tighter2}
         b2d0ppbar = makeB2XSels(decays,dname,inputs,self.config)
-        decays = {'B02D0PPbarWS': ["B0 -> D0 rho(770)-","B0 -> D0 rho(770)+"]}
-        inputs = {'B02D0PPbarWS': d2x+self.hh.ppbar_ws_pid_tighter}
-        b2d0ppbar_ws = makeB2XSels(decays,dname,inputs,self.config)
+        #decays = {'B02D0PPbarWS': ["B0 -> D0 rho(770)-","B0 -> D0 rho(770)+"]}
+        #inputs = {'B02D0PPbarWS': d2x+self.hh.ppbar_ws_pid_tighter}
+        #b2d0ppbar_ws = makeB2XSels(decays,dname,inputs,self.config)
         self.lines.append(ProtoLine(b2d0ppbar,1.0))
-        self.lines.append(ProtoLine(b2d0ppbar_ws,0.1))        
+        #self.lines.append(ProtoLine(b2d0ppbar_ws,0.1))        
 
     def _makeB02DHHH(self,dname,d2x):
         '''Makes RS and WS B0 -> D + h- + c.c.'''

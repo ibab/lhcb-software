@@ -125,6 +125,9 @@ config = {
     'TIGHTER' : {    'P'  : {'PIDp_MIN' : 0},
                      'PI' : {'PIDK_MAX' : 10},
                      'K'  : {'PIDK_MIN' : 0}},
+    'TIGHTER2' : {    'P'  : {'PIDp_MIN' : 5},
+                      'PI' : {'PIDK_MAX' : 10},
+                      'K'  : {'PIDK_MIN' : 0}},
     'TIGHTPI' : { 'P' : {'PIDp_MIN' : -10},
                   'PI': {'PIDK_MAX' : 10},
                   'K' : {'PIDK_MIN' : -10}},
@@ -135,6 +138,43 @@ config = {
                   'PI': {'PIDK_MAX' : 12},
                   'K' : {'PIDK_MIN' : -10}}
     },
+    'FlavourTagging':[ #lines for which EnableFlavourTagging should be True
+    'B02D0PiPiD2HHFULLDSTBeauty2CharmLine',
+    'B02D0D0FULLDSTBeauty2CharmLine',
+    'B02DDFULLDSTBeauty2CharmLine',
+    'B02DPiPiPiD2HHHFULLDSTBeauty2CharmLine',
+    'B02DKPiPiD2HHHFULLDSTBeauty2CharmLine',
+    'B02DKD2PhiMuNuBeauty2CharmLine',
+    'B02DPiD2PhiMuNuBeauty2CharmLine',
+    'B02DKD2HHHBeauty2CharmLine',
+    'B02DPiD2HHHBeauty2CharmLine',
+    'B02DKD2KSHLLBeauty2CharmLine',
+    'B02DPiD2KSHLLBeauty2CharmLine',
+    'B02DKD2KSHDDBeauty2CharmLine',
+    'B02DPiD2KSHDDBeauty2CharmLine',
+    'B02DKD2Pi0HHHResolvedBeauty2CharmLine',
+    'B02DPiD2Pi0HHHResolvedBeauty2CharmLine',
+    'B02DKD2Pi0HHHMergedBeauty2CharmLine',
+    'B02DPiD2Pi0HHHMergedBeauty2CharmLine',
+    'B02DKD2HHHUPBeauty2CharmLine',
+    'B02DPiD2HHHUPBeauty2CharmLine',
+    'B02DRhoPMD2HHHCFPIDBeauty2CharmLine',
+    'B02DKstarPMD2HHHCFPIDBeauty2CharmLine',
+    'B02D0PiPiD2HHiBeauty2CharmLine',
+    'B02D0PiPiD2HHWSBeauty2CharmLine',
+    'B02DKPiPiD2HHHPIDBeauty2CharmLine',
+    'B02DKPiPiWSD2HHHPIDBeauty2CharmLine',
+    'B02DPiPiPiD2HHHPIDBeauty2CharmLine',
+    'B02DPiPiPiWSD2HHHPIDBeauty2CharmLine',
+    'B02DKKPiD2HHHPIDBeauty2CharmLine',
+    'B02DKKPiWSD2HHHPIDBeauty2CharmLine',
+    'B02D0D0Beauty2CharmLine',
+    'B02DDBeauty2CharmLine',
+    'B02DDWSBeauty2CharmLine',
+    'B02D0PPbarD2HHBeauty2CharmLine',
+    'B02D0PPbarWSD2HHBeauty2CharmLine',
+    'B2D0DBeauty2CharmLine'
+    ],
     '2TOPO' : {'ANGLE_MIN': (2/57.),'M_MIN':19000,'DPHI_MIN':0},
     'BB' : {'ADDSUMPT':0,'COSANGLE_MAX':0.99,'COSDPHI_MAX':0,'M_MIN':0,'MAXPT_MIN': 4000},
     'D0INC' : {'PT_MIN' : 1000, 'IPCHI2_MIN': 100},
@@ -167,7 +207,7 @@ config = {
 
 class Beauty2CharmConf(LineBuilder):
     __configuration_keys__ = ('ALL','UPSTREAM','KS0','Pi0','D2X','B2X','Dstar','HH','HHH',
-                              'PID','2TOPO','BB','D0INC','Prescales','GECNTrkMax')
+                              'PID','FlavourTagging','2TOPO','BB','D0INC','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
         
@@ -292,9 +332,11 @@ class Beauty2CharmConf(LineBuilder):
             #hlt = "HLT_PASS('Hlt1TrackAllL0Decision') & "\
             hlt = "(HLT_PASS_RE('Hlt2Topo.*Decision') | "\
                   "HLT_PASS_RE('Hlt2IncPhi.*Decision'))"
+
             sline = StrippingLine(name,protoLine.prescale(line,name,config),
                                   selection=tmpSel,checkPV=True,FILTER=filter,
-                                  HLT=hlt)
+                                  HLT=hlt,
+                                  EnableFlavourTagging = (name in config['FlavourTagging']))
             self.registerLine(sline)
 
     def _makeLines(self,lines,config):

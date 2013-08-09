@@ -63,6 +63,12 @@ class DBuilder(object):
         self.pi0hh_resolved = self._makeD2Pi0hh("Resolved") 
         self.pi0hhh_merged = self._makeD2Pi0hhh("Merged")
         self.pi0hhh_resolved = self._makeD2Pi0hhh("Resolved")
+
+        self.kspi0hh_ll_merged = self._makeD2KSPi0hh("LL","Merged")
+        self.kspi0hh_ll_resolved = self._makeD2KSPi0hh("LL","Resolved")
+        self.kspi0hh_dd_merged = self._makeD2KSPi0hh("DD","Merged")
+        self.kspi0hh_dd_resolved = self._makeD2KSPi0hh("DD","Resolved")
+        
         # UP tracks in D
         self.hh_up = self._makeD2hh(True)
         self.hhh_up = self._makeD2hhh(True)
@@ -76,7 +82,6 @@ class DBuilder(object):
         self.pi0hhh_merged_up = self._makeD2Pi0hhh("Merged",True)
         self.pi0hhh_resolved_up = self._makeD2Pi0hhh("Resolved",True)
         
-
         # PID filtered selections
         self.hh_pid = [filterPID('D2HHPID',self.hh,config_pid)]
         self.hh_pid_tight = [filterPID('D2HHTIGHTPID',self.hh_pid,
@@ -194,17 +199,26 @@ class DBuilder(object):
         
         self.ds_hhh_pid_custom = [MergedSelection('Ds2HHHPIDCUSTOM',
                                                   RequiredSelections=self.ds_pipipi_pid_tightpi+self.ds_kpipi_pid_special+self.ds_hhh_cf_custom)]
+
+        #this spans the whole mass range covered by D+ and Ds (comes from self.hhh)
+        #either d(s) --> pipipi kpipi or kkpi
+        self.hhh_pid_custom = [MergedSelection('D2HHHPIDCUSTOM',
+                                               RequiredSelections=self.ds_pipipi_pid_tightpi+self.ds_kpipi_pid_special+self.kkpi_custom)]
+        
         #for use with the FULL DST B --> DD line
         #add D+ --> K+K-pi+ to the d_cf selection
         #remove trailing bracket to add this charge combo in
-        d_cf_plus = d_cf_noMassWin[:-1] + " | ((NINTREE(ID=='K-')==1) & (NINTREE(ID=='K+')==1)))"
-        d_cf_plus = LoKiCuts.combine([d_cf_plus,"in_range(%s,MM,%s)"%(d_min,d_max)])
-        d_kkpi_custom = [filterSelection('Dplus2KKPiCUSTOM',"in_range(%s,MM,%s)"%(d_min,d_max),self.kkpi_custom)]
+        #d_cf_plus = d_cf_noMassWin[:-1] + " | ((NINTREE(ID=='K-')==1) & (NINTREE(ID=='K+')==1)))"
+        #d_cf_plus = LoKiCuts.combine([d_cf_plus,"in_range(%s,MM,%s)"%(d_min,d_max)])
+
+        #d_kkpi_custom = [filterSelection('Dplus2KKPiCUSTOM',"in_range(%s,MM,%s)"%(d_min,d_max),self.kkpi_custom)]
         self.d_cf_hhh_pid_tightpi = [filterSelection('Dplus2HHHCF',d_cf,self.hhh_pid_tightpi)]
-        self.d_hhh_custom = [MergedSelection('Dplus2HHHCUSTOM',RequiredSelections=d_kkpi_custom+self.d_cf_hhh_pid_tightpi)]
+        #self.d_hhh_custom = [MergedSelection('Dplus2HHHCUSTOM',RequiredSelections=d_kkpi_custom+self.d_cf_hhh_pid_tightpi)]
         
+        #self.d_hhh_4_B2DD_custom = [MergedSelection('D2HHH_4_B2DD_CUSTOM_Beauty2Charm',
+        #                                            RequiredSelections=self.ds_hhh_pid_custom+self.d_hhh_custom)]
         self.d_hhh_4_B2DD_custom = [MergedSelection('D2HHH_4_B2DD_CUSTOM_Beauty2Charm',
-                                                    RequiredSelections=self.ds_hhh_pid_custom+self.d_hhh_custom)]
+                                                    RequiredSelections=self.hhh_pid_custom+self.d_cf_hhh_pid_tightpi)]
         #for use with FULL DST D0D0 line
         self.d0_cf_pid_tight = [filterPID('D0CFPIDTIGHT',
                                           self.d0_cf_pid,config_pid['TIGHT'])]
@@ -227,9 +241,12 @@ class DBuilder(object):
 
     def _massWindow(self,which):
         dm,units = LoKiCuts.cutValue(self.config['MASS_WINDOW'])
-        if which is 'D0':
+        if which == 'D0':
             min = 1864.84 - dm # D0 - dm
             max = 1864.84 + dm # D0 + dm
+        elif which == 'D0wide' :
+            min = 1864.84 - dm - 150.
+            max = 1864.84 + dm + 150.
         else:
             min = 1869.62 - dm # D+ - dm
             max = 1968.49 + dm # Ds+ + dm
@@ -387,7 +404,7 @@ class DBuilder(object):
     
     def _makeD2Pi0hh(self,which,up=False):
         '''Makes D->Pi0hh'''
-        min,max = self._massWindow('D0')
+        min,max = self._massWindow('D0wide')
         decays = [['pi0','pi+','pi-'],['pi0','pi+','K-'],
                   ['pi0','K+','pi-'],['pi0','K+','K-']]
         wm = awmFunctor(decays,min,max)
@@ -419,7 +436,22 @@ class DBuilder(object):
         msel = subPIDSels(getCCs(decays),'D2Pi0HHWSMinus'+tag,which,min,max,[msel])
         return [MergedSelection('D2Pi0HHWSBeauty2Charm'+which+tag,
                                 RequiredSelections=[psel,msel])]
-    
+
+    def _makeD2KSPi0hh(self,whichKs,whichPi0,up=False):
+        '''Makes D->KsPi0hh'''
+        min,max = self._massWindow('D0wide')
+        decays = [['KS0','pi0','pi+','pi-'],['KS0','pi0','pi+','K-'],
+                  ['KS0','pi0','K+','pi-'],['KS0','pi0','K+','K-']]
+        wm = awmFunctor(decays,min,max)
+        config = deepcopy(self.config)    
+        config.pop('AMAXDOCA_MAX')
+        config['ADOCA(3,4)_MAX'] = self.config['AMAXDOCA_MAX']
+        protoD2Kspi0hh = self._makeD2X('D2KSPi0HH_'+whichKs+'_'+whichPi0,['D0 -> KS0 pi0 pi+ pi-'],
+                                       wm,up,config,self.pi0[whichPi0]+self.ks[whichKs])
+        name = 'D2KsPi0HH'
+        if up: name += 'UP'
+        return [subPIDSels(decays,name,whichKs+'_'+whichPi0,min,max,[protoD2Kspi0hh])]
+
     def _makeD2hhhh(self,up=False):
         '''Makes D->hhhh'''
         min,max = self._massWindow('D0')

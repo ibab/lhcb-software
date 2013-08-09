@@ -4,6 +4,20 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-09 - Edmund Smith
+ - Added D0 --> KsPi0HH in DBuilder.
+ - Altered definition of d_hhh_4_B2DD_custom in DBuilder (no overlapping mass windows).
+ - Added wide D0 mass window for KsPi0HH and Pi0HH selections.
+ - Filtered ppbar selection in HHBuilder.
+ - Added new set of PID cuts in config dictionary in StrippingBeauty2Charm.
+ - Added EnableFlavourTagging = True for lines that need it in StrippingBeauty2Charm.
+ - Added B2D0HD2KsPi0HH lines in B2DXBuilder.
+ - Changed selection in B02D0PPbarD2HHFULLDST line in B2DXBuilder.
+	M           161140   python/StrippingSelections/Beauty2Charm_DBuilder.py
+	M           161140   python/StrippingSelections/Beauty2Charm_HHBuilder.py
+	M           161140   python/StrippingSelections/StrippingBeauty2Charm.py
+	M           161140   python/StrippingSelections/Beauty2Charm_B2DXBuilder.py
+
 ! 2013-08-08 - Fred Blanc
  - Add config variables to StrippingB2CharmlessQuasi2Body.py
 
