@@ -4,15 +4,16 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-
-! 2013-07-31 - Conor Fitzpatrick
- -Created package CommonMCParticles, designed to mirror CommonParticles but requiring full MC association and without additional cuts. Uses StdNoPIDsParticles for final states.  
- 
+! 2013-07-31 - Conor Pitzpatrick
+ - Created package CommonMCParticles, designed to mirror CommonParticles but
+   requiring full MC association and without additional cuts.
+   Uses StdNoPIDsParticles for final states.  
 
 ! 2013-08-07 - Conor Fitzpatrick
- -Added qmtest, CMakeFile, rearranged modules to better reflect CommonParticles layout
+ - Added qmtest, CMakeFile, rearranged modules to better reflect CommonParticles
+   layout.
 
 ! 2013-08-09 - Conor Fitzpatrick
- -Updated Kshorts to include KsDD and KsLL, KsAny (LL, DD, LD and DL) with MC association
- -Fixed the location listings for many modules 
-
+ - Updated Kshorts to include KsDD and KsLL, KsAny (LL, DD, LD and DL) with 
+   MC association
+ - Fixed the location listings for many modules 
