@@ -19,6 +19,10 @@ _locations = {}
 from CommonMCParticles.StandardMCPhotons import *
 _locations.update ( locations )
 
+from CommonMCParticles.StandardMCPi0 import *
+_locations.update ( locations )
+
+
 # redefine the locations 
 locations = _locations
 
