@@ -686,7 +686,7 @@ static void help_TaskSupervisor() {
 }
 
 
-#include "TaskSupervisorParser.h"
+#include "ROMon/TaskSupervisorParser.h"
 extern "C" int run_tasksupervisor(int argc, char** argv) {
   ROMon::Inventory inv;
   string server, fname, inventory, node = RTL::nodeNameShort();

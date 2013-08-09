@@ -21,7 +21,7 @@
 #include "RTL/Lock.h"
 #include "ROMonDefs.h"
 #include "ROMon/CtrlSubfarmDisplay.h"
-#include "TaskSupervisorParser.h"
+#include "ROMon/TaskSupervisorParser.h"
 
 #include "dic.hxx"
 

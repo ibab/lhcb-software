@@ -15,7 +15,7 @@
 
 // Framework include files
 #include "ROMon/TaskSupervisor.h"
-#include "TaskSupervisorParser.h"
+#include "ROMon/TaskSupervisorParser.h"
 #include "ROMon/FarmDisplay.h"
 #include "ROMon/CPUMon.h"
 #include "ROMonDefs.h"
@@ -32,7 +32,7 @@ using namespace ROMon;
 using namespace SCR;
 using namespace std;
 
-CtrlNodeDisplay::CtrlNodeDisplay(InternalDisplay* parent, const string& title) 
+CtrlNodeDisplay::CtrlNodeDisplay(InternalDisplay* parent, const string& title)
   : InternalDisplay(parent,title), m_node(0)
 {
   ::scrc_create_display(&m_display,55,130,MAGENTA,ON,"Node Control display for node:");
@@ -43,7 +43,7 @@ void CtrlNodeDisplay::connect(const string& node) {
   if ( 0 == m_svc ) {
     m_nodeName = node;
     string svc = svcPrefix()+strupper(node)+"/TaskSupervisor/Status";
-    m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,tsDataHandler,(long)this,0,0);  
+    m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,tsDataHandler,(long)this,0,0);
     ::scrc_set_border(m_display,("Connecting to:"+node).c_str(),INVERSE|RED|BOLD);
   }
 }
@@ -139,8 +139,8 @@ void CtrlNodeDisplay::update(const void* data) {
             ::scrc_put_chars(m_display,txt,INVERSE|GREEN,++line,1,1);
             for(Cluster::Projects::const_iterator q=n.projects.begin(); q != n.projects.end(); ++q,++cnt)  {
               const Cluster::PVSSProject& p = *q;
-              ::sprintf(txt,"   [%03d]        %-16s %-14s %-14s %-14s %-14s %-14s",cnt,p.name.c_str(), 
-                        p.state(p.eventMgr), p.state(p.dataMgr), p.state(p.distMgr), 
+              ::sprintf(txt,"   [%03d]        %-16s %-14s %-14s %-14s %-14s %-14s",cnt,p.name.c_str(),
+                        p.state(p.eventMgr), p.state(p.dataMgr), p.state(p.distMgr),
                         p.state(p.fsmSrv), p.state(p.devHdlr));
               ::scrc_put_chars(m_display,txt,p.ok() ? NORMAL : INVERSE|RED,++line,1,1);
             }

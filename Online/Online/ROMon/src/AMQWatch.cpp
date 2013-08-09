@@ -97,7 +97,7 @@ namespace ROMon {
 #endif // ONLINE_ROMON_AMQWATCH_H
 
 // Framework include files
-#include "TaskSupervisorParser.h"
+#include "ROMon/TaskSupervisorParser.h"
 #include "RTL/rtl.h"
 #include "RTL/time.h"
 #include "NET/defs.h"
@@ -136,7 +136,7 @@ struct AMQDataProcessor : public DataFile::DataProcessor {
 };
 
 /// Initializing constructor
-AMQWatch::AMQWatch(const std::string& n) 
+AMQWatch::AMQWatch(const std::string& n)
   : m_name(n), m_sampleSize(30), m_maxErrors(1), m_scanDiff(10), m_test(0), m_file("")
 {
 }

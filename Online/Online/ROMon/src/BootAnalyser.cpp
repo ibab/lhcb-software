@@ -130,7 +130,7 @@ namespace ROMon {
 #endif // ONLINE_ROMON_BOOTANALYZER_H
 
 // Framework include files
-#include "TaskSupervisorParser.h"
+#include "ROMon/TaskSupervisorParser.h"
 #include "RTL/rtl.h"
 #include "RTL/time.h"
 #include "RTL/strdef.h"
@@ -305,9 +305,9 @@ struct BootDataProcessor : public DataFile::DataProcessor {
 };
 
 /// Initializing constructor
-SubfarmBootStatus::SubfarmBootStatus(const string& n, BootMonitor* parent) 
-  : m_parent(parent), m_status(0), m_name(n), 
-    m_file(string(CLUSTERLOGS_FARMS)+"/"+n+"/"+n+"/messages"), 
+SubfarmBootStatus::SubfarmBootStatus(const string& n, BootMonitor* parent)
+  : m_parent(parent), m_status(0), m_name(n),
+    m_file(string(CLUSTERLOGS_FARMS)+"/"+n+"/"+n+"/messages"),
     m_id(0), m_tsID(0)
 {}
 
@@ -655,7 +655,7 @@ static void help() {
 extern "C" int run_boot_analyser(int argc, char *argv[])    {
   string node = RTL::nodeNameShort();
   string server = "/"+node+"/"+RTL::processName();
-  
+
   RTL::CLI cli(argc,argv,help);
   cli.getopt("prefix",2,s_svcPrefix);
   s_use_ts = cli.getopt("nots",1)==0;
@@ -671,7 +671,7 @@ extern "C" int run_boot_analyser(int argc, char *argv[])    {
     ::lib_rtl_install_printer(ro_rtl_print,(void*)LIB_RTL_ERROR);
   else
     ::lib_rtl_install_printer(ro_rtl_print,(void*)LIB_RTL_ERROR);
-  
+
   BootMonitor mon(server);
   mon.start();
   TimeSensor::instance().add(&mon,1,(void*)CMD_CHECK);

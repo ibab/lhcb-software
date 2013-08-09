@@ -12,7 +12,7 @@ using namespace ROMon;
 using namespace std;
 
 #include "ROMon/TaskSupervisor.h"
-#include "TaskSupervisorParser.h"
+#include "ROMon/TaskSupervisorParser.h"
 
 namespace ROMon {
 
@@ -46,7 +46,7 @@ namespace ROMon {
 #include "ROMonDefs.h"
 
 /// Initializing constructor
-CtrlSubfarmMonitor::CtrlSubfarmMonitor(FarmMonitor* parent, const string& title) 
+CtrlSubfarmMonitor::CtrlSubfarmMonitor(FarmMonitor* parent, const string& title)
 : InternalMonitor(parent, title)
 {
   m_lastUpdate = time(0);

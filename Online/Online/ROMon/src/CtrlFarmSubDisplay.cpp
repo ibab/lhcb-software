@@ -14,7 +14,7 @@ using namespace SCR;
 using namespace std;
 
 #include "ROMon/TaskSupervisor.h"
-#include "TaskSupervisorParser.h"
+#include "ROMon/TaskSupervisorParser.h"
 
 namespace ROMon {
 
@@ -74,7 +74,7 @@ namespace ROMon {
 #define COL_ALARM           (RED|BOLD|INVERSE)
 
 /// Initializing constructor
-CtrlFarmSubDisplay::CtrlFarmSubDisplay(InternalDisplay* parent, const string& title, int height, bool bad) 
+CtrlFarmSubDisplay::CtrlFarmSubDisplay(InternalDisplay* parent, const string& title, int height, bool bad)
 : InternalDisplay(parent, title)
 {
   m_height = height;
@@ -111,7 +111,7 @@ void CtrlFarmSubDisplay::update(const void* address) {
       updateContent(ts);
     }
     else {
-      ::scrc_put_chars(m_display," Received invalid XML information",COL_ALARM,1,1,1);    
+      ::scrc_put_chars(m_display," Received invalid XML information",COL_ALARM,1,1,1);
       ::scrc_set_border(m_display,m_title.c_str(),COL_ALARM);
     }
     IocSensor::instance().send(m_parent,CMD_CHECK,this);
@@ -189,13 +189,13 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
     setTimeoutError();
   }
   else if ( pvss_status>1 ) {
-    ::scrc_put_chars(m_display,"PVSS environment looks funny - Please Check.",COL_ALARM,m_height,1,1);    
+    ::scrc_put_chars(m_display,"PVSS environment looks funny - Please Check.",COL_ALARM,m_height,1,1);
     ::scrc_set_border(m_display,border.c_str(),COL_WARNING);
   }
   else if ( !cl_good && c.status == "DEAD" ) {
     ::scrc_put_chars(m_display,"",NORMAL,1,1,0);
     ::scrc_put_chars(m_display,"",NORMAL,m_height,1,0);
-    ::scrc_put_chars(m_display,"Nodes down - Please check.",COL_WARNING,m_height,1,1);    
+    ::scrc_put_chars(m_display,"Nodes down - Please check.",COL_WARNING,m_height,1,1);
     ::scrc_set_border(m_display,border.c_str(),COL_ALARM);
   }
   else if ( !cl_good && c.status == "MIXED" ) {

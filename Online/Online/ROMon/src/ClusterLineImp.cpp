@@ -44,7 +44,7 @@ namespace ROMon {
 	min_free_slots = std::numeric_limits<float>::max();
 	min_free_space = std::numeric_limits<float>::max();
       }
-      Info(const Info& c) { 
+      Info(const Info& c) {
 	free_slots     = c.free_slots;
 	min_free_slots = c.min_free_slots;
 	buf_clients    = c.buf_clients;
@@ -53,7 +53,7 @@ namespace ROMon {
 	min_free_space = c.min_free_space;
 	min_free_slots = c.min_free_slots;
       }
-      Info& operator=(const Info& c) { 
+      Info& operator=(const Info& c) {
 	free_slots     = c.free_slots;
 	min_free_slots = c.min_free_slots;
 	buf_clients    = c.buf_clients;
@@ -177,7 +177,7 @@ namespace ROMon {
 }
 
 #include "ROMon/TaskSupervisor.h"
-#include "TaskSupervisorParser.h"
+#include "ROMon/TaskSupervisorParser.h"
 
 namespace ROMon {
 
@@ -302,7 +302,7 @@ void CtrlFarmClusterLine::display() {
   Display*       dis = m_parent->display();
   RTL::Lock lock(InternalDisplay::screenLock());
   ::scrc_begin_pasteboard_update (pb);
-  ::scrc_put_chars(dis," Received invalid XML information",COL_ALARM,pos,1,1);    
+  ::scrc_put_chars(dis," Received invalid XML information",COL_ALARM,pos,1,1);
   ::scrc_end_pasteboard_update(pb);
 }
 
@@ -365,18 +365,18 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
   }
   if ( missConnCount>0 ) {
     ::snprintf(txt,sizeof(txt),"%4zu/BAD ",missConnCount);
-    ::scrc_put_chars(dis,txt,COL_ALARM,line,37,0);  
+    ::scrc_put_chars(dis,txt,COL_ALARM,line,37,0);
     ::scrc_put_chars(dis," ",NORMAL,line,46,0);
   }
   else {
     ::snprintf(txt,sizeof(txt),"%4zu ",connCount);
-    ::scrc_put_chars(dis,txt,GREEN|INVERSE,line,37,0);  
+    ::scrc_put_chars(dis,txt,GREEN|INVERSE,line,37,0);
     ::scrc_put_chars(dis,"     ",NORMAL,line,42,0);
   }
   ::snprintf(txt,sizeof(txt),"  %-6s  ",c.status.c_str());
   ::scrc_put_chars(dis,txt,col|BOLD,line,45,0);
   //bg_black(pb);
-  ::scrc_put_chars(dis,pvss_status>1?"ERROR":"   OK",pvss_status>1?COL_ALARM:GREEN,line,53,0);    
+  ::scrc_put_chars(dis,pvss_status>1?"ERROR":"   OK",pvss_status>1?COL_ALARM:GREEN,line,53,0);
 
   col = NORMAL|BOLD;
   struct tm tm;
@@ -384,9 +384,9 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
   if ( ::time(0)-::mktime(&tm) > UPDATE_TIME_MAX )
     err = " No update information present ", col = COL_ALARM;
   else if ( pvss_status>1 )
-    err = " PVSS environment looks funny.", col = COL_ALARM;    
+    err = " PVSS environment looks funny.", col = COL_ALARM;
   else if ( !cl_good && c.status == "DEAD" )
-    err = " Nodes down - Check.", col = COL_WARNING;    
+    err = " Nodes down - Check.", col = COL_WARNING;
   else if ( c.status == "MIXED" )
     err = " Some nodes down - Check.", col = COL_WARNING;
   else if ( missTaskCount>0 )
@@ -652,7 +652,7 @@ void MonitoringClusterLine::display() {
     ::snprintf(txt,sizeof(txt),"%13s%6s  %8s%4s%64s","--","--","","","");
   ::scrc_put_chars(dis,"  Worker:  ",BOLD,pos,77+57+CLUSTERLINE_START,0);
   ::scrc_put_chars(dis,txt,NORMAL,pos,77+67+CLUSTERLINE_START,0);
-  
+
   int col = NORMAL;
   if ( now-m_lastUpdate > UPDATE_TIME_MAX ) {
     err = " No update information available", col = RED|INVERSE|BOLD;
@@ -994,7 +994,7 @@ void HltDeferLine::display() {
   pos += 2;
   ::scrc_put_chars(dis," ",INVERSE|BOLD|YELLOW,line,pos,1);
   last_pos = pos;
-  if ( valid_data && nodes->size() > 0 ) {    
+  if ( valid_data && nodes->size() > 0 ) {
     for (Nodes::const_iterator ni=nodes->begin(); ni!=nodes->end(); ni=nodes->next(ni))  {
       const DeferredHLTStats& n = *ni;
       string nn = n.name;

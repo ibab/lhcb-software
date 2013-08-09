@@ -209,7 +209,7 @@ static void help_Pinger() {
   ::exit(0);
 }
 
-#include "TaskSupervisorParser.h"
+#include "ROMon/TaskSupervisorParser.h"
 extern "C" int run_node_ping(int argc, char** argv) {
   string root = ::getenv("ROMONDATA") ? ::getenv("ROMONDATA") : "file://";
   string dns  = ::getenv("DIM_DNS_NODE") ? ::getenv("DIM_DNS_NODE") : "";
