@@ -16,10 +16,10 @@ include_path      none
 #============================================================================
 # Depend on the various component packages, so they get built before the
 # python stuff below.
-use   DecayTreeTuple            v*    Phys
-use   LoKiPhys                  v*    Phys
-#use   HepMC                     v*    LCG_Interfaces
-use   ROOT                      v*    LCG_Interfaces -no_auto_imports
+use   DecayTreeTuple       v*    Phys
+use   LoKiPhys             v*    Phys
+use   ROOT                 v*    LCG_Interfaces -no_auto_imports
+use   Boost                v*    LCG_Interfaces -no_auto_imports
 
 #============================================================================
 # building rules
