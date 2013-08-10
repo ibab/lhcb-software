@@ -5,6 +5,12 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-08-10 - Vanya Belyaev
+
+ - PyRoUts: minor improvements in VE.b2s, VE.prec
+   more easy sampling from VE and histograms 
+
+
 !========================= AnalysisPython v2r22p1 2013-08-01 =========================
 
 ! 2013-07-18 - Vanya Belyaev

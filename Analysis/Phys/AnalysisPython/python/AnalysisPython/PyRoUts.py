@@ -156,35 +156,12 @@ def _b2s_ ( s )  :
     
     """
     #
-    v = s.value () 
-    c = s.cov2  ()
+    c2 = s.cov2  ()
     #
-    if v <= 0  or c <= 0 : return -1
+    if s.value() <= 0  or c2 <= 0 : return VE(-1,0) 
     #
-    return c/v - 1
+    return c2/s - 1 
 
-# =============================================================================
-## get the precision 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
-#  @date   2012-10-15
-def _prec_ ( s )  :
-    """
-    Get precision 
-
-    >>> v = ...
-    >>> p = v.precision() 
-    
-    """
-    if not hasattr ( s , 'value' ) :
-        return _prec_ ( VE ( s , 0 ) )
-    #
-    c =       s.error ()
-    v = abs ( s.value () ) 
-    #
-    if     c <  0 or v == 0  : return -1
-    elif   c == 0            : return  0
-    #
-    return c/v
 
 # =============================================================================
 ## get the precision with some  error estimation 
@@ -195,29 +172,130 @@ def _prec2_ ( s )  :
     Get precision with ``some'' error estimate 
 
     >>> v = ...
-    >>> p = v.prec2() 
+    >>> p = v.prec () 
     
     """
     if not hasattr ( s , 'value' ) :
         return _prec_ ( VE ( s , 0 ) )
     #
     c =       s.error ()
-    v = abs ( s.value () ) 
     #
-    if     c <  0 or v == 0  : return VE(-1,0)
-    elif   c == 0            : return VE( 0,0)
+    if     c <  0 or s.value() == 0  : return VE(-1,0)
+    elif   c == 0                    : return VE( 0,0)
     #
     return c/abs(s) 
 
 
 VE . b2s        = _b2s_
-VE . prec       = _prec_
-VE . precision  = _prec_
-
-VE . prec2      = _prec2_
-VE . precision2 = _prec2_
+VE . prec       = _prec2_
+VE . precision  = _prec2_
 
 
+# =============================================================================
+## get the (gaussian) random number according to parameters
+#
+#  @code
+#    >>> v = ...  ## the number with error
+#
+#    ## get 100 random numbers 
+#    >>> for i in range ( 0, 100 ) : print v.gauss()
+#    
+#    ## get only non-negative numbers 
+#    >>> for j in range ( 0, 100 ) : print v.gauss( lambda s : s > 0 )
+#
+#  @endcode
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-08-10
+# 
+def _gauss_ ( s , accept = lambda a : True ) : 
+    """
+    Get the gaussian random number
+
+    >>> v = ...  ## the number with error
+
+    ## get 100 random numbers 
+    >>> for i in range ( 0, 100 ) : print v.gauss()
+    
+    ## get only non-negative numbers 
+    >>> for j in range ( 0, 100 ) : print v.gauss( lambda s : s > 0 ) 
+    
+    """
+    #
+    if  0 == s.cov2 () : return s.value() ## return
+    #
+    from scipy import random
+    _gauss = random.normal
+    #
+    v = s.value ()
+    e = s.error ()
+    #
+    def _generate_ () :
+        r = v + e * _gauss ()
+        if accept ( r ) : return r
+        return _generate_ ()
+    #
+    return _generate_ () 
+
+# =============================================================================
+## generate poisson random number according to parameters 
+#  @code
+#    >>> v = ...  ## the number with error
+#
+#    ## get 100 random numbers 
+#    >>> for i in range ( 0, 100 ) : print v.poisson ( fluctuate = True )
+#    
+#    ## get only odd numbers 
+#    >>> for j in range ( 0, 100 ) : print v.poisson ( fluctuate = True , accept = lambda s : 1 ==s%2 )
+#
+#    ## do not fluctuate the mean of poisson:    
+#    >>> for j in range ( 0, 100 ) : print v.poisson ( fluctuate = False  )
+#
+#  @endcode
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-08-10   
+def _poisson_ ( s , fluctuate , accept = lambda s : True ) :
+    """
+    Generate poisson random number according to parameters 
+    
+    >>> v = ...  ## the number with error
+    
+    ## get 100 random numbers 
+    >>> for i in range ( 0, 100 ) : print v.poisson()
+    
+    ## get only odd numbers 
+    >>> for j in range ( 0, 100 ) : print v.poisson ( accept = lambda s : 1 ==s%2 )
+    
+    ## do not fluctuate the mean of poisson:    
+    >>> for j in range ( 0, 100 ) : print v.poisson ( fluctuate = False  )
+    
+    """
+    v = s.value() 
+    if v <= 0 and not fluctuate :
+        raise TypeErorr, 'Non-positive mean without fluctuations (1)'
+    if v <= 0 and s.cov2() <=0  :
+        raise TypeErorr, 'Non-positive mean without fluctuations (2)'
+
+    e = s.error() 
+    if abs(v)/e > 3 :
+        logger.warning ("Very inefficient mean fluctuations: %s" % s ) 
+
+    mu = v
+    if fluctuate :
+        mu = s.gauss ()
+        while mu <= 0 :
+            mu = s.gauss ()
+
+    from scipy import random
+    _poisson = random.poisson
+    
+    return _poisson ( mu ) 
+    
+    
+VE.gauss   = _gauss_
+VE.poisson = _poisson_ 
+    
 # =============================================================================
 # Decorate histogram axis and iterators 
 # =============================================================================
@@ -2872,6 +2950,51 @@ def _transform_ ( h1 , func ) :
 
 ROOT.TH1F. transform = _transform_ 
 ROOT.TH1D. transform = _transform_ 
+
+# =============================================================================
+## sample the histogram using gaussian hypothesis
+#
+#  @code
+#
+#   >>> h = ... ##  the histogram
+#
+#   >>> s1 = h.sample( keep_errors = True  )  ## the sampled hist
+#   >>> s2 = h.sample( keep_errors = False )  ## the sampled hist
+#
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  
+def _sample_ ( histo , keep_errors , accept = lambda s : True ) :
+    """
+    Sample the histogram using gaussian hypothesis
+ 
+    >>> h = ... ##  the histogram
+ 
+    >>> s1 = h.sample( keep_errors = True  )  ## the sampled hist
+    >>> s2 = h.sample( keep_errors = False )  ## the sampled hist
+
+    """
+    #
+    result = histo.Clone ( hID () )     
+    if not result.GetSumw2() : result.Sumw2()
+    
+    for bin in histo :
+
+        ## getbin content
+        v1 = histo[bin]
+        
+        ## sample it! 
+        v2 = VE( v1.gauss ( accept = accept ) )
+        
+        if not keep_errors : v2.setCov2 ( 0         )
+        else               : v2.setCov2 ( v1.cov2() )
+        
+        result [bin] = v2
+        
+    return result
+
+ROOT.TH1 ._sample_ = _sample_
+ROOT.TH1 .sample   = _sample_
 
 # =============================================================================
 ## Get the Figure-of-Merit (FoM) for the pure signal distribution,
