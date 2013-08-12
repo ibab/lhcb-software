@@ -32,6 +32,7 @@ from Hlt2Lines.Hlt2CharmHadD02HHHHDstLines  import Hlt2CharmHadD02HHHHDstLinesCo
 from Hlt2Lines.Hlt2CharmHadD02HHHHDstNoHlt1Lines import Hlt2CharmHadD02HHHHDstNoHlt1LinesConf
 from Hlt2Lines.Hlt2CharmHadD2KS0HLines    import  Hlt2CharmHadD2KS0HLinesConf
 from Hlt2Lines.Hlt2CharmHadD02HHKsLines   import Hlt2CharmHadD02HHKsLinesConf
+from Hlt2Lines.Hlt2CharmHadD02HHPi0Lines   import Hlt2CharmHadD02HHPi0LinesConf
 from Hlt2Lines.Hlt2CharmSemilepD02HMuNuLines  import Hlt2CharmSemilepD02HMuNuLinesConf
 from Hlt2Lines.Hlt2CharmSemilepTwoMuonForMuMuHad import Hlt2CharmSemilepTwoMuonForMuMuHadConf
 from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuLines   import Hlt2CharmSemilepD02HHMuMuLinesConf
@@ -90,7 +91,8 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2CharmHadD02HHLinesConf
                              , Hlt2CharmHadD2HHHLinesConf
                              , Hlt2CharmHadD2KS0HLinesConf  
-                             , Hlt2CharmHadD02HHKsLinesConf
+                               , Hlt2CharmHadD02HHKsLinesConf
+                               , Hlt2CharmHadD02HHPi0LinesConf
                              , Hlt2CharmHadTwoBodyForMultiBodyConf
                              , Hlt2CharmHadTwoBodyForD02HHHHConf
                              , Hlt2CharmHadD02HHHHDstLinesConf
