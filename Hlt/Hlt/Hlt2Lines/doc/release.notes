@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2013-08-12 - Mika Vesterinen
+ - Add python/Hlt2Lines/Hlt2CharmHadD02HHPi0Lines.py
+
 !========================= Hlt2Lines v9r0p2 2013-05-16 =========================
 ! 2013-05-15 - Rob Lambert
  - Add HASMUON for each ISMUON, to suppress error printouts
