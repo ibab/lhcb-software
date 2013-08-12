@@ -62,11 +62,15 @@ StatusCode ChargedProtoParticleMoni::execute()
   using namespace Gaudi::Units;
 
   // Load the Track objects
-  const LHCb::Tracks * tracks = get<LHCb::Tracks>(m_tracksPath);
+  const LHCb::Tracks * tracks = getIfExists<LHCb::Tracks>(m_tracksPath);
+  if ( !tracks ) return Warning( "No Tracks at '" + m_tracksPath + "'", 
+                                 StatusCode::SUCCESS );
 
   // Load the ProtoParticles
-  const LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>(m_protoPath);
-
+  const LHCb::ProtoParticles * protos = getIfExists<LHCb::ProtoParticles>(m_protoPath);
+  if ( !protos ) return Warning( "No ProtoParticles at '" + m_protoPath + "'", 
+                                 StatusCode::SUCCESS );
+  
   // count events
   ++m_nEvts;
 
