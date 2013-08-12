@@ -4,6 +4,10 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-08-12 - Chris Jones
+ - Update ChargedProtoANNPIDMoni to not terminate the processing if the
+   input ProtoParticles are missing. Instead just print a warning.
+
 !========================= ChargedProtoANNPID v2r3 2013-07-18 =======================
 ! 2013-06-04 - Chris Jones
  - Remove unused CheckForNaN.h header causing clang unused method warnings.

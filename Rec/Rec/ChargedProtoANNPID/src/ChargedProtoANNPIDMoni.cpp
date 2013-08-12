@@ -42,7 +42,9 @@ ChargedProtoANNPIDMoni::~ChargedProtoANNPIDMoni() {}
 StatusCode ChargedProtoANNPIDMoni::execute()
 {
   // Load the charged ProtoParticles
-  LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( m_protoPath );
+  LHCb::ProtoParticles * protos = getIfExists<LHCb::ProtoParticles>( m_protoPath );
+  if ( !protos ) return Warning( "No ProtoParticles at '" + m_protoPath + "'", 
+                                 StatusCode::SUCCESS );
 
   // Loop over ProtoParticles
   for ( LHCb::ProtoParticles::iterator iP = protos->begin();
