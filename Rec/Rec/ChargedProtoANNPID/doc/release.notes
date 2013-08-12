@@ -4,6 +4,10 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2013-08-12 - Michel De Cian
+ - Update ChargedProtoANNPIDTrainingTuple to not terminate the processing if the
+   input ProtoParticles are missing. Instead just print a warning.
+
 ! 2013-08-12 - Chris Jones
  - Update ChargedProtoANNPIDMoni to not terminate the processing if the
    input ProtoParticles are missing. Instead just print a warning.
