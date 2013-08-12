@@ -71,7 +71,7 @@ StatusCode NominalTabulatedSignalDetectionEff::initialize()
 
   // Informational Printout
   if ( msgLevel(MSG::DEBUG) )
-    debug() << " HPD quartz window efficiency = " << qEff << endmsg
+    debug() << " HPD quartz window efficiency = " << qEff 
             << " Digitisation pedestal eff.   = " << pLos << endmsg;
   
   return sc;
