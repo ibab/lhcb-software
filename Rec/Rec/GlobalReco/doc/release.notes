@@ -5,8 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-08-12 - Chris Jones
- - Update ChargedProtoParticleMoni to not terminate the processing if the
-   input Tracks or ProtoParticles are missing. Instead just print a warning.
+ - Update ChargedProtoParticleMoni and ChargedProtoParticleTupleAlg to not 
+   terminate the processing if the input Tracks or ProtoParticles are missing. 
+   Instead just print a warning.
 
 !========================= GlobalReco v6r44p1 2013-04-30 =========================
 ! 2013-04-09 - Marco Cattaneo

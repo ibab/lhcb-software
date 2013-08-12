@@ -69,7 +69,11 @@ StatusCode ChargedProtoParticleTupleAlg::initialize()
 StatusCode ChargedProtoParticleTupleAlg::execute()
 {
   // Load the charged ProtoParticles
-  const LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( m_protoPath );
+  const LHCb::ProtoParticles * protos = 
+    getIfExists<LHCb::ProtoParticles>( m_protoPath );
+  if ( !protos ) 
+    return Warning( "No ProtoParticles at '" + m_protoPath + "'", 
+                    StatusCode::SUCCESS );
 
   // Loop over the protos
   for ( LHCb::ProtoParticles::const_iterator iP = protos->begin();
