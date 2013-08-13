@@ -66,6 +66,10 @@ void PrintAllSpinFactors(std::ostream& out){
       << SF_DtoPP1P2_PtoP3P4::getExampleDecay()
       << " -------------------- " << std::endl;
 
+  out << " SF_DtoS1S2_S1toP1P2_S2toP3P4:\n"
+      << SF_DtoS1S2_S1toP1P2_S2toP3P4::getExampleDecay()
+      << " -------------------- " << std::endl;
+
 }
 
 
@@ -234,6 +238,11 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
 			  , thisDcy)
 	   ){
     return new SF_DtoPP1P2_PtoP3P4(events, thisDcy);
+  }else if(equalBySVPAT_L(SF_DtoS1S2_S1toP1P2_S2toP3P4::getExampleDecay() 
+			  //Lauren's wide Ks Spin
+			  , thisDcy)
+	   ){
+    return new SF_DtoS1S2_S1toP1P2_S2toP3P4(events, thisDcy);
   }else if( equalBySVPAT(SF_DtoV1P0_V1toV2P1_V2toP2P3::getExampleDecay()
 			 , thisDcy) ){
     if(dbThis){
