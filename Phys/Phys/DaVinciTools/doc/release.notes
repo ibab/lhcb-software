@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-08-13 - Murilo Rangel
+ - Added Cone Track pT requirement for HighPtTopoTool.cpp
+
 !========================= DaVinciTools v23r8p1 2013-06-13 =========================
 
 ! 2013-06-12 - Chris Jones

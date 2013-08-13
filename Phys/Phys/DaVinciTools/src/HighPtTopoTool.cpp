@@ -11,6 +11,7 @@
 #include "Event/HltObjectSummary.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Vector4DTypes.h"
+#include "Event/Particle.h"
 
 // =============================================================================
 
@@ -25,6 +26,8 @@ private:
   HighPtTopoTool& operator=(const HighPtTopoTool&);
 
   float m_minpT;
+  float m_conesize;
+  float m_minconepT;
   ITriggerTisTos *m_tistostool;
 
 
@@ -47,6 +50,8 @@ HighPtTopoTool::HighPtTopoTool(const std::string& type,const std::string& name,
                                const IInterface* parent)
   : base_class(type,name,parent), m_tistostool(0) {
   declareProperty("minpT", m_minpT = 20000.);
+  declareProperty("conesize", m_conesize = -1);
+  declareProperty("minconepT", m_minconepT = 0.);
 }
 
 StatusCode HighPtTopoTool::initialize(){
@@ -65,8 +70,35 @@ bool HighPtTopoTool::accept() const {
   std::vector<std::vector<int> > lhcbIDs(num);
   Gaudi::LorentzVector P4;
   for(unsigned int i = 0; i < num; i++){
-    getHltObjP4(hltObjs[i],P4);
-    if(P4.Pt()  > m_minpT) return true;
+      getHltObjP4(hltObjs[i],P4);
+      if(m_conesize<0 && P4.Pt()  > m_minpT) return true;
+      if(m_conesize>0 && P4.Pt()  > m_minpT) {
+          LHCb::Tracks* tracks = get<LHCb::Tracks>("Rec/Track/Best");//LHCb::TrackLocation::Default);
+          double sumPx = 0.0; double sumPy = 0.0;
+          double sumPx_out = 0.0; double sumPy_out = 0.0; double sumPt_out = 0.0;
+          for( LHCb::Tracks::const_iterator it = tracks->begin(); it != tracks->end(); ++it){
+              LHCb::Track* track = (*it);
+              double trackpt = track->pt();
+              if(trackpt<200) continue;
+              if(track->ghostProbability()>0.4 || track->chi2PerDoF()>3) continue;
+              Gaudi::XYZVector trackMomentum = track->momentum();
+              double trackpx = trackMomentum.X();
+              double trackpy = trackMomentum.Y();
+
+              // -- Calculate the difference in Eta and Phi between the particle in question and a track
+              double deltaPhi = fabs( P4.Phi() - track->phi());//trackMomentum.Phi() );
+              if(deltaPhi > M_PI) deltaPhi  = 2*M_PI-deltaPhi;
+              double deltaEta = P4.Eta() - track->pseudoRapidity();//trackMomentum.Eta();
+              double deltaR = std::sqrt(deltaPhi * deltaPhi + deltaEta * deltaEta);
+
+              // -- Add the tracks to the summation if deltaR is smaller than the cut value of deltaR
+              if(deltaR < m_conesize && (track->type()==3)){
+                  sumPx += trackpx;
+                  sumPy += trackpy;
+              } else if(deltaR > m_conesize && (track->type()==3)) {sumPx_out += trackpx; sumPy_out += trackpy; sumPt_out += trackpt;}
+          }
+          if(sqrt(sumPx*sumPx+sumPy*sumPy)  > m_minconepT && P4.Pt()  > m_minpT) return true;
+      }
   }
   return false;
 }
