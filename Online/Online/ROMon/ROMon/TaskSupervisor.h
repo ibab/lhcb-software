@@ -37,16 +37,16 @@ namespace ROMon {
       bool   fsmSrv;
       bool   devHdlr;
       PVSSProject() : eventMgr(false), dataMgr(false), distMgr(false), fsmSrv(false), devHdlr(false) {}
-      PVSSProject(const PVSSProject& c) : name(c.name), eventMgr(c.eventMgr), 
+      PVSSProject(const PVSSProject& c) : name(c.name), eventMgr(c.eventMgr),
            dataMgr(c.dataMgr), distMgr(c.distMgr), fsmSrv(c.fsmSrv), devHdlr(c.devHdlr) {}
-      PVSSProject& operator=(const PVSSProject& c) 
+      PVSSProject& operator=(const PVSSProject& c)
       { name=c.name; eventMgr=c.eventMgr; dataMgr=c.dataMgr; distMgr=c.distMgr; fsmSrv=c.fsmSrv; devHdlr=c.devHdlr;return *this;}
       bool operator==(const PVSSProject& c) const
       { return name==c.name && eventMgr==c.eventMgr && dataMgr==c.dataMgr && distMgr==c.distMgr && fsmSrv==c.fsmSrv && devHdlr==c.devHdlr; }
       bool operator<(const PVSSProject& c) const
       { return name<c.name && eventMgr<c.eventMgr && dataMgr<c.dataMgr && distMgr<c.distMgr && fsmSrv<c.fsmSrv && devHdlr<c.devHdlr;; }
       bool ok() const {  return eventMgr && dataMgr && distMgr; }
-      static const char* state(bool value) { return value ? "RUNNING" : "DEAD"; }      
+      static const char* state(bool value) { return value ? "RUNNING" : "DEAD"; }
       static std::string projectName(const std::string& n);
     };
     typedef std::vector<PVSSProject> Projects;
@@ -62,7 +62,7 @@ namespace ROMon {
       typedef std::vector<Item>              Connections;
       typedef std::vector<PVSSProject>       Projects;
       std::string name, status, time, boot;
-    
+
       Tasks        tasks;
       Connections  conns;
       Projects     projects;
@@ -77,6 +77,7 @@ namespace ROMon {
         time = n.time;
         status = n.status;
         tasks = n.tasks;
+        projects = n.projects;
         boot = n.boot;
         totalTaskCount = n.totalTaskCount;
         missTaskCount = n.missTaskCount;
@@ -89,12 +90,12 @@ namespace ROMon {
         totalConnCount = n.totalConnCount;
         missConnCount = n.missConnCount;
         connCount = n.connCount;
-	blk_size = n.blk_size;
-	blk_total = n.blk_total;
-	blk_availible = n.blk_availible;
+        blk_size = n.blk_size;
+        blk_total = n.blk_total;
+        blk_availible = n.blk_availible;
       }
       Node() : perc_cpu(0.), perc_mem(0.), vsize(0), rss(0), data(0), stack(0),
-	       taskCount(0), missTaskCount(0), totalTaskCount(0), 
+	       taskCount(0), missTaskCount(0), totalTaskCount(0),
 	       connCount(0), missConnCount(0), totalConnCount(0),
 	       blk_size(0), blk_total(0), blk_availible(0)
       {}
@@ -287,7 +288,7 @@ namespace ROMon {
     static void pingHandler(void* tag, void* address, int* size);
     /// Access node type
     const std::string& type() const            {  return m_type;              }
-    /// Access error information 
+    /// Access error information
     const std::string& error() const           {  return m_error;             }
     /// Set error information
     void setError(const std::string& e)        {  m_error = e;                }
@@ -299,7 +300,7 @@ namespace ROMon {
     const std::string& connectionStatus() const{  return m_connStatus;        }
     /// Encode task information in XML
     const std::string& taskStatus() const      {  return m_taskStatus;        }
-    /// Access the number of bad tasks 
+    /// Access the number of bad tasks
     int numBadTasks() const                    {  return m_numBadTasks;       }
     /// Access the number of bad connections
     int numBadConnections() const              {  return m_numBadConnections; }
