@@ -150,7 +150,6 @@ int ampFit(){
   cout << " got event pattern: " << pdg << endl;
   DalitzEventList eventList;
 
-
   bool doIntegTest=false;
   if(doIntegTest){
     int Ncheck=1000000;
