@@ -8,6 +8,9 @@
 #include "Kernel/IDecayFinder.h"
 #include "MCInterfaces/IMCDecayFinder.h"
 
+#include "LoKi/IMCDecay.h"
+#include "LoKi/IDecay.h"
+
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
@@ -42,6 +45,10 @@ public:
   virtual IDecayFinder* decayFinder() const = 0;
 
   virtual IMCDecayFinder* mcDecayFinder() const = 0;
+
+  virtual bool useLoKiDecayFinders() const = 0;
+  virtual const Decays::IMCDecay::iTree& mcDecayTree() const = 0;
+  virtual const Decays::IDecay::iTree& decayTree() const = 0;
 
   virtual const std::string& getName() const = 0;
 

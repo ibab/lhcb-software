@@ -53,6 +53,10 @@ public:
   IDecayFinder* decayFinder() const;
   IMCDecayFinder* mcDecayFinder() const;
 
+  virtual bool useLoKiDecayFinders() const { return m_useLoKiDecayFinders; }
+  const Decays::IMCDecay::iTree& mcDecayTree() const { return m_mcdecayTree; }
+  const Decays::IDecay::iTree& decayTree() const { return m_decayTree; }
+
   bool hasMatched() const;
   void hasMatched( bool state );
 
@@ -78,6 +82,9 @@ private:
   IMCDecayFinder* m_mcdkFinder;
   bool m_isMC ;
 
+  bool m_useLoKiDecayFinders;
+  Decays::IMCDecay::Tree m_mcdecayTree; ///< MC truth decay tree
+  Decays::IDecay::Tree   m_decayTree;   ///< MC truth decay tree
 };
 
 #endif // JBOREL_TUPLETOOLDECAY_H

@@ -58,6 +58,44 @@ StatusCode fillTuple( Tuples::Tuple& tuple
 
   return test;
 }
+
+template<class PARTICLE,class COLLECTION>
+StatusCode fillTuple( typename Tuple::Tuple& tuple
+                    , COLLECTION heads
+                    , const typename Decays::iTree_<PARTICLE>& decaytree )
+{
+  unsigned int nCandidates=0;
+  StatusCode test = StatusCode::FAILURE;
+  std::vector<PARTICLE> row;
+  for ( typename COLLECTION::const_iterator pIt = heads.begin(); pIt != heads.end(); ++pIt ) {
+    if (msgLevel(MSG::DEBUG)) debug() << "######################################## New head" << endmsg ;
+    test = StatusCode::FAILURE;
+    row.clear();
+    if ( decaytree(*pIt) && decaytree.marked() ) {
+      decaytree.collect(row);
+    }
+    row.insert( row.begin(), *pIt ); // must insert the head as it cant be flagged.
+
+    if( fillParticles( tuple, row ) ) {
+      tuple->column( "nCandidate", nCandidates ).ignore();
+      tuple->column( "totCandidates", (unsigned long long)heads.size()).ignore();
+      tuple->column( "EventInSequence", (unsigned long long)counter("Event").nEntries()).ignore();
+      ++nCandidates;
+    } else {
+      Warning("Failed to fill a candidate. Will skip it.").ignore();
+      continue;
+    }
+
+    test = fillEventRelatedVariables( tuple );
+    if ( test ) {
+      test = tuple->write();
+    } else {
+      Warning("Failed to fill some variable, will skip this candidate.").ignore();
+    }
+  }
+  return test;
+}
+
 //=============================================================================
 /// get offset in tree
 template<class PARTICLE>

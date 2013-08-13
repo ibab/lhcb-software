@@ -13,6 +13,10 @@
 #include "boost/lexical_cast.hpp"
 #include "Kernel/Escape.h"
 
+#include "Event/MCParticle.h"
+#include "LoKi/IMCDecay.h"
+#include "LoKi/IDecay.h"
+
 /** @class DecayTreeTupleBase DecayTreeTupleBase.h jborel/DecayTreeTupleBase.h
  *
  * Base class for algorithms providing a DecayTreeTuple
@@ -49,6 +53,10 @@ protected:
 
   /// Access the MC decay finder tool
   IDecayFinder*   dkFinder()   const { return m_dkFinder; }
+
+  bool useLoKiDecayFinders() const { return m_useLoKiDecayFinders; }
+  const Decays::IMCDecay::iTree& mcDecayTree() const { return m_mcdecayTree; }
+  const Decays::IDecay::iTree& decayTree() const { return m_decayTree; }
 
   /// Initialize the main decay
   bool initializeDecays(const bool isMC);
@@ -144,6 +152,10 @@ private:
   IMCDecayFinder* m_mcdkFinder; ///< MC truth decay finder
 
   IDecayFinder* m_dkFinder;     ///< Decay finder
+
+  bool m_useLoKiDecayFinders;
+  Decays::IMCDecay::Tree m_mcdecayTree; ///< MC truth decay tree
+  Decays::IDecay::Tree   m_decayTree;   ///< decay tree
 
   std::string m_headDecay;
 

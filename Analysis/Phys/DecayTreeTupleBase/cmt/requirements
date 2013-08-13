@@ -17,6 +17,8 @@ use   DaVinciKernel       v*    Phys
 use   MCInterfaces        v*    Kernel
 use   Boost               v*    LCG_Interfaces
 use   CaloUtils           v*    Calo
+use   LoKiPhys            v*    Phys
+use   LoKiPhysMC          v*    Phys
 
 #============================================================================
 # Environment

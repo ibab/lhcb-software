@@ -4,6 +4,11 @@
 ! Purpose     : Base classes for the DecayTreeTuples
 !-----------------------------------------------------------------------------
 
+! 2013-08-13 - Pieter David
+ - Added the option to use LoKi decay finders, cfr.
+   https://twiki.cern.ch/twiki/bin/view/LHCb/FAQ/LoKiNewDecayFinders ,
+   in (MC)DecayTreeTuple by setting the "UseLoKiDecayFinders" property.
+
 !========================= DecayTreeTupleBase v1r1 2013-02-20 =========================
 
 ! 2013-02-20 - Chris Jones

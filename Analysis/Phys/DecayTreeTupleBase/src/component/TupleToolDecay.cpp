@@ -8,6 +8,8 @@
 #include "TupleToolDecay.h"
 //#include "Kernel/IParticleTupleTool.h"
 
+#include "LoKi/Trees.h"
+
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
 
@@ -39,10 +41,15 @@ DECLARE_TOOL_FACTORY( TupleToolDecay )
     , m_dkFinder(NULL)
     , m_mcdkFinder(NULL)
     , m_isMC(false)
+    , m_useLoKiDecayFinders(false)
+    , m_mcdecayTree( Decays::Trees::Invalid_<const LHCb::MCParticle*>() )
+    , m_decayTree( Decays::Trees::Invalid_<const LHCb::Particle*>() )
 {
   declareInterface<ITupleToolDecay>(this);
   declareProperty( "ToolList", m_stufferList );
   declareProperty( "InheritTools", m_inheritTools = true );
+
+  declareProperty( "UseLoKiDecayFinders", m_useLoKiDecayFinders = false );
 }
 
 //=============================================================================
@@ -72,12 +79,28 @@ StatusCode TupleToolDecay::initializeDecay( const std::string& dcy, bool isMC )
   }
 
   bool test = true ;
-  if (m_isMC){
-    m_mcdkFinder = tool<IMCDecayFinder>("MCDecayFinder", this );
-    test &= m_mcdkFinder->setDecay( dcy );
+  if ( m_useLoKiDecayFinders ) {
+    if ( m_isMC ) {
+      Decays::IMCDecay* mcdecaytool = tool<Decays::IMCDecay>( "LoKi::MCDecay", this );
+      if ( mcdecaytool != NULL ) {
+        m_mcdecayTree = mcdecaytool->tree(dcy);
+      }
+      test = m_mcdecayTree.valid();
+    } else {
+      Decays::IDecay* decaytool = tool<Decays::IDecay>( "LoKi::Decay", this );
+      if ( decaytool != NULL ) {
+        m_decayTree = decaytool->tree(dcy);
+      }
+      test = m_decayTree.valid();
+    }
   } else {
-    m_dkFinder = tool<IDecayFinder>("DecayFinder", this );
-    test &= m_dkFinder->setDecay( dcy );
+    if (m_isMC){
+      m_mcdkFinder = tool<IMCDecayFinder>("MCDecayFinder", this );
+      test &= m_mcdkFinder->setDecay( dcy );
+    } else {
+      m_dkFinder = tool<IDecayFinder>("DecayFinder", this );
+      test &= m_dkFinder->setDecay( dcy );
+    }
   }
 
   if (msgLevel(MSG::DEBUG)) debug() << "Initialized " << name()
@@ -95,7 +118,11 @@ StatusCode TupleToolDecay::initializeDecay( const std::string& dcy, bool isMC )
 //=============================================================================
 std::string TupleToolDecay::decay() const
 {
-  return ( m_isMC ? m_mcdkFinder->decay() : m_dkFinder->decay() );
+  if ( m_useLoKiDecayFinders ) {
+    return ( m_isMC ? m_mcdecayTree.toString() : m_decayTree.toString() );
+  } else {
+    return ( m_isMC ? m_mcdkFinder->decay() : m_dkFinder->decay() );
+  }
 }
 
 std::string TupleToolDecay::getInfo() const { return name() + " :" + decay(); }

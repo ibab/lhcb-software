@@ -3,6 +3,7 @@
 
 #include "boost/lexical_cast.hpp"
 #include "Kernel/Escape.h"
+#include "LoKi/select.h"
 // local
 #include "MCDecayTreeTuple.h"
 
@@ -56,25 +57,31 @@ StatusCode MCDecayTreeTuple::execute()
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   ++counter("Event");
 
-  LHCb::MCParticle::ConstVector mothers ;
-  const LHCb::MCParticle* head = 0 ;
-  while ( mcdkFinder()->findDecay( head) )
-  {
-    mothers.push_back(head);
-  }
-  if ( mothers.empty() )
-  {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "No mothers of decay " << headDecay() 
-                                          << " found" << endreq;
-    setFilterPassed(false);
-    return StatusCode::SUCCESS;
-  }
-  if (msgLevel(MSG::VERBOSE)) verbose() << "I have " << mothers.size()
-                                        << " particles to handle" << endreq;
-
   LHCb::MCParticle::ConstVector heads;
-  StatusCode test = getDecayMatches( mothers, heads );
-  if( test ){
+  bool found = false;
+  if ( useLoKiDecayFinders() ) {
+    const LHCb::MCParticles* mcParts = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
+    LoKi::select( mcParts->begin(), mcParts->end(), std::back_inserter(heads), mcDecayTree() );
+    found = !heads.empty();
+  } else {
+    LHCb::MCParticle::ConstVector mothers ;
+    const LHCb::MCParticle* head = 0 ;
+    while ( mcdkFinder()->findDecay( head) )
+    {
+      mothers.push_back(head);
+    }
+    if ( mothers.empty() )
+    {
+      if (msgLevel(MSG::VERBOSE)) verbose() << "No mothers of decay " << headDecay()
+                                            << " found" << endreq;
+      setFilterPassed(false);
+      return StatusCode::SUCCESS;
+    }
+    if (msgLevel(MSG::VERBOSE)) verbose() << "I have " << mothers.size()
+                                          << " particles to handle" << endreq;
+    found = getDecayMatches( mothers, heads );
+  }
+  if ( found ){
     if (msgLevel(MSG::VERBOSE)) verbose() << "There is " << heads.size()
                                           << " top particles matching the decay." << endreq;
   }
@@ -85,9 +92,14 @@ StatusCode MCDecayTreeTuple::execute()
   }
   //don't create the ntuple if there's nothing to fill!
   Tuple tuple = nTuple( tupleName(), tupleName() );
-  test = fillTuple( tuple, heads, mcdkFinder() );
+  StatusCode test;
+  if ( useLoKiDecayFinders() ) {
+    test = fillTuple( tuple, heads, mcDecayTree() );
+  } else {
+    test = fillTuple( tuple, heads, mcdkFinder() );
+  }
 
-  if( test ){
+  if ( test.isSuccess() ){
     if (msgLevel(MSG::VERBOSE)) verbose() << "NTuple sucessfully filled" << endreq;
   }
 

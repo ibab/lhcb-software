@@ -3,6 +3,8 @@
 
 #include "boost/lexical_cast.hpp"
 #include "Kernel/Escape.h"
+
+#include "LoKi/select.h"
 // local
 #include "DecayTreeTuple.h"
 
@@ -60,19 +62,26 @@ StatusCode DecayTreeTuple::execute()
 {
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
   counter("Event")++;
-  const LHCb::Particle::ConstVector mothers( this->particles().begin(),
-                                             this->particles().end()   );
-  if ( mothers.empty() )
-  {
-    setFilterPassed(false);
-    return StatusCode::SUCCESS;
-  }
-  if (msgLevel(MSG::VERBOSE)) verbose() << "I have " << mothers.size()
-                                        << " particles to handle" << endreq;
 
   LHCb::Particle::ConstVector heads;
-  StatusCode test = getDecayMatches( mothers, heads );
-  if ( test.isSuccess() )
+  bool found = false;
+  if ( useLoKiDecayFinders() ) {
+    LoKi::select( i_particles().begin(), i_particles().end(), std::back_inserter(heads), decayTree() );
+    found = !heads.empty();
+  } else {
+    const LHCb::Particle::ConstVector mothers( this->particles().begin(),
+                                              this->particles().end()   );
+    if ( mothers.empty() )
+    {
+      setFilterPassed(false);
+      return StatusCode::SUCCESS;
+    }
+    if (msgLevel(MSG::VERBOSE)) verbose() << "I have " << mothers.size()
+                                          << " particles to handle" << endreq;
+    StatusCode test = getDecayMatches( mothers, heads );
+    found = test.isSuccess();
+  }
+  if ( found )
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << "There is " << heads.size()
                                           << " top particles matching the decay." << endreq;
@@ -86,7 +95,12 @@ StatusCode DecayTreeTuple::execute()
 
   //don't create the ntuple if there's nothing to fill!
   Tuple tuple = nTuple( tupleName(), tupleName() );
-  test = fillTuple( tuple, heads, dkFinder() );
+  StatusCode test;
+  if ( useLoKiDecayFinders() ) {
+    test = fillTuple( tuple, heads, decayTree() );
+  } else {
+    test = fillTuple( tuple, heads, dkFinder() );
+  }
 
   if ( test.isSuccess() )
   {

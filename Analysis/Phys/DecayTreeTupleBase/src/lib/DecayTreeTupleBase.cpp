@@ -8,6 +8,8 @@
 #include "MCInterfaces/IMCDecayFinder.h"
 #include "DecayTreeTupleBase/DecayTreeTupleBase.h"
 #include "GaudiKernel/IRegistry.h" // IOpaqueAddress
+#include "LoKi/Trees.h"
+#include "GaudiKernel/AlgTool.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DecayTreeTupleBase
@@ -25,6 +27,9 @@ DecayTreeTupleBase::DecayTreeTupleBase( const std::string& name,
   : DaVinciTupleAlgorithm ( name , pSvcLocator )
   , m_mcdkFinder          ( NULL               )
   , m_dkFinder            ( NULL               )
+  , m_useLoKiDecayFinders ( false              )
+  , m_mcdecayTree         ( Decays::Trees::Invalid_<const LHCb::MCParticle*>() )
+  , m_decayTree           ( Decays::Trees::Invalid_<const LHCb::Particle*>() )
 {
   declareProperty( "TupleName", m_tupleName = "" );
 
@@ -34,6 +39,8 @@ DecayTreeTupleBase::DecayTreeTupleBase( const std::string& name,
 
   declareProperty( "UseToolNameForBranchName", m_tupleNameAsToolName = true );
   declareProperty( "RevertToPositiveID", m_revertToPositiveID = true );
+
+  declareProperty( "UseLoKiDecayFinders", m_useLoKiDecayFinders = false );
 }
 
 //=============================================================================
@@ -89,25 +96,53 @@ bool DecayTreeTupleBase::initializeDecays( const bool isMC )
 {
   // main decay initialization
 
-  if (isMC)
-  {
-    m_mcdkFinder = tool<IMCDecayFinder>( "MCDecayFinder", this );
-    if ( !m_mcdkFinder->setDecay( m_headDecay ) )
-    {
-      Error( "Cannot initialize the main decay '" + m_headDecay+ "' properly." ).ignore();
-      return false;
+  if ( useLoKiDecayFinders() ) {
+    if ( isMC ) {
+      Decays::IMCDecay* mcdecaytool = tool<Decays::IMCDecay>( "LoKi::MCDecay", this );
+      if ( ! mcdecaytool ) {
+        Error("Could not retrieve MC-decay finder").ignore();
+        return false;
+      }
+      m_mcdecayTree = mcdecaytool->tree(m_headDecay);
+      if ( ! m_mcdecayTree ) {
+        Error( "Unable to decode/parse MC-decay descriptor '" + m_headDecay + "'." ).ignore();
+        return false;
+      }
+      info() << "Will look for " << m_mcdecayTree << endmsg;
+    } else {
+      Decays::IDecay* decaytool = tool<Decays::IDecay>( "LoKi::Decay", this );
+      if ( ! decaytool ) {
+        Error("Could not retrieve decay finder").ignore();
+        return false;
+      }
+      m_decayTree = decaytool->tree(m_headDecay);
+      if ( ! m_decayTree ) {
+        Error( "Unable to decode/parse decay descriptor '" + m_headDecay + "'." ).ignore();
+        return false;
+      }
+      info() << "Will look for " << m_decayTree << endmsg;
     }
-    info() << "Will look for " << m_mcdkFinder->decay() << endreq;
-  }
-  else
-  {
-    m_dkFinder = tool<IDecayFinder>( "DecayFinder", this );
-    if( !m_dkFinder->setDecay( m_headDecay ) )
+  } else {
+    if (isMC)
     {
-      Error( "Cannot initialize the main decay '" + m_headDecay+ "' properly." ).ignore();
-      return false;
+      m_mcdkFinder = tool<IMCDecayFinder>( "MCDecayFinder", this );
+      if ( !m_mcdkFinder->setDecay( m_headDecay ) )
+      {
+        Error( "Cannot initialize the main decay '" + m_headDecay+ "' properly." ).ignore();
+        return false;
+      }
+      info() << "Will look for " << m_mcdkFinder->decay() << endreq;
     }
-    info() << "Will look for " << m_dkFinder->decay() << endreq;
+    else
+    {
+      m_dkFinder = tool<IDecayFinder>( "DecayFinder", this );
+      if( !m_dkFinder->setDecay( m_headDecay ) )
+      {
+        Error( "Cannot initialize the main decay '" + m_headDecay+ "' properly." ).ignore();
+        return false;
+      }
+      info() << "Will look for " << m_dkFinder->decay() << endreq;
+    }
   }
 
   // sub-decays initialization (if any)
@@ -117,6 +152,7 @@ bool DecayTreeTupleBase::initializeDecays( const bool isMC )
   {
     if (msgLevel(MSG::DEBUG)) debug() << "Try now to instanciate " << mit->first << endreq;
     ITupleToolDecay * m = tool<ITupleToolDecay>( "TupleToolDecay", mit->first, this );
+    Gaudi::Utils::setProperty(m, "UseLoKiDecayFinders", useLoKiDecayFinders()).ignore();
     if( !m->initializeDecay( mit->second, isMC ) )
     {
       Error( "Cannot initialize '" + mit->first + "' branch properly, skipping it." );
@@ -234,8 +270,8 @@ void DecayTreeTupleBase::matchSubDecays( const Particle::ConstVector& row ,
   if ( !mit )
     Exception("DecayTreeTupleBase::matchSubDecays ITupleToolDecay undefined");
 
-  if ( !mit->decayFinder() )
-    Exception("DecayTreeTupleBase::matchSubDecays ITupleToolDecay DecayFinder undefined");
+  if ( mit->useLoKiDecayFinders() ? ( !mit->decayTree() ) : ( !mit->decayFinder() ) )
+    Exception("DecayTreeTupleBase::matchSubDecays ITupleToolDecay DecayFinder or DecayTree undefined");
 
   if ( !row[0] )
     Exception("DecayTreeTupleBase::matchSubDecays DecayTreeTupleBase::Null Particle");
@@ -243,7 +279,18 @@ void DecayTreeTupleBase::matchSubDecays( const Particle::ConstVector& row ,
   const Particle* head = row[0];
   if (msgLevel(MSG::VERBOSE))
     verbose() << "Match subdecay for Particle " << head->particleID().pid() << endmsg ;
-  mit->decayFinder()->decayMembers( head, buffer );
+  if ( mit->useLoKiDecayFinders() ) {
+    const Decays::IDecay::iTree& tree = mit->decayTree();
+    if ( tree(head) ) {
+      if ( tree.marked() ) {
+        tree.collect(buffer);
+      } else {
+        buffer.push_back(head);
+      }
+    }
+  } else {
+    mit->decayFinder()->decayMembers( head, buffer );
+  }
   if (msgLevel(MSG::VERBOSE))
     verbose() << "Decay finder gets " << buffer.size() << " particles for "
               << mit->decay() << endmsg ;
@@ -258,7 +305,7 @@ void DecayTreeTupleBase::matchSubDecays( const MCParticle::ConstVector& row,
   if ( !mit )
     Exception("DecayTreeTupleBase::matchSubDecays ITupleToolDecay undefined");
 
-  if ( !mit->mcDecayFinder() )
+  if ( mit->useLoKiDecayFinders() ? ( !mit->mcDecayTree() ) : ( !mit->mcDecayFinder() ) )
     Exception("DecayTreeTupleBase::matchSubDecays ITupleToolDecay MCDecayFinder undefined");
 
   if ( !row[0] )
@@ -267,7 +314,18 @@ void DecayTreeTupleBase::matchSubDecays( const MCParticle::ConstVector& row,
   const MCParticle* head = row[0];
   if (msgLevel(MSG::VERBOSE))
     verbose() << "Match subdecay for MCParticle " << head->particleID().pid() << endmsg ;
-  mit->mcDecayFinder()->decayMembers( head, buffer );
+  if ( mit->useLoKiDecayFinders() ) {
+    const Decays::IMCDecay::iTree& tree = mit->mcDecayTree();
+    if ( tree(head) ) {
+      if ( tree.marked() ) {
+        tree.collect(buffer);
+      } else {
+        buffer.push_back(head);
+      }
+    }
+  } else {
+    mit->mcDecayFinder()->decayMembers( head, buffer );
+  }
   if (msgLevel(MSG::VERBOSE))
     verbose() << "Decay finder gets " << buffer.size() << " mc particles for "
               << mit->decay() << endmsg ;
