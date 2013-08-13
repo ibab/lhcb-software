@@ -47,7 +47,6 @@ PrChecker::PrChecker( const std::string& name,
     m_writeVeloHistos(-1),
     m_writeForwardHistos(-1),
     m_writeMatchHistos(-1),
-    m_writeSeedHistos(-1),
     m_writeDownHistos(-1),
     m_writeUpHistos(-1),
     m_writeTTrackHistos(-1),
@@ -65,7 +64,6 @@ PrChecker::PrChecker( const std::string& name,
   declareProperty( "WriteVeloHistos",    m_writeVeloHistos      = -1 );
   declareProperty( "WriteForwardHistos", m_writeForwardHistos   = -1 );
   declareProperty( "WriteMatchHistos",   m_writeMatchHistos     = -1 );
-  declareProperty( "WriteSeedHistos",    m_writeSeedHistos      = -1 );
   declareProperty( "WriteDownHistos",    m_writeDownHistos      = -1 );
   declareProperty( "WriteUpHistos",      m_writeUpHistos        = -1 );
   declareProperty( "WriteTTrackHistos",  m_writeTTrackHistos    = -1 );

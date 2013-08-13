@@ -82,7 +82,6 @@ private:
   int  m_writeVeloHistos;      
   int  m_writeForwardHistos;   
   int  m_writeMatchHistos;     
-  int  m_writeSeedHistos;      
   int  m_writeDownHistos;      
   int  m_writeUpHistos;        
   int  m_writeTTrackHistos;    
