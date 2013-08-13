@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2013-08-13 - Mika Vesterinen
+ - Fix to python/Hlt2Lines/Hlt2CharmHadD02HHPi0Lines.py
+
 ! 2013-08-12 - Mika Vesterinen
  - Add python/Hlt2Lines/Hlt2CharmHadD02HHPi0Lines.py
 

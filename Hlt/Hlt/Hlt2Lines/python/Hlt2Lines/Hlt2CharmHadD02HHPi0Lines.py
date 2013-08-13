@@ -35,9 +35,9 @@ class Hlt2CharmHadD02HHPi0LinesConf(HltLinesConfigurableUser) :
         ,"Pi0R_PT_MIN"    : 500.0 * MeV
         ,"HLT1FILTER"     : ""
         ,"name_prefix"              : "CharmHadD02HHPi0"
-        ,"Prescale"             : { "Hlt2CharmHadD02HHPi0_Resolved"     : 1.0}
-        ,"Postscale"            : { "Hlt2CharmHadD02HHPi0_Resolved"     : 1.0}
-        ,"HltANNSvcID"          : { "Hlt2CharmHadD02HHPi0_Resolved"     : 59998}
+        ,"Prescale"             : { "Hlt2CharmHadD02HHPi0_ResolvedDecision"     : 1.0}
+        ,"Postscale"            : { "Hlt2CharmHadD02HHPi0_ResolvedDecision"     : 1.0}
+        ,"HltANNSvcID"          : { "Hlt2CharmHadD02HHPi0_ResolvedDecision"     : 50930}
         }
 
 
@@ -78,7 +78,7 @@ class Hlt2CharmHadD02HHPi0LinesConf(HltLinesConfigurableUser) :
                         , algos = lclAlgos
                         , HLT = hlt
                        )
-        #self.__updateHltANNSvc(lineName)
+        self.__updateHltANNSvc(lineName)
         # }
 
 
