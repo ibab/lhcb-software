@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-13 - Konstantinos A. Petridis
+  - Added B+->rho+mumu in python/StrippingSelections/StrippingB2XMuMu.py
+  - fixed minor issue with default dictionary by including a 'DECAYS'
+    entry in python/StrippingSelections/StrippingB2XMuMu.py
+
 ! 2013-08-09 - Edmund Smith
  - Added D0 --> KsPi0HH in DBuilder.
  - Altered definition of d_hhh_4_B2DD_custom in DBuilder (no overlapping mass windows).

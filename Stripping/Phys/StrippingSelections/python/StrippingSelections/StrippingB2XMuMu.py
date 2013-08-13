@@ -96,8 +96,28 @@ defaultConfig = {
     'HadronWS'            :   True,
 
     # GEC
-    'SpdMult'             :  600
-    }
+    'SpdMult'             :  600,
+    'DECAYS'              :  ["B0 -> J/psi(1S) phi(1020)",                  
+                              "[B0 -> J/psi(1S) K*(892)0]cc",               
+                              "B0 -> J/psi(1S) rho(770)0",
+                              "[B+ -> J/psi(1S) rho(770)+]cc",
+                              "B0 -> J/psi(1S) f_2(1950)",                  
+                              "B0 -> J/psi(1S) KS0",                        
+                              "[B0 -> J/psi(1S) D~0]cc",                    
+                              "[B+ -> J/psi(1S) K+]cc",                     
+                              "[B+ -> J/psi(1S) pi+]cc",                    
+                              "[B+ -> J/psi(1S) K*(892)+]cc",               
+                              "[B+ -> J/psi(1S) D+]cc",                     
+                              "[B+ -> J/psi(1S) D*(2010)+]cc",              
+                              "[Lambda_b0 -> J/psi(1S) Lambda0]cc",         
+                              "[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc",   
+                              "B0 -> J/psi(1S) pi0",                        
+                              "[B+ -> J/psi(1S) a_1(1260)+]cc",             
+                              "[B+ -> J/psi(1S) K_1(1270)+]cc",             
+                              "[B+ -> J/psi(1S) K_2(1770)+]cc"
+                              ]
+
+      }
 
 
 #################
@@ -251,6 +271,7 @@ class B2XMuMuConf(LineBuilder) :
         self.Lambdastar = self.__Lambdastar__(self.Rho, config)
         self.Kstar2KsPi = self.__Kstar2KsPi__(self.Kshort, self.Pions, config)
         self.Kstar2KPi0 = self.__Kstar2KPi0__(self.Kaons, self.Pi0, config)
+        self.Rho2PiPi0 = self.__Rho2PiPi0__(self.Pions, self.Pi0, config)
         self.Dstar = self.__Dstar__(config)
         self.A1 = self.__A1__(self.Pions, config)
         self.K1 = self.__K1__(self.A1, config)
@@ -266,6 +287,7 @@ class B2XMuMuConf(LineBuilder) :
             'K+'            : [ self.Kaons ] ,
             'pi+'           : [ self.Pions ] ,
             'K*(892)+'      : [ self.Kstar2KsPi, self.Kstar2KPi0 ],
+            'rho(770)+'     : [ self.Rho2PiPi0 ],
             'D+'            : [ self.Dplus ] ,
             'D*(2010)+'     : [ self.Dstar ] ,
             'Lambda0'       : [ self.Lambda ] ,
@@ -515,6 +537,23 @@ class B2XMuMuConf(LineBuilder) :
                                        RequiredSelections = [ Kaons, Pi0 ] )
         return _selKSTAR2KPIZERO
         
+
+
+    def __Rho2PiPi0__( self, Pions, Pi0, conf):
+        """
+        Make rho(770)+ -> pi+ pi0 
+        """
+        _rho2pipizero = CombineParticles()
+        _rho2pipizero.DecayDescriptor = "[rho(770)+ -> pi+ pi0]cc"
+        _rho2pipizero.MotherCut = "(ADMASS('rho(770)+') < %(KstarplusWINDOW)s *MeV)" % conf
+
+        _rhoConf = _rho2pipizero.configurable("Combine_"+self.name+"_PiPi0")
+        _rhoConf.ParticleCombiners.update ( { '' : 'MomentumCombiner' } )
+                                                 
+        _selRHO2PIPIZERO = Selection( "Selection_"+self.name+"_rho2pipizero",
+                                       Algorithm = _rhoConf,
+                                       RequiredSelections = [ Pions, Pi0 ] )
+        return _selRHO2PIPIZERO
 
 
     def __KpiCuts__(self, conf):
@@ -844,7 +883,7 @@ class B2XMuMuConf(LineBuilder) :
 
 
 
-##   _b2xmumu.DecayDescriptors = [ "B0 -> J/psi(1S) phi(1020)",
+##   _b2xmumu.DecayDescriptors = [       "B0 -> J/psi(1S) phi(1020)",
 ##                                       "[B0 -> J/psi(1S) K*(892)0]cc",
 ##                                       "B0 -> J/psi(1S) rho(770)0",
 ##                                       "B0 -> J/psi(1S) f_2(1950)",
@@ -860,4 +899,4 @@ class B2XMuMuConf(LineBuilder) :
 ##                                       "B0 -> J/psi(1S) pi0",
 ##                                       "[B+ -> J/psi(1S) a_1(1260)+]cc",
 ##                                       "[B+ -> J/psi(1S) K_1(1270)+]cc",
-##                                       "[B+ -> J/psi(1S) K_2(1770)+]cc"]
+##                                       "[B+ -> J/psi(1S) K_2(1770)+]cc"]             
