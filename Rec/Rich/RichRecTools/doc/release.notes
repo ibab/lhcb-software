@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones   Christopher.Rob.Jones@cern.ch
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
+!2013-08-13 - Sajan Easo
+ - Minor fixes to RichTabulatedSignalDetectionEff.cpp and RichNominalTabulatedSignalDetectionEff.cpp to use with pmts
 !2013-08-12 - Sajan Easo
 -  Minor Fix to  a print statement in RichNominalTabulatedSignalDetectionEff.cpp
 
