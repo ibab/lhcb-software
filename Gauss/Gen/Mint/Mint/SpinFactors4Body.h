@@ -13,6 +13,20 @@
 #include "Mint/counted_ptr.h"
 #include <iostream>
 
+class SF_DtoS1S2_S1toP1P2_S2toP3P4 : public SpinFactorTrivial{ 
+  static DecayTree* _exampleDecay;
+ public:
+  SF_DtoS1S2_S1toP1P2_S2toP3P4(IDalitzEventAccess* , const DecayTree& )
+    : SpinFactorTrivial(){}
+
+  virtual ~SF_DtoS1S2_S1toP1P2_S2toP3P4(){}
+  static const DecayTree& getExampleDecay();
+  virtual const DecayTree& exampleDecay();
+  virtual std::string name() const{
+    return "SpinFactor4:SF_DtoS1S2_S1toP1P2_S2toP3P4-trivialSpinFactor";
+  }
+};
+
 class SF_DtoPP1P2_PtoP3P4 : public SpinFactorTrivial{ //Laurens wide Ks Spin
   static DecayTree* _exampleDecay;
  public:
