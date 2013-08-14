@@ -37,7 +37,7 @@
         desc="Vector of information for combined PIDs"
         access="PUBLIC"
         />
-      
+
       <typedef
 	  type   = "SharedObjectsContainer&lt;LHCb::Particle&gt;"
 	  def    = "Selection"
@@ -70,6 +70,11 @@
         <enumval name="Chi2OfVertexConstrainedFit"    value="12" desc="Chi2 of Vertex  Constrained Fit"   />
         <enumval name="Chi2OfParticleReFitter"        value="15" desc="Chi2 From Particle ReFitter"       />
         <enumval name="HasBremAdded"                  value="16" desc="particle momentum is brem-corrected (0/1)"      />
+        <enumval name="NumVtxWithinChi2WindowOneTrack" value="7000"  desc="Number of compatible vertices found within a given chi2 window when adding one track" />
+        <enumval name="SmallestDeltaChi2OneTrack"      value="NumPartWithinDeltaChi2Window+1"  desc="Value of the smallest vertex DeltaChi2 with an extra track" />
+        <enumval name="SmallestDeltaChi2MassOneTrack"  value="NumPartWithinDeltaChi2Window+2"  desc="Mass of the vertex giving the smallest vertex DeltaChi2 with an extra track" />
+        <enumval name="SmallestDeltaChi2TwoTracks"     value="NumPartWithinDeltaChi2Window+3"  desc="Value of the smallest vertex DeltaChi2 with two extra tracks" />
+        <enumval name="SmallestDeltaChi2MassTwoTracks" value="NumPartWithinDeltaChi2Window+4"  desc="Mass of the vertex giving the smallest vertex DeltaChi2 with two extra tracks" />
         <enumval name="FlavourTaggingIPPUs"  value="8000"       desc="IPs wrt PU vertices (for FlavourTagging internal use)"   />
         <enumval name="FlavourTaggingTaggerID"  value="8001"    desc="ID of tagger if !=0 (for FlavourTagging internal use)"   />
         <enumval name="Cone1Angle" value="9000"                 desc="Cone angle, cone size 1" />
@@ -190,7 +195,7 @@
       m_momentum        = rhs.m_momentum;
       m_referencePoint  = rhs.m_referencePoint;
       m_measuredMass    = rhs.m_measuredMass;
-      m_measuredMassErr = rhs.m_measuredMassErr;  
+      m_measuredMassErr = rhs.m_measuredMassErr;
       m_posCovMatrix    = rhs.m_posCovMatrix;
       m_momCovMatrix    = rhs.m_momCovMatrix;
       m_posMomCovMatrix = rhs.m_posMomCovMatrix;
@@ -301,16 +306,16 @@
         desc="short cut for transerve momentum"
         type="double"
         >
-        <code> return m_momentum.Pt(); </code> 
+        <code> return m_momentum.Pt(); </code>
       </method>
 
       <method
         name="p"
         const="TRUE"
-        desc="short cut for |P|" 
+        desc="short cut for |P|"
         type="double"
-        > 
-        <code> return m_momentum.R(); </code> 
+        >
+        <code> return m_momentum.R(); </code>
       </method>
       <method
         const="TRUE"
@@ -331,8 +336,8 @@
         />
       <method
         name="isBasicParticle"
-	const="TRUE" 
-        desc="a basic particle has no daughters" 
+	const="TRUE"
+        desc="a basic particle has no daughters"
         type="bool"
         >
 	<code> return m_daughters.empty(); </code>
@@ -344,7 +349,7 @@
         />
       <relation
         name="daughters"
-        desc="Reference to daughter particles. Users are strongly discouraged to use setDaughters method." 
+        desc="Reference to daughter particles. Users are strongly discouraged to use setDaughters method."
         multiplicity="N"
         type="LHCb::Particle"
         />
@@ -371,7 +376,7 @@
         desc="has information for specified key"
         argList="int key"
         type="bool"
-        > 
+        >
         <code>
           return m_extraInfo.end() != m_extraInfo.find( key ) ;
         </code>
@@ -381,7 +386,7 @@
         desc=" add/replace new information, associated with the key"
         argList="int key, double info"
         type="bool"
-        > 
+        >
         <code>
           return m_extraInfo.insert( key , info ).second ;
         </code>
@@ -392,7 +397,7 @@
         argList="int key, double def"
         type="double"
         const="TRUE"
-        > 
+        >
         <code>
           ExtraInfo::const_iterator i = m_extraInfo.find( key ) ;
           return m_extraInfo.end() == i ? def : i->second ;
@@ -403,18 +408,18 @@
         desc="erase the information associated with the given key"
         argList="int key"
         type="unsigned long"
-        > 
+        >
         <code>
-          return m_extraInfo.erase( key ) ; 
+          return m_extraInfo.erase( key ) ;
         </code>
       </method>
 
-      <method 
-        type="Gaudi::XYZVector" 
-        name="slopes" 
-        const="TRUE" 
+      <method
+        type="Gaudi::XYZVector"
+        name="slopes"
+        const="TRUE"
         desc="Returns slopes ( Px/Pz, Py/Pz, 1 ) at reference point"
-        > 
+        >
         <code>
 	  return Gaudi::XYZVector( fabs(m_momentum.Z()) > 0 ? m_momentum.X()/m_momentum.Z() : 0 ,
 	                           fabs(m_momentum.Z()) > 0 ? m_momentum.Y()/m_momentum.Z() : 0 ,
@@ -422,14 +427,14 @@
         </code>
       </method>
 
-      <method 
-         name    = "fillStream" 
+      <method
+         name    = "fillStream"
          desc    = "Print this Particle in a human readable way"
-         type    = "std::ostream&amp;" 
-         virtual = "FALSE" 
+         type    = "std::ostream&amp;"
+         virtual = "FALSE"
          const   = "TRUE">
-         <arg 
-           type = "std::ostream" 
+         <arg
+           type = "std::ostream"
            name = "s"/>
       </method>
 

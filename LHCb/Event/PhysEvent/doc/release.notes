@@ -3,6 +3,10 @@
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
 
+! 2013-08-14 - Albert Puig
+ - Added 5 new ExtraInfo variables related to the vertex isolation, starting
+   on number 7000.
+
 !========================= PhysEvent v11r21 2013-07-17 =========================
 ! 2013-07-13 - Stefania Vecchi
  - Changed the info FlavourTaggingIndex-->FlavourTaggingIPPUs, FlavourTaggingTaggerID
