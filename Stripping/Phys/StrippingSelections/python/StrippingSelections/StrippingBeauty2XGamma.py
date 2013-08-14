@@ -24,7 +24,7 @@ from StandardParticles import StdAllLooseGammaLL, StdAllLooseGammaDD
 
 # Builders
 from Beauty2XGamma_HHBuilder import HHBuilder as HHBuilder
-from Beauty2XGamma_HHHBuilder import HHHBuilder as HHHBuilder 
+from Beauty2XGamma_HHHBuilder import HHHBuilder as HHHBuilder
 from Beauty2XGamma_B2XGammaBuilder import B2XGammaBuilder
 from Beauty2XGamma_Lb2XGammaBuilder import Lb2XGammaBuilder
 from Beauty2XGamma_Utils import *
@@ -39,12 +39,12 @@ default_config = { # Cuts made on all charged input particles in all lines
                       'TRGHP_MAX'      : 0.4},
            # Cuts made on the photon
            "GAMMA" : { 'PT_MIN'       : '2000*MeV',
-                       'CL_MIN'       : 0.25 
+                       'CL_MIN'       : 0.25
                      },
            # Cuts made on the converted photon
            "GAMMACONV" : { 'VCHI2DOF_MAX' : 9,
                            'MM_MAX'       : '100*MeV'
-                        },   
+                        },
            # Cuts made on all K shorts
            "KS0" : { 'PT_MIN'        : '1000*MeV',
                      'BPVVDCHI2_MIN' : 81 ,
@@ -65,27 +65,28 @@ default_config = { # Cuts made on all charged input particles in all lines
                      'BPVDIRA_MIN'   : 0.9998,
                      'AM_MIN'        : '4000*MeV',
                      'AM_MAX'        : '7000*MeV',
-                     #'BBDT_MIN'      : 0.0, 
+                     #'BBDT_MIN'      : 0.0,
                      },
            # Cuts for rho, K*, phi, omega
-           "HH": { 'MASS_WINDOW'      : {'KST':'150*MeV','RHO': ['520*MeV','2.0*GeV'],'PHI':'15*MeV','OMEGA':'30*MeV'}, 
+           "HH": { 'MASS_WINDOW'      : {'KST':'150*MeV','RHO': ['520*MeV','2.0*GeV'],'PHI':'15*MeV','OMEGA':'30*MeV'},
                    'DAUGHTERS'        : {'PT_MIN':'500*MeV','P_MIN':'3000*MeV'},
                    'piLAMBDADAUGHTERS': {'PT_MIN':'300*MeV','P_MIN':'3000*MeV','PIDK_MAX':'2'},   # only for pH
                    'pLAMBDADAUGHTERS' : {'PT_MIN':'1200*MeV','P_MIN':'10000*MeV','PIDp_MIN':'10','PIDpK_MIN':'0'}, # only for pH
                    'kLAMBDADAUGHTERS' : {'PT_MIN':'500*MeV','P_MIN':'3000*MeV','PIDK_MIN':'5','PIDKp_MIN':'0'},    # only for pH
                    #'AMAXDOCA_MAX'  : '0.5*mm',
                    'VCHI2DOF_MAX'     : 9,
-                   'BPVVDCHI2_MIN'    : 81, 
+                   'BPVVDCHI2_MIN'    : 81,
                    #'BPVDIRA_MIN'   : 0.0,
                    'ASUMPT_MIN'       : '1500*MeV',
                    #'pP_MIN'        : '10000*MeV' # for pH only (obviously)
+                   'ANGLE_MIN'        : 0.0003,
                  },
            # Cuts for omega -> 3 body decay
            "HHH": { 'MASS_WINDOW'   : {'OMEGA': '100*MeV', 'K1': ['0.8*GeV', '3.5*GeV']},
                     'DAUGHTERS'     : {'PT_MIN':'350*MeV','P_MIN':'2000*MeV'},
                     'AMAXDOCA_MAX'  : '0.50*mm',
                     'VCHI2DOF_MAX'  : 9,
-                    'BPVVDCHI2_MIN' : 64, 
+                    'BPVVDCHI2_MIN' : 64,
                     #'BPVDIRA_MIN'   : 0.0,
                     'ASUMPT_MIN'    : '1600*MeV',
                     'PT_MIN'        : '500*MeV',
@@ -106,7 +107,7 @@ class Beauty2XGamma(LineBuilder):
     __configuration_keys__ = ('ALL',
                               'B2X',
                               'GAMMA',
-                              'GAMMACONV',  
+                              'GAMMACONV',
                               'GECNTrkMax',
                               'HH',
                               'HHH',
@@ -161,7 +162,7 @@ class Beauty2XGamma(LineBuilder):
         ###########################################################################
         lb2xgamma = Lb2XGammaBuilder(photons, hh, default_config['B2X'])
         self._makeLines(lb2xgamma.lines, default_config)
-    
+
     def _makeLine(self,protoLine,default_config):
         tag = 'B2XGBBDTBeauty2XGammaFilter'
         for line in protoLine.selections:
@@ -184,7 +185,7 @@ class Beauty2XGamma(LineBuilder):
                                   #HLT=hlt
                                   )
             self.registerLine(sline)
-      
+
     def _makeLines(self, lines, default_config):
         for line in lines:
             self._makeLine(line, default_config)

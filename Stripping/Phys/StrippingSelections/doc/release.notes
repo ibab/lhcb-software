@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-14 - Albert Puig
+ - Added cut in the HH angle for Beauty2XGamma Stripping
+
 ! 2013-08-14 - Sascha Stahl
  - Added new lines in StrippingB2DMuNuX to write out D* -> D0 pi combinations 
 	 when a B -> D0 mu was found.

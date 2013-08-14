@@ -57,7 +57,7 @@ class HHBuilder(object):
         self.ph = self._makePH()
         self.pPi = self._makePPi()
         self.jpsi = self._makeJPsi()
-        self.pK = self._makePK() 
+        self.pK = self._makePK()
         self.phi = self._makePhi(self.kk)
         self.rho0 = self._makeRho0(self.pipi)
         #self.omega = self._makeOmega()
@@ -74,14 +74,14 @@ class HHBuilder(object):
         self.LambdaDD = self._makeLambdaDD()
         self.LambdaLL = self._makeLambdaLL()
         self.Lambda = [MergedSelection("LambdaForBeauty2XGamma", RequiredSelections = self.LambdaDD+self.LambdaLL)]
-        
+
     def _makeX2HH(self,name,decays,amass,config,inputs):
         ''' Makes all X -> HH selections with charged tracks only.'''
-        comboCuts = [LoKiCuts(['ASUMPT'],config).code(),amass,hasTopoChild()]
+        comboCuts = [LoKiCuts(['ASUMPT'],config).code(),amass,hasTopoChild(),hasMinimalAngle(config['ANGLE_MIN'])]
         #comboCuts.append(LoKiCuts(['AMAXDOCA'],config).code())
         comboCuts = LoKiCuts.combine(comboCuts)
         #momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()
-        momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2'],config).code() 
+        momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2'],config).code()
         cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
                               DecayDescriptors=decays)
         return Selection(name+'Beauty2XGamma',Algorithm=cp,RequiredSelections=inputs)
@@ -90,7 +90,7 @@ class HHBuilder(object):
         ''' Makes all X+ -> HH selections involving neutrals.'''
         comboCuts = [LoKiCuts(['ASUMPT'],config).code(),amass,hasTopoChild()]
         comboCuts = LoKiCuts.combine(comboCuts)
-        momCuts = "ALL" 
+        momCuts = "ALL"
         cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
                               DecayDescriptors=decays)
         if pi0:
@@ -129,7 +129,7 @@ class HHBuilder(object):
         sels = self._makePiPiWSSels()
         return [MergedSelection('X2PiPiWSBeauty2XGamma',
                                 RequiredSelections=sels)]
-    
+
     def _makeJPsi(self):
         '''Makes X -> pi+pi-'''
         return [self._makeX2HH('X2mumu',['J/psi(1S) -> mu+ mu-'],
@@ -152,7 +152,7 @@ class HHBuilder(object):
                   RequiredSelections=[sel2])
 
         return [MergedSelection('X2KPi', RequiredSelections=[presel1,presel2])]
-   
+
     def _makeKK(self,pipi):
         '''Makes X -> K+K-.'''
         sel = self._makeX2HH('X2KK',['phi(1020) -> pi+ pi-'],
@@ -177,7 +177,7 @@ class HHBuilder(object):
                            [protoSels[1]])
         return [MergedSelection('X2HHWSBeauty2XGamma',
                                 RequiredSelections=[plus,minus])]
-        
+
     def _makeKsPi(self):
         '''Makes X -> Ks0pi- + c.c.'''
         ## Change the mass window to 4.5 GeV to improve the timing
@@ -199,7 +199,7 @@ class HHBuilder(object):
         return [MergedSelection('X2KPi0Beauty2XGamma',RequiredSelections=[m,r])]
 
     def _makePiPi0(self):
-        '''Makes X -> pi+pi0'''        
+        '''Makes X -> pi+pi0'''
         m = self._makeXPLUS2HH('X2PiPi0Merged',['[rho(770)+ -> pi+ pi0]cc'],
                                'AM < 2.0*GeV',self.config,
                                [self.pions]+self.pi0["Merged"],True)
@@ -220,7 +220,7 @@ class HHBuilder(object):
     def _makePhi(self,kk):
         mass = self._massWindow('PHI','phi(1020)').replace('ADAMASS','ADMASS')
         return [filterSelection('PHI',mass,kk)]
-   
+
     def _makePPi(self):
         ''' Makes X -> p+ pi- + c.c. '''
         sel = self._makeX2HH('X2PPi',['Lambda0 -> pi+ pi-'],
@@ -234,10 +234,10 @@ class HHBuilder(object):
         filter="INTREE((ABSID=='p+') & (P > %s) & (PT > %s) & (PIDp > %s)) & (( (M < 1130*MeV) & INTREE((ABSID=='pi+')) & (PT > 1500) ))" \
               % (self.config['pLAMBDADAUGHTERS']['P_MIN'], \
                  self.config['pLAMBDADAUGHTERS']['PT_MIN'], \
-                 self.config['pLAMBDADAUGHTERS']['PIDp_MIN']) 
+                 self.config['pLAMBDADAUGHTERS']['PIDp_MIN'])
         return [filterSelection('X2PPi',filter,[presel])]
 
- 
+
     def _makePK(self):
         '''Makes X -> p+ K- + c.c.'''
         sel = self._makeX2HH('X2PK',['Lambda(1520)0 -> pi+ pi-'],
@@ -267,8 +267,8 @@ class HHBuilder(object):
                            RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseLambdaLL/Particles")]
                           )
                 ]
-    
-    
+
+
     def _makeLambdaDD(self):
         return [Selection("LambdaDDForBeauty2XGamma",
                           Algorithm = FilterDesktop(Code = "(PT > 1500.*MeV) & INTREE((ABSID=='p+') & (PIDp > 10) & ((PIDp-PIDK) > 0)  & (TRGHP <0.5)) & INTREE(('pi-'==ABSID) & (PT > 400.*MeV)  & (PIDK < 2) & (TRGHP <0.5)) & (ADMASS('Lambda0') < 7.*MeV) & (VFASPF(VCHI2) < 20)"),
@@ -293,5 +293,5 @@ class HHBuilder(object):
         filter="INTREE((ABSID=='p+') & (P > %s) & (PT > %s) & (PIDp > %s)) & (( (M < 1130*MeV) & INTREE((ABSID=='pi+')) & (PT > 1500) ) | ((M < 1565*MeV) & INTREE((ABSID=='K+') & (PT > 800) & (PIDK > %s)) & (PT > 2000) ) | ( (M<2500*MeV) & INTREE((ABSID=='K+') & (PT > 1000) & (PIDK > %s)) & (PT > 2250) )) & (P > 10000) " \
               % (self.config['pLAMBDADAUGHTERS']['P_MIN'], self.config['pLAMBDADAUGHTERS']['PT_MIN'], self.config['pLAMBDADAUGHTERS']['PIDp_MIN'], self.config['kLAMBDADAUGHTERS']['PIDK_MIN'], self.config['kLAMBDADAUGHTERS']['PIDK_MIN'])
         return [filterSelection('X2PH',filter,[presel])]
-        
+
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\l#
