@@ -17,3 +17,6 @@
  - Updated Kshorts to include KsDD and KsLL, KsAny (LL, DD, LD and DL) with 
    MC association
  - Fixed the location listings for many modules 
+
+! 2013-08-14 - Conor Fitzpatrick
+ - Added MC associated Lambda_c  
