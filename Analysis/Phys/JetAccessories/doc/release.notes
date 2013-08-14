@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2013-08-14 - Cedric Potterat
+ - Remove ChargedInfMomentum from the default PFtypes to be used by JetMaker_Config.py
+
 ! 2013-08-07 - Victor Coco
  - Add new partitionning procedure for jet maker with maximal IP cut.
 
