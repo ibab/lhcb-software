@@ -27,16 +27,16 @@ TabulatedSignalDetectionEff::
 TabulatedSignalDetectionEff ( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : ToolBase         ( type, name, parent ),
-    m_coneTrace      ( NULL ),
-    m_ckAngle        ( NULL ),
-    m_riches         ( Rich::NRiches ),
-    m_qEffPedLoss    ( 0 ),
-    m_traceModeRad   ( Rich::NRadiatorTypes ),
-    m_nPoints        ( Rich::NRadiatorTypes, 50 ),
-    m_last_segment   ( NULL ),
-    m_last_ring      ( NULL ),
-    m_last_hypo      ( Rich::Unknown )
+: ToolBase         ( type, name, parent ),
+  m_coneTrace      ( NULL ),
+  m_ckAngle        ( NULL ),
+  m_riches         ( Rich::NRiches ),
+  m_qEffPedLoss    ( 0 ),
+  m_traceModeRad   ( Rich::NRadiatorTypes ),
+  m_nPoints        ( Rich::NRadiatorTypes, 50 ),
+  m_last_segment   ( NULL ),
+  m_last_ring      ( NULL ),
+  m_last_hypo      ( Rich::Unknown )
 {
   // interface
   declareInterface<ISignalDetectionEff>(this);
@@ -59,10 +59,8 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocations::Rich1 );
   m_riches[Rich::Rich2] = getDet<DeRich2>( DeRichLocations::Rich2 );
 
- // Do we have HPDs or PMTs
+  // Do we have HPDs or PMTs
   const bool PmtActivate = m_riches[Rich::Rich1]->RichPhotoDetConfig() == Rich::PMTConfig;
-
-
 
   // PD panels
   m_pdPanels[Rich::Rich1][Rich::top]    = m_riches[Rich::Rich1]->pdPanel(Rich::top);
@@ -84,28 +82,13 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   const double qEff = m_riches[Rich::Rich1]->param<double>( "HPDQuartzWindowEff" );
 
   // Digitisation pedestal loss
-  //  const double pLos = m_riches[Rich::Rich1]->param<double>( "HPDPedestalDigiEff" );
-  // Digitisation pedestal loss
-  double pLos = ( !PmtActivate ?
-                  m_riches[Rich::Rich1]->param<double>("HPDPedestalDigiEff") :
-                  m_riches[Rich::Rich1]->param<double>("HPDPedestalDigiEff") );
-  // the last part of line above just for backward compatibility in the near future.
-  // the qeff for pmts is kept as a placeholder.
-  if ( PmtActivate )
-  {
-    if ( m_riches[Rich::Rich1]->exists("PMTPedestalDigiEff") )
-    {
-      pLos = m_riches[Rich::Rich1]->param<double>("PMTPedestalDigiEff");
-    }
-    m_qEffPedLoss = qEff * pLos;
-  }
-  else
-  {
-    m_qEffPedLoss = qEff * pLos;
-  }
+  const double pLos = 
+    ( PmtActivate && m_riches[Rich::Rich1]->exists("PMTPedestalDigiEff") ?
+      m_riches[Rich::Rich1]->param<double>("PMTPedestalDigiEff") :
+      m_riches[Rich::Rich1]->param<double>("HPDPedestalDigiEff") );
 
   // store cached value
-  //m_qEffPedLoss = qEff * pLos;
+  m_qEffPedLoss = qEff * pLos;
 
   // Informational Printout
   if ( msgLevel(MSG::DEBUG) )
@@ -113,11 +96,11 @@ StatusCode TabulatedSignalDetectionEff::initialize()
     debug() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endmsg;
     debug() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
     debug() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
-    debug() << " PD quartz window efficiency  = " << qEff 
+    debug() << " PD quartz window efficiency  = " << qEff
             << " Digitisation pedestal eff.   = " << pLos << endmsg;
   }
 
-  // return  
+  // return
   return sc;
 }
 
@@ -184,9 +167,9 @@ TabulatedSignalDetectionEff::photonDetEfficiency( LHCb::RichRecSegment * segment
     m_last_hypo    = hypo;
     m_last_ring    = ckRing( segment, hypo );
   }
-  if ( !m_last_ring ) 
-  { 
-    if ( msgLevel(MSG::DEBUG) ) debug() << " -> No Ring" << endmsg; 
+  if ( !m_last_ring )
+  {
+    if ( msgLevel(MSG::DEBUG) ) debug() << " -> No Ring" << endmsg;
     return 0;
   }
 

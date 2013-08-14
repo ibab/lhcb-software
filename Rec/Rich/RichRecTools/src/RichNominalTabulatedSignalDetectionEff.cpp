@@ -52,24 +52,11 @@ StatusCode NominalTabulatedSignalDetectionEff::initialize()
   const double qEff = m_riches[Rich::Rich1]->param<double>( "HPDQuartzWindowEff" );
 
   // Digitisation pedestal loss
-  double pLos = ( !PmtActivate ? 
-                  m_riches[Rich::Rich1]->param<double>("HPDPedestalDigiEff") :  
-                  m_riches[Rich::Rich1]->param<double>("HPDPedestalDigiEff") );
-  // the last part of line above just for backward compatibility in the near future.
-  // the qeff for pmts is kept as  a placeholder.
-  if ( PmtActivate ) 
-  {
-    if ( m_riches[Rich::Rich1]->exists("PMTPedestalDigiEff") )
-    {
-      pLos = m_riches[Rich::Rich1]->param<double>("PMTPedestalDigiEff");
-    }
-    m_qEffPedLoss = qEff * pLos;
-    //    m_qEffPedLoss = pLos;
-  } 
-  else
-  {
-    m_qEffPedLoss = qEff * pLos;
-  }
+  const double pLos = 
+    ( PmtActivate && m_riches[Rich::Rich1]->exists("PMTPedestalDigiEff") ? 
+      m_riches[Rich::Rich1]->param<double>("PMTPedestalDigiEff") :  
+      m_riches[Rich::Rich1]->param<double>("HPDPedestalDigiEff") );
+  m_qEffPedLoss = qEff * pLos;
 
   // Informational Printout
   if ( msgLevel(MSG::DEBUG) )
