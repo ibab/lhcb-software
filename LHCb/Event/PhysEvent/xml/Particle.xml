@@ -71,10 +71,10 @@
         <enumval name="Chi2OfParticleReFitter"        value="15" desc="Chi2 From Particle ReFitter"       />
         <enumval name="HasBremAdded"                  value="16" desc="particle momentum is brem-corrected (0/1)"      />
         <enumval name="NumVtxWithinChi2WindowOneTrack" value="7000"  desc="Number of compatible vertices found within a given chi2 window when adding one track" />
-        <enumval name="SmallestDeltaChi2OneTrack"      value="NumPartWithinDeltaChi2Window+1"  desc="Value of the smallest vertex DeltaChi2 with an extra track" />
-        <enumval name="SmallestDeltaChi2MassOneTrack"  value="NumPartWithinDeltaChi2Window+2"  desc="Mass of the vertex giving the smallest vertex DeltaChi2 with an extra track" />
-        <enumval name="SmallestDeltaChi2TwoTracks"     value="NumPartWithinDeltaChi2Window+3"  desc="Value of the smallest vertex DeltaChi2 with two extra tracks" />
-        <enumval name="SmallestDeltaChi2MassTwoTracks" value="NumPartWithinDeltaChi2Window+4"  desc="Mass of the vertex giving the smallest vertex DeltaChi2 with two extra tracks" />
+        <enumval name="SmallestDeltaChi2OneTrack"      value="NumVtxWithinChi2WindowOneTrack+1"  desc="Value of the smallest vertex DeltaChi2 with an extra track" />
+        <enumval name="SmallestDeltaChi2MassOneTrack"  value="NumVtxWithinChi2WindowOneTrack+2"  desc="Mass of the vertex giving the smallest vertex DeltaChi2 with an extra track" />
+        <enumval name="SmallestDeltaChi2TwoTracks"     value="NumVtxWithinChi2WindowOneTrack+3"  desc="Value of the smallest vertex DeltaChi2 with two extra tracks" />
+        <enumval name="SmallestDeltaChi2MassTwoTracks" value="NumVtxWithinChi2WindowOneTrack+4"  desc="Mass of the vertex giving the smallest vertex DeltaChi2 with two extra tracks" />
         <enumval name="FlavourTaggingIPPUs"  value="8000"       desc="IPs wrt PU vertices (for FlavourTagging internal use)"   />
         <enumval name="FlavourTaggingTaggerID"  value="8001"    desc="ID of tagger if !=0 (for FlavourTagging internal use)"   />
         <enumval name="Cone1Angle" value="9000"                 desc="Cone angle, cone size 1" />
