@@ -24,7 +24,6 @@ use  LoKiPhysMC                 v9r6p2   Phys   # Vanya Belyaev
 use  DaVinciAssociators         v9r5p2   Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r5     Phys   # Chris Jones
 use  VertexFitCheck             v1r8p3   Phys   # Yuehong Xie
-#use  MCStandardParticles        v1r3p1   Phys   # Juan Palacios
 use  FlavourTaggingChecker      v7r1     Phys   # Marc Grabalosa
 use  ParticleMakerChecker       v1r5p1   Phys   # Chris Jones
 use  DisplVerticesMC            v1r4p5   Phys   # Victor Coco
@@ -32,6 +31,7 @@ use  JetTagging                 v1r1p1   Phys   # Cedric Potterat
 use  JetAccessories		v3r0     Phys   # Victor Coco, Cedric Potterat
 use  JetAccessoriesMC		v2r3p1   Phys   # Victor Coco, Cedric Potterat
 use  CommonMCParticles          v1r0     Phys   # Conor Fitzpatrick
+use  IncTopoVert                v1r0     Phys   # Mathieu Perrin-Terrin
 
 ####################################################################
 

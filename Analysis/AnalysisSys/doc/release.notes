@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+! 2013-08-14 - Chris Jones
+ - Add new package Phys/IncTopoVert
+
 ! 2013-08-07 - Chris Jones
  - Add new package Phys/CommonMCParticles
  - Remove obsolete Phys/MCStandardParticles

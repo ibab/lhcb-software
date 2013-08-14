@@ -44,5 +44,6 @@ gaudi_depends_on_subdirs(Analysis/PyAna
                          Phys/VertexFitCheck
                          Phys/MVADictTools
                          Phys/CommonMCParticles
+                         Phys/IncTopoVert
                          Rich/RichPIDQC
                          Tutorial/Analysis)
