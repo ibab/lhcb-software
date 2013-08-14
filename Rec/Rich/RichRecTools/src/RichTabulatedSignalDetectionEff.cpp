@@ -96,8 +96,8 @@ StatusCode TabulatedSignalDetectionEff::initialize()
     debug() << "Aerogel  Track " << m_traceModeRad[Rich::Aerogel]  << endmsg;
     debug() << "Rich1Gas Track " << m_traceModeRad[Rich::Rich1Gas] << endmsg;
     debug() << "Rich2Gas Track " << m_traceModeRad[Rich::Rich2Gas] << endmsg;
-    debug() << " PD quartz window efficiency  = " << qEff
-            << " Digitisation pedestal eff.   = " << pLos << endmsg;
+    debug() << "PD quartz window eff.      = " << qEff << endmsg;
+    debug() << "Digitisation pedestal eff. = " << pLos << endmsg;
   }
 
   // return
