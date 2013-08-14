@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-08-14 - Albert Puig
+ - Added VertexIsolation calculation tool.
+
 ! 2013-08-13 - Murilo Rangel
  - Added Cone Track pT requirement for HighPtTopoTool.cpp
 
