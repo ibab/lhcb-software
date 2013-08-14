@@ -1,0 +1,39 @@
+#============================================================================
+# Created    : 2012-07-25
+# Maintainer : Mathieu Perrin-Terrin
+#============================================================================
+package           IncTopoVert
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src IncTopoVert
+
+#============================================================================
+# Packages needed to compile and link the application
+#============================================================================
+use GaudiAlg     v*
+use RecEvent     v* Event
+use LHCbMath     v* Kernel
+# These are for the trigger
+use HltEvent     v* Event
+use L0Event      v* Event
+use DaVinciInterfaces v* Phys
+
+#============================================================================
+# Install header files
+#============================================================================
+apply_pattern install_more_includes more=IncTopoVert
+
+include_path      none
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library  IncTopoVert    ../src/*.cpp 
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern  component_library library=IncTopoVert
