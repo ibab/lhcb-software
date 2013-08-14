@@ -23,7 +23,7 @@ namespace LHCb {
     FitStatus fit( double ztolerance = 10, double maxdchisq=0.01, size_t maxiterations=10) ;
 
     /// adapative fit. downweight tracks with chi2 contribution larger than maxtrkchi2
-    FitStatus fitAdaptive( double maxtrkchi2, double ztolerance = 10, double maxdchisq=0.01, size_t maxiterations=10) ;
+    FitStatus fitAdaptive( double maxtrkchi2=4, double ztolerance = 10, double maxdchisq=0.01, size_t maxiterations=10) ;
 
   private:
     void updateStates( double z ) ;

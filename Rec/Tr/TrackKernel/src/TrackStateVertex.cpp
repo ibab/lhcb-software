@@ -17,7 +17,8 @@ namespace LHCb
       typedef ROOT::Math::SVector<double,3> PositionParameters ;
       typedef ROOT::Math::SVector<double,3> MomentumParameters ;
       typedef ROOT::Math::SVector<double,5> TrackVector ;
-
+      enum Status { IsOK, InitFailure, ProjFailure } ;
+      
       VertexTrack( const LHCb::State& state, const PositionCovariance& m_poscov ) ;
 
       /// set the state
@@ -27,10 +28,10 @@ namespace LHCb
         m_G.InvertChol();
       }
       
-      /// compute chisq derivatives
-      void project( const ROOT::Math::SVector<double,3>& position,
-		    ROOT::Math::SVector<double,3>& halfDChisqDX,
-		    Gaudi::SymMatrix3x3&           halfD2ChisqDX2) ;
+      /// compute chisq derivatives. returns 1 if fine.
+      Status project( const ROOT::Math::SVector<double,3>& position,
+		      ROOT::Math::SVector<double,3>& halfDChisqDX,
+		      Gaudi::SymMatrix3x3&           halfD2ChisqDX2) ;
       
       /// derivative of momentum to position
       const ROOT::Math::SMatrix<double,3,3>& WBGA() const { 
@@ -63,6 +64,9 @@ namespace LHCb
 
       /// retrieve the weight
       double weight() const { return m_weight ; }
+
+      /// retrieve the status
+      Status status() const { return m_status ; }
  
       /// update momentum for given change in position
       void updateSlopes( const ROOT::Math::SVector<double,3>& pos ) { 
@@ -129,17 +133,23 @@ namespace LHCb
       mutable std::pair<bool, ROOT::Math::SMatrix<double,3,3> > m_WBGA ;
       mutable std::pair<bool, Gaudi::SymMatrix3x3 > m_momcov ;
       mutable std::pair<bool, ROOT::Math::SMatrix<double,3,3> > m_momposcov ;
+      Status m_status ;
     } ;
   
     VertexTrack::VertexTrack(const LHCb::State& state, const PositionCovariance& poscov)
-      : m_state(state), m_poscov(poscov), m_weight(1.0)
+      : m_state(state), m_poscov(poscov), m_weight(1.0), m_status(IsOK)
     {
       // reset cache of variables that we calculate only on demand
       m_WBGA.first = m_momcov.first = m_momposcov.first = false ;
 
       // compute the weight matrix (inverse of V)
       m_G = state.covariance() ;
-      m_G.InvertChol();
+      bool OK = m_G.InvertChol();
+      if( !OK ) {
+	//std::cout << "TrackStateVertex::Vertextrack constructor: cannot invert cov matrix "
+	//<< state.covariance() << std::endl ;
+	m_status = InitFailure ;
+      }
       // set the initial momentum
       m_q(0) = state.tx() ;
       m_q(1) = state.ty() ;
@@ -171,10 +181,13 @@ namespace LHCb
       return res ;
     }
     
-    void VertexTrack::project( const ROOT::Math::SVector<double,3>& pos,
-			       ROOT::Math::SVector<double,3>& halfDChisqDX,
-			       Gaudi::SymMatrix3x3&           halfD2ChisqDX2)
+    VertexTrack::Status
+    VertexTrack::project( const ROOT::Math::SVector<double,3>& pos,
+			  ROOT::Math::SVector<double,3>& halfDChisqDX,
+			  Gaudi::SymMatrix3x3&           halfD2ChisqDX2)
     {
+      if( m_status == InitFailure ) return m_status ;
+
       // projection matrix for vertex position
       m_A(0,0) = m_A(1,1) = 1 ;
       m_A(0,2) = -m_q(0) ;
@@ -187,7 +200,8 @@ namespace LHCb
       
       // Matrix W (Fruhwirth)
       m_W = ROOT::Math::Similarity( Transpose(m_B), m_G ) ;
-      m_W.InvertChol();
+      bool OK = m_W.InvertChol();
+      if( !OK ) m_status = ProjFailure ;
 
       // now we need to be careful with the track weight. in
       // principle, we just reweight m_G. However, if the weight is
@@ -205,8 +219,10 @@ namespace LHCb
       // Add to chisquare plus derivatives
       halfDChisqDX += - m_weight * ROOT::Math::Transpose(m_A) * GB * residual(pos) ;
       halfD2ChisqDX2 += m_weight * ROOT::Math::Similarity(ROOT::Math::Transpose(m_A),GB) ;
+
       // reset cache of variables that we calculate only on demand
       m_WBGA.first = m_momcov.first = m_momposcov.first = false ;
+      return m_status ;
     }
 
   }
@@ -223,6 +239,7 @@ namespace LHCb
     m_poscov    = rhs.m_poscov ;
     m_mommomcov = rhs.m_mommomcov ;
     m_fitStatus = rhs.m_fitStatus ;
+    m_error     = rhs.m_error ;
     m_chi2      = rhs.m_chi2 ;
     // first delete any existing tracks
     if( ! m_tracks.empty() ) {
@@ -242,6 +259,7 @@ namespace LHCb
       m_poscov(rhs.m_poscov),
       m_mommomcov(rhs.m_mommomcov),
       m_fitStatus(rhs.m_fitStatus),
+      m_error(rhs.m_error),
       m_chi2(rhs.m_chi2),
       m_refpos(rhs.m_refpos),
       m_refweight(rhs.m_refweight)
@@ -252,14 +270,14 @@ namespace LHCb
   }
   
   TrackStateVertex::TrackStateVertex()
-    : m_fitStatus(UnFitted), m_chi2(-1)
+    : m_fitStatus(UnFitted), m_error(NoError), m_chi2(-1)
   {
     for(size_t i=0; i<PositionParameters::kSize; ++i) m_pos(i) = 0 ;
   }
   
   TrackStateVertex::TrackStateVertex( const std::vector<const LHCb::State*>& states,
 				      double maxdchisq, size_t maxnumiter)
-    : m_fitStatus(UnFitted), m_chi2(-1)
+    : m_fitStatus(UnFitted), m_error(NoError), m_chi2(-1)
   {
     for(size_t i=0; i<PositionParameters::kSize; ++i) m_pos(i) = 0 ;
     for( std::vector<const LHCb::State*>::const_iterator istate = states.begin() ;
@@ -271,7 +289,7 @@ namespace LHCb
   TrackStateVertex::TrackStateVertex( const LHCb::State& stateA,
 				      const LHCb::State& stateB,
 				      double maxdchisq, size_t maxnumiter)
-    : m_fitStatus(UnFitted), m_chi2(-1)
+    : m_fitStatus(UnFitted), m_error(NoError), m_chi2(-1)
   {
     for(size_t i=0; i<PositionParameters::kSize; ++i) m_pos(i) = 0 ;
     addTrack( stateA ) ;
@@ -282,7 +300,7 @@ namespace LHCb
   TrackStateVertex::TrackStateVertex( const Gaudi::XYZPoint& reference,
 				      const Gaudi::SymMatrix3x3& refcovariance,
 				      bool isweightmatrix )
-    : m_poscov(refcovariance), m_fitStatus(UnFitted), m_chi2(-1)
+    : m_poscov(refcovariance), m_fitStatus(UnFitted), m_error(NoError), m_chi2(-1)
   {
     m_refpos(0) =  reference.x() ;
     m_refpos(1) =  reference.y() ;
@@ -296,19 +314,25 @@ namespace LHCb
 				   const Gaudi::TrackVector& reference)
   {
     m_tracks.push_back( new VertexTrack( inputstate, m_poscov) ) ;
-    m_fitStatus = UnFitted ;
-    // set the reference, used in the _first_ iteration only
-    for(int i=0; i<3; ++i) m_tracks.back()->mom()(i) = reference(i+2) ;
-    // if there is a reference vertex, we use that. otherwise
-    // initialize the vertex position with information in the tracks
-    if( !hasReference() ) {
-      int N = m_tracks.size() ;
-      m_pos(0) = ( (N-1) * m_pos(0) + reference(0))/N ;
-      m_pos(1) = ( (N-1) * m_pos(1) + reference(1))/N ;
-      m_pos(2) = ( (N-1) * m_pos(2) + inputstate.z())/N ;
+    if( m_tracks.back()->status() != TrackVertexHelpers::VertexTrack::IsOK ) {
+      m_fitStatus = FitFailure ;
+      m_error |= BadInputTrack ;
+    } else if( m_fitStatus != FitFailure ) {
+      // make sure thet fit is flagged as unfitted
+      m_fitStatus = UnFitted ;
+      // set the reference, used in the _first_ iteration only
+      for(int i=0; i<3; ++i) m_tracks.back()->mom()(i) = reference(i+2) ;
+      // if there is a reference vertex, we use that. otherwise
+      // initialize the vertex position with information in the tracks
+      if( !hasReference() ) {
+	int N = m_tracks.size() ;
+	m_pos(0) = ( (N-1) * m_pos(0) + reference(0))/N ;
+	m_pos(1) = ( (N-1) * m_pos(1) + reference(1))/N ;
+	m_pos(2) = ( (N-1) * m_pos(2) + inputstate.z())/N ;
+      }
     }
   }
-
+  
   void TrackStateVertex::setInputState(size_t i, const LHCb::State& inputstate)
   {
     m_fitStatus = UnFitted ;
@@ -322,14 +346,27 @@ namespace LHCb
   
   double TrackStateVertex::fitOneStep()
   {
+    // check that we have enough constraints
+    if( m_tracks.size() <2 && !hasReference() ) {
+      m_fitStatus = FitFailure ;
+      m_error |= InsufficientTracks ;
+    }
+    
     // This implements the Billoir-Fruhwirth-Regler algorithm.
     // adds the reference position
     Gaudi::SymMatrix3x3 halfD2ChisqDX2 = m_refweight ;
     ROOT::Math::SVector<double,3> halfDChisqDX = m_refweight * (m_pos - m_refpos ) ;
     // add all the tracks
     for( VertexTrackContainer::iterator itrack = m_tracks.begin() ;
-         itrack != m_tracks.end(); ++itrack ) 
+         itrack != m_tracks.end() && m_fitStatus != FitFailure ; ++itrack ) {
       (*itrack)->project( m_pos, halfDChisqDX, halfD2ChisqDX2) ;
+      if( (*itrack)->status() != TrackVertexHelpers::VertexTrack::IsOK ) {
+	m_fitStatus = FitFailure ;
+	m_error = ProjectionFailure ;
+      }
+    }
+    
+    if( m_fitStatus == FitFailure ) return -1 ;
     
     // calculate the covariance and the change in the position
     double dchisq = -1 ;
@@ -338,6 +375,7 @@ namespace LHCb
     const bool ok = m_poscov.InvertChol();
     if( !ok ) {
       m_fitStatus = FitFailure ;
+      m_error = InversionFailure ;
     } else {
       ROOT::Math::SVector<double,3> dpos = - m_poscov * halfDChisqDX ;
       // update the position
@@ -385,7 +423,11 @@ namespace LHCb
       double dchisq = fitOneStep() ;
       converged = -dchisq < maxdchisq ;
     }
-    if( ! converged ) m_fitStatus = FitFailure ;
+    if( ! converged ) {
+      m_fitStatus = FitFailure ;
+      m_error = NotConverged ;
+      //std::cout << "TrackStateVertex fit failure: not converging" << std::endl ;
+    }
     return m_fitStatus ;
   }
 
@@ -401,27 +443,39 @@ namespace LHCb
     std::vector<double> trkchi2s(N,0) ;
     while( !finished ) {
       fit( maxdchisq, maxnumiter) ;
-      ++niter ; //niter += m_nIter ;
-      // compute the total chi2, cache contribution of each track
-      m_chi2 = ROOT::Math::Similarity(m_refweight,(m_pos - m_refpos)) ;
-      for(size_t i=0; i<N; ++i) {
-        double trkchi2 = m_tracks[i]->chisq(m_pos) ;
-        m_chi2 += m_tracks[i]->weight() * trkchi2 ;
-	trkchi2s[i] = trkchi2 ;
-      }
-      if( niter>1 && prevtotalchi2 - m_chi2 < maxdchisq ) {
-        finished = true ;
-      } else if ( niter >= maxnumiter ) {
-	finished = true ;
-	m_fitStatus = FitFailure ;
+      if( m_fitStatus == FitFailure ) {
+	finished = true ; 
       } else {
-        prevtotalchi2 = m_chi2 ;
-        double sumw(0) ;
-        for(size_t i=0; i<N; ++i) {
-	  double weight = trkchi2s[i] < scaledmaxtrkchi2 ? 1 : scaledmaxtrkchi2 / trkchi2s[i] ;
-	  m_tracks[i]->setweight(weight) ;
-          sumw += weight ;
-        }
+	++niter ; //niter += m_nIter ;
+	// compute the total chi2, cache contribution of each track
+	m_chi2 = ROOT::Math::Similarity(m_refweight,(m_pos - m_refpos)) ;
+	for(size_t i=0; i<N; ++i) {
+	  double trkchi2 = m_tracks[i]->chisq(m_pos) ;
+	  m_chi2 += m_tracks[i]->weight() * trkchi2 ;
+	  trkchi2s[i] = trkchi2 ;
+	}
+	if( niter>1 && prevtotalchi2 - m_chi2 < maxdchisq ) {
+	  finished = true ;
+	} else if ( niter >= maxnumiter ) {
+	  finished = true ;
+	  // We have some convergence problems. Decided not to flag these as failed.
+	  //m_fitStatus = FitFailure ;
+	  // std::cout << "Adaptive fit failed" << std::endl ;
+	  m_error = NotConvergedAdaptive ;
+	} else {
+	  prevtotalchi2 = m_chi2 ;
+	  double sumw(0) ;
+	  for(size_t i=0; i<N; ++i) {
+	    // this is one way: these are called 'Huber' weights, at least, if you take the sqroot!
+	    //double weight = trkchi2s[i] < scaledmaxtrkchi2 ? 1 : scaledmaxtrkchi2 / trkchi2s[i] ;
+	    double weight = trkchi2s[i] < scaledmaxtrkchi2 ? 1 : std::sqrt(scaledmaxtrkchi2 / trkchi2s[i]) ;
+	    // this is 'tri-weight', more like Tukey
+	    //double weight =  trkchi2s[i] < 2 ? 1 
+	    // : (trkchi2s[i] >= scaledmaxtrkchi2 ? 0 : (1 - trkchi2s[i] /scaledmaxtrkchi2 ) ) ;
+	    m_tracks[i]->setweight(weight) ;
+	    sumw += weight ;
+	  }
+	}
       }
     }
     //m_nIter = niter ;

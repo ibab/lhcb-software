@@ -28,6 +28,7 @@ namespace LHCb
   public:
     ///
     enum FitStatus { FitSuccess, FitFailure, UnFitted } ;
+    enum ErrCode { NoError=0,NotConverged=1,BadInputTrack=2,InsufficientTracks=4,ProjectionFailure=8,InversionFailure=16,NotConvergedAdaptive=32} ;
 
     /// Sets minimal data content for useable vertex. The rest we do with setters.
     TrackStateVertex() ;    
@@ -66,11 +67,16 @@ namespace LHCb
     /// fit until converged
     FitStatus fit( double maxdchisq=0.01, size_t maxiterations=10) ;
 
-    /// adapative fit. downweight tracks with chi2 contribution larger than maxtrkchi2
-    FitStatus fitAdaptive( double maxtrkchi2, double maxdchisq=0.01, size_t maxiterations=10) ;
+    /// adapative fit. downweight tracks with chi2 contribution larger than maxtrkchi2 using Huber weights.
+    /// the '95%' efficient chi2 for 1dof = 1.8. I multiplied that by 2, then rounded.
+    /// (see also http://research.microsoft.com/en-us/um/people/zhang/INRIA/Publis/Tutorial-Estim/node24.html)
+    FitStatus fitAdaptive( double maxtrkchi2=4, double maxdchisq=0.01, size_t maxiterations=10) ;
 
     /// return the fit status
     FitStatus fitStatus() const { return m_fitStatus ; }
+
+    /// errcode gives some information on the type of error for failed fits
+    int error() const { return m_error ; }
 
     /// calculate the chisquare of the vertex fit
     double chi2() const ;
@@ -152,6 +158,7 @@ namespace LHCb
     PositionCovariance m_poscov ;
     mutable std::vector< Gaudi::Matrix3x3 > m_mommomcov ;
     FitStatus m_fitStatus ;
+    int m_error ;
     mutable double m_chi2 ;
     PositionParameters m_refpos ;    // position of reference position
     PositionCovariance m_refweight ; // weight (inverse cov) of reference position
