@@ -1978,19 +1978,21 @@ int NamedDecayTreeList::make4PiList() {
   dk = new DecayTree(421);
   dk->addDgtr(9010221)->addDgtr(211, -211);
   dk->addDgtr(9010221)->addDgtr(211, -211);
+  // dk->getVal().setL(0);
   add(*dk);
   if(dbThis) cout << "fourth decay: " << *dk << endl;
   delete dk;
 
   //D0 -> f2(1270)pi-pi+, f2(1270)->pi+pi-
   //Adding no resonant decays to help with the spin factors
-  dk = new DecayTree(421);
+  /*dk = new DecayTree(421);
   dk->addDgtr(225)->addDgtr(211, -211);
   dk->addDgtr(225)->addDgtr(211, -211);
+  //dk->getVal().setL(0);
   add(*dk);
   if(dbThis) cout << "fifth decay: " << *dk << endl;
   delete dk;
-
+  */
   //D0 -> sigma_1 pi-pi+, sigma_1->pi+pi-
   dk = new DecayTree(421);
   dk->addDgtr(999001)->addDgtr(211, -211);
@@ -2066,19 +2068,19 @@ int NamedDecayTreeList::make4PiList() {
   dk->addDgtr(9993)->addDgtr(211, -211);
   add(*dk);
   delete dk;
-    
+  
   // D0 -> pi(1300)- pi+, pi(1300)- ->rho(770) pi-, rhp(770) -> pi+pi-
-  dk = new DecayTree(421);
+  /*dk = new DecayTree(421);
   dk->addDgtr(-211,100211)->addDgtr(211, 113)->addDgtr(211, -211);
   add(*dk);
   delete dk;
-    
+  */ 
   // D0 -> omega3(1670)- pi+, omega3(1670)- ->rho(770) pi-, rhp(770) -> pi+pi-
-  dk = new DecayTree(421);
+  /*dk = new DecayTree(421);
   dk->addDgtr(-211,227)->addDgtr(211, 113)->addDgtr(211, -211);
   add(*dk);
   delete dk;
-    
+  */  
   return _trees.size();
 }
 
