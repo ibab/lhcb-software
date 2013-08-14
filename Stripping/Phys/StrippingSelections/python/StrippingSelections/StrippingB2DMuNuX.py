@@ -16,7 +16,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLoosePions, StdLooseMuons, StdLooseKaons, StdLooseProtons, StdNoPIDsPions, StdLooseMergedPi0,StdLooseResolvedPi0
+from StandardParticles import StdAllNoPIDsPions, StdLoosePions, StdLooseMuons, StdLooseKaons, StdLooseProtons, StdNoPIDsPions, StdLooseMergedPi0,StdLooseResolvedPi0
 from Configurables import ConjugateNeutralPID
 
 __all__ = ('B2DMuNuXAllLinesConf',
@@ -278,6 +278,10 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                         BDIRA = config['BDIRA'],
                                         DZ = config['DZLoose']
                                         )
+
+        self.selDstarOfb2D0MuX = Selection("DstarOfb2D0MuX" + name,
+                                           Algorithm = self._LooseDstarFilter(),
+                                           RequiredSelections = [self.selb2D0MuX, self.seld02kpi , StdAllNoPIDsPions] )
         
         self.selb2D0MuXKK = makeb2DMuX('b2D0MuXKK' + name,
                                        DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
@@ -296,6 +300,11 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                           BDIRA = config['BDIRA'],
                                           DZ = config['DZLoose']
                                           )
+
+        self.selDstarOfb2D0MuXKK = Selection("DstarOfb2D0MuXKK" + name,
+                                             Algorithm = self._LooseDstarFilter(),
+                                             RequiredSelections = [self.selb2D0MuXKK, self.seld02kk , StdAllNoPIDsPions] )
+
         
         self.selb2D0MuXpipi = makeb2DMuX('b2D0MuXpipi' + name,
                                          DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
@@ -314,6 +323,11 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                             BDIRA = config['BDIRA'],
                                             DZ = config['DZLoose']
                                             )
+
+        self.selDstarOfb2D0MuXpipi = Selection("DstarOfb2D0MuXpipi" + name,
+                                             Algorithm = self._LooseDstarFilter(),
+                                             RequiredSelections = [self.selb2D0MuXpipi, self.seld02kk , StdAllNoPIDsPions] )
+
         
         self.selb2D0MuXK3Pi = makeb2DMuX('b2D0MuXK3Pi' + name,
                                          DecayDescriptors = [ '[B- -> D0 mu-]cc', '[B+ -> D0 mu+]cc' ],
@@ -415,17 +429,30 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                          prescale = config['PrescalD0Mu'], 
                                          selection = self.selb2D0MuX)
 
+        self.DstarOfb2D0MuXLine = StrippingLine('DstarOfb2D0MuX' + name + 'Line', 
+                                                prescale = config['PrescalD0Mu'], 
+                                                selection = self.selDstarOfb2D0MuX)
+        
         self.b2D0MuXKpiDCSLine = StrippingLine('b2D0MuXKpiDCS' + name + 'Line', 
                                                prescale = 1, 
                                                selection = self.selb2D0MuXKpiDCS)
-
+        
         self.b2D0MuXKKLine = StrippingLine('b2D0MuXKK' + name + 'Line', 
                                            prescale = 1, 
                                            selection = self.selb2D0MuXKK)
+
+        self.DstarOfb2D0MuXKKLine = StrippingLine('DstarOfb2D0MuXKK' + name + 'Line', 
+                                                  prescale = 1, 
+                                                  selection = self.selDstarOfb2D0MuXKK)
         
         self.b2D0MuXpipiLine = StrippingLine('b2D0MuXpipi' + name + 'Line', 
                                              prescale = 1, 
                                              selection = self.selb2D0MuXpipi)
+        
+        self.DstarOfb2D0MuXpipiLine = StrippingLine('DstarOfb2D0MuXpipi' + name + 'Line', 
+                                                  prescale = 1, 
+                                                  selection = self.selDstarOfb2D0MuXpipi)
+
         
         self.b2D0MuXDstLine = StrippingLine('b2D0MuXDst' + name + 'Line', 
                                             selection = self.selb2D0MuXDst,
@@ -513,6 +540,10 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         self.registerLine(self.b2D0MuXDstLine)        
         self.registerLine(self.b2D0MuXKKDstLine)
         self.registerLine(self.b2D0MuXpipiDstLine)
+
+        self.registerLine(self.DstarOfb2D0MuXLine)
+        self.registerLine(self.DstarOfb2D0MuXKKLine)
+        self.registerLine(self.DstarOfb2D0MuXpipiLine)
         
         self.registerLine(self.b2DsMuXPhiPiLine)
         self.registerLine(self.b2DsPi_PhiPi_fakesLine)
@@ -690,6 +721,17 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                                MotherCut = _motherCut)                             
         return _ds2phipi_forfakes
     
+
+    def _LooseDstarFilter( self ) : 
+        _cutsDstarComb = '(AM - ACHILD(M,1) + 5 > %(Dstar_wideDMCutLower)s *MeV) & (AM - ACHILD(M,1) - 5 < %(Dstar_wideDMCutUpper)s *MeV)' % self.__confdict__
+        _cutsDstarMoth_base = '(VFASPF(VCHI2/VDOF) < %(Dstar_Chi2)s )' % self.__confdict__
+        _cutsDstarMoth_DM = '(M - CHILD(M,1) > %(Dstar_wideDMCutLower)s *MeV) & (M - CHILD(M,1) < %(Dstar_wideDMCutUpper)s *MeV)' % self.__confdict__
+        _cutsDstarMoth = '(' + _cutsDstarMoth_base + ' & ' + _cutsDstarMoth_DM + ')'
+        _Dstar = CombineParticles( DecayDescriptors = ["[D*(2010)+ -> D0 pi+]cc" , "[D*(2010)+ -> D~0 pi+]cc"] ,
+                                   CombinationCut = _cutsDstarComb,
+                                   MotherCut = _cutsDstarMoth)
+        return _Dstar
+
     
 def makeb2DMuX(name,
                DecayDescriptors,
@@ -764,4 +806,5 @@ def makeDstar(_name, inputD0,Dstar_cuts) :
                                CombinationCut = _cutsDstarComb,
                                MotherCut = _cutsDstarMoth)
     return Selection (name = "Sel"+_name,Algorithm = _Dstar,RequiredSelections = [inputD0,_inputD0_conj] + [_softPi])
+
 

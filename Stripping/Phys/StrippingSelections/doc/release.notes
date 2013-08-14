@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-14 - Sascha Stahl
+ - Added new lines in StrippingB2DMuNuX to write out D* -> D0 pi combinations 
+	 when a B -> D0 mu was found.
+
 ! 2012-08-13 - Murilo Rangel
  - added new lines in StrippingHighPtTopo
 
