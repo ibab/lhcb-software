@@ -24,6 +24,7 @@ ProtoParticleCloner::ProtoParticleCloner( const std::string& type,
 {
   declareProperty("ICloneTrack",    m_trackClonerName    = "TrackCloner"    );
   declareProperty("ICloneCaloHypo", m_caloHypoClonerName = "CaloHypoCloner" );
+  //setProperty( "OutputLevel", 2 );
 }
 
 //=============================================================================

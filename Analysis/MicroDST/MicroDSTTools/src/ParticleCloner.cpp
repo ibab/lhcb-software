@@ -24,6 +24,7 @@ ParticleCloner::ParticleCloner( const std::string& type,
 {
   declareProperty("ICloneVertex",        m_vertexClonerName="VertexCloner"   );
   declareProperty("ICloneProtoParticle", m_ppClonerName="ProtoParticleCloner");
+  //setProperty( "OutputLevel", 2 );
 }
 
 //=============================================================================
@@ -37,7 +38,10 @@ StatusCode ParticleCloner::initialize()
   const StatusCode sc = base_class::initialize();
   if ( sc.isFailure() ) return sc;
 
-  debug() << "Going to initialise ICloneProtoParticle and ICloneVertex" << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Going to initialise ICloneProtoParticle and ICloneVertex" << endmsg;
+  }
 
   m_vertexCloner = ( m_vertexClonerName != "NONE" ?
                      tool<ICloneVertex>(m_vertexClonerName, this->parent() ) : NULL );
@@ -45,14 +49,17 @@ StatusCode ParticleCloner::initialize()
   m_ppCloner = ( m_ppClonerName != "NONE"  ?
                  tool<ICloneProtoParticle>(m_ppClonerName, this->parent() ) : NULL );
 
-  if (m_ppCloner)
+  if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Found ICloneProtoParticle " << m_ppClonerName << endmsg;
-  }
-  else
-  {
-    debug() << "Did not find ICloneProtoParticle '" << m_ppClonerName
-            << "'. ProtoParticle cloning de-activated."<< endmsg;
+    if ( m_ppCloner )
+    {
+      debug() << "Found ICloneProtoParticle " << m_ppClonerName << endmsg;
+    }
+    else
+    {
+      debug() << "Did not find ICloneProtoParticle '" << m_ppClonerName
+              << "'. ProtoParticle cloning de-activated."<< endmsg;
+    }
   }
 
   return sc;
@@ -69,10 +76,12 @@ LHCb::Particle* ParticleCloner::operator() (const LHCb::Particle* particle)
 
 LHCb::Particle* ParticleCloner::clone(const LHCb::Particle* particle)
 {
-  if ( !particle ) 
+  if ( !particle )
   {
     if ( msgLevel(MSG::DEBUG) )
+    {
       debug() << "Particle pointer is NULL !" << endmsg;
+    }
     return NULL;
   }
 
@@ -90,10 +99,10 @@ LHCb::Particle* ParticleCloner::clone(const LHCb::Particle* particle)
     {
       particleClone->setEndVertex( SmartRef<LHCb::Vertex>(particle->endVertex()) );
     }
-    
+
     // Daughters
     storeDaughters( particleClone, particle->daughters() );
-    
+
     // ProtoParticle
     const LHCb::ProtoParticle * protoToSet = NULL;
     if ( m_ppCloner && particle->proto() )
@@ -101,7 +110,7 @@ LHCb::Particle* ParticleCloner::clone(const LHCb::Particle* particle)
       protoToSet = (*m_ppCloner)( particle->proto() );
     }
     if ( protoToSet ) { particleClone->setProto(protoToSet); }
-    
+
   }
 
   return particleClone;
@@ -109,7 +118,7 @@ LHCb::Particle* ParticleCloner::clone(const LHCb::Particle* particle)
 
 //=============================================================================
 
-void 
+void
 ParticleCloner::storeDaughters( LHCb::Particle* particleClone,
                                 const SmartRefVector<LHCb::Particle>& daughters )
 {
