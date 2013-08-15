@@ -1,5 +1,5 @@
 package OnlineBase
-version v1r17
+version v1r18
 
 branches  cmt doc src
 use GaudiPolicy v*
