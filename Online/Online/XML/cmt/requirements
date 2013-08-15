@@ -1,5 +1,5 @@
 package XML
-version v0r1
+version v0r2
 
 branches cmt doc src
 use GaudiPolicy v*
