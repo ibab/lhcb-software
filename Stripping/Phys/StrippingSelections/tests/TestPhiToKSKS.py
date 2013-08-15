@@ -1,5 +1,5 @@
-# $Id: $
-# Test your line(s) of the stripping
+### test the phi->KsKs stripping module
+### Mika Vesterinen
 
 from Gaudi.Configuration import *
 from Configurables import SelDSTWriter, DaVinci
@@ -16,6 +16,11 @@ Stream = StrippingStream("TEST")
 from StrippingSelections import StrippingPhiToKSKS
 confPhiToKSKS = StrippingPhiToKSKS.PhiToKSKSAllLinesConf("PhiToKSKS", StrippingPhiToKSKS.confdict)
 Stream.appendLines( confPhiToKSKS.lines() )
+
+mod_conf = StrippingPhiToKSKS.confdict.copy()
+mod_conf["DoDTF"] = False
+confPhiToKSKS_noDTF = StrippingPhiToKSKS.PhiToKSKSAllLinesConf("PhiToKSKS_NODTF", mod_conf)
+Stream.appendLines( confPhiToKSKS_noDTF.lines() )
 
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
@@ -53,43 +58,45 @@ CondDB().IgnoreHeartBeat = True
 from Configurables import FilterDesktop
 
 StdParticles = []
-#StdParticles.append("Phys/StdNoPIDsProtons")
-#StdParticles.append("Phys/StdNoPIDsPions")
-#StdParticles.append("Phys/StdNoPIDsKaons")
-#StdParticles.append("Phys/StdNoPIDsMuons")
-#StdParticles.append("Phys/StdAllLoosePions")
-#StdParticles.append("Phys/StdLoosePions")
 StdParticles.append("Phys/StdLooseKaons")
-#StdParticles.append("Phys/StdLooseProtons")
 StdParticles.append("Phys/StdLooseKsLL")
-#StdParticles.append("Phys/StdLooseKsDD")
-#StdParticles.append("Phys/StdLooseLambdaLL")
-#StdParticles.append("Phys/StdLooseLambdaDD")
-#StdParticles.append("Phys/StdLooseResolvedPi0")
-#StdParticles.append("Phys/StdLooseMergedPi0")
-#StdParticles.append("Phys/StdLooseDstarWithD02KPi")
+StdParticles.append("Phys/StdLooseKsDD")
 MakePionsEtc = FilterDesktop('MakePionsEtc')
 MakePionsEtc.Inputs=StdParticles
 MakePionsEtc.Code="ALL"
 
+
+tupletools = []
+tupletools.append("TupleToolKinematic")                                                                                                                                        
+tupletools.append("TupleToolGeometry")                                                                                                                                         
+tupletools.append("TupleToolTrackInfo")                                                                                                                                        
+tupletools.append("TupleToolPid")                                                                                                                                              
+tupletools.append("TupleToolRecoStats")  
+from Configurables import DecayTreeTuple
+tuple_PhiToKK = DecayTreeTuple("Tuple_PhiToKK")
+tuple_PhiToKK.Inputs = [ 'Phys/PhiToKSKS_PhiToKKLine/Particles']
+tuple_PhiToKK_NODTF = DecayTreeTuple("Tuple_PhiToKK_NODTF")
+tuple_PhiToKK_NODTF.Inputs = [ 'Phys/PhiToKSKS_NODTF_PhiToKKLine/Particles']
+for tuple in tuple_PhiToKK,tuple_PhiToKK_NODTF:
+    tuple.ToolList = tupletools[:]
+    tuple.Decay = "phi(1020) -> ^K+ ^K-"
+    tuple.Branches = {"phi" : "phi(1020) : phi(1020) -> K+ K-",
+                      "Kplus" : "phi(1020) -> ^K+ K-",
+                      "Kminus" : "phi(1020) -> K+ ^K-"}
+
 DaVinci().PrintFreq = 10000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 100000
+DaVinci().TupleFile = 'DVTuples.root'
+DaVinci().EvtMax = -1
+DaVinci().Lumi = True
 DaVinci().EventPreFilters = [ filterHLT ]
 DaVinci().appendToMainSequence( [MakePionsEtc] )
-#DaVinci().appendToMainSequence( [KsLL_SEQ])
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
-#DaVinci().appendToMainSequence( [ ac ] )
+DaVinci().appendToMainSequence( [ tuple_PhiToKK])
+DaVinci().appendToMainSequence( [ tuple_PhiToKK_NODTF])
 DaVinci().DataType = "2012"
 DaVinci().InputType = 'SDST'
-#DaVinci().DDDBtag  = "head-20120413"
-#DaVinci().CondDBtag = "head-20120420"
 DaVinci().DDDBtag  = "dddb-20120831"
 DaVinci().CondDBtag = "cond-20121008"
 
-
-#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco13c_Run124134.py")
-#importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_2011Data_MagDn.py")
-importOptions("$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run125113.py")
-#importOptions("$STRIPPINGSELECTIONSROOT/Reco13e.py")

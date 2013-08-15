@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-15 - Mika Vesterinen
+ - Update to psi/phi->KsKs lines
+
 ! 2013-08-14 - Albert Puig
  - Added cut in the HH angle for Beauty2XGamma Stripping
 
