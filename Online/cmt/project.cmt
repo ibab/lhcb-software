@@ -1,6 +1,6 @@
 project ONLINE
 
-use GAUDI GAUDI_v23r8
+use GAUDI GAUDI_v23r9
 
 build_strategy with_installarea
 setup_strategy root
