@@ -68,7 +68,7 @@ void *ObjSerializer::SerializeObj(void *&ptr, int &siz, bool clear)
   }
   if (pp != p1)
   {
-    pp = pp;
+//    pp = pp;
 //    printf ("serialiazing all object does not reach end of buffer...\n");
   }
   siz = bs;

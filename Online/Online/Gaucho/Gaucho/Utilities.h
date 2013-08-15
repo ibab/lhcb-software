@@ -44,7 +44,7 @@ namespace
     }
   }
 
-  inline void toLowerCase(std::string &s)
+  void toLowerCase(std::string &s)
   {
     for (unsigned int i=0;i<s.size();i++)
     {
