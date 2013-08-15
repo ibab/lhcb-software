@@ -132,6 +132,13 @@ class Brunel(LHCbConfigurableUser):
         if self.getProp( "WithMC" ) or self.getProp( "InputType" ).upper() == 'DIGI':
             self.setProp( "Simulation", True )
 
+        # Check that detector list does not contain non-upgrade detectors if in upgrade mode (can crash later)
+        if( self.getProp("DataType") is "Upgrade"):
+            for det in self.getProp("Detectors"):
+                if det in ['Velo', 'TT', 'OT', 'IT']:
+                    log.warning("You are running with non-upgrade detector %s in upgrade mode."%det)
+                    
+
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","Simulation"])
 
@@ -139,6 +146,8 @@ class Brunel(LHCbConfigurableUser):
         if hasattr(LHCbApp(), "Detectors"):
             LHCbApp().setProp("Detectors", self.getProp("Detectors"))
             self.setProp("UpgradeDets", LHCbApp().upgradeDetectors())
+
+       
 
         # Set list of detectors in DstConf
         dstConfDetList = []
