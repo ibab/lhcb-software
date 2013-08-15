@@ -6,6 +6,23 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r0>2013-08-13 OnlineSys v5r3</A></H1>
+<PRE>
+  Bug fix release of v5r2.
+  Use new Gaudi v23r9
+  Updated/new packages:
+    Online/XML           v0r2
+    Online/GaudiOnline   v2r67
+    Online/Controller    v0r7
+    Online/OnlineBase    v1r18
+    Online/OnlineKernel  v2r13
+    Online/UPI           v1r24
+    Online/Writer        v1r48
+    Online/ROMon         v1r43
+    DAQ/MDF              v3r40
+
+</PRE>
+
 <H1><A NAME=v5r0>2013-07-13 OnlineSys v5r2</A></H1>
 <PRE>
   Bug fix release of v5r1.
