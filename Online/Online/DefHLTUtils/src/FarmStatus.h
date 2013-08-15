@@ -18,14 +18,17 @@
 #include "ROMon/CPUMon.h"
 #include "stdio.h"
 #include "time.h"
-#include "HLTPerfFormatter.h"
+#include "ROMon/TaskSupervisorParser.h"
+#include <iostream>
+#include <sstream>
+
 using namespace ROMon;
 using namespace std;
-typedef std::map<int,int> RunMap;
+typedef map<int,int> RunMap;
 //class MBMStat
 //{
 //  public:
-//    std::string name;
+//    string name;
 //    int produced;
 //    int seen;
 //    float p_rate;
@@ -61,16 +64,17 @@ typedef std::map<int,int> RunMap;
 //      }
 //    }
 //};
+
 class MyNode
 {
   public:
-    std::string m_name;
-    std::string m_subfarm;
+    string m_name;
+    string m_subfarm;
     int m_state;
     int m_badtasks;
     int m_badconns;
     bool m_excl;
-    MyNode(std::string n)
+    MyNode(string n)
     {
       m_name = n;
       m_state = 0;
@@ -82,26 +86,106 @@ class MyNode
 class SFarm
 {
   public:
-    std::string m_svcnam;
+    string m_svcnam;
 
 };
 typedef ROMon::SubfarmSummary _SFSumm;
 class StatusInfoHandler;
 class MBMInfoHandler;
-typedef std::map<std::string,MyNode*> myNodeMap;
-typedef std::map<std::string,std::list<std::pair<std::string,int> > > myActionMap; //list of nodes per subfarm to execute an action on.
-typedef std::set<std::string> NodeSet;
-typedef std::map<std::string,float> NodePerfMap;
+//class Inventory;
+class TaskSummaryInfoHandler;
+typedef map<string,MyNode*> myNodeMap;
+typedef map<string,list<pair<string,int> > > myActionMap; //list of nodes per subfarm to execute an action on.
+typedef set<string> NodeSet;
+typedef set<string> StrSet;
+class Dictionary
+{
+  public:
+    vector<string> WordList;
+    map<string,int> WordMap;
+    size_t NumEls;
+    DimService *DictService;
+    string SvcCont;
+    string OCont;
+    Dictionary(string &svc)
+    {
+      NumEls = 0;
+      SvcCont.clear();
+      OCont.clear();
+      DictService = new DimService(svc.c_str(),"C",(void*)"\0",1);
+      WordMap.clear();
+      WordList.clear();
+    }
+    void Add(string &word)
+    {
+      map<string,int>::iterator i;
+      i = WordMap.find(word);
+      if (i != WordMap.end())
+      {
+        return;
+      }
+      else
+      {
+        WordList.push_back(word);
+        WordMap.insert(make_pair(word,NumEls));
+        if (NumEls >0)
+        {
+          SvcCont += "|"+word+"\0";
+        }
+        else
+        {
+          SvcCont += word+"\0";
+        }
+        NumEls++;
+      }
+      return;
+    }
+
+    void Add(vector<string> &svec)
+    {
+      size_t i;
+      for (i=0;i<svec.size();i++)
+      {
+        Add(svec[i]);
+      }
+      return;
+    }
+
+    int Find(string &word)
+    {
+      map<string,int>::iterator i;
+      i = WordMap.find(word);
+      if (i != WordMap.end())
+      {
+        return (*i).second;
+      }
+      return -1;
+    }
+    void Update()
+    {
+      if (OCont != SvcCont)
+      {
+        SvcCont += '\0';
+        DictService->setData((void*)SvcCont.c_str(),SvcCont.size());
+        DictService->updateService();
+        OCont = SvcCont;
+      }
+    }
+};
+typedef map<string,float> NodePerfMap;
 class FarmStatus
 {
   public:
-    std::map<std::string,SFarm *> m_Farms;
+    ostringstream osStatus;
+    ostringstream osDetails;
+    map<string,SFarm *> m_Farms;
     myNodeMap m_Nodes;
     myNodeMap m_AllNodes;
-    nodemap M_PMap;
-    std::map<std::string,DimInfo*> m_infoMap;
+    map<string,DimInfo*> m_infoMap;
+    map<string,DimInfo*> m_TaskMap;
+    map<DimInfo*,string> m_DimMap;
     StatusInfoHandler *m_InfoHandler;
-    MBMInfoHandler *m_MBMInfoHandler;
+    TaskSummaryInfoHandler *m_TSInfoHandler;
     int m_nnodes;
     int m_nfiles;
     long m_nfiles2;
@@ -109,15 +193,17 @@ class FarmStatus
     int m_high;
     DimInfo *m_DefStateInfo;
     DimService *m_StatusService;
-    std::string m_servdat;
+    DimService *m_DetailService;
     NodeSet m_enabledFarm;
     NodeSet m_recvNodes;
     NodeSet m_everrecvd;
     NodeSet m_BufferrecvNodes;
     NodeSet m_exclNodes;
-    std::set<std::string> m_AllpFarms;
-    std::set<std::string> m_AllpNodes;
+    set<string> m_AllpFarms;
     NodePerfMap m_nodePerf;
+    Dictionary *m_TaskDict;
+    Dictionary *m_ConnDict;
+    Dictionary *m_ProjDict;
     FarmStatus();
     void Analyze();
     void Dump();
@@ -136,21 +222,14 @@ class StatusInfoHandler : public DimInfoHandler
     void infoHandler();
 };
 
-class LHCb1RunStatus : public DimInfo
+class TaskSummaryInfoHandler : public DimInfoHandler
 {
   public:
-    FarmStatus *m_equalizer;
-    int m_nolink;
-    int m_state;
-    LHCb1RunStatus(char *name, int nolink,FarmStatus *e);
-    void infoHandler();
-};
-
-class ExclInfo : public DimInfo
-{
-  public:
-    NodeSet *m_exclNodes;
-    ExclInfo(char *name, NodeSet *nodeset);
+    int m_bufsiz;
+    FarmStatus *m_Equalizer;
+    map<DimInfo*,Cluster*> m_ClusterMap;
+    map<string,Cluster*> m_CluMap;
+    TaskSummaryInfoHandler(FarmStatus *e);
     void infoHandler();
 };
 

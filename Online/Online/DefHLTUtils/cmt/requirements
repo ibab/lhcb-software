@@ -13,6 +13,8 @@ use Gaucho		 v* Online
 #use GaudiAlg     v*
 #use Boost        v* LCG_Interfaces
 use ROOT         v* LCG_Interfaces
+#use XercesC       v* LCG_Interfaces -no_auto_imports
+use XercesC       v* LCG_Interfaces
 
 macro_append ROOT_linkopts " -lGpad -lRint -lHist " WIN32 " libHist.lib "
 
