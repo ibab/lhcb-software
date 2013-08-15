@@ -60,8 +60,8 @@ public:
   bool m_enableTrending;
   COUTServiceMap m_outmap;
 private:
-  MyErrh *m_errh;
-
-  unsigned long long m_prevupdate;
+//  MyErrh *m_errh;
+//
+//  unsigned long long m_prevupdate;
 };
 #endif // ONLINE_GAUCHO_RATESVC_H

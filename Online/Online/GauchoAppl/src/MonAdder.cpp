@@ -238,7 +238,7 @@ void MonAdder::TaskDied(std::string & task)
 void MonAdder::SynchronizeServices(std::string taskname, std::vector<std::string>&service_list)
 {
   unsigned int i;
-  bool fnd;
+  bool fnd = false;
   std::string le;
   std::string tskname,tgen;
 //  printf("In SynchronizeServices: Taskname = %s, expected task name =%s\n",taskname.c_str(),m_taskPattern.c_str());
