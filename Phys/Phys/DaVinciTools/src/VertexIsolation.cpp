@@ -98,7 +98,7 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
   m_particlesToVertex.clear();
   // -- Add the mother (prefix of the decay chain) to the vector
   if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << top->particleID().pid() << endmsg;
-  m_particlesToVertex.push_back( top );
+  //  m_particlesToVertex.push_back( top );
   // -- Save all basic particles that belong to the mother vertex in the vector m_particlesToVertex
   findDaughters2Vertex( top );
 
@@ -131,8 +131,7 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
       bool isSignal = false ;
       for ( LHCb::Particle::ConstVector::const_iterator iSignal = m_particlesToVertex.begin();
             iSignal != m_particlesToVertex.end();
-            iSignal++ )
-      {
+            iSignal++ )    {
         if ( (*iSignal)->proto() == (*iParticle)->proto() ) { isSignal = true ; break ; }
       }
       if ( isSignal ) continue ;
@@ -161,7 +160,7 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
   IsolationResult isolationTwoTracks ;
   double smallestMassOneTrack  = 0.0 ;
   double smallestMassTwoTracks = 0.0 ;
-  if ( isolationOneTrack.bestParticle )
+  if ( isolationOneTrack.bestParticle)
   {
     Gaudi::LorentzVector cand = part->momentum() + isolationOneTrack.bestParticle->momentum();
     smallestMassOneTrack = cand.mass();
@@ -179,7 +178,7 @@ StatusCode VertexIsolation::calculateExtraInfo( const LHCb::Particle *top,
     // Compute isolation adding one further track
     isolationTwoTracks = getIsolation(originalVtxChi2, partsToCheckForTwoTracks) ;
     // Cleanup the list of signal tracks
-    m_particlesToVertex.pop_back() ;
+    //   m_particlesToVertex.pop_back() ;
     if ( isolationTwoTracks.bestParticle )
     {
       Gaudi::LorentzVector cand = part->momentum() + isolationOneTrack.bestParticle->momentum() + isolationTwoTracks.bestParticle->momentum();
@@ -213,7 +212,7 @@ VertexIsolation::IsolationResult VertexIsolation::getIsolation( const double ori
   double          smallestChi2         = -1 ;
   double          smallestDeltaChi2    = -1 ;
   LHCb::Particle *bestParticle         = NULL ;
-  StatusCode sc = true ;
+
   for ( LHCb::Particle::ConstVector::const_iterator iExtraPart = extraParticles.begin() ;
         iExtraPart != extraParticles.end() ;
         iExtraPart++ )
@@ -222,13 +221,18 @@ VertexIsolation::IsolationResult VertexIsolation::getIsolation( const double ori
     // Temporarily add the extra track to the partcles to vertex vector
     m_particlesToVertex.push_back(*iExtraPart) ;
     // Fit
-    StatusCode  sc2 = m_pVertexFit->fit(vtxWithExtraTrack, m_particlesToVertex) ;
-
+   StatusCode sc = m_pVertexFit->fit(vtxWithExtraTrack, m_particlesToVertex) ;
     // Remove the extra track
     m_particlesToVertex.pop_back() ;
-    if ( !sc ) Warning("Failed to fit vertex").ignore() ;
+    if ( !sc )
+    {
+      Warning("Failed to fit vertex").ignore() ;
+    }
     else
     {
+      //second check:....
+      if(vtxWithExtraTrack.chi2() == 0) continue;
+
       double deltaChi2 = vtxWithExtraTrack.chi2() - originalVtxChi2 ;
       if ( msgLevel(MSG::DEBUG) ) debug() << "Fitted vertex adding track has Delta chi2 = " << deltaChi2  << " chi2 = " << vtxWithExtraTrack.chi2() << endmsg ;
       // Get values
@@ -241,7 +245,6 @@ VertexIsolation::IsolationResult VertexIsolation::getIsolation( const double ori
         bestParticle = (LHCb::Particle*) (*iExtraPart) ;
       }
     }
-
   }
   IsolationResult res ;
   res.nCompatibleChi2      = nCompatibleChi2 ;
@@ -270,7 +273,7 @@ void VertexIsolation::findDaughters2Vertex( const LHCb::Particle *top )
     }
     else
     { // -- if it is not stable, call the function recursively
-      m_particlesToVertex.push_back( (*idau) );
+      //   m_particlesToVertex.push_back( (*idau) );
       if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << (*idau)->particleID().pid() << endmsg;
       findDaughters2Vertex( (*idau) );
     }

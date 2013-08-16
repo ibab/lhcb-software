@@ -29,18 +29,14 @@ namespace LHCb {
  *    event, one by one, building a new vertex.
  *
  * Variables:
- *    - m_nPartDeltaChi2Win: number of particles that generate a vertex within a delta chi2 window
  *    - m_nPartChi2Win: number of particles that generate a vertex within a chi2 window
  *    - m_smallestDeltaChi2OneTrack: smallest delta chi2 when adding one track
- *    - m_smallestChi2OneTra: smallest chi2 when adding one track
  *    - m_smallestDeltaChi2MassOneTrack: mass of the candidate with the smallest delta chi2
  *    - m_smallestDeltaChi2TwoTracks: smallest delta chi2 when adding one track to the combination that has the smallest delta chi2 when adding one track
- *    - m_smallestChi2TwoTracks: smallest chi2 when adding one track to the combination that has the smallest delta chi2 when adding one track
  *    - m_smallestDeltaChi2MassTwoTracks: mass of the candidate with the smallest delta chi2 when adding one track to the combination that has the smallest delta chi2 when adding one track
  *
  * Options:
  *    - InputParticles: containers for extra particles used for building extra vertices
- *    - MaxDeltaChi2: maximum delta chi2 for counting compatible vertices
  *    - MaxChi2: maximum chi2 for counting compatible vertices
  *
  *  Converted from TupleTool by A. Puig 05/08/2013
@@ -112,7 +108,6 @@ class VertexIsolation : public GaudiTool, virtual public IExtraInfoTool {
 
   // Isolation calculation
   VertexIsolation::IsolationResult getIsolation( const double, LHCb::Particle::ConstVector& ) ;
-  //bool getIsolation( const double, LHCb::Particle::ConstVector& ) ;
 
 };
 
