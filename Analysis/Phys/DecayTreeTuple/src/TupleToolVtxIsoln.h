@@ -5,6 +5,7 @@
 // from Gaudi
 #include "DecayTreeTupleBase/TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
+#include "Kernel/IExtraInfoTool.h"            // Interface
 
 class IDVAlgorithm;
 class IDistanceCalculator;
@@ -53,19 +54,14 @@ public:
 
 private:
 
-  const LHCb::Vertex* originVertex( const  LHCb::Particle*
-                                    , const LHCb::Particle* ) const;
-
-private:
-
   IDVAlgorithm* m_dva;
   const IDistanceCalculator* m_dist;
   const IVertexFit* m_pVertexFit;
-  double m_deltaChi2;
+  IExtraInfoTool *m_isolationTool ;
   double m_Chi2;
   std::string m_typeVertexFit;
   std::vector<std::string> m_inputParticles;
-
+  std::map< int, std::string > m_varNames ;
 };
 
 #endif // MPATEL_TUPLETOOLGEOMETRY_H

@@ -4,6 +4,9 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2013-08-16 - Albert Puig
+ - New version of TupleToolVtxIsoln that makes use of the VertexIsolation tool.
+
 !========================= DecayTreeTuple v4r3 2013-08-01 =========================
 
 ! 2013-07-23 - Chris Jones
