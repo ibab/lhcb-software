@@ -1,3 +1,7 @@
+2013-08-16  Ben Couturier  <Ben.Couturier@cern.ch>
+
+	* scripts/mkMCGentar: Add special hook to deal with powheg-box
+
 2013-08-08  Ben Couturier  <Ben.Couturier@cern.ch>
 
         * scripts/mkMCGentar: Added option to enable/disable the inclusion

@@ -223,7 +223,19 @@ def get_MCGen_tar_name(root,gen,native,bin):
         print ' get_MCGen_tar_name Found %s'% tmpfullfilename
         name = tmpname
         fullfilename = tmpfullfilename
+
     else:
+        # Checking powheg-box
+        if gen == "powhegbox":
+            tmpgen = "powheg-box"
+            tmpname = tmpgen +'-'+native+'-'+bin+'.tgz'
+            tmprootdef = os.path.join(root, tmpgen)
+            tmpfullfilename = os.path.join(tmprootdef, tmpname)
+            if os.path.exists(tmpfullfilename):
+                print ' get_MCGen_tar_name Found %s'% tmpfullfilename
+                name = tmpname
+                fullfilename = tmpfullfilename
+        
         # Looking for the pp version instead of ++
         gen = gen.replace("pp", "++")
         tmpname = gen+'-'+native+'-'+bin+'.tgz'
@@ -279,6 +291,9 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version, 
         if orig_key.endswith("pp"):
             key = orig_key.replace("pp", "++")
 
+        if orig_key == "powhegbox":
+            key = "powheg-box"
+
         (file, fullfilename) = get_MCGen_tar_name(MCGen_tar_dir,key,value,binary_dir)
 
         print "-----------------------------------"
@@ -292,10 +307,11 @@ def get_tar_files(packages_versions, packages_homes, binary_dir, HepMC_version, 
         print "-----------------------------------"
 
         print 'get_tar_files Processing %s '%(file)
-        if key == 'lhapdf'  and include_lhapdf == False:
-            print "get_tar_files - LHAPDF will NOT include PDF Sets"
-        else:
-            print "get_tar_files - LHAPDF will include PDF Sets"
+        if key == 'lhapdf':
+            if include_lhapdf == False:
+                print "get_tar_files - LHAPDF will NOT include PDF Sets"
+            else:
+                print "get_tar_files - LHAPDF will include PDF Sets"
         #
         # Check that the file file actually exists
         # FAIL otherwise, we need to know...
