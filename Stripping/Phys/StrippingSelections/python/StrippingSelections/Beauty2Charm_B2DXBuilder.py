@@ -506,8 +506,10 @@ class B2DXBuilder(object):
         config['AM_MAX'] = '6000*MeV'
         config['DZ1_MIN'] = '-1.5*mm'
         config['DZ2_MIN'] = '-1.5*mm'
-        decays = {'B02DDFULLDST': ["B0 -> D- D+"] }
-        inputs = {'B02DDFULLDST': self.d.d_hhh_4_B2DD_custom}
+        decays = {'B02DDFULLDST': ["B0 -> D- D+"],
+                  'B02DDUPFULLDST': ["B0 -> D- D+"]}
+        inputs = {'B02DDFULLDST': self.d.d_hhh_4_B2DD_custom,
+                  'B02DDUPFULLDST': self.d.d_cf_hhh_pid_tightpi_up}
         b2dd_rs = makeB2XSels(decays,'',inputs,config)
         self.lines.append(ProtoLine(b2dd_rs,1.0))
 
@@ -543,8 +545,10 @@ class B2DXBuilder(object):
         config['DZ1_MIN'] = '-1.5*mm'
         config['DZ2_MIN'] = '-1.5*mm'
         dec = ["B0 -> D0 D0"]
-        decays = {'B02D0D0FULLDST' : dec}
-        inputs = {'B02D0D0FULLDST' : self.d.d0_cf_pid_tight}
+        decays = {'B02D0D0FULLDST' : dec,
+                  'B02D0D0D02K3PiUPFULLDST' : dec}
+        inputs = {'B02D0D0FULLDST' : self.d.d0_cf_pid_tight,
+                  'B02D0D0D02K3PiUPFULLDST' : self.d.k3pi_pid_tight_up}
         b2d0d0 = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2d0d0,1.0))
    

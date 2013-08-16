@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-16 - Edmund Smith
+	- Added filtered D selections with upstream tracks in DBuilder.
+	- Added lines that use the filtered D selections in B2DXBuilder.
+	- Enabled flavour tagging for these lines.
+	M       python/StrippingSelections/Beauty2Charm_DBuilder.py
+	M       python/StrippingSelections/StrippingBeauty2Charm.py
+	M       python/StrippingSelections/Beauty2Charm_B2DXBuilder.py
+
 ! 2013-08-15 - Mika Vesterinen
  - Update to psi/phi->KsKs lines
 

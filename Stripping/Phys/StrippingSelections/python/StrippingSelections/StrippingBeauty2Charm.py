@@ -141,7 +141,9 @@ config = {
     'FlavourTagging':[ #lines for which EnableFlavourTagging should be True
     'B02D0PiPiD2HHFULLDSTBeauty2CharmLine',
     'B02D0D0FULLDSTBeauty2CharmLine',
+    'B02D0D0D02K3PiUPFULLDSTBeauty2CharmLine',
     'B02DDFULLDSTBeauty2CharmLine',
+    'B02DDUPFULLDSTBeauty2CharmLine',
     'B02DPiPiPiD2HHHFULLDSTBeauty2CharmLine',
     'B02DKPiPiD2HHHFULLDSTBeauty2CharmLine',
     'B02DKD2PhiMuNuBeauty2CharmLine',

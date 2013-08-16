@@ -89,6 +89,7 @@ class DBuilder(object):
         self.hhh_pid = [filterPID('D2HHHPID',self.hhh,config_pid)]
         self.hhh_pid_tight = [filterPID('D2HHHPIDTIGHT',self.hhh_pid,
                                         config_pid['TIGHT'])]
+        self.hh_pid_tight_up = [filterPID('D2HHPIDTIGHTUP',self.hh_up,config_pid['TIGHT'])]
         # subset decays
         oneK = "NINTREE(ABSID=='K+') == 1"
         d_cf = "(((ID=='D+') & (NINTREE(ID=='K-')==1) & (%s)) | "\
@@ -96,8 +97,11 @@ class DBuilder(object):
         ds_cf = "((NINTREE(ID=='K-')==1) & (NINTREE(ID=='K+')==1))"
         self.kpi_pid = [filterSelection('D2KPIPID',oneK,self.hh_pid)]
         self.kpi_pid_tight = [filterSelection('D2KPITIGHTPID',oneK,self.hh_pid_tight)]
+        self.kpi_pid_tight_up = [filterSelection('D2KPITIGHTPIDUP',oneK,self.hh_pid_tight_up)]
         self.k3pi = [filterSelection('D2K3PI',oneK,self.hhhh)]
+        self.k3pi_up = [filterSelection('D2K3PIUP',oneK,self.hhhh_up)]
         self.k3pi_pid = [filterPID('D2K3PIPID',self.k3pi,config_pid)]
+        self.k3pi_pid_tight_up = [filterPID('D2K3PIPIDTIGHTUP',self.k3pi_up,config_pid['TIGHT'])]
         self.d0_cf_pid = [MergedSelection('D0CFPID',
                                           RequiredSelections=self.kpi_pid+self.k3pi_pid)]
         self.pi0kpi_merged = [filterSelection('D2Pi0KPi_Merged',oneK,
@@ -134,6 +138,7 @@ class DBuilder(object):
         #Different subsets or selections for FULL DST lines
         #Different PID filtering
         self.hhh_pid_tightpi = [filterPID('D2HHHPIDTIGHTPI',self.hhh_pid,config_pid['TIGHTPI'])]
+        self.hhh_pid_tightpi_up = [filterPID('D2HHHPIDTIGHTPIUP',self.hhh_up,config_pid['TIGHTPI'])]
         self.hhh_pid_tighter = [filterPID('D2HHHPIDTIGHTER',self.hhh_pid,config_pid['TIGHTER'])]
         self.hhh_pid_special = [filterPID('D2HHHPIDSPECIAL',self.hhh,config_pid['SPECIAL'])]
         self.hhh_pid_specialpi = [filterPID('D2HHHPIDSPECIALPI',self.hhh,config_pid['SPECIALPI'])]
@@ -214,7 +219,7 @@ class DBuilder(object):
         #d_kkpi_custom = [filterSelection('Dplus2KKPiCUSTOM',"in_range(%s,MM,%s)"%(d_min,d_max),self.kkpi_custom)]
         self.d_cf_hhh_pid_tightpi = [filterSelection('Dplus2HHHCF',d_cf,self.hhh_pid_tightpi)]
         #self.d_hhh_custom = [MergedSelection('Dplus2HHHCUSTOM',RequiredSelections=d_kkpi_custom+self.d_cf_hhh_pid_tightpi)]
-        
+        self.d_cf_hhh_pid_tightpi_up = [filterSelection('Dplus2HHHCFUP',d_cf,self.hhh_pid_tightpi_up)]
         #self.d_hhh_4_B2DD_custom = [MergedSelection('D2HHH_4_B2DD_CUSTOM_Beauty2Charm',
         #                                            RequiredSelections=self.ds_hhh_pid_custom+self.d_hhh_custom)]
         self.d_hhh_4_B2DD_custom = [MergedSelection('D2HHH_4_B2DD_CUSTOM_Beauty2Charm',
@@ -222,7 +227,8 @@ class DBuilder(object):
         #for use with FULL DST D0D0 line
         self.d0_cf_pid_tight = [filterPID('D0CFPIDTIGHT',
                                           self.d0_cf_pid,config_pid['TIGHT'])]
-
+        self.d0_cf_pid_tight_up = [MergedSelection('D0CFPIDTIGHTUP',
+                                                   RequiredSelections=self.kpi_pid_tight_up+self.k3pi_pid_tight_up)]
                 
     def _makeD2X(self,name,decays,wm,up,config,extrainputs=[]):
         ''' Makes all D -> X selections.'''
