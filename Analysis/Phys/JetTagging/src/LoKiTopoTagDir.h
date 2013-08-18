@@ -61,7 +61,6 @@ namespace LoKi
       , m_dva(0)          
       , m_tinputs              ("/Event/Phys/PseudoTopoCands/Particles")
       , m_in2(0)
-      , m_MCORR(LoKi::Cuts::ONE)
       // runs ntrack seeder by default
       {
 	// Interface
@@ -97,7 +96,11 @@ namespace LoKi
     int m_in2; 
 
   private:
-     LoKi::Types::Fun m_MCORR;
+
+    void heavyVChi2Dof(const LHCb::Particle *p, double &chi2, int &dof);
+
+  
+
   public:
 
     StatusCode initialize(); // standard initialise

@@ -10,6 +10,16 @@
 
 // kernel
 #include "Kernel/IParticle2MCAssociator.h"
+
+
+
+#include "LoKi/AlgoMC.h"
+#include "LoKi/ParticleCuts.h"
+#include "LoKi/VertexCuts.h"
+#include "LoKi/MCVertexCuts.h"
+#include "LoKi/MCParticleCuts.h"
+#include "LoKi/PhysMCParticleCuts.h"
+
 // ============================================================================
 // Declaration of the Tool Factory
 DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,JetTagTruth)

@@ -4,6 +4,10 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+! 2013-08-15 - Cedric Potterat
+ - add varaibles to LoKiTopoTagDir
+ - adding a new MCPartig Truth tag
+
 !========================= JetTagging v1r1p1 2013-06-13 =========================
 
 ! 2013-06-12 - Chris Jones

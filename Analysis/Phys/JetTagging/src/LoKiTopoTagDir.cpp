@@ -1,3 +1,4 @@
+
 // $Id: LokiSVTag.cpp,v 1.1 2011-06-24 10:10:10 aphan Exp $
 
 // ============================================================================
@@ -20,7 +21,7 @@ DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,TopoTagDir)
 
 // ============================================================================
 // Standard Initialization
-StatusCode LoKi::TopoTagDir::initialize()
+  StatusCode LoKi::TopoTagDir::initialize()
 {
   if(msgLevel(MSG::VERBOSE))
     verbose() << "Initialising algorithm" << endmsg;
@@ -66,15 +67,75 @@ StatusCode LoKi::TopoTagDir::finalize()
 bool LoKi::TopoTagDir::calculateJetProperty
 (const LHCb::Particle *jet,  std::map <std::string,double> &jetWeight)
 {
+
+
+
+  
+
   StatusCode sc = StatusCode::SUCCESS;
+
+
+
+
+
+
+  std::pair<double,std::string> tmp;
+  double maxTopoBDT = -1;
+  double maxTopoR = -1;
+  double maxTopoFD = -1;
+  double maxTopoFDChi2 = -1;
+  double maxTopoPtRel = -1;
+  double maxTopoPt = -1;
+  double maxTopoPtMiss = -1;
+  double maxTopoM = -1;
+  double maxTopoMCorr = -1;
+  double maxTopoMCorrNew = -1;
+  double maxTopoCosDira = -9;
+  double maxTopoMaxDoca = -1;
+  double maxTopoHeavyChi2PerDOF = -1;
+  double maxTopoIpBPV = -1;
+  double maxTopoChi2BPV = -1;
+  double maxTopoSumPt = 0;
+  double maxTopoAlpha = -1;
+  double maxTopoP = -1;
+
+  double maxTopoPTBDT = -1;
+  double maxTopoPTR = -1;
+  double maxTopoPTFD = -1;
+  double maxTopoPTFDChi2 = -1;
+  double maxTopoPTPtRel = -1;
+  double maxTopoPTPt = -1;
+  double maxTopoPTPtMiss = -1;
+  double maxTopoPTM = -1;
+  double maxTopoPTMCorr = -1;
+  double maxTopoPTMCorrNew = -1;
+  double maxTopoPTCosDira = -9;
+  double maxTopoPTMaxDoca = -1;
+  double maxTopoPTHeavyChi2PerDOF = -1;
+  double maxTopoPTIpBPV = -1;
+  double maxTopoPTChi2BPV = -1;
+  double maxTopoPTSumPt = 0;
+  double maxTopoPTAlpha = -1;
+  double maxTopoPTP = -1;
+
+
+  double sumTopo = 0;
+  double multTopo = 0;
+
+
+
+
+
   jetWeight.clear();
 
+  LHCb::Particle::Range topos;
+
+  if(jet != NULL){
   // Set member variables
   m_Jet = jet;
   // m_JetInputs = jet->daughtersVector();
 
  
-  LHCb::Particle::Range topos;
   bool locseed = exist<LHCb::Particle::Range>( m_tinputs );
   if(!locseed){
     debug()<< "Unable to get location at '"
@@ -88,25 +149,13 @@ bool LoKi::TopoTagDir::calculateJetProperty
   }
   
 
-
-
   LHCb::Particle::Range::iterator itopo;
-
-  std::pair<double,std::string> tmp;
-  double maxTopoBDT = -1;
-  double maxTopoR = -1;
-  double maxTopoFD = -1;
-  double maxTopoPtRel = -1;
-  double maxTopoPt = -1;
-  double maxTopoM = -1;
-  double maxTopoMCorr = -1;
-  double sumTopo = 0;
-  double multTopo = 0;
 
   if(locseed){
 
+    //   std::cout<<"topo size" << topos.size() << std::endl;
 
-    const LHCb::VertexBase* JetOriVtx = m_dva->bestVertex ( jet );
+    //    const LHCb::VertexBase* JetOriVtx = m_dva->bestVertex ( jet );
 
     for(itopo = topos.begin(); itopo!=topos.end(); itopo++){
       
@@ -121,7 +170,9 @@ bool LoKi::TopoTagDir::calculateJetProperty
       const LHCb::VertexBase* evtx = mypartS->endVertex();
       const LHCb::VertexBase* oriVtx = m_dva->bestVertex ( mypartS );
 
-      if(oriVtx->key()!=JetOriVtx->key()) continue;
+
+      if((jet->endVertex()->position() - oriVtx->position()).Mag2() > 1e-4) continue;
+
 
       Gaudi::XYZVector A = jet->momentum().Vect();
       Gaudi::XYZVector B = evtx->position() - oriVtx->position();
@@ -140,34 +191,196 @@ bool LoKi::TopoTagDir::calculateJetProperty
       double distance = std::sqrt( Dphi*Dphi + (e1-e2)*(e1-e2) );
       
 
+      // std::cout<<"topo2: "<<distance << " "<<maxTopoPTCosDira<<" "<< maxTopoBDT<<std::endl;
 
 
       //  double distance = std::sqrt(deltaRFunction((mypartS)));
       if (distance < 0.5){
 	
-	double defVal = -1;
-	double topoVal = mypartS->info(9999,defVal);
-	
 	Gaudi::XYZVector B2 =  mypartS->momentum().Vect();
 	
-	//   copying code from Perp2 from ROOT
-	double tot = A.Mag2();
-	double ss = B2.Dot(A);
-	double per = B2.Mag2();
-	if(tot > 0.0) per -= ss*ss/tot;
-	if(per < 0)   per = 0;
+
+
+
+	// copying code from Perp2 from ROOT
+	//
+	// Missing Pt of the topo with respect to its flight direction
+	double tot2 = B.Mag2();
+	double ss2 = B2.Dot(B);
+	double per2 = B2.Mag2();
+	double dira = ss2/(std::sqrt(per2)*std::sqrt(tot2));
+	if(tot2 > 0.0) per2 -= ss2*ss2/tot2;
+	if(per2 < 0)   per2 = 0;
 	
-	double ptRel = std::sqrt(per);
+
+
+	double defVal = -1;
+	double topoVal = mypartS->info(9999,defVal);
+
+
+
+
+
+
+
+	if(mypartS->pt() > maxTopoPTPt){
+
+	  double  SumPt = 0;
+	  //max doca:
+	  LHCb::Particle::ConstVector daughters = mypartS->daughtersVector();
+	  int size = daughters.size();
+	  double maxDoca = 0;
+	  for(int i = 0; i < size; i++){
+	    SumPt += daughters[i]->pt();
+	    if(daughters[i]->particleID().pid() == 22) continue;
+	    for(int j = i+1; j < size; j++){
+	      if(daughters[j]->particleID().pid() == 22) continue;
+	      double doca;
+	      m_distCalc->distance(daughters[i],daughters[j],doca);
+	      if(doca > maxDoca) maxDoca = doca;
+	    }
+	  }
+
+	  
+	  
+	  double chi2 = 0; int dof = 0;
+	  double chipdof = -1;
+	  heavyVChi2Dof(mypartS,chi2,dof);
+	  if(dof > 0) chipdof= chi2/(double)dof;
+
+
+	  double ipVtx=0, chi2Vtx=0;
+	  m_distCalc->distance(mypartS, oriVtx, ipVtx, chi2Vtx);
+
+
+
+
+	  // flight distance
+	  double Fdist = 0;
+	  double FDChi2 = 0 ;
+	  m_distCalc->distance( oriVtx,evtx, Fdist, FDChi2 );
+
+
+	  //   copying code from Perp2 from ROOT
+	  //
+	  //Relative Pt of the topo cand with respect to the jet
+	  double tot = A.Mag2();
+	  double ss = B2.Dot(A);
+	  double per = B2.Mag2();
+	  if(tot > 0.0) per -= ss*ss/tot;
+	  if(per < 0)   per = 0;
 	
+	  double ptRel = std::sqrt(per);
+
+
+
+	  double topoPtMiss = std::sqrt(per2);
+
+
+	  //Corrected Mass
+	  double topoM = mypartS->momentum().M();
+	  double topoMCorr = std::sqrt((topoM*topoM)+(topoPtMiss*topoPtMiss)) + topoPtMiss;
+	  double topoP =  mypartS->momentum().P();
+	  double mcorr2    = std::sqrt((topoM*topoM) + 2*topoPtMiss*((std::sqrt(topoM*topoM+topoP*topoP))+topoPtMiss));
+	  
+	  maxTopoPTBDT = topoVal;
+	  maxTopoPTPtRel = ptRel;
+	  maxTopoPTR = distance;
+	  maxTopoPTFD = Fdist;
+	  maxTopoPTFDChi2 = FDChi2;
+	  maxTopoPTPt = mypartS->pt();
+	  maxTopoPTM = topoM;
+	  maxTopoPTPtMiss = topoPtMiss;
+	  maxTopoPTMCorr = topoMCorr;
+	  maxTopoPTMCorrNew = mcorr2;
+	  maxTopoPTCosDira = dira;
+	  maxTopoPTMaxDoca = maxDoca;
+	  maxTopoPTHeavyChi2PerDOF = chipdof;
+	  maxTopoPTIpBPV = ipVtx;
+	  maxTopoPTChi2BPV = chi2Vtx;
+	  maxTopoPTSumPt = SumPt;
+	  maxTopoPTAlpha = B.theta();
+	  maxTopoPTP = mypartS->momentum().P();
+
+	}
+
+
 	if(topoVal > maxTopoBDT){
+
+	  double  SumPt = 0;
+	  //max doca:
+	  LHCb::Particle::ConstVector daughters = mypartS->daughtersVector();
+	  int size = daughters.size();
+	  double maxDoca = 0;
+	  for(int i = 0; i < size; i++){
+	    SumPt += daughters[i]->pt();
+	    if(daughters[i]->particleID().pid() == 22) continue;
+	    for(int j = i+1; j < size; j++){
+	      if(daughters[j]->particleID().pid() == 22) continue;
+	      double doca;
+	      m_distCalc->distance(daughters[i],daughters[j],doca);
+	      if(doca > maxDoca) maxDoca = doca;
+	    }
+	  }
+
+	  
+	  
+	  double chi2 = 0; int dof = 0;
+	  double chipdof = -1;
+	  heavyVChi2Dof(mypartS,chi2,dof);
+	  if(dof > 0) chipdof= chi2/(double)dof;
+
+
+	  double ipVtx=0, chi2Vtx=0;
+	  m_distCalc->distance(mypartS, oriVtx, ipVtx, chi2Vtx);
+
+
+
+
+	  // flight distance
+	  double Fdist = 0;
+	  double FDChi2 = 0 ;
+	  m_distCalc->distance( oriVtx,evtx, Fdist, FDChi2 );
+
+
+	  // copying code from Perp2 from ROOT
+	  //
+	  // Relative Pt of the topo cand with respect to the jet
+	  double tot = A.Mag2();
+	  double ss = B2.Dot(A);
+	  double per = B2.Mag2();
+	  if(tot > 0.0) per -= ss*ss/tot;
+	  if(per < 0)   per = 0;
+	
+	  double ptRel = std::sqrt(per);
+	  double topoPtMiss = std::sqrt(per2);
+	
+
+	  //Corrected Mass
+	  double topoM = mypartS->momentum().M();
+	  double topoMCorr = std::sqrt((topoM*topoM)+(topoPtMiss*topoPtMiss)) + topoPtMiss;	  
+	  double topoP =  mypartS->momentum().P();
+	  double mcorr2    = std::sqrt((topoM*topoM) + 2*topoPtMiss*(std::sqrt(topoM*topoM+topoP*topoP)+topoPtMiss));
+	  
 	  maxTopoBDT = topoVal;
 	  maxTopoPtRel = ptRel;
 	  maxTopoR = distance;
-	  maxTopoFD = std::sqrt(B.Mag2());
+	  maxTopoFD = Fdist;
+	  maxTopoFDChi2 = FDChi2;
 	  maxTopoPt = mypartS->pt();
-	  maxTopoM = mypartS->momentum().M();
-	  // m_BPVCORRM.setVertex(JetOriVtx);
-	  //	  maxTopoMCorr = LOKI::CUTS::BPVCORRM(mypartS);
+	  maxTopoM = topoM;
+	  maxTopoPtMiss = topoPtMiss;
+	  maxTopoMCorr = topoMCorr;
+	  maxTopoMCorrNew = mcorr2;
+	  maxTopoCosDira = dira;
+	  maxTopoMaxDoca = maxDoca;
+	  maxTopoHeavyChi2PerDOF = chipdof;
+	  maxTopoIpBPV = ipVtx;
+	  maxTopoChi2BPV = chi2Vtx;
+	  maxTopoSumPt = SumPt;
+	  maxTopoAlpha = B.theta();
+	  maxTopoP = mypartS->momentum().P();
+
 	}
 
 	sumTopo+=topoVal;
@@ -176,18 +389,49 @@ bool LoKi::TopoTagDir::calculateJetProperty
       }
     }
   } 
-
+  }
 
   jetWeight["sumTopo"]=sumTopo;
   jetWeight["multTopo"]=multTopo;
+
+  jetWeight["maxTopoPTBDT"]=maxTopoPTBDT;
+  jetWeight["maxTopoPTPtRel"]=maxTopoPTPtRel;
+  jetWeight["maxTopoPTR"]=maxTopoPTR;
+  jetWeight["maxTopoPTPt"]=maxTopoPTPt;
+  jetWeight["maxTopoPTPtMiss"]=maxTopoPTPtMiss;
+  jetWeight["maxTopoPTM"]=maxTopoPTM;
+  jetWeight["maxTopoPTMCorr"]=maxTopoPTMCorr;
+  jetWeight["maxTopoPTMCorrNew"]=maxTopoPTMCorrNew;
+  jetWeight["maxTopoPTCosDira"]=maxTopoPTCosDira;
+  jetWeight["maxTopoPTFD"]=maxTopoPTFD;
+  jetWeight["maxTopoPTFDChi2"]=maxTopoPTFDChi2;
+  jetWeight["maxTopoPTMaxDoca"]=maxTopoPTMaxDoca;
+  jetWeight["maxTopoPTHeavyChi2PerDOF"]=maxTopoPTHeavyChi2PerDOF;
+  jetWeight["maxTopoPTIpBPV"]=maxTopoPTIpBPV;
+  jetWeight["maxTopoPTChi2BPV"]=maxTopoPTChi2BPV;
+  jetWeight["maxTopoPTSumPt"]=maxTopoPTSumPt;
+  jetWeight["maxTopoPTAlpha"]=maxTopoPTAlpha;
+  jetWeight["maxTopoPTP"]=maxTopoPTP;
+
   jetWeight["maxTopoBDT"]=maxTopoBDT;
   jetWeight["maxTopoPtRel"]=maxTopoPtRel;
   jetWeight["maxTopoR"]=maxTopoR;
   jetWeight["maxTopoPt"]=maxTopoPt;
+  jetWeight["maxTopoPtMiss"]=maxTopoPtMiss;
   jetWeight["maxTopoM"]=maxTopoM;
   jetWeight["maxTopoMCorr"]=maxTopoMCorr;
+  jetWeight["maxTopoMCorrNew"]=maxTopoMCorrNew;
+  jetWeight["maxTopoCosDira"]=maxTopoCosDira;
   jetWeight["maxTopoFD"]=maxTopoFD;
-  
+  jetWeight["maxTopoFDChi2"]=maxTopoFDChi2;
+  jetWeight["maxTopoMaxDoca"]=maxTopoMaxDoca;
+  jetWeight["maxTopoHeavyChi2PerDOF"]=maxTopoHeavyChi2PerDOF;
+  jetWeight["maxTopoIpBPV"]=maxTopoIpBPV;
+  jetWeight["maxTopoChi2BPV"]=maxTopoChi2BPV;
+  jetWeight["maxTopoSumPt"]=maxTopoSumPt;
+  jetWeight["maxTopoAlpha"]=maxTopoAlpha;
+  jetWeight["maxTopoP"]=maxTopoP;
+
 
   double tag_global = 0;
   if (maxTopoBDT > 0) 
@@ -207,4 +451,16 @@ bool LoKi::TopoTagDir::calculateJetProperty
     return true;
   else
     return false;
+}
+
+
+// ============================================================================
+void  LoKi::TopoTagDir::heavyVChi2Dof(const LHCb::Particle *p, double &chi2, int &dof){
+  LHCb::Particle::ConstVector daughters = p->daughtersVector();
+  int size = daughters.size();
+  if(!p->particleID().hasCharm() && !p->particleID().hasBottom()) return;
+  if(size == 0 || p->endVertex() == 0) return;
+  chi2 += p->endVertex()->chi2();
+  dof += p->endVertex()->nDoF();
+  for(int i = 0; i < size; i++) heavyVChi2Dof(daughters[i],chi2,dof);
 }
