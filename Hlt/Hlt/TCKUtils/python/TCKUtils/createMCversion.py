@@ -12,8 +12,8 @@ def createMCversion( tck, newtck = None, cas = ConfigTarFileAccessSvc() ) :
          '.*Debug.*'          : None,
          'Hlt1ODINTechnical.*': None,
          'Hlt1Lumi.*'         : None,
-         'Hlt1L0.*'           : None}
-         'Hlt1MBMicroBias.*'  : None }
+         'Hlt1L0.*'           : None,
+         'Hlt1MBMicroBias.*'  : None}
     update = { } 
     for n,v in props.iteritems() :
        v = v['AcceptFraction']
