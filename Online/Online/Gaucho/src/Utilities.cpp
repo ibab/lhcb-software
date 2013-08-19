@@ -7,6 +7,15 @@
 #include "Gaucho/Utilities.h"
 #include <string>
 #include <string.h>
+
+  void toLowerCase(std::string &s)
+  {
+    for (unsigned int i=0;i<s.size();i++)
+    {
+      s[i] = tolower(s[i]);
+    }
+  }
+
 dyn_string *Strsplit(const char *s, const char *del)
 {
   return Strsplit((char*)s, (char*)del);
