@@ -30,6 +30,7 @@ RichPmtPhotoElectricEffect::RichPmtPhotoElectricEffect(const GiGaBase* /*gigabas
   : G4VDiscreteProcess(processName, aType ),
     m_numTotPmt(std::vector<int>(2)),
     m_PmtQESourceTable(0),
+    m_PmtQEScaleFactor(1.0),
     m_PmtModuleSupFlag3(false),
     m_PmtModuleSupFlag4(false),
     m_PmtModuleSupFlag5(false),
@@ -54,6 +55,7 @@ void RichPmtPhotoElectricEffect::setPmtPhElecParam()
     //    m_PmtProperty -> setUsingPmtMagneticFieldDistortion((bool) m_UsePmtMagDistortions );
      m_PmtProperty -> setUseNominalPmtQE( (bool) m_PmtQEUsingNominalTable );
      m_PmtProperty -> SetCurQETableSourceOption ( m_PmtQESourceTable);
+     m_PmtProperty -> SetPmtQEOverallScaling( m_PmtQEScaleFactor );
      m_PmtProperty ->setActivatePmtModuleSuppressSet3(m_PmtModuleSupFlag3);
      m_PmtProperty ->setActivatePmtModuleSuppressSet4(m_PmtModuleSupFlag4);
      m_PmtProperty ->setActivatePmtModuleSuppressSet5(m_PmtModuleSupFlag5);

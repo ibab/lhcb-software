@@ -39,6 +39,7 @@ RichPmtProperties::RichPmtProperties( )
     m_PmtDBOverRideMaxQEValue(0.60),
     m_CurQEMatPathname(RichPmtQeffMatTabPropPath ),
     m_CurQETableSourceOption(0),
+    m_PmtQEScaleFactor( 1.0 ),
     m_ActivatePmtModuleSuppressSet3(false),
     m_ActivatePmtModuleSuppressSet4(false),
     m_ActivatePmtModuleSuppressSet5(false),
@@ -439,7 +440,10 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
 
 
      SmartDataPtr<TabulatedProperty> tabQE(detSvc, m_CurQEMatPathname );
-     RichPmtPropLogQE<<MSG::INFO<<" Now getting the QE from "<<m_CurQEMatPathname<<endreq;
+
+     //RichPmtPropLogQE<<MSG::INFO<<"QE source: " << m_CurQETableSourceOption << endreq;
+     RichPmtPropLogQE<<MSG::INFO<<"Now getting the QE from "<<m_CurQEMatPathname<<endreq;
+     //RichPmtPropLogQE<<MSG::INFO<<"QE overall scale factor: " << m_PmtQEScaleFactor << endreq;
 
     //  SmartDataPtr<TabulatedProperty> tabQE(detSvc, RichPmtBorosilicateQeffMatTabPropPath);
     // RichPmtPropLogQE<<MSG::INFO<<" Now getting QE from "<<RichPmtBorosilicateQeffMatTabPropPath<<endreq;    
@@ -461,13 +465,14 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
     TabulatedProperty::Table::const_iterator it;
     for (it = table.begin(); it != table.end(); it++) {
       double aPhotonEnergy= (it->first);
-      double aQeOrig      = (it->second)/100.0; // division by 100 to get from percent to prob 
-      double aQeCorrected = aQeOrig;
+      double aQeOrig      = (it->second)/100.0; // division by 100 to get from percent to prob
 
       // if( (aPhotonEnergy >= (double) m_MinPhotonEnergyInRICH) && 
           //	  (aPhotonEnergy <= (double) m_MaxPhotonEnergyInRICH ) ) {
           //	aQeCorrected = getPmtCorrectedQEFromPhotonEnergy(aPhotonEnergy, aQeOrig);
           // }
+
+      double aQeCorrected = aQeOrig * m_PmtQEScaleFactor ;
 
       double aPhotonEnergyIneV = aPhotonEnergy*1000000.0; // mult to get from MeV to eV
       EphotSingle.push_back(aPhotonEnergyIneV);

@@ -374,7 +374,7 @@ void CherenkovG4HistoFillSet4::FillRichG4HistoSet4(CkvG4Hit* acHit,
     if(hCkvRich1GasResEmisD4)hCkvRich1GasResEmisD4->fill(aCkvRecD4E4-aCkvRecD4E1);
 
     if( hRich1GasResEmisAsTheta ) hRich1GasResEmisAsTheta->fill(TrkTheta, aCkvRecD4E4-aCkvRecD4E1 );
-    if( hRich1GasResEmisAsTrPhi ) hRich1GasResEmisAsTheta->fill(TrkPhi,   aCkvRecD4E4-aCkvRecD4E1 );
+    if( hRich1GasResEmisAsTrPhi ) hRich1GasResEmisAsTrPhi->fill(TrkPhi,   aCkvRecD4E4-aCkvRecD4E1 );
 
      if(aPrimTrack) {
        if(hCkvRich1GasResEmisD4Prim)  hCkvRich1GasResEmisD4Prim->fill( aCkvRecD4E4-aCkvRecD4E1);   

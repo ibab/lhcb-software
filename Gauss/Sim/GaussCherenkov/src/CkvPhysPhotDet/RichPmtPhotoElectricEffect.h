@@ -130,7 +130,10 @@ public:
   {m_PmtQEUsingNominalTable=apmtqetableoption;}  
   G4bool PSFPreDc06Flag() {return m_PSFPreDc06Flag;}
   G4bool PmtQEUsingNominalTable()  {  return m_PmtQEUsingNominalTable;}
-  void  SetPmtQESourceTable(int asou);
+
+  void SetPmtQESourceTable(int asou);
+  void SetPmtQEOverallScaling( double scaleFactor );
+
   void setPmtModuleSupFlag3(G4bool aFlag3) 
   { m_PmtModuleSupFlag3=aFlag3;}
   void setPmtModuleSupFlag4(G4bool aFlag4)
@@ -180,6 +183,7 @@ private:
   G4bool m_PmtQEUsingNominalTable; // if true using old Nominal QE Table for all pmts from sqldddb
                                    // if false using the new measured QE tables for the Pmts. 
   G4int m_PmtQESourceTable;
+  double m_PmtQEScaleFactor;
 
   G4bool m_PmtModuleSupFlag3;
   G4bool m_PmtModuleSupFlag4;
@@ -256,6 +260,11 @@ inline void RichPmtPhotoElectricEffect::setMaxZHitInRich1(double MaxZHitWithinRi
 inline void RichPmtPhotoElectricEffect::SetPmtQESourceTable(int asou) 
 {  
   m_PmtQESourceTable=asou;
+}
+
+inline void RichPmtPhotoElectricEffect::SetPmtQEOverallScaling(double scaleFactor) 
+{  
+  m_PmtQEScaleFactor = scaleFactor ;
 }
 
 

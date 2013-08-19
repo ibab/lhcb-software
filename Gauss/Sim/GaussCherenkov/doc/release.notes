@@ -4,6 +4,11 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, 
 !               etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
+
+! 2013-08-19 - Jibo He
+ - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties  
+  . Added option to scale overall PMT QE 
+
 ! 2013-08-09 - Sajan Easo
   - Fix couple of compilation warnings in CherenkovG4CkvRecon.cpp which seems to have occured in
     latest update.
