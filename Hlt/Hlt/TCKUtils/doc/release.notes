@@ -6,6 +6,8 @@
 !-----------------------------------------------------------------------------
 
 
+!========================= TCKUtils v1r12 2013-08-19 =========================
+
 ! 2013-08-19 - Eric van Herwijnen
  - added createMCversion.py to python/TCKUtils so it can be invoked from TCKsh
 
