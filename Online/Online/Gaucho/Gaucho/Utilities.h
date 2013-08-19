@@ -43,9 +43,9 @@ namespace
       p = 0;
     }
   }
-
+extern "C" {
   void toLowerCase(std::string &s);
-
+}
   template <class T> struct ObjectLock {
     T* m_obj;
     ObjectLock(T* a) : m_obj(a) { m_obj->Lock(); }
