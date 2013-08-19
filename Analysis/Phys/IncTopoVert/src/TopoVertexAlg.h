@@ -93,7 +93,7 @@ private:
   std::string m_trackVertexerToolType; ///< Type of the track vertexer Tool
 
   bool isMatched(const  LHCb::Particle* P);
-  const double hasPartancestor(const LHCb::MCParticle*, const int );
+  double hasPartancestor(const LHCb::MCParticle*, const int );
 
   //trigger
   std::string m_HLT1Loc;

@@ -92,9 +92,13 @@ std::vector<const LHCb::Track*> & TrackTypeFilterVtxTopoTracksTool::filteredTrac
 std::vector<const LHCb::Track*> & TrackTypeFilterVtxTopoTracksTool::filteredTracks(std::vector<const LHCb::Track*> input_tracks,Tuples::Tuple* tuple)
 {
   m_tracks.clear();
+  tuple =0;
+  if (tuple) {
+  }
+  
   if (input_tracks.size()==0) {
     debug()<<"No input tracks"<<endmsg;
-    return input_tracks;
+    return m_tracks;
   }
 
 

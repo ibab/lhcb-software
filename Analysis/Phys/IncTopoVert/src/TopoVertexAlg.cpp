@@ -161,7 +161,7 @@ StatusCode TopoVertexAlg::initialize() {
 //=============================================================================
 StatusCode TopoVertexAlg::execute() {
   //if ( !exist<Particle::Range>( "/Event/AllStreams/Phys/B2XTau_TauTau_TOSLine/Particles" ) ) return  StatusCode::SUCCESS;
-  bool run_ZVTOP = true;
+  //  bool run_ZVTOP = true;
  
   
   //pepare ntuple
@@ -360,12 +360,12 @@ return StatusCode::SUCCESS;
   }
 
 
-const double TopoVertexAlg::hasPartancestor(const MCParticle*imc, int part)
+double TopoVertexAlg::hasPartancestor(const LHCb::MCParticle*imc, const int part)
 {
   //this function returns +p^2 if the particle has a ancestor=part (based on MC truth) else itreturns  -p^2
   if(imc->mother()) {
     
-    const MCParticle*mc_mom = imc->mother();
+    const LHCb::MCParticle*mc_mom = imc->mother();
     if( (mc_mom->particleID()).pid() == part ){
       return pow(mc_mom->p()*mc_mom->p(),0.5);
     }

@@ -12,7 +12,7 @@
  *   different directions disposed as to form a regular polyhedra and finally walk in the
  *   direction in which the vertex function increases the most.
  *
- *  @author Julien Cogan and Mathieu Perrin-Terrin
+ *  @author Giampiero Mancinelli, Mathieu Perrin-Terrin
  *  @date   2012-10-16
  */
 

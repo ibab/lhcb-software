@@ -39,6 +39,9 @@ FilterVtxTopoTracksTool::~FilterVtxTopoTracksTool() {}
 std::vector<const LHCb::Track*> & FilterVtxTopoTracksTool::filteredTracks(Tuples::Tuple* tuple)
 {
   m_tracks.clear();
+  tuple = 0;
+  if (tuple) {
+  }
   
   LHCb::Tracks* trackContainer = get<LHCb::Tracks*>( m_inputTrackLocation );
   m_tracks.reserve(trackContainer->size());

@@ -76,7 +76,7 @@ StatusCode MCFilterVtxTopoTracksTool::initialize() {
 std::vector<const LHCb::Track*> & MCFilterVtxTopoTracksTool::filteredTracks(Tuples::Tuple* tuple)
 {
   m_tracks.clear();
-  bool AllRec = true;
+  //  bool AllRec = true;
   int Reconstructed = -1;
   debug()<<"Tool "<<name()<<endmsg;
   //Get the MC particle form the TES and the find the one corresponding to the decay
@@ -106,7 +106,7 @@ std::vector<const LHCb::Track*> & MCFilterVtxTopoTracksTool::filteredTracks(Tupl
       debug()<<"No MC->track link found, NO TRACK RETURNED!   MC Part Ancestors :  "<<endmsg;
       Reconstructed = 0;
       if( msgLevel( MSG::DEBUG ) ) m_MCDecayPrinter->printAncestor(*i_MCPart);
-      AllRec = false;
+      //      AllRec = false;
       ++counter("Missing MC->track link "+name());
       continue;
     }

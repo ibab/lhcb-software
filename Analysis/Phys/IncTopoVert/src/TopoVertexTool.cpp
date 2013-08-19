@@ -92,11 +92,16 @@ StatusCode TopoVertexTool::initialize()
 StatusCode TopoVertexTool::findVertices(std::vector<const LHCb::Track*> & tracks,
                                         std::vector<const LHCb::Track*> & vTr, int* n_sig_track_step) 
 {
+  if (n_sig_track_step){
+  }
+  
   setVertexFunctionTracks(vTr);
   return findVertices(tracks);
 }
 StatusCode TopoVertexTool::findVertices(std::vector<const LHCb::Particle*> & particles, int* n_sig_track_step) 
 {
+  if (n_sig_track_step){
+  }
   std::vector<const LHCb::Track*> tracks(particles.size());
   for (std::vector<const LHCb::Particle*>::iterator ipart=particles.begin(); ipart<particles.end();++ipart){
     const LHCb::ProtoParticle * proto = (*ipart)->proto();
@@ -109,8 +114,10 @@ StatusCode TopoVertexTool::findVertices(std::vector<const LHCb::Particle*> & par
 StatusCode TopoVertexTool::findVertices(std::vector<const LHCb::Particle*> & particles,
                                         std::vector<const LHCb::Track*> & vTr, int* n_sig_track_step) 
 {
-  setVertexFunctionTracks(vTr);
-  return findVertices(particles);
+  if (n_sig_track_step){
+  }
+    setVertexFunctionTracks(vTr);
+    return findVertices(particles);
 }
 
 StatusCode TopoVertexTool::findVertices(std::vector<const LHCb::Track*> & tracks, int* n_sig_track_step) 

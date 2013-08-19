@@ -78,7 +78,7 @@ std::vector<const LHCb::Track*> & IpsFilterVtxTopoTracksTool::filteredTracks(std
   m_tracks.clear();
   if (input_tracks.size()==0) {
     debug()<<"No input tracks"<<endmsg;
-    return input_tracks;
+    return m_tracks;
   }
 
   LHCb::RecVertex::Container* primary_vertices = NULL;  

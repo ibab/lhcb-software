@@ -255,7 +255,6 @@ double VertexFunctionTool::computeSumGaussTubeAt(Gaudi::XYZPoint & P)
   //====================================================================
   double CpC=0  ;
   double SumGaussT=0  ;
-  double SumGaussTSquared=0  ;
   int index =0;
   const LHCb::VertexBase* vv = new LHCb::VertexBase(P);
   

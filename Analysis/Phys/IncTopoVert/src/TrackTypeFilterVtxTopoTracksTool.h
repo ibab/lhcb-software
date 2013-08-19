@@ -32,7 +32,7 @@ public:
 
   std::vector<const LHCb::Track*> & filteredTracks(Tuples::Tuple* tuple = NULL);
   std::vector<const LHCb::Track*> & filteredTracks(std::vector<const LHCb::Track*> input_tracks, Tuples::Tuple* tuple = NULL);
-  void SetParam(double p){
+  void SetParam(double){
   };
 
   virtual ~TrackTypeFilterVtxTopoTracksTool( ); ///< Destructor

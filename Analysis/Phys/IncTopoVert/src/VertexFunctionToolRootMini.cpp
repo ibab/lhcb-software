@@ -41,9 +41,9 @@ void VertexFunctionToolRootMini::computeValueMax(LHCb::RecVertex & V, Gaudi::XYZ
   // fitted postion. It uses ROOT standard minimizer.
   //====================================================================
 
-  char* minName = "Minuit2";
-  char* algoName = "";
-  int randomSeed = -1;
+  const char* minName = "Minuit2";
+  const char* algoName = "";
+  //  int randomSeed = -1;
   ROOT::Math::Minimizer* min = 
     ROOT::Math::Factory::CreateMinimizer(minName, algoName);
   min->SetMaxFunctionCalls(m_max_finder_max_iteration); // for Minuit/Minuit2 
