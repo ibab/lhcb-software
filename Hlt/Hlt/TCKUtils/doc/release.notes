@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2013-08-19 - Eric van Herwijnen
+ - added createMCversion.py to python/TCKUtils so it can be invoked from TCKsh
+
 !========================= TCKUtils v1r11p1 2013-04-09 =========================
 ! 2013-03-25 - Rob Lambert
  - Print more details of given exceptions
