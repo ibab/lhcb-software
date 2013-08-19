@@ -1,5 +1,5 @@
 package  GauchoAppl
-version  v1r10
+version  v1r11
 
 branches GauchoAppl src cmt doc
 
