@@ -3,11 +3,14 @@
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
 
+!========================= PhysEvent v11r22 2013-08-19 =========================
+
 ! 2013-08-14 - Albert Puig
  - Added 5 new ExtraInfo variables related to the vertex isolation, starting
    on number 7000.
 
 !========================= PhysEvent v11r21 2013-07-17 =========================
+
 ! 2013-07-13 - Stefania Vecchi
  - Changed the info FlavourTaggingIndex-->FlavourTaggingIPPUs, FlavourTaggingTaggerID
 
@@ -16,6 +19,7 @@
    which are redoundant
  - Added two new Tagger types (OS_nnetKaon and SS_nnetKaon) for two new taggers
  - Dedicate FlavourTaggingIndex=8000 to store FTagging information for private use
+
 !========================= PhysEvent v11r20 2013-06-03 =========================
 ! 2012-05-03 - Chris Jones
  - Change the data members of the Flavour tagging classes, to reduce their
