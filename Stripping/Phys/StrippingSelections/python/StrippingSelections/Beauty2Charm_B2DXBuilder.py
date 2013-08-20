@@ -111,6 +111,10 @@ class B2DXBuilder(object):
         self._makeB2D0HHH('D2HHPID',self.d.hh_pid)   # B+- -> D0(HH)  H+H-H+
         self._makeB2D0HHH('D2KSHHDD',self.d.kshh_dd)
         self._makeB2D0HHH('D2KSHHLL',self.d.kshh_ll)
+        #lines going to full dst: B+- -> D0(Kpi)3pi and B+- -> D0(K3pi)pi
+        self._makeB2D0HHH_FULLDST('D2HHTIGHT',self.d.kpi_pid_tighter1_narrow)
+        self._makeB2D0Pi('D2HHHHTIGHT',self.d.k3pi_pid_tighter1_narrow)
+        
         # B -> D(HHH) 3h
         self._makeB02DHHH('D2HHHPID',self.d.hhh_pid)   # B+- -> D(HHH)  H+H-H+
         #Tighter selection Full DST lines
@@ -311,6 +315,15 @@ class B2DXBuilder(object):
             inputs[tag%'K'] = d2x+self.topoKaons
         b2d0h = makeB2XSels(decays,dname,inputs,self.config,useIP)
         self.lines.append(ProtoLine(b2d0h,1.0))
+
+    def _makeB2D0Pi(self,dname,d2x,useIP=True):
+        '''Makes RS B+ -> D0 h+ (h=pi,K) + c.c.'''
+        tag = 'B2D0%s'
+        if not useIP: tag += 'NoIP'
+        decays = {tag%'Pi': ["B+ -> D0 pi+","B- -> D0 pi-"]}
+        inputs = {tag%'Pi': d2x+self.topoPions}
+        b2d0h = makeB2XSels(decays,dname,inputs,self.config,useIP)
+        self.lines.append(ProtoLine(b2d0h,1.0))
         
     def _makeB02D0KS(self,dname,d2x,ks):
         '''Makes B0 -> D0 KS'''
@@ -485,6 +498,17 @@ class B2DXBuilder(object):
                   'B2D0KPiPi' : ["B+ -> D0 K_1(1270)+","B- -> D0 K_1(1270)-"],
                   'B2D0KKPi':   ["B+ -> D0 a_1(1260)+","B- -> D0 a_1(1260)-"]}
         inputs = {'B2D0PiPiPi': d2x+pipipi,'B2D0KPiPi': d2x+kpipi, 'B2D0KKPi': d2x+kkpi}
+        b2d03h = makeB2XSels(decays,dname,inputs,self.config)
+        self.lines.append(ProtoLine(b2d03h,1.0))
+
+    def _makeB2D0HHH_FULLDST(self,dname,d2x):
+        '''Makes RS B+ -> D0 h+h-h+ (h=pi,K) + c.c.'''
+        config = deepcopy(self.config)
+        config['AM_MAX'] = '5500*MeV'
+        config['AM_MIN'] = '5000*MeV'
+        pipipi = self.hhh.pipipi_tighterpi
+        decays = {'B2D0PiPiPi': ["B+ -> D0 a_1(1260)+","B- -> D0 a_1(1260)-"]}
+        inputs = {'B2D0PiPiPi': d2x+pipipi}
         b2d03h = makeB2XSels(decays,dname,inputs,self.config)
         self.lines.append(ProtoLine(b2d03h,1.0))
 

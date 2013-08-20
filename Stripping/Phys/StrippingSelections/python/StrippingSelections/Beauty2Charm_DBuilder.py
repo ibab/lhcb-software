@@ -97,10 +97,19 @@ class DBuilder(object):
         ds_cf = "((NINTREE(ID=='K-')==1) & (NINTREE(ID=='K+')==1))"
         self.kpi_pid = [filterSelection('D2KPIPID',oneK,self.hh_pid)]
         self.kpi_pid_tight = [filterSelection('D2KPITIGHTPID',oneK,self.hh_pid_tight)]
+        self.kpi_pid_tighter1 = [filterPID('D2KPITIGHTER1PID',self.kpi_pid,config_pid['TIGHTER1'])]
+        
+        #d0 narrow mass window +-40MeV
+        d0_narrow_min,d0_narrow_max = self._massWindow('D0narrow')
+
+        self.kpi_pid_tighter1_narrow = [filterSelection('D2KPITIGHTER1PIDNARROWMW','in_range(%s,MM,%s)'%(d0_narrow_min,d0_narrow_max),self.kpi_pid_tighter1)]
         self.kpi_pid_tight_up = [filterSelection('D2KPITIGHTPIDUP',oneK,self.hh_pid_tight_up)]
         self.k3pi = [filterSelection('D2K3PI',oneK,self.hhhh)]
         self.k3pi_up = [filterSelection('D2K3PIUP',oneK,self.hhhh_up)]
         self.k3pi_pid = [filterPID('D2K3PIPID',self.k3pi,config_pid)]
+        self.k3pi_pid_tight = [filterPID('D2K3PIPIDTIGHT',self.k3pi,config_pid['TIGHT'])]
+        self.k3pi_pid_tighter1 = [filterPID('D2K3PIPIDTIGHTER1',self.k3pi,config_pid['TIGHTER1'])]
+        self.k3pi_pid_tighter1_narrow = [filterSelection('D2K3PIPIDTIGHTER1NARROWMW','in_range(%s,MM,%s)'%(d0_narrow_min,d0_narrow_max),self.k3pi_pid_tighter1)]
         self.k3pi_pid_tight_up = [filterPID('D2K3PIPIDTIGHTUP',self.k3pi_up,config_pid['TIGHT'])]
         self.d0_cf_pid = [MergedSelection('D0CFPID',
                                           RequiredSelections=self.kpi_pid+self.k3pi_pid)]
@@ -253,6 +262,9 @@ class DBuilder(object):
         elif which == 'D0wide' :
             min = 1864.84 - dm - 150.
             max = 1864.84 + dm + 150.
+        elif which == 'D0narrow' :
+            min = 1864.84 - dm + 60.
+            max = 1864.84 + dm - 60.
         else:
             min = 1869.62 - dm # D+ - dm
             max = 1968.49 + dm # Ds+ + dm

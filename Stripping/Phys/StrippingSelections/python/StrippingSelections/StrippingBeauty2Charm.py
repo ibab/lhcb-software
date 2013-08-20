@@ -125,6 +125,9 @@ config = {
     'TIGHTER' : {    'P'  : {'PIDp_MIN' : 0},
                      'PI' : {'PIDK_MAX' : 10},
                      'K'  : {'PIDK_MIN' : 0}},
+    'TIGHTER1' : {    'P'  : {'PIDp_MIN' : 0},
+                     'PI' : {'PIDK_MAX' : 10},
+                     'K'  : {'PIDK_MIN' : -1}},                      
     'TIGHTER2' : {    'P'  : {'PIDp_MIN' : 5},
                       'PI' : {'PIDK_MAX' : 10},
                       'K'  : {'PIDK_MIN' : 0}},
@@ -175,7 +178,9 @@ config = {
     'B02DDWSBeauty2CharmLine',
     'B02D0PPbarD2HHBeauty2CharmLine',
     'B02D0PPbarWSD2HHBeauty2CharmLine',
-    'B2D0DBeauty2CharmLine'
+    'B2D0DBeauty2CharmLine',
+    'B2D0PiPiPiD2HHTIGHTBeauty2CharmLine',
+    'B2D0PiD2HHHHTIGHTBeauty2CharmLine'
     ],
     '2TOPO' : {'ANGLE_MIN': (2/57.),'M_MIN':19000,'DPHI_MIN':0},
     'BB' : {'ADDSUMPT':0,'COSANGLE_MAX':0.99,'COSDPHI_MAX':0,'M_MIN':0,'MAXPT_MIN': 4000},
