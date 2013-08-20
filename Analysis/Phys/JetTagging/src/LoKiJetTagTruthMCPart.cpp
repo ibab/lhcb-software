@@ -305,7 +305,6 @@ bool LoKi::JetTagTruthMCPart::calculateJetProperty
   std::map<int,double>::iterator imb2;
 
   double  minR = 10;
-  double  minR04 = 10;
   int  minRKey = -1;
   int  minRKey04 = -1;
   for(imb = BR.begin(); imb != BR.end(); ++imb){
