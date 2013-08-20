@@ -164,9 +164,10 @@ bool DecayTreeTupleBase::initializeDecays( const bool isMC )
   if( !m_decays.empty() )
   {
     info() << "Explicit sub decays :" << m_decays.size() << endreq;
-    for( int i=0; i<(int)m_decays.size(); ++i )
+    for ( std::vector<ITupleToolDecay*>::const_iterator di = m_decays.begin();
+          di != m_decays.end(); ++di )
     {
-      m_decays[i]->printInfo();
+      (*di)->printInfo();
     }
   }
   else
@@ -182,13 +183,17 @@ std::vector<std::string> DecayTreeTupleBase::getEventTools() const
   std::vector<std::string> ret;
   ret.reserve( m_eTools.size() );
   for ( std::vector<IEventTupleTool*>::const_iterator it = m_eTools.begin();
-        m_eTools.end() != it; ++it ) { ret.push_back( (*it)->type() ); }
+        m_eTools.end() != it; ++it ) 
+  {
+    ret.push_back( (*it)->type() ); 
+  }
   return ret;
 }
 //=============================================================================
 //=============================================================================
 // get daughters
-LHCb::MCParticle::ConstVector DecayTreeTupleBase::daughtersVector(const LHCb::MCParticle* d) const
+LHCb::MCParticle::ConstVector 
+DecayTreeTupleBase::daughtersVector(const LHCb::MCParticle* d) const
 {
   if ( !d ) Exception("NULL MCParticle");
   LHCb::MCParticle::ConstVector dau ;
@@ -230,10 +235,11 @@ bool DecayTreeTupleBase::checkUnicity() const
 {
   // check the name unicity
   std::set<std::string> names;
-  for( int k=0; k<(int)m_parts.size(); ++k )
+  for ( std::vector<Decays::OnePart*>::const_iterator iP = m_parts.begin();
+        iP != m_parts.end(); ++iP )
   {
-    std::string n = m_parts[k]->headName();
-    if( names.count( n )>0 )
+    const std::string n = (*iP)->headName();
+    if ( names.count(n) > 0 )
     {
       Error("You are using two times the name " + n
             + " for your tuple branches.").ignore();
@@ -421,9 +427,11 @@ bool DecayTreeTupleBase::getDecayMatches( const MCParticle::ConstVector& pool
 // Get branch name for given particle
 std::string DecayTreeTupleBase::getBranchName( const std::string& realname ) const
 {
-  if( m_useLabName )
-    return std::string("lab")
-      + boost::lexical_cast<std::string>( m_parts.size() );
+  if ( m_useLabName )
+  {
+    return ( std::string("lab") +
+             boost::lexical_cast<std::string>( m_parts.size() ) );
+  }
 
   std::string name = Decays::escape( realname ), buffer = name;
 
@@ -433,9 +441,10 @@ std::string DecayTreeTupleBase::getBranchName( const std::string& realname ) con
   do
   {
     flag = false;
-    for( int k = 0; k<(int)m_parts.size(); ++k )
+    for ( std::vector<Decays::OnePart*>::const_iterator iP = m_parts.begin();
+          iP != m_parts.end(); ++iP )
     {
-      if ( buffer == m_parts[k]->headName() )
+      if ( buffer == (*iP)->headName() )
       {
         flag = true;
         break;
