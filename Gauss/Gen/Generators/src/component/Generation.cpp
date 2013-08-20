@@ -324,6 +324,9 @@ StatusCode Generation::execute() {
 StatusCode Generation::finalize() {
   using namespace GenCounters ;
   debug( ) << "==> Finalize" << endmsg ;
+  // Add the event type number to the log file
+  m_xmlLogTool -> addEventType( m_eventType ) ;
+  
   // Print the various counters
   if ( 0 != m_pileUpTool ) { m_pileUpTool -> printPileUpCounters( ) ; }
 

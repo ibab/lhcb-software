@@ -78,14 +78,14 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
           // choose randomly one particle and force the decay
           hasFlipped = false ;
           isInverted = false ;
-	  hasFailed  = false ;
+          hasFailed  = false ;
           HepMC::GenParticle * theSignal =
             chooseAndRevert( theParticleList , isInverted , hasFlipped , hasFailed ) ;
-	  if ( hasFailed ) {
-	    HepMCUtils::RemoveDaughters( theSignal ) ;
-	    Error( "Skip event" ) ;
-	    return false ;
-	  }
+          if ( hasFailed ) {
+            HepMCUtils::RemoveDaughters( theSignal ) ;
+            Error( "Skip event" ) ;
+            return false ;
+          }
 
           theParticleList.clear() ;
           theParticleList.push_back( theSignal ) ;
@@ -103,7 +103,7 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
                                                theGenCollision ) ;
             
             if ( passCut && ( ! theParticleList.empty() ) ) {
-              m_nEventsAfterCut++ ;
+              if ( ! isInverted ) m_nEventsAfterCut++ ;
               
               if ( isInverted ) ++m_nInvertedEvents ;
               

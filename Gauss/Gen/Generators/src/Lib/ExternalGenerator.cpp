@@ -18,6 +18,7 @@
 #include "Generators/IProductionTool.h"
 #include "Generators/LhaPdf.h"
 #include "Generators/StringParse.h"
+#include "Generators/ICounterLogFile.h"
 #include "GenEvent/HepMCUtils.h"
 
 //-----------------------------------------------------------------------------
@@ -34,8 +35,9 @@ ExternalGenerator::ExternalGenerator( const std::string& type,
                                       const IInterface* parent )
   : GaudiTool ( type, name , parent ) , 
     m_productionTool( 0 ) ,
-    m_decayTool( 0 ) , 
+    m_decayTool( 0 ) ,
     m_cutTool  ( 0 ) , 
+    m_xmlLogTool( 0 ) ,
     m_ppSvc    ( 0 ) { 
     m_defaultLhaPdfSettings.clear() ;
     declareInterface< ISampleGenerationTool >( this ) ;
@@ -109,6 +111,9 @@ StatusCode ExternalGenerator::initialize( ) {
 
   if ( 0 != m_productionTool ) 
     m_productionTool -> initializeGenerator();
+
+  // obtain the log tool
+  m_xmlLogTool = tool< ICounterLogFile >( "XmlCounterLogFile" ) ;
 
   // now debug printout of Production Tool 
   // has to be after all initializations to be sure correct values are printed
@@ -338,6 +343,11 @@ StatusCode ExternalGenerator::finalize( ) {
   if ( 0 != m_productionTool ) release( m_productionTool ) ;
   if ( 0 != m_cutTool ) release( m_cutTool ) ;
   if ( 0 != m_ppSvc ) release( m_ppSvc ) ;
+
+  // set the name of the method
+  m_xmlLogTool -> addMethod( this -> name() ) ;
+  // set the name of the generator
+  m_xmlLogTool -> addGenerator( m_hepMCName ) ;
 
   return GaudiTool::finalize() ;
 }

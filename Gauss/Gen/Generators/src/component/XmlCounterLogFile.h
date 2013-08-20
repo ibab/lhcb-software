@@ -47,9 +47,19 @@ public:
                                 const unsigned int number , 
                                 const double value ) ;
 
+  virtual void addEventType( const unsigned int evType ) ;
+
+  /// Add the Gauss version
+  virtual void addGaussVersion( const std::string & version ) ;
+
+  virtual void addMethod( const std::string & type ) ;
+
+  virtual void addGenerator( const std::string & generator ) ;
+
 protected:
 
 private:
+  std::string     m_version ;
   std::string     m_fileName ;
   std::ofstream   m_file ;
 
