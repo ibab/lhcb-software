@@ -317,7 +317,6 @@ int NamedDecayTreeList::makeKsPiPiList(){
 
   //  bool dbThis=false;
   DecayTree* dk=0;
-  DecayTree* a1=0;
 
   // Ks sigma_1
   dk = new DecayTree(421);
