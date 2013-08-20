@@ -207,6 +207,7 @@ import StrippingBu2K1MuMu
 import StrippingBu2MuNu
 
 import StrippingDstarD2hhpi0
+import StrippingDstarD0ToHHPi0
 import StrippingD2XGamma
 
 import StrippingB2HHBDT
