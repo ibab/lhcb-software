@@ -41,15 +41,13 @@ DECLARE_TOOL_FACTORY( TupleToolDecay )
     , m_dkFinder(NULL)
     , m_mcdkFinder(NULL)
     , m_isMC(false)
-    , m_useLoKiDecayFinders(false)
     , m_mcdecayTree( Decays::Trees::Invalid_<const LHCb::MCParticle*>() )
-    , m_decayTree( Decays::Trees::Invalid_<const LHCb::Particle*>() )
+    , m_decayTree  ( Decays::Trees::Invalid_<const LHCb::Particle*>()   )
 {
   declareInterface<ITupleToolDecay>(this);
   declareProperty( "ToolList", m_stufferList );
   declareProperty( "InheritTools", m_inheritTools = true );
-
-  declareProperty( "UseLoKiDecayFinders", m_useLoKiDecayFinders = false );
+  declareProperty( "UseLoKiDecayFinders", m_useLoKiDecayFinders = true );
 }
 
 //=============================================================================

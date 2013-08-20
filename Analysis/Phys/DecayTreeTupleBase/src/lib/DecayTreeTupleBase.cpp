@@ -27,20 +27,16 @@ DecayTreeTupleBase::DecayTreeTupleBase( const std::string& name,
   : DaVinciTupleAlgorithm ( name , pSvcLocator )
   , m_mcdkFinder          ( NULL               )
   , m_dkFinder            ( NULL               )
-  , m_useLoKiDecayFinders ( false              )
   , m_mcdecayTree         ( Decays::Trees::Invalid_<const LHCb::MCParticle*>() )
   , m_decayTree           ( Decays::Trees::Invalid_<const LHCb::Particle*>() )
 {
   declareProperty( "TupleName", m_tupleName = "" );
-
   declareProperty( "Branches", m_decayMap, "Branches with other tools" );
   declareProperty( "Decay", m_headDecay, "decay descriptor" );
   declareProperty( "UseLabXSyntax", m_useLabName = false, "Use labX syntax" );
-
   declareProperty( "UseToolNameForBranchName", m_tupleNameAsToolName = true );
   declareProperty( "RevertToPositiveID", m_revertToPositiveID = true );
-
-  declareProperty( "UseLoKiDecayFinders", m_useLoKiDecayFinders = false );
+  declareProperty( "UseLoKiDecayFinders", m_useLoKiDecayFinders = true );
 }
 
 //=============================================================================
@@ -116,7 +112,7 @@ bool DecayTreeTupleBase::initializeDecays( const bool isMC )
         return false;
       }
       m_decayTree = decaytool->tree(m_headDecay);
-      if ( ! m_decayTree ) {
+      if ( !m_decayTree ) {
         Error( "Unable to decode/parse decay descriptor '" + m_headDecay + "'." ).ignore();
         return false;
       }
@@ -152,10 +148,14 @@ bool DecayTreeTupleBase::initializeDecays( const bool isMC )
   {
     if (msgLevel(MSG::DEBUG)) debug() << "Try now to instanciate " << mit->first << endreq;
     ITupleToolDecay * m = tool<ITupleToolDecay>( "TupleToolDecay", mit->first, this );
-    Gaudi::Utils::setProperty(m, "UseLoKiDecayFinders", useLoKiDecayFinders()).ignore();
+    if ( !Gaudi::Utils::setProperty(m,"UseLoKiDecayFinders",useLoKiDecayFinders()) )
+    {
+      Error( "Failed to set tool property 'UseLoKiDecayFinders'" ).ignore();
+      return false;
+    }
     if( !m->initializeDecay( mit->second, isMC ) )
     {
-      Error( "Cannot initialize '" + mit->first + "' branch properly, skipping it." );
+      Error( "Cannot initialize '" + mit->first + "' branch properly, skipping it." ).ignore();
       continue;
     }
     m_decays.push_back( m );
