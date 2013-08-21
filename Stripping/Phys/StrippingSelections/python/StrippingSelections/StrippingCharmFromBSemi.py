@@ -2,6 +2,7 @@
 Module for selecting charm decays from semileptonic B decays.
 Following decays are included:
 * D0->KsHH (also Dstar)
+* D0->KsPi0HH (also Dstar)
 * D0->Pi0HH (also Dstar)
 * D0->hhhh (also Dstar)
 * D0->KsKs (also Dstar)
@@ -91,6 +92,11 @@ confdict = {
     ,"PhotonCL"         : 0.25   # Confidence level for Pi0 photons
     ,"D02HHPi0AMassWin" : 220  # MeV (mass window for combination)
     ,"D02HHPi0MassWin"  : 210  # MeV (mass window after vertex fit)
+    ,"D02KSHHPi0AMassWin" : 220  # MeV (mass window for combination)
+    ,"D02KSHHPi0MassWin"  : 210  # MeV (mass window after vertex fit)
+    ,"D02KSHHPi0_D0PTComb"	: 1000 # MeV (PT of D0 combination)
+    ,"D02KSHHPi0_D0PT"	: 1000 # MeV (PT of D0 combination)
+    ,"D02KSHHPi0_PTSUMLoose"  : 1000 # MeV (sum PT of D0 daughters)
     ,"D02HHPi0DocaCut"  : 6.0    # mm
     ,"Dstar_Chi2"       :  8.0 ## unitless
     ,"Dstar_SoftPion_PIDe" : 2. ## unitless
@@ -163,6 +169,11 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         ,"PhotonCL"
         ,"D02HHPi0AMassWin"
         ,"D02HHPi0MassWin"
+        ,"D02KSHHPi0AMassWin"
+        ,"D02KSHHPi0MassWin"
+        ,"D02KSHHPi0_D0PTComb"
+        ,"D02KSHHPi0_D0PT"
+        ,"D02KSHHPi0_PTSUMLoose"
         ,"D02HHPi0DocaCut"
         ,"Dstar_Chi2"
         ,"Dstar_SoftPion_PIDe"
@@ -365,34 +376,56 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.seld02KsPiPiLL = Selection( 'SelD02KsPiPiLLfor' + name,
                                          Algorithm = self._D02KsHHFilter(['[D0 -> KS0 pi+ pi-]cc'],'D02KsPiPiLLfor' + name),
                                          RequiredSelections = [self.selKSLL,self.selPionloose] )           
-        self.selDstar_2KsPiPiLL = makeDstar('DstarPiPiLLFor'+name,self.seld02KsPiPiLL,self.selSlowPion,Dstar_cuts)
+        self.selDstar_2KsPiPiLL = makeDstar('DstarPiPiLLFor'+name,self.seld02KsPiPiLL,self.selSlowPion,Dstar_cuts,True)
 
         self.seld02KsPiPiDD = Selection( 'SelD02KsPiPiDDfor' + name,
                                          Algorithm = self._D02KsHHFilter(['[D0 -> KS0 pi+ pi-]cc'],'D02KsPiPiDDfor' + name),
                                          RequiredSelections = [self.selKSDD,self.selPionloose] )           
-        self.selDstar_2KsPiPiDD = makeDstar('DstarPiPiDDFor'+name,self.seld02KsPiPiDD,self.selSlowPion,Dstar_cuts)
+        self.selDstar_2KsPiPiDD = makeDstar('DstarPiPiDDFor'+name,self.seld02KsPiPiDD,self.selSlowPion,Dstar_cuts,True)
 
         ### ks K K 
         self.seld02KsKKLL = Selection( 'SelD02KsKKLLfor' + name,
                                        Algorithm = self._D02KsHHFilter(['[D0 -> KS0 K+ K-]cc'],'D02KsKKLLfor' + name),
                                        RequiredSelections = [self.selKSLL,self.selKaonloose] )           
-        self.selDstar_2KsKKLL = makeDstar('DstarKKLLFor'+name,self.seld02KsKKLL,self.selSlowPion,Dstar_cuts)
+        self.selDstar_2KsKKLL = makeDstar('DstarKKLLFor'+name,self.seld02KsKKLL,self.selSlowPion,Dstar_cuts,True)
 
         self.seld02KsKKDD = Selection( 'SelD02KsKKDDfor' + name,
                                        Algorithm = self._D02KsHHFilter(['[D0 -> KS0 K+ K-]cc'],'D02KsKKDDfor' + name),
                                        RequiredSelections = [self.selKSDD,self.selKaonloose] )           
-        self.selDstar_2KsKKDD = makeDstar('DstarKKDDFor'+name,self.seld02KsKKDD,self.selSlowPion,Dstar_cuts)
+        self.selDstar_2KsKKDD = makeDstar('DstarKKDDFor'+name,self.seld02KsKKDD,self.selSlowPion,Dstar_cuts,True)
 
         ### ks K Pi 
         self.seld02KsKPiLL = Selection( 'SelD02KsKPiLLfor' + name,
                                         Algorithm = self._D02KsHHFilter(['[D0 -> KS0 K- pi+]cc','[D0 -> KS0 K+ pi-]cc'],'D02KsKPiLLfor' + name),
                                         RequiredSelections = [self.selKSLL,self.selPionloose,self.selKaonloose] )           
-        self.selDstar_2KsKPiLL = makeDstar('DstarKPiLLFor'+name,self.seld02KsKPiLL,self.selSlowPion,Dstar_cuts)
+        self.selDstar_2KsKPiLL = makeDstar('DstarKPiLLFor'+name,self.seld02KsKPiLL,self.selSlowPion,Dstar_cuts,True)
         
         self.seld02KsKPiDD = Selection( 'SelD02KsKPiDDfor' + name,
                                         Algorithm = self._D02KsHHFilter(['[D0 -> KS0 K- pi+]cc','[D0 -> KS0 K+ pi-]cc'],'D02KsKPiDDfor' + name),
                                         RequiredSelections = [self.selKSDD,self.selPionloose,self.selKaonloose] )           
-        self.selDstar_2KsKPiDD = makeDstar('DstarKPiDDFor'+name,self.seld02KsKPiDD,self.selSlowPion,Dstar_cuts)
+        self.selDstar_2KsKPiDD = makeDstar('DstarKPiDDFor'+name,self.seld02KsKPiDD,self.selSlowPion,Dstar_cuts,True)
+
+        ################## D0 -> Ks HHPi0 SELECTIONS #########################
+        ### ks Pi Pi Pi0 (merged PI0)
+        self.seld02KsPiPiPi0MergedLL = Selection( 'SelD02KsPiPiPi0MergedLLfor' + name,
+                                         Algorithm = self._D02KsHHPi0Filter(['[D0 -> KS0 pi+ pi- pi0]cc'],'D02KsPiPiPi0MergedLLfor' + name),
+                                         RequiredSelections = [self.selKSLL,self.selPionloose,self.selPi0Merged] )           
+        self.selDstar_2KsPiPiPi0MergedLL = makeDstar('DstarPiPiPi0MergedLLFor'+name,self.seld02KsPiPiPi0MergedLL,self.selSlowPion,Dstar_cuts,True)
+
+        self.seld02KsPiPiPi0MergedDD = Selection( 'SelD02KsPiPiPi0MergedDDfor' + name,
+                                         Algorithm = self._D02KsHHPi0Filter(['[D0 -> KS0 pi+ pi- pi0]cc'],'D02KsPiPiPi0MergedDDfor' + name),
+                                         RequiredSelections = [self.selKSDD,self.selPionloose,self.selPi0Merged] )           
+        self.selDstar_2KsPiPiPi0MergedDD = makeDstar('DstarPiPiPi0MergedDDFor'+name,self.seld02KsPiPiPi0MergedDD,self.selSlowPion,Dstar_cuts,True)
+        ### ks Pi Pi Pi0 (resolved PI0)
+        self.seld02KsPiPiPi0ResolvedLL = Selection( 'SelD02KsPiPiPi0ResolvedLLfor' + name,
+                                         Algorithm = self._D02KsHHPi0Filter(['[D0 -> KS0 pi+ pi- pi0]cc'],'D02KsPiPiPi0ResolvedLLfor' + name),
+                                         RequiredSelections = [self.selKSLL,self.selPionloose,self.selPi0ResolvedLoose] )           
+        self.selDstar_2KsPiPiPi0ResolvedLL = makeDstar('DstarPiPiPi0ResolvedLLFor'+name,self.seld02KsPiPiPi0ResolvedLL,self.selSlowPion,Dstar_cuts,True)
+
+        self.seld02KsPiPiPi0ResolvedDD = Selection( 'SelD02KsPiPiPi0ResolvedDDfor' + name,
+                                         Algorithm = self._D02KsHHPi0Filter(['[D0 -> KS0 pi+ pi- pi0]cc'],'D02KsPiPiPi0ResolvedDDfor' + name),
+                                         RequiredSelections = [self.selKSDD,self.selPionloose,self.selPi0ResolvedLoose] )           
+        self.selDstar_2KsPiPiPi0ResolvedDD = makeDstar('DstarPiPiPi0ResolvedDDFor'+name,self.seld02KsPiPiPi0ResolvedDD,self.selSlowPion,Dstar_cuts,True)
 
         ################## D0 -> HHPi0 WITH MERGED PI0 #######################
 
@@ -561,7 +594,19 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.selb2DstarMuXKsKKDD = makeb2DMuX('b2DstarMuXKsKKDD'+name,BDecays,MuSelKsHH,self.selDstar_2KsKKDD,BCutsKsHH)
         self.selb2DstarMuXKsKPiLL = makeb2DMuX('b2DstarMuXKsKPiLL'+name,BDecays,MuSelKsHH,self.selDstar_2KsKPiLL,BCutsKsHH)
         self.selb2DstarMuXKsKPiDD = makeb2DMuX('b2DstarMuXKsKPiDD'+name,BDecays,MuSelKsHH,self.selDstar_2KsKPiDD,BCutsKsHH)
-
+        
+				############### B+ -> MU X D0 -> Ks HH Pi0 #########################
+        BDecays = [ '[B- -> D0 mu-]cc']
+        self.selb2D0MuXKsPiPiPi0MergedLL = makeb2DMuX('b2D0MuXKsPiPiPi0MergedLL' + name,BDecays,MuSelKsHH,self.seld02KsPiPiPi0MergedLL,BCutsKsHH)
+        self.selb2D0MuXKsPiPiPi0MergedDD = makeb2DMuX('b2D0MuXKsPiPiPi0MergedDD' + name,BDecays,MuSelKsHH,self.seld02KsPiPiPi0MergedDD,BCutsKsHH)
+        self.selb2D0MuXKsPiPiPi0ResolvedLL = makeb2DMuX('b2D0MuXKsPiPiPi0ResolvedLL' + name,BDecays,MuSelKsHH,self.seld02KsPiPiPi0ResolvedLL,BCutsKsHH)
+        self.selb2D0MuXKsPiPiPi0ResolvedDD = makeb2DMuX('b2D0MuXKsPiPiPi0ResolvedDD' + name,BDecays,MuSelKsHH,self.seld02KsPiPiPi0ResolvedDD,BCutsKsHH)
+        #### Dstar
+        BDecays = [ '[B0 -> D*(2010)+ mu-]cc', '[B0 -> D*(2010)+ mu+]cc' ]
+        self.selb2DstarMuXKsPiPiPi0MergedLL = makeb2DMuX('b2DstarMuXKsPiPiPi0MergedLL' + name,BDecays,MuSelKsHH,self.selDstar_2KsPiPiPi0MergedLL,BCutsKsHH)
+        self.selb2DstarMuXKsPiPiPi0MergedDD = makeb2DMuX('b2DstarMuXKsPiPiPi0MergedDD' + name,BDecays,MuSelKsHH,self.selDstar_2KsPiPiPi0MergedDD,BCutsKsHH)
+        self.selb2DstarMuXKsPiPiPi0ResolvedLL = makeb2DMuX('b2DstarMuXKsPiPiPi0ResolvedLL' + name,BDecays,MuSelKsHH,self.selDstar_2KsPiPiPi0ResolvedLL,BCutsKsHH)
+        self.selb2DstarMuXKsPiPiPi0ResolvedDD = makeb2DMuX('b2DstarMuXKsPiPiPi0ResolvedDD' + name,BDecays,MuSelKsHH,self.selDstar_2KsPiPiPi0ResolvedDD,BCutsKsHH)
 
         ############# B+ -> MU X D0 -> Ks Ks #####################
         
@@ -689,6 +734,17 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.registerLine( StrippingLine('b2D0MuXKsKPiLL'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsKPiLL) )
         self.registerLine( StrippingLine('b2D0MuXKsKPiDD'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsKPiDD) )
         
+        ########### D0 -> Ks HH Pi0
+        self.registerLine( StrippingLine('b2D0MuXKsPiPiPi0MergedLL'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsPiPiPi0MergedLL) ) 
+        self.registerLine( StrippingLine('b2D0MuXKsPiPiPi0MergedDD'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsPiPiPi0MergedDD) ) 
+        self.registerLine( StrippingLine('b2D0MuXKsPiPiPi0ResolvedLL'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsPiPiPi0ResolvedLL) ) 
+        self.registerLine( StrippingLine('b2D0MuXKsPiPiPi0ResolvedDD'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKsPiPiPi0ResolvedDD) ) 
+				## D*+ versions
+        self.registerLine( StrippingLine('b2DstarMuXKsPiPiPi0MergedLL'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXKsPiPiPi0MergedLL) ) 
+        self.registerLine( StrippingLine('b2DstarMuXKsPiPiPi0MergedDD'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXKsPiPiPi0MergedDD) ) 
+        self.registerLine( StrippingLine('b2DstarMuXKsPiPiPi0ResolvedLL'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXKsPiPiPi0ResolvedLL) ) 
+        self.registerLine( StrippingLine('b2DstarMuXKsPiPiPi0ResolvedDD'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2DstarMuXKsPiPiPi0ResolvedDD) ) 
+
         ########### D0 -> HHPi0
         self.registerLine( StrippingLine('b2D0MuXKPiPi0Resolved'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKPiPi0Resolved) )
         self.registerLine( StrippingLine('b2D0MuXKKPi0Resolved'+name+'Line',prescale = 1,FILTER=GECs,selection = self.selb2D0MuXKKPi0Resolved) )
@@ -905,6 +961,20 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                                      MotherCut = _motherCut)                            
         return _d02KsHH
 
+    def _D02KsHHPi0Filter( self , _decayDescriptors, _name):
+        _combinationCut = "(ADAMASS('D0') < %(D02KSHHPi0AMassWin)s *MeV) & (APT > %(D02KSHHPi0_D0PTComb)s *MeV)" \
+                          "& (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3)+ACHILD(PT,4) > %(D02KSHHPi0_PTSUMLoose)s *MeV)" \
+                          "& (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
+        _motherCut = "(ADMASS('D0') < %(D02KSHHPi0MassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
+                     "& (SUMTREE( PT,  ISBASIC )> %(D02KSHHPi0_PTSUMLoose)s*MeV) & (PT > %(D02KSHHPi0_D0PT)s *MeV)" \
+                     "& (MINTREE(((ABSID=='KS0')) , VFASPF(VZ))-VFASPF(VZ) > %(KSCutZFDFromD)s *mm )"  % self.__confdict__
+        _d02KsHHPi0 = CombineParticles( name = _name,
+                                     DecayDescriptors = _decayDescriptors,
+                                     CombinationCut = _combinationCut,
+                                     MotherCut = _motherCut)                            
+        return _d02KsHHPi0
+
+
     def _D2KsHHHFilter( self , _name, _decayDescriptors,_requiredSelections):
         _combinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV)"\
                           "& (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3)+ACHILD(PT,4) > %(PTSUM)s *MeV)"\
@@ -1014,7 +1084,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                           Algorithm = _comb,
                           RequiredSelections = _requiredSelections)
     
-def makeDstar(_name, inputD0,_softPi,Dstar_cuts) : 
+def makeDstar(_name, inputD0,_softPi,Dstar_cuts,_isSelfConjFS=False) : 
     _inputD0_conj = Selection("SelConjugateD0For"+_name,
                              Algorithm = ConjugateNeutralPID('ConjugateD0For'+_name),
                              RequiredSelections = [inputD0])
@@ -1028,6 +1098,7 @@ def makeDstar(_name, inputD0,_softPi,Dstar_cuts) :
                                DaughtersCuts = { "pi+" : _cutsSoftPi },
                                CombinationCut = _cutsDstarComb,
                                MotherCut = _cutsDstarMoth)
+    if(_isSelfConjFS==True):	return Selection (name = "Sel"+_name,Algorithm = _Dstar,RequiredSelections = [inputD0] + [_softPi])
     return Selection (name = "Sel"+_name,Algorithm = _Dstar,RequiredSelections = [inputD0,_inputD0_conj] + [_softPi])
 
 def makeb2DMuX(_name,
