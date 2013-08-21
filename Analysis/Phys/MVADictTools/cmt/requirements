@@ -14,12 +14,9 @@ include_path      none
 #============================================================================
 # Used packages.
 #============================================================================
-# Depend on the various component packages, so they get built before the
-# python stuff below.
-use   DecayTreeTuple       v*    Phys
-use   LoKiPhys             v*    Phys
-use   ROOT                 v*    LCG_Interfaces -no_auto_imports
-use   Boost                v*    LCG_Interfaces -no_auto_imports
+use   LoKiPhys     v*    Phys
+use   ROOT         v*    LCG_Interfaces -no_auto_imports
+use   Boost        v*    LCG_Interfaces -no_auto_imports
 
 #============================================================================
 # building rules
@@ -33,12 +30,6 @@ macro_append     MVADictTools_dependencies " MVADictToolsLib "
 
 application      utesttmva     ../src/applications/utesttmva.cxx
 macro_append     utesttmva_dependencies " MVADictToolsLib "
-
-#============================================================================
-# Python
-#============================================================================
-#apply_pattern    install_python_modules
-#macro_append MVADictToolsGenConfUser_dependencies MVADictToolsConfDbMerge
 
 #============================================================================
 # private build options
