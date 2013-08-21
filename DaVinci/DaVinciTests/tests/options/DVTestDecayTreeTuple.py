@@ -42,7 +42,9 @@ tuple.ToolList +=  [
 #    , "TupleToolTISTOS"
      ]
 tuple.Inputs = [line.outputLocation()]
-tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-)]cc"
+#tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-)]cc"
+# CRJ : Adapt for LoKi decay finder
+tuple.Decay = "[B0 -> ^(J/psi(1S) -> ^mu+ ^mu-) ^(KS0 -> ^pi+ ^pi-)]CC"
 #tuple.OutputLevel = 1 ;
 ########################################################################
 #

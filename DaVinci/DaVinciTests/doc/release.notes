@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-08-21 - Chris Jones
+ - Update DecayTreeTuple test to adapt to new LoKi decay finder syntax.
+
 !========================= DaVinciTests v2r18 2013-08-05 =========================
 
 ! 2013-07-24 - Stefania Vechi
