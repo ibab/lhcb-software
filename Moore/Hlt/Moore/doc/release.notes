@@ -7,6 +7,7 @@
 ! 2013-08-21 - Gerhard Raven
  - fix writing out of MDF files in conjunction with an output requirement
  - add support for TCK ZIP persistency
+ - add initial commisioning scripts for split Hlt1/Hlt2 testing
 
 !========================= Moore v20r2 2013-07-03 =========================
 ! 2013-07-02 - Rob Lambert
