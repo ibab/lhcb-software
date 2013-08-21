@@ -62,7 +62,7 @@ class LcBuilder(object):
 class Lb2XBuilder(object):
     '''Makes all Lambda_b -> X lines.'''
 
-    def __init__(self,lc,d,hh,topoPions,topoKaons,protons,hhh,dst,config):
+    def __init__(self,lc,d,hh,topoPions,topoKaons,protons,hhh,dst,lambda0,config):
         self.lc = lc.pkpi
         self.lc_pid = lc.pkpi_pid
         self.xic = lc.xic_pkpi
@@ -71,6 +71,7 @@ class Lb2XBuilder(object):
         self.hh = hh
         self.hhh = hhh
         self.dst = dst
+        self.lambda0 = lambda0
         self.topoPions = [topoPions]
         self.topoKaons = [topoKaons]
         self.protons = [protons]
@@ -97,6 +98,8 @@ class Lb2XBuilder(object):
         self._makeX2LcLc()
         # Lb -> Lc 5pi
         self._makeLb2Lc5Pi()
+        # Lb -> D0 Lambda0
+        self._makeLb2D0Lambda0()
 
     def _makeLb2LcH(self):
         '''Make RS and WS Lb -> Lc H (H=pi,K) + cc.'''
@@ -179,6 +182,18 @@ class Lb2XBuilder(object):
         inputs = {'Lb2D0PHWS': self.d0+self.hh.ph_ws}
         ws = makeB2XSels(decays,'D02HH',inputs,self.config)
         self.lines.append(ProtoLine(ws,0.1))
+    
+    def _makeLb2D0Lambda0(self):
+        '''Makes RS Lb -> D0(HH) Lambda0 + c.c.'''
+        decs = ["Lambda_b0 -> D0 Lambda0","Lambda_b0 -> D0 Lambda~0"]
+        decays = {'Lb2D0Lambda0DD': decs}
+        inputs = {'Lb2D0Lambda0DD': self.d0 + self.lambda0["DD"]}
+        lb_dd = makeB2XSels(decays,'D02HH',inputs,self.config)
+        self.lines.append(ProtoLine(lb_dd,1.0))
+        decays = {'Lb2D0Lambda0LL': decs}
+        inputs = {'Lb2D0Lambda0LL': self.d0 + self.lambda0["LL"]}
+        lb_ll = makeB2XSels(decays,'D02HH',inputs,self.config)
+        self.lines.append(ProtoLine(lb_ll,1.0))
     
     def _makeSb02DP(self):
         '''Make RS and WS Sb0 -> D+- p-+ + cc.'''

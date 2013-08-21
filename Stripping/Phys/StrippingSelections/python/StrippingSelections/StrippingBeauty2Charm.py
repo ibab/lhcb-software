@@ -52,6 +52,12 @@ config = {
     'MM_MIN'        : '467.*MeV',
     'MM_MAX'        : '527.*MeV'
     },
+    "Lambda0" : { # Cuts made on all Lambda0's
+    'PT_MIN'        : '250*MeV',
+    'BPVVDCHI2_MIN' : 36,
+    'MM_MIN'        : '1086.*MeV',
+    'MM_MAX'        : '1146.*MeV'
+    },
     "Pi0" : { # Cuts made on all pi0's
     'PT_MIN'        : '500*MeV',
     'P_MIN'         : '1000*MeV',
@@ -213,7 +219,7 @@ config = {
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 class Beauty2CharmConf(LineBuilder):
-    __configuration_keys__ = ('ALL','UPSTREAM','KS0','Pi0','D2X','B2X','Dstar','HH','HHH',
+    __configuration_keys__ = ('ALL','UPSTREAM','KS0','Lambda0','Pi0','D2X','B2X','Dstar','HH','HHH',
                               'PID','FlavourTagging','2TOPO','BB','D0INC','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
@@ -230,6 +236,11 @@ class Beauty2CharmConf(LineBuilder):
         ks_ll = filterInputs('KS0_LL',[dataOnDemand("StdLooseKsLL")],
                              config['KS0'])
         ks = {"DD":[ks_dd],"LL":[ks_ll]}
+        lambda0_dd = filterInputs('Lambda0_DD',[dataOnDemand("StdLooseLambdaDD")],
+                                       config['Lambda0']) 
+        lambda0_ll = filterInputs('Lambda0_LL',[dataOnDemand("StdLooseLambdaLL")],
+                             config['Lambda0'])
+        lambda0 = {"DD":[lambda0_dd],"LL":[lambda0_ll]}
         pi0_merged   = filterPi0s('Merged',[StdLooseMergedPi0],config['Pi0'])
         pi0_resolved = filterPi0s('Resolved',[StdLooseResolvedPi0],
                                   config['Pi0'])
@@ -267,7 +278,7 @@ class Beauty2CharmConf(LineBuilder):
         self._makeLines(b2dx.lines,config)
 
         # Lb -> X
-        lb2x = Lb2XBuilder(lc,d,hh,topoPions,topoKaons,topoProtons,hhh,dst,
+        lb2x = Lb2XBuilder(lc,d,hh,topoPions,topoKaons,topoProtons,hhh,dst,lambda0, 
                            config['B2X'])
         self._makeLines(lb2x.lines,config)
 

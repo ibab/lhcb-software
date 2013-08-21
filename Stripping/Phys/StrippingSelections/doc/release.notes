@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-21 - Anton Poluektov 
+ - Add Lb->D0Lambda0 mode to Beauty2Charm module
+
 ! 2013-08-21 - Cedric Potterat
  - Removed cut in the HH angle for Beauty2XGamma Stripping
 
