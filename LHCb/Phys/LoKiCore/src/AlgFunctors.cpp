@@ -94,11 +94,11 @@ namespace
     // get job options svc -- todo: move this one level up, not done 
     // on this branch to retain binary compatiblity...
     LoKi::ILoKiSvc *ls = LoKi::Services::instance().lokiSvc ();
-    SmartIF<IJobOptionsSvc> jos( ls );
     SmartIF<IAlgContextSvc> cntx ( ls ) ;
     LoKi::Assert ( !(!cntx) , "IAlgContextSvc* points to NULL!" ) ;
     GaudiAlgorithm *parent = Gaudi::Utils::getGaudiAlg ( cntx ) ;
     LoKi::Assert ( parent!=0 , "parent not a GaudiAlg!" ) ;
+    IJobOptionsSvc* jos = parent->svc<IJobOptionsSvc>( "JobOptionsSvc" );
 
     /////////////////////////////
     /////////////////////////////

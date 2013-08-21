@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-08-21 - Gerhard Raven
+ - Fix a bug in AlgFunctors: pointer to IJobOptionsSvc was invalid
+
 !========================= LoKiCore v11r13 2013-06-03 =========================
 ! 2013-05-15 - Chris Jones
  - Fix a bug in addMomenta in Kinematics.h where the Predicate cut was not 
