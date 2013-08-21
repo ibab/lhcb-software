@@ -36,9 +36,13 @@ def Name2Threshold(name) :
     if name not in Name2Threshold._dict : 
         from Gaudi.Configuration import log
         log.warning(' '+'#'*(41+len(name)) )
-        log.warning(' ## Using trigger threshold settings "%s" ##'%name)
-        mod = getattr( __import__('HltSettings.%s' % name ), name )
-        cls = getattr( mod, name )
+        log.warning(' ## using trigger threshold settings "%s" ##'%name)
+        try :
+            mod = getattr( __import__('HltSettings.%s' % name ), name )
+            cls = getattr( mod, name )
+        except (AttributeError,ImportError) as error:
+            log.error('   ## Unknown ThresholdSetting "%s" -- please fix Moore().ThresholdSetting ##' % name )
+            raise error
         Name2Threshold._dict[name] = cls()
         #log.warning(' ## type is %-30s ##' % Name2Threshold._dict[name].HltType() )
         log.warning(' '+'#'*(41+len(name)) )

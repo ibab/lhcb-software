@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2013-08-21 - Gerhard Raven
+ - improve error message when a bogus ThresholdSetting is specified
+
 ! 2013-08-12 - Mika Vesterinen
  - Add HltCharmHadD02HHPi0 to Hlt2.py
 
