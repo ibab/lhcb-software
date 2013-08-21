@@ -6,6 +6,9 @@
 
 !========================= StrippingSettings v2r28 2013-08-02 =========================
 
+! 2013-08-21 - Ronan Wallace
+ - Added LowMult configuration dictionaries for Stripping20r{0,1}p2 to LineConfigDictionaries_QEE.py.
+
 ! 2013-08-20 - Ronan Wallace
  - Added config dictionaries for Stripping20r{0,1}p2 to Calibration stream. Z lines of StrippingTrackEffMuonTT to be restripped.
 
