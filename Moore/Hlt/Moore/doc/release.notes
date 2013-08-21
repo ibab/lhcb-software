@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-08-21 - Rob Lambert
+ - Add tests from Gerhard on Hlt1/2 splitting functionality. 
+ - Currently they don't 100% work...
+
 ! 2013-08-21 - Gerhard Raven
  - fix writing out of MDF files in conjunction with an output requirement
  - add support for TCK ZIP persistency
