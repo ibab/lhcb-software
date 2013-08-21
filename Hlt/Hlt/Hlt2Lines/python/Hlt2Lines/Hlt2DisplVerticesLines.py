@@ -232,7 +232,6 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                         , MinNumTracks         = self.getProp("VeloMinNumTracks")
                         , MaxNumInputTracks    = self.getProp("VeloMaxNumInput")
                         , MaxNumOutputTracks   = self.getProp("VeloMaxNumOutput")
-                        , PropertiesPrint = True
                         )
 
             veloTracksForVertexing = [ vWithIP.Output ]
@@ -244,21 +243,17 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                                         , InputTracks     = veloTracksForVertexing
                                         , PVSeedingName   = "PVSeed3DTool"
                                         , PVFitterName    = "LSAdaptPV3DFitter"
-                                        , PropertiesPrint = True
                                         )
         veloVertexFinder.addTool(PVSeed3DTool)
         veloVertexFinder.PVSeed3DTool.TrackPairMaxDistance = 0.2*units.mm
         veloVertexFinder.PVSeed3DTool.zMaxSpread           = 1.0*units.mm
         veloVertexFinder.PVSeed3DTool.MinCloseTracks       = 3
-        veloVertexFinder.PVSeed3DTool.PropertiesPrint      = True
         veloVertexFinder.addTool(LSAdaptPV3DFitter)
         veloVertexFinder.LSAdaptPV3DFitter.maxIP2PV        = 2.0*units.mm
         veloVertexFinder.LSAdaptPV3DFitter.MinTracks       = 4
-        veloVertexFinder.LSAdaptPV3DFitter.PropertiesPrint = True
 
         veloVertexing = PatPV3D("Hlt2DisplVertices3DVelo"
                           , OutputVerticesName = "Hlt/Hlt2VeloVertices/Vertices"
-                          , PropertiesPrint    = True
                           )
         veloVertexing.addTool(veloVertexFinder, name="PVOfflineTool")
 
@@ -272,7 +267,6 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                                     , Output             = "Hlt2/Hlt2RV2PVelo/Particles"
                                     , WriteP2PVRelations = False
                                     , ForceP2PVBuild     = False
-                                    #, OutputLevel        = VERBOSE
                                     )
         ## Add the properties from the settings above
         self.setProps( recVertexToParticleVelo, self.localise_props("RV2PVelo", Hlt2DisplVerticesLinesConf.recoCuts + Hlt2DisplVerticesLinesConf.singleCuts), True )
@@ -296,13 +290,11 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                                         , RequireVelo     = False
                                         , PVSeedingName   = "PVSeed3DTool"
                                         , PVFitterName    = "LSAdaptPVFitter"
-                                        , PropertiesPrint = True
                                         )
         downVertexFinder.addTool(PVSeed3DTool)
         downVertexFinder.PVSeed3DTool.TrackPairMaxDistance = 2.0*units.mm
         downVertexFinder.PVSeed3DTool.zMaxSpread           = 20.0*units.mm
         downVertexFinder.PVSeed3DTool.MinCloseTracks       = 3
-        downVertexFinder.PVSeed3DTool.PropertiesPrint      = True
         downVertexFinder.addTool(LSAdaptPVFitter)
         downVertexFinder.LSAdaptPVFitter.MinTracks          = 3
         downVertexFinder.LSAdaptPVFitter.maxChi2            = 400.0
@@ -311,12 +303,9 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         downVertexFinder.LSAdaptPVFitter.acceptTrack        = 0.00000001
         downVertexFinder.LSAdaptPVFitter.trackMaxChi2       = 9
         downVertexFinder.LSAdaptPVFitter.trackMaxChi2Remove = 64
-        downVertexFinder.LSAdaptPVFitter.PropertiesPrint    = True
 
         downVertexing = PatPV3D("Hlt2DisplVertices3DDown"
                           , OutputVerticesName = "Hlt/Hlt2DownVertices/Vertices"
-                          , PropertiesPrint    = True
-                          #, OutputLevel        = VERBOSE
                           )
         downVertexing.addTool(downVertexFinder, name="PVOfflineTool")
 
@@ -330,7 +319,6 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                        , Code               = self.getLLPSelection( self.localise_props("PreSelDown", Hlt2DisplVerticesLinesConf.singleCuts) )
                        , WriteP2PVRelations = False
                        , ForceP2PVBuild     = False
-                       #, OutputLevel        = VERBOSE
                        )
 
         # Make Particles out of the RecVertices
@@ -341,7 +329,6 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                                     , Output             = "Hlt2/Hlt2RV2PDown/Particles"
                                     , WriteP2PVRelations = False
                                     , ForceP2PVBuild     = False
-                                    #, OutputLevel        = VERBOSE
                                     )
         ## Add the properties from the settings above
         self.setProps( recVertexToParticleDown, self.localise_props("RV2PDown", Hlt2DisplVerticesLinesConf.recoCuts + Hlt2DisplVerticesLinesConf.singleCuts), True )
@@ -383,7 +370,6 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                            , Code               = self.getLLPSelection( self.localise_props(lSelName, Hlt2DisplVerticesLinesConf.singleCuts) )
                            , WriteP2PVRelations = False
                            , ForceP2PVBuild     = False
-                           #, OutputLevel        = VERBOSE
                            )
 
             line = Hlt2Line(lLineName
@@ -421,7 +407,6 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                            , MotherCut          = motherCut
                            , WriteP2PVRelations = False
                            , ForceP2PVBuild     = False
-                           #, OutputLevel        = VERBOSE
                            )
             line = Hlt2Line(lLineName
                      , prescale  = self.localise_props(lSelName, ["PreScale"])["PreScale"]

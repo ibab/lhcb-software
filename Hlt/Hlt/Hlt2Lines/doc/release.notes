@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2013-08-21 - Pieter David
+ - Turn off printing of properties for the Hlt2DisplVertices algorithms
+
 ! 2013-08-13 - Mika Vesterinen
  - Fix to python/Hlt2Lines/Hlt2CharmHadD02HHPi0Lines.py
 
