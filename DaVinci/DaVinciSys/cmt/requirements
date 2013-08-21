@@ -1,11 +1,20 @@
 package DaVinciSys
-version v33r6
+version v33r6p1
 
 branches doc cmt
 
 # Packages
-use  DaVinci         v33r6  Phys
+use  DaVinci         v33r6p1  Phys
 use  DaVinciTests    v2r18
+# Temporary (remember to remove from CMake as well).
+use  DecayTreeTupleBase         v1r2     Phys 
+use  DecayTreeTupleReco         v1r3     Phys   
+use  DecayTreeTupleDalitz       v1r0     Phys
+use  DecayTreeTupleJets         v1r1p2   Phys
+use  DecayTreeTupleMC           v1r4     Phys
+use  DecayTreeTupleTrigger      v1r1     Phys
+use  DecayTreeTupleMuonCalib    v1r2p1   Phys
+use  DecayTreeTuple             v4r3     Phys
 
 # Declare this as a container package
 apply_pattern container_package
