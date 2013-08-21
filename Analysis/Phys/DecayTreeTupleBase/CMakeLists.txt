@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DecayTreeTupleBase
 ################################################################################
-gaudi_subdir(DecayTreeTupleBase v1r1)
+gaudi_subdir(DecayTreeTupleBase v1r2)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          Kernel/MCInterfaces
