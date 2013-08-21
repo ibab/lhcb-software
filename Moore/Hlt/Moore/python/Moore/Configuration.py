@@ -263,8 +263,7 @@ class Moore(LHCbConfigurableUser):
         #    #ApplicationMgr().EvtSel.REQ1 = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0"
         self._configureDataOnDemand()
         
-        if not files:
-            return
+        if not files: return
         
         persistency=None
         if hasattr(self, "Persistency"):
@@ -289,12 +288,9 @@ class Moore(LHCbConfigurableUser):
         #check the file type and use MDF writer or InputCopyStream
         if iox.detectFileType(fname) == 'MDF'  : 
             from Configurables import LHCb__MDFWriter as MDFWriter
-            writer = MDFWriter( 'Writer'
-                              , Compress = 0
-                              , ChecksumType = 1
-                              , GenerateMD5 = True
-                              , Connection = 'file://' + fname
-                              )
+            writer = IOHelper("MDF","MDF").outputAlgs(fname
+                                                     ,writer = MDFWriter( 'Writer' , Compress = 0 )
+                                                     ,writeFSR=False)
             if self.getProp('WriterRequires') :
                 from Configurables import LoKi__VoidFilter as VoidFilter
                 writer = GaudiSequencer( 'WriteSequence'
@@ -302,10 +298,9 @@ class Moore(LHCbConfigurableUser):
                                                                , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
                                                                , Code = ' & '.join( [ "ALG_EXECUTED('%s') & ALG_PASSED('%s')" % (i,i) for i in self.getProp('WriterRequires') ] ) 
                                                                )
-                                                   , writer 
-                                                   ]
+                                                   ] + writer
                                        )
-            IOHelper("MDF","MDF").outStream(fname,writer,writeFSR=False)
+            ApplicationMgr().OutStream.append( writer )
         else : 
             from Configurables import InputCopyStream
             writer = InputCopyStream("Writer"
@@ -327,7 +322,7 @@ class Moore(LHCbConfigurableUser):
 
     def getConfigAccessSvc(self):
         method = self.getProp('TCKpersistency').lower()
-        if method not in [ 'file', 'sqlite', 'tarfile' ] : raise TypeError("invalid TCK persistency '%s'"%method)
+        if method not in [ 'file', 'sqlite', 'tarfile','zipfile' ] : raise TypeError("invalid TCK persistency '%s'"%method)
         TCKData = self.getProp('TCKData')
         if method == 'file' :
             from Configurables import ConfigFileAccessSvc
@@ -338,6 +333,9 @@ class Moore(LHCbConfigurableUser):
         if method == 'tarfile' :
             from Configurables import ConfigTarFileAccessSvc
             return ConfigTarFileAccessSvc( File = TCKData +'/config.tar' )
+        if method == 'zipfile' :
+            from Configurables import ConfigZipFileAccessSvc
+            return ConfigZipFileAccessSvc( File = TCKData +'/config.zip' )
 
     def addAuditor(self,x) :
         if  'AuditorSvc' not in ApplicationMgr().ExtSvc : 
@@ -584,7 +582,7 @@ class Moore(LHCbConfigurableUser):
         from Configurables import MooreInitSvc
         ApplicationMgr().ExtSvc.append( MooreInitSvc() )
         #from Configurables import LbAppInit
-	#ApplicationMgr().TopAlg.append(LbAppInit(PreloadGeometry=True))
+        #ApplicationMgr().TopAlg.append(LbAppInit(PreloadGeometry=True))
         ApplicationMgr().TopAlg.append( GaudiSequencer('Hlt') )
 
 
@@ -600,8 +598,8 @@ class Moore(LHCbConfigurableUser):
         # Get the event time (for CondDb) from ODIN 
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
-	import time
-	EventClockSvc().InitialTime = int(time.time()*1e9)  #now
+        import time
+        EventClockSvc().InitialTime = int(time.time()*1e9)  #now
 
         # make sure we don't pick up small variations of the read current
         # Need a defined HistogramPersistency to read some calibration inputs!!!

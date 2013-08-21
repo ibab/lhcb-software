@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-08-21 - Gerhard Raven
+ - fix writing out of MDF files in conjunction with an output requirement
+ - add support for TCK ZIP persistency
+
 !========================= Moore v20r2 2013-07-03 =========================
 ! 2013-07-02 - Rob Lambert
  - see task #42700, suppress warning print outs for LoKi Distance Calculator
