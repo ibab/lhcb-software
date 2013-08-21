@@ -79,7 +79,7 @@ default_config = { # Cuts made on all charged input particles in all lines
                    #'BPVDIRA_MIN'   : 0.0,
                    'ASUMPT_MIN'       : '1500*MeV',
                    #'pP_MIN'        : '10000*MeV' # for pH only (obviously)
-                   'ANGLE_MIN'        : 0.0003,
+                 #  'ANGLE_MIN'        : 0.0003,
                  },
            # Cuts for omega -> 3 body decay
            "HHH": { 'MASS_WINDOW'   : {'OMEGA': '100*MeV', 'K1': ['0.8*GeV', '3.5*GeV']},

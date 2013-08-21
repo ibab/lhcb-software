@@ -77,7 +77,8 @@ class HHBuilder(object):
 
     def _makeX2HH(self,name,decays,amass,config,inputs):
         ''' Makes all X -> HH selections with charged tracks only.'''
-        comboCuts = [LoKiCuts(['ASUMPT'],config).code(),amass,hasTopoChild(),hasMinimalAngle(config['ANGLE_MIN'])]
+        comboCuts = [LoKiCuts(['ASUMPT'],config).code(),amass,hasTopoChild()]#,hasMinimalAngle(config['ANGLE_MIN'])]
+        #remove hasMinimalAngle for S20r{0,1}p2
         #comboCuts.append(LoKiCuts(['AMAXDOCA'],config).code())
         comboCuts = LoKiCuts.combine(comboCuts)
         #momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVDIRA'],config).code()

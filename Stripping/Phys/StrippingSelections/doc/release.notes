@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-21 - Cedric Potterat
+ - Removed cut in the HH angle for Beauty2XGamma Stripping
+
 ! 2013-08-20 - Mika Vesterinen
  - Added python/StrippingSelections/StrippingDstarD0ToHHPi0.py
  - also tests/TestDstarD0ToHHPi0.py
