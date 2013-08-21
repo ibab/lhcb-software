@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-21 - Ronan Wallace
+ - Bug fix to StrippingLowMult.py. Generic 'HH' lines broken into specific hadron decays.
+ - Introduced variable LowMultZeroPrescale to zero lines not to be run in restrippings.
+
 ! 2013-08-21 - Anton Poluektov 
  - Add Lb->D0Lambda0 mode to Beauty2Charm module
 
