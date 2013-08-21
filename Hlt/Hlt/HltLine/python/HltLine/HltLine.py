@@ -127,6 +127,15 @@ def decisionName   ( line, level = 'Hlt1' ) :
     """Convention: the name of 'Decision' algorithm inside HltLine"""
     return level + '%sDecision'   % line if line != 'Global' else level+'Global'
 
+def flatten(l):
+    import collections
+    for i in l:
+        if isinstance(i, collections.Iterable) and not isinstance(i, basestring):
+            for j in flatten(i): yield j
+        else:
+            yield i
+
+
 
 ## Type of scalar...
 # if the pre/postscales are a string, the pre/postscaler is a LoKi_VoidFilter,
@@ -980,27 +989,27 @@ class Hlt1Line(object):
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
         #       and change them -- and not having the scaler would be problem in that case...
-        mdict.update( { 'DecisionName' : decisionName ( line ) 
-                      , 'Prescale'     : _createScalar( prescalerName(line), self._prescale)
-                      , 'Postscale'    : _createScalar( postscalerName(line),self._postscale)
-                      } )
+        mdict.update( DecisionName = decisionName ( line ) 
+                    , Prescale     = _createScalar( prescalerName(line), self._prescale  )
+                    , Postscale    = _createScalar( postscalerName(line),self._postscale )
+                    )
         if ODIN : 
             odict = { 'Code' : self._ODIN }
             if 'jbit' in self._ODIN : odict['Preambulo'] =  [ 'from LoKiCore.math import *' ] 
-            mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line ) , **odict ) } )
+            mdict.update( ODIN = ODINFilter ( odinentryName( line ) , **odict ) )
         if L0DU : 
             from HltDecodeRaw import DecodeL0DU
             _s = GaudiSequencer( l0entryName(line) + 'Sequence'
                                , Members = DecodeL0DU.members() + [ L0Filter( l0entryName( line ) , Code = self._L0DU  ) ] 
                                )
-            mdict.update( { 'L0DU' : _s } )
+            mdict.update( L0DU = _s )
         ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
-        if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line ) , Code = self._HLT  ) } )
+        if HLT  : mdict.update( HLT = HDRFilter  ( hltentryName ( line ) , Code = self._HLT  ) )
         if _members : 
             if len(_members)==1 :
-                mdict.update( { 'Filter1' : _members[0] } )
+                mdict.update( Filter1 = _members[0] )
             else :
-                mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line ) , Members = _members ) })
+                mdict.update( Filter1 = GaudiSequencer( filterName ( line ) , Members = _members ) )
         # final cloning of all parameters:
         __mdict = deepcopy ( mdict ) 
         self._configurable = Line ( self.name() , **__mdict )
@@ -1271,10 +1280,8 @@ class Hlt2Member ( object ) :
                        from re import sub
                        return sub('^%', 'Hlt2' + line, i )
             inputLocations = [ _adapt(i,line) for i in inputLocations ]
-            # deal with nested lists (one level only), keep order invariant
-            args['Inputs'] = []
-            for i in inputLocations :
-                args['Inputs']  += i if type(i) is list else [ i ]
+            # deal with nested lists, keep order invariant
+            args['Inputs'] = [ i for i in flatten(inputLocations) ]
 
         _name = self.name( line )
         if 'Output' not in args :
@@ -1436,16 +1443,25 @@ class Hlt2Line(object):
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
         #       and change them -- and not having the scaler would be problem in that case...
-        mdict.update( { 'DecisionName' : decisionName ( line, 'Hlt2' ) 
-                      , 'Prescale'     : _createScalar( prescalerName(line,'Hlt2'), self._prescale)
-                      , 'Postscale'    : _createScalar( postscalerName(line,'Hlt2'),self._postscale)
-                      } )
-        if self._ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line,'Hlt2' ) , Code = self._ODIN )  } )
-        if self._L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line,'Hlt2' ) , Code = self._L0DU )  } )
-        ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent...
-        if self._HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT  ) } )
+        mdict.update( DecisionName = decisionName ( line, 'Hlt2' ) 
+                    , Prescale     = _createScalar( prescalerName(line,'Hlt2'), self._prescale)
+                    , Postscale    = _createScalar( postscalerName(line,'Hlt2'),self._postscale)
+                    )
+        if self._ODIN : mdict.update( ODIN = ODINFilter ( odinentryName( line,'Hlt2' ) , Code = self._ODIN ) )
+        if self._L0DU : 
+            from HltDecodeRaw import DecodeL0DU
+            _s = GaudiSequencer( l0entryName(line, 'Hlt2') + 'Sequence'
+                               , Members = DecodeL0DU.members() + [ L0Filter( l0entryName( line, 'Hlt2' ) , Code = self._L0DU  ) ] )
+            mdict.update( L0DU = _s  )
+        ## TODO: in case of HLT, we have a dependency... dangerous, as things become order dependent... 
+        ## This is OK, as long as it only pertains to Hlt1 results...
+        if self._HLT  : 
+            # TODO: insert Hlt1 decreports decoding... -- but this should ONLY be done in the split scenario!!!!
+            #  so we need to make it optional...
+            mdict.update( HLT = HDRFilter  ( hltentryName ( line,'Hlt2' ) , Code = self._HLT  ) )
         from Configurables import LoKi__VoidFilter
-        if self._VoidFilter : mdict.update( { 'Filter0' : LoKi__VoidFilter( voidName( line, 'Hlt2' ), Code = self._VoidFilter ) }  )
+        if self._VoidFilter : 
+            mdict.update( Filter0 = LoKi__VoidFilter( voidName( line, 'Hlt2' ), Code = self._VoidFilter ) )
         if _members : 
             last = _members[-1]
             while hasattr(last,'Members') : 
@@ -1460,7 +1476,7 @@ class Hlt2Line(object):
                 members += [ HltCopyParticleSelection( decisionName( line, 'Hlt2')
                                                      , InputSelection = 'TES:/Event/Hlt2/%s/Particles'%last.getName()
                                                      , OutputSelection = decisionName(line, 'Hlt2')) ]
-            mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Hlt2' ) , Members = members ) })
+            mdict.update( Filter1 = GaudiSequencer( filterName ( line,'Hlt2' ) , Members = members ) )
         # final cloning of all parameters:
         __mdict = deepcopy ( mdict ) 
         self._configurable = Line ( self.name() , **__mdict )

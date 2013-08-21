@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2013-08-21 - Gerhard Raven
+ - add explicit L0DU decoding prior to any L0 filter in an Hlt2 line 
+
 !========================= HltLine v5r1p8 2013-04-09 =========================
 ! 2013-03-29 - Rob Lambert
  - Add CaloDAQ and L0DU to environment
