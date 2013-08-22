@@ -9,8 +9,8 @@
     <text>../options/Moore_Hlt1Only.py</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
-  <argument name="prerequisites"><set>
-    <tuple><text>moore.physics.deferral.hlt1and2</text><enumeral>PASS</enumeral></tuple>
+  <!--<argument name="prerequisites"><set>
+    <tuple><text>moore.physics.deferral.hlt1and2</text><enumeral>PASS</enumeral></tuple> --><!-- commented out for now due to RICH error messages-->
   </set></argument>
   <argument name="validator"><text>
 #print "YES"
@@ -98,6 +98,7 @@ if refresult.strip().rstrip()!=timing.strip().rstrip():
 
 #count error lines, shouldn't be any warnings or errors, ideally
 #error lines here are stupid Gaudi warnings about not being able to navigate to input file, 3 input files means 6 errors.
+#11 warnings are about 
 countErrorLines({"FATAL":0,"ERROR":6,"WARNING":1})
 
 </text></argument>

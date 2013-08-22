@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-08-22 - Rob Lambert
+ - Update some references with new L0DU lines. Run some of the tests independently rather than in sequence due to the RICH and HltGlobal warnings.
+
 ! 2013-08-21 - Rob Lambert
  - Add tests from Gerhard on Hlt1/2 splitting functionality. 
  - Currently they don't 100% work...
