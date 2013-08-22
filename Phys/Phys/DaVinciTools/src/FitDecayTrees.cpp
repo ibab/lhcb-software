@@ -41,6 +41,9 @@ FitDecayTrees::FitDecayTrees                       // standard contructor
 ( const std::string& name ,                        // the algorithm instance name
   ISvcLocator*       pSvc )                        // pointer to Service Locator
   : FilterDesktop ( name , pSvc )
+// Track extrapolator  
+  , m_extrapolator     ( 0 )
+  , m_extrapolatorName ( "TrackStateProvider" )
 // chi2 cut for decay tree fit
   , m_chi2cut  ( 10 )
 // list of mass-constraints to be applied
@@ -50,6 +53,13 @@ FitDecayTrees::FitDecayTrees                       // standard contructor
 // use PV-constraint ?
   , m_use_PV_Constraint ( false )
 {
+  declareProperty
+    ( "TrackStateProvider"                        ,
+      m_extrapolatorName                         ,
+      "Track Extrapolator to be used"            )
+    -> declareUpdateHandler
+    ( &FitDecayTrees::updateExtrapolator  , this ) ;
+
   //
   declareProperty
     ( "MaxChi2PerDoF" ,
@@ -103,6 +113,21 @@ StatusCode FitDecayTrees::initialize ()
 // ============================================================================
 StatusCode FitDecayTrees::finalize ()
 { return FilterDesktop::initialize () ; }
+    /// update-handler for the property "Track Extrapolator"
+void FitDecayTrees::updateExtrapolator ( Property& /* p */ )      // update the extrapolator
+{
+  // no action if not yet initialized
+  if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
+  //        
+  MsgStream& log = info() ;
+  log << "New Track extrapolator to be used '" << m_extrapolatorName <<  "'" ;
+  const IAlgTool* e = extrapolator() ;
+  if ( 0 != e ) { log  << " : " << e->type() << "/" << e->name() ;}
+  log << endreq ;
+  //
+}
+
+
 // ============================================================================
 // update constraints
 // ============================================================================
@@ -151,7 +176,9 @@ LHCb::DecayTree FitDecayTrees::reFitted ( const LHCb::Particle* p ) const
   std::auto_ptr<Fitter>  fitter ;
   //
   // instantiate the fitter
-  fitter.reset ( 0 == pv ? new Fitter ( *p ) : new Fitter ( *p , *pv ) ) ;
+  fitter.reset ( 0 == pv ? 
+                 new Fitter ( *p, extrapolator() ) : 
+                 new Fitter ( *p , *pv, extrapolator() ) ) ;
   //
   // apply mass-constraints (if needed)
   for ( std::vector<LHCb::ParticleID>::const_iterator ipid = m_mc_2.begin() ;

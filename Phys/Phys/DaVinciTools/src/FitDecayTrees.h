@@ -10,6 +10,10 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToStream.h"
 // ============================================================================
+// TrackInterfaces 
+// ============================================================================
+#include "TrackInterfaces/ITrackStateProvider.h"
+// ============================================================================
 // local
 // ============================================================================
 #include "FilterDesktop.h"
@@ -136,6 +140,8 @@ public:
   /// attention:restore the original action by DaVinciAlgorithm
   virtual void       writeEmptyTESContainers() ;
   // ==========================================================================
+  void updateExtrapolator ( Property& /* p */ );      // update the extrapolator
+  // ==========================================================================
   void updateConstraints ( Property& /* p */ ) ;      // update the constraints 
   // ==========================================================================
   /// update handler for 'CloneFilteredParticles' property 
@@ -152,6 +158,18 @@ private:
   /// assignement operator is disabled 
   FitDecayTrees& operator=( const FitDecayTrees& ) ;          // no assignement
   // ==========================================================================
+
+protected:
+  // ========================================================================
+  /// get track extrapolator
+  inline const ITrackStateProvider* extrapolator() const
+  {
+    if ( 0 != m_extrapolator        ) { return m_extrapolator ; } // RETURN
+    if ( m_extrapolatorName.empty() ) { return              0 ; } // RETURN
+    m_extrapolator = tool<ITrackStateProvider> ( m_extrapolatorName ) ;
+      return m_extrapolator ;
+  }
+  // ========================================================================   
 protected:
   // ==========================================================================
   /// the chi2-cut for the decay tree fit 
@@ -162,6 +180,10 @@ protected:
   LHCb::DecayTree reFitted ( const LHCb::Particle* p ) const ;
   // ==========================================================================
 private:
+  /// track extrapolator
+  mutable const ITrackStateProvider* m_extrapolator ;   // the track extrapolator
+  std::string               m_extrapolatorName ; //  the name of extrapolator
+    // ========================================================================     
   // ==========================================================================
   /// the chi2-cut for the decay tree fit 
   double         m_chi2cut ;             // the chi2-cut for the decay tree fit 

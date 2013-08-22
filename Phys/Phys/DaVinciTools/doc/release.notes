@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-08-22 - Sascha Stahl
+ - Added TrackStateProvider in initialization of DecayTreeFitter in FitDecayTrees
+
 ! 2013-08-14 - Albert Puig
  - Added VertexIsolation calculation tool.
 
