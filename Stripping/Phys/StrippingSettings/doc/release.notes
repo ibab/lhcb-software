@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-08-22 - Edmund Smith
+ - Adding Stripping20r{0,1}p2 settings for B2OC WG.
+
 ! 2013-08-23 - Frederic Dupertuis
  - Adding B2CC inclusive psi(2S) lines settings to LineConfigDictionaries_B2CC.py.
 
