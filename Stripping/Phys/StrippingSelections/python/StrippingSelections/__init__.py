@@ -203,6 +203,7 @@ import StrippingLb2pMuNu
 
 import StrippingLFVLines
 import StrippingBu2K1MuMu
+import StrippingBs2Phif0
 
 import StrippingBu2MuNu
 
