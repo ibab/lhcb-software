@@ -3,7 +3,7 @@ __date__ = '24/05/2010,23/08/2012'
 __version__ = '$Revision: 1.2 $'
 # Stripping line by V. Gligorov for B->mu tau, B->tau tau, B->D mu and B->D D
 # Strongly modified for Stripping20 by Ch. Elsasser
-# added Dpi mode by G. Mancinelli
+# added Dpi mode and prescale for 2011 restripping in tautau and taumu TOS by G. Mancinelli
 
 """
   B->TauTau, B->TauMu
@@ -68,13 +68,13 @@ config_params =  {  'PT_HAD_ALL_FINAL_STATE'        : '200',  # MeV
   'MASS_LOW_D'                    : '1800', # MeV
   'MASS_HIGH_D'                   : '2030', # MeV  
   #
-  'B2TauTau_TOSLinePrescale'          : 1,
+  'B2TauTau_TOSLinePrescale'          : 0.2,
   'B2TauTau_TOSLinePostscale'         : 1,
   'B2TauTau_SB_TOSLinePrescale'          : 0.05,
   'B2TauTau_SB_TOSLinePostscale'         : 1,
   'B2DD_TOSLinePrescale'              : 1,
   'B2DD_TOSLinePostscale'             : 1,
-  'B2TauMu_TOSLinePrescale'           : 1,
+  'B2TauMu_TOSLinePrescale'           : 0.2,
   'B2TauMu_TOSLinePostscale'          : 1,
   'B2TauMu_SB_TOSLinePrescale'          : 0.05,
   'B2TauMu_SB_TOSLinePostscale'         : 1,
