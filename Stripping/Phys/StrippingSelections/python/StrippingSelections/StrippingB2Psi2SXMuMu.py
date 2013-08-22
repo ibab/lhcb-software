@@ -1,6 +1,6 @@
-# $Id: StrippingBs2Psi2SPhiPrescaledAndDetatched.py,v 1.1 2010-06-30 12:53:17 jpalac Exp $
+# $Id: StrippingBs2Psi2SPhiPrescaledAndDetached.py,v 1.1 2010-06-30 12:53:17 jpalac Exp $
 '''
-Module for construction of Bs->Psi(2S)Phi pre-scaled and detatched 
+Module for construction of Bs->Psi(2S)Phi pre-scaled and detached 
 stripping Selections and StrippingLines.
 Provides functions to build Bs, Psi2S, Phi selections.
 Provides class Bs2Psi2SPhiPrescaledConf, which constructs the Selections and 
@@ -51,11 +51,19 @@ config_params = {'muPID':0.,
                  'KstPIDpi': 10, #new
                  'KsVFASPF':20,
                  'KsBPVDLS':5,
-                 'incl_LinePrescale':0.05, #before 0.1
+                 'incl_LinePrescale':0.1, #before 0.1
                  'incl_LinePostscale':1,
-                 'BPVLTIME_detatched':0.2, #before 0.15
-                 'incl_DetatchedLinePrescale':0.2, #before 0.5
-                 'incl_DetatchedLinePostscale':1,
+                 'incl_LineTisTosHlt1':{ "Hlt1DiMuonHighMassDecision%TOS" : 0 },
+                 'incl_LineTisTosHlt2':{ "Hlt2DiMuonPsi2SDecision%TOS" : 0 },
+                 'BPVLTIME_detached':0.2, #before 0.15
+                 'incl_DetachedLinePrescale':1, #before 0.5
+                 'incl_DetachedLinePostscale':1,
+                 'incl_DetachedLineTisTosHlt1':{ "Hlt1DiMuonHighMassDecision%TOS" : 0,
+                                                 "Hlt1TrackMuonDecision%TOS" : 0,
+                                                 "Hlt1TrackAllL0Decision%TOS" : 0 },
+                 'incl_DetachedLineTisTosHlt2':{ "Hlt2DiMuonDetachedHeavyDecision%TOS" : 0,
+                                                 "Hlt2DiMuonDetachedPsi2SDecision%TOS" : 0 },
+                 'incl_DetachedCut':"BPVDLS > 3",
                  'BsMassCutDownPre':5000, #before 5000
                  'BsMassCutUpPre':5650,  #before 5650
                  'BsMassCutDownPost':5150, #before 5100
@@ -63,8 +71,8 @@ config_params = {'muPID':0.,
                  'BsVCHI2PDOF':20,     #new change, it was 10 before
                  'sig_PrescaledLinePrescale':0.5, #before 1.
                  'sig_PrescaledLinePostscale':1,
-                 'sig_DetatchedLinePrescale':1,
-                 'sig_DetatchedLinePostscale':1,
+                 'sig_DetachedLinePrescale':1,
+                 'sig_DetachedLinePostscale':1,
                  'BPVLTIME_unbiased': None,
                  'MINTREEPT':1000, #before 1000
                  'MINTREEPT2':1500, #before 1000
@@ -73,22 +81,22 @@ config_params = {'muPID':0.,
                  'ChKPT':500,
                  'K_PrescaledLinePrescale':0.1, #before 0.3 #before 0.2
                  'K_PrescaledLinePostscale':1,
-                 'K_DetatchedLinePrescale':1, #before 0.1
-                 'K_DetatchedLinePostscale':1,
+                 'K_DetachedLinePrescale':1, #before 0.1
+                 'K_DetachedLinePostscale':1,
 #                 'K_UnbiasedLinePrescale':0.7, #before 1.
 #                 'K_UnbiasedLinePostscale':1,
                  'KstarPT': 2,
                  'Kstar_PrescaledLinePrescale':0.07, #before 0.1
                  'Kstar_PrescaledLinePostscale':1,
-                 'Kstar_DetatchedLinePrescale':1, #before 1
-                 'Kstar_DetatchedLinePostscale':1,
+                 'Kstar_DetachedLinePrescale':1, #before 1
+                 'Kstar_DetachedLinePostscale':1,
 #                 'Kstar_UnbiasedLinePrescale':0.6, #before 1
 #                 'Kstar_UnbiasedLinePostscale':1,
                  'BKsVCHI2PDOF':10,
                  'Ks_PrescaledLinePrescale':1,
                  'Ks_PrescaledLinePostscale':1,
-                 'Ks_DetatchedLinePrescale':1,
-                 'Ks_DetatchedLinePostscale':1
+                 'Ks_DetachedLinePrescale':1,
+                 'Ks_DetachedLinePostscale':1
 #                 'Ks_UnbiasedLinePrescale':1,
 #                 'Ks_UnbiasedLinePostscale':1
                  }
@@ -129,9 +137,14 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                               'KsBPVDLS',
                               'incl_LinePrescale',
                               'incl_LinePostscale',
-                              'BPVLTIME_detatched',
-                              'incl_DetatchedLinePrescale',
-                              'incl_DetatchedLinePostscale',
+                              'incl_LineTisTosHlt1',
+                              'incl_LineTisTosHlt2',
+                              'BPVLTIME_detached',
+                              'incl_DetachedLinePrescale',
+                              'incl_DetachedLinePostscale',
+                              'incl_DetachedLineTisTosHlt1',
+                              'incl_DetachedLineTisTosHlt2',
+                              'incl_DetachedCut',
                               'BsMassCutDownPre',
                               'BsMassCutUpPre',
                               'BsMassCutDownPost',
@@ -139,8 +152,8 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                               'BsVCHI2PDOF',
                               'sig_PrescaledLinePrescale',
                               'sig_PrescaledLinePostscale',
-                              'sig_DetatchedLinePrescale',
-                              'sig_DetatchedLinePostscale',
+                              'sig_DetachedLinePrescale',
+                              'sig_DetachedLinePostscale',
                               'BPVLTIME_unbiased',
                               'MINTREEPT',
                               'MINTREEPT2',
@@ -149,22 +162,22 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                               'ChKPT',
                               'K_PrescaledLinePrescale',
                               'K_PrescaledLinePostscale',
-                              'K_DetatchedLinePrescale',
-                              'K_DetatchedLinePostscale',
+                              'K_DetachedLinePrescale',
+                              'K_DetachedLinePostscale',
 #                              'K_UnbiasedLinePrescale',
 #                              'K_UnbiasedLinePostscale',
                               'KstarPT',
                               'Kstar_PrescaledLinePrescale',
                               'Kstar_PrescaledLinePostscale',
-                              'Kstar_DetatchedLinePrescale',
-                              'Kstar_DetatchedLinePostscale',
+                              'Kstar_DetachedLinePrescale',
+                              'Kstar_DetachedLinePostscale',
 #                              'Kstar_UnbiasedLinePrescale',
 #                              'Kstar_UnbiasedLinePostscale',
                               'BKsVCHI2PDOF',
                               'Ks_PrescaledLinePrescale',
                               'Ks_PrescaledLinePostscale',
-                              'Ks_DetatchedLinePrescale',
-                              'Ks_DetatchedLinePostscale'
+                              'Ks_DetachedLinePrescale',
+                              'Ks_DetachedLinePostscale'
 #                              'Ks_UnbiasedLinePrescale',
 #                              'Ks_UnbiasedLinePostscale'
                               )
@@ -178,27 +191,27 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
 
         incl = self.name +'_InclPsi2SToMuMu'
         #print 'inclusiveline ' + incl  
-        incl_detatched_name = incl + 'Detatched'
+        incl_detached_name = incl + 'Detached'
 
         sig = self.name +'_Bs2Psi2SPhiMuMu'
         sig_unbiased_name = sig + 'Unbiased'
         sig_prescaled_name = sig + 'Prescaled'
-        sig_detatched_name = sig + 'Detatched'
+        sig_detached_name = sig + 'Detached'
 
         K = self.name +'_Bu2Psi2SKMuMu'
         K_unbiased_name = K + 'Unbiased'
         K_prescaled_name = K + 'Prescaled'
-        K_detatched_name = K + 'Detatched'
+        K_detached_name = K + 'Detached'
 
         Kstar = self.name + '_Bd2Psi2SKstarMuMu'
         Kstar_unbiased_name = Kstar + 'Unbiased'
         Kstar_prescaled_name = Kstar + 'Prescaled'
-        Kstar_detatched_name = Kstar + 'Detatched'
+        Kstar_detached_name = Kstar + 'Detached'
 
         Ks = self.name + '_Bd2Psi2SKsMuMu'
         Ks_unbiased_name = Ks + 'Unbiased'
         Ks_prescaled_name = Ks + 'Prescaled'
-        Ks_detatched_name = Ks + 'Detatched'
+        Ks_detached_name = Ks + 'Detached'
 
 
         self.selPsi2S2MuMu = makePsi2S2MuMu( self.name + '_Psi2SToMuMu',
@@ -246,7 +259,9 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
 ####################
 
         self.InclPsi2SToMuMu = makeInclPsi2SToMuMu(incl,  
-                                                   Psi2SSel = self.selPsi2S2MuMu 
+                                                   Psi2SSel = self.selPsi2S2MuMu,
+                                                   TisTosHlt1 = config['incl_LineTisTosHlt1'],
+                                                   TisTosHlt2 = config['incl_LineTisTosHlt2']
                                                    )                                                         
         
         self.InclPsi2SToMuMu_line = StrippingLine(incl + "Line",
@@ -255,15 +270,17 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                   selection = self.InclPsi2SToMuMu
                                                   )
         
-        self.InclPsi2SToMuMuDetatched = makeInclPsi2SToMuMu(incl_detatched_name,  
-                                                            Psi2SSel = self.selPsi2S2MuMu,
-                                                            BPVLTIME = config['BPVLTIME_detatched']
-                                                            )                                                         
+        self.InclPsi2SToMuMuDetached = makeInclPsi2SToMuMu(incl_detached_name,  
+                                                           Psi2SSel = self.selPsi2S2MuMu,
+                                                           TisTosHlt1 = config['incl_DetachedLineTisTosHlt1'],
+                                                           TisTosHlt2 = config['incl_DetachedLineTisTosHlt2'],
+                                                           Cuts = config['incl_DetachedCut']
+                                                           )                                                         
         
-        self.InclPsi2SToMuMu_detatched_line = StrippingLine(incl_detatched_name + "Line",
-                                                            prescale = config['incl_DetatchedLinePrescale'],
-                                                            postscale = config['incl_DetatchedLinePostscale'],
-                                                            selection = self.InclPsi2SToMuMuDetatched
+        self.InclPsi2SToMuMu_detached_line = StrippingLine(incl_detached_name + "Line",
+                                                            prescale = config['incl_DetachedLinePrescale'],
+                                                            postscale = config['incl_DetachedLinePostscale'],
+                                                            selection = self.InclPsi2SToMuMuDetached
                                                             )
         
         
@@ -286,7 +303,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                         selection = self.selBs2Psi2SPhiPrescaled
                                                         )
         
-        self.selBs2Psi2SPhiDetatched = makeBs2Psi2SPhiMuMu(sig_detatched_name,  
+        self.selBs2Psi2SPhiDetached = makeBs2Psi2SPhiMuMu(sig_detached_name,  
                                                            Psi2SSel = self.selPsi2S2MuMu, 
                                                            PhiSel = self.selPhi2KK,
                                                            BsMassCutDownPre = config['BsMassCutDownPre'],
@@ -294,13 +311,13 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                            BsMassCutDownPost = config['BsMassCutDownPost'],
                                                            BsMassCutUpPost = config['BsMassCutUpPost'],
                                                            BsVCHI2PDOF = config['BsVCHI2PDOF'],
-                                                           BPVLTIME = config['BPVLTIME_detatched']
+                                                           BPVLTIME = config['BPVLTIME_detached']
                                                            )
         
-        self.Bs2Psi2SPhi_detatched_line = StrippingLine(sig_detatched_name + "Line",
-                                                        prescale = config['sig_DetatchedLinePrescale'],
-                                                        postscale = config['sig_DetatchedLinePostscale'],
-                                                        selection = self.selBs2Psi2SPhiDetatched
+        self.Bs2Psi2SPhi_detached_line = StrippingLine(sig_detached_name + "Line",
+                                                        prescale = config['sig_DetachedLinePrescale'],
+                                                        postscale = config['sig_DetachedLinePostscale'],
+                                                        selection = self.selBs2Psi2SPhiDetached
                                                         )
         
         self.selBs2Psi2SPhiUnbiased = makeBs2Psi2SPhiMuMu(sig_unbiased_name,  
@@ -341,7 +358,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                       selection = self.selBu2Psi2SKPrescaled
                                                       )
         
-        self.selBu2Psi2SKDetatched = makeBu2Psi2SKMuMu(K_detatched_name,  
+        self.selBu2Psi2SKDetached = makeBu2Psi2SKMuMu(K_detached_name,  
                                                        Psi2SSel = self.selPsi2S2MuMu, 
                                                        ChKSel = self.selChargedK,
                                                        ChKPT = config['ChKPT'],
@@ -350,13 +367,13 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                        BsMassCutDownPost = config['BsMassCutDownPost'],
                                                        BsMassCutUpPost = config['BsMassCutUpPost'],
                                                        BsVCHI2PDOF = config['BsVCHI2PDOF'],
-                                                       BPVLTIME = config['BPVLTIME_detatched']
+                                                       BPVLTIME = config['BPVLTIME_detached']
                                                        )
         
-        self.Bu2Psi2SK_detatched_line = StrippingLine(K_detatched_name + "Line",
-                                                      prescale = config['K_DetatchedLinePrescale'],
-                                                      postscale = config['K_DetatchedLinePostscale'],
-                                                      selection = self.selBu2Psi2SKDetatched
+        self.Bu2Psi2SK_detached_line = StrippingLine(K_detached_name + "Line",
+                                                      prescale = config['K_DetachedLinePrescale'],
+                                                      postscale = config['K_DetachedLinePostscale'],
+                                                      selection = self.selBu2Psi2SKDetached
                                                       )
         
         self.selBu2Psi2SKUnbiased = makeBu2Psi2SKMuMu(K_unbiased_name,  
@@ -398,7 +415,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                           selection = self.selBd2Psi2SKstarPrescaled
                                                           )
         
-        self.selBd2Psi2SKstarDetatched = makeBd2Psi2SKstarMuMu(Kstar_detatched_name,  
+        self.selBd2Psi2SKstarDetached = makeBd2Psi2SKstarMuMu(Kstar_detached_name,  
                                                                Psi2SSel = self.selPsi2S2MuMu, 
                                                                KstarSel = self.selKstar,
                                                                BsMassCutDownPre = config['BsMassCutDownPre'],
@@ -406,13 +423,13 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                                BsMassCutDownPost = config['BsMassCutDownPost'],
                                                                BsMassCutUpPost = config['BsMassCutUpPost'],
                                                                BsVCHI2PDOF = config['BsVCHI2PDOF'],
-                                                               BPVLTIME = config['BPVLTIME_detatched']
+                                                               BPVLTIME = config['BPVLTIME_detached']
                                                                )
         
-        self.Bd2Psi2SKstar_detatched_line = StrippingLine(Kstar_detatched_name + "Line",
-                                                          prescale = config['Kstar_DetatchedLinePrescale'],
-                                                          postscale = config['Kstar_DetatchedLinePostscale'],
-                                                          selection = self.selBd2Psi2SKstarDetatched
+        self.Bd2Psi2SKstar_detached_line = StrippingLine(Kstar_detached_name + "Line",
+                                                          prescale = config['Kstar_DetachedLinePrescale'],
+                                                          postscale = config['Kstar_DetachedLinePostscale'],
+                                                          selection = self.selBd2Psi2SKstarDetached
                                                           )
         
         self.selBd2Psi2SKstarUnbiased = makeBd2Psi2SKstarMuMu(Kstar_unbiased_name,  
@@ -454,7 +471,7 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                        selection = self.selBd2Psi2SKsPrescaled
                                                        )
         
-        self.selBd2Psi2SKsDetatched = makeBd2Psi2SKsMuMu(Ks_detatched_name,  
+        self.selBd2Psi2SKsDetached = makeBd2Psi2SKsMuMu(Ks_detached_name,  
                                                          Psi2SSel = self.selPsi2S2MuMu, 
                                                          KsSel = self.selKs,
                                                          BsMassCutDownPre = config['BsMassCutDownPre'],
@@ -462,13 +479,13 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
                                                          BsMassCutDownPost = config['BsMassCutDownPost'],
                                                          BsMassCutUpPost = config['BsMassCutUpPost'],
                                                          BKsVCHI2PDOF = config['BKsVCHI2PDOF'],
-                                                         BPVLTIME = config['BPVLTIME_detatched']
+                                                         BPVLTIME = config['BPVLTIME_detached']
                                                          )
         
-        self.Bd2Psi2SKs_detatched_line = StrippingLine(Ks_detatched_name + "Line",
-                                                       prescale = config['Ks_DetatchedLinePrescale'],
-                                                       postscale = config['Ks_DetatchedLinePostscale'],
-                                                       selection = self.selBd2Psi2SKsDetatched
+        self.Bd2Psi2SKs_detached_line = StrippingLine(Ks_detached_name + "Line",
+                                                       prescale = config['Ks_DetachedLinePrescale'],
+                                                       postscale = config['Ks_DetachedLinePostscale'],
+                                                       selection = self.selBd2Psi2SKsDetached
                                                        )
         
         self.selBd2Psi2SKsUnbiased = makeBd2Psi2SKsMuMu(Ks_unbiased_name,  
@@ -491,22 +508,22 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
         
 
         self.registerLine(self.InclPsi2SToMuMu_line)
-        self.registerLine(self.InclPsi2SToMuMu_detatched_line)
+        self.registerLine(self.InclPsi2SToMuMu_detached_line)
               
         self.registerLine(self.Bs2Psi2SPhi_prescaled_line)
-        self.registerLine(self.Bs2Psi2SPhi_detatched_line)
+        self.registerLine(self.Bs2Psi2SPhi_detached_line)
 #        self.registerLine(self.Bs2Psi2SPhi_unbiased_line)
         
 #        self.registerLine(self.Bu2Psi2SK_unbiased_line)
-        self.registerLine(self.Bu2Psi2SK_detatched_line)
+        self.registerLine(self.Bu2Psi2SK_detached_line)
         self.registerLine(self.Bu2Psi2SK_prescaled_line)
         
 #        self.registerLine(self.Bd2Psi2SKstar_unbiased_line)
-        self.registerLine(self.Bd2Psi2SKstar_detatched_line)
+        self.registerLine(self.Bd2Psi2SKstar_detached_line)
         self.registerLine(self.Bd2Psi2SKstar_prescaled_line)
         
 #        self.registerLine(self.Bd2Psi2SKs_unbiased_line)
-        self.registerLine(self.Bd2Psi2SKs_detatched_line)
+        self.registerLine(self.Bd2Psi2SKs_detached_line)
         self.registerLine(self.Bd2Psi2SKs_prescaled_line)
         
 
@@ -621,18 +638,31 @@ def makeKs(name,
 ####################
 def makeInclPsi2SToMuMu(name,
                         Psi2SSel,
-                        BPVLTIME = None
+                        TisTosHlt1,
+                        TisTosHlt2,
+                        Cuts = None
                         ) :
     _code = "ALL"
-    if BPVLTIME != None :
-        _code = "(BPVLTIME()>%(BPVLTIME)s*ps)" % locals()
+    if Cuts != None :
+        _code = Cuts
 
     _InclFilter = FilterDesktop(Code = _code)
-    
-    return Selection (name,
-                      Algorithm = _InclFilter,
-                      RequiredSelections = [Psi2SSel])
 
+    InclPsi2SToMuMu = Selection (name,
+                                 Algorithm = _InclFilter,
+                                 RequiredSelections = [Psi2SSel])
+    
+    InclPsi2SToMuMuHlt1TOS = filterTisTos( name+"Hlt1TOS",
+                                           DiMuonInput = InclPsi2SToMuMu,
+                                           myTisTosSpecs = TisTosHlt1
+                                           )
+    
+    InclPsi2SToMuMuTOS = filterTisTos( name+"TOS",
+                                       DiMuonInput = InclPsi2SToMuMuHlt1TOS,
+                                       myTisTosSpecs = TisTosHlt2
+                                       )
+    
+    return InclPsi2SToMuMuTOS
 
 
 
@@ -804,4 +834,23 @@ def makeBd2Psi2SKsMuMu(name,
                        RequiredSelections = [Psi2SSel, KsSel])
 
 
+#####################
+### TISTOS Filter ###
+#####################
+def filterTisTos( name, DiMuonInput, myTisTosSpecs ) :
+    
+    from Configurables import TisTosParticleTagger
+    
+    myTagger = TisTosParticleTagger(name + "_TisTosTagger")
+    myTagger.TisTosSpecs = myTisTosSpecs
 
+    # To speed it up, TisTos only with tracking system
+    
+    myTagger.ProjectTracksToCalo = False
+    myTagger.CaloClustForCharged = False
+    myTagger.CaloClustForNeutral = False
+    myTagger.TOSFrac = { 4:0.0, 5:0.0 }
+    
+    return Selection(name + "_SelTisTos",
+                     Algorithm = myTagger,
+                     RequiredSelections = [ DiMuonInput ] )

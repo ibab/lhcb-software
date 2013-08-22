@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-22 - Frederic Dupertuis
+  - Added inclusive psi(2S) lines in StrippingB2Psi2SXMuMu.py
+
 ! 2013-08-22 - Francesca Dordei
   - Added a micro dst line for JpsiPhi and persistent tagging inso in StrippingB2JpsiXforBeta_s.py
 

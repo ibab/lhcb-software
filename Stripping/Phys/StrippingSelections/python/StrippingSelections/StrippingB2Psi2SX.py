@@ -1,6 +1,6 @@
-# $Id: StrippingBs2Psi2SPhiPrescaledAndDetatched.py,v 1.1 2010-06-30 12:53:17 jpalac Exp $
+# $Id: StrippingBs2Psi2SPhiPrescaledAndDetached.py,v 1.1 2010-06-30 12:53:17 jpalac Exp $
 '''
-Module for construction of Bs->Psi(2S)Phi pre-scaled and detatched 
+Module for construction of Bs->Psi(2S)Phi pre-scaled and detached 
 stripping Selections and StrippingLines.
 Provides functions to build Bs, Psi2S, Phi selections.
 Provides class Bs2Psi2SPhiPrescaledConf, which constructs the Selections and 
@@ -63,7 +63,7 @@ config_params = {'PionsTRCHI2DOF': 5,
                  'KsBPVDLS':5,
                  'incl_LinePrescale':0.1, #0.1 #before 0.5 #avui 0.2 
                  'incl_LinePostscale':1,
-                 'BPVLTIME_detatched':0.15,
+                 'BPVLTIME_detached':0.15,
                  'BsMassCutDownPre':5000,#before 5000
                  'BsMassCutUpPre':5650,#before 5650
                  'BsMassCutDownPost':5150,#before 5100
@@ -123,7 +123,7 @@ class B2Psi2SXConf(LineBuilder) :
                               'KsBPVDLS',
                               'incl_LinePrescale',
                               'incl_LinePostscale',
-                              'BPVLTIME_detatched',
+                              'BPVLTIME_detached',
                               'BsMassCutDownPre',
                               'BsMassCutUpPre',
                               'BsMassCutDownPost',
@@ -148,7 +148,7 @@ class B2Psi2SXConf(LineBuilder) :
 
 
         incl = self.name + '_InclPsi2SToJpsiPiPi'
-        incl_detatched_name = incl + 'Detatched'
+        incl_detached_name = incl + 'Detached'
         sig = self.name + '_Bs2Psi2SPhiJpsiPiPi' 
         K = self.name + '_Bu2Psi2SKJpsiPiPi' 
         Kstar = self.name + '_Bd2Psi2SKstarJpsiPiPi' 
@@ -232,7 +232,7 @@ class B2Psi2SXConf(LineBuilder) :
                                                               BsMassCutDownPost = config['BsMassCutDownPost'],
                                                               BsMassCutUpPost = config['BsMassCutUpPost'],
                                                               BsVCHI2PDOF = config['BsVCHI2PDOF'],
-                                                              BPVLTIME = config['BPVLTIME_detatched']
+                                                              BPVLTIME = config['BPVLTIME_detached']
                                                               )
         
         self.Bs2Psi2SPhiJpsiPiPi_line = StrippingLine(sig + "Line",
@@ -253,7 +253,7 @@ class B2Psi2SXConf(LineBuilder) :
                                                           BsMassCutDownPost = config['BsMassCutDownPost'],
                                                           BsMassCutUpPost = config['BsMassCutUpPost'],
                                                           BsVCHI2PDOF = config['BsVCHI2PDOF'],
-                                                          BPVLTIME = config['BPVLTIME_detatched']
+                                                          BPVLTIME = config['BPVLTIME_detached']
                                                           )
         
         self.Bu2Psi2SKJpsiPiPi_line = StrippingLine(K + "Line",
@@ -277,7 +277,7 @@ class B2Psi2SXConf(LineBuilder) :
                                                                   BsMassCutUpPost = config['BsMassCutUpPost'],
                                                                   BsVCHI2PDOF = config['BsVCHI2PDOF'],
                                                                   MINTREEPT2 = config['MINTREEPT2'],
-                                                                  BPVLTIME = config['BPVLTIME_detatched']
+                                                                  BPVLTIME = config['BPVLTIME_detached']
                                                                   )
         
         self.Bd2Psi2SKstarJpsiPiPi_line = StrippingLine(Kstar + "Line",
