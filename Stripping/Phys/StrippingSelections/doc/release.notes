@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-22 - Francesca Dordei
+  - Added a micro dst line for JpsiPhi and persistent tagging inso in StrippingB2JpsiXforBeta_s.py
+
 ! 2013-08-22 - Francesco Dettori 
  - Adding StrippingRareStrange.py to StrippingSelections 
    for the selection of Sigma-> p mu mu 

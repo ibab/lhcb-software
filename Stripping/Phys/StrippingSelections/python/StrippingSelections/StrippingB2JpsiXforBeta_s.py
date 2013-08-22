@@ -359,12 +359,19 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                    PreVertexCuts = "in_range(5050,AM,5650)",
                                    #PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config )
 				   PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < 20)" % self.config )     # for the other particles is 10
+				   
         Bs2JpsiPhiPrescaledLine = StrippingLine( self.name + "Bs2JpsiPhiPrescaledLine", algos = [ Bs2JpsiPhi ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bs2JpsiPhiPrescale'])
 
         Bs2JpsiPhiDetached = self.createSubSel( InputList = Bs2JpsiPhi,
                                    OutputList = Bs2JpsiPhi.name() + "Detached" + self.name,
                                    Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
-        Bs2JpsiPhiDetachedLine  = StrippingLine( self.name + "Bs2JpsiPhiDetachedLine", algos = [ Bs2JpsiPhiDetached ] )
+        Bs2JpsiPhiDetachedLine  = StrippingLine( self.name + "Bs2JpsiPhiDetachedLine", algos = [ Bs2JpsiPhiDetached ], EnableFlavourTagging = True )
+        
+        
+        Bs2JpsiPhiMicro = self.createSubSel( InputList = Bs2JpsiPhi,
+                                   OutputList = Bs2JpsiPhi.name() + "Micro" + self.name,
+                                   Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
+        Bs2JpsiPhiMicroLine  = StrippingLine( self.name + "Bs2JpsiPhiMicroLine", algos = [ Bs2JpsiPhiMicro ], EnableFlavourTagging = True )
 
         Bs2JpsiPhiUnbiased = self.createSubSel( InputList = Bs2JpsiPhi,
                                    OutputList = Bs2JpsiPhi.name() + "Unbiased" + self.name,
@@ -372,6 +379,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bs2JpsiPhiUnbiasedLine =  StrippingLine( self.name + "Bs2JpsiPhiUnbiasedLine", algos = [ Bs2JpsiPhiUnbiased ] )
 
         self.registerLine(Bs2JpsiPhiPrescaledLine)
+        self.registerLine(Bs2JpsiPhiMicroLine)
         self.registerLine(Bs2JpsiPhiDetachedLine)
         ##self.registerLine(Bs2JpsiPhiUnbiasedLine)
 
