@@ -99,8 +99,8 @@ class Bs2Phif0Conf(LineBuilder) :
 
         self.Bs2Phif0Line = StrippingLine( name+"Line",
                                          prescale = config['Q2BPrescale'],
-                                         selection = self.B2CharmlessPhif0)
-
+                                         selection = self.B2CharmlessPhif0,
+                                         EnableFlavourTagging = True )
         self.registerLine(self.Bs2Phif0Line)
 
 def mkDiTrackList( name,
