@@ -64,7 +64,7 @@ evtTuple.TupleToolTrigger.VerboseHlt2 = True
 #
 from Configurables import MCDecayTreeTuple
 mcTuple = MCDecayTreeTuple("MCTuple")
-mcTuple.Decay = "{[ [B0]nos -> (^J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}) (^KS0 -> ^pi+ ^pi- {,gamma}{,gamma}) {,gamma}]cc, [ [B0]os -> (^J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}) (^KS0 -> ^pi+ ^pi- {,gamma}{,gamma}) {,gamma}]cc}"
+mcTuple.Decay = "{[ [B0]nos -> ^(J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}) ^(KS0 -> ^pi+ ^pi- {,gamma}{,gamma}) {,gamma} ]CC, [ [B0]os -> ^(J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}) ^(KS0 -> ^pi+ ^pi- {,gamma}{,gamma}) {,gamma} ]CC}"
 mcTuple.ToolList = [ "MCTupleToolKinematic", "TupleToolEventInfo", "MCTupleToolReconstructed"  ]
 from Configurables import MCTupleToolReconstructed, MCReconstructed
 #ToolSvc().addTool(MCReconstructed)
