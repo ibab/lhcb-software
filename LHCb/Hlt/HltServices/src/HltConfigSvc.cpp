@@ -57,14 +57,13 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   , m_id(~0u)
 {
   //TODO: template this pattern of property + 'transformer' -> thing_I_really_want with callback support
-  //TODO: Already done -- called propertyhandler...[:w
+  //TODO: Already done -- called propertyhandler...
   declareProperty("TCK2ConfigMap", m_tck2config_)->declareUpdateHandler( &HltConfigSvc::updateMap, this);
   declareProperty("initialTCK", m_initialTCK_ )->declareUpdateHandler( &HltConfigSvc::updateInitial, this); 
   declareProperty("prefetchDir", m_prefetchDir);
   declareProperty("checkOdin", m_checkOdin = true);
   declareProperty("maskL0TCK", m_maskL0TCK = false);
-  //declareProperty( "HltDecReportsLocation", m_outputContainerName = std::string("/Event/")+LHCb::HltDecReportsLocation::Default );
-  m_outputContainerName = std::string("/Event/")+LHCb::HltDecReportsLocation::Default ;
+  declareProperty( "HltDecReportsLocation", m_outputContainerName = std::string("/Event/")+LHCb::HltDecReportsLocation::Default );
 }
 
 void HltConfigSvc::updateMap(Property&) {
@@ -202,7 +201,7 @@ HltConfigSvc::tck2id(TCK tck) const {
     TCKMap_t::const_iterator i = m_tck2config.find( tck );
     if (i != m_tck2config.end()) {
         id = ConfigTreeNode::digest_type::createFromStringRep(i->second);
-        debug() << " TCK " << tck << " mapped (by explicit option) to " << id << endmsg;
+        warning() << " TCK " << tck << " mapped (by explicit option) to " << id << endmsg;
         return id;
     }
 
