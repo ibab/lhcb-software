@@ -222,6 +222,8 @@ import StrippingB2LambdaMuLines
 import StrippingTau2LambdaMuLines
 import StrippingD2PiPi0
 
+import StrippingRareStrange
+
 from sys import modules as _modules
 _this = _modules[__name__]
 

@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-22 - Francesco Dettori 
+ - Adding StrippingRareStrange.py to StrippingSelections 
+   for the selection of Sigma-> p mu mu 
+   See VRD Meeting 2013-08-21
+
 ! 2013-08-22 - Haofei Luo
  Bs2Phif0 line was added
 
