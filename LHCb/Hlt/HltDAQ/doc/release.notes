@@ -4,6 +4,11 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2013-08-23 - Gerhard Raven
+ - HltRoutingBitsWriter: use two different, configurable, TES location for HltDecReports used to fill 
+   bits 32-63 (Hlt1) and 64-95 (Hlt2). The default maintains the existing behaviour, i.e. both use the 
+   same (default) location
+
 ! 2013-07-26 - Rob Lambert
  - Move all HLT services to the HltServices package
 

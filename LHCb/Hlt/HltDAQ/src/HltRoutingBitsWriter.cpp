@@ -113,7 +113,8 @@ HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
   , m_preambulo_updated(false)
 {
   zeroEvaluators(true);
-  declareProperty("HltDecReportsLocation", m_hlt_location = LHCb::HltDecReportsLocation::Default);
+  declareProperty("Hlt1DecReportsLocation", m_hlt1_location = LHCb::HltDecReportsLocation::Default);
+  declareProperty("Hlt2DecReportsLocation", m_hlt2_location = LHCb::HltDecReportsLocation::Default);
   declareProperty("L0DUReportLocation", m_l0_location = LHCb::L0DUReportLocation::Default);
   declareProperty("ODINLocation", m_odin_location = LHCb::ODINLocation::Default);
   declareProperty("RoutingBits", m_bits) ->declareUpdateHandler( &HltRoutingBitsWriter::updateBits, this );
@@ -257,8 +258,11 @@ StatusCode HltRoutingBitsWriter::execute() {
   }
 
   // bits 32--95 are for HLT
-  LHCb::HltDecReports* hdr = get<LHCb::HltDecReports>( m_hlt_location );
+  std::string* location[2];
+  location[0] = &m_hlt1_location;
+  location[1] = &m_hlt2_location;
   for (unsigned j=1;j<3;++j) {
+    LHCb::HltDecReports* hdr = get<LHCb::HltDecReports>( *location[j-1] );
     for (unsigned i=0;i<32;++i) {
         LoKi::Types::HLT_Cut* eval = m_hlt_evaluators[ (j-1)*32+i ].predicate;
         if ( eval == 0 ) continue;
