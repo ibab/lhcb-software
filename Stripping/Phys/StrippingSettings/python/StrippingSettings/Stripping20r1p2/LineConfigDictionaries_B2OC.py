@@ -183,7 +183,7 @@ Beauty2Charm = {
     #'B2D0DD02K3PiBeauty2CharmLine' : 1.0
     },
     'GECNTrkMax'   : 500
-    }
+    },
     'STREAMS' : {
     'Bhadron' : ['StrippingB2D0KD2Pi0HHMergedBeauty2CharmLine',
                  'StrippingB2D0KD2Pi0HHResolvedBeauty2CharmLine',
