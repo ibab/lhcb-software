@@ -118,6 +118,7 @@ import StrippingHighPtGamma
 
 import StrippingMiniBias
 import StrippingProtonIonMinBias
+import StrippingSbarSCorrelations
 
 import StrippingNoPIDDstarWithD02RSKPi
 
