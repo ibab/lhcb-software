@@ -18,30 +18,26 @@ from Moore.Configuration import Moore
 Moore().ThresholdSettings = 'Physics_September2012'
 
 Moore().Verbose = True
-Moore().EvtMax = 100
+#Moore().EvtMax = 10000
+from Configurables import EventSelector
+EventSelector().PrintFreq = 100
 
 Moore().UseDBSnapshot = False
 Moore().ForceSingleL0Configuration = False
 
 from PRConfig.TestFileDB import test_file_db
 input = test_file_db['2012_raw_default']
+input.filenames = [ '/data/bfys/graven/0x46/'+f.split('/')[-1] for f in input.filenames ]
 input.run(configurable=Moore()) 
+Moore().inputFiles = input.filenames
 
-# /data/bfys/graven/0x46
-rel = lambda f : '/data/bfys/graven/0x46/'+f.split('/')[-1]
-Moore().inputFiles = [ rel(fn) for fn in input.filenames ]
-#Moore().WriterRequires = [ 'Hlt1' ]
-#Moore().outputFile = '/data/bfys/graven/0x46/hlt1_reqhlt1.raw'
-
-
-__replace = lambda orig, repl, members : [ m if m != orig else repl for m in members ]
-def SplitHlt1() :
+def hlt2DiMuonOnly() :
+    __remove_re  = lambda re, members : [ m for m in members if not re.match(m.name()) ] 
     from Configurables import GaudiSequencer as gs
-    seq = gs('Hlt')
-    seq.Members = __replace( gs('HltDecisionSequence'), gs('Hlt1'), seq.Members )
-    ## adapt HltGlobalMonitor for Hlt1 only...
-    from Configurables import HltGlobalMonitor
-    HltGlobalMonitor().DecToGroupHlt2 = {}
-
+    import re
+    seq = gs('Hlt2')
+    seq.Members = __remove_re(re.compile('Hlt2(?!DiMuon).*') , seq.Members )
+    #for c in walkAlgorithms( seq ) : c.OutputLevel = 2
+    
 from Gaudi.Configuration import appendPostConfigAction
-appendPostConfigAction( SplitHlt1 )
+appendPostConfigAction( hlt2DiMuonOnly )
