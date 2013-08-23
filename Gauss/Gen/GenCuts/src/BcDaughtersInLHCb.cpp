@@ -135,7 +135,10 @@ bool BcDaughtersInLHCb::applyCut( ParticleVector & theParticleVector ,
 bool BcDaughtersInLHCb::passCuts( const HepMC::GenParticle * theSignal ) 
   const {
   HepMC::GenVertex * EV = theSignal -> end_vertex() ;
-  if ( 0 == EV ) return true ;
+  if ( 0 == EV ) return false ;
+
+  // check if pz of the Bc is positive
+  if ( theSignal -> momentum().pz() < 0. ) return false ;
   
   typedef std::vector< HepMC::GenParticle * > Particles ;
   Particles stables ;

@@ -156,7 +156,9 @@ bool BcDaughtersInLHCbAndMassCut::passCuts( const HepMC::GenParticle * theSignal
     return false ;
     //return true ;
   }
-  
+
+  // check if pz of the Bc is positive
+  if ( theSignal -> momentum().pz() < 0. ) return false ;  
   
   typedef std::vector< HepMC::GenParticle * > Particles ;
   Particles stables ;

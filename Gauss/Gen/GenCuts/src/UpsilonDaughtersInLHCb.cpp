@@ -94,7 +94,7 @@ StatusCode UpsilonDaughtersInLHCb::finalize( ) {
 // Acceptance function
 //=============================================================================
 bool UpsilonDaughtersInLHCb::applyCut( ParticleVector & theParticleVector ,
-				       const HepMC::GenEvent * theEvent  ,
+                                       const HepMC::GenEvent * theEvent  ,
                                        const LHCb::GenCollision */* theHardInfo */ ) const {
   
   // First decay all particles heavier than the Upsilon
@@ -161,8 +161,11 @@ bool UpsilonDaughtersInLHCb::applyCut( ParticleVector & theParticleVector ,
 bool UpsilonDaughtersInLHCb::passCuts( const HepMC::GenParticle * theSignal ) 
   const {
   HepMC::GenVertex * EV = theSignal -> end_vertex() ;
-  if ( 0 == EV ) return true ;
+  if ( 0 == EV ) return false ;
   
+  // check if pz of the Bc is positive
+  if ( theSignal -> momentum().pz() < 0. ) return false ;
+
   typedef std::vector< HepMC::GenParticle * > Particles ;
   Particles stables ;
   HepMC::GenVertex::particle_iterator iter ;
