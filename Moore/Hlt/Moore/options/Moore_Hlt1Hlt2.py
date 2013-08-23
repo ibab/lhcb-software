@@ -18,7 +18,7 @@ from Moore.Configuration import Moore
 Moore().ThresholdSettings = 'Physics_September2012'
 
 Moore().Verbose = True
-#Moore().EvtMax = 10000
+Moore().EvtMax = 1000
 from Configurables import EventSelector
 EventSelector().PrintFreq = 100
 
@@ -31,13 +31,3 @@ input.filenames = [ '/data/bfys/graven/0x46/'+f.split('/')[-1] for f in input.fi
 input.run(configurable=Moore()) 
 Moore().inputFiles = input.filenames
 
-def hlt2DiMuonOnly() :
-    __remove_re  = lambda re, members : [ m for m in members if not re.match(m.name()) ] 
-    from Configurables import GaudiSequencer as gs
-    import re
-    seq = gs('Hlt2')
-    seq.Members = __remove_re(re.compile('Hlt2(?!DiMuon).*') , seq.Members )
-    #for c in walkAlgorithms( seq ) : c.OutputLevel = 2
-    
-from Gaudi.Configuration import appendPostConfigAction
-appendPostConfigAction( hlt2DiMuonOnly )

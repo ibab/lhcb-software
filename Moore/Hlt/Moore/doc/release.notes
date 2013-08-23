@@ -4,8 +4,16 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-08-23 - Gerhard Raven
+ - move splitting logic out of dedicated scripts, and hide it in the 
+   Moore configurable. One can now specify:
+    Moore().Split = 'Hlt1' # or 'Hlt2' or ''
+
 ! 2013-08-22 - Rob Lambert
- - Update some references with new L0DU lines. Run some of the tests independently rather than in sequence due to the RICH and HltGlobal warnings.
+ - Update some references with additional locations where 
+   L0DU decoders appear. 
+ - Run some of the tests independently rather than in sequence 
+   due to the RICH and HltGlobal warnings.
 
 ! 2013-08-21 - Rob Lambert
  - Add tests from Gerhard on Hlt1/2 splitting functionality. 
