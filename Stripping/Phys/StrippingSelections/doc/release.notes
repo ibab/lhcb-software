@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-23 - Andrea Contu
+  - BugFix to StrippingB2ppipiSigmacmm_Lcpi lines
+
 ! 2013-08-22 - Frederic Dupertuis
   - Added inclusive psi(2S) lines in StrippingB2Psi2SXMuMu.py
 

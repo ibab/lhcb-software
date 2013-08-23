@@ -15,15 +15,18 @@ Exported symbols (use python help):
 '''
 
 __author__ = ['Andrea Contu']
-__date__ = '15/03/2013'
-__version__ = '$Revision: 1.0 $'
+__date__ = '20/08/2013'
+__version__ = '$Revision: 2.0 $'
 
 __all__ = ('StrippingB2ppipiSigmacmm_Lcpi_Conf'
            ,'makepifromSigmacmm'
            ,'makeThreePart'
            ,'makeFourPart'
+           ,'makeFourPartWS'
            ,'makeSigmacmm2Lcpi'
            ,'makeB2ppipiSigmacmm'
+           ,'makeB2ppipiSigmacmm_FourPart'
+           ,'makeB2ppipiSigmacmm_FourPart_WS'
            )
 
 from Gaudi.Configuration import *
@@ -43,13 +46,13 @@ name='StrippingB2ppipiSigmacmm_Lcpi'
 
 config_default = {
   'protonMINP':10.0*GeV
-  ,'protonMINIPCHI2':6.0
+  ,'protonMINIPCHI2':8.0
   ,'protonMINPT': 500.0*MeV
-  ,'protonMINPIDp':5.0
+  ,'protonMINPIDp':10.0
   ,'protonMINPIDp_K':0.0
   ,'pionMINP':5.0*GeV
   ,'pionMINPT':500.0*MeV
-  ,'pionMINIPCHI2':6.0
+  ,'pionMINIPCHI2':8.0
   ,'piSigmaMINP':2.0*GeV
   ,'piSigmaMINPT':150.0*MeV
   ,'piSigmaMAXP':10.0*GeV
@@ -76,7 +79,7 @@ config_default = {
   ,'threepartMinIPChi2':5.0
   ,'fourpartMinIPChi2':5.0
   ,'threepartPT':1.0*GeV
-  ,'fourpartPT':1.0*GeV
+  ,'fourpartPT':1.2*GeV
   ,'BFDChi2':100.0
   ,'SigmaFDChi2':36.0
   ,'SigmaVtxChi2DOF':10.0
@@ -101,10 +104,10 @@ config_default = {
     }
 
 config_default_FULLDST = {
-  'protonMINP':10.0*GeV
+  'protonMINP':15.0*GeV
   ,'protonMINIPCHI2':6.0
   ,'protonMINPT': 500.0*MeV
-  ,'protonMINPIDp':5.0
+  ,'protonMINPIDp':10.0
   ,'protonMINPIDp_K':0.0
   ,'pionMINP':5.0*GeV
   ,'pionMINPT':500.0*MeV
@@ -135,7 +138,7 @@ config_default_FULLDST = {
   ,'threepartMinIPChi2':5.0
   ,'fourpartMinIPChi2':5.0
   ,'threepartPT':1.0*GeV
-  ,'fourpartPT':1.0*GeV
+  ,'fourpartPT':1.2*GeV
   ,'BFDChi2':100.0
   ,'SigmaFDChi2':36.0
   ,'SigmaVtxChi2DOF':10.0
@@ -288,6 +291,21 @@ class StrippingB2ppipiSigmacmm_Lcpi_Conf(LineBuilder):
       ,DelmLower = config['DelmLower']
       )
     
+    selFourPartWS = makeFourPartWS(
+      name = name
+      ,selectionthree = selThreePart
+      ,selectionpiSigma = selpifromSigmacmm
+      ,fourpartMassLow = config["fourpartMassLow"]
+      ,fourpartMassHigh = config["fourpartMassHigh"]
+      ,fourpartMAXDOCA = config["fourpartMAXDOCA"]
+      ,fourpartVtxChi2DOF = config["fourpartVtxChi2DOF"]
+      ,fourpartFDChi2 = config["fourpartFDChi2"]
+      ,fourpartPT = config['fourpartPT']
+      ,fourpartMinIPChi2 = config['fourpartMinIPChi2']
+      ,ApplyDeltaMCut = config['ApplyDeltaMCut']
+      ,DelmUpper = config['DelmUpper']
+      ,DelmLower = config['DelmLower']
+      )
     
     selSigmacmm2Lcpi = makeSigmacmm2Lcpi(
       name = name
@@ -313,7 +331,34 @@ class StrippingB2ppipiSigmacmm_Lcpi_Conf(LineBuilder):
       ,BFDChi2 = config['BFDChi2']
       ,BDIRA = config['BDIRA']
       )
-
+    
+    
+    selB2ppipiSigmacmm_FourPart = makeB2ppipiSigmacmm_FourPart(
+      name = name
+      ,selectionfour = selFourPart
+      ,BMassWind = config['BMassWind']
+      ,BMAXDOCA = config['BMAXDOCA']
+      ,BVtxChi2DOF = config['BVtxChi2DOF']
+      ,BFDChi2 = config['BFDChi2']
+      ,BDIRA = config['BDIRA']
+      ,LcMassWind = config['LcMassWind']
+      ,LcVtxChi2DOF = config['LcVtxChi2DOF']
+      ,LcFDChi2 = config['LcFDChi2']
+      )
+      
+    selB2ppipiSigmacmm_FourPart_WS = makeB2ppipiSigmacmm_FourPart_WS(
+      name = name
+      ,selectionfour = selFourPartWS
+      ,BMassWind = config['BMassWind']
+      ,BMAXDOCA = config['BMAXDOCA']
+      ,BVtxChi2DOF = config['BVtxChi2DOF']
+      ,BFDChi2 = config['BFDChi2']
+      ,BDIRA = config['BDIRA']
+      ,LcMassWind = config['LcMassWind']
+      ,LcVtxChi2DOF = config['LcVtxChi2DOF']
+      ,LcFDChi2 = config['LcFDChi2']
+      )
+    
     _GECfilter = None
 
     if config['ApplyGECs']:
@@ -342,14 +387,42 @@ class StrippingB2ppipiSigmacmm_Lcpi_Conf(LineBuilder):
       ,FILTER=_GECfilter)
     self.registerLine(self.line_fourpart)
     
-    self.line_B2ppipiSigmacmm= StrippingLine(
-      name+"_Closed_Line"
-      ,prescale=config['PrescaleComplete']
-      ,postscale=config['PostscaleComplete']
-      ,selection=selB2ppipiSigmacmm
+    
+    self.line_fourpartWS = StrippingLine(
+      name+"_PartRecoWS_Line"
+      ,prescale=config['Prescalefourpart']
+      ,postscale=config['Postscalefourpart']
+      ,selection=selFourPartWS
       ,checkPV=config['CheckPV']
       ,FILTER=_GECfilter)
-    self.registerLine(self.line_B2ppipiSigmacmm)
+    self.registerLine(self.line_fourpartWS)
+    
+    #self.line_B2ppipiSigmacmm= StrippingLine(
+      #name+"_Closed_Line"
+      #,prescale=config['PrescaleComplete']
+      #,postscale=config['PostscaleComplete']
+      #,selection=selB2ppipiSigmacmm
+      #,checkPV=config['CheckPV']
+      #,FILTER=_GECfilter)
+    #self.registerLine(self.line_B2ppipiSigmacmm)
+    
+    self.line_B2ppipiSigmacmm_FourPart= StrippingLine(
+      name+"_Closed_Line_FourPart"
+      ,prescale=config['PrescaleComplete']
+      ,postscale=config['PostscaleComplete']
+      ,selection=selB2ppipiSigmacmm_FourPart
+      ,checkPV=config['CheckPV']
+      ,FILTER=_GECfilter)
+    self.registerLine(self.line_B2ppipiSigmacmm_FourPart)
+    
+    self.line_B2ppipiSigmacmm_FourPart_WS= StrippingLine(
+      name+"_Closed_Line_FourPart_WS"
+      ,prescale=config['PrescaleComplete']
+      ,postscale=config['PostscaleComplete']
+      ,selection=selB2ppipiSigmacmm_FourPart_WS
+      ,checkPV=config['CheckPV']
+      ,FILTER=_GECfilter)
+    self.registerLine(self.line_B2ppipiSigmacmm_FourPart_WS)
 
 def makepifromSigmacmm(
        name
@@ -410,7 +483,7 @@ def makeThreePart(
               " & (MIPCHI2DV(PRIMARY)>%(piMINIPCHI2)s)" \
               %locals()
   if applyPionPIDK:
-    _tmpc = "((PIDK-PIDpi)>%(pionPIDK)s)" %locals()
+    _tmpc = "((PIDK-PIDpi)<%(pionPIDK)s)" %locals()
     _pionCuts = _pionCuts + " & "+_tmpc
      
   _protonCuts = "(TRCHI2DOF<%(trackChi2DOF)s) &  ((PIDp-PIDpi)>%(pMINPIDp)s) & ((PIDp-PIDK)>%(pMINPIDp_K)s)" \
@@ -510,6 +583,46 @@ def makeFourPart(
   return _selection
 
 
+def makeFourPartWS(
+  name
+  ,selectionthree
+  ,selectionpiSigma
+  ,fourpartMassLow
+  ,fourpartMassHigh
+  ,fourpartMAXDOCA
+  ,fourpartVtxChi2DOF
+  ,fourpartFDChi2
+  ,fourpartPT
+  ,fourpartMinIPChi2
+  ,ApplyDeltaMCut
+  ,DelmUpper
+  ,DelmLower
+  ):
+  _prefitCuts = "(AMAXDOCA('')<%(fourpartMAXDOCA)s) & (APT>%(fourpartPT)s)" %locals()
+
+  _motherCuts = "(VFASPF(VCHI2/VDOF)<%(fourpartVtxChi2DOF)s) & (BPVIPCHI2()>%(fourpartMinIPChi2)s) & " \
+                "(BPVVDCHI2>%(fourpartFDChi2)s) & (PT>%(fourpartPT)s) & " \
+                  "((M)>%(fourpartMassLow)s) & ((M)<%(fourpartMassHigh)s)"%locals()
+
+  if(ApplyDeltaMCut):
+    _deltamcut="((M-M2)>%(DelmLower)s) & ((M-M2)<%(DelmUpper)s)"%locals()
+    _motherCuts=motherCuts+" & "+_deltamcut
+    
+  _combpart = CombineParticles (
+    DecayDescriptor="[B+ -> pi+ D+]cc"
+    ,CombinationCut = _prefitCuts
+    ,MotherCut = _motherCuts
+    ,DaughtersCuts = {"pi+": "ALL", "D+" : "ALL"}
+    )
+
+  _selection = Selection(
+    'fourpartWS'+name
+    ,Algorithm=_combpart
+    ,RequiredSelections=[selectionthree, selectionpiSigma]
+    )
+  return _selection
+
+
 def makeB2ppipiSigmacmm(
   name
   ,selectionthree
@@ -537,6 +650,74 @@ def makeB2ppipiSigmacmm(
     'B2ppipiSigmacmm'+name
     ,Algorithm=_combpart
     ,RequiredSelections=[selectionthree, selectionSigma]
+    )
+  return _selection
+  
+def makeB2ppipiSigmacmm_FourPart(
+  name
+  ,selectionfour
+  ,BMassWind
+  ,BMAXDOCA
+  ,BVtxChi2DOF
+  ,BFDChi2
+  ,BDIRA
+  ,LcMassWind
+  ,LcVtxChi2DOF
+  ,LcFDChi2
+  ):
+  _prefitCuts = "(AMAXDOCA('')<%(BMAXDOCA)s)" %locals()
+
+  _motherCuts = "(ADMASS('B+')<%(BMassWind)s) & " \
+                "(BPVVDCHI2>%(BFDChi2)s) & (BPVDIRA>%(BDIRA)s) & " \
+                 "(VFASPF(VCHI2/VDOF)<%(BVtxChi2DOF)s)" %locals()
+  _LcCuts = "(ADMASS('Lambda_c~-')<%(LcMassWind)s) & " \
+                "(BPVVDCHI2>%(LcFDChi2)s) & " \
+                 "(VFASPF(VCHI2/VDOF)<%(LcVtxChi2DOF)s)" %locals()
+  _combpart = CombineParticles (
+    DecayDescriptor="[B0 -> Lambda_c~- B+]cc"
+    ,CombinationCut = _prefitCuts
+    ,MotherCut = _motherCuts
+    ,DaughtersCuts = {"Lambda_c~-": _LcCuts, "B+" : "ALL"}
+    )
+  mylcs=DataOnDemand( Location = 'Phys/StdLooseLambdac2PKPi/Particles' )
+  _selection = Selection(
+    'B2ppipiSigmacmm_FourPart'+name
+    ,Algorithm=_combpart
+    ,RequiredSelections=[selectionfour, mylcs]
+    )
+  return _selection
+
+def makeB2ppipiSigmacmm_FourPart_WS(
+  name
+  ,selectionfour
+  ,BMassWind
+  ,BMAXDOCA
+  ,BVtxChi2DOF
+  ,BFDChi2
+  ,BDIRA
+  ,LcMassWind
+  ,LcVtxChi2DOF
+  ,LcFDChi2
+  ):
+  _prefitCuts = "(AMAXDOCA('')<%(BMAXDOCA)s)" %locals()
+
+  _motherCuts = "(ADMASS('B+')<%(BMassWind)s) & " \
+                "(BPVVDCHI2>%(BFDChi2)s) & (BPVDIRA>%(BDIRA)s) & " \
+                 "(VFASPF(VCHI2/VDOF)<%(BVtxChi2DOF)s)" %locals()
+  _LcCuts = "(ADMASS('Lambda_c~-')<%(LcMassWind)s) & " \
+                "(BPVVDCHI2>%(LcFDChi2)s) & " \
+                 "(VFASPF(VCHI2/VDOF)<%(LcVtxChi2DOF)s)" %locals()
+  _combpart = CombineParticles (
+    DecayDescriptor="[B0 -> Lambda_c~- B+]cc"
+    ,CombinationCut = _prefitCuts
+    ,MotherCut = _motherCuts
+    ,DaughtersCuts = {"Lambda_c~-": _LcCuts, "B+" : "ALL"}
+    )
+  mylcs=DataOnDemand( Location = 'Phys/StdLooseLambdac2PKPi/Particles' )
+  _selection = Selection(
+    'B2ppipiSigmacmm_FourPart_WS'+name
+    ,Algorithm=_combpart
+    ,RequiredSelections=[selectionfour, mylcs]
     )
   return _selection
   
