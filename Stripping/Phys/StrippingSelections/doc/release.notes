@@ -6,7 +6,7 @@
 
 ! 2013-08-23 - Roel Aaij
  - Adapt StrippingB2JpsiXforBeta_s.py and StrippingHeavyBaryons.py to the wider mass
-   window of StdMassConstrainedJpsi. Only the prescaled lines use the wider mass window,
+   window of StdMassConstrainedJpsi. Only some prescaled lines use the wider mass window,
    a cut on "ADAMASS < 80 * MeV" has been added where needed to keep the behaviour of
    all other lines identical to the previous round.
 

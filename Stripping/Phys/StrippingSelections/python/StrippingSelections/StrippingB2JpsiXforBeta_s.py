@@ -259,20 +259,20 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 
     def makeInclJpsi( self ):
         '''Inclusive J/psi. We keep it for as long as we can'''
-        Jpsi2MuMuForBetasLine = StrippingLine( self.name + "Jpsi2MuMuLine", algos = [ self.JpsiList ], HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config["Jpsi2MuMuPrescale"] )
+        Jpsi2MuMuForBetasLine = StrippingLine( self.name + "Jpsi2MuMuLine", algos = [ self.WideJpsiList ], HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config["Jpsi2MuMuPrescale"] )
 
         Jpsi2MuMuForBetasDetached = self.createSubSel( OutputList = "Jpsi2MuMuDetachedforBetaS" + self.name,
                                                        InputList  = self.JpsiList,
                                                        Cuts = "(BPVDLS > 3)" )
 
-	Jpsi2MuMuForBetasDetachedHlt1TOS = self.filterTisTos( name = "Jpsi2MuMuForBetasDetachedHlt1TOS", 
+        Jpsi2MuMuForBetasDetachedHlt1TOS = self.filterTisTos( name = "Jpsi2MuMuForBetasDetachedHlt1TOS", 
                                                               DiMuonInput = Jpsi2MuMuForBetasDetached, 
                                                               myTisTosSpecs = { "Hlt1DiMuonHighMassDecision%TOS" : 0,
                                                                                 "Hlt1TrackMuonDecision%TOS" : 0,
                                                                                 "Hlt1TrackAllL0Decision%TOS" : 0 }
                                                               )
         
-	Jpsi2MuMuForBetasDetachedTOS = self.filterTisTos( name = "Jpsi2MuMuForBetasDetachedTOS",
+        Jpsi2MuMuForBetasDetachedTOS = self.filterTisTos( name = "Jpsi2MuMuForBetasDetachedTOS",
                                                           DiMuonInput = Jpsi2MuMuForBetasDetachedHlt1TOS,
                                                           myTisTosSpecs = { "Hlt2DiMuonDetachedJPsiDecision%TOS" : 0 }
                                                           )
@@ -511,7 +511,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         
         self.registerLine(Bs2Jpsif0NoIPPrescaledLine)
         self.registerLine(Bs2Jpsif0NoIPDetachedLine)
-	
+    
     def makeBs2Jpsi4Pi( self ):
         '''Note: the input list is already heavily lifetime biased'''
         Bs2Jpsi4Pi = self.createCombinationSel( OutputList = "Bs2Jpsi4Pi" + self.name,
@@ -559,14 +559,14 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 
         Lambdab2JpsiLambdaUnbiasedLine = StrippingLine( self.name + "Lambdab2JpsiLambdaUnbiasedLine", algos = [ Lambdab2JpsiLambda ]) 
         #Lambdab2JpsiLambdaUnbiasedLine = StrippingLine( self.name + "Lambdab2JpsiLambdaUnbiasedLine", algos = [ Lambdab2JpsiLambda ], HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')")
-	
+    
         self.registerLine(Lambdab2JpsiLambdaUnbiasedLine)
 
 
     def makeBs2JpsiEta( self ):
         Bs2JpsiEta = self.createCombinationSel( OutputList = "Bs2JpsiEta" + self.name,
                                                 DecayDescriptor = "B_s0 -> J/psi(1S) eta",
-                                                DaughterLists  = [ self.JpsiList, self.EtaList ],
+                                                DaughterLists  = [ self.WideJpsiList, self.EtaList ],
                                                 PreVertexCuts = "in_range(4750,AM,6000)",
                                                 PostVertexCuts = "in_range(4850,M,5900) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
                                                 )
@@ -575,7 +575,8 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bs2JpsiEtaDetachedLine  = StrippingLine( self.name + "Bs2JpsiEtaDetachedLine",
                                                  algos = [ self.createSubSel( InputList = Bs2JpsiEta,
                                                                               OutputList = Bs2JpsiEta.name() + "Detached" + self.name,
-                                                                              Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )] )
+                                                                              Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & "\
+                                                                              "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )] )
         
         self.registerLine(Bs2JpsiEtaPrescaledLine)
         self.registerLine(Bs2JpsiEtaDetachedLine)
@@ -584,7 +585,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
     def makeBs2JpsiEtap( self ):
         Bs2JpsiEtap = self.createCombinationSel( OutputList = "Bs2JpsiEtap" + self.name,
                                                  DecayDescriptor = "B_s0 -> J/psi(1S) eta_prime",
-                                                 DaughterLists  = [ self.JpsiList, self.EtapList ],
+                                                 DaughterLists  = [ self.WideJpsiList, self.EtapList ],
                                                  PreVertexCuts = "in_range(5000,AM,5800)",
                                                  PostVertexCuts = "in_range(5100,M,5700) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
                                                  )
@@ -593,7 +594,8 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bs2JpsiEtapDetachedLine  = StrippingLine( self.name + "Bs2JpsiEtapDetachedLine",
                                                   algos = [ self.createSubSel( InputList = Bs2JpsiEtap,
                                                                                OutputList = Bs2JpsiEtap.name() + "Detached" + self.name,
-                                                                               Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )] )
+                                                                               Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & "\
+                                                                               "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )] )
         
         self.registerLine(Bs2JpsiEtapPrescaledLine)
         self.registerLine(Bs2JpsiEtapDetachedLine)
@@ -654,19 +656,17 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.registerLine(Lambdab2JpsippiDetachedLine)
 
     def filterTisTos( self, name, DiMuonInput, myTisTosSpecs ) :
-
-	from Configurables import TisTosParticleTagger
-	
-	myTagger = TisTosParticleTagger(name + "_TisTosTagger")
-	myTagger.TisTosSpecs = myTisTosSpecs
-	
-	# To speed it up, TisTos only with tracking system
-	
-	myTagger.ProjectTracksToCalo = False
-	myTagger.CaloClustForCharged = False
-	myTagger.CaloClustForNeutral = False
-	myTagger.TOSFrac = { 4:0.0, 5:0.0 }
-
+        from Configurables import TisTosParticleTagger
+    
+        myTagger = TisTosParticleTagger(name + "_TisTosTagger")
+        myTagger.TisTosSpecs = myTisTosSpecs
+        
+        # To speed it up, TisTos only with tracking system
+        myTagger.ProjectTracksToCalo = False
+        myTagger.CaloClustForCharged = False
+        myTagger.CaloClustForNeutral = False
+        myTagger.TOSFrac = { 4:0.0, 5:0.0 }
+        
     	return Selection(name + "_SelTisTos",
                      Algorithm = myTagger,
                      RequiredSelections = [ DiMuonInput ] ) 
