@@ -22,6 +22,10 @@
 // ============================================================================
 #include "OTDAQ/IOTRawBankDecoder.h"
 // ============================================================================
+// VeloDet
+// ============================================================================
+#include "VeloDet/DeVelo.h"
+// ============================================================================
 namespace Hlt
 {
   // ==========================================================================
@@ -83,6 +87,9 @@ namespace Hlt
     // ========================================================================
   private:
     // ========================================================================
+    double veloBalance() const;;
+    /// the maximum imbalance of VELO-hits 
+    double m_maxVeloBalance;
     /// the maximum number of OT-hits 
     int m_maxOTHits;                  // the maximum number of OT-hits 
     /// the maximum number of IT-hits 
@@ -95,8 +102,10 @@ namespace Hlt
     int m_minITHits;                  // the minimum number of IT-hits
     /// the minimum number of Velo-hits 
     int m_minVeloHits;                  // the minimum number of Velo-hits    
-    /// the decodetr tool 
-    IOTRawBankDecoder* m_rawBankDecoder; // the decodetr tool 
+    /// the OT decoder tool 
+    IOTRawBankDecoder* m_rawBankDecoder; // the decoder tool 
+    ///
+    DeVelo *m_veloDet;
     //is it a upper GEC or an activity trigger
     bool m_isActivity;
     // ========================================================================    

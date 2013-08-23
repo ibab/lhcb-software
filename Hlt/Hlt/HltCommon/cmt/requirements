@@ -15,9 +15,11 @@ include_path none
 use GaudiAlg            v*
 
 use HltEvent            v*    Event
-use L0Event		v*    Event
-use DAQEvent		v*    Event
+use L0Event             v*    Event
+use DAQEvent            v*    Event
 use TrackEvent          v*    Event
+use DigiEvent           v*    Event
+use VeloDet             v*    Det
 
 use HltBase             v*    Hlt
 use LoKiTrigger         v*    Phys
