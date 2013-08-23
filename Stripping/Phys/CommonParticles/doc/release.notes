@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2013-08-23 - Roel Aaij
+ - Widen the mass window to 150 MeV in StdMassConstrainedJpsi.
+
 !========================= CommonParticles v8r14 2013-07-05 =========================
 
 ! 2013-07-04 - Chris Jones

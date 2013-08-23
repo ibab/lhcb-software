@@ -27,7 +27,7 @@ StdMassConstrainedJpsi2MuMu = CombineParticles("StdMassConstrainedJpsi2MuMu")
 StdMassConstrainedJpsi2MuMu.Inputs = ["Phys/StdAllLooseMuons/Particles"]
 StdMassConstrainedJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
 StdMassConstrainedJpsi2MuMu.DaughtersCuts = { 'mu+' : '(PIDmu > 0) & (PT > 0.5*GeV)' }
-StdMassConstrainedJpsi2MuMu.CombinationCut = "(ADAMASS('J/psi(1S)') < 80.*MeV) & (ADOCACHI2CUT(20, ''))"
+StdMassConstrainedJpsi2MuMu.CombinationCut = "(ADAMASS('J/psi(1S)') < 150.*MeV) & (ADOCACHI2CUT(20, ''))"
 StdMassConstrainedJpsi2MuMu.MotherCut = "(VFASPF(VCHI2) < 16.) & (MFIT)"
 
 ## configure Data-On-Demand service
