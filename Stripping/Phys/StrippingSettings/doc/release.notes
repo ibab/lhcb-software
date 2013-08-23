@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-08-23 - Philip Hunt
+ - Updated config dictionaries for Stripping20r{0,1}p2 Calibration streams
+   * Added B2LcpXLc2Kpi lines for proton detection asymmetry measurements
+
 ! 2013-08-24 - Francesca Dordei
  - Updates of Stripping20r{0,1}p2 settings for B2CC WG (removed some prescale lines).
 
@@ -22,13 +26,13 @@
 ! 2013-08-22 - Mika Vesterinen
  - First commit of Stripping20r{0,1}p2 settings for Semileptonic WG
 
-!========================= StrippingSettings v2r28 2013-08-02 =========================
-
 ! 2013-08-21 - Ronan Wallace
  - Added LowMult configuration dictionaries for Stripping20r{0,1}p2 to LineConfigDictionaries_QEE.py.
 
 ! 2013-08-20 - Ronan Wallace
  - Added config dictionaries for Stripping20r{0,1}p2 to Calibration stream. Z lines of StrippingTrackEffMuonTT to be restripped.
+
+!========================= StrippingSettings v2r28 2013-08-02 =========================
 
 ! 2013-07-08 - Stefano Perazzini
  - Created scratch LineConfigDictionaries_XXX.py files for the dictionaries of Stripping20r{0,1}p2
