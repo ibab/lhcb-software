@@ -38,20 +38,20 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
     __configuration_keys__ = (
 					'TRCHI2DOF'
 				,	'BPVLTIME'
-				,	'DaughterPT'
-        			,       'VCHI2PDOF'
-        			,       'Jpsi2MuMuPrescale'
+                ,   'JpsiMassWindow'
+                ,	'DaughterPT'
+                ,   'VCHI2PDOF'
+                ,   'Jpsi2MuMuPrescale'
 				,	'Jpsi2MuMuDetachedPrescale'
-        			,       'Bu2JpsiKPrescale'
-        			,       'Bd2JpsiKstarPrescale'
-        			,       'Bd2JpsiKsPrescale'
-                                ,       'Bs2JpsiPhiPrescale'
-				,       'Bs2Jpsif0Prescale'
-        			,       'Bs2JpsiEtaPrescale'
-				,       'Bs2JpsiEtapPrescale'
-				,       'Bs2JpsiPi0Prescale'
-				,       'Bs2JpsiRho0Prescale'
-                              )
+        		,   'Bu2JpsiKPrescale'
+        		,   'Bd2JpsiKstarPrescale'
+        		,   'Bd2JpsiKsPrescale'
+                ,   'Bs2JpsiPhiPrescale'
+                ,   'Bs2Jpsif0Prescale'
+        		,   'Bs2JpsiEtaPrescale'
+				,   'Bs2JpsiEtapPrescale'
+				,   'Bs2JpsiPi0Prescale'
+				,   'Bs2JpsiRho0Prescale')
 
     def __init__(self, name, config) :
         LineBuilder.__init__(self, name, config)
@@ -59,8 +59,11 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 	self.config = config
 	
         # define input daughter lists for various B -> J/psi X selections
-        self.JpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
-
+        self.WideJpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
+        self.JpsiList = self.createSubSel( OutputList = 'NarrowJpsiForBetaS' + self.name,
+                                           InputList = self.WideJpsiList,
+                                           Cuts = "(PFUNA(ADAMASS('J/psi(1S)')) < %(JpsiMassWindow)s * MeV)" % self.config)
+        
         self.KaonList = self.createSubSel( OutputList = "KaonsForBetaS" + self.name,
                                            InputList = DataOnDemand(Location = "Phys/StdLooseKaons/Particles"),
                                            Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & (PIDK >-2)" % self.config )  
@@ -97,7 +100,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                           "& (MAXTREE('K+'==ABSID, TRCHI2DOF) < %(TRCHI2DOF)s )" \
                                           "& (MINTREE('K+'==ABSID, PIDK) > 0)" % self.config)
         
-	self.KstarList = self.createSubSel( OutputList = "Kstar2KpiForBetaS" + self.name,
+        self.KstarList = self.createSubSel( OutputList = "Kstar2KpiForBetaS" + self.name,
                                             InputList = DataOnDemand(Location = "Phys/StdLooseKstar2Kpi/Particles"),
                                             Cuts = "(in_range(826,M,966))" \
                                             "& (PT > 1300.*MeV) " \
@@ -202,7 +205,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         ##self.makeBd2JpsiKsFromV0 ()
         self.makeBs2Jpsif0   ()
         self.makeBs2Jpsif0NoIP()
-	self.makeBs2Jpsi4Pi  ()
+        self.makeBs2Jpsi4Pi  ()
         self.makeBs2JpsiKstar()
         self.makeBs2JpsiKstarWide()
         self.makeLambdab2JpsiLambda() 
@@ -310,7 +313,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
     def makeBu2JpsiK( self ):
         Bu2JpsiK = self.createCombinationSel( OutputList = "Bu2JpsiK" + self.name,
                                  DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
-                                 DaughterLists = [ self.JpsiList, self.NoIPKaonList ],
+                                 DaughterLists = [ self.WideJpsiList, self.NoIPKaonList ],
                                  DaughterCuts  = {"K+": "(PT > 500.*MeV)" },
                                  PreVertexCuts = "in_range(5050,AM,5550)",
                                  PostVertexCuts = "in_range(5150,M,5450) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config )
@@ -320,16 +323,17 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 	
 
         Bu2JpsiKDetached = self.createSubSel( InputList = Bu2JpsiK, OutputList = Bu2JpsiK.name() + "Detached" + self.name,
-                                        Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps) &" \
-					       "(MINTREE('K+'==ABSID, PT) > 500.*MeV)" % self.config )
+                                              Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & "\
+                                              "(BPVLTIME() > %(BPVLTIME)s*ps) & "\
+                                              "(MINTREE('K+'==ABSID, PT) > 500.*MeV)" % self.config )
         Bu2JpsiKDetachedLine  = StrippingLine( self.name + "Bu2JpsiKDetachedLine", algos = [ Bu2JpsiKDetached ] )
 
         Bu2JpsiKUnbiased = self.createSubSel( InputList = Bu2JpsiK,
                                         OutputList = Bu2JpsiK.name() + "Unbiased" + self.name,
                                         Cuts = "(MINTREE('K+'==ABSID, PT) > %(DaughterPT)s*MeV) &"\
-					       "(MINTREE('K+'==ABSID, P)  > 10*GeV) &"\
-					       "(MINTREE('K+'==ABSID, PIDK) > 0) &"\
-					       "(MINTREE('K+'==ABSID, PIDK - PIDp) > -2)" % self.config)
+                                        "(MINTREE('K+'==ABSID, P)  > 10*GeV) &"\
+                                        "(MINTREE('K+'==ABSID, PIDK) > 0) &"\
+                                        "(MINTREE('K+'==ABSID, PIDK - PIDp) > -2)" % self.config)
         Bu2JpsiKUnbiasedLine = StrippingLine( self.name + "Bu2JpsiKUnbiasedLine",
                                         algos = [ Bu2JpsiKUnbiased ] )
     
@@ -355,7 +359,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
     def makeBs2JpsiPhi( self ):
         Bs2JpsiPhi = self.createCombinationSel( OutputList = "Bs2JpsiPhi" + self.name,
                                    DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
-                                   DaughterLists  = [ self.JpsiList, self.PhiList ],
+                                   DaughterLists  = [ self.WideJpsiList, self.PhiList ],
                                    PreVertexCuts = "in_range(5050,AM,5650)",
                                    #PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config )
 				   PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < 20)" % self.config )     # for the other particles is 10
@@ -363,19 +367,22 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bs2JpsiPhiPrescaledLine = StrippingLine( self.name + "Bs2JpsiPhiPrescaledLine", algos = [ Bs2JpsiPhi ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bs2JpsiPhiPrescale'])
 
         Bs2JpsiPhiDetached = self.createSubSel( InputList = Bs2JpsiPhi,
-                                   OutputList = Bs2JpsiPhi.name() + "Detached" + self.name,
-                                   Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
+                                                OutputList = Bs2JpsiPhi.name() + "Detached" + self.name,
+                                                Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & "\
+                                                "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
         Bs2JpsiPhiDetachedLine  = StrippingLine( self.name + "Bs2JpsiPhiDetachedLine", algos = [ Bs2JpsiPhiDetached ], EnableFlavourTagging = True )
         
         
         Bs2JpsiPhiMicro = self.createSubSel( InputList = Bs2JpsiPhi,
                                    OutputList = Bs2JpsiPhi.name() + "Micro" + self.name,
-                                   Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
+                                   Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & "\
+                                   "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
         Bs2JpsiPhiMicroLine  = StrippingLine( self.name + "Bs2JpsiPhiMicroLine", algos = [ Bs2JpsiPhiMicro ], EnableFlavourTagging = True )
 
         Bs2JpsiPhiUnbiased = self.createSubSel( InputList = Bs2JpsiPhi,
                                    OutputList = Bs2JpsiPhi.name() + "Unbiased" + self.name,
-                                   Cuts = "(MINTREE('phi(1020)'==ABSID, PT) > %(DaughterPT)s*MeV)" % self.config)
+                                   Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & "\
+                                   "(MINTREE('phi(1020)'==ABSID, PT) > %(DaughterPT)s*MeV)" % self.config)
         Bs2JpsiPhiUnbiasedLine =  StrippingLine( self.name + "Bs2JpsiPhiUnbiasedLine", algos = [ Bs2JpsiPhiUnbiased ] )
 
         self.registerLine(Bs2JpsiPhiPrescaledLine)
@@ -387,7 +394,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
     def makeBd2JpsiKstar( self ):
         Bd2JpsiKstar = self.createCombinationSel( OutputList = "Bd2JpsiKstar" + self.name,
                                      DecayDescriptor = "[B0 -> J/psi(1S) K*(892)0]cc",
-                                     DaughterLists  = [ self.JpsiList, self.KstarList ],
+                                     DaughterLists  = [ self.WideJpsiList, self.KstarList ],
                                      PreVertexCuts = "in_range(5050,AM,5550)",
                                      #PostVertexCuts = "in_range(5150,M,5450) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config)
                                      PostVertexCuts = "in_range(5150,M,5450) & (VFASPF(VCHI2PDOF) < 20)" % self.config)      # for the other particles is 10
@@ -395,17 +402,19 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 
 
         Bd2JpsiKstarDetached = self.createSubSel( InputList = Bd2JpsiKstar,
-                                     OutputList = Bd2JpsiKstar.name() + "Detached" + self.name,
-                                     Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
+                                                  OutputList = Bd2JpsiKstar.name() + "Detached" + self.name,
+                                                  Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & "\
+                                                  "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
         Bd2JpsiKstarDetachedLine  = StrippingLine( self.name + "Bd2JpsiKstarDetachedLine",
                                           algos = [ Bd2JpsiKstarDetached ] )
 
         Bd2JpsiKstarUnbiased = self.createSubSel( InputList = Bd2JpsiKstar,
-                                     OutputList = Bd2JpsiKstar.name() + "Unbiased" + self.name,
-                                     Cuts = "(PT>2.*GeV) " \
-                                     "& (MINTREE('K*(892)0'==ABSID, PT) > %(DaughterPT)s*MeV)" \
-				     "& (MINTREE('K+'==ABSID, PIDK) > 0 )" \
-				     "& (MINTREE('K+'==ABSID, PIDK - PIDp) > -2 )" % self.config)
+                                                  OutputList = Bd2JpsiKstar.name() + "Unbiased" + self.name,
+                                                  Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & "\
+                                                  "(PT>2.*GeV) " \
+                                                  "& (MINTREE('K*(892)0'==ABSID, PT) > %(DaughterPT)s*MeV)" \
+                                                  "& (MINTREE('K+'==ABSID, PIDK) > 0 )" \
+                                                  "& (MINTREE('K+'==ABSID, PIDK - PIDp) > -2 )" % self.config)
         Bd2JpsiKstarUnbiasedLine  = StrippingLine( self.name + "Bd2JpsiKstarUnbiasedLine",
                                           algos = [ Bd2JpsiKstarUnbiased ] )
 
@@ -416,7 +425,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
     def makeBd2JpsiKs( self ):
         Bd2JpsiKs = self.createCombinationSel( OutputList = "Bd2JpsiKS" + self.name,
                                   DecayDescriptor = "B0 -> J/psi(1S) KS0",
-                                  DaughterLists  = [ self.JpsiList, self.KsList ],
+                                  DaughterLists  = [ self.WideJpsiList, self.KsList ],
                                   PreVertexCuts = "in_range(5000,AM,5650)",
                                   PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
                                   )
@@ -424,8 +433,9 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bd2JpsiKsPrescaledLine = StrippingLine( self.name + "Bd2JpsiKsPrescaledLine", algos = [ Bd2JpsiKs ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bd2JpsiKsPrescale'])
 
         Bd2JpsiKsDetached = self.createSubSel( InputList = Bd2JpsiKs,
-                                    OutputList = Bd2JpsiKs.name() + "Detached" + self.name,
-                                    Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config)
+                                               OutputList = Bd2JpsiKs.name() + "Detached" + self.name,
+                                               Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & "\
+                                               "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config)
         Bd2JpsiKsDetachedLine = StrippingLine( self.name + "Bd2JpsiKsDetachedLine",
                                         algos = [ Bd2JpsiKsDetached ] )
 

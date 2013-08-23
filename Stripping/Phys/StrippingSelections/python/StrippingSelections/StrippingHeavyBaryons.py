@@ -24,6 +24,7 @@ class HeavyBaryonsConf(LineBuilder) :
        __configuration_keys__ = ( 
                                     "TRCHI2DOF"
                                   , "PionPIDK"
+                                  , "JpsiMassWindow"
                                   , "KaonPIDK"
                                   , "DLSForLongLived"
                                   , "XiMassWindow"
@@ -39,8 +40,10 @@ class HeavyBaryonsConf(LineBuilder) :
            self.config = config
 	
            # define input daughter lists for various selections
-           self.JpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
-
+           self.WideJpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
+           self.JpsiList = self.createSubSel( OutputList = 'MassConstrainedJpsiForHeavyBaryons' + self.name,
+                                              InputList = self.WideJpsiList,
+                                              Cuts = "(PFUNA(ADAMASS('J/psi(1S)')) < %(JpsiMassWindow)s)" % self.config)
 
            #make a merged list for pions 
            self.MergedPionsList = MergedSelection( "MergedPionsFor" + self.name,
