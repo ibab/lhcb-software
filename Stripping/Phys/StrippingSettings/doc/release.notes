@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-08-24 - Francesca Dordei
+ - Updates of Stripping20r{0,1}p2 settings for B2CC WG (removed some prescale lines).
+
 ! 2013-08-22 - Edmund Smith
  - Adding Stripping20r{0,1}p2 settings for B2OC WG.
 

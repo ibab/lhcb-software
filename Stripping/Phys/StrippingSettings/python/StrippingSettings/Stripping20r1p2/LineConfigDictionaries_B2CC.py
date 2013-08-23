@@ -30,11 +30,8 @@ BetaS = {
          'StrippingBetaSBs2JpsiPhiPrescaledLine',
          'StrippingBetaSBd2JpsiKstarPrescaledLine',
          'StrippingBetaSBd2JpsiKsPrescaledLine',
-         'StrippingBetaSBs2Jpsif0NoIPPrescaledLine',
          'StrippingBetaSBs2JpsiEtaPrescaledLine',
-         'StrippingBetaSBs2JpsiEtapPrescaledLine',
-         'StrippingBetaSBd2JpsiPi0PrescaledLine',
-         'StrippingBetaSBd2JpsiRho0PrescaledLine'
+         'StrippingBetaSBs2JpsiEtapPrescaledLine'
         ]
     }   
     }
