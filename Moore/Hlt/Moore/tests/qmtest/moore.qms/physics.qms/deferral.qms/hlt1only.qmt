@@ -10,8 +10,8 @@
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <!--<argument name="prerequisites"><set>
-    <tuple><text>moore.physics.deferral.hlt1and2</text><enumeral>PASS</enumeral></tuple> --><!-- commented out for now due to RICH error messages-->
-  </set></argument>
+    <tuple><text>moore.physics.deferral.hlt1and2</text><enumeral>PASS</enumeral></tuple>
+  </set></argument> --><!-- commented out for now due to RICH error messages-->
   <argument name="validator"><text>
 #print "YES"
 #reftable
