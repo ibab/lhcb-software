@@ -52,10 +52,9 @@ StatusCode PrintDuplicates::execute()
       // do we have any duplicates
       if ( iPH->second.size() > 1 )
       {
-        std::ostringstream mess;
-        mess << "Found " << iPH->second.size()
-             << " possible duplicate decays in '" << loc << "'";
-        Warning( mess.str() ).ignore();
+        warning() << "Found " << iPH->second.size()
+                  << " possible duplicate decays in '" << loc << "'"
+                  << endmsg;
         printDecay()->printTree( iPH->second.begin(), iPH->second.end() );
       }
 
