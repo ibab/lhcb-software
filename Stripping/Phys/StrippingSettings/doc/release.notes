@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-08-24 - Lucio Anderlini (BandQ)
+ - Configuration for Stripping20r{0,1}p2 settings for BandQ WG 
+   (Xibc, pentaquark, Xic)
+
 ! 2013-08-23 - Philip Hunt
  - Updated config dictionaries for Stripping20r{0,1}p2 Calibration streams
    * Added B2LcpXLc2Kpi lines for proton detection asymmetry measurements
