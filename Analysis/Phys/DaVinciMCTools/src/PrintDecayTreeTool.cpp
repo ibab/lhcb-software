@@ -924,8 +924,8 @@ void PrintDecayTreeTool::printAsList( const LHCb::MCParticles& particles,
   printHeader( info(), true, assoc != NULL );
 
   int c = 0;
-  for( LHCb::MCParticles::const_iterator i = particles.begin();
-       i != particles.end(); i++, c++ )
+  for ( LHCb::MCParticles::const_iterator i = particles.begin();
+        i != particles.end(); ++i, ++c )
   {
     printInfo( "", *i, assoc, info() );
   }
@@ -938,7 +938,7 @@ void PrintDecayTreeTool::printUsedContainers( MsgStream &log )
   for ( std::set<std::string>::const_iterator i = m_usedTesLocs.begin();
         i != m_usedTesLocs.end(); ++i )
   {
-    log << " " << boost::format("%i4") % tesCode(*i) << " = '" << *i << "'" << endmsg;
+    log << " " << boost::format("%4u") % tesCode(*i) << " = '" << *i << "'" << endmsg;
   }
   m_usedTesLocs.clear();
 }
