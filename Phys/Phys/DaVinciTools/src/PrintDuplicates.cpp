@@ -14,7 +14,10 @@ DECLARE_ALGORITHM_FACTORY( PrintDuplicates )
 PrintDuplicates::PrintDuplicates( const std::string& name,
                                   ISvcLocator* pSvcLocator )
 : DaVinciAlgorithm ( name , pSvcLocator ),
-  m_printDecay ( NULL ) { }
+  m_printDecay ( NULL ) 
+{
+  declareProperty( "MaxPrintoutsPerTESLoc", m_maxPrints = 100 );
+}
 
 //=============================================================================
 /// Destructor
@@ -35,7 +38,7 @@ StatusCode PrintDuplicates::execute()
   {
     const std::size_t h = LHCb::HashIDs::hashID( *ip );
     // current have to use energy to take PID swaps into account.
-    // Would be better to have the option t include this in the hash. To Do.
+    // Would be better to have the option to include this in the hash. To Do.
     const double e = (*ip)->momentum().e();
     (hashMap[tesLocation(*ip)])[std::make_pair(h,e)] .push_back ( *ip );
   }
@@ -46,16 +49,21 @@ StatusCode PrintDuplicates::execute()
   {
     const std::string& loc = iL->first;
 
+    // Loop over the distinct trees within this TES location
     for ( PartHashMap::const_iterator iPH = iL->second.begin();
           iPH != iL->second.end(); ++iPH )
     {
       // do we have any duplicates
       if ( iPH->second.size() > 1 )
       {
-        warning() << "Found " << iPH->second.size()
-                  << " possible duplicate decays in '" << loc << "'"
-                  << endmsg;
-        printDecay()->printTree( iPH->second.begin(), iPH->second.end() );
+        std::ostringstream mess;
+        mess << "Found " << iPH->second.size()
+             << " duplicate decays in '" << loc << "'";
+        Warning( mess.str(), StatusCode::FAILURE, m_maxPrints );
+        if ( m_countPerLoc[loc]++ < m_maxPrints )
+        {
+          printDecay()->printTree( iPH->second.begin(), iPH->second.end() );
+        }
       }
 
     }

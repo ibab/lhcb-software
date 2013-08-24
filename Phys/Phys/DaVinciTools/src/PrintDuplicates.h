@@ -61,12 +61,13 @@ private:
 private:
 
   typedef std::map< std::pair<std::size_t,double>, LHCb::Particle::ConstVector > PartHashMap;
-
   typedef std::map< std::string, PartHashMap > LocHashMap;
 
 private:
 
-  IPrintDecay * m_printDecay;
+  IPrintDecay * m_printDecay; ///< Tool to print the decay tree
+  unsigned int m_maxPrints;   ///< Max number of times to print the decay tree.
+  std::map< std::string, unsigned int > m_countPerLoc; ///< Printout count per TES location
 
 };
 
