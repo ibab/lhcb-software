@@ -43,7 +43,8 @@ PrintDecayTreeTool::PrintDecayTreeTool( const std::string& type,
     m_ppSvc(0),
     m_keys(0),
     m_energyUnitName("MeV"),
-    m_lengthUnitName("mm")
+    m_lengthUnitName("mm"),
+    m_lastTESCode(0)
 {
 
   declareInterface<IPrintDecayTreeTool> (this);
@@ -153,8 +154,7 @@ void PrintDecayTreeTool::printHeader( MsgStream& log,
   }
 
   bool name_key = false;
-  std::vector<InfoKeys>::iterator i;
-  for( i = m_keys.begin(); i!= m_keys.end(); i++ )
+  for( std::vector<InfoKeys>::iterator i = m_keys.begin(); i!= m_keys.end(); i++ )
     if( *i == Name )
       name_key = true;
   int n_keys = m_keys.size() - (name_key ? 1 : 0);
@@ -180,7 +180,7 @@ void PrintDecayTreeTool::printHeader( MsgStream& log,
   }
   log << endmsg;
 
-  for( i = m_keys.begin(); i!= m_keys.end(); i++ )
+  for( std::vector<InfoKeys>::iterator i = m_keys.begin(); i!= m_keys.end(); i++ )
     switch( *i ) {
     case Name:      log << std::setw(m_treeWidth) << "Name";   break;
     case E:         log << std::setw(m_fWidth) << "E";         break;
@@ -198,11 +198,11 @@ void PrintDecayTreeTool::printHeader( MsgStream& log,
     case eta:       log << std::setw(m_fWidth) << "eta";       break;
     case idcl:      log << std::setw(m_fWidth) << "ID CL";     break;
     case chi2:      log << std::setw(m_fWidth) << "chi2";      break;
-    case PK:        log << std::setw(m_fWidth) << "Pkey";      break;
-    case PPK:       log << std::setw(m_fWidth) << "PPkey";     break;
+    case PK:        log << std::setw(m_fWidth) << "P(C/K)";    break;
+    case PPK:       log << std::setw(m_fWidth) << "PP(C/K)";   break;
     }
   if( associated )
-    for( i = m_keys.begin(); i!= m_keys.end(); i++ )
+    for( std::vector<InfoKeys>::iterator i = m_keys.begin(); i!= m_keys.end(); i++ )
       switch( *i ) {
       case Name:    log << std::setw(m_fWidth) << "Name";      break;
       case E:       log << std::setw(m_fWidth) << "E";         break;
@@ -225,7 +225,7 @@ void PrintDecayTreeTool::printHeader( MsgStream& log,
       }
   log << endmsg;
 
-  for( i = m_keys.begin(); i!= m_keys.end(); i++ )
+  for( std::vector<InfoKeys>::iterator i = m_keys.begin(); i!= m_keys.end(); i++ )
     switch( *i ) {
     case Name:      log << std::setw(m_treeWidth) << " ";      break;
     case E:         log << std::setw(m_fWidth) << m_energyUnitName;       break;
@@ -247,7 +247,7 @@ void PrintDecayTreeTool::printHeader( MsgStream& log,
     case PPK:       log << std::setw(m_fWidth) << " ";         break;
     }
   if( associated )
-    for( i = m_keys.begin(); i!= m_keys.end(); i++ )
+    for( std::vector<InfoKeys>::iterator i = m_keys.begin(); i!= m_keys.end(); i++ )
       switch( *i ) {
       case Name:    log << std::setw(m_fWidth) << " ";         break;
       case E:       log << std::setw(m_fWidth) << m_energyUnitName;       break;
@@ -277,10 +277,11 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
                                     MsgStream& log )
 {
   const LHCb::ParticleProperty* p = m_ppSvc->find( part->particleID() );
-  const LHCb::MCVertex *origin = part->originVertex();
+  const LHCb::MCVertex *origin    = part->originVertex();
 
-  std::vector<InfoKeys>::iterator i;
-  for( i = m_keys.begin(); i!= m_keys.end(); i++ )
+  m_usedTesLocs.insert( tesLocation(part) );
+
+  for( std::vector<InfoKeys>::iterator i = m_keys.begin(); i!= m_keys.end(); i++ )
     switch( *i ) {
     case Name:
       {
@@ -372,10 +373,16 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
       break;
     }
 
-  if( assoc ) {
+  if( assoc )
+  {
     const LHCb::Particle* reco = assoc->firstP( part );
     if( reco )
-      for( i = m_keys.begin(); i!= m_keys.end(); ++i )
+    {
+      const std::string pLoc = tesLocation(reco);
+      const std::string ppLoc = tesLocation(reco->proto());
+      std::ostringstream mess;
+      for( std::vector<InfoKeys>::iterator i = m_keys.begin(); i!= m_keys.end(); ++i )
+      {
         switch( *i ) {
         case Name:
           {
@@ -458,27 +465,38 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
             if ( 0!=reco->proto()->track()) {
               log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
                   << reco->proto()->track()->chi2PerDoF() ;
-            } else log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) << -1. ;
+            } else { log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) << -1.; }
           } else if ( 0!=reco->endVertex() ){
             log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
                 << reco->endVertex()->chi2()/reco->endVertex()->nDoF()  ;
           }
-          else log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) << -2  ;
+          else { log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) << -2; }
           break;
         case PK:
-          log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << reco->key();
+          m_usedTesLocs.insert( pLoc );
+          mess.str("");
+          mess << tesCode(pLoc) << "/" << reco->key();
+          log << boost::format("%"+boost::lexical_cast<std::string>(m_fWidth)+"s") % mess.str();
           break;
         case PPK:
-          log << std::setw(m_fWidth) << std::setprecision(m_fPrecision);
-          if ( reco->proto() ) { log << reco->proto()->key(); }
-          else                 { log << "N/A"; }
+          if ( reco->proto() )
+          {
+            m_usedTesLocs.insert(ppLoc);
+            mess.str("");
+            mess << tesCode(ppLoc) << "/" << reco->proto()->key();
+            log << boost::format("%"+boost::lexical_cast<std::string>(m_fWidth)+"s") % mess.str();
+          }
+          else { log << boost::format("%"+boost::lexical_cast<std::string>(m_fWidth)+"s") % "N/A"; }
           break;
         default:
           break;
         }
+      }
+    }
     else
+    {
       log << "  No associated particle";
+    }
   }
   log << endmsg;
 }
@@ -488,9 +506,15 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
                                     Particle2MCLinker* assoc,
                                     MsgStream& log )
 {
+  // get Particle info
   const LHCb::ParticleProperty* p = m_ppSvc->find( reco->particleID() );
-  std::vector<InfoKeys>::iterator i;
-  for( i = m_keys.begin(); i!= m_keys.end(); i++ )
+
+  const std::string pLoc = tesLocation(reco);
+  const std::string ppLoc = tesLocation(reco->proto());
+  std::ostringstream mess;
+
+  for( std::vector<InfoKeys>::iterator i = m_keys.begin(); i != m_keys.end(); ++i )
+  {
     switch( *i ) {
     case Name:
       {
@@ -578,22 +602,33 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
       else log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) << -2  ;
       break;
     case PK:
-      log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << reco->key();
+      m_usedTesLocs.insert( pLoc );
+      mess.str("");
+      mess << tesCode(pLoc) << "/" << reco->key();
+      log << boost::format("%"+boost::lexical_cast<std::string>(m_fWidth)+"s") % mess.str();
       break;
     case PPK:
-      log << std::setw(m_fWidth) << std::setprecision(m_fPrecision);
-      if ( reco->proto() ) { log << reco->proto()->key(); }
-      else                 { log << "N/A"; }
+      if ( reco->proto() )
+      {
+        m_usedTesLocs.insert(ppLoc);
+        mess.str("");
+        mess << tesCode(ppLoc) << "/" << reco->proto()->key();
+        log << boost::format("%"+boost::lexical_cast<std::string>(m_fWidth)+"s") % mess.str();
+      }
+      else { log << boost::format("%"+boost::lexical_cast<std::string>(m_fWidth)+"s") % "N/A"; }
       break;
     default:
       break;
     }
+  }
 
-  if( assoc ) {
+  if( assoc )
+  {
     const LHCb::MCParticle* part = assoc->firstMCP( reco );
     if( part )
-      for( i = m_keys.begin(); i!= m_keys.end(); i++ )
+    {
+      for( std::vector<InfoKeys>::iterator i = m_keys.begin(); i!= m_keys.end(); ++i )
+      {
         switch( *i ) {
         case Name:
           {
@@ -689,8 +724,12 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
         default:
           break;
         }
+      }
+    }
     else
+    {
       log << "  No associated particle";
+    }
   }
   log << endmsg;
 }
@@ -701,16 +740,20 @@ void PrintDecayTreeTool::printTree( const LHCb::MCParticle *mother,
 {
   if ( maxDepth == -1 ) { maxDepth = m_depth; }
 
-  if ( !mother ) 
+  if ( !mother )
   {
     Error( "printTree called with NULL MCParticle" ).ignore();
     return;
   }
 
+  m_usedTesLocs.clear();
+
   printHeader( info(), true, assoc != NULL );
 
   info().setf(std::ios::fixed,std::ios::floatfield);
   printDecayTree( mother, assoc, "", maxDepth, info() );
+  info() << endreq;
+  printUsedContainers( info() );
   info() << endreq;
 }
 //=============================================================================
@@ -720,7 +763,7 @@ void PrintDecayTreeTool::printAsTree( const LHCb::MCParticle::ConstVector &parti
   printHeader( info(), true, assoc != NULL );
 
   info().setf(std::ios::fixed,std::ios::floatfield);
-  for ( LHCb::MCParticle::ConstVector::const_iterator i = particles.begin(); 
+  for ( LHCb::MCParticle::ConstVector::const_iterator i = particles.begin();
         i != particles.end(); ++i )
   {
     if( ((*i)->originVertex() == NULL) ||
@@ -752,12 +795,14 @@ void PrintDecayTreeTool::printDecayTree( const LHCb::MCParticle* mother,
                                          int depth,
                                          MsgStream &log )
 {
+  m_usedTesLocs.insert( tesLocation(mother) );
+
   printInfo( prefix, mother, assoc, log );
 
-  if( depth ) 
+  if( depth )
   {
     for ( SmartRefVector<LHCb::MCVertex>::const_iterator iv = mother->endVertices().begin();
-          iv != mother->endVertices().end(); ++iv ) 
+          iv != mother->endVertices().end(); ++iv )
     {
       for ( SmartRefVector<LHCb::MCParticle>::const_iterator idau = (*iv)->products().begin();
             idau != (*iv)->products().end(); ++idau )
@@ -782,18 +827,22 @@ void PrintDecayTreeTool::printTree( const LHCb::Particle *mother,
                                     Particle2MCLinker* assoc,
                                     int maxDepth  )
 {
-  if( maxDepth == -1 )
-    maxDepth = m_depth;
+  if ( maxDepth == -1 ) { maxDepth = m_depth; }
 
-  if( !mother ) {
+  if( !mother )
+  {
     err() << "printTree called with NULL Particle" << endreq;
     return;
   }
+
+  m_usedTesLocs.clear();
 
   printHeader( info(), false, assoc != NULL );
 
   info().setf(std::ios::fixed,std::ios::floatfield);
   printDecayTree( mother, assoc, "", maxDepth, info() );
+  info() << endreq;
+  printUsedContainers( info() );
   info() << endreq;
 }
 //=============================================================================
@@ -809,7 +858,7 @@ void PrintDecayTreeTool::printDecayTree( const LHCb::Particle *mother,
     if( !mother->endVertex() )
       return;
     for ( SmartRefVector<LHCb::Particle>::const_iterator iprod = mother->daughters().begin();
-          iprod != mother->daughters().end(); iprod++ ) 
+          iprod != mother->daughters().end(); iprod++ )
     {
       if ( (*iprod) != mother->daughters().back() )
         printDecayTree( *iprod, assoc, prefix+'|', depth-1, log );
@@ -829,7 +878,7 @@ void PrintDecayTreeTool::printAsList( const LHCb::Particle::ConstVector& particl
 {
   printHeader( info(), false, assoc != NULL );
 
-  for( LHCb::Particle::ConstVector::const_iterator i = particles.begin(); 
+  for( LHCb::Particle::ConstVector::const_iterator i = particles.begin();
        i != particles.end(); ++i )
   {
     printInfo( "", *i, assoc, info() );
@@ -843,7 +892,7 @@ void PrintDecayTreeTool::printAsList( const LHCb::MCParticle::ConstVector& parti
   printHeader( info(), true, assoc != NULL );
 
   int c = 0;
-  for( LHCb::MCParticle::ConstVector::const_iterator i = particles.begin(); 
+  for( LHCb::MCParticle::ConstVector::const_iterator i = particles.begin();
        i != particles.end(); i++, c++ )
   {
     printInfo( "", *i, assoc, info() );
@@ -861,7 +910,7 @@ void PrintDecayTreeTool::printAsList( const LHCb::Particles& particles,
 {
   printHeader( info(), false, assoc != NULL );
 
-  for( LHCb::Particles::const_iterator i = particles.begin(); 
+  for( LHCb::Particles::const_iterator i = particles.begin();
        i != particles.end(); ++i )
   {
     printInfo( "", *i, assoc, info() );
@@ -881,5 +930,16 @@ void PrintDecayTreeTool::printAsList( const LHCb::MCParticles& particles,
     printInfo( "", *i, assoc, info() );
   }
   info() << endreq;
+}
+//=============================================================================
+void PrintDecayTreeTool::printUsedContainers( MsgStream &log )
+{
+  log << "Used TES locations :-" << endmsg;
+  for ( std::set<std::string>::const_iterator i = m_usedTesLocs.begin();
+        i != m_usedTesLocs.end(); ++i )
+  {
+    log << "  " << tesCode(*i) << " = '" << *i << "'" << endmsg;
+  }
+  m_usedTesLocs.clear();
 }
 //=============================================================================
