@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+2013-08-24 - Ed Greening
+ - Extra lines now in StrippingD2PiPi0.py for K, eta and eta-prime combinations.
+
 ! 2013-08-24 - Lucio Anderlini
  - StrippingXibc.py 
    . Added Xibc lines (fix "GoodPoint" inclusive line + JpsiKp new line) 
