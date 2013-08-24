@@ -3,7 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
-2013-08-24 - Ed Greening
+
+! 2013-08-24 -Stephane Tourneur
+ - 5 new stripping lines in StrippingBjets.py aimed for QEE analyses with 1, 2 topo B and 2, 3 or 4 jets
+
+! 2013-08-24 - Ed Greening
  - Extra lines now in StrippingD2PiPi0.py for K, eta and eta-prime combinations.
 
 ! 2013-08-24 - Lucio Anderlini
