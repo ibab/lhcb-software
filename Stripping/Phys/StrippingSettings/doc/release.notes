@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-08-24 - Andrea Contu
+ - Configuration for Stripping20r{0,1}p2 settings for Charm WG 
+
 ! 2013-08-24 - Lucio Anderlini (BandQ)
  - Configuration for Stripping20r{0,1}p2 settings for BandQ WG 
    (Xibc, pentaquark, Xic)
