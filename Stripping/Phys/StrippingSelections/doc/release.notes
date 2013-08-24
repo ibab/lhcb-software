@@ -3,8 +3,15 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+! 2013-08-24 - Lucio Anderlini
+ - StrippingXibc.py 
+   . Added Xibc lines (fix "GoodPoint" inclusive line + JpsiKp new line) 
+ - StrippingXic2HHH.py, and StrippingBetac2PhiP.py
+   . New version by Yury Shcheglov
+
 ! 2013-08-24 - Olga Kochebina
  - Add ghost prob cut to hhmumu and hhmumuControl lines at StrippingD2XMuMuSS.py
+
 ! 2013-08-23 - Roel Aaij
  - Adapt StrippingB2JpsiXforBeta_s.py and StrippingHeavyBaryons.py to the wider mass
    window of StdMassConstrainedJpsi. Only some prescaled lines use the wider mass window,

@@ -161,13 +161,13 @@ default_config = {
                   , 'Daug_P_MIN'                : 10000.0 * MeV 
                   , 'Daug_PT_MIN'               : 400.0 * MeV
                   , 'Daug_MIPDV'                : 0.05 * mm
-		  , 'Proton_PIDpi_MIN'          : 20.0
-                  , 'Proton_PIDK_MIN'           : 10.0 
+		  , 'Proton_PIDpi_MIN'          : 30.0
+                  , 'Proton_PIDK_MIN'           : 5.0 
                   , 'Phi_WIN'                   : 10.0 * MeV
                   , 'Phi_PT'                    : 0.0 * MeV         
                   , 'Betac_AM_MIN'              : 1950.0 * MeV 
                   , 'Betac_AM_MAX'              : 2800.0 * MeV 
-                  , 'Betac_BPVDIRA_MIN'         : 0.9999
+                  , 'Betac_BPVDIRA_MIN'         : 0.999
                   , 'Betac_VCHI2VDOF_MAX'       : 10.0   
                   , 'Betac_BPVLTIME_MIN'        : 0.0 * ns
                   , 'Betac_BPVLTIME_MAX'        : 0.006 * ns

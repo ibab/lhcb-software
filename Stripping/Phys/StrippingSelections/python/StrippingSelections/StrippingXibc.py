@@ -126,7 +126,28 @@ default_config = {
       , 'JpsiForHighMassBaryon_MassWin'     : '40*MeV'
       , 'JpsiForHighMassBaryon_MuonPIDmu'   : 0
       , 'JpsiProtonForHighMassBaryonCosth'  : 0.992
-####### #
+#######
+      , "JpsiKp_CtrlLine_Prescale"          : 1.0
+      , "JpsiKp_MinTAU"                     : '0.10*ps'
+      , "JpsiKp_MassMin"                    : 5200 #MeV/c2
+      , "JpsiKp_MassLbThreshold"            : 5750 #MeV/c2
+      , "JpsiKp_MassMax"                    : 8000 #MeV/c2
+      , "JpsiKp_MaxVertexChi2"              : 10
+      , "JpsiKp_Jpsi_MinPT"                 : 700 #MeV/c
+      , "JpsiKp_Jpsi_MassWin"               : 40  #MeV/cc
+      , "JpsiKp_mu_MaxTrackGhostProb"       : 0.4
+      , "JpsiKp_mu_MinPIDmu"                : 0
+      , "JpsiKp_p_MinPt"                    : 300 #MeV
+      , "JpsiKp_p_MinPIDp"                  : 10
+      , "JpsiKp_p_MaxTrackGhostProb"        : 0.4
+      , "JpsiKp_p_MinTrackPvalue"           : 0.1
+      , "JpsiKp_p_MinP"                     : 2000 #MeV/c
+      , "JpsiKp_K_MinPT"                    : 300 #MeV
+      , "JpsiKp_K_MinPIDK"                  : 5
+      , "JpsiKp_K_MaxTrackGhostProb"        : 0.4
+      , "JpsiKp_K_MinTrackPvalue"           : 0.1
+      , "JpsiKp_K_MinP"                     : 2000 #MeV/c
+########
       , 'GlobalGhostProb_Max'               : 0.4
       , 'LongTrackGEC'                      : 150 
 			} 
@@ -146,6 +167,8 @@ _my_immutable_config = {
 				, 'DownPionsForXi'                : 'Phys/StdNoPIDsDownPions/Particles'
 				, 'JpsiForExclusiveLinesLocation' : 'Phys/StdLooseJpsi2MuMu/Particles'
 				, 'PionsForXic'                   : 'Phys/StdAllNoPIDsPions/Particles'
+        , 'Protons4JpsiKp'                : 'Phys/StdAllNoPIDsProtons/Particles'
+        , 'Kaons4JpsiKp'                  : 'Phys/StdAllNoPIDsKaons/Particles'
 				, 'Protons4HighMassBaryon'        : 'Phys/StdLooseProtons/Particles'
 				, 'Jpsi4HighMassBaryon'           : 'Phys/StdLooseJpsi2MuMu/Particles'
         } 
@@ -230,7 +253,28 @@ class XibcBuilder(LineBuilder) :
 				, 'JpsiForHighMassBaryon_MassWin'			
 				, 'JpsiForHighMassBaryon_MuonPIDmu'			
 				, 'JpsiProtonForHighMassBaryonCosth'
-	####### #
+  #######
+        , "JpsiKp_CtrlLine_Prescale"         
+        , "JpsiKp_MinTAU"                   
+        , "JpsiKp_MassMin"                   
+        , "JpsiKp_MassLbThreshold"           
+        , "JpsiKp_MassMax"                   
+        , "JpsiKp_MaxVertexChi2"             
+        , "JpsiKp_Jpsi_MinPT"                
+        , "JpsiKp_Jpsi_MassWin"              
+        , "JpsiKp_mu_MaxTrackGhostProb"      
+        , "JpsiKp_mu_MinPIDmu"               
+        , "JpsiKp_p_MinPt"                   
+        , "JpsiKp_p_MinPIDp"                 
+        , "JpsiKp_p_MaxTrackGhostProb"       
+        , "JpsiKp_p_MinTrackPvalue"          
+        , "JpsiKp_p_MinP"                    
+        , "JpsiKp_K_MinPT"                   
+        , "JpsiKp_K_MinPIDK"                 
+        , "JpsiKp_K_MaxTrackGhostProb"       
+        , "JpsiKp_K_MinTrackPvalue"          
+        , "JpsiKp_K_MinP"                    
+  	####### #
         , 'GlobalGhostProb_Max'  
 				, 'LongTrackGEC')								
  
@@ -313,6 +357,40 @@ class XibcBuilder(LineBuilder) :
         self.registerLine(self.lineXibc2XicJpsi)
 
 
+        ########################################## Xibc -> J/psi K p  Line #######################
+
+        self._Xibc2JpsiKpi = makeXibc2JpsiKp(name, 
+            [ self._Jpsi, 
+              AutomaticData( _my_immutable_config['Protons4JpsiKp']),
+              AutomaticData( _my_immutable_config['Kaons4JpsiKp'])
+            ],
+            config)
+      
+        self.lineXibc2JpsiKp = StrippingLine((name+'Xibc2JpsiKp'),
+                                               prescale = 1.0,
+                                               postscale = 1.0,
+                                               FILTER = _globalEventCuts,
+                                               selection = self._Xibc2JpsiKpi)
+
+        self.registerLine (self.lineXibc2JpsiKp);
+
+        ########################################## Xibc -> J/psi K p Control Line #######################
+
+        self._Xibc2JpsiKpiCtrl = makeXibc2JpsiKp(name+"Lb", 
+            [ self._Jpsi, 
+              AutomaticData( _my_immutable_config['Protons4JpsiKp']),
+              AutomaticData( _my_immutable_config['Kaons4JpsiKp'])
+            ],
+            config, controlLine = True)
+      
+        self.lineXibc2JpsiKp = StrippingLine((name+'Lb2JpsiKp'),
+                                               prescale = config['JpsiKp_CtrlLine_Prescale'],
+                                               postscale = 1.0,
+                                               FILTER = _globalEventCuts,
+                                               selection = self._Xibc2JpsiKpiCtrl)
+
+        self.registerLine (self.lineXibc2JpsiKp);
+
 
         ########################################## Inclusive X -> p J/psi Line #####################
 
@@ -330,6 +408,28 @@ class XibcBuilder(LineBuilder) :
 
         self.registerLine(self.lineX2JpsiProton)
 
+        ########################################## Inclusive X -> p J/psi Line Good Pointing #####
+        # Complementary line reverting the Pointing requirement for Stripping20r1p1.
+        # Previous Stripping version was tuned on decays towards heavy daughters
+        # partially reconstructed, so that the requirement of bad pointing did make sense
+        # however, it forbids studies on Xibc -> J/psi p K -like decays.
+
+        self._Xgp = makeX (name + "GoodPointing", 
+              [	self._Jpsi, 
+                AutomaticData (_my_immutable_config['Jpsi4HighMassBaryon']), 
+                AutomaticData( _my_immutable_config['Protons4HighMassBaryon'])]
+                                                        , config, requireBadPointing = False)
+
+        self.lineX2JpsiProton_gp = StrippingLine(name+'X2JpsiProtonGoodPointing',
+                                      prescale = 1.0,
+                                      postscale = 1.0,
+                                      FILTER = _globalEventCuts,
+                                      selection = self._Xgp)
+
+        self.registerLine(self.lineX2JpsiProton_gp)
+
+
+      
 
 #####################
 # Functions
@@ -552,15 +652,21 @@ def makeXibc0 (localname, _RequiredSelections, config=default_name):
 
 #################################################################################
 
-def makeX (localname, _RequiredSelections, config=default_name):
+def makeX (localname, _RequiredSelections, config=default_config, requireBadPointing=True):
 
   _combinex = CombineParticles(localname + "HighMassState");
   _combinex.DecayDescriptor = "[Xi_bc+ -> J/psi(1S) p+]cc"
   _combinex.CombinationCut = ("(AM > %(HighMassBaryon_MassLowEdge)s ) &" +
-                              " (APT > %(HighMassBaryon_MinAPT)s )  & " 
-      "((ACHILD(PX,1)*ACHILD(PX,2)+ACHILD(PY,1)*ACHILD(PY,2)+ACHILD(PZ,1)*ACHILD(PZ,2))/"+
-      "(ACHILD(P,1)*ACHILD(P,2)) < %(JpsiProtonForHighMassBaryonCosth)s)" 
-                                                                          )% config
+                              " (APT > %(HighMassBaryon_MinAPT)s ) " ) % config
+  if (requireBadPointing == True):
+    _combinex.CombinationCut += (
+      "& ((ACHILD(PX,1)*ACHILD(PX,2)+ACHILD(PY,1)*ACHILD(PY,2)+ACHILD(PZ,1)*ACHILD(PZ,2))/"+
+      "(ACHILD(P,1)*ACHILD(P,2)) < %(JpsiProtonForHighMassBaryonCosth)s)" ) % config
+  else:
+    _combinex.CombinationCut += (
+      "& ((ACHILD(PX,1)*ACHILD(PX,2)+ACHILD(PY,1)*ACHILD(PY,2)+ACHILD(PZ,1)*ACHILD(PZ,2))/"+
+      "(ACHILD(P,1)*ACHILD(P,2)) > %(JpsiProtonForHighMassBaryonCosth)s)" ) % config
+
   _combinex.DaughtersCuts = { "p+" : ("(PT > %(ProtonsForHighMassBaryon_PT)s) &"+
                                     " (PIDp > %(ProtonsForHighMassBaryon_PIDp)s) &"+
                                     " (TRGHP < %(GlobalGhostProb_Max)s) &" +
@@ -578,3 +684,39 @@ def makeX (localname, _RequiredSelections, config=default_name):
                         RequiredSelections = _RequiredSelections);
 
 
+###################################################################################
+def makeXibc2JpsiKp (localname, _RequiredSelections, config=default_config, controlLine=False):
+  myXibc = CombineParticles(localname+"Xibc2JpsipK");
+  myXibc.DecayDescriptor = "[Xi_bc0 -> J/psi(1S) p+ K-]cc"
+  if (controlLine == True):
+    myXibc.CombinationCut = ("(AM > %(JpsiKp_MassMin)s ) & " 
+                             "(AM < %(JpsiKp_MassLbThreshold)s)  " )%config
+  else:
+    myXibc.CombinationCut = ("(AM > %(JpsiKp_MassLbThreshold)s ) & " 
+                             "(AM < %(JpsiKp_MassMax)s  )  " )%config
+                                                                          
+  myXibc.MotherCut = ("(VFASPF(VCHI2/VDOF)< %(JpsiKp_MaxVertexChi2)s) & "
+                      "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')> %(JpsiKp_MinTAU)s)"
+                      ) %config
+  myXibc.DaughtersCuts = {"J/psi(1S)" : ("(PT > %(JpsiKp_Jpsi_MinPT)s) & "+
+                                         "(ADMASS('J/psi(1S)') < %(JpsiKp_Jpsi_MassWin)s) &"+
+                                         "(MAXTREE(TRGHP, ISBASIC) < %(JpsiKp_mu_MaxTrackGhostProb)s) &"+
+                                         "(MINTREE('mu+'==ABSID,PIDmu) > %(JpsiKp_mu_MinPIDmu)s )" ) %config,
+                          "p+" : ("(PT > %(JpsiKp_p_MinPt)s) &"+
+                                  " (PIDp > %(JpsiKp_p_MinPIDp)s) &"+
+                                  " (TRGHP < %(JpsiKp_p_MaxTrackGhostProb)s) &" +
+                                  " (TRPCHI2 > %(JpsiKp_p_MinTrackPvalue)s) & "+
+                                  " (P > %(JpsiKp_p_MinP)s )" ) %config,
+                          "K-" : ("(PT > %(JpsiKp_K_MinPT)s) &"+
+                                  "(PIDK > %(JpsiKp_K_MinPIDK)s) &"+
+                                  "(TRGHP < %(JpsiKp_K_MaxTrackGhostProb)s )&" +
+                                  "(TRPCHI2 > %(JpsiKp_K_MinTrackPvalue)s) & "+
+                                  "(P > %(JpsiKp_K_MinP)s)") %config}
+
+
+  return Selection(localname + "Xibc2JpsipKSel", Algorithm=myXibc, 
+                      RequiredSelections = _RequiredSelections)
+                                
+
+
+###################################################################################

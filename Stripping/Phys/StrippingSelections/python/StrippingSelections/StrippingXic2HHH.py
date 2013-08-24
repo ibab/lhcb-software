@@ -4,8 +4,8 @@ Designed by Yury Shcheglov, Alexey Dzyuba, Nelya Sagidova to  study Xic+ and The
 '''
 
 __author__ = ['Yury Shcheglov']
-__date__ = '2013/03/30'
-__version__ = '$Revision: 1.0 $'
+__date__ = '2013/08/22'
+__version__ = '$Revision: 2.0 $'
 
 __all__ = ( 'StrippingXic2HHHConf',
             'makeXic2HHH',
@@ -198,8 +198,8 @@ class StrippingXic2HHHConf(LineBuilder):
                , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
                , Proton_PIDp_MIN = 30.                  
                , K_IPCHI2_MIN = 0. 
-               , Comb_MASS_MIN  = 1490. * MeV            
-               , Comb_MASS_MAX  = 2330. * MeV            
+               , Comb_MASS_MIN  = 1440. * MeV            
+               , Comb_MASS_MAX  = 1800. * MeV            
                , Comb_ADOCAMAX_MAX = 0.3 * mm
                , Xic_PT_MIN = config['Xic_PT_MIN']
                , Xic_BPVDIRA_MIN = -100.   
@@ -249,8 +249,8 @@ class StrippingXic2HHHConf(LineBuilder):
                                        )
 
         self.line_Xic2KLam = self._strippingLine( name = xic_klam_name + 'Line',
-                                         prescale  = config['PrescaleXic2PV0'],
-                                         postscale = config['PostscaleXic2PV0'],
+                                         prescale  = config['PrescaleXic2PKK'],
+                                         postscale = config['PostscaleXic2PKK'],
                                          selection = self.selXic2KLam
                                        )
 
@@ -358,10 +358,8 @@ def makeTheta2PKS0( name
                , decDescriptors = [ "[Lambda_c+ -> p+ KS0]cc" ]
              ) :
 
-    combCuts = "(((AM > %(Comb_MASS_MIN)s)" \
-               "& (AM < 1600 * MeV))" \
-               "| ((AM > 2242 * MeV)" \
-               "& (AM <  %(Comb_MASS_MAX)s)))" \
+    combCuts = "(AM > %(Comb_MASS_MIN)s)" \
+               "& (AM <  %(Comb_MASS_MAX)s)" \
                "& (AMAXCHILD(PT) > %(Daug_1of3_PT_MIN)s)" % locals()
 
     thetaCuts = "(PT > %(Xic_PT_MIN)s) & (MIPDV(PRIMARY)< 0.4 * mm)" % locals()
@@ -429,17 +427,17 @@ default_config = {  'Daug_All_PT_MIN'         : 400.0 * MeV
                   , 'Comb_MASS_MIN'           : 1950.0 * MeV 
                   , 'Comb_MASS_MAX'           : 2800.0 * MeV 
                   , 'Comb_ADOCAMAX_MAX'       : 0.1 * mm
-                  , 'Xic_PT_MIN'              : 1900.0 * MeV
+                  , 'Xic_PT_MIN'              : 1500.0 * MeV
                   , 'Xic_VCHI2VDOF_MAX'       : 10.0
                   , 'Xic_BPVVDCHI2_MIN'       : 5.0
                   , 'Xic_BPVDIRA_MIN'         : 0.9999
                   , 'Xic_BPVLTIME_MAX'        : 0.06 * ns
                   , 'Xic_BPVLTIME_MIN'        : 0.0 * ns
                   , 'HltFilter'               : "HLT_PASS('Hlt2CharmHadD2HHHDecision')"
-                  , 'PrescaleXic2PKPi'        : 0.5
-                  , 'PostscaleXic2PKPi'       : 1.0
-                  , 'PrescaleXic2PKK'         : 1.0
-                  , 'PostscaleXic2PKK'        : 1.0
+                  , 'PrescaleXic2PKPi'        : 0.
+                  , 'PostscaleXic2PKPi'       : 0.0
+                  , 'PrescaleXic2PKK'         : 0.0
+                  , 'PostscaleXic2PKK'        : 0.0
                   , 'PrescaleXic2PV0'         : 1.0
                   , 'PostscaleXic2PV0'        : 1.0
                  }
