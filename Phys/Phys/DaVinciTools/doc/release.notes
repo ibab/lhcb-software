@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-08-24 - Chris Jones
+ - Some small CPU improvements to SubPIDMMFilter
+ - Add a new algorithm PrintDuplicates to search for and print possible
+   duplicate decays.
+
 ! 2013-08-22 - Sascha Stahl
  - Added TrackStateProvider in initialization of DecayTreeFitter in FitDecayTrees
 
