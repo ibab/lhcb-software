@@ -938,7 +938,7 @@ void PrintDecayTreeTool::printUsedContainers( MsgStream &log )
   for ( std::set<std::string>::const_iterator i = m_usedTesLocs.begin();
         i != m_usedTesLocs.end(); ++i )
   {
-    log << "  " << tesCode(*i) << " = '" << *i << "'" << endmsg;
+    log << " " << boost::format("%i4") % tesCode(*i) << " = '" << *i << "'" << endmsg;
   }
   m_usedTesLocs.clear();
 }

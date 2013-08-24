@@ -158,9 +158,9 @@ private:
   std::string m_energyUnitName; ///< Unit for energies, momenta and masses
   std::string m_lengthUnitName; ///< Unit for distances
 
-  std::map<std::string,unsigned int> m_tesLocs;
-  unsigned int m_lastTESCode;
-  std::set<std::string> m_usedTesLocs;
+  std::map<std::string,unsigned int> m_tesLocs; ///< List of all TES locations with its assigned int code
+  unsigned int m_lastTESCode; ///< cache of the last assigned TES code
+  std::set<std::string> m_usedTesLocs; ///< All TES locations in the last considered decay
 
 };
 
