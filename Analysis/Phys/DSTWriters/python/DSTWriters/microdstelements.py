@@ -598,3 +598,13 @@ class PrintTESContents(MicroDSTElement) :
                                 TestAccess    = True,
                                 ExploreRelations = True )
         return [sag]
+
+class FindDuplicates(MicroDSTElement) :
+    """
+    Debug element. Finds and prints duplicate Particle Trees
+    """
+    def __call__(self, sel):
+        from Configurables import PrintDuplicates
+        pd = PrintDuplicates( name = self.personaliseName(sel,"FindDuplicates"),
+                              Inputs = self.dataLocations(sel,"Particles") )
+        return [pd]

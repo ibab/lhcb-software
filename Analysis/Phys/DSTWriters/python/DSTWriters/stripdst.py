@@ -15,10 +15,13 @@ from microdstelements import ( CloneParticleTrees,
                                PackStrippingReports,
                                PackParticlesAndVertices,
                                PackRecObjects,
-                               CleanEmptyEventNodes )
+                               CleanEmptyEventNodes,
+                               PrintTESContents,
+                               FindDuplicates )
 
 def stripDSTElements(pack=True) :
-    elements = [ CloneParticleTrees( TESVetoList = ["/Event/Rec/ProtoP/Charged",
+    elements = [ FindDuplicates(),
+                 CloneParticleTrees( TESVetoList = ["/Event/Rec/ProtoP/Charged",
                                                     "/Event/Rec/ProtoP/Neutrals",
                                                     "/Event/Rec/Track/Best",
                                                     "/Event/Rec/Rich/PIDs",
@@ -33,10 +36,12 @@ def stripDSTElements(pack=True) :
                                    clonePVs = True,
                                    RecVertexCloner = "VertexBaseFromRecVertexCloner" )
                  ]
-    if pack : elements += [ PackStrippingReports(),
-                            PackParticlesAndVertices(),
-                            PackRecObjects(),
-                            CleanEmptyEventNodes() ]
+    if pack :
+        elements += [ PackStrippingReports(),
+                      PackParticlesAndVertices(),
+                      PackRecObjects(),
+                      CleanEmptyEventNodes() ]
+        #elements += [ PrintTESContents() ] # For debugging
     return elements
 
 def stripDSTStreamConf( pack = True,

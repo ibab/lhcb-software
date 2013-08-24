@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2013-08-24 - Chris Jones
+ - Add Duplicates check to stripping (u)DST stream elements.
+
 !========================= DSTWriters v4r10 2013-06-26 =========================
 
 ! 2013-06-26 - Chris Jones

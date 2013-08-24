@@ -28,7 +28,8 @@ from microdstelements import ( CloneRecHeader,
                                PackMCInfo,
                                CleanEmptyEventNodes,
                                PackTrackingClusters,
-                               PrintTESContents )
+                               PrintTESContents,
+                               FindDuplicates )
 
 def stripMicroDSTElements( pack=True, saveTrackClusters=True, isMC=False ) :
     '''
@@ -38,6 +39,7 @@ def stripMicroDSTElements( pack=True, saveTrackClusters=True, isMC=False ) :
     elements = [
         ClonePVs( RecVertexCloner = "RecVertexClonerNoTracks",
                   ClonePVWeights  = False ),
+        FindDuplicates(),
         CloneParticleTrees(),
         CloneBTaggingInfo( CloneTaggerParticles = False ),
         ClonePVRelations( location = "Particle2VertexRelations",
