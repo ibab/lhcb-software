@@ -16,7 +16,7 @@ PrintDuplicates::PrintDuplicates( const std::string& name,
 : DaVinciAlgorithm ( name , pSvcLocator ),
   m_printDecay ( NULL ) 
 {
-  declareProperty( "MaxPrintoutsPerTESLoc", m_maxPrints = 100 );
+  declareProperty( "MaxPrintoutsPerTESLoc", m_maxPrints = 10 );
 }
 
 //=============================================================================
