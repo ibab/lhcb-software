@@ -53,6 +53,9 @@ config_params =  {'MuonP'         : 3000. ,    #MeV
                   'DMassWin_CS_hhmumu'         : 100.  ,    #MeV, mass window
                   'LambdacMassWin'             : 100. , #MeV, mass window
                   'DMassLow'                   :1763.  ,    #MeV, low-mass veto
+
+             
+                  'GhostProbCut_hhmumu'     : 0.5,
                   
                   'D2PiMuMuOSLinePrescale'     : 1 ,
                   'D2PiMuMuOSLinePostscale'    : 1 ,
@@ -169,6 +172,7 @@ class D2XMuMuConf(LineBuilder) :
                                 , 'DMassWin_CS_hhmumu'# Added by B. VIAUD for hhmumu modes
                                 , 'LambdacMassWin'#   Added by O. KOCHEBINA for Lambda_c modes
                                 , 'DMassLow'
+                                , 'GhostProbCut_hhmumu' #   Added by O. KOCHEBINA for hhmumu modes
                                 
                                 , 'D2PiPiPiCalLinePrescale'
                                 , 'D2PiPiPiCalLinePostscale'
@@ -291,38 +295,43 @@ class D2XMuMuConf(LineBuilder) :
                                                , MuonPT = config['PT_hhmumu']
                                                , MuonMINIPCHI2 = config['MINIPCHI2_hhmumu']
                                                , MuonTRCHI2 = config['MuonTRCHI2']
-                                               , MuonPIDmu_CS_hhmumu = config['MuonPIDmu_hhmumu'])
+                                               , MuonPIDmu_CS_hhmumu = config['MuonPIDmu_hhmumu']
+                                               , ghostProbCut = config['GhostProbCut_hhmumu'])
 
         # 6 : Make Kaons for hhmumu 
         selKaonsForhhmumu  = makeKaonsForhhmumu(name="KaonsForhhmumuAndFor"+name
-                             , KaonP = config['KaonP']
-                             , KaonPT = config['PT_hhmumu']
-                             , KaonPIDK = config['KaonPIDK']
-                             , KaonMINIPCHI2 = config['MINIPCHI2_hhmumu']
-                             , KaonTRCHI2 = config['KaonTRCHI2'])
+                                                , KaonP = config['KaonP']
+                                                , KaonPT = config['PT_hhmumu']
+                                                , KaonPIDK = config['KaonPIDK']
+                                                , KaonMINIPCHI2 = config['MINIPCHI2_hhmumu']
+                                                , KaonTRCHI2 = config['KaonTRCHI2']
+                                                , ghostProbCut = config['GhostProbCut_hhmumu'])
 
         # 7 : Make Pions for hhmumu 
         selPionsForhhmumu = makePionsForhhmumu(name="PionsForForhhmumuAndFor"+name
-                             , PionP = config['PionP']
-                             , PionPT = config['PT_hhmumu']
-                             , PionMINIPCHI2 = config['MINIPCHI2_hhmumu']
-                             , PionTRCHI2 = config['PionTRCHI2'])
+                                               , PionP = config['PionP']
+                                               , PionPT = config['PT_hhmumu']
+                                               , PionMINIPCHI2 = config['MINIPCHI2_hhmumu']
+                                               , PionTRCHI2 = config['PionTRCHI2']
+                                               , ghostProbCut = config['GhostProbCut_hhmumu'])
 
 
 
         # 6a : Make Kaons for 4 body Control Samples
         selKaonsFor4bodyCS  = makeKaonsFor4bodyCS(name="HadFor4bodyCSAndFor"+name
-                             , KaonP = config['KaonP']
-                             , KaonPT = config['PT_hhmumu']
-                             , KaonMINIPCHI2 = config['MINIPCHI2_4bodyCS']
-                             , KaonTRCHI2 = config['KaonTRCHI2'])
-
+                                                  , KaonP = config['KaonP']
+                                                  , KaonPT = config['PT_hhmumu']
+                                                  , KaonMINIPCHI2 = config['MINIPCHI2_4bodyCS']
+                                                  , KaonTRCHI2 = config['KaonTRCHI2']
+                                                  , ghostProbCut = config['GhostProbCut_hhmumu'])
+        
         # 7a : Make Pions for 4 body Control samples 
         selPionsFor4bodyCS = makePionsFor4bodyCS(name="PionsFor4bodyCSAndFor"+name
-                             , PionP = config['PionP']
-                             , PionPT = config['PT_hhmumu']
-                             , PionMINIPCHI2 = config['MINIPCHI2_4bodyCS']
-                             , PionTRCHI2 = config['PionTRCHI2'])
+                                                 , PionP = config['PionP']
+                                                 , PionPT = config['PT_hhmumu']
+                                                 , PionMINIPCHI2 = config['MINIPCHI2_4bodyCS']
+                                                 , PionTRCHI2 = config['PionTRCHI2']
+                                                 , ghostProbCut = config['GhostProbCut_hhmumu'])
 
       
 
@@ -1279,92 +1288,6 @@ def makePionsAsMuons(name, MuonP, MuonPT, MuonMINIPCHI2, MuonTRCHI2):
                     
 
 
-#####################################################
-def makeKaonsForhhmumu(name, KaonP, KaonPT, KaonPIDK, KaonMINIPCHI2, KaonTRCHI2):
-    """
-    Kaon selection
-    """
-    _code = "(TRCHI2DOF < %(KaonTRCHI2)s) & "\
-						"(P > %(KaonP)s *MeV) & "\
-            "(PT > %(KaonPT)s *MeV) &"\
-            "(PIDK-PIDpi > %(KaonPIDK)s) & "\
-            "(MIPCHI2DV(PRIMARY) > %(KaonMINIPCHI2)s)" % locals()
-
-    _Filter = FilterDesktop(Code = _code)
-
-    return Selection(name,
-                     Algorithm = _Filter,
-                     RequiredSelections = [ StdAllLooseKaons ] )
-
-
-#####################################################
-def makeMuonsForhhmumu(name, MuonP, MuonPT, MuonMINIPCHI2, MuonTRCHI2, MuonPIDmu_CS_hhmumu):
-    """
-    Muon selection
-    """
-    _code = "(TRCHI2DOF < %(MuonTRCHI2)s) & "\
-						"(P > %(MuonP)s *MeV) & "\
-            "(PT > %(MuonPT)s* MeV) & "\
-            "(PIDmu-PIDpi > %(MuonPIDmu_CS_hhmumu)s) & "\
-            "(MIPCHI2DV(PRIMARY) > %(MuonMINIPCHI2)s)" % locals()
-
-    _Filter = FilterDesktop(Code = _code)
-    
-    return Selection(name,
-                     Algorithm = _Filter,
-                     RequiredSelections = [ StdAllLooseMuons ] )
-
-#####################################################
-def makePionsForhhmumu(name, PionP, PionPT, PionMINIPCHI2, PionTRCHI2):
-    """
-    Muon selection
-    """
-    _code = "(TRCHI2DOF < %(PionTRCHI2)s) & "\
-						"(P > %(PionP)s *MeV) & "\
-            "(PT > %(PionPT)s* MeV) & "\
-            "(MIPCHI2DV(PRIMARY) > %(PionMINIPCHI2)s)" % locals()
-
-    _Filter = FilterDesktop(Code = _code)
-    
-    return Selection(name,
-                     Algorithm = _Filter,
-                     RequiredSelections = [ StdAllLoosePions ] )
-
-
-
-#####################################################
-def makeKaonsFor4bodyCS(name, KaonP, KaonPT, KaonMINIPCHI2, KaonTRCHI2):
-    """
-    Kaon selection
-    """
-    _code = "(TRCHI2DOF < %(KaonTRCHI2)s) & "\
-						"(P > %(KaonP)s *MeV) & "\
-            "(PT > %(KaonPT)s *MeV) &"\
-            "(MIPCHI2DV(PRIMARY) > %(KaonMINIPCHI2)s)" % locals()
-
-    _Filter = FilterDesktop(Code = _code)
-
-    return Selection(name,
-                     Algorithm = _Filter,
-                     RequiredSelections = [ StdAllNoPIDsKaons ] )
-
-
-#####################################################
-def makePionsFor4bodyCS(name, PionP, PionPT, PionMINIPCHI2, PionTRCHI2):
-    """
-    pion selection
-    """
-    _code = "(TRCHI2DOF < %(PionTRCHI2)s) & "\
-						"(P > %(PionP)s *MeV) & "\
-            "(PT > %(PionPT)s* MeV) & "\
-            "(MIPCHI2DV(PRIMARY) > %(PionMINIPCHI2)s)" % locals()
-
-    _Filter = FilterDesktop(Code = _code)
-    
-    return Selection(name,
-                     Algorithm = _Filter,
-                     RequiredSelections = [ StdAllNoPIDsPions ] )
-
 
 #####################################################
 def makeKaonsFor3bodyCS(name, KaonP, KaonPT, KaonMINIPCHI2, KaonTRCHI2):
@@ -1415,6 +1338,100 @@ def makeProtonsFor3bodyCS(name, ProtonP, ProtonPT, ProtonMINIPCHI2, ProtonTRCHI2
     return Selection(name,
                      Algorithm = _Filter,
                      RequiredSelections = [ StdAllNoPIDsProtons ] )
+
+
+
+
+#####################################################
+def makeKaonsForhhmumu(name, KaonP, KaonPT, KaonPIDK, KaonMINIPCHI2, KaonTRCHI2, ghostProbCut):
+    """
+    Kaon selection
+    """
+    _code = "(TRCHI2DOF < %(KaonTRCHI2)s) & "\
+						"(P > %(KaonP)s *MeV) & "\
+            "(PT > %(KaonPT)s *MeV) &"\
+            "(PIDK-PIDpi > %(KaonPIDK)s) & "\
+            "(MIPCHI2DV(PRIMARY) > %(KaonMINIPCHI2)s) & "\
+            "( TRGHOSTPROB < %(ghostProbCut)s )" % locals()
+
+    _Filter = FilterDesktop(Code = _code)
+
+    return Selection(name,
+                     Algorithm = _Filter,
+                     RequiredSelections = [ StdAllLooseKaons ] )
+
+
+#####################################################
+def makeMuonsForhhmumu(name, MuonP, MuonPT, MuonMINIPCHI2, MuonTRCHI2, MuonPIDmu_CS_hhmumu, ghostProbCut):
+    """
+    Muon selection
+    """
+    _code = "(TRCHI2DOF < %(MuonTRCHI2)s) & "\
+						"(P > %(MuonP)s *MeV) & "\
+            "(PT > %(MuonPT)s* MeV) & "\
+            "(PIDmu-PIDpi > %(MuonPIDmu_CS_hhmumu)s) & "\
+            "(MIPCHI2DV(PRIMARY) > %(MuonMINIPCHI2)s) & "\
+            "( TRGHOSTPROB < %(ghostProbCut)s )" % locals()
+
+    _Filter = FilterDesktop(Code = _code)
+    
+    return Selection(name,
+                     Algorithm = _Filter,
+                     RequiredSelections = [ StdAllLooseMuons ] )
+
+#####################################################
+def makePionsForhhmumu(name, PionP, PionPT, PionMINIPCHI2, PionTRCHI2, ghostProbCut):
+    """
+    Muon selection
+    """
+    _code = "(TRCHI2DOF < %(PionTRCHI2)s) & "\
+						"(P > %(PionP)s *MeV) & "\
+            "(PT > %(PionPT)s* MeV) & "\
+            "(MIPCHI2DV(PRIMARY) > %(PionMINIPCHI2)s) & "\
+            "( TRGHOSTPROB < %(ghostProbCut)s )" % locals()
+
+    _Filter = FilterDesktop(Code = _code)
+    
+    return Selection(name,
+                     Algorithm = _Filter,
+                     RequiredSelections = [ StdAllLoosePions ] )
+
+
+
+#####################################################
+def makeKaonsFor4bodyCS(name, KaonP, KaonPT, KaonMINIPCHI2, KaonTRCHI2, ghostProbCut):
+    """
+    Kaon selection
+    """
+    _code = "(TRCHI2DOF < %(KaonTRCHI2)s) & "\
+						"(P > %(KaonP)s *MeV) & "\
+            "(PT > %(KaonPT)s *MeV) &"\
+            "(MIPCHI2DV(PRIMARY) > %(KaonMINIPCHI2)s) & "\
+            "( TRGHOSTPROB < %(ghostProbCut)s )" % locals()
+
+    _Filter = FilterDesktop(Code = _code)
+
+    return Selection(name,
+                     Algorithm = _Filter,
+                     RequiredSelections = [ StdAllNoPIDsKaons ] )
+
+
+#####################################################
+def makePionsFor4bodyCS(name, PionP, PionPT, PionMINIPCHI2, PionTRCHI2, ghostProbCut):
+    """
+    pion selection
+    """
+    _code = "(TRCHI2DOF < %(PionTRCHI2)s) & "\
+						"(P > %(PionP)s *MeV) & "\
+            "(PT > %(PionPT)s* MeV) & "\
+            "(MIPCHI2DV(PRIMARY) > %(PionMINIPCHI2)s) & "\
+            "( TRGHOSTPROB < %(ghostProbCut)s )" % locals()
+
+    _Filter = FilterDesktop(Code = _code)
+    
+    return Selection(name,
+                     Algorithm = _Filter,
+                     RequiredSelections = [ StdAllNoPIDsPions ] )
 
 
 
