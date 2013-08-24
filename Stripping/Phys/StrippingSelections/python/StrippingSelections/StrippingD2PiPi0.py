@@ -21,14 +21,46 @@ from StandardParticles import StdLoosePions, StdLooseKaons, StdLooseAllPhotons, 
 __all__=('default_config', 'D2PiPi0Conf')
 
 default_config = { 
-    'PromptHPi' : {
-        'Daug_IPCHI2_MIN'    : 16         # computes the chi^2 distance of track to PV, 9 is 3 sigma from PV, 16 is 4 sigma. Notice the pattern?
-        ,'Daug_PT_MIN'       : 250  *MeV
+    'PromptHPi0' : {
+        'Daug_IPCHI2_MIN'    : 25         # computes the chi^2 distance of track to PV, 9 is 3 sigma from PV, 16 is 4 sigma. Notice the pattern?
+        ,'Daug_PT_MIN'       : 350  *MeV
         ,'Daug_P_MIN'        : 1000 *MeV  # ensures good range for RICH
         ,'Daug_TRCHI2DOF_MAX': 5          # to ensure good track quality
         ,'TRGHOSTPROB_MAX'   : 0.5
         ,'ResMass_MIN'       : 70   *MeV
         ,'ResMass_MAX'       : 210  *MeV
+        ,'D_PT_Min'          : 2000 *MeV
+        ,'DMass_MIN'         : 1600 *MeV
+        ,'DMass_MAX'         : 2500 *MeV
+        ,'VFASPF_MAX'        : 5          # computes the chi^2 on the end vertex of the particle
+        ,'BPVLTIME_MIN'      : 50 *micrometer
+        ,'DTF_CHI2NDOF_MAX'  : 5          # computes the chi^2 of the fit
+        ,'KaonPID_MIN'       :-1          # when kaon in the decay 
+        },
+    'PromptHEta' : {
+        'Daug_IPCHI2_MIN'    : 25         # computes the chi^2 distance of track to PV, 9 is 3 sigma from PV, 16 is 4 sigma. Notice the pattern?
+        ,'Daug_PT_MIN'       : 600  *MeV
+        ,'Daug_P_MIN'        : 1000 *MeV  # ensures good range for RICH
+        ,'Daug_TRCHI2DOF_MAX': 5          # to ensure good track quality
+        ,'TRGHOSTPROB_MAX'   : 0.5
+        ,'ResMass_MIN'       : 500   *MeV
+        ,'ResMass_MAX'       : 600  *MeV
+        ,'D_PT_Min'          : 2000 *MeV
+        ,'DMass_MIN'         : 1600 *MeV
+        ,'DMass_MAX'         : 2500 *MeV
+        ,'VFASPF_MAX'        : 5          # computes the chi^2 on the end vertex of the particle
+        ,'BPVLTIME_MIN'      : 50 *micrometer
+        ,'DTF_CHI2NDOF_MAX'  : 5          # computes the chi^2 of the fit
+        ,'KaonPID_MIN'       :-1          # when kaon in the decay 
+        },
+    'PromptHEtaPrime' : {
+        'Daug_IPCHI2_MIN'    : 25         # computes the chi^2 distance of track to PV, 9 is 3 sigma from PV, 16 is 4 sigma. Notice the pattern?
+        ,'Daug_PT_MIN'       : 1000  *MeV
+        ,'Daug_P_MIN'        : 1000 *MeV  # ensures good range for RICH
+        ,'Daug_TRCHI2DOF_MAX': 5          # to ensure good track quality
+        ,'TRGHOSTPROB_MAX'   : 0.5
+        ,'ResMass_MIN'       : 900  *MeV
+        ,'ResMass_MAX'       : 990  *MeV
         ,'D_PT_Min'          : 2000 *MeV
         ,'DMass_MIN'         : 1600 *MeV
         ,'DMass_MAX'         : 2500 *MeV
@@ -57,19 +89,6 @@ default_config = {
         ,'BMass_MAX'         : 6300 *MeV
         }
 }
-
-# Copy D2HPi0 dictionary and add extra cuts
-DictHEta = default_config['PromptHPi'].copy()
-DictHEta.update( {'ResMass_MIN':500 *MeV} )
-DictHEta.update( {'ResMass_MAX':600 *MeV} )
-DictHEta.update( {'Daug_PT_MIN':350 *MeV} )
-default_config.update( {'PromptHEta':DictHEta} )
-
-DictHEtaPrime = default_config['PromptHPi'].copy()
-DictHEtaPrime.update( {'ResMass_MIN':900 *MeV} )
-DictHEtaPrime.update( {'ResMass_MAX':980 *MeV} )
-DictHEtaPrime.update( {'Daug_PT_MIN':700 *MeV} )
-default_config.update( {'PromptHEtaPrime':DictHEtaPrime} )
 
 class D2PiPi0Conf(LineBuilder) :
     __configuration_keys__ = default_config.keys()
@@ -109,7 +128,7 @@ class D2PiPi0Conf(LineBuilder) :
         self.dielectrons = DataOnDemand(Location = "Phys/StdDiElectronFromTracks/Particles" )
                                 
         # Make selections for decay
-        SetConfig = config['PromptHPi']
+        SetConfig = config['PromptHPi0']
         PiPi0PromptSelection = self.makePromptCandidate( self._name + 'PiPi0PromptSelection',
                                                          '[D+ -> pi+ pi0]cc',
                                                          self.pion,
@@ -212,17 +231,17 @@ class D2PiPi0Conf(LineBuilder) :
                            "PT > {0[Daug_PT_MIN]}",
                            "TRCHI2DOF < {0[Daug_TRCHI2DOF_MAX]}",
                            "MIPCHI2DV(PRIMARY) > {0[Daug_IPCHI2_MIN]}"],
-                          self._config['PromptHPi'])
+                          self._config['PromptHPi0'])
 
     def _defaultHadronTrackCuts( self ):
-        return self._defaultTrackCuts() + "&" + cut_string( ["HASRICH","in_range( 2, ETA, 5)","TRGHOSTPROB < {0[TRGHOSTPROB_MAX]}"],self._config['PromptHPi'] )
+        return self._defaultTrackCuts() + "&" + cut_string( ["HASRICH","in_range( 2, ETA, 5)","TRGHOSTPROB < {0[TRGHOSTPROB_MAX]}"],self._config['PromptHPi0'] )
     
     def _pionFilter( self ):
         _code = self._defaultHadronTrackCuts()
         return FilterDesktop( Code=_code )
 
     def _kaonFilter( self ):
-        _code = self._defaultHadronTrackCuts() + "&" + cut_string( ["PIDK-PIDpi > {0[KaonPID_MIN]}"],self._config['PromptHPi'] )
+        _code = self._defaultHadronTrackCuts() + "&" + cut_string( ["PIDK-PIDpi > {0[KaonPID_MIN]}"],self._config['PromptHPi0'] )
         return FilterDesktop( Code=_code )
    
     def _gammaFilter( self ):
