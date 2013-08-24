@@ -1,5 +1,5 @@
 // $Id: PrintDecayTreeTool.cpp,v 1.4 2009-11-17 08:12:50 pkoppenb Exp $
-// Include files 
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -39,23 +39,22 @@ using namespace Gaudi::Units;
 PrintDecayTreeTool::PrintDecayTreeTool( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : GaudiTool( type, name, parent ), 
-    m_ppSvc(0), 
-    m_keys(0), 
-    m_energyUnitName("MeV"), 
+  : GaudiTool( type, name, parent ),
+    m_ppSvc(0),
+    m_keys(0),
+    m_energyUnitName("MeV"),
     m_lengthUnitName("mm")
 {
 
   declareInterface<IPrintDecayTreeTool> (this);
   declareInterface<IPrintDecay>         (this);
-  
+
   declareProperty( "PrintDepth", m_depth = 999 );
   declareProperty( "TreeWidth", m_treeWidth = 20 );
   declareProperty( "FieldWidth", m_fWidth = 10 );
   declareProperty( "FieldPrecision", m_fPrecision = 2 );
   declareProperty( "Arrow", m_arrow = "+-->" );
-  declareProperty( "Informations", m_informationsDeprecated = "" );
-  declareProperty( "Information", m_information = "Name E M P Pt phi Vz" );
+  declareProperty( "Information", m_information = "Name E M P Pt phi Vz PK PPK" );
   declareProperty( "EnergyUnit", m_energyUnit = MeV );
   declareProperty( "LengthUnit", m_lengthUnit = mm );
 }
@@ -63,7 +62,8 @@ PrintDecayTreeTool::PrintDecayTreeTool( const std::string& type,
 //=============================================================================
 // initialise
 //=============================================================================
-StatusCode PrintDecayTreeTool::initialize( void ){
+StatusCode PrintDecayTreeTool::initialize( void )
+{
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
 
@@ -74,12 +74,6 @@ StatusCode PrintDecayTreeTool::initialize( void ){
     throw GaudiException( "LHCb::ParticlePropertySvc not found",
                           "DebugException",
                           StatusCode::FAILURE );
-  }
-
-  if ( m_informationsDeprecated != "" ){
-    warning() << "You are using the deprecated option ``informations''." << endmsg ;
-    warning() << "Use ``Information'' instead." << endmsg ;
-    m_information = m_informationsDeprecated ;
   }
 
   std::size_t oldpos = 0, pos;
@@ -102,12 +96,13 @@ StatusCode PrintDecayTreeTool::initialize( void ){
     else if( tok=="eta" )   m_keys.push_back(eta);
     else if( tok=="IDCL" )  m_keys.push_back(idcl);
     else if( tok=="chi2" )  m_keys.push_back(chi2);
+    else if( tok=="PK" )    m_keys.push_back(PK);
     else if( tok=="PPK" )   m_keys.push_back(PPK);
     else
       err() << "Unknown output key '" << tok << "'. Ignoring it."
             << endreq;
-    if( pos != std::string::npos ) oldpos = pos+1;
-    else                           oldpos = pos;
+    if( pos != std::string::npos ) { oldpos = pos+1; }
+    else                           { oldpos = pos; }
   }
   while( pos != std::string::npos );
 
@@ -115,12 +110,12 @@ StatusCode PrintDecayTreeTool::initialize( void ){
   else if (m_energyUnit == GeV) m_energyUnitName = "GeV" ;
   else if (m_energyUnit == MeV) m_energyUnitName = "MeV" ;
   else if (m_energyUnit <= 0) {
-    err() << "You have chosen a unit for energies: " 
+    err() << "You have chosen a unit for energies: "
           << m_energyUnit << endreq;
     return StatusCode::FAILURE ;
-  } 
+  }
   else {
-    warning() << "You have chosen a non-standard unit for energies: " 
+    warning() << "You have chosen a non-standard unit for energies: "
               << m_energyUnit << endreq;
     m_energyUnitName = "???" ;
   }
@@ -128,22 +123,22 @@ StatusCode PrintDecayTreeTool::initialize( void ){
   else if (m_lengthUnit == cm) m_lengthUnitName = "cm" ;
   else if (m_lengthUnit == m) m_lengthUnitName = "m" ;
   else if (m_lengthUnit <= 0) {
-    err() << "You have chosen a unit for lengths: " 
+    err() << "You have chosen a unit for lengths: "
           << m_lengthUnit << endreq;
     return StatusCode::FAILURE ;
-  } 
+  }
   else {
-    warning() << "You have chosen a non-standard unit for lengths: " 
+    warning() << "You have chosen a non-standard unit for lengths: "
               << m_lengthUnit << endreq;
     m_lengthUnitName = "??" ;
-    
+
   }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 //=============================================================================
-void PrintDecayTreeTool::printHeader( MsgStream& log, 
-                                      bool mcfirst, 
+void PrintDecayTreeTool::printHeader( MsgStream& log,
+                                      bool mcfirst,
                                       bool associated )
 {
   static const std::string mctitle = " MCParticle ";
@@ -183,7 +178,7 @@ void PrintDecayTreeTool::printHeader( MsgStream& log,
     if( right2 >= 0 )
       log<< std::string(right2,'-') << '>';
   }
-  log << std::endl;
+  log << endmsg;
 
   for( i = m_keys.begin(); i!= m_keys.end(); i++ )
     switch( *i ) {
@@ -203,6 +198,7 @@ void PrintDecayTreeTool::printHeader( MsgStream& log,
     case eta:       log << std::setw(m_fWidth) << "eta";       break;
     case idcl:      log << std::setw(m_fWidth) << "ID CL";     break;
     case chi2:      log << std::setw(m_fWidth) << "chi2";      break;
+    case PK:        log << std::setw(m_fWidth) << "Pkey";      break;
     case PPK:       log << std::setw(m_fWidth) << "PPkey";     break;
     }
   if( associated )
@@ -224,9 +220,10 @@ void PrintDecayTreeTool::printHeader( MsgStream& log,
       case eta:     log << std::setw(m_fWidth) << "eta";       break;
       case idcl:    log << std::setw(m_fWidth) << "ID CL";     break;
       case chi2:    log << std::setw(m_fWidth) << "chi2";      break;
+      case PK:      log << std::setw(m_fWidth) << "Pkey";      break;
       case PPK:     log << std::setw(m_fWidth) << "PPkey";     break;
       }
-  log << std::endl;
+  log << endmsg;
 
   for( i = m_keys.begin(); i!= m_keys.end(); i++ )
     switch( *i ) {
@@ -238,16 +235,17 @@ void PrintDecayTreeTool::printHeader( MsgStream& log,
     case Px:        log << std::setw(m_fWidth) << m_energyUnitName;       break;
     case Py:        log << std::setw(m_fWidth) << m_energyUnitName;       break;
     case Pz:        log << std::setw(m_fWidth) << m_energyUnitName;       break;
-    case Vx:        log << std::setw(m_fWidth) << m_lengthUnitName;        break;
-    case Vy:        log << std::setw(m_fWidth) << m_lengthUnitName;        break;
-    case Vz:        log << std::setw(m_fWidth) << m_lengthUnitName;        break;
+    case Vx:        log << std::setw(m_fWidth) << m_lengthUnitName;       break;
+    case Vy:        log << std::setw(m_fWidth) << m_lengthUnitName;       break;
+    case Vz:        log << std::setw(m_fWidth) << m_lengthUnitName;       break;
     case theta:     log << std::setw(m_fWidth) << "mrad";      break;
     case phi:       log << std::setw(m_fWidth) << "mrad";      break;
     case eta:       log << std::setw(m_fWidth) << "prap";      break;
     case idcl:      log << std::setw(m_fWidth) << " ";         break;
     case chi2:      log << std::setw(m_fWidth) << " ";         break;
+    case PK:        log << std::setw(m_fWidth) << " ";         break;
     case PPK:       log << std::setw(m_fWidth) << " ";         break;
-   }
+    }
   if( associated )
     for( i = m_keys.begin(); i!= m_keys.end(); i++ )
       switch( *i ) {
@@ -259,22 +257,23 @@ void PrintDecayTreeTool::printHeader( MsgStream& log,
       case Px:      log << std::setw(m_fWidth) << m_energyUnitName;       break;
       case Py:      log << std::setw(m_fWidth) << m_energyUnitName;       break;
       case Pz:      log << std::setw(m_fWidth) << m_energyUnitName;       break;
-      case Vx:      log << std::setw(m_fWidth) << m_lengthUnitName;        break;
-      case Vy:      log << std::setw(m_fWidth) << m_lengthUnitName;        break;
-      case Vz:      log << std::setw(m_fWidth) << m_lengthUnitName;        break;
+      case Vx:      log << std::setw(m_fWidth) << m_lengthUnitName;       break;
+      case Vy:      log << std::setw(m_fWidth) << m_lengthUnitName;       break;
+      case Vz:      log << std::setw(m_fWidth) << m_lengthUnitName;       break;
       case theta:   log << std::setw(m_fWidth) << "mrad";      break;
       case phi:     log << std::setw(m_fWidth) << "mrad";      break;
       case eta:     log << std::setw(m_fWidth) << "prap";      break;
       case idcl:    log << std::setw(m_fWidth) << " ";         break;
       case chi2:    log << std::setw(m_fWidth) << " ";         break;
+      case PK:      log << std::setw(m_fWidth) << " ";         break;
       case PPK:     log << std::setw(m_fWidth) << " ";         break;
       }
-  log << std::endl;
+  log << endmsg;
 }
 //=============================================================================
-void PrintDecayTreeTool::printInfo( const std::string& prefix, 
+void PrintDecayTreeTool::printInfo( const std::string& prefix,
                                     const LHCb::MCParticle* part,
-                                    Particle2MCLinker* assoc, 
+                                    Particle2MCLinker* assoc,
                                     MsgStream& log )
 {
   const LHCb::ParticleProperty* p = m_ppSvc->find( part->particleID() );
@@ -376,7 +375,7 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
   if( assoc ) {
     const LHCb::Particle* reco = assoc->firstP( part );
     if( reco )
-      for( i = m_keys.begin(); i!= m_keys.end(); i++ )
+      for( i = m_keys.begin(); i!= m_keys.end(); ++i )
         switch( *i ) {
         case Name:
           {
@@ -457,31 +456,36 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
         case chi2:
           if ( 0!=reco->proto() ){
             if ( 0!=reco->proto()->track()) {
-              log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) 
+              log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
                   << reco->proto()->track()->chi2PerDoF() ;
             } else log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) << -1. ;
-          } else if ( 0!=reco->endVertex() ){         
-               log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) 
-                   << reco->endVertex()->chi2()/reco->endVertex()->nDoF()  ;
+          } else if ( 0!=reco->endVertex() ){
+            log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
+                << reco->endVertex()->chi2()/reco->endVertex()->nDoF()  ;
           }
           else log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) << -2  ;
           break;
-        case PPK:
+        case PK:
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-              << ((0!=reco->proto())?reco->proto()->key():-1);
-            break;
+              << reco->key();
+          break;
+        case PPK:
+          log << std::setw(m_fWidth) << std::setprecision(m_fPrecision);
+          if ( reco->proto() ) { log << reco->proto()->key(); }
+          else                 { log << "N/A"; }
+          break;
         default:
-          break;          
+          break;
         }
-    else 
+    else
       log << "  No associated particle";
   }
-  log << std::endl;
+  log << endmsg;
 }
 //=============================================================================
-void PrintDecayTreeTool::printInfo( const std::string& prefix, 
+void PrintDecayTreeTool::printInfo( const std::string& prefix,
                                     const LHCb::Particle* reco,
-                                    Particle2MCLinker* assoc, 
+                                    Particle2MCLinker* assoc,
                                     MsgStream& log )
 {
   const LHCb::ParticleProperty* p = m_ppSvc->find( reco->particleID() );
@@ -564,18 +568,23 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
     case chi2:
       if ( 0!=reco->proto() ){
         if ( 0!=reco->proto()->track()) {
-          log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) 
+          log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
               << reco->proto()->track()->chi2PerDoF() ;
         } else log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) << -1. ;
-      } else if ( 0!=reco->endVertex() ){         
-        log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) 
+      } else if ( 0!=reco->endVertex() ){
+        log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
             << reco->endVertex()->chi2()/reco->endVertex()->nDoF()  ;
       }
       else log << std::setw(m_fWidth) << std::setprecision(m_fPrecision) << -2  ;
       break;
-    case PPK:
+    case PK:
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-          << ((0!=reco->proto())?reco->proto()->key():-1);
+          << reco->key();
+      break;
+    case PPK:
+      log << std::setw(m_fWidth) << std::setprecision(m_fPrecision);
+      if ( reco->proto() ) { log << reco->proto()->key(); }
+      else                 { log << "N/A"; }
       break;
     default:
       break;
@@ -649,11 +658,11 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
         case Vz:
           {
             const LHCb::MCVertex *origin = part->originVertex();
-            if( origin ){  
+            if( origin ){
               log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
                   << origin->position().z()/m_lengthUnit;
             } else {
-                log << std::setw(m_fWidth) << " N/A ";
+              log << std::setw(m_fWidth) << " N/A ";
             }
           }
           break;
@@ -683,82 +692,76 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
     else
       log << "  No associated particle";
   }
-  log << std::endl;  
+  log << endmsg;
 }
 //=============================================================================
-void PrintDecayTreeTool::printTree( const LHCb::MCParticle *mother, 
+void PrintDecayTreeTool::printTree( const LHCb::MCParticle *mother,
                                     Particle2MCLinker* assoc,
                                     int maxDepth )
 {
-  if( maxDepth == -1 )
-    maxDepth = m_depth;
-  
-  MsgStream log(msgSvc(), name());
+  if ( maxDepth == -1 ) { maxDepth = m_depth; }
 
-  if( !mother ) {
-    err() << "printTree called with NULL MCParticle" << endreq;
+  if ( !mother ) 
+  {
+    Error( "printTree called with NULL MCParticle" ).ignore();
     return;
   }
 
-  log << MSG::INFO << std::endl;
-  printHeader( log, true, assoc != NULL );
+  printHeader( info(), true, assoc != NULL );
 
-  log.setf(std::ios::fixed,std::ios::floatfield);
-  printDecayTree( mother, assoc, "", maxDepth, log );
-  log << endreq;
+  info().setf(std::ios::fixed,std::ios::floatfield);
+  printDecayTree( mother, assoc, "", maxDepth, info() );
+  info() << endreq;
 }
 //=============================================================================
 void PrintDecayTreeTool::printAsTree( const LHCb::MCParticle::ConstVector &particles,
                                       Particle2MCLinker* assoc )
 {
-  MsgStream log(msgSvc(), name());
+  printHeader( info(), true, assoc != NULL );
 
-  log << MSG::INFO << std::endl;
-  printHeader( log, true, assoc != NULL );
-
-  log.setf(std::ios::fixed,std::ios::floatfield);
-  LHCb::MCParticle::ConstVector::const_iterator i;
-  for( i=particles.begin(); i!=particles.end(); i++ ) {
+  info().setf(std::ios::fixed,std::ios::floatfield);
+  for ( LHCb::MCParticle::ConstVector::const_iterator i = particles.begin(); 
+        i != particles.end(); ++i )
+  {
     if( ((*i)->originVertex() == NULL) ||
         ((*i)->originVertex()->mother() == NULL) )
-      printDecayTree( *i, assoc, "", m_depth, log );
+      printDecayTree( *i, assoc, "", m_depth, info() );
   }
-  log << endreq;
+  info() << endreq;
 }
 //=============================================================================
 void PrintDecayTreeTool::printAsTree( const LHCb::MCParticles &particles,
                                       Particle2MCLinker* assoc )
 {
-  MsgStream log(msgSvc(), name());
+  printHeader( info(), true, assoc != NULL );
 
-  log << MSG::INFO << std::endl;
-  printHeader( log, true, assoc != NULL );
-
-  log.setf(std::ios::fixed,std::ios::floatfield);
-  LHCb::MCParticles::const_iterator i;
-  for( i=particles.begin(); i!=particles.end(); i++ ) {
+  info().setf(std::ios::fixed,std::ios::floatfield);
+  for( LHCb::MCParticles::const_iterator i = particles.begin();
+       i != particles.end(); ++i )
+  {
     if( ((*i)->originVertex() == NULL) ||
         ((*i)->originVertex()->mother() == NULL) )
-      printDecayTree( *i, assoc, "", m_depth, log );
+      printDecayTree( *i, assoc, "", m_depth, info() );
   }
-  log << endreq;
+  info() << endreq;
 }
 //=============================================================================
-void PrintDecayTreeTool::printDecayTree( const LHCb::MCParticle* mother, 
+void PrintDecayTreeTool::printDecayTree( const LHCb::MCParticle* mother,
                                          Particle2MCLinker* assoc,
                                          const std::string& prefix,
-                                         int depth, 
+                                         int depth,
                                          MsgStream &log )
 {
   printInfo( prefix, mother, assoc, log );
 
-  if( depth ) {
-    SmartRefVector<LHCb::MCVertex>::const_iterator iv;
-    for ( iv = mother->endVertices().begin();
-          iv != mother->endVertices().end(); iv++ ) {
-      SmartRefVector<LHCb::MCParticle>::const_iterator idau;
-      for ( idau = (*iv)->products().begin();
-            idau != (*iv)->products().end(); idau++ ) {
+  if( depth ) 
+  {
+    for ( SmartRefVector<LHCb::MCVertex>::const_iterator iv = mother->endVertices().begin();
+          iv != mother->endVertices().end(); ++iv ) 
+    {
+      for ( SmartRefVector<LHCb::MCParticle>::const_iterator idau = (*iv)->products().begin();
+            idau != (*iv)->products().end(); ++idau )
+      {
         if ( (*idau == (*iv)->products().back())
              && (*iv == mother->endVertices().back()) )
           printDecayTree( *idau, assoc, prefix+' ', depth-1, log );
@@ -769,47 +772,45 @@ void PrintDecayTreeTool::printDecayTree( const LHCb::MCParticle* mother,
   }
 }
 //=============================================================================
-void PrintDecayTreeTool::printTree( const LHCb::Particle* mother, 
+void PrintDecayTreeTool::printTree( const LHCb::Particle* mother,
                                     int maxDepth )
 {
   printTree( mother, NULL, maxDepth );
 }
 //=============================================================================
-void PrintDecayTreeTool::printTree( const LHCb::Particle *mother, 
+void PrintDecayTreeTool::printTree( const LHCb::Particle *mother,
                                     Particle2MCLinker* assoc,
                                     int maxDepth  )
 {
   if( maxDepth == -1 )
     maxDepth = m_depth;
-  
-  MsgStream log(msgSvc(), name());
 
   if( !mother ) {
     err() << "printTree called with NULL Particle" << endreq;
     return;
   }
 
-  log << MSG::INFO << std::endl;
-  printHeader( log, false, assoc != NULL );
+  printHeader( info(), false, assoc != NULL );
 
-  log.setf(std::ios::fixed,std::ios::floatfield);
-  printDecayTree( mother, assoc, "", maxDepth, log );
-  log << endreq;
+  info().setf(std::ios::fixed,std::ios::floatfield);
+  printDecayTree( mother, assoc, "", maxDepth, info() );
+  info() << endreq;
 }
 //=============================================================================
-void PrintDecayTreeTool::printDecayTree( const LHCb::Particle *mother, 
+void PrintDecayTreeTool::printDecayTree( const LHCb::Particle *mother,
                                          Particle2MCLinker* assoc,
                                          const std::string &prefix,
-                                         int depth, MsgStream &log ){
-
+                                         int depth, MsgStream &log )
+{
   printInfo( prefix, mother, assoc, log );
 
-  if( depth ) {
+  if( depth )
+  {
     if( !mother->endVertex() )
       return;
-    SmartRefVector<LHCb::Particle>::const_iterator iprod;
-    for ( iprod = mother->daughters().begin();
-          iprod != mother->daughters().end(); iprod++ ) {
+    for ( SmartRefVector<LHCb::Particle>::const_iterator iprod = mother->daughters().begin();
+          iprod != mother->daughters().end(); iprod++ ) 
+    {
       if ( (*iprod) != mother->daughters().back() )
         printDecayTree( *iprod, assoc, prefix+'|', depth-1, log );
       else
@@ -826,28 +827,28 @@ void PrintDecayTreeTool::printAsList( const LHCb::Particle::ConstVector& particl
 void PrintDecayTreeTool::printAsList( const LHCb::Particle::ConstVector& particles,
                                       Particle2MCLinker* assoc )
 {
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << std::endl;
-  printHeader( log, false, assoc != NULL );
+  printHeader( info(), false, assoc != NULL );
 
-  LHCb::Particle::ConstVector::const_iterator i;
-  for( i=particles.begin(); i!=particles.end(); i++ )
-    printInfo( "", *i, assoc, log );
-  log << endreq;
+  for( LHCb::Particle::ConstVector::const_iterator i = particles.begin(); 
+       i != particles.end(); ++i )
+  {
+    printInfo( "", *i, assoc, info() );
+  }
+  info() << endreq;
 }
 //=============================================================================
 void PrintDecayTreeTool::printAsList( const LHCb::MCParticle::ConstVector& particles,
                                       Particle2MCLinker* assoc )
 {
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << std::endl;
-  printHeader( log, true, assoc != NULL );
-  
+  printHeader( info(), true, assoc != NULL );
+
   int c = 0;
-  LHCb::MCParticle::ConstVector::const_iterator i;
-  for( i=particles.begin(); i!=particles.end(); i++, c++ )
-    printInfo( "", *i, assoc, log );
-  log << endreq;
+  for( LHCb::MCParticle::ConstVector::const_iterator i = particles.begin(); 
+       i != particles.end(); i++, c++ )
+  {
+    printInfo( "", *i, assoc, info() );
+  }
+  info() << endreq;
 }
 //=============================================================================
 void PrintDecayTreeTool::printAsList( const LHCb::Particles& particles )
@@ -858,27 +859,27 @@ void PrintDecayTreeTool::printAsList( const LHCb::Particles& particles )
 void PrintDecayTreeTool::printAsList( const LHCb::Particles& particles,
                                       Particle2MCLinker* assoc )
 {
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << std::endl;
-  printHeader( log, false, assoc != NULL );
+  printHeader( info(), false, assoc != NULL );
 
-  LHCb::Particles::const_iterator i;
-  for( i=particles.begin(); i!=particles.end(); i++ )
-    printInfo( "", *i, assoc, log );
-  log << endreq;
+  for( LHCb::Particles::const_iterator i = particles.begin(); 
+       i != particles.end(); ++i )
+  {
+    printInfo( "", *i, assoc, info() );
+  }
+  info() << endreq;
 }
 //=============================================================================
 void PrintDecayTreeTool::printAsList( const LHCb::MCParticles& particles,
                                       Particle2MCLinker* assoc )
 {
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << std::endl;
-  printHeader( log, true, assoc != NULL );
-  
+  printHeader( info(), true, assoc != NULL );
+
   int c = 0;
-  LHCb::MCParticles::const_iterator i;
-  for( i=particles.begin(); i!=particles.end(); i++, c++ )
-    printInfo( "", *i, assoc, log );
-  log << endreq;
+  for( LHCb::MCParticles::const_iterator i = particles.begin();
+       i != particles.end(); i++, c++ )
+  {
+    printInfo( "", *i, assoc, info() );
+  }
+  info() << endreq;
 }
 //=============================================================================

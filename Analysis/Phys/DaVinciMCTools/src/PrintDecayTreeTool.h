@@ -12,7 +12,8 @@
 
 
 // Forward declarations
-namespace LHCb {
+namespace LHCb
+{
   class IParticlePropertySvc;
 }
 
@@ -85,8 +86,11 @@ public:
                                  Particle2MCLinker* assoc );
 
 private:
+
   enum InfoKeys { Name, E, M, P, Pt, Px, Py, Pz, Vx, Vy, Vz,
-                  theta, phi, eta, idcl, chi2, PPK };
+                  theta, phi, eta, idcl, chi2, PK, PPK };
+
+private:
 
   void printHeader( MsgStream& log, 
                     bool mcfirst, 
@@ -121,7 +125,6 @@ private:
   int m_fWidth;        ///< width of the data fields
   int m_fPrecision;    ///< precision of the data fields
   std::string m_arrow; ///< arrow drawing
-  std::string m_informationsDeprecated; ///< For backward compatibility. Will be removed
   std::string m_information; ///< The specification of the values to print
   std::vector<InfoKeys> m_keys; ///< The list of information to print
   double m_energyUnit ; /// Unit for energies, momenta and masses

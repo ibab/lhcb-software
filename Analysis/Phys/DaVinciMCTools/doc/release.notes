@@ -4,6 +4,10 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2013-08-24 - Chris Jones
+ - Add ProtoParticle and Particle keys to the information printed by the
+   PrintDecayTreeTool.
+
 !========================= DaVinciMCTools v10r8 2013-08-01 =========================
 
 ! 2013-06-06 - Chris Jones
