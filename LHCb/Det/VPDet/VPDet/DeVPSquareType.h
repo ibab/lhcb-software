@@ -1,4 +1,3 @@
-// $Id: DeVPSquareType.h,v 1.10 2010-04-13 10:09:43 cocov Exp $
 #ifndef VPDET_DEVPSQUARETYPE_H 
 #define VPDET_DEVPSQUARETYPE_H 1
 
@@ -88,7 +87,10 @@ public:
   /// Determines in which ladder is local 3-d point
   virtual int WhichLadder(const Gaudi::XYZPoint& point) const;
   virtual int WhichLadder(int chipNum) const;
-  
+  // Added function
+  virtual int ladderOfChip(unsigned int chip) const {
+    return WhichLadder(chip);
+  }
 
   /// Determines in which chip of a given ladder is local 3-d point 
   virtual int WhichChip(const Gaudi::XYZPoint& point, int ladderIndex) const;
@@ -97,7 +99,7 @@ public:
   virtual std::pair<int,int> WhichPixel(const Gaudi::XYZPoint& point, int ladderIndex,
                                         int chipIndex, std::pair <double, double>& fraction) const;
 
-  virtual std::pair<double,double> PixelSize( LHCb::VPChannelID channel) const;
+  virtual std::pair<double,double> pixelSize( LHCb::VPChannelID channel) const;
 
   virtual bool isLong( LHCb::VPChannelID channel ) const;
 
@@ -113,32 +115,32 @@ public:
   //::::::::::::: Some classes to deal with coordinates in the different frame
 
   /// Return the X,Y size of a pixel
-  inline std::pair<double,double> PixelSize(unsigned long pixel)const
+  inline std::pair<double,double> pixelSize(unsigned long pixel)const
   {
     int chipNum =( pixel & m_ChipMask) >> m_PixelBit  ;
     int pixX = (pixel & m_PixelLPMask) >> m_PixelHPBit ;
     if ( m_ChipHorizontal[chipNum]){
       if ( pixX == 0 ){
-        return std::make_pair(  m_ChipFirstPixelSize[chipNum] ,m_PixelSize   ); 
+        return std::make_pair(  m_ChipFirstPixelSize[chipNum] ,m_pixelSize   ); 
 
       }
       else if ( pixX < (m_NpixX-1) && pixX!=0 ){
-        return std::make_pair( m_PixelSize ,m_PixelSize   );  
+        return std::make_pair( m_pixelSize ,m_pixelSize   );  
       }
       else {
-        return std::make_pair( m_ChipLastPixelSize[chipNum] , m_PixelSize );  
+        return std::make_pair( m_ChipLastPixelSize[chipNum] , m_pixelSize );  
       }
     }
     else {
       if ( pixX == 0 ){
-        return std::make_pair( m_PixelSize ,  m_ChipFirstPixelSize[chipNum]   ); 
+        return std::make_pair( m_pixelSize ,  m_ChipFirstPixelSize[chipNum]   ); 
 
       }
       else if ( pixX < (m_NpixX-1) && pixX!=0 ){
-        return std::make_pair( m_PixelSize ,m_PixelSize   );  
+        return std::make_pair( m_pixelSize ,m_pixelSize   );  
       }
       else {
-        return std::make_pair( m_PixelSize , m_ChipLastPixelSize[chipNum] );  
+        return std::make_pair( m_pixelSize , m_ChipLastPixelSize[chipNum] );  
       }
     }
   }
@@ -152,33 +154,33 @@ public:
     if ( m_ChipHorizontal[chipNum]){
       if ( pixX == 0 ){
         return std::make_pair(  m_xyChips[chipNum].first -( m_ChipFirstPixelSize[chipNum]/2. ),
-                                m_xyChips[chipNum].second + m_PixelSize/2. + pixY*m_PixelSize   );  
+                                m_xyChips[chipNum].second + m_pixelSize/2. + pixY*m_pixelSize   );  
       }
       else if ( pixX < (m_NpixX-1) && pixX != 0 ){
-        return std::make_pair(  m_xyChips[chipNum].first -( m_ChipFirstPixelSize[chipNum]+ (double)m_PixelSize/2. 
-                                                            + (double)(pixX-1)*m_PixelSize),
-                                m_xyChips[chipNum].second + m_PixelSize/2. + pixY*m_PixelSize   );  
+        return std::make_pair(  m_xyChips[chipNum].first -( m_ChipFirstPixelSize[chipNum]+ (double)m_pixelSize/2. 
+                                                            + (double)(pixX-1)*m_pixelSize),
+                                m_xyChips[chipNum].second + m_pixelSize/2. + pixY*m_pixelSize   );  
       }
       else {
-        return std::make_pair(  m_xyChips[chipNum].first -( m_ChipFirstPixelSize[chipNum] + (double)(pixX-1)*m_PixelSize
+        return std::make_pair(  m_xyChips[chipNum].first -( m_ChipFirstPixelSize[chipNum] + (double)(pixX-1)*m_pixelSize
                                                             + m_ChipLastPixelSize[chipNum]/2.),
-                                m_xyChips[chipNum].second + m_PixelSize/2. + pixY*m_PixelSize   );  
+                                m_xyChips[chipNum].second + m_pixelSize/2. + pixY*m_pixelSize   );  
       }
     }
     else {
       if ( pixX == 0 ){
-        return std::make_pair(  m_xyChips[chipNum].first - ( chipWidth() - ( m_PixelSize/2. + pixY*m_PixelSize ) ),
+        return std::make_pair(  m_xyChips[chipNum].first - ( chipWidth() - ( m_pixelSize/2. + pixY*m_pixelSize ) ),
                                 m_xyChips[chipNum].second + m_ChipFirstPixelSize[chipNum]/2.  );
       }
       else if ( pixX < ( m_NpixX - 1 ) && pixX != 0 ){
-        return std::make_pair(  m_xyChips[chipNum].first - ( chipWidth()  - ( m_PixelSize/2. + pixY*m_PixelSize )  )   ,
-                                m_xyChips[chipNum].second + ( m_ChipFirstPixelSize[chipNum]+ (double)m_PixelSize/2. 
-                                                              + (double)(pixX-1)*m_PixelSize)  );  
+        return std::make_pair(  m_xyChips[chipNum].first - ( chipWidth()  - ( m_pixelSize/2. + pixY*m_pixelSize )  )   ,
+                                m_xyChips[chipNum].second + ( m_ChipFirstPixelSize[chipNum]+ (double)m_pixelSize/2. 
+                                                              + (double)(pixX-1)*m_pixelSize)  );  
         
       }
       else {
-        return std::make_pair(  m_xyChips[chipNum].first - ( chipWidth()  - ( m_PixelSize/2. + pixY*m_PixelSize )  ) ,
-                                m_xyChips[chipNum].second + ( m_ChipFirstPixelSize[chipNum] + (pixX-1)*m_PixelSize
+        return std::make_pair(  m_xyChips[chipNum].first - ( chipWidth()  - ( m_pixelSize/2. + pixY*m_pixelSize )  ) ,
+                                m_xyChips[chipNum].second + ( m_ChipFirstPixelSize[chipNum] + (pixX-1)*m_pixelSize
                                                             + m_ChipLastPixelSize[chipNum]/2.));  
       }
     }
@@ -193,25 +195,25 @@ public:
     if ( m_ChipHorizontal[chipNum]){
       if ( pixX == 0 ){
         pixelCoord result =   std::make_pair(  m_xyChips[chipNum].first -( m_ChipFirstPixelSize[chipNum]/2. ),
-                                m_xyChips[chipNum].second + m_PixelSize/2. + pixY*m_PixelSize 
-                                               + (fraction.second-0.5)*m_PixelSize  );  
+                                m_xyChips[chipNum].second + m_pixelSize/2. + pixY*m_pixelSize 
+                                               + (fraction.second-0.5)*m_pixelSize  );  
         result.first = result.first - (fraction.first-0.5)*m_ChipFirstPixelSize[chipNum];
         return result;
       }
       else if ( pixX < (m_NpixX-1) && pixX > 0 ){
-        pixelCoord result =   std::make_pair(  m_xyChips[chipNum].first -( m_ChipFirstPixelSize[chipNum]+ (double)m_PixelSize/2. 
-                                                            + (double)(pixX-1)*m_PixelSize),
-                                m_xyChips[chipNum].second + m_PixelSize/2. + pixY*m_PixelSize 
-                                               + (fraction.second-0.5)*m_PixelSize  ); 
-        result.first = result.first - (fraction.first-0.5)*m_PixelSize;
+        pixelCoord result =   std::make_pair(  m_xyChips[chipNum].first -( m_ChipFirstPixelSize[chipNum]+ (double)m_pixelSize/2. 
+                                                            + (double)(pixX-1)*m_pixelSize),
+                                m_xyChips[chipNum].second + m_pixelSize/2. + pixY*m_pixelSize 
+                                               + (fraction.second-0.5)*m_pixelSize  ); 
+        result.first = result.first - (fraction.first-0.5)*m_pixelSize;
         return result ;
       }
       else {
         pixelCoord result =   std::make_pair(  m_xyChips[chipNum].first -( m_ChipFirstPixelSize[chipNum] 
-                                                                           + (double)(pixX-1)*m_PixelSize
+                                                                           + (double)(pixX-1)*m_pixelSize
                                                             + m_ChipLastPixelSize[chipNum]/2.),
-                                m_xyChips[chipNum].second + m_PixelSize/2. + pixY*m_PixelSize  
-                                               + (fraction.second-0.5)*m_PixelSize);  
+                                m_xyChips[chipNum].second + m_pixelSize/2. + pixY*m_pixelSize  
+                                               + (fraction.second-0.5)*m_pixelSize);  
         result.first = result.first - (fraction.first-0.5)*m_ChipLastPixelSize[chipNum];
         return result;
       }
@@ -220,27 +222,27 @@ public:
       // fraction are given in the XY sensor frame coordinates...  
       if ( pixX == 0 ){
         pixelCoord result =   std::make_pair(  m_xyChips[chipNum].first 
-                                               - (chipWidth() - (m_PixelSize/2. + pixY*m_PixelSize  
-                                                                 - (fraction.first-0.5)*m_PixelSize ) ),
+                                               - (chipWidth() - (m_pixelSize/2. + pixY*m_pixelSize  
+                                                                 - (fraction.first-0.5)*m_pixelSize ) ),
                                 m_xyChips[chipNum].second + m_ChipFirstPixelSize[chipNum]/2.  ); 
         result.second = result.second + (fraction.second-0.5)*m_ChipFirstPixelSize[chipNum];
         return result;
       }
       else if ( pixX < ( m_NpixX - 1 ) && pixX != 0 ){
         pixelCoord result =   std::make_pair(  m_xyChips[chipNum].first 
-                                               - ( chipWidth() - (m_PixelSize/2. + pixY*m_PixelSize  
-                                                                  - (fraction.first-0.5)*m_PixelSize ))    ,
-                                m_xyChips[chipNum].second + ( m_ChipFirstPixelSize[chipNum]+ (double)m_PixelSize/2. 
-                                                              + (double)(pixX-1)*m_PixelSize)  );  
-        result.second = result.second + (fraction.second-0.5)*m_PixelSize;
+                                               - ( chipWidth() - (m_pixelSize/2. + pixY*m_pixelSize  
+                                                                  - (fraction.first-0.5)*m_pixelSize ))    ,
+                                m_xyChips[chipNum].second + ( m_ChipFirstPixelSize[chipNum]+ (double)m_pixelSize/2. 
+                                                              + (double)(pixX-1)*m_pixelSize)  );  
+        result.second = result.second + (fraction.second-0.5)*m_pixelSize;
         return result;
         
       }
       else {
         pixelCoord result =   std::make_pair(  m_xyChips[chipNum].first 
-                                               - ( chipWidth() - (m_PixelSize/2. + pixY*m_PixelSize 
-                                                                  - (fraction.first-0.5)*m_PixelSize ) ) ,
-                                m_xyChips[chipNum].second + ( m_ChipFirstPixelSize[chipNum] + (pixX-1)*m_PixelSize
+                                               - ( chipWidth() - (m_pixelSize/2. + pixY*m_pixelSize 
+                                                                  - (fraction.first-0.5)*m_pixelSize ) ) ,
+                                m_xyChips[chipNum].second + ( m_ChipFirstPixelSize[chipNum] + (pixX-1)*m_pixelSize
                                                             + m_ChipLastPixelSize[chipNum]/2.));  
         result.second = result.second + (fraction.second-0.5)*m_ChipLastPixelSize[chipNum];
         return result;
@@ -265,26 +267,40 @@ public:
   }
 
   /// Return the X,Y,Z position of the pixel plus fraction*size of the pixel in the global frame
-  inline Gaudi::XYZPoint globalXYZ(unsigned long pixel , pixelCoord fraction) const {
-    return localToGlobal(xyzOfPixel( pixel,fraction));
+  virtual Gaudi::XYZPoint globalXYZ(unsigned long pixel, pixelCoord fraction) const {
+    return localToGlobal(xyzOfPixel(pixel, fraction));
   }
-  inline Gaudi::XYZPoint globalXYZ(unsigned long pixel) const {
+  inline Gaudi::XYZPoint globalXYZ(unsigned int pixel) const {
     return localToGlobal(xyzOfPixel( pixel));
   }
     
-  /// Return the  X,Y,Z position of the pixel plus fraction*size of the pixel in the halfbox frame
-  inline Gaudi::XYZPoint halfboxXYZ(unsigned long pixel, pixelCoord fraction) const {
-    return localToVPHalfBox(xyzOfPixel( pixel,fraction));
-  }
-  inline Gaudi::XYZPoint halfboxXYZ(unsigned long pixel) const {
-    return localToVPHalfBox(xyzOfPixel( pixel));
-  }
   /// Return true if is a long pixel
   inline bool isLong(unsigned long pixel) const
   {
-    return ( fabs(PixelSize(pixel).first - interchipPixSize()) < 0.0000001 ) 
-      || ( fabs(PixelSize(pixel).second - interchipPixSize()) < 0.0000001 ); 
+    return ( fabs(pixelSize(pixel).first - interchipPixSize()) < 0.0000001 ) 
+      || ( fabs(pixelSize(pixel).second - interchipPixSize()) < 0.0000001 ); 
   }
+
+  ///  the chip active length (size along the dimension on which the chips are aligned)(mm)
+  inline double chipLength() const {return m_chipLength;}
+  /// the chip active width (mm)
+  inline double chipWidth() const {return m_chipWidth;}
+  /// the distance between chip (mm)
+  inline double interChipDist() const {return m_interChipDist;}
+  /// the size of pixel along the high precision dimension 
+  inline double hpSize() const {return m_hpSize;}
+  /// the size of pixel along the low precision dimension (is identical to hpSize if Square pixel)
+  inline double lpSize() const {return m_lpSize;}
+  /// the number of pixel in one column (for FPIX column is along the hp dimension)
+  inline int nPixCol() const {return m_nPixCol;}
+  /// the number of pixel in one row (for FPIX column is along the lp dimension)
+  inline int nPixRow() const {return m_nPixRow;}
+
+  /// Returns the size of the interchip pixel
+  inline double interchipPixSize() const {return m_interchipPixSize;}
+
+  /// The number of ladders orming the detector
+  inline int ladderNumber() const {return m_ladderNumber;}
 
 private:
   /// Store the local x,y position and fraction for each pixel in the sensor
@@ -312,6 +328,16 @@ private:
   unsigned int m_PixelHPMask;
   unsigned int m_PixelMask;
   
+  double m_chipWidth         ; ///< Chip width
+  double m_chipLength        ; ///< Chip length
+  double m_interChipDist     ; ///< Distance between chips
+  double m_hpSize            ; ///< high precision pixel dimension (eq. to low if symetric)
+  double m_lpSize            ; ///< low precision pixel dimension (eq. to high if symetric)
+  int m_nPixCol              ; ///< Number of pixel column in a chip
+  int m_nPixRow              ; ///< Number of pixel row in a chip
+  double m_interchipPixSize  ; ///< Size of the pixel at the edge of the chip
+
+  int m_ladderNumber         ; ///< Number of ladders constituing the sensor
 
   // These are references to local statics accessed via static functions
   // implemented in DeVeloRType.cpp. I stree this because these are
@@ -322,7 +348,7 @@ private:
   // The staic bool m_staticDataInvalid is not (and never should be!)
   // accessed by any inline function. It's sole purpose is to speed
   // up the initialize() method when the information common to all sensors
-  //  - m_PixelSize | standard pixel size
+  //  - m_pixelSize | standard pixel size
   //  - m_NpixX     | number of chips along the x axis
   //  - m_ChipWidth | chip width needed to transform x to y
 
@@ -334,7 +360,7 @@ private:
   //  - m_ChipHorizontal | chip orientation (for the moment Horizontal or vertial --> vector of bool) size  NChip*bool
   
 
-  double& m_PixelSize;
+  double& m_pixelSize;
   int& m_NpixX ;
   double& m_ChipWidth ;
   // 64 size at maximum
@@ -350,20 +376,13 @@ private:
   bool m_debug;
 
   /// cached Message Stream object
-  mutable MsgStream * m_msgStream;
+  mutable MsgStream* m_msgStream;
 
   /// On demand access to MsgStream object
-  inline MsgStream & msg() const
-  {
-    if ( !m_msgStream ) m_msgStream = new MsgStream( msgSvc(), "DeVPSquareType" );
+  inline MsgStream & msg() const {
+    if (!m_msgStream) m_msgStream = new MsgStream(msgSvc(), "DeVPSquareType");
     return *m_msgStream; 
   }
 };
 
-/// fast cast to Square sensor, returns 0 for wrong type
-inline const DeVPSquareType* DeVPSensor::squareType() const { 
-  return (m_isSquare ? static_cast<const DeVPSquareType*>(this) : 0); 
-}
-  
-
-#endif // VPDET_DEVPSQUARETYPE_H
+#endif 

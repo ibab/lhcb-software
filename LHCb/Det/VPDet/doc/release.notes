@@ -4,6 +4,14 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2013-08-23 - Heinrich Schindler
+ - removed DeVPXType and DeVPYType
+ - removed casts to DeVPSquareType
+ - removed unused functions (e. g. iterators in DeVP, halfbox transformations) 
+ - added functions (globalXYZ) from DeVPSquareType 
+   which are used in Boole and Brunel to DeVPSensor
+ - moved geometry specific member variables from DeVPSensor to DeVPSquareType 
+
 !========================= VPDet v2r2 2013-04-29 =========================
 ! 2013-04-02 - Marco Cattaneo
  - Replace endreq by endmsg

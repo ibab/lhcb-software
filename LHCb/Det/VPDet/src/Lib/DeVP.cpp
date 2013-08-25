@@ -1,8 +1,7 @@
-// ============================================================================
-// from STL (for std::sort)
+// STL (for std::sort)
 #include <algorithm>
 
-// From Gaudi
+// Gaudi
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
@@ -11,6 +10,7 @@
 #include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
+// LHCb
 #include "DetDesc/Condition.h"
 
 // Local
@@ -24,329 +24,143 @@
  */
 
 
-// **  Standard Constructors
-
-DeVP::DeVP( const std::string& name ) :  
+// ============================================================================
+/// Constructor
+// ============================================================================ 
+DeVP::DeVP(const std::string& name) :  
   DetectorElement(name),
-  m_nSensors(0),
-  m_nXSensors(0),
-  m_nYSensors(0),
-  m_nLeftSensors(0),
-  m_nRightSensors(0),
-  m_nLeftXSensors(0),
-  m_nRightXSensors(0),
-  m_nLeftYSensors(0),
-  m_nRightYSensors(0),
-  m_debug(false),
-  m_sensVolCut(0.)
-{
+  m_nSensors(0), m_nLeftSensors(0), m_nRightSensors(0),
+  m_debug(false) {
+
 } 
 
-//
-// Standard Destructor
-DeVP::~DeVP() {
-}
-
 // ============================================================================
-// object identification
+/// Destructor
 // ============================================================================ 
-const CLID& DeVP::clID () const { return DeVP::classID() ; }
-
+DeVP::~DeVP() {}
 
 // ============================================================================
-// intialization method
+/// Object identification
+// ============================================================================ 
+const CLID& DeVP::clID() const {return DeVP::classID();}
+
+// ============================================================================
+/// Initialisation method
 // ============================================================================ 
 StatusCode DeVP::initialize() {
 
-  // Trick from old DeVP to set the output level
+  // Set the output level.
   PropertyMgr* pmgr = new PropertyMgr();
-  int outputLevel=0;
+  int outputLevel = 0;
   pmgr->declareProperty("OutputLevel", outputLevel);
   IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
-  if( sc.isSuccess() ) sc = jobSvc->setMyProperties("DeVP", pmgr);
-  if ( 0 < outputLevel ) {
-    msgSvc()->setOutputLevel("DeVP", outputLevel);
-  }
+  if (sc.isSuccess()) sc = jobSvc->setMyProperties("DeVP", pmgr);
+  if (outputLevel > 0) msgSvc()->setOutputLevel("DeVP", outputLevel);
   delete pmgr;
-  if( !sc ) return sc;
+  if (!sc) return sc;
+  m_debug  = (msgSvc()->outputLevel("DeVP") == MSG::DEBUG);
 
-  MsgStream msg( msgSvc(), "DeVP" );
-  msg << MSG::DEBUG << "Initialising DeVP " << endmsg;
+  MsgStream msg(msgSvc(), "DeVP");
 
-  // Initialise the detector element
+  // Initialise the base class.
   sc = DetectorElement::initialize();
-  if( sc.isFailure() ) { 
-    msg << MSG::ERROR << "Failure to initialize DetectorElement" << endmsg;
+  if (sc.isFailure()) { 
+    msg << MSG::ERROR << "Cannot initialize DetectorElement" << endmsg;
     return sc ; 
   }
-  m_debug   = (msgSvc()->outputLevel("DeVP") == MSG::DEBUG  ) ;
 
-  // get all of the pointers to the child detector elements
-  std::vector<DeVPSensor*> veloSensors = findVPSensors();
-  
-  if( m_debug ) msg << MSG::DEBUG << "Found " << veloSensors.size() 
-                    << " sensors in the XML" << endmsg;
-
-  std::vector<DeVPSensor*>::iterator iDESensor;
-  m_nSensors=m_nXSensors=m_nYSensors=0;
-  m_nLeftSensors=m_nRightSensors=0;
-
-  std::sort(veloSensors.begin(), veloSensors.end(), less_Z());
- 
-  // this determines the size of our pseudo map and check type
-  unsigned int maxSensorNumber=0;
-  bool isSymetric = false;
-  for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ; 
-      ++iDESensor){
-     if (maxSensorNumber < (*iDESensor)->sensorNumber())
-       maxSensorNumber = (*iDESensor)->sensorNumber();
-     // Frome the sensor type describe in DDDB determine which type of detector we implement in intialisation
-     if ((*iDESensor)->isSquare() ) isSymetric = true;
+  // Get all child detector elements
+  std::vector<DeVPSensor*> sensors;
+  findSensors(this, sensors);
+  if (m_debug) {
+    msg << MSG::DEBUG << "Found " << sensors.size() << "sensors" << endmsg; 
   }
-  
-  // ok, now we know the size of our pseudo map
-  m_sensors.resize(maxSensorNumber+1,0);
+  std::sort(sensors.begin(), sensors.end(), less_Z());
 
-  if(isSymetric == true ){ 
-    //Case where the pixel solution uses symetric pixel::  VP detector element is made of DeVPSquareType
-    m_nLeftSensors=m_nRightSensors=0;
-    for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ; 
-        ++iDESensor,++m_nSensors){
-      // Sensors are pre-sorted in XML such that they increase with z position
-      m_vpSensors.push_back(*iDESensor);
-      unsigned int index=m_vpSensors.size()-1;
-      if(m_debug) msg << MSG::DEBUG << "type " << (*iDESensor)->fullType() 
-                      << " index " << index
-                      << " Square type " << (*iDESensor)->isSquare() 
-                      << " SNO " <<  (*iDESensor)->sensorNumber()
-                      << endmsg;
-    
-      //      bool isLeftSensor=false;
-      // Check if sensor is on Left/Right side of LHCb
-      if((*iDESensor)->isLeft()){
-        //        isLeftSensor=true;
-        m_vpLeftSensors.push_back(m_vpSensors.back());
-        m_nLeftSensors++;
-      } else {
-        m_vpRightSensors.push_back(m_vpSensors.back());
-        m_nRightSensors++;
-      }
-
-      m_sensors[m_vpSensors[index]->sensorNumber()]= m_vpSensors[index];
-      if( m_debug ) msg << MSG::DEBUG << "Module " << m_vpSensors[index]->module()
-                        << " sensor " << m_vpSensors[index]->sensorNumber()
-                        << " type " << m_vpSensors[index]->fullType() 
-                        << " z = " << m_vpSensors[index]->z()
-                        << " and in VELO frame " 
-                        << geometry()->toLocal(Gaudi::XYZPoint(0,0,m_vpSensors[index]->z())).z()
-                        << endmsg;
+  // Find the highest sensor number.
+  std::vector<DeVPSensor*>::iterator it;
+  unsigned int maxSensorNumber = 0;
+  for (it = sensors.begin(); it != sensors.end(); ++it) { 
+    if (maxSensorNumber < (*it)->sensorNumber()) {
+       maxSensorNumber = (*it)->sensorNumber();
     }
-    // Set the associated and other side sensor links.  This makes assumptions about the
-    // semantics of sensor number.  While this is a bad idea in general it is
-    // defendable inside the detector element itself. 
-    for (std::vector<DeVPSensor*>::const_iterator iSquareS=leftSensorsBegin();
-         iSquareS != leftSensorsEnd();
-         ++iSquareS) {
-      // associated sensors on the left side
-      DeVPSquareType*   lSquareS = const_cast<DeVPSquareType*>(squareSensor((*iSquareS)->sensorNumber()));
-      // associated sensors on the right side
-      DeVPSquareType* rSquareS = const_cast<DeVPSquareType*>(squareSensor((*iSquareS)->sensorNumber()+1));
-      // other side sensor links
-      if (rSquareS) rSquareS->setOtherSideSensor(lSquareS);
-    } 
-    msg << MSG::INFO << "There are " << m_nSensors << " Square sensors: Left " << m_nLeftSensors
-        << " Right " << m_nRightSensors << endmsg;
-    // Get the value of the sensitiveVolumeCut from the XML.  ??????????if m_sensVolCut>z-zfront+siplanetichness
-    m_sensVolCut=param<double>("sensitiveVolumeCut");
+  } 
+  m_sensors.resize(maxSensorNumber + 1, 0);
+
+  m_nSensors = 0;
+  m_nLeftSensors = m_nRightSensors = 0;
+  for (it = sensors.begin(); it != sensors.end(); ++it) {
+    m_vpSensors.push_back(*it);
+    ++m_nSensors;
+    if ((*it)->isLeft()) {
+      m_leftSensors.push_back(*it);
+      ++m_nLeftSensors;
+    } else {
+      m_rightSensors.push_back(*it);
+      ++m_nRightSensors;
+    }
+    m_sensors[(*it)->sensorNumber()] = *it;
   }
-  else{
-    //Case where the pixel solution uses assymetric pixel:  VP detector element is made of DeVPXType and DeVPYType
-    m_nLeftXSensors=m_nRightXSensors=0;
-    m_nLeftYSensors=m_nRightYSensors=0;
-    for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ; 
-        ++iDESensor,++m_nSensors){
-      // Sensors are pre-sorted in XML such that they increase with z position
-      m_vpSensors.push_back(*iDESensor);
-      unsigned int index=m_vpSensors.size()-1;
-      if( m_debug ) msg << MSG::DEBUG << "type " << (*iDESensor)->fullType() 
-                        << " index " << index
-                        << " X " << (*iDESensor)->isX() 
-                        << " Y " << (*iDESensor)->isY()
-                        << " SNO " <<  (*iDESensor)->sensorNumber()
-                        << endmsg;
-    
-      bool isLeftSensor=false;
-      // Check if sensor is on Left/Right side of LHCb
-      if((*iDESensor)->isLeft()){
-        isLeftSensor=true;
-        m_vpLeftSensors.push_back(m_vpSensors.back());
-        m_nLeftSensors++;
-      } else {
-        m_vpRightSensors.push_back(m_vpSensors.back());
-        m_nRightSensors++;
-      }
-      if((*iDESensor)->isX()){
-        m_vpXSensors.push_back(dynamic_cast<DeVPXType*>((*iDESensor)));
-        m_nXSensors++;
-        if(isLeftSensor){
-          m_vpLeftXSensors.push_back(m_vpXSensors.back());
-          m_nLeftXSensors++;
-        } else {
-          m_vpRightXSensors.push_back(m_vpXSensors.back());
-          m_nRightXSensors++;
-        }
-
-      } else if((*iDESensor)->isY()){
-        m_vpYSensors.push_back(dynamic_cast<DeVPYType*>((*iDESensor)));
-        m_nYSensors++;
-        if(isLeftSensor){
-          m_vpLeftYSensors.push_back(m_vpYSensors.back());
-          m_nLeftYSensors++;
-        } else {
-          m_vpRightYSensors.push_back(m_vpYSensors.back());
-          m_nRightYSensors++;
-        }
-
-      } else {
-        msg << MSG::ERROR << "Sensor type is unknown" << endmsg;
-      }
-      m_sensors[m_vpSensors[index]->sensorNumber()]= m_vpSensors[index];
-      if( m_debug ) msg << MSG::DEBUG << "Module " << m_vpSensors[index]->module()
-                        << " sensor " << m_vpSensors[index]->sensorNumber()
-                        << " type " << m_vpSensors[index]->fullType() 
-                        << " z = " << m_vpSensors[index]->z()
-                        << " and in VELO frame " 
-                        << geometry()->toLocal(Gaudi::XYZPoint(0,0,m_vpSensors[index]->z())).z()
-                        << endmsg;
-    }
-
-    // Set the associated and other side sensor links.  This makes assumptions about the
-    // semantics of sensor number.  While this is a bad idea in general it is
-    // defendable inside the detector element itself. 
-    for (std::vector<DeVPXType*>::const_iterator iXS=leftXSensorsBegin();
-         iXS != leftXSensorsEnd();
-         ++iXS) {
-    
-      // associated sensors on the left side
-      DeVPXType*   lXS = *iXS;
-      DeVPYType* lYS = const_cast<DeVPYType*>(ySensor(lXS->sensorNumber()+1));
-      lXS->setAssociatedYSensor(lYS);
-      if (lYS) lYS->setAssociatedXSensor(lXS);
-
-      // associated sensors on the right side
-      DeVPXType* rXS = const_cast<DeVPXType*>(xSensor(lXS->sensorNumber()+2));
-      DeVPYType* rYS = const_cast<DeVPYType*>(ySensor(lYS->sensorNumber()+2));
-      if (rXS) rXS->setAssociatedYSensor(rYS);
-      if (rYS) rYS->setAssociatedXSensor(rXS);
-
-      // other side sensor links
-      if (rXS) rXS->setOtherSideXSensor(lXS);
-      if (rXS) rXS->setOtherSideYSensor(lYS);
-      if (lXS) lXS->setOtherSideXSensor(rXS);
-      if (lXS) lXS->setOtherSideYSensor(rYS);
-      if (rYS) rYS->setOtherSideYSensor(lYS);
-      if (rYS) rYS->setOtherSideXSensor(lXS);
-      if (lYS) lYS->setOtherSideYSensor(rYS);
-      if (lYS) lYS->setOtherSideXSensor(rXS);
-      
-    }
-    if( m_debug ) {
-      msg << MSG::DEBUG << "There are " << m_nSensors << " sensors: Left " << m_nLeftSensors
-          << " Right " << m_nRightSensors << endmsg;
-      msg << MSG::DEBUG << "There are " << m_nXSensors << " X sensors: Left " << m_nLeftXSensors
-          << " Right " << m_nRightXSensors << endmsg;
-      msg << MSG::DEBUG << "There are " << m_nYSensors << " Y sensors: Left " << m_nLeftYSensors
-          << " Right " << m_nRightYSensors << endmsg;
-    }
-    
-    // Get the value of the sensitiveVolumeCut from the XML.  ??????????if m_sensVolCut>z-zfront+siplanetichness
-    m_sensVolCut=param<double>("sensitiveVolumeCut");
-  }
-  
+  msg << MSG::INFO << "There are " << m_nSensors << " sensors "
+                   << "(left: " << m_nLeftSensors 
+                   << ", right: " << m_nRightSensors << ")" << endmsg;
   return StatusCode::SUCCESS;
+
 }
 
+// ============================================================================
+/// Get sensitive volume identifier for a given point in the global frame
+// ============================================================================ 
+int DeVP::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
+  
+  std::vector<DeVPSensor*>::const_iterator it;
+  for (it = m_vpSensors.begin(); it != m_vpSensors.end(); ++it) {
+    // Gaudi::XYZPoint localPoint = (*it)->globalToLocal(point);
+    // TODO: this needs changing for new meaning of "sensor"...
+    // if (m_sensVolCut > fabs(localPoint.z())) {
+    //   return ((*it)->sensorNumber());
+    // }
+    if ((*it)->isInside(point)) return (*it)->sensorNumber();
+  }
+  MsgStream msg(msgSvc(), "DeVP");
+  msg << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at z = " 
+      << point.z() << endmsg;
+  return -999;
 
-// return the sensor number for a point (global frame) ======================================= 
+}
+
+// ============================================================================
+/// Return pointer to sensor for a given point in the global frame
+// ============================================================================ 
 const DeVPSensor* DeVP::sensor(const Gaudi::XYZPoint& point) const {
   return sensor(sensitiveVolumeID(point));
 }
 
-// return the sensitive volume if for a point in the global frame =======================================  OK  
-// if m_sensVolCut>z-zfront+siplanetichness
-int DeVP::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
-  
-  MsgStream msg(msgSvc(), "DeVP");
-  std::vector<DeVPSensor*>::const_iterator iDeVPSensor;
-  for(iDeVPSensor=m_vpSensors.begin(); iDeVPSensor!=m_vpSensors.end(); ++iDeVPSensor){
-    Gaudi::XYZPoint localPoint=(*iDeVPSensor)->globalToLocal(point);
-    double z = localPoint.z();
-    if( m_debug) msg << MSG::DEBUG << "z = " << point.z() <<"local z ="
-                     <<localPoint.z()<<" in sensor: "<<(*iDeVPSensor)->sensorNumber()<< endmsg;
-    if(m_sensVolCut > fabs(z)) {
-      return ((*iDeVPSensor)->sensorNumber());
+// ============================================================================
+/// Scan detector element tree for VP sensors
+// ============================================================================ 
+void DeVP::findSensors(IDetectorElement* det,
+                       std::vector<DeVPSensor*>& sensors) {
+
+  MsgStream msg(msgSvc(), "DeVP");  
+  std::vector<IDetectorElement*> elements = det->childIDetectorElements();
+  std::vector<IDetectorElement*>::iterator it;
+  for (it = elements.begin(); it != elements.end(); ++it) {
+    if (m_debug) {
+      msg << MSG::DEBUG << std::setw(12) << std::setiosflags(std::ios::left)
+                        << (*it)->name() << endmsg;
     }
-  }
-  msg << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at z = " 
-      << point.z() << endmsg;
-  return -999;
-}
-
-//============================================================================= 
-std::vector<DeVPSensor*> DeVP::findVPSensors()
-{
-
-  std::vector<DeVPSensor*> mySensors;
-  
-  scanDetectorElement(this, mySensors);
-  return mySensors;
-  
-}
-//=============================================================================  
-void DeVP::scanDetectorElement(IDetectorElement* detElem, 
-                                 std::vector<DeVPSensor*>& sensors)
-{
-  MsgStream msg( msgSvc(), "DeVP" );  
-  std::vector<IDetectorElement*> veloSensors =
-    detElem->childIDetectorElements();
-
-  if( m_debug ) msg << MSG::DEBUG << "scanDetectorElement" << endmsg;
-  
-  std::vector<IDetectorElement*>::iterator iVPSensors=veloSensors.begin();
-
-  for (;iVPSensors!=veloSensors.end(); ++iVPSensors ) {
-    if( m_debug ) msg << MSG::DEBUG << std::setw(12) << std::setiosflags(std::ios::left)
-                      << (*iVPSensors)->name() << endmsg;
-    DeVPSensor* pSensor = dynamic_cast<DeVPSensor*>((*iVPSensors));
-    if (pSensor) {
-      sensors.push_back(pSensor);
-      if( m_debug ) msg << MSG::DEBUG << "Storing detector " <<   (*iVPSensors)->name()
-                        << endmsg;
-      
+    DeVPSensor* p = dynamic_cast<DeVPSensor*>(*it);
+    if (p) {
+      sensors.push_back(p);
+      if (m_debug) {
+        msg << MSG::DEBUG << "Storing detector " << (*it)->name() << endmsg;
+      } 
     }
-    scanDetectorElement(*iVPSensors, sensors);
+    findSensors(*it, sensors);
   }
-}
-//========================================================== 
-StatusCode DeVP::updateLeftHalfBoxOffset() {
 
-  Gaudi::XYZPoint localZero(0.,0.,0.);
- 
-  Gaudi::XYZPoint global = (*leftSensorsBegin())->vPHalfBoxToGlobal(localZero);
-  m_halfBoxOffsets[LeftHalf] = global-localZero;
-  
-  return StatusCode::SUCCESS;
 }
 
-//========================================================== 
-StatusCode DeVP::updateRightHalfBoxOffset() {
-
-  Gaudi::XYZPoint localZero(0.,0.,0.);
-  
-  Gaudi::XYZPoint global = (*rightSensorsBegin())->vPHalfBoxToGlobal(localZero);
-  m_halfBoxOffsets[RightHalf] = global-localZero;
-  
-  return StatusCode::SUCCESS;
-}

@@ -179,7 +179,7 @@ DeVPSquareType::DeVPSquareType(const std::string& name) :
   m_PixelLPMask(0),
   m_PixelHPMask(0),
   m_PixelMask(0),
-  m_PixelSize(VPDet::deVPSquareTypeStaticPixelSize()), 
+  m_pixelSize(VPDet::deVPSquareTypeStaticPixelSize()), 
   m_NpixX(VPDet::deVPSquareTypeStaticNpixX()), 
   m_ChipWidth(VPDet::deVPSquareTypeStaticChipWidth()), 
   m_xyChips(VPDet::deVPSquareTypeStaticChips()),
@@ -229,6 +229,17 @@ StatusCode DeVPSquareType::initialize()
   }
 
   m_debug   = (msgSvc()->outputLevel("DeVPSquareType") == MSG::DEBUG  ) ;
+
+  m_chipWidth = param<double>("ActiveWidth");
+  m_chipLength = param<double>("ChipLength");
+  m_interChipDist = param<double>("InterChipDist");
+  m_hpSize = param<double>("HighPrecisionSize");
+  m_lpSize = param<double>("LowPrecisionSize");
+  m_nPixCol = param<int>("NPixelColumn");
+  m_nPixRow = param<int>("NPixelRow");
+  m_interchipPixSize = param<double>("InterChipPixelSize");
+  m_ladderNumber = param<int>("LadderNumber");
+
   int numOfChips = 0;
   // Fill the ladder vector with parameters from the DDDB
   for (int nl = 0 ; nl < ladderNumber() ; nl ++)
@@ -412,7 +423,7 @@ StatusCode  DeVPSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point,
   Gaudi::XYZPoint loc_point = globalToLocal(point);
   // Initialise the size and if there is a channel at the central point get its size
   std::pair <double, double> size (0.,0.);
-  if( sc.isSuccess()) size = PixelSize(channelCentral);
+  if( sc.isSuccess()) size = pixelSize(channelCentral);
 
 
   // Loop over the possible position in the 3x3 cluster
@@ -506,7 +517,7 @@ StatusCode  DeVPSquareType::channelToNeighbours( const LHCb::VPChannelID& seedCh
   
   // Initialise the size of the seed pixel
   std::pair <double, double> size (0.,0.);
-  size = PixelSize(seedChannel);
+  size = pixelSize(seedChannel);
   
   // Loop over the possible position in the 3x3 cluster
   int pixY = (seedChannel).pixel_hp();
@@ -709,9 +720,9 @@ std::pair<int,int> DeVPSquareType::WhichPixel(const Gaudi::XYZPoint& point, int 
 //==============================================================================
 /// The function that retruns the size of a pixel from channelID                 
 //==============================================================================
-std::pair<double,double> DeVPSquareType::PixelSize(LHCb::VPChannelID channel) const
+std::pair<double,double> DeVPSquareType::pixelSize(LHCb::VPChannelID channel) const
 {
-  return PixelSize(channel.pixel());
+  return pixelSize(channel.pixel());
 }
 //==============================================================================
 /// The function that retruns true if channel is a long pixel              
@@ -739,7 +750,7 @@ StatusCode DeVPSquareType::calcPixelsParam()
     int ntotPixel = 0;
     // Filling a big table with all the pixel position in one sensor is not possible (more than 20M per table)
     // so we cut the data into :
-    //  - m_PixelSize | standard pixel size
+    //  - m_pixelSize | standard pixel size
     //  - m_NpixX     | number of chips along the x axis
     //  - m_ChipWidth | chip width needed to transform x to y
     //  - m_xyChips | bottom left X,Y position of 1st pixel in chip (size NChip*std::pair<double,double>)
@@ -749,7 +760,7 @@ StatusCode DeVPSquareType::calcPixelsParam()
     //  - m_ChipsInLadder  | ladder of each chip (since it contains the Z relative position wrt. the sensor z=0) size  NChip*int
     //  - m_ChipHorizontal | chip orientation (for the moment Horizontal or vertial --> vector of bool) size  NChip*bool
     // Note that X,Y are in the sensor coordinates while  x,y are in the ladder coordinate
-    m_PixelSize = lpSize();
+    m_pixelSize = lpSize();
     m_NpixX = nPixCol();
     m_ChipWidth = chipWidth();
 

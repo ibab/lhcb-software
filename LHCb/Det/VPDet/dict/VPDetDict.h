@@ -3,8 +3,6 @@
 
 #include "VPDet/DeVP.h"
 #include "VPDet/DeVPSensor.h"
-#include "VPDet/DeVPYType.h"
-#include "VPDet/DeVPXType.h"
 #include "VPDet/DeVPSquareType.h"
 
 // ============================================================================
