@@ -4,6 +4,9 @@
 ! Purpose     : Pattern recogintion for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2013-08-25 - Heinrich Schindler
+ - Replace direct calls to DeVPSquareType 
+
 !========================= PatPixel v1r1 2013-06-03 =========================
 ! 2013-05-28 - Wouter Hulsbergen
  - implemented a simple fixed-noise kalman filter to improve IP resolution

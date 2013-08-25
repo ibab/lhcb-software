@@ -58,8 +58,7 @@ public:
     Double_t slx, sly;
     Double_t delta_x = fabs(dx-0.5);
     Double_t delta_y = fabs(dy-0.5);
-    const DeVPSquareType* sqDet = sensor()->squareType();
-    Gaudi::XYZPoint Point = sqDet->globalXYZ( id.channelID(), offsets );
+    Gaudi::XYZPoint Point = sensor()->globalXYZ( id.channelID(), offsets );
     if (dx == 0.5 && dy ==0.5) {return Point;}
     if (dx != 0.5) {
       slx = fabs(Point.x()/Point.z());
@@ -78,7 +77,7 @@ public:
     
     
     std::pair<double,double> offsets2(dx_prime,dy_prime);
-    return sqDet->globalXYZ( id.channelID(), offsets2 );
+    return sensor()->globalXYZ( id.channelID(), offsets2 );
   }
     //double low = id.pixel_lp() + dx;
     //double hig = id.pixel_hp() + dy;
