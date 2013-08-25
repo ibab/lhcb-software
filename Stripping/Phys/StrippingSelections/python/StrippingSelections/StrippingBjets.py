@@ -28,8 +28,8 @@ from Configurables import LoKi__FastJetMaker,LoKi__JetMaker
 # constants
 
 default_config = {
-    "1B2jetlow" : { "PTmin" : 8*units.GeV ,  "prescale" : 200 },
-    "1B2jethigh" : { "PTmin" : 14*units.GeV ,  "prescale" : 10 },
+    "1B2jetlow" : { "PTmin" : 8*units.GeV ,  "prescale" : 0.005 },
+    "1B2jethigh" : { "PTmin" : 14*units.GeV ,  "prescale" : 0.1 },
     "1B4jet" : { "PTmin" : 16*units.GeV ,  "prescale" : 1 },
     "2B3jet" : { "PTmin" : 11*units.GeV ,  "prescale" : 1 },
     "2B4jet" : { "PTmin" : 8*units.GeV ,  "prescale" : 1 },
@@ -130,7 +130,7 @@ class BJetsLinesConf(LineBuilder):
         _jetAlgo.ApplyJEC = False #If True, error
         _jetAlgo.Associate2Vertex = True ## Inputs are selected from the good PV before hands
         _jetAlgo.addTool ( LoKi__FastJetMaker )
-        _jetAlgo.Inputs = ['Phys/StdLoosePhotons/Particles','Phys/StrippingBjetsHighPTPions/Particles']#'Phys/StdNoPIDsDownPions/Particles',
+        _jetAlgo.Inputs = ['Phys/StdLoosePhotons/Particles','Phys/BjetsHighPTPions/Particles']#'Phys/StdNoPIDsDownPions/Particles',
         _jetTool = getattr ( _jetAlgo , 'LoKi__FastJetMaker' )
         _jetTool.Type = 2 ## anti-kt
         _jetTool.RParameter = 0.5
