@@ -42,9 +42,7 @@ tuple.ToolList +=  [
 #    , "TupleToolTISTOS"
      ]
 tuple.Inputs = [line.outputLocation()]
-#tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-)]cc"
-# CRJ : Adapt for LoKi decay finder
-tuple.Decay = "[B0 -> ^(J/psi(1S) -> ^mu+ ^mu-) ^(KS0 -> ^pi+ ^pi-)]CC"
+tuple.Decay = "[ B0 -> ^( J/psi(1S) -> ^mu+ ^mu- ) ^( KS0 -> ^pi+ ^pi- ) ]CC"
 #tuple.OutputLevel = 1 ;
 ########################################################################
 #
@@ -64,7 +62,7 @@ evtTuple.TupleToolTrigger.VerboseHlt2 = True
 #
 from Configurables import MCDecayTreeTuple
 mcTuple = MCDecayTreeTuple("MCTuple")
-mcTuple.Decay = "{[ [B0]nos -> ^(J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}) ^(KS0 -> ^pi+ ^pi- {,gamma}{,gamma}) {,gamma} ]CC, [ [B0]os -> ^(J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}) ^(KS0 -> ^pi+ ^pi- {,gamma}{,gamma}) {,gamma} ]CC}"
+mcTuple.Decay = "( [ [B0]nos => ^( J/psi(1S) => ^mu+ ^mu- ) ^( KS0 => ^pi+ ^pi- ) ]CC ) || ( [ [B0]os -> ^( J/psi(1S) => ^mu+ ^mu- ) ^( KS0 => ^pi+ ^pi- ) ]CC )"
 mcTuple.ToolList = [ "MCTupleToolKinematic", "TupleToolEventInfo", "MCTupleToolReconstructed"  ]
 from Configurables import MCTupleToolReconstructed, MCReconstructed
 #ToolSvc().addTool(MCReconstructed)
