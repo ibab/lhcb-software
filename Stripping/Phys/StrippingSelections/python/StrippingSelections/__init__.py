@@ -189,6 +189,7 @@ import StrippingD02KPiPi0
 import StrippingBeamGas
 import StrippingForTriggerValidation
 import StrippingDstarD02KShhForTrackingEff
+import StrippingB2LcpXLc2Kpi # new to Stripping20rXp2
 
 import StrippingD2HHLTUnbiased
 import StrippingBu2hhh

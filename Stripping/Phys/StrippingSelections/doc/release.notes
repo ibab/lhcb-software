@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-25 - Philip Hunt
+ - Added line to import the new StrippingB2LcpXLc2Kpi module in __init__.py,
+   which contains calibration lines for proton detection asymmetry measurements
+
 ! 2013-08-24 -Alessandra Borgia
  - StrippingB2XuMuNu: Removed prescale and E_nu cut from K line. 
    Added a new neutrino reconstruction cut to this line as well as tightening up some cuts. 
