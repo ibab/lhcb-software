@@ -65,11 +65,11 @@ default_config = {
     # Maximum final state track impact parameter chi^2
     "TrackIPCHI2": 20.0,
     # Minimum Kaon ANN PID
-    "ProbNNk": 0.1,
+    "ProbNNk": 0.2,
     # Minimum Proton ANN PID
-    "ProbNNp": 0.1,
+    "ProbNNp": 0.2,
     # Minimum Pion ANN PID
-    "ProbNNpi": 0.1
+    "ProbNNpi": 0.2
 }
 
 class B2LcpXLc2KpiBuilder(LineBuilder):
@@ -145,19 +145,19 @@ class B2LcpXLc2KpiBuilder(LineBuilder):
             self.bu_decay,
             lc
         )
-
         # Create the stripping lines
         bd_line = self.make_line(
-            "StrippingBd2LcppipiLc2pKpi{0}Line".format(name),
+            "Bd2LcppipiLc2Kpi{0}Line".format(name),
             bd
         )
         bu_line = self.make_line(
-            "StrippingBu2LcppipipiLc2pKpi{0}Line".format(name),
+            "Bu2LcppipipiLc2Kpi{0}Line".format(name),
             bu
         )
+
         # Make the lines visible to the LineBuilder
-        self.registerLine(bd_line)
         self.registerLine(bu_line)
+        self.registerLine(bd_line)
 
     def make_line(self, name, selection):
         """Return StrippingLine object for the line.
