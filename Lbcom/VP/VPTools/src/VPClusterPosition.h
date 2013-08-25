@@ -1,19 +1,18 @@
-
 #ifndef VPCLUSTERPOSITION_H 
 #define VPCLUSTERPOSITION_H 1
 
-// Include files
-// from Gaudi
+// Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "TrackInterfaces/IVPClusterPosition.h"            // Interface
+#include "GaudiMath/GaudiMath.h"
+
+// LHCb
 #include "Kernel/VPChannelID.h"
 #include "Kernel/PixelPositionInfo.h"
 #include "Event/StateVector.h"
-#include "GaudiMath/GaudiMath.h"
+#include "TrackInterfaces/IVPClusterPosition.h"
 
 /** @class VPClusterPosition VPClusterPosition.h
  *  
- *
  *  @author Victor Coco (based on  Tomasz Szumlak VeloClusterPosition)
  *  @date   2010-02-02
  */
@@ -21,74 +20,48 @@
 class DeVP;
 class DeVPSensor;
 
-class VPClusterPosition: public GaudiTool, virtual public IVPClusterPosition{
+class VPClusterPosition: public GaudiTool, virtual public IVPClusterPosition {
+
 public:
+  /// Constructor
+  VPClusterPosition(const std::string& type, 
+                    const std::string& name,
+                    const IInterface* parent);
+  /// Destructor
+  virtual ~VPClusterPosition();
 
-  // throughout the code LA stands for Linear Approximation
+  // Throughout the code LA stands for Linear Approximation
   // typedefs for object returned by tool
-
-  enum conv{
-    RAD_TO_DEG=180
-  };
-  //-- type of the error parametrization
-  enum paraType{
-    PITCH_PARA=1,
-    ANGLE_PARA
-  };
-  
   typedef IVPClusterPosition::toolInfo toolInfo;
   typedef IVPClusterPosition::Direction Direction;
   typedef std::pair<double, double> Pair;
 
-  virtual StatusCode initialize();    ///< Tool initialization
-  virtual StatusCode finalize();      ///< Tool finalization
-  /// Standard constructor
-  VPClusterPosition( const std::string& type, 
-                       const std::string& name,
-                       const IInterface* parent);
-  virtual ~VPClusterPosition( ); ///< Destructor
-  //-- public interface ----------------------------------------------
-  virtual toolInfo position(const LHCb::VPLiteCluster* aCluster) const;
+  virtual StatusCode initialize();
 
-  virtual toolInfo position(const LHCb::VPLiteCluster* aCluster,
-                            const Gaudi::XYZPoint& aPoint,
-                            const Direction& aDirection) const;
-
-  virtual toolInfo position(const LHCb::VPLiteCluster* aCluster,
-                            const LHCb::StateVector& aState) const;
-  //------------------------------------------------------------------
-  //-- returns value of the projected angle
-  Pair projectedAngle() const;
-
-  
-protected:
-
-  /// full/lite cluster position implementation code
-  toolInfo position(const LHCb::VPChannelID &centreChannel,
-                    const Pair &fractionalPos) const;
-  
-  /// full/lite cluster position implementation code with point and direction  
-  toolInfo position(const LHCb::VPChannelID &centreChan,
-                                          const Pair & fracPos,
-                                          const Gaudi::XYZPoint& aGlobalPoint,
-                    const Direction& aDirection) const;
-
-  //-- this method can be used when full state is available
-  Pair errorEstimate(const Pair projAngle, const Pair pixelSize) const;
-  
-  //-- calculates the value of the projected angle
-  Pair projectedAngle(const DeVPSensor* sensor) const;
+  virtual toolInfo position(const LHCb::VPLiteCluster* cluster) const;
+  virtual toolInfo position(const LHCb::VPLiteCluster* cluster,
+                            const Gaudi::XYZPoint& point,
+                            const Direction& direction) const;
+  virtual toolInfo position(const LHCb::VPLiteCluster* cluster,
+                            const LHCb::StateVector& state) const;
   
 private:
 
-  DeVP* m_vPDet;                  /// detector element
-  std::vector<double> m_defaultResolution;  /// resolution para one angle
-  mutable std::vector< std::pair<double,double> > m_errAnglePara;       /// angle projection para
+  toolInfo position(const LHCb::VPChannelID& channel, const Pair& frac,
+                    const Gaudi::XYZPoint& point,
+                    const Direction& direction) const;
 
-  mutable Gaudi::XYZVector m_trackDir;      /// a track direction in global ref. frame
-  mutable Gaudi::XYZPoint m_gloPoint;       /// point on sensor global ref. frame
-  mutable Pair m_projectedAngle;            /// value of projected angle
-  Pair m_fracPos;                           /// fractional position
+  // Error estimate when full state is available
+  Pair errorEstimate(const Pair projAngle, const Pair pixelSize) const;
+  // Calculate the projected angles
+  Pair projectedAngles(const DeVPSensor* sensor, Gaudi::XYZVector track,
+                       Gaudi::XYZPoint globalPoint) const;
+  
+  /// Detector element
+  DeVP* m_det;
+  /// Parameters for polynomial fit of resolution as function of proj. angle
+  std::vector<double> m_p; 
     
 };
-#endif // VELOCLUSTERPOS_H
+
+#endif
