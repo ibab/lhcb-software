@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-25 - Ronan Wallace
+ - Added StrippingWeJets.py and StrippingWMuJets.py with proposed 'medium' settings.
+ - Added line to import the new StrippingBjets module in __init__.py.
+ - Change to StrippingHighPtTopo.py introducing new prescales.
+ - Change to to prescales StrippingBjets.py.
+
 ! 2013-08-25 - Philip Hunt
  - Added line to import the new StrippingB2LcpXLc2Kpi module in __init__.py,
    which contains calibration lines for proton detection asymmetry measurements
