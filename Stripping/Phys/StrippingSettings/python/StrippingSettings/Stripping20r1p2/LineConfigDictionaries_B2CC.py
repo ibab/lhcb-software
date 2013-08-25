@@ -6,16 +6,17 @@ BetaS = {
     'CONFIG'    : {
                          'TRCHI2DOF'                 :       5
                  ,       'BPVLTIME'                  :       0.2
+                 ,       'JpsiMassWindow'            :       80
                  ,       'DaughterPT'                :       1000
                  ,       'VCHI2PDOF'                 :       10
-                 ,       'Jpsi2MuMuPrescale'         :       0.008   #0.01
-         	 ,     'Jpsi2MuMuDetachedPrescale'   :       1.0
-                 ,       'Bu2JpsiKPrescale'          :       0.03  #0.05
-                 ,       'Bd2JpsiKstarPrescale'      :       0.03   #0.03
-                 ,       'Bd2JpsiKsPrescale'         :       0.5   #0.3
-                 ,       'Bs2JpsiPhiPrescale'        :       0.06   #0.5 #0.15
+                 ,       'Jpsi2MuMuPrescale'         :       0.006 
+         	 ,       'Jpsi2MuMuDetachedPrescale' :       1.0
+                 ,       'Bu2JpsiKPrescale'          :       0.025  
+                 ,       'Bd2JpsiKstarPrescale'      :       0.025   
+                 ,       'Bd2JpsiKsPrescale'         :       0.5   
+                 ,       'Bs2JpsiPhiPrescale'        :       0.055  
                  ,       'Bs2Jpsif0Prescale'         :       0.02  
-                 ,       'Bs2JpsiEtaPrescale'        :       0.10
+                 ,       'Bs2JpsiEtaPrescale'        :       0.02
                  ,       'Bs2JpsiEtapPrescale'       :       0.04
                  ,       'Bs2JpsiPi0Prescale'        :       0.1
                  ,       'Bs2JpsiRho0Prescale'       :       0.02
@@ -26,6 +27,7 @@ BetaS = {
         ],
         'Dimuon' : [
          'StrippingBetaSJpsi2MuMuLine',
+         'StrippingBetaSBs2JpsiPhiDetachedLine',
          'StrippingBetaSBu2JpsiKPrescaledLine',
          'StrippingBetaSBs2JpsiPhiPrescaledLine',
          'StrippingBetaSBd2JpsiKstarPrescaledLine',
