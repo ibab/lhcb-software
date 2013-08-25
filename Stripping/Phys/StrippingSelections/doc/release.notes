@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-24 -Alessandra Borgia
+ - StrippingB2XuMuNu: Removed prescale and E_nu cut from K line. 
+   Added a new neutrino reconstruction cut to this line as well as tightening up some cuts. 
+   Amended the name of the Majorana lines to remove ambiguity.
+ - StrippingB2DMuNuX: Removed the prescale from the fake line (Bs2DsHX) for asl_s,
+   and tightened up cuts on the hadron faking as a muon.
+
 ! 2013-08-24 -Stephane Tourneur
  - 5 new stripping lines in StrippingBjets.py aimed for QEE analyses with 1, 2 topo B and 2, 3 or 4 jets
 
