@@ -76,7 +76,14 @@ default_config = { 'D02Kpi_DaugPtMin': 800.,
 	'Jpsi2MM_Prescale':1.,
 	'Jpsi2MM_Postscale':1.,
 
+    'Jpsi2MM_NoReco_Prescale' : 0.001,
+    'Jpsi2MM_NoReco_Postscale' : 1.,
+    'D02KPi_NoReco_Prescale' : 0.01,
+    'D02KPi_NoReco_Postscale' : 1.,
+
 	'HLT':"HLT_PASS_RE('Hlt1MBNoBiasDecision')",
+    'HLT_Jpsi2MM_NoReco' : "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')",
+    'HLT_D02KPi_NoReco' : "HLT_PASS_RE('Hlt2CharmHadD02HH_D02KPiWideMassDecision')"
 	#'HLT':"HLT_PASS_RE('Hlt1*.*')",
            
 }
@@ -150,25 +157,31 @@ class TriggerValidationConf(LineBuilder) :
 				'Jpsi2MM_ADOCACHI2CUT',
 				'Jpsi2MM_Prescale',
 				'Jpsi2MM_Postscale',
-				'HLT'
+                'Jpsi2MM_NoReco_Prescale',
+                'Jpsi2MM_NoReco_Postscale',
+                'D02KPi_NoReco_Prescale',
+                'D02KPi_NoReco_Postscale',
+				'HLT',
+                'HLT_Jpsi2MM_NoReco',
+                'HLT_D02KPi_NoReco'
                               )
 
 
     def __init__(self, name, config) :
 
-	LineBuilder.__init__(self, name, config)
+        LineBuilder.__init__(self, name, config)
 
 
-	d02kpi_name = name+'D02KPi'
+        d02kpi_name = name+'D02KPi'
         self.selD02Kpi = makeD02Kpi(d02kpi_name, config)
         self.d02kpi_line = StrippingLine(d02kpi_name+"Line",
                                         prescale = config['D02Kpi_Prescale'],
                                         postscale = config['D02Kpi_Postscale'],
                                         selection = self.selD02Kpi,
-					HLT=config['HLT']
+                                        HLT=config['HLT']
 
                                        )
-	self.registerLine(self.d02kpi_line)
+        self.registerLine(self.d02kpi_line)
         
         d2kpipi_name=name+'D2KPiPi'
         self.selD2Kpipi = makeD2Kpipi(d2kpipi_name, config)
@@ -178,29 +191,45 @@ class TriggerValidationConf(LineBuilder) :
 					selection=self.selD2Kpipi,
 					HLT=config['HLT']
 					)
-	self.registerLine(self.d2Kpipi_line)
-	
+        self.registerLine(self.d2Kpipi_line)
 
 
-	jpsi2mm_name=name+'Jpsi2MM'
-	self.selJpsi2MM=makeJpsi2MM(jpsi2mm_name,config)
-	self.jpsi2MM_line=StrippingLine(jpsi2mm_name+"Line",
+        jpsi2mm_name=name+'Jpsi2MM'
+        self.selJpsi2MM=makeJpsi2MM(jpsi2mm_name,config)
+        self.jpsi2MM_line=StrippingLine(jpsi2mm_name+"Line",
 				        prescale=config['Jpsi2MM_Prescale'],
 				        postscale=config['Jpsi2MM_Postscale'],
 					selection=self.selJpsi2MM,
 					HLT=config['HLT']
 					)
-	self.registerLine(self.jpsi2MM_line)
-	
-	phi2kk_name=name+'Phi2KK'
-	self.selPhi2KK=makePhi2KK(phi2kk_name,config)
-	self.phi2KK_line = StrippingLine(phi2kk_name+"Line",
+        self.registerLine(self.jpsi2MM_line)
+    
+        phi2kk_name=name+'Phi2KK'
+        self.selPhi2KK=makePhi2KK(phi2kk_name,config)
+        self.phi2KK_line = StrippingLine(phi2kk_name+"Line",
 					prescale=config['Phi2KK_Prescale'],
 					postscale=config['Phi2KK_Postscale'],
 					selection=self.selPhi2KK,
 					HLT=config['HLT']
 					)
-	self.registerLine(self.phi2KK_line)				
+        self.registerLine(self.phi2KK_line)				
+
+        # Now the no reco JPsi line
+        Jpsi2MM_NoReco_name = name + 'Jpsi2MM_NoReco'
+        self.Jpsi2MM_NoReco_line = StrippingLine(Jpsi2MM_NoReco_name+"Line",
+                                             prescale = config['Jpsi2MM_NoReco_Prescale'],
+                                             postscale = config['Jpsi2MM_NoReco_Postscale'],   
+                                             HLT = config['HLT_Jpsi2MM_NoReco'])
+
+        self.registerLine(self.Jpsi2MM_NoReco_line)
+   
+        D02KPi_NoReco_name = name + 'D02KPi_NoReco'
+        self.D02KPi_NoReco_line = StrippingLine(D02KPi_NoReco_name+"Line",
+                                             prescale = config['D02KPi_NoReco_Prescale'],
+                                             postscale = config['D02KPi_NoReco_Postscale'],   
+                                             HLT = config['HLT_D02KPi_NoReco'])     
+
+        self.registerLine(self.D02KPi_NoReco_line)
 
 def makeD02Kpi(name,config) :
         """
