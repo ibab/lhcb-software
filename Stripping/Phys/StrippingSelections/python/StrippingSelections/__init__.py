@@ -115,6 +115,9 @@ import StrippingHighPtJets
 import StrippingInclbJets
 import StrippingLLP2MuX
 import StrippingHighPtGamma
+import StrippingWMuJets
+import StrippingWeJets
+import StrippingBjets
 
 import StrippingMiniBias
 import StrippingProtonIonMinBias
