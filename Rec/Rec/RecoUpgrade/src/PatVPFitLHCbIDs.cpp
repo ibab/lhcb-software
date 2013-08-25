@@ -125,9 +125,8 @@ StatusCode Tf::PatVPFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
     if (iIDtmp->isVP()){
        const LHCb::VPLiteCluster* liteclusL = m_clusters->object(iIDtmp ->vpID () );
        IVPClusterPosition::toolInfo clusInfoL = m_positiontool->position(liteclusL) ;
-       const DeVPSquareType* sqDetL = 
-         static_cast<const DeVPSquareType*>(m_vP->squareSensor(clusInfoL.pixel.sensor()));
-       double zL = sqDetL->globalXYZ(clusInfoL.pixel.pixel(),clusInfoL.fractionalPosition).z() ;
+       const DeVPSensor* sensor = m_vP->sensor(clusInfoL.pixel.sensor()); 
+       double zL = sensor->globalXYZ(clusInfoL.pixel.pixel(),clusInfoL.fractionalPosition).z() ;
        IDsToSort.push_back(std::make_pair(zL,*iIDtmp));
     }
   }
@@ -180,9 +179,8 @@ StatusCode Tf::PatVPFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
     const LHCb::VPLiteCluster* liteclus = m_clusters->object( ((*iID).second).vpID () );
     if(liteclus == NULL) continue;
     IVPClusterPosition::toolInfo clusInfo = m_positiontool->position(liteclus) ;
-    const DeVPSquareType* sqDet = 
-      static_cast<const DeVPSquareType*>(m_vP->squareSensor(clusInfo.pixel.sensor()));
-    Gaudi::XYZPoint thePixPoint = sqDet->globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ;
+    const DeVPSensor* sensor = m_vP->sensor(clusInfo.pixel.sensor()); 
+    Gaudi::XYZPoint thePixPoint = sensor->globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ;
     thePoints.push_back(thePixPoint);
     
     double x = thePixPoint.x();
@@ -190,10 +188,10 @@ StatusCode Tf::PatVPFitLHCbIDs::fit( LHCb::Track & track, LHCb::ParticleID){
     double z = thePixPoint.z();
     
     //Weight calculation using Variance
-    std::pair<double,double> pixSize = sqDet->PixelSize(clusInfo.pixel.pixel());
+    std::pair<double,double> pixSize = sensor->pixelSize(clusInfo.pixel.pixel());
     
     double dx = pixSize.first*clusInfo.fractionalError.first ;
-    if (sqDet->isLong(clusInfo.pixel.pixel())) dx = 0.1 ;//fixed to 0.1 mm whatever is the angle for long pixel THIS IS NEEDED!
+    // if (sqDet->isLong(clusInfo.pixel.pixel())) dx = 0.1 ;//fixed to 0.1 mm whatever is the angle for long pixel THIS IS NEEDED!
     double dy = pixSize.second*clusInfo.fractionalError.second;
     
 

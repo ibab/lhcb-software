@@ -106,15 +106,15 @@ StatusCode VPPatLinear::execute() {
   LHCb::VPLiteCluster::VPLiteClusters::const_iterator iclust;
   for(iclust = m_clusters->begin(); iclust != m_clusters->end(); iclust++){  
     IVPClusterPosition::toolInfo clusInfo = m_positiontool->position(&(*iclust));
-    const DeVPSquareType* sqDet =static_cast<const DeVPSquareType*>(m_vP->squareSensor(clusInfo.pixel.sensor()));
-    Gaudi::XYZPoint thePixPoint = sqDet->globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ; 
-    std::pair<double,double> pixSize = sqDet->PixelSize(clusInfo.pixel.pixel());
+    const DeVPSensor* sensor = m_vP->sensor(clusInfo.pixel.sensor());
+    Gaudi::XYZPoint thePixPoint = sensor->globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ; 
+    std::pair<double,double> pixSize = sensor->pixelSize(clusInfo.pixel.pixel());
     
     double dx = pixSize.first*clusInfo.fractionalError.first ;
-    if (sqDet->isLong(clusInfo.pixel.pixel())) dx = 0.1 ;//fixed to 0.1 mm whatever is the angle for long pixel
+    //if (sqDet->isLong(clusInfo.pixel.pixel())) dx = 0.1 ;//fixed to 0.1 mm whatever is the angle for long pixel
     double dy = pixSize.second*clusInfo.fractionalError.second;
     LHCb::VPChannelID pixid = (*iclust).channelID();
-    int sensornum = m_vP->sensorNum(pixid);
+    int sensornum = pixid.sensor();
     VPHit* hit = new VPHit(thePixPoint.x(),thePixPoint.y(),thePixPoint.z(),dx,dy,sensornum);
     hit->setLHCbID(LHCb::LHCbID(pixid));
     m_hits[sensornum].push_back(hit);   
@@ -485,13 +485,13 @@ void VPPatLinear::addAnotherSideHits()
     int firstsensor = (*((*itT).hits().begin()))->sensor()-1;
     int endsensor = (*( (*itT).hits().end()-1))->sensor()+1;
     if(firstsensor>-1){
-      const DeVPSquareType *firsttype = m_vP->squareSensor(firstsensor);
+      const DeVPSensor *firsttype = m_vP->sensor(firstsensor);
       double firstz = firsttype->z();
       Gaudi::XYZPoint firstpoint((*itT).xAtz(firstz),(*itT).yAtz(firstz),firstz);
       if(firsttype->isInActiveArea(firstpoint)) extendTrack((*itT),firstsensor,false);
     }
     if(endsensor < m_sensor){
-      const DeVPSquareType *endtype = m_vP->squareSensor(endsensor);
+      const DeVPSensor *endtype = m_vP->sensor(endsensor);
       double endz = endtype->z();
       Gaudi::XYZPoint endpoint((*itT).xAtz(endz),(*itT).yAtz(endz),endz);
       if(endtype->isInActiveArea(endpoint)) extendTrack((*itT),endsensor,true);
