@@ -31,10 +31,11 @@ confdict = {
     ,"TRGHOSTPROB" : 0.5 # adimensional
     ,"MuonGHOSTPROB" : 0.5 #adimensional
     ,"PrescalD0Mu"    : 0.5  # for D0->KPi line
-    ,"PrescalDsPi_fakes" : 0.5  # for Bs->(Ds->PhiPi)Pi for Fakes line
+    ,"PrescalDsPi_fakes" : 1.0  # for Bs->(Ds->PhiPi)Pi for Fakes line
     ,"MINIPCHI2"     : 9.0    # adimensiional
     ,"TRCHI2"        : 4.0    # adimensiional
-    ,"TRCHI2Loose"   : 5.0    # adimensiional    
+    ,"TRCHI2Loose"   : 5.0    # adimensiional
+    ,"TRCHI2Tight"   : 3.0    # adimensiional    
     ,"KaonPIDK"      : 4.0    # adimensiional
     ,"KaonPIDKTight" : 8.0    # adimensiional
     ,"PionPIDK"      : 10.0   # adimensiional
@@ -42,6 +43,7 @@ confdict = {
     ,"MuonIPCHI2"    : 4.00   # adimensiional
     ,"MuonPT"        : 800.0  # MeV
     ,"KPiPT"         : 300.0  # MeV
+    ,"KPiPTTight"    : 1500.0  # MeV
     ,"DsDIRA"        : 0.99   # adimensiional
     ,"DsFDCHI2"      : 100.0  # adimensiional
     ,"DsMassWin"     : 80.0   # MeV
@@ -65,7 +67,10 @@ confdict = {
     ,"Dstar_SoftPion_PIDe" : 2. ## unitless
     ,"Dstar_SoftPion_PT" : 180. ## MeV ###
     ,"Dstar_wideDMCutLower" : 0. ## MeV
-    ,"Dstar_wideDMCutUpper" : 170. ## MeV
+    ,"Dstar_wideDMCutUpper" : 170. ## MeV,
+    ,"FakePionP_Tight": 6.0    # GeV,
+    ,"BMassMin" : 3.1 #GeV
+    ,"BMassMax" : 5.1 #GeV
     }
 
 class B2DMuNuXAllLinesConf(LineBuilder) :
@@ -80,14 +85,16 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         ,"PrescalDsPi_fakes" 
         ,"MINIPCHI2"     
         ,"TRCHI2"     
-        ,"TRCHI2Loose"   
+        ,"TRCHI2Loose"
+        ,"TRCHI2Tight"   
         ,"KaonPIDK"
         ,"KaonPIDKTight"      
         ,"PionPIDK"
         ,"PionPIDKTight"      
         ,"MuonIPCHI2"    
         ,"MuonPT"        
-        ,"KPiPT"               
+        ,"KPiPT"
+        ,"KPiPTTight" 
         ,"DsDIRA"        
         ,"DsFDCHI2"      
         ,"DsMassWin"     
@@ -112,6 +119,9 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         ,"Dstar_SoftPion_PT" 
         ,"Dstar_wideDMCutLower" 
         ,"Dstar_wideDMCutUpper" 
+        ,"FakePionP_Tight"
+        ,"BMassMin"
+        ,"BMassMax"
         )
     
     __confdict__={}
@@ -416,7 +426,9 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                               DSel = self.selds2phipi_forfakes,
                                               BVCHI2DOF = config['BVCHI2DOF'],
                                               BDIRA = config['BDIRA'],
-                                              DZ = config['DZ']
+                                              DZ = config['DZ'],
+                                              BMassMin = config['BMassMin'],
+                                              BMassMax = config['BMassMax']
                                               )
         
         ################# DECLARE THE STRIPPING LINES #################################
@@ -486,7 +498,6 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                               selection = self.selb2DsMuXPhiPi)
 
         self.b2DsPi_PhiPi_fakesLine = StrippingLine('b2DsPi_PhiPi_fakes' + name + 'Line'
-                                                    , HLT     = "HLT_PASS_RE('Hlt2IncPhi.*Decision')"
                                                     , prescale = config['PrescalDsPi_fakes']
                                                     , FILTER = GECs
                                                     , selection = self.selb2DsPi_PhiPi_fakes)
@@ -572,7 +583,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
     def _kaonlooseFilter( self ):
         _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
                 "&(TRGHOSTPROB < %(TRGHOSTPROB)s)"\
-                "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2Loose)s) &  (PIDK> %(KaonPIDKloose)s)" % self.__confdict__
+                "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK> %(KaonPIDKloose)s)" % self.__confdict__
         _kal = FilterDesktop( Code = _code )
         return _kal 
     
@@ -584,7 +595,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         return _pil
     
     def _pionFilter_fakes( self ):
-        _code = "  (TRCHI2DOF < %(TRCHI2)s) & (P>2.0*GeV) & (PT > %(KPiPT)s *MeV)"\
+        _code = "  (TRCHI2DOF < %(TRCHI2Tight)s) & (P>%(FakePionP_Tight)s*GeV) & (PT > %(KPiPTTight)s*MeV)"\
                 "&(TRGHOSTPROB < %(TRGHOSTPROB)s)"\
                 "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2Loose)s) & (PIDmu < %(PIDmu)s)" % self.__confdict__
         _pil_fakes = FilterDesktop( Code = _code )
@@ -712,7 +723,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
 
     def _Ds2PhiPi_forfakes_Filter( self ):
         _decayDescriptors = [ '[D+ -> phi(1020) pi+]cc' ]
-        _combinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 800.*MeV) & (ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2)> %(MINIPCHI2Loose)s) " % self.__confdict__
+        _combinationCut = "(DAMASS('D_s+') < %(DsAMassWin)s *MeV) & (DAMASS('D+')> -%(DsAMassWin)s *MeV) & (ACHILD(PT,1)+ACHILD(PT,2) > 2100.*MeV) & (ACHILD(MIPCHI2DV(PRIMARY),1)+ACHILD(MIPCHI2DV(PRIMARY),2)> %(MINIPCHI2Loose)s) " % self.__confdict__
         _motherCut = "(SUMTREE( PT,  ISBASIC )>800.*MeV) &(DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
                      "& (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) " \
                      "& (BPVVDCHI2 > %(DsFDCHI2)s) &  (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
@@ -760,9 +771,11 @@ def makeb2DX(name,
              DSel,
              BVCHI2DOF,
              BDIRA,
-             DZ):
+             DZ,
+             BMassMin,
+             BMassMax):
     _combinationCut = "(AM<6.2*GeV)"
-    _motherCut = "  (MM<6.0*GeV) & (MM>2.5*GeV) & (VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)  " \
+    _motherCut = "  (MM < %(BMassMax)s*GeV) & (MM>%(BMassMin)s*GeV) & (VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)  " \
                  "& (MINTREE(((ABSID=='D+') | (ABSID=='D0') | (ABSID=='Lambda_c+')) , VFASPF(VZ))-VFASPF(VZ) > %(DZ)s *mm ) "  % locals()
     #        _B.ReFitPVs = True
     _BX = CombineParticles(DecayDescriptors = DecayDescriptors,
