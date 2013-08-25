@@ -9,7 +9,7 @@ __date__   = '17/08/2013'
 __all__ = ( 'BJetsLinesConf' )
 
 from Gaudi.Configuration import *
-from GaudiKernel import SystemOfUnits as units
+from GaudiKernel.SystemOfUnits import GeV
 from LHCbKernel.Configuration import DEBUG, VERBOSE
 
 from PhysSelPython.Wrappers import AutomaticData, Selection, DataOnDemand, PassThroughSelection, EventSelection
@@ -28,11 +28,11 @@ from Configurables import LoKi__FastJetMaker,LoKi__JetMaker
 # constants
 
 default_config = {
-    "1B2jetlow" : { "PTmin" : 8*units.GeV ,  "prescale" : 0.005 },
-    "1B2jethigh" : { "PTmin" : 14*units.GeV ,  "prescale" : 0.1 },
-    "1B4jet" : { "PTmin" : 16*units.GeV ,  "prescale" : 1 },
-    "2B3jet" : { "PTmin" : 11*units.GeV ,  "prescale" : 1 },
-    "2B4jet" : { "PTmin" : 8*units.GeV ,  "prescale" : 1 },
+    "1B2jetlow" : { "PTmin" : 8*GeV ,  "prescale" : 0.005 },
+    "1B2jethigh" : { "PTmin" : 14*GeV ,  "prescale" : 0.1 },
+    "1B4jet" : { "PTmin" : 16*GeV ,  "prescale" : 1 },
+    "2B3jet" : { "PTmin" : 11*GeV ,  "prescale" : 1 },
+    "2B4jet" : { "PTmin" : 8*GeV ,  "prescale" : 1 },
     "my2TOPO" : {"ANGLE_MIN":2/57., "M_MIN":0, "DPHI_MIN":0}
     }
 
