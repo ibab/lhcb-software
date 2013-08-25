@@ -6,6 +6,10 @@
 !               present detector simulation
 !-----------------------------------------------------------------------------
 
+! 2013-08-23 - Heinrich Schindler
+ - Remove dependency on detector element.
+ - Use getIfExists, remove unnecessary StatusCode return types and flags. 
+
 !========================= GaussUMC v2r0 2012-10-19 ==========================
 ! 2012-10-19 - Gloria Corti
  - Remove obolete files GaussUMC_{dll,load}.cpp
