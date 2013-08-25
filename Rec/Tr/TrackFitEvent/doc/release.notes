@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2013-08-23 Heinrich Schindler
+ - Remove calls to DeVPSquareType
+
 !========================= TrackFitEvent v5r23 2013-07-24 =========================
 ! 2013-07-24 - Francesco Polci
  - Added a switch between old and new detector geometry needed in FTMeasurement.cpp
