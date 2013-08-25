@@ -4,9 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-08-25 - Ronan Wallace
+ - Added HighPtTopo, WeJets, WMuJets, SbarSCorrelations, Bjets, configuration dictionaries for Stripping20r{0,1}p2 to LineConfigDictionaries_QEE.py.
+
 ! 2013-08-25 - Thomas Blake
  - First commit of RD lines for Stripping20r{0,1}p2
-
 
 ! 2013-08-25 - Francesca Dordei
  - Updates of Stripping20r{0,1}p2 settings for B2CC WG (new values of prescales).
