@@ -17,8 +17,10 @@ from StrippingUtils.Utils import LineBuilder
 from Configurables import LoKi__VoidFilter
 from PhysSelPython.Wrappers import EventSelection
 
-confdict_HighPtTopoJets = { 'HighPtTopo_Prescale'    : 1.0,
-                          'HighPtTopoLow_Prescale' : 1.0, ##changed from 0.05
+confdict_HighPtTopoJets = { 'HighPtTopo40000_Prescale'    : 1.0,
+                          'HighPtTopo20000_Prescale'    : 0.1,
+                          'HighPtTopo10000_Prescale'    : 0.008,
+                          'HighPtTopo1000_Prescale'    : 0.001, 
                           'HighPtTopo_Postscale'   : 1.0,
                           'pT'        : 40000,
                           'pT20'      : 20000,
@@ -33,8 +35,10 @@ default_name = 'HighPtTopo'
 
 class HighPtTopoJetsConf( LineBuilder ) :
 
-    __configuration_keys__ = ( 'HighPtTopo_Prescale',
-                               'HighPtTopoLow_Prescale',
+    __configuration_keys__ = ( 'HighPtTopo40000_Prescale',
+                               'HighPtTopo20000_Prescale',
+                               'HighPtTopo10000_Prescale',
+                               'HighPtTopo1000_Prescale',
                                'HighPtTopo_Postscale',
                                'pT',
                                'pT20',
@@ -51,7 +55,6 @@ class HighPtTopoJetsConf( LineBuilder ) :
         self._myname = name
 
 
-
         # High pT Topo line
         from Configurables import HighPtTopoTool as HighpTDT
         code = "ACCEPT('HighPtTopoTool/HighPtTopoLine_DT_40000')"
@@ -61,7 +64,7 @@ class HighPtTopoJetsConf( LineBuilder ) :
         dt.minpT = config['pT']
         hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine(name+'%(pT)s'%config,
-                              prescale  = config[ 'HighPtTopo_Prescale' ],
+                              prescale  = config[ 'HighPtTopo40000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
                               HLT=hlt)
@@ -77,7 +80,7 @@ class HighPtTopoJetsConf( LineBuilder ) :
         dt.minpT = config['pT20']
         hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine(name+'%(pT20)s'%config,
-                              prescale  = config[ 'HighPtTopo_Prescale' ],
+                              prescale  = config[ 'HighPtTopo20000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
                               HLT=hlt)
@@ -93,7 +96,7 @@ class HighPtTopoJetsConf( LineBuilder ) :
         dt.minpT = config['pT10']
         hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine(name+'%(pT10)s'%config,
-                              prescale  = config[ 'HighPtTopo_Prescale' ],
+                              prescale  = config[ 'HighPtTopo10000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
                               HLT=hlt)
@@ -109,7 +112,7 @@ class HighPtTopoJetsConf( LineBuilder ) :
         dt.minpT = config['pT1']
         hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine(name+'%(pT1)s'%config,
-                              prescale  = config[ 'HighPtTopo_Prescale' ],
+                              prescale  = config[ 'HighPtTopo1000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
                               HLT=hlt)
@@ -125,7 +128,7 @@ class HighPtTopoJetsConf( LineBuilder ) :
         dt.minpT = config['pT20']
         hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine(name+'%(pT20)s_Cone55'%config,
-                              prescale  = config[ 'HighPtTopoLow_Prescale' ],
+                              prescale  = config[ 'HighPtTopo40000_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
                               HLT=hlt)
