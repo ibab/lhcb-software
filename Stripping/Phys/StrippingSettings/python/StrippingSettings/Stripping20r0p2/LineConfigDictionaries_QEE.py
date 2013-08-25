@@ -9,7 +9,7 @@ StrippingSelections file containing the line builder instance.
 
       PromptCharm = { ... }
 """
-from GaudiKernel.SystemOfUnits import MeV, mm
+from GaudiKernel.SystemOfUnits import GeV,MeV, mm
 
 #LowMult
 LowMult = {
@@ -188,11 +188,11 @@ HighPtTopoJets = {
 Bjets = {
     'BUILDERTYPE'  : 'BJetsLinesConf',
     'CONFIG'       : {
-    "1B2jetlow" : { "PTmin" : 8*units.GeV ,  "prescale" : 0.005 },
-    "1B2jethigh" : { "PTmin" : 14*units.GeV ,  "prescale" : 0.1 },
-    "1B4jet" : { "PTmin" : 16*units.GeV ,  "prescale" : 1 },
-    "2B3jet" : { "PTmin" : 11*units.GeV ,  "prescale" : 1 },
-    "2B4jet" : { "PTmin" : 8*units.GeV ,  "prescale" : 1 },
+    "1B2jetlow" : { "PTmin" : 8*GeV ,  "prescale" : 0.005 },
+    "1B2jethigh" : { "PTmin" : 14*GeV ,  "prescale" : 0.1 },
+    "1B4jet" : { "PTmin" : 16*GeV ,  "prescale" : 1 },
+    "2B3jet" : { "PTmin" : 11*GeV ,  "prescale" : 1 },
+    "2B4jet" : { "PTmin" : 8*GeV ,  "prescale" : 1 },
     "my2TOPO" : {"ANGLE_MIN":0.08, "M_MIN":0, "DPHI_MIN":0}
     },
     'WGs' : [ 'QEE' ],
