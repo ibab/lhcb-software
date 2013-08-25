@@ -177,8 +177,8 @@ HighPtTopoJets = {
     'pT20'      : 20000,
     'pT10'      : 10000,
     'pT1'       : 1000,
-#    'conesize'  : 0.3,
-#    'pTcone'    : 55000
+    'conesize'  : 0.3,
+    'pTcone'    : 55000
     },
     'WGs' : [ 'QEE' ],  
     'STREAMS' : [ 'EW' ]
