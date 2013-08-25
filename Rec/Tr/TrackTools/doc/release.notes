@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2013-08-23 Heinrich Schindler
+ - Remove direct calls to DeVPSquareType
+
 !========================= TrackTools v4r25 2013-07-24 =========================
 ! 2013-07-24 - Francesco Polci
  - Added a switch between old and new detector geometry needed in FTMeasurementProvider.cpp
