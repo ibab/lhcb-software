@@ -95,4 +95,107 @@ LowMult = {
     }
 
 
+#SbarSCorrelations
+SbarSCorrelations = {
+    'BUILDERTYPE'  : 'SbarSCorrelationsBuilder',   
+    'CONFIG'       : {
+    'HLT' : "HLT_PASS('Hlt1MBNoBiasDecision')|HLT_PASS('Hlt1MBMicroBiasTStationDecision')|HLT_PASS('Hlt1MBMicroBiasVeloDecision')|HLT_PASS('Hlt1MBMicroBiasTStationRateLimitedDecision')|HLT_PASS('Hlt1MBMicroBiasVeloRateLimitedDecision')"
+    ,  'LongTrackGEC'          :    1000 # 150 or 500 might be a better choice
+    ,  'Trk_P_MIN'             : 5000 # to limit material interactions for Kaons
+    ,  'isLong'                : '(ISLONG)'
+    ,  'KAON_PIDK_MIN'         : 8 # DLL_KAON_vs_PION
+    ,  'KAON_PIDKp_MIN'        : 0 # DLL_KAON_vs_PROTON
+    ,  'KAON_ipChi2_MAX'                : 49 # IPCHI2 with respect to best PV (do not know if UPCHI2 or IP is used, but Iguess IPCHI2 was used to tag the best PV )
+#
+    ,   'PION_ipChi2_MIN'       : 9
+    ,   'PROTON_ipChi2_MIN'     : 9
+    ,   'PION_P_MIN'            : 2000
+    ,   'PROTON_P_MIN'          : 2000
+#
+    ,   'Fisher'                : 10
+    ,   'Lambda_V_Chi2_Max'      : 9
+    ,   'Lambda_Adamass'        : 50
+    ,   'Lambda_ipChi2_MAX'     : 49
+#                   
+    , 'Phiprescale'             :    0.05
+    , 'F2prescale'              :    1.0
+    , 'LambdaCprescale'         :    1.0                   
+    , 'postscale'             :    1.0
+    },
+    'WGs' : [ 'QEE' ],
+    'STREAMS' : [ 'EW' ]
+    }
+
+#WeJets
+WeJets = {
+    'BUILDERTYPE'  : 'WeJetsConf',
+    'CONFIG'       : {
+    'WeJets_Prescale'    : 1.0,
+    'WeJets_Postscale'   : 1.0,
+    'PrsCalMin'          : 50.,
+    'ECalMin'            : 0.10,
+    'HCalMax'            : 0.05,
+    'min_pT'             : 10.,
+    'max_pT'             : 20.,
+    'GEC_TrkPt'          : 60.,
+    'GEC_TrkSPt'         : 15.,
+    'min_pT_IP_Particle'  : 3,
+    'min_IPchi2'          : 40.
+    },
+    'WGs' : [ 'QEE' ],
+    'STREAMS' : [ 'EW' ]
+    }
+
+#WMuJets
+WMuJets = {
+    'BUILDERTYPE'  : 'WMuJetsConf',
+    'CONFIG'       : {
+    'WMuJets_Prescale'    : 1.0,
+    'WMuJets_Postscale'   : 1.0,
+    'min_pT'              : 10.,
+    'max_pT'              : 20.,
+    'pT_isol'             : 3.,
+    'GEC_TrkSumPt'        : 70., 
+    'GEC_TrkMissPt'       : 25., 
+    'min_pT_IP_Particle'  : 3,
+    'min_IPchi2'          : 40.
+    },
+    'WGs' : [ 'QEE' ],
+    'STREAMS' : [ 'EW' ]
+    }
+
+#HighPtTopoJets   
+HighPtTopoJets = {
+    'BUILDERTYPE'  : 'HighPtTopoJetsConf',
+    'CONFIG'       : {
+    'HighPtTopo40000_Prescale'    : 1.0,
+    'HighPtTopo20000_Prescale'    : 0.1,  
+    'HighPtTopo10000_Prescale'    : 0.008,
+    'HighPtTopo1000_Prescale'    : 0.001, 
+    'HighPtTopo_Postscale'   : 1.0,
+    'pT'        : 40000,
+    'pT20'      : 20000,
+    'pT10'      : 10000,
+    'pT1'       : 1000, 
+#    'conesize'  : 0.3, 
+#    'pTcone'    : 55000
+    },
+    'WGs' : [ 'QEE' ],     
+    'STREAMS' : [ 'EW' ]   
+    }
+
+#Bjets
+Bjets = {
+    'BUILDERTYPE'  : 'BJetsLinesConf',  
+    'CONFIG'       : {
+    "1B2jetlow" : { "PTmin" : 8*units.GeV ,  "prescale" : 0.005 },
+    "1B2jethigh" : { "PTmin" : 14*units.GeV ,  "prescale" : 0.1 },
+    "1B4jet" : { "PTmin" : 16*units.GeV ,  "prescale" : 1 },
+    "2B3jet" : { "PTmin" : 11*units.GeV ,  "prescale" : 1 },
+    "2B4jet" : { "PTmin" : 8*units.GeV ,  "prescale" : 1 },
+    "my2TOPO" : {"ANGLE_MIN":0.08, "M_MIN":0, "DPHI_MIN":0}
+    },
+    'WGs' : [ 'QEE' ],
+    'STREAMS' : [ 'EW' ]
+    }
 
