@@ -3,6 +3,9 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2013-08-23 - Heinrich Schindler
+ - Follow renaming of function in DeVPSensor (PixelSize -> pixelSize)
+
 !========================= VPAlgorithms v3r3 2013-06-06 =========================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warnings

@@ -378,7 +378,7 @@ void VPMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
                         // printf(" => sensor->channelToPoint() failed\n");
                         continue; }
       std::pair<double,double> pixSize;
-      pixSize = sensor->PixelSize(channel);                            // size of given pixel
+      pixSize = sensor->pixelSize(channel);                            // size of given pixel
       double sizeX = pixSize.first / 2.0;
       double sizeY = pixSize.second / 2.0;
       double xdL = fabs(pnt.x() - midPoint.x()) - sizeX;
