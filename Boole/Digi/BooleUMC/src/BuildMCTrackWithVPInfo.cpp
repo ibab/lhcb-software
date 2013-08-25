@@ -128,7 +128,6 @@ StatusCode BuildMCTrackWithVPInfo::execute() {
   for ( LHCb::VPClusters::const_iterator vIt = vpClus->begin() ;
         vpClus->end() != vIt ; vIt++ ) {
     int sensor = (*vIt)->channelID().sensor();
-    const DeVPSensor* sens=m_vpDet->sensor(sensor);
     part = vpLink.first( *vIt );
     while ( NULL != part ) {
       if ( mcParts == part->parent() ) {
@@ -136,10 +135,8 @@ StatusCode BuildMCTrackWithVPInfo::execute() {
         if ( vp.size() > MCNum ) {
           if ( sensor != lastVP[MCNum] ) {  // Count only once per sensor a given MCParticle
             lastVP[MCNum] = sensor;
-            if ( sens->isSquare() ) {
-              vp[MCNum]++;
-              if(isVerbose)  verbose() << "MC " << MCNum << " VP sensor " << sensor << " nbVP " << vp[MCNum] << endmsg;
-            }
+            vp[MCNum]++;
+            if(isVerbose)  verbose() << "MC " << MCNum << " VP sensor " << sensor << " nbVP " << vp[MCNum] << endmsg;
           }
         }
       }
@@ -275,11 +272,7 @@ void BuildMCTrackWithVPInfo::computeAcceptance ( std::vector<int>& station ) {
       continue;
     }
     
-    int staNr = (*vHit)->sensDetID();
-    const DeVPSensor* sens=m_vpDet->sensor(staNr);   
-    if ( sens->isSquare() ) {
-      nVP[MCNum]++;
-    }
+    nVP[MCNum]++;
   }
   for ( unsigned int MCNum = 0; station.size() > MCNum; MCNum++ ){
     if ( 2 < nVP[MCNum] ) station[MCNum] |= MCTrackInfo::maskAccVelo;

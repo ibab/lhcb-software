@@ -4,6 +4,9 @@
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
 
+! 2013-08-25 - Heinrich Schindler
+ - Remove isSquare checks from BuildMCUpgradeWithVPInfo
+
 !========================= BooleUMC v2r2 2013-06-06 =========================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warning
