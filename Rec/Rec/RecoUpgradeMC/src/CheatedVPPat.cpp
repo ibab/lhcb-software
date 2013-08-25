@@ -138,13 +138,13 @@ StatusCode CheatedVPPat::execute() {
       IVPClusterPosition::toolInfo clusInfo = m_positiontool->position(liteclus) ;
       vPPositions.push_back(clusInfo) ;
       // Get the MCPostion of the Hit to check were not 10mm away...
-      const DeVPSquareType* sqDet =static_cast<const DeVPSquareType*>(m_vP->squareSensor(clusInfo.pixel.sensor()));
+      const DeVPSensor* sqDet = m_vP->sensor(clusInfo.pixel.sensor());
         
-      Gaudi::XYZPoint thePixPoint = sqDet->globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ;
-      std::pair<double,double> pixSize = sqDet->PixelSize(clusInfo.pixel.pixel());
+      Gaudi::XYZPoint thePixPoint = sqDet->globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition);
+      std::pair<double,double> pixSize = sqDet->pixelSize(clusInfo.pixel.pixel());
       
       double dx = pixSize.first*clusInfo.fractionalError.first ;
-      if (sqDet->isLong(clusInfo.pixel.pixel())) dx = 0.1 ;//fixed to 0.1 mm whatever is the angle for long pixel
+      // if (sqDet->isLong(clusInfo.pixel.pixel())) dx = 0.1 ;//fixed to 0.1 mm whatever is the angle for long pixel
       double dy = pixSize.second*clusInfo.fractionalError.second;
       
       VPHit *hit = new VPHit(thePixPoint.x(),thePixPoint.y(),thePixPoint.z(),dx,dy,int(clusInfo.pixel.sensor()));
