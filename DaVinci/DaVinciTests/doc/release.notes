@@ -4,9 +4,13 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-08-26 - Chris Jones
+ - Add new tests for Stripping20rXp2. Will fail until the AppConfig options
+   are released, at which point the references will need updating.
+
 ! 2013-08-26 - Stefania Vecchi
- - Updated reference file tagging.qms/test_tag_mc12.qmt according to the change in
-   FT/python/FT/Tunings.py in NNetSSK tuning.
+ - Updated reference file tagging.qms/test_tag_mc12.qmt according to the change 
+   in FT/python/FT/Tunings.py in NNetSSK tuning.
 
 ! 2013-08-21 - Chris Jones
  - Update DecayTreeTuple test to adapt to new LoKi decay finder syntax.
