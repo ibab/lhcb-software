@@ -321,7 +321,7 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
   ts.getClusterNodes(c);
 
   RTL::Lock lock(InternalDisplay::screenLock());
-  ::snprintf(txt,sizeof(txt),"%8s %6zu ",c.time.c_str()+11,c.nodes.size());
+  ::snprintf(txt,sizeof(txt),"%8s %6d ",c.time.c_str()+11,int(c.nodes.size()));
   begin_update(txt);
   pos = 87+CLUSTERLINE_START;
   for(Cluster::Nodes::const_iterator i=c.nodes.begin(), e=c.nodes.end(); i!=e;++i) {
@@ -354,22 +354,22 @@ void CtrlFarmClusterLine::updateContent(XML::TaskSupervisorParser& ts) {
 
   col = (c.status=="ALIVE" || cl_good) ? NORMAL : (c.status=="MIXED") ? COL_WARNING : COL_ALARM;
   if ( missTaskCount>0 ) {
-    ::snprintf(txt,sizeof(txt),"%4zu/BAD ",missTaskCount);
+    ::snprintf(txt,sizeof(txt),"%4d/BAD ",int(missTaskCount));
     ::scrc_put_chars(dis,txt,COL_ALARM,line,28,0);
     ::scrc_put_chars(dis," ",NORMAL,line,37,0);
   }
   else {
-    ::snprintf(txt,sizeof(txt),"%4zu ",taskCount);
+    ::snprintf(txt,sizeof(txt),"%4d ",int(taskCount));
     ::scrc_put_chars(dis,txt,GREEN|INVERSE,line,28,0);
     ::scrc_put_chars(dis,"     ",NORMAL,line,33,0);
   }
   if ( missConnCount>0 ) {
-    ::snprintf(txt,sizeof(txt),"%4zu/BAD ",missConnCount);
+    ::snprintf(txt,sizeof(txt),"%4d/BAD ",int(missConnCount));
     ::scrc_put_chars(dis,txt,COL_ALARM,line,37,0);
     ::scrc_put_chars(dis," ",NORMAL,line,46,0);
   }
   else {
-    ::snprintf(txt,sizeof(txt),"%4zu ",connCount);
+    ::snprintf(txt,sizeof(txt),"%4d ",int(connCount));
     ::scrc_put_chars(dis,txt,GREEN|INVERSE,line,37,0);
     ::scrc_put_chars(dis,"     ",NORMAL,line,42,0);
   }

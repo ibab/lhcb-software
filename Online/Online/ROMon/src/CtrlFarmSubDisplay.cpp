@@ -175,9 +175,13 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
   col = (c.status=="ALIVE" || cl_good) ? NORMAL|BOLD : (c.status=="MIXED") ? COL_WARNING : COL_ALARM;
   size_t nchar = ::sprintf(txt,"%-12s",pvss_status>0 ? pvss_status==1 ? "PVSS Ok" : "PVSS Errors" : "");
   ::scrc_put_chars(m_display,txt,col,1,1,1);
-  nchar  = ::sprintf(txt,"%2zu Nodes ",c.nodes.size());
-  nchar += ::sprintf(txt+nchar,"%3zu %sTasks ",missTaskCount>0?missTaskCount:taskCount,missTaskCount>0?"BAD ":"");
-  nchar += ::sprintf(txt+nchar,"%3zu %sConnections ",missConnCount>0?missConnCount:connCount,missConnCount>0?"BAD ":"");
+  nchar  = ::sprintf(txt,"%2d Nodes ",int(c.nodes.size()));
+  nchar += ::sprintf(txt+nchar,"%3d %sTasks ",
+		     int(missTaskCount>0 ? missTaskCount : taskCount),
+		     missTaskCount>0 ? "BAD " : "");
+  nchar += ::sprintf(txt+nchar,"%3d %sConnections ",
+		     int(missConnCount>0 ? missConnCount : connCount),
+		     missConnCount>0 ? "BAD " : "");
   ::scrc_put_chars(m_display,txt,col&~BOLD,1,13,1);
 
   ::sprintf(txt," - %s",c.time.c_str());

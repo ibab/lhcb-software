@@ -95,6 +95,7 @@ namespace ROMon {
     time_t when;
     std::string description;
     mutable std::string tag, optional;
+
     Alarm(const std::string& txt);
     Alarm(int c, time_t w, const std::string& s, const std::string& n, const std::string& dsc="",const std::string& opt="") 
       : AlarmTag(c,s,n), when(w), description(dsc), optional(opt) {    }

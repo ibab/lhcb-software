@@ -7,18 +7,22 @@
 #include "ROMon/Utilities.h"
 #include <string>
 #include <string.h>
+
 dyn_string *Strsplit(const char *s, const char *del)
 {
   return Strsplit((char*)s, (char*)del);
 }
+
 dyn_string *Strsplit(const char *s, char *del)
 {
   return Strsplit((char*)s,del);
 }
+
 dyn_string *Strsplit(char *s, const char *del)
 {
   return Strsplit(s,(char*)del);
 }
+
 dyn_string *Strsplit(char *s, char *del)
 {
   char *pch;
@@ -33,7 +37,8 @@ dyn_string *Strsplit(char *s, char *del)
     pch = strtok(0,del);
   }
   return v;
-};
+}
+
 void StringReplace(std::string &in, const char *patt, std::string &repl)
 {
   if (in.find(patt) != std::string::npos)
@@ -42,6 +47,7 @@ void StringReplace(std::string &in, const char *patt, std::string &repl)
   }
 
 }
+
 unsigned long long GetTime()
 {
 #define onesec_nano (unsigned long long)(1000000000)
@@ -55,6 +61,7 @@ unsigned long long GetTime()
   timstamp += tv.tv_usec*1000;
   return timstamp;
 }
+
 void *Memcpy(void *d, void *s,size_t n)
 {
   return memcpy(d,s,n);

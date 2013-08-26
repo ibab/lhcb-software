@@ -84,18 +84,18 @@ namespace ROMon {
     int    vmExe;
     int    vmLib;
     int    vmPTE;
-    long   staBrk;
-    long   brk;
-    long   staStk;
-    int    nThreads;
-    long   sigPend;
-    long   shdPend;
-    long   sigBlk;
-    long   sigIgn;
-    long   sigCgt;
-    long   capInh;
-    long   capPrm;
-    long   capEff;
+    long unsigned staBrk;
+    long unsigned brk;
+    long unsigned staStk;
+    int           nThreads;
+    long unsigned sigPend;
+    long unsigned shdPend;
+    long unsigned sigBlk;
+    long unsigned sigIgn;
+    long unsigned sigCgt;
+    long unsigned capInh;
+    long unsigned capPrm;
+    long unsigned capEff;
     /// Default constructor
     StatusProcess() {}
     /// Read process data from proc file system
