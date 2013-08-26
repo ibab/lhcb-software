@@ -29,7 +29,6 @@ void OMAIfbMonitor::exec(TH1 &Histo,
    if( input_pars.size() < m_ninput) return;
    warn_thresholds.empty(); // avoid compil. warning
    alarm_thresholds.empty(); // avoid compil. warning
-   input_pars = input_pars; // avoid compil. warning
    int min_tot = (int) (input_pars[0]+0.1);
    int max_ifb =  (int) (input_pars[1]+0.1);
 

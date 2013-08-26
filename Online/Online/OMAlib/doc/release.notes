@@ -2,6 +2,9 @@
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
+! 20130826 GG
+- remove compilation warnings under clang 
+
 ! ======== v4r2 ===============
 
 ! 20120411

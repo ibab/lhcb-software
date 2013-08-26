@@ -62,8 +62,7 @@ void OMAFitFunction::initfun() {
 }
 
 
-void OMAFitFunction::init(std::vector<float>* initValues, TH1* histo) {
-  histo=histo; // avoid compil. warning
+void OMAFitFunction::init(std::vector<float>* initValues, TH1*) {
   if((int) initValues->size() > np() )
     initValues->resize(np());  
   for (Int_t ip=0; ip < (Int_t) initValues->size(); ip++)
