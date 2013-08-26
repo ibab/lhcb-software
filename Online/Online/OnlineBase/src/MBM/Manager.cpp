@@ -35,8 +35,10 @@ MBM::Manager::~Manager()  {
 void MBM::Manager::setup(const char* id)  {
   if ( id )   {
     bm_id = (char*)id;
-    ::snprintf(ctrl_mod, sizeof(ctrl_mod), "bm_ctrl_%s",id);
-    ::snprintf(buff_mod, sizeof(buff_mod), "bm_buff_%s",id);
+  }
+  if ( bm_id )   {
+    ::snprintf(ctrl_mod, sizeof(ctrl_mod), "bm_ctrl_%s",bm_id);
+    ::snprintf(buff_mod, sizeof(buff_mod), "bm_buff_%s",bm_id);
     return;
   }
   throw std::runtime_error("Invalid MBM buffer name supplied [NULL-string]");
@@ -49,7 +51,7 @@ void MBM::Manager::getOptions(int argc, char** argv)    {
     if ( *cptr == '-' || *cptr == '/' )
       optparse (cptr+1);
   }
-  setup();
+  setup(bm_id);
 }
 
 /// Map BM memory sections
