@@ -160,7 +160,7 @@ Pair VPClusterPosition::projectedAngles(const DeVPSensor* sensor,
   const double dx = localPoint.x() - vLocal.x();
   const double dy = localPoint.y() - vLocal.y();
   const double dz = localPoint.z() - vLocal.z();
-  return std::make_pair<double, double>(atan(dx / dz), atan(dy / dz));
+  return std::make_pair(atan(dx / dz), atan(dy / dz));
 
 }
 
@@ -182,7 +182,7 @@ Pair VPClusterPosition::errorEstimate(const Pair angles, const Pair pixelSize) c
                 pow(thetay, 5) * m_p[5] + pow(thetay, 6) * m_p[6];
   errx *= 1.e-3 / pixelSize.first;
   erry *= 1.e-3 / pixelSize.second;
-  return std::make_pair<double, double>(errx, erry);
+  return std::make_pair(errx, erry);
 
 }
 
