@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-26 - Mika Vesterinen 
+ - Update to TestSemileptonicsFromSettings.py
+
 ! 2013-08-26 - Stefano Perazzini
  - Corrected line names for StrippingB2XEta.py configurable
 
