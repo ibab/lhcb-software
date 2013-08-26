@@ -866,7 +866,7 @@ class B2XTauConf(LineBuilder) :
     """                     
       Muon selection          
       """                     
-    _code = self._muFinalStateKinematicCuts(config) +"& (ISMUON) & (PIDmu > 0) & (TRGHOSTPROB<0.5)"
+    _code = self._muFinalStateKinematicCuts(config) +" & (HASMUON) & (ISMUON) & (PIDmu > 0) & (TRGHOSTPROB<0.5)"
     
     _Filter = FilterDesktop(Code = _code)
     
