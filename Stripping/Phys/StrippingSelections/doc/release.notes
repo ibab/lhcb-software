@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+! 2013-08-26 - Olga Kochebina
+ - Remove duplication from cc (lines : D0->4Pi, D0->KKPiPi,D0->KKMuMu,D0->PiPiMuMu and D+->Pi rho(PiPi))
 
 ! 2013-08-26 - Lucio Anderlini
  - Fix to Xibc line: fixing double candidates problem

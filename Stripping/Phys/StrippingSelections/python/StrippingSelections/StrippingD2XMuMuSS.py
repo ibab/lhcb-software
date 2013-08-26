@@ -814,7 +814,7 @@ def makeD2PiPiPi(name, pionSel, muonSel,DMAXDOCA, DMassWin, DMassLow, DimuonMass
     Makes the D+ -> pi+ (pi+ pi-)
     """
     rhos=Selection("pre"+name,
-                   Algorithm = CombineParticles(DecayDescriptor = "[rho(770)0 -> pi+ pi-]cc",MotherCut = "ALL"),
+                   Algorithm = CombineParticles(DecayDescriptor = "rho(770)0 -> pi+ pi-",MotherCut = "ALL"),
                    RequiredSelections=[muonSel] )
 
     _combcut = "(ADAMASS('D+') < %(DMassWin)s *MeV) & "\
@@ -1005,7 +1005,7 @@ def makeD02KKMuMu(name, kaonSel, muonSel, DMAXDOCA, DdauMAXIPCHI2, DFDCHI2, DVCH
               "(BPVVDCHI2>%(DFDCHI2)s) & (BPVIPCHI2()< %(DIPCHI2)s) & "\
               "(BPVDIRA > %(DDIRA)s)" % locals()
     
-    _Combine = CombineParticles(DecayDescriptor = "[D0 -> K+ K- mu+ mu-]cc",
+    _Combine = CombineParticles(DecayDescriptor = "D0 -> K+ K- mu+ mu-",
                                 CombinationCut = _combcut,
                                 MotherCut = _bcut)
     _Combine.ReFitPVs = True
@@ -1034,7 +1034,7 @@ def makeD02PiPiMuMu(name, pionSel, muonSel, DMAXDOCA, DdauMAXIPCHI2, DFDCHI2, DV
               "(BPVVDCHI2>%(DFDCHI2)s) & (BPVIPCHI2()< %(DIPCHI2)s) & "\
               "(BPVDIRA > %(DDIRA)s)" % locals()
     
-    _Combine = CombineParticles(DecayDescriptor = "[D0 -> pi+ pi- mu+ mu-]cc",
+    _Combine = CombineParticles(DecayDescriptor = "D0 -> pi+ pi- mu+ mu-",
                                 CombinationCut = _combcut,
                                 MotherCut = _bcut)
     _Combine.ReFitPVs = True
@@ -1090,7 +1090,7 @@ def makeD02KKPiPi(name, kaonSel, pionSel, OneKaonPID, DMAXDOCA, DdauMAXIPCHI2, D
               "(BPVVDCHI2>%(DFDCHI2)s) & (BPVIPCHI2()< %(DIPCHI2)s) & "\
               "(BPVDIRA > %(DDIRA)s)" % locals()
     
-    _Combine = CombineParticles(DecayDescriptor = "[D0 -> K+ K- pi+ pi-]cc",
+    _Combine = CombineParticles(DecayDescriptor = "D0 -> K+ K- pi+ pi-",
                                 CombinationCut = _combcut,
                                 MotherCut = _bcut)
     _Combine.ReFitPVs = True
@@ -1147,7 +1147,7 @@ def makeD02PiPiPiPi(name, pionSel, DMAXDOCA, DdauMAXIPCHI2, DFDCHI2, DVCHI2DOF, 
               "(PT > %(DPT)s *MeV) &"\
               "(BPVDIRA > %(DDIRA)s)" % locals()
     
-    _Combine = CombineParticles(DecayDescriptor = "[D0 -> pi+ pi- pi+ pi-]cc",
+    _Combine = CombineParticles(DecayDescriptor = "D0 -> pi+ pi- pi+ pi-",
                                 CombinationCut = _combcut,
                                 MotherCut = _bcut)
     _Combine.ReFitPVs = True
