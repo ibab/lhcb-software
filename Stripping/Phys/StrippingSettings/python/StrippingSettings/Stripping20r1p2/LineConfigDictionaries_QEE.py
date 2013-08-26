@@ -193,7 +193,7 @@ Bjets = {
     "1B4jet" : { "PTmin" : 16*GeV ,  "prescale" : 1 },
     "2B3jet" : { "PTmin" : 11*GeV ,  "prescale" : 1 },
     "2B4jet" : { "PTmin" : 8*GeV ,  "prescale" : 1 },
-    "my2TOPO" : {"ANGLE_MIN":0.08, "M_MIN":0, "DPHI_MIN":0}
+    "my2TOPO" : {"ANGLE_MIN":2/57., "M_MIN":0, "DPHI_MIN":0}
     },
     'WGs' : [ 'QEE' ],
     'STREAMS' : [ 'EW' ]
