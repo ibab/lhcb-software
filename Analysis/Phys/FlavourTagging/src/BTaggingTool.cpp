@@ -197,6 +197,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   //loop over Particles, preselect candidates ///////////
   theTag.setTaggedB( AXB );
   if(vtags.empty()) vtags = chooseCandidates(AXB, parts, PileUpVtx);
+  if (msgLevel(MSG::DEBUG)) debug() <<"vtags.size()="<<vtags.size()<<endreq;
 
   //AXB is the signal B from selection
   bool isBd = AXB->particleID().hasDown();

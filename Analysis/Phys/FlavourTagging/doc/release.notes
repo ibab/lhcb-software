@@ -4,7 +4,8 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
-
+! 2013-08-26 - Stefania Vecchi
+ - Fix a wrong value in Tunings.py
 !========================= FlavourTagging v13r2 2013-08-01 =========================
 
 ! 2013-08-01 - Stefania Vecchi
