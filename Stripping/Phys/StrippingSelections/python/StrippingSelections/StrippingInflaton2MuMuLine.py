@@ -3,6 +3,11 @@ Module for construction of very very detached dimuon --> MuMu stripping selectio
 
 Exported symbols (use python help!):
      - ..
+-    Detached2mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 4 ) "\
+-                                  " & (MIPCHI2DV(PRIMARY)> 150)"\
+-                                  "& (PT > 125*MeV) "\
+
+
 '''
 
 __author__ = ['Michel De Cian']
@@ -184,14 +189,14 @@ def makeLong(name, vertexDistChi2, vertexDist) :
     Detached2mu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Detached2mu.OfflineVertexFitter.useResonanceVertex = False
     Detached2mu.ReFitPVs = True
-    Detached2mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 3 ) "\
-                                  " & (MIPCHI2DV(PRIMARY)> 100)"\
+    Detached2mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 4 ) "\
+                                  " & (MIPCHI2DV(PRIMARY)> 90)"\
                                   " & (PIDmu > -4)" \
                                   "& (PT > 125*MeV) "}
                                  
-    Detached2mu.CombinationCut = " (AMAXDOCA('')<0.1*mm)"
+    Detached2mu.CombinationCut = " (AMAXDOCA('')<0.11*mm) & (ADOCACHI2CUT(25, '')) "
     #"(ADAMASS('B_s0')<1000*MeV) "\
-    Detached2mu.MotherCut = "(VFASPF(VCHI2/VDOF)<10) "\
+    Detached2mu.MotherCut = "(VFASPF(VCHI2/VDOF)<12) "\
                             "& (M>250)"\
                             "& (BPVDIRA > 0) "\
                             "& (BPVVDCHI2>  %(vertexDistChi2)s)"\
@@ -221,17 +226,16 @@ def makeDownstream(name) :
     Detached2mu.OfflineVertexFitter.useResonanceVertex = False
     Detached2mu.ReFitPVs = True
     Detached2mu.DaughtersCuts = { "mu+" : "(TRCHI2DOF < 4 ) "\
-                                  " & (MIPCHI2DV(PRIMARY)> 150)"\
-                                  "& (PT > 125*MeV) "\
+                                  "& (MIPCHI2DV(PRIMARY)> 135) "\
+                                  "& (PT > 125*MeV) & (P > 2.*GeV) "\
                                   "& (PIDmu > -4)"}
                                  
-    Detached2mu.CombinationCut = " (AMAXDOCA('')<0.2*mm)"
+    Detached2mu.CombinationCut = " (ADOCACHI2CUT(25, '') ) &  (AMAXDOCA('')<0.22*mm)"
     #"(ADAMASS('B_s0')<1000*MeV) "\
     Detached2mu.MotherCut = "(VFASPF(VCHI2/VDOF)<12) "\
                             "& (M>250)"\
-                            "& (BPVDIRA > 0) "\
-                            "& (BPVVDCHI2>1000)"\
-                            "& (BPVVD>200)" 
+                            "& (BPVVDCHI2>600)"\
+                            "& (BPVVD>150)" 
                           
     
 
@@ -331,7 +335,6 @@ def makeBd2InflatonKst(name, SelInflatonLong) :
     Arguments:
     name        : name of the Selection.
     """
-
     
     from Configurables import OfflineVertexFitter
    
@@ -345,9 +348,9 @@ def makeBd2InflatonKst(name, SelInflatonLong) :
     Bd2InflatonKst.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bd2InflatonKst.OfflineVertexFitter.useResonanceVertex = False
     Bd2InflatonKst.ReFitPVs = True
-    Bd2InflatonKst.DaughtersCuts = { "K*(892)0" : "MIPCHI2DV(PRIMARY)> 25."}
+    Bd2InflatonKst.DaughtersCuts = { "K*(892)0" : "MIPCHI2DV(PRIMARY)> 23."}
     Bd2InflatonKst.CombinationCut = "(ADAMASS('B0') < 500*MeV)"
-    Bd2InflatonKst.MotherCut = "(BPVIPCHI2()< 50) & (VFASPF(VCHI2)<100)& (D2DVVDDOT(1) > 0.3*mm)"
+    Bd2InflatonKst.MotherCut = "(BPVIPCHI2()< 60) & (VFASPF(VCHI2)<100)& (D2DVVDDOT(1) > 0.3*mm)"
 
     return Selection( "Sel"+name,
                       Algorithm = Bd2InflatonKst,
