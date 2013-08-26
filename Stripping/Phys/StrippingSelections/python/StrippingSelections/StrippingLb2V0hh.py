@@ -227,7 +227,7 @@ class Lb2V0hhConf(LineBuilder) :
         _daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['LbDaug_MedPT_PT']
         _daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['LbDaug_MaxPT_IP']
         _maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"            % config['LbDaug_DD_maxDocaChi2']
-        _daugPtSumCut   = "(APT1)>%s*MeV)"                   % config['Lbh_DD_PTMin']
+        _daugPtSumCut   = "(APT1>%s*MeV)"                    % config['Lbh_DD_PTMin']
 
         _combCuts = _aptCut+'&'+_daugPtSumCut+'&'+_daugMedPtCut+'&'+_massCutLow+'&'+_massCutHigh+'&'+_daugMaxPtIPCut+'&'+_maxDocaChi2Cut
 
@@ -297,7 +297,7 @@ class Lb2V0hhConf(LineBuilder) :
         _aptCut         = "(APT>%s*MeV)"                     % config['Lb_APTmin']
         _daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['LbDaug_MedPT_PT']
         _maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"            % config['LbDaug_LL_maxDocaChi2']
-        _daugPtSumCut   = "(APT1)>%s*MeV)"                   % config['Lbh_LL_PTMin']
+        _daugPtSumCut   = "(APT1>%s*MeV)"                   % config['Lbh_LL_PTMin']
 
         _combCuts = _aptCut+'&'+_daugPtSumCut+'&'+_daugMedPtCut+'&'+_massCutLow+'&'+_massCutHigh+'&'+_maxDocaChi2Cut
 
