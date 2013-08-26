@@ -1,6 +1,9 @@
 Package: OnlineTasks
 Author:  Markus Frank
 
+! 2013-08-26 Eric van Herwijnen
+  Added cmt/makePathcvmfs.sh 
+
 ! 2007-07-05 Eric van Herwijnen
   Modified Adder.sh and Adder options
 
