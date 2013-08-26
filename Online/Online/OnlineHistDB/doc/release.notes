@@ -6,6 +6,9 @@
 ! or using makedoc script in this folder
 !
 
+! 20130826
+- remove compilation warnings under clang 
+
 !========================= 2011-09-01 v8r1 ====================================
 ! 20110810 GG
  - small changes to OMAMessage
