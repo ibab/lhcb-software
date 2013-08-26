@@ -8,7 +8,7 @@
  - Replace direct calls to DeVPSquareType, remove unused variables and includes 
  - Add crude parameterisation of error as function of angle
 ! 2013-08-26 - Heinrich Schindler
- - Fix std::make_pair compilation error on gcc4.7 
+ - Fix std::make_pair compilation error on gcc4.7, add cut-off for angular range 
  
 !========================= VPTools v2r1p1 2013-07-18 =========================
 ! 2013-06-18 - Marco Cattaneo

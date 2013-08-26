@@ -170,8 +170,10 @@ Pair VPClusterPosition::projectedAngles(const DeVPSensor* sensor,
 Pair VPClusterPosition::errorEstimate(const Pair angles, const Pair pixelSize) const {
 
   // Convert angles to degrees.
-  const double thetax = angles.first / Gaudi::Units::degree;
-  const double thetay = angles.second / Gaudi::Units::degree;
+  double thetax = fabs(angles.first / Gaudi::Units::degree);
+  double thetay = fabs(angles.second / Gaudi::Units::degree);
+  if (thetax > 25.) thetax = 25.;
+  if (thetay > 25.) thetay = 25.;
   // Calculate resolution in micron (based on fit to testbeam data).
   // TODO: to be improved!
   double errx = m_p[0] + thetax * m_p[1] + thetax * thetax * m_p[2] +
