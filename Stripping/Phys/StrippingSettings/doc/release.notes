@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-08-26 - Mika Vesterinen
+ - Updates to Stripping20r{0,1}p2 settings for Semileptonic WG.
+
 ! 2013-08-26 - Stefano Perazzini
  - Updates to Stripping20r{0,1}p2 settings for Charmless WG.
 
