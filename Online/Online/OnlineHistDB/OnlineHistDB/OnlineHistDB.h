@@ -194,7 +194,6 @@ class  OnlineHistDB : public OnlineHistDBEnv,
      OnlineHistDB& operator= (const OnlineHistDB&)  {return *this;} 
   int m_canwrite;
   int m_AlgListID;
-  int m_nit;
   int m_nHistograms;
   int m_nPages;
   int m_nPageFolders;

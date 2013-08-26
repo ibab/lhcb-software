@@ -16,7 +16,7 @@ OnlineHistDB::OnlineHistDB(std::string passwd,
   OnlineTaskStorage(), 
   OnlineHistogramStorage(),
   OnlinePageStorage(),
-  m_AlgListID(-1), m_nit(0)
+  m_AlgListID(-1)
 {
   setTaskEnv((OnlineHistDBEnv*) this);
   setHistEnv((OnlineHistDBEnv*) this);
