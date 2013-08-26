@@ -3,6 +3,12 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-08-26 - Chris Jones
+ - Add a check to SubPIDMMFilter to make sure array indices are in range
+ - Add a check to SubPIDMMFilter to warn if a PID substitution is going
+   to change a particle's charge.
+ - Change max printout per duplicate to 1 in PrintDuplicates.
+
 ! 2013-08-24 - Chris Jones
  - Some small CPU improvements to SubPIDMMFilter
  - Add a new algorithm PrintDuplicates to search for and print possible

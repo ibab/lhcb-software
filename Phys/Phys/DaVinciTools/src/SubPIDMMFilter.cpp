@@ -2,6 +2,7 @@
 // ============================================================================
 // Include files
 // ============================================================================
+#include <sstream>
 #include "GaudiKernel/IIncidentSvc.h"
 #include "LoKi/ParticleProperties.h"
 #include "LoKi/select.h"
@@ -37,11 +38,13 @@ class SubPIDMMFilter : public FilterDesktop
   friend class AlgFactory<SubPIDMMFilter>;
 
 public:
+
   virtual StatusCode initialize();
   virtual StatusCode _saveInTES();
   virtual void writeEmptyTESContainers();
 
 protected:
+
   SubPIDMMFilter(const std::string& name,ISvcLocator* pSvc);
   virtual ~SubPIDMMFilter(){}
   IIncidentSvc* incSvc() const
@@ -51,15 +54,21 @@ protected:
   }
 
 public:
+
   virtual StatusCode filter(const LHCb::Particle::ConstVector& input,
                             LHCb::Particle::ConstVector& filtered);
 
-  bool substitute(LHCb::Particle* p,int which);
+private:
+
+  bool substitute(LHCb::Particle* p,const unsigned int which);
 
 private:
+
   SubPIDMMFilter();
   SubPIDMMFilter(const SubPIDMMFilter&);
   SubPIDMMFilter& operator=(const SubPIDMMFilter&);
+
+private:
 
   std::vector<std::vector<std::string> > m_names;
   std::vector<std::vector<LHCb::ParticleID> > m_pids;
@@ -69,17 +78,22 @@ private:
   unsigned int m_maxParticles;
   std::string m_stopIncidentType;
   mutable IIncidentSvc* m_incSvc; ///< the incident service
+
 };
 
-StatusCode SubPIDMMFilter::initialize() {
+StatusCode SubPIDMMFilter::initialize()
+{
   const StatusCode sc = FilterDesktop::initialize () ;
   if ( sc.isFailure() ) { return sc ; }
+
   const int size1 = m_names.size();
   m_masses.resize(size1); m_pids.resize(size1);
-  for(int i = 0; i < size1; ++i){
+  for(int i = 0; i < size1; ++i)
+  {
     const int size2 = m_names[i].size();
     m_masses[i].resize(size2); m_pids[i].resize(size2);
-    for(int j = 0; j < size2; ++j){
+    for(int j = 0; j < size2; ++j)
+    {
       m_masses[i][j] = LoKi::Particles::massFromName(m_names[i][j]);
       m_pids[i][j]   = LoKi::Particles::pidFromName(m_names[i][j]);
     }
@@ -110,14 +124,13 @@ StatusCode SubPIDMMFilter::filter(const LHCb::Particle::ConstVector& input,
   filtered.reserve(input.size());
   LoKi::select(input.begin(),input.end(),
                std::back_inserter(filtered),predicate());
-  int size = m_pids.size();
   bool reachedMax = false;
   for(LHCb::Particle::ConstVector::const_iterator ip = filtered.begin();
-      filtered.end() != ip; ++ip) 
+      filtered.end() != ip; ++ip)
   {
     const LHCb::Particle* p = *ip ;
     if ( NULL == p ) { continue ; }
-    for(int i = 0; i < size; ++i)
+    for ( unsigned int i = 0; i < m_pids.size(); ++i )
     {
       if ( i_markedParticles().size() > m_maxParticles )
       {
@@ -131,9 +144,9 @@ StatusCode SubPIDMMFilter::filter(const LHCb::Particle::ConstVector& input,
         break;
       }
       LHCb::DecayTree tree(*p);
-      if(!substitute(tree.head(),i)) return StatusCode::FAILURE;
+      if ( !substitute(tree.head(),i) ) return StatusCode::FAILURE;
       const double mm = tree.head()->measuredMass();
-      if ( mm > m_mmMin && mm < m_mmMax ) 
+      if ( mm > m_mmMin && mm < m_mmMax )
       {
         markNewTree(tree.head()); // mark & store new decay tree
         output.push_back( tree.release() );
@@ -144,39 +157,69 @@ StatusCode SubPIDMMFilter::filter(const LHCb::Particle::ConstVector& input,
   return StatusCode::SUCCESS;
 }
 
-bool SubPIDMMFilter::substitute(LHCb::Particle* p,int which)
+bool SubPIDMMFilter::substitute(LHCb::Particle* p,const unsigned int which)
 {
   if ( NULL == p ) { return false; }
+
+  // Check which index (should never fail...)
+  if ( which >= m_pids.size() )
+  {
+    std::ostringstream mess;
+    mess << "'which' index " << which << " exceeds bound " << m_pids.size()-1;
+    Warning( mess.str() ).ignore();
+    return false;
+  }
+
   const SmartRefVector<LHCb::Particle>& daughters = p->daughters();
   if ( !daughters.empty() )
   {
     double energySum = 0.0, pxSum = 0.0, pySum = 0.0, pzSum = 0.0;
-    int index = 0;
+    unsigned int index = 0;
     BOOST_FOREACH( const LHCb::Particle* daughter, daughters )
     {
-      LHCb::Particle *d = const_cast<LHCb::Particle*>(daughter);
-      if ( d->particleID() != m_pids[which][index] )
+      if ( index >= (m_pids[which]).size() )
       {
-        d->setParticleID(m_pids[which][index]);
-        const double newMass = m_masses[which][index];
-        const Gaudi::LorentzVector& oldMom = d->momentum();
-        d->setMomentum( Gaudi::LorentzVector(oldMom.Px(),oldMom.Py(),oldMom.Pz(),
-                                             std::sqrt(oldMom.P2()+std::pow(newMass,2))) );
-        d->setMeasuredMass(newMass);
+        std::ostringstream mess;
+        mess << "'index' index " << index << " exceeds bound " << (m_pids[which]).size()-1;
+        Warning( mess.str() ).ignore();
       }
-      energySum += d->momentum().E() ;
-      pxSum     += d->momentum().Px();
-      pySum     += d->momentum().Py();
-      pzSum     += d->momentum().Pz();
+      else
+      {
+        const LHCb::ParticleID newPID = (m_pids[which])[index];
+        if ( daughter->particleID() != newPID )
+        {
+          if ( daughter->particleID().threeCharge() != newPID.threeCharge() )
+          {
+            std::ostringstream mess;
+            mess << "Subsitution will change Particle charge! "
+                 << daughter->particleID() << " -> " << newPID;
+            Warning( mess.str() ).ignore();
+          }
+          { // const cast to set things
+            LHCb::Particle * d = const_cast<LHCb::Particle*>(daughter);
+            d->setParticleID(newPID);
+            const double newMass = m_masses[which][index];
+            const Gaudi::LorentzVector& oldMom = d->momentum();
+            d->setMomentum( Gaudi::LorentzVector(oldMom.Px(),oldMom.Py(),oldMom.Pz(),
+                                                 std::sqrt(oldMom.P2()+std::pow(newMass,2))) );
+            d->setMeasuredMass(newMass);
+          }
+        }
+        energySum += daughter->momentum().E() ;
+        pxSum     += daughter->momentum().Px();
+        pySum     += daughter->momentum().Py();
+        pzSum     += daughter->momentum().Pz();
+      }
       ++index;
     }
     p->setMomentum( Gaudi::LorentzVector(pxSum,pySum,pzSum,energySum) );
     p->setMeasuredMass( p->momentum().M() );
   }
+
   return true;
 }
 
-StatusCode SubPIDMMFilter::_saveInTES ()
+StatusCode SubPIDMMFilter::_saveInTES()
 {
   return FilterDesktop::BaseClass::_saveInTES() ;
 }
