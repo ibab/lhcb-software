@@ -173,10 +173,10 @@ class BJetsLinesConf(LineBuilder):
     # Same code as the double Topo stripping line
     def _2topo( self, name): 
         from Configurables import DoubleTopoTool as DT
-        code = "ACCEPT('DoubleTopoTool/DoubleTopoLine_DT')"
-        alg = LoKi__VoidFilter('DoubleTopoLineFilter',Code=code)
-        sel = EventSelection('DoubleTopoEventSel',Algorithm=alg)
-        dt = DT('DoubleTopoLine_DT')
+        code = "ACCEPT('DoubleTopoTool/"+name+"_DoubleTopoLine_DT')"
+        alg = LoKi__VoidFilter(name+'_DoubleTopoLineFilter',Code=code)
+        sel = EventSelection(name+'_DoubleTopoEventSel',Algorithm=alg)
+        dt = DT(name+'_DoubleTopoLine_DT')
         dt.minAngle = self.__confdict__["my2TOPO"]["ANGLE_MIN"]
         dt.minMass = self.__confdict__["my2TOPO"]["M_MIN"]
         dt.minDPhi = self.__confdict__["my2TOPO"]["DPHI_MIN"]
