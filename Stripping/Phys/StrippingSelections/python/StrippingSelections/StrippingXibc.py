@@ -395,7 +395,7 @@ class XibcBuilder(LineBuilder) :
         ########################################## Inclusive X -> p J/psi Line #####################
 
         self._X = makeX (name, 
-              [	self._Jpsi, 
+              [	#self._Jpsi, 
                 AutomaticData (_my_immutable_config['Jpsi4HighMassBaryon']), 
                 AutomaticData( _my_immutable_config['Protons4HighMassBaryon'])]
                                                         , config)
@@ -415,7 +415,7 @@ class XibcBuilder(LineBuilder) :
         # however, it forbids studies on Xibc -> J/psi p K -like decays.
 
         self._Xgp = makeX (name + "GoodPointing", 
-              [	self._Jpsi, 
+              [	#self._Jpsi, 
                 AutomaticData (_my_immutable_config['Jpsi4HighMassBaryon']), 
                 AutomaticData( _my_immutable_config['Protons4HighMassBaryon'])]
                                                         , config, requireBadPointing = False)

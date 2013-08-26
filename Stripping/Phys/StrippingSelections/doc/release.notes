@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-26 - Lucio Anderlini
+ - Fix to Xibc line: fixing double candidates problem
+
 ! 2013-08-26 - Mika Vesterinen 
  - Update to TestSemileptonicsFromSettings.py
 
