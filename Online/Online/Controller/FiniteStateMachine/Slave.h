@@ -100,7 +100,7 @@ namespace FiniteStateMachine {
     /// Check if the task is alive
     bool isAlive() const                                  {  return m_alive;                }
     /// Check if the slave is limbo
-    bool isLimbo() const    {  return !m_alive||m_meta==SLAVE_LIMBO||m_meta==SLAVE_STARTING;}
+    bool isLimbo() const    {  return !m_alive||((m_meta&SLAVE_LIMBO)==SLAVE_LIMBO)||((m_meta&SLAVE_STARTING)==SLAVE_STARTING);}
     /// Access flag indicating (initial) internal transition actions
     bool isInternal() const                               {  return m_internal;             }
     /// Access flag indicating (initial) internal transition actions

@@ -70,5 +70,6 @@ void FmcSlave::handleUnloadTimeout()  {
 /// Force slave killing
 FSM::ErrCond FmcSlave::forceKill()  {
   TaskManager::instance(RTL::nodeNameShort()).stop(name(),SIGTERM,15);
+  iamDead();
   return FSM::SUCCESS;
 }
