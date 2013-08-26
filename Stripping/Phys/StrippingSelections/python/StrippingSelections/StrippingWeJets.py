@@ -63,7 +63,7 @@ class WeJetsConf( LineBuilder ) :
 
         # We initial sel
         self.sel_We    = makeFilter( self._myname + 'We',
-                                     StdNoPIDsElectrons,
+                                     StdAllNoPIDsElectrons,
                                      [],
                                      _cut
                                      )

@@ -13,8 +13,8 @@ def test_instantiate_StrippingConf_with_all_streams() :
     from StrippingConf.Configuration import StrippingConf
     from StrippingSelections.Utils import buildStreams
 
-    #streams = buildStreams('stripping20r0p1')
-    streams = buildStreams('stripping20r3')
+    #streams = buildStreams('stripping20r0p2',['B2CC','B2OC','BandQ','ALL','Charmless','Charm','QEE','RD','Semileptonic'])
+    streams = buildStreams('stripping20r0p2')
 
     sc = StrippingConf (Streams = streams)
 
