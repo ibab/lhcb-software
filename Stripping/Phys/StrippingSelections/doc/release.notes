@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-26 - Stefano Perazzini
+ - Corrected line names for StrippingB2XEta.py configurable
+
 ! 2013-08-25 - Ronan Wallace
  - Added StrippingWeJets.py and StrippingWMuJets.py with proposed 'medium' settings.
  - Added line to import the new StrippingBjets module in __init__.py.

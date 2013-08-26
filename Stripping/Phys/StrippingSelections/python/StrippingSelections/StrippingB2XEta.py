@@ -165,8 +165,8 @@ class B2XEtaConf(LineBuilder) :
         Lb2etap_DD_name = name+'Lb2etapLDD'
         Lb2etaGG_LL_name = name+'Lb2etaGGLLL'
         Lb2etaGG_DD_name = name+'Lb2etaGGLDD'
-        Lb2eta3Pi_LL_name = name+'Lb2eta3piKSLL'
-        Lb2eta3Pi_DD_name = name+'Lb2eta3piKSDD'       
+        Lb2eta3Pi_LL_name = name+'Lb2eta3piLLL'
+        Lb2eta3Pi_DD_name = name+'Lb2eta3piLDD'       
 
         GECCode = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % config['GEC_MaxTracks'],
                    'Preambulo' : ["from LoKiTracks.decorators import *"]}
