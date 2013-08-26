@@ -226,6 +226,7 @@ static void help_OnlineTask() {
 
 extern "C" int OnlineTask(int argc, char** argv)  {
   RTL::CLI cli(argc, argv, help_OnlineTask);
+  int milli = 0;
   std::string dll     = "";
   std::string type    = "LHCb::Class1Task";
   std::string runable = "LHCb::OnlineRunable/Runable";
@@ -237,6 +238,7 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   bool checkpoint = cli.getopt("checkpoint",1) != 0;
   bool evtLoop    = cli.getopt("loop",4) != 0;
   cli.getopt("dll",3,dll);
+  cli.getopt("dbg",3,milli);
   cli.getopt("tasktype",8,type);
   cli.getopt("runable",3,runable);
   cli.getopt("evtloop",3,evtloop);
@@ -245,6 +247,13 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   cli.getopt("options",3,optopts);
   if ( cli.getopt("help",4) )    return 1;
   if ( cli.getopt("debug",5) ) ::lib_rtl_start_debugger();
+  if ( milli > 1000 && milli < 900000 ) {
+    std::cout << "[ERROR] Connect debugger:   gdb --pid " << (int)::lib_rtl_pid() << std::endl;
+    while(milli > 0) {
+      ::lib_rtl_sleep(10);
+      milli -= 10;
+    }
+  }
   SmartIF<IProperty> p(Gaudi::createInstance("",type,dll));
   if ( p )  {
     p->setProperty(StringProperty("JobOptionsPath",opts));
