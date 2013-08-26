@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-08-26 - Ronan Wallace
+ - Change to config in Stripping20r{0,1}p2. Updated the angle between two topos to make it the same as the doubletopo line in StrippingBjets.py.
+
 ! 2013-08-26 - Philip Hunt
  - Updates to Stripping20r{0,1}p2 Calibration streams
    * Added "NoReco" trigger validation lines and tightened ProbNN cuts for
