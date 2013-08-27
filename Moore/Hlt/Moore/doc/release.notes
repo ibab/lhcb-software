@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-08-27 - Eric van Herwijnen
+ - Pick up project version instead of package version in Configuarion.py
+
 ! 2013-08-22 - Rob Lambert
  - Split HLT in tests using Gerhard's new Moore feature.
 
