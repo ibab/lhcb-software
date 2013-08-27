@@ -4,6 +4,9 @@
 ! Purpose     : Hold link to Geant4 data files
 !-----------------------------------------------------------------------------
 
+! 2013-08-27 - Marco Clemencic
+ - Added environment XML file needed for CMake configuration.
+
 !======================== Geant4Files v95r0 2012-08-20 =======================
 
 ! 2012-08-20 - Nigel Watson
