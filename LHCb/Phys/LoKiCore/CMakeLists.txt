@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiCore
 ################################################################################
-gaudi_subdir(LoKiCore v11r13)
+gaudi_subdir(LoKiCore v11r14)
 
 gaudi_depends_on_subdirs(Event/RecEvent
                          GaudiAlg
