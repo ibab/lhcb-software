@@ -5,6 +5,7 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= HltLine v5r2 2013-08-27 =========================
 ! 2013-08-21 - Gerhard Raven
  - add explicit L0DU decoding prior to any L0 filter in an Hlt2 line 
 
