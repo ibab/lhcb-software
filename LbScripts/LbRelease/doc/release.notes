@@ -1,3 +1,7 @@
+2013-08-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/DataPkgEnvs: added environment for Geant4Files v95r0
+
 2013-08-01  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/SvnChecker: improved error messages and added check of JSON in the nightly build configuration
