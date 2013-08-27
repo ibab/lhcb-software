@@ -47,5 +47,9 @@ def SplitHlt2() :
     
     #for c in walkAlgorithms( gs('Hlt2') ) : c.OutputLevel = 2
 
-from Gaudi.Configuration import appendPostConfigAction
-appendPostConfigAction( SplitHlt2 )
+#old turning off of HLT1
+#from Gaudi.Configuration import appendPostConfigAction
+#appendPostConfigAction( SplitHlt2 )
+
+#new splitting of Hlt1
+Moore().Split='Hlt2'

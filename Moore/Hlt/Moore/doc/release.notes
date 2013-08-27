@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-08-22 - Rob Lambert
+ - Split HLT in tests using Gerhard's new Moore feature.
+
 ! 2013-08-23 - Gerhard Raven
  - move splitting logic out of dedicated scripts, and hide it in the 
    Moore configurable. One can now specify:
