@@ -786,8 +786,7 @@ class B2XTauConf(LineBuilder) :
     
     _dcut  = getcuts[1] + "& (MAXTREE('pi+'==ABSID,PT) > " + config['PT_HAD_ALL_FINAL_STATE']  + ")" 
     
-    _Combine = CombineParticles(DecayDescriptors = ["[D+ -> rho(770)0 pi+]cc ",
-                                                    "[D+ -> rho(770)0 pi+]cc "],
+    _Combine = CombineParticles(DecayDescriptors = ["[D+ -> rho(770)0 pi+]cc"],
                                 CombinationCut   = _combcut,
                                 MotherCut        = _dcut)
     
