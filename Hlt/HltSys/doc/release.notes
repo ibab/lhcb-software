@@ -5,6 +5,16 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
+</PRE><H1><A NAME=v20r3p1>2013-08-27 HltSys v20r3p1</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v36r1 stack. Depends on Rec v15r1 via Phys v17r1. Based on Gaudi v23r9.
+
+Commissioning Hlt/Moore version for September 2013 commissioning week. First Moore version to natively be able to run Hlt1 and Hlt2 independently, although the results are not identical to when they are run together.
+
+This Hlt release picks up a branch (v2r17b) of HltDAQ to deal with multiple possible TES locations for decoded trigger banks, and also some fixes in LoKiCore.
+
+For more information see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v20r3p1
+
 </PRE><H1><A NAME=v20r3>2013-08-01 HltSys v20r3</A></H1><PRE>
 Moore/HLT LS1 development version. LHCb v36r1 stack. Depends on Rec v15r1 via Phys v17r1. Based on Gaudi v23r9.
 
