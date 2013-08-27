@@ -109,9 +109,10 @@ LoKi::Algo::Algo
     ( "Cuts"  , m_cutValues , 
       "The map of 'named-cuts': { 'cut' : value } " ) ;
   // 
-  setProperty ( "HistoPrint"      , true ) . ignore () ;
-  setProperty ( "NTuplePrint"     , true ) . ignore () ;
-  setProperty ( "PropertiesPrint" , true ) . ignore () ;
+  // CRJ. Should not force these on algorithms run in production
+  //setProperty ( "HistoPrint"      , true ) . ignore () ;
+  //setProperty ( "NTuplePrint"     , true ) . ignore () ;
+  //setProperty ( "PropertiesPrint" , true ) . ignore () ;
 } 
 // ============================================================================
 // virtual and protected destructor 

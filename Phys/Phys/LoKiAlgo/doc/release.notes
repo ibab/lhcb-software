@@ -5,6 +5,8 @@
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+! 2013 - Chris Jones
+ - Do not hard code default printout options to true in LoKi::Algo.
 
 !========================= LoKiAlgo v9r8p2 2013-05-08 =========================
 
