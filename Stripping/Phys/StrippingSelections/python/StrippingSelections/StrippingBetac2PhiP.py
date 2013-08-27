@@ -125,7 +125,7 @@ def makeBetac2PhiP(name
 
     phiCuts =  "(ALL)"
 
-    pCuts =    "(P >  %(Daug_P_MIN)s) & (PT > %(Daug_PT_MIN)s) & (TRCHI2DOF < %(Proton_TRCHI2DOF_MAX)s)" \
+    pCuts =    "(TRGHP < 0.4) & (P >  %(Daug_P_MIN)s) & (PT > %(Daug_PT_MIN)s) & (TRCHI2DOF < %(Proton_TRCHI2DOF_MAX)s)" \
                "& (MIPDV(PRIMARY) > %(Daug_MIPDV)s)" \
                "& ((PIDp-PIDpi) > %(Proton_PIDpi_MIN)s)" \
                "& ((PIDp-PIDK)  > %(Proton_PIDK_MIN)s)" % locals()    
@@ -161,7 +161,7 @@ default_config = {
                   , 'Daug_P_MIN'                : 10000.0 * MeV 
                   , 'Daug_PT_MIN'               : 400.0 * MeV
                   , 'Daug_MIPDV'                : 0.05 * mm
-		  , 'Proton_PIDpi_MIN'          : 30.0
+		  , 'Proton_PIDpi_MIN'          : 35.0
                   , 'Proton_PIDK_MIN'           : 5.0 
                   , 'Phi_WIN'                   : 10.0 * MeV
                   , 'Phi_PT'                    : 0.0 * MeV         

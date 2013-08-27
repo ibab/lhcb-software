@@ -5,6 +5,9 @@
 ! ----------------------------------------------------------------------------- 
 
 ! 2013-08-26 - Stefano Perazzini
+ - New version of StrippingBetac2PhiP.py to reduce retention rate
+
+! 2013-08-26 - Stefano Perazzini
  - Fix clash between StrippingBeauty2Charm.py and StrippingBjest.py
 
 ! 2013-08-26 - Olga Kochebina
