@@ -4,6 +4,7 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v10r2 2013-08-27 =========================
 ! 2013-08-21 - Gerhard Raven
  - improve error message when a bogus ThresholdSetting is specified
 
