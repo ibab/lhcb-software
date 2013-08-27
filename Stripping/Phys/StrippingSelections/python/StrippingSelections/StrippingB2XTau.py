@@ -1,4 +1,4 @@
-__author__ = ['V. Gligorov, Ch. Elsasser']
+__author__ = ['V. Gligorov, Ch. Elsasser, G. Mancinelli']
 __date__ = '24/05/2010,23/08/2012'
 __version__ = '$Revision: 1.2 $'
 # Stripping line by V. Gligorov for B->mu tau, B->tau tau, B->D mu and B->D D
