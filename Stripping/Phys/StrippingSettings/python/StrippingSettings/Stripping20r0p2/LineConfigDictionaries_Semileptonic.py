@@ -8,7 +8,7 @@ B2DMuNuX = {
         "GEC_nLongTrk" : 250 # adimensional
         ,"TRGHOSTPROB" : 0.5 # adimensional
         ,"MuonGHOSTPROB" : 0.5 #adimensional
-        ,"PrescalD0Mu"    : 0.5  # for D0->KPi line
+        ,"PrescalD0Mu"    : 1.0  # for D0->KPi line
         ,"PrescalDsPi_fakes" : 1.0  # for Bs->(Ds->PhiPi)Pi for Fakes line
         ,"MINIPCHI2"     : 9.0    # adimensiional
         ,"TRCHI2"        : 4.0    # adimensiional

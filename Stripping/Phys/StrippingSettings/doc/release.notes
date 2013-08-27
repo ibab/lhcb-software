@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-08-27 - Mika Vesterinen
+ - Change prescale for D0->Kpi mode in Stripping20r{0,1}p2 settings for Semileptonic WG
+
 ! 2013-08-26 - Stefano Perazzini
  - Created dbase/stripping20r1p2 and dbase/stripping20r0p2
 
