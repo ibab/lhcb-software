@@ -43,8 +43,7 @@ PrintDecayTreeTool::PrintDecayTreeTool( const std::string& type,
     m_ppSvc(0),
     m_keys(0),
     m_energyUnitName("MeV"),
-    m_lengthUnitName("mm"),
-    m_lastTESCode(0)
+    m_lengthUnitName("mm")
 {
 
   declareInterface<IPrintDecayTreeTool> (this);

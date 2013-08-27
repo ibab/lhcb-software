@@ -136,11 +136,13 @@ private:
 
   unsigned int tesCode( const std::string& loc )
   {
-    if ( m_tesLocs.find(loc) == m_tesLocs.end() )
+    static std::map<std::string,unsigned int> tesLocs;
+    static unsigned int lastTESCode(0);
+    if ( tesLocs.find(loc) == tesLocs.end() )
     {
-      m_tesLocs[loc] = m_lastTESCode++;
+      tesLocs[loc] = lastTESCode++;
     }
-    return m_tesLocs[loc];
+    return tesLocs[loc];
   }
 
 private:
@@ -157,9 +159,6 @@ private:
   double m_lengthUnit ; /// Unit for distances
   std::string m_energyUnitName; ///< Unit for energies, momenta and masses
   std::string m_lengthUnitName; ///< Unit for distances
-
-  std::map<std::string,unsigned int> m_tesLocs; ///< List of all TES locations with its assigned int code
-  unsigned int m_lastTESCode; ///< cache of the last assigned TES code
   std::set<std::string> m_usedTesLocs; ///< All TES locations in the last considered decay
 
 };
