@@ -194,12 +194,12 @@ bool SubPIDMMFilter::substitute( LHCb::Particle* p,const unsigned int which )
             std::ostringstream mess;
             mess << "Substitution will change Particle charge! "
                  << daughter->particleID() << " -> " << newPID;
-            Warning( mess.str() ).ignore();
+            Warning( mess.str(), StatusCode::SUCCESS ).ignore();
           }
           { // const cast to set things
             LHCb::Particle * d = const_cast<LHCb::Particle*>(daughter);
             d->setParticleID(newPID);
-            const double newMass = m_masses[which][index];
+            const double& newMass = (m_masses[which])[index];
             const Gaudi::LorentzVector& oldMom = d->momentum();
             d->setMomentum( Gaudi::LorentzVector(oldMom.Px(),oldMom.Py(),oldMom.Pz(),
                                                  std::sqrt(oldMom.P2()+std::pow(newMass,2))) );

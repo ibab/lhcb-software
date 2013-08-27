@@ -19,7 +19,7 @@
 
 /** @class PrintDuplicates PrintDuplicates.h
  *
- *  Finds and print duplicates.
+ *  Finds and print duplicate decay trees.
  *
  *  @author Chris Jones
  *  @date   2012-10-11
@@ -34,26 +34,24 @@ public:
 
   virtual ~PrintDuplicates( ); ///< Destructor
 
-  virtual StatusCode execute();    ///< Algorithm execution
+  virtual StatusCode execute(); ///< Algorithm execution
 
 private:
 
   /// Get TES location for an object
   template<class TYPE>
-  std::string tesLocation( const TYPE * obj ) const
+  inline std::string tesLocation( const TYPE * obj ) const
   {
     return ( obj && obj->parent() && obj->parent()->registry() ?
              obj->parent()->registry()->identifier() : "NotInTES" );
   }
 
-private:
-
   /// Access print tool on demand
-  IPrintDecay * printDecay()
+  inline IPrintDecay * printDecay()
   {
-    if ( ! m_printDecay )
+    if ( !m_printDecay )
     {
-      m_printDecay = tool<IPrintDecay>( "PrintDecayTreeTool/PrintDecay", this ) ;
+      m_printDecay = tool<IPrintDecay>( "PrintDecayTreeTool/PrintDuplicateDecays" );
     }
     return m_printDecay;
   }
