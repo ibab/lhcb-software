@@ -117,16 +117,16 @@ SubPIDMMFilter::SubPIDMMFilter(const std::string& name,ISvcLocator* pSvc)
   declareProperty("StopIncidentType", m_stopIncidentType, "incident type");
 }
 
-StatusCode SubPIDMMFilter::filter(const LHCb::Particle::ConstVector& input,
-                                  LHCb::Particle::ConstVector& output)
+StatusCode SubPIDMMFilter::filter( const LHCb::Particle::ConstVector& input,
+                                   LHCb::Particle::ConstVector& output )
 {
   LHCb::Particle::ConstVector filtered ;
   filtered.reserve(input.size());
   LoKi::select(input.begin(),input.end(),
                std::back_inserter(filtered),predicate());
   bool reachedMax = false;
-  for(LHCb::Particle::ConstVector::const_iterator ip = filtered.begin();
-      filtered.end() != ip; ++ip)
+  for ( LHCb::Particle::ConstVector::const_iterator ip = filtered.begin();
+        filtered.end() != ip; ++ip )
   {
     const LHCb::Particle* p = *ip ;
     if ( NULL == p ) { continue ; }
@@ -157,7 +157,7 @@ StatusCode SubPIDMMFilter::filter(const LHCb::Particle::ConstVector& input,
   return StatusCode::SUCCESS;
 }
 
-bool SubPIDMMFilter::substitute(LHCb::Particle* p,const unsigned int which)
+bool SubPIDMMFilter::substitute( LHCb::Particle* p,const unsigned int which )
 {
   if ( NULL == p ) { return false; }
 
@@ -170,6 +170,7 @@ bool SubPIDMMFilter::substitute(LHCb::Particle* p,const unsigned int which)
     return false;
   }
 
+  // loop over daugthers and start changing those PIDs
   const SmartRefVector<LHCb::Particle>& daughters = p->daughters();
   if ( !daughters.empty() )
   {
@@ -185,13 +186,13 @@ bool SubPIDMMFilter::substitute(LHCb::Particle* p,const unsigned int which)
       }
       else
       {
-        const LHCb::ParticleID newPID = (m_pids[which])[index];
+        const LHCb::ParticleID& newPID = (m_pids[which])[index];
         if ( daughter->particleID() != newPID )
         {
           if ( daughter->particleID().threeCharge() != newPID.threeCharge() )
           {
             std::ostringstream mess;
-            mess << "Subsitution will change Particle charge! "
+            mess << "Substitution will change Particle charge! "
                  << daughter->particleID() << " -> " << newPID;
             Warning( mess.str() ).ignore();
           }
