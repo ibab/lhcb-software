@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-28 - Cedric Potterat
+ - Remove multiple candidate in B2KstarGamma_B2VG_Line
+
 ! 2013-08-26 - Stefano Perazzini
  - New version of StrippingBetac2PhiP.py to reduce retention rate
 

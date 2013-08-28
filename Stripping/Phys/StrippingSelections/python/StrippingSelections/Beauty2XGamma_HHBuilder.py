@@ -144,12 +144,15 @@ class HHBuilder(object):
         sel2 = self._makeX2HH('X2KPiBar',['K*(892)~0 -> pi+ pi-'],
                               '(AM < 2.5*GeV)',
                               self.config,[self.pions])
-        decays = [['K+','pi-'],['pi+','K-']]
-        filter = SubPIDMMFilter('X2KPiSubPIDBeauty2XGamma',Code='ALL',
-                 MinMM=700,MaxMM=1100,PIDs=decays)
-        presel1 = Selection('X2KPiSubPIDSelBeauty2XGamma',Algorithm=filter,
+        decays1 = [['K+','pi-']]
+        decays2 = [['pi+','K-']]
+        filter1 = SubPIDMMFilter('X2KPiSubPID1Beauty2XGamma',Code='ALL',
+                 MinMM=700,MaxMM=1100,PIDs=decays1)
+        filter2 = SubPIDMMFilter('X2KPiSubPID2Beauty2XGamma',Code='ALL',
+                 MinMM=700,MaxMM=1100,PIDs=decays2)
+        presel1 = Selection('X2KPiSubPID1SelBeauty2XGamma',Algorithm=filter1,
                   RequiredSelections=[sel1])
-        presel2 = Selection('X2KPiBarSubPIDSelBeauty2XGamma',Algorithm=filter,
+        presel2 = Selection('X2KPiBarSubPID2SelBeauty2XGamma',Algorithm=filter2,
                   RequiredSelections=[sel2])
 
         return [MergedSelection('X2KPi', RequiredSelections=[presel1,presel2])]
