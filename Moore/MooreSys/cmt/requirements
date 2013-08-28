@@ -1,18 +1,18 @@
 package MooreSys
-version           v20r3
+version           v20r3p1
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v20r2      Hlt
+use  Moore               v20r3p1    Hlt
 use  IndependenceTests   v1r5       Hlt
 use  HltMonitor          v1r2	    Hlt   # Diego Martinez
 use  Swimming            v3r0p1     Phys  # Nick Torr
 use  L0App               v1r0       L0    # Rob Lambert
 
-# Bug fixes on top of LHCb v36r0 release stack
+# Bug fixes on top of LHCb v36r1 release stack
 
 
 # Declare this as a container package
