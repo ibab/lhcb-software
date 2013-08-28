@@ -10,7 +10,7 @@ if ( "$CMTCONFIG" == "x86_64-slc5-icc11-opt" || "$CMTCONFIG" == "x86_64-slc5-icc
 endif 
 
 if ( "$CMTCONFIG" == "x86_64-slc6-icc13-opt" || "$CMTCONFIG" == "x86_64-slc6-icc13-dbg" ) then
-  if ( ! $?ICC_SETUP_DONE ) then
+  if ( ! $?ICC13_SETUP_DONE ) then
     echo "Setting up the 64 bits icc13 compiler"
     unalias cd
     unalias cwdcmd

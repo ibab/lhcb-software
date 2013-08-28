@@ -10,7 +10,7 @@ if [ "$CMTCONFIG" = "x86_64-slc5-icc11-opt" ] || [ "$CMTCONFIG" = "x86_64-slc5-i
     echo "Setting up the 64 bits icc compiler"
     . ${GROUP_DIR}/post/icc_setup.sh
     export ICC_SETUP_DONE=1
-    export ICC13_SETUP_DONE=0
+    unset ICC13_SETUP_DONE
   fi
 fi 
 
@@ -19,7 +19,7 @@ if [ "$CMTCONFIG" = "x86_64-slc6-icc13-opt" ] || [ "$CMTCONFIG" = "x86_64-slc6-i
     echo "Setting up the 64 bits icc13 compiler"
     . ${GROUP_DIR}/post/icc13_setup.sh
     export ICC13_SETUP_DONE=1
-    export ICC_SETUP_DONE=0
+    unset ICC_SETUP_DONE
   fi
 fi
 
@@ -28,7 +28,7 @@ if [ "$CMTCONFIG" = "i686-slc5-icc11-opt" ] || [ "$CMTCONFIG" = "i686-slc5-icc11
     echo "Setting up the 32 bits icc compiler"
     . ${GROUP_DIR}/post/icc_setup32.sh
     export ICC_SETUP_DONE=1
-    export ICC13_SETUP_DONE=0
+    unset ICC13_SETUP_DONE
   fi
 fi 
 
