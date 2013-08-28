@@ -21,6 +21,12 @@ __author__  = "Thomas RUF, Vanya BELYAEV"
 __date__    = "2012-10-24"
 __version__ = "Revision"
 # =============================================================================
+## some "fix"
+# @todo cehck if it really needed 
+import ROOT
+if not hasattr( ROOT , 'ostream') :
+    ROOT.gROOT.ProcessLine("#include <ostream>") 
+# =============================================================================
 ## helper function to get DB-tags
 #  @author Thomas RUF
 #  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -86,7 +92,7 @@ def get_db_tags ( silent = True , files = [] ) :
     if not files :
         if len(sys.argv) > 1 : 
             files = sys.argv[1:] 
-            
+
     ## no valid 
     if not files : return {}
     
@@ -94,12 +100,12 @@ def get_db_tags ( silent = True , files = [] ) :
 
     try:
         
-        from AnalysisPython.Utils import mute
+        from AnalysisPython.Utils import mute 
         with mute ( silent , silent ) :
             tags = _get_db_tags_ ( files )
             
     except:
-        
+
         tags = {}
                     
     return tags
@@ -108,7 +114,7 @@ def get_db_tags ( silent = True , files = [] ) :
 # =============================================================================
 if __name__ == '__main__' :
 
-    print 'DBTags: %s ' % get_db_tags ( silent = True  ) 
+    print 'DBTags: %s ' % get_db_tags ( silent = True ) 
         
 # =============================================================================
 # The END 
