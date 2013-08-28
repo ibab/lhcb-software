@@ -4,6 +4,7 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v20r3p1 2013-08-28 =========================
 ! 2013-08-27 - Eric van Herwijnen
  - Pick up project version instead of package version in Configuarion.py
 
