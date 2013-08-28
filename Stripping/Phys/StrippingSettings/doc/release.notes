@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-08-28 - Thomas Blake
+ - Update of the RD line configuration with
+   * New control modes for XMuMu
+	 * B --> K* X inflaton lines 
+
 ! 2013-08-28 - Mika Vesterinen
  - Tighter prescale for V->KK control modes in Stripping20r{0,1}p2 settings for Semileptonic WG
 
