@@ -2958,20 +2958,18 @@ ROOT.TH1D. transform = _transform_
 #
 #   >>> h = ... ##  the histogram
 #
-#   >>> s1 = h.sample( keep_errors = True  )  ## the sampled hist
-#   >>> s2 = h.sample( keep_errors = False )  ## the sampled hist
+#   >>> s1 = h.sample()  ## the sampled hist
 #
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  
-def _sample_ ( histo , keep_errors , accept = lambda s : True ) :
+def _sample_ ( histo , accept = lambda s : True ) :
     """
     Sample the histogram using gaussian hypothesis
  
     >>> h = ... ##  the histogram
  
-    >>> s1 = h.sample( keep_errors = True  )  ## the sampled hist
-    >>> s2 = h.sample( keep_errors = False )  ## the sampled hist
+    >>> s1 = h.sample()  ## the sampled hist
 
     """
     #
@@ -2986,8 +2984,7 @@ def _sample_ ( histo , keep_errors , accept = lambda s : True ) :
         ## sample it! 
         v2 = VE( v1.gauss ( accept = accept ) )
         
-        if not keep_errors : v2.setCov2 ( 0         )
-        else               : v2.setCov2 ( v1.cov2() )
+        v2.setCov2 ( v1.cov2() )
         
         result [bin] = v2
         

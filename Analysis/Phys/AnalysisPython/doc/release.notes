@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-08-28 - Vanya Belyaev
+ - use new functions from Kernel/LHCbMath
+
 !========================= AnalysisPython v2r23 2013-08-10 =========================
 
 ! 2013-08-10 - Vanya Belyaev

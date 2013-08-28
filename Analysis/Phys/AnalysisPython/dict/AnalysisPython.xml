@@ -40,9 +40,17 @@
   <class name = "Analysis::Models::ExpoPositive"    />
   <class name = "Analysis::Models::StudentT"        />
   <class name = "Analysis::Models::GammaDist"       />
+  <class name = "Analysis::Models::GenGammaDist"    />
+  <class name = "Analysis::Models::Amoroso"         />
   <class name = "Analysis::Models::LogGammaDist"    />
   <class name = "Analysis::Models::Log10GammaDist"  />
+  <class name = "Analysis::Models::LogGamma"        />
+  <class name = "Analysis::Models::BifurcatedGauss" />
+  <class name = "Analysis::Models::GenGaussV1"      />
+  <class name = "Analysis::Models::GenGaussV2"      />
+  <class name = "Analysis::Models::SkewGauss"       />
   <class name = "Analysis::Models::Product"         />
+  <class name = "Analysis::Models::Adjust"          />
   
   <class name = "Gaudi::Utils::HStats"              />
   <class name = "Gaudi::Utils::Mute"                />

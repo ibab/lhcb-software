@@ -97,9 +97,16 @@ for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.Linear                 ,
                Gaudi.Math.Parabola               ,
                #
+               Gaudi.Math.GenGaussV1             ,
+               Gaudi.Math.GenGaussV2             ,
+               Gaudi.Math.SkewGauss              ,
                Gaudi.Math.GammaDist              ,
+               Gaudi.Math.GenGammaDist           ,
+               Gaudi.Math.Amoroso                ,
                Gaudi.Math.LogGammaDist           ,
                Gaudi.Math.Log10GammaDist         ,
+               Gaudi.Math.LogGamma               ,
+               Gaudi.Math.BetaPrime              
                ) :
     model . tf1 = _tf1_ 
 

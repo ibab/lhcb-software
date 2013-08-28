@@ -71,6 +71,13 @@ namespace Analysis
                     const double         m2        ,
                     const unsigned short L                         ,
                     const Gaudi::Math::BreitWigner::JacksonRho rho ) ;
+      /// constructor from main parameters and "shape"
+      BreitWigner ( const char*          name      , 
+                    const char*          title     , 
+                    RooAbsReal&          x         ,
+                    RooAbsReal&          mass      ,
+                    RooAbsReal&          width     ,
+                    const Gaudi::Math::BreitWigner& bw ) ;
       /// "copy" constructor 
       BreitWigner ( const BreitWigner& , const char* name = 0 ) ;
       /// virtual destructor 
@@ -771,6 +778,228 @@ namespace Analysis
       // ======================================================================
     } ;  
     // ========================================================================
+    /** @class BifurcatedGauss 
+     *  @see Gaudi::Math::BifurkatedGauss 
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
+     *  @date 2013-08-27
+     */
+    // ========================================================================
+    class GAUDI_API BifurcatedGauss : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::BifurcatedGauss, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      BifurcatedGauss 
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          peak      , 
+        RooAbsReal&          sigmaL    , 
+        RooAbsReal&          sigmaR    ) ;
+      /// "copy" constructor 
+      BifurcatedGauss ( const BifurcatedGauss& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~BifurcatedGauss () ;
+      /// clone 
+      virtual  BifurcatedGauss* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::BifurcatedGauss& function() const { return m_bg ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_peak   ;
+      RooRealProxy m_sigmaL ;
+      RooRealProxy m_sigmaR ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::BifurcatedGauss m_bg ;               // the function 
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    /** @class GenGaussV1
+     *  Simple class that implements the generalized normal distribution v1
+     *  @see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_1
+     *  @see Gaudi::Math::GenGaussV1 
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
+     *  @date 2013-08-27
+     */
+    // ========================================================================
+    class GAUDI_API GenGaussV1 : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::GenGaussV1, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      GenGaussV1
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          mu        , 
+        RooAbsReal&          alpha     , 
+        RooAbsReal&          beta      ) ;
+      /// "copy" constructor 
+      GenGaussV1 ( const GenGaussV1& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~GenGaussV1 () ;
+      /// clone 
+      virtual  GenGaussV1* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::GenGaussV1& function() const { return m_ggv1 ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_mu     ;
+      RooRealProxy m_alpha  ;
+      RooRealProxy m_beta   ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::GenGaussV1 m_ggv1 ;                 // the function 
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    /** @class GenGaussV2
+     *  Simple class that implements the generalized normal distribution v2
+     *  @see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_2
+     *  @see Gaudi::Math::GenGaussV2 
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
+     *  @date 2013-08-27
+     */
+    // ========================================================================
+    class GAUDI_API GenGaussV2 : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::GenGaussV2, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      GenGaussV2
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          xi        , 
+        RooAbsReal&          alpha     , 
+        RooAbsReal&          kappa     ) ;
+      /// "copy" constructor 
+      GenGaussV2 ( const GenGaussV2& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~GenGaussV2 () ;
+      /// clone 
+      virtual  GenGaussV2* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::GenGaussV2& function() const { return m_ggv2 ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_xi     ;
+      RooRealProxy m_alpha  ;
+      RooRealProxy m_kappa  ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::GenGaussV2 m_ggv2 ;                 // the function 
+      // ======================================================================      
+    } ;
+    // ========================================================================
+    /** @class SkewGauss
+     *  Simple class that implements the skew normal distribution
+     *  @see http://en.wikipedia.org/wiki/Skew_normal_distribution
+     *  @see Gaudi::Math::SkewGauss 
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
+     *  @date 2013-08-27
+     */
+    // ========================================================================
+    class GAUDI_API SkewGauss : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::SkewGauss, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      SkewGauss
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          xi        , 
+        RooAbsReal&          omega     , 
+        RooAbsReal&          alpha     ) ;
+      /// "copy" constructor 
+      SkewGauss ( const SkewGauss& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~SkewGauss () ;
+      /// clone 
+      virtual  SkewGauss* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::SkewGauss& function() const { return m_sg ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_xi     ;
+      RooRealProxy m_omega  ;
+      RooRealProxy m_alpha  ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::SkewGauss m_sg ;                     // the function 
+      // ======================================================================      
+    } ;
+    // ========================================================================
     /** @class Bukin
      *  "Bukin"-function
      *  @see Gaudi::Math::Bukin
@@ -1207,7 +1436,128 @@ namespace Analysis
       /// the actual function
       mutable Gaudi::Math::GammaDist m_gamma ; // the actual function
       // ======================================================================
-    } ;  
+    } ;
+    // ========================================================================
+    /** @class GenGammaDist 
+     *  Generalized Gamma-distribution with additional shift parameter 
+     *  http://en.wikipedia.org/wiki/Generalized_gamma_distribution
+     *  special cases : 
+     *   - p == 1      : Gamma  distribution
+     *   - p == k      : Weibull distribution
+     *   - p == k == 1 : Exponential distribution
+     *   - p == k == 2 : Rayleigh    distribution
+     *  @see Gaudi::Math::GenGammaDist
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     *  @see Gaudi::Math::GammaDist 
+     */
+    class GAUDI_API GenGammaDist : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::GenGammaDist, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters
+      GenGammaDist 
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          k         ,
+        RooAbsReal&          theta     ,
+        RooAbsReal&          p         ,
+        RooAbsReal&          low       ) ;
+      /// "copy constructor"
+      GenGammaDist ( const GenGammaDist&  right     , 
+                     const char*          name  = 0 )  ;
+      /// destructor 
+      virtual ~GenGammaDist () ;
+      /// clone 
+      virtual  GenGammaDist* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::GenGammaDist& function() const { return m_ggamma ; }
+      // ======================================================================
+    protected: 
+      // ======================================================================
+      RooRealProxy m_x        ;
+      RooRealProxy m_k        ;
+      RooRealProxy m_theta    ;
+      RooRealProxy m_p        ;
+      RooRealProxy m_low      ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function
+      mutable Gaudi::Math::GenGammaDist m_ggamma ; // the actual function
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Amoroso
+     *  Another view on generalized gamma distribtion
+     *  http://arxiv.org/pdf/1005.3274
+     *  @see Gaudi::Math::Amoroso
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-12-05
+     */
+    class GAUDI_API Amoroso : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Amoroso, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Amoroso
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          theta     , 
+        RooAbsReal&          alpha     , 
+        RooAbsReal&          beta      ,
+        RooAbsReal&          a         ) ;
+      /// "copy" constructor 
+      Amoroso ( const Amoroso& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~Amoroso () ;
+      /// clone 
+      virtual  Amoroso* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Amoroso& function() const { return m_amoroso ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_theta  ;
+      RooRealProxy m_alpha  ;
+      RooRealProxy m_beta   ;
+      RooRealProxy m_a      ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Amoroso m_amoroso ;                  // the function 
+      // ======================================================================      
+    } ;
     // ========================================================================
     /** @class LogGammaDist 
      *  Distribution for log(x), where x follows 
@@ -1317,6 +1667,123 @@ namespace Analysis
       // ======================================================================
     } ;  
     // ========================================================================
+    /** @class LogGamma
+     *  - http://arxiv.org/pdf/1005.3274
+     *  - Prentice, R. L. (1974). A log gamma model and its maximum likelihood
+     *                            estimation. Biometrika 61, 539
+     *  - Johnson, N. L., Kotz, S., and Balakrishnan, N. (1995). Continuous
+     *            univariate distributions, 2nd ed. Vol. 2. Wiley, New York.
+     *  - Bartlett, M. S. and G., K. M. (1946). The statistical analysis of
+     *                  variance-heterogeneity and the logarithmic transformation. 
+     *                 J. Roy. Statist. Soc. Suppl. 8, 1, 128.
+     *
+     *  dot not mix with Analysis::Models::LogGammaDist        
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     *  @see Gaudi::Math::LogGamma 
+     */
+    class GAUDI_API LogGamma : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::LogGamma, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters
+      LogGamma ( const char*          name      , 
+                 const char*          title     ,
+                 RooAbsReal&          x         , 
+                 RooAbsReal&          nu        ,
+                 RooAbsReal&          lambda    ,
+                 RooAbsReal&          alpha     ) ;
+      /// "copy constructor"
+      LogGamma ( const LogGamma&      right     , 
+                 const char*          name  = 0 )  ;
+      /// destructor 
+      virtual ~LogGamma () ;
+      /// clone 
+      virtual  LogGamma* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::LogGamma& function() const { return m_lgamma ; }
+      // ======================================================================
+    protected: 
+      // ======================================================================
+      RooRealProxy m_x        ;
+      RooRealProxy m_nu       ;
+      RooRealProxy m_lambda   ;
+      RooRealProxy m_alpha    ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function
+      mutable Gaudi::Math::LogGamma m_lgamma ; // the actual function
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class BetaPrime
+     *  http://en.wikipedia.org/wiki/Beta_prime_distribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     *  @see Gaudi::Math::BetaPrime 
+     */
+    class GAUDI_API BetaPrime : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::BetaPrime, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters
+      BetaPrime 
+      ( const char*           name      , 
+        const char*           title     ,
+        RooAbsReal&           x         , 
+        RooAbsReal&           alpha     ,
+        RooAbsReal&           beta      ) ;
+      /// "copy constructor"
+      BetaPrime 
+      ( const BetaPrime&      right     , 
+        const char*           name  = 0 )  ;
+      /// destructor 
+      virtual ~BetaPrime () ;
+      /// clone 
+      virtual  BetaPrime* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Log10GammaDist& function() const { return m_gamma ; }
+      // ======================================================================
+    protected: 
+      // ======================================================================
+      RooRealProxy m_x        ;
+      RooRealProxy m_k        ;
+      RooRealProxy m_theta    ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function
+      mutable Gaudi::Math::Log10GammaDist m_gamma ; // the actual function
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class Product 
      *  helper utility for building run-time PDFs.
      *  In many aspects it is similar to RooProduct
@@ -1356,6 +1823,54 @@ namespace Analysis
       RooRealProxy m_pdf1 ;  // the first  pdf 
       /// the second pdf 
       RooRealProxy m_pdf2 ;  // the second pdf 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Adjust
+     *  helper utility to make PDF positive 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-06-08
+     */
+    class GAUDI_API Adjust : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::Adjust, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters
+      Adjust ( const char*  name  , 
+               const char*  title ,
+               RooAbsPdf&   pdf   ,
+               const double small ) ;
+      /// constructor from all parameters
+      Adjust ( const char*  name  , 
+               const char*  title ,
+               RooAbsPdf&   pdf   ) ;
+      /// "copy constructor"
+      Adjust ( const Adjust& right    , 
+               const char*   name = 0 ) ;
+      /// virtual destructor 
+      virtual ~Adjust () ;
+      // clone 
+      virtual  Adjust* clone ( const char* name ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      double small() const { return m_small ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the first  pdf 
+      RooRealProxy m_pdf   ; // the first  pdf 
+      /// small (positive) number to be added 
+      double       m_small ; // small number to be added to pdf
       // ======================================================================
     } ;
     // ========================================================================

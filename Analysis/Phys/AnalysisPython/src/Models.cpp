@@ -2,6 +2,10 @@
 // ============================================================================
 // Include files 
 // ============================================================================
+// STD & ST:
+// ============================================================================
+#include <limits>
+// ============================================================================
 // Local
 // ============================================================================
 #include "Analysis/Models.h"
@@ -65,6 +69,27 @@ Analysis::Models::BreitWigner::BreitWigner
   m_bw.setGamma0 ( m_width ) ;
 }
 // ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::BreitWigner::BreitWigner 
+( const char*                     name  , 
+  const char*                     title ,
+  RooAbsReal&                     x     ,
+  RooAbsReal&                     mass  ,
+  RooAbsReal&                     width ,
+  const Gaudi::Math::BreitWigner& bw    ) 
+  : RooAbsPdf  ( name , title ) 
+//
+  , m_x     ( "x"  , "Observable" , this , x     ) 
+  , m_mass  ( "m0" , "Peak"       , this , mass  ) 
+  , m_width ( "g0" , "Width"      , this , width )
+//
+  , m_bw    ( bw ) 
+{
+  m_bw.setM0     ( m_mass  ) ;
+  m_bw.setGamma0 ( m_width ) ;
+}
+// ============================================================================
 // "copy" constructor 
 // ============================================================================
 Analysis::Models::BreitWigner::BreitWigner 
@@ -99,8 +124,6 @@ Double_t Analysis::Models::BreitWigner::evaluate() const
   return m_bw ( m_x ) ;
 }
 // ============================================================================
-
-
 
 // ============================================================================
 // constructor from all parameters 
@@ -1344,6 +1367,277 @@ Double_t Analysis::Models::GramCharlierA::evaluate() const
 }
 // ============================================================================
 
+// ============================================================================
+// Bifurcated Gauss 
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::BifurcatedGauss::BifurcatedGauss 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         , 
+  RooAbsReal&          peak      , 
+  RooAbsReal&          sigmaL    , 
+  RooAbsReal&          sigmaR    ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x       ( "x"       , "Observable"   , this , x      ) 
+  , m_peak    ( "peak"    , "peak"         , this , peak   ) 
+  , m_sigmaL  ( "sigmaL"  , "sigma(left)"  , this , sigmaL )
+  , m_sigmaR  ( "sigmaR"  , "sigma(right)" , this , sigmaR )
+//
+  , m_bg      ( 0 , 1 , 1 ) 
+{
+  m_bg . setPeak   ( m_peak   ) ;
+  m_bg . setSigmaL ( m_sigmaL ) ;
+  m_bg . setSigmaR ( m_sigmaR ) ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::BifurcatedGauss::BifurcatedGauss 
+( const Analysis::Models::BifurcatedGauss& right , 
+  const char*                              name   ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x      ( "x"      , this , right.m_x      ) 
+  , m_peak   ( "peak"   , this , right.m_peak   ) 
+  , m_sigmaL ( "sigmaL" , this , right.m_sigmaL ) 
+  , m_sigmaR ( "sigmaR" , this , right.m_sigmaR ) 
+//
+  , m_bg     ( right.m_bg ) 
+{}
+// ============================================================================
+// desctructor
+// ============================================================================
+Analysis::Models::BifurcatedGauss::~BifurcatedGauss(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::BifurcatedGauss*
+Analysis::Models::BifurcatedGauss::clone( const char* name ) const 
+{ return new Analysis::Models::BifurcatedGauss ( *this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::BifurcatedGauss::evaluate() const 
+{
+  //
+  m_bg.setPeak   ( m_peak   ) ;
+  m_bg.setSigmaL ( m_sigmaL ) ;
+  m_bg.setSigmaR ( m_sigmaR ) ;
+  //
+  return m_bg    ( m_x      ) ;
+}
+// ============================================================================
+
+
+
+// ============================================================================
+//         GenGaussV1 
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::GenGaussV1::GenGaussV1
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         , 
+  RooAbsReal&          mu        , 
+  RooAbsReal&          alpha     , 
+  RooAbsReal&          beta      )  
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x       ( "x"       , "Observable" , this , x      ) 
+  , m_mu      ( "mu"      , "mu"         , this , mu     ) 
+  , m_alpha   ( "alpha"   , "alpha"      , this , alpha  ) 
+  , m_beta    ( "beta"    , "beta"       , this , beta   ) 
+//
+  , m_ggv1    ( 0 , 1 , 2 ) 
+{
+  //
+  m_ggv1.setMu     ( m_mu    ) ;
+  m_ggv1.setAlpha  ( m_alpha ) ;
+  m_ggv1.setBeta   ( m_beta  ) ;
+  //
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::GenGaussV1::GenGaussV1 
+( const Analysis::Models::GenGaussV1& right , 
+  const char*                         name   ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x      ( "x"      , this , right.m_x      ) 
+  , m_mu     ( "mu"     , this , right.m_mu     ) 
+  , m_alpha  ( "alpha"  , this , right.m_alpha  ) 
+  , m_beta   ( "beta"   , this , right.m_beta   ) 
+//
+  , m_ggv1   ( right.m_ggv1 ) 
+{}
+// ============================================================================
+// desctructor
+// ============================================================================
+Analysis::Models::GenGaussV1::~GenGaussV1(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::GenGaussV1*
+Analysis::Models::GenGaussV1::clone( const char* name ) const 
+{ return new Analysis::Models::GenGaussV1 ( *this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::GenGaussV1::evaluate() const 
+{
+  //
+  m_ggv1.setMu     ( m_mu    ) ;
+  m_ggv1.setAlpha  ( m_alpha ) ;
+  m_ggv1.setBeta   ( m_beta  ) ;
+  //
+  return m_ggv1    ( m_x      ) ;
+}
+// ============================================================================
+
+
+// ============================================================================
+//         GenGaussV2
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::GenGaussV2::GenGaussV2
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         , 
+  RooAbsReal&          xi        , 
+  RooAbsReal&          alpha     , 
+  RooAbsReal&          kappa     )  
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x       ( "x"       , "Observable" , this , x      ) 
+  , m_xi      ( "xi"      , "xi"         , this , xi     ) 
+  , m_alpha   ( "alpha"   , "alpha"      , this , alpha  ) 
+  , m_kappa   ( "kappa"   , "kappa"      , this , kappa  ) 
+//
+  , m_ggv2    ( 0 , 1 , 0 ) 
+{
+  //
+  m_ggv2.setXi     ( m_xi    ) ;
+  m_ggv2.setAlpha  ( m_alpha ) ;
+  m_ggv2.setKappa  ( m_kappa ) ;
+  //
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::GenGaussV2::GenGaussV2 
+( const Analysis::Models::GenGaussV2& right , 
+  const char*                         name   ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x      ( "x"      , this , right.m_x      ) 
+  , m_xi     ( "xi"     , this , right.m_xi     ) 
+  , m_alpha  ( "alpha"  , this , right.m_alpha  ) 
+  , m_kappa  ( "kappa"  , this , right.m_kappa  ) 
+//
+  , m_ggv2   ( right.m_ggv2 ) 
+{}
+// ============================================================================
+// desctructor
+// ============================================================================
+Analysis::Models::GenGaussV2::~GenGaussV2(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::GenGaussV2*
+Analysis::Models::GenGaussV2::clone( const char* name ) const 
+{ return new Analysis::Models::GenGaussV2 ( *this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::GenGaussV2::evaluate() const 
+{
+  //
+  m_ggv2.setXi     ( m_xi    ) ;
+  m_ggv2.setAlpha  ( m_alpha ) ;
+  m_ggv2.setKappa  ( m_kappa ) ;
+  //
+  return m_ggv2    ( m_x      ) ;
+}
+// ============================================================================
+
+
+// ============================================================================
+//         SkewGauss
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::SkewGauss::SkewGauss
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         , 
+  RooAbsReal&          xi        , 
+  RooAbsReal&          omega     , 
+  RooAbsReal&          alpha     )  
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x       ( "x"       , "Observable" , this , x      ) 
+  , m_xi      ( "xi"      , "xi"         , this , xi     ) 
+  , m_omega   ( "omega"   , "omega"      , this , omega  ) 
+  , m_alpha   ( "alpha"   , "alpha"      , this , alpha  ) 
+//
+  , m_sg    ( 0 , 1 , 0 ) 
+{
+  //
+  m_sg . setXi     ( m_xi    ) ;
+  m_sg . setOmega  ( m_omega ) ;
+  m_sg . setAlpha  ( m_alpha ) ;
+  //
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::SkewGauss::SkewGauss
+( const Analysis::Models::SkewGauss& right , 
+  const char*                        name   ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x      ( "x"      , this , right.m_x      ) 
+  , m_xi     ( "xi"     , this , right.m_xi     ) 
+  , m_omega  ( "omega"  , this , right.m_omega  ) 
+  , m_alpha  ( "alpha"  , this , right.m_alpha  ) 
+//
+  , m_sg     ( right.m_sg ) 
+{}
+// ============================================================================
+// desctructor
+// ============================================================================
+Analysis::Models::SkewGauss::~SkewGauss (){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::SkewGauss*
+Analysis::Models::SkewGauss::clone( const char* name ) const 
+{ return new Analysis::Models::SkewGauss ( *this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::SkewGauss::evaluate() const 
+{
+  //
+  m_sg . setXi     ( m_xi    ) ;
+  m_sg . setOmega  ( m_omega ) ;
+  m_sg . setAlpha  ( m_alpha ) ;
+  //
+  return m_sg      ( m_x      ) ;
+}
+// ============================================================================
+
+
+
+
+
+
 
 // ============================================================================
 //         Bukin
@@ -1613,6 +1907,145 @@ Double_t Analysis::Models::GammaDist::evaluate() const
 // ============================================================================
 // constructor from all parameters 
 // ============================================================================
+Analysis::Models::GenGammaDist::GenGammaDist
+( const char*          name  , 
+  const char*          title ,
+  RooAbsReal&          x     ,
+  RooAbsReal&          k     ,
+  RooAbsReal&          theta ,
+  RooAbsReal&          p     ,
+  RooAbsReal&          low   )
+  : RooAbsPdf  (name ,title ) 
+//
+  , m_x       ( "x"     , "Observable" , this , x     ) 
+  , m_k       ( "k"     , "Shape"      , this , k     ) 
+  , m_theta   ( "theta" , "Scale"      , this , theta )
+  , m_p       ( "p"     , "P"          , this , p     )
+  , m_low     ( "low"   , "Low"        , this , low   )
+//
+  , m_ggamma   ( 2 , 1 , 1 , 0 ) 
+{
+  m_ggamma.setK     ( m_k     ) ;
+  m_ggamma.setTheta ( m_theta ) ;
+  m_ggamma.setP     ( m_p     ) ;
+  m_ggamma.setLow   ( m_low   ) ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::GenGammaDist::GenGammaDist
+( const Analysis::Models::GenGammaDist& right ,
+  const char*                           name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x      ( "x"     , this , right.m_x      ) 
+  , m_k      ( "k"     , this , right.m_k      ) 
+  , m_theta  ( "theta" , this , right.m_theta  )
+  , m_p      ( "p"     , this , right.m_p      )
+  , m_low    ( "low"   , this , right.m_low    )
+//
+  , m_ggamma (                  right.m_ggamma ) 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::GenGammaDist::~GenGammaDist () {}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::GenGammaDist*
+Analysis::Models::GenGammaDist::clone( const char* name ) const 
+{ return new Analysis::Models::GenGammaDist ( *this , name) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::GenGammaDist::evaluate() const 
+{
+  m_ggamma.setK     ( m_k     ) ;
+  m_ggamma.setTheta ( m_theta ) ;
+  m_ggamma.setP     ( m_p     ) ;
+  m_ggamma.setLow   ( m_low   ) ;
+  //
+  return m_ggamma   ( m_x ) ;
+}
+// ============================================================================
+
+
+// ============================================================================
+//    Amoroso
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::Amoroso::Amoroso
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         , 
+  RooAbsReal&          theta     , 
+  RooAbsReal&          alpha     , 
+  RooAbsReal&          beta      ,
+  RooAbsReal&          a         ) 
+  : RooAbsPdf ( name ,title ) 
+//
+  , m_x       ( "x"     , "Observable" , this , x     ) 
+  , m_theta   ( "theta" , "theta"      , this , theta )
+  , m_alpha   ( "alpha" , "alpha"      , this , alpha )
+  , m_beta    ( "beta"  , "beta"       , this , beta  )
+  , m_a       ( "a"     , "a"          , this , a     )
+//
+  , m_amoroso   ( 1 , 1 , 1 , 0 ) 
+{
+  m_amoroso.setTheta     ( m_theta ) ;
+  m_amoroso.setAlpha     ( m_alpha ) ;
+  m_amoroso.setBeta      ( m_beta  ) ;
+  m_amoroso.setA         ( m_a     ) ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::Amoroso::Amoroso
+( const Analysis::Models::Amoroso& right , 
+  const char*                      name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x       ( "x"     , this , right.m_x     ) 
+  , m_theta   ( "theta" , this , right.m_theta )
+  , m_alpha   ( "alpha" , this , right.m_alpha )
+  , m_beta    ( "beta"  , this , right.m_beta  )
+  , m_a       ( "a"     , this , right.m_a     )
+//
+  , m_amoroso ( right.m_amoroso ) 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::Amoroso::~Amoroso () {}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Amoroso*
+Analysis::Models::Amoroso::clone( const char* name ) const 
+{ return new Analysis::Models::Amoroso ( *this , name) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Amoroso::evaluate() const 
+{
+  m_amoroso.setTheta ( m_theta ) ;
+  m_amoroso.setAlpha ( m_alpha ) ;
+  m_amoroso.setBeta  ( m_beta  ) ;
+  m_amoroso.setA     ( m_a     ) ;
+  //
+  return m_amoroso   ( m_x     ) ;
+}
+// ============================================================================
+
+
+
+
+
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
 Analysis::Models::LogGammaDist::LogGammaDist
 ( const char*          name  , 
   const char*          title ,
@@ -1723,6 +2156,72 @@ Double_t Analysis::Models::Log10GammaDist::evaluate() const
 // ============================================================================
 
 
+
+
+
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::LogGamma::LogGamma
+( const char*          name   , 
+  const char*          title  ,
+  RooAbsReal&          x      ,
+  RooAbsReal&          nu     ,
+  RooAbsReal&          lambda ,
+  RooAbsReal&          alpha  )
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x       ( "x"      , "Observable" , this , x      ) 
+  , m_nu      ( "nu"     , "nu"         , this , nu     ) 
+  , m_lambda  ( "lambda" , "lambda"     , this , lambda ) 
+  , m_alpha   ( "alpha"  , "alpha"      , this , alpha  )
+//
+  , m_lgamma   ( 0 , 1 , 1 ) 
+{
+  m_lgamma.setNu     ( m_nu     ) ;
+  m_lgamma.setLambda ( m_lambda ) ;
+  m_lgamma.setAlpha  ( m_alpha  ) ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::LogGamma::LogGamma
+( const Analysis::Models::LogGamma& right ,
+  const char*                       name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x      ( "x"      , this , right.m_x      ) 
+  , m_nu     ( "nu"     , this , right.m_nu     ) 
+  , m_lambda ( "lambda" , this , right.m_lambda )
+  , m_alpha  ( "alpha"  , this , right.m_alpha  )
+//
+  , m_lgamma (                   right.m_lgamma ) 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::LogGamma::~LogGamma () {}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::LogGamma*
+Analysis::Models::LogGamma::clone( const char* name ) const 
+{ return new Analysis::Models::LogGamma ( *this , name) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::LogGamma::evaluate() const 
+{
+  //
+  m_lgamma.setNu     ( m_nu     ) ;
+  m_lgamma.setLambda ( m_lambda ) ;
+  m_lgamma.setAlpha  ( m_alpha  ) ;
+  //
+  return m_lgamma    ( m_x ) ;
+}
+// ============================================================================
+
+
 // ============================================================================
 // constructor from all parameters
 // ============================================================================
@@ -1764,6 +2263,58 @@ Double_t Analysis::Models::Product::evaluate() const
 { return m_pdf1 * m_pdf2 ; }
 
 
+// ============================================================================
+// constructor from all parameters
+// ============================================================================
+Analysis::Models::Adjust::Adjust 
+( const char*  name  , 
+  const char*  title ,
+  RooAbsPdf&   pdf   ,
+  const double small ) 
+  : RooAbsPdf  (name ,title ) 
+//
+  , m_pdf     ( "pdf"  , "PDF"  , this , pdf ) 
+  , m_small   ( std::abs ( small ) ) 
+{}
+// ============================================================================
+// constructor from all parameters
+// ============================================================================
+Analysis::Models::Adjust::Adjust 
+( const char*  name  , 
+  const char*  title ,
+  RooAbsPdf&   pdf   ) 
+  : RooAbsPdf  (name ,title ) 
+//
+  , m_pdf     ( "pdf"  , "PDF"  , this , pdf          ) 
+  , m_small   ( 4 * std::numeric_limits<float>::min() )
+{}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::Adjust::Adjust
+( const Analysis::Models::Adjust& right ,
+  const char*                      name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_pdf   ( "pdf " , this , right.m_pdf   ) 
+  , m_small ( right.m_small ) 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::Adjust::~Adjust (){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Adjust*
+Analysis::Models::Adjust::clone( const char* name ) const 
+{ return new Analysis::Models::Adjust ( *this , name) ; }
+// ============================================================================
+Double_t Analysis::Models::Adjust::evaluate() const 
+{ 
+  const double pdf = 1.0 * m_pdf  ;
+  return pdf <= m_small ? m_small : pdf ;
+}
 
 
 

@@ -45,6 +45,8 @@ __all__     = (
 # =============================================================================
 import ROOT, time, os,sys, PyCintex   
 cpp = PyCintex.makeNamespace('')
+if not hasattr ( ROOT , 'ostream' ) :
+    ROOT.gROOT.ProcessLine("#include <ostream>")     
 # =============================================================================
 ## @class Memory
 #  Simple context manager to measure the virtual memory increase
