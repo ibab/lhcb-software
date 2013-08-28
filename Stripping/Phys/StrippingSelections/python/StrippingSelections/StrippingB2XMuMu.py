@@ -97,6 +97,11 @@ defaultConfig = {
 
     # GEC
     'SpdMult'             :  600,
+
+    'Hadronic_Selection'  : "(INTREE((ABSID == 'K*(892)0')&(M < 1100*MeV)) | INTREE((ABSID == 'phi(1020)')&(M>1000*MeV)&(M<1100*MeV)))", 
+
+    'HADRONICDECAYS'      :  [ "[B0 -> K*(892)0 rho(770)0]cc", "[B0 -> K*(892)0 phi(1020)]cc" ],
+    
     'DECAYS'              :  ["B0 -> J/psi(1S) phi(1020)",                  
                               "[B0 -> J/psi(1S) K*(892)0]cc",               
                               "B0 -> J/psi(1S) rho(770)0",
@@ -204,6 +209,9 @@ class B2XMuMuConf(LineBuilder) :
 
         #GEC
         'SpdMult',
+
+        'Hadronic_Selection' ,
+        'HADRONICDECAYS'     ,  
         'DECAYS' 
         )
     
@@ -281,6 +289,7 @@ class B2XMuMuConf(LineBuilder) :
         self.AvailableDaughters = {
             'K*(892)0'      : [ self.Kstar ] ,
             'rho(770)0'     : [ self.Rho   ] ,
+            'phi(1020)'     : [ self.Phi   ] ,
             'f_2(1950)'     : [ self.F2    ] ,
             'KS0'           : [ self.Kshort] ,
             'D~0'           : [ self.Dzero ] ,
@@ -304,13 +313,17 @@ class B2XMuMuConf(LineBuilder) :
             for k in self.AvailableDaughters.keys():
                 if k in d: self.DeclaredDaughters += self.AvailableDaughters.pop(k) 
                 
-                    
+        for d in config['HADRONICDECAYS']:
+            for k in self.AvailableDaughters.keys():
+                if k in d: self.DeclaredDaughters += self.AvailableDaughters.pop(k)             
                 
         
         self.Bs = self.__Bs__( self.Dimuon,
                                daughters = self.DeclaredDaughters,  
                                conf = config)
 
+        self.HadronicB = self.__HadronicB__( daughters = self.DeclaredDaughters,  
+                                             conf = config )
 
         self.line = StrippingLine(
             self.name+"_Line",
@@ -326,8 +339,19 @@ class B2XMuMuConf(LineBuilder) :
         
         self.registerLine(self.line)
 
+        self.hadronic_line =  StrippingLine(
+            self.name+"_HadronicLine",
+            prescale = 1,
+            FILTER = {
+            'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
+            'Preambulo' : [
+            "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb"
+            ]
+            },
+            algos=[self.HadronicB]
+            )
 
- 
+        self.registerLine( self.hadronic_line )
         
         
     def __Dimuon__(self, conf):
@@ -875,13 +899,30 @@ class B2XMuMuConf(LineBuilder) :
         _sel_Daughters = MergedSelection("Selection_"+self.name+"_daughters",
                                          RequiredSelections = daughters )
         
-        sel = Selection( "Selection_"+self.name+"_b2xmumu",
+        sel = Selection( "Selection_"+self.name+"_B2XMuMu",
                          Algorithm = _b2xmumu,
                          RequiredSelections = [ Dimuon, _sel_Daughters ])
         return sel
 
+    def __HadronicB__( self, daughters, conf ):
+        """
+        Make and return a Bs selection
+        """      
 
+        _b2xmumu = CombineParticles()
+        _b2xmumu.DecayDescriptors = conf['HADRONICDECAYS']
 
+        
+        _b2xmumu.CombinationCut = self.BdCombCut
+        _b2xmumu.MotherCut = self.BdCut + ' & ' + conf['Hadronic_Selection']
+        
+        _sel_Daughters = MergedSelection("Selection_"+self.name+"_Hadronic_daughters",
+                                         RequiredSelections = daughters )
+        
+        sel = Selection( "Selection_"+self.name+"_Hadronic_B2XMuMu",
+                         Algorithm = _b2xmumu,
+                         RequiredSelections = [ _sel_Daughters ])
+        return sel 
 
 ##   _b2xmumu.DecayDescriptors = [       "B0 -> J/psi(1S) phi(1020)",
 ##                                       "[B0 -> J/psi(1S) K*(892)0]cc",

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-28 - Thomas Blake
+ - Added Hadronic lines to XMuMu
+
 ! 2013-08-28 - Cedric Potterat
  - Remove multiple candidate in B2KstarGamma_B2VG_Line
 
