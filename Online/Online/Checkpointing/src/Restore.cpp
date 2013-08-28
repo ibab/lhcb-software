@@ -48,17 +48,17 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_print_stack(const char* comm
 /// Print file descriptor information
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpoint_file_print(int lvl, const FileDesc* d) {
   mtcp_output(lvl,
-	      "FileHandler: /proc/self/fd/%d -> %s\n\t\tSiz:%d Dir:%s Reg:%s "
-	      "Sock:%s Fifo:%s Block:%s Tmp:%s Del:%s\n",
-	      d->fd, d->name, d->statbuf.st_size,
-	      S_ISDIR(d->statbuf.st_mode)  ? "YES" : "NO", 
-	      S_ISREG(d->statbuf.st_mode)  ? "YES" : "NO", 
-	      S_ISSOCK(d->statbuf.st_mode) ? "YES" : "NO", 
-	      S_ISFIFO(d->statbuf.st_mode) ? "YES" : "NO",
-	      S_ISBLK(d->statbuf.st_mode)  ? "YES" : "NO",
-	      d->istmp ? "YES" : "NO",
-	      d->isdel ? "YES" : "NO"
-	      );
+              "FileHandler: /proc/self/fd/%d -> %s\n\t\tSiz:%d Dir:%s Reg:%s "
+              "Sock:%s Fifo:%s Block:%s Tmp:%s Del:%s\n",
+              d->fd, d->name, d->statbuf.st_size,
+              S_ISDIR(d->statbuf.st_mode)  ? "YES" : "NO", 
+              S_ISREG(d->statbuf.st_mode)  ? "YES" : "NO", 
+              S_ISSOCK(d->statbuf.st_mode) ? "YES" : "NO", 
+              S_ISFIFO(d->statbuf.st_mode) ? "YES" : "NO",
+              S_ISBLK(d->statbuf.st_mode)  ? "YES" : "NO",
+              d->istmp ? "YES" : "NO",
+              d->isdel ? "YES" : "NO"
+              );
 }
 
 /// Reopen file descriptor for process restoration
@@ -72,14 +72,14 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_reopen(FileDesc* d) {
       char* p = m_chrfind(d->name,' ');
       if ( !p ) p = d->name + d->name_len;
       if ( p ) {
-	pid_t pid = mtcp_sys_getpid();
-	*p++ = '_';
-	if ( pid>10000 ) *p++ =  (pid/10000)+'0';
-	if ( pid>1000  ) *p++ = ((pid%10000)/1000)+'0';
-	if ( pid>100   ) *p++ = ((pid%1000)/100)+'0';
-	if ( pid>10    ) *p++ = ((pid%100)/10)+'0';
-	*p++ = (pid%10)+'0';
-	*p++ = 0;
+        pid_t pid = mtcp_sys_getpid();
+        *p++ = '_';
+        if ( pid>10000 ) *p++ =  (pid/10000)+'0';
+        if ( pid>1000  ) *p++ = ((pid%10000)/1000)+'0';
+        if ( pid>100   ) *p++ = ((pid%1000)/100)+'0';
+        if ( pid>10    ) *p++ = ((pid%100)/10)+'0';
+        *p++ = (pid%10)+'0';
+        *p++ = 0;
       }
       //::tmpnam(d->name);
     }
@@ -89,7 +89,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_reopen(FileDesc* d) {
   int fdnum = mtcp_sys_open(d->name, flags, mode);
   if (fdnum < 0)    {
     mtcp_output(MTCP_ERROR,"FileDesc: error %d opening %s flags %o Skip file\n", 
-		mtcp_sys_errno, d->name, flags);
+                mtcp_sys_errno, d->name, flags);
     if (mtcp_sys_errno == EACCES) mtcp_output(MTCP_ERROR,"  Permission denied.\n");
     return 0;
   }
@@ -97,7 +97,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_reopen(FileDesc* d) {
   if (d->fd != fdnum) {
     if (mtcp_sys_dup2(fdnum,d->fd) < 0) {
       mtcp_output(MTCP_ERROR,"FileDesc: error %d [%s] restore %s fd %d to %d SKIP file.\n", 
-		  mtcp_sys_errno, strerror(mtcp_sys_errno), d->name, fdnum, d->fd);
+                  mtcp_sys_errno, strerror(mtcp_sys_errno), d->name, fdnum, d->fd);
       mtcp_sys_close (fdnum);
       return 0;
     }
@@ -122,16 +122,16 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_read(FileDesc* d, const voi
     restore = restore ? (checkpoint_file_reopen(d) == 1) : restore;
     if ( d->hasData ) {
       if ( restore ) {
-	::write(d->fd,in,d->statbuf.st_size);
+        ::write(d->fd,in,d->statbuf.st_size);
       }
       in += d->statbuf.st_size;
     }
     if ( restore ) {
       // Position the file to its same spot it was at when checkpointed
       if (S_ISREG(d->statbuf.st_mode) && (mtcp_sys_lseek (d->fd, d->offset, SEEK_SET) != d->offset)) {
-	mtcp_output(MTCP_ERROR,"FileDesc: error %d [%s] positioning %s to %ld\n", 
-		    mtcp_sys_errno, strerror(mtcp_sys_errno), d->name, (long)d->offset);
-	return -1;
+        mtcp_output(MTCP_ERROR,"FileDesc: error %d [%s] positioning %s to %ld\n", 
+                    mtcp_sys_errno, strerror(mtcp_sys_errno), d->name, (long)d->offset);
+        return -1;
       }
       if ( d->isdel ) mtcp_sys_unlink(d->name);
     }
@@ -157,16 +157,16 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_fread(FileDesc* d, int fd, 
     restore = restore ? (checkpoint_file_reopen(d) == 1) : restore;
     if ( d->hasData ) {
       if ( restore ) {
-	m_fcopy(d->fd,fd,d->statbuf.st_size);
+        m_fcopy(d->fd,fd,d->statbuf.st_size);
       }
       in += d->statbuf.st_size;
     }
     if ( restore )   {
       // Position the file to its same spot it was at when checkpointed
       if (S_ISREG(d->statbuf.st_mode) && (mtcp_sys_lseek(d->fd, d->offset, SEEK_SET) != d->offset)) {
-	mtcp_output(MTCP_ERROR,"FileDesc: error %d [%s] positioning %s to %ld\n", 
-		    mtcp_sys_errno, strerror(mtcp_sys_errno), d->name, (long)d->offset);
-	return -1;
+        mtcp_output(MTCP_ERROR,"FileDesc: error %d [%s] positioning %s to %ld\n", 
+                    mtcp_sys_errno, strerror(mtcp_sys_errno), d->name, (long)d->offset);
+        return -1;
       }
       if ( d->isdel ) mtcp_sys_unlink(d->name);
     }
@@ -246,13 +246,13 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_memory(Process*,
     for(int i=0; i<numArea; ++i) {
       int rc = checkpointing_area_read(&a,in,checkpointing_process_map_memory,(const AreaHandler*)0);
       if ( rc<0 ) {
-	mtcp_output(MTCP_FATAL,"restore: Failed to restored area [%d] %s\n",i,a.name);
+        mtcp_output(MTCP_FATAL,"restore: Failed to restored area [%d] %s\n",i,a.name);
       }
       in += rc;
     }
     in += checkMarker(in,MEMMAP_END_MARKER);
     mtcp_output(MTCP_INFO,"Read %ld bytes of mmap area data for %d areas\n",
-		addr_diff(in,addr),numArea);
+                addr_diff(in,addr),numArea);
     return addr_diff(in,addr);
   }
   mtcp_output(MTCP_ERROR,"Failed to read memory dump!\n");
@@ -267,19 +267,19 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read(Process* p, cons
     if ( (rc=checkpointing_process_read_header(p,in)) ) {
       mtcp_output(MTCP_INFO,"Read %ld bytes of process header.\n",rc);
       if ( (rc=checkpointing_process_skip_sys(p, in+=rc)) ) {
-	mtcp_output(MTCP_INFO,"Read %ld bytes of process sysinfo.\n",rc);
-	if ( (rc=checkpointing_process_read_files(p,in+=rc)) ) {
-	  mtcp_output(MTCP_INFO,"Read %ld bytes of process file info.\n",rc);
-	  if ( (rc=checkpointing_process_read_memory(p,in+=rc)) ) {
-	    mtcp_output(MTCP_INFO,"Read %ld bytes of process memory.\n",rc);
-	    if ( (rc=checkpointing_process_read_trailer(p,in+=rc)) ) {
-	      mtcp_output(MTCP_INFO,"Read %ld bytes of process trailer.\n",rc);
-	      in+= rc;
-	      checkpointing_sys_restore_finish();
-	      return addr_diff(in,addr);
-	    }
-	  }
-	}
+        mtcp_output(MTCP_INFO,"Read %ld bytes of process sysinfo.\n",rc);
+        if ( (rc=checkpointing_process_read_files(p,in+=rc)) ) {
+          mtcp_output(MTCP_INFO,"Read %ld bytes of process file info.\n",rc);
+          if ( (rc=checkpointing_process_read_memory(p,in+=rc)) ) {
+            mtcp_output(MTCP_INFO,"Read %ld bytes of process memory.\n",rc);
+            if ( (rc=checkpointing_process_read_trailer(p,in+=rc)) ) {
+              mtcp_output(MTCP_INFO,"Read %ld bytes of process trailer.\n",rc);
+              in+= rc;
+              checkpointing_sys_restore_finish();
+              return addr_diff(in,addr);
+            }
+          }
+        }
       }
     }
   }
@@ -327,7 +327,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_memory(Process*
     for(int i=0; i<numArea; ++i) {
       int rc = checkpointing_area_fread(&a,fd,checkpointing_process_fmap_memory,(const AreaHandler*)0);
       if ( rc<0 ) {
-	mtcp_output(MTCP_FATAL,"restore: Failed to restored area [%d] %s\n",i,a.name);
+        mtcp_output(MTCP_FATAL,"restore: Failed to restored area [%d] %s\n",i,a.name);
       }
       in += rc;
     }
@@ -364,41 +364,41 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread(Process* p, int
 
       /// Skip libraries
       if ( (rc=checkpointing_process_fskip_libs(p,fd)) ) {
-	mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process sysinfo.\n",fd,rc);
+        mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process sysinfo.\n",fd,rc);
       }
       else {
-	mtcp_output(MTCP_FATAL,"fd:%d Failed to skip library section.\n",fd,rc);
-	return 0;
+        mtcp_output(MTCP_FATAL,"fd:%d Failed to skip library section.\n",fd,rc);
+        return 0;
       }
       /// Skip SysInfo (we got it already...)
       if ( (rc=checkpointing_process_fskip_sys(p,fd)) ) {
-	mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process sysinfo.\n",fd,rc);
+        mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process sysinfo.\n",fd,rc);
       }
       else {
-	mtcp_output(MTCP_FATAL,"fd:%d Failed to skip SysInfo section.\n",fd,rc);
-	return 0;
+        mtcp_output(MTCP_FATAL,"fd:%d Failed to skip SysInfo section.\n",fd,rc);
+        return 0;
       }
       /// Read and save file sections
       if ( (rc=checkpointing_process_fread_files(p,fd)) ) {
-	mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process file info.\n",fd,rc);
+        mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process file info.\n",fd,rc);
       }
       else {
-	mtcp_output(MTCP_FATAL,"fd:%d Failed to process file sections.\n",fd,rc);
-	return 0;
+        mtcp_output(MTCP_FATAL,"fd:%d Failed to process file sections.\n",fd,rc);
+        return 0;
       }
       /// Read and remap memory sections
       if ( (rc=checkpointing_process_fread_memory(p,fd)) ) {
-	mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process memory.\n",fd,rc);
+        mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process memory.\n",fd,rc);
       }
       else {
-	mtcp_output(MTCP_FATAL,"fd:%d Failed to process memory sections.\n",fd,rc);
-	return 0;
+        mtcp_output(MTCP_FATAL,"fd:%d Failed to process memory sections.\n",fd,rc);
+        return 0;
       }
       /// Read process trailer
       if ( (rc=checkpointing_process_fread_trailer(p,fd)) ) {
-	mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process trailer.\n",fd,rc);
-	//checkpointing_sys_restore_finish();
-	return 1;
+        mtcp_output(MTCP_INFO,"fd:%d, Read %ld bytes of process trailer.\n",fd,rc);
+        //checkpointing_sys_restore_finish();
+        return 1;
       }
     }
   }
@@ -428,8 +428,8 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_datalength(const Area* a
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_area_print(const Area* a,int lvl,const char* opt) {
   int len = checkpointing_area_datalength(a);
   mtcp_output(lvl,"%s%p-%p [%8d,%8d] %c%c%c%c o:%p %s\n",
-	      opt,a->low,a->high,a->size,len,
-	      a->prot[0],a->prot[1],a->prot[2],a->prot[3],a->offset,a->name);
+              opt,a->low,a->high,a->size,len,
+              a->prot[0],a->prot[1],a->prot[2],a->prot[3],a->offset,a->name);
 }
 
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_read(Area* a, const void* addr, int (*map)(const AreaHandler*, const Area& a,const unsigned char*,int), const AreaHandler* handler) 
@@ -458,12 +458,22 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_fread(Area* a,int fd, in
   if ( a->name[0] && a->name[0] == '/' && 
        chkpt_sys.save_flags&MTCP_SAVE_LIBS &&
        chkpt_sys.checkpointLibs[0] ) {
-    char tmp[PATH_MAX];
-    const char *p0, *p1;
-    m_strcpy(tmp,chkpt_sys.checkpointLibs);
-    for(p0=a->name, p1=a->name; *p0; ++p0) if (*p0=='/') p1=p0;
-    m_strcpy(tmp+m_strlen(tmp),p1);
-    m_strcpy(a->name,tmp);
+    bool found = false;
+    for(size_t i=0; i<sizeof(chkpt_sys.tmpFiles)/sizeof(chkpt_sys.tmpFiles[0]);++i) {
+      SysInfo::TmpFile& tmp = chkpt_sys.tmpFiles[i];
+      if ( tmp.fd > 0 && m_strcmp(a->name,tmp.name) ) {
+        found = true;
+        break;
+      }
+    }    
+    if ( !found ) {
+      char tmp[PATH_MAX];
+      const char *p0, *p1;
+      m_strcpy(tmp,chkpt_sys.checkpointLibs);
+      for(p0=a->name, p1=a->name; *p0; ++p0) if (*p0=='/') p1=p0;
+      m_strcpy(tmp+m_strlen(tmp),p1);
+      m_strcpy(a->name,tmp);
+    }
     a->name_len = m_strlen(a->name);
   }
   in += map ? (*map)(handler,*a,fd,l) : l;
@@ -495,6 +505,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
   //mtcp_output(MTCP_DEBUG,"*** Mapping area \"%s\"  %p->%p.\n",a.name,a.low,a.high);
   int flags = checkpointing_area_mapFlags(&a);
   int prot  = checkpointing_area_protection(&a);
+  int close_file = 1;
   const char* nam = a.name;
   void* addr = (void*)a.low;
   size_t size = a.size;
@@ -534,12 +545,15 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
   }
   if ((flags & MAP_ANONYMOUS) && (flags & MAP_SHARED)) {
     mtcp_output(MTCP_INFO,"*** WARNING: area %s specifies MAP_ANONYMOUS and MAP_SHARED.\n"
-		"*** Turning off MAP_ANONYMOUS and hoping for best.\n",nam);
+                "*** Turning off MAP_ANONYMOUS and hoping for best.\n",nam);
   }
 
   int  fd = 0;
   int  map_prot = prot|MAP_FIXED;
   bool copy_data = true;
+  //mtcp_output(MTCP_DEBUG,"restore: mmap file %s -- %s [%s] \n",
+  //            nam,a.name,flags & MAP_ANONYMOUS ? "anaon" : "non-anaon");
+
   if (flags & MAP_ANONYMOUS) {
     /* CASE MAP_ANONYMOUS (usually implies MAP_PRIVATE):
      * For anonymous areas, the checkpoint file contains the memory contents 
@@ -567,23 +581,36 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
 
     fd = mtcp_sys_open(nam,file_flags,0);  // open it
     if ( fd < 0 )  {    // Fatal: backing file doesn't exist:
-      mtcp_output(MTCP_FATAL,"restore: error %d opening mmap file %s\n",mtcp_sys_errno, nam);
+      for(size_t i=0; i<sizeof(chkpt_sys.tmpFiles)/sizeof(chkpt_sys.tmpFiles[0]);++i) {
+        SysInfo::TmpFile& tmp = chkpt_sys.tmpFiles[i];
+        if ( tmp.fd > 0 ) {
+        }
+        if ( tmp.fd > 0 && tmp.name[0] && 0==m_strncmp(a.name,tmp.name,m_strlen(tmp.name) )) {
+          fd = tmp.fd;
+          close_file = 0;
+          mtcp_output(MTCP_INFO,"restore: Re-bind %s to %s with fd=%d\n",a.name,tmp.name,fd);
+          break;
+        }
+      }
+      if ( fd < 0 ) {
+        mtcp_output(MTCP_FATAL,"restore: error %d opening mmap file %s\n",mtcp_sys_errno, nam);
+      }
     }
     copy_data = (file_flags == O_WRONLY || file_flags == O_RDWR) && (prot & PROT_WRITE);
   }
 
-  mtcp_output(MTCP_DEBUG,"restore %sanon.%p-%p [%d,%d] %c%c%c%c o:%p %s [%s] %s\n",
-	      (flags & MAP_ANONYMOUS) ? "non-" : "    ",addr,a.high,size,data_len,
-	      a.prot[0],a.prot[1],a.prot[2],a.prot[3],fd==0 ? 0 : offset,nam,
-	      data_len>0 ? "Move data" : "Skip data",
-	      flags & MAP_SHARED ? "Shared" : "");
+  mtcp_output(MTCP_DEBUG,"restore %sanon.%p-%p [%d,%d] %c%c%c%c o:%p fd:%d %s [%s] %s\n",
+              (flags & MAP_ANONYMOUS) ? "non-" : "    ",addr,a.high,size,data_len,
+              a.prot[0],a.prot[1],a.prot[2],a.prot[3],fd==0 ? 0 : offset, fd, nam,
+              data_len>0 ? "Move data" : "Skip data",
+              flags & MAP_SHARED ? "Shared" : "");
   // Create the memory area. This mmap automatically unmaps old memory.
   void* data = mtcp_sys_mmap(addr,size,map_prot,flags,fd,offset);
   if ( data == MAP_FAILED || data != addr ) {
     int err = mtcp_sys_errno;
     mtcp_output(MTCP_ERROR,"restore: \"%s\"\n",nam);
     mtcp_output(MTCP_FATAL,"restore: error %d mapping 0x%X bytes offset%d at %p ->%p\n",
-		err,size,offset,addr,data);
+                err,size,offset,addr,data);
   }
   // This mmapfile after prev. mmap is okay; use same args again. Posix says prev. map will be munmapped.
   if ( data_len > 0 )   {
@@ -599,11 +626,11 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd
     if (mtcp_sys_mprotect (addr,size,prot) < 0) {
       int err = mtcp_sys_errno;
       mtcp_output(MTCP_FATAL,"restore: \"%s\" error %d write-protecting 0x%X bytes at %p\n",
-		  nam,err,size,addr);
+                  nam,err,size,addr);
     }
   }
   // Close image file (fd only gets in the way) */
-  if ( fd != 0 ) mtcp_sys_close(fd);
+  if ( close_file && fd != 0 ) mtcp_sys_close(fd);
   
   void* brk = mtcp_sys_brk(0);
   if( *(int*)nam == *(int*)"[heap]" && brk != nam + size) {
@@ -640,37 +667,37 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_process_file(int fd, voi
       if ( (com = c=='#' ? true : com) ) { if ( c!='\n')*p++ = c; continue; }
       switch(c) {
       case '\n':
-	com = false;
+        com = false;
       case ';':
       case '\0':
-	if ( m_strncmp(line,"then",4)  == 0 && (m_isspace(line[4]) || m_isspace(c))) ign = true;
-	else if ( m_strncmp(line,"fi",2) == 0 && (m_isspace(line[2]) || m_isspace(c) || c==';')) ign = true;
-	if ( p > line ) {
-	  const char* opt = ign ? "Ignore: " : nrec ? "Not recognized: " : com ? "Comment: " : "";
-	  *p++ = 0;
-	  if ( *opt == 0 )  {
-	    if ( handler ) handler(par,line);
-	  }
-	}
-	eq = ign = nrec = false;
-	p  = line;
-	break;
+        if ( m_strncmp(line,"then",4)  == 0 && (m_isspace(line[4]) || m_isspace(c))) ign = true;
+        else if ( m_strncmp(line,"fi",2) == 0 && (m_isspace(line[2]) || m_isspace(c) || c==';')) ign = true;
+        if ( p > line ) {
+          const char* opt = ign ? "Ignore: " : nrec ? "Not recognized: " : com ? "Comment: " : "";
+          *p++ = 0;
+          if ( *opt == 0 )  {
+            if ( handler ) handler(par,line);
+          }
+        }
+        eq = ign = nrec = false;
+        p  = line;
+        break;
       case ' ':
-	if ( p==line ) break;
-	*p++ = c;
-	if ( !eq )  {
-	  if      ( m_strncmp(line,"if ",   3) == 0 ) ign = true;
-	  else if ( m_strncmp(line,"export",6) == 0 ) ign = true;
-	  else if ( m_strncmp(line,"unset", 5) == 0 ) ign = true;
-	  else if ( m_strncmp(line,"LS_COLORS",9) == 0 ) com = true;
-	  else if ( line[0] ) nrec = true;
-	}
-	break;
+        if ( p==line ) break;
+        *p++ = c;
+        if ( !eq )  {
+          if      ( m_strncmp(line,"if ",   3) == 0 ) ign = true;
+          else if ( m_strncmp(line,"export",6) == 0 ) ign = true;
+          else if ( m_strncmp(line,"unset", 5) == 0 ) ign = true;
+          else if ( m_strncmp(line,"LS_COLORS",9) == 0 ) com = true;
+          else if ( line[0] ) nrec = true;
+        }
+        break;
       case '=':
-	eq = true;	// Fall through!
+        eq = true;	// Fall through!
       default:
-	*p++ = c;
-	break;
+        *p++ = c;
+        break;
       }
     }
   }

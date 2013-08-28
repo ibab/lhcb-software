@@ -110,6 +110,11 @@ namespace CHECKPOINTING_NAMESPACE    {
     /// The full argv[0] string
     char            arg0String[1024];
 
+    int numTmpFiles;
+    struct TmpFile {
+      int  fd;
+      char name[256];
+    } tmpFiles[128];
 #ifndef CHECKPOINTING_SYSINFO_STRUCT_ONLY
     /// Standard constructor
     SysInfo();

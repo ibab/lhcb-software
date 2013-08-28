@@ -38,7 +38,7 @@ WEAK(int) FileDesc::setup(int fdnum) {
     rc = mtcp_sys_lstat (procfdname, &f_link);
     if (rc < 0) {
       mtcp_output(MTCP_ERROR,"FileHandler: error stat %s [%d] -> %s: %s\n",
-		  procfdname, fd, name, strerror(-rc));
+                  procfdname, fd, name, strerror(-rc));
       return 0;
     }
     // Read about the actual file open on the fd
@@ -46,7 +46,7 @@ WEAK(int) FileDesc::setup(int fdnum) {
     // This does not take into account regulare open files, which are written!
     if (rc < 0) {
       mtcp_output(MTCP_WARNING,"FileHandler: error stat %s [%d] -> %s: %s\n",
-		  procfdname,fd,name,strerror(-rc));
+                  procfdname,fd,name,strerror(-rc));
       return 0;
     }
     istmp = (*(int*)name == *(int*)"/tmp/") == 0 ? 0 : 'y';
@@ -82,12 +82,30 @@ WEAK(int) FileDesc::reopen() {
 /// Write descriptor and possibly data to memory
 WEAK(int) FileDesc::streamOut(void* address)   const {
   //print(MTCP_WARNING);
+  if ( name[0] && isdel )  {
+    SysInfo::TmpFile& tmp = chkpt_sys.tmpFiles[chkpt_sys.numTmpFiles];
+    tmp.fd = fd;
+    m_strcpy(tmp.name,name);
+    char* p = m_chrfind(tmp.name,' ');
+    if ( p ) *p = 0;
+    ++chkpt_sys.numTmpFiles;
+    mtcp_output(MTCP_ERROR,"FileHandler: added temp file %d: %s\n",fd,tmp.name);
+  }
   return checkpoint_file_write(this,address);
 }
 
 /// Write descriptor and possibly data to file identified by fileno fd_out
 WEAK(int) FileDesc::write(int fd_out)   const {
   //print(MTCP_WARNING);
+  if ( name[0] && isdel ) {
+    SysInfo::TmpFile& tmp = chkpt_sys.tmpFiles[chkpt_sys.numTmpFiles];
+    tmp.fd = fd;
+    m_strcpy(tmp.name,name);
+    char* p = m_chrfind(tmp.name,' ');
+    if ( p ) *p = 0;
+    ++chkpt_sys.numTmpFiles;
+    mtcp_output(MTCP_ERROR,"FileHandler: added temp file %d: %s\n",fd,tmp.name);
+  }
   return checkpoint_file_fwrite(this,fd_out);
 }
 

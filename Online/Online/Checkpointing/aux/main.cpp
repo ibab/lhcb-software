@@ -26,7 +26,7 @@ static int checkMarker(int fd, Marker should) {
   const char* b = (char*)&should;
   if ( got != should ) {
     mtcp_output(MTCP_ERROR,"Seen invalid markers: Got:%d '%c%c%c%c' Should be:%d '%c%c%c%c'\n",
-	     got,a[0],a[1],a[2],a[3],should,b[0],b[1],b[2],b[3]);
+                got,a[0],a[1],a[2],a[3],should,b[0],b[1],b[2],b[3]);
   }
   return 1;
 }
@@ -89,38 +89,41 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
     else {
       int dir_len = m_strlen(lib_dir);
       for ( int ilib=0; ilib<num_libs; ++ilib ) {
-	char lib[PATH_MAX], buffer[PATH_MAX];
-	mtcp_sys_mkdir(lib_dir,0777);
-	m_strcpy(lib,lib_dir);
-	if ( lib[dir_len-1] != '/' ) { lib[dir_len]='/';lib[dir_len+1]=0; }
-	checkMarker(fd,LIBRARY_BEGIN_MARKER);
-	mtcp_sys_read(fd,&siz,sizeof(siz));
-	mtcp_sys_read(fd,lib+m_strlen(lib),siz);
-	mtcp_sys_read(fd,&siz,sizeof(siz));
-	mtcp_sys_unlink(lib);
-	int lib_fd = mtcp_sys_open(lib,O_WRONLY|O_TRUNC|O_CREAT,0777);
-	if ( lib_fd < 0 ) {
-	  mtcp_output(MTCP_FATAL,"restore: error restoring image file:%s  errno:%d\n",lib,mtcp_sys_errno);
-	}
-	mtcp_output(MTCP_INFO,"Restoring %d bytes for library[%d/%d] %s\n",siz,ilib+1,num_libs,lib);
-	while(siz>=PATH_MAX) {
-	  mtcp_sys_read(fd,buffer,sizeof(buffer));
-	  int rc = mtcp_sys_write(lib_fd,buffer,sizeof(buffer));
-	  if ( rc < 0 ) {
-	    mtcp_output(MTCP_FATAL,"restore: error writing image file:%s  errno:%d\n",lib,mtcp_sys_errno);
-	  }
-	  siz -= PATH_MAX;
-	}
-	while(siz>0) {
-	  mtcp_sys_read(fd,buffer,1);
-	  int rc = mtcp_sys_write(lib_fd,buffer,1);
-	  if ( rc < 0 ) {
-	    mtcp_output(MTCP_FATAL,"restore: error writing image file:%s  errno:%d\n",lib,mtcp_sys_errno);
-	  }
-	  siz -= 1;
-	}
-	mtcp_sys_close(lib_fd);
-	checkMarker(fd,LIBRARY_END_MARKER);
+        int name_len = 0;
+        char lib[PATH_MAX], buffer[PATH_MAX];
+        mtcp_sys_mkdir(lib_dir,0777);
+        m_strcpy(lib,lib_dir);
+        if ( lib[dir_len-1] != '/' ) { lib[dir_len]='/';lib[dir_len+1]=0; }
+        checkMarker(fd,LIBRARY_BEGIN_MARKER);
+        mtcp_sys_read(fd,&name_len,sizeof(name_len));
+        if ( name_len > 0 ) mtcp_sys_read(fd,lib+m_strlen(lib),name_len);
+        mtcp_sys_read(fd,&siz,sizeof(siz));
+        if ( name_len > 0 )   {
+          mtcp_sys_unlink(lib);
+          int lib_fd = mtcp_sys_open(lib,O_WRONLY|O_TRUNC|O_CREAT,0777);
+          if ( lib_fd < 0 ) {
+            mtcp_output(MTCP_FATAL,"restore: error restoring image file:%s  errno:%d\n",lib,mtcp_sys_errno);
+          }
+          mtcp_output(MTCP_INFO,"Restoring %d bytes for library[%d/%d] %s\n",siz,ilib+1,num_libs,lib);
+          while(siz>=PATH_MAX) {
+            mtcp_sys_read(fd,buffer,sizeof(buffer));
+            int rc = mtcp_sys_write(lib_fd,buffer,sizeof(buffer));
+            if ( rc < 0 ) {
+              mtcp_output(MTCP_FATAL,"restore: error writing image file:%s  errno:%d\n",lib,mtcp_sys_errno);
+            }
+            siz -= PATH_MAX;
+          }
+          while(siz>0) {
+            mtcp_sys_read(fd,buffer,1);
+            int rc = mtcp_sys_write(lib_fd,buffer,1);
+            if ( rc < 0 ) {
+              mtcp_output(MTCP_FATAL,"restore: error writing image file:%s  errno:%d\n",lib,mtcp_sys_errno);
+            }
+            siz -= 1;
+          }
+          mtcp_sys_close(lib_fd);
+        }
+        checkMarker(fd,LIBRARY_END_MARKER);
       }
     }
   }
@@ -155,20 +158,20 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
       int l1=0, l2=0;
       mtcp_executable(cmdLine);
       for(i=0; i<num_arg;++i) {
-	mtcp_output(MTCP_DEBUG,"SysInfo-arg[%d] = %s\n",i,ptr);
-	ptr += m_strlen(ptr)+1;
-	l1+= m_strlen(ptr)+1;
+        mtcp_output(MTCP_DEBUG,"SysInfo-arg[%d] = %s\n",i,ptr);
+        ptr += m_strlen(ptr)+1;
+        l1+= m_strlen(ptr)+1;
       }
       for(i=0; i<num_env;++i) {
-	mtcp_output(MTCP_DEBUG,"SysInfo-env[%d] = %s\n",i,ptr);
-	envp[i] = ptr;
-	ptr += m_strlen(ptr)+1;
+        mtcp_output(MTCP_DEBUG,"SysInfo-env[%d] = %s\n",i,ptr);
+        envp[i] = ptr;
+        ptr += m_strlen(ptr)+1;
       }
       envp[num_env] = 0;
       for(i=0; i<org_argc;++i) {
-	mtcp_output(MTCP_DEBUG,"SysInfo-restart-arg[%d] = %s\n",i,org_argv[i]);
-	argv[i] = org_argv[i];
-	l2 += m_strlen(argv[i])+1;
+        mtcp_output(MTCP_DEBUG,"SysInfo-restart-arg[%d] = %s\n",i,org_argv[i]);
+        argv[i] = org_argv[i];
+        l2 += m_strlen(argv[i])+1;
       }
       argv[org_argc] = (char*)"-runnow";
       l2 += m_strlen(argv[org_argc])+1;
@@ -177,7 +180,7 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
       mtcp_output(MTCP_INFO,"SysInfo-arg-len  %d \n",long(org_argv[0])-sys.arg0);
       mtcp_output(MTCP_INFO,"SysInfo-arg-len  %d  checkpointed:%d\n",l2,l1);
       mtcp_output(MTCP_INFO,"SysInfo-#argc:   %d  checkpointed:%d   #env:    %d  checkpointed:%d\n",
-		  org_argc+1,sys.argc,count,num_env);
+                  org_argc+1,sys.argc,count,num_env);
       mtcp_output(MTCP_INFO,"SysInfo-argv[0]: %p  checkpointed:%p\n",org_argv[0],sys.arg0);
       mtcp_output(MTCP_INFO,"SysInfo-cmdline = %s\n",cmdLine);
       mtcp_output(MTCP_INFO,"SysInfo-cmdline = %s\n",sys.arg0String);
@@ -193,13 +196,13 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
   mtcp_output(MTCP_DEBUG,"checkpoint: Page   size:   %d [%X]\n",int(sys.pageSize),int(sys.pageSize));
   mtcp_output(MTCP_DEBUG,"checkpoint: Image  name:  '%s'\n",sys.checkpointImage);
   mtcp_output(MTCP_DEBUG,"checkpoint: Image  begin:  %p end    %p [%X bytes]\n",
-	      pvoid(sys.addrStart),pvoid(sys.addrEnd),int(sys.addrSize));
+              pvoid(sys.addrStart),pvoid(sys.addrEnd),int(sys.addrSize));
   mtcp_output(MTCP_DEBUG,"checkpoint: Heap   saved:  %p\n",pvoid(sys.saved_break));
   mtcp_output(MTCP_DEBUG,"checkpoint: Stack lim soft:%p hard:  %p\n",
-	      pvoid(sys.stackLimitCurr),pvoid(sys.stackLimitHard));
+              pvoid(sys.stackLimitCurr),pvoid(sys.stackLimitHard));
   // The finishRestore function pointer:
   mtcp_output(MTCP_DEBUG,"checkpoint: Restore start: %p finish:%p\n",
-	      sys.startRestore,sys.finishRestore);
+              sys.startRestore,sys.finishRestore);
 
   mtcp_output(MTCP_INFO,"SysInfo-argc:    %d  checkpointed:%d\n",org_argc,sys.argc);
   mtcp_output(MTCP_INFO,"SysInfo-argv[0]: %p  checkpointed:%p\n",org_argv[0],sys.arg0);
@@ -208,7 +211,7 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
   if (data == MAP_FAILED) {
     if (errno != EBUSY) {
       mtcp_output(MTCP_FATAL,"restore: error creating %d byte restore region at %p: %s\n",
-		  int(sys.addrSize),pvoid(sys.addrStart),::strerror(errno));
+                  int(sys.addrSize),pvoid(sys.addrStart),::strerror(errno));
     } 
     else {
       mtcp_sys_close(fd);
@@ -217,10 +220,10 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
   }
   if ( data != (void*)sys.addrStart ) {
     mtcp_output(MTCP_FATAL,"restore: %d byte restore region at %p got mapped at %p\n",
-		int(sys.addrSize),pvoid(sys.addrStart),pvoid(data));
+                int(sys.addrSize),pvoid(sys.addrStart),pvoid(data));
   }
   mtcp_output(MTCP_INFO,"restore: mapped %d byte restore image region at %p - %p in execution mode.\n",
-		 int(sys.addrSize),data,pvoid(sys.addrStart+sys.addrSize));
+              int(sys.addrSize),data,pvoid(sys.addrStart+sys.addrSize));
 
   mtcp_sys_read(fd,&siz,sizeof(siz));
   mtcp_sys_read(fd,data,sys.addrSize);
@@ -231,7 +234,7 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
   if ( fd != fdnum ) {  // Move file to the same descriptor used for writing the checkpoint!
     if ( mtcp_sys_dup2(fd,fdnum) < 0) {
       mtcp_output(MTCP_FATAL,"FileDesc: error %d [%s] restore %s fd %d to %d.\n", 
-		  mtcp_sys_errno, strerror(mtcp_sys_errno), file_name, fd, fdnum);
+                  mtcp_sys_errno, strerror(mtcp_sys_errno), file_name, fd, fdnum);
     }
     mtcp_sys_close(fd);
   }
@@ -250,9 +253,9 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
 }
 #if 0
 extern "C" int __libc_start_main (int (*main) (int, char **, char **),
-				  int argc, char **argv,
-				  void (* /*init */) (void), void (* /*fini */) (void),
-				  void (* /* rtld_fini */) (void), void * stack_end)
+                                  int argc, char **argv,
+                                  void (* /*init */) (void), void (* /*fini */) (void),
+                                  void (* /* rtld_fini */) (void), void * stack_end)
 {
   char **envp = argv + argc + 1;
   mtcp_global_stack_end = stack_end;
@@ -278,12 +281,12 @@ extern "C" void __libc_csu_fini (void)
 
 static int usage() {
   mtcp_output(MTCP_ERROR,"Usage: restore -p(rint) <print-level> -i(nput) <file-name> \n"
-	      "       print-level = 1...5  : DEBUG,INFO,WARNING,ERROR,FATAL.         \n"
-	      "                              Default:%d                              \n"
-	      "       file-name = string   : Name of the checkpoint file.            \n"
-	      "       -n                   : Do not write PID in mtcp output.        \n"
-	      "       -e                   : Read new environment vars from stdin.   \n"
-	      , mtcp_get_debug_level());
+              "       print-level = 1...5  : DEBUG,INFO,WARNING,ERROR,FATAL.         \n"
+              "                              Default:%d                              \n"
+              "       file-name = string   : Name of the checkpoint file.            \n"
+              "       -n                   : Do not write PID in mtcp output.        \n"
+              "       -e                   : Read new environment vars from stdin.   \n"
+              , mtcp_get_debug_level());
   return 1;
 }
 
@@ -300,14 +303,14 @@ int main(int argc, char** argv, char** /* envp */) {
       int advise=0, norestart=1;
       const char* file_name = 0;
       for(int i=1; i<argc; ++i) {
-	if      ( argc>i && argv[i][1] == 'i' ) file_name = argv[++i];
-	else if ( argc>i && argv[i][1] == 'p' ) prt   = argv[++i][0]-'0';
-	else if ( argc>i && argv[i][1] == 'n' ) prt  |= MTCP_PRINT_NO_PID;
-	else if ( argc>i && argv[i][1] == 'e' ) opts |= MTCP_STDIN_ENV;
-	else if ( argc>i && argv[i][1] == 'a' ) advise = 1;
-	else if ( argc>i && argv[i][1] == 'r' ) norestart = 0;
-	else if ( argc>i && argv[i][1] == 'l' ) libs_dir = argv[++i];
-	else if ( argc>i && argv[i][1] == 'd' ) ::sleep(10);
+        if      ( argc>i && argv[i][1] == 'i' ) file_name = argv[++i];
+        else if ( argc>i && argv[i][1] == 'p' ) prt   = argv[++i][0]-'0';
+        else if ( argc>i && argv[i][1] == 'n' ) prt  |= MTCP_PRINT_NO_PID;
+        else if ( argc>i && argv[i][1] == 'e' ) opts |= MTCP_STDIN_ENV;
+        else if ( argc>i && argv[i][1] == 'a' ) advise = 1;
+        else if ( argc>i && argv[i][1] == 'r' ) norestart = 0;
+        else if ( argc>i && argv[i][1] == 'l' ) libs_dir = argv[++i];
+        else if ( argc>i && argv[i][1] == 'd' ) ::sleep(10);
       }
       if ( 0 == file_name ) return usage();
       mtcp_set_debug_level(prt /* MTCP_ERROR prt */);

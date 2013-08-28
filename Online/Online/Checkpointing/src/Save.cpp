@@ -31,36 +31,53 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_library_fwrite(int fd, const 
   if ( fd <= 0 ) return 0;
   else if ( m_strcmp(a->name,chkpt_sys.checkpointFile)  == 0 ) return 0;
   else if ( m_strcmp(a->name,chkpt_sys.checkpointImage) == 0 ) return 0;
+  else if ( m_strfind(a->name,"(deleted)") == 0 ) return 0;
   else if ( a->name[0] && a->name[0]=='/' ) {
-    int    bytes = 0;
+    int bytes = 0;
+    int lib_fd = 0;
+    const char *p0, *nam;
+    for(p0=a->name, nam=a->name; *p0; ++p0) if (*p0=='/') nam=p0;
+    nam = nam + 1;
     bytes += writeMarker(fd,LIBRARY_BEGIN_MARKER);
-    int lib_fd = mtcp_sys_open(a->name,O_RDONLY,0);
+    lib_fd = mtcp_sys_open(a->name,O_RDONLY,0);
     if ( lib_fd > 0 ) {
       struct stat lib_stat;
-      const char *p0, *nam;
-      for(p0=a->name, nam=a->name; *p0; ++p0) if (*p0=='/') nam=p0;
-      nam = nam + 1;
       if ( 0 == mtcp_sys_fstat(lib_fd,&lib_stat) ) {
-	size_t nam_len = m_strlen(nam);
-	bytes += writeInt(fd,nam_len+1);
-	bytes += m_writemem(fd,nam,nam_len+1);
-	bytes += writeInt(fd,lib_stat.st_size);
-	bytes += m_fcopy(fd, lib_fd, lib_stat.st_size);
-	bytes += writeMarker(fd,LIBRARY_END_MARKER);
-	mtcp_sys_close(lib_fd);
-	mtcp_output(MTCP_INFO,"checkpoint_lib_fwrite: Image: %s Wrote %d bytes\n",nam,bytes);
-	return bytes;
+        size_t nam_len = m_strlen(nam);
+        bytes += writeInt(fd,nam_len+1);
+        bytes += m_writemem(fd,nam,nam_len+1);
+        bytes += writeInt(fd,lib_stat.st_size);
+        bytes += m_fcopy(fd, lib_fd, lib_stat.st_size);
+        bytes += writeMarker(fd,LIBRARY_END_MARKER);
+        mtcp_sys_close(lib_fd);
+        mtcp_output(MTCP_INFO,"checkpoint_lib_fwrite: Image: %s Wrote %d bytes\n",nam,bytes);
+        return bytes;
       }
       else {
-	mtcp_sys_close(lib_fd);
-	writeInt(fd,2*sizeof(Marker));
-	mtcp_output(MTCP_ERROR,"checkpoint_lib_fwrite: Image:%s failed to stat:%d [%s]\n",
-		    a->name, mtcp_sys_errno, ::strerror(mtcp_sys_errno));
+        mtcp_sys_close(lib_fd);
+        bytes += writeInt(fd,0);
+        bytes += writeInt(fd,0);
+        bytes += writeMarker(fd,LIBRARY_END_MARKER);
+        mtcp_output(MTCP_ERROR,"checkpoint_lib_fwrite: Image:%s failed to stat:%d [%s]\n",
+                    a->name, mtcp_sys_errno, ::strerror(mtcp_sys_errno));
       }
     }
+    else if ( m_strfind(a->name,"/tmp/") != 0 ) { // temporary deleted files
+      bytes += writeInt(fd,0);
+      bytes += writeInt(fd,0);
+      bytes += writeMarker(fd,LIBRARY_END_MARKER);
+      mtcp_sys_close(lib_fd);
+      mtcp_output(MTCP_INFO,"checkpoint_lib_fwrite: Image: %s Wrote %d bytes\n",nam,bytes);
+      return bytes;
+    }
     else {
+      bytes += writeInt(fd,0);
+      bytes += writeInt(fd,0);
+      bytes += writeInt(fd,0);
+      bytes += writeMarker(fd,LIBRARY_END_MARKER);
       mtcp_output(MTCP_ERROR,"checkpoint_lib_fwrite: Image:%s failed to open file:%d [%s]\n",
-		  a->name, mtcp_sys_errno, ::strerror(mtcp_sys_errno));
+                  a->name, mtcp_sys_errno, ::strerror(mtcp_sys_errno));
+      return bytes;
     }
     return -1;
   }
@@ -77,16 +94,16 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_libs_fwrite(int fd) {
     if ( chkpt_sys.save_flags&MTCP_SAVE_LIBS )   {
       AreaLibHandler h(fd);
       if ( 1 == checkpointing_memory_scan(&h) ) {
-	bytes += h.bytes();
-	bytes += writeMarker(fd,LIBS_END_MARKER);
-	off = mtcp_sys_lseek(fd,0,SEEK_CUR);
-	mtcp_sys_lseek(fd,offset,SEEK_SET);
-	writeLong(fd,h.bytes());   // Update counter
-	writeInt(fd,h.numLibs());  // Update counter
-	mtcp_sys_lseek(fd,off,SEEK_SET);
-	mtcp_output(MTCP_INFO,"Saving %d image files to checkpoint!\n",h.numLibs());
-	h.release();
-	return bytes;
+        bytes += h.bytes();
+        bytes += writeMarker(fd,LIBS_END_MARKER);
+        off = mtcp_sys_lseek(fd,0,SEEK_CUR);
+        mtcp_sys_lseek(fd,offset,SEEK_SET);
+        writeLong(fd,h.bytes());   // Update counter
+        writeInt(fd,h.numLibs());  // Update counter
+        mtcp_sys_lseek(fd,off,SEEK_SET);
+        mtcp_output(MTCP_INFO,"Saving %d image files to checkpoint!\n",h.numLibs());
+        h.release();
+        return bytes;
       }
       h.release();
       bytes += writeMarker(fd,LIBS_END_MARKER);
@@ -111,8 +128,8 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_fwrite(const FileDesc* d,in
     if ( d->hasData ) {
       char c;
       for(long i=0;i<d->statbuf.st_size;++i) {
-	::pread(d->fd,&c,1,i);
-	::write(fd_out,&c,1);
+        ::pread(d->fd,&c,1,i);
+        ::write(fd_out,&c,1);
       }
       bytes += d->statbuf.st_size;
     }
@@ -148,38 +165,38 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fwrite(int fd)   {
       tot += rc;
       mtcp_output(MTCP_INFO,"checkpoint: Wrote %ld [Total:%ld] bytes of process header.\n",rc,tot);
       if ( (rc=checkpointing_libs_fwrite(fd)) ) {
-	tot += rc;
-	mtcp_output(MTCP_INFO,"checkpoint: Wrote %ld [Total:%ld] bytes of library data.\n",rc,tot);
+        tot += rc;
+        mtcp_output(MTCP_INFO,"checkpoint: Wrote %ld [Total:%ld] bytes of library data.\n",rc,tot);
       }
       else   {
-	mtcp_output(MTCP_FATAL,"checkpoint: Failed to write library data.\n");
+        mtcp_output(MTCP_FATAL,"checkpoint: Failed to write library data.\n");
       }
       offset = mtcp_sys_lseek(fd,0,SEEK_CUR);
       if ( (rc=checkpointing_sys_fwrite(fd,&chkpt_sys)) ) {
-	tot += rc;
-	mtcp_output(MTCP_INFO,"checkpoint: Wrote %ld [Total:%ld] bytes of System information.\n",rc,tot);
-	if ( (rc=checkpointing_files_write(fd)) ) {
-	  tot += rc;
-	  mtcp_output(MTCP_INFO,"checkpoint: Wrote %ld [Total:%ld] bytes of file information.\n",rc,tot);
-	  if ( (rc=checkpointing_memory_write(fd)) ) {
-	    if ( chkpt_sys.restart_type == SysInfo::RESTART_CHECKPOINT ) {
-	      mtcp_output(MTCP_INFO,"checkpoint: Restarting HURRA. Restart_type=%d [Should be:%d]\n",
-			  chkpt_sys.restart_type, SysInfo::RESTART_CHECKPOINT);
-	      return 1;
-	    }
-	    tot += rc;
-	    mtcp_output(MTCP_INFO,"checkpoint: Wrote %ld [Total:%ld] bytes of process memory.\n",rc,tot);
-	    if ( (rc=checkpointing_process_write_trailer(fd)) ) {
-	      tot += rc;
-	      mtcp_output(MTCP_INFO,"checkpoint: Wrote %ld [Total:%ld] bytes of process trailer.\n",rc,tot);
-	      mtcp_sys_lseek(fd,offset,SEEK_SET);
-	      mtcp_output(MTCP_INFO,"checkpoint: Restarting -- BAD Location. Restart_type=%d [Should be:%d]\n",
-			  chkpt_sys.restart_type, SysInfo::RESTART_CHECKPOINT);
-	      checkpointing_sys_fwrite(fd,&chkpt_sys);
-	      return tot;
-	    }
-	  }
-	}
+        tot += rc;
+        mtcp_output(MTCP_INFO,"checkpoint: Wrote %ld [Total:%ld] bytes of System information.\n",rc,tot);
+        if ( (rc=checkpointing_files_write(fd)) ) {
+          tot += rc;
+          mtcp_output(MTCP_INFO,"checkpoint: Wrote %ld [Total:%ld] bytes of file information.\n",rc,tot);
+          if ( (rc=checkpointing_memory_write(fd)) ) {
+            if ( chkpt_sys.restart_type == SysInfo::RESTART_CHECKPOINT ) {
+              mtcp_output(MTCP_INFO,"checkpoint: Restarting HURRA. Restart_type=%d [Should be:%d]\n",
+                          chkpt_sys.restart_type, SysInfo::RESTART_CHECKPOINT);
+              return 1;
+            }
+            tot += rc;
+            mtcp_output(MTCP_INFO,"checkpoint: Wrote %ld [Total:%ld] bytes of process memory.\n",rc,tot);
+            if ( (rc=checkpointing_process_write_trailer(fd)) ) {
+              tot += rc;
+              mtcp_output(MTCP_INFO,"checkpoint: Wrote %ld [Total:%ld] bytes of process trailer.\n",rc,tot);
+              mtcp_sys_lseek(fd,offset,SEEK_SET);
+              mtcp_output(MTCP_INFO,"checkpoint: Restarting -- BAD Location. Restart_type=%d [Should be:%d]\n",
+                          chkpt_sys.restart_type, SysInfo::RESTART_CHECKPOINT);
+              checkpointing_sys_fwrite(fd,&chkpt_sys);
+              return tot;
+            }
+          }
+        }
       }
     }
   }
@@ -221,35 +238,35 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_memory_scan(AreaHandler* hand
       if ( n == 1 && *p != '\n' ) continue;
       *p = 0;
       if ( n == 1 ) {
-	low  = text;
-	high = m_chrfind(low,'-');
-	*high++  = 0;
-	prot     = m_chrfind(high,' ');
-	*prot++  = 0;
-	off      = m_chrfind(prot,' ');
-	*off++   = 0;
-	dev      = m_chrfind(off,' ');
-	*dev++   = 0;
-	inode    = m_chrfind(dev,' ');
-	*inode++ = 0;
-	fn       = m_chrfind(inode,' ');
-	*fn++    = 0;
-	file     = m_chrfind(fn,'/');
-	if ( !file ) file = m_chrfind(fn,'[');
-	if ( !file ) file = "";
-	Area a;
-	::sscanf(low,"%lx",&a.low);
-	::sscanf(high,"%lx",&a.high);
-	::sscanf(off,"%lx",&a.offset);
-	a.size = a.high - a.low;
-	*(int*)a.prot = *(int*)prot;
-	if ( !file[0] ) {
-	  unsigned long brk = (unsigned long)mtcp_sys_brk(0);
-	  if ( brk >= a.low && brk <= a.high ) file = "[heap]";
-	}
-	a.name_len = m_strcpy(a.name,file);
-	long sc = (*handler->f_handle)(handler,count,a);
-	if ( sc > 0 ) count++;
+        low  = text;
+        high = m_chrfind(low,'-');
+        *high++  = 0;
+        prot     = m_chrfind(high,' ');
+        *prot++  = 0;
+        off      = m_chrfind(prot,' ');
+        *off++   = 0;
+        dev      = m_chrfind(off,' ');
+        *dev++   = 0;
+        inode    = m_chrfind(dev,' ');
+        *inode++ = 0;
+        fn       = m_chrfind(inode,' ');
+        *fn++    = 0;
+        file     = m_chrfind(fn,'/');
+        if ( !file ) file = m_chrfind(fn,'[');
+        if ( !file ) file = "";
+        Area a;
+        ::sscanf(low,"%lx",&a.low);
+        ::sscanf(high,"%lx",&a.high);
+        ::sscanf(off,"%lx",&a.offset);
+        a.size = a.high - a.low;
+        *(int*)a.prot = *(int*)prot;
+        if ( !file[0] ) {
+          unsigned long brk = (unsigned long)mtcp_sys_brk(0);
+          if ( brk >= a.low && brk <= a.high ) file = "[heap]";
+        }
+        a.name_len = m_strcpy(a.name,file);
+        long sc = (*handler->f_handle)(handler,count,a);
+        if ( sc > 0 ) count++;
       }
       if ( n == 0 ) break;
       p = text;

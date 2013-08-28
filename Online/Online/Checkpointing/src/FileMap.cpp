@@ -40,15 +40,15 @@ WEAK(int) FileMap::scan(const FileHandler& handler)  const   {
       if (sizeof(dent->d_ino) == 8) dsiz = mtcp_sys_getdents64(fddir,dbuf,sizeof(dbuf));
       if (dsiz <= 0) break;
       for (int doff = 0; doff < dsiz; doff += dent->d_reclen) {
-	dent = (dirent*)(dbuf + doff);
-	// The filename should just be a decimal number = the fd it represents
-	// Also, skip the entry for the checkpoint and directory files as we 
-	// don't want the restore to know about them
-	int fdnum = ::strtol(dent->d_name, &p, 10);
-	if ( *p == 0 && fdnum > 2 && fdnum != fddir ) {
-	  ++count;
-	  handler.handle(fdnum);
-	}
+        dent = (dirent*)(dbuf + doff);
+        // The filename should just be a decimal number = the fd it represents
+        // Also, skip the entry for the checkpoint and directory files as we 
+        // don't want the restore to know about them
+        int fdnum = ::strtol(dent->d_name, &p, 10);
+        if ( *p == 0 && fdnum > 2 && fdnum != fddir ) {
+          ++count;
+          handler.handle(fdnum);
+        }
       }
     }
     mtcp_sys_close(fddir);

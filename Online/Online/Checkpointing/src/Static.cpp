@@ -71,6 +71,11 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_initialize(SysInfo* sys)
   sys->restore_arglen     = 0;
   sys->restore_utgid      = 0;
   sys->restore_utgidLen   = 0;
+  sys->numTmpFiles        = 0;
+  for(size_t i=0; i<sizeof(sys->tmpFiles)/sizeof(sys->tmpFiles[0]);++i) {
+    sys->tmpFiles[i].name[0] = 0;
+    sys->tmpFiles[i].fd = -1;
+  }
 }
 
 /// Set directory name for libraries to be restored.
@@ -118,13 +123,13 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_restore_start(int argc, 
   // in order to execute the process restore. After this, we move back
   // to the regular stack pointer.
   __asm__ volatile (CLEAN_FOR_64_BIT(mov %0,%%esp\n\t)
-                /* This next assembly language confuses gdb,
-		   but seems to work fine anyway */
-                CLEAN_FOR_64_BIT(xor %%ebp,%%ebp\n\t)
-                : : "g" (extendedStack) : "memory");
+                    /* This next assembly language confuses gdb,
+                       but seems to work fine anyway */
+                    CLEAN_FOR_64_BIT(xor %%ebp,%%ebp\n\t)
+                    : : "g" (extendedStack) : "memory");
 #if 0  /* Same as above.... */
   __asm__ volatile (CLEAN_FOR_64_BIT(mov %0,%%esp\n\t)
-                : : "g" (extendedStack) : "memory");
+                    : : "g" (extendedStack) : "memory");
   //__asm__("mov $0,%rbp");
   __asm__ volatile ("xor %rbp,%rbp");
 #endif
@@ -185,19 +190,19 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_print(const SysInfo* s) 
   mtcp_output(MTCP_INFO,"checkpoint: SysInfo:       %p -> %p Size:%d\n",&s,s->sysInfo,int(sizeof(SysInfo)));
   mtcp_output(MTCP_INFO,"checkpoint: Checkpoint[%d]:%s \n",s->checkpointFD,s->checkpointFile);
   mtcp_output(MTCP_INFO,"checkpoint: dto.   begin:  %p end    %p [%X bytes]\n",
-	      s->chkptStart,s->chkptStart+s->chkptSize,s->chkptSize);
+              s->chkptStart,s->chkptStart+s->chkptSize,s->chkptSize);
 
   // Restore image
   mtcp_output(MTCP_INFO,"checkpoint: Page   size:   %d [%X]\n",s->pageSize,s->pageSize);
   mtcp_output(MTCP_INFO,"checkpoint: Image  name:  '%s'\n",s->checkpointImage);
   mtcp_output(MTCP_INFO,"checkpoint: Image  begin:  %p end    %p [%X bytes]\n",
-	      s->addrStart,s->addrEnd,s->addrSize);
+              s->addrStart,s->addrEnd,s->addrSize);
 
   // Heap & Stack
   mtcp_output(MTCP_INFO,"checkpoint: Heap   curr:   %p saved  %p\n",curr_break,s->saved_break);
   mtcp_output(MTCP_INFO,"checkpoint: Stack lim soft:%p hard:  %p\n",s->stackLimitCurr,s->stackLimitHard);
   mtcp_output(MTCP_INFO,"checkpoint: tmpstack start:%p finish:%p\n",
-	      mtcp_internal_tempstack,mtcp_internal_tempstack+STACKSIZE+1);
+              mtcp_internal_tempstack,mtcp_internal_tempstack+STACKSIZE+1);
   mtcp_output(MTCP_INFO,"checkpoint: argc          :%d          \n",s->argc);
 
   // The finishRestore function pointer:
@@ -329,13 +334,13 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_restore_stack(SysIn
   if ( ee )   {
     for(char* ep=*ee; *ep && *ee; ++ee, ep=*ee ) {
       if ( ep )    {
-	if ( 0 == m_strncmp(ep,"UTGID=",6) ) {
-	  char* ptr = ep + 6;
-	  sys->restore_utgid    = mem_address_t(ptr);
-	  sys->restore_utgidLen = m_strlen(ptr);
-	  break;
-	}
-	else if ( *(short*)ep == *(short*)"_=" ) break;
+        if ( 0 == m_strncmp(ep,"UTGID=",6) ) {
+          char* ptr = ep + 6;
+          sys->restore_utgid    = mem_address_t(ptr);
+          sys->restore_utgidLen = m_strlen(ptr);
+          break;
+        }
+        else if ( *(short*)ep == *(short*)"_=" ) break;
       }
     }
   }
@@ -355,17 +360,17 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_stack(SysInfo* sys,
   if ( ee ) {
     for(char* ep=*ee; *ep && *ee; ep=*(++ee)) {
       if ( ep ) {
-	if ( 0 == m_strncmp(ep,"UTGID=",6) ) {
-	  sys->utgid = (char*)ep + 6;
-	  sys->utgidLen = m_strlen(sys->utgid);
-	  break;
-	}
-	else if ( *(short*)ep == *(short*)"_=" ) break;
+        if ( 0 == m_strncmp(ep,"UTGID=",6) ) {
+          sys->utgid = (char*)ep + 6;
+          sys->utgidLen = m_strlen(sys->utgid);
+          break;
+        }
+        else if ( *(short*)ep == *(short*)"_=" ) break;
       }
     }
   }
   mtcp_output(MTCP_DEBUG,"Environ:%p argv[0]:%p %s UTGID:%p %s\n",
-	      ee,arg0,arg0,sys->utgid,sys->utgid ? sys->utgid : "Unknown");
+              ee,arg0,arg0,sys->utgid,sys->utgid ? sys->utgid : "Unknown");
 }
 
 
@@ -376,7 +381,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_utgid(SysInfo* sys, c
   //int max_len = sys->restore_arglen;
   if ( sys->restore_arg0 < sys->arg0 ) {
     mtcp_output(MTCP_ERROR,"Failed to set argv[0] to utgid:%s orig arg0:%p > new arg0:%p len=%d\n",
-		new_utgid, sys->arg0, sys->restore_arg0, len);
+                new_utgid, sys->arg0, sys->restore_arg0, len);
   }
 #endif
   if ( sys->restore_utgid ) {
@@ -387,7 +392,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_utgid(SysInfo* sys, c
     }
     else {
       mtcp_output(MTCP_ERROR,"Failed to update utgid restore stack environment: len(%d)>allowed(%d)\n",
-		  len, sys->restore_utgidLen);
+                  len, sys->restore_utgidLen);
     }
   }
   if ( sys->restore_arg0 ) {
@@ -395,22 +400,22 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_utgid(SysInfo* sys, c
       char* p = (char*)sys->restore_arg0;
       m_memcpy(p,new_utgid,len);
       mtcp_output(MTCP_INFO,"New UTGID: %p %s - %s arglen:%d utgidlen:%d\n",
-		  sys->restore_arg0,sys->restore_arg0,new_utgid,sys->restore_arglen,len);
+                  sys->restore_arg0,sys->restore_arg0,new_utgid,sys->restore_arglen,len);
       if ( sys->restore_arglen > len )  {
-	m_memset(p+len,0,sys->restore_arglen - len);
+        m_memset(p+len,0,sys->restore_arglen - len);
       }
       if ( sys->utgid && sys->utgidLen>len ) {
-	mtcp_output(MTCP_INFO,"Sys UTGID: %p %s - %s\n",sys->utgid, sys->utgid,new_utgid);
-	m_memcpy(sys->utgid,new_utgid,len);
+        mtcp_output(MTCP_INFO,"Sys UTGID: %p %s - %s\n",sys->utgid, sys->utgid,new_utgid);
+        m_memcpy(sys->utgid,new_utgid,len);
       }
       else {
-	mtcp_output(MTCP_ERROR,"Failed to update utgid stack environment: len(%d)>allowed(%d)\n",
-		    len,sys->utgidLen);
+        mtcp_output(MTCP_ERROR,"Failed to update utgid stack environment: len(%d)>allowed(%d)\n",
+                    len,sys->utgidLen);
       }
     }
     else {
       mtcp_output(MTCP_ERROR,"Failed to set argv[0] to utgid:%s orig arg0:%p new arg0:%p len=%d\n",
-		  new_utgid, sys->arg0, sys->restore_arg0, len);
+                  new_utgid, sys->arg0, sys->restore_arg0, len);
     }
   }
   return ::setenv("UTGID",new_utgid,1);
@@ -427,7 +432,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_force_utgid(SysInfo* sys,
   }
   else if ( sys->utgidLen != len ) {
     mtcp_output(MTCP_FATAL,"New UTGID %s too long to replace old value from process stack with length [%d].\n",
-		new_utgid,sys->utgidLen);
+                new_utgid,sys->utgidLen);
   }
   if ( sys->utgid ) {
     m_memcpy(sys->utgid,new_utgid,len);
