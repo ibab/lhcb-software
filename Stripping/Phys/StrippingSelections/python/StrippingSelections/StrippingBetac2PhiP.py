@@ -41,6 +41,7 @@ class StrippingBetac2PhiPConf(LineBuilder):
     , 'Betac_BPVLTIME_MIN'
     , 'Betac_BPVLTIME_MAX'
     , 'Hlt2IncPhiDecision'   
+    , 'Hlt2CharmHadD2HHHDecision'
     , 'PrescaleBetac2PhiP'
     , 'PostscaleBetac2PhiP'
                              )
@@ -76,7 +77,10 @@ class StrippingBetac2PhiPConf(LineBuilder):
                           )
         
         self.line_Betac2PhiP = StrippingLine( Betac2PhiP_name + 'Line',
-                                           HLT                   = config['Hlt2IncPhiDecision'], 
+#                                           HLT = config['Hlt2CharmHadD2HHHDecision'] | config['Hlt2IncPhiDecision'], 
+
+                  HLT = "(HLT_PASS_RE('Hlt2IncPhiDecision') | "\
+                        "HLT_PASS_RE('Hlt2CharmHadD2HHHDecision'))",
                                            prescale              = config['PrescaleBetac2PhiP'],
                                            postscale             = config['PostscaleBetac2PhiP'],
                                            algos                 = [ self.selBetac2PhiP ]
@@ -137,6 +141,7 @@ def makeBetac2PhiP(name
    
     
     dCuts =    "(VFASPF(VCHI2/VDOF) < %(Betac_VCHI2VDOF_MAX)s) " \
+               "& (PT> 3000.0*MeV) " \
                "& (BPVDIRA > %(Betac_BPVDIRA_MIN)s) " \
                "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %(Betac_BPVLTIME_MIN)s) " \
                "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') < %(Betac_BPVLTIME_MAX)s)" % locals()
@@ -161,7 +166,7 @@ default_config = {
                   , 'Daug_P_MIN'                : 10000.0 * MeV 
                   , 'Daug_PT_MIN'               : 400.0 * MeV
                   , 'Daug_MIPDV'                : 0.05 * mm
-		  , 'Proton_PIDpi_MIN'          : 35.0
+		  , 'Proton_PIDpi_MIN'          : 25.0
                   , 'Proton_PIDK_MIN'           : 5.0 
                   , 'Phi_WIN'                   : 10.0 * MeV
                   , 'Phi_PT'                    : 0.0 * MeV         
@@ -172,9 +177,9 @@ default_config = {
                   , 'Betac_BPVLTIME_MIN'        : 0.0 * ns
                   , 'Betac_BPVLTIME_MAX'        : 0.006 * ns
                   , 'Hlt2IncPhiDecision'        : "HLT_PASS_RE('Hlt2IncPhiDecision')"
+                  , 'Hlt2CharmHadD2HHHDecision':  "HLT_PASS_RE('Hlt2CharmHadD2HHHDecision')"
                   , 'PrescaleBetac2PhiP'        : 1.0
                   , 'PostscaleBetac2PhiP'       : 1.0
                  }
-
 
  

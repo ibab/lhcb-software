@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-28 - Lucio Anderlini (for Yury Shcheglov)
+ - Reduced retention for Betac2PhiP line (includes new conf. dictionary)
+
 ! 2013-08-28 - Thomas Blake
  - Added Hadronic lines to XMuMu
 
