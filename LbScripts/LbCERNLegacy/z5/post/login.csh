@@ -5,6 +5,7 @@ if ( "$CMTCONFIG" == "x86_64-slc5-icc11-opt" || "$CMTCONFIG" == "x86_64-slc5-icc
     unalias cwdcmd
     source ${GROUP_DIR}/post/icc_setup.csh
     setenv ICC_SETUP_DONE
+    unsetenv ICC13_SETUP_DONE
   endif
 endif 
 
@@ -14,7 +15,8 @@ if ( "$CMTCONFIG" == "x86_64-slc6-icc13-opt" || "$CMTCONFIG" == "x86_64-slc6-icc
     unalias cd
     unalias cwdcmd
     source ${GROUP_DIR}/post/icc13_setup.csh
-    setenv ICC_SETUP_DONE
+    setenv ICC13_SETUP_DONE
+    unsetenv ICC_SETUP_DONE
   endif
 endif
 
@@ -26,5 +28,6 @@ if ( "$CMTCONFIG" == "i686-slc5-icc11-opt" || "$CMTCONFIG" == "i686-slc5-icc11-d
     unalias cwdcmd
     source ${GROUP_DIR}/post/icc_setup32.csh
     setenv ICC_SETUP_DONE
+    unsetenv ICC13_SETUP_DONE
   endif
 endif 
