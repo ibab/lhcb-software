@@ -150,10 +150,10 @@ B2XuMuNu = {
 PhiToKSKS = {
     'BUILDERTYPE' : 'PhiToKSKSAllLinesConf',
     'CONFIG' :  {
-        "prescale_PhiToKK" : 0.1,
+        "prescale_PhiToKK" : 0.01,
         "prescale_PhiToKsKs_LLLL" : 1.0,
         "prescale_PhiToKsKs_LLDD" : 1.0,
-        "prescale_JPsiToKK" : 0.2,
+        "prescale_JPsiToKK" : 0.05,
         "prescale_JPsiToKsKs_LLLL" : 1.0,
         "prescale_JPsiToKsKs_LLDD" : 1.0,
         "GEC_nLongTrk" : 250,
