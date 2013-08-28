@@ -70,7 +70,14 @@
   <class name    = "Gaudi::Math::GammaDist"       />
   <class name    = "Gaudi::Math::LogGammaDist"    />
   <class name    = "Gaudi::Math::Log10GammaDist"  />
-
+  <class name    = "Gaudi::Math::GenGammaDist"    />
+  <class name    = "Gaudi::Math::Amoroso"         />
+  <class name    = "Gaudi::Math::LogGamma"        />
+  <class name    = "Gaudi::Math::BetaPrime"       />
+  
+  <class name    = "Gaudi::Math::GenGaussV1"      />
+  <class name    = "Gaudi::Math::GenGaussV2"      />
+  <class name    = "Gaudi::Math::SkewGauss"       />
 
   <class name    = "Gaudi::Math::Spline"           >
     <field name  = "m_spline" transient = "true"/>      

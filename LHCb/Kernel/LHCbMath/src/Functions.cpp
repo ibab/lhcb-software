@@ -24,6 +24,7 @@
 #include "gsl/gsl_sf_log.h"
 #include "gsl/gsl_sf_erf.h"
 #include "gsl/gsl_sf_gamma.h"
+#include "gsl/gsl_sf_psi.h"
 #include "gsl/gsl_integration.h"
 // ============================================================================
 // ROOT
@@ -344,7 +345,21 @@ namespace
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-04-19
    */
-  const double s_SQRT2PI    =       std::sqrt( 2 * M_PI ) ;
+  const double s_SQRT2PI    =       std::sqrt ( 2 * M_PI ) ;
+  // ===========================================================================
+  /** @var s_SQRT2 
+   *  helper constant \f$\sqrt{2}\f$
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2013-08-25
+   */
+  const double s_SQRT2      =       std::sqrt ( 2.0 )      ;
+  // ===========================================================================
+  /** @var s_SQRT2i 
+   *  helper constant \f$\frac{1}{\sqrt{2}}\f$
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2013-08-25
+   */
+  const double s_SQRT2i      =       1/std::sqrt ( 2.0 )    ;
   // ===========================================================================
   /** @var s_HALFSQRTPI
    *  helper constant \f$ \frac{\sqrt{\pi}}{2}\f$
@@ -1070,7 +1085,7 @@ Gaudi::Math::BifurcatedGauss::~BifurcatedGauss (){}
 // ============================================================================
 // evaluate Bifurcated Gaussian
 // ============================================================================
-double Gaudi::Math::BifurcatedGauss::operator() ( const double x ) const
+double Gaudi::Math::BifurcatedGauss::pdf ( const double x ) const
 {
   const double dx = x - m_peak ;
   //
@@ -1154,6 +1169,402 @@ double Gaudi::Math::BifurcatedGauss::sigma   () const
 double Gaudi::Math::BifurcatedGauss::asym    () const
 { return 0.5  * ( sigmaL () - sigmaR () ) / sigma () ; }
  // ============================================================================
+
+
+// ============================================================================
+/*  constructor from all agruments 
+ *  @param mu     location/peak posiiton 
+ *  @param alpha  "scale" parameter 
+ *  @param beta   "shape" parameter 
+ */
+// ============================================================================
+Gaudi::Math::GenGaussV1::GenGaussV1 
+( const double mu    ,
+  const double alpha , 
+  const double beta  ) 
+  : std::unary_function<double,double>() 
+  , m_mu     ( mu                 ) 
+  , m_alpha  ( std::abs ( alpha ) ) 
+  , m_beta   ( std::abs ( beta  ) ) 
+  , m_gbeta1 ( 0 )
+  , m_gbeta2 ( 0 )
+{
+  //
+  setBeta ( beta ) ;
+  //
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::GenGaussV1::~GenGaussV1(){}
+// ============================================================================
+bool Gaudi::Math::GenGaussV1::setMu        ( const double value ) 
+{
+  if ( s_equal ( value , m_mu) ) { return false ; }
+  m_mu = value ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::GenGaussV1::setAlpha     ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;
+  if ( s_equal ( value_ , m_alpha ) ) { return false ; }
+  m_alpha = value_ ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::GenGaussV1::setBeta     ( const double value ) 
+{
+  //
+  const double value_ = std::max ( std::abs ( value ) , 1.5/GSL_SF_GAMMA_XMAX ) ;
+  //
+  if ( s_equal ( value_ , m_beta ) ) { return false ; }
+  //
+  m_beta = value_ ;
+  //
+  if   ( beta() * GSL_SF_GAMMA_XMAX < 6 ) 
+  { 
+    m_gbeta1  = 0 ;
+    m_gbeta2  = gsl_sf_lngamma ( 3 / beta() ) ;    
+    m_gbeta2 -= gsl_sf_lngamma ( 1 / beta() ) ;
+    m_gbeta2  = gsl_sf_exp     ( m_gbeta2   ) ;
+  }
+  else 
+  { 
+    m_gbeta1 = 1. / gsl_sf_gamma ( 1 / beta() )            ;
+    m_gbeta2 =      gsl_sf_gamma ( 3 / beta() ) * m_gbeta1 ;
+  }
+  //
+  return true ;
+}
+// ============================================================================
+double Gaudi::Math::GenGaussV1::pdf ( const double x ) const 
+{
+  //
+  const double delta  = std::abs ( x - m_mu )         ;
+  const double delta1 =            delta  / m_alpha   ;
+  const double delta2 = std::pow ( delta1 , m_beta  ) ;
+  //
+  if ( delta2 > 60 || 0 == m_gbeta1 || beta() * GSL_SF_GAMMA_XMAX < 4 ) 
+  {
+    double result  = gsl_sf_log ( 0.5 * beta() / alpha() ) ;
+    result        -= delta2 ;
+    result        -= gsl_sf_lngamma ( 1 / beta() ) ;
+    return gsl_sf_exp ( result ) ;
+  }
+  //
+  double result   = 0.5 * beta() / alpha() ;
+  result         *= gsl_sf_exp   ( -delta2 ) ;
+  result         *= m_gbeta1  ;
+  //
+  return result ;
+}
+// ============================================================================
+double Gaudi::Math::GenGaussV1::cdf ( const double x ) const 
+{
+  //
+  const double delta  = std::abs ( x - m_mu )         ;
+  const double delta1 =            delta  / m_alpha   ;
+  const double delta2 = std::pow ( delta1 , m_beta  ) ;
+  //
+  const double c = gsl_sf_gamma_inc_P ( 1/beta() , -delta2 ) ;
+  //
+  return x < m_mu ?  0.5 - c : 0.5 + c ;
+}
+// ============================================================================ 
+double Gaudi::Math::GenGaussV1::integral ( const double low  , 
+                                           const double high ) const 
+{
+  if ( s_equal ( low , high ) ) { return 0 ; }
+  return cdf ( high ) - cdf ( low ) ;
+}
+// ============================================================================ 
+double  Gaudi::Math::GenGaussV1::variance () const 
+{ return alpha() * alpha() *             m_gbeta2   ; }
+// ============================================================================
+double  Gaudi::Math::GenGaussV1::sigma    () const 
+{ return alpha()           * std::sqrt ( m_gbeta2 ) ; }
+// ============================================================================
+double  Gaudi::Math::GenGaussV1::kurtosis () const 
+{
+  double result  =   gsl_sf_lngamma ( 5 / beta() ) ;
+  result        +=   gsl_sf_lngamma ( 1 / beta() ) ;
+  result        -= 2*gsl_sf_lngamma ( 3 / beta() ) ;
+  //
+  return gsl_sf_exp ( result ) - 3 ;
+}
+// ============================================================================
+
+
+
+// ============================================================================
+/* constructor from all agruments 
+ *  @param xi     location/peak posiiton 
+ *  @param alpha  "scale" parameter 
+ *  @param kappa  "shape" parameter 
+ */
+// ============================================================================
+Gaudi::Math::GenGaussV2::GenGaussV2 
+( const double xi    ,
+  const double alpha , 
+  const double kappa )  // kappa=0 correponds to gaussian  
+  : std::unary_function<double,double>() 
+  , m_xi      ( xi                 ) 
+  , m_alpha   ( std::abs ( alpha ) ) 
+  , m_kappa   (            kappa   ) 
+{
+  //
+  setKappa ( kappa ) ;
+  //
+}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::GenGaussV2::~GenGaussV2(){}
+// ============================================================================
+bool Gaudi::Math::GenGaussV2::setXi        ( const double value ) 
+{
+  if ( s_equal ( value , m_xi) ) { return false ; }
+  m_xi = value ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::GenGaussV2::setAlpha     ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;
+  if ( s_equal ( value_ , m_alpha ) ) { return false ; }
+  m_alpha = value_ ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::GenGaussV2::setKappa  ( const double value ) 
+{
+  //
+  double value_ = value ;
+  //
+  if ( s_equal ( value_ , 0       ) ) { value_ = 0 ; }
+  if ( s_equal ( value_ , m_kappa ) ) { return false ; }
+  //
+  m_kappa = value_;
+  //
+  return true ;
+}
+// ============================================================================
+double  Gaudi::Math::GenGaussV2::y ( const double x ) const
+{
+  if  ( s_equal( m_kappa , 0 ) ) { return ( x - xi() ) / alpha() ; }
+  //
+  const double delta =  - ( x - xi () ) * kappa() / alpha () ;
+  //
+  return 
+    delta > 1 ?
+    -gsl_sf_log        ( 1 + delta ) / kappa() :
+    -gsl_sf_log_1plusx (     delta ) / kappa() ;  
+}
+// ============================================================================
+double Gaudi::Math::GenGaussV2::pdf ( const double x ) const 
+{
+  //
+  const double z = xi() + alpha() / kappa() ;
+  //
+  if      ( kappa () > 0 && ( x > z || s_equal ( x , z ) ) ) { return 0 ; }
+  else if ( kappa () < 0 && ( x < z || s_equal ( x , z ) ) ) { return 0 ; }
+  //
+  const double y_   = y ( x ) ;
+  //
+  const double gau  = my_exp ( -0.5 * y_ * y_ ) / s_SQRT2PI ;
+  //
+  return gau / ( 1 - kappa() * ( x - xi () ) ) ;
+}
+// ============================================================================
+double Gaudi::Math::GenGaussV2::cdf ( const double x ) const 
+{
+  //
+  const double z = xi() + alpha() / kappa() ;
+  //
+  if      ( kappa () > 0 && ( x > z || s_equal ( x , z ) ) ) { return 1 ; }
+  else if ( kappa () < 0 && ( x < z || s_equal ( x , z ) ) ) { return 0 ; }
+  //
+  const double y_   = y ( x ) ;
+  //
+  const double e_   = gsl_sf_erf ( y_ * s_SQRT2i ) ;
+  //
+  return 0.5 * ( 1 + e_ ) ;
+}
+// ============================================================================
+double Gaudi::Math::GenGaussV2::integral ( const double low  , 
+                                           const double high ) const 
+{
+  if ( s_equal ( low , high ) ) { return 0 ; }
+  return cdf ( high ) - cdf ( low ) ;
+}
+// ============================================================================
+double Gaudi::Math::GenGaussV2::mean () const 
+{
+  if ( s_equal ( kappa () , 0 ) ) { return xi () ; }
+  //
+  const double k2 = 0.5 * kappa() * kappa() ;
+  //
+  return xi() - 0.5 * alpha() * kappa() * gsl_sf_exprel ( k2 ) ;
+}
+// ============================================================================
+double Gaudi::Math::GenGaussV2::variance () const 
+{
+  if ( s_equal ( kappa() , 0 ) ) { return alpha () * alpha() ; }
+  //
+  const double k2 = kappa() * kappa() ;
+  //
+  return alpha () * alpha() * gsl_sf_exp ( k2 ) * gsl_sf_exprel ( k2 ) ;
+}
+// ============================================================================
+double Gaudi::Math::GenGaussV2::sigma () const 
+{ return std::sqrt ( variance() ) ; }
+// ============================================================================
+double Gaudi::Math::GenGaussV2::skewness () const 
+{
+  const double k2     = kappa () * kappa() ;
+  //
+  const double a1     = gsl_sf_exprel (     k2 ) ;
+  const double a3     = gsl_sf_exprel ( 3 * k2 ) ;
+  //
+  const double a      = std::pow ( a1 , 1.5 ) ;
+  //
+  const double result = 3 *  ( a1 - a3 ) / a ;
+  //
+  return kappa() * result ;
+  //  
+}
+// ============================================================================
+double Gaudi::Math::GenGaussV2::kurtosis () const 
+{
+  //
+  const double ek2 = gsl_sf_exp ( kappa() * kappa() ) ;
+  //
+  return  Gaudi::Math::pow ( ek2 , 4 )  
+    + 2 * Gaudi::Math::pow ( ek2 , 3 ) 
+    + 3 * Gaudi::Math::pow ( ek2 , 2 ) - 6 ;
+}
+// ============================================================================
+#include "boost/math/distributions/skew_normal.hpp"
+// ============================================================================
+/*  constructor from all agruments 
+ *  @param xi     location/peak posiiton 
+ *  @param omega  "scale" parameter 
+ *  @param alpha  "shape" parameter 
+ */
+// ============================================================================
+Gaudi::Math::SkewGauss::SkewGauss
+( const double xi    ,
+  const double omega , 
+  const double alpha )  // alpha=0 correponds to gaussian  
+  : std::unary_function<double,double>() 
+  , m_xi      ( xi                 ) 
+  , m_omega   ( std::abs ( omega ) ) 
+  , m_alpha   (            alpha   ) 
+{}
+// ============================================================================
+// desctructor
+// ============================================================================
+Gaudi::Math::SkewGauss::~SkewGauss(){}
+// ============================================================================
+bool Gaudi::Math::SkewGauss::setXi        ( const double value ) 
+{
+  if ( s_equal ( value , m_xi) ) { return false ; }
+  m_xi = value ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::SkewGauss::setOmega     ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;
+  if ( s_equal ( value_ , m_omega ) ) { return false ; }
+  m_omega = value_ ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::SkewGauss::setAlpha  ( const double value ) 
+{
+  //
+  if ( s_equal ( value , m_alpha ) ) { return false ; }
+  m_alpha = value ;
+  if ( s_equal ( 0     , m_alpha ) ) { m_alpha = 0  ; }
+  //
+  return true ;
+}
+// ============================================================================
+double Gaudi::Math::SkewGauss::pdf ( const double x ) const 
+{
+  typedef boost::math::skew_normal_distribution<>  skew ;
+  skew skew_ ( m_xi , m_omega , m_alpha ) ;
+  return boost::math::pdf ( skew_ , x ) ;
+}
+// ============================================================================
+double Gaudi::Math::SkewGauss::cdf ( const double x ) const 
+{
+  typedef boost::math::skew_normal_distribution<>  skew ;
+  skew skew_ ( m_xi , m_omega , m_alpha ) ;
+  return boost::math::cdf ( skew_ , x ) ;
+}
+// ============================================================================
+double Gaudi::Math::SkewGauss::integral ( const double low  , 
+                                          const double high ) const 
+{
+  if ( s_equal ( low , high ) ) { return 0 ; }
+  //
+  typedef boost::math::skew_normal_distribution<>  skew ;
+  skew skew_ ( m_xi , m_omega , m_alpha ) ;
+  //
+  return 
+    boost::math::cdf ( skew_ , high ) - 
+    boost::math::cdf ( skew_ , low  ) ;  
+}
+// ============================================================================
+double Gaudi::Math::SkewGauss::mean () const 
+{
+  typedef boost::math::skew_normal_distribution<>  skew ;
+  skew skew_ ( m_xi , m_omega , m_alpha ) ;
+  //
+  return boost::math::mean ( skew_ ) ;
+}
+// ============================================================================
+double Gaudi::Math::SkewGauss::variance () const 
+{
+  typedef boost::math::skew_normal_distribution<>  skew ;
+  skew skew_ ( m_xi , m_omega , m_alpha ) ;
+  //
+  return boost::math::variance ( skew_ ) ;
+}
+// ============================================================================
+double Gaudi::Math::SkewGauss::skewness () const 
+{
+  typedef boost::math::skew_normal_distribution<>  skew ;
+  skew skew_ ( m_xi , m_omega , m_alpha ) ;
+  //
+  return boost::math::skewness ( skew_ ) ;
+}
+// ============================================================================
+double Gaudi::Math::SkewGauss::kurtosis () const 
+{
+  typedef boost::math::skew_normal_distribution<>  skew ;
+  skew skew_ ( m_xi , m_omega , m_alpha ) ;
+  //
+  return boost::math::kurtosis ( skew_ ) ;
+}
+// ============================================================================
+double Gaudi::Math::SkewGauss::mode  () const 
+{
+  typedef boost::math::skew_normal_distribution<>  skew ;
+  skew skew_ ( m_xi , m_omega , m_alpha ) ;
+  //
+  return boost::math::kurtosis ( skew_ ) ;
+}
+// ============================================================================
+double Gaudi::Math::SkewGauss::sigma  () const 
+{ return std::sqrt ( variance () ) ; }
+// ============================================================================
+
+
+
 
 
 // ============================================================================
@@ -1357,7 +1768,7 @@ bool Gaudi::Math::Bukin::setRhoR  ( const double value )
 // ============================================================================
 // evaluate Bukin's function
 // ============================================================================
-double Gaudi::Math::Bukin::operator() ( const double x ) const
+double Gaudi::Math::Bukin::pdf ( const double x ) const
 {
   //
   //  left tail :
@@ -1593,7 +2004,7 @@ bool Gaudi::Math::Novosibirsk::setTau ( const double value )
 // ============================================================================
 // evaluate Novosibirsk's function
 // ============================================================================
-double Gaudi::Math::Novosibirsk::operator() ( const double x ) const
+double Gaudi::Math::Novosibirsk::pdf  ( const double x ) const
 {
   //
   const double dx     = ( x - m_m0 ) / m_sigma ;
@@ -1849,7 +2260,7 @@ bool Gaudi::Math::CrystalBall::setN      ( const double value )
 // ============================================================================
 //  evaluate CrystalBall's function
 // ============================================================================
-double Gaudi::Math::CrystalBall::operator() ( const double x ) const
+double Gaudi::Math::CrystalBall::pdf ( const double x ) const
 {
   //
   const double dx    = ( x - m_m0 ) / m_sigma ;
@@ -1999,7 +2410,7 @@ bool Gaudi::Math::Needham::setA2 ( const double value )
 // ===========================================================================
 // evaluate Needham's function
 // ===========================================================================
-double Gaudi::Math::Needham::operator() ( const double x ) const
+double Gaudi::Math::Needham::pdf ( const double x ) const
 { return m_cb ( x ) ; }
 // ============================================================================
 /*  constructor from all parameters
@@ -2109,7 +2520,7 @@ bool Gaudi::Math::CrystalBallDoubleSided::setN_R     ( const double value )
 // ============================================================================
 //  evaluate CrystalBall's function
 // ============================================================================
-double Gaudi::Math::CrystalBallDoubleSided::operator() ( const double x ) const
+double Gaudi::Math::CrystalBallDoubleSided::pdf ( const double x ) const
 {
   //
   const double dx = ( x - m_m0 ) / m_sigma ;
@@ -2252,7 +2663,7 @@ Gaudi::Math::GramCharlierA::~GramCharlierA() {}
 // ============================================================================
 // evaluate Gram-Charlier type A approximation
 // ============================================================================
-double Gaudi::Math::GramCharlierA::operator() ( const double x ) const
+double Gaudi::Math::GramCharlierA::pdf ( const double x ) const
 {
   //
   const double dx = ( x - m_mean ) / m_sigma ;
@@ -5194,7 +5605,8 @@ double Gaudi::Math::StudentT::integral
 Gaudi::Math::GammaDist::GammaDist 
 ( const double k     ,   // shape parameter  
   const double theta )   // scale parameter
-  : m_k     ( std::abs ( k     ) )
+  : std::unary_function<double,double> () 
+  , m_k     ( std::abs ( k     ) )
   , m_theta ( std::abs ( theta ) ) 
 {}
 // ============================================================================
@@ -5222,6 +5634,12 @@ bool Gaudi::Math::GammaDist::setK ( const double x )
   return true ;
 }
 // ============================================================================
+double Gaudi::Math::GammaDist::sigma    () const
+{ return std::sqrt ( dispersion ()  ) ; }
+// ============================================================================
+double Gaudi::Math::GammaDist::skewness () const
+{ return 2.0 / std::sqrt ( m_k )      ; }
+// ============================================================================
 // set the proper parameters
 // ============================================================================
 bool Gaudi::Math::GammaDist::setTheta ( const double x )
@@ -5245,7 +5663,7 @@ bool Gaudi::Math::GammaDist::setTheta ( const double x )
 // ============================================================================
 // calculate gamma distribution shape
 // ============================================================================
-double Gaudi::Math::GammaDist::operator() ( const double x ) const
+double Gaudi::Math::GammaDist::pdf ( const double x ) const
 {
   // simple cases 
   if ( x < 0 ) { return 0 ; }
@@ -5277,9 +5695,351 @@ double Gaudi::Math::GammaDist::integral ( const double low  ,
     gsl_sf_gamma_inc_P ( m_k , high / m_theta ) - 
     gsl_sf_gamma_inc_P ( m_k , low  / m_theta ) ;
 }
+// ============================================================================
+
 
 // ============================================================================
-/* constructor form scale & shape parameters
+// Generalaize Gamma distribtions 
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  double _calc_aux_ ( const double k     , 
+                      const double theta , 
+                      const double p     )
+  {
+    if ( k > 0.2 * GSL_SF_GAMMA_XMAX * p 
+         || theta < 1.e-6 
+         || p     > 1.e+6 ) 
+    {
+      double aux  = gsl_sf_log     ( p     ) ;
+      aux        -= gsl_sf_log     ( theta ) ;
+      aux        -= gsl_sf_lngamma ( k / p ) ;
+      return        gsl_sf_exp     ( aux   ) ;
+    }
+    return p / theta / gsl_sf_gamma ( k / p ) ;
+  }
+  // ==========================================================================
+}
+// ============================================================================
+/*  constructor
+ *  param k     \f$k\f$ parameter      (shape)
+ *  param theta \f$\theta\f$ parameter (scale)
+ *  param p     \f$p\f$ parameter 
+ *  param low   bias       
+ */
+// ============================================================================
+Gaudi::Math::GenGammaDist::GenGammaDist
+( const double k     , 
+  const double theta , 
+  const double p     , // 1 corresponds to gamma distribution 
+  const double low   ) 
+  : std::unary_function<double,double>() 
+  , m_k     ( std::abs ( k     ) ) 
+  , m_theta ( std::abs ( theta ) ) 
+  , m_p     ( std::abs ( p     ) ) 
+  , m_low   ( low ) 
+  , m_aux   ( 0   ) 
+{
+  m_aux = _calc_aux_ ( m_k  , m_theta , m_p ) ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::GenGammaDist::~GenGammaDist(){}
+// ============================================================================
+bool Gaudi::Math::GenGammaDist::setK     ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;
+  if ( s_equal ( value_ , m_k ) ) { return false ; }
+  m_k   = value_ ;
+  m_aux = _calc_aux_ ( k () , theta() , p() ) ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::GenGammaDist::setTheta ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;
+  if ( s_equal ( value_ , m_theta ) ) { return false ; }
+  m_theta = value_ ;
+  m_aux   = _calc_aux_ ( k () , theta() , p() ) ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::GenGammaDist::setP    ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;
+  if ( s_equal ( value_ , m_p ) ) { return false ; }
+  m_p     = value_ ;
+  m_aux   = _calc_aux_ ( k () , theta() , p () ) ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::GenGammaDist::setLow ( const double value ) 
+{
+  if ( s_equal ( value , m_low ) ) { return false ; }
+  m_low   = value ;
+  return true ;
+}
+// ============================================================================
+double Gaudi::Math::GenGammaDist::pdf ( const double x ) const 
+{
+  //
+  if ( x <= m_low || s_equal ( x , m_low ) ) { return 0 ; }
+  //
+  const double xc = ( x - m_low ) / theta() ;  
+  const double xt = std::pow ( xc , p() ) ;
+  //
+  if ( xt > 50 
+       || k     () > 0.2 * GSL_SF_GAMMA_XMAX * p() 
+       || theta () < 1.e-6 
+       || p     () > 1.e+6 ) 
+  {
+    double result   = ( k () - 1 ) * gsl_sf_log ( xc ) ;
+    result         -= xt  ;
+    result         += gsl_sf_log     ( p     ()    ) ;
+    result         -= gsl_sf_log     ( theta ()    ) ;
+    result         -= gsl_sf_lngamma ( k () / p () ) ;
+    return gsl_sf_exp ( result ) ;
+  }
+  //
+  double result  = m_aux ;
+  result        *= std::pow ( xc , k() - 1 ) ;
+  result        *= gsl_sf_exp ( -xt  ) ;
+  //
+  return result ;
+}
+// ============================================================================
+double Gaudi::Math::GenGammaDist::cdf ( const double x ) const 
+{
+  //
+  if ( x <= m_low || s_equal ( x , m_low ) ) { return 0 ; }
+  //
+  const double xc = ( x - m_low ) / theta() ;  
+  const double xt = std::pow ( xc , p () ) ;
+  //
+  return gsl_sf_gamma_inc_P ( k () / p () , xt ) ;
+}
+// ============================================================================
+double Gaudi::Math::GenGammaDist::integral () const { return 1 ; }
+// ============================================================================
+double Gaudi::Math::GenGammaDist::integral ( const double low  , 
+                                             const double high ) const 
+{
+  if ( s_equal ( low , high ) ) { return 0 ; }
+  return cdf ( high ) - cdf ( low ) ;  
+}
+// ============================================================================
+
+
+// ============================================================================
+// Amoroso 
+// ============================================================================
+namespace 
+{
+  double _calc_aux_2_ ( const double theta ,
+                        const double alpha , 
+                        const double beta  )
+  {
+    if ( alpha >= 0.2 * GSL_SF_GAMMA_XMAX 
+         || std::abs ( theta ) < 1.e-6 
+         || std::abs ( beta  ) > 1.e+6 ) 
+    { 
+      double aux  = gsl_sf_log     ( std::abs ( beta  ) ) ;
+      aux        -= gsl_sf_log     ( std::abs ( theta ) ) ;
+      aux        -= gsl_sf_lngamma ( alpha ) ;
+      return        gsl_sf_exp     ( aux   ) ;
+    }
+    return std::abs ( beta / theta ) / gsl_sf_gamma ( alpha ) ;
+  }  
+}
+
+// ==========================================================================
+/*  constructor
+ *  param a     a-parameter 
+ *  param theta \f$\theta\f$-parameter  
+ *  param alpha \f$\alpha\f$-parameter (>0)
+ *  param beta  \f$\beta\f$-parameter 
+ *  Note that   \f$\alpha\beta\f$ is equal to k-parameter 
+ */
+// ============================================================================
+Gaudi::Math::Amoroso::Amoroso 
+( const double theta , 
+  const double alpha , 
+  const double beta  ,
+  const double a     ) 
+  : std::unary_function<double,double>() 
+  , m_a     (            a       ) 
+  , m_theta ( theta              ) 
+  , m_alpha ( std::abs ( alpha ) ) 
+  , m_beta  (            beta    ) 
+  , m_aux   ( 0 ) 
+{
+  m_aux = _calc_aux_2_ ( m_theta , m_alpha , m_beta ) ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::Amoroso::~Amoroso(){}
+// ============================================================================
+bool Gaudi::Math::Amoroso::setA      ( const double value ) 
+{
+  if ( s_equal ( value , m_a ) ) { return false ; }
+  m_a = value ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::Amoroso::setTheta ( const double value ) 
+{
+  if ( s_equal ( value , m_theta ) ) { return false ; }
+  m_theta = value ;
+  m_aux   = _calc_aux_2_ ( m_theta , m_alpha , m_beta ) ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::Amoroso::setAlpha ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;
+  if ( s_equal ( value_ , m_alpha ) ) { return false ; }
+  m_alpha = value_ ;
+  m_aux   = _calc_aux_2_ ( m_theta , m_alpha , m_beta ) ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::Amoroso::setBeta ( const double value ) 
+{
+  if ( s_equal ( value , m_beta ) ) { return false ; }
+  m_beta  = value ;
+  m_aux   = _calc_aux_2_ ( m_theta , m_alpha , m_beta ) ;
+  return true ;
+}
+// ============================================================================
+// evaluate Amoroso distribtion
+// ============================================================================
+double Gaudi::Math::Amoroso::pdf ( const double x ) const 
+{
+  //
+  if      ( theta () > 0 && ( x <= m_a || s_equal ( x , m_a ) ) ) { return 0 ; }
+  else if ( theta () < 0 && ( x >= m_a || s_equal ( x , m_a ) ) ) { return 0 ; }
+  //
+  const double xc = ( x - m_a ) / theta ()    ;
+  const double xt = std::pow ( xc , beta() ) ;
+  //
+  if ( xt > 50 
+       || alpha () >= 0.2 * GSL_SF_GAMMA_XMAX 
+       || std::abs ( theta () ) < 1.e-6 
+       || std::abs ( beta  () ) > 1.e+6 ) 
+  {
+    //
+    double result   = ( alpha() * beta() - 1 ) * xc ;
+    result += gsl_sf_log     ( std::abs ( beta  () ) ) ;
+    result -= gsl_sf_log     ( std::abs ( theta () ) ) ;
+    result -= gsl_sf_lngamma (            alpha ()   ) ;
+    //
+    return gsl_sf_exp ( result ) ;
+  }
+  //
+  double result  = m_aux ;
+  result        *= std::pow   ( xc , alpha() * beta() - 1 ) ;
+  result        *= gsl_sf_exp ( -xt  ) ;
+  //
+  return result ;
+}
+// ============================================================================
+double Gaudi::Math::Amoroso::cdf ( const double x ) const 
+{
+  //
+  if      ( theta () > 0 && ( x <= m_a || s_equal ( x , m_a ) ) ) { return 0 ; }
+  else if ( theta () < 0 && ( x >= m_a || s_equal ( x , m_a ) ) ) { return 1 ; }
+  //
+  const double xc = ( x - m_a ) / theta ()    ;
+  const double xt = std::pow ( xc , beta() ) ;
+  //
+  return 
+    beta() * theta() > 0 ? 
+    1 - gsl_sf_gamma_inc_Q ( alpha() , xt ) :
+    gsl_sf_gamma_inc_Q ( alpha() , xt ) ;
+}
+// ============================================================================
+double Gaudi::Math::Amoroso::integral () const { return 1 ; }
+// ============================================================================
+double Gaudi::Math::Amoroso::integral ( const double low  , 
+                                        const double high ) const 
+{
+  if ( s_equal ( low ,high ) ) { return 0 ; }
+  return  cdf ( high ) - cdf ( low ) ;
+}
+// ============================================================================
+double Gaudi::Math::Amoroso::mode () const 
+{
+  if ( alpha() * beta() <= 1 ) { return a () ; }
+  return a () + theta() * std::pow ( alpha() - 1./beta() , 1./beta () ) ;
+}
+// ============================================================================
+double Gaudi::Math::Amoroso::mean () const 
+{
+  const double x = alpha() + 1/beta() ;
+  if ( x <= 0 || s_equal ( x , 0 )  ) { return -1.e+9 ; } // RETURN 
+  //
+  if ( x       < 0.2 * GSL_SF_GAMMA_XMAX && 
+       alpha() < 0.2 * GSL_SF_GAMMA_XMAX  ) 
+  {
+    return a () + theta() * gsl_sf_gamma ( x ) / gsl_sf_gamma ( alpha() ) ;
+  }
+  //
+  double aux = gsl_sf_lngamma ( x       ) ;
+  aux -= gsl_sf_lngamma       ( alpha() ) ;
+  //
+  return a() + theta() * gsl_sf_exp ( aux ) ;
+}
+// ============================================================================
+double Gaudi::Math::Amoroso::variance () const 
+{
+  //
+  const double x2 = alpha() + 2/beta() ;
+  if ( x2 <= 0 || s_equal ( x2 , 0 )  ) { return -1.e+9 ; } // RETURN 
+  //
+  const double x1 = alpha() + 1/beta() ;
+  if ( x1 <= 0 || s_equal ( x1 , 0 )  ) { return -1.e+9 ; } // RETURN 
+  //
+  //
+  if ( x1      < 0.2 * GSL_SF_GAMMA_XMAX && 
+       x2      < 0.2 * GSL_SF_GAMMA_XMAX && 
+       alpha() < 0.2 * GSL_SF_GAMMA_XMAX  ) 
+  {
+    const double ga  = gsl_sf_gamma ( alpha () ) ;
+    const double gx1 = gsl_sf_gamma ( x1       ) ;
+    const double gx2 = gsl_sf_gamma ( x2       ) ;
+    //
+    return theta2() * ( gx2 / ga - Gaudi::Math::pow ( gx1 / ga , 2 ) ) ;
+  }
+  //
+  const double lnga = gsl_sf_lngamma ( alpha () ) ;
+  //
+  double aux1  = gsl_sf_lngamma ( x1   ) ;
+  aux1        -= lnga ;
+  aux1         = gsl_sf_exp     ( aux1 ) ;
+  //
+  double aux2  = gsl_sf_lngamma ( x2   ) ;
+  aux2        -= lnga ;
+  aux2         = gsl_sf_exp     ( aux2 ) ;
+  //
+  return theta2() * ( aux2 - aux1 * aux1 ) ;
+}
+// ============================================================================
+double Gaudi::Math::Amoroso::sigma () const 
+{
+  //
+  const double x2 = alpha() + 2/beta() ;
+  if ( x2 <= 0 || s_equal ( x2 , 0 )  ) { return -1.e+9 ; } // RETURN 
+  //
+  const double x1 = alpha() + 1/beta() ;
+  if ( x1 <= 0 || s_equal ( x1 , 0 )  ) { return -1.e+9 ; } // RETURN 
+  //
+  return std::sqrt ( variance() ) ;
+}
+// ============================================================================
+/* constructor from scale & shape parameters
  *  param k      \f$k\f$ parameter (shape)
  *  param theta  \f$\theta\f$ parameter (scale)
  */
@@ -5352,6 +6112,280 @@ double Gaudi::Math::Log10GammaDist::integral () const { return 1 ; }
 double Gaudi::Math::Log10GammaDist::integral ( const double low  ,
                                                const double high ) const 
 { return LogGammaDist::integral ( low  * s_LN10 , high * s_LN10 ) ; }
+// ============================================================================
+
+
+
+// ============================================================================
+// Log-Gamma
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  double _calc_aux_3_ ( const double alpha  , 
+                        const double lambda )
+  {
+    if ( alpha >= 0.2 * GSL_SF_GAMMA_XMAX 
+         || std::abs ( lambda ) < 1.e-6  )
+    { 
+      double aux  = 0 ;
+      aux        -= gsl_sf_log     ( std::abs ( lambda ) ) ;
+      aux        -= gsl_sf_lngamma ( alpha ) ;
+      return        gsl_sf_exp     ( aux   ) ;
+    }
+    return 1 / ( gsl_sf_gamma ( alpha ) * std::abs ( lambda ) ) ;
+  }  
+  // ==========================================================================
+}
+// ============================================================================
+/*  constructor from scale & shape parameters
+ *  param nu      \f$\nu\f$ parameter      (location)
+ *  param lambda  \f$\lambda\f$ parameter  
+ *  param alpha   \f$\alpha\f$ parameter    (>0)
+ */
+// ============================================================================
+Gaudi::Math::LogGamma::LogGamma
+( const double nu     , 
+  const double lambda , 
+  const double alpha  ) 
+  : std::unary_function<double,double>() 
+  , m_nu     ( nu     ) 
+  , m_lambda ( lambda ) 
+  , m_alpha  ( std::abs ( alpha ) ) 
+  , m_aux    ( 0 ) 
+{
+  m_aux = _calc_aux_3_ ( m_alpha , m_lambda ) ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::LogGamma::~LogGamma(){}
+// ============================================================================
+bool Gaudi::Math::LogGamma::setNu   ( const double value ) 
+{
+  if ( s_equal ( value , m_nu ) ) { return false ; }
+  m_nu  = value ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::LogGamma::setLambda ( const double value ) 
+{
+  if ( s_equal ( value , m_lambda ) ) { return false ; }
+  m_lambda = value ;
+  m_aux    = _calc_aux_3_ ( m_alpha , m_lambda ) ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::LogGamma::setAlpha ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;
+  if ( s_equal ( value_ , m_alpha ) ) { return false ; }
+  m_alpha = value_ ;
+  m_aux   = _calc_aux_3_ ( m_alpha , m_lambda ) ;
+  return true ;
+}
+// ============================================================================
+// calculate log-gamma shape
+// ============================================================================
+double Gaudi::Math::LogGamma::pdf ( const double x ) const 
+{
+  //
+  const double xc  = x  -  nu    () ;
+  const double xt  = xc / lambda () ;
+  //
+  const double arg = alpha() * xt - gsl_sf_exp ( xt ) ;
+  //
+  if ( std::abs ( arg ) > 50 
+       || alpha() > 0.2 * GSL_SF_GAMMA_XMAX 
+       || std::abs ( lambda() ) < 1.e+6      ) 
+  {
+    //
+    double result  = arg ;
+    result        -= gsl_sf_log      ( std::abs ( lambda () ) ) ;
+    result        -= gsl_sf_lngamma  (            alpha  ()   ) ;
+    //
+    return gsl_sf_exp ( result ) ;
+  }
+  //
+  return m_aux * gsl_sf_exp ( arg ) ;
+}
+// ============================================================================
+double Gaudi::Math::LogGamma::cdf ( const double x ) const 
+{
+  //
+  const double xc  = x  -  nu    () ;
+  const double xt  = xc / lambda () ;
+  //
+  const double ext = gsl_sf_exp ( xt ) ;
+  //
+  return 
+    lambda () > 0 ? 
+    1 - gsl_sf_gamma_inc_Q ( alpha() , ext ) : 
+    gsl_sf_gamma_inc_Q ( alpha() , ext ) ;
+}
+// ============================================================================
+double Gaudi::Math::LogGamma::integral ( const double low  , 
+                                         const double high ) const
+{
+  if ( s_equal ( low , high ) ) { return 0 ; }
+  return cdf ( high ) - cdf ( low ) ;
+}
+// ============================================================================
+double Gaudi::Math::LogGamma::integral () const { return 1 ; }
+// ============================================================================
+double Gaudi::Math::LogGamma::mode     () const 
+{ return nu() - lambda() * gsl_sf_log ( alpha () ) ; }
+// ============================================================================
+double Gaudi::Math::LogGamma::mean     () const 
+{ return nu() + lambda() * gsl_sf_psi ( alpha () ) ; }
+// ============================================================================
+double Gaudi::Math::LogGamma::sigma    () const 
+{ return std::sqrt ( variance () ) ; }
+// ============================================================================
+double Gaudi::Math::LogGamma::variance () const 
+{ return lambda() * lambda() * gsl_sf_psi_1 ( alpha () ) ; }
+// ============================================================================
+double Gaudi::Math::LogGamma::skewness () const 
+{ 
+  const double l_p2 = gsl_sf_psi_n ( 2 , alpha () ) ; 
+  const double l_p1 = gsl_sf_psi_1 (     alpha () ) ; 
+  return 
+    lambda() > 0 ?
+    l_p2 / std::pow ( l_p1 , 1.5 ) : -1 * l_p2 / std::pow ( l_p1 , 1.5 ) ;
+}
+// ============================================================================
+double Gaudi::Math::LogGamma::kurtosis () const 
+{ 
+  const double l_p3 = gsl_sf_psi_n ( 3 , alpha () ) ; 
+  const double l_p1 = gsl_sf_psi_1 (     alpha () ) ; 
+  return l_p3 / ( l_p1 * l_p1) ;
+}
+// ============================================================================
+
+
+
+// ============================================================================
+// Beta' 
+// ============================================================================
+/*  constructor with all parameters 
+ *  @param alpha \f$\alpha\f$-parameter 
+ *  @param beta  \f$\beta\f$-parameter 
+ */
+// ============================================================================
+Gaudi::Math::BetaPrime::BetaPrime 
+( const double alpha , 
+  const double beta  )
+  : std::unary_function<double,double> () 
+  , m_alpha ( std::abs ( alpha ) )
+  , m_beta  ( std::abs ( beta  ) )
+  , m_aux () 
+{
+  m_aux = gsl_sf_beta ( m_alpha , m_beta ) ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Gaudi::Math::BetaPrime::~BetaPrime (){}
+// ============================================================================
+bool Gaudi::Math::BetaPrime::setAlpha ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;
+  if ( s_equal ( value_ , m_alpha ) ) { return false ; }
+  m_alpha = value_ ;
+  m_aux   = gsl_sf_beta ( m_alpha , m_beta ) ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::BetaPrime::setBeta  ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;
+  if ( s_equal ( value_ , m_beta  ) ) { return false ; }
+  m_beta  = value_ ;
+  m_aux   = gsl_sf_beta ( m_alpha , m_beta ) ;
+  return true ;
+}
+// ============================================================================
+// evaluate beta'-distributions 
+// ============================================================================
+double Gaudi::Math::BetaPrime::pdf ( const double x ) const 
+{
+  //
+  if ( x <= 0 || s_equal ( x , 0 ) ) { return 0 ; }
+  //
+  return m_aux 
+    * std::pow (     x ,   alpha () - 1       ) 
+    * std::pow ( 1 + x , - alpha () - beta () ) ;  
+}
+// ============================================================================
+double Gaudi::Math::BetaPrime::cdf ( const double x ) const 
+{
+  //
+  if ( x <= 0 || s_equal ( x , 0 ) ) { return 0 ; }
+  //
+  const double y = x / ( 1 + x ) ;
+  //
+  return gsl_sf_beta_inc (  alpha() , beta() , y ) ;
+}
+// ============================================================================
+double Gaudi::Math::BetaPrime::integral ( const double low  , 
+                                          const double high ) const 
+{
+  //
+  if ( s_equal ( low , high ) ) { return 0 ; }
+  //
+  return cdf ( high ) - cdf ( low ) ;
+}
+// ============================================================================
+double Gaudi::Math::BetaPrime::integral () const { return 1 ; }
+// ============================================================================
+double Gaudi::Math::BetaPrime::mean () const 
+{
+  if ( beta() <= 1 || s_equal ( beta() , 1 ) ) { return -1.e+9 ; }  
+  //
+  return alpha() / ( beta() - 1 ) ;
+}
+// ============================================================================
+double Gaudi::Math::BetaPrime::mode () const 
+{
+  if ( alpha() < 1 ) { return 0 ; }
+  return ( alpha() - 1 ) / ( beta() + 1 ) ;
+}
+// ============================================================================
+double Gaudi::Math::BetaPrime::variance () const 
+{
+  if ( beta() <= 2 || s_equal ( beta() , 2 ) ) { return -1.e+9 ; }  
+  //
+  const double a = alpha () ;
+  const double b = beta  () ;
+  //
+  return a *  ( a + b + 1 ) / ( b - 2 ) / Gaudi::Math::pow ( b - 1 , 2 ) ;
+}
+// ===========================================================================
+double Gaudi::Math::BetaPrime::sigma () const 
+{
+  if ( beta() <= 2 || s_equal ( beta() , 2 ) ) { return -1.e+9 ; }  
+  return std::sqrt ( variance () ) ;
+}
+// ===========================================================================
+double Gaudi::Math::BetaPrime::skewness  () const 
+{
+  if ( beta() <= 3 || s_equal ( beta() , 3 ) ) { return -1.e+9 ; }  
+  //
+  const double a = alpha () ;
+  const double b = beta  () ;
+  //
+  return 2 * ( 2 * a + b - 1 ) / ( b - 3 ) * std::sqrt( ( b - 2 ) / a / ( a + b - 1 ) ) ;
+}
+// ===========================================================================
+
+
+
+
+
+
+
+
+
 // ============================================================================
 // The END
 // ============================================================================

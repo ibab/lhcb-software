@@ -433,9 +433,9 @@ namespace Gaudi
        *  @param sigmaR  (right sigma)
        */
       BifurcatedGauss
-      ( const double peak  ,
-        const double sigmaL ,
-        const double asym  ) ;
+      ( const double peak   = 0 ,
+        const double sigmaL = 1 ,
+        const double sigmaR = 1 ) ;
       // ======================================================================
       /// destructor
       ~BifurcatedGauss() ;
@@ -443,7 +443,8 @@ namespace Gaudi
     public:
       // ======================================================================
       /// evaluate Bifurcated Gaussian
-      double operator() ( const double x ) const ;
+      double pdf        ( const double x ) const ;
+      double operator() ( const double x ) const { return pdf ( x )  ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -472,9 +473,6 @@ namespace Gaudi
       // ======================================================================
     private:
       // ======================================================================
-      /// default constructor is disabled
-      BifurcatedGauss () ;                   // default constructor is disabled
-      // ======================================================================
     private: // parameters
       // ======================================================================
       /// the peak position
@@ -484,6 +482,246 @@ namespace Gaudi
       /// sigma right
       double m_sigmaR ;       // sigma-right
       // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class GenGaussV1
+     *  Simple class that implements the generalized normal distribution v1
+     *  @see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_1
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2013-08-25
+     */
+    class GAUDI_API GenGaussV1: public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor from all agruments 
+       *  @param mu     location/peak posiiton 
+       *  @param alpha  "scale" parameter 
+       *  @param beta   "shape" parameter 
+       */
+      GenGaussV1 
+      ( const double mu    = 0 ,
+        const double alpha = 1 , 
+        const double beta  = 2 ) ; // beta=2 correponds to gaussian  
+      /// desctructor
+      ~GenGaussV1() ;
+      // ======================================================================
+    public: // primary getters 
+      // ======================================================================
+      double mu          () const { return m_mu       ; }
+      double peak        () const { return   mu    () ; }
+      double location    () const { return   mu    () ; }
+      double alpha       () const { return m_alpha    ; }
+      double scale       () const { return   alpha () ; }
+      double beta        () const { return m_beta     ; }
+      double shape       () const { return   beta  () ; }
+      // ====================================================================== 
+    public: // setters  
+      // ======================================================================
+      bool  setMu        ( const double value ) ;
+      bool  setAlpha     ( const double value ) ;
+      bool  setBeta      ( const double value ) ;
+      // 
+      bool  setPeak      ( const double value ) { return setMu    ( value ) ; }
+      bool  setLocation  ( const double value ) { return setMu    ( value ) ; }
+      bool  setScale     ( const double value ) { return setAlpha ( value ) ; }
+      bool  setShape     ( const double value ) { return setBeta  ( value ) ; }
+      // ====================================================================== 
+    public: // derived getters  
+      // ======================================================================
+      double mean        () const { return   mu    () ; }
+      double mediane     () const { return   mu    () ; }
+      double mode        () const { return   mu    () ; }
+      //
+      double variance    () const ;
+      double dispersion  () const { return variance () ; }
+      double sigma2      () const { return variance () ; }
+      double sigma       () const ;
+      //
+      double skewness    () const { return 0 ; }
+      double kurtosis    () const ;
+      // ======================================================================
+    public :
+      // ======================================================================
+      /// get pdf 
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      double pdf        ( const double x ) const ;
+      // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      double cdf      ( const double x ) const ;
+      /// get the integral
+      double integral () const { return 1 ; }
+      /// get the integral between low and high limits
+      double integral ( const double low  ,
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      double m_mu     ;  // location 
+      double m_alpha  ;  // scale 
+      double m_beta   ;  // shape 
+      double m_gbeta1 ;  // helper parameter
+      double m_gbeta2 ;  // helper parameter
+    } ;
+    // ========================================================================
+    /** @class GenGaussV2
+     *  Simple class that implements the generalized normal distribution v2
+     *  @see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_2
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2013-08-25
+     */
+    class GAUDI_API GenGaussV2: public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor from all agruments 
+       *  @param xi     location/peak posiiton 
+       *  @param alpha  "scale" parameter 
+       *  @param kappa  "shape" parameter 
+       */
+      GenGaussV2 
+      ( const double xi    = 0 ,
+        const double alpha = 1 , 
+        const double kappa = 0 ) ; // kappa=0 correponds to gaussian  
+      /// desctructor
+      ~GenGaussV2() ;
+      // ======================================================================
+    public: // primary getters 
+      // ======================================================================
+      double xi          () const { return m_xi       ; }
+      double peak        () const { return   xi    () ; }
+      double location    () const { return   xi    () ; }
+      double alpha       () const { return m_alpha    ; }
+      double scale       () const { return   alpha () ; }
+      double kappa       () const { return m_kappa    ; }
+      double shape       () const { return   kappa () ; }
+      // ====================================================================== 
+    public: // setters  
+      // ======================================================================
+      bool  setXi        ( const double value ) ;
+      bool  setAlpha     ( const double value ) ;
+      bool  setKappa     ( const double value ) ;
+      // 
+      bool  setPeak      ( const double value ) { return setXi    ( value ) ; }
+      bool  setLocation  ( const double value ) { return setXi    ( value ) ; }
+      bool  setScale     ( const double value ) { return setAlpha ( value ) ; }
+      bool  setShape     ( const double value ) { return setKappa ( value ) ; }
+      // ====================================================================== 
+    public: // derived getters  
+      // ======================================================================
+      double mean        () const ;
+      double mediane     () const { return   xi    () ; }
+      //
+      double variance    () const ;
+      double dispersion  () const { return variance () ; }
+      double sigma2      () const { return variance () ; }
+      double sigma       () const ;
+      //
+      double skewness    () const ;
+      double kurtosis    () const ;
+      // ======================================================================
+    public :
+      // ======================================================================
+      /// get pdf 
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      double pdf        ( const double x ) const ;
+      // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      double cdf        ( const double x ) const ;
+      /// get the integral
+      double integral   () const { return 1 ; }
+      /// get the integral between low and high limits
+      double integral   ( const double low  ,
+                          const double high ) const ;
+      // ======================================================================
+    private: 
+      // ======================================================================
+      double  y ( const double x ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      double m_xi      ;  // location 
+      double m_alpha   ;  // scale 
+      double m_kappa   ;  // shape 
+    } ;
+    // ========================================================================
+    /** @class SkewGauss
+     *  Simple class that implements the skew normal distribution
+     *  @see http://en.wikipedia.org/wiki/Skew_normal_distribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2013-08-25
+     */
+    class GAUDI_API SkewGauss: public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor from all agruments 
+       *  @param xi     location/peak posiiton 
+       *  @param omega  "scale" parameter 
+       *  @param alpha  "shape" parameter 
+       */
+      SkewGauss
+      ( const double xi    = 0 ,
+        const double omega = 1 , 
+        const double alpha = 0 ) ; // alpha=0 correponds to gaussian  
+      /// desctructor
+      ~SkewGauss () ;
+      // ======================================================================
+    public: // primary getters 
+      // ======================================================================
+      double xi          () const { return m_xi       ; }
+      double peak        () const { return   xi    () ; }
+      double location    () const { return   xi    () ; }
+      double omega       () const { return m_omega    ; }
+      double scale       () const { return   omega () ; }
+      double alpha       () const { return m_alpha    ; }
+      double shape       () const { return   alpha () ; }
+      // ====================================================================== 
+    public: // setters  
+      // ======================================================================
+      bool  setXi        ( const double value ) ;
+      bool  setOmega     ( const double value ) ;
+      bool  setAlpha     ( const double value ) ;
+      // 
+      bool  setPeak      ( const double value ) { return setXi    ( value ) ; }
+      bool  setLocation  ( const double value ) { return setXi    ( value ) ; }
+      bool  setScale     ( const double value ) { return setOmega ( value ) ; }
+      bool  setShape     ( const double value ) { return setAlpha ( value ) ; }
+      // ====================================================================== 
+    public: // derived getters  
+      // ======================================================================
+      double mean        () const ;
+      double mode        () const ;
+      double variance    () const ;
+      double dispersion  () const { return variance () ; }
+      double sigma2      () const { return variance () ; }
+      double sigma       () const ;
+      double skewness    () const ;
+      double kurtosis    () const ;
+      // ======================================================================
+    public :
+      // ======================================================================
+      /// get pdf 
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      double pdf        ( const double x ) const ;
+      // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      double cdf        ( const double x ) const ;
+      /// get the integral
+      double integral   () const { return 1 ; }
+      /// get the integral between low and high limits
+      double integral   ( const double low  ,
+                          const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      double m_xi     ;  // location 
+      double m_omega  ;  // scale 
+      double m_alpha  ;  // shape 
+      // =======================================================================
     } ;
     // ========================================================================
     /** @class WorkSpace
@@ -536,8 +774,8 @@ namespace Gaudi
        *  @param rhoR  the right tail parameter
        */
       Bukin
-      ( const double peak       ,
-        const double sigma      ,
+      ( const double peak   = 0 ,
+        const double sigma  = 1 ,
         const double xi     = 0 ,
         const double rhoL   = 0 ,
         const double rhoR   = 0 ) ;
@@ -548,7 +786,9 @@ namespace Gaudi
     public:
       // ======================================================================
       /// evaluate Bukin's function
-      double operator() ( const double x ) const ;
+      double pdf        ( const double x ) const ;
+      /// evaluate Bukin's function
+      double operator() ( const double x ) const { return pdf ( x ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -578,11 +818,6 @@ namespace Gaudi
       /// get the integral between low and high limits
       double integral ( const double low  ,
                         const double high ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// default constructor is disabled
-      Bukin () ;                             // default constructor is disabled
       // ======================================================================
     private: // recalculate constants
       // ======================================================================
@@ -639,8 +874,8 @@ namespace Gaudi
        *  @param tau   the tail paramter
        */
       Novosibirsk
-      ( const double m0        ,
-        const double sigma     ,
+      ( const double m0    = 0 ,
+        const double sigma = 1 ,
         const double tau   = 0 ) ;
       /// destructor
       ~Novosibirsk () ;                                           // destructor
@@ -648,7 +883,9 @@ namespace Gaudi
     public:
       // ======================================================================
       /// evaluate Novosibirsk's function
-      double operator() ( const double x ) const ;
+      double pdf        ( const double x ) const ;
+      /// evaluate Novosibirsk's function
+      double operator() ( const double x ) const { return pdf ( x ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -673,11 +910,6 @@ namespace Gaudi
       /// get the integral between low and high limits
       double integral ( const double low  ,
                         const double high ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// default constructor is disabled
-      Novosibirsk () ; // default constructor is disabled
       // ======================================================================
     private: // recalculate constants
       // ======================================================================
@@ -723,17 +955,19 @@ namespace Gaudi
        *  @param n     (N-1)     parameter
        */
       CrystalBall
-      ( const double m0    ,
-        const double sigma ,
-        const double alpha ,
-        const double N     ) ;
+      ( const double m0    = 0 ,
+        const double sigma = 1 ,
+        const double alpha = 2 ,
+        const double N     = 1 ) ;
       /// destructor
       ~CrystalBall() ;
       // ======================================================================
     public:
       // ======================================================================
       /// evaluate CrystalBall's function
-      double operator() ( const double x ) const ;
+      double pdf        ( const double x ) const ;
+      /// evaluate CrystalBall's function
+      double operator() ( const double x ) const { return pdf ( x ) ; } 
       // ======================================================================
     public: // trivial accessors
       // ======================================================================
@@ -759,11 +993,6 @@ namespace Gaudi
       /// get integral between low and high
       double integral ( const double low ,
                         const double high ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// default constructor is disabled
-      CrystalBall () ;                      // default constructor is disabled
       // ======================================================================
     private:
       // ======================================================================
@@ -818,7 +1047,9 @@ namespace Gaudi
     public:
       // ======================================================================
       /// evaluate Needham's function
-      double operator() ( const double x ) const ;
+      double pdf        ( const double x ) const ;
+      /// evaluate Needham's function
+      double operator() ( const double x ) const { return pdf ( x ) ; } 
       // ======================================================================
     public: // trivial accessors
       // ======================================================================
@@ -880,19 +1111,21 @@ namespace Gaudi
        *  @param n_R     (n_R-1)     parameter
        */
       CrystalBallDoubleSided
-      ( const double m0      ,
-        const double sigma   ,
-        const double alpha_L ,
-        const double n_L     ,
-        const double alpha_R ,
-        const double n_R     ) ;
+      ( const double m0      = 1 ,
+        const double sigma   = 1 ,
+        const double alpha_L = 2 ,
+        const double n_L     = 1 ,
+        const double alpha_R = 2 ,
+        const double n_R     = 1 ) ;
       /// destructor
       ~CrystalBallDoubleSided() ;
       // ======================================================================
     public:
       // ======================================================================
       /// evaluate CrystalBall's function
-      double operator() ( const double x ) const ;
+      double pdf        ( const double x ) const ;
+      /// evaluate CrystalBall's function
+      double operator() ( const double x ) const { return pdf ( x ) ; }
       // ======================================================================
     public: // trivial accessors
       // ======================================================================
@@ -922,11 +1155,6 @@ namespace Gaudi
       /// get integral between low and high
       double integral ( const double low ,
                         const double high ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// default constructor is disabled
-      CrystalBallDoubleSided () ;            // default constructor is disabled
       // ======================================================================
     private:
       // ======================================================================
@@ -971,17 +1199,19 @@ namespace Gaudi
        *  @param kappa3 the standartized 3rd cumulant
        *  @param kappa4 the standartized 4th cumulant
        */
-      GramCharlierA  ( const double mean   ,
-                       const double sigma  ,
-                       const double kappa3 ,
-                       const double kappa4 ) ;
+      GramCharlierA  ( const double mean   = 0 ,
+                       const double sigma  = 1 ,
+                       const double kappa3 = 1 ,
+                       const double kappa4 = 1 ) ;
       /// destructor
       ~GramCharlierA () ;
       // ======================================================================
     public:
       // ======================================================================
       /// evaluate Gram-Charlier type A approximation
-      double operator () ( const double x ) const ;
+      double pdf         ( const double x ) const ;
+      /// evaluate Gram-Charlier type A approximation
+      double operator () ( const double x ) const { return pdf ( x ) ; }
       // ======================================================================
     public: // trivial accessors
       // ======================================================================
@@ -1002,11 +1232,6 @@ namespace Gaudi
       bool setSigma   ( const double value ) ;
       bool setKappa3  ( const double value ) ;
       bool setKappa4  ( const double value ) ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// default constructor is disabled
-      GramCharlierA () ;                     // default constructor is disabled
       // ======================================================================
     public: //
       // ======================================================================
@@ -2564,9 +2789,9 @@ namespace Gaudi
        *  @param sigma width parameter
        *  @param N     n-parameter  ( actually  n=1+|N| ) 
        */
-      StudentT ( const double mass  , 
-                 const double sigma ,
-                 const double n     ) ;
+      StudentT ( const double mass  = 0 , 
+                 const double sigma = 1 ,
+                 const double n     = 2 ) ;
       /// destructor
       ~StudentT() ;
       // ======================================================================
@@ -2613,11 +2838,6 @@ namespace Gaudi
       // ======================================================================
     private:
       // ======================================================================
-      /// default constructor is disabled 
-      StudentT() ;  // default consytructor is disabled 
-      // ======================================================================
-    private:
-      // ======================================================================
       /// mass 
       double m_M  ; // 
       /// width parameter
@@ -2651,15 +2871,16 @@ namespace Gaudi
        *  param k      \f$k\f$ parameter (shape)
        *  param theta  \f$\theta\f$ parameter (scale)
        */
-      GammaDist ( const double k     ,   // shape parameter  
-                  const double theta ) ; // scale parameter
+      GammaDist ( const double k     = 2 ,   // shape parameter  
+                  const double theta = 1 ) ; // scale parameter
       /// desctructor
       ~GammaDist() ;  // desctructor
       // ======================================================================
     public:
       // ======================================================================
+      double pdf        ( const double x ) const ;      
       /// calculate gamma distribution shape
-      double operator() ( const double x ) const ;
+      double operator() ( const double x ) const { return pdf ( x ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -2673,8 +2894,8 @@ namespace Gaudi
       double mean       () const  { return m_k * m_theta                ; }
       double dispersion () const  { return m_k * m_theta * m_theta      ; }
       double variance   () const  { return dispersion ()                ; }
-      double sigma      () const  { return std::sqrt ( dispersion ()  ) ; }
-      double skewness   () const  { return 2.0 / std::sqrt ( m_k )      ; }
+      double sigma      () const  ;
+      double skewness   () const  ;
       // ======================================================================
     public:
       // ======================================================================
@@ -2697,11 +2918,6 @@ namespace Gaudi
       /// get the integral between low and high limits
       double integral ( const double low  ,
                         const double high ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// default constructor is disabled 
-      GammaDist () ;  // default consytructor is disabled 
       // ======================================================================
     private:
       // ======================================================================
@@ -2732,8 +2948,8 @@ namespace Gaudi
        *  param k      \f$k\f$ parameter (shape)
        *  param theta  \f$\theta\f$ parameter (scale)
        */
-      LogGammaDist ( const double k     ,   // shape parameter  
-                     const double theta ) ; // scale parameter
+      LogGammaDist ( const double k     = 2 ,   // shape parameter  
+                     const double theta = 1 ) ; // scale parameter
       /// destructor
       virtual ~LogGammaDist() ;  // desctructor
       // ======================================================================
@@ -2784,11 +3000,6 @@ namespace Gaudi
                                 const double high ) const ;
       // ======================================================================
     private:
-      // ======================================================================
-      /// default constructor is disabled 
-      LogGammaDist () ;  // default constructor is disabled 
-      // ======================================================================
-    private:
       // ======================================================================      
       /// helper gamma distribution 
       GammaDist m_gamma ;  // helper gamma distribution 
@@ -2809,8 +3020,8 @@ namespace Gaudi
        *  param k      \f$k\f$ parameter (shape)
        *  param theta  \f$\theta\f$ parameter (scale)
        */
-      Log10GammaDist ( const double k     ,   // shape parameter  
-                       const double theta ) ; // scale parameter
+      Log10GammaDist ( const double k     = 2 ,   // shape parameter  
+                       const double theta = 1 ) ; // scale parameter
       /// destructor
       virtual ~Log10GammaDist() ;  // destructor
       // ======================================================================
@@ -2827,12 +3038,333 @@ namespace Gaudi
       virtual double integral   ( const double low  ,
                                   const double high ) const ;
       // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class GenGammaDist 
+     *  Generalized Gamma-distribution with additional shift parameter 
+     *  http://en.wikipedia.org/wiki/Generalized_gamma_distribution
+     *  special cases : 
+     *   - p == 1      : Gamma  distribution
+     *   - p == k      : Weibull distribution
+     *   - p == k == 1 : Exponential distribution
+     *   - p == k == 2 : Rayleigh    distribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     */
+    class GAUDI_API GenGammaDist 
+      : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor
+       *  param k     \f$k\f$ parameter      (shape)
+       *  param theta \f$\theta\f$ parameter (scale)
+       *  param p     \f$p\f$ parameter 
+       *  param low   bias       
+       */
+      GenGammaDist ( const double k     = 2 , 
+                     const double theta = 1 , 
+                     const double p     = 1 , // 1 corresponds to gamma distribution 
+                     const double low   = 0 ) ;
+      /// desctructor
+      ~GenGammaDist() ;  // desctructor
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// calculate gamma distribution shape
+      double pdf        ( const double x ) const ;
+      /// calculate gamma distribution shape
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      // ======================================================================
+    public: // getters 
+      // ======================================================================
+      double k          () const  { return m_k                          ; }
+      double theta      () const  { return m_theta                      ; }
+      double p          () const  { return m_p                          ; }
+      double low        () const  { return m_low                        ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// Wikipedia notations 
+      double a          () const { return theta () ; }
+      double d          () const { return k     () ; }  
+      // ======================================================================
+    public: // derived getters 
+      // ======================================================================
+      double mean       () const  { return m_k * m_theta +   low ()     ; }
+      double dispersion () const  { return m_k * m_theta * m_theta      ; }
+      double variance   () const  { return dispersion ()                ; }
+      double sigma      () const  { return std::sqrt ( dispersion ()  ) ; }
+      double skewness   () const  { return 2.0 / std::sqrt ( m_k )      ; }
+      // ======================================================================
+    public:  // setters 
+      // ======================================================================
+      bool setK     ( const double value  ) ;
+      bool setTheta ( const double value  ) ;
+      bool setP     ( const double value  ) ;
+      bool setLow   ( const double value  ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      double cdf      ( const double x ) const ;
+      /// get the integral
+      double integral () const ;
+      /// get the integral between low and high limits
+      double integral ( const double low  ,
+                        const double high ) const ;
+      // ======================================================================
     private:
       // ======================================================================
-      /// default constructor is disabled 
-      Log10GammaDist () ;  // default constructor is disabled 
+      /// shape 
+      double m_k      ; // shape 
+      /// scale 
+      double m_theta  ; // scale 
+      /// parameter 
+      double m_p      ; // parameter 
+      /// shift 
+      double m_low    ; // shift 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// auxillary intermediate parameter 
+      double m_aux ; // auxillary intermediate parameter 
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class Amoroso
+     *  Another view on generalized gamma distribtion
+     *  http://arxiv.org/pdf/1005.3274
+     *  @see Gaudi::Math::GenGammaDist
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     */
+    class GAUDI_API Amoroso 
+      : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor
+       *  param theta \f$\theta\f$-parameter  
+       *  param alpha \f$\alpha\f$-parameter (>0)
+       *  param beta  \f$\beta\f$-parameter 
+       *  param a     a-parameter 
+       *  Note that   \f$\alpha\beta\f$ is equal to k-parameter 
+       */
+      Amoroso ( const double theta = 1 , 
+                const double alpha = 1 , 
+                const double beta  = 1 , 
+                const double a     = 0 ) ;
+      /// destructor
+      ~Amoroso () ;  // desctructor
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate Amoroso distribtion
+      double pdf        ( const double x ) const ;
+      /// evaluate Amoroso distribtion
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      // ======================================================================
+    public:  // direct getters  
+      // ======================================================================
+      double a     () const { return m_a     ; }
+      double theta () const { return m_theta ; }
+      double alpha () const { return m_alpha ; }
+      double beta  () const { return m_beta  ; }
+      // ======================================================================
+    public:  // derived getters 
+      // ======================================================================
+      double d      () const { return alpha () * beta () ; }
+      double k      () const { return alpha () * beta () ; }
+      double p      () const { return            beta () ; }
+      // ======================================================================
+    public:  // helper getters 
+      // ======================================================================      
+      double theta2 () const { return m_theta * m_theta  ; }
+      // ======================================================================
+    public: // direct setters 
+      // ======================================================================
+      bool setA      ( const double value ) ;
+      bool setTheta  ( const double value ) ;
+      bool setAlpha  ( const double value ) ;
+      bool setBeta   ( const double value ) ;
+      bool setP      ( const double value ) { return setBeta ( value ) ; }
+      // ======================================================================
+    public: // general properties 
+      // ======================================================================
+      double mode       () const ;
+      double mean       () const ;
+      double variance   () const ;
+      double dispersion () const { return variance () ; }
+      double sigma2     () const { return variance () ; }
+      double sigma      () const ;
+      // ======================================================================
+    public: // integrals 
+      // ======================================================================
+      double integral () const ;
+      double cdf      ( const double x    ) const ;
+      double integral ( const double low  , 
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      double m_a     ;
+      double m_theta ;
+      double m_alpha ;
+      double m_beta  ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// auxillary intermediate parameter 
+      double m_aux ; // auxillary intermediate parameter 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class LogGamma
+     *  - http://arxiv.org/pdf/1005.3274
+     *  - Prentice, R. L. (1974). A log gamma model and its maximum likelikhood
+     *                            estimation. Biometrika 61, 539
+     *  - Johnson, N. L., Kotz, S., and Balakrishnan, N. (1995). Continuous
+     *            univariate distributions, 2nd ed. Vol. 2. Wiley, New York.
+     *  - Bartlett, M. S. and G., K. M. (1946). The statistical analysis of
+     *                  variance-heterogeneity and the logarithmic transformation. 
+     *                 J. Roy. Statist. Soc. Suppl. 8, 1, 128.
+     *
+     *  dot not mix with Gaudi::Math::LogGammaDist        
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     */
+    class GAUDI_API LogGamma
+      : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor from scale & shape parameters
+       *  param nu      \f$\nu\f$ parameter      (location)
+       *  param lambda  \f$\lambda\f$ parameter  
+       *  param alpha   \f$\alpha\f$ parameter    (>0)
+       */
+      LogGamma ( const double nu     = 0 ,   // shape parameter  
+                 const double lambda = 1 , // scale parameter
+                 const double alpha  = 1 ) ; // scale parameter
+      /// destructor
+      ~LogGamma () ;  // desctructor
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// calculate log-gamma shape
+      double pdf        ( const double x ) const ;
+      /// calculate log-gamma shape
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      // ======================================================================
+    public: // direct getter s
+      // ======================================================================
+      double nu         () const  { return m_nu     ; }
+      double lambda     () const  { return m_lambda ; }
+      double alpha      () const  { return m_alpha  ; }
+      // ======================================================================
+    public: // general properties 
+      // ======================================================================
+      double mean       () const ;
+      double mode       () const ;
+      double variance   () const ;
+      double dispersion () const { return variance () ; }
+      double sigma2     () const { return variance () ; }
+      double sigma      () const ;
+      double skewness   () const ;
+      double kurtosis   () const ;
+      // ======================================================================
+    public: // setters 
+      // ======================================================================
+      bool setNu     ( const double value  ) ;
+      bool setLambda ( const double value  ) ;
+      bool setAlpha  ( const double value  ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      double cdf ( const double x ) const ;
+      /// get the integral
+      double integral () const ;
+      /// get the integral between low and high limits
+      double integral ( const double low  ,
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      double  m_nu      ;
+      double  m_lambda  ;
+      double  m_alpha   ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// auxillary intermediate parameter 
+      double m_aux ; // auxillary intermediate parameter 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class BetaPrime 
+     *  http://en.wikipedia.org/wiki/Beta_prime_distribution
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2013-05-11
+     */
+    class GAUDI_API BetaPrime 
+      : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor with all parameters 
+       *  @param alpha \f$\alpha\f$-parameter 
+       *  @param beta  \f$\beta\f$-parameter 
+       */
+      BetaPrime ( const double alpha = 3 , 
+                  const double beta  = 3 ) ;
+      /// destructor 
+      ~BetaPrime () ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate beta'-distributions 
+      double pdf        ( const double x ) const ;
+      /// evaluate beta'-distributions 
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      // ======================================================================
+    public: // direct getters 
+      // ======================================================================
+      double alpha () const { return m_alpha ; }
+      double beta  () const { return m_beta  ; }
+      // ======================================================================
+    public: // general properties 
+      // ======================================================================
+      double mean       () const ;
+      double mode       () const ;
+      double variance   () const ;
+      double dispersion () const { return variance () ; }
+      double sigma2     () const { return variance () ; }
+      double sigma      () const ;
+      double skewness   () const ;
+      // ======================================================================
+    public: // direct setters 
+      // ======================================================================
+      bool   setAlpha ( const double value ) ;
+      bool   setBeta  ( const double value ) ;
+      // ======================================================================
+    private: // integrals 
+      // ======================================================================
+      double integral ()                    const ;
+      double cdf      ( const double x    ) const ;
+      double integral ( const double low  , 
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      double m_alpha ;
+      double m_beta  ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// auxillary intermediate parameter 
+      double m_aux ; // auxillary intermediate parameter 
+      // ======================================================================
+    } ;  
     // ========================================================================
   } //                                             end of namespace Gaudi::Math
   // ==========================================================================
