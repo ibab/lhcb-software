@@ -220,6 +220,7 @@ namespace LHCb  {
 
 using namespace std;
 
+#include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,CheckpointSvc)
 
@@ -267,7 +268,12 @@ namespace  {
 	m_fsm->declareState(ITaskFSM::ST_NOT_READY);
 	m_check->restartChildren(false);
       }
-      else if ( cmd == "unload"     ) {
+      else if ( cmd == "!state" )  {
+	const std::string& old_state = m_fsm->stateName();
+        m_fsm->_declareState(old_state);
+        return;
+      }
+      else if ( cmd == "unload" || cmd == "recover" || cmd == "RESET" ) {
 	m_fsm->setTargetState(ITaskFSM::ST_UNKNOWN);
 	m_fsm->declareState(ITaskFSM::ST_UNKNOWN);	
 	// Sleep for 1 second, then exit
