@@ -2,7 +2,7 @@ package FarmConfig
 version v0r1
 author "Markus Frank"
 
-branches cmt doc scripts
+branches cmt doc
 use Gaucho             v* Online
 use GaudiOnline        v* Online
 use Controller         v* Online
