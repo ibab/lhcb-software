@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-08-29 - Thomas Blake
+ - Updated dictionaries for RD lines 
+
 ! 2013-08-28 - Lucio Anderlini (BandQ)
  - Updated configuration dictionaries for BandQ Stripping20r{0,1}p2 
   . New dictionary to reduce retention on Betac2PhiP line

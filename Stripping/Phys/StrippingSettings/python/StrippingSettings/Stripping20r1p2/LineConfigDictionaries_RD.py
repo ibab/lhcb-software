@@ -83,10 +83,10 @@ Beauty2XGamma = {
 RareStrange = {
     'BUILDERTYPE'  : 'RareStrangeLinesConf',
     'CONFIG'       : {
-    'Postscale'           :1,
-    'SigmaPMuMuPrescale'      :1,
-    'SigmaPEEPrescale'      :1,
-    'SigmaPMuMuLFVPrescale'      :1,
+    'Postscale'             : 1,
+    'SigmaPMuMuPrescale'    : 1,
+    'SigmaPEEPrescale'      : 1,
+    'SigmaPMuMuLFVPrescale' : 0.1,
     'K3PiPrescale' : 0,
     'SigmaMinTauPs' : 6,
     'SigmaMinPt' : 500.,
@@ -270,10 +270,10 @@ B2XMuMu =  {
     ,'UseNoPIDsHadrons'          : True,
 
     # B cuts
-    'B_Comb_MassLow'	  : 4500.0,
-    'B_Comb_MassHigh'     : 7100.0,
-    'B_MassLow'           : 4600.0,
-    'B_MassHigh'          : 7000.0,
+    'B_Comb_MassLow'	  : 4700.0,
+    'B_Comb_MassHigh'     : 6100.0,
+    'B_MassLow'           : 4800.0,
+    'B_MassHigh'          : 6000.0,
     'B_VertexCHI2'        :    8.0,
     'B_IPCHI2'            :   16.0,
     'B_DIRA'              :    0.9999,
@@ -310,13 +310,13 @@ B2XMuMu =  {
     'MuonNoPIDs_PIDmu'    :    0.0,
 
     # Wrong sign combinations
-    'DimuonWS'            :   True,
+    'DimuonWS'            :   False,
     'HadronWS'            :   False,
 
     # GEC
     'SpdMult'             :  600 ,
 
-    'Hadronic_Selection'  :   "(M > 5000*MeV)&(M < 5700*MeV)&(INTREE((ABSID == 'K*(892)0')&(M>800*MeV)&(M < 1000*MeV)&(INTREE((ABSID=='K+')&(HASRICH)&(PIDK>-5)))))&((INTREE((ABSID=='rho(770)0')&((M<2800)|(M>3800))&(2 == NINTREE((ABSID=='pi+')&(HASRICH)&(PIDK < 5)))))|(INTREE((ABSID=='phi(1020)')&(M<1200*MeV))))" , 
+    'Hadronic_Selection'  :   "(M > 5000*MeV)&(M < 5700*MeV)&(INTREE((ABSID == 'K*(892)0')&(M>800*MeV)&(M < 1000*MeV)&(INTREE((ABSID=='K+')&(HASRICH)&(PIDK>-5)))))&((INTREE((ABSID=='rho(770)0')&((M<2800)|(M>3800))&(2 == NINTREE((ABSID=='pi+')&(HASRICH)&(PIDK < 5)&(P>3000*MeV)))))|(INTREE((ABSID=='phi(1020)')&(M<1200*MeV))))" , 
       
     'DECAYS'              : [ "[B+ -> J/psi(1S) rho(770)+]cc" ],
     'HADRONICDECAYS'      : [ "[B0 -> K*(892)0 rho(770)0]cc" , "[B0 -> K*(892)0 phi(1020)]cc" ]
