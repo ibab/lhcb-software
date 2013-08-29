@@ -484,7 +484,6 @@ class Bc3hConf(LineBuilder) :
         
         return self._add_selection( 'Bc3kpi_Selection' , sel ) 
     
-    
     # Bc -> pppi
     def Bc3pppi ( self ) :
         """
