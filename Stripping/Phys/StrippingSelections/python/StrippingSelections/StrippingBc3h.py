@@ -384,7 +384,7 @@ class Bc3hConf(LineBuilder) :
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
         alg  = CombineParticles (
             ##
-            DecayDescriptor = "[B_c+ -> pi+ pi+ pi- ]cc" ,
+            DecayDescriptor = "[B_c+ -> pi+ pi- pi+ ]cc" ,
             ##
             Preambulo = self['Preambulo'] ,
             ##
@@ -419,7 +419,7 @@ class Bc3hConf(LineBuilder) :
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
         alg  = CombineParticles (
             ##
-            DecayDescriptor = "[B_c+ -> K+ K+ K-]cc" ,
+            DecayDescriptor = "[B_c+ -> K+ K- K+]cc" ,
             ##
             Preambulo = self['Preambulo'] ,
             ##
@@ -455,10 +455,10 @@ class Bc3hConf(LineBuilder) :
         alg  = CombineParticles (
             ##
             DecayDescriptors = [
-            "[B_c+ -> K+  pi+ K-  ]cc" ,
-            "[B_c+ -> K+  K+  pi- ]cc" ,
-            "[B_c+ -> K+  pi+ pi- ]cc" ,
-            "[B_c+ -> pi+ pi+ K-  ]cc" ,
+            "[B_c+ -> K+  K-  pi+ ]cc" ,
+            "[B_c+ -> K+  pi- K+  ]cc" ,
+            "[B_c+ -> K+  pi- pi+ ]cc" ,
+            "[B_c+ -> pi+ K-  pi+ ]cc" ,
             ] ,
             ##
             Preambulo = self['Preambulo'] ,
