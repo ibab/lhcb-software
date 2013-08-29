@@ -4,9 +4,14 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-29 - Edmund Smith
+ - Bug in Beauty2Charm_DBuilder.py: having a default argument to a function led to
+   duplicate input locations for lines that specified a non-default value for this
+   argument. Since the value of the default argument is bound at the function 
+   definition not execution.
+
 ! 2013-08-29 - Vanya Belyaev
  - add new file StrippingBc3h.h
-
 
 ! 2013-08-28 - Lucio Anderlini (for Yury Shcheglov)
  - Reduced retention for Betac2PhiP line (includes new conf. dictionary)
