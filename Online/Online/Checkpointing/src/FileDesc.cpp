@@ -82,14 +82,17 @@ WEAK(int) FileDesc::reopen() {
 /// Write descriptor and possibly data to memory
 WEAK(int) FileDesc::streamOut(void* address)   const {
   //print(MTCP_WARNING);
-  if ( name[0] && isdel )  {
+  if ( name[0] && isdel && chkpt_sys.numTmpFiles<int(sizeof(chkpt_sys.tmpFiles)/sizeof(chkpt_sys.tmpFiles[0])) ) {
     SysInfo::TmpFile& tmp = chkpt_sys.tmpFiles[chkpt_sys.numTmpFiles];
     tmp.fd = fd;
     m_strcpy(tmp.name,name);
     char* p = m_chrfind(tmp.name,' ');
     if ( p ) *p = 0;
     ++chkpt_sys.numTmpFiles;
-    mtcp_output(MTCP_ERROR,"FileHandler: added temp file %d: %s\n",fd,tmp.name);
+    mtcp_output(MTCP_DEBUG,"FileHandler: added temp file %d: %s\n",fd,tmp.name);
+  }
+  else if ( name[0] && isdel )  {
+    mtcp_output(MTCP_ERROR,"FileHandler: Cannot add temp file %d: %s -- increase space in sys.tmpFiles.\n",fd,name);
   }
   return checkpoint_file_write(this,address);
 }
@@ -97,14 +100,17 @@ WEAK(int) FileDesc::streamOut(void* address)   const {
 /// Write descriptor and possibly data to file identified by fileno fd_out
 WEAK(int) FileDesc::write(int fd_out)   const {
   //print(MTCP_WARNING);
-  if ( name[0] && isdel ) {
+  if ( name[0] && isdel && chkpt_sys.numTmpFiles<int(sizeof(chkpt_sys.tmpFiles)/sizeof(chkpt_sys.tmpFiles[0])) ) {
     SysInfo::TmpFile& tmp = chkpt_sys.tmpFiles[chkpt_sys.numTmpFiles];
     tmp.fd = fd;
     m_strcpy(tmp.name,name);
     char* p = m_chrfind(tmp.name,' ');
     if ( p ) *p = 0;
     ++chkpt_sys.numTmpFiles;
-    mtcp_output(MTCP_ERROR,"FileHandler: added temp file %d: %s\n",fd,tmp.name);
+    mtcp_output(MTCP_DEBUG,"FileHandler: added temp file %d: %s\n",fd,tmp.name);
+  }
+  else if ( name[0] && isdel )  {
+    mtcp_output(MTCP_ERROR,"FileHandler: Cannot add temp file %d: %s -- increase space in sys.tmpFiles.\n",fd,name);
   }
   return checkpoint_file_fwrite(this,fd_out);
 }
