@@ -458,9 +458,7 @@ class Bc3hConf(LineBuilder) :
             ##
             DecayDescriptors = [
             "[B_c+ -> K+  K-  pi+ ]cc" ,
-            "[B_c+ -> K+  pi- K+  ]cc" ,
             "[B_c+ -> K+  pi- pi+ ]cc" ,
-            "[B_c+ -> pi+ K-  pi+ ]cc" ,
             ] ,
             ##
             Preambulo = self['Preambulo'] ,
