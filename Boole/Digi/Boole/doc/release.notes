@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Configuration Changes
+   . Incorporated pathUpgrade1.py code into Configuration for RichPmt
+
 </PRE><H1><A NAME=v26r7>2013-07-25 Boole v26r7</A></H1><PRE>
 This version uses projects LCGCMT 65a, Gaudi v23r9, LHCb v36r1, Lbcom v14r1
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*

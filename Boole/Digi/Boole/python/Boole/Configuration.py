@@ -231,6 +231,7 @@ class Boole(LHCbConfigurableUser):
             detListDigi += ['Rich']
             if [det for det in ["Rich1Pmt","Rich2Pmt"] if det in self.getProp("DetectorLink")]:
                 detListLink += ["Rich"]
+
             if [det for det in ["Rich1Pmt","Rich2Pmt"] if det in self.getProp("DetectorMoni")]:
                 detListMoni += ["Rich"]
             
@@ -389,6 +390,7 @@ class Boole(LHCbConfigurableUser):
         if "OT"      in digiDets : self.configureDigiOT(      GaudiSequencer("DigiOTSeq"), "" )
         if "FT"      in digiDets : self.configureDigiFT(      GaudiSequencer("DigiFTSeq"), "" )
         if "Rich"    in digiDets : self.configureDigiRich(    GaudiSequencer("DigiRichSeq"), "")
+        #if "RichPmt" in digiDets : self.configureDigiRichPmt(    GaudiSequencer("DigiRichSeq"), "")
         if "Calo"    in digiDets : self.configureDigiCalo(    GaudiSequencer("DigiCaloSeq"), "" )        
         if "Muon"    in digiDets : self.configureDigiMuon(    GaudiSequencer("DigiMuonSeq"), "" )
         if "L0"      in digiDets : self.configureDigiL0(      GaudiSequencer("DigiL0Seq"), "" )
@@ -554,20 +556,14 @@ class Boole(LHCbConfigurableUser):
             from Configurables import RichDigiSysConf
             self.setOtherProp(RichDigiSysConf(),"UseSpillover")
             RichDigiSysConf().Sequencer = GaudiSequencer("DigiRichSeq")
+            # Apply some additional settings if using upgrade Rich
+            if [det for det in self.getProp("DetectorDigi") if det in ["Rich1Pmt", "Rich2Pmt"]]:
+                RichDigiSysConf().ChargeShareModel = "None"
+                RichDigiSysConf().ResponseModel = "Copy"
+                RichDigiSysConf().OutputLevel = INFO
+                RichDigiSysConf().RawDataFormatVersion = 3                
         else:
             raise RuntimeError("TAE not implemented for RICH")
-
-    def configureDigiRichPmt(self, seq, tae ):
-        if tae == "":
-            from Configurables import RichDigiSysConf
-            self.setOtherProp(RichDigiSysConf(),"UseSpillover")
-            RichDigiSysConf().Sequencer = GaudiSequencer("DigiRichSeq")
-            RichDigiSysConf().ChargeShareModel = "None"
-            RichDigiSysConf().ResponseModel = "Copy"
-            RichDigiSysConf().OutputLevel = INFO
-            RichDigiSysConf().RawDataFormatVersion = 3
-        else:
-            raise RuntimeError("TAE not implemented for RICHMaPMT")
             
     def configureDigiCalo(self, seq, tae ):
         # Calorimeter digitisation
@@ -817,6 +813,7 @@ class Boole(LHCbConfigurableUser):
             from Configurables import BooleInit
             slotInit =  BooleInit("Init%s"%taeSlot, RootInTES = "%s/"%taeSlot )
             GaudiSequencer( "Digi%sInitSeq"%taeSlot ).Members = [ slotInit ]
+
             if "Velo" in taeDets:
                 self.configureDigiVelo( GaudiSequencer("Digi%sVeloSeq"%taeSlot), taeSlot )
             if "VP" in taeDets:
@@ -833,9 +830,8 @@ class Boole(LHCbConfigurableUser):
                 self.configureDigiOT( GaudiSequencer("Digi%sOTSeq"%taeSlot), taeSlot )
             if [det for det in taeDets if det in ['Rich1', 'Rich2']]:
                 self.configureDigiRich( GaudiSequencer("Digi%sRichSeq"%taeSlot), taeSlot )
-            if [det for det in taeDets if det in ['Rich1Pmt', 'Rich2Pmt']]:
-                self.configureDigiRichPmt( GaudiSequencer("Digi%sRichSeq"%taeSlot), taeSlot )
-                #self.configureDigiRichPmt( GaudiSequencer("Digi%sRichSeq"%taeSlot), taeSlot )
+            #if [det for det in taeDets if det in ['Rich1Pmt', 'Rich2Pmt']]:
+            #    self.configureDigiRichPmt( GaudiSequencer("Digi%sRichSeq"%taeSlot), taeSlot )
             if [det for det in taeDets if det in ['Spd','Prs','Ecal','Hcal']]:
                 caloTAEDets = [det for det in taeDets if det in ['Spd','Prs','Ecal','Hcal']]
                 self.configureDigiCalo( GaudiSequencer("Digi%sCaloSeq"%taeSlot), taeSlot )
