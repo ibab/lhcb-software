@@ -90,8 +90,36 @@ LowMult = {
     , 'PHI2KK_APmin'         : 4000.0 * MeV
     , 'PHI2KK_VtxChi2DoFmax' : 3.0
     },
-    'WGs' : [ 'QEE' ],
-    'STREAMS' : [ 'EW' ]
+     'WGs' : [ 'QEE' ],
+     'STREAMS' : { 
+      'EW' : [
+       'StrippingLowMultCEP_D2KpPipPim_line',                        
+       'StrippingLowMultCEP_D2KmPipPip_line',
+       'StrippingLowMultCEP_ChiC2KK_line',
+       'StrippingLowMultCEP_ChiC2PiPi_line',
+       'StrippingLowMultCEP_ChiC2KpKpPimPim_line',
+       'StrippingLowMultCEP_ChiC2KpKmPipPim_line',
+       'StrippingLowMultCEP_ChiC2KKKK_line',
+       'StrippingLowMultCEP_ChiC2PiPiPiPi_line',
+       'StrippingLowMultCEP_D0D0_line',
+       'StrippingLowMultCEP_D0D0bar_line',
+       'StrippingLowMultCEP_DpDm_line',
+       'StrippingLowMultCEP_D0Dp_line',
+       'StrippingLowMultCEP_DpDp_line',
+       'StrippingLowMultCEP_KpKm_line',
+       'StrippingLowMultCEP_KpKp_line',
+       'StrippingLowMultCEP_LMR2KPi_line',
+       'StrippingLowMultCEP_LMR2KK_line',
+       'StrippingLowMultCEP_LMR2PiPi_line',
+       'StrippingLowMultCEP_ChiC2KKWS_line',
+       'StrippingLowMultCEP_ChiC2PiPiWS_line',
+       'StrippingLowMultCEP_ChiC2KpKpPipPipWS_line',
+       'StrippingLowMultCEP_ChiC2KpKpPipPimWS_line',
+       'StrippingLowMultCEP_ChiC2KpKmPipPipWS_line',
+       'StrippingLowMultCEP_ChiC2KKKKWS_line',
+       'StrippingLowMultCEP_ChiC2PiPiPiPiWS_line'   
+      ] 
+     }
     }
 
 
@@ -180,8 +208,14 @@ HighPtTopoJets = {
     'conesize'  : 0.3, 
     'pTcone'    : 55000
     },
-    'WGs' : [ 'QEE' ],     
-    'STREAMS' : [ 'EW' ]   
+    'WGs' : [ 'QEE' ],
+    'STREAMS' : {
+     'EW' : [
+      'StrippingHighPtTopoJets10000',
+      'StrippingHighPtTopoJets1000',
+      'StrippingHighPtTopoJets20000_Cone55'
+      ]
+     }
     }
 
 #Bjets
@@ -196,6 +230,6 @@ Bjets = {
     "my2TOPO" : {"ANGLE_MIN":2/57., "M_MIN":0, "DPHI_MIN":0}
     },
     'WGs' : [ 'QEE' ],
-    'STREAMS' : [ 'EW' ]
+    'STREAMS' : [ 'BhadronCompleteEvent' ]
     }
 
