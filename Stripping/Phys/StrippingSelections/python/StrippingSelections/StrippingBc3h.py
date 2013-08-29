@@ -397,6 +397,7 @@ class Bc3hConf(LineBuilder) :
             ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
             """ % ( self['CTAU'] , self['CTAU_BC'] ) 
             ##
+            , ParticleCombiners = { '' : FITTER }
             )
         
         from PhysSelPython.Wrappers  import Selection
@@ -432,6 +433,7 @@ class Bc3hConf(LineBuilder) :
             ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
             """ % ( self['CTAU'] , self['CTAU_BC'] ) 
             ##
+            , ParticleCombiners = { '' : FITTER }
             )
         
         from PhysSelPython.Wrappers  import Selection
@@ -472,6 +474,7 @@ class Bc3hConf(LineBuilder) :
             ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
             """ % ( self['CTAU'] , self['CTAU_BC'] ) 
             ##
+            , ParticleCombiners = { '' : FITTER }
             )
         
         from PhysSelPython.Wrappers  import Selection
@@ -508,6 +511,7 @@ class Bc3hConf(LineBuilder) :
             ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
             """ % ( self['CTAU'] , self['CTAU_BC'] ) 
             ##
+            , ParticleCombiners = { '' : FITTER }
             )
         
         from PhysSelPython.Wrappers  import Selection
@@ -545,6 +549,7 @@ class Bc3hConf(LineBuilder) :
             ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
             """ % ( self['CTAU'] , self['CTAU_BC'] ) 
             ##
+            , ParticleCombiners = { '' : FITTER }
             )
         
         from PhysSelPython.Wrappers  import Selection

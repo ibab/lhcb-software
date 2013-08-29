@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-29 - Vanya Belyaev
+ - StrippingBc3h: minor (~5%) CPU improvement with the usage 
+   of LoKi::VertexFitter as particle combiner 
+
 ! 2013-08-29 - Edmund Smith
  - Bug in Beauty2Charm_DBuilder.py: having a default argument to a function led to
    duplicate input locations for lines that specified a non-default value for this
