@@ -23,7 +23,7 @@ use LHAPDFSets v1r0
 #-- Herwig++ and ThePeg
 # Set native versions of required software.
 #============================================================================
-macro herwigpp_native_version "2.6.1b"
+macro herwigpp_native_version "2.6.1a"
 macro thepeg_native_version   "1.8.1"
 
 

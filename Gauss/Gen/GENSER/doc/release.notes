@@ -4,7 +4,11 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
-!========================== GENSER v12r7 2013-08-08 ==========================
+!========================== GENSER v12r7 2013-08-29 ==========================
+! 2013-08-29 - Gloria Corti
+ - Need to revert to herwig++ 2.6.1a for Gauss v45 since 2.6.1b does not exists
+   in MCGenerators_lcgcmt64c
+
 ! 2013-08-07 - Gloria Corti
  - Adapt to change in interface package name for powhegbox instead of 
    powheg-box that causes problems on bash
