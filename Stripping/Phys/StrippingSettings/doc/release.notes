@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-08-29 - Francesca Dordei
+ - Updates of Stripping20r{0,1}p2 settings for B2CC WG (tighter values of prescales).
+
 ! 2013-08-29 - Ronan Wallace
  - Specified LowMult lines in config dictionaries for Stripping20r{0,1}p2.
  - Removed StrippingHighPtTopo40000 and StrippingHighPtTopo20000.

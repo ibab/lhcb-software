@@ -9,15 +9,15 @@ BetaS = {
                  ,       'JpsiMassWindow'            :       80
                  ,       'DaughterPT'                :       1000
                  ,       'VCHI2PDOF'                 :       10
-                 ,       'Jpsi2MuMuPrescale'         :       0.03  
+                 ,       'Jpsi2MuMuPrescale'         :       0.028  
                  ,       'Jpsi2MuMuDetachedPrescale' :       1.0
-                 ,       'Bu2JpsiKPrescale'          :       0.2 
-                 ,       'Bd2JpsiKstarPrescale'      :       0.2   
-                 ,       'Bd2JpsiKsPrescale'         :       0.8   
-                 ,       'Bs2JpsiPhiPrescale'        :       0.5 
+                 ,       'Bu2JpsiKPrescale'          :       0.12 
+                 ,       'Bd2JpsiKstarPrescale'      :       0.09   
+                 ,       'Bd2JpsiKsPrescale'         :       1.0   
+                 ,       'Bs2JpsiPhiPrescale'        :       0.27 
                  ,       'Bs2Jpsif0Prescale'         :       0.15  
-                 ,       'Bs2JpsiEtaPrescale'        :       0.5
-                 ,       'Bs2JpsiEtapPrescale'       :       0.2
+                 ,       'Bs2JpsiEtaPrescale'        :       0.35
+                 ,       'Bs2JpsiEtapPrescale'       :       0.11
                  ,       'Bs2JpsiPi0Prescale'        :       0.4
                  ,       'Bs2JpsiRho0Prescale'       :       0.15
                          },

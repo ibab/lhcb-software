@@ -11,13 +11,13 @@ BetaS = {
                  ,       'VCHI2PDOF'                 :       10
                  ,       'Jpsi2MuMuPrescale'         :       0.006 
          	 ,       'Jpsi2MuMuDetachedPrescale' :       1.0
-                 ,       'Bu2JpsiKPrescale'          :       0.025  
-                 ,       'Bd2JpsiKstarPrescale'      :       0.025   
-                 ,       'Bd2JpsiKsPrescale'         :       0.5   
-                 ,       'Bs2JpsiPhiPrescale'        :       0.055  
+                 ,       'Bu2JpsiKPrescale'          :       0.017  
+                 ,       'Bd2JpsiKstarPrescale'      :       0.015   
+                 ,       'Bd2JpsiKsPrescale'         :       0.50   
+                 ,       'Bs2JpsiPhiPrescale'        :       0.043  
                  ,       'Bs2Jpsif0Prescale'         :       0.02  
-                 ,       'Bs2JpsiEtaPrescale'        :       0.02
-                 ,       'Bs2JpsiEtapPrescale'       :       0.04
+                 ,       'Bs2JpsiEtaPrescale'        :       0.027
+                 ,       'Bs2JpsiEtapPrescale'       :       0.025
                  ,       'Bs2JpsiPi0Prescale'        :       0.1
                  ,       'Bs2JpsiRho0Prescale'       :       0.02
                          },
