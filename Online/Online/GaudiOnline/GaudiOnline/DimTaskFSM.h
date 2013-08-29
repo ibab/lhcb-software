@@ -90,14 +90,14 @@ namespace LHCb  {
     /// Print error message (returns FAILURE)
     StatusCode printErr(int flag, const char* fmt, ...);
     /// Declare FSM state
-    StatusCode _declareState(const std::string& new_state);
+    virtual StatusCode _declareState(const std::string& new_state);
     /// Accessor to property manager
     PropertyMgr& propertyMgr()   { return *m_propertyMgr; }
     /// Translate integer state to string name
     static std::string stateName(int state);
 
-    /// Clear current state name
-    void clearState() { m_stateName = ""; } 
+    ///  ITaskFSM overload: Clear current state name
+    virtual void clearState() { m_stateName = ""; } 
 
   public:
     /// Initializing constructor                       (OFFLINE     -> Inactive)

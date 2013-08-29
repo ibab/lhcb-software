@@ -88,6 +88,13 @@ namespace LHCb  {
     /// Print overload
     virtual void output(int level, const char* s) = 0;
 
+    /// Clear current state name
+    virtual void clearState() = 0;
+    /// IAppMgrUI overload: state name
+    virtual const std::string& stateName() const = 0;
+
+    /// Declare FSM state
+    virtual StatusCode _declareState(const std::string& new_state) = 0;
     /// Declare FSM state
     virtual StatusCode declareState(State state) = 0;
     /// Declare FSM sub-state

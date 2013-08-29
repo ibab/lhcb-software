@@ -43,7 +43,7 @@ namespace LHCb
     /// Flag indicating that MBM event retrieval is active
     bool                     m_receiveEvts;
     /// Lock handle
-    void*                    m_lock;
+    lib_rtl_lock_t           m_lock;
     /// Reference to MEP manager service
     MEPManager*              m_mepMgr;
     /// Reference to buffer manager producer
@@ -170,7 +170,9 @@ HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
 
 /// Standard Destructor
 HltBufferedIOReader::~HltBufferedIOReader()  {
-  ::lib_rtl_delete_lock(m_lock);
+  if ( m_lock ) {
+    ::lib_rtl_delete_lock(m_lock);
+  }
 }
 
 /// IInterface implementation : queryInterface
