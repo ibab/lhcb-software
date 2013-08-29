@@ -124,7 +124,7 @@ namespace FiniteStateMachine {
     /// Collect the states of all slaves
     const States slaveStates() const;
     /// Evaluate the when rules accoding to the slave states and invoke transition if required.
-    void evaluateWhens();
+    bool evaluateWhens();
 
     /// Add a slave to this FSM  machine
     ErrCond addSlave(Slave* slave);

@@ -270,8 +270,12 @@ void Controller::commandHandler()   {
     invokeTransition("UnknownTransition");
     return;
   }
-  if ( status == FSM::TRANNOTFOUND )
-    publish();
-  else
-    declareSubState(EXEC_ACTION);
+  if ( status == FSM::TRANNOTFOUND ) {
+    m_machine->goIdle();
+    if ( !m_machine->evaluateWhens() ) {
+      publish();
+    }
+    return;
+  }
+  declareSubState(EXEC_ACTION);
 }

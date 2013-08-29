@@ -200,7 +200,7 @@ const Machine::States Machine::slaveStates() const   {
 }
 
 /// Evaluate the when rules accoding to the slave states and invoke transition if required.
-void Machine::evaluateWhens()  {
+bool Machine::evaluateWhens()  {
   const State::Whens& whens = state()->when();
   if ( !whens.empty() )  {
     stringstream state_names;
@@ -219,13 +219,14 @@ void Machine::evaluateWhens()  {
 	display(INFO,c_name(),"WHEN clause: %s fired. Invoke tramsition to:%s",
 		w->c_name(),res.first->c_name());
 	invokeTransition(res.first,res.second);
-	return;
+	return true;
       }
       else  {
 	display(DEBUG,c_name(),"WHEN clause: %s rejected.",w->c_name());
       }
     }
   }
+  return false;
 }
 
 /// Callback executed on a failure of a metastate change

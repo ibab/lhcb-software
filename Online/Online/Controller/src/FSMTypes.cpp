@@ -100,11 +100,19 @@ static Type* defineDAQType()    {
   daq_err3->adoptRule(AllChildrenOfType(daq).moveTo(error));
 
   // Otherwise: FULL KILL on recover
-  Tr*  recover0  = daq->addTransition("recover",   error,       offline,   NO_CHECKS|ON_TIMEOUT_KILL);
-  Tr*  recover1  = daq->addTransition("recover",   not_ready,   offline,   NO_CHECKS|ON_TIMEOUT_KILL);
-  recover0->adoptRule(recover0).adoptRule(recover1);
-  recover1->adoptRule(recover0).adoptRule(recover1);
-
+  int flags = KILL;//NO_CHECKS|ON_TIMEOUT_KILL
+  Tr*  recover0  = daq->addTransition("recover",   error,     offline,   flags);
+  Tr*  recover1  = daq->addTransition("recover",   running,   offline,   flags);
+  Tr*  recover2  = daq->addTransition("recover",   ready,     offline,   flags);
+  Tr*  recover3  = daq->addTransition("recover",   not_ready, offline,   flags);
+  Tr*  recover5  = daq->addTransition("recover",   paused,    offline,   flags);
+#if 0
+  recover0->adoptRule( AllChildrenOfType(daq).execTransition(daq->transitionsByName("recover")));
+  recover1->adoptRule( AllChildrenOfType(daq).execTransition(daq->transitionsByName("recover")));
+  recover2->adoptRule( AllChildrenOfType(daq).execTransition(daq->transitionsByName("recover")));
+  recover3->adoptRule( AllChildrenOfType(daq).execTransition(daq->transitionsByName("recover")));
+  recover5->adoptRule( AllChildrenOfType(daq).execTransition(daq->transitionsByName("recover")));
+#endif
   RESET0->adoptRule(  AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
   RESET1->adoptRule(  AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
   RESET2->adoptRule(  AllChildrenOfType(daq).execTransition(daq->transitionsByName("RESET")));
