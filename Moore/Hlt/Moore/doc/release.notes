@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-08-29 - Eric van Herwijnen
+ - Change the buffer names in Configuarion.py to work with Online v5r3
+
 !========================= Moore v20r3p1 2013-08-28 =========================
 ! 2013-08-27 - Eric van Herwijnen
  - Pick up project version instead of package version in Configuarion.py

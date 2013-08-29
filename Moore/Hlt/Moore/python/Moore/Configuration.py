@@ -30,25 +30,6 @@ def fixDQ():
     del c.Alternatives['/Conditions/DQ']
 #appendPostConfigAction(fixDQ)
 
-_replace = lambda orig, repl, members : [ m if m != orig else repl for m in members ]
-_remove  = lambda remove,     members : [ m for m in members if m.name() not in remove ]
-_remove_re  = lambda re,      members : [ m for m in members if not re.match(m.name()) ]
-## FIXME: how to catch HltUnit's RunAll???
-def _walkAlgorithms( c , descend = [ 'Members','Prescale','ODIN','L0DU','HLT','Filter0','Filter1','Postscale'] ) :
-    for p in descend :
-        if not hasattr(c,p) : continue
-        x = getattr(c,p)
-        import GaudiKernel
-        if isinstance(x,GaudiKernel.Configurable.Configurable) : x = [x]
-        for i in x :
-            for j in _walkAlgorithms(i,descend) : yield j
-    yield c
-def _updateProperties( top, table, value ) :
-    for conf in _walkAlgorithms( top ) :
-        prop = table.get( conf.getType().replace(':','_') , None )
-        if prop : setattr( conf, prop, value )
-
-
 class Moore(LHCbConfigurableUser):
     ## Possible used Configurables
     __used_configurables__ = [ HltConf
@@ -59,7 +40,7 @@ class Moore(LHCbConfigurableUser):
     __slots__ = {
           "EvtMax":            -1    # Maximum number of events to process
         , "SkipEvents":        0
-        , "NbOfSlaves":        0
+	, "NbOfSlaves":        0
         , "Simulation":        True # True implies use SimCond
         , "DataType":          '2010' # Data type, can be [ 'DC06','2008' ]
         , "DDDBtag" :          'default' # default as set in DDDBConf for DataType
@@ -107,7 +88,7 @@ class Moore(LHCbConfigurableUser):
         , 'REQ1' : ''
         , 'Persistency' :  None #Root or Pool?
         , 'WriteFSR'    :  True #copy FSRs as required
-        , 'Split'       : ''
+
         }   
                 
 
@@ -126,7 +107,8 @@ class Moore(LHCbConfigurableUser):
         from Configurables import LoKiSvc
         LoKiSvc().Welcome = False
         
-        import OnlineEnv 
+        import OnlineEnv
+
         self.setProp('UseTCK', True)
         self._configureDataOnDemand()
         
@@ -165,22 +147,30 @@ class Moore(LHCbConfigurableUser):
                 elif OnlineEnv.MooreStartupMode == 2:
                     self._configureOnlineCheckpointing()
             
+            importOptions('$MBM_SETUP_OPTIONS')
+            mbm_setup = allConfigurables['OnlineEnv']
+            task_type = os.environ['TASK_TYPE']
+            input   = mbm_setup.__getattribute__(task_type+'_Input')   #'Events' 
+            output  = mbm_setup.__getattribute__(task_type+'_Output')  #'Send'
+
             TAE = OnlineEnv.TAE != 0
-            input   = 'Events' 
-            output  = 'Send'
             mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input,output],False)
-            mepMgr.ConnectWhen = 'start'
+            mepMgr.PartitionBuffers = True
+            mepMgr.PartitionName    = OnlineEnv.PartitionName
+            mepMgr.PartitionID      = OnlineEnv.PartitionID
+            mepMgr.ConnectWhen      = 'start'
+            
             app.Runable = OnlineEnv.evtRunable(mepMgr)
             app.ExtSvc.append(mepMgr)
             evtMerger = OnlineEnv.evtMerger(name='Output',buffer=output,location='DAQ/RawEvent',datatype=OnlineEnv.MDF_NONE,routing=1)
             evtMerger.DataType = OnlineEnv.MDF_BANKS
-            if TAE : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=False)
-            else   : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
+	    if TAE : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=False)
+            else : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
             app.ExtSvc.append(eventSelector)
 
             OnlineEnv.evtDataSvc()
-            if self.getProp('REQ1') : eventSelector.REQ1 = self.getProp('REQ1')
-
+	    if self.getProp('REQ1') : eventSelector.REQ1 = self.getProp('REQ1')
+            
             # define the send sequence
             writer =  GaudiSequencer('SendSequence')
             writer.OutputLevel = OnlineEnv.OutputLevel
@@ -215,18 +205,18 @@ class Moore(LHCbConfigurableUser):
         #      id = int(host[6:])
         #      if id < 12: numChildren=9
         #      if id > 11: numChildren=23
-        if self.getProp("NbOfSlaves") > 0 : numChildren = self.getProp("NbOfSlaves")
+	if self.getProp("NbOfSlaves") > 0 : numChildren = self.getProp("NbOfSlaves")
 
         forker = LHCb__CheckpointSvc("CheckpointSvc")
         forker.NumberOfInstances   = numChildren
         forker.Partition           = OnlineEnv.PartitionName
-        forker.TaskType            = 'GauchoJob'
+        forker.TaskType            = os.environ['TASK_TYPE'] ###'GauchoJob'
         forker.UseCores            = False
         forker.ChildSessions       = False
-        forker.FirstChild          = 1
+        forker.FirstChild          = 0
         # Sleep in [ms] for each child in batches of 10:
         forker.ChildSleep          = 500;
-        forker.UtgidPattern        = "%NN_%T_%02d";
+        forker.UtgidPattern        = "%P_%NN_%T_%02d";
         forker.PrintLevel          = 3  # 1=MTCP_DEBUG 2=MTCP_INFO 3=MTCP_WARNING 4=MTCP_ERROR
         forker.OutputLevel         = 4  # 1=VERBOSE 2=DEBUG 3=INFO 4=WARNING 5=ERROR 6=FATAL
         ApplicationMgr().ExtSvc.append(forker)
@@ -282,7 +272,8 @@ class Moore(LHCbConfigurableUser):
         #    #ApplicationMgr().EvtSel.REQ1 = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0"
         self._configureDataOnDemand()
         
-        if not files: return
+        if not files:
+            return
         
         persistency=None
         if hasattr(self, "Persistency"):
@@ -307,9 +298,12 @@ class Moore(LHCbConfigurableUser):
         #check the file type and use MDF writer or InputCopyStream
         if iox.detectFileType(fname) == 'MDF'  : 
             from Configurables import LHCb__MDFWriter as MDFWriter
-            writer = IOHelper("MDF","MDF").outputAlgs(fname
-                                                     ,writer = MDFWriter( 'Writer' , Compress = 0 )
-                                                     ,writeFSR=False)
+            writer = MDFWriter( 'Writer'
+                              , Compress = 0
+                              , ChecksumType = 1
+                              , GenerateMD5 = True
+                              , Connection = 'file://' + fname
+                              )
             if self.getProp('WriterRequires') :
                 from Configurables import LoKi__VoidFilter as VoidFilter
                 writer = GaudiSequencer( 'WriteSequence'
@@ -317,9 +311,10 @@ class Moore(LHCbConfigurableUser):
                                                                , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
                                                                , Code = ' & '.join( [ "ALG_EXECUTED('%s') & ALG_PASSED('%s')" % (i,i) for i in self.getProp('WriterRequires') ] ) 
                                                                )
-                                                   ] + writer
+                                                   , writer 
+                                                   ]
                                        )
-            ApplicationMgr().OutStream.append( writer )
+            IOHelper("MDF","MDF").outStream(fname,writer,writeFSR=False)
         else : 
             from Configurables import InputCopyStream
             writer = InputCopyStream("Writer"
@@ -341,7 +336,7 @@ class Moore(LHCbConfigurableUser):
 
     def getConfigAccessSvc(self):
         method = self.getProp('TCKpersistency').lower()
-        if method not in [ 'file', 'sqlite', 'tarfile','zipfile' ] : raise TypeError("invalid TCK persistency '%s'"%method)
+        if method not in [ 'file', 'sqlite', 'tarfile' ] : raise TypeError("invalid TCK persistency '%s'"%method)
         TCKData = self.getProp('TCKData')
         if method == 'file' :
             from Configurables import ConfigFileAccessSvc
@@ -352,9 +347,6 @@ class Moore(LHCbConfigurableUser):
         if method == 'tarfile' :
             from Configurables import ConfigTarFileAccessSvc
             return ConfigTarFileAccessSvc( File = TCKData +'/config.tar' )
-        if method == 'zipfile' :
-            from Configurables import ConfigZipFileAccessSvc
-            return ConfigZipFileAccessSvc( File = TCKData +'/config.zip' )
 
     def addAuditor(self,x) :
         if  'AuditorSvc' not in ApplicationMgr().ExtSvc : 
@@ -562,85 +554,7 @@ class Moore(LHCbConfigurableUser):
         
         if persistency is not None:
             LHCbApp().setProp("Persistency",persistency)
-
-    def _split(self): 
-        # for now, this is specific to non-TCK running...
-        
-        def hlt1_only() :
-            from Configurables import GaudiSequencer as gs
-            seq = gs('Hlt')
-            seq.Members = _replace( gs('HltDecisionSequence'), gs('Hlt1'), seq.Members )
-            ## adapt HltGlobalMonitor for Hlt1 only...
-            from Configurables import HltGlobalMonitor
-            HltGlobalMonitor().DecToGroupHlt2 = {}
-
-        def hlt2_only() :
-            from Configurables import GaudiSequencer as gs
-            seq = gs('Hlt')
-            seq.Members = _replace( gs('HltDecisionSequence'), gs('Hlt2'), seq.Members )
-            # TODO: shunt lumi nano events...
-            # globally prepend a HltDecReportsDecoder for Hlt1...
-            # TODO: find a better way of doing this... ditto for L0 decoding...
-            from Configurables import HltDecReportsDecoder
-            seq.Members.insert( seq.Members.index(gs('Hlt2')), HltDecReportsDecoder('Hlt1DecReportsDecoder') )
-            # TODO: replace Hlt1 filter in endsequence by Hlt2 filter...
-            # remove LumuWriter, LumiStripper
-            end = gs('HltEndSequence')
-            end.Members = _remove( ( 'HltL0GlobalMonitor','Hlt1Global','HltLumiWriter','LumiStripper'), end.Members )
-            ## for debugging remove everything except Hlt2DiMuon.* lines...
-            #import re
-            #seq = gs('Hlt2')
-            #seq.Members = _remove_re(re.compile('Hlt2(?!DiMuon).*') , seq.Members )
-
-            ## adapt HltGlobalMonitor for Hlt2 only...
-            from Configurables import HltGlobalMonitor
-            HltGlobalMonitor().DecToGroupHlt1 = {}
-
-            # shunt Hlt1 decreports
-            _updateProperties( gs('Hlt')
-                             , dict( HltDecReportsDecoder = 'OutputHltDecReportsLocation'
-                                   , LoKi__HDRFilter      = 'Location'
-                                   , HltRoutingBitsWriter = 'Hlt1DecReportsLocation'
-                                   )
-                             , '/Event/Hlt1/DecReports'
-                             )
-
-            # shunt Hlt2 decreports 
-            _updateProperties( gs('Hlt')
-                             , dict( Hlt__Line            = 'HltDecReportsLocation'
-                                   , HltRoutingBitsWriter = 'Hlt2DecReportsLocation'
-                                   , HltDecReportsWriter  = 'InputHltDecReportsLocation'
-                                   , HltSelReportsMaker   = 'InputHltDecReportsLocation'
-                                   , HltGlobalMonitor     = 'HltDecReports'
-                                   )
-                             , '/Event/Hlt2/DecReports'
-                             )
-
-            # shunt selreports
-            _updateProperties( gs('Hlt')
-                             , dict( HltSelReportsMaker   = 'OutputHltSelReportsLocation'
-                                   , HltSelReportsWriter  = 'InputHltSelReportsLocation' )
-                             , '/Event/Hlt2/SelReports'
-                             )
-
-        # rather nasty way of doing this.. but it is 'hidden' 
-        # if you're reading this: don't expect this to remain like this!!!
-        splitter = { 'Hlt1' : hlt1_only
-                   , 'Hlt2' : hlt2_only
-                   , ''     : None
-                   }
-        try :
-            action = splitter[ self.getProp('Split') ]
-        except :
-            raise ValueError('Invalid option for Moore().Split: %s'% self.getProp("Split") )
-        if action :
-            from Gaudi.Configuration import appendPostConfigAction
-            appendPostConfigAction( action )
-
-
-
-
-
+    
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
         # verify mutually exclusive settings:
@@ -649,7 +563,7 @@ class Moore(LHCbConfigurableUser):
         #       Online vs. DB tags...
         #       Online vs. EvtMax, SkipEvents, DataType, ...
         #       Online requires UseTCK
-        # L0 decoding to look in a single place  
+	# L0 decoding to look in a single place  
         # L0Conf().RawEventLocations = ['DAQ/RawEvent']        
         #L0DUFromRawAlg("L0DUFromRaw").Hlt1 = True 
         
@@ -657,7 +571,7 @@ class Moore(LHCbConfigurableUser):
         #todo: put this in a "quiet" option of Moore
         from Configurables import LoKi__DistanceCalculator
         LoKi__DistanceCalculator().MaxPrints=0
-
+	
         if not self.getProp("RunOnline") : self._l0()
         if self.getProp("RunOnline") : 
             import OnlineEnv 
@@ -679,7 +593,7 @@ class Moore(LHCbConfigurableUser):
         from Configurables import MooreInitSvc
         ApplicationMgr().ExtSvc.append( MooreInitSvc() )
         #from Configurables import LbAppInit
-        #ApplicationMgr().TopAlg.append(LbAppInit(PreloadGeometry=True))
+	#ApplicationMgr().TopAlg.append(LbAppInit(PreloadGeometry=True))
         ApplicationMgr().TopAlg.append( GaudiSequencer('Hlt') )
 
 
@@ -695,8 +609,8 @@ class Moore(LHCbConfigurableUser):
         # Get the event time (for CondDb) from ODIN 
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
-        import time
-        EventClockSvc().InitialTime = int(time.time()*1e9)  #now
+	import time
+	EventClockSvc().InitialTime = int(time.time()*1e9)  #now
 
         # make sure we don't pick up small variations of the read current
         # Need a defined HistogramPersistency to read some calibration inputs!!!
@@ -709,7 +623,6 @@ class Moore(LHCbConfigurableUser):
             self._config_with_tck()
         else:
             self._config_with_hltconf()
-            self._split()
             
         self._definePersistency()
         
