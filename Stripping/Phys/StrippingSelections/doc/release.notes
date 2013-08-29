@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-29 - Vanya Belyaev
+ - add new file StrippingBc3h.h
+
+
 ! 2013-08-28 - Lucio Anderlini (for Yury Shcheglov)
  - Reduced retention for Betac2PhiP line (includes new conf. dictionary)
 
