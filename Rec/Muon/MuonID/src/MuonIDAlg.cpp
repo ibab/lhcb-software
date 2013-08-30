@@ -418,8 +418,8 @@ StatusCode MuonIDAlg::initialize() {
 
       int dllFlag  = DLL_flag->param<int>("DLL_flag");
       if(dllFlag != m_dllFlag) info() << "Initialise: OverrideDB=false but dllFlag in options file (="
-                                         << m_dllFlag << ") not equal dllFlag in database (="  << dllFlag 
-					 << "). Using dllFlag from options file" << endmsg;
+                                      << m_dllFlag << ") not equal dllFlag in database (="  << dllFlag 
+   				      << "). Using dllFlag from options file" << endmsg;
       //m_dllFlag = dllFlag;
       if (msgLevel(MSG::DEBUG) ) debug()  << "==> DLL_flag:" << m_dllFlag << endmsg;
 
@@ -834,9 +834,11 @@ StatusCode MuonIDAlg::initialize() {
   int i=0;
   while(i<m_NStation){
     m_stationNames.push_back(basegeometry.getStationName(i));
-    // if (msgLevel(MSG::DEBUG) ) debug()   <<" station "<<i<<" "<<m_stationNames[i]<<endmsg;
+    if (msgLevel(MSG::DEBUG) ) debug()   <<" station "<<i<<" "<<m_stationNames[i]<<endmsg;
+    if("M2"==m_stationNames[i]) m_iM2 = i;
     i++;
   }
+  info() << "Index of station M2: " << m_iM2 <<endmsg;
 
   // set the size of the local vectors
   m_padSizeX.resize(m_NStation * m_NRegion);
@@ -849,7 +851,7 @@ StatusCode MuonIDAlg::initialize() {
   // fill local arrays of pad sizes and region sizes
   m_mudet=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
   int station,region;
-  for(station = 0 ; station < m_NStation ; station++ ){
+  for(station = 0 ; station < m_NStation ; station++ ){   // JHLJHL 30/08/2013
     m_regionInnerX[station] = m_mudet->getInnerX(station);
     m_regionOuterX[station] = m_mudet->getOuterX(station);
     m_regionInnerY[station] = m_mudet->getInnerY(station);
@@ -865,33 +867,21 @@ StatusCode MuonIDAlg::initialize() {
     }
   }
 
-  if (msgLevel(MSG::DEBUG) ) {
-    debug()  << "-Geometry information ----------------"<< endmsg;
-    debug()  << "Outer X M1 = " << m_regionOuterX[0] << endmsg;
-    debug()  << "Outer Y M1 = " << m_regionOuterY[0] << endmsg;
-    debug()  << "Outer X M5 = " << m_regionOuterX[4] << endmsg;
-    debug()  << "Outer Y M5 = " << m_regionOuterY[4] << endmsg;
-    debug()  << "Inner X M1 = " << m_regionInnerX[0] << endmsg;
-    debug()  << "Inner Y M1 = " << m_regionInnerY[0] << endmsg;
-    debug()  << "Inner X M5 = " << m_regionInnerX[4] << endmsg;
-    debug()  << "Inner Y M5 = " << m_regionInnerY[4] << endmsg;
-    debug()  << "stationZ M1 = " << m_stationZ[0] << endmsg;
-    debug()  << "stationZ M2 = " << m_stationZ[1] << endmsg;
-    debug()  << "stationZ M3 = " << m_stationZ[2] << endmsg;
-    debug()  << "stationZ M4 = " << m_stationZ[3] << endmsg;
-    debug()  << "stationZ M5 = " << m_stationZ[4] << endmsg;
-    debug()  << "--------------------------------------"<< endmsg;
+  info()  << "-Geometry information ----------------"<< endmsg;
+  for(station = 0 ; station < m_NStation ; station++ ){
+    info()  << "Station " << m_stationNames[station] << " Outer X = "  << m_regionOuterX[station] << " Outer Y = " << m_regionOuterY[station] 
+                                                     << "\tInner X = "  << m_regionInnerX[station] << " Inner Y = " << m_regionInnerY[station]
+                                                     << "\tstationZ = " <<  m_stationZ[station] <<  endmsg;
   }
 
   if( m_MomentumCuts.empty() ||
-      m_xfoiParam1.size() != (unsigned)m_NStation*m_NRegion ||
-      m_xfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
-      m_xfoiParam3.size() != (unsigned)m_NStation*m_NRegion ||
-      m_yfoiParam1.size() != (unsigned)m_NStation*m_NRegion ||
-      m_yfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
-      m_yfoiParam3.size() != (unsigned)m_NStation*m_NRegion){
-    return Error(format("OPTIONS initialising MuonID are missing or wrong size for %d stations and %d regions",
-                        m_NStation, m_NRegion));
+      m_xfoiParam1.size() != 20 ||   // 20 = 5 stationx x 4 regions// JHLJHL 30/08/2013
+      m_xfoiParam2.size() != 20 ||
+      m_xfoiParam3.size() != 20 ||
+      m_yfoiParam1.size() != 20 ||
+      m_yfoiParam2.size() != 20 ||
+      m_yfoiParam3.size() != 20){
+    return Error(format("OPTIONS initialising MuonID: missing or wrong size for MomentumCuts or foi parameters")); // JHLJHL 30/08/2013
 
   }
 
@@ -1214,6 +1204,7 @@ StatusCode MuonIDAlg::fillCoordVectors(){
     }
     m_coordPos[station*m_NRegion+region].
       push_back(coordExtent_(x,dx,y,dy,*iCoord));
+    if (msgLevel(MSG::VERBOSE) ) verbose() << "fillCoordVectors: station: " << station << " region: " << region << " tile: " << tile << " z: " << z << endmsg;
   }
 
   return StatusCode::SUCCESS;
@@ -1227,8 +1218,8 @@ StatusCode MuonIDAlg::fillCoordVectors(){
 StatusCode MuonIDAlg::find_LandauParam(const double& p,
                                        const std::vector<int>& trackRegion, double *parMu, double *parNonMu){
   // Track region is defined in M2 or M3
-  int region=trackRegion[1]; // M2
-  if (region<0) region=trackRegion[2]; // M3
+  int region=trackRegion[m_iM2]; // M2 JHLJHL Check M2 and M3 indices if no M1 30/08/2013
+  if (region<0) region=trackRegion[m_iM2+1]; // M3
   if (region==0){//Region 1
     if (p>m_PreSelMomentum && p<m_MupBinsR1[0]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR1_1[i]; } }
     if (p>m_MupBinsR1[0] && p<m_MupBinsR1[1]) {for (int i=0;i<6;i++){parMu[i] = m_MuLanParR1_2[i]; } }
@@ -1366,6 +1357,9 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
     if(pMuid->InAcceptance())  counter("nInAcceptance")++;
     if(pMuid->PreSelMomentum())  counter("nMomentumPresel")++;
 
+    if (msgLevel(MSG::DEBUG) ) debug() << "doID: Track key: " << pMuid->idTrack()->key() << " InAcceptance: " << pMuid->InAcceptance() 
+        << " PreSelMomentum: " << pMuid->PreSelMomentum() << endmsg;
+
     // OK: track failed preselection say so and return
     if(!passed){
       if (msgLevel(MSG::DEBUG) ) debug() << " Track failed preselection " << endmsg;
@@ -1381,13 +1375,12 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
     }
 
     // apply ID: depends on the track momentum
-    // now: implement original algorithm:
-    // bin 0 M1.and.M2.and.M3
-    // bin 1 M1.and.M2.and.M3.and.(M4.or.M5)
-    // bin 2 M1.and.M2.and.M3.and.M4.and.M5
+    // bin 0 M2.and.M3
+    // bin 1 M2.and.M3.and.(M4.or.M5)
+    // bin 2 M2.and.M3.and.M4.and.M5
 
     std::vector<int> stations;
-    for(int ist=1;ist<5;ist++){
+    for(int ist=m_iM2;ist<m_NStation;ist++){   // JHLJHL   Changed to go from m_iM2 to m_NStation 30/08/2013
       if (m_occupancyAll[ist]>0) stations.push_back(ist);
     }
     if (msgLevel(MSG::DEBUG)){
@@ -1401,7 +1394,7 @@ StatusCode MuonIDAlg::doID(LHCb::MuonPID *pMuid){
     myIsMuon = IsMuon(stations,m_MomentumPre);
 
     std::vector<int> stationsWithCrossing;
-    for(int ist=1;ist<5;ist++){
+    for(int ist=m_iM2;ist<m_NStation;ist++){
       if (m_occupancyWithCrossing[ist]>0) stationsWithCrossing.push_back(ist);
     }
     if (msgLevel(MSG::DEBUG) ) {
@@ -1508,20 +1501,20 @@ bool MuonIDAlg::IsMuon(const std::vector<int>& stations,const double& p)
     debug()<<"IsMuon p="<<mom<<endmsg;
   }
 
-  if (mom>pr1 && mom<pr2)
+  if (mom>pr1 && mom<pr2)  // JHLJHL: Check indices for M2 and M3 30/08/2013
   {
-    if (stInStations(1,stations) && stInStations(2,stations)) return true;
+    if (stInStations(m_iM2,stations) && stInStations(m_iM2+1,stations)) return true;
   }
 
   else if (mom>pr2 && mom<pr3)
   {
-    if (stInStations(1,stations) && stInStations(2,stations) &&
-        (stInStations(3,stations) || stInStations(4,stations))) return true;
+    if (stInStations(m_iM2,stations) && stInStations(m_iM2+1,stations) &&
+        (stInStations(m_iM2+2,stations) || stInStations(m_iM2+3,stations))) return true;
   }
   else if (mom>pr3)
   {
-    if (stInStations(1,stations) && stInStations(2,stations)
-        && stInStations(3,stations) && stInStations(4, stations) ) return true;
+    if (stInStations(m_iM2,stations) && stInStations(m_iM2+1,stations)
+        && stInStations(m_iM2+2,stations) && stInStations(m_iM2+3, stations) ) return true;
   }
 
   return false;
@@ -1538,8 +1531,8 @@ bool MuonIDAlg::IsMuonLoose(const std::vector<int>& stations,const double& p)
 {
   //double mom=p/Gaudi::Units::GeV;
   double mom=p;
-  std::vector<int> vstations_rel1 = boost::assign::list_of(1)(2)(3);
-  std::vector<int> vstations_rel2 = boost::assign::list_of(1)(2)(3)(4);
+  std::vector<int> vstations_rel1 = boost::assign::list_of(m_iM2)(m_iM2+1)(m_iM2+2);   // JHLJHL: Check indices... 30/08/2013
+  std::vector<int> vstations_rel2 = boost::assign::list_of(m_iM2)(m_iM2+1)(m_iM2+2)(m_iM2+3);
 
   if (msgLevel(MSG::DEBUG) ) {
     debug()<<"vstations_rel1"<<vstations_rel1<<endmsg;
@@ -1598,7 +1591,7 @@ double MuonIDAlg::calcMuProb(LHCb::MuonPID * pMuid){
 
   if(pMuid->IsMuonLoose()){
     // slope calculated in M2 and M3
-    m_xMatchStation = 1;
+    m_xMatchStation = m_iM2;  // JHLJHL: Check M2 and M3 indices, ... for the case with no M1! 30/08/2013
     // find slope difference between track and Coords in M2-M3
     double coordSlopeX = ((m_CoordX[m_xMatchStation] -
                            m_CoordX[m_xMatchStation+1])/
@@ -1727,8 +1720,8 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
   //find track region
   trackRegion=findTrackRegions();
 
-  int region=trackRegion[1]; // M2
-  if (region<0) region=trackRegion[2]; // M3
+  int region=trackRegion[m_iM2]; // M2 // JHLJHL: Check M2 and M3 indices in case of no M1. 30/08/2013
+  if (region<0) region=trackRegion[m_iM2+1]; // M3
   
   if (region<0) {
     Warning("calcMuonLL_tanhdist: no valid region",StatusCode::SUCCESS).ignore();
@@ -1806,8 +1799,8 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const do
   //find track region
   trackRegion=findTrackRegions();
 
-  int region=trackRegion[1]; // M2
-  if (region<0) region=trackRegion[2]; // M3
+  int region=trackRegion[m_iM2]; // M2   JHLJHL Check indices ... 30/08/2013
+  if (region<0) region=trackRegion[m_iM2+1]; // M3
 
   // Find Landau's parameters for a given track:
   StatusCode sc = find_LandauParam(p, trackRegion, parMu, parNonMu);
@@ -1819,7 +1812,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const do
   // Determine the momentum bin for this region
   int pBin=GetPbin(p, region);
   double tanhdist;
-  // Calculate tanh(dist). The effetive scale factor is after dividing by tanh^¯1(0.5)
+  // Calculate tanh(dist). The effetive scale factor is after dividing by tanh^¯1(0.5)
   tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*atanh05);
 
   // Calculate Prob(mu)  for a given track using tanh(dist);
@@ -1904,8 +1897,7 @@ StatusCode MuonIDAlg::calcMuonLL(LHCb::MuonPID * muonid){
   double LklhMu = m_distMuon[0] * (TMath::Landau (dist,m_distMuon[1],m_distMuon[2])) +
     m_distMuon[3] * (TMath::Landau (dist,m_distMuon[4],m_distMuon[5])) +
     m_distMuon[6] * (TMath::Landau (dist,m_distMuon[7],m_distMuon[8]));
-  double LklhPi = m_distPion[0] * (TMath::Landau (dist,m_distPion[1],m_distPion[2])) +
-    m_distPion[3] * (TMath::Landau (dist,m_distPion[4],m_distPion[5])) +
+  double LklhPi = m_distPion[0] * (TMath::Landau (dist,m_distPion[1],m_distPion[2])) + m_distPion[3] * (TMath::Landau (dist,m_distPion[4],m_distPion[5])) +
     m_distPion[6] * (TMath::Landau (dist,m_distPion[7],m_distPion[8]));
 
   if (LklhMu<0 || LklhPi<0) return StatusCode::FAILURE;
@@ -2084,12 +2076,13 @@ StatusCode MuonIDAlg::preSelection(LHCb::MuonPID * pMuid, bool &passed){
     pMuid->setPreSelMomentum(1);
   }
   pMuid->setInAcceptance(1);
-  // in first and last station acceptance
+  // in first and last station acceptance  
+  // JHLJHL: Change 4 -> m_NStation-1, in case of no M1. In this case 0 -> M2. Check how this affects InAcceptance... 30/08/2013
   if (msgLevel(MSG::DEBUG) ) {
     debug()  << "trackX0 = " << m_trackX[0] << endmsg;
-    debug()  << "trackX4 = " << m_trackX[4] << endmsg;
+    debug()  << "trackX4 = " << m_trackX[m_NStation-1] << endmsg;
     debug()  << "trackY0 = " << m_trackY[0] << endmsg;
-    debug()  << "trackY4 = " << m_trackY[4] << endmsg;
+    debug()  << "trackY4 = " << m_trackY[m_NStation-1] << endmsg;
   }
   if(  ! (fabs(m_trackX[0]) <  m_regionOuterX[0] &&
           fabs(m_trackY[0]) <  m_regionOuterY[0] )  ||
@@ -2303,8 +2296,7 @@ std::vector<int> MuonIDAlg::findTrackRegions(){
               << endmsg;
   }
   
-  if (msgLevel(MSG::DEBUG)) debug() << "TrackRegions" << trackRegion 
-                                    << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "TrackRegions" << trackRegion << endmsg;
   return trackRegion;
 }
 
@@ -2348,70 +2340,72 @@ double MuonIDAlg::calc_closestDist(LHCb::MuonPID *pMuid, const double& p, double
     for(int ist=0;ist<5;++ist) debug()  << ist << " " << closest_region[ist] << "\t" << closest_x[ist] << "\t" << closest_y[ist] << endmsg;
   }
 
-  if(p>m_PreSelMomentum && p<m_MomentumCuts[0]){
+  int iM2=m_iM2, iM3=m_iM2+1, iM4=m_iM2+2, iM5=m_iM2+3;
+
+  if(p>m_PreSelMomentum && p<m_MomentumCuts[0]){ // JHLJHL: Check station indices whith no M1 configuration 30/08/2013
     //3 or 2 stations
-    if((*occupancy)[1]>0 && (*occupancy)[2]>0 && (*occupancy)[3]>0){//M2 &&M3 && M4
-      closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
-        (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2])+
-        (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3]);
+    if((*occupancy)[iM2]>0 && (*occupancy)[iM3]>0 && (*occupancy)[iM4]>0){//M2 &&M3 && M4
+      closest_dist = (closest_x[iM2]*closest_x[iM2]+closest_y[iM2]*closest_y[iM2]) +
+        (closest_x[iM3]*closest_x[iM3]+closest_y[iM3]*closest_y[iM3])+
+        (closest_x[iM4]*closest_x[iM4]+closest_y[iM4]*closest_y[iM4]);
       closest_dist = closest_dist/3.;
       return closest_dist;
     }
-    if((*occupancy)[1]>0 && (*occupancy)[2]>0){//M2 &&M3
-      closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
-        (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2]);
+    if((*occupancy)[iM2]>0 && (*occupancy)[iM3]>0){//M2 &&M3
+      closest_dist = (closest_x[iM2]*closest_x[iM2]+closest_y[iM2]*closest_y[iM2]) +
+        (closest_x[iM3]*closest_x[iM3]+closest_y[iM3]*closest_y[iM3]);
       closest_dist = closest_dist/2.;
       return closest_dist;
     }
-    if((*occupancy)[1]>0 && (*occupancy)[3]>0){//M2 &&M4
-      closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
-        (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3]);
+    if((*occupancy)[iM2]>0 && (*occupancy)[iM4]>0){//M2 &&M4
+      closest_dist = (closest_x[iM2]*closest_x[iM2]+closest_y[iM2]*closest_y[iM2]) +
+        (closest_x[iM4]*closest_x[iM4]+closest_y[iM4]*closest_y[iM4]);
       closest_dist = closest_dist/2.;
       return closest_dist;
     }
-    if((*occupancy)[2]>0 && (*occupancy)[3]>0){//M3 &&M4
-      closest_dist = (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2]) +
-        (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3]);
+    if((*occupancy)[iM3]>0 && (*occupancy)[iM4]>0){//M3 &&M4
+      closest_dist = (closest_x[iM3]*closest_x[iM3]+closest_y[iM3]*closest_y[iM3]) +
+        (closest_x[iM4]*closest_x[iM4]+closest_y[iM4]*closest_y[iM4]);
       closest_dist = closest_dist/2.;
       return closest_dist;
     }
   }//3-6
 
   if(p>m_MomentumCuts[0]){
-    if((*occupancy)[1]>0 && (*occupancy)[2]>0 && (*occupancy)[3]>0 && (*occupancy)[4]>0){
+    if((*occupancy)[iM2]>0 && (*occupancy)[iM3]>0 && (*occupancy)[iM4]>0 && (*occupancy)[iM5]>0){
       //M2 &&M3&&M4&&M5
-      closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
-        (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2])+
-        (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3])+
-        (closest_x[4]*closest_x[4]+closest_y[4]*closest_y[4]);
+      closest_dist = (closest_x[iM2]*closest_x[iM2]+closest_y[iM2]*closest_y[iM2]) +
+        (closest_x[iM3]*closest_x[iM3]+closest_y[iM3]*closest_y[iM3])+
+        (closest_x[iM4]*closest_x[iM4]+closest_y[iM4]*closest_y[iM4])+
+        (closest_x[iM5]*closest_x[iM5]+closest_y[iM5]*closest_y[iM5]);
       closest_dist = closest_dist/4.;
       return closest_dist;
     }
-    if((*occupancy)[1]>0 && (*occupancy)[2]>0 && (*occupancy)[3]){//M2 && M3 && M4
-      closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
-        (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2])+
-        (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3]);
+    if((*occupancy)[iM2]>0 && (*occupancy)[iM3]>0 && (*occupancy)[iM4]){//M2 && M3 && M4
+      closest_dist = (closest_x[iM2]*closest_x[iM2]+closest_y[iM2]*closest_y[iM2]) +
+        (closest_x[iM3]*closest_x[iM3]+closest_y[iM3]*closest_y[iM3])+
+        (closest_x[iM4]*closest_x[iM4]+closest_y[iM4]*closest_y[iM4]);
       closest_dist = closest_dist/3.;
       return closest_dist;
     }
-    if((*occupancy)[1]>0 && (*occupancy)[2]>0 && (*occupancy)[4]){//M2 && M3 && M5
-      closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
-        (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2]) +
-        (closest_x[4]*closest_x[4]+closest_y[4]*closest_y[4]);
+    if((*occupancy)[iM2]>0 && (*occupancy)[iM3]>0 && (*occupancy)[iM5]){//M2 && M3 && M5
+      closest_dist = (closest_x[iM2]*closest_x[iM2]+closest_y[iM2]*closest_y[iM2]) +
+        (closest_x[iM3]*closest_x[iM3]+closest_y[iM3]*closest_y[iM3]) +
+        (closest_x[iM5]*closest_x[iM5]+closest_y[iM5]*closest_y[iM5]);
       closest_dist = closest_dist/3.;
       return closest_dist;
     }
-    if((*occupancy)[2]>0 && (*occupancy)[3]>0 && (*occupancy)[4]>0){//M3 &&M4 && M5
-      closest_dist = (closest_x[2]*closest_x[2]+closest_y[2]*closest_y[2]) +
-        (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3])+
-        (closest_x[4]*closest_x[4]+closest_y[4]*closest_y[4]);
+    if((*occupancy)[iM3]>0 && (*occupancy)[iM4]>0 && (*occupancy)[iM5]>0){//M3 &&M4 && M5
+      closest_dist = (closest_x[iM3]*closest_x[iM3]+closest_y[iM3]*closest_y[iM3]) +
+        (closest_x[iM4]*closest_x[iM4]+closest_y[iM4]*closest_y[iM4])+
+        (closest_x[iM5]*closest_x[iM5]+closest_y[iM5]*closest_y[iM5]);
       closest_dist = closest_dist/3.;
       return closest_dist;
     }
-    if((*occupancy)[1]>0 && (*occupancy)[3]>0 && (*occupancy)[4]>0){//M2 &&M4 && M5
-      closest_dist = (closest_x[1]*closest_x[1]+closest_y[1]*closest_y[1]) +
-        (closest_x[3]*closest_x[3]+closest_y[3]*closest_y[3])+
-        (closest_x[4]*closest_x[4]+closest_y[4]*closest_y[4]);
+    if((*occupancy)[iM2]>0 && (*occupancy)[iM4]>0 && (*occupancy)[iM5]>0){//M2 &&M4 && M5
+      closest_dist = (closest_x[iM2]*closest_x[iM2]+closest_y[iM2]*closest_y[iM2]) +
+        (closest_x[iM4]*closest_x[iM4]+closest_y[iM4]*closest_y[iM4])+
+        (closest_x[iM5]*closest_x[iM5]+closest_y[iM5]*closest_y[iM5]);
       closest_dist = closest_dist/3.;
       return closest_dist;
     }
@@ -2738,6 +2732,8 @@ StatusCode MuonIDAlg::trackExtrapolate(const LHCb::Track *pTrack){
                                       (m_stationZ[station] - state->z()) ));
     m_trackY.push_back(state->y() + ( state->ty() *
                                       (m_stationZ[station] - state->z()) ));
+    if (msgLevel(MSG::DEBUG) ) debug() << "trackExtrapolate: station: " << station << " m_trackX: " 
+        << m_trackX[station] << " m_trackY: " << m_trackY[station] << endmsg;
   }
 
   return StatusCode::SUCCESS;

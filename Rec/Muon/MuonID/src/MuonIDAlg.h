@@ -383,6 +383,8 @@ private:
   int m_NRegion;
   //Names of the station
   std::vector<std::string> m_stationNames;
+  // Index of M2. Normally m_iM2=1. But m_iM2=0 in case of no M1. Assuming iM3=iM2+1
+  int m_iM2;
   // fill local arrays of pad sizes and region sizes
   DeMuonDetector*  m_mudet;
 

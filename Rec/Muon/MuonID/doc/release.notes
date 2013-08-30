@@ -3,6 +3,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2013-08-30 - J. Helder Lopes
+ - Adapt MuonIDAlg to work also in the no M1 setup.
+
 !========================= MuonID v9r6 2013-07-18 =========================
 ! 2013-06-19 - Marco Cattaneo
  - Add missing TrackInterfaces dependency
