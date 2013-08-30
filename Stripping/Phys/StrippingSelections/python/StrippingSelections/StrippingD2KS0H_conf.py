@@ -14,7 +14,7 @@ Exported symbols (use python help!):
 
 __author__ = ['Sam Gregson']
 __date__ = '02/21/2011'
-__version__ = '$Revision: 1.0 $'
+__version__ = '$Revision: 2.0 $'
 
 __all__ = ('D2KS0HConf',
            'makeKS02PiPi',
@@ -34,6 +34,7 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StandardParticles import StdLoosePions, StdLooseKaons
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder, checkConfig
+from Configurables import TisTosParticleTagger
 
 ## Example config dictionary - keep updated
 
@@ -110,8 +111,14 @@ class D2KS0HConf(LineBuilder) :
 
     __configuration_keys__ = (
 
-  # KS0 daughter pion cuts
-       'KS0DaugP'    
+        # TISTOS
+       'UseTOS'
+       ,'TisTosSpecs_KS0Pi'
+       ,'TisTosSpecs_KS0PiDD'
+       ,'TisTosSpecs_KS0K'
+       ,'TisTosSpecs_KS0KDD'
+       # KS0 daughter pion cuts
+      , 'KS0DaugP'    
       ,'KS0DaugPT'  
       ,'KS0DaugTrackChi2'  
       ,'KS0DaugMIPChi2' 
@@ -262,81 +269,89 @@ class D2KS0HConf(LineBuilder) :
                                      ,DMesonMotherHighMass = config['DMesonMotherHighMass']     
                                      ,DMesonMotherVertexChi2 = config['DMesonMotherVertexChi2']   
                                      ,DMesonMotherMIPChi2 = config['DMesonMotherMIPChi2']    
-                                     ,DMesonMotherPT = config['DMesonMotherPT']
-                                     ,KS0ZDiff = config['KS0ZDiff']
-                                     ,DMesonFlightDistChi2 = config['DMesonFlightDistChi2'] 
-                                     )   
+                                      ,DMesonMotherPT = config['DMesonMotherPT']
+                                      ,KS0ZDiff = config['KS0ZDiff']
+                                      ,DMesonFlightDistChi2 = config['DMesonFlightDistChi2'] 
+                                      ,UseTOS =  config['UseTOS'] 
+                                      ,TisTosSpecs =  config['TisTosSpecs_KS0Pi'] 
+                                      )   
 
         # D(s)->KS0DDPi selection
         self.selD2KS0PiDD = makeD2KS0PiDD(pion_nameDD
-                                     # Pass the KS0DD selection 
-                                     ,KS0DDSel = self.selKS0DD
-                                     # Pass the bachelor pions selection
-                                     ,BachPionsSel = self.selBachPions 
-                                     # D meson cuts
-                                     # Combo cuts
-                                     ,DMesonComboLowMass = config['DMesonComboLowMass']           
-                                     ,DMesonComboHighMass = config['DMesonComboHighMass']    
-                                     ,DMesonComboDOCA = config['DMesonComboDOCA']
-                                     ,DMesonAPT = config['DMesonAPT']
-                                     ,DMesonADOCAChi2 = config['DMesonADOCAChi2'] 
-                                     # Mother cuts
-                                     ,DMesonMotherLowMass = config['DMesonMotherLowMass']               
-                                     ,DMesonMotherHighMass = config['DMesonMotherHighMass']     
-                                     ,DMesonMotherVertexChi2 = config['DMesonMotherVertexChi2']   
-                                     ,DMesonMotherMIPChi2 = config['DMesonMotherMIPChi2']    
-                                     ,DMesonMotherPT = config['DMesonMotherPT']
-                                     ,KS0ZDiff = config['KS0ZDiff']
-                                     ,DMesonFlightDistChi2 = config['DMesonFlightDistChi2']      
-                                     )  
+                                          # Pass the KS0DD selection 
+                                          ,KS0DDSel = self.selKS0DD
+                                          # Pass the bachelor pions selection
+                                          ,BachPionsSel = self.selBachPions 
+                                          # D meson cuts
+                                          # Combo cuts
+                                          ,DMesonComboLowMass = config['DMesonComboLowMass']           
+                                          ,DMesonComboHighMass = config['DMesonComboHighMass']    
+                                          ,DMesonComboDOCA = config['DMesonComboDOCA']
+                                          ,DMesonAPT = config['DMesonAPT']
+                                          ,DMesonADOCAChi2 = config['DMesonADOCAChi2'] 
+                                          # Mother cuts
+                                          ,DMesonMotherLowMass = config['DMesonMotherLowMass']               
+                                          ,DMesonMotherHighMass = config['DMesonMotherHighMass']     
+                                          ,DMesonMotherVertexChi2 = config['DMesonMotherVertexChi2']   
+                                          ,DMesonMotherMIPChi2 = config['DMesonMotherMIPChi2']    
+                                          ,DMesonMotherPT = config['DMesonMotherPT']
+                                          ,KS0ZDiff = config['KS0ZDiff']
+                                          ,DMesonFlightDistChi2 = config['DMesonFlightDistChi2']      
+                                          ,UseTOS =  config['UseTOS'] 
+                                          ,TisTosSpecs =  config['TisTosSpecs_KS0PiDD'] 
+                                          )  
                                 
 
         # D(s)->KS0K selection
         self.selD2KS0K = makeD2KS0K(kaon_name
                                     # Pass the KS0LL selection 
-                                   ,KS0LLSel = self.selKS0LL
+                                    ,KS0LLSel = self.selKS0LL
                                     # Pass the bachelor kaons selection
-                                   ,BachKaonsSel = self.selBachKaons  
+                                    ,BachKaonsSel = self.selBachKaons  
                                     # D meson cuts
                                     # Combo cuts
-                                   ,DMesonComboLowMass = config['DMesonComboLowMass']           
-                                   ,DMesonComboHighMass = config['DMesonComboHighMass']    
-                                   ,DMesonComboDOCA = config['DMesonComboDOCA']
-                                   ,DMesonAPT = config['DMesonAPT']
-                                   ,DMesonADOCAChi2 = config['DMesonADOCAChi2'] 
+                                    ,DMesonComboLowMass = config['DMesonComboLowMass']           
+                                    ,DMesonComboHighMass = config['DMesonComboHighMass']    
+                                    ,DMesonComboDOCA = config['DMesonComboDOCA']
+                                    ,DMesonAPT = config['DMesonAPT']
+                                    ,DMesonADOCAChi2 = config['DMesonADOCAChi2'] 
                                     # Mother cuts
-                                   ,DMesonMotherLowMass = config['DMesonMotherLowMass']               
-                                   ,DMesonMotherHighMass = config['DMesonMotherHighMass']     
-                                   ,DMesonMotherVertexChi2 = config['DMesonMotherVertexChi2']   
-                                   ,DMesonMotherMIPChi2 = config['DMesonMotherMIPChi2']    
-                                   ,DMesonMotherPT = config['DMesonMotherPT']
-                                   ,KS0ZDiff = config['KS0ZDiff']
-                                   ,DMesonFlightDistChi2 = config['DMesonFlightDistChi2'] 
+                                    ,DMesonMotherLowMass = config['DMesonMotherLowMass']               
+                                    ,DMesonMotherHighMass = config['DMesonMotherHighMass']     
+                                    ,DMesonMotherVertexChi2 = config['DMesonMotherVertexChi2']   
+                                    ,DMesonMotherMIPChi2 = config['DMesonMotherMIPChi2']    
+                                    ,DMesonMotherPT = config['DMesonMotherPT']
+                                    ,KS0ZDiff = config['KS0ZDiff']
+                                    ,DMesonFlightDistChi2 = config['DMesonFlightDistChi2'] 
+                                    ,UseTOS =  config['UseTOS'] 
+                                    ,TisTosSpecs =  config['TisTosSpecs_KS0K'] 
                                     )
 
         # D(s)->KS0DDK selection
         self.selD2KS0KDD = makeD2KS0KDD(kaon_nameDD
-                                    # Pass the KS0LL selection 
-                                   ,KS0DDSel = self.selKS0DD
-                                    # Pass the bachelor kaons selection
-                                   ,BachKaonsSel = self.selBachKaons  
-                                    # D meson cuts
-                                    # Combo cuts
-                                   ,DMesonComboLowMass = config['DMesonComboLowMass']           
-                                   ,DMesonComboHighMass = config['DMesonComboHighMass']    
-                                   ,DMesonComboDOCA = config['DMesonComboDOCA']
-                                   ,DMesonAPT = config['DMesonAPT']
-                                   ,DMesonADOCAChi2 = config['DMesonADOCAChi2'] 
-                                    # Mother cuts
-                                   ,DMesonMotherLowMass = config['DMesonMotherLowMass']               
-                                   ,DMesonMotherHighMass = config['DMesonMotherHighMass']     
-                                   ,DMesonMotherVertexChi2 = config['DMesonMotherVertexChi2']   
-                                   ,DMesonMotherMIPChi2 = config['DMesonMotherMIPChi2']    
-                                   ,DMesonMotherPT = config['DMesonMotherPT']
-                                   ,KS0ZDiff = config['KS0ZDiff']
-                                   ,DMesonFlightDistChi2 = config['DMesonFlightDistChi2'] 
-                                    )
-
+                                        # Pass the KS0LL selection 
+                                        ,KS0DDSel = self.selKS0DD
+                                        # Pass the bachelor kaons selection
+                                        ,BachKaonsSel = self.selBachKaons  
+                                        # D meson cuts
+                                        # Combo cuts
+                                        ,DMesonComboLowMass = config['DMesonComboLowMass']           
+                                        ,DMesonComboHighMass = config['DMesonComboHighMass']    
+                                        ,DMesonComboDOCA = config['DMesonComboDOCA']
+                                        ,DMesonAPT = config['DMesonAPT']
+                                        ,DMesonADOCAChi2 = config['DMesonADOCAChi2'] 
+                                        # Mother cuts
+                                        ,DMesonMotherLowMass = config['DMesonMotherLowMass']               
+                                        ,DMesonMotherHighMass = config['DMesonMotherHighMass']     
+                                        ,DMesonMotherVertexChi2 = config['DMesonMotherVertexChi2']   
+                                        ,DMesonMotherMIPChi2 = config['DMesonMotherMIPChi2']    
+                                        ,DMesonMotherPT = config['DMesonMotherPT']
+                                        ,KS0ZDiff = config['KS0ZDiff']
+                                        ,DMesonFlightDistChi2 = config['DMesonFlightDistChi2'] 
+                                        ,UseTOS =  config['UseTOS'] 
+                                        ,TisTosSpecs =  config['TisTosSpecs_KS0KDD'] 
+                                        )
+        
 
         # Define/declare the lines
         self.pion_line = StrippingLine(pion_name+"Line",
@@ -559,8 +574,10 @@ def makeD2KS0Pi(name,
                ,DMesonMotherMIPChi2  
                ,DMesonMotherPT
                ,KS0ZDiff
-               ,DMesonFlightDistChi2 
-               ) :
+                ,DMesonFlightDistChi2 
+                ,UseTOS
+                ,TisTosSpecs
+                ) :
         """
         Create and return a D -> KS0 Pi Selection object.
         Arguments:
@@ -585,31 +602,40 @@ def makeD2KS0Pi(name,
         # Define the combine particles
         _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 pi+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
 
-        return Selection ( name,
-                       Algorithm = _Dmeson,
-                       RequiredSelections = [KS0LLSel, BachPionsSel])
+        sel =  Selection ( name,
+                           Algorithm = _Dmeson,
+                           RequiredSelections = [KS0LLSel, BachPionsSel])
+        if not UseTOS:
+            return sel
+        else:
+            return Selection( name+"_TOS"
+                              , Algorithm = TisTosParticleTagger( name + "TOSTagger",TisTosSpecs = TisTosSpecs )
+                              , RequiredSelections = [ sel ]
+                              )
 def makeD2KS0PiDD(name,
-                # KS0 selection
-                KS0DDSel
-                # Bach pions selection
-               ,BachPionsSel   
-                # Cuts to be used                  
-                # D meson cuts
-                # Combo cuts
-               ,DMesonComboLowMass         
-               ,DMesonComboHighMass  
-               ,DMesonComboDOCA
-               ,DMesonAPT 
-               ,DMesonADOCAChi2
-               # Mother cuts
-               ,DMesonMotherLowMass             
-               ,DMesonMotherHighMass   
-               ,DMesonMotherVertexChi2 
-               ,DMesonMotherMIPChi2  
-               ,DMesonMotherPT
-               ,KS0ZDiff
-               ,DMesonFlightDistChi2
-               ) :
+                  # KS0 selection
+                  KS0DDSel
+                  # Bach pions selection
+                  ,BachPionsSel   
+                  # Cuts to be used                  
+                  # D meson cuts
+                  # Combo cuts
+                  ,DMesonComboLowMass         
+                  ,DMesonComboHighMass  
+                  ,DMesonComboDOCA
+                  ,DMesonAPT 
+                  ,DMesonADOCAChi2
+                  # Mother cuts
+                  ,DMesonMotherLowMass             
+                  ,DMesonMotherHighMass   
+                  ,DMesonMotherVertexChi2 
+                  ,DMesonMotherMIPChi2  
+                  ,DMesonMotherPT
+                  ,KS0ZDiff
+                  ,DMesonFlightDistChi2
+                  ,UseTOS
+                  ,TisTosSpecs
+                  ) :
         """
         Create and return a D -> KS0 Pi Selection object.
         Arguments:
@@ -632,33 +658,41 @@ def makeD2KS0PiDD(name,
         # Define the combine particles
         _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 pi+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
 
-        return Selection ( name,
-                       Algorithm = _Dmeson,
-                       RequiredSelections = [KS0DDSel, BachPionsSel])
-
+        sel = Selection ( name,
+                          Algorithm = _Dmeson,
+                          RequiredSelections = [KS0DDSel, BachPionsSel])
+        if not UseTOS:
+            return sel
+        else:
+            return Selection( name+"_TOS"
+                              , Algorithm = TisTosParticleTagger( name + "TOSTagger",TisTosSpecs = TisTosSpecs )
+                              , RequiredSelections = [ sel ]
+                              )
     
 def makeD2KS0K(name,
                # KS0 selection
                KS0LLSel
                # Bach kaons selection
-              ,BachKaonsSel 
+               ,BachKaonsSel 
                # Cuts to be used                  
                # D meson cuts
                # Combo cuts
-              ,DMesonComboLowMass         
-              ,DMesonComboHighMass  
-              ,DMesonComboDOCA
-              ,DMesonAPT 
-              ,DMesonADOCAChi2
+               ,DMesonComboLowMass         
+               ,DMesonComboHighMass  
+               ,DMesonComboDOCA
+               ,DMesonAPT 
+               ,DMesonADOCAChi2
                # Mother cuts
-              ,DMesonMotherLowMass             
-              ,DMesonMotherHighMass   
-              ,DMesonMotherVertexChi2 
-              ,DMesonMotherMIPChi2  
-              ,DMesonMotherPT
-              ,KS0ZDiff
-              ,DMesonFlightDistChi2 
-                   ) :
+               ,DMesonMotherLowMass             
+               ,DMesonMotherHighMass   
+               ,DMesonMotherVertexChi2 
+               ,DMesonMotherMIPChi2  
+               ,DMesonMotherPT
+               ,KS0ZDiff
+               ,DMesonFlightDistChi2 
+               ,UseTOS
+               ,TisTosSpecs
+               ) :
 
         """
         Create and return a D(s) -> KS0 K Selection object.
@@ -684,32 +718,42 @@ def makeD2KS0K(name,
         # Define the combine particles
         _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 K+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
 
-        return Selection ( name,
-                       Algorithm = _Dmeson,
-                       RequiredSelections = [KS0LLSel, BachKaonsSel])
+        sel =  Selection ( name,
+                           Algorithm = _Dmeson,
+                           RequiredSelections = [KS0LLSel, BachKaonsSel])
+        if not UseTOS:
+            return sel
+        else:
+            return Selection( name+"_TOS"
+                              , Algorithm = TisTosParticleTagger( name + "TOSTagger",TisTosSpecs = TisTosSpecs )
+                              , RequiredSelections = [ sel ]
+                              )
+        
 
 def makeD2KS0KDD(name,
-               # KS0 selection
-               KS0DDSel
-               # Bach kaons selection
-              ,BachKaonsSel 
-               # Cuts to be used                  
-               # D meson cuts
-               # Combo cuts
-              ,DMesonComboLowMass         
-              ,DMesonComboHighMass  
-              ,DMesonComboDOCA
-              ,DMesonAPT 
-              ,DMesonADOCAChi2
-               # Mother cuts
-              ,DMesonMotherLowMass             
-              ,DMesonMotherHighMass   
-              ,DMesonMotherVertexChi2 
-              ,DMesonMotherMIPChi2  
-              ,DMesonMotherPT
-              ,KS0ZDiff
-              ,DMesonFlightDistChi2 
-                   ) :
+                 # KS0 selection
+                 KS0DDSel
+                 # Bach kaons selection
+                 ,BachKaonsSel 
+                 # Cuts to be used                  
+                 # D meson cuts
+                 # Combo cuts
+                 ,DMesonComboLowMass         
+                 ,DMesonComboHighMass  
+                 ,DMesonComboDOCA
+                 ,DMesonAPT 
+                 ,DMesonADOCAChi2
+                 # Mother cuts
+                 ,DMesonMotherLowMass             
+                 ,DMesonMotherHighMass   
+                 ,DMesonMotherVertexChi2 
+                 ,DMesonMotherMIPChi2  
+                 ,DMesonMotherPT
+                 ,KS0ZDiff
+                 ,DMesonFlightDistChi2 
+                 ,UseTOS
+                 ,TisTosSpecs
+                 ) :
 
         """
         Create and return a D(s) -> KS0 K Selection object.
@@ -733,6 +777,17 @@ def makeD2KS0KDD(name,
         # Define the combine particles
         _Dmeson = CombineParticles( DecayDescriptor = "[D+ -> KS0 K+]cc", CombinationCut = _combCuts, MotherCut = _motherCuts)
 
-        return Selection ( name,
-                       Algorithm = _Dmeson,
-                       RequiredSelections = [KS0DDSel, BachKaonsSel])
+        sel =  Selection ( name,
+                           Algorithm = _Dmeson,
+                           RequiredSelections = [KS0DDSel, BachKaonsSel])
+        
+        if not UseTOS:
+            return sel
+        else:
+            return Selection( name+"_TOS"
+                              , Algorithm = TisTosParticleTagger( name + "TOSTagger",TisTosSpecs = TisTosSpecs )
+                              , RequiredSelections = [ sel ]
+                              )
+        
+
+

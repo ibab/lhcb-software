@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-08-30 - Mika Vesterinen
+ - Add option to make TOS requirements in StrippingD2KS0H_conf.py 
+
 ! 2013-08-29 - Vanya Belyaev
  - StrippingBc3h: minor (~5%) CPU improvement with the usage 
    of LoKi::VertexFitter as particle combiner 
