@@ -4,12 +4,16 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-08-30 - Gerhard Raven
+ - resurrect splitting changes which disappeared in previous commit
+ - move generation of online scripts from Moore to MooreSys
+
 ! 2013-08-29 - Eric van Herwijnen
  - Change the buffer names in Configuarion.py to work with Online v5r3
 
 !========================= Moore v20r3p1 2013-08-28 =========================
 ! 2013-08-27 - Eric van Herwijnen
- - Pick up project version instead of package version in Configuarion.py
+ - Pick up project version instead of package version in Configuration.py
 
 ! 2013-08-22 - Rob Lambert
  - Split HLT in tests using Gerhard's new Moore feature.
