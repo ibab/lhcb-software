@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-08-30 - Lucio Anderlini (BandQ)
+ - Updates of Stripping20r{0,1}p2 for BandQ WG (added Bc->3pi line dict)
+
+
 ! 2013-08-29 - Francesca Dordei
  - Updates of Stripping20r{0,1}p2 settings for B2CC WG (tighter values of prescales).
 
