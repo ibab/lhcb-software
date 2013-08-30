@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
 
+Move online installation scripts from Hlt/Moore to MooreSys
+
+
 </PRE><H1><A NAME=v20r3p1>2013-08-27 MooreSys v20r3p1</A></H1><PRE>
 Moore/HLT LS1 development version. LHCb v36r1 stack. Depends on Rec v15r1 via Phys v17r1 via Hlt v20r3p1. Based on Gaudi v23r9.
 
