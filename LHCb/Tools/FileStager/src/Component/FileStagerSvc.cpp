@@ -765,8 +765,10 @@ bool FileStagerSvc::checkJobID() const
 {
    // Check if there is an environment variable which ends in JOBID set.
    // If so, always switch off keep file mode.
-   typedef map<string, string> s_map_t;
-   s_map_t variables;
+   smatch matches;
+   match_flag_type flags = boost::match_default;
+   regex re_jobid( ".*JOBID$" );
+
    char** env_ptr = environ;
    while ( *env_ptr ) {
       string var( *env_ptr );
@@ -774,25 +776,16 @@ bool FileStagerSvc::checkJobID() const
       if ( pos == string::npos ) {
          continue;
       }
-      variables.insert( make_pair( var.substr( 0, pos ), var.substr( pos + 1, string::npos ) ) );
-      env_ptr++;
-   }
-
-   smatch matches;
-   match_flag_type flags = boost::match_default;
-
-   bool job = false;
-   regex re_jobid( ".*JOBID$" );
-   BOOST_FOREACH( const s_map_t::value_type& entry, variables ) {
-      const string& name = entry.first;
+      const string name(var.substr( 0, pos ));
       if ( regex_match( name.begin(), name.end(), matches, re_jobid, flags ) ) {
-         warning() << "Keep files mode has been switched of since the presence of the "
+         warning() << "Keep files mode has been switched off since the presence of the "
                    << "environment variable " << name << " indicates that this job is "
                    << "running on a batch system" << endmsg;
-         job = true;
+         return true;
       }
+      env_ptr++;
    }
-   return job;
+   return false;
 }
 
 #else
