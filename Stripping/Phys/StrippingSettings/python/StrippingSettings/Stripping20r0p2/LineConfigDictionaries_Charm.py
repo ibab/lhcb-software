@@ -395,7 +395,12 @@ D2KS0H = {
     ,'PionLinePostscale'        :    1 
     ,'KaonLinePostscale'        :    1
     ,'PionLinePostscaleDD'      :    1 
-    ,'KaonLinePostscaleDD'      :    1          
+    ,'KaonLinePostscaleDD'      :    1
+    ,"UseTOS" : True
+    ,"TisTosSpecs_KS0Pi" : {"Hlt1TrackAllL0Decision%TOS":0,"Hlt2CharmHadD2KS0H_D2KS0PiDecision%TOS":0}
+    ,"TisTosSpecs_KS0PiDD" : {"Hlt1TrackAllL0Decision%TOS":0,"Hlt2CharmHadD2KS0H_D2KS0DDPiDecision%TOS":0}
+    ,"TisTosSpecs_KS0K" : {"Hlt1TrackAllL0Decision%TOS":0,"Hlt2CharmHadD2KS0H_D2KS0KDecision%TOS":0}
+    ,"TisTosSpecs_KS0KDD" : {"Hlt1TrackAllL0Decision%TOS":0,"Hlt2CharmHadD2KS0H_D2KS0DDKDecision%TOS":0}
     },
     'WGs' : [ 'Charm' ],
     'STREAMS' : { 
