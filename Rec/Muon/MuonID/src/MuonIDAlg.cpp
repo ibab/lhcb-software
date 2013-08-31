@@ -838,7 +838,7 @@ StatusCode MuonIDAlg::initialize() {
     if("M2"==m_stationNames[i]) m_iM2 = i;
     i++;
   }
-  info() << "Index of station M2: " << m_iM2 <<endmsg;
+  //info() << "Index of station M2: " << m_iM2 <<endmsg;
 
   // set the size of the local vectors
   m_padSizeX.resize(m_NStation * m_NRegion);
@@ -867,12 +867,16 @@ StatusCode MuonIDAlg::initialize() {
     }
   }
 
-  info()  << "-Geometry information ----------------"<< endmsg;
-  for(station = 0 ; station < m_NStation ; station++ ){
-    info()  << "Station " << m_stationNames[station] << " Outer X = "  << m_regionOuterX[station] << " Outer Y = " << m_regionOuterY[station] 
-                                                     << "\tInner X = "  << m_regionInnerX[station] << " Inner Y = " << m_regionInnerY[station]
-                                                     << "\tstationZ = " <<  m_stationZ[station] <<  endmsg;
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug()  << "-Geometry information ----------------"<< endmsg;
+    for(station = 0 ; station < m_NStation ; station++ ){
+      debug()  << "Station " << m_stationNames[station] << " Outer X = "  << m_regionOuterX[station]
+               << " Outer Y = " << m_regionOuterY[station] 
+               << "\tInner X = "  << m_regionInnerX[station] << " Inner Y = " << m_regionInnerY[station]
+               << "\tstationZ = " <<  m_stationZ[station] <<  endmsg;
+    }
   }
+  
 
   if( m_MomentumCuts.empty() ||
       m_xfoiParam1.size() != 20 ||   // 20 = 5 stationx x 4 regions// JHLJHL 30/08/2013
@@ -1732,7 +1736,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
   // Determine the momentum bin for this region
   int pBin=GetPbin(p, region);
   double tanhdist;
-  // Calculate tanh(dist). The effective scale factor is after dividing by tanh^¯1(0.5)
+  // Calculate tanh(dist). The effective scale factor is after dividing by tanh^Â¯1(0.5)
   tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*atanh05);
 
   // Calculate Prob(mu) and Prob(non-mu) for a given track;
@@ -1812,7 +1816,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const do
   // Determine the momentum bin for this region
   int pBin=GetPbin(p, region);
   double tanhdist;
-  // Calculate tanh(dist). The effetive scale factor is after dividing by tanh^¯1(0.5)
+  // Calculate tanh(dist). The effetive scale factor is after dividing by cotanh(0.5)
   tanhdist = tanh(myDist/(*(m_tanhScaleFactors[region]))[pBin]*atanh05);
 
   // Calculate Prob(mu)  for a given track using tanh(dist);

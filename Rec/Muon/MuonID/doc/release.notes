@@ -3,6 +3,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2013-08-31 - Paul Szczypka
+ - Change some printout from info to debug.
+
 ! 2013-08-30 - J. Helder Lopes
  - Adapt MuonIDAlg to work also in the no M1 setup.
 
