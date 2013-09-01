@@ -3,6 +3,9 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2013-09-01 - Paul Szczypka
+ - Correct some comment lines
+
 ! 2013-08-31 - Paul Szczypka
  - Change some printout from info to debug.
 
