@@ -1192,7 +1192,7 @@ class StrippingPromptCharmConf(LineBuilder) :
                                     StdAllNoPIDsPions ] ## slow prompt pion!
             )
 
-        return self._add_selection( 'SigmaCstarForPromptCharm_Selection' ,  sel )
+        return self._add_selection( 'LambdaCstarForPromptCharm_Selection' ,  sel )
 
     # ===========================================================================
     ## try to reconstruct   Xicc+

@@ -5,6 +5,9 @@
 ! ----------------------------------------------------------------------------- 
 
 ! 2013-09-01 - Vanya Belyaev
+ - promptcharm : fix typo (not used in stripping)
+
+! 2013-09-01 - Vanya Belyaev
 
  - minor update of StirppingPsiX0 and Stripping PsiXforBandQ - 
    these files anyhow are not used in stripping
