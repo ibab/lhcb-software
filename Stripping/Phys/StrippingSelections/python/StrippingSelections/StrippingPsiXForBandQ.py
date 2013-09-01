@@ -29,7 +29,6 @@ __all__ = (
 
 # =============================================================================
 from GaudiKernel.SystemOfUnits             import GeV, MeV, mm, micrometer 
-from StrippingConf.StrippingLine           import StrippingLine
 from StrippingUtils.Utils                  import LineBuilder
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles

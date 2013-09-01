@@ -1260,10 +1260,9 @@ class PsiX0Conf(LineBuilder) :
             "SelB2PsiKpiEta2ggFor" + self.name() ,
             Algorithm            =   _alg      ,
             RequiredSelections   = [ self.psi    () ,
-                                     self.kaons  () , 
                                      self.eta2gg () ,
                                      self.pions  () ]  
-           )
+            )
         ##
         return self._add_selection( 'B2PsiKpiEta2gg_Selection' , sel ) 
 
@@ -1428,6 +1427,223 @@ class PsiX0Conf(LineBuilder) :
         ##
         return self._add_selection( 'B2PsiKpiOmega_Selection' , sel ) 
     
+    
+    # B -> psi(') ( eta -> gg ) Pi (Pi)
+    def b2PiEta2gg ( self ) :
+        """
+        B -> psi(') ( eta -> gg ) pi (pi) 
+        """
+        sel = self._selection ( 'B2PsiPiEta2gg_Selection')
+        if sel : return sel
+        
+        _alg = CombineParticles (
+            ## 
+            DecayDescriptors = [
+            "[B+   -> J/psi(1S) pi+     eta]cc " ,
+            " B_s0 -> J/psi(1S) pi+ pi- eta    " ,
+            ] , 
+            ##
+            Preambulo       = self['Preambulo'] ,
+            ##
+            DaughtersCuts   = {
+            ## Attention: additional cuts are here 
+            'pi+' : " PT > 400 * MeV " , 
+            'eta' : """
+            (                           PT   > %s        ) & 
+            ( MINTREE ( 'gamma' == ID , PT ) > 300 * MeV )
+            """ % self['X0PTK']
+            } ,
+            ##
+            CombinationCut  = "mb_acut" ,
+            ##
+            MotherCut       = """
+            mb_cut             &
+            ( chi2vxNDF <  6 ) &  
+            ( ctau      > %s ) 
+            """ % self['CTAU'],
+            ##
+            ParticleCombiners = {'' : "LoKi::VertexFitter:PUBLIC" }
+            )
+        ##
+        sel  = Selection (
+            "SelB2PsiPiEta2ggFor" + self.name() ,
+            Algorithm            =   _alg      ,
+            RequiredSelections   = [ self.psi    () ,
+                                     self.pions  () , 
+                                     self.eta2gg () , ] 
+            )
+        ##
+        return self._add_selection( 'B2PsiPiEta2gg_Selection' , sel ) 
+    
+    # B -> psi(') ( eta -> 3pi ) pi(pi)
+    def b2PiEta23pi ( self ) :
+        """
+        B -> psi(') ( eta -> 3pi ) pi(pi)
+        """
+        sel = self._selection ( 'B2PsiPiEta23pi_Selection')
+        if sel : return sel
+        
+        _alg = CombineParticles (
+            ## 
+            DecayDescriptors = [
+            "[B+   -> J/psi(1S) pi+     eta]cc " ,
+            " B_s0 -> J/psi(1S) pi+ pi- eta    " ,
+            ] , 
+            ##
+            Preambulo = self['Preambulo'] ,
+            #
+            DaughtersCuts   = {
+            'eta' : ' PT > %s ' % self['X0PTK']
+            } ,
+            ##
+            CombinationCut  = " mb_acut " , 
+            ##
+            MotherCut = """
+            mb_cut             & 
+            ( chi2vxNDF <  6 ) &  
+            ( ctau      > %s ) 
+            """ % self ['CTAU'],
+            ##
+            ParticleCombiners = {'' : "LoKi::VertexFitter:PUBLIC" }
+            )
+        ##
+        sel  = Selection (
+            "SelB2PsiPiEta23piFor" + self.name() ,
+            Algorithm            =   _alg        ,
+            RequiredSelections   = [ self.psi     () ,
+                                     self.pions   () ,
+                                     self.eta23pi () ] 
+            )
+        ##
+        return self._add_selection( 'B2PsiPiEta23pi_Selection' , sel ) 
+
+    # B -> psi(') ( eta' -> rhog ) pi(pi)
+    def b2PiEtap2rhog ( self ) :
+        """
+        B -> psi(') ( eta' -> rhog ) pi(pi)
+        """
+        sel = self._selection ( 'B2PsiPiEtap2rhog_Selection')
+        if sel : return sel
+        
+        _alg = CombineParticles (
+            ## 
+            DecayDescriptors = [
+            "[B+   -> J/psi(1S) pi+     eta_prime]cc " ,
+            " B_s0 -> J/psi(1S) pi+ pi- eta_prime    " ,
+            ] ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            DaughtersCuts   = {
+            'eta_prime' : ' PT > %s ' % self['X0PTK']
+            } ,
+            ## 
+            CombinationCut  = "mb_acut " ,
+            ##
+            MotherCut = """
+            mb_cut             & 
+            ( chi2vxNDF <  6 ) &  
+            ( ctau      > %s ) 
+            """ % self['CTAU'],
+            ##
+            ParticleCombiners = {'' : "LoKi::VertexFitter:PUBLIC" }
+            )
+        ##
+        sel  = Selection (
+            "SelB2PsiPiEtap2rhogFor" + self.name() ,
+            Algorithm              =   _alg      ,
+            RequiredSelections     = [ self.psi       () ,
+                                       self.pions     () ,
+                                       self.etap2rhog () ] 
+            )
+        ##
+        return self._add_selection( 'B2PsiPiEtap2rhog_Selection' , sel ) 
+    
+    # B -> psi(') ( eta' -> pi pi eta  ) pi(pi)
+    def b2PiEtap2pipieta ( self ) :
+        """
+        B -> psi(') ( eta' -> pi pi eta  ) pi(pi)
+        """
+        sel = self._selection ( 'B2PsiPiEtap2pipieta_Selection')
+        if sel : return sel
+        
+        _alg = CombineParticles (
+            ## 
+            DecayDescriptors = [
+            "[B+   -> J/psi(1S) pi+     eta_prime]cc" , 
+            " B_s0 -> J/psi(1S) pi+ pi- eta_prime   "
+            ] ,
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            DaughtersCuts   = {
+            'eta_prime' : ' PT > %s ' % self['X0PTK']
+            } ,
+            ## 
+            CombinationCut  = "mb_acut ", 
+            ##
+            MotherCut = """
+            mb_cut             & 
+            ( chi2vxNDF <  6 ) &  
+            ( ctau      > %s ) 
+            """ % self ['CTAU'] ,
+            ##
+            ParticleCombiners = {'' : "LoKi::VertexFitter:PUBLIC" }
+            )
+        ##
+        sel  = Selection (
+            "SelB2PsiPiEtap2pipietaFor" + self.name() ,
+            Algorithm                 =   _alg      ,
+            RequiredSelections        = [ self.psi          () ,
+                                          self.pions        () ,
+                                          self.etap2pipieta () ] 
+            )
+        ##
+        return self._add_selection( 'B2PsiPiEtap2pipieta_Selection' , sel ) 
+    
+    # B -> psi(') (omega -> 3pi  ) pi(pi)
+    def b2PiOmega ( self ) :
+        """
+        B -> psi(') (omega -> 3pi  ) pi(pi)
+        """
+        sel = self._selection ( 'B2PsiPiOmega_Selection')
+        if sel : return sel
+        
+        _alg = CombineParticles (
+            ## 
+            DecayDescriptors = [
+            "[B+   -> J/psi(1S) pi+     omega(782)]cc" , 
+            " B_s0 -> J/psi(1S) pi+ pi- omega(782)   "
+            ],
+            ##
+            Preambulo = self['Preambulo'] ,
+            ##
+            DaughtersCuts   = {
+            'omega(782)' : ' PT > %s ' % self['X0PTK']
+            } ,
+            ##
+            CombinationCut  = " mb_acut " , 
+            ##
+            MotherCut = """
+            mb_cut             & 
+            ( chi2vxNDF <  6 ) &  
+            ( ctau      > %s ) 
+            """ % self['CTAU'] ,
+            ##
+            ParticleCombiners = {'' : "LoKi::VertexFitter:PUBLIC" }
+            )
+        ##
+        sel  = Selection (
+            "SelB2PsiPiOmegaFor" + self.name() ,
+            Algorithm          =   _alg       ,
+            RequiredSelections = [ self.psi   () ,
+                                   self.pions () ,  
+                                   self.omega () ] 
+            )
+        ##
+        return self._add_selection( 'B2PsiPiOmega_Selection' , sel ) 
+    
+        
 # =============================================================================
 if '__main__' == __name__ :
     

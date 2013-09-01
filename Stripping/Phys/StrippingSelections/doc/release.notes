@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-09-01 - Vanya Belyaev
+
+ - minor update of StirppingPsiX0 and Stripping PsiXforBandQ - 
+   these files anyhow are not used in stripping
+
 ! 2013-08-30 - Mika Vesterinen
  - Add option to make TOS requirements in StrippingD2KS0H_conf.py 
 
