@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-09-01 -Alessandra Borgia
+ - B2XuMuNu.py: For RhoMuNu lines, removed the duplicates and added &
+   tuned cuts to reduce background further, for retention reduction.
+
 ! 2013-09-01 - Vanya Belyaev
  - promptcharm : fix typo (not used in stripping)
 
