@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-09-01 - Mika Vesterinen (Semileptonics)
+ - Move Strippingb2DsPi_PhiPi_fakesB2DMuNuXLine from Semileptonic to Charm muDST
+
 ! 2013-08-31 - Andrea Contu (Charm)
  - Updates of Stripping20r{0,1}p2 for Charm WG
 

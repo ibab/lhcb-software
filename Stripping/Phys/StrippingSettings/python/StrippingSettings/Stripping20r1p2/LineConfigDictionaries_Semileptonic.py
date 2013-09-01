@@ -53,8 +53,7 @@ B2DMuNuX = {
     'STREAMS' : {
         'Charm' : [
             'Strippingb2D0MuXB2DMuNuXLine',
-            'StrippingDstarOfb2D0MuXB2DMuNuXLine'],
-        'Semileptonic' : [
+            'StrippingDstarOfb2D0MuXB2DMuNuXLine',
             'Strippingb2DsPi_PhiPi_fakesB2DMuNuXLine']
         },
     'WGs'    : ['Semileptonic']
