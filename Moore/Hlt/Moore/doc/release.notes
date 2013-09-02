@@ -5,7 +5,7 @@
 !============================================
 
 ! 2013-09-02 - Eric van Herwijnen
- - Fix problem with kwargs in Configuration.py when making checkpoint
+ - Fix problem with kwargs in runOnline.py when making checkpoint
 
 ! 2013-09-02 - Gerhard Raven
  - resurrect writer changes which also disappeared
