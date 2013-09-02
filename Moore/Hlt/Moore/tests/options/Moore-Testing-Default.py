@@ -14,7 +14,7 @@ Moore().Persistency= 'ROOT';
 Moore().outputFile= 'Test.dst';
 Moore().Verbose= False;
 Moore().DataType= '2012';
-Moore().DDDBtag= 'head-20120413'; #from RunDB
+Moore().DDDBtag= 'dddb-20120831'; #from RunDB
 Moore().EnableRunChangeHandler= False;
 Moore().WriterRequires= [];
 Moore().WriteFSR= True;
@@ -22,7 +22,7 @@ Moore().EnableDataOnDemand= True;
 Moore().CheckOdin= False;
 Moore().InitialTCK= '0x00790038';
 Moore().Simulation= False;
-Moore().CondDBtag= 'head-20120420'; #from RunDB
+Moore().CondDBtag= 'cond-20120831'; #from RunDB
 Moore().ThresholdSettings="Physics_September2012"
 
 from Configurables import TimingAuditor, SequencerTimerTool

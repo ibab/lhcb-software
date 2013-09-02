@@ -33,15 +33,16 @@ for line in stdout.split('\n'):
         continue
     name=line[0].strip().rstrip()
     num=line[4].strip().rstrip()
-    timing.append(':'.join([name,line[4]]))
+    timing.append(': '.join([name,num]))
     timingdict[name]=int(num)
 
 timing='\n'.join(timing)
 reftiming=open(reftable)
 refresult=reftiming.read()
 reftiming.close()
+refresult='\n'.join([ref.strip() for ref in refresult.split('\n')])
 
-if refresult.strip().rstrip()!=timing.strip().rstrip():
+if refresult.replace('  ',' ').strip().rstrip()!=timing.replace('  ',' ').strip().rstrip():
     #print "YES55"
     newreftiming=open(reftable+'.new','w')
     newreftiming.write(timing)
@@ -61,8 +62,8 @@ if refresult.strip().rstrip()!=timing.strip().rstrip():
     lineFailureDiff=[r for r in diff if ((r not in singleEventDiffs) and (refresultdict[r]!=0) and (timingdict[r]==0))]
     tenPercentDiffs=[r for r in diff if ((r not in singleEventDiffs) and (r not in lineFailureDiff) and (fabs(float(refresultdict[r]-timingdict[r])/float(refresultdict[r]+timingdict[r]))&lt;0.1))]
     rest=[r for r in diff if ((r not in singleEventDiffs) and (r not in lineFailureDiff) and (r not in tenPercentDiffs))]
-    if len(missing)+len(added)+len(diff)&gt;100:
-        result['moore.physics.2012_v14r8.a_total']=result.Quote('More than 100 differences, summary only')
+    if len(missing)+len(added)+len(diff)&gt;150:
+        result['moore.physics.2012_v14r8.a_total']=result.Quote('More than 150 differences, summary only')
 	if len(missing):
             result['moore.physics.2012_v14r8.b_missing'] = result.Quote("Missing: " + str(len(missing)))
 	if len(added):

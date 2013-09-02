@@ -34,7 +34,7 @@ for line in stdout.split('\n'):
         continue
     name=line[0].strip().rstrip()
     num=line[4].strip().rstrip()
-    timing.append(':'.join([name,line[4]]))
+    timing.append(': '.join([name,num]))
     timingdict[name]=int(num)
 
 timing='\n'.join(timing)
@@ -45,7 +45,7 @@ refresult=refresult.split('\n')
 refresult=[ref for ref in refresult if ref.startswith('Hlt1')]
 refresult='\n'.join(refresult)
 
-if refresult.strip().rstrip()!=timing.strip().rstrip():
+if refresult.replace('  ',' ').strip().rstrip()!=timing.replace('  ',' ').strip().rstrip():
     #print "YES55"
     newreftiming=open(reftable+'.hlt1.new','w')
     newreftiming.write(timing)

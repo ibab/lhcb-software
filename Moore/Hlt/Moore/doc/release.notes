@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-09-02 - Rob Lambert
+ - Update tests to ignore whitespace. Extend the number of differences printed in the test for the deferred triggering.
+ - small update now I'm picking the correct database tags (finally)
+
 ! 2013-09-02 - Eric van Herwijnen
  - Fix problem with kwargs in runOnline.py when making checkpoint
 
