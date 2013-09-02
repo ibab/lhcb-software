@@ -611,7 +611,7 @@ class Moore(LHCbConfigurableUser):
                                    , LoKi__HDRFilter      = 'Location'
                                    , HltRoutingBitsWriter = 'Hlt1DecReportsLocation'
                                    )
-                             , '/Event/Hlt1/DecReports'
+                             , 'Hlt1/DecReports'
                              )
 
             # shunt Hlt2 decreports 
@@ -622,41 +622,40 @@ class Moore(LHCbConfigurableUser):
                                    , HltSelReportsMaker   = 'InputHltDecReportsLocation'
                                    , HltGlobalMonitor     = 'HltDecReports'
                                    )
-                             , '/Event/Hlt2/DecReports'
+                             , 'Hlt2/DecReports'
                              )
 
             # shunt selreports
             _updateProperties( gs('Hlt')
                              , dict( HltSelReportsMaker   = 'OutputHltSelReportsLocation'
                                    , HltSelReportsWriter  = 'InputHltSelReportsLocation' )
-                             , '/Event/Hlt2/SelReports'
+                             , 'Hlt2/SelReports'
                              )
 
 
         def hlt2_only_tck() :
             from Configurables import HltDecReportsDecoder
-            hlt1decrep_location = '/Event/Hlt1/DecReports' 
-            hlt2decrep_location = '/Event/Hlt2/DecReports' 
-            hlt2selrep_location = '/Event/Hlt2/SelReports'
+            hlt1decrep_location = 'Hlt1/DecReports' 
+            hlt2decrep_location = 'Hlt2/DecReports' 
+            hlt2selrep_location = 'Hlt2/SelReports'
             HltDecReportsDecoder('Hlt1DecReportsDecoder').OutputHltDecReportsLocation = hlt1decrep_location
             from Configurables import HltConfigSvc
             cfg = HltConfigSvc()
-            cfg.ApplyTransformation = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'HltDecisionSequence' : 'Hlt2'  
-                                                                                            , '^[' : "[ 'HltDecReportsDecoder/Hlt1DecReportsDecoder'," } }
+            cfg.ApplyTransformation = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'GaudiSequencer/HltDecisionSequence' : "HltDecReportsDecoder/Hlt1DecReportsDecoder', 'GaudiSequencer/Hlt2"  } }
                                       , 'GaudiSequencer/HltEndSequence' :     { 'Members' : { ", '.*/HltL0GlobalMonitor'" : '' 
                                                                                             , ", '.*/Hlt1Global'"         : ''
                                                                                             , ", '.*/HltLumiWriter'"      : ''
                                                                                             , ", '.*/LumiStripper'"       : '' } }
-                                      , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt1'             : { '.*' : '{ }'               } }
-                                      , '.*HDRFilter/.*'                    : { 'Location'                   : { '.*' : hlt1decrep_location } }
-                                      , '.*/HltRoutingBitsWriter'           : { 'Hlt1DecReportsLocation'     : { '.*' : hlt1decrep_location } 
-                                                                              , 'Hlt2DecReportsLocation'     : { '.*' : hlt2decrep_location } }
-                                      , 'Hlt::Line/.*'                      : { 'HltDecReportsLocation'      : { '.*' : hlt2decrep_location } }
-                                      , 'HltDecReportsWriter/.*'            : { 'InputHltDecReportsLocation' : { '.*' : hlt2decrep_location } }
-                                      , 'HltSelReportsMaker/.*'             : { 'InputHltDecReportsLocation' : { '.*' : hlt2decrep_location } }
-                                      , 'HltGlobalMonitor/.*'               : { 'HltDecReports'              : { '.*' : hlt2decrep_location } }
-                                      , 'HltSelReportsMaker/.*'             : { 'OutputHltSelReportsLocation': { '.*' : hlt2selrep_location } }
-                                      , 'HltSelReportsWriter/.*'            : { 'InputHltSelReportsLocation' : { '.*' : hlt2selrep_location } }
+                                      , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt1'             : { '^.*$' : '{ }'               } }
+                                      , '.*HDRFilter/.*'                    : { 'Location'                   : { '^.*$' : hlt1decrep_location } }
+                                      , '.*/HltRoutingBitsWriter'           : { 'Hlt1DecReportsLocation'     : { '^.*$' : hlt1decrep_location } 
+                                                                              , 'Hlt2DecReportsLocation'     : { '^.*$' : hlt2decrep_location } }
+                                      , 'Hlt::Line/.*'                      : { 'HltDecReportsLocation'      : { '^.*$' : hlt2decrep_location } }
+                                      , 'HltDecReportsWriter/.*'            : { 'InputHltDecReportsLocation' : { '^.*$' : hlt2decrep_location } }
+                                      , 'HltSelReportsMaker/.*'             : { 'InputHltDecReportsLocation' : { '^.*$' : hlt2decrep_location } }
+                                      , 'HltGlobalMonitor/.*'               : { 'HltDecReports'              : { '^.*$' : hlt2decrep_location } }
+                                      , 'HltSelReportsMaker/.*'             : { 'OutputHltSelReportsLocation': { '^.*$' : hlt2selrep_location } }
+                                      , 'HltSelReportsWriter/.*'            : { 'InputHltSelReportsLocation' : { '^.*$' : hlt2selrep_location } }
                                       }
 
         # rather nasty way of doing this.. but it is 'hidden' 
