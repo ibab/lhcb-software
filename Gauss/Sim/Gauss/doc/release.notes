@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-09-02 - Paul Szczypka
+ - Updated Gauss Pythia Config references.
+
 !========================== Gauss v46r4 2013-07-24 ===========================
 ! 2013-07-24 - Paul Szczypka
  - Added gauss-upgrade-ft_mono, reverted gauss-upgrade-ft to use FT_BiLayer.
