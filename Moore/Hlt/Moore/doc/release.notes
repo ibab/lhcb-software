@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-09-02 - Gerhard Raven
+ - resurrect writer changes which also disappeared
+ - support 'Split' in case 'UseTCK=True'
+
 ! 2013-08-30 - Gerhard Raven
  - resurrect splitting changes which disappeared in previous commit
  - move generation of online scripts from Moore to MooreSys

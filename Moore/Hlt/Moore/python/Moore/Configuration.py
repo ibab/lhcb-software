@@ -317,12 +317,9 @@ class Moore(LHCbConfigurableUser):
         #check the file type and use MDF writer or InputCopyStream
         if iox.detectFileType(fname) == 'MDF'  : 
             from Configurables import LHCb__MDFWriter as MDFWriter
-            writer = MDFWriter( 'Writer'
-                              , Compress = 0
-                              , ChecksumType = 1
-                              , GenerateMD5 = True
-                              , Connection = 'file://' + fname
-                              )
+            writer = IOHelper("MDF","MDF").outputAlgs(fname
+                                                     ,writer = MDFWriter( 'Writer' , Compress = 0 )
+                                                     ,writeFSR=False)
             if self.getProp('WriterRequires') :
                 from Configurables import LoKi__VoidFilter as VoidFilter
                 writer = GaudiSequencer( 'WriteSequence'
@@ -330,10 +327,9 @@ class Moore(LHCbConfigurableUser):
                                                                , Preambulo = [ 'from LoKiHlt.algorithms import ALG_EXECUTED, ALG_PASSED' ]
                                                                , Code = ' & '.join( [ "ALG_EXECUTED('%s') & ALG_PASSED('%s')" % (i,i) for i in self.getProp('WriterRequires') ] ) 
                                                                )
-                                                   , writer 
-                                                   ]
+                                                   ] + writer
                                        )
-            IOHelper("MDF","MDF").outStream(fname,writer,writeFSR=False)
+            ApplicationMgr().OutStream.append( writer )
         else : 
             from Configurables import InputCopyStream
             writer = InputCopyStream("Writer"
@@ -574,9 +570,8 @@ class Moore(LHCbConfigurableUser):
         if persistency is not None:
             LHCbApp().setProp("Persistency",persistency)
 
-    def _split(self): 
-        # for now, this is specific to non-TCK running...
-        
+    def _split(self, useTCK ): 
+        if not self.getProp('Split') : return
         def hlt1_only() :
             from Configurables import GaudiSequencer as gs
             seq = gs('Hlt')
@@ -584,6 +579,13 @@ class Moore(LHCbConfigurableUser):
             ## adapt HltGlobalMonitor for Hlt1 only...
             from Configurables import HltGlobalMonitor
             HltGlobalMonitor().DecToGroupHlt2 = {}
+
+        def hlt1_only_tck() :
+            from Configurables import HltConfigSvc
+            cfg = HltConfigSvc()
+            cfg.ApplyTransformation = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'HltDecisionSequence' : 'Hlt1' } } 
+                                      , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt2' : { '^.*$' : "{  }" } }
+                                      }
 
         def hlt2_only() :
             from Configurables import GaudiSequencer as gs
@@ -630,19 +632,48 @@ class Moore(LHCbConfigurableUser):
                              , '/Event/Hlt2/SelReports'
                              )
 
+
+        def hlt2_only_tck() :
+            from Configurables import HltDecReportsDecoder
+            hlt1decrep_location = '/Event/Hlt1/DecReports' 
+            hlt2decrep_location = '/Event/Hlt2/DecReports' 
+            hlt2selrep_location = '/Event/Hlt2/SelReports'
+            HltDecReportsDecoder('Hlt1DecReportsDecoder').OutputHltDecReportsLocation = hlt1decrep_location
+            from Configurables import HltConfigSvc
+            cfg = HltConfigSvc()
+            cfg.ApplyTransformation = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'HltDecisionSequence' : 'Hlt2'  
+                                                                                            , '^[' : "[ 'HltDecReportsDecoder/Hlt1DecReportsDecoder'," } }
+                                      , 'GaudiSequencer/HltEndSequence' :     { 'Members' : { ", '.*/HltL0GlobalMonitor'" : '' 
+                                                                                            , ", '.*/Hlt1Global'"         : ''
+                                                                                            , ", '.*/HltLumiWriter'"      : ''
+                                                                                            , ", '.*/LumiStripper'"       : '' } }
+                                      , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt1'             : { '.*' : '{ }'               } }
+                                      , '.*HDRFilter/.*'                    : { 'Location'                   : { '.*' : hlt1decrep_location } }
+                                      , '.*/HltRoutingBitsWriter'           : { 'Hlt1DecReportsLocation'     : { '.*' : hlt1decrep_location } 
+                                                                              , 'Hlt2DecReportsLocation'     : { '.*' : hlt2decrep_location } }
+                                      , 'Hlt::Line/.*'                      : { 'HltDecReportsLocation'      : { '.*' : hlt2decrep_location } }
+                                      , 'HltDecReportsWriter/.*'            : { 'InputHltDecReportsLocation' : { '.*' : hlt2decrep_location } }
+                                      , 'HltSelReportsMaker/.*'             : { 'InputHltDecReportsLocation' : { '.*' : hlt2decrep_location } }
+                                      , 'HltGlobalMonitor/.*'               : { 'HltDecReports'              : { '.*' : hlt2decrep_location } }
+                                      , 'HltSelReportsMaker/.*'             : { 'OutputHltSelReportsLocation': { '.*' : hlt2selrep_location } }
+                                      , 'HltSelReportsWriter/.*'            : { 'InputHltSelReportsLocation' : { '.*' : hlt2selrep_location } }
+                                      }
+
         # rather nasty way of doing this.. but it is 'hidden' 
         # if you're reading this: don't expect this to remain like this!!!
-        splitter = { 'Hlt1' : hlt1_only
-                   , 'Hlt2' : hlt2_only
-                   , ''     : None
-                   }
-        try :
-            action = splitter[ self.getProp('Split') ]
+        try: 
+            if useTCK :
+                splitter = { 'Hlt1' : hlt1_only_tck , 'Hlt2' : hlt2_only_tck }
+                action = splitter[ self.getProp('Split') ]
+                if action : action()
+            else :
+                splitter = { 'Hlt1' : hlt1_only , 'Hlt2' : hlt2_only }
+                action = splitter[ self.getProp('Split') ]
+                if action :
+                    from Gaudi.Configuration import appendPostConfigAction
+                    appendPostConfigAction( action )
         except :
-            raise ValueError('Invalid option for Moore().Split: %s'% self.getProp("Split") )
-        if action :
-            from Gaudi.Configuration import appendPostConfigAction
-            appendPostConfigAction( action )
+            raise ValueError("Invalid option for Moore().Split: '%s'"% self.getProp("Split") )
 
 
 
@@ -714,9 +745,10 @@ class Moore(LHCbConfigurableUser):
 
         if self.getProp('UseTCK') :
             self._config_with_tck()
+            self._split( useTCK = True )
         else:
             self._config_with_hltconf()
-            self._split()
+            self._split( useTCK = False  )
             
         self._definePersistency()
         
