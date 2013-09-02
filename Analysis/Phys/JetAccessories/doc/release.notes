@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2013-09-02 - Cedric Potterat
+ - adding MNF to the jet extra info
+
 ! 2013-08-14 - Cedric Potterat
  - Remove ChargedInfMomentum from the default PFtypes to be used by JetMaker_Config.py
 

@@ -136,6 +136,7 @@ namespace LoKi
                             NSatHCAL = 9009,
                             NIPChi2Inf4 = 9010,
                             MPT = 9011,
+                            MNF = 9012 ,
                             Charged = 9201,
                             ChargedHadron = 9202,
                             Muon  = 9203,
@@ -551,13 +552,15 @@ StatusCode LoKi::PFJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   std::vector<const LHCb::Particle *>::iterator idaughter = daughtersvector.begin();
 
   double mtf;    /// Highest pT track / Jet pT
+  double mnf;    /// Highest pT neutral part / Jet pT
   double mpt;    /// Highest pT track
   double cpf;    /// charged pT fraction - V0s are not included
   double width;  /// jet width
   int    n90;    /// Number of items responsible for at least 90% of the jet momentum
   int    ntrk;   /// Number of tracks
 
-  float auxptmax=-1, sumpt=0; int iitems=0;
+  float auxptmax=-1, auxptPmax=-1,sumpt=0; 
+  int iitems=0;
   double tpx=0, tpy=0;
   std::vector<float> itemspt;
   ntrk=n90=width=0; 
@@ -568,6 +571,8 @@ StatusCode LoKi::PFJetMaker::appendJetIDInfo( LHCb::Particle* jet )
     if(daughter->particleID().threeCharge()!=0) {
       ntrk++; auxptmax = daughter->momentum().Pt() > auxptmax ? daughter->momentum().Pt() : auxptmax;
       tpx+=daughter->momentum().Px(); tpy+=daughter->momentum().Py();
+    }else{
+      auxptPmax = daughter->momentum().Pt() > auxptPmax ? daughter->momentum().Pt() : auxptPmax;
     }
     iitems++; float pt = daughter->momentum().Pt(); sumpt+=pt;
     itemspt.push_back(pt);
@@ -577,6 +582,8 @@ StatusCode LoKi::PFJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   }
 
   mtf = auxptmax / jet->momentum().Pt(); mtf = 0 > mtf ? 0 : mtf; mtf = 1 < mtf ? 1 : mtf;
+  mnf = auxptPmax / jet->momentum().Pt(); mnf = 0 > mnf ? 0 : mnf; mnf = 1 < mnf ? 1 : mnf;
+
   mpt = auxptmax;
   cpf = TMath::Sqrt(tpx*tpx+tpy*tpy)/jet->momentum().Pt();
   width /= sumpt;
@@ -600,6 +607,7 @@ StatusCode LoKi::PFJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   jet->addInfo ( Ntracks , ntrk );
   jet->addInfo ( N90 , n90 );
   jet->addInfo ( MTF , mtf );
+  jet->addInfo ( MNF , mnf );
   jet->addInfo ( MPT , mpt );
   jet->addInfo ( NSatCalo , NsatCells(jet) );
   jet->addInfo ( NHasPV   , N_HasPVInfo(jet) );
