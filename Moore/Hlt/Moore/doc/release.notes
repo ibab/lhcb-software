@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-09-02 - Eric van Herwijnen
+ - Fix problem with kwargs in Configuration.py when making checkpoint
+
 ! 2013-09-02 - Gerhard Raven
  - resurrect writer changes which also disappeared
  - support 'Split' in case 'UseTCK=True'
