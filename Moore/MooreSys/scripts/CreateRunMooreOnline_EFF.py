@@ -12,6 +12,8 @@ output = sys.argv[1]
 setup = sys.argv[2]
 split = sys.argv[3] if len(sys.argv)>3 else ''
 
+
+
 print 'using ' + setup
 print 'generating '+ output
 target_dir = dirname( output )
@@ -107,10 +109,10 @@ ${gaudi_exe} ${GAUDIONLINEROOT}/${CMTCONFIG}/libGaudiOnline.so \\
     -msgsvc=LHCb::FmcMessageSvc \\
     -tasktype=LHCb::Class1Task  \\
     -main=/group/online/dataflow/templates/options/Main.opts \\
-    -opt=command="import Moore.runOnline; Moore.runOnline.start(NbOfSlaves = "${NBOFSLAVES}", Split = '%(split)s' )" \\
+    -opt=command="import Moore.runOnline; Moore.runOnline.start(NbOfSlaves = "${NBOFSLAVES}", Split = '%(split)s', WriterRequires = %(WriterRequires)s )" \\
  ${APP_STARTUP_OPTS};
 
-"""%({'setup': setup, 'split' : split } ) )
+"""%({'setup': setup, 'split' : split, 'WriterRequires' : { 'Hlt1' : "[ 'Hlt1' ]" , 'Hlt2' : "[ 'Hlt2' ]" }.get( split, "[ 'HltDecisionSequence' ]" ) } ) )
 
 from stat import *
 orig = os.stat(output)[0]

@@ -3,8 +3,8 @@ import os, os.path
 import re
 import sys
 import string
-from os import pathsep, listdir 
-from os.path import exists, isdir, realpath, islink
+from os import pathsep, listdir, makedirs
+from os.path import exists, isdir, realpath, islink, dirname
 from zipfile import is_zipfile
 import fnmatch
 
@@ -32,6 +32,9 @@ addRunTimeProject = lambda proj,vers : ['--dev-dir=/home/online/ONLINE','--use',
 ### TODO: replace bare positional arguments with named arguments using argparse
 output = sys.argv[1]
 version = sys.argv[2]
+
+target_dir = dirname( output )
+if not exists( target_dir ) : makedirs( target_dir )
 
 from LbConfiguration.SetupProject import SetupProject
 run_opts = [ ]
