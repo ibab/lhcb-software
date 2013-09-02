@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-09-02 - Mika Vesterinen (Semileptonics)
+  - Updates to the V_ub lines for 20r{0,1}p2
+
 ! 2013-09-01 - Mika Vesterinen (Semileptonics)
  - Move Strippingb2DsPi_PhiPi_fakesB2DMuNuXLine from Semileptonic to Charm muDST
 

@@ -97,9 +97,9 @@ B2XuMuNu = {
         "RhoChPionPT"         : 300.  ,#MeV
         "RhoChPionTRCHI2"     : 10.   ,#MeV
         "RhoChPionPIDK"       : -10.  ,#adminensional
-        "RhoFDCHI2"           : 100.  ,#adimensional
-        "RhoFD"               : 6     ,#mm
-        "RhoIPMin"            : 0.3   ,#mm    
+        #    "RhoFDCHI2"           : 100.  ,#adimensional
+        #    "RhoFD"               : 6     ,#mm
+        #    "RhoIPMin"            : 0.3   ,#mm    
         "RhoDIRA"             : 0.9   ,#adimensional
         "RhoChPionMINIPCHI2"  : 9.    ,#adimensional
         #Kshort Daughter Cuts
