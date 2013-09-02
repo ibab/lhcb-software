@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-09-01 - Jason E Andrews
+ - Added tentative version of StrippingBu2Kpi0.py; retention rates to be further
+   reduced
+
 ! 2013-09-01 -Alessandra Borgia
  - B2XuMuNu.py: For RhoMuNu lines, removed the duplicates and added &
    tuned cuts to reduce background further, for retention reduction.
