@@ -473,7 +473,7 @@ StatusCode HltBufferedIOReader::i_run()  {
 	      e->events[j].status = EVENT_TYPE_OK;
 	      e->events[j].signal = 0;
 	    }
-	    read_ptr = (char*)me->start() + 2*sizeof(int);
+	    read_ptr = (char*)me->start();
 	    ::memcpy(read_ptr,size_buf+1,2*sizeof(size_buf[0]));
 	    read_ptr += 2*sizeof(size_buf[0]);
 	    read_len = me->size() - 2*sizeof(int);
