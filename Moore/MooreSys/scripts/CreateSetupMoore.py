@@ -45,23 +45,26 @@ print 'generating %s assuming version %s'%(output,version)
 if run_opts : print 'with runtime project options %s'%(' '.join(run_opts))
 SetupProject().main( run_opts + [ '--shell=sh','--output='+output,'Moore',version] )
 
+if exists(output) :
 
-print 'removing use of StripPath.sh'
+    print 'removing use of StripPath.sh'
 # remove call to StripPath.sh from generated SetupProject.sh
-with open(output, 'r') as f : txt = f.read()
-with open(output, 'w') as f :
-    for input in txt.splitlines():
-        line = input.replace('echo ','#echo ')
-        line = re.sub('test -f [^ ]*StripPath.sh','false', line)
-        m = re.match('export ([^=]+)="([^"]+)"',line)
-        if m :
-            (name,value) = m.groups()
-            if name == 'LD_LIBRARY_PATH':
-                # value = StripPath(value,lambda x: not re.search('lcg/external/Grid',x))
-                value = StripPath(value,lambda x: ContainsFNmatch(x,['*.so']))
-            if name == 'PYTHONPATH' :  # TODO: deal with python.zip files...
-                value = StripPath(value)
-                #value = StripPath(value,lambda x: ContainsFNmatch(x,['*.py','*.pyc']))
-            line = 'export %s="%s"'%(name,value)
-        if input!=line : f.write('#ORIG: %s\n'%input)
-        f.write(line+'\n')        
+    with open(output, 'r') as f : txt = f.read()
+    with open(output, 'w') as f :
+        for input in txt.splitlines():
+            line = input.replace('echo ','#echo ')
+            line = re.sub('test -f [^ ]*StripPath.sh','false', line)
+            m = re.match('export ([^=]+)="([^"]+)"',line)
+            if m :
+                (name,value) = m.groups()
+                if name == 'LD_LIBRARY_PATH':
+                    # value = StripPath(value,lambda x: not re.search('lcg/external/Grid',x))
+                    value = StripPath(value,lambda x: ContainsFNmatch(x,['*.so']))
+                if name == 'PYTHONPATH' :  # TODO: deal with python.zip files...
+                    value = StripPath(value)
+                    #value = StripPath(value,lambda x: ContainsFNmatch(x,['*.py','*.pyc']))
+                line = 'export %s="%s"'%(name,value)
+            if input!=line : f.write('#ORIG: %s\n'%input)
+            f.write(line+'\n')        
+else :
+    print 'SetupProject did not generate %s... this is fine during a release build...' % output
