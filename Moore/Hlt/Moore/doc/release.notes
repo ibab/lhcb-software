@@ -4,6 +4,7 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v20r3p2 2013-09-03 =========================
 ! 2013-09-02 - Rob Lambert
  - Update tests to ignore whitespace. Extend the number of differences printed in the test for the deferred triggering.
  - small update now I'm picking the correct database tags (finally)
