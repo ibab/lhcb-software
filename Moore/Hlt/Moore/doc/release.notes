@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-09-03 - Rob Lambert
+ - Test written which creates a TCK from a threshold setting, for zero and 100 events processed and checks the difference.
+
 ! 2013-09-03 - Gerhard Raven
  - allow CheckOdin to be set to False (with a warning) when running online
  - minor streamlining of small bit of python

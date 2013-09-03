@@ -1,0 +1,20 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>python</text></argument>
+  <argument name="args"><set>
+    <text>../options/tckcheck.py</text>
+  </set></argument>
+  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>moore.physics.tck.zeroevents</text><enumeral>PASS</enumeral></tuple>
+    <tuple><text>moore.physics.tck.hundredevents</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
+  <argument name="validator"><text>
+
+if len(stdout.split())>3:
+    causes.append('differences found')
+    result['moore.physics.tck.diffs']=result.Quote('check stdout for differences')
+
+</text></argument>
+</extension>
+
