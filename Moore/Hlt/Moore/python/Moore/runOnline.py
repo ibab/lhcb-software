@@ -35,7 +35,7 @@ def start(**kwargs) :
     moore.InitialTCK = OnlineEnv.InitialTCK
     moore.REQ1 = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
 
-    for k in kwargs : setattr(moore,k,kwargs[k])
+    for k,v in kwargs.iteritems() : setattr(moore,k,v)
 
     ## TODO: is this still needed???
     #if OnlineEnv.PartitionName == 'FEST' : Moore().EnableRunChangeHandler = False

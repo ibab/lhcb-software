@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-09-03 - Gerhard Raven
+ - allow CheckOdin to be set to False (with a warning) when running online
+ - minor streamlining of small bit of python
+
 !========================= Moore v20r3p2 2013-09-03 =========================
 ! 2013-09-02 - Rob Lambert
  - Update tests to ignore whitespace. Extend the number of differences printed in the test for the deferred triggering.

@@ -160,11 +160,11 @@ class Moore(LHCbConfigurableUser):
         if not self.getProp('RunMonitoringFarm') :
             ## Setup Checkpoint & forking: Do this EXACTLY here. Just befor the MEPManager & event selector.
             ## It will not work if these are created before.
-            if not self.getProp('RunMonitoringFarm'):
-                if OnlineEnv.MooreStartupMode == 1:
-                    self._configureOnlineForking()
-                elif OnlineEnv.MooreStartupMode == 2:
-                    self._configureOnlineCheckpointing()
+            
+            if OnlineEnv.MooreStartupMode == 1:
+                self._configureOnlineForking()
+            elif OnlineEnv.MooreStartupMode == 2:
+                self._configureOnlineCheckpointing()
             
             importOptions('$MBM_SETUP_OPTIONS')
             mbm_setup = allConfigurables['OnlineEnv']
@@ -195,7 +195,6 @@ class Moore(LHCbConfigurableUser):
             writer.OutputLevel = OnlineEnv.OutputLevel
             writer.Members = self.getProp('WriterRequires') + [ evtMerger ]
             app.TopAlg.append( writer )
-            #app.OutStream.append( writer )
         else :
             input = 'Events'
             mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input],True)
@@ -263,17 +262,13 @@ class Moore(LHCbConfigurableUser):
         msg.doPrintAlways = False
     
     def _configureDBSnapshot(self):
-        tag = { "DDDB":     self.getProp('DDDBtag')
-              , "LHCBCOND": self.getProp('CondDBtag')
-              , "SIMCOND" : self.getProp('CondDBtag') 
-              , "ONLINE"  : 'fake'
-              }
-
-        baseloc = self.getProp( "DBSnapshotDirectory" )
-
         from Configurables import CondDB
         conddb = CondDB()
-        conddb.Tags = tag
+        conddb.Tags =  { "DDDB"    : self.getProp('DDDBtag')
+                       , "LHCBCOND": self.getProp('CondDBtag')
+                       , "SIMCOND" : self.getProp('CondDBtag') 
+                       , "ONLINE"  : 'fake'
+                       }
         # hack to allow us to chance connectionstrings...
         conddb.setProp('IgnoreHeartBeat',self.getProp('IgnoreDBHeartBeat')  )
         self.setOtherProps( conddb, [ 'UseDBSnapshot',
@@ -579,6 +574,7 @@ class Moore(LHCbConfigurableUser):
             ## adapt HltGlobalMonitor for Hlt1 only...
             from Configurables import HltGlobalMonitor
             HltGlobalMonitor().DecToGroupHlt2 = {}
+            ##
 
         def hlt1_only_tck() :
             from Configurables import HltConfigSvc
@@ -609,6 +605,7 @@ class Moore(LHCbConfigurableUser):
             _updateProperties( gs('Hlt')
                              , dict( HltDecReportsDecoder = 'OutputHltDecReportsLocation'
                                    , LoKi__HDRFilter      = 'Location'
+                                   , TisTosParticleTagger = 'HltDecReportsInputLocation'
                                    , HltRoutingBitsWriter = 'Hlt1DecReportsLocation'
                                    )
                              , 'Hlt1/DecReports'
@@ -648,6 +645,7 @@ class Moore(LHCbConfigurableUser):
                                                                                             , ", '.*/LumiStripper'"       : '' } }
                                       , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt1'             : { '^.*$' : '{ }'               } }
                                       , '.*HDRFilter/.*'                    : { 'Location'                   : { '^.*$' : hlt1decrep_location } }
+                                      , 'TisTosParticleTagger/.*'           : { 'HltDecReportsInputLocation' : { '^.*$' : hlt1decrep_location } }
                                       , '.*/HltRoutingBitsWriter'           : { 'Hlt1DecReportsLocation'     : { '^.*$' : hlt1decrep_location } 
                                                                               , 'Hlt2DecReportsLocation'     : { '^.*$' : hlt2decrep_location } }
                                       , 'Hlt::Line/.*'                      : { 'HltDecReportsLocation'      : { '^.*$' : hlt2decrep_location } }
@@ -676,7 +674,9 @@ class Moore(LHCbConfigurableUser):
 
 
 
-
+    def _setIfNotSet(self,prop,value) :
+        if not self.isPropertySet(prop) : self.setProp(prop,value)
+        return self.getProp(prop) == value
 
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
@@ -706,11 +706,18 @@ class Moore(LHCbConfigurableUser):
             ## in case of LHCb or FEST, _REQUIRE_ it exists...
             if hasattr(OnlineEnv,'InitialTCK') :
                 self.setProp('InitialTCK',OnlineEnv.InitialTCK)
-                self.setProp('CheckOdin',True)
+                if not self._setIfNotSet('CheckOdin',True) :
+                    print 'WARNING '*10
+                    print 'WARNING: you are running online, using a TCK, but ignoring ODIN. Are you sure this is really what you want???'
+                    print 'WARNING '*10
+                      
             # determine the partition we run in, and adapt settings accordingly...
             if self.getProp('PartitionName') in [ 'FEST', 'LHCb' ] : 
                 self.setProp('InitialTCK',OnlineEnv.InitialTCK)
-                self.setProp('CheckOdin',True)
+                if not self._setIfNotSet('CheckOdin',True) :
+                    print 'WARNING '*10
+                    print 'WARNING: you are running in the %s Partititon, using a TCK, but ignoring ODIN. Make sure this is really what you want.' % self.getProp('PartitionName')
+                    print 'WARNING '*10
 
 
         from Configurables import MooreInitSvc
