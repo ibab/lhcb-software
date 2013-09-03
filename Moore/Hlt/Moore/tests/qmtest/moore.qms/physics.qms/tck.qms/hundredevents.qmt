@@ -7,7 +7,7 @@
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
 
-expected_string= &quot;PASS&quot
+expected_string= &quot;PASS&quot;
 if stdout.find(expected_string) ==-1:
     causes.append('missing string')
     result['moore.physics.tck.hundredevents.expected_string']=result.Quote(expected_string)

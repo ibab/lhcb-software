@@ -22,8 +22,8 @@ status,output = commands.getstatusoutput("source ../../../../TCK/HltTCK/cmt/setu
 #print output
 
 if "FATAL" in output or (creationString not in output and existsString not in output):
-    raise ValueError("Something went wrong in the gaudirun step")
     print output
+    raise ValueError("Something went wrong in the gaudirun step")
 
 searchstring=creationString
 if creationString not in output and existsString in output:
