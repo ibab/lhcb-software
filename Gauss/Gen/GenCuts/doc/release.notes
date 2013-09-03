@@ -4,6 +4,11 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-09-03 - Maurizio Martinelli
+ - Added DaughtersInLHCbAndCutsForDinSLBdecays, to generate D0 candidates from
+  SL B decays with cuts on D0 daughters and muon momentum. All the final state
+  particles are required to fall in the acceptance.
+
 ! 2013-08-23 - Patrick Robbe
  - Ask that pz(Bc) and pz(Upsilon) are positive in the generator cuts
 
