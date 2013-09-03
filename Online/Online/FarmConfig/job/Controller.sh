@@ -13,8 +13,10 @@
 #    -sleep=20 \
 #
 #
+export PRINT_LEVEL=4;
+#export PRINT_LEVEL=3;
 exec -a ${UTGID} ${CONTROLLERROOT}/${CMTCONFIG}/fsm_ctrl.exe \
-    -print=4 -sleep=0 \
+    -print=${PRINT_LEVEL} -sleep=0 \
     -partition=${PARTITION_NAME} \
     -runinfo=${RUNINFO} \
     -mode=${MOORESTARTUP_MODE} \
