@@ -53,24 +53,35 @@ public:
   unsigned int firstSensor()   const { return m_firstSensor;   }
   unsigned int lastSensor()    const { return m_lastSensor;    }
 
-  int nbHits()  const { return m_nextInPool - m_pool.begin(); }
+  int nbHits()     const { return m_nextInPool - m_pool.begin(); }  // number of hits in the pool
+  int nbHitsUsed() const
+  { int Count;
+    for(std::vector<PatPixelHit>::const_iterator itH = m_pool.begin(); itH != m_nextInPool; ++itH )
+    { if((*itH).isUsed()) Count++; }
+    return Count; }
+
   int maxSize() const { return m_maxSize; }
 
-  StatusCode rebuildGeometry();  ///< Recompute the geometry in case of change
+  StatusCode rebuildGeometry();                                  // Recompute the geometry in case of change
 
-  void sortByX();
+  void sortByX();                                                // sort hits by X within every sensor (to speed up the search).
+
+  void print(void)
+  { for( std::vector<PatPixelSensor*>::const_iterator itS=m_sensors.begin(); itS != m_sensors.end(); ++itS)
+    { (*itS)->print(); }
+  }
 
 protected:
 
 private:
-  DeVP* m_veloPix;
-
-  std::vector<PatPixelHit>  m_pool;
-  std::vector<PatPixelHit>::iterator m_nextInPool;
-  std::vector<PatPixelSensor*> m_sensors;
-  unsigned int m_firstSensor;
-  unsigned int m_lastSensor;
-  int m_maxSize;
-  bool m_eventReady;
+  DeVP*                              m_veloPix;          // to convert clusters into 3-D positions
+  std::vector<PatPixelHit>           m_pool;             // list of hits: here are the hits stored, PatPixelSensor contains list of pointers to hits
+  std::vector<PatPixelHit>::iterator m_nextInPool;       // next free place in the hit list
+  std::vector<PatPixelSensor*>       m_sensors;          // list of (pointers to) sensors: every sensor contains a list of pointers to its hits.
+  unsigned int                       m_firstSensor;      // index of the first sensor
+  unsigned int                       m_lastSensor;       // index of the last sensor
+  int                                m_maxSize;
+  bool                               m_eventReady;
 };
+
 #endif // PATPIXELHITMANAGER_H

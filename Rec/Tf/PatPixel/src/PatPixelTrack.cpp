@@ -68,8 +68,9 @@ void PatPixelTrack::set( PatPixelHit* h1, PatPixelHit* h2 ) {
 //=========================================================================
 //  Add a hit to the track. Update fit parameters
 //=========================================================================
-void PatPixelTrack::addHit ( PatPixelHit* hit ) {
-  m_hits.push_back( hit );
+void PatPixelTrack::addHit ( PatPixelHit* hit )
+{ if( hit->sensor() >= m_hits[0]->sensor() ) m_hits.insert(m_hits.begin(), hit ); // m_hits.push_front( hit );
+                                        else m_hits.push_back( hit );
   double z = hit->z();
   double w = hit->wx();
   double x = hit->x();
@@ -161,17 +162,20 @@ Gaudi::TrackSymMatrix PatPixelTrack::covariance( double z ) {
   cov(4,4) = 1.;
   return cov;
 }
+
 //===============================================================================
 
-namespace {
-
+namespace
+{
   /// Helper function to sort hits
   struct SortDecreasingZ
-  {
-    SortDecreasingZ() {}
-    bool operator()( const PatPixelHit* lhs, const PatPixelHit* rhs) const {
-      return lhs->z() > rhs->z() ;
-    }
+  { SortDecreasingZ() {}
+    bool operator()( const PatPixelHit* lhs, const PatPixelHit* rhs) const { return lhs->z() > rhs->z(); }
+  } ;
+
+  struct SortDecreasingR
+  { SortDecreasingR() {}
+    bool operator()( const PatPixelHit* lhs, const PatPixelHit* rhs) const { return lhs->r() > rhs->r(); }
   } ;
 
   /// Helper function to filter one hit

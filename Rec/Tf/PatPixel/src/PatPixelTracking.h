@@ -43,6 +43,8 @@ public:
 
 protected:
 
+  void trackDownstream(void);
+  void trackUpstream(void);
   void searchByPair();                            // search for tracks starting from pair of hits on adjacent sensors
 
   void makeLHCbTracks( LHCb::Tracks* tracks );    // produce LHCb::Track list understable to other LHCb applications
@@ -82,7 +84,7 @@ private:
   bool   m_addStateFirstLastMeasurementKalmanFit ;
 
   PatPixelTracks m_tracks;                  // list of tracks found by searchByPair()
-  PatPixelTrack  m_track;
+  PatPixelTrack  m_track;                   // current track being search, when complete, it is added to the list
 
   // double         m_zPrimaryVertex;
   // double         m_zErrPrimaryVertex;

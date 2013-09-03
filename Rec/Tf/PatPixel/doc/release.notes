@@ -4,6 +4,11 @@
 ! Purpose     : Pattern recogintion for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2013-09-03 - Pawel Jalocha
+ - tracks fit on multiple scattering model, instead of a straight line,
+   improves hit efficiency (and IP resolution as a result)
+ - code not very clean and not final: more a test of the new concept
+
 ! 2013-08-25 - Heinrich Schindler
  - Replace direct calls to DeVPSquareType 
 

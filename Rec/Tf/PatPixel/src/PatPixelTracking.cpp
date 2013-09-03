@@ -32,17 +32,19 @@ DECLARE_ALGORITHM_FACTORY( PatPixelTracking )
 
 {
   declareProperty( "OutputTracksName",      m_outputLocation    = LHCb::TrackLocation::Velo );
-  declareProperty( "MaxXSlope",             m_maxXSlope         = 0.400 );                     // 0.400
-  declareProperty( "MaxYSlope",             m_maxYSlope         = 0.400 );                     // 0.300
+  declareProperty( "MaxXSlope",             m_maxXSlope         =  0.400 );                     // 0.400
+  declareProperty( "MaxYSlope",             m_maxYSlope         =  0.400 );                     // 0.300
+  declareProperty( "ExtraTol",              m_extraTol          =  1.000 * Gaudi::Units::mm );  // 0.150 // (initial) extrapolation tolerance when adding hits
+  declareProperty( "MaxChi2ToAdd",          m_maxChi2ToAdd      = 200.0 );  // 100.0 // (initial) limit on track chi2 when adding new hits
+  declareProperty( "MaxChi2SameSensor",     m_maxChi2SameSensor = 16.0  );  // 16.0 // limit when adding hits from sensor that already has hits ?
+  declareProperty( "MaxMissed",             m_maxMissed         =  4    );  // stops the extrapolation after that many sensors
+  declareProperty( "MaxChi2PerHit",         m_maxChi2PerHit     = 25.0  );  // 16.0 // limit when removing worst hits
+  declareProperty( "MaxChi2Short",          m_maxChi2Short      = 20.0  );  //  6.0 // short (3-hit) tracks are removed with this limit
+  declareProperty( "ClearHits",             m_clearHits         = false );  // Clear hits if needed, for a rerun in same event
+
   declareProperty( "MaxZForRBeamCut",       m_maxZForRBeamCut   = 200.0 * Gaudi::Units::mm );  // 
-  declareProperty( "MaxR2Beam",             m_maxR2Beam         =   1.0 * Gaudi::Units::mm2 ); // 1.0 // limit on squared distance to the beam axis
-  declareProperty( "ExtraTol",              m_extraTol          = 0.200 * Gaudi::Units::mm );  // 0.150 // (initial) extrapolation tolerance when adding hits
-  declareProperty( "MaxChi2ToAdd",          m_maxChi2ToAdd      = 60.0 );  // 100.0 // (initial) limit on track chi2 when adding new hits
-  declareProperty( "MaxChi2SameSensor",     m_maxChi2SameSensor = 12.0  ); // 16.0 // limit when adding hits from sensor that already has hits ?
-  declareProperty( "MaxMissed",             m_maxMissed         = 4     );
-  declareProperty( "MaxChi2PerHit",         m_maxChi2PerHit     = 12.0  ); // 16.0 // limit when removing worst hits
-  declareProperty( "MaxChi2Short",          m_maxChi2Short      =  6.0  ); //  6.0 // short (3-hit) tracks are removed with this limit
-  declareProperty( "ClearHits",             m_clearHits         = false ); // Clear hits if needed, for a rerun in same event
+  declareProperty( "MaxR2Beam",             m_maxR2Beam         =   1.0 * Gaudi::Units::mm2 ); // 1.0 // limit on squared track distance to the beam axis
+
   // Parameters for debugging
   declareProperty( "DebugToolName",         m_debugToolName     = ""    );
   declareProperty( "WantedKey",             m_wantedKey         = -100  );
@@ -108,10 +110,6 @@ StatusCode PatPixelTracking::execute() {
   if ( m_clearHits ) m_hitManager->clearHits();
   m_hitManager->buildHits();                                        // import hits from VeloLite Clusters
   m_hitManager->sortByX();                                          // sort by X-pos. within each sensor for faster search
-  // printf(" m_hitManager->nbHits() => %d\n", m_hitManager->nbHits());
-#ifdef DEBUG_HISTO
-  plot(m_hitManager->nbHits(), "HitsPerEvent", "PatPixelTracking: Number of hits per event", 0.0, 4000.0, 50);
-#endif
 
   if ( m_isDebug ) {
     for ( unsigned int sensorNb = m_hitManager->firstSensor(); m_hitManager->lastSensor() >= sensorNb; ++sensorNb ) {
@@ -132,6 +130,9 @@ StatusCode PatPixelTracking::execute() {
     }
   }
 
+  // m_hitManager->print();
+  // printf(" m_hitManager->nbHits() => %d\n", m_hitManager->nbHits());
+
   if ( m_doTiming ) m_timerTool->stop( m_timePrepare );
   //==========================================================================
   // Search by finding a pair, then extrapolating
@@ -144,12 +145,32 @@ StatusCode PatPixelTracking::execute() {
   //==========================================================================
   if ( m_doTiming ) m_timerTool->start( m_timeFinal );
 
-  makeLHCbTracks( outputTracks );                                    // convert out tracks to LHCb tracks
+  // m_hitManager->print();
+#ifdef DEBUG_HISTO
+  int nbHits = m_hitManager->nbHits();
+  plot(nbHits,          "HitsPerEvent",   "PatPixelTracking: Number of hits per event",   0.0, 8000.0, 80);
+  plot(m_tracks.size(), "TracksPerEvent", "PatPixelTracking: Number of tracks per event", 0.0,  800.0, 80);
+  int nbHitsUsed = m_hitManager->nbHitsUsed();
+  if(nbHits>0)
+    plot((100.0*nbHitsUsed)/nbHits, "PercentUsedHitsPerEvent", "PatPixelTracking: Percent of hits assigned to tracks", 0.0, 100.0, 100);
+  for(PatPixelTracks::const_iterator itT = m_tracks.begin(); itT != m_tracks.end(); ++itT)
+  { if((*itT).size()<=3) continue;
+    double minR, maxR;
+    itT->getMinMaxRadius(minR, maxR);
+    plot(minR, "MinHitRadiusPerTrack", "PatPixelTracking: Smallest hit radius [mm] per track (of 4 or more hits)", 0.0, 50.0, 100);
+    plot(maxR, "MaxHitRadiusPerTrack", "PatPixelTracking: Largest hit radius [mm] per track (of 4 or more hits)",  0.0, 50.0, 100);
+  }
+#endif
+
+  // for(PatPixelTracks::const_iterator itT = m_tracks.begin(); itT != m_tracks.end(); ++itT) (*itT).print();
+
+  makeLHCbTracks( outputTracks );                                    // convert out tracks to LHCb tracks, as well: clears the track list !
 
   if ( m_doTiming ) {
     m_timerTool->stop( m_timeFinal );
     m_timerTool->stop( m_timeTotal );
   }
+
   return StatusCode::SUCCESS;
 }
 
@@ -163,57 +184,110 @@ StatusCode PatPixelTracking::finalize() {
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
+//== Extend downstream, on both sides of the detector as soon as one hit is missed
+void PatPixelTracking::trackDownstream(void)
+{ 
+  int extraStep = 2;                                              // scan every 2nd sensor to stay on the same side (right or left)
+  int extraSensIdx = m_track.lastSensor()-extraStep;              // start two sensors behind the last one
+  int nbMissed = 0;                                               // count sensors without hits found
+  while ( extraSensIdx >= 0 )                                     // loop over sensors before the seed
+  { PatPixelSensor* extra = m_hitManager->sensor( extraSensIdx ); // sensor we try to extrapolate to
+
+    double tol     = m_extraTol;                                  // extrapolation tolerance
+    double maxChi2 = m_maxChi2ToAdd;                              // maximum Chi2 for a hit we want to add
+    bool added = addHitsOnSensor( extra, tol, maxChi2 );          // attempt to add new hits from this sensor with given tolarances
+
+    if ( added )
+    { nbMissed = 0; }                                             // if some hits added: reset missed hit counter
+    else                                                          // if none found:
+    { if(extraStep==2)                                            // is still every second sensor scan:
+        added=addHitsOnSensor( m_hitManager->sensor(extraSensIdx+1), tol, maxChi2 ); // go back one sensor, the hit might be there.
+      if(!added) nbMissed += extraStep;
+      extraStep = 1; }                                            // switch to every sensor scan, not every 2nd
+    if ( m_maxMissed < nbMissed ) break;
+    extraSensIdx -= extraStep;
+  }
+}
+
+void PatPixelTracking::trackUpstream(void)
+{ 
+  int extraStep = 1;
+  int extraSensIdx = m_track.lastSensor() + extraStep;
+  int nbMissed = 0;
+  while ( extraSensIdx <= (int)(m_hitManager->lastSensor()) )
+  { PatPixelSensor* extra = m_hitManager->sensor( extraSensIdx );
+
+    // double tol     = m_extraTol;                                  // extrapolation tolerance
+    // double maxChi2 = m_maxChi2ToAdd;                              // maximum Chi2 for a hit we want to add
+    bool added = addHitsOnSensor( extra, m_extraTol, m_maxChi2ToAdd );
+
+    if ( added ) { nbMissed = 0; }
+    else { nbMissed += extraStep; }
+    if ( m_maxMissed < nbMissed ) break;
+    extraSensIdx += extraStep;
+  }
+}
+
 //=========================================================================
 //  Search starting with a pair of consecutive sensors.
 //=========================================================================
 void PatPixelTracking::searchByPair() {
   // printf("PatPixelTracking::searchByPair() =>\n");
-  int lastSensor  = m_hitManager->lastSensor();
-  int firstSensor = m_hitManager->firstSensor() + 2;
-  for ( int sens0 = lastSensor; firstSensor <= sens0; sens0 -= 1 ) {  // loop over sensors, start with the last sensor
-    int sens1 = sens0 - 2;                                            // pick-up the "paired" sensor as one full station backwards
-    PatPixelSensor* sensor0 = m_hitManager->sensor( sens0 );          // the sensor pair
-    PatPixelSensor* sensor1 = m_hitManager->sensor( sens1 );
-    double z0 = sensor0->z();                                         // Zet's of the sensor pair
+  int lastSensor  = m_hitManager->lastSensor();                       // the very last sensor index (largest Z, most forward)
+  int firstSensor = m_hitManager->firstSensor() + 2;                  // the one-before-last sensor index (almost smallest Z)
+  for ( int sens0 = lastSensor; firstSensor <= sens0; sens0 -= 1 )    // loop over sensors, start with the last sensor
+  { int sens1 = sens0 - 2;                                            // pick-up the "paired" sensor as one station backwards
+    PatPixelSensor* sensor0 = m_hitManager->sensor( sens0 );          // more forward sensor (larger Z)
+    PatPixelSensor* sensor1 = m_hitManager->sensor( sens1 );          // less forward sensor (smaller Z)
+    double z0 = sensor0->z();                                         // Z's of the sensor pair
     double z1 = sensor1->z();
-    double dxMax = m_maxXSlope * fabs( z1 - z0 );                     // limits on dX/dY from the slope limit
-    double dyMax = m_maxYSlope * fabs( z1 - z0 );
+    double dz = z0-z1;
+    // if(fabs(dz)>60.0) continue;                                      // does it make sense not to start on pairs very far apart ?
+#ifdef DEBUG_HISTO
+  plot(dz, "SeedPairDeltaZ", "Separation in Z [mm] between the seed pair sensors", -200.0, +200.0, 400);
+#endif
+    double dxMax = m_maxXSlope * fabs(dz);                          // limits on dX/dY from the slope limit
+    double dyMax = m_maxYSlope * fabs(dz);
 
-    PatPixelHits::const_iterator itH0, itH1, itH, first1;
-    first1 = sensor1->hits().begin();
-    for ( itH0 = sensor0->hits().begin(); sensor0->hits().end() != itH0; ++itH0 )   // loop over hits in the first sensor in the pair
-    { if ( (*itH0)->isUsed() ) continue;                                            // skip hits already in use by other tracks
-      double x0  = (*itH0)->x();
-      double y0  = (*itH0)->y();
+    PatPixelHits::const_iterator itH0;
+    for ( itH0 = sensor0->hits().begin(); sensor0->hits().end() != itH0; ++itH0 )   // loop over hits in the first sensor (larger Z) in the pair
+    { if ( (*itH0)->isUsed() ) continue;                                            // skip hits already assigned to tracks
+      double x0  = (*itH0)->x();                                                    // hit X
+      double y0  = (*itH0)->y();                                                    // hit Y
       double xMin = x0 - dxMax;                                                     // X-pos. limits for the other sensor
       double xMax = x0 + dxMax;
 
-      if (  0 != m_debugTool && matchKey( *itH0 ) )
+      if (  0 != m_debugTool && matchKey( *itH0 ) )                                 // print debug if enabled
       { info() << format( "s1%3d xMin%9.3f xMax%9.3f ", sens1, xMin, xMax );
         printHit ( *itH0,   "St0" ); }
 
-      for ( itH1 = first1; sensor1->hits().end() != itH1; ++itH1 ) {                 // loop over hits in the second sensor in the pair
-        double x1 = (*itH1)->x();
-        if ( x1 < xMin ) { first1 = itH1+1; continue; }                              // skip hits below the X-pos. limit
+      PatPixelHits::const_iterator itH1; // , first1 = sensor1->hits().begin();
+      for (itH1 = sensor1->hits().begin(); sensor1->hits().end() != itH1; ++itH1 )   // loop over hits in the second sensor (smaller Z) in the pair
+      { double x1 = (*itH1)->x();                                                    // note: hits are sorted accord. to their X
+        if ( x1 < xMin ) continue; // { first1 = itH1+1; continue; }                 // skip hits below the X-pos. limit
         if ( x1 > xMax ) break;                                                      // stop search when above the X-pos. limit
         if ( (*itH1)->isUsed() ) continue;                                           // skip hits already assigned to tracks
 
         //== Check y compatibility...
         double y1  = (*itH1)->y();
-        if ( fabs( y1 - y0 ) > dyMax ) continue;                                     // skip hits out of Y-pos. limit
+        if ( fabs( y1 - y0 ) > dyMax ) continue;                                     // skip hits out of Y-pos. limit (based on max. slope)
 
         m_debug = m_isDebug;
-        if ( 0 != m_debugTool ) {
-          if ( matchKey( *itH0 ) && matchKey( *itH1 ) ) m_debug = true;
-          if ( m_debug ) {
-            info() << format( "s1%3d dxRel %7.3f dyRel %7.3f    ", 
+        if ( 0 != m_debugTool )
+        { if ( matchKey( *itH0 ) && matchKey( *itH1 ) ) m_debug = true;
+          if ( m_debug )
+          { info() << format( "s1%3d dxRel %7.3f dyRel %7.3f    ", 
                               sens1, (x1-xMin)/(xMax-xMin), fabs((*itH1)->y()-y0)/dyMax );
             printHit( *itH1 );
           }
         }
 
-        m_track.set( *itH0, *itH1 );  // make a track out of the two hits that pass slope criteria and use it as a seed
+        m_track.set( *itH0, *itH1 );                           // make a track out of the two hits that pass slope criteria and use it as a seed
 
+        // double zBeam  = m_track.zBeam();
+        // if(fabs(zBeam)>200.0) continue;
+
+/*
         //== Cut on R2Beam if needed : backward tracks, i.e zBeam > first hit
         if ( sensor0->z() < m_maxZForRBeamCut )                // if 1st sensor below the Z-limit
         { double zBeam  = m_track.zBeam();                     // where (which Z) the track passes closest to the beam
@@ -223,97 +297,62 @@ void PatPixelTracking::searchByPair() {
             if ( r2Beam > m_maxR2Beam ) continue;
           }
         }
+*/
+        // printf("PatPixelTracking::searchByPair() Seed pair: zBeam=%+6.1f\n", m_track.zBeam() );
+        // (*itH0)->print();
+        // (*itH1)->print();
 
         //== Extend downstream, on both sides of the detector as soon as one hit is missed
-        int extraStep = 2;                                              // scan every 2nd sensor to stay on the same side (right or left)
-        int extraSens = sens1-extraStep;                                // start two sensors behind the 2nd seed sensor
-        int nbMissed = 0;
-        double lastZ = sensor1->z();                                    // last-Z on a track
-        while ( extraSens >= 0 )                                        // loop over sensors before the seed
-        { PatPixelSensor* extra = m_hitManager->sensor( extraSens );    // 
-          double tol     = m_extraTol;
-          double maxChi2 = m_maxChi2ToAdd;
-          if ( extra->z() < (lastZ - 100.0) )                           // double the tolerances if sensor more than 100 mm away
-          { tol     = 2 * tol;
-            maxChi2 = 2 * maxChi2; }
-          bool added = addHitsOnSensor( extra, tol, maxChi2 );          // attempt to add new hits from this sensor
-          if ( added ) { nbMissed = 0; lastZ = extra->z(); }            // if some hits added: 
-                  else { nbMissed += extraStep; extraStep = 1; }        // if none added: count missed sensors
-          if ( m_maxMissed < nbMissed ) break;
-          extraSens -= extraStep; }
+        trackDownstream();
+        trackUpstream();
 
-        //== Try upstream if almost forward tracks
-        if ( sensor0->z() > m_maxZForRBeamCut )
-        { extraStep = 1;
-          extraSens = sens0 + 3;  // + 2 already tried...
-          nbMissed = 2;
-          while ( extraSens <= lastSensor )
-          { PatPixelSensor* extra = m_hitManager->sensor( extraSens );
-            bool added = addHitsOnSensor( extra, m_extraTol, m_maxChi2ToAdd );
-            if ( added ) { nbMissed = 0; }
-                    else { nbMissed += extraStep; }
-            if ( m_maxMissed < nbMissed ) break;
-            extraSens += extraStep;
-          }
-        }
-
-        removeWorstHit( m_maxChi2PerHit );
-        if ( m_track.hits().size() < 3 ) continue;
-        removeWorstHit( m_maxChi2PerHit );
         if ( m_track.hits().size() < 3 ) continue;
 
+/*      this part is unclear why would it help ?
         //== Add compatible hits in sens0 and sens1.
-        if ( itH0+1 != sensor0->hits().end() ) {
-          if ( m_track.chi2( *(itH0+1) ) < m_maxChi2SameSensor ) {
-            ++itH0;
-            m_track.addHit( *itH0 );
-          }
+        if ( (itH0+1) != sensor0->hits().end() )
+        { if ( m_track.chi2( *(itH0+1) ) < m_maxChi2SameSensor )
+          { ++itH0; m_track.addHit( *itH0 ); }
         }
-        if ( itH1+1 != sensor1->hits().end() ) {
-          if ( m_track.chi2( *(itH1+1) ) < m_maxChi2SameSensor ) {
-            ++itH1;
-            m_track.addHit( *itH1 );
-          }
+        if ( (itH1+1) != sensor1->hits().end() )
+        { if ( m_track.chi2( *(itH1+1) ) < m_maxChi2SameSensor )
+          { ++itH1; m_track.addHit( *itH1 ); }
         }
+*/
+        // m_track.print();
+        // printf(" Track[%3d]: %2d/%2d hists, Chi2=%3.1f zBeam=%+6.1f\n",
+        //        m_tracks.size(), m_track.hits().size(), m_track.nbUnused(), m_track.chi2(), m_track.zBeam() );
 
         //== Final check: if only 3 hits, all should be unused and chi2 good.
-        if ( m_track.hits().size() == 3 ) {
-          if ( !m_track.all3SensorsAreDifferent() ) {
-            if ( m_debug ) {
-              info() << "  -- reject, not 3 different sensors." << endmsg;
-              printTrack( m_track );
-            }
+        if ( m_track.hits().size() == 3 )
+        { if ( !m_track.all3SensorsAreDifferent() )
+          { if ( m_debug ) 
+            { info() << "  -- reject, not 3 different sensors." << endmsg;
+              printTrack( m_track ); }
+            // printf("Rejected: 3 hits but not different sensors\n");
             continue;
           }
-          if ( m_track.nbUnused() != 3 ) {
-            if ( m_debug ) {
-              info() << "  -- reject, only " << m_track.nbUnused() << " unused hits." << endmsg;
-              printTrack( m_track );
-            }
+          if ( m_track.nbUnused() != 3 )
+          { if ( m_debug )
+            { info() << "  -- reject, only " << m_track.nbUnused() << " unused hits." << endmsg;
+              printTrack( m_track ); }
+            // printf("Rejected: 3 hits but some used by other tracks\n");
             continue;
           }
-          if ( m_track.chi2() > m_maxChi2Short ) {
-            if ( m_debug ) {
-              info() << "  -- reject, chi2 " << m_track.chi2() << " too high." << endmsg;
-              printTrack( m_track );
-            }
-            continue;
-          }
-        } else {
-          if ( m_track.nbUnused() < .6 * m_track.hits().size() ) {
-            if ( m_debug ) {
-              info() << "  -- reject, only " << m_track.nbUnused() << " unused hits." << endmsg;
-              printTrack( m_track );
-            }
+        } else
+        { if ( m_track.nbUnused() < 0.5 * m_track.hits().size() )
+          { if ( m_debug )
+            { info() << "  -- reject, only " << m_track.nbUnused() << " unused hits." << endmsg;
+              printTrack( m_track ); }
+            // printf("Rejected: more than 3 hits but too many used by other tracks\n");
             continue;
           }
         }
 
-        // printf(" Track #%3d: %2d/%2d hists, Chi2=%3.1f zBeam=%+6.1f\n",
-        //       m_tracks.size(), m_track.hits().size(), m_track.nbUnused(), m_track.chi2(), m_track.zBeam() );
         m_tracks.push_back( m_track );
         if ( m_debug ) {
-          info() << "=== Store track Nb " << m_tracks.size() << " chi2 " << m_track.chi2() << endmsg;
+          // info() << "=== Store track Nb " << m_tracks.size() << " chi2 " << m_track.chi2perDoF() << endmsg;
+          info() << "=== Store track Nb " << m_tracks.size() << endmsg;
           printTrack( m_track );
         }
         if ( m_track.hits().size() > 3 ) {
@@ -343,7 +382,8 @@ void PatPixelTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
     newTrack->setHistory( LHCb::Track::PatFastVelo );
     newTrack->setPatRecStatus( LHCb::Track::PatRecIDs );
     if ( m_debug ) {
-      info() << "=== Store track Nb " << outputTracks->size() << " chi2 " << (*itT).chi2() << endmsg;
+      // info() << "=== Store track Nb " << outputTracks->size() << " chi2 " << (*itT).chi2perDoF()<< endmsg;
+      info() << "=== Store track Nb " << outputTracks->size() << endmsg;
       printTrack( *itT );
     }
 
@@ -412,7 +452,7 @@ void PatPixelTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
     }
 
     // set the chi2/dof
-    newTrack->setNDoF(2*((*itT).hits().size()-2)); newTrack->setChi2PerDoF((*itT).chi2());
+    // newTrack->setNDoF(2*((*itT).hits().size()-2)); newTrack->setChi2PerDoF( (*itT).chi2perDoF() );
     outputTracks->insert( newTrack );
 
     // printf(" pseudoRapidity=%3.1f Chi2/DoF=%3.1f nDoF=%d\n",
@@ -468,6 +508,7 @@ void PatPixelTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
   m_tracks.clear();
 }
 
+/*
 //=========================================================================
 //  Remove the worst hit until all chi2 are good.
 //=========================================================================
@@ -486,58 +527,96 @@ void PatPixelTracking::removeWorstHit ( double maxChi2 ) {
     }
     if ( topChi2 > maxChi2 )                    // if highest hit chi2 above limit
     { m_track.removeHit( worst );               // remove it
+      // printf(" - [%+6.1f]: [%+5.1f,%+5.1f] chi2=%5.1f <%5.1f>\n", worst->z(), worst->x(), worst->y(), topChi2, m_track.chi2perDoF() );
       if ( m_debug )
       { info() << "After worst hit removal" << endmsg;
         printTrack( m_track ); }
     }  
   }
 }
+*/
 
 //=========================================================================
 //  Add hits from the specified sensor to the track
 //=========================================================================
 bool PatPixelTracking::addHitsOnSensor( PatPixelSensor* sensor, double xTol, double maxChi2 )
 { if ( 0 == sensor->hits().size() ) return false;                  // if no hits on this sensor: return (no hits added)
-  double xGuess = m_track.xAtZ( sensor->z() ) - xTol; //  - 1.0;        // upper X-limit on hit search
+  // printf("PatPixelTracking::addHitsOnSensor(%+6.1f)\n", sensor->z() );
+  // double xGuess = m_track.xAtZ( sensor->z() ) - xTol;              // upper X-limit on hit search
+                                                                   // Note: sensor->z() is an average Z of the silicon ladders
+                                                                   // thus is not exactly equal to the Z of the ladderhit by the track extrapolation
+
+  double xGuess,yGuess,dist;
+  if( m_track.extrapolate(xGuess,yGuess,dist, sensor->z() )<=0 ) return false;    // new: extrapolate with only the edge two hits.
+  xGuess-=xTol;
+
   if ( sensor->hits().back()->x() < xGuess ) return false;         // if the first hit is below this limit: return (no hits added)
                                                                    // hits on a sensor are already sorted in X to speed up the search
-
-  PatPixelHits::const_iterator itStart = sensor->hits().begin();
+  PatPixelHits::const_iterator itStart = sensor->hits().begin();   // binary search through the hits (they are sorted in X)
   unsigned int step = sensor->hits().size();
   while ( 2 < step )                                               // quick skip of hits that are above the X-limit
   { step = step/2;
     if ( (*(itStart+step))->x() < xGuess ) itStart += step;
   }
 
-  bool added = false;
+  int Count=0;
+  double maxScatter=0.004;
+  double bestScatter=maxScatter;
+  PatPixelHit *bestHit = 0; // double bestChi2 = maxChi2;             // find the hit that matches best
   for ( PatPixelHits::const_iterator itH = itStart; sensor->hits().end() != itH; ++itH )
-  { double xPred = m_track.xAtHit( *itH );                        // predict X at Z of this sensor
+  { // double xPred = m_track.xAtHit( *itH );                         // predict X at Z of this hit
+    double xPred,yPred,dist;                                        // new: extrapolate with two edge hits only
+    if( m_track.extrapolate(xPred,yPred,dist, *itH )<=0 ) continue;
+
     if ( m_debug ) printHitOnTrack( *itH );
 #ifdef DEBUG_HISTO
-  plot( ((*itH)->x()-xPred)/xTol , "HitExtraErrPerTol", "PatPixelTracking: Hit X extrapolation error / tolerance", -3.0, +3.0, 90);
+  plot( ((*itH)->x()-xPred)/xTol , "HitExtraErrPerTol", "PatPixelTracking: Hit X extrapolation error / tolerance", -4.0, +4.0, 400);
+/*
   plot2D( (*itH)->z()-m_track.meanZ(), (*itH)->x()-xPred,
            "HitExtraErrVsZdist", "PatPixelTracking: Hit X [mm] extrapolation error vs extr. Z [mm] distance",
-          -500.0, +500.0, -2.0, +2.0, 50, 100);
+          -500.0, +500.0, -5.0, +5.0, 100, 200);
+*/
 #endif
     if ( (*itH)->x() + xTol < xPred ) continue;                   // if hit's X is above prediction+tolerance, keep looking
     if ( (*itH)->x() - xTol > xPred ) break;                      // if hit's X is below prediction-tolerance, stop the search
+    double dx = xPred-(*itH)->x();
+    double dy = yPred-(*itH)->y();
+    double scatter = sqrt(dx*dx+dy*dy)/dist;
+    if(scatter<bestScatter) { bestHit = *itH; bestScatter=scatter; }
+    if(scatter<maxScatter) Count++;
 #ifdef DEBUG_HISTO
-  plot( m_track.chi2( *itH ) ,
-        "TrackChi2forNewHit", "PatPixelTracking: Chi2 of a new candidate hit for a track",
-        0.0, 60.0, 120);
+    plot ( scatter, "HitScatter", "PatPixelTracking: hit scatter [rad]",
+         0.0, 0.5, 500);
 #endif
-    if ( m_track.chi2( *itH ) < maxChi2 )
-    { if ( m_debug ) printHitOnTrack( *itH, false );
-      m_track.addHit( *itH );
-      added = true; }
+    // double chi2 = m_track.chi2(*itH); 
+    // if(chi2<bestChi2) { bestHit = *itH; bestChi2=chi2; }
+    // if(chi2<maxChi2) Count++;
   }
-  return added;
+#ifdef DEBUG_HISTO
+  plot(Count, "HitExtraCount", "Number of hits within the extrapolation window with chi2 within limits", 0.0, 10.0, 10);
+#endif
+  if(bestHit==0)
+  { // printf(" + [%+6.1f]: [%+5.1f,%+5.1f] ---\n", sensor->z(), xGuess, yGuess );
+    return false; }
+
+#ifdef DEBUG_HISTO
+  plot ( bestScatter, "HitBestScatter", "PatPixelTracking: best hit scatter [rad]",
+         0.0, 0.1, 100);
+#endif
+
+  if ( m_debug ) printHitOnTrack( bestHit, false );
+  m_track.addHit(bestHit);
+  // printf(" + [%+6.1f]: [%+5.1f,%+5.1f] %4.2f:%5.3f <%5.1f>\n",
+  //       sensor->z(), bestHit->x(), bestHit->y(), m_track.distance(bestHit), bestScatter, m_track.chi2perDoF() );
+
+  return true;
 }
+
 //=========================================================================
 //  Debug the content of a hit
 //=========================================================================
-void PatPixelTracking::printHit ( const PatPixelHit* hit, std::string title ) {
-  if ( "" != title ) info() << title;
+void PatPixelTracking::printHit ( const PatPixelHit* hit, std::string title )
+{ if ( "" != title ) info() << title;
   info() << format( " sensor%3d x%8.3f y%8.3f z%8.2f used%2d",
                     hit->sensor(), hit->x(), hit->y(), hit->z(), hit->isUsed() );
   LHCb::LHCbID myId =  hit->id();
@@ -553,8 +632,8 @@ void PatPixelTracking::printHit ( const PatPixelHit* hit, std::string title ) {
 //  Print a track, with distance and chi2
 //=========================================================================
 void PatPixelTracking::printTrack ( PatPixelTrack& track ) {
-  for (  PatPixelHits::const_iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH ) {
-    info() << format( "Dist%8.3f chi%7.3f ", track.distance( *itH ), track.chi2( *itH ) );
+  for (  PatPixelHits::const_iterator itH = track.hits().begin(); track.hits().end() != itH; ++itH )
+  { // info() << format( "Dist%8.3f chi%7.3f ", track.distance( *itH ), track.chi2( *itH ) );
     printHit( *itH );
   }
 }
@@ -566,7 +645,7 @@ void PatPixelTracking::printHitOnTrack ( PatPixelHit* hit, bool ifMatch ) {
   bool isMatching = matchKey( hit );
   isMatching = (isMatching && ifMatch) || (!isMatching && !ifMatch );
   if ( isMatching ) {
-    info() << format( "  sens %3d dx  %9.3f chi2 %8.3f ", hit->sensor(), m_track.xAtHit( hit )-hit->x(), m_track.chi2( hit ) );
+    // info() << format( "  sens %3d dx  %9.3f chi2 %8.3f ", hit->sensor(), m_track.xAtHit( hit )-hit->x(), m_track.chi2( hit ) );
     printHit( hit, "   " );
   }
 }

@@ -166,18 +166,18 @@ void PatPixelHitManager::buildHits ( )
 
   double dx = 0.055 / sqrt(12.0);                           // assume sigma on hit position (55x55 um square pixel)
   
-  for ( iClus = liteClusters->begin(); liteClusters->end() != iClus; ++iClus ) { // loop over Lite Clusters
-    unsigned int sensor = iClus->channelID().sensor();      // sensor number in Gaudi
+  for ( iClus = liteClusters->begin(); liteClusters->end() != iClus; ++iClus )            // loop over Lite Clusters
+  { unsigned int sensor = iClus->channelID().sensor();                                    // sensor number in Gaudi
     if ( sensor > m_sensors.size() ) break;
-    if ( sensor != lastSensor )                             // if a new Gaudi sensor
-    { lastSensor = sensor;                                  // switch HitManager sensor
-       mySensor = m_sensors[sensor]; }                      // sensor number in HitManager
-    PatPixelHit* hit = &(*(m_nextInPool++));  // get the next object in the pool => here we store the new hit
+    if ( sensor != lastSensor )                                                          // if a new Gaudi sensor
+    { lastSensor = sensor;                                                               // switch HitManager sensor
+       mySensor = m_sensors[sensor]; }                                                   // sensor number in HitManager
+    PatPixelHit* hit = &(*(m_nextInPool++));               // get the next object in the pool => here we store the new hit
 
-    Gaudi::XYZPoint point = mySensor->position( (*iClus).channelID(),            // calc. 3-D position for this LiteCluster
+    Gaudi::XYZPoint point = mySensor->position( (*iClus).channelID(),                   // calc. 3-D position for this LiteCluster
                                                 (*iClus).interPixelFractionX(), 
                                                 (*iClus).interPixelFractionY() );
-    hit->setHit( LHCb::LHCbID( (*iClus).channelID() ), point, dx, dx, sensor );  // set our hit data
+    hit->setHit( LHCb::LHCbID( (*iClus).channelID() ), point, dx, dx, sensor );         // set our hit data
     mySensor->addHit( hit );
   }
 }
@@ -186,10 +186,9 @@ void PatPixelHitManager::buildHits ( )
 // Sort hits by X within every sensor to speed up the track search
 //=========================================================================
 void PatPixelHitManager::sortByX ( ) {
-  for ( std::vector<PatPixelSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS ) {
-    if ( 0 != *itS) {
-      std::sort( (*itS)->hits().begin(), (*itS)->hits().end(), PatPixelHit::LowerByX() );
-    }
+  for ( std::vector<PatPixelSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS )
+  { if ( 0 != *itS)
+    {  std::sort( (*itS)->hits().begin(), (*itS)->hits().end(), PatPixelHit::LowerByX() ); }
   }
 }
 //=============================================================================
