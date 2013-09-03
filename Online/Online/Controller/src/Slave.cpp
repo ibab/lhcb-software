@@ -78,7 +78,8 @@ const char* Slave::c_machine ()  const
 
 /// Send IOC interrupt to slave
 FSM::ErrCond Slave::send(int code, const State* state)   const {
-  IocSensor::instance().send((Interactor*)this,code,(void*)state); 
+  const Interactor* actor = this;
+  IocSensor::instance().send(const_cast<Interactor*>(actor),code,(void*)state); 
   return FSM::SUCCESS;
 }
 
@@ -160,10 +161,10 @@ FSM::ErrCond Slave::apply(const Rule* rule)  {
 }
 
 /// Start slave process
-FSM::ErrCond Slave::startSlave()  {
+FSM::ErrCond Slave::startSlave(const Transition* tr)  {
   inquireState();
   if ( isInternal() )  {
-    send(SLAVE_ALIVE,0);
+    send(SLAVE_ALIVE,tr->to());
     return FSM::WAIT_ACTION;
   }
   FSM::ErrCond ret = start();
@@ -285,6 +286,7 @@ void Slave::handle(const Event& event)   {
   case Slave::SLAVE_ALIVE:
     display(DEBUG,c_name(),"Received IAMHERE from internal slave. rule:%s",Rule::c_name(m_rule));
     iamHere();
+    send(Slave::SLAVE_FINISHED,state);
     break;
   case Slave::SLAVE_LIMBO:
     iamDead();

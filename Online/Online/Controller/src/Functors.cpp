@@ -47,7 +47,7 @@ void SlaveStarter::operator()(Slave* s)    {
   else if ( st == Slave::SLAVE_FAILED )
     ++fail;
   else if ( st == Slave::SLAVE_LIMBO )  {
-    FSM::ErrCond sc = s->startSlave();
+    FSM::ErrCond sc = s->startSlave(object);
     if ( sc == FSM::WAIT_ACTION  ) ++dead;
     else if ( sc == FSM::SUCCESS ) ++count;
     else ++fail;
@@ -121,6 +121,9 @@ void CheckStateSlave::operator()(const Slave* s)   {
   else if ( s->isLimbo() ) { 
     ++dead;  // Count the number of dead slaves.
   }
+  else if ( s->isInternal() ) {
+    ++count;
+  }
   else if ( s->currentState() == Slave::SLAVE_EXECUTING ) { 
     // Nothing to do: Slave has not yet answered
   }
@@ -140,23 +143,14 @@ void CheckStateSlave::operator()(const Slave* s)   {
     for(Transition::Rules::const_iterator i=r.begin(); i != r.end(); ++i)  {
       const Rule* rule = (*i);
       if ( rule->type() == slType )  {
-	if      ( slRule  == rule && slState == object->to() && slState==rule->targetState() )
+	if      ( slRule  == rule && slState == object->to() && slState==rule->targetState() ) {
 	  ++count;  // Slave fulfills state criteria
-	else if ( slState == object->to() && slState == rule->targetState() )  
-	  ++count;  // Slave fulfills state criteria
-	else if ( slState == object->to() )
-	  ++count; // There was nothing to be done.
-	else {
-	  char text1[128], text2[128];
-	  ::snprintf(text1,sizeof(text1),"%s",Rule::c_name(rule));
-	  ::snprintf(text2,sizeof(text2),"%s",Rule::c_name(slRule));
-	  ++fail;  // What can I do: there was a rule, but the slave did not go to the target state
-	  s->display(s->ALWAYS,s->c_name(),"FAILED Metastate:%s [Rule not fulfilled] State:%s",
-		     s->metaStateName(),State::c_name(slState));
-	  s->display(s->ALWAYS,s->c_name(),"Tr:%s from:%s to:%s Rule:%s -- %s",
-		     object->c_name(),State::c_name(object->from()),State::c_name(object->to()),text1,text2);
+	  break;
 	}
-	break;
+	else if ( slState == rule->targetState() ) {
+	  ++count;  // Slave fulfills state criteria
+	  break;
+	}
       }
     }
   }

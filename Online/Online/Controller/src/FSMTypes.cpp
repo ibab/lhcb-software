@@ -130,6 +130,7 @@ static Type* defineDAQType()    {
   load->addPredicate( AllChildrenOfType(daq).inState(offline, not_ready, ready, paused, running));
   load->adoptRule(    AllChildrenOfType(daq).move(offline,   not_ready));
   load->adoptRule(    AllChildrenOfType(daq).move(paused,    ready));
+  load->adoptRule(    AllChildrenOfType(daq).move(offline,   ready)); // --> CHeckpointing
 
   /// Not Ready -> Ready
   Tr*  configure = daq->addTransition("configure", not_ready,   ready);

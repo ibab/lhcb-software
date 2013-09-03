@@ -153,7 +153,7 @@ namespace FiniteStateMachine {
     virtual ErrCond notifyMachine(int meta_state);
 
     /// Start slave process
-    virtual ErrCond startSlave();
+    virtual ErrCond startSlave(const Transition* tr);
     /// Start slave process
     virtual ErrCond killSlave();
     /// Force slave killing  (kill -9 or equivalent)
