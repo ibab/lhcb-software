@@ -3,8 +3,15 @@ Package     : MooreSys
 Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
 
-Move online installation scripts from Hlt/Moore to MooreSys
+</PRE><H1><A NAME=v20r3p2>2013-09-03 MooreSys v20r3p2</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v36r1 stack. Depends on Rec v15r1 via Phys v17r1 via Hlt v20r3p1. Based on Gaudi v23r9.
 
+
+Commissioning Hlt/Moore version for September 2013 commissioning week. Some fixes to Online configuration in Hlt/Moore, and online installation scripts moved from Hlt/Moore to MooreSys.
+
+The split differences in v20r3p2 (Hlt2 after Hlt1 doesn't work the same as the full Hlt in one job) seem all to be due to TOS problems from being unable to locate the Hlt1Dec/SelReports, which need to be put in a new location and decoded as in the offline in the future.
+
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v20r3p2
 
 </PRE><H1><A NAME=v20r3p1>2013-08-27 MooreSys v20r3p1</A></H1><PRE>
 Moore/HLT LS1 development version. LHCb v36r1 stack. Depends on Rec v15r1 via Phys v17r1 via Hlt v20r3p1. Based on Gaudi v23r9.
