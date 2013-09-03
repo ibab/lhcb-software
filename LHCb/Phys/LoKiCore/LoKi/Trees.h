@@ -800,7 +800,7 @@ namespace Decays
       {
         const bool result = m_tree.tree ( p ) ;
         m_tree.tree().reset () ;
-        return result ;
+        return !result ;
       }
       /// MANDATORY: the specific printout
       virtual  std::ostream& fillStream( std::ostream& s ) const

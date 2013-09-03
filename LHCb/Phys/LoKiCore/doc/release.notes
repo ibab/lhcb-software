@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-09-03 - Vanya Belyaev
+
+ - Trees.h: fix a stupid bug in negation of decay trees 
+
 !========================= LoKiCore v11r14 2013-08-27 =========================
 ! 2013-08-21 - Gerhard Raven
  - Fix a bug in AlgFunctors: pointer to IJobOptionsSvc was invalid
