@@ -3,33 +3,22 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout">
     <integer>1200</integer>
-  </argument>
+  </argument>a
   <argument name="args"><set>
     <text>../options/Moore_Hlt1And2.py</text>
-    <text>../options/Moore_Hlt2Only.py</text>
-  </set></argument>
-  <argument name="prerequisites"><set>
-    <tuple><text>moore.physics.deferral.hlt1only</text><enumeral>PASS</enumeral></tuple>
+    <text>../options/Moore_NoTosDeferral.py</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
 #print "YES"
 #reftable
-reftable='../refs/physics.deferral.timing.ref'
-savestdout='hlt2only.stdout'
-
-prevstdout=''
-#save stdout
-f=open(savestdout,'w')
-f.write(stdout)
-f.close()
-
+reftable='../refs/physics.deferral.timing.notos.ref'
 from math import fabs
 
 timing=[]
 timingdict={}
 for line in stdout.split('\n'):
-    if 'TIMER' not in line or 'Hlt2' not in line:
+    if 'TIMER' not in line or 'Hlt' not in line:
         continue
     line=line.replace('\t',' ')
     line=line.replace('  ',' ')
@@ -38,7 +27,7 @@ for line in stdout.split('\n'):
     line=line.split('|')
     if len(line)&lt;5:
         continue
-    if not line[0].startswith('Hlt2'): 
+    if not line[0].startswith('Hlt'): 
         continue
     name=line[0].strip().rstrip()
     num=line[4].strip().rstrip()
@@ -49,21 +38,17 @@ timing='\n'.join(timing)
 reftiming=open(reftable)
 refresult=reftiming.read()
 reftiming.close()
-refresult=refresult.split('\n')
-refresult=[ref.strip() for ref in refresult if ref.startswith('Hlt2')]
-refresult='\n'.join(refresult)
+refresult='\n'.join([ref.strip() for ref in refresult.split('\n')])
 
 if refresult.replace('  ',' ').strip().rstrip()!=timing.replace('  ',' ').strip().rstrip():
     #print "YES55"
-    newreftiming=open(reftable+'.hlt2.new','w')
+    newreftiming=open(reftable+'.new','w')
     newreftiming.write(timing)
     newreftiming.close()
     refresultdict={}
     for line in refresult.split('\n'):
         line=line.strip().rstrip()
         if len(line)&lt;2 : 
-            continue
-        if not line.startswith("Hlt2"):
             continue
         refresultdict[':'.join(line.split(':')[:-1])]=int(line.split(':')[-1])
     
@@ -75,8 +60,8 @@ if refresult.replace('  ',' ').strip().rstrip()!=timing.replace('  ',' ').strip(
     lineFailureDiff=[r for r in diff if ((r not in singleEventDiffs) and (refresultdict[r]!=0) and (timingdict[r]==0))]
     tenPercentDiffs=[r for r in diff if ((r not in singleEventDiffs) and (r not in lineFailureDiff) and (fabs(float(refresultdict[r]-timingdict[r])/float(refresultdict[r]+timingdict[r]))&lt;0.1))]
     rest=[r for r in diff if ((r not in singleEventDiffs) and (r not in lineFailureDiff) and (r not in tenPercentDiffs))]
-    if len(missing)+len(added)+len(diff)&gt;200:
-        result['moore.physics.2012.a_total']=result.Quote('More than 200 differences, summary only')
+    if len(missing)+len(added)+len(diff)&gt;100:
+        result['moore.physics.2012.a_total']=result.Quote('More than 100 differences, summary only')
 	if len(missing):
             result['moore.physics.2012.b_missing'] = result.Quote("Missing: " + str(len(missing)))
 	if len(added):
@@ -105,8 +90,8 @@ if refresult.replace('  ',' ').strip().rstrip()!=timing.replace('  ',' ').strip(
             result['moore.physics.2012.g_different'] = result.Quote("Rest:\n\t" + ',\n\t'.join([r+':'+str(refresultdict[r])+'-&gt;'+str(timingdict[r]) for r in rest]))
 
 #count error lines, shouldn't be any warnings or errors, ideally
-#error lines here are stupid Gaudi warnings about not being able to navigate to input file, 1 input file means 2 errors.
-countErrorLines({"FATAL":0,"ERROR":2,"WARNING":1})
+#error lines here are stupid Gaudi warnings about not being able to navigate to input file, 3 input files means 6 errors.
+countErrorLines({"FATAL":0,"ERROR":6,"WARNING":1})
 
 </text></argument>
 </extension>
