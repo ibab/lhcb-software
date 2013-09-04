@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-09-04 - Rob Lambert
+ - TCK generation tests updated to copy config.tar to install area, to enable concurrent running on different platforms.
+ - Replace lambda ternary with simple function to avoid runtime problems on older python versions
+
 ! 2013-09-03 - Rob Lambert
  - Test written which creates a TCK from a threshold setting, for zero and 100 events processed and checks the difference.
 

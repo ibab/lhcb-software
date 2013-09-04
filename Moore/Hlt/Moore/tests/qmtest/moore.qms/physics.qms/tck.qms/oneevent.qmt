@@ -2,7 +2,7 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
   <argument name="args"><set>
-    <text>../options/tcksteerzeroevents.py</text>
+    <text>../options/tcksteeroneevent.py</text>
   </set></argument>
   <argument name="timeout">
     <integer>1200</integer>
@@ -13,7 +13,7 @@
 expected_string= &quot;PASS&quot;
 if stdout.find(expected_string) ==-1:
     causes.append('missing string')
-    result['moore.physics.tck.zeroevents.expected_string']=result.Quote(expected_string)
+    result['moore.physics.tck.oneevent.expected_string']=result.Quote(expected_string)
 
 </text></argument>
 </extension>

@@ -7,11 +7,12 @@
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="prerequisites"><set>
     <tuple><text>moore.physics.tck.zeroevents</text><enumeral>PASS</enumeral></tuple>
+    <tuple><text>moore.physics.tck.oneevent</text><enumeral>PASS</enumeral></tuple>
     <tuple><text>moore.physics.tck.hundredevents</text><enumeral>PASS</enumeral></tuple>
   </set></argument>
   <argument name="validator"><text>
 
-if len(stdout.split())>3:
+if len(stdout.split())>8:
     causes.append('differences found')
     result['moore.physics.tck.diffs']=result.Quote('check stdout for differences')
 

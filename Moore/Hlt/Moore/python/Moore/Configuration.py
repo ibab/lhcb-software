@@ -30,9 +30,18 @@ def fixDQ():
     del c.Alternatives['/Conditions/DQ']
 #appendPostConfigAction(fixDQ)
 
-_replace = lambda orig, repl, members : [ m if m != orig else repl for m in members ]
+def _choose(orig, repl, m):
+    if m!=orig:
+        return m
+    return repl
+
+#Ternary operator not valid for old python versions, replacing...
+_replace = lambda orig, repl, members : [ _choose(orig,repl,m) for m in members ]
 _remove  = lambda remove,     members : [ m for m in members if m.name() not in remove ]
 _remove_re  = lambda re,      members : [ m for m in members if not re.match(m.name()) ]
+
+
+
 ## FIXME: how to catch HltUnit's RunAll???
 def _walkAlgorithms( c , descend = [ 'Members','Prescale','ODIN','L0DU','HLT','Filter0','Filter1','Postscale'] ) :
     for p in descend :
