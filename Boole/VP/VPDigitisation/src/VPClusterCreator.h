@@ -28,7 +28,7 @@
 
 
 /** @class VPClusterCreator.h 
- *  VPAlgorithms/VPClusterCreator.h
+ *  VPDigitisation/VPClusterCreator.h
  *
  *  @author Marcin Kucharczyk
  *  @date   2009/11/12

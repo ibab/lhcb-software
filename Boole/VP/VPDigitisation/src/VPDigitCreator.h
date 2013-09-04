@@ -17,7 +17,7 @@
 #include "LHCbMath/LHCbMath.h"
 
 /** @class VPDigitCreator.h 
- *  VPAlgorithms/VPDigitCreator.h
+ *  VPDigitisation/VPDigitCreator.h
  *
  *  @author Marcin Kucharczyk
  *  @date   2009/10/20

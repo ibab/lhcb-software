@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 /** @class VPMCDigitCreator.h 
- *  VPAlgorithms/VPMCDigitCreator.h
+ *  VPDigitisation/VPMCDigitCreator.h
  *
  *  @author Marcin Kucharczyk
  *  @date   20/09/09

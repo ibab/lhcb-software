@@ -1,7 +1,7 @@
 # Created    : 20/09/09
 # Maintainer : Marcin Kucharczyk
 #
-package           VPAlgorithms
+package           VPDigitisation
 version           v3r3
 
 # Structure, i.e. directories to process. 
@@ -25,5 +25,5 @@ use  DAQEvent      v*  Event
 
 # Component library building rule
 #=========================================================================
-library          VPAlgorithms      ../src/*.cpp -import=AIDA
-apply_pattern component_library library=VPAlgorithms
+library          VPDigitisation      ../src/*.cpp -import=AIDA
+apply_pattern component_library library=VPDigitisation

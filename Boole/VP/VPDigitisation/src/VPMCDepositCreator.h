@@ -24,7 +24,7 @@ class VPChannelID;
 class ISiDepositedCharge;
 
 /** @class VPMCDepositCreator.h 
- *  VPAlgorithms/VPMCDepositCreator.h
+ *  VPDigitisation/VPMCDepositCreator.h
  *
  *  @author Marcin Kucharczyk
  *  @date   20/09/09
