@@ -1287,7 +1287,7 @@ class Hlt2Member ( object ) :
         if 'Output' not in args :
             args['Output'] = 'Hlt2/%s/Particles' % _name
         else :
-            print 'WARNING: Output for %s has been explicitly specified as %s' % ( name, args['Output'] )
+            print 'WARNING: Output for %s has been explicitly specified as %s' % ( _name, args['Output'] )
         from GaudiConfUtils import configurableExists
         if configurableExists(_name) :
                 raise NameError('Configurable %s already exists, oh dear!'%_name)
