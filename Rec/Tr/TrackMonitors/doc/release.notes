@@ -4,6 +4,11 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-09-04 - Patrick Koppenburg
+ - AlignmentOnlineMonitor by Stefan Hallmann (summie)
+   . Produces residual plots to check the alignment in OnlineBrunel
+   . ConfiguredTrackMonitors.py : Add  AlignmentOnlineMonitor to sequence
+
 !========================= TrackMonitors v1r45p1 2013-08-01 =========================
 ! 2013-08-01 - Rob Lambert
  - Fix uninitialized variable in ConfiguredTrackMonitors

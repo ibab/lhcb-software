@@ -6,7 +6,8 @@ from Configurables import (GaudiSequencer, TrackMonitor, TrackVertexMonitor,
                            TrackITOverlapMonitor,TrackVeloOverlapMonitor,
                            TTTrackMonitor, ITTrackMonitor,TrackTimingMonitor,
                            TrackPV2HalfAlignMonitor,
-			   HitEffPlotter)
+			   HitEffPlotter,
+                           AlignmentOnlineMonitor)
 from Configurables import (RecSysConf, RecMoniConf, TrackSys)
 
 def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
@@ -36,6 +37,7 @@ def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
         if (subDets is None or "TT" in subDets):   seq.Members.append( TTTrackMonitor(HistoPrint=HistoPrint) )
         if (subDets is None or "IT" in subDets):   seq.Members.append( ITTrackMonitor(HistoPrint=HistoPrint) )
         seq.Members.append( TrackPV2HalfAlignMonitor(HistoPrint=HistoPrint) )
+        seq.Members.append( AlignmentOnlineMonitor(HistoPrint=HistoPrint) )
 	if RecMoniConf().expertHistos() :
             if [det for det in ['Velo', 'TT', 'IT', 'OT'] if (subDets is None or det in subDets)]:
                 seq.Members.append( HitEffPlotter(HistoPrint=HistoPrint) )
