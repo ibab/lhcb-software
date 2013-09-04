@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-09-03 - Jason E Andrews
+ - Updated StrippingBu2Kpi0.py; added CONEVAR cuts, narrowed resolved mass window
+
 ! 2013-09-01 - Jason E Andrews
  - Added tentative version of StrippingBu2Kpi0.py; retention rates to be further
    reduced

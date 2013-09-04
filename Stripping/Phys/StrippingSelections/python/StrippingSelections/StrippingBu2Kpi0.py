@@ -13,7 +13,9 @@ __all__     = ( "StrippingBu2Kpi0Conf",
 
 from Gaudi.Configuration import *
 
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+#from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+from Configurables import FilterDesktop
 from StandardParticles                     import StdNoPIDsKaons, StdLooseMergedPi0, StdLooseResolvedPi0
 
 from PhysSelPython.Wrappers      import Selection
@@ -22,35 +24,38 @@ from StrippingUtils.Utils        import LineBuilder
 
 
 default_config = {
+    "KuMinPTasy"     : -0.6,
     "RKuMIPCHI2DV"   : 25,
     "KuMinPROBNNK"   : 0.8,
     "KuMaxTRCHI2DOF" : 1.5,
     "Rpi0MinP"       : 10000,
     "Rpi0MinPT"      : 1600,
     "Rpi0MinCL"      : 0.2,
-    "RBuMinM"        : 4550,
-    "BuMaxM"         : 6050,
+    "RBuMinM"        : 4800, # 4550 4800
+    "RBuMaxM"        : 5800, # 6050 5800
     "RBuMinPT"       : 0,
     "PrescaleBu2Kpi0Resolved" : 1.0,
     "MKuMIPCHI2DV"   : 49,
     "Mpi0MinP"       : 10000,
     "Mpi0MinPT"      : 2600,
     "Mpi0MinCL"      : 0.9,
-    "MBuMinM"        : 4200,
+    "MBuMinM"        : 4000,
+    "MBuMaxM"        : 6050,
     "MBuMinPT"       : 1500,
     "PrescaleBu2Kpi0Merged"   : 1.0
     }
 
 class StrippingBu2Kpi0Conf(LineBuilder) :
 
-    __configuration_keys__ = ( "RKuMIPCHI2DV",
+    __configuration_keys__ = ( "KuMinPTasy",
+                               "RKuMIPCHI2DV",
                                "KuMinPROBNNK",
                                "KuMaxTRCHI2DOF",
 			       "Rpi0MinP",
 			       "Rpi0MinPT",
 			       "Rpi0MinCL",
 			       "RBuMinM",
-			       "BuMaxM",
+			       "RBuMaxM",
                                "RBuMinPT",
 			       "PrescaleBu2Kpi0Resolved",
 			       "MKuMIPCHI2DV",
@@ -58,6 +63,7 @@ class StrippingBu2Kpi0Conf(LineBuilder) :
 			       "Mpi0MinPT",
 			       "Mpi0MinCL",
                                "MBuMinM",
+                               "MBuMaxM",
                                "MBuMinPT",
                                "PrescaleBu2Kpi0Merged"
                                )
@@ -68,16 +74,28 @@ class StrippingBu2Kpi0Conf(LineBuilder) :
 
         Bu2Kpi0Name = "Bu2Kpi0"
 
+        PTasyFilter = FilterDesktop( "PTasyFilter",
+                                     Preambulo = [ "ptC1 = SUMCONE ( 1.2 , PT , '/Event/Phys/StdNoPIDsPions/Particles' )" ],
+                                     Code = "( PT - ptC1 ) / ( ptC1 + PT ) > %(KuMinPTasy)s" % locals()["config"]
+                                     )
+
+        filteredKaons = Selection( "FilteredKaons",
+                                   Algorithm = PTasyFilter,
+                                   RequiredSelections = [ StdNoPIDsKaons ]
+                                   )
+        
 	self.selResolved = makeBu2Kpi0Resolved( Bu2Kpi0Name + "Resolved",
                                                 config,
                                                 DecayDescriptor = "[B+ -> K+ pi0]cc",
-                                                inputSel = [ StdNoPIDsKaons, StdLooseResolvedPi0 ]
+#                                                inputSel = [ StdNoPIDsKaons, StdLooseResolvedPi0 ]
+                                                inputSel = [ filteredKaons, StdLooseResolvedPi0 ]
                                                 )				       
 
         self.selMerged = makeBu2Kpi0Merged( Bu2Kpi0Name + "Merged",
                                             config,
                                             DecayDescriptor = "[B+ -> K+ pi0]cc",
-                                            inputSel = [ StdNoPIDsKaons, StdLooseMergedPi0 ]
+#                                            inputSel = [ StdNoPIDsKaons, StdLooseMergedPi0 ]
+                                            inputSel = [ filteredKaons, StdLooseMergedPi0 ]
                                             )
 
         self.Bu2Kpi0Resolved_line = StrippingLine(Bu2Kpi0Name + "ResolvedLine",
@@ -103,7 +121,7 @@ def makeBu2Kpi0Resolved( name,
     _KuCuts = "(PROBNNK>%(KuMinPROBNNK)s) & (MIPCHI2DV(PRIMARY)>%(RKuMIPCHI2DV)s) & (TRCHI2DOF<%(KuMaxTRCHI2DOF)s)" % locals()["config"]
     _pi0Cuts = "(P>%(Rpi0MinP)s *MeV) & (PT>%(Rpi0MinPT)s *MeV) & (CL>%(Rpi0MinCL)s)" % locals()["config"]
     _daughterCuts = { "K+" : _KuCuts, "pi0" : _pi0Cuts }
-    _combCuts = "(AM>%(RBuMinM)s *MeV) & (AM<%(BuMaxM)s *MeV)" % locals()["config"]
+    _combCuts = "(AM>%(RBuMinM)s *MeV) & (AM<%(RBuMaxM)s *MeV)" % locals()["config"]
     _motherCuts = "(PT>%(RBuMinPT)s *MeV)" % locals()["config"]
 
     _B = CombineParticles( DecayDescriptor = DecayDescriptor,
@@ -127,7 +145,7 @@ def makeBu2Kpi0Merged( name,
     _KuCuts = "(PROBNNK>%(KuMinPROBNNK)s) & (MIPCHI2DV(PRIMARY)>%(MKuMIPCHI2DV)s) & (TRCHI2DOF<%(KuMaxTRCHI2DOF)s)" % locals()["config"]
     _pi0Cuts = "(P>%(Mpi0MinP)s *MeV) & (PT>%(Mpi0MinPT)s *MeV) & (CL>%(Mpi0MinCL)s)" % locals()["config"]
     _daughterCuts = { "K+" : _KuCuts, "pi0" : _pi0Cuts }
-    _combCuts = "(AM>%(MBuMinM)s *MeV) & (AM<%(BuMaxM)s *MeV)" % locals()["config"]
+    _combCuts = "(AM>%(MBuMinM)s *MeV) & (AM<%(MBuMaxM)s *MeV)" % locals()["config"]
     _motherCuts = "(PT>%(MBuMinPT)s *MeV)" % locals()["config"]
 
     _B = CombineParticles( DecayDescriptor = DecayDescriptor,
