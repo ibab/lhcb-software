@@ -361,7 +361,7 @@ class B2XuMuNuBuilder(LineBuilder):
                              algos = [ self._Bu2RhoMuNuWS()])
     def _RhoSB_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'Bu2RhoSBLine', prescale = 0.5,
+        return StrippingLine(self._name+'Bu2RhoSBLine', prescale = 1.0,
                              FILTER=self.GECs,
                              algos = [ self._Bu2RhoMuNuSB()])
 

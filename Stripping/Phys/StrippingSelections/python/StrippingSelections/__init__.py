@@ -217,6 +217,7 @@ import StrippingDstarD2hhpi0
 import StrippingDstarD0ToHHPi0
 import StrippingD2XGamma
 
+import StrippingBu2Kpi0
 import StrippingB2HHBDT
 import StrippingD2HHBDT
 import StrippingB2DHHHForBXX
