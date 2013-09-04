@@ -4,6 +4,12 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-09-04 - Gerhard Raven
+ - When doing Moore().Split = 'Hlt2' now explicitly disable TOS linking
+ - Add the possibility to do Moore().Split = 'Hlt1Hlt2' which runs 'as always', but disables TOS linking
+   (intended for create a reference to compare with Split = 'Hlt2')
+ - add back support for TCK ZIP persistency that was MIA
+
 ! 2013-09-04 - Rob Lambert
  - TCK generation tests updated to copy config.tar to install area, to enable concurrent running on different platforms.
  - Replace lambda ternary with simple function to avoid runtime problems on older python versions

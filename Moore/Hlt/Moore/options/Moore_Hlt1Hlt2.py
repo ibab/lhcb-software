@@ -31,3 +31,4 @@ input.filenames = [ '/data/bfys/graven/0x46/'+f.split('/')[-1] for f in input.fi
 input.run(configurable=Moore()) 
 Moore().inputFiles = input.filenames
 
+Moore().Split = 'Hlt1Hlt2'

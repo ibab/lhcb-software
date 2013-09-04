@@ -344,18 +344,18 @@ class Moore(LHCbConfigurableUser):
 
     def getRelease(self):
         import re,fileinput
-        #  do not pick up the pz in vxrypz
+        #  do NOT pick up the pz in vxrypz
         version = re.compile('^version\s*(v\d+r\d+)(p\d+)?')
-        for line in fileinput.input(os.environ.get('MOORESYSROOT')+'/cmt/requirements') :
+        fname = os.environ.get('MOORESYSROOT')+'/cmt/requirements'
+        for line in fileinput.input(fname) :
             match = version.match(line)
             if not match: continue
             fileinput.close()
             return 'MOORE_'+match.group(1)
-        raise TypeError('Could not deduce version from cmt/requirementes')
+        raise ValueError('Could not deduce MOORE (base)version from %s',fname)
 
     def getConfigAccessSvc(self):
-        method = self.getProp('TCKpersistency').lower()
-        if method not in [ 'file', 'sqlite', 'tarfile' ] : raise TypeError("invalid TCK persistency '%s'"%method)
+        method  = self.getProp('TCKpersistency').lower()
         TCKData = self.getProp('TCKData')
         if method == 'file' :
             from Configurables import ConfigFileAccessSvc
@@ -366,6 +366,10 @@ class Moore(LHCbConfigurableUser):
         if method == 'tarfile' :
             from Configurables import ConfigTarFileAccessSvc
             return ConfigTarFileAccessSvc( File = TCKData +'/config.tar' )
+        if method == 'zipfile' :
+            from Configurables import ConfigZipFileAccessSvc
+            return ConfigZipFileAccessSvc( File = TCKData +'/config.zip' )
+        raise TypeError("invalid TCK persistency '%s'"%method)
 
     def addAuditor(self,x) :
         if  'AuditorSvc' not in ApplicationMgr().ExtSvc : 
@@ -441,7 +445,6 @@ class Moore(LHCbConfigurableUser):
             HltGenConfig().Overrule = { 'Hlt1ODINTechnicalPreScaler' : [ 'AcceptFraction:@OnlineEnv.AcceptRate@0' ] }
             gather( GaudiSequencer('Hlt'), HltGenConfig().Overrule )
             print HltGenConfig()
-
         from Gaudi.Configuration import appendPostConfigAction
         appendPostConfigAction( genConfigAction )
 
@@ -637,6 +640,11 @@ class Moore(LHCbConfigurableUser):
                                    , HltSelReportsWriter  = 'InputHltSelReportsLocation' )
                              , 'Hlt2/SelReports'
                              )
+           
+            _updateProperties( gs('Hlt')
+                             , dict( TisTosParticleTagger = 'PassOnAll' )
+                             , 'True'
+                             )
 
 
         def hlt2_only_tck() :
@@ -654,7 +662,10 @@ class Moore(LHCbConfigurableUser):
                                                                                             , ", '.*/LumiStripper'"       : '' } }
                                       , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt1'             : { '^.*$' : '{ }'               } }
                                       , '.*HDRFilter/.*'                    : { 'Location'                   : { '^.*$' : hlt1decrep_location } }
-                                      , 'TisTosParticleTagger/.*'           : { 'HltDecReportsInputLocation' : { '^.*$' : hlt1decrep_location } }
+                                      , 'TisTosParticleTagger/.*'           : { 'HltDecReportsInputLocation' : { '^.*$' : hlt1decrep_location } 
+                                                                              , 'PassOnAll'                  : { '^.*$' : 'True'              }
+                                                                              # , 'TriggerTisTosName'          : { '^.*$' : foobar              }
+                                                                              }
                                       , '.*/HltRoutingBitsWriter'           : { 'Hlt1DecReportsLocation'     : { '^.*$' : hlt1decrep_location } 
                                                                               , 'Hlt2DecReportsLocation'     : { '^.*$' : hlt2decrep_location } }
                                       , 'Hlt::Line/.*'                      : { 'HltDecReportsLocation'      : { '^.*$' : hlt2decrep_location } }
@@ -665,15 +676,28 @@ class Moore(LHCbConfigurableUser):
                                       , 'HltSelReportsWriter/.*'            : { 'InputHltSelReportsLocation' : { '^.*$' : hlt2selrep_location } }
                                       }
 
+        def hlt1hlt2() :
+            from Configurables import GaudiSequencer as gs
+            _updateProperties( gs('Hlt2') , dict( TisTosParticleTagger = 'PassOnAll' ) , True)
+
+        def hlt1hlt2_tck() : 
+            from Configurables import HltConfigSvc
+            cfg = HltConfigSvc()
+            cfg.ApplyTransformation = { 'TisTosParticleTagger/.*' : { 'PassOnAll' : { '^.*$' : 'True' } } }
+
         # rather nasty way of doing this.. but it is 'hidden' 
         # if you're reading this: don't expect this to remain like this!!!
-        try: 
+        try : 
             if useTCK :
-                splitter = { 'Hlt1' : hlt1_only_tck , 'Hlt2' : hlt2_only_tck }
+                splitter = { 'Hlt1'     : hlt1_only_tck 
+                           , 'Hlt2'     : hlt2_only_tck
+                           , 'Hlt1Hlt2' : hlt1hlt2_tck }
                 action = splitter[ self.getProp('Split') ]
                 if action : action()
             else :
-                splitter = { 'Hlt1' : hlt1_only , 'Hlt2' : hlt2_only }
+                splitter = { 'Hlt1'     : hlt1_only 
+                           , 'Hlt2'     : hlt2_only
+                           , 'Hlt1Hlt2' : hlt1hlt2 }
                 action = splitter[ self.getProp('Split') ]
                 if action :
                     from Gaudi.Configuration import appendPostConfigAction
@@ -725,7 +749,7 @@ class Moore(LHCbConfigurableUser):
                 self.setProp('InitialTCK',OnlineEnv.InitialTCK)
                 if not self._setIfNotSet('CheckOdin',True) :
                     print 'WARNING '*10
-                    print 'WARNING: you are running in the %s Partititon, using a TCK, but ignoring ODIN. Make sure this is really what you want.' % self.getProp('PartitionName')
+                    print 'WARNING: you are running in the %s partition, using a TCK, but ignoring ODIN. Make sure this is really what you want.' % self.getProp('PartitionName')
                     print 'WARNING '*10
 
 
