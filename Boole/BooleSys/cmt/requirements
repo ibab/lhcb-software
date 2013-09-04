@@ -40,7 +40,7 @@ use RichReadout         v2r16   Rich     # Chris Jones
 use STDigiAlgorithms    v2r4    ST       # Jeroen van Tilburg
 
 # VeloPix
-use VPAlgorithms        v3r3    VP       # Marcin Kucharczyk / Paul Szczypka
+use VPDigitisation      v3r3    VP       # Marcin Kucharczyk / Paul Szczypka
 use VPAssociators       v2r2    VP       # Marcin Kucharczyk / Paul Szczypka
 
 # VeloLite
