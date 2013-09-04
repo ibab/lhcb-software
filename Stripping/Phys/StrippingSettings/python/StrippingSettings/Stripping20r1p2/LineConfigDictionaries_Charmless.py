@@ -173,3 +173,36 @@ BetaSQ2B = {
                     }
     }
 
+##
+## StrippingBu2Kpi0.py
+##
+Bu2Kpi0 = {
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'StrippingBu2Kpi0Conf',
+    'CONFIG'      : {"KuMinPTasy"     : -0.6,
+                     "RKuMIPCHI2DV"   : 25,
+                     "KuMinPROBNNK"   : 0.8,
+                     "KuMaxTRCHI2DOF" : 1.5,
+                     "Rpi0MinP"       : 10000,
+                     "Rpi0MinPT"      : 1600,
+                     "Rpi0MinCL"      : 0.2,
+                     "RBuMinM"        : 4800, # 4550 4800
+                     "RBuMaxM"        : 5800, # 6050 5800
+                     "RBuMinPT"       : 0,
+                     "PrescaleBu2Kpi0Resolved" : 1.0,
+                     "MKuMIPCHI2DV"   : 49,
+                     "Mpi0MinP"       : 10000,
+                     "Mpi0MinPT"      : 2600,
+                     "Mpi0MinCL"      : 0.9,
+                     "MBuMinM"        : 4000,
+                     "MBuMaxM"        : 6050,
+                     "MBuMinPT"       : 1500,
+                     "PrescaleBu2Kpi0Merged"   : 1.0
+                    },
+    'STREAMS'     : ['Bhadron']
+    #'STREAMS'     : { 'Bhadron' : [],
+    #                  'BhadronCompleteEvent' : []
+    #                }
+    }
+
+

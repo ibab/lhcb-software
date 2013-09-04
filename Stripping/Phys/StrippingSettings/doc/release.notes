@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-09-04 - Stefano Perazzini
+ - Updated LineConfigDictionaries_Charmless.py for Stripping20r{0,1}p2
+
 ! 2013-09-02 - Mika Vesterinen (Semileptonics)
   - Updates to the V_ub lines for 20r{0,1}p2
 
