@@ -1,12 +1,10 @@
 !--------------------------------------------------------------------------
-! Package     : VP/VPDigitisation
+! Package     : VP/VPAlgorithms
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
-! 2013-09-04 - Heinrich Schindler
- - Rename package from VPAlgorithms to VPDigitisation
-! 2013-08-23 - Heinrich Schindler
- - Follow renaming of function in DeVPSensor (PixelSize -> pixelSize)
+! 2013-09-05 - Heinrich Schindler
+ - Moved package to Lbcom, remove digitisation classes
 
 !========================= VPAlgorithms v3r3 2013-06-06 =========================
 ! 2013-05-27 - Marco Cattaneo
