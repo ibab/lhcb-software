@@ -28,8 +28,9 @@ from Configurables import LoKi__FastJetMaker,LoKi__JetMaker
 # constants
 
 default_config = {
-    "1B2jetlow" : { "PTmin" : 8*GeV ,  "prescale" : 0.005 },
-    "1B2jethigh" : { "PTmin" : 14*GeV ,  "prescale" : 0.1 },
+    "DoubleTopoPS" : { "prescale" : 0.008 } , #0.005% retention on 2012 data
+    "1B2jetlow" : { "PTmin" : 8*GeV ,  "prescale" : 0.0008}, #0.05%/6 on 2012
+    "1B2jethigh" : { "PTmin" : 14*GeV ,  "prescale" : 0.0027 }, #0.05%/6 on 2012
     "1B4jet" : { "PTmin" : 16*GeV ,  "prescale" : 1 },
     "2B3jet" : { "PTmin" : 11*GeV ,  "prescale" : 1 },
     "2B4jet" : { "PTmin" : 8*GeV ,  "prescale" : 1 },
@@ -39,6 +40,7 @@ default_config = {
 class BJetsLinesConf(LineBuilder):
 
     __configuration_keys__ = (
+        "DoubleTopoPS",
         "1B2jetlow",
         "1B2jethigh",
         "1B4jet",
@@ -54,58 +56,66 @@ class BJetsLinesConf(LineBuilder):
         LineBuilder.__init__(self, name, config)
         self.__confdict__= config
         self.name = name
-                
         self.LongPions = self._getLongPions(name)
         Jets = self._createJets(name)
         sel_2topo = self._2topo(name)
         
+        
+        _doubletopoPSLine = StrippingLine( name+"DoubleTopoLinePS" ,
+                                           HLT = "HLT_PASS_RE('Hlt2.*Topo.*Decision')",
+                                           prescale = self.__confdict__["DoubleTopoPS"]["prescale"] ,
+                                           selection = sel_2topo )
+        
         _2B3jetsel = Selection( name+"HighPT3Jets",
-                                      Algorithm = self._3jets(name, str(self.__confdict__["2B3jet"]["PTmin"])),
-                                      RequiredSelections = [sel_2topo, Jets] )
+                                Algorithm = self._3jets(name, str(self.__confdict__["2B3jet"]["PTmin"])),
+                                RequiredSelections = [sel_2topo, Jets] )
         _2B3jetLine = StrippingLine( name+"2B3jetLine" ,
-                                              HLT = "HLT_PASS_RE('Hlt2.*Topo.*Decision')",
-                                              prescale = self.__confdict__["2B3jet"]["prescale"] ,
-                                              selection = _2B3jetsel )
-
+                                     HLT = "HLT_PASS_RE('Hlt2.*Topo.*Decision')",
+                                     prescale = self.__confdict__["2B3jet"]["prescale"] ,
+                                     selection = _2B3jetsel )
+        
         _2B4jetsel = Selection( name+"HighPT4Jets",
-                                      Algorithm = self._4jets(name, str(self.__confdict__["2B4jet"]["PTmin"])),
-                                      RequiredSelections = [ sel_2topo, Jets] )
-
+                                Algorithm = self._4jets(name, str(self.__confdict__["2B4jet"]["PTmin"])),
+                                RequiredSelections = [ sel_2topo, Jets] )
+        
         _2B4jetLine = StrippingLine( name+"2B4jetLine" ,
-                                              HLT = "HLT_PASS_RE('Hlt2.*Topo.*Decision')",
-                                              prescale = self.__confdict__["2B4jet"]["prescale"] ,
-                                              selection = _2B4jetsel )
-
+                                     HLT = "HLT_PASS_RE('Hlt2.*Topo.*Decision')",
+                                     prescale = self.__confdict__["2B4jet"]["prescale"] ,
+                                     selection = _2B4jetsel )
+        
         _1B2jetlowsel = Selection( name+"1B2jetlow",
-                                      Algorithm = self._2jets(name, str(self.__confdict__["1B2jetlow"]["PTmin"])),
-                                      RequiredSelections = [ Jets] )
+                                   Algorithm = self._2jets(name, str(self.__confdict__["1B2jetlow"]["PTmin"])),
+                                   RequiredSelections = [ Jets] )
         _1B2jetlowLine = StrippingLine( name+"1B2jetlowLinePS" ,
-                                              HLT = "HLT_PASS_RE('Hlt2.*Topo.*Decision')",
-                                              prescale = self.__confdict__["1B2jetlow"]["prescale"] ,
-                                              selection = _1B2jetlowsel )
-
+                                        HLT = "HLT_PASS_RE('Hlt2.*Topo.*Decision')",
+                                        prescale = self.__confdict__["1B2jetlow"]["prescale"] ,
+                                        selection = _1B2jetlowsel )
+        
         _1B2jethighsel = Selection( name+"1B2jethigh",
-                                      Algorithm = self._3jets(name, str(self.__confdict__["1B2jethigh"]["PTmin"])),
-                                      RequiredSelections = [ Jets] )
+                                    Algorithm = self._2jets(name, str(self.__confdict__["1B2jethigh"]["PTmin"])),
+                                    RequiredSelections = [ Jets] )
         _1B2jethighLine = StrippingLine( name+"1B2jethighLinePS" ,
-                                              HLT = "HLT_PASS_RE('Hlt2.*Topo.*Decision')",
-                                              prescale = self.__confdict__["1B2jethigh"]["prescale"] ,
-                                              selection = _1B2jethighsel )
-
+                                         HLT = "HLT_PASS_RE('Hlt2.*Topo.*Decision')",
+                                         prescale = self.__confdict__["1B2jethigh"]["prescale"] ,
+                                         selection = _1B2jethighsel )
+        
         _1B4jetsel = Selection( name+"1B4jet",
-                                      Algorithm = self._4jets(name, str(self.__confdict__["1B4jet"]["PTmin"])),
-                                      RequiredSelections = [ Jets] )
+                                Algorithm = self._4jets(name, str(self.__confdict__["1B4jet"]["PTmin"])),
+                                RequiredSelections = [ Jets] )
         _1B4jetLine = StrippingLine( name+"1B4jetLine" ,
-                                              HLT = "HLT_PASS_RE('Hlt2.*Topo.*Decision')",
-                                              prescale = self.__confdict__["1B4jet"]["prescale"] ,
-                                              selection = _1B4jetsel )
-
+                                     HLT = "HLT_PASS_RE('Hlt2.*Topo.*Decision')",
+                                     prescale = self.__confdict__["1B4jet"]["prescale"] ,
+                                     selection = _1B4jetsel )
+        
+        
+        
+        self.registerLine( _doubletopoPSLine )
         self.registerLine( _2B4jetLine )
         self.registerLine( _2B3jetLine )
         self.registerLine(_1B4jetLine  )
         self.registerLine(_1B2jethighLine  )
         self.registerLine(_1B2jetlowLine  )
-        
+
     def _getLongPions( self , name ):
         """
         Select only the StdAllNoPIDSPions which comes from the same PV than the Topo candidate
@@ -113,7 +123,7 @@ class BJetsLinesConf(LineBuilder):
         _stdAllPions = DataOnDemand( Location = "Phys/StdAllNoPIDsPions/Particles" )
         _code = "(PT > 200. *MeV)"
         _selectPions = FilterDesktop( Code = _code )
-
+        
         return Selection( name+"HighPTPions" ,
                           Algorithm = _selectPions,
                           RequiredSelections = [_stdAllPions] )
@@ -130,7 +140,7 @@ class BJetsLinesConf(LineBuilder):
         _jetAlgo.ApplyJEC = False #If True, error
         _jetAlgo.Associate2Vertex = True ## Inputs are selected from the good PV before hands
         _jetAlgo.addTool ( LoKi__FastJetMaker )
-        _jetAlgo.Inputs = ['Phys/StdLoosePhotons/Particles','Phys/BjetsHighPTPions/Particles']#'Phys/StdNoPIDsDownPions/Particles',
+        _jetAlgo.Inputs = ['Phys/StdLoosePhotons/Particles','Phys/'+name+'HighPTPions/Particles']#'Phys/StdNoPIDsDownPions/Particles',
         _jetTool = getattr ( _jetAlgo , 'LoKi__FastJetMaker' )
         _jetTool.Type = 2 ## anti-kt
         _jetTool.RParameter = 0.5

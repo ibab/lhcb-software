@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+! 2013-09-05 - Stephane Tourneur
+ - StrippingBjets.py: added BjetsDoubleTopoLinePS and increased prescales of control lines
 
 ! 2013-09-03 - Jason E Andrews
  - Updated StrippingBu2Kpi0.py; added CONEVAR cuts, narrowed resolved mass window
