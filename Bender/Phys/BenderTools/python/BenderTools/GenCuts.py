@@ -107,18 +107,20 @@ class GenCuts(AlgoMC) :
     """
     Simple class to check Generator Level Cuts
     """
-    def __init__ ( self  ,
-                   name  ,
-                   decay ,
-                   tool  , **kwargs ) :
+    def __init__ ( self                        , 
+                   name                        , ## algorithm name 
+                   decay                       , ## the decay to be 
+                   tool                        , ## the tool name 
+                   **kwargs                    ) :
         """
+        Constructor 
         """
         AlgoMC.__init__ ( self , name , **kwargs )
         
         ## define the actual decay
         self._decay = decay
         self._tool  = tool
-
+        
     ## standard method for analyses
     def initialize( self ):
         """
@@ -131,13 +133,20 @@ class GenCuts(AlgoMC) :
         #
         ## the tool itself 
         self.inLHCb  = self.tool    ( cpp.IGenCutTool, self._tool )
-        self._cnt    = self.counter ( "multiplicity" )
+        self._cnt0   = self.counter ( "multiplicity-0" )
+        self._cnt    = self.counter ( "multiplicity"   )
         
         self._gv     = HepMC.GenEvent    ()
         self._gc     = LHCb.GenCollision () 
-        
+
         return SUCCESS
     
+    ## fake (empty) filtering: placeholder for customization 
+    def accept ( self , gen ) :
+        """
+        Fake (empty) filtering: placeholder for customization 
+        """
+        return self.gselect ('gen1', gen , GALL ) 
     
     ## the standard method for analyse 
     def analyse ( self ) :
@@ -148,12 +157,21 @@ class GenCuts(AlgoMC) :
         ## check the presence of beauty particles 
         beauty = self.gselect ( 'beauty' , GBEAUTY )
         
-        gen    = self.gselect ( 'gen0' ,   self._decay )
-        if     gen.empty() :
-            return self.Warning('No proper (HepMC)-decays are found', SUCCESS )
-        
-        self._cnt += len ( gen )
+        #
+        ## select decays
+        # 
+        gen0   = self.gselect ( 'gen0' ,   self._decay )
+        if     gen0.empty() :
+            return self.Warning('No proper (HepMC)-decays are found[decay]', SUCCESS )
 
+        self._cnt0 += len ( gen0 )
+        
+        gen = self.accept ( gen0 )
+        if     gen.empty() :
+            return self.Warning('No proper (HepMC)-decays are found[cuts ]', SUCCESS )
+        
+        self._cnt  += len ( gen  )
+        
         ## algorithm decision: 
         self.setFilterPassed ( not gen.empty() ) 
         tup = self.nTuple ( 'Gen' )
@@ -162,10 +180,13 @@ class GenCuts(AlgoMC) :
         for p in gen :
 
             #
-            ## tool have a bit strange interface... :-( 
+            ## tool have a bit strange interface... :-(
+            #
             v   = HepMC.GenParticle.Vector()
             v.push_back ( p )
-            ## use tool! 
+            #
+            ## use tool!
+            #
             acc = self.inLHCb.applyCut ( v , self._gv , self._gc )
             
             ## take care about multiple candidates 
@@ -205,7 +226,21 @@ class GenCuts(AlgoMC) :
 #  @param name algorithm name
 #  @param decay the decay pattern or functor 
 #  @param datafiles the data files
-#  @param tool the tool to be applied  
+#  @param tool the tool to be applied
+#  @code 
+#  ## Configure the job:
+#
+#   def configure ( datafiles , catalogs = [] , castor = False ) :
+#
+#      from BenderTools.GenCuts import configure_decay
+#    
+#      return configure_decay (
+#           'Alg' , 
+#           'Upsilon(1S) => mu+ mu-' ,
+#           datafiles ,
+#           catalogs  ,
+#           castor    )
+#  @endcode   
 def configure_decay ( name               ,
                       decay              ,                      
                       datafiles          ,
@@ -213,19 +248,19 @@ def configure_decay ( name               ,
                       castor     = False ,
                       tool       = 'DaughtersInLHCb' ) :
     """
-    Configure the job:
-
-    def configure ( datafiles , catalogs = [] , castor = False ) :
-        
-        from Bender.GenCuts import configure_decay
-        
-        return configure_decay (
-            'Alg' , 
-            'Upsilon(1S) => mu+ mu-' ,
-            datafiles ,
-            catalogs  ,
-            castor 
-            )
+    # Configure the job:
+    #
+    # def configure ( datafiles , catalogs = [] , castor = False ) :
+    #
+    #    from Bender.GenCuts import configure_decay
+    #    
+    #    return configure_decay (
+    #      'Alg' , 
+    #      'Upsilon(1S) => mu+ mu-' ,
+    #      datafiles ,
+    #      catalogs  ,
+    #      castor   )
+    #
     """
     from Configurables import DaVinci
     daVinci = DaVinci (
@@ -234,30 +269,25 @@ def configure_decay ( name               ,
         HistogramFile = 'GenCuts_Histo.root' ,
         TupleFile     = 'GenCuts_Tuple.root' ,
         ) 
-    
-    from Configurables import EventClockSvc
-    EventClockSvc (
-        EventTimeDecoder = "FakeEventTime"
-        )
+    #
+    ## specific action for (X)GEN-files
+    #
+    from BenderTools.GenFiles import genAction
+    from BenderTools.Parser   import hasInFile
+    #
+    if   hasInFile ( datafiles , '.xgen' ) : genAction ( 'xgen' ) 
+    elif hasInFile ( datafiles , '.XGEN' ) : genAction ( 'xgen' )
+    elif hasInFile ( datafiles ,  '.gen' ) : genAction (  'gen' )
+    elif hasInFile ( datafiles ,  '.GEN' ) : genAction (  'gen' )
+    else :
+        logger.warning('Neither .gen nor .xgen extension is found! use ".gen"')
+        genAction ( 'gen'  )
         
-    ## define the proper postconfig action 
-    def  postconfig () :
-        
-        from Configurables import EventClockSvc, CondDB 
-        EventClockSvc (
-            EventTimeDecoder = "FakeEventTime"
-            )
-        CondDB  ( IgnoreHeartBeat = True )
-        
-    ## Important: use Post Config action! 
-    from Gaudi.Configuration import appendPostConfigAction
-    appendPostConfigAction ( postconfig )
-    
     ## define/set the input data 
     setData ( datafiles , catalogs , castor )
     
     ## get the actual application manager (create if needed)
-    gaudi = appMgr()
+    gaudi = appMgr ()
     
     ## create local algorithm:
     alg = GenCuts(
