@@ -2,7 +2,7 @@
 # Maintainer : Marcin Kucharczyk
 #
 package           VPDigitisation
-version           v3r3
+version           v1r0
 
 # Structure, i.e. directories to process. 
 #=========================================================================
@@ -15,8 +15,6 @@ include_path none
 use  LHCbKernel    v*  Kernel
 use  MCEvent       v*  Event
 use  DigiEvent     v*  Event
-use  VeloEvent     v*  Event
-use  VeloDet       v*  Det
 use  GaudiAlg      v*
 use  LinkerEvent   v*  Event
 use  VPDet         v*  Det
