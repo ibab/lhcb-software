@@ -57,7 +57,7 @@ use RichDigiSys        v*    Rich   -no_auto_imports
 use RichReadout        v*    Rich   -no_auto_imports
 use STDigiAlgorithms   v*    ST     -no_auto_imports
 use VLDigitisation     v*    VL     -no_auto_imports
-use VPAlgorithms       v*    VP     -no_auto_imports
+use VPDigitisation     v*    VP     -no_auto_imports
 use VPAssociators      v*    VP     -no_auto_imports
 
 # ========================= Install configurable ============================

@@ -32,7 +32,7 @@ gaudi_depends_on_subdirs(Bcm/BcmDigi
 			 ST/STDigiAlgorithms
                          Tools/XmlTools
 			 VL/VLDigitisation
-			 VP/VPAlgorithms
+			 VP/VPDigitisation
 			 VP/VPAssociators)
 
 gaudi_install_python_modules()
