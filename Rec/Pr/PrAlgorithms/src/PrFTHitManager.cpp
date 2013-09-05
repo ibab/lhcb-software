@@ -62,9 +62,9 @@ void PrFTHitManager::buildGeometry ( ) {
     zone( 2*id+1 )->setGeometry( seg ); // ex:layers 0  up 
     zone( 2*id   )->setBoundaries( -4090., 4090., -3030., 50. ); //check this boudaries values for zone down 
     zone( 2*id+1 )->setBoundaries( -4090., 4090., -50., 3030. ); //check this boudaries values for zone up   
-    info() << "Layer " << id << " z " << zone(2*id)->z() << " angle " << zone(2*id)->dxDy() << endmsg;
+    debug() << "Layer " << id << " z " << zone(2*id)->z() << " angle " << zone(2*id)->dxDy() << endmsg;
   }
-  info() << "XSmearing " << m_xSmearing << " ZSmearing " << m_zSmearing << endmsg;
+  debug() << "XSmearing " << m_xSmearing << " ZSmearing " << m_zSmearing << endmsg;
 }
 
 
