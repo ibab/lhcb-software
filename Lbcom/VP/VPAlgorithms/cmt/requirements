@@ -1,0 +1,29 @@
+# Created    : 20/09/09
+# Maintainer : Marcin Kucharczyk
+#
+package           VPDigitisation
+version           v3r3
+
+# Structure, i.e. directories to process. 
+#=========================================================================
+branches          cmt doc src
+
+include_path none
+
+# Used packages
+#=========================================================================
+use  LHCbKernel    v*  Kernel
+use  MCEvent       v*  Event
+use  DigiEvent     v*  Event
+use  VeloEvent     v*  Event
+use  VeloDet       v*  Det
+use  GaudiAlg      v*
+use  LinkerEvent   v*  Event
+use  VPDet         v*  Det
+use  GSL           v*  LCG_Interfaces
+use  DAQEvent      v*  Event
+
+# Component library building rule
+#=========================================================================
+library          VPDigitisation      ../src/*.cpp -import=AIDA
+apply_pattern component_library library=VPDigitisation
