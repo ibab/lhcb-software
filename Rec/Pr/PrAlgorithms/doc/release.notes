@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-09-05 - Francesco Polci
+ - Changed info to debug in PrFTHitManager.cpp
+
 ! 2013-09-04 - Francesco Polci
  - Cleaning the code in PrFTHitManager.cpp
 
