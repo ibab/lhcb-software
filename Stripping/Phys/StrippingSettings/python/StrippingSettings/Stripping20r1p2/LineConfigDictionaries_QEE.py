@@ -165,8 +165,8 @@ WeJets = {
     'HCalMax'            : 0.05,
     'min_pT'             : 10.,
     'max_pT'             : 20.,
-    'GEC_TrkPt'          : 60.,
-    'GEC_TrkSPt'         : 15.,
+    'TrkSumPt'           : 10.,
+    'TrkMissPt'          : 10.,
     'min_pT_IP_Particle'  : 3,
     'min_IPchi2'          : 40.
     },
@@ -183,8 +183,8 @@ WMuJets = {
     'min_pT'              : 10.,
     'max_pT'              : 20.,
     'pT_isol'             : 3.,
-    'GEC_TrkSumPt'        : 70., 
-    'GEC_TrkMissPt'       : 25., 
+    'TrkSumPt'            : 20.,
+    'TrkMissPt'           : 10.,
     'min_pT_IP_Particle'  : 3,
     'min_IPchi2'          : 40.
     },
@@ -198,8 +198,9 @@ HighPtTopoJets = {
     'CONFIG'       : {
     'HighPtTopo40000_Prescale'    : 1.0,
     'HighPtTopo20000_Prescale'    : 0.1,  
-    'HighPtTopo10000_Prescale'    : 0.008,
-    'HighPtTopo1000_Prescale'    : 0.001, 
+    'HighPtTopo10000_Prescale'    : 0.0014,
+    'HighPtTopo1000_Prescale'    : 0.00017,
+    'HighPtTopo20000_Cone55_Prescale'  : 0.1,
     'HighPtTopo_Postscale'   : 1.0,
     'pT'        : 40000,
     'pT20'      : 20000,
@@ -210,7 +211,7 @@ HighPtTopoJets = {
     },
     'WGs' : [ 'QEE' ],
     'STREAMS' : {
-     'EW' : [
+     'BhadronCompleteEvent' : [
       'StrippingHighPtTopoJets10000',
       'StrippingHighPtTopoJets1000',
       'StrippingHighPtTopoJets20000_Cone55'
@@ -222,8 +223,9 @@ HighPtTopoJets = {
 Bjets = {
     'BUILDERTYPE'  : 'BJetsLinesConf',  
     'CONFIG'       : {
-    "1B2jetlow" : { "PTmin" : 8*GeV ,  "prescale" : 0.005 },
-    "1B2jethigh" : { "PTmin" : 14*GeV ,  "prescale" : 0.1 },
+    "DoubleTopoPS" : { "prescale" : 0.008 } ,
+    "1B2jetlow" : { "PTmin" : 8*GeV ,  "prescale" : 0.0008 },
+    "1B2jethigh" : { "PTmin" : 14*GeV ,  "prescale" : 0.0027 },
     "1B4jet" : { "PTmin" : 16*GeV ,  "prescale" : 1 },
     "2B3jet" : { "PTmin" : 11*GeV ,  "prescale" : 1 },
     "2B4jet" : { "PTmin" : 8*GeV ,  "prescale" : 1 },
