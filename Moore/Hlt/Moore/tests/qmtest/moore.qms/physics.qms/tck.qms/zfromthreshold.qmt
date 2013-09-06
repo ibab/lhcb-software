@@ -14,7 +14,7 @@
 #print "YES"
 #reftable
 reftable='../refs/physics.fromthresh.timing.ref'
-myname='moore.physics.tck.fromthreshold'
+myname='moore.physics.tck.zfromthreshold'
 
 
 from Moore.QMTest.MooreTests import compareTimingTableEvents
