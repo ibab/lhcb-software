@@ -78,8 +78,14 @@ try:
 except:
     pass
 
-from PyCintex import gbl as cpp 
-            
+# =============================================================================
+import ROOT
+import PyCintex 
+cpp = PyCintex.makeNamespace('')
+if not hasattr ( ROOT , 'ostream' ) :
+    logger.info ( 'Fix ostream issue. Needed???')
+    ROOT.gROOT.ProcessLine("#include <ostream>")     
+    
 # =============================================================================
 
 ## massive imports of everything-II
