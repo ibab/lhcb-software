@@ -3,6 +3,12 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
+
+! 2013-09-06 - Ronan Wallace
+ - More efficient StrippingWeJets.py and StrippingWMuJets.py added to stripping selections.
+ - Prescale changes in StrippingHighPtTopo.py.
+
+
 ! 2013-09-05 - Stephane Tourneur
  - StrippingBjets.py: added BjetsDoubleTopoLinePS and increased prescales of control lines
 
