@@ -17,10 +17,11 @@ from StrippingUtils.Utils import LineBuilder
 from Configurables import LoKi__VoidFilter
 from PhysSelPython.Wrappers import EventSelection
 
-confdict_HighPtTopoJets = { 'HighPtTopo40000_Prescale'    : 1.0,
-                          'HighPtTopo20000_Prescale'    : 0.1,
-                          'HighPtTopo10000_Prescale'    : 0.008,
-                          'HighPtTopo1000_Prescale'    : 0.001, 
+confdict_HighPtTopoJets = { 'HighPtTopo40000_Prescale'    : 1.0, 
+                          'HighPtTopo20000_Prescale'    : 1.0, 
+                          'HighPtTopo10000_Prescale'    : 0.0014,
+                          'HighPtTopo1000_Prescale'    : 0.00017,
+                          'HighPtTopo20000_Cone55_Prescale'  : 0.1, 
                           'HighPtTopo_Postscale'   : 1.0,
                           'pT'        : 40000,
                           'pT20'      : 20000,
@@ -39,6 +40,7 @@ class HighPtTopoJetsConf( LineBuilder ) :
                                'HighPtTopo20000_Prescale',
                                'HighPtTopo10000_Prescale',
                                'HighPtTopo1000_Prescale',
+                               'HighPtTopo20000_Cone55_Prescale'
                                'HighPtTopo_Postscale',
                                'pT',
                                'pT20',
@@ -128,7 +130,7 @@ class HighPtTopoJetsConf( LineBuilder ) :
         dt.minpT = config['pT20']
         hlt = "HLT_PASS_RE('Hlt2Topo.*Decision')"
         sline = StrippingLine(name+'%(pT20)s_Cone55'%config,
-                              prescale  = config[ 'HighPtTopo40000_Prescale' ],
+                              prescale  = config[ 'HighPtTopo20000_Cone55_Prescale' ],
                               postscale = config[ 'HighPtTopo_Postscale' ],
                               selection=sel,
                               HLT=hlt)
