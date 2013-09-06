@@ -40,7 +40,7 @@ class HighPtTopoJetsConf( LineBuilder ) :
                                'HighPtTopo20000_Prescale',
                                'HighPtTopo10000_Prescale',
                                'HighPtTopo1000_Prescale',
-                               'HighPtTopo20000_Cone55_Prescale'
+                               'HighPtTopo20000_Cone55_Prescale',
                                'HighPtTopo_Postscale',
                                'pT',
                                'pT20',
