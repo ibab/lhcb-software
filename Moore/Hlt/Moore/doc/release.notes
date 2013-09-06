@@ -4,6 +4,12 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-09-06 - Rob Lambert
+ - Make the timing table test parsing a python module rather than having
+   copies in each script...
+ - Added a test of the Hlt2 with bypassed TISTOS which runs with no pre-existing HLT1.
+ - Expanded the TCK tests, to check that the TCK generated from a threshold setting gives the same results as running *from* that threshold setting (over 1200 events).
+
 ! 2013-09-04 - Rob Lambert
  -  Moore().Split = 'Hlt1Hlt2' into a test... not sure if it works yet...
 

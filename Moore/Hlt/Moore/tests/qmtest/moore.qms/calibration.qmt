@@ -16,24 +16,8 @@ if stdout.find(expected_string) == -1:
 #Parse timing table, and check that there is only one entry for HLT 2 and it sees all events (1200)
 
 
-timing=[]
-timingdict={}
-for line in stdout.split('\n'):
-    if 'TIMER' not in line or 'Hlt' not in line:
-        continue
-    line=line.replace('\t',' ')
-    line=line.replace('  ',' ')
-    line=line[line.find('INFO')+4:]
-    line=line.strip().rstrip()
-    line=line.split('|')
-    if len(line)&lt;5:
-        continue
-    if not line[0].startswith('Hlt'): 
-        continue
-    name=line[0].strip().rstrip()
-    num=line[4].strip().rstrip()
-    timing.append(':'.join([name,line[4]]))
-    timingdict[name]=int(num)
+from Moore.QMTest.MooreTests import extractEventsFromTiming
+timing,timingdict=extractEventsFromTiming(stdout,'Hlt')
 
 if len([t for t in timingdict if t.startswith("Hlt2")])!=1:
     causes.append('Does not look like pass-through')

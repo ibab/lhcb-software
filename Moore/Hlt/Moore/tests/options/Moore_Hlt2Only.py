@@ -8,10 +8,6 @@
 #
 import Gaudi.Configuration
 from Configurables import Moore
-from GaudiConf import IOHelper
-IOHelper().inputFiles([],clear=True)
-
-Moore().inputFiles = [ 'hlt1_reqhlt1.raw' ]
 
 __replace = lambda orig, repl, members : [ m if m != orig else repl for m in members ]
 __remove  = lambda remove,     members : [ m for m in members if m.name() not in remove ]
