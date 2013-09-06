@@ -9,7 +9,8 @@ from Configurables       import FilterDesktop
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdAllNoPIDsElectrons, StdNoPIDsPions, StdAllLooseElectrons
+from StandardParticles import StdAllNoPIDsPions, StdAllLooseMuons, StdNoPIDsPions, StdAllLooseElectrons, StdAllNoPIDsElectrons
+from CommonParticles.Utils import *
 
 confdict_WeJets = { 'WeJets_Prescale'    : 1.0,
                     'WeJets_Postscale'   : 1.0,
@@ -18,10 +19,10 @@ confdict_WeJets = { 'WeJets_Prescale'    : 1.0,
                     'HCalMax'            : 0.05,
                     'min_pT'             : 10.,
                     'max_pT'             : 20.,
-                    'GEC_TrkPt'          : 60.,
-                    'GEC_TrkSPt'         : 15.,
-                    'min_pT_IP_Particle'  : 3,
-                    'min_IPchi2'          : 40.
+                    'TrkSumPt'           : 10.,
+                    'TrkMissPt'          : 10.,
+                    'min_pT_IP_Particle' : 3.,
+                    'min_IPchi2'         : 40.
                   }
 
 default_name = 'WeJets'
@@ -35,8 +36,8 @@ class WeJetsConf( LineBuilder ) :
                                'HCalMax',
                                'min_pT',
                                'max_pT',
-                               'GEC_TrkPt', 
-                               'GEC_TrkSPt',
+                               'TrkSumPt', 
+                               'TrkMissPt',
                                'min_pT_IP_Particle',
                                'min_IPchi2'
                                )
@@ -49,34 +50,39 @@ class WeJetsConf( LineBuilder ) :
 
 
         # Define the cuts
+
         _cut    = "(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)<P*%(HCalMax)s) & (PT>%(min_pT)s*GeV) & (PT<%(max_pT)s*GeV) & (HASTRACK & TRCUT(0<TrIDC('isTT')))"%config
+        _sumpt      = "(sumpt>%(TrkSumPt)s*GeV)"%config
+        _misspt     = "((sumpx**2 + sumpy**2)>%(TrkMissPt)s*%(TrkMissPt)s*GeV*GeV)"% config
 
+        # WeJets signal
 
-        GECs = { "Code"     : "(sumpt > %(GEC_TrkPt)s*GeV) & (sumpx**2 + sumpy**2 > %(GEC_TrkSPt)s*%(GEC_TrkSPt)s*GeV*GeV)" % config,
-                  "Preambulo": [ "from LoKiTracks.decorators import *",
-                                 "from LoKiCore.functions import sum",
-                                 "from GaudiKernel.SystemOfUnits import GeV",
-                                 "sumpx  = TrSOURCE( 'Rec/Track/Best', TrLONG) >> sum (TrPX)" ,
-                                 "sumpy  = TrSOURCE( 'Rec/Track/Best', TrLONG) >> sum (TrPY)" ,
-                                 "sumpt  = TrSOURCE ('Rec/Track/Best', TrLONG) >> sum (TrPT)"] }
+        self.sel_We = makeFilter( self._myname + 'We',
+                                  StdAllNoPIDsElectrons,
+                                  ["from LoKiTracks.decorators import *",
+                                  "trpx    = switch(TrLONG,TrPX,0)",
+                                  "trpy    = switch(TrLONG,TrPY,0)",
+                                  "trpt    = switch(TrLONG,TrPT,0)",
+                                  "trpxsum = RV_TrSUM(trpx,-1)",
+                                  "trpysum = RV_TrSUM(trpy,-1)",
+                                  "trptsum = RV_TrSUM(trpt,-1)",
+                                  "sumpx   = BPV(trpxsum)",
+                                  "sumpy   = BPV(trpysum)",
+                                  "sumpt   = BPV(trptsum)-PT",],
+                                  _cut + '&' + _sumpt + '&' + _misspt
+                                  )
 
-
-        # We initial sel
-        self.sel_We    = makeFilter( self._myname + 'We',
-                                     StdAllNoPIDsElectrons,
-                                     [],
-                                     _cut
-                                     )
 
         # This requests that at least a pion with no PID, hence a particle, with pt and IPchi2 larger than cuts
         _min_pT_IP_Particle = '(PT>%(min_pT_IP_Particle)s*GeV)'% config
         _min_IP = '(MIPCHI2DV(PRIMARY)>%(min_IPchi2)s)'% config
-        
+
         self.sel_HighIP = makeFilter( self._myname + 'HighIP',
                                       StdNoPIDsPions,
                                       [],
                                       _min_pT_IP_Particle + '&' + _min_IP
                                       )
+
 
         self.sel_WeJets = makeSelection (self._myname + 'WeJets', [self.sel_We,self.sel_HighIP])
 
@@ -84,13 +90,10 @@ class WeJetsConf( LineBuilder ) :
         self.line_WeJets = StrippingLine( self._myname + 'Line',
                                       prescale  = config[ 'WeJets_Prescale' ],
                                       postscale = config[ 'WeJets_Postscale' ],
-                                      FILTER=GECs,
                                       selection = self.sel_WeJets
                                       )
 
         self.registerLine( self.line_WeJets )
-
-
 
 
 def makeFilter( _name, _input, _preambulo, _code ) :
@@ -104,9 +107,8 @@ def makeFilter( _name, _input, _preambulo, _code ) :
                        RequiredSelections = [ _input ]
                        )
 
-
 def makeSelection(_name, _filters):
-    
+
     _Algorithm=FilterDesktop(_name,Code='ALL')
 
     return Selection ( "sel"+_name,
