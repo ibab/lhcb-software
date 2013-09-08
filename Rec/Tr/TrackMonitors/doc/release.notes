@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-09-08 - Patrick Koppenburg
+ - AlignmentOnlineMonitor : remove cout and fix compilation warning on gcc4.7
+
 ! 2013-09-04 - Patrick Koppenburg
  - AlignmentOnlineMonitor by Stefan Hallmann (summie)
    . Produces residual plots to check the alignment in OnlineBrunel

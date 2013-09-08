@@ -64,7 +64,7 @@ namespace {
     };
 
     void fillfinal(){
-      std::cout<<"========== Moments of Residual Distributions =============="<<std::endl;
+      //      std::cout<<"========== Moments of Residual Distributions =============="<<std::endl;
       for(int i=0; i<m_numelements; i++){
         if(m_residual[i] != 0 ) {
           TH1D* pr = Gaudi::Utils::Aida2ROOT::aida2root ( m_residual[i] ) ;
@@ -78,7 +78,7 @@ namespace {
                    <<std::endl; 
         }
       };
-      std::cout<<"==========================================================="<<std::endl;
+      // std::cout<<"==========================================================="<<std::endl;
     };
 
     ~ResidualRecorder(){
@@ -97,7 +97,7 @@ namespace {
     GaudiHistoAlg* m_parent ;
     int m_numelements ;
   };
-};
+}
 
 class AlignmentOnlineMonitor : public GaudiHistoAlg {
 
@@ -265,7 +265,7 @@ StatusCode AlignmentOnlineMonitor::initialize()
 		std::string otNames[3] = {"OT1","OT2","OT3"};
 		m_ot   = new ResidualRecorder(*this, "OT",   3, otNames) ;
 	} else {
-		std::cout << "OT histogram mode not defined. Possible values are <<>>, <<quarter>>, <<station>>" << std::endl;
+    err() << "OT histogram mode not defined. Possible values are <<>>, <<quarter>>, <<station>>" << endmsg ;
 	}
 	//std::cout<<"booked OT histos"<<std::endl;
 
@@ -287,7 +287,7 @@ StatusCode AlignmentOnlineMonitor::initialize()
     std::string itNames[3] = {"IT1","IT2","IT3"};
 		m_it   = new ResidualRecorder(*this, "IT",   3, itNames) ;
 	} else {
-		std::cout << "IT histogram mode not defined. Possible values are <<>>, <<box>>, <<station>>" << std::endl;
+		err() << "IT histogram mode not defined. Possible values are <<>>, <<box>>, <<station>>" << endmsg;
 	}
 	//std::cout<<"booked IT histos"<<std::endl;
 
@@ -308,7 +308,7 @@ StatusCode AlignmentOnlineMonitor::initialize()
     std::string veloNames[2] = {"Velo Side 1","Velo Side 2"};
 		m_velo = new ResidualRecorder(*this, "Velo", 2, veloNames) ;
 	} else {
-		std::cout << "Velo histogram mode not defined. Possible values are <<>>, <<side>>" << std::endl;
+		Warning("Velo histogram mode not defined. Possible values are <<>>, <<side>>").ignore();
 	}
 	//std::cout<<"booked Velo histos"<<std::endl;
 
@@ -320,7 +320,7 @@ StatusCode AlignmentOnlineMonitor::initialize()
     std::string ttNames[4] = {"TTaX","TTaU","TTbV","TTbX"};
 		m_tt = new ResidualRecorder(*this, "TT", 4, ttNames) ;
 	} else {
-		std::cout << "TT histogram mode not defined. Possible values are <<>>, <<layer>>, <<station>>" << std::endl;
+    Warning("TT histogram mode not defined. Possible values are <<>>, <<layer>>, <<station>>").ignore();
 	}
 	//std::cout<<"booked TT histos"<<std::endl;
 
