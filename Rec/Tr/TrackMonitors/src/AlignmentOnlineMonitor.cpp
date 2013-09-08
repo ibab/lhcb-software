@@ -64,21 +64,23 @@ namespace {
     };
 
     void fillfinal(){
-      //      std::cout<<"========== Moments of Residual Distributions =============="<<std::endl;
+      //      std::cout<<"========== Moments of Residual Distributions =============="<<endmsg;
       for(int i=0; i<m_numelements; i++){
         if(m_residual[i] != 0 ) {
           TH1D* pr = Gaudi::Utils::Aida2ROOT::aida2root ( m_residual[i] ) ;
           m_parentMean->fill(pr->GetMean());
           m_parentRMS->fill(pr->GetRMS());
           m_parentSkewness->fill(pr->GetSkewness());
-          m_parentKurtosis->fill(pr->GetKurtosis());      
-          std::cout<<pr->GetName()
-                   << ":: MEAN: "  <<pr->GetMean()    <<" RMS: "     <<pr->GetRMS()
-                   << " SKEWNESS: "<<pr->GetSkewness()<<" KURTOSIS: "<<pr->GetKurtosis()
-                   <<std::endl; 
+          m_parentKurtosis->fill(pr->GetKurtosis());
+          /*
+          if (msgLevel(MSG::VERBOSE)) verbose() <<pr->GetName()
+                                                << ":: MEAN: "  <<pr->GetMean()    <<" RMS: "     <<pr->GetRMS()
+                                                << " SKEWNESS: "<<pr->GetSkewness()<<" KURTOSIS: "<<pr->GetKurtosis()
+                                                <<enmsg;
+          */
         }
       };
-      // std::cout<<"==========================================================="<<std::endl;
+      // std::cout<<"==========================================================="<<endmsg;
     };
 
     ~ResidualRecorder(){
@@ -134,7 +136,7 @@ private:
   //} ;
 
   size_t otUniqueStation(const LHCb::OTChannelID& id) {
-    //std::cout<<"OT:" << id.station()<<" "<< id.layer() <<" "<<id.quarter()<<std::endl;
+    if (msgLevel(MSG::VERBOSE)) verbose()  <<"OT:" << id.station()<<" "<< id.layer() <<" "<<id.quarter()<<endmsg;
     return (id.station()-1) ;
   } ;
 
@@ -150,31 +152,35 @@ private:
   //	unsigned int station = (id.sensor()%64)/2 ; 
   //	unsigned int side    = (id.sensor()%2) ; 
   //unsigned int type    = (id.sensor()/64) ;
-  //std::cout << "velo: " << side << " " << station << std::endl ;
+  // if (msgLevel(MSG::VERBOSE)) verbose()   << "velo: " << side << " " << station << endmsg ;
   //	return side * 21 + station ;
   //} ;
 
 
   size_t veloUniqueSide(const LHCb::VeloChannelID& id) {
     unsigned int side    = (id.sensor()%2) ;
-    //unsigned int type    = (id.sensor()/64) ;
-    //std::cout << "velo: " << side << " " << station << std::endl ;
+    if (msgLevel(MSG::VERBOSE)) {
+      unsigned int station = (id.sensor()/64) ;
+      verbose()   << "velo: " << side << " " << station << endmsg ;
+    }
     return side;
   } ;
 
   size_t veloUniqueSideStation(const LHCb::VeloChannelID& id) {
     return (id.sensor()%64) ;
-    //std::cout << "velo: " << side << " " << station << std::endl ;
+    //    if (msgLevel(MSG::VERBOSE)) verbose()   << "velo: " << side << " " << station << endmsg ;
   } ;
 
   size_t itUniqueID(const LHCb::STChannelID& id) {
-    //std::cout << "it: " << id.station() << " " << id.layer() << " " << id.detRegion() << " " << id.sector() << std::endl ;
+    if (msgLevel(MSG::VERBOSE)) verbose()   << "it: " << id.station() << " " << id.layer() << " " 
+                                            << id.detRegion() << " " << id.sector() << endmsg ;
     return (((id.station()-1)*4 + id.layer()-1)*4 + id.detRegion()-1)*7 + id.sector()-1 ;
   } ;
 
 		
   size_t itUniqueBoxStation(const LHCb::STChannelID& id) {
-    //std::cout << "it: " << id.station() << " " << id.layer() << " " << id.detRegion() << " " << id.sector() << std::endl ;
+    if (msgLevel(MSG::VERBOSE)) verbose()   << "it: " << id.station() << " " << id.layer() << " " 
+                                            << id.detRegion() << " " << id.sector() << endmsg ;
     return itUniqueID(id)%4 + 4*(id.station()-1);
   } ;
 
@@ -182,27 +188,32 @@ private:
 
 
   size_t itUniqueBox(const LHCb::STChannelID& id) {
-    //std::cout << "it: " << id.station() << " " << id.layer() << " " << id.detRegion() << " " << id.sector() << std::endl ;
+    if (msgLevel(MSG::VERBOSE)) verbose()   << "it: " << id.station() << " " << id.layer() << " " 
+                                            << id.detRegion() << " " << id.sector() << endmsg ;
     return itUniqueID(id)%4;
   } ;
 	
   size_t itUniqueStation(const LHCb::STChannelID& id) {
-    //std::cout << "it: " << id.station() << " " << id.layer() << " " << id.detRegion() << " " << id.sector() << std::endl ;
+    if (msgLevel(MSG::VERBOSE)) verbose()   << "it: " << id.station() << " " << id.layer() << " " 
+                                            << id.detRegion() << " " << id.sector() << endmsg ;
     return (id.station()-1);
   } ;
 
   //size_t ttUniqueID(const LHCb::STChannelID& id) {
-  //std::cout << "tt: " << id.station() << " " << id.layer() << " " << id.detRegion() << " " << id.sector() << std::endl ;
+  //if (msgLevel(MSG::VERBOSE)) verbose()   << "tt: " << id.station() << " " << id.layer() << " " 
+  //                                        << id.detRegion() << " " << id.sector() << endmsg ;
   //	return (((id.station()-1)*2 + id.layer()-1)*3 + id.detRegion()-1)*24 + id.sector()-1 ;
   //} ;
 
   size_t ttUniqueLayer(const LHCb::STChannelID& id) {
-    //std::cout << "tt: " << id.station() << " " << id.layer() << " " << id.detRegion() << " " << id.sector() << std::endl ;
+    if (msgLevel(MSG::VERBOSE)) verbose()   << "tt: " << id.station() << " " << id.layer() << " " 
+                                            << id.detRegion() << " " << id.sector() << endmsg ;
     return (id.station()-1)*2 + id.layer()-1 ;
   } ;
 	
   size_t ttUniqueStation(const LHCb::STChannelID& id) {
-    //std::cout << "tt: " << id.station() << " " << id.layer() << " " << id.detRegion() << " " << id.sector() << std::endl ;
+    if (msgLevel(MSG::VERBOSE)) verbose()   << "tt: " << id.station() << " " << id.layer() << " " 
+                                            << id.detRegion() << " " << id.sector() << endmsg ;
     return (id.station()-1) ;
   } ;
 
@@ -267,7 +278,7 @@ StatusCode AlignmentOnlineMonitor::initialize()
 	} else {
     err() << "OT histogram mode not defined. Possible values are <<>>, <<quarter>>, <<station>>" << endmsg ;
 	}
-	//std::cout<<"booked OT histos"<<std::endl;
+	if (msgLevel(MSG::VERBOSE)) verbose()  <<"booked OT histos"<<endmsg;
 
 
 	if(m_modeIT == "all"){ // 3stations * 4quarters (neglected: * 18modules)
@@ -289,7 +300,7 @@ StatusCode AlignmentOnlineMonitor::initialize()
 	} else {
 		err() << "IT histogram mode not defined. Possible values are <<>>, <<box>>, <<station>>" << endmsg;
 	}
-	//std::cout<<"booked IT histos"<<std::endl;
+	if (msgLevel(MSG::VERBOSE)) verbose()  <<"booked IT histos"<<endmsg;
 
 
 
@@ -310,7 +321,7 @@ StatusCode AlignmentOnlineMonitor::initialize()
 	} else {
 		Warning("Velo histogram mode not defined. Possible values are <<>>, <<side>>").ignore();
 	}
-	//std::cout<<"booked Velo histos"<<std::endl;
+	if (msgLevel(MSG::VERBOSE)) verbose()  <<"booked Velo histos"<<endmsg;
 
 
 	if(m_modeTT == "station"){
@@ -322,7 +333,7 @@ StatusCode AlignmentOnlineMonitor::initialize()
 	} else {
     Warning("TT histogram mode not defined. Possible values are <<>>, <<layer>>, <<station>>").ignore();
 	}
-	//std::cout<<"booked TT histos"<<std::endl;
+	if (msgLevel(MSG::VERBOSE)) verbose()  <<"booked TT histos"<<endmsg;
 
 
 	return sc ;
