@@ -64,7 +64,7 @@ namespace {
     };
 
     void fillfinal(){
-      //      std::cout<<"========== Moments of Residual Distributions =============="<<endmsg;
+      //      std::cout<<"========== Moments of Residual Distributions =============="<<std::endl;
       for(int i=0; i<m_numelements; i++){
         if(m_residual[i] != 0 ) {
           TH1D* pr = Gaudi::Utils::Aida2ROOT::aida2root ( m_residual[i] ) ;
@@ -73,14 +73,14 @@ namespace {
           m_parentSkewness->fill(pr->GetSkewness());
           m_parentKurtosis->fill(pr->GetKurtosis());
           /*
-          if (msgLevel(MSG::VERBOSE)) verbose() <<pr->GetName()
-                                                << ":: MEAN: "  <<pr->GetMean()    <<" RMS: "     <<pr->GetRMS()
-                                                << " SKEWNESS: "<<pr->GetSkewness()<<" KURTOSIS: "<<pr->GetKurtosis()
-                                                <<enmsg;
+          std::cout <<pr->GetName()
+          << ":: MEAN: "  <<pr->GetMean()    <<" RMS: "     <<pr->GetRMS()
+          << " SKEWNESS: "<<pr->GetSkewness()<<" KURTOSIS: "<<pr->GetKurtosis()
+          <<std::endl;
           */
         }
       };
-      // std::cout<<"==========================================================="<<endmsg;
+      // std::cout<<"==========================================================="<< std::endl;
     };
 
     ~ResidualRecorder(){
