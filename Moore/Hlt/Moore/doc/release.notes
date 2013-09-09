@@ -4,6 +4,7 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v20r3p3 2013-09-09 =========================
 ! 2013-09-09 - Rob Lambert
  - Fix the TCK test, ready for tagging for nightlies tonight.
 
