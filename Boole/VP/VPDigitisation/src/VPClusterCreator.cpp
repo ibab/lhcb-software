@@ -137,7 +137,7 @@ StatusCode VPClusterCreator::createClusters(VPDigits* digitCont,
     PixDigit & dgt = *id;
     if(dgt.isUsed == 0) {                                                              // only consider if not already used for a cluster
       // Get 8 neighbour pixels
-      const DeVPSensor* sensor = m_vPelDet->sensor(dgt.key);
+      const DeVPSensor* sensor = m_vPelDet->sensorOfChannel(dgt.key);
       std::vector<LHCb::VPChannelID> neighbsVec; neighbsVec.clear();
       StatusCode channelsValid;
       channelsValid = sensor->channelToNeighbours(dgt.key,neighbsVec);                 // list of adjacent channels 
@@ -250,19 +250,20 @@ void VPClusterCreator::baryCenter(std::vector<PixDigit> activePixels,
   for(std::vector<PixDigit>::iterator ipc = activePixels.begin();
       ipc != activePixels.end(); ipc++) {
     PixDigit dgt = *ipc;
-    const DeVPSensor* sensor = 
-                           m_vPelDet->sensor(dgt.key);
-    Gaudi::XYZPoint midPoint(0.0,0.0,0.0);
-    StatusCode pointValid;
-    pointValid = sensor->channelToPoint(dgt.key,midPoint);
-    if(pointValid) {
+    const DeVPSensor* sensor = m_vPelDet->sensorOfChannel(dgt.key);
+    // removed pointValid check (hschindl)
+    // Gaudi::XYZPoint midPoint(0.0,0.0,0.0);
+    // StatusCode pointValid;
+    // pointValid = sensor->channelToPoint(dgt.key,midPoint);
+    Gaudi::XYZPoint midPoint = sensor->channelToPoint(dgt.key);
+    // if(pointValid) {
       sumXW = sumXW + dgt.tot * midPoint.x();
       sumYW = sumYW + dgt.tot * midPoint.y();
       sumZW = sumZW + dgt.tot * midPoint.z();
       sumWeight = sumWeight + dgt.tot;
-    } else {
-      Warning("channelToPoint failure");
-    }
+    // } else {
+    //   Warning("channelToPoint failure");
+    // }
     
   }
   double avX = sumXW / sumWeight;
@@ -270,7 +271,7 @@ void VPClusterCreator::baryCenter(std::vector<PixDigit> activePixels,
   double avZ = sumZW / sumWeight;
   Gaudi::XYZPoint baryCenter(avX,avY,avZ);
   StatusCode EntryValid;
-  const DeVPSensor* sensor = m_vPelDet->sensor(activePixels[0].key);
+  const DeVPSensor* sensor = m_vPelDet->sensorOfChannel(activePixels[0].key);
   EntryValid = sensor->pointToChannel(baryCenter,baryCenterChID,xyFraction);
   if(!EntryValid) Warning("pointToChannel failure");
   isLong = sensor->isLong(baryCenterChID);

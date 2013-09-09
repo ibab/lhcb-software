@@ -65,7 +65,7 @@ private:
   std::vector<std::string> m_spillNames;
   std::vector<std::string> m_spillPaths;
   std::vector<std::string> m_outPaths;
-  DeVP* m_vPelDet;
+  DeVP* m_det;
   double m_siteSize;
   int m_maxNumSites;
   int m_inhomogenCh;

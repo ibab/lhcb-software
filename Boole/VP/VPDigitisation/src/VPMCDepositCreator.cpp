@@ -1,4 +1,3 @@
-// $Id: VPMCDepositCreator.cpp,v 1.2 2009-12-07 17:37:56 marcin Exp $
 // Include files:
 // STL
 #include <string>
@@ -52,7 +51,7 @@ VPMCDepositCreator::VPMCDepositCreator(const std::string& name,
   : GaudiAlgorithm(name, pSvcLocator),
 #endif
 
-    m_vPelDet(0),
+    m_det(0),
     m_depositedCharge(NULL)
 {
   declareProperty("InputLocation", m_inputLocation = 
@@ -110,7 +109,7 @@ StatusCode VPMCDepositCreator::initialize() {
   // Deposited charge 
   m_depositedCharge = tool<ISiDepositedCharge>(m_depChTool,"DepCharge",this);
   // Get detector elements
-  m_vPelDet = getDet<DeVP>(DeVPLocation::Default);
+  m_det = getDet<DeVP>(DeVPLocation::Default);
   // printf("VPMCDepositCreator::initialize()\n");
   // Random number generators
   StatusCode scG = m_gaussDist.initialize(randSvc(),Rndm::Gauss(0.0,1.0));
@@ -225,8 +224,7 @@ void VPMCDepositCreator::chargeToPoint(LHCb::MCHit* hit,
   double chargeE;
   // Some charge allocated by delta ray algorithm
   if(m_inhomogenCh) {
-    double thickSi = 
-           m_vPelDet->sensor(hit->sensDetID())->siliconThickness();
+    double thickSi = m_det->sensor(hit->sensDetID())->siliconThickness();
     chargeE = m_chargeUniform * thickSi / Gaudi::Units::micrometer;
     if(chargeE > charge) chargeE = charge;
   } else {
@@ -326,7 +324,7 @@ void VPMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
   Gaudi::XYZPoint pnt = hit->entry() + path;                                                   // first 3-D point where ionization is simulated
   // printf(" => [%+8.3f,%+8.3f,%+9.3f] + %d x [%+6.3f,%+6.3f,%+6.3f]\n",
   //           pnt.x(), pnt.y(), pnt.z(), simPoints.size()-1, path.x(), path.y(), path.z());
-  const DeVPSensor* sensor = m_vPelDet->sensor(hit->sensDetID());                    // sensor that was hit
+  const DeVPSensor* sensor = m_det->sensor(hit->sensDetID());                    // sensor that was hit
   // printf(" => DeVPSensor(%02d): %3.1f um, chipLxW: %4.1fx%4.1f mm, %dx%d pix. pixelHxL: %1.0fx%1.0f um\n",
   //          hit->sensDetID(), 1000*sensor->siliconThickness(),
   //          sensor->chipLength(), sensor->chipWidth(),
@@ -371,14 +369,14 @@ void VPMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
     for(std::vector<LHCb::VPChannelID>::iterator                  // loop over center and neib. pixel
         ic = neighbsVec.begin(); ic != neighbsVec.end(); ++ic ) {
       LHCb::VPChannelID channel = *ic;                            // every channel = pixel
-      Gaudi::XYZPoint midPoint;
-      StatusCode pointValid;
-      pointValid = sensor->channelToPoint(channel,midPoint);           // mid-point of given pixel
-      if(!pointValid) { Warning("channelToPoint failure"); 
-                        // printf(" => sensor->channelToPoint() failed\n");
-                        continue; }
-      std::pair<double,double> pixSize;
-      pixSize = sensor->pixelSize(channel);                            // size of given pixel
+      Gaudi::XYZPoint midPoint = sensor->channelToPoint(channel);
+      // removed pointValid check (hschindl)
+      // StatusCode pointValid;
+      // pointValid = sensor->channelToPoint(channel,midPoint);           // mid-point of given pixel
+      // if(!pointValid) { Warning("channelToPoint failure"); 
+      //                   // printf(" => sensor->channelToPoint() failed\n");
+      //                   continue; }
+      std::pair<double,double> pixSize = sensor->pixelSize(channel);      // size of given pixel
       double sizeX = pixSize.first / 2.0;
       double sizeY = pixSize.second / 2.0;
       double xdL = fabs(pnt.x() - midPoint.x()) - sizeX;
