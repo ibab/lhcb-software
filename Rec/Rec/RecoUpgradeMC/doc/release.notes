@@ -5,7 +5,9 @@
 !               classes
 !-----------------------------------------------------------------------------
 
-! 2013-08-23 Heinrich Schindler
+! 2013-09-09 - Heinrich Schindler
+ - Follow VP detector element and channel ID changes (r162190, 162191)
+! 2013-08-23 - Heinrich Schindler
  - Remove direct calls to DeVPSquareType
 
 !========================= RecoUpgradeMC v2r1p1 2013-06-03 =======================

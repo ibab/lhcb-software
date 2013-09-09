@@ -108,7 +108,7 @@ StatusCode VPChecker::execute() {
         
         LHCb::VPChannelID 	vPID  = theLHCBID.vpID ();
         
-        const DeVPSensor* sqDet = m_vP->sensor(vPID.sensor());
+        const DeVPSensor* sqDet = m_vP->sensorOfChannel(vPID);
         if (isBack && sqDet->z()>bestZ){
           bestZ=sqDet->z();
           theID.setDetectorType( theLHCBID.detectorType());  // create LHCbId from int. Clumsy !"
@@ -135,9 +135,9 @@ StatusCode VPChecker::execute() {
         // Get the position (halfbox) and errors (most important is error, position is can be accessed via detelem)
         //IVPClusterPosition::toolInfo clusInfo = m_positiontool->position(liteclus,*theStateVector) ;
         clusInfo = m_positiontool->position(liteclus) ;
-        const DeVPSensor* sqDet = m_vP->sensor(clusInfo.pixel.sensor());
-        thePixPoint = sqDet->globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ;
-        std::pair<double,double> pixSize = sqDet->pixelSize(clusInfo.pixel.pixel());
+        const DeVPSensor* sqDet = m_vP->sensorOfChannel(clusInfo.pixel);
+        thePixPoint = sqDet->channelToPoint(clusInfo.pixel, clusInfo.fractionalPosition) ;
+        std::pair<double,double> pixSize = sqDet->pixelSize(clusInfo.pixel);
         //Check about errors too...
         dx = pixSize.first*clusInfo.fractionalError.first ;
         // if (sqDet->isLong(clusInfo.pixel.pixel())) dx = 0.1 ;//fixed to 0.1 mm whatever is the angle for long pixel
@@ -186,8 +186,8 @@ StatusCode VPChecker::execute() {
         tPoint->column("hit1_dty",hit->displacement ().y()/hit->displacement ().z()-slopes.y());
         //always()<<"go for chip"<<endreq;
         tPoint->column("chip1",clusInfo.pixel.chip());
-        tPoint->column("pixelX1",clusInfo.pixel.pixel_lp());
-        tPoint->column("pixelY1",clusInfo.pixel.pixel_hp());
+        tPoint->column("pixelX1",clusInfo.pixel.col());
+        tPoint->column("pixelY1",clusInfo.pixel.row());
       }
       else{
         //always()<<"hit is null ...."<<endreq;
