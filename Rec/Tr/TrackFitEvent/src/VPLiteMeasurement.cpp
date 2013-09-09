@@ -44,10 +44,9 @@ VPLiteMeasurement::VPLiteMeasurement(const DeVP& det,const VPLiteCluster& cluste
 
 void VPLiteMeasurement::init(const DeVP& det, const IVPClusterPosition::toolInfo& info) {
 
-  const DeVPSensor* sensor = det.sensor(info.pixel.sensor()); 
-  const unsigned long pixel = info.pixel.pixel(); 
-  m_position = sensor->globalXYZ(pixel, info.fractionalPosition);
-  std::pair<double, double> pixelSize = sensor->pixelSize(pixel);
+  const DeVPSensor* sensor = det.sensorOfChannel(info.pixel); 
+  m_position = sensor->channelToPoint(info.pixel, info.fractionalPosition);
+  std::pair<double, double> pixelSize = sensor->pixelSize(info.pixel);
   double dx = pixelSize.first * info.fractionalError.first ;
   double dy = pixelSize.second * info.fractionalError.second;
   setZ(m_position.z());
