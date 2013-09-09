@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-09-09 - Rob Lambert
+ - Fix the TCK test, ready for tagging for nightlies tonight.
+
 ! 2013-09-06 - Rob Lambert
  - Make the timing table test parsing a python module rather than having
    copies in each script...

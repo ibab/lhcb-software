@@ -6,6 +6,7 @@
   </argument>
   <argument name="args"><set>
     <text>../options/Moore-Testing-Default.py</text>
+    <text>../options/Moore-LocalTCKData.py</text>
     <text>--option</text>
     <text>from Configurables import Moore; Moore().EvtMax=1200; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False;</text>
   </set></argument>

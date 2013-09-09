@@ -121,7 +121,7 @@ def compareTimingTableEvents(testname,result,causes,stdout,refFile,beginswith=No
     if beginswith is not None:
         extranewref='.'+beginswith
     f=open(refFile+extranewref+'.new','w')
-    f.write('\n'.join(refresult))
+    f.write('\n'.join(timing))
     f.close()
     #categorize the differences
     missing=[r for r in refresultdict if r not in timingdict]
