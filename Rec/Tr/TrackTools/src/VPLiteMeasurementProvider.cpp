@@ -174,7 +174,7 @@ LHCb::Measurement* VPLiteMeasurementProvider::measurement(const LHCb::LHCbID& id
 /// Return the z-coordinate of this lhcb-id (w/o creating the hit)
 //=============================================================================
 double VPLiteMeasurementProvider::nominalZ(const LHCb::LHCbID& id) const {
-  return m_det->sensor(id.vpID().sensor())->z();
+  return m_det->sensorOfChannel(id.vpID())->z();
 }
 
 //-----------------------------------------------------------------------------

@@ -4,7 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
-! 2013-08-23 Heinrich Schindler
+! 2013-09-09 - Heinrich Schindler
+ - Follow VP detector element and channel ID changes (r162190, 162191)
+! 2013-08-23 - Heinrich Schindler
  - Remove direct calls to DeVPSquareType
 
 !========================= TrackTools v4r25 2013-07-24 =========================
