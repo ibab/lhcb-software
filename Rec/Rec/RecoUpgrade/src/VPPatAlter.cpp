@@ -108,15 +108,15 @@ StatusCode VPPatAlter::execute() {
   LHCb::VPLiteCluster::VPLiteClusters::const_iterator iclust;
   for(iclust = m_clusters->begin(); iclust != m_clusters->end(); iclust++){  
     IVPClusterPosition::toolInfo clusInfo = m_positiontool->position(&(*iclust));
-    const DeVPSensor* sensor = m_vP->sensor(clusInfo.pixel.sensor());
-    Gaudi::XYZPoint thePixPoint = sensor->globalXYZ(clusInfo.pixel.pixel(),clusInfo.fractionalPosition) ; 
-    std::pair<double,double> pixSize = sensor->pixelSize(clusInfo.pixel.pixel());
+    const DeVPSensor* sensor = m_vP->sensorOfChannel(clusInfo.pixel);
+    Gaudi::XYZPoint thePixPoint = sensor->channelToPoint(clusInfo.pixel, clusInfo.fractionalPosition) ; 
+    std::pair<double,double> pixSize = sensor->pixelSize(clusInfo.pixel);
     
     double dx = pixSize.first*clusInfo.fractionalError.first ;
     // if (sqDet->isLong(clusInfo.pixel.pixel())) dx = 0.1 ;//fixed to 0.1 mm whatever is the angle for long pixel
     double dy = pixSize.second*clusInfo.fractionalError.second;
     LHCb::VPChannelID pixid = (*iclust).channelID();
-    int sensornum = pixid.sensor();
+    int sensornum = pixid.module();
     VPHit* hit = new VPHit(thePixPoint.x(),thePixPoint.y(),thePixPoint.z(),dx,dy,sensornum);
     hit->setLHCbID(LHCb::LHCbID(pixid));
     m_hits[sensornum].push_back(hit);   
