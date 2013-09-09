@@ -1,17 +1,13 @@
 #ifndef VPDET_DEVPSENSOR_H
 #define VPDET_DEVPSENSOR_H 1
 
-// STL
-#include <algorithm>
-#include <bitset>
-
 // Gaudi 
 #include "GaudiKernel/Point3DTypes.h"
-#include "GaudiKernel/PhysicalConstants.h"
 
-// LHCb
+// Det/Desc 
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
+// Kernel/LHCbKernel
 #include "Kernel/Trajectory.h"
 
 // Unique class identifier
@@ -50,21 +46,19 @@ public:
   virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VPChannelID& id, 
                                                      const std::pair<double, double> offset) const = 0;
 
-  /// Calculate the nearest channel to a 3-d point.
-  /// Also returns the fractional x-y position in the pixel
+  /// Calculate the nearest channel to point in the global frame.
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
                                     LHCb::VPChannelID& channel,
                                     std::pair <double, double>& fraction) const = 0;
-  /// Calculate the XYZ center of a pixel
-  virtual StatusCode channelToPoint(const LHCb::VPChannelID& channel,
-                                    Gaudi::XYZPoint& point) const = 0;
-  /// Get the global position of a pixel
-  virtual Gaudi::XYZPoint globalXYZ(unsigned long pixel, std::pair<double, double> fraction) const = 0; 
+  /// Calculate the global position of a given pixel.
+  virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel) const = 0;
+  virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel, 
+                                         const std::pair<double, double> fraction) const = 0;
 
-  /// Return the pixel size
+  /// Return the pixel size.
   virtual std::pair<double, double> pixelSize(LHCb::VPChannelID channel) const = 0;
 
-  /// Return true if the pixel is a long one
+  /// Return true if the pixel is elongated.
   virtual bool isLong(LHCb::VPChannelID channel) const = 0;
 
   /// Determines if local 3-d point is inside sensor
@@ -97,7 +91,7 @@ public:
   bool isDownstream() const {return m_isDownstream;}
 
   /// Return sensor thickness in mm
-  inline double siliconThickness() const {return m_siliconThickness;}
+  virtual double siliconThickness() const = 0;
 
   /// Workaround to prevent hidden base class function
   inline const std::type_info& type(const std::string &name) const {
@@ -126,7 +120,6 @@ private:
   bool m_isDownstream;
 
   double m_z;
-  double m_siliconThickness;
 
   bool m_debug;
   bool m_verbose;

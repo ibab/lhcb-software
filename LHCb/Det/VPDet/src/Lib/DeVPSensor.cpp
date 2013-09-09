@@ -7,7 +7,9 @@
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
 // LHCb
+// Det/DetDesc
 #include "DetDesc/Condition.h"
+// Kernel/LHCbKernel
 #include "Kernel/VPChannelID.h"
 
 // Local 
@@ -15,7 +17,7 @@
 
 /** @file DeVPSensor.cpp
  *
- *  Implementation of class : DeVPSensor
+ *  Implementation of class DeVPSensor
  *
  *  @author Victor Coco victor.coco@cern.ch
  *  
@@ -25,10 +27,11 @@
 /// Standard constructor
 //==============================================================================
 DeVPSensor::DeVPSensor(const std::string& name) : 
-  DetectorElement(name),
-  m_geometry(NULL) {
+    DetectorElement(name),
+    m_geometry(NULL) {
  
 }
+
 //==============================================================================
 /// Destructor
 //==============================================================================
@@ -76,7 +79,6 @@ StatusCode DeVPSensor::initialize() {
   std::string side = param<std::string>("Side");
   m_isLeft = side.find("Left") == 0;
   m_isDownstream = 0 != param<int>("Downstream");
-  m_siliconThickness = param<double>("SiThick");
 
   m_geometry = geometry();
   sc = cacheGeometry();

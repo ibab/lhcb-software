@@ -64,14 +64,9 @@ public:
                                     LHCb::VPChannelID& channel,
                                     std::pair <double, double>& fraction) const;
   /// Calculate the XYZ center of a pixel
-  virtual StatusCode channelToPoint( const LHCb::VPChannelID& channel,
-                                                Gaudi::XYZPoint& point) const;
-
-  virtual StatusCode channelToPointWithFraction( const LHCb::VPChannelID& channel,
-                                                        const std::pair<double,double> offset,
-                                                 Gaudi::XYZPoint& point) const;
-  
-  
+  virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel) const;
+  virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
+                                         const std::pair<double, double> offset) const;
 
   /// Get the list of VPChannelID forming the 3x3 cluster of pixel centered on point
   virtual StatusCode pointTo3x3Channels(const Gaudi::XYZPoint& point,
@@ -83,6 +78,8 @@ public:
   
   /// Determines if local 3-d point is inside sensor
   virtual StatusCode isInActiveArea(const Gaudi::XYZPoint& point) const;
+
+  virtual double siliconThickness() const {return m_siliconThickness;}
 
   /// Determines in which ladder is local 3-d point
   virtual int WhichLadder(const Gaudi::XYZPoint& point) const;
@@ -267,7 +264,7 @@ public:
   }
 
   /// Return the X,Y,Z position of the pixel plus fraction*size of the pixel in the global frame
-  virtual Gaudi::XYZPoint globalXYZ(unsigned long pixel, pixelCoord fraction) const {
+  inline Gaudi::XYZPoint globalXYZ(unsigned long pixel, pixelCoord fraction) const {
     return localToGlobal(xyzOfPixel(pixel, fraction));
   }
   inline Gaudi::XYZPoint globalXYZ(unsigned int pixel) const {
@@ -327,7 +324,8 @@ private:
   unsigned int m_PixelLPMask;
   unsigned int m_PixelHPMask;
   unsigned int m_PixelMask;
-  
+
+  double m_siliconThickness;  
   double m_chipWidth         ; ///< Chip width
   double m_chipLength        ; ///< Chip length
   double m_interChipDist     ; ///< Distance between chips

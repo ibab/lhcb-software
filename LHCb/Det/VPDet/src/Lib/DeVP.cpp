@@ -10,7 +10,7 @@
 #include "GaudiKernel/IUpdateManagerSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
-// LHCb
+// Det/DetDesc 
 #include "DetDesc/Condition.h"
 
 // Local
@@ -18,7 +18,7 @@
 
 /** @file DeVP.cpp
  *
- *  Implementation of class :  DeVP
+ *  Implementation of class DeVP
  *
  *  @author Victor Coco Victor.Coco@cern.ch
  */
@@ -28,9 +28,10 @@
 /// Constructor
 // ============================================================================ 
 DeVP::DeVP(const std::string& name) :  
-  DetectorElement(name),
-  m_nSensors(0), m_nLeftSensors(0), m_nRightSensors(0),
-  m_debug(false) {
+    DetectorElement(name),
+    m_nSensors(0), m_nLeftSensors(0), m_nRightSensors(0),
+    m_old(true),
+    m_debug(false) {
 
 } 
 
@@ -117,16 +118,11 @@ int DeVP::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
   
   std::vector<DeVPSensor*>::const_iterator it;
   for (it = m_vpSensors.begin(); it != m_vpSensors.end(); ++it) {
-    // Gaudi::XYZPoint localPoint = (*it)->globalToLocal(point);
-    // TODO: this needs changing for new meaning of "sensor"...
-    // if (m_sensVolCut > fabs(localPoint.z())) {
-    //   return ((*it)->sensorNumber());
-    // }
     if ((*it)->isInside(point)) return (*it)->sensorNumber();
   }
   MsgStream msg(msgSvc(), "DeVP");
-  msg << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at z = " 
-      << point.z() << endmsg;
+  msg << MSG::ERROR << "No sensitive volume at (" 
+      << point.x() << ", " << point.y() << ", " << point.z() << ")" << endmsg;
   return -999;
 
 }
@@ -135,7 +131,9 @@ int DeVP::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
 /// Return pointer to sensor for a given point in the global frame
 // ============================================================================ 
 const DeVPSensor* DeVP::sensor(const Gaudi::XYZPoint& point) const {
-  return sensor(sensitiveVolumeID(point));
+  
+  return m_sensors[sensitiveVolumeID(point)];
+  
 }
 
 // ============================================================================

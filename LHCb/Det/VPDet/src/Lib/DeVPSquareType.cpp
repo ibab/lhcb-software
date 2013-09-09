@@ -229,7 +229,7 @@ StatusCode DeVPSquareType::initialize()
   }
 
   m_debug   = (msgSvc()->outputLevel("DeVPSquareType") == MSG::DEBUG  ) ;
-
+  m_siliconThickness = param<double>("SiThick");
   m_chipWidth = param<double>("ActiveWidth");
   m_chipLength = param<double>("ChipLength");
   m_interChipDist = param<double>("InterChipDist");
@@ -285,14 +285,14 @@ StatusCode DeVPSquareType::initialize()
 //   m_PixelBit = m_PixelHPBit+m_PixelLPBit;
 
   LHCb::VPChannelID ch_tmp(0);
-  m_PixelLPBit = ch_tmp.GetPixellpBits();
-  m_PixelHPBit = ch_tmp.GetPixelhpBits();
-  m_PixelBit =  ch_tmp.GetPixelBits();
+  m_PixelLPBit = ch_tmp.getColBits();
+  m_PixelHPBit = ch_tmp.getRowBits();
+  m_PixelBit =  ch_tmp.getPixelBits();
   
-  m_ChipMask = ch_tmp.GetChipMask();
-  m_PixelHPMask = ch_tmp.GetPixelhpMask();
-  m_PixelLPMask = ch_tmp.GetPixellpMask();
-  m_PixelMask =  ch_tmp.GetPixelMask();
+  m_ChipMask = ch_tmp.getChipMask();
+  m_PixelHPMask = ch_tmp.getRowMask();
+  m_PixelLPMask = ch_tmp.getColMask();
+  m_PixelMask =  ch_tmp.getPixelMask();
     
   // geometry conditions, update global position in cache
   /*updMgrSvc()->
@@ -315,8 +315,7 @@ StatusCode DeVPSquareType::initialize()
 std::auto_ptr<LHCb::Trajectory> DeVPSquareType::trajectory(const LHCb::VPChannelID& id,
                                                         const std::pair<double,double> offset) const {
   // offset is offset on R
-  Gaudi::XYZPoint globalP;
-  channelToPointWithFraction(id.pixel(),offset,globalP);
+  Gaudi::XYZPoint globalP = channelToPoint(id, offset);
   Gaudi::XYZPoint globalPOff (globalP.x()+offset.first,globalP.y()+offset.second,globalP.z());
   // put into trajectory
   LHCb::Trajectory* tTraj = new LHCb::LineTraj(globalPOff ,globalPOff );
@@ -347,7 +346,7 @@ StatusCode DeVPSquareType::pointToChannel(const Gaudi::XYZPoint& point,
   if(!sc.isSuccess())return sc;
   unsigned int sensor=sensorNumber();
   // Create the associated VPChannelID
-  channel.setSensor(sensor);
+  channel.setModule(sensor);
   // Get the ladder number in which the point is
   int ladderIndex = WhichLadder(localPoint);
   // Get the chip number in which the point is
@@ -367,18 +366,17 @@ StatusCode DeVPSquareType::pointToChannel(const Gaudi::XYZPoint& point,
     return StatusCode::FAILURE;
   }
   // Set the pixel position in the VPChannelID
-  channel.setPixel_lp(pixelPos.first);
-  channel.setPixel_hp(pixelPos.second);
+  channel.setCol(pixelPos.first);
+  channel.setRow(pixelPos.second);
   return StatusCode::SUCCESS;
 }
 
 //==============================================================================
 /// Calculate the position of a fraction in the given channel in global coordinates
 //==============================================================================
-StatusCode DeVPSquareType::channelToPointWithFraction( const LHCb::VPChannelID& channel,
-                                                        const std::pair<double,double> offset,
-                                                        Gaudi::XYZPoint& point) const
-{
+Gaudi::XYZPoint DeVPSquareType::channelToPoint(const LHCb::VPChannelID& channel,
+                                               const std::pair<double,double> offset) const {
+
   MsgStream msg(msgSvc(), "DeVPSquareType");
   Gaudi::XYZPoint LocalPoint(0.,0.,0.);
   int ladderIndex = WhichLadder(channel.chip());
@@ -386,16 +384,15 @@ StatusCode DeVPSquareType::channelToPointWithFraction( const LHCb::VPChannelID& 
   LocalPoint.SetX(point2d.first);
   LocalPoint.SetY(point2d.second);
   LocalPoint.SetZ(m_ladders[ladderIndex].ReferencePoint().z());
-  point = localToGlobal(LocalPoint);
-  return StatusCode::SUCCESS;
+  return localToGlobal(LocalPoint);
+
 }
 
 //==============================================================================
 /// Calculate the center of the pixel from a given channel
 //==============================================================================
-StatusCode DeVPSquareType::channelToPoint( const LHCb::VPChannelID& channel,
-                                                Gaudi::XYZPoint& point) const
-{
+Gaudi::XYZPoint DeVPSquareType::channelToPoint(const LHCb::VPChannelID& channel) const {
+
   MsgStream msg(msgSvc(), "DeVPSquareType");
   Gaudi::XYZPoint LocalPoint(0.,0.,0.);
   int ladderIndex = WhichLadder(channel.chip());
@@ -403,8 +400,8 @@ StatusCode DeVPSquareType::channelToPoint( const LHCb::VPChannelID& channel,
   LocalPoint.SetX(point2d.first);
   LocalPoint.SetY(point2d.second);
   LocalPoint.SetZ(m_ladders[ladderIndex].ReferencePoint().z());
-  point = localToGlobal(LocalPoint);
-  return StatusCode::SUCCESS;
+  return localToGlobal(LocalPoint);
+
 }
 
 //==============================================================================
@@ -427,8 +424,8 @@ StatusCode  DeVPSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point,
 
 
   // Loop over the possible position in the 3x3 cluster
-  int pixY = (channelCentral).pixel_hp();
-  int pixX = (channelCentral).pixel_lp();
+  int pixY = (channelCentral).row();
+  int pixX = (channelCentral).col();
   int chip = (channelCentral).chip();
   int ladderIndex = WhichLadder(loc_point);
   int NchipInLad =m_ladders[ladderIndex].nChip();
@@ -464,8 +461,8 @@ StatusCode  DeVPSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point,
 	LHCb::VPChannelID neig_channel(channelCentral);
 	if (x == 0 && y == 0)continue;
 	neig_channel.setChip(neig_channel.chip()+chipoffset);
-	neig_channel.setPixel_lp((neig_channel.pixel_lp()+x)%256);
-	neig_channel.setPixel_hp(neig_channel.pixel_hp()+y);
+	neig_channel.setCol((neig_channel.col()+x)%256);
+	neig_channel.setRow(neig_channel.row()+y);
 	channels.push_back(neig_channel);
 	//if (diff) msg() << MSG::INFO<<"       x,y "<<x<<" "<<y<<" minX,Y "<<minX<<" "<<minY<<" maxX,Y"<<maxX<<" "<<maxY<<" "<<(neig_channel).sensor()<<" "<<(neig_channel).chip()<<" "<<(neig_channel).pixel_hp()<<" "<<(neig_channel).pixel_lp()<<endmsg;
       }
@@ -509,10 +506,7 @@ StatusCode  DeVPSquareType::channelToNeighbours( const LHCb::VPChannelID& seedCh
   MsgStream msg(msgSvc(), "DeVPSquareType");
   // Get the point corresponding to the seedChannel 
   std::pair <double, double> fraction(0.5,0.5);
-  Gaudi::XYZPoint point;
-  StatusCode sc = channelToPoint (seedChannel, point);
-  if (!sc.isSuccess()) return sc;
-  
+  Gaudi::XYZPoint point = channelToPoint(seedChannel);
   Gaudi::XYZPoint loc_point = globalToLocal(point);
   
   // Initialise the size of the seed pixel
@@ -520,8 +514,8 @@ StatusCode  DeVPSquareType::channelToNeighbours( const LHCb::VPChannelID& seedCh
   size = pixelSize(seedChannel);
   
   // Loop over the possible position in the 3x3 cluster
-  int pixY = (seedChannel).pixel_hp();
-  int pixX = (seedChannel).pixel_lp();
+  int pixY = (seedChannel).row();
+  int pixX = (seedChannel).col();
   int chip = (seedChannel).chip();
   int ladderIndex = WhichLadder(loc_point);
   int NchipInLad =m_ladders[ladderIndex].nChip();
@@ -548,8 +542,8 @@ StatusCode  DeVPSquareType::channelToNeighbours( const LHCb::VPChannelID& seedCh
       LHCb::VPChannelID neig_channel(seedChannel);
       if (x == 0 && y == 0)continue;
       neig_channel.setChip(neig_channel.chip()+chipoffset);
-      neig_channel.setPixel_lp((neig_channel.pixel_lp()+x)%256);
-      neig_channel.setPixel_hp(neig_channel.pixel_hp()+y);
+      neig_channel.setCol((neig_channel.col()+x)%256);
+      neig_channel.setRow(neig_channel.row()+y);
       channels.push_back(neig_channel);
     }
   }

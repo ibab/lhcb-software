@@ -4,6 +4,12 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2013-09-09 - Heinrich Schindler
+ - removed globalXYZ interface in DeVPSensor, changed format of channelToPoint
+ - rename sensor(LHCb::VPChannelID) function in DeVP to sensorOfChannel 
+    to avoid ambiguities
+ - added first version of DeVPNewSensor (not yet ready for use) 
+
 ! 2013-08-23 - Heinrich Schindler
  - removed DeVPXType and DeVPYType
  - removed casts to DeVPSquareType
