@@ -6,6 +6,10 @@
 ! 2013-02-04 - Gloria Corti
  - Comment output level in GenXibc options for production
 
+! 2013-09-09 - Liang Zhong
+ - Add a new cut tool XiccDaughtersInLHCbAndWithMinPT to increase the reconstrction
+    efficiency. The PT threshold is 2000MeV for Xicc
+
 !========================= LbGenXicc v2r0 2012-07-23 =========================
 ! 2012-07-23 - Gloria Corti
  - Remove options in *.opts form that are obsolete
