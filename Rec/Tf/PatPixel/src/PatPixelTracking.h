@@ -59,7 +59,7 @@ protected:
   }
 
   void removeWorstHit ( double maxChi2 );
-  bool addHitsOnSensor( PatPixelSensor* sensor, double xTol, double maxChi2 );
+  bool addHitsOnSensor(PatPixelSensor* sensor, double xTol);
   void printHit( const PatPixelHit* hit, std::string title="" );
   void printTrack( PatPixelTrack& track );
   void printHitOnTrack ( PatPixelHit* hit, bool ifMatch=true );

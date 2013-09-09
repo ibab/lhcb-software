@@ -167,7 +167,7 @@ void PatPixelHitManager::buildHits ( )
   double dx = 0.055 / sqrt(12.0);                           // assume sigma on hit position (55x55 um square pixel)
   
   for ( iClus = liteClusters->begin(); liteClusters->end() != iClus; ++iClus )            // loop over Lite Clusters
-  { unsigned int sensor = iClus->channelID().sensor();                                    // sensor number in Gaudi
+  { unsigned int sensor = iClus->channelID().module();                                    // sensor number in Gaudi
     if ( sensor > m_sensors.size() ) break;
     if ( sensor != lastSensor )                                                          // if a new Gaudi sensor
     { lastSensor = sensor;                                                               // switch HitManager sensor

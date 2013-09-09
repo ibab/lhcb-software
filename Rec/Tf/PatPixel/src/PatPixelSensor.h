@@ -57,7 +57,7 @@ public:
     Double_t slx, sly;
     Double_t delta_x = fabs(dx-0.5);
     Double_t delta_y = fabs(dy-0.5);
-    Gaudi::XYZPoint Point = sensor()->globalXYZ( id.channelID(), offsets );
+    Gaudi::XYZPoint Point = sensor()->channelToPoint(id, offsets);
     if (dx == 0.5 && dy ==0.5) {return Point; }
 
     if (dx != 0.5)
@@ -73,7 +73,7 @@ public:
       dy_prime = 0.5 + (dy-0.5)/delta_y*(P_offset + T_factor *delta_y); }
 
     std::pair<double,double> offsets2(dx_prime,dy_prime);
-    return sensor()->globalXYZ( id.channelID(), offsets2 );
+    return sensor()->channelToPoint(id, offsets2);
   }
     //double low = id.pixel_lp() + dx;
     //double hig = id.pixel_hp() + dy;

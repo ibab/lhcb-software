@@ -194,14 +194,13 @@ void PatPixelTracking::trackDownstream(void)
   { PatPixelSensor* extra = m_hitManager->sensor( extraSensIdx ); // sensor we try to extrapolate to
 
     double tol     = m_extraTol;                                  // extrapolation tolerance
-    double maxChi2 = m_maxChi2ToAdd;                              // maximum Chi2 for a hit we want to add
-    bool added = addHitsOnSensor( extra, tol, maxChi2 );          // attempt to add new hits from this sensor with given tolarances
+    bool added = addHitsOnSensor(extra, tol);                     // attempt to add new hits from this sensor with given tolarances
 
     if ( added )
     { nbMissed = 0; }                                             // if some hits added: reset missed hit counter
     else                                                          // if none found:
     { if(extraStep==2)                                            // is still every second sensor scan:
-        added=addHitsOnSensor( m_hitManager->sensor(extraSensIdx+1), tol, maxChi2 ); // go back one sensor, the hit might be there.
+        added=addHitsOnSensor(m_hitManager->sensor(extraSensIdx+1), tol); // go back one sensor, the hit might be there.
       if(!added) nbMissed += extraStep;
       extraStep = 1; }                                            // switch to every sensor scan, not every 2nd
     if ( m_maxMissed < nbMissed ) break;
@@ -219,7 +218,7 @@ void PatPixelTracking::trackUpstream(void)
 
     // double tol     = m_extraTol;                                  // extrapolation tolerance
     // double maxChi2 = m_maxChi2ToAdd;                              // maximum Chi2 for a hit we want to add
-    bool added = addHitsOnSensor( extra, m_extraTol, m_maxChi2ToAdd );
+    bool added = addHitsOnSensor(extra, m_extraTol);
 
     if ( added ) { nbMissed = 0; }
     else { nbMissed += extraStep; }
@@ -539,8 +538,8 @@ void PatPixelTracking::removeWorstHit ( double maxChi2 ) {
 //=========================================================================
 //  Add hits from the specified sensor to the track
 //=========================================================================
-bool PatPixelTracking::addHitsOnSensor( PatPixelSensor* sensor, double xTol, double maxChi2 )
-{ if ( 0 == sensor->hits().size() ) return false;                  // if no hits on this sensor: return (no hits added)
+bool PatPixelTracking::addHitsOnSensor(PatPixelSensor* sensor, double xTol) {
+  if ( 0 == sensor->hits().size() ) return false;                  // if no hits on this sensor: return (no hits added)
   // printf("PatPixelTracking::addHitsOnSensor(%+6.1f)\n", sensor->z() );
   // double xGuess = m_track.xAtZ( sensor->z() ) - xTol;              // upper X-limit on hit search
                                                                    // Note: sensor->z() is an average Z of the silicon ladders

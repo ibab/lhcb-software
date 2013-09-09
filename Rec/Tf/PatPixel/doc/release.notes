@@ -4,6 +4,10 @@
 ! Purpose     : Pattern recogintion for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2013-09-09 - Heinrich Schindler
+ - Follow VP detector element and channel ID changes (r162190, 162191)
+ - Fix unused variable warning from previous commit
+
 ! 2013-09-03 - Pawel Jalocha
  - tracks fit on multiple scattering model, instead of a straight line,
    improves hit efficiency (and IP resolution as a result)
