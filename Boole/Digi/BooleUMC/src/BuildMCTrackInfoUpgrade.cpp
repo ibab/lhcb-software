@@ -217,21 +217,21 @@ StatusCode BuildMCTrackInfoUpgrade::execute() {
                                                              LHCb::VPClusterLocation::VPClusterLocation );
     if( veloPixLink.notFound() ) return StatusCode::FAILURE;
     
-    std::sort( veloPixClus->begin(), veloPixClus->end(), increasingSensor() );  //== Sorting not done in decoding!
+    std::sort( veloPixClus->begin(), veloPixClus->end(), increasingModule() );  //== Sorting not done in decoding!
     for ( LHCb::VPClusters::const_iterator vIt = veloPixClus->begin() ;
           veloPixClus->end() != vIt ; vIt++ ) {
-      int sensor = (*vIt)->channelID().sensor();
+      int module = (*vIt)->channelID().module();
       part = veloPixLink.first( *vIt );
       while ( NULL != part ) {
         if ( mcParts == part->parent() ) {
           MCNum = part->key();
           // PSZ - clone code from BuildMCTrackWithVPInfo
           if (veloPix.size() > MCNum ) {
-            if ( sensor != lastVelo[MCNum] ) {  // Count only once per sensor a given MCParticle
-              lastVelo[MCNum] = sensor;
+            if (module != lastVelo[MCNum]) {  // Count only once per module a given MCParticle
+              lastVelo[MCNum] = module;
               veloPix[MCNum]++;
               if(isVerbose)  
-                verbose() << "MC " << MCNum << " VP sensor " << sensor << " nbVP " << veloPix[MCNum] << endmsg;
+                verbose() << "MC " << MCNum << " VP module " << module << " nbVP " << veloPix[MCNum] << endmsg;
             }
           }
         }

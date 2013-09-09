@@ -4,6 +4,8 @@
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
 
+! 2013-09-09 - Heinrich Schindler
+ - Follow VP detector element and channel ID changes (r162190, 162191)
 ! 2013-08-25 - Heinrich Schindler
  - Remove isSquare checks from BuildMCUpgradeWithVPInfo
 

@@ -69,7 +69,7 @@ protected:
 
   struct increasingSensor {
      bool operator() ( LHCb::VPCluster* clust1, LHCb::VPCluster* clust2 ) const{
-       return clust1->channelID().sensor() < clust2->channelID().sensor();
+       return clust1->channelID().module() < clust2->channelID().module();
      }
   }  increasingSensor;
 

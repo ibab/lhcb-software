@@ -127,7 +127,7 @@ StatusCode BuildMCTrackWithVPInfo::execute() {
   std::sort( vpClus->begin(), vpClus->end(), increasingSensor);
   for ( LHCb::VPClusters::const_iterator vIt = vpClus->begin() ;
         vpClus->end() != vIt ; vIt++ ) {
-    int sensor = (*vIt)->channelID().sensor();
+    int sensor = (*vIt)->channelID().module();
     part = vpLink.first( *vIt );
     while ( NULL != part ) {
       if ( mcParts == part->parent() ) {

@@ -69,9 +69,9 @@ protected:
   void computeAcceptance ( std::vector<int>& station ) ;
 
   ///< method for sorting the VP clusters. Should be in the VPCluster class!
-  struct increasingSensor {
+  struct increasingModule {
      bool operator() ( LHCb::VPCluster* clust1, LHCb::VPCluster* clust2 ) const{
-       return clust1->channelID().sensor() < clust2->channelID().sensor();
+       return clust1->channelID().module() < clust2->channelID().module();
      }
   };
 
