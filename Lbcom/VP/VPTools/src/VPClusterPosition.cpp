@@ -71,9 +71,9 @@ StatusCode VPClusterPosition::initialize() {
 toolInfo VPClusterPosition::position(const LHCb::VPLiteCluster* cluster) const {
 
   toolInfo info;
-  const DeVPSensor* sensor = m_det->sensor(cluster->channelID().sensor());
-  Gaudi::XYZPoint point = sensor->globalXYZ(cluster->channelID().pixel(), 
-                                            cluster->interPixelFraction());
+  const DeVPSensor* sensor = m_det->sensorOfChannel(cluster->channelID());
+  Gaudi::XYZPoint point = sensor->channelToPoint(cluster->channelID(), 
+                                                 cluster->interPixelFraction());
   Direction direction;
   direction.first = point.x() / point.z();
   direction.second = point.y() / point.z();
@@ -101,7 +101,7 @@ toolInfo VPClusterPosition::position(const LHCb::VPLiteCluster* cluster,
 toolInfo VPClusterPosition::position(const LHCb::VPLiteCluster* cluster,
                                      const LHCb::StateVector& state) const {
   
-  const DeVPSensor* sensor = m_det->sensor(cluster->channelID().sensor());
+  const DeVPSensor* sensor = m_det->sensorOfChannel(cluster->channelID());
   // Get space point in global frame
   Gaudi::XYZPoint point(state.x(), state.y(), sensor->z());
   // Get direction 
@@ -123,7 +123,7 @@ toolInfo VPClusterPosition::position(const LHCb::VPChannelID& channel,
                                      const Direction& direction) const {
 
   toolInfo info;
-  const DeVPSensor* sensor = m_det->sensor(channel.sensor());
+  const DeVPSensor* sensor = m_det->sensorOfChannel(channel);
   if (!sensor) {
     Error("No valid pointer to sensor");
     info.pixel = LHCb::VPChannelID(0);
