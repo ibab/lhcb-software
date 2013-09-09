@@ -3,6 +3,14 @@ Package     : MooreSys
 Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v20r3p3>2013-09-09 MooreSys v20r3p3</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v36r1 stack. Depends on Rec v15r1 via Phys v17r1 via Hlt v20r3p1. Based on Gaudi v23r9.
+
+Minor changes to Moore, implementation of new tests and "Gerhard's Sledgehammer" of turning off the TOS linking for the split HLT scenario.
+
+For more information see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v20r3p3
+
 </PRE><H1><A NAME=v20r3p2>2013-09-03 MooreSys v20r3p2</A></H1><PRE>
 Moore/HLT LS1 development version. LHCb v36r1 stack. Depends on Rec v15r1 via Phys v17r1 via Hlt v20r3p1. Based on Gaudi v23r9.
 
