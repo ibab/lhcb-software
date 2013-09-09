@@ -46,7 +46,7 @@ XiccDaughtersInLHCbAndWithMinPT::XiccDaughtersInLHCbAndWithMinPT( const std::str
   declareProperty( "NeutralThetaMax" , m_neutralThetaMax = 400 * Gaudi::Units::mrad ) ;
   declareProperty( "DecayTool" ,       m_decayToolName   = "EvtGenDecay") ;
   declareProperty( "BaryonState",      m_BaryonState     = "Xi_cc+"); // double heavy baryon to be looked for
-  declareProperty( "MinXiccPT",        m_minXiccPT       = 5000 * Gaudi::Units::MeV );
+  declareProperty( "MinXiccPT",        m_minXiccPT       = 2000 * Gaudi::Units::MeV );
 
 }
 
@@ -228,7 +228,7 @@ bool XiccDaughtersInLHCbAndWithMinPT::passCuts( const HepMC::GenParticle * theSi
     }
   }
 
-    // check Xicc
+  // check Xicc
   double Xicc_PT = theXicc -> momentum().perp();
   debug() << "Xicc PT = " << Xicc_PT << endmsg;
 
