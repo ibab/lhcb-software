@@ -104,7 +104,7 @@ StatusCode PrepareVPRawBank::execute() {
   unsigned int currentSensorNumber;
   int sensorIndex = -1;
   while(firstOnSensor != m_sortedClusters.end()) {
-    currentSensorNumber = (*firstOnSensor)->key().sensor();
+    currentSensorNumber = (*firstOnSensor)->key().module();
     // Move to next on list of expected sensors
     sensorIndex++;
     // Check there was not a missing sensor
@@ -118,7 +118,7 @@ StatusCode PrepareVPRawBank::execute() {
       sensorIndex++;
     }
     while(lastOnSensor != m_sortedClusters.end() &&
-         (*lastOnSensor)->key().sensor() == currentSensorNumber) {
+         (*lastOnSensor)->key().module() == currentSensorNumber) {
       ++lastOnSensor;
     }
     // Make and store the bank
@@ -130,26 +130,24 @@ StatusCode PrepareVPRawBank::execute() {
 }
 
 //=============================================================================
-// Store RawBank
+/// Store RawBank
 //=============================================================================
 void PrepareVPRawBank::storeBank(int sensor,
                       std::vector<const VPCluster*>::const_iterator begin,
                       std::vector<const VPCluster*>::const_iterator end,
-                      RawEvent* rawEvent)
-{
-  // Create new raw buffer in raw data cache, old one is cleared
-  makeBank(begin,end);
-  if(m_vPelDet->sensor(sensor)) {
-    if(m_isDebug) debug() << "Sensor = " << sensor << endmsg;
-    LHCb::RawBank* newBank =
-          rawEvent->createBank(static_cast<SiDAQ::buffer_word>(sensor),
-                               LHCb::RawBank::VP,
-                               m_bankVersion,
-                               m_bankSizeInBytes,
-                               &(m_rawData[0]));
-    // Add new bank and pass memory ownership to raw event
-    rawEvent->adoptBank(newBank,true);
-  }
+                      RawEvent* rawEvent) {
+
+  // Create new raw buffer in raw data cache, old one is cleared.
+  makeBank(begin, end);
+  if (m_isDebug) debug() << "Sensor = " << sensor << endmsg;
+  LHCb::RawBank* bank = rawEvent->createBank(static_cast<SiDAQ::buffer_word>(sensor),
+                                             LHCb::RawBank::VP,
+                                             m_bankVersion,
+                                             m_bankSizeInBytes,
+                                             &(m_rawData[0]));
+  // Add new bank and pass memory ownership to raw event.
+  rawEvent->adoptBank(bank, true);
+
 }
 
 
@@ -254,7 +252,7 @@ void PrepareVPRawBank::makeBank(
 long PrepareVPRawBank::findPattern(LHCb::VPChannelID centrChanID,
                             std::vector<LHCb::VPChannelID> activeChIDs)
 {
-  const DeVPSensor* sensor = m_vPelDet->sensor(centrChanID);    
+  const DeVPSensor* sensor = m_vPelDet->sensorOfChannel(centrChanID);    
   std::vector<LHCb::VPChannelID> neighbsVec; neighbsVec.clear();
   StatusCode channelsValid;
   channelsValid = sensor->channelToNeighbours(centrChanID,neighbsVec);

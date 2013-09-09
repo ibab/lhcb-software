@@ -26,7 +26,7 @@ class DeVP;
 
 bool sortLessBySensor(const LHCb::VPCluster* first,
                       const LHCb::VPCluster* second) {
-     return first->key().sensor() < second->key().sensor();
+     return first->key().module() < second->key().module();
 }
 bool sortLessByChannel(LHCb::VPChannelID first,
                        LHCb::VPChannelID second) {

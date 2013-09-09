@@ -176,7 +176,7 @@ void VPRawBankToPartialCluster::createPartialCluster(
                      VPCluster::Container* clusCont) const 
 {
   LHCb::VPChannelID achan;
-  achan.setSensor(sensor);
+  achan.setModule(sensor);
 
   achan.setPixel(aWord.pixel());
   std::pair<unsigned int,unsigned int> xyFract;
@@ -185,7 +185,7 @@ void VPRawBankToPartialCluster::createPartialCluster(
   const VPLiteCluster newLiteCluster(achan,aWord.totValue(),xyFract,
                                       aWord.hasIsLong()); 
   LHCb::VPChannelID achan_central;
-  achan_central.setSensor(sensor);
+  achan_central.setModule(sensor);
   achan_central.setPixel( aPattern.pixel());
 
   const std::vector< std::pair< LHCb::VPChannelID, int > >  vectorCHID;

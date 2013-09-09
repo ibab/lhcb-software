@@ -163,7 +163,7 @@ void VPRawBankToLiteCluster::createLiteCluster(
                      VPLiteCluster::VPLiteClusters* clusCont) const 
 {
   LHCb::VPChannelID achan;
-  achan.setSensor(sensor);
+  achan.setModule(sensor);
   achan.setPixel(aWord.pixel());
   std::pair<unsigned int,unsigned int> xyFract;
   xyFract.first  = aWord.xFract();

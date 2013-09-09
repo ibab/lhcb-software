@@ -1,8 +1,11 @@
 !-----------------------------------------------------------------------------
-! Package     : VeloPix/VeloPixDAQ
+! Package     : VP/VPDAQ
 ! Responsible : Marcin Kucharczyk
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
+
+! 2013-09-09 - Heinrich Schindler
+ - Follow detector element and channel ID changes (r162190, 162191)
 
 ! 2013-07-25 - Rob Lambert
  - Added DAQ/DAQUtils dependency to resolve build-order.
