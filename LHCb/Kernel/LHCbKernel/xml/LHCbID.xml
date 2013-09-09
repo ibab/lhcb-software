@@ -144,27 +144,6 @@
        </method>
 
        <method
-         type  = "bool"
-         name  = "isVPX"
-         const = 'TRUE'
-         desc  = "return true if this is a VP X identifier">
-         <code>
-  return (isVP() ? vpID().isXType(): false);
-         </code>
-       </method>
-       
-       <method
-         type  = "bool"
-         name  = "isVPY"
-         const = 'TRUE'
-         desc  = "return true if this is a VP Y identifier">
-         <code>
-  return (isVP() ? vpID().isYType(): false);
-         </code>
-       </method>
-     
-
-       <method
          type  = "LHCb::VPChannelID"
          name  = "vpID"
          const = 'TRUE'

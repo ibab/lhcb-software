@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2013-09-09 Heinrich Schindler
+ - cleanup of VPChannelID (remove ladderZPos, rename pixel_lp to col, 
+   pixel_hp to row, sensor to module)
+
 !========================= LHCbKernel v14r2 2013-07-17 =========================
 ! 2013-06-13 - Chris Jones
  - Add a new hash_value method to RichSmartIDHashFuncs.h for Boost 1.53

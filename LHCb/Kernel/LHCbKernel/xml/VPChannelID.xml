@@ -4,205 +4,100 @@
 <gdd>
   <package name='LHCbKernel'>
     <class name = 'VPChannelID' 
-      author    = 'Victor Coco' 
-      desc      = 'This class describes a single channel of LHCb VELO PIX subdetector'
-      virtual   = "FALSE"                                             >
+           author = 'Victor Coco' 
+           desc = 'This class describes a single pixel'
+           virtual = 'FALSE'>
 
-      <desc> Fully qualified constructor: sets pixel and sensor numbers and
-        pixel type</desc>
-      <constructor 
-        argList='unsigned int station,  
-        VPChannelID::sensorType type, 
-        VPChannelID::sensorSide sidepos, 
-        VPChannelID::ladderZPos zpos,
-        unsigned int chip, 
-        unsigned int pixel_lp, 
-        unsigned int pixel_hp' 
-        desc='constructor with station, sensor side (L/R), sensor type (X,Y or inexistant (bitfield=0)),  ladder z position (F/B or inexistant (bitfield=0)), chip number, lp position and hp position of the pixel'>
+      <constructor argList = 'unsigned long module, unsigned int chip, unsigned int col, unsigned int row' 
+                   desc = 'Constructor with module, chip, column and row'>
         <code>
-m_channelID = ( station &lt;&lt; stationBits ) | ( type &lt;&lt; typeBits )  | ( sidepos &lt;&lt; sideposBits ) | ( zpos &lt;&lt; zposBits ) | ( chip &lt;&lt; chipBits ) | ( pixel_lp &lt;&lt; pixel_lpBits )| pixel_hp;
-       </code>
+  m_channelID = (module &lt;&lt; sideposBits) | (chip &lt;&lt; chipBits) | (col &lt;&lt; colBits) | row;
+        </code>
       </constructor>
 
-      <constructor
-        argList='unsigned long sensor, unsigned long pixel'
-        desc='Constructor with sensor (station-side-type) and pixel (zpos-chip-pixel_lp-pixel_hp)'>
-        <code>
-        m_channelID = (sensor &lt;&lt; typeBits) | pixel;   
-       </code>
-      </constructor>
-
-      <constructor
-        argList='unsigned long sensor,unsigned int chip, unsigned int pixel_lp,  unsigned int pixel_hp' 
-        desc='Constructor with sensor (station-side-type), chip (chip) and lp position and hp position of the pixel'>
-        <code>
-        m_channelID = (sensor &lt;&lt; typeBits) |  ( chip &lt;&lt; chipBits ) | ( pixel_lp &lt;&lt; pixel_lpBits )| pixel_hp ;   
-       </code>
-      </constructor>
-
-      <constructor argList='int id' initList = 'm_channelID(id)'
-        desc='constructor with channelID'>
-        <code></code>
+      <constructor argList = 'int id' initList = 'm_channelID(id)'
+                   desc = 'constructor with channelID'>
       </constructor>
 
       <copyconstructor/>
 
-      <method name='setType' argList='VPChannelID::sensorType type'
-        desc='Set sensor type bits'>
-        <code>
-          m_channelID &amp;=  ~typeMask;
-          m_channelID |= ((unsigned long)(type) &lt;&lt; typeBits)  &amp; typeMask;
-        </code>
-      </method>
-
-     <method type='LHCb::VPChannelID::sensorType' name='type' 
-       desc="Get sensor type" const='TRUE'> 
-        <code>
-          return sensorType((m_channelID &amp; typeMask) &gt;&gt; typeBits);
-        </code>
-      </method>
-
-      <method type='bool' name='isXType' const='TRUE'
-        desc="Is the channel in an X type sensor">
-        <code> return (VPChannelID::XType == type());</code>
-      </method>
-
-      <method type='bool' name='isYType' const='TRUE'
-        desc="Is the channel in a Y type sensor">
-        <code> return (VPChannelID::YType == type());</code>
-      </method>
-
-     <method name='setSide' argList='VPChannelID::sensorSide sidepos'
-        desc='Set sensor side bits'>
-        <code>
-          m_channelID &amp;=  ~sideposMask;
-          m_channelID |= ((unsigned long)(sidepos) &lt;&lt; sideposBits)  &amp; sideposMask;
-        </code>
-      </method>
-
-     <method type='LHCb::VPChannelID::sensorSide' name='sidepos' 
-       desc="Get sensor side" const='TRUE'> 
-        <code>
-          return sensorSide((m_channelID &amp; sideposMask) &gt;&gt; sideposBits);
-        </code>
-      </method>
-
-      <method type='bool' name='isLeft' const='TRUE'
-        desc="Is the channel in an Left side sensor">
-        <code> return (VPChannelID::Left == sidepos());</code>
-      </method>
-
-      <method type='bool' name='isRight' const='TRUE'
-        desc="Is the channel in a Right side sensor">
-        <code> return (VPChannelID::Right == sidepos());</code>
-      </method>
-
-     <method name='setLadderZPosition' argList='VPChannelID::ladderZPos zpos'
-        desc='Set ladder Z position bits'>
-        <code>
-          m_channelID &amp;=  ~zposMask;
-          m_channelID |= ((unsigned long)(zpos) &lt;&lt; zposBits)  &amp; zposMask;
-        </code>
-      </method>
-
-     <method type='LHCb::VPChannelID::ladderZPos' name='zpos' 
-       desc="Get ladder Z position " const='TRUE'> 
-        <code>
-          return ladderZPos((m_channelID &amp; zposMask) &gt;&gt; zposBits);
-        </code>
-      </method>
-
-      <method type='bool' name='isFront' const='TRUE'
-        desc="Is the channel in an front ladder">
-        <code> return (VPChannelID::Front == zpos());</code>
-      </method>
-
-      <method type='bool' name='isBack' const='TRUE'
-        desc="Is the channel in a back ladder">
-        <code> return (VPChannelID::Back == zpos());</code>
-      </method>
-
-      <method type='' name='operator long' const='TRUE'  desc='cast'>
+      <method type = '' name = 'operator long' const = 'TRUE' desc = 'cast'>
         <code>return m_channelID;</code>
       </method> 
 
-
-      <method type='unsigned long' name='sensor' const='TRUE' desc='Get sensor number'>
-        <code> return (m_channelID &amp; (stationMask | typeMask | sideposMask)) >> typeBits; </code>
-      </method>
-
-      <method name='setSensor' argList='unsigned long sensor'
-        desc='Set sensor number'>
+      <method type = 'unsigned long' name = 'module' const = 'TRUE' 
+              desc = 'Get module number'>
         <code>
-          m_channelID &amp;=  ~(stationMask | typeMask | sideposMask);
-          m_channelID |= ((unsigned long)(sensor) &lt;&lt; typeBits) &amp; (stationMask | typeMask | sideposMask);
+  return (m_channelID &amp; (stationMask | sideposMask)) >> sideposBits;
         </code>
       </method>
 
-      <method type='unsigned long' name='pixel' const='TRUE' desc='Get pixel'>
-        <code> return (m_channelID &amp; (zposMask | chipMask | pixel_lpMask | pixel_hpMask)); </code>
+      <method name = 'setModule' argList = 'unsigned long module'
+              desc = 'Set module number'>
+        <code>
+  m_channelID &amp;=  ~(stationMask | sideposMask);
+  m_channelID |= ((unsigned long)(module) &lt;&lt; sideposBits) &amp; (stationMask | sideposMask);
+        </code>
       </method>
 
-      <method name='setPixel' argList='unsigned long pixel'
-        desc='Set pixel'>
+      <method type = 'unsigned long' name = 'sidepos' const = 'TRUE' desc = 'Get side (left/right)'>
         <code>
-          m_channelID &amp;=  ~(zposMask | chipMask | pixel_lpMask | pixel_hpMask);
-          m_channelID |= ((unsigned long)(pixel))  &amp; (zposMask | chipMask | pixel_lpMask | pixel_hpMask);
+  return (m_channelID &amp; sideposMask) >> sideposBits;
+        </code>
+      </method>
+
+      <method type = 'unsigned long' name = 'pixel' const = 'TRUE' desc = 'Get pixel'>
+        <code>
+  return (m_channelID &amp; (chipMask | colMask | rowMask));
+        </code>
+      </method>
+
+      <method name = 'setPixel' argList = 'unsigned long pixel' desc = 'Set pixel'>
+        <code>
+  m_channelID &amp;= ~(chipMask | colMask | rowMask);
+  m_channelID |= ((unsigned long)(pixel))  &amp; (chipMask | colMask | rowMask);
         </code>
       </method>
        
-      <method type='unsigned int' name='GetPixellpMask' const='TRUE' desc='Get pixel low precision mask'>
-        <code> return  pixel_lpMask ; </code>
+      <method type = 'unsigned int' name = 'getColMask' const = 'TRUE' desc = 'Get column mask'>
+        <code>return colMask;</code>
       </method>
-      <method type='unsigned int' name='GetPixelhpMask' const='TRUE' desc='Get pixel high precision mask'>
-        <code> return  pixel_hpMask ; </code>
+      <method type = 'unsigned int' name = 'getRowMask' const = 'TRUE' desc = 'Get row mask'>
+        <code>return rowMask;</code>
       </method>
-      <method type='unsigned int' name='GetPixelMask' const='TRUE' desc='Get pixel mask'>
-        <code> return  (pixel_lpMask | pixel_hpMask) ; </code>
+      <method type = 'unsigned int' name = 'getPixelMask' const = 'TRUE' desc = 'Get pixel mask'>
+        <code>return (colMask | rowMask);</code>
       </method>
-      <method type='unsigned int' name='GetChipMask' const='TRUE' desc='Get chip mask'>
-        <code> return  ( zposMask | chipMask ) ; </code>
+      <method type = 'unsigned int' name = 'getChipMask' const = 'TRUE' desc = 'Get chip mask'>
+        <code>return chipMask;</code>
       </method>
        
-      <method type='unsigned int' name='GetPixellpBits' const='TRUE' desc='Get pixel low precision number of bits'>
-        <code> return  pixel_lpBits-pixel_hpBits ; </code>
+      <method type = 'unsigned int' name = 'getColBits' const = 'TRUE' desc = 'Get pixel low precision number of bits'>
+        <code>return colBits - rowBits;</code>
       </method>
-      <method type='unsigned int' name='GetPixelhpBits' const='TRUE' desc='Get pixel high precision number of bits'>
-        <code> return  chipBits-pixel_lpBits ; </code>
+      <method type = 'unsigned int' name = 'getRowBits' const = 'TRUE' desc = 'Get pixel high precision number of bits'>
+        <code>return chipBits - colBits;</code>
       </method>
-      <method type='unsigned int' name='GetPixelBits' const='TRUE' desc='Get pixel high precision number of bits'>
-        <code> return  chipBits-pixel_hpBits ; </code>
+      <method type = 'unsigned int' name = 'getPixelBits' const = 'TRUE' desc = 'Get pixel high precision number of bits'>
+        <code>return chipBits - rowBits;</code>
       </method>
 
-      <method type="std::ostream&amp;" name="fillStream" 
-        virtual="FALSE" const="TRUE"
-        desc="special serializer to ASCII stream" >
-        <arg name = "s" type = "std::ostream" inout = "BOTH" /> 
+      <method type = "std::ostream&amp;" name = "fillStream" virtual = "FALSE" const = "TRUE"
+              desc = "special serializer to ASCII stream" >
+        <arg name = "s" type = "std::ostream" inout = "BOTH"/> 
       </method> 
 
-      <enum access='PUBLIC'
-        desc='Enumerates the 2 sensor types'
-        name='sensorType'
-        value=' XType = 0, YType = 1' />
+      <enum access = 'PUBLIC'
+            desc = 'Enumerates the 2 module sides'
+            name = 'side'
+            value = 'Left = 0, Right = 1'/>
 
-      <enum access='PUBLIC'
-        desc='Enumerates the 2 sensor sides'
-        name='sensorSide'
-        value=' Left = 0, Right = 1' />
-
-      <enum access='PUBLIC'
-        desc='Enumerates the 2 sensor zpos'
-        name='ladderZPos'
-        value=' Front = 0, Back = 1' />
-      
-      <attribute type='bitfield' name='channelID' desc='VELO Pixel Channel ID'>
-        <bitfield name='pixel_hp' length='8' desc='Pixel high precision dimension position'/>
-        <bitfield name='pixel_lp' length='8' desc='Pixel low precision dimension position'/>
-        <bitfield name='chip' length='6' desc='Chip number'/>
-        <bitfield name='zpos' length='0' desc='Z position of the ladder (Front/Back)' setMeth="FALSE" getMeth="FALSE"/>
-        <bitfield name='type' length='0' desc='Sensor type' setMeth="FALSE" getMeth="FALSE"/>
-        <bitfield name='sidepos' length='1' desc='Side position of the sensor (Left/Right)' setMeth="FALSE" getMeth="FALSE"/>
-        <bitfield name='station' length='5' desc='Station number'/>
+      <attribute type = 'bitfield' name = 'channelID' desc = 'VP Channel ID'>
+        <bitfield name = 'row'     length = '8' desc = 'Pixel row'/>
+        <bitfield name = 'col'     length = '8' desc = 'Pixel column'/>
+        <bitfield name = 'chip'    length = '6' desc = 'Chip number'/>
+        <bitfield name = 'sidepos' length = '1' desc = 'Side of the module (left/right)' setMeth = "FALSE" getMeth = "FALSE"/>
+        <bitfield name = 'station' length = '5' desc = 'Station number'/>
       </attribute>
 
     </class>
