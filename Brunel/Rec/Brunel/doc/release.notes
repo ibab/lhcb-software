@@ -18,6 +18,8 @@ Purpose: LHCb reconstruction program
     made in v45r0) (PatVeloTT)
   . Follow addition of HistoCountersPrint slot in GaudiHistos
   . Follow move to use of VDT library in Rich code (RichDet, RichRecPhotonTools)
+  . Removed MC09 tuning of STOffline position tool
+  . Added AlignmentOnlineMonitor
 
 - Changes to example options
   . Remove COLLISION10-Beam3500GeV-VeloClosed-MagDown.py, now in PRConfig
