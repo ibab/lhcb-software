@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-09-10 - Stefano Perazzini
+ - Updated xml catalog files for the test data (decommissioning of Castor and freezere completely moved to EOS)
+
 ! 2013-09-06 - Ronan Wallace
  - More efficient StrippingWeJets.py and StrippingWMuJets.py added to stripping selections.
  - Prescale changes in StrippingHighPtTopo.py.

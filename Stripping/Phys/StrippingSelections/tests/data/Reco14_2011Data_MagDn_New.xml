@@ -436,12 +436,12 @@
      </logical>
    </File>
 
-  <File ID="E4C20EBB-9565-E211-932E-0030487F1655">
+  <File ID="68FF394D-E76D-E211-A882-00266CF25CE4">
      <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009315_1.full.dst"/>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110848_1.full.dst"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009315_1.full.dst"/>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110848_1.full.dst"/>
      </logical>
    </File>
 
@@ -526,15 +526,6 @@
      </logical>
    </File>
 
-  <File ID="8A6AD089-3867-E211-9BE1-003048C339D9">
-     <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025759_1.full.dst"/>
-     </physical>
-     <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025759_1.full.dst"/>
-     </logical>
-   </File>
-
   <File ID="9C794535-D76D-E211-981F-003048C45BC6">
      <physical>
        <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110812_1.full.dst"/>
@@ -544,12 +535,12 @@
      </logical>
    </File>
 
-  <File ID="6C37BA52-9765-E211-B03C-D8D385FF322D">
+  <File ID="20B7BC2E-8B6E-E211-9980-003048C4E844">
      <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009349_1.full.dst"/>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0012/00022719_00123269_1.full.dst"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009349_1.full.dst"/>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0012/00022719_00123269_1.full.dst"/>
      </logical>
    </File>
 
@@ -616,12 +607,30 @@
      </logical>
    </File>
 
+  <File ID="30079999-A165-E211-9E8F-78E3B5173E44">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009376_1.full.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009376_1.full.dst"/>
+     </logical>
+   </File>
+
   <File ID="5C04A7F0-D36D-E211-BD36-00266CF2512C">
      <physical>
        <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110705_1.full.dst"/>
      </physical>
      <logical>
        <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110705_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E4C20EBB-9565-E211-932E-0030487F1655">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009315_1.full.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009315_1.full.dst"/>
      </logical>
    </File>
 
@@ -1018,15 +1027,6 @@
      </physical>
      <logical>
        <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025640_1.full.dst"/>
-     </logical>
-   </File>
-
-  <File ID="68FF394D-E76D-E211-A882-00266CF25CE4">
-     <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110848_1.full.dst"/>
-     </physical>
-     <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110848_1.full.dst"/>
      </logical>
    </File>
 
@@ -2164,15 +2164,6 @@
      </logical>
    </File>
 
-  <File ID="9EB5CEDA-B06D-E211-ABC4-0026552138B8">
-     <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110804_1.full.dst"/>
-     </physical>
-     <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110804_1.full.dst"/>
-     </logical>
-   </File>
-
   <File ID="2A0CDBD8-B46D-E211-B53D-003048C526AA">
      <physical>
        <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110822_1.full.dst"/>
@@ -2191,15 +2182,6 @@
      </logical>
    </File>
 
-  <File ID="1A81D841-1867-E211-9804-0025B3E05BE9">
-     <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025582_1.full.dst"/>
-     </physical>
-     <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025582_1.full.dst"/>
-     </logical>
-   </File>
-
   <File ID="E26814FD-1B67-E211-86CF-3C4A92723736">
      <physical>
        <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025650_1.full.dst"/>
@@ -2209,12 +2191,12 @@
      </logical>
    </File>
 
-  <File ID="40D50FF8-D66D-E211-9D10-00266CF25FE0">
+  <File ID="9EB5CEDA-B06D-E211-ABC4-0026552138B8">
      <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110757_1.full.dst"/>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110804_1.full.dst"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110757_1.full.dst"/>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110804_1.full.dst"/>
      </logical>
    </File>
 
@@ -2407,12 +2389,12 @@
      </logical>
    </File>
 
-  <File ID="4220AC54-4267-E211-BD95-0025901D4C18">
+  <File ID="5C383C87-E26D-E211-9FE3-003048C4E72A">
      <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025758_1.full.dst"/>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110838_1.full.dst"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025758_1.full.dst"/>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110838_1.full.dst"/>
      </logical>
    </File>
 
@@ -2443,12 +2425,12 @@
      </logical>
    </File>
 
-  <File ID="B2954159-9765-E211-932E-0030487F1655">
+  <File ID="A2DCFD3A-3467-E211-B27D-0030487D5DB1">
      <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009328_1.full.dst"/>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025658_1.full.dst"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009328_1.full.dst"/>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025658_1.full.dst"/>
      </logical>
    </File>
 
@@ -2785,6 +2767,15 @@
      </logical>
    </File>
 
+  <File ID="40D50FF8-D66D-E211-9D10-00266CF25FE0">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110757_1.full.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110757_1.full.dst"/>
+     </logical>
+   </File>
+
   <File ID="7EDB81AA-A365-E211-B9E0-3C4A9272354C">
      <physical>
        <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009377_1.full.dst"/>
@@ -2827,6 +2818,15 @@
      </physical>
      <logical>
        <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009289_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CAAD7C34-B26D-E211-AFD3-3C4A92E6E4F6">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110805_1.full.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110805_1.full.dst"/>
      </logical>
    </File>
 
@@ -3082,12 +3082,12 @@
      </logical>
    </File>
 
-  <File ID="20B7BC2E-8B6E-E211-9980-003048C4E844">
+  <File ID="1A81D841-1867-E211-9804-0025B3E05BE9">
      <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0012/00022719_00123269_1.full.dst"/>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025582_1.full.dst"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0012/00022719_00123269_1.full.dst"/>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025582_1.full.dst"/>
      </logical>
    </File>
 
@@ -3100,12 +3100,12 @@
      </logical>
    </File>
 
-  <File ID="CAAD7C34-B26D-E211-AFD3-3C4A92E6E4F6">
+  <File ID="8A6AD089-3867-E211-9BE1-003048C339D9">
      <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110805_1.full.dst"/>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025759_1.full.dst"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110805_1.full.dst"/>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025759_1.full.dst"/>
      </logical>
    </File>
 
@@ -3253,12 +3253,12 @@
      </logical>
    </File>
 
-  <File ID="30079999-A165-E211-9E8F-78E3B5173E44">
+  <File ID="4AE78994-B36D-E211-840C-001B21BAC4C8">
      <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009376_1.full.dst"/>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110821_1.full.dst"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009376_1.full.dst"/>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110821_1.full.dst"/>
      </logical>
    </File>
 
@@ -3412,15 +3412,6 @@
      </physical>
      <logical>
        <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025706_1.full.dst"/>
-     </logical>
-   </File>
-
-  <File ID="A2DCFD3A-3467-E211-B27D-0030487D5DB1">
-     <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025658_1.full.dst"/>
-     </physical>
-     <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025658_1.full.dst"/>
      </logical>
    </File>
 
@@ -3775,21 +3766,21 @@
      </logical>
    </File>
 
-  <File ID="5C383C87-E26D-E211-9FE3-003048C4E72A">
+  <File ID="4220AC54-4267-E211-BD95-0025901D4C18">
      <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110838_1.full.dst"/>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025758_1.full.dst"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110838_1.full.dst"/>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025758_1.full.dst"/>
      </logical>
    </File>
 
-  <File ID="3EF095DD-1767-E211-8B06-003048D436E8">
+  <File ID="9C34A00C-DB6D-E211-93F0-001B21B994A0">
      <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025674_1.full.dst"/>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110834_1.full.dst"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025674_1.full.dst"/>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110834_1.full.dst"/>
      </logical>
    </File>
 
@@ -3979,6 +3970,15 @@
      </physical>
      <logical>
        <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025715_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6C37BA52-9765-E211-B03C-D8D385FF322D">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009349_1.full.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009349_1.full.dst"/>
      </logical>
    </File>
 
@@ -4279,6 +4279,15 @@
      </logical>
    </File>
 
+  <File ID="B2954159-9765-E211-932E-0030487F1655">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009328_1.full.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00009328_1.full.dst"/>
+     </logical>
+   </File>
+
   <File ID="BE34E722-2B67-E211-A5BA-003048F0E51A">
      <physical>
        <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025701_1.full.dst"/>
@@ -4312,15 +4321,6 @@
      </physical>
      <logical>
        <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110862_1.full.dst"/>
-     </logical>
-   </File>
-
-  <File ID="6A95EC84-0A6E-E211-A4AF-9C8E9918C730">
-     <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0012/00022719_00120618_1.full.dst"/>
-     </physical>
-     <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0012/00022719_00120618_1.full.dst"/>
      </logical>
    </File>
 
@@ -4684,15 +4684,6 @@
      </logical>
    </File>
 
-  <File ID="4AE78994-B36D-E211-840C-001B21BAC4C8">
-     <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110821_1.full.dst"/>
-     </physical>
-     <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110821_1.full.dst"/>
-     </logical>
-   </File>
-
   <File ID="3E0BBC36-0F67-E211-8657-003048C693BA">
      <physical>
        <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025635_1.full.dst"/>
@@ -4801,12 +4792,12 @@
      </logical>
    </File>
 
-  <File ID="9C34A00C-DB6D-E211-93F0-001B21B994A0">
+  <File ID="3EF095DD-1767-E211-8B06-003048D436E8">
      <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110834_1.full.dst"/>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025674_1.full.dst"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0011/00022719_00110834_1.full.dst"/>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025674_1.full.dst"/>
      </logical>
    </File>
 
@@ -4891,12 +4882,12 @@
      </logical>
    </File>
 
-  <File ID="B69B1097-5865-E211-A1ED-0018FEFAB654">
+  <File ID="6A95EC84-0A6E-E211-A4AF-9C8E9918C730">
      <physical>
-       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00005090_1.full.dst"/>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0012/00022719_00120618_1.full.dst"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00005090_1.full.dst"/>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0012/00022719_00120618_1.full.dst"/>
      </logical>
    </File>
 
@@ -5005,6 +4996,15 @@
      </physical>
      <logical>
        <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0002/00022719_00025757_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B69B1097-5865-E211-A1ED-0018FEFAB654">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00005090_1.full.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision11/FULL.DST/00022719/0000/00022719_00005090_1.full.dst"/>
      </logical>
    </File>
 
