@@ -5,6 +5,9 @@
 ! Purpose     : track-related functors for LoKi-framework 
 ! -----------------------------------------------------------------------------
 
+! 2013-09-09 - Heinrich Schindler
+ - Remove isVPX, isVPY checks
+
 !========================= LoKiTracks v2r8p4 2013-05-07 =========================
 
 ! 2013-04-22 - Chris Jones
