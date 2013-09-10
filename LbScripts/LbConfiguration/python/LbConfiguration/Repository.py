@@ -30,9 +30,9 @@ repository_shortpaths = {
 
 # Define default repositories
 for k in repositories:
-    repositories[k]["default"] = repositories[k]["ssh"]
+    repositories[k]["default"] = repositories[k]["anonymous"]
 
-repository_shortpaths["default"]=repository_shortpaths["ssh"] #default protocol
+repository_shortpaths["default"]=repository_shortpaths["anonymous"] #default protocol
 repository_shortpaths["authenticated"]=repository_shortpaths["ssh"] #default authenticated protocol
 
 def getRepositories( user_svn = None, user_cvs = None, protocol = "default" ):

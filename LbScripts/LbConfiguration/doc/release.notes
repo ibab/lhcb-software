@@ -1,3 +1,7 @@
+2013-09-10  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/Repository.py: changed the default svn protocol to anonymous
+
 2013-08-07 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Package.py: Added package WG/BNoCConfig
