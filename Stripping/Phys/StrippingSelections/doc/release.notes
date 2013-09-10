@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-09-10 - Konstantinos A. Petridis
+  - Updated Beauty2Charm_Utily.py to make use of new ConeJetProxy tool
+    that selects ps-topo candidates with sufficient vector-sum-pT of tracks
+    and neutrals in a cone around it
+  - Updated StrippingBeauty2Charm.py to add new dictionary entries for the ps-topo line
+    regarding the ConeJetProxy tool (cone size and min_pt cut)
+
 ! 2013-09-10 - Stefano Perazzini
  - Updated xml catalog files for the test data (decommissioning of Castor and freezere completely moved to EOS)
 

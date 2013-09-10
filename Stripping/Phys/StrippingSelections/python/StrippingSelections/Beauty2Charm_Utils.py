@@ -7,6 +7,7 @@ from PhysSelPython.Wrappers import DataOnDemand, Selection, MergedSelection
 from Beauty2Charm_LoKiCuts import LoKiCuts
 from Configurables import OfflineVertexFitter
 from Configurables import SubstitutePID
+from Configurables import ConeJetProxyFilter
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -185,8 +186,17 @@ def makeTopoCands(inputs,addsumpt):
     topo4 = topoBDT(4,topo4)
     return [MergedSelection('PseudoTopoCands',[topo2,topo3,topo4])]
 
+def conePtFilter(inputs,cone_size,cone_pt):
+    alg = ConeJetProxyFilter('ConeJetTopoFilter',Code='ALL',DeltaR=cone_size,MinPT=cone_pt)
+    alg.ChargedParticles = 'Phys/StdAllNoPIDsPions'
+    alg.NeutralParticles = 'Phys/StdLooseAllPhotons'
+    return Selection('ConeJetFilter',
+                     Algorithm=alg,
+                     RequiredSelections=inputs)
+
 def makeDoubleTopo(inputs,config):
     topos = makeTopoCands(inputs,config['ADDSUMPT'])
+    topos = [conePtFilter(topos,config['TOPOCONESIZE'],config['TOPOCONEPT_MIN'])]
     preambulo = ['D1 = ACHILD(BPVVD,1)',
                  'DZ1 = ACHILD(BPVVDZ,1)',
                  'DR1 = ACHILD(BPVVDR,1)',
