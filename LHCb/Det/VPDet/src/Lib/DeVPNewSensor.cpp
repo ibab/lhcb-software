@@ -36,7 +36,7 @@ DeVPNewSensor::DeVPNewSensor(const std::string& name) :
 //==============================================================================
 DeVPNewSensor::~DeVPNewSensor() {
 
-  delete m_msg;
+  if (m_msg) delete m_msg;
 
 }
 
@@ -133,23 +133,27 @@ StatusCode DeVPNewSensor::pointToChannel(const Gaudi::XYZPoint& point,
     if (localPoint.x() < x0 + step) {
       // Set the chip number.
       channel.setChip(m_chip + i);
-      int col = int((localPoint.x() - x0) / m_pixelSize);
-      int row = int(localPoint.y() / m_pixelSize);
-      if (col < 0) {
-        col = 0;
-      } else if (col >= m_nCols) {
-        col = m_nCols - 1;
+      // Set the row and column.
+      unsigned int col = 0;
+      unsigned int row = 0;
+      if (localPoint.x() > x0) {
+        col = int((localPoint.x() - x0) / m_pixelSize);
+        if (col >= m_nCols) col = m_nCols - 1;
       }
-      if (row < 0) {
-        row = 0;
-      } else if (row >= m_nRows) {
-        row = m_nRows - 1;
+      if (localPoint.y() > 0.) {
+        row = int(localPoint.y() / m_pixelSize);
+        if (row >= m_nRows) row = m_nRows - 1;
       }
       channel.setCol(col);
       channel.setRow(row); 
     }
     x0 += step;
   }
+  // Calculate the interpixel fractions.
+  Gaudi::XYZPoint pixelCentre = globalToLocal(channelToPoint(channel));
+  std::pair<double, double> pitch = pixelSize(channel);
+  fraction.first = (localPoint.x() - pixelCentre.x()) / pitch.first;
+  fraction.second = (localPoint.y() - pixelCentre.y()) / pitch.second; 
   return StatusCode::SUCCESS;
 
 }
@@ -213,8 +217,9 @@ StatusCode DeVPNewSensor::pointTo3x3Channels(const Gaudi::XYZPoint& point,
   std::pair<double, double> fraction;
   StatusCode sc = pointToChannel(point, centralChannel, fraction);
   if (!sc.isSuccess()) return sc;
-
   channels.clear();
+  sc = channelToNeighbours(centralChannel, channels);
+  if (!sc.isSuccess()) return sc;
   channels.push_back(centralChannel);
   return StatusCode::SUCCESS;
 
@@ -226,6 +231,72 @@ StatusCode DeVPNewSensor::pointTo3x3Channels(const Gaudi::XYZPoint& point,
 StatusCode DeVPNewSensor::channelToNeighbours(const LHCb::VPChannelID& channel,
                                               std::vector <LHCb::VPChannelID>& neighbours) const {
 
+  neighbours.clear();
+  const unsigned int chip = channel.chip();
+  const unsigned int col = channel.col();
+  const unsigned int row = channel.row();
+  if (row > 0) {
+    LHCb::VPChannelID neighbour(channel);
+    neighbour.setRow(row - 1);
+    neighbours.push_back(neighbour);
+  }
+  if (row < m_nRows - 1) {
+    LHCb::VPChannelID neighbour(channel);
+    neighbour.setRow(row + 1);
+    neighbours.push_back(neighbour);
+  }
+  if (col > 0) {
+    LHCb::VPChannelID neighbour(channel);
+    neighbour.setCol(col - 1);
+    neighbours.push_back(neighbour);
+    if (row > 0) {
+      neighbour.setRow(row - 1);
+      neighbours.push_back(neighbour);
+    }
+    if (row < m_nRows - 1) {
+      neighbour.setRow(row + 1);
+      neighbours.push_back(neighbour);
+    }
+  } else if (chip % m_nChips > 0) {
+    LHCb::VPChannelID neighbour(channel);
+    neighbour.setChip(chip - 1);
+    neighbour.setCol(m_nCols - 1);
+    neighbours.push_back(neighbour);
+    if (row > 0) {
+      neighbour.setRow(row - 1);
+      neighbours.push_back(neighbour);
+    }
+    if (row < m_nRows - 1) {
+      neighbour.setRow(row + 1);
+      neighbours.push_back(neighbour);
+    }
+  } 
+  if (col < m_nCols - 1) {
+    LHCb::VPChannelID neighbour(channel);
+    neighbour.setCol(col + 1);
+    neighbours.push_back(neighbour);
+    if (row > 0) {
+      neighbour.setRow(row - 1);
+      neighbours.push_back(neighbour);
+    }
+    if (row < m_nRows - 1) {
+      neighbour.setRow(row + 1);
+      neighbours.push_back(neighbour);
+    }
+  } else if (chip % m_nChips < m_nChips - 1) {
+    LHCb::VPChannelID neighbour(channel);
+    neighbour.setChip(chip + 1);
+    neighbour.setCol(0);
+    neighbours.push_back(neighbour);
+    if (row > 0) {
+      neighbour.setRow(row - 1);
+      neighbours.push_back(neighbour);
+    }
+    if (row < m_nRows - 1) {
+      neighbour.setRow(row + 1);
+      neighbours.push_back(neighbour);
+    }
+  }
   return StatusCode::SUCCESS;
 
 }
