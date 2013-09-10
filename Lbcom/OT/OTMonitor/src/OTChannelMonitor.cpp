@@ -120,7 +120,7 @@ StatusCode OTChannelMonitor::initialize() {
       getLayerGeometry(uniqueLayer, min_modules_x, min_modules_y); 
       double min = min_modules_x.front(), max = min_modules_x.back();
       if ( msgLevel(MSG::DEBUG) ) debug() << "Layer " << uniqueLayer << " " 
-                                          <<layername << "  interval = " << min << " " << max << endreq;
+                                          <<layername << "  interval = " << min << " " << max << endmsg;
 
       const int nbin = (max-min)/5.25; // binning roughly per straw.
       
@@ -179,7 +179,7 @@ StatusCode OTChannelMonitor::execute() {
       // Get unique layer number 
       int uniqueLayer = ihit->channel().sequentialUniqueLayer(); 
       if ( msgLevel(MSG::DEBUG) ) 
-	debug() << " Going to fill layer " << uniqueLayer << " at point " << mypoint.X() << endreq;
+	debug() << " Going to fill layer " << uniqueLayer << " at point " << mypoint.X() << endmsg;
 
       // Fill layer histogram
       fill(m_LayerHist[uniqueLayer], mypoint.X(),weight);
@@ -193,8 +193,6 @@ StatusCode OTChannelMonitor::execute() {
   }
   
   return sc ;
-
-  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -227,9 +225,9 @@ void OTChannelMonitor::debugChannel(const LHCb::OTChannelID& channel){
   int realOtis =  ( channel.straw()-1) / 32; // This should be in OTChannelID but is not 
   int otisChannel =  ( channel.straw()-1) % 32; // And this too
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "Considering channel " << channel.channelID() << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Considering channel " << channel.channelID() << endmsg;
   if ( msgLevel(MSG::DEBUG) ) debug() << "Considering Otis " << m_otisNames[uniqueOtis(channel)] 
-				      <<  " sequential number " << uniqueOtis(channel) << endreq;
+				      <<  " sequential number " << uniqueOtis(channel) << endmsg;
   if ( msgLevel(MSG::DEBUG) ) debug()  << " T " << channel.station() 
 				       << " L "  << channel.layer() 
 				       << " Q " << channel.quarter() 
@@ -238,7 +236,7 @@ void OTChannelMonitor::debugChannel(const LHCb::OTChannelID& channel){
 				       << " ROtis " << realOtis    
 				       << " Straw " << channel.straw() 
 				       << " RStraw " << otisChannel 
-				       << endreq;
+				       << endmsg;
 
 }
 
@@ -258,7 +256,7 @@ void OTChannelMonitor::getLayerGeometry(int uniqueLayer,
 					std::vector<double> & min_modules_y){
   // Function to get the geometry of each layer to configure bin sizes 
   // ----------
-  if ( msgLevel(MSG::DEBUG) ) debug() << "Getlayergeometry called for layer " << uniqueLayer  <<endreq; 
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Getlayergeometry called for layer " << uniqueLayer  <<endmsg; 
   LHCb::OTChannelID  aChan(uniqueLayer/4 +1 , uniqueLayer%4, 1, 0u, 0u, 0u);
 
   // Probably all this can be optimized
@@ -343,7 +341,7 @@ double OTChannelMonitor::getChannelWeight(const DeOTModule *module, LHCb::OTChan
     weight =  (erf(ymax/sigma) - erf(ymin_long/sigma))/
       ((erf(ymax/sigma) - erf(ymin/sigma)));
     if ( msgLevel(MSG::DEBUG) ) debug() << "Module min is " << ymin 
-                                        << " instead of "<< ymin_long << "   correction is " << weight << endreq;
+                                        << " instead of "<< ymin_long << "   correction is " << weight << endmsg;
     
   }
   return weight;

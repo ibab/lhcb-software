@@ -3,6 +3,10 @@
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
 
+! 2013-09-10 - Marco Cattaneo
+ - Restore one more fix from v3r5p1
+ - Replace endreq by endmsg
+
 !========================= OTMonitor v3r6p1 2013-07-18 =========================
 ! 2013-07-06 - Francesco Dettori 
  - Restore v3r5p1 fixes, previously removed by mistake.
