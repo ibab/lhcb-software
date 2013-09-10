@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2013-09-09 - Heinrich Schindler
+ - Replace VPChannelID::sensor() by VPChannelID::module()
+
 !========================= TrackMCTools v3r4 2013-06-03 =========================
 ! 2012-05-01 - Paul Seyfert
  - introduce return values in ghost classification tools
