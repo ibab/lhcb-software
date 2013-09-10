@@ -23,6 +23,7 @@ def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
     seq.Members.append( TrackMonitor(HistoPrint=HistoPrint) )
     seq.Members.append( TrackDiMuonMonitor(HistoPrint=HistoPrint) )
     seq.Members.append( TrackVertexMonitor(HistoPrint=HistoPrint) )
+    seq.Members.append( AlignmentOnlineMonitor(HistoPrint=HistoPrint) )
 
     from Configurables import TrackSys
     if TrackSys().timing():
@@ -37,7 +38,6 @@ def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
         if (subDets is None or "TT" in subDets):   seq.Members.append( TTTrackMonitor(HistoPrint=HistoPrint) )
         if (subDets is None or "IT" in subDets):   seq.Members.append( ITTrackMonitor(HistoPrint=HistoPrint) )
         seq.Members.append( TrackPV2HalfAlignMonitor(HistoPrint=HistoPrint) )
-        seq.Members.append( AlignmentOnlineMonitor(HistoPrint=HistoPrint) )
 	if RecMoniConf().expertHistos() :
             if [det for det in ['Velo', 'TT', 'IT', 'OT'] if (subDets is None or det in subDets)]:
                 seq.Members.append( HitEffPlotter(HistoPrint=HistoPrint) )

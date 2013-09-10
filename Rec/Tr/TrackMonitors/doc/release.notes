@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-09-10 - Patrick Koppenburg
+ - AlignmentOnlineMonitor should always run, not only offline.
+
 ! 2013-09-08 - Patrick Koppenburg
  - AlignmentOnlineMonitor : remove cout and fix compilation warning on gcc4.7
 
