@@ -1,0 +1,73 @@
+#============================================================================
+# $Id: requirements,v 1.143 2010-09-10 11:34:50 graven Exp $
+# Created    : 03/06/2005 by P. Koppenburg
+# Maintainer : R. Lambert, G. Raven
+#============================================================================
+
+#============================================================================
+package Moore
+version           v20r3p3
+
+branches doc cmt options python
+
+# Packages needed to compile and link the application
+use GaudiConf          v*                   -no_auto_imports
+use GaudiKernel        v*
+# use GaudiProfiling        v*
+
+# Packages needed to resolve external dependencies at run time
+use Python              v*      LCG_Interfaces -no_auto_imports
+use HepMC               v*      LCG_Interfaces -no_auto_imports
+
+# Databases
+use DDDB                v*      Det         -no_auto_imports
+use ParamFiles          v8r*                -no_auto_imports
+use FieldMap            v5r*                -no_auto_imports
+use HltTCK              v*      TCK         -no_auto_imports
+use L0TCK               v*      TCK         -no_auto_imports
+use AppConfig           v3r*                -no_auto_imports
+use PRConfig            v*    
+use RawEventFormat      v*
+
+
+# Patches
+
+
+# The rest are needed only to set up environment variables for job options
+# and to give a cmt broadcast dependency for user checked out component packages
+
+# From GAUDI project
+use GaudiSvc            v*                  -no_auto_imports
+use GaudiPython         v*                  -no_auto_imports
+
+# From LHCbSys
+use L0Interfaces        v*      L0          -no_auto_imports
+
+#-- Lbcom packages 
+use LbcomSys            v*                  -no_auto_imports
+
+#-- Rec packages 
+use RecSys              v*                  -no_auto_imports
+
+#-- HLT packages 
+use HltSys              v*                  -no_auto_imports
+
+#-- Phys packages 
+use PhysSys             v*                  -no_auto_imports
+
+#-- Online ??
+#use OnlineSys           v*                  -no_auto_imports
+
+#============================================================================
+#set CORAL_SQLITE_TEMP_STORE_MEMORY yes
+#============================================================================
+apply_pattern application_path
+apply_pattern install_python_modules
+apply_pattern GaudiApp
+
+# define aliases
+alias Moore gaudirun.py
+
+private
+apply_pattern QMTest
+end_private
