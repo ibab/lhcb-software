@@ -25,46 +25,50 @@ def ContainsFNmatch(dir,matches) :
         dirs.extend([ f for f in files if islink(f) and isdir(f)])
     return False
 #
-addRunTimeProject = lambda proj,vers : ['--dev-dir=/home/online/ONLINE','--use',proj+'Sys','--runtime-project',proj,vers ]
+
+def CreateSetupMoore( *argv ) :
+    addRunTimeProject = lambda proj,vers : ['--dev-dir=/home/online/ONLINE','--use',proj+'Sys','--runtime-project',proj,vers ]
 
 
+    ### TODO: replace bare positional arguments with named arguments using argparse
+    output = argv[0]
+    version = argv[1]
 
-### TODO: replace bare positional arguments with named arguments using argparse
-output = sys.argv[1]
-version = sys.argv[2]
+    target_dir = dirname( output )
+    if not exists( target_dir ) : makedirs( target_dir )
 
-target_dir = dirname( output )
-if not exists( target_dir ) : makedirs( target_dir )
+    from LbConfiguration.SetupProject import SetupProject
+    run_opts = [ ]
+    if len(argv)> 2 : 
+        run_opts = ['--dev-dir=/home/online/ONLINE' ] +  addRunTimeProject( *argv[2:] ) 
 
-from LbConfiguration.SetupProject import SetupProject
-run_opts = [ ]
-if len(sys.argv)> 3 : 
-    run_opts = ['--dev-dir=/home/online/ONLINE' ] +  addRunTimeProject( *sys.argv[3:] ) 
+    print 'generating %s assuming version %s'%(output,version)
+    if run_opts : print 'with runtime project options %s'%(' '.join(run_opts))
+    SetupProject().main( run_opts + [ '--shell=sh','--output='+output,'Moore',version] )
 
-print 'generating %s assuming version %s'%(output,version)
-if run_opts : print 'with runtime project options %s'%(' '.join(run_opts))
-SetupProject().main( run_opts + [ '--shell=sh','--output='+output,'Moore',version] )
+    if exists(output) :
 
-if exists(output) :
-
-    print 'removing use of StripPath.sh'
+        print 'removing use of StripPath.sh'
 # remove call to StripPath.sh from generated SetupProject.sh
-    with open(output, 'r') as f : txt = f.read()
-    with open(output, 'w') as f :
-        for input in txt.splitlines():
-            line = input.replace('echo ','#echo ')
-            line = re.sub('test -f [^ ]*StripPath.sh','false', line)
-            m = re.match('export ([^=]+)="([^"]+)"',line)
-            if m :
-                (name,value) = m.groups()
-                if name == 'LD_LIBRARY_PATH':
-                    # value = StripPath(value,lambda x: not re.search('lcg/external/Grid',x))
-                    value = StripPath(value,lambda x: ContainsFNmatch(x,['*.so']))
-                if name == 'PYTHONPATH' :  # TODO: deal with python.zip files...
-                    value = StripPath(value)
-                    #value = StripPath(value,lambda x: ContainsFNmatch(x,['*.py','*.pyc']))
-                line = 'export %s="%s"'%(name,value)
-            if input!=line : f.write('#ORIG: %s\n'%input)
-            f.write(line+'\n')        
-else :
-    print 'SetupProject did not generate %s... this is fine during a release build...' % output
+        with open(output, 'r') as f : txt = f.read()
+        with open(output, 'w') as f :
+            for input in txt.splitlines():
+                line = input.replace('echo ','#echo ')
+                line = re.sub('test -f [^ ]*StripPath.sh','false', line)
+                m = re.match('export ([^=]+)="([^"]+)"',line)
+                if m :
+                    (name,value) = m.groups()
+                    if name == 'LD_LIBRARY_PATH':
+                        # value = StripPath(value,lambda x: not re.search('lcg/external/Grid',x))
+                        value = StripPath(value,lambda x: ContainsFNmatch(x,['*.so']))
+                    if name == 'PYTHONPATH' :  # TODO: deal with python.zip files...
+                        value = StripPath(value)
+                        #value = StripPath(value,lambda x: ContainsFNmatch(x,['*.py','*.pyc']))
+                    line = 'export %s="%s"'%(name,value)
+                if input!=line : f.write('#ORIG: %s\n'%input)
+                f.write(line+'\n')        
+    else :
+        print 'SetupProject did not generate %s... this is fine during a release build...' % output
+
+
+if __name__ == "__main__": CreateSetupMoore( *sys.argv[1:] )

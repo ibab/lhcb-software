@@ -1,33 +1,20 @@
 #!/usr/bin/env python
-import os, os.path
-import re
-import sys
-import string
-from os import makedirs
-from os.path import exists, dirname
 
 
-### TODO: replace bare positional arguments with named arguments using argparse
-output = sys.argv[1]
-setup = sys.argv[2]
-split = sys.argv[3] if len(sys.argv)>3 else ''
+def CreateRunMooreOnline_EFF( output, setup, split='' ) :
+    from os import makedirs,chmod
+    from os.path import exists, dirname
 
-
-
-print 'using ' + setup
-print 'generating '+ output
-target_dir = dirname( output )
-if not exists( target_dir ) : makedirs( target_dir )
-file = open(output,'w+')
-file.write( """#!/bin/sh
+    print 'using ' + setup
+    print 'generating '+ output
+    target_dir = dirname( output )
+    if not exists( target_dir ) : makedirs( target_dir )
+    file = open(output,'w+')
+    file.write( """#!/bin/sh
 ulimit -v 3221225472
 export PARENT=$1
 export PARTNAME=$2
 export NBOFSLAVES=${3:-0}
-##if test -n "$3" ;
-##   then export NBOFSLAVES=$3
-##   else export NBOFSLAVES=0
-##fi
    
 # remove the args because they interfere with the cmt scripts
 export HOME=/home/$(/usr/bin/whoami)
@@ -112,15 +99,21 @@ ${gaudi_exe} ${GAUDIONLINEROOT}/${CMTCONFIG}/libGaudiOnline.so \\
     -opt=command="import Moore.runOnline; Moore.runOnline.start(NbOfSlaves = "${NBOFSLAVES}", Split = '%(split)s', WriterRequires = %(WriterRequires)s )" \\
  ${APP_STARTUP_OPTS};
 
-"""%({'setup': setup, 'split' : split, 'WriterRequires' : { 'Hlt1' : "[ 'Hlt1' ]" , 'Hlt2' : "[ 'Hlt2' ]" }.get( split, "[ 'HltDecisionSequence' ]" ) } ) )
+    """%({'setup': setup, 'split' : split, 'WriterRequires' : { 'Hlt1' : "[ 'Hlt1' ]" , 'Hlt2' : "[ 'Hlt2' ]" }.get( split, "[ 'HltDecisionSequence' ]" ) } ) )
 
-from stat import *
-orig = os.stat(output)[0]
-rwxrwxrx = S_IRUSR | S_IRGRP | S_IROTH | S_IWUSR | S_IWGRP | S_IXUSR | S_IXGRP | S_IXOTH 
-if orig|rwxrwxrx != orig :
-    print '%s has permissions %d -- want %d instead' % (output,orig,orig|rwxrwxrx)
-    try :
-        os.chmod(output,rwxrwxrx)
-        print 'updated permission of %s'%(output)
-    except :
-        print 'WARNING: could not update permissions of %s -- please make sure it is executable!' % output
+    from stat import S_IRUSR, S_IRGRP, S_IROTH, S_IWUSR, S_IWGRP, S_IXUSR, S_IXGRP, S_IXOTH 
+    import os
+    orig = os.stat(output)[0]
+    rwxrwxrx = S_IRUSR | S_IRGRP | S_IROTH | S_IWUSR | S_IWGRP | S_IXUSR | S_IXGRP | S_IXOTH 
+    if orig|rwxrwxrx != orig :
+        print '%s has permissions %d -- want %d instead' % (output,orig,orig|rwxrwxrx)
+        try :
+            chmod(output,rwxrwxrx)
+            print 'updated permission of %s'%(output)
+        except :
+            print 'WARNING: could not update permissions of %s -- please make sure it is executable!' % output
+
+if __name__ == '__main__' :
+    ### TODO: replace bare positional arguments with named arguments using argparse
+    import sys
+    CreateRunMooreOnline_EFF( output = sys.argv[1], setup = sys.argv[2] , split = sys.argv[3] if len(sys.argv)>3 else '' )
