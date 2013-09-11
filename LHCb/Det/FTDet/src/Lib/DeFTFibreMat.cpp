@@ -190,7 +190,10 @@ StatusCode DeFTFibreMat::initialize(){
   m_fibreMatMaxY = fibreMatCenter.y() + m_fibreMatHalfSizeY; 
   m_fibreMatMinZ = fibreMatCenter.z() - m_fibreMatHalfSizeZ; 
   m_fibreMatMaxZ = fibreMatCenter.z() + m_fibreMatHalfSizeZ; 
-  m_layerPosZ    = fibreMatCenter.z();
+  m_layerPosZ = fibreMatCenter.z();
+
+  
+    
 
   double CarHoneyKapWidth = 0.15 + 20. + 0.05;
 
@@ -836,16 +839,27 @@ DetectorSegment DeFTFibreMat::createDetSegment(const FTChannelID& channel,
   /// the fibres are shorter
   
   double ds_yMin, ds_yMax;
+  double z;
   if ( channel.quarter()>1 ) {
     ds_yMin = 0.;
     ds_yMax = m_layerMaxY;
+    z = m_layerPosZ - m_dzDy* (0.5*m_moduleGapH+m_fibreMatHalfSizeY)* cos(m_angle);
+    //z = m_layerPosZ - m_dzDy* (0.5*m_moduleGapH+m_fibreMatHalfSizeY);
   }
   else{
     ds_yMin = m_layerMinY;
     ds_yMax = 0.;
+    //z = m_layerPosZ + m_dzDy* (0.5*m_moduleGapH+m_fibreMatHalfSizeY);
+    z = m_layerPosZ + m_dzDy* (0.5*m_moduleGapH+m_fibreMatHalfSizeY)* cos(m_angle);
   }
 
-  return DetectorSegment( segmentU, m_layerPosZ, m_tanAngle, m_dzDy, ds_yMin, ds_yMax );
+  
+ 
+  
+  
+
+  //return DetectorSegment( segmentU, m_layerPosZ, m_tanAngle, m_dzDy, ds_yMin, ds_yMax );
+  return DetectorSegment( segmentU, z, m_tanAngle, m_dzDy, ds_yMin, ds_yMax );
 }
 
 //=============================================================================
