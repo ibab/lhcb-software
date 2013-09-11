@@ -4,6 +4,10 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
+!========================= FTDet v2r3 2013-09-11 =========================
+! 2013-09-11 - Michel De Cian
+ - Fix for wrong z position of FibreMat in DeFTFibreMat.cpp
+
 ! 2013-07-30 - Francesco Polci
 - modified a FATAL into DEBUG in DeFTDetector.cpp
 - modified DeFTTestAlg.h and .cpp to produced a ntuple for performing checks
