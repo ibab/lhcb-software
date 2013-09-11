@@ -27,9 +27,6 @@ def ContainsFNmatch(dir,matches) :
 #
 
 def CreateSetupMoore( *argv ) :
-    addRunTimeProject = lambda proj,vers : ['--dev-dir=/home/online/ONLINE','--use',proj+'Sys','--runtime-project',proj,vers ]
-
-
     ### TODO: replace bare positional arguments with named arguments using argparse
     output = argv[0]
     version = argv[1]
@@ -38,13 +35,9 @@ def CreateSetupMoore( *argv ) :
     if not exists( target_dir ) : makedirs( target_dir )
 
     from LbConfiguration.SetupProject import SetupProject
-    run_opts = [ ]
-    if len(argv)> 2 : 
-        run_opts = ['--dev-dir=/home/online/ONLINE' ] +  addRunTimeProject( *argv[2:] ) 
 
     print 'generating %s assuming version %s'%(output,version)
-    if run_opts : print 'with runtime project options %s'%(' '.join(run_opts))
-    SetupProject().main( run_opts + [ '--shell=sh','--output='+output,'Moore',version] )
+    SetupProject().main( [ '--dev-dir=/home/online/ONLINE','--shell=sh','--output='+output,'MooreOnline',version] )
 
     if exists(output) :
 

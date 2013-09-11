@@ -32,8 +32,8 @@ private
 # but if ONLINE_MOORE is set we overrule this...
 #tag ONLINE_OVERRULE_MOORE_SETUP
 macro Create_SetupMoore_output  "$(CMTINSTALLAREA)/scripts/setupMoore_$(version).sh"
-macro Create_SetupMoore_command "python ../scripts/CreateSetupMoore.py $(Create_SetupMoore_output) $(version) " \
-        ONLINE_OVERRULE_MOORE_SETUP "python ../scripts/CreateSetupMoore.py $(Create_SetupMoore_output) $(version) Online v5r3"
+macro Create_SetupMoore_command "python ../scripts/CreateSetupMooreOnline.py $(Create_SetupMoore_output) $(version) " \
+        ONLINE_OVERRULE_MOORE_SETUP "python ../scripts/CreateSetupMooreOnline.py $(Create_SetupMoore_output) $(version) Online v5r3"
 apply_pattern CallCommand  target=Create_SetupMoore
 
 macro Create_RunMooreOnline_output  "$(CMTINSTALLAREA)/scripts/runMooreOnline_EFF.sh"
