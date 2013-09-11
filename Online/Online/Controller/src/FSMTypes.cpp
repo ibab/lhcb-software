@@ -46,8 +46,9 @@ static Type* defineDAQType()    {
   running->when  (  anyChildInState(error),        moveTo(error));
   running->when  (  anyChildInState(offline),      moveTo(offline));
   running->when  (  anyChildInState(not_ready),    moveTo(not_ready));
+  running->when  (  anyChildInState(paused),       moveTo(paused));
   running->when  (  allChildrenInState(ready),     moveTo(ready));
-  running->when  (  allChildrenInState(running,paused),   moveTo(paused));
+  //running->when  (  allChildrenInState(running),   moveTo(running));
 
   paused->when   (  anyChildInState(error),        moveTo(error));
   paused->when   (  anyChildInState(offline),      moveTo(offline));
@@ -101,11 +102,11 @@ static Type* defineDAQType()    {
 
   // Otherwise: FULL KILL on recover
   int flags = KILL;//NO_CHECKS|ON_TIMEOUT_KILL
-  Tr*  recover0  = daq->addTransition("recover",   error,     offline,   flags);
-  Tr*  recover1  = daq->addTransition("recover",   running,   offline,   flags);
-  Tr*  recover2  = daq->addTransition("recover",   ready,     offline,   flags);
-  Tr*  recover3  = daq->addTransition("recover",   not_ready, offline,   flags);
-  Tr*  recover5  = daq->addTransition("recover",   paused,    offline,   flags);
+  /* Tr*  recover0  = */  daq->addTransition("recover",   error,     offline,   flags);
+  /* Tr*  recover1  = */  daq->addTransition("recover",   running,   offline,   flags);
+  /* Tr*  recover2  = */  daq->addTransition("recover",   ready,     offline,   flags);
+  /* Tr*  recover3  = */  daq->addTransition("recover",   not_ready, offline,   flags);
+  /* Tr*  recover5  = */  daq->addTransition("recover",   paused,    offline,   flags);
 #if 0
   recover0->adoptRule( AllChildrenOfType(daq).execTransition(daq->transitionsByName("recover")));
   recover1->adoptRule( AllChildrenOfType(daq).execTransition(daq->transitionsByName("recover")));
