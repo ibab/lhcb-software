@@ -1,7 +1,8 @@
-project MOORE
+project MOOREONLINE
 
-use HLT     HLT_v20r3p1
+use MOORE     MOORE_v20r3p3
+use ONLINE    ONLINE_v5r3
 
-container       MooreSys
+container       MooreOnlineSys
 build_strategy	with_installarea
 setup_strategy	root
