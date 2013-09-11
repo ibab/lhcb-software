@@ -1,8 +1,9 @@
 /** \mainpage notitle
- *  \anchor mooredoxygenmain
+ *  \anchor mooreonlinedoxygenmain
  *
- * <b>The classes used by Moore are documented in the following reference manuals:</b>
+ * <b>The classes used by MooreOnline are documented in the following reference manuals:</b>
  *
+ * \li \ref mooresysdoxygenmain "MooreSys documentation (LHCb trigger steering application)"
  * \li \ref hltsysdoxygenmain "HltSys documentation (LHCb High Level Trigger classes)"
  * \li \ref physsysdoxygenmain "PhysSys documentation (LHCb physics packages)"
  * \li \ref recsysdoxygenmain "RecSys documentation (LHCb reconstruction packages)"
