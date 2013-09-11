@@ -292,6 +292,9 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
     if ( m_debugLevel ) debug() <<"---Track Container retrieved but EMPTY---"<< endmsg;
     return StatusCode::SUCCESS;
   }
+
+  if( m_clusters == NULL )
+    return Warning("No VELO clusters in default location",StatusCode::FAILURE);
   
   //Number of Tracks per Event
   unsigned int nTracks = m_tracks->size();
@@ -326,10 +329,6 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
     const LHCb::TrackFitResult *fitResult = track->fitResult();
     if(!fitResult) return Warning("No fitResult on this track",StatusCode::FAILURE);
     const std::vector<LHCb::Node*> nodes = fitResult->nodes();
-    LHCb::VeloClusters *clusters =
-      getIfExists<LHCb::VeloClusters>(LHCb::VeloClusterLocation::Default);
-    if( clusters == NULL )
-      return Warning("No VELO clusters in default location",StatusCode::FAILURE);
     //Loop over all nodes on this track    
     for( std::vector<LHCb::Node*>::const_iterator iNode = nodes.begin();
          iNode != nodes.end(); ++iNode ){
@@ -362,7 +361,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( )
         rMeas->sensor().distToM2Line(rNode->position(),innerID,distToM2,distToStrip);
       if(!sc)continue;
       
-      innerClus = clusters->object(innerID);// Inner cluster
+      innerClus = m_clusters->object(innerID);// Inner cluster
       if(innerClus){
         ADCInner = innerClus->totalCharge();
         innerSize = (double)innerClus->size(); 

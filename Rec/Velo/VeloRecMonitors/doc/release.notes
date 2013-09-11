@@ -4,11 +4,15 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2013-09-11 - Marco Cattaneo
+ - Remove unnecessary repeated accesses to TES from inside a loop in
+   VeloTrackMonitor.cpp
+
 ! 2013-07-29 - Marco Clemencic
  - Fixed use of Velo namespace in VeloTrackMonitorNT.cpp, hidden by a leak in
    the macro DECLARE_NAMESPACE_ALGORITHM_FACTORY.
 
-!========================= VeloRecMonitors v2r26 2013-07-18 =========================
+!========================= VeloRecMonitors v2r26 2013-07-18 ======================
 ! 2013-06-24 - Marco Cattaneo
  - Fix clang32 warning
 
@@ -20,7 +24,7 @@
 ! 2013-06-20 - Michel De Cian
  - Fix a warning due to int <-> unsigned int comparison in VeloTrackMonitorNT
 
-!========================= VeloRecMonitors v2r25 2013-06-03 =========================
+!========================= VeloRecMonitors v2r25 2013-06-03 ======================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warnings
  - Fix an UNINIT_CTOR
@@ -28,14 +32,14 @@
 ! 2013-05-24 - Marco Cattaneo
  - Remove unnecessary include that caused unnecessary TrackKernel dependency
 
-!========================= VeloRecMonitors v2r24 2013-04-30 =========================
+!========================= VeloRecMonitors v2r24 2013-04-30 ======================
 ! 2013-04-23 - Chris Jones
  - Remove unneccessary forward declarations that broke clang compilation
 
 ! 2013-04-09 - Marco Cattaneo
  - Add __init__.py to please CMake
 
-!========================= VeloRecMonitors v2r23 2013-02-14 =========================
+!========================= VeloRecMonitors v2r23 2013-02-14 ======================
 ! 2013-01-09 - Silvia Borghi
  - Update in VeloTrackMonitorNT: fix in ev ntuple and fix compilation warning
 
@@ -43,7 +47,7 @@
  - Update in VeloTrackMonitorNT: add ntuple for eta study and other small 
    changes (clean up of the code, delete duplication in the variables)
 
-!========================= VeloRecMonitors v2r22 2012-11-28 =========================
+!========================= VeloRecMonitors v2r22 2012-11-28 ======================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
 
@@ -59,7 +63,7 @@
  - Fix some Coverity warnings
  - Use getIfExists
 
-!========================= VeloRecMonitors v2r21 2012-10-01 =========================
+!========================= VeloRecMonitors v2r21 2012-10-01 ======================
 ! 2012-08-17 - Kurt Rinnert
  - added PU only average occupancy histogram. This allows to display these
    separately online and put different alarms on them. In fact the PU has to
