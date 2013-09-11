@@ -1,0 +1,7 @@
+project MOORE
+
+use HLT     HLT_v20r3p1
+
+container       MooreSys
+build_strategy	with_installarea
+setup_strategy	root
