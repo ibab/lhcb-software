@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-09-11 - Stefano Perazzini
+ - Stripping20r1p2/LineConfigDictionaries_B2OC.py, changes to the 'BB' (ps-Topo) dictionary
+   needed to make it compatible with new configuration
+
 ! 2013-09-10 - Konstantinos A. Petridis
   - Stripping20r0p2/LineConfigDictionaries_B2OC.py, changes to the 'BB' (ps-Topo) dictionary
 	  where the cos(dphi) cut is tightened to -0.866, and additional selections placed due to 
