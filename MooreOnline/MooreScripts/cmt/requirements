@@ -1,14 +1,14 @@
 #============================================================================
 # $Id: requirements,v 1.143 2010-09-10 11:34:50 graven Exp $
-# Created    : 03/06/2005 by P. Koppenburg
+# Created    : 13/09/2013 by R. Lambert
 # Maintainer : R. Lambert, G. Raven
 #============================================================================
 
 #============================================================================
-package Moore
-version           v20r3p3
+package MooreScripts
+version v1r0
 
-branches doc cmt options python
+branches doc cmt python scripts tests
 
 # Packages needed to compile and link the application
 use GaudiConf          v*                   -no_auto_imports
@@ -26,7 +26,7 @@ use FieldMap            v5r*                -no_auto_imports
 use HltTCK              v*      TCK         -no_auto_imports
 use L0TCK               v*      TCK         -no_auto_imports
 use AppConfig           v3r*                -no_auto_imports
-use PRConfig            v*    
+use PRConfig            v*
 use RawEventFormat      v*
 
 
@@ -43,27 +43,29 @@ use GaudiPython         v*                  -no_auto_imports
 # From LHCbSys
 use L0Interfaces        v*      L0          -no_auto_imports
 
-#-- Lbcom packages 
+#-- Lbcom packages
 use LbcomSys            v*                  -no_auto_imports
 
-#-- Rec packages 
+#-- Rec packages
 use RecSys              v*                  -no_auto_imports
 
-#-- HLT packages 
+#-- HLT packages
 use HltSys              v*                  -no_auto_imports
 
-#-- Phys packages 
+#-- Phys packages
 use PhysSys             v*                  -no_auto_imports
 
-#-- Online ??
-#use OnlineSys           v*                  -no_auto_imports
+#-- Online
+use OnlineSys           v*                  -no_auto_imports
+
+#-- Moore
+use MooreSys            v*                  -no_auto_imports
+
 
 #============================================================================
 #set CORAL_SQLITE_TEMP_STORE_MEMORY yes
 #============================================================================
-apply_pattern application_path
 apply_pattern install_python_modules
-apply_pattern GaudiApp
 
 # define aliases
 alias Moore gaudirun.py
