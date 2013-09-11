@@ -1,0 +1,584 @@
+<PRE>
+Package     : MooreSys
+Package Coordinator : R. Lambert
+Purpose     : LHCb HLT application
+
+</PRE><H1><A NAME=v20r3p3>2013-09-09 MooreSys v20r3p3</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v36r1 stack. Depends on Rec v15r1 via Phys v17r1 via Hlt v20r3p1. Based on Gaudi v23r9.
+
+Minor changes to Moore, implementation of new tests and "Gerhard's Sledgehammer" of turning off the TOS linking for the split HLT scenario.
+
+For more information see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v20r3p3
+
+</PRE><H1><A NAME=v20r3p2>2013-09-03 MooreSys v20r3p2</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v36r1 stack. Depends on Rec v15r1 via Phys v17r1 via Hlt v20r3p1. Based on Gaudi v23r9.
+
+
+Commissioning Hlt/Moore version for September 2013 commissioning week. Some fixes to Online configuration in Hlt/Moore, and online installation scripts moved from Hlt/Moore to MooreSys.
+
+The split differences in v20r3p2 (Hlt2 after Hlt1 doesn't work the same as the full Hlt in one job) seem all to be due to TOS problems from being unable to locate the Hlt1Dec/SelReports, which need to be put in a new location and decoded as in the offline in the future.
+
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v20r3p2
+
+</PRE><H1><A NAME=v20r3p1>2013-08-27 MooreSys v20r3p1</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v36r1 stack. Depends on Rec v15r1 via Phys v17r1 via Hlt v20r3p1. Based on Gaudi v23r9.
+
+Commissioning Hlt/Moore version for September 2013 commissioning week. First Moore version to natively be able to run Hlt1 and Hlt2 independently, although the results are not identical to when they are run together.
+
+This Hlt release picks up a branch (v2r17b) of HltDAQ to deal with multiple possible TES locations for decoded trigger banks, and also some fixes in LoKiCore.
+
+For more information see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v20r3p1
+and
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v20r3p1
+
+</PRE><H1><A NAME=v20r3>2013-08-01 Moore v20r3</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v36r1 stack. Depends on Rec v15r1 via Phys v17r1. Based on Gaudi v23r9.
+
+First version released on gcc 4.7 platform, slc6 gcc47 is expected to be *much* faster than slc5 gcc43. Real changes are only minor in the projects beneath, no significant changes in Hlt itself.
+
+DAQ/RawEventCompat removed, now released with LHCb as v1r1.
+
+For more information, see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v20r3
+
+</PRE><H1><A NAME=v20r2>2013-07-03 Moore v20r2</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v36r0 stack. Depends on Rec v15r0 via Phys v16r5. Based on Gaudi v23r8.
+
+New packages:
+   . Add L0/L0App to handle L0 emulation, see task #42380
+   . DAQ/RawEventCompat, (depends on new DBase package) to juggle around raw events.
+
+The Project structure has been re-arranged. Now we have a different definition of the content of LHCb, Lbcom. Lbcom is now included directly in Rec.
+
+There are minor changes in this version to address compilation on slc6 gcc47. See task #42876. This HLT version replaces v20r1p1 as the main development version.
+
+</PRE><H1><A NAME=v20r1p1>2013-05-16 Moore v20r1p1</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v35r5 stack. Depends on Rec v14r5 via Phys v16r5. Based on Gaudi v23r7.
+
+Moore version intended to be used for HLT splitting commissioning in the May 2013 commissioning week.
+
+Two major fixes made:
+ - postConfigure fix all PVlocations to replace OnOfflineTool behaviour.
+ - ensure each ISMUON functor has a previous HASMUON functor to suppress loki warnings
+
+Other modifications:
+ - testing improved a lot, now Moore tests running with vdm, passthrough and physics
+   are sensitive to legitimate problems.
+
+Disclaimer: This Moore version does not behave identically to 2012 trigger differences are at the %-level, nominally v20r1p1 selects fewer events, but the majority of the modifications seem to be from changes in FastVelo.
+
+To see what has changed take a look at the test references for moore.physics.2012 test.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v20r1p1
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v20r1p1
+
+and
+
+https://savannah.cern.ch/task/?40113
+
+</PRE><H1><A NAME=v20r1>2013-04-09 Moore v20r1</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v35r5 stack. Depends on Rec v14r5 via Phys v16r5. Based on Gaudi v23r7.
+
+On top of First HLT version to directly take Lbcom as a dependency, Lbcom v13r5. see task #40844
+
+Packages added:
+ - HltMonitor (Moved from HLT)
+ - Swimming (moved from Phys).
+
+Modification Summary (HLT project, not Moore):
+ - Added a test suite into every package, see task #40437
+   Tests check that configurables&modules can be instantiated and algs can be constructed
+ - During the addition of tests, some minor bugs showed up in Hlt2SharedParticles and HltMonitor.
+ - Some test updates in Moore,
+ - bug in L0 emulation configuration fixed see task #39741
+ - Swimming package now to be included in Moore, major version change due to previous incompatibility with the head. See task #40021
+
+
+For a description of the introduced changes, links to changesets, and other details, see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v20r1
+and
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v20r1
+
+</PRE><H1><A NAME=v20r0>2013-02-28 Moore v20r0</A></H1><PRE>
+HLT/Moore LS1 first development version. First backward-incompatible changes for 2012 triggers and Gaudi versions tentatively allowed. see task #40113.
+
+LHCb v35r4 stack. Depends on Rec v14r4 via Phys v16r4 via Hlt v20r0. Also depends on Lbcom v13r4. Based on Gaudi v23r6.
+
+Packages Removed from HLT:
+ - HltSelChecker (is in Analysis project and has been for a while)
+ - PatAlgorithms v4r24, now taken from latest Rec
+ - L0Calo v11r8, now taken in Moore from latest Lbcom (was never needed in HLT)
+
+Packages Removed from MooreSys:
+ - HltSettings, Hlt1Lines, Hlt2Lines, HltConf, HltTracking
+ - All of the above are now inherited from HLT
+ - RichDet, DetCond,
+ - All of the above taken through latest stack, Lbcom, etc.
+
+Modification summary:
+ - Review of debug printout: task #40215
+ - Replace exist-get with getIfExists: task #40118. Requires latest Gaudi
+ - Absorption of minor changes which were otherwise included directly in Moore.
+ - Major bug reported in HltGlobalMonitor, see bug #100666
+
+For a description of the introduced changes, links to changesets, and other details, see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v20r0
+and
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v20r0
+
+</PRE><H1><A NAME=v14r12>2013-01-09 Moore v14r12</A></H1><PRE>
+For the pA run only.
+
+</PRE><H1><A NAME=v14r11>2012-11-6 Moore v14r11</A></H1><PRE>
+As v14r10. Remove GaudiConf and L0DU, L0Base.
+
+</PRE><H1><A NAME=v14r10>2012-10-29 Moore v14r10</A></H1><PRE>
+As v14r9. Fix Hlt2HighPtJets. New GaudiConf and L0DU, L0Base for MC.
+
+</PRE><H1><A NAME=v14r9>2012-10-11 Moore v14r9</A></H1><PRE>
+As v14r8. Tighter cuts on charm lines. Hlt1HighPtJets added.
+
+</PRE><H1><A NAME=v14r8>2012-09-19 Moore v14r8</A></H1><PRE>
+Uses Hlt v15r5 (V0 LT cut as in june, no DOCA cuts)
+
+</PRE><H1><A NAME=v14r7p2>2012-09-11 Moore v14r7p2</A></H1><PRE>
+Low mult lines back in, no tracking activity for pA pilot run
+
+</PRE><H1><A NAME=v14r7p1>2012-09-11 Moore v14r7p1</A></H1><PRE>
+Same as v14r7p1 with pA pilot run fix
+
+</PRE><H1><A NAME=v14r6p1>2012-07-2 Moore v14r6p1</A></H1><PRE>
+Uses Hlt v15r3p1 with fix in Gaudi to problem below
+
+</PRE><H1><A NAME=v14r6>2012-06-28 Moore v14r6</A></H1><PRE>
+Uses Hlt v15r3 with fix to PatSeeding small numbers rounded in TCK problem
+
+</PRE><H1><A NAME=v14r5p3>2012-06-27 Moore v14r5p3</A></H1><PRE>
+With tuned settings from Christoph
+
+</PRE><H1><A NAME=v14r5p2>2012-06-23 Moore v14r5p2</A></H1><PRE>
+For patched Hlt v15r2p2
+
+</PRE><H1><A NAME=v14r5p1>2012-06-21 Moore v14r5p1</A></H1><PRE>
+For patched Hlt v15r2p1
+
+</PRE><H1><A NAME=v14r5>2012-06-20 Moore v14r5</A></H1><PRE>
+For use with higher deferral rate (using new disks in the pit)
+
+</PRE><H1><A NAME=v14r4>2012-05-16 Moore v14r4</A></H1><PRE>
+Final tuned version for 2012 datataking
+
+</PRE><H1><A NAME=v14r3>2012-04-30 Moore v14r3</A></H1><PRE>
+With Rich/RichRecSys v4r5 fix for lines using Rich PID to use
+match as well as forward tracks
+
+</PRE><H1><A NAME=v14r2>2012-04-29 Moore v14r2</A></H1><PRE>
+As v14r1 with HltSettings v5r33 (for 3 physics TCK families)
+
+</PRE><H1><A NAME=v14r1p1>2012-04-26 Moore v14r1p1</A></H1><PRE>
+As v14r1 with HltSettings v5r32 (for 6 physics TCKS)
+
+</PRE><H1><A NAME=v14r1>2012-04-26 Moore v14r1</A></H1><PRE>
+For May 2012 data taking.
+
+</PRE><H1><A NAME=v13r4p1>2012-04-20 Moore v13r4p1</A></H1><PRE>
+As v13r4, with Physics_May2012 settings and improved
+Hlt2InclusiveDiMuonLines.py
+
+</PRE><H1><A NAME=v13r4>2012-04-17 Moore v13r4</A></H1><PRE>
+Uses Hlt v14r4.
+
+</PRE><H1><A NAME=v13r3>2012-04-09 Moore v13r3</A></H1><PRE>
+Uses Hlt v14r3. Bug fixes for 2012 data taking
+
+</PRE><H1><A NAME=v13r2p5>2012-04-03 Moore v13r2p5</A></H1><PRE>
+For loose SPD settings.
+
+</PRE><H1><A NAME=v13r2p4>2012-04-02 Moore v13r2p4</A></H1><PRE>
+HltSettings with Physics_April{BU}2012, fixed topo, prescaled diproton,
+removed nobias & lumi rate limiters
+
+</PRE><H1><A NAME=v13r2p3>2012-03-28 Moore v13r2p3</A></H1><PRE>
+Same as v13r2p1 with HltGlobalMonitor v3r9 and TrackFitter v4r7.
+
+</PRE><H1><A NAME=v13r2p2>2012-03-28 Moore v13r2p2</A></H1><PRE>
+Same as v13r2p2 without EventPacker and PackedEvent.
+
+</PRE><H1><A NAME=v13r2p1>2012-03-23 Moore v13r2p1</A></H1><PRE>
+Fix topo rate bug; fix displvertices bug. Set rate limit to lumi
+and nobias very high. Subscribe to odin nobias evttyp.
+
+</PRE><H1><A NAME=v13r2>2012-03-17 Moore v13r2</A></H1><PRE>
+Uses Hlt v14r2.
+
+</PRE><H1><A NAME=v13r1p3>2012-03-09 Moore v13r1p3</A></H1><PRE>
+Fixed mainly online bugs in Hlt/Moore/python/Moore.
+
+</PRE><H1><A NAME=v13r1p2>2012-03-07 Moore v13r1p2</A></H1><PRE>
+PatForward, TrackFitter, Hlt2SharedParticles and Hlt2DisplVertices
+bugfixes. Add DD KS to the topo.
+
+</PRE><H1><A NAME=v13r1p1>2012-03-06 Moore v13r1p1</A></H1><PRE>
+Fix GaudiConf bug in Configuration.py.
+
+</PRE><H1><A NAME=v13r1>2012-02-29 Moore v13r1</A></H1><PRE>
+based on HLT_v14r1 and Gaudi v23r1 stack.
+
+</PRE><H1><A NAME=v13r0>2012-02-06 Moore v13r0</A></H1><PRE>
+based on HLT_v14r0 and Gaudi v23r0 stack.
+
+</PRE><H1><A NAME=v12r10>2012-01-25 Moore v12r10</A></H1><PRE>
+based on HLT_v13r11. Intermediate version for testing deferred
+triggering in the pit.
+
+</PRE><H1><A NAME=v12r9p1>2011-08-29 Moore v12r9p1</A></H1><PRE>
+based on HLT_v13r10p1
+
+</PRE><H1><A NAME=v12r9>2011-08-29 Moore v12r9</A></H1><PRE>
+based on HLT_v13r10
+
+</PRE><H1><A NAME=v12r6p1>2011-05-12 Moore v12r6p1</A></H1><PRE>
+based on HLT_v13r5p1, bugfixes on top of v13r5
+
+</PRE><H1><A NAME=v12r6>2011-05-06 Moore v12r6</A></H1><PRE>
+based on HLT_v13r5, candidate release for use after the
+May 9th LHC technical stop
+
+</PRE><H1><A NAME=v12r5>2011-04-07 Moore v12r5</A></H1><PRE>
+based on HLT_v13r4
+
+</PRE><H1><A NAME=v12r4>2011-03-17 Moore v12r4</A></H1><PRE>
+still based on HLT_v13r2p1, minor patches applied
+
+</PRE><H1><A NAME=v12r3>2011-03-10 Moore v12r3</A></H1><PRE>
+based on HLT_v13r2p1, minor patches for Physics_Feb11 setting
+
+</PRE><H1><A NAME=v12r2>2011-03-06 Moore v12r2</A></H1><PRE>
+based on HLT_v13r2, minor patches for Physics_Feb11 setting
+
+</PRE><H1><A NAME=v12r1p1>2011-03-04 Moore v12r1p1</A></H1><PRE>
+based on HLT_v13r1, minor patches for Physics_Feb11 setting
+
+</PRE><H1><A NAME=v12r1>2011-03-02 Moore v12r1</A></H1><PRE>
+based on HLT_v13r1
+
+</PRE><H1><A NAME=v12r0>2011-02-22 Moore v12r0</A></H1><PRE>
+based on HLT_v13r0
+
+</PRE><H1><A NAME=v11r6p1>2011-02-19 Moore v11r6p1</A></H1><PRE>
+based on HLT_v12r6p1
+
+</PRE><H1><A NAME=v11r6>2011-02-17 Moore v11r6</A></H1><PRE>
+based on HLT_v12r6
+
+</PRE><H1><A NAME=v11r5>2011-02-10 Moore v11r5</A></H1><PRE>
+based on HLT_v12r5
+
+</PRE><H1><A NAME=v11r4>2011-02-08 Moore v11r4</A></H1><PRE>
+based on HLT_v12r4
+
+</PRE><H1><A NAME=v11r3>2011-01-30 Moore v11r3</A></H1><PRE>
+based on HLT_v12r3
+
+
+</PRE><H1><A NAME=v11r2>2011-01-21 Moore v11r2</A></H1><PRE>
+based on HLT_v12r2
+
+</PRE><H1><A NAME=v11r1>2011-01-05 Moore v11r1</A></H1><PRE>
+based on HLT_v12r1
+
+</PRE><H1><A NAME=v11r0>2010-12-09 Moore v11r0</A></H1><PRE>
+based on HLT_v12r0
+
+</PRE><H1><A NAME=v10r2p1>2010-12-16 Moore v10r2p1</A></H1><PRE>
+Add support for swimming
+
+</PRE><H1><A NAME=v10r2>2010-09-30 Moore v10r2</A></H1><PRE>
+based on HLT_v11r2
+
+</PRE><H1><A NAME=v10r1>2010-09-09 Moore v10r1</A></H1><PRE>
+based on HLT_v11r1
+
+</PRE><H1><A NAME=v10r0>2010-09-02 Moore v10r0</A></H1><PRE>
+based on HLT_v11r0
+
+</PRE><H1><A NAME=v9r4>2010-07-21 Moore v9r4</A></H1><PRE>
+based on Hlt v10r5
+
+</PRE><H1><A NAME=v9r3>2010-07-02 Moore v9r3</A></H1><PRE>
+Patches on top of v9r2, but given that there is eg. now
+(the possibility of adding) a global pile-up veto in Hlt2,
+call it v9r3 instead of v9r2p1...
+
+</PRE><H1><A NAME=v9r2>2010-05-31 Moore v9r2</A></H1><PRE>
+Release of top of Hlt v10r4
+
+</PRE><H1><A NAME=v9r1p2>2010-05-07 Moore v9r1p2</A></H1><PRE>
+Patches on top of v9r1p1 to pick up RICH gas parameters online,
+improve startup behaviour of rate limiters, add some monitoring
+
+</PRE><H1><A NAME=v9r1p1>2010-05-07 Moore v9r1p1</A></H1><PRE>
+change compared to v9r1: allow to re-run L0 when
+configuring from a TCK
+
+</PRE><H1><A NAME=v9r1>2010-04-21 Moore v9r1</A></H1><PRE>
+Release on top of HLT v10r2
+
+</PRE><H1><A NAME=v8r9>2010-04-09 Moore v8r9</A></H1><PRE>
+More maintenance fixes for data taking
+
+</PRE><H1><A NAME=v9r0>2010-03-31 Moore v9r0</A></H1><PRE>
+Release on top of LHCb v30r0, HLT v10r0
+
+</PRE><H1><A NAME=v8r8p1>2010-03-19 Moore v8r8p1</A></H1><PRE>
+Minor fixes for data taking
+
+</PRE><H1><A NAME=v8r8>2010-03-02 Moore v8r8</A></H1><PRE>
+Release on top of LHCb v29r2, HLT v9r2
+
+</PRE><H1><A NAME=v8r7>2010-02-22 Moore v8r7</A></H1><PRE>
+Release on top of LHCb v29r1, HLT v9r1
+
+</PRE><H1><A NAME=v8r6>2010-02-18 Moore v8r6</A></H1><PRE>
+Release on top of LHCb v29r0, HLT v9r0
+
+</PRE><H1><A NAME=v8r5>2010-01-18 Moore v8r5</A></H1><PRE>
+Release on top of LHCb v28r5, HLT v8r2
+
+</PRE><H1><A NAME=v8r4>2009-12-18 Moore v8r4</A></H1><PRE>
+Release on top of LHCb v28r4, HLT v8r0
+
+</PRE><H1><A NAME=v8r3>2009-11-23 Moore v8r3</A></H1><PRE>
+(re)Release on top of LHCb v28r3, with fixed ODIN event time
+decoding for ODIN v6
+
+</PRE><H1><A NAME=v8r2>2009-11-18 Moore v8r2</A></H1><PRE>
+Based on Hlt v7r2, Phys v8r12, Lbcom v7r8, Rec v7r8 and Online v4r31
+First release on top of LHCb v28r2, which contains support for ODIN
+version 6.
+
+</PRE><H1><A NAME=v8r1>2009-11-05 Moore v8r1</A></H1><PRE>
+Based on Hlt v7r1, Phys v8r11, Lbcom v7r7, Rec v7r7 and Online v4r30
+
+</PRE><H1><A NAME=v8r0p1>2009-11-02 Moore v8r0p1</A></H1><PRE>
+Minimal changes needed for L0xHlt stripping
+
+</PRE><H1><A NAME=v8r0>2009-10-21 Moore v8r0</A></H1><PRE>
+Based on Hlt v7r0, Phys v8r10, Lbcom v7r6, Rec v7r6 and Online v4r29.
+
+</PRE><H1><A NAME=v7r5>2009-09-29 Moore v7r5</A></H1><PRE>
+Based on Hlt v6r8, Phys v8r10, Lbcom v7r6, Rec v7r6 and Online v4r29.
+- Added the pattern container_package.
+
+</PRE><H1><A NAME=v7r4>2009-09-14 Moore v7r4</A></H1><PRE>
+Based on Hlt v6r7, Phys v8r8, Lbcom v7r5, Rec v7r5 and Online v4r28.
+- Added the pattern container_package.
+
+</PRE><H1><A NAME=v7r3>2009-08-04 Moore v7r3</A></H1><PRE>
+Based on Hlt v6r5, Phys v8r7, Lbcom v7r4, Rec v7r4 and Online v4r27.
+
+</PRE><H1><A NAME=v7r2>2009-07-15 Moore v7r2</A></H1><PRE>
+Based on Hlt v6r4, Phys v8r6, Lbcom v7r3, Rec v7r3 and Online v4r25.
+
+</PRE><H1><A NAME=v7r1>2009-06-08 Moore v7r1</A></H1><PRE>
+Based on Hlt v6r2, Phys v8r4, Lbcom v7r1, Rec v7r1 and Online v4r23.
+
+</PRE><H1><A NAME=v7r0>2009-05-27 Moore v7r0</A></H1><PRE>
+Based on Hlt v6r1, Phys v8r3, Lbcom v7r0, Rec v7r0 and Online v4r22.
+First release based on LHCB v27r0, and Gaudi v21r0
+
+</PRE><H1><A NAME=v6r2>2009-04-11 Moore v6r2</A></H1><PRE>
+Based on Hlt v5r2, but includes almost all changes which
+will appear in Hlt v6r0. This version, unlike Hlt v6r0,
+however still uses the LHCb v26r2 stack instead so we can
+continue to use Online v4r20 for FEST3.
+
+</PRE><H1><A NAME=v6r1>2009-03-11 Moore v6r1</A></H1><PRE>
+Based on Hlt v5r1, Lbcom v6r26, Phys v8r1, Online v4r20
+  Release used during the FEST week first week of February
+
+</PRE><H1><A NAME=v6r0>2009-02-05 Moore v6r0</A></H1><PRE>
+Based on Hlt v5r0, Lbcom v6r25, Phys v8r0, Online v4r19
+  Release used during the FEST week last week of January
+
+</PRE><H1><A NAME=v5r6>2008-12-19 Moore v5r6</A></H1><PRE>
+Based on Phys v7r4, Rec v6r0, HLT v4r4, Lbcom v6r24, Online v4r18
+  Updates for monitoring, routing bits, fixes for memory leak
+
+</PRE><H1><A NAME=v5r5>2008-12-01 Moore v5r5</A></H1><PRE>
+Based on Phys v7r4, Rec v6r0, HLT v4r4, Lbcom v6r24, Online v4r18
+  Updates for Online v4r18 and Gaudi v20r3
+
+! 2008-11-25 - Patrick Koppenburg
+ - Adapt doxygen to no version directories.
+
+</PRE><H1><A NAME=v5r4>2008-11-13 Moore v5r4</A></H1><PRE>
+Based on Phys v7r2, Rec v5r12, HLT v4r3, Lbcom v6r23, Online v4r16
+ add ONLINE_OVERRULE_MOORE_SETUP as tag to the requirements.
+ This tag is used to change the setup for runMooreOnline_EFF.sh: default is to
+ take the environment from $LHCBSCRIPTS/SetupMoore_vxxx.sh, which runs the
+ version in the release area. If this is set, the environment corresponding
+ to the checked out version of Moore is generated and used instead
+
+</PRE><H1><A NAME=v5r3>2008-09-21 Moore v5r3</A></H1><PRE>
+Based on Phys v7r1, Rec v5r11, HLT v4r2, Lbcom v6r22, LHCb v25r1, Gaudi v20r2, LCGCMT 55a, Online v4r15
+ Updates for Online v4r15, further integration into online system
+ (eg. includes Velo lines)
+
+</PRE><H1><A NAME=v5r2>2008-09-05 Moore v5r2</A></H1><PRE>
+Based on Phys v7r0, Rec v5r10, HLT v4r1, Lbcom v6r21, LHCb v25r0, Gaudi v20r2, LCGCMT 55, Online v4r14
+ Updates for Online v4r14, further integration into online system
+
+</PRE><H1><A NAME=v5r1>2008-08-29 Moore v5r1</A></H1><PRE>
+Based on Phys v7r0, Rec v5r10, HLT v4r1, Lbcom v6r21, LHCb v25r0, Gaudi v20r1, LCGCMT 55
+
+ This version uses LHCb v25r0 and Gaudi v20r2 . Only Hlt changed.
+ . Many changes to get pythonized configuration.
+ . Prepare for working version in the pit.
+ . New packages HltConf, HltHidValley
+
+The Moore project temporarily contains DaVinciTools to allow the use
+of the ParticleFilter in Hlt2 (was in DaVinciFilter).
+
+</PRE><H1><A NAME=v5r0>2008-08-11 Moore v5r0</A></H1><PRE>
+Based on Phys v7r0, Rec v5r10, HLT v4r0, Lbcom v6r21, LHCb v25r0, Gaudi v20r1, LCGCMT 55
+
+ . Many changes for Gaudi state machine and use of TCK.
+ . Hlt1: New packages HltEcalAlley, HltLuminosity, HltGlobalMonitor, HltRawData
+ . Hlt2: Removed all .opts files and replaced by .py.
+
+! 2008-07-28 - Gerhard Raven
+  - add TCKData package
+
+</PRE><H1><A NAME=v4r3>2008-07-09 Moore v4r3</A></H1><PRE>
+Based on Phys v6r14, Rec v5r8, HLT v3r4, Lbcom v6r19, LHCb v24r0, Gaudi v20r1, LCGCMT 55
+
+</PRE><H1><A NAME=v4r2>2008-06-02 Moore v4r2</A></H1><PRE>
+ - Based on Hlt v3r3 and Online v4r10.
+ - New IANNSvc
+ - Used in Hlt2 throughout
+ - Many changes in alleys
+
+</PRE><H1><A NAME=v4r1>2008-05-06 Moore v4r1</A></H1><PRE>
+ - Based on Hlt v3r2 and Online v4r8. Separation of Hlt1 and Hlt2.
+
+</PRE><H1><A NAME=v4r0>2008-03-26 Moore v4r0</A></H1><PRE>
+ - Based on Hlt v3r1 with LoKi::Hybrid and big alleys cleanup. Depends on Online v4r7.
+
+</PRE><H1><A NAME=v3r0>2007-12-17 Moore v3r0</A></H1><PRE>
+Tf framework version
+
+</PRE><H1><A NAME=v2r3>2007-11-14 Moore v2r3</A></H1><PRE>
+HLT benchmark version
+
+</PRE><H1><A NAME=v2r2>2007-03-09 Moore v2r2</A></H1><PRE>
+This version uses
+ projects  Gaudi v19r2, LHCb v22r2, Lbcom v6r2, Rec v4r2, Hlt v1r3, Phys v6r0
+
+This version is a development version for the DC06 Hlt Application.
+
+A first incomplete release of the HltSelections is included.
+
+
+</PRE><H1><A NAME=v2r1>2007-02-12 Moore v2r1</A></H1><PRE>
+This version uses
+ projects  Gaudi v19r1, LHCb v22r1, Lbcom v6r1, Rec v4r1, Hlt v1r2
+ databases XmlDDDB v40r0, XmlConditions v2r4, ParamFiles v5r0, FieldMap v4r7
+
+This version is a development version for the DC06 Hlt Application.
+It is the first release using CMT InstallAreas
+
+The application is again called Hlt/Moore, no longer Hlt/HltApp
+
+</PRE><H1><A NAME=v2r0>2006-12-06 Moore v2r0</A></H1><PRE>
+This version uses
+ projects  Gaudi v18r11, LHCb v21r12, Lbcom v5r9, Rec v3r14p1, Hlt v1r0
+ databases XmlDDDB v30r14, XmlConditions v2r4, ParamFiles v5r0, FieldMap v4r7
+
+This version is a development version for the DC06 Hlt Application.
+
+It contains the HltApp application, with only the HLT Alleys implementation.
+
+The Moore application (HLT exclusive and Online intergration) is not available
+in this release
+
+- In HltApp v1r4:
+  . HltAlleys.opts self-consistent to be run in DaVinci or other Gaudi App
+      add options for HltCalAlley (but they are switched off)
+  . L0.opts to rerun the L0
+  . HltApp.opts cleaning the options
+  . HltAppFrame.opts remove
+  . L0Reco.opts rename to L0.opts
+
+</PRE><H1><A NAME=v1r2>2005-07-26 Moore v1r2</A></H1><PRE>
+This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
+                  Gaudi v16r5 and XmlDDDB v26r1
+
+ - New features:
+   . In offline mode, any /Raw, /Rec, /MC, /Trig node that may have been
+     registered on the input file is killed by executing EventNodeKiller as the
+     first TopAlg. This enables to transparently process .raw files that may or
+     may not have these nodes already existing (MooreOffline.opts, LHCbAlgs v1r8)
+   . Add support for OT RawBank v2 (OTDAQ v3r3, TrgForward v5r2)
+   . MakeResonances now does not make any plot by default, exclusive HLT options
+     have been updated accordingly
+   . Add example for reading online ("Markus file") format in MooreOffline
+     (MooreMF.opts)
+
+ - New tuning:
+   . Removed ResolutionCor from DeOTDetector, following 2005 test beam
+     (OTDet v5r6)
+   . Change OT readout gate from 50ns to 75ns (OTDAQ v3r3)
+
+ - Bug fixes:
+   . For 2D tracks, get phi-zone geometry from Velo detector element. Fixes L1
+     accept rate problem in RTTC data (L1Reco v7r1)
+   . Fix decoding of ST Raw Bank, was always decoding one word beyond end of bank
+     (TrgForward v5r2)
+   . Add /Event/Rec Node to DataOnDemandSvc, to prevent triggering a CaloPID
+     algorithm instead (MooreCommon.opts)
+   . Load GaudiPoolDb even in online (for Event dictionary) (MooreOnline.opts)
+   . RichLocalPID tools were accessing TES before the start of the event loop,
+     in the beginEvent incident handler (RichLocalPID v1r12)
+   . HltCompare2RawBuffer algorithm no longer tries to access RawBuffer,
+     accesses RawEvent instead (HltMonitor v1r1)
+   . Fix memory leak in XmlMuonRegionCnv (MuonDet v4r8)
+   . Fixes to bugs found during RTTC in various HLT packages, see PhysSys
+     release notes for details
+   . Decode again Velo RawBuffer in Reco sequence to avoid Velo tracking
+     interference with Hlt. (RecSys v1r4)
+   . Do not send L1 event number with Hlt decision (GaudiOnline v1r2p1)
+
+</PRE><H1><A NAME=v1r1>2005-06-27 Moore v1r1</A></H1><PRE>
+This version uses LHCb v18r7, Lbcom v2r3, Rec v1r3, Phys v1r3, Online v1r3
+
+ - New features:
+   . Property "Moore.HistoProduce" replaces "Moore.doHistos" (LHCbAlgs v1r7)
+   . Split memory histogram into two, both with "Moore.HistoSize" bins
+     + hID=2: one entry per event for first HistoSize events
+     + hID=3: one entry every HistoSize events, starting at event 1
+     (LHCbAlgs v1r7)
+   . Repackaging of Rich to allow running both Hlt and Reco in same job
+     (Not yet enabled. See LHCbSys, LbcomSys, RecSys, PhysSys release notes)
+   . Read SFC client parameters from environment variables (SFCClient v1r1)
+
+ - New tuning:
+   . Speed improvements to Rich reconstruction
+     (See LHCbSys, LbcomSys, RecSys release notes)
+
+ - Bug fixes:
+   . Load Pool persistency only in offline application
+     (MooreOffline.opts, LHCbApplication.opts)
+   . Set up online EventSelector in online application (MooreOnline.opts)
+   . Fix memory leaks at finalisation (XmlTools v5r3p1, DetDesc v15r2)
+   . Fix memory leaks in event loop (TrgPrimVertex v4r2, TrgMuon v1r2p2)
+   . If UTGID is not set, don't give a null pointer (GauchoJob v2r3)
+
+</PRE><H1><A NAME=v1r0>2005-06-15 Moore v1r0</A></H1><PRE>
+This version uses LHCb v18r6, Lbcom v2r2, Rec v1r2, Phys v1r2, Online v1r2
+
+First release, for RTTC tests
+</PRE>

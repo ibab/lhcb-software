@@ -1,0 +1,5 @@
+To make the documentation:
+
+MooreEnv <version> (give appropriate version)
+source ../cmt/setup.csh
+python /afs/cern.ch/lhcb/scripts/makedoc.py
