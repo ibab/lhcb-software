@@ -1,0 +1,8 @@
+!============================================
+! Package     : MooreScripts
+! Package Coordinator : R. Lambert, G. Raven
+! Purpose     : Holding any scripts running Moore in the Online
+!============================================
+
+! 2013-09-13 - Rob Lambert
+ - Created the package.
