@@ -92,7 +92,6 @@ class VertexIsolation : public GaudiTool, virtual public IExtraInfoTool {
   IDVAlgorithm*              m_dva;
   const IDistanceCalculator* m_dist;
   const IVertexFit*          m_pVertexFit;
-  double                     m_deltaChi2 ;
   double                     m_chi2 ;
 
  public:

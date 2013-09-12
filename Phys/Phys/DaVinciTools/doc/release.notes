@@ -3,12 +3,15 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-09-12 - Chris Jones
+ - Remove unused data member in VertexIsolation
+
 ! 2013-09-10 - Konstantinos A. Petridis
-  - Addition of ConeJetProxy tool which vectorially sums up tracks
-  and neutral momenta in a cone around a candidate and selects candidates
-  that satisfy a minimum vector sum pT cut. At the moment the track cleanup
-  criteria are hard coded, and only sum tracks originating near the vertex
-  of the input candidates
+ - Addition of ConeJetProxy tool which vectorially sums up tracks
+   and neutral momenta in a cone around a candidate and selects candidates
+   that satisfy a minimum vector sum pT cut. At the moment the track cleanup
+   criteria are hard coded, and only sum tracks originating near the vertex
+   of the input candidates
 
 ! 2013-08-26 - Chris Jones
  - Add a check to SubPIDMMFilter to make sure array indices are in range

@@ -28,8 +28,6 @@ DECLARE_TOOL_FACTORY( VertexIsolation )
   declareInterface<IExtraInfoTool>(this);
   declareProperty("InputParticles", m_inputParticles,
                   "List of containers to check for extra particle vertexing") ;
-//  declareProperty("MaxDeltaChi2", m_deltaChi2 = 9.0,
-//                  "Maximum Delta chi2 for compatible particles") ;
   declareProperty("MaxChi2", m_chi2 = 9.0,
                   "Maximum chi2 for compatible particles") ;
 }
@@ -236,7 +234,6 @@ VertexIsolation::IsolationResult VertexIsolation::getIsolation( const double ori
       double deltaChi2 = vtxWithExtraTrack.chi2() - originalVtxChi2 ;
       if ( msgLevel(MSG::DEBUG) ) debug() << "Fitted vertex adding track has Delta chi2 = " << deltaChi2  << " chi2 = " << vtxWithExtraTrack.chi2() << endmsg ;
       // Get values
-      //if ( (m_deltaChi2 > 0.0) && (deltaChi2 < m_deltaChi2) )      nCompatibleDeltaChi2++ ;
       if ( (m_chi2 > 0.0) && (vtxWithExtraTrack.chi2() < m_chi2) ) nCompatibleChi2++ ;
       if ( (smallestChi2) < 0 || (smallestChi2 > vtxWithExtraTrack.chi2()) ) smallestChi2 = vtxWithExtraTrack.chi2() ;
       if ( (smallestDeltaChi2 < 0) || (smallestDeltaChi2 > deltaChi2) )
