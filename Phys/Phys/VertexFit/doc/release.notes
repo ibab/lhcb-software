@@ -4,6 +4,9 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2013-09-12 - Chris Jones
+ - Add protection to AdaptivePVReFitter for NULL pointers.
+
 !========================= VertexFit v6r15p1 2013-06-13 =========================
 
 ! 2013-05-25 - Chris Jones

@@ -77,9 +77,13 @@ StatusCode AdaptivePVReFitter::initialize()
 //=============================================================================
 StatusCode AdaptivePVReFitter::reFit(LHCb::VertexBase* PV) const
 {
-  if( !(PV->isPrimary()) ) 
+  if ( !PV ) 
   {
-    return Error( "AdaptivePVReFitter is used to reFit a non-PV" );
+    return Error( "NULL PV pointer passed !" );
+  }
+  if ( !(PV->isPrimary()) ) 
+  {
+    return Error( "Cannot reFit a non-PV" );
   }
 
   RecVertex * primvtx = dynamic_cast<RecVertex*>(PV);
@@ -106,14 +110,21 @@ StatusCode AdaptivePVReFitter::reFit(LHCb::VertexBase* PV) const
 StatusCode AdaptivePVReFitter::remove( const LHCb::Particle* part,
                                        LHCb::VertexBase* PV ) const
 {
-
+  if ( !PV ) 
+  {
+    return Error( "NULL PV pointer passed !" );
+  }
+  if ( !part ) 
+  {
+    return Error( "NULL Particle pointer passed !" );
+  }
   if ( !(PV->isPrimary()) )
   {
-    return Error( "AdaptivePVReFitter is used to remove a track from a non-PV" );
+    return Error( "Cannot remove a track from a non-PV" );
   }
 
   RecVertex* primvtx = dynamic_cast<RecVertex*>(PV);
-  if(!primvtx) return StatusCode::FAILURE;
+  if (!primvtx) return StatusCode::FAILURE;
 
   std::vector<const LHCb::Track*> dautracks;
   getFinalTracks(part, dautracks);
