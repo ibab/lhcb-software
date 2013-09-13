@@ -5,9 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-09-13 - Chris Jones
- - Remove hardcoded DB tags from strpping tests, to allow them to again run
+ - Remove hardcoded DB tags from stripping tests, to allow them to again run
    with whatever is the current 'best'.
- - Update stripping references for current SVN builds.
+ - Update stripping reference log files for current SVN builds.
 
 ! 2013-08-26 - Chris Jones
  - Add new tests for Stripping20rXp2. Will fail until the AppConfig options
@@ -37,8 +37,9 @@
  - Add new test for Stripping20r3.
 
 ! 2013-07-07 - Stefania Vecchi
- - Updated reference file tagging.qms/test_tag_mc12.qmt to monitor also nnetKaonOpposite
-   and nnetKaonSame Tagging algorithms + some changes in the Category definition
+ - Updated reference file tagging.qms/test_tag_mc12.qmt to monitor also 
+   nnetKaonOpposite and nnetKaonSame Tagging algorithms + some changes in the 
+   Category definition.
 
 !========================= DaVinciTests v2r17 2013-06-17 =========================
 
