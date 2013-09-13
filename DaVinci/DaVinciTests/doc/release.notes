@@ -7,6 +7,7 @@
 ! 2013-09-13 - Chris Jones
  - Remove hardcoded DB tags from strpping tests, to allow them to again run
    with whatever is the current 'best'.
+ - Update stripping references for current SVN builds.
 
 ! 2013-08-26 - Chris Jones
  - Add new tests for Stripping20rXp2. Will fail until the AppConfig options
