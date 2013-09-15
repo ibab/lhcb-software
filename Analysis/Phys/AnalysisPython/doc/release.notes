@@ -5,6 +5,12 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-09-15 - Vanya Belyaev
+ - PyRoUts: few new decorators (e.g. sumVar)
+   GetLumi: make use of sumVar 
+   SaveRoot 
+
+
 ! 2013-08-28 - Vanya Belyaev
  - use new functions from Kernel/LHCbMath
 
