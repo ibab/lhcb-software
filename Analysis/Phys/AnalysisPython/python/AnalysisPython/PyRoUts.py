@@ -3393,7 +3393,7 @@ def hToGraph ( h1                   ,
 # =============================================================================
 # iterate over graph items
 # =============================================================================
-## iterate over points in TGraphError
+## iterate over points in TGraphErrors
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _gr_iter_ ( graph ) :
@@ -3445,7 +3445,7 @@ def _gr_getitem_ ( graph , ipoint )  :
     return x_,v_
 
 # =============================================================================
-## get the point in TGraphError
+## get the point in TGraphErrors
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _gre_getitem_ ( graph , ipoint )  :
@@ -3483,7 +3483,7 @@ def _gr_setitem_ ( graph , ipoint , point )  :
     graph.SetPoint      ( ipoint , x , v )
 
 # =============================================================================
-## set the point in TGraphError
+## set the point in TGraphErrors
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
 def _gre_setitem_ ( graph , ipoint , point )  :
@@ -4523,46 +4523,44 @@ def _null_ ( self , linestyle = 2 ) :
     >>> h.null() 
     """
     return _level_ ( self , 0 , linestyle ) 
-# =============================================================================
-## set color attributes  
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-01-21 
-def _color_ ( self , color = 2 ) :
-    """
-    Set color attributes
-
-    >>> h.color ( 3 ) 
-    """
-    #
-    if hasattr ( self , 'SetLineColor'   ) : self.SetLineColor   ( color )
-    if hasattr ( self , 'SetMarkerColor' ) : self.SetMarkerColor ( color )
-    #
-    return self
-# =============================================================================
-## set color attributes  
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-01-21 
-def _red_  ( self ) : return _color_( self , 2 ) 
-# =============================================================================
-## set color attributes  
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date   2013-01-21 
-def _blue_ ( self ) : return _color_( self , 4 ) 
-
 
 ROOT.TH1D. level = _level_
 ROOT.TH1F. level = _level_
 ROOT.TH1D. null  = _null_
 ROOT.TH1F. null  = _null_
 
-ROOT.TH1D. color  = _color_
-ROOT.TH1D. red    = _red_
-ROOT.TH1D. blue   = _blue_
+# =============================================================================
+## set color attributes  
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-01-21 
+def _color_ ( self , color = 2 ,marker = 20 ) :
+    """
+    Set color attributes
 
-ROOT.TH1F. color  = _color_
-ROOT.TH1F. red    = _red_
-ROOT.TH1F. blue   = _blue_
+    >>> h.color ( 3 ) 
+    """
+    #
+    if hasattr ( self , 'SetLineColor'   ) : self.SetLineColor   ( color  )
+    if hasattr ( self , 'SetMarkerColor' ) : self.SetMarkerColor ( color  )
+    if hasattr ( self , 'SetMarkerStyle' ) : self.SetMarkerStyle ( marker ) 
+    #
+    return self
+# =============================================================================
+## set color attributes  
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-01-21 
+def _red_  ( self , marker = 20 ) : return _color_( self , 2 , marker ) 
+# =============================================================================
+## set color attributes  
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-01-21 
+def _blue_ ( self , marker = 25 ) : return _color_( self , 4 , marker ) 
 
+for _t in  ( ROOT.TH1D   , ROOT.TH1F , ROOT.TGraph , ROOT.TGraphErrors ) :
+    
+    _t . color = _color_
+    _t . red   = _red_
+    _t . blue  = _blue_
 
 # =============================================================================
 ## add some spline&interpolation stuff
@@ -4903,6 +4901,42 @@ def _ds_draw_ ( dataset , what , *args ) :
         if tree : return tree.Draw( what , *args )
         
     raise AttributeError( "Can't ``draw'' data set , probably wrong StorageType" )
+
+# =============================================================================
+## @var _h_one_
+#  special helper histogram for summation
+_h_one_ = ROOT.TH1D( hID () , '' , 3 , -1 , 2 ) ; _h_one_.Sumw2()
+# =============================================================================
+## make a sum over expression in Tree/Dataset
+#
+#  @code
+#
+#  >>> dataset = ...
+#  ## get corrected number of events 
+#  >>> n_corr  = dataset.sumVar ( "S_sw/effic" )
+#
+#  @endcode
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-09-15
+def _sum_var_ ( tree , expression ) :
+    """
+    Make a sum over expression in Tree/Dataset
+    
+    >>> dataset = ...
+    ## get corrected number of signale events  
+    >>> n_corr  = dataset.sumVar ( 'S_sw/effic' )
+    
+    """
+    _h_one_.Reset() 
+    tree.project ( _h_one_ , '1' , expression )
+    return _h_one_.accumulate()
+
+ROOT.RooDataSet . sumVar = _sum_var_
+ROOT.TTree      . sumVar = _sum_var_
+ROOT.TChain     . sumVar = _sum_var_
+
+
 
 # =============================================================================
 ## print method for RooDatSet

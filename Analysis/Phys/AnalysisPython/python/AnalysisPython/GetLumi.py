@@ -45,6 +45,7 @@ logger = getLogger( __name__ )
 #
 #  @param data  (INPUT) tree, chain, file, filename or sequence
 #  @return the luminosity
+#  @attention Linear addition of uncertainties is used here 
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2012-09-20
@@ -78,7 +79,7 @@ def getLumi ( data , *args ) :
         data = os.path.expandvars ( data )
         
         try :    
-            tree = ROOT.TChain (  tree_name ) 
+            tree = ROOT.TChain ( tree_name ) 
             tree.Add ( data )   
             lumi = getLumi ( tree )
             return lumi
@@ -96,37 +97,25 @@ def getLumi ( data , *args ) :
             return VE()
         
     if isinstance ( data , ROOT.TTree ) :
+        
         try:
-            h = ROOT.TH1F( hID() , '' , 10, -1, 4 ) ; h.Sumw2()
-            l1 = VE()
             #
-            data.Project ( h.GetName() , " 1 " ,  '1.0*IntegratedLuminosity' ) 
-            l1 = h.accumulate()
+            l1 = data.sumVar ( '1.0*IntegratedLuminosity+0.0*IntegratedLuminosityErr' )
+            l2 = data.sumVar ( '1.0*IntegratedLuminosity+1.0*IntegratedLuminosityErr' )
+            l3 = data.sumVar ( '1.0*IntegratedLuminosity-1.0*IntegratedLuminosityErr' )            
             #
-            data.Project ( h.GetName() , " 1 " ,
-                           '1.0*IntegratedLuminosity+0.0*IntegratedLuminosityErr' ) 
-            l1 = h.accumulate()
-            # 
-            data.Project ( h.GetName() , " 1 " ,
-                           '1.0*IntegratedLuminosity+1.0*IntegratedLuminosityErr' ) 
-            l2 = h.accumulate()
-            # 
-            data.Project ( h.GetName() , " 1 " ,
-                           '1.0*IntegratedLuminosity-1.0*IntegratedLuminosityErr' ) 
-            l3 = h.accumulate()
-            # 
-            #
-            l1.setError ( 0.5 * abs( l2.value () - l3.value () ) )
+            l1.setError ( 0.5 * abs ( l2.value () - l3.value () ) )
             #
             # 
             return l1
         except :
             logger.error('Unable to get lumi(3) for %s' % data.GetName() )
             return VE()
-
+        
     l = VE() 
     for i in data :
-        k = getLumi ( i ) 
+        k = getLumi ( i )
+        ## @attention: linear addition of uncertainties: 
         l = VE ( l.value() + k.value() , ( l.error() + k.error () ) ** 2 ) 
 
     return l 
