@@ -5,53 +5,60 @@
 #include "LoKi/select.h"
 #include "FilterDesktop.h"
 
-/** @class ConeJetProxyFilter 
- *                                                                                      
+/** @class ConeJetProxyFilter
+ *
  * \brief Vector sum of PT from all charged and neutral particles in a cone.
- *                                                                                      
- *  @author Mike Williams
+ *
+ *  @author Konstantinos A. Petridis
  *  @date   2013-09-02
  */
 
-class ConeJetProxyFilter : public FilterDesktop {
+class ConeJetProxyFilter : public FilterDesktop
+{
 
-  friend class AlgFactory<ConeJetProxyFilter>;
+public:
 
-protected:
   ConeJetProxyFilter(const std::string &name,ISvcLocator *pSvc);
-  virtual ~ConeJetProxyFilter(){}
-  IIncidentSvc* incSvc() const{
+
+  virtual StatusCode initialize();
+
+public:
+
+  virtual StatusCode filter(const LHCb::Particle::ConstVector& input,
+                            LHCb::Particle::ConstVector& output);
+
+private:
+
+  double conePT ( const LHCb::Particle* p,
+                  const LHCb::Particles * charged,
+                  const LHCb::Particles * neutral, 
+                  const LHCb::VertexBase *bpv );
+
+  IIncidentSvc* incSvc() const
+  {
     if ( !m_incSvc ) { m_incSvc = svc<IIncidentSvc>("IncidentSvc",true); }
     return m_incSvc ;
   }
 
-public:
-  virtual StatusCode initialize();
-  virtual StatusCode filter(const LHCb::Particle::ConstVector& input,
-                            LHCb::Particle::ConstVector& output);
-
-  double conePT(const LHCb::Particle* p,LHCb::Particles *charged,
-		LHCb::Particles *neutral, const LHCb::VertexBase *bpv);
-
 private:
-  ConeJetProxyFilter();
-  ConeJetProxyFilter(const ConeJetProxyFilter&);
-  ConeJetProxyFilter& operator=(const ConeJetProxyFilter&);
 
   double m_dR;
   double m_minPT;
   std::string m_chargedLoc;
   std::string m_neutralLoc;
   std::string m_stopIncidentType;
-  mutable IIncidentSvc* m_incSvc; ///< the incident service 
-  const IDistanceCalculator* m_dist; 
+  mutable IIncidentSvc* m_incSvc; ///< the incident service
+  const IDistanceCalculator* m_dist;
+
 };
 
 
-StatusCode ConeJetProxyFilter::initialize() {
+StatusCode ConeJetProxyFilter::initialize()
+{
   const StatusCode sc = FilterDesktop::initialize () ;
   if ( sc.isFailure() ) { return sc ; }
-  // get tools 
+
+  // get tools
   m_dist = distanceCalculator();
 
   return sc;
@@ -64,8 +71,8 @@ ConeJetProxyFilter::ConeJetProxyFilter(const std::string& name,ISvcLocator* pSvc
     m_chargedLoc(""),
     m_neutralLoc(""),
     m_stopIncidentType(),
-    m_incSvc(0),
-    m_dist(0)
+    m_incSvc(NULL),
+    m_dist(NULL)
 {
   declareProperty("DeltaR", m_dR, "Cone size (defaults to 1.0)");
   declareProperty("MinPT", m_minPT, "Filter on cone PT > this");
@@ -75,85 +82,87 @@ ConeJetProxyFilter::ConeJetProxyFilter(const std::string& name,ISvcLocator* pSvc
 }
 
 StatusCode ConeJetProxyFilter::filter(const LHCb::Particle::ConstVector& input,
-                                  LHCb::Particle::ConstVector& output){
+                                      LHCb::Particle::ConstVector& output)
+{
   LHCb::Particle::ConstVector filtered;
   filtered.reserve(input.size());
   LoKi::select(input.begin(),input.end(),
                std::back_inserter(filtered),predicate());
   LHCb::Particles *charged = get<LHCb::Particles>(m_chargedLoc+"/Particles");
   LHCb::Particles *neutral = get<LHCb::Particles>(m_neutralLoc+"/Particles");
-  if(charged->size() == 0){
-    warning() << "Failed to get particles from " << m_chargedLoc << endmsg;
-    return StatusCode::FAILURE;
+  if ( charged->empty() )
+  {
+    return Warning( "Failed to get particles from " + m_chargedLoc );
   }
-  if(neutral->size() == 0){
-    warning() << "Failed to get particles from " << m_neutralLoc << endmsg;
-    return StatusCode::FAILURE;
+  if ( neutral->empty() )
+  {
+    return Warning( "Failed to get particles from " + m_neutralLoc );
   }
 
-  for(LHCb::Particle::ConstVector::const_iterator ip = filtered.begin();
-      filtered.end() != ip; ++ip) {
+  for ( LHCb::Particle::ConstVector::const_iterator ip = filtered.begin();
+        filtered.end() != ip; ++ip ) 
+  {
     const LHCb::Particle *p = *ip;
     if ( 0 == p ) { continue ; }
     const LHCb::VertexBase* bpv = bestVertex(p);
-    double pt = conePT(p,charged,neutral,bpv);
-    if(pt < 0) return StatusCode::FAILURE;
-    if(pt > m_minPT) output.push_back(p);
+    const double pt = conePT(p,charged,neutral,bpv);
+    if ( pt < 0 ) return StatusCode::FAILURE;
+    if ( pt > m_minPT) output.push_back(p);
   }
   markParticles(output);
   return StatusCode::SUCCESS ;
 }
 
 double ConeJetProxyFilter::conePT(const LHCb::Particle *p,
-				  LHCb::Particles *charged,
-				  LHCb::Particles *neutral,
-				  const LHCb::VertexBase *pv){
-  Gaudi::LorentzVector p4cone(0,0,0,0), p4 = p->momentum(); 
+                                  const LHCb::Particles *charged,
+                                  const LHCb::Particles *neutral,
+                                  const LHCb::VertexBase *pv)
+{
+  Gaudi::LorentzVector p4cone(0,0,0,0);
+  const Gaudi::LorentzVector& p4 = p->momentum();
   // charged
-  //std::cout << "conePT: " << p4.Pt() << std::endl;
-  for(LHCb::Particles::const_iterator ip = charged->begin(); ip != charged->end(); ++ip){
+  for ( LHCb::Particles::const_iterator ip = charged->begin(); 
+        ip != charged->end(); ++ip ) 
+  {
     // clean up
-    if((*ip)->proto()->track()->chi2PerDoF() > 3) continue;
-    if((*ip)->proto()->track()->ghostProbability() > 0.4) continue;
+    if ( (*ip)->proto()->track()->chi2PerDoF() > 3         ) continue;
+    if ( (*ip)->proto()->track()->ghostProbability() > 0.4 ) continue;
     // prompt from same pv or "close" to topo
     bool use = false;
-    double imp,chi2,doca=-1;
+    double imp(-1),chi2(-1),doca(-1);
     m_dist->distance((*ip),pv,imp,chi2);
-    if(chi2 < 16) use = true;
-    else{
+    if ( chi2 < 16 )
+    {
+      use = true; 
+    }
+    else
+    {
       m_dist->distance(p,(*ip),doca);
       if(doca < 1.0) use = true;
     }
-    //    std::cout << use << " " << chi2 << " " << doca << std::endl;
     //if(!use) std::cout << "fail!" << std::endl;
     if(!use) continue;
-    Gaudi::LorentzVector p4part = (*ip)->momentum();
+    const Gaudi::LorentzVector& p4part = (*ip)->momentum();
     double deltaPhi = fabs(p4.Phi() - p4part.Phi() );
     if(deltaPhi > M_PI) deltaPhi = 2*M_PI - deltaPhi;
-    double deltaEta = p4.Eta() - p4part.Eta();
-    double dR   = sqrt(deltaPhi*deltaPhi + deltaEta*deltaEta);
-    if(dR < m_dR) p4cone += p4part;
+    const double deltaEta = p4.Eta() - p4part.Eta();
+    const double dR   = std::sqrt(deltaPhi*deltaPhi + deltaEta*deltaEta);
+    if ( dR < m_dR ) { p4cone += p4part; }
   }
-  //  std::cout << "charged: " << p4cone.Pt();
   // neutral
-  for(LHCb::Particles::const_iterator ip = neutral->begin(); ip != neutral->end(); ++ip){
-    Gaudi::LorentzVector p4part = (*ip)->momentum();
+  for(LHCb::Particles::const_iterator ip = neutral->begin(); 
+      ip != neutral->end(); ++ip ) 
+  {
+    const Gaudi::LorentzVector& p4part = (*ip)->momentum();
     double deltaPhi = fabs(p4.Phi() - p4part.Phi() );
     if(deltaPhi > M_PI) deltaPhi = 2*M_PI - deltaPhi;
-    double deltaEta = p4.Eta() - p4part.Eta();
-    double dR   = sqrt(deltaPhi*deltaPhi + deltaEta*deltaEta);
-    if(dR < m_dR) p4cone += p4part;
+    const double deltaEta = p4.Eta() - p4part.Eta();
+    const double dR   = std::sqrt(deltaPhi*deltaPhi + deltaEta*deltaEta);
+    if ( dR < m_dR ) { p4cone += p4part; }
   }
-  //std::cout << " total: " << p4cone.Pt() << std::endl;
   return p4cone.Pt();
 }
 
 // ============================================================================
 DECLARE_ALGORITHM_FACTORY(ConeJetProxyFilter)
 // ============================================================================
-
-
-
-
-
-

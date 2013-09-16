@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2013-09-16 - Chris Jones
+ - Clean up ConeJetProxy prior to back porting it to the DV v32r2pX series.
+
 ! 2013-09-12 - Chris Jones
  - Remove unused data member in VertexIsolation
 
