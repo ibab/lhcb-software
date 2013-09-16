@@ -4,7 +4,9 @@
 !============================================================================
 
 ! 2013-09-16 - Chris Jones
- - Clean up ConeJetProxy prior to back porting it to the DV v32r2pX series.
+ - Clean up ConeJetProxy prior to back porting it to the DV v32r2pX series
+  + Various minor performance updates (const references)
+  + Make track cuts configurable.
 
 ! 2013-09-12 - Chris Jones
  - Remove unused data member in VertexIsolation

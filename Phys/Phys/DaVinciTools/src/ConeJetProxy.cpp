@@ -38,6 +38,8 @@ private:
 
   double m_dR;
   double m_minPT;
+  double m_maxTkChiSqPerDOF;
+  double m_maxTkGhostProb;
   std::string m_chargedLoc;
   std::string m_neutralLoc;
   const IDistanceCalculator* m_dist;
@@ -46,7 +48,7 @@ private:
 
 StatusCode ConeJetProxyFilter::initialize()
 {
-  const StatusCode sc = FilterDesktop::initialize () ;
+  const StatusCode sc = FilterDesktop::initialize();
   if ( sc.isFailure() ) { return sc ; }
 
   // get tools
@@ -65,6 +67,10 @@ ConeJetProxyFilter::ConeJetProxyFilter(const std::string& name,ISvcLocator* pSvc
 {
   declareProperty("DeltaR", m_dR, "Cone size (defaults to 1.0)");
   declareProperty("MinPT", m_minPT, "Filter on cone PT > this");
+  declareProperty("MaxTrackChiSqPerDOF", m_maxTkChiSqPerDOF = 3,
+                  "Max Track chi^2 / D.O.F." );
+  declareProperty("MaxTrackGhostProb", m_maxTkGhostProb = 0.4,
+                  "Max Track ghost probability" );
   declareProperty("ChargedParticles", m_chargedLoc, "location of charged particles");
   declareProperty("NeutralParticles", m_neutralLoc, "location of neutral particles");
 }
@@ -72,10 +78,6 @@ ConeJetProxyFilter::ConeJetProxyFilter(const std::string& name,ISvcLocator* pSvc
 StatusCode ConeJetProxyFilter::filter(const LHCb::Particle::ConstVector& input,
                                       LHCb::Particle::ConstVector& output)
 {
-  LHCb::Particle::ConstVector filtered;
-  filtered.reserve(input.size());
-  LoKi::select(input.begin(),input.end(),
-               std::back_inserter(filtered),predicate());
   LHCb::Particles *charged = getIfExists<LHCb::Particles>(m_chargedLoc+"/Particles");
   LHCb::Particles *neutral = getIfExists<LHCb::Particles>(m_neutralLoc+"/Particles");
   if ( !charged || charged->empty() )
@@ -87,6 +89,12 @@ StatusCode ConeJetProxyFilter::filter(const LHCb::Particle::ConstVector& input,
     return Warning( "Failed to get particles from " + m_neutralLoc );
   }
 
+  LHCb::Particle::ConstVector filtered;
+  filtered.reserve(input.size());
+  LoKi::select(input.begin(),input.end(),
+               std::back_inserter(filtered),predicate());
+
+  output.reserve(filtered.size());
   for ( LHCb::Particle::ConstVector::const_iterator ip = filtered.begin();
         filtered.end() != ip; ++ip ) 
   {
@@ -95,7 +103,7 @@ StatusCode ConeJetProxyFilter::filter(const LHCb::Particle::ConstVector& input,
     const LHCb::VertexBase* bpv = bestVertex(p);
     const double pt = conePT(p,charged,neutral,bpv);
     if ( pt < 0 ) return StatusCode::FAILURE;
-    if ( pt > m_minPT) output.push_back(p);
+    if ( pt > m_minPT ) output.push_back(p);
   }
   markParticles(output);
   return StatusCode::SUCCESS;
@@ -113,8 +121,8 @@ double ConeJetProxyFilter::conePT(const LHCb::Particle *p,
         ip != charged->end(); ++ip ) 
   {
     // clean up
-    if ( (*ip)->proto()->track()->chi2PerDoF() > 3         ) continue;
-    if ( (*ip)->proto()->track()->ghostProbability() > 0.4 ) continue;
+    if ( (*ip)->proto()->track()->chi2PerDoF()     > m_maxTkChiSqPerDOF ) continue;
+    if ( (*ip)->proto()->track()->ghostProbability() > m_maxTkGhostProb ) continue;
     // prompt from same pv or "close" to topo
     bool use = false;
     double imp(-1),chi2(-1),doca(-1);
