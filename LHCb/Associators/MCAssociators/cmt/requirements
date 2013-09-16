@@ -6,12 +6,11 @@ package           MCAssociators
 version           v1r4
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure
 #============================================================================
 branches          cmt doc dict Kernel
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages
 #============================================================================
 use  PhysEvent           v*  Event
 use  MCEvent             v*  Event
@@ -26,11 +25,8 @@ apply_pattern install_more_includes more=Kernel
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern reflex_dictionary                                                 \
-              dictionary=MCAssociators                                        \
+apply_pattern reflex_dictionary                                             \
+              dictionary=MCAssociators                                      \
               headerfiles=$(MCASSOCIATORSROOT)/dict/MCAssociatorsDict.h     \
               selectionfile=$(MCASSOCIATORSROOT)/dict/MCAssociatorsDict.xml \
               options="-U__MINGW32__"
-
-macro MCAssociatorsDict_use_linkopts $(use_linkopts)
-

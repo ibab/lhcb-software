@@ -4,20 +4,23 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!========================= MCAssociators v1r4 2013-04-29 =========================
+! 2013-09-16 - Marco Cattaneo
+ - Remove unnecessary linkopts macro from requirements
+
+!========================= MCAssociators v1r4 2013-04-29 ========================
 ! 2013-04-22 - Chris Jones
  - Replace forward declarations for event model classes with includes, 
    as clang requires them.
 
-!========================= MCAssociators v1r3 2013-02-04 =========================
+!========================= MCAssociators v1r3 2013-02-04 ========================
 ! 2013-01-09 - Olivier Callot
  - Pass a NULL message service to the linker constructor, to remove messages.
 
-!========================= MCAssociators v1r2 2012-11-26 =========================
+!========================= MCAssociators v1r2 2012-11-26 ========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
-!========================= MCAssociators v1r1 2011-04-26 =========================
+!========================= MCAssociators v1r1 2011-04-26 ========================
 ! 2011-04-20 - Marco Cattaneo
  - Remove unneccessary dependencies on DaVinciInterfaces, LoKiCore, RecEvent
 
