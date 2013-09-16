@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-09-16 - Konstantinos A. Petridis
+  - Updated Beauty2Charm_Utily.py to add new parameters of ConeJetProxy into dictionary
+  - StrippingBeauty2Charm.py to add new parameters of ConeJetProxy into dictionary
+
 ! 2013-09-10 - Konstantinos A. Petridis
   - Updated Beauty2Charm_Utily.py to make use of new ConeJetProxy tool
     that selects ps-topo candidates with sufficient vector-sum-pT of tracks

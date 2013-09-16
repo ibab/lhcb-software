@@ -186,8 +186,15 @@ def makeTopoCands(inputs,addsumpt):
     topo4 = topoBDT(4,topo4)
     return [MergedSelection('PseudoTopoCands',[topo2,topo3,topo4])]
 
-def conePtFilter(inputs,cone_size,cone_pt):
-    alg = ConeJetProxyFilter('ConeJetTopoFilter',Code='ALL',DeltaR=cone_size,MinPT=cone_pt)
+def conePtFilter(inputs,config):
+    alg = ConeJetProxyFilter('ConeJetTopoFilter',
+                             Code='ALL',
+                             DeltaR=config['TOPOCONESIZE'],
+                             MinPT=config['TOPOCONEPT_MIN'],
+                             MaxTrackChiSqPerDOF=config['TOPOCONETKCHI2NDOF_MAX'],
+                             MaxTrackGhostProb=config['TOPOCONETKGHOSTPROB_MAX'],
+                             MaxTrackIPChiSq=config['TOPOCONETKIPCHI2_MAX'],
+                             MaxTrackDOCA=config['TOPOCONETKDOCA_MAX'])
     alg.ChargedParticles = 'Phys/StdAllNoPIDsPions'
     alg.NeutralParticles = 'Phys/StdLooseAllPhotons'
     return Selection('ConeJetFilter',
@@ -196,7 +203,9 @@ def conePtFilter(inputs,cone_size,cone_pt):
 
 def makeDoubleTopo(inputs,config):
     topos = makeTopoCands(inputs,config['ADDSUMPT'])
-    topos = [conePtFilter(topos,config['TOPOCONESIZE'],config['TOPOCONEPT_MIN'])]
+
+    topos = [conePtFilter(topos,config)]
+
     preambulo = ['D1 = ACHILD(BPVVD,1)',
                  'DZ1 = ACHILD(BPVVDZ,1)',
                  'DR1 = ACHILD(BPVVDR,1)',
