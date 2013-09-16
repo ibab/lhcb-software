@@ -40,7 +40,4 @@ apply_pattern    reflex_dictionary                                 \
                  selectionfile=$(HLTINTERFACESROOT)/dict/HltInterfacesDict.xml \
                  options="-U__MINGW32__"
 
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro HltInterfacesDict_use_linkopts $(use_linkopts)
-
 macro_append Boost_linkopts $(Boost_linkopts_regex)
