@@ -7,7 +7,7 @@
 
 /** @class ConeJetProxyFilter
  *
- * \brief Vector sum of PT from all charged and neutral particles in a cone.
+ *  Vector sum of PT from all charged and neutral particles in a cone.
  *
  *  @author Konstantinos A. Petridis
  *  @date   2013-09-02
