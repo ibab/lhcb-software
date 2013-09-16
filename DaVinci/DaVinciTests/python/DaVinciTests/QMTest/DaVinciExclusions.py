@@ -14,6 +14,7 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["MagnetRegion/"]) + \
   LineSkipper(["BeforeMagnetRegion/"]) + \
   LineSkipper(["DownstreamRegion"]) + \
+  LineSkipper(["DaVinciInitAlg.DaVinciMemory"]) + \
   LineSkipper(["MD5 sum:"]) 
 
 #LineSkipper(["LHCBCOND_"]) + \

@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-09-16 - Chris Jones
+ - Add messages starting 'DaVinciInitAlg.DaVinciMemory' to the exclusion list.
+
 ! 2013-09-13 - Chris Jones
  - Remove hardcoded DB tags from stripping tests, to allow them to again run
    with whatever is the current 'best'.
