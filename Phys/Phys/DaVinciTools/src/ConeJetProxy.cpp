@@ -40,6 +40,8 @@ private:
   double m_minPT;
   double m_maxTkChiSqPerDOF;
   double m_maxTkGhostProb;
+  double m_maxTkIPChiSq;
+  double m_maxTkDOCA;
   std::string m_chargedLoc;
   std::string m_neutralLoc;
   const IDistanceCalculator* m_dist;
@@ -67,10 +69,14 @@ ConeJetProxyFilter::ConeJetProxyFilter(const std::string& name,ISvcLocator* pSvc
 {
   declareProperty("DeltaR", m_dR, "Cone size (defaults to 1.0)");
   declareProperty("MinPT", m_minPT, "Filter on cone PT > this");
-  declareProperty("MaxTrackChiSqPerDOF", m_maxTkChiSqPerDOF = 3,
+  declareProperty("MaxTrackChiSqPerDOF", m_maxTkChiSqPerDOF = 3.0,
                   "Max Track chi^2 / D.O.F." );
   declareProperty("MaxTrackGhostProb", m_maxTkGhostProb = 0.4,
                   "Max Track ghost probability" );
+  declareProperty("MaxTrackIPChiSq", m_maxTkIPChiSq = 16.0,
+                  "Max Track I.P. chi^2" );
+  declareProperty("MaxTrackDOCA", m_maxTkDOCA = 1.0,
+                  "Max Track DOCA" );
   declareProperty("ChargedParticles", m_chargedLoc, "location of charged particles");
   declareProperty("NeutralParticles", m_neutralLoc, "location of neutral particles");
 }
@@ -127,14 +133,14 @@ double ConeJetProxyFilter::conePT(const LHCb::Particle *p,
     bool use = false;
     double imp(-1),chi2(-1),doca(-1);
     m_dist->distance((*ip),pv,imp,chi2);
-    if ( chi2 < 16 )
+    if ( chi2 < m_maxTkIPChiSq )
     {
       use = true; 
     }
     else
     {
       m_dist->distance(p,(*ip),doca);
-      if(doca < 1.0) use = true;
+      if ( doca < m_maxTkDOCA ) { use = true; }
     }
     if(!use) continue;
     const Gaudi::LorentzVector& p4part = (*ip)->momentum();
