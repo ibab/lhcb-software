@@ -108,6 +108,15 @@ class SoftConfDB(object):
         self.runCypher(query, lambda x: pvs.append((x[0], x[1])))
         return pvs
 
+    def listActiveReferences(self, project, version):
+        ''' List the project/versions that depend on this project, that are active on disk '''
+
+        query = 'start n=node:ProjectVersion(ProjectVersion="%s_%s") match o-[:ACTIVE]-m-[:REQUIRES*]->n  return distinct m.project, m.version' \
+        % (project, version)
+        pvs = []
+        self.runCypher(query, lambda x: pvs.append((x[0], x[1])))
+        return pvs
+
     def listActive(self):
         ''' List the active project/versions '''
         query = 'start n=node:Lbadmin(Type="STATUS") match n-[:ACTIVE]->m return distinct m.project, m.version'

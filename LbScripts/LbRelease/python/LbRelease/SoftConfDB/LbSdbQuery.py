@@ -46,7 +46,7 @@ class LbSdbQuery(Script):
         # Locating the command...
         cmdShort = { 'l':'listProjects', 'v':'listVersions', 'sp':'listStackPlatforms',
                     'p':'listPlatforms', 'd':'listDependencies', 'r':'listReferences',
-                    'u':'listUsed', 'a':'listActive' }
+                    'u':'listUsed', 'a':'listActive', 's':'listActiveReferences' }
         command = args[0]
         if command in cmdShort.keys():
             command = cmdShort[command]
@@ -171,6 +171,23 @@ class LbSdbQuery(Script):
             print "%s\t%s" %  p
 
 
+    def cmdlistActiveReferences(self, args):
+        ''' List the project/versions that depend on this project '''
+
+        if (len(args) < 2):
+            self.log.error("Please specify a project and version")
+            sys.exit(1)
+
+        pname = args[0].upper()
+        pversion =  args[1]
+        if not self.cmdProjectExists(args):
+            self.log.error("Could not find %s %s" % (pname, pversion))
+            sys.exit(1)
+
+        for p in self.mConfDB.listActiveReferences(pname, pversion):
+            print "%s\t%s" %  p
+
+
     # Method that looks for a method name in the object passed
     # and returns it in order to set the attribute
     def _findMethod(self, obj, prefix, partialMethodName):
@@ -196,7 +213,7 @@ if __name__=='__main__':
   %prog listPlatforms[p] <project> <version>
   %prog listDependencies[d] <project> <version>
   %prog listReferences[r] <project> <version>
-
+  %prog listActiveReferences[s] <project> <version>
 
       """
     s = LbSdbQuery(usage=sUsage)

@@ -1,3 +1,10 @@
+2013-09-16  Ben Couturier <Ben.Couturier@cern.ch>
+
+        Added query of list of active projects refencing a specific one:
+        * python/LbRelease/SoftConfDB/LbSdbQuery.py
+        * python/LbRelease/SoftConfDB/LbSdbImportFromInstallArea.py
+        * python/LbRelease/SoftConfDB/SoftConfDB.py
+
 2013-08-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/DataPkgEnvs: added environment for Geant4Files v95r0

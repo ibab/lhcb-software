@@ -72,7 +72,7 @@ class LbSdbImportFIA(Script):
         self.mAppImporter = AppImporter()
         self.mAppImporter.installArea = self.installareapath
 
-        if len(args) > 0 and len(args) < 2:
+        if len(args) > 0 and len(args) < 1:
             self.log.error("Please specify the -c or -t options, or a project and version")
             sys.exit(1)
 
