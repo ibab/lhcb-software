@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-09-16 - Stefano Perazzini
+ - Updated dbase stripping20r0p2 and stripping20r1p2
+
 ! 2013-09-16 - Konstantinos A. Petridis
 	- Stripping20r1p2/LineConfigDictionaries_B2OC.py, additional parameters to the 'BB' (ps-Topo) dictionary
   - Stripping20r0p2/LineConfigDictionaries_B2OC.py, additional parameters to the 'BB' (ps-Topo) dictionary
