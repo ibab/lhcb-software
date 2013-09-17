@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-09-17 - Marco Cattaneo
+ - Remove unnecessary linkopts macro from requirements
+
 !========================= LoKiGen v10r12 2013-04-29 =========================
 ! 2013-04-29 - Marco Cattaneo
  - Replace endreq by endmsg
