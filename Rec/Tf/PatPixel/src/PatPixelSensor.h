@@ -8,7 +8,7 @@
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "TMath.h"
-
+/*
 class ChipParams   // geometrical parameters for a single readout chip: there are 3 chips per sensor and 12 chips per module
 {
 public:
@@ -26,7 +26,7 @@ private:
   Gaudi::XYZVector m_vl; // pixel pitch vector along the low-resolution axis
   Gaudi::XYZVector m_vh; // pixel pitch vector along the high-resolution axis
 };                       // high/low-resolution was made for alongated pixels, for square pixels both resolutions are same: 55 microns
-
+*/
 /** @class PatPixelSensor PatPixelSensor.h
  *  Describes one sensor and its data for the Fast hit manager, from FastVelo
  *
@@ -99,7 +99,7 @@ private:
   double                  m_z;            // Z-position
 
   DeVPSensor*             m_sensor;       // DetectorElement from XML
-  std::vector<ChipParams> m_chips;        // vector of readout chips
+ // std::vector<ChipParams> m_chips;        // vector of readout chips
 
   PatPixelHits            m_hits;         // vector of (pointers to) hits, which are stored in PatPixelManager
 };

@@ -26,7 +26,6 @@ DECLARE_TOOL_FACTORY( PatPixelHitManager )
     : GaudiTool ( type, name , parent )
 {
   declareInterface<PatPixelHitManager>(this);
-
 }
 //=============================================================================
 // Destructor
@@ -192,4 +191,5 @@ void PatPixelHitManager::sortByX ( ) {
   }
 }
 //=============================================================================
+
 

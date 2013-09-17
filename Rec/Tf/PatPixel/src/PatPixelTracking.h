@@ -3,7 +3,6 @@
 #define PATPIXELTRACKING_H 1
 
 // #define DEBUG_HISTO // fill some histograms while the algorithm runs.
-
 // Include files
 // from Gaudi
 
@@ -20,7 +19,7 @@
 #include "PatPixelTrack.h"
 
 /** @class PatPixelTracking PatPixelTracking.h
- *  This is the main tracking fo rthe Velo Pixel upgrade
+ *  This is the main tracking for the Velo Pixel upgrade
  *
  *  @author Olivier Callot
  *  @date   2011-12-16
@@ -59,7 +58,7 @@ protected:
   }
 
   void removeWorstHit ( double maxChi2 );
-  bool addHitsOnSensor(PatPixelSensor* sensor, double xTol);
+  bool addHitsOnSensor( PatPixelSensor* sensor, double xTol, double maxScatter );
   void printHit( const PatPixelHit* hit, std::string title="" );
   void printTrack( PatPixelTrack& track );
   void printHitOnTrack ( PatPixelHit* hit, bool ifMatch=true );
@@ -70,24 +69,16 @@ private:
 
   double m_maxXSlope;
   double m_maxYSlope;
-  double m_maxZForRBeamCut;
-  double m_maxR2Beam;
   double m_extraTol;
-  double m_maxChi2ToAdd;
-  double m_maxChi2SameSensor;
+  double m_maxScatter;
   int    m_maxMissed;
-  double m_maxChi2PerHit;
-  double m_maxChi2Short;
   bool   m_clearHits;
   bool   m_stateClosestToBeamKalmanFit ;
   bool   m_stateEndVeloKalmanFit ;
-  bool   m_addStateFirstLastMeasurementKalmanFit ;
+  bool   m_addStateFirstLastMeasurementKalmanFit ;	
 
   PatPixelTracks m_tracks;                  // list of tracks found by searchByPair()
   PatPixelTrack  m_track;                   // current track being search, when complete, it is added to the list
-
-  // double         m_zPrimaryVertex;
-  // double         m_zErrPrimaryVertex;
   
   //== Debug control
   std::string      m_debugToolName;
@@ -103,6 +94,11 @@ private:
   int   m_timePrepare;
   int   m_timePairs;
   int   m_timeFinal;
-
+  double  m_maxZForRBeamCut;
+  double m_maxR2Beam;
+  double m_maxChi2PerHit;
+  double m_maxChi2Short;
+  double m_maxChi2ToAdd;
+  double m_maxChi2SameSensor;
 };
 #endif // PATPIXELTRACKING_H

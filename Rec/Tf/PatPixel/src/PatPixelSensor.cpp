@@ -20,7 +20,8 @@ PatPixelSensor::PatPixelSensor( DeVPSensor* sensor ) :
   m_number  = sensor->sensorNumber();
   m_isRight = sensor->isRight();
   // printf("PatPixelSensor(%02d:%c)\n", m_number, m_isRight?'R':'L' );
-  for ( unsigned int chipNum = 0 ; 12 > chipNum ; ++chipNum )  // loop over chips
+/* 
+ for ( unsigned int chipNum = 0 ; 12 > chipNum ; ++chipNum )  // loop over chips
   { if ( 0 > sensor->ladderOfChip(chipNum ) ) break;
     LHCb::VPChannelID id0( m_number, chipNum,   1,   1 );      // ChannelID corresponding to this chip pixel (  1,   1)
     LHCb::VPChannelID idl( m_number, chipNum, 101,   1 );      // ChannelID corresponding to this chip pixel (101,   1)
@@ -36,6 +37,7 @@ PatPixelSensor::PatPixelSensor( DeVPSensor* sensor ) :
     // printf(" %2d: [%+7.3f,%+7.3f,%+8.3f] : [%+6.3f,%+6.3f,%+6.3f] x [%+6.3f,%+6.3f,%+6.3f]\n",
     //       chipNum, p0.x(), p0.y(), p0.z(), slx.x(), slx.y(), slx.z(), sly.x(), sly.y(), sly.z() );
   }
+*/
   m_z = sensor->z();
   // printf(" Z = %+8.3f\n", m_z);
   reset();

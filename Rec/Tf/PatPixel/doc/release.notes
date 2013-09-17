@@ -3,6 +3,9 @@
 ! Responsible : 
 ! Purpose     : Pattern recogintion for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
+! 2013-0-17 - Tim Evans
+ - Removed some obsolete code / commented out PatPixelSensor code that is not used
+ - Changed Maximum scattering parameter to a GaudiParameter (MaxScattering)
 
 ! 2013-09-09 - Heinrich Schindler
  - Follow VP detector element and channel ID changes (r162190, 162191)
