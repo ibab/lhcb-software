@@ -35,8 +35,6 @@ apply_pattern    install_python_modules
 # ============== find memory leaks ============================================
 macro_append     Relations_pp_cppflags '  -DCOUNT_INSTANCES  ' \
                  WIN32                 ' /D"COUNT_INSTANCES" '
-macro RelationsDict_use_linkopts $(use_linkopts)
-
 
 # =============================================================================
 # The END 

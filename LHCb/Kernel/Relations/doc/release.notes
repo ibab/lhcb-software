@@ -4,6 +4,9 @@
 ! Purpose     : General purposes templated relations between classes
 !------------------------------------------------------------------------------
 
+! 2013-09-17 - Marco Cattaneo
+ - Remove unnecessary linkopts macro from requirements
+
 !========================= Relations v6r1 2012-11-26 =========================
 ! 2012-11-22 - Vanya Belyaev
  - fix the length of guid (needed for 64-bit platform)
