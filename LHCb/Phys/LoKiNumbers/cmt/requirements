@@ -24,9 +24,6 @@ apply_pattern    reflex_dictionary                                       \
                  options=" -U__MINGW32__ "
 
 # ================ patterns ===================================================
-
-macro LoKiNumbersDict_use_linkopts $(use_linkopts)
-
 apply_pattern QMTest 
 
 # =============================================================================

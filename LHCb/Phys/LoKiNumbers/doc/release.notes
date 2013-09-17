@@ -11,12 +11,11 @@
 !   Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
-! 
-!   By usage of this code one clearly states the disagreement 
-!   with the campain of Dr.O.Callot et al.: 
-!   ``No Vanya's lines are allowed in LHCb/Gaudi software.''
-!
 ! -----------------------------------------------------------------------------
+
+! 2013-09-17 - Marco Cattaneo
+ - Remove unnecessary linkopts macro from requirements
+ - Remove unnecessary disclaimers
 
 !========================= LoKiNumbers v10r4 2013-04-29 =========================
 ! 2013-03-29 - Vanya Belyaev
