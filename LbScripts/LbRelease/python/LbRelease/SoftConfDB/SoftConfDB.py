@@ -51,6 +51,14 @@ class SoftConfDB(object):
         self.runCypher(query, lambda x: projects.append(x[0]))
         return projects
 
+    def listApplications(self):
+        ''' List the applications known by the SoftConfDB '''
+
+        query = 'start n=node:Lbadmin(Type="APPLICATION") match n-[:APPLICATION]-m  return distinct m.project'
+        projects = []
+        self.runCypher(query, lambda x: projects.append(x[0]))
+        return projects
+
     def listVersions(self, project):
         ''' List the number of versions known for a given project '''
 
@@ -124,6 +132,14 @@ class SoftConfDB(object):
         self.runCypher(query, lambda x: pvs.append((x[0], x[1])))
         return pvs
 
+    def listActiveApplications(self):
+        ''' List the active project/versions '''
+        query = '''start n=node:Lbadmin(Type="STATUS"), p=node:Lbadmin(Type="APPLICATION")
+        match n-[:ACTIVE]->m--q--p return distinct m.project, m.version '''
+        pvs = []
+        self.runCypher(query, lambda x: pvs.append((x[0], x[1])))
+        return pvs
+
     def listUsed(self):
         ''' List the used project/versions '''
         query = 'start n=node:Lbadmin(Type="USED") match n-[:USED]->m return distinct m.project, m.version'
@@ -177,6 +193,11 @@ class SoftConfDB(object):
                                                                "Type",
                                                                "STATUS",
                                                                {"type": "STATUS"})
+
+            self.node_application =  self.mNeoDB.get_or_create_indexed_node("Lbadmin",
+                                                               "Type",
+                                                               "APPLICATION",
+                                                               {"type": "APPLICATION"})
 
             self.setupDone = True
 
@@ -306,11 +327,24 @@ class SoftConfDB(object):
             if r.is_type("USED"):
                 r.delete()
 
+
+    def setAllAppVersionsUsed(self):
+        ''' List the number of versions known for a given project '''
+
+        query = 'start n=node:Lbadmin(Type="APPLICATION") match n-[:APPLICATION]-p-[:PROJECT]-m  return distinct m'
+        pvs = []
+        self.runCypher(query, lambda x: pvs.append((x[0])))
+        for pv in pvs:
+            if not pv.has_relationship_with(self.node_used):
+                self.mNeoDB.get_or_create_relationships((self.node_used, "USED", pv))
+
+
     def setPVUsed(self, project, version):
         ''' Set the used link for a project version '''
         self.setupDB()
 
         node_pv =  self.mNeoDB.get_indexed_node("ProjectVersion",
+
                                                            "ProjectVersion",
                                                            project + "_" + version)
         if node_pv is None:
@@ -318,6 +352,33 @@ class SoftConfDB(object):
 
         if not self.node_used.has_relationship_with(node_pv):
             self.mNeoDB.get_or_create_relationships((self.node_used, "USED", node_pv))
+
+    def setApplication(self, project):
+        ''' Set the link to indicate that a project is an application '''
+        self.setupDB()
+
+        node_project = self.mNeoDB.get_or_create_indexed_node("Project",
+                                                           "Project",
+                                                           project,
+                                                           {"project": project})
+
+        if not self.node_application.has_relationship_with(node_project):
+            self.mNeoDB.get_or_create_relationships((self.node_application, "APPLICATION", node_project))
+
+    def unsetApplication(self, project):
+        ''' unset the used link for a project version '''
+        self.setupDB()
+
+        node_project = self.mNeoDB.get_or_create_indexed_node("Project",
+                                                           "Project",
+                                                           project,
+                                                           {"project": project})
+
+        if self.node_application.has_relationship_with(node_project):
+            for r in node_project.get_relationships():
+                if r.is_type("APPLICATION"):
+                    r.delete()
+
 
     def setPVActive(self, project, version, batch=None):
         ''' Set the used link for a project version '''
@@ -358,5 +419,9 @@ class SoftConfDB(object):
 
 
 
+if __name__ == '__main__':
+    sdb = SoftConfDB()
+    sdb.setupDB()
+    sdb.setAllAppVersionsUsed()
 
 

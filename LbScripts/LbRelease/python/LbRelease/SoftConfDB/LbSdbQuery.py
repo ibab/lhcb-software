@@ -44,7 +44,7 @@ class LbSdbQuery(Script):
         self.mConfDB = SoftConfDB()
 
         # Locating the command...
-        cmdShort = { 'l':'listProjects', 'v':'listVersions', 'sp':'listStackPlatforms',
+        cmdShort = { 'l':'listProjects', 'i':'listApplications', 'v':'listVersions', 'sp':'listStackPlatforms',
                     'p':'listPlatforms', 'd':'listDependencies', 'r':'listReferences',
                     'u':'listUsed', 'a':'listActive', 's':'listActiveReferences' }
         command = args[0]
@@ -67,9 +67,19 @@ class LbSdbQuery(Script):
         for p in sorted(self.mConfDB.listProjects()):
             print p
 
+    def cmdlistApplications(self, args):
+        ''' List the projects known by the SoftConfDB '''
+        for p in sorted(self.mConfDB.listApplications()):
+            print p
+
     def cmdlistActive(self, args):
         ''' List active projects '''
         for p in sorted(self.mConfDB.listActive()):
+            print "%s %s" % (p[0], p[1])
+
+    def cmdlistActiveApplications(self, args):
+        ''' List active applications '''
+        for p in sorted(self.mConfDB.listActiveApplications()):
             print "%s %s" % (p[0], p[1])
 
     def cmdlistUsed(self, args):
@@ -207,6 +217,7 @@ if __name__=='__main__':
 
   %prog listProjects[l]
   %prog listActive[a]
+  %prog listApplications[a]
   %prog listUsed[u]
   %prog listVersions[v] <project>
   %prog listStackPlatforms[sp] <project> <version>
@@ -214,6 +225,7 @@ if __name__=='__main__':
   %prog listDependencies[d] <project> <version>
   %prog listReferences[r] <project> <version>
   %prog listActiveReferences[s] <project> <version>
+  %prog checkUnused <project> <version>
 
       """
     s = LbSdbQuery(usage=sUsage)

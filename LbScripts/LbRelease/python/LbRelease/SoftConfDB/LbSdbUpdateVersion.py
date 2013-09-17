@@ -10,7 +10,7 @@ from LbUtils.Script import Script
 from LbRelease.SoftConfDB.SoftConfDB import SoftConfDB
 
 
-class LbSdbClear(Script):
+class LbSdbUpdateVersion(Script):
     """ Update information about a project / version """
 
     def defineOpts(self):
@@ -56,7 +56,7 @@ class LbSdbClear(Script):
 
 if __name__=='__main__':
     sUsage = """%prog project version  """
-    s = LbSdbClear(usage=sUsage)
+    s = LbSdbUpdateVersion(usage=sUsage)
     sys.exit(s.run())
 
 

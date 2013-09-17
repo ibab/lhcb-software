@@ -81,7 +81,7 @@ class LbSdbImportFIA(Script):
             projects.append((args[0].upper(), args[1]))
         else:
             if self.options.checkactive:
-                self.log.warn("Checking the install area to know which projects are installed" % nbdays)
+                self.log.warn("Checking the install area to know which projects are installed")
                 projects = self.resetActiveFlag(installareapath)
                 sys.exit(0)
             else:

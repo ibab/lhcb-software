@@ -1,3 +1,17 @@
+2013-09-17  Ben Couturier <Ben.Couturier@cern.ch>
+
+	Added list of applications to the DB:
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/LbSdbClear.py
+	* python/LbRelease/SoftConfDB/LbSdbUpdateVersion.py
+	* python/LbRelease/SoftConfDB/LbSdbSetAllAppsUsed.py
+	* python/LbRelease/SoftConfDB/LbSdbSetApp.py
+	* python/LbRelease/SoftConfDB/LbSdbAddPlatform.py
+	* python/LbRelease/SoftConfDB/LbSdbImportFromInstallArea.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+	* scripts/lb-sdb-setallappsused
+	* scripts/lb-sdb-setapp
+
 2013-09-16  Ben Couturier <Ben.Couturier@cern.ch>
 
         Added query of list of active projects refencing a specific one:
@@ -16,6 +30,7 @@
 2013-07-25  Illya Shapoval <Illya.Shapoval@cern.ch>
 
         * scripts/ariadne_add: inform a commiter of lxbuild119 being the only allowed machine to commit from.
+2013-09-16  Ben Couturier <Ben.Couturier@cern.ch>
 
 2013-06-28  Ben Couturier <Ben.Couturier@cern.ch>
 
