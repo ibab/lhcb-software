@@ -1,3 +1,55 @@
+! 2013-09-17 - Marco Clemencic (97e42f0)
+
+ - add standard libraries location to rpath
+
+   Displaced the code to locate the standard libraries so that the locations
+   can be added to link_deirectories and then used in the rpath.
+
+! 2013-09-11 - Marco Clemencic (a886246)
+
+ - fix to ignore CMakeLists.txt files from the build dir
+
+   If, by chance, the build produces CMakeLists.txt files in the binary 
+   directory, they must not be considered during a reconfigure/rebuild.
+
+
+! 2013-09-11 - Marco Clemencic (bf3ad4f)
+
+ - modified FindXercesC.cmake to set *_LIBRARY_DIRS
+
+   The <package>_LIBRARY_DIRS variable is needed by GaudiProjectConfig.cmake to
+   correctly set the LD_LIBRARY_PATH if we have a runtime-only dependency.
+
+
+! 2013-09-11 - Marco Clemencic (4a28dca)
+
+ - fixed to use GaudiProjectConfig.cmake not depending on Gaudi
+
+   For the install and python.zip target it was (implicitly) mandatory to
+   depent on Gaudi. Now it does not couse a failure anymore.
+
+
+! 2013-09-02 - Marco Clemencic (2f94780)
+
+ - enable use of distcc+ccache and allow custom build prefix commands
+
+   
+
+! 2013-08-30 - Marco Clemencic (2ffe8a5)
+
+ - added support for the library path for icc
+
+   When using a non-system compiler through the LHCb wrappers, we need to add
+   to the library path the compiler library dirs. This was already implemented
+   for gcc and clang, but it required some adaptations for the intel compiler.
+
+
+! 2013-08-01 - Marco Clemencic (d98e2ed)
+
+ - minor change to allow empty CMakeLists.txt files
+
+   
+
 ! 2013-07-19 - Marco Clemencic (4f5db2d)
 
  - check that all the requirements have a matching CMakeLists.txt

@@ -1,3 +1,7 @@
+2013-09-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmake: updated CMake support modules
+
 2013-07-24  Ben Couturier  <ben.couturier@cern.ch>
 
 	* cmt/requirements: release of version v3r14p2
