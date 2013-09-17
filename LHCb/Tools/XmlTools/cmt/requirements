@@ -27,5 +27,3 @@ apply_pattern     reflex_dictionary                                   \
                   headerfiles=$(XMLTOOLSROOT)/dict/XmlToolsDict.h     \
                   selectionfile=$(XMLTOOLSROOT)/dict/XmlToolsDict.xml \
                   options="-U__MINGW32__"
-
-macro_append XmlToolsDict_use_linkopts ' $(XmlToolsLib_use_linkopts) '
