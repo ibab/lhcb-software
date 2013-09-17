@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-09-17 - Mika Vesterinen
+ - Fix duplication problem in StrippingPhiToKSKS.py
+
 ! 2013-09-16 - Konstantinos A. Petridis
   - Updated Beauty2Charm_Utily.py to add new parameters of ConeJetProxy into dictionary
   - StrippingBeauty2Charm.py to add new parameters of ConeJetProxy into dictionary

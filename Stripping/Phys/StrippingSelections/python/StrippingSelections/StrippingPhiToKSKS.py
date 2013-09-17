@@ -21,11 +21,9 @@ __all__ = ('PhiToKSKSAllLinesConf',
 
 confdict = {
     "prescale_PhiToKK" : 1.0,
-    "prescale_PhiToKsKs_LLLL" : 1.0,
-    "prescale_PhiToKsKs_LLDD" : 1.0,
+    "prescale_PhiToKsKs" : 1.0,
     "prescale_JPsiToKK" : 1.0,
-    "prescale_JPsiToKsKs_LLLL" : 1.0,
-    "prescale_JPsiToKsKs_LLDD" : 1.0,
+    "prescale_JPsiToKsKs" : 1.0,
     
     "GEC_nLongTrk" : 250,
     "DoDTF" : True,
@@ -67,11 +65,9 @@ class PhiToKSKSAllLinesConf(LineBuilder) :
     
     __configuration_keys__ = (
         "prescale_PhiToKK" ,
-        "prescale_PhiToKsKs_LLLL" ,
-        "prescale_PhiToKsKs_LLDD" ,
+        "prescale_PhiToKsKs" ,
         "prescale_JPsiToKK" ,
-        "prescale_JPsiToKsKs_LLLL" ,
-        "prescale_JPsiToKsKs_LLDD",
+        "prescale_JPsiToKsKs" ,
         "GEC_nLongTrk",
         "DoDTF",
         "GHOSTPROB_MAX",
@@ -150,37 +146,33 @@ class PhiToKSKSAllLinesConf(LineBuilder) :
         self.PhiToKK_Line = VMaker(_name+"_PhiToKK",[self.Kaons],"phi(1020) -> K+ K-",GECs,config,config["prescale_PhiToKK"])
         self.registerLine(self.PhiToKK_Line)        
         
-        self.PhiToKsKs_LLLL_Line = VMaker(_name+"_PhiToKsKs_LLLL",[self.KsLL],"phi(1020) -> KS0 KS0",GECs,config,config["prescale_PhiToKsKs_LLLL"])
-        self.registerLine(self.PhiToKsKs_LLLL_Line)        
-        
-        self.PhiToKsKs_LLDD_Line = VMaker(_name+"_PhiToKsKs_LLDD",[self.KsLL,self.KsDD],"phi(1020) -> KS0 KS0",GECs,config,config["prescale_PhiToKsKs_LLDD"])
-        self.registerLine(self.PhiToKsKs_LLDD_Line)        
+        self.PhiToKsKs_Line = VMaker(_name+"_PhiToKsKs",[self.KsLL,self.KsDD],"phi(1020) -> KS0 KS0",GECs,config,config["prescale_PhiToKsKs"])
+        self.registerLine(self.PhiToKsKs_Line)        
         
         ########### J/psi(1S)  ################
         
         self.JPsiToKK_Line = VMaker(_name+"_JPsiToKK",[self.Kaons],"J/psi(1S) -> K+ K-",GECs,config,config["prescale_JPsiToKK"])
         self.registerLine(self.JPsiToKK_Line)        
         
-        self.JPsiToKsKs_LLLL_Line = VMaker(_name+"_JPsiToKsKs_LLLL",[self.KsLL],"J/psi(1S) -> KS0 KS0",GECs,config,config["prescale_JPsiToKsKs_LLLL"])
-        self.registerLine(self.JPsiToKsKs_LLLL_Line)        
-        
-        self.JPsiToKsKs_LLDD_Line = VMaker(_name+"_JPsiToKsKs_LLDD",[self.KsLL,self.KsDD],"J/psi(1S) -> KS0 KS0",GECs,config,config["prescale_JPsiToKsKs_LLDD"])
-        self.registerLine(self.JPsiToKsKs_LLDD_Line)        
+        self.JPsiToKsKs_Line = VMaker(_name+"_JPsiToKsKs",[self.KsLL,self.KsDD],"J/psi(1S) -> KS0 KS0",GECs,config,config["prescale_JPsiToKsKs"])
+        self.registerLine(self.JPsiToKsKs_Line)        
         
 
 def VMaker(_name,_RequiredSelections,_DecayDescriptor,_Filter,conf,_prescale):
     
+    _CombiCut = "( (ACHILDCUT(CHILDCUT(ISLONG,1),1)) | (ACHILDCUT(CHILDCUT(ISLONG,1),2)) )"
     if 'phi(1020)' in _DecayDescriptor:
-        _CombiCut = "(APT > %(Phi_PT_MIN)s *MeV) & (AM < %(Phi_MASS_MAX)s + 30*MeV) & (ACUTDOCACHI2(%(Phi_DOCACHI2_MAX)s,''))" %conf
+        _CombiCut += "& (APT > %(Phi_PT_MIN)s *MeV) & (AM < %(Phi_MASS_MAX)s + 30*MeV) & (ACUTDOCACHI2(%(Phi_DOCACHI2_MAX)s,''))" %conf
         _MotherCut = "(M < %(Phi_MASS_MAX)s +20*MeV) & (VFASPF(VCHI2/VDOF) < %(Phi_VCHI2NDOF_MAX)s) & (MIPCHI2DV(PRIMARY) < %(Phi_IPCHI2_MAX)s)" %conf
         _MassFilter = FilterDesktop(name = "MassFilter_"+_name,Code = "(M < %(Phi_MASS_MAX)s *MeV)" %conf)
     elif 'J/psi(1S)' in _DecayDescriptor:
-        _CombiCut = "(ADAMASS('J/psi(1S)') < %(JPsi_MASS_WIN)s +30*MeV) & (APT > %(JPsi_PT_MIN)s*MeV)"\
+        _CombiCut += "& (ADAMASS('J/psi(1S)') < %(JPsi_MASS_WIN)s +30*MeV) & (APT > %(JPsi_PT_MIN)s*MeV)"\
             "& (ACUTDOCACHI2(%(JPsi_DOCACHI2_MAX)s,''))" %conf
         _MotherCut = "(DMASS('J/psi(1S)') < %(JPsi_MASS_WIN)s +20*MeV)"\
             "& (VFASPF(VCHI2/VDOF) < %(JPsi_VCHI2NDOF_MAX)s) & (MIPCHI2DV(PRIMARY) < %(JPsi_IPCHI2_MAX)s)" %conf
         _MassFilter = FilterDesktop(name = "MassFilter_"+_name,Code = "(DMASS('J/psi(1S)') < %(JPsi_MASS_WIN)s *MeV)" %conf)
         
+    
     Comb = CombineParticles( name = "Comb_"+_name,
                              DecayDescriptor = _DecayDescriptor,
                              CombinationCut = _CombiCut,
