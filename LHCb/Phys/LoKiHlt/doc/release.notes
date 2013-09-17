@@ -4,6 +4,9 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2013-09-17 - Marco Cattaneo
+ - Remove unnecessary linkopts macro from requirements
+
 !========================= LoKiHlt v3r12 2013-04-29 =========================
 ! 2013-04-29 - Marco Cattaneo
  - Replace endreq by endmsg

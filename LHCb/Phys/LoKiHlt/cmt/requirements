@@ -47,8 +47,6 @@ apply_pattern    linker_library    library=LoKiHltLib
 apply_pattern    component_library library=LoKiHlt
 apply_pattern    QMTest 
 
-macro LoKiHltDict_use_linkopts $(use_linkopts)
-
 # ============================================================================
 # The END 
 # ============================================================================
