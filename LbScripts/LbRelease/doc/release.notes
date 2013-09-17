@@ -1,3 +1,7 @@
+2013-09-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/DataPkgEnvs: added environment for a few data packages
+
 2013-09-17  Ben Couturier <Ben.Couturier@cern.ch>
 
 	Added list of applications to the DB:
