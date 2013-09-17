@@ -30,6 +30,13 @@ class ProjectTestCase(unittest.TestCase):
     def testSVNProject(self):
         p = _getSVNProject("Gaudi")
         self.assertEqual("Gaudi", p.Name())
+
+
+    def testMooreOnline(self):
+        p = getProject("MooreOnline")
+        print p
+        self.assertEqual("MooreOnline", p.Name())
+
     def testAFSReleaseVolumeName(self):
         p = getProject("Integration")
         self.assertEqual(p.AFSVolumeShortName(), "IN")

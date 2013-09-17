@@ -1,3 +1,7 @@
+2013-09-17 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Project.py: Added project MooreOnline 
+
 2013-09-10  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/Repository.py: changed the default svn protocol to anonymous
