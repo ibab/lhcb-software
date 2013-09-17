@@ -2,6 +2,7 @@
 
 	* python/LbConfiguration/Package.py: Added package WG/HLTConfig (LBCORE-261)
 	* python/LbConfiguration/Project.py: Added project MooreOnline (LBCORE-260)
+	* python/LbConfiguration/Project.py: Added project BeautyDirac (LBCORE-262)
 
 2013-09-10  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

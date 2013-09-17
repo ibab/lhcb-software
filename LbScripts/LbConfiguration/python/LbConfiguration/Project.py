@@ -22,7 +22,7 @@ project_names = [ "Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                   "Curie", "Vetra", "VetraTB", "Compat", "VanDerMeer", "Ganga",
                   "LHCbDirac", "Integration", "Erasmus", "Feicim",
                   "Stripping", "LHCbExternals", "Urania", "VMDirac", "LHCbVMDirac", "Noether", "Tesla",
-                  "MooreOnline" ]
+                  "MooreOnline", "BeautyDirac" ]
 
 afs_volume_short_names = { "Gaudi"      : "GA",
                            "LHCb"       : "LH",
@@ -64,7 +64,8 @@ afs_volume_short_names = { "Gaudi"      : "GA",
                            "Noether"    : "NO",
                            "Tesla"      : "TE",
                            "Urania"     : "UR",
-                           "MooreOnline": "ML"}
+                           "MooreOnline": "ML",
+                           "BeautyDirac": "BD"}
 
 # ------------------------------------------------------------------------------------
 
@@ -603,3 +604,6 @@ Tesla.setAFSVolumeName("TESL")#IGNORE:E0602
 
 # MooreOnline
 MooreOnline.setAFSVolumeName("MOL")#IGNORE:E0602
+
+# BeautyDirac
+BeautyDirac.setAFSVolumeName("BDIRAC")#IGNORE:E0602

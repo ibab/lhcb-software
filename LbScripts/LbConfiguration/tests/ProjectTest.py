@@ -34,8 +34,12 @@ class ProjectTestCase(unittest.TestCase):
 
     def testMooreOnline(self):
         p = getProject("MooreOnline")
-        print p
         self.assertEqual("MooreOnline", p.Name())
+
+    def testBeautyDirac(self):
+        p = getProject("BeautyDirac")
+        print p
+        self.assertEqual("BeautyDirac", p.Name())
 
     def testAFSReleaseVolumeName(self):
         p = getProject("Integration")
