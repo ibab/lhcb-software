@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-09-17 - Chris Jones
+ - Update reference block for the commonparticles standardintermediate_run 
+   test to account for changes in StdMassConstrainedJpsi2MuMu.
+
 ! 2013-09-16 - Chris Jones
  - Add messages starting 'DaVinciInitAlg.DaVinciMemory' to the exclusion list.
 
