@@ -13,7 +13,7 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLoosePions, StdLooseKaons
 from Configurables import FitDecayTrees
-from PhysSelPython.Wrappers import AutomaticData
+from PhysSelPython.Wrappers import AutomaticData, MergedSelection
 
 __all__ = ('PhiToKSKSAllLinesConf',
            'TOSFilter',
@@ -137,6 +137,8 @@ class PhiToKSKSAllLinesConf(LineBuilder) :
                                Algorithm = FilterDesktop(name = "KsDDFilterFor"+_name, Code = self.KsDDCuts ),
                                RequiredSelections = [DataOnDemand(Location = 'Phys/StdLooseKsDD/Particles')])
         
+        self.Ks = MergedSelection("KsFor"+_name, RequiredSelections = [ self.KsLL, self.KsDD] )
+        
         self.Kaons = Selection( "KaonsFor" + _name,
                                 Algorithm = FilterDesktop(name = "KaonFilterFor"+_name, Code = self.KaonCuts ),
                                 RequiredSelections = [StdLooseKaons])
@@ -146,7 +148,7 @@ class PhiToKSKSAllLinesConf(LineBuilder) :
         self.PhiToKK_Line = VMaker(_name+"_PhiToKK",[self.Kaons],"phi(1020) -> K+ K-",GECs,config,config["prescale_PhiToKK"])
         self.registerLine(self.PhiToKK_Line)        
         
-        self.PhiToKsKs_Line = VMaker(_name+"_PhiToKsKs",[self.KsLL,self.KsDD],"phi(1020) -> KS0 KS0",GECs,config,config["prescale_PhiToKsKs"])
+        self.PhiToKsKs_Line = VMaker(_name+"_PhiToKsKs",[self.Ks],"phi(1020) -> KS0 KS0",GECs,config,config["prescale_PhiToKsKs"])
         self.registerLine(self.PhiToKsKs_Line)        
         
         ########### J/psi(1S)  ################
@@ -154,7 +156,7 @@ class PhiToKSKSAllLinesConf(LineBuilder) :
         self.JPsiToKK_Line = VMaker(_name+"_JPsiToKK",[self.Kaons],"J/psi(1S) -> K+ K-",GECs,config,config["prescale_JPsiToKK"])
         self.registerLine(self.JPsiToKK_Line)        
         
-        self.JPsiToKsKs_Line = VMaker(_name+"_JPsiToKsKs",[self.KsLL,self.KsDD],"J/psi(1S) -> KS0 KS0",GECs,config,config["prescale_JPsiToKsKs"])
+        self.JPsiToKsKs_Line = VMaker(_name+"_JPsiToKsKs",[self.Ks],"J/psi(1S) -> KS0 KS0",GECs,config,config["prescale_JPsiToKsKs"])
         self.registerLine(self.JPsiToKsKs_Line)        
         
 

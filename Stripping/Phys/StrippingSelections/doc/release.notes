@@ -5,6 +5,9 @@
 ! ----------------------------------------------------------------------------- 
 
 ! 2013-09-17 - Mika Vesterinen
+ - Use the MergedSelection for the KsLL and KsDD in StrippingPhiToKSKS.py
+
+! 2013-09-17 - Mika Vesterinen
  - Fix to previous commit that broke the K+K- control mode.
 
 ! 2013-09-17 - Mika Vesterinen
