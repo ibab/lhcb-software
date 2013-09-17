@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-09-17 - Chris Jones
+ - Increase timeouts (again) for stripping(20/20r1) tests to accomodate the
+   slow debug builds...
+
+! 2013-09-17 - Chris Jones
  - Update reference block for the commonparticles standardintermediate_run 
    test to account for changes in StdMassConstrainedJpsi2MuMu.
 
