@@ -49,9 +49,6 @@ apply_pattern     linker_library    library=LoKiMCLib
 apply_pattern     component_library library=LoKiMC
 apply_pattern     QMTest
 
-macro LoKiMCDict_use_linkopts $(use_linkopts)
-
-
 # ============================================================================
 # The END 
 # ============================================================================
