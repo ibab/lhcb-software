@@ -40,6 +40,12 @@ class PackageTestCase(unittest.TestCase):
         m2 = getPackage("AppConfig")
 
 
+    def testHLTConfig(self):
+        m1 = getPackage("HLTConfig")
+        self.assertEqual(m1.Name(), "HLTConfig")
+        self.assertEqual(m1.hat(), "WG")
+        self.assertEqual(m1.FullName(), "WG/HLTConfig")
+        self.assertEqual(m1.project(), "DBASE")
 
 if __name__ == '__main__':
     log = logging.getLogger()

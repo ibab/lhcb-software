@@ -1,6 +1,7 @@
 2013-09-17 Ben Couturier <Ben.Couturier@cern.ch>
 
-	* python/LbConfiguration/Project.py: Added project MooreOnline 
+	* python/LbConfiguration/Package.py: Added package WG/HLTConfig (LBCORE-261)
+	* python/LbConfiguration/Project.py: Added project MooreOnline (LBCORE-260)
 
 2013-09-10  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

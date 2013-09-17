@@ -57,7 +57,8 @@ package_names = ['XmlDDDB',
                  'Ariadne',
                  'RawEventFormat',
                  'LHAPDFSets',
-                 'BNoCConfig']
+                 'BNoCConfig',
+                 'HLTConfig']
 
 class PackageConfException(Exception):
     pass
@@ -359,3 +360,7 @@ LHAPDFSets.setProject("DBASE")#IGNORE:E0602
 
 BNoCConfig.setHat("WG")#IGNORE:E0602$
 BNoCConfig.setProject("DBASE")#IGNORE:E0602$
+
+HLTConfig.setHat("WG")#IGNORE:E0602$
+HLTConfig.setProject("DBASE")#IGNORE:E0602$
+
