@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-09-17 - Mika Vesterinen
+ - Fix duplication problem in the Phi->KsKs module. Now merge the LLLL and LLDD lines, hence update to settings needed.
+
 ! 2013-09-16 - Stefano Perazzini
  - Updated dbase stripping20r0p2 and stripping20r1p2
 

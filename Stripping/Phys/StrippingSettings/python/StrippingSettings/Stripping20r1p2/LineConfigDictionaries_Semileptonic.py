@@ -150,11 +150,9 @@ PhiToKSKS = {
     'BUILDERTYPE' : 'PhiToKSKSAllLinesConf',
     'CONFIG' :  {
         "prescale_PhiToKK" : 0.01,
-        "prescale_PhiToKsKs_LLLL" : 1.0,
-        "prescale_PhiToKsKs_LLDD" : 1.0,
+        "prescale_PhiToKsKs" : 1.0,
         "prescale_JPsiToKK" : 0.05,
-        "prescale_JPsiToKsKs_LLLL" : 1.0,
-        "prescale_JPsiToKsKs_LLDD" : 1.0,
+        "prescale_JPsiToKsKs" : 1.0,
         "GEC_nLongTrk" : 250,
         "DoDTF" : True,
         "GHOSTPROB_MAX" : 0.35, #adimensional
