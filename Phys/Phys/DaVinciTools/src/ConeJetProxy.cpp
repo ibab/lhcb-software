@@ -151,8 +151,8 @@ double ConeJetProxyFilter::conePT(const LHCb::Particle *p,
     if ( dR < m_dR ) { p4cone += p4part; }
   }
   // neutral
-  for(LHCb::Particles::const_iterator ip = neutral->begin(); 
-      ip != neutral->end(); ++ip ) 
+  for ( LHCb::Particles::const_iterator ip = neutral->begin(); 
+        ip != neutral->end(); ++ip ) 
   {
     const Gaudi::LorentzVector& p4part = (*ip)->momentum();
     double deltaPhi = fabs( p4.Phi() - p4part.Phi() );
