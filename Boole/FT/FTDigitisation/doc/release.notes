@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2013-09-18 - Marco Cattaneo
+ - Fix unused variable warning
+
 !========================= FTDigitisation v1r5 2013-07-18 =========================
 ! 2013-07-12 - Eric Cogneras
  - MCFTDepositCreator : adapt the call of function converting 'hit to ftchannel' to have  backward 

@@ -45,7 +45,7 @@ private:
   std::string m_outputLocation;    ///< FT energy deposit Location
 
   // FT Geometry version
-  int m_ftGeomVersion;
+  // int m_ftGeomVersion;
   
   // Fibre properties
   float       m_shortAttenuationLength; ///< Attenuation lengh of the light along the fibre : short component
