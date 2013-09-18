@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+!========================= StrippingSelections v3r28 2013-09-18 =========================
+
 ! 2013-09-17 - Mika Vesterinen
  - Use the MergedSelection for the KsLL and KsDD in StrippingPhiToKSKS.py
 
