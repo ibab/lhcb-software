@@ -37,7 +37,6 @@ VPClustering::VPClustering( const std::string& name,
                         ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
 {
-  declareProperty( "Debug",                   m_debugLevel           = true );
   declareProperty( "DigitContainer",          m_digitLocation        = LHCb::VPDigitLocation::VPDigitLocation );
   declareProperty( "LiteClusterContainer",    m_liteClusterLocation  = LHCb::VPLiteClusterLocation::Default );
   declareProperty( "VPClusterContainer",      m_VPClusterLocation    = LHCb::VPClusterLocation::VPClusterLocation );
@@ -56,11 +55,11 @@ VPClustering::~VPClustering() {}
 StatusCode VPClustering::initialize() {
   StatusCode sc = GaudiHistoAlg::initialize(); 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
+  
+  m_debugLevel = msgLevel(MSG::DEBUG);
+  
   if ( m_debugLevel ) debug() << "==> Initialize" << endmsg;
   
-  // Set histo dir if debugging
-  if ( m_debugLevel ) setHistoTopDir( "VPRecMon/" );
-
   // Get detector element
   m_vpDet = getDet<DeVP>( DeVPLocation::Default );
 
@@ -75,14 +74,12 @@ StatusCode VPClustering::execute() {
   if ( m_debugLevel ) debug() << "==> Execute" << endmsg;
 
   // Check if LiteClusters already decoded. If not, run clustering on decoded digits
-  if ( !exist<LHCb::VPLiteCluster::VPLiteClusters>( LHCb::VPLiteClusterLocation::Default ) ) m_clusterHits = true;
-  else m_clusterHits = false;
-
-  // If lite clusters are decoded there is no need to build clusters
-  if ( !m_clusterHits ){
+  if ( exist<LHCb::VPLiteCluster::VPLiteClusters>( LHCb::VPLiteClusterLocation::Default ) ){
+    // If lite clusters are decoded there is no need to build clusters
     if ( m_debugLevel ) debug() << "Lite clusters already exist. No clustering taking place" << endmsg;
     return StatusCode::SUCCESS;
-  }
+  }  
+  // If no lite clusters, then cluster the digits
   return clusterDigits();
 
 }
@@ -94,17 +91,16 @@ StatusCode VPClustering::clusterDigits (){
   if ( m_debugLevel ) debug() << "Clustering digits" << endmsg;
 
   // Pick up pixel hits (digits) to cluster
-  if ( !exist<LHCb::VPDigits>( m_digitLocation ) ){
-    if ( m_debugLevel ) error() << "No digits founds" << endmsg;
+  LHCb::VPDigits* raw_hits = getIfExists<LHCb::VPDigits>(m_digitLocation);
+  if(!raw_hits){
+    error() << "No digits founds in this event" << endmsg;
     return StatusCode::FAILURE;
-  }  
-  LHCb::VPDigits* raw_hits = get<LHCb::VPDigits>(m_digitLocation);
+  }
   LHCb::VPDigits::const_iterator iHit;
 
   // Make space on the TES for the lite clusters and VP clusters
   VPLiteCluster::VPLiteClusters* liteclusterCont = new VPLiteCluster::VPLiteClusters();
   put( liteclusterCont, m_liteClusterLocation );
-  
   VPClusters* clusterCont = new VPClusters();
   put( clusterCont, m_VPClusterLocation );
 
@@ -115,101 +111,53 @@ StatusCode VPClustering::clusterDigits (){
   }
   
   // Sort pixels by channelID
-  std::sort(digitCont.begin(), digitCont.end(),less_than_channelID());
-
-  
-  int newsize=0;
-  int oldsize=0;
+  std::sort(digitCont.begin(), digitCont.end(),less_than_channelID());  
   
   // Cluster while there are still pixels in the temporary storage
+  int newsize,oldsize;
   while(digitCont.size() > 0){
-    
-
     std::vector<LHCb::VPDigit*> cluster;                          //create new cluster 
     std::vector< std::pair<LHCb::VPChannelID,int> > totVec;      
     cluster.push_back(digitCont[0]);                              //push back first hit in container 
     totVec.push_back(std::make_pair(digitCont[0]->channelID(),digitCont[0]->ToTValue()));
     digitCont.erase(digitCont.begin());                           //remove hit from container              
-    
-
+ 
     // Add hits to cluster until it no longer changes size
     do {
       oldsize=cluster.size();
       for(unsigned int i=0;i<cluster.size();i++){
         if(digitCont.size() == 0) break; // No more hits in temp. storage
         
-        if(   cluster[i]->channelID().station() != digitCont[0]->channelID().station()     
-           || cluster[i]->channelID().module()  != digitCont[0]->channelID().module()  ) continue;  // Next hit not on same station (move this)
-        
-        if(    cluster[i]->channelID().col() != 255 
-            && cluster[i]->channelID().col() != 0
-            && cluster[i]->channelID().chip()     != digitCont[0]->channelID().chip() ) continue;  // Not edge and next hit not on same chip
-        
+        if( cluster[i]->channelID().module() != digitCont[0]->channelID().module() ) break;  // Next hit not on same module
+        if( sensorNumber(cluster[i]) != sensorNumber(digitCont[0]) ) break; // Next hit not on same sensor
         
         for(unsigned int hit=0; hit<digitCont.size(); hit++){ // Loop down the stored hits until new pixels cannot be part of cluster
-        
-          if(   !isEdge(cluster[i])
-             && abs(cluster[i]->channelID().col() - digitCont[hit]->channelID().col()) > 1
-             && abs(cluster[i]->channelID().row() - digitCont[hit]->channelID().row()) > 1 ) break; // Too far away to be added
 
-          if( abs(cluster[i]->channelID().row() - digitCont[hit]->channelID().row()) > 1 ) continue; // Not neighbouring in y
-          
-          if( !isEdge(cluster[i]) ){ // Deal with x direction for non-edge pixels
-            if( abs(cluster[i]->channelID().col() - digitCont[hit]->channelID().col()) > 1 ) continue;
-            else{
-//              totVec.push_back(std::make_pair(digitCont[hit]->channelID(),digitCont[hit]->ToTValue()));
-//              cluster.push_back(digitCont[hit]);                 //add hit to cluster
-//              digitCont.erase(digitCont.begin()+hit);            //remove hit from container
-
-              addToCluster(cluster,totVec,digitCont,hit);
-            }
-//            std::cout<<"Added pixel to cluster, now has size "<<cluster.size()<<std::endl;
+          if( !isEdge(cluster[i]) ){ // Not edge
+            if( cluster[i]->channelID().chip() != digitCont[hit]->channelID().chip() ) break;  // Next hit not on same chip
+            if( abs(cluster[i]->channelID().row() - digitCont[hit]->channelID().row()) > 1 ) continue; // Not neighbouring in y
+            if( abs(cluster[i]->channelID().col() - digitCont[hit]->channelID().col()) > 1 ) break; // Too far away to be added
+            addToCluster(cluster,totVec,digitCont,hit); 
             continue;
-          } else{
-            
-            // Deal with x direction for edge pixels
-            
-            unsigned int ladder_cluster = floor(cluster[i]->channelID().chip() / 3);
-            unsigned int ladder_hit = floor(digitCont[hit]->channelID().chip() / 3);
-            unsigned int ladder_position = cluster[i]->channelID().chip() % 3;
-            
-            if(  (ladder_position == 0 && cluster[i]->channelID().col() == 0)
-              || (ladder_position == 2 && cluster[i]->channelID().col() == 255) ){
-              if( abs(cluster[i]->channelID().col() - digitCont[hit]->channelID().col()) > 1 ) continue;
-              
-              else{
-
-//                totVec.push_back(std::make_pair(digitCont[hit]->channelID(),digitCont[hit]->ToTValue()));
-//                cluster.push_back(digitCont[hit]);                 //add hit to cluster
-//                digitCont.erase(digitCont.begin()+hit);            //remove hit from container
-
-                addToCluster(cluster,totVec,digitCont,hit);
-              }
+          }
+          else{ // Deal with edge pixels
+            if( cluster[i]->channelID().chip() == digitCont[hit]->channelID().chip() ){ // If on the same chip
+              if( abs(cluster[i]->channelID().row() - digitCont[hit]->channelID().row()) > 1 ) continue; // Not neighbouring in y
+              if( abs(cluster[i]->channelID().col() - digitCont[hit]->channelID().col()) > 1 ) break; // Too far away to be added
+              addToCluster(cluster,totVec,digitCont,hit); 
               continue;
             }
-               
-            else{
-
-              if( ladder_cluster != ladder_hit ) continue; // Not on same ladder
-              
-              if(   (cluster[i]->channelID().col() == 0 && digitCont[hit]->channelID().col() == 255)
-                 || (cluster[i]->channelID().col() == 255 && digitCont[hit]->channelID().col() == 0) ){
-                
-//                totVec.push_back(std::make_pair(digitCont[hit]->channelID(),digitCont[hit]->ToTValue()));
-//                cluster.push_back(digitCont[hit]);                 //add hit to cluster
-//                digitCont.erase(digitCont.begin()+hit);            //remove hit from container
-                addToCluster(cluster,totVec,digitCont,hit);
-                continue;
-                
-              }
-          
+            else{ // Not on the same chip
+              if( !isEdge(digitCont[hit]) ) break; // No hits on neighbouring edge
+              if( abs(cluster[i]->channelID().row() - digitCont[hit]->channelID().row()) > 1 ) continue; // Not neighbouring in y
+              addToCluster(cluster,totVec,digitCont,hit); 
+              continue;
             }
           } // End of edge pixel check
         }
       }
       newsize=cluster.size();
     } while (newsize!=oldsize);//no more hits to be added to cluster
-        
 
     unsigned int sensor = cluster[0]->channelID().module();      // sensor number in Gaudi
     
@@ -271,12 +219,25 @@ StatusCode VPClustering::clusterDigits (){
   return StatusCode::SUCCESS;
 }
 
+
+//=============================================================================
+//  Get sensor number for a given digit
+//=============================================================================
+int VPClustering::sensorNumber(LHCb::VPDigit* digit) {
+  return floor(digit->channelID().chip() / 3);
+}
+
+
 //=============================================================================
 //  Check if pixel is on the edge of a chip
 //=============================================================================
 bool VPClustering::isEdge(LHCb::VPDigit* digit) {
   
-  if(digit->channelID().col() == 0 || digit->channelID().col() == 255) return true;
+  int sensor = sensorNumber(digit);
+  if( (sensor == 0 && digit->channelID().col() == 255) ||
+      (sensor == 1 && ( digit->channelID().col() == 255 || digit->channelID().col() == 0) ) ||
+      (sensor == 2 && digit->channelID().col() == 0) ) return true;  
+  
   else return false;
   
 }

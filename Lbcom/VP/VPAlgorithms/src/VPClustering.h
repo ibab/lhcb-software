@@ -33,7 +33,9 @@ class VPClustering : public GaudiHistoAlg {
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-    
+
+  private:
+
   std::string m_digitLocation;
   std::string m_liteClusterLocation;
   std::string m_VPClusterLocation;
@@ -42,6 +44,7 @@ class VPClustering : public GaudiHistoAlg {
   bool m_debugLevel;
   StatusCode clusterDigits();
   
+  int sensorNumber(LHCb::VPDigit* digit);
   bool isEdge(LHCb::VPDigit* digit);
   void addToCluster(std::vector<LHCb::VPDigit*>& cluster, std::vector< std::pair<LHCb::VPChannelID,int> >& totVec,
                     std::vector<LHCb::VPDigit*>& digitCont, unsigned int hit);
@@ -56,7 +59,6 @@ class VPClustering : public GaudiHistoAlg {
 
   protected:
 
-  private:
 
   
 };
