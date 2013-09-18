@@ -49,14 +49,12 @@ public:
                           const LHCb::ZTrajectory& reftraj) const ;
 
   StatusCode load( LHCb::Track&  ) const {
-    info() << "sorry, MeasurementProviderBase::load not implemented" << endmsg ;
-    return StatusCode::FAILURE ;
+    return Error( "sorry, MeasurementProviderBase::load not implemented" );
   }
 
 
 private:
   const DeFTDetector* m_det;
-  DeFTFibreMat* m_Mat;
   mutable FastClusterContainer<LHCb::FTRawCluster,int>* m_clusters;
 } ;
 
