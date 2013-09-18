@@ -4,6 +4,8 @@ i!-----------------------------------------------------------------------------
 ! Purpose     : Stripping algorithms based on the NeuroBayes neural network
 !-----------------------------------------------------------------------------
 
+!========================= StrippingNeuroBayes v1r9 2013-09-18 =========================
+
 ! 2013-06-10 - Chris Jones
  - Fix unused method warning (clang).
 
