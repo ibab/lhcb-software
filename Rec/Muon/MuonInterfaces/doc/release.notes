@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta Alessia.Satta@cern.ch
 ! =============================================================================
 
+! 2013-09-18 - Marco Cattaneo
+ - Remove unused variable in MuonHit.h
+
 !========================= MuonInterfaces v1r4 2013-04-29 =========================
 ! 2013-04-02 - Marco Cattaneo
  - Fix UNINIT_CTOR defects

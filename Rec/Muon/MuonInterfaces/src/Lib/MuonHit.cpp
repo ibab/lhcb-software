@@ -1,4 +1,3 @@
-// $Id: MuonHit.cpp,v 1.3 2010-02-12 12:19:58 ggiacomo Exp $
 // Include files
 #include <cmath>
 #include "MuonInterfaces/MuonHit.h"
@@ -8,7 +7,6 @@
 
 MuonHit::MuonHit():
   ROOT::Math::XYZPoint(),
-  m_muonDet(NULL),
   m_pid(0),
   m_mamy_pid(0),
   m_hit_ID(-1),
@@ -24,9 +22,8 @@ MuonHit::MuonHit():
   m_pads.clear(); m_padx.clear(); m_pady.clear(); m_padz.clear();
 }
 
-MuonHit::MuonHit(DeMuonDetector* md,  IMuonFastPosTool* posTool):
+MuonHit::MuonHit(DeMuonDetector*,  IMuonFastPosTool* posTool):
   ROOT::Math::XYZPoint(),
-  m_muonDet(md),
   m_pid(0),
   m_mamy_pid(0),
   m_hit_ID(-1),
@@ -46,14 +43,13 @@ MuonHit::MuonHit(DeMuonDetector* md,  IMuonFastPosTool* posTool):
 // Constructor from a MuonLogPad
 //=============================================================================
 // obsolete constructor from a MuonPad (kept for backw. compat.)
-MuonHit::MuonHit( DeMuonDetector* md, 
+MuonHit::MuonHit( DeMuonDetector*, 
                   MuonLogPad* mp,
                   const double x,
                   const double y,
                   const double z,
                   IMuonFastPosTool* posTool):
   ROOT::Math::XYZPoint(x,y,z),
-  m_muonDet(md),
   m_pid(0),
   m_mamy_pid(0),
   m_hit_ID(-1),
@@ -63,11 +59,10 @@ MuonHit::MuonHit( DeMuonDetector* md,
   createFromPad(mp);
 }
 
-MuonHit::MuonHit( DeMuonDetector* md, 
+MuonHit::MuonHit( DeMuonDetector*, 
                   MuonLogPad* mp,
                   IMuonFastPosTool* posTool):
   ROOT::Math::XYZPoint(0.,0.,0.),
-  m_muonDet(md),
   m_pid(0),
   m_mamy_pid(0),
   m_hit_ID(-1),

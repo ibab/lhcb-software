@@ -1,4 +1,3 @@
-// $Id: MuonHit.h,v 1.2 2010-02-12 12:19:58 ggiacomo Exp $
 #ifndef COSMICSMUONHIT_H 
 #define COSMICSMUONHIT_H 1
 
@@ -118,7 +117,6 @@ private:
                     double* pos, double* dpos,
                     int* clsize, double step);
   void recomputeTime();
-  DeMuonDetector* m_muonDet;
   std::vector<MuonLogPad*> m_pads;
   std::vector<double> m_padx;
   std::vector<double> m_pady;
