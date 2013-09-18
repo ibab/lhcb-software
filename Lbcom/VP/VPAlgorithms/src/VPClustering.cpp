@@ -139,15 +139,13 @@ StatusCode VPClustering::clusterDigits (){
             if( abs(cluster[i]->channelID().col() - digitCont[hit]->channelID().col()) > 1 ) break; // Too far away to be added
             addToCluster(cluster,totVec,digitCont,hit); 
             continue;
-          }
-          else{ // Deal with edge pixels
+          }else{ // Deal with edge pixels
             if( cluster[i]->channelID().chip() == digitCont[hit]->channelID().chip() ){ // If on the same chip
               if( abs(cluster[i]->channelID().row() - digitCont[hit]->channelID().row()) > 1 ) continue; // Not neighbouring in y
               if( abs(cluster[i]->channelID().col() - digitCont[hit]->channelID().col()) > 1 ) break; // Too far away to be added
               addToCluster(cluster,totVec,digitCont,hit); 
               continue;
-            }
-            else{ // Not on the same chip
+            }else{ // Not on the same chip
               if( !isEdge(digitCont[hit]) ) break; // No hits on neighbouring edge
               if( abs(cluster[i]->channelID().row() - digitCont[hit]->channelID().row()) > 1 ) continue; // Not neighbouring in y
               addToCluster(cluster,totVec,digitCont,hit); 
@@ -233,10 +231,10 @@ int VPClustering::sensorNumber(LHCb::VPDigit* digit) {
 //=============================================================================
 bool VPClustering::isEdge(LHCb::VPDigit* digit) {
   
-  int sensor = sensorNumber(digit);
-  if( (sensor == 0 && digit->channelID().col() == 255) ||
-      (sensor == 1 && ( digit->channelID().col() == 255 || digit->channelID().col() == 0) ) ||
-      (sensor == 2 && digit->channelID().col() == 0) ) return true;  
+  int ladder_position = digit->channelID().chip() % 3;
+  if( (ladder_position == 0 && digit->channelID().col() == 255) ||
+      (ladder_position == 1 && ( digit->channelID().col() == 255 || digit->channelID().col() == 0) ) ||
+      (ladder_position == 2 && digit->channelID().col() == 0) ) return true;  
   
   else return false;
   
