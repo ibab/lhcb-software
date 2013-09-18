@@ -1,8 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tf/PatPixel
 ! Responsible : 
-! Purpose     : Pattern recogintion for the Pixel detector of the upgraded LHCb
+! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
+
+! 2013-09-18 - Marco Cattaneo
+ - Fix uninitialised counter in PatPixelHitManager.h
+
 ! 2013-0-17 - Tim Evans
  - Removed some obsolete code / commented out PatPixelSensor code that is not used
  - Changed Maximum scattering parameter to a GaudiParameter (MaxScattering)

@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef PATPIXELHITMANAGER_H 
 #define PATPIXELHITMANAGER_H 1
 
@@ -55,7 +54,7 @@ public:
 
   int nbHits()     const { return m_nextInPool - m_pool.begin(); }  // number of hits in the pool
   int nbHitsUsed() const
-  { int Count;
+  { unsigned int Count = 0;
     for(std::vector<PatPixelHit>::const_iterator itH = m_pool.begin(); itH != m_nextInPool; ++itH )
     { if((*itH).isUsed()) Count++; }
     return Count; }
