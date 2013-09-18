@@ -261,10 +261,10 @@ StatusCode VPClustering::clusterDigits (){
 //    liteclusterCont->push_back(newLiteCluster); 
 //    std::cout<<"Pushing back new cluster at "<<cluster_point<<" with channel id "<<temp_id<<std::endl;
     bool isLong = false; //temp
-    std::cout<<"New cluster with temp frac: "<<temp_frac.first<<","<<temp_frac.second<<std::endl<<" and cluster id: "<<temp_id<<std::endl;
+//    std::cout<<"New cluster with temp frac: "<<temp_frac.first<<","<<temp_frac.second<<std::endl<<" and cluster id: "<<temp_id<<std::endl;
     const VPLiteCluster newLiteCluster(temp_id,1,temp_frac,isLong); //temp
     LHCb::VPCluster* newCluster = new LHCb::VPCluster(newLiteCluster,totVec); //temp
-//    clusterCont->insert(newCluster, temp_id); //temp
+    clusterCont->insert(newCluster, temp_id); //temp
     liteclusterCont->push_back(newLiteCluster); //temp
   }
   
