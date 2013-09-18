@@ -21,7 +21,6 @@ _known_strippings = [
   "Stripping19c", 
   "Stripping20", 
   "Stripping20r1", 
-  "Stripping20r1p2", 
   "Stripping20r0p1",
   "Stripping20r0p2",
   "Stripping20r2",
@@ -34,7 +33,8 @@ _duplicate_strippings={ "Stripping13b"        : "Stripping13",
                         "Stripping1Point4Tev" : "Stripping13",
                         "Stripping18b"        : "Stripping18",
                         "Stripping19a"        : "Stripping19", 
-                        "Stripping20r1p1"     : "Stripping20r0p1" }
+                        "Stripping20r1p1"     : "Stripping20r0p1",
+                        "Stripping20r1p2"     : "Stripping20r0p2" }
 
 
 #give a dictionary to describe what each stripping was for
