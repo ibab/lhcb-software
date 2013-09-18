@@ -47,7 +47,11 @@ StatusCode UTReadoutTool::initialize() {
   }
 
   registerCondition(m_conditionLocation,
+                    &UTReadoutTool::createTell1Map);
+
+  registerCondition(m_conditionLocation,
                     &UTReadoutTool::createBoards);
+
   sc = runUpdate(); // force update
   if (sc.isFailure()) return Error ( "Failed first UMS update for readout tool", sc );
   
@@ -72,6 +76,34 @@ const  std::map<unsigned int, unsigned int>& UTReadoutTool::SourceIDToTELLNumber
 const  std::map<unsigned int, unsigned int>& UTReadoutTool::TELLNumberToSourceIDMap() const {
   return STBoardMapping::UTNumberToSourceIDMap();
 }
+
+StatusCode UTReadoutTool::createTell1Map() 
+{
+  Condition* rInfo = getDet<Condition>(m_conditionLocation);
+  const std::vector<std::string> layers =  rInfo->param<std::vector<std::string> >("layers");
+
+  STBoardMapping::ClearUTMap();
+  
+  unsigned int sourceIDBase = 0;
+  for (unsigned int iReg = 0; iReg < layers.size(); ++iReg){
+    std::string tell1Loc = layers[iReg]+"TELL1";
+    if ( rInfo->exists(tell1Loc) ) {
+      //      printf("Extracting TELL1 map from %s\n", tell1Loc.c_str());
+      
+      const std::vector<int>& tell1 = rInfo->param<std::vector<int> >(tell1Loc);
+      for ( unsigned int i=0; i<tell1.size(); i++ ) {
+        STBoardMapping::AddUTMapEntry(sourceIDBase+i, tell1.at(i));
+      }
+    }
+    sourceIDBase += 64;
+  }
+
+  //  printf("%s\n", STBoardMapping::printUTMap().c_str());
+  
+  return StatusCode::SUCCESS;
+}
+
+
 
 StatusCode UTReadoutTool::createBoards() {
 

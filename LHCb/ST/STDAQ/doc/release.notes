@@ -4,6 +4,11 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2013-09-18 - Jianchun Wang
+ - Support DB mapping of UT board vs TELL1 ID.
+ - This map is by default hard coded in STBoardMapping. Now the definition
+   in UT/ReadoutConf/ReadoutMap.xml overrides the hard coded mapping.
+
 !========================= STDAQ v4r2 2013-02-14 =========================
 ! 2013-01-07 - Jianchun Wang
  - UT cluster is decoded differently from TT or IT cluster

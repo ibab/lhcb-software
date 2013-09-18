@@ -39,6 +39,7 @@ public:
 private:
 
   StatusCode createBoards();
+  StatusCode createTell1Map();
 
 
   unsigned int m_nRegionA;
