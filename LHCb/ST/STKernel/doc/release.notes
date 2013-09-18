@@ -3,6 +3,11 @@
 ! Responsible : M. Tobin
 !----------------------------------------------------------------------------
 
+! 2013-09-18 - Jianchun Wang
+ - Support DB mapping of UT board vs TELL1 ID.
+ - This map is by default hard coded in STBoardMapping. Now the definition
+   in UT/ReadoutConf/ReadoutMap.xml overrides the hard coded mapping.
+
 !========================= STKernel v2r12 2013-04-29 =========================
 ! 2013-04-02 - Marco Cattaneo
  - Fix UNINIT_CTOR defect

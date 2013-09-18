@@ -156,7 +156,7 @@ const STBoardMapping::Map& STBoardMapping::UTSourceIDToNumberMap() {
     (240, 187)(241, 188);
   }
 #endif
-  return s_map;
+  return m_UTSourceIDToNumber.size()>0 ? m_UTSourceIDToNumber : s_map;
 }
 
 const STBoardMapping::Map& STBoardMapping::UTNumberToSourceIDMap() {
@@ -219,7 +219,19 @@ const STBoardMapping::Map& STBoardMapping::UTNumberToSourceIDMap() {
   }
 #endif
 
-  return s_map;
+  return m_UTNumberToSourceID.size()>0 ? m_UTNumberToSourceID : s_map;
+}
+
+
+// UT maps can be generated from DB in UTReadoutTool.cpp
+void STBoardMapping::ClearUTMap() {
+  m_UTSourceIDToNumber.clear();
+  m_UTNumberToSourceID.clear();
+}
+
+void STBoardMapping::AddUTMapEntry(unsigned int sourceID, unsigned int number) {
+  m_UTSourceIDToNumber[sourceID] = number;
+  m_UTNumberToSourceID[number]   = sourceID;
 }
 
 #include <boost/foreach.hpp>

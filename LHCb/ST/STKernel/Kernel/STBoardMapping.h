@@ -45,6 +45,11 @@ namespace STBoardMapping{
   /** printout the UT mapping */
   std::string printUTMap();
 
+  void ClearUTMap();
+  void AddUTMapEntry(unsigned int sourceID, unsigned int number);
+
+  static Map m_UTSourceIDToNumber;
+  static Map m_UTNumberToSourceID;
 }
 
 inline unsigned int STBoardMapping::find(const unsigned int key, const STBoardMapping::Map& testMap){
