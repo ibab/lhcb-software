@@ -54,6 +54,7 @@ use VeloTools         v4r2     Velo      # Tomasz Szumlak
 
 # Velo Pixel
 use VPTools           v2r1p1   VP        # Victor Coco
+use VPAlgorithms      v1r0     VP        # Daniel Hynds
 
 # Declare this as a container package
 apply_pattern container_package
