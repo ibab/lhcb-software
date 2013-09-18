@@ -3,6 +3,16 @@ from LbUtils import LockOnPrintThread
 import Queue, threading, thread, commands
 #use TCKsh to find all TCKs
 
+numthreads=8
+import os
+if "LHCB_NIGHTLY_MAX_THREADS" in os.environ:
+    if os.environ["LHCB_NIGHTLY_MAX_THREADS"] is not "":
+        numthreads=int(os.environ["LHCB_NIGHTLY_MAX_THREADS"])
+        if numthreads>8:
+            numthreads=8
+        if numthreads<1:
+            numthreads=1
+
 L0TCKs={}
 for TCK in getTCKList():
     if int(TCK,16)&0xffff == 0:
@@ -10,7 +20,7 @@ for TCK in getTCKList():
     L0TCKs[hex(int(TCK,16)&0xffff)]=TCK
     
 #print L0TCKs
-options="\"from Configurables import L0App; L0App().EvtMax=11; L0App().TCK = '##TCK##';\""
+options="\"from Configurables import EventSelector; EventSelector().PrintFreq=1; from Configurables import L0App; L0App().EvtMax=3; L0App().TCK = '##TCK##';\""
 
 #L0TCKs={"0x0045":"0x409f0045"}
 
@@ -26,7 +36,7 @@ def runAndParse(self,l0):
     #coarsely parse the result.
     parsing=["Exit code! ","Not all events! ","Not Emulating! "]
     w_e_f=[]
-    parsed=[s==0,"SUCCESS Reading Event record 11." in o,"L0EmulatorSeq" in o]
+    parsed=[s==0,"SUCCESS Reading Event record 3." in o,"L0EmulatorSeq" in o]
     
     for line in o.split('\n'):
         if line.startswith('#'):
@@ -59,7 +69,7 @@ for l0 in L0TCKs:
 
 from time import sleep
 lock=thread.allocate_lock()
-for i in range(8):
+for i in range(numthreads):
     sleep(1)
     t=LockOnPrintThread(l0pool,lock)
     t.method=runAndParse

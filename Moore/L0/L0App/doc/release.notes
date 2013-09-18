@@ -4,6 +4,10 @@
 ! Purpose     : An LHCb application to run L0 Emulation
 !-----------------------------------------------------------------------------
 
+! 2013-09-18 - Rob Lambert
+ - Configure the threads in l0app.emulate-all tests
+ - 8 threads, or LHCB_NIGHTLY_MAX_THREADS if it is set.
+
 !========================= L0App v1r0 2013-07-03 =========================
 ! 2013-06-07 - Rob Lambert
  - Tests added. First working version of this application.
