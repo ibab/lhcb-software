@@ -23,12 +23,13 @@ namespace Tf {
   //=============================================================================
   // Standard constructor, initializes variables
   //=============================================================================
-  PatGenericFitter::PatGenericFitter( PatVeloRHitManager* rHitManager,
-      PatVeloPhiHitManager* phiHitManager,
+  PatGenericFitter::PatGenericFitter( PatVeloRHitManager* /* rHitManager */,
+                                      PatVeloPhiHitManager* /* phiHitManager */,
       bool alignment ) 
-    : m_rHitManager(rHitManager)
-    , m_phiHitManager(phiHitManager)
-    , m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
+    : 
+    //m_rHitManager(rHitManager)
+    //, m_phiHitManager(phiHitManager)
+      m_angleUtils(-Gaudi::Units::pi,Gaudi::Units::pi)
     , m_valid(true)
     , m_align(alignment)
     {

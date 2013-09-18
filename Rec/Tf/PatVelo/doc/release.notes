@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2013-09-18 - Marco Cattaneo
+ - Fix again clang32 warnings
+
 !========================= PatVelo v3r29 2013-07-18 =========================
 ! 2013-06-11 - Marco Cattaneo
  - Undo clang32 fix, unused fields in PatGenericFitter are initialised via 
