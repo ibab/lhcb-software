@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MvaPreSelB2DH
 ################################################################################
-gaudi_subdir(MvaPreSelB2DH v1r5)
+gaudi_subdir(MvaPreSelB2DH v1r6)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          Event/L0Event
