@@ -1,8 +1,76 @@
-!-----------------------------------------------------------------------------
-! Package     : VPTools/VPClustering
+!--------------------------------------------------------------------------
+! Package     : VP/VPAlgorithms
 ! Responsible : Daniel Hynds
-! Purpose     : Clustering algorithm for velo pixel detector
-!-----------------------------------------------------------------------------
+!--------------------------------------------------------------------------
 
-! 2013-08-13 - Daniel Hynds
- - Initial package setup
+! 2013-09-18 - Daniel Hynds
+ - Added clustering algorithm
+
+! 2013-09-05 - Heinrich Schindler
+ - Moved package to Lbcom, remove digitisation classes
+
+!========================= VPAlgorithms v3r3 2013-06-06 =========================
+! 2013-05-27 - Marco Cattaneo
+ - Fix clang32 warnings
+ - Fix UNINIT_CTOR defects
+ - Remove 'do nothing' finalize methods
+
+!========================= VPAlgorithms v3r2 2012-12-12 =========================
+! 2012-12-11 - Marco Clemencic
+ - Added CMake configuration file.
+ - Fixes to compile with C++11.
+
+!========================= VPAlgorithms v3r1 2012-12-10 =========================
+! 2012-11-28 - Pawel Jalocha
+ - better bug fix for clustering algorithm which occasionally outputs
+   same ChannelID (which crashes KeyedContainer)
+ - some curly brackets missing but under DEBUG_HISTO thus did not break the main line
+
+!========================= VPAlgorithms v3r0 2012-10-03 =========================
+! 2012-09-24 - Paul Szczypka
+ - Rename VeloPix to VP in filenames and code.
+
+! 2012-09-12 - Marco Cattaneo
+ - Fix unused variable warning in previous commit
+
+! 2012-08-31 - Pawel Jalocha
+ - Change VeloPix to VP in containers
+ - DEBUG_HISTO (in .h files) to activate debug histograms
+ - quick but dirty bug fix for clustering algorithm which occasionally outputs
+   same ChannelID (which crashes KeyedContainer)
+
+!======================== VeloPixAlgorithms v2r2 2012-08-14 ===================
+! 2012-08-14 - Pawel Jalocha
+ - added debug prints (now inactive) and histograms to study the simulation results
+ - drop tiny (below 0.001e) ionization deposits for speedup
+
+!========================= VeloPixAlgorithms v2r1 2011-04-11 =============
+! 2011-03-17 -Wenbin Qian
+- make cluster id == litecluster id
+
+!================= VeloPixAlgorithms v2r0 2010-10-04 ======================
+! 2010-09-22 - Victor Coco
+ - Replace hardcoded container location by prpoer location definition
+
+! 2010-09-15 - Tomasz Skwarnicki, Thomas Britton
+ - Add VeloPixDigitsCreator to deal with deadtime (VeloPixSpilloverSubtraction becomes obsolete),
+   and time walk. Add non-linearity in charge to ToT conversion. Add noise simulation.
+ - VeloPixDigitCreator now saves charge in electrons; move digitazation to VeloPixDigitsCreator
+
+! 2010-09-10 - Tomasz Skwarnicki
+ - Fix bug in VeloPixClusterCreator which let the same Digit to appear in many clusters
+   Save all clusters even if no local maximum 
+
+!================= VeloPixAlgorithms v1r0 2010-01-25 ======================
+! 2010-01-06 Marcin Kucharczyk
+ - Update the name of FastClusterContainer in VeloPixClusterCreator 
+   according to the change in VeloPixLiteCluster.h
+
+! 2009-12-08 Marcin Kucharczyk
+ - Fix: loading now baryCenterChID instead of central one to liteCluster 
+        in VeloPixClusterCreator
+
+! 2009-12-07 Marcin Kucharczyk
+ - Some improvements in VeloPixMCDepositCreator
+
+
