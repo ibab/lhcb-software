@@ -15,3 +15,10 @@ from DAQSys.Decoders import DecoderDB
 
 #configure L0TCKs
 importOptions('$L0TCK/L0DUConfig.opts')
+
+#set event time:
+from Configurables import EventClockSvc
+clock=EventClockSvc()
+clock.EventTimeDecoder="FakeEventTime"
+clock.addTool(FakeEventTime,name="FakeEventTime")
+clock.FakeEventTime.StartTime="1346336270000000000" #2012 08 30
