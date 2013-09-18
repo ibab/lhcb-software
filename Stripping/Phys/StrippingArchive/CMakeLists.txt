@@ -1,7 +1,7 @@
 ################################################################################
 # Package: StrippingArchive
 ################################################################################
-gaudi_subdir(StrippingArchive v1r21p2)
+gaudi_subdir(StrippingArchive v1r21p3)
 
 gaudi_depends_on_subdirs(GaudiConfUtils
                          Kernel/LHCbAlgs

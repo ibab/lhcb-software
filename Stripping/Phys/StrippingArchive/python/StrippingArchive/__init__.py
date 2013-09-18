@@ -21,7 +21,9 @@ _known_strippings = [
   "Stripping19c", 
   "Stripping20", 
   "Stripping20r1", 
+  "Stripping20r1p2", 
   "Stripping20r0p1",
+  "Stripping20r0p2",
   "Stripping20r2",
   "Stripping20r3"
 ]
@@ -55,7 +57,9 @@ _stripping_help={"Stripping13"  : "2011 data taking, processing during the first
                  "Stripping20" : "2012 data reprocessing, promt processing of 2012 data after September TS", 
                  "Stripping20r1" : "2011 data reprocessing with Reco14", 
                  "Stripping20r0p1" : "First incremental restripping of 2012 data", 
+                 "Stripping20r0p2" : "Second incremental restripping of 2012 data", 
                  "Stripping20r1p1" : "First incremental restripping 20 2011 data",
+                 "Stripping20r1p2" : "Second incremental restripping 20 2011 data",
                  "Stripping20r2" : "Stripping of 2.76 TeV Collision13 data on Rec14",
                  "Stripping20r3" : "Stripping of pA/Ap Collision13 data on Rec14a"
                  }
