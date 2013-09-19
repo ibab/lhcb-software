@@ -64,6 +64,9 @@ StatusCode TimeAccounting::initialize() {
   m_timeSpanFSRs = new LHCb::TimeSpanFSRs();
   m_timeSpanFSR = 0;
   put(m_fileRecordSvc, m_timeSpanFSRs, m_FSRName);
+  // create a new FSR and append to TDS
+  m_timeSpanFSR = new LHCb::TimeSpanFSR();
+  m_timeSpanFSRs->insert(m_timeSpanFSR);
 
   return StatusCode::SUCCESS;
 }
@@ -112,9 +115,11 @@ StatusCode TimeAccounting::execute() {
       m_count_files++;
       m_current_fname = fname;
       if ( msgLevel(MSG::DEBUG) ) debug() << "RunInfo record: " << fname << endmsg;
+      /* This code is now in initialize:
       // create a new FSR and append to TDS
       m_timeSpanFSR = new LHCb::TimeSpanFSR();
       m_timeSpanFSRs->insert(m_timeSpanFSR);
+      */
     }
   }
   // get the event time

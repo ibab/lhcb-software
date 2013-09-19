@@ -15,14 +15,16 @@ from Configurables import LHCbApp
 LHCbApp().XMLSummary = 'summary.xml'
 #-- set explicit CondDB tag
 # LHCbApp().CondDBtag = 'head-20110407'
-LHCbApp().CondDBtag = 'head-20111111'
+#LHCbApp().CondDBtag = 'head-20111111'
+LHCbApp().CondDBtag = 'cond-20130710'
 
 #--- determine application to run
 from Configurables import LumiAlgsConf, DumpFSR
 from LumiAlgs.LumiIntegratorConf import LumiIntegratorConf
 
 #-- cannot test this in REC due to dependence on PropertyConfigSvc (TCK)
-LumiIntegratorConf().UseOnline = False
+## LumiIntegratorConf().UseOnline = False
+LumiIntegratorConf().UseOnline = True
 
 # clock service for CondDB
 from Configurables import EventClockSvc

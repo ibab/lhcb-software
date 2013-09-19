@@ -6,7 +6,7 @@ from Configurables import DumpLumiEvents
 
 FileCatalog().Catalogs = ["xmlcatalog_file:MyCatalog.xml"]
 
-inputs = ['lfn:lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000113.raw']
+inputs = ["lfn:/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000298.raw"]
 
 IOHelper(None, None).setupServices()
 

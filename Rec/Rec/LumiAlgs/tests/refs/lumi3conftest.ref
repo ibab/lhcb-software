@@ -1,20 +1,22 @@
-# --> Including file '/build/cattanem/Rec_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
-# <-- End of file '/build/cattanem/Rec_HEAD/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_v15r1/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_v15r1/Rec/LumiAlgs/job/LumiAlgsConfTest.py'
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
-# |-Persistency   = None
-# |-DataType      = '2012'
-# |-DDDBtag       = ''
-# |-SkipEvents    = 0
-# |-XMLSummary    = None
-# |-OutputLevel   = 3
-# |-EvtMax        = 100  (default: -1)
-# |-CondDBtag     = ''
-# |-DQFLAGStag    = ''
-# |-Monitors      = []  (default: [])
-# |-TimeStamp     = False
-# |-Simulation    = False
-# |-IgnoreDQFlags = True
+# |-Persistency    = None
+# |-DataType       = '2012'
+# |-DDDBtag        = ''
+# |-SkipEvents     = 0
+# |-XMLSummary     = None
+# |-OutputLevel    = 3
+# |-EvtMax         = 100  (default: -1)
+# |-Simulation     = False
+# |-DQFLAGStag     = ''
+# |-IgnoreDQFlags  = True
+# |-Detectors      = []  (default: [])
+# |-LocalDataTypes = []  (default: [])
+# |-TimeStamp      = False
+# |-CondDBtag      = ''
+# |-Monitors       = []  (default: [])
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
 # applying configuration of LumiAlgsConf
 # /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
@@ -29,22 +31,23 @@
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x14f163a0>  (default: None)
+# |-LumiSequencer     = <GaudiSequencer/LumiSequence at 0x59bc940>  (default: None)
 # |-IgnoreDQFlags     = False
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # skipping configuration of XMLSummary
 # applying configuration of DDDBConf
-# WARNING: Using default tag dddb-20120831 for partition DDDB
-# WARNING: Using default tag cond-20120831 for partition LHCBCOND
-# WARNING: Using default tag dq-20120831 for partition DQFLAGS
+# WARNING: Using default tag dddb-20130312-1 for partition DDDB
+# WARNING: Using default tag cond-20130404 for partition LHCBCOND
+# WARNING: Using default tag dq-20130418 for partition DQFLAGS
 # /***** User DDDBConf/DDDBConf **********************************************************************
 # |-DataType   = '2012'
 # |-DbRoot     = 'conddb:/lhcb.xml'
+# |-AutoTags   = False
 # |-Simulation = False
 # \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DBASE/Det/SQLDDDB/options/SQLDDDB.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v7r10/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v7r10/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
 # |-Upgrade                   = False
 # |-DBSnapshotDirectory       = '/group/online/hlt/conditions'
@@ -72,8 +75,8 @@
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r2)
-                                          running on lxbuild163.cern.ch on Mon Sep 24 09:12:24 2012
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r5)
+                                          running on lxplus440.cern.ch on Thu Sep 19 15:10:58 2013
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -82,7 +85,7 @@ LumiSequence         INFO OR Member list: GaudiSequencer/LumiNoBeamSeq, GaudiSeq
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.27 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.14 times the speed of a 2.8 GHz Xeon.
 LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSummaryDecoder/LumiDecodeNoBeam, FilterOnLumiSummary/LumiFilterNoBeam, LumiAccounting/LumiCountNoBeam
 LoKiSvc           SUCCESS
 
@@ -199,10 +202,10 @@ LumiCountNoBeam   VERBOSE ServiceLocatorHelper::service: found service DetectorD
 LumiCountNoBeam     DEBUG ==> Register DB
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "dddb-20120831"
-LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "cond-20120831"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                 INFO Using TAG "dddb-20130312-1"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND             INFO Using TAG "cond-20130404"
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing
 LumiFilterBeamC...  DEBUG Property update for OutputLevel : new value = 1
@@ -385,7 +388,7 @@ FillingBeam1        DEBUG Property ['Name': Value] =  'OutputLevel':1
 FillingBeam1        DEBUG ==> Initialize
 FillingBeam1      VERBOSE ServiceLocatorHelper::service: found service DetectorDataSvc
 FillingBeam1        DEBUG ==> Register DB
-ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2012.db/ONLINE"
+ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/ONLINE-2012.db/ONLINE"
 ONLINE_2012          INFO Using TAG ""
 FillingBeam1        DEBUG Conditions/Online/LHCb/LHCFillingScheme
 FillingBeam1        DEBUG Conditions/Online/LHCb/Magnet/Measured
@@ -761,7 +764,9 @@ LumiCountBeam2      DEBUG Releasing service 'FileRecordDataSvc'
 LumiCountBeam2      DEBUG Releasing service 'UpdateManagerSvc'
 TimeSpanAccounting  DEBUG ==> Finalize
 TimeSpanAccounting   INFO number of files seen: 0
+TimeSpanAccounting   INFO FSR: {  earliest : 0 - latest : 0 }
 TimeSpanAccounting  DEBUG The object of type 'KeyedContainer<LHCb::TimeSpanFSR,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address '/FileRecords/TimeSpanFSR'
+TimeSpanAccounting  DEBUG READ FSR: {  earliest : 0 - latest : 0 }
 TimeSpanAccounting  DEBUG Finalize base class GaudiAlgorithm
 TimeSpanAccounting  DEBUG Tools to release :
 TimeSpanAccounting  DEBUG Services to release : FileRecordDataSvc
@@ -802,36 +807,9 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   2.27 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.14 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSequence                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiNoBeamSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     FilterNoBeam              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiDecodeNoBeam          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiFilterNoBeam          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiCountNoBeam           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiBeamCrossingSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     FilterBeamCrossing        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiDecodeBeamCrossing    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiFilterBeamCrossing    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiCountBeamCrossing     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiBeam1Seq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     FilterBeam1               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiDecodeBeam1           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiFilterBeam1           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     FillingBeam1              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiCountBeam1            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO   LumiBeam2Seq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     FilterBeam2               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiDecodeBeam2           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiFilterBeam2           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     FillingBeam2              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     LumiCountBeam2            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO   TimeSpanSeq                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     TimeSpanFilter            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO     TimeSpanAccounting        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

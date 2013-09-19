@@ -3,87 +3,73 @@
 <!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
 <POOLFILECATALOG>
 
-  <File ID="b3190bc2-5651-11df-8bb8-00074305d05b">
+
+
+  <File ID="345b5b36-9890-11e1-95f3-002590121862">
      <physical>
-       <pfn filetype="MDF" name="root:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/71185/071185_0000000029.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000018.raw"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/71185/071185_0000000029.raw"/>
+       <lfn name="/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000018.raw"/>
+     </logical>
+   </File>
+
+  <File ID="14dceef0-9890-11e1-95f3-002590121862">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000016.raw"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000016.raw"/>
+     </logical>
+   </File>
+
+  <File ID="14de0a1a-9890-11e1-95f3-002590121862">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000015.raw"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000015.raw"/>
+     </logical>
+   </File>
+
+  <File ID="21ab1526-9890-11e1-95f3-002590121862">
+     <physical>
+       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000017.raw"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000017.raw"/>
      </logical>
    </File>
 
 
-  <File ID="a43d2a40-e606-11de-bfa2-00188b8565c8">
+  <File ID="2d9d961c-9898-11e1-95f3-002590121862">
      <physical>
-       <pfn filetype="MDF" name="root:castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63688/063688_0000000001.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000298.raw"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63688/063688_0000000001.raw"/>
-     </logical>
-   </File>
-
-  <File ID="EA29D570-41FC-DE11-947F-001E4F3DA517">
-    <physical>
-      <pfn filetype="MDF" name="file://testout.mdf"/>
-    </physical>
-    <logical/>
-  </File>
-
-  <File ID="0238bd38-9252-11df-8bb8-00188b856c33">
-     <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75710/075710_0000000186.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
-     </physical>
-     <logical>
-       <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75710/075710_0000000186.raw"/>
-     </logical>
-   </File>
-
-  <File ID="0238bd38-9252-11de-8bb8-00188b856c33">
-     <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75710/075710_0000000186.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
-     </physical>
-     <logical>
-       <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75710/075710_0000000180.raw"/>
+       <lfn name="/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000298.raw"/>
      </logical>
    </File>
 
 
-
-  <File ID="0238bd38-9252-11df-7234-00188b856c31">
+  <File ID="156d2ae0-e117-11e1-b668-00259011312c">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/80355/080355_0000000087.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2012/RAW/EXPRESS/LHCb/COLLISION12/124915/124915_0000000008.raw"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/80355/080355_0000000087.raw"/>
+       <lfn name="/lhcb/data/2012/RAW/EXPRESS/LHCb/COLLISION12/124915/124915_0000000008.raw"/>
      </logical>
    </File>
 
-  <File ID="0238bd38-9252-11de-8123-00188b856c32">
+  <File ID="3b3b41fc-e118-11e1-b669-00259011312c">
      <physical>
-       <pfn filetype="MDF" name="root:rfio://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75350/075350_0000000027.raw?svcClass=lhcbtape&amp;castorVersion=2"/>
+       <pfn filetype="MDF" name="mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2012/RAW/EXPRESS/LHCb/COLLISION12/124915/124915_0000000112.raw"/>
      </physical>
      <logical>
-       <lfn name="/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/75350/075350_0000000027.raw"/>
+       <lfn name="/lhcb/data/2012/RAW/EXPRESS/LHCb/COLLISION12/124915/124915_0000000112.raw"/>
      </logical>
    </File>
 
-  <File ID="0238bd38-9252-12df-8123-00188b856c32">
-    <physical>
-      <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000113.raw?svcClass=lhcbdisk&amp;castorVersion=2"/>
-    </physical>
-    <logical>
-      <lfn name="lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000113.raw"/>
-    </logical>
-  </File>
-
-  <File ID="0238bd38-9252-13e0-8123-00188b856c32">
-    <physical>
-      <pfn filetype="MDF" name="mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000095.raw?svcClass=lhcbdisk&amp;castorVersion=2"/>
-    </physical>
-    <logical>
-      <lfn name="lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000095.raw"/>
-    </logical>
-  </File>
 
   <File ID="AC2BF0E3-76FC-DE11-A5BE-001E4F3DA517">
     <physical>
@@ -123,6 +109,13 @@
   <File ID="D0BF54DD-898B-E011-A214-002590138ADC">
     <physical>
       <pfn filetype="ROOT_TREE" name="testRootFsr.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="1A2CA9A2-3021-E311-8C81-003048F0E7AE">
+    <physical>
+      <pfn filetype="MDF" name="file://testout.mdf"/>
     </physical>
     <logical/>
   </File>

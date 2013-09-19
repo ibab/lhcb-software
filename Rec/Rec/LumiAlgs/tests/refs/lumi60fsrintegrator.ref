@@ -1,9 +1,10 @@
-# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v42r0/Rec/LumiAlgs/job/LumiFsrIntegrator0.py'
-# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Brunel_v42r0/Rec/LumiAlgs/job/LumiFsrIntegrator0.py'
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_v15r1/Rec/LumiAlgs/job/LumiFsrIntegrator0.py'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_v15r1/Rec/LumiAlgs/job/LumiFsrIntegrator0.py'
 # applying configuration of LumiAlgsConf
 # /***** User LumiAlgsConf/LumiAlgsConf **************************************************************
 # |-UseLumiLow        = False
 # |-ForceFullSequence = False
+# |-InputType         = 'DST'  (default: 'MDF')
 # |-DataType          = '2012'
 # |-SetFSRStatus      = ''
 # |-OutputLevel       = 3  (default: 3)
@@ -12,37 +13,42 @@
 # |                   (default: ['NoBeam', 'BeamCrossing', 'Beam1', 'Beam2'])
 # |-Simulation        = False
 # |-Context           = 'Offline'
-# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0x2dbf960>  (default: None)
-# |-InputType         = 'DST'  (default: 'MDF')
+# |-LumiSequencer     = <GaudiSequencer/LumiSeq at 0x12e1f800>  (default: None)
+# |-IgnoreDQFlags     = False
 # \----- (End of User LumiAlgsConf/LumiAlgsConf) -----------------------------------------------------
 # applying configuration of LHCbApp
 # /***** User LHCbApp/LHCbApp ************************************************************************
-# |-Persistency = None
-# |-DDDBtag     = ''
-# |-DataType    = '2009'
-# |-TimeStamp   = False
-# |-SkipEvents  = 0
-# |-OutputLevel = 3
-# |-EvtMax      = -1
-# |-CondDBtag   = 'head-20111111'  (default: '')
-# |-DQFLAGStag  = ''
-# |-XMLSummary  = 'summary.xml'  (default: None)
-# |-Simulation  = False
-# |-Monitors    = []  (default: [])
+# |-Persistency    = None
+# |-DataType       = '2012'
+# |-DDDBtag        = ''
+# |-SkipEvents     = 0
+# |-XMLSummary     = 'summary.xml'  (default: None)
+# |-OutputLevel    = 3
+# |-EvtMax         = -1
+# |-Simulation     = False
+# |-DQFLAGStag     = ''
+# |-IgnoreDQFlags  = True
+# |-Detectors      = []  (default: [])
+# |-LocalDataTypes = []  (default: [])
+# |-TimeStamp      = False
+# |-CondDBtag      = 'cond-20130710'  (default: '')
+# |-Monitors       = []  (default: [])
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
 # applying configuration of LumiIntegratorConf
 # /***** User LumiIntegratorConf/LumiIntegratorConf **************************************************
 # |-TupleFile     = ''
-# |-LumiSequencer = <GaudiSequencer/LumiIntSeq at 0x2dc0d00>  (default: None)
+# |-LumiSequencer = <GaudiSequencer/LumiIntSeq at 0x130a2610>  (default: None)
+# |-UseOnline     = True  (default: True)
 # |-InputType     = 'DST'
-# |-UseOnline     = False  (default: True)
+# |-IgnoreDQFlags = False
 # \----- (End of User LumiIntegratorConf/LumiIntegratorConf) -----------------------------------------
 # applying configuration of DDDBConf
-# WARNING: Using default tag head-20101206 for partition DDDB
-# WARNING: Using default tag tt-20110126 for partition DQFLAGS
+# WARNING: Using default tag dddb-20130312-1 for partition DDDB
+# WARNING: Using default tag dq-20130418 for partition DQFLAGS
 # /***** User DDDBConf/DDDBConf **********************************************************************
-# |-DataType   = '2009'
+# |-DataType   = '2012'
 # |-DbRoot     = 'conddb:/lhcb.xml'
+# |-AutoTags   = False
 # |-Simulation = False
 # \----- (End of User DDDBConf/DDDBConf) -------------------------------------------------------------
 # applying configuration of XMLSummary
@@ -50,29 +56,37 @@
 # |-XMLSummary = 'summary.xml'  (default: None)
 # \----- (End of User XMLSummary/XMLSummary) ---------------------------------------------------------
 # applying configuration of CondDB
-# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/options/SQLDDDB.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/options/SQLDDDB.py'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v7r10/options/SQLDDDB.py'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v7r10/options/SQLDDDB.py'
 # /***** User CondDB/CondDB **************************************************************************
+# |-Upgrade                   = False
+# |-DBSnapshotDirectory       = '/group/online/hlt/conditions'
+# |-SQLiteLocalCopiesDir      = ''
+# |-Online                    = False
+# |-LogFile                   = ''
+# |-EnableRunChangeHandler    = False
+# |-Tags                      = {}  (default: {})
+# |-LatestLocalTagsByDataType = []  (default: [])
+# |-AllLocalTagsByDataType    = []  (default: [])
+# |-PartitionName             = 'LHCb'
 # |-PartitionConnectionString = {}  (default: {})
 # |-LocalTags                 = {}  (default: {})
 # |-IgnoreHeartBeat           = False
-# |-Tags                      = {}  (default: {})
 # |-Overrides                 = []  (default: [])
-# |-DisableLFC                = False
 # |-Simulation                = False
-# |-SQLiteLocalCopiesDir      = ''
-# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
-# |-Online                    = False
 # |-QueryGranularity          = 0
 # |-UseOracle                 = False
-# |-LogFile                   = ''
+# |-LatestGlobalTagByDataType = ''
+# |-UseDBSnapshot             = False
+# |-DisableLFC                = False
+# |-HeartBeatCondition        = '/Conditions/Online/LHCb/Tick'
 # |-UseLatestTags             = []  (default: [])
 # |-OverwriteSQLiteLocalCopy  = False
 # \----- (End of User CondDB/CondDB) -----------------------------------------------------------------
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v42r0
-                                          running on lxplus404.cern.ch on Wed Feb 15 14:08:00 2012
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r5)
+                                          running on lxplus440.cern.ch on Thu Sep 19 15:12:03 2013
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -82,7 +96,7 @@ LumiSeq              INFO OR Member list: EventAccounting/EventAccount
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.70 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.19 times the speed of a 2.8 GHz Xeon.
 LumiIntSeq           INFO Member list: LumiIntegrateFSR/IntegrateBeamCrossing
 IntegrateBeamCr...   INFO Primary  BXType BeamCrossing
 IntegrateBeamCr...   INFO Add      BXType NoBeam
@@ -90,10 +104,12 @@ IntegrateBeamCr...   INFO Subtract BXType Beam1
 IntegrateBeamCr...   INFO Subtract BXType Beam2
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20101206"
-LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "head-20111111"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                 INFO Using TAG "dddb-20130312-1"
+LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
+LHCBCOND             INFO Using TAG "cond-20130710"
+ONLINE_2008          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/ONLINE-2008.db/ONLINE"
+ONLINE_2008          INFO Using TAG ""
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
 EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:testFSRout0.dst' SVC='Gaudi::RootEvtSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
@@ -101,26 +117,27 @@ ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-ONLINE_2010          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/db/ONLINE-2010.db/ONLINE"
-ONLINE_2010          INFO Using TAG ""
-DQFLAGS              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v6r20/db/DQFLAGS.db/DQFLAGS"
-DQFLAGS              INFO Using TAG "tt-20110126"
+ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/ONLINE-2012.db/ONLINE"
+ONLINE_2012          INFO Using TAG ""
+DQFLAGS              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/SQLite/SQLDDDB/db/DQFLAGS.db/DQFLAGS"
+DQFLAGS              INFO Using TAG "dq-20130418"
+PropertyConfigSvc    INFO  resolving alias TCK/0x0094003d
+ConfigTarFileAc...   INFO  opening /afs/cern.ch/lhcb/software/releases/DBASE/TCK/HltTCK/v2r52/config.tar in mode ReadOnly
+PropertyConfigSvc    INFO  resolved TCK/0x0094003d to 158005664d55a192dbefb1fbb6b612f0
 IntegrateBeamCr...   INFO ========== Integrating luminosity normalization: START ==========
-IntegrateBeamCr...   INFO run: [81430] RandomFrequencyBB 697.9 CollidingBunches 344
-IntegrateBeamCr...   INFO Luminosity scale used: 1.7007e-11 relative uncertainty 0.035
-IntegrateBeamCr...   INFO Integrated luminosity: 3.67426e-05 +/- 1.28599e-06 [pb-1]
+IntegrateBeamCr...   INFO run: [114753] RandomFrequencyBB 700 CollidingBunches 1032
+IntegrateBeamCr...   INFO Luminosity scale used: 1.71e-11 relative uncertainty 0.05
+IntegrateBeamCr...   INFO Integrated luminosity: 7.52367e-05 +/- 3.76183e-06 [pb-1]
 IntegrateBeamCr...   INFO ========== Integrating luminosity normalization: END ==========
 ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO This machine has a speed about   1.70 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO This machine has a speed about   2.19 times the speed of a 2.8 GHz Xeon.
 ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
-ToolSvc.Sequenc...   INFO LumiSeq                       |     0.005 |     0.004 |    0.003       0.0 |    1000 |     0.004 |
-ToolSvc.Sequenc...   INFO   EventAccount                |     0.002 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
-ToolSvc.Sequenc...   INFO LumiIntSeq                    |     0.003 |     0.003 |    0.002       0.0 |    1000 |     0.003 |
-ToolSvc.Sequenc...   INFO   IntegrateBeamCrossing       |     0.002 |     0.002 |    0.001       0.0 |    1000 |     0.002 |
+ToolSvc.Sequenc...   INFO LumiIntSeq                    |     0.003 |     0.003 |    0.002       0.1 |    1000 |     0.003 |
+ToolSvc.Sequenc...   INFO   IntegrateBeamCrossing       |     0.003 |     0.002 |    0.001       0.1 |    1000 |     0.002 |
 ToolSvc.Sequenc...   INFO --------------------------------------------------------------------------------------------------
 CounterSummarySvc    INFO filling counters...
 CounterSummarySvc    INFO counters filled OK

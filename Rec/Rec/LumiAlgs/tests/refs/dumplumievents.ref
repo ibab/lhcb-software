@@ -1,9 +1,9 @@
-# --> Including file '/build/cattanem/Rec_HEAD/Rec/LumiAlgs/job/DumpLumiEvents.py'
-# <-- End of file '/build/cattanem/Rec_HEAD/Rec/LumiAlgs/job/DumpLumiEvents.py'
+# --> Including file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_v15r1/Rec/LumiAlgs/job/DumpLumiEvents.py'
+# <-- End of file '/afs/cern.ch/user/p/panmanj/cmtuser/Rec_v15r1/Rec/LumiAlgs/job/DumpLumiEvents.py'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r2)
-                                          running on lxbuild163.cern.ch on Mon Sep 24 09:10:18 2012
+                                                   Welcome to ApplicationMgr (GaudiCoreSvc v1r5)
+                                          running on lxplus440.cern.ch on Thu Sep 19 15:21:29 2013
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DumpLumiEvents      DEBUG Property update for OutputLevel : new value = 2
@@ -50,7 +50,7 @@ DumpLumiEvents      DEBUG Property ['Name': Value] =  'Enable':True
 DumpLumiEvents      DEBUG Property ['Name': Value] =  'OutputLevel':2
 DumpLumiEvents      DEBUG ==> Initialize
 DumpLumiEvents       INFO Reserved capacity for 100 elements in key-location pairs vector.
-EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='lfn:lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000113.raw' SVC='LHCb::MDFSelector' OPT='READ'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='lfn:/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000298.raw' SVC='LHCb::MDFSelector' OPT='READ'
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
@@ -62,12 +62,11 @@ EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnv
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6042222,193439761,1288065082316352,0,524288,0,1,1,0,2,0,1624,;0,0,1,0,2,0,6,0,7,459,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40413831,2731773332,1336431479860416,0,262144,0,3,0,0,2,0,3013,;0,17,1,78,2,15,3,73,4,1,6,248,7,2159,8,0,11,2,14,2,21,2,;
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,5980989,191480956,1288065076871168,0,524288,0,3,1,0,2,0,2986,;0,13,1,39,2,9,6,239,7,14659,8,0,11,2,21,2,;
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -80,15 +79,16 @@ EventSelector     SUCCESS Reading Event record 5. Record number within stream 1:
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
+DumpLumiEvents      DEBUG 6,114753,0,8,40390239,2730157520,1336431477762432,0,262144,0,3,0,0,2,0,2615,;0,42,1,60,2,10,3,58,4,0,6,359,7,2519,8,0,11,2,14,2,21,2,;
 EventSelector     SUCCESS Reading Event record 6. Record number within stream 1: 6
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,5983320,191555505,1288065077078464,0,524288,0,3,1,0,2,0,2884,;0,16,1,49,2,15,6,237,7,12299,8,0,11,2,21,2,;
 EventSelector     SUCCESS Reading Event record 7. Record number within stream 1: 7
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
+DumpLumiEvents      DEBUG 6,114753,0,8,40392428,2730307356,1336431477957120,0,262144,0,1,0,0,2,0,811,;0,0,1,0,2,0,3,0,4,0,6,1,7,119,8,0,11,0,14,0,21,2,;
 EventSelector     SUCCESS Reading Event record 8. Record number within stream 1: 8
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -97,7 +97,6 @@ EventSelector     SUCCESS Reading Event record 9. Record number within stream 1:
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6044820,193522911,1288065082547392,0,524288,0,3,1,0,2,0,2095,;0,73,1,257,2,75,6,526,7,30819,8,0,11,5,21,2,;
 EventSelector     SUCCESS Reading Event record 10. Record number within stream 1: 10
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -110,7 +109,6 @@ EventSelector     SUCCESS Reading Event record 12. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,5978179,191390844,1288065076621248,0,524288,0,2,1,0,2,0,3337,;0,0,1,0,2,0,6,1,7,619,8,0,11,0,21,2,;
 EventSelector     SUCCESS Reading Event record 13. Record number within stream 1: 13
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -127,21 +125,19 @@ EventSelector     SUCCESS Reading Event record 16. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
+DumpLumiEvents      DEBUG 6,114753,0,8,40399573,2730796607,1336431478592384,0,262144,0,2,0,0,2,0,3555,;0,0,1,0,2,0,3,0,4,0,6,1,7,99,8,0,11,0,14,0,21,2,;
 EventSelector     SUCCESS Reading Event record 17. Record number within stream 1: 17
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6044939,193526661,1288065082557952,0,524288,0,3,1,0,2,0,1183,;0,28,1,40,2,16,6,117,7,9479,8,0,11,2,21,2,;
 EventSelector     SUCCESS Reading Event record 18. Record number within stream 1: 18
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,5987241,191680739,1288065077427136,0,524288,0,3,1,0,2,0,1939,;0,19,1,70,2,9,6,294,7,16799,8,0,11,2,21,2,;
 EventSelector     SUCCESS Reading Event record 19. Record number within stream 1: 19
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,5984567,191595251,1288065077189312,0,524288,0,1,1,0,2,0,1624,;0,0,1,0,2,0,6,2,7,519,8,0,11,0,21,2,;
 EventSelector     SUCCESS Reading Event record 20. Record number within stream 1: 20
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -166,17 +162,16 @@ EventSelector     SUCCESS Reading Event record 25. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6045100,193531831,1288065082572288,0,524288,0,2,1,0,2,0,3337,;0,0,1,0,2,0,6,0,7,519,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40395232,2730499662,1336431478206464,0,262144,0,1,0,0,2,0,809,;0,0,1,0,2,0,3,0,4,0,6,1,7,99,8,0,11,0,14,0,21,2,;
 EventSelector     SUCCESS Reading Event record 26. Record number within stream 1: 26
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,5986388,191653442,1288065077351232,0,524288,0,3,1,0,2,0,472,;0,29,1,84,2,22,6,249,7,10079,8,0,11,4,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40393891,2730407680,1336431478087232,0,262144,0,2,0,0,2,0,3451,;0,0,1,0,2,0,3,0,4,0,6,0,7,99,8,0,11,0,14,0,21,2,;
 EventSelector     SUCCESS Reading Event record 27. Record number within stream 1: 27
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6016499,192616065,1288065080028928,0,524288,0,3,1,0,2,0,1429,;0,23,1,59,2,15,6,244,7,13399,8,0,11,1,21,2,;
 EventSelector     SUCCESS Reading Event record 28. Record number within stream 1: 28
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -193,16 +188,16 @@ EventSelector     SUCCESS Reading Event record 31. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6045133,193532825,1288065082575232,0,524288,0,1,1,0,2,0,661,;0,0,1,0,2,0,6,0,7,459,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40399402,2730784896,1336431478577280,0,262144,0,2,0,0,2,0,3477,;0,0,1,0,2,0,3,0,4,0,6,1,7,119,8,0,11,0,14,0,21,2,;
 EventSelector     SUCCESS Reading Event record 32. Record number within stream 1: 32
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
+DumpLumiEvents      DEBUG 6,114753,0,8,40417705,2732038529,1336431480204928,0,262144,0,3,0,0,2,0,1898,;0,63,1,123,2,48,3,118,4,0,6,559,7,1439,8,0,11,2,14,2,21,2,;
 EventSelector     SUCCESS Reading Event record 33. Record number within stream 1: 33
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6045060,193530572,1288065082568768,0,524288,0,3,1,0,2,0,3262,;0,29,1,138,2,26,6,245,7,20499,8,0,11,3,21,2,;
 EventSelector     SUCCESS Reading Event record 34. Record number within stream 1: 34
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -227,7 +222,6 @@ EventSelector     SUCCESS Reading Event record 39. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,5990105,191772441,1288065077681792,0,524288,0,3,1,0,2,0,2977,;0,32,1,75,2,28,6,189,7,13639,8,0,11,2,21,2,;
 EventSelector     SUCCESS Reading Event record 40. Record number within stream 1: 40
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -236,7 +230,6 @@ EventSelector     SUCCESS Reading Event record 41. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,5984800,191602657,1288065077210048,0,524288,0,3,1,0,2,0,1555,;0,8,1,66,2,3,6,272,7,16859,8,0,11,2,21,2,;
 EventSelector     SUCCESS Reading Event record 42. Record number within stream 1: 42
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -245,7 +238,6 @@ EventSelector     SUCCESS Reading Event record 43. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,5985162,191614110,1288065077242240,0,524288,0,1,1,0,2,0,637,;0,0,1,0,2,0,6,1,7,399,8,0,11,0,21,2,;
 EventSelector     SUCCESS Reading Event record 44. Record number within stream 1: 44
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -254,7 +246,6 @@ EventSelector     SUCCESS Reading Event record 45. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6045316,193538805,1288065082591488,0,524288,0,3,1,0,2,0,1807,;0,25,1,122,2,15,6,357,7,18459,8,0,11,2,21,2,;
 EventSelector     SUCCESS Reading Event record 46. Record number within stream 1: 46
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -271,10 +262,12 @@ EventSelector     SUCCESS Reading Event record 49. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
+DumpLumiEvents      DEBUG 6,114753,0,8,40391894,2730270672,1336431477909632,0,262144,0,3,0,0,2,0,968,;0,20,1,44,2,12,3,43,4,0,6,267,7,1239,8,0,11,2,14,2,21,2,;
 EventSelector     SUCCESS Reading Event record 50. Record number within stream 1: 50
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
+DumpLumiEvents      DEBUG 6,114753,0,8,40419508,2732162200,1336431480365248,0,262144,0,3,0,0,2,0,2076,;0,23,1,97,2,17,3,92,4,0,6,393,7,1539,8,0,11,2,14,2,21,2,;
 EventSelector     SUCCESS Reading Event record 51. Record number within stream 1: 51
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -283,7 +276,7 @@ EventSelector     SUCCESS Reading Event record 52. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6045434,193542584,1288065082601984,0,524288,0,3,1,0,2,0,1945,;0,15,1,49,2,11,6,284,7,10639,8,0,11,3,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40401742,2730945017,1336431478785408,0,262144,0,0,0,0,2,0,2236,;0,0,1,0,2,0,3,0,4,0,6,13,7,159,8,0,11,0,14,0,21,2,;
 EventSelector     SUCCESS Reading Event record 53. Record number within stream 1: 53
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -296,6 +289,7 @@ EventSelector     SUCCESS Reading Event record 55. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
+DumpLumiEvents      DEBUG 6,114753,0,8,40401501,2730928451,1336431478763968,0,262144,0,1,0,0,2,0,839,;0,0,1,0,2,0,3,0,4,0,6,0,7,119,8,0,11,0,14,0,21,2,;
 EventSelector     SUCCESS Reading Event record 56. Record number within stream 1: 56
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -304,7 +298,6 @@ EventSelector     SUCCESS Reading Event record 57. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,5981537,191498321,1288065076919872,0,524288,0,3,1,0,2,0,1882,;0,28,1,80,2,24,6,234,7,17359,8,0,11,3,21,2,;
 EventSelector     SUCCESS Reading Event record 58. Record number within stream 1: 58
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -341,7 +334,6 @@ EventSelector     SUCCESS Reading Event record 66. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6045170,193534070,1288065082578496,0,524288,0,3,1,0,2,0,1450,;0,50,1,122,2,50,6,313,7,15799,8,0,11,3,21,2,;
 EventSelector     SUCCESS Reading Event record 67. Record number within stream 1: 67
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -350,7 +342,6 @@ EventSelector     SUCCESS Reading Event record 68. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6045673,193550240,1288065082623232,0,524288,0,3,1,0,2,0,2146,;0,45,1,99,2,39,6,220,7,17599,8,0,11,3,21,2,;
 EventSelector     SUCCESS Reading Event record 69. Record number within stream 1: 69
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -375,7 +366,7 @@ EventSelector     SUCCESS Reading Event record 74. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6045732,193552120,1288065082628480,0,524288,0,2,1,0,2,0,3394,;0,0,1,0,2,0,6,0,7,479,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40394667,2730460833,1336431478156224,0,262144,0,3,0,0,2,0,1809,;0,1,1,0,2,0,3,0,4,0,6,3,7,99,8,0,11,0,14,0,21,2,;
 EventSelector     SUCCESS Reading Event record 75. Record number within stream 1: 75
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -384,7 +375,6 @@ EventSelector     SUCCESS Reading Event record 76. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6045664,193549965,1288065082622464,0,524288,0,3,1,0,2,0,3085,;0,39,1,144,2,29,6,463,7,19959,8,0,11,5,21,2,;
 EventSelector     SUCCESS Reading Event record 77. Record number within stream 1: 77
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -397,7 +387,6 @@ EventSelector     SUCCESS Reading Event record 79. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6045617,193548440,1288065082618304,0,524288,0,3,1,0,2,0,3124,;0,66,1,110,2,25,6,374,7,25159,8,0,11,4,21,2,;
 EventSelector     SUCCESS Reading Event record 80. Record number within stream 1: 80
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -414,7 +403,6 @@ EventSelector     SUCCESS Reading Event record 83. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6045671,193550186,1288065082623104,0,524288,0,3,1,0,2,0,2065,;0,35,1,88,2,26,6,206,7,16779,8,0,11,1,21,2,;
 EventSelector     SUCCESS Reading Event record 84. Record number within stream 1: 84
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -435,7 +423,6 @@ EventSelector     SUCCESS Reading Event record 88. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6045829,193555258,1288065082637120,0,524288,0,3,1,0,2,0,124,;0,0,1,0,2,0,6,3,7,579,8,0,11,0,21,2,;
 EventSelector     SUCCESS Reading Event record 89. Record number within stream 1: 89
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -448,6 +435,7 @@ EventSelector     SUCCESS Reading Event record 91. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
+DumpLumiEvents      DEBUG 6,114753,0,8,40393212,2730361192,1336431478026816,0,262144,0,3,0,0,2,0,1096,;0,0,1,0,2,0,3,0,4,0,6,1,7,79,8,0,11,0,14,0,21,2,;
 EventSelector     SUCCESS Reading Event record 92. Record number within stream 1: 92
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -456,12 +444,10 @@ EventSelector     SUCCESS Reading Event record 93. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6045948,193559081,1288065082647680,0,524288,0,3,1,0,2,0,3109,;0,24,1,41,2,26,6,108,7,6179,8,0,11,2,21,2,;
 EventSelector     SUCCESS Reading Event record 94. Record number within stream 1: 94
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,5991018,191801560,1288065077763008,0,524288,0,3,1,0,2,0,1033,;0,10,1,43,2,9,6,127,7,7439,8,0,11,1,21,2,;
 EventSelector     SUCCESS Reading Event record 95. Record number within stream 1: 95
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -470,7 +456,7 @@ EventSelector     SUCCESS Reading Event record 96. Record number within stream 1
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6035063,193210428,1288065081679744,0,524288,0,0,1,0,2,0,1179,;0,0,1,0,2,0,6,3,7,439,8,0,11,0,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40396521,2730587839,1336431478321088,0,262144,0,3,0,0,2,0,2191,;0,3,1,15,2,1,3,15,4,0,6,117,7,1019,8,0,11,1,14,1,21,2,;
 EventSelector     SUCCESS Reading Event record 97. Record number within stream 1: 97
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
@@ -487,41 +473,25 @@ EventSelector     SUCCESS Reading Event record 100. Record number within stream 
 DumpLumiEvents      DEBUG ==> Execute
 DumpLumiEvents      DEBUG The object of type 'LHCb::ODIN*' has been retrieved from TS at address 'DAQ/ODIN'
 DumpLumiEvents      DEBUG The object of type 'LHCb::HltLumiSummary*' has been retrieved from TS at address 'Hlt/LumiSummary'
-DumpLumiEvents      DEBUG 6,81430,0,0,6045879,193556868,1288065082641600,0,524288,0,2,1,0,2,0,3355,;0,0,1,0,2,0,6,1,7,439,8,0,11,0,21,2,;
 DumpLumiEvents      DEBUG Property update for OutputLevel : new value = 2
 ApplicationMgr       INFO Application Manager Stopped successfully
-HltLumiSummaryD...   INFO Average event size :     2.8 words
+HltLumiSummaryD...   INFO Average event size :     1.8 words
 DumpLumiEvents      DEBUG ==> Finalize
-DumpLumiEvents      DEBUG 6,81430,0,0,5978179,191390844,1288065076621248,0,524288,0,2,1,0,2,0,3337,;0,0,1,0,2,0,6,1,7,619,8,0,11,0,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,5980989,191480956,1288065076871168,0,524288,0,3,1,0,2,0,2986,;0,13,1,39,2,9,6,239,7,14659,8,0,11,2,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,5981537,191498321,1288065076919872,0,524288,0,3,1,0,2,0,1882,;0,28,1,80,2,24,6,234,7,17359,8,0,11,3,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,5983320,191555505,1288065077078464,0,524288,0,3,1,0,2,0,2884,;0,16,1,49,2,15,6,237,7,12299,8,0,11,2,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,5984567,191595251,1288065077189312,0,524288,0,1,1,0,2,0,1624,;0,0,1,0,2,0,6,2,7,519,8,0,11,0,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,5984800,191602657,1288065077210048,0,524288,0,3,1,0,2,0,1555,;0,8,1,66,2,3,6,272,7,16859,8,0,11,2,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,5985162,191614110,1288065077242240,0,524288,0,1,1,0,2,0,637,;0,0,1,0,2,0,6,1,7,399,8,0,11,0,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,5986388,191653442,1288065077351232,0,524288,0,3,1,0,2,0,472,;0,29,1,84,2,22,6,249,7,10079,8,0,11,4,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,5987241,191680739,1288065077427136,0,524288,0,3,1,0,2,0,1939,;0,19,1,70,2,9,6,294,7,16799,8,0,11,2,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,5990105,191772441,1288065077681792,0,524288,0,3,1,0,2,0,2977,;0,32,1,75,2,28,6,189,7,13639,8,0,11,2,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,5991018,191801560,1288065077763008,0,524288,0,3,1,0,2,0,1033,;0,10,1,43,2,9,6,127,7,7439,8,0,11,1,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6016499,192616065,1288065080028928,0,524288,0,3,1,0,2,0,1429,;0,23,1,59,2,15,6,244,7,13399,8,0,11,1,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6035063,193210428,1288065081679744,0,524288,0,0,1,0,2,0,1179,;0,0,1,0,2,0,6,3,7,439,8,0,11,0,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6042222,193439761,1288065082316352,0,524288,0,1,1,0,2,0,1624,;0,0,1,0,2,0,6,0,7,459,8,0,11,0,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6044820,193522911,1288065082547392,0,524288,0,3,1,0,2,0,2095,;0,73,1,257,2,75,6,526,7,30819,8,0,11,5,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6044939,193526661,1288065082557952,0,524288,0,3,1,0,2,0,1183,;0,28,1,40,2,16,6,117,7,9479,8,0,11,2,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6045060,193530572,1288065082568768,0,524288,0,3,1,0,2,0,3262,;0,29,1,138,2,26,6,245,7,20499,8,0,11,3,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6045100,193531831,1288065082572288,0,524288,0,2,1,0,2,0,3337,;0,0,1,0,2,0,6,0,7,519,8,0,11,0,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6045133,193532825,1288065082575232,0,524288,0,1,1,0,2,0,661,;0,0,1,0,2,0,6,0,7,459,8,0,11,0,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6045170,193534070,1288065082578496,0,524288,0,3,1,0,2,0,1450,;0,50,1,122,2,50,6,313,7,15799,8,0,11,3,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6045316,193538805,1288065082591488,0,524288,0,3,1,0,2,0,1807,;0,25,1,122,2,15,6,357,7,18459,8,0,11,2,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6045434,193542584,1288065082601984,0,524288,0,3,1,0,2,0,1945,;0,15,1,49,2,11,6,284,7,10639,8,0,11,3,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6045617,193548440,1288065082618304,0,524288,0,3,1,0,2,0,3124,;0,66,1,110,2,25,6,374,7,25159,8,0,11,4,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6045664,193549965,1288065082622464,0,524288,0,3,1,0,2,0,3085,;0,39,1,144,2,29,6,463,7,19959,8,0,11,5,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6045671,193550186,1288065082623104,0,524288,0,3,1,0,2,0,2065,;0,35,1,88,2,26,6,206,7,16779,8,0,11,1,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6045673,193550240,1288065082623232,0,524288,0,3,1,0,2,0,2146,;0,45,1,99,2,39,6,220,7,17599,8,0,11,3,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6045732,193552120,1288065082628480,0,524288,0,2,1,0,2,0,3394,;0,0,1,0,2,0,6,0,7,479,8,0,11,0,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6045829,193555258,1288065082637120,0,524288,0,3,1,0,2,0,124,;0,0,1,0,2,0,6,3,7,579,8,0,11,0,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6045879,193556868,1288065082641600,0,524288,0,2,1,0,2,0,3355,;0,0,1,0,2,0,6,1,7,439,8,0,11,0,21,2,;
-DumpLumiEvents      DEBUG 6,81430,0,0,6045948,193559081,1288065082647680,0,524288,0,3,1,0,2,0,3109,;0,24,1,41,2,26,6,108,7,6179,8,0,11,2,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40390239,2730157520,1336431477762432,0,262144,0,3,0,0,2,0,2615,;0,42,1,60,2,10,3,58,4,0,6,359,7,2519,8,0,11,2,14,2,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40391894,2730270672,1336431477909632,0,262144,0,3,0,0,2,0,968,;0,20,1,44,2,12,3,43,4,0,6,267,7,1239,8,0,11,2,14,2,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40392428,2730307356,1336431477957120,0,262144,0,1,0,0,2,0,811,;0,0,1,0,2,0,3,0,4,0,6,1,7,119,8,0,11,0,14,0,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40393212,2730361192,1336431478026816,0,262144,0,3,0,0,2,0,1096,;0,0,1,0,2,0,3,0,4,0,6,1,7,79,8,0,11,0,14,0,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40393891,2730407680,1336431478087232,0,262144,0,2,0,0,2,0,3451,;0,0,1,0,2,0,3,0,4,0,6,0,7,99,8,0,11,0,14,0,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40394667,2730460833,1336431478156224,0,262144,0,3,0,0,2,0,1809,;0,1,1,0,2,0,3,0,4,0,6,3,7,99,8,0,11,0,14,0,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40395232,2730499662,1336431478206464,0,262144,0,1,0,0,2,0,809,;0,0,1,0,2,0,3,0,4,0,6,1,7,99,8,0,11,0,14,0,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40396521,2730587839,1336431478321088,0,262144,0,3,0,0,2,0,2191,;0,3,1,15,2,1,3,15,4,0,6,117,7,1019,8,0,11,1,14,1,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40399402,2730784896,1336431478577280,0,262144,0,2,0,0,2,0,3477,;0,0,1,0,2,0,3,0,4,0,6,1,7,119,8,0,11,0,14,0,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40399573,2730796607,1336431478592384,0,262144,0,2,0,0,2,0,3555,;0,0,1,0,2,0,3,0,4,0,6,1,7,99,8,0,11,0,14,0,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40401501,2730928451,1336431478763968,0,262144,0,1,0,0,2,0,839,;0,0,1,0,2,0,3,0,4,0,6,0,7,119,8,0,11,0,14,0,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40401742,2730945017,1336431478785408,0,262144,0,0,0,0,2,0,2236,;0,0,1,0,2,0,3,0,4,0,6,13,7,159,8,0,11,0,14,0,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40413831,2731773332,1336431479860416,0,262144,0,3,0,0,2,0,3013,;0,17,1,78,2,15,3,73,4,1,6,248,7,2159,8,0,11,2,14,2,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40417705,2732038529,1336431480204928,0,262144,0,3,0,0,2,0,1898,;0,63,1,123,2,48,3,118,4,0,6,559,7,1439,8,0,11,2,14,2,21,2,;
+DumpLumiEvents      DEBUG 6,114753,0,8,40419508,2732162200,1336431480365248,0,262144,0,3,0,0,2,0,2076,;0,23,1,97,2,17,3,92,4,0,6,393,7,1539,8,0,11,2,14,2,21,2,;
 DumpLumiEvents      DEBUG Finalize base class GaudiAlgorithm
 DumpLumiEvents      DEBUG Tools to release :
 DumpLumiEvents      DEBUG Services to release :

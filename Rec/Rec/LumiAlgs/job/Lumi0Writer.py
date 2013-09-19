@@ -14,10 +14,7 @@ from LumiAlgs.LumiWriterConf import LumiWriterConf as LumiWriter
 #-- File catalogs. First one is read-write
 FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml",
                             ]
-
-# files = [ "DATAFILE='mdf:root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000113.raw' SVC='LHCb::MDFSelector'"  ]
-files = [ "lfn:lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/81430/081430_0000000113.raw"  ]
-
+files = [ "lfn:/lhcb/data/2012/RAW/FULL/LHCb/COLLISION12/114753/114753_0000000015.raw"  ]
 ofilename='testout0.mdf'
 
 LumiWriter().inputFiles = files
