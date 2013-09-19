@@ -4,6 +4,10 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-09-19 - Rob Lambert
+ - Adding test for Calo segfault specifically. Only does the calo.
+ - Added more tests using fixed and reset event times.
+
 ! 2013-09-18 - Rob Lambert
  - Static event time for the decoding tests to avoid a problem with Calo decoding *for now*.
 
