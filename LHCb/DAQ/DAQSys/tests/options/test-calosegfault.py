@@ -15,7 +15,7 @@ from DAQSys.Decoders import DecoderDB as ddb
 for k,v in ddb.iteritems():
     v.Active=False
 
-for b in ["PrsE", "EcalE", "HcalE"]:
+for b in ["PrsE", "EcalE", "HcalE", "ODIN"]:
     for d in decodersForBank(ddb,b,ignoreActive=True,addRequired=True):
         d.Active=True
 
