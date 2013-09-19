@@ -8,10 +8,16 @@ mySeq.OutputLevel=VERBOSE
 DecodeRawEvent().Sequencer=mySeq
 ApplicationMgr().TopAlg=[mySeq]
 
-#deactivate Upgrade banks
+from DAQSys.DecoderClass import decodersForBank
+from DAQSys.Decoders import DecoderDB as ddb
 
-from DAQSys.Decoders import DecoderDB
-[DecoderDB[k].deactivate()  for k in DecoderDB if (DecoderDB[k].Active and (('FT' in k) or ('UT' in k) or ('VL' in k) or ('VP' in k)))]
+#only calo banks
+for k,v in ddb.iteritems():
+    v.Active=False
+
+for b in ["PrsE", "EcalE", "HcalE"]:
+    for d in decodersForBank(ddb,b,ignoreActive=True,addRequired=True):
+        d.Active=True
 
 #configure L0TCKs
 importOptions('$L0TCK/L0DUConfig.opts')

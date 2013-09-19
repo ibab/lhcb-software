@@ -335,12 +335,12 @@ def validate(db):
             raise AttributeError("A decoder in this database thinks it is not in this database... try again! "+k)
         for tool in v.PublicTools+v.PrivateTools:
             if tool not in db:
-                raise KeyError("A decoder is asking for a tool which hasn't been put in this database... try again! "+adecoder.FullName+"-> "+tool)
+                raise KeyError("A decoder is asking for a tool which hasn't been put in this database... try again! "+v.FullName+"-> "+tool)
         for alg in v.Required:
             if alg not in db:
-                raise KeyError("A decoder requires another decoder which is hasn't been put in this database... try again! "+adecoder.FullName+"-> "+alg)
-            if not db[alg].Active:
-                raise ValueError("A decoder requires another which isn't set as active! "+adecoder.FullName+"-> "+alg)
+                raise KeyError("A decoder requires another decoder which is hasn't been put in this database... try again! "+v.FullName+"-> "+alg)
+            if v.Active and not db[alg].Active:
+                raise ValueError("An active decoder requires another which isn't set as active! "+v.FullName+"-> "+alg)
     return True
 
 def decodersForBank(db,bank,ignoreActive=False,addRequired=False):
