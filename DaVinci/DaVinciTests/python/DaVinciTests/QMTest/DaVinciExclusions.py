@@ -15,8 +15,8 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["BeforeMagnetRegion/"]) + \
   LineSkipper(["DownstreamRegion"]) + \
   LineSkipper(["DaVinciInitAlg.DaVinciMemory"]) + \
-  LineSkipper(["MD5 sum:"]) 
-
-#LineSkipper(["LHCBCOND_"]) + \
-#LineSkipper(["SIMCOND_"]) + \
-#LineSkipper(["DDDB_"]) + \
+  LineSkipper(["Trying to import module StrippingArchive.Stripping"]) + \
+  LineSkipper(["MD5 sum:"]) + \
+  LineSkipper(["LHCBCOND_"]) + \
+  LineSkipper(["SIMCOND_"]) + \
+  LineSkipper(["DDDB_"])
