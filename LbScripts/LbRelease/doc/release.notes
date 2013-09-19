@@ -1,3 +1,7 @@
+2013-09-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: the 'default' protocol implies --switch
+
 2013-09-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/DataPkgEnvs: added environment for a few data packages

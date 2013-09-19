@@ -343,8 +343,7 @@ class GetPack(Script):
         self.parser.add_option("-R", "--really-recursive", action = "store_true",
                                help = "check out >every< package this one depends on")
         self.parser.add_option("-p", "--protocol",
-                               help = "preferred access method to revision system [kerberos|kserver|ssh|anonymous]"
-                                      " (kserver is valid only for CVS)")
+                               help = "preferred access method to revision system [ssh|anonymous|default]")
         self.parser.add_option("-f",
                                dest = "protocol",
                                help = "obsolete: same as -p, --protocol")
@@ -598,8 +597,10 @@ class GetPack(Script):
         else:
             pkgtopdir = package
             pkgdir = os.path.join(package, "cmt")
-        #svn switch?
-        if self.options.switch:
+        # svn switch?
+        # (the default was changed at some point to use the non-authenticated
+        # access, but that must imply the switch to preserve the old behavior)
+        if self.options.switch or self.options.protocol == "default":
             self._switchProtocol(pkgtopdir,self.options.protocol,"authenticated")
         if self.options.eclipse and self.options.eclipse_config:
             # add package-specific configuration
