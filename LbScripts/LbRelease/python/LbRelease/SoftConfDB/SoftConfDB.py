@@ -150,11 +150,20 @@ class SoftConfDB(object):
     def checkUnused(self):
         ''' List the used project/versions '''
         queryactive = 'start n=node:Lbadmin(Type="STATUS") match n-[:ACTIVE]->m return distinct m'
-        queryused = 'start n=node:Lbadmin(Type="USED") match n-[:USED|REQUIRES*]->(p) return distinct p'
+        queryappused = '''start n=node:Lbadmin(Type="USED"), q=node:Lbadmin(Type="STATUS")
+                        match n-[:USED]-t-[:ACTIVE]-q
+                        return distinct t'''
+        queryused = '''start n=node:Lbadmin(Type="USED"), q=node:Lbadmin(Type="STATUS")
+                        match n-[:USED]-t-[:ACTIVE]-q
+                        with t
+                        match t-[:REQUIRES*]->m
+                        return distinct m'''
         active = []
+        appused = []
         used = []
         self.runCypher(queryused, lambda x: used.append(x[0]))
         self.runCypher(queryactive, lambda x: active.append(x[0]))
+        self.runCypher(queryappused, lambda x: appused.append(x[0]))
 
         activec = []
         for n in active:
@@ -166,7 +175,12 @@ class SoftConfDB(object):
             props = n.get_properties()
             usedc.append((props["project"], props["version"]))
 
-        return [ n for n in activec if n not in usedc ]
+        appusedc = []
+        for n in appused:
+            props = n.get_properties()
+            appusedc.append((props["project"], props["version"]))
+
+        return [ n for n in activec if n not in usedc and n not in appusedc ]
 
 
     # Methods to add/update nodes
@@ -422,6 +436,6 @@ class SoftConfDB(object):
 if __name__ == '__main__':
     sdb = SoftConfDB()
     sdb.setupDB()
-    sdb.setAllAppVersionsUsed()
+    sdb.checkUnused()
 
 

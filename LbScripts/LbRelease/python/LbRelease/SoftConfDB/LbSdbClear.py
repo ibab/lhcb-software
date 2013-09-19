@@ -11,7 +11,7 @@ from LbRelease.SoftConfDB.SoftConfDB import SoftConfDB
 
 
 class LbSdbClear(Script):
-    """ Update information about a project / version """
+    """ Clears the Active or Used flags """
 
     def defineOpts(self):
         """ Script specific options """
