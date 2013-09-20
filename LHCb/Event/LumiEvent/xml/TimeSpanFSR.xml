@@ -44,6 +44,7 @@
        />
 
 
+      <!-- assign from another FSR -->
       <method
         desc="Assignment operator"
         name="operator="
@@ -60,6 +61,7 @@
         </code>
       </method>
 
+      <!-- add a single time and enlarge the span if needed -->
       <method
 	type = "void"
 	name = "addTime"
@@ -75,6 +77,7 @@
 	</code>
       </method>
 
+      <!-- add a single time and enlarge the span if needed -->
       <method
         desc="Addition operator"
         name="operator+="
@@ -86,6 +89,32 @@
           return *this;
         </code>
       </method> 
+
+      <!-- add two timeSpanFSRs and calculate span that overlaps both -->
+      <method
+	desc="add two FSRs and store the earliest/latest times"
+	name="operator+="
+        type="LHCb::TimeSpanFSR&amp;"
+        >
+	<arg name="rhs" type="LHCb::TimeSpanFSR" const="TRUE"/>   
+        <code>
+	  if ( rhs.m_earliest > 0 ) addTime (rhs.m_earliest);
+          addTime (rhs.m_latest);
+          return *this;
+	</code>
+      </method>
+
+      <!-- add reference to timeSpanFSR to timeSpanFSR and calculate span that overlaps both -->
+      <method
+	desc = "add two FSRs and store the earliest/latest times"
+	name = "operator+="
+        type = "LHCb::TimeSpanFSR&amp;"
+        >   
+	<arg name="rhs" type="LHCb::TimeSpanFSR*" const="TRUE"/>
+        <code>
+          return *this += *rhs;
+	</code>
+      </method>
 
 
       <!-- readable printout -->
