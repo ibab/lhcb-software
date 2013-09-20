@@ -20,6 +20,7 @@ Purpose: LHCb reconstruction program
   . Follow move to use of VDT library in Rich code (RichDet, RichRecPhotonTools)
   . Removed MC09 tuning of STOffline position tool
   . Added AlignmentOnlineMonitor
+  . Follow fix to TimeSpanaccounting FSR
 
 - Changes to example options
   . Remove COLLISION10-Beam3500GeV-VeloClosed-MagDown.py, now in PRConfig
