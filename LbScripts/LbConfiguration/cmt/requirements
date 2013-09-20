@@ -1,5 +1,5 @@
 package LbConfiguration
-version v7r8p2
+version v7r9
 
 use LbUtils		v*
 
