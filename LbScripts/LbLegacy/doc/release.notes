@@ -1,3 +1,8 @@
+2013-09-20  Ben Couturier  <Ben.Couturier@cern.ch>
+
+        * cmt/requirements: release of version v5r9
+        * python/LbLegacy/install_project.py:  release of LbScripts version v7r9
+
 2013-08-16  Ben Couturier  <Ben.Couturier@cern.ch>
 
 	* scripts/mkMCGentar: Add special hook to deal with powheg-box
@@ -11,7 +16,7 @@
 
 	* scripts/archive_project: Updated to use dirac-lhcb-view-software
 
-	2013-07-24  Ben Couturier  <Ben.Couturier@cern.ch>
+2013-07-24  Ben Couturier  <Ben.Couturier@cern.ch>
 
         * cmt/requirements: release of version v5r8p2
         * python/LbLegacy/install_project.py:  release of LbScripts version v7r8p2
