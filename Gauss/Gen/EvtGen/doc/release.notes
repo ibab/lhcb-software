@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-09-20 - John Back
+ - Modified EvtGenModels/EvtPythiaEngine to keep track of any new
+   particles (such as Xsu, Xu+-, Xsd) that are added to the default Pythia 
+   database to avoid duplicating particle/anti-particle entries that could 
+   override previously defined Pythia decay chains (for these new particles).
+
 !========================== EvtGen v13r7 2013-07-16 ==========================
 ! 2013-07-16 - John Back
  - Code changes from Daniel Craik:
