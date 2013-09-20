@@ -151,6 +151,12 @@ StatusCode LumiMergeFSR::merge() {
   for(std::vector< std::string >::iterator a = addresses.begin() ; a!= addresses.end() ; ++a ){  
     if ( a->find(m_FSRName + m_PrimaryBXType) != std::string::npos ) {
       primaryFileRecordAddress = (*a);   // a primary BX is found
+      // get primary LumiFSR number
+      LHCb::LumiFSRs* primaryFSRs = getIfExists<LHCb::LumiFSRs>(m_fileRecordSvc, primaryFileRecordAddress);
+      int n_primaryFSRs = primaryFSRs->size();
+      if ( msgLevel(MSG::DEBUG) ) debug() << primaryFileRecordAddress << ": " << n_primaryFSRs
+                                          << " primary FSRs in container " << endmsg; 
+
       // search for the TimeSpanFSR 
       std::string timeSpanRecordAddress(primaryFileRecordAddress);
       timeSpanRecordAddress.replace( timeSpanRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), "" );
@@ -164,18 +170,58 @@ StatusCode LumiMergeFSR::merge() {
       } else {
         //if ( msgLevel(MSG::VERBOSE) ) 
         if ( msgLevel(MSG::VERBOSE) ) verbose() << timeSpanRecordAddress << " found" << endmsg ;
+        int n_timeSpanFSRs = timeSpanFSRs->size();
+        if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << ": " << n_timeSpanFSRs
+                                            << " time span FSRs in container " << endmsg; 
+
+        // decide if fatal error
+        bool needCorrection = false;
+        if (n_primaryFSRs > n_timeSpanFSRs) {
+          fatal() << " number of primary FSRs " << n_primaryFSRs << " larger than number of timeSpanFSRs " << n_timeSpanFSRs 
+                  << " - this cannot be right!" << endmsg;
+          return StatusCode::FAILURE;
+        }
+        if (n_primaryFSRs < n_timeSpanFSRs  && n_primaryFSRs != 1) {
+          fatal() << " number of primary FSRs " << n_primaryFSRs << " smaller than number of timeSpanFSRs " << n_timeSpanFSRs 
+                  << " and not equal to one - this cannot be right!" << endmsg;
+          return StatusCode::FAILURE;
+        }
+        // decide if corrective action needs to be taken
+        if (n_primaryFSRs < n_timeSpanFSRs && n_primaryFSRs == 1) {
+          warning() << " at address: " <<  primaryFileRecordAddress
+                    << " number of primary FSRs " << n_primaryFSRs << " smaller than number of timeSpanFSRs " << n_timeSpanFSRs 
+                    << " and exactly equal to one - corrective action being taken!" << endmsg;
+          needCorrection = true;
+        }
+
         // look at all TimeSpanFSRs (normally only one)
         LHCb::TimeSpanFSRs::iterator tsfsr;
-        for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
-          // prepare new time span FSR and put in TS
-          n_tsFSR++;
+        if ( needCorrection ) {
+          // correction needed - take the sum of all timespanFSRs and create only one
           LHCb::TimeSpanFSR* timeSpanFSR = new LHCb::TimeSpanFSR();
-          *timeSpanFSR = *(*tsfsr);
+          for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
+            // prepare new time span FSR and put in TS
+            *timeSpanFSR += *(*tsfsr);
+          }
+          n_tsFSR++;
           m_timeSpanFSRs->insert(timeSpanFSR); // put a copy in TS container
+          if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << ": " << n_tsFSR 
+                                              << " successfully copied - total is now " 
+                                              << m_timeSpanFSRs->size() << endmsg; 
         }
-        if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << ": " << n_tsFSR 
-                                            << " successfully copied - total is now " 
-                                            << m_timeSpanFSRs->size() << endmsg; 
+        else {
+          // no correction needed
+          for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
+            // prepare new time span FSR and put in TS
+            n_tsFSR++;
+            LHCb::TimeSpanFSR* timeSpanFSR = new LHCb::TimeSpanFSR();
+            *timeSpanFSR = *(*tsfsr);
+            m_timeSpanFSRs->insert(timeSpanFSR); // put a copy in TS container
+          }
+          if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << ": " << n_tsFSR 
+                                              << " successfully copied - total is now " 
+                                              << m_timeSpanFSRs->size() << endmsg; 
+        }
       }    
 
       // now handle all Lumi FSRs

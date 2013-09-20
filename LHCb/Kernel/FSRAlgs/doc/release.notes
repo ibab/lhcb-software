@@ -4,6 +4,11 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-09-20 - Jaap Panman
+ - Add code in LumiMergeFSR to correct an inconsistency in the number of lumi and time span FSRs.
+   This inconsistency was introduced by a bug in Rec/LumiAlgs/TimeAccounting.
+   It needs an update of Event/LumiEvent.
+
 !========================= FSRAlgs v1r2 2013-02-04 =========================
 ! 2012-12-10 - Marco Cattaneo
  - Use getIfExists wherever appropriate
