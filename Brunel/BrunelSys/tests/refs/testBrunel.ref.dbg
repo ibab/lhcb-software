@@ -92,7 +92,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v44r5
-                                          running on lxplus0347 on Wed Sep 11 09:16:34 2013
+                                          running on lxplus0432 on Fri Sep 20 11:40:40 2013
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -528,6 +528,7 @@ LumiCountBeam1       INFO INTEGRAL: {  runs :  files :  info (key/incr/integral)
 LumiCountBeam2       INFO number of files seen: 0
 LumiCountBeam2       INFO INTEGRAL: {  runs :  files :  info (key/incr/integral) :  }
 TimeSpanAccounting   INFO number of files seen: 0
+TimeSpanAccounting   INFO FSR: {  earliest : 0 - latest : 0 }
 EventAccount         INFO Overriding status: UNRELIABLE with: VERIFIED
 CreateTTClusters     INFO Successfully processed 0 %
 CreateTTClusters  SUCCESS Number of counters : 2
