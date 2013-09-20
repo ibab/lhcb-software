@@ -1,3 +1,50 @@
+2013-09-20 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v7r9
+
+	LbConfiguration
+	* python/LbConfiguration/Package.py: Added package WG/HLTConfig (LBCORE-261)
+	* python/LbConfiguration/Project.py: Added project MooreOnline (LBCORE-260)
+	* python/LbConfiguration/Project.py: Added project BeautyDirac (LBCORE-262)
+	* python/LbConfiguration/Repository.py: changed the default svn protocol to anonymous
+	* python/LbConfiguration/Package.py: Added package WG/BNoCConfig
+	* python/LbConfiguration/Package.py: Added package LHAPDFSets 
+
+	LbRelease
+	* python/LbRelease/GetPack.py: fix to the automatic '--switch'
+	* python/LbRelease/GetPack.py: the 'default' protocol implies --switch
+	* data/DataPkgEnvs: added environment for a few data packages
+	* data/DataPkgEnvs: added environment for Geant4Files v95r0
+	Added list of applications to the Software Configuration DB:
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/LbSdbClear.py
+	* python/LbRelease/SoftConfDB/LbSdbUpdateVersion.py
+	* python/LbRelease/SoftConfDB/LbSdbSetAllAppsUsed.py
+	* python/LbRelease/SoftConfDB/LbSdbSetApp.py
+	* python/LbRelease/SoftConfDB/LbSdbAddPlatform.py
+	* python/LbRelease/SoftConfDB/LbSdbImportFromInstallArea.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+	* scripts/lb-sdb-setallappsused
+	* scripts/lb-sdb-setapp
+	Added query of list of active projects refencing a specific one:
+  * python/LbRelease/SoftConfDB/LbSdbQuery.py
+  * python/LbRelease/SoftConfDB/LbSdbImportFromInstallArea.py
+  * python/LbRelease/SoftConfDB/SoftConfDB.py
+	SvnChecker
+	* python/LbRelease/SvnChecker: improved error messages and added check of JSON in the nightly build configuration
+	Ariadne
+	* scripts/ariadne_add: inform a commiter of lxbuild119 being the only allowed machine to commit from.
+
+	LbUtils
+	* cmake: updated CMake support modules
+	
+	LbLegacy
+	* python/LbLegacy/install_project.py:  release of LbScripts version v7r9
+	* scripts/mkMCGentar: Add special hook to deal with powheg-box
+	* scripts/mkMCGentar: Added option to enable/disable the inclusion
+    of LHAPDF Sets.
+	* scripts/archive_project: Updated to use dirac-lhcb-view-software
+
 2013-07-24 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r8p2
