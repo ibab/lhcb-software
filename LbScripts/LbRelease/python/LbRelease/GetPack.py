@@ -598,9 +598,7 @@ class GetPack(Script):
             pkgtopdir = package
             pkgdir = os.path.join(package, "cmt")
         # svn switch?
-        # (the default was changed at some point to use the non-authenticated
-        # access, but that must imply the switch to preserve the old behavior)
-        if self.options.switch or self.options.protocol == "default":
+        if self.options.switch:
             self._switchProtocol(pkgtopdir,self.options.protocol,"authenticated")
         if self.options.eclipse and self.options.eclipse_config:
             # add package-specific configuration
@@ -847,6 +845,11 @@ class GetPack(Script):
         if self.options.no_curses:
             global selectFromList
             selectFromList = selectFromListPlain
+
+        # the default was changed at some point to use the non-authenticated
+        # access, but that must imply the switch to preserve the old behavior
+        if self.options.protocol == "default":
+            self.options.switch = True
 
     def askPackage(self):
         if self.options.batch:

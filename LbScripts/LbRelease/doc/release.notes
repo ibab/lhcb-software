@@ -1,3 +1,7 @@
+2013-09-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: fix to the automatic '--switch'
+
 2013-09-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: the 'default' protocol implies --switch
