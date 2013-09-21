@@ -3,6 +3,9 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+! 2013-09-21 - Chris Jones
+ - Import Phys/FlavourTagging from Analysis
+
 </PRE><H1><A NAME=v17r1>2013-08-01 Phys v17r1 </A></H1><PRE>
 Development release, based on Rec v15r1, LHCb v36r1 and Gaudi v23r9.
 

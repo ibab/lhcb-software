@@ -53,6 +53,10 @@ use NeuroBayesTools             v1r2p3   Phys   # ???
 
 #===================================================================
 
+use  FlavourTagging             v13r2    Phys   # Stefania Vecchi
+
+#===================================================================
+
 # Temporary MC stuff.
 use DaVinciMCKernel v4r4 Phys
 
