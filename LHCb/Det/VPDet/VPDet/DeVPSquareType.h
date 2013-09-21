@@ -20,10 +20,6 @@
 // Unique class identifier
 static const CLID CLID_DeVPSquareType = 1008204 ;
 
-namespace LHCb {
-  class VPChannelID;
-}
-
 /** @class DeVPSquareType DeVPSquareType.h VPDet/DeVPSquareType.h
  *  
  *  Detector element for square (symetric) pixel type
@@ -66,7 +62,9 @@ public:
   /// Calculate the XYZ center of a pixel
   virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel) const;
   virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
-                                         const std::pair<double, double> offset) const;
+                                         const std::pair<double, double> offset) const {
+    return localToGlobal(xyzOfPixel(channel.pixel(), offset));
+  }
 
   /// Get the list of VPChannelID forming the 3x3 cluster of pixel centered on point
   virtual StatusCode pointTo3x3Channels(const Gaudi::XYZPoint& point,

@@ -9,15 +9,12 @@
 #include "DetDesc/IGeometryInfo.h"
 // Kernel/LHCbKernel
 #include "Kernel/Trajectory.h"
+#include "Kernel/VPChannelID.h"
 
 // Unique class identifier
 static const CLID CLID_DeVPSensor = 1008201;
 
 class DeVP;
-
-namespace LHCb {
-  class VPChannelID;
-}
 
 /** @class DeVPSensor DeVPSensor.h VPDet/DeVPSensor.h
  *

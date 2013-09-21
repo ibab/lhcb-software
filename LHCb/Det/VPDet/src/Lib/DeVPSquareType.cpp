@@ -17,8 +17,6 @@
 
 // From VP
 #include "VPDet/DeVPSquareType.h"
-#include "Kernel/VPChannelID.h"
-
 
 // Note for later: If by design or to assume possible non orthogonal position of the sensor plane wrt. 
 // the halfbox itself, the way global and halfbox position is stored should be review...
@@ -374,6 +372,7 @@ StatusCode DeVPSquareType::pointToChannel(const Gaudi::XYZPoint& point,
 //==============================================================================
 /// Calculate the position of a fraction in the given channel in global coordinates
 //==============================================================================
+/*
 Gaudi::XYZPoint DeVPSquareType::channelToPoint(const LHCb::VPChannelID& channel,
                                                const std::pair<double,double> offset) const {
 
@@ -387,6 +386,7 @@ Gaudi::XYZPoint DeVPSquareType::channelToPoint(const LHCb::VPChannelID& channel,
   return localToGlobal(LocalPoint);
 
 }
+*/
 
 //==============================================================================
 /// Calculate the center of the pixel from a given channel
