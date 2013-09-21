@@ -67,8 +67,9 @@ private:
   double m_P0_Cal_kaonS ;
   double m_P1_Cal_kaonS ;
   double m_Eta_Cal_kaonS ;
-
   double m_AverageOmega;
+  int    m_isMonteCarlo;
+  
 };
 
 //===============================================================//

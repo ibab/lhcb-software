@@ -45,6 +45,7 @@ DECLARE_TOOL_FACTORY( TaggerKaonSameTool )
   declareProperty( "KaonSame_P0_Cal",  m_P0_Cal_kaonS   = 0.350 );
   declareProperty( "KaonSame_P1_Cal",  m_P1_Cal_kaonS   = 0.51 );
   declareProperty( "KaonSame_Eta_Cal", m_Eta_Cal_kaonS  = 0.324 );
+  declareProperty( "isMonteCarlo",     m_isMonteCarlo  = 0 );
 
   m_nnet = 0;
   m_util = 0;
@@ -186,27 +187,51 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
     const double deta = std::log(std::tan(ptotB.Theta()/2))-std::log(std::tan(ang/2));
     const double dphi = std::fabs(TaggingHelpers::dphi(ikaonS->momentum().Phi(), ptotB.Phi()));
     const double dR   = std::sqrt(deta*deta+dphi*dphi);
+    if(m_isMonteCarlo ) {
+      std::vector<std::string> inputVars;
+      std::vector<double> inputVals;
+      inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));
+      inputVars.push_back("ptB");         inputVals.push_back( (double)log(AXB0->pt()/GeV));
+      inputVars.push_back("partPt");      inputVals.push_back( (double)log(ikaonS->pt()/GeV));
+      inputVars.push_back("IPs");         inputVals.push_back( (double)log(fabs(save_IPsig)));
+      inputVars.push_back("nndeta");      inputVals.push_back( (double)deta);
+      inputVars.push_back("nndphi");      inputVals.push_back( (double)save_dphi);
+      inputVars.push_back("nndq");        inputVals.push_back( (double)save_dQ/GeV);
+      inputVars.push_back("nnkrec");      inputVals.push_back( (double)nPV);
+      inputVars.push_back("nndr");        inputVals.push_back( (double)dR);
 
-    std::vector<double> NNinputs(10);
-    NNinputs.at(0) = m_util->countTracks(vtags);
-    NNinputs.at(1) = AXB0->pt()/GeV;
-    //    NNinputs.at(2) = ikaonS->p()/GeV;
-    NNinputs.at(3) = ikaonS->pt()/GeV;
-    NNinputs.at(4) = save_IPsig;
-    NNinputs.at(5) = deta;
-    NNinputs.at(6) = save_dphi;
-    NNinputs.at(7) = save_dQ/GeV;
-    NNinputs.at(8) = nPV;
-    NNinputs.at(9) = dR;
+      pn = m_nnet->MLPkSTMVA_MC(inputVars,inputVals);
 
-    pn = m_nnet->MLPkS( NNinputs );
-
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose()<<" KaonS pn inputs="<<NNinputs<<endreq;
-      verbose()<<" KaonS pn ="<<pn<<endreq;
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug()<<" TaggerKaonSS: "<<ikaonS->charge()<<" omega="<<1-pn<<" ";
+        for(unsigned int iloop=0; iloop<inputVals.size(); iloop++){
+          debug() << inputVals[iloop]<<" ";
+        }
+        debug()<<endreq;
+      }
+   
+    }else{ // Old format for the moment
+      std::vector<double> NNinputs(10);
+      NNinputs.at(0) = m_util->countTracks(vtags);
+      NNinputs.at(1) = AXB0->pt()/GeV;
+      //    NNinputs.at(2) = ikaonS->p()/GeV;
+      NNinputs.at(3) = ikaonS->pt()/GeV;
+      NNinputs.at(4) = save_IPsig;
+      NNinputs.at(5) = deta;
+      NNinputs.at(6) = save_dphi;
+      NNinputs.at(7) = save_dQ/GeV;
+      NNinputs.at(8) = nPV;
+      NNinputs.at(9) = dR;      
+      pn = m_nnet->MLPkS( NNinputs );
+      
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose()<<" KaonS pn inputs="<<NNinputs<<endreq;
+        verbose()<<" KaonS pn ="<<pn<<endreq;
+      }
     }
-
+    
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     pn = 1 - m_P0_Cal_kaonS - m_P1_Cal_kaonS * ( (1-pn)-m_Eta_Cal_kaonS);
     if ( msgLevel(MSG::DEBUG) )

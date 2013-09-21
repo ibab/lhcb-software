@@ -51,6 +51,7 @@ DECLARE_TOOL_FACTORY( TaggerElectronTool )
     declareProperty( "Ele_ProbMin",       m_ProbMin_ele   = 0. ); //no cut
     declareProperty( "Ele_AverageOmega",  m_AverageOmega  = 0.33 );
     declareProperty( "Personality",       m_personality   = "Reco14");
+    declareProperty( "isMonteCarlo",      m_isMonteCarlo = 0);
     m_nnet = 0;
     m_util = 0;
     m_descend = 0;
@@ -373,7 +374,8 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
     inputVars.push_back("ghostProb");   inputVals.push_back( (double)log(iele->proto()->track()->ghostProbability()));
     inputVars.push_back("IPPU");        inputVals.push_back( (double)log(save_IPPU));
     
-    pn = m_nnet->MLPeTMVA(inputVars,inputVals);
+    if(m_isMonteCarlo ) pn = m_nnet->MLPeTMVA_MC(inputVars,inputVals);
+    else pn = m_nnet->MLPeTMVA(inputVars,inputVals);
 
 
     if(msgLevel(MSG::VERBOSE)) verbose() << " Elec pn=" << pn << endreq;

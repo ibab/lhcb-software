@@ -112,7 +112,7 @@ private:
   double m_P1_Cal_kaon ;
   double m_Eta_Cal_kaon ;
   std::string m_personality;
-
+  int m_isMonteCarlo;
 };
 
 //===============================================================//

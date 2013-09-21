@@ -46,6 +46,7 @@ DECLARE_TOOL_FACTORY( TaggerMuonTool )
   declareProperty( "Muon_ProbMin",       m_ProbMin_muon  = 0. ); //no cut
   declareProperty( "Muon_AverageOmega",  m_AverageOmega  = 0.33 );
   declareProperty( "Personality",        m_personality = "Reco14");
+  declareProperty( "isMonteCarlo",       m_isMonteCarlo = 0);
   m_nnet = 0;
   m_util = 0;
   m_descend = 0;
@@ -339,7 +340,8 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
     inputVars.push_back("ghostProb");   inputVals.push_back( (double)log(imuon->proto()->track()->ghostProbability()));
     inputVars.push_back("IPPU");        inputVals.push_back( (double)log(save_IPPU));
     
-    pn = m_nnet->MLPmTMVA(inputVars,inputVals);
+    if(m_isMonteCarlo) pn = m_nnet->MLPmTMVA_MC(inputVars,inputVals);
+    else pn = m_nnet->MLPmTMVA(inputVars,inputVals);
     
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     pn = 1. - m_P0_Cal_muon - m_P1_Cal_muon * ( (1.-pn)-m_Eta_Cal_muon);

@@ -4,6 +4,12 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2013-09-20 - Stefania Vecchi
+ - Add some code to run MC12 Reco14 with calibrated mistag
+   affects: Tagger*Tool.*, NNet_MLP.* INNetTool.h
+ - Added nnet weights for MC12: NeuralNet/weights/*__*MLPBNN.class.C
+ - Added configuration in Tunings.py to run on MC12: Reco14_MC12 
+
 ! 2013-08-26 - Stefania Vecchi
  - Fix a wrong value in Tunings.py
 !========================= FlavourTagging v13r2 2013-08-01 =========================

@@ -50,6 +50,12 @@ public:
   //virtual double MLPeTMVA(std::list<std::pair<std::string, Float_t> >&);
   //virtual double MLPkaonTMVA(std::list<std::pair<std::string, Float_t> >&);
   //virtual double MLPvtxTMVA(std::list<std::pair<std::string, Float_t> >&);
+  virtual double MLPmTMVA_MC(std::vector<std::string>&, std::vector<double>&);
+  virtual double MLPeTMVA_MC(std::vector<std::string>&, std::vector<double>&);
+  virtual double MLPkaonTMVA_MC(std::vector<std::string>&, std::vector<double>&);
+  virtual double MLPvtxTMVA_MC(std::vector<std::string>&, std::vector<double>&);
+  virtual double MLPpSTMVA_MC(std::vector<std::string>&, std::vector<double>&);
+  virtual double MLPkSTMVA_MC(std::vector<std::string>&, std::vector<double>&);
 
 private:
 
@@ -69,9 +75,9 @@ private:
   double m_P0vtx,m_P1vtx,m_P2vtx,m_P3vtx;  
   double m_P0ps, m_P1ps, m_P2ps, m_P3ps;  
   double m_P0ks, m_P1ks, m_P2ks, m_P3ks;
-
+  /*
   std::string m_NNetWeights_mu, m_NNetWeights_ele, m_NNetWeights_kaon, m_NNetWeights_vtx, m_XML_dir;
-
+  */
 };
 
 #endif // NNETTOOL_NNETTOOL_MLP_H

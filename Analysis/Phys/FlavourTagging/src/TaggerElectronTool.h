@@ -122,7 +122,7 @@ private:
   double m_PIDNNepi_cut_ele;
   
   std::string m_personality;
-
+  int m_isMonteCarlo;
 };
 
 //===============================================================//

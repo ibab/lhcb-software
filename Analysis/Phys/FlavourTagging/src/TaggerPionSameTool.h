@@ -70,6 +70,8 @@ private:
   double m_P1_Cal_pionS ;
   double m_P2_Cal_pionS ;
   double m_Eta_Cal_pionS ;
+  int    m_isMonteCarlo;
+  
 };
 //===============================================================//
 #endif // USER_TAGGERPIONSAMETOOL_H

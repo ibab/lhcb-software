@@ -33,6 +33,12 @@ public:
   virtual double MLPeTMVA(std::vector<std::string>&, std::vector<double>&  )=0;
   virtual double MLPkaonTMVA(std::vector<std::string>&, std::vector<double>&  )=0;
   virtual double MLPvtxTMVA(std::vector<std::string>&, std::vector<double>&  )=0;
+  virtual double MLPmTMVA_MC(std::vector<std::string>&, std::vector<double>&  )=0;
+  virtual double MLPeTMVA_MC(std::vector<std::string>&, std::vector<double>&  )=0;
+  virtual double MLPkaonTMVA_MC(std::vector<std::string>&, std::vector<double>&  )=0;
+  virtual double MLPvtxTMVA_MC(std::vector<std::string>&, std::vector<double>&  )=0;
+  virtual double MLPpSTMVA_MC(std::vector<std::string>&, std::vector<double>&  )=0;
+  virtual double MLPkSTMVA_MC(std::vector<std::string>&, std::vector<double>&  )=0;
 
 };
 #endif // NNETTOOL_INNETTOOL_H

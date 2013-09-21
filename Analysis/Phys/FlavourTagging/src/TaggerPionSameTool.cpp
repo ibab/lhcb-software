@@ -54,6 +54,7 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
 
   declareProperty( "PionSame_AverageOmega",  m_AverageOmega   = 0.40 );
   declareProperty( "PionSame_ProbMin",       m_PionProbMin   = 0.56);
+  declareProperty( "isMonteCarlo",       m_isMonteCarlo   = 0);
 
   m_nnet = 0;
   m_util = 0;
@@ -108,7 +109,6 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   Particle::ConstVector::const_iterator ipart, jpart;
   for ( ipart = vtags.begin(); ipart != vtags.end(); ++ipart )
   {
-
     //PID cuts to select the pion
     const ProtoParticle* proto = (*ipart)->proto();
     const double PIDk = proto->info( ProtoParticle::CombDLLk,  -1000.0 );
@@ -119,6 +119,9 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
                      PIDp < m_PionSame_PIDNoP_cut) pidpass=true;
     if( (*ipart)->particleID().abspid() != 211 ) continue;
     if(!pidpass) continue;
+    const Track* track = proto->track();
+    if( track->type() != Track::Long ) continue;
+
 
     if ( msgLevel(MSG::VERBOSE) )
       verbose()<<" Pion PIDk="<< PIDk <<endreq;
@@ -132,10 +135,8 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
       verbose()<<" Pion P="<< P <<" Pt="<< Pt <<endreq;
 
 
-    const Track* track = proto->track();
     const double lcs = track->chi2PerDoF();
     if( lcs > m_lcs_cut ) continue;
-    if( track->type() != Track::Long ) continue;
 
     const double tsa = track->likelihood();
     if(tsa < m_ghost_cut) continue;
@@ -157,18 +158,20 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     if( m_util->isinTree( *ipart, axdaugh, distphi ) ) continue ;//exclude signal
     if( distphi < m_distPhi_cut_pS ) continue;
 
+    const double dQ = (ptotB+(*ipart)->momentum()).M() - B0mass;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;
+    if(dQ > m_dQcut_pionS ) continue;
+
     const double deta = std::fabs(log(tan(ptotB.Theta()/2.)/tan(asin(Pt/P)/2.)));
     const double dphi = std::fabs(TaggingHelpers::dphi((*ipart)->momentum().Phi(), ptotB.Phi()));
     const double dR = std::sqrt(deta*deta+dphi*dphi);
+
     if(deta > m_eta_max_cut_pionS) continue;
     if(deta < m_eta_min_cut_pionS) continue;
     if(dphi > m_phi_cut_pionS) continue;
     if(dR > m_dR_cut_pionS) continue;
 
-    const double dQ = (ptotB+(*ipart)->momentum()).M() - B0mass;
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " Pion IPs="<< IPsig <<" dQ="<<dQ<<endmsg;
-    if(dQ > m_dQcut_pionS ) continue;
 
     ++ncand;
 
@@ -202,22 +205,58 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     const double dQ  = ((ptotB+ ipionS->momentum() ).M() - B0mass);
     const double dR  = std::sqrt(deta*deta+dphi*dphi);
 
-    std::vector<double> NNinputs(10);
-    NNinputs.at(0) = m_util->countTracks(vtags);
-    NNinputs.at(1) = AXB0->pt()/GeV;
-    NNinputs.at(3) = ipionS->pt()/GeV;
-    NNinputs.at(4) = fabs(IP/IPerr);
-    NNinputs.at(5) = dR;
-    NNinputs.at(7) = dQ/GeV;
-    NNinputs.at(8) = nPV;
+    if(m_isMonteCarlo) {
+      std::vector<std::string> inputVars;
+      std::vector<double> inputVals;
+      inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));
+      inputVars.push_back("ptB");         inputVals.push_back( (double)log(AXB0->pt()/GeV));
+      inputVars.push_back("partPt");      inputVals.push_back( (double)log(ipionS->pt()/GeV));
+      inputVars.push_back("IPs");         inputVals.push_back( (double)log(fabs(IP/IPerr)));
+      inputVars.push_back("nndr");        inputVals.push_back( (double)dR);
+      inputVars.push_back("nndq");        inputVals.push_back( (double)dQ/GeV);
+      inputVars.push_back("nnkrec");      inputVals.push_back( (double)nPV);
+      
+      pn = m_nnet->MLPpSTMVA_MC(inputVars,inputVals);
 
-    pn = m_nnet->MLPpS( NNinputs );
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug()<<" TaggerPionSS: "<<ipionS->charge()<<" omega="<<1-pn<<" ";
+        for(unsigned int iloop=0; iloop<inputVals.size(); iloop++){
+          debug() << inputVals[iloop]<<" ";
+        }
+        debug()<<endreq;
+      }
+
+
+    }else{  // Old format for the moment      
+      std::vector<double> NNinputs(10);
+      NNinputs.at(0) = m_util->countTracks(vtags);
+      NNinputs.at(1) = AXB0->pt()/GeV;
+      NNinputs.at(3) = ipionS->pt()/GeV;
+      NNinputs.at(4) = fabs(IP/IPerr);
+      NNinputs.at(5) = dR;
+      NNinputs.at(7) = dQ/GeV;
+      NNinputs.at(8) = nPV;
+      
+      pn = m_nnet->MLPpS( NNinputs );
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug()<<" TaggerPionSS: "<<ipionS->charge()<<" omega="<<1-pn<<" ";
+        for(unsigned int iloop=0; iloop<10; iloop++){
+          debug() << NNinputs[iloop]<<" ";
+        }
+        debug()<<endreq;
+      }
+
+
+    }
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " Pion pn="<< pn <<endmsg;
-
+    
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     //pn = 1 - m_P0_Cal_pionS - m_P1_Cal_pionS * ( (1-pn)-m_Eta_Cal_pionS);
     pn = 1 - m_P0_Cal_pionS - m_P1_Cal_pionS * ((1-pn)-m_Eta_Cal_pionS) - m_P2_Cal_pionS * ((1-pn)-m_Eta_Cal_pionS) * ((1-pn)-m_Eta_Cal_pionS);
+    
 
     if ( msgLevel(MSG::DEBUG) )
       debug() << " PionS pn="<< pn <<" w="<<1-pn<<endmsg;

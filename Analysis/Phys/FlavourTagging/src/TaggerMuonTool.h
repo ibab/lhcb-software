@@ -107,17 +107,19 @@ private:
   double m_ipPU_cut_muon;
   double m_distPhi_cut_muon;
   double m_ProbMin_muon;
-double m_ghostprob_cut;
-double m_PIDNNm_cut_muon;
-double m_PIDNNpi_cut_muon;
-double m_PIDNNe_cut_muon;
-double m_PIDNNk_cut_muon;
-double m_PIDNNp_cut_muon;
+  double m_ghostprob_cut;
+  double m_PIDNNm_cut_muon;
+  double m_PIDNNpi_cut_muon;
+  double m_PIDNNe_cut_muon;
+  double m_PIDNNk_cut_muon;
+  double m_PIDNNp_cut_muon;
   double m_AverageOmega;
   double m_P0_Cal_muon ;
   double m_P1_Cal_muon ;
   double m_Eta_Cal_muon ;
   std::string m_personality;
+  int   m_isMonteCarlo;
+  
 };
 
 //===============================================================//

@@ -51,7 +51,7 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
   declareProperty( "TracksEq2",    m_wSameSign2           = 0.4141 );
   declareProperty( "TracksGt2",    m_wSameSignMoreThan2   = 0.3250 );
   declareProperty( "Personality",  m_personality          = "Reco14");
-
+  declareProperty( "isMonteCarlo", m_isMonteCarlo         = 0);
   m_svtool = NULL;
   m_nnet   = NULL;
   m_util   = NULL;
@@ -363,7 +363,8 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
     inputVars.push_back("svtau");       inputVals.push_back( (double)log(SVtau));
     inputVars.push_back("docamax");     inputVals.push_back( (double)Vdocamax);
 
-    omega = 1. - m_nnet->MLPvtxTMVA(inputVars,inputVals);
+    if(m_isMonteCarlo) omega = 1. - m_nnet->MLPvtxTMVA_MC(inputVars,inputVals);
+    else omega = 1. - m_nnet->MLPvtxTMVA(inputVars,inputVals);
     
     if ( msgLevel(MSG::VERBOSE) )
       verbose() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts" <<", omega= "<< omega <<endreq;

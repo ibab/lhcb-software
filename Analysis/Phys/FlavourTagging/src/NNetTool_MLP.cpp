@@ -3,18 +3,26 @@
 #include "GaudiKernel/ToolFactory.h"
 // local
 #include "NNetTool_MLP.h"
-
+// MC11 Reco09 
 #include "NeuralNet/NNmuon.cxx"
 #include "NeuralNet/NNele.cxx"
 #include "NeuralNet/NNkaon.cxx"
 #include "NeuralNet/NNkaonS.cxx"
 #include "NeuralNet/NNpionS.cxx"
 #include "NeuralNet/NNvtx.cxx"
-
+// data Reco14
 #include "NeuralNet/weights/muon__muonMLPBNN.class.C"
 #include "NeuralNet/weights/ele__eleMLPBNN.class.C"
 #include "NeuralNet/weights/kaon__kaonMLPBNN.class.C"
 #include "NeuralNet/weights/vtx__vtxMLPBNN.class.C"
+// MC12 Reco14
+#include "NeuralNet/weights/muon__muonMLPBNN_MC.class.C"
+#include "NeuralNet/weights/ele__eleMLPBNN_MC.class.C"
+#include "NeuralNet/weights/kaon__kaonMLPBNN_MC.class.C"
+#include "NeuralNet/weights/vtx__vtxMLPBNN_MC.class.C"
+#include "NeuralNet/weights/pionS__pionSMLPBNN_MC.class.C"
+#include "NeuralNet/weights/kaonS__kaonSMLPBNN_MC.class.C"
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : NNetTool_MLP v1.3
@@ -66,13 +74,13 @@ NNetTool_MLP::NNetTool_MLP( const std::string& type,
   declareProperty( "P1_ps_scale", m_P1ps = -1.76027);
   declareProperty( "P2_ps_scale", m_P2ps =  0.651766);
   declareProperty( "P3_ps_scale", m_P3ps =  0.);
-
+  /*
   declareProperty( "XML_dir",          m_XML_dir   = "$FLAVOURTAGGINGROOT/src/NeuralNet/weights/"  );
   declareProperty( "NNetWeights_mu",   m_NNetWeights_mu   = "muon__muonMLPBNN.weights.xml"  );
   declareProperty( "NNetWeights_ele",  m_NNetWeights_ele  = "ele__eleMLPBNN.weights.xml"  );
   declareProperty( "NNetWeights_kaon", m_NNetWeights_kaon = "kaon__kaonMLPBNN.weights.xml"  );
   declareProperty( "NNetWeights_vtx",  m_NNetWeights_vtx  = "vtx__vtxMLPBNN.weights.xml"  );
-
+  */
 }
 
 NNetTool_MLP::~NNetTool_MLP(){}
@@ -81,6 +89,7 @@ StatusCode NNetTool_MLP::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
+  /*
   std::string dir = m_XML_dir;
   if ( dir.compare(0,1,"$")==0 ) 
   {
@@ -93,6 +102,7 @@ StatusCode NNetTool_MLP::initialize()
   {
     debug()<< " directory not starting with and evniromental variable "<<m_XML_dir<<" "<<dir.at(0)<< endreq;
   }
+  */
   return sc;
 }
 //=============================================================================
@@ -370,6 +380,113 @@ double NNetTool_MLP::MLPvtxTMVA(std::vector <std::string>& inputVars, std::vecto
     pn = 1.0 -func(rnet, m_P0vtx, m_P1vtx, m_P2vtx, m_P3vtx);
   } else {
     debug()<<"**********************BAD TRAINING vtx"<<rnet<<endmsg;
+    pn = -1.;
+  }
+  return pn;
+}
+//============================================================================
+double NNetTool_MLP::MLPmTMVA_MC(std::vector <std::string>& inputVars, std::vector<double>& inputVals) 
+{
+  double rnet = 0.5;
+  double pn = 0.5;
+
+  Read_muonMLPBNN_MC *reader = new Read_muonMLPBNN_MC(inputVars);  
+  rnet = reader->GetMvaValue(inputVals);
+
+  if (rnet>=0 && rnet<=1) {
+    pn = 1.0 -func(rnet, m_P0mu, m_P1mu, m_P2mu, m_P3mu);
+  } else {
+    debug()<<"**********************BAD TRAINING muon"<<rnet<<endmsg;
+    pn = -1.;
+  }
+  return pn;
+}
+
+//=============================================================================
+double NNetTool_MLP::MLPeTMVA_MC(std::vector <std::string>& inputVars, std::vector<double>& inputVals) 
+{
+  double rnet = 0.5;
+  double pn = 0.5;
+
+  Read_eleMLPBNN_MC *reader = new Read_eleMLPBNN_MC(inputVars); 
+  rnet = reader->GetMvaValue(inputVals);
+
+  if (rnet>=0 && rnet<=1) {
+    pn = 1.0 -func(rnet, m_P0e, m_P1e, m_P2e, m_P3e);
+  } else {
+    debug()<<"**********************BAD TRAINING ele"<<rnet<<endmsg;
+    pn = -1.;
+  }
+  return pn;
+}
+
+//=============================================================================
+double NNetTool_MLP::MLPkaonTMVA_MC(std::vector <std::string>& inputVars, std::vector<double>& inputVals) 
+{
+  double rnet = 0.5;
+  double pn = 0.5;
+
+  Read_kaonMLPBNN_MC *reader = new Read_kaonMLPBNN_MC(inputVars); 
+  rnet = reader->GetMvaValue(inputVals);
+
+  if (rnet>=0 && rnet <=1){
+    pn = 1.0 -func(rnet, m_P0k, m_P1k, m_P2k, m_P3k);
+  }
+  else{
+    debug()<<"**********************BAD TRAINING kaon"<<rnet<<endmsg;
+    pn = -1.;
+  }
+  return pn;
+}
+
+//=============================================================================
+double NNetTool_MLP::MLPvtxTMVA_MC(std::vector <std::string>& inputVars, std::vector<double>& inputVals) 
+{
+  double rnet = 0.5;
+  double pn = 0.5;
+
+  Read_vtxMLPBNN_MC *reader = new Read_vtxMLPBNN_MC(inputVars); 
+  rnet = reader->GetMvaValue(inputVals);
+
+  if (rnet>=0 && rnet<=1) {
+    pn = 1.0 -func(rnet, m_P0vtx, m_P1vtx, m_P2vtx, m_P3vtx);
+  } else {
+    debug()<<"**********************BAD TRAINING vtx"<<rnet<<endmsg;
+    pn = -1.;
+  }
+  return pn;
+}
+//============================================================================
+double NNetTool_MLP::MLPpSTMVA_MC(std::vector <std::string>& inputVars, std::vector<double>& inputVals) 
+{
+  double rnet = 0.5;
+  double pn = 0.5;
+
+  Read_pionSMLPBNN_MC *reader = new Read_pionSMLPBNN_MC(inputVars); 
+  rnet = reader->GetMvaValue(inputVals);
+
+  if (rnet>=0 && rnet<=1) {
+    pn = 1.0 -func(rnet, m_P0ps, m_P1ps, m_P2ps, m_P3ps);
+  } else {
+    debug()<<"**********************BAD TRAINING pSame"<<rnet<<endmsg;
+    pn = -1.;
+  }
+  return pn;
+}
+//============================================================================
+//============================================================================
+double NNetTool_MLP::MLPkSTMVA_MC(std::vector <std::string>& inputVars, std::vector<double>& inputVals) 
+{
+  double rnet = 0.5;
+  double pn = 0.5;
+
+  Read_kaonSMLPBNN_MC *reader = new Read_kaonSMLPBNN_MC(inputVars); 
+  rnet = reader->GetMvaValue(inputVals);
+
+  if (rnet>=0 && rnet<=1) {
+    pn = 1.0 -func(rnet, m_P0ks, m_P1ks, m_P2ks, m_P3ks);
+  } else {
+    debug()<<"**********************BAD TRAINING kSame"<<rnet<<endmsg;
     pn = -1.;
   }
   return pn;

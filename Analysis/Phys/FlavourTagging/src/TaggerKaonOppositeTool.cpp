@@ -48,6 +48,7 @@ DECLARE_TOOL_FACTORY( TaggerKaonOppositeTool )
     declareProperty( "Kaon_AverageOmega",m_AverageOmega  = 0.33 );
     declareProperty( "Kaon_ProbMin",     m_ProbMin_kaon  = 0. ); //no cut
     declareProperty( "Personality",      m_personality   = "Reco14");
+    declareProperty( "isMonteCarlo",     m_isMonteCarlo         = 0);
     m_nnet = 0;
     m_util = 0;
     m_descend = 0;
@@ -347,9 +348,10 @@ Tagger TaggerKaonOppositeTool::tagReco14( const Particle* AXB0,
     inputVars.push_back("PIDNNp");      inputVals.push_back( (double)save_PIDNNp );
     inputVars.push_back("ghostProb");   inputVals.push_back( (double)log(ikaon->proto()->track()->ghostProbability()));
     inputVars.push_back("IPPU");        inputVals.push_back( (double)log(save_IPPU));
-  
-    pn = m_nnet->MLPkaonTMVA(inputVars,inputVals);
- 
+
+    if(m_isMonteCarlo) pn = m_nnet->MLPkaonTMVA_MC(inputVars,inputVals);
+    else  pn = m_nnet->MLPkaonTMVA(inputVars,inputVals);
+
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " Kaon pn="<< pn <<endmsg;
 

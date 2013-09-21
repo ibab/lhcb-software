@@ -87,6 +87,7 @@ private:
   double m_Eta_Cal_vtx ;
   double m_wSameSign2, m_wSameSignMoreThan2, m_P0, m_P1, m_Gt075;
   std::string m_personality;
+  int    m_isMonteCarlo;
 };
 
 //===============================================================//
