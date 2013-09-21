@@ -1,0 +1,46 @@
+#$Id: requirements,v 1.77 2010-06-17 17:46:03 mgrabalo Exp $
+#============================================================================
+# Created    : 2002-05-22
+# Maintainer : Marc Grabalosa
+#
+#============================================================================
+package      FlavourTagging
+version      v13r2
+
+# Structure, i.e. directories to process.
+#============================================================================
+branches          cmt doc src options summary
+
+# Set the default paths for the Tagging options
+#============================================================================
+set FLAVOURTAGGINGOPTS ${FLAVOURTAGGINGROOT}/options
+
+# Used packages.
+#============================================================================
+use GaudiPython     v*
+use PhysSelPython   v*   PhysSel
+use TrackInterfaces v*   Tr
+use PhysEvent       v*   Event
+use DaVinciKernel   v*   Phys
+use CaloInterfaces  v*   Calo
+
+private
+macro_append   ROOT_linkopts   " -lMLP -lGraf -lHist -lMatrix -lTreePlayer -lGpad -lGraf3d -lTMVA" 
+end_private
+
+# Component library building rule
+#============================================================================
+library          FlavourTagging    ../src/*.cpp
+
+# define component library link options
+#============================================================================
+apply_pattern component_library library=FlavourTagging
+
+#============================================================================
+apply_pattern install_python_modules
+
+# =================== summary application  ==================================
+private
+application       summaryof      ../summary/summaryof.cpp
+macro_append summaryof_use_linkopts "" target-icc " -Wl,--no-as-needed "
+# apply_pattern     application_path
