@@ -30,7 +30,6 @@ gaudi_depends_on_subdirs(Analysis/PyAna
                          Phys/DecayTreeTupleReco
                          Phys/DecayTreeTupleTrigger
                          Phys/DisplVerticesMC
-                         Phys/FlavourTagging
                          Phys/FlavourTaggingChecker
                          Phys/JetAccessories
                          Phys/JetAccessoriesMC

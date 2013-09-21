@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+! 2013-09-21 - Chris Jones
+ - Remove Phys/FlavourTagging (moved to Phys).
+
 ! 2013-08-14 - Chris Jones
  - Add new package Phys/IncTopoVert
 
