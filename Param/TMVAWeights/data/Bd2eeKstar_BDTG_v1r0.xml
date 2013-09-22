@@ -46,7 +46,7 @@
     <Option name="NNodesMax" modified="Yes">5</Option>
     <Option name="MaxDepth" modified="No">3</Option>
     <Option name="DoBoostMonitor" modified="No">False</Option>
-    <Option name="NegWeightTreatment" modified="No">ignorenegweights</Option>
+    <Option name="NegWeightTreatment" modified="No">InverseBoostNegWeights </Option>
   </Options>
   <Variables NVar="18">
     <Variable VarIndex="0" Expression="L1_IPCHI2_OWNPV" Label="L1_IPCHI2_OWNPV" Title="L1_IPCHI2_OWNPV" Unit="" Internal="L1_IPCHI2_OWNPV" Type="F" Min="1.00001752e+00" Max="2.18777641e+05"/>

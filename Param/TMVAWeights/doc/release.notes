@@ -4,6 +4,11 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections 
 !-----------------------------------------------------------------------------
 
+! 2013-09-22 - Chris Jones
+ - Patch the TMVA wieghts file Bd2eeKstar_BDTG_v1r0.xml to work around a 
+   change in TMVA w.r.t. the option "NegWeightTreatment". 
+   Replace ignorenegweights with InverseBoostNegWeights.
+
 !========================= TMVAWeights v1r2 2013-04-19 =========================
 
 ! 2013-03-28 - Anton Poluektov 
