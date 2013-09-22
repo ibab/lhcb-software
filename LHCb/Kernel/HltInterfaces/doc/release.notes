@@ -3,6 +3,12 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+! 2013-09-22 - Gerhard Raven
+ - make parsing of PropertyConfig and ConfigTreeNode more flexible:
+   in addition to the 'old' custom format, the code can now read json
+   and xml representations. Writing will remain be in the old format for
+   now Note that the text representation can now be decoupled from the hashing.
+
 ! 2013-09-16 - Marco Cattaneo
  - Remove unnecessary linkopts macro from requirements
 

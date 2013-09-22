@@ -84,7 +84,7 @@ private:
     NodeRefs    m_nodes;
     LeafRef     m_leaf;
     std::string m_label;
-    void updateCache() const { m_digest=digest_type::compute(*this); }
+    void updateCache() const;
     mutable digest_type m_digest;
 };
 
