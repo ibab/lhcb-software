@@ -1,6 +1,3 @@
-# Created    : 20/09/09
-# Maintainer : Marcin Kucharczyk
-#
 package           VPDigitisation
 version           v1r0
 
@@ -19,7 +16,6 @@ use  GaudiAlg      v*
 use  LinkerEvent   v*  Event
 use  VPDet         v*  Det
 use  GSL           v*  LCG_Interfaces
-use  DAQEvent      v*  Event
 
 # Component library building rule
 #=========================================================================
