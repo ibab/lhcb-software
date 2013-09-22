@@ -101,9 +101,9 @@ StatusCode LumiMergeFSR::finalize() {
   info() << "========== Merging FSRs ==========" << endmsg;
 
   // integrate all FSRs in one go
-  merge();
+  const StatusCode mergeSC = merge();
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return ( mergeSC && GaudiAlgorithm::finalize() ); // must be called after all other actions
 }
 
 //=========================================================================

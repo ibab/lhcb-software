@@ -4,8 +4,13 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-09-22 - Chris Jones
+ - Propagate the StatusCode returned by LumiMergeFSR::merge() called in
+   LumiMergeFSR::finalize() back to the application manager.
+
 ! 2013-09-20 - Jaap Panman
- - Add code in LumiMergeFSR to correct an inconsistency in the number of lumi and time span FSRs.
+ - Add code in LumiMergeFSR to correct an inconsistency in the number of lumi 
+   and time span FSRs.
    This inconsistency was introduced by a bug in Rec/LumiAlgs/TimeAccounting.
    It needs an update of Event/LumiEvent.
 
