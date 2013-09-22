@@ -4,6 +4,8 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+!========================= LumiEvent v3r5 2013-09-22 =========================
+
 ! 2013-09-20 - Jaap Panman
  - Update of TimeSpanFSR to implement the += operator on two time spans.
 
