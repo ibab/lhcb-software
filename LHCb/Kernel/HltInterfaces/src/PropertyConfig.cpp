@@ -126,7 +126,7 @@ istream& PropertyConfig::read(istream& is) {
     m_properties.clear();
     for (ptree::const_iterator i=props.begin(); i!=props.end(); ++i ) m_properties.push_back(make_pair(i->first,i->second.data()));
     return is;
-};
+}
 
 
 ostream& PropertyConfig::print(ostream& os) const {
