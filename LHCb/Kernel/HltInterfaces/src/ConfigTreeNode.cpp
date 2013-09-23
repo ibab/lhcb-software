@@ -27,7 +27,6 @@ void ConfigTreeNode::updateCache() const {
 #include <boost/property_tree/xml_parser.hpp>
 using boost::property_tree::ptree;
 namespace {
-
 void read_custom(istream& is, ptree& top) {
     bool parsing_nodes = false;
     static boost::regex leaf("^Leaf: ([a-fA-F0-9]{32})$"),
@@ -45,7 +44,7 @@ void read_custom(istream& is, ptree& top) {
             if (boost::regex_match(s,what,nodeend) ) { 
                 parsing_nodes = false;
             } else if (boost::regex_match(s,what,node) ) { 
-                nodes.push_back(std::make_pair("",what[1].str()));
+                nodes.push_back(std::make_pair(std::string(),what[1].str()));
             } else {
                 cout << "parsing error while looking for nodes!!! : [" << s << "]" << endl;
             }
@@ -63,15 +62,13 @@ void read_custom(istream& is, ptree& top) {
     }
 }
 
-class MD5Translator {
-    public:
-        MD5Translator() {}
-        typedef std::string internal_type;
-        typedef ConfigTreeNode::digest_type  external_type;
-        boost::optional<external_type> get_value( internal_type const & v) 
-        {  return external_type::createFromStringRep(v); }
-        boost::optional<internal_type> put_value( external_type const & v) 
-        { return v.str(); }
+struct MD5Translator {
+    typedef std::string                  internal_type;
+    typedef ConfigTreeNode::digest_type  external_type;
+    boost::optional<external_type> get_value( internal_type const & v) 
+    {  return external_type::createFromStringRep(v); }
+    boost::optional<internal_type> put_value( external_type const & v) 
+    { return v.str(); }
 };
 
 }
@@ -91,8 +88,8 @@ istream& ConfigTreeNode::read(istream& is) {
     if (fmt=='{')      { read_json(is,top);   }
     else if (fmt=='<') { read_xml(is,top);    }
     else               { read_custom(is,top); }
-    m_label = top.get<std::string>("Label");
-    m_leaf =  top.get<digest_type>("Leaf");
+    m_label = top.get<std::string>("Label"); // add default: empty string (most nodes have no label)
+    m_leaf =  top.get<digest_type>("Leaf");  // add default: digest_type::createInvalid() (top level has no leaf)
     m_nodes.clear();
     const ptree& nodes = top.get_child("Nodes");
     for (ptree::const_iterator i=nodes.begin(); i!=nodes.end();++i) m_nodes.push_back( i->second.get_value<ConfigTreeNode::digest_type>() );
@@ -100,6 +97,7 @@ istream& ConfigTreeNode::read(istream& is) {
 }
 
 // when switching to JSON (or XML) make Label and nodes optional (saves space!)
+// ditto for Leaf: top level nodes have no leaf. (value if not present: MD5::createInvalid)
 // NOTE: when switching, make sure that digest continues to use this representation...
 ostream& ConfigTreeNode::print(ostream& os) const {
     os << "Label: " << label() << '\n'

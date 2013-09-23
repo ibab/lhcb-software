@@ -82,7 +82,6 @@ public:
     digest_type digest() const { if (!m_digest.valid()) updateCache(); return m_digest; }
 
 private:
-    // TODO: replace m_properties, m_type, m_name and m_kind by a single boost::property_tree
     Properties   m_properties;
     std::string  m_type,m_name,m_kind;
     mutable digest_type  m_digest;
