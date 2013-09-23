@@ -4,6 +4,9 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !======================== GaussAlgs v7r0 2013-06-27 ===========================
 ! 2013-05-08 - Paul Szczypka
  - commented out SL hitsTracker line such that it isn't run by default.

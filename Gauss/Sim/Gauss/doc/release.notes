@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2013-09-02 - Paul Szczypka
  - Updated Gauss Pythia Config references.
 

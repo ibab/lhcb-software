@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2013-08-29 - Gloria Corti
  - Use herwig++ 2.6.1b for Gauss v46 as needed by MCGenerators_lcgcmt65 and 
    higher

@@ -4,6 +4,9 @@
 ! Purpose     : Holds monitoring of VL detector
 !-----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= VLMoniSim v1r0 2012-10-19 =========================
 
 ! 2012-06-14 - Heinrich Schindler

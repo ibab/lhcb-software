@@ -4,6 +4,9 @@
 ! Purpose     : Histograming for the BCM stations
 !----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !======================== BcmMoniSim v1r2 2009-04-08 ========================
 ! 2009-04-03 - Gloria CORTI
  - Allow for multiple location of hits to handle spill-over in Gauss.

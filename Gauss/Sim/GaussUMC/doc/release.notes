@@ -6,6 +6,9 @@
 !               present detector simulation
 !-----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2013-08-23 - Heinrich Schindler
  - Remove dependency on detector element.
  - Use getIfExists, remove unnecessary StatusCode return types and flags. 

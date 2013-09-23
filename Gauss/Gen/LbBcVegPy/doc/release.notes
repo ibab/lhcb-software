@@ -3,6 +3,9 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= LbBcVegPy v5r0 2013-03-21 =========================
 ! 2013-03-21 - Patrick Robbe
  - Move generator level cuts to the Gen/GenCuts package

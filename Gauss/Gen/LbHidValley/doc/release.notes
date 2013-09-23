@@ -19,6 +19,9 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= LbHidValley v3r2 2012-07-25 ========================
 ! 2012-07-25 - Gloria Corti
  - Insert dummy alpgen_veto for hidvalley executable

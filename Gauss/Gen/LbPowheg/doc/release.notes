@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of the powheg-box in Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= LbPowheg v1r0p1 2013-08-08 ========================
 ! 2013-08-08 - Gloria Corti
  - Use powhegbox instead of powheg-box interface that cannot be used on bash

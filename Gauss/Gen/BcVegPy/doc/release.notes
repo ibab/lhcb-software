@@ -2,6 +2,9 @@
 ! Package     : Gen/BcVegPy
 ! Responsible : 
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= BcVegPy v3r1 2012-10-19 ===========================
 ! 2012-10-01 - Jibo He
  - Added 8 TeV as it is supported now

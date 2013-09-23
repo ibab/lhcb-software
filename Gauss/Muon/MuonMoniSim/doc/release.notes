@@ -4,6 +4,9 @@
 ! Purpose       : Monitoring for the muon system for simulated data
 !-----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !======================== MuonMoniSim v2r6 2012-05-15 ========================
 ! 2012-05-07 - Alessia Satta
  - Fix compilation error with Gaudi v23

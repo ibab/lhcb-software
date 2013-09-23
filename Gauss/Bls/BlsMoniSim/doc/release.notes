@@ -4,6 +4,9 @@
 ! Purpose     : BlsMoniSim package documentation
 !-----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !======================= BlsMoniSim v1r1 2010-02-06 ==========================
 ! 2010-02-06 - Vadim Talanov
  - Minor correction of sizes for local variables in BlsHitChecker.h

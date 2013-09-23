@@ -1,0 +1,29 @@
+# - Try to find Pythia8
+# Defines:
+#
+#  PYTHIA8_FOUND
+#  PYTHIA8_INCLUDE_DIR
+#  PYTHIA8_INCLUDE_DIRS (not cached)
+#  PYTHIA8_LIBRARY
+#  PYTHIA8_LIBRARIES (not cached)
+#  PYTHIA8_LIBRARY_DIRS (not cached)
+
+find_library(PYTHIA8_LIBRARY NAMES pythia8)
+
+find_path(PYTHIA8_INCLUDE_DIR Pythia.h)
+
+find_file(PYTHIA8_XML xmldoc PATH_SUFFIXES ../share)
+
+mark_as_advanced(PYTHIA8_INCLUDE_DIR PYTHIA8_LIBRARY PYTHIA8_XML)
+
+# handle the QUIETLY and REQUIRED arguments and set PYTHIA8_FOUND to TRUE if
+# all listed variables are TRUE
+include(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(Pythia8 DEFAULT_MSG PYTHIA8_INCLUDE_DIR PYTHIA8_LIBRARY PYTHIA8_XML)
+
+set(PYTHIA8_LIBRARIES ${PYTHIA8_LIBRARY})
+get_filename_component(PYTHIA8_LIBRARY_DIRS ${PYTHIA8_LIBRARY} PATH)
+
+set(PYTHIA8_INCLUDE_DIRS ${PYTHIA8_INCLUDE_DIR})
+
+mark_as_advanced(PYTHIA8_FOUND)

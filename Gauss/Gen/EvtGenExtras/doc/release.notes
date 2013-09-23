@@ -4,6 +4,9 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !======================= EvtGenExtras v3r8 2013-08-07 ========================
 ! 2013-07-31 - William sutcliffe
  - Added models Lb2plnuLCSR and Lb2plnuLQCD together with corresponding form 

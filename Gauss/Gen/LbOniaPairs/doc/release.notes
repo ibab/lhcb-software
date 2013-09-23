@@ -6,6 +6,9 @@
 ! Purpose     : Generator for onia pairs production 
 ! -----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !======================== LbOniaPairs v1r2 2012-07-23 =========================
 ! 2012-07-23 - Gloria Corti
  - Remove include of ParticleProperty that is not needed

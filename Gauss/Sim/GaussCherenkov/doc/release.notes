@@ -5,6 +5,9 @@
 !               etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2013-08-19 - Jibo He
  - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties  
   . Added option to scale overall PMT QE 

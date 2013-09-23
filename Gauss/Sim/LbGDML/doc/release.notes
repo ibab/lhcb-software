@@ -4,6 +4,9 @@
 ! Purpose     : Interface to read/write GDML geometry
 !-----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= LbGDML v1r0 2012-10-19 ============================
 
 ! 2012-10-19 - Gloria Corti

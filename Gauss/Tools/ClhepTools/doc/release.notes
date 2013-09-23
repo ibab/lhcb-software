@@ -7,6 +7,9 @@
 !               these aren't defined.
 !-----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !============================ ClhepTools v2r1p1 ===============================
 ! 2009-10-15 - Silvia Miglioranzi
  - Change version name in requirements file (mismatch between what was 

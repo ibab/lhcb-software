@@ -5,6 +5,9 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= GenTune v2r0p1 2013-07-17 =======================
 ! 2013-07-17 - Alex Grecu
  - added scripts/listAnalysisInfo.py to list Rivet plugin info files given 

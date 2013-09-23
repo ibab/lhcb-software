@@ -2,6 +2,9 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !======================== LbGenXicc v2r0p1 2013-02-04 ========================
 ! 2013-02-04 - Gloria Corti
  - Comment output level in GenXibc options for production

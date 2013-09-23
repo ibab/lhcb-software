@@ -8,6 +8,9 @@
 !                  : G4 actions, etc for LHCb calorimeters
 ! -----------------------------------------------------------------------------
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 !========================= GaussCalo v9r3 2011-11-11 ==========================
 ! 2011-10-20 - Patrick Robbe
  - CaloSensDet.cpp

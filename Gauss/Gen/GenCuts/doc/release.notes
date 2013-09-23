@@ -8,6 +8,9 @@
  - Add XiccDaughtersInLHCbAndWithMinPT tool, which apply a minimum PT
    cut on the Xicc
 
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
 ! 2013-09-03 - Maurizio Martinelli
  - Added DaughtersInLHCbAndCutsForDinSLBdecays, to generate D0 candidates from
   SL B decays with cuts on D0 daughters and muon momentum. All the final state
