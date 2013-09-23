@@ -3,13 +3,12 @@
 
 // Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-
-// Event
+// LHCb
+// Event/DigiEvent
 #include "Event/VPDigit.h"
 #include "Event/VPCluster.h"
 #include "Event/VPLiteCluster.h"
-
-// VPDet
+// Det/VPDet
 #include "VPDet/DeVP.h"
 
 /** @class VPClustering VPClustering.h
@@ -32,7 +31,7 @@ class VPClustering : public GaudiAlgorithm {
 
   std::string m_digitLocation;
   std::string m_liteClusterLocation;
-  std::string m_VPClusterLocation;
+  std::string m_clusterLocation;
 
   DeVP* m_vpDet;
 

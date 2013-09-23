@@ -1,5 +1,8 @@
+// Gaudi
 #include "GaudiKernel/AlgFactory.h"
-
+// LHCb
+// Kernel/LHCbKernel
+#include "Kernel/SiDataFunctor.h"
 // Local
 #include "VPClustering.h"
 
@@ -19,9 +22,9 @@ DECLARE_ALGORITHM_FACTORY(VPClustering)
 VPClustering::VPClustering(const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiAlgorithm (name , pSvcLocator) {
 
-  declareProperty( "DigitContainer",          m_digitLocation        = LHCb::VPDigitLocation::VPDigitLocation);
-  declareProperty( "LiteClusterContainer",    m_liteClusterLocation  = LHCb::VPLiteClusterLocation::Default);
-  declareProperty( "VPClusterContainer",      m_VPClusterLocation    = LHCb::VPClusterLocation::VPClusterLocation);
+  declareProperty("DigitContainer",       m_digitLocation       = LHCb::VPDigitLocation::VPDigitLocation);
+  declareProperty("LiteClusterContainer", m_liteClusterLocation = LHCb::VPLiteClusterLocation::Default);
+  declareProperty("VPClusterContainer",   m_clusterLocation     = LHCb::VPClusterLocation::VPClusterLocation);
 
 }
 
@@ -52,7 +55,7 @@ StatusCode VPClustering::execute() {
 
   if (m_debug) debug() << "==> Execute" << endmsg;
 
-  // Check if LiteClusters already decoded. If not, run clustering on decoded digits
+  // Check if LiteClusters already decoded. 
   if (exist<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default)) {
     // If lite clusters are decoded there is no need to build clusters.
     if (m_debug) {
@@ -60,10 +63,11 @@ StatusCode VPClustering::execute() {
     }
     return StatusCode::SUCCESS;
   }  
-  // If no lite clusters, then cluster the digits
+  // If no lite clusters, then cluster the digits.
   return clusterDigits();
 
 }
+
 //=============================================================================
 // Loop over track container
 //=============================================================================
@@ -79,10 +83,8 @@ StatusCode VPClustering::clusterDigits (){
   }
 
   // Make space on the TES for the lite clusters and VP clusters
-  VPLiteCluster::VPLiteClusters* liteclusterCont = new VPLiteCluster::VPLiteClusters();
-  put(liteclusterCont, m_liteClusterLocation);
-  VPClusters* clusterCont = new VPClusters();
-  put(clusterCont, m_VPClusterLocation);
+  VPLiteCluster::VPLiteClusters* liteClusters = new VPLiteCluster::VPLiteClusters();
+  VPClusters* clusters = new VPClusters();
 
   // Make a temporary storage space for the pixels, and delete when used
   std::vector<LHCb::VPDigit*> digitCont;
@@ -184,8 +186,8 @@ StatusCode VPClustering::clusterDigits (){
     
     // const VPLiteCluster newLiteCluster(baryCenterChID,1,xyFrac,isLong);
     // LHCb::VPCluster* newCluster = new LHCb::VPCluster(newLiteCluster,totVec);
-    // clusterCont->insert(newCluster, baryCenterChID);
-    // liteclusterCont->push_back(newLiteCluster); 
+    // clusters->insert(newCluster, baryCenterChID);
+    // liteClusters->push_back(newLiteCluster); 
     if (m_debug) {
       debug() << "New cluster with temp frac: " << temp_frac.first << "," << temp_frac.second 
               << " and cluster id: " << temp_id << endmsg;
@@ -193,9 +195,15 @@ StatusCode VPClustering::clusterDigits (){
     bool isLong = false; //temp
     const VPLiteCluster newLiteCluster(temp_id, 1, temp_frac, isLong); //temp
     LHCb::VPCluster* newCluster = new LHCb::VPCluster(newLiteCluster, totVec); //temp
-    clusterCont->insert(newCluster, temp_id); //temp
-    liteclusterCont->push_back(newLiteCluster); //temp
+    clusters->insert(newCluster, temp_id); //temp
+    liteClusters->push_back(newLiteCluster); //temp
   }
+  // Sort lite clusters.
+  std::sort(liteClusters->begin(), liteClusters->end(), 
+            SiDataFunctor::Less_by_Channel<LHCb::VPLiteCluster>()); 
+  // Store clusters and lite clusters on TS.
+  put(liteClusters, m_liteClusterLocation);
+  put(clusters, m_clusterLocation);
   return StatusCode::SUCCESS;
 
 }
@@ -226,10 +234,14 @@ bool VPClustering::isEdge(LHCb::VPDigit* digit) {
 //=============================================================================
 //  Add pixel to cluster
 //=============================================================================
-void VPClustering::addToCluster(std::vector<LHCb::VPDigit*>& cluster, std::vector< std::pair<LHCb::VPChannelID, int> >& totVec,
-                                std::vector<LHCb::VPDigit*>& digitCont, unsigned int hit) {
+void VPClustering::addToCluster(std::vector<LHCb::VPDigit*>& cluster, 
+                                std::vector<std::pair<LHCb::VPChannelID, int> >& totVec,
+                                std::vector<LHCb::VPDigit*>& digitCont, 
+                                unsigned int hit) {
+  // Add hit to cluster
   totVec.push_back(std::make_pair(digitCont[hit]->channelID(), digitCont[hit]->ToTValue()));
-  cluster.push_back(digitCont[hit]);                 //add hit to cluster
-  digitCont.erase(digitCont.begin() + hit);            //remove hit from container
+  cluster.push_back(digitCont[hit]);                 
+  // Remove hit from container
+  digitCont.erase(digitCont.begin() + hit);            
 }
 

@@ -3,6 +3,9 @@
 ! Responsible : Daniel Hynds
 !--------------------------------------------------------------------------
 
+! 2013-09-23 - Heinrich Schindler
+ - Added sorting of lite clusters
+
 ! 2013-09-18 - Daniel Hynds
  - Added clustering algorithm
 
