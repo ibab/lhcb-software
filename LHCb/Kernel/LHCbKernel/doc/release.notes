@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2013-09-23 Heinrich Schindler
+ - Add VP to LHCbID stream operator
+
 ! 2013-09-09 Heinrich Schindler
  - cleanup of VPChannelID (remove ladderZPos, rename pixel_lp to col, 
    pixel_hp to row, sensor to module)
