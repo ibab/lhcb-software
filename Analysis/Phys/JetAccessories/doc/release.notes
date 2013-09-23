@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2013-09-23 - Victor Coco
+ - fix the JetMakerConfig.py : do not use BadPhotonMatchingT
+
 ! 2013-09-02 - Cedric Potterat
  - adding MNF to the jet extra info
 
