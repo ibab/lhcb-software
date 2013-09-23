@@ -36,7 +36,7 @@ void read_custom(istream& is, ptree& top) {
                         nodeend("^\\]$");
     std::string s;
     boost::smatch what;
-    ptree& nodes = top.put_child("Nodes",ptree());
+    ptree& nodes = top.put_child(std::string("Nodes"),ptree());
     while (!is.eof()) {
         getline(is,s);
         if (s.empty()) break;
@@ -49,12 +49,12 @@ void read_custom(istream& is, ptree& top) {
                 cout << "parsing error while looking for nodes!!! : [" << s << "]" << endl;
             }
         } else {
-            if (boost::regex_match(s,what,leaf) ) { assert(leaf().invalid());
-                top.put("Leaf", what[1].str() );
-            } else if (boost::regex_match(s,what,nodestart) ) { assert(nodes().empty());
+            if (boost::regex_match(s,what,leaf) ) { 
+                top.put<std::string>(ptree::path_type("Leaf"), what[1].str() );
+            } else if (boost::regex_match(s,what,nodestart) ) {
                 parsing_nodes = true;
-            } else if (boost::regex_match(s,what,label) ) { assert(label().empty());
-                top.put("Label",what[1].str());
+            } else if (boost::regex_match(s,what,label) ) {
+                top.put<std::string>(ptree::path_type("Label"),what[1].str());
             } else {
                 cout << "parsing error!!! : [" << s << "]" << endl;
             }
