@@ -50,11 +50,11 @@ void read_custom(istream& is, ptree& top) {
             }
         } else {
             if (boost::regex_match(s,what,leaf) ) { 
-                top.put<std::string>(ptree::path_type("Leaf"), what[1].str() );
+                top.put(ptree::path_type("Leaf"), what[1].str() );
             } else if (boost::regex_match(s,what,nodestart) ) {
                 parsing_nodes = true;
             } else if (boost::regex_match(s,what,label) ) {
-                top.put<std::string>(ptree::path_type("Label"),what[1].str());
+                top.put(ptree::path_type("Label"),what[1].str());
             } else {
                 cout << "parsing error!!! : [" << s << "]" << endl;
             }
