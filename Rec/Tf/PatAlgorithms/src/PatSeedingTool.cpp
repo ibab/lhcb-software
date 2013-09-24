@@ -517,7 +517,7 @@ StatusCode PatSeedingTool::performTracking(
   }
 
   // protect against very hot events
-  if( m_maxITHits < 999999 && m_maxOTHits < 999999 ) {
+  if( m_maxITHits < 999999 || m_maxOTHits < 999999 ) {
     unsigned nHitsIT = 0, nHitsOT = 0;
     for (unsigned sta = 0; sta < m_nSta; ++sta) {
       for (unsigned lay = 0; lay < m_nLay; ++lay) {
