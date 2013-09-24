@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2013-09-24 - Marco Clemencic
+ - Added missing piece to CMake configuration.
+
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
 
