@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-09-24 - Marco Clemencic
+ - Added (empty) __init__.py to the Gauss Python module.
+
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
 
