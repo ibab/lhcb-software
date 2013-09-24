@@ -3,6 +3,10 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2013-09-24 - Giovanni Passaleva
+ - Det/MuonDet MuonDAQHelper: moved getODENumberInLink(...) from .h to .cpp.
+   Protected access to array elements 
+
 !========================= MuonDet v9r13 2013-07-17 =========================
 ! 2013-06-17 - Marco Cattaneo
  - Put back the fixes from v9r11 and from the commit on 2013-05-07, lost in

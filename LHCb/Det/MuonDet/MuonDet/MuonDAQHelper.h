@@ -78,9 +78,9 @@ public:
   inline unsigned int getODENumberInTell1(unsigned int Tell1_num,unsigned int ODE_num){
     return (m_ODEInTell1[Tell1_num])[ODE_num];
   }
-  inline unsigned int getODENumberInLink(unsigned int Tell1_num,unsigned int Link_num){
-    return (m_linkInTell1[Tell1_num])[Link_num];
-  }
+
+  //GP moved to MuonDAQHelper.cpp. Protect against empty elements
+  unsigned int getODENumberInLink(unsigned int Tell1_num,unsigned int Link_num);
 
   unsigned int findODENumber(LHCb::MuonTileID digit);
   unsigned int findODEChNumber(LHCb::MuonTileID digit);

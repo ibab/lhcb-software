@@ -428,7 +428,7 @@ StatusCode MuonDAQHelper::initMaps()
   if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<"Load TELL1/ODE mapping parameters "<<endmsg;
 
-  int Tell1Number=0;
+  int Tell1Number=0; // this is a progressive number
   for(int station=0; station < m_nStations; station++){
 
     std::string cablingBasePath = getBasePath(m_basegeometry->getStationName(station));
@@ -461,7 +461,7 @@ StatusCode MuonDAQHelper::initMaps()
 		     <<i<<" is connected to ODE: "<<l1->getLinkConnection(i)<<endmsg;
 	//
 
-	// load optical link map per TELL1
+	// load optical link map per TELL1. Rtrieved according to TELL1 serial number !
 	//        m_linkInTell1[Tell1Number].push_back(l1->getLinkConnection(i)); // <-- modify it !!!
         m_linkInTell1[l1->L1Number()].push_back(l1->getLinkConnection(i)); // <-- modify it !!!
 
@@ -2162,3 +2162,12 @@ StatusCode MuonDAQHelper::initLUTCrossing()
   return StatusCode::SUCCESS; 
  
 } 
+
+//GP This method was inlined in the header file.
+//Protected against access to empty elements of the m_linkInTell1 array
+//
+unsigned int MuonDAQHelper::getODENumberInLink(unsigned int Tell1_num,unsigned int Link_num)
+{
+  size_t s = m_linkInTell1[Tell1_num].size();
+  return s == 0 ? 0 :  (m_linkInTell1[Tell1_num])[Link_num];
+}
