@@ -124,6 +124,9 @@ protected:
 
   SmartMuonMeasProvider* m_muonProvider;
 
+  //GP check if M1 exists
+  int m_isM1defined;
+  //
 };
 
 #endif // MUIDTOOL_H

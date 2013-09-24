@@ -3,6 +3,10 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2013-09-24 - Giovanni Passaleva
+ - Muon/MuonID Chi2MuIDTool Fixed problem in addLHCbIDsToMuTrack when running
+   without M1 
+
 ! 2013-09-01 - Paul Szczypka
  - Correct some comment lines
 

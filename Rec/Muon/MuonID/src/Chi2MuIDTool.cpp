@@ -76,6 +76,11 @@ StatusCode Chi2MuIDTool::initialize() {
   MuonBasicGeometry basegeometry( detSvc(),msgSvc());
   m_NStation= basegeometry.getStations();
 
+
+  //GP: check if M1 exists
+  m_isM1defined = basegeometry.retrieveM1status();
+  //
+
   m_mudet = getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
   //Find z of mu stations
   for (int i=0;i<m_NStation;i++) 
@@ -105,6 +110,7 @@ StatusCode Chi2MuIDTool::initialize() {
     debug()<<"Chi2Cut="<<m_chi2cut<<endmsg;
     debug()<<"PreSelMomentum="<<m_PreSelMomentum<<endmsg;
     debug()<<"MomentumCuts="<<m_MomentumCuts<<endmsg;
+    debug()<<"M1 exists ? "<<m_isM1defined<<endmsg;
   }
   
   return sc;
@@ -548,8 +554,18 @@ void Chi2MuIDTool::addLHCbIDsToMuTrack(LHCb::Track& muTrack,double mom)
 {
 
   int j=0;
+
+  //GP fix for M1-noM1 configurations. a horrible patch for the moment.
+  //
+  int firstStation = (m_isM1defined) ? 1 : 0;
+  //
+
   //from muonProvider, get idsInRange if any
-  for (int i = 1; i < 5; ++i) {
+  //GP
+  //  for (int i = 1; i < 5; ++i) {  //GP this doesn't work if no-M1.
+  // set properly the first station and parametrize number of stations
+  //
+  for (int i = firstStation; i < m_NStation; ++i) {
     //if (m_muonProviderInRange[i].size() == 0 ) continue;
     if (msgLevel(MSG::DEBUG) ) {
       debug()<<"m_nsigmasUsed="<<m_nsigmasUsed<<endmsg;
