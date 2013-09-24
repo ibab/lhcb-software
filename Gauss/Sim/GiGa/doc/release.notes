@@ -6,6 +6,10 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
+! 2013-09-24 - Marco Clemencic
+ - Disable -pedantic in the CMake configuration because it casuses a build
+   error in GiGaTrajectory.cpp (redefinition of isnan and finite).
+
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
 
