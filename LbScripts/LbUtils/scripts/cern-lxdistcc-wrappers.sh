@@ -58,7 +58,7 @@ setup_clang() {
 
 case ${_self} in
 
-        lcg-[cg]++-[0-9].[0-9].[0-9]|lcg-gcc-[0-9].[0-9].[0-9])
+        lcg-[cg]++-[0-9].[0-9].[0-9]|lcg-gcc-[0-9].[0-9].[0-9]|lcg-gfortran-[0-9].[0-9].[0-9])
 
                 _version=${_self##*-}
                 setup_gcc $_version
