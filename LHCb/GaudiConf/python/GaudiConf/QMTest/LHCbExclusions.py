@@ -1,6 +1,9 @@
 from GaudiTest import normalizeExamples, RegexpReplacer, LineSkipper
 
 preprocessor = normalizeExamples + \
+    RegexpReplacer(when = "/afs/cern.ch/lhcb/software/DEV/nightlies",
+        orig = r'/DEV/nightlies',
+        repl = r'/releases') + \
     RegexpReplacer(when = "at 0x########L",
         orig = r'0x########L',
         repl = r'0x########') + \

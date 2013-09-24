@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-09-24 - Marco Cattaneo
+ - Add a QMTest replace string to accept afs paths pointing to $LHCBDEV/nightlies
+
 ! 2013-07-26 - Rob Lambert
  - Move UT position from DecodeRawEvent into STOfflineConf (STTools)
 
