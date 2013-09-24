@@ -89,7 +89,9 @@
         type="double"
       >
 	<code>
-         return ( '2' == version() ? beamParameters()->luminosity() : m_luminosity );
+         return ( '2' != version() ? m_luminosity : 
+	  beamParameters() ? beamParameters()->luminosity() 
+          : m_luminosity );
         </code>
       </method>
       <method
@@ -99,7 +101,9 @@
         type="double"
       >
         <code>
-         return ( '2' == version() ? beamParameters()->totalXSec() : m_totCrossSection );
+         return ( '2' != version() ? m_totCrossSection : 
+          beamParameters() ? beamParameters()->totalXSec() 
+          : m_totCrossSection );
         </code>
       </method>
       <method
@@ -109,7 +113,9 @@
         type="double"
       >
         <code>
-         return ( '2' == version() ? beamParameters()->revolutionFrequency() : m_crossingFreq );
+         return ( '2' != version() ? m_crossingFreq : 
+	  beamParameters() ? beamParameters()->revolutionFrequency() 
+          : m_crossingFreq );
         </code>
       </method>
      </class>
