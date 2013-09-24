@@ -246,20 +246,39 @@ class ZipShelf(shelve.Shelf):
         if self.__opened : self.close()  
 
     ## list the avilable keys 
-    def __dir ( self ) :
+    def __dir ( self , pattern = '' ) :
         """
-        (Sorted) List the avilable keys
+        List the avilable keys (patterns included).
+        Pattern matching is performed accoriding to
+        fnmatch/glob/shell rules [it is not regex!] 
+        
+        >>> db = ...
+        >>> db.ls() ## all keys
+        >>> db.ls ('*MC*')
+        
         """
         keys_ = self.keys()
-        keys_.sort() 
+        keys_.sort()
+        if pattern :
+            import fnmatch
+            _keys = [ k for k in keys_ if fnmatch.fnmatchcase ( k , pattern ) ]
+            keys_ = _keys
+        #
         for key in keys_ : print key
-
+        
     ## list the avilable keys 
-    def ls    ( self ) :
+    def ls    ( self , pattern = '' ) :
         """
-        List the avilable keys
+        List the avilable keys (patterns included).
+        Pattern matching is performed accoriding to
+        fnmatch/glob/shell rules [it is not regex!] 
+
+        >>> db = ...
+        >>> db.ls() ## all keys
+        >>> db.ls ('*MC*')        
+        
         """
-        return self.__dir()
+        return self.__dir( pattern )
         
     ## cloze and gzip (if needed)
     def close ( self ) :

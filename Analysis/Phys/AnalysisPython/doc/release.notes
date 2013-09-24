@@ -5,6 +5,20 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-09-24 - Vanya Belyaev
+ - ZipShelve: add more functionality to ls-method:
+
+	      """
+        List the avilable keys (patterns included).
+        Pattern matching is performed accoriding to
+        fnmatch/glob/shell rules [it is not regex!] 
+        
+        >>> db = ...
+        >>> db.ls () ## all keys in DB 
+        >>> db.ls ('*MC*')
+        
+        """
+ 
 ! 2013-09-15 - Vanya Belyaev
  - PyRoUts: few new decorators (e.g. sumVar)
    GetLumi: make use of sumVar 
