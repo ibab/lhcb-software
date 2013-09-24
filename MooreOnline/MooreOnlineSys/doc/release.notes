@@ -5,6 +5,6 @@ Purpose     : Running and testing Moore in the online environment
 
 </PRE><H1><A NAME=v20r3p3>2013-09-13 MooreOnlineSys v20r3p3</A></H1><PRE>
 
-
+Remove all the old scripts, tidy up the crappy cmt requirements which are not needed. Let's just call the script ourself.
 
 </PRE>

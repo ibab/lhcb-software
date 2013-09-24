@@ -25,4 +25,4 @@ if not cpManifest(manifest,target) :
         #  try again without the 'pX' suffix
         manifest = re.sub('p\d+$','',manifest)
         if not cpManifest(manifest,target) :
-               print 'WANRING: could not locate TCK manifest %s for %s'
+               print 'WARNING: could not locate TCK manifest %s for %s'

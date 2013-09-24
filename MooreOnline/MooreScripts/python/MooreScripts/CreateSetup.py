@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import os, os.path
 import re
 import sys
@@ -26,10 +25,7 @@ def ContainsFNmatch(dir,matches) :
     return False
 #
 
-def CreateSetupMoore( *argv ) :
-    ### TODO: replace bare positional arguments with named arguments using argparse
-    output = argv[0]
-    version = argv[1]
+def CreateSetupMoore( output, version , setupProjectOps=[]) :
 
     target_dir = dirname( output )
     if not exists( target_dir ) : makedirs( target_dir )
@@ -37,7 +33,7 @@ def CreateSetupMoore( *argv ) :
     from LbConfiguration.SetupProject import SetupProject
 
     print 'generating %s assuming version %s'%(output,version)
-    SetupProject().main( [ '--dev-dir=/home/online/ONLINE','--shell=sh','--output='+output,'MooreOnline',version] )
+    SetupProject().main( [ '--dev-dir=/home/online/ONLINE','--shell=sh','--output='+output,'MooreOnline',version]+setupProjectOps )
 
     if exists(output) :
 
@@ -63,5 +59,3 @@ def CreateSetupMoore( *argv ) :
     else :
         print 'SetupProject did not generate %s... this is fine during a release build...' % output
 
-
-if __name__ == "__main__": CreateSetupMoore( *sys.argv[1:] )

@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-
 
 def CreateRunMooreOnline_EFF( output, setup, split='' ) :
     from os import makedirs,chmod
     from os.path import exists, dirname
-
+    
     print 'using ' + setup
     print 'generating '+ output
     target_dir = dirname( output )
@@ -112,8 +110,3 @@ ${gaudi_exe} ${GAUDIONLINEROOT}/${CMTCONFIG}/libGaudiOnline.so \\
             print 'updated permission of %s'%(output)
         except :
             print 'WARNING: could not update permissions of %s -- please make sure it is executable!' % output
-
-if __name__ == '__main__' :
-    ### TODO: replace bare positional arguments with named arguments using argparse
-    import sys
-    CreateRunMooreOnline_EFF( output = sys.argv[1], setup = sys.argv[2] , split = sys.argv[3] if len(sys.argv)>3 else '' )
