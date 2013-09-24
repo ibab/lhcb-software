@@ -54,10 +54,11 @@ public:
     { }
 
     bool operator==(const PropertyConfig& rhs) const { 
-        return m_type == rhs.m_type 
-            && m_name == rhs.m_name 
-            && m_kind == rhs.m_kind 
-            && m_properties == rhs.m_properties;
+        return digest() != digest_type::createInvalid() ? digest() == rhs.digest()
+                             : ( m_type == rhs.m_type 
+                              && m_name == rhs.m_name 
+                              && m_kind == rhs.m_kind 
+                              && m_properties == rhs.m_properties );
     }
 
     const std::string& name() const    { return m_name;}

@@ -36,7 +36,7 @@ void read_custom(istream& is, ptree& top) {
                         nodeend("^\\]$");
     std::string s;
     boost::smatch what;
-    ptree& nodes = top.put_child(std::string("Nodes"),ptree());
+    ptree& nodes = top.put_child(ptree::path_type("Nodes"),ptree());
     while (!is.eof()) {
         getline(is,s);
         if (s.empty()) break;
@@ -44,19 +44,21 @@ void read_custom(istream& is, ptree& top) {
             if (boost::regex_match(s,what,nodeend) ) { 
                 parsing_nodes = false;
             } else if (boost::regex_match(s,what,node) ) { 
-                nodes.push_back(std::make_pair(std::string(),what[1].str()));
+                nodes.push_back(ptree::value_type(std::string(),ptree(what[1].str())));
             } else {
-                cout << "parsing error while looking for nodes!!! : [" << s << "]" << endl;
+                cerr << "ConfigTreeNode: read_custom: parsing error while looking for nodes!!! : [" << s << "]" << endl;
+                top = ptree() ; return;
             }
         } else {
-            if (boost::regex_match(s,what,leaf) ) { 
+            if (boost::regex_match(s,what,leaf) ) {
                 top.put(ptree::path_type("Leaf"), what[1].str() );
             } else if (boost::regex_match(s,what,nodestart) ) {
                 parsing_nodes = true;
             } else if (boost::regex_match(s,what,label) ) {
                 top.put(ptree::path_type("Label"),what[1].str());
             } else {
-                cout << "parsing error!!! : [" << s << "]" << endl;
+                cerr << "ConfigTreeNode: read_custom: parsing error!!! : [" << s << "]" << endl;
+                top = ptree() ; return;
             }
         }
     }
@@ -88,11 +90,19 @@ istream& ConfigTreeNode::read(istream& is) {
     if (fmt=='{')      { read_json(is,top);   }
     else if (fmt=='<') { read_xml(is,top);    }
     else               { read_custom(is,top); }
-    m_label = top.get<std::string>("Label"); // add default: empty string (most nodes have no label)
-    m_leaf =  top.get<digest_type>("Leaf");  // add default: digest_type::createInvalid() (top level has no leaf)
-    m_nodes.clear();
-    const ptree& nodes = top.get_child("Nodes");
-    for (ptree::const_iterator i=nodes.begin(); i!=nodes.end();++i) m_nodes.push_back( i->second.get_value<ConfigTreeNode::digest_type>() );
+    if (top.empty()) {
+        // flag as invalid 'forever' -- needs to interact with updateCache
+        m_label.clear();
+        m_nodes.clear();
+        m_leaf = digest_type::createInvalid();
+        m_digest = digest_type::createInvalid();
+    } else {
+        m_label = top.get<std::string>("Label"); // add default: empty string (most nodes have no label)
+        m_leaf =  top.get<digest_type>("Leaf");  // add default: digest_type::createInvalid() (top level has no leaf)
+        m_nodes.clear();
+        const ptree& nodes = top.get_child("Nodes");
+        for (ptree::const_iterator i=nodes.begin(); i!=nodes.end();++i) m_nodes.push_back( i->second.get_value<ConfigTreeNode::digest_type>() );
+    }
     return is;
 }
 

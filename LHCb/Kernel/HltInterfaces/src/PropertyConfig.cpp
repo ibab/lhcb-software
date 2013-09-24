@@ -119,12 +119,16 @@ istream& PropertyConfig::read(istream& is) {
     if (fmt=='{')      { read_json(is,top);   }
     else if (fmt=='<') { read_xml(is,top);    }
     else               { read_custom(is,top); }
-    m_name = top.get<std::string>("Name");
-    m_kind = top.get<std::string>("Kind");
-    m_type = top.get<std::string>("Type");
-    const ptree& props = top.get_child("Properties");
-    m_properties.clear();
-    for (ptree::const_iterator i=props.begin(); i!=props.end(); ++i ) m_properties.push_back(make_pair(i->first,i->second.data()));
+    if (top.empty()) {
+        // flag as invalid 'forever' -- needs to interact with updateCache
+    } else {
+        m_name = top.get<std::string>("Name");
+        m_kind = top.get<std::string>("Kind");
+        m_type = top.get<std::string>("Type");
+        const ptree& props = top.get_child("Properties");
+        m_properties.clear();
+        for (ptree::const_iterator i=props.begin(); i!=props.end(); ++i ) m_properties.push_back(make_pair(i->first,i->second.data()));
+    }
     return is;
 }
 
