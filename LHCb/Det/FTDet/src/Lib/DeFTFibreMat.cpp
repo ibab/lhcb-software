@@ -843,14 +843,14 @@ DetectorSegment DeFTFibreMat::createDetSegment(const FTChannelID& channel,
   if ( channel.quarter()>1 ) {
     ds_yMin = 0.;
     ds_yMax = m_layerMaxY;
-    z = m_layerPosZ - m_dzDy* (0.5*m_moduleGapH+m_fibreMatHalfSizeY)* cos(m_angle);
+    z = m_layerPosZ - m_dzDy* (0.5*m_moduleGapH+m_fibreMatHalfSizeY)*cos(m_angle)/sqrt(1.+m_dzDy*m_dzDy);
     //z = m_layerPosZ - m_dzDy* (0.5*m_moduleGapH+m_fibreMatHalfSizeY);
   }
   else{
     ds_yMin = m_layerMinY;
     ds_yMax = 0.;
     //z = m_layerPosZ + m_dzDy* (0.5*m_moduleGapH+m_fibreMatHalfSizeY);
-    z = m_layerPosZ + m_dzDy* (0.5*m_moduleGapH+m_fibreMatHalfSizeY)* cos(m_angle);
+    z = m_layerPosZ + m_dzDy* (0.5*m_moduleGapH+m_fibreMatHalfSizeY)*cos(m_angle)/sqrt(1.+m_dzDy*m_dzDy);
   }
 
   

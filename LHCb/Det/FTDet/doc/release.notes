@@ -4,6 +4,9 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
+! 2013-09-25 - Diego Milanes
+ - Correct z position of FibreMat in DeFTFibreMat.cpp
+
 !========================= FTDet v2r3 2013-09-11 =========================
 ! 2013-09-11 - Michel De Cian
  - Fix for wrong z position of FibreMat in DeFTFibreMat.cpp
