@@ -1,12 +1,11 @@
 // $Id: LoKiJetMakerAlg.cpp,v 1.6 2010-01-11 08:37:42 cocov Exp $
 // ============================================================================
-// Include files
+// Include files 
 // ============================================================================
 // from Gaudi
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "LoKi/IGenHybridFactory.h"
-#include "LoKi/IMCHybridFactory.h"
 // ============================================================================
 // LoKiAlgo
 // ============================================================================
@@ -15,22 +14,22 @@
 #include "LoKi/VertexCuts.h"
 #include "LoKi/ParticleContextCuts.h"
 // ============================================================================
-// DaVinci Kernel
+// DaVinci Kernel 
 // ============================================================================
 #include "Kernel/IParticleCombiner.h"
 #include "Kernel/IJetMaker.h"
 #include "Kernel/Particle2Vertex.h"
 #include "Kernel/PFParticle.h"
 // ============================================================================
-// Event
+// Event 
 // ============================================================================
 #include "Event/Particle.h"
 #include "Relations/Relation1D.h"
 #include "Relations/Relation2D.h"
 
-#include "LoKi/GenParticleCuts.h"
-#include "LoKi/MCParticleCuts.h"
-#include "LoKi/GenExtract.h"
+#include "LoKi/GenParticleCuts.h" 
+#include "LoKi/MCParticleCuts.h" 
+#include "LoKi/GenExtract.h" 
 #include "Event/HepMCEvent.h"
 
 #include "GaudiKernel/IHistogramSvc.h"
@@ -45,100 +44,96 @@ namespace
 {
   /// local "none"
   typedef LoKi::BasicFunctors<const HepMC::GenParticle*>::BooleanConstant       _PBOOL ;
-  typedef LoKi::BasicFunctors<const LHCb::MCParticle*>::BooleanConstant       _PBOOLMC ;
   // ==========================================================================
 }
 // ============================================================================
-namespace LoKi
+namespace LoKi 
 {
   // ==========================================================================
-  /** @class MCJetMaker
-   *
-   *  This file is a part of LoKi project -
+  /** @class HEPMCJetMaker
+   *  
+   *  This file is a part of LoKi project - 
    *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
    *
    *  The package has been designed with the kind help from
-   *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
-   *  contributions and advices from G.Raven, J.van Tilburg,
+   *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+   *  contributions and advices from G.Raven, J.van Tilburg, 
    *  A.Golutvin, P.Koppenburg have been used in the design.
    *
    *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
    *  @date   2005-03-21
    */
-  class MCJetMaker : public LoKi::AlgoMC
+  class HEPMCJetMaker : public LoKi::AlgoMC  
   {
     // ========================================================================
-    /// the friend factory for instantiation
-    friend class AlgFactory<LoKi::MCJetMaker> ;
+    /// the friend factory for instantiation 
+    friend class AlgFactory<LoKi::HEPMCJetMaker> ;
     // ========================================================================
-  protected:
-    // ========================================================================
+  protected:  
+    // ========================================================================    
     /** Standard constructor
-     *  @param name instance name
-     *  @param pSvc pointer to Service Locator
+     *  @param name instance name 
+     *  @param pSvc pointer to Service Locator 
      */
-    MCJetMaker
+    HEPMCJetMaker
     ( const std::string& name ,
-      ISvcLocator*       pSvc )
+      ISvcLocator*       pSvc ) 
       : LoKi::AlgoMC ( name , pSvc )
-    //
+      // 
       , m_makerName    ( "LoKi::FastJetMaker"   )
       , m_maker        ( 0                      )
       , m_inputTypes   (                        )
-      , m_codeForMotherMC( "MCNONE"                )
-      , m_codeForBannedMC( "MCNONE"                )
-      , m_preambuloMC   (                        )
-      , m_factoryMC    ( "LoKi::Hybrid::MCTool/MCFactory:PUBLIC" )
-      , m_cutForMotherMC ( _PBOOLMC ( false )       )
-      , m_cutForBannedMC ( _PBOOLMC ( false )       )
+      , m_codeForMother( "GNONE"                )
+      , m_codeForBanned( "GNONE"                )
+      , m_preambulo    (                        )
+      , m_factory      ( "LoKi::Hybrid::GenTool/GenFactory:PUBLIC" )
+      , m_cutForMother ( _PBOOL ( false )       )
+      , m_cutForBanned ( _PBOOL ( false )       )
       , m_simpleAcceptance ( false )
-      , m_outputTableMC ("Relations/Phys/MCJets2MCParticles")
+      , m_outputTable ("Relations/Phys/MCJets2MCParticlesFROMHEP")
       , m_jetsFromMotherOnly (false)
-      , m_rejectNeutrinos(true)
-    {
-      //
-      declareProperty  ( "JetMaker"  ,
-			 m_makerName ,
-			 "Type type/name of jet-maker tool (IJetMaker interface)") ;
-
-      declareProperty  ( "CodeForMotherSelectionMC" ,
-			 m_codeForMotherMC ,
+    { 
+      // 
+      declareProperty  ( "JetMaker"  , 
+			 m_makerName , 
+			 "Type type/name of jet-maker tool (IJetMaker interface)") ;  
+      declareProperty  ( "MCParticleTypes"  , 
+			 m_inputTypes  ,
+			 "Type of particles to consider");
+      declareProperty  ( "CodeForMotherSelection" ,
+			 m_codeForMother ,
 			 "The functor for mother selection" );
-      declareProperty  ( "CodeForBannedSelectionMC" ,
-			 m_codeForBannedMC ,
+      declareProperty  ( "CodeForBannedSelection" ,
+			 m_codeForBanned ,
 			 "The functor for selecting the particle from which to ban the decendant" );
-
-      declareProperty  ( "OutputTableMC" ,
-			 m_outputTableMC ,
-			 "Location of the Jet 2 MCParticles relation table" );
       declareProperty  ( "SimpleAcceptance" ,
 			 m_simpleAcceptance ,
 			 "A simple theta cut on the acceptance" );
-      declareProperty  ( "RejectNeutrinos" ,
-			 m_rejectNeutrinos ,
-			 "to reject neutrinos from the final particle" );
+      declareProperty  ( "OutputTable" ,
+			 m_outputTable ,
+			 "Location of the Jet 2 MCParticles relation table" );
       declareProperty  ( "SaveMCJetsFromMotherOnly" ,
 			 m_jetsFromMotherOnly ,
 			 "Only save the jets from mother" );
       //
     }
     /// destructor
-    virtual ~MCJetMaker( ){}
-    // ========================================================================
+    virtual ~HEPMCJetMaker( ){}
+    // ========================================================================    
   public:
-    // ========================================================================
-    /** standard execution of the algorithm
-     *  @see LoKi::AlgoMC
-     *  @return status code
-     */
-
+    // ========================================================================    
+    /** standard execution of the algorithm 
+     *  @see LoKi::AlgoMC 
+     *  @return status code 
+     */  
+    
     enum ParticleExtraInfo{ StartJetExtraInfo =9000,
-			    Ntracks = 9001 ,
-			    N90 = 9002 ,
-			    MTF = 9003 ,
-			    NSatCalo = 9004,
+                            Ntracks = 9001 ,
+                            N90 = 9002 ,
+                            MTF = 9003 ,
+                            NSatCalo = 9004,
 			    NHasPV = 9005,
-			    CPF = 9006,
+                            CPF = 9006,
 			    JetWidth = 9007,
 			    NSatECAL = 9008,
 			    NSatHCAL = 9009,
@@ -181,8 +176,8 @@ namespace LoKi
 			    GMotherBarCode = 9313,
 			    FracOfOtherMother = 9314
     };
-
-
+                         
+			    
 
     virtual StatusCode initialize   () ;
     virtual StatusCode analyse   () ;
@@ -190,88 +185,93 @@ namespace LoKi
     StatusCode appendJetIDInfo   ( LHCb::Particle * jet ) ;
     StatusCode updateMajor( ) ;
     StatusCode decodeCode ( ) ;
-    std::string preambuloMC ( ) const;
+    std::string preambulo ( ) const;
+    
 
-    // ========================================================================
+    // ========================================================================    
   private:
-    // ========================================================================
-    // the default constructor is disabled
-    MCJetMaker () ;
-    // the copy constructor is disabled
-    MCJetMaker ( const MCJetMaker& )  ;
-    // the assignement operator is disabled
-    MCJetMaker& operator=( const  MCJetMaker& )  ;
-    // ========================================================================
-  private:
-    // ========================================================================
+    // ========================================================================    
+    // the default constructor is disabled 
+    HEPMCJetMaker () ;
+    // the copy constructor is disabled 
+    HEPMCJetMaker ( const HEPMCJetMaker& )  ;
+    // the assignement operator is disabled 
+    HEPMCJetMaker& operator=( const  HEPMCJetMaker& )  ;
+    // ========================================================================    
+  private:  
+    // ========================================================================    
     /// maker name
-    std::string      m_makerName ; // jet maker name
+    std::string      m_makerName ; // jet maker name  
     /// maker
-    const IJetMaker* m_maker     ; // jet maker to be used
+    const IJetMaker* m_maker     ; // jet maker to be used 
     /// List of inputs types to consider
     std::vector< std::string > m_inputTypes ; //inputs types to consider
     /// Particle Service
     LHCb::IParticlePropertySvc* m_ppSvc; //ParticleSvc
     /// Code for the predicate for the selection of Mother
-    std::string m_codeForMotherMC;
+    std::string m_codeForMother; 
     /// Code for the predicate for the selection of Banned particles
-    std::string m_codeForBannedMC;
-    /// the preambulo
-    std::vector<std::string> m_preambuloMC ; // the preambulo
-    /// LoKi/Bender "hybrid" factory name
-    std::string m_factoryMC ; // LoKi/Bender "hybrid" factory name
-    /// the predicate for the selection of Motherc
-    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate m_cutForMotherMC ;
+    std::string m_codeForBanned;
+    /// the preambulo 
+    std::vector<std::string> m_preambulo ; // the preambulo 
+    /// LoKi/Bender "hybrid" factory name 
+    std::string m_factory ; // LoKi/Bender "hybrid" factory name 
+    /// the predicate for the selection of Mother 
+    LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate m_cutForMother ;
     /// the predicate for the selection of banned particles
-    LoKi::BasicFunctors<const LHCb::MCParticle*>::PredicateFromPredicate m_cutForBannedMC ;
+    LoKi::BasicFunctors<const HepMC::GenParticle*>::PredicateFromPredicate m_cutForBanned ;
     /// apply a simple acceptance cut
     bool m_simpleAcceptance ;
     /// Location of the HepMC to LHCb::Particle table
-    std::string m_outputTableMC;
+    std::string m_outputTable;
     /// Only save the jets from mother
     bool m_jetsFromMotherOnly;
-    /// List of Long lvied part
-    std::vector<int> m_listOfLongLived;
-    //reject neutrino flag
-    bool m_rejectNeutrinos;
-    std::vector<int> m_listofNeutrinos;
-
 
     std::string m_daughtersLocation;
     std::string m_jetsLocation;
-
-    bool isALongLivedDecay( const LHCb::MCParticle *mcparticle );
-    bool isFromPV(const LHCb::MCParticle *mcparticle );
-    // ========================================================================
+    
+    // ========================================================================    
   };
   // ==========================================================================
-} // end of namespace LoKi
+} // end of namespace LoKi 
 // ============================================================================
-/** @file
- *  Implementation file for class  LoKi::MCJetMaker
- *  @date  2005-03-21
+/** @file 
+ *  Implementation file for class  LoKi::HEPMCJetMaker
+ *  @date  2005-03-21 
  *  @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
  */
 // ============================================================================
-/*  standard execution of the algorithm
- *  @see LoKi::AlgoMC
- *  @return status code
+/*  standard execution of the algorithm 
+ *  @see LoKi::AlgoMC 
+ *  @return status code 
  */
 // ===========================================================================
-StatusCode LoKi::MCJetMaker::initialize ()
+StatusCode LoKi::HEPMCJetMaker::initialize () 
 {
-  StatusCode sc = LoKi::AlgoMC::initialize() ;
+  StatusCode sc = LoKi::AlgoMC::initialize() ; 
   if ( sc.isFailure() ) { return sc ; }
   // decode the cut:
   sc = updateMajor () ;
   if ( sc.isFailure () )
-    { return Error ("The error from updateMajor" , sc ) ; }
+  { return Error ("The error from updateMajor" , sc ) ; }
 
   // Initialize the tool
-  if ( 0 == m_maker ) { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
+  if ( 0 == m_maker ) { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }  
   sc = service("LHCb::ParticlePropertySvc", m_ppSvc);
   if ( sc.isFailure() ) { return sc ; }
-
+  // Give some default values to the types if not defined
+  if (m_inputTypes.empty()){
+    m_inputTypes.push_back("pi+");
+    m_inputTypes.push_back("K+");
+    m_inputTypes.push_back("p+");
+    m_inputTypes.push_back("e+");
+    m_inputTypes.push_back("mu+");
+    m_inputTypes.push_back("pi0");
+    m_inputTypes.push_back("gamma");
+    m_inputTypes.push_back("KL0");
+    m_inputTypes.push_back("n0");
+  }
+  
   m_daughtersLocation = "Phys/";
   m_daughtersLocation.append(this->name());
   m_daughtersLocation.append("Particles/Particles");
@@ -279,56 +279,39 @@ StatusCode LoKi::MCJetMaker::initialize ()
   m_jetsLocation.append(this->name());
   m_jetsLocation.append("Jets/Particles");
 
-
-  m_listofNeutrinos.push_back(12);
-  m_listofNeutrinos.push_back(14);
-  m_listofNeutrinos.push_back(16);
-
-  m_listOfLongLived.push_back(321);
-  m_listOfLongLived.push_back(211);
-  m_listOfLongLived.push_back(130);
-  m_listOfLongLived.push_back(3222);
-  m_listOfLongLived.push_back(310);
-  m_listOfLongLived.push_back(3122);
-  m_listOfLongLived.push_back(3112);
-  m_listOfLongLived.push_back(3312);
-  m_listOfLongLived.push_back(3322);// f_0
- // m_listOfLongLived.push_back(30221);
- // m_listOfLongLived.push_back(9010221);
-
   return StatusCode::SUCCESS ;
 }
 
 // ============================================================================
 // construct the preambulo string
 // ============================================================================
-std::string LoKi::MCJetMaker::preambuloMC() const
+std::string LoKi::HEPMCJetMaker::preambulo() const
 {
   // Put some default to the preambulo so that it is not necessary to specify each time
-  std::string result = "from LoKiMC.decorators import *\nfrom LoKiNumbers.decorators import *\nfrom LoKiCore.functions import *\nfrom LoKiCore.math import *";
+  std::string result = "from LoKiGen.decorators import *\nfrom LoKiNumbers.decorators import *\nfrom LoKiCore.functions import *\nfrom LoKiCore.math import *";
 
   for ( std::vector<std::string>::const_iterator iline =
-	  m_preambuloMC.begin() ; m_preambuloMC.end() != iline ; ++iline )
-    {
-      if ( m_preambuloMC.begin() != iline ) { result += "\n" ; }
-      result += (*iline) ;
-    }
+          m_preambulo.begin() ; m_preambulo.end() != iline ; ++iline )
+  {
+    if ( m_preambulo.begin() != iline ) { result += "\n" ; }
+    result += (*iline) ;
+  }
   return result ;
 }
 // ============================================================================
 // update the major properties
 // ============================================================================
-StatusCode LoKi::MCJetMaker::updateMajor ()
+StatusCode LoKi::HEPMCJetMaker::updateMajor ()
 {
   // decode the code
   StatusCode sc = decodeCode () ;
   if ( sc.isFailure() ) { return Error ( "Error from decodeCode()'" ) ; }
 
   // locate the factory
-  LoKi::IMCHybridFactory* factoryMC = tool<LoKi::IMCHybridFactory> ( m_factoryMC , this ) ;
+  LoKi::IGenHybridFactory* factory = tool<LoKi::IGenHybridFactory> ( m_factory , this ) ;
 
   // release the factory (not needed anymore)
-  release ( factoryMC ) ;
+  release ( factory ) ;
   //
   return StatusCode::SUCCESS ;
 }
@@ -337,60 +320,31 @@ StatusCode LoKi::MCJetMaker::updateMajor ()
 // ============================================================================
 // decode the code
 // ============================================================================
-StatusCode LoKi::MCJetMaker::decodeCode ()
+StatusCode LoKi::HEPMCJetMaker::decodeCode ()
 {
-
   // locate the factory
-  LoKi::IMCHybridFactory* MCfactory_ = tool<LoKi::IMCHybridFactory> ( m_factoryMC , this ) ;
+  LoKi::IGenHybridFactory* factory_ = tool<LoKi::IGenHybridFactory> ( m_factory , this ) ;
   //
   // use the factory
-  StatusCode  sc = MCfactory_ -> get ( m_codeForMotherMC , m_cutForMotherMC , preambuloMC() ) ;
+  StatusCode sc = factory_ -> get ( m_codeForMother , m_cutForMother , preambulo() ) ;
   if ( sc.isFailure() )
-    { return Error ( "Error from LoKi/Bender 'hybrid' factory for Code='"
-		     + m_codeForMotherMC + "'" , sc )  ; }
-  sc = MCfactory_ -> get ( m_codeForBannedMC , m_cutForBannedMC , preambuloMC() ) ;
+  { return Error ( "Error from LoKi/Bender 'hybrid' factory for Code='"
+                   + m_codeForMother + "'" , sc )  ; }
+  sc = factory_ -> get ( m_codeForBanned , m_cutForBanned , preambulo() ) ;
   if ( sc.isFailure() )
-    { return Error ( "Error from LoKi/Bender 'hybrid' factory for Code='"
-		     + m_codeForBannedMC + "'" , sc )  ; }
+  { return Error ( "Error from LoKi/Bender 'hybrid' factory for Code='"
+                   + m_codeForBanned + "'" , sc )  ; }
   //
-  release ( MCfactory_ ) ;
+  release ( factory_ ) ;
   //
-
-
-
   return sc ;
 }
 
-StatusCode LoKi::MCJetMaker::analyse   ()
+StatusCode LoKi::HEPMCJetMaker::analyse   () 
 {
   using namespace LoKi        ;
   using namespace LoKi::Types ;
-  using namespace LoKi::Cuts  ;
-
-
-
-
-  LHCb::MCParticles* mcparts = get< LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
-  LHCb::MCVertex::Container* mcv = get< LHCb::MCVertex::Container>( LHCb::MCVertexLocation::Default );
-
-  std::vector<const LHCb::MCVertex*>  primaries;
-  for ( LHCb::MCVertex::Container::const_iterator imc = mcv->begin() ; mcv->end() != imc ; ++imc ) {
-
-    const LHCb::MCVertex* mcv = *imc ;
-    if ( 0 == mcv || !mcv->isPrimary() ) { continue ; }
-    primaries.push_back ( mcv ) ;
-
-
-  }
-
-
-  LHCb::MCParticle::ConstVector StableParts;
-  LHCb::MCParticle::Vector::iterator  mcIt;
-
-
-  std::vector< const LHCb::MCParticle* > mothers;
-
-
+  using namespace LoKi::Cuts  ; 
 
   typedef LHCb::Relation1D< LHCb::Particle, LHCb::MCParticle > Table ;
 
@@ -400,256 +354,189 @@ StatusCode LoKi::MCJetMaker::analyse   ()
   put(daughterParticles,m_daughtersLocation);
   put(jetParticles,m_jetsLocation);
 
-
-  //Cb::HepMC2MC2D* tableHepMC2MC = 0 ;
+  
+  LHCb::HepMC2MC2D* tableHepMC2MC = 0 ;
   Table* table = 0 ;
-  if ( !m_outputTableMC.empty() ){
+  if ( !m_outputTable.empty() ){
     table = new Table(100) ;
-    put ( table , m_outputTableMC ) ;
-    //hleHepMC2MC = get<LHCb::HepMC2MC2D> ( LHCb::HepMC2MCLocation::Default ) ;
+    put ( table , m_outputTable ) ;
+    tableHepMC2MC = get<LHCb::HepMC2MC2D> ( LHCb::HepMC2MCLocation::Default ) ;
   }
-
+  
   // Initialize the tool
   if ( 0 == m_maker ) { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
-
+  
   // PID and stable particles cut
-  LoKi::Types::MCCut cut = MCVALID ;
-  //  for ( std::vector< std::string >::iterator pid = m_inputTypes.begin() ; m_inputTypes.end() != pid ; ++ pid ){
-  //    if( pid == m_inputTypes.begin() ) cut =  ( (*pid) == LoKi::Cuts::MCABSID );
-  //    else cut =  ( cut || ( (*pid) == LoKi::Cuts::MCABSID ) );
-  //  }
-  if ( m_simpleAcceptance ) cut = cut && ( LoKi::Cuts::MCTHETA < 0.4 );
-  //  MCCut isToBan = ( LoKi::Cuts::MCNINTREE( m_cutForBanned , HepMC::ancestors ) > 0 ) || ( m_cutForBanned );
-  //  cut = cut && ( ( LoKi::Cuts::MCSTATUS == 1 ) || ( LoKi::Cuts::MCSTATUS == 999 ) ) // && ( !isToBan );
-  // Some cuts to identify the type of jet
-
-  MCCut containsB = LoKi::Cuts::MCQUARK( LHCb::ParticleID::bottom ) ;
-  MCCut containsC = LoKi::Cuts::MCQUARK( LHCb::ParticleID::charm ) ;
-  MCCut containsS = LoKi::Cuts::MCQUARK( LHCb::ParticleID::strange ) ;
-  //  MCCut containsSV02 = ((LoKi::Cuts::MCABSID) == 3122);
-  MCCut isFromB = LoKi::Cuts::MCINANCESTORS( containsB && HADRON )  ; // the hadron contains b
-  MCCut isFromC = LoKi::Cuts::MCINANCESTORS( containsC && !isFromB && HADRON ); // the hadron contains c but no b
-  MCCut isFromS = LoKi::Cuts::MCINANCESTORS( containsS && !isFromC && !isFromB && HADRON ); // the hadron contains s but no c nor b
-  //  MCCut isFromV0 = LoKi::Cuts::MCINANCESTORS( ((LoKi::Cuts::MCABSID) == 310) || ((LoKi::Cuts::MCABSID) == 3122) ) ;
-  //MCCut isFromb = LoKi::Cuts::MCNINTREE( LoKi::Cuts::MCABSID == "b" , HepMC::ancestors ) > 0 ;
-  //MCCut isFromc = LoKi::Cuts::MCNINTREE( LoKi::Cuts::MCABSID == "c" , HepMC::ancestors ) > 0 ;
-  //MCCut isFroms = LoKi::Cuts::MCNINTREE( LoKi::Cuts::MCABSID == "s" , HepMC::ancestors ) > 0 ;
-  MCCut isFromMother = LoKi::Cuts::MCINANCESTORS( m_cutForMotherMC  ) ;
-  // Some map to ease the jet 2 MCParticle relation table making
-  std::map< int ,const LHCb::MCParticle* > mapBarCode2MCPs ;
-  // Get the HepMCEvents
-
-
-
-
-
-
-
-
-
-  double tote = 0;
-  // Loop over all MCs
-  for (mcIt = mcparts->begin();mcIt!=mcparts->end();mcIt++){
-
-    const LHCb::MCParticle *mcparticle = (*mcIt);
-    //remove neutrino is requested
-    if(m_rejectNeutrinos)
-      if(std::find(m_listofNeutrinos.begin(), m_listofNeutrinos.end(), mcparticle->particleID().abspid()) != m_listofNeutrinos.end())
-	continue;
-    // Check if the particle come from a decay of a particle from the PV
-    if(isFromPV(mcparticle)){
-      const SmartRefVector< LHCb::MCVertex >  evs = mcparticle->endVertices();
-
-
-      if ( m_cutForMotherMC(mcparticle) ){
-	mothers.push_back(mcparticle);
-	LHCb::Particle* newPart = new LHCb::Particle();
-	newPart->setMomentum(mcparticle->momentum());
-	LHCb::ParticleID pid;
-	pid.setPid(MCID(mcparticle));
-	newPart->setParticleID(pid);
-	if ((mcparticle)->primaryVertex () != NULL){
-
-	  Gaudi::XYZPoint p_vertexPosition ((mcparticle)->primaryVertex()->position());
-	  newPart->setReferencePoint (p_vertexPosition);
-	}
-	if(((mcparticle)->endVertices()).size() > 0){
-	  SmartRefVector< LHCb::MCVertex >::const_iterator itv;
-	  LHCb::Vertex  vJet;
-	  Gaudi::XYZPoint e_vertexPosition (0.,0.,0.);
-	  for(itv = evs.begin(); itv!= evs.end(); itv++){
-	    if (((*itv).target()->type()  == 2) || ((*itv).target()->type()  == 3)){
-	      Gaudi::XYZPoint e_vertexPosition ((*itv).target()->position());
-	      break;
-	    }
-	  }
-	  vJet.setPosition( e_vertexPosition );
-	  newPart->setEndVertex(vJet.clone());
-	}
-	newPart->addInfo ( GBarCode , (mcparticle)->key() );
-	jetParticles->insert(newPart);
-
-
-
-      }
-
-
-      bool isGenerator = false;
-      // If is a long lived or do not has a decay at all, particle is kept
-      if (evs.size()==0 || isALongLivedDecay( mcparticle )){
-        isGenerator = true;
-      }
-      // Otherwise only keep if its end end vwertex is not a decay
-      else{
-        bool Decay = false;
-        SmartRefVector< LHCb::MCVertex >::const_iterator itv;
-        for(itv = evs.begin(); itv!= evs.end(); itv++){
-          if ( ((*itv).target()->type() != 1) &&  ((*itv).target()->type() != 2) &&  ((*itv).target()->type() != 3) &&  ((*itv).target()->type() != 4) ){
-            isGenerator = true;
-          }
-          if (((*itv).target()->type()  == 2) || ((*itv).target()->type()  == 3)){
-            Decay = true;
-          }
-        }
-        if(Decay){
-          isGenerator = false;
-        }
-      }
-      // Append the particle to the list.
-      if (isGenerator){
-        tote += mcparticle->momentum().E();
-        StableParts.push_back(mcparticle);
-      }
-    }
+  LoKi::Types::GCut cut = GVALID ;
+  for ( std::vector< std::string >::iterator pid = m_inputTypes.begin() ; m_inputTypes.end() != pid ; ++ pid ){
+    if( pid == m_inputTypes.begin() ) cut =  ( (*pid) == LoKi::Cuts::GABSID );
+    else cut =  ( cut || ( (*pid) == LoKi::Cuts::GABSID ) );
   }
-
-
-
-
-
-  std::vector<const LHCb::MCVertex*>::iterator itr;
-  for ( itr = primaries.begin(); itr != primaries.end(); ++itr ){
-    const LHCb::MCVertex* primary = *itr;
-
-    Gaudi::XYZPoint vertexPosition(primary->position().X(), primary->position().Y(),primary->position().Z());
-    //    int processID = event->signal_process_id ();
+  if ( m_simpleAcceptance ) cut = cut && ( LoKi::Cuts::GTHETA < 0.4 );
+  GCut isToBan = ( LoKi::Cuts::GNINTREE( m_cutForBanned , HepMC::ancestors ) > 0 ) || ( m_cutForBanned );
+  cut = cut && ( ( LoKi::Cuts::GSTATUS == 1 ) || ( LoKi::Cuts::GSTATUS == 999 ) ) && ( !isToBan );
+  // Some cuts to identify the type of jet
+  GCut containsB = LoKi::Cuts::GQUARK( LHCb::ParticleID::bottom ) ;
+  GCut containsC = LoKi::Cuts::GQUARK( LHCb::ParticleID::charm ) ;
+  GCut containsS = LoKi::Cuts::GQUARK( LHCb::ParticleID::strange ) ;
+  GCut isFromB = LoKi::Cuts::GNINTREE( ( containsB && GHADRON ) ,  HepMC::ancestors ) > 0 ; // the hadron contains b
+  GCut isFromC = LoKi::Cuts::GNINTREE( ( containsC && !containsB && GHADRON ) , HepMC::ancestors ) > 0 ; // the hadron contains c but no b
+  GCut isFromS = LoKi::Cuts::GNINTREE( ( containsS && !containsC && !containsB && GHADRON ) , HepMC::ancestors ) > 0 ; // the hadron contains s but no c nor b
+  GCut isFromV0 = LoKi::Cuts::GNINTREE( ( LoKi::Cuts::GABSID == 310 || LoKi::Cuts::GABSID == 3122 ) , HepMC::ancestors ) > 0 ;
+  GCut isFromb = LoKi::Cuts::GNINTREE( LoKi::Cuts::GABSID == "b" , HepMC::ancestors ) > 0 ;
+  GCut isFromc = LoKi::Cuts::GNINTREE( LoKi::Cuts::GABSID == "c" , HepMC::ancestors ) > 0 ;
+  GCut isFroms = LoKi::Cuts::GNINTREE( LoKi::Cuts::GABSID == "s" , HepMC::ancestors ) > 0 ;
+  GCut isFromMother = LoKi::Cuts::GNINTREE( m_cutForMother , HepMC::ancestors ) > 0 ;
+  // Some map to ease the jet 2 MCParticle relation table making
+  std::map< int , LHCb::MCParticle* > mapBarCode2MCPs ;
+  // Get the HepMCEvents
+  const LHCb::HepMCEvent::Container* events = get<LHCb::HepMCEvent::Container> (  LHCb::HepMCEventLocation::Default ) ;
+  std::vector< std::vector< const LHCb::Particle * > > particles;
+  std::vector< const HepMC::GenVertex *> vertices;
+  for ( LHCb::HepMCEvent::Container::const_iterator i_event = events->begin() ; events->end() != i_event ; ++i_event ){
+    const HepMC::GenEvent* event = ( *i_event )->pGenEvt () ;
+    // Get the signal process vertex
+    std::pair< HepMC::GenParticle *, HepMC::GenParticle * > beamPart = event->beam_particles( );
+    const HepMC::GenVertex * primary = beamPart.first->end_vertex ();
+    Gaudi::XYZPoint vertexPosition(primary->point3d().x(), primary->point3d().y(),primary->point3d().z());
+    int processID = event->signal_process_id ();
     // Get the list of good particles and make jets out of it
     IJetMaker::Input inputs;
-
-
-
-    for ( LHCb::MCParticle::ConstVector::iterator p = StableParts.begin ()  ;  StableParts.end () != p ; ++p ){
-      if((*p)->primaryVertex()->key() != primary->key()) continue;
+    std::vector< const HepMC::GenParticle* > mothers;
+    // Get the mothers
+    for ( HepMC::GenEvent::particle_const_iterator p = event->particles_begin ()  ;  event->particles_end () != p ; ++p ){
+      if ( !m_cutForMother(*p) ) continue;
+      mothers.push_back(*p);
+      LHCb::Particle* newPart = new LHCb::Particle();
+      Gaudi::LorentzVector mom(GPX(*p),GPY(*p),GPZ(*p),GE(*p));
+      newPart->setMomentum(mom);
+      LHCb::ParticleID pid;
+      pid.setPid(GID(*p));
+      newPart->setParticleID(pid);
+      if ((*p)->production_vertex ()){
+        Gaudi::XYZPoint p_vertexPosition ((*p)->production_vertex ()->point3d().x(),(*p)->production_vertex ()->point3d().y(),(*p)->production_vertex ()->point3d().z());
+        newPart->setReferencePoint (p_vertexPosition);
+      }
+      if((*p)->end_vertex ()){
+        Gaudi::XYZPoint e_vertexPosition ((*p)->end_vertex ()->point3d().x(),(*p)->end_vertex ()->point3d().y(),(*p)->end_vertex ()->point3d().z());
+        LHCb::Vertex  vJet;
+        vJet.setPosition( e_vertexPosition );
+        newPart->setEndVertex(vJet.clone());
+      }
+      newPart->addInfo ( ProcessID , processID );
+      newPart->addInfo ( GBarCode , GBAR(*p) );
+      //this->markTree(newPart);
+      jetParticles->insert(newPart);
+    }
+    for ( HepMC::GenEvent::particle_const_iterator p = event->particles_begin ()  ;  event->particles_end () != p ; ++p ){
       if ( !cut(*p) )continue;
       LHCb::Particle* newPart = new LHCb::Particle();
-      newPart->setMomentum((*p)->momentum());
+      Gaudi::LorentzVector mom(GPX(*p),GPY(*p),GPZ(*p),GE(*p));
+      newPart->setMomentum(mom);
       LHCb::ParticleID pid;
-      pid.setPid(MCID(*p));
+      pid.setPid(GID(*p));
       newPart->setParticleID(pid);
-
-      Gaudi::XYZPoint p_vertexPosition (primary->position());
+      Gaudi::XYZPoint p_vertexPosition ((*p)->production_vertex ()->point3d().x(),(*p)->production_vertex ()->point3d().y(),(*p)->production_vertex ()->point3d().z());
       newPart->setReferencePoint (p_vertexPosition);
-      //       newPart->addInfo ( ProcessID , processID );
+      newPart->addInfo ( ProcessID , processID );
       newPart->addInfo ( HasS , isFromS(*p) );
       newPart->addInfo ( HasC , isFromC(*p) );
       newPart->addInfo ( HasB , isFromB(*p) );
-      //newPart->addInfo ( HasV0, isFromV0(*p) );
-      //newPart->addInfo ( Hass , isFroms(*p) );
-      //newPart->addInfo ( Hasc , isFromc(*p) );
-      //newPart->addInfo ( Hasb , isFromb(*p) );
+      newPart->addInfo ( HasV0, isFromV0(*p) );
+      newPart->addInfo ( Hass , isFroms(*p) );
+      newPart->addInfo ( Hasc , isFromc(*p) );
+      newPart->addInfo ( Hasb , isFromb(*p) );
       newPart->addInfo ( FromMother , isFromMother(*p) );
-      newPart->addInfo ( GBarCode , (*p)->key() );
-
-      if ( !m_outputTableMC.empty() ){
-	//LHCb::HepMC2MC2D::Range range = tableHepMC2MC->relations(*p);
-	//if (range.size()>0){
-	//LHCb::MCParticle*  mcp = range[0];
-	mapBarCode2MCPs[(*p)->key()]=  (*p) ;
+      newPart->addInfo ( GBarCode , GBAR(*p) );
+      if ( !m_outputTable.empty() ){
+        LHCb::HepMC2MC2D::Range range = tableHepMC2MC->relations(*p);
+        if (range.size()>0){
+          LHCb::MCParticle*  mcp = range[0];
+          mapBarCode2MCPs[int(GBAR(*p))]=  mcp ;
+        }
       }
-      // }
-      //int motherBarCode(-1),motherID(0);
-      //for(std::vector< const HepMC::GenParticle* >::const_iterator imother = mothers.begin();
-      //mothers.end()!=imother ; ++ imother){
-      //GCut isFromthisMother = GFROMTREE(*imother);
-      //if (isFromthisMother(*p)){
-      //motherBarCode = GBAR(*imother);
-      //motherID = GID(*imother);
-      // }
-      // }
-      // newPart->addInfo ( GMotherBarCode , motherBarCode  );
-      // newPart->addInfo ( MotherID , motherID );
-
+      int motherBarCode(-1),motherID(0);
+      for(std::vector< const HepMC::GenParticle* >::const_iterator imother = mothers.begin();
+          mothers.end()!=imother ; ++ imother){
+        GCut isFromthisMother = GFROMTREE(*imother);
+        if (isFromthisMother(*p)){
+          motherBarCode = GBAR(*imother);
+          motherID = GID(*imother);
+        }
+      }
+      newPart->addInfo ( GMotherBarCode , motherBarCode  );
+      newPart->addInfo ( MotherID , motherID );
       daughterParticles->insert(newPart);
       inputs.push_back(newPart);
     }
     // Now make the jets
     IJetMaker::Jets jets ;
-    // make the jets
+    // make the jets 
     StatusCode sc = m_maker->makeJets ( inputs.begin () , inputs.end   () , jets  ) ;
     if ( sc.isFailure() ) { return Error ( "Error from jet maker" , sc ) ; }
     // save all jets
     std::vector <int> usedBarCode ;
-    while ( !jets.empty() )
-      {
-	LHCb::Particle* jet = jets.back() ;
-	jet->setReferencePoint( vertexPosition );
-	LHCb::Vertex  vJet;
-	vJet.setPosition( vertexPosition );
-	vJet.setOutgoingParticles(jet->daughters());
-	jet->setEndVertex(vJet.clone());
-	this->appendJetIDInfo(jet);
-	if (m_jetsFromMotherOnly && jet->info(FromMother,-1.)<0.){
-	  jets.pop_back() ;
-	  delete jet ;
-	}
-	// store the hepmc particles that are used
-	for ( SmartRefVector< LHCb::Particle >::const_iterator ip = jet->daughters().begin();jet->daughters().end()!=ip;++ip ){
-	  usedBarCode.push_back((int)(*ip)->info(GBarCode,-1.));
-	}
-	// if requested, store the MCParticles used in this jet in a relation table
-	double totE(0.);
-	if ( !m_outputTableMC.empty() ){
-
-	  for ( SmartRefVector< LHCb::Particle >::const_iterator ip = jet->daughters().begin();jet->daughters().end()!=ip;++ip ){
-	    if (! mapBarCode2MCPs[int((*ip)->info(GBarCode,-1.))])continue;
-	    totE+=MCE(mapBarCode2MCPs[int((*ip)->info(GBarCode,-1.))]);
-	    table -> relate(jet , mapBarCode2MCPs[int((*ip)->info(GBarCode,-1.))] ); // relie le jet a chaque MCParticle qui correspond a ses filles.
-	  }
-	}
-
-	jetParticles->insert(jet);
-	//this->markTree( jet );
+    while ( !jets.empty() ) 
+    {
+      LHCb::Particle* jet = jets.back() ;
+      jet->setReferencePoint( vertexPosition );
+      LHCb::Vertex  vJet;
+      vJet.setPosition( vertexPosition );
+      vJet.setOutgoingParticles(jet->daughters());
+      jet->setEndVertex(vJet.clone());
+      this->appendJetIDInfo(jet);
+      if (m_jetsFromMotherOnly && jet->info(FromMother,-1.)<0.){
 	jets.pop_back() ;
-	//delete jet ;
+	delete jet ;
       }
+      // store the hepmc particles that are used
+      for ( SmartRefVector< LHCb::Particle >::const_iterator ip = jet->daughters().begin();jet->daughters().end()!=ip;++ip ){
+	usedBarCode.push_back((int)(*ip)->info(GBarCode,-1.));
+      }
+      // if requested, store the MCParticles used in this jet in a relation table
+      double totE(0.);
+      if ( !m_outputTable.empty() ){
+	
+	for ( SmartRefVector< LHCb::Particle >::const_iterator ip = jet->daughters().begin();jet->daughters().end()!=ip;++ip ){
+	  if (! mapBarCode2MCPs[int((*ip)->info(GBarCode,-1.))])continue;
+	  totE+=MCE(mapBarCode2MCPs[int((*ip)->info(GBarCode,-1.))]);
+	  table -> relate(jet , mapBarCode2MCPs[int((*ip)->info(GBarCode,-1.))] );
+	}
+      }
+      
+      jetParticles->insert(jet);
+      //this->markTree( jet );
+      jets.pop_back() ;
+      //delete jet ;
+    }
     /*while ( !inputs.empty())
-      {
+    {
       LHCb::Particle* p = inputs.back() ;
       bool used = false;
       for ( int i = 0 ; i < (int)usedBarCode.size(); ++i){
-      if ((int)p->info(GBarCode,-1.) == usedBarCode[i]){
-      used = true;
-      break;
-      }
+	if ((int)p->info(GBarCode,-1.) == usedBarCode[i]){
+	  used = true;
+	  break;
+	}
       }
       if (used) daughterParticles->insert(p); //this->markTree( p );
       inputs.pop_back();
       delete( p );
-
+      
       }*/
   }
-  if ( statPrint() || msgLevel ( MSG::DEBUG ) )
-    { counter ( "#jets" ) += selected ("jets").size() ; }
+  if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
+  { counter ( "#jets" ) += selected ("jets").size() ; }
 
-  if ( m_outputTableMC.empty() ){
+  if ( m_outputTable.empty() ){
     delete(table);
   }
   setFilterPassed ( true ) ;
-
+  
   return StatusCode::SUCCESS ;
 }
 
-StatusCode LoKi::MCJetMaker::appendJetIDInfo( LHCb::Particle* jet )
+StatusCode LoKi::HEPMCJetMaker::appendJetIDInfo( LHCb::Particle* jet )
 {
   using namespace LoKi        ;
   using namespace LoKi::Types ;
@@ -668,7 +555,7 @@ StatusCode LoKi::MCJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   float auxptmax=-1, sumpt=0; int iitems=0;
   double tpx=0, tpy=0;
   std::vector<float> itemspt;
-  ntrk=n90=width=0;
+  ntrk=n90=width=0; 
   std::map<int,double> barCodeMotherFraction;
 
   for (;idaughter != daughtersvector.end() ; ++idaughter){
@@ -707,7 +594,7 @@ StatusCode LoKi::MCJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   LoKi::Types::Fun FractionElectron = LoKi::Cuts::SUMTREE( LoKi::Cuts::E ,  ABSID == "e+" , 0. );
   jet->addInfo ( Electron  , FractionElectron(jet)/LoKi::Cuts::E(jet) );
 
-
+  
   LoKi::Types::Fun FractionCharged = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , ( ABSID == "pi+" || ABSID == "K+" || ABSID == "p+" || ABSID == "mu+" || ABSID == "e+" ) , 0. );
   jet->addInfo ( Charged  , FractionCharged(jet)/LoKi::Cuts::E(jet) );
 
@@ -738,7 +625,7 @@ StatusCode LoKi::MCJetMaker::appendJetIDInfo( LHCb::Particle* jet )
   LoKi::Types::Fun isS =  LoKi::Cuts::INFO( HasS , -10.);
   LoKi::Types::Fun FractionS = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , isS > 0. , 0. );
   jet->addInfo ( HasS , FractionS(jet)/LoKi::Cuts::E(jet)  );
-
+  
   LoKi::Types::Fun iss =  LoKi::Cuts::INFO( Hass , -10.);
   LoKi::Types::Fun Fractions = LoKi::Cuts::SUMTREE( LoKi::Cuts::E , iss > 0. , 0. );
   jet->addInfo ( Hass , Fractions(jet)/LoKi::Cuts::E(jet)  );
@@ -766,49 +653,16 @@ StatusCode LoKi::MCJetMaker::appendJetIDInfo( LHCb::Particle* jet )
 	otherMotherFraction -= (*i_motherBar).second + maxMotherFraction;
 	maxMotherFraction = (*i_motherBar).second;
       }
-    }
+  }
   jet->addInfo ( GMotherBarCode , maxMotherBar  );
   jet->addInfo ( FracOfOtherMother , otherMotherFraction  );
 
   return SUCCESS;
 }
 
-
-
-
-
-
-
-bool  LoKi::MCJetMaker::isALongLivedDecay( const LHCb::MCParticle *mcparticle ){
-  if(std::find( m_listOfLongLived.begin(),  m_listOfLongLived.end(), mcparticle->particleID().abspid()) !=  m_listOfLongLived.end()) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-
-bool LoKi::MCJetMaker::isFromPV( const LHCb::MCParticle *mcparticle ){
-  const LHCb::MCVertex * ov = mcparticle->originVertex();
-  if (ov->isPrimary())
-    return true;
-  if ((ov->type() != 1) && (ov->type() != 2) && (ov->type() != 3) && (ov->type() != 4))
-    return false;
-  if(std::find(m_listOfLongLived.begin(), m_listOfLongLived.end(), mcparticle->mother()->particleID().abspid()) != m_listOfLongLived.end()) {
-    return false;
-  }
-  return isFromPV( ov->mother() );
-}
-
-
-
-
-
-
-
 // ===========================================================================
 /// The factory
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,MCJetMaker)
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,HEPMCJetMaker)
 // ============================================================================
-// The END
+// The END 
 // ============================================================================
