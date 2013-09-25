@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2013-09-25 - Tim Evans
+ - Add VPDigit RawBank to RawBank types 
+
 !========================= DAQEvent v9r12p1 2013-06-03 =========================
 ! 2013-05-23 - Marco Cattaneo
  - Updated comment on ODIN::triggerConfigurationKey to alert users that this is
