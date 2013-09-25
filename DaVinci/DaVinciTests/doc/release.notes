@@ -1,8 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : DaVinciTests
-! Responsible : Juan Palacios
+! Responsible : Chris Jones
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+
+! 2013-09-25 - Chris Jones
+ - Update Stripping20rXp2 references now AppConfig options are available.
 
 ! 2013-09-19 - Christopher Rob Jones
  - Add exclusions for "Trying to import module StrippingArchive.Stripping..."
