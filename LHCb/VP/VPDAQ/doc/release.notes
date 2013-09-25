@@ -4,6 +4,9 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+! 2013-09-25 - Tim Evans
+ - Added VPDigit raw bank encoding and decoding 
+
 ! 2013-09-09 - Heinrich Schindler
  - Follow detector element and channel ID changes (r162190, 162191)
 
