@@ -25,6 +25,10 @@ static int USER_next_off;
 static qentry_t *desc_head = 0;
 static int reference_count = 0;
 
+static inline int mbm_error_code()  {  
+  return MBM_ERROR;  
+}
+
 static inline int mbm_error(const char* fn, int line)  {  
   ::lib_rtl_output(LIB_RTL_ERROR,"MBM Error in '%s' Line:%d\n",fn,line);
   return MBM_ERROR;  
@@ -35,6 +39,7 @@ static inline int mbm_error(const char* fn, int line)  {
 #define CHECKED_CONSUMER(u)  (u); if ( !(u) || (u)->magic != MBM_USER_MAGIC || (u)->uid == -1 ) return MBM_ILL_CONS;
 #define CHECKED_CLIENT(u)    (u); if ( !(u) || (u)->magic != MBM_USER_MAGIC || (u)->uid == -1 ) return MBM_ERROR;
 
+#define  MBM_ERROR_CODE mbm_error_code()
 #undef   MBM_ERROR
 #define  MBM_ERROR  mbm_error(__FILE__,__LINE__);
 #define  MBMQueue   RTL::DoubleLinkedQueue
@@ -175,7 +180,7 @@ int mbmsrv_map_global_buffer_info(lib_rtl_gbl_t* handle, bool create)  {
   if( !lib_rtl_is_success(status) && create )    {
     status = ::lib_rtl_create_section("bm_buffers",len,&h,true);
     if(!lib_rtl_is_success(status))   {   
-      return MBM_ERROR;
+      return MBM_ERROR_CODE;
     }
     BUFFERS* buffs = (BUFFERS*)h->address;
     ::memset(buffs,0,len);
@@ -183,7 +188,7 @@ int mbmsrv_map_global_buffer_info(lib_rtl_gbl_t* handle, bool create)  {
   }
   else if (!lib_rtl_is_success(status)) {
     *handle = 0;
-    return MBM_ERROR;
+    return MBM_ERROR_CODE;
   }
   BUFFERS* b = (BUFFERS*)h->address;
   b->p_bmax = MBM_MAX_BUFF;
@@ -880,15 +885,14 @@ int mbmsrv_free_event(ServerBMID bm, MSG& msg) {
 int mbmsrv_pause(ServerBMID bm, MSG& msg) {
   USER* u = CHECKED_CONSUMER(msg.user);
   LOCK lock(bm->lockid);
-  qentry_t* none = 0;
   if (u->held_eid != EVTID_NONE)  {
     _mbmsrv_rel_event(bm, u);
   }
   u->state = S_pause;
-  MBMQueue<EVENT> que(none, -EVENT_next_off);
+  MBMQueue<EVENT> que(bm->evDesc,-EVENT_next_off);
   for(EVENT* e = que.get(); e; e = que.get())  {
     _mbmsrv_evt_clear(e,u);
-    if ( _mbmsrv_evt_held(e) ) _mbmsrv_del_event(bm, u, e);
+    if ( _mbmsrv_evt_held(e) ) _mbmsrv_del_event(bm,u,e);
   }
   return MBM_NORMAL;
 }
@@ -1305,6 +1309,7 @@ int _mbmsrv_connect(ServerBMID bm)    {
 	return MBM_ERROR;
       }
     }
+    ::chmod(s.fifoName,0666);
     if( -1 == (s.fifo=::open(s.fifoName,O_RDWR|O_NONBLOCK)) ) {
       ::lib_rtl_signal_message(LIB_RTL_OS,"Unable to open the fifo: %s\n",s.fifoName);
       _mbmsrv_close_fifos(bm);

@@ -91,6 +91,7 @@ namespace RTL {
     void install(int num, const string& name, struct sigaction& action);
     void init();
     static void handler(int signum, siginfo_t *info,void * );
+    static void back_trace();
   };
   static ExitSignalHandler& s_RTL_ExitSignalHandler = ExitSignalHandler::instance();
 }
@@ -143,6 +144,21 @@ void RTL::ExitSignalHandler::install(int num, const string& name, struct sigacti
   //cout << "Successfully installed handler for " << name << endl;
   old_action.first = name;
 }
+#ifdef _WIN32
+void RTL::ExitSignalHandler::back_trace() {
+}
+#else
+#include <execinfo.h>
+void RTL::ExitSignalHandler::back_trace() {
+  void *bt[256];
+  int bt_size = backtrace(bt, sizeof(bt) / sizeof(void *));
+  printf("\n[ERROR] (ExitSignalHandler) ---------------------- Backtrace ----------------------\n");
+  printf("Number of elements in backtrace: %d\n", bt_size);
+  for (int i = 0; i < bt_size; i++) {
+    printf("[ERROR] (ExitSignalHandler) %02d --> %p\n", i, bt[i]);
+  }
+}
+#endif
 
 void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void *ptr) {
   SigMap& m = instance().m_map;
@@ -152,12 +168,20 @@ void RTL::ExitSignalHandler::handler(int signum, siginfo_t *info, void *ptr) {
     func_cast<void (*)(int)> dsc0(old);
     func_cast<void (*)(int,siginfo_t*, void*)> dsc(dsc0.ptr);
     if ( s_RTL_exit_handler_print ) {
-      ::lib_rtl_output(LIB_RTL_ERROR,"RTL:Handled signal: %d [%s] Old action:%p\n",
-		       signum,(*i).second.first.c_str(),dsc.ptr);
+      printf("[ERROR] (ExitSignalHandler) RTL:Handled signal: %d [%s] Old action:%p Mem:%p Code:%08X\n",
+		       signum,(*i).second.first.c_str(),dsc.ptr,info->si_addr,info->si_code);
     }
     if ( signum == SIGINT || signum == SIGHUP || signum == SIGFPE || signum == SIGPIPE ) {
       if ( old && old != SIG_IGN && dsc.fun )
 	dsc.fun(signum,info,ptr);
+    }
+    else if ( signum == SIGSEGV && old && old != SIG_IGN && old != SIG_DFL ) {
+      RTL::ExitHandler::execute();
+      if ( dsc.fun ) 
+	dsc.fun(signum,info,ptr);
+      else 
+	(*old)(signum);
+      ::_exit(0);
     }
     else if ( old && old != SIG_IGN && dsc.fun )  {
       RTL::ExitHandler::execute();

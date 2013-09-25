@@ -237,6 +237,7 @@ BMID mbm_include(const char* bm_name, const char* name, int partid) {
       return MBM_INV_DESC;
     }
   }
+  ::chmod(bm->fifoName,0666);
   if( (bm->fifo=::open(bm->fifoName, O_RDONLY | O_NONBLOCK)) < 0 ) {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Cannot open local fifo '%s' for MBM buffer %s.",
 			     bm->fifoName,bm->bm_name);
