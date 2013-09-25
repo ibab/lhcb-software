@@ -23,6 +23,22 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v22r8p1> 2013-09-25 Bender v22r8p1 based on the DaVinci v33r6p1</A>
+
+It is very similar to to v22r8 
+but is based on the DaVinci v33r6p1.
+
+There are few changes for Bender-based scripts:
+<li> 
+	New script <code>no-mc-decays/no-decays</code> is added to adress 
+	``MCDecayTuple does not contain all events'' problem
+</li>
+<li> 
+	fixed the broken functionailty of 
+  <code>get-db-tags/db-tags/get-metainfo</code> scripts 
+</li>
+
+
 <A NAME=v22r8>   2013-08-10 Bender v22r8 based on the DaVinci v33r6</A>
 
 It is very similar to to v22r7 and v22r7p1, 
