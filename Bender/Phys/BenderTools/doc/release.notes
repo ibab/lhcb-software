@@ -5,6 +5,11 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2013-09-25 - Vanya Belyaev
+ - NoMCdecay module and no_mc_decays script 
+   (and many aliases: "no-decay" ,"no-mc-decays", etc..)
+   to address  ``MCDecayTuple does not contain all events'' problem
+
 ! 2013-08-28 - Vanya Belyaev
  - fix (?) broken get_db*/get_meta* functionality 
 

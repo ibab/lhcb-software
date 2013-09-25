@@ -190,8 +190,8 @@ def makeParser ( usage = None ,
 def dataType ( files ) :
     """
     extract the data type,
-    simulaton type and input type from file name
-
+    simulation type and input type from file name
+    
     >>> file_names  = ...
     >>> data_type, simulation,ext = daataType ( file_names )
     

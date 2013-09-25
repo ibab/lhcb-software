@@ -64,7 +64,7 @@ Last modification $Date$
 
 """
 # =============================================================================
-__author__  = 'Vanya BELYAEV Ivan.Belyaev@cern.ch'
+__author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2011-10-24"
 __version__ = '$Revision$'
 __all__     = ()  ## nothing to import 

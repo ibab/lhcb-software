@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-## @file dst-dump.py
+## @file no_mc_decays.py
 #
-#  Trivial Bender-based script to dump the content of (x,mu,s,r,...)DSTs
+#  Simple script to address ``MCDecayTuple does not contain all events'' problem
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -22,20 +22,21 @@
 #
 # @code
 #
-#    dst_dump [options] file1 [ file2 [ file3 [ file4 ....'
+#    no-mc-decays [options] -d GENERICDECAY
+#                           -z DECAYINQUESTION file1 [ file2 [ file3 [ file4 ....'
 #
 #  @endcode 
 #
 #  @date   2011-10-24
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #
-#                    $Revision$
-#  Last modification $Date$
-#                 by $Author$
+#                    $Revision: 152803 $
+#  Last modification $Date: 2013-02-23 14:29:42 +0100 (Sat, 23 Feb 2013) $
+#                 by $Author: ibelyaev $
 # =============================================================================
-
 """
-Trivial Bender-based script to dump the content of (x,mu,s,r,...)DSTs
+
+Simple script to address ``MCDecayTuple does not contain all events'' problem
 
 This file is a part of BENDER project:
 
@@ -53,34 +54,36 @@ By usage of this code one clearly states the disagreement with the smear campaig
 
 Usage:
 
-    dst-dump [options] file1 [ file2 [ file3 [ file4 ....'
+    no-mc-decays [options] -d GENERICDECAY
+                           -z DECAYINQUESTION file1 [ file2 [ file3 [ file4 ....'
 
-
-                  $Revision$
-Last modification $Date$
-               by $Author$
+                  $Revision: 152803 $
+Last modification $Date: 2013-02-23 14:29:42 +0100 (Sat, 23 Feb 2013) $
+               by $Author: ibelyaev $
 
 """
 # =============================================================================
-__author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
-__date__    = "2011-10-24"
-__version__ = '$Revision$'
-__all__     = ()  ## nothing to import 
-__usage__   = 'dst_dump [options] file1 [ file2 [ file3 [ file4 ....'
+__author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
+__date__    = " 2013-09-25 "
+__version__ = " $Revision: 162137 $ "
+__usage__   = """
+   no-mc-decays [options] -d GENERICDECAY
+                          -z DECAYINQUESTION file1 [ file2 [ ....
+   """
 # =============================================================================
 
-print 120*'*'
-print                __doc__ 
-print ' Author  : ', __author__ 
-print ' Version : ', __version__ 
-print ' Date    : ', __date__
-
-from BenderTools.DstDump import dumpDst
-
-dumpDst ( __usage__ , __version__ )
-
-print 120*'*'
-
+if '__main__' == __name__ :
+    
+    print 120*'*'
+    print                __doc__ 
+    print ' Author  : ', __author__ 
+    print ' Version : ', __version__ 
+    print ' Date    : ', __date__
+    print 120*'*'
+    
+    from BenderTools.NoMCdecay import noDecays 
+    noDecays  ( __usage__ , __version__ )
+    
 # =============================================================================
 # The END 
 # =============================================================================
