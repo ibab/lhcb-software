@@ -4,6 +4,13 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2013-09-25 - Heinrich Schindler
+ - Modifications for use with new XML and detector element hierarchy
+ - Moved track extrapolation to PatPixelTracking
+ - Temporarily removed trackUpstream method
+ - Moved position calculation to PatPixelHitManager 
+ - Removed printf statements from helper classes
+ 
 ! 2013-09-18 - Marco Cattaneo
  - Fix uninitialised counter in PatPixelHitManager.h
 

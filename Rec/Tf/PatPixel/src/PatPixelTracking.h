@@ -32,38 +32,38 @@ class PatPixelTracking : public GaudiAlgorithm {
 
 public: 
   /// Standard constructor
-  PatPixelTracking( const std::string& name, ISvcLocator* pSvcLocator );
-
-  virtual ~PatPixelTracking( ); ///< Destructor
+  PatPixelTracking(const std::string& name, ISvcLocator* pSvcLocator);
+  /// Destructor
+  virtual ~PatPixelTracking();
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
+private:
 
-  void trackDownstream(void);
-  void trackUpstream(void);
-  void searchByPair();                            // search for tracks starting from pair of hits on adjacent sensors
+  void trackDownstream(const PatPixelHit* h1, const PatPixelHit* h2);
+  void trackUpstream();
+  /// Search for tracks starting from pair of hits on adjacent sensors
+  void searchByPair();                            
+  PatPixelHit* bestHit(PatPixelSensor* sensor, double xTol, double maxScatter,
+                       const PatPixelHit* h1, const PatPixelHit* h2);
+  /// Produce LHCb::Track list understandable to other LHCb applications
+  void makeLHCbTracks();
 
-  void makeLHCbTracks( LHCb::Tracks* tracks );    // produce LHCb::Track list understable to other LHCb applications
-
-  //== Debugging methods
-  bool matchKey( const PatPixelHit* hit ) {
-    if ( m_debugTool ) {
+  /// Debugging methods
+  bool matchKey(const PatPixelHit* hit) {
+    if (m_debugTool) {
       LHCb::LHCbID id = hit->id();
-      return m_debugTool->matchKey( id, m_wantedKey );
+      return m_debugTool->matchKey(id, m_wantedKey);
     }
     return false;
   }
+  void printHit(const PatPixelHit* hit, std::string title = "");
+  void printTrack(PatPixelTrack& track);
+  void printHitOnTrack(PatPixelHit* hit, bool ifMatch = true);
 
   void removeWorstHit ( double maxChi2 );
-  bool addHitsOnSensor( PatPixelSensor* sensor, double xTol, double maxScatter );
-  void printHit( const PatPixelHit* hit, std::string title="" );
-  void printTrack( PatPixelTrack& track );
-  void printHitOnTrack ( PatPixelHit* hit, bool ifMatch=true );
 
-private:
   std::string m_outputLocation;
   PatPixelHitManager* m_hitManager;
 
@@ -71,7 +71,7 @@ private:
   double m_maxYSlope;
   double m_extraTol;
   double m_maxScatter;
-  int    m_maxMissed;
+  unsigned int m_maxMissed;
   bool   m_clearHits;
   bool   m_stateClosestToBeamKalmanFit ;
   bool   m_stateEndVeloKalmanFit ;

@@ -1,195 +1,203 @@
-// Include files 
-
-// from Gaudi
+// Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "Event/VPLiteCluster.h"
 
-// local
+// Local
 #include "PatPixelHitManager.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : PatPixelHitManager from FastVeloHitManager
+// Implementation file for class : PatPixelHitManager
 //
 // 2012-01-05 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PatPixelHitManager )
-
+DECLARE_TOOL_FACTORY(PatPixelHitManager)
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  PatPixelHitManager::PatPixelHitManager( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent )
-    : GaudiTool ( type, name , parent )
-{
+PatPixelHitManager::PatPixelHitManager(const std::string& type,
+                                       const std::string& name,
+                                       const IInterface* parent) :
+    GaudiTool(type, name, parent) {
+
   declareInterface<PatPixelHitManager>(this);
+
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-PatPixelHitManager::~PatPixelHitManager() {
-}
+PatPixelHitManager::~PatPixelHitManager() {}
+
 //=============================================================================
 // Initialization
 //=============================================================================
 StatusCode PatPixelHitManager::initialize() {
-  StatusCode sc = GaudiTool::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-  m_veloPix      = getDet<DeVP>( DeVPLocation::Default );
-
-  // make sure we are up-to-date on populated VELO stations
-  registerCondition( (*(m_veloPix->leftSensorsBegin()))->geometry(), &PatPixelHitManager::rebuildGeometry );
-  registerCondition( (*(m_veloPix->rightSensorsBegin()))->geometry(), &PatPixelHitManager::rebuildGeometry );
-
-  // first update
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
+  // Get detector element.
+  m_vp = getDet<DeVP>(DeVPLocation::Default);
+  // Make sure we are up-to-date on populated VELO stations
+  registerCondition((*(m_vp->leftSensorsBegin()))->geometry(), &PatPixelHitManager::rebuildGeometry);
+  registerCondition((*(m_vp->rightSensorsBegin()))->geometry(), &PatPixelHitManager::rebuildGeometry);
+  // First update
   sc = updMgrSvc()->update(this);
-  if(!sc.isSuccess()) {
-    return Error( "Failed to update station structure." );
+  if (!sc.isSuccess()) {
+    return Error("Failed to update station structure.");
   }
 
-  // invalidate measurements at the beginning of each event
+  // Invalidate measurements at the beginning of each event
   incSvc()->addListener(this, IncidentType::BeginEvent);
 
-  m_pool.resize( 10000 );
+  // Setup the hit pool.
+  m_pool.resize(10000);
   m_nextInPool = m_pool.begin();
   m_maxSize = 0;
   m_eventReady = false;
-
   return StatusCode::SUCCESS;
+
 }
 
 //=========================================================================
 //  Finalize method.
 //=========================================================================
-StatusCode PatPixelHitManager::finalize ( ) {
+StatusCode PatPixelHitManager::finalize() {
+
   info() << "Maximum number of Velo hits " << m_maxSize << endmsg;
-  for ( std::vector<PatPixelSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS ) {
-    if ( NULL != *itS ) delete *itS;
+  std::vector<PatPixelSensor*>::iterator itS;
+  for (itS = m_modules.begin(); m_modules.end() != itS; ++itS) {
+    if (*itS) delete *itS;
   }
   return GaudiTool::finalize();
+
 }
-//=========================================================================
-//  Rebuild the geometry. Needed in case something changes in the Velo during the run...
-//=========================================================================
-StatusCode PatPixelHitManager::rebuildGeometry ( ) {
 
-  for ( std::vector<PatPixelSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS ) {
-    if ( NULL != *itS ) delete *itS;
+//=========================================================================
+// Rebuild the geometry. Needed in case something changes in the Velo during the run...
+//=========================================================================
+StatusCode PatPixelHitManager::rebuildGeometry() {
+
+  // Delete the existing modules.
+  std::vector<PatPixelSensor*>::iterator itm;
+  for (itm = m_modules.begin(); m_modules.end() != itm; ++itm) {
+    if (*itm) delete *itm;
   }
-  m_sensors.clear();
-  m_firstSensor = 999;
-  m_lastSensor  = 0;
+  m_modules.clear();
+  m_firstModule = 999;
+  m_lastModule  = 0;
 
-  std::vector<int> previous(2,-1);
-
-  for ( std::vector<DeVPSensor*>::const_iterator itS = m_veloPix->sensorsBegin();
-        m_veloPix->sensorsEnd() > itS; ++itS ) {
-    //== TO BE DONE ===   if ( !(*itS)->isReadOut() ) continue;
-    PatPixelSensor* sens = new PatPixelSensor( *itS );
-    while ( m_sensors.size() < sens->number() ) {
-      m_sensors.push_back( 0 );
+  int previousLeft = -1;
+  int previousRight = -1;
+  std::vector<DeVPSensor*>::const_iterator its;
+  for (its = m_vp->sensorsBegin(); m_vp->sensorsEnd() > its; ++its) {
+    //== TO BE DONE === 
+    // if (!(*its)->isReadOut()) continue;
+    // Get the number of the module this sensor is on.
+    const unsigned int number = (*its)->module();
+    if (number < m_modules.size()) {
+      // Check if this module has already been setup.
+      if (m_modules[number]) continue;
+    } else {
+      while (number > m_modules.size() + 1) {
+        m_modules.push_back(0);
+      }
     }
-    m_sensors.push_back( sens );
-    int side = 0;
-    unsigned int number = sens->number();
-    if ( sens->isRight() ) side = 1;
-    if ( m_firstSensor > number ) m_firstSensor = number;
-    if ( m_lastSensor  < number ) m_lastSensor  = number;
-    sens->setPrevious( previous[side] );
-    previous[side] = number;
+    // Create a new module and add it to the list.
+    PatPixelSensor* module = new PatPixelSensor(number, (*its)->isRight());
+    module->setZ((*its)->z());
+    if ((*its)->isRight()) {
+      module->setPrevious(previousRight);
+      previousRight = number;
+    } else {
+      module->setPrevious(previousLeft);
+      previousLeft = number;
+    }
+    m_modules.push_back(module);
+    if (m_firstModule > number) m_firstModule = number;
+    if (m_lastModule  < number) m_lastModule  = number;
   }
-
-  previous[0] = -1;
-  previous[1] = -1;
-
-
-  if ( msgLevel( MSG::DEBUG ) ) {
-    info() << "Found sensors from " << m_firstSensor << " to " << m_lastSensor << endmsg;
-
-    for ( std::vector<PatPixelSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS ) {
-      if ( 0 != *itS) {
-        info() << "   Sensor " << (*itS)->number() << " prev " << (*itS)->previous() << endmsg;
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "Found modules from " << m_firstModule << " to " << m_lastModule << endmsg;
+    for (itm = m_modules.begin(); m_modules.end() != itm; ++itm) {
+      if (*itm) {
+        debug() << "  Module " << (*itm)->number() << " prev " << (*itm)->previous() << endmsg;
       }
     }
   }
   return StatusCode::SUCCESS;
+
 }
 
 //=========================================================================
-//  Incident handler
+// Incident handler
 //=========================================================================
-void PatPixelHitManager::handle ( const Incident& incident ) {
-  if ( IncidentType::BeginEvent == incident.type() ){
+void PatPixelHitManager::handle(const Incident& incident) {
+  if (IncidentType::BeginEvent == incident.type()) {
     this->clearHits();
   }
 }
 
 //=========================================================================
-//  Clear all the hits from a previous event
+// Clear all the hits from a previous event
 //=========================================================================
-void PatPixelHitManager::clearHits( ) {
+void PatPixelHitManager::clearHits() {
   int lastSize = m_nextInPool - m_pool.begin();
-  if ( lastSize > m_maxSize ) m_maxSize = lastSize;
-
-  for ( std::vector<PatPixelSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS ) {
-    if ( 0 != *itS) (*itS)->reset();
+  if (lastSize > m_maxSize) m_maxSize = lastSize;
+  std::vector<PatPixelSensor*>::iterator itS;
+  for (itS = m_modules.begin(); m_modules.end() != itS; ++itS) {
+    if (*itS) (*itS)->reset();
   }
   m_nextInPool = m_pool.begin();
   m_eventReady = false;
 }
 
 //=========================================================================
-//  Convert the LiteClusters to PatPixelHit
+//  Convert the LiteClusters to PatPixelHits
 //=========================================================================
-void PatPixelHitManager::buildHits ( )
-{ if ( m_eventReady ) return;
+void PatPixelHitManager::buildHits() {
+
+  if (m_eventReady) return;
   m_eventReady = true;
 
-  LHCb::VPLiteCluster::VPLiteClusters * liteClusters =
+  // Get the clusters.
+  LHCb::VPLiteCluster::VPLiteClusters* liteClusters =
     GaudiTool::get<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default);
-
-  if ( liteClusters->size() > m_pool.size() ) {
-    m_pool.resize( liteClusters->size() + 100 );
+  // If necessary adjust the size of the hit pool.
+  if (liteClusters->size() > m_pool.size()) {
+    m_pool.resize(liteClusters->size() + 100);
     m_nextInPool = m_pool.begin();
   }
-  
-  LHCb::VPLiteCluster::VPLiteClusters::iterator iClus;
-  unsigned int lastSensor = 9999;
-  PatPixelSensor* mySensor = NULL;
-
-  double dx = 0.055 / sqrt(12.0);                           // assume sigma on hit position (55x55 um square pixel)
-  
-  for ( iClus = liteClusters->begin(); liteClusters->end() != iClus; ++iClus )            // loop over Lite Clusters
-  { unsigned int sensor = iClus->channelID().module();                                    // sensor number in Gaudi
-    if ( sensor > m_sensors.size() ) break;
-    if ( sensor != lastSensor )                                                          // if a new Gaudi sensor
-    { lastSensor = sensor;                                                               // switch HitManager sensor
-       mySensor = m_sensors[sensor]; }                                                   // sensor number in HitManager
-    PatPixelHit* hit = &(*(m_nextInPool++));               // get the next object in the pool => here we store the new hit
-
-    Gaudi::XYZPoint point = mySensor->position( (*iClus).channelID(),                   // calc. 3-D position for this LiteCluster
-                                                (*iClus).interPixelFractionX(), 
-                                                (*iClus).interPixelFractionY() );
-    hit->setHit( LHCb::LHCbID( (*iClus).channelID() ), point, dx, dx, sensor );         // set our hit data
-    mySensor->addHit( hit );
+  // Assume binary resolution of hit position.
+  const double dx = 0.055 / sqrt(12.0);
+  // Loop over clusters.
+  LHCb::VPLiteCluster::VPLiteClusters::iterator itc; 
+  for (itc = liteClusters->begin(); liteClusters->end() != itc; ++itc) {
+    const unsigned int module = itc->channelID().module();
+    if (module >= m_modules.size()) break; // TODO: why?
+    // Get the next object in the pool => here we store the new hit
+    PatPixelHit* hit = &(*(m_nextInPool++));
+    // Calculate the 3-D position for this cluster.
+    Gaudi::XYZPoint point = position((*itc).channelID(),
+                                     (*itc).interPixelFractionX(), 
+                                     (*itc).interPixelFractionY());
+    // Set our hit data
+    hit->setHit(LHCb::LHCbID((*itc).channelID()), point, dx, dx, module);
+    m_modules[module]->addHit(hit);
   }
+
 }
 
 //=========================================================================
-// Sort hits by X within every sensor to speed up the track search
+// Sort hits by X within every module to speed up the track search
 //=========================================================================
-void PatPixelHitManager::sortByX ( ) {
-  for ( std::vector<PatPixelSensor*>::iterator itS = m_sensors.begin(); m_sensors.end() != itS; ++itS )
-  { if ( 0 != *itS)
-    {  std::sort( (*itS)->hits().begin(), (*itS)->hits().end(), PatPixelHit::LowerByX() ); }
+void PatPixelHitManager::sortByX() {
+  std::vector<PatPixelSensor*>::iterator itm;
+  for (itm = m_modules.begin(); m_modules.end() != itm; ++itm) {
+    if (*itm) {
+      std::sort((*itm)->hits().begin(), (*itm)->hits().end(), 
+                PatPixelHit::LowerByX()); 
+    }
   }
 }
-//=============================================================================
-
-
