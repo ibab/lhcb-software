@@ -20,7 +20,7 @@ using namespace LHCb;
 //--------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VPCluster2MCParticleLinker );
+DECLARE_ALGORITHM_FACTORY( VPCluster2MCParticleLinker )
 
 VPCluster2MCParticleLinker::VPCluster2MCParticleLinker(
                                  const std::string& name,
@@ -40,7 +40,7 @@ VPCluster2MCParticleLinker::VPCluster2MCParticleLinker(
 //=============================================================================
 // Destructor
 //=============================================================================
-VPCluster2MCParticleLinker::~VPCluster2MCParticleLinker() {};
+VPCluster2MCParticleLinker::~VPCluster2MCParticleLinker() {}
 
 //=============================================================================
 // Initialisation
@@ -50,7 +50,7 @@ StatusCode VPCluster2MCParticleLinker::initialize() {
   if(sc.isFailure()) return sc;
   if(sc) debug() << "==> Initialise" << endmsg;
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Execution
@@ -91,7 +91,7 @@ StatusCode VPCluster2MCParticleLinker::execute()
     }
   }
   return StatusCode::SUCCESS;
-};
+}
 
 //============================================================================
 // Reference to related MC particles

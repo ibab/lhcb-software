@@ -1,9 +1,12 @@
 !--------------------------------------------------------------------------
-! Package     : VeloPix/VeloPixAssociators
-! Responsible : Marcin Kucharczyk
+! Package     : VP/VPAssociators
+! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
-!========================= VPAssociators v2r2 2013-07-18 =========================
+! 2013-09-26 - Marco Cattaneo
+ - Remove extra ';' to fix CMake warnings
+
+!========================= VPAssociators v2r2 2013-07-18 ========================
 ! 2013-06-24 - Marco Cattaneo
  - Fix UNINIT_CTOR defect
  - Remove empty finalize methods

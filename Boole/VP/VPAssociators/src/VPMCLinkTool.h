@@ -1,4 +1,3 @@
-// $Id: VPMCLinkTool.h,v 1.1.1.1 2009-12-04 14:34:46 marcin Exp $
 #ifndef VPMCLINKTOOL_H
 #define VPMCLINKTOOL_H 1
 
@@ -17,7 +16,7 @@ namespace LHCb {
   class MCParticle;
   class MCHit;
   class VPDigit;
-};
+}
 
 namespace VPMCLinkTool {
   void associateToTruth(const LHCb::VPDigit* aDigit,
@@ -30,6 +29,6 @@ namespace VPMCLinkTool {
                         const LHCb::MCVPDigits* digitsMC,
                         std::map<const LHCb::MCParticle*,double>& particleMap);
   const static double drayTol = 0.02 * Gaudi::Units::mm;
-}; 
+}
 
 #endif // VPMCLINKTOOL_H

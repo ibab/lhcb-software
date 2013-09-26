@@ -19,7 +19,7 @@ using namespace LHCb;
 //--------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VPDigit2MCParticleLinker);
+DECLARE_ALGORITHM_FACTORY(VPDigit2MCParticleLinker)
 
 VPDigit2MCParticleLinker::VPDigit2MCParticleLinker(
                                const std::string& name,
@@ -38,7 +38,7 @@ VPDigit2MCParticleLinker::VPDigit2MCParticleLinker(
 //=============================================================================
 // Destructor
 //=============================================================================
-VPDigit2MCParticleLinker::~VPDigit2MCParticleLinker() {};
+VPDigit2MCParticleLinker::~VPDigit2MCParticleLinker() {}
 
 //=============================================================================
 // Initialisation
@@ -48,7 +48,7 @@ StatusCode VPDigit2MCParticleLinker::initialize() {
   if(sc.isFailure()) return sc;
   if(sc) debug() << "==> Initialise" << endmsg;
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Execution
@@ -90,7 +90,7 @@ StatusCode VPDigit2MCParticleLinker::execute()
   }
    
   return StatusCode::SUCCESS;
-};
+}
 
 
 //============================================================================

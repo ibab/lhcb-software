@@ -22,7 +22,7 @@ using namespace LHCb;
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VPCluster2MCHitLinker);
+DECLARE_ALGORITHM_FACTORY(VPCluster2MCHitLinker)
 
 VPCluster2MCHitLinker::VPCluster2MCHitLinker(const std::string& name,
                             ISvcLocator* pSvcLocator) 
@@ -47,7 +47,7 @@ VPCluster2MCHitLinker::VPCluster2MCHitLinker(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPCluster2MCHitLinker::~VPCluster2MCHitLinker() {};
+VPCluster2MCHitLinker::~VPCluster2MCHitLinker() {}
 
 //=============================================================================
 // Initialisation
@@ -57,7 +57,7 @@ StatusCode VPCluster2MCHitLinker::initialize() {
   if(sc.isFailure()) return sc;
   if(sc) debug() << "==> Initialise" << endmsg;
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Execution
@@ -98,7 +98,7 @@ StatusCode VPCluster2MCHitLinker::execute()
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 
 //============================================================================

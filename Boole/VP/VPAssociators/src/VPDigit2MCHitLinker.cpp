@@ -19,7 +19,7 @@ using namespace LHCb;
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VPDigit2MCHitLinker);
+DECLARE_ALGORITHM_FACTORY(VPDigit2MCHitLinker)
 
 VPDigit2MCHitLinker::VPDigit2MCHitLinker(const std::string& name,
                                                    ISvcLocator* pSvcLocator)
@@ -39,7 +39,7 @@ VPDigit2MCHitLinker::VPDigit2MCHitLinker(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPDigit2MCHitLinker::~VPDigit2MCHitLinker() {};
+VPDigit2MCHitLinker::~VPDigit2MCHitLinker() {}
 
 //=============================================================================
 // Initialisation
@@ -49,7 +49,7 @@ StatusCode VPDigit2MCHitLinker::initialize() {
   if(sc.isFailure()) return sc;
   if(sc) debug() << "==> Initialise" << endmsg;
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Execution
