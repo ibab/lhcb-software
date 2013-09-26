@@ -1,13 +1,11 @@
 #include <vector>
 
 #include "GaudiKernel/AlgFactory.h"
-//#include "BcmDet/DeBcm.h"
-//#include "BcmDet/DeBcmSens.h"
 #include "BcmDigitization.h"
 #include "Event/BcmDigit.h"
 #include "Event/MCBcmDigit.h"
 
-DECLARE_ALGORITHM_FACTORY( BcmDigitization );
+DECLARE_ALGORITHM_FACTORY( BcmDigitization )
 
 BcmDigitization::BcmDigitization(const std::string& name,
                                    ISvcLocator* pSvcLocator)
