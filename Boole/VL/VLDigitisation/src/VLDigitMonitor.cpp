@@ -67,7 +67,7 @@ StatusCode VLDigitMonitor::execute() {
   monitor();
   return StatusCode::SUCCESS;
 
-};
+}
 
 //=============================================================================
 ///  Finalize

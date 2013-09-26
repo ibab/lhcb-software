@@ -139,7 +139,7 @@ StatusCode VLDigitCreator::initialize() {
   }
   return StatusCode::SUCCESS;
 
-};
+}
 
 //===========================================================================
 /// Main execution
