@@ -1,25 +1,27 @@
 from Configurables import Swimming
 from Gaudi.Configuration import *
 
-Swimming().DataType = '2011'
+Swimming().DataType = '2012'
 Swimming().EvtMax = 1000
 Swimming().Simulation = False
-Swimming().DDDBtag = 'head-20110914'
-Swimming().CondDBtag = 'head-20110914'
+Swimming().DDDBtag = 'dddb-20120831'
+Swimming().CondDBtag = 'cond-20120831'
 Swimming().Persistency = 'ROOT'
 Swimming().InputType = 'DST'
-Swimming().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/r/raaij/Swimming/SwimTrigDST_0x00730035.dst'"]
+Swimming().Input = ["PFN:castor:/castor/cern.ch/user/g/gligorov/tests/SwimTrigDST.dst"]
 Swimming().SwimStripping = True
 Swimming().StrippingStream = 'DiMuon'
-Swimming().StrippingVersion = 'Stripping17'
+Swimming().StrippingVersion = 'Stripping20'
 Swimming().StrippingFile = 'B2JpsiXforBeta_s'
-Swimming().StrippingLine = 'BetaS'
-Swimming().StripCands = '/Event/Phys/BetaSBs2JpsiPhiDetachedLine'
-Swimming().OffCands = '/Event/SingleCandidate'
+Swimming().StrippingLineGroup = 'BetaS'
+Swimming().StrippingLine  = 'BetaSBd2JpsiKstarDetachedLine'
+Swimming().StripCands = '/Event/Dimuon/Phys/BetaSBd2JpsiKstarDetachedLine'
+Swimming().OffCands = '/Event/Dimuon/Phys/BetaSBd2JpsiKstarDetachedLine'
 Swimming().SelectMethod = 'random'
 Swimming().OutputType = 'MDST'
+Swimming().OutputFile = 'SwimStrippingMDST.mdst'
 Swimming().UseFileStager = True
-Swimming().Debug = True
+Swimming().Debug = False
 
 from Configurables import CondDB
 CondDB(UseOracle = False, DisableLFC = True)
