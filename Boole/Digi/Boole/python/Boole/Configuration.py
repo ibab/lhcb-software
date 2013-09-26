@@ -438,14 +438,22 @@ class Boole(LHCbConfigurableUser):
     def configureDigiVP(self, seq, tae ):
         # VP digitisation and clustering
         if tae == "":
-            from Configurables import (VPMCDepositCreator,VPMCDigitCreator,VPDigitCreator,
-                                       VPDigitsCreator,VPClusterCreator,PrepareVPRawBank)
-            seq.Members += [VPMCDepositCreator("VPMCDepositCreator") ]
-            seq.Members += [VPMCDigitCreator("VPMCDigitCreator") ]
-            seq.Members += [VPDigitCreator("VPDigitCreator") ]
-            seq.Members += [VPDigitsCreator("VPDigitsCreator") ]
-            seq.Members += [VPClusterCreator("VPClusterCreator") ]
-            seq.Members += [PrepareVPRawBank("PrepareVPRawBank") ]
+            # Previous sequence prior to Boole v26r8
+            #from Configurables import (OldVPMCDepositCreator,OldVPMCDigitCreator,OldVPDigitCreator,
+            #                           OldVPDigitsCreator,OldVPClusterCreator,PrepareVPRawBank)
+            #seq.Members += [OldVPMCDepositCreator("OldVPMCDepositCreator") ]
+            #seq.Members += [OldVPMCDigitCreator("OldVPMCDigitCreator") ]
+            #seq.Members += [OldVPDigitCreator("OldVPDigitCreator") ]
+            #seq.Members += [OldVPDigitsCreator("OldVPDigitsCreator") ]
+            #seq.Members += [OldVPClusterCreator("OldVPClusterCreator") ]
+            #seq.Members += [PrepareVPRawBank("PrepareVPRawBank") ]
+            # New sequence as of Boole v26r8
+            from Configurables import VPDepositCreator, VPDigitCreator
+            seq.Members += [VPDepositCreator(), VPDigitCreator()]
+            from Configurables import VPClustering
+            seq.Members += [VPClustering()]
+            from Configurables import PrepareVPRawBank
+            seq.Members += [PrepareVPRawBank()]
         else:
             raise RuntimeError("TAE not implemented for VP")
 
