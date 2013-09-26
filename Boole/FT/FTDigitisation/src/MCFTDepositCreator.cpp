@@ -26,7 +26,7 @@ using namespace LHCb;
 
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCFTDepositCreator );
+DECLARE_ALGORITHM_FACTORY( MCFTDepositCreator )
 
 
 //=============================================================================
