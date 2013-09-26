@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-09-26 - Vanya Belyaev
+ - add getitem ffor the axes 
+
 ! 2013-09-24 - Vanya Belyaev
  - ZipShelve: add more functionality to ls-method:
 

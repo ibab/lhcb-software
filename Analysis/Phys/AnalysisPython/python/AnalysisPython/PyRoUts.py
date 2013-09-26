@@ -1109,6 +1109,26 @@ def _a_iteritems_ ( axis ) :
 
 ROOT.TAxis. iteritems     = _a_iteritems_
 
+
+# =============================================================================
+## get bin parameters : low- and up-edges 
+def _a_get_item_ ( axis , i ) :
+    """
+    Get bin parameter: low- and up-edges
+
+    >>> axis = ...
+    >>> low,high = axis[1]
+    
+    """
+    if not i in axis : raise IndexError
+    
+    l = axis.GetBinLowEdge ( i )
+    u = axis.GetBinUpEdge  ( i )
+    
+    return l,u
+
+ROOT.TAxis.__getitem__  = _a_get_item_
+
 # =============================================================================
 # soem minor decoration for 2D-histos 
 # =============================================================================
