@@ -4,24 +4,24 @@
 #include "GaudiKernel/AlgFactory.h"
  
 // local
-#include "VPDigitsCreator.h"
+#include "OldVPDigitsCreator.h"
 
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : VPDigitsCreator
+// Implementation file for class : OldVPDigitsCreator
 //
 // 2010-07-07 : Thomas Britton
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VPDigitsCreator );
+DECLARE_ALGORITHM_FACTORY( OldVPDigitsCreator );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-VPDigitsCreator::VPDigitsCreator( const std::string& name,
+OldVPDigitsCreator::OldVPDigitsCreator( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_buffer(NULL)
@@ -62,11 +62,11 @@ VPDigitsCreator::VPDigitsCreator( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPDigitsCreator::~VPDigitsCreator() {}
+OldVPDigitsCreator::~OldVPDigitsCreator() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode VPDigitsCreator::initialize() {
+StatusCode OldVPDigitsCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
@@ -119,10 +119,10 @@ StatusCode VPDigitsCreator::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode VPDigitsCreator::execute() {
+StatusCode OldVPDigitsCreator::execute() {
   
   debug() << "==> Execute" << endmsg;
-  // printf("VPDigitsCreator::execute() =>\n");
+  // printf("OldVPDigitsCreator::execute() =>\n");
 
   // ================================
   // add Previous (or Next) bunch crossing hits (min.bias) to the buffer with prev. bunch crossing info
@@ -339,7 +339,7 @@ StatusCode VPDigitsCreator::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode VPDigitsCreator::finalize() {
+StatusCode OldVPDigitsCreator::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
@@ -350,7 +350,7 @@ StatusCode VPDigitsCreator::finalize() {
 }
 
 // pulse shape with max normalized to 1.0
-double VPDigitsCreator::pulseShape(double time) {
+double OldVPDigitsCreator::pulseShape(double time) {
   if( time < 0.0 )return 0.0;
   if( time <= m_peakTime )return (time/m_peakTime);
   if( time < ( m_peakTime+m_decayTime ) )return (1.0 - (time-m_peakTime)/m_decayTime);
@@ -358,12 +358,12 @@ double VPDigitsCreator::pulseShape(double time) {
 }
 
 // from bunch crossing number difference to time
-double VPDigitsCreator::convertToTime(int bunchCrossingNumberDifference) {
+double OldVPDigitsCreator::convertToTime(int bunchCrossingNumberDifference) {
   return (m_bunchCrossingSpacing*bunchCrossingNumberDifference);  
 }
 
 // linear conversion from charge in electrons to ToT counts
-int VPDigitsCreator::convertToTDC(double charge) {
+int OldVPDigitsCreator::convertToTDC(double charge) {
   int tot = int(ceil(charge * m_conversion));
   if( tot > m_maxToT ) tot = m_maxToT;
   if( tot <  1 )tot = 1;  
@@ -371,7 +371,7 @@ int VPDigitsCreator::convertToTDC(double charge) {
 }
 
 // non-linearity in charge digitazation
-double VPDigitsCreator::nonLinearModel(double charge){
+double OldVPDigitsCreator::nonLinearModel(double charge){
   double q = charge*m_scale;  
   return (q + m_b1 - m_c1/(q-m_t))/m_scale;  
 }

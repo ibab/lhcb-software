@@ -10,23 +10,23 @@
 // Boost
 #include "boost/assign/list_of.hpp"
 // Local
-#include "VPMCDigitCreator.h"
+#include "OldVPMCDigitCreator.h"
 
 using namespace LHCb;
 
 //------------------------------------------------------------
-// Implementation file for class : VPMCDigitCreator
+// Implementation file for class : OldVPMCDigitCreator
 //
 // 20/09/2009 : Marcin Kucharczyk
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VPMCDigitCreator)
+DECLARE_ALGORITHM_FACTORY(OldVPMCDigitCreator)
 
 //=============================================================================
 // Constructor
 //=============================================================================
-VPMCDigitCreator::VPMCDigitCreator(const std::string& name, 
+OldVPMCDigitCreator::OldVPMCDigitCreator(const std::string& name, 
                                              ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
   , m_isDebug(false)
@@ -47,12 +47,12 @@ VPMCDigitCreator::VPMCDigitCreator(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPMCDigitCreator::~VPMCDigitCreator(){}
+OldVPMCDigitCreator::~OldVPMCDigitCreator(){}
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode VPMCDigitCreator::initialize() {
+StatusCode OldVPMCDigitCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   m_isDebug = msgLevel(MSG::DEBUG);
@@ -64,7 +64,7 @@ StatusCode VPMCDigitCreator::initialize() {
 //=============================================================================
 //  Execution
 //=============================================================================
-StatusCode VPMCDigitCreator::execute() {
+StatusCode OldVPMCDigitCreator::execute() {
   if(m_isDebug) debug() << "==> Execute" << endmsg;
   // Clear path vectors
   m_spillPaths.clear();
@@ -102,11 +102,11 @@ StatusCode VPMCDigitCreator::execute() {
 //============================================================================
 // Create MCVPDigits
 //============================================================================
-void VPMCDigitCreator::createMCDigits(
+void OldVPMCDigitCreator::createMCDigits(
                             const MCVPDeposits* depositCont,  // list of deposits is sorted accord. to channel id
                             LHCb::MCVPDigits* digitsCont)     // otherwise the collection method would not work
 {
-  // printf("VPMCDigitCreator::createMCDigits(): %d deposits\n", depositCont->size());
+  // printf("OldVPMCDigitCreator::createMCDigits(): %d deposits\n", depositCont->size());
   // Collect all deposits that belong to the same pixel
   MCVPDeposits::const_iterator iterDep = depositCont->begin();
   MCVPDeposits::const_iterator jterDep = iterDep;
@@ -136,7 +136,7 @@ void VPMCDigitCreator::createMCDigits(
 //============================================================================
 // Keep adding charge assigned to the same channelID 
 //============================================================================ 
-bool VPMCDigitCreator::keepAdding(const MCVPDeposit* firstDep,
+bool OldVPMCDigitCreator::keepAdding(const MCVPDeposit* firstDep,
                                        const MCVPDeposit* secondDep) const
 {
   return (firstDep->channelID() == secondDep->channelID()); // return true if same channel ID (same pixel)

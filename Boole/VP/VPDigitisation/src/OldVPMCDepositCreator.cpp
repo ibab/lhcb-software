@@ -27,23 +27,23 @@
 #include <boost/foreach.hpp>
 #include "boost/assign/list_of.hpp"  
 // Local
-#include "VPMCDepositCreator.h"
+#include "OldVPMCDepositCreator.h"
 
 using namespace LHCb;
 
 //------------------------------------------------------------
-// Implementation file for class : VPMCDepositCreator
+// Implementation file for class : OldVPMCDepositCreator
 //
 // 20/09/2009 : Marcin Kucharczyk
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VPMCDepositCreator)
+DECLARE_ALGORITHM_FACTORY(OldVPMCDepositCreator)
 
 //=============================================================================
 // Constructor
 //=============================================================================
-VPMCDepositCreator::VPMCDepositCreator(const std::string& name, 
+OldVPMCDepositCreator::OldVPMCDepositCreator(const std::string& name, 
                                                  ISvcLocator* pSvcLocator)
 #ifdef DEBUG_HISTO
   : GaudiTupleAlg(name, pSvcLocator),
@@ -77,12 +77,12 @@ VPMCDepositCreator::VPMCDepositCreator(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPMCDepositCreator::~VPMCDepositCreator(){}
+OldVPMCDepositCreator::~OldVPMCDepositCreator(){}
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode VPMCDepositCreator::initialize() {
+StatusCode OldVPMCDepositCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   m_isDebug = msgLevel(MSG::DEBUG);
@@ -110,7 +110,7 @@ StatusCode VPMCDepositCreator::initialize() {
   m_depositedCharge = tool<ISiDepositedCharge>(m_depChTool,"DepCharge",this);
   // Get detector elements
   m_det = getDet<DeVP>(DeVPLocation::Default);
-  // printf("VPMCDepositCreator::initialize()\n");
+  // printf("OldVPMCDepositCreator::initialize()\n");
   // Random number generators
   StatusCode scG = m_gaussDist.initialize(randSvc(),Rndm::Gauss(0.0,1.0));
   StatusCode scU = m_uniformDist.initialize(randSvc(),Rndm::Flat(0.0,1.0));
@@ -130,7 +130,7 @@ StatusCode VPMCDepositCreator::initialize() {
 //=========================================================================
 //  Main execution
 //=========================================================================
-StatusCode VPMCDepositCreator::execute() {
+StatusCode OldVPMCDepositCreator::execute() {
   if(m_isDebug) debug() << "==> Execute" << endmsg;
   // Output containers put into the store  
   std::vector<LHCb::MCVPDeposits*> depositsVector;
@@ -140,14 +140,14 @@ StatusCode VPMCDepositCreator::execute() {
     put(depositsContainer,path);
     depositsVector.push_back(depositsContainer);
   }
-  // printf("VPMCDepositCreator::execute() => %d spills\n", m_spillPaths.size());
+  // printf("OldVPMCDepositCreator::execute() => %d spills\n", m_spillPaths.size());
   // Loop over spills
   for(unsigned int iSpill = 0; iSpill < m_spillPaths.size(); ++iSpill) {
     if(exist<LHCb::MCHits>(m_spillPaths[iSpill]) == false) {
       debug() << "Unable to retrieve " + m_spillPaths[iSpill] << endmsg;
     }
     else {
-      // printf("VPMCDepositCreator::execute() => process spill %d/%d = %s\n", iSpill, m_spillPaths.size(), m_spillPaths[iSpill].c_str() );
+      // printf("OldVPMCDepositCreator::execute() => process spill %d/%d = %s\n", iSpill, m_spillPaths.size(), m_spillPaths[iSpill].c_str() );
       const LHCb::MCHits* hits = get<LHCb::MCHits>(m_spillPaths[iSpill]);
       createDeposits(hits, depositsVector[iSpill]);
     }
@@ -164,10 +164,10 @@ StatusCode VPMCDepositCreator::execute() {
 //============================================================================
 // Create MCVPDeposits
 //============================================================================
-void VPMCDepositCreator::createDeposits(
+void OldVPMCDepositCreator::createDeposits(
                               const LHCb::MCHits* mcHitContainer, 
                               LHCb::MCVPDeposits*& depositsCont)
-{ // printf("VPMCDepositCreator::createDeposits()\n");
+{ // printf("OldVPMCDepositCreator::createDeposits()\n");
   int Count=0;
   // Loop over MChits
   for(LHCb::MCHits::const_iterator iHit = mcHitContainer->begin();    // loop over MC hits
@@ -176,13 +176,13 @@ void VPMCDepositCreator::createDeposits(
     // printf(" MCHit: sensDetID=%2d path=%6.1f um dep. energy=%5.1f keV p=%7.1f MeV/c time=%5.3f ns\n",
     //               hit->sensDetID(), 1000*hit->pathLength(), 1000*hit->energy(), hit->p(), hit->time() );
 #ifdef DEBUG_HISTO
-    plot(1000*hit->pathLength(), "PathInSensor",  "VPMCDepositCreator: Path in sensor [um]" , 0.0, 300.0, 60);
-    plot(1000*hit->energy(),     "EnergyInSensor","VPMCDepositCreator: Energy deposited in sensor [keV]" , 0.0, 200.0, 40);
+    plot(1000*hit->pathLength(), "PathInSensor",  "OldVPMCDepositCreator: Path in sensor [um]" , 0.0, 300.0, 60);
+    plot(1000*hit->energy(),     "EnergyInSensor","OldVPMCDepositCreator: Energy deposited in sensor [keV]" , 0.0, 200.0, 40);
 #endif
     Count+=1;
     // Number of points per pixel to distribute charge on
     int simPoints = simulatedPoints(hit);                              // see into how many parts the path should be divided
-    // printf("VPMCDepositCreator::createDeposits() => simPoints=%d\n", simPoints);
+    // printf("OldVPMCDepositCreator::createDeposits() => simPoints=%d\n", simPoints);
     if(simPoints > 0) {
       // Calculate charge for each point + delta ray inhomogeneities
       std::vector<double> sPoints(simPoints);                          // store simulated charge here
@@ -191,27 +191,27 @@ void VPMCDepositCreator::createDeposits(
       diffuseCharge(hit,sPoints,depositsCont);                         // diffuse some charge to adjacent pixels
     }
   }
-  // printf("VPMCDepositCreator::createDeposits() => %d hits\n", Count);
+  // printf("OldVPMCDepositCreator::createDeposits() => %d hits\n", Count);
 }
 
 //============================================================================
 // Calculate how many points are taken for the simulation in the silicon
 //============================================================================
-int VPMCDepositCreator::simulatedPoints(LHCb::MCHit* hit)
+int OldVPMCDepositCreator::simulatedPoints(LHCb::MCHit* hit)
 {
   if(m_isDebug) debug() << " ==> simulatedPoints() " << endmsg;
   double nrPoints = 0.0;
   double path = hit->pathLength();
   nrPoints = ceil(path / m_siteSize);
   if(nrPoints > m_maxNumSites) nrPoints = double(m_maxNumSites);
-  // printf(" VPMCDepositCreator::simulatedPoints() => path=%5.3f nrPoints=%3.1f\n", path, nrPoints);
+  // printf(" OldVPMCDepositCreator::simulatedPoints() => path=%5.3f nrPoints=%3.1f\n", path, nrPoints);
   return int(nrPoints);
 }
 
 //============================================================================
 // Allocate charge deposit to each point
 //============================================================================
-void VPMCDepositCreator::chargeToPoint(LHCb::MCHit* hit, 
+void OldVPMCDepositCreator::chargeToPoint(LHCb::MCHit* hit, 
                                             std::vector<double>& simPoints) 
 {
   if(m_isDebug) debug() << " ==> chargeToPoint() " << endmsg;
@@ -255,7 +255,7 @@ void VPMCDepositCreator::chargeToPoint(LHCb::MCHit* hit,
       }
     }
   }
-  // printf("VPMCDepositCreator::chargeToPoint() =>");
+  // printf("OldVPMCDepositCreator::chargeToPoint() =>");
   double totalCharge = 0.0;
   for(iP = simPoints.begin(); iP != simPoints.end(); ++iP) {
     totalCharge += (*iP);
@@ -263,7 +263,7 @@ void VPMCDepositCreator::chargeToPoint(LHCb::MCHit* hit,
   }
   // printf(" [%3.1f]\n", totalCharge);                                 // print charge for the whole path in silicon
 #ifdef DEBUG_HISTO
-  plot(totalCharge, "DepositPerHit","VPMCDepositCreator: Charge deposited in sensor [e]" , 0.0, 40000.0, 80);
+  plot(totalCharge, "DepositPerHit","OldVPMCDepositCreator: Charge deposited in sensor [e]" , 0.0, 40000.0, 80);
 #endif
   if(fabs(totalCharge - charge) > 1.e-6) {
     Warning("Normalization problems");
@@ -274,7 +274,7 @@ void VPMCDepositCreator::chargeToPoint(LHCb::MCHit* hit,
 //=============================================================================
 // Allocate remaining charge from delta ray distribution
 //=============================================================================
-void VPMCDepositCreator::deltaRayCh(double charge, double frCh,
+void OldVPMCDepositCreator::deltaRayCh(double charge, double frCh,
 			                 std::vector<double>& simPoints) 
 {
   if(m_isDebug) debug() << " ==> deltaRayCh() " << endmsg;
@@ -300,7 +300,7 @@ void VPMCDepositCreator::deltaRayCh(double charge, double frCh,
 //=============================================================================
 // Delta ray tail random numbers
 //=============================================================================
-double VPMCDepositCreator::ranomDRTail(double minDRC, double maxDRC) 
+double OldVPMCDepositCreator::ranomDRTail(double minDRC, double maxDRC) 
 {
   if(m_isDebug) debug() << " ==> randomDRTail() " << endmsg;
   double range = (1.0 / minDRC) - (1.0 / maxDRC);
@@ -313,7 +313,7 @@ double VPMCDepositCreator::ranomDRTail(double minDRC, double maxDRC)
 //=============================================================================
 // Diffuse charge from points to pixels & create deposits
 //=============================================================================
-void VPMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
+void OldVPMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
                               std::vector<double>& simPoints,          // ionization amounts simulated for this MC hit
                               LHCb::MCVPDeposits*& depositCont)   // storage for pixel deposits
 {
@@ -345,14 +345,14 @@ void VPMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
     channelValid = sensor->pointToChannel(pnt,entryChannel,EntryFraction);                     // which pixel is this ?
     if(!channelValid) {
 #ifdef DEBUG_HISTO
-      plot2D(pnt.x(), pnt.y(), "DeadSensorArea", "VPMCDepositCreator: Dead sensor area [mm]",
+      plot2D(pnt.x(), pnt.y(), "DeadSensorArea", "OldVPMCDepositCreator: Dead sensor area [mm]",
              -40.0, 40.0, -40.0, 40.0, 160, 160);
 #endif
       // Warning("pointToChannel() failure");
       // printf(" => pointToChannel() failed\n");
       continue; }
 #ifdef DEBUG_HISTO
-      plot2D(pnt.x(), pnt.y(), "ActiveSensorArea", "VPMCDepositCreator: Active sensor area [mm]",
+      plot2D(pnt.x(), pnt.y(), "ActiveSensorArea", "OldVPMCDepositCreator: Active sensor area [mm]",
              -40.0, 40.0, -40.0, 40.0, 160, 160);
 #endif
     // printf(" => entryChannel @ [%02d:%c, %02d:%03dx%03d]\n",
@@ -405,7 +405,7 @@ void VPMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
 	                    safe_gsl_sf_erf_Q(xdMax / diffuseSig)) *
                      (safe_gsl_sf_erf_Q(ydMin / diffuseSig) -
 		                  safe_gsl_sf_erf_Q(ydMax / diffuseSig)) * (*iP);
-        // plot(chDepNeigh, "DepositPerPixel","VPMCDepositCreator: Charge deposited in pixel [e]" , 1.0, 25001.0, 50);
+        // plot(chDepNeigh, "DepositPerPixel","OldVPMCDepositCreator: Charge deposited in pixel [e]" , 1.0, 25001.0, 50);
         const double minDeposit = 0.001;                  // [e] avoid storing smaller deposits
         if(chDepNeigh>=minDeposit)                        // added by Pawel Jalocha: to avoid very many deposits of very tiny charge.
         { MCVPDeposit* newDeposit =     

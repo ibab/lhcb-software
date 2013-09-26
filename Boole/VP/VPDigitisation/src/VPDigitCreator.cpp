@@ -1,155 +1,173 @@
-// Include files:
-// STL
-#include <string>
-#include <vector>
-// GSL
-#include "gsl/gsl_sf_erf.h"
+//STL
+#include <map>
+
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SystemOfUnits.h"
-// LHCbKernel
-#include "Kernel/VPChannelID.h"
-#include "Kernel/VPDataFunctor.h"
-#include "LHCbMath/LHCbMath.h"
-// Event
+
+// LHCb
+// Event/MCEvent
 #include "Event/MCVPDigit.h"
+// Event/DigiEvent
 #include "Event/VPDigit.h"
-// Boost
-#include "boost/assign/list_of.hpp"  
-#include "boost/numeric/conversion/bounds.hpp"
+
 // Local
 #include "VPDigitCreator.h"
 
 using namespace LHCb;
 
-//------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Implementation file for class : VPDigitCreator
 //
-// 20/09/2009 : Marcin Kucharczyk
-//------------------------------------------------------------
+// 2010-07-07 : Thomas Britton
+//-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY(VPDigitCreator)
 
 //=============================================================================
-// Constructor
+/// Standard constructor
 //=============================================================================
 VPDigitCreator::VPDigitCreator(const std::string& name, 
-                                         ISvcLocator* pSvcLocator)
+                               ISvcLocator* pSvcLocator) :
 #ifdef DEBUG_HISTO
-  : GaudiTupleAlg(name, pSvcLocator)
+    GaudiTupleAlg(name, pSvcLocator),
 #else
-  : GaudiAlgorithm(name, pSvcLocator)
+    GaudiAlgorithm(name, pSvcLocator),
 #endif
-  , m_isDebug(false)
-  , m_isVerbose(false)
+    m_debug(false) {
 
-{
-  declareProperty("InputLocation", m_inputLocation = 
-                  "MC/VP/Digits");
-  declareProperty("OutputLocation", m_outputLocation = 
-                  "VP/PreDigits");
+  declareProperty("InputLocation",  m_inputLocation =  LHCb::MCVPDigitLocation::MCVPDigitLocation);
+  declareProperty("OutputLocation", m_outputLocation = LHCb::VPDigitLocation::VPDigitLocation);
 
-  std::vector<std::string> tmp =
-    boost::assign::list_of("/")("/Prev/")("/PrevPrev/")("/Next/");
+  // Discrimination threshold in electrons
+  declareProperty("ChargeThreshold", m_threshold = 1000.0);  
+  // Tuning of ToT gain
+  declareProperty("TunedCharge", m_chargeTuning = 15000.); 
+  declareProperty("TunedTOT", m_totTuning = 10.);
+  // Number of bits for ToT
+  declareProperty("NumberOfBits", m_nBits = 4); 
+  // Bunch spacing in ns 
+  declareProperty("BunchCrossingSpacing", m_bunchCrossingSpacing = 25.0);
+  // Sampling phase in ns w. r. t. LHC clock (tuned to largest timewalk)
+  declareProperty("ClockPhase", m_clockPhase = 12.0); 
+  // Sampling period of the ToT counter in ns
+  declareProperty("SamplingPeriod", m_samplePeriod = 25.0);
+  // Electronic noise in electrons
+  declareProperty("ElectronicNoise", m_ElectronicNoise = 100.0);  
+  // Include pixel dead time in the simulation or not
+  declareProperty("DeadTime", m_deadTime = false);  
 
-  declareProperty("SamplesVector", m_sampleNames = tmp);
-  declareProperty("SpillVector", m_spillNames = tmp);
 }
 
 //=============================================================================
-// Destructor
+/// Destructor
 //=============================================================================
-VPDigitCreator::~VPDigitCreator(){}
+VPDigitCreator::~VPDigitCreator() {}
 
 //=============================================================================
-// Initialisation
+/// Initialization
 //=============================================================================
 StatusCode VPDigitCreator::initialize() {
+
   StatusCode sc = GaudiAlgorithm::initialize();
-  if(sc.isFailure()) return sc;
-  m_isDebug = msgLevel(MSG::DEBUG);
-  m_isVerbose = msgLevel(MSG::VERBOSE);
-  if(m_isDebug) debug() << "==> Initialise" << endmsg;
-#ifdef DEBUG_HISTO
-  setHistoTopDir("VP/");
-#endif
+  if (sc.isFailure()) return sc;  
+  m_debug = msgLevel(MSG::DEBUG);
+  if (m_debug) debug() << "==> Initialize" << endmsg;
+
+  // Calculate maximal ToT value (saturation)
+  if (m_nBits > 0) {
+     m_maxToT = (2 << (m_nBits - 1)) - 1;
+  } else {
+     m_maxToT = 1; 
+  }
+  // Calculate discharge rate in ns / electron
+  m_discharge = (m_totTuning * m_samplePeriod) / (m_chargeTuning - m_threshold); 
+  
+  if (m_ElectronicNoise > 0.1) {    
+    sc = m_gaussDist.initialize(randSvc(), Rndm::Gauss(0.0, 1.0));
+    if (!sc) {
+      error() << "Random number initialisation failure" << endmsg;
+      return sc;
+    }
+  }
   return StatusCode::SUCCESS;
+
 }
 
 //=============================================================================
-//  Execution
+/// Main execution
 //=============================================================================
 StatusCode VPDigitCreator::execute() {
-  if(m_isDebug) debug() << "==> Execute" << endmsg;
-  // Clear path vectors
-  m_spillPaths.clear();
-  m_outPaths.clear();
-  std::vector<std::string>::const_iterator iSpillName = m_spillNames.begin() ;
-  while (iSpillName != m_spillNames.end()) {
-    m_spillPaths.push_back("/Event"+(*iSpillName)+m_inputLocation);
-    ++iSpillName;
-  }
-  std::vector<std::string>::const_iterator iSampleName = m_sampleNames.begin();
-  while (iSampleName != m_sampleNames.end()){
-    m_outPaths.push_back("/Event"+(*iSampleName)+m_outputLocation);
-    ++iSampleName;
-  }
-  // Loop over spills
-  for(unsigned int iSpill = 0; iSpill < m_spillPaths.size(); ++iSpill) {
-    if(exist<MCVPDigits>(m_spillPaths[iSpill]) == false) {
-      debug() << "Unable to retrieve " + m_spillPaths[iSpill] << endmsg;
-    }
-    else {
-      const MCVPDigits* digitsMC = 
-                             get<MCVPDigits>(m_spillPaths[iSpill]);
-      // Create VPDigits
-      LHCb::VPDigits* digitsCont = new LHCb::VPDigits();
-      createDigits(digitsMC,digitsCont);
-      // Register VPDigits in the transient data store
-      put(digitsCont,m_outPaths[iSpill]);
+  
+  if (m_deadTime) {
+    // Update the list of currently inactive pixels
+    std::map<const VPChannelID, double>::iterator itp;
+    for (itp = m_deadPixels.begin(); itp != m_deadPixels.end(); ++itp) {
+      m_deadPixels[itp->first] -= m_bunchCrossingSpacing;
+      if (m_debug) {
+        debug() << (itp->first).channelID() << " " << itp->second << endmsg;
+      }
+      if (m_deadPixels[itp->first] <= 0) {
+        std::map<const VPChannelID, double>::iterator here = itp++;
+        m_deadPixels.erase(here);
+      }
     }
   }
- 
+  
+  LHCb::VPDigits* digits = new LHCb::VPDigits();
+  const LHCb::MCVPDigits* mcdigits = getIfExists<LHCb::MCVPDigits>(m_inputLocation);
+  if (!mcdigits) {
+    error() << "No digits in " << m_inputLocation << endmsg;
+    return StatusCode::FAILURE;
+  }
+  LHCb::MCVPDigits::const_iterator it;
+  for (it = mcdigits->begin(); it != mcdigits->end(); ++it) {
+    // Sum up the charge from all deposits.
+    SmartRefVector<LHCb::MCVPDeposit> deposits = (*it)->mcDeposit();
+    double charge = 0.;
+    SmartRefVector<LHCb::MCVPDeposit>::const_iterator itd;
+    for (itd = deposits.begin(); itd != deposits.end(); ++itd) {
+      charge += (*itd)->depositedCharge(); 
+    }
+    // Add electronics noise.
+    if (m_ElectronicNoise > 0.1) {
+      charge += m_ElectronicNoise * m_gaussDist();
+      if (charge < 1.) charge = 1.;
+    }
+    const LHCb::VPChannelID channel = (*it)->channelID();
+    // Calculate time over threshold.
+    double tot = timeOverThreshold(charge);
+    // Check if pixel is already over threshold.
+    if (m_deadTime) {
+      if (m_deadPixels.count(channel) == 1) {
+        m_deadPixels[channel] += tot;
+        continue;
+      } 
+    }
+    // Skip hits below threshold.
+    if (charge < m_threshold) continue;
+    // Update dead time for this pixel.
+    if (m_deadTime) m_deadPixels[channel] = tot;
+    // Calculate ToT counts.
+    unsigned int adc = ceil((tot - m_clockPhase) / m_samplePeriod);
+    if (adc > m_maxToT) adc = m_maxToT;
+    // Create new digit.
+    LHCb::VPDigit* digit = new LHCb::VPDigit(adc); 
+    digits->insert(digit, channel);
+  }
+  put(digits, m_outputLocation); 
   return StatusCode::SUCCESS;
+
 }
 
+//=============================================================================
+/// Calculate the time (ns) that the pixel stays over threshold, 
+/// counting from the LHC clock onwards
+//=============================================================================
+double VPDigitCreator::timeOverThreshold(const double charge) {
 
-//============================================================================
-// Create VPDigits
-//============================================================================
-void VPDigitCreator::createDigits(const MCVPDigits* digitsMC, 
-                                       LHCb::VPDigits* digitsCont)
-{ // printf("VPDigitCreator::createDigits() =>\n");
-  MCVPDigits::const_iterator iterMC = digitsMC->begin();
-  for(; iterMC != digitsMC->end(); ++iterMC) {                                   // for every MC hit
-    const SmartRefVector<MCVPDeposit> depositsCont =
-                                           (*iterMC)->mcDeposit();
-    double totCharge = std::accumulate(depositsCont.begin(),                     // sum up the charge of all the deposits
-                                       depositsCont.end(), 0.0,                  // simulated for this MC hit
-           VPDataFunctor::Accumulate_Charge<const MCVPDeposit*>());
+  double timeOverTh = m_clockPhase + (charge - m_threshold) * m_discharge;
+  if (timeOverTh < 0.) timeOverTh = 0.;
+  return timeOverTh;
 
-    const VPChannelID aChan = (*iterMC)->channelID();                       // print the channel ID
-    // printf(" %9.1f e [%02d:%c, %02d:%03dx%03d]\n", totCharge,                    // and the total change accumulated on this pixel
-    //        aChan.station(), aChan.sidepos()?'R':'L',
-    //        aChan.chip(), aChan.pixel_lp(), aChan.pixel_hp() );
-
-    int Station = aChan.station()+1; if(aChan.sidepos()) Station = (-Station);
-
-#ifdef DEBUG_HISTO
-    if(totCharge>=500.0)
-    { int Chip = aChan.chip();
-      plot2D( Station, Chip, "HitsPerChip", "VPDigitCreator: number of hits/chip (all events)",
-             -24.0, 24.0, 0.0, 12.0, 49, 12);
-      plot(totCharge, "ChargePerPixel", "VPDigitCreator: charge/pixel [e]", 250.0, 25000.0, 99); }
-#endif
-
-    if(totCharge > 0.0 ) {
-      int tot = int( ceil(totCharge) );
-      int timeStamp = 0; // temporary assumption                                 // for now time-stamp=0
-      LHCb::VPDigit* newDigit =
-                          new LHCb::VPDigit(tot,timeStamp);                 // store total charge and time-stamp
-      digitsCont->insert(newDigit,(*iterMC)->channelID());
-    }
-  }
 }
+

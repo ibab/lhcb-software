@@ -21,18 +21,18 @@
 // Boost
 #include "boost/numeric/conversion/bounds.hpp"
 // Local
-#include "VPClusterCreator.h"
+#include "OldVPClusterCreator.h"
 
 using namespace LHCb;
 
 //------------------------------------------------------------
-// Implementation file for class : VPClusterCreator
+// Implementation file for class : OldVPClusterCreator
 //
 // 12/11/2009 : Marcin Kucharczyk
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VPClusterCreator)
+DECLARE_ALGORITHM_FACTORY(OldVPClusterCreator)
 
 bool sortByChannel(LHCb::VPChannelID first,
                    LHCb::VPChannelID second) {
@@ -42,7 +42,7 @@ bool sortByChannel(LHCb::VPChannelID first,
 //=============================================================================
 // Constructor
 //=============================================================================
-VPClusterCreator::VPClusterCreator(const std::string& name, 
+OldVPClusterCreator::OldVPClusterCreator(const std::string& name, 
                                              ISvcLocator* pSvcLocator)
 #ifdef DEBUG_HISTO
   : GaudiTupleAlg(name, pSvcLocator)
@@ -70,12 +70,12 @@ VPClusterCreator::VPClusterCreator(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPClusterCreator::~VPClusterCreator(){}
+OldVPClusterCreator::~OldVPClusterCreator(){}
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode VPClusterCreator::initialize() {
+StatusCode OldVPClusterCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return sc;
   m_maxValue = double(2 << (m_nBits-1) ) - 1;
@@ -92,7 +92,7 @@ StatusCode VPClusterCreator::initialize() {
 //=============================================================================
 //  Execution
 //=============================================================================
-StatusCode VPClusterCreator::execute() {
+StatusCode OldVPClusterCreator::execute() {
   if(m_isDebug) debug() << "==> Execute" << endmsg;
   // Get VPDigits
   VPDigits* digitCont = get<VPDigits>(m_inputLocation);
@@ -114,10 +114,10 @@ StatusCode VPClusterCreator::execute() {
 //============================================================================
 // Create VPClusters
 //============================================================================
-StatusCode VPClusterCreator::createClusters(VPDigits* digitCont,
+StatusCode OldVPClusterCreator::createClusters(VPDigits* digitCont,
            VPClusters* clusterCont,
            VPLiteCluster::VPLiteClusters* clusterLiteCont)
-{ // printf("VPClusterCreator::createClusters() =>\n");
+{ // printf("OldVPClusterCreator::createClusters() =>\n");
   // Sort VPDigits by totValue
   std::stable_sort(digitCont->begin(),digitCont->end(),                               // sort all digits: strongest signal first
               VPDataFunctor::Greater_by_totValue<const VPDigit*>());
@@ -191,14 +191,14 @@ StatusCode VPClusterCreator::createClusters(VPDigits* digitCont,
                                                   isLong);
 #ifdef DEBUG_HISTO
           plot2D( xyFraction.first, xyFraction.second,
-                  "ClusterLinBaryCenter", "VPClusterCreator: lin. fraction of cluster barycenter",
+                  "ClusterLinBaryCenter", "OldVPClusterCreator: lin. fraction of cluster barycenter",
                   0.0, 1.0, 0.0, 1.0, 15, 15);
           plot2D( xyFrac.first, xyFrac.second,
-                  "ClusterDigBaryCenter", "VPClusterCreator: 3-bit fraction of cluster barycenter",
+                  "ClusterDigBaryCenter", "OldVPClusterCreator: 3-bit fraction of cluster barycenter",
                   -0.5, 7.5, -0.5, 7.5, 8, 8);
-          plot( totSum, "ChargePerCluster", "VPClusterCreator: (dig.) Charge per cluster [ADC]",
+          plot( totSum, "ChargePerCluster", "OldVPClusterCreator: (dig.) Charge per cluster [ADC]",
                 0.5, 50.5, 50);
-          plot( totVec.size(), "PixelsPerCluster", "VPClusterCreator: Number of pixels in a cluster",
+          plot( totVec.size(), "PixelsPerCluster", "OldVPClusterCreator: Number of pixels in a cluster",
                 0.5, 9.5, 9);
 #endif
           // printf(" totSum=%2d => scaledToT=%2d, xyFraction=[%4.2f,%4.2f] => xyFrac=[%d,%d]",
@@ -229,7 +229,7 @@ StatusCode VPClusterCreator::createClusters(VPDigits* digitCont,
     }
   }
 #ifdef DEBUG_HISTO
-  plot(clusterCont->size(), "ClustersPerEvent", "VPClusterCreator: Clusters/event", 0.5, 4000.5, 40);
+  plot(clusterCont->size(), "ClustersPerEvent", "OldVPClusterCreator: Clusters/event", 0.5, 4000.5, 40);
 #endif
   return StatusCode::SUCCESS;
 }
@@ -238,7 +238,7 @@ StatusCode VPClusterCreator::createClusters(VPDigits* digitCont,
 //============================================================================
 // Calculate barycenter of the cluster
 //============================================================================
-void VPClusterCreator::baryCenter(std::vector<PixDigit> activePixels,
+void OldVPClusterCreator::baryCenter(std::vector<PixDigit> activePixels,
                                        LHCb::VPChannelID& baryCenterChID,
                                        std::pair<double,double>& xyFraction,
                                        bool& isLong)
@@ -282,7 +282,7 @@ void VPClusterCreator::baryCenter(std::vector<PixDigit> activePixels,
 // Scale 3 bit xyFraction
 //============================================================================
 std::pair<unsigned int, unsigned int> 
-     VPClusterCreator::scaleFrac(std::pair<double,double> xyFraction)
+     OldVPClusterCreator::scaleFrac(std::pair<double,double> xyFraction)
 {
   std::pair<unsigned int, unsigned int> xyFrac;
   xyFrac.first = int(ceil(xyFraction.first * m_maxValue));
@@ -296,7 +296,7 @@ std::pair<unsigned int, unsigned int>
 //============================================================================
 // Scale 3 bit total ToT
 //============================================================================
-unsigned int VPClusterCreator::scaleToT(int totSum)
+unsigned int OldVPClusterCreator::scaleToT(int totSum)
 {
   unsigned int scaledToT = int(ceil(totSum / m_scaleFactor));
   if(scaledToT > m_maxValue) scaledToT = int(m_maxValue);

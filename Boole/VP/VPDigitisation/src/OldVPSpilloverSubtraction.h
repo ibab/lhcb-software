@@ -1,10 +1,10 @@
-#ifndef VPSPILLOVERSUBTRACTION_H
-#define VPSPILLOVERSUBTRACTION_H 1
+#ifndef OLDVPSPILLOVERSUBTRACTION_H
+#define OLDVPSPILLOVERSUBTRACTION_H 1
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Event/VPDigit.h"
 #include <string>
 
-/** @class VPSpilloverSubtraction VPSpilloverSubtraction.h
+/** @class OldVPSpilloverSubtraction OldVPSpilloverSubtraction.h
  *
  *  Class for killing VP spillover 
  *
@@ -16,12 +16,12 @@ namespace LHCb {
   class VPChannelID;
 }
 
-class VPSpilloverSubtraction : public GaudiAlgorithm {
+class OldVPSpilloverSubtraction : public GaudiAlgorithm {
 public:
   /// Standard constructor
-  VPSpilloverSubtraction(const std::string& name,
+  OldVPSpilloverSubtraction(const std::string& name,
                               ISvcLocator* pSvcLocator);
-  virtual ~VPSpilloverSubtraction();  //< Destructor
+  virtual ~OldVPSpilloverSubtraction();  //< Destructor
   virtual StatusCode initialize();         //< Algorithm initialization
   virtual StatusCode execute   ();         //< Algorithm execution
 
@@ -39,4 +39,4 @@ private:
 
 };
 
-#endif // VPSPILLOVERSUBTRACTION_H
+#endif // OLDVPSPILLOVERSUBTRACTION_H

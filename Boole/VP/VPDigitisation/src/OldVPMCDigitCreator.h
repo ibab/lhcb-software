@@ -1,23 +1,23 @@
-#ifndef VPMCDIGITCREATOR_H
-#define VPMCDIGITCREATOR_H 1
+#ifndef OLDVPMCDIGITCREATOR_H
+#define OLDVPMCDIGITCREATOR_H 1
 // Include files
 // from STL
 #include <string>
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-/** @class VPMCDigitCreator.h 
- *  VPDigitisation/VPMCDigitCreator.h
+/** @class OldVPMCDigitCreator.h 
+ *  VPDigitisation/OldVPMCDigitCreator.h
  *
  *  @author Marcin Kucharczyk
  *  @date   20/09/09
  */
 
-class VPMCDigitCreator : public GaudiAlgorithm {
+class OldVPMCDigitCreator : public GaudiAlgorithm {
 public:
   /// Standard constructor
-  VPMCDigitCreator(const std::string& name,ISvcLocator* pSvcLocator);
-  virtual ~VPMCDigitCreator();   ///< Destructor
+  OldVPMCDigitCreator(const std::string& name,ISvcLocator* pSvcLocator);
+  virtual ~OldVPMCDigitCreator();   ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
@@ -39,4 +39,4 @@ private:
   bool m_isVerbose;
 
 };
-#endif // VPMCDigitCreator_H
+#endif // OldVPMCDigitCreator_H

@@ -1,26 +1,30 @@
-#// $Id: VPDigitCreator.h,v 1.1.1.1 2009-12-04 14:16:52 marcin Exp $
-#ifndef VPDIGITCREATOR_H
+#ifndef VPDIGITCREATOR_H 
 #define VPDIGITCREATOR_H 1
-// Include files
-// from STL
-#include <string>
-// from Gaudi
 
-// #define DEBUG_HISTO // fill some histograms while the algorithm	runs
+// Activate filling of debugging histograms while the algorithm	runs
+// #define DEBUG_HISTO 
+
+// STL 
+#include <string>
+#include <map>
+
+// Gaudi
 #ifdef DEBUG_HISTO
 #include "GaudiAlg/GaudiTupleAlg.h"
 #else
 #include "GaudiAlg/GaudiAlgorithm.h"
 #endif
+#include "GaudiKernel/RndmGenerators.h"
 
-// Event
-#include "LHCbMath/LHCbMath.h"
+// LHCb
+// Event/DigiEvent
+#include "Event/VPDigit.h"
 
-/** @class VPDigitCreator.h 
- *  VPDigitisation/VPDigitCreator.h
+/** @class VPDigitCreator VPDigitCreator.h
+ *  
  *
- *  @author Marcin Kucharczyk
- *  @date   2009/10/20
+ *  @author Thomas Britton
+ *  @date   2010-07-07
  */
 
 #ifdef DEBUG_HISTO
@@ -29,27 +33,51 @@ class VPDigitCreator : public GaudiTupleAlg {
 class VPDigitCreator : public GaudiAlgorithm {
 #endif
 
-public:
+public: 
   /// Standard constructor
-  VPDigitCreator(const std::string& name,ISvcLocator* pSvcLocator);
-  virtual ~VPDigitCreator();     ///< Destructor
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  VPDigitCreator(const std::string& name, ISvcLocator* pSvcLocator);
+  /// Destructor
+  virtual ~VPDigitCreator();
 
-protected:
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute();       ///< Algorithm execution
 
 private:
 
-  void createDigits(const LHCb::MCVPDigits* digitsMC, 
-                    LHCb::VPDigits* digitsCont);
-  int convertToTDC(double charge);
   std::string m_inputLocation;
   std::string m_outputLocation;
-  std::vector<std::string> m_sampleNames;
-  std::vector<std::string> m_spillNames;
-  std::vector<std::string> m_spillPaths;
-  std::vector<std::string> m_outPaths;
-  bool m_isDebug; 
-  bool m_isVerbose;
+
+  // Bunch crossing spacing in ns
+  double m_bunchCrossingSpacing;  
+  // Discrimination threshold in number of electrons
+  double m_threshold;
+    
+  // Calibration constants used during tuning of the front end. X-threshold) electrons = Y ToT
+  double m_chargeTuning;
+  double m_totTuning;
+  double m_discharge;
+  
+  double m_clockPhase;
+  double m_samplePeriod;
+
+   // Number of bits to use for ToT
+  unsigned int m_nBits;
+  // Max ToT value
+  unsigned int m_maxToT;
+
+  // Gaussian random number generator for noise
+  Rndm::Numbers m_gaussDist;
+  // Noise in electrons (0 = don't simulate)
+  double m_ElectronicNoise;
+
+  // Option to use pixel dead time
+  bool m_deadTime;
+  // List of dead pixels and time until recovery
+  std::map<const LHCb::VPChannelID, double> m_deadPixels; 
+
+  bool m_debug;
+
+  double timeOverThreshold(double charge);
+  
 };
-#endif // VPDigitCreator_H
+#endif // VPDIGITCREATOR_H

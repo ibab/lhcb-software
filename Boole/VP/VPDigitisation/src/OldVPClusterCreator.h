@@ -1,5 +1,5 @@
-#ifndef VPCLUSTERCREATOR_H
-#define VPCLUSTERCREATOR_H 1
+#ifndef OLDVPCLUSTERCREATOR_H
+#define OLDVPCLUSTERCREATOR_H 1
 // Include files
 // from STL
 #include <string>
@@ -27,23 +27,23 @@
 #include "VPDet/DeVP.h"
 
 
-/** @class VPClusterCreator.h 
- *  VPDigitisation/VPClusterCreator.h
+/** @class OldVPClusterCreator.h 
+ *  VPDigitisation/OldVPClusterCreator.h
  *
  *  @author Marcin Kucharczyk
  *  @date   2009/11/12
  */
 
 #ifdef DEBUG_HISTO
-class VPClusterCreator : public GaudiTupleAlg {
+class OldVPClusterCreator : public GaudiTupleAlg {
 #else
-class VPClusterCreator : public GaudiAlgorithm {
+class OldVPClusterCreator : public GaudiAlgorithm {
 #endif
 
 public:
   /// Standard constructor
-  VPClusterCreator(const std::string& name,ISvcLocator* pSvcLocator);
-  virtual ~VPClusterCreator();   ///< Destructor
+  OldVPClusterCreator(const std::string& name,ISvcLocator* pSvcLocator);
+  virtual ~OldVPClusterCreator();   ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
@@ -79,4 +79,4 @@ private:
   double m_maxValue;
   DeVP* m_vPelDet;
 };
-#endif // VPClusterCreator_H
+#endif // OldVPClusterCreator_H

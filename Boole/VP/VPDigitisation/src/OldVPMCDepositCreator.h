@@ -1,5 +1,5 @@
-#ifndef VPMCDEPOSITCREATOR_H
-#define VPMCDEPOSITCREATOR_H 1
+#ifndef OLDVPMCDEPOSITCREATOR_H
+#define OLDVPMCDEPOSITCREATOR_H 1
 // Include files
 // from STL
 #include <string>
@@ -23,23 +23,23 @@ class MCHit;
 class VPChannelID;
 class ISiDepositedCharge;
 
-/** @class VPMCDepositCreator.h 
- *  VPDigitisation/VPMCDepositCreator.h
+/** @class OldVPMCDepositCreator.h 
+ *  VPDigitisation/OldVPMCDepositCreator.h
  *
  *  @author Marcin Kucharczyk
  *  @date   20/09/09
  */
 
 #ifdef DEBUG_HISTO
-class VPMCDepositCreator : public GaudiTupleAlg {
+class OldVPMCDepositCreator : public GaudiTupleAlg {
 #else
-class VPMCDepositCreator : public GaudiAlgorithm {
+class OldVPMCDepositCreator : public GaudiAlgorithm {
 #endif
 
 public:
   /// Standard constructor
-  VPMCDepositCreator(const std::string& name,ISvcLocator* pSvcLocator);
-  virtual ~VPMCDepositCreator(); ///< Destructor
+  OldVPMCDepositCreator(const std::string& name,ISvcLocator* pSvcLocator);
+  virtual ~OldVPMCDepositCreator(); ///< Destructor
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
@@ -85,4 +85,4 @@ private:
   bool m_isVerbose;
   
 };
-#endif // VPMCDepositCreator_H
+#endif // OldVPMCDepositCreator_H

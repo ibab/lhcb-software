@@ -6,7 +6,7 @@
 // Event
 #include "Event/VPDigit.h"
 // Local
-#include "VPSpilloverSubtraction.h"
+#include "OldVPSpilloverSubtraction.h"
 // Boost
 #include "boost/assign/list_of.hpp"
 #include <boost/foreach.hpp>
@@ -14,17 +14,17 @@
 using namespace LHCb;
 
 //-------------------------------------------------------------
-// Implementation file for class : VPSpilloverSubtraction
+// Implementation file for class : OldVPSpilloverSubtraction
 //
 // 19/10/2009 : Marcin Kucharczyk
 //-------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY(VPSpilloverSubtraction)
+DECLARE_ALGORITHM_FACTORY(OldVPSpilloverSubtraction)
 
 //=============================================================================
 // Constructor
 //=============================================================================
-VPSpilloverSubtraction::VPSpilloverSubtraction(
+OldVPSpilloverSubtraction::OldVPSpilloverSubtraction(
                              const std::string& name,
                              ISvcLocator* pSvcLocator)
   : GaudiAlgorithm(name, pSvcLocator)
@@ -39,12 +39,12 @@ VPSpilloverSubtraction::VPSpilloverSubtraction(
 //=============================================================================
 // Destructor
 //=============================================================================
-VPSpilloverSubtraction::~VPSpilloverSubtraction() {}
+OldVPSpilloverSubtraction::~OldVPSpilloverSubtraction() {}
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode VPSpilloverSubtraction::initialize()
+StatusCode OldVPSpilloverSubtraction::initialize()
 {
   StatusCode sc = GaudiAlgorithm::initialize();
   if(sc.isFailure()) return Error("Failed to initialize", sc);
@@ -55,7 +55,7 @@ StatusCode VPSpilloverSubtraction::initialize()
 //=============================================================================
 //  Execution
 //=============================================================================
-StatusCode VPSpilloverSubtraction::execute()
+StatusCode OldVPSpilloverSubtraction::execute()
 {
   if(m_switchOn) {
     m_spillPaths.clear();
@@ -85,7 +85,7 @@ StatusCode VPSpilloverSubtraction::execute()
 //============================================================================
 // Remove selected digits
 //============================================================================ 
-void VPSpilloverSubtraction::mvDigits(VPDigits* digitContCentr,
+void OldVPSpilloverSubtraction::mvDigits(VPDigits* digitContCentr,
                                   VPDigits* digitContPrev,
                                   VPDigits* digitContPrevPrev,
                                   std::vector<LHCb::VPDigit*>& selDigits)

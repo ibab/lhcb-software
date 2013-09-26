@@ -3,6 +3,10 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2013-09-26 - Heinrich Schindler
+ - Rename existing VPxxxCreator classes to OldVPxxxCreator
+ - Rename VPNewDigitCreator to VPDigitCreator
+
 ! 2013-09-26 - Marco Cattaneo
  - Remove extra ';' to fix CMake warnings
 

@@ -1,6 +1,6 @@
 // $Id: $
-#ifndef VPDIGITSCREATOR_H 
-#define VPDIGITSCREATOR_H 1
+#ifndef OLDVPDIGITSCREATOR_H 
+#define OLDVPDIGITSCREATOR_H 1
 
 // Include files
 #include <string>
@@ -15,18 +15,18 @@
 
 using namespace LHCb;
 
-/** @class VPDigitsCreator VPDigitsCreator.h
+/** @class OldVPDigitsCreator OldVPDigitsCreator.h
  *  
  *
  *  @author Thomas Britton
  *  @date   2010-07-07
  */
-class VPDigitsCreator : public GaudiAlgorithm {
+class OldVPDigitsCreator : public GaudiAlgorithm {
 public: 
   /// Standard constructor
-  VPDigitsCreator( const std::string& name, ISvcLocator* pSvcLocator );
+  OldVPDigitsCreator( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~VPDigitsCreator( ); ///< Destructor
+  virtual ~OldVPDigitsCreator( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -103,4 +103,4 @@ private:
   
   
 };
-#endif // VPDIGITSCREATOR_H
+#endif // OLDVPDIGITSCREATOR_H

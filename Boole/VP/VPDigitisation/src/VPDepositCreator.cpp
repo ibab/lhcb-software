@@ -38,11 +38,11 @@ DECLARE_ALGORITHM_FACTORY(VPDepositCreator)
 VPDepositCreator::VPDepositCreator(const std::string& name, 
                                    ISvcLocator* pSvcLocator) : 
 #ifdef DEBUG_HISTO
-  GaudiTupleAlg(name, pSvcLocator),
+    GaudiTupleAlg(name, pSvcLocator),
 #else
-  GaudiAlgorithm(name, pSvcLocator),
+    GaudiAlgorithm(name, pSvcLocator),
 #endif
-  m_oldXml(true), m_det(NULL), m_radDamageTool(NULL) {
+    m_oldXml(true), m_det(NULL), m_radDamageTool(NULL) {
 
   declareProperty("HitLocation",     m_hitLocation = LHCb::MCHitLocation::VP);
   declareProperty("DepositLocation", m_depositLocation = LHCb::MCVPDepositLocation::MCVPDepositLocation);
@@ -185,7 +185,8 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit,
 
   // Get the sensor that was hit and its thickness.
   const DeVPSensor* sensor = m_det->sensor(hit->sensDetID());
-  double activeDepth = sensor->siliconThickness();
+  const double thickness = sensor->siliconThickness();
+  double activeDepth = thickness;
   if (m_irradiated) {
     const double f = m_radDamageTool->fluence(hit->midPoint(), m_dataTaken);
     activeDepth *= m_radDamageTool->chargeCollectionEfficiency(f, m_biasVoltage);
@@ -208,9 +209,9 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit,
     if (m_oldXml) {
       dz = fabs(point.z() - hit->entry().z()); 
     } else {
-      // Pixel side is always at z = 0 in local coordinates.
+      // Pixel side is always at z = -thickness/2 in local coordinates.
       Gaudi::XYZPoint localPoint = sensor->globalToLocal(point);
-      dz = fabs(localPoint.z());
+      dz = fabs(localPoint.z() + 0.5 * thickness);
     }
     if (m_irradiated) {
       if (dz > activeDepth) continue;
