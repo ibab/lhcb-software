@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OTFillRawBuffer );
+DECLARE_ALGORITHM_FACTORY( OTFillRawBuffer )
 
 OTFillRawBuffer::OTFillRawBuffer( const std::string& name,
                                   ISvcLocator* pSvcLocator)

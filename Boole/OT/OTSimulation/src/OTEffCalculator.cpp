@@ -1,5 +1,3 @@
-// $Id: OTEffCalculator.cpp,v 1.16 2010-02-28 11:56:25 nserra Exp $
-
 // Gaudi files
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -26,7 +24,7 @@
 using namespace LHCb;
 
 // Declaration of the tool Factory
-DECLARE_TOOL_FACTORY( OTEffCalculator );
+DECLARE_TOOL_FACTORY( OTEffCalculator )
 
 OTEffCalculator::OTEffCalculator(const std::string& type, 
                                  const std::string& name, 

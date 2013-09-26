@@ -1,5 +1,3 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.19 2009-01-27 09:55:13 janos Exp $
-
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
@@ -29,7 +27,7 @@
 using namespace LHCb;
 
 // Declaration of the tool Factory
-DECLARE_TOOL_FACTORY( OTRandomDepositCreator );
+DECLARE_TOOL_FACTORY( OTRandomDepositCreator )
 
 OTRandomDepositCreator::OTRandomDepositCreator(const std::string& type, 
                                                const std::string& name, 

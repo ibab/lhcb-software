@@ -1,5 +1,3 @@
-// $Id: MCOTTimeCreator.cpp,v 1.15 2009-04-27 16:54:14 janos Exp $
-
 // STD
 #include <algorithm>
 
@@ -32,13 +30,13 @@ namespace MCOTTimeHelpers {
       return lhs->channel().geometry() < rhs->channel().geometry();
     };
   };  
-};
+}
 
 
 using namespace LHCb;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCOTTimeCreator );
+DECLARE_ALGORITHM_FACTORY( MCOTTimeCreator )
 
 MCOTTimeCreator::MCOTTimeCreator(const std::string& name, 
                                  ISvcLocator* pSvcLocator) :

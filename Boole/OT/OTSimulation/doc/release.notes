@@ -3,6 +3,9 @@
 ! Package manager : Lucia Grillo
 !--------------------------------------------------------------------------
 
+! 2013-09-26 - Marco Cattaneo
+ - Remove extra ';' to fix CMake warnings
+
 !========================= OTSimulation v5r5 2013-06-06 =========================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warning

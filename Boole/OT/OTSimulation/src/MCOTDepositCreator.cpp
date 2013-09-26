@@ -1,5 +1,3 @@
-// $Id: $
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
@@ -49,7 +47,7 @@ using namespace boost::lambda;
 using boost::lexical_cast;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCOTDepositCreator );
+DECLARE_ALGORITHM_FACTORY( MCOTDepositCreator )
 
 MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
                                        ISvcLocator* pSvcLocator) :

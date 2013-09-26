@@ -1,5 +1,3 @@
-// $Id: OTLUTDoublePulseTool.cpp,v 1.0 2011-10-18 abien Exp $
-
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IHistogramSvc.h"
@@ -24,7 +22,7 @@
 using namespace LHCb;
 
 // Declaration of the tool Factory
-DECLARE_TOOL_FACTORY( OTLUTDoublePulseTool );
+DECLARE_TOOL_FACTORY( OTLUTDoublePulseTool )
 
 OTLUTDoublePulseTool::OTLUTDoublePulseTool(const std::string& type,
                                            const std::string& name,
