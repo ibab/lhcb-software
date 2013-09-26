@@ -5,6 +5,14 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2013-09-26 - V. Gligorov
+ - Fix bug in SwimmingTisTos.py introduced by an earlier rollback
+ - Make Configuration.py properly use either the __dev__ or normal DSTWriters
+   depending on the avilability of the former
+ - Update GeneralSetup to make it clear this is obsolete
+ - Update SwimTriggerB2JpsiX.py, SwimStrippingB2JpsiX.py to be relevant 
+   to testing Moore v14rX versions 
+
 !========================= Swimming v3r0p1 2013-06-13 =========================
 
 ! 2013-05-13 - V. Gligorov (Added by CRJ as Vava forgot...)
