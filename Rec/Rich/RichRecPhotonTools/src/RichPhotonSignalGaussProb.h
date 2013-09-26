@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file RichPhotonSignalGaussProb.h
  *
@@ -104,8 +103,18 @@ namespace Rich
       /// Temporary local value for Radii of curvature
       double m_radiusCurv[Rich::NRiches];
 
+      // Pixel Signal scale factor for RICH2
+
+      double  m_rich2PixelSignalScaleFactor;
+      
       /// Temporary local value pixel area
       double m_pixelArea;
+      /// Temporary local value grand pixel area
+      double m_grandPixelArea;
+
+      bool m_pmtActivate;
+      bool m_rich2GrandPixelActivate;
+      
 
       // chaced parameters
       double m_minArg;
