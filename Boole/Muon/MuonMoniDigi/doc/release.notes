@@ -3,6 +3,9 @@
 !Package manager : A Sarti
 !-----------------------------------------------------------------------------
 
+! 2013-09-26 - Marco Cattaneo
+ - Remove extra ';' to fix CMake warnings
+
 !========================= MuonMoniDigi v2r8 2013-07-18 =========================
 ! 2013-06-26 - Marco Cattaneo
  - Fix REVERSE_INULL defect

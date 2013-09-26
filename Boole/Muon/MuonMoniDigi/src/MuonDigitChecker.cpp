@@ -71,7 +71,7 @@ StatusCode MuonDigitChecker::initialize() {
 
   m_base = new MuonBasicGeometry(this->detSvc(), this->msgSvc());
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
