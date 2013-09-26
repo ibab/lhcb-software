@@ -1,4 +1,3 @@
-// $Id: VeloMonitorSpilloverSubtr.cpp,v 1.1.1.1 2009-09-19 23:12:04 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -24,7 +23,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloMonitorSpilloverSubtr );
+DECLARE_ALGORITHM_FACTORY( VeloMonitorSpilloverSubtr )
 
 
 //=============================================================================

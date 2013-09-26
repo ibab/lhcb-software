@@ -14,7 +14,7 @@
 using namespace LHCb;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloSpillSubtraction );
+DECLARE_ALGORITHM_FACTORY( VeloSpillSubtraction )
 
 VeloSpillSubtraction::VeloSpillSubtraction(const std::string& name,
                                      ISvcLocator* pSvcLocator):

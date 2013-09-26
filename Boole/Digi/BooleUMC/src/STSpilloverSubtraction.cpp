@@ -14,7 +14,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY(STSpilloverSubtraction);
+DECLARE_ALGORITHM_FACTORY(STSpilloverSubtraction)
 
 STSpilloverSubtraction::STSpilloverSubtraction(const std::string& name,
                                      ISvcLocator* pSvcLocator):

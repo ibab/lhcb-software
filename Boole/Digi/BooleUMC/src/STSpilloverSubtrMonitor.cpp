@@ -14,7 +14,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY(STSpilloverSubtrMonitor);
+DECLARE_ALGORITHM_FACTORY(STSpilloverSubtrMonitor)
 
 STSpilloverSubtrMonitor::STSpilloverSubtrMonitor(const std::string& name,
                                      ISvcLocator* pSvcLocator):

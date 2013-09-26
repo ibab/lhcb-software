@@ -1,4 +1,3 @@
-// $Id: TTSpilloverSubtraction.cpp,v 1.3 2010-06-21 21:04:15 tskwarni Exp $
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -14,7 +13,7 @@
 #include <boost/foreach.hpp>
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY(TTSpilloverSubtraction);
+DECLARE_ALGORITHM_FACTORY(TTSpilloverSubtraction)
 
 TTSpilloverSubtraction::TTSpilloverSubtraction(const std::string& name,
                                      ISvcLocator* pSvcLocator):

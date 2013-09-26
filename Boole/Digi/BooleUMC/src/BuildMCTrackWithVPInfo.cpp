@@ -31,7 +31,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( BuildMCTrackWithVPInfo );
+DECLARE_ALGORITHM_FACTORY( BuildMCTrackWithVPInfo )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -49,7 +49,7 @@ BuildMCTrackWithVPInfo::BuildMCTrackWithVPInfo( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-BuildMCTrackWithVPInfo::~BuildMCTrackWithVPInfo() {}; 
+BuildMCTrackWithVPInfo::~BuildMCTrackWithVPInfo() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -73,7 +73,7 @@ StatusCode BuildMCTrackWithVPInfo::initialize() {
   debug() << "Number of OT layers " << m_otDet->layers().size() << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -237,7 +237,7 @@ StatusCode BuildMCTrackWithVPInfo::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
