@@ -32,7 +32,7 @@ using namespace LHCb;
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VPClusterCreator);
+DECLARE_ALGORITHM_FACTORY(VPClusterCreator)
 
 bool sortByChannel(LHCb::VPChannelID first,
                    LHCb::VPChannelID second) {
@@ -70,7 +70,7 @@ VPClusterCreator::VPClusterCreator(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPClusterCreator::~VPClusterCreator(){};
+VPClusterCreator::~VPClusterCreator(){}
 
 //=============================================================================
 // Initialisation
@@ -87,7 +87,7 @@ StatusCode VPClusterCreator::initialize() {
   setHistoTopDir("VP/");
 #endif
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Execution

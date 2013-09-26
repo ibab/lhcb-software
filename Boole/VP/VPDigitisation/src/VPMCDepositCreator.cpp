@@ -38,7 +38,7 @@ using namespace LHCb;
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VPMCDepositCreator);
+DECLARE_ALGORITHM_FACTORY(VPMCDepositCreator)
 
 //=============================================================================
 // Constructor
@@ -77,7 +77,7 @@ VPMCDepositCreator::VPMCDepositCreator(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPMCDepositCreator::~VPMCDepositCreator(){};
+VPMCDepositCreator::~VPMCDepositCreator(){}
 
 //=============================================================================
 // Initialisation
@@ -125,7 +125,7 @@ StatusCode VPMCDepositCreator::initialize() {
 #endif
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=========================================================================
 //  Main execution

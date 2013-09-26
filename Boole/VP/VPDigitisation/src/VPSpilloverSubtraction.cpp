@@ -19,7 +19,7 @@ using namespace LHCb;
 // 19/10/2009 : Marcin Kucharczyk
 //-------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY(VPSpilloverSubtraction);
+DECLARE_ALGORITHM_FACTORY(VPSpilloverSubtraction)
 
 //=============================================================================
 // Constructor

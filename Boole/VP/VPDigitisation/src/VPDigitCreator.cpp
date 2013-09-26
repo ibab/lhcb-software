@@ -29,7 +29,7 @@ using namespace LHCb;
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VPDigitCreator);
+DECLARE_ALGORITHM_FACTORY(VPDigitCreator)
 
 //=============================================================================
 // Constructor
@@ -60,7 +60,7 @@ VPDigitCreator::VPDigitCreator(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPDigitCreator::~VPDigitCreator(){};
+VPDigitCreator::~VPDigitCreator(){}
 
 //=============================================================================
 // Initialisation
@@ -75,7 +75,7 @@ StatusCode VPDigitCreator::initialize() {
   setHistoTopDir("VP/");
 #endif
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Execution

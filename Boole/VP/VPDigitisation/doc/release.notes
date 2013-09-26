@@ -3,6 +3,9 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2013-09-26 - Marco Cattaneo
+ - Remove extra ';' to fix CMake warnings
+
 ! 2013-09-22 - Heinrich Schindler
  - Add new classes VPDepositCreator, VPNewDigitCreator, 
    VPRadiationDamageTool, VPDepositMonitor

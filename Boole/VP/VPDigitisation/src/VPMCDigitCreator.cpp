@@ -21,7 +21,7 @@ using namespace LHCb;
 //------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY(VPMCDigitCreator);
+DECLARE_ALGORITHM_FACTORY(VPMCDigitCreator)
 
 //=============================================================================
 // Constructor
@@ -47,7 +47,7 @@ VPMCDigitCreator::VPMCDigitCreator(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPMCDigitCreator::~VPMCDigitCreator(){};
+VPMCDigitCreator::~VPMCDigitCreator(){}
 
 //=============================================================================
 // Initialisation
@@ -59,7 +59,7 @@ StatusCode VPMCDigitCreator::initialize() {
   m_isVerbose = msgLevel(MSG::VERBOSE);
   if(m_isDebug) debug() << "==> Initialise" << endmsg;
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Execution

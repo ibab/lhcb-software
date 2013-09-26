@@ -55,7 +55,7 @@ StatusCode VPDepositMonitor::execute() {
   if (mcdigits) monitorDigits(mcdigits);
   return StatusCode::SUCCESS;
 
-};
+}
 
 void VPDepositMonitor::monitorHits(LHCb::MCHits* hits) {
 
