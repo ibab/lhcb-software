@@ -83,6 +83,6 @@ template <class TYPE>
     return (!obj) ? charge : charge+= obj->depositedCharge(); };
 
 };
-};
+}
 
 #endif // _VPDataFunctor_H
