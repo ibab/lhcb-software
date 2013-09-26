@@ -29,7 +29,7 @@
  */
 // ============================================================================
 
-DECLARE_ALGORITHM_FACTORY( CaloSignalAlg );
+DECLARE_ALGORITHM_FACTORY( CaloSignalAlg )
 
 //=============================================================================
 // Standard creator, initializes variables
@@ -75,12 +75,12 @@ CaloSignalAlg::CaloSignalAlg( const std::string& name,
   }
   //== This is needed only for normal processing.
   if ( normal ) m_previousData   = "Prev/" + m_inputData;
- };
+ }
 
 //=============================================================================
 // Standard destructor
 //=============================================================================
-CaloSignalAlg::~CaloSignalAlg() {};
+CaloSignalAlg::~CaloSignalAlg() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -106,7 +106,7 @@ StatusCode CaloSignalAlg::initialize() {
   info() << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -295,6 +295,6 @@ StatusCode CaloSignalAlg::execute() {
   if(msgLevel(MSG::DEBUG)) debug() << endmsg;
   
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================

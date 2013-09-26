@@ -30,7 +30,7 @@ using namespace boost::assign;
  */
 // ============================================================================
 
-DECLARE_ALGORITHM_FACTORY( CaloDigitAlg );
+DECLARE_ALGORITHM_FACTORY( CaloDigitAlg )
 
 //=============================================================================
 // Standard creator, initializes variables
@@ -142,12 +142,12 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_triggerIsBit     = false;
     m_zSup = false; // no 0-suppression in Tell1 for Hcal
  }
-};
+}
 
 //=============================================================================
 // Standard destructor
 //=============================================================================
-CaloDigitAlg::~CaloDigitAlg() {};
+CaloDigitAlg::~CaloDigitAlg() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -283,7 +283,7 @@ StatusCode CaloDigitAlg::initialize() {
   info() << format("Additional gain error %4.1f%%", m_gainError*100. ) << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -499,7 +499,7 @@ StatusCode CaloDigitAlg::execute() {
             << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
