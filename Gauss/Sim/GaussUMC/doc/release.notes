@@ -6,6 +6,9 @@
 !               present detector simulation
 !-----------------------------------------------------------------------------
 
+! 2013-09-26 - Heinrich Schindler
+ - Adjusted histogram ranges
+
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
 

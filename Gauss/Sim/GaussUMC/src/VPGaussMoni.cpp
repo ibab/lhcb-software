@@ -15,7 +15,7 @@
 // 2009-06-05 : Victor Coco, based on VeloGaussMoni
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY(VPGaussMoni);
+DECLARE_ALGORITHM_FACTORY(VPGaussMoni)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -30,7 +30,6 @@ VPGaussMoni::VPGaussMoni(const std::string& name,
 
   declareProperty("PrintInfo", m_printInfo = false);
   declareProperty("DetailedMonitor", m_detailedMonitor = true);
-  // Location of MCHits ("MC/VP/Hits")
   declareProperty("HitLocation", m_hitsLocation = LHCb::MCHitLocation::VP);
 
 }
@@ -38,9 +37,7 @@ VPGaussMoni::VPGaussMoni(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VPGaussMoni::~VPGaussMoni() {
-
-}
+VPGaussMoni::~VPGaussMoni() {}
 
 //=============================================================================
 // Initialization
@@ -129,19 +126,19 @@ void VPGaussMoni::monitor() {
     double z = (*it)->entry().z() / Gaudi::Units::cm;
     plot2D(z, x, "entryZX",
            "Particle entry point in Si [cm] - ZX plane",
-           -20., 80., -10., 10., 1000, 50);
+           -30., 80., -5., 5., 1100, 50);
     plot2D(x, y, "entryXY",
            "Particle entry point in Si [cm] - XY plane",
-           -10., 10., -10., 10., 500, 500);
+           -5., 5., -5., 5., 500, 500);
     x = (*it)->exit().x() / Gaudi::Units::cm;
     y = (*it)->exit().y() / Gaudi::Units::cm;
     z = (*it)->exit().z() / Gaudi::Units::cm;
     plot2D(z, x, "exitZX",
            "Particle exit point in Si [cm] - ZX plane",
-           -20., 80., -10., 10., 1000, 50);
+           -30., 80., -5., 5., 1100, 50);
     plot2D(x, y, "exitXY",
            "Particle exit point in Si [cm] - XY plane",
-           -10., 10., -10., 10., 500, 500);
+           -5., 5., -5., 5., 500, 500);
     plot((*it)->time() / Gaudi::Units::ns, "TOF",
          "Time Of Flight [ns]", 
          0., 50., 100);
@@ -159,13 +156,13 @@ void VPGaussMoni::monitor() {
     z = vert->position().z() / Gaudi::Units::cm;
     plot2D(x, y, "MCVertexPosXY",
            "Position of production MC Vertex of MCParticles giving hits - XY [cm]",
-           -10., 10., -10., 10., 500, 500);      
+           -5., 5., -5., 5., 500, 500);      
     plot2D(z, y, "MCVertexPosZX",
            "Position of production MC Vertex of MCParticles giving hits - ZY [cm]",
-           -20., 80., -10., 10., 500, 500); 
+           -30., 80., -5., 5., 500, 500); 
     plot2D(z, y, "MCVertexPosZY",
            "Position of production MC Vertex of MCParticles giving hits - ZY [cm]",
-           -20., 80., -10., 10., 500, 500); 
+           -30., 80., -5., 5., 500, 500); 
     if (m_printInfo) {
       info() << " ==> MCHit - MCParticle: "
              << "\np_x = " << fMom.px() / Gaudi::Units::GeV
