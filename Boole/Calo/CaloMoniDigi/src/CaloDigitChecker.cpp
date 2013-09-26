@@ -15,7 +15,7 @@
 // 25/05/2001 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( CaloDigitChecker );
+DECLARE_ALGORITHM_FACTORY( CaloDigitChecker )
 
 // Standard creator
 CaloDigitChecker::CaloDigitChecker( const std::string& name, 
@@ -30,12 +30,12 @@ CaloDigitChecker::CaloDigitChecker( const std::string& name,
   declareProperty( "MaxEnergy"        , m_maxEnergy      );
   declareProperty( "ScaleHit"         , m_scaleHit       );
   setProperty( "HistoTopDir", "Calo/" );
-};
+}
 
 //=============================================================================
 // Standard destructor
 //=============================================================================
-CaloDigitChecker::~CaloDigitChecker() {};
+CaloDigitChecker::~CaloDigitChecker() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -55,7 +55,7 @@ StatusCode CaloDigitChecker::initialize() {
               << ", Histograms booked" << endmsg;
 
   return StatusCode::SUCCESS; 
-};
+}
 
 //=============================================================================
 // Main execution
@@ -135,4 +135,4 @@ StatusCode CaloDigitChecker::execute() {
                                    << "#Digits " << nbDigit << " E=" << sumDigit << " GeV" << endmsg;
   
   return StatusCode::SUCCESS; 
-};
+}

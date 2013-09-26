@@ -1,7 +1,3 @@
-//
-// $Id:
-// ============================================================================
-//CLHEP
 // Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/SystemOfUnits.h"
@@ -9,7 +5,6 @@
 
 #include "CaloDet/DeCalorimeter.h"
 
-//#include "Kernel/CaloCellID.h"
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
 
@@ -29,18 +24,18 @@ using namespace LHCb;
 //
 // 28/03/2007 : Yasmine Amhis
 //-----------------------------------------------------------------------------
-DECLARE_ALGORITHM_FACTORY( CaloDigitChannel );
+DECLARE_ALGORITHM_FACTORY( CaloDigitChannel )
 
 // Standard creator
 CaloDigitChannel::CaloDigitChannel( const std::string& name, 
 					ISvcLocator* pSvcLocator) 
   : GaudiTupleAlg ( name , pSvcLocator            )
   , m_calo(NULL)
-{ declareProperty( "Detector"         , m_nameOfDetector );};
+{ declareProperty( "Detector"         , m_nameOfDetector );}
 //=============================================================================
 // Standard destructor
 //=============================================================================
-CaloDigitChannel::~CaloDigitChannel() {};
+CaloDigitChannel::~CaloDigitChannel() {}
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
@@ -86,7 +81,7 @@ StatusCode CaloDigitChannel::initialize() {
     } 
   }
   return StatusCode::SUCCESS; 
-};
+}
 
 //=============================================================================
 // Main execution
@@ -151,4 +146,4 @@ StatusCode CaloDigitChannel::execute() {
   
   return sc ; 
   
-};
+}
