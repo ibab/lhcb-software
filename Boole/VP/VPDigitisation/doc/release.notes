@@ -3,6 +3,9 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2013-09-27 - Daniel Hynds
+- Fixed irradiation diffusion parameter
+
 ! 2013-09-26 - Heinrich Schindler
  - Rename existing VPxxxCreator classes to OldVPxxxCreator
  - Rename VPNewDigitCreator to VPDigitCreator

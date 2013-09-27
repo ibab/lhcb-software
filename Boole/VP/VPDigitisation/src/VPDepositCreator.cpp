@@ -100,7 +100,10 @@ StatusCode VPDepositCreator::initialize() {
   // Calculate diffusion coefficient.
   const double kt = m_temperature * Gaudi::Units::k_Boltzmann / Gaudi::Units::eV;
   const double thickness = m_det->sensor(0)->siliconThickness();
-  m_diffusionCoefficient = sqrt(2. * kt * thickness / m_biasVoltage);
+  
+  if(m_irradiated) m_diffusionCoefficient = sqrt(2. * kt * thickness / 100.);
+  else m_diffusionCoefficient = sqrt(2. * kt * thickness / m_biasVoltage);
+  
   return StatusCode::SUCCESS;
 
 }
