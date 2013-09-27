@@ -479,20 +479,16 @@ namespace LoKi
       const PREDICATE2& cut2   ,
       OBJECT            except )
     {
-      bool ok1 = false ;
-      bool ok2 = false ;      
-      for ( ; first != last ; ++first )
+      const int num = last - first ;
+      for ( int i = 0 ; i < num ; ++i )
       {
-        if ( first == except ) { continue ; }                       // CONTINUE 
-        //
-        const bool _ok1 = cut1 ( *first ) ;
-        if ( ok2 && _ok1 ) { return true ; }                        // RETURN 
-        //
-        const bool _ok2 = cut2 ( *first ) ;
-        if ( ok1 && _ok2 ) { return true ; }                        // RETURN 
-        //
-        if ( _ok1 ) { ok1 = true ; }
-        if ( _ok2 ) { ok2 = true ; }        
+        if ( first + i == except ) { continue ; }                   // CONTINUE
+        if ( !cut1( *( first + i ) ) ) { continue ; }               // CONTINUE
+        for ( int j = 0 ; j < num ; ++j )
+        {
+          if ( first + j == except ) { continue ; }                 // CONTINUE
+          if ( i != j && cut2( *( first + j ) ) ) { return true ; } // RETURN
+        }
       }
       // 
       return false ;                                                // RETURN
