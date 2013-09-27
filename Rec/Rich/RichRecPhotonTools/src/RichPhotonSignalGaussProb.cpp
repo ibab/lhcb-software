@@ -64,11 +64,11 @@ StatusCode PhotonSignalGaussProb::initialize()
   m_radiusCurv[Rich::Rich1] = Rich1DE->sphMirrorRadius();
   m_radiusCurv[Rich::Rich2] = Rich2DE->sphMirrorRadius();
 
-  const bool pmtActivate = Rich1DE -> RichPhotoDetConfig() == Rich::PMTConfig;
+  const bool pmtActivate = ( Rich1DE->RichPhotoDetConfig() == Rich::PMTConfig );
   bool rich2GrandPixelActivate = false;
 
   // PD sizes
-  const double xSize = ( !pmtActivate ?  // 0.5*mm for hpd, 2.78bmm for pmt.
+  const double xSize = ( !pmtActivate ?  // 0.5*mm for hpd, 2.78 mm for pmt.
                          Rich1DE->param<double>("RichHpdPixelXsize") :
                          Rich1DE->param<double>("RichPmtPixelYSize") );
   const double ySize = ( !pmtActivate ?  // 0.5*mm for hpd , 2.78 mm for pmt
@@ -202,8 +202,6 @@ PhotonSignalGaussProb::signalProb( LHCb::RichRecPhoton * photon,
 
   // Expected Cherenkov theta angle resolution
   const double thetaExpRes = m_ckRes->ckThetaResolution(photon->richRecSegment(),id);
-
-
 
   // The difference between reco and expected
   const double thetaDiff = photon->geomPhoton().CherenkovTheta() - thetaExp;
