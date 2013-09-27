@@ -49,7 +49,9 @@ DeCalorimeter::DeCalorimeter( const std::string& name )
   ,  m_puMeth( -1 )
   ,  m_puBin(  0 )
   ,  m_puMin(  0 )
-  ,  m_pinArea           ( -1         ){
+  ,  m_pinArea           ( -1         )
+  ,  m_empty( ){
+  
 }
 // ============================================================================
 // Destructor
