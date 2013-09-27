@@ -3,10 +3,17 @@
 ! Responsible : Chris Jones
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
+
+! 2013-09-27 - Chris Jones
+ - Clean up a bit the last commit. 
+   Move some calculations from the event loop to initialize().
+
 !2013-09-26 - Sajan Easo
- - In RichPhotonSignalGaussProb.h and cpp, made updates to use with large Pixel PMTs
- - Introduced a scalefactor for the pixel signal calculation so that one can give different weights to
-   Rich2 signals compared to Rich1 signals for example. This is applied only in the case of PMTs.
+ - In RichPhotonSignalGaussProb.h and cpp, made updates to use with large 
+   Pixel PMTs
+ - Introduced a scalefactor for the pixel signal calculation so that one can 
+   give different weights to Rich2 signals compared to Rich1 signals for 
+   example. This is applied only in the case of PMTs.
 
 ! 2013-07-25 - Chris Jones
  - Clean up a bit the previous commit.

@@ -100,22 +100,18 @@ namespace Rich
       /// Pointer to RichCherenkovResolution interface
       const ICherenkovResolution * m_ckRes;
 
-      /// Temporary local value for Radii of curvature
+      /// Cached Radii of curvature
       double m_radiusCurv[Rich::NRiches];
+      
+      /// Cached pixel area
+      double m_pixelArea[Rich::NRiches];
+
+      /// Cached Scale factors
+      double m_scaleFactor[Rich::NRiches];
 
       // Pixel Signal scale factor for RICH2
-
-      double  m_rich2PixelSignalScaleFactor;
+      double m_rich2PixelSignalScaleFactor;
       
-      /// Temporary local value pixel area
-      double m_pixelArea;
-      /// Temporary local value grand pixel area
-      double m_grandPixelArea;
-
-      bool m_pmtActivate;
-      bool m_rich2GrandPixelActivate;
-      
-
       // chaced parameters
       double m_minArg;
       double m_expMinArg;
