@@ -33,6 +33,7 @@ DeRich::DeRich( const std::string & name )
   : DeRichBase              ( name  ),
     m_sphMirrorRadius       ( 0     ),
     m_RichPhotoDetConfig    ( Rich::HPDConfig ),
+    m_RichGeometryConfig    ( 0     ),
     m_gasWinRefIndex        ( NULL  ),
     m_gasWinAbsLength       ( NULL  ),
     m_nominalSphMirrorRefl  ( NULL  ),
@@ -43,8 +44,7 @@ DeRich::DeRich( const std::string & name )
     m_sphMirrorSegCols      ( 0     ),
     m_secMirrorSegRows      ( 0     ),
     m_secMirrorSegCols      ( 0     ),
-    m_nominalPDQuantumEff   ( NULL  ),
-    m_RichGeometryConfig    ( 0     )
+    m_nominalPDQuantumEff   ( NULL  )
 {
   m_PDPanels[Rich::Rich1]  = NULL;
   m_PDPanels[Rich::Rich2]  = NULL;

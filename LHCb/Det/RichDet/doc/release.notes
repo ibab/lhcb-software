@@ -4,7 +4,7 @@
 ! Purpose     : Interface to the xml description
 2013-09-27 - Sajan Easo
   - Adaptation for using large PMTS in RICH2. Modified DeRich, DeRichPMT, DeRichPMTPanel
-
+  - Fix some compilation warnings
 !-----------------------------------------------------------------------------
 2013-07-19 - Sajan Easo
 - Minor fix in DeRichPMTPanel.cpp to avoid compilation warnings in some platforms
