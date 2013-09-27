@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-09-27 - Daniel Hynds
+- Fixed call to det element
 - Added cheated PR for VP detector
 - Split polynomial fit function for velo + VP
 

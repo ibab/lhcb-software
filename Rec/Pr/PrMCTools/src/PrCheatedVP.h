@@ -21,12 +21,12 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 
 private:
 
+  DeVP* m_veloPix;
   bool m_useMCHits;
   bool m_binaryClusters;
   Gaudi::XYZPoint getXYZ(LHCb::VPCluster* cluster);

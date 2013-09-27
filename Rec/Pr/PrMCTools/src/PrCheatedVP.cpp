@@ -50,6 +50,7 @@ StatusCode PrCheatedVP::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+  m_veloPix = getDet<DeVP>( DeVPLocation::Default );
 
   return StatusCode::SUCCESS;
 }
@@ -195,7 +196,6 @@ StatusCode PrCheatedVP::execute() {
 Gaudi::XYZPoint PrCheatedVP::getXYZ(LHCb::VPCluster* cluster){
   
 //  Gaudi::XYZPoint pointGlobal;
-  DeVP* m_veloPix = getDet<DeVP>( DeVPLocation::Default );
   const DeVPSensor* vpSensor = m_veloPix->sensorOfChannel(cluster->channelID());
   
   Gaudi::XYZPoint pointGlobal = vpSensor->channelToPoint(cluster->channelID(),cluster->lCluster().interPixelFraction());
@@ -212,23 +212,12 @@ Gaudi::XYZPoint PrCheatedVP::getXYZ(LHCb::VPCluster* cluster){
 //===========================================================================
 Gaudi::XYZPoint PrCheatedVP::getBinaryXYZ(LHCb::VPCluster* cluster){
   
-  DeVP* m_veloPix = getDet<DeVP>( DeVPLocation::Default );
   const DeVPSensor* vpSensor = m_veloPix->sensorOfChannel(cluster->channelID());
   Gaudi::XYZPoint pointGlobal = vpSensor->channelToPoint(cluster->channelID());
   //  std::cout<<"Point global in getXYZ has x = "<<pointGlobal.x()<<", y = "<<pointGlobal.y()<<", z = "<<pointGlobal.z()<<std::endl;
   
   return pointGlobal;
   
-}
-
-//===========================================================================
-//  Finalize
-//=============================================================================
-StatusCode PrCheatedVP::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
