@@ -517,7 +517,7 @@ class GetPack(Script):
         """
         detect the short URL used in the protocol of the checked out directory
         """
-        self.log.debug("detecting protocol at existing directory: "+directory)
+        self.log.debug("detecting protocol at existing directory: %s", directory)
         from LbUtils.VCS import svn_command
         from LbConfiguration.Repository import repository_shortpaths as rps
         out = svn_command("info", directory, stderr = None)[0]
@@ -525,7 +525,7 @@ class GetPack(Script):
         #print url
         for protocol in rps:
             if str(rps[protocol]) in url:
-                self.log.debug(" detected ", protocol)
+                self.log.debug("detected %s", protocol)
                 return protocol
         return "default"
 

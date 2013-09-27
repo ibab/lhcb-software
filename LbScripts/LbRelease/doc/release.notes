@@ -1,3 +1,7 @@
+2013-09-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: fixed LBCORE-268
+
 2013-09-24  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* scripts/lb-project-create-volume: New script to replace mkproject -a n
