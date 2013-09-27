@@ -34,6 +34,7 @@ DeRich::DeRich( const std::string & name )
     m_sphMirrorRadius       ( 0     ),
     m_RichPhotoDetConfig    ( Rich::HPDConfig ),
     m_RichGeometryConfig    ( 0     ),
+    m_Rich2PhotoDetectorArrayConfig ( 0 ),
     m_gasWinRefIndex        ( NULL  ),
     m_gasWinAbsLength       ( NULL  ),
     m_nominalSphMirrorRefl  ( NULL  ),
@@ -99,26 +100,28 @@ StatusCode DeRich::initialize ( )
     m_RichPhotoDetConfig = Rich::HPDConfig;
   }
 
-  if(exists("RichGeometryRunConfiguration")) 
+  if ( exists("RichGeometryRunConfiguration") )
   {
-    m_RichGeometryConfig = param<int> ("RichGeometryRunConfiguration");
-  }else {
-    // assume current RICH configuration
-    m_RichGeometryConfig =0;
-    
+    m_RichGeometryConfig = param<int>("RichGeometryRunConfiguration");
   }
-  m_Rich2PhotoDetectorArrayConfig=0;
-  m_Rich2UseGrandPmt=false;
+  else
+  {
+    // assume current RICH configuration
+    m_RichGeometryConfig = 0;
+  }
 
-  if(exists("Rich2PMTArrayConfig"     ) ) {
+  m_Rich2PhotoDetectorArrayConfig = 0;
+  m_Rich2UseGrandPmt              = false;
+
+  if ( exists("Rich2PMTArrayConfig") )
+  {
     m_Rich2PhotoDetectorArrayConfig = param<int>("Rich2PMTArrayConfig" );
-    if( m_Rich2PhotoDetectorArrayConfig >= 1 ) {
+    if ( m_Rich2PhotoDetectorArrayConfig >= 1 )
+    {
       m_Rich2UseGrandPmt = true;
     }
   }
-  
-  
-  
+
   return StatusCode::SUCCESS;
 }
 

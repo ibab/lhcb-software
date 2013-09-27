@@ -137,11 +137,12 @@ public:
   }
 
   // returns phodetector array config
-
-  inline int Rich2PhotoDetectorArrayConfig() const 
+  inline int Rich2PhotoDetectorArrayConfig() const
   {
     return m_Rich2PhotoDetectorArrayConfig;
   }
+
+  /// Use large PMTs
   inline bool Rich2UseGrandPmt () const
   {
     return m_Rich2UseGrandPmt;
@@ -259,15 +260,21 @@ protected:
   /// The nominal radius of the spherical mirror
   double m_sphMirrorRadius;
 
-  // RICH PhotoDetector Configuration
+  /// RICH PhotoDetector Configuration
   Rich::RichPhDetConfigType m_RichPhotoDetConfig;
 
-  // Rich Geometry Configuration
+  /// Rich Geometry Configuration
   int m_RichGeometryConfig;
- 
+
+  /** RICH2 PhotoDetector Configuration
+   * @todo This is specific to RICH2, so should be moved to DeRich2
+   */
   int m_Rich2PhotoDetectorArrayConfig;
+
+  /** Use large PMTs in RICH2
+   * @todo This is specific to RICH2, so should be moved to DeRich2
+   */
   bool m_Rich2UseGrandPmt;
-  
 
   /// refractive index of the quartz gas window
   const Rich::TabulatedProperty1D* m_gasWinRefIndex;
