@@ -5,6 +5,13 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2013-09-27 - Roel Aaij
+ - Fix swimming the stripping. Apparently something was going wrong with the
+   types setup in Swimming.decorators; it looks like (Py)ROOT sometimes messes
+   with the class table. As a workaround, the definitions have been moved into
+   the eventloop, but are only called once.
+ - Explicitely load SwimmingEventDict to get access to Swimming::hashParticle
+
 ! 2013-09-26 - V. Gligorov
  - Fix bug in SwimmingTisTos.py introduced by an earlier rollback
  - Make Configuration.py properly use either the __dev__ or normal DSTWriters

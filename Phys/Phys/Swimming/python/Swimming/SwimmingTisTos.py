@@ -2,7 +2,10 @@
 #we use the regular TISTOS tools, the stripping is done "by hand"
 from collections import defaultdict
 from GaudiPython.Bindings import gbl
-hashParticle = gbl.Swimming.hashParticle
+import GaudiPython
+GaudiPython.loaddict('SwimmingEventDict')
+Swimming = gbl.Swimming
+hashParticle = Swimming.hashParticle
 
 __all__ = ["evaluateTisTos","appendToFSP"]
 

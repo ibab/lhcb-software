@@ -49,15 +49,8 @@ elif Swimming().getProp('OutputType') == 'DST':
 def SwimmingEventLoop(gaudi, nEvents):
     import GaudiPython
     StatusCode = GaudiPython.gbl.StatusCode
-    from Swimming.decorators import (LHCb,
-                                     SwimmingReports,
-                                     P2TPRelation,
-                                     SharedParticles,
-                                     std_map_ulb,
-                                     std_map_sb,
-                                     std_map_sinfo)
-    gaudi = GaudiPython.AppMgr(outputlevel = 3)
-    gaudi.initialize()
+    if gaudi.targetFSMState() < 2:
+        gaudi.initialize()
     TES = gaudi.evtsvc()
     SEL = gaudi.evtSel()
     SEL.OutputLevel = 6
@@ -166,6 +159,10 @@ def SwimmingEventLoop(gaudi, nEvents):
 
     # Initialize at -1 so the eventNumber can be incremented at the top of the loop.
     eventNumber = -1
+    from Swimming.decorators import (LHCb,
+                                     SwimmingReports,
+                                     P2TPRelation,
+                                     SharedParticles)
     while True:
         # Increment event number
         eventNumber += 1
@@ -354,6 +351,29 @@ def SwimmingEventLoop(gaudi, nEvents):
             print "WARNING, stage %s already present, this is unsupported and will fail!"
             return StatusCode(False)
 
+        # symbols for std::map; create them here the first time we pass by. They
+        # used to be in Swimming.decorators, but something goes pear-shaped with
+        # the dictionary loading in that case...
+        if 'std_map_sb' not in locals():
+            from GaudiPython import gbl
+            std_map_sinfo = gbl.std.map('string', 'map<unsigned long,bool>')
+            std_map_ulb = gbl.std.map('unsigned long', 'bool')
+            pair_ulb = gbl.std.pair('const unsigned long', 'bool')
+            std_map_ulb.__pair = pair_ulb
+            std_map_sb = gbl.std.map('std::string', 'bool')
+            pair_sb = gbl.std.pair('const std::string', 'bool')
+            std_map_sb.__pair = pair_sb
+            
+            def set_map(self, k, v):
+                p = self.__pair(k, v)
+                it = self.find(k)
+                if it != self.end():
+                    self.erase(it)
+                self.insert(p)
+            
+            std_map_ulb.__setitem__ = set_map
+            std_map_sb.__setitem__ = set_map
+        
         # Create the TurningPoint objects and put them in the report
         for turn in finalTurningPointsForWriting:
             d = std_map_sb()
