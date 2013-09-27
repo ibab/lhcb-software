@@ -38,9 +38,13 @@ setup_gcc() {
 }
 
 setup_clang() {
-        setup_gcc 4.6.3
 
         _version=$1
+        case ${_version} in
+          3.3) setup_gcc 4.8.1 ;;
+          *)   setup_gcc 4.6.3 ;;
+        esac
+
         _platform=${LCG_hostos:-$(hostos)}
         _external=${LCG_external_area:-/afs/cern.ch/sw/lcg/external}
 
