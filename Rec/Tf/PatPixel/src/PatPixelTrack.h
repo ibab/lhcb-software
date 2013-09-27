@@ -65,16 +65,19 @@ public:
   int lastModule()  const {return m_hits.back()->module();}
 
   /// Chi2 / degrees-of-freedom of straight-line fit
-  double chi2() const {
+  double chi2() {
     double ch = 0.;
     int nDoF = -4;
     PatPixelHits::const_iterator ith;
     for (ith = m_hits.begin(); m_hits.end() != ith; ++ith) {
-      const double z = (*ith)->z();
-      ch += (*ith)->chi2(m_x0 + m_tx * z, m_y0 + m_ty * z);
+      ch += chi2(*ith);
       nDoF += 2;
     }
     return ch / nDoF;
+  }
+  /// Chi2 constribution from a given hit
+  double chi2(PatPixelHit* hit) {
+    return hit->chi2(m_x0 + m_tx * hit->z(), m_y0 + m_ty * hit->z()); 
   }
   /// Position at given z from straight-line fit
   double xAtZ(const double z) const {

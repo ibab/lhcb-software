@@ -27,12 +27,20 @@ PatPixelTracking::PatPixelTracking(const std::string& name,
     m_debugTool(NULL) { 
 
   declareProperty("OutputTracksName", m_outputLocation = LHCb::TrackLocation::Velo);
-  declareProperty("MaxXSlope", m_maxXSlope = 0.400);                     // 0.400
-  declareProperty("MaxYSlope", m_maxYSlope = 0.400);                     // 0.300
-  declareProperty("ExtraTol", m_extraTol = 1.000 * Gaudi::Units::mm);  // 0.150 // (initial) extrapolation tolerance when adding hits
-  declareProperty("MaxMissed", m_maxMissed = 4);  // stops the extrapolation after that many sensors
-  declareProperty("ClearHits", m_clearHits = false);  
+  declareProperty("MaxXSlope", m_maxXSlope = 0.400);
+  declareProperty("MaxYSlope", m_maxYSlope = 0.400);
+  // Tolerance window when adding hits
+  declareProperty("ExtraTol", m_extraTol = 1. * Gaudi::Units::mm); // 0.2 
+  // Number of modules without a hit after which to stop extrapolation
+  declareProperty("MaxMissed", m_maxMissed = 4); 
+
+  // Acceptance criteria for adding new hits
   declareProperty("MaxScatter", m_maxScatter = 0.004);
+
+  // Flag to clear hits (for rerunning in same event) 
+  declareProperty("ClearHits", m_clearHits = false);  
+
+  declareProperty("UseSlopeCorrection", m_useSlopeCorrection = true);
 
   // Parameters for debugging
   declareProperty("DebugToolName", m_debugToolName = "");
@@ -44,13 +52,13 @@ PatPixelTracking::PatPixelTracking(const std::string& name,
   declareProperty("EndVeloStateKalmanFit", m_stateEndVeloKalmanFit = false);
   declareProperty("AddFirstLastMeasurementStatesKalmanFit", m_addStateFirstLastMeasurementKalmanFit = false);
 
-  // obsolete parameters - only kept in for backwards compatibility
-  declareProperty("MaxZForRBeamCut",       m_maxZForRBeamCut   = 200.0 * Gaudi::Units::mm );  // 
-  declareProperty("MaxR2Beam",             m_maxR2Beam         =   1.0 * Gaudi::Units::mm2 ); // 1.0 // limit on squared track distance to the beam axis
-  declareProperty("MaxChi2PerHit",         m_maxChi2PerHit     = 25.0  );  // 16.0 // limit when removing worst hits
-  declareProperty("MaxChi2Short",          m_maxChi2Short      = 20.0  );  //  6.0 // short (3-hit) tracks are removed with this limit
-  declareProperty("MaxChi2ToAdd",          m_maxChi2ToAdd      = 200.0 );  // 100.0 // (initial) limit on track chi2 when adding new hits
-  declareProperty("MaxChi2SameSensor",     m_maxChi2SameSensor = 16.0  );  // 16.0 // limit when adding hits from sensor that already has hits ?
+  // Obsolete parameters - only kept in for backwards compatibility
+  // Limit on hit chi2 when removing worst hits
+  declareProperty("MaxChi2PerHit", m_maxChi2PerHit = 25.0);  // 12.0
+  // Max. chi2 for 3-hit tracks
+  declareProperty("MaxChi2Short", m_maxChi2Short = 20.0); 
+  // Limit on hit chi2 when adding new hits
+  declareProperty("MaxChi2ToAdd", m_maxChi2ToAdd = 200.0);
 
 }
 
@@ -69,6 +77,7 @@ StatusCode PatPixelTracking::initialize() {
   m_isDebug = msgLevel(MSG::DEBUG);
   // Setup the hit manager.
   m_hitManager = tool<PatPixelHitManager>("PatPixelHitManager");
+  m_hitManager->useSlopeCorrection(m_useSlopeCorrection);
   // Setup the debug tool.
   if ("" != m_debugToolName) m_debugTool = tool<IPatDebugTool>(m_debugToolName);
   // Setup the timing measurement.
@@ -163,7 +172,7 @@ StatusCode PatPixelTracking::execute() {
   }
   for (PatPixelTracks::const_iterator itT = m_tracks.begin(); itT != m_tracks.end(); ++itT) {
     if ((*itT).size() <= 3) continue;
-    // Calculate radius at first and last hit (assume that hits are sorted by sensor)
+    // Calculate radius at first and last hit (assume that hits are sorted by module)
     const double x1 = (*itT).hits.front()->x();
     const double y1 = (*itT).hits.front()->y();
     const double r1 = sqrt(x1 * x1 + y1 * y1);
@@ -182,73 +191,88 @@ StatusCode PatPixelTracking::execute() {
 }
 
 //=============================================================================
-// Extend downstream, on both sides of the detector as soon as one hit is missed
+// Extend track towards smaller z, 
+// on both sides of the detector as soon as one hit is missed.
 //=============================================================================
-void PatPixelTracking::trackDownstream(const PatPixelHit* h1, const PatPixelHit* h2) {
+void PatPixelTracking::extendTrack(const PatPixelHit* h1, 
+                                   const PatPixelHit* h2) {
 
   // Initially scan every second module (stay on the same side).
-  int extraStep = 2;
-  // Start two sensors behind the last one.
-  int extraSensIdx = m_track.lastModule() - extraStep; 
-  // Count sensors without hits found.
+  int step = 2;
+  // Start two modules behind the last one.
+  int next = h2->module() - step; 
+  // Count modules without hits found.
   unsigned int nbMissed = 0;
-  while (extraSensIdx >= 0) {
-    PatPixelSensor* extra = m_hitManager->sensor(extraSensIdx); 
-    // Attempt to add new hits from this sensor with given tolerances
-    PatPixelHit* h3 = bestHit(extra, m_extraTol, m_maxScatter, h1, h2); 
+  while (next >= 0) {
+    PatPixelModule* module = m_hitManager->module(next);
+    // Attempt to add new hits from this module with given tolerances
+    PatPixelHit* h3 = bestHit(module, m_extraTol, m_maxScatter, h1, h2);
     if (h3) {
       m_track.addHit(h3);
       // Reset missed hit counter.
       nbMissed = 0;
+      // Update the pair of hits to be used for extrapolating.
       h1 = h2;
       h2 = h3;
     } else {
       // No hits found.
-      if (extraStep == 2) {
+      if (step == 2) {
         // Look on the other side.
-        extra = m_hitManager->sensor(extraSensIdx + 1);
-        h3 = bestHit(extra, m_extraTol, m_maxScatter, h1, h2);
+        module = m_hitManager->module(next + 1);
+        h3 = bestHit(module, m_extraTol, m_maxScatter, h1, h2);
         if (!h3) {
-          nbMissed += extraStep;
+          nbMissed += step;
         } else {
           m_track.addHit(h3);
           h1 = h2;
           h2 = h3;
         }
         // Switch to scanning every module (left and right). 
-        extraStep = 1; 
+        step = 1; 
       } else {
         ++nbMissed;
       }
     }
     if (m_maxMissed < nbMissed) break;
-    extraSensIdx -= extraStep;
+    next -= step;
   }
 
 }
 
-/*
-void PatPixelTracking::trackUpstream() {
- 
-  int extraStep = 1;
-  int extraSensIdx = m_track.lastModule() + extraStep;
+//=============================================================================
+// Extend track towards larger z.
+//=============================================================================
+void PatPixelTracking::extendTrackOtherSide(const PatPixelHit* h1, 
+                                            const PatPixelHit* h2) {
+
+  // Scan every module.
+  const unsigned int step = 1;
+  unsigned int next = h2->module() + step;
+  // Count modules without hits found.
   unsigned int nbMissed = 0;
-  while (extraSensIdx <= (int)(m_hitManager->lastModule())) {
-    PatPixelSensor* extra = m_hitManager->sensor(extraSensIdx);
-    bool added = addHits( extra, m_extraTol, m_maxScatter );
-    if (added) { 
+  while (next <= m_hitManager->lastModule()) {
+    PatPixelModule* module = m_hitManager->module(next); 
+    // Attempt to add new hits from this module with given tolerances
+    PatPixelHit* h3 = bestHit(module, m_extraTol, m_maxScatter, h1, h2); 
+    if (h3) {
+      m_track.addHit(h3);
+      // Reset missed hit counter.
       nbMissed = 0;
-    } else { 
-      nbMissed += extraStep;
+      // Update the pair of hits to be used for extrapolating.
+      h1 = h2;
+      h2 = h3;
+    } else {
+      // No hits found.
+      nbMissed += step;
     }
     if (m_maxMissed < nbMissed) break;
-    extraSensIdx += extraStep;
+    next -= step;
   }
 
 }
-*/
+
 //=========================================================================
-//  Search starting with a pair of consecutive sensors.
+//  Search starting with a pair of consecutive modules.
 //=========================================================================
 void PatPixelTracking::searchByPair() {
 
@@ -257,24 +281,25 @@ void PatPixelTracking::searchByPair() {
   const int lastModule  = m_hitManager->lastModule();
   const int firstModule = m_hitManager->firstModule() + 2;
   for (int sens0 = lastModule; firstModule <= sens0; sens0 -= 1) { 
-    // Pick-up the "paired" sensor one station backwards
+    // Pick-up the "paired" module one station backwards
     const int sens1 = sens0 - 2;
-    PatPixelSensor* sensor0 = m_hitManager->sensor(sens0);
-    PatPixelSensor* sensor1 = m_hitManager->sensor(sens1);
-    double z0 = sensor0->z();
-    double z1 = sensor1->z();
+    PatPixelModule* module0 = m_hitManager->module(sens0);
+    PatPixelModule* module1 = m_hitManager->module(sens1);
+    double z0 = module0->z();
+    double z1 = module1->z();
     double dz = z0 - z1;
     // Does it make sense to skip pairs very far apart ?
     // if( fabs(dz) > 60.0) continue;                                      
 #ifdef DEBUG_HISTO
-    plot(dz, "SeedPairDeltaZ", "Separation in Z [mm] between the seed pair sensors", -200.0, +200.0, 400);
+    plot(dz, "SeedPairDeltaZ", "Separation in Z [mm] between the seed pair modules", -200.0, +200.0, 400);
 #endif
     // Calculate the search window from the slope limits. 
     const double dxMax = m_maxXSlope * fabs(dz);
     const double dyMax = m_maxYSlope * fabs(dz);
     // Loop over hits in the first module (larger Z) in the pair.
     PatPixelHits::const_iterator ith0;
-    for (ith0 = sensor0->hits().begin(); sensor0->hits().end() != ith0; ++ith0) {
+    PatPixelHits::const_iterator first1 = module1->hits().begin();
+    for (ith0 = module0->hits().begin(); module0->hits().end() != ith0; ++ith0) {
       // Skip hits already assigned to tracks.
       if ((*ith0)->isUsed()) continue;                                            
       const double x0 = (*ith0)->x();
@@ -286,17 +311,20 @@ void PatPixelTracking::searchByPair() {
         info() << format("s1%3d xMin%9.3f xMax%9.3f ", sens1, xMin, xMax);
         printHit(*ith0, "St0");
       }
-      // Loop over hits in the second sensor (smaller Z) in the pair.
-      PatPixelHits::const_iterator ith1; // , first1 = sensor1->hits().begin();
-      for (ith1 = sensor1->hits().begin(); sensor1->hits().end() != ith1; ++ith1) { 
+      // Loop over hits in the second module (smaller Z) in the pair.
+      PatPixelHits::const_iterator ith1;
+      for (ith1 = first1; module1->hits().end() != ith1; ++ith1) { 
         const double x1 = (*ith1)->x();
         // Skip hits below the X-pos. limit.
-        if (x1 < xMin) continue; // { first1 = itH1+1; continue; }
+        if (x1 < xMin) {
+          first1 = ith1 + 1;
+          continue;
+        } 
         // Stop search when above the X-pos. limit.
         if (x1 > xMax) break;
         // Skip hits already assigned to tracks.
         if ((*ith1)->isUsed()) continue;
-        // Check y compatibility...
+        // Check y compatibility.
         const double y1 = (*ith1)->y();
         // Skip hits out of Y-pos. limit.
         if (fabs(y1 - y0) > dyMax) continue;
@@ -313,10 +341,10 @@ void PatPixelTracking::searchByPair() {
         // Make a seed track out of these two hits.
         m_track.set(*ith0, *ith1);
         // Extend the seed track towards smaller Z.
-        // TODO: downstream, on both sides of the detector as soon as one hit is missed
-        trackDownstream(*ith0, *ith1);
-        // trackUpstream();
-
+        extendTrack(*ith0, *ith1);
+        if (m_track.hits().size() < 3) {
+          // extendTrackOtherSide(*ith1, *ith0);
+        }
         if (m_track.hits().size() < 3) continue;
 
         // Final checks
@@ -329,8 +357,14 @@ void PatPixelTracking::searchByPair() {
             }
             continue;
           }
+          if (m_track.chi2() > m_maxChi2Short) {
+            if (m_debug) {
+              info() << " -- reject, chi2 " << m_track.chi2() << " too high." << endmsg;
+              printTrack(m_track);
+            }
+          }
         } else {
-          // TODO: make fraction unused a parameter
+          // TODO: make fraction unused a parameter.
           if (m_track.nbUnused() < 0.5 * m_track.hits().size()) {
             if (m_debug) {
               info() << "  -- reject, only " << m_track.nbUnused() << "/" 
@@ -503,12 +537,12 @@ void PatPixelTracking::makeLHCbTracks() {
 }
 
 //=========================================================================
-//  Add hits from the specified sensor to the track
+//  Add hits from the specified module to the track
 //=========================================================================
-PatPixelHit* PatPixelTracking::bestHit(PatPixelSensor* sensor, double xTol, double maxScatter,
+PatPixelHit* PatPixelTracking::bestHit(PatPixelModule* module, double xTol, double maxScatter,
                                        const PatPixelHit* h1, const PatPixelHit* h2) {
 
-  if (sensor->hits().empty()) return NULL;
+  if (module->hits().empty()) return NULL;
   const double x1 = h1->x();
   const double y1 = h1->y();
   const double z1 = h1->z();
@@ -518,13 +552,13 @@ PatPixelHit* PatPixelTracking::bestHit(PatPixelSensor* sensor, double xTol, doub
   const double tx = (x2 - x1) / (z2 - z1);
   const double ty = (y2 - y1) / (z2 - z1); 
   // Extrapolate to the z-position of the module.
-  const double xGuess = x1 + tx * (sensor->z() - z1) - xTol;
+  const double xGuess = x1 + tx * (module->z() - z1) - xTol;
 
   // If the first hit is already below this limit we can stop here.
-  if (sensor->hits().back()->x() < xGuess) return NULL;
+  if (module->hits().back()->x() < xGuess) return NULL;
   // Do a binary search through the hits.
-  PatPixelHits::const_iterator itStart = sensor->hits().begin();   
-  unsigned int step = sensor->hits().size();
+  PatPixelHits::const_iterator itStart = module->hits().begin();   
+  unsigned int step = module->hits().size();
   while (2 < step) { // quick skip of hits that are above the X-limit
     step /= 2;
     if ((*(itStart + step))->x() < xGuess) itStart += step;
@@ -533,9 +567,9 @@ PatPixelHit* PatPixelTracking::bestHit(PatPixelSensor* sensor, double xTol, doub
   // Find the hit that matches best.
   unsigned int nFound = 0;
   double bestScatter = maxScatter;
-  PatPixelHit* bestHit = 0;
+  PatPixelHit* bestHit = NULL;
   PatPixelHits::const_iterator ith;
-  for (ith = itStart; sensor->hits().end() != ith; ++ith) {
+  for (ith = itStart; module->hits().end() != ith; ++ith) {
     const double dz = (*ith)->z() - z1; 
     const double xPred = x1 + tx * dz;
     const double yPred = y1 + ty * dz;
@@ -548,6 +582,8 @@ PatPixelHit* PatPixelTracking::bestHit(PatPixelSensor* sensor, double xTol, doub
     if ((*ith)->x() - xTol > xPred) break;
     const double dx = xPred - (*ith)->x();
     const double dy = yPred - (*ith)->y();
+    // Skip hits outside the y-position tolerance.
+    if (fabs(dy) > xTol) continue;
     const double scatter = sqrt(dx * dx + dy * dy) / fabs((*ith)->z() - z2);
     if (scatter < bestScatter) { 
       bestHit = *ith; 
@@ -569,6 +605,34 @@ PatPixelHit* PatPixelTracking::bestHit(PatPixelSensor* sensor, double xTol, doub
     if (m_debug) printHitOnTrack(bestHit, false);
   }
   return bestHit;
+
+}
+
+//=========================================================================
+// Remove the worst hit until all chi2 are good.
+//=========================================================================
+void PatPixelTracking::removeWorstHit(const double maxChi2) {
+
+  double worstChi2 = 1.e9;
+  while (worstChi2 > maxChi2) {
+    // Find the hit with highest Chi2.
+    worstChi2 = 0.0;                              
+    PatPixelHit* worst = NULL;
+    PatPixelHits::const_iterator ith;
+    for (ith = m_track.hits().begin(); m_track.hits().end() != ith; ++ith) {
+      double myChi2 = m_track.chi2(*ith);
+      if (myChi2 > worstChi2) {
+        worstChi2 = myChi2; 
+        worst = *ith;
+      }
+    }
+    // If highest chi2 is above limit, remove the hit.
+    if (worstChi2 > maxChi2) m_track.removeHit(worst);
+    if (m_debug) {
+      info() << "After worst hit removal" << endmsg;
+      printTrack(m_track);
+    }
+  }
 
 }
 

@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef PATPIXELTRACKING_H 
 #define PATPIXELTRACKING_H 1
 
@@ -41,13 +40,15 @@ public:
 
 private:
 
-  void trackDownstream(const PatPixelHit* h1, const PatPixelHit* h2);
-  void trackUpstream();
   /// Search for tracks starting from pair of hits on adjacent sensors
   void searchByPair();                            
-  PatPixelHit* bestHit(PatPixelSensor* sensor, double xTol, double maxScatter,
+  /// Extrapolate a seed track and try to add further hits.
+  void extendTrack(const PatPixelHit* h1, const PatPixelHit* h2);
+  void extendTrackOtherSide(const PatPixelHit* h1, const PatPixelHit* h2);
+  /// Try to add a matching hit on a given module. 
+  PatPixelHit* bestHit(PatPixelModule* module, double xTol, double maxScatter,
                        const PatPixelHit* h1, const PatPixelHit* h2);
-  /// Produce LHCb::Track list understandable to other LHCb applications
+  /// Produce LHCb::Track list understandable to other LHCb applications.
   void makeLHCbTracks();
 
   /// Debugging methods
@@ -62,43 +63,51 @@ private:
   void printTrack(PatPixelTrack& track);
   void printHitOnTrack(PatPixelHit* hit, bool ifMatch = true);
 
-  void removeWorstHit ( double maxChi2 );
+  void removeWorstHit(const double maxChi2);
 
+  /// Location of output container
   std::string m_outputLocation;
+  /// Hit manager tool
   PatPixelHitManager* m_hitManager;
 
+  /// Slope limits for seed pairs
   double m_maxXSlope;
   double m_maxYSlope;
+  /// Parameters for track extrapolation
   double m_extraTol;
-  double m_maxScatter;
   unsigned int m_maxMissed;
-  bool   m_clearHits;
-  bool   m_stateClosestToBeamKalmanFit ;
-  bool   m_stateEndVeloKalmanFit ;
-  bool   m_addStateFirstLastMeasurementKalmanFit ;	
-
-  PatPixelTracks m_tracks;                  // list of tracks found by searchByPair()
-  PatPixelTrack  m_track;                   // current track being search, when complete, it is added to the list
-  
-  //== Debug control
-  std::string      m_debugToolName;
-  int              m_wantedKey;
-  IPatDebugTool*   m_debugTool;
-  bool             m_isDebug;
-  bool             m_debug;
-
-  //== Timing measurement control
-  bool             m_doTiming;
-  ISequencerTimerTool* m_timerTool;
-  int   m_timeTotal;
-  int   m_timePrepare;
-  int   m_timePairs;
-  int   m_timeFinal;
-  double  m_maxZForRBeamCut;
-  double m_maxR2Beam;
+  /// Criteria for adding hits to an existing track
+  double m_maxScatter;
   double m_maxChi2PerHit;
-  double m_maxChi2Short;
   double m_maxChi2ToAdd;
-  double m_maxChi2SameSensor;
+  /// Max. chi2 for 3-hit tracks
+  double m_maxChi2Short;
+
+  bool m_useSlopeCorrection;
+  bool m_clearHits;
+  bool m_stateClosestToBeamKalmanFit;
+  bool m_stateEndVeloKalmanFit;
+  bool m_addStateFirstLastMeasurementKalmanFit; 
+
+  /// List of tracks found
+  PatPixelTracks m_tracks;                  
+  /// Current track being worked with
+  PatPixelTrack  m_track;                   
+
+  /// Debug control
+  std::string m_debugToolName;
+  int m_wantedKey;
+  IPatDebugTool* m_debugTool;
+  bool m_isDebug;
+  bool m_debug;
+
+  /// Timing measurement control
+  bool m_doTiming;
+  ISequencerTimerTool* m_timerTool;
+  int m_timeTotal;
+  int m_timePrepare;
+  int m_timePairs;
+  int m_timeFinal;
+
 };
 #endif // PATPIXELTRACKING_H

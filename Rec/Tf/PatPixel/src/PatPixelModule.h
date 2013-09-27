@@ -1,5 +1,5 @@
-#ifndef PATPIXELSENSOR_H
-#define PATPIXELSENSOR_H 1
+#ifndef PATPIXELMODULE_H
+#define PATPIXELMODULE_H 1
 
 // Gaudi
 #include "GaudiKernel/Point3DTypes.h"
@@ -7,22 +7,22 @@
 // Local
 #include "PatPixelHit.h"
 
-/** @class PatPixelSensor PatPixelSensor.h
- *  Describes one module and its data for the hit manager
+/** @class PatPixelModule PatPixelModule.h
+ *  Class to hold hits for one VP module
  *
  *  @author Olivier Callot
  *  @date   2012-01-05
  */
-class PatPixelSensor {
+class PatPixelModule {
 
 public:
   /// Constructor
-  PatPixelSensor(const unsigned int number, const bool right) : 
+  PatPixelModule(const unsigned int number, const bool right) : 
     m_number(number), m_isRight(right), m_previous(-1) {
     reset();
   }
   /// Destructor
-  virtual ~PatPixelSensor() {}
+  virtual ~PatPixelModule() {}
 
   unsigned int number() const {return m_number;}
   int previous() const {return m_previous;}
@@ -51,4 +51,4 @@ private:
   PatPixelHits m_hits;
 
 };
-#endif // PATPIXELSENSOR_H
+#endif // PATPIXELMODULE_H

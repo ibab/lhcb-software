@@ -4,6 +4,11 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2013-09-27 - Heinrich Schindler
+ - Renamed PatPixelSensor to PatPixelModule to reflect new geometry
+ - Added flag to use slope dependent correction in position calculation or not
+ - Some cleanup in PatPixelTracking 
+
 ! 2013-09-25 - Heinrich Schindler
  - Modifications for use with new XML and detector element hierarchy
  - Moved track extrapolation to PatPixelTracking

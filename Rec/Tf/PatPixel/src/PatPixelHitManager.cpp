@@ -18,7 +18,7 @@ DECLARE_TOOL_FACTORY(PatPixelHitManager)
 PatPixelHitManager::PatPixelHitManager(const std::string& type,
                                        const std::string& name,
                                        const IInterface* parent) :
-    GaudiTool(type, name, parent) {
+    GaudiTool(type, name, parent), m_useSlopeCorrection(true) {
 
   declareInterface<PatPixelHitManager>(this);
 
@@ -66,9 +66,9 @@ StatusCode PatPixelHitManager::initialize() {
 StatusCode PatPixelHitManager::finalize() {
 
   info() << "Maximum number of Velo hits " << m_maxSize << endmsg;
-  std::vector<PatPixelSensor*>::iterator itS;
-  for (itS = m_modules.begin(); m_modules.end() != itS; ++itS) {
-    if (*itS) delete *itS;
+  std::vector<PatPixelModule*>::iterator itm;
+  for (itm = m_modules.begin(); m_modules.end() != itm; ++itm) {
+    if (*itm) delete *itm;
   }
   return GaudiTool::finalize();
 
@@ -80,7 +80,7 @@ StatusCode PatPixelHitManager::finalize() {
 StatusCode PatPixelHitManager::rebuildGeometry() {
 
   // Delete the existing modules.
-  std::vector<PatPixelSensor*>::iterator itm;
+  std::vector<PatPixelModule*>::iterator itm;
   for (itm = m_modules.begin(); m_modules.end() != itm; ++itm) {
     if (*itm) delete *itm;
   }
@@ -105,7 +105,7 @@ StatusCode PatPixelHitManager::rebuildGeometry() {
       }
     }
     // Create a new module and add it to the list.
-    PatPixelSensor* module = new PatPixelSensor(number, (*its)->isRight());
+    PatPixelModule* module = new PatPixelModule(number, (*its)->isRight());
     module->setZ((*its)->z());
     if ((*its)->isRight()) {
       module->setPrevious(previousRight);
@@ -145,7 +145,7 @@ void PatPixelHitManager::handle(const Incident& incident) {
 void PatPixelHitManager::clearHits() {
   int lastSize = m_nextInPool - m_pool.begin();
   if (lastSize > m_maxSize) m_maxSize = lastSize;
-  std::vector<PatPixelSensor*>::iterator itS;
+  std::vector<PatPixelModule*>::iterator itS;
   for (itS = m_modules.begin(); m_modules.end() != itS; ++itS) {
     if (*itS) (*itS)->reset();
   }
@@ -190,10 +190,41 @@ void PatPixelHitManager::buildHits() {
 }
 
 //=========================================================================
+// Calculate global position of a cluster.
+//=========================================================================
+Gaudi::XYZPoint PatPixelHitManager::position(LHCb::VPChannelID id, double dx, double dy) {
+
+  const DeVPSensor* sensor = m_vp->sensorOfChannel(id);
+  std::pair<double, double> offsets(dx, dy);
+  Gaudi::XYZPoint point = sensor->channelToPoint(id, offsets);
+  // If no correction to be applied, we're done.
+  if (!m_useSlopeCorrection) return point;
+  double dx_prime = dx, dy_prime = dy;
+  Double_t delta_x = fabs(dx - 0.5);
+  Double_t delta_y = fabs(dy - 0.5);
+  if (dx == 0.5 && dy == 0.5) return point;
+  if (dx != 0.5) {
+    Double_t slx = fabs(point.x() / point.z());
+    Double_t p_offset = 0.31172471 + 0.15879833 * TMath::Erf(-6.78928312 * slx + 0.73019077);
+    Double_t t_factor = 0.43531842 + 0.3776611 * TMath::Erf(6.84465914 * slx - 0.75598833);
+    dx_prime = 0.5 + (dx - 0.5) / delta_x * (p_offset + t_factor * delta_x); 
+  }
+  if (dy != 0.5) {
+    Double_t sly = fabs(point.y() / point.z());
+    Double_t p_offset = 0.35829374 - 0.20900493 * TMath::Erf(5.67571733 * sly -0.40270243);
+    Double_t t_factor = 0.29798696 + 0.47414641 * TMath::Erf(5.84419802 * sly -0.40472057);
+    dy_prime = 0.5 + (dy - 0.5) / delta_y * (p_offset + t_factor * delta_y);
+  }
+  std::pair<double, double> offsets2(dx_prime, dy_prime);
+  return sensor->channelToPoint(id, offsets2);
+
+}
+
+//=========================================================================
 // Sort hits by X within every module to speed up the track search
 //=========================================================================
 void PatPixelHitManager::sortByX() {
-  std::vector<PatPixelSensor*>::iterator itm;
+  std::vector<PatPixelModule*>::iterator itm;
   for (itm = m_modules.begin(); m_modules.end() != itm; ++itm) {
     if (*itm) {
       std::sort((*itm)->hits().begin(), (*itm)->hits().end(), 
