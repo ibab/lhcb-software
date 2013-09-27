@@ -17,6 +17,7 @@ use   MCEvent           v*   Event
 use   FTEvent           v*   Event
 use   LinkerEvent       v*   Event
 use   PrKernel          v*   Pr
+use   VPDet             v*   Det
 
 include_path      none
 #=========================================================================

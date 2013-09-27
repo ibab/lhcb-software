@@ -4,6 +4,10 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-09-27 - Daniel Hynds
+- Added cheated PR for VP detector
+- Split polynomial fit function for velo + VP
+
 ! 2013-09-09 - Heinrich Schindler
  - Replace VPChannelID::sensor() by VPChannelID::module()
 
