@@ -3,6 +3,9 @@
 ! Responsible : Daniel Hynds
 !--------------------------------------------------------------------------
 
+! 2013-09-27 - Heinrich Schindler
+ - Added protection against duplicated cluster channel IDs
+
 ! 2013-09-23 - Heinrich Schindler
  - Added sorting of lite clusters
 
