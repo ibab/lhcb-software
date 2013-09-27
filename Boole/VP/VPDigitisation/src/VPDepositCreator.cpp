@@ -101,7 +101,7 @@ StatusCode VPDepositCreator::initialize() {
   const double kt = m_temperature * Gaudi::Units::k_Boltzmann / Gaudi::Units::eV;
   const double thickness = m_det->sensor(0)->siliconThickness();
   
-  if(m_irradiated) m_diffusionCoefficient = sqrt(2. * kt * thickness / 100.);
+  if (m_irradiated) m_diffusionCoefficient = sqrt(2. * kt * thickness / 100.);
   else m_diffusionCoefficient = sqrt(2. * kt * thickness / m_biasVoltage);
   
   return StatusCode::SUCCESS;
@@ -165,7 +165,6 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit,
   const double path = hit->pathLength();
   unsigned int nPoints = int(ceil(path / m_stepSize));
   if (nPoints > m_nMaxSteps) nPoints = m_nMaxSteps;
-  if (nPoints == 0) info() << "PROBLEM!! nPoints = 0" << endmsg;
   // Calculate charge on each point.
   std::vector<double> charges(nPoints);
   double sum = 0.;

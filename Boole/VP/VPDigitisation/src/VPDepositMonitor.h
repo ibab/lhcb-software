@@ -32,7 +32,6 @@ private:
   void monitorDigits(LHCb::MCVPDigits*);
 
   bool m_detailed;
-  LHCb::MCVPDigits* m_mcdigits;
   DeVP* m_det;
 
 };

@@ -3,6 +3,9 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2013-09-27 - Heinrich Schindler
+ - Removed unused member variable in VPDepositMonitor
+
 ! 2013-09-27 - Daniel Hynds
 - Fixed irradiation diffusion parameter
 
