@@ -104,6 +104,7 @@ StatusCode DeVP::initialize() {
     }
     m_sensors[(*it)->sensorNumber()] = *it;
   }
+  if (m_nSensors > 100) m_old = false;
   msg << MSG::INFO << "There are " << m_nSensors << " sensors "
                    << "(left: " << m_nLeftSensors 
                    << ", right: " << m_nRightSensors << ")" << endmsg;

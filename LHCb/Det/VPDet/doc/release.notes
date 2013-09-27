@@ -4,6 +4,9 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2013-09-26 - Heinrich Schindler
+ - added check whether old or new XML description is used
+  
 ! 2013-09-21 - Heinrich Schindler
  - use xyzOfPixel method in channelToPoint function of DeVPSquareType
 

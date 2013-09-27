@@ -145,7 +145,8 @@ StatusCode DeVPNewSensor::pointToChannel(const Gaudi::XYZPoint& point,
         if (row >= m_nRows) row = m_nRows - 1;
       }
       channel.setCol(col);
-      channel.setRow(row); 
+      channel.setRow(row);
+      break; 
     }
     x0 += step;
   }
