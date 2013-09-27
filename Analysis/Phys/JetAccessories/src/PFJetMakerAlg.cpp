@@ -319,57 +319,48 @@ StatusCode LoKi::PFJetMaker::analyse   ()
     {
       // Cut to get the particles pointing to the PV.
       const LHCb::RecVertex* pv = *i_pv;
-
+      
       // Prepare the inputs
       IJetMaker::Input inputs;
       for (Range::const_iterator i_p = part.begin() ; part.end() != i_p ; i_p++ ){ 
-        //always()<<"here "<<endreq;
-        
+        // General cut, if it is not a good input
        	if (!GoodInput(*i_p))continue;
-        //always()<<"there "<<m_minIPChi2PVassoc<<endreq;
+        // If we decideded to only do the best ipchi2 association and the input is to be associated to a pv but does not point to this pv, discard
         if ( m_minIPChi2PVassoc && PerPVinputs(*i_p) && ( std::abs( bestVertexVZ(*i_p) - VZ(pv) ) > 1e-6 
                                     || std::abs( bestVertexVY(*i_p) - VY(pv) ) > 1e-6 
                                     || std::abs( bestVertexVX(*i_p) - VX(pv) ) > 1e-6 ) ){continue;}
+        // Otherwise (if it does point to this pv) take it
         else if ( m_minIPChi2PVassoc && PerPVinputs(*i_p) )	inputs.push_back(*i_p);
+        // Then if it is of the type to ba added to all pv, just add it to all pv
         else if ( m_minIPChi2PVassoc && AllPVinputs(*i_p) )	inputs.push_back(*i_p); 
-        else if (!m_minIPChi2PVassoc && PerPVinputs(*i_p)){
-          //always()<<"tag1"<<endreq;
-          
+        else if (!m_minIPChi2PVassoc && PerPVinputs(*i_p) ){
+          // First compute the ip and ipchi2 wrt this pv
           double ip(1e8), chi2(1e8);
           StatusCode dist = m_dist->distance ( (*i_p), pv, ip, chi2 );
-          //always()<<"tag2"<<endreq;
           if (ip<0. || chi2<0. ) continue;
-          //always()<<"tag3"<<endreq;
           double thisPVchi2 = chi2;
           // Cut for long tracks
+          // If the ip and ipchi2 are below a maximal value, and no
           if ( (*i_p)->proto()!= NULL && (*i_p)->proto()->track()->type()== LHCb::Track::Long && ip< TMath::Log( m_minlogIPtoPV_Long) &&  TMath::Log(chi2) <  m_minlogIPChi2toPV_Long ){
             bool useIt = true;
-          //always()<<"tag4"<<endreq;
             for ( LHCb::RecVertex::Range::const_iterator i_pv2 = pvs.begin() ; pvs.end() != i_pv2 ; i_pv2++ ){
               if (i_pv2 == i_pv) continue;
-          //always()<<"tag5"<<endreq;
-              dist = m_dist->distance ( (*i_p), pv, ip, chi2 );
-          //always()<<"tag6"<<endreq;
+              dist = m_dist->distance ( (*i_p), (*i_pv2), ip, chi2 );
               if ( chi2<0. ) continue;
-          //always()<<"tag7"<<endreq;
               if( chi2<thisPVchi2){
                 useIt = false;
                 break;
               }
-          //always()<<"tag8"<<endreq;
             }
             if (useIt) inputs.push_back(*i_p);
           }
           else if( (*i_p)->proto()!= NULL && ((*i_p)->proto()->track()->type()== LHCb::Track::Upstream || (*i_p)->proto()->track()->type()== LHCb::Track::Velo) && 
                    TMath::Log(ip) < m_minlogIPtoPV_Up &&  TMath::Log(chi2) < m_minlogIPChi2toPV_Up ){
-          //always()<<"tag9"<<endreq;
-           bool useIt = true;
+            bool useIt = true;
             for ( LHCb::RecVertex::Range::const_iterator i_pv2 = pvs.begin() ; pvs.end() != i_pv2 ; i_pv2++ ){
               if (i_pv2 == i_pv) continue;
-          //always()<<"tag10"<<endreq;
-              dist = m_dist->distance ( (*i_p), pv, ip, chi2 );
+              dist = m_dist->distance ( (*i_p), (*i_pv2), ip, chi2 );
               if (ip<0. || chi2<0. ) continue;
-          //always()<<"tag11"<<endreq;
               if( chi2<thisPVchi2){
                 useIt = false;
                 break;
@@ -379,56 +370,37 @@ StatusCode LoKi::PFJetMaker::analyse   ()
           }
           else{
            bool useIt = true;
-           //always()<<"tag12 "<<pvs.size()<<endreq;
             for ( LHCb::RecVertex::Range::const_iterator i_pv2 = pvs.begin() ; pvs.end() != i_pv2 ; i_pv2++ ){
-              //always()<<" tagaaa"<<endreq;
               if (i_pv2 == i_pv){
-                //always()<<"tag12a "<<endreq;
                 continue;
               }
-              
-          //always()<<"tag13"<<endreq;
-              dist = m_dist->distance ( (*i_p), pv, ip, chi2 );
-          //always()<<"tag14"<<endreq;
+              dist = m_dist->distance ( (*i_p), (*i_pv2), ip, chi2 );
               if ( chi2<0. ) continue;
               if( chi2<thisPVchi2){
-          //always()<<"tag15"<<endreq;
                 useIt = false;
                 break;
               }
-          //always()<<"tag15a"<<endreq;
             }
-          //always()<<"tag15b"<<endreq;
             if (useIt) inputs.push_back(*i_p);
-          //always()<<"tag15c"<<endreq;
           }
-          //always()<<"tag15d"<<endreq;
           // make the ip selection
         } 
         else if (!m_minIPChi2PVassoc && AllPVinputs(*i_p)){
           // make the ip selection for downstream
-          //always()<<"tag16a"<<endreq; 
           if (  ( PFType(*i_p) > LHCb::PFParticle::Charged && PFType(*i_p) < LHCb::PFParticle::Neutral )
                 || ( PFType(*i_p) == LHCb::PFParticle::ChargedInfMomentum )
                 || ( PFType(*i_p) == LHCb::PFParticle::Charged0Momentum )){
             
             if( (*i_p)->proto()->track()->type()== LHCb::Track::Downstream){ 
-              //always()<<"tag16"<<endreq; 
               double ip(1e8), chi2(1e8);
-              //always()<<"tag17"<<endreq; 
-              StatusCode dist = m_dist->distance ( (*i_p), pv, ip, chi2 );
-              //always()<<"tag18"<<endreq; 
+              StatusCode dist = m_dist->distance ( (*i_p), pv , ip, chi2 );
               double thisPVchi2 = chi2;
               if ( chi2<0. ) continue;
-              //always()<<"tag19"<<endreq; 
               if( TMath::Log(ip) < m_minlogIPtoPV_Down &&  TMath::Log(chi2) < m_minlogIPChi2toPV_Down ){
                 bool useIt = true;
-                //always()<<"tag20"<<endreq; 
                 for ( LHCb::RecVertex::Range::const_iterator i_pv2 = pvs.begin() ; pvs.end() != i_pv2 ; i_pv2++ ){
                   if (i_pv2 == i_pv) continue;
-                  //always()<<"tag21"<<endreq; 
-                  dist = m_dist->distance ( (*i_p), pv, ip, chi2 );
-                  //always()<<"tag22"<<endreq; 
+                  dist = m_dist->distance ( (*i_p), (*i_pv2), ip, chi2 );
                   if (ip<0. || chi2<0. ) continue;
                   if( chi2<thisPVchi2){
                     useIt = false;
@@ -443,20 +415,14 @@ StatusCode LoKi::PFJetMaker::analyse   ()
             inputs.push_back(*i_p);
           }
         }
-        
         else if (m_minIPChi2PVassoc && AllPVinputs(*i_p)){
             inputs.push_back(*i_p);
         }
-
         else{
           continue;
-          
-          //always()<<"tag23bla"<<endreq; 
         }
-        //always()<<"tag23blu"<<endreq; 
       }
 
-          //always()<<"tag23"<<endreq; 
       // ouput container
       IJetMaker::Jets jets ;
       // make the jets 
