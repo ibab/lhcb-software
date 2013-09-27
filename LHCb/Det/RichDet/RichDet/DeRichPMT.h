@@ -94,6 +94,13 @@ private:
   Gaudi::XYZPoint getAnodeHitCoordFromPixelNum( const double fracPixelCol,
                                                 const double fracPixelRow ) const;
 
+  Gaudi::XYZPoint getAnodeHitCoordFromGrandPixelNum( const double fracPixelCol,
+                                                const double fracPixelRow ) const;
+
+  Gaudi::XYZPoint getAnodeHitCoordFromMultTypePixelNum( const double fracPixelCol,
+                                                        const double fracPixelRow,
+                                                const LHCb::RichSmartID smartID  ) const;
+
 
   Gaudi::XYZPoint RichPmtLensReconFromPhCath(  const Gaudi::XYZPoint & aPhCathCoord  ) const ;
   /// Clean up interpolators
@@ -125,6 +132,23 @@ private:
   bool m_PmtLensFlag;
   double m_PmtLensMagnificationRatio;
   double m_PmtLensRoc;
+  
+  double m_GrandPmtAnodeXSize;
+  double m_GrandPmtAnodeYSize;
+  double m_GrandPmtAnodeZSize;
+  double m_GrandPmtPixelXSize;
+  double m_GrandPmtPixelYSize;
+  double m_GrandPmtPixelGap;
+  double m_GrandPmtEdgePixelXSize;
+  double m_GrandPmtEdgePixelYSize;
+  double m_GrandPmtEffectivePixelXSize;
+  double m_GrandPmtEffectivePixelYSize;
+  double m_GrandPmtEdgePixelXDiff;
+  double m_GrandPmtEdgePixelYDiff;
+  double m_GrandPmtAnodeHalfThickness;
+  bool m_Rich2UseGrandPmt;
+  double m_Rich1Rich2ZDivideLimit;
+  int m_Rich2PmtArrayConfig;
   
 };
 

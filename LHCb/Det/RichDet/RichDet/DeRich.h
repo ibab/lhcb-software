@@ -130,6 +130,22 @@ public:
   {
     return m_RichPhotoDetConfig;
   }
+  /// Returns the Rich Geometry config type
+  inline int RichGeometryConfig() const
+  {
+    return m_RichGeometryConfig;
+  }
+
+  // returns phodetector array config
+
+  inline int Rich2PhotoDetectorArrayConfig() const 
+  {
+    return m_Rich2PhotoDetectorArrayConfig;
+  }
+  inline bool Rich2UseGrandPmt () const
+  {
+    return m_Rich2UseGrandPmt;
+  }
 
   /**
    * Returns a pointer to the tabulated property that holds the refractive
@@ -245,6 +261,13 @@ protected:
 
   // RICH PhotoDetector Configuration
   Rich::RichPhDetConfigType m_RichPhotoDetConfig;
+
+  // Rich Geometry Configuration
+  int m_RichGeometryConfig;
+ 
+  int m_Rich2PhotoDetectorArrayConfig;
+  bool m_Rich2UseGrandPmt;
+  
 
   /// refractive index of the quartz gas window
   const Rich::TabulatedProperty1D* m_gasWinRefIndex;

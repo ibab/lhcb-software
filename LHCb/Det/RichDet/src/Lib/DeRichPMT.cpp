@@ -33,6 +33,7 @@ DeRichPMT::DeRichPMT( const std::string & name )
   : DeRichPD ( name )
   , m_dePmtAnode(NULL)
   , m_PmtLensFlag(false)
+  , m_Rich2UseGrandPmt(false)
 {
 }
 
@@ -151,6 +152,38 @@ StatusCode DeRichPMT::getPMTParameters()
   m_PmtQwZSize = deRich->param<double>  ("RichPmtQuartzZSize"  );
   m_QwToAnodeZDist= deRich->param<double> ( "RichPmtQWToSiMaxDist" );
 
+  m_Rich2PmtArrayConfig=0;
+  
+  if(deRich->exists ("Rich2PMTArrayConfig") ) {
+    
+    m_Rich2PmtArrayConfig = deRich->param<int>  ("Rich2PMTArrayConfig");
+    if( deRich->exists ("RichGrandPmtAnodeXSize" ) ){
+      m_GrandPmtAnodeXSize = deRich->param<double> ("RichGrandPmtAnodeXSize" );
+      m_GrandPmtAnodeYSize = deRich->param<double> ("RichGrandPmtAnodeYSize" );
+      m_GrandPmtAnodeZSize = deRich->param<double> ("RichGrandPmtAnodeZSize" );
+      m_GrandPmtPixelXSize = deRich->param<double>( "RichGrandPmtPixelXSize");
+      m_GrandPmtPixelYSize = deRich->param<double>( "RichGrandPmtPixelYSize");
+      m_GrandPmtPixelGap   = deRich->param<double> ( "RichGrandPmtPixelGap" );
+      m_GrandPmtEdgePixelXSize = deRich->param<double>( "RichGrandPmtEdgePixelXSize");
+      m_GrandPmtEdgePixelYSize = deRich->param<double>( "RichGrandPmtEdgePixelYSize");
+      m_GrandPmtEffectivePixelXSize =  m_GrandPmtPixelXSize  + m_GrandPmtPixelGap;
+      m_GrandPmtEffectivePixelYSize =  m_GrandPmtPixelYSize  + m_GrandPmtPixelGap;
+      m_GrandPmtEdgePixelXDiff= m_GrandPmtEdgePixelXSize - m_GrandPmtPixelXSize;
+      m_GrandPmtEdgePixelYDiff= m_GrandPmtEdgePixelYSize - m_GrandPmtPixelYSize;
+      m_GrandPmtAnodeHalfThickness = m_GrandPmtAnodeZSize/2.0;
+      
+      
+    }
+    
+  }
+  m_Rich2UseGrandPmt =false;
+  if(m_Rich2PmtArrayConfig >= 1 ) {
+    m_Rich2UseGrandPmt = true;
+    
+  }
+  m_Rich1Rich2ZDivideLimit = 6000.0;
+  
+
   if(exists("RichPmtLensMagnficationFactor")) {
        m_PmtLensMagnificationRatio=deRich->param<double> ("RichPmtLensMagnficationFactor"  );
   }else {
@@ -208,7 +241,15 @@ StatusCode DeRichPMT::detectionPoint ( const double fracPixelCol,
 {
   StatusCode  sc = StatusCode::SUCCESS;
 
-  const Gaudi::XYZPoint aLocalHit = getAnodeHitCoordFromPixelNum( fracPixelCol,fracPixelRow );
+  // First find which RichDetector this point is in
+  const Gaudi::XYZPoint atestPoint = Gaudi::XYZPoint (0.0,0.0,0.0);
+  const Gaudi::XYZPoint atestGlobalPoint = geometry()->toGlobalMatrix() *atestPoint ;
+  bool aGrandPmtUse = ( atestGlobalPoint.z()> m_Rich1Rich2ZDivideLimit ) &&  (m_Rich2UseGrandPmt);  
+ 
+  const Gaudi::XYZPoint aLocalHit = 
+   aGrandPmtUse ? getAnodeHitCoordFromGrandPixelNum( fracPixelCol,fracPixelRow ):
+                  getAnodeHitCoordFromPixelNum( fracPixelCol,fracPixelRow );
+                                          
   const double zPh = ( aLocalHit.z())+ m_QwToAnodeZDist +  m_PmtAnodeLocationInPmt ;
   const double zQwExt = zPh + m_PmtQwZSize;
 
@@ -259,7 +300,7 @@ StatusCode DeRichPMT::detectionPoint( const LHCb::RichSmartID smartID,
 
   const double aPixCol = (double) ( smartID.pixelCol())* 1.0;
   const double aPixRow  = (double) ( smartID.pixelRow())* 1.0;
-  const Gaudi::XYZPoint aLocalHit= getAnodeHitCoordFromPixelNum( aPixCol,aPixRow );
+  const Gaudi::XYZPoint aLocalHit= getAnodeHitCoordFromMultTypePixelNum( aPixCol,aPixRow,smartID );
   const double zPh = ( aLocalHit.z())+ m_QwToAnodeZDist +  m_PmtAnodeLocationInPmt ;
   const double zQwExt = zPh + m_PmtQwZSize;
   const Gaudi::XYZPoint aPhCathHit = Gaudi::XYZPoint ( aLocalHit.x(), aLocalHit.y(), zPh    );
@@ -298,12 +339,49 @@ DeRichPMT::getAnodeHitCoordFromPixelNum( const double fracPixelCol,
 
   return Gaudi::XYZPoint( xh,yh,zh );
 }
+//============================================================================================
+Gaudi::XYZPoint
+DeRichPMT::getAnodeHitCoordFromGrandPixelNum( const double fracPixelCol,
+                                         const double fracPixelRow ) const
+{
+  double aXEffPixel = 
+    ((fracPixelCol==0) || (fracPixelCol==( m_PmtNumPixCol-1)) ) ?  m_GrandPmtEdgePixelXSize : m_GrandPmtEffectivePixelXSize;
+  double aYEffPixel = 
+    ((fracPixelRow==0) || (fracPixelRow==( m_PmtNumPixRow-1)) ) ?  m_GrandPmtEdgePixelYSize : m_GrandPmtEffectivePixelYSize;
+  
+  const double xh = ( fracPixelCol - (m_PmtNumPixCol-1) * 0.5 ) * aXEffPixel;
+  const double yh = ( fracPixelRow - (m_PmtNumPixRow-1) * 0.5 ) * aYEffPixel;
+  const double zh = m_GrandPmtAnodeHalfThickness;
 
+  return Gaudi::XYZPoint( xh,yh,zh );
+}
+//=============================================================================
+
+Gaudi::XYZPoint
+DeRichPMT::getAnodeHitCoordFromMultTypePixelNum( const double fracPixelCol,
+                                                 const double fracPixelRow ,
+                                                 const LHCb::RichSmartID smartID ) const
+{
+  Gaudi::XYZPoint aP = Gaudi::XYZPoint(0.0,0.0,0.0);
+  
+  if( (smartID.rich()== Rich::Rich2) && (  m_Rich2UseGrandPmt ) ) {
+   aP = getAnodeHitCoordFromGrandPixelNum(fracPixelCol , fracPixelRow);
+      
+  } else {
+   aP = getAnodeHitCoordFromPixelNum( fracPixelCol , fracPixelRow );
+    
+  }
+  const Gaudi::XYZPoint aPC = aP;
+  
+  return aPC;
+  
+}
+//===============================================================================================
 Gaudi::XYZPoint DeRichPMT::detPointOnAnode ( const LHCb::RichSmartID smartID ) const
 {
   const double aPixCol = (double) (smartID.pixelCol());
   const double aPixRow = (double) (smartID.pixelRow());
-  Gaudi::XYZPoint aLocalAnodeCoord = getAnodeHitCoordFromPixelNum(aPixCol,aPixRow);
+  Gaudi::XYZPoint aLocalAnodeCoord = getAnodeHitCoordFromMultTypePixelNum(aPixCol,aPixRow,smartID );
   // std::cout<<" DeRichPmt local point col row coord "<<aPixCol<<"  :"<<aPixRow<<"   "<<aLocalAnodeCoord <<std::endl;
 
   return ( m_dePmtAnode->geometry()->toGlobal(aLocalAnodeCoord));

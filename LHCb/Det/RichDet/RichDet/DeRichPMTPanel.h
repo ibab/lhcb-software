@@ -98,6 +98,7 @@ private:
 
 
   std::vector<int> getPmtRowColFromPmtNum( const int aPmtNum );
+  std::vector<int> getGrandPmtRowColFromPmtNum( const int aPmtNum );
 
   int PmtModuleNumInPanelFromModuleNum(const int aMnum) const;
   int PmtModuleNumInPanelFromModuleNumAlone(const int aMnum) const;
@@ -116,6 +117,8 @@ private:
   DetectorElement* getFirstDeRich() const;
   int getNumModulesInThisPanel() ;
   int getPmtNumFromRowCol(int PRow, int PCol) const;
+  int getGrandPmtNumFromRowCol(int PRow, int PCol) const;
+
   bool isInPmtAnodeLateralAcc(const Gaudi::XYZPoint& aPointInPmtAnode ) const;
   bool isInPmt(const Gaudi::XYZPoint& aPointInPmt ) const;
   bool isInPmtPanel(const Gaudi::XYZPoint& aPointInPanel ) const;
@@ -191,8 +194,32 @@ private:
   std::vector<int>   m_Rich1PmtPanelWithLensColSize;
   std::vector<int>  m_RichNumLensPmtinModuleRowCol;
   double m_Rich1LensMagnificationFactor;
+
+
+  bool m_Rich2UseGrandModule;
+  int m_Rich2ArrayConfig;
   
 
+
+  std::vector<double> m_GrandPmtModulePlaneHalfSizeR2;
+  double m_GrandPmtModulePitch;
+  std::vector<double>  m_RichGrandPmtModuleActiveAreaHalfSize;
+  double m_GrandPmtPitch;
+  double m_GrandPmtAnodeXSize;
+  double m_GrandPmtAnodeYSize;
+  double m_GrandPmtPixelGap;
+  int  m_GrandPmtPixelsInRow;
+  int  m_GrandPmtPixelsInCol;
+  double m_GrandPmtAnodeXEdge;
+  double m_GrandPmtAnodeYEdge;
+  double m_GrandAnodeXPixelSize;
+  double m_GrandAnodeYPixelSize;
+  double m_GrandPmtAnodeEffectiveXPixelSize;
+  double m_GrandPmtAnodeEffectiveYPixelSize;
+  double m_GrandPmtMasterLateralSize ;
+  int m_GrandNumPmtInRichModule;
+  std::vector<int> m_NumGrandPmtInRowCol;
+  int m_Rich2TotNumGrandPmts;
   
 };
 

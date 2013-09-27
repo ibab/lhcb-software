@@ -43,7 +43,8 @@ DeRich::DeRich( const std::string & name )
     m_sphMirrorSegCols      ( 0     ),
     m_secMirrorSegRows      ( 0     ),
     m_secMirrorSegCols      ( 0     ),
-    m_nominalPDQuantumEff   ( NULL  )
+    m_nominalPDQuantumEff   ( NULL  ),
+    m_RichGeometryConfig    ( 0     )
 {
   m_PDPanels[Rich::Rich1]  = NULL;
   m_PDPanels[Rich::Rich2]  = NULL;
@@ -98,6 +99,26 @@ StatusCode DeRich::initialize ( )
     m_RichPhotoDetConfig = Rich::HPDConfig;
   }
 
+  if(exists("RichGeometryRunConfiguration")) 
+  {
+    m_RichGeometryConfig = param<int> ("RichGeometryRunConfiguration");
+  }else {
+    // assume current RICH configuration
+    m_RichGeometryConfig =0;
+    
+  }
+  m_Rich2PhotoDetectorArrayConfig=0;
+  m_Rich2UseGrandPmt=false;
+
+  if(exists("Rich2PMTArrayConfig"     ) ) {
+    m_Rich2PhotoDetectorArrayConfig = param<int>("Rich2PMTArrayConfig" );
+    if( m_Rich2PhotoDetectorArrayConfig >= 1 ) {
+      m_Rich2UseGrandPmt = true;
+    }
+  }
+  
+  
+  
   return StatusCode::SUCCESS;
 }
 
@@ -392,3 +413,4 @@ DeRichPDPanel * DeRich::pdPanel( const Rich::Side panel ) const
 }
 
 //=============================================================================
+

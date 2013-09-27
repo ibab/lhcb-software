@@ -14,7 +14,7 @@ use RichKernel  v*   Rich
 use DetDescCnv  v*   Det
 use Boost       v*   LCG_Interfaces
 use GSL         v*   LCG_Interfaces
-
+use vdt         v*   LCG_Interfaces
 # ================ environment ===============================================
 apply_pattern install_more_includes more=RichDet
 
