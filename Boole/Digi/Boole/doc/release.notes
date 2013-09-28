@@ -5,6 +5,7 @@ Purpose: LHCb Digitization program
 
  - QMTest Changes
    . Updated VP reference
+   . Updated VP_Compact_MicroChannel-UT-FT reference
 
  - Configuration Changes
    . Incorporated pathUpgrade1.py code into Configuration for RichPmt
