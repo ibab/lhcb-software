@@ -1,4 +1,2 @@
 #!/bin/sh
-echo "invoking" `which python` 
-echo "and loading TCKUtils.utils"
 exec `which python` -i -c 'from TCKUtils.utils import *'

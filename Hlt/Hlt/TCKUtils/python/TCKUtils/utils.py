@@ -1,9 +1,10 @@
 import GaudiPython
 from Gaudi.Configuration import*
-from Configurables import ConfigStackAccessSvc, ConfigDBAccessSvc, ConfigTarFileAccessSvc, ConfigFileAccessSvc, ConfigTreeEditor, PropertyConfigSvc
+from Configurables import ConfigStackAccessSvc, ConfigDBAccessSvc, ConfigZipFileAccessSvc, ConfigTarFileAccessSvc, ConfigFileAccessSvc, ConfigTreeEditor, PropertyConfigSvc
 
 # pick the default config access svc
 from Configurables import ConfigTarFileAccessSvc as ConfigAccessSvc
+#from Configurables import ConfigZipFileAccessSvc as ConfigAccessSvc
 
 from pprint import pprint
 
@@ -20,7 +21,7 @@ vector_string = GaudiPython.gbl.std.vector('std::string')
 from os import getpid
 
 def _appMgr() :
-    print 'starting appMgr @ pid = %s' % getpid()
+    #print 'starting appMgr @ pid = %s' % getpid()
     ApplicationMgr().AppName = ""
     ApplicationMgr().OutputLevel = ERROR
     appMgr = GaudiPython.AppMgr()
@@ -155,40 +156,20 @@ class AccessSvcSingleton(object) :
          return self._cas().configTreeNodeAliases( alias )
     def writeConfigTreeNodeAlias(self,alias) :
          return self._cas().writeConfigTreeNodeAlias(alias)
+    def writePropertyConfig(self,node) :
+         return self._cas().writePropertyConfig(node)
     def readConfigTreeNode(self, id ) :
          return self._cas().readConfigTreeNode(id)
+    def writeConfigTreeNode(self,node) :
+         return self._cas().writeConfigTreeNode(node)
     def updateAndWrite(self,id,mods,label) :
          print 'updateAndWrite: %s ' % mods
          return self._cte().updateAndWrite(id,mods,label)
 
 
 def createAccessSvcSingleton( cas = ConfigAccessSvc(), createConfigTreeEditor = False ) :
-    return AccessSvcSingleton( create = True, createConfigTreeEditor = createConfigTreeEditor )
+    return AccessSvcSingleton( create = True, createConfigTreeEditor = createConfigTreeEditor, cas = cas )
 
-
-def _copyTree(svc,nodeRef,prefix) :
-    node = svc.readConfigTreeNode(nodeRef)
-    leafRef = node.leaf()
-    if (leafRef.valid()) : 
-        leaf = svc.readPropertyConfig(leafRef)
-        print prefix + leaf.name()
-        newRef = svc.writePropertyConfig(leaf.get())
-        # TODO: check validity...
-    for i in node.nodes() : _copyTree(svc,i,prefix+'   ')
-    svc.writeConfigTreeNode(node.get())
-
-def _copy( source , target ) :
-    csvc = ConfigStackAccessSvc( ConfigAccessSvcs = [ target.getFullName(), source.getFullName() ], OutputLevel=DEBUG )
-    appMgr = _appMgr()
-    appMgr.createSvc(csvc.getFullName())
-    s = appMgr.service(csvc.getFullName(),'IConfigAccessSvc')
-    for label in [ 'TOPLEVEL/','TCK/','ALIAS/' ] :
-        for i in s.configTreeNodeAliases( alias(label) ) :
-            print '\n\n copying tree ' + str(i.alias()) + '\n\n'
-            _copyTree(s,i.ref(),' ')
-            print '\n\n writing alias ' + str(i.alias()) + '\n\n'
-            s.writeConfigTreeNodeAlias(i)
-    print 'done copying...'
 
 def _lookupProperty(table,algname,property) :
     if algname not in table : raise KeyError("no algorithm named %s in specified config"%algname )
@@ -353,9 +334,15 @@ def diff( lhs, rhs , cas = ConfigAccessSvc() ) :
                                         l.fqn(), r.fqn(),
                                         lhs, rhs, n=0) )
 
-def copy( source = ConfigAccessSvc() , target = ConfigDBAccessSvc(ReadOnly=False) ) :
-    from TCKUtils.Sandbox import execInSandbox
-    return execInSandbox( _copy, source, target )
+def copy( source = ConfigAccessSvc() , target = ConfigDBAccessSvc(ReadOnly=False), glob = None ) :
+    if source == target : 
+        print 'WARNING: source and target are the same -- no-op ...'
+        return
+    r = AccessProxy().access( cas = ConfigStackAccessSvc( ConfigAccessSvcs = [ target.getFullName(), source.getFullName() ]
+                                                        , OutputLevel=DEBUG ) 
+                            ).rcopy(glob)
+    AccessProxy().flush() 
+    return r
 
 def listComponents( id, cas = ConfigAccessSvc() ) :
     tree = getConfigTree( id, cas )
@@ -515,21 +502,22 @@ def dump( id, properties = None,  lines = None, file = None, cas = ConfigAccessS
            if v : line += '%-15s : %s' % ( k, v)
        file.write(line+'\n')
 
+
 class RemoteAccess(object) :
     _svc = None
     def __init__( self, cas ) :
-        #print 'remote(%s) created at pid=%s' % (self,getpid())
+        #print 'remote(%s) created at pid=%s and cas %s' % (self,getpid(),cas.getType())
         RemoteAccess._svc = createAccessSvcSingleton( cas = cas )
     def __del__( self ) :
         RemoteAccess._svc.reset()
     def rgetConfigTree( self, id ) :
         # maybe prefetch all leafs by invoking 
-        # benchmark result: makes no difference whatsoever...
         #RemoteAccess._svc.collectLeafRefs(id)
-        from time import clock
-        x = clock()
+        # benchmark result: makes no difference whatsoever...
+        #from time import clock
+        #x = clock()
         t = Tree(id)
-        print '<< remote(%s) at pid=%s: rgetConfigTree(%s) : lookup time: %s s.' % (self,getpid(),id, clock()-x)
+        #print '<< remote(%s) at pid=%s: rgetConfigTree(%s) : lookup time: %s s.' % (self,getpid(),id, clock()-x)
         return t
     def rgetConfigurations( self ) :
         #print 'remote(%s) at pid=%s: rgetConfigurations()' % (self,getpid())
@@ -634,6 +622,39 @@ class RemoteAccess(object) :
             alias = TCK( ref.get(), tck )
             svc.writeConfigTreeNodeAlias(alias)
 
+    def rcopyTree( self, nodeRef ) :
+        svc = RemoteAccess._svc
+        def __nodes( n ) :
+            node = svc.readConfigTreeNode( n )
+            from itertools import chain
+            # depth first traversal -- this insures we do not write
+            # incomplete data objects... 
+            for j in chain.from_iterable( __nodes(i) for i in node.nodes() ) : 
+                yield j
+            yield node
+        for i in __nodes( nodeRef ) :
+            leafRef = i.leaf()
+            if leafRef.valid() : 
+                leaf = svc.resolvePropertyConfig(leafRef)
+                assert leaf 
+                newRef = svc.writePropertyConfig(leaf)
+                assert leafRef == newRef
+            n = svc.writeConfigTreeNode(i.get())
+            assert n == i.digest()
+
+    def rcopy( self, glob = None  ) :
+        svc = RemoteAccess._svc
+        for label in ( 'TOPLEVEL/','TCK/','ALIAS/' ) :
+            print 'looping over ',label
+            for i in svc.configTreeNodeAliases( alias(label) ) :
+                if glob :
+                    from fnmatch import fnmatch
+                    if not fnmatch(str(i.alias()),glob) : continue
+                print 'copying tree %s' % i.alias()
+                self.rcopyTree(i.ref())
+                print 'writing alias %s' % i.alias()
+                svc.writeConfigTreeNodeAlias(i)
+        print 'done copying... '
 
 
 from multiprocessing.managers import BaseManager
@@ -665,7 +686,7 @@ class AccessProxy( object ) :
             AccessProxy._manager.start()
             #print 'proxy started manager'
         if not AccessProxy._access :
-            #print 'proxy requesting access to remote'
+            #print 'proxy requesting access to remote -- cas = %s'%(cas.getType())
             AccessProxy._access = AccessProxy._manager.Access( cas )
             AccessProxy._cas = cas
             AccessProxy._properties = cas.getProperties()

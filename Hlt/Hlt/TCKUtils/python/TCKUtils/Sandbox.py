@@ -1,4 +1,3 @@
-
 def execInSandbox(fun,*args,**kwargs) :
     from processing import Pipe, Process, Condition
     (r,w) = Pipe()
@@ -15,11 +14,6 @@ def execInSandbox(fun,*args,**kwargs) :
     p.start()
     result = r.recv()
     if type(result) is Exception : raise result
-    # check if child exited OK..    .
+    # check whether child exited OK..    .
     return result
 
-# TODO: add a proxy for a remote Gaudi process, make it possible to sent the remote
-#       a callable, and receive the result...
-
-
-# class proxy( obj 
