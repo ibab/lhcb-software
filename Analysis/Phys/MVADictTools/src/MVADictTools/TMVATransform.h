@@ -28,6 +28,7 @@ private:
   std::string m_weightfile;
   std::string m_name;
   std::string m_branchname;
+  std::string m_default_path;
   std::vector<std::string> m_spectator;
   //std::vector<double> m_values; // because of const this is defined within operator()
  
@@ -50,6 +51,7 @@ public:
   // the policy methods neede for collaboration with DictTransform
   bool Init(optmap options, std::ostream& info);
   bool operator()(const IParticleDictTool::DICT& in, IParticleDictTool::DICT& out) const;
+  bool checkWeightsFile(std::ostream& info);
 
 };
 

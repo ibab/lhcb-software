@@ -17,6 +17,7 @@ TMVATransform::TMVATransform()
   , m_weightfile("")
   , m_name("")
   , m_branchname("")
+  , m_default_path("TMVATRANSFORMPATH")
   , m_reader(NULL)
 {
   return;
@@ -76,6 +77,32 @@ TMVATransform::operator()(const IParticleDictTool::DICT& in, IParticleDictTool::
 }
 
 
+bool
+TMVATransform::checkWeightsFile(std::ostream& info) {
+  ifstream fin(m_weightfile.c_str());
+  // Check existence of WeightFile: locally
+  if (fin.good()) {
+    return true;
+  }
+  fin.close();
+  // Check existence of WeightFile: in path
+  m_weightfile = m_default_path + "/" + m_weightfile;
+  fin.open(m_weightfile.c_str());
+  if (fin.good()) {
+    return true;
+  }
+  // else ERROR
+  if (m_weightfile == "") {
+    info << "ERROR  ";
+    info << "WeightFile not given." << std::endl;
+  } else {
+    info << "WeightFile \"" << m_weightfile << "\" not found." << std::endl;
+    info << "  TMVA will not be run.  The output will be 0 for each event." << std::endl;
+  }
+  return false;
+}
+   
+
 //==============================================================================
 // Implementation of other functions
 //==============================================================================
@@ -85,18 +112,9 @@ void TMVATransform::readWeightsFile(std::ostream& info) {
   m_spectator.clear();
   // Check that the WeightFile exists
   ifstream fin(m_weightfile.c_str());
-  if (!fin.good()) { // check existence of WeightFile path
-    if (m_weightfile == "") {
-      info << "ERROR  ";
-      info << "WeightFile not given." << std::endl;
-    } else {
-      info << "WeightFile \"" << m_weightfile << "\" not found." << std::endl;
-      info << "  TMVA will not be run.  The output will be 0 for each event." << std::endl;
-    }
-    m_setup_success &= false;
+  m_setup_success &= checkWeightsFile(info);
+  if (!m_setup_success) {
     return;
-  } else {
-    m_setup_success &= true;
   }
   // Setup the XML parser
   info << "Reading WeightFile \"" << m_weightfile << "\"" << std::endl;
