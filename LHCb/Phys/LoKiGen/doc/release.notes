@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-09-30 - Pieter David
+ - Decays::GenExclusive (and derived): make sure the cache is emptied
+   when no match is found
+
 !========================= LoKiGen v10r12p1 2013-09-30 =========================
 ! 2013-09-17 - Marco Cattaneo
  - Remove unnecessary linkopts macro from requirements

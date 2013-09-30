@@ -220,13 +220,24 @@ bool Decays::Trees::GenExclusive::marked () const
   return false ;
 }
 // ============================================================================
-// the only one essential method 
+// operator() implementation for GenExclusive and derived classes
 // ============================================================================
-bool Decays::Trees::GenExclusive::operator() 
+bool Decays::Trees::GenExclusive::operator()
   ( Decays::iTree_<const HepMC::GenParticle*>::argument p ) const
 {
-  // reset the cache (ALWAYS!!!)
-  i_reset () ;
+  if ( p_match(p) ) {
+    return true ;
+  } else {
+    reset() ; // cache should be empty when not matching
+    return false ;
+  }
+}
+// ============================================================================
+// the only one essential method 
+// ============================================================================
+bool Decays::Trees::GenExclusive::p_match
+  ( Decays::iTree_<const HepMC::GenParticle*>::argument p ) const
+{
   // check the validness and oscillation criteria 
   const HepMC::GenParticle* good = ok ( p ) ;
   if ( !good                          ) { return false ; }        // RETURN 
@@ -491,11 +502,9 @@ bool Decays::Trees::GenInclusive::valid() const
 // ============================================================================
 // the only one essential method 
 // ============================================================================
-bool Decays::Trees::GenInclusive::operator() 
+bool Decays::Trees::GenInclusive::p_match
   ( Decays::iTree_<const HepMC::GenParticle*>::argument p ) const
 {
-  // reset the cache (ALWAYS!!!)
-  i_reset () ;
   // check the validness and oscillation criteria 
   const HepMC::GenParticle* good = ok ( p ) ;
   if ( !good                      ) { return false ; }        // RETURN 
@@ -695,11 +704,9 @@ std::ostream& Decays::Trees::GenOptional::fillStream
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool Decays::Trees::GenOptional::operator() 
+bool Decays::Trees::GenOptional::p_match
   ( Decays::iTree_<const HepMC::GenParticle*>::argument p ) const 
 {
-  // reset the cache (ALWAYS!!!)
-  i_reset () ;
   // check the validness and oscillation criteria 
   const HepMC::GenParticle* good = ok ( p ) ;
   if ( !good                      ) { return false ; }        // RETURN 
@@ -909,11 +916,9 @@ std::ostream& Decays::Trees::GenPhotos::fillStream ( std::ostream& s ) const
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool Decays::Trees::GenPhotos::operator() 
+bool Decays::Trees::GenPhotos::p_match
   ( Decays::iTree_<const HepMC::GenParticle*>::argument p ) const 
 {
-  // reset the cache (ALWAYS!!!)
-  i_reset () ;
   // check the validness and oscillation criteria 
   const HepMC::GenParticle* good = ok ( p ) ;
   if ( !good ) { return false ; }        // RETURN 
@@ -1061,11 +1066,9 @@ std::ostream& Decays::Trees::GenPhotosOptional::fillStream
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool Decays::Trees::GenPhotosOptional::operator() 
+bool Decays::Trees::GenPhotosOptional::p_match
   ( Decays::iTree_<const HepMC::GenParticle*>::argument p ) const 
 {
-  // reset the cache (ALWAYS!!!)
-  i_reset () ;
   // check the validness and oscillation criteria 
   const HepMC::GenParticle* good = ok ( p ) ;
   if ( !good ) { return false ; }        // RETURN 
