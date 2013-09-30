@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v17r12 2013-09-30 =========================
 ! 2013-09-24 - Marco Cattaneo
  - Add a QMTest replace string to accept afs paths pointing to $LHCBDEV/nightlies
 
