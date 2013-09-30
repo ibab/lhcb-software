@@ -3,6 +3,7 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+!========================= HltInterfaces v4r9 2013-09-30 =========================
 ! 2013-09-22 - Gerhard Raven
  - make parsing of PropertyConfig and ConfigTreeNode more flexible:
    in addition to the 'old' custom format, the code can now read json
