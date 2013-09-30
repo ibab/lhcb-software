@@ -4,6 +4,7 @@
 ! Purpose     : Prepare VeloPix RawBank and decode it
 !-----------------------------------------------------------------------------
 
+!========================= VPDAQ v2r4 2013-09-30 =========================
 ! 2013-09-25 - Tim Evans
  - Added VPDigit raw bank encoding and decoding 
 
