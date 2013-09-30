@@ -4,6 +4,7 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+!========================= VPDet v2r3 2013-09-30 =========================
 ! 2013-09-26 - Heinrich Schindler
  - added check whether old or new XML description is used
   
