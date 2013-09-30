@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiHlt
 ################################################################################
-gaudi_subdir(LoKiHlt v3r12)
+gaudi_subdir(LoKiHlt v3r12p1)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          Event/HltEvent
