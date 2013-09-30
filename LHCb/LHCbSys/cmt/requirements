@@ -118,9 +118,9 @@ use MuonKernel            v4r1    Muon    # Andrei Tsaregorodtsev
 use OTDAQ                 v7r16p1 OT      # Wouter Hulsbergen
 
 use LoKiCore              v11r15  Phys    # Ivan Belyaev
-use LoKiGen               v10r12p1  Phys    # Ivan Belyaev
+use LoKiGen               v10r13  Phys    # Ivan Belyaev
 use LoKiHlt               v3r12p1 Phys    # Ivan Belyaev
-use LoKiMC                v10r8p2 Phys    # Ivan Belyaev
+use LoKiMC                v10r9   Phys    # Ivan Belyaev
 use LoKiNumbers           v10r4p1 Phys    # Ivan Belyaev
 
 use RichDAQ               v3r41   Rich    # Chris Jones
