@@ -4,6 +4,7 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+!========================= HltServices v1r0 2013-09-30 =========================
 ! 2013-08-22 - Gerhard Raven
  - HltConfigSvc: make HltDecReportsLocation a property
 
