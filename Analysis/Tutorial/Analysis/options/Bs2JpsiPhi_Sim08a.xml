@@ -1,0 +1,1294 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By PoolXMLCatalog.py -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+
+  <File ID="C0AB2593-6FDC-E211-91C1-001E67397E1D">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000120_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000120_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="50E3F62A-49DC-E211-91BF-0025904B11D0">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000078_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000078_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D8B22452-F7DB-E211-9779-003048F009BE">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000010_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000010_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="68F90F7C-29DC-E211-A51B-003048C90C08">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000046_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000046_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3AA1333B-8BDC-E211-9092-008CFA002830">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000131_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000131_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6C301C4A-46DC-E211-8FBB-003048F24344">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000073_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000073_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="0C6393E3-5DDC-E211-AFD0-0025901D4B4C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000102_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000102_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A046C57A-63DC-E211-A293-0030487CD5DC">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000109_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000109_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FE47D02B-5CDC-E211-86FD-001B21B9927C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000100_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000100_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D0BACE0F-49DC-E211-96D6-7845C4FC3A7F">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000079_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000079_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="62EAEE98-47DC-E211-8ED7-003048F1195A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000075_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000075_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="64596399-25DC-E211-8BB5-001B21B99524">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000044_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000044_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B0AA393D-D2DB-E211-A1A1-02163E00939D">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000003_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000003_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="462452FD-5CDC-E211-AB26-1CC1DE04FF98">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000098_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000098_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="EA91FFAE-37DC-E211-B8CE-02163E009DBF">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000062_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000062_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D6276008-60DC-E211-87BC-0025B3E0651C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000105_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000105_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="248EB06F-76DC-E211-B164-7845C4FC3A3D">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000125_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000125_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="50A8A88E-69DC-E211-8688-7845C4FC39C2">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000117_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000117_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="94A195ED-49DC-E211-992D-001B21BAC7C0">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000082_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000082_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C60D9489-EEDB-E211-918F-003048D3C978">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000007_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000007_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="44D58DE7-37DC-E211-8A5F-002590747E28">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000063_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000063_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DA480FB0-61DC-E211-9B17-20CF3027A5E5">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000107_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000107_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="341A5D21-9FDC-E211-8AE2-D485645C8BC8">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000142_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000142_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1C3E160C-9FDC-E211-8E37-002590A50046">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000140_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000140_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D8B248A6-2EDC-E211-A56D-003048678110">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000053_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000053_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D04C379C-44DC-E211-A613-001E67398E35">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000072_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000072_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8EA2D194-52DC-E211-A7A0-003048F23D64">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000090_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000090_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="106FAA1C-44DC-E211-B135-002590A370DC">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000071_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000071_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="580EA486-9EDC-E211-8188-00265521F9E0">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000144_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000144_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="2276A449-59DC-E211-91B7-001E672CC1E7">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000096_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000096_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5E246D59-5ADC-E211-AB64-D8D385FF4A94">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000097_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000097_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="AA0E5A94-79DC-E211-AF1E-001E67396973">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000127_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000127_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CC170085-6CDC-E211-BA7B-003048F17C12">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000118_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000118_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FCF25C67-4ADC-E211-97AA-D8D385FF8E16">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000080_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000080_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D06E446A-47DC-E211-A2AD-001E67396E05">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000076_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000076_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9EB24D75-6CDC-E211-8BD9-90E6BA442F0A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000119_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000119_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="1001613B-55DC-E211-9AD3-0025904B12B2">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000094_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000094_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="88C87E58-17DC-E211-BC9E-00237DE0C490">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000031_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000031_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4E92439D-FBDB-E211-BE09-003048F23A22">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000012_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000012_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="443161B1-20DC-E211-B9F6-485B39800C0F">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000040_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000040_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="EEF7FF9A-68DC-E211-AD9B-001B21B99138">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000116_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000116_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="98F05D56-16DC-E211-AE15-E0CB4E29C51A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000029_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000029_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C4D1770E-55DC-E211-8A6C-90E6BA19A245">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000092_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000092_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F0C18997-43DC-E211-B3BE-0025904B1424">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000070_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000070_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5EE2134F-C9DB-E211-A74D-02163E008FD9">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000001_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000001_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="16C13188-0DDC-E211-81C3-003048F1190E">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000023_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000023_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="78CD7395-9ADC-E211-9636-20CF3019DEE8">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000137_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000137_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D0F46FEF-33DC-E211-990E-A0369F13FBB8">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000059_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000059_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="18800CEF-50DC-E211-B875-003048D37452">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000089_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000089_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="70270349-15DC-E211-BBDA-002219BB90C6">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000027_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000027_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="0435F826-55DC-E211-8CD7-001E673987D2">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000093_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000093_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9C9092D7-0CDC-E211-8E65-20CF3027A62C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000021_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000021_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8847ED56-4EDC-E211-BCDD-003048CFB39E">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000087_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000087_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="505EF943-CCDB-E211-81A8-02163E008FF5">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000002_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000002_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="44D0A2B6-21DC-E211-86DE-002590200A18">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000041_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000041_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="7E109541-2FDC-E211-AF99-003048946F74">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000054_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000054_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A6CAEF5C-0EDC-E211-93EE-1CC1DE0503C0">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000024_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000024_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4C71B2B9-01DC-E211-AF6A-E0CB4E29C4BE">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000015_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000015_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="00D8A941-DBDB-E211-B09F-02163E009966">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000005_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000005_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B097A0BE-7EDC-E211-8BC0-003048C692D8">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000129_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000129_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C4F1730F-1ADC-E211-85A0-003048F237F8">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000032_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000032_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FC8BFD88-03DC-E211-A482-003048C9C058">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000016_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000016_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5E03F5E5-66DC-E211-A0E0-002481E107A8">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000113_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000113_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="2EE34500-74DC-E211-9FBD-20CF3027A56B">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000123_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000123_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CE36AD28-E7DB-E211-8432-0025901AF34A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000006_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000006_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D2786095-17DC-E211-828B-003048D37580">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000028_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000028_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9CA042FC-68DC-E211-904F-0025B3E01806">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000115_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000115_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5E404CBB-8EDC-E211-99E7-003048CF9E2A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000133_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000133_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B438581B-0CDC-E211-8327-003048F0E55A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000020_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000020_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="563B888A-F5DB-E211-B112-BCAEC518FF6B">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000009_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000009_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C099CCBA-53DC-E211-9BFE-002655213E58">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000091_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000091_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="3261209A-23DC-E211-8591-0025904B144E">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000043_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000043_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5266BAC8-9EDC-E211-8B02-0030487F938B">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000143_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000143_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D86F6766-10DC-E211-B464-003048D3759E">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000025_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000025_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="EE3CEE62-2CDC-E211-B490-02163E008C1E">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000051_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000051_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="70F49B2E-47DC-E211-8E67-78E7D164DF08">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000074_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000074_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B644398D-64DC-E211-B4F2-003048CFABDA">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000110_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000110_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="32C8D7D9-5BDC-E211-9CFA-C860001BD8B6">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000099_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000099_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FADE5D93-42DC-E211-803B-001E672CBCE2">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000069_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000069_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4CA1B0C6-98DC-E211-A3B8-7845C4FC3B1B">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000136_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000136_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BA4B5C9D-2BDC-E211-9D01-00259074AEAC">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000049_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000049_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="72C878E7-62DC-E211-B763-003048D2C108">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000108_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000108_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="BA87E0CB-41DC-E211-B262-7845C4FC3A28">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000068_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000068_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B2AAB8C8-33DC-E211-9A3A-001E673983A4">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000058_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000058_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D42892B6-1CDC-E211-BA36-001E673976ED">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000037_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000037_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="32841AAA-19DC-E211-9ECC-001E672CC4AD">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000033_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000033_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="16A77CF5-A0DC-E211-8C77-02163E008E61">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000138_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000138_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="745A96B8-1CDC-E211-8965-003048F1CAC4">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000036_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000036_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9E089345-7EDC-E211-99C9-02163E009DCB">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000128_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000128_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="0EE8EAB6-D4DB-E211-A944-02163E008BB6">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000004_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000004_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="0EBFB252-71DC-E211-A198-0025901D4124">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000122_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000122_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B863C208-17DC-E211-BE29-00266CFFBF68">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000030_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000030_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E66C3FFA-3EDC-E211-81E6-E0CB4E1A117E">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000067_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000067_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="DE282C04-58DC-E211-86F3-001E67398ABB">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000095_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000095_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="ECDFD364-9EDC-E211-8398-848F69FD4565">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000141_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000141_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8A836A25-92DC-E211-BE16-003048F0E306">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000135_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000135_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="D2448B69-4CDC-E211-89D5-003048F01E88">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000085_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000085_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B45D0429-FBDB-E211-9ACB-001E6739834A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000013_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000013_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8879A415-38DC-E211-A7E9-0025901D4B08">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000064_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000064_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="A62ED54F-5EDC-E211-BD59-001E67398D36">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000103_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000103_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FCDC7A22-2DDC-E211-8FAC-0025B31E3330">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000052_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000052_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="586D1DF0-5CDC-E211-80EC-003048CF9AE0">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000101_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000101_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E2EF72A5-4ADC-E211-840D-002590A83174">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000084_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000084_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="147EE584-06DC-E211-98A0-001E672CC1E7">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000018_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000018_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B8F66C91-0ADC-E211-BA9A-0026B93B44BA">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000019_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000019_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="22D7CECF-3DDC-E211-9921-002481E14E2A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000066_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000066_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="0CDBD675-1FDC-E211-B591-003048F01076">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000039_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000039_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="64859DDD-2ADC-E211-A461-00304867341C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000048_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000048_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="224C99A3-F8DB-E211-A298-00237DDC5C1E">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000011_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000011_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8E02CF40-0DDC-E211-8912-003048D4604C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000022_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000022_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B8ABEF48-61DC-E211-9765-001E4F3E5C3B">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000106_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000106_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C8C67493-34DC-E211-9B68-848F69FD2928">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000060_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000060_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="34D9D2B5-2BDC-E211-8E2C-003048F0E834">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000050_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000050_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="420389C8-8EDC-E211-A25C-00266CFFBF50">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000134_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000134_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="80664662-00DC-E211-9290-001B21BAD5D8">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000014_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000014_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C01B7AA1-8DDC-E211-A0F1-001E67398D72">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000132_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000132_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F8ACF0ED-47DC-E211-82E4-003048F17948">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000077_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000077_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="6EF3CD92-1DDC-E211-BC88-0026B93B44BA">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000038_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000038_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="CAB5BE68-6FDC-E211-AF03-848F69FD45A4">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000121_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000121_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="880616B0-67DC-E211-A5D7-0025B32441F4">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000114_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000114_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="98FEFB8A-76DC-E211-855E-00266CFFBF34">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000124_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000124_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="28DE5341-9EDC-E211-8169-E0CB4E553666">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000139_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000139_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="9670C78C-1BDC-E211-8F37-003048F1C4C6">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000035_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000035_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="EAB1B17A-30DC-E211-8E8F-001E672CC4AD">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000055_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000055_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="B2BB1807-4DDC-E211-BC65-0025904B1426">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000086_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000086_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="187F3F0E-28DC-E211-AEE4-001E67398C37">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000045_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000045_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4656E558-32DC-E211-90F7-003048F0094A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000056_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000056_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="22BB9FA2-15DC-E211-BF9F-001E67396568">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000026_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000026_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="FEB2E883-35DC-E211-BE76-003048F00B10">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000061_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000061_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="4CBFB33F-22DC-E211-B061-7845C4FC361A">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000042_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000042_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="8E825EB8-4EDC-E211-963A-001E67398CAA">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000088_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000088_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C2557F8C-66DC-E211-9735-003048F02D3C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000111_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000111_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="481A88B9-4ADC-E211-B2B5-E0CB4E553659">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000081_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000081_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="C648344B-F2DB-E211-8C2C-0025901D624E">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000008_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000008_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="0E8C69A4-3CDC-E211-AED5-001B21BAD23C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000065_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000065_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5C95E2D8-5FDC-E211-9242-0025901D5DB2">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000104_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000104_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="E05A34EF-76DC-E211-9CF3-001B21B99904">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000126_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000126_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="341F0DCF-19DC-E211-AFD6-0025901D4B00">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000034_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000034_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="963C2009-34DC-E211-92E2-003048F1C9F4">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000057_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000057_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="281153F2-65DC-E211-AC3B-001E67397C79">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000112_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000112_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="28B673FB-28DC-E211-A575-00266CFFC980">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000047_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000047_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="5A0351A0-4ADC-E211-A54F-003048D2BC3C">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000083_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000083_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+  <File ID="10AE4443-08DC-E211-8A43-0025901AF1C4">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000017_1.allstreams.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00025235/0000/00025235_00000017_1.allstreams.dst"/>
+     </logical>
+   </File>
+
+</POOLFILECATALOG>

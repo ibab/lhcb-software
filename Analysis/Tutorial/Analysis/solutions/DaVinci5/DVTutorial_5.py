@@ -34,15 +34,13 @@ DaVinci().MoniSequence = [ tree ]      # The monitoring stuff
 #
 # Print  Print All True Bs (only on MC)
 #
-"""
 from Configurables import PrintMCTree, PrintMCDecayTreeTool
 mctree = PrintMCTree("PrintTrueBs")
 mctree.addTool( PrintMCDecayTreeTool )
 mctree.PrintMCDecayTreeTool.Information = "Name M P Px Py Pz Pt chi2" 
 mctree.ParticleNames = [  "B_s0", "B_s~0" ]
 mctree.Depth = 2  # down to the K and mu
-DaVinci().MoniSequence += [ tree ]      # The monitoring stuff
-"""
+DaVinci().MoniSequence += [ mctree ]      # The monitoring stuff
 #######################################################################
 #
 # Configure the application
@@ -51,6 +49,7 @@ DaVinci().UserAlgorithms = [ seq ]             # The selection sequence
 DaVinci().HistogramFile = "DVHistos_5.root"    # Histogram file
 DaVinci().EvtMax = 1000                        # Number of events
 DaVinci().DataType = "2012"                    # 
+DaVinci().Simulation = True 
 #
 # Add our own stuff
 #
@@ -59,6 +58,6 @@ DaVinci().MainOptions  = ""                    # None
 ########################################################################
 #
 # To run in shell :
-# gaudirun.py solutions/DaVinci5/DVTutorial_5.py options/DimuonR14S20.py
+# gaudirun.py solutions/DaVinci5/DVTutorial_5.py options/Bs2JpsiPhi_Sim08a.py
 #
 ########################################################################

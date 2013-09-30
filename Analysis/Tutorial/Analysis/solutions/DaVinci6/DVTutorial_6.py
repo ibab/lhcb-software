@@ -26,24 +26,28 @@ simulation = False
 from DecayTreeTuple.Configuration import *
 tuple = DecayTreeTuple() 
 tuple.Inputs = [ SeqBs2JpsiPhi.outputLocation() ]
-tuple.ToolList +=  [
-      "TupleToolGeometry"
-    , "TupleToolKinematic"
-    , "TupleToolPropertime"
-    , "TupleToolPrimaries"
-    , "TupleToolEventInfo"
-    , "TupleToolTrackInfo"
-    , "TupleToolTagging" ]
-if (simulation): tuple.ToolList +=  [ "TupleToolMCTruth", "TupleToolMCBackgroundInfo" ]
+# tuple.addTupleTool( "TupleToolGeometry") // already default
+# tuple.addTupleTool( "TupleToolKinematic")// already default
+tuple.addTupleTool( "TupleToolPropertime")
+tuple.addTupleTool( "TupleToolPrimaries")
+# tuple.addTupleTool( "TupleToolEventInfo")// already default
+tuple.addTupleTool( "TupleToolTrackInfo")
+tuple.addTupleTool( "TupleToolTagging")
+
+if (simulation):
+    tuple.addTupleTool( "TupleToolMCTruth")
+    tuple.addTupleTool( "TupleToolMCBackgroundInfo")
     
-tuple.Decay = "[B_s0 -> (^J/psi(1S) => ^mu+ ^mu-) (^phi(1020) -> ^K+ ^K-)]cc"
+tuple.Decay = "[B_s0 -> ^(J/psi(1S) -> ^mu+ ^mu-) ^(phi(1020) -> ^K+ ^K-)]CC"
 #######################################################################
 #
 # Event Tuple
 #
 from Configurables import EventTuple
 etuple = EventTuple()
-etuple.ToolList = [ "TupleToolEventInfo", "TupleToolGeneration", "TupleToolTrigger"  ]
+# etuple.addTupleTool("TupleToolEventInfo")// already default
+if (simulation): etuple.addTupleTool("TupleToolGeneration")
+etuple.addTupleTool("TupleToolTrigger")
 
 #######################################################################
 #
@@ -52,9 +56,9 @@ etuple.ToolList = [ "TupleToolEventInfo", "TupleToolGeneration", "TupleToolTrigg
 from Configurables import DaVinci
 DaVinci().TupleFile = "Tutorial6.root"         # Ntuple
 DaVinci().HistogramFile='DVHistos.root'
-DaVinci().EvtMax = 10000                      # Number of events
+DaVinci().EvtMax = 1000                        # Number of events
 DaVinci().DataType = "2012"                    # 
-DaVinci().Simulation = simulation
+DaVinci().Simulation = True
 #
 # Add our own stuff
 #
@@ -63,6 +67,6 @@ DaVinci().MoniSequence = [ tuple, etuple ]
 ########################################################################
 #
 # To run in shell :
-# gaudirun.py solutions/DaVinci6/DVTutorial_6.py options/DimuonR14S20.py
+# gaudirun.py solutions/DaVinci6/DVTutorial_6.py options/Bs2JpsiPhi_Sim08a.py
 #
 ########################################################################

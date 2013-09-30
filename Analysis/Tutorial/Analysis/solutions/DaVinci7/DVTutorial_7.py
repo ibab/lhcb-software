@@ -9,6 +9,9 @@
 from Gaudi.Configuration import *
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 #######################################################################
+# now tell if you want MC or not
+simulation = False 
+#######################################################################
 #
 # Load the sequencer from Ex 4 and catch it
 #
@@ -20,13 +23,19 @@ seq = SeqBs2JpsiPhi.sequence()
 #
 from DecayTreeTuple.Configuration import *
 tuple = DecayTreeTuple("TutorialTree")
-tuple.Decay = "[B_s0 -> (^J/psi(1S) => ^mu+ ^mu-) (^phi(1020) -> ^K+ ^K-)]cc"
+tuple.Decay = "[B_s0 -> ^(J/psi(1S) -> ^mu+ ^mu-) ^(phi(1020) -> ^K+ ^K-)]CC"
 tuple.Inputs = [  SeqBs2JpsiPhi.outputLocation()]
-tuple.ToolList +=  [
-#    "TupleToolMCTruth",
-#    "TupleToolMCBackgroundInfo",
-    "TupleToolEventInfo",
-]
+# tuple.addTupleTool( "TupleToolGeometry") // already default
+# tuple.addTupleTool( "TupleToolKinematic")// already default
+tuple.addTupleTool( "TupleToolPropertime")
+tuple.addTupleTool( "TupleToolPrimaries")
+# tuple.addTupleTool( "TupleToolEventInfo")// already default
+tuple.addTupleTool( "TupleToolTrackInfo")
+tuple.addTupleTool( "TupleToolTagging")
+
+if (simulation):
+    tuple.addTupleTool( "TupleToolMCTruth")
+    tuple.addTupleTool( "TupleToolMCBackgroundInfo")
 
 # Use a LoKi::Hybrid::TupleTool
 LoKi_All=tuple.addTupleTool("LoKi::Hybrid::TupleTool/LoKi_All")
@@ -43,17 +52,17 @@ TutTool.absCharge=True #false by default
 
 # Configure the MCTruth information
 
-#MCTruth=tuple.addTupleTool("TupleToolMCTruth")
-#MCTruth.ToolList =  [
-#    "MCTupleToolKinematic",
-#    "MCTupleToolHierarchy" ]
+if (simulation):
+    MCTruth=tuple.addTupleTool("TupleToolMCTruth")
+    MCTruth.addTupleTool("MCTupleToolKinematic")
+    MCTruth.addTupleTool("MCTupleToolHierarchy")
 
 # Configure some branches
 
-tuple.Branches = {
-    "B" :  "[B_s0]cc : [B_s0 -> (J/psi(1S) => mu+ mu-) (phi(1020) -> K+ K-)]cc",
-    "KPlus" :  "[B_s0]cc -> (phi(1020) -> ^K+ K-) ? ",
-    "KMinus" :  "[B_s0]cc -> (phi(1020) -> K+ ^K-) ? "
+tuple.Branches = {  # remove all "^" except where needed.
+    "B" :  "^([B_s0 -> (J/psi(1S) -> mu+ mu-) (phi(1020) -> K+ K-)]CC)",
+    "KPlus" :  "[B_s0 -> (J/psi(1S) -> mu+ mu-) (phi(1020) -> ^K+ K-)]CC",
+    "KMinus" :  "[B_s0 -> (J/psi(1S) -> mu+ mu-) (phi(1020) -> K+ ^K-)]CC "
     }
 tuple.addTool(TupleToolDecay("B"))
 tuple.addTool(TupleToolDecay("KPlus"))

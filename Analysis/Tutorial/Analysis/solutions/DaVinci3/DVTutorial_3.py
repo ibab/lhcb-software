@@ -21,7 +21,7 @@ tutorialseq = GaudiSequencer("TutorialSeq")
 #
 from Configurables import TutorialAlgorithm
 jpsi2mumu = TutorialAlgorithm("Jpsi2MuMu")
-jpsi2mumu.Inputs = [ "Phys/StdLooseMuons/Particles" ]
+jpsi2mumu.Inputs = [ "Phys/StdAllLooseMuons/Particles" ]
 from GaudiKernel.SystemOfUnits import MeV
 jpsi2mumu.MassWindow = 30*MeV 
 jpsi2mumu.MaxChi2 = 100 
@@ -32,7 +32,7 @@ tutorialseq.Members += [ jpsi2mumu ]
 # 2) Add the Phi
 #
 phi2kk = TutorialAlgorithm("Phi2KK");
-phi2kk.Inputs = [ "Phys/StdLooseKaons/Particles" ]
+phi2kk.Inputs = [ "Phys/StdAllLooseKaons/Particles" ]
 phi2kk.MassWindow = 50*MeV 
 phi2kk.Particle =  "phi(1020)" 
 phi2kk.MaxChi2 = 20 
@@ -48,8 +48,9 @@ tutorialseq.IgnoreFilterPassed = True # get all phis
 #
 from Configurables import DaVinci
 DaVinci().HistogramFile = "DVHistos_3.root"    # Histogram file
-DaVinci().EvtMax = 1000                        # Number of events
+DaVinci().EvtMax = 10000                       # Number of events
 DaVinci().DataType = "2012"                    # 
+DaVinci().Simulation = True                    # When running on MC
 #
 # Add our own stuff
 #
@@ -58,6 +59,6 @@ DaVinci().MainOptions  = ""                    # None
 ########################################################################
 #
 # To run in shell :
-# gaudirun.py solutions/DaVinci2/DVTutorial_2.py options/DimuonR14S20.py
+# gaudirun.py solutions/DaVinci3/DVTutorial_3.py options/Bs2JpsiPhi_Sim08a.py
 #
 ########################################################################

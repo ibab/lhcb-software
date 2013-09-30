@@ -22,8 +22,9 @@ seq = SeqBs2JpsiPhi.sequence()
 #
 from Configurables import DaVinci
 DaVinci().HistogramFile = "DVHistos_4.root"    # Histogram file
-DaVinci().EvtMax = 1000                          # Number of events
+DaVinci().EvtMax = 10000                          # Number of events
 DaVinci().DataType = "2012"                    # 
+DaVinci().Simulation = True                    # When running on MC
 #
 # Add our own stuff
 #
@@ -32,6 +33,6 @@ DaVinci().MainOptions  = ""                    # None
 ########################################################################
 #
 # To run in shell :
-# gaudirun.py solutions/DaVinci4/DVTutorial_4.py options/DimuonR14S20.py
+# gaudirun.py solutions/DaVinci4/DVTutorial_4.py options/Bs2JpsiPhi_Sim08a.py
 #
 ########################################################################

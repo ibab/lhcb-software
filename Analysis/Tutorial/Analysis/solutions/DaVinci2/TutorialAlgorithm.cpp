@@ -30,7 +30,7 @@ DECLARE_ALGORITHM_FACTORY( TutorialAlgorithm );
 //=============================================================================
 TutorialAlgorithm::TutorialAlgorithm( const std::string& name,
                                       ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator )
+  : DaVinciTupleAlgorithm ( name , pSvcLocator )
     , m_jPsiID(0)
     , m_jPsiMass(0.)
 {
@@ -46,7 +46,7 @@ TutorialAlgorithm::~TutorialAlgorithm() {}
 // Initialization
 //=============================================================================
 StatusCode TutorialAlgorithm::initialize() {
-  StatusCode sc = DVAlgorithm::initialize(); 
+  StatusCode sc = DaVinciTupleAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
@@ -124,7 +124,7 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::Range& muons){
       }
       if (msgLevel(MSG::DEBUG)) debug() << "Vertex fit at " << MuMuVertex.position()/cm
               << " with chi2 " << MuMuVertex.chi2() << endmsg;
-      plot(MuMuVertex.chi2(), "DiMuChi2", "DiMu Chi^2",0.,200.);
+      plot(MuMuVertex.chi2(), "DiMuChi2", "DiMu Chi^2",0.,20.);
       plot(Jpsi.measuredMass(), "Jpsi_MM", "Jpsi measured mass", 3.0*GeV, 3.2*GeV);
       if ( MuMuVertex.chi2() > m_jPsiChi2 ) continue ; // chi2 cut
       // happy -> keep
@@ -175,7 +175,7 @@ StatusCode TutorialAlgorithm::plotMuon(const LHCb::Particle* mu, const std::stri
     sc = distanceCalculator()->distance(mu, (*ipv), IP, IPchi2);
     if (sc){
       plot(IP, head+"MuIP", head+" Muon IP", 0., 10.*mm);
-      if (IPchi2>0.) plot(IPchi2, head+"MuIPchi2",  head+" Muon IP chi2", 0., 10.);
+      if (IPchi2>0.) plot(IPchi2, head+"MuIPchi2",  head+" Muon IP chi2", 0., 25.);
       //====================================================================
       //
       //====================================================================
@@ -192,7 +192,7 @@ StatusCode TutorialAlgorithm::finalize() {
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
-  return DVAlgorithm::finalize(); 
+  return DaVinciTupleAlgorithm::finalize(); 
 } 
 
 //=============================================================================

@@ -14,6 +14,7 @@ location = '/Event/Dimuon/Phys/'+line+'/Particles'
 
 MessageSvc().Format = "% F%80W%S%7W%R%T %0W%M"
 from Configurables import DaVinci
+from DecayTreeTuple.Configuration import *
 
 # get classes to build the SelectionSequence
 from PhysSelPython.Wrappers import AutomaticData, Selection, SelectionSequence
@@ -36,21 +37,16 @@ JpsiSeq = SelectionSequence('SeqJpsi',
 ############# DecayTreeTuple
 from Configurables import DecayTreeTuple, TupleToolTrigger, TupleToolDecay, TupleToolTISTOS
 tuple = DecayTreeTuple("Jpsi_Tuple")
-tuple.ToolList +=  [
-    "TupleToolGeometry"
-    , "TupleToolKinematic"
-    , "TupleToolPrimaries"
-    , "TupleToolEventInfo"
-    , "TupleToolTrackInfo"
-    , "TupleToolTISTOS"
-    , "TupleToolAngles"
-    , "TupleToolPid"
-    , "TupleToolPropertime"
-    ]
+# tuple.addTupleTool( "TupleToolGeometry") // already default
+# tuple.addTupleTool( "TupleToolKinematic")// already default
+tuple.addTupleTool( "TupleToolPropertime")
+tuple.addTupleTool( "TupleToolPrimaries")
+# tuple.addTupleTool( "TupleToolEventInfo")// already default
+tuple.addTupleTool( "TupleToolTrackInfo")
 tuple.Decay = "J/psi(1S) -> ^mu+ ^mu-"
 tuple.Inputs = [ JpsiSeq.outputLocation() ]
-tuple.addTool(TupleToolTISTOS)
-tuple.TupleToolTISTOS.TriggerList = [ "Hlt2DiMuonJPsiDecision" ]
+tuple.addTupleTool(TupleToolTISTOS)
+tuple.TupleToolTISTOS.TriggerList = [ "Hlt2DiMuonJPsiDecision", "Hlt2DiMuonJPsiHighPTDecision", "Hlt2DiMuonDetachedJPsiDecision" ]
 tuple.TupleToolTISTOS.VerboseHlt2 = True
 DaVinci().appendToMainSequence( [ JpsiSeq.sequence(), tuple ] ) 
 ##################
@@ -73,13 +69,19 @@ DaVinci().EvtMax = 100000
 DaVinci().PrintFreq = 100
 DaVinci().TupleFile = "Tutorial8.root"
 
-"""
+""" To gerenate the plot. Needs Patrick's private macroes
 TTree* T = _file0->Get("Jpsi_Tuple/DecayTree")
 T->Show(0)
 T->Draw("J_psi_1S_MM")
-SandB(T,0,"J_psi_1S_MM","J_psi_1SHlt2DiMuonJPsiDecision_TOS","1","J_psi_1S_MM<3500 && J_psi_1S_PT>1000 && J_psi_1S_MM>2500","","Psi_Tos")
-TH1D hh("hh","MuMu Mass",100,3020,3170)
-T->Draw("J_psi_1S_MM >> hh", "J_psi_1S_PT>1000")
-NiceRooPlot(hh,"gp")  // only PK has this...
+SandB(T,0,"J_psi_1S_MM","J_psi_1S_Hlt2DiMuonJPsiDecision_TOS","1","J_psi_1S_MM<3500 && J_psi_1S_PT>1000 && J_psi_1S_MM>2500","","Psi_Tos")
+TH1D hh("hh","MuMu Mass",50,3020,3170)
+T->Draw("J_psi_1S_MM >> hh", "1")
+TH1D hh2("hh2","MuMu Mass",50,3020,3170)
+T->Draw("J_psi_1S_MM >> hh2", "J_psi_1S_Hlt2DiMuonJPsiDecision_TOS")
+TH1D hh3("hh3","MuMu Mass",50,3020,3170)
+T->Draw("J_psi_1S_MM >> hh3", "J_psi_1S_Hlt2DiMuonDetachedJPsiDecision_TOS")
+RooPlot* r = NiceRooPlot(hh3,hh,"gp")  // only PK has this...
+SetTitle("m_{#mu#mu} [MeV/c^{2}]","candidates",r)
+png("J/psi detached TOS")
 """
 
