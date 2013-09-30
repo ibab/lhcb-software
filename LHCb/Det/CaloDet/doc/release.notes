@@ -3,7 +3,7 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! ====================================================================
 
-
+!========================= CaloDet v10r17 2013-09-30 =========================
 ! 2013-09-18 - Olivier Deschamps
   - DeCalorimeter.h : protect vectors access against invalid index
 
