@@ -4,6 +4,7 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+!========================= XmlTools v6r8p1 2013-09-30 =========================
 ! 2013-09-17 - Marco Cattaneo
  - Remove unnecessary linkopts macro from requirements
  - Fix UNINIT_CTOR defect
