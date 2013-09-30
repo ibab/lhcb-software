@@ -1,9 +1,9 @@
 # ========================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
-# =========================================================================
+# ========================================================================
 package           LoKiCore
-version           v11r14
+version           v11r15
 
 # ================ structure ==================================================
 branches           cmt doc src dict python LoKi 
@@ -45,7 +45,7 @@ macro_append       NodeGrammarTest_dependencies " LoKiCoreLib "
 macro_append       TreeGrammarTest_dependencies " LoKiCoreLib " 
 macro_append       CCGrammarTest_dependencies   " LoKiCoreLib " 
 
-# ================ patterns ===================================================
+# ================ patterns ==================================================
 apply_pattern      linker_library    library=LoKiCoreLib
 apply_pattern      component_library library=LoKiCore
 apply_pattern      QMTest

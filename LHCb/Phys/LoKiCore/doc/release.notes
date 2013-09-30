@@ -13,11 +13,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r15 2013-09-30 =========================
 ! 2013-09-27 - Pieter David
  - Algs.h: reorder _found_2 (see https://savannah.cern.ch/bugs/?102220)
 
 ! 2013-09-03 - Vanya Belyaev
-
  - Trees.h: fix a stupid bug in negation of decay trees 
 
 !========================= LoKiCore v11r14 2013-08-27 =========================
