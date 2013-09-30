@@ -10,14 +10,31 @@ GaudiPython.loaddict( 'SwimmingDict' )
 Random = GaudiPython.Bindings.gbl.Random
 
 def createObject(t, *args):
-    """ Function to create objects which are not owned by python, will not be
-    garbage collected and can therefore be put in the TES. """
+    """
+    Function to create objects which are not owned by python.
+
+    These objects will not be garbage collected and can therefore be put in the
+    TES, which always takes ownership.
+    """
     i = t(*args)
     import ROOT
     ROOT.SetOwnership(i, False)
     return i
 
 class RandomSelector(object):
+    """
+    Selector which deteministically selects a single offline candidate.
+
+    This selector uses the code developed for the HLT's DeterministicPrescaler
+    to randomly select a single offline candidate in the event. It uses as input
+    (same as DeterministicPrescaler):
+    - event GPS time
+    - event run number
+    - event number
+
+    This ensures that in an event any container with size m will always result
+    in a selected candidate with position in the container 0 <= n < m.
+    """
     def __init__(self, globs, extra = 'RandomSelector'):
         self._extra = extra
         self._initialRandom = Random.mixString(len(extra), extra)
@@ -39,6 +56,9 @@ class RandomSelector(object):
         return float(x) / float(0xFFFFFFFF)
 
 class FirstSelector(object):
+    """
+    Selector which selects the first candidate in a container.
+    """
     def __init__(self, *args):
         pass
 

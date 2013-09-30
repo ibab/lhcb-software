@@ -5,6 +5,9 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2013-09-30 - Roel Aaij
+ - Add some documentation explaining the deterministic nature of RandomSelector.
+
 ! 2013-09-27 - Roel Aaij
  - Fix swimming the stripping. Apparently something was going wrong with the
    types setup in Swimming.decorators; it looks like (Py)ROOT sometimes messes
