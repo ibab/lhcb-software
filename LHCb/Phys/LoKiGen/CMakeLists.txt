@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LoKiGen
 ################################################################################
-gaudi_subdir(LoKiGen v10r12p1)
+gaudi_subdir(LoKiGen v10r13)
 
 gaudi_depends_on_subdirs(Event/GenEvent
                          Phys/LoKiCore
