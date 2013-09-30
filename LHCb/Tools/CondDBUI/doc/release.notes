@@ -3,8 +3,10 @@
 ! package manager : Marco Clemencic
 ! ========================================================================
 
+!========================= CondDBUI v3r25 2013-09-30 =========================
 ! 2013-08-08 - Liang Sun
- - decompress_db_metadata.py: new script to decompress the content of a CondDB file. Still needed to keep a copy of uncompressed db files for backward compatibility.
+ - decompress_db_metadata.py: new script to decompress the content of a CondDB file.
+    Still needed to keep a copy of uncompressed db files for backward compatibility.
 
 !========================= CondDBUI v3r24 2013-07-17 =========================
 ! 2013-07-16 - Illya Shapoval
