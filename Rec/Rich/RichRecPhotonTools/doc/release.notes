@@ -4,6 +4,7 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RichRecPhotonTools v1r12 2013-09-30 =========================
 ! 2013-09-27 - Chris Jones
  - Clean up a bit the last commit. 
    Move some calculations from the event loop to initialize().
