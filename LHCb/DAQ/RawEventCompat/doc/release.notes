@@ -4,6 +4,7 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+!========================= RawEventCompat v1r2 2013-09-30 =========================
 ! 2013-07-23 - Rob Lambert
  - Adapt methods for DAQSys fix one small bug exposed in DAQSys
 
