@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-09-30 - Marco Cattaneo
+ - Add VPDet dependency also in CMakeLists.txt
+
 ! 2013-09-27 - Daniel Hynds
 - Fixed call to det element
 - Added cheated PR for VP detector
