@@ -1,9 +1,9 @@
-# =============================================================================
+# ========================================================================
 package Relations
 author  Vanya.Belyaev
 manager Vanya.Belyaev
-version           v6r1
-# =============================================================================
+version           v6r1p1
+# ========================================================================
 
 # ============= structure =====================================================
 branches      Relations doc cmt src dict python tests 
@@ -28,7 +28,7 @@ library          RelationsLib    *.cpp
 application      RelationsTests  -check ../tests/RelationsTest.cpp
 macro_append     RelationsTests_dependencies RelationsLib
  
-# ============== patterns =====================================================
+# ============== patterns ====================================================
 apply_pattern    linker_library    library=RelationsLib
 apply_pattern    install_python_modules 
 
@@ -36,6 +36,6 @@ apply_pattern    install_python_modules
 macro_append     Relations_pp_cppflags '  -DCOUNT_INSTANCES  ' \
                  WIN32                 ' /D"COUNT_INSTANCES" '
 
-# =============================================================================
+# ========================================================================
 # The END 
-# =============================================================================
+# ========================================================================
