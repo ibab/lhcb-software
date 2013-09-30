@@ -5,7 +5,187 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-Added VL/VLDAQ, VP/VPDAQ and FT/FTDAQ for RawEventDecoding.
+</PRE><H1><A NAME=v36r2>2013-10-01 LHCbSys v36r2</A></H1><PRE>
+This version uses Gaudi v23r10 and LCG_66
+
+- Packages added: FT/FTDAQ        - Moved from Lbcom for RawEventDecoding
+                  Hlt/HltDAQ      - Moved from Lbcom for RawEventDecoding
+                  Hlt/HltServices - New, split from HltDAQ, see task #42384
+                  VL/VLDAQ        - Moved from Lbcom for RawEventDecoding
+                  VP/VPDAQ        - Moved from Lbcom for RawEventDecoding
+- Packages modified: Associators/MCAssociators v1r4p1, DAQ/DAQSys v7r1,
+    DAQ/MDF v3r40, DAQ/RawEventCompat v1r2, Det/CaloDet v10r17, Det/DDDB v1r64,
+    Det/FTDet v2r3p1, Det/MuonDet v9r14, Det/RichDet v6r19, Det/VPDet v2r3,
+    Event/DAQEvent v9r13, Event/GenEvent v6r9, Event/LumiEvent v3r5,
+    Event/PhysEvent v11r22, GaudiConf v7r12, Hlt/HltDAQ v2r18,
+    Hlt/HltServices v1r0, Kernel/FSRAlgs v1r3, Kernel/HltInterfaces v4r9,
+    Kernel/LHCbKernel v14r3, Kernel/LHCbMath v3r42, Kernel/Relations v6r1p1,
+    Phys/LoKiCore v11r15, Phys/LoKiGen v10r13, Phys/LoKiHlt v3r12p1,
+    Phys/LoKiMC v10r9, Phys/LoKiNumbers v10r4p1, Rich/RichKernel v7r54p1,
+    ST/STDAQ v4r3, ST/STKernel v2r13, Tools/CondDBUI v3r25,
+    Tools/EventIndexer v1r2, Tools/FileStager v1r12, Tools/XmlTools v6r8p1,
+    VP/VPDAQ v2r4
+
+- In DAQ/DAQSys v7r1
+  . First full implementation of drop-in replacement for DecodeRawEvent.py
+    (see https://savannah.cern.ch/task/?19106)
+  . Test suite added which demonstrates the key behaviours.
+  . Added test for Calo segfault specifically (now protected in CaloDet v10r17 
+    but still failing due to bug in handling of CondDB updates)
+
+- In DAQ/MDF v3r40
+  . Fix Coverity warnings
+
+- In DAQ/RawEventCompat v1r2
+  . Adapt methods for DAQSys, fix one small bug exposed in DAQSys
+  . Added empty python/RawEventCompat/__init__.py.
+
+- In Det/CaloDet v10r17
+  . DeCalorimeter.h : protect vectors access against invalid index
+
+- In Det/DDDB v1r64
+  . Update default database tags to the latest ones:
+    o LHCBCOND, 2013, 2012      : cond-20130710
+    o LHCBCOND,             2011: cond-20130522
+    o DDDB,     2013, 2012      : head-20130503-1
+    o DDDB,                 2011: head-20130503
+    o DQFLAGS   2013, 2012, 2011: dq-20130806-1
+
+- In Det/FTDet v2r1, v2r2, v2r3, v2r3p1
+  . Correct z position of FibreMat in DeFTFibreMat.cpp
+  . Modified a FATAL into DEBUG in DeFTDetector.cpp
+  . Modified DeFTTestAlg.h and .cpp to produce a ntuple for performing checks
+  . Modified function findFibreMat in DeFTDetector.cpp to avoid returning null
+    fibermat at the borders of the layer.
+  . Bug fix. Inverted of U-V stereo angles, which causing Sipm for those layers
+    to be shifted wrt those in X layers
+  . Changes odd behaviour on getting local coordinates on the layer construction 
+    from a FibreMat
+  . Changes in main classes to cope with errors at the level reconstruction, 
+    associated to the new geometry. 
+
+- In Det/MuonDet v9r14
+  . MuonDAQHelper: moved getODENumberInLink(...) from .h to .cpp.
+  . Protected access to array elements 
+
+- In Det/RichDet v6r19
+  . Adaptation for using large PMTS in RICH2. Modified DeRich, DeRichPMT, 
+    DeRichPMTPanel.
+  . Fix some compilation warnings
+
+- In Det/VPDet v2r3
+  . added check whether old or new XML description is used
+  . use xyzOfPixel method in channelToPoint function of DeVPSquareType
+  . removed globalXYZ interface in DeVPSensor, changed format of channelToPoint
+  . rename sensor(LHCb::VPChannelID) function in DeVP to sensorOfChannel 
+    to avoid ambiguities
+  . added first version of DeVPNewSensor (not yet ready for use) 
+  . removed DeVPXType and DeVPYType
+  . removed casts to DeVPSquareType
+  . removed unused functions (e. g. iterators in DeVP, halfbox transformations) 
+  . added functions (globalXYZ) from DeVPSquareType which are used in Boole
+    and Brunel to DeVPSensor
+  . moved geometry specific member variables from DeVPSensor to DeVPSquareType 
+
+- In Event/DAQEvent v9r13
+  . Add VPDigit RawBank to RawBank types 
+
+- In Event/GenEvent v6r9
+  . GenHeader.xml : protect against missing BeamParameter pointer
+
+- In Event/LumiEvent v3r5
+  . Update of TimeSpanFSR to implement the += operator on two time spans.
+
+- In Event/PhysEvent v11r22
+  . Added 5 new ExtraInfo variables related to the vertex isolation, starting
+    on number 7000.
+
+- In GaudiConf v7r12
+  . Add a QMTest replace string to accept afs paths pointing to $LHCBDEV/nightlies
+  . Move UT position from DecodeRawEvent into STOfflineConf (STTools)
+  . Add obsolete warning into DecodeRawEvent.py
+  . Add new manipulator methods for use in DAQSys, fix one small bug in 
+    previous method
+
+- In Hlt/HltDAQ v2r18
+  . HltRoutingBitsWriter: use two different, configurable, TES locations for
+    HltDecReports used to fill bits 32-63 (Hlt1) and 64-95 (Hlt2). 
+    The default maintains the existing behaviour, i.e. both use the same
+    (default) location
+  . Move all HLT services to the HltServices package
+    (see https://savannah.cern.ch/task/?42384)
+  . Added ZIP file writing functionality
+
+- In Hlt/HltServices v1r0
+  . New package containing all services previously in HltDAQ
+  . HltConfigSvc: make HltDecReportsLocation a property
+
+- In Kernel/FSRAlgs v1r3
+  . Propagate the StatusCode returned by LumiMergeFSR::merge() called in
+    LumiMergeFSR::finalize() back to the application manager.
+  . Add code in LumiMergeFSR to correct an inconsistency in the number of lumi 
+    and time span FSRs that was introduced by a bug in Rec/LumiAlgs/TimeAccounting
+
+- In  Kernel/HltInterfaces v4r9
+  . Make parsing of PropertyConfig and ConfigTreeNode more flexible:
+    in addition to the 'old' custom format, the code can now read json
+    and xml representations. Writing will remain in the old format for now.
+    Note that the text representation can now be decoupled from the hashing.
+
+- In Kernel/LHCbKernel v14r3
+  . Remove extra ';' to fix CMake warnings
+  . Add VP to LHCbID stream operator
+  . Cleanup of VPChannelID (remove ladderZPos, rename pixel_lp to col, 
+    pixel_hp to row, sensor to module)
+
+- In Kernel/LHCbMath v3r42
+  . Add more useful functions 
+
+- In Phys/LoKiCore v11r14, v11r15
+  . Algs.h: reorder _found_2 (see https://savannah.cern.ch/bugs/?102220)
+  . Trees.h: fix a stupid bug in negation of decay trees 
+  . Fix a bug in AlgFunctors: pointer to IJobOptionsSvc was invalid
+
+- In Phys/LoKiGen v10r13
+  . Decays::GenExclusive (and derived): make sure the cache is emptied
+    when no match is found
+
+- In Phys/LoKiMC v10r9
+  . Decays::MCExclusive (and derived): make sure the cache is emptied
+    when no match is found
+
+- In Rich/RichKernel v7r54p1
+  . Fixed CMake configuration.
+
+- In ST/STDAQ v4r3, ST/STKernel v2r13
+  . Support DB mapping of UT board vs TELL1 ID.
+  . This map is by default hard coded in STBoardMapping. Now the definition
+    in UT/ReadoutConf/ReadoutMap.xml overrides the hard coded mapping.
+
+- In Tools/CondDBUI v3r25
+  . decompress_db_metadata.py: new script to decompress the content of a
+    CondDB file.
+
+- In Tools/EventIndexer v1r2
+  . Extended list of variables available to EventIndexer
+
+- In Tools/FileStager v1r12
+  . Simplified loop over environment variables looking for ".*JOBID$". If at least
+    one is found, a single warning is printed and KeepFiles is switched off.
+
+- In Tools/XmlTools v6r8p1
+  . Fix UNINIT_CTOR defect
+
+- In VP/VPDAQ v2r4
+  . Added VPDigit raw bank encoding and decoding 
+  . Follow detector element and channel ID changes (r162190, 162191)
+  . Added DAQ/DAQUtils dependency to resolve build-order.
+
+- In Associators/MCAssociators v1r4p1, Kernel/HltInterfaces v4r9, 
+     Kernel/Relations v6r1p1, Phys/LoKiGen v10r12p1, Phys/LoKiHlt v3r12p1,
+     Phys/LoKiMC v10r8p2, Phys/LoKiNumbers v10r4p1, Tools/XmlTools v6r8p1
+  . Remove unnecessary linkopts macro from requirements
+
 
 </PRE><H1><A NAME=v36r1>2013-07-17 LHCbSys v36r1</A></H1><PRE>
 This version uses Gaudi v23r9 and LCG_65a
