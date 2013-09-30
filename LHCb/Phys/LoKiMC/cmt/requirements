@@ -3,7 +3,7 @@
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ========================================================================
 package           LoKiMC
-version           v10r8p1
+version           v10r8p2
 	
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi 
@@ -49,6 +49,6 @@ apply_pattern     linker_library    library=LoKiMCLib
 apply_pattern     component_library library=LoKiMC
 apply_pattern     QMTest
 
-# ============================================================================
+# ========================================================================
 # The END 
-# ============================================================================
+# ========================================================================
