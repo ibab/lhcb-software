@@ -238,7 +238,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             
             val = _config[key]
             if val != _default_configuration_ [ key ] : 
-                logger.warning ('new configuration: %-16s : %s ' % ( key , _config[key] ) )
+                logger.debug ('new configuration: %-16s : %s ' % ( key , _config[key] ) )
                 
         self._name         = name
 

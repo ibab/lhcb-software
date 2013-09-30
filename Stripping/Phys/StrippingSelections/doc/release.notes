@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-09-30 - Chris Jones
+ - Downgrade "new configuration" messages from WARNING to DEBUG
+
 !========================= StrippingSelections v3r28 2013-09-18 =========================
 
 ! 2013-09-17 - Mika Vesterinen

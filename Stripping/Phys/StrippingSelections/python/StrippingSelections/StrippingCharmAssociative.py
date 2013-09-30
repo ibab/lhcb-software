@@ -234,7 +234,7 @@ class StrippingCharmAssociativeConf(LineBuilder) :
             
             val = _config[key]
             if val != _default_configuration_ [ key ] : 
-                logger.warning ('new configuration: %-16s : %s ' % ( key , _config[key] ) )
+                logger.debug ('new configuration: %-16s : %s ' % ( key , _config[key] ) )
 
         keys = _config.keys()
         for key in keys :
@@ -244,7 +244,7 @@ class StrippingCharmAssociativeConf(LineBuilder) :
             
             val = _config[key]
             if val != _default_configuration_ [ key ] : 
-                logger.warning ('new configuration: %-16s : %s ' % ( key , _config[key] ) )
+                logger.debug ('new configuration: %-16s : %s ' % ( key , _config[key] ) )
 
         ## cehck for prescales 
         for keys in self.keys() :
