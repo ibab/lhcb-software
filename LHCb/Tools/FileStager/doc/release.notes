@@ -4,6 +4,7 @@
 ! Purpose     : Create local copies of files from the grid at runtime.
 !-----------------------------------------------------------------------------
 
+!========================= FileStager v1r12 2013-09-30 =========================
 ! 2013-08-31 - Roel Aaij
  - Simplified loop over environment variables looking for ".*JOBID$". If at least
    one is found, a single warning is printed and KeepFiles is switched off.
