@@ -181,6 +181,11 @@ namespace Decays
       /// MANDATORY: the specific printout
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
+    private:
+      // ======================================================================
+      /// MANDATORY: implementation of operator()
+      virtual bool p_match ( Decays::iTree_<PARTICLE>::argument p ) const ;
+      // ======================================================================
     public:
       // ======================================================================
       /// check "decay-only" flag
@@ -429,13 +434,15 @@ namespace Decays
       // ======================================================================
       /// MANDATORY: clone method ("virtual constructor")
       virtual  MCInclusive* clone() const { return new MCInclusive ( *this ) ; }
-      /// MANDATORY: the only one essential method:
-      virtual bool operator()
-        ( Decays::iTree_<PARTICLE>::argument p ) const ;
       /// MANDATORY: check the validity of the tree
       virtual bool valid() const ;
       /// MANDATORY: the specific printout
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// MANDATORY: implementation of operator()
+      virtual bool p_match ( Decays::iTree_<PARTICLE>::argument p ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -517,9 +524,6 @@ namespace Decays
       /// MANDATORY: clone method ("virtual constructor")
       virtual  MCOptional* clone() const
       { return new MCOptional ( *this ) ; }
-      /// MANDATORY: the only one essential method
-      virtual bool operator()
-        ( Decays::iTree_<PARTICLE>::argument p ) const ;
       /// MANDATORY: check the validity of the tree
       virtual bool valid() const ;
       /// MANDATORY: the specific printout
@@ -529,6 +533,11 @@ namespace Decays
       ( const LHCb::IParticlePropertySvc* svc ) const ;
       /// has marked decays in tree ?
       virtual bool marked() const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// MANDATORY: implementation of operator()
+      virtual bool p_match ( Decays::iTree_<PARTICLE>::argument p ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -639,11 +648,13 @@ namespace Decays
       /// MANDATORY: the proper validation of the tree
       virtual  StatusCode validate 
       ( const LHCb::IParticlePropertySvc* svc ) const ;
-      /// MANDATORY: the only one essential method
-      virtual bool operator()
-        ( Decays::iTree_<const LHCb::MCParticle*>::argument p ) const ;
       /// MANDATORY: the specific printout
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// MANDATORY: implementation of operator()
+      virtual bool p_match ( Decays::iTree_<PARTICLE>::argument p ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -731,9 +742,6 @@ namespace Decays
       /// MANDATORY: clone method ("virtual constructor")
       virtual  PhotosOptional* clone() const
       { return new PhotosOptional ( *this ) ; }
-      /// MANDATORY: the only one essential method
-      virtual bool operator()
-        ( Decays::iTree_<PARTICLE>::argument p ) const ;
       /// MANDATORY: the specific printout
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ======================================================================
@@ -742,6 +750,11 @@ namespace Decays
       /// MANDATORY: the proper validation of the tree
       virtual  StatusCode validate 
       ( const LHCb::IParticlePropertySvc* svc ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// MANDATORY: implementation of operator()
+      virtual bool p_match ( Decays::iTree_<PARTICLE>::argument p ) const ;
       // ======================================================================
     public:
       // ======================================================================

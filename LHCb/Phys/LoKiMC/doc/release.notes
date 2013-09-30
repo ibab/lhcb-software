@@ -14,6 +14,10 @@
 !
 ! -----------------------------------------------------------------------------
 
+! 2013-09-30 - Pieter David
+ - Decays::MCExclusive (and derived): make sure the cache is emptied
+   when no match is found
+
 !========================= LoKiMC v10r8p2 2013-09-30 =========================
 ! 2013-09-17 - Marco Cattaneo
  - Remove unnecessary linkopts macro from requirements

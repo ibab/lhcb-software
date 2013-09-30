@@ -240,13 +240,24 @@ bool Decays::Trees::MCExclusive::marked() const
   return false ;
 }
 // ============================================================================
-// the only one essential method 
+// implementation of operator() for MCExclusive and derived classes
 // ============================================================================
 bool Decays::Trees::MCExclusive::operator() 
   ( Decays::iTree_<const LHCb::MCParticle*>::argument p ) const
 {
-  // reset the cache (ALWAYS!!!)
-  i_reset () ;
+  if ( p_match(p) ) {
+    return true ;
+  } else {
+    reset() ; // cache should be empty when not matching
+    return false ;
+  }
+}
+// ============================================================================
+// MANDATORY: actual implementation of operator()
+// ============================================================================
+bool Decays::Trees::MCExclusive::p_match
+  ( Decays::iTree_<const LHCb::MCParticle*>::argument p ) const
+{
   // check the validness and oscillation criteria 
   if ( !ok ( p )                      ) { return false ; }        // RETURN 
   // perform the real matching:
@@ -419,11 +430,9 @@ bool Decays::Trees::MCInclusive::valid() const
 // ============================================================================
 // the only one essential method 
 // ============================================================================
-bool Decays::Trees::MCInclusive::operator() 
+bool Decays::Trees::MCInclusive::p_match
   ( Decays::iTree_<const LHCb::MCParticle*>::argument p ) const
 {
-  // reset the cache (ALWAYS!!!)
-  i_reset () ;
   // check the validness and oscillation criteria 
   if ( !ok ( p )                      ) { return false ; }        // RETURN 
   // perform the real matching:
@@ -646,11 +655,9 @@ std::ostream& Decays::Trees::MCOptional::fillStream
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool Decays::Trees::MCOptional::operator() 
+bool Decays::Trees::MCOptional::p_match
   ( Decays::iTree_<const LHCb::MCParticle*>::argument p ) const 
 {
-  // reset the cache (ALWAYS!!!)
-  i_reset () ;
   // check the validness and oscillation criteria 
   if ( !ok ( p )                      ) { return false ; }        // RETURN 
   // perform the real matching:
@@ -845,11 +852,9 @@ std::ostream& Decays::Trees::Photos::fillStream ( std::ostream& s ) const
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool Decays::Trees::Photos::operator() 
+bool Decays::Trees::Photos::p_match
   ( Decays::iTree_<const LHCb::MCParticle*>::argument p ) const 
 {
-  // reset the cache (ALWAYS!!!)
-  i_reset () ;
   // check the validness and oscillation criteria 
   if ( !ok ( p )                      ) { return false ; }        // RETURN 
   // perform the real matching:
@@ -1080,11 +1085,9 @@ std::ostream& Decays::Trees::PhotosOptional::fillStream
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool Decays::Trees::PhotosOptional::operator() 
+bool Decays::Trees::PhotosOptional::p_match
   ( Decays::iTree_<const LHCb::MCParticle*>::argument p ) const 
 {
-  // reset the cache (ALWAYS!!!)
-  i_reset () ;
   // check the validness and oscillation criteria 
   if ( !ok ( p )                      ) { return false ; }        // RETURN 
   // perform the real matching:
