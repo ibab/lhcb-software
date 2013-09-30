@@ -32,7 +32,7 @@ std::ostream& Gaudi::Utils::toStream
            << o.xmax  << " , "
     		   << o.s_min << " , "
 		       << o.s_max << " , "
-           << "detector" //o.det
+           << "\"detector\"" //o.det
            << " )" ;
 }
 // ============================================================================
