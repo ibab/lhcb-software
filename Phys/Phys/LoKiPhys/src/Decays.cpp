@@ -227,13 +227,24 @@ bool Decays::Trees::Exclusive::marked () const
   return false ;
 }
 // ============================================================================
-// the only one essential method 
+// implementation of operator() for Exclusive and derived classes
 // ============================================================================
-bool Decays::Trees::Exclusive::operator() 
+bool Decays::Trees::Exclusive::operator()
   ( Decays::iTree_<const LHCb::Particle*>::argument p ) const
 {
-  // reset the cache (ALWAYS!!!)
-  i_reset () ;
+  if ( p_match(p) ) {
+    return true ;
+  } else {
+    reset() ; // cache should be empty when not matching
+    return false ;
+  }
+}
+// ============================================================================
+// the only one essential method 
+// ============================================================================
+bool Decays::Trees::Exclusive::p_match
+  ( Decays::iTree_<const LHCb::Particle*>::argument p ) const
+{
   // check the validness and oscillation criteria 
   if ( !ok ( p )                      ) { return false ; }        // RETURN 
   // check the mother node
@@ -379,11 +390,9 @@ bool Decays::Trees::Inclusive::valid() const
 // ============================================================================
 // the only one essential method 
 // ============================================================================
-bool Decays::Trees::Inclusive::operator() 
+bool Decays::Trees::Inclusive::p_match
   ( Decays::iTree_<const LHCb::Particle*>::argument p ) const
 {
-  // reset the cache (ALWAYS!!!)
-  i_reset () ;
   // check the validness and oscillation criteria 
   if ( !ok ( p )                      ) { return false ; }        // RETURN 
   // check the mother node
@@ -572,11 +581,9 @@ std::ostream& Decays::Trees::Optional::fillStream
 // ============================================================================
 // MANDATORY: the only one essential method
 // ============================================================================
-bool Decays::Trees::Optional::operator() 
+bool Decays::Trees::Optional::p_match
   ( Decays::iTree_<const LHCb::Particle*>::argument p ) const 
 {
-  // reset the cache (ALWAYS!!!)
-  i_reset () ;
   // check the validness and oscillation criteria 
   if ( !ok ( p )                       ) { return false ; }        // RETURN 
   // perform the real matching:

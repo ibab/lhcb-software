@@ -101,6 +101,11 @@ namespace Decays
       /// has marked elements in tree? 
       virtual bool marked() const ;
       // ====================================================================
+    private:
+      // ======================================================================
+      /// implementation of operator()
+      virtual bool p_match ( Decays::iTree_<PARTICLE>::argument p ) const ;
+      // ======================================================================
     public:
       // ====================================================================
       /// check the validness & mother 
@@ -245,14 +250,16 @@ namespace Decays
       // ====================================================================
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Inclusive* clone() const { return new Inclusive ( *this ) ; }
-      /// MANDATORY: the only one essential method: 
-      virtual bool operator() 
-        ( Decays::iTree_<PARTICLE>::argument p ) const ;
       /// MANDATORY: check the validity of the tree 
       virtual bool valid() const ;
       /// MANDATORY: the specific printout 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;
       // ====================================================================
+    private:
+      // ======================================================================
+      /// implementation of operator()
+      virtual bool p_match ( Decays::iTree_<PARTICLE>::argument p ) const ;
+      // ======================================================================
     public:
       // ====================================================================
       /// add one more node to the tree 
@@ -324,9 +331,6 @@ namespace Decays
       // ====================================================================
       /// MANDATORY: clone method ("virtual constructor")
       virtual  Optional* clone() const { return new Optional ( *this ) ; }
-      /// MANDATORY: the only one essential method
-      virtual bool operator() 
-        ( Decays::iTree_<PARTICLE>::argument p ) const ;
       /// MANDATORY: check the validity of the tree 
       virtual bool valid() const ;
       /// MANDATORY: the specific printout 
@@ -337,6 +341,11 @@ namespace Decays
       /// has marked elements in tree? 
       virtual bool marked() const ;
       // ====================================================================
+    private:
+      // ======================================================================
+      /// implementation of operator()
+      virtual bool p_match ( Decays::iTree_<PARTICLE>::argument p ) const ;
+      // ======================================================================
     public:
       // ====================================================================
       /// set optional

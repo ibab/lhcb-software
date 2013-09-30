@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2013-09-30 - Pieter David
+ - Decays::Exclusive (and derived): make sure the cache is emptied
+   when no match is found
+
 ! 2013-08-08 Sebastian Neubert
  - Added VALUE functor. Simple adapter to IParticleValue tools
    Receives a Particle; Returns a double 
