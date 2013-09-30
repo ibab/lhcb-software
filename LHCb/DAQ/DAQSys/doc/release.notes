@@ -4,6 +4,7 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+!========================= DAQSys v7r1 2013-09-30 =========================
 ! 2013-09-19 - Rob Lambert
  - Adding test for Calo segfault specifically. Only does the calo.
  - Added more tests using fixed and reset event times.
