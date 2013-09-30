@@ -3,6 +3,7 @@
 ! Responsible : M. Tobin
 !----------------------------------------------------------------------------
 
+!========================= STKernel v2r13 2013-09-30 =========================
 ! 2013-09-18 - Jianchun Wang
  - Support DB mapping of UT board vs TELL1 ID.
  - This map is by default hard coded in STBoardMapping. Now the definition
