@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= MCAssociators v1r4p1 2013-09-30 =========================
 ! 2013-09-16 - Marco Cattaneo
  - Remove unnecessary linkopts macro from requirements
 
