@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RecoUpgradeMC
 ################################################################################
-gaudi_subdir(RecoUpgradeMC v2r1p1)
+gaudi_subdir(RecoUpgradeMC v2r2)
 
 gaudi_depends_on_subdirs(Det/VPDet
                          Event/LinkerEvent
