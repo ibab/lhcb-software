@@ -3,6 +3,7 @@
 ! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
 
+!========================= OTMonitor v3r7 2013-10-01 =========================
 ! 2013-09-10 - Marco Cattaneo
  - Restore one more fix from v3r5p1
  - Replace endreq by endmsg
