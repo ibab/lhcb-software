@@ -6,7 +6,35 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-Moved VL/VLDAQ, VP/VPDAQ and FT/FTDAQ to LHCb for RawEventDecoding.
+</PRE><H1><A NAME=v14r2>2013-10-02 LbcomSys v14r2</A></H1><PRE>
+This version uses Gaudi v23r10 and LHCb v36r2
+
+- Packages added:    VP/VPAlgorithms v4r0 (Clustering classes previously in Boole)
+- Packages removed:  Det/FTDet  - was added temporarily in v14r1
+                     FT/FTDAQ   - Moved to LHCb for RawEventDecoding
+                     Hlt/HltDAQ - Moved to LHCb for RawEventDecoding
+                     VL/VLDAQ   - Moved to LHCb for RawEventDecoding
+                     VP/VPDAQ   - Moved to LHCb for RawEventDecoding
+- Packages modified: OT/OTMonitor v3r7, ST/STTools v4r15, VP/VPAlgorithms v4r0,
+    VP/VPTools v2r2
+
+- In OT/OTMonitor v3r7
+  . Restore one more fix accidentally lost from v3r5p1
+  . Replace endreq by endmsg
+
+- In ST/STTools v4r15
+  . Move STOfflinePosition for UT from DecodeRawEvent.py to STOfflineConf
+
+- In VP/VPAlgorithms v4r0
+  . Added protection against duplicated cluster channel IDs
+  . Added sorting of lite clusters
+  . Added clustering algorithm
+  . Moved package to Lbcom, remove digitisation classes
+
+- In VP/VPTools v2r2
+  . Follow detector element changes (r162191)
+  . Replace direct calls to DeVPSquareType, remove unused variables and includes 
+  . Add crude parameterisation of error as function of angle
 
 </PRE><H1><A NAME=v14r1>2013-07-21 LbcomSys v14r1</A></H1><PRE>
 This version uses Gaudi v23r9 and LHCb v36r1
