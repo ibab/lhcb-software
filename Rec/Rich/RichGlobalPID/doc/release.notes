@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!========================= RichGlobalPID v3r21 2013-10-01 =========================
 ! 2013-07-23 - Chris Jones
  - Remove incorrect inline specification from LikelihoodTool::sigFunc(...)
 
