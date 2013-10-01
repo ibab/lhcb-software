@@ -97,7 +97,7 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  if (msgLevel(MSG::DEBUG)) debug() << "starting classifying particles to fit " <<endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Starting to classifying particles to fit" <<endmsg;
 
   for ( Particle::ConstVector::const_iterator iPart = parts.begin();
         iPart != parts.end(); ++iPart )
@@ -112,7 +112,7 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
     sc = classify(parPointer, FlyingParticles, VertexedParticles, Photons, MergedPi0s, PhotonPairs);
     if ( sc.isFailure() )
     {
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Fail to classify a particle" << endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Failed to classify a particle" << endmsg;
       return sc;
     }
   }
@@ -311,55 +311,59 @@ StatusCode OfflineVertexFitter::classify(const LHCb::Particle* part,
                                          LHCb::Particle::ConstVector& MergedPi0s,
                                          LHCb::Particle::ConstVector& PhotonPairs) const
 {
+  if ( !part ) return Warning( "Cannot classify a NULL pointer !!" );
+
   StatusCode sc = StatusCode::SUCCESS;
 
   const int id = part->particleID().pid();
 
-  if(part->isBasicParticle())
+  if ( part->isBasicParticle() )
   {
-    if      (id==m_photonID)    { Photons.push_back(part); }
-    else if (isMergedPi0(part)) { MergedPi0s.push_back(part); }
-    else                        { FlyingParticles.push_back(part); }
+    if      ( id == m_photonID  )  { Photons.push_back(part); }
+    else if ( isMergedPi0(part) )  { MergedPi0s.push_back(part); }
+    else                           { FlyingParticles.push_back(part); }
   }
   else
   {
-    if(!isResonance(part))
+    if ( !isResonance(part) )
     {
       FlyingParticles.push_back(part);
     }
     else
     {
-      if(isVertexed(part))
+      if ( isVertexed(part) )
       {
-        if (m_useResonanceVertex)
+        if ( m_useResonanceVertex )
         {
           VertexedParticles.push_back(part);
         }
         else
         {
           const Particle::ConstVector& Prods = part->daughtersVector();
-          for ( Particle::ConstVector::const_iterator iProd=Prods.begin(); iProd!=Prods.end(); ++iProd )
+          for ( Particle::ConstVector::const_iterator iProd = Prods.begin(); 
+                iProd !=Prods.end(); ++iProd )
           {
             const Particle* daughter = *iProd;
             sc = classify(daughter, FlyingParticles, VertexedParticles, Photons, MergedPi0s, PhotonPairs);
-            if(sc.isFailure()) return sc;
+            if ( sc.isFailure() ) return sc;
           }
         }
       }
       else
       {
-        if (isPhotonPair(part))
+        if ( isPhotonPair(part) )
         {
           PhotonPairs.push_back(part);
         }
         else
         {
           const Particle::ConstVector & Prods = part->daughtersVector();
-          for ( Particle::ConstVector::const_iterator iProd=Prods.begin(); iProd!=Prods.end(); ++iProd )
+          for ( Particle::ConstVector::const_iterator iProd=Prods.begin();
+                iProd != Prods.end(); ++iProd )
           {
             const Particle* daughter = *iProd;
             sc = classify(daughter, FlyingParticles, VertexedParticles, Photons, MergedPi0s, PhotonPairs);
-            if(sc.isFailure()) return sc;
+            if ( sc.isFailure() ) return sc;
           }
         }
       }

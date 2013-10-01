@@ -4,6 +4,10 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2013-10-01 - Chris Jones
+ - Add some protection in OfflineVertexFitter::classify against being passed
+   a NULL Particle pointer.
+
 ! 2013-09-12 - Chris Jones
  - Add protection to AdaptivePVReFitter for NULL pointers.
 
