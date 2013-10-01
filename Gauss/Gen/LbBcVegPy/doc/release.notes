@@ -3,6 +3,9 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+! 2013-10-01 - Patrick Robbe
+ - remove setting of cut tool in BcVegPy Pythia8 option 
+
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
 

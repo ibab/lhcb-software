@@ -5,7 +5,6 @@ gen = Generation()
 gen.SampleGenerationTool = "Special"
 gen.addTool( Special , "Special" )
 gen.Special.Pythia8Production.PythiaUserProcessTool = "LbLHAup"
-gen.Special.CutTool = "" 
 gen.Special.Pythia8Production.addTool( LbLHAup , "LbLHAup" )
 gen.Special.Pythia8Production.LbLHAup.UserProcess = "BcVegPyProduction"
 gen.PileUpTool = "FixedNInteractions" 
