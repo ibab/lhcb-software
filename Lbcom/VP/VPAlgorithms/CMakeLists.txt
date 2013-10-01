@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VPAlgorithms
 ################################################################################
-gaudi_subdir(VPAlgorithms v3r3)
+gaudi_subdir(VPAlgorithms v4r0)
 
 gaudi_depends_on_subdirs(Det/VPDet
                          Event/DigiEvent

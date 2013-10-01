@@ -3,6 +3,7 @@
 ! Responsible : Daniel Hynds
 !--------------------------------------------------------------------------
 
+!========================= VPAlgorithms v4r0 2013-10-01 =========================
 ! 2013-09-27 - Heinrich Schindler
  - Added protection against duplicated cluster channel IDs
 
