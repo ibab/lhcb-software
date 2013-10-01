@@ -103,6 +103,11 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
         iPart != parts.end(); ++iPart )
   {
     const Particle* parPointer = *iPart;
+    if ( !parPointer )
+    {
+      Warning( "Cannot fit a NULL pointer !!" ).ignore();
+      continue;
+    }
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << parPointer->particleID().pid() << " at "
