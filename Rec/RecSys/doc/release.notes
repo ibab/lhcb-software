@@ -5,6 +5,148 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v15r2>2013-10-02 RecSys v15r2</A></H1><PRE>
+This version uses Gaudi v23r10, LHCb v36r2 and Lbcom v14r2
+
+- Packages removed:  Sft/FstTools v1r0 - No longer maintained within Rec
+- Packages modified: Muon/MuonID v9r7, Muon/MuonInterfaces v1r5,
+    Pr/PrAlgorithms v1r7, Pr/PrMCTools v1r6, Rec/ChargedProtoANNPID v2r4,
+    Rec/GlobalReco v6r45, Rec/LumiAlgs v8r2, Rec/RecoUpgrade v3r2,
+    Rec/RecoUpgradeMC v2r2, Rich/RichGlobalPID v3r21,
+    Rich/RichRecMCAlgorithms v1r5, Rich/RichRecPhotonTools v1r12,
+    Rich/RichRecQC v2r63, Rich/RichRecSys v4r8, Rich/RichRecTools v2r24,
+    Tf/PatAlgorithms v4r28, Tf/PatPixel v1r2, Tf/PatVelo v3r30,
+    Tf/TrackSys v7r12, Tr/TrackFitEvent v5r24, Tr/TrackKernel v1r17, 
+    Tr/TrackMCTools v3r5, Tr/TrackMonitors v1r46, Tr/TrackTools v4r26,
+    Velo/VeloRecMonitors v2r27
+
+- In Muon/MuonID v9r7
+  . Chi2MuIDTool: Fixed problem in addLHCbIDsToMuTrack when running without M1 
+  . Correct some comment lines
+  . Change some printout from info to debug.
+  . Adapt MuonIDAlg to work also in the no M1 setup.
+
+- In Muon/MuonInterfaces v1r5
+  . Remove unused variable in MuonHit.h
+
+- In Pr/PrAlgorithms v1r7
+  . Cleaning the code in PrFTHitManager.cpp
+
+- In Pr/PrMCTools v1r6
+  . Add VPDet dependency
+  . Added cheated PR for VP detector
+  . Split polynomial fit function for velo + VP
+  . Replace VPChannelID::sensor() by VPChannelID::module()
+  . Removed unused writeSeedHistos from PrChecker
+
+- In Rec/ChargedProtoANNPID v2r4
+  . Update ChargedProtoANNPIDMoni and ChargedProtoANNPIDTrainingTuple to not
+    terminate the processing if the input ProtoParticles are missing.
+    Instead just print a warning.
+
+- In Rec/GlobalReco v6r45
+  . Update ChargedProtoParticleMoni and ChargedProtoParticleTupleAlg to not 
+    terminate the processing if the input Tracks or ProtoParticles are missing. 
+    Instead just print a warning.
+
+- In Rec/LumiAlgs v8r2
+  . Fix bug in TimeAccounting.cpp to avoid writing multiple timeSpanFSRs 
+  . Update freezer input files to use existing files in eos
+  . Update unit test references
+  . Update db tags in tests
+
+- In Rec/RecoUpgrade v3r2 Rec/RecoUpgradeMC v2r2, Tr/TrackFitEvent v5r24,
+     Tr/TrackTools v4r26
+  . Follow VP detector element and channel ID changes (r162190, 162191)
+  . Replace direct calls to DeVPSquareType
+
+- In Rich/RichGlobalPID v3r21
+  . Remove incorrect inline specification from LikelihoodTool::sigFunc(...)
+
+- In Rich/RichRecMCAlgorithms v1r5
+  . DumpRichHitsToTextFileAlg.cpp + DumpRichTracksToTextFileAlg.cpp
+    Update ofstream opening options to ovewrite existing files
+
+- In Rich/RichRecPhotonTools v1r12
+  . Move some calculations from the event loop to initialize().
+  . RichPhotonSignalGaussProb.{h,.cpp} updated to use with large Pixel PMTs
+  . Introduced a scalefactor for the pixel signal calculation so that one can 
+    give different weights to Rich2 signals compared to Rich1 signals for 
+    example. This is applied only in the case of PMTs.
+  . Updated RichPhotonSignalGaussProb.cpp to support pmt reconstruction in 
+    the RICH upgrade.
+    Switches are set up so that it can run with hpd and pmt configurations.
+  . Use vdt::fast_exp in PhotonSignalGaussProb.
+
+- In Rich/RichRecQC v2r63
+  . Add some specific tuning options for DataType="Upgrade".
+    Currently just disables the use of Aerogel.
+
+- In Rich/RichRecSys v4r8
+  . Import some Upgrade specific tunings and tweeks. Applied automatically
+    when the DataType property is set to "Upgrade". Work in progress
+
+- In Rich/RichRecTools v2r24
+  . Minor fixes to RichTabulatedSignalDetectionEff.cpp and 
+    RichNominalTabulatedSignalDetectionEff.cpp to use with pmts.
+  . Update RichRecBackgroundEstiAvHPD.cpp and 
+    RichNominalTabulatedSignalDetectionEff.cpp to support the RICH upgrade 
+    reconstruction with pmts. Switches are set up that it can run with
+    hpd configuration and pmt configuration.
+
+- In Tf/PatAlgorithms v4r28
+  . Fixed bug in PatSeedingTool which disabled protection against hot events 
+    in the OT when disabling protection against hot events in IT
+
+- In Tf/PatPixel v1r2
+  . Renamed PatPixelSensor to PatPixelModule to reflect new geometry
+  . Added flag to use slope dependent correction in position calculation or not
+  . Some cleanup in PatPixelTracking 
+  . Modifications for use with new XML and detector element hierarchy
+  . Moved track extrapolation to PatPixelTracking
+  . Temporarily removed trackUpstream method
+  . Moved position calculation to PatPixelHitManager 
+  . Removed printf statements from helper classes
+  . Fix uninitialised counter in PatPixelHitManager.h
+  . Removed some obsolete code/commented out PatPixelSensor code that is not used
+  . Changed Maximum scattering parameter to a GaudiParameter (MaxScattering)
+  . Follow VP detector element and channel ID changes (r162190, 162191)
+  . Tracks fit on multiple scattering model, instead of a straight line,
+    improves hit efficiency (and IP resolution as a result)
+  . Replace direct calls to DeVPSquareType 
+
+- In Tf/PatVelo v3r30
+  . Fix clang32 warnings
+
+- In Tf/TrackSys v7r12
+  . Added STOfflinePostion to standard tracking options.
+  . Removed MC09 code options.
+
+- In Tr/TrackKernel v1r17
+  . Improved error handling of TrackStateVertex
+  . Changed weights of adaptive fit
+
+- In Tr/TrackMCTools v3r5
+  . Replace VPChannelID::sensor() by VPChannelID::module()
+
+- In Tr/TrackMonitors v1r46
+  . Adding some additional verbose plotting to STEfficiency.
+  . AlignmentOnlineMonitor should always run, not only offline.
+  . AlignmentOnlineMonitor : 
+    o remove cout and fix compilation warning on gcc4.7
+    o Produces residual plots to check the alignment in OnlineBrunel
+  . ConfiguredTrackMonitors.py : Add  AlignmentOnlineMonitor to sequence
+
+- In Tr/TrackTools v4r26
+  . Remove an unused variable
+  . Print a Error instead of info() when returning StatusCode::FAILURE
+
+- In Velo/VeloRecMonitors v2r27
+  . Remove unnecessary repeated accesses to TES from inside a loop in
+    VeloTrackMonitor.cpp
+  . Fixed use of Velo namespace in VeloTrackMonitorNT.cpp, hidden by a leak in
+    the macro DECLARE_NAMESPACE_ALGORITHM_FACTORY.
+
 </PRE><H1><A NAME=v15r1>2013-07-24 RecSys v15r1</A></H1><PRE>
 This version uses Gaudi v23r9, LHCb v36r1 and Lbcom v14r1
 
