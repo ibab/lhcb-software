@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r28 2013-10-01 =========================
 ! 2013-09-24 - Sascha Stahl
  - Fixed bug in PatSeedingTool which disabled protection against hot events 
 	 in the OT when disabling protection against hot events in IT.
