@@ -4,6 +4,7 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrAlgorithms v1r7 2013-10-01 =========================
 ! 2013-09-05 - Francesco Polci
  - Changed info to debug in PrFTHitManager.cpp
 
