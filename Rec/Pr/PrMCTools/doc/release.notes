@@ -4,6 +4,7 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrMCTools v1r6 2013-10-01 =========================
 ! 2013-09-30 - Marco Cattaneo
  - Add VPDet dependency also in CMakeLists.txt
 
