@@ -348,8 +348,7 @@ StatusCode OfflineVertexFitter::classify(const LHCb::Particle* part,
           for ( Particle::ConstVector::const_iterator iProd = Prods.begin(); 
                 iProd !=Prods.end(); ++iProd )
           {
-            const Particle* daughter = *iProd;
-            sc = classify(daughter, FlyingParticles, VertexedParticles, Photons, MergedPi0s, PhotonPairs);
+            sc = classify( *iProd, FlyingParticles, VertexedParticles, Photons, MergedPi0s, PhotonPairs);
             if ( sc.isFailure() ) return sc;
           }
         }
