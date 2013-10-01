@@ -4,11 +4,12 @@
 ! Purpose     : RICH reconstruction algorithms that use MC information
 !-----------------------------------------------------------------------------
 
+!========================= RichRecMCAlgorithms v1r5 2013-10-01 ======================
 ! 2013-07-23 - Chris Jones
  - DumpRichHitsToTextFileAlg.cpp + DumpRichTracksToTextFileAlg.cpp
   + Update ofstream opening options to ovewrite existing files
 
-!========================= RichRecMCAlgorithms v1r4 2012-11-28 =========================
+!========================= RichRecMCAlgorithms v1r4 2012-11-28 ======================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
 
@@ -16,7 +17,8 @@
  - Add a new algorithm DumpRichTracksToTextFileAlg which dumps basic track
    information to a text file
 
-!========================= RichRecMCAlgorithms v1r3p3 2011-02-28 =========================
+!========================= RichRecMCAlgorithms v1r3p3 2011-02-28 =====================
+
 ! 2011-02-10 - Chris Jones
  - fix various icc warnings
 

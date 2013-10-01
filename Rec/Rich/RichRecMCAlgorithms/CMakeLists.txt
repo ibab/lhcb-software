@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RichRecMCAlgorithms
 ################################################################################
-gaudi_subdir(RichRecMCAlgorithms v1r4)
+gaudi_subdir(RichRecMCAlgorithms v1r5)
 
 gaudi_depends_on_subdirs(Event/LinkerEvent
                          Event/MCEvent
