@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v4r8 2013-10-01 =========================
 ! 2013-07-25 - Chris Jones
  - Fix a bug in the previous changes, that was causing some Upgrade tunings
    to be wrongly applied in non-Upgrade scenarios.
