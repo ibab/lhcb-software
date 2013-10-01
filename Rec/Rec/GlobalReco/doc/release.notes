@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================= GlobalReco v6r45 2013-10-01 =========================
 ! 2013-08-12 - Chris Jones
  - Update ChargedProtoParticleMoni and ChargedProtoParticleTupleAlg to not 
    terminate the processing if the input Tracks or ProtoParticles are missing. 
