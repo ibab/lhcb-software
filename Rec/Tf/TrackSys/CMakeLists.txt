@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TrackSys
 ################################################################################
-gaudi_subdir(TrackSys v7r11p1)
+gaudi_subdir(TrackSys v7r12)
 
 gaudi_depends_on_subdirs(Event/TrackEvent
                          Tf/FastVelo
