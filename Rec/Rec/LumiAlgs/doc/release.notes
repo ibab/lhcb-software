@@ -4,7 +4,7 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
-
+!========================= LumiAlgs v8r2 2013-10-01 =========================
 ! 2013-09-19 - Jaap Panman
  - Fix bug in TimeAccounting.cpp to avoid writing multiple timeSpanFSRs 
  - Update freezer input files to use existing files in eos
