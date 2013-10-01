@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r63 2013-10-01 =========================
 ! 2013-07-24 - Chris Jones
  - Add some specific tuning options for DataType="Upgrade".
    Currently just disables the use of Aerogel.
