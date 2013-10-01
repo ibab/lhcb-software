@@ -4,7 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!========================= TrackKernel v1r16 2013-08-14 =========================
+!========================= TrackKernel v1r17 2013-10-01 =========================
 ! 2013-08-13 - Wouter Hulsbergen
  - Improved error handling of TrackStateVertex
  - Changed weights of adaptive fit
