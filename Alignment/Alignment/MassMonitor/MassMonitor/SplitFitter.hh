@@ -29,12 +29,14 @@ public :
   // UNSPLIT CONSTRUCTOR
   SplitFitter(RooRealVar *mass, // quantity whose PDF is being fit
               RooAbsPdf *model, // model PDF for quantity
+              RooCmdArg *range,
               RooArgList *vars, // vars to save values and errors of
               string directory = "tmp");
   
   // SPLIT CONSTRUCTOR
   SplitFitter(RooRealVar *mass, // quantity whose PDF is being fit
               RooAbsPdf *model, // model PDF for quantity
+              RooCmdArg *range,
               RooArgList *vars, // vars to save values and errors of
               RooCategory *SplitCat, // category to be split over during fit (i.e. phid, momdiff, mom, eta)
               string directory = "tmp");
@@ -53,6 +55,9 @@ public :
   RooCmdArg* _range;
   RooLinkedList fitpath;
 
+  // STORED ORIGINAL PARAMETERS
+  vector<double> originalParams;
+
   // OUTPUT DIRECTORY
   string outputDirectoryName;
 
@@ -67,6 +72,9 @@ public :
                              const bool justPlot = false);
   
 private:
+
+  // Reset parameters
+  void resetParams();
 
   // _fitAll ...
   // This method fits the combined data

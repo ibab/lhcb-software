@@ -2,10 +2,13 @@
 #include "MassMonitor/SplitFitter.hh"
 
 // C++ INCLUDES
-//#include <fstream> // perhaps I'll fix to use this
+#include <iostream>
+#include <fstream>
 
 // ROOT INCLUDES
 #include <TFile.h> 
+#include <TCanvas.h>
+#include <TPad.h>
 
 // ROOFIT INCLUDES
 #include <RooPlot.h>
@@ -39,6 +42,7 @@ namespace {
     else
       resname = string(pdfName) + "_resid";
     pulls->SetName(resname.c_str());
+    pulls->SetTitle(resname.c_str());
     pulls->SetMinimum(-5);
     pulls->SetMaximum(+5); 
     
@@ -51,10 +55,12 @@ namespace {
 // UNSPLIT CONSTRUCTOR
 SplitFitter::SplitFitter(RooRealVar *mass, //
                          RooAbsPdf *model, //
+                         RooCmdArg* range,
                          RooArgList *vars,
                          string directory)
   : _mass(mass),
     _model(model),
+    _range(range),
     _vars(vars),
     outputDirectoryName(directory)
 {
@@ -69,11 +75,13 @@ SplitFitter::SplitFitter(RooRealVar *mass, //
 // SPLIT CONSTRUCTOR
 SplitFitter::SplitFitter(RooRealVar *mass, //
                          RooAbsPdf *model, //
+                         RooCmdArg *range,
                          RooArgList *vars,
                          RooCategory *SplitCat, //
                          string directory)
   : _mass(mass),
     _model(model),
+    _range(range),
     _vars(vars),
     _SplitCat(SplitCat),
     outputDirectoryName(directory)
@@ -108,13 +116,46 @@ void SplitFitter::initialize()
   this->fitpath.Add(new RooCmdArg(Save(true)));
 
   // SET RANGE
-  //  range = new RooCmdArg(Range(
-  //  this->fitpath.Add(new RooCmdArg(Range("all")));
+  if (_range != 0)
+    this->fitpath.Add(_range);
+
+  // SAVE ORIGINAL PARAMETERS SO THEY CAN BE RESET
+  RooArgSet varset(*_mass);
+  RooArgSet* params = _model->getParameters(&varset);
+  TIterator* iter = params->createIterator();
+  RooRealVar *var = (RooRealVar*)iter->Next();
+  
+  while (var != NULL) {
+    std::cout << "Default value: " << var->getValV() << std::endl;
+    originalParams.push_back(var->getValV());
+    var = (RooRealVar*)iter->Next();
+  }
+  
 }
+
+// RESET PARAMETERS
+void SplitFitter::resetParams() 
+{
+  RooArgSet varset(*_mass);
+  RooArgSet* params = _model->getParameters(&varset);
+  TIterator* iter = params->createIterator();
+  int i = 0;
+  RooRealVar *var = (RooRealVar*)iter->Next();
+  var = (RooRealVar*)iter->Next();
+  while (var != 0) {
+    var->setVal(originalParams[i]);
+    var = (RooRealVar*)iter->Next();
+    i++;
+  }  
+}
+
 
 // fit either does _fitAll or _fitSplit, depending on whether split category has been provided
 vector<binValsAndErrs> SplitFitter::fit(RooDataHist *hist, const char* fname, const bool justPlot)
 {
+  if (fname == 0)
+    std::cerr << "ERROR: Must supply base file name for output" << std::endl;
+  
   if (split)
     return _fitSplit(hist,fname,justPlot);
   else
@@ -126,11 +167,10 @@ vector<binValsAndErrs> SplitFitter::_fitAll(RooDataHist *hist,
                                             const char* fname,
                                             const bool justPlot) 
 {
-  
-  // CREATE ROO WORKSPACE
-  RooWorkspace FitWS("fitAll");
 
-  // CREATE RETURN VECTOR
+  assert(fname != 0);
+
+  // CREATE ARRAYS OF FIT PARAMETERS TO BE MONITORED
   int num = _vars->getSize();
   vector<binValsAndErrs> data;
   for (int i = 0; i < num; i++) {
@@ -142,20 +182,17 @@ vector<binValsAndErrs> SplitFitter::_fitAll(RooDataHist *hist,
     data.push_back(bve);
   }
 
-  // FIT TOTALPDF TO TOTAL #1
+  // FIT TO DATA SET
   RooFitResult *fitresult = 0;
+  string fit_filename = outputDirectoryName + "/" + fname + FitExt;
+  std::ofstream fit_stream(fit_filename.c_str(), std::ofstream::out);
+  
   if (not justPlot) {
-    
-    // FIT _MODEL TO DATA
     fitresult = _model->fitTo(*hist,fitpath);
     fitresult->Print("v");
-    FitWS.import(*fitresult);
-
-    // WRITE FITRESULT TO FILE
-    RooArgSet* allVars = _model->getVariables();
-    string fit_filename = outputDirectoryName + "/" + fname + FitExt;
-    allVars->writeToFile(fit_filename.c_str());
+    _model->getVariables()->writeToStream(fit_stream,false);
   }
+  fit_stream.close();
 
   // SAVE VALS AND ERRS
   for (int i = 0; i < num; i++) {
@@ -164,62 +201,58 @@ vector<binValsAndErrs> SplitFitter::_fitAll(RooDataHist *hist,
     data[i].errs[0] = var->getError();
   }
 
-  // CREATE OUTPUT FILE
-  string root_filename = outputDirectoryName + "/" + fname + RootExt;
-  TFile *fout = new TFile(root_filename.c_str(),"recreate");
-  assert(fout);
-  
   // DEFINE PLOT
   RooPlot* frame = _mass->frame(_mass->getBins());
   frame->SetName("all");
   
   // PLOT DATA
   hist->plotOn(frame,
-               Range("all"),
+               *_range,
                DataError(RooAbsData::Poisson),
                RooFit::Name("hist_all"));
   
-  // PLOT FIT
+  // PLOT FIT COMPONENTS
   _model->plotOn(frame,
-                 RooFit::Range("all"),
+                 *_range,
                  RooFit::Name("fit_all"));
   _model->plotOn(frame,
-                 RooFit::Range("all"),
-                 Components("signal"),
+                 *_range,
+                 Components("signal*"),
                  LineColor(kRed),
                  RooFit::Name("signal_all"));
   _model->plotOn(frame,
-                 RooFit::Range("all"),
-                 Components("bkg"),
+                 *_range,
+                 Components("bkg*"),
                  LineColor(kMagenta),
                  RooFit::Name("bkg_all"));
   
   // PLOT RESIDUAL
-  RooPlot *pulls = getPullHist(frame,"hist_all","curve_all","pulls_all");
+  RooPlot *pulls = getPullHist(frame,"hist_all","fit_all","pulls_all");
   
-  //   // MAKE CANVAS
-  //   TCanvas canvas("Fit","Fit");
-  //   canvas.cd();
-  //   TPad* HistogramPad = new TPad("HistogramPad","HistogramPad",0.0,0.5,1.0,1.0);
-  //   HistogramPad->Draw();
-  //   TPad* ResidualPad = new TPad("ResidualPad","ResidualPad",0.0,0.0,1.0,0.5);
-  //   ResidualPad->Draw();
-  //   ResidualPad->SetTopMargin(0.1);
-  //   HistogramPad->cd();
-  //   frame->Draw();
-  //   ResidualPad->cd();
-  //   pulls->Draw();
+  // MAKE CANVAS
+  TCanvas canvas("Fit","Fit");
+  canvas.cd();
+  TPad* HistogramPad = new TPad("HistogramPad","HistogramPad",0.0,0.5,1.0,1.0);
+  HistogramPad->Draw();
+  TPad* ResidualPad = new TPad("ResidualPad","ResidualPad",0.0,0.0,1.0,0.5);
+  ResidualPad->Draw();
+  ResidualPad->SetTopMargin(0.1);
+  HistogramPad->cd();
+  frame->Draw();
+  HistogramPad->Update();
+  ResidualPad->cd();
+  pulls->Draw();
+  ResidualPad->Update();
+  canvas.Update();
   
-  // SAVE TO FILE
+  // SAVE TO ROOT FILE
+  string root_filename = outputDirectoryName + "/" + fname + RootExt;
+  TFile *fout = new TFile(root_filename.c_str(),"recreate");
+  assert(fout);
   fout->cd();
-  //  canvas.Write();
-  frame->Write();
-  pulls->Write();
-  //   FitWS.import(*frame);
-  //   FitWS.import(*pulls);
-  //   FitWS.Write();
-  
-  // CLOSE FILE
+  canvas.Write();
+  //  frame->Write();
+  //  pulls->Write();
   fout->Close();
 
   // RETURN VALUE AND ERRORx
@@ -232,16 +265,8 @@ vector<binValsAndErrs> SplitFitter::_fitSplit(RooDataHist *hist, // Data total h
                                               const char* fname, // name to give to file
                                               const bool justPlot) { // if true, don't fit; just plot
   
-  RooWorkspace SplitWS("fitSplit");
+  assert(fname != 0);
 
-  // CREATE OUTPUT FILE
-  TFile* fout;
-  if (fname) {
-    string filename = outputDirectoryName + "/" + fname + RootExt;
-    fout = new TFile(filename.c_str(),"recreate");
-    assert(fout);
-  }
-  
   // GET CATEGORY INFO
   int nTypes = _SplitCat->numTypes();
   string catName = _SplitCat->GetName();
@@ -257,10 +282,18 @@ vector<binValsAndErrs> SplitFitter::_fitSplit(RooDataHist *hist, // Data total h
     bve.errs = errors;
     data.push_back(bve);
   }
-  
+
+  // FIT RESULTS FILE
+  string fit_filename = outputDirectoryName + "/" + fname + FitExt;
+  std::ofstream fit_stream(fit_filename.c_str(), std::ofstream::out);
+
+  // ROOTFILE
+  string root_filename = outputDirectoryName + "/" + fname + RootExt;
+  TFile* fout = new TFile(root_filename.c_str(),"recreate");
+  assert(fout);
+
   // LOOP OVER CATEGORY TAG
   for (int iType = 0; iType < nTypes; iType++) {
-    // SET CATEGORY TAG
     _SplitCat->setIndex(iType);      
     
     // GET DATA SUBSET
@@ -269,21 +302,19 @@ vector<binValsAndErrs> SplitFitter::_fitSplit(RooDataHist *hist, // Data total h
     subhist->Print("v");
 
     // FIT TO DATA SUBSET
+    RooFitResult* fitresult = 0;
     RooAbsPdf* fitter = (RooAbsPdf*)_model->Clone();
-    RooFitResult* fitresult;
     if (not justPlot) {
-      RooFitResult* fitresult = fitter->fitTo(*subhist,fitpath);
-      fitresult->Print("v");
-      SplitWS.import(*fitresult);
+      if (subhist->sum(false) > 0) {
+        std::cout << "Enough entries to fit:" << std::endl;
+        fitresult = fitter->fitTo(*subhist,fitpath);
+        fitresult->Print("v");
+        fitter->getVariables()->writeToStream(fit_stream,false);
+      } else {
+        std::cout << "Not enough entries; skipping bin ..." << std::endl;
+      }
     }
 
-    // WRITE FITRESULT TO FILE
-    if (fname and (not justPlot)) {
-      RooArgSet* allVars = fitter->getVariables();
-      string fit_filename = outputDirectoryName + "/" + fname + FitExt;
-      allVars->writeToFile(fit_filename.c_str());
-    }
-      
     // SAVE VALS AND ERRS
     for (int i = 0; i < num; i++) {
       RooRealVar* var = (RooRealVar*)_vars->at(i);
@@ -291,58 +322,65 @@ vector<binValsAndErrs> SplitFitter::_fitSplit(RooDataHist *hist, // Data total h
       data[i].errs[iType] = var->getError();
     }
 
-    if (fname) {
-      
-      // DEFINE PLOT
-      RooPlot* frame = _mass->frame(_mass->getBins());
-      string name = string("bin_") + _SplitCat->getLabel();
-      string title = string(frame->GetTitle()) + " - " + name;
-      frame->SetName(name.c_str());
-      frame->SetTitle(title.c_str());
-      
-      // PLOT DATA
-      string histName = string("hist_") + _SplitCat->getLabel();
-      subhist->plotOn(frame,
-                      RooFit::Range("all"),
-                      DataError(RooAbsData::Poisson),
-                      RooFit::Name(histName.c_str()));
-      
-      // PLOT FIT COMPONENTS
-      string fitName = string("fit_") + _SplitCat->getLabel();
-      fitter->plotOn(frame,
-                     RooFit::Range("all"),
-                     RooFit::Name(fitName.c_str()));
-      string signalName = string("signal_") + _SplitCat->getLabel();
-      fitter->plotOn(frame,
-                     RooFit::Range("all"),
-                     Components("signal"),
-                     LineColor(kRed),
-                     RooFit::Name(signalName.c_str()));
-      string bkgName = string("bkg_") + _SplitCat->getLabel();
-      fitter->plotOn(frame,
-                     RooFit::Range("all"),
-                     Components("bkg"),
-                     LineColor(kMagenta),
-                     RooFit::Name(bkgName.c_str()));
-      
-      // PLOT RESIDUAL
-      string pulls_title = string("pulls_") + _SplitCat->getLabel();
-      RooPlot* pulls = getPullHist(frame,histName.c_str(),fitName.c_str(),pulls_title.c_str());
-      
-      // SAVE TO FILE
-      fout->cd();
-      frame->Write();
-      pulls->Write();
-      //      canvas.Write();
-    }
-  }
-
-  if (fname) {
+    // DEFINE PLOT
+    RooPlot* frame = _mass->frame(_mass->getBins());
+    string name = string("bin_") + _SplitCat->getLabel();
+    string title = name;
+    frame->SetName(name.c_str());
+    frame->SetTitle(title.c_str());
     
-    // CLOSE FILE
-    SplitWS.Write();
-    fout->Close();
+    // PLOT DATA
+    string histName = string("hist_") + _SplitCat->getLabel();
+    subhist->plotOn(frame,
+                    *_range,
+                    DataError(RooAbsData::Poisson),
+                    RooFit::Name(histName.c_str()));
+    
+    // PLOT FIT COMPONENTS
+    string fitName = string("fit_") + _SplitCat->getLabel();
+    fitter->plotOn(frame,
+                   *_range,
+                     RooFit::Name(fitName.c_str()));
+    string signalName = string("signal_") + _SplitCat->getLabel();
+    fitter->plotOn(frame,
+                   *_range,
+                   Components("signal*"),
+                   LineColor(kRed),
+                   RooFit::Name(signalName.c_str()));
+    string bkgName = string("bkg_") + _SplitCat->getLabel();
+    fitter->plotOn(frame,
+                   *_range,
+                   Components("bkg*"),
+                   LineColor(kMagenta),
+                   RooFit::Name(bkgName.c_str()));
+    
+    // PLOT RESIDUAL
+    string pulls_name = string("pulls_") + _SplitCat->getLabel();
+    RooPlot* pulls = getPullHist(frame,histName.c_str(),fitName.c_str(),pulls_name.c_str());
+    
+    // MAKE CANVAS
+    string canvas_name = string("Fit_") + _SplitCat->getLabel();
+    string canvas_title = canvas_name;
+    TCanvas canvas(canvas_name.c_str(),canvas_title.c_str());
+    canvas.cd();
+    TPad* HistogramPad = new TPad("HistogramPad","HistogramPad",0.0,0.5,1.0,1.0);
+    HistogramPad->Draw();
+    TPad* ResidualPad = new TPad("ResidualPad","ResidualPad",0.0,0.0,1.0,0.5);
+    ResidualPad->Draw();
+    ResidualPad->SetTopMargin(0.1);
+    HistogramPad->cd();
+    frame->Draw();
+    ResidualPad->cd();
+    pulls->Draw();
+  
+    // SAVE TO ROOT FILE
+    fout->cd();
+    canvas.Write();
   }
+  
+  // CLOSE FILES
+  fit_stream.close();
+  fout->Close();
   
   // RETURN FIT RESULT
   return data;

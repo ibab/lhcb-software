@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <cstdio>
 using std::map;
 using std::vector;
 using std::string;
@@ -33,12 +34,16 @@ using std::endl;
 #include <RooExponential.h>
 #include <RooGenericPdf.h>
 #include <RooChebychev.h>
+#include <RooCmdArg.h>
 #include <RooTable.h>
 
 namespace {
 
   // THIS BOOLEAN CONTROLS HOW MUCH INFO IS PRINTED
-  bool verbose = true;  
+  const bool verbose = true;  
+
+  // DO MEAN CORRECTION?
+  bool meanCorrection = true; // do this by default
   
   // INPUT / OUTPUT
   const string RootExt = ".root";
@@ -46,33 +51,23 @@ namespace {
   
   // DECAY CONSTANTS
 
-  const int NumRes = 4;
+  const int NumRes = 6;
   int res = 0; // The particular decay for this execution; initialized at the command line
   
   const string ID[NumRes] =
     {
       "Jpsi2MuMu"
+      , "Jpsi2MuMu_Double"
+      , "Jpsi2MuMu_Cruijff"
       , "Ups1S2MuMu"
       , "Z02MuMu"
-      , "D02Kpi"
+      , "D02KPi"
     }; // Short form decay string, e.g. Jpsi2MuMu  
-  const string Head[NumRes] =
-    {
-      "Jpsi"
-      , "Ups1S"
-      , "Z0"
-      , "D0"
-    }; // Short form decay particle
-  const string Decay[NumRes] =
-    {
-      "J/psi(1S) -> mu+ mu-"
-      , "Upsilon(1S) -> mu+ mu-"
-      , "Z0 -> mu+ mu-"
-      , "[D*(2010)+ -> (D0 => K- pi+) pi+]cc"
-    }; // Long form LHCb decay, e.g. J/psi(1S) -> mu+ mu-
   const string Particle[NumRes] =
     {
       "J/psi(1S)"
+      , "J/psi(1S)"
+      , "J/psi(1S)"
       , "Upsilon(1S)"
       , "Z0"
       , "D0"
@@ -80,16 +75,20 @@ namespace {
   const double Mass[NumRes] = 
     {
       3.096916
+      , 3.096916
+      , 3.096916
       , 9.4603026
       , 91.1876
       , 1.86484
     }; // Resonance mass; starting value for fit
   const double Width[NumRes] =
     {
-      0.08,
-      0.05,
-      10.00,
       0.08
+      , 0.0133
+      , 0.08
+      , 0.05
+      , 10.00
+      , 0.008
     }; // Starting width for fit
 
   // ----------------------------------------------------------------------------------------------------
@@ -97,7 +96,23 @@ namespace {
   // MODEL PDFS
   // ----------------------------------------------------------------------------------------------------
   // ----------------------------------------------------------------------------------------------------
-
+  
+  double AlphaCor[NumRes] = {
+    0.055
+    , 0.055
+    , 0
+    , 0
+    , 0
+  };
+  
+  double Alpha2Cor[NumRes] = {
+    -2.6E-4
+    , -2.6E-4
+    , 0
+    , 0
+    , 0
+  };
+    
   // Signal mean and width (common to all shapes, basically)
   RooRealVar mass ("mass","mass", 0.0);
   RooRealVar mean("mean","mass mean", 0.0);
@@ -111,13 +126,65 @@ namespace {
   RooRealVar n("n","n",1);
   RooCBShape signal_cb("signal_cb","signal (CB)",mass,mean,width,z,n);
 
-  // Cruijff (Symmetric, 1-sided)
+  // Double Crystal Ball FOR JPSI
+  /* Adding gaussians f Gaus(mu,s) + (1-f) Gaus(mu,t), what is the effective width r?
+     (Note: means here are different, but not that different)
+     Add them, take logarithm, find second derivative at mean
+     This gives 1/r^2 = f/s^2 + (1-f)/t^2
+     So, given r (width), a = s/r (subwidth1_ratio), and b = t/r (subwidth2_ratio),
+     we can find f (sigratio):
+     f = a^2 * (b^2 - 1) / (b^2 - a^2)
+     (a and b must both be in range 0 to 1, because combined width is always bigger)
+     For this to be well defined, we clearly need 1 > b > a > 0. How to do this?
+     It means that 1 < 1/b < 1/a < infinity, so we can say with impunity
+     1/a = 1/b + d => a = b / (1 + bd)
+   */
+//   RooRealVar subwidth2_ratio("subwidth2_ratio","mass subwidth2_ratio",1.5,0.1,2);
+//   RooRealVar subwidth12_diff("subwidth12_diff","mass subwidth12_diff",0.5,1E-4,10);
+//   RooFormulaVar subwidth1_ratio("subwidth1_ratio","mass subwidth1_ratio","@0/(1+@0*@1)",
+//                                 RooArgList(subwidth2_ratio,subwidth12_diff));
+//   RooFormulaVar subwidth1("subwidth1","mass subwidth1","width*subwidth1_ratio",RooArgList(width,subwidth1_ratio));
+//   RooFormulaVar subwidth2("subwidth2","mass subwidth2","width*subwidth2_ratio",RooArgList(width,subwidth2_ratio));
+//   RooFormulaVar sigratio("sigratio","sigratio","@0*@0 * (@1*@1-1) / (@1*@1 - @0*@0)",
+//                          RooArgList(subwidth1_ratio,subwidth2_ratio));
+
+  /* The following deserves some explanation
+     True J/psi distribution is a sharp breit-wigner + tail
+     Gaussian resolution -> crystal ball with shifted mean
+     Dobule gaussian resolution -> double crystal ball with separate, but related, shifted means
+     For more detail, see LHCb-ANA-2011-027 Appendix B
+  */
+  RooRealVar extrawidth("extrawidth","extrawidth",1.1,1,3);
+  RooFormulaVar width2("width2","mass width2","width*extrawidth",RooArgList(width,extrawidth));
+  RooRealVar alphacor("alphacor","alphacor",AlphaCor[res]);
+  RooRealVar alpha2cor("alpha2cor","alpha2cor",Alpha2Cor[res]);  
+  string mean2_formula = "@0 + @3 * (@1-@2) + @4 * (@1*@1-@2*@2)";
+  //  RooFormulaVar mean2("mean2","mass mean2",mean2_formula.c_str(), RooArgList(mean,subwidth1,subwidth2,alphacor,alpha2cor));
+  RooFormulaVar mean2("mean2","mass mean2",mean2_formula.c_str(), RooArgList(mean,width,width2,alphacor,alpha2cor));
+  RooRealVar z2("z2","z2",1.5,0.01,5);
+  RooRealVar n2("n2","n2",1);
+//   RooCBShape subcb1("subcb1","subcb1",mass,mean,subwidth1,z,n);
+//   RooCBShape subcb2("subcb2","subcb2",mass,mean2,subwidth2,z2,n2);
+  RooCBShape subcb1("subcb1","subcb1",mass,mean,width,z,n);
+  RooCBShape subcb2("subcb2","subcb2",mass,mean2,width2,z2,n2);
+  RooRealVar sigratio("sigratio","sigratio",0.7,0,1);
+  RooAddPdf signal_2cb("signal_2cb","signal_2cb",RooArgList(subcb1,subcb2),RooArgList(sigratio));
+
+  // Cruijff Shapes
   RooRealVar alpha("alpha","alpha",0.1,1E-10,1);
+  RooRealVar alphaR("alphaR","alphaR",0.1,1E-10,1);
   const char* cr1_formula =
     "exp( - (mass-mean)*(mass-mean)"
     " / (2*width*width "
     "+ alpha*(mass-mean)*(mass-mean)*(mass<mean) ) )";
   RooGenericPdf signal_cr1("signal_cr1","signal (CR1)",cr1_formula,RooArgSet(mass,mean,width,alpha));
+
+  const char* cr2_formula =
+    "exp( - (mass-mean)*(mass-mean)"
+    " / (2*width*width "
+    "+ alpha*(mass-mean)*(mass-mean)*(mass<mean) "
+    "+ alphaR*(mass-mean)*(mass-mean)*(mass>mean) ) )";
+  RooGenericPdf signal_cr2("signal_cr2","signal (CR2)",cr2_formula,RooArgSet(mass,mean,width,alpha,alphaR));
 
   // Exponential background
   RooRealVar decay("decay","decay",0,-10,10);
@@ -133,7 +200,10 @@ namespace {
   // Combinations
   RooRealVar frac("frac","frac",0.7,0,1);
   RooAddPdf model_cb_exp("model_cb_exp","model_cb_exp",RooArgList(signal_cb,bkg_exp),RooArgList(frac)); // J/psi, Ups(#s), Z0
-  RooAddPdf model_g_p0("model_g_p0","model_g_p0",RooArgList(signal_g,bkg_p0),RooArgList(frac)); // D0, KS, Lambda
+  RooAddPdf model_2cb_exp("model_2cb_exp","model_2cb_exp",RooArgList(signal_2cb,bkg_exp),RooArgList(frac)); // J/psi, Ups(#s), Z0
+  RooAddPdf model_cr2_exp("model_cr2_exp","model_cr2_exp",RooArgList(signal_cr2,bkg_exp),RooArgList(frac));
+  RooAddPdf model_cr2_p1("model_cr2_p1","model_cr2_p1",RooArgList(signal_cr2,bkg_p1),RooArgList(frac)); // D0, above didn't work
+  RooAddPdf model_g_p1("model_g_p1","model_g_p1",RooArgList(signal_g,bkg_p1),RooArgList(frac)); // D0, KS, Lambda
   /* Create others as needed, such as 
      - phi : Voigtian / threshold
      - Others for testing purposes
@@ -141,9 +211,11 @@ namespace {
 
   RooAbsPdf* ResModel[NumRes] = {
     &model_cb_exp
+    , &model_2cb_exp
+    , &model_cr2_exp
     , &model_cb_exp
     , &model_cb_exp
-    , &model_g_p0
+    , &model_g_p1
   };
 
   // Doesn't seem to be a native function for this, sadly
@@ -187,9 +259,11 @@ namespace {
 
     // SOME EXTRA LABELS
     char meanLabel[] = "#Deltam/m_{PDG}";
-    char meanLabelUnits[] = "#Deltam/m (#times 10^{3})";
+    char meanLabelUnits[] = "#Deltam/m (10^{-3})";
     char widthLabel[] = "#sigma/m_{PDG}";
-    char widthLabelUnits[] = "#sigma/m (#times 10^{3})";
+    char widthLabelUnits[] = "#sigma/m (10^{-3})";
+    char fracLabel[] = "signal %";
+    char fracLabelUnits[] = "#signal %";
 
     // CALCULATE VALUES
     int bins = hist->GetNbinsX();
@@ -197,6 +271,8 @@ namespace {
     double* meanErrs = new double[bins];
     double* width = new double[bins];
     double* widthErrs = new double[bins];
+    double* frac = new double[bins];
+    double* fracErrs = new double[bins];
     double* mids = new double[bins];
     double* binwidths = new double[bins];
     for (int i = 0; i < bins; i++) {
@@ -204,8 +280,16 @@ namespace {
       meanErrs[i] = data[0].errs[i]/(Mass[res])*1000;
       width[i] = data[1].vals[i]/(Mass[res])*1000;
       widthErrs[i] = data[1].errs[i]/(Mass[res])*1000;
+      frac[i] = data[2].vals[i]*100;
+      fracErrs[i] = data[2].errs[i]*100;
       mids[i] = hist->GetBinCenter(i+1);
       binwidths[i] = hist->GetBinWidth(i+1)/2.0;
+
+      // MEAN CORRECTION
+      if (meanCorrection) {
+        double cor = AlphaCor[res]*width[i] + Alpha2Cor[res]*width[i]*width[i];
+        mean[i] += cor;
+      }
     }
 
     // CREATE GRAPH OF MEANS
@@ -220,10 +304,17 @@ namespace {
     name = string(type) + "_sigmas";
     SetGraphStyle(sigmas,name.c_str(),title.c_str(),labelUnits,widthLabelUnits);
 
+    // CREATE GRAPH OF PURITY
+    TGraphErrors fracs(bins,mids,frac,binwidths,fracErrs);
+    title = Particle[res] + " " + string(fracLabel) + " vs. " + string(label);
+    name = string(type) + "_purities";
+    SetGraphStyle(fracs,name.c_str(),title.c_str(),labelUnits,fracLabelUnits);
+
     // SAVE TO FILE
     file.cd();
     means.Write();
     sigmas.Write();
+    fracs.Write();
   
     // MEMORY MANAGEMENT
     delete mean;
@@ -275,15 +366,10 @@ int main( int argc, char** argv) {
   string OutputDirectory = string(argv[4]);
   if (verbose) cout << OutputDirectory << endl;
 
-  // OPENING ROOT FILE
-  TFile inputFile(HistoFile.c_str(),"READ");
-  if (inputFile.IsZombie()) {
-    cout << "ERROR: input file not found" << endl;
-    return 1;
-  } else  {
-    if (verbose) cout << "Input file opened successfully" << endl;
+  if (argc >= 6) {
+    if (string(argv[5]) == "correct")
+      meanCorrection = true;
   }
-
   // ----------------------------------------------------------------------------------------------------
   // ----------------------------------------------------------------------------------------------------
   // FITS
@@ -292,7 +378,7 @@ int main( int argc, char** argv) {
 
   // Get model
   RooAbsPdf* model = ResModel[res];
-
+  
   // Set values and ranges
   mean.setVal(Mass[res]);
   mean.setRange(0.95*Mass[res],1.05*Mass[res]);
@@ -300,7 +386,21 @@ int main( int argc, char** argv) {
   width.setVal(Width[res]);
   width.setRange(0.1*Width[res],10*Width[res]);
   width.setConstant(false);
-  RooArgList vars(mean,width);
+  RooArgList vars(mean,width,frac);
+
+  // Tweak range
+  RooCmdArg range = RooFit::Range("all");
+  if (ID[res] == "Jpsi2MuMu" or ID[res] == "Jpsi2MuMu_Double" or ID[res] == "Jpsi2MuMu_Cruijff") {
+    range = RooFit::Range(3.02,3.16);
+    mass.setRange(3.02,3.16);
+  } else if (ID[res] == "D02KPi") {
+    range = RooFit::Range(1.82,1.91);
+    mass.setRange(1.82,1.91);
+  }
+
+  // Other tweaks
+  if (ID[res] == "D02KPi")
+    c1.setVal(-0.3);
 
   // ----------------------------------------------------------------------------------------------------
   // OUTPUT FILE
@@ -324,7 +424,7 @@ int main( int argc, char** argv) {
     Hist.Print("v");
     
     // CREATE FITTER OBJECT; PERFORM FIT
-    SplitFitter totFitter(&mass,model,&vars,OutputDirectory);
+    SplitFitter totFitter(&mass,model,&range,&vars,OutputDirectory);
     if (verbose) cout << "Fitting over all data" << endl;
     vector<binValsAndErrs> data = totFitter.fit(&Hist,"fitTotal",false);
   }
@@ -346,8 +446,7 @@ int main( int argc, char** argv) {
     Hist_mom.Print("v");
     
     // CREATE FITTER OBJECT; PERFORM FIT
-    SplitFitter momFitter(&mass,model,&vars,&momCat,OutputDirectory);
-    momFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    SplitFitter momFitter(&mass,model,&range,&vars,&momCat,OutputDirectory);
     vector<binValsAndErrs> data = momFitter.fit(&Hist_mom,"fitSplit_mom",false);
     plotMakerAndSaver(fout,massVmom_th2,data,"mom","P","P [GeV]");
   }
@@ -368,8 +467,7 @@ int main( int argc, char** argv) {
     Hist_pt.Print("v");
     
     // CREATE FITTER OBJECT; PERFORM FIT
-    SplitFitter ptFitter(&mass,model,&vars,&ptCat,OutputDirectory);
-    ptFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    SplitFitter ptFitter(&mass,model,&range,&vars,&ptCat,OutputDirectory);
     vector<binValsAndErrs> data = ptFitter.fit(&Hist_pt,"fitSplit_pt",false);
     plotMakerAndSaver(fout,massVpt_th2,data,"pt","PT","PT [GeV]");
   }
@@ -389,8 +487,7 @@ int main( int argc, char** argv) {
      RooDataHist Hist_momdiff = splitDataHistFromTH2D("massVmomdiffH2","massVmomdiffH2",mass,momdiffCat,massVmomdiff_th2);
      
      // CREATE FITTER OBJECT; PERFORM FIT
-     SplitFitter momdiffFitter(&mass,model,&vars,&momdiffCat,OutputDirectory);
-     momdiffFitter.fitpath.Add(new RooCmdArg(Range("all")));
+     SplitFitter momdiffFitter(&mass,model,&range,&vars,&momdiffCat,OutputDirectory);
      vector<binValsAndErrs> data = momdiffFitter.fit(&Hist_momdiff,"fitSplit_momdiff",false);
      plotMakerAndSaver(fout,massVmomdiff_th2,data,"momdiff","p^{+}-p^{-}","p^{+}-p^{-} [GeV]");
   }
@@ -404,14 +501,13 @@ int main( int argc, char** argv) {
     if (verbose) cout << "Fitting over each momasym bin separately:" << endl;
      
      // MAKE ROO DATA OBJECT
-     string massVmomasymStr = rootDirectoryFile + "/massVersusMomAsymH2";
+     string massVmomasymStr = rootDirectoryFile + "/massVersusAsymH2";
      TH2D* massVmomasym_th2 = (TH2D*)(inputFile.Get(massVmomasymStr.c_str()));
      RooCategory momasymCat ("momasymCat","momasymCat");
      RooDataHist Hist_momasym = splitDataHistFromTH2D("massVmomasymH2","massVmomasymH2",mass,momasymCat,massVmomasym_th2);
      
      // CREATE FITTER OBJECT; PERFORM FIT
-     SplitFitter momasymFitter(&mass,model,&vars,&momasymCat,OutputDirectory);
-     momasymFitter.fitpath.Add(new RooCmdArg(Range("all")));
+     SplitFitter momasymFitter(&mass,model,&range,&vars,&momasymCat,OutputDirectory);
      vector<binValsAndErrs> data = momasymFitter.fit(&Hist_momasym,"fitSplit_momasym",false);
      plotMakerAndSaver(fout,massVmomasym_th2,data,"momasym","(p^{+}-p^{-})/(p^{+}+p^{-})","(p^{+}-p^{-})/(p^{+}+p^{-})");
   }
@@ -431,8 +527,7 @@ int main( int argc, char** argv) {
     RooDataHist Hist_eta = splitDataHistFromTH2D("massVetaH2","massVetaH2",mass,etaCat,massVeta_th2);
     
     // CREATE FITTER OBJECT; PERFORM FIT
-    SplitFitter etaFitter(&mass,model,&vars,&etaCat,OutputDirectory);
-    etaFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    SplitFitter etaFitter(&mass,model,&range,&vars,&etaCat,OutputDirectory);
     vector<binValsAndErrs> data = etaFitter.fit(&Hist_eta,"fitSplit_eta",false);
     plotMakerAndSaver(fout,massVeta_th2,data,"eta","#eta","#eta");
   }
@@ -453,8 +548,7 @@ int main( int argc, char** argv) {
     Hist_tx.Print("v");
     
     // CREATE FITTER OBJECT; PERFORM FIT
-    SplitFitter txFitter(&mass,model,&vars,&txCat,OutputDirectory);
-    txFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    SplitFitter txFitter(&mass,model,&range,&vars,&txCat,OutputDirectory);
     vector<binValsAndErrs> data = txFitter.fit(&Hist_tx,"fitSplit_tx",false);
     plotMakerAndSaver(fout,massVtx_th2,data,"tx","Tx","Tx");
   }
@@ -475,8 +569,7 @@ int main( int argc, char** argv) {
     Hist_ty.Print("v");
     
     // CREATE FITTER OBJECT; PERFORM FIT
-    SplitFitter tyFitter(&mass,model,&vars,&tyCat,OutputDirectory);
-    tyFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    SplitFitter tyFitter(&mass,model,&range,&vars,&tyCat,OutputDirectory);
     vector<binValsAndErrs> data = tyFitter.fit(&Hist_ty,"fitSplit_ty",false);
     plotMakerAndSaver(fout,massVty_th2,data,"ty","Ty","Ty");
   }
@@ -497,8 +590,7 @@ int main( int argc, char** argv) {
     RooDataHist Hist_phid = splitDataHistFromTH2D("massVphidH2","massVphidH2",mass,phidCat,massVphid_th2);
     
     // CREATE FITTER OBJECT; PERFORM FIT
-    SplitFitter phiFitter(&mass,model,&vars,&phidCat,OutputDirectory);
-    phiFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    SplitFitter phiFitter(&mass,model,&range,&vars,&phidCat,OutputDirectory);
     vector<binValsAndErrs> data = phiFitter.fit(&Hist_phid,"fitSplit_phid",false);
     plotMakerAndSaver(fout,massVphid_th2,data,"phid","#phi_{d}","#phi_{d}");
   }
@@ -520,8 +612,7 @@ int main( int argc, char** argv) {
     RooDataHist Hist_phi = splitDataHistFromTH2D("massVphiH2","massVphiH2",mass,phiCat,massVphi_th2);
     
     // CREATE FITTER OBJECT; PERFORM FIT
-    SplitFitter phiFitter(&mass,model,&vars,&phiCat,OutputDirectory);
-    phiFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    SplitFitter phiFitter(&mass,model,&range,&vars,&phiCat,OutputDirectory);
     vector<binValsAndErrs> data = phiFitter.fit(&Hist_phi,"fitSplit_phi",false);
     plotMakerAndSaver(fout,massVphi_th2,data,"phi","#phi","#phi");
   }
@@ -543,33 +634,51 @@ int main( int argc, char** argv) {
     RooDataHist Hist_theta = splitDataHistFromTH2D("massVthetaH2","massVthetaH2",mass,thetaCat,massVtheta_th2);
     
     // CREATE FITTER OBJECT; PERFORM FIT
-    SplitFitter phiFitter(&mass,model,&vars,&thetaCat,OutputDirectory);
-    phiFitter.fitpath.Add(new RooCmdArg(Range("all")));
+    SplitFitter phiFitter(&mass,model,&range,&vars,&thetaCat,OutputDirectory);
     vector<binValsAndErrs> data = phiFitter.fit(&Hist_theta,"fitSplit_theta",false);
     plotMakerAndSaver(fout,massVtheta_th2,data,"theta","#theta","#theta");
   }
 
 
   // ----------------------------------------------------------------------------------------------------
-  // THETA-SPLIT SIMULTANEOUS FITS (opening angle)
+  // 2011 TIME SPLIT DATA
   // ----------------------------------------------------------------------------------------------------
   
   
-  bool split_time = true;
-  if (split_time) {
+  bool split_iov2011 = true;
+  if (split_iov2011) {
     if (verbose) cout << "Fitting over each run bin separately:" << endl;
     
     // MAKE ROO DATA OBJECT
-    string massVtimeStr = rootDirectoryFile + "/massVersusTimeH2";
-    TH2D* massVtime_th2 = (TH2D*)(inputFile.Get(massVtimeStr.c_str()));
-    RooCategory timeCat ("timeCat","timeCat");
-    RooDataHist Hist_time = splitDataHistFromTH2D("massVtimeH2","massVtimeH2",mass,timeCat,massVtime_th2);
+    string massViov2011Str = rootDirectoryFile + "/massVersus2011iovH2";
+    TH2D* massViov2011_th2 = (TH2D*)(inputFile.Get(massViov2011Str.c_str()));
+    RooCategory iovCat ("iov2011Cat","iov2011Cat");
+    RooDataHist Hist_iov2011 = splitDataHistFromTH2D("massViov2011H2","massViov2011H2",mass,iovCat,massViov2011_th2);
     
     // CREATE FITTER OBJECT; PERFORM FIT
-    SplitFitter phiFitter(&mass,model,&vars,&timeCat,OutputDirectory);
-    phiFitter.fitpath.Add(new RooCmdArg(Range("all")));
-    vector<binValsAndErrs> data = phiFitter.fit(&Hist_time,"fitSplit_time",false);
-    plotMakerAndSaver(fout,massVtime_th2,data,"run","run","run");
+    SplitFitter iov2011Fitter(&mass,model,&range,&vars,&iovCat,OutputDirectory);
+    vector<binValsAndErrs> data = iov2011Fitter.fit(&Hist_iov2011,"fitSplit_iov2011",false);
+    plotMakerAndSaver(fout,massViov2011_th2,data,"iov2011","iov","iov");
+  }
+  // ----------------------------------------------------------------------------------------------------
+  // 2012 TIME SPLIT DATA
+  // ----------------------------------------------------------------------------------------------------
+  
+  
+  bool split_iov2012 = true;
+  if (split_iov2012) {
+    if (verbose) cout << "Fitting over each run bin separately:" << endl;
+    
+    // MAKE ROO DATA OBJECT
+    string massViov2012Str = rootDirectoryFile + "/massVersus2012iovH2";
+    TH2D* massViov2012_th2 = (TH2D*)(inputFile.Get(massViov2012Str.c_str()));
+    RooCategory iovCat ("iov2012Cat","iov2012Cat");
+    RooDataHist Hist_iov2012 = splitDataHistFromTH2D("massViov2012H2","massViov2012H2",mass,iovCat,massViov2012_th2);
+    
+    // CREATE FITTER OBJECT; PERFORM FIT
+    SplitFitter iov2012Fitter(&mass,model,&range,&vars,&iovCat,OutputDirectory);
+    vector<binValsAndErrs> data = iov2012Fitter.fit(&Hist_iov2012,"fitSplit_iov2012",false);
+    plotMakerAndSaver(fout,massViov2012_th2,data,"iov2012","iov","iov");
   }
   
   
