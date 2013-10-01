@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tr/TrackMCTools
-! Responsible : Jose Hernando, Eduardo Rodrigues
+! Responsible :
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!========================= TrackMCTools v3r5 2013-10-01 =========================
 ! 2013-09-09 - Heinrich Schindler
  - Replace VPChannelID::sensor() by VPChannelID::module()
 
