@@ -2,7 +2,7 @@
 # Maintainer : Victor Coco
 #
 package           VPTools
-version           v2r1p1
+version           v2r2
 
 # Structure, i.e. directories to process. 
 #=========================================================================
