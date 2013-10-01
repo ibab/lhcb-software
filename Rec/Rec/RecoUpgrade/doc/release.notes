@@ -4,6 +4,7 @@
 ! Purpose     : Package for the reconstruction in upgraded detector classes
 !-----------------------------------------------------------------------------
 
+!========================= RecoUpgrade v3r2 2013-10-01 =========================
 ! 2013-09-09 - Heinrich Schindler
  - Follow VP detector element and channel ID changes (r162190, 162191)
 ! 2013-08-23 - Heinrich Schindler

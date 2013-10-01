@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RecoUpgrade
 ################################################################################
-gaudi_subdir(RecoUpgrade v3r1p2)
+gaudi_subdir(RecoUpgrade v3r2)
 
 gaudi_depends_on_subdirs(Det/VPDet
                          Event/DAQEvent
