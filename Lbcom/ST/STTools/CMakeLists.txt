@@ -1,7 +1,7 @@
 ################################################################################
 # Package: STTools
 ################################################################################
-gaudi_subdir(STTools v4r14p2)
+gaudi_subdir(STTools v4r15)
 
 gaudi_depends_on_subdirs(Det/STDet
                          Event/DigiEvent

@@ -3,7 +3,7 @@
 # Maintainer : Jeroen van Tilburg
 #=========================================================================
 package           STTools
-version           v4r14p2
+version           v4r15
 
 branches          cmt doc src options python
 include_path      none
