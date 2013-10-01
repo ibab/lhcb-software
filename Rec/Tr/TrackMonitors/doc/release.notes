@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-10-01 - Frederic Dupertuis 
+ - Adding some additional verbose plotting to STEfficiency.
+
 ! 2013-09-10 - Patrick Koppenburg
  - AlignmentOnlineMonitor should always run, not only offline.
 

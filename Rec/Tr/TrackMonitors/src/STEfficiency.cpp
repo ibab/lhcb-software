@@ -86,6 +86,7 @@ STEfficiency::STEfficiency( const std::string& name,
   declareProperty( "MinStationPassed"   , m_minStationPassed = 3 );
   declareProperty( "MinCharge"          , m_minCharge = 0. );
   declareProperty( "EfficiencyPlot"     , m_effPlot = true );
+  declareProperty( "ResidualsPlot"      , m_resPlot = false );
   declareProperty( "TakeEveryHit"       , m_everyHit = true );
   declareProperty( "SingleHitPerSector" , m_singlehitpersector = false );
 }
@@ -342,6 +343,11 @@ bool STEfficiency::foundHitInSector( const ISTClusterCollector::Hits& hits,
         if(fullDetail()){
           plot(aHit.residual, "Control/HitResidual","Hit residual",-1.,1.,200);
           plot(aHit.cluster->totalCharge(), "Control/HitCharge","Hit charge",0.,200.,200);
+        }
+        if(m_resPlot){
+          std::string name("perSector/Residuals_");
+          name += aHit.cluster->sectorName();
+          plot(aHit.residual, name,"Hit residual",-1.,1.,200);
         }
         if( fabs(aHit.residual) < resCut ){
           if ( !( m_everyHit || track -> isOnTrack( LHCbID( aHit.cluster -> channelID() ) ) ) )

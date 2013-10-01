@@ -173,6 +173,11 @@ private:
    * Plot efficiency plot
    */
   bool m_effPlot;
+
+  /**
+   * Plot residuals plot
+   */
+  bool m_resPlot;
     
 };
 #endif // STEFFICIENCY_H
