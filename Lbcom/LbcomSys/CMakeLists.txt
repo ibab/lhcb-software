@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbcomSys
 ################################################################################
-gaudi_subdir(LbcomSys v14r1)
+gaudi_subdir(LbcomSys v14r2)
 
 gaudi_depends_on_subdirs(Associators/Associators
                          Calo/CaloAssociators
