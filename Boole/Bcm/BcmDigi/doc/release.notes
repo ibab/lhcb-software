@@ -4,6 +4,7 @@
 ! Purpose     : Create BcmDigits and MCBcmDigits from hits on the BCM
 !-----------------------------------------------------------------------------
 
+!========================= BcmDigi v1r2p1 2013-10-02 =========================
 ! 2013-09-26 - Marco Cattaneo
  - Remove extra ';' to fix CMake warnings
 
