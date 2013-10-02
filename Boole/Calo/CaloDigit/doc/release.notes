@@ -4,6 +4,7 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!========================= CaloDigit v3r4p1 2013-10-02 =========================
 ! 2013-09-26 - Marco Cattaneo
  - Remove extra ';' to fix CMake warnings
 
