@@ -3,6 +3,105 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v11r2>2013-10-02 Analysis v11r2 </A></H1><PRE>
+New development release, built against Phys v17r2.
+
+- Packages Removed : Phys/FlavourTagging (Moved to Phys)
+
+- Packages Added   : Phys/CommonMCParticles, Phys/IncTopoVert 
+
+- Packages Updated :-
+   AnalysisPython, DSTWriters, DaVinciMCTools, DecayTreeTuple,
+   DecayTreeTupleBase, JetAccessories, JetAccessoriesMC,
+   JetTagging, MVADictTools, Tutorial/Analysis
+
+In AnalysisPython :
+ . Add getitem ffor the axes 
+ . ZipShelve: Add more functionality to ls-method :
+     List the avilable keys (patterns included).
+     Pattern matching is performed accoriding to
+     fnmatch/glob/shell rules [it is not regex!] 
+     >>> db = ...
+     >>> db.ls () ## all keys in DB 
+     >>> db.ls ('*MC*')
+ . PyRoUts: few new decorators (e.g. sumVar)
+   GetLumi: make use of sumVar 
+ . use new functions from Kernel/LHCbMath
+
+In CommonMCParticles :
+ . Added MC associated Lambda_c  
+ . Updated Kshorts to include KsDD and KsLL, KsAny (LL, DD, LD and DL) with 
+   MC association
+ . Fixed the location listings for many modules  
+ . Added qmtest, CMakeFile, rearranged modules to better reflect 
+   CommonParticles layout.
+ . Created package CommonMCParticles, designed to mirror CommonParticles but
+   requiring full MC association and without additional cuts.
+   Uses StdNoPIDsParticles for final states. 
+
+In DSTWriters :
+ . Add Duplicates check to stripping (u)DST stream elements.
+
+In DaVinciMCTools :
+ . Add ProtoParticle and Particle keys to the information printed by the
+   PrintDecayTreeTool.
+
+In DecayTreeTuple :
+ . New version of TupleToolVtxIsoln that makes use of the VertexIsolation tool.
+
+In DecayTreeTupleBase :
+ . Make default setting for UseLoKiDecayFinders true, to allow more testing
+   in the nightlies etc.
+ . Added the option to use LoKi decay finders, cfr.
+   https://twiki.cern.ch/twiki/bin/view/LHCb/FAQ/LoKiNewDecayFinders ,
+   in (MC)DecayTreeTuple by setting the "UseLoKiDecayFinders" property.
+
+In JetAccessories :
+ . Fix the vertex associstion in PFJetMakerAlg.cpp
+ . Fix the JetMakerConfig.py : do not use BadPhotonMatchingT
+ . Adding MNF to the jet extra info
+ . Remove ChargedInfMomentum from the default PFtypes to be used by JetMaker_Config.py
+ . Add new partitionning procedure for jet maker with maximal IP cut.
+
+In JetAccessoriesMC :
+ . Move MCJetMakerAlg.cpp to HEPMCJetMakerAlg.cpp (this is for jets from HEPGenParticles
+   called from HEPMCJetMakerConf).
+ . Create a new MCJetMakerAlg.cpp (this is for jets from MCParticles - called from
+   MCJetMakerConf. It recreates Stable HEPGenParticles with the MCParticles and creates
+   jets of of them.
+
+In JetTagging :
+ . Add variables to LoKiTopoTagDir.
+ . Adding a new MCParticle Truth tag.
+
+In MVADictTools :
+ . Looks for .xml in local directory and then in a path, specifically
+   TMVATRANSFORMPATH - if file is still not found an error is thrown.
+ . Added MVAManager algorithm. 
+   Holds one IParticleDictTool in order to avoid the
+   double lock problem during instantiation of LoKi functors
+   This class is only needed as a container for the tool.
+   It has no functionality of its own
+ . Added example how to cut on MVA output by using the VALUE functor
+   and and the LoKi::Hybrid::DictValue tool.  
+ . small fix: replaced endmsg by std::endl  
+ . Split code into a linker library and a component library, to allow
+   sharing between the Gaudi components and the test applications.
+ . Various other minor clean ups to the requirements and CMake files.
+ . Added the unit test in the CMake configuration. 
+ . changed DictTransform policies to use std::ostream
+ . Created header file for TMVAClassifierTool
+ . added unit test framework for TMVATransform
+ . added a first unit test
+ . added qmtest call to utest
+
+In Tutorial/Analysis :
+ . Adapt to DaVinci v33r7
+   + Use new LoKi Decay Descriptors
+   + Use DaVinciTupleAlgorithm
+   + Use addTupleTool
+   + Add Sim08a Bs->J/psiPhi 
+
 ! 2013-09-21 - Chris Jones
  - Remove Phys/FlavourTagging (moved to Phys).
 
