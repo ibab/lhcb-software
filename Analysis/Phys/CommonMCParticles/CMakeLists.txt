@@ -8,5 +8,4 @@ gaudi_depends_on_subdirs(Phys/DaVinciKernel
 
 gaudi_install_python_modules()
 
-
 gaudi_add_test(QMTest QMTEST)
