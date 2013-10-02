@@ -1,11 +1,11 @@
 package PhysSys
-version v17r1
+version v17r2
 
 branches doc cmt
 
 #===================================================================
 
-use  DaVinciInterfaces          v2r19    Phys    # Juan Palacios
+use  DaVinciInterfaces          v2r20    Phys    # Juan Palacios
 use  DaVinciTypes               v2r6p2   Phys    # Juan Palacios
 use  DaVinciUtils               v1r1p1   Phys    # Juan Palacios
 use  DaVinciKernel              v11r4p1  Phys    # Juan Palacios
@@ -17,10 +17,10 @@ use  PhysSelPython              v9r4     PhysSel # Juan Palacios
 
 use  PhysConf                   v1r22    Phys    # Patrick Koppenburg
 use  ProtoParticleFilter        v1r7p2   Phys    # Chris Jones
-use  DaVinciTools       	v23r8p1  Phys    # Juan Palacios
+use  DaVinciTools       	v23r9    Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r11    Phys    # Juan Palacios
 use  ParticleMaker      	v6r8     Phys    # Chris Jones
-use  VertexFit			v6r15p1  Phys    # Yuehong Xie
+use  VertexFit			v6r16    Phys    # Yuehong Xie
 use  LoKiFitters                v4r6     Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r15p1  Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2p3   Phys    # Juan Palacios
@@ -31,12 +31,12 @@ use  BBDecTreeTool              v1r6p2   Phys    # Mike Williams
 
 use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
 use  LoKiJets                   v6r8p2   Phys    # Vanya Belyaev, Victor Coco
-use  LoKiAlgo                   v9r8p2   Phys    # Vanya Belyaev
-use  LoKiArrayFunctors          v10r2    Phys    # Vanya Belyaev
-use  LoKiPhys                   v10r15   Phys    # Vanya Belyaev
+use  LoKiAlgo                   v9r8p3   Phys    # Vanya Belyaev
+use  LoKiArrayFunctors          v10r3    Phys    # Vanya Belyaev
+use  LoKiPhys                   v10r16   Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v2r1p3   Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
-use  LoKiTracks                 v2r8p4   Phys    # Vanya Belyaev
+use  LoKiTracks                 v2r9     Phys    # Vanya Belyaev
 use  KalmanFilter               v1r5     Phys    # Vanya Belyaev
 
 #===================================================================
@@ -53,7 +53,7 @@ use NeuroBayesTools             v1r2p3   Phys   # ???
 
 #===================================================================
 
-use  FlavourTagging             v13r2    Phys   # Stefania Vecchi
+use FlavourTagging              v13r3    Phys   # Stefania Vecchi
 
 #===================================================================
 
