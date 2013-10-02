@@ -7,6 +7,9 @@ Purpose: LHCb Digitization program
    . Updated VP reference
    . Updated VP_Compact_MicroChannel-UT-FT reference
 
+- Packaging changes
+   . Add missing __init__.py file for CMake
+
  - Configuration Changes
    . Incorporated pathUpgrade1.py code into Configuration for RichPmt
 
