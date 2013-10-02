@@ -3,7 +3,7 @@
 # Maintainer : Alessio Sarti
 #=========================================================================
 package           MuonMoniDigi 
-version           v2r8
+version           v2r8p1
 
 #=========================================================================
 # Structure, i.e. directories to process. 
