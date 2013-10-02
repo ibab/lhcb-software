@@ -23,18 +23,35 @@
 
 #include "EvtGenBase/EvtDecayIncoherent.hh"
 
-
 // MINT
 #include "Mint/IMintGen.h"
 #include "Mint/D_hhhh.h"
-
+// #include "Mint/counted_ptr.h"
+#include "Mint/EvtTRandom.h"
 
 class EvtParticle;
 
-class EvtDTohhhh:public  EvtDecayIncoherent  {
-
+namespace MINT {
+  class EvtRand : virtual public IEvtRandom
+  {
+   public: 
+    /// Standard constructor
+    EvtRand(); 
+    EvtRand(const MINT::EvtRand& other);
+    virtual ~EvtRand( );
+    virtual void SetSeed(unsigned int seed);
+    virtual unsigned int GetSeed() const;
+    virtual double Rndm(int i);
+  private:
+    unsigned int m_nCalls; // number of random numbers generated
+  };
+}
+    
+class EvtDTohhhh : public EvtDecayIncoherent 
+{
 public:
   EvtDTohhhh() {}
+  
   virtual ~EvtDTohhhh();
 
   std::string getName();
@@ -45,7 +62,7 @@ public:
 
 private:
   MINT::IMintGen* m_MintGen;
-
+  MINT::EvtTRandom* m_rnd;
 };
 
 #endif

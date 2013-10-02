@@ -4,6 +4,15 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2013-10-02 - Philip Hunt (LHCB)
+ - Added EvtRand class to EvtDTohhhh, which enables the MINT code to use
+   the EvtGen random number generator
+ - Added support for DCS K3pi models in EvtDTohhh
+ - Changed the order by which EvtDTohhhh searched for MINT model files
+   . $DECFILESROOT/MintData checked first
+   . $MINTROOT/Models checked second
+   . current directory used as a final check
+
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
 
