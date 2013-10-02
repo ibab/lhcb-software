@@ -4,6 +4,8 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform 
 !-----------------------------------------------------------------------------
 
+!========================= MVADictTools v1r1 2013-10-02 =========================
+
 ! 2012-09-29 - Sam Hall
  - Looks for .xml in local directory and then in a path, specifically
    TMVATRANSFORMPATH - if file is still not found an error is thrown.
