@@ -4,14 +4,16 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessories v3r1 2013-10-02 =========================
+
 ! 2013-09-27 - Victor Coco
- - fix the vertex associstion in PFJetMakerAlg.cpp
+ - Fix the vertex associstion in PFJetMakerAlg.cpp
 
 ! 2013-09-23 - Victor Coco
- - fix the JetMakerConfig.py : do not use BadPhotonMatchingT
+ - Fix the JetMakerConfig.py : do not use BadPhotonMatchingT
 
 ! 2013-09-02 - Cedric Potterat
- - adding MNF to the jet extra info
+ - Adding MNF to the jet extra info
 
 ! 2013-08-14 - Cedric Potterat
  - Remove ChargedInfMomentum from the default PFtypes to be used by JetMaker_Config.py
