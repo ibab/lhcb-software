@@ -1,3 +1,7 @@
+2013-10-02  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v4r15p1
+
 2013-10-02  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* reverted the changes in the behavior of getpack,
