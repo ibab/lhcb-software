@@ -4,6 +4,7 @@
 ! Purpose     : Configure the RICH digitisation simulation
 !-----------------------------------------------------------------------------
 
+!========================= RichDigiSys v1r3p1 2013-10-02 =========================
 ! 2013-10-02 - Marco Cattaneo
  - Add missing __init__.py file for CMake
 
