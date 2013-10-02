@@ -1,0 +1,54 @@
+# Suppressions file for valgrind
+
+{
+   ROOT : G__params::operator[](char)
+   Memcheck:Leak
+   fun:malloc
+   fun:_ZN9G__paramsixEc
+   fun:G__memfunc_para_setup
+}
+
+{
+   ROOT : G__malloc
+   Memcheck:Leak
+   fun:malloc
+   fun:G__malloc
+   fun:_Z16G__alloc_var_refIhPFl8G__valueEEviT0_PKcP12G__var_arrayiRS0_
+   fun:_ZL16G__allocvariable8G__valuePS_P12G__var_arrayS2_iiPKcPciRN4Cint19G__DataMemberHandleE
+   fun:_Z14G__letvariableR18G__FastAllocString8G__valueP12G__var_arrayS3_RN4Cint19G__DataMemberHandleE
+   fun:_Z14G__letvariableR18G__FastAllocString8G__valueP12G__var_arrayS3_
+   fun:G__getexpr
+   fun:G__set_stdio
+   fun:G__main
+   fun:G__init_cint
+   fun:_ZN5TCint8ResetAllEv
+}
+
+{
+   ROOT : G__search_tagname
+   Memcheck:Leak
+   fun:malloc
+   fun:G__search_tagname
+}
+
+{
+   ROOT : G__savestring
+   Memcheck:Leak
+   fun:malloc
+   fun:G__savestring
+}
+
+{
+   ROOT : G__tagtable_setup
+   Memcheck:Leak
+   ...
+   fun:G__tagtable_setup
+}
+
+{
+   SimpleProperty<bool, BoundedVerifier<bool> >::SimpleProperty(BoundedVerifier<bool>)
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN14SimplePropertyIb15BoundedVerifierIbEEC1ES1_
+}
+
