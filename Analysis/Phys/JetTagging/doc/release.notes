@@ -4,9 +4,11 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+!========================= JetTagging v1r2 2013-10-02 =========================
+
 ! 2013-08-15 - Cedric Potterat
- - add varaibles to LoKiTopoTagDir
- - adding a new MCPartig Truth tag
+ - Add variables to LoKiTopoTagDir.
+ - Adding a new MCParticle Truth tag.
 
 !========================= JetTagging v1r1p1 2013-06-13 =========================
 
