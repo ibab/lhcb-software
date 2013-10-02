@@ -4,6 +4,7 @@
 ! Purpose     : Algorithms for VL Digitization
 !-----------------------------------------------------------------------------
 
+!========================= VLDigitisation v1r5p1 2013-10-02 =========================
 ! 2013-09-26 - Marco Cattaneo
  - Remove extra ';' to fix CMake warnings
 
