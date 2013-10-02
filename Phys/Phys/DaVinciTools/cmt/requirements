@@ -2,7 +2,7 @@
 # Maintainer : P. Koppenburg, J. Palacios
 
 package           DaVinciTools
-version           v23r8p1
+version           v23r9
 
 # Structure, i.e. directories to process. 
 #============================================================================
