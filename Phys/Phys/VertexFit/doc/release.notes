@@ -4,6 +4,8 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+!========================= VertexFit v6r16 2013-10-02 =========================
+
 ! 2013-10-01 - Chris Jones
  - Add some protection in OfflineVertexFitter::classify against being passed
    a NULL Particle pointer.
