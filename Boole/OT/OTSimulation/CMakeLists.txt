@@ -1,7 +1,7 @@
 ################################################################################
 # Package: OTSimulation
 ################################################################################
-gaudi_subdir(OTSimulation v5r5)
+gaudi_subdir(OTSimulation v5r5p1)
 
 gaudi_depends_on_subdirs(Det/OTDet
                          Event/MCEvent
