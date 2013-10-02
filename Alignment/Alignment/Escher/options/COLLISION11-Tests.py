@@ -12,11 +12,11 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 #-- Use latest 2011 database tags for real data
 Escher().DataType = "2011"
 Escher().InputType  = "MDF"
+Escher().DDDBtag = 'dddb-20130503'
+Escher().CondDBtag = 'cond-20130522'
 
 # Events from run 87968 from fill 1647, on 24th March 2011
-EventSelector().Input = [
-  "DATAFILE='mdf:srm://srm-lhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/EXPRESS/LHCb/COLLISION11/87968/087968_0000000001.raw?svcClass=lhcbdisk' SVC='LHCb::MDFSelector'"
-    ]
-EventSelector().Input = [
-  "DATAFILE='mdf:srm://srm-lhcb.cern.ch//castor/cern.ch/grid/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97121/097121_0000000003.raw?svcClass=lhcbdisk' SVC='LHCb::MDFSelector'"
-    ]
+from GaudiConf import IOHelper
+IOHelper('MDF').inputFiles([
+    "mdf:root://eoslhcb.cern.ch//eos/lhcb/freezer/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11/97121/097121_0000000003.raw"
+    ], clear=True)

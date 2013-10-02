@@ -16,8 +16,8 @@ theApp.EvtMax = 20000
 theApp.DatasetName = 'AlignHltD0'
 
 # COND DB
-theApp.DDDBtag = 'dddb-20120831'
-theApp.CondDBtag = 'cond-20130114'
+theApp.DDDBtag = 'dddb-20130503-1'
+theApp.CondDBtag = 'cond-20130710'
 
 # specify the input to the alignment
 from Configurables import TAlignment

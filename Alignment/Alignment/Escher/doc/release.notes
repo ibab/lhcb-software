@@ -6,6 +6,9 @@ Purpose : Gaudi application used to perform
 
 </PRE><H1><A NAME=v4r14>2013-01-14 Escher v4r14</A></H1><PRE>
 
+! 2013-10-02 - Maurizio Martinelli
+ - Updated Collision 11 and 12 test files
+
 ! 2013-01-18 - Rob Lambert
  - Update QM and configurables testz with new stack
 
