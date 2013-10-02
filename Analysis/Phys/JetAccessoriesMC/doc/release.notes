@@ -4,12 +4,16 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
-!========================= JetAccessoriesMC v2r3p1 2013-06-13 =========================
+!========================= JetAccessoriesMC v2r4 2013-10-02 =========================
 
 ! 2013-09-25 - Cedric Potterat
- - Move MCJetMakerAlg.cpp to HEPMCJetMakerAlg.cpp (this is for jets from HEPGenParticles - called from HEPMCJetMakerConf)
- - Create a new MCJetMakerAlg.cpp (this is for jets from MCParticles - called from  MCJetMakerConf)
-   It recreates Stable HEPGenParticles with the MCParticles and creates jets of of them
+ - Move MCJetMakerAlg.cpp to HEPMCJetMakerAlg.cpp (this is for jets from HEPGenParticles
+   called from HEPMCJetMakerConf).
+ - Create a new MCJetMakerAlg.cpp (this is for jets from MCParticles - called from
+   MCJetMakerConf. It recreates Stable HEPGenParticles with the MCParticles and creates
+   jets of of them.
+
+!========================= JetAccessoriesMC v2r3p1 2013-06-13 =========================
 
 ! 2013-06-12 - Chris Jones
  - Remove various unused typedefs (gcc 4.8 warnings).
