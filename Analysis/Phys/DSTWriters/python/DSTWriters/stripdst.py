@@ -19,7 +19,7 @@ from microdstelements import ( CloneParticleTrees,
                                PrintTESContents,
                                FindDuplicates )
 
-def stripDSTElements(pack=True) :
+def stripDSTElements(pack=True, stripPrefix = 'Strip' ) :
     elements = [ FindDuplicates(),
                  CloneParticleTrees( TESVetoList = ["/Event/Rec/ProtoP/Charged",
                                                     "/Event/Rec/ProtoP/Neutrals",
@@ -37,20 +37,31 @@ def stripDSTElements(pack=True) :
                                    RecVertexCloner = "VertexBaseFromRecVertexCloner" )
                  ]
     if pack :
-        elements += [ PackStrippingReports(),
-                      PackParticlesAndVertices(),
+        if isinstance(stripPrefix, list) : 
+          for p in stripPrefix : 
+            elements += [ PackStrippingReports( prefix = p ) ] 
+        else : 
+          elements += [ PackStrippingReports( prefix = stripPrefix ) ]
+        elements += [ PackParticlesAndVertices(),
                       PackRecObjects(),
                       CleanEmptyEventNodes() ]
         #elements += [ PrintTESContents() ] # For debugging
     return elements
 
 def stripDSTStreamConf( pack = True,
-                        vetoItems = [ ] ) :
+                        vetoItems = [ ], 
+                        stripPrefix = 'Strip' ) :
     eItems = [ '/Event/DAQ/RawEvent#1' ] # For backwards compatibility with sDSTs
+    phys = 'Phys'
     if pack :
-        eItems += [ '/Event/Strip/pPhys/DecReports#1' ]
-    else :
-        eItems += [ '/Event/Strip/Phys/DecReports#1' ]
+      phys = 'pPhys'
+    
+    if isinstance(stripPrefix, list) : 
+      for p in stripPrefix : 
+        eItems += [ '/Event/%s/%s/DecReports#1' % (p, phys) ]
+    else : 
+      eItems += [ '/Event/%s/%s/DecReports#1' % (stripPrefix, phys) ]
+
     return OutputStreamConf( streamType = InputCopyStream,
                              extraItems = eItems,
                              vetoItems  = vetoItems )

@@ -4,6 +4,10 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2013-10-02 - Anton Poluektov 
+ - Modify stripdst.py and microdstelements.py to enable writing several 
+   stripping DecReports
+
 !========================= DSTWriters v4r11 2013-08-26 =========================
 
 ! 2013-08-24 - Chris Jones

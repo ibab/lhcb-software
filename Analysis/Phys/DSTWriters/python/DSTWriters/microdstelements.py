@@ -416,11 +416,14 @@ class PackStrippingReports(MicroDSTElement) :
     """
     Configurable to pack Stripping reports
     """
+    def __init__(self, prefix = 'Strip') : 
+        self.prefix = prefix
+    
     def __call__(self, sel):
         from Configurables import PackDecReport
-        packer = PackDecReport( name = "PackFullStripReps",
-                                InputName   = "Strip/Phys/DecReports",
-                                OutputName  = "Strip/pPhys/DecReports",
+        packer = PackDecReport( name = "PackFull%sReps" % self.prefix,
+                                InputName   = "%s/Phys/DecReports" % self.prefix,
+                                OutputName  = "%s/pPhys/DecReports" % self.prefix,
                                 DeleteInput = True )
         return [packer]
 
