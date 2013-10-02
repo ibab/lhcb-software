@@ -1,3 +1,8 @@
+2013-10-02  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* reverted the changes in the behavior of getpack,
+	see https://its.cern.ch/jira/browse/LBCORE-267
+
 2013-09-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: fixed LBCORE-268
