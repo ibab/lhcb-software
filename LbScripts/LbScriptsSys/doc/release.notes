@@ -1,3 +1,25 @@
+2013-10-02 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v7r9p1
+
+	LbConfiguration
+	* python/LbConfiguration/Repository.py: restored the old default protocol,
+	see https://its.cern.ch/jira/browse/LBCORE-267
+
+	LbRelease
+	* reverted the changes in the behavior of getpack,
+	see https://its.cern.ch/jira/browse/LBCORE-267
+	* python/LbRelease/GetPack.py: fixed LBCORE-268
+	* scripts/lb-project-create-volume: New script to replace mkproject -a n
+	
+	LbUtils	
+	* scripts/cern-lxdistcc-wrappers.sh: changed gcc support version for clang 3.3
+	* scripts/cern-lxdistcc-wrappers.sh: improved wrapper script for gfortran
+  * scripts/lcg-*: added links for gfortran, for gcc 4.8.1 and for clang 3.3
+
+	LbLegacy
+	* python/LbLegacy/install_project.py:  release of LbScripts version v7r9p1
+
 2013-09-20 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r9
