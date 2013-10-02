@@ -5,19 +5,19 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiArrayFunctors v10r3 2013-10-02 =========================
+
 ! 2013-08-08 Sebastian Neubert
- - Added DictValue tool which implements IParticleValue to return the value of a dictionary
-   entry for a given key.
-   Intended for use with the VALUE functor
+ - Added DictValue tool which implements IParticleValue to return the value of a
+   dictionary entry for a given key. Intended for use with the VALUE functor.
 
 ! 2013-08-06 Sebastian Neubert
- - small fix: replaced endmsg with std::endl in DummyTransform
+ - Small fix: replaced endmsg with std::endl in DummyTransform.
 
 ! 2013-08-02 Sebastian Neubert
- - simplified the DictTransform policy to use 
+ - Simplified the DictTransform policy to use 
    std::ostream instead of MsgStream to make dependencies lighter
-   and enable easy unit testing of the policy classes
-
+   and enable easy unit testing of the policy classes.
 
 !========================= LoKiArrayFunctors v10r2 2013-08-01 =========================
 
