@@ -4,9 +4,18 @@
   <argument name="args"><set>
     <text>$BOOLEROOT/tests/options/testBoole-defaults.py</text>
     <text>$APPCONFIGOPTS/Boole/DataType-2011.py</text>
-    <text>--option</text>
-    <text>from Boole.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20110914"; LHCbApp().CondDBtag="sim-20111020-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2011/XDST/00012935/0000/00012935_00000827_3.xdst'"]; Boole().SiG4EnergyDeposit=True</text>
     </set></argument>
+<argument name="options"><text>
+# this line is needed until Gaudi v23r10
+from Gaudi.Configuration import*
+
+from Boole.Configuration import *
+from Configurables import LHCbApp
+LHCbApp().DDDBtag="head-20110914"
+LHCbApp().CondDBtag="sim-20111020-vc-md100"
+EventSelector().Input = ["DATAFILE='PFN:root://eoslhcb.cern.ch//eos/lhcb/swtest/lhcb/MC/2011/XDST/00012935/0000/00012935_00000827_3.xdst' SVC='Gaudi::RootEvtSelector' OPT='READ'"]
+Boole().SiG4EnergyDeposit=True
+</text></argument>
   <argument name="reference"><text>../refs/boole-mc11a-xdst.ref</text></argument>
   <argument name="validator"><text>
 from Boole.QMTest.BooleExclusions import preprocessor

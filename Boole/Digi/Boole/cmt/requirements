@@ -1,6 +1,6 @@
 package           Boole
-version           v26r7
-# Remember to change version also in ../job/valgrind.py, ../job/Boole_Ganga.py
+version           v26r8
+# Remember to change version also in ../job/valgrind.job, ../job/Boole_Ganga.py
 #                                    ../CMakeLists.txt
 
 branches doc cmt job options
@@ -14,6 +14,7 @@ use GaudiKernel        v*
 
 # Packages needed to resolve external dependencies at run time
 use Python             v*    LCG_Interfaces -no_auto_imports
+use RELAX              v*    LCG_Interfaces -no_auto_imports
 
 # Databases
 use DDDB               v*    Det    -no_auto_imports
