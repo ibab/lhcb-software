@@ -54,8 +54,6 @@ protected:
 
   bool m_statusOnTES;      ///< Flag to activate the writing of the decoding status on the TES
   bool m_useRootInTES;     ///< Flag to use RootInTES in the raw bank location 
-  
-private:
 
 };
 #endif // L0FROMRAWBASE_H

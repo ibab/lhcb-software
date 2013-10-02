@@ -19,7 +19,8 @@
 //=============================================================================
 L0FromRawBase::L0FromRawBase( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_statusOnTES  ( true )
 {
   m_rawEventLocations.push_back( LHCb::RawEventLocation::Trigger );
   m_rawEventLocations.push_back( LHCb::RawEventLocation::Default );
