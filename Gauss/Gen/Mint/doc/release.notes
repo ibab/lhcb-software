@@ -6,6 +6,16 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 2013-10-02 - Philip Hunt (LHCB)
+ - Added the EvtTRandom class, which inherits from TRandom and allows the
+   EvtGen-MINT generator to use the EvtGen random number generator
+  . Takes as a constructor argument an IEvtRandom object, which is implemented
+    in the EvtGenExtras package
+ - Modified IMintGen::Initialize to accept a TRandom as an argument
+ - Modified some of the MintGen methods
+  . Initialize now has the ability to set the random number generator of the
+    SignalGenerator 
+  . Fixed typo in one of the method names ("getDaugtherMom"->"getDaughterMom")
 
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.

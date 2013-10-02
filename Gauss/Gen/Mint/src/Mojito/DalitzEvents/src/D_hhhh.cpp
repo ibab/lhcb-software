@@ -11,7 +11,9 @@
 #include <iostream>
 
 //ROOT
-#include "TRandom3.h"
+//#include "TRandom3.h"
+#include "TRandom.h"
+#include "TVector3.h"
 
 //MINT
 #include "Mint/SignalGenerator.h"
@@ -39,7 +41,7 @@ void MintGen::SetInputTextFile(std::string inputFile)
 }
 
 
-std::vector<double> MintGen::getDaugtherMom(IDalitzEvent* dE, int daughter)
+std::vector<double> MintGen::getDaughterMom(IDalitzEvent* dE, int daughter)
 {
 	std::vector<double> DaughterMom;
 	DaughterMom.push_back(dE->p(daughter).T()/1000);
@@ -51,7 +53,7 @@ std::vector<double> MintGen::getDaugtherMom(IDalitzEvent* dE, int daughter)
 }
 
 
-void MintGen::Initalize(const std::vector<int> &patternVec)
+void MintGen::Initalize(const std::vector<int> &patternVec, TRandom* rnd)
 {
 	m_swap = false;
 	std::cout <<"m_inputFileName " << m_inputFileName << std::endl;
@@ -90,7 +92,7 @@ void MintGen::Initalize(const std::vector<int> &patternVec)
 
 //	std::cout << " Text input event pattern: " << pdg_text << std::endl;
 
-	m_sg = new SignalGenerator(pdg);
+	m_sg = new SignalGenerator(pdg, rnd);
 }
 
 std::vector<std::vector<double> > MintGen::DecayEventRFVec()
@@ -99,18 +101,15 @@ std::vector<std::vector<double> > MintGen::DecayEventRFVec()
 
 
 	IDalitzEvent* dE = newEvt.get();
-
+  
 	std::vector<std::vector<double> > daughters;
 
 	// Loop over 4 daughters
 	// Start at 1 as 0 is the mother particles
 	for (int i = 1; i < 5; i++)
 	{
-		std::vector<double> DaughterMom = this->getDaugtherMom(dE,i);
+		std::vector<double> DaughterMom = this->getDaughterMom(dE,i);
 		daughters.push_back(DaughterMom);
 	}
 	return daughters;
 }
-
-
-

@@ -12,20 +12,23 @@
 
 //C++
 #include <string>
-#include <iostream>
+// #include <iostream>
 #include <vector>
 
 //MINT
-#include "Mint/SignalGenerator.h"
+//#include "Mint/SignalGenerator.h"
 #include "Mint/IDalitzEvent.h"
 #include "Mint/IMintGen.h"
 
 //ROOT
-#include "TVector3.h"
-#include "TRandom2.h"
-#include "TRandom3.h"
-#include <ctime>
+// #include "TVector3.h"
+// #include "TRandom2.h"
+// #include "TRandom3.h"
+#include "TRandom.h"
+// #include <ctime>
 
+class TVector3;
+class SignalGenerator;
 
 namespace MINT {
 	class MintGen : virtual public IMintGen{
@@ -33,14 +36,15 @@ namespace MINT {
 		MintGen();
 		virtual ~MintGen();
 
-		void Initalize(const std::vector<int>&);
+		void Initalize(const std::vector<int>& pat,
+                    TRandom* rnd=gRandom);
 
 		void SetInputTextFile(std::string inputFile);
 
 		// Decay Event in parent Rest Frame
 		std::vector<std::vector<double> > DecayEventRFVec();
 
-		std::vector<double> getDaugtherMom(IDalitzEvent* , int );
+		std::vector<double> getDaughterMom(IDalitzEvent* , int );
 
 		//DalitzEvent
 		void SetDalitzEvent(IDalitzEvent*);
