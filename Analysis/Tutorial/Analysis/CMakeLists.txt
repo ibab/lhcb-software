@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Analysis
 ################################################################################
-gaudi_subdir(Analysis v10r5)
+gaudi_subdir(Analysis v10r6)
 
 gaudi_depends_on_subdirs(Phys/DaVinciKernel
                          Phys/DaVinciMCKernel)
