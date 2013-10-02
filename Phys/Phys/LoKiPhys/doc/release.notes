@@ -5,15 +5,17 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiPhys v10r16 2013-10-02 =========================
+
 ! 2013-09-30 - Pieter David
  - Decays::Exclusive (and derived): make sure the cache is emptied
-   when no match is found
+   when no match is found.
 
 ! 2013-08-08 Sebastian Neubert
  - Added VALUE functor. Simple adapter to IParticleValue tools
-   Receives a Particle; Returns a double 
+   Receives a Particle; Returns a double. 
    First example application: cut on MVA classifier response through a 
-   DictValue tool (see package MVADictTools)
+   DictValue tool (see package MVADictTools).
 
 !========================= LoKiPhys v10r15 2013-06-13 =========================
 
