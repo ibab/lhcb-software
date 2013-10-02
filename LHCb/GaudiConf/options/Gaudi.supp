@@ -470,3 +470,40 @@
   fun:_ZN10DataObject7releaseEv
   fun:_ZN14DataSvcHelpers13RegistryEntryD0Ev
 }
+
+# To supress warnings when accessing data via XRootD
+
+{
+   libcrypto : uninitialised Conditional
+   Memcheck:Cond
+   ...
+   obj:/usr/lib64/libcrypto*
+}
+
+{
+   libcrypto : uninitialised Value8
+   Memcheck:Value8
+   ...
+   obj:/usr/lib64/libcrypto*
+}
+
+{
+   RSA_check_key : uninitialised Conditional
+   Memcheck:Cond
+   ...
+   fun:RSA_check_key
+}
+
+{
+   bn_mul_mont : uninitialised Value8
+   Memcheck:Value8
+   fun:bn_mul_mont
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
