@@ -1,3 +1,7 @@
+2013-10-02  Ben Couturier  <ben.couturier@cern.ch>
+
+	* cmt/requirements: release of version v3r15p1
+
 2013-09-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/cern-lxdistcc-wrappers.sh: changed gcc support version for clang 3.3
@@ -7,7 +11,7 @@
 	* scripts/cern-lxdistcc-wrappers.sh: improved wrapper script for gfortran
         * scripts/lcg-*: added links for gfortran, for gcc 4.8.1 and for clang 3.3
 
-2013-07-24  Ben Couturier  <ben.couturier@cern.ch>
+2013-09-24  Ben Couturier  <ben.couturier@cern.ch>
 
 	* cmt/requirements: release of version v3r15
 
