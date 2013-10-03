@@ -3,6 +3,67 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v44r7>2013-10-04 Brunel v44r7</A></H1><PRE>
+This version uses projects LCG 66, Gaudi v23r10, LHCb v36r2, Lbcom v14r2,
+ Rec v15r2 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Development release
+
+- Platform support
+  . Support for x86_64-slc6-gcc47 removed, replaced by x86_64-slc6-gcc48
+
+- New functionality
+  . Fix problems when running without M1, no M1 configuration now fully
+    supported (MuonID v9r7)
+  . Support for new VP sensor description and reorganisation of VP detector
+    description (LHCbKernel v14r3, VPDet v2r3, VPDAQ v2r4, Lbcom+Rec packages) 
+  . Add VPDigit raw bank decoding (DAQEvent v9r13, VPDAQ v2r4)
+  . Add cheated PR for VP detector (PrMCTools v1r6)
+  . Add support for Rich reconstruction with PMTs in Upgrade 
+    (RichRecPhotonTools v1r12, RichRecTools v2r24, RichDet v6r19)
+
+- New tuning
+  . Split polynomial fit function for velo + VP (PrMCTools v1r6)
+  . Introduced a scalefactor for the pixel signal calculation so that one can 
+    give different weights to Rich2 signals compared to Rich1 signals for 
+    example. This is applied only in the case of PMTs (RichRecPhotonTools v1r12)
+  . VP tracks fit on multiple scattering model, instead of a straight line,
+    improves hit efficiency (and IP resolution as a result) (PatPixel v1r2)
+  . Removed MC09 specific tuning (TrackSys v7r12) 
+  . Update default database tags to the latest ones (DDDB v1r64)
+    o LHCBCOND, 2013, 2012      : cond-20130710
+    o LHCBCOND,             2011: cond-20130522
+    o DDDB,     2013, 2012      : head-20130503-1
+    o DDDB,                 2011: head-20130503
+  
+- Bug fixes
+  . Fix bug in TimeAccounting.cpp to avoid writing multiple timeSpanFSRs when
+    processing more than one input file (LumiAlgs v8r2, LumiEvent v3r5)
+  . Fix bug in PatSeedingTool which disabled protection against hot events 
+    in the OT when disabling protection against hot events in IT
+    (PatAlgorithms v4r28)
+  . Fix for wrong z position of FibreMat in DeFTFibreMat.cpp (FTDet v2r3, v2r3p1)
+
+- Performance optimisation
+  . Move some calculations from the event loop to initialize()
+    (RichRecPhotonTools v1r12)
+  . Use vdt::fast_exp in PhotonSignalGaussProb (RichRecPhotonTools v1r12)
+  . Import some Upgrade specific tunings and tweeks (RichRecSys v4r8)
+  . Remove unnecessary repeated accesses to TES from inside a loop in
+    VeloTrackMonitor.cpp (VeloRecMonitors v2r27)
+  
+- Monitoring changes
+  . Add some specific tuning options for DataType="Upgrade". Currently just
+    disables the use of Aerogel (RichRecQC v2r63)
+  . Add AlignmentOnlineMonitor to default sequence. Produces residual plots to
+    check the alignment in OnlineBrunel (TrackMonitors v1r46)
+
+- Changes to QMTests:
+  . Add brunel-upgrade-calo_nospdprs to tests
+    o Added relevant options to $BRUNELROOT/tests/options
+    o Test will fail until problem is fixed.
+  . Fix a bug in the exclusions file, introduced in v44r5, that meant that
+    comparisons with reference were always successful.
 
 </PRE><H1><A NAME=v44r6>2013-07-26 Brunel v44r6</A></H1><PRE>
 This version uses projects LCG 65a, Gaudi v23r9, LHCb v36r1, Lbcom v14r1,
@@ -29,7 +90,6 @@ This version uses projects LCG 65a, Gaudi v23r9, LHCb v36r1, Lbcom v14r1,
     (RichDet v16r18, RichRecPhotonTools v1r11)
   . Remove empty finalize methods (CaloMoniDst v5r14, MuonID v9r6, 
      MuonTrackAlign v1r10, MuonTrackMonitor v2r8, rackMonitors v1r45, VPDAQ v2r3)
-  . Remove empty finalize methods
   . Reduce calls to phiOfStrip by pre-calculating R sector of each Phi hit
     (PrVL v1r4)
 

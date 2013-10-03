@@ -1,5 +1,5 @@
 package           BrunelSys
-version           v44r6
+version           v44r7
 
 branches cmt doc tests
  
@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v44r6 Rec
+use Brunel v44r7 Rec
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
@@ -20,4 +20,3 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use FTDet v2r2 Det
