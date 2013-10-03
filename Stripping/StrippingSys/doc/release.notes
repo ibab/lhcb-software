@@ -3,6 +3,21 @@ Package     : StrippingSys
 Package Coordinator : l.carson@imperial.ac.uk, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v7r2 2013-10-03 =========================
+
+* Version for future development. Contains Stripping packages as used in incremental
+  stripping 20rXp2.
+
+* Phys/CommonParticles
+  - Widen mass window of StdMassConstrainedJPsi
+
+* Phys/StrippingSelections and Phys/StrippingSettings
+  - Many changes for S20rXp2
+  - Downgrade "new configuration" msgs from WARNING to DEBUG
+
+* Phys/StrippingArchive 
+  - Add archive for S20rXp2
+
 !========================= StrippingSys v7r1 2013-08-02 =========================
 
 * Version for future development
