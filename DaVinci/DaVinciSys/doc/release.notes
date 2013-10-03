@@ -36,7 +36,7 @@ MVADictTools :-
 
 New packages : CommonMCParticles, IncTopoVert
 
-Changed Packages :- DaVinciTests
+Changed Packages : DaVinciTests
 
 In DaVinciTests :
  . Update Stripping20rXp2 references now AppConfig options are available.
