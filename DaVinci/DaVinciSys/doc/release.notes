@@ -3,6 +3,57 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v33r7>2013-10-03 DaVinci v33r7</A></H1><PRE>
+
+New development release based on the LHCb v36r2 stack.
+
+Executive Summary of notable Phys and Analysis changes :-
+
+FlavourTagging :-
+ . Move from Analysis to Phys project (for Stripping dependency).
+ . Add some code to run MC12 Reco14 with calibrated mistag
+   affects: Tagger*Tool.*, NNet_MLP.* INNetTool.h
+
+VertexFit :-
+ . Add some protection in OfflineVertexFitter::classify against being passed
+   a NULL Particle pointer.
+ . Add protection to AdaptivePVReFitter for NULL pointers.
+
+DaVinciTools :-
+ . Addition of ConeJetProxy tool which vectorially sums up tracks
+   and neutral momenta in a cone around a candidate.
+ . Add a new algorithm PrintDuplicates to search for and print possible
+   duplicate decays.
+
+DSTWriters :-
+ . Add Duplicates check to (u)DST stream elements.
+
+DecayTreeTuple :-
+ . New version of TupleToolVtxIsoln that makes use of the VertexIsolation tool.
+
+MVADictTools :-
+ . Various updates. See package release notes.
+
+New packages : CommonMCParticles, IncTopoVert
+
+Changed Packages :- DaVinciTests
+
+In DaVinciTests :
+ . Update Stripping20rXp2 references now AppConfig options are available.
+ . Add exclusions for "Trying to import module StrippingArchive.Stripping..."
+   messages.
+ . Increase timeouts (again) for stripping(20/20r1) tests to accomodate the
+   slow debug builds...
+ . Update reference block for the commonparticles standardintermediate_run 
+   test to account for changes in StdMassConstrainedJpsi2MuMu.
+ . Add messages starting 'DaVinciInitAlg.DaVinciMemory' to the exclusion list.
+ . Remove hardcoded DB tags from stripping tests, to allow them to again run
+   with whatever is the current 'best'.
+ . Add new tests for Stripping20rXp2.
+ . Updated reference file tagging.qms/test_tag_mc12.qmt according to the change 
+   in FT/python/FT/Tunings.py in NNetSSK tuning.
+ . Update DecayTreeTuple test to adapt to new LoKi decay finder syntax.
+
 </PRE><H1><A NAME=v33r6p1>2013-08-21 DaVinci v33r6p1</A></H1><PRE>
 
 New development patch release built on top of DaVinci v33r6.
