@@ -4,6 +4,11 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2013-10-03 - Gloria Corti
+ - Put v1r* in version of LHAPDFSet to be used
+ - Change version of herwigpp from 2.6.1a to 2.6.1b as this version of GENSER
+   will only be used by Gauss >= v46r5 and not for Sim08
+
 ! 2013-09-24 - Marco Clemencic
  - Added missing piece to CMake configuration.
 
@@ -29,7 +34,7 @@
 
 !========================= GENSER v12r6g1 2013-07-24 =========================
 ! 2013-07-24 - Gloria Corti
- - Identical to v12r4 but with 'g1' tag to allow to pick up the generators
+ - Identical to v12r6 but with 'g1' tag to allow to pick up the generators
    distributions from the MCGenerators_lcgcmt65a area as needed by LHCB v36r1
    and Gaudi v23r9
 
