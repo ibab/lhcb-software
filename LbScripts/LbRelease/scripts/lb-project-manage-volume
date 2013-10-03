@@ -15,7 +15,8 @@ from LbUtils.afs.volume import Volume
 from LbLegacy.Utils import getStatusOutput
 
 class AfsManageProjectVolume(Script):
-    """ Main scripts class to check the applications used by DIRAC """
+    """ Script to manage LHCb AFS project volumes. It allows locking/unlocking but  also
+        can add the NOT_READY file needed to hide the project from SetupProject."""
 
     def defineOpts(self):
         """ Script specific options """
