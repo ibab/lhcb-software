@@ -1,6 +1,7 @@
 package           Brunel
-# Remember to update the version also in job/valgrind.job, job/Brunel_Ganga.py
-version           v44r5
+# Remember to update the version also in CMakeLists.txt, job/valgrind.job,
+#                                                        job/Brunel_Ganga.py
+version           v44r7
 
 branches doc cmt job options
 
