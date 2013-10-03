@@ -3,7 +3,46 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v26r7>2013-07-25 Boole v26r7</A></H1><PRE>
+</PRE><H1><A NAME=v26r8>2013-10-03 Boole v26r8</A></H1><PRE>
+This version uses projects LCGCMT 65a, Gaudi v23r10, LHCb v36r2, Lbcom v14r2
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+ - Platform support
+   . Support for x86_64-slc6-gcc47 removed, replaced by x86_64-slc6-gcc48
+
+ - Configuration Changes
+   . Incorporated pathUpgrade1.py code into Configuration for RichPmt
+   . Updated VP digitisation sequence
+
+ - New functionality
+   . Adaptation for using large PMTs in RICH2 (RichDet v6r19)
+   . Support for new VP sensor description and reorganisation of VP detector
+     description (LHCbKernel v14r3, VPDet v2r3, VPDAQ v2r4, BooleUMC v2r3,
+     VPTools v2r2, VPDigitisation v1r0)
+   . Added VPDigit raw bank encoding and decoding (DAQEvent v9r13, VPDAQ v2r4)
+   . New implementation of VP Deposit and Digit creation (VPDigitisation v1r0)
+   . Fixed irradiation diffusion parameter (VPDigitisation v1r0)
+   . Support DB mapping of UT board vs TELL1 ID (STDAQ v4r3, STKernel v2r13)
+
+ - Bug fixes
+   . Several fixes to FT geometry (FTDet v2r1 to v2r3p1)
+
+ - Packaging changes
+   . VPAlgorithms package moved to Lbcom. Boole specific classes moved to new
+     VPDigitisation package.
+   . Added missing dependency on RELAX, to locate Reflex dictionaries
+
+ - Code cleanups
+   . Fix CMake warnings (BcmDigi v1r2p1, CaloDigit v3r4p1, CaloMoniDigi v2r6p1,
+     Boole v26r8, BooleUMC v2r3, FTDigitisation v1r6, MuonMoniDigi v2r8p1, 
+     OTSimulation v5r5p1, RichDigiSys v1r3p1, VLDigitisation v1r5p1,
+     VPAssociators v2r3p1, VPDigitisation v2r2p1)
+   . Fix gcc48 warnings (FTDigitisation v1r6, VPDigitisation v1r0)
+
+ - QMTest Changes
+   . Updated mc11a-xdst test to use input file from EOS
+
+<</PRE><H1><A NAME=v26r7>2013-07-25 Boole v26r7</A></H1><PRE>
 This version uses projects LCGCMT 65a, Gaudi v23r9, LHCb v36r1, Lbcom v14r1
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
