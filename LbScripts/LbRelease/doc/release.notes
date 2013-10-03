@@ -1,3 +1,7 @@
+2013-10-03  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* scripts/lb-project-manage-volume: New script to manage LHCb AFS volumes 
+
 2013-10-02  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v4r15p1

@@ -1,0 +1,202 @@
+#!/usr/bin/env python
+"""
+A script to create an AFS volume
+
+"""
+import logging
+import os
+import sys
+
+from LbConfiguration.Project import getProject
+from LbLegacy.vol_for_releases import create_volume
+from LbUtils.Script import Script
+from LbUtils.afs.directory import Directory
+from LbUtils.afs.volume import Volume
+from LbLegacy.Utils import getStatusOutput
+
+class AfsManageProjectVolume(Script):
+    """ Main scripts class to check the applications used by DIRAC """
+
+    def defineOpts(self):
+        """ Script specific options """
+        parser = self.parser
+        parser.add_option("-d",
+                          dest = "debug",
+                          action = "store_true",
+                          help = "Display debug output")
+
+        parser.add_option("-c",
+                          dest = "create",
+                          action = "store_true",
+                          help = "Creates the volume")
+
+        parser.add_option("-l",
+                          dest = "lock",
+                          action = "store_true",
+                          help = "Locks the volume (the AFS acls)")
+
+        parser.add_option("-u",
+                          dest = "unlock",
+                          action = "store_true",
+                          help = "Unlocks the volume  (the AFS acls)")
+
+        parser.add_option("-r",
+                          dest = "release",
+                          action = "store_true",
+                          help = "Release the volume (Make world readable and adds NOT_READY file")
+
+        parser.add_option("-n",
+                          dest = "unrelease",
+                          action = "store_true",
+                          help = "Hides the volume by adding the NOT_READY, unlocking first if necessary")
+
+
+    def main(self):
+        """   Parse the arguments and start the actual method """
+        # parse the args
+        self.log = logging.getLogger()
+        opts = self.options
+        args = self.args
+        if opts.debug:
+            self.log.setLevel(logging.DEBUG)
+        else:
+            self.log.setLevel(logging.WARNING)
+
+
+        if len(args) != 2:
+            self.log.error("Please specify project name and version")
+            exit(1)
+
+        projectNameCmd   = args[0]
+        version   = args[1]
+
+        # Validate the project name
+        project = getProject(projectNameCmd, True)
+        if project == None:
+            self.log.error("Could not find project: %s" % projectNameCmd)
+            sys.exit(1)
+
+        if not (opts.create or  opts.unlock or opts.release or opts.unrelease or opts.lock ):
+            self.log.error("Please specify at leat one action")
+            sys.exit(1)
+
+        if opts.create:
+            self.log.info("Creating volume for %s %s" % (projectNameCmd, version))
+            if self._createVolume(project, version) > 0:
+                return 1
+
+        if opts.unlock:
+            self.log.info("Unlocking volume for %s %s" % (projectNameCmd, version))
+            if self._unlockVolume(project, version) > 0:
+                return 1
+
+        if opts.release:
+            self.log.info("Releasing volume for %s %s" % (projectNameCmd, version))
+            if self._releaseVolume(project, version) > 0:
+                return 1
+
+        if opts.unrelease:
+            self.log.info("Unreleasing volume for %s %s" % (projectNameCmd, version))
+            if self._createNotReady(project, version) > 0:
+                return 1
+
+        if opts.lock:
+            self.log.info("Locking volume for %s %s" % (projectNameCmd, version))
+            if self._lockVolume(project, version) > 0:
+                return 1
+
+        # Now for the actual method
+        #return self._createVolume(project, version)
+
+    def _createVolume(self, project, version):
+        """ Create the AFS Volume """
+        pname = project.Name()
+
+        # Creating the volume itself
+        create_volume(pname, version)
+
+        # Checking that the directory exists
+        releasedir = os.path.join(project.ReleaseArea(), project.releasePrefix(version))
+        if os.path.exists(releasedir):
+            self._createNotReady(project, version)
+            return 0
+        else:
+            return 1
+
+    def _releaseVolume(self, project, version):
+        """ Release the volume so that users can start using it """
+
+        self.log.info('Making the release area public')
+
+        # First remove the not ready file
+        self._deleteNotReady(project, version)
+
+        releasedir = os.path.join(project.ReleaseArea(), project.releasePrefix(version))
+        str = 'find %s -noleaf -type d -exec fs setacl {} system:anyuser rl \;' % releasedir
+        self.log.debug("Running command: %s" % str)
+        status, output = getStatusOutput(str)
+        self.log.info('status = %s' % status)
+        return status
+
+
+    def _lockVolume(self, project, version):
+        """ Locks the AFS volume """
+        afs_dir_path = os.path.join(project.ReleaseArea(), project.releasePrefix(version))
+        self.log.info("Locking path: %s" % afs_dir_path)
+        afs_vol = Volume(dirname=afs_dir_path)
+        return afs_vol.lock()
+
+    def _unlockVolume(self, project, version):
+        afs_dir_path = os.path.join(project.ReleaseArea(), project.releasePrefix(version))
+        self.log.info("Unlocking path: %s" % afs_dir_path)
+        afs_vol = Volume(dirname=afs_dir_path)
+        return afs_vol.unlock()
+
+    def _createNotReady(self, project, version):
+        """ Create the NOT_READY file """
+        try:
+            releasedir = os.path.join(project.ReleaseArea(), project.releasePrefix(version))
+            self.log.info("Adding not ready file in: %s" % releasedir)
+
+            # First making sure we can write in there
+            afsdir = Directory(releasedir)
+            self.log.info("Unlocking: %s" % releasedir)
+            afsdir.unlockACL(False)
+
+            # Extend quota to add file
+            afs_vol = Volume(dirname=releasedir)
+            if afs_vol.remainingSpace() < 10:
+                afs_vol.setQuota("+10k")
+
+            # Now creating the file
+            not_ready_file = os.path.join(releasedir, "NOT_READY")
+            if not os.path.exists(not_ready_file) :
+                fd = open(not_ready_file, "w")
+                fd.write("This project is not ready and cannot be used by SetupProject\n")
+                fd.write("In order to finalize the project and remove this file, use the 'K' action\n")
+                fd.close()
+            return 0
+        except:
+            return 1
+
+
+    def _deleteNotReady(self, project, version):
+        """ Delete the NOT_READY file """
+        try:
+            releasedir = os.path.join(project.ReleaseArea(), project.releasePrefix(version))
+            not_ready_file = os.path.join(releasedir, "NOT_READY")
+            self.log.info("Deleting not ready file in: %s" % releasedir)
+            if os.path.exists(not_ready_file):
+                os.remove(not_ready_file)
+            return 0
+        except:
+            return 1
+
+if __name__=='__main__':
+    sUsage = """%prog [-d] <project> <version>
+     -d: Prints debug output.
+      Creates the volume for the project version"""
+    s = AfsManageProjectVolume(usage=sUsage)
+    sys.exit(s.run())
+
+
