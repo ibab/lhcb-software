@@ -36,6 +36,7 @@ CaloCorrectionBase::CaloCorrectionBase( const std::string& type   ,
   , m_caloElectron(0)
   , m_useCondDB( true )
   , m_cond    ( NULL )
+  , m_tables  ( NULL )
 {
 
   declareInterface<CaloCorrectionBase>(this);
@@ -103,7 +104,7 @@ StatusCode CaloCorrectionBase::initialize() {
   // get external tools
   m_caloElectron = tool<ICaloElectron>("CaloElectron", this);
   m_pileup = tool<ICaloDigitFilterTool>("CaloDigitFilterTool","FilterTool");
-
+  m_tables = tool<ICaloRelationsGetter>("CaloRelationsGetter","CaloRelationsGetter",this);
   return setConditionParams(m_conditionName);
 }
 
@@ -355,7 +356,7 @@ double CaloCorrectionBase::incidence(const LHCb::CaloHypo* hypo, bool straight)c
   if(  LHCb::CaloHypo::EmCharged == hypo->hypothesis() && !straight ){
     // for electron hypothesis : get the matching track
     if (exist<LHCb::Calo2Track::IClusTrTable> (m_cmLoc)) {
-      LHCb::Calo2Track::IClusTrTable* ctable = get<LHCb::Calo2Track::IClusTrTable> (m_cmLoc);
+      LHCb::Calo2Track::IClusTrTable* ctable = m_tables->getClusTrTable( m_cmLoc );
       const LHCb::Calo2Track::IClusTrTable::Range range = ctable -> relations(cluster);
       if ( !range.empty() ){
         const LHCb::Track* ctrack = range.front();

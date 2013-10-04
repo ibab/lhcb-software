@@ -19,6 +19,7 @@
 #include "CaloUtils/Calo2Track.h"
 #include "Relations/IRelationWeighted2D.h"
 #include "Event/Track.h"
+#include "CaloInterfaces/ICaloRelationsGetter.h"
 static const InterfaceID IID_CaloCorrectionBase ( "CaloCorrectionBase", 1, 0 );
 
 /** @class CaloCorrectionBase CaloCorrectionBase.h
@@ -187,6 +188,7 @@ private:
   std::map<std::string, std::vector<double> > m_optParams;
   Condition* m_cond;
   std::string m_cmLoc;
+  ICaloRelationsGetter*    m_tables;
 };
 
 

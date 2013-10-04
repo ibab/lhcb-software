@@ -7,10 +7,9 @@
 #include "Relations/IRelationWeighted.h"
 // from STL
 #include <string>
-// GaudiKernel
-#include "GaudiKernel/IIncidentListener.h"
 // CaloInterfaces 
 #include "CaloInterfaces/ICaloClusterSelector.h"
+#include "CaloInterfaces/ICaloRelationsGetter.h"
 // GaudiAlg
 #include "GaudiAlg/GaudiTool.h"
 //Event
@@ -33,13 +32,10 @@
  */
 class CaloSelectNeutralClusterWithTracks : 
   public virtual ICaloClusterSelector ,
-  public virtual IIncidentListener    ,
   public          GaudiTool
 {
   /// friend factory for instantiation
   friend class ToolFactory<CaloSelectNeutralClusterWithTracks>;
-public:
-  
   
 public:
   
@@ -77,13 +73,6 @@ public:
    */
   virtual StatusCode initialize () ;
   
-public:
-  
-  /** handle the incident
-   *  @see IIncindentListener 
-   *  @param inc incident 
-   */
-  virtual void handle ( const Incident& inc ) ;
   
 protected:
   
@@ -117,9 +106,7 @@ private:
 private:
   
   std::string      m_tableLocation ;
-  mutable LHCb::Calo2Track::IClusTrTable*  m_table         ;
-  
   float           m_chi2cut       ;
-
+  ICaloRelationsGetter*    m_tables;  
 };
 #endif // CALORECO_CALOSELECTNEUTRALCLUSTERWITHTRACKS_H

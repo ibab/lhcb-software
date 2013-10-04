@@ -1,8 +1,6 @@
 // ============================================================================
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IIncidentListener.h"
-#include "GaudiKernel/IIncidentSvc.h"
 //CaloUtils
 #include "CaloUtils/Calo2Track.h"
 #include "CaloUtils/CaloAlgUtils.h"
@@ -37,12 +35,11 @@ CaloSelectNeutralClusterWithTracks::CaloSelectNeutralClusterWithTracks
   const IInterface*  parent )
   : GaudiTool ( type , name , parent )
   , m_tableLocation (LHCb::CaloIdLocation::ClusterMatch ) 
-  , m_table              (    0 ) 
   , m_chi2cut             ( -100 )
+  , m_tables              (    NULL ) 
 {
   //
   declareInterface<ICaloClusterSelector> ( this ) ;
-  declareInterface<IIncidentListener>    ( this ) ;
   //
   declareProperty ("Table"      , m_tableLocation ) ;
   declareProperty ("MinChi2"    , m_chi2cut       ) ;
@@ -71,25 +68,9 @@ CaloSelectNeutralClusterWithTracks::initialize ()
   StatusCode sc = GaudiTool::initialize () ;
   if( sc.isFailure() )
   {return Error("Could not initialize the base class GaudiTool!",sc); }
-  // 
-  // subscribe the incident 
-  IIncidentSvc* iSvc = incSvc() ;
-  if ( 0 == iSvc ) { return Error("IIncidentSvc* point to NULL!") ; }
-  // 
-  iSvc -> addListener ( this , IncidentType::BeginEvent   , 10 ) ;
-  
+  m_tables = tool<ICaloRelationsGetter>("CaloRelationsGetter","CaloRelationsGetter",this);  
   return StatusCode::SUCCESS ;
 }
-// ============================================================================
-
-// ============================================================================
-/** handle the incident 
- *  @param inc incident 
- */
-// ============================================================================
-void CaloSelectNeutralClusterWithTracks::handle ( const Incident& /* inc */ ) 
-{ m_table = 0 ; }
-// ============================================================================
 
 // ============================================================================
 /** @brief "select"  method 
@@ -126,12 +107,12 @@ bool CaloSelectNeutralClusterWithTracks::operator()
   // check the cluster 
   if ( 0 == cluster ) { Warning ( "CaloCluster* points to NULL!" ).ignore() ; return false ; }
   
-  if( !exist<LHCb::Calo2Track::IClusTrTable>( m_tableLocation ))return true;
-  // locate the table (if needed) 
-  if ( 0 == m_table ) { m_table = get<LHCb::Calo2Track::IClusTrTable>( m_tableLocation ) ; }
-  
+  // locate the table 
+  LHCb::Calo2Track::IClusTrTable* table = m_tables->getClusTrTable( m_tableLocation );
+  if( NULL == table )return true;
+
   // get all relations with WEIGHT = 'chi2' under the threshold value 
-  const LHCb::Calo2Track::IClusTrTable::Range range = m_table -> relations ( cluster , m_chi2cut , false ) ;
+  const LHCb::Calo2Track::IClusTrTable::Range range = table -> relations ( cluster , m_chi2cut , false ) ;
 
   bool sel = range.empty() ? true : false;
   counter("selected clusters") += (int) sel;
