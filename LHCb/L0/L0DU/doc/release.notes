@@ -3,6 +3,11 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2013-10-04 - Olivier Deschamps
+ - L0DUFromRawAlg :  
+   - move tool->_setProperty(...) to initialize
+   - initialize via the base class instead of GaudiAlgorithm
+
 !========================= L0DU v10r28 2013-06-03 =========================
 ! 2013-05-27 - Marco Cattaneo
  - Fix clang32 warninga

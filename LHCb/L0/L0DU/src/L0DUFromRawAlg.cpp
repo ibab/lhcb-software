@@ -51,7 +51,7 @@ L0DUFromRawAlg::~L0DUFromRawAlg() {}
 // Initialization
 //=============================================================================
 StatusCode L0DUFromRawAlg::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = L0FromRawBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
@@ -65,16 +65,7 @@ StatusCode L0DUFromRawAlg::initialize() {
   m_fromRaw = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool  , this);
   if ( m_compare ) m_fromRaw2 = tool<IL0DUFromRawTool>( "L0DUFromRawTool"  , "L0DUFromRawTool" , this);
 
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-// Main execution
-//=============================================================================
-StatusCode L0DUFromRawAlg::execute() {
-
-  if ( !m_hlt1 ) {
-    
+  if ( !m_hlt1 ) {    
     // decode the bank
     if ( m_fromRaw->_setProperty("RawLocations",Gaudi::Utils::toString(rawEventLocations()) ).isFailure() )
       return Error("Unable to set RawLocation in L0DUFromRawTool",StatusCode::SUCCESS,50);
@@ -83,6 +74,15 @@ StatusCode L0DUFromRawAlg::execute() {
     if ( m_fromRaw->_setProperty("UseRootInTES",Gaudi::Utils::toString(m_useRootInTES)).isFailure() )
       return Error("Unable to set UseRootInTES in L0DUFromRawTool",StatusCode::SUCCESS,50);
   }
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// Main execution
+//=============================================================================
+StatusCode L0DUFromRawAlg::execute() {
+
+
   
   if(!m_fromRaw->decodeBank())Warning("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
 
