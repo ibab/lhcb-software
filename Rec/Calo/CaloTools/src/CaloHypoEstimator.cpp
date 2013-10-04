@@ -7,6 +7,8 @@
 #include "CaloHypoEstimator.h"
 #include "Event/ProtoParticle.h"
 #include "GaudiKernel/IRegistry.h"
+#include "Event/Track.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : CaloHypoEstimator
 //
@@ -30,6 +32,7 @@ CaloHypoEstimator::CaloHypoEstimator( const std::string& type,
   , m_status(true)
   , m_electron(NULL)
   , m_GammaPi0(NULL)
+  , m_tables(NULL)
 {
   declareInterface<ICaloHypoEstimator>(this);
 
@@ -65,6 +68,7 @@ StatusCode CaloHypoEstimator::initialize() {
   IIncidentSvc* inc = incSvc() ;
   if ( 0 != inc )inc -> addListener  ( this , IncidentType::BeginEvent ) ;
   m_toCalo = tool<ICaloHypo2Calo> ("CaloHypo2Calo", "CaloHypo2Calo", this); 
+  m_tables = tool<ICaloRelationsGetter>("CaloRelationsGetter","CaloRelationsGetter",this);
   std::string seed = m_seed ? "true" : "false";
   std::string line = m_extrapol ? "true" : "false";
   std::string neig = m_neig ? "true" : "false";
@@ -154,7 +158,8 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
     double chi2e = 9999;
     double trajL = 9999;
     const LHCb::Track* etrack = NULL;
-    LHCb::Calo2Track::ITrHypoTable2D* etable = getIfExists<LHCb::Calo2Track::ITrHypoTable2D> (m_emLoc);
+    //LHCb::Calo2Track::ITrHypoTable2D* etable = getIfExists<LHCb::Calo2Track::ITrHypoTable2D> (m_emLoc);
+    LHCb::Calo2Track::ITrHypoTable2D* etable = m_tables->getTrHypoTable2D( m_emLoc);
     if ( NULL != etable ) {
       const LHCb::Calo2Track::ITrHypoTable2D::InverseType::Range range = etable -> inverse()->relations(hypo);
       if ( !range.empty() ){
@@ -180,7 +185,8 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
     // brem matching
     double chi2b = 9999;
     const LHCb::Track* btrack = NULL;
-    LHCb::Calo2Track::ITrHypoTable2D* btable = getIfExists<LHCb::Calo2Track::ITrHypoTable2D> (m_bmLoc);
+    //LHCb::Calo2Track::ITrHypoTable2D* btable = getIfExists<LHCb::Calo2Track::ITrHypoTable2D> (m_bmLoc);
+    LHCb::Calo2Track::ITrHypoTable2D* btable = m_tables->getTrHypoTable2D(m_bmLoc);
     if ( NULL != btable ) {
       const LHCb::Calo2Track::ITrHypoTable2D::InverseType::Range range = btable -> inverse()->relations(hypo);
       if ( !range.empty() ){
@@ -200,7 +206,8 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloHypo* hypo){
       std::string loc = l->second;
       std::string  hypothesis =  l->first;
       if ( exist<LHCb::Calo2Track::IHypoEvalTable>( loc ) )
-        m_idTable[hypothesis] = get<LHCb::Calo2Track::IHypoEvalTable> ( loc ) ;
+        //m_idTable[hypothesis] = get<LHCb::Calo2Track::IHypoEvalTable> ( loc ) ;
+        m_idTable[hypothesis] = m_tables->getHypoEvalTable( loc );
       else
         counter( "Missing "+ loc) += 1; 
     }
@@ -393,9 +400,9 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloCluster* cluster, const LHCb::
     // special trick for split cluster : use full cluster matching
     if (NULL != fromHypo && fromHypo->hypothesis() == LHCb::CaloHypo::PhotonFromMergedPi0)
       clus = LHCb::CaloAlgUtils::ClusterFromHypo( fromHypo , false); // get the main cluster
-    double chi2 = 9999;
-    const LHCb::Track* ctrack = NULL;
-    LHCb::Calo2Track::IClusTrTable* ctable = getIfExists<LHCb::Calo2Track::IClusTrTable> (m_cmLoc);
+    double chi2 = 9999;    const LHCb::Track* ctrack = NULL;
+    //LHCb::Calo2Track::IClusTrTable* ctable = getIfExists<LHCb::Calo2Track::IClusTrTable> (m_cmLoc);
+    LHCb::Calo2Track::IClusTrTable* ctable = m_tables->getClusTrTable( m_cmLoc );
     if ( NULL != ctable ) {
       const LHCb::Calo2Track::IClusTrTable::Range range = ctable -> relations(clus);
       if ( !range.empty() ){
@@ -420,3 +427,6 @@ void CaloHypoEstimator::clean(){
   m_track.clear();
   return;
 }
+
+
+

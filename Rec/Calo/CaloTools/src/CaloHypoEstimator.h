@@ -19,6 +19,8 @@
 #include "CaloInterfaces/ICaloHypoEstimator.h"            // Interface
 #include "CaloInterfaces/IGammaPi0SeparationTool.h"
 #include "CaloUtils/ICaloElectron.h"
+#include "CaloInterfaces/ICaloRelationsGetter.h"
+
 
 /** @class CaloHypoEstimator CaloHypoEstimator.h
  *  
@@ -68,6 +70,8 @@ protected:
 private:
   bool estimator(const LHCb::CaloCluster* cluster,const LHCb::CaloHypo* fromHypo=NULL);
   bool estimator(const LHCb::CaloHypo* hypo);
+
+
   void clean();
   ICaloHypo2Calo* m_toCalo;
   bool m_extrapol;
@@ -89,5 +93,6 @@ private:
   bool m_status;
   ICaloElectron * m_electron;
   IGammaPi0SeparationTool* m_GammaPi0; 
+  ICaloRelationsGetter*    m_tables;
 };
 #endif // CALOHYPOESTIMATOR_H
