@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =========================================================================
 
+! 2013-10-04 - Olivier Deschamps
+ - Add ICaloRelationsGetter interfaces
+
 !========================= CaloInterfaces v8r6 2013-07-17 =========================
 ! 2013-06-12 - Marco Cattaneo
  - Add virtual destructor to ICaloSubClusterTag and IPart2Calo interface classes.

@@ -24,6 +24,7 @@
   <class name    = "ICaloGetterTool"          />
   <class name    = "ICaloHypoEstimator"       />
   <class name    = "IGammaPi0SeparationTool"  />
+  <class name    = "ICaloRelationsGetter"     />
 </lcgdict>
 
 
