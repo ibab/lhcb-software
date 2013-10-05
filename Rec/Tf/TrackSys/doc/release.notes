@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2013-10-05 - Michel De Cian
+ - Issue a warning if a non-default track type is used.
+
 !========================= TrackSys v7r12 2013-10-01 =========================
 ! 2013-08-02 - Maurizio Martinelli
  - added STOfflinePostion to standard tracking options.

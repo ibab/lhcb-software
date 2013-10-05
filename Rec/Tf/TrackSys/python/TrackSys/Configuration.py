@@ -66,6 +66,11 @@ class TrackSys(LHCbConfigurableUser):
 
       if self.getProp( "ForceOldSeq" ):
          self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms_old)
+
+      for track in self.getProp( "TrackTypes" ):
+          if track not in self.DefaultTrackTypes:
+              log.warning("Using non-default track type: '%s'" %track)
+              log.warning("Default track types are: %s" %self.DefaultTrackTypes)
     
       if "cosmics" not in self.getProp("SpecialData"):
           # Defaults changes starting in 2011
