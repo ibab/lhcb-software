@@ -4,6 +4,12 @@
 ! Purpose     : Track scaling and smearing
 !-----------------------------------------------------------------------------
 
+! 2013-10-05 - Vanya Belyaev
+
+ - TrackScaleState
+   remove some bad-intereference with ROOT memory management 
+   (actually it needs to be fixed in XmlBaseConditionCnv.cpp) 
+
 !========================= DaVinciTrackScaling v1r2 2013-08-01 =========================
 
 ! 2013-07-12 M Needham

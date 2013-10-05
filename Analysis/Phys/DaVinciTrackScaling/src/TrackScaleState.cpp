@@ -424,6 +424,10 @@ namespace
     return histo.GetBinContent ( bin ) ;
   } 
   // ==========================================================================
+  // temporary fix, to be propagated into XmlBaseConditionCnv.cpp
+  inline void _fix_dir_ ( const TH1& histo ) 
+  { const_cast<TH1&>(histo).SetDirectory( 0 ) ; }
+  // ==========================================================================
 }
 // ============================================================================
 // scale the covarince matrix 
@@ -529,6 +533,11 @@ TrackScaleState::TrackScaleState
     ( "CovScaleHisto" , 
       m_hc_str ,
       "The 1D-historam for covarinace scaling factor as function of momenta" ) ;
+  //
+  _fix_dir_ ( m_h1      ) ;
+  _fix_dir_ ( m_h2      ) ;
+  _fix_dir_ ( m_offsets ) ;
+  _fix_dir_ ( m_hc      ) ;
   //
 }
 // ============================================================================
@@ -712,6 +721,7 @@ StatusCode TrackScaleState::i_updateSCALE ()
       ++counter("#CONDB problem") ;
       return Error ( "Unable to get 'IdpPlus'  from CONDDB" ) ;
     }
+    _fix_dir_ ( *h1 ) ;
     //
     // ON_DEBUG
     { info () << "Comment for IdpPlus  : " << m_condition->comment ( "IdpPlus"  ) << endreq ; }
@@ -722,6 +732,7 @@ StatusCode TrackScaleState::i_updateSCALE ()
       ++counter("#CONDB problem") ;
       return Error ( "Unable to get 'IdpMinus' from CONDDB") ; 
     }
+    _fix_dir_ ( *h2 ) ;
     //
     // ON_DEBUG
     { info () << "Comment for IdpMinus : " << m_condition->comment ( "IdpMinus" ) << endreq ; }
@@ -732,6 +743,7 @@ StatusCode TrackScaleState::i_updateSCALE ()
       ++counter("#CONDB problem") ;
       return Error ( "Unable to get 'Offsets' from CONDDB") ; 
     }
+    _fix_dir_ ( *ro ) ;
     //
     // ON_DEBUG
     { info () << "Comment for Offsets  : " << m_condition->comment ( "Offsets"  ) << endreq ; }
@@ -788,6 +800,7 @@ StatusCode TrackScaleState::i_updateCOV2 ()
       ++counter("#CONDB problem") ;
       return Error ( "Unable to get 'Scale' from CONDDB") ; 
     }
+    _fix_dir_ ( *h1 ) ;
    //
   }
   catch ( GaudiException& e ) 
