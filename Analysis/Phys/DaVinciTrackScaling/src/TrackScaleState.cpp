@@ -723,7 +723,7 @@ StatusCode TrackScaleState::i_updateSCALE ()
     }
     _fix_dir_ ( *h1 ) ;
     //
-    // ON_DEBUG
+    ON_DEBUG
     { info () << "Comment for IdpPlus  : " << m_condition->comment ( "IdpPlus"  ) << endreq ; }
     //
     h2 = DetDesc::Params::paramAsHisto2D ( m_condition , "IdpMinus"  ) ;
@@ -734,7 +734,7 @@ StatusCode TrackScaleState::i_updateSCALE ()
     }
     _fix_dir_ ( *h2 ) ;
     //
-    // ON_DEBUG
+    ON_DEBUG
     { info () << "Comment for IdpMinus : " << m_condition->comment ( "IdpMinus" ) << endreq ; }
     //
     ro = DetDesc::Params::paramAsHisto1D ( m_condition , "Offsets"   ) ;
@@ -745,7 +745,7 @@ StatusCode TrackScaleState::i_updateSCALE ()
     }
     _fix_dir_ ( *ro ) ;
     //
-    // ON_DEBUG
+    ON_DEBUG
     { info () << "Comment for Offsets  : " << m_condition->comment ( "Offsets"  ) << endreq ; }
     //
     if ( m_condition->exists ( "Delta" ) && m_condition->is<double>( "Delta" ) ) 
@@ -753,7 +753,7 @@ StatusCode TrackScaleState::i_updateSCALE ()
       m_delta = m_condition->paramAsDouble ( "Delta" ) ;
       counter("#DELTA update") += m_delta ;
       //
-      // ON_DEBUG
+      ON_DEBUG
       { info () << "Comment for Delta    : " << m_condition->comment ( "Delta"    ) << endreq ; }
       //
     }
@@ -800,7 +800,7 @@ StatusCode TrackScaleState::i_updateCOV2 ()
       ++counter("#CONDB problem") ;
       return Error ( "Unable to get 'Scale' from CONDDB") ; 
     }
-    _fix_dir_ ( *h1 ) ;
+   _fix_dir_ ( *h1 ) ;
    //
   }
   catch ( GaudiException& e ) 
@@ -856,8 +856,7 @@ StatusCode TrackScaleState::execute ()
     // scale only LONG tracks 
     if ( allowedType(track ) == false ) { continue ; } // scale only Long tracks 
     //
-    // std::cout << "Type " << track->type() << std::endl;
-
+    
     typedef std::vector<LHCb::State*> STATES ;
     const STATES& states = track->states();
     //

@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-10-05 - Vanya Belyaev
+ - TrackScaleState: reduce printout 
+
+! 2013-10-05 - Vanya Belyaev
 
  - TrackScaleState
    remove some bad-intereference with ROOT memory management 
