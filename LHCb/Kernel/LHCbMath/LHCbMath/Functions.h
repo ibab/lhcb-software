@@ -349,6 +349,8 @@ namespace Gaudi
     // ========================================================================
     /** @class Positive
      *  The "positive" polynomial of order N
+     *  Actually it is a sum of basic bernstein polynomials with 
+     *  non-negative coefficients 
      */
     class GAUDI_API Positive : public std::unary_function<double,double>
     {
@@ -420,6 +422,8 @@ namespace Gaudi
     } ;
     // ========================================================================
     /** @class BifurcatedGauss
+     *  simple representation of bifurcated gaussian function 
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date 2011-04-19
      */
     class GAUDI_API BifurcatedGauss : public std::unary_function<double,double>
@@ -1286,6 +1290,19 @@ namespace Gaudi
       /// the default constructor is disabled
       PhaseSpace2 () ;                   // the default constructor is disabled
       // ======================================================================
+    public:
+      // ======================================================================
+      /// get the momentum at center of mass 
+      double                q_  ( const double x ) const ;
+      /// ditto but as complex
+      std::complex<double>  q1_ ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      double m1      () const { return m_m1 ; }
+      double m2      () const { return m_m2 ; }      
+      double lowEdge () const { return m1() + m2() ; }
+      // ======================================================================
     private:
       // ======================================================================
       /// the first mass
@@ -1509,7 +1526,9 @@ namespace Gaudi
     } ;
     // ========================================================================
     /** @class PhaseSpaceNL
-     *  simple function to represent N/L-body phase space
+     *  simple function to represent the approximation for 
+     *  the mass distribution of L-particles from N-body 
+     *  phase space decay
      *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
      *  @date 2011-11-30
      */
@@ -1519,18 +1538,30 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// constructor from thresholds and number of particles
-      PhaseSpaceNL ( const double         threshold1 ,
-                     const double         threshold2 ,
-                     const unsigned short l          ,
-                     const unsigned short n          ) ;
-      /// deststructor
+      /** constructor from thresholds and number of particles
+       *  @param threshold_L the low-mass  threshold 
+       *  @param threshold_H the high-mass threshold 
+       *  @param L           how many particles we consider         
+       *  @param N           total number of particles ( N>L!) 
+       */
+      PhaseSpaceNL ( const double         threshold_L =  0 ,
+                     const double         threshold_H = 10 ,
+                     const unsigned short l           =  2 ,
+                     const unsigned short n           =  3 ) ;
+      /// destructor
       ~PhaseSpaceNL () ;                                     // deststructor
       // ======================================================================
     public:
       // ======================================================================
       /// evaluate N/L-body phase space
       double operator () ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      double          lowEdge () const { return m_threshold1 ; }
+      double         highEdge () const { return m_threshold2 ; }
+      unsigned short       L  () const { return m_L ; }
+      unsigned short       N  () const { return m_N ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -1546,11 +1577,6 @@ namespace Gaudi
       /// get the integral between low and high limits
       double integral ( const double low  ,
                         const double high ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled
-      PhaseSpaceNL () ;               // the default constructor is disabled
       // ======================================================================
     private:
       // ======================================================================
@@ -2214,15 +2240,102 @@ namespace Gaudi
       // ======================================================================
     } //                                               end of namespace Jackson
     // ========================================================================
+    /** @class LASS
+     *  The LASS parameterization (Nucl. Phys. B296, 493 (1988)) 
+     *  describes the 0+ component of the Kpi spectrum. 
+     *  It consists of the K*(1430) resonance together with an 
+     *  effective range non-resonant component
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2013-10-05
+     */
+    class GAUDI_API LASS : public std::unary_function<double,double>
+    {
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor from all masses and angular momenta
+       *  @param m1 the mass of the first  particle
+       *  @param m2 the mass of the second particle
+       *  @param a  the LASS parameter
+       *  @param r  the LASS parameter
+       *  @param e  the LASS parameter
+       */
+      LASS ( const double         m1 =  493.7  ,
+             const double         m2 =  139.6  ,
+             const double         m0 = 1435    , // K*(1450) mass 
+             const double         g0 =  279    , // K*(1430) width 
+             const double         a  = 1.94e-3 ,
+             const double         r  = 1.76e-3 ,
+             const double         e  = 1.0     ) ;
+      /// destructor
+      virtual ~LASS () ;                                          // destructor
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the (complex) LASS amplitude
+      std::complex<double> amplitude  ( const double x ) const ;
+      /// get the phase space factor
+      double               phaseSpace ( const double x ) const ;
+      /// evaluate LASS
+      double operator () ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      double m0  ( ) const { return m_m0 ; }
+      double g0  ( ) const { return m_g0 ; }
+      double a   ( ) const { return m_a  ; }
+      double r   ( ) const { return m_r  ; }
+      double e   ( ) const { return m_e  ; }
+      // ======================================================================
+      double m1  ( ) const { return m_ps2.m1 () ; }
+      double m2  ( ) const { return m_ps2.m2 () ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      bool setM0 ( const double value ) ;
+      bool setG0 ( const double value ) ;
+      bool setA  ( const double value ) ;
+      bool setR  ( const double value ) ;
+      bool setE  ( const double value ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral between low and high limits
+      double integral ( const double low  ,
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the pole position for scalar meson
+      double   m_m0 ;
+      double   m_g0 ;
+      /// LASS-parameters
+      double   m_a  ;
+      double   m_r  ;
+      double   m_e  ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// phase space
+      Gaudi::Math::PhaseSpace2 m_ps2     ;    // phase space
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// integration workspace
+      Gaudi::Math::WorkSpace m_workspace ;    // integration workspace
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class LASS23L
-     *  simple function to represent the phase
-     *   space of 2 particles from 3-body decays:
-     *   \f$ f \propto q^{2\ell+1}p^{2L+1}\f$, where
-     *     \f$\ell\f$ is the orbital momentum of the pair of particles,
-     *    and \f$L\f$ is the orbital momentum between the pair and
-     *    the third particle.
-     *   E.g. taking \f$\ell=0, L=1\f$, one can get the S-wave contribution for
-     *   \f$\pi^+\pi^-\f$-mass from \f$B^0\rightarrowJ/\psi\pi^+\pi^-\f$ decay.
+     * 
+     *  The LASS parameterization (Nucl. Phys. B296, 493 (1988)) 
+     *  describes the 0+ component of the Kpi spectrum. 
+     *  It consists of the K*(1430) resonance together with an 
+     *  effective range non-resonant component.
+     * 
+     *  This function is suitable to describe the S-wave Kpi distribtion 
+     *  from X -> K pi Y decay 
+     *
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2012-04-01
      */
@@ -2250,8 +2363,18 @@ namespace Gaudi
                 const double         a  = 1.94e-3 ,
                 const double         r  = 1.76e-3 ,
                 const double         e  = 1.0     ) ;
+      /** constructor from LASS and 3-rd particle 
+       *  @param lass the actual lass shape 
+       *  @param m3   the mass of third particle (Y)
+       *  @param m    the mass of mother particle (X)
+       *  @param L    the orbital momentum between Y and (Kpi) 
+       */
+      LASS23L ( const LASS&          lass   , 
+                const double         m3     , // the third particle, e.g. J/psi
+                const double         m      , // mother particle, e.g. B 
+                const unsigned short L  = 1 ) ;
       /// destructor
-      virtual ~LASS23L () ;                                     // deststructor
+      virtual ~LASS23L () ;                                     // destructor
       // ======================================================================
     public:
       // ======================================================================
@@ -2264,11 +2387,26 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      bool setM0 ( const double value ) ;
-      bool setG0 ( const double value ) ;
-      bool setA  ( const double value ) ;
-      bool setR  ( const double value ) ;
-      bool setE  ( const double value ) ;
+      double m0  () const { return m_lass . m0 () ; } // K*(1430) mass 
+      double g0  () const { return m_lass . g0 () ; } // K*(1430) width 
+      double a   () const { return m_lass . a  () ; }
+      double r   () const { return m_lass . r  () ; }
+      double e   () const { return m_lass . e  () ; }
+      // ======================================================================
+      double m1  () const { return m_ps   . m1 () ; }
+      double m2  () const { return m_ps   . m2 () ; }      
+      double m3  () const { return m_ps   . m3 () ; }      
+      double m   () const { return m_ps   . m  () ; }      
+      double l   () const { return m_ps   . l  () ; }      
+      double L   () const { return m_ps   . L  () ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      bool setM0 ( const double value ) { return m_lass . setM0 ( value ) ; }
+      bool setG0 ( const double value ) { return m_lass . setG0 ( value ) ; } 
+      bool setA  ( const double value ) { return m_lass . setA  ( value ) ; }
+      bool setR  ( const double value ) { return m_lass . setR  ( value ) ; } 
+      bool setE  ( const double value ) { return m_lass . setE  ( value ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -2280,16 +2418,8 @@ namespace Gaudi
       // ======================================================================
     private:
       // ======================================================================
-      /// the pole position for scalar meson
-      double   m_m0 ;
-      double   m_g0 ;
-      /// LASS-parameters
-      double   m_a  ;
-      double   m_r  ;
-      double   m_e  ;
-      // ======================================================================
-    private:
-      // ======================================================================
+      /// Lass itself 
+      Gaudi::Math::LASS          m_lass  ;    // lass-function itself 
       /// phase space
       Gaudi::Math::PhaseSpace23L m_ps    ;    // phase space
       // ======================================================================

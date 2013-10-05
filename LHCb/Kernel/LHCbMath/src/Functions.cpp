@@ -908,6 +908,18 @@ namespace
     return (*ps23L)(x) ;
   }
   // ==========================================================================
+  /** helper function for itegration of LASS shape
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2013-10--5
+   */
+  double LASS_GSL ( double x , void* params )
+  {
+    //
+    const Gaudi::Math::LASS* lass = (Gaudi::Math::LASS*) params ;
+    //
+    return (*lass)(x) ;
+  }
+  // ==========================================================================
   /** helper function for itegration of LASS23L shape
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
@@ -2816,6 +2828,13 @@ Gaudi::Math::PhaseSpace2::~PhaseSpace2(){}
 // ============================================================================
 double Gaudi::Math::PhaseSpace2::operator () ( const double x ) const
 { return phasespace ( x , m_m1 , m_m2 ) ; }
+// get the momentum at center of mass 
+double Gaudi::Math::PhaseSpace2::q_  ( const double x ) const 
+{ return q ( x , m1() , m2() ) ; }
+// get the momentum at center of mass 
+std::complex<double>
+Gaudi::Math::PhaseSpace2::q1_ ( const double x ) const 
+{ return q1 ( x , m1() , m2() ) ; }
 // ============================================================================
 /* calculate the phase space for   m -> m1 + m2
  *  \f$ \Phi = \frac{1}{8\pi} \frac{ \lambda^{\frac{1}{2}} \left( m^2 , m_1^2, m_2_2 \right) }{ m^2 }\f$,
@@ -4106,6 +4125,216 @@ bool Gaudi::Math::Voigt::setSigma ( const double x )
   //
   return true ;
 }
+
+
+
+// ============================================================================
+// LASS: Kpi S-wave 
+// ============================================================================
+/*  constructor from all masses and angular momenta
+ *  @param m1 the mass of the first  particle
+ *  @param m2 the mass of the second particle
+ *  @param a  the LASS parameter
+ *  @param r  the LASS parameter
+ *  @param e  the LASS parameter
+ */
+// ============================================================================
+Gaudi::Math::LASS::LASS
+( const double         m1 ,
+  const double         m2 ,
+  const double         m0 ,
+  const double         g0 ,
+  const double         a  ,
+  const double         r  ,
+  const double         e  )
+  : std::unary_function<double,double> ()
+  , m_m0  ( std::abs ( m0 ) )
+  , m_g0  ( std::abs ( g0 ) )
+  , m_a   ( std::abs ( a  ) )
+  , m_r   ( std::abs ( r  ) )
+  , m_e   ( std::abs ( e  ) )
+// phase space
+  , m_ps2 ( m1 , m2 )
+//
+  , m_workspace ()
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::LASS::~LASS(){}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::LASS::setM0 ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_m0 ) ) { return false ; }
+  //
+  m_m0 = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::LASS::setG0 ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_g0 ) ) { return false ; }
+  //
+  m_g0 = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::LASS::setA ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_a ) ) { return false ; }
+  //
+  m_a = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::LASS::setR ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_r ) ) { return false ; }
+  //
+  m_r = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::LASS::setE ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_e ) ) { return false ; }
+  //
+  m_e = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// get the (complex) LASS amplitude
+// ============================================================================
+std::complex<double>
+Gaudi::Math::LASS::amplitude ( const double x ) const
+{
+  //
+  const double q  = m_ps2.q_ ( x ) ;
+  if ( 0 >= q                ) { return 0 ; }  // RETURN
+  //
+  // get the width:
+  const double gs = gamma_run ( m_g0        ,
+                                x           ,
+                                m_ps2.m1 () ,
+                                m_ps2.m2 () ,
+                                m_m0        ,
+                                // K*(1430) is a scalar! 
+                                0           ) * m_m0 / x  ;
+  //
+  // phase shift:
+  const double cotB = 1.0 / ( m_a * q ) + 0.5 * m_r * q  ;
+  // phase shift:
+  const double cotR = ( m_m0 * m_m0 - x * x )  / m_m0 / gs ;
+  //
+  const double sinB =  1.0 / std::sqrt ( 1 + cotB*cotB ) ;
+  const double cosB = cotB * sinB ;
+  //
+  // exp( i*pi/2 )
+  static const std::complex<double> i = std::complex<double>( 0 , 1 );
+  //
+  // exp( i*Delta_B )
+  std::complex<double> deltaB ( cosB , sinB ) ;
+  //
+  // the amplitude
+  std::complex<double> A =
+    1.0 / ( cotB - i ) + m_e * deltaB * deltaB / ( cotR - i ) ;
+  //
+  // scale it!
+  std::complex<double> T = A * ( x / q ) ;
+  //
+  return T ;
+}
+// ============================================================================
+// get the phase space factor
+// ============================================================================
+double Gaudi::Math::LASS::phaseSpace ( const double x ) const
+{ return std::max ( 0.0 , m_ps2 ( x ) ) ; }
+// ============================================================================
+// evaluate LASS
+// ============================================================================
+double Gaudi::Math::LASS::operator () ( const double x ) const
+{
+  const double result = phaseSpace  ( x ) ;
+  if ( 0 >= result ) { return 0 ; }
+  //
+  return result * std::norm ( amplitude( x ) ) ;
+}
+// ============================================================================
+// get the integral between low and high limits
+// ============================================================================
+double  Gaudi::Math::LASS::integral
+( const double low  ,
+  const double high ) const
+{
+  if ( s_equal ( low , high ) ) { return                 0.0 ; } // RETURN
+  if (           low > high   ) { return - integral ( high ,
+                                                      low  ) ; } // RETURN
+  //
+  if ( high <= m_ps2.lowEdge  () ) { return 0 ; }
+  //
+  if ( low  <  m_ps2.lowEdge  () )
+  { return integral ( m_ps2.lowEdge() , high ) ; }
+  //
+  // use GSL to evaluate the integral
+  //
+  Sentry sentry ;
+  //
+  gsl_function F                 ;
+  F.function         = &LASS_GSL ;
+  const LASS* _ps    = this  ;
+  F.params           = const_cast<LASS*> ( _ps ) ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  const int ierror = gsl_integration_qag
+    ( &F                ,            // the function
+      low   , high      ,            // low & high edges
+      s_PRECISION       ,            // absolute precision
+      s_PRECISION       ,            // relative precision
+      s_SIZE            ,            // size of workspace
+      GSL_INTEG_GAUSS31 ,            // integration rule
+      workspace ( m_workspace ) ,    // workspace
+      &result           ,            // the result
+      &error            ) ;          // the error in result
+  //
+  if ( ierror )
+  {
+    gsl_error ( "Gaudi::Math::LASS::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ;
+  }
+  //
+  return result ;
+}
+// ============================================================================
+
+
+
 // ============================================================================
 /*  constructor from four masses and angular momenta
  *  @param m1 the mass of the first  particle
@@ -4229,6 +4458,30 @@ double  Gaudi::Math::PhaseSpace23L::integral () const
 // ============================================================================
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ============================================================================
 // LASS: Kpi S-wave for  X -> (K pi) Y decays..
 // ============================================================================
@@ -4254,129 +4507,46 @@ Gaudi::Math::LASS23L::LASS23L
   const double         r  ,
   const double         e  )
   : std::unary_function<double,double> ()
-  , m_m0 ( std::abs ( m0 ) )
-  , m_g0 ( std::abs ( g0 ) )
-  , m_a  ( std::abs ( a  ) )
-  , m_r  ( std::abs ( r  ) )
-  , m_e  ( std::abs ( e  ) )
+// LASS-fiunction 
+  , m_lass ( m1 , m2 , m0 , g0  , a , r , e ) 
 // phase space
-  , m_ps ( m1 , m2 , m3 , m , L , 0 )
+  , m_ps   ( m1 , m2 , m3 , m   , L , 0 )
 //
   , m_workspace ()
 {}
+// ============================================================================
+/*  constructor from LASS and 3-rd particle 
+ *  @param lass the actual lass shape 
+ *  @param m3   the mass of third particle (Y)
+ *  @param m    the mass of mother particle (X)
+ *  @param L    the orbital momentum between Y and (Kpi) 
+ */
+// ============================================================================
+Gaudi::Math::LASS23L::LASS23L
+( const Gaudi::Math::LASS& lass   , 
+  const double             m3     ,
+  const double             m      ,
+  const unsigned short     L      ) 
+  : std::unary_function<double,double> ()
+// LASS-fiunction 
+  , m_lass ( lass ) 
+// phase space
+  , m_ps   ( lass.m1 ()  , lass.m2 () , m3 , m   , L , 0 )
+//
+  , m_workspace ()
+{}  
+// ============================================================================
+
 // ============================================================================
 // destructor
 // ============================================================================
 Gaudi::Math::LASS23L::~LASS23L(){}
 // ============================================================================
-// set the proper parameters
-// ============================================================================
-bool Gaudi::Math::LASS23L::setM0 ( const double x )
-{
-  //
-  const double v = std::abs ( x ) ;
-  if ( s_equal ( v , m_m0 ) ) { return false ; }
-  //
-  m_m0 = v ;
-  //
-  return true ;
-}
-// ============================================================================
-// set the proper parameters
-// ============================================================================
-bool Gaudi::Math::LASS23L::setG0 ( const double x )
-{
-  //
-  const double v = std::abs ( x ) ;
-  if ( s_equal ( v , m_g0 ) ) { return false ; }
-  //
-  m_g0 = v ;
-  //
-  return true ;
-}
-// ============================================================================
-// set the proper parameters
-// ============================================================================
-bool Gaudi::Math::LASS23L::setA ( const double x )
-{
-  //
-  const double v = std::abs ( x ) ;
-  if ( s_equal ( v , m_a ) ) { return false ; }
-  //
-  m_a = v ;
-  //
-  return true ;
-}
-// ============================================================================
-// set the proper parameters
-// ============================================================================
-bool Gaudi::Math::LASS23L::setR ( const double x )
-{
-  //
-  const double v = std::abs ( x ) ;
-  if ( s_equal ( v , m_r ) ) { return false ; }
-  //
-  m_r = v ;
-  //
-  return true ;
-}
-// ============================================================================
-// set the proper parameters
-// ============================================================================
-bool Gaudi::Math::LASS23L::setE ( const double x )
-{
-  //
-  const double v = std::abs ( x ) ;
-  if ( s_equal ( v , m_e ) ) { return false ; }
-  //
-  m_e = v ;
-  //
-  return true ;
-}
-// ============================================================================
 // get the (complex) LASS amplitude
 // ============================================================================
 std::complex<double>
 Gaudi::Math::LASS23L::amplitude ( const double x ) const
-{
-  //
-  if ( x <= m_ps.lowEdge  () ) { return 0 ; }  // RETURN
-  if ( x >= m_ps.highEdge () ) { return 0 ; }  // RETURN
-  //
-  const double q  = m_ps.q ( x    ) ;
-  if ( 0 >= q                ) { return 0 ; }  // RETURN
-  //
-  // get the width:
-  const double gs = gamma_run ( m_g0       ,
-                                x          ,
-                                m_ps.m1 () ,
-                                m_ps.m2 () ,
-                                m_m0       ,
-                                m_ps.l  () ) * m_m0 / x  ;
-  //
-  // phase shift:
-  const double cotB = 1.0 / ( m_a * q ) + 0.5 * m_r * q  ;
-  // phase shift:
-  const double cotR = ( m_m0 * m_m0 - x * x )  / m_m0 / gs ;
-  //
-  const double sinB =  1.0 / std::sqrt ( 1 + cotB*cotB ) ;
-  const double cosB = cotB * sinB ;
-  //
-  // exp( i*pi/2 )
-  static const std::complex<double> i = std::complex<double>( 0 , 1 );
-  //
-  // exp( i*Delta_B )
-  std::complex<double> deltaB ( cosB , sinB ) ;
-  //
-  // the amplitude
-  std::complex<double> A =
-    1.0 / ( cotB - i ) + m_e * deltaB * deltaB / ( cotR - i ) ;
-  //
-  // scale it!
-  std::complex<double> T = A * ( x / q ) ;
-  //
-  return T ;
-}
+{ return m_lass.amplitude ( x )  ; }  
 // ============================================================================
 // get the phase space factor
 // ============================================================================
