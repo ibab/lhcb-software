@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-10-05 - Michel De Cian
+ - Fix behaviour of flag 'fromB' in PrChecker to only include B baryons and mesons, and not particles from string fragmentation of b quarks (follow-up of change in Gauss, r159594)
+
 !========================= PrMCTools v1r6 2013-10-01 =========================
 ! 2013-09-30 - Marco Cattaneo
  - Add VPDet dependency also in CMakeLists.txt

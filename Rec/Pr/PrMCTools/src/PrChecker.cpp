@@ -324,7 +324,8 @@ StatusCode PrChecker::execute() {
         }
       }
       while( 0 != mother ) {
-        if ( mother->particleID().hasBottom() ) fromB = true;
+        if ( mother->particleID().hasBottom() && 
+             ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() ) ) fromB = true;
         mother = mother->originVertex()->mother();
       }
     }
