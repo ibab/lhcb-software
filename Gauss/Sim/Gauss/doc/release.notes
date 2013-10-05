@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-10-06 - Paul Szczypka
+ - Added qmtest and options for Muon_NoM1 test.
+
 ! 2013-09-24 - Marco Clemencic
  - Added (empty) __init__.py to the Gauss Python module.
 
