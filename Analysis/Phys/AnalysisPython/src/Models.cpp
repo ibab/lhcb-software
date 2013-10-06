@@ -633,6 +633,95 @@ Double_t Analysis::Models::PhaseSpace23L::evaluate() const
 // ============================================================================
 // constructor from all parameters 
 // ============================================================================
+Analysis::Models::LASS::LASS
+( const char*          name  , 
+  const char*          title ,
+  RooAbsReal&          x     ,
+  RooAbsReal&          m1430 ,
+  RooAbsReal&          g1430 ,
+  RooAbsReal&          a     , 
+  RooAbsReal&          r     , 
+  RooAbsReal&          e     , 
+  const double         m1    , 
+  const double         m2    )
+//
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x     ( "x"     , "Observable"      , this , x     ) 
+  , m_m0    ( "m0"    , "K*(1430)-mass"   , this , m1430 ) 
+  , m_g0    ( "g0"    , "K*(1430)-width"  , this , g1430 ) 
+  , m_a     ( "a"     , "LASS-a"          , this , a     )
+  , m_r     ( "r"     , "LASS-r"          , this , r     )
+  , m_e     ( "e"     , "LASS-elasticity" , this , e     )
+//
+  , m_lass  ( m1      , m2      , 
+              1430    , 300     , 
+              1.94e-3 , 1.76e-1 , 1.0 ) 
+{
+  m_lass.setM0 ( m_m0 ) ;
+  m_lass.setG0 ( m_g0 ) ;
+  m_lass.setA  ( m_a  ) ;
+  m_lass.setR  ( m_r  ) ;
+  m_lass.setE  ( m_e  ) ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::LASS::LASS 
+( const Analysis::Models::LASS& right , 
+  const char*                   name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x     ( "x"  , this , right.m_x  ) 
+  , m_m0    ( "m0" , this , right.m_m0 ) 
+  , m_g0    ( "g0" , this , right.m_g0 ) 
+  , m_a     ( "a"  , this , right.m_a  ) 
+  , m_r     ( "r"  , this , right.m_r  ) 
+  , m_e     ( "e"  , this , right.m_e  ) 
+//
+  , m_lass  ( right.m_lass ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::LASS::~LASS (){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::LASS*
+Analysis::Models::LASS::clone( const char* name ) const 
+{ return new Analysis::Models::LASS ( *this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::LASS::evaluate() const 
+{
+  m_lass.setM0  ( m_m0 ) ;
+  m_lass.setG0  ( m_g0 ) ;
+  m_lass.setA   ( m_a  ) ;
+  m_lass.setR   ( m_r  ) ;
+  m_lass.setE   ( m_e  ) ;
+  //
+  return m_lass ( m_x  ) ;
+}
+// ===========================================================================
+// get the complex amplitude 
+// ===========================================================================
+std::complex<double> Analysis::Models::LASS::amplitude() const 
+{
+  m_lass.setM0  ( m_m0 ) ;
+  m_lass.setG0  ( m_g0 ) ;
+  m_lass.setA   ( m_a  ) ;
+  m_lass.setR   ( m_r  ) ;
+  m_lass.setE   ( m_e  ) ;
+  //
+  return m_lass.amplitude ( m_x  ) ;
+}
+// ============================================================================
+
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
 Analysis::Models::LASS23L::LASS23L
 ( const char*          name  , 
   const char*          title ,
@@ -2316,6 +2405,283 @@ Double_t Analysis::Models::Adjust::evaluate() const
   return pdf <= m_small ? m_small : pdf ;
 }
 
+
+// ============================================================================
+//  PhaseSpace x poly
+// ============================================================================
+Analysis::Models::PhaseSpacePol::PhaseSpacePol 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  const double         low       , 
+  const double         high      ,
+  const unsigned short N         , 
+  const unsigned short L         , 
+  RooAbsReal&          phi1      ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x   ) 
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_ps       (     low , high , L , N ) 
+  , m_positive ( 1 , low , high ) 
+{
+  m_phis.add ( phi1 ) ;
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+//  PhaseSpace x poly
+// ============================================================================
+Analysis::Models::PhaseSpacePol::PhaseSpacePol 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  const double         low       , 
+  const double         high      ,
+  const unsigned short N         , 
+  const unsigned short L         , 
+  RooAbsReal&          phi1      ,
+  RooAbsReal&          phi2      ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x   ) 
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_ps       (     low , high , L , N ) 
+  , m_positive ( 2 , low , high ) 
+{
+  m_phis.add ( phi1 ) ;
+  m_phis.add ( phi2 ) ;
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+//  PhaseSpace x poly
+// ============================================================================
+Analysis::Models::PhaseSpacePol::PhaseSpacePol 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  const double         low       , 
+  const double         high      ,
+  const unsigned short N         , 
+  const unsigned short L         , 
+  RooAbsReal&          phi1      ,
+  RooAbsReal&          phi2      , 
+  RooAbsReal&          phi3      ) 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x   ) 
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_ps       (     low , high , L , N ) 
+  , m_positive ( 3 , low , high ) 
+{
+  m_phis.add ( phi1 ) ;
+  m_phis.add ( phi2 ) ;
+  m_phis.add ( phi3 ) ;
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+//  PhaseSpace x poly
+// ============================================================================
+Analysis::Models::PhaseSpacePol::PhaseSpacePol 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  const double         low       , 
+  const double         high      ,
+  const unsigned short N         , 
+  const unsigned short L         , 
+  RooArgList&          phis      )
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x    ) 
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_ps       (                  low , high , L , N ) 
+  , m_positive ( phis.getSize() , low , high ) 
+{
+  //
+  TIterator* tmp  = phis.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+  }
+  delete tmp ;
+  //
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+//  PhaseSpace x poly
+// ============================================================================
+Analysis::Models::PhaseSpacePol::PhaseSpacePol 
+( const char*                      name      , 
+  const char*                      title     ,
+  RooAbsReal&                      x         ,
+  const Gaudi::Math::PhaseSpaceNL& ps        , 
+  RooAbsReal&                      phi1      )
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x   ) 
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_ps       ( ps ) 
+  , m_positive ( 1 , ps.lowEdge() , ps.highEdge() ) 
+{
+  m_phis.add ( phi1 ) ;
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+//  PhaseSpace x poly
+// ============================================================================
+Analysis::Models::PhaseSpacePol::PhaseSpacePol 
+( const char*                      name      , 
+  const char*                      title     ,
+  RooAbsReal&                      x         ,
+  const Gaudi::Math::PhaseSpaceNL& ps        , 
+  RooAbsReal&                      phi1      ,
+  RooAbsReal&                      phi2      )
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x   ) 
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_ps       ( ps ) 
+  , m_positive ( 2 , ps.lowEdge() , ps.highEdge() ) 
+{
+  m_phis.add ( phi1 ) ;
+  m_phis.add ( phi2 ) ;
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+//  PhaseSpace x poly
+// ============================================================================
+Analysis::Models::PhaseSpacePol::PhaseSpacePol 
+( const char*                      name      , 
+  const char*                      title     ,
+  RooAbsReal&                      x         ,
+  const Gaudi::Math::PhaseSpaceNL& ps        , 
+  RooAbsReal&                      phi1      ,
+  RooAbsReal&                      phi2      ,
+  RooAbsReal&                      phi3      )
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x   ) 
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_ps       ( ps ) 
+  , m_positive ( 3 , ps.lowEdge() , ps.highEdge() ) 
+{
+  m_phis.add ( phi1 ) ;
+  m_phis.add ( phi2 ) ;
+  m_phis.add ( phi3 ) ;
+  m_iterator = m_phis.createIterator() ;
+}
+// ============================================================================
+//  PhaseSpace x poly
+// ============================================================================
+Analysis::Models::PhaseSpacePol::PhaseSpacePol 
+( const char*                      name      , 
+  const char*                      title     ,
+  RooAbsReal&                      x         ,
+  const Gaudi::Math::PhaseSpaceNL& ps        , 
+  RooArgList&                      phis      )
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x        ( "x"       , "Observable"   , this , x    ) 
+  , m_phis     ( "phi"     , "Coefficients" , this )
+//
+  , m_iterator ( 0 ) 
+//
+  , m_ps       ( ps ) 
+  , m_positive ( phis.getSize() , ps.lowEdge() , ps.highEdge() ) 
+{
+  //
+  TIterator* tmp  = phis.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+  }
+  delete tmp ;
+  //
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::PhaseSpacePol::~PhaseSpacePol () { delete m_iterator; }
+// ======================================================================
+// "copy" constructor 
+// ======================================================================
+Analysis::Models::PhaseSpacePol::PhaseSpacePol 
+( const Analysis::Models::PhaseSpacePol& right , 
+  const char*                            name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x        ( "x"      , this , right.m_x    ) 
+  , m_phis     ( "phis"   , this , right.m_phis ) 
+//
+  , m_iterator ( 0 ) 
+//
+  , m_ps       ( right.m_ps       ) 
+  , m_positive ( right.m_positive ) 
+{
+  m_iterator = m_phis.createIterator () ;
+}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::PhaseSpacePol* 
+Analysis::Models::PhaseSpacePol::clone ( const char* name ) const 
+{ return new Analysis::Models::PhaseSpacePol ( *this , name ) ; }
+// ============================================================================
+// evaluate the function
+// ============================================================================
+Double_t Analysis::Models::PhaseSpacePol::evaluate () const 
+{
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  std::vector<double> sin2phi ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phi   = r->getVal ( nset ) ;
+    //
+    m_positive.setPar ( k  , phi ) ;
+    //
+    ++k ;
+  }
+  //
+  return m_ps ( m_x ) * m_positive ( m_x ) ;
+}
+// ============================================================================
 
 
 // ============================================================================

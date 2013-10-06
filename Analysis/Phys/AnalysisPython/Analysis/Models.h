@@ -452,6 +452,123 @@ namespace Analysis
       // ======================================================================
     };
     // ========================================================================
+    /** @class PhaseSpacePol
+     *  The mass-ditribtion of L-particles form N-body phase space decays, 
+     *  modulate with non-negative polynomial 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2013-10-05
+     */
+    class PhaseSpacePol : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::PhaseSpacePol, 1) ;
+      // ======================================================================
+      /// constructor from all parameters 
+      PhaseSpacePol 
+      ( const char*                      name   , 
+        const char*                      title  ,
+        RooAbsReal&                      x      ,
+        const double                     low    , 
+        const double                     high   ,
+        const unsigned short             N      , 
+        const unsigned short             L      , 
+        RooAbsReal&                      phi1   ) ;
+      /// constructor from all parameters 
+      PhaseSpacePol 
+      ( const char*                      name   , 
+        const char*                      title  ,
+        RooAbsReal&                      x      ,
+        const double                     low    , 
+        const double                     high   ,
+        const unsigned short             N      , 
+        const unsigned short             L      , 
+        RooAbsReal&                      phi1   ,
+        RooAbsReal&                      phi2   ) ;
+      /// constructor from all parameters 
+      PhaseSpacePol 
+      ( const char*                      name   , 
+        const char*                      title  ,
+        RooAbsReal&                      x      ,
+        const double                     low    , 
+        const double                     high   ,
+        const unsigned short             N      , 
+        const unsigned short             L      , 
+        RooAbsReal&                      phi1   ,
+        RooAbsReal&                      phi2   , 
+        RooAbsReal&                      phi3   ) ;
+      /// constructor from all parameters 
+      PhaseSpacePol 
+      ( const char*                      name   , 
+        const char*                      title  ,
+        RooAbsReal&                      x      ,
+        const double                     low    , 
+        const double                     high   ,
+        const unsigned short             N      , 
+        const unsigned short             L      , 
+        RooArgList&                      phis   ) ;
+      // ======================================================================
+      /// constructor from all parameters 
+      PhaseSpacePol 
+      ( const char*                      name   , 
+        const char*                      title  ,
+        RooAbsReal&                      x      ,
+        const Gaudi::Math::PhaseSpaceNL& ps     , 
+        RooAbsReal&                      phi1   ) ;
+      /// constructor from all parameters 
+      PhaseSpacePol 
+      ( const char*                      name   , 
+        const char*                      title  ,
+        RooAbsReal&                      x      ,
+        const Gaudi::Math::PhaseSpaceNL& ps     , 
+        RooAbsReal&                      phi1   ,
+        RooAbsReal&                      phi2   ) ;
+      /// constructor from all parameters 
+      PhaseSpacePol 
+      ( const char*                      name   , 
+        const char*                      title  ,
+        RooAbsReal&                      x      ,
+        const Gaudi::Math::PhaseSpaceNL& ps     , 
+        RooAbsReal&                      phi1   ,
+        RooAbsReal&                      phi2   ,
+        RooAbsReal&                      phi3   ) ;
+      /// constructor from all parameters 
+      PhaseSpacePol 
+      ( const char*                      name   , 
+        const char*                      title  ,
+        RooAbsReal&                      x      ,
+        const Gaudi::Math::PhaseSpaceNL& ps     , 
+        RooArgList&                      phis   ) ;
+      // ======================================================================
+      // "copy" constructor 
+      // ======================================================================
+      PhaseSpacePol ( const PhaseSpacePol& right    , 
+                      const char*          name = 0 ) ;
+      /// destructor 
+      virtual ~PhaseSpacePol () ;
+      /// clone 
+      virtual  PhaseSpacePol* clone( const char* name )  const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      virtual Double_t evaluate () const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      RooRealProxy m_x    ;
+      RooListProxy m_phis ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual phase space function 
+      Gaudi::Math::PhaseSpaceNL     m_ps       ;  // the actual function 
+      /// the positive polinomial 
+      mutable Gaudi::Math::Positive m_positive ;  // the positive polynomial
+      // ======================================================================      
+    } ;
+    // ========================================================================
     /** @class PhaseSpace23L
      *  simple model for 2-body phase space from 3-body decays with 
      *  the orbital momenta:
@@ -517,6 +634,72 @@ namespace Analysis
       // ======================================================================
       /// the actual function 
       Gaudi::Math::PhaseSpace23L m_ps23L ;               // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class LASS
+     *  S-wave Kpi amplitude for S-wave Kpi distribtion
+     *  @see Gaudi::Math::LASS
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2013-10-05
+     */
+    class GAUDI_API LASS : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::LASS, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      LASS  ( const char*          name          , 
+              const char*          title         ,
+              RooAbsReal&          x             ,
+              RooAbsReal&          m1430         , // mass  of K*(1430) 
+              RooAbsReal&          g1430         , // width of K*(1430) 
+              RooAbsReal&          a             , 
+              RooAbsReal&          r             , 
+              RooAbsReal&          e             ,                
+              const double         m1    = 493.7 ,   // mass of K 
+              const double         m2    = 139.6 ) ; // mass of pi 
+      /// "copy constructor"
+      LASS  ( const LASS& right , const char* name = 0 )  ;
+      /// destructor 
+      virtual ~LASS () ;
+      /// clone 
+      virtual  LASS * clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::LASS& function() const { return m_lass ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// the mass 
+      RooRealProxy m_x     ;
+      /// K*(1430) parameters
+      RooRealProxy m_m0    ;
+      RooRealProxy m_g0    ;
+      /// LASS parameters 
+      RooRealProxy m_a     ;
+      RooRealProxy m_r     ;
+      RooRealProxy m_e     ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the complex amplitude 
+      std::complex<double> amplitude() const ; // get the complex amplitude 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::LASS m_lass ;              // the actual function 
       // ======================================================================
     } ;
     // ========================================================================
