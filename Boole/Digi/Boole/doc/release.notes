@@ -11,6 +11,7 @@ This version uses projects LCGCMT 65a, Gaudi v23r10, LHCb v36r2, Lbcom v14r2
    . Updated VP reference
    . Updated VP_Compact_MicroChannel-UT-FT reference
    . Updated mc11a-xdst test to use input file from EOS
+   . Updated all VP references, added Muon_NoM1 test.
 
  - Packaging changes
    . Add missing __init__.py file for CMake

@@ -6,7 +6,7 @@
     <text>$APPCONFIGOPTS/Boole/Boole-Upgrade-VP-UT-FT.py</text>
     <text>$APPCONFIGOPTS/Boole/patchUpgrade1.py</text>
     <text>--option</text>
-    <text>from Boole.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130722"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/VP_Compact_MicroChannel-UT-FT/VP_Compact_MicroChannel-UT-FT_Mono.sim'"]; CondDB().AllLocalTagsByDataType=["VP_Compact_MicroChannel+UT","FT_MonoLayer"] ;</text>
+    <text>from Boole.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130808"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/VP_Compact_MicroChannel-UT-FT/VP_Compact_MicroChannel-UT-FT_Mono.sim'"]; CondDB().AllLocalTagsByDataType=["VP_Compact_MicroChannel+UT","FT_MonoLayer"] ;</text>
     </set></argument>
   <argument name="reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-vp_compact_microchannel-ut-ft.ref</text></argument>
   <argument name="error_reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-vp_compact_microchannel-ut-ft-err.ref</text></argument>

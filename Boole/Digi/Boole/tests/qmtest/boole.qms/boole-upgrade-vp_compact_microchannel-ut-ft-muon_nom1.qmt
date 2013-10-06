@@ -1,0 +1,17 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set>
+    <text>$APPCONFIGOPTS/Boole/Default.py</text>
+    <text>$APPCONFIGOPTS/Boole/Boole-Upgrade-VP-UT-FT.py</text>
+    <text>$APPCONFIGOPTS/Boole/patchUpgrade1.py</text>
+    <text>--option</text>
+    <text>from Boole.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130808"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/VP_Compact_MicroChannel-UT-FT/VP_Compact_MicroChannel-UT-FT_Mono-Muon_NoM1.sim'"]; CondDB().AllLocalTagsByDataType=["VP_Compact_MicroChannel+UT","FT_MonoLayer","Muon_NoM1"] ;</text>
+    </set></argument>
+  <argument name="reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-vp_compact_microchannel-ut-ft-muon_nom1.ref</text></argument>
+  <argument name="error_reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-vp_compact_microchannel-ut-ft-muon_nom1-err.ref</text></argument>
+  <argument name="validator"><text>
+from Boole.QMTest.BooleExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
+</extension>
