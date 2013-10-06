@@ -41,8 +41,10 @@ public:
 
   /// Calculate the nearest channel to point in the global frame.
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
+                                    LHCb::VPChannelID& channel) const;
+  virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
                                     LHCb::VPChannelID& channel,
-                                    std::pair <double, double>& fraction) const;
+                                    std::pair<double, double>& fraction) const;
   /// Calculate the global position of a given pixel.
   virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel) const;
   virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
@@ -54,17 +56,12 @@ public:
 
   /// Get the eight channels (if they exist) arround a given seed channel
   virtual StatusCode channelToNeighbours(const LHCb::VPChannelID& channel, 
-                                         std::vector <LHCb::VPChannelID>& neighbours) const;
+                                         std::vector<LHCb::VPChannelID>& neighbours) const;
   
   /// Determine if local point is inside the active area of the sensor.
   virtual StatusCode isInActiveArea(const Gaudi::XYZPoint& point) const;
   /// Return the sensor thickness.
   virtual double siliconThickness() const {return m_thickness;}
-
-  // Temporary function for backwards compatibility
-  virtual int ladderOfChip(unsigned int chip) const {
-    return chip;
-  }
 
   virtual std::pair<double, double> pixelSize(LHCb::VPChannelID channel) const;
   virtual bool isLong(LHCb::VPChannelID channel) const;

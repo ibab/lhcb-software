@@ -44,6 +44,8 @@ public:
                                                      const std::pair<double, double> offset) const = 0;
 
   /// Calculate the nearest channel to point in the global frame.
+  virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point, 
+                                    LHCb::VPChannelID& channel) const = 0;
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
                                     LHCb::VPChannelID& channel,
                                     std::pair <double, double>& fraction) const = 0;
@@ -98,8 +100,7 @@ public:
   /// Cache the geometry information when position changes 
   StatusCode cacheGeometry();
 
-  /// Functions added/kept for backwards compatibility
-  virtual int ladderOfChip(unsigned int chip) const = 0;
+  /// Functions kept for backwards compatibility
   virtual StatusCode pointTo3x3Channels(const Gaudi::XYZPoint& point,
                                         std::vector <LHCb::VPChannelID>& channels) const = 0;
   virtual StatusCode channelToNeighbours(const LHCb::VPChannelID& seedChannel, 

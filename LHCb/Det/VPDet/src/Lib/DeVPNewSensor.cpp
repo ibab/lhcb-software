@@ -8,7 +8,9 @@
 #include "GaudiKernel/IUpdateManagerSvc.h"
 
 // LHCb
+// Kernel/LHCbMath
 #include "LHCbMath/LHCbMath.h"
+// Kernel/LHCbKernel
 #include "Kernel/LineTraj.h"
 #include "Kernel/VPChannelID.h"
 
@@ -86,7 +88,7 @@ StatusCode DeVPNewSensor::initialize()  {
   // Calculate the active area
   m_sizeX = m_nChips * m_chipSize + (m_nChips - 1) * m_interChipDist;
   m_sizeY = m_chipSize;
-  // Calculate the chip index.
+  // Calculate the index of the first chip (assuming four sensors per module).
   m_chip = (sensorNumber() - module() * 4) * m_nChips; 
 
   // Register geometry conditions.
@@ -118,26 +120,25 @@ std::auto_ptr<LHCb::Trajectory> DeVPNewSensor::trajectory(const LHCb::VPChannelI
 /// Calculate the nearest pixel to a point in the global frame. 
 //==============================================================================
 StatusCode DeVPNewSensor::pointToChannel(const Gaudi::XYZPoint& point,
-                                         LHCb::VPChannelID& channel,
-                                         std::pair<double, double>& fraction) const {
-  
+                                         LHCb::VPChannelID& channel) const {
+
   Gaudi::XYZPoint localPoint = globalToLocal(point);
-  // Check that the point is in the active area of the sensor
+  // Check if the point is in the active area of the sensor.
   StatusCode sc = isInActiveArea(localPoint);
   if (!sc.isSuccess()) return sc;
   // Set the module number.
   channel.setModule(module());
   double x0 = 0.;
-  const double step = m_chipSize + 0.5 * m_interChipDist;
   for (unsigned int i = 0; i < m_nChips; ++i) {
-    if (localPoint.x() < x0 + step) {
+    const double x = localPoint.x() - x0; 
+    if (x < m_chipSize + 0.5 * m_interChipDist) {
       // Set the chip number.
       channel.setChip(m_chip + i);
       // Set the row and column.
       unsigned int col = 0;
       unsigned int row = 0;
-      if (localPoint.x() > x0) {
-        col = int((localPoint.x() - x0) / m_pixelSize);
+      if (x > 0.) {
+        col = int(x / m_pixelSize);
         if (col >= m_nCols) col = m_nCols - 1;
       }
       if (localPoint.y() > 0.) {
@@ -148,13 +149,84 @@ StatusCode DeVPNewSensor::pointToChannel(const Gaudi::XYZPoint& point,
       channel.setRow(row);
       break; 
     }
+    x0 += m_chipSize + m_interChipDist;
+  }
+  return StatusCode::SUCCESS;
+
+}
+
+//==============================================================================
+/// Calculate the pixel and fraction corresponding to a global point.
+//==============================================================================
+StatusCode DeVPNewSensor::pointToChannel(const Gaudi::XYZPoint& point,
+                                         LHCb::VPChannelID& channel,
+                                         std::pair<double, double>& fraction) const {
+  
+  Gaudi::XYZPoint localPoint = globalToLocal(point);
+  // Check if the point is in the active area of the sensor.
+  StatusCode sc = isInActiveArea(localPoint);
+  if (!sc.isSuccess()) return sc;
+  fraction.first = 0.;
+  fraction.second = 0.;
+  // Set the module number.
+  channel.setModule(module());
+  const double step = m_chipSize + m_interChipDist;
+  double x0 = 0.;
+  for (unsigned int i = 0; i < m_nChips; ++i) {
+    if (localPoint.x() < x0 + step) {
+      // Set the chip number.
+      channel.setChip(m_chip + i);
+      // Calculate the column number.
+      const double x = localPoint.x() - x0;
+      const double fcol = x / m_pixelSize - 0.5;
+      const unsigned int icol = fcol > 0. ? int(fcol) : 0;
+      // Set column and inter-pixel fraction.
+      if (icol <= 0) {
+        channel.setCol(0);
+        if (0 == i) {
+          if (fcol > 0.) fraction.first = fcol;
+        } else {
+          // First column has elongated pixels.
+          const double pitch = 0.5 * (m_pixelSize + m_interChipPixelSize);
+          fraction.first = x / pitch;
+        }
+      } else if (icol >= m_nCols - 1) {
+        channel.setCol(m_nCols - 1);
+        if (i == m_nChips - 1) {
+          fraction.first = fcol - icol;
+        } else {
+          // Last column has elongated pixels.
+          if (x < m_chipSize) {
+            // This point is assigned to the last but one pixel.
+            channel.setCol(m_nCols - 2);
+            const double pitch = 0.5 * (m_pixelSize + m_interChipPixelSize); 
+            fraction.first = 1. - (m_chipSize - x) / pitch;
+          } else {
+            // Point is in inter-chip region.
+            fraction.first = (x - m_chipSize) / m_interChipPixelSize; 
+          }
+        } 
+      } else {
+        channel.setCol(icol);
+        fraction.first = fcol - icol;
+        if (icol == m_nCols - 2 && i < m_nChips - 1) {
+          fraction.first *= m_pixelSize / m_interChipPixelSize;
+        } 
+      } 
+      // Set the row and inter-pixel fraction.
+      const double frow = localPoint.y() / m_pixelSize - 0.5;
+      const unsigned int irow = frow > 0. ? int(frow) : 0;
+      if (irow <= 0) {
+        channel.setRow(0);
+        if (frow > 0.) fraction.second = frow;
+      } else { 
+        channel.setRow(irow);
+        fraction.second = frow - irow;
+      }
+      break; 
+    }
     x0 += step;
   }
-  // Calculate the interpixel fractions.
-  Gaudi::XYZPoint pixelCentre = globalToLocal(channelToPoint(channel));
-  std::pair<double, double> pitch = pixelSize(channel);
-  fraction.first = (localPoint.x() - pixelCentre.x()) / pitch.first;
-  fraction.second = (localPoint.y() - pixelCentre.y()) / pitch.second; 
   return StatusCode::SUCCESS;
 
 }
@@ -190,18 +262,26 @@ Gaudi::XYZPoint DeVPNewSensor::channelToPoint(const LHCb::VPChannelID& channel,
   const unsigned int col = channel.col();
   const unsigned int row = channel.row();
   const double x0 = chip * (m_chipSize + m_interChipDist);
+  // Calculate the x-coordinate of the pixel centre.
   double x = x0 + (col + 0.5) * m_pixelSize;
   if (col == 0 && chip > 0) {
     x -= 0.5 * (m_interChipPixelSize - m_pixelSize);
-    x += fraction.first * m_interChipPixelSize / 2.;
   } else if (col == m_nCols - 1 && chip < m_nChips - 1) {
     x += 0.5 * (m_interChipPixelSize - m_pixelSize);
-    x += fraction.first * m_interChipPixelSize / 2.;
-  } else {
-    x += fraction.first * m_pixelSize / 2.;
   }
-  double y = (row + 0.5) * m_pixelSize;
-  y += fraction.second * m_pixelSize / 2.; 
+  // Calculate the pitch in the column direction.
+  double pitch = m_pixelSize;
+  if (chip > 0 && col == 0) {
+    pitch = 0.5 * (m_interChipPixelSize + m_pixelSize);
+  } else if (chip < m_nChips - 1 && col == m_nCols - 1) {
+    pitch = m_interChipPixelSize;
+  } else if (chip < m_nChips - 1 && col == m_nCols - 2) {
+    pitch = 0.5 * (m_interChipPixelSize + m_pixelSize); 
+  }
+  // Correct the x-coordinate based on the inter-pixel fraction.
+  x += fraction.first * pitch;
+  // Calculate the y-coordinate.
+  double y = (row + 0.5 + fraction.second) * m_pixelSize;
   Gaudi::XYZPoint point(x, y, 0.); 
   return localToGlobal(point);
 

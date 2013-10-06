@@ -331,6 +331,16 @@ std::auto_ptr<LHCb::Trajectory> DeVPSquareType::trajectory(const LHCb::VPChannel
 /// (assuming the DeVPSquareType instance is already the correct one: z is corresponding to the sensor number)
 //==============================================================================
 StatusCode DeVPSquareType::pointToChannel(const Gaudi::XYZPoint& point,
+                                          LHCb::VPChannelID& channel) const {
+
+  std::pair<double, double> fraction;
+  StatusCode sc = pointToChannel(point, channel, fraction);
+  if (!sc.isSuccess()) return sc;
+  return StatusCode::SUCCESS;
+  
+}
+
+StatusCode DeVPSquareType::pointToChannel(const Gaudi::XYZPoint& point,
                                                LHCb::VPChannelID& channel,
                                                std::pair <double, double>& fraction) const
 {

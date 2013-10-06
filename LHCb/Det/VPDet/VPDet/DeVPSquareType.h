@@ -55,6 +55,8 @@ public:
   //::::::::::::: Some classes to deal with channelID to real world
 
   /// Calculate the nearest channel to a 3-d point.
+  virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
+                                    LHCb::VPChannelID& channel) const;
   /// Also returns the fractional x-y position IN the pixel
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
                                     LHCb::VPChannelID& channel,
@@ -82,10 +84,6 @@ public:
   /// Determines in which ladder is local 3-d point
   virtual int WhichLadder(const Gaudi::XYZPoint& point) const;
   virtual int WhichLadder(int chipNum) const;
-  // Added function
-  virtual int ladderOfChip(unsigned int chip) const {
-    return WhichLadder(chip);
-  }
 
   /// Determines in which chip of a given ladder is local 3-d point 
   virtual int WhichChip(const Gaudi::XYZPoint& point, int ladderIndex) const;
