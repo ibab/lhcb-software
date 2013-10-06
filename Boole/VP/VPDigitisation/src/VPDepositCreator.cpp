@@ -93,17 +93,16 @@ StatusCode VPDepositCreator::initialize() {
     error() << "Cannot initialize uniform random number generator." << endmsg;
     return sc;
   }
-
   // Temporary check if we are running with old or new geometry.
   if (m_det->numberSensors() > 100) m_oldXml = false;
-
   // Calculate diffusion coefficient.
   const double kt = m_temperature * Gaudi::Units::k_Boltzmann / Gaudi::Units::eV;
   const double thickness = m_det->sensor(0)->siliconThickness();
-  
   if (m_irradiated) m_diffusionCoefficient = sqrt(2. * kt * thickness / 100.);
   else m_diffusionCoefficient = sqrt(2. * kt * thickness / m_biasVoltage);
-  
+#ifdef DEBUG_HISTO
+  setHistoTopDir("VP/");
+#endif
   return StatusCode::SUCCESS;
 
 }
@@ -134,18 +133,26 @@ StatusCode VPDepositCreator::execute() {
   put(deposits, m_depositLocation);
   // Sum up the deposits on each pixel and create MC digits.
   LHCb::MCVPDigits* digits = new LHCb::MCVPDigits();
-  LHCb::MCVPDeposits::const_iterator itd = deposits->begin();
-  LHCb::VPChannelID channel = (*itd)->channelID();
-  LHCb::MCVPDigit* digit = new LHCb::MCVPDigit();
-  while (itd != deposits->end()) {
-    if ((*itd)->channelID() != channel) {
-      digits->insert(digit, channel);
-      channel = (*itd)->channelID();
+  LHCb::VPChannelID lastChannel;
+  LHCb::MCVPDigit* digit = NULL;
+  LHCb::MCVPDeposits::const_iterator itd;
+  for (itd = deposits->begin(); itd != deposits->end(); ++itd) {
+    if (!digit) {
+      // Create the first digit.
       digit = new LHCb::MCVPDigit();
-    }
+      lastChannel = (*itd)->channelID();
+    } else {
+      // Check if the deposits belongs to a new channel.
+      if ((*itd)->channelID() != lastChannel) {
+        digits->insert(digit, lastChannel);
+        digit = new LHCb::MCVPDigit();
+        lastChannel = (*itd)->channelID();
+      }
+    } 
     digit->addToMcDeposit(*itd);
-    ++itd;
   }
+  // Add the last digit to the list.
+  if (digit) digits->insert(digit, lastChannel);
   // Store the MC digits on the transient store.
   put(digits, m_digitLocation);
   return StatusCode::SUCCESS;
@@ -177,6 +184,8 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit,
       sum += q;
     }
   }
+  // Skip very small deposits.
+  if (sum < 1.) return;
   while (charge > sum + m_minChargeTail) {
     // Add additional charge sampled from 1 / n^2 distribution.
     const double q = randomTail(m_minChargeTail, charge - sum);
@@ -224,10 +233,10 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit,
     for (unsigned int j = 0; j < nSplit; ++j) {
       const double dx = sigmaD * m_gauss();
       const double dy = sigmaD * m_gauss();
-      Gaudi::XYZPoint endpoint = point + Gaudi::XYZVector(dx, dy, 0.);
+      Gaudi::XYZPoint endpoint = sensor->globalToLocal(point) + Gaudi::XYZVector(dx, dy, 0.);
       LHCb::VPChannelID channel;
       std::pair<double, double> fraction;
-      StatusCode valid = sensor->pointToChannel(endpoint, channel, fraction);
+      StatusCode valid = sensor->pointToChannel(sensor->localToGlobal(endpoint), channel, fraction);
       if (valid) {
         if (pixels.find(channel) == pixels.end()) {
           pixels[channel] = q;

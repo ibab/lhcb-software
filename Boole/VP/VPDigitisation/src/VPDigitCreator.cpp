@@ -89,6 +89,9 @@ StatusCode VPDigitCreator::initialize() {
       return sc;
     }
   }
+#ifdef DEBUG_HISTO
+  setHistoTopDir("VP/");
+#endif
   return StatusCode::SUCCESS;
 
 }

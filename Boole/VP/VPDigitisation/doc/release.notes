@@ -3,6 +3,9 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2013-10-06 - Heinrich Schindler
+ - Fix unprotected iterator in VPDepositCreator
+
 !========================= VPDigitisation v1r0 2013-10-02 =========================
 ! 2013-09-27 - Heinrich Schindler
  - Removed unused member variable in VPDepositMonitor
