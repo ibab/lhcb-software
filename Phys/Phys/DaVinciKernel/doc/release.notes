@@ -4,6 +4,11 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2013-10-06 - Vanya Belyaev
+
+ - add new file PVSEntry : 
+   actually move the internal CombineParticle sentry into public domain.
+
 !========================= DaVinciKernel v11r4p1 2013-08-01 =========================
 
 ! 2013-06-14 - Chris Jones
