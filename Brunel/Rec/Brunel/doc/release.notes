@@ -3,6 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to QMTests:
+  . Removed VL tests and references.
+  . Added VP_Compact_MicroChannel-UT-FT_Mono-Muon_NoM1 test and reference file.
+  . Edited VP_Compact_MicroChannel-UT-FT_Mono test to point to szczypka's file.
+  . Renamed VP_Compact_MicroChannel-UT-FT_Mono test to be consistent with other tests. 
+
 </PRE><H1><A NAME=v44r7>2013-10-04 Brunel v44r7</A></H1><PRE>
 This version uses projects LCG 66, Gaudi v23r10, LHCb v36r2, Lbcom v14r2,
  Rec v15r2 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*

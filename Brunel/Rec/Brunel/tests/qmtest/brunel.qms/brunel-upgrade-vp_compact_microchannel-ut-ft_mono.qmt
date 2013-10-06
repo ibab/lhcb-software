@@ -11,7 +11,7 @@
     <text>--option</text>
     <text>from Brunel.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130806"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; CondDB.LocalTags = { "DDDB" : [ "VP-CompactMicroChannelOptimize-Local-20130408", "VP-Compact-Local-20130319", "VP-UT-Local-NoPuVeto-20121024", "UT-Pipe-Upgrade-Local-20120928", "FT-MonoLayer-Local-20130722" ]}; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/d/decianm/nightlyTestFiles/BrunelStep/VP-UT-FT_MonoLayer/VP-UT-FT_MonoLayer.xdigi'"]; CondDB().AllLocalTagsByDataType = ["VP_Compact_MicroChannel+UT","FT_Monolayer"];from Configurables import Brunel; Brunel().DataType  = "Upgrade"; Brunel().EvtMax = 3;</text>
     </set></argument>
-  <argument name="reference"><text>../refs/brunel-upgrade-vp_compact_microchannel-ut-ft_monolayer.ref</text></argument>
+  <argument name="reference"><text>../refs/brunel-upgrade-vp_compact_microchannel-ut-ft_mono.ref</text></argument>
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
