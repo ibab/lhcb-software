@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =========================================================================
 
+! 2013-10-07 - Olivier Deschamps
+ - fix circular dependency with CaloUtils in ICaloRelationsGetter
+
 ! 2013-10-04 - Olivier Deschamps
  - Add ICaloRelationsGetter interfaces
 

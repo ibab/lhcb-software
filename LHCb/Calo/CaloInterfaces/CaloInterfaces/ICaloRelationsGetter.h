@@ -7,7 +7,17 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-#include "CaloUtils/Calo2Track.h"
+
+//Forward dec'
+template <class FROM,class TO,class WEIGHT> class IRelationWeighted; 
+template <class FROM,class TO,class WEIGHT> class IRelationWeighted2D; 
+template <class FROM,class TO> class IRelation; 
+
+namespace LHCb{ 
+  class CaloHypo;
+  class CaloCluster;
+  class Track;
+}
 
 static const InterfaceID IID_ICaloRelationsGetter ( "ICaloRelationsGetter", 1, 0 );
 
@@ -24,16 +34,14 @@ public:
   static const InterfaceID& interfaceID() { return IID_ICaloRelationsGetter; }
 
 
-  virtual LHCb::Calo2Track::ITrHypoTable2D* getTrHypoTable2D(std::string location)=0;
-  virtual LHCb::Calo2Track::IHypoEvalTable* getHypoEvalTable(std::string location)=0;
-  virtual LHCb::Calo2Track::IClusTrTable*   getClusTrTable  (std::string location)=0;
+  virtual IRelationWeighted2D< LHCb::Track , LHCb::CaloHypo , float >* getTrHypoTable2D(std::string location)=0;
+  virtual IRelation< LHCb::CaloHypo , float >*  getHypoEvalTable(std::string location)=0;
+  virtual IRelationWeighted< LHCb::CaloCluster , LHCb::Track , float >* getClusTrTable  (std::string location)=0;
 
 
 protected:
 
 private:
-
-
 
 };
 #endif // ICALORELATIONSGETTER_H

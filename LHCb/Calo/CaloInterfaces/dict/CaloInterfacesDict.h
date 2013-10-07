@@ -27,4 +27,5 @@
 #include "CaloInterfaces/ICaloHypoEstimator.h"
 #include "CaloInterfaces/IGammaPi0SeparationTool.h"
 #include "CaloInterfaces/ICaloRelationsGetter.h"
+
 #endif //DICT_CALOINTERFACESDICT_H 
