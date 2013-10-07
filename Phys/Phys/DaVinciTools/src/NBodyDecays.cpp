@@ -29,6 +29,8 @@
  *  they makes the configuration more complicated, but 
  *  they really could imporve CPU performance.
  *
+ *  @attention  Please be sure what you are actually doing, if use these algorithms 
+ *
  *  @code 
  *  from Configurables import DaVinci__N4BodyDecays as ALGO
  *  alg = ALGO ( 
@@ -45,6 +47,85 @@
  *  @see DaVinci::N5BodyDecay
  *  @see DaVinci::N6BodyDecay
  *  @see DaVinci::N7BodyDecay
+ *
+ *
+ *  I've tested a bit artificial (in terms of numerical values for 
+ *  the cuts, clearly chi2(DOCA)<9 is much better than chi2(DOCA)<25) 
+ *  but realistic (in terms of decay structure and variables to cut on) 
+ *  configurations:
+ *
+ *  @code 
+ *
+ *  ## NEW ONE 
+ *
+ *  from GaudiConfUtils.ConfigurableGenerators import DaVinci__N5BodyDecays
+ *  alg_5n = DaVinci__N5BodyDecays (
+ *      ##
+ *      DecayDescriptors = [
+ *      "[ B_s0 -> J/psi(1S) K+ pi+ pi- pi- ]cc" ,
+ *      "  B_s0 -> J/psi(1S) K+ pi+ K-  pi-    " ,
+ *      "[ B_s0 -> J/psi(1S) K+ K+  K-  pi- ]cc"
+ *      ] ,
+ *      ##
+ *      Preambulo = ... , 
+ *      ##
+ *      Combination12Cut  = """
+ *      ( AM<5.550 * GeV    ) &
+ *      ( ACHI2DOCA(1,2)<25 )
+ *      """,
+ *      Combination123Cut = """
+ *      ( AM<5.550 * GeV    ) &
+ *      ( ACHI2DOCA(1,3)<25 ) & 
+ *      ( ACHI2DOCA(2,3)<25 ) 
+ *      """ ,
+ *      Combination1234Cut = """
+ *      ( AM<5.550 * GeV   ) &
+ *      ( ACHI2DOCA(1,4)<25) & 
+ *      ( ACHI2DOCA(2,4)<25) &
+ *      ( ACHI2DOCA(3,4)<25) 
+ *      """ ,
+ *      CombinationCut   = """
+ *      mb0_acut & 
+ *      ( ACHI2DOCA(1,5)<25) & 
+ *      ( ACHI2DOCA(2,5)<25) &
+ *      ( ACHI2DOCA(3,5)<25) &
+ *      ( ACHI2DOCA(4,5)<25) 
+ *      """ ,
+ *      ## 
+ *      MotherCut = "..." 
+ *      ## 
+ *      )
+ *
+ *  ## OLD ONE:
+ *  from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+ *  alg_5 = CombineParticles (
+ *      ##
+ *      DecayDescriptors = [
+ *          "[ B_s0 -> J/psi(1S) K+ pi+ pi- pi- ]cc" ,
+ *          "  B_s0 -> J/psi(1S) K+ pi+ K-  pi-    " ,
+ *          "[ B_s0 -> J/psi(1S) K+ K+  K-  pi- ]cc"
+ *      ] ,
+ *      ##
+ *      Preambulo = ... ,  
+ *      ##
+ *      CombinationCut = """
+ *      mb0_acut & 
+ *      ADOCACHI2CUT ( 25 , '' )
+ *      """ ,
+ *      ## 
+ *      MotherCut = ... 
+ *   )
+ *
+ *  @endcode 
+ *
+ *  The configurations have been compared with the DIMUON-stream,
+ *  using <code>FullDSTDiMuonJpsi2MuMuDetachedLine</code> stripping 
+ *  line and <code>StdLooseKaons</code> and <code>StdLoosePions</code>
+ *
+ *  The performance of algorithms for 5000 events is 
+ *   - 269s for standard CombineParticles algorithm 
+ *   - 2-4s for N5BodyDecays 
+ *
  *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
  *  @date 2013-10-06
  *
@@ -73,6 +154,9 @@ namespace DaVinci
    *  @endcode 
    *
    *  @attention: note the order of particles
+   *
+   *  @attention  Please be sure what you are actually doing, if use these algorithms 
+   *
    *
    *  @author Vanya Belyaev
    *  @date   2013-10-06
@@ -155,6 +239,8 @@ namespace DaVinci
    *  @author Vanya Belyaev
    *  @date   2013-10-06
    *
+   *  @attention  Please be sure what you are actually doing, if use these algorithms 
+   *
    *                    $Revision:$
    *  Last modification $Date:$
    *                 by $Author:$
@@ -233,6 +319,87 @@ namespace DaVinci
    *  @author Vanya Belyaev
    *  @date   2013-10-06
    *
+   *  @attention  Please be sure what you are actually doing, if use these algorithms 
+   *
+   *  I've tested a bit artificial (in terms of numerical values for 
+   *  the cuts, clearly chi2(DOCA)<9 is much better than chi2(DOCA)<25) 
+   *  but realistic (in terms of decay structure and variables to cut on) 
+   *  configurations:
+   *
+   *  @code 
+   *
+   *  ## NEW ONE 
+   *
+   *  from GaudiConfUtils.ConfigurableGenerators import DaVinci__N5BodyDecays
+   *  alg_5n = DaVinci__N5BodyDecays (
+   *      ##
+   *      DecayDescriptors = [
+   *      "[ B_s0 -> J/psi(1S) K+ pi+ pi- pi- ]cc" ,
+   *      "  B_s0 -> J/psi(1S) K+ pi+ K-  pi-    " ,
+   *      "[ B_s0 -> J/psi(1S) K+ K+  K-  pi- ]cc"
+   *      ] ,
+   *      ##
+   *      Preambulo = ... , 
+   *      ##
+   *      Combination12Cut  = """
+   *      ( AM<5.550 * GeV    ) &
+   *      ( ACHI2DOCA(1,2)<25 )
+   *      """,
+   *      Combination123Cut = """
+   *      ( AM<5.550 * GeV    ) &
+   *      ( ACHI2DOCA(1,3)<25 ) & 
+   *      ( ACHI2DOCA(2,3)<25 ) 
+   *      """ ,
+   *      Combination1234Cut = """
+   *      ( AM<5.550 * GeV   ) &
+   *      ( ACHI2DOCA(1,4)<25) & 
+   *      ( ACHI2DOCA(2,4)<25) &
+   *      ( ACHI2DOCA(3,4)<25) 
+   *      """ ,
+   *      CombinationCut   = """
+   *      mb0_acut & 
+   *      ( ACHI2DOCA(1,5)<25) & 
+   *      ( ACHI2DOCA(2,5)<25) &
+   *      ( ACHI2DOCA(3,5)<25) &
+   *      ( ACHI2DOCA(4,5)<25) 
+   *      """ ,
+   *      ## 
+   *      MotherCut = "..." 
+   *      ## 
+   *      )
+   *
+   *  ## OLD ONE:
+   *  from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+   *  alg_5 = CombineParticles (
+   *      ##
+   *      DecayDescriptors = [
+   *          "[ B_s0 -> J/psi(1S) K+ pi+ pi- pi- ]cc" ,
+   *          "  B_s0 -> J/psi(1S) K+ pi+ K-  pi-    " ,
+   *          "[ B_s0 -> J/psi(1S) K+ K+  K-  pi- ]cc"
+   *      ] ,
+   *      ##
+   *      Preambulo = ... ,  
+   *      ##
+   *      CombinationCut = """
+   *      mb0_acut & 
+   *      ADOCACHI2CUT ( 25 , '' )
+   *      """ ,
+   *      ## 
+   *      MotherCut = ... 
+   *   )
+   *
+   *  @endcode 
+   *
+   *  The configurations have been compared with the DIMUON-stream,
+   *  using <code>FullDSTDiMuonJpsi2MuMuDetachedLine</code> stripping 
+   *  line and <code>StdLooseKaons</code> and <code>StdLoosePions</code>
+   *
+   *  The performance of algorithms for 5000 events is 
+   *   - 269s for standard CombineParticles algorithm 
+   *   - 2-4s for N5BodyDecays 
+   *
+   *
+   *
    *                    $Revision:$
    *  Last modification $Date:$
    *                 by $Author:$
@@ -309,6 +476,8 @@ namespace DaVinci
    *    CombinationCut      = "..." , 
    *    MotherCut           = "..." )
    *  @endcode 
+   *
+   *  @attention  Please be sure what you are actually doing, if use these algorithms 
    *
    *  @author Vanya Belyaev
    *  @date   2013-10-06
@@ -395,6 +564,8 @@ namespace DaVinci
    *  @author Vanya Belyaev
    *  @date   2013-10-06
    *
+   *  @attention  Please be sure what you are actually doing, if use these algorithms 
+   *
    *                    $Revision:$
    *  Last modification $Date:$
    *                 by $Author:$
@@ -463,7 +634,7 @@ namespace
                   PARTICLE end             , 
                   const LHCb::Particle* p2 ) 
   {
-    for ( ; begin != end ; ++end ) 
+    for ( ; begin != end ; ++begin ) 
     { if ( !_unique_ ( *begin , p2 ) ) { return false ; } }
     return true ;
   }
@@ -495,7 +666,10 @@ namespace
     if      ( bp1 ) { return _unique_ ( daughters2.begin() , daughters2.end() , p1 ) ; }
     else if ( bp2 ) { return _unique_ ( daughters1.begin() , daughters1.end() , p2 ) ; }
     //
-    return  _unique_ ( daughters2.begin () , daughters2.end() , p1 ) ; 
+    return 
+      daughters1.size() < daughters2.size() ?
+      _unique_ ( daughters2.begin () , daughters2.end() , p1 ) :
+      _unique_ ( daughters1.begin () , daughters1.end() , p2 ) ;
   }
   // ==========================================================================
   /// check the N-body decay structure 
@@ -1366,7 +1540,6 @@ StatusCode DaVinci::N5BodyDecays::execute()
         // here we have the combination and can apply the cut:
         if ( !m_acut12.fun ( comb12 ) ) { continue ; } // CONTINUE, next c2 
         //
-        //
         // loop over 3rd particle 
         for ( Selected::Range::const_iterator it3 = child3.begin() ;
               child3.end() != it3 && !problem ; ++it3 ) 
@@ -1412,7 +1585,7 @@ StatusCode DaVinci::N5BodyDecays::execute()
             
             // loop over 5th particle 
             for ( Selected::Range::const_iterator it5 = child5.begin() ;
-                  child4.end() != it5 && !problem ; ++it5 ) 
+                  child5.end() != it5 && !problem ; ++it5 ) 
             {
               
               problem = problem || tooMuchCandidates ( nGood , *idecay ) ;
@@ -1632,7 +1805,7 @@ StatusCode DaVinci::N6BodyDecays::execute()
             
             // loop over 5th particle 
             for ( Selected::Range::const_iterator it5 = child5.begin() ;
-                  child4.end() != it5 && !problem ; ++it5 ) 
+                  child5.end() != it5 && !problem ; ++it5 ) 
             {
               
               problem = problem || tooMuchCandidates ( nGood , *idecay ) ;
@@ -1653,7 +1826,7 @@ StatusCode DaVinci::N6BodyDecays::execute()
               
               // loop over 6th particle 
               for ( Selected::Range::const_iterator it6 = child6.begin() ;
-                    child4.end() != it6 && !problem ; ++it6 ) 
+                    child6.end() != it6 && !problem ; ++it6 ) 
               {
                 
                 problem = problem || tooMuchCandidates ( nGood , *idecay ) ;
@@ -1884,7 +2057,7 @@ StatusCode DaVinci::N7BodyDecays::execute()
             
             // loop over 5th particle 
             for ( Selected::Range::const_iterator it5 = child5.begin() ;
-                  child4.end() != it5 && !problem ; ++it5 ) 
+                  child5.end() != it5 && !problem ; ++it5 ) 
             {
               
               problem = problem || tooMuchCandidates ( nGood , *idecay ) ;
@@ -1906,7 +2079,7 @@ StatusCode DaVinci::N7BodyDecays::execute()
               
               // loop over 6th particle 
               for ( Selected::Range::const_iterator it6 = child6.begin() ;
-                    child4.end() != it6 && !problem ; ++it6 ) 
+                    child6.end() != it6 && !problem ; ++it6 ) 
               {
                 
                 problem = problem || tooMuchCandidates ( nGood , *idecay ) ;
@@ -1929,7 +2102,7 @@ StatusCode DaVinci::N7BodyDecays::execute()
                 
                 // loop over 7th particle 
                 for ( Selected::Range::const_iterator it7 = child7.begin() ;
-                      child4.end() != it7 && !problem ; ++it7 ) 
+                      child7.end() != it7 && !problem ; ++it7 ) 
                 {
                   
                   problem = problem || tooMuchCandidates ( nGood , *idecay ) ;
