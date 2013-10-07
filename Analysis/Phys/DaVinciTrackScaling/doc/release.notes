@@ -4,11 +4,12 @@
 ! Purpose     : Track scaling and smearing
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciTrackScaling v1r3 2013-10-07 =========================
+
 ! 2013-10-05 - Vanya Belyaev
  - TrackScaleState: reduce printout 
 
 ! 2013-10-05 - Vanya Belyaev
-
  - TrackScaleState
    remove some bad-intereference with ROOT memory management 
    (actually it needs to be fixed in XmlBaseConditionCnv.cpp) 
