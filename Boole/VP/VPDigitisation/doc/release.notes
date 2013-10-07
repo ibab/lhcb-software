@@ -3,6 +3,9 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2013-10-07 - Daniel Hynds
+ - Added cluster monitoring code (uses MC truth)
+
 ! 2013-10-06 - Heinrich Schindler
  - Fix unprotected iterator in VPDepositCreator
 
