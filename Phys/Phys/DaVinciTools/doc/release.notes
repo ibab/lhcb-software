@@ -5,39 +5,37 @@
 
 
 ! 2013-10-06 - Vanya Belyaev
-
  - reshuffle CombineParticles in a way to allow specializations  
  - add new algorithms in the file NBodyDecays.cpp to deal with 
    particular specializations. 
-
- *  Attempt to make more fine instumentation of generic 
- *  CombineParticle algorithm for multibody decays.
- *  The new functionality allows to provide the cuts for 
- *  incomplete combinations. Being used in smart way,
- *  this functionality could allow some gain in CPU perfomance.
- *  For N-body decays the following new properties are added :
- *  - <code>Combination12Cut</code>
- *  - <code>Combination123Cut</code>
- *  - ... up to <code>Combination123...(N-1)Cut</code>
- *  These cuts are applied during the explicit loops 
- *  (it is bad, but generic looper here make no gain...)
- *  Honestly speaking the implementation is a bit ugly, 
- *  but I've seen even less nice lines in LHCb software.
- *
- *  These new properties are mandatory, and of course 
- *  they makes the configuration more complicated, but 
- *  they really could imporve CPU performance.
- *
- *  @code 
- *  from Configurables import DaVinci__N4BodyDecays as ALGO
- *  alg = ALGO ( 
- *    'MyDecay' , 
- *    DecayDescriptor = "D0 -> pi+ pi+ pi- pi-" , 
- *    Combination12Cut  = "ACHI2DOCA(1,2)<16"                       , ## new one 
- *    Combination123Cut = "(ACHI2DOCA(1,3)<16)&(ACHI2DOCA(2,3)<16)" , ## new one 
- *    CombinationCut    = "(ACHI2DOCA(1,4)<16)&(ACHI2DOCA(2,4)<16)&(ACHI2DOCA(3,4)<16)" , 
- *    MotherCut         = "..." )
- *  @endcode 
+  *  Attempt to make more fine instumentation of generic 
+  *  CombineParticle algorithm for multibody decays.
+  *  The new functionality allows to provide the cuts for 
+  *  incomplete combinations. Being used in smart way,
+  *  this functionality could allow some gain in CPU perfomance.
+  *  For N-body decays the following new properties are added :
+  *  - <code>Combination12Cut</code>
+  *  - <code>Combination123Cut</code>
+  *  - ... up to <code>Combination123...(N-1)Cut</code>
+  *  These cuts are applied during the explicit loops 
+  *  (it is bad, but generic looper here make no gain...)
+  *  Honestly speaking the implementation is a bit ugly, 
+  *  but I've seen even less nice lines in LHCb software.
+  *
+  *  These new properties are mandatory, and of course 
+  *  they makes the configuration more complicated, but 
+  *  they really could imporve CPU performance.
+  *
+  *  @code 
+  *  from Configurables import DaVinci__N4BodyDecays as ALGO
+  *  alg = ALGO ( 
+  *    'MyDecay' , 
+  *    DecayDescriptor = "D0 -> pi+ pi+ pi- pi-" , 
+  *    Combination12Cut  = "ACHI2DOCA(1,2)<16"                       , ## new one 
+  *    Combination123Cut = "(ACHI2DOCA(1,3)<16)&(ACHI2DOCA(2,3)<16)" , ## new one 
+  *    CombinationCut    = "(ACHI2DOCA(1,4)<16)&(ACHI2DOCA(2,4)<16)&(ACHI2DOCA(3,4)<16)" , 
+  *    MotherCut         = "..." )
+  *  @endcode 
 
 !========================= DaVinciTools v23r9 2013-10-02 =========================
 
