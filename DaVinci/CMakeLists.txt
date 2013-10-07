@@ -6,7 +6,7 @@ find_package(GaudiProject)
 #---------------------------------------------------------------
 
 # Declare project name and version
-gaudi_project(DaVinci v33r7
+gaudi_project(DaVinci v33r7p1
               USE Analysis v11r2
                   Stripping v7r2
                   Lbcom v14r2
