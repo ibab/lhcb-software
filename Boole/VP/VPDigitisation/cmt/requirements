@@ -16,6 +16,7 @@ use  GaudiAlg      v*
 use  LinkerEvent   v*  Event
 use  VPDet         v*  Det
 use  GSL           v*  LCG_Interfaces
+use  TrackEvent    v*  Event
 
 # Component library building rule
 #=========================================================================
