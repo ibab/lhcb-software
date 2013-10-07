@@ -3,6 +3,28 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v33r7p1>2013-10-07 DaVinci v33r7p1</A></H1><PRE>
+
+New development patch release, based on DaVinci v33r7.
+
+Includes updates to CombineParticles to test new functionailty.
+
+Patched Packages :-
+
+- DaVinciKernel
+ . Add new file PVSEntry (Made public from CombineParticle sentry).
+
+- DaVinciTools
+ . Reshuffle CombineParticles in a way to allow specializations  
+ . Add new algorithms in the file NBodyDecays.cpp to deal with 
+   particular specializations. 
+ . See the package release notes and doxygen documentation for more
+   detailed information.
+
+- DaVinciTrackScaling
+ . TrackScaleState : Remove some bad-intereference with ROOT 
+   memory management.
+
 </PRE><H1><A NAME=v33r7>2013-10-03 DaVinci v33r7</A></H1><PRE>
 
 New development release based on the LHCb v36r2 stack.
