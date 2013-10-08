@@ -59,21 +59,26 @@ LoKi::DistanceCalculatorBase::DistanceCalculatorBase
   , m_extrapolatorName ( "TrackMasterExtrapolator:PUBLIC" )
 // The state provider  tool itself 
   , m_extrapolator     ( 0 ) /// The extrapolator
+// allow transitions between different categories ?
+  , m_allowTransitions ( true )  // allow transitions between categories ?
 {
   // ==========================================================================
   declareProperty 
     ( "MaxPrints"        , 
       m_prints           , 
-      "Maximal number of prints "        ) ;
+      "Maximal number of prints " ) ;
   declareProperty 
     ( "Transporter"        , m_transporterName      , 
-      "The Particle Transporter  tool to be used"  ) ;
+      "The Particle Transporter  tool to be used" );
   declareProperty 
     ( "StateProvider"      , m_stateProviderName  , 
       "The Track State Provider  tool to be used" );
   declareProperty 
     ( "TrackExtrapolator"  , m_extrapolatorName   , 
       "The Track Extrapolator    tool to be used" );
+  declareProperty 
+    ( "AllowTransitions"   , m_allowTransitions   , 
+      "allow transitions between different categrories" );
   // ==========================================================================
 }
 // ============================================================================

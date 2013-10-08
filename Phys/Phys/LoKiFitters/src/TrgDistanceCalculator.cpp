@@ -785,9 +785,40 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   Gaudi::XYZVector&       impact   , 
   double*                 chi2     ) const 
 {
-  
+  // 
+  if ( allowTransitions () )
+  {
+    // the first particle
+    LoKi::KalmanFilter::ParticleType type1 = particleType_ ( particle ) ;
+    switch ( type1 ) 
+    {
+    case LoKi::KalmanFilter::GammaLikeParticle   : ;
+    case LoKi::KalmanFilter::DiGammaLikeParticle :
+      {
+        impact =  Gaudi::XYZVector() ;
+        if ( 0 != chi2 ) { *chi2 = 0 ; }
+        if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "IP->(DI)GAMMA" ) ; }
+        return StatusCode::SUCCESS ;                                    // RETURN 
+      }
+    case LoKi::KalmanFilter::ShortLivedParticle : 
+      {
+        const LHCb::VertexBase* v1 = particle.endVertex() ;
+        if ( 0 == v1 ) { break ; }  
+        if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "IP->VD" ) ; }
+        // make the real calculations 
+        double dist = 0 ;
+        StatusCode sc = i_distance ( *v1 , vertex , dist , chi2 ) ; // RETURN 
+        impact = v1->position() - vertex.position () ;
+        return sc ;
+      } 
+    default: ;
+    }    
+  }
+  //
+  // start normal processing 
+  //
   using namespace Gaudi::Math::Operators ;
-  
+  //
   // make the fast evaluation:
   i_distance ( particle , vertex , impact ) ;
   
@@ -859,7 +890,63 @@ StatusCode LoKi::TrgDistanceCalculator::_distance
   double&               dist , 
   double*               chi2 ) const 
 {
-  
+  //
+  if ( allowTransitions () )
+  {
+    // the first particle
+    LoKi::KalmanFilter::ParticleType type1 = particleType_ ( p1 ) ;
+    switch ( type1 ) 
+    {
+    case LoKi::KalmanFilter::GammaLikeParticle   : ;
+    case LoKi::KalmanFilter::DiGammaLikeParticle :
+      {
+        dist = 0 ;
+        if ( 0 != chi2 ) { *chi2 = 0 ; }
+        if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "DOCA->(DI)GAMMA" ) ; }
+        return StatusCode::SUCCESS ;                                    // RETURN 
+      }
+    case LoKi::KalmanFilter::ShortLivedParticle : 
+      {
+        const LHCb::VertexBase* v1 = p1.endVertex() ;
+        if ( 0 == v1 ) { break ; }  
+        if ( printStat() && msgLevel ( MSG::INFO ) ) { ++counter ( "DOCA->IP" ) ; }
+        // make the proper evaluations 
+        Gaudi::XYZVector impact ;
+        StatusCode sc  = _distance ( p2 , *v1 , impact , chi2 ) ;
+        dist           = impact.R() ;
+        return sc  ;                                                    // RETURN 
+      } 
+    default: ;
+    }    
+    // the second particle
+    LoKi::KalmanFilter::ParticleType type2 = particleType_ ( p2 ) ;
+    switch ( type2 ) 
+    {
+    case LoKi::KalmanFilter::GammaLikeParticle   : ;
+    case LoKi::KalmanFilter::DiGammaLikeParticle :
+      {
+        dist = 0 ;
+        if ( 0 != chi2 ) { *chi2 = 0 ; }
+        if ( printStat() && msgLevel( MSG::INFO ) ) { ++counter ( "DOCA->(DI)GAMMA" ) ; }
+        return StatusCode::SUCCESS ;                                    // RETURN 
+      }
+    case LoKi::KalmanFilter::ShortLivedParticle :
+      {
+        const LHCb::VertexBase* v2 = p2.endVertex() ;
+        if ( 0 == v2 ) { break ; }  
+        if ( printStat() && msgLevel ( MSG::INFO ) ) { ++counter ( "DOCA->IP" ) ; }
+        // make the proper evaluations 
+        Gaudi::XYZVector impact ;
+        StatusCode sc  = _distance ( p1 , *v2 , impact , chi2 ) ;
+        dist           = impact.R() ;
+        return sc ;                                                    // RETURN 
+      }
+    default: ;
+    }
+  }
+  //
+  // start normal processing  
+  //
   using namespace Gaudi::Math::Operators ;
   
   Gaudi::XYZPoint point1 ;

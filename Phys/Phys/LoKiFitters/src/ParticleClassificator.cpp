@@ -229,30 +229,38 @@ LoKi::KalmanFilter::ParticleType
 LoKi::ParticleClassificator::particleType ( const LHCb::Particle* p ) const 
 {
   //
-  if      ( 0 == p ) 
-  { return LoKi::KalmanFilter::UnspecifiedParticle ; }  // RETURN 
-  else if ( m_gammaCLike ( p ) )
+  if ( 0 == p ) { return LoKi::KalmanFilter::UnspecifiedParticle ; }  // RETURN 
+  return particleType_ ( *p ) ;
+}
+// ============================================================================
+// get the particle type 
+// ============================================================================
+LoKi::KalmanFilter::ParticleType 
+LoKi::ParticleClassificator::particleType_ ( const LHCb::Particle& p ) const 
+{
+  //
+  if      ( m_gammaCLike  ( &p ) )
   { 
-    m_gammaC_like.insert ( p->particleID () ) ;
+    m_gammaC_like.insert ( p.particleID () ) ;
     // ATTENTION! GammaC is *LONG_LIVED_PARTICLE*
     return LoKi::KalmanFilter::LongLivedParticle   ;    // RETURN 
   } 
-  else if ( m_digammaLike ( p ) )
+  else if ( m_digammaLike ( &p ) )
   { 
-    m_digamma_like.insert ( p->particleID () ) ;   
+    m_digamma_like.insert ( p.particleID () ) ;   
     return LoKi::KalmanFilter::DiGammaLikeParticle ;    // RETURN 
   } 
-  else if ( m_gammaLike   ( p ) )
+  else if ( m_gammaLike   ( &p ) )
   { 
-    m_gamma_like.insert   ( p->particleID () ) ;   
+    m_gamma_like.insert   ( p.particleID () ) ;   
     return LoKi::KalmanFilter::GammaLikeParticle   ;    // RETURN
   }
-  else if ( m_longLived  ( p->particleID () ) ) 
+  else if ( m_longLived  ( p.particleID () ) ) 
   { return LoKi::KalmanFilter::LongLivedParticle   ; }  // RETURN 
-  else if ( m_shortLived ( p->particleID () ) )
+  else if ( m_shortLived ( p.particleID () ) )
   { return LoKi::KalmanFilter::ShortLivedParticle  ; }  // RETURN 
   //
-  m_unclassified.insert ( p->particleID() ) ;
+  m_unclassified.insert  ( p.particleID() ) ;
   //
   return LoKi::KalmanFilter::UnspecifiedParticle ;
 }

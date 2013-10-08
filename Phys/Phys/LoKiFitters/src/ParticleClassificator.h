@@ -88,6 +88,14 @@ namespace LoKi
     // ========================================================================
   protected:
     // ========================================================================
+    /** get the particle type 
+     *  @see LoKi::KalmanFilter::ParticleType
+     */
+    LoKi::KalmanFilter::ParticleType 
+    particleType_ ( const LHCb::Particle& p ) const ;
+    // ========================================================================
+  protected:
+    // ========================================================================
     /** standard constructor 
      *  @param type   the actual type of the tool 
      *  @param name   the instance name 
