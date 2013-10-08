@@ -2,13 +2,13 @@
 # Created    : 2008-11-18
 # Maintainer : Chris Jones
 #========================================================================
-package           EventPacker
-version           v3r2
+package           PackedFlavTagEvent
+version           v1r0
 
 #========================================================================
 # Structure, i.e. directories to process.
 #========================================================================
-branches          cmt doc src
+branches          cmt dict doc src
 
 #========================================================================
 # Used packages.
@@ -16,38 +16,25 @@ branches          cmt doc src
 use   GaudiKernel  v*
 use   GaudiAlg     v*
 use   LHCbKernel   v*    Kernel
-use   MCEvent      v*    Event
-use   TrackEvent   v*    Event
-use   RecEvent     v*    Event
-use   PhysEvent    v*    Event	
-use   DAQEvent     v*    Event
-use   HltEvent     v*    Event
-use   MDF          v*    DAQ
 use   Boost        v*    LCG_Interfaces
 use   Relations    v*    Kernel
 use   MicroDst     v*    Event
 
 private
 macro_append Boost_linkopts ' $(Boost_linkopts_regex) '
-include_dirs $(EVENTPACKERROOT)/src
+include_dirs $(PACKEDFLAVTAGEVENTROOT)/src
 end_private
 
 #========================================================================
 # Linker library building rule
 #========================================================================
-library          EventPackerLib   ../src/lib/*.cpp
-apply_pattern    linker_library   library=EventPackerLib
+library          PackedFlavTagEventLib   ../src/lib/*.cpp
+apply_pattern    linker_library   library=PackedFlavTagEventLib
 
-#========================================================================
-# Component library building rule
-#========================================================================
-library          EventPacker         ../src/component/*.cpp
-apply_pattern    component_library   library=EventPacker
-
-#============================================================================ 
+#============================================================================
 # Produce lcg dictionary
-#============================================================================ 
+#============================================================================
 apply_pattern reflex_dictionary \
-                  dictionary=EventPacker \
-                  headerfiles=$(EVENTPACKERROOT)/dict/PackedEventDict.h     \
-                  selectionfile=$(EVENTPACKERROOT)/dict/PackedEventDict.xml
+                  dictionary=PackedFlavTagEvent \
+                  headerfiles=$(PACKEDFLAVTAGEVENTROOT)/dict/PackedFlavTagEventDict.h     \
+                  selectionfile=$(PACKEDFLAVTAGEVENTROOT)/dict/PackedFlavTagEventDict.xml
