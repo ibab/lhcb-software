@@ -8,7 +8,7 @@
 # 
 # >>> from PhysConf.Filters import LoKi_Filters
 # 
-# >>> fltrs = Lo Ki_Filters (
+# >>> fltrs = LoKi_Filters (
 #       ODIN_Code  = ' in_range ( 5000 , ODIN_RUNNUM , 9000 ) '          ,
 #       L0DU_Code  = ' L0_CHANNEL  ( ... )  '                            ,
 #       HLT_Code   = ' HLT_PASS_RE ( 'Hlt1MBMicro.*Decision')  '         ,
@@ -313,7 +313,7 @@ class LoKi_Filters ( object ) :
     #
     #  @endcode 
     #  @param name (INPUT) the sequencer name
-    #  @reutrn the constructed sequencer
+    #  @return the constructed sequencer
     def sequence  ( self , name , **kwargs ) :
         """
         Get sequence of constructed algorithms
