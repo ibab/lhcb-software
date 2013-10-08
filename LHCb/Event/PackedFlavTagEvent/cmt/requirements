@@ -25,11 +25,6 @@ macro_append Boost_linkopts ' $(Boost_linkopts_regex) '
 include_dirs $(PACKEDFLAVTAGEVENTROOT)/src
 end_private
 
-#========================================================================
-# Linker library building rule
-#========================================================================
-library          PackedFlavTagEventLib   ../src/lib/*.cpp
-apply_pattern    linker_library   library=PackedFlavTagEventLib
 
 #============================================================================
 # Produce lcg dictionary

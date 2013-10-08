@@ -4,6 +4,9 @@
 ! Purpose     : Hold event model classes for packed flavour tagging
 !-----------------------------------------------------------------------------
 
+! 2013-10-08 - Rob Lambert
+ - Remove knowledge of how to pack/unpack this class form its definition, so that it only knows about the class itself...
+
 
 ! 2013-10-08 Rob Lambert
  - Created package initially as clone of EventPacker, but cleaned up such that it is only the flavour tag event classes.

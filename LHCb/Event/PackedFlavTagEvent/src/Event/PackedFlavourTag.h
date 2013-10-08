@@ -4,9 +4,6 @@
 
 #include <string>
 
-// Kernel
-#include "Kernel/StandardPacker.h"
-
 // Event
 #include "Event/FlavourTag.h"
 
@@ -177,78 +174,6 @@ namespace LHCb
 
   // -----------------------------------------------------------------------
 
-  /** @class FlavourTagPacker Event/PackedFlavourTag.h
-   *
-   *  Utility class to handle the packing and unpacking of the FlavourTags
-   *
-   *  @author Christopher Rob Jones
-   *  @date   2009-10-13
-   */
-  class FlavourTagPacker
-  {
-  public:
-
-    // These are required by the templated algorithms
-    typedef LHCb::FlavourTag                    Data;
-    typedef LHCb::PackedFlavourTag        PackedData;
-    typedef LHCb::FlavourTags             DataVector;
-    typedef LHCb::PackedFlavourTags PackedDataVector;
-    static const std::string& packedLocation()   { return LHCb::PackedFlavourTagLocation::Default; }
-    static const std::string& unpackedLocation() { return LHCb::FlavourTagLocation::Default; }
-
-  private:
-
-    /// Default Constructor hidden
-    FlavourTagPacker() : m_parent(NULL) {}
-
-  public:
-
-    /// Default Constructor
-    FlavourTagPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
-
-  public:
-
-    /// Pack a single FlavourTag
-    void pack( const Data & ft,
-               PackedData & pft,
-               PackedDataVector & pfts ) const;
-
-    /// Pack FlavourTags
-    void pack( const DataVector & fts,
-               PackedDataVector & pfts ) const;
-
-    /// Unpack a single FlavourTag
-    void unpack( const PackedData       & pft,
-                 Data                   & ft,
-                 const PackedDataVector & pfts,
-                 DataVector             & fts ) const;
-
-    /// Unpack FlavourTags
-    void unpack( const PackedDataVector & pfts,
-                 DataVector             & fts ) const;
-
-    /// Compare two FlavourTag vectors to check the packing -> unpacking performance
-    StatusCode check( const DataVector & dataA,
-                      const DataVector & dataB ) const;
-
-    /// Compare two FlavourTags to check the packing -> unpacking performance
-    StatusCode check( const Data & dataA,
-                      const Data & dataB ) const;
-
-  private:
-
-    /// Access the parent algorithm
-    GaudiAlgorithm& parent() const { return *m_parent; }
-
-  private:
-
-    /// Standard packing of quantities into integers ...
-    StandardPacker m_pack;
-
-    /// Pointer to parent algorithm
-    GaudiAlgorithm * m_parent;
-
-  };
 
   // -----------------------------------------------------------------------
 
