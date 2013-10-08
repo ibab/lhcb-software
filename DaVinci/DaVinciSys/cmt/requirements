@@ -7,11 +7,6 @@ branches doc cmt
 use  DaVinci         v33r7p1  Phys
 use  DaVinciTests    v2r19
 
-# Temporary
-use  DaVinciKernel        v11r5    Phys
-use  DaVinciTools         v23r10   Phys
-use  DaVinciTrackScaling  v1r3     Phys
-
 # Declare this as a container package
 apply_pattern container_package
 
