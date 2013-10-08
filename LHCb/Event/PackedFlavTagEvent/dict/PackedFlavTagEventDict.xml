@@ -1,0 +1,13 @@
+<lcgdict>
+<!-- Produce dictionary for the packed classes
+  The magic number is just the class ID in Hex, followed by the given pattern of zeroes
+  -->
+
+  <class name="LHCb::PackedFlavourTag" />
+  <class name="std::vector<LHCb::PackedFlavourTag>" />
+  <class name="LHCb::PackedFlavourTags" id="0000062F-0000-0000-0000-000000000000" />
+
+  <class name="LHCb::PackedTagger" />
+  <class name="std::vector<LHCb::PackedTagger>" />
+
+</lcgdict>
