@@ -6,6 +6,7 @@
 #include "Mint/ParticlePropertiesList.h"
 #include <iostream>
 #include <sstream>
+#include <string>
 
 class DecayTreeItem{ 
   // conversion functions make it behave mostly
@@ -42,7 +43,7 @@ class DecayTreeItem{
 
   const ParticleProperties* props() const;
   std::string name() const;
-  char SVPAT() const;
+  std::string SVPAT() const;
   double mass() const;
   bool isNonResonant() const;
   double width() const;

@@ -37,10 +37,10 @@ std::string DecayTreeItem::name() const{
   }
   return pp->name();
 }
-char DecayTreeItem::SVPAT() const{
+std::string DecayTreeItem::SVPAT() const{
   const ParticleProperties* pp = props();
   if(0 == pp){
-    return '?';
+    return "?";
   }
   return pp->SVPAT();
 }
