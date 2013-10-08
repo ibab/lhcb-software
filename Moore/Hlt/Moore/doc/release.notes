@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-10-08 - Marco Clemencic
+ - Disabled the FileStagerSvc in the swimming tests because it may make the
+   tests hang forever.
+
 !========================= Moore v20r3p3 2013-09-09 =========================
 ! 2013-09-09 - Rob Lambert
  - Fix the TCK test, ready for tagging for nightlies tonight.

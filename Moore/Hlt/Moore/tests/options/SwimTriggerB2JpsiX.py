@@ -42,7 +42,8 @@ Swimming().OffCands = "/Event/Dimuon/Phys/BetaSBd2JpsiKstarDetachedLine"
 Swimming().TransformName = '2011_WithBeamSpotFilter_NoRecoLines'
 Swimming().SelectMethod = 'random'
 Swimming().OutputType = 'DST'
-Swimming().UseFileStager = True
+# MCl.: This caused the tests to hang forever
+#Swimming().UseFileStager = True
 Swimming().Debug = False
 #For v14r2
 #Swimming().Input = ['PFN:root://eoslhcb.cern.ch//eos/lhcb/LHCb/Collision12/DIMUON.DST/00018117/0000/00018117_00002737_1.dimuon.dst']
