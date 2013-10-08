@@ -2,6 +2,10 @@
 ! Package     : Gen/BcVegPy
 ! Responsible : 
 
+! 2013-10-08 - Patrick Robbe
+ - Change status for the FORTRAN OPEN statements from UNKNOWN to OLD
+   to solve problems seen on the grid at some of the sites
+
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
 

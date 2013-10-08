@@ -109,56 +109,56 @@ C.*******************************************************
         IF(IMIXTYPE.EQ.1) THEN
           OPEN(UNIT=36,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade1s0.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
           OPEN(UNIT=37,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3s1.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
           OPEN(UNIT=38,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade1p1.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
           OPEN(UNIT=39,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p0.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
           OPEN(UNIT=46,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p1.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
           OPEN(UNIT=47,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p2.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
           OPEN(UNIT=48,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade81s.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
           OPEN(UNIT=49,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade83s.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
         END IF
         IF(IMIXTYPE.EQ.2) THEN
           OPEN(UNIT=36,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade1s0.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
           OPEN(UNIT=37,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3s1.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
         END IF
         IF(IMIXTYPE.EQ.3) THEN
           OPEN(UNIT=38,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade1p1.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
           OPEN(UNIT=39,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p0.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
           OPEN(UNIT=46,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p1.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
           OPEN(UNIT=47,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade3p2.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
           OPEN(UNIT=48,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade81s.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
           OPEN(UNIT=49,FILE
      &      =FULLPATHNAME(1:len_trim(FULLPATHNAME))//'grade83s.dat'
-     &      ,STATUS='UNKNOWN')
+     &      ,STATUS='OLD')
         END IF
       END IF                    !IMIX=1       
       
