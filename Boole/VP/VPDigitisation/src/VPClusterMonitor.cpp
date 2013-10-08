@@ -1,9 +1,6 @@
-// $Id: VPClusterMonitor.cpp, v1.0 2012-07-06 dhynds
-
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "Event/Track.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 
 // local
