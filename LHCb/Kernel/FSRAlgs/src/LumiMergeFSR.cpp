@@ -74,7 +74,7 @@ StatusCode LumiMergeFSR::initialize() {
     info() << "Subtract BXType " << (*bx) << endmsg;
     if ( (*bx) != "None" ) m_BXTypes.push_back(*bx);
   }
-
+   
   // get the File Records service
   m_fileRecordSvc = svc<IDataProviderSvc>("FileRecordDataSvc", true);
   
@@ -102,7 +102,6 @@ StatusCode LumiMergeFSR::finalize() {
 
   // integrate all FSRs in one go
   const StatusCode mergeSC = merge();
-
   return ( mergeSC && GaudiAlgorithm::finalize() ); // must be called after all other actions
 }
 
@@ -122,14 +121,25 @@ StatusCode LumiMergeFSR::merge() {
       debug() << "address: " << (*iAddr) << endmsg;
     }
   }
-  // get timespans for later removal
+  // get timespans for later removal - and store earliest and latest times
+  ulonglong all_earliest = 0;                         // earliest time seen
+  ulonglong all_latest = 0;                           // latest time seen
   std::vector< std::string > tsAddresses = m_navigatorTool->navigate(fileRecordRoot, m_TimeSpanFSRName);
-  if ( msgLevel(MSG::DEBUG) ) {
-    for(std::vector< std::string >::iterator iAddr = tsAddresses.begin() ; iAddr != tsAddresses.end() ; ++iAddr ){
+  for(std::vector< std::string >::iterator iAddr = tsAddresses.begin() ; iAddr != tsAddresses.end() ; ++iAddr ){
+    LHCb::TimeSpanFSRs* timeSpanFSRs = getIfExists<LHCb::TimeSpanFSRs>(m_fileRecordSvc, *iAddr);    
+    LHCb::TimeSpanFSRs::iterator tsfsr;
+    for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
+      // take earliest and latest
+      ulonglong t0 = (*tsfsr)->earliest();
+      ulonglong t1 = (*tsfsr)->latest();
+      if ( all_earliest == 0 ) all_earliest = t0;     
+      all_latest = std::max(t1, all_latest);
+    }
+    if ( msgLevel(MSG::DEBUG) ) {
       debug() << "address: " << (*iAddr) << endmsg;
     }
   }
-
+  
   // prepare TDS for FSR
   for ( unsigned int ibx = 0 ; ibx < m_BXTypes.size() ; ++ibx ){  
     std::string bx = m_BXTypes[ibx];
@@ -151,6 +161,7 @@ StatusCode LumiMergeFSR::merge() {
   for(std::vector< std::string >::iterator a = addresses.begin() ; a!= addresses.end() ; ++a ){  
     if ( a->find(m_FSRName + m_PrimaryBXType) != std::string::npos ) {
       primaryFileRecordAddress = (*a);   // a primary BX is found
+      bool needNewLumiFSR = false;
       // get primary LumiFSR number
       LHCb::LumiFSRs* primaryFSRs = getIfExists<LHCb::LumiFSRs>(m_fileRecordSvc, primaryFileRecordAddress);
       int n_primaryFSRs = primaryFSRs->size();
@@ -176,15 +187,58 @@ StatusCode LumiMergeFSR::merge() {
 
         // decide if fatal error
         bool needCorrection = false;
-        if (n_primaryFSRs > n_timeSpanFSRs) {
+        bool needNewTsFSR = false;
+        if (n_primaryFSRs > n_timeSpanFSRs && n_timeSpanFSRs > 0) {
           fatal() << " number of primary FSRs " << n_primaryFSRs << " larger than number of timeSpanFSRs " << n_timeSpanFSRs 
                   << " - this cannot be right!" << endmsg;
           return StatusCode::FAILURE;
         }
-        if (n_primaryFSRs < n_timeSpanFSRs  && n_primaryFSRs != 1) {
+        if (n_primaryFSRs < n_timeSpanFSRs  && n_primaryFSRs != 1 && n_primaryFSRs != 0) {
           fatal() << " number of primary FSRs " << n_primaryFSRs << " smaller than number of timeSpanFSRs " << n_timeSpanFSRs 
                   << " and not equal to one - this cannot be right!" << endmsg;
+          for ( unsigned int ibx = 0; ibx < m_BXTypes.size() ; ++ibx ){  
+            std::string bx = m_BXTypes[ibx];
+            // construct the right name of the containers
+            std::string fileRecordAddress(primaryFileRecordAddress);
+            fileRecordAddress.replace( fileRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), bx );
+          	if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed address: " << fileRecordAddress << endmsg; 
+            // read LumiFSR 
+            LHCb::LumiFSRs* lumiFSRs = getIfExists<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress);
+            if ( NULL == lumiFSRs ) {
+              if ( msgLevel(MSG::ERROR) ) error() << fileRecordAddress << " not found" << endmsg ;
+            } else {
+              fatal() << "found " << fileRecordAddress << " size " << lumiFSRs->size() << endmsg;
+            }
+          }
           return StatusCode::FAILURE;
+        }
+        if (n_primaryFSRs < n_timeSpanFSRs  && n_primaryFSRs == 0) {
+          warning() << " number of primary FSRs " << n_primaryFSRs << " smaller than number of timeSpanFSRs " << n_timeSpanFSRs 
+                    << " and not equal to one - try to correct!" << endmsg;
+
+          // rest is for debugging
+          for ( unsigned int ibx = 0; ibx < m_BXTypes.size() ; ++ibx ){  
+            std::string bx = m_BXTypes[ibx];
+            info() << "BXType " << bx << endmsg;
+            // construct the right name of the containers
+            std::string fileRecordAddress(primaryFileRecordAddress);
+            fileRecordAddress.replace( fileRecordAddress.find(m_PrimaryBXType), m_PrimaryBXType.size(), bx );
+          	if ( msgLevel(MSG::VERBOSE) ) verbose() << "constructed address: " << fileRecordAddress << endmsg; 
+            // read LumiFSR 
+            LHCb::LumiFSRs* lumiFSRs = getIfExists<LHCb::LumiFSRs>(m_fileRecordSvc, fileRecordAddress);
+            if ( NULL == lumiFSRs ) {
+              if ( msgLevel(MSG::FATAL) ) fatal() << fileRecordAddress << " not found" << endmsg ;
+              return StatusCode::FAILURE;
+            } else {
+              // expect all empty
+              if ( lumiFSRs->size() != 0 ) {
+                fatal() << "found " << fileRecordAddress << " with different size " << lumiFSRs->size() << endmsg;
+                return StatusCode::FAILURE;
+              }
+            }
+          }
+          // all are missing - can correct
+          needNewLumiFSR = true;
         }
         // decide if corrective action needs to be taken
         if (n_primaryFSRs < n_timeSpanFSRs && n_primaryFSRs == 1) {
@@ -193,21 +247,41 @@ StatusCode LumiMergeFSR::merge() {
                     << " and exactly equal to one - corrective action being taken!" << endmsg;
           needCorrection = true;
         }
+        if (n_primaryFSRs > n_timeSpanFSRs && n_timeSpanFSRs == 0) {
+          warning() << " number of primary FSRs " << n_primaryFSRs << " larger than number of timeSpanFSRs " << n_timeSpanFSRs 
+                    << " - corrective action taken!" << endmsg;
+          needCorrection = true;
+          needNewTsFSR = true;
+        }
 
         // look at all TimeSpanFSRs (normally only one)
         LHCb::TimeSpanFSRs::iterator tsfsr;
         if ( needCorrection ) {
-          // correction needed - take the sum of all timespanFSRs and create only one
-          LHCb::TimeSpanFSR* timeSpanFSR = new LHCb::TimeSpanFSR();
-          for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
-            // prepare new time span FSR and put in TS
-            *timeSpanFSR += *(*tsfsr);
+          // any correction
+          if ( needNewTsFSR ) {
+            // correction needed - create a new TimeSpanFSR with earliest and latest times
+            LHCb::TimeSpanFSR* timeSpanFSR = new LHCb::TimeSpanFSR();
+            (*timeSpanFSR) += all_earliest;
+            (*timeSpanFSR) += all_latest;
+            n_tsFSR++;
+            m_timeSpanFSRs->insert(timeSpanFSR); // put a copy in TS container
+            if ( msgLevel(MSG::INFO) ) info() << timeSpanRecordAddress << ": " << n_tsFSR 
+                                                << " successfully created - total is now " 
+                                                << m_timeSpanFSRs->size() << endmsg; 
           }
-          n_tsFSR++;
-          m_timeSpanFSRs->insert(timeSpanFSR); // put a copy in TS container
-          if ( msgLevel(MSG::DEBUG) ) debug() << timeSpanRecordAddress << ": " << n_tsFSR 
-                                              << " successfully copied - total is now " 
-                                              << m_timeSpanFSRs->size() << endmsg; 
+          else {
+            // correction needed - take the sum of all timespanFSRs and create only one
+            LHCb::TimeSpanFSR* timeSpanFSR = new LHCb::TimeSpanFSR();
+            for ( tsfsr = timeSpanFSRs->begin(); tsfsr != timeSpanFSRs->end(); tsfsr++ ) {
+              // prepare new time span FSR and put in TS
+              *timeSpanFSR += *(*tsfsr);
+            }
+            n_tsFSR++;
+            m_timeSpanFSRs->insert(timeSpanFSR); // put a copy in TS container
+            if ( msgLevel(MSG::INFO) ) info() << timeSpanRecordAddress << ": " << n_tsFSR 
+                                                << " successfully copied - total is now " 
+                                                << m_timeSpanFSRs->size() << endmsg; 
+          }
         }
         else {
           // no correction needed
@@ -243,14 +317,23 @@ StatusCode LumiMergeFSR::merge() {
         } else {
           if ( msgLevel(MSG::VERBOSE) ) verbose() << fileRecordAddress << " found" << endmsg ;
           // look at all FSRs for the BXType (normally only one)
-          LHCb::LumiFSRs::iterator fsr;
-          for ( fsr = lumiFSRs->begin(); fsr != lumiFSRs->end(); ++fsr ) {
-            // create a new FSR and append to TS
+          if (needNewLumiFSR ) {
+            // create empty one
             n_lumiFSR++;
             LHCb::LumiFSR* lumiFSR = new LHCb::LumiFSR();
-            *lumiFSR = *(*fsr);
-            fsrs->insert(lumiFSR); // insert in TS
+            fsrs->insert(lumiFSR); // insert empty FSR in TS
+          } else {
+            LHCb::LumiFSRs::iterator fsr;
+            // just copy
+            for ( fsr = lumiFSRs->begin(); fsr != lumiFSRs->end(); ++fsr ) {
+              // create a new FSR and append to TS
+              n_lumiFSR++;
+              LHCb::LumiFSR* lumiFSR = new LHCb::LumiFSR();
+              *lumiFSR = *(*fsr);
+              fsrs->insert(lumiFSR); // insert in TS
+            }  
           }
+          // count the result
           if ( n_tsFSR == n_lumiFSR ) {
             if ( msgLevel(MSG::DEBUG) ) debug() << fileRecordAddress << ": " << n_lumiFSR 
                                                 << " successfully copied - total is now " 

@@ -4,6 +4,11 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-10-08 - Jaap Panman
+ - Add code in LumiMergeFSR to handle legacy productions.
+   An empty FSR is generated when missing so that the total number of FSRs
+   of each type is consistent.
+
 !========================= FSRAlgs v1r3 2013-09-30 =========================
 ! 2013-09-22 - Chris Jones
  - Propagate the StatusCode returned by LumiMergeFSR::merge() called in
