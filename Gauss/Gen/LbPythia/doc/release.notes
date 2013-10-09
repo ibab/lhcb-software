@@ -4,6 +4,9 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-10-09 - Patrick Robbe
+ - Add Pythia.py option files with the Pythia6 tuning
+
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
 
