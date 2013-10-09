@@ -3,6 +3,10 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2013-10-09 - Heinrich Schindler 
+ - VPClusterMonitor: protect debug statements, made loopClusters void
+ - VPDepositCreator: use pointToChannel function without fraction
+
 ! 2013-10-08 - Marco Cattaneo
  - Remove unnecessary Track.h include and unnecessary dependence on TrackEvent
 

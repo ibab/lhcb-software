@@ -235,8 +235,7 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit,
       const double dy = sigmaD * m_gauss();
       Gaudi::XYZPoint endpoint = sensor->globalToLocal(point) + Gaudi::XYZVector(dx, dy, 0.);
       LHCb::VPChannelID channel;
-      std::pair<double, double> fraction;
-      StatusCode valid = sensor->pointToChannel(sensor->localToGlobal(endpoint), channel, fraction);
+      StatusCode valid = sensor->pointToChannel(sensor->localToGlobal(endpoint), channel);
       if (valid) {
         if (pixels.find(channel) == pixels.end()) {
           pixels[channel] = q;
