@@ -126,8 +126,12 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
     const VertexBase* evtx = P->endVertex();
     if ( !evtx )
     {
-      return Error("Can't retrieve the end vertex for " + prefix );
+      fatal() << "Can't retrieve the end vertex for " << prefix 
+              << ". TupleToolGeometry cannot act on such a particle. Define a branch" << endmsg ;
+      fatal() << "See https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciTutorial7#Branches" << endmsg ;
+      return StatusCode::FAILURE ;
     }
+      
     if ( msgLevel(MSG::VERBOSE) )
     { // https://savannah.cern.ch/bugs/?92524
       verbose() << "End Vertex : " << *evtx << endmsg ;
