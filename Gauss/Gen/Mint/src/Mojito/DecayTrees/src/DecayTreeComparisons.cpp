@@ -29,11 +29,13 @@ bool lessBySVPAT_L::operator()(const_counted_ptr<DecayTree> a, const_counted_ptr
 }
 
 bool sortBySVPAT(DecayTree& A){
+  A.sortAllBy<moreByNDgtr>();
   A.sortAllBy<lessBySVPAT>();
   return true;
 }
 
 bool sortBySVPAT_L(DecayTree& A){
+  A.sortAllBy<moreByNDgtr>();
   A.sortAllBy<lessBySVPAT>();
   return true;
 }

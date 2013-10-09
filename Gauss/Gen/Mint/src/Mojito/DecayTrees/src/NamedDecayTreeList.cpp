@@ -2068,12 +2068,14 @@ int NamedDecayTreeList::make4PiList() {
   add(*dk);
   delete dk;
   
+
+
   // D0 -> pi(1300)- pi+, pi(1300)- ->rho(770) pi-, rhp(770) -> pi+pi-
-  /*dk = new DecayTree(421);
+  dk = new DecayTree(421);
   dk->addDgtr(-211,100211)->addDgtr(211, 113)->addDgtr(211, -211);
   add(*dk);
   delete dk;
-  */ 
+  
   // D0 -> omega3(1670)- pi+, omega3(1670)- ->rho(770) pi-, rhp(770) -> pi+pi-
   /*dk = new DecayTree(421);
   dk->addDgtr(-211,227)->addDgtr(211, 113)->addDgtr(211, -211);

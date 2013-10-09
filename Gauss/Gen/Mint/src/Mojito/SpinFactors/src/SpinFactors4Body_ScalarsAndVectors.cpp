@@ -3,6 +3,8 @@
 #include "Mint/SpinFactors.h"
 #include "Mint/SpinFactors4Body_ScalarsAndVectors.h"
 #include "Mint/DecayTree.h"
+//#include "Mint/DecayTreeComparisons.h"
+
 #include "Mint/Utils.h"
 #include "Mint/CLHEPSystemOfUnits.h"
 
@@ -41,12 +43,14 @@ DecayTree* SF_DtoAP0_AtoVP1Dwave_VtoP2P3::_exampleDecayD=0;
 const DecayTree& SF_DtoAP0_AtoVP1Dwave_VtoP2P3::getExampleDecay(){
   // D->a(1) pi, a(1)->rho pi, rho->pipi
   // with a(1) decaying in D-wave
-  _exampleDecayD = new DecayTree(421);
-  DecayTree a1(20213);
-  a1.getVal().setL(2);
-  a1.addDgtr(211, 113)->addDgtr(211, -211);
-  _exampleDecayD->addDgtr(-211);
-  _exampleDecayD->addDgtr(&a1);
+  if(0 == _exampleDecayD){
+    _exampleDecayD = new DecayTree(421);
+    DecayTree a1(20213);
+    a1.getVal().setL(2);
+    a1.addDgtr(211, 113)->addDgtr(211, -211);
+    _exampleDecayD->addDgtr(-211);
+    _exampleDecayD->addDgtr(&a1);
+  }
   return *_exampleDecayD;
 }
 const DecayTree& SF_DtoAP0_AtoVP1Dwave_VtoP2P3::exampleDecay(){
@@ -99,7 +103,7 @@ const DecayTree& SF_DtoPP0_PtoVP1_VtoP2P3::getExampleDecay(){
     // remark: addDgtr always returns a pointer to the 
     // last daughter that was added, thus allowing these
     // chains:
-    _exampleDecay->addDgtr(-211, 100211)->addDgtr(211, 770)->addDgtr(-211,211);
+    _exampleDecay->addDgtr(-211, 100211)->addDgtr(211, 113)->addDgtr(-211,211);
   }
   return *_exampleDecay;
 }
@@ -392,7 +396,7 @@ const DecayTree& SF_DtoV1V2_V1toP0P1_V1toP2P3_S::getExampleDecay(){
     // chains:
     _exampleDecayS->addDgtr( 313)->addDgtr( 321, -211);
     _exampleDecayS->addDgtr(-313)->addDgtr(-321,  211);
-  }
+ }
   return *_exampleDecayS;
 }
 
@@ -662,7 +666,7 @@ const DecayTree& SF_DtoV1V2_V1toP0P1_V1toP2P3_S_nonResV1::getExampleDecay(){
     // chains:
     _exampleDecay->addDgtr(-321,  321);
     _exampleDecay->addDgtr( 113)->addDgtr( 211, -211);
-  }
+ }
   return *_exampleDecay;
 }
 
