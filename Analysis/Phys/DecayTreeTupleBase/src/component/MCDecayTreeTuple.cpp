@@ -105,6 +105,6 @@ StatusCode MCDecayTreeTuple::execute()
 
   setFilterPassed(test);
   // Mandatory. Set to true if event is accepted.
-  return StatusCode::SUCCESS;
+  return test ;
 
 }

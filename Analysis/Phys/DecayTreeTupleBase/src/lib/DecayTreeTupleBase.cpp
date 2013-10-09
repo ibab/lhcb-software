@@ -361,7 +361,9 @@ bool DecayTreeTupleBase::fillOnePart( Decays::OnePart* op
     test &= localTest;
     if ( !localTest )
     {
-      Warning("Tool '" + (*it)->type() + "' acting on particle '"+ op->headName() + "' returned a failure status." );
+      fatal () << "Tool '" << (*it)->type() << "' acting on particle '" << op->headName() 
+               << "' returned a failure status." << endmsg ;
+      return StatusCode::FAILURE ;
     }
   }
   return test;

@@ -110,7 +110,7 @@ StatusCode DecayTreeTuple::execute()
   setFilterPassed( test.isSuccess() );
 
   // Mandatory. Set to true if event is accepted.
-  return StatusCode::SUCCESS;
+  return test ;
 }
 
 //=============================================================================

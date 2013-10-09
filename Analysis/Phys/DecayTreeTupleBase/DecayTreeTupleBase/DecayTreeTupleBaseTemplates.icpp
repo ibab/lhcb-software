@@ -39,8 +39,10 @@ StatusCode fillTuple( Tuples::Tuple& tuple
     }
     else
     {
-      Warning("Failed to fill a candidate. Will skip it.").ignore();
-      continue;
+      fatal() << "Failed to fill a candidate. Please fix your options." << endmsg ;
+      fatal() << "### NOTE : This is a new behaviour since bug https://savannah.cern.ch/bugs/?102616" << endmsg ;
+      fatal() << "### NOTE : If you think this is wrong, report to lhcb-davinci@cern.ch" << endmsg ;
+      return StatusCode::FAILURE ;
     }
 
     test = fillEventRelatedVariables( tuple );
@@ -82,8 +84,10 @@ StatusCode fillTuple( typename Tuple::Tuple& tuple
       tuple->column( "EventInSequence", (unsigned long long)counter("Event").nEntries()).ignore();
       ++nCandidates;
     } else {
-      Warning("Failed to fill a candidate. Will skip it.").ignore();
-      continue;
+      fatal() << "Failed to fill a candidate. Please fix your options." << endmsg ;
+      fatal() << "### NOTE : This is a new behaviour since bug https://savannah.cern.ch/bugs/?102616" << endmsg ;
+      fatal() << "### NOTE : If you think this is wrong, report to lhcb-davinci@cern.ch" << endmsg ;
+      return StatusCode::FAILURE ;
     }
 
     test = fillEventRelatedVariables( tuple );
