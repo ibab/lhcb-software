@@ -279,6 +279,7 @@ void EvtbTosllMSFF::getVectorFF(EvtId parent, EvtId daught, double t,
                                  double& t1, double& t2, double& t3 ){
 
   int models_counter=0; // counter of the accepted models
+  double thetaK = -34.0; // K_1(1270) - K_1(1400) mixing angle
 
 
   // \bar B -> \bar K* transition form factors
@@ -457,8 +458,8 @@ void EvtbTosllMSFF::getVectorFF(EvtId parent, EvtId daught, double t,
      double MK1A=1.31;  // GeV
      double MK1B=1.34;  // GeV
 
-     double sinK=0.559; // sin(34^o)
-     double cosK=0.829; // cos(34^o)
+     double sinK=sin(thetaK); // sin(-34^o)
+     double cosK=cos(thetaK); // cos(-34^o)
      
      double a, v0, v1, v2;
    
@@ -520,8 +521,8 @@ void EvtbTosllMSFF::getVectorFF(EvtId parent, EvtId daught, double t,
      double MK1A=1.31;  // GeV
      double MK1B=1.34;  // GeV
 
-     double sinK=0.559; // sin(34^o)
-     double cosK=0.829; // cos(34^o)
+     double sinK=sin(thetaK); // sin(-34^o)
+     double cosK=cos(thetaK); // cos(-34^o)
      
      double a, v0, v1, v2;
    

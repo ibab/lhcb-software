@@ -4,6 +4,9 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2013-10-09 - Sam Hall
+ - K_1(1270) - K_1(1400) mixing angle changed from 34^o to -34^o
+
 ! 2013-10-02 - Philip Hunt (LHCB)
  - Added EvtRand class to EvtDTohhhh, which enables the MINT code to use
    the EvtGen random number generator
