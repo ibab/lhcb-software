@@ -379,7 +379,7 @@ class EventList
     
     time_t startTime = time(0);
     
-    int rememberSize = this->size();
+    //int rememberSize = this->size();
     unsigned int counter=0;
     std::vector<double> vals;
     vals.resize(this->size());
