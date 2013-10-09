@@ -4,6 +4,7 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v20r4 2013-10-09 =========================
 ! 2013-10-08 - Marco Clemencic
  - Disabled the FileStagerSvc in the swimming tests because it may make the
    tests hang forever.
