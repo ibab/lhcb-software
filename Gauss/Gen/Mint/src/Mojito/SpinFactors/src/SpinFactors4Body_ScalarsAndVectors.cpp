@@ -624,7 +624,7 @@ double SF_DtoV1V2_V1toP0P1_V1toP2P3_D::getVal(){
     
     double z1Result = tV1.Contract(tD.Contract(tV2))/(GeV*GeV*GeV*GeV);
     double z2Result = tV1.Dot(pV2) * tV2.Dot(pV1)/(GeV*GeV*GeV*GeV);
-    double z3Result = tV1.Dot(tV2) * tD.Contract_2(tD)/(GeV*GeV*GeV*GeV);
+    double z3Result = tV1.Dot(tV2) * tD.Contract_2(tD)/(GeV*GeV* GeV*GeV*GeV*GeV *GeV*GeV*GeV*GeV);
     cout << "SF_DtoV1V2_V1toP0P1_V1toP2P3_D compare: 1/n " << z1Result << " / "
 	 << returnVal << " = " << z1Result/returnVal << endl;
     cout << " .... and compare: 2/n " << z2Result << " / "

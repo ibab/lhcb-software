@@ -225,7 +225,7 @@ int ampFit(){
     cout << "ex " << j_ex << ") " << " got event pattern: " << pat << endl;
     DalitzEventList BpEventList, BmEventList;
 
-    bool doWeightTest= true && (0 == j_ex);
+    bool doWeightTest= false && (0 == j_ex);
     if(doWeightTest){
       SignalGenerator sgP_generateWeighted(BpAmps.get());
       sgP_generateWeighted.setWeighted();

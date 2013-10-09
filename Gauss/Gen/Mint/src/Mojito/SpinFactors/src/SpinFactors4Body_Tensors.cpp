@@ -158,7 +158,7 @@ const DecayTree& SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::exampleDecay(){
 const DecayTree& SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::getExampleDecay(){
   // (angular momenum of pi2->rho must be 1)
   _exampleDecay = new DecayTree(421);
-  _exampleDecay->addDgtr(-211, 10215)->addDgtr(211, 213)->addDgtr(211, -211);
+  _exampleDecay->addDgtr(-211, 10215)->addDgtr(211, 113)->addDgtr(211, -211);
   return *_exampleDecay;
 }
 const DecayTree& SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::exampleDecay(){
@@ -378,8 +378,10 @@ double SF_DtoT1T2_T1toP0P1_T2toP2P3_S::getVal(){
   ZTspin2 tT1(qT1, pT1, MT1);
   ZTspin2 tT2(qT2, pT2, MT2);
   
-  const double units = GeV*GeV*GeV*GeV;
+  const double units = GeV*GeV*GeV*GeV * GeV*GeV*GeV*GeV;
 
+  // Contract_1 turns GeV^2 * GeV^2 to GeV^4
+  // Contract_2 squares that!
   double returnVal = tT1.Contract_2(tT2) / units;
 
   if(dbThis){
@@ -397,7 +399,7 @@ void SF_DtoT1T2_T1toP0P1_T2toP2P3_S::printYourself(ostream& os) const{
   os << "spin factor SF_DtoT1T2_T1toP0P1_T2toP2P3_S"
      << "\n\t  ZTspin2 tT1(qT1, pT1, MT1);"
      << "\n\t  ZTspin2 tT2(qT2, pT2, MT2);"
-     << "\n\t  return: tT1.Contract_2(tT2) / GeV^4"
+     << "\n\t  return: tT1.Contract_2(tT2) / GeV^8"
      << "\n\t with pT1 = p(0) + p(1), qT = p(0) - p(1), pT2 = p(2) + p(3), qT2 = p(2)-p(3)"
      << "\n\t    parsed tree " << theDecay().oneLiner()
      << "\n      like this:" << endl;
@@ -422,7 +424,7 @@ double SF_DtoT1T2_T1toP0P1_T2toP2P3_P::getVal(){
   ZTspin2 tT1(qT1, pT1, MT1);
   ZTspin2 tT2(qT2, pT2, MT2);
   
-  const double units = GeV*GeV*GeV*GeV*GeV*GeV ;
+  const double units = GeV*GeV * GeV*GeV * GeV*GeV ;
 
   double returnVal = LeviCivita(pD, qD, tT1.Contract_1(tT2)) / units;
 
@@ -466,10 +468,10 @@ double SF_DtoT1T2_T1toP0P1_T2toP2P3_D::getVal(){
   ZTspin2 tT1(qT1, pT1, MT1);
   ZTspin2 tT2(qT2, pT2, MT2);
   
-  const double units = GeV*GeV*GeV*GeV*GeV*GeV;
-
   TLorentzVector X1(tT1.Contract(qD));
   TLorentzVector X2(tT2.Contract(qD));
+
+  const double units = GeV*GeV*GeV * GeV*GeV*GeV;
 
   double returnVal = X1.Dot(X2) / units;
 
@@ -571,7 +573,7 @@ double SF_DtoTP0_TtoVP1_VtoP2P3::getVal(){
   
   TLorentzVector DT(tT.Contract(qD));
 
-  const double units = GeV*GeV*GeV*GeV*GeV*GeV;
+  const double units = GeV*GeV * GeV*GeV * GeV*GeV;
 
   double returnVal = LeviCivita(pD, qD, DT, tV) / units;
 
@@ -670,7 +672,7 @@ double SF_DtoT1P0_T1toT2P1_T2toP2P3::getVal(){
   
   TLorentzVector DT(tT1.Contract(qT1));
 
-  const double units = GeV*GeV*GeV*GeV*GeV*GeV;
+  const double units = GeV*GeV * GeV*GeV * GeV*GeV;
 
   double returnVal = LeviCivita(pD, DT, tT2) / units;
 
@@ -764,7 +766,7 @@ double SF_DtoTS_TtoP0P1_StoP2P3::getVal(){
   
   ZTspin2 tT(qT, pT, MT);
   
-  const double units = GeV*GeV*GeV*GeV;
+  const double units = GeV*GeV * GeV*GeV;
 
   double returnVal = (tT.Contract(qD)).Dot(qD) / units;
 
@@ -865,7 +867,7 @@ double SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::getVal(){
   ZTspin2 tT(qD, pT, MT);
   //SpinSumT ProT(pT, MT);
   
-  const double units = GeV*GeV*GeV*GeV;
+  const double units = GeV*GeV * GeV*GeV;
 
   double returnVal = (tT.Contract(qT)).Dot(tV) / units;
 
@@ -967,7 +969,7 @@ double SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::getVal(){
   
   ZTspin2 tT(qT, pT, MT);
   
-  const double units = GeV*GeV*GeV*GeV;
+  const double units = GeV*GeV * GeV*GeV;
 
   double returnVal =  (tT.Contract(qD)).Dot(qD) / units;
 
@@ -1052,6 +1054,8 @@ bool SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::parseTree(){
 double SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::getVal(){
   bool dbThis=false;
   if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+
+  double invGeV = 1;// 1.0/GeV;
   
   TLorentzVector pT = p(2) + p(3);
   TLorentzVector qT = p(2) - p(3);
@@ -1064,16 +1068,20 @@ double SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::getVal(){
   double MT = mRes(T);
   //double MV = mRes(S);
   
-  ZTspin2 tPT(qD, pPT, MPT);
-  ZTspin2 tT(qT, pT, MT);
-  
-  const double units = GeV*GeV*GeV*GeV;
+  ZTspin2 tPT(qD*invGeV, pPT*invGeV, MPT*invGeV);
+  ZTspin2 tT(qT*invGeV, pT*invGeV, MT*invGeV);
+
+  // Contract_1 turns GeV^2 * GeV^2 to GeV^4
+  // Contract_2 squares that!
+  const double units = GeV*GeV*GeV*GeV * GeV*GeV*GeV*GeV;
 
   double returnVal =  tPT.Contract_2(tT) / units;
 
   if(dbThis){
     cout << " SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::getVal "
 	 << " returning " << returnVal
+	 << " = " << tPT.Contract_2(tT) << " / " << units
+	 << "\n MPT = " << MPT << ", MT = " << MT
 	 << endl;
   }
   return returnVal;
@@ -1088,7 +1096,7 @@ void SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::printYourself(ostream& os) const{
      << "\n\t  pT = p(2) + p(3); qT = p(2) - p(3);"
      << "\n\t  pPT = pT + p(1); qPT = pT - p(1);"
      << "\n\t  pD = pPT + p(0); qD = pPT - p(0);"
-     << "\n\t  tPT.Contract_2(tT)/ GeV^4"
+     << "\n\t  tPT.Contract_2(tT)/ GeV^8"
      << "\n\t    parsed tree " << theDecay().oneLiner()
      << "\n      like this:" << endl;
   this->printParsing(os);
