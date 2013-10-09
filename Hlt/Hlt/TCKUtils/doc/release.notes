@@ -5,6 +5,7 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+!========================= TCKUtils v1r12p1 2013-10-09 =========================
 ! 2013-09-28 - Gerhard Raven
  - fix 'copy' command
  - make TCKsh less verbose
