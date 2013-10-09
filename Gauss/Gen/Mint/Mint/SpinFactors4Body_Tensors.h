@@ -130,7 +130,6 @@ class SF_DtoT1T2_T1toP0P1_T2toP2P3_S : public SF_DtoT1T2_T1toP0P1_T2toP2P3_BASE{
   // the simplest D->T1, T2, with L=0
  protected:
   static DecayTree* _exampleDecay;
-  virtual bool parseTree();
 
  public:
   virtual void printYourself(std::ostream& os=std::cout) const;
@@ -157,7 +156,6 @@ class SF_DtoT1T2_T1toP0P1_T2toP2P3_P : public SF_DtoT1T2_T1toP0P1_T2toP2P3_BASE{
   // the simplest D->T1, T2, with L=0
  protected:
   static DecayTree* _exampleDecay;
-  virtual bool parseTree();
 
  public:
   virtual void printYourself(std::ostream& os=std::cout) const;
@@ -184,7 +182,6 @@ class SF_DtoT1T2_T1toP0P1_T2toP2P3_D : public SF_DtoT1T2_T1toP0P1_T2toP2P3_BASE{
   // the simplest D->T1, T2, with L=0
  protected:
   static DecayTree* _exampleDecay;
-  virtual bool parseTree();
 
  public:
   virtual void printYourself(std::ostream& os=std::cout) const;

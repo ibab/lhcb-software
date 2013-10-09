@@ -250,6 +250,62 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
 		<< thisDcy << std::endl;
     }
     return new SF_DtoV1P0_V1toV2P1_V2toP2P3(events, thisDcy);
+  }else if( equalBySVPAT(SF_DtoT1T2_T1toP0P1_T2toP2P3_S::getExampleDecay()
+			 , thisDcy) ){
+    if(dbThis){
+      std::cout << "found a spin factor for this decay:\n" 
+		<< thisDcy << std::endl;
+    }
+    return new SF_DtoT1T2_T1toP0P1_T2toP2P3_S(events, thisDcy);
+  }else if( equalBySVPAT(SF_DtoT1T2_T1toP0P1_T2toP2P3_P::getExampleDecay()
+			 , thisDcy) ){
+    if(dbThis){
+      std::cout << "found a spin factor for this decay:\n" 
+		<< thisDcy << std::endl;
+    }
+    return new SF_DtoT1T2_T1toP0P1_T2toP2P3_P(events, thisDcy);
+  }else if( equalBySVPAT(SF_DtoT1T2_T1toP0P1_T2toP2P3_D::getExampleDecay()
+			 , thisDcy) ){
+    if(dbThis){
+      std::cout << "found a spin factor for this decay:\n" 
+		<< thisDcy << std::endl;
+    }
+    return new SF_DtoT1T2_T1toP0P1_T2toP2P3_D(events, thisDcy);
+  }else if( equalBySVPAT(SF_DtoTP0_TtoVP1_VtoP2P3::getExampleDecay()
+			 , thisDcy) ){
+    if(dbThis){
+      std::cout << "found a spin factor for this decay:\n" 
+		<< thisDcy << std::endl;
+    }
+    return new SF_DtoTP0_TtoVP1_VtoP2P3(events, thisDcy);
+  }else if( equalBySVPAT(SF_DtoT1P0_T1toT2P1_T2toP2P3::getExampleDecay()
+			 , thisDcy) ){
+    if(dbThis){
+      std::cout << "found a spin factor for this decay:\n" 
+		<< thisDcy << std::endl;
+    }
+    return new SF_DtoT1P0_T1toT2P1_T2toP2P3(events, thisDcy);
+  }else if( equalBySVPAT(SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::getExampleDecay()
+			 , thisDcy) ){
+    if(dbThis){
+      std::cout << "found a spin factor for this decay:\n" 
+		<< thisDcy << std::endl;
+    }
+    return new SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3(events, thisDcy);
+  }else if( equalBySVPAT(SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::getExampleDecay()
+			 , thisDcy) ){
+    if(dbThis){
+      std::cout << "found a spin factor for this decay:\n" 
+		<< thisDcy << std::endl;
+    }
+    return new SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3(events, thisDcy);
+  }else if( equalBySVPAT(SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::getExampleDecay()
+			 , thisDcy) ){
+    if(dbThis){
+      std::cout << "found a spin factor for this decay:\n" 
+		<< thisDcy << std::endl;
+    }
+    return new SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3(events, thisDcy);
   }else{
     std::cout << "SpinFactorMaker WARNING!!"
 	      << " don't know spin factor of this decay:\n" 
