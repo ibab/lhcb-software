@@ -8,6 +8,9 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2013-10-09 - Chris Jones
+ - Adding missing constructor data member initializers in MuonTrackMomRec
+
 !========================= MuonTrackRec v3r9p1 2013-07-18 =========================
 ! 2013-06-10 - Marco Cattaneo
  - Fix clang32 warnings

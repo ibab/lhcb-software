@@ -40,7 +40,8 @@ public:
                                  LHCb::Track* lbTrack);
   virtual double getBdl() {return m_bdlX;}
   virtual double getZcenter() {return m_zCenter;}
-protected:
+
+private:
   
   std::vector<double> m_ParabolicCorrection;
   std::vector<double> m_resParams;
@@ -54,5 +55,6 @@ protected:
   double m_bdlX;    // integrated Bx field
   int m_FieldPolarity;
   bool m_BdlwasInit; // flag to see if B field was initialized
+
 };
 #endif // COMPONENT_MUONTRACKMOMREC_H

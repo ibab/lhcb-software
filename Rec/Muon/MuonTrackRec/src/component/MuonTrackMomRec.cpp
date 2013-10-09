@@ -36,7 +36,14 @@ DECLARE_TOOL_FACTORY( MuonTrackMomRec )
 MuonTrackMomRec::MuonTrackMomRec( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+: GaudiTool       ( type, name , parent ),
+  m_Constant      ( 0 ),
+  m_bIntegrator   ( NULL ),
+  m_muonDetector  ( NULL ),
+  m_zCenter       ( 0    ),
+  m_bdlX          ( 0    ),
+  m_FieldPolarity ( 0    ),
+  m_BdlwasInit    ( false )
 {
   declareInterface<IMuonTrackMomRec>(this);
 
