@@ -79,7 +79,7 @@ const DecayTree& SF_DtoT1T2_T1toP0P1_T2toP2P3_S::exampleDecay(){
 }
 
 const DecayTree& SF_DtoT1T2_T1toP0P1_T2toP2P3_P::getExampleDecay(){
-  // D->f2 f2 (with L=0)
+  // D->f2 f2 (with L=1)
   _exampleDecay = new DecayTree(421);
   _exampleDecay->addDgtr(225)->addDgtr(211, -211);
   _exampleDecay->addDgtr(225)->addDgtr(211, -211);
@@ -91,7 +91,7 @@ const DecayTree& SF_DtoT1T2_T1toP0P1_T2toP2P3_P::exampleDecay(){
 }
 
 const DecayTree& SF_DtoT1T2_T1toP0P1_T2toP2P3_D::getExampleDecay(){
-  // D->f2 f2 (with L=0)
+  // D->f2 f2 (with L=2)
   _exampleDecay = new DecayTree(421);
   _exampleDecay->addDgtr(225)->addDgtr(211, -211);
   _exampleDecay->addDgtr(225)->addDgtr(211, -211);
@@ -106,10 +106,7 @@ const DecayTree& SF_DtoT1T2_T1toP0P1_T2toP2P3_D::exampleDecay(){
 
 const DecayTree& SF_DtoTP0_TtoVP1_VtoP2P3::getExampleDecay(){
   _exampleDecay = new DecayTree(421);
-  DecayTree rho(213);
-  //  rho.getVal().setL(2); // this is implied through parity and mom conservation
-  rho.addDgtr(211, -211);
-  _exampleDecay->addDgtr(211, 225)->addDgtr(&rho);
+  _exampleDecay->addDgtr(-211, 215)->addDgtr(211, 113)->addDgtr(-211, 211);
   return *_exampleDecay;
 }
 const DecayTree& SF_DtoT1P0_T1toT2P1_T2toP2P3::exampleDecay(){

@@ -2068,14 +2068,63 @@ int NamedDecayTreeList::make4PiList() {
   add(*dk);
   delete dk;
   
-
+  // added on 9 Oct 2013, using new/refurbished spin factors (mainly tensor/pseudo tensor)
 
   // D0 -> pi(1300)- pi+, pi(1300)- ->rho(770) pi-, rhp(770) -> pi+pi-
   dk = new DecayTree(421);
   dk->addDgtr(-211,100211)->addDgtr(211, 113)->addDgtr(211, -211);
   add(*dk);
   delete dk;
-  
+
+  // D-> f2(1270) f2(1270) 
+  dk = new DecayTree(421);
+  dk->addDgtr(225)->addDgtr(211, -211);
+  dk->addDgtr(225)->addDgtr(211, -211);
+  add(*dk);
+  dk->getVal().setL(1);
+  add(*dk);
+  dk->getVal().setL(2);
+  add(*dk);
+  delete dk;
+
+  // D->a2(1320) pi, a2(1320)->rho pi, rho->pi pi
+  dk = new DecayTree(421);
+  dk->addDgtr(-211, 215)->addDgtr(211, 113)->addDgtr(-211, 211);
+  add(*dk);
+  delete dk;
+
+  // D->a2(1320) pi, a2(1320)->f2(1270) pi, f2-> rho pi
+  // (kinematically challenged, but broad resonances)
+  dk = new DecayTree(421);
+  dk->addDgtr(-211, 215)->addDgtr(211, 225)->addDgtr(-211, 211);
+  add(*dk);
+  delete dk;
+
+  // D->a2(1700) pi, a2(1700)->f2(1270) pi, f2-> rho pi
+  dk = new DecayTree(421);
+  dk->addDgtr(-211, 100215)->addDgtr(211, 225)->addDgtr(-211, 211);
+  add(*dk);
+  delete dk;
+
+  // pseudo tensor modes with pi2(1670)
+  // D -> pi2(1670) pi, pi2->f2(1270) pi, f2->pipi
+  dk = new DecayTree(421);
+  dk->addDgtr(-211, 10215)->addDgtr(211, 225)->addDgtr(211, -211);
+  add(*dk);
+  delete dk;
+
+  // D -> pi2(1670) pi, pi2->f0(600) pi, f0(600)->pipi
+  dk = new DecayTree(421);
+  dk->addDgtr(-211, 10215)->addDgtr(211, 9000221)->addDgtr(211, -211);
+  add(*dk);
+  delete dk;
+
+  // D -> pi2(1670) pi, pi2->rho pi
+  dk = new DecayTree(421);
+  dk->addDgtr(-211, 10215)->addDgtr(211, 113)->addDgtr(211, -211);
+  add(*dk);
+  delete dk;
+
   // D0 -> omega3(1670)- pi+, omega3(1670)- ->rho(770) pi-, rhp(770) -> pi+pi-
   /*dk = new DecayTree(421);
   dk->addDgtr(-211,227)->addDgtr(211, 113)->addDgtr(211, -211);

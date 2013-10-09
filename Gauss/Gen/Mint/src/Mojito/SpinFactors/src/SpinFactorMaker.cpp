@@ -123,15 +123,12 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
 				  , char SPD_Wave
 				  //  , const std::string&
 				  ){
-  bool dbThis=true;
+  bool dbThis=false;
 
   if(dbThis){
     std::cout << "SpinFactorMaker4Body called for"
 	      << thisDcy
 	      << std::endl;
-
-    cout << "Does it match " << SF_DtoPP0_PtoVP1_VtoP2P3::getExampleDecay()
-	 << " ?" << endl;
   }
   if( equalBySVPAT(SF_DtoPP0_PtoVP1_VtoP2P3::getExampleDecay()
 		   , thisDcy) ){

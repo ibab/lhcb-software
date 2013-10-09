@@ -293,6 +293,10 @@ int ampFit(){
     mini.doFit();
     mini.printResultVsInput();
     BpPdf.doFinalStats();
+    BpPdf.saveEachAmpsHistograms("Bp");
+    BmPdf.doFinalStats();
+    BmPdf.saveEachAmpsHistograms("Bm");
+
     cout << "ex " << j_ex << ") " << "done fit" << endl;
 
     MinuitParameterSet::getDefaultSet()->fillNtp(paraFile, ntp);    
