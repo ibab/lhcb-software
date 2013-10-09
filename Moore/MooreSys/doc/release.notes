@@ -3,6 +3,16 @@ Package     : MooreSys
 Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v20r4>2013-10-09 MooreSys v20r4</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v36r2 stack. Depends on Rec v15r2 via Phys v17r2. Based on Gaudi v23r10.
+
+First Hlt/Moore version to support gcc48 :)
+Otherwise very minor changes. Most changes are in the project re-organization of lower projects.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v20r4
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v20r4
+
 </PRE><H1><A NAME=v20r3p3>2013-09-09 MooreSys v20r3p3</A></H1><PRE>
 Moore/HLT LS1 development version. LHCb v36r1 stack. Depends on Rec v15r1 via Phys v17r1 via Hlt v20r3p1. Based on Gaudi v23r9.
 
