@@ -7,9 +7,11 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2013-10-10 - Chris Jones
+ - Some minor clean ups and typo fixes.
+
 ! 2013-10-10 - Cedric Potterat
  - Fixing Memory Leak detected by Valgrind
-
 
 !========================= LoKiJets v6r8p2 2013-06-13 =========================
 

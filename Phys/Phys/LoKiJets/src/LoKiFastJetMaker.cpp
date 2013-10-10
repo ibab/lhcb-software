@@ -55,7 +55,7 @@ fastjet::JetDefinition LoKi::FastJetMaker::prepare
         input.end() != ip ; ++ip )
   {
     const LHCb::Particle* p = *ip ;
-    if ( 0 == p ) { Warning ( "Invalid input particle" ) ; continue ; }
+    if ( NULL == p ) { Warning ( "Invalid input particle" ).ignore() ; continue ; }
     jets.push_back ( makeJet( p , to_user_index ( ip - input.begin() ) ) ) ;
   }
  
@@ -130,7 +130,6 @@ StatusCode LoKi::FastJetMaker::makeJets
   // Jets found
   Jets_ jets ;
  
- 
   fastjet::ClusterSequence* clusters = new fastjet::ClusterSequence( inputs , jetDef ) ;
  
   switch ( m_sort )
@@ -150,10 +149,11 @@ StatusCode LoKi::FastJetMaker::makeJets
   }
  
   if ( jets.empty() )
-  {  Warning ( "No jets from fatsjet::ClusterSequence" ) ; }
+  { Warning( "No jets from fastjet::ClusterSequence", 
+             StatusCode::SUCCESS ).ignore() ; }
  
   //
-  if ( 0 == m_combiner )
+  if ( NULL == m_combiner )
   { m_combiner = tool<IParticleCombiner> ( m_combinerName , this ) ; }
  
   IJetMaker::Jets  output  ;
@@ -165,7 +165,7 @@ StatusCode LoKi::FastJetMaker::makeJets
   {
     const Jet& jet = *ijet ;
     const Constituents& constituents = clusters->constituents ( jet ) ;
-    if ( constituents.empty() ) { Warning ( "Jet is 'empty'!" ) ; }
+    if ( constituents.empty() ) { Warning( "Jet is 'empty'!" ).ignore() ; }
    
     LHCb::Particle              pJet ;
     LHCb::Vertex                vJet      ;
@@ -182,7 +182,8 @@ StatusCode LoKi::FastJetMaker::makeJets
       // find the appropriate input particle
       const int index = from_user_index ( c.user_index() ) ;
       if ( 0 > index || (int) inputs.size() <= index )
-      { Warning ( "Invalid index for a constituent!" ) ; continue ; } // CONTINUE
+      { Warning ( "Invalid index for a constituent!" ).ignore() ; 
+        continue ; } // CONTINUE
       // get the appropriate particle:
       const LHCb::Particle* p = input_[index] ;
       // add the particle into the vertex
@@ -190,14 +191,14 @@ StatusCode LoKi::FastJetMaker::makeJets
     }
     if ( daughters.empty() )
     {
-      Warning ("Empty list of of daughter particles, skip it") ;
+      Warning ("Empty list of of daughter particles, skip it").ignore() ;
       continue ;
     }
     // use the tool
-    StatusCode sc = m_combiner->combine ( daughters , pJet , vJet ) ;
+    const StatusCode sc = m_combiner->combine ( daughters , pJet , vJet ) ;
     if ( sc.isFailure() )
     {
-      Error ( "Error from momentum combiner, skip" , sc ) ;
+      Error ( "Error from momentum combiner, skip" , sc ).ignore() ;
       continue ;
     }
     // redefine the momentum
