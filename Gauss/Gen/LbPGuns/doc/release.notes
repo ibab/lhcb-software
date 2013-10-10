@@ -4,8 +4,13 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+!========================== LbPGuns v4r1 2013-10-10 ==========================
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
+
+! 2013-08-30 - Michel De Cian
+ - Added tool MomentumSpectrum, which allows to generate events with a particle
+   gun according to a given spectrum from a 3D histogram
 
 !========================== LbPGuns v4r0 2012-07-23 ==========================
 ! 2012-07-23 - Patrick Robbe
