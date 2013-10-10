@@ -6,7 +6,8 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
-! 2013-10-02 - Philip Hunt (LHCB)
+!=========================== Mint v2r2 2013-10-10 ============================
+! 2013-10-02 - Philip Hunt (LHCb)
  - Added the EvtTRandom class, which inherits from TRandom and allows the
    EvtGen-MINT generator to use the EvtGen random number generator
   . Takes as a constructor argument an IEvtRandom object, which is implemented
