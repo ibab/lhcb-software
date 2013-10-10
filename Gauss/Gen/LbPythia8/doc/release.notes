@@ -4,8 +4,20 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+
+
+! 2013-10-10 - Chitsanu Khurewathanakul
+ - Added the new IGenTool: Pythia8Gun. This is a subclass of Pythia8Production, 
+   where user can specify the decay product in a gun-like fashion, i.e., with 
+   predefined Energy, angle theta/phi, as well as the decay channel as dictated
+   by Pythia8's engine.
+ - Tested in-house (at EPFL) against Gauss v46r4, v45r3 
+ - See example file sample_gun_gauss.py
+ - See presentation at: https://indico.cern.ch/conferenceDisplay.py?confId=264427
+
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
+
 
 !========================= LbPythia8 v7r4 2013-07-24 =========================
 ! 2013-07-15 - Patrick Robbe 
