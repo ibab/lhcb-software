@@ -3,6 +3,8 @@
 ! Responsible : Gloria CORTI, Patrick ROBBE
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
+
+!========================== GenCuts v3r6 2013-10-10 ========================== 
 ! 2013-09-17 - Liang Zhong
  - Move XiccDaughtersInLHCb tool from LbGenXicc package to GenCuts
  - Add XiccDaughtersInLHCbAndWithMinPT tool, which apply a minimum PT
