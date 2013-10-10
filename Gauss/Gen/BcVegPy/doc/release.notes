@@ -2,7 +2,8 @@
 ! Package     : Gen/BcVegPy
 ! Responsible : 
 
-! 2013-10-08 - Patrick Robbe
+!========================= BcVegPy v3r2 2012-10-10 ===========================
+ 2013-10-08 - Patrick Robbe
  - Change status for the FORTRAN OPEN statements from UNKNOWN to OLD
    to solve problems seen on the grid at some of the sites
 

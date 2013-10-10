@@ -1,7 +1,7 @@
 # $Id: requirements,v 1.11 2009-11-04 14:08:55 silviam Exp $
 # =============================================================================
 package       BcVegPy
-version       v3r1
+version       v3r2
 
 # =========== structure =======================================================
 branches      cmt src include doc
