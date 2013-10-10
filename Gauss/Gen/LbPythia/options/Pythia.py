@@ -1,8 +1,8 @@
 ##  Empty Pythia options to be included in production to generate
 ##  standard events as to havethe same structure for all generators
 ##
-##  author G.Corti
-##  date 2009-09-18
+##  author P.Robbe 
+##  date 2013-10-09
 ##
 
 pythiaCommands = [ "pysubs msel 0" ,
@@ -98,14 +98,22 @@ gen.addTool( Inclusive )
 gen.addTool( SignalPlain )
 gen.addTool( SignalRepeatedHadronization )
 
-gen.Special.addTool( PythiaProduction )
-gen.MinimumBias.addTool( PythiaProduction )
-gen.Inclusive.addTool( PythiaProduction )
-gen.SignalPlain.addTool( PythiaProduction )
-gen.SignalRepeatedHadronization.addTool( PythiaProduction )
+gen.Special.ProductionTool = "PythiaProduction"
+gen.MinimumBias.ProductionTool = "PythiaProduction"
+gen.Inclusive.ProductionTool = "PythiaProduction"
+gen.SignalPlain.ProductionTool = "PythiaProduction"
+gen.SignalRepeatedHadronization.ProductionTool = "PythiaProduction"
 
-gen.Special.PythiaProduction.Commands += pythiaCommands
-gen.MinimumBias.PythiaProduction.Commands += pythiaCommands
-gen.Inclusive.PythiaProduction.Commands += pythiaCommands
-gen.SignalPlain.PythiaProduction.Commands += pythiaCommands
-gen.SignalRepeatedHadronization.PythiaProduction.Commands += pythiaCommands
+# Do not set the default setting here yet as they already are in the code and
+# may be reset by the event type which options are called before in production
+## gen.Special.addTool( PythiaProduction )
+## gen.MinimumBias.addTool( PythiaProduction )
+## gen.Inclusive.addTool( PythiaProduction )
+## gen.SignalPlain.addTool( PythiaProduction )
+## gen.SignalRepeatedHadronization.addTool( PythiaProduction )
+
+## gen.Special.PythiaProduction.Commands += pythiaCommands
+## gen.MinimumBias.PythiaProduction.Commands += pythiaCommands
+## gen.Inclusive.PythiaProduction.Commands += pythiaCommands
+## gen.SignalPlain.PythiaProduction.Commands += pythiaCommands
+## gen.SignalRepeatedHadronization.PythiaProduction.Commands += pythiaCommands

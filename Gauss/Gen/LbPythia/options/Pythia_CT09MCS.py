@@ -7,31 +7,27 @@ from Configurables import Special, ToolSvc, EvtGenDecay
 
 gen = Generation()
 gen.addTool( MinimumBias , name = "MinimumBias" )
+gen.MinimumBias.ProductionTool = "PythiaProduction"
 gen.MinimumBias.addTool( PythiaProduction , name = "PythiaProduction" )
 gen.MinimumBias.PythiaProduction.Commands += command
 
-gen = Generation()
 gen.addTool( Inclusive , name = "Inclusive" )
 gen.Inclusive.addTool( PythiaProduction , name = "PythiaProduction" )
 gen.Inclusive.PythiaProduction.Commands += command
 
-gen = Generation()
 gen.addTool( SignalPlain , name = "SignalPlain" )
+gen.SignalPlain.ProductionTool = "PythiaProduction"
 gen.SignalPlain.addTool( PythiaProduction , name = "PythiaProduction" )
 gen.SignalPlain.PythiaProduction.Commands += command
 
-gen = Generation()
 gen.addTool( SignalRepeatedHadronization , name = "SignalRepeatedHadronization" )
+gen.SignalRepeatedHadronization.ProductionTool = "PythiaProduction"
 gen.SignalRepeatedHadronization.addTool( PythiaProduction , name = "PythiaProduction" )
 gen.SignalRepeatedHadronization.PythiaProduction.Commands += command
 
-gen = Generation()
 gen.addTool( Special , name = "Special" )
+gen.Special.ProductionTool = "PythiaProduction"
 gen.Special.addTool( PythiaProduction , name = "PythiaProduction" )
 gen.Special.PythiaProduction.Commands += command
-
-ToolSvc().addTool( EvtGenDecay )
-ToolSvc().EvtGenDecay.addTool( PythiaProduction , name = "PythiaProduction" )
-ToolSvc().EvtGenDecay.PythiaProduction.Commands += command
 
 

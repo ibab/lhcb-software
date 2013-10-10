@@ -4,6 +4,10 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-10-10 - Gloria Corti
+ - Add lines in Pythia.py and Pythia_CT09MCS.py to set use of PythiaProduction
+   for cases when we will change the default.
+
 ! 2013-10-09 - Patrick Robbe
  - Add Pythia.py option files with the Pythia6 tuning
 
