@@ -378,7 +378,6 @@ class SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3 : public SpinFactor{
    
 };
 //------------------------------------------------
-
 class SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3 : public SpinFactor{
   // the simplest D->T1, T2, with L=0
  protected:
@@ -406,6 +405,42 @@ class SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3 : public SpinFactor{
    virtual const DecayTree& exampleDecay();
    virtual std::string name() const{
      return "SpinFactor4:SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3("
+       + theDecay().oneLiner() + ")";
+   }
+   
+};
+
+// -----------------------------------
+// D->PA, A->TP (ang mom L=1 at each vtx)
+// -----------------------------------
+
+class SF_DtoAP0_AtoTP1_TtoP2P3 : public SpinFactor{
+  // the simplest D->T1, T2, with L=0
+ protected:
+  static DecayTree* _exampleDecay;
+  MINT::const_counted_ptr<AssociatedDecayTree> A, T;// *P1, *P2, *P3, *P4;
+   virtual bool parseTree();
+
+ public:
+   virtual void printYourself(std::ostream& os=std::cout) const;
+   SF_DtoAP0_AtoTP1_TtoP2P3(IDalitzEventAccess* events
+				     , const DecayTree& theDecay) 
+     : SpinFactor(events, theDecay, 4)
+     , A(0), T(0)
+     {
+       if( ! parseTree()){
+	 throw "error in parseTree in constructor of SF_DtoAP0_AtoTP1_TtoP2P3";
+       }
+       //      printYourself();
+     }
+   
+   virtual ~SF_DtoAP0_AtoTP1_TtoP2P3(){}
+   virtual double getVal();
+   
+   static const DecayTree& getExampleDecay();
+   virtual const DecayTree& exampleDecay();
+   virtual std::string name() const{
+     return "SpinFactor4:SF_DtoAP0_AtoTP1_TtoP2P3("
        + theDecay().oneLiner() + ")";
    }
    

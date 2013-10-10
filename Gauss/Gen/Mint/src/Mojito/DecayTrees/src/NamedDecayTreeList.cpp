@@ -2125,6 +2125,19 @@ int NamedDecayTreeList::make4PiList() {
   add(*dk);
   delete dk;
 
+  // D -> pi(1300) pi, pi(1300)->f(600) pi (trivial spin factor)
+  dk = new DecayTree(421);
+  dk->addDgtr(-211, 100211)->addDgtr(211, 9000221)->addDgtr(-211,211);
+  add(*dk);
+  delete dk;
+
+  //  D->a1(1260) pi, a1 -> f2(1270) pi 
+  dk = new DecayTree(421);
+  dk->addDgtr(-211, 20213)->addDgtr(211, 225)->addDgtr(211, -211);
+  add(*dk);
+  delete dk;
+
+ 
   // D0 -> omega3(1670)- pi+, omega3(1670)- ->rho(770) pi-, rhp(770) -> pi+pi-
   /*dk = new DecayTree(421);
   dk->addDgtr(-211,227)->addDgtr(211, 113)->addDgtr(211, -211);

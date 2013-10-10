@@ -31,6 +31,9 @@ DecayTree* SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::_exampleDecay=0;
 DecayTree* SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::_exampleDecay=0;
 DecayTree* SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::_exampleDecay=0;
 
+
+DecayTree* SF_DtoAP0_AtoTP1_TtoP2P3::_exampleDecay=0;
+
 //============================================================
 
 // ----------- D->VT, various L states --------
@@ -162,6 +165,18 @@ const DecayTree& SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::getExampleDecay(){
   return *_exampleDecay;
 }
 const DecayTree& SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::exampleDecay(){
+  return getExampleDecay();
+}
+
+// ----- D->AP, A->TP, ---------
+const DecayTree& SF_DtoAP0_AtoTP1_TtoP2P3::getExampleDecay(){
+  _exampleDecay = new DecayTree(421);
+  // example: D->a1(1260) pi, a1 -> f2(1270) pi 
+  // (kinematically challenged, but in PDG - broad particles...)
+  _exampleDecay->addDgtr(-211, 20213)->addDgtr(211, 225)->addDgtr(211, -211);
+  return *_exampleDecay;
+}
+const DecayTree& SF_DtoAP0_AtoTP1_TtoP2P3::exampleDecay(){
   return getExampleDecay();
 }
 
@@ -897,8 +912,6 @@ void SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::printYourself(ostream& os) const{
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
-
-// ==========================================
 // -----------------------------------------------
 bool SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::parseTree(){
   //  bool debugThis=false;
@@ -996,8 +1009,7 @@ void SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::printYourself(ostream& os) const{
   this->printParsing(os);
 }
 
-// ==========================================
-// -----------------------------------------------
+// -------------------------------------------
 bool SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::parseTree(){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
@@ -1101,5 +1113,110 @@ void SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::printYourself(ostream& os) const{
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
+
+// ==========================================
+// -----------------------------------------------
+// D->PA, A->TP (ang mom L=1 at each vtx)
+// -----------------------------------------------
+
+bool SF_DtoAP0_AtoTP1_TtoP2P3::parseTree(){
+  //  bool debugThis=false;
+  if(fsPS.size() < 4) fsPS.reserve(4);
+  if(! theDecay().nDgtr() == 2){
+    cout << "ERROR in SF_DtoAP0_AtoTP1_TtoP2P3_BASE::parseTree"
+	 << " expected exactly 2 daughers of D, have "
+	 << theDecay().nDgtr();
+    return false;
+  }
+  for(int i=0; i< theDecay().nDgtr(); i++){
+    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay().getDgtrTreePtr(i);
+    if     (dgtr->getVal().SVPAT() == "P" &&   dgtr->isFinalState()) fsPS[0] = dgtr;
+    else if(dgtr->getVal().SVPAT() == "A" && ! dgtr->isFinalState()) A = dgtr;
+  }
+  if(0==A || 0==fsPS[0]){
+    cout << "ERROR in SF_DtoAP0_AtoTP1_TtoP2P3_BASE::parseTree"
+	 << " Didn't find T or P0 " << A.get() << ", " << fsPS[0].get() << endl;
+    return false;
+  }
+  
+  if(A->nDgtr() != 2){
+    cout << "ERROR in SF_DtoAP0_AtoTP1_TtoP2P3_BASE::parseTree"
+	 << " T should have 2 daughters, but it says it has "
+	 << A->nDgtr() << "."
+	 << endl;
+    return false;
+  }
+  for(int i=0; i< A->nDgtr(); i++){
+    const_counted_ptr<AssociatedDecayTree> dgtr= A->getDgtrTreePtr(i);
+    if     (dgtr->getVal().SVPAT() == "T" && ! dgtr->isFinalState()) T = dgtr;
+    else if(dgtr->getVal().SVPAT() == "P" &&   dgtr->isFinalState()) fsPS[1] = dgtr;
+  }
+  if(0==T || 0==fsPS[1]){
+    cout << "ERROR in SF_DtoAP0_AtoTP1_TtoP2P3_BASE::parseTree"
+	 << " Didn't find T or P1 " << T.get() << ", " << fsPS[1].get() << endl;
+    return false;
+  }
+  
+  if(T->nDgtr() != 2){
+    cout << "ERROR in SF_DtoAP0_AtoTP1_TtoP2P3_BASE::parseTree"
+	 << " A should have 2 daughters, but it says it has "
+	 << T->nDgtr() << "."
+	 << endl;
+    return false;
+  }
+  fsPS[2] = T->getDgtrTreePtr(0);
+  fsPS[3] = T->getDgtrTreePtr(1);
+  normalOrder(fsPS[2], fsPS[3]);
+  
+  // this->printYourself();
+  return true;
+}
+// ---
+double SF_DtoAP0_AtoTP1_TtoP2P3::getVal(){
+  bool dbThis=false;
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+
+  TLorentzVector pT = p(2) + p(3);
+  TLorentzVector qT = p(2) - p(3);
+  TLorentzVector pA = pT + p(1);
+  TLorentzVector qA = pT - p(1);
+  //TLorentzVector pD = pPT + p(0);
+  TLorentzVector qD = pA - p(0);
+
+  double MA = mRes(A);
+  double MT = mRes(T);
+  //double MV = mRes(S);
+  
+  ZTspin1 tA(qA, pA, MA);
+  ZTspin2 tT(qT, pT, MT);
+
+  const double units = GeV*GeV*GeV*GeV;
+
+  double returnVal =  (tT.Contract(tA)).Dot(qD) / units;
+
+  if(dbThis){
+    cout << " SF_DtoAP0_AtoTP1_TtoP2P3::getVal "
+	 << " returning " << returnVal
+	 << endl;
+  }
+  return returnVal;
+}
+
+void SF_DtoAP0_AtoTP1_TtoP2P3::printYourself(ostream& os) const{
+  //  bool debugThis = false;
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) return;
+  os << "spin factor SF_DtoAP0_AtoTP1_TtoP2P3"
+     << "\n\t  ZTspin1 tA(qA, pA, MA);"
+     << "\n\t  ZTspin2 tT(qT, pT, MT);"
+     << "\n\t  pT = p(2) + p(3); qT = p(2) - p(3);"
+     << "\n\t  pA = pT + p(1); qA = pT - p(1);"
+     << "\n\t  pD = pA + p(0); qD = pA - p(0);"
+     << "\n\t  (tT.Contract(tA)).Dot(qD) / GeV^4"
+     << "\n\t    parsed tree " << theDecay().oneLiner()
+     << "\n      like this:" << endl;
+  this->printParsing(os);
+}
+
+//====================================
 
 //====================================

@@ -32,6 +32,8 @@ DecayTree* SF_DtoVS_VtoP0P1_StoP2P3_nonResV::_exampleDecay=0;
 DecayTree* SF_DtoPP1P2_PtoP3P4::_exampleDecay=0; // trivial, = 1
 DecayTree* SF_DtoS1S2_S1toP1P2_S2toP3P4::_exampleDecay=0; // trival, = 1
 
+DecayTree* SF_DtoPP0_PtoSP1_StoP3P4::_exampleDecay=0; // trival, = 1
+
 DecayTree* SF_DtoV1P0_V1toV2P1_V2toP2P3::_exampleDecay=0;
 
 DecayTree* SF_DtoAP0_AtoVP1_VtoP2P3::_exampleDecay=0;
@@ -78,6 +80,17 @@ const DecayTree& SF_DtoS1S2_S1toP1P2_S2toP3P4::getExampleDecay(){
   return *_exampleDecay;
 }
 const DecayTree& SF_DtoS1S2_S1toP1P2_S2toP3P4::exampleDecay(){//Laurens KsSpin
+  return getExampleDecay();
+}
+
+const DecayTree& SF_DtoPP0_PtoSP1_StoP3P4::getExampleDecay(){
+  if(0 == _exampleDecay){
+    _exampleDecay = new DecayTree(421);
+    _exampleDecay->addDgtr(-211, 100211)->addDgtr(211, 9000221)->addDgtr(-211,211);
+  }
+  return *_exampleDecay;
+}
+const DecayTree& SF_DtoPP0_PtoSP1_StoP3P4::exampleDecay(){//Laurens KsSpin
   return getExampleDecay();
 }
 

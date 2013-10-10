@@ -312,6 +312,20 @@ ISpinFactor* SpinFactorMaker4Body(const DecayTree& thisDcy
 		<< thisDcy << std::endl;
     }
     return new SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3(events, thisDcy);
+  }else if( equalBySVPAT(SF_DtoPP0_PtoSP1_StoP3P4::getExampleDecay()
+			 , thisDcy) ){
+    if(dbThis){
+      std::cout << "found a spin factor for this decay:\n" 
+		<< thisDcy << std::endl;
+    }
+    return new SF_DtoPP0_PtoSP1_StoP3P4(events, thisDcy);
+  }else if( equalBySVPAT(SF_DtoAP0_AtoTP1_TtoP2P3::getExampleDecay()
+			 , thisDcy) ){
+    if(dbThis){
+      std::cout << "found a spin factor for this decay:\n" 
+		<< thisDcy << std::endl;
+    }
+    return new SF_DtoAP0_AtoTP1_TtoP2P3(events, thisDcy);
   }else{
     std::cout << "SpinFactorMaker WARNING!!"
 	      << " don't know spin factor of this decay:\n" 

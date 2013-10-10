@@ -16,6 +16,21 @@
 
 // ==========================================
 
+class SF_DtoPP0_PtoSP1_StoP3P4 : public SpinFactorTrivial{ 
+  static DecayTree* _exampleDecay;
+ public:
+  SF_DtoPP0_PtoSP1_StoP3P4(IDalitzEventAccess* , const DecayTree& )
+    : SpinFactorTrivial(){}
+
+  virtual ~SF_DtoPP0_PtoSP1_StoP3P4(){}
+  static const DecayTree& getExampleDecay();
+  virtual const DecayTree& exampleDecay();
+  virtual std::string name() const{
+    return "SpinFactor4:SF_DtoPP0_PtoSP1_StoP3P4-trivialSpinFactor";
+  }
+};
+// ==========================================
+
 class SF_DtoS1S2_S1toP1P2_S2toP3P4 : public SpinFactorTrivial{ 
   static DecayTree* _exampleDecay;
  public:
