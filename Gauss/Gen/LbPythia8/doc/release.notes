@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 
-
+!========================= LbPythia8 v7r5 2013-10-10 =========================
 ! 2013-10-10 - Chitsanu Khurewathanakul
  - Added the new IGenTool: Pythia8Gun. This is a subclass of Pythia8Production, 
    where user can specify the decay product in a gun-like fashion, i.e., with 
@@ -17,7 +17,6 @@
 
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
-
 
 !========================= LbPythia8 v7r4 2013-07-24 =========================
 ! 2013-07-15 - Patrick Robbe 

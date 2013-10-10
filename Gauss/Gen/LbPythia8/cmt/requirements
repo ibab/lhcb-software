@@ -3,7 +3,7 @@
 # Maintainer : Patrick Robbe
 #============================================================================
 package       LbPythia8
-version       v7r4
+version       v7r5
 
 # Structure, i.e. directories to process. 
 #============================================================================
