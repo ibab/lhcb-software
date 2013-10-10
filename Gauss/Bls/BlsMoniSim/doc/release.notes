@@ -4,6 +4,7 @@
 ! Purpose     : BlsMoniSim package documentation
 !-----------------------------------------------------------------------------
 
+!====================== BlsMoniSim v1r1p1 2013-10-10 =========================
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
 
