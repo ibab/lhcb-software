@@ -248,12 +248,10 @@ StatusCode LoKi::JetMaker::analyse   ()
         if(m_applyJEC)this->JEC(jet);  
         if(m_runJetID) this->appendJetIDInfo(jet);
         // If the jet contain info on PV, assign a PV and update the P2PV relation table
-        LHCb::Vertex* vJet = new LHCb::Vertex();;
-	//	DaVinci::PVSentry(this,jet);
+        LHCb::Vertex* vJet = new LHCb::Vertex();
 
         if ( withPVPointingInfo(jet) ){
           jet->setReferencePoint( Gaudi::XYZPoint((*i_pv)->position ()) );
-          LHCb::Vertex* vJet = new LHCb::Vertex();;
           vJet->setPosition((*i_pv)->position());
           vJet->setCovMatrix((*i_pv)->covMatrix());
           vJet->setChi2((*i_pv)->chi2());
@@ -264,7 +262,6 @@ StatusCode LoKi::JetMaker::analyse   ()
         }
         if (m_applyJetID && m_runJetID &&( mtf(jet)>0.75 || nPVInfo(jet)<2 )){
           jets.pop_back() ;
-	  //	  DaVinci::PVSentry(this,jet);
 	  unRelatePV(jet);
           delete jet ;
           delete vJet ;
@@ -273,7 +270,6 @@ StatusCode LoKi::JetMaker::analyse   ()
         save ( "jets" , jet ).ignore() ;
         jets.pop_back() ;
 	unRelatePV(jet);
-	//	DaVinci::PVSentry(this,jet);
         delete jet ;
 	delete vJet ;
       }
