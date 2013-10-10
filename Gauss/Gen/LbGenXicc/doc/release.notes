@@ -2,8 +2,13 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+!========================= LbGenXicc v3r0 2013-10-10 =========================
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
+
+! 2013-09-17 - Liang Zhong
+ - Remove two Xicc generator level cut tools, since they will be migrated to
+   GenCuts
 
 !======================== LbGenXicc v2r0p1 2013-02-04 ========================
 ! 2013-02-04 - Gloria Corti
