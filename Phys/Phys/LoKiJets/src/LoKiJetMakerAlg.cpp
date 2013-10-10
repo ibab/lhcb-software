@@ -68,7 +68,7 @@ namespace LoKi
     ( const std::string& name ,
       ISvcLocator*       pSvc ) 
       : LoKi::Algo ( name , pSvc )
-      // 
+	// 
       , m_makerName ( "LoKi::FastJetMaker"   )
       , m_maker     ( 0   )
       , m_associate2Vertex ( false  )
@@ -200,80 +200,81 @@ StatusCode LoKi::JetMaker::analyse   ()
     // Loop over PV list and make jets out of appropriate inputs related to the PVs
     const LHCb::RecVertex::Range pvs = this->primaryVertices () ;
     for ( LHCb::RecVertex::Range::const_iterator i_pv = pvs.begin() ; pvs.end() != i_pv ; i_pv++ )
-    {
-      IJetMaker::Input inputs;
-      for (Range::const_iterator i_p = part.begin() ; part.end() != i_p ; i_p++ ){
-        // Neutral inputs
-        if (Q(*i_p) == 0 ){
-          // Take all neutrals exept V0s
-          if ( ABSID(*i_p) != 310 && ABSID(*i_p) != 3122 ) inputs.push_back(*i_p) ;
-          // Keep only the V0s that match to the vertex
-          else if ( bestVertexVX(*i_p) == VX( *i_pv) &&
-		    bestVertexVY(*i_p) == VY( *i_pv) &&
-		    bestVertexVZ(*i_p) == VZ( *i_pv)  ) inputs.push_back(*i_p) ;
-          else continue ;
-        }
-        // Charged inputs
-        else{
-          // Take all downstream tracks
-          if ( LHCb::Track::Downstream == TRTYPE(*i_p) ) inputs.push_back(*i_p) ;
-          // Keep only the tracks with velo segment that match to the vertex
-          else if ( bestVertexVX(*i_p) == VX( *i_pv) &&
-		    bestVertexVY(*i_p) == VY( *i_pv) &&
-		    bestVertexVZ(*i_p) == VZ( *i_pv)  ) inputs.push_back(*i_p);
-          else continue ;
-        }
-      }
-
-      // input container of "particles"
-      IJetMaker::Jets jets ;
-      
-      LoKi::Types::Fun mtf = LoKi::Cuts::INFO(9003,-10.);
-      LoKi::Types::Fun n90 = LoKi::Cuts::INFO(9002,-10.);
-      LoKi::Types::Fun cpf = LoKi::Cuts::INFO(9006,-10.);
-      LoKi::Types::Fun width = LoKi::Cuts::INFO(9007,-10.);
-      LoKi::Types::Fun nPVInfo = LoKi::Cuts::INFO(9005,-10.);
-      if ( 0 == m_maker ) 
-      { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
-
-      // make the jets 
-      StatusCode sc = m_maker->makeJets ( inputs.begin () , inputs.end   () , jets  ) ;
-      
-      if ( sc.isFailure() ) { return Error ( "Error from jet maker" , sc ) ; }
-      
-      // save all jets
-      while ( !jets.empty() ) 
       {
-        LHCb::Particle* jet = jets.back() ;
-        if(m_applyJEC)this->JEC(jet);  
-        if(m_runJetID) this->appendJetIDInfo(jet);
-        // If the jet contain info on PV, assign a PV and update the P2PV relation table
-        LHCb::Vertex* vJet = new LHCb::Vertex();
+	IJetMaker::Input inputs;
+	for (Range::const_iterator i_p = part.begin() ; part.end() != i_p ; i_p++ ){
+	  // Neutral inputs
+	  if (Q(*i_p) == 0 ){
+	    // Take all neutrals exept V0s
+	    if ( ABSID(*i_p) != 310 && ABSID(*i_p) != 3122 ) inputs.push_back(*i_p) ;
+	    // Keep only the V0s that match to the vertex
+	    else if ( bestVertexVX(*i_p) == VX( *i_pv) &&
+		      bestVertexVY(*i_p) == VY( *i_pv) &&
+		      bestVertexVZ(*i_p) == VZ( *i_pv)  ) inputs.push_back(*i_p) ;
+	    else continue ;
+	  }
+	  // Charged inputs
+	  else{
+	    // Take all downstream tracks
+	    if ( LHCb::Track::Downstream == TRTYPE(*i_p) ) inputs.push_back(*i_p) ;
+	    // Keep only the tracks with velo segment that match to the vertex
+	    else if ( bestVertexVX(*i_p) == VX( *i_pv) &&
+		      bestVertexVY(*i_p) == VY( *i_pv) &&
+		      bestVertexVZ(*i_p) == VZ( *i_pv)  ) inputs.push_back(*i_p);
+	    else continue ;
+	  }
+	}
 
-        if ( withPVPointingInfo(jet) ){
-          jet->setReferencePoint( Gaudi::XYZPoint((*i_pv)->position ()) );
-          vJet->setPosition((*i_pv)->position());
-          vJet->setCovMatrix((*i_pv)->covMatrix());
-          vJet->setChi2((*i_pv)->chi2());
-          vJet->setNDoF((*i_pv)->nDoF());
-          vJet->setOutgoingParticles(jet->daughters());
-          jet->setEndVertex(vJet->clone());
-          this->relate ( jet , *i_pv );
-        }
-        if (m_applyJetID && m_runJetID &&( mtf(jet)>0.75 || nPVInfo(jet)<2 )){
-          jets.pop_back() ;
-	  unRelatePV(jet);
-          delete jet ;
-          delete vJet ;
-          continue;
-        }
-        save ( "jets" , jet ).ignore() ;
-        jets.pop_back() ;
-	unRelatePV(jet);
-        delete jet ;
-	delete vJet ;
+	// input container of "particles"
+	IJetMaker::Jets jets ;
+      
+	LoKi::Types::Fun mtf = LoKi::Cuts::INFO(9003,-10.);
+	LoKi::Types::Fun n90 = LoKi::Cuts::INFO(9002,-10.);
+	LoKi::Types::Fun cpf = LoKi::Cuts::INFO(9006,-10.);
+	LoKi::Types::Fun width = LoKi::Cuts::INFO(9007,-10.);
+	LoKi::Types::Fun nPVInfo = LoKi::Cuts::INFO(9005,-10.);
+	if ( 0 == m_maker ) 
+	  { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
+
+	// make the jets 
+	StatusCode sc = m_maker->makeJets ( inputs.begin () , inputs.end   () , jets  ) ;
+      
+	if ( sc.isFailure() ) { return Error ( "Error from jet maker" , sc ) ; }
+      
+	// save all jets
+      
+      
+      
+	while ( !jets.empty() )
+	  {
+	    LHCb::Particle* jet = jets.back() ;
+	    if(m_applyJEC)this->JEC(jet);
+	    if(m_runJetID) this->appendJetIDInfo(jet);
+	    // If the jet contain info on PV, assign a PV and update the P2PV relation table
+	    if ( withPVPointingInfo(jet) ){
+	      jet->setReferencePoint( Gaudi::XYZPoint((*i_pv)->position ()) );
+	      LHCb::Vertex* vJet = new LHCb::Vertex();
+	      vJet->setPosition((*i_pv)->position());
+	      vJet->setCovMatrix((*i_pv)->covMatrix());
+	      vJet->setChi2((*i_pv)->chi2());
+	      vJet->setNDoF((*i_pv)->nDoF());
+	      vJet->setOutgoingParticles(jet->daughters());
+	      jet->setEndVertex(vJet);
+	      this->relate ( jet , *i_pv );
+	    }
+	    if ( !( m_applyJetID && m_runJetID &&( mtf(jet)>0.75 || nPVInfo(jet)<2 ) ) )
+	      {
+		sc = save ( "jets" , jet ) ;
+		if ( sc.isFailure() ) { return Error ( "Error from save function in jet maker" , sc ) ; }
+      
+	      }
+	    jets.pop_back() ;
+	    unRelatePV(jet);
+	    delete jet->endVertex();
+	    delete jet;
+	  }
+
       }
-    }
   }
   else{
 
@@ -282,7 +283,7 @@ StatusCode LoKi::JetMaker::analyse   ()
     IJetMaker::Jets jets ;
     
     if ( 0 == m_maker ) 
-    { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
+      { m_maker = tool<IJetMaker> ( m_makerName ,m_makerName, this ) ; }
     
     
     // make the jets 
@@ -298,22 +299,25 @@ StatusCode LoKi::JetMaker::analyse   ()
     
     // save all jets
     while ( !jets.empty() ) 
-    {
-      LHCb::Particle* jet = jets.back() ;
-      if(m_runJetID) this->appendJetIDInfo(jet);
-      if (m_applyJetID && m_runJetID && ( mtf(jet)>0.75 || nPVInfo(jet)<2 )){
+      {
+	LHCb::Particle* jet = jets.back() ;
+	if(m_runJetID) this->appendJetIDInfo(jet);
+	if (m_applyJetID && m_runJetID && ( mtf(jet)>0.75 || nPVInfo(jet)<2 )){
           jets.pop_back() ;
           delete jet ;
           continue;
+	}
+
+	sc = save ( "jets" , jet ) ;
+	if ( sc.isFailure() ) { return Error ( "Error from save function in jet maker" , sc ) ; }
+      
+	jets.pop_back() ;
+	delete jet ;
       }
-      save ( "jets" , jet ).ignore() ;
-      jets.pop_back() ;
-      delete jet ;
-    }
   }
   
   if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 
-  { counter ( "#jets" ) += selected ("jets").size() ; }
+    { counter ( "#jets" ) += selected ("jets").size() ; }
   setFilterPassed ( true ) ;
   
   return StatusCode::SUCCESS ;
@@ -345,7 +349,7 @@ StatusCode LoKi::JetMaker::appendJetIDInfo( LHCb::Particle* jet )
     iitems++; float pt = daughter->momentum().Pt(); sumpt+=pt;
     itemspt.push_back(pt);
     for(int ii=0; ii<iitems; ii++) if(itemspt[ii]<pt) {
-      float aux = itemspt[ii]; itemspt[ii]=pt; pt = aux;}
+	float aux = itemspt[ii]; itemspt[ii]=pt; pt = aux;}
     width += ROOT::Math::VectorUtil::DeltaR(daughter->momentum(),jet->momentum()) * daughter->momentum().Pt();
   }
 
