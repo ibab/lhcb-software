@@ -3,7 +3,7 @@
 # Maintainer : Philip Ilten
 #============================================================================
 package       LbHerwigpp
-version       v2r0
+version       v2r0p1
 
 # Structure, i.e. directories to process.
 #============================================================================
