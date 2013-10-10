@@ -159,10 +159,13 @@ def SwimmingEventLoop(gaudi, nEvents):
 
     # Initialize at -1 so the eventNumber can be incremented at the top of the loop.
     eventNumber = -1
-    from Swimming.decorators import (LHCb,
-                                     SwimmingReports,
-                                     P2TPRelation,
-                                     SharedParticles)
+
+    from GaudiPython.Bindings import gbl
+    SwimmingReport  = gbl.LHCb.SwimmingReport
+    SwimmingReports = gbl.KeyedContainer('LHCb::SwimmingReport', 'Containers::KeyedObjectManager<Containers::hashmap>')
+    P2TPRelation    = gbl.LHCb.Relation2D('LHCb::Particle', 'LHCb::SwimmingReport')
+    SharedParticles = gbl.SharedObjectsContainer('LHCb::Particle')
+
     while True:
         # Increment event number
         eventNumber += 1
@@ -343,8 +346,9 @@ def SwimmingEventLoop(gaudi, nEvents):
                 break
         # Get or create the SwimmingReport
         report = reports(mycand.key())
+
         if not report:
-            report = createObject(LHCb.SwimmingReport, mycand)
+            report = createObject(SwimmingReport, mycand)
             # Put the SwimmingReport in the container.
             reports.insert(report)
         elif report.hasStage(stage):
@@ -373,7 +377,10 @@ def SwimmingEventLoop(gaudi, nEvents):
             
             std_map_ulb.__setitem__ = set_map
             std_map_sb.__setitem__ = set_map
-        
+
+            GaudiPython.loaddict("SwimmingHacksDict")
+            createTurningPoint = gbl.SwimmingHacks.createTurningPoint
+            
         # Create the TurningPoint objects and put them in the report
         for turn in finalTurningPointsForWriting:
             d = std_map_sb()
@@ -385,7 +392,8 @@ def SwimmingEventLoop(gaudi, nEvents):
                 for k, v in info.iteritems():
                     i[k] = v
                 m[decision] = i
-            tp = LHCb.TurningPoint(turn[0], turn[1], turn[2], turn[3][0], d, m)
+                
+            tp = createTurningPoint(turn[0], turn[1], turn[2], turn[3][0], d, m)
             report.addTurningPoint(stage, tp)
 
         # Create the relations table

@@ -24,16 +24,22 @@ include_path      none
 #============================================================================
 # Linker library
 #============================================================================
-library          Swimming          ../src/functions.cpp
+library          Swimming          ../src/*.cpp
 apply_pattern    linker_library    library=Swimming
 
 #============================================================================
-# Reflex dictionary
+# Reflex dictionaries
 #============================================================================
 apply_pattern     reflex_dictionary                                \
                   dictionary=Swimming                              \
                   headerfiles=$(SWIMMINGROOT)/dict/functions.h     \
                   selectionfile=$(SWIMMINGROOT)/dict/functions.xml \
+                  options="-U__MINGW32__"
+
+apply_pattern     reflex_dictionary                                \
+                  dictionary=SwimmingHacks                         \
+                  headerfiles=$(SWIMMINGROOT)/dict/hacks.h     \
+                  selectionfile=$(SWIMMINGROOT)/dict/hacks.xml \
                   options="-U__MINGW32__"
 
 apply_pattern install_python_modules

@@ -1,11 +1,6 @@
 #The TISTOS function of the swimming. For TISTOSing the trigger
 #we use the regular TISTOS tools, the stripping is done "by hand"
 from collections import defaultdict
-from GaudiPython.Bindings import gbl
-import GaudiPython
-GaudiPython.loaddict('SwimmingEventDict')
-Swimming = gbl.Swimming
-hashParticle = Swimming.hashParticle
 
 __all__ = ["evaluateTisTos","appendToFSP"]
 
@@ -26,6 +21,12 @@ def isTob(myGlobs,trigger) :
     return False 
 
 def evaluateTisTos(myGlobs,mycand,swimPoint):
+    from GaudiPython.Bindings import gbl
+    ## import GaudiPython
+    ## GaudiPython.loaddict('SwimmingEventDict')
+    Swimming = gbl.Swimming
+    hashParticle = Swimming.hashParticle
+
     #Evaluate whether or not you TOS-ed on your triggers
     decisions = {}
     if not myGlobs.swimStripping :

@@ -5,6 +5,15 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2013-10-10 - Roel Aaij
+
+ - Fix method resolution problems when swimming the stripping. There
+   is a dictionary related problem, which I suspect has to do with a
+   clash between Reflex and CINT dictionaries for std::map
+   classes. This fix I coded up is super hacky and the fact that the
+   solution works depends heavily on the details of when dictionaries
+   are loaded. 
+
 ! 2013-09-30 - Roel Aaij
  - Add some documentation explaining the deterministic nature of RandomSelector.
 
