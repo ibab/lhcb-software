@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           BcmMoniSim
-version           v1r2
+version           v1r2p1
 
 #============================================================================
 # This template is an example for a standard Algorithm package
