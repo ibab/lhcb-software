@@ -26,8 +26,6 @@ use TCKUtils            v1r12p1 Hlt   # Gerhard Raven
 use LoKiTrigger         v13r0p1 Phys  # Vanya Belyaev
 
 #temporary
-use LoKiCore            v11r14  Phys  #require bugfix, from LHCb
-use HltDAQ              v2r17p1 Hlt   #cope with multiple TES locations, from LHCb, from branch
 
 # Declare this as a container package
 apply_pattern container_package

@@ -11,6 +11,7 @@ Moore/HLT LS1 development version. LHCb v36r2 stack. Depends on Rec v15r2 via Ph
 First Hlt/Moore version to support gcc48 :)
 Otherwise very minor changes. Most changes are in the project re-organization of lower projects.
 
+This development stack will be used to prepare the Moore/MooreOnline split, and the use of the new DecoderDB for decoding.
 
 For more details see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v20r4
