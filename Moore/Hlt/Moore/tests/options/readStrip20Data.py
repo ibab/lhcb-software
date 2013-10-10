@@ -48,10 +48,4 @@ from Configurables import RecombineRawEvent
 RecombineRawEvent()
 
 
-################ dataset #################
-# Input data
-from PRConfig import TestFileDB
-TestFileDB.test_file_db["Charm_Strip20_Test"].run(withDB=False,configurable=Moore())
-
-
 
