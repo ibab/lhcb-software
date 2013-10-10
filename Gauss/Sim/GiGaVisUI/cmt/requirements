@@ -1,6 +1,6 @@
 # =============================================================================
 package GiGaVisUI
-version v5r2
+version v5r2p1
 
 # =============== package structure ===========================================
 branches         cmt src doc
