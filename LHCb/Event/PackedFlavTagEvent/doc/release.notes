@@ -4,6 +4,7 @@
 ! Purpose     : Hold event model classes for packed flavour tagging
 !-----------------------------------------------------------------------------
 
+!===================  PackedFlavTagEvent v1r0 2013-10-10 ======================
 ! 2013-10-08 - Rob Lambert
  - Remove knowledge of how to pack/unpack this class form its definition, so that it only knows about the class itself...
 
