@@ -3,7 +3,7 @@
 # Maintainer : Olivier Deschamps
 # ============================================================================
 package           CaloMoniSim
-version           v3r2
+version           v4r0p1
 
 # =============== structure ==================================================
 branches          cmt doc src options 
