@@ -3,7 +3,7 @@
 # Maintainer : Alex Grecu <alexandru.grecu@nipne.ro>
 #============================================================================
 package           GenTune
-version           v2r0p1
+version           v2r0p2
 
 #============================================================================
 # Structure, i.e. directories to process. 
