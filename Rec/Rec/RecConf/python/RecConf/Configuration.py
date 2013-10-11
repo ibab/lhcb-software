@@ -10,9 +10,7 @@ from LHCbKernel.Configuration import *
 from TrackSys.Configuration   import *
 from RichRecSys.Configuration import *
 from GlobalReco.Configuration import *
-
-from CaloReco.Configuration   import OffLineCaloRecoConf 
-from CaloPIDs.Configuration   import OffLineCaloPIDsConf
+from Configurables import CaloProcessor
 
 from Configurables import ( ProcessPhase, CaloMoniDstConf, RichRecQCConf,
                             VeloRecMonitors, GlobalRecoChecks,
@@ -30,8 +28,7 @@ class RecSysConf(LHCbConfigurableUser):
     ## Possible used Configurables
     __used_configurables__ = [ GlobalRecoConf      ,
                                TrackSys            ,
-                               OffLineCaloPIDsConf ,
-                               OffLineCaloRecoConf ,
+                               CaloProcessor,
                                (RichRecSysConf,richRecConfName)
                                ]
 
@@ -141,28 +138,19 @@ class RecSysConf(LHCbConfigurableUser):
             
         # CALO
         if "CALO" in recoSeq:
-            
+            import GaudiKernel.ProcessJobOptions            
             seq  = GaudiSequencer ( 'RecoCALOSeq' )
-            reco = GaudiSequencer ( 'CaloRecoSeq' )
-            pids = GaudiSequencer ( 'CaloPIDsSeq' )
-            seq.Members = [ reco , pids ]
-            
-            caloConf = OffLineCaloRecoConf(
-                Sequence           = reco                           ,
-                Context            = self.getProp('Context')        ,
+            caloConf=CaloProcessor(
+                Context            = self.getProp('Context')       ,
                 OutputLevel        = self.getProp('OutputLevel')    ,
-                ##
                 UseTracks          = True                           ,
-                EnableRecoOnDemand = False 
-                )
-            
-            caloPIDs = OffLineCaloPIDsConf (
-                Sequence           = pids                           ,
-                Context            = self.getProp('Context')        ,
-                OutputLevel        = self.getProp('OutputLevel')    ,
-                EnablePIDsOnDemand = False                          ,
+                EnableOnDemand     = False                          ,
                 DataType           = self.getProp ('DataType')      
                 )
+            GaudiKernel.ProcessJobOptions.PrintOn()
+            seq.Members = [caloConf.caloSequence()]
+            GaudiKernel.ProcessJobOptions.PrintOff()
+            
 
 
         # MUON
@@ -353,20 +341,22 @@ class RecMoniConf(LHCbConfigurableUser):
             seq.Members += [ProcStatAbortMoni()]
         
         if "CALO" in moniSeq :
+            import GaudiKernel.ProcessJobOptions
+            GaudiKernel.ProcessJobOptions.PrintOn()
             from Configurables import GaudiSequencer
             seq = GaudiSequencer( "MoniCALOSeq")
-            caloMoni = CaloMoniDstConf( Sequence    = seq,
+            caloMoni = CaloMoniDstConf( MonitorSequence    = seq,
                                         OutputLevel = self.getProp('OutputLevel'),
                                         Context = 'Offline' )
+            caloMoni.printConf()
             self.setOtherProps(caloMoni,["Histograms"])
+            GaudiKernel.ProcessJobOptions.PrintOff()
 
         if "VELO" in moniSeq :
             from Configurables import GaudiSequencer
             self.setOtherProps(VeloRecMonitors(),["Histograms","OutputLevel"])
             VeloRecMonitors().setProp("MoniSequence", GaudiSequencer("MoniVELOSeq"))
-            #importOptions('$VELORECMONITORSROOT/options/BrunelMoni_Velo.py')
-
-   
+            #importOptions('$VELORECMONITORSROOT/options/BrunelMoni_Velo.py')   
         if "OT" in moniSeq :
             from TrackMonitors.ConfiguredTrackMonitors import ConfiguredOTMonitorSequence
             ConfiguredOTMonitorSequence(Name='MoniOTSeq')

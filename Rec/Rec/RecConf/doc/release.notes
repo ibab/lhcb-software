@@ -4,6 +4,12 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2013-10-11 - Olivier Deschamps
+ - Configuration.py : 
+ 	 									- RecSysConf  : make use of CaloProcessor configure the calorimeter Reco&PIDs sequence
+ 	 								  - RecMoniConf : adapt to change in CaloMoniDST
+
+
 !========================= RecConf v2r13 2013-04-30 =========================
 ! 2013-04-25 - Sascha Stahl
  - Added checks if detector exists to monitoring sequence. 
