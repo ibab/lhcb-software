@@ -1,0 +1,17 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set>
+    <text>$APPCONFIGOPTS/Boole/Default.py</text>
+    <text>$APPCONFIGOPTS/Boole/Boole-Upgrade-VP-UT-FT.py</text>
+    <text>$APPCONFIGOPTS/Boole/patchUpgrade1.py</text>
+    <text>--option</text>
+    <text>from Boole.Configuration import *; from Configurables import Boole; Boole().DataType     = "Upgrade";  from Configurables import Boole; Boole().DetectorDigi = ["VP", "UT", "FT", "Rich1Pmt", "Rich2Pmt", "Ecal", "Hcal", "Muon"]; Boole().DetectorLink = ["VP", "UT", "FT", "Rich1Pmt", "Rich2Pmt", "Ecal", "Hcal", "Muon", "Tr"]; Boole().DetectorMoni = ["VP", "UT", "FT", "Rich1Pmt", "Rich2Pmt", "Ecal", "Hcal", "Muon", "MC"]; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20131009"; LHCbApp().CondDBtag="sim-20130830-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/Baseline/Baseline.sim'"]; CondDB().AllLocalTagsByDataType=["VP+RICH_2019+UT_UUT","FT_StereoAngle5","Muon_NoM1", "Calo_NoSPDPRS"] ;</text>
+    </set></argument>
+  <argument name="reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-baseline.ref</text></argument>
+  <argument name="error_reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-baseline-err.ref</text></argument>
+  <argument name="validator"><text>
+from Boole.QMTest.BooleExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+</text></argument>
+</extension>
