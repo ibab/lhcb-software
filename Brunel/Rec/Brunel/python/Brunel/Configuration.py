@@ -10,7 +10,7 @@ from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
                             RecMoniConf,GaudiSequencer, RichRecQCConf, DstConf,
-                            LumiAlgsConf, L0Conf, GlobalRecoChecks, CondDB )
+                            LumiAlgsConf, L0Conf, GlobalRecoChecks, CondDB,CaloDigitConf,CaloMoniDstConf )
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -25,7 +25,7 @@ class Brunel(LHCbConfigurableUser):
     __used_configurables__ = [ TrackSys, RecSysConf, RecMoniConf,
                                (RichRecQCConf,richMoniConfName),
                                LHCbApp, DstConf, LumiAlgsConf, L0Conf,
-                               GlobalRecoChecks ]
+                               GlobalRecoChecks,CaloDigitConf,CaloMoniDstConf ]
 
     ## Default init sequences
     DefaultInitSequence      = ["Brunel"]
@@ -72,7 +72,6 @@ class Brunel(LHCbConfigurableUser):
        ,"SpecialData"     : []
        ,"Context"         : "Offline"
        ,"RawBanksToKill"  : None
-       ,"CaloPhotonChecker" : False
        ,"VetoHltErrorEvents" : True
        ,"Detectors"       : ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
        ,"UpgradeDets"     : []
@@ -114,7 +113,6 @@ class Brunel(LHCbConfigurableUser):
        ,'SpecialData'  : """ Various special data processing options. See RecSys.KnownSpecialData for all options """
        ,'Context'      : """ The context within which to run (default 'Offline') """
        ,'RawBanksToKill':""" Raw banks to remove from RawEvent before processing. Removed also from DST copy of RawEvent """
-       ,'CaloPhotonChecker':""" Temporary workaround to bug #73392 """
        ,"VetoHltErrorEvents" : """Do not reconstruct events that have been flagged as error by Hlt"""
        ,"Detectors"    : """List of detectors""" 
        ,"UpgradeDets"  : """List of Upgrade detectors"""
@@ -348,9 +346,10 @@ class Brunel(LHCbConfigurableUser):
             brunelSeq.Members += [ hlterrorSeq ]                         # add this sequece to Brunel _before_ physseq
             physicsSeq.Members += [ hltfilterSeq ]                       # take good events in physics seq
 
-        # Convert Calo 'packed' banks to 'short' banks if needed
-        physicsSeq.Members += ["GaudiSequencer/CaloBanksHandler"]
-        importOptions("$CALODAQROOT/options/CaloBankHandler.opts")
+        # Convert Calo ReadoutStatus to ProcStatus
+        caloBanks=GaudiSequencer("CaloBanksHandler")
+        CaloDigitConf(ReadoutStatusConvert=True,Sequence=caloBanks)
+        physicsSeq.Members += [caloBanks]
 
         # Decode L0 (and HLT if not already done)
         trgSeq = GaudiSequencer("DecodeTriggerSeq")
@@ -755,14 +754,16 @@ class Brunel(LHCbConfigurableUser):
                 importOptions( "$TRACKSYSROOT/options/TrackChecking.opts" )
 
             if "CALO" in  checkSeq :
+                import GaudiKernel.ProcessJobOptions
+                GaudiKernel.ProcessJobOptions.PrintOn()
                 from Configurables import GaudiSequencer
-                GaudiSequencer("CheckCALOSeq").Members += [ "CaloDigit2MCLinks2Table", "CaloClusterMCTruth" ]
-                importOptions( "$STDOPTS/PreloadUnits.opts" )
-                importOptions( "$CALOMONIDSTOPTS/CaloChecker.opts" )
-                # temporary workaround to bug #73392
-                if not self.getProp("CaloPhotonChecker"):
-                    caloPIDsChecker = GaudiSequencer("CaloPIDsChecker")
-                    caloPIDsChecker.Members.remove("CaloPhotonChecker")
+                ccseq=GaudiSequencer("CaloCheckers")
+                caloMoni = CaloMoniDstConf( CheckerSequence  = ccseq,
+                                            OutputLevel = self.getProp('OutputLevel'),
+                                            Context = 'Offline' )
+                caloMoni.printConf()
+                GaudiKernel.ProcessJobOptions.PrintOff()
+                GaudiSequencer("CheckCALOSeq").Members = [ "CaloDigit2MCLinks2Table", "CaloClusterMCTruth" ,ccseq] 
 
             if "PROTO" in checkSeq :
                 from Configurables import GaudiSequencer
