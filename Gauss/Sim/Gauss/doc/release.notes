@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-10-11 - Paul Szczypka
+ - Added Baseline qmtest and references.
+
 ! 2013-10-06 - Paul Szczypka
  - Added qmtest and options for Muon_NoM1 test.
 
