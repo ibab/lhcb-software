@@ -41,8 +41,7 @@ class PhysConf(LHCbConfigurableUser) :
     __used_configurables__ = (
         'DstConf',
         'CaloDstUnPackConf'   ,
-        'OffLineCaloRecoConf' ,
-        'OffLineCaloPIDsConf'
+        'CaloProcessor'
         )
     
 #
@@ -66,50 +65,41 @@ class PhysConf(LHCbConfigurableUser) :
         Configure Reconstruction to be redone
         """
 
-        from Configurables  import OffLineCaloRecoConf
-        from Configurables  import OffLineCaloPIDsConf 
-
-        ## CaloPIDs 
-        caloPIDs = OffLineCaloPIDsConf (
-            EnablePIDsOnDemand = True   , ## enable PIDs-On-Demand
-            DataType           = self.getProp('DataType')
-            )
-
-        ## Calo reco
-
-        caloReco = OffLineCaloRecoConf (
-            EnableRecoOnDemand = True     ## enable Reco-On-Demand
-            )
+        ## CaloReco & CaloPIDs on-demand
+        clusters= [ 'Digits' , 'Clusters' ]
+        from Configurables  import CaloProcessor
+        caloProc = CaloProcessor(EnableOnDemand=True)  # enable caloDigits & Clusters onDemand 
+        caloProc.RecList =  clusters
+        # --- 
+        #if self.getProp('DataType')=='Upgrade' :
+        #    caloProc.NoSpdPrs=True
 
         ## General unpacking
         from Configurables import DstConf
         if self.isPropertySet('EnableUnpack') :
             DstConf().setProp('EnableUnpack',self.getProp('EnableUnpack')) 
         
-        ## unpack Calo (?)
+        ## unpack Calo Hypos ?
         from Configurables import CaloDstUnPackConf 
         unpack = CaloDstUnPackConf()
-
-        if self.isPropertySet('EnableUnpack') :
-            if "Reconstruction" in self.getProp('EnableUnpack') :
-                unpack.setProp('Enable',True)
-
-        if unpack.getProp( 'Enable' ) : 
-            hypos    = unpack   .getProp( 'Hypos'   )
-            reco_old = caloReco .getProp( 'RecList' )
-            reco_new = [ h for h in reco_old if h not in hypos ]
-            caloReco.RecList = reco_new
-            log.warning("PhysConf: CaloReco.RecList is redefined: %s:" %  reco_new )
-
-
+        hypos= [ 'Photons',  'MergedPi0s', 'SplitPhotons' ,'Electrons' ]  # CaloHypos
+        if self.isPropertySet('EnableUnpack') and "Reconstruction" in self.getProp('EnableUnpack') :
+            unpack.setProp('Enable',True)
+        else :
+            caloProc.RecList +=  hypos  # enable caloHypos onDemand
+            
+        # Reprocess explicitely the full calo sequence in the init sequence ?
         inputtype = self.getProp('InputType').upper()
-        # Reprocess CaloReco explicitely
         if ( self.getProp("CaloReProcessing") and inputtype != 'MDST' and inputtype != 'RDST' ) :
-            from Configurables import CaloProcessor
-            caloSeq = GaudiSequencer( 'CaloReProcessing' )
-            caloSeq.Members += [ CaloProcessor('Offline').caloSequence(),CaloProcessor('Offline').protoSequence()] 
-            init.Members += [caloSeq]
-        
+            caloProc.RecList =  clusters + hypos
+            caloSeq = caloProc.sequence() # apply the CaloProcessor configuration
+            cSeq = GaudiSequencer( 'CaloReProcessing' )
+            cSeq.Members += [ caloSeq ] 
+            init.Members += [cSeq]
+            unpack.setProp('Enable',False) 
+        else :
+            caloProc.applyConf()
+
         # For backwards compatibility with MC09, we need the following to rerun
         # the Muon Reco on old data. To be removed AS SOON as this backwards compatibility
         # is no longer needed
