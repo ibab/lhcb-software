@@ -6,7 +6,15 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
-<H1><A NAME=v5r4>2013-08-13 OnlineSys v5r4</A></H1>
+<H1><A NAME=v5r5>2013-10-11 OnlineSys v5r5</A></H1>
+<PRE>
+  Use new Gaudi v23r10
+  Updated/new packages:	
+  OMAlib              v4r3     Online
+  (v4r2 would not compile with gcc 48)
+</PRE>
+
+<H1><A NAME=v5r4>2013-10-11 OnlineSys v5r4</A></H1>
 <PRE>
   Use new Gaudi v23r10
   Updated/new packages:	

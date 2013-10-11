@@ -10,7 +10,7 @@ tag() {
 tag_project()
 {
     cd ../../cmt;
-    echo " ====  Tagging ONLINE project with tag $2  ==== ";
+    echo " ====  Tagging ONLINE project with tag $1  ==== ";
     svn commit -m "New project release Online $1";
     svn mkdir -m "New release Online $1" svn+ssh://svn.cern.ch/reps/lhcb/Online/tags/ONLINE/ONLINE_$1;
     svn cp -m "New release Online $1"  svn+ssh://svn.cern.ch/reps/lhcb/Online/trunk/cmt svn+ssh://svn.cern.ch/reps/lhcb/Online/tags/ONLINE/ONLINE_$1/;

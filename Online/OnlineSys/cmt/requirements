@@ -1,5 +1,5 @@
 package OnlineSys
-version v5r4
+version v5r5
 ###
 ### last v4 release: v4r69 based on Gaudi v23r7
 ###
@@ -37,7 +37,7 @@ use GaudiUPI            v1r16    Online
 use HistDBPython        v1r7     Online
 use InsertDB            v1r9     Online
 use MBMDump             v1r15    Online
-use OMAlib              v4r2     Online
+use OMAlib              v4r3     Online
 use OnlineBase          v1r19    Online
 use OnlineHistDB        v8r1     Online
 use OnlineKernel        v2r13    Online
