@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to configuration
+  . physics Sequence   :  CaloBankHandler setup via CaloDigitConf (Calo decoding and ProcStatus conversion)
+  . MCChecker sequence :  Calo chekers sequence via CaloMoniDstConf
+  . Remove the temporary switch CaloPhotonChecker (removed from CaloMoniDstConf so far)
+
 - Changes to QMTests:
   . Removed VL tests and references.
   . Added VP_Compact_MicroChannel-UT-FT_Mono-Muon_NoM1 test and reference file.
