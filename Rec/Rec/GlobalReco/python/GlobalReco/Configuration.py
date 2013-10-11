@@ -33,6 +33,7 @@ class GlobalRecoConf(LHCbConfigurableUser):
                                    }
                   ,"AddANNPIDInfo" : True
                   ,"DataType"     : "" # Type of data, propagated from application
+                  ,"NoSpdPrs"     : False # Upgrade configuration with no SPd/Prs
                   }
 
     ## Configure a track selector with the given name
@@ -85,14 +86,16 @@ class GlobalRecoConf(LHCbConfigurableUser):
         ecal = ChargedProtoParticleAddEcalInfo("ChargedProtoPAddEcal")
         brem = ChargedProtoParticleAddBremInfo("ChargedProtoPAddBrem")
         hcal = ChargedProtoParticleAddHcalInfo("ChargedProtoPAddHcal")
-        prs  = ChargedProtoParticleAddPrsInfo("ChargedProtoPAddPrs")
-        spd  = ChargedProtoParticleAddSpdInfo("ChargedProtoPAddSpd")
         velo = ChargedProtoParticleAddVeloInfo("ChargedProtoPAddVeloDEDX")
         # Fill the Combined DLL information in the charged protoparticles
         combine = ChargedProtoCombineDLLsAlg("ChargedProtoPCombDLLs")
         # Fill the sequence
-        cseq.Members += [ charged,ecal,brem,hcal,prs,spd,velo ]
-        cseq.Members += [ rich,muon,combine ]
+        cseq.Members += [ charged,ecal,brem,hcal]
+        if not self.getProp("NoSpdPrs") :
+            prs  = ChargedProtoParticleAddPrsInfo("ChargedProtoPAddPrs")
+            spd  = ChargedProtoParticleAddSpdInfo("ChargedProtoPAddSpd")
+            cseq.Members += [prs,spd ]
+        cseq.Members += [ velo, rich,muon,combine ]
         
         # Neutrals
         from Configurables import NeutralProtoPAlg
@@ -110,8 +113,9 @@ class GlobalRecoConf(LHCbConfigurableUser):
             ecal.OutputLevel    = level
             brem.OutputLevel    = level
             hcal.OutputLevel    = level
-            prs.OutputLevel     = level
-            spd.OutputLevel     = level
+            if not self.getProp("NoSpdPrs") :
+                prs.OutputLevel     = level
+                spd.OutputLevel     = level
             velo.OutputLevel    = level
             combine.OutputLevel = level
             neutral.OutputLevel = level

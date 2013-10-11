@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+
+ 2013-10-09 - Olivier Deschamps
+ -  python/GlobalReco/Configuration.py : 
+        - possibility to set-up a configuration without active Spd/Prs  (NoSpdPrs = <False> flag)
+
 !========================= GlobalReco v6r45 2013-10-01 =========================
 ! 2013-08-12 - Chris Jones
  - Update ChargedProtoParticleMoni and ChargedProtoParticleTupleAlg to not 
