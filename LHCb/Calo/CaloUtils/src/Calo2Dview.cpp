@@ -107,7 +107,8 @@ StatusCode Calo2Dview::initialize() {
   m_lCardMap[2] = 351;
   m_nChanMap[2] = 32;
   // Prs
-  m_caloMap[1]=getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
+  m_caloMap[1]=getDetIfExists<DeCalorimeter>( DeCalorimeterLocation::Prs );
+  if(NULL == m_caloMap[1])Warning("Prs Element does not exists !",StatusCode::SUCCESS).ignore();
   m_centreMap[1] = 32;
   m_regMap[1]    = 6;
   m_refCellMap[1].push_back(LHCb::CaloCellID(1, 0, 6 ,0) ) ; // outer
@@ -117,7 +118,8 @@ StatusCode Calo2Dview::initialize() {
   m_lCardMap[1] = 127;
   m_nChanMap[1] = 64;
   // Spd
-  m_caloMap[0]=getDet<DeCalorimeter>( DeCalorimeterLocation::Spd );
+  m_caloMap[0]=getDetIfExists<DeCalorimeter>( DeCalorimeterLocation::Spd );
+  if(NULL == m_caloMap[0])Warning("Spd Element does not exists !",StatusCode::SUCCESS).ignore();
   m_centreMap[0] = 32;
   m_regMap[0]    = 6;
   m_refCellMap[0].push_back(LHCb::CaloCellID(0, 0, 6 ,0)  ); // outer
@@ -143,6 +145,7 @@ void Calo2Dview::getCaloParam(unsigned int calo){
 
   if((int)calo == m_caloType)return;
   m_calo= m_caloMap[calo];
+  if( NULL != m_calo)return;
   m_centre=m_centreMap[calo];
   m_reg=m_regMap[calo];
   m_refCell = m_refCellMap[calo];
@@ -176,6 +179,7 @@ void Calo2Dview::bookCalo2D(const HistoID& unit,const std::string title,  std::s
 void Calo2Dview::bookCalo2D(const HistoID& unit,const std::string title,  unsigned  int calo , int area){
 
   getCaloParam(calo);
+  if( NULL == m_calo)return;
   caloViewMap[unit]=calo;
 
   // 1D view : caloCellID as xAxis
@@ -391,7 +395,7 @@ void  Calo2Dview::fillCalo2D(const HistoID& unit, const LHCb::CaloCellID& id , d
   
   // get calo parameters
   getCaloParam(calo);
-
+  if( NULL == m_calo)return;
 
   // check the cellID is consistent with the calo
   
