@@ -183,5 +183,49 @@ namespace LHCb
 
       return OK ;
     }
+    
+    int poca( const LHCb::State& stateA, const LHCb::State& stateB,
+	      Gaudi::XYZPoint& vertex)
+    {
+      // find the z-positions of the doca. then take the average of the two points.
+      // see also Gaudi::Math::closestPointParams.
+      const double zA = stateA.z() ;
+      const double xA = stateA.x() ;
+      const double yA = stateA.y() ;
+      const double txA = stateA.tx() ;
+      const double tyA = stateA.ty() ;
+      const double zB = stateB.z() ;
+      const double xB = stateB.x() ;
+      const double yB = stateB.y() ;
+      const double txB = stateB.tx() ;
+      const double tyB = stateB.ty() ;
+      
+      // define d^2 = ( xA + muA*txA - xB - muB*txB)^2 +  ( yA + muA*tyA - xB - muB*tyB)^2 + (zA + muA - zB - muB)^2
+      // compute (half) 2nd derivative to muA and muB in point muA=muB=0
+      double secondAA = txA*txA + tyA*tyA + 1;
+      double secondBB = txB*txB + tyB*tyB + 1;
+      double secondAB = -txA*txB - tyA*tyB - 1;
+      // compute inverse matrix, but stop if determinant not positive
+      double det = secondAA*secondBB - secondAB*secondAB ;
+      int OK = 1 ;
+      if ( std::abs(det) > 0 ) {
+	double secondinvAA = secondBB / det ;
+	double secondinvBB = secondAA / det ;
+	double secondinvAB = -secondAB / det ;
+	// compute (half) first derivative
+	double firstA =  txA * ( xA - xB ) + tyA * (yA - yB ) + (zA - zB) ;
+	double firstB = -txB * ( xA - xB ) - tyB * (yA - yB ) - (zA - zB) ;
+	// compute muA and muB with delta-mu = - seconderivative^-1 * firstderivative
+	double muA = - (secondinvAA * firstA + secondinvAB * firstB ) ;
+	double muB = - (secondinvBB * firstB + secondinvAB * firstA ) ;
+	// return the average point
+	vertex.SetX( 0.5*(xA + muA*txA + xB + muB*txB) ) ;
+	vertex.SetY( 0.5*(yA + muA*tyA + yB + muB*tyB) ) ;
+	vertex.SetZ( 0.5*(zA + muA     + zB + muB    ) ) ;
+      } else {
+	OK = 0 ; // parallel tracks
+      }
+      return OK ;
+    }
   } 
 }

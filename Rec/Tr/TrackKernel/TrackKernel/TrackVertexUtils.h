@@ -27,7 +27,8 @@ namespace LHCb
     
     /////////////////////////////////////////////////////////////////////////
     /// Compute the chi2 and decaylength of a 'particle' with respect
-    /// to a vertex. This should probably go into LHCb math.
+    /// to a vertex. Return 1 if successful.
+    /// This should probably go into LHCb math. 
     /////////////////////////////////////////////////////////////////////////
     int computeChiSquare(const Gaudi::XYZPoint&  pos,
 			 const Gaudi::XYZVector& mom,
@@ -37,6 +38,13 @@ namespace LHCb
 			 double& chi2,
 			 double& decaylength,
 			 double& decaylengtherr) ;
+  
+    /////////////////////////////////////////////////////////////////////////
+    /// Compute the point of the doca of two track states.  Return 1 if successful.
+    /////////////////////////////////////////////////////////////////////////
+    int poca( const LHCb::State& stateA, const LHCb::State& stateB,
+	      Gaudi::XYZPoint& vertex) ;
   }
 }
+
 		       
