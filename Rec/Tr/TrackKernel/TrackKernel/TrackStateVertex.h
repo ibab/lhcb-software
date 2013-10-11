@@ -105,6 +105,8 @@ namespace LHCb
     Gaudi::XYZPoint position() const { return Gaudi::XYZPoint(m_pos(0),m_pos(1),m_pos(2)) ; }
     /// Position covariance of the vertex
     const Gaudi::SymMatrix3x3& covMatrix() const { return m_poscov ; }
+    /// Inverse of position covariance of the vertex
+    //const Gaudi::SymMatrix3x3& weightMatrix() const { return m_posweight ; }
     /// Momentum (tx,ty,q/pc) of track i
     const ROOT::Math::SVector<double,3>& mom( size_t i) const ;
     /// Momentum (tx,ty,q/pc) covariance matrix of track i
@@ -146,6 +148,7 @@ namespace LHCb
     size_t symIndex( size_t i, size_t j ) const { return i*(i+1)/2 + j ; }
     const Gaudi::Matrix3x3& computeMomMomCov(size_t i, size_t j) const ;
     bool hasReference() const { return (m_refweight(0,0)+m_refweight(1,1)+m_refweight(2,2))>0 ; }
+    void initPos() ;
   private:
     typedef TrackVertexHelpers::VertexTrack VertexTrack ;
     typedef std::vector< TrackVertexHelpers::VertexTrack* > VertexTrackContainer ;
@@ -162,6 +165,7 @@ namespace LHCb
     mutable double m_chi2 ;
     PositionParameters m_refpos ;    // position of reference position
     PositionCovariance m_refweight ; // weight (inverse cov) of reference position
+    //PositionCovariance m_posweight ; // inverse of the position covariance matrix
   } ;
   
 } // namespace LHCb;

@@ -1,6 +1,7 @@
 #include "TrackKernel/TrackStateVertex.h"
 #include "Event/TrackFunctor.h"
 #include "LHCbMath/MatrixTransforms.h"
+#include "TrackKernel/TrackVertexUtils.h"
 
 namespace std {
   inline double sqr(double x) { return x*x ; }
@@ -32,6 +33,10 @@ namespace LHCb
       Status project( const ROOT::Math::SVector<double,3>& position,
 		      ROOT::Math::SVector<double,3>& halfDChisqDX,
 		      Gaudi::SymMatrix3x3&           halfD2ChisqDX2) ;
+      /// same as above but exploiting that A and B are almost empty
+      Status projectFast( const ROOT::Math::SVector<double,3>& position,
+			  ROOT::Math::SVector<double,3>& halfDChisqDX,
+			  Gaudi::SymMatrix3x3&           halfD2ChisqDX2) ;
       
       /// derivative of momentum to position
       const ROOT::Math::SMatrix<double,3,3>& WBGA() const { 
@@ -224,7 +229,119 @@ namespace LHCb
       m_WBGA.first = m_momcov.first = m_momposcov.first = false ;
       return m_status ;
     }
+    
+    VertexTrack::Status
+    VertexTrack::projectFast( const ROOT::Math::SVector<double,3>& pos,
+			      ROOT::Math::SVector<double,3>& halfDChisqDX,
+			      Gaudi::SymMatrix3x3&           halfD2ChisqDX2)
+    {
+      if( m_status == InitFailure ) return m_status ;
 
+      // projection matrix for vertex position
+      m_A(0,0) = m_A(1,1) = 1 ;
+      m_A(0,2) = -m_q(0) ;
+      m_A(1,2) = -m_q(1) ;
+      
+      // projection matrix for momentum (tx,ty,qop)
+      double dz = m_state.z() - pos(2) ;
+      m_B(2,0) = m_B(3,1) = m_B(4,2) = 1 ;
+      m_B(0,0) = m_B(1,1) = dz ;
+      
+      // Matrix W (Fruhwirth)
+      // let's see if we can optimize this a bit
+      //m_W = ROOT::Math::Similarity( Transpose(m_B), m_G ) ;
+      double dz2 = dz*dz ;
+      m_W(0,0) = dz2*m_G(0,0) + 2*dz*m_G(2,0) + m_G(2,2) ;
+      m_W(1,0) = dz2*m_G(1,0) + dz*( m_G(2,1) + m_G(3,0) ) + m_G(3,2) ;
+      m_W(2,0) = dz*m_G(4,0) + m_G(4,2) ;
+      m_W(1,1) = dz2*m_G(1,1) + 2*dz*m_G(3,1) + m_G(3,3) ;
+      m_W(2,1) = dz*m_G(4,1) + m_G(4,3) ;
+      m_W(2,2) = m_G(4,4) ;
+      
+      bool OK = m_W.InvertChol();
+      if( !OK ) m_status = ProjFailure ;
+
+      // now we need to be careful with the track weight. in
+      // principle, we just reweight m_G. However, if the weight is
+      // close to zero, then the matrix inversion of m_W fails. The
+      // weight has no effect on m_WBG. In the end, by ignoring the
+      // weight until the derivatives, all we do wrong are the track
+      // momenta (which would get infinite error for zero weight).
+      
+      // momentum gain matrix (3x5). w don't actually need it here,
+      // but we don't save any time by not cmputing it.
+      //m_WBG  = m_W * Transpose(m_B) * m_G ;
+      Gaudi::Matrix3x5 WB ;
+      WB(0,0) = dz * m_W(0,0) ;
+      WB(1,0) = dz * m_W(1,0) ;
+      WB(2,0) = dz * m_W(2,0) ;
+      WB(0,1) = dz * m_W(0,1) ;
+      WB(1,1) = dz * m_W(1,1) ;
+      WB(2,1) = dz * m_W(2,1) ;
+      WB(0,2) = m_W(0,0) ;
+      WB(1,2) = m_W(1,0) ;
+      WB(2,2) = m_W(2,0) ;
+      WB(0,3) = m_W(0,1) ;
+      WB(1,3) = m_W(1,1) ;
+      WB(2,3) = m_W(2,1) ;
+      WB(0,4) = m_W(0,2) ;
+      WB(1,4) = m_W(1,2) ;
+      WB(2,4) = m_W(2,2) ;
+      m_WBG = WB*m_G ;
+      
+      // Weight matrix after minimization to momentum
+      //Gaudi::SymMatrix5x5 GB = m_G - ROOT::Math::Similarity( m_G*m_B, m_W) ;      
+      typedef ROOT::Math::SMatrix<double, 5, 3> Matrix5x3;
+      typedef ROOT::Math::SMatrix<double, 3, 5> Matrix3x5;
+      typedef ROOT::Math::SMatrix<double, 2, 5> Matrix2x5;
+      Matrix5x3 GBtmp ;
+      int i,k,l ;
+      for(i=0; i<5; ++i) {
+	GBtmp(i,0) = dz * m_G(i,0) + m_G(i,2) ;
+	GBtmp(i,1) = dz * m_G(i,1) + m_G(i,3) ;
+	GBtmp(i,2) = m_G(i,4) ;
+      }
+      // now we compute the symmetric matrix
+      //   Gaudi::SymMatrix5x5 GB = m_G - ROOT::Math::Similarity( GBtmp, m_W) ;
+      // we need only two columns, so we write it out. this makes less
+      // difference than I had hopes.
+      Matrix2x5 GB ;
+      GB(0,0) = m_G(0,0) ;
+      for(i=1; i<5; ++i) {
+	GB(0,i) = m_G(0,i) ;
+	GB(1,i) = m_G(1,i) ;
+      }
+      for(k=0; k<3; ++k) 
+	for(l=0; l<3; ++l) {
+	  for(i=1; i<5; ++i) {
+	    GB(0,i) -= ( GBtmp(0,k) * m_W(k,l) * GBtmp(i,l) ) ;
+	    GB(1,i) -= ( GBtmp(1,k) * m_W(k,l) * GBtmp(i,l) ) ;
+	  }
+	  GB(0,0) -= ( GBtmp(0,k) * m_W(k,l) * GBtmp(0,l) ) ;
+	}
+      GB(1,0) = GB(0,1) ;
+      
+      // Compute sub part of A^T G_B that matters
+      Matrix3x5 ATGB ; // = ATsub * GBsub ;
+      for(i=0; i<5; ++i) {
+	ATGB(0,i) = GB(0,i) ;
+	ATGB(1,i) = GB(1,i) ;
+	ATGB(2,i) = -m_q(0) * GB(0,i) - m_q(1) * GB(1,i) ;
+      }
+      
+      // now add to the derivatives
+      halfDChisqDX        -= m_weight * ATGB*residual(pos) ;
+      halfD2ChisqDX2(0,0) += m_weight * ATGB(0,0) ;
+      halfD2ChisqDX2(0,1) += m_weight * ATGB(0,1) ;
+      halfD2ChisqDX2(1,1) += m_weight * ATGB(1,1) ;
+      halfD2ChisqDX2(0,2) += m_weight * (- m_q(0) * ATGB(0,0) - m_q(1) * ATGB(0,1)) ;
+      halfD2ChisqDX2(1,2) += m_weight * (- m_q(0) * ATGB(1,0) - m_q(1) * ATGB(1,1)) ;
+      halfD2ChisqDX2(2,2) += m_weight * (- m_q(0) * ATGB(2,0) - m_q(1) * ATGB(2,1)) ;
+      
+      // reset cache of variables that we calculate only on demand
+      m_WBGA.first = m_momcov.first = m_momposcov.first = false ;
+      return m_status ;
+    }
   }
 
   TrackStateVertex::~TrackStateVertex()
@@ -237,6 +354,7 @@ namespace LHCb
   {
     m_pos       = rhs.m_pos;
     m_poscov    = rhs.m_poscov ;
+    //m_posweight = rhs.m_posweight ;
     m_mommomcov = rhs.m_mommomcov ;
     m_fitStatus = rhs.m_fitStatus ;
     m_error     = rhs.m_error ;
@@ -263,6 +381,7 @@ namespace LHCb
       m_chi2(rhs.m_chi2),
       m_refpos(rhs.m_refpos),
       m_refweight(rhs.m_refweight)
+      //, m_posweight(rhs.m_posweight)
   {
     const size_t N = rhs.m_tracks.size();
     m_tracks.resize( N ) ;
@@ -322,14 +441,6 @@ namespace LHCb
       m_fitStatus = UnFitted ;
       // set the reference, used in the _first_ iteration only
       for(int i=0; i<3; ++i) m_tracks.back()->mom()(i) = reference(i+2) ;
-      // if there is a reference vertex, we use that. otherwise
-      // initialize the vertex position with information in the tracks
-      if( !hasReference() ) {
-	int N = m_tracks.size() ;
-	m_pos(0) = ( (N-1) * m_pos(0) + reference(0))/N ;
-	m_pos(1) = ( (N-1) * m_pos(1) + reference(1))/N ;
-	m_pos(2) = ( (N-1) * m_pos(2) + inputstate.z())/N ;
-      }
     }
   }
   
@@ -343,35 +454,68 @@ namespace LHCb
       m_tracks[i]->setState( inputstate ) ;
     }
   }
+
+  void TrackStateVertex::initPos()
+  {
+    const int N = m_tracks.size() ;
+    if( N==2 ) {
+      // we gain about one iteration by initializing the position with the doca
+      Gaudi::XYZPoint docapoint  ;
+      int success = LHCb::TrackVertexUtils::poca(m_tracks[0]->state(), m_tracks[1]->state(), docapoint ) ;
+      if( !success ) m_fitStatus = FitFailure ;
+      m_pos(0) = docapoint.x();
+      m_pos(1) = docapoint.y();
+      m_pos(2) = docapoint.z();
+    } else {
+      // return the average state of the positions. this is what we
+      // used to do, and I don't want things to break. it isn't quite
+      // optimal though.
+      m_pos(0) = m_pos(1) = m_pos(2) = 0 ;
+      for(int i=0; i<N; ++i) {
+	m_pos(0) += m_tracks[i]->state().x() ;
+	m_pos(1) += m_tracks[i]->state().y() ;
+	m_pos(2) += m_tracks[i]->state().z() ;
+      }
+      m_pos(0) /= N ;
+      m_pos(1) /= N ;
+      m_pos(2) /= N ;
+    }
+  }
   
   double TrackStateVertex::fitOneStep()
   {
-    // check that we have enough constraints
-    if( m_tracks.size() <2 && !hasReference() ) {
-      m_fitStatus = FitFailure ;
-      m_error |= InsufficientTracks ;
+    if(!hasReference() ) {
+      // check that we have enough constraints
+      if( m_tracks.size() <2 ) {
+	m_fitStatus = FitFailure ;
+	m_error |= InsufficientTracks ;
+      } 
+      // initialize the position. FIXME: replace FP comparison with a flag.
+      else if( m_pos(0)==0 ) {
+	initPos() ;
+      }
     }
     
     // This implements the Billoir-Fruhwirth-Regler algorithm.
     // adds the reference position
-    Gaudi::SymMatrix3x3 halfD2ChisqDX2 = m_refweight ;
+    Gaudi::SymMatrix3x3 m_posweight = m_refweight ;
     ROOT::Math::SVector<double,3> halfDChisqDX = m_refweight * (m_pos - m_refpos ) ;
     // add all the tracks
     for( VertexTrackContainer::iterator itrack = m_tracks.begin() ;
          itrack != m_tracks.end() && m_fitStatus != FitFailure ; ++itrack ) {
-      (*itrack)->project( m_pos, halfDChisqDX, halfD2ChisqDX2) ;
+      (*itrack)->projectFast( m_pos, halfDChisqDX, m_posweight ) ;
       if( (*itrack)->status() != TrackVertexHelpers::VertexTrack::IsOK ) {
 	m_fitStatus = FitFailure ;
 	m_error = ProjectionFailure ;
       }
     }
-    
+
     if( m_fitStatus == FitFailure ) return -1 ;
     
     // calculate the covariance and the change in the position
     double dchisq = -1 ;
     m_chi2      = -1 ;
-    m_poscov = halfD2ChisqDX2 ;
+    m_poscov = m_posweight ;
     const bool ok = m_poscov.InvertChol();
     if( !ok ) {
       m_fitStatus = FitFailure ;
