@@ -5,6 +5,11 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v22r9    2013-10-11 ====================
+
+! 2013-10-11 - Vanya Belyaev
+ - fix standard script to deal with 2013 data 
+
 ! ==================== Phys/BenderTools v22r8p1  2013-09-25 ====================
 
 ! 2013-09-25 - Vanya Belyaev
