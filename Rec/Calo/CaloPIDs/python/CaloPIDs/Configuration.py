@@ -28,6 +28,8 @@ from CaloKernel.ConfUtils     import ( addAlgs        ,
                                        setTheProperty ) 
 from CaloPIDs.PIDs            import caloPIDs
 from CaloPIDs.PIDs            import referencePIDs
+import logging
+_log = logging.getLogger ('CaloPIDs')
 
 # =============================================================================
 ## @class CaloPIDsConf
@@ -62,6 +64,8 @@ class CaloPIDsConf(LHCbConfigurableUser):
         , 'SkipCharged'        : False       # skip chargedID 
         , 'FastPID'            : False       # speed-up PID (lighter sequence)
         , 'ExternalClusters'   : ''          # use non-default cluster container
+        , 'NoSpdPrs'           : False       # Upgrade configuration without Spd/Prs
+        , 'Verbose'            : False
         }
     
     ## Configure recontruction of Calo Charged  PIDs  
@@ -87,13 +91,16 @@ class CaloPIDsConf(LHCbConfigurableUser):
                          self.getProp('SkipNeutrals'),
                          self.getProp('SkipCharged'),
                          self.getProp('FastPID'),
-                         self.getProp('ExternalClusters')
+                         self.getProp('ExternalClusters'),
+                         self.getName(),
+                         self.getProp('NoSpdPrs')
                          ) 
+
 
 
         referencePIDs( self.getProp("DataType" ) )
 
-        log.info ('Configured Calo PIDs           : %s ' % cmp.name()  )
+        _log.info ('Configured Calo PIDs           : %s ' % cmp.name()  )
         ##
         return cmp 
     
@@ -102,18 +109,25 @@ class CaloPIDsConf(LHCbConfigurableUser):
         """
         Check the configuration
         """
-        log.debug('CaloPIDsConf: Configuration is not checked!')
+        _log.debug('CaloPIDsConf: Configuration is not checked!')
     
+
+
+    def printConf(self,verbose=False) :
+        if self.getProp('NoSpdPrs') :
+            _log.info("CaloPIDsConf : upgrade configuration without Spd/Prs")
+        if self.getProp('Verbose') or verbose:
+            _log.info ( self )
+
+
    ## Calorimeter PID Configuration
     def applyConf ( self ) :
         """
         Calorimeter PID Configuration
         """
-        log.info ( 'Apply Calo PIDs Configuration ')
 
-        self.checkConfiguration()
+        self.printConf()
 
-        
         pids = self.caloPIDs()
         
         setTheProperty ( pids , 'Context'     , self.getProp('Context'    ) )
@@ -122,21 +136,17 @@ class CaloPIDsConf(LHCbConfigurableUser):
 
         if self.getProp ( 'Sequence' ) :
             addAlgs  ( self.Sequence , pids ) 
-            log.info ('Configure main Calo PIDs Sequence  : %s '% self.Sequence.name() )
-            log.info ( prntCmp ( self.Sequence ) ) 
+            _log.info ('Configure main Calo PIDs Sequence  : %s '% self.Sequence.name() )
+            if self.getProp('Verbose') :
+                _log.info ( prntCmp ( self.Sequence ) ) 
         else :
-            log.info ('Configure Calorimeter PIDs blocks ' )            
-            log.info ( prntCmp ( pids ) )
+            _log.info ('Configure Calorimeter PIDs blocks ' )            
+            if self.getProp('Verbose') :
+                _log.info ( prntCmp ( pids ) )
             
                     
         if self.getProp( 'EnablePIDsOnDemand')  :
-            log.info ( printOnDemand () ) 
-
-
-            
-        ##print ' ON-DEMAND ' , printOnDemand () 
-
-
+            _log.info ( printOnDemand () )             
 
 
 

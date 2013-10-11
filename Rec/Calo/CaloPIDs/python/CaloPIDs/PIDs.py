@@ -163,11 +163,11 @@ def trackMatch ( context , enableRecoOnDemand, trackLocations = [] , fastReco = 
 # =================================================================================
 ## define various Calo PIDs evaluation
 def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , skipNeutrals = False , skipCharged = False ,
-               fastPID = False , external = '', name = '') :
+               fastPID = False , external = '', name = '', noSpdPrs=False) :
     """
     Define various Calo PIDs evaluation
     """
-    
+
 
     from Configurables import ( InSpdAcceptance     ,
                                 InSpdAcceptanceAlg  ,
@@ -215,16 +215,6 @@ def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , ski
         charged = getAlgo( GaudiSequencer , _name , context )
 
         # inAcceptance
-        inSPD = getAlgo ( InSpdAcceptanceAlg    ,
-                          'InSPD'               , 
-                          context               ,
-                          "Rec/Calo/InAccSpd"   ,
-                          enableRecoOnDemand    )
-        inPRS = getAlgo ( InPrsAcceptanceAlg    ,
-                          'InPRS'               , 
-                          context               ,
-                          "Rec/Calo/InAccPrs"   ,
-                          enableRecoOnDemand    )
         inHCAL = getAlgo ( InHcalAcceptanceAlg  ,
                            'InHCAL'             , 
                            context              ,
@@ -239,13 +229,23 @@ def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , ski
         inAcc = getAlgo ( GaudiSequencer     ,
                           'InCaloAcceptance' ,
                           context            )
-        inAcc.Members = [
-            inSPD  ,
-            inPRS  ,
-            inECAL ,
-            inHCAL ,
-            inBREM 
-            ]
+
+
+        inAcc.Members = [ inECAL , inHCAL , inBREM ]
+        if not noSpdPrs :
+            inSPD = getAlgo ( InSpdAcceptanceAlg    ,
+                              'InSPD'               , 
+                              context               ,
+                              "Rec/Calo/InAccSpd"   ,
+                              enableRecoOnDemand    )
+            inPRS = getAlgo ( InPrsAcceptanceAlg    ,
+                              'InPRS'               , 
+                              context               ,
+                              "Rec/Calo/InAccPrs"   ,
+                              enableRecoOnDemand    )
+            inAcc.Members += [ inSPD  , inPRS  ]
+        else :
+            log.info('remove Spd/Prs from acceptance')
 
         # matching
         match    = getAlgo ( GaudiSequencer  ,
@@ -264,25 +264,12 @@ def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , ski
                              enableRecoOnDemand       )
 
 
-        match.Members = [
-            cluster  , 
-            electron ,
-            brem ]
+        match.Members = [cluster  , electron, brem ]
 
         # energy
         energy = getAlgo ( GaudiSequencer ,
                            'CaloEnergy'   ,
                            context        )
-        spdE   = getAlgo ( Track2SpdEAlg      ,
-                           'SpdE'             , 
-                           context            ,
-                           'Rec/Calo/SpdE'    ,
-                           enableRecoOnDemand )
-        prsE   = getAlgo ( Track2PrsEAlg      ,
-                           'PrsE'             , 
-                           context            ,
-                           'Rec/Calo/PrsE'    ,
-                           enableRecoOnDemand )
         ecalE  = getAlgo ( Track2EcalEAlg     ,
                            'EcalE'            , 
                            context            ,
@@ -293,15 +280,28 @@ def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , ski
                            context            ,
                            'Rec/Calo/HcalE'   ,
                            enableRecoOnDemand )
-        energy.Members = [ spdE , prsE , ecalE , hcalE ]
+        energy.Members = [ ecalE , hcalE ]
+        if not noSpdPrs :
+            spdE   = getAlgo ( Track2SpdEAlg      ,
+                               'SpdE'             , 
+                               context            ,
+                               'Rec/Calo/SpdE'    ,
+                               enableRecoOnDemand )
+            prsE   = getAlgo ( Track2PrsEAlg      ,
+                               'PrsE'             , 
+                               context            ,
+                               'Rec/Calo/PrsE'    ,
+                           enableRecoOnDemand )
+            energy.Members += [ spdE , prsE ]
+        else :
+            log.info('remove Spd/Prs from energy estimators')
+
 
         # Chi2's
-        chi2  = getAlgo ( GaudiSequencer ,
-                          'CaloChi2'     ,
-                          context        )
-        eChi2 = getAlgo ( EcalChi22ID, 'EcalChi22ID', context, 'Rec/Calo/EcalChi2', enableRecoOnDemand   ) 
-        bChi2 = getAlgo ( BremChi22ID, 'BremChi22ID', context, 'Rec/Calo/BremChi2', enableRecoOnDemand   ) 
-        cChi2 = getAlgo ( ClusChi22ID, 'ClusChi22ID', context, 'Rec/Calo/ClusChi2', enableRecoOnDemand   ) 
+        chi2  = getAlgo ( GaudiSequencer , 'CaloChi2', context        )
+        eChi2 = getAlgo ( EcalChi22ID, 'EcalChi22ID' , context, 'Rec/Calo/EcalChi2', enableRecoOnDemand   ) 
+        bChi2 = getAlgo ( BremChi22ID, 'BremChi22ID' , context, 'Rec/Calo/BremChi2', enableRecoOnDemand   ) 
+        cChi2 = getAlgo ( ClusChi22ID, 'ClusChi22ID' , context, 'Rec/Calo/ClusChi2', enableRecoOnDemand   ) 
         chi2.Members = [ eChi2, bChi2 , cChi2 ]
 
 
@@ -312,11 +312,6 @@ def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , ski
         dllmu  = getAlgo ( GaudiSequencer ,
                           'CaloDLLmu'     ,
                           context        )
-        prse=getAlgo ( PrsPIDeAlg           ,
-                       'PrsPIDe'            ,
-                       context              ,
-                       'Rec/Calo/PrsPIDe'   ,
-                       enableRecoOnDemand   ) 
         ecale=getAlgo ( EcalPIDeAlg          ,
                         'EcalPIDe'           ,
                         context              ,
@@ -343,7 +338,16 @@ def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , ski
                          'Rec/Calo/HcalPIDmu' ,
                          enableRecoOnDemand   ) 
         dllmu.Members = [ ecalmu, hcalmu ]
-        dlle.Members  = [ prse , ecale , breme , hcale ]
+        dlle.Members  = [ ecale , breme , hcale ]
+        if not noSpdPrs :
+            prse=getAlgo ( PrsPIDeAlg           ,
+                           'PrsPIDe'            ,
+                           context              ,
+                           'Rec/Calo/PrsPIDe'   ,
+                           enableRecoOnDemand   ) 
+            dlle.Members  += [ prse ]
+        else :
+            log.info('remove Spd/Prs from dlle')
 
 
 
@@ -354,18 +358,16 @@ def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , ski
         hcalT  = getAlgo ( GaudiSequencer ,'HcalPID'     , context        )
         hcalT.Members = [ inHCAL,  hcalE, hcale, hcalmu ]
 
-        prsT  = getAlgo ( GaudiSequencer ,'PrsPID'     , context        )
-        prsT.Members = [ inPRS,  prsE, prse ]
+
+        if not noSpdPrs :
+            prsT  = getAlgo ( GaudiSequencer ,'PrsPID'     , context        )
+            prsT.Members = [ inPRS,  prsE, prse ]
  
-        spdT  = getAlgo ( GaudiSequencer ,'SpdPID'     , context        )
-        spdT.Members = [ inSPD,  spdE ]
+            spdT  = getAlgo ( GaudiSequencer ,'SpdPID'     , context        )
+            spdT.Members = [ inSPD,  spdE ]
  
         bremT  = getAlgo ( GaudiSequencer ,'BremPID'     , context        )
         bremT.Members = [ inBREM,  brem, bChi2, breme ]
- 
-
-
-
 
         # Override CaloAlgUtils default track location
         if  trackLocations :
@@ -396,13 +398,13 @@ def caloPIDs ( context , enableRecoOnDemand , list , trackLocations = []   , ski
         if 'EcalPID' in list :  charged.Members        += [ ecalT  ]
         if 'BremPID' in list :  charged.Members        += [ bremT  ]
         if 'HcalPID' in list :  charged.Members        += [ hcalT  ]
-        if 'PrsPID' in list :  charged.Members         += [ prsT   ]
-        if 'SpdPID' in list :  charged.Members         += [ spdT   ]
+        if 'PrsPID' in list and not noSpdPrs :  charged.Members         += [ prsT   ]
+        if 'SpdPID' in list and not noSpdPrs :  charged.Members         += [ spdT   ]
         if charged.Members : addAlgs( seq , charged )
         
 
-    ## Add Neutrals
-    if not skipNeutrals  :
+    ## Add Neutrals (! No neutralID so far for the noSpdPrs configuration )
+    if not skipNeutrals  and not noSpdPrs:
         _name = 'NeutralPIDs'
         if name != context or context.upper() == 'OFFLINE': _name = _name+name
         neutrals = getAlgo( GaudiSequencer , _name , context )
