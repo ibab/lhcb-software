@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-10-11 - Wouter Hulsbergen
+ - Improved speed of TrackStateVertex
+
 !========================= TrackKernel v1r17 2013-10-01 =========================
 ! 2013-08-13 - Wouter Hulsbergen
  - Improved error handling of TrackStateVertex
