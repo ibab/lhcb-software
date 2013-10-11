@@ -31,7 +31,9 @@ from CaloMoniDst.Monitor      import ( digitsMoni     ,
                                        hyposMoni      ,
                                        pi0sMoni       ,
                                        pidsMoni       ,
-                                       protosMoni
+                                       protosMoni     ,
+                                       pidCheck       ,
+                                       recoCheck 
                                        )
 
 # =============================================================================
@@ -46,12 +48,11 @@ class CaloMoniDstConf(LHCbConfigurableUser):
     """
    ## define the slots
     __slots__ = {
-        ##
         "Context"              : "Offline"   # The context within which to run
         , "MeasureTime"        : False       # Measure the time for sequencers
         , "OutputLevel"        : INFO        # The global output level
-        ##
-        , 'Sequence'           : None        # The sequencer to add the CALO reconstruction algorithms to
+        , 'MonitorSequence'    : None        # The monitor's sequence
+        , 'CheckerSequence'    : None        # The checker's sequence 
         , 'MoniList'           : [ 'Digits'   ,
                                    'EFlow'    ,
                                    'Clusters' ,
@@ -59,9 +60,11 @@ class CaloMoniDstConf(LHCbConfigurableUser):
                                    'Pi0s'     ,
                                    'Protos'   ,
                                    'PIDs'     
-                                   ] ##
-        ##
+                                   ] 
+        , 'CheckList'          : ['Reco','PIDs']
         , 'Histograms'         : 'OfflineFull' # Default Histograms level
+        , 'NoSpdPrs'           : False # Upgrade configuration without Prs/Spd
+        , 'Verbose'            : False
         }
 
     ## Default Histogram set
@@ -74,7 +77,7 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         Configure monitoring of Digits
         
         """
-        cmp = digitsMoni   ( self.Context )
+        cmp = digitsMoni   ( self.getProp('Context') , self.getProp('NoSpdPrs'))
         ##
         return cmp
 
@@ -84,7 +87,7 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         """
         Configure E-Flow monitoring
         """
-        cmp = eflowMoni ( self.Context )
+        cmp = eflowMoni ( self.getProp('Context') )
 
         return cmp
 
@@ -93,7 +96,7 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         """
         Configure Clusters monitoring
         """
-        cmp = clustersMoni ( self.Context )
+        cmp = clustersMoni ( self.getProp('Context') )
         
         return cmp
 
@@ -102,7 +105,7 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         """
         Configure Hypos monitoring
         """
-        cmp = hyposMoni ( self.Context )
+        cmp = hyposMoni ( self.getProp('Context') )
         
         return cmp
 
@@ -111,7 +114,7 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         """
         Configure Pi0s monitoring
         """
-        cmp = pi0sMoni ( self.Context )
+        cmp = pi0sMoni ( self.getProp('Context') )
         
         return cmp
 
@@ -120,7 +123,7 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         """
         Configure Protos monitoring
         """
-        cmp = protosMoni ( self.Context )
+        cmp = protosMoni ( self.getProp('Context') )
         
         return cmp
 
@@ -130,9 +133,19 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         """
         Configure PIDs monitoring
         """
-        cmp = pidsMoni ( self.Context, self.getProp("Histograms") )
+        cmp = pidsMoni ( self.getProp('Context'), self.getProp("Histograms") )
       
         return cmp
+
+
+    #--- configure the checkers
+    def pidChecker ( self ) :
+        cmp = pidCheck( self.getProp('Context'), self.getProp("NoSpdPrs") )      
+        return cmp
+    def recoChecker ( self ) :
+        cmp = recoCheck( self.getProp('Context'))
+        return cmp
+
     
     
     ## Check the configuration
@@ -143,42 +156,62 @@ class CaloMoniDstConf(LHCbConfigurableUser):
 
         if self.getProp( 'Histograms' ) not in self.__known_histograms__:
             raise RuntimeError("Unknown Histograms option '%s'" % self.getProp( 'Histograms' ))
+
+
+    def printConf(self) :
+        if self.getProp('NoSpdPrs') :
+            log.info("CaloMoniDstConf : upgrade configuration without Spd/Prs")
+        if self.getProp('Verbose') :
+            log.info( self )
+
  
     ## Calorimeter Monitoring Configuration
     def applyConf ( self ) :
         """
-        Calorimeter Reconstruction Configuration
+        Calorimeter Monitor Configuration
         """
+        log.info ('CaloMoniConf: Apply Calo Monitoring Configuration ')
+
+        self.printConf()
         
         self.checkConfiguration()
         
-        log.info ('CaloMoniConf: Apply Calo Monitoring Configuration ')
-        
-        monList = self.MoniList
-        
-        seq     = []
-        
+
+        #----- MONITORS
+        monList = self.MoniList        
+        seq     = []        
         if 'Digits'     in monList : addAlgs ( seq , self.digits     () ) 
         if 'EFlow'      in monList : addAlgs ( seq , self.eflow      () ) 
         if 'Clusters'   in monList : addAlgs ( seq , self.clusters   () ) 
         if 'Hypos'      in monList : addAlgs ( seq , self.hypos      () )
         if 'Pi0s'       in monList : addAlgs ( seq , self.pi0s       () )
-        if 'Protos'     in monList : addAlgs ( seq , self.protos       () )
-        if 'PIDs'       in monList : addAlgs ( seq , self.pids       () )
-        
-        setTheProperty ( seq , 'Context'     , self.Context )
-        
+        if 'Protos'     in monList : addAlgs ( seq , self.protos     () )
+        if 'PIDs'       in monList : addAlgs ( seq , self.pids       () )        
+        setTheProperty ( seq , 'Context'     , self.getProp('Context') )        
         setTheProperty ( seq , 'OutputLevel' , self.getProp('OutputLevel') )
-        setTheProperty ( seq , 'MeasureTime' , self.getProp('MeasureTime') )
-        
-        if self.getProp('Sequence') :
-            addAlgs  ( self.Sequence , seq ) 
-            log.info ('Configure main Calo Moni Sequence  : %s '% self.Sequence.name() )
-            log.info ( prntCmp ( self.Sequence ) ) 
-            
-        ##print ' CONFIGURATION!' , prntCmp ( seq )
-        
+        setTheProperty ( seq , 'MeasureTime' , self.getProp('MeasureTime') )    
+        if self.isPropertySet('MonitorSequence') :
+            moniSeq=self.getProp('MonitorSequence')
+            addAlgs  ( moniSeq , seq ) 
+            log.info ('Configure main Calo Moni MonitorSequence  : %s '% moniSeq.name() )
+            if self.getProp('Verbose') :
+                log.info ( prntCmp ( moniSeq ) ) 
 
-# =============================================================================
-# The END 
-# =============================================================================
+
+        #----- CHECKERS
+        checkList = self.CheckList        
+        cseq     = []        
+        if 'Reco'     in checkList : addAlgs ( cseq , self.recoChecker     () ) 
+        if 'PIDs'     in checkList : addAlgs ( cseq , self.pidChecker      () ) 
+        setTheProperty ( cseq , 'Context'     , self.getProp('Context') )        
+        setTheProperty ( cseq , 'OutputLevel' , self.getProp('OutputLevel') )
+        setTheProperty ( cseq , 'MeasureTime' , self.getProp('MeasureTime') )    
+
+        if self.isPropertySet('CheckerSequence') :
+            checkSeq= self.getProp('CheckerSequence')
+            addAlgs  ( checkSeq  , cseq ) 
+            log.info ('Configure  CheckerSequence  : %s '% checkSeq.name() )
+            if self.getProp('Verbose') :
+                log.info ( prntCmp ( checkSeq ) ) 
+
+            

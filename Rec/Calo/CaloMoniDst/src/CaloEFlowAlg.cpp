@@ -77,18 +77,21 @@ StatusCode CaloEFlowAlg::initialize() {
   else if ( "Hcal" == detData() ) {
     m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );  }
   else if ( "Prs"  == detData() ){
-    m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs  );  }  
+    m_calo = getDetIfExists<DeCalorimeter>( DeCalorimeterLocation::Prs  );  }  
   else if ( "Spd"  == detData() ) {
-    m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd  );
+    m_calo = getDetIfExists<DeCalorimeter>( DeCalorimeterLocation::Spd  );
   }  
   else{
     return Error( "Unknown detector name "+detData() );
   }
+  if (!m_calo) return Error("No DeCalorimeter for "+detData());
 
   hBook1( "4", detData() + " : # of Digits"   ,  m_calo->numberOfCells(),  0, m_calo->numberOfCells()   );
   
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()  << " initialized" << endmsg;
   
+
+
   return  StatusCode::SUCCESS;
 }
 

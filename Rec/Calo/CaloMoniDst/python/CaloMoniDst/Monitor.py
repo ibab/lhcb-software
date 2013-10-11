@@ -33,7 +33,7 @@ from GaudiKernel.SystemOfUnits import  ( MeV , GeV )
 
 # =============================================================================
 ## prepare digit monitoring
-def digitsMoni ( context ) :
+def digitsMoni ( context ,noSpdPrs=False) :
     """
     
     Prepare digit monitoring
@@ -48,30 +48,23 @@ def digitsMoni ( context ) :
     
     alg1 = getAlgo ( CaloDigitMonitor , "EcalDigitMon"  , context ) 
     alg2 = getAlgo ( CaloDigitMonitor , "HcalDigitMon"  , context ) 
-    alg3 = getAlgo ( CaloDigitMonitor , "PrsDigitMon"   , context ) 
-    alg4 = getAlgo ( CaloDigitMonitor , "SpdDigitMon"   , context ) 
-
-
     if not alg1.isPropertySet('histoList') :
         alg1.histoList   = [ "1", "2" , "3" , "6" , "7" ]
     if not alg2.isPropertySet('histoList') :
         alg2.histoList   = [ "1", "2" , "3" , "6" , "7" ]
-    if not alg3.isPropertySet('histoList') :
-        alg3.histoList   = [ "1", "2" , "3" , "6" , "7" ]
-    if not alg4.isPropertySet('histoList') :
-        alg4.histoList   = [ "1", "2" , "3" , "6" ]
-    
-    alg.Members = [
-        alg1 ,
-        alg2 ,
-        alg3 ,
-        alg4 , 
-        ##
-        getAlgo ( SpdMonitor , "SpdMon"   , context )
-        ]
-    
+
+    alg.Members = [alg1,alg2]
+
+    if not noSpdPrs :
+        alg3 = getAlgo ( CaloDigitMonitor , "PrsDigitMon"   , context ) 
+        alg4 = getAlgo ( CaloDigitMonitor , "SpdDigitMon"   , context ) 
+        alg5 =  getAlgo ( SpdMonitor , "SpdMon"   , context )
+        if not alg3.isPropertySet('histoList') :
+            alg3.histoList   = [ "1", "2" , "3" , "6" , "7" ]
+        if not alg4.isPropertySet('histoList') :
+            alg4.histoList   = [ "1", "2" , "3" , "6" ]
+        alg.Members += [alg3,alg4,alg5]    
     setTheProperty ( alg , 'Context' , context )
-    
     return alg
 
 
@@ -330,7 +323,54 @@ def pidsMoni ( context, Histograms ) :
     setTheProperty ( alg , 'Context' , context )
 
     return alg
-  
+
+### ------ CHECKING ----- ###
+def recoCheck( context ) :
+
+    from Configurables import ( CaloClusterChecker,CaloPi0Checker)
+    
+    alg  = getAlgo ( GaudiSequencer    ,'CaloRecoCheck'     , context)
+    alg1 = getAlgo ( CaloClusterChecker,'CaloClusterChecker',context)
+    alg2 = getAlgo ( CaloPi0Checker    ,'CaloPi0Checker'    ,context)
+    alg.Members=[alg1,alg2]
+    setTheProperty(alg,'Context',context)
+    return alg
+
+def pidCheck( context,noSpdPrs=False ) :
+
+    from Configurables import ( CaloPIDsChecker,CaloPhotonChecker)
+    
+    alg  = getAlgo ( GaudiSequencer    ,'CaloPIDsCheck'     , context)
+    alg1 = pidCheckerConf('PIDeEcalChecker',context,11,"Rec/Calo/EcalPIDe",50.0*GeV,0.0,"Long", "Rec/Calo/InAccEcal" )
+    alg2 = pidCheckerConf('PIDeHcalChecker',context,11,"Rec/Calo/HcalPIDe",50.0*GeV,0.0,"Long", "Rec/Calo/InAccHcal" )
+    alg3 = pidCheckerConf('PIDeBremChecker',context,11,"Rec/Calo/BremPIDe",50.0*GeV,0.0,"Long", "Rec/Calo/InAccBrem" )
+    alg4 = pidCheckerConf('PIDmEcalChecker',context,13,"Rec/Calo/EcalPIDmu",25.0*GeV,0.0,"Long", "Rec/Calo/InAccEcal" )
+    alg5 = pidCheckerConf('PIDmHcalChecker',context,13,"Rec/Calo/HcalPIDmu",25.0*GeV,0.0,"Long", "Rec/Calo/InAccHcal" )    
+    alg.Members=[alg1,alg2,alg3,alg4,alg5]
+    if not noSpdPrs :
+        alg6 = pidCheckerConf('PIDePrsChecker',context,11,"Rec/Calo/PrsPIDe",50.0*GeV,0.0,"Long", "Rec/Calo/InAccPrs" )
+        alg.Members += [alg6]
+        # caloPhotonChecker
+        alg7 = getAlgo ( CaloPhotonChecker,'CaloPhotonChecker',context)
+        alg7.Pdf=True
+        alg7.EPrsBin=[50.,0.,200.]
+        alg7.Chi2Bin=[26.,0.,104.]
+        alg7.SeedBin=[50.,0.,1.]
+#        alg.Members += [alg7]
+    setTheProperty(alg,'Context',context)
+    return alg
+
+def pidCheckerConf(name,context,particle,input,norm,cut,type,acc) :
+    from Configurables import ( CaloPIDsChecker )
+    algo = getAlgo ( CaloPIDsChecker,name,context)
+    algo.Particle        = particle
+    algo.Input           = input
+    algo.Normalization   = norm
+    algo.Cut             = cut
+    algo.TrackType       = type
+    algo.TrackAcceptance = acc
+    return algo
+
     
 # =============================================================================
 if '__main__' == __name__ :

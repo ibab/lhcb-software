@@ -162,8 +162,9 @@ StatusCode CaloPhotonChecker::initialize()
 //----- Detector recovery
 
   m_ecal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
-  m_spd  = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd );
-  m_prs  = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
+  m_spd  = getDetIfExists<DeCalorimeter>( DeCalorimeterLocation::Spd );
+  m_prs  = getDetIfExists<DeCalorimeter>( DeCalorimeterLocation::Prs );
+  if( !m_spd || !m_prs)return Error("DeCalorimeter does not exist for Prs/Spd");
   
   m_ecalPlane = m_ecal->plane( CaloPlane::ShowerMax );
   m_spdPlane  = m_spd->plane ( CaloPlane::Middle );
