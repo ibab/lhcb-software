@@ -13,7 +13,7 @@
 #include "Event/CaloHypo.h"
 class ICaloDataProvider;
 
-static const InterfaceID IID_ICaloGetterTool ( "ICaloGetterTool", 2, 0 );
+static const InterfaceID IID_ICaloGetterTool ( "ICaloGetterTool", 3, 0 );
 
 /** @class ICaloGetterTool ICaloGetterTool.h
  *  
@@ -37,6 +37,7 @@ public:
   virtual LHCb::CaloDigits*   digits   ( const std::string& loc)=0;
   virtual LHCb::CaloClusters* clusters ( const std::string& loc)=0;
   virtual LHCb::CaloHypos*    hypos    ( const std::string& loc)=0;
+  virtual int detectorsMask()=0;
   
   virtual bool hasData ( const std::string& det )=0;
   virtual ICaloDataProvider* provider ( const std::string& det)=0;

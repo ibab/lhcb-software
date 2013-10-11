@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =========================================================================
 
+! 2013-10-09 - Olivier Deschamps
+ - ICaloGetterTool : new virtual method to access the sub-detectors mask (increment release number)
+
 ! 2013-10-07 - Olivier Deschamps
  - fix circular dependency with CaloUtils in ICaloRelationsGetter
 
