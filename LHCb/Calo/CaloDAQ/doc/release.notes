@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2013-10-09 - Olivier Deschamps
+ -  python/CaloDAQ/CaloDigits.py & Configuration.py : allow to set-up the valid sub-detectors
+ -  src/CaloDigitFilter{Alg,Tool} :  protect against the upgrade configuration with no Spd/Prs
+
 !========================= CaloDAQ v4r35 2013-07-17 =========================
 ! 2013-06-12 - Marco Cattaneo
  - Add virtual destructor to ICaloReadoutTool interface class. Fixes gcc48 warning

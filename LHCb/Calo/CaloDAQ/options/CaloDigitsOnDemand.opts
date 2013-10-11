@@ -3,9 +3,9 @@
 // Data on demand options for CaloDigits
 // ============================================================================
 DataOnDemandSvc.AlgMap += {
-     "Raw/Spd/Digits"  : "CaloDigitsFromRaw/SpdFromRaw"
-   , "Raw/Prs/Digits"  : "CaloDigitsFromRaw/PrsFromRaw"
-   , "Raw/Ecal/Digits" : "CaloZSupAlg/EcalZSup"
-   , "Raw/Hcal/Digits" : "CaloZSupAlg/HcalZSup"
+  "Raw/Spd/Digits"  : "CaloDigitsFromRaw/SpdFromRaw"
+    , "Raw/Prs/Digits"  : "CaloDigitsFromRaw/PrsFromRaw"
+    ,"Raw/Ecal/Digits" : "CaloZSupAlg/EcalZSup"
+    , "Raw/Hcal/Digits" : "CaloZSupAlg/HcalZSup"
   };
 

@@ -196,8 +196,10 @@ int CaloDigitFilterTool::getScale(){
 }
 
 double CaloDigitFilterTool::offset(LHCb::CaloCellID id,bool spd){
-  if( id.caloName() != m_caloName)setDet( id.caloName() );
-  int scale = getScale();
+  if( id.caloName() != m_caloName){
+    if( ! setDet( id.caloName() ))return 0.;
+  }
+ int scale = getScale();
   return getOffset( id , scale,spd);
 }
 

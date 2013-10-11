@@ -47,6 +47,9 @@ class CaloDigitConf(LHCbConfigurableUser):
         , 'CreateADCs'           : False       # Create ADCs ? 
         , 'Sequence'             : None        # The sequencer to add the CALO reconstruction algorithms to
         , 'EnableDigitsOnDemand' : False       # Enable Digits-On-Demand
+        , 'Detectors'            : ['Ecal','Hcal','Prs','Spd']
+        , 'Verbose'              : False
+        , 'ReadoutStatusConvert' : False
         ##
         }
     ## documentation lines 
@@ -59,6 +62,9 @@ class CaloDigitConf(LHCbConfigurableUser):
         , 'CreateADCs'           : """ Create ADCs ? """
         , 'Sequence'             : """ The sequencer to add the CALO Digit algorithms to """
         , 'EnableDigitsOnDemand' : """ Enable Digits-On-Demand """ 
+        , 'Detectors'            : """ List of available calo subdetectors"""
+        , 'Verbose'              : """ Verbose printout """
+        , 'ReadoutStatusConvert' : """ Add ReadoutStatus -> ProcStatus conversion in the sequence"""
         ##
         }
     
@@ -72,21 +78,29 @@ class CaloDigitConf(LHCbConfigurableUser):
         
         cmp = caloDigits ( self.getProp ('Context'             ) ,
                            self.getProp ('EnableDigitsOnDemand') ,
-                           self.getProp ('CreateADCs'          ) ) 
+                           self.getProp ('CreateADCs'          ) ,
+                           self.getProp ('Detectors'           ) ,
+                           self.getProp ('ReadoutStatusConvert')) 
 
         return cmp
     
+    def printConf(self,verbose=False) :
+        if self.getProp ( 'EnableDigitsOnDemand') :
+            _log.info    ('CaloDigits onDemand for %s' , self.getProp('Detectors'))
+        if self.getProp('Verbose') or verbose:
+            _log.info ( self )
+
+
     ## Calo Digits Configuration
     def applyConf ( self ) :
         """
         Calorimeter Digits Configuration
-        """
-        
-        _log.info ('Apply Calo Digits Configuration ')
-        _log.info ( self )
+        """        
+        _log.info ('Apply Calo Digits Configuration')
+        self.printConf() 
 
-        cmp = self.digits()
-        
+
+        cmp = self.digits()    
         setTheProperty ( cmp , 'Context'     , self.getProp ( 'Context'     ) )
         setTheProperty ( cmp , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
         setTheProperty ( cmp , 'MeasureTime' , self.getProp ( 'MeasureTime' ) )        
@@ -97,7 +111,9 @@ class CaloDigitConf(LHCbConfigurableUser):
             seq.Members = [ cmp ] + seq.Members  
 
         if self.getProp ( 'EnableDigitsOnDemand') :
-            _log.info( printOnDemand() )
+            _log.info    (' creation-on-demand of CaloDigits is enabled for %s' , self.getProp('Detectors'))
+            if self.getProp('Verbose') :
+                _log.info( printOnDemand() )
             
 # =============================================================================
 if '__main__' == __name__ :

@@ -24,9 +24,12 @@ _log = logging.getLogger('CaloDAQ')
 ## the digits 
 def caloDigits ( context        ,
                  enableOnDemand ,
-                 createADCs     ) :
+                 createADCs=False,
+                 detectors=['Ecal','Hcal','Prs','Spd'],
+                 ReadoutStatusConvert=False) :
+
     """
-    Decoding of Calo-Digits
+    Decoding of Calo-Digits 
     """
     _cntx = 'Offline'
     if context != _cntx :
@@ -34,35 +37,82 @@ def caloDigits ( context        ,
         
     from Configurables import ( CaloZSupAlg       ,
                                 CaloDigitsFromRaw ,
+                                RawBankReadoutStatusConverter,
                                 GaudiSequencer    ) 
     
-    spd  = getAlgo ( CaloDigitsFromRaw       , 
-                     "SpdFromRaw"            ,
-                     _cntx                   ,
-                     "Raw/Spd/Digits"        ,
-                     enableOnDemand          )
     
     
-    prs  = getAlgo ( CaloDigitsFromRaw       , 
-                     "PrsFromRaw"            ,
-                     _cntx                   ,
-                     "Raw/Prs/Digits"        ,
-                     enableOnDemand          )
-    
-    ecal = getAlgo ( CaloZSupAlg             , 
-                     "EcalZSup"              ,
-                     _cntx                   ,
-                     "Raw/Ecal/Digits"       ,
-                     enableOnDemand          )
-    
-    hcal = getAlgo ( CaloZSupAlg             , 
-                     "HcalZSup"              ,
-                     _cntx                   ,
-                     "Raw/Hcal/Digits"       ,
-                     enableOnDemand          )
-    
+
+    conflist=[]
+    alglist=[]
+    if 'Ecal' in detectors :
+        _log.debug('caloDigits : Ecal is added to the detector list')
+        ecalSeq = GaudiSequencer ('EcalDigitsSeq',Context = _cntx)
+        ecal = getAlgo ( CaloZSupAlg             , 
+                         "EcalZSup"              ,
+                         _cntx                   ,
+                         "Raw/Ecal/Digits"       ,
+                         enableOnDemand          )
+        conflist.append(ecal)
+        if ReadoutStatusConvert :
+            ecalCnv = getAlgo ( RawBankReadoutStatusConverter, "EcalProcStatus",_cntx)
+            ecalCnv.System='Ecal'
+            ecalCnv.BankTypes=['EcalPacked']
+            ecalSeq.Members = [ecal,ecalCnv]
+            alglist.append(ecalSeq)
+        else :
+            alglist.append(ecal)
+
+    if 'Hcal' in detectors :
+        _log.debug('caloDigits : Hcal is added to the detector list')
+        hcalSeq = GaudiSequencer ('HcalDigitsSeq',Context = _cntx)
+        hcal = getAlgo ( CaloZSupAlg             , 
+                         "HcalZSup"              ,
+                         _cntx                   ,
+                         "Raw/Hcal/Digits"       ,
+                         enableOnDemand          )
+        conflist.append(hcal)
+        if ReadoutStatusConvert :
+            hcalCnv = getAlgo ( RawBankReadoutStatusConverter, "HcalProcStatus",_cntx)
+            hcalCnv.System='Hcal'
+            hcalCnv.BankTypes=['HcalPacked']
+            hcalSeq.Members = [hcal,hcalCnv]
+            alglist.append(hcalSeq)
+        else :
+            alglist.append(hcal)
+
+    if 'Prs'  in detectors :
+        _log.debug('caloDigits : Prs is added to the detector list')
+        prsSeq = GaudiSequencer ('PrsDigitsSeq',Context = _cntx)
+        prs  = getAlgo ( CaloDigitsFromRaw       , 
+                         "PrsFromRaw"            ,
+                         _cntx                   ,
+                         "Raw/Prs/Digits"        ,
+                         enableOnDemand          )
+        conflist.append(prs)
+        if ReadoutStatusConvert :
+            prsCnv = getAlgo ( RawBankReadoutStatusConverter, "PrsProcStatus",_cntx)
+            prsCnv.System='Prs'
+            prsCnv.BankTypes=['PrsPacked']
+            prsSeq.Members = [prs,prsCnv]
+            alglist.append(prsSeq)
+        else :
+            alglist.append(prs)
+
+
+    if 'Spd'  in detectors :
+        _log.debug('caloDigits : Spd is added to the detector list')
+        spd  = getAlgo ( CaloDigitsFromRaw       , 
+                         "SpdFromRaw"            ,
+                         _cntx                   ,
+                         "Raw/Spd/Digits"        ,
+                         enableOnDemand          )
+        conflist.append(spd)
+        alglist.append(spd)
+
+
     if createADCs :
-        for a in ( spd , prs , ecal , hcal ) :
+        for a in conflist :
             t = a.OutputType.upper()
             if   t in [ 'DIGIT', 'DIGITS' , 'CALODIGIT' , 'CALODIGITS' ] :
                 t.OutputType = 'Both'
@@ -80,16 +130,7 @@ def caloDigits ( context        ,
                
             
     ## combine them into sequence  
-    alg = GaudiSequencer (
-        'CaloDigits'      ,
-        Context = context ,
-        Members = [ spd  ,
-                    prs  ,
-                    ecal ,
-                    hcal ] ,
-        IgnoreFilterPassed = True  
-        )
-    
+    alg = GaudiSequencer ('CaloDigits',Context = context, IgnoreFilterPassed = True, Members=alglist)
     return alg 
     
     
