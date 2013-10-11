@@ -16,8 +16,8 @@ def check_path():
     cwd=os.path.abspath('.').lower()
     updir=os.path.abspath('..').lower()
     lastdir=cwd.split('/')[-1]
-    if (not re.match("mooreonline_((v[0-9]*r.*)|(head))",lastdir)) or updir!=os.path.abspath(os.environ["User_release_area"]):
-        raise IOError("Hey! you're calling this script from the wrong directory. You'd better call it from a valid Moore directory in a User_release_area! "+cwd)
+    if (not re.match("mooreonline_((v[0-9]*r.*)|(head))",lastdir)) or updir!=os.path.abspath(os.environ["User_release_area"]).lower():
+        raise IOError("Hey! you're calling this script from the wrong directory. You'd better call it from a valid Moore directory in a User_release_area! "+cwd+" vs."+os.path.abspath(os.environ["User_release_area"]))
 
 def define_cmtconfig() :
     import os
