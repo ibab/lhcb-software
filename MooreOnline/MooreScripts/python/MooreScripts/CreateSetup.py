@@ -25,16 +25,10 @@ def ContainsFNmatch(dir,matches) :
     return False
 #
 
-def CreateSetupMoore( output, version , setupProjectOps=[]) :
-
-    target_dir = dirname( output )
-    if not exists( target_dir ) : makedirs( target_dir )
-
-    from LbConfiguration.SetupProject import SetupProject
-
-    print 'generating %s assuming version %s'%(output,version)
-    SetupProject().main( [ '--dev-dir=/home/online/ONLINE','--shell=sh','--output='+output,'MooreOnline',version]+setupProjectOps )
-
+def StripSetupMoore( output ):
+    """
+    Edit the output of SetupProject to remove certain rubbish
+    """
     if exists(output) :
 
         print 'removing use of StripPath.sh'
@@ -58,4 +52,15 @@ def CreateSetupMoore( output, version , setupProjectOps=[]) :
                 f.write(line+'\n')        
     else :
         print 'SetupProject did not generate %s... this is fine during a release build...' % output
+
+def CreateSetupMoore( output, version , setupProjectOps=[]) :
+
+    target_dir = dirname( output )
+    if not exists( target_dir ) : makedirs( target_dir )
+
+    from LbConfiguration.SetupProject import SetupProject
+
+    print 'generating %s assuming version %s'%(output,version)
+    SetupProject().main( [ '--dev-dir=/home/online/ONLINE','--shell=sh','--output='+output,'MooreOnline',version]+setupProjectOps )
+    StripSetupMoore(output)
 

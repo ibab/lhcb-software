@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2013-10-11 - Rob Lambert
+ - Change the PostInstall script, only use the setup file passed into the script.
+
 ! 2013-09-24 - Rob Lambert
  - Move the scripts which generate the Moore configurations to here.
  - Need some test to check I can generate the configurations...
