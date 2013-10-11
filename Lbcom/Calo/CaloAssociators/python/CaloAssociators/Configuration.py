@@ -42,6 +42,7 @@ class CaloAssociatorsConf(LHCbConfigurableUser):
         ##
         , 'Sequence'         : None        # The sequencer to add the CALO Associations
         , 'EnableMCOnDemand' : True        # Enable Digits-On-Demand
+        , 'Digits'        : ['Ecal']
         ##
         }
       ## documentation lines 
@@ -53,6 +54,7 @@ class CaloAssociatorsConf(LHCbConfigurableUser):
         ##
         , 'Sequence'         : """ The sequencer to add the CALO Associations """ 
         , 'EnableMCOnDemand' : """ Enable MC-On-Demand """ 
+        , 'Digits'        : """ List of allowed sub-detectors"""
         ##
         }
     ## used Configurables
@@ -69,7 +71,7 @@ class CaloAssociatorsConf(LHCbConfigurableUser):
         main = caloMCTruth (
             self.getProp ( 'Context'          ) ,
             self.getProp ( 'EnableMCOnDemand' ) ,
-            [ 'Ecal'] 
+            self.getProp ( 'Digits'           )
             )
         setTheProperty ( main , 'OutputLevel' , self.getProp('OutputLevel') )
         setTheProperty ( main , 'MeasureTime' , self.getProp('MeasureTime') )
@@ -80,7 +82,8 @@ class CaloAssociatorsConf(LHCbConfigurableUser):
                 MeasureTime          = self.getProp('MeasureTime'     ) ,
                 OutputLevel          = self.getProp('OutputLevel'     ) ,
                 EnableDigitsOnDemand = self.getProp('EnableMCOnDemand') ,
-                Sequence             = self.getProp('Sequence'        ) 
+                Sequence             = self.getProp('Sequence'        ) , 
+                Digits               = self.getProp('Digits'          )
                 )
             sequence.Members += [ main ]
 

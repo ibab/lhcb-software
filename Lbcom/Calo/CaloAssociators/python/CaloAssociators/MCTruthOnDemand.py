@@ -44,7 +44,8 @@ def caloMCTruth ( context           = 'Offline' ,
     ## configure 'digits'
     caloDigits( 'Offline'        , 
                 enableMCOnDemand ,
-                False            )
+                False,
+                Digits)
 
     from Configurables import GaudiSequencer 
     main = getAlgo (

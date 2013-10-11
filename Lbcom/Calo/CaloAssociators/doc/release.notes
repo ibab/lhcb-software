@@ -5,6 +5,9 @@
 !               Olivier Deschamps odescham@in2p3.fr
 ! ========================================================================
 
+! 2013-10-09 - Olivier Deschamps
+ - python/CaloAssociators/Configuration.py & MCTruthOnDemand.py : adapt to change in caloDigitConf
+
 !========================= CaloAssociators v6r12p1 2013-06-03 =======================
 ! 2013-05-26 - Marco Cattaneo
  - Fix trivial gcc48 warning
