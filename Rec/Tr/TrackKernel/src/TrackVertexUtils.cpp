@@ -184,6 +184,9 @@ namespace LHCb
       return OK ;
     }
     
+    /////////////////////////////////////////////////////////////////////////
+    /// Compute the point of the doca of two track states.  Return 1 if successful.
+    /////////////////////////////////////////////////////////////////////////
     int poca( const LHCb::State& stateA, const LHCb::State& stateB,
 	      Gaudi::XYZPoint& vertex)
     {
