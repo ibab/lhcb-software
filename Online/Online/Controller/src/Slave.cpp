@@ -206,7 +206,6 @@ void Slave::handleTimeout()  {
   int st = currentState();
   display(ALWAYS,c_name(),"Slave TIMEOUT. State:%08X [%s] value:%08X [%s]",
 	  st,metaStateName(),m_timerID.second,_metaStateName(m_timerID.second));
-  bool on_tmo_kill = m_rule ? _onTimeoutKill(m_rule) : false;
   if ( m_timerID.second == SLAVE_UNLOAD_TIMEOUT ) {
     handleUnloadTimeout();
   }
