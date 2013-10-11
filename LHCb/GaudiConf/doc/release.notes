@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-10-09 - Olivier Deschamps
+ - options/DecodeRawEvent.py : relies on CaloDigitsConf for decoding calorimeter onDemand
+
 ! 2013-10-04 - Marco Cattaneo
  - Add a QMTest replace string to allow changes in HltTCK package version numbers
 

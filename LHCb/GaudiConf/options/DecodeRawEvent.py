@@ -59,5 +59,8 @@ DecodeVeloRawBuffer("createVeloLiteClusters").DecodeToVeloClusters     = False
 DecodeVeloRawBuffer("createVeloLiteClusters").DecodeToVeloLiteClusters = True
 
 Rich__DAQ__RawBufferToRichDigitsAlg("RichRawEventToDigits").DecodeBufferOnly = False
-importOptions( "$CALODAQROOT/options/CaloDigitsOnDemand.opts" )
+# Calorimeters
+from Configurables import CaloDigitConf
+CaloDigitConf(EnableDigitsOnDemand=True).applyConf()
+
 importOptions( "$L0DUOPTS/L0OnDemand.opts" )
