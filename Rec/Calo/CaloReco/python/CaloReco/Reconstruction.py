@@ -57,7 +57,7 @@ def digitsReco  ( context            ,
 
 ## ============================================================================
 ## define the recontruction of Ecal clusters
-def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = False , external = '', makeTag=False) :
+def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = False , external = '', makeTag=False,noSpdPrs=False) :
     """
     Define the recontruction of Ecal Clusters
     """
@@ -87,6 +87,10 @@ def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = Fa
 
     seq.Members[:]=[]
     filter= getAlgo ( CaloDigitFilterAlg       , "CaloDigitFilter",context)
+    if noSpdPrs :
+        filter.PrsFilter=0
+        filter.SpdFilter=0
+
     clust = getAlgo ( CellularAutomatonAlg     , "EcalClust"  , context )
     share = getAlgo ( CaloSharedCellAlg        , "EcalShare"  , context )  
     covar = getAlgo ( CaloClusterCovarianceAlg , "EcalCovar"  , context ) 
@@ -115,11 +119,12 @@ def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = Fa
     if enableRecoOnDemand : 
         splitSeq   = mergedPi0Reco( context , enableRecoOnDemand , True, False, False)
         onDemand ( 'Rec/Calo/EcalSplitClusters' , splitSeq , context ) 
-        _log.info    ('CaloReco/ClusterReco: creation-on-demand of clusters is enabled')
 
 
     ## printout
     _log.debug ( 'Configure Ecal Cluster Reco Seq : %s   for %s : ' % (seq.name()  , context) )
+    if enableRecoOnDemand : 
+        _log.info    ('ClusterReco onDemand')
     
     ##    
     return seq
@@ -127,7 +132,7 @@ def clusterReco ( context , enableRecoOnDemand , clusterPt = 0.  , fastReco = Fa
 # ============================================================================
 ## define the recontruction of  Single Photons
 def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False, usePrs = False , trackLocations = [], neutralID = True,
-                 photonPt=150.*MeV, fastReco = False, external = '') :
+                 photonPt=150.*MeV, fastReco = False, external = '',noSpdPrs=False) :
     """
     Define the recontruction of Single Photon Hypo
     """
@@ -176,24 +181,28 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
         alg.addTool ( CaloSelectNeutralClusterWithTracks , "NeutralCluster" )
         alg.NeutralCluster.MinChi2 = 4
         alg.SelectionTools += [ alg.NeutralCluster ]
-        _log.info    ('CaloReco/PhotonReco: Configure Neutral Cluster Selector with Tracks     : %s' %  alg.NeutralCluster.getFullName() )
+        _log.debug    ('CaloReco/PhotonReco: Configure Neutral Cluster Selector with Tracks     : %s' %  alg.NeutralCluster.getFullName() )
 
     if usePrs :
         alg.addTool ( CaloSelectClusterWithPrs           , "ClusterWithPrs" )
         alg.ClusterWithPrs.MinEnergy = 10.*MeV
         alg.SelectionTools += [ alg.ClusterWithPrs ]
-        _log.warning ('CaloReco/PhotonReco: Configure Cluster Selector with  Prs       : %s' %  alg.ClusterWithPrs.getFullName() )
+        _log.debug ('CaloReco/PhotonReco: Configure Cluster Selector with  Prs       : %s' %  alg.ClusterWithPrs.getFullName() )
 
     if  useSpd  :
         alg.addTool ( CaloSelectNeutralClusterWithSpd    , "NeutralClusterWithSpd"    )        
         alg.SelectionTools += [ alg.NeutralClusterWithSpd ]
-        _log.warning ('CaloReco/PhotonReco: Configure Neutral Cluster Selector with !Spd : %s as %s ' %   alg.NeutralClusterWithSpd.getFullName()  )
+        _log.debug ('CaloReco/PhotonReco: Configure Neutral Cluster Selector with !Spd : %s as %s ' %   alg.NeutralClusterWithSpd.getFullName()  )
         
         
     ## hypo tools : add Spd/Prs digits
-    alg.addTool ( CaloExtraDigits , 'SpdPrsExtraG' )
-    alg.HypoTools = [ alg.SpdPrsExtraG ]
-    
+
+    if not noSpdPrs :
+        alg.addTool ( CaloExtraDigits , 'SpdPrsExtraG' )
+        alg.HypoTools = [ alg.SpdPrsExtraG ]
+    else :
+        alg.HypoTools = []
+        
     ## correction tools : E/S/L
     alg.addTool ( CaloECorrection , 'ECorrection' )
     alg.addTool ( CaloSCorrection , 'SCorrection' )
@@ -225,23 +234,20 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
         pID =  PhotonID ( context,enableRecoOnDemand, useTracks )
         addAlgs ( seq , pID ) 
 
-
-    if enableRecoOnDemand : 
-        _log.info    ('CaloReco/PhotonReco: creation-on-demand of photons  is enabled')
-
-
     ## global context
     setTheProperty ( seq , 'Context' , context )
 
     ## printout
     _log.debug ( 'Configure Photon Reco Seq : %s  for : %s' % (seq.name() , context ) )
+    if enableRecoOnDemand : 
+        _log.info    ('PhotonReco onDemand')
         
     return seq
 
 # ============================================================================
 ## define the recontruction of Electorn Hypos
 def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = True, usePrsE = True, trackLocations = [] ,
-                   electronPt=150.*MeV , fastReco = False, external = '' ) :
+                   electronPt=150.*MeV , fastReco = False, external = '' ,noSpdPrs=False) :
     """
     Define the reconstruction of
     """
@@ -288,14 +294,14 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
     if useSpdE : 
         alg.addTool ( CaloSelectChargedClusterWithSpd , "ChargedClusterWithSpd"  )
         alg.SelectionTools += [ alg.ChargedClusterWithSpd ]
-        _log.info    ('CaloReco/ElectronReco: Configure Charged Cluster Selector with Spd     : %s' %  alg.ChargedClusterWithSpd.getFullName() )
+        _log.debug    ('CaloReco/ElectronReco: Configure Charged Cluster Selector with Spd     : %s' %  alg.ChargedClusterWithSpd.getFullName() )
 
     ## 3/ energy in Prs
     if usePrsE :  
         alg.addTool ( CaloSelectClusterWithPrs        , "ClusterWithPrs"  )
         alg.ClusterWithPrs.MinEnergy = 10 * MeV
         alg.SelectionTools += [ alg.ClusterWithPrs ]
-        _log.info    ('CaloReco/ElectronReco: Configure Cluster Selector with Prs    : %s' %  alg.ClusterWithPrs.getFullName() )
+        _log.debug    ('CaloReco/ElectronReco: Configure Cluster Selector with Prs    : %s' %  alg.ClusterWithPrs.getFullName() )
 
     ## 4/  match with tracks
     if useTracksE :
@@ -305,12 +311,15 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
         clnot.NotNeutralCluster.MinChi2 = 25
         clnot.SelectorTools = [ clnot.NotNeutralCluster ]
         alg.SelectionTools += [ alg.ChargedCluster ]
-        _log.info    ('CaloReco/ElectronReco: Configure Charged Cluster Selector with Tracks     : %s' %  alg.ChargedCluster.getFullName() )
+        _log.debug   ('CaloReco/ElectronReco: Configure Charged Cluster Selector with Tracks     : %s' %  alg.ChargedCluster.getFullName() )
 
 
     ## hypo tools : add Spd/Prs digits
-    alg.addTool ( CaloExtraDigits , 'SpdPrsExtraE' )
-    alg.HypoTools = [ alg.SpdPrsExtraE ]
+    if not noSpdPrs :
+        alg.addTool ( CaloExtraDigits , 'SpdPrsExtraE' )
+        alg.HypoTools = [ alg.SpdPrsExtraE ]
+    else :
+        alg.HypoTools = []
 
     ## correction tools : E/S/L
     alg.addTool ( CaloECorrection , 'ECorrection' )
@@ -333,15 +342,14 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
     ## update the sequence
     addAlgs ( seq , alg ) 
 
-    # 
-    if enableRecoOnDemand : 
-        _log.info    ('CaloReco/ElectronReco: creation-on-demand of electrons is enabled')
 
     # global context 
     setTheProperty ( seq , 'Context' , context )
 
     ## printout
     _log.debug ( 'Configure Electron Reco Seq : %s  for : %s' % (seq.name() , context ))
+    if enableRecoOnDemand : 
+        _log.info    ('ElectronReco onDemand')
 
     return seq
 
@@ -349,7 +357,7 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
 # =============================================================================
 ## define the reconstruction of Merged Pi0s Hypos 
 def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutralID = True , useTracks = True,
-                    mergedPi0Pt = 2.* GeV ,fastReco = False, external = '') :
+                    mergedPi0Pt = 2.* GeV ,fastReco = False, external = '',noSpdPrs=False) :
     """
     Define the recontruction of Merged Pi0s
     """
@@ -397,17 +405,18 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
     if clusterOnly :
         setTheProperty ( sseq , 'Context' , context )
         return sseq
-
+    
     ## MergedPi0 sequence
-
+    
     ## 2/ SplitPhotons
-#    splitg = getAlgo ( CaloHypoAlg , 'PhotonFromMergedRec' , context )    
-#    splitg.HypoType = "SplitPhotons";
-#    splitg.PropertiesPrint = False   
+    #    splitg = getAlgo ( CaloHypoAlg , 'PhotonFromMergedRec' , context )    
+    #    splitg.HypoType = "SplitPhotons";
+    #    splitg.PropertiesPrint = False   
     
     ## Add Prs/Spd digits
-    pi0.addTool ( CaloExtraDigits , 'SpdPrsExtraS' )
-    pi0.addTool ( CaloExtraDigits , 'SpdPrsExtraM' )
+    if not noSpdPrs :
+        pi0.addTool ( CaloExtraDigits , 'SpdPrsExtraS' )
+        pi0.addTool ( CaloExtraDigits , 'SpdPrsExtraM' )
     ## correction tools
     pi0.addTool ( CaloECorrection , 'ECorrection' )
     pi0.addTool ( CaloSCorrection , 'SCorrection' )
@@ -420,8 +429,13 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
     ecorr = eCorrection ( ecorr )
     scorr = sCorrection ( scorr )
     lcorr = lCorrection ( lcorr )
-    pi0.Tools = [ pi0.SpdPrsExtraS , ecorr , scorr , lcorr ]
-    pi0.Pi0Tools = [ pi0.SpdPrsExtraM ]
+    if not noSpdPrs :
+        pi0.Tools = [ pi0.SpdPrsExtraS ,  ecorr , scorr , lcorr ]
+        pi0.Pi0Tools = [ pi0.SpdPrsExtraM ]
+    else :       
+        pi0.Tools = [ ecorr , scorr , lcorr ]
+
+
     addAlgs ( seq , pi0 ) 
 #    addAlgs ( seq , splitg ) 
     
@@ -445,13 +459,10 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
             onDemand ( 'Rec/Calo/MergedPi0s'        , seq , context )
             ## onDemand ( 'Rec/Calo/EcalSplitClusters' , seq , context )  ## ??
 
-    ##
-    if enableRecoOnDemand : 
-        _log.info    ('CaloReco/MergedPi0 Reco: creation-on-demand of mergedPi0/SplitPhotons  is enabled')
-
-
     ## printout
     _log.debug ( 'Configure MergedPi0 Reco Seq : %s  for : %s' %( seq.name() , context ))
+    if enableRecoOnDemand : 
+        _log.info    ('MergedPi0Reco onDemand')
 
     return seq
 

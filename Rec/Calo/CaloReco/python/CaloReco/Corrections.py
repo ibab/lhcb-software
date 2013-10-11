@@ -46,7 +46,7 @@ def eCorrection ( ecorr , version = None ) :
     ecorr.Parameters["globalC"] = [ 0      ,     1    ,               0.977  , 0.977  ,  0.977     ]
     
     ##
-    log.info ('Configure E-Corrections for Ecal hypotheses: %s' % ecorr.name () )
+    log.debug ('Configure E-Corrections for Ecal hypotheses: %s' % ecorr.name () )
     #    ecorr.OutputLevel = 2
     return ecorr
 
@@ -80,7 +80,7 @@ def sCorrection ( scorr , version = None ) :
                                   0.11472E-01, 0.11557E-01, 0.38043E-02,
                                   0.35928    , 0.31548    , 0.21436]    
     ##
-    log.info ('Configure S-Corrections for Ecal hypotheses: %s' % scorr.name () ) 
+    log.debug ('Configure S-Corrections for Ecal hypotheses: %s' % scorr.name () ) 
     return scorr
 
 
@@ -100,7 +100,7 @@ def lCorrection ( lcorr , version = None ) :
     lcorr.Parameters["deltaP"] = [ 2      ,     2    ,      4.38  ,      4.15  ,   4.02  , -0.0247,    -0.0597 ,  -0.0308 ]
     
     ##
-    log.info ('Configure L-Corrections for Ecal hypotheses: %s' % lcorr.name () ) 
+    log.debug ('Configure L-Corrections for Ecal hypotheses: %s' % lcorr.name () ) 
     return lcorr
 
 
@@ -141,7 +141,7 @@ def showerProfile ( shape , version = None ) :
     
     
     ##
-    log.info ('Configure showerShape for Ecal hypotheses: %s' % shape.name () )
+    log.debug ('Configure showerShape for Ecal hypotheses: %s' % shape.name () )
     #    shape.OutputLevel = 2
     return shape
 

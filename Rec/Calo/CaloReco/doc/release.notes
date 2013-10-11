@@ -4,8 +4,15 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
-! 2013-10-04 - Olivier Deschamps
- - Instrument CaloSelectrNeutralClusterWithTracks and CaloCorrectionBase  with ICaloRelationsGetter to access cached relations table
+! 2013-10-09 - Olivier Deschamps
+ -  python/CaloReco/*.py : 
+        - possibility to set-up a configuration without active Spd/Prs  (NoSpdPrs = <False> flag)
+                - configure the caloReco/Pids algorithms in order they don't access Prs/Spd detectorElement nor Digits
+                - remove any component related to Prs/Spd  in the reconstruction sequence : 
+                         digits decoding via CaloDigitsConf, cluster filtering, photonID, pi0/gamma separation, neutral/charged ID
+        - NoSpdPrs flag propagated to CaloPIDs configuration via CaloProcessor and CaloDigitsConf configured with [Ecal,Hcal] only 
+
+ -  src/CaloMergedPi0AlgAlg :  protect against accessing Prs/Spd digits when they don't exist
 
 !========================= CaloReco v5r16p1 2013-06-03 =======================
 ! 2013-05-27 - Marco Cattaneo

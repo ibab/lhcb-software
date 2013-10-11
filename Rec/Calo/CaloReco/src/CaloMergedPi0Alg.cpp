@@ -377,11 +377,11 @@ StatusCode CaloMergedPi0Alg::execute()
 
   // SpdHit in front of Cluster Seed (new 09/02/2004)
   // (moved from internal loop)
-  LHCb::CaloDigits* spds = get<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Spd );
+  LHCb::CaloDigits* spds = getIfExists<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Spd );
 
   // Prs deposit in front of Cluster Seed (new 09/02/2004)
   // (moved from internal loop)
-  LHCb::CaloDigits* prss = get<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Prs );
+  LHCb::CaloDigits* prss = getIfExists<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Prs );
 
   // added by V.B 2004-10-27: estimator of cluster transverse energy
   LHCb::CaloDataFunctor::EnergyTransverse<const LHCb::CaloCluster*,const DeCalorimeter*> eT ( m_det ) ;
@@ -427,11 +427,11 @@ StatusCode CaloMergedPi0Alg::execute()
       debug() << " get Spd/Prs digits " << endmsg;
     }
     double SpdHit = 0 ;
-    const LHCb::CaloDigit* spddigit = spds->object( seed->key() );
-    if( 0 != spddigit ) { SpdHit = spddigit->e() ; }
+    const LHCb::CaloDigit* spddigit = (spds == NULL) ? NULL : spds->object( seed->key() );
+    if( NULL != spddigit ) { SpdHit = spddigit->e() ; }
     double PrsDep = 0 ;
-    const LHCb::CaloDigit* prsdigit = prss->object( seed->key() );
-    if( 0 != prsdigit ) { PrsDep = prsdigit->e() ; }
+    const LHCb::CaloDigit* prsdigit = (prss == NULL)?  NULL : prss->object( seed->key() );
+    if( NULL != prsdigit ) { PrsDep = prsdigit->e() ; }
 
     if ( msgLevel ( MSG::DEBUG ) ){
       debug() << " -----> Find SubSeed " << endmsg;

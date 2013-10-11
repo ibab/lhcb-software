@@ -68,7 +68,7 @@ class CaloRecoConf(LHCbConfigurableUser):
                                    'Photons'      ,
                                    'MergedPi0s'   ,
                                    'SplitPhotons' , # the same action as 'MergedPi0s'
-                                   'Electrons'    ] ##
+                                   'Electrons'    ] #
         , 'ForceDigits'         : True       # Force digits recontruction to be run with Clusters
         , 'CreateADCs'          : False      # Create Calo-ADCs
         , 'UseTracks'           : True       # Use Tracks as Neutrality Criteria 
@@ -92,6 +92,8 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'MergedPi0Pt'         : 2.*GeV
         , 'ClusterPt'           : 0.
         , 'MakeExternalClustersWithTag': ''
+        , 'NoSpdPrs'            : False
+        ,'Verbose'              : False
         ##
         }
     ## documentation lines 
@@ -126,6 +128,8 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'MergedPi0Pt'        : """ MergedPi0 Pt cut """
         , 'ClusterPt'          : """ Cluster Pt """
         , 'MakeExternalClustersWithTag'   :""" Build tagged external clusters in the sequence (only if ExternalClusters != '')"""
+        , 'NoSpdPrs'           : """ Upgrade configuration without Prs/Spd - implies UsePrs/Spd = False """
+        ,'Verbose'             : """ Verbose printout"""
         ##
     }
     
@@ -139,21 +143,16 @@ class CaloRecoConf(LHCbConfigurableUser):
         """
         Configure processing of Digits
         
-        """
-        from CaloDAQ.CaloDigits import caloDigits
-       
-	myCaloDigitConf = CaloDigitConf(self._instanceName(CaloDigitConf))
-	myCaloDigitConf.Context 		= "Offline"
-	myCaloDigitConf.OutputLevel 		= self.getProp ('OutputLevel'       )
-	myCaloDigitConf.EnableDigitsOnDemand 	= self.getProp ('EnableRecoOnDemand')
-	myCaloDigitConf.CreateADCs		= self.getProp ('CreateADCs'        ) 
-
-        return caloDigits (
-            'Offline'                        ,  
-            #self.getProp ('Context'           ) ,
-            self.getProp ('EnableRecoOnDemand') ,
-            self.getProp ('CreateADCs'        ) 
-            )
+        """        
+	digitConf = CaloDigitConf()
+	digitConf.Context 		= "Offline"
+	digitConf.OutputLevel 		= self.getProp ('OutputLevel'       )
+	digitConf.EnableDigitsOnDemand 	= self.getProp ('EnableRecoOnDemand')
+	digitConf.CreateADCs		= self.getProp ('CreateADCs'        )
+        digitConf.Verbose               = self.getProp ('Verbose'           )
+        if self.getProp('NoSpdPrs') :
+            digitConf.Detectors = ['Ecal','Hcal']            
+        return digitConf.digits()
     
     ## Configure reconstruction of Ecal Clusters
     def clusters ( self ) :
@@ -165,14 +164,15 @@ class CaloRecoConf(LHCbConfigurableUser):
                               self.getProp('ClusterPt')           ,
                               self.getProp('FastReco')            ,
                               self.getProp('ExternalClusters')    ,
-                              self.getProp('MakeExternalClustersWithTag')
-                             )
+                              self.getProp('MakeExternalClustersWithTag'),
+                              self.getProp('NoSpdPrs')
+                              )
+        _log.info ('Configured Ecal Clusters Reco : %s ' % cmp.name()  )
         
         if self.getProp ( 'ForceDigits' ) :
             ## insert digits into Cluster Sequence
             cmp.Members = [ self.digits() ] + cmp.Members 
             
-        _log.info ('Configured Ecal Clusters  Reco : %s ' % cmp.name()  )
         ##
         return cmp
     
@@ -205,13 +205,14 @@ class CaloRecoConf(LHCbConfigurableUser):
                              uSpd,
                              uPrs,
                              _elocs,
-                             self.getProp ( 'NeutralID' ) ,
+                             self.getProp( 'NeutralID' ) ,
                              self.getProp('PhotonPt')            ,
                              self.getProp('FastReco')            ,
-                             self.getProp('ExternalClusters')     
+                             self.getProp('ExternalClusters')    ,
+                             noSpdPrs=self.getProp('NoSpdPrs')
                              )
-        _log.info ('Configured Single Photons Reco : %s ' % cmp.name()  )
         ##
+        _log.info ('Configured Single Photons Reco : %s ' % cmp.name()  )
         return cmp
 
     ## Configure recontruction of Electrons
@@ -233,7 +234,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         uTracks = self.getProp ( 'UseTracksE'      ) 
         uSpd = self.getProp ( 'UseSpdE'            ) 
         uPrs = self.getProp ( 'UsePrsE'            ) 
-        if self.getProp('CaloStandalone') :
+        if self.getProp('CaloStandalone') and not self.getProp( 'NoSpdPrs') :
             uTracks = False
             uSpd    = True
             uPrs    = True
@@ -247,12 +248,13 @@ class CaloRecoConf(LHCbConfigurableUser):
                              _elocs ,
                              self.getProp('ElectronPt')          ,
                              self.getProp('FastReco')            ,
-                             self.getProp('ExternalClusters')
+                             self.getProp('ExternalClusters'),
+                             self.getProp('NoSpdPrs')
                              )
 
 
-        _log.info ('Configured Electron Hypos Reco : %s ' % cmp.name()  )
         ##
+        _log.info ('Configured Electron Hypos Reco : %s ' % cmp.name()  )
         return cmp
 
     ## Configure recontruction of Merged Pi0
@@ -273,12 +275,13 @@ class CaloRecoConf(LHCbConfigurableUser):
                               uTracks,
                               self.getProp('MergedPi0Pt')         ,
                               self.getProp('FastReco')            ,
-                              self.getProp('ExternalClusters')
+                              self.getProp('ExternalClusters'),
+                              self.getProp('NoSpdPrs')
                               )
         
 
-        _log.info ('Configured Merged Pi0     Reco : %s ' % cmp.name()  )
         ##
+        _log.info ('Configured Merged Pi0 Reco : %s ' % cmp.name()  )
         return cmp
     
     ## Check the configuration
@@ -289,16 +292,23 @@ class CaloRecoConf(LHCbConfigurableUser):
         _log.debug('Configuration is not checked !')
 
         
+    def printConf(self,verbose=False) :
+        if self.getProp('NoSpdPrs') :
+            _log.info("CaloRecoConf : upgrade configuration without Spd/Prs")
+        if self.getProp('Verbose') or verbose:
+            _log.info ( self )
+
+
     ## Calorimeter Reconstruction Configuration
     def applyConf ( self ) :
         """
         Calorimeter Reconstruction Configuration
         """
         
-        self.checkConfiguration()
+        self.printConf()
         
-        _log.info ('Apply Calo Reco Configuration ')
-        _log.info ( self )
+        _log.info ('Apply CaloRecoConf configuration for %s ',  self.getProp('RecList'))
+
 
         recList = self.getProp ( 'RecList') 
         skipNeutrals  = self.getProp('SkipNeutrals')
@@ -314,12 +324,30 @@ class CaloRecoConf(LHCbConfigurableUser):
             self.digits()
             self.clusters()
             self.photons()
-            self.mergedPi0s();
-            self.electrons();
+            self.mergedPi0s()
+            self.electrons()
+
+        if self.getProp('NoSpdPrs') : 
+            self.setProp('UseSpd',False)
+            self.setProp('UsePrs',False)
+            self.setProp('UseSpdE',False)
+            self.setProp('UsePrsE',False)
+            # configure the public getter tool
+            from Configurables import ToolSvc,CaloGetterTool
+            tsvc=ToolSvc()
+            tsvc.addTool(CaloGetterTool,name="CaloGetter")
+            tsvc.CaloGetter.DetectorMask=12
+
+            
 
         # add only the requested components to the sequence
-        if 'Digits'     in recList : addAlgs ( seq , self.digits() ) 
-        if 'Clusters'   in recList : addAlgs ( seq , self.clusters() ) 
+        if 'Digits'     in recList :
+            addAlgs ( seq , self.digits() ) 
+            CaloDigitConf().printConf()
+        if 'Clusters'   in recList :
+            addAlgs ( seq , self.clusters() ) 
+            if 'Digits' not in recList :
+                CaloDigitConf().printConf()
         if not skipNeutrals :
             if 'Photons'    in recList : addAlgs ( seq , self.photons() )
             if 'MergedPi0s' in recList or 'SplitPhotons' in recList : addAlgs ( seq , self.mergedPi0s() )
@@ -334,13 +362,17 @@ class CaloRecoConf(LHCbConfigurableUser):
             main = self.getProp('Sequence') 
             addAlgs  ( main , seq ) 
             _log.info ('Configure main Calo Reco Sequence  : %s '% main.name() )
-            _log.info ( prntCmp ( main ) ) 
+            if self.getProp('Verbose') :
+                _log.info ( prntCmp ( main ) ) 
         else :
             _log.info ('Configure Calorimeter Reco blocks ' )            
-            _log.info ( prntCmp ( seq  ) )
+            if self.getProp('Verbose') :
+                _log.info ( prntCmp ( seq  ) )
 
         if self.getProp( 'EnableRecoOnDemand' )  :
-            _log.info ( printOnDemand () ) 
+            _log.info("CaloReco onDemand enabled")
+            if self.getProp('Verbose') :
+                _log.info ( printOnDemand () ) 
             
 # =============================================================================
 ## @class HltCaloRecoConf
@@ -387,7 +419,7 @@ class OffLineCaloRecoConf(CaloRecoConf):
 
 
 # =============================================================================
-class CaloProcessor( CaloRecoConf ):
+class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
     """
     Class/Configurable to define the Full calorimeter reconstruction
     """
@@ -419,7 +451,7 @@ class CaloProcessor( CaloRecoConf ):
                                   'Chi2',
                                   'DLL',
                                   'NeutralPID'
-                                  ] # List of PID fragments to be included (alternative full sequence per technique : [ 'EcalPID', 'BremPID', 'HcalPID', 'PrsPID', 'SpdPID', 'NeutralPID' ] )
+                                  ] # List of PID fragments to be included (alternative full sequence per technique : [ 'EcalPID', 'BremPID', 'HcalPID','PrsPID', 'SpdPID', 'NeutralPID' ] )
         }
     
     ## used configurables 
@@ -429,41 +461,26 @@ class CaloProcessor( CaloRecoConf ):
 	)
 
 
-    ## Configure recontruction of Calo Charged  PIDs (copy-past from CaloPIDs)
     def caloPIDs ( self ) :
 
-        from CaloPIDs.PIDs import caloPIDs
-        from CaloPIDs.PIDs import referencePIDs
-
-
-        ## confuse configurable on purpose 
-        _locs = self.getProp ( 'TrackLocations'    )
-        _elocs = []
-        for l in _locs :
-            if l.find( '/Event/' )  != 0 :
-                l = '/Event/' + l
-            _elocs.append( l )
-
-
-
-        cmp = caloPIDs ( self.getProp( 'Context'            )  ,
-                         self.getProp( 'EnableOnDemand' )  ,
-                         self.getProp('PIDList'),
-                         _elocs,
-                         self.getProp('SkipNeutrals'),
-                         self.getProp('SkipCharged'),
-                         self.getProp('FastReco'),
-                         self.getProp('ExternalClusters'),
-                         self.getName()
-                         ) 
-        referencePIDs( self.getProp('DataType') )
-       
-        log.info ('Configured Calo PIDs           : %s ' % cmp.name()  ) 
+        pidConf=CaloPIDsConf('For'+self.getName())
+        pidConf.Verbose=self.getProp('Verbose')
+        pidConf.Context=self.getProp( 'Context')  
+        pidConf.EnablePIDsOnDemand=self.getProp( 'EnableOnDemand' )  
+        pidConf.PIDList=self.getProp('PIDList')
+        pidConf.TrackLocations=self.getProp('TrackLocations')
+        pidConf.SkipNeutrals=self.getProp('SkipNeutrals')
+        pidConf.SkipCharged=self.getProp('SkipCharged')
+        pidConf.FastPID=self.getProp('FastReco')
+        pidConf.ExternalClusters=self.getProp('ExternalClusters')
+        pidConf.NoSpdPrs=self.getProp('NoSpdPrs')
+        pidConf.DataType= self.getProp('DataType')        
+        pidConf.printConf()
         ##
-        return cmp 
+        return pidConf.caloPIDs()
 
     def caloSequence ( self,   tracks=[]  ) :
-        seq  = GaudiSequencer ( 'CaloRecoPIDs' + self.getName() )
+        seq  = GaudiSequencer ( self.getName() + 'CaloSeq'   )
         seq.Members[:] = []
         self.setProp("CaloSequencer", seq)
         context = self.getProp('Context')
@@ -471,16 +488,19 @@ class CaloProcessor( CaloRecoConf ):
             self.setProp("Context", self.getName() )        
         if tracks != [] :
             self.setProp("TrackLocations", tracks)
+            _log.info("CaloProcessor.caloSequence : update TrackLocation %s: " % tracks)
+            
         self.applyConf()
         return seq
     def protoSequence ( self,   tracks=[] , protoPrefix = '' ) :
-        seq  = GaudiSequencer ( 'CaloProtoPUpdate' + self.getName() )
+        seq  = GaudiSequencer (self.getName() + 'ProtoPUpdateSeq'   )
         seq.Members[:] = []
         self.setProp("ProtoSequencer", seq)
         if self.getProp('Context') == '' : 
             self.setProp("Context", self.getName() )
         if tracks != [] :
             self.setProp("TrackLocations", tracks)        
+            _log.info("CaloProcessor.protoSequence : update TrackLocation %s: " % tracks)
         if protoPrefix != '' :
             nloc = protoPrefix + '/Neutrals'
             cloc = protoPrefix + '/Charged'
@@ -488,48 +508,55 @@ class CaloProcessor( CaloRecoConf ):
             cloc = cloc.replace('//', '/')
             self.setProp("ChargedProtoLocation",cloc)
             self.setProp("NeutralProtoLocation",nloc)            
+            _log.info("CaloProcessor.protoSequence : update protoP Location with prefix %s: " % protoPrefix)
         self.applyConf()
         return seq
     def chargedProtoSequence ( self,   tracks=[] , protoPrefix = '' ) :
-        seq  = GaudiSequencer ( 'CaloChargedProtoPUpdate' + self.getName() )
+        seq  = GaudiSequencer ( self.getName() + 'ChargedProtoPUpdateSeq'  )
         seq.Members[:] = []
         self.setProp("ChargedProtoSequencer", seq)
         if self.getProp('Context') == '' : 
             self.setProp("Context", self.getName() )
         if tracks != [] :
             self.setProp("TrackLocations", tracks)        
+            _log.info("CaloProcessor.chargedProtoSequence : update TrackLocation %s: " % tracks)
         if protoPrefix != '' :
             cloc = protoPrefix
             if protoPrefix.find('/Charged') == -1 :
                 cloc = protoPrefix + '/Charged'
                 cloc = cloc.replace('//', '/')
             self.setProp("ChargedProtoLocation",cloc)
+            _log.info("CaloProcessor.chargedProtoSequence : update protoP Location with prefix %s: " % protoPrefix)
+
         self.applyConf()
         return seq
     def neutralProtoSequence ( self,   tracks=[] , protoPrefix = '' ) :
-        seq  = GaudiSequencer ( 'CaloNeutralProtoPUpdate' + self.getName() )
+        seq  = GaudiSequencer (  self.getName() + 'NeutralProtoPUpdateSeq' )
         seq.Members[:] = []
         self.setProp("NeutralProtoSequencer", seq) 
         if self.getProp('Context') == '' : 
             self.setProp("Context", self.getName() )
         if tracks != [] :
             self.setProp("TrackLocations", tracks)        
+            _log.info("CaloProcessor.neutralProtoSequence : update TrackLocation %s: " % tracks)
         if protoPrefix != '' :
             nloc = protoPrefix
             if protoPrefix.find('/Neutrals') == -1 :
                 nloc = protoPrefix + '/Neutrals'
                 nloc = nloc.replace('//', '/')
             self.setProp("NeutralProtoLocation",nloc)            
+            _log.info("CaloProcessor.neutralProtoSequence : update protoP Location with prefix %s: " % protoPrefix)
         self.applyConf()
         return seq
     def sequence ( self,   tracks=[], protoPrefix = ''  ) :
-        seq  = GaudiSequencer ( 'CaloProcessor' + self.getName() )
+        seq  = GaudiSequencer ( self.getName() + 'FullSeq'   )
         seq.Members[:] = []
         self.setProp("Sequence", seq)
         if self.getProp('Context') == '' : 
             self.setProp("Context", self.getName() )
         if tracks != [] :
             self.setProp("TrackLocations", tracks)        
+            _log.info("CaloProcessor.sequence : update TrackLocation %s: " % tracks)
         if protoPrefix != '' :
             nloc = protoPrefix + '/Neutrals'
             cloc = protoPrefix + '/Charged'
@@ -537,14 +564,23 @@ class CaloProcessor( CaloRecoConf ):
             cloc = cloc.replace('//', '/')
             self.setProp("ChargedProtoLocation",cloc)
             self.setProp("NeutralProtoLocation",nloc)            
+            _log.info("CaloProcessor.sequence : update protoP Location with prefix %s: " % protoPrefix)
         self.applyConf()
         return seq
 
+
+    def printConf( self,verbose=False) :
+        if self.getProp('NoSpdPrs') :
+            _log.info("CaloProcessor : upgrade configuration without Spd/Prs")
+        if self.getProp('Verbose') or verbose:
+            _log.info ( self )
+
         
-    def applyConf ( self ) :
+    def applyConf ( self) :        
+        _log.info ('Apply CaloProcessor configuration for %s and %s',  self.getProp('RecList'), self.getProp('PIDList'))
         
-        _log.info ('Apply configuration for  full calo processing ')
-        _log.info ( self )
+        self.printConf()
+            
         from Configurables import ( GaudiSequencer,
                                     ChargedProtoParticleAddEcalInfo,
                                     ChargedProtoParticleAddBremInfo,
@@ -560,6 +596,21 @@ class CaloProcessor( CaloRecoConf ):
 
         if self.getName() == 'CaloProcessor' and ( self.getProp('Context') == '' or self.getProp('Context') == 'CaloProcessor' ) :
             self.setProp('Context','Offline') # default is Offline is neither context nor name is specified
+
+        # prepare the NoSpdPrs configuration
+        if self.getProp('NoSpdPrs') : 
+            self.setProp('UseSpd',False)
+            self.setProp('UsePrs',False)
+            self.setProp('UseSpdE',False)
+            self.setProp('UsePrsE',False)
+            # configure the public getter tool
+            from Configurables import ToolSvc,CaloGetterTool
+            tsvc=ToolSvc()
+            tsvc.addTool(CaloGetterTool,name="CaloGetter")
+            tsvc.CaloGetter.DetectorMask=12
+
+
+
 
         # overwrite Reco & PID onDemand
         dod = self.getProp('EnableOnDemand')
@@ -578,8 +629,9 @@ class CaloProcessor( CaloRecoConf ):
         skipCharged  = self.getProp('SkipCharged')
         context = self.getProp('Context')
 
+
         # CaloReco sequence
-        recoSeq = getAlgo( GaudiSequencer , "CaloReco"+self.getName() , context ) 
+        recoSeq = getAlgo( GaudiSequencer , "CaloRecoFor"+self.getName() , context ) 
         recoSeq.Members[:] = []
         recList = self.getProp ( 'RecList')         
 
@@ -592,13 +644,19 @@ class CaloProcessor( CaloRecoConf ):
             dig=self.digits()
             clu=self.clusters()
             pho=self.photons()
-            mer=self.mergedPi0s();
-            ele=self.electrons();
+            mer=self.mergedPi0s()
+            ele=self.electrons()
 
 
         #  add only the requested components to the sequence
-	if 'Digits'     in recList : addAlgs ( recoSeq , self.digits() ) 
-        if 'Clusters'   in recList : addAlgs ( recoSeq , self.clusters() ) 
+	if 'Digits'     in recList :
+            addAlgs ( recoSeq , self.digits() ) 
+            CaloDigitConf().printConf()
+        if 'Clusters'   in recList :
+            addAlgs ( recoSeq , self.clusters() ) 
+            if 'Digits' not in recList :
+                CaloDigitConf().printConf()
+
         if not skipNeutrals :
             if 'Photons'    in recList : addAlgs ( recoSeq , self.photons() )
             if 'MergedPi0s' in recList or 'SplitPhotons' in recList : addAlgs ( recoSeq , self.mergedPi0s() )
@@ -661,8 +719,9 @@ class CaloProcessor( CaloRecoConf ):
             ecal = getAlgo( ChargedProtoParticleAddEcalInfo,"ChargedProtoPAddEcal", context)
             brem = getAlgo( ChargedProtoParticleAddBremInfo,"ChargedProtoPAddBrem", context)
             hcal = getAlgo( ChargedProtoParticleAddHcalInfo,"ChargedProtoPAddHcal", context)
-            prs  = getAlgo( ChargedProtoParticleAddPrsInfo ,"ChargedProtoPAddPrs" , context)
-            spd  = getAlgo( ChargedProtoParticleAddSpdInfo ,"ChargedProtoPAddSpd" , context)            
+            if not self.getProp('NoSpdPrs') :
+                prs  = getAlgo( ChargedProtoParticleAddPrsInfo ,"ChargedProtoPAddPrs" , context)
+                spd  = getAlgo( ChargedProtoParticleAddSpdInfo ,"ChargedProtoPAddSpd" , context)            
             comb = getAlgo( ChargedProtoCombineDLLsAlg, "ChargedProtoPCombineDLLs", context)
 
             # ChargedProtoP Maker on demand (not in any sequencer)  ####
@@ -707,14 +766,20 @@ class CaloProcessor( CaloRecoConf ):
                 ecal.ProtoParticleLocation = cloc
                 brem.ProtoParticleLocation = cloc
                 hcal.ProtoParticleLocation = cloc
-                prs.ProtoParticleLocation = cloc
-                spd.ProtoParticleLocation = cloc            
+                if not self.getProp('NoSpdPrs') :
+                    prs.ProtoParticleLocation = cloc
+                    spd.ProtoParticleLocation = cloc            
                 comb.ProtoParticleLocation = cloc            
             # Fill the sequence
-            cpSeq = getAlgo( GaudiSequencer , "ChargedProtoPCaloUpdateSeq", context )
-            cpSeq.Members = [ ecal,brem,hcal,prs,spd,comb ]
+            cpSeq = getAlgo( GaudiSequencer , "ChargedProtoPCaloUpdateSeq", context )            
+            cpSeq.Members = [ ecal,brem,hcal ]
+            if not self.getProp('NoSpdPrs') :
+                cpSeq.Members += [ prs,spd ]
+            cpSeq.Members += [ comb ]
             addAlgs(protoSeq , cpSeq )
-            addAlgs(cProtoSeq, [ecal,brem,hcal,prs,spd,comb] )
+            addAlgs(cProtoSeq, cpSeq.Members )
+
+
 
         # NeutralProtoParticleProtoP components        
         if not self.getProp('SkipNeutrals') :
@@ -751,32 +816,51 @@ class CaloProcessor( CaloRecoConf ):
             main = self.getProp('Sequence') 
             main.Members[:]=[]
             addAlgs  ( main , fullSeq ) 
-            _log.info ('Configure main Calo processing Sequence  : %s '% main.name() )
-            _log.info ( prntCmp ( main ) ) 
+            _log.info ('Configure full sequence %s with '% main.name() )
+            _log.info ('    Reco : %s '% self.getProp('RecList'))
+            _log.info ('    PIDs : %s '% self.getProp('PIDList'))
+            _log.info ('    and ProtoParticle update')
+            if self.getProp('Verbose') :
+                _log.info ( prntCmp ( main ) ) 
 
         if self.isPropertySet('CaloSequencer') :
             calo = self.getProp('CaloSequencer') 
             calo.Members[:]=[]
             addAlgs  ( calo , caloSeq ) 
+            _log.info ('Configure caloSequencer  : %s '% calo.name() )
+            if self.getProp('Verbose') :
+                _log.info ( prntCmp ( calo ) ) 
 
         if self.isPropertySet('ProtoSequencer') :
             proto = self.getProp('ProtoSequencer') 
             proto.Members[:]=[]
             addAlgs  ( proto , protoSeq ) 
+            _log.info ('Configure protoSequencer  : %s '% proto.name() )
+            if self.getProp('Verbose') :
+                _log.info ( prntCmp ( proto ) ) 
 
 
         if self.isPropertySet('ChargedProtoSequencer') :
             cproto = self.getProp('ChargedProtoSequencer') 
             cproto.Members[:]=[]
             addAlgs  ( cproto , cProtoSeq ) 
+            _log.info ('Configure chargedProtoSequencer  : %s '% cproto.name() )
+            if self.getProp('Verbose') :
+                _log.info ( prntCmp ( cproto ) ) 
 
         if self.isPropertySet('NeutralProtoSequencer') :
             nproto = self.getProp('NeutralProtoSequencer') 
             nproto.Members[:]=[]
             addAlgs  ( nproto , nProtoSeq ) 
+            _log.info ('Configure neutralProtoSequencer  : %s '% nproto.name() )
+            if self.getProp('Verbose') :
+                _log.info ( prntCmp ( nproto ) ) 
 
         if self.getProp( 'EnableOnDemand' )  :
-            _log.info ( printOnDemand () ) 
+            _log.info("CaloProcessor onDemand enabled")
+            if self.getProp('Verbose') :
+                _log.info ( printOnDemand () ) 
+
 
 #####################################
 class CaloLines(LHCbConfigurableUser):
@@ -804,7 +888,8 @@ class CaloLines(LHCbConfigurableUser):
         'Sequencer'          : None,
         'OutputLevel'        : INFO,
         'HighEtProtoPPrefix' : '',
-        'LowEtProtoPPrefix'  : ''
+        'LowEtProtoPPrefix'  : '',
+        'NoSpdPrs'           : False
         }
 
     
@@ -877,6 +962,7 @@ class CaloLines(LHCbConfigurableUser):
                                ,ClusterPt = self.getProp('HighEt')*fac
                                ,PhotonPt = self.getProp('HighEt')
                                ,MakeExternalClustersWithTag = tagHighP
+                               ,noSpdPrs=self.getProp('NoSpdPrs')
                                )
             
             addAlgs( caloLines, hp.caloSequence(tracks=tracks) )
@@ -900,6 +986,7 @@ class CaloLines(LHCbConfigurableUser):
                                ,ClusterPt = self.getProp('LowEt')*fac
                                ,PhotonPt = self.getProp('LowEt')
                                ,MakeExternalClustersWithTag = tagLowP
+                               ,noSpdPrs=self.getProp('NoSpdPrs')
                                )
             addAlgs( caloLines , lp.caloSequence(tracks=tracks) )
             if self.getProp('LowEtProtoPPrefix') == '' :
@@ -923,6 +1010,7 @@ class CaloLines(LHCbConfigurableUser):
                                ,SkipNeutrals = True
                                ,ProtoOnDemand = pdod
                                ,MakeExternalClustersWithTag = tagLowE
+                               ,noSpdPrs=self.getProp('NoSpdPrs')
                                )
             addAlgs( caloLines , le.caloSequence(tracks=tracks))
             if self.getProp('LowEtProtoPPrefix') == '' :
