@@ -20,7 +20,7 @@ use Checkpointing       v0r14    Online
 macro CondDBServer_use "CondDBServer v1r4 Online" target-i686 ""
 use $(CondDBServer_use)
 use CondDBServer        v1r4     Online
-use Controller          v0r7     Online
+use Controller          v0r8     Online
 use ControllerTests     v0r2     Online
 use DailyReport         v1r2     Online
 use DefHLTUtils         v1r6     Online
@@ -29,8 +29,8 @@ use FarmConfig          v0r2     Online
 use FarmMonitor         v2r12    Online
 use Gaucho              v7r29    Online
 use GauchoAppl          v1r8     Online
-use GaudiCheckpointing  v0r11    Online
-use GaudiOnline         v2r67    Online
+use GaudiCheckpointing  v0r12    Online
+use GaudiOnline         v2r68    Online
 use GaudiRootCnvTests   v1r10    Online
 use GaudiSerialize      v0r11    Online
 use GaudiUPI            v1r16    Online
@@ -38,11 +38,11 @@ use HistDBPython        v1r7     Online
 use InsertDB            v1r9     Online
 use MBMDump             v1r15    Online
 use OMAlib              v4r2     Online
-use OnlineBase          v1r18    Online
+use OnlineBase          v1r19    Online
 use OnlineHistDB        v8r1     Online
 use OnlineKernel        v2r13    Online
 use OnlineTools         v1r4     Online
-use OnlineTasks         v1r51    Online
+use OnlineTasks         v1r52    Online
 use Presenter           v3r7     Online
 use PresenterDoc        v1r0     Online
 use PyDIM               v2r12    Online

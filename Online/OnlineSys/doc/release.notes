@@ -6,7 +6,18 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
-<H1><A NAME=v5r0>2013-08-13 OnlineSys v5r3</A></H1>
+<H1><A NAME=v5r4>2013-08-13 OnlineSys v5r4</A></H1>
+<PRE>
+  Use new Gaudi v23r10
+  Updated/new packages:
+  Controller          v0r8     Online
+  GaudiCheckpointing  v0r12    Online
+  GaudiOnline         v2r68    Online
+  OnlineBase          v1r19    Online
+  OnlineTasks         v1r52    Online
+</PRE>
+
+<H1><A NAME=v5r3>2013-08-13 OnlineSys v5r3</A></H1>
 <PRE>
   Bug fix release of v5r2.
   Use new Gaudi v23r9
@@ -23,7 +34,7 @@
 
 </PRE>
 
-<H1><A NAME=v5r0>2013-07-13 OnlineSys v5r2</A></H1>
+<H1><A NAME=v5r2>2013-07-13 OnlineSys v5r2</A></H1>
 <PRE>
   Bug fix release of v5r1.
   Use new Gaudi v23r8
@@ -38,7 +49,7 @@
       UPI                 v1r23    Online
 </PRE>
 
-<H1><A NAME=v5r0>2013-07-03 OnlineSys v5r1</A></H1>
+<H1><A NAME=v5r1>2013-07-03 OnlineSys v5r1</A></H1>
 <PRE>
   Bug fix release of v5r0.
   New package Online/FarmConfig.
