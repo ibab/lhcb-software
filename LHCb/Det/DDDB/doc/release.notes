@@ -4,6 +4,10 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2013-10-11 - Chris Jones
+ - Fix typo in default DQFLAGS tag for 2011 data
+     "dq-2013086-1" -> "dq-20130806-1"
+
 !========================= DDDB v1r64 2013-09-30 =========================
 ! 2013-09-26 - Marco Cattaneo
  - Update default database tags to the latest ones:
