@@ -53,7 +53,9 @@ public:
   
   // update
   void update();
+  int detectorsMask(){return m_detMask;}
   
+    
   
   // setters
   void addToDigits ( const std::string&loc,bool clear )
@@ -145,6 +147,7 @@ private:
   std::vector<std::string> m_digiLoc;
   std::vector<std::string> m_clusLoc;
   std::vector<std::string> m_hypoLoc;
+  int m_detMask;
 };
 // ============================================================================
 // The END

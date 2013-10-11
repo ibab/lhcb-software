@@ -34,8 +34,8 @@ GammaPi0SeparationTool::GammaPi0SeparationTool( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_ecal(0),
-    m_prs(0),
+    m_ecal(NULL),
+    m_prs(NULL),
     m_vertex(),
     m_planePrs(),
     m_data(){
@@ -58,14 +58,12 @@ StatusCode GammaPi0SeparationTool::initialize() {
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
   /// Retrieve geometry of detector
-  m_ecal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
-  if( 0 == m_ecal ) { return StatusCode::FAILURE; }
-  m_prs = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
-  if( 0 == m_prs ) { return StatusCode::FAILURE; }
+  m_ecal = getDetIfExists<DeCalorimeter>( DeCalorimeterLocation::Ecal );
+  m_prs  = getDetIfExists<DeCalorimeter>( DeCalorimeterLocation::Prs );
 
   // IP and prs middle plane
   m_vertex = Gaudi::XYZPoint(0.,0.,0.);
-  m_planePrs = m_prs->plane(CaloPlane::Middle);
+  if(m_prs)m_planePrs = m_prs->plane(CaloPlane::Middle);
 
   // TMVA discriminant
   std::vector<std::string> inputVars;
@@ -119,9 +117,11 @@ double GammaPi0SeparationTool::isPhoton(const LHCb::CaloHypo* hypo){
     debug()<<"Inside isPhoton ------"<<endmsg;
   m_data.clear();
 
+  double tmva_output = -9999.;
+  if( NULL == m_prs || NULL==m_ecal)return tmva_output;
+
   double pt = LHCb::CaloMomentum(hypo).pt();
 
-  double tmva_output = -9999.;
   
   if (pt>m_minPt){  
 
@@ -283,7 +283,12 @@ void GammaPi0SeparationTool::PrsVariables(const LHCb::CaloCluster *cluster,
     debug() << "No Table container found at " << CaloDigitLocation::Prs << endreq;
     //return StatusCode::SUCCESS;
   }
-  CaloDigits* digitsPrs = get<CaloDigits>(CaloDigitLocation::Prs);
+  CaloDigits* digitsPrs = getIfExists<CaloDigits>(CaloDigitLocation::Prs);
+  if( NULL == digitsPrs ){
+    Warning("Data missing at "+CaloDigitLocation::Prs,StatusCode::SUCCESS).ignore();
+    return;
+  }
+  
 
   if( !(LHCb::CaloCellID() == cellPrs)  ) { // valid cell!
     // Determine which cells have a hit

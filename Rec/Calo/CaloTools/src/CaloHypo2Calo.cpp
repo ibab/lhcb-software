@@ -76,6 +76,7 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(const LHCb::CaloHypo
   LHCb::CaloCellID seedID = cluster->seed();
   std::string fromCalo = CaloCellCode::CaloNameFromNum( seedID.calo() );
   if( toCalo != m_toCalo || fromCalo != m_fromCalo)setCalos(fromCalo,toCalo);
+  if( !m_ok )return m_cells;
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "Cluster seed " << seedID << " " << m_fromDet->cellCenter( seedID ) << endmsg;
 
@@ -108,7 +109,8 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(const LHCb::CaloClus
   LHCb::CaloCellID seedID = fromCluster.seed();
   std::string fromCalo = CaloCellCode::CaloNameFromNum( seedID.calo() );
   if( toCalo != m_toCalo || fromCalo != m_fromCalo)setCalos(fromCalo,toCalo);
-
+  if( !m_ok)return m_cells;
+  
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "-----  cluster energy " <<  fromCluster.e()<< " " << seedID << endmsg;
   m_neighbour.setDet ( m_fromDet );

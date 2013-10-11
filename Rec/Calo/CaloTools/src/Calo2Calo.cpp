@@ -42,6 +42,7 @@ Calo2Calo::Calo2Calo( const std::string& type,
   , m_count(0)
   , m_fromSize(0.)
   , m_toSize(0.)
+  , m_ok(true)
 {
   declareInterface<ICalo2Calo>(this);
   declareProperty("IdealGeometry", m_geo = true );
@@ -61,8 +62,8 @@ StatusCode Calo2Calo::initialize()
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "Initialize Calo2Calo tool " << endmsg;
   
-  // get getter tool
-  m_getter = tool<ICaloGetterTool>("CaloGetterTool",m_getterName,this);
+  // get getter tool : public tool
+  m_getter = tool<ICaloGetterTool>("CaloGetterTool",m_getterName);
 
   // CaloDigit locations
   m_loc["Ecal"]=  LHCb::CaloAlgUtils::CaloDigitLocation( "Ecal" , context() );
@@ -70,24 +71,34 @@ StatusCode Calo2Calo::initialize()
   m_loc["Prs"] =  LHCb::CaloAlgUtils::CaloDigitLocation( "Prs"  , context() );
   m_loc["Spd"] =  LHCb::CaloAlgUtils::CaloDigitLocation( "Spd"  , context() );
   // DeCalorimeter* pointers
+  int mask=m_getter->detectorsMask();
   m_det["Ecal"]=getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
   m_det["Hcal"]=getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
-  m_det["Prs"]=getDet<DeCalorimeter>( DeCalorimeterLocation::Prs   );
-  m_det["Spd"]=getDet<DeCalorimeter>( DeCalorimeterLocation::Spd   );
+  m_det["Prs"]=((mask&2)==0) ? NULL : getDetIfExists<DeCalorimeter>( DeCalorimeterLocation::Prs   );
+  m_det["Spd"]=((mask&1)==0) ? NULL : getDetIfExists<DeCalorimeter>( DeCalorimeterLocation::Spd   );
   // CellSize reference (outer section)  Warning : factor 2 for Hcal
   m_refSize["Hcal"] = (*(m_det["Hcal"]->cellParams().begin())).size()/2.;
   m_refSize["Ecal"] = (*(m_det["Ecal"]->cellParams().begin())).size(); 
-  m_refSize["Prs"]  = (*(m_det["Prs"]->cellParams().begin())).size(); 
-  m_refSize["Spd"]  = (*(m_det["Spd"]->cellParams().begin())).size(); 
+  if(NULL != m_det["Prs"])m_refSize["Prs"]  = (*(m_det["Prs"]->cellParams().begin())).size(); 
+  if(NULL != m_det["Spd"])m_refSize["Spd"]  = (*(m_det["Spd"]->cellParams().begin())).size(); 
   // CaloPlanes
   m_plane["Hcal"] = m_det["Hcal"]->plane(CaloPlane::ShowerMax );
   m_plane["Ecal"] = m_det["Ecal"]->plane(CaloPlane::ShowerMax );
-  m_plane["Prs"]  = m_det["Prs"]->plane(CaloPlane::ShowerMax );
-  m_plane["Spd"]  = m_det["Spd"]->plane(CaloPlane::ShowerMax );
+  if(NULL != m_det["Prs"])m_plane["Prs"]  = m_det["Prs"]->plane(CaloPlane::ShowerMax );
+  if(NULL != m_det["Spd"])m_plane["Spd"]  = m_det["Spd"]->plane(CaloPlane::ShowerMax );  
 
   reset();
+
   if((m_fromCalo == "Hcal" || m_fromCalo == "Ecal" || m_fromCalo == "Prs" || m_fromCalo == "Spd" ) &&  
      (m_toCalo   == "Hcal" || m_toCalo   == "Ecal" || m_toCalo   == "Prs" || m_toCalo   == "Spd" ) )setCalos(m_fromCalo,m_toCalo);
+  // 
+
+  if( UNLIKELY( msgLevel(MSG::DEBUG) )){
+    if( NULL == m_det["Prs"] && (m_fromCalo=="Prs" || m_toCalo=="Prs"))
+      debug() << "Try to access non-existing Prs DetectorElement" << endmsg;
+    if( NULL == m_det["Spd"] && (m_fromCalo=="Spd" || m_toCalo=="Spd"))
+      debug() << "Try to access non-existing Spd DetectorElement" << endmsg;
+  }
   return sc;
 }
 
@@ -102,6 +113,20 @@ void Calo2Calo::setCalos
 ( const std::string& fromCalo ,
   const std::string& toCalo   )
 { 
+
+  m_ok       = true;
+  if( NULL == m_det["Prs"] && (fromCalo=="Prs" || toCalo=="Prs")){    
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug() <<"Try to access non-existing Prs DetectorElement"<<endmsg;    
+    m_ok = false;
+    return;
+  }
+  
+  if( NULL == m_det["Spd"] && (fromCalo=="Spd" || toCalo=="Spd")){
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug() <<"Try to access non-existing Spd DetectorElement"<<endmsg;    
+    m_ok=false;
+    return;
+  }
+
   m_fromCalo = fromCalo;
   m_toCalo   = toCalo;
   m_fromDet  = m_det[m_fromCalo];
@@ -110,18 +135,21 @@ void Calo2Calo::setCalos
   m_toPlane  = m_plane[m_toCalo];
   m_toSize   = m_refSize[m_toCalo];
   m_toLoc    = m_loc[ m_toCalo ];
+
+
+  
+
  }
 //=======================================================================================================
-const std::vector<LHCb::CaloCellID>& 
-Calo2Calo::cellIDs ( const LHCb::CaloCluster& fromCluster , 
-                     const std::string&       toCalo      )
-{
+const std::vector<LHCb::CaloCellID>& Calo2Calo::cellIDs ( const LHCb::CaloCluster& fromCluster , 
+                                                          const std::string&       toCalo      ){
   
   reset();
   LHCb::CaloCellID seedID = fromCluster.seed();
   std::string fromCalo = CaloCellCode::CaloNameFromNum( seedID.calo() );
   if( toCalo != m_toCalo || fromCalo != m_fromCalo)setCalos(fromCalo,toCalo);
-  
+  if( !m_ok )return m_cells;
+
   for(LHCb::CaloCluster::Entries::const_iterator ent = fromCluster.entries().begin();
       ent != fromCluster.entries().end(); ++ent)
   {
@@ -132,10 +160,10 @@ Calo2Calo::cellIDs ( const LHCb::CaloCluster& fromCluster ,
   return m_cells;
 }
 //=======================================================================================================
-const std::vector<LHCb::CaloCellID>& Calo2Calo::addCell
-( const LHCb::CaloCellID& id     , 
-  const std::string&      toCalo )
-{
+const std::vector<LHCb::CaloCellID>& Calo2Calo::addCell( const LHCb::CaloCellID& id     , 
+                                                         const std::string&      toCalo ){
+
+  if( !m_ok )return m_cells;
   // consistency check
   if( CaloCellCode::CaloNameFromNum(id.calo()) != m_toCalo || toCalo != m_toCalo ){
     Warning("CellID is not consistent with Calo setting").ignore();
@@ -167,12 +195,12 @@ const std::vector<LHCb::CaloCellID>& Calo2Calo::addCell
 //=======================================================================================================
 const std::vector<LHCb::CaloCellID>& 
 Calo2Calo::cellIDs ( const LHCb::CaloCellID& fromId , 
-                     const std::string&      toCalo , bool init )
-{
+                     const std::string&      toCalo , bool init ){
   
   if( init )reset();
   std::string fromCalo = CaloCellCode::CaloNameFromNum( fromId.calo() );
   if( toCalo != m_toCalo || fromCalo != m_fromCalo)setCalos(fromCalo,toCalo);
+  if( !m_ok )return m_cells;
 
   LHCb::CaloCellID toId = fromId;
   // ---- Assume ideal geometry : trivial mapping for detectors having the same granularity (Prs/Spd/Ecal)
@@ -235,51 +263,46 @@ Calo2Calo::cellIDs ( const LHCb::CaloCellID& fromId ,
 
 
 // Digits
-const std::vector<LHCb::CaloDigit*>& Calo2Calo::digits
-( const LHCb::CaloCellID& fromId ,
-  const std::string& toCalo )
-{  
+const std::vector<LHCb::CaloDigit*>& Calo2Calo::digits( const LHCb::CaloCellID& fromId ,
+                                                        const std::string& toCalo ){  
   m_digs     = m_getter->digits( m_toLoc );  
   cellIDs( fromId, toCalo ) ;
   return m_digits;
 }
-const std::vector<LHCb::CaloDigit*>& Calo2Calo::digits
-( const LHCb::CaloCluster& fromCluster , 
-  const std::string& toCalo ) 
-{  
+
+const std::vector<LHCb::CaloDigit*>& Calo2Calo::digits( const LHCb::CaloCluster& fromCluster , 
+                                                        const std::string& toCalo ){  
   m_digs     = m_getter->digits( m_toLoc );  
   cellIDs( fromCluster, toCalo);
   return m_digits;
 }  
+
 // Energy
-double Calo2Calo::energy 
-( const LHCb::CaloCellID& fromId , 
-  const std::string&      toCalo )
-{
+double Calo2Calo::energy( const LHCb::CaloCellID& fromId , 
+                          const std::string&      toCalo ){
   m_digs     = m_getter->digits( m_toLoc );  
   cellIDs ( fromId , toCalo );
   return m_energy;
 }
-int Calo2Calo::multiplicity
-( const LHCb::CaloCellID& fromId , 
-  const std::string&      toCalo )
-{
+
+
+int Calo2Calo::multiplicity( const LHCb::CaloCellID& fromId , 
+                             const std::string&      toCalo ){
   m_digs     = m_getter->digits( m_toLoc );  
   cellIDs(fromId, toCalo);
   return m_count;
 }
-double Calo2Calo::energy
-( const LHCb::CaloCluster& fromCluster , 
-  const std::string&  toCalo )
-{
+
+double Calo2Calo::energy( const LHCb::CaloCluster& fromCluster , 
+                          const std::string&  toCalo ){
   m_digs     = m_getter->digits( m_toLoc );  
   cellIDs(fromCluster, toCalo);
   return m_energy;
 }
-int Calo2Calo::multiplicity
-( const LHCb::CaloCluster& fromCluster , 
-  const std::string& toCalo )
-{
+
+
+int Calo2Calo::multiplicity( const LHCb::CaloCluster& fromCluster , 
+                             const std::string& toCalo ){
   m_digs     = m_getter->digits( m_toLoc );  
   cellIDs(fromCluster, toCalo);
   return m_count;
@@ -287,8 +310,7 @@ int Calo2Calo::multiplicity
 
 // ============================================================================
 // Additional method : isLocalMax
-bool Calo2Calo::isLocalMax ( const LHCb::CaloDigit& digit)
-{
+bool Calo2Calo::isLocalMax ( const LHCb::CaloDigit& digit){
   const LHCb::CaloCellID& id = digit.cellID();
   std::string    calo = CaloCellCode::CaloNameFromNum( id.calo() );
   DeCalorimeter* det  = m_det[ calo ];

@@ -86,6 +86,9 @@ protected:
 private:
   bool m_geo;
   std::string m_getterName;
+protected :
+  bool m_ok;
+  
 };
 #endif // CALO2CALO_H
 

@@ -27,8 +27,8 @@ DECLARE_TOOL_FACTORY( CaloGetterTool )
 CaloGetterTool::CaloGetterTool 
 ( const std::string& type,
   const std::string& name,
-  const IInterface* parent )
-  : GaudiTool ( type, name , parent ){
+  const IInterface* parent ): GaudiTool ( type, name , parent )
+  ,m_detMask(0xF){
   declareInterface<ICaloGetterTool>(this);
   declareProperty ( "GetDigits"        , m_digiUpd = true  ) ;
   declareProperty ( "GetClusters"      , m_clusUpd = false ) ;
@@ -37,21 +37,23 @@ CaloGetterTool::CaloGetterTool
   declareProperty ( "DigitLocations"   , m_digiLoc ) ;
   declareProperty ( "ClusterLocations" , m_clusLoc ) ;
   declareProperty ( "HypoLocations"    , m_hypoLoc ) ;
+  declareProperty ( "DetectorMask"     , m_detMask=0xF);
+
   
   std::string flag = context();
   if( std::string::npos != name.find ("HLT") || 
       std::string::npos != name.find ("Hlt") )flag="Hlt";
 
   // digits
-  m_digiLoc.push_back( LHCb::CaloAlgUtils::CaloDigitLocation( "Ecal" , flag ) ) ;
-  m_digiLoc.push_back( LHCb::CaloAlgUtils::CaloDigitLocation( "Hcal" , flag ) ) ;
-  m_digiLoc.push_back( LHCb::CaloAlgUtils::CaloDigitLocation( "Prs"  , flag ) ) ;
-  m_digiLoc.push_back( LHCb::CaloAlgUtils::CaloDigitLocation( "Spd"  , flag ) ) ;
+  if((m_detMask&8)!=0)m_digiLoc.push_back( LHCb::CaloAlgUtils::CaloDigitLocation( "Hcal" , flag ) ) ;
+  if((m_detMask&4)!=0)m_digiLoc.push_back( LHCb::CaloAlgUtils::CaloDigitLocation( "Ecal" , flag ) ) ;
+  if((m_detMask&2)!=0)m_digiLoc.push_back( LHCb::CaloAlgUtils::CaloDigitLocation( "Prs"  , flag ) ) ;
+  if((m_detMask&1)!=0)m_digiLoc.push_back( LHCb::CaloAlgUtils::CaloDigitLocation( "Spd"  , flag ) ) ;
   
-  m_clusLoc.push_back( LHCb::CaloAlgUtils::CaloClusterLocation( "Ecal" , flag ) ) ;
-  m_clusLoc.push_back( LHCb::CaloAlgUtils::CaloClusterLocation( "Hcal" , flag ) ) ;
+  if((m_detMask&8)!=0)m_clusLoc.push_back( LHCb::CaloAlgUtils::CaloClusterLocation( "Hcal" , flag ) ) ;
+  if((m_detMask&4)!=0)m_clusLoc.push_back( LHCb::CaloAlgUtils::CaloClusterLocation( "Ecal" , flag ) ) ;
   m_clusLoc.push_back( LHCb::CaloAlgUtils::CaloSplitClusterLocation( flag ) ) ;
-
+  
   m_hypoLoc.push_back( LHCb::CaloAlgUtils::CaloHypoLocation("Photons"      , flag ) );
   m_hypoLoc.push_back( LHCb::CaloAlgUtils::CaloHypoLocation("Electrons"    , flag ) );
   m_hypoLoc.push_back( LHCb::CaloAlgUtils::CaloHypoLocation("SplitPhotons" , flag ) );
@@ -69,11 +71,14 @@ StatusCode CaloGetterTool::initialize()
   StatusCode sc = GaudiTool::initialize();
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "Initialize Calo2Calo tool " << endmsg;
+
+
+  if( m_detMask != 0xF) info() << "Incomplete calorimeter detector is requested - mask = " << m_detMask << endmsg;
   //
-  m_provider["Ecal"] = tool<ICaloDataProvider>( "CaloDataProvider" , "EcalDataProvider" );
-  m_provider["Hcal"] = tool<ICaloDataProvider>( "CaloDataProvider" , "HcalDataProvider" );
-  m_provider["Prs"]  = tool<ICaloDataProvider>( "CaloDataProvider" , "PrsDataProvider"  );
-  m_provider["Spd"]  = tool<ICaloDataProvider>( "CaloDataProvider" , "SpdDataProvider"  );
+  if((m_detMask&8)!=0)m_provider["Hcal"] = tool<ICaloDataProvider>( "CaloDataProvider" , "HcalDataProvider" );
+  if((m_detMask&4)!=0)m_provider["Ecal"] = tool<ICaloDataProvider>( "CaloDataProvider" , "EcalDataProvider" );
+  if((m_detMask&2)!=0)m_provider["Prs"]  = tool<ICaloDataProvider>( "CaloDataProvider" , "PrsDataProvider"  );
+  if((m_detMask&1)!=0)m_provider["Spd"]  = tool<ICaloDataProvider>( "CaloDataProvider" , "SpdDataProvider"  );
   //
   // subscribe to the incidents
   IIncidentSvc* inc = incSvc() ;
@@ -85,28 +90,25 @@ StatusCode CaloGetterTool::initialize()
   // prepare the known locations:
   //
   // digits
-  if ( m_digiUpd )
-  {
+  if ( m_digiUpd ){
     m_digits.clear() ;
-    for ( std::vector<std::string>::iterator iloc = m_digiLoc.begin() ; 
-          m_digiLoc.end() != iloc; ++iloc )
-    { m_digits[ *iloc ] = 0 ; }
+    for ( std::vector<std::string>::iterator iloc = m_digiLoc.begin() ;m_digiLoc.end() != iloc; ++iloc ){
+      m_digits[ *iloc ] = 0 ; 
+    }
   }
   // clusters
-  if ( m_clusUpd )
-  {
+  if ( m_clusUpd ){
     m_clusters.clear() ;
-    for ( std::vector<std::string>::iterator iloc = m_clusLoc.begin() ; 
-          m_clusLoc.end() != iloc; ++iloc)
-    { m_clusters[ *iloc ] = 0 ; }
+    for ( std::vector<std::string>::iterator iloc = m_clusLoc.begin() ;m_clusLoc.end() != iloc; ++iloc){
+      m_clusters[ *iloc ] = 0 ; 
+    }
   }
   // hypos
-  if ( m_hypoUpd )
-  {
+  if ( m_hypoUpd ){
     m_hypos.clear() ;
-    for ( std::vector<std::string>::iterator iloc = m_hypoLoc.begin() ; 
-          m_hypoLoc.end() != iloc; ++iloc)
-    { m_hypos[ *iloc ] = 0 ; }
+    for ( std::vector<std::string>::iterator iloc = m_hypoLoc.begin() ;m_hypoLoc.end() != iloc; ++iloc){ 
+      m_hypos[ *iloc ] = 0 ; 
+    }
   }  
   //
   return StatusCode::SUCCESS;
@@ -149,8 +151,7 @@ LHCb::CaloDigits* CaloGetterTool::digits ( const std::string& loc )
 {  
   std::map<std::string,LHCb::CaloDigits*>::iterator it = m_digits.find( loc );
   //
-  if ( m_digits.end () == it ) 
-  {
+  if ( m_digits.end () == it ){
     Error ( "Illegal Attempt to retrive digits   from '" + loc + "'" ).ignore() ;
     return 0 ;
   }
@@ -158,8 +159,7 @@ LHCb::CaloDigits* CaloGetterTool::digits ( const std::string& loc )
   if ( 0 != it->second ) { return it -> second ; } 
   //
   it -> second = getIfExists<LHCb::CaloDigits>( loc );  
-  if ( NULL != it->second )
-  {
+  if ( NULL != it->second ){
     counter ("#Digits   @ " + loc ) += it->second->size() ;
     return it->second ;
   }
@@ -219,10 +219,8 @@ void CaloGetterTool::update()
   // digits
   if ( m_digiUpd )
   {
-    for(std::vector<std::string>::iterator iloc = m_digiLoc.begin();m_digiLoc.end() != iloc; ++iloc)
-    {
-      if ( exist<LHCb::CaloDigits>(*iloc) && 0 == m_digits[*iloc] ) 
-      { 
+    for(std::vector<std::string>::iterator iloc = m_digiLoc.begin();m_digiLoc.end() != iloc; ++iloc){
+      if ( exist<LHCb::CaloDigits>(*iloc) && 0 == m_digits[*iloc] ){ 
         LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( *iloc );
         m_digits[ *iloc ] =  digits ;
         counter ("#Digits   @ " + (*iloc) ) += digits->size() ;

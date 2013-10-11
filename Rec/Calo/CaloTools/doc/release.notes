@@ -3,6 +3,8 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+! 2013-10-09 - Olivier Deschamps
+ - CaloGetterTool, Calo2Calo, GammaPi0SeparationTool, CaloHypo2Calo : protect against the upgrade configuration with no Spd/Prs
 
 ! 2013-10-04 - Olivier Deschamps
  - Add CaloRelationsGetter implementation
