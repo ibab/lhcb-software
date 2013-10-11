@@ -47,16 +47,12 @@ int Utils::nameLookup(std::string &serverAddr,
 }
 
 int Utils::setupSocket(int sndBufSize, int rcvBufSize, MsgStream *log) {
-
   socklen_t optlen;
-  int retSocket;
-  int ret;
+  int ret, retSocket = socket(AF_INET, SOCK_STREAM, 0);
 
-  retSocket = socket(AF_INET, SOCK_STREAM, 0);
   if(retSocket < 0) {
     throw std::runtime_error("Could not create socket.");
   }
-
   //Set options.
   optlen = sizeof(sndBufSize);
   ret = setsockopt(retSocket, SOL_SOCKET, SO_SNDBUF, &sndBufSize, optlen);
@@ -67,7 +63,6 @@ int Utils::setupSocket(int sndBufSize, int rcvBufSize, MsgStream *log) {
   if(ret < 0 && log) {
     *log << MSG::WARNING << "Could not set SO_RCVBUF size." << endmsg;
   }
-
   return retSocket;
 }
 
@@ -75,20 +70,22 @@ int Utils::connectToAddress(struct sockaddr_in *destAddr,
     int sndSize, int rcvSize, MsgStream *log)
 {
   int ret;
-  int sock;
+  int sock = setupSocket(sndSize, rcvSize, log);
 
-  sock = setupSocket(sndSize, rcvSize, log);
   if(sock < 0)
     return -1;
 
-  ret = connect(sock, (struct sockaddr*)destAddr,
-      (socklen_t)sizeof(struct sockaddr_in));
+  ret = ::connect(sock, (struct sockaddr*)destAddr,
+                (socklen_t)sizeof(struct sockaddr_in));
 
   if(ret != 0) {
     std::stringstream str;
-    str << "Failed to open socket to adrr: "
-	<< std::hex << ntohl(destAddr->sin_addr.s_addr)
-	<< " Errno is: " << std::dec << errno << strerror(errno)  <<std::endl;
+    str << "Failed to open socket to addr: "
+        << ::inet_ntoa(destAddr->sin_addr) << "  ["
+        << std::hex << ntohl(destAddr->sin_addr.s_addr)
+        << "] Errno: " << std::dec << errno 
+        << "  [" << strerror(errno)  << "]" << std::endl;
+    ::close(sock);
     throw std::runtime_error(str.str());
     return -1;
   }
@@ -96,8 +93,8 @@ int Utils::connectToAddress(struct sockaddr_in *destAddr,
 }
 
 int Utils::closeSocket(int *sock, MsgStream * /*log*/) {
-  shutdown(*sock, SHUT_RDWR);
-  close(*sock);
+  ::shutdown(*sock, SHUT_RDWR);
+  ::close(*sock);
   *sock = -1;
   return 0;
 }
