@@ -32,7 +32,7 @@
 		<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-Upgrade-DBTags.py</text>
 		<text>--option</text>
-		<text>from Configurables import Gauss; Gauss().DetectorGeo  = { "Detectors": ['VP', 'UT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DetectorSim  = { "Detectors": ['VP', 'UT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DetectorMoni = { "Detectors": ['VP', 'UT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DataType     = "Upgrade"; from Configurables import CondDB; CondDB().Upgrade     = True; CondDB().AllLocalTagsByDataType=["VP+RICH_2019+UT_UUT", "FT_StereoAngle5", "Muon_NoM1", "Calo_NoSPDPRS"];</text>
+		<text>from Configurables import Gauss; Gauss().DetectorGeo  = { "Detectors": ['VP', 'UT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DetectorSim  = { "Detectors": ['VP', 'UT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DetectorMoni = { "Detectors": ['VP', 'UT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DataType     = "Upgrade"; from Configurables import CondDB; CondDB().Upgrade     = True; CondDB().AllLocalTagsByDataType=["VP+RICH_2019+UT_UUT", "FT_StereoAngle5", "Muon_NoM1", "Calo_NoSPDPRS"];from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20131009"; LHCbApp().CondDBtag="sim-20130830-vc-md100";</text>
 	</set>
 </argument>
 <argument name="exit_code">

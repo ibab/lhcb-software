@@ -6,6 +6,7 @@
 
 ! 2013-10-11 - Paul Szczypka
  - Added Baseline qmtest and references.
+ - Added db tags directly to baseline qmtest.
 
 ! 2013-10-06 - Paul Szczypka
  - Added qmtest and options for Muon_NoM1 test.
