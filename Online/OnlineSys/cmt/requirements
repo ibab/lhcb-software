@@ -8,9 +8,9 @@ branches cmt doc
 #=======================================================
 # Overrides from LHCB  ( LHCB_v34r2 )
 #=======================================================
-use MDF                 v3r39    DAQ
+use MDF                 v3r40    DAQ
 use MDF_ROOT            v1r9     DAQ
-use DAQEvent            v9r12p1  Event
+use DAQEvent            v9r13    Event
 use GaudiObjDesc        v11r17
 #=======================================================
 # LHCb Online packages
@@ -27,7 +27,7 @@ use DefHLTUtils         v1r6     Online
 use DIM                 v20r7p2  Online
 use FarmConfig          v0r2     Online
 use FarmMonitor         v2r12    Online
-use Gaucho              v7r29    Online
+use Gaucho              v7r32    Online
 use GauchoAppl          v1r8     Online
 use GaudiCheckpointing  v0r12    Online
 use GaudiOnline         v2r68    Online

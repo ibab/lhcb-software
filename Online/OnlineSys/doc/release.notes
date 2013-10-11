@@ -9,7 +9,10 @@
 <H1><A NAME=v5r4>2013-08-13 OnlineSys v5r4</A></H1>
 <PRE>
   Use new Gaudi v23r10
-  Updated/new packages:
+  Updated/new packages:	
+  MDF                 v3r40    DAQ
+  DAQEvent            v9r13    Event
+  Gaucho              v7r32    Online
   Controller          v0r8     Online
   GaudiCheckpointing  v0r12    Online
   GaudiOnline         v2r68    Online
