@@ -138,10 +138,6 @@ def dumpDst ( usage   = __usage__   ,
     ## The input files must be specified!
     if not arguments : parser.error ( 'No input files are specified' )
 
-    files = arguments 
-    from BenderTools.Parser import dataType
-    dtype, simu, ext = dataType ( files ) 
-
     ## options.Quiet = True 
     configure ( options , arguments ) 
     
@@ -185,12 +181,7 @@ def dumpDst ( usage   = __usage__   ,
 
 
     root = options.RootInTES
-    ## guess a bit about structure 
-    
-    if ext in ( 'gen' , 'xgen' , 'GEN' , 'XGEN' ) :
-        from BenderTools.GenFiles import genAction
-        genAction ( ext )
-        
+
     #
     ## instantiate the application manager
     #

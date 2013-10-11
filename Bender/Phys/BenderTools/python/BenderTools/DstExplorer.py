@@ -159,6 +159,10 @@ def configure ( options , arguments ) :
     files = arguments 
     dtype, simu, ext = dataType ( files ) 
 
+    if '2013' == dtype :
+        logger.info ('Data type 2013 is redefined to be 2012')
+        dtype = '2012'
+        
     # 
     if ext in ( 'gen' , 'xgen' , 'GEN' , 'XGEN' ) and not simu : simu = True 
         

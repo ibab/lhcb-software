@@ -208,7 +208,7 @@ def dataType ( files ) :
         elif 0 <= f.find ( 'Collision10'   ) : dtype = '2010'
         elif 0 <= f.find ( 'Collision11'   ) : dtype = '2011'
         elif 0 <= f.find ( 'Collision12'   ) : dtype = '2012'
-        elif 0 <= f.find ( 'Collision13'   ) : dtype = '2013'
+        elif 0 <= f.find ( 'Collision13'   ) : dtype = '2013' ## ATTENTION
         #
         elif 0 <= f.find ( 'Stripping13'   ) : dtype = '2011'
         elif 0 <= f.find ( 'Stripping17'   ) : dtype = '2011'
