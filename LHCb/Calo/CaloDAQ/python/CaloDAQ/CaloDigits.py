@@ -45,6 +45,35 @@ def caloDigits ( context        ,
 
     conflist=[]
     alglist=[]
+
+    if 'Spd'  in detectors :
+        _log.debug('caloDigits : Spd is added to the detector list')
+        spd  = getAlgo ( CaloDigitsFromRaw       , 
+                         "SpdFromRaw"            ,
+                         _cntx                   ,
+                         "Raw/Spd/Digits"        ,
+                         enableOnDemand          )
+        conflist.append(spd)
+        alglist.append(spd)
+
+    if 'Prs'  in detectors :
+        _log.debug('caloDigits : Prs is added to the detector list')
+        prsSeq = GaudiSequencer ('PrsDigitsSeq',Context = _cntx)
+        prs  = getAlgo ( CaloDigitsFromRaw       , 
+                         "PrsFromRaw"            ,
+                         _cntx                   ,
+                         "Raw/Prs/Digits"        ,
+                         enableOnDemand          )
+        conflist.append(prs)
+        if ReadoutStatusConvert :
+            prsCnv = getAlgo ( RawBankReadoutStatusConverter, "PrsProcStatus",_cntx)
+            prsCnv.System='Prs'
+            prsCnv.BankTypes=['PrsPacked']
+            prsSeq.Members = [prs,prsCnv]
+            alglist.append(prsSeq)
+        else :
+            alglist.append(prs)
+
     if 'Ecal' in detectors :
         _log.debug('caloDigits : Ecal is added to the detector list')
         ecalSeq = GaudiSequencer ('EcalDigitsSeq',Context = _cntx)
@@ -81,34 +110,6 @@ def caloDigits ( context        ,
         else :
             alglist.append(hcal)
 
-    if 'Prs'  in detectors :
-        _log.debug('caloDigits : Prs is added to the detector list')
-        prsSeq = GaudiSequencer ('PrsDigitsSeq',Context = _cntx)
-        prs  = getAlgo ( CaloDigitsFromRaw       , 
-                         "PrsFromRaw"            ,
-                         _cntx                   ,
-                         "Raw/Prs/Digits"        ,
-                         enableOnDemand          )
-        conflist.append(prs)
-        if ReadoutStatusConvert :
-            prsCnv = getAlgo ( RawBankReadoutStatusConverter, "PrsProcStatus",_cntx)
-            prsCnv.System='Prs'
-            prsCnv.BankTypes=['PrsPacked']
-            prsSeq.Members = [prs,prsCnv]
-            alglist.append(prsSeq)
-        else :
-            alglist.append(prs)
-
-
-    if 'Spd'  in detectors :
-        _log.debug('caloDigits : Spd is added to the detector list')
-        spd  = getAlgo ( CaloDigitsFromRaw       , 
-                         "SpdFromRaw"            ,
-                         _cntx                   ,
-                         "Raw/Spd/Digits"        ,
-                         enableOnDemand          )
-        conflist.append(spd)
-        alglist.append(spd)
 
 
     if createADCs :
