@@ -3,6 +3,9 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2013-10-11 - Olivier Deschamps
+ - Calo2Dview :  fix trivial bug
+
 ! 2013-10-09 - Olivier Deschamps
  - Calo2Dview :  protect against the upgrade configuration with no Spd/Prs
 

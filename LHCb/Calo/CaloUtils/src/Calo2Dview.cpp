@@ -145,7 +145,7 @@ void Calo2Dview::getCaloParam(unsigned int calo){
 
   if((int)calo == m_caloType)return;
   m_calo= m_caloMap[calo];
-  if( NULL != m_calo)return;
+  if(NULL == m_calo)return;
   m_centre=m_centreMap[calo];
   m_reg=m_regMap[calo];
   m_refCell = m_refCellMap[calo];
