@@ -24,7 +24,9 @@ public:
   
   bool hasOptimizedHorizontalRich1(){return   m_optHorizontalRichFlag;}
 
-
+  bool Rich2_UseGrandPmt() 
+  {  return  m_Rich2_UseGrandPmt;}
+  
     
   
 
@@ -47,6 +49,11 @@ private:
   bool m_horizontalRich1Flag;
   bool m_optVerticalRichFlag;
   bool m_optHorizontalRichFlag;
+  int m_Rich1PmtArrayConfig;  // 0 for standard arrangement
+  int m_Rich2PmtArrayConfig;  // 0 for standard arrangement:all pmts=R11265.
+                              // 1  all pmts= grandPMT=H12700
+  bool m_Rich2_UseGrandPmt;
+  
 
   
   

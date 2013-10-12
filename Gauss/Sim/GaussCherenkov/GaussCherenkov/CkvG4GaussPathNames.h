@@ -57,13 +57,20 @@ static const G4String RichPmtModuleSuppressSet6Path="/dd/Materials/RichMaterialT
 
 static const G4String LogVolPmtSMasterNameAnalysis =
                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichPMTSMaster";
+static const G4String LogVolGrandPmtSMasterNameAnalysis =
+                     "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichGrandPMTSMaster";
 static const G4String LogVolPmtSMasterNameAnalysisStrPrefix =
                       "/dd/Geometry/BeforeMagnetRegion/Rich1/";
 static const G4String LogVolPmtSMasterNameAnalysisListStrPrefix [] =
                      {"/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichPMTSMaster",
-                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichPMTSMaster"};
+                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichPMTSMaster",
+                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichGrandPMTSMaster"};
 static const G4String LogVolPmtQWindowNameAnalysis =
                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichPMTQuartz";
+
+static const G4String LogVolGrandPmtQWindowNameAnalysis =
+                     "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichGrandPMTQuartz";
+
 static const G4String LogVolPmtAnodeNameAnalysis =
                      "/dd/Geometry/BeforeMagnetRegion/Rich1/lvRichPMTAnode";
 static const G4String LogVolPmtAnodeNameAnalysisStrPrefix =
@@ -88,6 +95,9 @@ static const G4String RichPmtPhCathDeSubPathname="/Rich1FirstPmtPhCathode";
 static const G4String RichLPmtQwDeSubPathName="/Rich1FirstLPmtQW";
 static const G4String RichLPmtPhCathDeSubPathname="/Rich1FirstLPmtPhCathode";
 static const G4String RichLPmtLensDeSubPathName="/Rich1FirstLPmtLens";
+
+static const G4String RichGrandPmtQwDeSubPathName="/RichFirstGrandPmtQW"; 
+static const G4String RichGrandPmtPhCathDeSubPathname="/RichFirstGrandPmtPhCathode";
 
 static const G4String RichPmtAnodeSensDetNamePrefix="RichPMTAnodeSensDet";
 

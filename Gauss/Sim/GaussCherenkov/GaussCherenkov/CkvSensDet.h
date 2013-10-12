@@ -95,6 +95,15 @@ public:
   G4int PixelYNum( const G4double localYCoord ) const
   {return m_RichGeomProperty->PixelYNumFromCoord(localYCoord) ;}
 
+ G4int GrandPixelXNum(const G4double localXCoord ) const
+  {return m_RichGeomProperty->GrandPixelXNumFromCoord(localXCoord) ;}
+
+  G4int GrandPixelYNum ( const G4double localYCoord ) const
+  {return m_RichGeomProperty->GrandPixelYNumFromCoord(localYCoord) ;}
+
+
+
+
   void ResetPmtMapInCurrentEvent();
  
 private:
@@ -113,15 +122,16 @@ private:
   G4int m_NumberOfHCInRICH;
   std::vector<CkvG4HitsCollection*>  m_RichHC;
   std::vector<G4int> m_PhdHCID;
-  bool m_SuperRichFlag;
+  bool  m_SuperRichFlag;
   bool  m_OptHorizRichFlag;
-
+  bool  m_Rich2UseGrandPmt;
+  
   bool m_RichPmtAviodDuplicateHitsActivate;
   bool m_RichPmtFlagDuplicateHitsActivate;
   G4int m_TotNumPmtsInRich;
   std::vector<bool> m_RichPmtAlreadyHit; // flag for pmt to have hits in current event
   std::multimap<G4int,G4int> m_RichPmtToPixelNumMap; // map between pmt and Pixelnum for each hit in current event
-  
+    
 
 };
 

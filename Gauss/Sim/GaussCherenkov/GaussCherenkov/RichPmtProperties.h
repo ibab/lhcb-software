@@ -77,6 +77,10 @@ public:
     m_PmtQWLogVolName=  hpdqwLvolname;
   }
 
+  const std::string &  GrandPmtQWLogVolName(){  return m_GrandPmtQWLogVolName ;}
+  const std::string &  GrandPmtPhCathodeLogVolName(){  return m_GrandPmtPhCathodeLogVolName;}
+  
+
   const std::string & LPmtPhCathodeLogVolName() const {return  m_LPmtPhCathodeLogVolName; }
   const std::string & LPmtLensLogVolName() const {return m_LPmtLensLogVolName;}
 
@@ -155,12 +159,10 @@ public:
     m_CurQETableSourceOption=aOpt;
     
   }
-
   void SetPmtQEOverallScaling( double scaleFactor )
   {
     m_PmtQEScaleFactor = scaleFactor ;
   }
-  
 
   void setPmtPropertiesVerboseLevel(int aLevel );
 
@@ -224,6 +226,9 @@ private:
   std::string m_LPmtQWLogVolName;
   std::string m_LPmtPhCathodeLogVolName;
   std::string m_LPmtLensLogVolName;
+
+  std::string  m_GrandPmtQWLogVolName ;
+  std::string  m_GrandPmtPhCathodeLogVolName;
   
 
   int m_numberOfRichDetectors;
@@ -252,7 +257,6 @@ private:
   int m_CurQETableSourceOption; // 0 default means Borosilicate
                                 // 1 means the UV glass
                                 // 2 means nominal HPD like
-
   double m_PmtQEScaleFactor;
 
   //  bool m_UsePmtMagDistortions;
