@@ -76,13 +76,24 @@ void CkvGeometrySetupUtil::InitCkvGeometrySuperRichFlag(){
 }
 //=============================================================================
 void CkvGeometrySetupUtil::InitCkvGeometryTwoRichFlags(){
+
+  // Set some defaults
+
+  m_Rich1PmtArrayConfig=0;
+  m_Rich2PmtArrayConfig=0;
+  m_Rich2_UseGrandPmt=false;
+  
   if(m_superRichFlag ) {
     m_classicTwoRichFlag=false;
     m_horizontalRich1Flag=false;
     m_optVerticalRichFlag=false;
     m_optHorizontalRichFlag=false;
+
     
   }else {
+
+
+
     IDataProviderSvc* detSvc = RichG4SvcLocator::RichG4detSvc();
     IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
     MsgStream CkvGeometrylog( msgSvc, "CkvGeometry" );
@@ -124,7 +135,14 @@ void CkvGeometrySetupUtil::InitCkvGeometryTwoRichFlags(){
               
             } 
           } // end test on ROC   
+
+
+          if(Rich1DE ->exists ("Rich1PMTArrayConfig") ) m_Rich1PmtArrayConfig=Rich1DE ->param<int>("Rich1PMTArrayConfig");
+          if(Rich1DE ->exists ("Rich2PMTArrayConfig") ) m_Rich2PmtArrayConfig=Rich1DE ->param<int>("Rich2PMTArrayConfig");
+
           
+
+
         } // end test rich1DE      
         
        }// end test classicRICH
@@ -136,6 +154,9 @@ void CkvGeometrySetupUtil::InitCkvGeometryTwoRichFlags(){
     
     
   }
+  
+  if(m_Rich2PmtArrayConfig >= 1 ) m_Rich2_UseGrandPmt=true;
+
   
   
 }

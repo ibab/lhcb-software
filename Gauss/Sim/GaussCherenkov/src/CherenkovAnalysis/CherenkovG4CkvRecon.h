@@ -121,6 +121,11 @@ public:
                       double a[4] );
 
   Gaudi::XYZPoint GetSiHitCoordFromPixelNum(int aPx, int aPy);
+  Gaudi::XYZPoint GetSiHitCoordFromGrandPixelNum(int aPxd, int aPyd);
+  Gaudi::XYZPoint GetSiHitCoordFromPixelNumRDet(int aPxa, int aPya, int aRDet);
+  
+
+
   Gaudi::XYZPoint getPhotAgelExitZ( double ex, double ey, double ez,
                                CkvG4Hit* bHit);
 
@@ -237,6 +242,15 @@ private:
   int  m_PmtNumPixelX;
   int  m_PmtNumPixelY;
   
+  double m_GrandPmtAnodeThickness;
+  double m_GrandPmtAnodeXSize;
+  double m_GrandPmtAnodeYSize;
+  double m_GrandPmtAnodePixelXSize;
+  double m_GrandPmtAnodePixelYSize;
+  double m_GrandPmtAnodePixelGap;
+  
+  
+  int  m_NumGrandPmtInModule;
   
 
   Gaudi::XYZPoint m_ChTrackPreStepPosition;

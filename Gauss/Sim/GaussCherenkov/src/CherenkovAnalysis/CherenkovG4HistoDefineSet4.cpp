@@ -214,7 +214,20 @@ void CherenkovG4HistoDefineSet4::bookRichG4HistogramsSet4()
     m_hCkvRich2GasD1E4 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1701",
                       title,1000,0.025,0.035);
 
-     title = "Cherenkov angle generated in Rich2 Gas radiator";
+    title = 
+         "Cherenkov angle D1E4 reconstruted from Rich2 Gas radiator LimitedRegion ";
+  
+    m_hCkvRich2GasD1E4Rst = CurHistoSvc->book(m_RichG4HistoPathSet4+"1701A",
+                      title,1000,0.025,0.035);
+
+
+     title = "Cherenkov angle D1E4 reconstruted from Rich2 Gas radiator LargePix";
+     
+    m_hCkvRich2GasLargeD1E4 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1721",
+                      title,1000,0.015,0.045);
+
+
+    title = "Cherenkov angle generated in Rich2 Gas radiator";
      
     m_hCkvRich2GasGen= CurHistoSvc->book(m_RichG4HistoPathSet4+"1704",
                       title,1000,0.025,0.035);
@@ -321,6 +334,19 @@ void CherenkovG4HistoDefineSet4::bookRichG4HistogramsSet4()
     
       m_hCkvRich2GasResEmis = CurHistoSvc->book(m_RichG4HistoPathSet4+"1730",
                                            title, 1000,-0.005,0.005);
+
+
+       title="Rich2Gas ReconsD4E4- Recons D4E1 Emiss error";
+    
+      m_hCkvRich2GasResEmisD4 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1731",
+                                           title, 1000,-0.005,0.005);
+
+      title="Rich2Gas ReconsD4E4- Recons D4E1 Emiss error  Limitedregion";
+    
+       m_hCkvRich2GasResEmisD4Rst = CurHistoSvc->book(m_RichG4HistoPathSet4+"1739",
+                                           title, 1000,-0.005,0.005);
+
+
       // agel exit refraction error
 
       title="Rich1Agel ReconsD3E1 - Recons D3E3 AgelExitRef error";
@@ -345,6 +371,12 @@ void CherenkovG4HistoDefineSet4::bookRichG4HistogramsSet4()
     
       m_hCkvRich2GasResPixel = CurHistoSvc->book(m_RichG4HistoPathSet4+"1740",
                                            title, 1000,-0.002,0.002);
+
+
+      title="Rich2Gas ReconsD1E1- Recons D2E1 Large Pixel error";
+    
+      m_hCkvRich2GasResLargePixel = CurHistoSvc->book(m_RichG4HistoPathSet4+"1741",
+                                           title, 1000,-0.006,0.006);
 
       // now for any PSF type error.
 

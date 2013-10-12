@@ -27,6 +27,7 @@
 #include "GaussRICH/RichG4GaussPathNames.h"
 #include "GaussRICH/RichSolveQuarticEqn.h"
 #include <math.h>
+#include "GaussCherenkov/CkvGeometrySetupUtil.h"
 
 // modification made on 30-8-2004 to make windows compatible.
 
@@ -83,7 +84,7 @@ CherenkovG4CkvRecon::CherenkovG4CkvRecon()
   IDataProviderSvc* detSvc = CkvG4SvcLocator::RichG4detSvc();
   IMessageSvc*  msgSvc = CkvG4SvcLocator::RichG4MsgSvc ();
   MsgStream CherenkovG4CkvReconlog( msgSvc,"CherenkovG4CkvRecon");
-  //     CherenkovG4CkvReconlog << MSG::VERBOSE
+  //      CherenkovG4CkvReconlog << MSG::VERBOSE
   //             << "Now creating CherenkovG4CkvRecon "
   //             << endreq;
 
@@ -134,8 +135,8 @@ CherenkovG4CkvRecon::CherenkovG4CkvRecon()
     m_Rich1_PmtTransforms.resize(m_NumPmtRich[0]);
     m_Rich2_PmtTransforms.resize(m_NumPmtRich[1]);
     
-    // CherenkovG4CkvReconlog <<MSG::INFO<<" Size of pmt transforms "
-    //                       << (int) m_Rich1_PmtTransforms.size()<<"  "<<(int) m_Rich2_PmtTransforms.size()<<endreq;
+     CherenkovG4CkvReconlog <<MSG::INFO<<" Size of pmt transforms "
+                           << (int) m_Rich1_PmtTransforms.size()<<"  "<<(int) m_Rich2_PmtTransforms.size()<<endreq;
     
     //    std::vector<double> r1NominalCoC = Rich1DE->param<std::vector<double> >("Rich1NominalCoC");
     std::vector<double> r1NominalCoC = Rich1DE->param<std::vector<double> >("NominalSphMirrorCoC");
@@ -214,11 +215,43 @@ CherenkovG4CkvRecon::CherenkovG4CkvRecon()
     m_PmtAnodePixelXSize=Rich1DE->param<double> ("RichPmtPixelXsize" );
     m_PmtAnodePixelYSize=Rich1DE->param<double> ("RichPmtPixelYsize" );
     m_PmtAnodePixelGap=Rich1DE->param<double> ("RichPmtPixelGap"  );
+    m_NumPmtInModule=Rich1DE->param<int> ("RichTotNumPmtInModule"  );
+    
     m_PmtPhCathZFromPMTCenter=10.0;
     if( Rich1DE->exists("RichPmtQwToCenterZDist"))
       m_PmtPhCathZFromPMTCenter= Rich1DE->param<double>("RichPmtQwToCenterZDist");
     
-
+     CkvGeometrySetupUtil * aCkvGeometrySetup=CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance() ;
+     if(aCkvGeometrySetup-> Rich2_UseGrandPmt()) {
+       if(Rich1DE->exists("RichGrandPmtAnodeXSize") )    {
+           
+           m_GrandPmtAnodeThickness= Rich1DE->param<double> ("RichGrandPmtAnodeZSize" );
+           m_GrandPmtAnodeXSize= Rich1DE->param<double> ("RichGrandPmtAnodeXSize" );
+           m_GrandPmtAnodeYSize= Rich1DE->param<double> ("RichGrandPmtAnodeYSize" );
+           m_GrandPmtAnodePixelXSize=Rich1DE->param<double> ("RichGrandPmtPixelXSize" );
+           m_GrandPmtAnodePixelYSize=Rich1DE->param<double> ("RichGrandPmtPixelYSize" );
+           m_GrandPmtAnodePixelGap=Rich1DE->param<double> ("RichGrandPmtPixelGap"  );
+           m_NumGrandPmtInModule=Rich1DE->param<int> ("RichTotNumGrandPmtInModule" );
+          
+       }
+       
+          
+          
+       
+     }else {
+       m_GrandPmtAnodeThickness=m_PmtAnodeThickness;
+       m_GrandPmtAnodeXSize = m_PmtAnodeXSize;
+       m_GrandPmtAnodeYSize = m_PmtAnodeYSize ;
+       m_GrandPmtAnodePixelXSize = m_PmtAnodePixelXSize;
+       m_GrandPmtAnodePixelYSize = m_PmtAnodePixelYSize;
+       m_GrandPmtAnodePixelGap  = m_PmtAnodePixelGap;
+       m_NumGrandPmtInModule = m_NumPmtInModule;
+       
+     }
+     
+     
+       
+    
       
     //    m_HpdSiDetThickness =   Rich1DE->
     //  userParameterAsDouble("RichHpdSiliconDetectorZSize");
@@ -301,9 +334,19 @@ CherenkovG4CkvRecon::CherenkovG4CkvRecon()
           m_Rich1_PmtTransforms[ih]= new RichG4ReconTransformPmt (idet, aPmtVV[0], aPmtVV[1] );
 
         } else if ( idet == 1 ) {
- 
-          m_Rich2_PmtTransforms[ih]=  new RichG4ReconTransformPmt (idet, aPmtVV[0], aPmtVV[1]);
+          bool getR2Transform=true;
+          CkvGeometrySetupUtil * aCkvGeometrySetup=CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance() ;     
+          if(aCkvGeometrySetup-> Rich2_UseGrandPmt()) {
+            if( aPmtVV[1] >=  m_NumGrandPmtInModule ) getR2Transform=false;
+          }
+          if(getR2Transform  ) {
+                
+            m_Rich2_PmtTransforms[ih]=  new RichG4ReconTransformPmt (idet, aPmtVV[0], aPmtVV[1]);
+          }
+          
+          
         }
+        
 
         // CherenkovG4CkvReconlog <<MSG::INFO<<"Transform for idet ih "<< idet <<"  "<< ih<<"  "
         //                             <<m_Rich1_PmtTransforms[idet][ih]  <<endreq;
@@ -353,13 +396,13 @@ CherenkovG4CkvRecon::CherenkovG4CkvRecon()
   //  CherenkovG4CkvReconlog << MSG::INFO
   //             << "Num richdet numPmtIn r1 r2  "<<
   //      m_NumRichDet<<"    "<< m_NumPmtRich[0]
-  //                      <<"   "<< m_NumPmtRich[1]
-  //             << endreq;
+  //                         <<"   "<< m_NumPmtRich[1]<<endmsg;
+  //
+     
 
-}
-
-
-CherenkovG4CkvRecon::~CherenkovG4CkvRecon(  ) { }
+  
+ }
+CherenkovG4CkvRecon::~CherenkovG4CkvRecon(){}
 
 
 std::vector<int> CherenkovG4CkvRecon::GetPmtModuleNumber(int aPmtNum) {
@@ -371,6 +414,20 @@ std::vector<int> CherenkovG4CkvRecon::GetPmtModuleNumber(int aPmtNum) {
 return aPmtV;
 }
 
+Gaudi::XYZPoint CherenkovG4CkvRecon::GetSiHitCoordFromPixelNumRDet(int aPXNum,
+                                                                   int aPYNum, int aRichDetNum ) 
+{
+     CkvGeometrySetupUtil * aCkvGeometrySetup=CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance() ;
+     if((aRichDetNum ==1) && (aCkvGeometrySetup-> Rich2_UseGrandPmt()) ) {
+       return GetSiHitCoordFromGrandPixelNum(aPXNum,aPYNum);
+       
+     }else {
+       return   GetSiHitCoordFromPixelNum(aPXNum,aPYNum);
+     }
+}
+
+
+
 Gaudi::XYZPoint CherenkovG4CkvRecon::GetSiHitCoordFromPixelNum(int aPXNum,
                                                      int aPYNum )
 {
@@ -378,6 +435,21 @@ Gaudi::XYZPoint CherenkovG4CkvRecon::GetSiHitCoordFromPixelNum(int aPXNum,
   const double zhitc=   m_PmtAnodeThickness/2.0;
   const double EffectivePixelXSize= m_PmtAnodePixelXSize+m_PmtAnodePixelGap;
   const double EffectivePixelYSize= m_PmtAnodePixelYSize+m_PmtAnodePixelGap;
+  
+  const double xhit= (aPXNum - (m_PmtNumPixelX-1)*0.5  ) * EffectivePixelXSize;
+  const double yhit= (aPYNum - (m_PmtNumPixelY-1)*0.5  ) * EffectivePixelYSize;
+
+
+  return  Gaudi::XYZPoint(xhit,yhit,zhitc);
+}
+
+Gaudi::XYZPoint CherenkovG4CkvRecon::GetSiHitCoordFromGrandPixelNum(int aPXNum,
+                                                     int aPYNum )
+{
+
+  const double zhitc=   m_GrandPmtAnodeThickness/2.0;
+  const double EffectivePixelXSize= m_GrandPmtAnodePixelXSize+m_GrandPmtAnodePixelGap;
+  const double EffectivePixelYSize= m_GrandPmtAnodePixelYSize+m_GrandPmtAnodePixelGap;
   
   const double xhit= (aPXNum - (m_PmtNumPixelX-1)*0.5  ) * EffectivePixelXSize;
   const double yhit= (aPYNum - (m_PmtNumPixelY-1)*0.5  ) * EffectivePixelYSize;

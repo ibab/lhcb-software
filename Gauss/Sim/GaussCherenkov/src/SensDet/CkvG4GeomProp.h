@@ -40,12 +40,23 @@ public:
   G4double PixelYBoundaryValue(int PixelYNumber);
   G4int PixelXNumFromCoord(const G4double localX );
   G4int PixelYNumFromCoord(const G4double localY );
+
+  G4double GrandPixelXBoundaryValue(int PixelXNumber);
+  G4double GrandPixelYBoundaryValue(int PixelYNumber);
+  G4int GrandPixelXNumFromCoord(const G4double localX );
+  G4int GrandPixelYNumFromCoord(const G4double localY );
+
+
   G4int PixelPosFinder( G4double Coord,
                         const std::vector<G4double> & BoundaryValues );
 
 
   G4bool PixelGapFinderX( const G4double Xc );
   G4bool PixelGapFinderY( const G4double Yc );
+
+  G4bool GrandPixelGapFinderX( const G4double Xc );
+  G4bool GrandPixelGapFinderY( const G4double Yc );
+
   G4int NumberOfPmtsInSuperRich()  {  return    m_NumberOfPmtsInSuperRich;}
   G4int GetPixelNumInPmt( int PixelXNum, int PixelYNum);
   
@@ -66,8 +77,8 @@ private:
   G4int m_NumberOfPixelRowInPMT;
 
 
-  G4double m_PixelXsize;
-  G4double m_PixelYsize;
+  //  G4double m_PixelXsize;
+  //G4double m_PixelYsize;
 
   G4int m_NumberOfPMTsInRich1;
   G4int m_NumberOfPMTsInRich2;
@@ -79,17 +90,33 @@ private:
   G4double m_PmtPixelXsize;
   G4double m_PmtPixelYsize;
   G4double m_PmtPixelGap;
+
+  G4double m_GrandPmtPixelXsize;
+  G4double m_GrandPmtPixelYsize;
+  G4double m_GrandPmtPixelGap;
+
+  G4double m_GrandPmtEdgePixelXSize;
+  G4double m_GrandPmtEdgePixelYSize;
+  
   
   G4double  m_MaxZHitInRich1Det;
 
-  std::vector<G4double> m_PixelXBoundary;
-  std::vector<G4double> m_PixelYBoundary;
-  G4int m_PixelXBoundarySize;
-  G4int m_PixelYBoundarySize;
+  //  std::vector<G4double> m_PixelXBoundary;
+  // std::vector<G4double> m_PixelYBoundary;
+  // G4int m_PixelXBoundarySize;
+  // G4int m_PixelYBoundarySize;
+
+
   std::vector<G4double> m_PmtPixelXBoundary;
   std::vector<G4double> m_PmtPixelYBoundary;
   G4int m_PmtPixelXBoundarySize;
   G4int m_PmtPixelYBoundarySize;
+
+
+  std::vector<G4double> m_GrandPmtPixelXBoundary;
+  std::vector<G4double> m_GrandPmtPixelYBoundary;
+  G4int m_GrandPmtPixelXBoundarySize;
+  G4int m_GrandPmtPixelYBoundarySize;
 
   G4int m_NumberOfPmtsInSuperRich;
   
@@ -104,6 +131,16 @@ inline G4int CkvG4GeomProp::PixelXNumFromCoord(const G4double localX)
 inline G4int CkvG4GeomProp::PixelYNumFromCoord(const G4double localY)
 {
   return PixelPosFinder(localY,m_PmtPixelYBoundary);
+}
+
+inline G4int CkvG4GeomProp::GrandPixelXNumFromCoord(const G4double localX)
+{
+  return PixelPosFinder(localX,m_GrandPmtPixelXBoundary);
+}
+
+inline G4int CkvG4GeomProp::GrandPixelYNumFromCoord(const G4double localY)
+{
+  return PixelPosFinder(localY,m_GrandPmtPixelYBoundary);
 }
 
 #endif

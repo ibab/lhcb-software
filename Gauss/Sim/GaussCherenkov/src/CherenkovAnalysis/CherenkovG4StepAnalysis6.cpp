@@ -90,10 +90,14 @@ void CherenkovG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
              // const G4Material* Material2 = aPostStepPoint -> GetMaterial();
              //const G4String & aMaterial1Name =  Material1 ->GetName();
              // const G4String & aMaterial2Name =  Material2 ->GetName();
+             // G4cout<<" Step Analysis6 prevol post vol "<<aPreVolName<<"   "<<aPostVolName<<G4endl;
+             
              std::string::size_type iPmtSMStrPrePos0=
                       aPreVolName.find(LogVolPmtSMasterNameAnalysisListStrPrefix[0]);
-             if( (aPreVolName == LogVolPmtSMasterNameAnalysis || iPmtSMStrPrePos0 != std::string::npos )  &&
-               aPostVolName ==  LogVolPmtQWindowNameAnalysis ){
+             std::string::size_type iPmtSMStrPrePos2=
+                      aPreVolName.find(LogVolPmtSMasterNameAnalysisListStrPrefix[2]);
+             if( ((aPreVolName == LogVolPmtSMasterNameAnalysis) || (iPmtSMStrPrePos0 != std::string::npos ) )  &&
+                 ( aPostVolName ==  LogVolPmtQWindowNameAnalysis) ){
 
                if(PhotCurDir.z() > 0.0 ) {
 
@@ -101,6 +105,21 @@ void CherenkovG4StepAnalysis6::UserSteppingAction( const G4Step* aStep )
                 
                }
              }
+             
+            
+             
+
+             if( ( (aPreVolName == LogVolGrandPmtSMasterNameAnalysis) || (iPmtSMStrPrePos2 != std::string::npos)  )  &&
+                 (  aPostVolName ==  LogVolGrandPmtQWindowNameAnalysis )     ){
+
+               if(PhotCurDir.z() > 0.0 ) {
+                 
+                 RichG4PmtQWIncidentTag((* aTrack), postPos,0 ); // zero indicates that it is for QW point
+                
+               }
+             }
+             
+
 
 
              if( (aPreVolName == LogVolLPmtSMasterNameAnalysis || iPmtSMStrPrePos0 != std::string::npos )  &&

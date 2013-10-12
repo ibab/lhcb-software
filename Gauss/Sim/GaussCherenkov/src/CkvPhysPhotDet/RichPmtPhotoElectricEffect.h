@@ -130,8 +130,7 @@ public:
   {m_PmtQEUsingNominalTable=apmtqetableoption;}  
   G4bool PSFPreDc06Flag() {return m_PSFPreDc06Flag;}
   G4bool PmtQEUsingNominalTable()  {  return m_PmtQEUsingNominalTable;}
-
-  void SetPmtQESourceTable(int asou);
+  void  SetPmtQESourceTable(int asou);
   void SetPmtQEOverallScaling( double scaleFactor );
 
   void setPmtModuleSupFlag3(G4bool aFlag3) 
@@ -155,6 +154,8 @@ private:
   G4String m_PrePhotoElectricLogVolName;
   G4String m_PostPhotoElectricLogVolName;
   G4String m_PrePhotoElectricMatNameSec;
+  G4String m_PrePhotoElectricLogVolNameWGrandPM;
+  G4String m_PostPhotoElectricLogVolNameWGrandPM;
 
   G4String m_PrePhotoElectricLogVolNameWLens;
   G4String m_PostPhotoElectricLogVolNameWLens;
@@ -261,11 +262,11 @@ inline void RichPmtPhotoElectricEffect::SetPmtQESourceTable(int asou)
 {  
   m_PmtQESourceTable=asou;
 }
-
 inline void RichPmtPhotoElectricEffect::SetPmtQEOverallScaling(double scaleFactor) 
 {  
   m_PmtQEScaleFactor = scaleFactor ;
 }
+
 
 
 #endif

@@ -63,6 +63,10 @@ private:
   IHistogram2D* m_hCkvRich2GasD4E1VsPhi;
 
   IHistogram1D* m_hCkvRich2GasD1E4;
+  IHistogram1D*  m_hCkvRich2GasLargeD1E4;
+  IHistogram1D*  m_hCkvRich2GasResEmisD4Rst;
+  
+
   IHistogram1D* m_hCkvRich2GasD1E4Rst;
 
   IHistogram1D*  m_hCkvRich2GasQwPh;
@@ -82,10 +86,17 @@ private:
   // IProfile*  m_hCkvRich2GasCkvResPhiProf ;
   IHistogram1D*  m_hCkvRich1GasResEmis;
   IHistogram1D*  m_hCkvRich1AgelResEmis;
+
   IHistogram1D*  m_hCkvRich2GasResEmis;
+  IHistogram1D*  m_hCkvRich2GasResEmisD4;
+
   IHistogram1D*  m_hCkvRich1GasResPixel;
   IHistogram1D*  m_hCkvRich1AgelResPixel;
+
   IHistogram1D*  m_hCkvRich2GasResPixel;
+
+  IHistogram1D*  m_hCkvRich2GasResLargePixel;
+
   IHistogram1D*   m_hCkvRich1GasResPsf;
   IHistogram1D*   m_hCkvRich1AgelResPsf;
   IHistogram1D*   m_hCkvRich2GasResPsf;

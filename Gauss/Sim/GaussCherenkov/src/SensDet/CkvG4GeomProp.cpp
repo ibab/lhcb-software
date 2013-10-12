@@ -40,8 +40,11 @@ CkvG4GeomProp::CkvG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
     SmartDataPtr<DetectorElement> SuperRichDESD(detSvc,SuperRichDeStructurePathName );
     RichDESD = SuperRichDESD;
   }else {
+    
     SmartDataPtr<DetectorElement> Rich1DESD(detSvc,Rich1DeStructurePathName  );
     RichDESD = Rich1DESD;
+     
+
     m_NumberOfPMTsInRich1 = RichDESD->param<int>("Rich1TotNumPmt");
     m_NumberOfPMTsInRich2 = RichDESD->param<int>("Rich2TotNumPmt");
     m_NumberOfPMTModulesInRich1= RichDESD->param<int>("Rich1TotNumModules");
@@ -49,7 +52,14 @@ CkvG4GeomProp::CkvG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
     m_NumberOfDetSectionsInRich1= RichDESD->param<int>("Rich1NumberOfDetSections");
     m_NumberOfDetSectionsInRich2= RichDESD->param<int>("Rich2NumberOfDetSections");
     m_MaxZHitInRich1Det = RichDESD->param<double>("Rich1MaxDownstreamZHitCoord");
+
+    if(aCkvGeometrySetup-> Rich2_UseGrandPmt()) {
+      m_NumberOfPMTModulesInRich2= RichDESD->param<int>("Rich2TotNumGrandModules");
+      m_NumberOfPMTsInRich2 = RichDESD->param<int>("Rich2TotNumGrandPmt");
+        
+    }
     
+       
   }
   
   if( !RichDESD )
@@ -72,6 +82,9 @@ CkvG4GeomProp::CkvG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
     m_PmtPixelYsize=RichDESD->param<double>("RichPmtPixelYsize");
     m_PmtPixelGap= RichDESD->param<double>("RichPmtPixelGap");
 
+
+
+
      if( isSuperRich) {
        m_NumberOfPmtsInSuperRich = RichDESD->param<double> ( "SuperRichTotNumPmt" );
        
@@ -87,27 +100,21 @@ CkvG4GeomProp::CkvG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
     m_PmtPixelYBoundarySize=m_NumberOfPixelRowInPMT+1;
     m_PmtPixelXBoundary.reserve( m_PmtPixelXBoundarySize);
     m_PmtPixelYBoundary.reserve( m_PmtPixelYBoundarySize);
+
+
+
     
-  //G4double CurPixelBoundaryX= -0.5*m_NumberOfPixelColInHPD*m_PixelXsize;
-  //  for(int ipb=0; ipb<m_PixelXBoundarySize; ipb++)
-  //  {
-  //    m_PixelXBoundary.push_back(CurPixelBoundaryX+ipb*m_PixelXsize);
-  //  }
-  //  G4double CurPixelBoundaryY= -0.5*m_NumberOfPixelRowInHPD*m_PixelYsize;
-  //  for(int ipc=0; ipc<m_PixelYBoundarySize; ipc++) {
-  //
-  //    m_PixelYBoundary.push_back(CurPixelBoundaryY+ipc*m_PixelYsize);
-   // }
 
     G4double CurPmtPixelBoundaryX=-0.5*RichDESD->param<double>("RichPmtAnodeXSize");
     G4double CurPmtPixelBoundaryY=-0.5*RichDESD->param<double>("RichPmtAnodeYSize");
+
     
     for(int ipd=0; ipd<m_PmtPixelXBoundarySize; ipd++)
     {
       double aBx= CurPmtPixelBoundaryX+
-                    ipd*(m_PmtPixelXsize+m_PmtPixelGap)- 0.5*+m_PmtPixelGap;
+        ipd*(m_PmtPixelXsize+m_PmtPixelGap)- (0.5*m_PmtPixelGap);
       if(ipd == 0 )aBx += 0.5*m_PmtPixelGap;
-      if(ipd == (m_PmtPixelXBoundarySize-1)) aBx -= 0.5*m_PmtPixelGap;
+      if(ipd == (m_PmtPixelXBoundarySize-1)) aBx -= (0.5*m_PmtPixelGap);
 
       
 
@@ -116,13 +123,61 @@ CkvG4GeomProp::CkvG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
     for(int ipe=0; ipe<m_PmtPixelYBoundarySize; ipe++)
     {
       double aBy= CurPmtPixelBoundaryY+
-                    ipe*(m_PmtPixelYsize+m_PmtPixelGap)- 0.5*+m_PmtPixelGap;
+        ipe*(m_PmtPixelYsize+m_PmtPixelGap)- (0.5*m_PmtPixelGap);
       if(ipe == 0 )aBy += 0.5*m_PmtPixelGap;
-      if(ipe == (m_PmtPixelYBoundarySize-1)) aBy -= 0.5*m_PmtPixelGap;
+      if(ipe == (m_PmtPixelYBoundarySize-1)) aBy -= (0.5*m_PmtPixelGap);
 
       
       m_PmtPixelYBoundary.push_back(aBy);
     }
+    
+
+    if( aCkvGeometrySetup-> Rich2_UseGrandPmt()) {
+
+      m_GrandPmtPixelXsize=RichDESD->param<double>("RichGrandPmtPixelXSize");
+      m_GrandPmtPixelYsize=RichDESD->param<double>("RichGrandPmtPixelYSize");
+      m_GrandPmtPixelGap= RichDESD->param<double>("RichGrandPmtPixelGap");
+      m_GrandPmtEdgePixelXSize = RichDESD->param<double>("RichGrandPmtEdgePixelXSize");
+      m_GrandPmtEdgePixelYSize = RichDESD->param<double>("RichGrandPmtEdgePixelYSize");
+            
+
+
+      m_GrandPmtPixelXBoundarySize=m_NumberOfPixelColInPMT+1;
+      m_GrandPmtPixelYBoundarySize=m_NumberOfPixelRowInPMT+1;
+      m_GrandPmtPixelXBoundary.reserve( m_GrandPmtPixelXBoundarySize);
+      m_GrandPmtPixelYBoundary.reserve( m_GrandPmtPixelYBoundarySize);
+ 
+      G4double CurGrandPmtPixelBoundaryX=-0.5*RichDESD->param<double>("RichGrandPmtAnodeXSize");
+      G4double CurGrandPmtPixelBoundaryY=-0.5*RichDESD->param<double>("RichGrandPmtAnodeYSize");
+      G4double CurPixelXSizeDiffEdge=m_GrandPmtEdgePixelXSize-(m_GrandPmtPixelXsize+m_GrandPmtPixelGap);
+      G4double CurPixelYSizeDiffEdge=m_GrandPmtEdgePixelYSize-(m_GrandPmtPixelYsize+m_GrandPmtPixelGap);
+      
+
+
+
+      for(int ipf=0; ipf<m_GrandPmtPixelXBoundarySize; ipf++)
+      {
+        double aCx= CurGrandPmtPixelBoundaryX+CurPixelXSizeDiffEdge+
+           ipf*(m_GrandPmtPixelXsize+m_GrandPmtPixelGap);
+         if(ipf == 0 )aCx -=  CurPixelXSizeDiffEdge ;
+         if(ipf == (m_GrandPmtPixelXBoundarySize-1)) aCx += CurPixelXSizeDiffEdge;      
+
+          m_GrandPmtPixelXBoundary.push_back(aCx);
+      }
+      for(int ipg=0; ipg<m_GrandPmtPixelYBoundarySize; ipg++)
+       {
+        double aDy= CurGrandPmtPixelBoundaryY+ CurPixelYSizeDiffEdge+
+          ipg*(m_GrandPmtPixelYsize+m_GrandPmtPixelGap);
+        
+          if(ipg == 0 )aDy -= CurPixelYSizeDiffEdge ;
+          if(ipg == (m_GrandPmtPixelYBoundarySize-1)) aDy +=  CurPixelYSizeDiffEdge;
+
+      
+        m_GrandPmtPixelYBoundary.push_back(aDy);
+      }
+      
+    }// end test on grand-pmt
+    
     
 
 
@@ -221,17 +276,74 @@ G4bool CkvG4GeomProp::PixelGapFinderY( const G4double Yc ){
 }
 
 
+
+
+G4double CkvG4GeomProp::GrandPixelXBoundaryValue(int PixelXNumber) {
+
+  if(PixelXNumber < (int) m_GrandPmtPixelXBoundary.size()){
+    return m_GrandPmtPixelXBoundary[PixelXNumber];
+  }
+  else
+  {
+    G4cout<<"RichGeomProp: Unknown Grand Pixel X boundary number in PMT "
+          <<PixelXNumber<<G4endl;
+    return -1000.0;
+  }
+
+}
+
+G4double CkvG4GeomProp::GrandPixelYBoundaryValue(int PixelYNumber) {
+
+  if(PixelYNumber < (int) m_GrandPmtPixelYBoundary.size())
+  {
+    return m_GrandPmtPixelYBoundary[PixelYNumber];
+  }
+  else
+  {
+    G4cout << "RichGeomProp: Unknown Grand Pixel Y boundary number in PMT "
+           << PixelYNumber << G4endl;
+    return -1000.0;
+  }
+
+}
+G4bool CkvG4GeomProp::GrandPixelGapFinderX( const G4double Xc ){
+  
+  G4bool HitInGap=false;
+  G4int CurrentPixelNum= GrandPixelXNumFromCoord(Xc);
+  
+  G4double aDistInPixel= Xc- m_GrandPmtPixelXBoundary[CurrentPixelNum] ;
+  if(fabs(aDistInPixel) < (0.5* m_GrandPmtPixelGap) ) HitInGap=true;
+  return HitInGap;
+  
+}
+
+G4bool CkvG4GeomProp::GrandPixelGapFinderY( const G4double Yc ){
+  
+  G4bool HitInGap=false;
+  G4int CurrentPixelNum= GrandPixelYNumFromCoord(Yc);
+  
+  G4double aDistInPixel= Yc- m_GrandPmtPixelYBoundary[CurrentPixelNum] ;
+  if(fabs(aDistInPixel) < (0.5* m_GrandPmtPixelGap) ) HitInGap=true;
+  return HitInGap;
+  
+}
+
+
+
+
+
+
 G4int CkvG4GeomProp::PixelPosFinder(G4double Xc,
                                      const std::vector<G4double> & aBound )
 {
 
   G4int CPixel=-1000;
 
-  // G4cout<<" Pixel finder Pmt Pixel boundary "<< aBound[0]<<"  "
+  //G4cout<<" Coord Pixel finder Pmt Pixel boundary "<< Xc <<"  "<<aBound[0]<<"  "
   //      <<aBound[1] <<"  "<< aBound[2] << "  "<< aBound[3]<<"  " << aBound[4] 
   //      <<"  "<< aBound[5] <<"  "<< aBound[6] <<"  "
   //      << aBound[7] <<"  "<< aBound[8] <<G4endl;
-  
+  //
   //  if(Xc < aBound[0] || Xc > aBound[aBound.size()-1] )
   // a tolerence of 0.001 is used to avoid machine precision issues.
   if( (Xc- aBound[0])< (-0.001) || (Xc- aBound[aBound.size()-1])> (0.001) )

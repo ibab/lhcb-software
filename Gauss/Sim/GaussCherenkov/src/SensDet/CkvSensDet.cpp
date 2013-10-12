@@ -66,7 +66,12 @@ CkvSensDet::CkvSensDet( const std::string& type   ,
 //=============================================================================
 // Destructor
 //=============================================================================
-CkvSensDet::~CkvSensDet(){}
+CkvSensDet::~CkvSensDet(){  
+  std::cout<<" Now in CkvSensdet end "<<std::endl;
+  
+  
+
+}
 //=============================================================================
 // initialize
 //=============================================================================
@@ -84,12 +89,15 @@ StatusCode CkvSensDet::initialize()
     CkvGeometrySetupUtil * aCkvGeometrySetup= CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance();
    m_SuperRichFlag = aCkvGeometrySetup ->isSuperRich();
    m_OptHorizRichFlag =  aCkvGeometrySetup ->hasOptimizedHorizontalRich1();
+   m_Rich2UseGrandPmt= aCkvGeometrySetup ->Rich2_UseGrandPmt();
+   //G4cout<<"CkvSensDet :  m_Rich2Use Grand pmt "<<m_Rich2UseGrandPmt<<G4endl;
+   
    
     
     m_RichG4HCName= new RichG4HitCollName();
     if(m_SuperRichFlag) m_RichG4HCName->setCollConfigWithSuperRich();
     m_NumberOfHCInRICH=m_RichG4HCName->NumberOfHCollectionInRICH();
-    //G4cout<<" Number of HC in SuperRich superrichglag  "<< m_NumberOfHCInRICH<< "  "<<
+    // G4cout<<" Number of HC in SuperRich superrichglag  "<< m_NumberOfHCInRICH<< "  "<<
     //  m_SuperRichFlag<<  G4endl;
     
     m_PhdHCID.reserve(m_NumberOfHCInRICH);
@@ -123,6 +131,8 @@ StatusCode CkvSensDet::initialize()
 //=============================================================================
 StatusCode CkvSensDet::finalize() 
 {
+  std::cout<<" Now in CkvSensDet finalize "<<std::endl;
+  
   return GiGaSensDetBase::finalize();  
   
 }
@@ -243,8 +253,8 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
     CurModuleWithLensFlag= aCherenkovPmtLensUtil->isPmtModuleWithLens(CurrentPmtModuleNumber);
    }
    
-    log<< MSG::DEBUG<<" SensDet PmtNumber Module RichDet Number  LensFlag "<< CurrentPmtNumber <<"   "
-      << CurrentPmtModuleNumber<<"  "<<CurrentRichDetNumber<<"  "<<CurModuleWithLensFlag<< endreq;
+   // log<< MSG::VERBOSE<<" SensDet PmtNumber Module RichDet Number  LensFlag "<< CurrentPmtNumber <<"   "
+   //   << CurrentPmtModuleNumber<<"  "<<CurrentRichDetNumber<<"  "<<CurModuleWithLensFlag<< endreq;
 
    G4int curSuperRichDet =0;
    
@@ -285,31 +295,52 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
   //test print
   //if(CurrentRichDetNumber == 0 ) {
   //  
-    //   log << MSG::INFO << "Now in ProcessHits() of CkvSensDet LocalPos X Y Z "
-    //   <<CurLocalPos.x() <<"  "<<CurLocalPos.y()<<"   "<<CurLocalPos.z()<<endreq;
+  //  log << MSG::DEBUG << "Now in ProcessHits() of CkvSensDet LocalPos X Y Z "
+  //    <<CurLocalPos.x() <<"  "<<CurLocalPos.y()<<"   "<<CurLocalPos.z()<<endreq;
 
-    //     log << MSG::INFO << "Now in ProcessHits() of CkvSensDet Global Pos X Y Z "
-    //  <<CurGlobalPos.x() <<"  "<<CurGlobalPos.y()<<"   "<<CurGlobalPos.z()<<endreq;
+  //         log << MSG::DEBUG << "Now in ProcessHits() of CkvSensDet Global Pos X Y Z "
+  //   <<CurGlobalPos.x() <<"  "<<CurGlobalPos.y()<<"   "<<CurGlobalPos.z()<<endreq;
 
-    //     log << MSG::INFO<<" Pe origin localxyz global xyz "<< CurPEOriginLocal.x()<<"   "
-    //   <<CurPEOriginLocal.y()<<"   "<< CurPEOriginLocal.z()<<"   "
-    //   <<CurPEOrigin.x()<<"   "<<CurPEOrigin.y()<<"   "<<CurPEOrigin.z()<<"   "<<endreq;
+  //         log << MSG::DEBUG<<" Pe origin localxyz global xyz "<< CurPEOriginLocal.x()<<"   "
+  //     <<CurPEOriginLocal.y()<<"   "<< CurPEOriginLocal.z()<<"   "
+  //    <<CurPEOrigin.x()<<"   "<<CurPEOrigin.y()<<"   "<<CurPEOrigin.z()<<"   "<<endreq;
     
   // }
   
   // end test print
   
-  G4int CurrentPixelXNum=  PixelXNum(CurLocalPos.x());
-  G4int CurrentPixelYNum=  PixelYNum(CurLocalPos.y());
-  //log << MSG::DEBUG <<
-  //  "Now in ProcessHits() of CkvSensDet : PixelX and Y = " <<CurLocalPos<< "  "<<
-  //    CurrentPixelXNum << "   " << CurrentPixelYNum<<endreq;
+  G4int CurrentPixelXNum= -1;
+  G4int CurrentPixelYNum= -1;
+  G4bool PXG = false;
+  G4bool PYG =false;
+  
+  if(CurrentRichDetNumber == 1 && m_Rich2UseGrandPmt ) {
+    CurrentPixelXNum =  GrandPixelXNum( CurLocalPos.x());
+    CurrentPixelYNum  = GrandPixelYNum( CurLocalPos.y());
+    PXG = m_RichGeomProperty->GrandPixelGapFinderX (CurLocalPos.x());
+    PYG = m_RichGeomProperty->GrandPixelGapFinderY (CurLocalPos.y());
+
+    
+  }else {
+    CurrentPixelXNum = PixelXNum(CurLocalPos.x());
+    CurrentPixelYNum = PixelYNum(CurLocalPos.y());
+    PXG = m_RichGeomProperty->PixelGapFinderX(CurLocalPos.x());
+    PYG = m_RichGeomProperty->PixelGapFinderY(CurLocalPos.y());    
+  }
+
+  G4int CurrentHitInPixelGap  = ( PXG || PYG ) ? 1 : 0;
+  
+  
+  
+
+
+  //log << MSG::VERBOSE <<
+  //  "Now in ProcessHits() of CkvSensDet : RichDetNum  localpos PixelX and Y Rich2Grandpmt  = " <<CurrentRichDetNumber 
+  //    <<"   "<<CurLocalPos<< "  "<<
+  //   CurrentPixelXNum << "   " << CurrentPixelYNum<<"   "<< m_Rich2UseGrandPmt<< endmsg;
 
   //  G4int CurOptPhotID= aTrack->GetParentID();   
-    
-     G4bool PXG = m_RichGeomProperty->PixelGapFinderX(CurLocalPos.x());
-     G4bool PYG = m_RichGeomProperty->PixelGapFinderY(CurLocalPos.y());
-     G4int CurrentHitInPixelGap  = ( PXG || PYG ) ? 1 : 0;
+     
      
 
   G4double CurGlobalTime =  aTrack-> GetGlobalTime();
@@ -393,11 +424,12 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
             CurPEOriginLocal= aPEInfo->HpdPeLocalOriginPosition();
             CurPhotonSourceProcInfo=aPEInfo->PhotonSourceInformation();
    
-            log << MSG::DEBUG << "Now in ProcessHits()  "
-                <<" Track id of charged tk opt phot pe "
-                << CurOptPhotMotherChTrackID <<"   "
-                <<  CurOptPhotID<<"   "
-                << aTrack->GetTrackID() << endreq;
+            //log << MSG::VRBOSE << "Now in ProcessHits()  "
+            //    <<" Track id of charged tk opt phot pe "
+            //    << CurOptPhotMotherChTrackID <<"   "
+            //    <<  CurOptPhotID<<"   "
+            //    << aTrack->GetTrackID() << endreq;
+
             if( CurElectronBackScatFlag > 0) {
               log << MSG::DEBUG << "Now in CkvSensDet ProcessHits() backscattered eln  "
                   << CurElectronBackScatFlag << endreq;
@@ -589,8 +621,8 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
   if ( CurrentRichCollectionSet >= 0 ) {
     bool EnableThisHitStore=true;
     G4bool FlagThisHitAsDuplicate=false;
-    log << MSG::VERBOSE<<" Avoid duplicate  Hits  "<< m_RichPmtAviodDuplicateHitsActivate
-           <<"   "<<m_RichPmtFlagDuplicateHitsActivate<< endreq;
+    //  log << MSG::VERBOSE<<" Avoid duplicate  Hits  "<< m_RichPmtAviodDuplicateHitsActivate
+    //       <<"   "<<m_RichPmtFlagDuplicateHitsActivate<< endreq;
     G4int CurPixelNumInPmt = m_RichGeomProperty ->GetPixelNumInPmt( CurrentPixelXNum, CurrentPixelYNum);
 
     if(m_RichPmtAviodDuplicateHitsActivate || m_RichPmtFlagDuplicateHitsActivate  ) { 
@@ -635,10 +667,10 @@ bool CkvSensDet::ProcessHits( G4Step* aStep ,
     }
     
     
-        log << MSG::VERBOSE
-        << "CkvSensdet: Current collection set AuxSet and Hit number stored = "
-        << CurrentRichCollectionSet << "  " 
-        <<NumHitsInCurHC << "   " <<endreq;
+    // log << MSG::VERBOSE
+    //   << "CkvSensdet: Current collection set AuxSet and Hit number stored = "
+    //   << CurrentRichCollectionSet << "  " 
+    //   <<NumHitsInCurHC << "   " <<endmsg;
         
   }
   
@@ -695,6 +727,8 @@ void CkvSensDet::Initialize(G4HCofThisEvent*  HCE) {
 
     HCE->AddHitsCollection( m_PhdHCID[ihhc] , m_RichHC[ihhc]  );
   }
+
+    ResetPmtMapInCurrentEvent();
 
 }
 

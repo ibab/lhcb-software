@@ -39,7 +39,6 @@ RichPmtProperties::RichPmtProperties( )
     m_PmtDBOverRideMaxQEValue(0.60),
     m_CurQEMatPathname(RichPmtQeffMatTabPropPath ),
     m_CurQETableSourceOption(0),
-    m_PmtQEScaleFactor( 1.0 ),
     m_ActivatePmtModuleSuppressSet3(false),
     m_ActivatePmtModuleSuppressSet4(false),
     m_ActivatePmtModuleSuppressSet5(false),
@@ -440,10 +439,7 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
 
 
      SmartDataPtr<TabulatedProperty> tabQE(detSvc, m_CurQEMatPathname );
-
-     //RichPmtPropLogQE<<MSG::INFO<<"QE source: " << m_CurQETableSourceOption << endreq;
-     RichPmtPropLogQE<<MSG::INFO<<"Now getting the QE from "<<m_CurQEMatPathname<<endreq;
-     //RichPmtPropLogQE<<MSG::INFO<<"QE overall scale factor: " << m_PmtQEScaleFactor << endreq;
+     RichPmtPropLogQE<<MSG::INFO<<" Now getting the QE from "<<m_CurQEMatPathname<<endreq;
 
     //  SmartDataPtr<TabulatedProperty> tabQE(detSvc, RichPmtBorosilicateQeffMatTabPropPath);
     // RichPmtPropLogQE<<MSG::INFO<<" Now getting QE from "<<RichPmtBorosilicateQeffMatTabPropPath<<endreq;    
@@ -465,14 +461,13 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
     TabulatedProperty::Table::const_iterator it;
     for (it = table.begin(); it != table.end(); it++) {
       double aPhotonEnergy= (it->first);
-      double aQeOrig      = (it->second)/100.0; // division by 100 to get from percent to prob
+      double aQeOrig      = (it->second)/100.0; // division by 100 to get from percent to prob 
+      double aQeCorrected = aQeOrig;
 
       // if( (aPhotonEnergy >= (double) m_MinPhotonEnergyInRICH) && 
           //	  (aPhotonEnergy <= (double) m_MaxPhotonEnergyInRICH ) ) {
           //	aQeCorrected = getPmtCorrectedQEFromPhotonEnergy(aPhotonEnergy, aQeOrig);
           // }
-
-      double aQeCorrected = aQeOrig * m_PmtQEScaleFactor ;
 
       double aPhotonEnergyIneV = aPhotonEnergy*1000000.0; // mult to get from MeV to eV
       EphotSingle.push_back(aPhotonEnergyIneV);
@@ -950,8 +945,10 @@ void   RichPmtProperties::setQWPhCathNames () {
 
   std::string aPmtPhcathSubPathName =m_SuperRichFlag ? SuperRichLPmtPhCathDeSubPathname :  RichPmtPhCathDeSubPathname;
   
-
+  std::string aR2DePath =   Rich2ClassicDeStructurePathName;
+  
   SmartDataPtr<DetectorElement> R_DET (detSvc, aRDePath);  
+  //  SmartDataPtr<DetectorElement> R2_DET (detSvc, aR2DePath);  
 
   // temporarily comment out the superrich option
 
@@ -1020,9 +1017,49 @@ void   RichPmtProperties::setQWPhCathNames () {
     SmartDataPtr<DetectorElement> RichLPmtPCDE(detSvc, (aRDePath + RichLPmtPhCathDeSubPathname ));
      
     SmartDataPtr<DetectorElement> RichLPmtLensDE(detSvc, ( aRDePath + RichLPmtLensDeSubPathName ));
+
+
+
+    SmartDataPtr<DetectorElement> RichGrandPmtQWDE(detSvc, ( aR2DePath+RichGrandPmtQwDeSubPathName ));    
+    SmartDataPtr<DetectorElement> RichGrandPmtPCDE(detSvc, ( aR2DePath + RichGrandPmtPhCathDeSubPathname ));
+    
+
+
     
     if( RichPmtQWDE->geometry()->hasLVolume())  m_PmtQWLogVolName =RichPmtQWDE->geometry()->lvolumeName();
     if(RichPmtPCDE->geometry()->hasLVolume())  m_PmtPhCathodeLogVolName = RichPmtPCDE->geometry()->lvolumeName();
+
+
+    //    if(RichGrandPmtQWDE)  {  RichPmtlog << MSG::INFO << " RichGrandPMTQE  Detelem QW " <<endreq; 
+    // }else {
+    //  RichPmtlog << MSG::INFO << " RichGrandPMTQE  Detelem QW Not found "<< aR2DePath<<"  "
+    //                               << RichGrandPmtQwDeSubPathName   <<endreq; 
+    //  }
+    //
+    // 
+    //  if(  RichGrandPmtPCDE)  { RichPmtlog << MSG::INFO << " RichGrandPMTQE  Detelem Phcath " <<endreq;   
+    //  }else {
+    //
+    //  RichPmtlog << MSG::INFO << " RichGrandPMTQE  Detelem Phcath not found "<<aR2DePath<<"  "
+    //                                    <<RichGrandPmtQwDeSubPathName    <<endreq;
+    //  
+    // }
+    
+    
+
+    if( (RichGrandPmtQWDE) && (RichGrandPmtPCDE) ) {
+
+
+      if(RichGrandPmtQWDE ->geometry()->hasLVolume()) m_GrandPmtQWLogVolName =RichGrandPmtQWDE->geometry()->lvolumeName();     
+      if( RichGrandPmtPCDE->geometry()->hasLVolume()) m_GrandPmtPhCathodeLogVolName = RichGrandPmtPCDE->geometry()->lvolumeName();   
+     
+      // RichPmtlog << MSG::INFO << " RichGrandPMTQE Log vol names "<<m_GrandPmtQWLogVolName<<"   "
+      //           <<m_GrandPmtPhCathodeLogVolName << endreq;
+      
+    }
+    
+
+
 
     if(! RichLPmtQWDE || !RichLPmtPCDE || !RichLPmtLensDE  ) {
 
@@ -1036,6 +1073,7 @@ void   RichPmtProperties::setQWPhCathNames () {
       }
       
     }
+    
     
     }else {    
 

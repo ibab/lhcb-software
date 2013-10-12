@@ -44,6 +44,8 @@ CherenkovG4HitRecon::CherenkovG4HitRecon( ):  m_RichG4CkvRec (0) ,
                                     m_RichG4ReconFlatMirr(0)  {
 
 
+
+  
   m_agelnominalrefindex = 1.03;
   m_c4f10nominalrefindex = 1.0014;
   m_chtkBetaSaturatedCut =0.9999;
@@ -70,9 +72,11 @@ CherenkovG4HitRecon::CherenkovG4HitRecon( ):  m_RichG4CkvRec (0) ,
   
   m_useOnlySignalHitsInRecon=false; 
 
-  m_MaxRich1TrackPreStepPosZ=1300.0;
-  m_MinRich1TrackPostStepPosZ=1750.0;
+  m_MaxRich1TrackPreStepPosZ= 1750.0;
   
+  m_MinRich1TrackPostStepPosZ=990 ;  
+  
+
 
 }
 CherenkovG4HitRecon::~CherenkovG4HitRecon(  ) {
@@ -188,7 +192,7 @@ void CherenkovG4HitRecon::RichG4GetOccupancies( const G4Event* anEvent,
 
 
             Gaudi::XYZPoint aLocalHitFromPixelNum = m_RichG4CkvRec->
-                        GetSiHitCoordFromPixelNum(aPixelXNum,aPixelYNum);
+              GetSiHitCoordFromPixelNumRDet(aPixelXNum,aPixelYNum,aRichDetNum);
           
             Gaudi::XYZPoint aLocalCoordInPhDetPanelPlane = m_RichG4CkvRec->
               GetCoordInPhDetPanelPlane(aLocalHitFromPixelNum,0);
@@ -232,8 +236,8 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
   int NumTkIdRich1Agel = TkIdVectRich1Agel.size();
   int NumTkIdRich1Gas  = TkIdVectRich1Gas.size();
   int NumTkIdRich2Gas =  TkIdVectRich2Gas.size();
- //  CherenkovG4HitReconlog<<MSG::INFO<<" NumTrkid rich1 rich2 "<<NumTkIdRich1Gas <<"  "
- //                       <<NumTkIdRich2Gas<<endreq;
+  //   CherenkovG4HitReconlog<<MSG::INFO<<" NumTrkid rich1 rich2 "<<NumTkIdRich1Gas <<"  "
+  //                      <<NumTkIdRich2Gas<<endreq;
   RichG4RadiatorMaterialIdValues* aRMIdValues =
       RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
   
@@ -276,7 +280,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
           const G4ThreeVector & LocalHitCoord = aHit->GetLocalPos();
          // G4int aPmtNum =    aHit-> GetCurHpdNum();
           G4int aPmtNum =    aHit-> CurPmtNum();
-          // G4int aPmtModuleNum =  aHit-> CurModuleNum();
+          //  G4int aPmtModuleNum =  aHit-> CurModuleNum();
           G4int aPmtLensFlag= aHit->pdWithLens() ;
           
 
@@ -285,10 +289,10 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
           //G4int aHitInPixelGap = 0;
           
           
-           //         G4cout<<" RichG4Recon Pmt LocalCoord Pixel Num GapFlag"<< LocalHitCoord <<"  "
-           //     <<aPixelXNum<<"  "<< aPixelYNum<<"   "<<aHitInPixelGap <<G4endl;
+          //           G4cout<<" RichG4Recon Pmt LocalCoord Pixel Num GapFlag"<< LocalHitCoord <<"  "
+          //      <<aPixelXNum<<"  "<< aPixelYNum<<"   "<<aHitInPixelGap <<G4endl;
           //  G4cout<<" RichG4Recon DetNum Pmt num Module num "<<aRichDetNum<< "   "
-         //       <<aPmtNum <<"  "<<aPmtModuleNum<<G4endl;
+          //      <<aPmtNum <<"  "<<aPmtModuleNum<<G4endl;
             
 	  // now to accomodate the new pmt numbering scheme.
 	         if(  aRichDetNum == 1 ) { aPmtNum -= aNumPmtInRich[0] ;  }
@@ -343,11 +347,16 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
            
           G4double ChTkEnergy =
             pow( (ChTkPDGMass*ChTkPDGMass+ aChTrackTotMom* aChTrackTotMom),0.5);
+          
           G4double ChTkBeta=0.0;
           if( ChTkEnergy > 0.0 ) {
 
             ChTkBeta = aChTrackTotMom/ChTkEnergy;
           }
+
+
+          //    G4cout<<"   mass mom energ  beta "<< ChTkPDGMass <<"  "<<aChTrackTotMom <<"  "<<ChTkEnergy <<"  "<<ChTkBeta<<G4endl;
+          
           int ChtkId =  (int) (aHit-> GetChTrackID()) ;
 
 
@@ -423,8 +432,8 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
           
           
 
-          //G4cout<<" G4HitRecon Local PeOrigin "<< CurLocalPeOrigin <<G4endl;
-          // G4cout<<" G4HitRecon Global Peorigin "<<GlobalPhcathCoord <<G4endl;
+          //  G4cout<<" G4HitRecon Local PeOrigin "<< CurLocalPeOrigin <<G4endl;
+          //  G4cout<<" G4HitRecon Global Peorigin "<<GlobalPhcathCoord <<G4endl;
           //  G4cout<<" G4HitRecon Global Qw ext point " <<GlobalQwExtCoord <<G4endl;
           
 
@@ -484,7 +493,13 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
             int itr1s=0;
 
             while (( aRadiatornum == (aRMIdValues-> Rich1GaseousCkvRadiatorNum() )) && (itr1s < NumTkIdRich1Gas) ) {
+
+              //  CherenkovG4HitReconlog<<MSG::INFO<<" radiator num   tk num TkID " 
+              //                      <<aRadiatornum <<"  "<<itr1s <<" "<< TkIdVectRich1Gas[itr1s] <<"   "<<ChtkId<<  endmsg;
+
               if( TkIdVectRich1Gas[itr1s] ==  ChtkId ) {
+
+                 
                 // test 
                 if( ChTkBeta >   m_chtkBetaSaturatedCut  ) {
                   //end test
@@ -497,10 +512,20 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
                     if( aChTrackTotMom <  m_minMomTracksForReconR1Gas )  SelectThisHit= false;
                     
                   }
+                  //    CherenkovG4HitReconlog<<MSG::INFO<<" radiator tk mom select hit "<< aRadiatornum<<"   "
+                  //    <<   aChTrackTotMom <<"  "<<SelectThisHit<<endmsg;
+                  //  CherenkovG4HitReconlog<<MSG::INFO<<" ChTrackPreStepPos  min max RichPos "
+                  //                      <<aChTrackPreStepPos<<"  "
+                  //  <<m_MaxRich1TrackPreStepPosZ<<"  "<<m_MinRich1TrackPostStepPosZ<<endmsg;
+                  
+
+
                   if( (aChTrackPreStepPos.z() > m_MaxRich1TrackPreStepPosZ) || 
                       (aChTrackPostStepPos.z() < m_MinRich1TrackPostStepPosZ) ) {
                     SelectThisHit= false;
                   }
+
+
                   
 
                 }
@@ -515,13 +540,15 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
 
             }
 
+
+
             // now  for rich2gas saturated  hits
             int itr2s=0;
 
             while ((aRadiatornum == (aRMIdValues-> Rich2GaseousCkvRadiatorNum() ))  && (itr2s < NumTkIdRich2Gas) ) {
                
-           //   CherenkovG4HitReconlog<<MSG::INFO<<" Now recon Rich2 sat  hits "<<NumTkIdRich2Gas
-           //                         <<"  "<<itr2s<<"   "<<  TkIdVectRich2Gas[itr2s] <<"  "<< ChtkId<<endreq;
+              //   CherenkovG4HitReconlog<<MSG::INFO<<" Now recon Rich2 sat  hits "<<NumTkIdRich2Gas
+              //                       <<"  "<<itr2s<<"   "<<  TkIdVectRich2Gas[itr2s] <<"  "<< ChtkId<<endreq;
            //   CherenkovG4HitReconlog<<MSG::INFO<<" Recon rich2 chtk Mom mass "<<aChTrackTotMom<<
            //       "     "<<ChTkPDGMass<<endreq;
 
@@ -558,6 +585,9 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
 
           // perform reconstruction only for those hits which went through both primary and
           // secondary mirrors.
+
+          // CherenkovG4HitReconlog<<MSG::INFO<<" Primary and sec copy info hit sel "<< aPrimaryMirrCopyInfo <<"  "
+          //                      << aSecMirrCopyInfo <<" "<< SelectThisHit<< endmsg;
           
           if( aPrimaryMirrCopyInfo < 0 || aSecMirrCopyInfo < 0 ) {
             SelectThisHit=false;
@@ -571,11 +601,14 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
             
             SelectThisHit=false;
           }
+          // CherenkovG4HitReconlog<<MSG::INFO<< "test reflInpmt photsource hit sel "<< areflectedInPmt <<"  "
+          //                      <<aPhotSource << "   "<< SelectThisHit<<  endmsg;
+          
           if(m_useOnlySignalHitsInRecon) {
               if(areflectedInPmt || (aPhotSource == 2 ) ) SelectThisHit =false;
           }
           
-        //  CherenkovG4HitReconlog<<MSG::INFO<< "Selected Hit  Pixelgapval "<< SelectThisHit <<"   "<<aHitInPixelGap <<endreq;
+          // CherenkovG4HitReconlog<<MSG::INFO<< "Selected Hit  Pixelgapval "<< SelectThisHit <<"   "<<aHitInPixelGap <<endreq;
           
 
           if(  SelectThisHit ) {
@@ -587,15 +620,15 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
             //                                  << ihcol<<"   "<<aPmtModuleNum<<"   "
             //                                  <<aPmtNum<<endreq;
 
-            // CherenkovG4HitReconlog<<MSG::INFO<<" Sidet Pixel X Y num are "
+            //  CherenkovG4HitReconlog<<MSG::INFO<<" Sidet Pixel X Y num are "
             //                  <<aPixelXNum<<"   "<<aPixelYNum<<endreq;
 
 
-          //    CherenkovG4HitReconlog<<MSG::INFO<<" Local ph cath coord is "
-         //                    << LocalPhcathCoord.x()<<"    "
-         //                    <<  LocalPhcathCoord.y()<<"    "
-         //                    <<  LocalPhcathCoord.z()<<endreq;
-         //
+            //  CherenkovG4HitReconlog<<MSG::INFO<<" Local ph cath coord is "
+            //                 << LocalPhcathCoord.x()<<"    "
+            //                 <<  LocalPhcathCoord.y()<<"    "
+            //                 <<  LocalPhcathCoord.z()<<endreq;
+         
 
             // now convert to clhep like param and store then in
             // RichG4CkvRec.
@@ -763,7 +796,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
 
             Gaudi::XYZPoint aLocalHitFromPixelNum =
               m_RichG4CkvRec->
-              GetSiHitCoordFromPixelNum(aPixelXNum,aPixelYNum);
+              GetSiHitCoordFromPixelNumRDet(aPixelXNum,aPixelYNum,aRichDetNum);
 
             //   G4cout<<" Local hit from pixel num "<<aPixelXNum<<"  "<<aPixelYNum<<"  "<<aLocalHitFromPixelNum<<G4endl;
             
@@ -1126,20 +1159,20 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
               // G4cout<<"Reflection point D1E4 D8E4 : "<<aReflPointD1E4<<"   "<<aReflPointD8E4 <<G4endl;
               // calculate the cherenkov angle in gas radiators.
               // G4cout<<" Now for the gas radaitor ckv D1E1 "<<G4endl;
-              // G4double atestCkvAngled1e1= m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD1E1,
+              //  G4double atestCkvAngled1e1= m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD1E1,
               //                                                                 EmisPtUseTrueEmissPt);
-            //G4double atestCkvAngled3e1= m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD3E1,
-            //                                                                   EmisPtUseTrueEmissPt);
+              // G4double atestCkvAngled3e1= m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD3E1,
+              //                                                                 EmisPtUseTrueEmissPt);
               //   G4double atestCkvAngled2e1= m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD2E1,
               //                                                                 EmisPtUseTrueEmissPt);
 
               // G4cout<<" True Flat Pt Dir "<<aTrueFlPtDir <<G4endl;
               
-              //G4cout<<" Example refl point recon d1e1 d3e1 d2e1"<<aReflPointD1E1 <<"   "<< aReflPointD3E1 <<"   "
-              //      <<aReflPointD2E1<<G4endl;
+                 //  G4cout<<" Example refl point recon d1e1 d3e1 d2e1"<<aReflPointD1E1 <<"   "<< aReflPointD3E1 <<"   "
+                 //   <<aReflPointD2E1<<G4endl;
               
-            //  G4cout<<"  Current example Recon Ckv Angle "<<atestCkvAngled1e1<<"   "<< atestCkvAngled3e1 <<"   "
-            //        <<  atestCkvAngled2e1 <<G4endl;
+                 //    G4cout<<"  Current example Recon Ckv Angle "<<atestCkvAngled1e1<<"   "<< atestCkvAngled3e1 <<"   "
+                 //    <<  atestCkvAngled2e1 <<G4endl;
 
               // G4cout<<"Sph REfl pt from D9E4  trueTS "<<aReflPointD9E4<<"   "<<aDetPointSphMirrorTrue<<G4endl;
               
@@ -1316,9 +1349,11 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
 
 
 
+            
             if(m_RichG4HistoFillSet4Ckv) {
               m_RichG4HistoFillSet4Ckv->
                 FillRichG4HistoSet4(aHit,m_RichG4ReconResult );
+              
               m_RichG4HistoFillSet4Ckv->
                 FillRichG4CoordHistoSet4(aHit,m_RichG4HitCoordResult);
 
