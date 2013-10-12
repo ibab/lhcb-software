@@ -145,7 +145,10 @@ void Calo2Dview::getCaloParam(unsigned int calo){
 
   if((int)calo == m_caloType)return;
   m_calo= m_caloMap[calo];
-  if(NULL == m_calo)return;
+  if(NULL == m_calo){
+    Warning("Cannot access calorimeter parameters ",StatusCode::SUCCESS).ignore();
+    return;
+  }
   m_centre=m_centreMap[calo];
   m_reg=m_regMap[calo];
   m_refCell = m_refCellMap[calo];
@@ -179,7 +182,10 @@ void Calo2Dview::bookCalo2D(const HistoID& unit,const std::string title,  std::s
 void Calo2Dview::bookCalo2D(const HistoID& unit,const std::string title,  unsigned  int calo , int area){
 
   getCaloParam(calo);
-  if( NULL == m_calo)return;
+  if( NULL == m_calo){
+    Warning("Cannot book calo2D histo "+title+"'",StatusCode::SUCCESS).ignore();
+    return;
+  }
   caloViewMap[unit]=calo;
 
   // 1D view : caloCellID as xAxis
@@ -479,6 +485,7 @@ void  Calo2Dview::fillCalo2D(const HistoID& unit, const LHCb::CaloCellID& id , d
 
 void  Calo2Dview::fillCaloPin2D(const HistoID& unit, const LHCb::CaloCellID& id , double value, const std::string title){
 
+  if(m_calo == NULL )return;
   // filter PIN ADC (sanity check)
   if( !id.isPin() )return;
 
