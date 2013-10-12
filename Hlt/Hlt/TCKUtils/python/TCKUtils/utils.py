@@ -109,7 +109,7 @@ class AccessSvcSingleton(object) :
     def _cas(self) : 
         return AccessSvcSingleton.__cas
     def _cte(self) : 
-        if type(AccessSvcSingleton.__cte) is not GaudiPython.gbl.IConfigAccessSvc : 
+        if callable( AccessSvcSingleton.__cte) :
             AccessSvcSingleton.__cte = AccessSvcSingleton.__cte(self)
         return AccessSvcSingleton.__cte
 
@@ -142,8 +142,12 @@ class AccessSvcSingleton(object) :
          if type(id) is not MD5 :
              id = self._2id(id)
          return self._pcs().resolveConfigTreeNode(id) if (id and id.valid()) else None
+    def writeConfigTreeNode(self,node) :
+         return self._cas().writeConfigTreeNode(node)
     def resolvePropertyConfig(self,id) :
          return self._pcs().resolvePropertyConfig(id) if (id and id.valid()) else None
+    def writePropertyConfig(self,node) :
+         return self._cas().writePropertyConfig(node)
     def collectLeafRefs(self,id) :
          if type(id) is not MD5 :
              id = self._2id(id)
@@ -156,14 +160,8 @@ class AccessSvcSingleton(object) :
          return self._cas().configTreeNodeAliases( alias )
     def writeConfigTreeNodeAlias(self,alias) :
          return self._cas().writeConfigTreeNodeAlias(alias)
-    def writePropertyConfig(self,node) :
-         return self._cas().writePropertyConfig(node)
-    def readConfigTreeNode(self, id ) :
-         return self._cas().readConfigTreeNode(id)
-    def writeConfigTreeNode(self,node) :
-         return self._cas().writeConfigTreeNode(node)
     def updateAndWrite(self,id,mods,label) :
-         print 'updateAndWrite: %s ' % mods
+         if not mods.empty() : print 'updateAndWrite: %s ' % ( [ i for i in mods ] )
          return self._cte().updateAndWrite(id,mods,label)
 
 
@@ -190,8 +188,8 @@ class Configuration :
     def __init__(self,alias,svc) :
         self.info = { 'id' : alias.ref().str() , 'TCK' : [], 'label' : '<NONE>' }
         self.info.update( zip(['release','hlttype'],alias.alias().str().split('/')[1:3]))
-        x = svc.readConfigTreeNode( alias.ref() )
-        label =  x.get().label();
+        x = svc.resolveConfigTreeNode( alias.ref() )
+        label =  x.label();
         self.info.update( { 'label' : label } )
     def __getitem__(self,label) : 
         return self.info[label]
@@ -264,7 +262,7 @@ class PropCfg(object) :
             obj.kind = x.kind()
             obj.fullyQualifiedName = x.fullyQualifiedName()
             obj.digest = id
-            obj.props  = dict( [ (i.first,i.second) for i in x.properties() ] )
+            obj.props  = dict( (i.first,i.second) for i in x.properties() )
             PropCfg._pool[id] = obj
         return obj
     def properties(self) : return self.props
@@ -542,13 +540,22 @@ class RemoteAccess(object) :
             print 'please provide a reasonable label for the new configuration'
             return None
         svc = RemoteAccess._svc
-        id = svc._2id(id)
-        if not id.valid() : raise RuntimeWarning('not a valid id : %s' % id )
-        a = [ i.alias().str() for  i in svc.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
-        if len(a) != 1 : 
-            print 'something went wrong: no unique toplevel match for ' + str(id)
-            return
-        (release,hlttype) = a[0].split('/',3)[1:3]
+        #  either we got (some form of) an ID, and we reverse engineer back the alias (provided it is unique!)
+        #  or we got an alias directly...
+
+        if type(id) == GaudiPython.gbl.ConfigTreeNodeAlias :
+            a = id.alias().str()
+            id = id.ref()
+            # this is fine for TOPLEVEL, but not TCK...
+        else :
+            id = svc._2id(id)
+            if not id.valid() : raise RuntimeWarning('not a valid id : %s' % id )
+            a = [ i.alias().str() for  i in svc.configTreeNodeAliases( alias('TOPLEVEL/') ) if i.ref() == id ]
+            if len(a) != 1 : 
+                print 'something went wrong: no unique toplevel match for ' + str(id)
+                return
+            a = a[0]
+        (release,hlttype) = a.split('/',3)[1:3]
         mods = vector_string()
         for algname,props in updates.iteritems() :
             for k,v in props.iteritems() : 
@@ -556,8 +563,8 @@ class RemoteAccess(object) :
                 print 'updating: ' + item
                 mods.push_back( item )
         newId = svc.updateAndWrite(id,mods,label)
-        noderef = svc.readConfigTreeNode( newId )
-        top = topLevelAlias( release, hlttype, noderef.get() )
+        noderef = svc.resolveConfigTreeNode( newId )
+        top = topLevelAlias( release, hlttype, noderef )
         svc.writeConfigTreeNodeAlias(top)
         print 'wrote ' + str(top.alias()) 
         return str(newId)
@@ -588,9 +595,9 @@ class RemoteAccess(object) :
                     mods.push_back( '%s.%s:%s' %  (algname, k, v ) )
         print 'updates: %s ' % mods
         newId = svc.updateAndWrite(id,mods,label)
-        noderef = svc.readConfigTreeNode( newId )
+        noderef = svc.resolveConfigTreeNode( newId )
         if not noderef : print 'oops, could not find node for %s ' % newId
-        top = topLevelAlias( release, hlttype, noderef.get() )
+        top = topLevelAlias( release, hlttype, noderef )
         svc.writeConfigTreeNodeAlias(top)
         print 'wrote ' + str(top.alias()) 
         return str(newId)
@@ -618,14 +625,14 @@ class RemoteAccess(object) :
                         elif cfg.type == 'L0DUConfigProvider' and l0tck != cfg.props['TCK'] :
                             raise KeyError('requested L0TCK %s not known by L0DUConfigProvider in config %s; known L0TCK: %s' % ( l0tck, id, cfg.props['TCK'] ))
             print 'creating mapping TCK: 0x%08x -> ID: %s' % (tck,id)
-            ref = svc.readConfigTreeNode( id )
-            alias = TCK( ref.get(), tck )
+            ref = svc.resolveConfigTreeNode( id )
+            alias = TCK( ref, tck )
             svc.writeConfigTreeNodeAlias(alias)
 
     def rcopyTree( self, nodeRef ) :
         svc = RemoteAccess._svc
         def __nodes( n ) :
-            node = svc.readConfigTreeNode( n )
+            node = svc.resolveConfigTreeNode( n )
             from itertools import chain
             # depth first traversal -- this insures we do not write
             # incomplete data objects... 
@@ -639,21 +646,36 @@ class RemoteAccess(object) :
                 assert leaf 
                 newRef = svc.writePropertyConfig(leaf)
                 assert leafRef == newRef
-            n = svc.writeConfigTreeNode(i.get())
+            n = svc.writeConfigTreeNode(i)
             assert n == i.digest()
 
     def rcopy( self, glob = None  ) :
         svc = RemoteAccess._svc
-        for label in ( 'TOPLEVEL/','TCK/','ALIAS/' ) :
-            print 'looping over ',label
-            for i in svc.configTreeNodeAliases( alias(label) ) :
-                if glob :
-                    from fnmatch import fnmatch
-                    if not fnmatch(str(i.alias()),glob) : continue
-                print 'copying tree %s' % i.alias()
-                self.rcopyTree(i.ref())
-                print 'writing alias %s' % i.alias()
-                svc.writeConfigTreeNodeAlias(i)
+        from copy import deepcopy
+        from itertools import chain
+        aliases = [ deepcopy(i)  for label in ( 'TOPLEVEL/','TCK/' ) for i in svc.configTreeNodeAliases( alias(label) ) ]
+        if glob :
+             from fnmatch import fnmatch
+             aliases = filter( lambda i : fnmatch(i.alias().str(),glob), aliases) 
+        # Now, split them into 
+        #    TOPLEVEL (just copy)
+        top   = filter( lambda i : i.alias().str().startswith('TOPLEVEL/'), aliases )
+        #    The rest: find corresponding TOPLEVEL, add it to the toplevel list, re-create alias afterwards
+        other = filter( lambda i : not i.alias().str().startswith('TOPLEVEL/'), aliases )
+        assert len(top)+len(other) == len(aliases)
+        for i in other :
+            top += [ deepcopy(j) for j in svc.configTreeNodeAliases( alias('TOPLEVEL/') ) if j.ref() == i.ref() and j not in top ]
+        l = len(top)
+        print '# of TOPLEVEL items to copy: %s' % l
+        for k,i in enumerate( sorted( top, key = lambda x : x.alias().str() ), 1 ):# TODO: sort on the (integer) numbers appearing in the string...
+            print '[%s/%s] copying tree %s' % (k,l, i.alias())
+            empty = dict()
+            node = svc.resolveConfigTreeNode( i.ref() )
+            newid = self.rupdateProperties(i,empty,node.label())
+            assert newid == i.ref().str()
+        for i in  other: 
+            print 'copying alias %s -> %s ' % (i.alias().str(),i.ref() )
+            svc.writeConfigTreeNodeAlias( i )
         print 'done copying... '
 
 
