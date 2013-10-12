@@ -156,6 +156,7 @@ def photonReco ( context , enableRecoOnDemand, useTracks = True , useSpd = False
     
     ## build the context-dependent sequence (  TrackMatch + SinglePhotonRec )
     seq = getAlgo ( GaudiSequencer , "PhotonReco" , context , "Rec/Calo/Photons"  , enableRecoOnDemand   )
+    seq.Members=[]
 
     # 1/ PhotonMatch from CaloPIDs (if tracking is requested)
     if useTracks : 
@@ -270,6 +271,7 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
 
     ## build the context-dependent sequence (  TrackMatch + SingleElectronRec )
     seq = getAlgo ( GaudiSequencer , "ElectronReco" , context  , 'Rec/Calo/Electrons' , enableRecoOnDemand   ) 
+    seq.Members=[]
 
     # 1/ ElectronMatch from CaloPIDs (if useTracks)
     if useTracksE :
@@ -380,7 +382,7 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
     if clusterOnly :
         pi0 = getAlgo ( CaloMergedPi0Alg , 'SplitClustersRec', context )
         pi0.CreateSplitClustersOnly = True
-        addAlgs ( sseq , pi0 ) 
+        sseq.Members=[pi0]
     else :
         pi0 = getAlgo ( CaloMergedPi0Alg , 'MergedPi0Rec', context )        
 
@@ -436,7 +438,7 @@ def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutral
         pi0.Tools = [ ecorr , scorr , lcorr ]
 
 
-    addAlgs ( seq , pi0 ) 
+    seq.Members=[pi0]
 #    addAlgs ( seq , splitg ) 
     
     ## 3/ (PhotonFrom)MergedID

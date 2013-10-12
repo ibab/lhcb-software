@@ -463,7 +463,7 @@ class CaloProcessor( CaloRecoConf,LHCbConfigurableUser ):
 
     def caloPIDs ( self ) :
 
-        pidConf=CaloPIDsConf('For'+self.getName())
+        pidConf=CaloPIDsConf('CaloPIDsFor'+self.getName())
         pidConf.Verbose=self.getProp('Verbose')
         pidConf.Context=self.getProp( 'Context')  
         pidConf.EnablePIDsOnDemand=self.getProp( 'EnableOnDemand' )  
