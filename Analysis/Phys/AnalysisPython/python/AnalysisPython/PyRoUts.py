@@ -113,13 +113,27 @@ def histID  () : return histoID ( )
 ## global ROOT identified for histogram objects 
 def hID     () : return histoID ( )
 
-
 # =============================================================================
 # temporary trick, to be removed 
 # =============================================================================
 
 SE.__repr__ = lambda s : 'Stat: '+ s.toString()
 SE.__str__  = lambda s : 'Stat: '+ s.toString()
+
+# =============================================================================
+# minor decoration for StatEntity 
+# ============================================================================= 
+if not hasattr ( SE , '_orig_sum'  ) : 
+    _orig_sum    = SE.sum
+    SE._orig_sum = _orig_sum
+    
+if not hasattr ( SE , '_orig_mean' ) : 
+    _orig_mean    = SE.mean
+    SE._orig_mean = _orig_mean
+    
+SE. sum     = lambda s : VE ( s._orig_sum  () , s.sum2()       )
+SE. minmax  = lambda s :    ( s.flagMin()     , s.flagMax()    ) 
+SE. mean    = lambda s : VE ( s._orig_mean () , s.meanErr()**2 )
 
 # =============================================================================
 def _int ( ve , precision = 1.e-5 ) :
@@ -4922,6 +4936,28 @@ def _ds_draw_ ( dataset , what , *args ) :
         
     raise AttributeError( "Can't ``draw'' data set , probably wrong StorageType" )
 
+
+# =============================================================================
+## get the statistic for certain expression in Tree/Dataset
+#  @code
+#  dataset  = ... 
+#  stat1 = dataset.statVar( 'S_sw/effic' )
+#  stat2 = dataset.statVar( 'S_sw/effic' ,'pt>1000')
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-09-15
+def _ds_stat_var_ ( dataset , what , *cuts ) :
+    """
+    """
+    store = dataset.store()
+    if store :
+        tree = store.tree()
+        if tree : return tree.statVar( what , *cuts )
+        
+    raise AttributeError( "Can't ``statVar'' data set , probably wrong StorageType" )
+
+ROOT.RooDataSet . statVar = _ds_stat_var_
+
 # =============================================================================
 ## @var _h_one_
 #  special helper histogram for summation
@@ -4956,7 +4992,28 @@ ROOT.RooDataSet . sumVar = _sum_var_
 ROOT.TTree      . sumVar = _sum_var_
 ROOT.TChain     . sumVar = _sum_var_
 
+# =============================================================================
+## get the statistic for certain expression in Tree/Dataset
+#  @code
+#  tree  = ... 
+#  stat1 = tree.statVar( 'S_sw/effic' )
+#  stat2 = tree.statVar( 'S_sw/effic' ,'pt>1000')
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-09-15
+def _stat_var_ ( tree , expression , *cuts ) :
+    """
+    Get a statistic for the  expression in Tree/Dataset
+    
+    >>> tree  = ... 
+    >>> stat1 = tree.statVar ( 'S_sw/effic' )
+    >>> stat2 = tree.statVar ( 'S_sw/effic' ,'pt>1000')
+    
+    """
+    return cpp.Analysis.StatVar.statVar ( tree , expression , *cuts )
 
+ROOT.TTree  . statVar = _stat_var_
+ROOT.TChain . statVar = _stat_var_
 
 # =============================================================================
 ## print method for RooDatSet

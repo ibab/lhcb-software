@@ -15,7 +15,8 @@
 // =============================================================================
 // Forward declarations 
 // =============================================================================
-class TTree ;     // ROOT 
+class TTree   ;     // ROOT 
+class TTChain ;     // ROOT 
 // =============================================================================
 namespace Analysis
 {
@@ -74,7 +75,7 @@ namespace Analysis
      *  @date 2013-04-27
      */
     static Gaudi::Math::ValueWithError
-      sFactor ( TTree* tree ,  const std::string& varname = "S_sw" ) ;
+    sFactor ( TTree* tree ,  const std::string& varname = "S_sw" ) ;
     // ========================================================================
   } ;
   // ==========================================================================

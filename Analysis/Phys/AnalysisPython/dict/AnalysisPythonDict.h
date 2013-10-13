@@ -18,6 +18,7 @@
 #include "Analysis/Tee.h"
 #include "Analysis/Formula.h"
 #include "Analysis/PyIterator.h"
+#include "Analysis/StatVar.h"
 // ============================================================================
 /** @file 
  *
