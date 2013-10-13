@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-10-13 - Chris Jones
+ - Update Stripping references to adapt to CALO changes.
+
 !========================= DaVinciTests v2r19 2013-10-03 =========================
 
 ! 2013-09-25 - Chris Jones
