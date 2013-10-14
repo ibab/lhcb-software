@@ -602,8 +602,8 @@ StatusCode DVCommonBase<PBASE>::loadParticles()
                   << " places" << endmsg ;
   }
 
-  for( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
-       iloc != m_inputLocations.end(); ++iloc )
+  for ( std::vector<std::string>::iterator iloc = m_inputLocations.begin();
+        iloc != m_inputLocations.end(); ++iloc )
   {
     // input location
     const std::string location = (*iloc)+"/Particles";
@@ -611,17 +611,22 @@ StatusCode DVCommonBase<PBASE>::loadParticles()
     // Retrieve the particles:
     LHCb::Particle::Range parts =
       this -> template getIfExists<LHCb::Particle::Range>(location);
-    // CRJ : To fix, as parts cannot be null with a range ....
-    if ( !parts )
-    {
-      this->Info ( "Non-existing location "+(*iloc) +
-                   ( this->rootInTES().empty() ?  "" : (" under " + this->rootInTES() ) ),
-                   StatusCode::SUCCESS, 0 ).ignore() ;
-      continue ;
-    }
 
     // statistics:
     this->counter ( "# " + (*iloc) ) += parts.size() ;
+
+    // Empty ?
+    if ( parts.empty() )
+    {
+      if ( this->msgLevel(MSG::DEBUG) )
+      {
+        this->debug() << "Non-existing/empty location " << location;
+        if ( ! this->rootInTES().empty() ) 
+        { this->debug() << " under " << this->rootInTES(); }
+        this->debug() << endmsg;
+      }
+      continue;
+    }
 
     // Msg number of Particles retrieved
     if ( this->msgLevel(MSG::VERBOSE) )
@@ -630,8 +635,8 @@ StatusCode DVCommonBase<PBASE>::loadParticles()
                       << location << " = " << parts.size() << endmsg;
     }
 
+    // Save to input particles list
     m_inputParts.reserve ( m_inputParts.size() + parts.size() ) ;
-
     for ( LHCb::Particle::Range::const_iterator icand = parts.begin();
           icand != parts.end(); ++icand )
     {

@@ -4,6 +4,9 @@
 ! Responsible : C.R. Jones
 !============================================================================
 
+! 2013-10-14 - Chris Jones
+ - Downgrade 'Non-existing location ...' messages to debug level.
+
 !========================= DaVinciKernel v11r5 2013-10-07 =========================
 
 ! 2013-10-06 - Vanya Belyaev
