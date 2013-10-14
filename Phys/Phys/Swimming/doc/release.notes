@@ -5,6 +5,12 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2013-10-14 - V. Gligorov
+ - Update example scripts for swimming the trigger and stripping,
+   as well as the DecayTreeTupleD2hh.py script, so that we have a 
+   working example for the full analysis chain for testing the
+   2012 charm production. 
+
 ! 2013-10-10 - Roel Aaij
 
  - Fix method resolution problems when swimming the stripping. There
