@@ -4948,6 +4948,12 @@ def _ds_draw_ ( dataset , what , *args ) :
 #  @date   2013-09-15
 def _ds_stat_var_ ( dataset , what , *cuts ) :
     """
+    Get the statistic for certain expression in Tree/Dataset
+    
+    >>> dataset  = ... 
+    >>> stat1 = dataset.statVar( 'S_sw/effic' )
+    >>> stat2 = dataset.statVar( 'S_sw/effic' ,'pt>1000')
+    
     """
     store = dataset.store()
     if store :
@@ -6308,9 +6314,8 @@ for t in ( ROOT.TH2D ,
 ## import useful contetx managers
 from AnalysisPython.Utils import *
 
+
 # =============================================================================
-
-
 if '__main__' == __name__ :
     
     print 80*'*'
