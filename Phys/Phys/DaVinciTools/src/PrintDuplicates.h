@@ -2,8 +2,6 @@
 #ifndef PrintDuplicates_H
 #define PrintDuplicates_H 1
 
-#include "Kernel/DaVinciAlgorithm.h"
-
 #include <algorithm>
 #include <string>
 #include <map>
@@ -12,10 +10,14 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
+// Kernel
+#include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/LHCbID.h"
 #include "Kernel/HashIDs.h"
-
 #include "Kernel/IPrintDecay.h"
+
+// Boost
+#include <boost/math/special_functions/round.hpp>
 
 /** @class PrintDuplicates PrintDuplicates.h
  *
@@ -58,11 +60,7 @@ private:
 
 private:
 
-  typedef std::map< std::pair<std::size_t,double>, LHCb::Particle::ConstVector > PartHashMap;
-  typedef std::map< std::string, PartHashMap > LocHashMap;
-
-private:
-
+  unsigned int m_dpPrec;      ///< Number of d.p. precision to compare energy values to
   IPrintDecay * m_printDecay; ///< Tool to print the decay tree
   unsigned int m_maxPrints;   ///< Max number of times to print the decay tree.
   std::map< std::string, unsigned int > m_countPerLoc; ///< Printout count per TES location
