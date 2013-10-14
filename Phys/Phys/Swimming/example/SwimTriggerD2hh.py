@@ -1,27 +1,62 @@
 from Configurables import Swimming
 from Gaudi.Configuration import *
 
-Swimming().DataType = '2011'
-Swimming().EvtMax = 100
+Swimming().DataType = '2012'
+Swimming().EvtMax = 500
 Swimming().Simulation = False
-Swimming().DDDBtag = "head-20110302"
-Swimming().CondDBtag = "head-20110321"
+# Define the database tags
+# For v14r2
+#Swimming().DDDBtag     = 'head-20120413'
+#Swimming().CondDBtag   = 'head-20120420'
+# For v14r6
+#Swimming().DDDBtag     = 'head-20120413'
+#Swimming().CondDBtag   = 'cond-20120730'
+# For v14r8,9,11
+Swimming().DDDBtag     = 'dddb-20120831'
+Swimming().CondDBtag   = 'cond-20120831'
+# Now define the TCK
+# For v14r2
+#Swimming().TCK = '0x0097003d'
+# For v14r6 
+#Swimming().TCK = '0x00990042'
+# For v14r8 
+Swimming().TCK = '0x009f0045'
+# For v14r9
+#Swimming().TCK = '0x00a30044'
+# For v14r11
+#Swimming().TCK = '0x00ab0046'
+# Now define the output file
+# For v14r2
+#Swimming().OutputFile = 'SwimTrigDST_v14r2.dst'
+# For v14r6
+#Swimming().OutputFile = 'SwimTrigDST_v14r6.dst'
+# For v14r8
+Swimming().OutputFile = 'SwimTrigDST_v14r8.dst'
+# For v14r9
+#Swimming().OutputFile = 'SwimTrigDST_v14r9.dst'
+# For v14r11
+#Swimming().OutputFile = 'SwimTrigDST_v14r11.dst'
 Swimming().Persistency = 'ROOT'
 Swimming().InputType = 'DST'
-Swimming().OutputFile = 'SwimTrigDST.dst'
 Swimming().SwimStripping = False
-Swimming().TCK = '0x00730035'
 Swimming().Hlt1Triggers = ["Hlt1TrackAllL0Decision"]
 Swimming().Hlt2Triggers = ["Hlt2CharmHadD02HH_D02KPiDecision"]
-Swimming().OffCands = "/Event/CharmCompleteEvent/Phys/D2hhPromptD2KPiLine"
-Swimming().TransformName = '2011_WithBeamSpotFilter'
+Swimming().OffCands = "/Event/CharmToBeSwum/Phys/D2hhPromptD2KPiLine"
+Swimming().TransformName = '2011_WithBeamSpotFilter_NoRecoLines'
 Swimming().SelectMethod = 'random'
 Swimming().OutputType = 'DST'
 Swimming().UseFileStager = False
-Swimming().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/LHCb/Collision11/CHARMCOMPLETEEVENT.DST/00012586/0000/00012586_00000584_1.charmcompleteevent.dst'"]
-
-from Configurables import FileStagerSvc
-FileStagerSvc().OutputLevel = 1
+# Now define the input file
+# For v14r2
+#Swimming().Input = ["PFN:/afs/cern.ch/lhcb/group/physics/swimming/Moore_v14r2/00020240_00000141_1.CharmToBeSwum.dst"]
+# For v14r6
+#Swimming().Input = ["PFN:/afs/cern.ch/lhcb/group/physics/swimming/Moore_v14r6/00020392_00002902_1.CharmToBeSwum.dst"]
+# For v14r8
+Swimming().Input = ["PFN:/afs/cern.ch/lhcb/group/physics/swimming/Moore_v14r8/00020566_00000274_1.CharmToBeSwum.dst"]
+# For v14r9
+#Swimming().Input = ["PFN:/afs/cern.ch/lhcb/group/physics/swimming/Moore_v14r9/00020847_00019204_1.CharmToBeSwum.dst"]
+# For v14r11
+#Swimming().Input = ["PFN:/afs/cern.ch/lhcb/group/physics/swimming/Moore_v14r11/00021210_00010066_1.CharmToBeSwum.dst"]
 
 from Configurables import CondDB
 CondDB(UseOracle = False, DisableLFC = True )
