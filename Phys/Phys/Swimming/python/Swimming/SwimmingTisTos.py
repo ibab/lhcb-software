@@ -96,8 +96,11 @@ def evaluateTisTos(myGlobs,mycand,swimPoint):
                     cand = candidates(i)
                     if myGlobs.DEBUGMODE :
                         print "########################"
-                        "About to match these two candidates"
-                        print cand,mycand
+                        print "About to match these two candidates"
+                        print "The stripping candidate"
+                        print cand
+                        print "The offline candidate"
+                        print mycand
                         print "########################"
                     if matchCands(myGlobs,mycand,cand):
                         # If we're not swimming the offline selection, we're done

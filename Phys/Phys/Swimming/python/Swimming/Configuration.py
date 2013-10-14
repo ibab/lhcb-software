@@ -325,6 +325,7 @@ def ConfigureDaVinci():
         lineName = config.getProp('StrippingLine')
         if l.outputLocation().find(lineName) != -1:
             lines.append(l)
+            print l.outputLocation()
     stream.appendLines(lines)
 
     # Define the stream
@@ -345,6 +346,7 @@ def ConfigureDaVinci():
             # decayVertices, etc...
             o = '/'.join(f.Output.split('/')[:-1])
             outputs.append(o)
+    print "Outputs are",outputs
     mykiller    = EventNodeKiller("killStripping")
     # Some default nodes which we will want to kill in all cases
     nodestokill = outputs + ['Strip', '/Event/Rec/Vertex/Primary']
