@@ -4,6 +4,9 @@
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
 
+! 2013-10-15 - Plamen Hopchev
+ - In DeFTTestAlg.cpp remove a line leftover from a previous commit
+
 !========================= FTDet v2r3p1 2013-09-25 =========================
 ! 2013-09-25 - Diego Milanes
  - Correct z position of FibreMat in DeFTFibreMat.cpp

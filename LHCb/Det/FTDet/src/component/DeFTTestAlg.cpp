@@ -207,9 +207,7 @@ StatusCode DeFTTestAlg::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
- return GaudiAlgorithm::finalize();   // must be called after all other actions
-
-  return GaudiTupleAlg::finalize();  
+  return GaudiTupleAlg::finalize();  // must be called after all other actions
 
 }
 
