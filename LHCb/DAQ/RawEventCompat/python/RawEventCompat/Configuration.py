@@ -55,14 +55,16 @@ def _replaceWrap(aloc):
     """
     c=RawEventFormatConf()
     for pattern in c.getProp("GenericReplacePatterns"):
-        #print "looking for", pattern
+        #print "looking for", pattern in aloc,
         if pattern in aloc:
-            #print "replacing", pattern
+            #print "replacing", pattern,
             aloc=aloc.replace(pattern,c.getProp("GenericReplacePatterns")[pattern])
-        if c.getProp("TCKReplacePattern") in aloc:
-            if not c.isPropertySet("TCK"):
-                raise AttributeError("TCK for replacement has not been set!")
-            aloc=aloc.replace(c.getProp("TCKReplacePattern"),c.getProp("TCK"))
+    if c.getProp("TCKReplacePattern") in aloc:
+        if not c.isPropertySet("TCK"):
+            raise AttributeError("TCK for replacement has not been set!")
+        aloc=aloc.replace(c.getProp("TCKReplacePattern"),c.getProp("TCK"))
+        #print "trying to replace", c.getProp("TCK"),
+    #print "Returning", aloc 
     return aloc
     
 
@@ -173,7 +175,7 @@ def RecombineWholeEvent(version,DoD=True, regex=".*", locations=None, recodict=N
     except ImportError:
         raise ImportError("You don't have RawEventSimpleCombiner available, choose another method, or getpack the correct version of DAQ/DAQUtils (v1r5p1, v1r7b, head)")
     myCombiner=RawEventSimpleCombiner("resurectRawEvent")
-    myCombiner.InputRawEventLocations=[aloc for aloc in ReverseDict(version,locations) if re.match(regex,aloc)]
+    myCombiner.InputRawEventLocations=[_replaceWrap(aloc) for aloc in ReverseDict(version,locations) if re.match(regex,aloc)]
 
     #configure DoD if required
     if DoD:
