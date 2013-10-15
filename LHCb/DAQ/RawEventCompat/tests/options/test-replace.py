@@ -30,11 +30,6 @@ try:
 except AttributeError:
   pass
 
-conf.RawEventFormatConf().TCK="0x0099"
-if "#TCK#" in conf._replaceWrap(test_locations[0.0]["Bank_C"]):
-  print conf._replaceWrap(test_locations[0.0]["Bank_C"])
-  raise ValueError("Failed to replace TCK")
-
 rej=conf.RawEventJuggler()
 
 rej.Input=99.0
@@ -47,6 +42,12 @@ try:
   raise ValueError( "Failed to protect against unset TCK")
 except AttributeError:
   pass
+
+conf.RawEventFormatConf().TCK="0x0099"
+if "#TCK#" in conf._replaceWrap(test_locations[0.0]["Bank_C"]):
+  print conf._replaceWrap(test_locations[0.0]["Bank_C"])
+  raise ValueError("Failed to replace TCK")
+
 
 rej.TCK="0x0099"
 rej.GenericReplacePatterns={"#two#": "Aha!"}
