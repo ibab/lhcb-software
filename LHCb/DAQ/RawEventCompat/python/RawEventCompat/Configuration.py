@@ -330,7 +330,7 @@ class RawEventJuggler(ConfigurableUser):
         #check if a Trigger TCK is needed
 
         if len([loc for loc in input_locations if self.getProp("TCKReplacePattern") in loc]) or len([loc for loc in output_locations if self.getProp("TCKReplacePattern") in loc]):
-            if (not self.isPropertySet("TCK")) or (not RawEventFormatConf().isPropertySet("TCK")):
+            if (not self.isPropertySet("TCK")) and (not RawEventFormatConf().isPropertySet("TCK")):
                 raise AttributeError("The raw event version you specified requires a TCK to be given. Set RawEventJuggler().TCK")
         for prop in ["TCK","GenericReplacePatterns","TCKReplacePattern"]:
             self.__safeset__(RawEventFormatConf(),prop)
