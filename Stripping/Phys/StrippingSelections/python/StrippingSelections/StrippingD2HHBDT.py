@@ -24,6 +24,7 @@ from StrippingUtils.Utils        import LineBuilder, checkConfig
 
 default_config = {'PrescaleD2HHBDT' : 1.,
                'PrescaleDSt'     : 1.,
+               'PostscaleD02HH'  : 0.1,
                'MinPT'           : 1000,
                'MinIP'           : 0.12,
                'TrChi2'          : 3,
@@ -48,6 +49,7 @@ class D2HHBDTLines( LineBuilder ) :
     
     __configuration_keys__ = ( 'PrescaleD2HHBDT',
                                'PrescaleDSt',
+                               'PostscaleD02HH',
                                'MinPT',    
                                'MinIP',
                                'TrChi2',
@@ -96,7 +98,7 @@ class D2HHBDTLines( LineBuilder ) :
 
         self.lineD2HHBDT = StrippingLine( D2HHBDTName+"Line",
                                           prescale  = config['PrescaleD2HHBDT'],
-                                          postscale = 0.1,
+                                          postscale = config['PostscaleD02HH'],
                                           selection = self.CutBDT )
       
         self.registerLine(self.lineD2HHBDT)
