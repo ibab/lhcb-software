@@ -98,6 +98,7 @@ namespace LHCb
   class VertexBase;
   class Particle;
   class RecVertex ;
+  class DecayTree ;
 }
 namespace DecayTreeFitter
 {
@@ -207,6 +208,12 @@ private:
   /// sort tracks into a set
   std::set<const LHCb::Track*> sortedTracks(const LHCb::VertexBase*) const ;
 
+  /// substitutions
+  StatusCode substitute( LHCb::DecayTree& tree);
+  /// checkMassConstraints
+  StatusCode checkMassConstraints(const LHCb::DecayTree& tree);
+  
+
 private:
 
   std::string m_pvLocation ; ///<  PV location to be used. If empty, take context-dependent default
@@ -228,6 +235,7 @@ private:
   bool m_storeAnyway ;///< Store PV even if a refitted version is already the best PV (i.e store twice)
   bool m_updateDaughters; ///< Store updated momenta of tracks in the decay tree
   ToolHandle<ITrackStateProvider> m_stateprovider ;
+  bool m_first ; ///< This is the first candidate
 
 };
 #endif // TUPLETOOLDECAYTREEFITTER_H

@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2013-10-16 - Patrick Koppenburg
+ - TupleToolDecayTreeFitter: Fix bug https://savannah.cern.ch/bugs/index.php?102869
+   Now there's a protection against non functional substitutions and against
+   mass constraining particles not in the decay tree.
+
 ! 2013-10-09 - Patrick Koppenburg
  - TupleToolGeometry: Fix bug https://savannah.cern.ch/bugs/index.php?102616
    Now issue an error when a composite particle without a vertex is given, 

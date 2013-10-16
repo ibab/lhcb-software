@@ -44,6 +44,7 @@ TupleToolDecayTreeFitter::TupleToolDecayTreeFitter( const std::string& type,
   , m_map ()
   , m_substitute()
   , m_stateprovider( "TrackStateProvider" )
+  , m_first(true)
 {
   declareProperty("daughtersToConstrain", m_massConstraints , "List of particles to contrain to mass");
   declareProperty("constrainToOriginVertex", m_constrainToOriginVertex = false,
@@ -135,16 +136,14 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
   
   const ITrackStateProvider* stateprovider = ( m_stateprovider.empty() ? NULL : &(*m_stateprovider) );
 
-  TupleMap tMap ; // the temporary data map
+  LHCb::DecayTree tree ( *P ) ;
+  // substitute
+  if ( m_substitute && !substitute(tree)) return StatusCode::FAILURE ; 
+  if ( !m_massConstraintsPids.empty() && !checkMassConstraints(tree)) return StatusCode::FAILURE ;
 
   // get origin vertices
   std::vector<const VertexBase*> originVtx;
-  LHCb::DecayTree tree ( *P ) ;
-  if ( m_substitute )
-  { // substitute
-    if (msgLevel(MSG::DEBUG)) debug() << "Calling substitute" << endmsg ;
-    m_substitute->substitute ( tree.head() ) ;
-  }
+  TupleMap tMap ; // the temporary data map
 
   if (m_constrainToOriginVertex)
   {
@@ -153,10 +152,7 @@ StatusCode TupleToolDecayTreeFitter::fill( const LHCb::Particle* mother
     }
     // check for origin vertex
     originVtx = originVertex( mother, P );
-    if( originVtx.empty() )
-    {
-      return Error("Can't get an origin vertex");
-    }
+    if( originVtx.empty() ){return Error("Can't get an origin vertex");}
     if (msgLevel(MSG::DEBUG)) debug() << "PVs: " << originVtx.size() << endmsg;
     for ( std::vector<const VertexBase*>::const_iterator iv = originVtx.begin() ;
           iv != originVtx.end() ; ++iv )
@@ -613,9 +609,63 @@ std::string TupleToolDecayTreeFitter::getName(const int id) const
 {
   const LHCb::ParticleProperty* prop = m_ppSvc->find( LHCb::ParticleID(id) );
   if (!prop) Exception("Unknown PID");
-  if (msgLevel(MSG::VERBOSE)) verbose() << "ID " << id << " gets name "
-                                        << Decays::escape(prop->name()) << endmsg ;
+  //if (msgLevel(MSG::VERBOSE)) verbose() << "ID " << id << " gets name "
+  //                                      << Decays::escape(prop->name()) << endmsg ;
   return Decays::escape(prop->name());
+}
+//=============================================================================
+// Substitute
+//=============================================================================
+StatusCode TupleToolDecayTreeFitter::substitute(LHCb::DecayTree& tree){
+  if (msgLevel(MSG::DEBUG)) debug() << "Calling substitute" << endmsg ;
+  unsigned int substituted = m_substitute->substitute ( tree.head() ) ;
+  // debugging
+  if ( msgLevel(MSG::VERBOSE) || 0==substituted ){
+    LHCb::DecayTree::CloneMap mp = tree.cloneMap();
+    for ( LHCb::DecayTree::CloneMap::const_iterator i = mp.begin() ; i != mp.end() ; i++){
+      if ( i->first->particleID().pid()==i->second->particleID().pid())
+      {
+        info() << "A " << getName(i->first->particleID().pid()) << " remains unchanged" << endmsg ;
+      } else {
+        info() << "A " << getName(i->first->particleID().pid()) << " is substituted by a " 
+               << getName(i->second->particleID().pid()) << endmsg ;
+      }
+    }
+    
+  } 
+  if (0==substituted) 
+  {
+    err() << "No particles have been substituted. Check your substitution options." << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS ;
+}
+//=============================================================================
+// Check Mass Constraints
+//=============================================================================
+StatusCode TupleToolDecayTreeFitter::checkMassConstraints(const LHCb::DecayTree& tree){
+  if (!m_first) return StatusCode::SUCCESS ;  // do that only once
+  m_first = false ;
+  const LHCb::DecayTree::CloneMap mp = tree.cloneMap();
+  for ( std::vector<LHCb::ParticleID>::const_iterator m =  m_massConstraintsPids.begin() ;
+        m!= m_massConstraintsPids.end() ; m++){
+    bool found = false ;
+    for ( LHCb::DecayTree::CloneMap::const_iterator i = mp.begin() ; i != mp.end() ; i++){
+      if (m->abspid()==i->second->particleID().abspid()) {
+        found = true ;
+        break ;
+      }
+    }
+    if (found &&  msgLevel(MSG::VERBOSE)) 
+      verbose() << "Constraint " << getName(m->pid()) << " was found in tree" << endmsg ;
+    if (!found) {
+      err() <<  "Constraint " << getName(m->pid()) 
+            << " was not found in tree. Check your options. Maybe also the substitution options." << endmsg ;
+      return StatusCode::FAILURE ;
+    }
+  }
+  return StatusCode::SUCCESS ;
+
 }
 
 // Declaration of the Tool Factory
