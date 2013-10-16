@@ -32,9 +32,7 @@ preprocessor = BrunelPreprocessor + \
   LineSkipper(["HltErrorProc         INFO   Algorithm: HltErrorProc"]) + \
   LineSkipper(["PhysicsSeq           INFO Member list"]) + \
   LineSkipper(["CaloBanksHandler     INFO Member list"]) + \
-  LineSkipper(["PrsBanksHandler      INFO Member list"]) + \
-  LineSkipper(["PrsCheckBanks        INFO  Check the 0-suppressed banks exist for Prs"]) + \
-  LineSkipper(["PrsCheckBanks        INFO  if not (MC) re-create them from packed bank and delete packed"]) + \
+  LineSkipper(["CaloDigits           INFO Member list: CaloDigitsFromRaw/SpdFromRaw, GaudiSequencer/PrsDigitsSeq, GaudiSequencer/EcalDigitsSeq, GaudiSequencer/HcalDigitsSeq, with context 'Offline'"]) + \
   LineSkipper(["EventPersistenc...   INFO Added successfully Conversion service:LHCb::RawDataCnvSvc"]) + \
   RegexpReplacer(when = "HltFilterSeq         INFO Member list: ", orig = r'HltRoutingBitsFilter/PhysFilter, ', repl = r'') +\
   LineSkipper(["TimeSpanSeq          INFO Member list"]) + \

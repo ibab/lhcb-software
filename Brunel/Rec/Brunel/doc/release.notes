@@ -4,9 +4,11 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 - Changes to configuration
-  . physics Sequence   :  CaloBankHandler setup via CaloDigitConf (Calo decoding and ProcStatus conversion)
-  . MCChecker sequence :  Calo chekers sequence via CaloMoniDstConf
-  . Remove the temporary switch CaloPhotonChecker (removed from CaloMoniDstConf so far)
+  . physics Sequence   :  CaloBankHandler setup via CaloDigitConf
+                          (Calo decoding and ProcStatus conversion)
+  . MCChecker sequence :  Calo checkers sequence via CaloMoniDstConf
+  . Remove the temporary switch to disable CaloPhotonChecker
+    (algorithm removed from CaloMoniDstConf for now)
 
 - Changes to QMTests:
   . Removed VL tests and references.
@@ -15,6 +17,7 @@ Purpose: LHCb reconstruction program
   . Renamed VP_Compact_MicroChannel-UT-FT_Mono test to be consistent with other tests. 
   . Actually pointed VP_Compact_MicroChannel-UT-FT_Mono test to szczypka's file.
   . Updated many references after Calo changes.
+  . Fix repro2012magdown test following Calo changes
 
 </PRE><H1><A NAME=v44r7>2013-10-04 Brunel v44r7</A></H1><PRE>
 This version uses projects LCG 66, Gaudi v23r10, LHCb v36r2, Lbcom v14r2,
