@@ -134,6 +134,10 @@ def nHitsOnTrackInVELOAcceptance(x, y, z, tx, ty) :
   return n1			
   
 def trackInVELOAcceptance( swimPoint, parent, trackparent, track, minhits) :
+  # For non VELO tracks, this part is always true
+  if not track.hasVelo() : 
+    return 1
+  #
   x  = trackparent.endVertex().position().x() - swimPoint*parent.slopes().Unit().X()
   y  = trackparent.endVertex().position().y() - swimPoint*parent.slopes().Unit().Y()
   z  = trackparent.endVertex().position().z() - swimPoint*parent.slopes().Unit().Z() 
