@@ -262,6 +262,9 @@ def ConfigureMoore():
     # Define the TCK transformation
     # 
     HltConfigSvc().ApplyTransformation = thisTransform
+    from Configurables import HltConfigSvc
+    from pprint import pprint
+    pprint( HltConfigSvc().ApplyTransformation )
     #
     # Define the swimming algorithm
     #
