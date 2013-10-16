@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-10-16 0 Wouter Hulsbergen
+ - Make sure PrTrackAssociator clears a linker table before filling it
+
 ! 2013-10-05 - Michel De Cian
  - Fix behaviour of flag 'fromB' in PrChecker to only include B baryons and mesons, and not particles from string fragmentation of b quarks (follow-up of change in Gauss, r159594)
 

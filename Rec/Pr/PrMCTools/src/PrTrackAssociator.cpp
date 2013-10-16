@@ -90,6 +90,8 @@ StatusCode PrTrackAssociator::execute() {
 
   for ( std::vector<std::string>::iterator itS = trackContainers.begin();
         trackContainers.end() != itS; ++itS ) {
+    if( msgLevel(MSG::DEBUG) ) 
+      debug() << "processing container: " << *itS << endreq ;
 
     // Retrieve the Tracks
     LHCb::Tracks* tracks = get<LHCb::Tracks> ( *itS );
@@ -97,6 +99,7 @@ StatusCode PrTrackAssociator::execute() {
     // Create the Linker table from Track to MCParticle
     // Sorted by decreasing weight, so first retrieved has highest weight
     LinkerWithKey<LHCb::MCParticle,LHCb::Track> myLinker( evtSvc(), msgSvc(), *itS );
+    myLinker.reset() ;
 
     // Loop over the Tracks
     LHCb::Tracks::const_iterator it;
