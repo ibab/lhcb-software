@@ -112,7 +112,7 @@ for dest,algs in diff.iteritems():
                             default.append([dest,alg,prop])
                         else:
                             bad.append([dest,alg,prop])
-                            
+
     for alg,props in algs.iteritems():
         for prop,val in props.iteritems():
             if [dest,alg,prop] in found:
@@ -129,10 +129,10 @@ print "Extra Locations:", extras.keys()
 print len(unknown_extras), "unknown new locations"
 
 for key in bad+unknown:
-    print "ERROR:", key, diffs[key[0]][key[1]][key[2]]
+    print "ERROR:", key, diff[key[0]][key[1]][key[2]]
 
 for extra in unknown_extras:
-    print "ERROR:",extra,diffs[extra]
+    print "ERROR:",extra,diff[extra]
 
 if len(bad+unknown):
     raise ValueError("Unknown or bad differences found.")
