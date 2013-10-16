@@ -2,7 +2,7 @@ from Configurables import Swimming
 from Gaudi.Configuration import *
 
 Swimming().DataType = '2012'
-Swimming().EvtMax = 500
+Swimming().EvtMax = 1
 Swimming().Simulation = False
 # Define the database tags
 # For v14r2
@@ -42,7 +42,7 @@ Swimming().SwimStripping = False
 Swimming().Hlt1Triggers = ["Hlt1TrackAllL0Decision"]
 Swimming().Hlt2Triggers = ["Hlt2CharmHadD02HH_D02KPiDecision"]
 Swimming().OffCands = "/Event/CharmToBeSwum/Phys/D2hhPromptD2KPiLine"
-Swimming().TransformName = '2011_WithBeamSpotFilter_NoRecoLines'
+Swimming().TransformName = '2012_WithBeamSpotFilter_NoRecoLines'
 Swimming().SelectMethod = 'random'
 Swimming().OutputType = 'DST'
 Swimming().UseFileStager = False
