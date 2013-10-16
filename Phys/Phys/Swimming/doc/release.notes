@@ -8,6 +8,7 @@
 ! 2013-10-16 - V. Gligorov
  - Update Hlt transforms to include a transform for swimming the
    inclusive D* trigger used in 2012 datataking.
+ - Update VELO acceptance calculator to ignore non-VELO tracks.
 
 ! 2013-10-14 - V. Gligorov
  - Update example scripts for swimming the trigger and stripping,
