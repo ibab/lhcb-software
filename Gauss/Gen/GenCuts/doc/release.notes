@@ -4,6 +4,10 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-10-16 - Marc Olivier Bettler
+ - Lowered the verbosity of BcDaughtersInLHCbAndMassCut.cpp to debug
+ - Corrected treatment of cases with more than one Bc in the event.
+
 !========================== GenCuts v3r6 2013-10-10 ========================== 
 ! 2013-09-17 - Liang Zhong
  - Move XiccDaughtersInLHCb tool from LbGenXicc package to GenCuts
