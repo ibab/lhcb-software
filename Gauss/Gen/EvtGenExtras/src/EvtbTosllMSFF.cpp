@@ -279,7 +279,7 @@ void EvtbTosllMSFF::getVectorFF(EvtId parent, EvtId daught, double t,
                                  double& t1, double& t2, double& t3 ){
 
   int models_counter=0; // counter of the accepted models
-  double thetaK = -34.0; // K_1(1270) - K_1(1400) mixing angle
+  double thetaK = -34.0 * 3.14159 / 180; // K_1(1270) - K_1(1400) mixing angle
 
 
   // \bar B -> \bar K* transition form factors
