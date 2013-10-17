@@ -1,9 +1,9 @@
 
 // $Id: $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 #include "Event/MCHeader.h"
 
 // local
@@ -17,57 +17,45 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MCFilterVtxTopoTracksTool );
-
+DECLARE_TOOL_FACTORY( MCFilterVtxTopoTracksTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 MCFilterVtxTopoTracksTool::MCFilterVtxTopoTracksTool( const std::string& type,
-                                                                    const std::string& name,
-                                                                    const IInterface* parent )
-  : GaudiHistoTool ( type, name , parent )
+                                                      const std::string& name,
+                                                      const IInterface* parent )
+: GaudiHistoTool ( type, name , parent )
 {
   declareInterface<IFilterVtxTopoTracksTool>(this);
   std::string Default_decay = "[B_s0 -> (tau+ -> ^pi+ ^pi- ^pi+ nu_tau~ {,gamma}{,gamma}{,gamma}) (tau- -> ^pi+ ^pi- ^pi- nu_tau {,gamma}{,gamma}{,gamma}) {,gamma}{,gamma}{,gamma}]cc";
   declareProperty("DecayDescriptor",m_DecayDescriptor= Default_decay);
 
-  declareProperty("Plot"  ,m_DoPlot = false); 
+  declareProperty("Plot"  ,m_DoPlot = false);
 
   std::string Default_decay_2 = "[B_s0 -> (tau+ -> ^pi- ^pi+ nu_tau~ {,e+,pi-}{,e-,pi-}{,gamma}{,gamma}{,gamma}) (tau- -> ^pi+ ^pi- nu_tau {,e+,pi-}{,e-,pi-}{,gamma}{,gamma}{,gamma}) {,gamma}{,gamma}{,gamma}]cc";
   declareProperty("DecayDescriptor",m_DecayDescriptor= Default_decay);
 
-
-
 }
-
 
 
 //====================================================================
 // Initialization
 //====================================================================
-StatusCode MCFilterVtxTopoTracksTool::initialize() {
-  
+StatusCode MCFilterVtxTopoTracksTool::initialize()
+{
+  const StatusCode sc = GaudiHistoTool::initialize();
+  if ( sc.isFailure() ) return sc;
+
   debug() << "==> Initialize" << endmsg;
 
   info() << "Looking decay: " << m_DecayDescriptor << endmsg;
-  
 
-  
   m_MCDecayFinder = tool<IMCDecayFinder>( "MCDecayFinder", this );
-  if ( !m_MCDecayFinder ) {
-    return Error("MCDecayFinder could not be found",StatusCode::FAILURE);
-  }
 
   m_MCDecayPrinter = tool<IPrintMCDecayTreeTool>("PrintMCDecayTreeTool", this );
-  if ( !m_MCDecayPrinter ) {
-    return Error("PrintTool could not be found",StatusCode::FAILURE);
-  }
 
-
-  return StatusCode::SUCCESS;
-
-
+  return sc;
 }
 
 //=============================================================================
@@ -83,11 +71,11 @@ std::vector<const LHCb::Track*> & MCFilterVtxTopoTracksTool::filteredTracks(Tupl
   //position of the MCPart are stored in m_MC_Tracks
   bool DecayFound = findMCDecay();
   if (DecayFound==false) {
-      if(tuple != NULL) (*tuple)->column("Reconstructed",Reconstructed);
+    if(tuple != NULL) (*tuple)->column("Reconstructed",Reconstructed);
     debug()<<"No Decays found in this event"<<endmsg;
     return m_tracks;
   }
-  
+
   //Get the Relation Table
   LHCb::Track2MC2D* Track2MC_table  = get<LHCb::Track2MC2D>(LHCb::Track2MCLocation::Default);
   LHCb::MC2Track*   MC2Track_table = Track2MC_table->inverse() ;
@@ -119,14 +107,14 @@ std::vector<const LHCb::Track*> & MCFilterVtxTopoTracksTool::filteredTracks(Tupl
     bestTrack->addInfo(3,i_MCTrack->MotherZ); //pion MCindex
 
     m_tracks.push_back(bestTrack);
-    
+
     //check if the first track has the same weight as another track
 
     double bestTrackWeight = links.back().weight();
     int nb_track_with_equal_weight = 0;
     for ( LHCb::MC2Track::Range::iterator link = links.begin() ; links.end() != link ; ++link ){
       if( link->weight() == bestTrackWeight){
-	//debug()<<"w= "<<link->weight()<<endmsg;
+        //debug()<<"w= "<<link->weight()<<endmsg;
         nb_track_with_equal_weight++;
       }
     }
@@ -138,13 +126,13 @@ std::vector<const LHCb::Track*> & MCFilterVtxTopoTracksTool::filteredTracks(Tupl
     // //check if the track type is correct
     // for (unsigned int i_type=0; i_type<m_TrackTypeAllowed.size(); i_type++){
     //   if( largest->checkType( m_TrackTypeMap[m_TrackTypeAllowed[i_type]])) {
-    // 	double indexMC = (double) *i_MCTrack;
+    //  double indexMC = (double) *i_MCTrack;
     //     largest->addInfo(0,indexMC);
     //     m_tracks.push_back(largest);
     //     break;
     //   }
     // }
-    
+
   }
   if(tuple != NULL) (*tuple)->column("Reconstructed",Reconstructed);
 
@@ -158,7 +146,7 @@ std::vector<const LHCb::Track*> & MCFilterVtxTopoTracksTool::filteredTracks(Tupl
   //   for ( LHCb::Tracks::const_iterator itt = all_tracks->begin(); itt != all_tracks->end() ; ++itt) {
   //     double ExtInfo = 0;
   //     if ((*itt)->hasInfo(0)){
-  // 	debug()<<"Has Info 0:  "<<(*itt)->info(0,ExtInfo)<<endmsg;
+  //  debug()<<"Has Info 0:  "<<(*itt)->info(0,ExtInfo)<<endmsg;
   //     }
   //   }
   // }
@@ -194,7 +182,7 @@ bool MCFilterVtxTopoTracksTool::findMCDecay()
       if(m_DoPlot)  plot (  0, "DecayType" , -0.5 , 2.5 , 3 ) ;
       info()<<"The event "<<evtnum<<" hasn't the required decay  [msg from "<< name()<<endmsg;
       ++counter("No decay found in the event "+name());
-      //    if( msgLevel( MSG::DEBUG ) ) 
+      //    if( msgLevel( MSG::DEBUG ) )
       m_MCDecayPrinter->printAsTree(*m_MCParts);
     }
     m_MCDecayFinder->setDecay(m_DecayDescriptor);
@@ -205,49 +193,49 @@ bool MCFilterVtxTopoTracksTool::findMCDecay()
     debug()<<"The event "<<evtnum <<" has the required decay; from "<< name()<<endmsg;
     const LHCb::MCParticle * headOfDecay = NULL;
     m_MCDecayFinder->findDecay(*m_MCParts, headOfDecay);
-    //debug()<<"findDecay   :"<< headOfDecay<<endmsg;    
+    //debug()<<"findDecay   :"<< headOfDecay<<endmsg;
     if (headOfDecay){
-      //debug()<<"# mother found   :"<< headOfDecay->particleID().pid()<<endmsg;    
+      //debug()<<"# mother found   :"<< headOfDecay->particleID().pid()<<endmsg;
       LHCb::MCParticle::ConstVector daughters;
-      m_MCDecayFinder->decayMembers 	 ( headOfDecay,	daughters);
-      //debug()<<"# daughter found :"<< daughters.size()<<endmsg;    
+      m_MCDecayFinder->decayMembers   ( headOfDecay, daughters);
+      //debug()<<"# daughter found :"<< daughters.size()<<endmsg;
 
       //now loop over the descendant to get their position in the list
       for (LHCb::MCParticle::ConstVector::const_iterator i_daughter = daughters.begin(); i_daughter!=daughters.end(); ++i_daughter){
 
-	TrackAncestor MC_Track;	
-	//debug()<<"look index of :"<< (*i_daughter)->particleID().pid()<<endmsg; 
+        TrackAncestor MC_Track;
+        //debug()<<"look index of :"<< (*i_daughter)->particleID().pid()<<endmsg;
 
-	LHCb::MCParticles::iterator daughter_position =  find(m_MCParts->begin(),m_MCParts->end(),*i_daughter)   ;
-	MC_Track.DaughterMCIndex = distance(m_MCParts->begin(),daughter_position);
+        LHCb::MCParticles::iterator daughter_position =  find(m_MCParts->begin(),m_MCParts->end(),*i_daughter)   ;
+        MC_Track.DaughterMCIndex = distance(m_MCParts->begin(),daughter_position);
 
-	const LHCb::MCParticle* Mother = (*i_daughter)->mother();
-	if(!Mother) {
-	  warning()<<"In MC matching, track has no mother"<<endmsg;
-	  continue;
-	}
-	MC_Track.MotherPid = Mother->particleID().pid();	
-	MC_Track.MotherZ =   (*i_daughter)->originVertex()->position().z();
-	//debug()<<"MC_Track.pid mother ="<<Mother->particleID().pid()<<endmsg; 
-	LHCb::MCParticles::iterator mother_position = find(m_MCParts->begin(),m_MCParts->end(),Mother);
-	MC_Track.MotherMCIndex = distance(m_MCParts->begin(),mother_position);
-  
-	m_MC_Tracks.push_back(MC_Track);
-	LHCb::MCParticles::iterator positionCheck = m_MCParts->begin();
-	positionCheck = positionCheck + MC_Track.DaughterMCIndex;
-	//debug()<<"check index Daughter is correct i:"<< MC_Track.DaughterMCIndex <<"  p :"<< (*i_daughter)->p() <<"   VS   "<<(*positionCheck)->p()<<endmsg;
-	positionCheck = m_MCParts->begin();
-	positionCheck = positionCheck + MC_Track.MotherMCIndex;
-	//debug()<<"check index Mother is correct i:"<< MC_Track.MotherMCIndex <<"  p :"<< Mother->p() <<"   VS   "<<(*positionCheck)->p()<<endmsg;
-	
-	
+        const LHCb::MCParticle* Mother = (*i_daughter)->mother();
+        if(!Mother) {
+          warning()<<"In MC matching, track has no mother"<<endmsg;
+          continue;
+        }
+        MC_Track.MotherPid = Mother->particleID().pid();
+        MC_Track.MotherZ =   (*i_daughter)->originVertex()->position().z();
+        //debug()<<"MC_Track.pid mother ="<<Mother->particleID().pid()<<endmsg;
+        LHCb::MCParticles::iterator mother_position = find(m_MCParts->begin(),m_MCParts->end(),Mother);
+        MC_Track.MotherMCIndex = distance(m_MCParts->begin(),mother_position);
+
+        m_MC_Tracks.push_back(MC_Track);
+        LHCb::MCParticles::iterator positionCheck = m_MCParts->begin();
+        positionCheck = positionCheck + MC_Track.DaughterMCIndex;
+        //debug()<<"check index Daughter is correct i:"<< MC_Track.DaughterMCIndex <<"  p :"<< (*i_daughter)->p() <<"   VS   "<<(*positionCheck)->p()<<endmsg;
+        positionCheck = m_MCParts->begin();
+        positionCheck = positionCheck + MC_Track.MotherMCIndex;
+        //debug()<<"check index Mother is correct i:"<< MC_Track.MotherMCIndex <<"  p :"<< Mother->p() <<"   VS   "<<(*positionCheck)->p()<<endmsg;
+
+
       }
     }
-    
+
   }
-  
+
   return hasDecay;
-  
+
 }
 
 
@@ -257,7 +245,7 @@ bool MCFilterVtxTopoTracksTool::findMCDecay()
 //=============================================================================
 MCFilterVtxTopoTracksTool::~MCFilterVtxTopoTracksTool() {
   //delete m_MCParts;
-  
-} 
+
+}
 
 //=============================================================================

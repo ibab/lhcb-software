@@ -1,8 +1,8 @@
 // $Id: $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "FilterVtxTopoTracksTool.h"
@@ -14,8 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( FilterVtxTopoTracksTool );
-
+DECLARE_TOOL_FACTORY( FilterVtxTopoTracksTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -23,26 +22,25 @@ DECLARE_TOOL_FACTORY( FilterVtxTopoTracksTool );
 FilterVtxTopoTracksTool::FilterVtxTopoTracksTool( const std::string& type,
                                                   const std::string& name,
                                                   const IInterface* parent )
-  : GaudiTool ( type, name , parent ), m_tracks(0)
+: GaudiTool ( type, name , parent ), m_tracks(0)
 {
   declareInterface<IFilterVtxTopoTracksTool>(this);
 
   declareProperty("InputTrackLocation",m_inputTrackLocation = "/Event/Rec/Track/Best" );
-
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-FilterVtxTopoTracksTool::~FilterVtxTopoTracksTool() {} 
+FilterVtxTopoTracksTool::~FilterVtxTopoTracksTool() {}
 
 //=============================================================================
-std::vector<const LHCb::Track*> & FilterVtxTopoTracksTool::filteredTracks(Tuples::Tuple* tuple)
+std::vector<const LHCb::Track*> & FilterVtxTopoTracksTool::filteredTracks(Tuples::Tuple* /* tuple */)
 {
   m_tracks.clear();
-  tuple = 0;
-  if (tuple) {
-  }
-  
+  //tuple = 0;
+  //if (tuple) { }
+
   LHCb::Tracks* trackContainer = get<LHCb::Tracks*>( m_inputTrackLocation );
   m_tracks.reserve(trackContainer->size());
   for (LHCb::Tracks::iterator it_ptrk=trackContainer->begin(); it_ptrk<trackContainer->end(); ++it_ptrk){
@@ -50,5 +48,4 @@ std::vector<const LHCb::Track*> & FilterVtxTopoTracksTool::filteredTracks(Tuples
   }
 
   return m_tracks;
-
 }

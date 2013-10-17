@@ -1,5 +1,5 @@
 // $Id: $
-#ifndef TRACKTYPEFILTERVTXTOPOTRACKSTOOL_H 
+#ifndef TRACKTYPEFILTERVTXTOPOTRACKSTOOL_H
 #define TRACKTYPEFILTERVTXTOPOTRACKSTOOL_H 1
 
 // Include files
@@ -16,19 +16,23 @@
 using namespace std;
 
 /** @class TrackTypeFilterVtxTopoTracksTool TrackTypeFilterVtxTopoTracksTool.h
- *  This class implements IFilterVtxTopoTracksTool. The selection is performed 
+ *  This class implements IFilterVtxTopoTracksTool. The selection is performed
  *  on the basis of the track type (Long, Upstream...)
  *
  *  @author Julien Cogan and Mathieu Perrin-Terrin
  *  @date   2012-11-27
  */
-class TrackTypeFilterVtxTopoTracksTool : public GaudiHistoTool, virtual public IFilterVtxTopoTracksTool {
-public: 
+class TrackTypeFilterVtxTopoTracksTool : public GaudiHistoTool, virtual public IFilterVtxTopoTracksTool 
+{
+
+public:
+
   /// Standard constructor
-  TrackTypeFilterVtxTopoTracksTool( const std::string& type, 
-                                       const std::string& name,
-                                       const IInterface* parent);
-  StatusCode initialize();
+  TrackTypeFilterVtxTopoTracksTool( const std::string& type,
+                                    const std::string& name,
+                                    const IInterface* parent);
+
+public:
 
   std::vector<const LHCb::Track*> & filteredTracks(Tuples::Tuple* tuple = NULL);
   std::vector<const LHCb::Track*> & filteredTracks(std::vector<const LHCb::Track*> input_tracks, Tuples::Tuple* tuple = NULL);
@@ -36,8 +40,6 @@ public:
   };
 
   virtual ~TrackTypeFilterVtxTopoTracksTool( ); ///< Destructor
-    
-protected:
 
 private:
 
@@ -47,9 +49,10 @@ private:
   map<string, LHCb::Track::Types>  m_TrackTypeMap;
   map<LHCb::Track::Types, string>  m_TrackTypeMapRev;
 
-  
+
   //container for tracks
   vector<const LHCb::Track*>  m_tracks;
 
 };
+
 #endif // TRACKTYPEFILTERVTXTOPOTRACKSTOOL_H

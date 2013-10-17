@@ -18,10 +18,10 @@
  *  @author Julien Cogan and Mathieu Perrin-Terrin
  *  @date   2013-01-31
  */
-class TopoVertexAnalyserTupleTool : public GaudiTool, virtual public ITopoVertexAnalyserTupleTool {
+class TopoVertexAnalyserTupleTool : public GaudiTool, virtual public ITopoVertexAnalyserTupleTool 
+{
+
 public: 
-
-
 
   /// Standard constructor
   TopoVertexAnalyserTupleTool( const std::string& type, 
@@ -30,14 +30,10 @@ public:
 
   virtual ~TopoVertexAnalyserTupleTool( ); ///< Destructor
 
-  StatusCode analyseVertices(Tuples::Tuple* tuple, std::string tesLocation);
+public:
 
-
-
-
-protected:
-
-private:
+  StatusCode analyseVertices(Tuples::Tuple* tuple, const std::string& tesLocation );
 
 };
+
 #endif // TOPOVERTEXANALYSERTUPLETOOL_H

@@ -30,8 +30,11 @@
  *  @author Julien Cogan and Mathieu Perrin-Terrin
  *  @date   2012-10-11
  */
-class TopoVertexAlg : public GaudiTupleAlg {
+class TopoVertexAlg : public GaudiTupleAlg
+{
+
 public: 
+
   /// Standard constructor
   TopoVertexAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -39,11 +42,9 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-protected:
 
 private:
+
   ITopoVertexTool * m_topoVertexTool ;
   IFilterVtxTopoTracksTool * m_filterTracksTool;
   IFilterVtxTopoTracksTool * m_filterTracksTypeTool;

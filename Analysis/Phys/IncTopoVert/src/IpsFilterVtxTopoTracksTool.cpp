@@ -1,8 +1,8 @@
 // $Id: $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 #include "Event/VertexBase.h"
 #include "Event/RecVertex.h"
 // local
@@ -19,45 +19,39 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( IpsFilterVtxTopoTracksTool );
-
+DECLARE_TOOL_FACTORY( IpsFilterVtxTopoTracksTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 IpsFilterVtxTopoTracksTool::IpsFilterVtxTopoTracksTool( const std::string& type,
-                                                                          const std::string& name,
-                                                                          const IInterface* parent )
-  : GaudiHistoTool ( type, name , parent )
+                                                        const std::string& name,
+                                                        const IInterface* parent )
+: GaudiHistoTool ( type, name , parent )
 {
   declareInterface<IFilterVtxTopoTracksTool>(this);
 
-  declareProperty("IpsCut"  ,m_ips = 5.0); 
-
+  declareProperty("IpsCut"  ,m_ips = 5.0);
 
   declareProperty("DistanceCalculatorToolType",m_distanceCalculatorToolType="LoKi::TrgDistanceCalculator"); //LoKi::DistanceCalculator
-
-
 }
 
-
-//============================================================================= 
+//=============================================================================
 // Initialization
 //=============================================================================
-StatusCode IpsFilterVtxTopoTracksTool::initialize() {
+StatusCode IpsFilterVtxTopoTracksTool::initialize()
+{
+  const StatusCode sc = GaudiHistoTool::initialize();
+  if ( sc.isFailure() ) return sc;
+
   debug() << "==> Initialize" << endmsg;
 
   m_Geom = tool<IDistanceCalculator> (m_distanceCalculatorToolType, this);
-  if ( ! m_Geom ) {
-    return Error("DistanceCalculator could not be found",StatusCode::FAILURE);
-  }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
-
-
 
 
 //=============================================================================
@@ -70,7 +64,7 @@ std::vector<const LHCb::Track*> & IpsFilterVtxTopoTracksTool::filteredTracks(Tup
   }
   debug()<<"Filter tracks from TES :"<<vec_input_tracks.size()<<" tracks"<<endmsg;
   return filteredTracks(vec_input_tracks, tuple);
-  
+
 }
 //=============================================================================
 std::vector<const LHCb::Track*> & IpsFilterVtxTopoTracksTool::filteredTracks(std::vector<const LHCb::Track*> input_tracks,Tuples::Tuple* tuple)
@@ -81,28 +75,28 @@ std::vector<const LHCb::Track*> & IpsFilterVtxTopoTracksTool::filteredTracks(std
     return m_tracks;
   }
 
-  LHCb::RecVertex::Container* primary_vertices = NULL;  
-  if(exist<LHCb::RecVertex::Container>(LHCb::RecVertexLocation::Primary)){    
-    primary_vertices = get<LHCb::RecVertex::Container>(LHCb::RecVertexLocation::Primary);    
-  }  
-  else {    
-    warning()<<"No primary vertex at location"<<endreq;    
+  LHCb::RecVertex::Container* primary_vertices = NULL;
+  if(exist<LHCb::RecVertex::Container>(LHCb::RecVertexLocation::Primary)){
+    primary_vertices = get<LHCb::RecVertex::Container>(LHCb::RecVertexLocation::Primary);
+  }
+  else {
+    warning()<<"No primary vertex at location"<<endreq;
     Error("No primary vertex at location",StatusCode::FAILURE,50).ignore();
     return m_tracks;
   }
 
   double ipsall;
-  bool keep_track = true;  
+  bool keep_track = true;
   debug()<<"Tool "<<name()<<endmsg;
   debug()<<"Input tracks Size "<<input_tracks.size()<<endmsg;
   std::vector<double> v_ips_of_tracks;
   std::vector<bool> v_is_tracks_used;
-  
-    for (std::vector<const LHCb::Track*>::iterator it = input_tracks.begin(); it!=input_tracks.end();++it){
+
+  for (std::vector<const LHCb::Track*>::iterator it = input_tracks.begin(); it!=input_tracks.end();++it){
     keep_track = true;
 
     debug()<<"\tcheck IPS: "<<endmsg;
-    //IPS filter   
+    //IPS filter
     ipsall= 999;
     double imp, impchi2;
     imp =m_ips +1.;
@@ -110,15 +104,15 @@ std::vector<const LHCb::Track*> & IpsFilterVtxTopoTracksTool::filteredTracks(std
     LHCb::RecVertex::Container::const_iterator iv;
     for ( iv = primary_vertices->begin(); iv != primary_vertices->end(); iv++) {
       StatusCode sc2 = m_Geom->distance(((*it)),(*iv),imp,impchi2);
-      if (sc2.isFailure() ) {    
-        warning()<<"m_Geom problems"<<endreq;    
+      if (sc2.isFailure() ) {
+        warning()<<"m_Geom problems"<<endreq;
         continue;
       }
       if (impchi2<ipsall) {
         ipsall = impchi2;
       }
     }
-    
+
     //fill vector for n-tuple
     v_ips_of_tracks.push_back(ipsall);
 
@@ -126,20 +120,20 @@ std::vector<const LHCb::Track*> & IpsFilterVtxTopoTracksTool::filteredTracks(std
       keep_track = false;
     }
     if(keep_track == true) {
-      m_tracks.push_back((*it));    
+      m_tracks.push_back((*it));
       v_is_tracks_used.push_back(1);
     }
     else v_is_tracks_used.push_back(0);
   }
 
   if(tuple != NULL)
-    {
-      //fill ntuple
-      std::string prefix=name();
-      prefix += "_";
-      (*tuple)->farray( prefix+"IPS"         , v_ips_of_tracks, prefix+"L_tracks" , 500 );
-      (*tuple)->farray( prefix+"ZVTOP", v_is_tracks_used, prefix+"L_tracks" , 500 );
-    }
+  {
+    //fill ntuple
+    std::string prefix=name();
+    prefix += "_";
+    (*tuple)->farray( prefix+"IPS"         , v_ips_of_tracks, prefix+"L_tracks" , 500 );
+    (*tuple)->farray( prefix+"ZVTOP", v_is_tracks_used, prefix+"L_tracks" , 500 );
+  }
 
   return m_tracks;
 }
@@ -150,6 +144,6 @@ std::vector<const LHCb::Track*> & IpsFilterVtxTopoTracksTool::filteredTracks(std
 //=============================================================================
 // Destructor
 //=============================================================================
-IpsFilterVtxTopoTracksTool::~IpsFilterVtxTopoTracksTool() {} 
+IpsFilterVtxTopoTracksTool::~IpsFilterVtxTopoTracksTool() {}
 
 //=============================================================================

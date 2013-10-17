@@ -14,8 +14,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TopoVertexTool );
-
+DECLARE_TOOL_FACTORY( TopoVertexTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -67,25 +66,17 @@ TopoVertexTool::~TopoVertexTool() {}
 //=============================================================================
 StatusCode TopoVertexTool::initialize()
 {
+  const StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
   
   m_vertexFunction = tool<IVertexFunctionTool>(m_vertexFunctionToolType,m_vertexFunctionToolName);
-  if (0 == m_vertexFunction) 
-    return Error("Unable to load vertexFunctionTool "+m_vertexFunctionToolType+" "+m_vertexFunctionToolName,
-                 StatusCode::FAILURE);
-
   setVertexFunctionParam();
    
-  m_distanceCalculator  = tool<IDistanceCalculator>(m_distanceCalculatorToolType,m_distanceCalculatorToolName);
-  if (0 == m_distanceCalculator) 
-    return Error("Unable to load distanceCalculatorTool "+m_distanceCalculatorToolType+" "+m_distanceCalculatorToolName,
-                 StatusCode::FAILURE);
+  m_distanceCalculator = tool<IDistanceCalculator>(m_distanceCalculatorToolType,m_distanceCalculatorToolName);
   
-  m_trackVertexer  = tool<ITrackVertexer>(m_trackVertexerToolType,m_trackVertexerToolName);
-  if (0 == m_trackVertexer) 
-    return Error("Unable to load trackVertexerTool "+m_trackVertexerToolType+" "+m_trackVertexerToolName,
-                 StatusCode::FAILURE);
+  m_trackVertexer = tool<ITrackVertexer>(m_trackVertexerToolType,m_trackVertexerToolName);
   
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 
@@ -309,7 +300,7 @@ StatusCode TopoVertexTool::step5()
       const SmartRefVector< LHCb::Track > vertex_tracks = vertex->tracks();
       all_tracks.insert(all_tracks.end(),vertex_tracks.begin(),vertex_tracks.end());
     }
-    std::sort(all_tracks.begin(),all_tracks.end());
+    std::stable_sort(all_tracks.begin(),all_tracks.end());
     TrackVector::iterator tracks_end = std::unique(all_tracks.begin(),all_tracks.end());
     TrackVector tracks;
     tracks.insert(tracks.end(), all_tracks.begin(),tracks_end);

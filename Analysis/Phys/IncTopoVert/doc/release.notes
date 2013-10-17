@@ -4,6 +4,12 @@
 ! Purpose     : Inclusive Vertex Reconstruction
 !-----------------------------------------------------------------------------
 
+! 2013-10-17 - Chris Jones
+ - Various clean ups ...
+  + Add missing or incorrect calls to bas class initialize() method from 
+    specialized initalize() implementations.
+  + fix -pedantic warnings
+
 !===================== IncTopoVert v1r0 2013-08-09 =======================
 
 ! 2013-08-09 - Mathieu Perrin-Terrin

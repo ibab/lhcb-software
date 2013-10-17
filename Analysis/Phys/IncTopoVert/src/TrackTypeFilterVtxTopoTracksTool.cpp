@@ -1,8 +1,8 @@
 // $Id: $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 #include "Event/VertexBase.h"
 #include "Event/RecVertex.h"
 // local
@@ -19,23 +19,22 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TrackTypeFilterVtxTopoTracksTool );
-
+DECLARE_TOOL_FACTORY( TrackTypeFilterVtxTopoTracksTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 TrackTypeFilterVtxTopoTracksTool::TrackTypeFilterVtxTopoTracksTool( const std::string& type,
-                                                                          const std::string& name,
-                                                                          const IInterface* parent )
-  : GaudiHistoTool ( type, name , parent )
+                                                                    const std::string& name,
+                                                                    const IInterface* parent )
+: GaudiHistoTool ( type, name , parent )
 {
   declareInterface<IFilterVtxTopoTracksTool>(this);
 
 
   vector<string>                   m_TrackTypeAllowed_default;
   m_TrackTypeAllowed_default.push_back("Long");
-  declareProperty("TrackType"  ,m_TrackTypeAllowed = m_TrackTypeAllowed_default); 
+  declareProperty("TrackType"  ,m_TrackTypeAllowed = m_TrackTypeAllowed_default);
 
   m_TrackTypeMap["TypeUnknown"] = LHCb::Track::TypeUnknown;
   m_TrackTypeMap["Velo"]        = LHCb::Track::Velo;
@@ -62,20 +61,6 @@ TrackTypeFilterVtxTopoTracksTool::TrackTypeFilterVtxTopoTracksTool( const std::s
 }
 
 
-//============================================================================= 
-// Initialization
-//=============================================================================
-StatusCode TrackTypeFilterVtxTopoTracksTool::initialize() {
-  debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-
-
-
-
 //=============================================================================
 std::vector<const LHCb::Track*> & TrackTypeFilterVtxTopoTracksTool::filteredTracks(Tuples::Tuple* tuple)
 {
@@ -86,8 +71,8 @@ std::vector<const LHCb::Track*> & TrackTypeFilterVtxTopoTracksTool::filteredTrac
   }
   debug()<<"Filter tracks from TES :"<<vec_input_tracks.size()<<" tracks"<<endmsg;
   return filteredTracks(vec_input_tracks, tuple);
-  
 }
+
 //=============================================================================
 std::vector<const LHCb::Track*> & TrackTypeFilterVtxTopoTracksTool::filteredTracks(std::vector<const LHCb::Track*> input_tracks,Tuples::Tuple* tuple)
 {
@@ -95,7 +80,7 @@ std::vector<const LHCb::Track*> & TrackTypeFilterVtxTopoTracksTool::filteredTrac
   tuple =0;
   if (tuple) {
   }
-  
+
   if (input_tracks.size()==0) {
     debug()<<"No input tracks"<<endmsg;
     return m_tracks;
@@ -110,10 +95,10 @@ std::vector<const LHCb::Track*> & TrackTypeFilterVtxTopoTracksTool::filteredTrac
       }
     }
     if(i_type<m_TrackTypeAllowed.size()) {
-      m_tracks.push_back((*it));   
+      m_tracks.push_back((*it));
     }
   }
-  
+
   return m_tracks;
 }
 
@@ -123,6 +108,6 @@ std::vector<const LHCb::Track*> & TrackTypeFilterVtxTopoTracksTool::filteredTrac
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackTypeFilterVtxTopoTracksTool::~TrackTypeFilterVtxTopoTracksTool() {} 
+TrackTypeFilterVtxTopoTracksTool::~TrackTypeFilterVtxTopoTracksTool() {}
 
 //=============================================================================

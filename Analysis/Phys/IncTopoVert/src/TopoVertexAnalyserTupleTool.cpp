@@ -1,8 +1,8 @@
 // $Id: $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 #include "Event/RecVertex.h"
 #include "Event/RecVertex.h"
 #include "Event/Track.h"
@@ -16,8 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TopoVertexAnalyserTupleTool );
-
+DECLARE_TOOL_FACTORY( TopoVertexAnalyserTupleTool )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -25,17 +24,15 @@ DECLARE_TOOL_FACTORY( TopoVertexAnalyserTupleTool );
 TopoVertexAnalyserTupleTool::TopoVertexAnalyserTupleTool( const std::string& type,
                                                           const std::string& name,
                                                           const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+: GaudiTool ( type, name , parent )
 {
   declareInterface<ITopoVertexAnalyserTupleTool>(this);
-
-
 }
 
 //=============================================================================
 // Analyser
 //=============================================================================
-StatusCode TopoVertexAnalyserTupleTool::analyseVertices(Tuples::Tuple* tuple, std::string tesLocation){
+StatusCode TopoVertexAnalyserTupleTool::analyseVertices(Tuples::Tuple* tuple, const std::string& tesLocation){
 
 
   //Defines variable
@@ -50,8 +47,8 @@ StatusCode TopoVertexAnalyserTupleTool::analyseVertices(Tuples::Tuple* tuple, st
 
 
   //load the vertices from the TES and loop if they exist
-  LHCb::RecVertex::Container* vertices = NULL;  
-  if( exist<LHCb::RecVertex::Container>(tesLocation) ){  
+  LHCb::RecVertex::Container* vertices = NULL;
+  if( exist<LHCb::RecVertex::Container>(tesLocation) ){
     vertices = get<LHCb::RecVertex::Container>(tesLocation);
 
     for(LHCb::RecVertex::Container::const_iterator i_vtx = vertices->begin() ; vertices->end()!=i_vtx ; ++i_vtx){
@@ -59,10 +56,10 @@ StatusCode TopoVertexAnalyserTupleTool::analyseVertices(Tuples::Tuple* tuple, st
       tmp_nb_tauM_tracks    = 0;
       tmp_nb_non_tau_tracks = 0;
       for (SmartRefVector< LHCb::Track >::const_iterator i_tr=(*i_vtx)->tracks().begin(); i_tr!=(*i_vtx)->tracks().end(); ++i_tr){
-	int mother_pid = (*i_tr)->info(0,0.0);
-	if      (mother_pid ==  15 )  tmp_nb_tauM_tracks+=1;
-	else if (mother_pid == -15 )  tmp_nb_tauP_tracks+=1;
-	else                          tmp_nb_non_tau_tracks +=1;
+        int mother_pid = (*i_tr)->info(0,0.0);
+        if      (mother_pid ==  15 )  tmp_nb_tauM_tracks+=1;
+        else if (mother_pid == -15 )  tmp_nb_tauP_tracks+=1;
+        else                          tmp_nb_non_tau_tracks +=1;
       }
       nb_tracks.push_back((*i_vtx)->tracks().size());
       nb_tauP_tracks.push_back(tmp_nb_tauP_tracks);
@@ -77,7 +74,7 @@ StatusCode TopoVertexAnalyserTupleTool::analyseVertices(Tuples::Tuple* tuple, st
 
     }
   }
-  
+
   //type of event
   if     ( nb_type1 == 2 && nb_type2 == 0  ) evt_type=1; //3+3pure
   else if( nb_type1 == 0 && nb_type2 == 1  ) evt_type=2; //6pure
@@ -90,13 +87,9 @@ StatusCode TopoVertexAnalyserTupleTool::analyseVertices(Tuples::Tuple* tuple, st
   return StatusCode::SUCCESS;
 }
 
-
-
-
-
 //=============================================================================
 // Destructor
 //=============================================================================
-TopoVertexAnalyserTupleTool::~TopoVertexAnalyserTupleTool() {} 
+TopoVertexAnalyserTupleTool::~TopoVertexAnalyserTupleTool() {}
 
 //=============================================================================

@@ -20,18 +20,16 @@
  *  @author Mathieu Perrin-Terrin
  *  @date   2013-08-09
  */
-class GAUDI_API ITopoVertexAnalyserTupleTool : virtual public IAlgTool {
+class GAUDI_API ITopoVertexAnalyserTupleTool : virtual public IAlgTool 
+{
+
 public: 
 
   DeclareInterfaceID(ITopoVertexAnalyserTupleTool, 2, 0);
 
   ///analyse the vertices at the given tesLocation
-  virtual StatusCode analyseVertices(Tuples::Tuple* tuple, std::string tesLocation)=0;
-
-
-protected:
-
-private:
+  virtual StatusCode analyseVertices( Tuples::Tuple* tuple, 
+                                      const std::string& tesLocation ) = 0;
 
 };
 #endif // ITOPOVERTEXANALYSERTUPLETOOL_H
