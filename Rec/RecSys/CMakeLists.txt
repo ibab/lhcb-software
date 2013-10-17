@@ -49,7 +49,6 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Rich/RichRecTemplateRings
                          Rich/RichRecTools
                          Rich/RichRecTrackTools
-                         Sft/FstTools
                          Tf/FastPV
                          Tf/FastVelo
                          Tf/PatAlgorithms
