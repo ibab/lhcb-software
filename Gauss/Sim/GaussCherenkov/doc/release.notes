@@ -4,6 +4,13 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, 
 !               etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
+
+! 2013-10-18 - Jibo He
+ - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties
+  . Added option to "remove" a list of PMTs given in db (set0-2) 
+ - CherenkovG4HistoDefineSet5.cpp
+  . Changed the range of total occupancies histos to 15k to not trunate distributions
+
 !2013-10-12- Sajan Easo
  - Added the modifications to use large PMTs
  - fix for histogram filling  with binary readout.

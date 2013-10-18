@@ -153,9 +153,10 @@ private:
   bool m_activatePmtModuleSupSet4;
   bool m_activatePmtModuleSupSet5;
   bool m_activatePmtModuleSupSet6;
-  
-  
-    
+  //
+  bool m_activatePmtSupSet0;
+  bool m_activatePmtSupSet1;
+  bool m_activatePmtSupSet2;  
   
 };
 // ============================================================================

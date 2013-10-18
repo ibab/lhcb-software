@@ -49,15 +49,15 @@ void CherenkovG4HistoDefineSet5::bookCherenkovG4HistogramsSet5()
   title = "Overall Occupancy in RICH1 ";
  
   m_NumTotHitRich1All = CurHistoSvc->book(m_RichG4HistoPathSet5+"363",
-                              title,1000,0.0,8000.0);
+                                          title,1500,0.0,15000.0);
   title = "Overall Occupancy in RICH2 ";
  
   m_NumTotHitRich2All = CurHistoSvc->book(m_RichG4HistoPathSet5+"383",
-                              title,1000,0.0,8000.0);
+                                          title,1500,0.0,15000.0);
   title = "Overall Occupancy in RICH2 No Scintllation";
  
   m_NumTotHitRich2NoScintAll = CurHistoSvc->book(m_RichG4HistoPathSet5+"384",
-                              title,1000,0.0,8000.0);
+                                                 title,1500,0.0,15000.0);
 
   title="XY Location of Rich1 Gas PMT hits ";
 

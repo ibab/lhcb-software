@@ -52,7 +52,9 @@ static const G4String RichPmtModuleSuppressSet5Path="/dd/Materials/RichMaterialT
 static const G4String RichPmtModuleSuppressSet6Path="/dd/Materials/RichMaterialTabProperties/Rich1PMTModuleAnnulationSet6";
 
 
-
+static const G4String RichPmtSuppressSet0Path="/dd/Materials/RichMaterialTabProperties/RichPmtSuppressSet0";
+static const G4String RichPmtSuppressSet1Path="/dd/Materials/RichMaterialTabProperties/RichPmtSuppressSet1";
+static const G4String RichPmtSuppressSet2Path="/dd/Materials/RichMaterialTabProperties/RichPmtSuppressSet2";
 
 
 static const G4String LogVolPmtSMasterNameAnalysis =

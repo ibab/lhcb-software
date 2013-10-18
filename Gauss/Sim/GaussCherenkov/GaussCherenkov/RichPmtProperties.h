@@ -186,6 +186,13 @@ public:
   void setActivatePmtModuleSuppressSet6(bool aAct6)
   { m_ActivatePmtModuleSuppressSet6=aAct6; }
 
+  //
+  void setActivatePmtSuppressSet0(bool aSet0) 
+  { m_ActivatePmtSuppressSet0 = aSet0;  }
+  void setActivatePmtSuppressSet1(bool aSet1)
+  { m_ActivatePmtSuppressSet1 = aSet1; }
+  void setActivatePmtSuppressSet2(bool aSet2)
+  { m_ActivatePmtSuppressSet2 = aSet2; }
 
   bool getSuperRichFlag();
 
@@ -263,7 +270,11 @@ private:
   bool m_ActivatePmtModuleSuppressSet3;
   bool m_ActivatePmtModuleSuppressSet4;
   bool m_ActivatePmtModuleSuppressSet5;
-  bool m_ActivatePmtModuleSuppressSet6;  
+  bool m_ActivatePmtModuleSuppressSet6; 
+
+  bool m_ActivatePmtSuppressSet0;
+  bool m_ActivatePmtSuppressSet1;
+  bool m_ActivatePmtSuppressSet2;
 
   bool m_SuperRichFlag;
   

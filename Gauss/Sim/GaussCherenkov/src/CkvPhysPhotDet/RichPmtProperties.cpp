@@ -39,10 +39,16 @@ RichPmtProperties::RichPmtProperties( )
     m_PmtDBOverRideMaxQEValue(0.60),
     m_CurQEMatPathname(RichPmtQeffMatTabPropPath ),
     m_CurQETableSourceOption(0),
+    m_PmtQEScaleFactor( 1.0 ),
     m_ActivatePmtModuleSuppressSet3(false),
     m_ActivatePmtModuleSuppressSet4(false),
     m_ActivatePmtModuleSuppressSet5(false),
     m_ActivatePmtModuleSuppressSet6(false),
+    //
+    m_ActivatePmtSuppressSet0(false),
+    m_ActivatePmtSuppressSet1(false),
+    m_ActivatePmtSuppressSet2(false),
+    //
     m_SuperRichFlag(false) 
 { }
 //    m_RichPmtDeMagList(2,std::vector<RichPmtDeMag*>(200)),
@@ -70,6 +76,7 @@ void RichPmtProperties::InitializePmtProperties( ) {
 
   if((int)m_numPmtTotRich.size() != m_numberOfRichDetectors)
     m_numPmtTotRich.resize(m_numberOfRichDetectors);
+
   if((int)m_numPmtTotUsedRich.size() != m_numberOfRichDetectors)
     m_numPmtTotUsedRich.resize(m_numberOfRichDetectors);
 
@@ -127,45 +134,34 @@ void RichPmtProperties::InitializePmtProperties( ) {
   
     if ( m_PmtVerboseLevel >0 ) {
        RichPmtlog << MSG::INFO <<"Max Z Hit coord in Rich1 = "<<m_Rich1MaxZHitCoord  <<endreq;
-    }
-    
-  
-
-  
+    }  
 
     // the following line to be un commented after
     // the rich2 structure.xml file has this info.
 
     // m_numPmtTotRich[1]= Rich2DE->userParameterAsInt("Rich2TotNumPmt");
     //    m_numPmtTotRich[1]= Rich1DE->userParameterAsInt("Rich2TotNumPmt");
-     if( R_DE[1] ) {
-       
-
-       m_numPmtTotRich[1]= R_DE[0]->param<int>("Rich2TotNumPmt");
+    if( R_DE[1] ) {
+      m_numPmtTotRich[1]= R_DE[0]->param<int>("Rich2TotNumPmt");
       if(R_DE[0]->exists("Rich2TotNumPmt")){
         m_numPmtTotUsedRich[1]= R_DE[0]->param<int>("Rich2TotNumPmt");
       }else {
         m_numPmtTotUsedRich[1]= m_numPmtTotRich[1];
-     }
-    
-    
-       
-    RichPmtlog << MSG::INFO << "Classic RICH1 Total Number of pmts used   MaxNumPmt  = "
-               << m_numPmtTotUsedRich[0] <<"   "<< m_numPmtTotRich[0]  <<endreq;
-       
-    RichPmtlog << MSG::INFO
-               << "Classic RICH2: Total Number of pmts Used MaxNumPmt = "
-               << m_numPmtTotUsedRich[1] << "   "<<  m_numPmtTotRich[1] <<endreq;
-    
-     } // end test R_DE[1]
+      } 
+      
+      RichPmtlog << MSG::INFO << "Classic RICH1 Total Number of pmts used   MaxNumPmt  = "
+                 << m_numPmtTotUsedRich[0] <<"   "<< m_numPmtTotRich[0]  <<endreq;
+      
+      RichPmtlog << MSG::INFO
+                 << "Classic RICH2: Total Number of pmts Used MaxNumPmt = "
+                 << m_numPmtTotUsedRich[1] << "   "<<  m_numPmtTotRich[1] <<endreq;
+      
+    } // end test R_DE[1]
      
      
   }    // end test R_DE[0]
   else if(  (m_SuperRichFlag)  && ( R_DE[2] )  ) {
     // now with super Rich
-
-
-    
     
     m_numPmtTotRich[2]= R_DE[2]->param<int>("SuperRichTotNumPmt");
 
@@ -234,9 +230,6 @@ void RichPmtProperties::InitializePmtProperties( ) {
     }
     
     }else if ( R_DE[2] ) {
-      
-   
-
 
       aCherenkovG4Counters->setNumPmtsSuperRich(m_numPmtTotRich[2] );
       aCherenkovG4Counters->InitCherenkovG4CountersSR() ;
@@ -296,10 +289,10 @@ void RichPmtProperties::InitializePmtProperties( ) {
 
   }
   //  if(m_PmtVerboseLevel >0) {
-    RichPmtlog << MSG::INFO
+  RichPmtlog << MSG::INFO
                <<"Pmt HighVoltage value = "<<PmtHVSingle<<endreq;
     // }
-  m_RichPmtHighVoltage=PmtHVSingle;
+    m_RichPmtHighVoltage=PmtHVSingle;
 
   //Now get the PhCathode to Si Surface max Distance
   if(m_SuperRichFlag ) {
@@ -314,12 +307,7 @@ void RichPmtProperties::InitializePmtProperties( ) {
                <<"Pmt QW to Si Max Dist = "<< m_RichPmtQWToSiDist <<endreq;
   }
 
-
-
-
    setQWPhCathNames ();
-
-
   
   } // end test R_DE[0]
   
@@ -413,6 +401,11 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
     TabulatedProperty::Table tableSupSet5;
     TabulatedProperty::Table tableSupSet6;
 
+    //
+    TabulatedProperty::Table tableSupPmtSet0;
+    TabulatedProperty::Table tableSupPmtSet1;
+    TabulatedProperty::Table tableSupPmtSet2;
+
     //    SmartDataPtr<DeRichPMT> iDePmt( detSvc, location );
     // if(  ( !iDePmt ) || (m_UseNominalPmtQE)  ) {
     // if( (m_UseNominalPmtQE)  ) {
@@ -430,13 +423,6 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
       }
       
     }
-    
-      
-    
-
-
-
-
 
      SmartDataPtr<TabulatedProperty> tabQE(detSvc, m_CurQEMatPathname );
      RichPmtPropLogQE<<MSG::INFO<<" Now getting the QE from "<<m_CurQEMatPathname<<endreq;
@@ -462,7 +448,7 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
     for (it = table.begin(); it != table.end(); it++) {
       double aPhotonEnergy= (it->first);
       double aQeOrig      = (it->second)/100.0; // division by 100 to get from percent to prob 
-      double aQeCorrected = aQeOrig;
+      double aQeCorrected = aQeOrig * m_PmtQEScaleFactor;
 
       // if( (aPhotonEnergy >= (double) m_MinPhotonEnergyInRICH) && 
           //	  (aPhotonEnergy <= (double) m_MaxPhotonEnergyInRICH ) ) {
@@ -483,9 +469,14 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
     int aNumPmtInModule=16;
     
     std::vector<bool> PmtSupFlag(aTotNumPmtRICH,false);
-    G4cout<<" Pmt supress flags set3 set4 set5 set6 "<< m_ActivatePmtModuleSuppressSet3<<"   "
+    G4cout<<" Pmt module supress flags set3 set4 set5 set6 "<< m_ActivatePmtModuleSuppressSet3<<"   "
           <<m_ActivatePmtModuleSuppressSet4<<"  "<< m_ActivatePmtModuleSuppressSet5
          <<"   "<< m_ActivatePmtModuleSuppressSet6<< G4endl;
+    
+    G4cout<<" Pmt supress flags set0 set1 set2: " 
+          << m_ActivatePmtSuppressSet0 <<"   "
+          << m_ActivatePmtSuppressSet1 <<"   "
+          << m_ActivatePmtSuppressSet2 << G4endl;    
     
     if(m_ActivatePmtModuleSuppressSet3) {
       SmartDataPtr<TabulatedProperty>  PmtModuleSupressSet3Table( detSvc,RichPmtModuleSuppressSet3Path  );
@@ -574,8 +565,62 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
       }
       
     
-    
-    
+      
+      // Now suppress PMT according to their copy numbers 
+      // PMT Set0 
+      if ( m_ActivatePmtSuppressSet0 ) {
+        SmartDataPtr<TabulatedProperty>  PmtSupressSet0Table( detSvc, RichPmtSuppressSet0Path  );
+        
+        //G4cout << "RichPmtSuppressSet0Path " << RichPmtSuppressSet0Path << G4endl;         
+        //G4cout << "Table " << PmtSupressSet0Table << G4endl;
+
+        if( PmtSupressSet0Table ){
+          tableSupPmtSet0 = PmtSupressSet0Table->table();
+          
+          for(TabulatedProperty::Table::const_iterator itPmt = tableSupPmtSet0.begin(); 
+              itPmt != tableSupPmtSet0.end(); itPmt++ ) {
+            PmtSupFlag[ (int)(itPmt->second) ] = true ;
+          }    
+        }
+      }
+
+      
+      // PMT Set1 
+      if ( m_ActivatePmtSuppressSet1 ) {
+        SmartDataPtr<TabulatedProperty>  PmtSupressSet1Table( detSvc, RichPmtSuppressSet1Path  );
+        
+        if( PmtSupressSet1Table ){
+          tableSupPmtSet1 = PmtSupressSet1Table->table();
+          
+          for(TabulatedProperty::Table::const_iterator itPmt = tableSupPmtSet1.begin(); 
+              itPmt != tableSupPmtSet1.end(); itPmt++ ) {
+            PmtSupFlag[ (int)(itPmt->second) ] = true ;
+          }    
+        }
+      }
+      
+      
+      // PMT Set2 
+      if ( m_ActivatePmtSuppressSet2 ) {
+        SmartDataPtr<TabulatedProperty>  PmtSupressSet2Table( detSvc, RichPmtSuppressSet2Path  );
+        
+        if( PmtSupressSet2Table ){
+          tableSupPmtSet2 = PmtSupressSet2Table->table();
+          
+          for(TabulatedProperty::Table::const_iterator itPmt = tableSupPmtSet2.begin(); 
+              itPmt != tableSupPmtSet2.end(); itPmt++ ) {
+            PmtSupFlag[ (int)(itPmt->second) ] = true ;
+          }    
+        }
+      }
+      
+      
+      //Check
+      //for( int i=0; i<(aTotNumPmtRICH) ; ++i ) {
+      //  G4cout << i << ", flag " << PmtSupFlag[i] << G4endl;        
+      //}
+      
+   
 
    for(int i=0; i<(aTotNumPmtRICH) ; ++i ) {
       int ih= i;

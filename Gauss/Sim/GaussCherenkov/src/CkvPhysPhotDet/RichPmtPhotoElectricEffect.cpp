@@ -34,7 +34,11 @@ RichPmtPhotoElectricEffect::RichPmtPhotoElectricEffect(const GiGaBase* /*gigabas
     m_PmtModuleSupFlag3(false),
     m_PmtModuleSupFlag4(false),
     m_PmtModuleSupFlag5(false),
-    m_PmtModuleSupFlag6(false)
+    m_PmtModuleSupFlag6(false),
+    //
+    m_PmtSupFlag0(false),
+    m_PmtSupFlag1(false),
+    m_PmtSupFlag2(false)
 {
     //  G4cout << GetProcessName() << " is created " << G4endl;
 }
@@ -60,6 +64,10 @@ void RichPmtPhotoElectricEffect::setPmtPhElecParam()
      m_PmtProperty ->setActivatePmtModuleSuppressSet4(m_PmtModuleSupFlag4);
      m_PmtProperty ->setActivatePmtModuleSuppressSet5(m_PmtModuleSupFlag5);
      m_PmtProperty ->setActivatePmtModuleSuppressSet6(m_PmtModuleSupFlag6);
+     //
+     m_PmtProperty ->setActivatePmtSuppressSet0(m_PmtSupFlag0);
+     m_PmtProperty ->setActivatePmtSuppressSet1(m_PmtSupFlag1);
+     m_PmtProperty ->setActivatePmtSuppressSet2(m_PmtSupFlag2);
      
     m_PmtProperty -> InitializePmtProperties( );
 

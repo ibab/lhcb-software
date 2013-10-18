@@ -141,6 +141,15 @@ public:
   { m_PmtModuleSupFlag5=aFlag5;}
   void setPmtModuleSupFlag6(G4bool aFlag6)
   { m_PmtModuleSupFlag6=aFlag6;}
+
+  //
+  void setPmtSupFlag0(G4bool aSet0)
+  { m_PmtSupFlag0 = aSet0;}
+  void setPmtSupFlag1(G4bool aSet1)
+  { m_PmtSupFlag1 = aSet1;}
+  void setPmtSupFlag2(G4bool aSet2)
+  { m_PmtSupFlag2 = aSet2;}
+
   
 private:
 
@@ -190,6 +199,10 @@ private:
   G4bool m_PmtModuleSupFlag4;
   G4bool m_PmtModuleSupFlag5;
   G4bool m_PmtModuleSupFlag6;
+
+  G4bool m_PmtSupFlag0;
+  G4bool m_PmtSupFlag1;
+  G4bool m_PmtSupFlag2;
 
          
 };

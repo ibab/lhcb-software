@@ -77,7 +77,12 @@ GiGaPhysConstructorOpCkv::GiGaPhysConstructorOpCkv
     m_activatePmtModuleSupSet3(false),
     m_activatePmtModuleSupSet4(false),
     m_activatePmtModuleSupSet5(false),
-    m_activatePmtModuleSupSet6(false)
+    m_activatePmtModuleSupSet6(false),
+    //
+    m_activatePmtSupSet0(false),
+    m_activatePmtSupSet1(false),
+    m_activatePmtSupSet2(false)
+
 {
   // in the above 3 is for the three radiators.
 
@@ -119,7 +124,9 @@ GiGaPhysConstructorOpCkv::GiGaPhysConstructorOpCkv
   declareProperty("ActivatePmtModuleSuppressSet5",m_activatePmtModuleSupSet5);
   declareProperty("ActivatePmtModuleSuppressSet6",m_activatePmtModuleSupSet6);
 
-  
+  declareProperty("ActivatePmtSuppressSet0", m_activatePmtSupSet0 );
+  declareProperty("ActivatePmtSuppressSet1", m_activatePmtSupSet1 );
+  declareProperty("ActivatePmtSuppressSet2", m_activatePmtSupSet2 );  
   
 }
 
@@ -318,6 +325,10 @@ void GiGaPhysConstructorOpCkv::ConstructOp() {
     theRichPmtPhotoElectricProcess->setPmtModuleSupFlag4(m_activatePmtModuleSupSet4);
     theRichPmtPhotoElectricProcess->setPmtModuleSupFlag5(m_activatePmtModuleSupSet5);
     theRichPmtPhotoElectricProcess->setPmtModuleSupFlag6(m_activatePmtModuleSupSet6);
+    //
+    theRichPmtPhotoElectricProcess->setPmtSupFlag0(m_activatePmtSupSet0);
+    theRichPmtPhotoElectricProcess->setPmtSupFlag1(m_activatePmtSupSet1);
+    theRichPmtPhotoElectricProcess->setPmtSupFlag2(m_activatePmtSupSet2);
 
     theRichPmtPhotoElectricProcess->setPmtPhElecParam();
  
