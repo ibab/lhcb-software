@@ -36,12 +36,13 @@ class VPClustering : public GaudiAlgorithm {
   DeVP* m_vpDet;
 
   bool m_debug;
-
+  std::pair<unsigned int,unsigned int> scaleFrac(
+                                                 std::pair<double,double> xyFraction);
   StatusCode clusterDigits();
   int sensorNumber(LHCb::VPDigit* digit);
   bool isEdge(LHCb::VPDigit* digit);
-  void addToCluster(std::vector<LHCb::VPDigit*>& cluster, std::vector< std::pair<LHCb::VPChannelID,int> >& totVec,
-                    std::vector<LHCb::VPDigit*>& digitCont, unsigned int hit);
+  void addToCluster(std::vector<LHCb::VPDigits::const_iterator>& cluster, std::vector< std::pair<LHCb::VPChannelID,int> >& totVec,
+                    LHCb::VPDigits::const_iterator candidate);
 
   struct less_than_channelID {
     inline bool operator() (const LHCb::VPDigit* obj1, const LHCb::VPDigit* obj2) {
