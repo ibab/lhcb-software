@@ -72,9 +72,9 @@ StatusCode VPClustering::clusterDigits() {
   
   if (m_debug) debug() << "Clustering digits" << endmsg;
   // Pick up pixel hits (digits) to cluster
-  LHCb::VPDigits* raw_hits = getIfExists<LHCb::VPDigits>(m_digitLocation);
-  if (!raw_hits) {
-    error() << "No digits founds in this event" << endmsg;
+  LHCb::VPDigits* digits = getIfExists<LHCb::VPDigits>(m_digitLocation);
+  if (!digits) {
+    error() << "No digits in " << m_digitLocation << endmsg;
     return StatusCode::SUCCESS;
   }
   // Create containers for clusters and lite clusters.
@@ -82,40 +82,40 @@ StatusCode VPClustering::clusterDigits() {
   VPClusters* clusters = new VPClusters();
 
   // Sort digits by channelID
-  std::sort(raw_hits->begin(), raw_hits->end(), less_than_channelID()); 
+  std::sort(digits->begin(), digits->end(), less_than_channelID()); 
   
   // Cluster while there are still pixels in the temporary storage
   unsigned int oldsize = 0;
-  std::vector<bool> isUsed(raw_hits->size()); // If each pixel is used NEW
+  std::vector<bool> isUsed(digits->size()); // If each pixel is used NEW
   LHCb::VPDigits::const_iterator iSeed; // Cluster seed iterator NEW
-  for (iSeed=raw_hits->begin(); iSeed != raw_hits->end(); iSeed++) { // NEW
-    if(isUsed[iSeed - raw_hits->begin()]) continue;
+  for (iSeed = digits->begin(); iSeed != digits->end(); iSeed++) { // NEW
+    if(isUsed[iSeed - digits->begin()]) continue;
     // Create a new cluster.
     std::vector<LHCb::VPDigits::const_iterator> cluster; //NEW
     std::vector<std::pair<LHCb::VPChannelID,int> > totVec;     
     // Add the first hit in the container.
     cluster.push_back(iSeed); // NEW
-    isUsed[iSeed - raw_hits->begin()] = true;
-    totVec.push_back(std::make_pair((*iSeed)->channelID(),(*iSeed)->ToTValue())); // NEW
+    isUsed[iSeed - digits->begin()] = true;
+    totVec.push_back(std::make_pair((*iSeed)->channelID(), (*iSeed)->ToTValue())); // NEW
 
     do {
       oldsize = cluster.size();
       for (unsigned int i = 0; i < cluster.size(); i++) { 
         LHCb::VPDigits::const_iterator iCand = cluster[i];
-        if(iCand!=raw_hits->end()-1) iCand++; // Candidate  iterator NEW
+        if (iCand != digits->end() - 1) iCand++; // Candidate  iterator NEW
         else break;
         if ((*cluster[i])->channelID().module() != (*iCand)->channelID().module()) break;  // Next hit not on same module NEW
         if (sensorNumber((*cluster[i])) != sensorNumber(*iCand) ) break; // Next hit not on same sensor
         // Loop down the stored hits until new pixels cannot be part of cluster    
-        for (; iCand != raw_hits->end(); iCand++) { 
-          if(isUsed[iCand - raw_hits->begin()]) continue;
+        for (; iCand != digits->end(); iCand++) { 
+          if (isUsed[iCand - digits->begin()]) continue;
           if (!isEdge((*cluster[i]))) {
             // Not edge
             if ((*cluster[i])->channelID().chip() != (*iCand)->channelID().chip()) break;  // Next hit not on same chip
             if (abs((*cluster[i])->channelID().row() - (*iCand)->channelID().row()) > 1) continue; // Not neighbouring in y
             if (abs((*cluster[i])->channelID().col() - (*iCand)->channelID().col()) > 1) break; // Too far away to be added
             addToCluster(cluster, totVec, iCand); 
-            isUsed[iCand - raw_hits->begin()] = true;
+            isUsed[iCand - digits->begin()] = true;
             break; //NEW
           } else {
             // Deal with edge pixels
@@ -124,56 +124,55 @@ StatusCode VPClustering::clusterDigits() {
               if (abs((*cluster[i])->channelID().row() - (*iCand)->channelID().row()) > 1) continue; // Not neighbouring in y
               if (abs((*cluster[i])->channelID().col() - (*iCand)->channelID().col()) > 1) break; // Too far away to be added
               addToCluster(cluster, totVec, iCand); 
-              isUsed[iCand - raw_hits->begin()] = true;
+              isUsed[iCand - digits->begin()] = true;
               break; //NEW
             } else {
               // Not on the same chip
               if (!isEdge(*iCand)) break; // No hits on neighbouring edge
               if (abs((*cluster[i])->channelID().row() - (*iCand)->channelID().row()) > 1) continue; // Not neighbouring in y
               addToCluster(cluster, totVec, iCand); 
-              isUsed[iCand - raw_hits->begin()] = true;
+              isUsed[iCand - digits->begin()] = true;
               break; //NEW
             }
           } // End of edge pixel check
         }
       }
     } while (cluster.size() != oldsize); // no more hits to be added to cluster
-    
-    double x = 0; //temp
-    double y = 0; //temp
-    double z = 0; //temp
-    const DeVPSensor* vp_sensor = m_vpDet->sensorOfChannel((*cluster[0])->channelID()); //temp
+    // Calculate the barycentre of the cluster. 
+    double x = 0;
+    double y = 0;
+    double z = 0;
+    const DeVPSensor* vp_sensor = m_vpDet->sensorOfChannel((*cluster[0])->channelID());
     int clustToT = 0;
-    for (unsigned int it = 0;it < cluster.size(); it++) { 
-      const double tot = (*cluster[it])->ToTValue();
+    for (unsigned int i = 0; i < cluster.size(); i++) { 
+      const double tot = (*cluster[i])->ToTValue();
       clustToT += tot;
-      Gaudi::XYZPoint pixel = vp_sensor->channelToPoint((*cluster[it])->channelID()); //temp
-      x += (pixel.x() * tot); //temp
-      y += (pixel.y() * tot); //temp
-      z += (pixel.z() * tot); //temp
+      Gaudi::XYZPoint pixel = vp_sensor->channelToPoint((*cluster[i])->channelID());
+      x += pixel.x() * tot;
+      y += pixel.y() * tot;
+      z += pixel.z() * tot;
     }
-    x /= clustToT; //temp
-    y /= clustToT; //temp
-    z /= clustToT; //temp
-    Gaudi::XYZPoint cluster_point(x, y, z); //temp
-    LHCb::VPChannelID temp_id; //temp
-    std::pair<double, double> temp_frac; //temp
-    StatusCode mycode = vp_sensor->pointToChannel(cluster_point, temp_id, temp_frac); //temp
+    x /= clustToT;
+    y /= clustToT;
+    z /= clustToT;
+    Gaudi::XYZPoint cluster_point(x, y, z);
+    // Get the channel ID and inter-pixel fraction of the barycentre.
+    LHCb::VPChannelID id;
+    std::pair<double, double> frac;
+    StatusCode mycode = vp_sensor->pointToChannel(cluster_point, id, frac);
     if (mycode == StatusCode::FAILURE) continue;
     // Make sure there isn't already a cluster with the same channel ID.
-    if (clusters->object(temp_id)) {
-      warning() << "Duplicated channel ID " << temp_id << endmsg;
+    if (clusters->object(id)) {
+      warning() << "Duplicated channel ID " << id << endmsg;
       continue; 
     }
-    // Make new scaled ToT fraction
-    std::pair<unsigned int,unsigned int> xyFracNew = scaleFrac(temp_frac);
     // Add the lite cluster to the list.
-    bool isLong = false; // temp 
-    const VPLiteCluster newLiteCluster(temp_id, 1, xyFracNew, isLong);
+    bool isLong = false; 
+    const VPLiteCluster newLiteCluster(id, 1, scaleFrac(frac), isLong);
     liteClusters->push_back(newLiteCluster);
     // Add the cluster to the list. 
-    LHCb::VPCluster* newCluster = new LHCb::VPCluster(newLiteCluster, totVec); 
-    clusters->insert(newCluster, temp_id); 
+    LHCb::VPCluster* newCluster = new LHCb::VPCluster(newLiteCluster, totVec);
+    clusters->insert(newCluster, id);
   }
   // Sort the lite clusters.
   std::sort(liteClusters->begin(), liteClusters->end(), 
