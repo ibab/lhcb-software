@@ -53,7 +53,7 @@ StatusCode VPClustering::initialize() {
 StatusCode VPClustering::execute() {
 
   // Check if LiteClusters already decoded. 
-  if (exist<LHCb::VPLiteCluster::VPLiteClusters>(LHCb::VPLiteClusterLocation::Default)) {
+  if (exist<LHCb::VPLiteCluster::VPLiteClusters>(m_digitLocation)) {
     // If lite clusters are decoded there is no need to build clusters.
     if (m_debug) {
       debug() << "Lite clusters already exist. No clustering taking place" << endmsg;
@@ -70,9 +70,6 @@ StatusCode VPClustering::execute() {
 //=============================================================================
 StatusCode VPClustering::clusterDigits() {
   
-//  std::cout<<"Clustering subroutine"<<std::endl;
-
-
   if (m_debug) debug() << "Clustering digits" << endmsg;
   // Pick up pixel hits (digits) to cluster
   LHCb::VPDigits* raw_hits = getIfExists<LHCb::VPDigits>(m_digitLocation);
@@ -84,14 +81,8 @@ StatusCode VPClustering::clusterDigits() {
   VPLiteCluster::VPLiteClusters* liteClusters = new VPLiteCluster::VPLiteClusters();
   VPClusters* clusters = new VPClusters();
 
-  // Make a temporary storage space for the pixels, and delete when used
-//  std::vector<LHCb::VPDigit*> digitCont;
-//  LHCb::VPDigits::const_iterator iHit;
-//  for (iHit = raw_hits->begin(); iHit != raw_hits->end(); ++iHit) {
-//    digitCont.push_back(*iHit);
-//  }
-//  // Sort pixels by channelID
-//  std::sort(digitCont.begin(), digitCont.end(), less_than_channelID()); 
+  // Sort digits by channelID
+  std::sort(raw_hits->begin(), raw_hits->end(), less_than_channelID()); 
   
   // Cluster while there are still pixels in the temporary storage
   unsigned int oldsize = 0;
@@ -147,30 +138,20 @@ StatusCode VPClustering::clusterDigits() {
         }
       }
     } while (cluster.size() != oldsize); // no more hits to be added to cluster
-
-    
-    unsigned int module = (*cluster[0])->channelID().module();
     
     double x = 0; //temp
     double y = 0; //temp
     double z = 0; //temp
     const DeVPSensor* vp_sensor = m_vpDet->sensorOfChannel((*cluster[0])->channelID()); //temp
     int clustToT = 0;
-    double clustRow = 0.;
-    double clustCol = 0.;    
     for (unsigned int it = 0;it < cluster.size(); it++) { 
       const double tot = (*cluster[it])->ToTValue();
       clustToT += tot;
-      clustCol += tot * ((*cluster[it])->channelID().col() + 0.5);
-      clustRow += tot * ((*cluster[it])->channelID().row() + 0.5);
       Gaudi::XYZPoint pixel = vp_sensor->channelToPoint((*cluster[it])->channelID()); //temp
       x += (pixel.x() * tot); //temp
       y += (pixel.y() * tot); //temp
       z += (pixel.z() * tot); //temp
     }
-    clustRow /= clustToT;
-    clustCol /= clustToT;
-    
     x /= clustToT; //temp
     y /= clustToT; //temp
     z /= clustToT; //temp
@@ -179,21 +160,6 @@ StatusCode VPClustering::clusterDigits() {
     std::pair<double, double> temp_frac; //temp
     StatusCode mycode = vp_sensor->pointToChannel(cluster_point, temp_id, temp_frac); //temp
     if (mycode == StatusCode::FAILURE) continue;
-    // Make the barycentre channel
-    LHCb::VPChannelID baryCenterChID(module, (*cluster[0])->channelID().chip(), floor(clustRow), floor(clustCol));
-        
-    // Get the interpixel fraction
-    std::pair<unsigned int, unsigned int> xyFrac;
-    xyFrac.first = int(ceil((clustRow-floor(clustRow)) * 7.));
-    xyFrac.second = int(ceil((clustCol-floor(clustCol)) * 7.));
-    if (xyFrac.first > 7.) xyFrac.first = int(7.);
-    if (xyFrac.second > 7.) xyFrac.second = int(7.);
-    
-    // const VPLiteCluster newLiteCluster(baryCenterChID,1,xyFrac,isLong);
-    // LHCb::VPCluster* newCluster = new LHCb::VPCluster(newLiteCluster,totVec);
-    // clusters->insert(newCluster, baryCenterChID);
-    // liteClusters->push_back(newLiteCluster); 
-
     // Make sure there isn't already a cluster with the same channel ID.
     if (clusters->object(temp_id)) {
       warning() << "Duplicated channel ID " << temp_id << endmsg;
@@ -203,7 +169,6 @@ StatusCode VPClustering::clusterDigits() {
     std::pair<unsigned int,unsigned int> xyFracNew = scaleFrac(temp_frac);
     // Add the lite cluster to the list.
     bool isLong = false; // temp 
-//    const VPLiteCluster newLiteCluster(temp_id, 1, temp_frac, isLong);
     const VPLiteCluster newLiteCluster(temp_id, 1, xyFracNew, isLong);
     liteClusters->push_back(newLiteCluster);
     // Add the cluster to the list. 
@@ -258,13 +223,12 @@ void VPClustering::addToCluster(std::vector<LHCb::VPDigits::const_iterator>& clu
 // Scale 3 bit xyFraction
 //============================================================================
 std::pair<unsigned int, unsigned int> 
-VPClustering::scaleFrac(std::pair<double,double> xyFraction)
-{
-  unsigned int m_maxValue = 7;
+VPClustering::scaleFrac(std::pair<double, double> xyFraction) {
+  const unsigned int maxValue = 7;
   std::pair<unsigned int, unsigned int> xyFrac;
-  xyFrac.first = int(ceil(xyFraction.first * m_maxValue));
-  xyFrac.second = int(ceil(xyFraction.second * m_maxValue));
-  if(xyFrac.first > m_maxValue) xyFrac.first = int(m_maxValue);
-  if(xyFrac.second > m_maxValue) xyFrac.second = int(m_maxValue);
+  xyFrac.first = int(ceil(xyFraction.first * maxValue));
+  xyFrac.second = int(ceil(xyFraction.second * maxValue));
+  if (xyFrac.first > maxValue) xyFrac.first = maxValue;
+  if (xyFrac.second > maxValue) xyFrac.second = maxValue;
   return xyFrac;
 }

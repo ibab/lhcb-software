@@ -3,7 +3,10 @@
 ! Responsible : Daniel Hynds
 !--------------------------------------------------------------------------
 
-2013-10-18 - Daniel Hynds
+! 2013-10-19 - Heinrich Schindler
+ - removed unused lines of code
+
+! 2013-10-18 - Daniel Hynds
  - Manual calculation of xy fraction
  - Reworked pixel container to prevent vector entry deletion
 
