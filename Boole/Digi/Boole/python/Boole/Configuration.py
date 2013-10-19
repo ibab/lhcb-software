@@ -679,12 +679,10 @@ class Boole(LHCbConfigurableUser):
             BuildMCTrackInfoUpgrade().WithVP = True
 
         if "VP" in linkDets or "VP" in moniDets:
-            from Configurables import VPDigit2MCHitLinker, VPDigit2MCParticleLinker, VPCluster2MCHitLinker, VPCluster2MCParticleLinker
+            from Configurables import VPDigitLinker, VPClusterLinker
             seq = GaudiSequencer("LinkVPSeq")
-            seq.Members += [VPDigit2MCHitLinker("VPDigit2MCHitLinker") ]
-            seq.Members += [VPDigit2MCParticleLinker("VPDigit2MCParticleLinker") ]
-            seq.Members += [VPCluster2MCHitLinker("VPCluster2MCHitLinker") ]
-            seq.Members += [VPCluster2MCParticleLinker("VPCluster2MCParticleLinker") ]
+            seq.Members += [VPDigitLinker()]
+            seq.Members += [VPClusterLinker()]
 
         if "VL" in linkDets:
             from Configurables import BuildMCTrackInfoUpgrade
