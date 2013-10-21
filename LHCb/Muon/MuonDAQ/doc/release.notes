@@ -4,6 +4,9 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-10-21 - Giovanni Passaleva
+ - fixed incorrect addressing of TELL1s in case of no M1 in MuonDigitToRawBuffer
+
 !========================= MuonDAQ v4r18 2013-06-05 =========================
 ! 2013-06-04 - Giovanni Passaleva
  - fixed a wrong continue statement and a wrong mapping
