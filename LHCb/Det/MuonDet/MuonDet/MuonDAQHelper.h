@@ -128,6 +128,15 @@ public:
     return m_tellPerStation[station];
   }
   unsigned int getODENumberInQuadrant(std::string ODEName);
+
+  //GP
+  // new method to retrieve the progressive number of Tell1 named L1Name
+  // this is neded at the moment because TELL1s are indexed sometimes 
+  // by serial number and sometimes by an progressive counter.
+  // This is irrelevant when M1 is present by matters if M1 is missing !
+  // 
+  
+  int findL1Index(std::string L1Name);
   
 private:
 

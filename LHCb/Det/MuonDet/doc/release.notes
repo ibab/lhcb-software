@@ -3,6 +3,10 @@
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+! 2013-10-21 - Giovanni Passaleva
+ - fixed wrong mapping of TELL1s in case of no M1 in MuonDAQHelper
+ - added new method to correctly address TELL1s in case of no M1 in MuonDAQHelper
+
 !========================= MuonDet v9r14 2013-09-30 =========================
 ! 2013-09-24 - Giovanni Passaleva
  - Det/MuonDet MuonDAQHelper: moved getODENumberInLink(...) from .h to .cpp.

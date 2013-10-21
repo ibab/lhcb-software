@@ -461,9 +461,9 @@ StatusCode MuonDAQHelper::initMaps()
 		     <<i<<" is connected to ODE: "<<l1->getLinkConnection(i)<<endmsg;
 	//
 
-	// load optical link map per TELL1. Rtrieved according to TELL1 serial number !
-	//        m_linkInTell1[Tell1Number].push_back(l1->getLinkConnection(i)); // <-- modify it !!!
-        m_linkInTell1[l1->L1Number()].push_back(l1->getLinkConnection(i)); // <-- modify it !!!
+	// load optical link map per TELL1. Retrieved according to TELL1 serial number !
+	m_linkInTell1[Tell1Number].push_back(l1->getLinkConnection(i)); // <-- modify it !!!
+	//        m_linkInTell1[l1->L1Number()].push_back(l1->getLinkConnection(i)); // <-- modify it !!!
 
       } // end of loop over TELL1 inputs
 
@@ -1281,7 +1281,9 @@ unsigned int MuonDAQHelper::DAQaddressInL1(LHCb::MuonTileID digitTile,
                                            long& ODENumber,
                                            unsigned int & ODEAdd,
                                            bool hole){
+
   ODEAdd=DAQaddressInODE(digitTile,L1Number,ODENumber,hole);
+
   std::string L1Path=findL1(digitTile);
   //  unsigned int ODEPos=findODEPosition(L1Path,ODENumber,hole);
   if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
@@ -1290,6 +1292,7 @@ unsigned int MuonDAQHelper::DAQaddressInL1(LHCb::MuonTileID digitTile,
   unsigned int chToAdd=channelsInL1BeforeODE(L1Path,ODENumber,false);
   if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )
     msgStream()<<MSG::DEBUG<<" ch add "<<chToAdd+ODEAdd<<endmsg;
+
   return chToAdd+ODEAdd;
 
 
@@ -2170,4 +2173,21 @@ unsigned int MuonDAQHelper::getODENumberInLink(unsigned int Tell1_num,unsigned i
 {
   size_t s = m_linkInTell1[Tell1_num].size();
   return s == 0 ? 0 :  (m_linkInTell1[Tell1_num])[Link_num];
+}
+
+//GP
+// new method to retrieve the progressive number of Tell1 named L1Name
+// this is neded at the moment because TELL1s are indexed sometimes 
+// by serial number and sometimes by an progressive counter.
+// This is irrelevant when M1 is present by matters if M1 is missing !
+// 
+int MuonDAQHelper::findL1Index(std::string L1Name)
+{
+  int index = -1;
+  std::vector<std::string>::iterator it = m_TELL1Name.begin();
+  for(; it != m_TELL1Name.end(); ++it) {
+    index++;
+    if(L1Name == *it ) return index;
+  }
+  return index;
 }
