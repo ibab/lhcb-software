@@ -211,7 +211,13 @@ void FastVeloHitManager::buildFastHits ( ) {
   LHCb::VeloLiteCluster::FastContainer * liteClusters = 
     GaudiTool::get<LHCb::VeloLiteCluster::FastContainer>(LHCb::VeloLiteClusterLocation::Default);
 
-  if ( liteClusters->size() > m_pool.size() ) m_pool.resize( liteClusters->size() + 100 );
+  if ( liteClusters->size() > m_pool.size() ) {
+    if ( msgLevel( MSG::DEBUG ) ) {  
+      debug() << "Resized container to " << liteClusters->size() + 100 << endmsg;
+    }
+    m_pool.resize( liteClusters->size() + 100 );
+    m_nextInPool = m_pool.begin();
+  }
 
   LHCb::VeloLiteCluster::FastContainer::iterator iClus;
   unsigned int lastSensor = 9999;
@@ -223,6 +229,7 @@ void FastVeloHitManager::buildFastHits ( ) {
       lastSensor = sensor;
       mySensor = m_sensors[sensor];
     }
+    
     //if ( !iClus->highThreshold() ) continue;
 
     FastVeloHit* hit = &(*(m_nextInPool++));  // get the next object in the pool

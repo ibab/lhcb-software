@@ -4,6 +4,10 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2013-10-22 - David Hutchcroft
+ - Fixed bug in container access in FastVeloHitManager.cpp when more than 
+   10k clusters in the event (needed for the pA data). 
+
 !========================= FastVelo v1r12p1 2013-07-18 =========================
 ! 2013-06-18 - Marco Cattaneo
  - Add missing TrackInterfaces dependency
