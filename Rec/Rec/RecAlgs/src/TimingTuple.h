@@ -39,7 +39,7 @@ private:
 
   ISequencerTimerTool* m_timerTool; ///< timer tool
   int m_timer ; ///< timer index
-  unsigned long int m_evtCounter;
+  unsigned long long m_evtCounter;
   std::string m_recSummaryLoc;
 
 private:
