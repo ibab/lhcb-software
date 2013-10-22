@@ -103,7 +103,7 @@ StatusCode EventTuple::execute()
     }
   }
 
-  sc = tuple->column( "EventInSequence", counter("Event").nEntries() );
+  sc = tuple->column( "EventInSequence", (unsigned long long)counter("Event").nEntries() );
   if ( sc.isFailure() ) return sc;
 
   for ( std::vector<IEventTupleTool*>::iterator i = m_tools.begin(); 

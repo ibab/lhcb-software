@@ -4,6 +4,10 @@
 ! Purpose     : Base classes for the DecayTreeTuples
 !-----------------------------------------------------------------------------
 
+! 2013-10-22 - Patrick Koppenburg
+ - Fix warning
+WARNING EventTuple:: Tuple 'EventTuple' 'unsigned long' has different sizes on 32/64 bit systems. Casting 'EventInSequence' to 'unsigned long long'
+
 ! 2013-10-09 - Patrick Koppenburg
  - Bug https://savannah.cern.ch/bugs/index.php?102616: Stop treating errors as warnings.
    Now DecayTreeTuple will stop if any tool returns an error.
