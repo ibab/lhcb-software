@@ -10,8 +10,8 @@ setupDir=sys.argv[1]
 from MooreScripts.CreateRunEFF import CreateRunMooreOnline_EFF
 
 for split in [ '','Hlt1','Hlt2'] :
-    f=setupDir+"runMoore%sOnline_EFF.sh"%(split)
+    f=os.path.join(setupDir,"runMoore%sOnline_EFF.sh"%(split))
     if os.path.exists(f):
         print "# WARNING: EFF File exists! Remove if you want me to recreate it! "+f
     else:
-        CreateRunMooreOnline_EFF( f, setup,split )
+        CreateRunMooreOnline_EFF( f, split )
