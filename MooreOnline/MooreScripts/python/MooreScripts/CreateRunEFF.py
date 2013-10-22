@@ -1,10 +1,10 @@
 
-def CreateRunMooreOnline_EFF( output, setup, split='' ) :
+def CreateRunMooreOnline_EFF( output, split='' ) :#setup, split='' ) :
     from os import makedirs,chmod
     from os.path import exists, dirname
     
-    print 'using ' + setup
-    print 'generating '+ output
+    #print '# INFO: using ' + setup
+    print '# INFO: generating '+ output
     target_dir = dirname( output )
     if not exists( target_dir ) : makedirs( target_dir )
     file = open(output,'w+')
@@ -16,8 +16,8 @@ export NBOFSLAVES=${3:-0}
    
 # remove the args because they interfere with the cmt scripts
 export HOME=/home/$(/usr/bin/whoami)
-# pick up 'our' setup... 
-source %(setup)s
+# pick up 'our' setup..., obsolete, now done in advance ...
+# source %(setup)s
 
 ####echo ${UTGID} Running as $(/usr/bin/whoami) with DIM_DNS_NODE $DIM_DNS_NODE and home $HOME , cmtconfig $CMTCONFIG
 

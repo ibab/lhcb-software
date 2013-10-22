@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2013-10-22 - Rob Lambert
+ - Split the PostInstall script into two, now it only makes the EFF files
+
 ! 2013-10-11 - Rob Lambert
  - Change the PostInstall script, only use the setup file passed into the script.
 
