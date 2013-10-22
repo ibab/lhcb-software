@@ -4,6 +4,7 @@
 // Event/LinkerEvent
 #include "Linker/LinkedTo.h"
 // Event/MCEvent
+#include "Event/MCHit.h"
 #include "Event/MCParticle.h"
 // Local
 #include "VPClusterMonitor.h"

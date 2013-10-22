@@ -3,6 +3,10 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2013-10-22 - Heinrich Schindler
+ - Remove unused member variable m_hits in VPClusterMonitor
+ - Set default value of NumberOfBits in VPDigitCreator to 1 (binary readout).
+
 ! 2013-10-09 - Heinrich Schindler 
  - VPClusterMonitor: protect debug statements, made loopClusters void
  - VPDepositCreator: use pointToChannel function without fraction

@@ -44,7 +44,7 @@ VPDigitCreator::VPDigitCreator(const std::string& name,
   declareProperty("TunedCharge", m_chargeTuning = 15000.); 
   declareProperty("TunedTOT", m_totTuning = 10.);
   // Number of bits for ToT
-  declareProperty("NumberOfBits", m_nBits = 4); 
+  declareProperty("NumberOfBits", m_nBits = 1); 
   // Bunch spacing in ns 
   declareProperty("BunchCrossingSpacing", m_bunchCrossingSpacing = 25.0);
   // Sampling phase in ns w. r. t. LHC clock (tuned to largest timewalk)

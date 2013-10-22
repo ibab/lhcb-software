@@ -4,8 +4,6 @@
 // Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 // LHCb
-// Event/MCEvent
-#include "Event/MCHit.h"
 // Event/DigiEvent
 #include "Event/VPCluster.h"
 // Det/VPDet
@@ -31,7 +29,6 @@ public:
   
 private:
   LHCb::VPClusters* m_clusters;
-  LHCb::MCHits* m_hits;
   std::string m_clusterCont;
   std::string m_hitCont;
   
