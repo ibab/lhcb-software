@@ -1,5 +1,5 @@
 package LHCbSys
-version           v36r2
+version           v36r3
 
 branches doc cmt tests
 
@@ -10,38 +10,38 @@ branches doc cmt tests
 #                                         Maintainer
 use MCAssociators         v1r4p1  Associators # V. Gligorov
 
-use CaloDAQ               v4r35   Calo    # Olivier Deschamps
-use CaloInterfaces        v8r6    Calo    # Olivier Deschamps
+use CaloDAQ               v4r36   Calo    # Olivier Deschamps
+use CaloInterfaces        v8r7    Calo    # Olivier Deschamps
 use CaloKernel            v6r4    Calo    # Olivier Deschamps
-use CaloUtils             v10r1   Calo    # Olivier Deschamps
+use CaloUtils             v10r2   Calo    # Olivier Deschamps
 
-use DAQSys                v7r1    DAQ     # Marco Cattaneo
+use DAQSys                v7r1p1  DAQ     # Marco Cattaneo
 use DAQUtils              v1r11   DAQ     # Marco Cattaneo
 use MDF                   v3r40   DAQ     # Markus Frank
 use MDF_ROOT              v1r9    DAQ     # Markus Frank
+use RawEventCompat        v1r3    DAQ     # Rob Lambert
 use Tell1Kernel           v1r13   DAQ     # Tomasz Szumlak
-use RawEventCompat        v1r2    DAQ     # Rob Lambert
 
 # Detector description
 use DetSys                v17r2   Det     # Marco Cattaneo
 use BcmDet                v1r4    Det     # Magnus Lieng
 use CaloDet               v10r17  Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r3    Det     # Olivier Deschamps
-use DDDB                  v1r64   Det     # Marco Cattaneo
+use DDDB                  v1r65   Det     # Marco Cattaneo
 use DetCond               v12r32  Det     # Marco Clemencic
 use DetDesc               v18r32p1  Det   # Marco Clemencic
 use DetDescChecks         v5r10   Det     # Marco Clemencic, Ivan Belyaev
 use DetDescCnv            v4r18   Det     # Marco Clemencic
 use DetDescSvc            v3r6    Det     # Marco Clemencic
-use FTDet                 v2r3p1  Det     # Diego Milanes
+use FTDet                 v2r4    Det     # Diego Milanes
 use Magnet                v7r6p1  Det     # Marco Cattaneo
-use MuonDet               v9r14   Det     # Giovanni Passaleva
+use MuonDet               v9r15   Det     # Giovanni Passaleva
 use OTDet                 v8r10   Det     # Alexandr Kozlinskiy, Lucia Grillo
 use RichDet               v16r19  Det     # Chris Jones
 use STDet                 v4r30   Det     # J. van Tilburg
 use VeloDet               v13r19p1  Det   # Mark Tobin, Kurt Rinnert
 use VLDet                 v1r7    Det     # Heinrich Schindler
-use VPDet                 v2r3    Det     # Pawel Jalocha
+use VPDet                 v2r4    Det     # Pawel Jalocha
 
 # Event data model
 use DAQEvent              v9r13   Event   # Marco Cattaneo, Markus Frank
@@ -76,7 +76,7 @@ use FTDAQ                 v1r3    FT      #
 
 # Packages without Hat, cannot have comment field.
 # Maintainer M.Cattaneo
-use GaudiConf             v17r12
+use GaudiConf             v17r13
 # Maintainer ??
 use GaudiConfUtils        v1r1
 # Maintainer I.Shapoval
@@ -90,27 +90,27 @@ use HltDAQ                v2r18   Hlt     # Tomasz Skwarnicki
 use HltServices           v1r0    Hlt     # Gerhard Raven
 
 # Kernel packages
-use FSRAlgs               v1r3    Kernel  # Rob Lambert, Jaap Panman
+use FSRAlgs               v1r4    Kernel  # Rob Lambert, Jaap Panman
 use HltInterfaces         v4r9    Kernel  # Patrick Koppenburg
 use KernelSys             v12r3   Kernel  # Marco Cattaneo
 use LHCbAlgs              v2r59   Kernel  # Marco Cattaneo
 use LHCbKernel            v14r3   Kernel  # Marco Cattaneo
-use LHCbMath              v3r42   Kernel  # Vanya Belyaev
+use LHCbMath              v3r43   Kernel  # Ivan Belyaev
 use MCInterfaces          v1r17   Kernel  # Marco Cattaneo et al.
-use PartProp              v1r16   Kernel  # Vanya Belyaev
+use PartProp              v1r16   Kernel  # Ivan Belyaev
 use Relations             v6r1p1  Kernel  # Ivan Belyaev
 use XMLSummaryBase        v1r5    Kernel  # Rob Lambert
 use XMLSummaryKernel      v1r11   Kernel  # Rob Lambert
 
-use L0Base                v2r2    L0      # Julien Cogan
+use L0Base                v2r3    L0      # Julien Cogan
 use L0Calo                v11r11  L0      # Patrick Robbe
-use L0DU                  v10r28  L0      # Olivier Deschamps
+use L0DU                  v10r29  L0      # Olivier Deschamps
 use L0Interfaces          v2r3    L0      # Olivier Deschamps
 use L0Muon                v9r12   L0      # Julien Cogan
 use L0MuonKernel          v9r10   L0      # Julien Cogan
 use ProcessorKernel       v7r1    L0      # Julien Cogan
 
-use MuonDAQ               v4r18   Muon    # Alessia Satta
+use MuonDAQ               v4r19   Muon    # Giovanni Passaleva
 use MuonKernel            v4r1    Muon    # Andrei Tsaregorodtsev
 
 #use RootCnv               v1r18   Online  # (also in GAUDI and ONLINE projects)
