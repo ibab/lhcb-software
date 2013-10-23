@@ -1,5 +1,5 @@
 package GaussSys
-version v46r4
+version v46r5
 
 branches cmt doc
 
@@ -11,91 +11,91 @@ branches cmt doc
 use Gauss               v46r4   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
-use LCG_Settings        v65r1p1 
-use lhapdf              v65r1p2 LCG_GeneratorsInterfaces
-use photospp            v65r1p1 LCG_GeneratorsInterfaces
-use tauolapp            v65r1p1 LCG_GeneratorsInterfaces
-use pythia6             v65r1p1 LCG_GeneratorsInterfaces
-use pythia8             v65r1p1 LCG_GeneratorsInterfaces
-use thepeg              v65r1p1 LCG_GeneratorsInterfaces
-use herwigpp            v65r1p1 LCG_GeneratorsInterfaces
-use rivet               v65r1p1 LCG_GeneratorsInterfaces
-use alpgen              v65r1p1 LCG_GeneratorsInterfaces
-use hijing              v65r1p1 LCG_GeneratorsInterfaces
-use powhegbox           v65r1p2 LCG_GeneratorsInterfaces
+use LCG_Settings        v66r0p1 
+use lhapdf              v66r0p1 LCG_GeneratorsInterfaces
+use photospp            v66r0p1 LCG_GeneratorsInterfaces
+use tauolapp            v66r0p1 LCG_GeneratorsInterfaces
+use pythia6             v66r0p1 LCG_GeneratorsInterfaces
+use pythia8             v66r0p1 LCG_GeneratorsInterfaces
+use thepeg              v66r0p1 LCG_GeneratorsInterfaces
+use herwigpp            v66r0p1 LCG_GeneratorsInterfaces
+use rivet               v66r0p1 LCG_GeneratorsInterfaces
+use alpgen              v66r0p1 LCG_GeneratorsInterfaces
+use hijing              v66r0p1 LCG_GeneratorsInterfaces
+use powhegbox           v66r0p1 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
-use GenCuts             v3r5    Gen
-use GENSER              v12r6g1 Gen
-use EvtGen              v13r7   Gen
-use Mint                v2r1    Gen
-use EvtGenExtras        v3r8    Gen
-use Generators          v14r5   Gen
-use LbPythia            v14r1   Gen
+use GenCuts             v3r7    Gen
+use GENSER              v13r0   Gen
+use EvtGen              v13r8   Gen
+use Mint                v2r2    Gen
+use EvtGenExtras        v3r9    Gen
+use Generators          v14r6   Gen
+use LbPythia            v14r2   Gen
 
 # Generators packages: extensions to Pythia6
-use LbAlpGen            v3r0p1  Gen 
-use BcVegPy             v3r1    Gen
-use GenXicc             v2r0    Gen
-use LbBcVegPy           v5r0    Gen
-use LbGenXicc           v2r0p1  Gen
-use LbHidValley         v3r2    Gen
-use LbOniaPairs         v1r2    Gen
-use LbPowheg            v1r0    Gen
+use LbAlpGen            v3r1    Gen 
+use BcVegPy             v3r2    Gen
+use GenXicc             v2r0p1  Gen
+use LbBcVegPy           v5r1    Gen
+use LbGenXicc           v3r0    Gen
+use LbHidValley         v3r2p1  Gen
+use LbOniaPairs         v1r2p1  Gen
+use LbPowheg            v1r0p2  Gen
 
 # Generators packages: alternative to Pythia6 for pp collisions
-use LbPythia8           v7r4    Gen
-use LbHerwigpp          v2r0    Gen
+use LbPythia8           v7r6    Gen
+use LbHerwigpp          v2r0p1  Gen
 
 # Generators packages: alternative to Pythia6 for p-A collisions
-use LbHijing            v9r0    Gen
+use LbHijing            v9r0p1  Gen
 
 # Generators packages: LHCb sampling results for Machine Induced Background
-use LbMIB               v7r0    Gen
+use LbMIB               v7r0p1  Gen
 
 # Generators packages: LHCb particle gun generator
-use LbPGuns             v4r0    Gen
+use LbPGuns             v4r1    Gen
 
 # Simulation basic packages
-use GiGa        	v20r2p1	  Sim     
-use GiGaCnv     	v20r2	  Sim
-use SimSvc              v5r2      Sim
-use GiGaVisUI           v5r2      Sim
-use VisSvc              v5r7      Vis 
-use ClhepTools          v2r1p1    Tools
+use GiGa        	v20r2p2	  Sim     
+use GiGaCnv     	v20r2p1	  Sim
+use SimSvc              v5r2p1    Sim
+use GiGaVisUI           v5r2p1    Sim
+use VisSvc              v5r7p1    Vis 
+use ClhepTools          v2r1p2    Tools
 
 # Simulation specialized packages
-use GaussKine           v6r3      Sim
-use GaussAlgs		v7r0      Sim
-use GaussTools          v18r2     Sim
-use GaussRICH		v14r0     Sim
-use GaussTracker	v6r2p1	  Sim
-use GaussCalo		v9r4	  Sim
-use GaussPhysics	v10r0	  Sim
-use GaussCherenkov      v4r0      Sim
+use GaussKine           v6r3p1    Sim
+use GaussAlgs		v7r0p1    Sim
+use GaussTools          v18r2p1   Sim
+use GaussRICH		v14r0p1   Sim
+use GaussTracker	v6r2p2	  Sim
+use GaussCalo		v9r4p1    Sim
+use GaussPhysics	v10r0p1   Sim
+use GaussCherenkov      v4r1      Sim
 
 # Monitoring packages
-use GaussMonitor	v7r0      Sim
-use CaloMoniSim         v4r0      Calo
-use VeloGauss           v2r4      Velo
-use MuonMoniSim         v2r6      Muon
-use BcmMoniSim          v1r2      Bcm
-use BlsMoniSim          v1r1      Bls
-use VLMoniSim           v1r0      VL
-use GaussUMC            v2r0      Sim
+use GaussMonitor	v7r0p1    Sim
+use CaloMoniSim         v4r0p1    Calo
+use VeloGauss           v2r4p1    Velo
+use MuonMoniSim         v2r6p1    Muon
+use BcmMoniSim          v1r2p1    Bcm
+use BlsMoniSim          v1r1p1    Bls
+use VLMoniSim           v1r0p1    VL
+use GaussUMC            v2r1      Sim
 
 # Packages for MC generator tuning
-use GenTune             v2r0p1    Gen  
+use GenTune             v2r0p2    Gen  
 
 # GMDL
-use LbGDML              v1r0      Sim
+use LbGDML              v1r0p1    Sim
 
 # Visualization configuration
-use XmlVis              v1r17     Vis
+use XmlVis              v1r18     Vis
 
 # Test packages for new releases or installations on new platforms
-use GenTests            v1r6      Gen
-use SimChecks           v1r0      Sim
+use GenTests            v1r6p1    Gen
+use SimChecks           v1r0p1    Sim
 
 # Allow to run the QMTests  
 apply_pattern QMTest
