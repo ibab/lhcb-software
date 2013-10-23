@@ -3,6 +3,10 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2013-10-23 - Daniel Hynds
+ - Fix in cluster monitoring code
+ - Fix to radiation damage loop
+
 ! 2013-10-22 - Heinrich Schindler
  - Remove unused member variable m_hits in VPClusterMonitor
  - Set default value of NumberOfBits in VPDigitCreator to 1 (binary readout).

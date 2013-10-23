@@ -94,30 +94,32 @@ void VPClusterMonitor::loopClusters (){
     double cluster_x(0), cluster_y(0), cluster_z(0), pix1ToT(0), pix2ToT(0), pixel_x(0); 
     std::vector<double> xvalues;
     // Loop over pixel hits
-    for (unsigned int i = 0; i < totVec.size(); ++i) {
-      clustToT += totVec[i].second;
+    
+    
+    for(unsigned int it=0;it<totVec.size();it++){
+      clustToT+=totVec[it].second;
       // Enter pixel values for eta distribution plots
-      if (i == 0 && totVec.size() == 2) pix1ToT = totVec[i].second;
-      if (i == 1 && totVec.size() == 2) pix2ToT = totVec[i].second;
+      if (it == 0 && totVec.size() == 2) pix1ToT = totVec[it].second;
+      if (it == 1 && totVec.size() == 2) pix2ToT = totVec[it].second;
       // Get sensor
-      const DeVPSensor* sensor = m_vpDet->sensorOfChannel(totVec[i].first);
+      const DeVPSensor* sensor = m_vpDet->sensorOfChannel(totVec[it].first);
       // Get XYZ of pixel
-      Gaudi::XYZPoint pointGlobal = sensor->channelToPoint(totVec[i].first);
+      Gaudi::XYZPoint pointGlobal = sensor->channelToPoint(totVec[it].first);
       // Get pixel radius
       double radius = sqrt(pow(pointGlobal.x(), 2) + pow(pointGlobal.y(), 2));
       // Plot pixel information
       plot(radius, "pixel_radius", 0, 100, 200);
-      plot(totVec[i].second, "single_pixel_tot", 0, 50, 50);
-      plot2D(radius, totVec[i].second, "single_pixel_tot_versus_r", 0, 100, 0, 50, 200, 50);
+      plot(totVec[it].second, "single_pixel_tot", 0, 50, 50);
+      plot2D(radius, totVec[it].second, "single_pixel_tot_versus_r", 0, 100, 0, 50, 200, 50);
       plot2D(pointGlobal.x(), pointGlobal.y(), "xy_map_pixels", -100, 100, -100, 100, 400, 400);
       plot2D(pointGlobal.z(), pointGlobal.x(), "xz_map_pixels", -500, 1000, -100, 100, 1000, 400);
       plot2D(pointGlobal.z(), pointGlobal.y(), "yz_map_pixels", -500, 1000, -100, 100, 1000, 400);
       // Get info for eta distribution
       pixel_x = pointGlobal.x();
       // Make cluster information
-      cluster_x += totVec[i].second * pointGlobal.x();
-      cluster_y += totVec[i].second * pointGlobal.y();
-      cluster_z += totVec[i].second * pointGlobal.z();
+      cluster_x += totVec[it].second * pointGlobal.x();
+      cluster_y += totVec[it].second * pointGlobal.y();
+      cluster_z += totVec[it].second * pointGlobal.z();
       // Information about cluster width
       bool newX = true;
       for (unsigned int j = 0; j < xvalues.size(); ++j) {
@@ -132,6 +134,7 @@ void VPClusterMonitor::loopClusters (){
     Gaudi::XYZPoint cluster_point(cluster_x, cluster_y, cluster_z);
     // Plot where the cluster is
     double cluster_radius = sqrt(cluster_x * cluster_x + cluster_y * cluster_y);
+    
     plot(totVec.size(), "global_cluster_size", 0, 100, 100);
     plot(cluster_radius, "cluster_radius", 0, 100, 200);
     plot(clustToT, "cluster_tot", 0, 50, 50);

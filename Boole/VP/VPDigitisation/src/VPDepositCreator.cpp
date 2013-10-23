@@ -225,7 +225,10 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit,
       dz = fabs(localPoint.z() + 0.5 * thickness);
     }
     if (m_irradiated) {
-      if (dz > activeDepth) continue;
+      if (dz > activeDepth){
+        point += step;
+        continue;
+      }
     }
     const double sigmaD = m_diffusionCoefficient * sqrt(dz);
     const unsigned int nSplit = 5;
