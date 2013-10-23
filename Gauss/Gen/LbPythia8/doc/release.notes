@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 
+! 2013-10-23 - Chitsanu Khurewathanakul
+ - Added the missing files for Pythia8Gun. SVN-newbie.
+
+
 !========================= LbPythia8 v7r5 2013-10-10 =========================
 ! 2013-10-10 - Chitsanu Khurewathanakul
  - Added the new IGenTool: Pythia8Gun. This is a subclass of Pythia8Production, 
