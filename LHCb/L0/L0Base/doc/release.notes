@@ -4,6 +4,7 @@
 ! Purpose     : Package containing base classes for L0 components
 !-----------------------------------------------------------------------------
 
+!========================= L0Base v2r3 2013-10-23 =========================
 ! 2013-10-02 - Chris Jones
  - Initialise m_statusOnTES in L0FromRawBase constructor.
 
