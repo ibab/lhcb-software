@@ -5,6 +5,7 @@
 !               etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
 
+!===================== GaussCherenkov v4r1 2013-10-23 ========================
 ! 2013-10-18 - Jibo He
  - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties
   . Added option to "remove" a list of PMTs given in db (set0-2) 
