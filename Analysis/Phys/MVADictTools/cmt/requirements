@@ -8,7 +8,7 @@ version           v1r1
 #============================================================================
 # Structure
 #============================================================================
-branches          cmt doc src tests options
+branches          cmt doc src tests options python
 include_path      none
 
 #============================================================================
@@ -30,6 +30,11 @@ macro_append     MVADictTools_dependencies " MVADictToolsLib "
 
 application      utesttmva     ../src/applications/utesttmva.cxx
 macro_append     utesttmva_dependencies " MVADictToolsLib "
+
+#============================================================================
+# Python
+#============================================================================
+apply_pattern    install_python_modules
 
 #============================================================================
 # private build options
