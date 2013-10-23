@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RawEventCompat
 ################################################################################
-gaudi_subdir(RawEventCompat v1r2)
+gaudi_subdir(RawEventCompat v1r3)
 
 gaudi_depends_on_subdirs(GaudiKernel
                          DAQ/DAQUtils)
