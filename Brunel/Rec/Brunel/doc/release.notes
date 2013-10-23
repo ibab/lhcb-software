@@ -19,6 +19,8 @@ Purpose: LHCb reconstruction program
   . Actually pointed VP_Compact_MicroChannel-UT-FT_Mono test to szczypka's file.
   . Updated many references after Calo changes.
   . Fix repro2012magdown test following Calo changes
+  . Removed one option from no_spdprs test also removed option file.
+
 
 </PRE><H1><A NAME=v44r7>2013-10-04 Brunel v44r7</A></H1><PRE>
 This version uses projects LCG 66, Gaudi v23r10, LHCb v36r2, Lbcom v14r2,
