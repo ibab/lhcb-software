@@ -4,6 +4,7 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= FSRAlgs v1r4 2013-10-23 =========================
 ! 2013-10-08 - Jaap Panman
  - Add code in LumiMergeFSR to handle legacy productions.
    An empty FSR is generated when missing so that the total number of FSRs
