@@ -345,9 +345,13 @@ class RecMoniConf(LHCbConfigurableUser):
             GaudiKernel.ProcessJobOptions.PrintOn()
             from Configurables import GaudiSequencer
             seq = GaudiSequencer( "MoniCALOSeq")
+            noSPDPRS = True
+            if [det for det in ['SPD','PRS'] if det in dets]:
+                noSPDPRS = False
             caloMoni = CaloMoniDstConf( MonitorSequence    = seq,
                                         OutputLevel = self.getProp('OutputLevel'),
-                                        Context = 'Offline' )
+                                        Context = 'Offline',
+                                        NoSpdPrs = noSPDPRS)
             caloMoni.printConf()
             self.setOtherProps(caloMoni,["Histograms"])
             GaudiKernel.ProcessJobOptions.PrintOff()

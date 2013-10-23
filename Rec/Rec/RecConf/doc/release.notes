@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2013-10-23 - Paul Szczypka
+ - Configuration.py: Added lines to accommodate NoSpdPrs.
+
 ! 2013-10-11 - Olivier Deschamps
  - Configuration.py : 
  	 									- RecSysConf  : make use of CaloProcessor configure the calorimeter Reco&PIDs sequence
