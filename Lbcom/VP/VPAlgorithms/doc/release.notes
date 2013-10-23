@@ -3,6 +3,9 @@
 ! Responsible : Daniel Hynds
 !--------------------------------------------------------------------------
 
+! 2013-10-23 - Daniel Hynds
+ - Fixed iterator for clustering search
+
 ! 2013-10-19 - Heinrich Schindler
  - removed unused lines of code
  - minor cosmetic modifications

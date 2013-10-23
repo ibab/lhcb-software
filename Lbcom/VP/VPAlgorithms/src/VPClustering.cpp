@@ -101,7 +101,7 @@ StatusCode VPClustering::clusterDigits() {
     do {
       oldsize = cluster.size();
       for (unsigned int i = 0; i < cluster.size(); i++) { 
-        LHCb::VPDigits::const_iterator iCand = cluster[i];
+        LHCb::VPDigits::const_iterator iCand = cluster[0];
         if (iCand != digits->end() - 1) iCand++; // Candidate  iterator NEW
         else break;
         if ((*cluster[i])->channelID().module() != (*iCand)->channelID().module()) break;  // Next hit not on same module NEW
