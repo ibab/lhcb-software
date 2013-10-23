@@ -4,6 +4,9 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2013-10-23 - Heinrich Schindler
+ - Changed default value of UseSlopeCorrection to False
+
 !========================= PatPixel v1r2 2013-10-01 =========================
 ! 2013-09-27 - Heinrich Schindler
  - Renamed PatPixelSensor to PatPixelModule to reflect new geometry

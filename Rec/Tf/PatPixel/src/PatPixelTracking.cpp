@@ -40,7 +40,7 @@ PatPixelTracking::PatPixelTracking(const std::string& name,
   // Flag to clear hits (for rerunning in same event) 
   declareProperty("ClearHits", m_clearHits = false);  
 
-  declareProperty("UseSlopeCorrection", m_useSlopeCorrection = true);
+  declareProperty("UseSlopeCorrection", m_useSlopeCorrection = false);
 
   // Parameters for debugging
   declareProperty("DebugToolName", m_debugToolName = "");
