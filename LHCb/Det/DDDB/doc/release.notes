@@ -4,6 +4,7 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================= DDDB v1r65 2013-10-23 =========================
 ! 2013-10-11 - Chris Jones
  - Fix typo in default DQFLAGS tag for 2011 data
      "dq-2013086-1" -> "dq-20130806-1"
