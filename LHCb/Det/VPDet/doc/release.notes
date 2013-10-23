@@ -4,6 +4,7 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+!========================= VPDet v2r4 2013-10-23 =========================
 ! 2013-10-06 - Heinrich Schindler
  - removed ladderOfChip function
  - added pointToChannel function without inter-pixel fraction
