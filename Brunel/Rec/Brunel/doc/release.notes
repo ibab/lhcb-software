@@ -9,6 +9,7 @@ Purpose: LHCb reconstruction program
   . MCChecker sequence :  Calo checkers sequence via CaloMoniDstConf
   . Remove the temporary switch to disable CaloPhotonChecker
     (algorithm removed from CaloMoniDstConf for now)
+  . Added some lines for NoSpdPrs
 
 - Changes to QMTests:
   . Removed VL tests and references.

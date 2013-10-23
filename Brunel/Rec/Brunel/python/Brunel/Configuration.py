@@ -10,7 +10,8 @@ from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
                             RecMoniConf,GaudiSequencer, RichRecQCConf, DstConf,
-                            LumiAlgsConf, L0Conf, GlobalRecoChecks, CondDB,CaloDigitConf,CaloMoniDstConf )
+                            LumiAlgsConf, L0Conf, GlobalRecoChecks, CondDB,
+                            CaloDigitConf, CaloMoniDstConf, CaloProcessor, GlobalRecoConf )
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -348,7 +349,8 @@ class Brunel(LHCbConfigurableUser):
 
         # Convert Calo ReadoutStatus to ProcStatus
         caloBanks=GaudiSequencer("CaloBanksHandler")
-        CaloDigitConf(ReadoutStatusConvert=True,Sequence=caloBanks)
+        caloDetectors = [det for det in ['Spd','Prs','Ecal','Hcal'] if det in self.getProp("Detectors")]
+        CaloDigitConf(ReadoutStatusConvert=True,Sequence=caloBanks,Detectors=caloDetectors)
         physicsSeq.Members += [caloBanks]
 
         # Decode L0 (and HLT if not already done)
@@ -428,6 +430,14 @@ class Brunel(LHCbConfigurableUser):
                 if not recInit.isPropertySet( "OutputLevel" ): recInit.OutputLevel = INFO
         self.setOtherProps(RecSysConf(), ["OutputLevel","Detectors"])
         self.setOtherProps(RecMoniConf(),["OutputLevel","Detectors"])
+
+        # New NoSPDPRS switches
+        noSPDPRS = True
+        if [det for det in ['Spd', 'Prs'] if det not in self.getProp("Detectors")]:
+            noSPDPRS = True
+        CaloProcessor().setProp("NoSpdPrs", noSPDPRS)
+        GlobalRecoConf().setProp("NoSpdPrs", noSPDPRS)
+
 
         # Always print Magnetic Field used
         from Configurables import MagneticFieldSvc
@@ -758,10 +768,15 @@ class Brunel(LHCbConfigurableUser):
                 GaudiKernel.ProcessJobOptions.PrintOn()
                 from Configurables import GaudiSequencer
                 ccseq=GaudiSequencer("CaloCheckers")
+                noSPDPRS = False
+                if [det for det in ['Spd', 'Prs'] if det in self.getProp("Detectors")]:
+                    noSPDPRS = True
                 caloMoni = CaloMoniDstConf( CheckerSequence  = ccseq,
                                             OutputLevel = self.getProp('OutputLevel'),
-                                            Context = 'Offline' )
+                                            Context = 'Offline',
+                                            NoSpdPrs = noSPDPRS)
                 caloMoni.printConf()
+
                 GaudiKernel.ProcessJobOptions.PrintOff()
                 GaudiSequencer("CheckCALOSeq").Members = [ "CaloDigit2MCLinks2Table", "CaloClusterMCTruth" ,ccseq] 
 
