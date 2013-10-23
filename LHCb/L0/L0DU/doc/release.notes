@@ -3,6 +3,7 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================= L0DU v10r29 2013-10-23 =========================
 ! 2013-10-04 - Olivier Deschamps
  - L0DUFromRawAlg :  
    - move tool->_setProperty(...) to initialize
