@@ -106,6 +106,8 @@ StatusCode RefitParticleTracks::execute()
 
   std::vector<LHCb::Track*> incasts;
   std::vector<LHCb::Track*> copies;
+  incasts.clear();
+  copies.clear();
 
   std::vector<LHCb::Track*>* toworkwith;
 
@@ -115,16 +117,21 @@ StatusCode RefitParticleTracks::execute()
   iterTs = uniqueTracks.begin();
   for ( ; uniqueTracks.end() != iterTs ; ++iterTs ) {
     incasts.push_back( const_cast<LHCb::Track*>(*iterTs) );
+    if (!m_overwrite) {
+      copies.push_back( (*iterTs)->cloneWithKey() );
+      if (incasts.back()->key() != copies.back()->key()) {
+        fatal() << "SEVERE PROBLEM. DATA WILL BE CORRUPTED!" << endmsg;
   }
 
 
+    }
+  }
 
   if (m_overwrite) {
     toworkwith = &incasts;
   } else {
-    iterTs = uniqueTracks.begin();
-    for ( ; uniqueTracks.end() != iterTs ; ++iterTs ) {
-      copies.push_back( (*iterTs)->cloneWithKey() );
+    if (copies.size() != incasts.size()) {
+      fatal() << "FAILED SANITY CHECK! WILL LIKELY SEGFAULT SOON!" << endmsg;
     }
     toworkwith = &copies;
   }
@@ -136,9 +143,9 @@ StatusCode RefitParticleTracks::execute()
     std::vector<LHCb::Track*>::const_iterator iterFrom = copies.begin();
     std::vector<LHCb::Track*>::const_iterator iterTo   = incasts.begin();
     for ( ; copies.end() != iterFrom ; ++iterFrom) {
-      ++iterTo;
       (*iterTo)->setGhostProbability((*iterFrom)->ghostProbability());
       ///@todo: what about more general updates?
+      ++iterTo; // do this only at the very end of the loop
     }
   }
 
