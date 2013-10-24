@@ -5,6 +5,7 @@
 // STD & STL 
 // ============================================================================
 #include <fstream>
+#include <sstream>
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -34,21 +35,21 @@ inline StatusCode LoKi::Hybrid::EngineActor::_add
 { 
   // ==========================================================================
   // check the tool
-  if ( !m_tool.validPointer() ) 
+  if ( !m_tool.top().validPointer() ) 
   {
     return LoKi::Report::Error
       ("LoKi:Hybrid::EngineActor::addCut/Fun(): LoKi::IHybridTool* is not connected!") ;  
   }
   // ==========================================================================
   // one more check 
-  if ( name != m_tool->name() )
+  if ( name != m_tool.top()->name() )
   {
     return LoKi::Report::Error
       ("LoKi:Hybrid::EngineActor::addCut/Fun() : mismatch in LoKi::IHybridTool name!") ;  
   }
   // ==========================================================================
   // set the cut for the tool 
-  m_tool -> set ( cut ) ;
+  m_tool.top() -> set ( cut ) ;
   // 
   return StatusCode::SUCCESS ;
 } 
@@ -63,7 +64,7 @@ LoKi::Hybrid::EngineActor& LoKi::Hybrid::EngineActor::instance()
 // ============================================================================
 // constructor 
 // ============================================================================
-LoKi::Hybrid::EngineActor::EngineActor() : m_tool ( 0 ) {} 
+LoKi::Hybrid::EngineActor::EngineActor() : m_tool (  ) {} 
 // ============================================================================
 // destructor
 // ============================================================================
@@ -74,16 +75,26 @@ LoKi::Hybrid::EngineActor::~EngineActor() {}
 StatusCode LoKi::Hybrid::EngineActor::releaseTool 
 ( const LoKi::IHybridTool*       tool ) 
 {
-  if ( m_tool.getObject() != tool ) 
+  
+  if ( m_tool.top().getObject() != tool ) 
   {
-    m_tool = 0 ;
+    m_tool.pop() ;
     return LoKi::Report::Error
       ("LoKi:Hybrid::EngineActor::releaseTool(): mismatch in tools " ) ;
   } 
   // nullify the pointer 
-  m_tool = 0 ;
+  m_tool.pop();
+
+  // check if there are still tools on the stack
+  if(m_tool.size()>0){
+    std::stringstream msg;
+    msg << "LoKi:Hybrid::EngineActor::releaseTool():  tool stack not empty after release.\n"
+	<< " Number of tools left on stack: " << m_tool.size() << "   Next tool on stack: " << m_tool.top()->name() << std::endl
+	<< " This is expected if you are using a chain of tools.";
+    return LoKi::Report::Warning(msg.str(),StatusCode::SUCCESS) ;
+  }
   //
-  return StatusCode::SUCCESS ;
+  return LoKi::Report::Warning("LoKi:Hybrid::EngineActor::releaseTool(): Stack empty after release. All is well.",StatusCode::SUCCESS) ;
 }
 // ============================================================================
 // connect the hybrid tool for code translation 
@@ -92,16 +103,18 @@ StatusCode LoKi::Hybrid::EngineActor::connectTool
 (       LoKi::IHybridTool*       tool )
 {
   //
-  LoKi::Report::Assert
-    ( !m_tool.validPointer() , "LoKi:Hybrid::EngineActor:: double lock?" ) ;
+  //LoKi::Report::Assert
+  //  ( !m_tool.validPointer() , "LoKi:Hybrid::EngineActor:: double lock?" ) ;
   //
-  // substitute the tool 
-  m_tool =  tool ;
+  // put the tool on the stack
+  m_tool.push(tool);
+ 
+    //m_tool =  tool ;
   // 
-  if ( !m_tool.validPointer() ) 
+  if ( !m_tool.top().validPointer() ) 
   {
     return LoKi::Report::Error
-      ( "LoKi:Hybrid::EngineActor::releaseTool(): Invalid LoKi::IHybridTool" ) ;
+      ( "LoKi:Hybrid::EngineActor::connectTool(): Invalid LoKi::IHybridTool" ) ;
   }
   //
   return StatusCode::SUCCESS ;

@@ -4,6 +4,7 @@
 #define LOKI_HYBRID_ENGINE_ACTOR_H 1
 // ============================================================================
 // Include files
+#include <stack>
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -184,8 +185,9 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      /// the tool itself 
-      LoKi::Interface<LoKi::IHybridTool> m_tool ;            // the tool itself 
+      /// a stack of tools -- since tools might instantiate other tools we need
+      /// to keep track of the stack
+      std::stack<LoKi::Interface<LoKi::IHybridTool> > m_tool ; // stack of tools
       // ======================================================================
     };
     // ========================================================================
