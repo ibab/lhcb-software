@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RecAlgs v2r15 2013-10-24 =========================
 ! 2013-10-22 - Patrick Koppenburg
  - TimingTuple: fix warning 
   TimingTuple       WARNING TimingTuple:: Tuple 'TimingTuple' 'unsignedlong' has different sizes on 32/64 bit systems. Casting 'EventInSequence' to 'unsigned long long' 
