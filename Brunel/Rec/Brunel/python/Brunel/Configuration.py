@@ -432,7 +432,7 @@ class Brunel(LHCbConfigurableUser):
         self.setOtherProps(RecMoniConf(),["OutputLevel","Detectors"])
 
         # New NoSPDPRS switches
-        noSPDPRS = True
+        noSPDPRS = False
         if [det for det in ['Spd', 'Prs'] if det not in self.getProp("Detectors")]:
             noSPDPRS = True
         CaloProcessor().setProp("NoSpdPrs", noSPDPRS)

@@ -10,6 +10,7 @@ Purpose: LHCb reconstruction program
   . Remove the temporary switch to disable CaloPhotonChecker
     (algorithm removed from CaloMoniDstConf for now)
   . Added some lines for NoSpdPrs
+  . Corrected lines for NoSpdPRs
 
 - Changes to QMTests:
   . Removed VL tests and references.
