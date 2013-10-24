@@ -63,6 +63,7 @@ use LbHidValley        v*     Gen            -no_auto_imports
 use LbAlpGen           v*     Gen            -no_auto_imports
 use LbHijing           v*     Gen            -no_auto_imports
 use LbPythia8          v*     Gen            -no_auto_imports
+use LbPowheg           v*     Gen            -no_auto_imports
 
 #-- Simulation
 use GiGaCnv              v*    Sim   -no_auto_imports

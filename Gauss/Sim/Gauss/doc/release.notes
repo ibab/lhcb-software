@@ -4,9 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== Gauss v46r5 2013-10-24 ===========================
 ! 2013-10-24 - Gloria Corti
  - Port from v45b branch chnages by Patrick Robbe (r163031)
    . Configuration.py: add options to generate events with Powheg
+ - Add use of LbPowheg
 
 ! 2013-10-11 - Paul Szczypka
  - Added Baseline qmtest and references.
