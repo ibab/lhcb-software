@@ -3,6 +3,57 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v44r8>2013-10-25 Brunel v44r8</A></H1><PRE>
+This version uses projects LCG 66, Gaudi v23r10, LHCb v36r3, Lbcom v14r3,
+ Rec v15r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Changes to configuration
+  . physics Sequence   :  CaloBankHandler setup via CaloDigitConf
+                          (Calo decoding and ProcStatus conversion)
+  . MCChecker sequence :  Calo checkers sequence via CaloMoniDstConf
+  . Remove the temporary switch to disable CaloPhotonChecker
+    (algorithm removed from CaloMoniDstConf for now)
+  . Added some lines for NoSpdPrs
+
+- New functionality
+  . Now possible to reconstruct Upgrade configurations without Prs/Spd. Note
+    however that Calo PID algorithms have not been retuned for absence of Prs/Spd
+    (CaloDAQ v4r36, CaloInterfaces v8r7, CaloUtils v10r2, GaudiConf v17r13,
+     CaloAssociators v6r13, CaloMoniDst v5r15, CaloPIDs v5r15, CaloReco v5r17,
+     CaloTools v6r7, GlobalReco v6r46)
+
+- New tuning
+  . Changed default value of UseSlopeCorrection to False (PatPixel v1r3)
+
+- Performance optimisation
+  . Improved speed of TrackStateVertex (TrackKernel v1r18)
+
+- Bug fixes
+  . Bug fixes in pointToChannel and channelToPoint functions of DeVPNewSensor
+    (VPDet v2r4)
+  . Fixed iterator for clustering search (VPAlgorithms v4r1)
+  . Fixed bug in container access in FastVeloHitManager.cpp when more than 
+    10k clusters in the event (needed for the pA data) (FastVelo v1r13)
+  . Add missing constructor data member initializers in MuonTrackMomRec
+    (MuonTrackRec v3r10)
+  . Fix behaviour of flag 'fromB' in PrChecker to only include B baryons and
+    mesons, and not particles from string fragmentation of b quarks
+    (follow-up of change in Gauss, r159594) (PrMCTools v1r7)
+ 
+- Monitoring changes
+  . Issue a warning if a non-default track type is used (TrackSys v7r13)
+  . Add to the valgrind suppressions file, Gaudi.supp, some entries to suppress
+    warnings when accessing data via XRootD (GaudiConf v17r13)
+
+- Changes to QMTests:
+  . Removed VL tests and references.
+  . Added VP_Compact_MicroChannel-UT-FT_Mono-Muon_NoM1 test and reference file.
+  . Renamed VP_Compact_MicroChannel-UT-FT_Mono test to be consistent with other
+    tests. 
+  . Updated many references after Calo changes.
+  . Fix repro2012magdown test following Calo changes
+  . Removed one option from no_spdprs test also removed option file.
+
 </PRE><H1><A NAME=v44r7>2013-10-04 Brunel v44r7</A></H1><PRE>
 This version uses projects LCG 66, Gaudi v23r10, LHCb v36r2, Lbcom v14r2,
  Rec v15r2 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
