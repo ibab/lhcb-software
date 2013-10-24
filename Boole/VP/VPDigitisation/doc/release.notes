@@ -3,6 +3,7 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+!========================= VPDigitisation v1r1 2013-10-24 =========================
 ! 2013-10-23 - Daniel Hynds
  - Fix in cluster monitoring code
  - Fix to radiation damage loop

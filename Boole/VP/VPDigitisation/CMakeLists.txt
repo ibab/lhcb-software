@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VPDigitisation
 ################################################################################
-gaudi_subdir(VPDigitisation v1r0)
+gaudi_subdir(VPDigitisation v1r1)
 
 gaudi_depends_on_subdirs(Det/VPDet
                          Event/DAQEvent
