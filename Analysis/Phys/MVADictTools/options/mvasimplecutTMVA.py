@@ -31,7 +31,7 @@ _phi2kk.CombinationCut = "ADAMASS('phi(1020)')<50*MeV"
 ##################################################################################### 
 
 # BDT wheight file
-XMLFile = "/afs/cern.ch/user/s/sneubert/cmtuserDev/DaVinci_HEAD/Phys/MVADictTools/options/TestPhi2KK.xml"
+wheightfile = "/afs/cern.ch/user/s/sneubert/cmtuserDev/DaVinci_HEAD/Phys/MVADictTools/options/TestPhi2KK.xml"
 
 # input variables needed by BDT
 Vars = {
@@ -47,9 +47,8 @@ Vars = {
 _phi2kk.MotherCut = "VALUE('LoKi__Hybrid__DictValue/MVAResponse')> -0.5"
 
 # add the complete tool chain with one command:
-from MVAclassifier import *
-_phi2kk.addTool(TMVAclassifierValue(XMLFile,Vars),"MVAResponse")
-
+from MVADictHelpers import *
+addTMVAclassifierValue(Component=_phi2kk,XMLFile=wheightfile,Variables=Vars,Name="MVAResponse")
 
 
 #####################################################################################
