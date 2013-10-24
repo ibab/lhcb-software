@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PatPixel
 ################################################################################
-gaudi_subdir(PatPixel v1r2)
+gaudi_subdir(PatPixel v1r3)
 
 gaudi_depends_on_subdirs(Det/VPDet
                          Event/DigiEvent

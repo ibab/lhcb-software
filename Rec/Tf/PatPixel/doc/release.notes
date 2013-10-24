@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tf/PatPixel
-! Responsible : 
+! Responsible : Heinrich Schindler
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+!========================= PatPixel v1r3 2013-10-24 =========================
 ! 2013-10-23 - Heinrich Schindler
  - Changed default value of UseSlopeCorrection to False
 
