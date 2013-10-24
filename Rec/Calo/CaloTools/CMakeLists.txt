@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CaloTools
 ################################################################################
-gaudi_subdir(CaloTools v6r6)
+gaudi_subdir(CaloTools v6r7)
 
 gaudi_depends_on_subdirs(Calo/CaloInterfaces
                          Calo/CaloUtils
