@@ -6,6 +6,10 @@ Purpose: LHCb Digitization program
  - QMTest Changes
    . Upgrade VP references (8 Oct 2013)
    . Added baseline qmtest and references.
+   . Updated qmtest references following VP changes
+      + boole.boole-upgrade-baseline
+      + boole.boole-upgrade-vp_compact_microchannel-ut-ft
+      + boole.boole-upgrade-vp_compact_microchannel-ut-ft-muon_nom1
 
 </PRE><H1><A NAME=v26r8>2013-10-02 Boole v26r8</A></H1><PRE>
 This version uses projects LCGCMT 65a, Gaudi v23r10, LHCb v36r2, Lbcom v14r2
