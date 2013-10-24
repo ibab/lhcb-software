@@ -3,13 +3,415 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+!=============================================================================
+</PRE><H1><A NAME="v46r5">2013-10-24 - GaussSys v46r5</A></H1><PRE>
+<H2><A NAME="Note"For development and Upgrade studies. 
+    </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v36r3</b> (and Gaudi v23r10)
+   AppConfig v3r*,
+   <b>DecFiles v27r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   pythia 6.427.2, lhapdf 5.8.5 
+   photos++ 2.6.1a and tauola++ 1.0.7 
+   pythia8 175 (via LCG_GeneratorsInterfaces),
+   HepMC 2.06.05 (via LCG_Interfaces),
+   <b>Geant4 v95r2p5g4</b> (based on geant4.9.5.p02 + patches for LHCb) and 
+   Geant4Files v95r0, 
+   <b>XmlVis v1r18</b>,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.6.1b and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
+   rivet 1.8.3 (via LCG_GeneratorsInterfaces),
+   <b>EvtGen v13r8</b> (private LHCb version),
+   BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r0 + GenXiccData v2r0 and 
+   HidValley v3r2 (private LHCb versions)
+</A></H3>
+
 ! 2013-08-07 - Gloria Corti
  - Remove temporary use of Det/FTDet package
  - Adapt to change of name of LCG_GeneratorsInterfaces package powhegbox from
    powheg-box that does not work on bash
  - Use new version of LCG_GeneratorsInterfaces package lhapdf to remove setting
    of LHAPATH that is set from new DBASE/LHAPDFSets package
- - Use EvtGenExtras v3r8
+ - Use new version of LCG_Settings to adapt to differences into LCGCMT 66
+ - Use new tgas of LCG_Generators interfaces although the content is the same
+   to indicate their compatibility with LCGCMT 66
+
+!========================== Gauss v46r5 2013-10-24 ===========================
+! 2013-10-24 - Gloria Corti
+ - Port from v45b branch chnages by Patrick Robbe (r163031)
+   . Configuration.py: add options to generate events with Powheg
+ - Add use of LbPowheg
+
+! 2013-10-11 - Paul Szczypka
+ - Added Baseline qmtest and references.
+ - Added db tags directly to baseline qmtest.
+
+! 2013-10-06 - Paul Szczypka
+ - Added qmtest and options for Muon_NoM1 test.
+
+! 2013-09-24 - Marco Clemencic
+ - Added (empty) __init__.py to the Gauss Python module.
+
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+! 2013-09-02 - Paul Szczypka
+ - Updated Gauss Pythia Config references.
+
+!========================== GenCuts v3r7 2013-10-23 ========================== 
+! 2013-10-16 - Marc Olivier Bettler
+ - Lowered the verbosity of BcDaughtersInLHCbAndMassCut.cpp to debug
+ - Corrected treatment of cases with more than one Bc in the event.
+
+!========================== GenCuts v3r6 2013-10-10 ========================== 
+! 2013-09-17 - Liang Zhong
+ - Move XiccDaughtersInLHCb tool from LbGenXicc package to GenCuts
+ - Add XiccDaughtersInLHCbAndWithMinPT tool, which apply a minimum PT
+   cut on the Xicc
+
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+! 2013-09-03 - Maurizio Martinelli
+ - Added DaughtersInLHCbAndCutsForDinSLBdecays, to generate D0 candidates from
+  SL B decays with cuts on D0 daughters and muon momentum. All the final state
+  particles are required to fall in the acceptance.
+
+! 2013-08-23 - Patrick Robbe
+ - Ask that pz(Bc) and pz(Upsilon) are positive in the generator cuts
+
+!========================== GENSER v13r0 2013-10-10 ==========================
+! 2013-10-03 - Gloria Corti
+ - Put v1r* in version of LHAPDFSet to be used
+
+! 2013-09-24 - Marco Clemencic
+ - Added missing piece to CMake configuration.
+
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+! 2013-08-29 - Gloria Corti
+ - Use herwig++ 2.6.1b for Gauss v46 as needed by MCGenerators_lcgcmt65 and 
+   higher. Will only be used by Gauss >= v46r5 and not for Sim08
+
+!========================== EvtGen v13r8 2013-10-11 ==========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+! 2013-09-20 - John Back
+ - Modified EvtGenModels/EvtPythiaEngine to keep track of any new
+   particles (such as Xsu, Xu+-, Xsd) that are added to the default Pythia 
+   database to avoid duplicating particle/anti-particle entries that could 
+   override previously defined Pythia decay chains (for these new particles).
+
+!=========================== Mint v2r2 2013-10-10 ============================
+! 2013-10-02 - Philip Hunt (LHCb)
+ - Added the EvtTRandom class, which inherits from TRandom and allows the
+   EvtGen-MINT generator to use the EvtGen random number generator
+  . Takes as a constructor argument an IEvtRandom object, which is implemented
+    in the EvtGenExtras package
+ - Modified IMintGen::Initialize to accept a TRandom as an argument
+ - Modified some of the MintGen methods
+  . Initialize now has the ability to set the random number generator of the
+    SignalGenerator 
+  . Fixed typo in one of the method names ("getDaugtherMom"->"getDaughterMom")
+
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================= EvtGenExtras v3r9 2013-10-10 ========================
+! 2013-10-09 - Sam Hall
+ - K_1(1270) - K_1(1400) mixing angle changed from 34^o to -34^o
+ - And a correction on the 17th.
+
+! 2013-10-02 - Philip Hunt (LHCB)
+ - Added EvtRand class to EvtDTohhhh, which enables the MINT code to use
+   the EvtGen random number generator
+ - Added support for DCS K3pi models in EvtDTohhh
+ - Changed the order by which EvtDTohhhh searched for MINT model files
+   . $DECFILESROOT/MintData checked first
+   . $MINTROOT/Models checked second
+   . current directory used as a final check
+
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================= EvtGenExtras v3r8 2013-08-07 ========================
+! 2013-07-31 - William sutcliffe
+ - Added models Lb2plnuLCSR and Lb2plnuLQCD together with corresponding form 
+   factor classes Lb2plnuLCSRFF and Lb2plnuLQCDFF.  These models calculate the
+   amplitude of Lb->plnu making use of Lb->p form factor predictions from 
+   Light Cone Sum Rules and Lattice QCD.
+ - Added the class EvtSLBaryonAmp.  This is a modified version of the class 
+   EvtSemiLeptonicBaryonAmp in the standard EvtGen distribution.  
+   This modification allows for the case of a Lb->p transtion. 
+   This class is then used in the models to calculate the full amplitude.
+ - Modified EvtModelRegExtras.cpp to include the new models.  
+
+!======================= Generators v14r6 2013-10-10 =========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+! 2013-08-20 - Patrick Robbe
+ - Generation.cpp: add extra informations to the xml log file
+ - SignalPlain.cpp: fix the generator level cut efficiency counter
+
+!========================= LbPythia v14r2 2013-10-21 =========================
+! 2013-10-10 - Gloria Corti
+ - Add lines in Pythia.py and Pythia_CT09MCS.py to set use of PythiaProduction
+   for cases when we will change the default.
+
+! 2013-10-09 - Patrick Robbe
+ - Add Pythia.py option files with the Pythia6 tuning
+
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!========================== LbAlpGen v3r1 2013-10-10 ==========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+! 2013-07-29 - Patrick Robbe
+ - Resurect ReadAlpGen algorithm
+
+!========================= BcVegPy v3r2 2012-10-10 ===========================
+ 2013-10-08 - Patrick Robbe
+ - Change status for the FORTRAN OPEN statements from UNKNOWN to OLD
+   to solve problems seen on the grid at some of the sites
+
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================== GenXicc v2r0p1 2013-10-10 ==========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!========================= LbBcVegPy v5r1 2013-10-10 =========================
+! 2013-10-01 - Patrick Robbe
+ - remove setting of cut tool in BcVegPy Pythia8 option 
+
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!========================= LbGenXicc v3r0 2013-10-10 =========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+! 2013-09-17 - Liang Zhong
+ - Remove two Xicc generator level cut tools, since they will be migrated to
+   GenCuts
+
+!======================== LbHidValley v3r2p1 2013-10-10 =======================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================= LbOniaPairs v1r2p1 2013-10-10 ========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!========================= LbPowheg v1r0p2 2013-10-10 ========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!========================= LbPowheg v1r0p1 2013-08-08 ========================
+! 2013-08-08 - Gloria Corti
+ - Use powhegbox instead of powheg-box interface that cannot be used on bash
+
+! 2013-07-31 - Gloria Corti
+ - Fix setting of POWHEGEXE to match change in interface that did not resolve 
+   correctly in tcsh
+
+!========================= LbPythia8 v7r6 2013-10-23 =========================
+! 2013-10-23 - Chitsanu Khurewathanakul
+ - Added the missing files for Pythia8Gun. SVN-newbie.
+
+!========================= LbPythia8 v7r5 2013-10-10 =========================
+! 2013-10-10 - Chitsanu Khurewathanakul
+ - Added the new IGenTool: Pythia8Gun. This is a subclass of Pythia8Production, 
+   where user can specify the decay product in a gun-like fashion, i.e., with 
+   predefined Energy, angle theta/phi, as well as the decay channel as dictated
+   by Pythia8's engine.
+ - Tested in-house (at EPFL) against Gauss v46r4, v45r3 
+ - See example file sample_gun_gauss.py
+ - See presentation at: https://indico.cern.ch/conferenceDisplay.py?confId=264427
+
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================== LbHerwig v2r0p1 2013-10-10 =========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================== LbHijing v9r0p1 2013-10-10 =========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!=========================== LbMIB v7r0p1 2013-10-10 =========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!========================== LbPGuns v4r1 2013-10-10 ==========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+! 2013-08-30 - Michel De Cian
+ - Added tool MomentumSpectrum, which allows to generate events with a particle
+   gun according to a given spectrum from a 3D histogram
+
+!========================= GiGa v20r2p2 2013-10-10 ===========================
+! 2013-09-24 - Marco Clemencic
+ - Disable -pedantic in the CMake configuration because it casuses a build
+   error in GiGaTrajectory.cpp (redefinition of isnan and finite).
+
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================== GiGaCnv v20r2p1 2013-10-10 =========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!========================== SimSvc v5r2p1 2013-10-10 =========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!====================== GiGaVisUI v5r2p1 2013-10-10 ==========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================== VisSvc v5r7p1 2013-10-10 ===========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!============================ ClhepTools v2r1p2 ===============================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================== GaussKine v6r3p1 2013-10-10 ========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================= GaussAlgs v7r0p1 2013-10-23 ==========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================= GaussTools v18r2p1 2013-10-10 =======================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================== GaussRICH v14r0p1 2013-10-22 =======================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!====================== GaussTracker v6r2p2 2013-10-10 =======================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================== GaussCalo v9r4p1 2013-10-10 =========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!===================== GaussPhysics v10r0p1 2013-10-10 ========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!===================== GaussCherenkov v4r1 2013-10-23 ========================
+! 2013-10-18 - Jibo He
+ - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties
+  . Added option to "remove" a list of PMTs given in db (set0-2) 
+ - CherenkovG4HistoDefineSet5.cpp
+  . Changed the range of total occupancies histos to 15k to not trunate distributions
+
+!2013-10-12- Sajan Easo
+ - Added the modifications to use large PMTs
+ - fix for histogram filling  with binary readout.
+
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+! 2013-08-19 - Jibo He
+ - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties  
+  . Added option to scale overall PMT QE 
+
+! 2013-08-09 - Sajan Easo
+  - Fix couple of compilation warnings in CherenkovG4CkvRecon.cpp which seems to have occured in
+    latest update.
+
+! 2013-08-09 - Jibo He
+ - GaussCherenkov/CkvG4ReconFlatMirr.h
+   src/CherenkovAnalysis/CkvG4ReconFlatMirr.cpp
+  . Added functions to calculate distance to flat mirror plane
+ - src/CherenkovAnalysis/CherenkovG4CkvRecon
+  . Added functions to calculate distance to spherical mirror 
+ - src/CherenkovAnalysis/CherenkovG4Histo*Set2
+  . Added histos of numHits as function of track theta, phi 
+ - src/CherenkovAnalysis/CherenkovG4Histo*Set4
+  . Added histos of emis reso as function of track theta, phi
+
+!====================== GaussMonitor v7r0p1 2013-10-10 =======================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!====================== CaloMoniSim v4r0p1 2013-10-10 =========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!========================= VeloGauss v2r4p1 2013-10-10 =======================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================= MuonMoniSim v2r6p1 2013-10-10 =======================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================= BcmMoniSim v1r2p1 2013-10-10 =======================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!====================== BlsMoniSim v1r1p1 2013-10-10 =========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================== VLMoniSim v1r0p1 2013-10-10 ========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!========================= GaussUMC v2r1 2013-10-10 ==========================
+! 2013-09-26 - Heinrich Schindler
+ - Adjusted histogram ranges
+
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+! 2013-08-23 - Heinrich Schindler
+ - Remove dependency on detector element.
+ - Use getIfExists, remove unnecessary StatusCode return types and flags. 
+
+!========================== GenTune v2r0p2 2013-10-10 ========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================== LbGDML v1r0p1 2013-10-10 ===========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!=========================== XmlVis v1r18 ====================================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+! 2013-09-18 - Jianchun Wang
+ - Modify UT visualization
+
+!========================= GenTests v1r6p1 2013-10-10 ========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
+
+!======================== SimChecks v1r0p1 2013-10-10 ========================
+! 2013-09-23 - Marco Clemencic
+ - Added CMake configuration file.
 
 !=============================================================================
 </PRE><H1><A NAME="v46r4">2013-07-24 - GaussSys v46r4</A></H1><PRE>

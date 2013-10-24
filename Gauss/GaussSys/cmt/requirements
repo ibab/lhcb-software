@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-use Gauss               v46r4   Sim
+use Gauss               v46r5   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
 use LCG_Settings        v66r0p1 
