@@ -3,6 +3,37 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v26r9>2013-10-25 Boole v26r9</A></H1><PRE>
+This version uses projects LCGCMT 65a, Gaudi v23r10, LHCb v36r3, Lbcom v14r3
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+- Configuration changes
+  . Updated LinkVPSeq to use simplified VP digit and cluster linker algorithms
+    to have same number of reconstructible tracks in binary in ToT mode
+    (Configuration.py, VPAssociators v2r3)
+
+- New tuning
+  . Enable binary readout by default in VPDigitCreator (VPDigitisation v1r1)
+  . VPDepositCreator: use pointToChannel function without fraction
+    (VPDigitisation v1r1, VPDet v2r4)
+
+- Bug fixes
+  . Fix unprotected iterator in VPDepositCreator (VPDigitisation v1r1)
+  . Fix to radiation damage loop (VPDigitisation v1r1)
+  . Bug fixes in pointToChannel and channelToPoint functions of DeVPNewSensor
+    (VPDet v2r4)
+  . Fixed incorrect addressing of TELL1s in case of no M1 in MuonDigitToRawBuffer
+    (MuonDAQ v4r19, MuonDet v9r15)
+
+- Monitoring changes
+  . Added cluster monitoring code (uses MC truth) (VPDigitisation v1r1)
+  . Add to the valgrind suppressions file, Gaudi.supp, some entries to suppress
+    warnings when accessing data via XRootD (GaudiConf v17r13)
+
+- QMTest Changes
+   . Added baseline qmtest and references.
+   . Updated qmtest references following VP changes
+
 </PRE><H1><A NAME=v26r8>2013-10-03 Boole v26r8</A></H1><PRE>
 This version uses projects LCGCMT 65a, Gaudi v23r10, LHCb v36r2, Lbcom v14r2
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
