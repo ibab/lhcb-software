@@ -4,6 +4,7 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r14 2013-10-24 =========================
 ! 2013-10-23 - Paul Szczypka
  - Configuration.py: Added lines to accommodate NoSpdPrs.
 
