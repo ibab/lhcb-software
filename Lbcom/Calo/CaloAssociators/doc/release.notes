@@ -5,6 +5,7 @@
 !               Olivier Deschamps odescham@in2p3.fr
 ! ========================================================================
 
+!========================= CaloAssociators v6r13 2013-10-24 =========================
 ! 2013-10-09 - Olivier Deschamps
  - python/CaloAssociators/Configuration.py & MCTruthOnDemand.py : adapt to change in caloDigitConf
 
