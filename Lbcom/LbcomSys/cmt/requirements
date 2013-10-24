@@ -1,5 +1,5 @@
 package           LbcomSys
-version           v14r2
+version           v14r3
 
 branches doc cmt tests
 
@@ -11,7 +11,7 @@ branches doc cmt tests
 use Associators       v3r8     Associators # Matt Needham
 
 # Calorimeter
-use CaloAssociators   v6r12p1  Calo      # Olivier Deschamps
+use CaloAssociators   v6r13    Calo      # Olivier Deschamps
 
 # DAQ
 use DAQMonitors       v1r9     DAQ       # Olivier Deschamps
@@ -50,7 +50,7 @@ use VeloSimulation    v3r14    Velo      # Tomasz Szumlak
 use VeloTools         v4r2     Velo      # Tomasz Szumlak
 
 # Velo Pixel
-use VPAlgorithms      v4r0     VP        # Daniel Hynds
+use VPAlgorithms      v4r1     VP        # Daniel Hynds
 use VPTools           v2r2     VP        # Heinrich Schindler
 
 # Declare this as a container package

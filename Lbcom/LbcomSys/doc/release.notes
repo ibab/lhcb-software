@@ -6,6 +6,22 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v14r3>2013-10-25 LbcomSys v14r3</A></H1><PRE>
+This version uses Gaudi v23r10 and LHCb v36r3
+
+- Packages modified: Calo/CaloAssociators v6r13, VP/VPAlgorithms v4r1
+
+- In Calo/CaloAssociators v6r13
+  . python/CaloAssociators/Configuration.py & MCTruthOnDemand.py : 
+    adapt to change in CaloDigitConf
+
+- In VP/VPAlgorithms v4r1
+  . Fixed iterator for clustering search
+  . Removed unused lines of code
+  . Minor cosmetic modifications
+  . Manual calculation of xy fraction
+  . Reworked pixel container to prevent vector entry deletion
+
 </PRE><H1><A NAME=v14r2>2013-10-02 LbcomSys v14r2</A></H1><PRE>
 This version uses Gaudi v23r10 and LHCb v36r2
 
