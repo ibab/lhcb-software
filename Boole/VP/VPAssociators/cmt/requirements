@@ -2,7 +2,7 @@
 # Maintainer : Marcin Kucharczyk
 #
 package           VPAssociators
-version           v2r2p1
+version           v2r3
 
 # Structure, i.e. directories to process. 
 #=========================================================================

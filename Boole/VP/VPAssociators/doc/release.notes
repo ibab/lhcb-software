@@ -3,6 +3,7 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+!========================= VPAssociators v2r3 2013-10-24 =========================
 ! 2013-10-12 - Heinrich Schindler
  - Add simplified digit and cluster linker algorithms to have same number 
    of reconstructible tracks in binary in ToT mode
