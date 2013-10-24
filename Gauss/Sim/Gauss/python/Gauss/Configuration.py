@@ -1859,6 +1859,37 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.Special.Pythia8Production.LbLHAup.addTool( BcVegPyProduction , "BcVegPyProduction" ) 
         gen_t0.Special.Pythia8Production.LbLHAup.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
 
+        # or with LbPowheg
+        from Configurables import PowhegProductionbb, PowhegProductiontt, PowhegProductionWbb
+        from Configurables import PowhegProductionWZ, PowhegProductionZZ
+        gen_t0.Special.addTool( PowhegProductionbb , name = "PowhegProductionbb" )
+        gen_t0.Special.addTool( PowhegProductiontt , name = "PowhegProductiontt" )
+        gen_t0.Special.addTool( PowhegProductionWbb , name = "PowhegProductionWbb" )
+        gen_t0.Special.addTool( PowhegProductionWZ , name = "PowhegProductionWZ" )
+        gen_t0.Special.addTool( PowhegProductionZZ , name = "PowhegProductionZZ" )
+        gen_t0.Special.PowhegProductionbb.ebeam1 = pInGeV
+        gen_t0.Special.PowhegProductionbb.ebeam2 = pInGeV
+        gen_t0.Special.PowhegProductiontt.ebeam1 = pInGeV
+        gen_t0.Special.PowhegProductiontt.ebeam2 = pInGeV
+        gen_t0.Special.PowhegProductionWbb.ebeam1 = pInGeV
+        gen_t0.Special.PowhegProductionWbb.ebeam2 = pInGeV
+        gen_t0.Special.PowhegProductionWZ.ebeam1 = pInGeV
+        gen_t0.Special.PowhegProductionWZ.ebeam2 = pInGeV
+        gen_t0.Special.PowhegProductionZZ.ebeam1 = pInGeV
+        gen_t0.Special.PowhegProductionZZ.ebeam2 = pInGeV
+        #
+        gen_t0.Special.PowhegProductionbb.numevts = LHCbApp().EvtMax
+        gen_t0.Special.PowhegProductiontt.numevts = LHCbApp().EvtMax
+        gen_t0.Special.PowhegProductionWbb.numevts = LHCbApp().EvtMax
+        gen_t0.Special.PowhegProductionWZ.numevts = LHCbApp().EvtMax
+        gen_t0.Special.PowhegProductionZZ.numevts = LHCbApp().EvtMax
+        #
+        gen_t0.Special.PowhegProductionbb.iseed = GenInit("GaussGen").RunNumber + GenInit("GaussGen").FirstEventNumber
+        gen_t0.Special.PowhegProductiontt.iseed = GenInit("GaussGen").RunNumber + GenInit("GaussGen").FirstEventNumber
+        gen_t0.Special.PowhegProductionWbb.iseed = GenInit("GaussGen").RunNumber + GenInit("GaussGen").FirstEventNumber
+        gen_t0.Special.PowhegProductionWZ.iseed = GenInit("GaussGen").RunNumber + GenInit("GaussGen").FirstEventNumber
+        gen_t0.Special.PowhegProductionZZ.iseed = GenInit("GaussGen").RunNumber + GenInit("GaussGen").FirstEventNumber
+
         # or with Hijing
         txtP = "hijinginit efrm "+str(pInGeV)
         gen_t0.addTool(MinimumBias,name="MinimumBias")

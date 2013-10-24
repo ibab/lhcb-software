@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-10-24 - Gloria Corti
+ - Port from v45b branch chnages by Patrick Robbe (r163031)
+   . Configuration.py: add options to generate events with Powheg
+
 ! 2013-10-11 - Paul Szczypka
  - Added Baseline qmtest and references.
  - Added db tags directly to baseline qmtest.
