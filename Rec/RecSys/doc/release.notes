@@ -1,9 +1,84 @@
 <PRE>
 Package: RecSys
-Package Coordinator: Marco Cattaneo, Rob Lambert
+Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
+
+</PRE><H1><A NAME=v15r3>2013-10-25 RecSys v15r3</A></H1><PRE>
+This version uses Gaudi v23r10, LHCb v36r3 and Lbcom v14r3
+
+- Packages modified: Calo/CaloMoniDst v5r15, Calo/CaloPIDs v5r15
+    Calo/CaloReco v5r17, Calo/CaloTools v6r7, Muon/MuonTrackRec v3r10,
+    Pr/PrMCTools v1r7, Rec/GlobalReco v6r46, Rec/RecAlgs v2r15, Rec/RecConf v2r14,
+    Tf/FastVelo v1r13, Tf/PatPixel v1r3, Tf/TrackSys v7r13, Tr/TrackKernel v1r18
+
+- In Calo/CaloMoniDst v5r15
+  . python/CaloDAQ/Monitors.py & Configuration.py :  possibility to set-up a
+    configuration without active Spd/Prs  (NoSpdPrs = <False> flag)
+  . src/  :  protect monitoring algorithms against the upgrade configuration with
+             no Spd/Prs
+
+- In Calo/CaloPIDs v5r15
+  . python/CaloPIDs/*.py : possibility to set-up a configuration without active
+                           Spd/Prs  (NoSpdPrs = <False> flag)
+
+- In Calo/CaloReco v5r17
+  . python/CaloReco/*.py : 
+    o possibility to set-up a configuration without active Spd/Prs
+      (NoSpdPrs = <False> flag)
+      . Configure the caloReco/Pids algorithms in order they don't access Prs/Spd
+        detectorElement nor Digits
+      . Remove any component related to Prs/Spd in the reconstruction sequence : 
+        digits decoding via CaloDigitsConf, cluster filtering, photonID,
+        pi0/gamma separation, neutral/charged ID
+    o NoSpdPrs flag propagated to CaloPIDs configuration via CaloProcessor and
+      CaloDigitsConf configured with [Ecal,Hcal] only 
+  . src/CaloMergedPi0AlgAlg :  protect against accessing Prs/Spd digits when they
+                               don't exist
+
+- In Calo/CaloTools v6r7
+  . CaloGetterTool, Calo2Calo, GammaPi0SeparationTool, CaloHypo2Calo :
+    protect against the upgrade configuration with no Spd/Prs
+  . Add CaloRelationsGetter implementation
+  . Instrument CaloHypoEstimator with CaloRelationsGetter to access relations
+    table
+
+- In Muon/MuonTrackRec v3r10
+  . Adding missing constructor data member initializers in MuonTrackMomRec
+
+- In Pr/PrMCTools v1r7
+  . Make sure PrTrackAssociator clears a linker table before filling it
+  . Fix behaviour of flag 'fromB' in PrChecker to only include B baryons and
+    mesons, and not particles from string fragmentation of b quarks
+    (follow-up of change in Gauss, r159594)
+
+- In Rec/GlobalReco v6r46
+  .  python/GlobalReco/Configuration.py : possibility to set-up a configuration
+     without active Spd/Prs  (NoSpdPrs = <False> flag)
+
+- In Rec/RecAlgs v2r15
+  . TimingTuple: fix warning 
+    TimingTuple       WARNING TimingTuple:: Tuple 'TimingTuple' 'unsignedlong' has different sizes on 32/64 bit systems. Casting 'EventInSequence' to 'unsigned long long' 
+
+- In Rec/RecConf v2r14
+  . Configuration.py: Added lines to accommodate NoSpdPrs.
+  . RecSysConf.py : make use of CaloProcessor configure the calorimeter Reco&PIDs
+                    sequence
+  . RecMoniConf.py : adapt to change in CaloMoniDST
+
+- In Tf/FastVelo v1r13
+  . Fixed bug in container access in FastVeloHitManager.cpp when more than 
+    10k clusters in the event (needed for the pA data). 
+
+- In Tf/PatPixel v1r3
+  . Changed default value of UseSlopeCorrection to False
+
+- In Tf/TrackSys v7r13
+  . Issue a warning if a non-default track type is used.
+
+- In Tr/TrackKernel v1r18
+  . Improved speed of TrackStateVertex
 
 </PRE><H1><A NAME=v15r2>2013-10-02 RecSys v15r2</A></H1><PRE>
 This version uses Gaudi v23r10, LHCb v36r2 and Lbcom v14r2
