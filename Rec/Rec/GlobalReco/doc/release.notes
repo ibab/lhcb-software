@@ -4,8 +4,8 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
-
- 2013-10-09 - Olivier Deschamps
+!========================= GlobalReco v6r46 2013-10-24 =========================
+! 2013-10-09 - Olivier Deschamps
  -  python/GlobalReco/Configuration.py : 
         - possibility to set-up a configuration without active Spd/Prs  (NoSpdPrs = <False> flag)
 
