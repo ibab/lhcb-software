@@ -4,6 +4,10 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-10-24 - Marco Clemencic
+ - Fixed configuration of decoding tests: the event time was not picked up
+   from the data (ODIN), but set to '0' (default if not explicitely changed).
+
 !========================= DAQSys v7r1p1 2013-10-23 =========================
 ! 2013-10-16 - Rob Lambert
  - Fix typo in analysis

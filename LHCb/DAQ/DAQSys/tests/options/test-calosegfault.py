@@ -1,8 +1,11 @@
 from Gaudi.Configuration import *
 from Configurables import DecodeRawEvent, LHCbApp
 from Configurables import GaudiSequencer
+from Configurables import EventClockSvc
 
 LHCbApp()
+EventClockSvc(EventTimeDecoder = "OdinTimeDecoder")
+
 mySeq=GaudiSequencer("Decoding")
 mySeq.OutputLevel=VERBOSE
 DecodeRawEvent().Sequencer=mySeq
