@@ -2,10 +2,16 @@
 ! Package     : Phys/MVADictTools
 ! Responsible : Sam Hall, Sebastian Neubert
 ! Purpose     : Generic MVA classifier backends for DictTransform 
-!-----------------------------------------------------------------------------
+!---------------------------------------------------------------------------
+
+! 2013-10-24 - Sebastian Neubert
+ - Added python directory with helper functions to 
+   configure MVA tool chains.
+   Added an example options script to illustrate the use of these.
+   The compact configuration depends on the stacked LoKi::HybridEngineActor
+   to avoid the double lock problem 
 
 !========================= MVADictTools v1r1 2013-10-02 =========================
-
 ! 2012-09-29 - Sam Hall
  - Looks for .xml in local directory and then in a path, specifically
    TMVATRANSFORMPATH - if file is still not found an error is thrown.
