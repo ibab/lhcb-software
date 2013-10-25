@@ -143,7 +143,7 @@ namespace DecayTreeFitter
       kalman.updatePar( fitpar ) ;
       kalman.updateCov( fitpar ) ;
       fitpar.addChiSquare( kalman.chisq(), m_dim, p.particle() ) ;
-      if( fitpar.cov( m_node->index()+1 ) < 0 || kalman.chisq()<0 ) 
+      if( fitpar.cov( m_node->index()+1 ) < 0 || kalman.chisq()<0 || std::isnan(kalman.chisq()) ) 
 	status |= ErrCode::filtererror ;
     }
     if( status.failure() && vtxverbose>=1)
@@ -179,6 +179,7 @@ namespace DecayTreeFitter
     case lifetime:     rc = "lifetime" ; break ;
     case merged:       rc = "merged" ; break ;
     case conversion:   rc = "conversion" ; break ;
+    case externalmomentum:   rc = "externalmomentum" ; break ;
     case ntypes:
     case unknown:
       break ;

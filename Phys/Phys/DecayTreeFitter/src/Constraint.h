@@ -31,6 +31,7 @@ namespace DecayTreeFitter
 		geometric,
 		mass,
 		merged,
+		externalmomentum,
 		ntypes} ;
     
     bool operator<(const Constraint& rhs) const ;

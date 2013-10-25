@@ -27,7 +27,7 @@ namespace DecayTreeFitter
                        kRecoComposite,kRecoResonance,
                        kInternalParticle,kRecoTrack,
                        kResonance,kRecoPhoton,
-                       kMissingParticle} ;
+                       kMissingParticle,kJetMomentum, kInternalRecoTrack } ;
     typedef std::vector<ParticleBase*> ParticleContainer ;
 
     // 'default' constructor
@@ -48,8 +48,9 @@ namespace DecayTreeFitter
     virtual ErrCode initPar2(FitParams*) = 0 ; // everything else
     virtual ErrCode initCov(FitParams*) const  ;
     virtual std::string parname(int index) const ;
-    virtual void print(const FitParams*) const ;
-
+    virtual std::ostream& fillStream(std::ostream&, const FitParams*) const ;
+    void print(const FitParams* fitpar) const { fillStream(std::cout,fitpar) ; }
+    
     const ParticleBase* locate(const LHCb::Particle& bc) const ;
     void locate(const LHCb::ParticleID& pid, ParticleContainer& result ) ;
     const LHCb::Particle& particle() const { return *m_particle ; }

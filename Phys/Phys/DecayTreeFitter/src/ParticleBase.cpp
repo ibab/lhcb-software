@@ -12,6 +12,8 @@
 #include "RecoPhoton.h"
 #include "Resonance.h"
 #include "MissingParticle.h"
+#include "JetMomentum.h"
+#include "InternalRecoTrack.h"
 #include "FitParams.h"
 #include "Configuration.h"
 
@@ -109,27 +111,31 @@ namespace DecayTreeFitter
     // constraint if not at head of tree.
     bool validfit = !config.forceFitAll() && particle.endVertex() != 0 
       && particle.endVertex()->nDoF() > 0 
-      && particle.endVertex()->position() != Gaudi::XYZPoint(0,0,0) ;
+      && particle.endVertex()->position() != Gaudi::XYZPoint(0,0,0) 
+      && particle.endVertex()->covMatrix()(2,2)>0 ;
     bool iscomposite = particle.daughters().size()>0 ;
     bool isresonance = iscomposite && prop && isAResonance(*prop) ;
-
+    const LHCb::ProtoParticle* proto = particle.proto() ;
+    bool hastrack = proto && proto->track() ;
+    bool hascalo  = proto && !(proto->calo().empty()) ;
+    
     if(!mother) { // 'head of tree' particles
       //if ( bsconstraint )
       //rc = new InteractionPoint(particle,forceFitAll) ;
       //else
-      if( iscomposite )
-        rc = new InternalParticle(particle,0,config) ; // still need proper head-of-tree class
-      else {
+      if( iscomposite ) {
+	if( hastrack ) {
+	  rc = new InternalRecoTrack(particle,0,config) ;
+	} else {
+	  rc = new InternalParticle(particle,0,config) ; // still need proper head-of-tree class
+	}
+      } else {
         std::cout << "VtkParticleBase::createParticle: You are fitting a decay tree that exists of "
                   << "a single, non-composite particle and which does not have a beamconstraint."
                   << "I do not understand what you want me to do with this." << std::endl ;
         rc = new InternalParticle(particle,0,config) ; // still need proper head-of-tree class
       }
     } else if( !iscomposite ) { // external particles
-      const LHCb::ProtoParticle* proto = particle.proto() ;
-      bool hastrack = proto && proto->track() ;
-      bool hascalo  = proto && !(proto->calo().empty()) ;
-
       if( hastrack )
         rc = new RecoTrack(particle,mother,config) ;  // reconstructed track
       else if( hascalo )
@@ -139,6 +145,8 @@ namespace DecayTreeFitter
           rc = new RecoResonance(particle,mother) ;
         else
           rc = new RecoComposite(particle,mother) ;
+      } else if(particle.particleID().pid()==22) { // jet constituent
+	rc = new JetMomentum(particle,mother) ;
       } else // missing particle! 
         rc = new MissingParticle(particle,mother) ;
     } else { // 'internal' particles
@@ -252,19 +260,19 @@ namespace DecayTreeFitter
     return rc ;
   }
 
-  void
-  ParticleBase::print(const FitParams* fitpar) const
+  std::ostream&
+  ParticleBase::fillStream(std::ostream& os, const FitParams* fitpar) const
   {
-    std::cout << std::setw(5) << "[" << type() << "]" << std::setw(15) << std::flush << name().c_str()
-              << " val" << std::setw(15) << "err" << std::endl ;
-    std::cout << std::setprecision(5) ;
+    os << std::setw(5) << "[" << type() << "]" << std::setw(15) << std::flush << name().c_str()
+       << " val" << std::setw(15) << "err" << std::endl ;
+    os << std::setprecision(5) ;
     for(int i=0; i<dim(); ++i) {
       int theindex = index()+i ;
-      std::cout << std::setw(2) << theindex << " "
-                << std::setw(20) << parname(i).c_str()
-                << std::setw(15) << fitpar->par()(theindex+1)
-                << std::setw(15) << sqrt(fitpar->cov()(theindex+1,theindex+1))
-                << std::setw(15) << fitpar->cov()(theindex+1,theindex+1) <<std::endl ;
+      os << std::setw(2) << theindex << " "
+	 << std::setw(20) << parname(i).c_str()
+	 << std::setw(15) << fitpar->par()(theindex+1)
+	 << std::setw(15) << sqrt(fitpar->cov()(theindex+1,theindex+1))
+	 << std::setw(15) << fitpar->cov()(theindex+1,theindex+1) <<std::endl ;
     }
     if( hasEnergy() ) {
       int momindex = momIndex() ;
@@ -282,15 +290,15 @@ namespace DecayTreeFitter
       G(3) = -pz/mass ;
       G(4) =   E/mass ;
       double massvar = cov.similarity(G) ;
-      std::cout << std::setw(2) << std::setw(20) << "mass: "
+      os << std::setw(2) << std::setw(20) << "mass: "
                 << std::setw(15) << mass
-                << std::setw(15) << sqrt(massvar) << std::endl ;
+	 << std::setw(15) << sqrt(massvar) << std::endl ;
     }
-
+    
     for(daucontainer::const_iterator it = m_daughters.begin() ;
         it != m_daughters.end() ; ++it)
-      (*it)->print(fitpar) ;
-
+      (*it)->fillStream(os,fitpar) ;
+    return os ;
   }
 
   const
