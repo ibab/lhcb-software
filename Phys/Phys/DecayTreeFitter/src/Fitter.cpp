@@ -209,7 +209,7 @@ namespace DecayTreeFitter
         }
 
         if(vtxverbose>=4) {
-          std::cout << print()            << std::endl;
+	  fillStream(std::cout) ;
           std::cout << "press a key ...." << std::endl ;
           getchar() ;
         }
@@ -243,16 +243,17 @@ namespace DecayTreeFitter
     m_status = Success ;
   }
 
-  std::string
-  Fitter::print() const
+  std::ostream&
+  Fitter::fillStream(std::ostream& os) const
   {
-    std::ostringstream s ;
-    m_decaychain->mother()->print(m_fitparams) ;
-    s << "chisq,ndof,ncontr,niter,status: "
-      << chiSquare() << " "
-      << nDof() << " " << m_fitparams->nConstraints() << " "
-      << nIter() << " " << status() << " " << m_errCode << std::endl ;
-    return s.str() ;
+    //std::ostringstream s ;
+    os << "****** chisq,ndof,ncontraints,niter,status,errcode: "
+       << chiSquare() << " "
+       << nDof() << " " << m_fitparams->nConstraints() << " "
+       << nIter() << " " << status() << " " << m_errCode << std::endl ;
+    m_decaychain->mother()->fillStream(os,m_fitparams) ;
+    os << "***************************************" << std::endl;
+    return os ;
   }
 
   int
@@ -635,10 +636,6 @@ namespace DecayTreeFitter
     }
     return rc ;
   }
-
-  // Print the result of the fit
-  std::ostream& Fitter::fillStream ( std::ostream& s ) const
-  { return s << print() ; }
 
   // Get the chisquare of a particular particle in the decay chain
   ChiSquare Fitter::chiSquare( const LHCb::Particle& particle ) const

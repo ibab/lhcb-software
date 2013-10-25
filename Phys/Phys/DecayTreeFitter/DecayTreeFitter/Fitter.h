@@ -92,7 +92,7 @@ namespace DecayTreeFitter
     /// Fit just one step
     void fitOneStep() ;
     /// Print the result of the fit
-    std::string   print() const ;
+    void print() const { fillStream( std::cout ) ; }
     /// Print the result of the fit
     std::ostream& fillStream ( std::ostream& s ) const ;
     /// The top level particle that is fitted
