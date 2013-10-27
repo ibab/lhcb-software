@@ -41,7 +41,10 @@ Analysis::Formula::~Formula()
 // evaluate the formula 
 // ============================================================================
 double Analysis::Formula::evaluate () // evaluate the formula 
-{ return EvalInstance () ; }
+{ 
+  GetNdata() ; 
+  return EvalInstance () ; 
+}
 // ============================================================================
 // The END 
 // ============================================================================

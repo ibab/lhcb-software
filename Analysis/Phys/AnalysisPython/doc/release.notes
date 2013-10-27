@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-10-27 - Vanya Belyaev
+ - add GetNdata for the Analysis::Formula 
+
+! 2013-10-27 - Vanya Belyaev
  - add few functions for phase space modulated by polynomial
 
 ! 2013-10-14 - Vanya Belyaev
