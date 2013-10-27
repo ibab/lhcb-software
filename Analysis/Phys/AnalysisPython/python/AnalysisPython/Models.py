@@ -111,6 +111,7 @@ for model in ( Gaudi.Math.Chebyshev              ,
                ) :
     model . tf1 = _tf1_ 
 
+Gaudi.Math.LASS        . amp = _amp_
 Gaudi.Math.LASS23L     . amp = _amp_
 Gaudi.Math.Bugg23L     . amp = _amp_
 Gaudi.Math.Flatte      . amp = _amp_

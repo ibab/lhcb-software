@@ -5,12 +5,15 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-10-27 - Vanya Belyaev
+ - add few functions for phase space modulated by polynomial
+
 ! 2013-10-14 - Vanya Belyaev
  - tiny fix in comments 
 
 ! 2013-10-13 - Vanya Belyaev
  - add StatVar : useful utility to get the statistics for 
-   certain varibales in TTree/Dataset 
+   certain variables in TTree/Dataset 
  - few minor decorators for StatEntity 
  
 !========================= AnalysisPython v2r24 2013-10-02 =========================
