@@ -5379,10 +5379,6 @@ double  Gaudi::Math::Gounaris23L::integral () const
 { return integral ( lowEdge () , highEdge() ) ; }
 // ============================================================================
 
-
-
-
-
 // ============================================================================
 // constructor from the order
 // ============================================================================
@@ -5514,6 +5510,7 @@ double Gaudi::Math::Bernstein::operator () ( const double x ) const
 namespace
 {
   // ==========================================================================
+  /// calcluate the intial phase for  unite vecor 
   inline void _phi0_ ( std::vector<double>& phi0 )
   {
     const std::size_t N = phi0.size() ;
@@ -5524,7 +5521,254 @@ namespace
     }
   }
   // ==========================================================================
+  /// calculate the binomial coefficients 
+  inline long double binomial
+  ( const unsigned short n , 
+    const unsigned short k ) 
+  {
+    //
+    return 
+      (  0 == k || 1 == n ) ? 1.0                    :
+      (  k > n - k )        ? binomial ( n , n - k ) : 
+      n * binomial ( n - 1 , k - 1 ) / k  ;
+  }
+  // ==========================================================================
 }
+// ============================================================================
+
+// ============================================================================
+// constructor from the order
+// ============================================================================
+Gaudi::Math::Bernstein2D::Bernstein2D
+( const unsigned short      nX   ,
+  const unsigned short      nY   ,
+  const double              xmin ,
+  const double              xmax ,
+  const double              ymin ,
+  const double              ymax )
+  : std::binary_function<double,double,double> ()
+//
+  , m_nx   ( nX ) 
+  , m_ny   ( nY )
+//
+  , m_pars ( ( nX + 1 ) * ( nY + 1 ) , 0.0 )
+//
+  , m_xmin ( std::min ( xmin , xmax ) )
+  , m_xmax ( std::max ( xmin , xmax ) )
+  , m_ymin ( std::min ( ymin , ymax ) )
+  , m_ymax ( std::max ( ymin , ymax ) )
+//
+  , m_cx   () 
+  , m_cy   () 
+//
+{
+  for ( unsigned short iy = 0 ; iy <= m_ny ; ++iy ) 
+  { m_cy . push_back ( binomial ( m_ny , iy ) ) ; }
+  for ( unsigned short ix = 0 ; ix <= m_nx ; ++ix ) 
+  { m_cx . push_back ( binomial ( m_nx , ix ) ) ; }
+}
+// ============================================================================
+// get the value
+// ============================================================================
+double Gaudi::Math::Bernstein2D::operator () ( const double x ,
+                                               const double y ) const
+{
+  /// the trivial cases
+  if ( x < m_xmin || x > m_xmax ) { return 0.0        ; }
+  if ( y < m_ymin || y > m_ymax ) { return 0.0        ; }
+  //
+  if      ( 0 == npars ()       ) { return 0.0        ; }
+  else if ( 1 == npars ()       ) { return m_pars [0] ; }
+  ///
+  const double _tx = tx ( x ) ;
+  const double _ty = ty ( y ) ;
+  //
+  double       result = 0 ;
+  //
+  std::vector<double> fy ( m_ny + 1 , 0 ) ;
+  for ( unsigned short iy = 0 ; iy <= m_ny ; ++iy ) 
+  {
+    fy[iy] = 
+      m_cy[iy] * 
+      Gaudi::Math::pow (     _ty ,        iy ) * 
+      Gaudi::Math::pow ( 1 - _ty , m_ny - iy ) ;
+  }
+  //
+  for  ( unsigned short ix = 0 ; ix <= m_nx ; ++ix ) 
+  {
+    const double fx =   
+      m_cx[ix] * 
+      Gaudi::Math::pow (     _tx ,        ix ) * 
+      Gaudi::Math::pow ( 1 - _tx , m_nx - ix ) ;
+    //
+    for  ( unsigned short iy = 0 ; iy <= m_ny ; ++iy ) 
+    {
+      //
+      result += par ( ix , iy ) * fx * fy[iy] ;
+    }
+  }
+  //
+  return result ;
+}
+// ============================================================================
+
+// ============================================================================
+// set (l,m)-parameter
+// ============================================================================
+bool Gaudi::Math::Bernstein2D::setPar
+( const unsigned short l     , 
+  const unsigned short m     , 
+  const double         value )
+{
+  if ( l > m_nx || m > m_ny )             { return false ; }
+  const unsigned int k =  l * ( m_ny + 1 ) + m ;
+  return setPar ( k , value ) ;
+}
+// ============================================================================
+// set k-parameter
+// ============================================================================
+bool Gaudi::Math::Bernstein2D::setPar
+( const unsigned int   k     , 
+  const double         value )
+{
+  if ( k >= npars() )                     { return false ; }
+  if ( s_equal ( m_pars [ k ] , value ) ) { return false ; }
+  m_pars [ k ] = value ;
+  return true ;
+}
+// ============================================================================
+// get (l,m)-parameter 
+// ============================================================================
+double  Gaudi::Math::Bernstein2D::par 
+( const unsigned short l ,
+  const unsigned short m ) const 
+{
+  if ( l > m_nx || m > m_ny ) { return 0 ; }
+  const unsigned int k =  l * ( m_ny + 1 ) + m ;
+  return par ( k ) ;
+}
+// ============================================================================
+
+  
+
+
+// ============================================================================
+// constructor from the order
+// ============================================================================
+Gaudi::Math::Bernstein2DSym::Bernstein2DSym
+( const unsigned short      n    ,
+  const double              xmin ,
+  const double              xmax )
+  : std::binary_function<double,double,double> ()
+//
+  , m_n    ( n ) 
+//
+  , m_pars ( ( n + 1 ) * ( n + 2 ) / 2 , 0.0 )
+//
+  , m_xmin ( std::min ( xmin , xmax ) )
+  , m_xmax ( std::max ( xmin , xmax ) )
+//
+  , m_c () 
+//
+{
+  for ( unsigned short i = 0 ; i <= m_n ; ++i ) 
+  { m_c . push_back ( binomial ( m_n , i ) ) ; }
+}
+// ============================================================================
+// get the value
+// ============================================================================
+double Gaudi::Math::Bernstein2DSym::operator () 
+  ( const double x ,
+    const double y ) const
+{
+  /// the trivial cases
+  if ( x < xmin () || x > xmax () ) { return 0.0        ; }
+  if ( y < ymin () || y > ymax () ) { return 0.0        ; }
+  //
+  if      ( 0 == npars ()       ) { return 0.0        ; }
+  else if ( 1 == npars ()       ) { return m_pars [0] ; }
+  ///
+  const double _tx = tx ( x ) ;
+  const double _ty = ty ( y ) ;
+  //
+  double       result = 0 ;
+  //
+  std::vector<double> fy ( m_n + 1 , 0 ) ;
+  for ( unsigned short i = 0 ; i <= m_n ; ++i ) 
+  {
+    fy[i] = 
+      m_c[i] * 
+      Gaudi::Math::pow (     _ty ,       i ) * 
+      Gaudi::Math::pow ( 1 - _ty , m_n - i ) ;
+  }
+  //
+  for  ( unsigned short ix = 0 ; ix <= m_n ; ++ix ) 
+  {
+    const double fx =   
+      m_c [ix] * 
+      Gaudi::Math::pow (     _tx ,       ix ) * 
+      Gaudi::Math::pow ( 1 - _tx , m_n - ix ) ;
+    //
+    for  ( unsigned short iy = ix ; iy <= m_n ; ++iy ) 
+    {
+      //
+      const double dr = par ( ix , iy ) * fx * fy[iy] ;  
+      //
+      result += ( ix == iy ) ? dr : 2*dr ; 
+    }
+  }
+  //
+  return result ;
+}
+// ============================================================================
+// set (k)-parameter
+// ============================================================================
+bool Gaudi::Math::Bernstein2DSym::setPar
+( const unsigned int   k     , 
+  const double         value )
+{
+  //
+  if ( k >= npars() )                     { return false ; }
+  if ( s_equal ( m_pars [ k ] , value ) ) { return false ; }
+  m_pars [ k ] = value ;
+  //
+  return true ;
+}
+// ============================================================================
+// set (l,m)-parameter
+// ============================================================================
+bool Gaudi::Math::Bernstein2DSym::setPar
+( const unsigned short l     , 
+  const unsigned short m     , 
+  const double         value )
+{
+  //
+  if ( l > m_n || m > m_n )               { return false ; }
+  //
+  const unsigned int k = ( l < m ) ? 
+    ( m * ( m + 1 ) / 2 + l ) : 
+    ( l * ( l + 1 ) / 2 + m ) ;
+  //
+  return setPar ( k , value ) ;
+}
+// ============================================================================
+// get (l,m)-parameter 
+// ============================================================================
+double Gaudi::Math::Bernstein2DSym::par
+( const unsigned short l ,
+  const unsigned short m ) const 
+{
+  //
+  if ( l > m_n || m > m_n )               { return 0 ; }
+  //
+  const unsigned int k = ( l < m ) ? 
+    ( m * ( m + 1 ) / 2 + l ) : 
+    ( l * ( l + 1 ) / 2 + m ) ;
+  //
+  return par ( k ) ;
+}
+
+
 // ============================================================================
 // constructor from the order
 // ============================================================================
@@ -5598,7 +5842,7 @@ bool Gaudi::Math::Positive::setPar ( const unsigned short k , const double value
 // =============================================================================
 // update bernstein coefficients
 // =============================================================================
-bool Gaudi::Math::Positive::updateBernstein ( const unsigned short k )
+bool Gaudi::Math::Positive::updateBernstein ( const unsigned int k )
 {
   //
   double psin2 = 1 ;
@@ -5620,12 +5864,170 @@ bool Gaudi::Math::Positive::updateBernstein ( const unsigned short k )
   //
   return update ;
 }
+// ============================================================================
 
 
 
 
 // ============================================================================
-// StudetnT 
+// constructor from the order
+// ============================================================================
+Gaudi::Math::Positive2D::Positive2D
+( const unsigned short      nX   ,
+  const unsigned short      nY   ,
+  const double              xmin ,
+  const double              xmax ,
+  const double              ymin ,
+  const double              ymax )
+  : std::binary_function<double,double,double> ()
+//
+  , m_bernstein (   nX , nY , xmin , xmax , ymin , ymax ) 
+  , m_phases    ( ( nX + 1 ) * ( nY + 1 ) - 1 , 0 )
+  , m_phi0      ( ( nX + 1 ) * ( nY + 1 ) - 1 , 0 )
+  , m_sin2      ( ( nX + 1 ) * ( nY + 1 ) - 1 , 0 )
+{
+  //
+  _phi0_ ( m_phi0 ) ;
+  //
+  for ( unsigned short i = 0 ; i < m_sin2.size() ; ++i )
+  {
+    const double s = std::sin ( m_phi0[i] ) ;
+    m_sin2 [ i ] = s * s ;
+  }
+  //
+  updateBernstein () ;
+}
+// ============================================================================
+// set k-parameter
+// ============================================================================
+bool Gaudi::Math::Positive2D::setPar 
+( const unsigned int k     , 
+  const double       value )
+{
+  //
+  if (  k >= m_phases.size() )         { return false ; } // FALSE
+  //
+  if ( s_equal ( value , par ( k ) ) ) { return false ; }
+  //
+  const double s  = std::sin ( value + m_phi0[k] ) ;
+  const double s2 =  s * s ;
+  //
+  if ( s_equal ( s2 , m_sin2 [ k ] ) ) { return false ; }
+  //
+  m_phases [ k ] = value ;
+  m_sin2   [ k ] = s2    ;
+  //
+  return updateBernstein ( k ) ;
+}
+// =============================================================================
+// update bernstein coefficients
+// =============================================================================
+bool Gaudi::Math::Positive2D::updateBernstein ( const unsigned int k )
+{
+  //
+  double psin2 = 1 ;
+  for ( unsigned int i = 0 ; i < k ; ++ i ) { psin2 *= m_sin2[i] ; }
+  //
+  bool update = false ;
+  const std::size_t np = ( m_bernstein.nX () + 1 ) * ( m_bernstein.nY () + 1 ) ;
+  for ( unsigned int i = k ; i < npars() ; ++i )
+  {
+    const double sin2 = m_sin2   [i] ;
+    const double cos2 = 1 - sin2     ;
+    bool up = m_bernstein.setPar ( i , psin2 * cos2 * np ) ;
+    update  = up || update ;
+    psin2  *= sin2 ;
+  }
+  //
+  const bool up = m_bernstein.setPar ( npars() , psin2 * np ) ;
+  update  = up || update ;
+  //
+  return update ;
+}
+// ============================================================================
+
+// ============================================================================
+// constructor from the order
+// ============================================================================
+Gaudi::Math::Positive2DSym::Positive2DSym
+( const unsigned short      N    ,
+  const double              xmin ,
+  const double              xmax )
+  : std::binary_function<double,double,double> ()
+//
+  , m_bernstein (   N , xmin , xmax ) 
+  , m_phases    ( ( N + 1 ) * ( N + 1 ) - 1  , 0 )
+  , m_phi0      ( ( N + 1 ) * ( N + 1 ) - 1  , 0 )
+  , m_sin2      ( ( N + 1 ) * ( N + 1 ) - 1  , 0 )
+{
+  //
+  _phi0_ ( m_phi0 ) ;
+  //
+  for ( unsigned short i = 0 ; i < m_sin2.size() ; ++i )
+  {
+    const double s = std::sin ( m_phi0[i] ) ;
+    m_sin2 [ i ] = s * s ;
+  }
+  //
+  updateBernstein () ;
+}
+// ============================================================================
+// set k-parameter
+// ============================================================================
+bool Gaudi::Math::Positive2DSym::setPar 
+( const unsigned int k     , 
+  const double       value )
+{
+  //
+  if (  k >= m_phases.size() )         { return false ; } // FALSE
+  //
+  if ( s_equal ( value , par ( k ) ) ) { return false ; }
+  //
+  const double s  = std::sin ( value + m_phi0[k] ) ;
+  const double s2 =  s * s ;
+  //
+  if ( s_equal ( s2 , m_sin2 [ k ] ) ) { return false ; }
+  //
+  m_phases [ k ] = value ;
+  m_sin2   [ k ] = s2    ;
+  //
+  return updateBernstein ( k ) ;
+}
+// =============================================================================
+// update bernstein coefficients
+// =============================================================================
+bool Gaudi::Math::Positive2DSym::updateBernstein ( const unsigned int k )
+{
+  //
+  double psin2 = 1 ;
+  for ( unsigned int i = 0 ; i < k ; ++ i ) { psin2 *= m_sin2[i] ; }
+  //
+  bool update = false ;
+  const std::size_t np = ( m_bernstein.nX () + 1 ) * ( m_bernstein.nY () + 1 ) ;
+  for ( unsigned int i = k ; i < npars() ; ++i )
+  {
+    const double sin2 = m_sin2   [i] ;
+    const double cos2 = 1 - sin2     ;
+    bool up = m_bernstein.setPar ( i , psin2 * cos2 * np ) ;
+    update  = up || update ;
+    psin2  *= sin2 ;
+  }
+  //
+  const bool up = m_bernstein.setPar ( npars() , psin2 * np ) ;
+  update  = up || update ;
+  //
+  return update ;
+}
+// ============================================================================
+
+
+
+
+
+
+
+// ============================================================================
+// Student-T 
 // ============================================================================
 /*  constructor from mass, resolution and "n"-parameter 
  *  @param M     mass 

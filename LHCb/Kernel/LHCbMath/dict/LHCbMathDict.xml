@@ -68,6 +68,10 @@
   </class>
   <class name    = "Gaudi::Math::Positive"        />
   <class name    = "Gaudi::Math::Bernstein"       />
+  <class name    = "Gaudi::Math::Positive2D"      />
+  <class name    = "Gaudi::Math::Bernstein2D"     />
+  <class name    = "Gaudi::Math::Positive2DSym"   />
+  <class name    = "Gaudi::Math::Bernstein2DSym"  />
   <class name    = "Gaudi::Math::GammaDist"       />
   <class name    = "Gaudi::Math::LogGammaDist"    />
   <class name    = "Gaudi::Math::Log10GammaDist"  />
