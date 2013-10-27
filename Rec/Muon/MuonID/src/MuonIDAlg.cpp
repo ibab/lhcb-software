@@ -205,8 +205,9 @@ MuonIDAlg::MuonIDAlg( const std::string& name,
   // flag to use DLL:
   //--------------------
   // 0 -- default
-  // 1 -- binned distance with closest hit + integral
-  // 3 -- binned tanh(distance) with closest hit + integral. Flag 2 used by MuonPIDChecker for monitoring Prob Mu
+  // 1 -- binned distance with closest hit + integral of Landau fit
+  // 3 -- binned tanh(distance) with closest hit(Muon) + integral. Flag 2 used by MuonPIDChecker for monitoring Prob Mu
+  // 4 -- binned tanh(distance) with closest hit(Muon) + integral of Landau fit(NonMuon).
   //-----------------------------
   declareProperty("DLL_flag",m_dllFlag = 1);
   
@@ -351,8 +352,8 @@ StatusCode MuonIDAlg::initialize() {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  info()  << "==> Initialise: Input tracks in: " << m_TracksPath << endmsg;
-  info()  << "                Output MuonPID in: " << m_MuonPIDsPath<< endmsg;
+  info()  << "===> Initialise: Input tracks in: " << m_TracksPath << endmsg;
+  info()  << "                 Output MuonPID in: " << m_MuonPIDsPath<< endmsg;
 
   // Check the presence of global MuonID parameters in the loaded conditions database
   if(existDet<DataObject>(detSvc(),"Conditions/ParticleID/Muon/PreSelMomentum" )){
@@ -840,6 +841,12 @@ StatusCode MuonIDAlg::initialize() {
   }
   //info() << "Index of station M2: " << m_iM2 <<endmsg;
 
+  // If no M1, switch m_FindQuality to false to avoid using Chi2MuIDTool, which was  not fixed to no M1 case JHL 12/10/2013
+  if(0 == m_iM2) {
+    m_FindQuality = false;
+    if (msgLevel(MSG::DEBUG) ) debug()   <<"FindQuality set to false. Chi2MuIDTool not yet fixed to no M1 case" << endmsg;
+  }
+
   // set the size of the local vectors
   m_padSizeX.resize(m_NStation * m_NRegion);
   m_padSizeY.resize(m_NStation * m_NRegion);
@@ -888,6 +895,30 @@ StatusCode MuonIDAlg::initialize() {
     return Error(format("OPTIONS initialising MuonID: missing or wrong size for MomentumCuts or foi parameters")); // JHLJHL 30/08/2013
 
   }
+
+  // Parameters in database or option files assumes five muon stations. In case of no M1, shift the values properly:  JHL 11/10/2013 
+  if(0 == m_iM2){
+     for(station = 0 ; station < m_NStation ; station++ ){   // m_NStation==4 
+        for(region=0; region<m_NRegion; ++region){
+           m_xfoiParam1[station * m_NRegion + region] = m_xfoiParam1[(station + 1) * m_NRegion + region];
+           m_xfoiParam2[station * m_NRegion + region] = m_xfoiParam2[(station + 1) * m_NRegion + region];
+           m_xfoiParam3[station * m_NRegion + region] = m_xfoiParam3[(station + 1) * m_NRegion + region];
+           m_yfoiParam1[station * m_NRegion + region] = m_yfoiParam1[(station + 1) * m_NRegion + region];
+           m_yfoiParam2[station * m_NRegion + region] = m_yfoiParam2[(station + 1) * m_NRegion + region];
+           m_yfoiParam3[station * m_NRegion + region] = m_yfoiParam3[(station + 1) * m_NRegion + region];
+        }
+     }
+     if (msgLevel(MSG::DEBUG) ){
+        debug()  << "FOI parameters reset for the case without M1 (last four entries will be ignored)"  <<endmsg;
+        debug()  << "==> XFOIParameters1:" << m_xfoiParam1 << endmsg;
+        debug()  << "==> XFOIParameters2:" << m_xfoiParam2 << endmsg;
+        debug()  << "==> XFOIParameters3:" << m_xfoiParam3 << endmsg;
+        debug()  << "==> YFOIParameters1:" << m_yfoiParam1 << endmsg;
+        debug()  << "==> YFOIParameters2:" << m_yfoiParam2 << endmsg;
+        debug()  << "==> YFOIParameters3:" << m_yfoiParam3 << endmsg;
+     }
+   }
+
 
   if( m_MomentumCuts.size() != 2 )
     return Error(" OPTIONS are wrong: size of MomentumCuts vector is not correct");
@@ -1747,7 +1778,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
   if (ProbNonMu<0) return Error("ProbNonMu <0", StatusCode::FAILURE);
 
 
-  // Set in the MuonPID object the ProbMu & ProbNonMu (Not the Log!)
+  // Set in the MuonPID object the ProbMu & ProbNonMu (Note the Log!)
   pMuid->setMuonLLMu(log(ProbMu));
   pMuid->setMuonLLBg(log(ProbNonMu));
 
@@ -1837,7 +1868,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const do
     ProbNonMu = 1.e-30;
   }
 
-  // Set in the MuonPID object the ProbMu & ProbNonMu (Not the Log!)
+  // Set in the MuonPID object the ProbMu & ProbNonMu (Note the Log!)
   pMuid->setMuonLLMu(log(ProbMu));
   pMuid->setMuonLLBg(log(ProbNonMu));
 
@@ -1887,7 +1918,7 @@ StatusCode MuonIDAlg::calcMuonLL(LHCb::MuonPID * muonid){
     }
 
     int station = (*iCoord)->key().station();
-    if (station > 0 ) {
+    if (station >= m_iM2 ) {  // JHL: station == 0 is OK in the case of no M1  12/Oct./2013 
       dist = dist + pow(((x - m_trackX[station])/dx),2) +
         pow(((y - m_trackY[station])/dy),2) ;
       nhits++;
@@ -1980,7 +2011,7 @@ bool MuonIDAlg::compareHits( LHCb::MuonPID* muonid1, LHCb::MuonPID* muonid2 ){
   for( iCoord1 = mcoord1.begin() ; iCoord1 != mcoord1.end() ; iCoord1++ ){
     for( iCoord2 = mcoord2.begin() ; iCoord2 != mcoord2.end() ; iCoord2++ ){
       if( (*iCoord1)->key() == (*iCoord2)->key() ) {
-        if ( ((*iCoord1)->key().station()) > 0 )  theSame = true;
+        if ( ((*iCoord1)->key().station()) >= m_iM2 )  theSame = true; // JHL: station == 0 is OK in the case of no M1  12/Oct./2013
       }
     }
   }
@@ -2049,10 +2080,10 @@ StatusCode MuonIDAlg::calcDist( LHCb::MuonPID* muonid ){
 
   // calculate the square of the distances
   int nstn = 0;
-  for( int stn = 0 ; stn < 5 ; stn++ ){
+  for( int stn = 0 ; stn < 5; stn++ ){  // No M1 case: 5 here refers to dimension of mCoordDX arrays JHL 12/Oct./2013
     if (msgLevel(MSG::DEBUG) ) {
-      debug()  << " mCoordDX =  " << stn << mCoordDX[stn] << endmsg;
-      debug()  << " mCoordDY =  " << stn << mCoordDY[stn] << endmsg;
+      debug() << "calcDist: station: "<< stn << " mCoordDX = " << mCoordDX[stn] 
+              << " mCoordDY = " << mCoordDY[stn] <<  endmsg;
     }
     if ( mCoordDX[stn] != 0. ) {
       nstn++;
@@ -2215,7 +2246,7 @@ StatusCode MuonIDAlg::get_closest(LHCb::MuonPID *pMuid, double *closest_x,
   double foiXDim,foiYDim;
   int nhits=0;
 
-  for (int ista=0; ista<5; ista++){
+  for (int ista=0; ista<5; ista++){  // No M1 case: 5 here is OK, these arrays have dimension 5 JHL 12/Oct./2013
     closest_x[ista] = -1;
     closest_y[ista] = -1;
     small_dist[ista] = 10000000.;
@@ -2243,7 +2274,7 @@ StatusCode MuonIDAlg::get_closest(LHCb::MuonPID *pMuid, double *closest_x,
     foiYDim = m_foifactor*foiY( station, region, m_MomentumPre, dy);
 
     // only for M2-M3-M4-M5:
-    if (station > 0 ) {
+    if (station >= m_iM2 ) {  // JHL: station == 0 is OK in the case of no M1  12/Oct./2013
 
       if(  ( fabs( x - m_trackX[station] ) < foiXDim ) &&
            ( fabs( y - m_trackY[station] ) < foiYDim )  ) {
