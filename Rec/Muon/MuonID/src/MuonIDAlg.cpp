@@ -352,8 +352,8 @@ StatusCode MuonIDAlg::initialize() {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  info()  << "===> Initialise: Input tracks in: " << m_TracksPath << endmsg;
-  info()  << "                 Output MuonPID in: " << m_MuonPIDsPath<< endmsg;
+  info()  << "==> Initialise: Input tracks in: " << m_TracksPath << endmsg;
+  info()  << "                Output MuonPID in: " << m_MuonPIDsPath<< endmsg;
 
   // Check the presence of global MuonID parameters in the loaded conditions database
   if(existDet<DataObject>(detSvc(),"Conditions/ParticleID/Muon/PreSelMomentum" )){
