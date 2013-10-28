@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-10-28 - Paul Szczypka
+ - Corrections to Configuration.py to safely access GenInit's properties after
+   PowHeg additions.
+
 !========================== Gauss v46r5 2013-10-24 ===========================
 ! 2013-10-24 - Gloria Corti
  - Port from v45b branch chnages by Patrick Robbe (r163031)

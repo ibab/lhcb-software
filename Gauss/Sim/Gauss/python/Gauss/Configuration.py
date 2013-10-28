@@ -1884,11 +1884,11 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.Special.PowhegProductionWZ.numevts = LHCbApp().EvtMax
         gen_t0.Special.PowhegProductionZZ.numevts = LHCbApp().EvtMax
         #
-        gen_t0.Special.PowhegProductionbb.iseed = GenInit("GaussGen").RunNumber + GenInit("GaussGen").FirstEventNumber
-        gen_t0.Special.PowhegProductiontt.iseed = GenInit("GaussGen").RunNumber + GenInit("GaussGen").FirstEventNumber
-        gen_t0.Special.PowhegProductionWbb.iseed = GenInit("GaussGen").RunNumber + GenInit("GaussGen").FirstEventNumber
-        gen_t0.Special.PowhegProductionWZ.iseed = GenInit("GaussGen").RunNumber + GenInit("GaussGen").FirstEventNumber
-        gen_t0.Special.PowhegProductionZZ.iseed = GenInit("GaussGen").RunNumber + GenInit("GaussGen").FirstEventNumber
+        gen_t0.Special.PowhegProductionbb.iseed = genInit.getProp("RunNumber") + genInit.getProp("FirstEventNumber")
+        gen_t0.Special.PowhegProductiontt.iseed = genInit.getProp("RunNumber") + genInit.getProp("FirstEventNumber")
+        gen_t0.Special.PowhegProductionWbb.iseed = genInit.getProp("RunNumber") + genInit.getProp("FirstEventNumber")
+        gen_t0.Special.PowhegProductionWZ.iseed = genInit.getProp("RunNumber") + genInit.getProp("FirstEventNumber")
+        gen_t0.Special.PowhegProductionZZ.iseed = genInit.getProp("RunNumber") + genInit.getProp("FirstEventNumber")
 
         # or with Hijing
         txtP = "hijinginit efrm "+str(pInGeV)
