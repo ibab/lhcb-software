@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DSTWriters
 ################################################################################
-gaudi_subdir(DSTWriters v4r11)
+gaudi_subdir(DSTWriters v4r12)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          GaudiConf)
