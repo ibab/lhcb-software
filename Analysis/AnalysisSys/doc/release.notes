@@ -7,15 +7,8 @@ Purpose     : LHCb analysis packages
 New development release, built against Phys v17r3.
 
 - Packages Updated :-
-   AnalysisPython, DSTWriters, DaVinciTrackScaling, DecayTreeTuple, 
+   DSTWriters, DaVinciTrackScaling, DecayTreeTuple, 
    DecayTreeTupleBase, IncTopoVert, MVADictTools, DaVinciTrackRefitting
-
-In AnalysisPython :
- . Add GetNdata for the Analysis::Formula 
- . Add few functions for phase space modulated by polynomial
- . Add StatVar : useful utility to get the statistics for 
-   certain variables in TTree/Dataset 
- . Few minor decorators for StatEntity
 
 In DSTWriters :
  . Modify stripdst.py and microdstelements.py to enable writing 

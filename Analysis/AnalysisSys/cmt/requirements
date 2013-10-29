@@ -47,7 +47,7 @@ use  HltSelChecker              v12r1p4  Hlt    # Patrick Koppenburg
 
 ####################################################################
 
-use  AnalysisPython             v2r25    Phys
+use  AnalysisPython             v2r24    Phys
 use  PyAna                      v1r3p1   Analysis
 
 ####################################################################
