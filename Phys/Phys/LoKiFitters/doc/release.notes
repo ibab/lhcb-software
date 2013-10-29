@@ -5,10 +5,10 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
-! 2013-10-08 - Vanya Belyaev
+!========================= LoKiFitters v4r7 2013-10-29 =========================
 
- - DistanceCalculator
-   make more accurate calculation of doca 
+! 2013-10-08 - Vanya Belyaev
+ - DistanceCalculator : Make a more accurate calculation of DOCA.
 
 !========================= LoKiFitters v4r6 2013-06-13 =========================
 
