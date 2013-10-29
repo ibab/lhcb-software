@@ -184,7 +184,7 @@ namespace {
 	      // require a minimum momentum to traverse the velo
 	      && particle->p()>300*Gaudi::Units::MeV 
 	      // require that its eta is within the acceptance
-	      && 1.8 < particle->pseudoRapidity() && particle->pseudoRapidity() < 4.5 
+	      && 2 < particle->pseudoRapidity() && particle->pseudoRapidity() < 5
 	      // require that there is no endvertex, or that it is sort-of outside the velo
 	      && (endvertex==0 || (endvertex->position() - vertex.position()).Rho() > 10*Gaudi::Units::cm ) ) {
 	++rc ;
@@ -276,7 +276,7 @@ StatusCode TrackIPResolutionChecker::execute()
     const LHCb::MCParticle* mcparticle = linker.first(track) ;
     if( mcparticle && mcparticle->originVertex() ) {
       // make some selection for the IP study
-      if(mcparticle->momentum().Pz()>0 ) {
+      if(mcparticle->momentum().Pz()>0 && 2 < mcparticle->pseudoRapidity() && mcparticle->pseudoRapidity() < 5 ) {
 	
 	std::string prefix = std::string("IP/") + Gaudi::Utils::toString(track->type()) + "/" ;
 
