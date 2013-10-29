@@ -3,6 +3,54 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v11r3>2013-10-29 Analysis v11r3</A></H1><PRE>
+New development release, built against Phys v17r3.
+
+- Packages Updated :-
+   AnalysisPython, DSTWriters, DaVinciTrackScaling, DecayTreeTuple, 
+   DecayTreeTupleBase, IncTopoVert, MVADictTools
+
+In AnalysisPython :
+ . Add GetNdata for the Analysis::Formula 
+ . Add few functions for phase space modulated by polynomial
+ . Add StatVar : useful utility to get the statistics for 
+   certain variables in TTree/Dataset 
+ . Few minor decorators for StatEntity
+
+In DSTWriters :
+ . Modify stripdst.py and microdstelements.py to enable writing 
+   several stripping DecReports.
+
+In DaVinciTrackScaling :
+ . TrackScaleState : Remove some bad-intereference with ROOT 
+                     memory management.
+
+In DecayTreeTuple :
+ . TupleToolDecayTreeFitter: Fix bug 
+   https://savannah.cern.ch/bugs/index.php?102869
+   Now there's a protection against non functional substitutions and against
+   mass constraining particles not in the decay tree.
+ . TupleToolGeometry: Fix bug 
+   https://savannah.cern.ch/bugs/index.php?102616
+   Now issue an error when a composite particle without a vertex is given, 
+   like a rho+. 
+
+In DecayTreeTupleBase :
+ . Bug https://savannah.cern.ch/bugs/index.php?102616: Stop treating errors 
+   as warnings. Now DecayTreeTuple will stop if any tool returns an error.
+
+In IncTopoVert :
+ . Various clean ups ...
+  + Add missing or incorrect calls to bas class initialize() method from 
+    specialized initalize() implementations.
+  + fix -pedantic warnings.
+
+In MVADictTools :
+ . Added python directory with helper functions to configure MVA tool chains.
+   Added an example options script to illustrate the use of these.
+   The compact configuration depends on the stacked LoKi::HybridEngineActor
+   to avoid the double lock problem.
+
 </PRE><H1><A NAME=v11r2>2013-10-02 Analysis v11r2 </A></H1><PRE>
 New development release, built against Phys v17r2.
 
