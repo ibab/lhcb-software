@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DaVinciTools
 ################################################################################
-gaudi_subdir(DaVinciTools v23r10)
+gaudi_subdir(DaVinciTools v23r11)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          Event/HltEvent

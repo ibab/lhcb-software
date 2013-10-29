@@ -3,9 +3,11 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+!========================= DaVinciTools v23r11 2013-10-29 =========================
+
 ! 2013-10-14 - Chris Jones
  - Round the Particle energy values used for match in PrintDuplicates to 
-   a fixed d.p. precision (default 2), to avoid machine precision 
+   a fixed d.p. precision (default 2), to (help) avoid machine precision 
    instabilities.
 
 !========================= DaVinciTools v23r10 2013-10-07 =========================
