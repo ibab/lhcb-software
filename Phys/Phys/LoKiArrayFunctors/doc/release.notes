@@ -5,10 +5,11 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiArrayFunctors v10r4 2013-10-29 =========================
+
 ! 2013-10-24 Sebastian Neubert
- - Made the tool handle of HybridEngineActor a stack. Allows to handle a chain of tools
-
-
+ - Made the tool handle of HybridEngineActor a stack. Allows to handle a chain 
+   of tools.
 
 !========================= LoKiArrayFunctors v10r3 2013-10-02 =========================
 
