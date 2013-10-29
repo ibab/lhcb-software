@@ -5,9 +5,11 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
- 2013-10-09 - Olivier Deschamps
- -  python/PhysConf/Configuration.py : relies on CaloProcessor for Calorimeter configuration (digis/clusters onDemand and/or full caloReco reprocessing)
+!========================= PhysConf v1r23 2013-10-29 =========================
 
+ 2013-10-09 - Olivier Deschamps
+ - python/PhysConf/Configuration.py : Relies on CaloProcessor for Calorimeter
+   configuration (digis/clusters onDemand and/or full CaloReco reprocessing).
 
 !========================= PhysConf v1r22 2013-06-13 =========================
 
