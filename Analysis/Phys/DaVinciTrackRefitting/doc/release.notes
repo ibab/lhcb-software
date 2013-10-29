@@ -4,8 +4,10 @@
 ! Purpose     : Provide tools for refitting on DST
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciTrackRefitting v1r4p1 2013-10-29 =========================
+
 ! 2013-10-23 - Paul Seyfert
- - fixed off-by-one error in RefitParticleTracks with ReplaceTracks = False
+ - Fixed off-by-one error in RefitParticleTracks with ReplaceTracks = False
    (caused segfault)
 
 !========================= DaVinciTrackRefitting v1r4 2013-05-07 =========================
