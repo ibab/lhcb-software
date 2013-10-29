@@ -3,6 +3,16 @@ Package     : StrippingSys
 Package Coordinator : l.carson@imperial.ac.uk, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v7r3 2013-10-29 =========================
+
+* Version for future development.
+
+* Phys/CommonParticles
+  - Remove CC in StdLooseRho0
+
+* Phys/StrippingSelections
+  - Add PostscaleD02HH to config of StrippingD2HHBDT.py
+
 !========================= StrippingSys v7r2 2013-10-03 =========================
 
 * Version for future development. Contains Stripping packages as used in incremental
