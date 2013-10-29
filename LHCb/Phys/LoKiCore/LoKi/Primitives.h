@@ -28,6 +28,19 @@
 // Boost 
 // ============================================================================
 #include "boost/integer_traits.hpp"
+
+// ============================================================================
+// Original Primitives first
+// ============================================================================
+#define _GEN_LOKI_PRIMITIVES 1
+#define typedef_void_TYPE
+#define argument_a_unless_void argument a
+#define typename_v typename
+#define a_unless_void a
+#define class_TYPE_unless_void class TYPE,
+#endif
+
+#ifdef _GEN_LOKI_PRIMITIVES
 // ============================================================================
 /** @file
  *
@@ -51,13 +64,21 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-11-01 
    */ 
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <class TYPE2>
+  class TwoFunctors<void,TYPE2>
+#else
   template <class TYPE,class TYPE2>
   class TwoFunctors
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// the actual type of underlying functor 
     typedef LoKi::Functor<TYPE,TYPE2> functor ;
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,TYPE2>::argument argument  ;
     // ========================================================================
   public:
     // ========================================================================
@@ -73,10 +94,10 @@ namespace LoKi
     // ========================================================================
     /// evaluate the first functor 
     typename functor::result_type fun1 
-    ( typename functor::argument a ) const { return m_fun1.fun ( a ) ; }
+    ( argument_a_unless_void ) const { return m_fun1.fun ( a_unless_void ) ; }
     /// evaluate the first functor 
     typename functor::result_type fun2 
-    ( typename functor::argument a ) const { return m_fun2.fun ( a ) ; }
+    ( argument_a_unless_void ) const { return m_fun2.fun ( a_unless_void ) ; }
     // ========================================================================
   public:
     // ========================================================================
@@ -125,11 +146,17 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-15
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2> 
+  class And<void,TYPE2> : public LoKi::Functor<void,bool> 
+#else
   template<class TYPE, class TYPE2=bool> 
   class And : public LoKi::Functor<TYPE,bool> 
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// the actual type of functor
     typedef LoKi::Functor<TYPE,TYPE2> functor ;
     /// argument type
@@ -153,8 +180,8 @@ namespace LoKi
     /// MANDATORY: clone method ("")
     virtual And* clone() const { return new And(*this) ; }
     /// MANDATORY: the only one essential method ("function")      
-    virtual result_type operator() ( argument a ) const 
-    { return fun1( a ) ? fun2 ( a )  : false ; }  
+    virtual result_type operator() ( argument_a_unless_void ) const 
+    { return fun1( a_unless_void ) ? fun2 ( a_unless_void )  : false ; }  
     /// OPTIONAL: the nice printout 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << func1() << " & " << func2() << ") " ; }
@@ -168,10 +195,10 @@ namespace LoKi
     // ========================================================================
     /// evaluate the first functor 
     typename functor::result_type fun1 
-    ( typename functor::argument a )  const { return m_two.fun1 ( a ) ; }
+    ( argument_a_unless_void )  const { return m_two.fun1 ( a_unless_void ) ; }
     /// evaluate the first functor 
     typename functor::result_type fun2 
-    ( typename functor::argument a )  const { return m_two.fun2 ( a ) ; }
+    ( argument_a_unless_void )  const { return m_two.fun2 ( a_unless_void ) ; }
     // ========================================================================
     /// get the first functor 
     const functor& func1 ()           const { return m_two.func1 () ; }
@@ -212,11 +239,17 @@ namespace LoKi
    *  @date   2002-07-15
    */
   // ==========================================================================
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2>
+  class Or<void,TYPE2> : public LoKi::And<void,TYPE2>
+#else
   template<class TYPE, class TYPE2=bool> 
   class Or : public LoKi::And<TYPE,TYPE2> 
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// the actual type of functor
     typedef LoKi::Functor<TYPE,TYPE2> functor ;
     /// argument type
@@ -238,8 +271,8 @@ namespace LoKi
     /// MANDATORY: clone method ("virtual constructor")
     virtual Or* clone() const { return new Or(*this) ; }
     /// MANDATORY: the only one essential method ("function")      
-    virtual result_type operator() ( argument a ) const 
-    { return this->fun1 ( a ) ? true : this->fun2 ( a ) ; }  
+    virtual result_type operator() ( argument_a_unless_void ) const 
+    { return this->fun1 ( a_unless_void ) ? true : this->fun2 ( a_unless_void ) ; }  
     /// OPTIONAL: the nice printout 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << this->func1() << " | " << this->func2() << ") " ; }
@@ -274,11 +307,17 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-15
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2>
+  class Not<void,TYPE2> : public LoKi::Functor<void,bool>
+#else
   template<class TYPE, class TYPE2=bool> 
   class Not : public LoKi::Functor<TYPE,bool>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
     typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
     /// result type 
@@ -296,10 +335,10 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  Not* clone() const { return new Not( *this ); }
     /// the only one essential method ("function")      
-    virtual  result_type operator() ( argument a ) const 
+    virtual  result_type operator() ( argument_a_unless_void ) const 
     { 
       std::logical_not<TYPE2> lnot ;
-      return lnot ( m_fun.fun ( a ) ) ; 
+      return lnot ( m_fun.fun ( a_unless_void ) ) ; 
     }
     /// the basic printout method 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
@@ -341,11 +380,17 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-15
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2>
+  class Negate<void,TYPE2> : public LoKi::Functor<void,TYPE2>
+#else
   template<class TYPE,class TYPE2=double> 
   class Negate : public LoKi::Functor<TYPE,TYPE2>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
     typedef typename LoKi::Functor<TYPE,TYPE2>::argument argument  ; 
     /// result type 
@@ -363,10 +408,10 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  Negate* clone() const { return new Negate ( *this ) ; }
     /// the only one essential method ("function")      
-    virtual  result_type operator() ( argument a ) const 
+    virtual  result_type operator() ( argument_a_unless_void ) const 
     { 
       std::negate<TYPE2> negator ;
-      return negator ( m_fun.fun ( a ) ) ;
+      return negator ( m_fun.fun ( a_unless_void ) ) ;
     }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
@@ -410,11 +455,17 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-15
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2>
+  class Less<void,TYPE2> : public LoKi::Functor<void,bool>
+#else
   template<class TYPE, class TYPE2=double> 
   class Less : public LoKi::Functor<TYPE,bool>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// the constant type 
     typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
     /// argument type
@@ -445,10 +496,10 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  Less* clone() const { return new Less( *this ); }
     /// the only one essential method ("function")      
-    virtual result_type operator() ( argument a ) const 
+    virtual result_type operator() ( argument_a_unless_void ) const 
     { 
       std::less<TYPE2> _cmp ;
-      return _cmp ( this->fun1 ( a ) , this->fun2 ( a ) ) ; 
+      return _cmp ( this->fun1 ( a_unless_void ) , this->fun2 ( a_unless_void ) ) ; 
     }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
@@ -464,10 +515,10 @@ namespace LoKi
     /// the functor type 
     typedef LoKi::Functor<TYPE,TYPE2>                                 functor ;
     typename functor::result_type fun1 
-    ( typename functor::argument a ) const { return m_two.fun1 ( a ) ; }
+    ( argument_a_unless_void ) const { return m_two.fun1 ( a_unless_void ) ; }
     /// evaluate the first functor 
     typename functor::result_type fun2 
-    ( typename functor::argument a ) const { return m_two.fun2 ( a ) ; }
+    ( argument_a_unless_void ) const { return m_two.fun2 ( a_unless_void ) ; }
     // ========================================================================
     /// get the first functor 
     const functor& func1 ()           const { return m_two.func1 () ; }
@@ -507,11 +558,17 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-15
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2>
+  class Equal<void,TYPE2> : public LoKi::Less<void,TYPE2>
+#else
   template<class TYPE, class TYPE2=double> 
   class Equal : public LoKi::Less<TYPE,TYPE2> 
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// the constant type 
     typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
     /// argument type
@@ -539,8 +596,8 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  Equal* clone() const { return new Equal ( *this ) ; }
     /// the only one essential method ("function")      
-    virtual result_type operator() ( argument a ) const 
-    { return equal ( a ) ; }
+    virtual result_type operator() ( argument_a_unless_void ) const 
+    { return equal ( a_unless_void ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << this->func1() << "==" << this->func2() << " ) " ; }
@@ -548,14 +605,14 @@ namespace LoKi
   public:
     // ========================================================================
     /// the actual comparison:
-    inline result_type equal ( argument a ) const 
+    inline result_type equal ( argument_a_unless_void ) const 
     { 
       LHCb::Math::Equal_To<TYPE2>  _cmp ;                      // the comparator 
-      return _cmp ( this->fun1 ( a ) , this->fun2 ( a ) ) ;
+      return _cmp ( this->fun1 ( a_unless_void ) , this->fun2 ( a_unless_void ) ) ;
     }
     // ========================================================================
     /// the actual comparison:
-    inline result_type not_equal ( argument a ) const { return !equal( a ) ; }
+    inline result_type not_equal ( argument_a_unless_void ) const { return !this->equal( a_unless_void ) ; }
     // ========================================================================
   private:
     // ========================================================================
@@ -591,11 +648,17 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-15
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2>
+  class LessOrEqual<void,TYPE2> : public LoKi::Equal<void,TYPE2>
+#else
   template<class TYPE, class TYPE2=double> 
   class LessOrEqual : public LoKi::Equal<TYPE,TYPE2>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// the constant type 
     typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
     /// argument type
@@ -623,10 +686,10 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  LessOrEqual* clone() const { return new LessOrEqual ( *this ) ; }
     /// the only one essential method ("function")      
-    virtual result_type operator() ( argument a ) const 
+    virtual result_type operator() ( argument_a_unless_void ) const 
     { 
       std::less_equal<TYPE2> cmp ;
-      return cmp ( this->fun1( a ) , this->fun2( a ) ) ; 
+      return cmp ( this->fun1( a_unless_void ) , this->fun2( a_unless_void ) ) ; 
     }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
@@ -665,11 +728,17 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-15
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2>
+  class NotEqual<void,TYPE2> : public LoKi::Equal<void,TYPE2>
+#else
   template<class TYPE, class TYPE2=double> 
   class NotEqual : public LoKi::Equal<TYPE,TYPE2> 
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
     typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
     /// result type 
@@ -696,8 +765,8 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  NotEqual* clone() const { return new NotEqual ( *this ) ; }
     /// the only one essential method ("function")      
-    virtual result_type operator() ( argument a ) const 
-    { return this -> not_equal ( a ) ; }
+    virtual result_type operator() ( argument_a_unless_void ) const 
+    { return this -> not_equal ( a_unless_void ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (" << this->func1() 
@@ -736,11 +805,19 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-15
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2>
+  class Plus<void,TYPE2> : public LoKi::Functor<void,double>
+#else
   template<class TYPE, class TYPE2=double> 
   class Plus : public LoKi::Functor<TYPE,TYPE2> 
+#endif
   {
   private:
     // ========================================================================
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+    typedef void TYPE;
+#endif
     /// the constant type 
     typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
     /// argument type
@@ -771,10 +848,10 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  Plus* clone() const { return new Plus ( *this ) ; }
     /// the only one essential method ("function")      
-    virtual  result_type operator() ( argument a ) const 
+    virtual  result_type operator() ( argument_a_unless_void ) const 
     { 
       std::plus<TYPE2> _plus ;
-      return _plus ( this->fun1( a ) , this->fun2( a ) ) ; 
+      return _plus ( this->fun1( a_unless_void ) , this->fun2( a_unless_void ) ) ; 
     }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
@@ -790,10 +867,10 @@ namespace LoKi
     /// the functor type 
     typedef typename LoKi::Functor<TYPE,TYPE2>                        functor ;
     typename functor::result_type fun1 
-    ( typename functor::argument a ) const { return m_two.fun1 ( a ) ; }
+    ( argument_a_unless_void ) const { return m_two.fun1 ( a_unless_void ) ; }
     /// evaluate the first functor 
     typename functor::result_type fun2 
-    ( typename functor::argument a ) const { return m_two.fun2 ( a ) ; }
+    ( argument_a_unless_void ) const { return m_two.fun2 ( a_unless_void ) ; }
     // ========================================================================
     /// get the first functor 
     const functor& func1 ()           const { return m_two.func1 () ; }
@@ -833,11 +910,19 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-15
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2>
+  class Minus<void,TYPE2> : public LoKi::Plus<void,double>
+#else
   template<class TYPE, class TYPE2=double> 
   class Minus : public LoKi::Plus<TYPE,TYPE2> 
+#endif
   {
   private:
     // ========================================================================
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+    typedef void TYPE;
+#endif
     /// the constant type 
     typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
     /// argument type
@@ -865,10 +950,10 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  Minus* clone() const { return new Minus ( *this ) ; }
     /// the only one essential method ("function")      
-    virtual  result_type operator() ( argument a ) const 
+    virtual  result_type operator() ( argument_a_unless_void ) const 
     { 
       std::minus<TYPE2> _minus ;
-      return _minus ( this->fun1 ( a ) , this->fun2 ( a ) ) ; 
+      return _minus ( this->fun1 ( a_unless_void ) , this->fun2 ( a_unless_void ) ) ; 
     }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
@@ -907,11 +992,17 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-15
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2>
+  class Divide<void,TYPE2> : public LoKi::Minus<void,double>
+#else
   template<class TYPE, class TYPE2=double> 
   class Divide : public LoKi::Minus<TYPE,TYPE2> 
+#endif
   { 
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// the constant type 
     typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
     /// argument type
@@ -939,10 +1030,10 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  Divide* clone() const { return new Divide ( *this ) ; }
     /// the only one essential method ("function")      
-    virtual  result_type operator() ( argument a ) const 
+    virtual  result_type operator() ( argument_a_unless_void ) const 
     { 
       std::divides<TYPE2> _divides ;
-      return _divides ( this->fun1 ( a ) , this->fun2 ( a ) ) ; 
+      return _divides ( this->fun1 ( a_unless_void ) , this->fun2 ( a_unless_void ) ) ; 
     }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
@@ -981,11 +1072,17 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-15
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2>
+  class Multiply<void,TYPE2> : public LoKi::Divide<void,double>
+#else
   template<class TYPE, class TYPE2=double> 
   class Multiply : public Divide<TYPE,TYPE2> 
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// the constant type 
     typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
     /// argument type
@@ -1013,10 +1110,10 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  Multiply* clone() const { return new Multiply ( *this ) ; }
     /// the only one essential method ("function")      
-    virtual  result_type operator() ( argument a ) const 
+    virtual  result_type operator() ( argument_a_unless_void ) const 
     { 
       std::multiplies<TYPE2> _multiplies ;
-      return _multiplies ( this->fun1 ( a ) , this->fun2 ( a ) ) ; 
+      return _multiplies ( this->fun1 ( a_unless_void ) , this->fun2 ( a_unless_void ) ) ; 
     }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
@@ -1052,11 +1149,17 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-11-01
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2>
+  class Min<void,TYPE2> : public LoKi::Functor<void,TYPE2>
+#else
   template<class TYPE, class TYPE2=double> 
   class Min : public LoKi::Functor<TYPE,TYPE2>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// the constant type 
     typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
     /// argument type
@@ -1114,10 +1217,10 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  Min* clone() const { return new Min ( *this ) ; }
     /// the only one essential method ("function")      
-    virtual result_type operator() ( argument a ) const 
+    virtual result_type operator() ( argument_a_unless_void ) const 
     { 
-      return  std::min ( this->fun1 ( a ) ,
-                         this->fun2 ( a ) , std::less<TYPE2>() ) ;
+      return  std::min ( this->fun1 ( a_unless_void ) ,
+                         this->fun2 ( a_unless_void ) , std::less<TYPE2>() ) ;
     }    
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
@@ -1133,10 +1236,10 @@ namespace LoKi
     /// the functor type 
     typedef typename LoKi::Functor<TYPE,TYPE2>                        functor ;
     typename functor::result_type fun1 
-    ( typename functor::argument a ) const { return m_two.fun1 ( a ) ; }
+    ( argument_a_unless_void ) const { return m_two.fun1 ( a_unless_void ) ; }
     /// evaluate the first functor 
     typename functor::result_type fun2 
-    ( typename functor::argument a ) const { return m_two.fun2 ( a ) ; }
+    ( argument_a_unless_void ) const { return m_two.fun2 ( a_unless_void ) ; }
     // ========================================================================
     /// get the first functor 
     const functor& func1 ()           const { return m_two.func1 () ; }
@@ -1174,11 +1277,17 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-11-01
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2>
+  class Max<void,TYPE2> : public LoKi::Min<void,TYPE2>
+#else
   template<class TYPE, class TYPE2=double> 
   class Max : public LoKi::Min<TYPE,TYPE2>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// the constant type 
     typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
     /// argument type
@@ -1231,10 +1340,10 @@ namespace LoKi
     /// MANDATORY: clone method ("virtual constructor")
     virtual  Max* clone() const { return new Max ( *this ) ; }
     /// MANDATORY: the only one essential method ("function")      
-    virtual  result_type operator() ( argument a ) const 
+    virtual  result_type operator() ( argument_a_unless_void ) const 
     { 
-      return std::max ( this -> fun1 ( a ) , 
-                        this -> fun2 ( a ) , std::less<TYPE2>() ) ;
+      return std::max ( this -> fun1 ( a_unless_void ) , 
+                        this -> fun2 ( a_unless_void ) , std::less<TYPE2>() ) ;
     }    
     /// OPTIONAL: the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
@@ -1258,11 +1367,17 @@ namespace LoKi
    *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
    *  @date 2005-02-11
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <class TYPE2>
+  class SimpleSwitch<void,TYPE2> : public LoKi::Functor<void,TYPE2>
+#else
   template <class TYPE, class TYPE2=double>
   class SimpleSwitch : public LoKi::Functor<TYPE,TYPE2>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// the constant type 
     typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
     /// argument type
@@ -1297,8 +1412,8 @@ namespace LoKi
     /// MANDATORY: clone method ("virtual constructor")
     virtual  SimpleSwitch* clone() const { return new SimpleSwitch ( *this ) ; }
     /// MANDATORY: the only one essential method:
-    virtual result_type operator() ( argument object ) const 
-    { return m_cut( object ) ? m_val1 : m_val2 ; }
+    virtual result_type operator() ( argument_a_unless_void ) const 
+    { return m_cut( a_unless_void ) ? m_val1 : m_val2 ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " switch("  << m_cut << ","  << m_val1 << "," << m_val2 << ") " ; }
@@ -1329,11 +1444,17 @@ namespace LoKi
    *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
    *  @date 2005-02-11
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<class TYPE2>
+  class Switch<void,TYPE2> : public LoKi::Functor<void,TYPE2>
+#else
   template<class TYPE, class TYPE2=double>
   class Switch : public LoKi::Functor<TYPE,TYPE2>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// the constant type 
     typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
     /// argument type
@@ -1436,8 +1557,8 @@ namespace LoKi
     /// MANDATORY: clone method ("virtual constructor")
     virtual  Switch* clone() const { return new Switch ( *this ) ; }
     /// MANDATORY: the only one essential method:
-    virtual  result_type operator() ( argument a ) const 
-    { return m_cut.fun ( a ) ? m_two.fun1 ( a ) : m_two.fun2 ( a ) ; }
+    virtual  result_type operator() ( argument_a_unless_void ) const 
+    { return m_cut.fun ( a_unless_void ) ? m_two.fun1 ( a_unless_void ) : m_two.fun2 ( a_unless_void ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " switch("     
@@ -1482,11 +1603,17 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-15
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <class TYPE2>
+  class ComposeFunction<void,TYPE2> : public LoKi::Functor<void,TYPE2>
+#else
   template <class TYPE, class TYPE2=double>
   class ComposeFunction : public LoKi::Functor<TYPE,TYPE2> 
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
     typedef typename LoKi::Functor<TYPE,TYPE2>::argument argument  ; 
     /// result type 
@@ -1522,8 +1649,8 @@ namespace LoKi
     virtual ComposeFunction*  clone () const 
     { return new ComposeFunction ( *this ) ; }
     /// the only one essential method ("function")      
-    virtual result_type operator() ( argument a ) const 
-    { return (*m_func) ( m_fun . fun ( a ) ) ; }
+    virtual result_type operator() ( argument_a_unless_void ) const 
+    { return (*m_func) ( m_fun . fun ( a_unless_void ) ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " " << m_desc << "("  << m_fun << ") " ; };
@@ -1568,11 +1695,17 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-15
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <class TYPE2>
+  class ComposeFunction2<void,TYPE2> : public LoKi::Functor<void,TYPE2>
+#else
   template <class TYPE, class TYPE2=double>
   class ComposeFunction2 : public LoKi::Functor<TYPE,TYPE2> 
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
     typedef typename LoKi::Functor<TYPE,TYPE2>::argument argument  ; 
     /// result type 
@@ -1643,8 +1776,8 @@ namespace LoKi
     virtual ComposeFunction2*  clone   () const 
     { return new ComposeFunction2( *this ); }
     /// the only one essential method ("function")      
-    virtual result_type operator() ( argument a ) const 
-    { return (*m_func) ( m_two. fun1 ( a ) , m_two.fun2( a ) ) ; }
+    virtual result_type operator() ( argument_a_unless_void ) const 
+    { return (*m_func) ( m_two. fun1 ( a_unless_void ) , m_two.fun2( a_unless_void ) ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " " 
@@ -1666,11 +1799,17 @@ namespace LoKi
   /** @class Compose 
    *  the general case of fun2(fun1) function:
    */  
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <class TYPE1, class TYPE2, class TYPE3>
+  class Compose<void,TYPE1,TYPE2,TYPE3> : public LoKi::Functor<void,TYPE2>
+#else
   template <class TYPE,class TYPE1, class TYPE2, class TYPE3=TYPE1>
   class Compose : public LoKi::Functor<TYPE,TYPE2>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
     typedef typename LoKi::Functor<TYPE,TYPE2>::argument argument  ; 
     /// result type 
@@ -1698,11 +1837,11 @@ namespace LoKi
     /// MANDATORY: clone method ("virtual constructor")
     virtual  Compose* clone() const { return new Compose ( *this ) ; }    
     /// the only one essential method ("function")      
-    virtual  result_type operator() ( argument a ) const 
+    virtual  result_type operator() ( argument_a_unless_void ) const 
     { 
       const LoKi::Apply<TYPE,TYPE1>  f1 ( &m_fun1.func() ) ;
       const LoKi::Apply<TYPE3,TYPE2> f2 ( &m_fun2.func() ) ;
-      return f2.eval ( f1.eval ( a ) ) ;
+      return f2.eval ( f1.eval ( a_unless_void ) ) ;
     }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
@@ -1716,6 +1855,7 @@ namespace LoKi
     LoKi::FunctorFromFunctor<TYPE3,TYPE2> m_fun2  ;       // the second functor 
     // ========================================================================
   } ;
+#ifndef _GEN_LOKI_VOIDPRIMITIVES
   // ==========================================================================
   /** @class Valid 
    *  The trivial predicate to check the validity of argument.
@@ -1729,6 +1869,7 @@ namespace LoKi
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
     typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
     /// result type 
@@ -1750,8 +1891,8 @@ namespace LoKi
     /// MANDATORY: clone method ("virtual constructor")
     virtual  Valid* clone() const { return new Valid( *this ) ; }
     /// MANDATORY: the only one essential method 
-    virtual result_type operator() ( argument a ) const 
-    { return LoKi::valid ( a ) ? true : false  ; }
+    virtual result_type operator() ( argument_a_unless_void ) const 
+    { return LoKi::valid ( a_unless_void ) ? true : false  ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " (Valid?)" ; }
@@ -1769,6 +1910,7 @@ namespace LoKi
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
     typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
     /// result type 
@@ -1810,16 +1952,23 @@ namespace LoKi
     TYPE m_value ;
     // ========================================================================
   };
+#endif
   // ==========================================================================
   /** @class EqualToValue 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-04-07
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <class TYPE2>
+  class EqualToValue<void,TYPE2> : public LoKi::Functor<void,bool>
+#else
   template <class TYPE, class TYPE2=double>
   class EqualToValue : public LoKi::Functor<TYPE,bool>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
     typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
     /// result type 
@@ -1869,8 +2018,8 @@ namespace LoKi
     /// MANDATORY: clone method ("virtual construcor")
     virtual  EqualToValue* clone() const { return new EqualToValue(*this); }
     /// MANDATORY: the only one essential method :
-    virtual  result_type operator() ( argument a ) const
-    { return equal_to ( a ) ; }
+    virtual  result_type operator() ( argument_a_unless_void ) const
+    { return equal_to ( a_unless_void ) ; }
     /// OPTIONAL: the specific printout 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
     { return s << " (" << this->func () 
@@ -1878,15 +2027,15 @@ namespace LoKi
     // ========================================================================
   public:
     // ========================================================================
-    inline result_type equal_to ( argument a ) const
+    inline result_type equal_to ( argument_a_unless_void ) const
     { 
       // the comparator 
       LHCb::Math::Equal_To<TYPE2> _cmp ;
-      return _cmp ( m_fun.fun ( a ) , m_val ) ; 
+      return _cmp ( m_fun.fun ( a_unless_void ) , m_val ) ; 
     }    
     // ========================================================================
-    inline result_type not_equal_to ( argument a ) const
-    { return ! this->equal_to ( a ) ; }  
+    inline result_type not_equal_to ( argument_a_unless_void ) const
+    { return ! this->equal_to ( a_unless_void ) ; }  
     // ========================================================================
   public:
     // ========================================================================
@@ -1911,11 +2060,17 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2006-04-07
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <class TYPE2>
+  class NotEqualToValue<void,TYPE2> : public LoKi::EqualToValue<void,TYPE2>
+#else
   template <class TYPE, class TYPE2=double>
   class NotEqualToValue : public LoKi::EqualToValue<TYPE,TYPE2>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
     typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
     /// result type 
@@ -1948,8 +2103,8 @@ namespace LoKi
     /// MANDATORY: clone method ("virtual constructor")
     virtual  NotEqualToValue* clone() const { return new NotEqualToValue(*this); }
     /// MANDATORY: the only one essential method :
-    virtual  result_type operator() ( argument a ) const
-    { return this->not_equal_to ( a ) ; }
+    virtual  result_type operator() ( argument_a_unless_void ) const
+    { return this->not_equal_to ( a_unless_void ) ; }
     /// OPTIONAL: the specific printout 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
     { return s << " (" << this -> func () 
@@ -1968,13 +2123,17 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   2002-07-24
    */ 
+#ifndef _GEN_LOKI_VOIDPRIMITIVES
   template<class TYPE , class CMP=std::less<double> , class TYPE2=double>
   class Compare
   {
   public:
     // ========================================================================
+    typedef_void_TYPE
     /// typedef for actual function 
     typedef LoKi::Functor<TYPE,TYPE2>   function ;
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,TYPE2>::argument argument  ;
     // typedef for comparison criteria 
     typedef const CMP            compare  ;
     // ========================================================================
@@ -2010,9 +2169,7 @@ namespace LoKi
     /// destructor 
     virtual ~Compare() {}
     /// the only one essential method 
-    bool operator() 
-      ( typename LoKi::Functor<TYPE,TYPE2>::argument a1 , 
-        typename LoKi::Functor<TYPE,TYPE2>::argument a2 ) const
+    bool operator() ( argument a1 , argument a2 ) const
     { return m_cmp ( m_two.fun1 ( a1 ) , m_two.fun2 ( a2 ) ) ; }
     // ========================================================================
   public:
@@ -2056,15 +2213,21 @@ namespace LoKi
   template <class TYPE,class TYPE2=TYPE>
   class Identity : public LoKi::Functor<TYPE,TYPE2>
   {
+  private:
+    // ========================================================================
+    typedef_void_TYPE
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,TYPE2>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,TYPE2>::result_type result_type ; 
   public :
     // ========================================================================
-    /// MANDATORY: virtual destrcutor 
+    /// MANDATORY: virtual destructor 
     virtual ~Identity(){}
-    /// MANDATORY: clone mehtod ("virtual constructor")
+    /// MANDATORY: clone method ("virtual constructor")
     virtual  Identity* clone () const { return new Identity(*this) ; }
     /// MANDATORY": the only one essential method 
-    virtual  typename LoKi::Functor<TYPE,TYPE2>::result_type operator () 
-      ( typename LoKi::Functor<TYPE,TYPE2>::argument a ) const { return a ; }    
+    virtual  result_type operator () ( argument_a_unless_void ) const { return a_unless_void ; }    
     /// OPTIONAL: the nice printout 
     virtual std::ostream& fillStream ( std::ostream& s ) const ;
     // ========================================================================
@@ -2078,18 +2241,25 @@ namespace LoKi
   template <class TYPE>
   class PrintOut : public LoKi::Functor<TYPE,std::string>
   {
+  private:
+    // ========================================================================
+    typedef_void_TYPE
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,std::string>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,std::string>::result_type result_type ; 
   public:
     // ========================================================================
-    /// MANDATORY: virtual destrcutor 
+    /// MANDATORY: virtual destructor 
     virtual ~PrintOut(){}
-    /// MANDATORY: clone mehtod ("virtual constructor")
+    /// MANDATORY: clone method ("virtual constructor")
     virtual  PrintOut* clone () const { return new PrintOut ( *this ) ; }
     /// MANDATORY": the only one essential method 
-    virtual typename LoKi::Functor<TYPE,std::string>::result_type operator () 
-      ( typename LoKi::Functor<TYPE,std::string>::argument a ) const 
-    { return Gaudi::Utils::toString ( a  ) ; }    
+    virtual result_type operator () ( argument_a_unless_void ) const 
+    { return Gaudi::Utils::toString ( a_unless_void  ) ; }    
     // ========================================================================
   };
+#endif
   // ==========================================================================
   /** @class InRange 
    *  Helper predicate to represent that the result of functor 
@@ -2097,15 +2267,21 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan/Belyaev@nikhef.nl
    *  @date 2009-11-21
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<>
+  class InRange<void>: public LoKi::Functor<void,bool>
+#else
   template<class TYPE> 
   class InRange: public LoKi::Functor<TYPE,bool> 
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
-    typedef typename LoKi::Functor<TYPE,bool>::argument              argument ; 
+    typedef typename_v LoKi::Functor<TYPE,bool>::argument              argument ; 
     /// result type 
-    typedef typename LoKi::Functor<TYPE,bool>::result_type        result_type ; 
+    typedef typename_v LoKi::Functor<TYPE,bool>::result_type        result_type ; 
     // ========================================================================
   public:
     // ========================================================================
@@ -2128,9 +2304,9 @@ namespace LoKi
     /// MANDATORY: clone method ("virtual constructor")
     virtual  InRange* clone() const { return new InRange ( *this ) ; }
     /// MANDATORY: the only one essential method 
-    virtual result_type operator() ( argument a ) const 
+    virtual result_type operator() ( argument_a_unless_void ) const 
     {
-      const double r = m_fun.fun ( a ) ;
+      const double r = m_fun.fun ( a_unless_void ) ;
       return m_low <= r && r <= m_high ;
     }
     /// OPTIONAL: the nice printout 
@@ -2164,15 +2340,21 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan/Belyaev@nikhef.nl
    *  @date 2009-11-21
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<>
+  class InRange2<void>: public LoKi::Functor<void,bool>
+#else
   template<class TYPE> 
   class InRange2: public LoKi::Functor<TYPE,bool> 
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
-    typedef typename LoKi::Functor<TYPE,bool>::argument              argument ; 
+    typedef typename_v LoKi::Functor<TYPE,bool>::argument              argument ; 
     /// result type 
-    typedef typename LoKi::Functor<TYPE,bool>::result_type        result_type ; 
+    typedef typename_v LoKi::Functor<TYPE,bool>::result_type        result_type ; 
     // ========================================================================
   public:
     // ========================================================================
@@ -2223,13 +2405,13 @@ namespace LoKi
     /// MANDATORY: clone method ("virtual constructor")
     virtual  InRange2* clone() const { return new InRange2 ( *this ) ; }
     /// MANDATORY: the only one essential method 
-    virtual result_type operator() ( argument a ) const 
+    virtual result_type operator() ( argument_a_unless_void ) const 
     {
-      const double low  = m_low .fun ( a ) ;
-      const double res  = m_fun .fun ( a ) ;
+      const double low  = m_low .fun ( a_unless_void ) ;
+      const double res  = m_fun .fun ( a_unless_void ) ;
       return  
         low <= res              ? 
-        res <= m_high.fun ( a ) : false ;
+        res <= m_high.fun ( a_unless_void ) : false ;
     }
     /// OPTIONAL: the nice printout 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
@@ -2260,15 +2442,21 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2009-12-06
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <>
+  class EqualToList<void> : public LoKi::Functor<void,bool>
+#else
   template <class TYPE>
   class EqualToList : public LoKi::Functor<TYPE,bool>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
-    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    typedef typename_v LoKi::Functor<TYPE,bool>::argument argument  ; 
     /// result type 
-    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    typedef typename_v LoKi::Functor<TYPE,bool>::result_type result_type ; 
     // ========================================================================
   public:
     // ========================================================================
@@ -2333,8 +2521,8 @@ namespace LoKi
     /// MANDATORY: clone method ("virtual construcor")
     virtual  EqualToList* clone() const { return new EqualToList(*this); }
     /// MANDATORY: the only one essential method :
-    virtual  result_type operator() ( argument a ) const
-    { return equal_to ( a ) ; }
+    virtual  result_type operator() ( argument_a_unless_void ) const
+    { return equal_to ( a_unless_void ) ; }
     /// OPTIONAL: the specific printout 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
     { return s << " (" << this->func() << "==" 
@@ -2342,11 +2530,11 @@ namespace LoKi
     // ========================================================================
   public:
     // ========================================================================
-    inline result_type equal_to ( argument a ) const
+    inline result_type equal_to ( argument_a_unless_void ) const
     {
       if ( m_vct.empty() ) { return  false ; }
       //
-      const double r = m_fun.fun ( a ) ;
+      const double r = m_fun.fun ( a_unless_void ) ;
       //
       LHCb::Math::Equal_To<double> cmp ;
       for  ( std::vector<double>::const_iterator item = m_vct.begin() ;
@@ -2356,8 +2544,8 @@ namespace LoKi
       return false ;
     }    
     // ========================================================================
-    inline result_type not_equal_to ( argument a ) const
-    { return !this->equal_to ( a ) ; }
+    inline result_type not_equal_to ( argument_a_unless_void ) const
+    { return !this->equal_to ( a_unless_void ) ; }
     // ========================================================================
   public:
     // ========================================================================
@@ -2394,15 +2582,21 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2009-12-06
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <>
+  class NotEqualToList<void> : public LoKi::EqualToList<void>
+#else
   template <class TYPE>
   class NotEqualToList : public LoKi::EqualToList<TYPE>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
-    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    typedef typename_v LoKi::Functor<TYPE,bool>::argument argument  ; 
     /// result type 
-    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    typedef typename_v LoKi::Functor<TYPE,bool>::result_type result_type ; 
     // ========================================================================
   public:
     // ========================================================================
@@ -2452,8 +2646,8 @@ namespace LoKi
     virtual  NotEqualToList* clone() const 
     { return new NotEqualToList(*this); }
     /// MANDATORY: the only one essential method :
-    virtual  result_type operator() ( argument a ) const
-    { return this -> not_equal_to ( a ) ; }
+    virtual  result_type operator() ( argument_a_unless_void ) const
+    { return this -> not_equal_to ( a_unless_void ) ; }
     /// OPTIONAL: the specific printout 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
     { return s << " (" << this->func() << "!=" 
@@ -2471,15 +2665,21 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2009-12-06
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <>
+  class XScaler<void> : public LoKi::Functor<void,bool>
+#else
   template <class TYPE>
   class XScaler : public LoKi::Functor<TYPE,bool>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
-    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    typedef typename_v LoKi::Functor<TYPE,bool>::argument argument  ; 
     /// result type 
-    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    typedef typename_v LoKi::Functor<TYPE,bool>::result_type result_type ; 
     // ========================================================================
   public:
     // ========================================================================
@@ -2499,9 +2699,9 @@ namespace LoKi
     /// MANDATORY: clone method ("virtual constructor") 
     virtual  XScaler* clone() const { return new XScaler ( *this ) ; }
     /// MANDATORY: the only one essential method 
-    virtual result_type operator() ( argument a ) const 
+    virtual result_type operator() ( argument_a_unless_void ) const 
     {
-      return m_cut.fun ( a ) && m_scaler.fun( /* void */ ) ;
+      return m_cut.fun ( a_unless_void ) && m_scaler.fun( /* void */ ) ;
     }
     /// OPTIONAL: nice printout 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
@@ -2531,15 +2731,21 @@ namespace LoKi
    *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
    *  @date   2011-03-30
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template<>
+  class Modulo<void> : public LoKi::Functor<void,double>
+#else
   template<class TYPE> 
   class Modulo : public LoKi::Functor<TYPE,double>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
-    typedef typename LoKi::Functor<TYPE,double>::argument argument  ; 
+    typedef typename_v LoKi::Functor<TYPE,double>::argument argument  ; 
     /// result type 
-    typedef typename LoKi::Functor<TYPE,double>::result_type result_type ; 
+    typedef typename_v LoKi::Functor<TYPE,double>::result_type result_type ; 
     // ========================================================================
   public:
     // ========================================================================
@@ -2555,8 +2761,8 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  Modulo* clone() const { return new Modulo ( *this ) ; }
     /// the only one essential method ("function")      
-    virtual  result_type operator() ( argument a ) const 
-    { return LHCb::Math::round ( m_divident.fun ( a ) ) % m_divisor ; }
+    virtual  result_type operator() ( argument_a_unless_void ) const 
+    { return LHCb::Math::round ( m_divident.fun ( a_unless_void ) ) % m_divisor ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " ("  << m_divident << " % "  << m_divisor << ") "; }
@@ -2582,15 +2788,21 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2011-04-02
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <>
+  class Round<void> : public LoKi::Functor<void,double>
+#else
   template <class TYPE>
   class Round : public LoKi::Functor<TYPE,double>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
-    typedef typename LoKi::Functor<TYPE,double>::argument argument  ; 
+    typedef typename_v LoKi::Functor<TYPE,double>::argument argument  ; 
     /// result type 
-    typedef typename LoKi::Functor<TYPE,double>::result_type result_type ; 
+    typedef typename_v LoKi::Functor<TYPE,double>::result_type result_type ; 
     // ========================================================================
   public:
     // ========================================================================
@@ -2605,8 +2817,8 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  Round* clone() const { return new Round ( *this ) ; }
     /// the only one essential method ("function")      
-    virtual  result_type operator() ( argument a ) const 
-    { return LHCb::Math::round ( this->m_fun.fun ( a ) ) ; }
+    virtual  result_type operator() ( argument_a_unless_void ) const 
+    { return LHCb::Math::round ( this->m_fun.fun ( a_unless_void ) ) ; }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
     { return s << " round("  << this->m_fun<< ") "; }
@@ -2633,15 +2845,21 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2011-04-02
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <>
+  class JBit<void> : public LoKi::Functor<void,bool>
+#else
   template <class TYPE>
   class JBit : public LoKi::Functor<TYPE,bool>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
-    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    typedef typename_v LoKi::Functor<TYPE,bool>::argument argument  ; 
     /// result type 
-    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    typedef typename_v LoKi::Functor<TYPE,bool>::result_type result_type ; 
     // ========================================================================
   public:
     // ========================================================================
@@ -2666,10 +2884,10 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  JBit* clone() const { return new JBit ( *this ) ; }
     /// the only one essential method ("function")      
-    virtual  result_type operator() ( argument a ) const 
+    virtual  result_type operator() ( argument_a_unless_void ) const 
     {
       const unsigned long _ulv = 
-        ::labs ( LHCb::Math::round ( this->m_fun.fun ( a ) ) ) ;
+        ::labs ( LHCb::Math::round ( this->m_fun.fun ( a_unless_void ) ) ) ;
       //
       return Gaudi::Math::bit ( _ulv , this->m_j ) ; 
     }
@@ -2701,15 +2919,21 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2011-04-02
    */
+#ifdef _GEN_LOKI_VOIDPRIMITIVES
+  template <>
+  class JBits<void> : public LoKi::Functor<void,double>
+#else
   template <class TYPE>
   class JBits : public LoKi::Functor<TYPE,double>
+#endif
   {
   private:
     // ========================================================================
+    typedef_void_TYPE
     /// argument type
-    typedef typename LoKi::Functor<TYPE,double>::argument argument  ; 
+    typedef typename_v LoKi::Functor<TYPE,double>::argument argument  ; 
     /// result type 
-    typedef typename LoKi::Functor<TYPE,double>::result_type result_type ; 
+    typedef typename_v LoKi::Functor<TYPE,double>::result_type result_type ; 
     // ========================================================================
   public:
     // ========================================================================
@@ -2739,10 +2963,10 @@ namespace LoKi
     /// clone method (mandatory)
     virtual  JBits* clone() const { return new JBits ( *this ) ; }
     /// the only one essential method ("function")      
-    virtual  result_type operator() ( argument a ) const 
+    virtual  result_type operator() ( argument_a_unless_void ) const 
     {
       const unsigned long _ulv = 
-        ::labs ( LHCb::Math::round ( this->m_fun.fun ( a ) ) ) ;
+        ::labs ( LHCb::Math::round ( this->m_fun.fun ( a_unless_void ) ) ) ;
       //
       return Gaudi::Math::bits ( _ulv , this->m_j1 , this -> m_j2 ) ; 
     }
@@ -2768,20 +2992,38 @@ namespace LoKi
     unsigned int                          m_j2  ;                  // the index 
     // ========================================================================
   };  
+#ifndef _GEN_LOKI_VOIDPRIMITIVES
   // ==========================================================================
   // OPTIONAL: the nice printout 
   // ==========================================================================
   template <class TYPE, class TYPE2>
   std::ostream& Identity<TYPE,TYPE2>::fillStream ( std::ostream& s ) const 
   { return s << "I" ; }
+#endif
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
 //                                           specializations for void-arguments
 // ============================================================================
-#include "LoKi/VoidPrimitives.h"
+//#include "LoKi/VoidPrimitives.h"
+#ifndef _GEN_LOKI_VOIDPRIMITIVES
+#define _GEN_LOKI_VOIDPRIMITIVES 1
+#undef typedef_void_TYPE
+#undef argument_a_unless_void
+#undef typename_v
+#undef a_unless_void
+#undef class_TYPE_unless_void
+#define typedef_void_TYPE typedef void TYPE;
+#define argument_a_unless_void
+#define typename_v
+#define a_unless_void
+#define class_TYPE_unless_void
+#include "LoKi/Primitives.h"
+#undef _GEN_LOKI_VOIDPRIMITIVES
+#endif
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // LOKI_PRIMITIVES_H
+#undef _GEN_LOKI_PRIMITIVES
+#endif // _GEN_LOKI_PRIMITIVES
 // ============================================================================

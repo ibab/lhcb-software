@@ -13,7 +13,6 @@
 #include "LoKi/Functor.h"
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/Primitives.h"
-#include "LoKi/VoidPrimitives.h"
 #include "LoKi/Dump.h"
 // ============================================================================
 /** @file 
