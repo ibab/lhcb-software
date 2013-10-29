@@ -5,6 +5,10 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2013-10-29 - Chris Jones
+ - Add a new property "Detectors" to the DaVinci() configurable. Primarily
+   for Upgrade studies.
+
 !========================= PhysConf v1r23 2013-10-29 =========================
 
  2013-10-09 - Olivier Deschamps

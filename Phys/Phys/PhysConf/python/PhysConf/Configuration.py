@@ -36,6 +36,7 @@ class PhysConf(LHCbConfigurableUser) :
         ,  "EnableUnpack"      : None    # Enable unpacking of DST.
         ,  "CaloReProcessing"  : False   # Force CaloReco reprocessing
         ,  "AllowPIDRecalib"   : True    # Allow recalibration of the PID information as required
+        ,  "Detectors"         : ['Velo','PuVeto','Rich1','Rich2','TT','IT','OT','Spd','Prs','Ecal','Hcal','Muon','Magnet','Tr']
         }
 
     __used_configurables__ = (
