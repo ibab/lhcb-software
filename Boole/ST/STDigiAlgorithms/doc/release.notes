@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+! 2013-10-29 - Jianchun Wang
+ - Revise UT signal pulse shape and crosstalk.
+
 !========================= STDigiAlgorithms v2r4 2012-12-12 =========================
 ! 2012-12-11 - Marco Clemencic
  - Added CMake configuration file.
