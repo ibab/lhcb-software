@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DDDB
 ################################################################################
-gaudi_subdir(DDDB v1r65)
+gaudi_subdir(DDDB v1r66)
 
 gaudi_depends_on_subdirs(Det/DetCond
                          Tools/CondDBEntityResolver)
