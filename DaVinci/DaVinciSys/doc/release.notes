@@ -3,11 +3,52 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v33r8>2013-10-29 DaVinci v33r8</A></H1><PRE>
+
+New development release based on the LHCb v36r3 stack.
+
+Executive Summary of notable Phys, Analysis and Stripping changes :-
+
+Core DaVinci :-
+ . Downgrade 'Non-existing location ...' messages to debug level.
+ . Round the Particle energy values used for match in PrintDuplicates to 
+   a fixed d.p. precision (default 2), to (help) avoid machine precision 
+   instabilities.
+ . New NBodyDecays algorithm. See package release notes for details.
+ . python/PhysConf/Configuration.py : Relies on CaloProcessor for Calorimeter
+   configuration (digis/clusters onDemand and/or full CaloReco reprocessing).
+
+DecayTreeTuple :-
+ . TupleToolDecayTreeFitter: Fix bug 
+   https://savannah.cern.ch/bugs/index.php?102869
+   Now there's a protection against non functional substitutions and against
+   mass constraining particles not in the decay tree.
+ . TupleToolGeometry: Fix bug 
+   https://savannah.cern.ch/bugs/index.php?102616
+   Now issue an error when a composite particle without a vertex is given, 
+   like a rho+. 
+ . Bug https://savannah.cern.ch/bugs/index.php?102616: Stop treating errors 
+   as warnings. Now DecayTreeTuple will stop if any tool returns an error.
+
+LoKi :-
+ . Made the tool handle of HybridEngineActor a stack. Allows to handle a 
+   chain of tools.
+ . LoKiFitters DistanceCalculator : Make a more accurate calculation of DOCA.
+ . LoKiJets : Fixing Memory Leak detected by Valgrind.
+
+Changed Packages : DaVinciTests
+
+In DaVinciTests :
+ . Update stripping decaytreetuple, standardintermediate_run and V0 references 
+   to adapt to a bug fix in DaVinciKernel, that excluded counts with 0 particles 
+   from the summaries.
+ . Update Stripping references to adapt to CALO changes.
+
 </PRE><H1><A NAME=v33r7p1>2013-10-07 DaVinci v33r7p1</A></H1><PRE>
 
 New development patch release, based on DaVinci v33r7.
 
-Includes updates to CombineParticles to test new functionailty.
+Includes updates to CombineParticles to test new functionality.
 
 Patched Packages :-
 
