@@ -8,7 +8,7 @@ New development release, built against Phys v17r3.
 
 - Packages Updated :-
    AnalysisPython, DSTWriters, DaVinciTrackScaling, DecayTreeTuple, 
-   DecayTreeTupleBase, IncTopoVert, MVADictTools
+   DecayTreeTupleBase, IncTopoVert, MVADictTools, DaVinciTrackRefitting
 
 In AnalysisPython :
  . Add GetNdata for the Analysis::Formula 
@@ -50,6 +50,9 @@ In MVADictTools :
    Added an example options script to illustrate the use of these.
    The compact configuration depends on the stacked LoKi::HybridEngineActor
    to avoid the double lock problem.
+
+In DaVinciTrackRefitting :
+ . Fixed off-by-one error in RefitParticleTracks with ReplaceTracks = False
 
 </PRE><H1><A NAME=v11r2>2013-10-02 Analysis v11r2 </A></H1><PRE>
 New development release, built against Phys v17r2.

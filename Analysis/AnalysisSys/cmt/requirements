@@ -67,7 +67,7 @@ use  MicroDSTExample            v2r14p1 Ex         # Chris Jones
 ####################################################################
 
 use  TrackSmearing              v1r6p1  Phys   # Alex Shires
-use  DaVinciTrackRefitting      v1r4    Phys   # Matt Needham
+use  DaVinciTrackRefitting      v1r4p1  Phys   # Matt Needham
 use  DaVinciTrackScaling        v1r3    Phys   # Vanya Belyaev
 
 ####################################################################
