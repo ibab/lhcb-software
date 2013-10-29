@@ -5,8 +5,6 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
-!========================= AnalysisPython v2r25 2013-10-29 =========================
-
 ! 2013-10-27 - Vanya Belyaev
  - Add GetNdata for the Analysis::Formula 
 
