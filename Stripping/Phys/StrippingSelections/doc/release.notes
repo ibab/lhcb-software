@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+!========================= StrippingSelections v3r30 2013-10-29 =========================
+
 ! 2013-10-16 - Stefano Perazzini
  - Added PostscaleD02HH to the configuration of StrippingD2HHBDT.py
 
