@@ -4,6 +4,10 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+
+! 2013-10-29 - Panagiotis Tsopelas
+! - Fixed eta range in TrackIPResolutionChecker
+
 !========================= TrackCheckers v4r18 2013-07-18 =========================
 ! 2013-06-27 - Maurizio Martinelli
  - Fixed coverity defects and optimized TrackOccupChecker
