@@ -1,5 +1,5 @@
 package PhysSys
-version v17r2
+version v17r3
 
 branches doc cmt
 
@@ -8,21 +8,21 @@ branches doc cmt
 use  DaVinciInterfaces          v2r20    Phys    # Juan Palacios
 use  DaVinciTypes               v2r6p2   Phys    # Juan Palacios
 use  DaVinciUtils               v1r1p1   Phys    # Juan Palacios
-use  DaVinciKernel              v11r4p1  Phys    # Juan Palacios
+use  DaVinciKernel              v11r5p1  Phys    # Juan Palacios
 use  SelectionLine              v1r0p5   Kernel  # Gerhard Raven
 use  SelPy                      v4r2p2   Phys    # Juan Palacios
 use  PhysSelPython              v9r4     PhysSel # Juan Palacios
 
 #===================================================================
 
-use  PhysConf                   v1r22    Phys    # Patrick Koppenburg
+use  PhysConf                   v1r23    Phys    # Patrick Koppenburg
 use  ProtoParticleFilter        v1r7p2   Phys    # Chris Jones
-use  DaVinciTools       	v23r9    Phys    # Juan Palacios
+use  DaVinciTools       	v23r11   Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r11    Phys    # Juan Palacios
 use  ParticleMaker      	v6r8     Phys    # Chris Jones
 use  VertexFit			v6r16    Phys    # Yuehong Xie
-use  LoKiFitters                v4r6     Phys    # Vanya Belyaev
-use  DecayTreeFitter            v1r15p1  Phys    # Wouter Hulsbergen
+use  LoKiFitters                v4r7     Phys    # Vanya Belyaev
+use  DecayTreeFitter            v1r16    Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2p3   Phys    # Juan Palacios
 use  HighPtJets                 v1r8p1   Phys    # Marcin Kucharczyk
 use  BBDecTreeTool              v1r6p2   Phys    # Mike Williams
@@ -30,9 +30,9 @@ use  BBDecTreeTool              v1r6p2   Phys    # Mike Williams
 #===================================================================
 
 use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
-use  LoKiJets                   v6r8p2   Phys    # Vanya Belyaev, Victor Coco
+use  LoKiJets                   v6r9     Phys    # Vanya Belyaev, Victor Coco
 use  LoKiAlgo                   v9r8p3   Phys    # Vanya Belyaev
-use  LoKiArrayFunctors          v10r3    Phys    # Vanya Belyaev
+use  LoKiArrayFunctors          v10r4    Phys    # Vanya Belyaev
 use  LoKiPhys                   v10r16   Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v2r1p3   Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev

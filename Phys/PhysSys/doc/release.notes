@@ -3,7 +3,42 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
-</PRE><H1><A NAME=v17r2>2013-10-02 Phys v17r2 </A></H1><PRE>
+</PRE><H1><A NAME=v17r3>2013-10-29 Phys v17r3</A></H1><PRE>
+Development release, based on Rec v15r3, LHCb v36r3 and Gaudi v23r10.
+
+- Packages Updated :
+   DaVinciKernel, DaVinciTools, DecayTreeFitter, LoKiArrayFunctors,
+   LoKiFitters, LoKiJets, PhysConf
+
+In DaVinciKernel :
+ . Downgrade 'Non-existing location ...' messages to debug level.
+ . Add new file PVSEntry : Actually move the internal CombineParticle 
+                           sentry into public domain.
+
+In DaVinciTools :
+ . Round the Particle energy values used for match in PrintDuplicates to 
+   a fixed d.p. precision (default 2), to (help) avoid machine precision 
+   instabilities.
+ . New NBodyDecays algorithm. See package release notes for details.
+
+In DecayTreeFitter :
+ . Added InternalRecoTrack and JetMomentum.
+
+In LoKiArrayFunctors :
+ . Made the tool handle of HybridEngineActor a stack. Allows to handle a 
+   chain of tools.
+
+In LoKiFitters :
+ . DistanceCalculator : Make a more accurate calculation of DOCA.
+
+In LoKiJets :
+ . Fixing Memory Leak detected by Valgrind.
+
+In PhysConf :
+ . python/PhysConf/Configuration.py : Relies on CaloProcessor for Calorimeter
+   configuration (digis/clusters onDemand and/or full CaloReco reprocessing).
+
+</PRE><H1><A NAME=v17r2>2013-10-02 Phys v17r2</A></H1><PRE>
 Development release, based on Rec v15r2, LHCb v36r2 and Gaudi v23r10.
 
 - Packages Updated :
