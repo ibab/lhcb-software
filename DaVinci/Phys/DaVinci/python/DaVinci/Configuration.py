@@ -42,7 +42,8 @@ class DaVinci(LHCbConfigurableUser) :
         , "ETCFile"            : ""              # Name of output ETC file
         , "WriteFSR"           : True            # Flags whether to write out an FSR
         # DQ
-        , "IgnoreDQFlags"      : False           # If False (default), process only events with good DQ.
+        , "IgnoreDQFlags"      : False           # If False (default), process only events with good DQ. 
+        #, "IgnoredDQFlags"     : []              # List of particular DQ flags to ignore.
         # Monitoring
         , "MoniSequence"       : []              # Add your monitors here
         # DaVinci Options
@@ -53,7 +54,8 @@ class DaVinci(LHCbConfigurableUser) :
         , "EventPreFilters"    : []
         , "VerboseMessages"    : False           # Turn on some verbose printout
         , "ProductionType"     : "None"          # Sets up options needed in various production modes
-        , "RootInTES"          : ""              # RootInTES property propagated to MainSequence in case of MDST input type 
+        , "RootInTES"          : ""              # RootInTES property propagated to MainSequence in case of MDST input type
+        , "Detectors"          : ['Velo','PuVeto','Rich1','Rich2','TT','IT','OT','Spd','Prs','Ecal','Hcal','Muon','Magnet','Tr']
        }
 
     _propertyDocDct = {  
@@ -73,6 +75,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "ETCFile"            : """ Write name of output ETC file."""
         , 'WriteFSR'           : """ Flags whether to write out an FSR """
         , 'IgnoreDQFlags'      : """ If False, process only events with good DQ. Default is False """
+        #, "IgnoredDQFlags"     : """ List of DQ flags to ignore. Default is empty, so events flagged bad for any reason are rejected (Unless IgnoreDQFlags=True) """
         , "Persistency"        : """ ROOT or POOL, steers the setup of services """
         , "MainOptions"        : """ Main option file to execute """
         , "UserAlgorithms"     : """ User algorithms to run. """
@@ -81,7 +84,8 @@ class DaVinci(LHCbConfigurableUser) :
         , "EventPreFilters"    : """Set of event filtering algorithms to be run before DaVinci initializaton sequence. Only events passing these filters will be processed."""
         , "VerboseMessages"    : """ Enable additional verbose printouts """
         , "ProductionType"     : """ Enables special settings for running in production (e.g. stripping) """
-        , "RootInTES"          : """ RootInTES (for uDst inptu type) """
+        , "RootInTES"          : """ RootInTES (for uDst input type) """
+        , "Detectors"          : """ List of detectors """ 
         }
 
     __used_configurables__ = [
@@ -163,7 +167,7 @@ class DaVinci(LHCbConfigurableUser) :
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag",
                                       "DQFLAGStag","Simulation","IgnoreDQFlags"])
-        self.setOtherProps(PhysConf(),["DataType","Simulation","InputType"])
+        self.setOtherProps(PhysConf(),["DataType","Simulation","InputType","Detectors"])
         self.setOtherProps(AnalysisConf(),["DataType","Simulation"])
     
     def _analysisSeq(self) :
@@ -363,15 +367,17 @@ class DaVinci(LHCbConfigurableUser) :
         return inputType
 
 ################################################################################
-# Ntuple files
+# ROOT files
 #
     def _rootFiles(self):
         """
         output files
         """
         ApplicationMgr().HistogramPersistency = "ROOT"
+        
         if ( self.isPropertySet('HistogramFile') and self.getProp("HistogramFile") != "" ):
             HistogramPersistencySvc().OutputFile = self.getProp("HistogramFile")
+            
         if ( self.isPropertySet('TupleFile') and self.getProp("TupleFile") != "" ):
             tupleFile = self.getProp("TupleFile")
             

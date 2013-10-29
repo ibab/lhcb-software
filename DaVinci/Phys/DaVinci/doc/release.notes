@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2013-10-29 - Chris Jones
+ - Add a new property "Detectors" to the DaVinci() configurable. Primarily
+   for Upgrade studies.
+
 !========================= DaVinci v33r8 2013-10-29 ===========================
 
 ! 2013-10-29 - Chris Jones
