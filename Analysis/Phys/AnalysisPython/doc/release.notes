@@ -5,19 +5,21 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
-! 2013-10-27 - Vanya Belyaev
- - add GetNdata for the Analysis::Formula 
+!========================= AnalysisPython v2r25 2013-10-29 =========================
 
 ! 2013-10-27 - Vanya Belyaev
- - add few functions for phase space modulated by polynomial
+ - Add GetNdata for the Analysis::Formula 
+
+! 2013-10-27 - Vanya Belyaev
+ - Add few functions for phase space modulated by polynomial
 
 ! 2013-10-14 - Vanya Belyaev
- - tiny fix in comments 
+ - Tiny fix in comments 
 
 ! 2013-10-13 - Vanya Belyaev
- - add StatVar : useful utility to get the statistics for 
+ - Add StatVar : useful utility to get the statistics for 
    certain variables in TTree/Dataset 
- - few minor decorators for StatEntity 
+ - Few minor decorators for StatEntity 
  
 !========================= AnalysisPython v2r24 2013-10-02 =========================
 
