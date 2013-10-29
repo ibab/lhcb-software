@@ -4,6 +4,8 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTuple v4r5 2013-10-29 =========================
+
 ! 2013-10-16 - Patrick Koppenburg
  - TupleToolDecayTreeFitter: Fix bug https://savannah.cern.ch/bugs/index.php?102869
    Now there's a protection against non functional substitutions and against
