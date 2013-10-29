@@ -164,9 +164,9 @@ class DDDBConf(ConfigurableUser):
         Default configuration for 2013 data (pA run) (and MonteCarlo for DDDB)
         """
         # Set the tags
-        self.__set_tag__(["DDDB"], "dddb-20130503-1")
-        self.__set_tag__(["LHCBCOND"], "cond-20130710")
-        self.__set_tag__(["DQFLAGS"], "dq-20130806-1")
+        self.__set_tag__(["DDDB"],     "dddb-20130503-1" )
+        self.__set_tag__(["LHCBCOND"], "cond-20131028"   )
+        self.__set_tag__(["DQFLAGS"],  "dq-20130806-1"   )
         if not self.getProp("Simulation"):
            # set initialization time to a safe default
             self.__set_init_time__(datetime(2013, 2, 28, 21, 0))
@@ -176,9 +176,9 @@ class DDDBConf(ConfigurableUser):
         Default configuration for 2012 data, including Jan 2013 pA run (and MonteCarlo for DDDB)
         """
         # Set the tags
-        self.__set_tag__(["DDDB"], "dddb-20130503-1")
-        self.__set_tag__(["LHCBCOND"], "cond-20130710")
-        self.__set_tag__(["DQFLAGS"], "dq-20130806-1")
+        self.__set_tag__(["DDDB"],     "dddb-20130503-1" )
+        self.__set_tag__(["LHCBCOND"], "cond-20131028"   )
+        self.__set_tag__(["DQFLAGS"],  "dq-20130806-1"   )
         if not self.getProp("Simulation"):
             self.__set_init_time__(datetime.utcfromtimestamp(1355694590)) # End of fill 3453
 
