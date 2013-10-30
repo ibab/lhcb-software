@@ -7,9 +7,6 @@ branches doc cmt
 use  DaVinci         v33r8    Phys
 use  DaVinciTests    v2r20
 
-# Temporary packages (remember to remove from CMake file ...)
-use  DDDB            v1r66    Det
-
 # Declare this as a container package
 apply_pattern container_package
 
