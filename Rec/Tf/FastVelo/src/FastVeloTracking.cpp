@@ -706,17 +706,33 @@ void FastVeloTracking::findUnusedTriplets( unsigned int sens0, bool forward ) {
           //== More demanding for minimal tracks of 3 clusters. Allow change of zone...
           if ( 3 == newTrack.nbRHits() ) {
             int nMissBack = extendTrack( newTrack, sensor0, zone, !forward );
-            if ( m_maxMissed <  nMissBack ) {
-              if ( 0 != zone ) nMissBack = extendTrack( newTrack, sensor0, zone-1, !forward );
-            }
-            if ( m_maxMissed <  nMissBack ) {
-              if ( 3 != zone ) nMissBack = extendTrack( newTrack, sensor0, zone+1, !forward );
-            }
-            if ( m_maxMissed <  nMissBack ) {
-              if ( m_debug ) info() << "Short track with missed sensors before." << endmsg;
-              continue;
-            }
-          }
+	    if ( m_maxMissed <  nMissBack ) {
+	      FastVeloSensor *lastSensor = sensor0;
+              if( 0 != zone ){
+		if(3 < newTrack.nbRHits() ){
+		  // Added clusters in the above. Start adding from the end of the track
+		  // Last sensor added is the end of the list
+		  lastSensor = m_hitManager->sensor( newTrack.rHits().back()->sensor() );
+		}
+		nMissBack = extendTrack( newTrack, lastSensor, zone-1, !forward );
+	      }
+	    }
+	    if ( m_maxMissed <  nMissBack ) {
+	      FastVeloSensor *lastSensor = sensor0;
+	      if ( 3 != zone ) {
+		if(3 < newTrack.nbRHits() ){
+		  // Added clusters in the above. Start adding from the end of the track
+		  // Last sensor added is the end of the list
+		  lastSensor = m_hitManager->sensor( newTrack.rHits().back()->sensor() );
+		}
+		nMissBack = extendTrack( newTrack, lastSensor, zone+1, !forward );
+	      }
+	    }
+	    if ( m_maxMissed <  nMissBack ) {
+	      if ( m_debug ) info() << "Short track with missed sensors before." << endmsg;
+	      continue;
+	    }
+	  }
 
           int setSector = zone;
           if ( sensor0->isRight() ) setSector += 4;
