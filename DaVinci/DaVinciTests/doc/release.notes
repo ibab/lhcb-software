@@ -4,6 +4,13 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-10-30 - Chris Jones
+ - Update stripping references to adapt to :
+  + new 'Detectors' property in the DaVinci() Configurable.
+  + A new (temporary for testing) LoKi message from 
+    LoKi:Hybrid::EngineActor::releaseTool()
+    !! NOTE : This message is to be suppressed before the next release !!
+
 !========================= DaVinciTests v2r20 2013-10-29 =========================
 
 ! 2013-10-15 - Chris Jones
