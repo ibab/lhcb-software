@@ -5,6 +5,7 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+!========================= Swimming v4r0 2013-10-30 =========================
 ! 2013-10-16 - V. Gligorov
  - Update Hlt transforms to include a transform for swimming the
    inclusive D* trigger used in 2012 datataking.
