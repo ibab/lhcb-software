@@ -3,8 +3,13 @@ Package     : MooreOnlineSys
 Package Coordinator : R. Lambert
 Purpose     : Running and testing Moore in the online environment
 
-</PRE><H1><A NAME=v20r3p3>2013-09-13 MooreOnlineSys v20r3p3</A></H1><PRE>
+</PRE><H1><A NAME=v20r4>2013-10-30 MooreOnlineSys v20r4</A></H1><PRE>
 
-Remove all the old scripts, tidy up the crappy cmt requirements which are not needed. Let's just call the script ourself.
+First release of the Online wrapper project for Moore. MooreOnline has the same version as the underlying Moore version for simplicity/transparency.
+
+It's a project which can be used in teh nightlies to test that running Moore works in the online environment. It can also hold online-specific code. I imagine moving all the online-specific parts of Moore into this project.
+
+Only package so far: MoroeScripts to hold the setup scripts.
+
 
 </PRE>
