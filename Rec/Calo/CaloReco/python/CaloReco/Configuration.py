@@ -962,7 +962,7 @@ class CaloLines(LHCbConfigurableUser):
                                ,ClusterPt = self.getProp('HighEt')*fac
                                ,PhotonPt = self.getProp('HighEt')
                                ,MakeExternalClustersWithTag = tagHighP
-                               ,noSpdPrs=self.getProp('NoSpdPrs')
+                               ,NoSpdPrs=self.getProp('NoSpdPrs')
                                )
             
             addAlgs( caloLines, hp.caloSequence(tracks=tracks) )
@@ -986,7 +986,7 @@ class CaloLines(LHCbConfigurableUser):
                                ,ClusterPt = self.getProp('LowEt')*fac
                                ,PhotonPt = self.getProp('LowEt')
                                ,MakeExternalClustersWithTag = tagLowP
-                               ,noSpdPrs=self.getProp('NoSpdPrs')
+                               ,NoSpdPrs=self.getProp('NoSpdPrs')
                                )
             addAlgs( caloLines , lp.caloSequence(tracks=tracks) )
             if self.getProp('LowEtProtoPPrefix') == '' :
@@ -1010,7 +1010,7 @@ class CaloLines(LHCbConfigurableUser):
                                ,SkipNeutrals = True
                                ,ProtoOnDemand = pdod
                                ,MakeExternalClustersWithTag = tagLowE
-                               ,noSpdPrs=self.getProp('NoSpdPrs')
+                               ,NoSpdPrs=self.getProp('NoSpdPrs')
                                )
             addAlgs( caloLines , le.caloSequence(tracks=tracks))
             if self.getProp('LowEtProtoPPrefix') == '' :
