@@ -510,7 +510,7 @@ class Boole(LHCbConfigurableUser):
                     seq.Members += [ STDigitCreator("TTDigitCreatorNext",DetType=det) ]
                     seq.Members += [ STDigitCreator("TTDigitCreatorPrevPrev",DetType=det) ]
                 elif det == "UT":
-                    pass
+                    STDigitCreator("%sDigitCreator%s"%(det,tae),DetType=det).Saturation = 31
                 else:
                     raise RuntimeError("Unknown ST detector '%s'"%det)
                 if det not in ["UT"]:
