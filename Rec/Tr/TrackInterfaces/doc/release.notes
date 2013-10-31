@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2013-10-31 - Michel De Cian
+ - Remove IAddUTClusterTool.h from TrackInterfacesDict.h and TrackInterfacesDict.xml 
+
 ! 2013-10-30 - Michel De Cian
  - Remove IAddUTClusterTool.h, as it was not used by any other class (will be re-introduced in a different form)
 

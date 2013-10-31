@@ -3,7 +3,6 @@
 
 #include "TrackInterfaces/ISTClusterCollector.h"
 #include "TrackInterfaces/IAddTTClusterTool.h"
-#include "TrackInterfaces/IAddUTClusterTool.h"
 #include "TrackInterfaces/IFunctionTool.h"
 #include "TrackInterfaces/IHitExpectation.h"
 #include "TrackInterfaces/IHltV0Upgrade.h"
