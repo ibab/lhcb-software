@@ -78,7 +78,7 @@
       m_origin = trState.position( );
       m_slope  = trState.slopes();
       m_list.reserve(100);
-      m_clusters.reserve(8); // max of 2 per layer
+      m_clusters.reserve(4); // max of 1 per layer
       m_dx = 0.;
       m_dxvar = 0.;
       m_qOverP = 0.;
@@ -183,9 +183,9 @@
       std::vector<std::vector<LocalHitIterators> > LocalHitsLists;
       LocalHitsLists.reserve(10); // reserve in case of many solutions for this Velo track
 
-      // Vector of local hits without more than 2 on the same layer:
+      // Vector of local hits without more than 1 on the same layer:
       std::vector<LocalHitIterators> myLocalHits;
-      myLocalHits.reserve(8); // max of 2 per layer
+      myLocalHits.reserve(4); // max of 1 per layer
 
       // Iterators: begin and end
       LocalHitIterators itB, itE;
@@ -265,7 +265,7 @@
             // Same layer tolerances and maximum of 2 compatible clusters on same layer
             int n = stationsLocalHits[planeCode].size();
             // Ignore solution if already 2 clusters on this layer
-            if(n >= 2) break;
+	    if(n >= 1) break;
 
             if(n > 0){
               if(sameLayerTol < itE->distance() - stationsLocalHits[planeCode].front()->distance()){
@@ -339,7 +339,7 @@
 
         // The compatible clusters made from these LocalHits
         PrUTHits hitsCandidate;
-        hitsCandidate.reserve(8);
+        hitsCandidate.reserve(4);
 
         std::vector<LocalHitIterators>::iterator iSub;
         for(iSub = (*iLocalHitsLists).begin(); iSub != (*iLocalHitsLists).end(); ++iSub){

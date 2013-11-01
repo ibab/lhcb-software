@@ -4,6 +4,9 @@
 ! Purpose     : Velo UT tracking
 !-----------------------------------------------------------------------------
 
+! 2013-11-1 - Espen Eie Bowen
+ - Changed number of hits from 8 to 4, pick up LastMeasurement state.
+
 !========================= PrVeloUT v1r2 2013-07-18 =========================
 ! 2013-06-28 - Espen Eie Bowen
  - Reduced verbosity in PrVeloUTTool, use PrintVariables flag.
