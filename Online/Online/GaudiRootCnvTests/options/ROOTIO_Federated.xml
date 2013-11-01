@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By POOL -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+  <File ID="DC98F2B6-3143-E311-8768-02163E00A641">
+    <physical>
+      <pfn filetype="ROOT" name="ROOTIO.bad_0.dst"/>
+      <pfn filetype="ROOT" name="ROOTIO.bad_1.dst"/>
+      <pfn filetype="ROOT" name="ROOTIO.bad_2.dst"/>
+      <pfn filetype="ROOT" name="ROOTIO.bad_3.dst"/>
+      <pfn filetype="ROOT" name="ROOTIO.bad_4.dst"/>
+      <pfn filetype="ROOT" name="ROOTIO.bad_5.dst"/>
+      <pfn filetype="ROOT" name="ROOTIO.bad_6.dst"/>
+      <pfn filetype="ROOT" name="ROOTIO.1.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="D80336B7-3143-E311-8768-02163E00A641">
+    <physical>
+      <pfn filetype="ROOT" name="ROOTIO.bad_0.mdst"/>
+      <pfn filetype="ROOT" name="ROOTIO.bad_1.mdst"/>
+      <pfn filetype="ROOT" name="ROOTIO.bad_2.mdst"/>
+      <pfn filetype="ROOT" name="ROOTIO.bad_3.mdst"/>
+      <pfn filetype="ROOT" name="ROOTIO.bad_4.mdst"/>
+      <pfn filetype="ROOT" name="ROOTIO.bad_5.mdst"/>
+      <pfn filetype="ROOT" name="ROOTIO.bad_6.mdst"/>
+      <pfn filetype="ROOT" name="ROOTIO.1.mdst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="74B294BD-3143-E311-95E4-02163E00A641">
+    <physical>
+      <pfn filetype="ROOT" name="ROOTIO.2.dst"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="CA77F5D7-3143-E311-B4E0-02163E00A641">
+    <physical>
+      <pfn filetype="ROOT" name="ROOTIO.all.tags"/>
+    </physical>
+    <logical/>
+  </File>
+
+</POOLFILECATALOG>

@@ -1,0 +1,13 @@
+#include "$ROOTCNVROOT/options/Setup.opts"
+ApplicationMgr.TopAlg = { "ReadAlg" };
+ReadAlg.OutputLevel        = 4;
+EventSelector.PrintFreq    = 100;
+ApplicationMgr.EvtMax      = 50000;
+RootCnvSvc.OutputLevel     = 3;
+MessageSvc.OutputLevel     = 3;
+ReadAlg.OutputLevel        = 3;
+FileCatalog.Catalogs       = { "xmlcatalog_file:ROOTIO.xml", "xmlcatalog_file:ROOTIO_Federated.xml" };
+EventSelector.Input  = {"DATAFILE='FID:DC98F2B6-3143-E311-8768-02163E00A641' SVC='Gaudi::RootEvtSelector'"};
+EventSelector.Input += {"DATAFILE='FID:D80336B7-3143-E311-8768-02163E00A641' SVC='Gaudi::RootEvtSelector'"};
+EventSelector.Input += {"DATAFILE='FID:74B294BD-3143-E311-95E4-02163E00A641' SVC='Gaudi::RootEvtSelector'"};
+EvtTupleSvc.Output = {"EvtColl DATAFILE='PFN:ROOTIO.fed.tags' OPT='RECREATE' SVC='Gaudi::RootCnvSvc'" };
