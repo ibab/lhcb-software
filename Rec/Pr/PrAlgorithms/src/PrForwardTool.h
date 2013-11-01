@@ -83,11 +83,10 @@ private:
   bool            m_debug;
 
   //Momentum estimate
-  std::vector<double>  m_magnetKickParams ;
-  double m_minRange;
   bool   m_useMomentumEstimate;
-  double m_momentumEstimateError;
-
+  bool m_Preselection;
+  float m_PreselectionPT;
+  
   // Working values
   float           m_minXSize;   // current value for the minimal number of X hits.
   PrHits          m_allXHits;

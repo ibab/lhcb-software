@@ -3,6 +3,8 @@
 ! Responsible : Yasmin Amhis
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+! 2013-11-01 - Espen Eie Bowen
+ - Implemented the new momentum dependent windows.
 
 !========================= PrAlgorithms v1r7 2013-10-01 =========================
 ! 2013-09-05 - Francesco Polci

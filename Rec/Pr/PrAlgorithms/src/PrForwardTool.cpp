@@ -53,16 +53,10 @@ DECLARE_TOOL_FACTORY( PrForwardTool )
 
   declareProperty("AddUTClusterName", m_addUtToolName = "PrAddUTCoord" );
 
-  //VeloUT momentum estimate configuration
-  std::vector<double> tmp;
-  tmp.push_back(1255 * Gaudi::Units::MeV);
-  tmp.push_back(175 * Gaudi::Units::MeV);
-  declareProperty( "MagnetKickParams"      , m_magnetKickParams      =  tmp);
   declareProperty( "UseMomentumEstimate"   , m_useMomentumEstimate = false ); 
-  declareProperty( "MomentumEstimateError"    , m_momentumEstimateError    =  0.5 );
-  declareProperty( "MinRange"              , m_minRange              =   300. * Gaudi::Units::mm  );
-
-
+  declareProperty( "Preselection"              , m_Preselection              =   false  );
+  declareProperty( "PreselectionPT"              , m_PreselectionPT              =   400.* Gaudi::Units::MeV  );
+  
 }
 //=============================================================================
 // Destructor
@@ -86,7 +80,7 @@ StatusCode PrForwardTool::initialize ( ) {
   } else {
     m_addUTClusterTool = NULL;
   }
-
+  
   return StatusCode::SUCCESS;
 }
 //=========================================================================
@@ -247,14 +241,24 @@ void PrForwardTool::collectAllXHits ( PrForwardTrack& track, unsigned int side )
 
     //use momentum estimate from VeloUT tracks
     if(m_useMomentumEstimate && 0 != track.qOverP() ){
-      double kick = 0;
+      
       double q = track.qOverP() > 0 ? 1. : -1.;
+      float pt = track.track()->pt();
       double magscalefactor = m_geoTool->magscalefactor();
-      kick = q*magscalefactor*(-1)*m_magnetKickParams[0] / ( fabs(1./track.qOverP()) -  m_magnetKickParams[1] ) ;
-      kick *= ( zZone - zMag);
-      double maxRange = m_minRange + m_momentumEstimateError*fabs(kick);
-      xMin = xInZone + kick - maxRange;
-      xMax = xInZone + kick + maxRange;
+      
+      //Preselect the VeloUT tracks
+      if(m_Preselection && pt<m_PreselectionPT) continue;
+
+      float dir = q*magscalefactor*(-1);
+
+      if(dir > 0){
+	xMin = xInZone;
+	xMax = xInZone + xTol;
+      }
+      else{
+	xMin = xInZone - xTol;
+	xMax = xInZone;
+      }
     }
 
     float dx    = yInZone * zoneUv->dxDy();
