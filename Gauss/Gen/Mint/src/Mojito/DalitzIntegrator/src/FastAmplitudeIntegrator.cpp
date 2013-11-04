@@ -12,6 +12,8 @@
 #include <sstream>
 
 #include <ctime>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 using namespace std;
 using namespace MINT;
@@ -93,7 +95,9 @@ bool FastAmplitudeIntegrator
   std::stringstream is(commaSeparatedList);
   getline(is, firstDir, ',');
 
-  if(firstDir != "" && access(firstDir.c_str(), 0) == 0){
+  struct stat buf;
+  //  if(firstDir != "" && access(firstDir.c_str(), 0) == 0){
+  if(firstDir != "" && stat(firstDir.c_str(), &buf) == 0){
     // it exists, we can retrieve it
     sc &= _integCalc->retrieve(commaSeparatedList);
     // if we add events to this, we need to avoid

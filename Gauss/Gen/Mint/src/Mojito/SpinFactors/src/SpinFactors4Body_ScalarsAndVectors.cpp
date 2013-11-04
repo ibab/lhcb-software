@@ -455,7 +455,7 @@ const DecayTree& SF_DtoV1V2_V1toP0P1_V1toP2P3_D::exampleDecay(){
 bool SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE::parseTree(){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(! theDecay().nDgtr() == 2){
+  if(theDecay().nDgtr() != 2){
     cout << "ERROR in SF_DtoV1V2_V1toP0P1_V1toP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
 	 << theDecay().nDgtr();

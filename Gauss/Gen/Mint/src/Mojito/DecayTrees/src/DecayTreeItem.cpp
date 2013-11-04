@@ -3,7 +3,7 @@
 
 #include "Mint/DecayTreeItem.h"
 #include "Mint/ParticlePropertiesList.h"
-
+#include <cmath>
 
 DecayTreeItem::DecayTreeItem(int i)
   : _pdg_id(i)
@@ -92,11 +92,9 @@ std::string DecayTreeItem::J() const{
 }
 
 
-bool DecayTreeItem::antiThis(){
+bool DecayTreeItem::ChargeConThis(){
   if(! hasDistinctAnti()) return false;
-
   _pdg_id *= -1;
-
   return true;
 }
 

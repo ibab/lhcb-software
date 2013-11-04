@@ -185,7 +185,7 @@ const DecayTree& SF_DtoAP0_AtoTP1_TtoP2P3::exampleDecay(){
 bool SF_DtoVT_VtoP0P1_TtoP2P3_BASE::parseTree(){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(! theDecay().nDgtr() == 2){
+  if(theDecay().nDgtr() != 2){
     cout << "ERROR in SF_DtoVT_VtoP0P1_TtoP2P3_S::parseTree"
 	 << " expected exactly 2 daughers of D, have "
 	 << theDecay().nDgtr();
@@ -328,7 +328,7 @@ void SF_DtoVT_VtoP0P1_TtoP2P3_D::printYourself(ostream& os) const{
 bool SF_DtoT1T2_T1toP0P1_T2toP2P3_BASE::parseTree(){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(! theDecay().nDgtr() == 2){
+  if(theDecay().nDgtr() != 2){
     cout << "ERROR in SF_DtoT1T2_T1toP0P1_T2toP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
 	 << theDecay().nDgtr();
@@ -519,7 +519,7 @@ void SF_DtoT1T2_T1toP0P1_T2toP2P3_D::printYourself(ostream& os) const{
 bool SF_DtoTP0_TtoVP1_VtoP2P3::parseTree(){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(! theDecay().nDgtr() == 2){
+  if(theDecay().nDgtr() != 2){
     cout << "ERROR in SF_DtoTP0_TtoVP1_VtoP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
 	 << theDecay().nDgtr();
@@ -618,7 +618,7 @@ void SF_DtoTP0_TtoVP1_VtoP2P3::printYourself(ostream& os) const{
 bool SF_DtoT1P0_T1toT2P1_T2toP2P3::parseTree(){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(! theDecay().nDgtr() == 2){
+  if(theDecay().nDgtr() != 2){
     cout << "ERROR in SF_DtoT1P0_T1toT2P1_T2toP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
 	 << theDecay().nDgtr();
@@ -721,7 +721,7 @@ void SF_DtoT1P0_T1toT2P1_T2toP2P3::printYourself(ostream& os) const{
 bool SF_DtoTS_TtoP0P1_StoP2P3::parseTree(){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(! theDecay().nDgtr() == 2){
+  if(theDecay().nDgtr() != 2){
     cout << "ERROR in SF_DtoTS_TtoP0P1_StoP2P3::parseTree"
 	 << " expected exactly 2 daughers of D, have "
 	 << theDecay().nDgtr();
@@ -814,7 +814,7 @@ void SF_DtoTS_TtoP0P1_StoP2P3::printYourself(ostream& os) const{
 bool SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::parseTree(){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(! theDecay().nDgtr() == 2){
+  if(theDecay().nDgtr() != 2){
     cout << "ERROR in SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
 	 << theDecay().nDgtr();
@@ -916,7 +916,7 @@ void SF_DtoPseudoTP0_PseudoTtoVP1_VtoP2P3::printYourself(ostream& os) const{
 bool SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::parseTree(){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(! theDecay().nDgtr() == 2){
+  if(theDecay().nDgtr() != 2){
     cout << "ERROR in SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
 	 << theDecay().nDgtr();
@@ -1013,7 +1013,7 @@ void SF_DtoPseudoTP0_PseudoTtoSP1_StoP2P3::printYourself(ostream& os) const{
 bool SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::parseTree(){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(! theDecay().nDgtr() == 2){
+  if(theDecay().nDgtr() != 2){
     cout << "ERROR in SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
 	 << theDecay().nDgtr();
@@ -1122,7 +1122,7 @@ void SF_DtoPseudoTP0_PseudoTtoTP1_TtoP2P3::printYourself(ostream& os) const{
 bool SF_DtoAP0_AtoTP1_TtoP2P3::parseTree(){
   //  bool debugThis=false;
   if(fsPS.size() < 4) fsPS.reserve(4);
-  if(! theDecay().nDgtr() == 2){
+  if(theDecay().nDgtr() != 2){
     cout << "ERROR in SF_DtoAP0_AtoTP1_TtoP2P3_BASE::parseTree"
 	 << " expected exactly 2 daughers of D, have "
 	 << theDecay().nDgtr();

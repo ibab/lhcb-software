@@ -35,6 +35,9 @@ Todo: Allow adding names rather than only numbers.
 typedef DDTree<DecayTreeItem> DecayTree;
 
 void anti(DecayTree& dt);
+//void ChargeCon(DecayTree& dt);
+//void ParityCon(DecayTree& dt);
+//void CPCon(DecayTree& dt);
 std::string uniqueName(const DecayTree& dt_in);
 
 MultiQuarkContent netQuarkContent(const DecayTree& dt_in);

@@ -52,7 +52,8 @@ class DecayTreeItem{
   int pdg() const;
   std::string J() const;
 
-  bool antiThis();
+  bool ChargeConThis();
+  bool antiThis(){return ChargeConThis();}
 
   virtual void print(std::ostream& out = std::cout) const;
   virtual void printShort(std::ostream& out = std::cout) const;
