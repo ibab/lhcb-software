@@ -3,6 +3,10 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+! 2013-11-04 - J. Helder Lopes
+ - Fixes comparison between signed and unsigned integer warning. Avoid repeated 
+   calculation of index station * m_NRegion + region. 
+
 ! 2013-10-28 - J. Helder Lopes
  - Fixes for the No M1 upgrade studies setup: a few bugs to correctly pick the 
    station index and set FindQuality to false because Chi2MuIDTool is not yet 

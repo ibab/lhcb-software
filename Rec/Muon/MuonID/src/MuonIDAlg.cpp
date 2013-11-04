@@ -865,10 +865,11 @@ StatusCode MuonIDAlg::initialize() {
     m_regionOuterY[station] = m_mudet->getOuterY(station);
     m_stationZ[station] = m_mudet->getStationZ(station);
     for(region = 0 ; region < m_NRegion ; region++ ){
-      m_padSizeX[station * m_NRegion + region]=m_mudet->getPadSizeX(station,region);
-      m_padSizeY[station * m_NRegion + region]=m_mudet->getPadSizeY(station,region);
+      int i  = station * m_NRegion + region;
+      m_padSizeX[i]=m_mudet->getPadSizeX(station,region);
+      m_padSizeY[i]=m_mudet->getPadSizeY(station,region);
 
-      if(m_padSizeX[station * m_NRegion + region]==0){
+      if(m_padSizeX[i]==0){
         return Error( "Muon Chamber Pad Size could not be retrieved !!!" );
       }
     }
@@ -900,12 +901,14 @@ StatusCode MuonIDAlg::initialize() {
   if(0 == m_iM2){
      for(station = 0 ; station < m_NStation ; station++ ){   // m_NStation==4 
         for(region=0; region<m_NRegion; ++region){
-           m_xfoiParam1[station * m_NRegion + region] = m_xfoiParam1[(station + 1) * m_NRegion + region];
-           m_xfoiParam2[station * m_NRegion + region] = m_xfoiParam2[(station + 1) * m_NRegion + region];
-           m_xfoiParam3[station * m_NRegion + region] = m_xfoiParam3[(station + 1) * m_NRegion + region];
-           m_yfoiParam1[station * m_NRegion + region] = m_yfoiParam1[(station + 1) * m_NRegion + region];
-           m_yfoiParam2[station * m_NRegion + region] = m_yfoiParam2[(station + 1) * m_NRegion + region];
-           m_yfoiParam3[station * m_NRegion + region] = m_yfoiParam3[(station + 1) * m_NRegion + region];
+           int i  = station * m_NRegion + region;
+           int ii = (station + 1) * m_NRegion + region;
+           m_xfoiParam1[i] = m_xfoiParam1[ii];
+           m_xfoiParam2[i] = m_xfoiParam2[ii];
+           m_xfoiParam3[i] = m_xfoiParam3[ii];
+           m_yfoiParam1[i] = m_yfoiParam1[ii];
+           m_yfoiParam2[i] = m_yfoiParam2[ii];
+           m_yfoiParam3[i] = m_yfoiParam3[ii];
         }
      }
      if (msgLevel(MSG::DEBUG) ){
@@ -2011,7 +2014,7 @@ bool MuonIDAlg::compareHits( LHCb::MuonPID* muonid1, LHCb::MuonPID* muonid2 ){
   for( iCoord1 = mcoord1.begin() ; iCoord1 != mcoord1.end() ; iCoord1++ ){
     for( iCoord2 = mcoord2.begin() ; iCoord2 != mcoord2.end() ; iCoord2++ ){
       if( (*iCoord1)->key() == (*iCoord2)->key() ) {
-        if ( ((*iCoord1)->key().station()) >= m_iM2 )  theSame = true; // JHL: station == 0 is OK in the case of no M1  12/Oct./2013
+        if ( ((*iCoord1)->key().station()) >= (unsigned int)m_iM2 )  theSame = true; // JHL: station == 0 is OK in the case of no M1  12/Oct./2013
       }
     }
   }
@@ -2158,15 +2161,15 @@ StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
   for(station = 0 ; station < m_NStation ; station++){
     int region;
     for(region = 0 ; region < m_NRegion ; region++){
-
-      if( !m_coordPos[station*m_NRegion + region].empty() ){
+      int i  = station * m_NRegion + region;
+      if( !m_coordPos[i].empty() ){
 
       if (msgLevel(MSG::VERBOSE) ) verbose()  << "           station " << station << " region " << region
                                           << " mapInRegion: " << m_mudet->mapInRegion(station,region ) << endmsg;
 
         std::vector<coordExtent_>::const_iterator itPos;
-        for(itPos = m_coordPos[station*m_NRegion + region].begin();
-            itPos != m_coordPos[station*m_NRegion + region].end();
+        for(itPos = m_coordPos[i].begin();
+            itPos != m_coordPos[i].end();
             itPos++){
 
           double x = itPos->m_x;
@@ -2781,12 +2784,13 @@ StatusCode MuonIDAlg::trackExtrapolate(const LHCb::Track *pTrack){
 //=============================================================================
 double MuonIDAlg::foiX(const int &station, const int &region, const double &p,
                        const double &dx){
+  int i  = station * m_NRegion + region;
   if (p < 1000000. ){
-    return ( m_xfoiParam1[ station * m_NRegion + region ] +
-             m_xfoiParam2[ station * m_NRegion + region ]*
-             exp(-m_xfoiParam3[ station * m_NRegion + region ]*p/Gaudi::Units::GeV ) )*dx;
+    return ( m_xfoiParam1[ i ] +
+             m_xfoiParam2[ i ]*
+             exp(-m_xfoiParam3[ i ]*p/Gaudi::Units::GeV ) )*dx;
   }else{
-    return m_xfoiParam1[ station * m_NRegion + region ] * dx;
+    return m_xfoiParam1[ i ] * dx;
   }
 
   //in the future optimize this checking that 2*dx =m_padSizeX[station * m_NRegion + region]
@@ -2798,12 +2802,13 @@ double MuonIDAlg::foiX(const int &station, const int &region, const double &p,
 //=============================================================================
 double MuonIDAlg::foiY(const int &station, const int &region, const double &p,
                        const double &dy){
+  int i  = station * m_NRegion + region;
   if ( p < 1000000. ){
-    return ( m_yfoiParam1[ station * m_NRegion + region ] +
-             m_yfoiParam2[ station * m_NRegion + region ]*
-             exp(-m_yfoiParam3[ station * m_NRegion + region ]*p/Gaudi::Units::GeV ) )*dy;
+    return ( m_yfoiParam1[ i ] +
+             m_yfoiParam2[ i ]*
+             exp(-m_yfoiParam3[ i ]*p/Gaudi::Units::GeV ) )*dy;
   }else{
-    return m_yfoiParam1[ station * m_NRegion + region ] * dy;
+    return m_yfoiParam1[ i ] * dy;
   }
 
 }
