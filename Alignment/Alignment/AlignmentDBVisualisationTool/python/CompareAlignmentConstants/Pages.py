@@ -492,8 +492,9 @@ def generateOTGeometryDict( DictName, detector, layer ):
 
     # ammend to make the hole for the IT and the beampipe
     _edit = lambda x: DictName["OT/" + layer + x]
-    _edit("/Q1/M9")[0] += np.array([width * 0.5, 0])
-    _edit("/Q1/M9")[1] -= width * 0.5
+#    _edit("/Q1/M9")[0] += np.array([width * 0.5, 0])
+#    _edit("/Q1/M9")[1] -= width * 0.5
+    _edit("/Q0/M9")[1] -= width * 0.5 # make Q0/M9 the thin one instead of Q1/M9. this is how the detector was actually installed
     _edit("/Q2/M9")[1] -= width * 0.5
     for i in range(4):
         _edit("/Q" + str(i) + "/M8")[2] -= 11
@@ -595,6 +596,6 @@ def drawHeatPlot( comparisonDescription, detector, layer, dof, outputDir, layerF
     layerName = layer.replace("/","_")
     fileName = "_".join((detector,layerName,dof)) + ".pdf"
     outputPath = os.path.join(*([detectorOutputDir] + [fileName]))
-    print "Writing %s" % outputPath
+    print " Writing %s" % outputPath
     fig.savefig(outputPath)
 #    plt.show()

@@ -11,7 +11,7 @@ __all__  = ( "plotAlignmentParametersComparison"
            , "plotAlignmentParametersTimeSeries"
            )
 
-import logging
+import logging, copy
 
 # this causes problems with the levels set in the shell script
 #logging.basicConfig(level=logging.INFO)
@@ -112,76 +112,115 @@ def plotAlignmentParametersComparison( elmGroup, dofs
     for folder in folders.itervalues():
         folder.save(outputdir)
 
-def plotAlignmentParametersHeat( detector
+# detector dictionary which contains an ElementGroup instantiation to call the database methods appropriately, and a tuple of the detector's layer names
+Dets = {
+    "TT" : { "elmGroup" : ElementGroups["TT.Sensors"]
+             , "layers"   : tuple( "TT" + str(u[0]) + "/TT" + str(v) + "Layer" for u in ( ("a", ("aX", "aU")), ("b", ("bV", "bX")) ) for v in u[1] )
+             }
+    , "IT" : { "elmGroup" : ElementGroup("IT/(?P<page>Station[1-3]/(?:ASide|CSide|Top|Bottom)Box)/Layer(?:X1|U|V|X2)/Ladder[1-7]/Sector/(?P<elm>Sensor[1-2])$", 1, 2)
+               # IT layer list intentionally omits box names
+               , "layers"   : tuple( "Station" + str(u) + "/Layer" + str(v) for u in range(1, 4) for v in ("X1", "U", "V", "X2") )
+               }
+    , "OT" : { "elmGroup" : ElementGroups["OT.Modules"]
+               , "layers"   : tuple( "T" + str(u) + "/" + v for u in range(1, 4) for v in ("X1", "U", "V", "X2") )
+               }
+    }
+
+def plotAlignmentParametersHeat( det
                                , dofs
                                , inputAlignments
                                , outputDir="."
                                , layers=["all"]
-                               , drawNames=False ):
+                               , drawNames=False
+                               , AlarmThresholds={"Tx":-1,"Ty":-1,"Tz":-1,"Rx":-1,"Ry":-1,"Rz":-1} # default thresholds of -1 double as 'alarm-mode-off' flags
+                               , returnFlag=False
+                                 ):
     """
     Plot heat maps of alignment differences for each layer of the specified detector
     """
-
-    # detector dictionary which contains an ElementGroup instantiation to call the database methods appropriately, and a tuple of the detector's layer names
-    D = { "TT" : { "elmGroup" : ElementGroups["TT.Sensors"]
-                 , "layers"   : tuple( "TT" + str(u[0]) + "/TT" + str(v) + "Layer" for u in ( ("a", ("aX", "aU")), ("b", ("bV", "bX")) ) for v in u[1] )
-                 }
-        , "IT" : { "elmGroup" : ElementGroup("IT/(?P<page>Station[1-3]/(?:ASide|CSide|Top|Bottom)Box)/Layer(?:X1|U|V|X2)/Ladder[1-7]/Sector/(?P<elm>Sensor[1-2])$", 1, 2)
-                              # IT layer list intentionally omits box names
-                 , "layers"   : tuple( "Station" + str(u) + "/Layer" + str(v) for u in range(1, 4) for v in ("X1", "U", "V", "X2") )
-                 }
-        , "OT" : { "elmGroup" : ElementGroups["OT.Modules"]
-                 , "layers"   : tuple( "T" + str(u) + "/" + v for u in range(1, 4) for v in ("X1", "U", "V", "X2") )
-                 }
-        }
-
+    
     # record the comparison being made, ultimately gets written in the plot titles
     comparisonDescriptionString = "%s   relative to   %s" % tuple( alignment[0] for alignment in inputAlignments )
     print comparisonDescriptionString
 
     if layers == ['all']:
-        logging.debug("Retrieving list of all layers for the %s" % detector)
-        layers = D[detector]['layers']
+        logging.debug("Retrieving list of all layers for the %s" % det)
+        layers = Dets[det]['layers']
     # check if a valid layer name was given in case the --layer option was used
-    if not layers[0] in D[detector]['layers']:
+    if not layers[0] in Dets[det]['layers']:
         from sys import exit
-        print "%r is not a valid layer name for the %s.\n Use the -h option to see the layer name conventions." % (layers[0], detector)
+        print "%r is not a valid layer name for the %s.\n Use the -h option to see the layer name conventions." % (layers[0], det)
+        print "exiting..."
         exit()
 
-    globalSince = "2010-01-01"
-    globalUntil = "2013-01-01"
     name, connection, since, until, tag = inputAlignments[0]
-    alignmentOne = AlignmentsWithIOVs( connection, [ detector ], globalSince, globalUntil, tag )
     timePeriodsOne = prepareTimePeriods(connection, since, until, tag)
-    name, connection, since, until, tag = inputAlignments[1]
-    if len(inputAlignments[0][1]) == 0 and len(connection) == 0:
-        # don't bother connecting to the conditions database again if the two alignments are both IOVs (both in the conditions database)
+    if ( 0 == len(connection) and 0 == len(inputAlignments[1][1]) ):
+        # both alignments are IOVs: only connect to the database once
+        if parseTimeMin(since) <= parseTimeMin(inputAlignments[1][2]):
+            globalSince = since
+            globalUntil = inputAlignments[1][3]
+        else:
+            globalSince = inputAlignments[1][2]
+            globalUntil = until
+        alignmentOne = AlignmentsWithIOVs( connection, [ det ], globalSince, globalUntil, tag )
         alignmentTwo = alignmentOne
     else:
-        alignmentTwo = AlignmentsWithIOVs( connection, [ detector ], globalSince, globalUntil, tag )
+        alignmentOne = AlignmentsWithIOVs( connection, [ det ], since, until, tag )
+        name, connection, since, until, tag = inputAlignments[1]
+        alignmentTwo = AlignmentsWithIOVs( connection, [ det ], since, until, tag )
+    name, connection, since, until, tag = inputAlignments[1]
     timePeriodsTwo = prepareTimePeriods(connection, since, until, tag)
 
     logging.debug("Initializing detector tuple")
-    detectorTuple = tuple( ( node, pageName, matrix[0] ) for node, pageName, matrix in alignmentOne.loopWithTimesAndValues( detector, D[detector]['elmGroup'], timePeriodsOne ) )
+    detectorTuple = tuple( ( node, pageName, matrix[0] ) for node, pageName, matrix in alignmentOne.loopWithTimesAndValues( det, Dets[det]['elmGroup'], timePeriodsOne ) )
+    if ( 0 == len(detectorTuple) ):
+        from sys import exit
+        print "Invalid time period. Check if an IOV entered is actually a technical stop, etc."
+        print "exiting..."
+        exit()
 
     logging.debug("Calculating detector tuple")
-    for i, ( first, second ) in enumerate( zip( detectorTuple, alignmentTwo.loopWithTimesAndValues( detector, D[detector]['elmGroup'], timePeriodsTwo )) ):
+    for i, ( first, second ) in enumerate( zip( detectorTuple, alignmentTwo.loopWithTimesAndValues( det, Dets[det]['elmGroup'], timePeriodsTwo )) ):
         for dof in dofs:
-            # convert rad to mrad
-            conversion = 1
+            parameters = [ getattr( first[2], dof ), getattr( second[2][0], dof ) ]
             if dof.startswith("R"):
-                conversion = 1000
-            # make the calculation
-            setattr( detectorTuple[i][2], dof, ( getattr( first[2], dof ) - getattr( second[2][0], dof )) * conversion )
+                from math import pi
+                for j, parameter in enumerate( parameters ):
+                    # scrub off 2pi (though the parameter is usually epsilon +/- pi)
+                    if   (  3*pi / 2 < parameter ):
+                        logging.debug("-> removing 2pi from  %s..." % parameter)
+                        parameter = parameter - 2*pi
+                        logging.debug("         ...it's now  %s" % parameter)
+                    elif ( -3*pi / 2 > parameter ):
+                        logging.debug("-> removing -2pi from %s..." % parameter)
+                        parameter = 2*pi + parameter
+                        logging.debug("          ...it's now %s" % parameter)
+                    # scrub off pi
+                    if   (  pi / 2 < parameter ):
+                        logging.debug("-> removing pi from  %s..." % parameter)
+                        parameter = parameter - pi
+                        logging.debug("        ...it's now  %s" % parameter)
+                    elif ( -pi / 2 > parameter ):
+                        logging.debug("-> removing -pi from %s..." % parameter)
+                        parameter = parameter + pi
+                        logging.debug("         ...it's now %s" % parameter)
+                    parameters[j] = parameter * 1000
+            difference = parameters[0] - parameters[1]
+            logging.debug("diff is %s" % difference)
+            setattr( detectorTuple[i][2], dof, difference )
 
+    # initialize dictionary of max alignment differectes to return
+    MaxDiffs = {}
+    
     # generate layer fill list by matching detectorTuple element name slices to the layer name
     for layer in layers:
         print "Processing layer %s" % layer
         layerFillList = []
         _elementLayer = lambda cellNumber: nameSplit[1] + "/" + nameSplit[cellNumber]
-        if detector in ("OT", "TT"):
+        if det in ("OT", "TT"):
             cell = 2
-        elif detector == "IT":
+        elif det == "IT":
             cell = 3 # ignore IT Box names
         logging.debug("Building layer %s fill list" % layer)
         for element in detectorTuple:
@@ -190,25 +229,56 @@ def plotAlignmentParametersHeat( detector
                 layerFillList.append(element)
 
         logging.debug("Generating geometry dictionary")
-        GeometryDict = generateGeometryDict(detector, layer)
+        GeometryDict = generateGeometryDict(det, layer)
 
         for dof in dofs:
             # make a color range which is symmetric about zero
-            diffMax = max([getattr(i[2], dof) for i in layerFillList])
-            diffMin = min([getattr(i[2], dof) for i in layerFillList])
-            diffColorRange = max(abs(diffMax),abs(diffMin))
-            # make a precision cutoff if necessary
+            diffsList = [ getattr(i[2], dof) for i in layerFillList ]
+            diffMax = max( diffsList )
+            diffMin = min( diffsList )
+            diffRange = max(abs(diffMax),abs(diffMin))
+            # copy this to return to scanner
+            if dof not in MaxDiffs:
+                MaxDiffs[dof] = {}
+            logging.debug("diffMax is %s and diffMin is %s" % ( diffMax, diffMin ))
+            if ( abs(diffMax) > abs(diffMin) ):
+                MaxDiffs[dof][layer] = copy.copy(diffMax)
+            else:
+                MaxDiffs[dof][layer] = copy.copy(diffMin)
+#            MaxDiffs[dof][layer] = copy.copy(diffRange)
+            # set units and precision cutoff
             if dof.startswith("T"):
+                units = "(mm)"
                 # 1 micron for silicon detectors
                 precisionCutoff = 0.001
                 # 10 micron for straw tubes
-                if detector == "OT":
-                    precisionCutoff = 0.01
+                if det == "OT":
+                     precisionCutoff = 0.01
             elif dof.startswith("R"):
+                units = "(mrad)"
                 # update this, tentatively set to 1 microradian
                 precisionCutoff = 0.001
-            if diffColorRange < precisionCutoff:
-                diffColorRange = precisionCutoff
+            if diffRange < precisionCutoff:
+                diffRange = precisionCutoff
+            alarm = AlarmThresholds[dof]
 
-            logging.debug("Generating %s plot" % dof)
-            drawHeatPlot(comparisonDescriptionString, detector, layer, dof, outputDir, layerFillList, GeometryDict, diffColorRange, drawNames)
+            # -1 means alarm mode is off
+            if alarm == -1:
+                logging.debug("Generating %s plot" % dof)
+                drawHeatPlot(comparisonDescriptionString, det, layer, dof, outputDir, layerFillList, GeometryDict, diffRange, drawNames)
+            # otherwise alarm mode is on
+            elif not alarm == -1:
+                if alarm <= precisionCutoff:
+                    print " * Alarm threshold for %s set below precision cutoff of %s " % (dof, precisionCutoff) + units + ",\n thus the alarm threshold will always be exceeded. *"
+                if diffRange < alarm:
+                    print " * Alarm threshold for %s not exceeded, absolute maximum of alignment differences is %s " % (dof, diffRange) + units + "\n   Skipping plot. *"
+                    pass
+                elif diffRange >= alarm:
+                    alarmString = "* Alarm mode: threshold of %s " % (alarm) + units + " exceeded *\n"
+                    print " " + alarmString.rstrip("\n")
+                    print " * Absolute maximum of %s aligment differences is %s " % (dof, diffRange) + units + " *"
+                    logging.debug("Generating %s plot" % dof)
+                    drawHeatPlot(alarmString + comparisonDescriptionString, det, layer, dof, outputDir, layerFillList, GeometryDict, diffRange, drawNames)
+
+    if returnFlag:
+        return MaxDiffs

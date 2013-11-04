@@ -8,7 +8,7 @@ __all__ = ( "StatusTimePeriod"
           , "statusPeriodsFromTable"
           )
 
-import re, os
+import re, os, logging
 
 from GaudiDetSvcTools import parseTimeMin, parseTimeMax
 

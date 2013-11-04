@@ -3,6 +3,15 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2013-11-04 - Jason Andrews
+ - fixed status of IOVs starting on 2011-04-27 and 2011-04-25 in LHCbStatus2011.txt
+ - for plotAlignHeat:
+  - Modified difference calculations to remove pi and 2pi from rotational parameters when
+	  necessary
+  - Fixed bug in which unnecessary alignment are retrieved; speed greatly imporved
+  - Changed OT geometry used in plots to reflect how OT was actually installed
+  - Added 'alarm mode'
+
 ! 2013-03-08 - Jason Andrews
  - Small fix for the sensor names of the TT
 
