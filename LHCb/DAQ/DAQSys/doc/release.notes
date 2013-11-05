@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-11-05 - Rob Lambert
+ - Adapt test to new behaviour of Calo configurable
+
 ! 2013-10-24 - Marco Clemencic
  - Fixed configuration of decoding tests: the event time was not picked up
    from the data (ODIN), but set to '0' (default if not explicitely changed).

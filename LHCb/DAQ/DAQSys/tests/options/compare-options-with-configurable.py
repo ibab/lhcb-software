@@ -19,7 +19,11 @@ default_opts_diffs={'Raw/VL/Clusters': {'VLRawBankDecoder/createVLClusters': {'R
                     'Raw/Velo/LiteClusters': {'DecodeVeloRawBuffer/createVeloLiteClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
                     'Raw/IT/Clusters': {'RawBankToSTClusterAlg/createITClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
                     'Raw/Velo/Clusters': {'DecodeVeloRawBuffer/createVeloClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
-                    'Raw/TT/LiteClusters': {'RawBankToSTLiteClusterAlg/createTTLiteClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}}
+                    'Raw/TT/LiteClusters': {'RawBankToSTLiteClusterAlg/createTTLiteClusters': {'RawEventLocations': [[], '-->', ['Other/RawEvent', 'DAQ/RawEvent']]}},
+                    'Raw/Hcal/Digits': {'CaloZSupAlg/HcalZSup' : {"OutputLevel" : [3,'-->',0], 'Context': ['Offline','-->',''] }},
+                    'Raw/Ecal/Digits': {'CaloZSupAlg/EcalZSup' : {"OutputLevel" : [3,'-->',0], 'Context': ['Offline','-->',''] }},
+                    'Raw/Prs/Digits': {'CaloDigitsFromRaw/PrsFromRaw' : {"OutputLevel" : [3,'-->',0], 'Context': ['Offline','-->',''] }},
+                    'Raw/Spd/Digits': {'CaloDigitsFromRaw/SpdFromRaw' : {"OutputLevel" : [3,'-->',0], 'Context': ['Offline','-->',''] }}
                     }
 
 def parse(stdout):
