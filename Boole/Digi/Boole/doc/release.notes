@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- QMTest Changes
+   . Updated Upgrade references
 
 - Configuration Changes
    . Added a line for the UT as submitted by JC. 
