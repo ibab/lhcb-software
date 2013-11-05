@@ -4,6 +4,11 @@
 ! Purpose     : Reconstruction related tuple tools
 !-----------------------------------------------------------------------------
 
+! 2013-11-05 - Francesco Dettori
+ - Adding TupleToolKink
+ 	 A tool to find kink information in the given tracks
+	 . TrackFitEvent added in the requirements 
+
 !========================= DecayTreeTupleReco v1r3 2013-06-13 =========================
 
 ! 2013-05-13 - Chris Jones
