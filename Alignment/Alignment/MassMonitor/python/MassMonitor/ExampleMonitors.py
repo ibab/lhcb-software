@@ -2,10 +2,10 @@
 from GaudiKernel.SystemOfUnits import *
 from Configurables import MassBiasesMonitor
 
-def exampleJpsiMonitor(name,sequence):
+def exampleJpsiMonitor(name,location):
 
     mon = MassBiasesMonitor(name,
-                            InputLocation = sequence.outputLocation(),
+                            InputLocation = location,
                             MinMass = 3.02*GeV, MaxMass = 3.17*GeV,
                             BinsMom = 10, MinMom = 20*GeV, MaxMom = 250*GeV,
                             MomDistr = "RFEXPO", MomParams = [20.55*GeV, 0.0877/GeV, 0.0181/GeV],
@@ -21,10 +21,10 @@ def exampleJpsiMonitor(name,sequence):
                             )
     return mon
     
-def examplePsi2SMonitor(name,sequence):
+def examplePsi2SMonitor(name,location):
 
     mon = MassBiasesMonitor(name,
-                            InputLocation = sequence.outputLocation(),
+                            InputLocation = location,
                             MinMass = 3.586*GeV, MaxMass = 3.786*GeV,
                             BinsMom = 10, MinMom = 20*GeV, MaxMom = 250*GeV,
                             MomDistr = "GAUSEXPO", MomParams = [30.05*GeV, 5.128*GeV, 0.021/GeV],
@@ -41,10 +41,10 @@ def examplePsi2SMonitor(name,sequence):
 
     return mon
 
-def exampleUps1SMonitor(name,sequence):
+def exampleUps1SMonitor(name,location):
 
     mon = MassBiasesMonitor(name,
-                            InputLocation = sequence.outputLocation(),
+                            InputLocation = location,
                             MinMass = 9.06030*GeV, MaxMass = 9.86030*GeV,
                             BinsMom = 10, MinMom = 30*GeV, MaxMom = 400*GeV,
                             MomDistr = "RFEXPO", MomParams = [32.21*GeV, 0.0005138/GeV, 0.01904/GeV],
@@ -61,10 +61,10 @@ def exampleUps1SMonitor(name,sequence):
     return mon
 
 
-def exampleUpsAllSMonitor(name,sequence):
+def exampleUpsAllSMonitor(name,location):
 
     mon = MassBiasesMonitor(name,
-                            InputLocation = sequence.outputLocation(),
+                            InputLocation = location,
                             MinMass = 8.5*GeV, MaxMass = 11.5*GeV,
                             BinsMom = 10, MinMom = 30*GeV, MaxMom = 400*GeV,
                             MomDistr = "RFEXPO", MomParams = [32.21*GeV, 0.0005138/GeV, 0.01904/GeV],
@@ -81,10 +81,10 @@ def exampleUpsAllSMonitor(name,sequence):
 
     return mon
 
-def exampleZ0Monitor(name,selection):
+def exampleZ0Monitor(name,location):
 
     mon = MassBiasesMonitor(name,
-                            InputLocation = sequence.outputLocation(),
+                            InputLocation = location,
                             MinMass = 60*GeV, MaxMass = 120*GeV,
                             BinsMom = 10, MinMom = 0*GeV, MaxMom = 2500*GeV,
                             MomDistr = "GAUSEXPO", MomParams = [484*GeV, 145*GeV, 0.00205/GeV],
@@ -101,3 +101,21 @@ def exampleZ0Monitor(name,selection):
 
     return mon
                             
+def exampleD0Monitor(name,location):
+
+    mon = MassBiasesMonitor(name,
+                            InputLocation = location,
+                            MinMass = 1.82*GeV, MaxMass = 1.91*GeV,
+                            BinsMom = 10, MinMom = 0*GeV, MaxMom = 200*GeV,
+                            MomDistr = "GAUSEXPO", MomParams = [39.3457*GeV,8.74601*GeV,0.0292012/GeV],
+                            BinsPt = 10, MinPt = 3.5*GeV, MaxPt = 20*GeV, PtDistr = "EXPO", PtParams = [0.428957/GeV],
+                            BinsMomDif = 10, MaxMomDif = 100*GeV, MomDifDistr = "EXPO", MomDifParams = [0.0485564/GeV],
+                            BinsAsym = 10, AsymDistr = "ASYM", AsymParams = [-1.06162,-1.6415,1.80802],
+                            BinsEta = 10, MinEta = 2, MaxEta = 5, EtaDistr = "GAMMA", EtaParams = [47.2643,0.0668159,0],
+                            BinsTx = 10, MaxTx = 0.2, TxDistr = "GAMMA", TxParams = [1.96466,3.30509e-2,0],
+                            BinsTy = 10, MaxTy = 0.2, TyDistr = "GAMMA", TyParams = [1.96466,3.30509e-2,0],
+                            BinsOpenAngle = 10, MinOpenAngle = 0, MaxOpenAngle = 0.2,
+                            OpenAngleDistr = "GAMMA", OpenAngleParams = [5.5199,1.10887e-2,0]
+                            )
+
+    return mon

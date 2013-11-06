@@ -3,12 +3,15 @@ from GaudiKernel.SystemOfUnits import *
 from PhysConf.Filters import LoKi_Filters
 from PhysSelPython.Wrappers import AutomaticData, Selection, SelectionSequence
 from Configurables import FilterDesktop, CombineParticles
+from Configurables import GaudiSequencer
 
 # DATA
 MuonLoc = 'Phys/StdAllLooseMuons/Particles'
 MuonSel = AutomaticData(Location = MuonLoc)
-JpsiLoc = 'Phys/StdLooseJpsi2MuMu/Particles'
-JpsiSel = AutomaticData(Location = JpsiLoc)
+LooseJPsiLoc = 'Phys/StdLooseJpsi2MuMu/Particles'
+LooseJpsiSel = AutomaticData(Location = LooseJPsiLoc)
+LooseD0Loc = 'Phys/StdLooseD02KPi/Particles'
+LooseD0Sel = AutomaticData(Location = LooseD0Loc)
     
 def exampleJpsiSelection(name):
 
@@ -18,6 +21,7 @@ def exampleJpsiSelection(name):
         HLT_CODE = "HLT_PASS_RE( 'Hlt1DiMuonHighMassDecision' ) & HLT_PASS_RE( 'Hlt2DiMuonJPsi.*Decision' )",
         STRIP_Code = "HLT_PASS_RE( 'StrippingFullDSTDiMuonJpsi2MuMuTOSLineDecision' )"
         )
+    JpsiFilter = JpsiFilt.sequence("JpsiFilter")
 
     # RECONSTRUCTION (NEEDHAM)
     _AlgJpsi2MuMu = FilterDesktop("AlgJpsi2MuMu")
@@ -27,10 +31,13 @@ def exampleJpsiSelection(name):
     
     JpsiSel = Selection("JpsiSel",
                         Algorithm = _AlgJpsi2MuMu,
-                        RequiredSelections = [JpsiSel])
-    JpsiSeq = SelectionSequence(name,TopSelection = JpsiSel)
+                        RequiredSelections = [LooseJpsiSel])
+    JpsiSelSeq = SelectionSequence("JpsiSelSeq",TopSelection = JpsiSel)
     
-    return JpsiSeq
+    # GAUDI SEQUENCE
+    JpsiSeq = GaudiSequencer(name)
+    JpsiSeq.Members = [ JpsiFilter, JpsiSelSeq.sequence() ]
+    return JpsiSeq, JpsiSelSeq.outputLocation()
 
 def examplePsi2SSelection(name):
 
@@ -40,6 +47,7 @@ def examplePsi2SSelection(name):
         HLT_CODE = "HLT_PASS_RE( 'Hlt1DiMuonHighMassDecision' ) & HLT_PASS_RE( 'Hlt2DiMuonPsi2S.*Decision' )",
         STRIP_Code = "HLT_PASS_RE( 'StrippingFullDSTDiMuonPsi2MuMuTOSLineDecision' )"
         )
+    Psi2SFilter = Psi2SFilt.sequence("Psi2SFilter")
     
     # RECONSTRUCTION (NEEDHAM)
     _AlgPsi2S2MuMu = CombineParticles("AlgPsi2S2MuMu")
@@ -54,9 +62,12 @@ def examplePsi2SSelection(name):
     Psi2SSel = Selection("Psi2SSel",
                          Algorithm = _AlgPsi2S2MuMu,
                          RequiredSelections = [MuonSel])
-    Psi2SSeq = SelectionSequence(name,TopSelection = Psi2SSel)
+    Psi2SSelSeq = SelectionSequence("Psi2SSelSeq",TopSelection = Psi2SSel)
 
-    return Psi2SSeq
+    # GAUDI SEQUENCE
+    Psi2SSeq = GaudiSequencer(name)
+    Psi2SSeq.Members = [ Psi2SFilter, Psi2SSelSeq.sequence() ]
+    return Psi2SSeq, Psi2SSelSeq.outputLocation()
 
 def exampleUps1SSelection(name):
 
@@ -66,6 +77,7 @@ def exampleUps1SSelection(name):
         HLT_CODE = "HLT_PASS_RE( 'Hlt1DiMuonHighMassDecision' ) & HLT_PASS_RE( 'Hlt2DiMuonBDecision' )",
         STRIP_Code = "HLT_PASS_RE( 'StrippingFullDSTDiMuonDiMuonHighMassLineDecision' )"
         )
+    Ups1SFilter = Ups1SFilt.sequence("Ups1SFilter")
 
     # RECONSTRUCTION (NEEDHAM)
     _AlgUps1S2MuMu = CombineParticles("AlgUps1S2MuMu")
@@ -80,9 +92,12 @@ def exampleUps1SSelection(name):
     Ups1SSel = Selection("Ups1SSel",
                          Algorithm = _AlgUps1S2MuMu,
                          RequiredSelections = [MuonSel])
-    Ups1SSeq = SelectionSequence(name,TopSelection = Ups1SSel)
+    Ups1SSelSeq = SelectionSequence("Ups1SSelSeq",TopSelection = Ups1SSel)
 
-    return Ups1SSeq
+    # GAUDI SEQUENCE
+    Ups1SSeq = GaudiSequencer(name)
+    Ups1SSeq.Members = [ Ups1SFilter, Ups1SSelSeq.sequence() ]
+    return Ups1SSeq, Ups1SSelSeq.outputLocation()
 
 def exampleUpsAllSSelection(name):
 
@@ -92,6 +107,7 @@ def exampleUpsAllSSelection(name):
         HLT_CODE = "HLT_PASS_RE( 'Hlt1DiMuonHighMassDecision' ) & HLT_PASS_RE( 'Hlt2DiMuonBDecision' )",
         STRIP_Code = "HLT_PASS_RE( 'StrippingFullDSTDiMuonDiMuonHighMassLineDecision' )"
         )
+    UpsAllSFilter = UpsAllSFilt.sequence("UpsAllSFilter")
 
     # RECONSTRUCTION (NEEDHAM)
     _AlgUpsAllS2MuMu = CombineParticles("AlgUpsAllS2MuMu")
@@ -106,9 +122,12 @@ def exampleUpsAllSSelection(name):
     UpsAllSSel = Selection("UpsAllSSel",
                            Algorithm = _AlgUpsAllS2MuMu,
                            RequiredSelections = [MuonSel])
-    UpsAllSSeq = SelectionSequence(name,TopSelection = UpsAllSSel)
+    UpsAllSSelSeq = SelectionSequence("UpsAllSSelSeq",TopSelection = UpsAllSSel)
 
-    return UpsAllSSeq
+    # GAUDI SEQUENCE
+    UpsAllSSeq = GaudiSequencer(name)
+    UpsAllSSeq.Members = [ UpsAllSFilter, UpsAllSSelSeq.sequence() ]
+    return UpsAllSSeq, UpsAllSSelSeq.outputLocation()
 
 def exampleZ0Selection(name):
 
@@ -118,6 +137,7 @@ def exampleZ0Selection(name):
         HLT_CODE = "HLT_PASS_RE( 'Hlt1DiMuonHighMassDecision' ) & HLT_PASS_RE( 'Hlt2DiMuonBDecision|Hlt2DiMuonZDecision' )",
         STRIP_Code = "HLT_PASS_RE( 'StrippingZ02MuMuLineDecision' )"
         )
+    Z0Filter = Z0Filt.sequence("Z0Filter")
 
     # RECONSTRUCTION (NEEDHAM)
     _AlgZ02MuMu = CombineParticles("AlgZ02MuMu")
@@ -131,8 +151,40 @@ def exampleZ0Selection(name):
     Z0Sel = Selection("Z0Sel",
                       Algorithm = _AlgZ02MuMu,
                       RequiredSelections = [MuonSel])
-    Z0Seq = SelectionSequence(name,TopSelection = Z0Sel)
+    Z0SelSeq = SelectionSequence("Z0SelSeq",TopSelection = Z0Sel)
 
-    return Z0Seq
+    # GAUDI SEQUENCE
+    Z0Seq = GaudiSequencer(name)
+    Z0Seq.Members = [ Z0Filter, Z0SelSeq.sequence() ]
+    return Z0Seq, Z0SelSeq.outputLocation()
 
+def exampleD0FromDstarSelection(name):
 
+    # FILTER
+    from PhysConf.Filters import LoKi_Filters
+    D0Filt = LoKi_Filters(
+        HLT_Code = "HLT_PASS( 'Hlt2CharmHadD02HH_D02KPiDecision' )"
+        )
+    D0Filter = D0Filt.sequence("D0Filter")
+    
+    # RECONSTRUCTION
+    from CommonParticles.StdLooseDstarWithD2HH import StdLooseDstarWithD02KPi
+    StdLooseDstarWithD02KPi.MotherCut = "(VFASPF(VCHI2/VDOF)<25) & (abs(M-MAXTREE('D0'==ABSID,M)-145.421)<4)"
+    _AlgD02KPi = FilterDesktop("AlgD02KPi")
+    _AlgD02KPi.Code = "(ADMASS('D0') < 50.*MeV) & (VFASPF(VCHI2) < 10.)"
+    _AlgD02KPi.Code += " & (PT > 3.5*GeV)" # put in a good trigger line
+    _AlgD02KPi.Code += " & (MINTREE('K-'==ABSID, PIDK) > 0) & (MAXTREE('pi+'==ABSID, PIDK) < 0)"
+    D0Sel = Selection("D0Sel",
+                      Algorithm = _AlgD02KPi,
+                      RequiredSelections = [ LooseD0Sel ])
+    D0SelSeq = SelectionSequence("D0SelSeq", TopSelection = D0Sel)
+    
+    # THERE CAN ONLY BE ONE (D0, so I know it's the one from the D*)
+    code = "CONTAINS('" + D0Seq.outputLocation() + "')==1"
+    onefilt = LoKi_Filters( VOID_Code = code )
+    HIGHLANDER = onefilt.sequence('HIGHLANDER')
+
+    # GAUDI SEQUENCE
+    D0Seq = GaudiSequencer(name)
+    D0Seq.Members = [ D0Filter, StdLooseDstarWithD02KPi, D0SelSeq.sequence(), HIGHLANDER ]
+    return D0Seq, D0SelSeq.outputLocation()
