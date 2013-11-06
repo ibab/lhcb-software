@@ -657,11 +657,11 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
         }
         if (!m_etastudy){
           
-          if(type==3 
+          //if(type==3 
              //&& fabs(pntx)<1.5 
-             && p>5 && chi2/ndof<5 && 
-             (m_sideRight > 15 || m_sideLeft>15))
-            {
+          //   && p>5 && chi2/ndof<5 && 
+          //   (m_sideRight > 15 || m_sideLeft>15))
+          //  {
               
           //event information
           tuple->column( "run",m_runodin);
@@ -742,10 +742,12 @@ StatusCode Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track,
             tuple->column("pntphi_mc", pntphi_mc);
           }
           tuple->write();
-          }
+          //}
+        
           
           
         }
+        
         
         else{
           //ntuple for eta study
