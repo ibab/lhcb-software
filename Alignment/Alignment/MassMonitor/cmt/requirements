@@ -38,7 +38,7 @@ apply_pattern component_library library=MassBiasesMonitor
 apply_pattern install_python_modules
 
 #============================================================================
-# Application building rule
+# Application building rule (1)
 #============================================================================
 application       MassBiasesFitter ../src/MassBiasesFitter.cpp ../src/SplitFitter.cpp
 macro_append      MassBiasesFitter_cppflags "-g"
@@ -46,6 +46,15 @@ macro_append      ROOT_linkopts " -lRooFitCore -lRooFit -lMatrix -lMathCore -lMa
 macro             MassBiasesFitter_use_linkopts $(use_linkopts)
 
 #============================================================================
+# Application building rule (2)
+#============================================================================
+application       MassShiftFitter ../src/MassShiftFitter.cpp
+macro_append      MassShiftFitter_cppflags "-g"
+macro_append      ROOT_linkopts " -lRooFitCore -lRooFit -lMatrix -lMathCore -lMathMore -lCintex -lGraf -lGpad"
+macro             MassShiftFitter_use_linkopts $(use_linkopts)
+
+#============================================================================
 # Application alias rule
 #============================================================================
 alias MassBiasesFitter $(MASSMONITORROOT)/$(CMTCONFIG)/MassBiasesFitter.exe
+alias MassShiftFitter $(MASSMONITORROOT)/$(CMTCONFIG)/MassShiftFitter.exe

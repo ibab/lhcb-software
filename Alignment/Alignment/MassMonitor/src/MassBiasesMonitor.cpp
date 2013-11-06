@@ -1,4 +1,20 @@
+// Project INCLUDES
+#include "MassMonitor/IOVDefinitions.hh"
 
+// C INCLUDES
+
+// C++ INCLUDES
+#include <boost/foreach.hpp>
+#include <stdlib.h>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <map>
+using std::string;
+using std::vector;
+
+// LHCB INCLUDES
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
@@ -12,16 +28,8 @@
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IProfile1D.h"
 
-#include <boost/foreach.hpp>
-#include <stdlib.h>
-#include <fstream>
-#include <sstream>
-
-#include <string>
-#include <vector>
-#include <map>
-using std::string;
-using std::vector;
+// ROOT INCLUDES
+#include "TMath.h"
 
 class MassBiasesMonitor;
 
@@ -63,6 +71,15 @@ namespace {
   };
   const DISTR RFEXPO_DISTR = &RFEXPO_FUNC;
 
+  double GAUSEXPO_FUNC(double x, vector<double> params)
+  {
+    double thresh = params[0];
+    double width = params[1];
+    double fall = params[2];
+    return (1+TMath::Erf((fabs(x)-thresh)/(sqrt(2.0)*width)))*exp(-fall*fabs(x));
+  };
+  const DISTR GAUSEXPO_DISTR = &GAUSEXPO_FUNC;
+
   double GAUS_FUNC(double x, vector<double> params)
   {
     double mu = params[0];
@@ -74,18 +91,22 @@ namespace {
 
   double GAMMA_FUNC(double x, vector<double> params)
   {
-    double k = params[0];
-    double fall = params[1];    
-    return pow(fabs(x),k-1)*exp(-fall*fabs(x));
+    double gamma = params[0];
+    double beta = params[1];    
+    double mu = params[2];
+    return TMath::GammaDist(x,gamma,mu,beta);
   };
   const DISTR GAMMA_DISTR = &GAMMA_FUNC;
   
   double ASYM_FUNC(double x, vector<double> params)
   {
-    double P = params[0];
+    double a1 = params[0];
+    double a2 = params[1];
+    double a3 = params[3];
     if (fabs(x) >= 1)
       return 0;
-    return pow(1-x*x,P);
+    double x2 = x*x;
+    return (1-x2)*(1+a1*x2+a2*x2*x2+a3*x2*x2*x2);
   }
   const DISTR ASYM_DISTR = &ASYM_FUNC;
   
@@ -95,6 +116,7 @@ namespace {
     , std::make_pair("THETA",THETA_DISTR)
     , std::make_pair("EXPO",EXPO_DISTR)
     , std::make_pair("RFEXPO",RFEXPO_DISTR)
+    , std::make_pair("GAUSEXPO",GAUSEXPO_DISTR)
     , std::make_pair("GAUS",GAUS_DISTR)
     , std::make_pair("GAMMA",GAMMA_DISTR)
     , std::make_pair("ASYM",ASYM_DISTR)
@@ -186,47 +208,6 @@ namespace {
   const GaudiAlg::HistoID iov2012ProID("massVersus2012iov");
   const string iov2012ProTitle = "mass vs. 2012 iov [GeV]";
 
-  // PARSE IOV DICTIONARY
-  // ../data contains files listing IOVs with info about start/stop dates/runs
-  // Instead of recompiling to update / fix this, parse the .txt file
-
-//   const char* raw = getenv("MASSMONITORROOT");
-//   const string rootPath = raw?raw:"";
-//   const string default_iov_file = rootPath+ "/data/LHCbStatus.txt";
-
-  const string iov_data_2011 =
-    "MagDown         2011-03-13      2011-03-21      1617-1640       87219           87773           2639.85\n"
-    "MagDown         2011-03-22      2011-04-14      1644-1647       87849           87977           4918.50\n"
-    "MagUp           2011-04-15      2011-04-25      1711-1737       89333           90207           44738.68\n"
-    "MagDown	       2011-04-26	     2011-06-10      1739-1862       90256           93282           195775.28\n"
-    "MagUp           2011-06-11      2011-06-28      1863-1901       93398           94386           140419.58\n"
-    "MagUp           2011-07-07      2011-07-27      1936-1979       95948           97028           71239.42\n"
-    "MagDown         2011-07-27      2011-08-17      1982-2029       97114           98882           192363.51\n"
-    "MagUp           2011-08-17      2011-08-22      2030-2040       98900           100256          36805.67\n"
-    "MagUp           2011-09-07      2011-09-16      2083-2110       101373          101862          67994.42\n"
-    "MagDown         2011-09-16      2011-09-28      2117-2160       101891          102452          99523.48\n"
-    "MagUp           2011-09-28      2011-10-05      2165-2182       102499          102907          83023.29\n"
-    "MagDown         2011-10-05      2011-10-21      2186-2234       103049          103863          113943.49\n"
-    "MagUp           2011-10-22      2011-10-31      2239-2267       103936          104414          54280.49\n";
-  
-  const string iov_data_2012 =
-    "MagDown         2012-04-01      2012-04-17      2469-2523       111181          112916          48250.48\n"
-    "MagDown         2012-04-17      2012-05-01      2533-2536       113013          113146          19635.33\n"
-    "MagUp           2012-05-01      2012-05-02      2574-2580       114205          114287          3366.76\n"
-    "MagDown         2012-05-02      2012-05-16      2583-2630       114316          115464          107426.52\n"
-    "MagUp           2012-05-16      2012-05-31      2632-2686       115518          117103          163044.70\n"
-    "MagDown         2012-05-31      2012-06-11      2691-2720       117192          118286          152351.70\n"
-    "MagUp           2012-06-11      2012-07-02      2723-2739       118326          118880          121009.77\n"
-    "MagUp           2012-07-02      2012-07-20      2795-2856       119956          122520          95125.17\n"
-    "MagUp           2012-07-20      2012-07-25      2858-2875       122540          123803          94469.95\n"
-    "MagDown         2012-07-25      2012-08-10      2880-2934       123910          125115          205270.63\n"
-    "MagUp		       2012-08-10	     2012-08-28	     2957-3011       125566          126676          194361.06\n"
-    "MagDown		     2012-08-28	     2012-09-15	     3015-3047       126824          128110          144160.58\n"
-    "MagUp           2012-09-15	     2012-09-17	     3067-3160       128411          128492          156105.81\n"
-    "MagDown		     2012-10-12	     2012-10-24	     3169-3214       130316          130861          140446.12\n"
-    "MagUp		       2012-10-24	     2012-11-08	     3220-3272       130911          131940          185258.63\n"
-    "MagDown         2012-11-08      2012-12-03      3273-3363       131973          133587          233169.75\n"
-    "MagUp           2012-12-03      2012-12-08      3370-3378       133624          133785          16035.34\n";
 
   vector<double> setBinThresh(int N, double min, double max, DISTR func, vector<double> params)
   {
@@ -385,23 +366,13 @@ private:
 
   // 2011 IOVs
   string m_iov2011Data;
-  vector<string> m_iov2011Conditions;
-  vector<string> m_iov2011StartDates;
-  vector<string> m_iov2011EndDates;
-  vector<string> m_iov2011FillRanges;
   vector<int> m_iov2011StartRuns;
   vector<int> m_iov2011EndRuns;
-  vector<double> m_iov2011Luminosities;
 
   // 2012 IOVs
   string m_iov2012Data;
-  vector<string> m_iov2012Conditions;
-  vector<string> m_iov2012StartDates;
-  vector<string> m_iov2012EndDates;
-  vector<string> m_iov2012FillRanges;
   vector<int> m_iov2012StartRuns;
   vector<int> m_iov2012EndRuns;
-  vector<double> m_iov2012Luminosities;
 
 };
 
@@ -671,8 +642,8 @@ StatusCode MassBiasesMonitor::initialize()
     else
       input << iov_data_2011;
     string line;
-    for (int i = 0; i < 6; i++)
-      std::getline(input, line);
+//     for (int i = 0; i < 6; i++)
+//       std::getline(input, line);
     while (std::getline(input, line))
     {
       std::istringstream ss(line);
@@ -680,13 +651,8 @@ StatusCode MassBiasesMonitor::initialize()
       int startRun, endRun;
       double luminosity;
       ss >> condition >> startDate >> endDate >> fillRange >> startRun >> endRun >> luminosity;
-      m_iov2011Conditions.push_back(condition);
-      m_iov2011StartDates.push_back(startDate);
-      m_iov2011EndDates.push_back(endDate);
-      m_iov2011FillRanges.push_back(fillRange);
       m_iov2011StartRuns.push_back(startRun);
       m_iov2011EndRuns.push_back(endRun);
-      m_iov2011Luminosities.push_back(luminosity);
     }
   }
   // Create bins out of the starting run numbers, and the final run number
@@ -711,13 +677,8 @@ StatusCode MassBiasesMonitor::initialize()
       int startRun, endRun;
       double luminosity;
       ss >> condition >> startDate >> endDate >> fillRange >> startRun >> endRun >> luminosity;
-      m_iov2012Conditions.push_back(condition);
-      m_iov2012StartDates.push_back(startDate);
-      m_iov2012EndDates.push_back(endDate);
-      m_iov2012FillRanges.push_back(fillRange);
       m_iov2012StartRuns.push_back(startRun);
       m_iov2012EndRuns.push_back(endRun);
-      m_iov2012Luminosities.push_back(luminosity);
     }
   }
   // Create bins out of the starting run numbers, and the final run number

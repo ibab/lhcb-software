@@ -1,0 +1,25 @@
+# EventType: 59999990
+#
+# Descriptor: J/psi(1S) => mu- mu+
+#
+# NickName: Jpsi2MuMu
+#
+# Cuts: 
+#
+# Momentum: 0.0*MeV
+#
+# Documentation: Decay file for J/psi(1S) particle gun
+# EndDocumentation
+#
+# PhysicsWG: 
+# Tested: No
+# Responsible:     Jack Wimberley
+# Email: jack.wimberley@cern.ch
+# Date:   20131011
+#
+Decay J/psi
+  1.0000  mu+        mu-                    PHOTOS VLL ;
+Enddecay
+#
+End
+#

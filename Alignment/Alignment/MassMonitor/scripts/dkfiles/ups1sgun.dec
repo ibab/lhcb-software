@@ -1,0 +1,25 @@
+# EventType: 59999992
+#
+# Descriptor: Upsilon(1S) => mu- mu+
+#
+# NickName: Ups1S2MuMu
+#
+# Cuts: 
+#
+# Momentum: 0.0*MeV
+#
+# Documentation: Decay file for Upsilon(1S) particle gun
+# EndDocumentation
+#
+# PhysicsWG: 
+# Tested: No
+# Responsible:     Jack Wimberley
+# Email: jack.wimberley@cern.ch
+# Date:   20131011
+#
+Decay Upsilon
+  1.0000  mu+        mu-                    PHOTOS VLL ;
+Enddecay
+#
+End
+#

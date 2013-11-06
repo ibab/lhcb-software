@@ -25,7 +25,7 @@ struct binValsAndErrs
 
 class SplitFitter : public TNamed {
 public :
-
+  
   // UNSPLIT CONSTRUCTOR
   SplitFitter(RooRealVar *mass, // quantity whose PDF is being fit
               RooAbsPdf *model, // model PDF for quantity
@@ -44,22 +44,24 @@ public :
   // OVERRIDABLE DESTRUCTOR
   virtual ~SplitFitter(){}
 
+  // CLASS VARIABLES
+  RooRealVar* _mass;
+  RooAbsPdf* _model;
+  RooCmdArg* _range;
+  RooArgList* _vars;
+  RooCategory* _SplitCat;
+  string outputDirectoryName;
+
   // FIT TYPE
   bool split;
 
   // ROOFIT VARIABLES
-  RooRealVar* _mass;
-  RooCategory* _SplitCat;
-  RooAbsPdf* _model;
-  RooArgList* _vars;
-  RooCmdArg* _range;
   RooLinkedList fitpath;
 
   // STORED ORIGINAL PARAMETERS
   vector<double> originalParams;
 
   // OUTPUT DIRECTORY
-  string outputDirectoryName;
 
   // CLASS METHODS
 

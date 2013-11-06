@@ -9,6 +9,7 @@
 #include <TFile.h> 
 #include <TCanvas.h>
 #include <TPad.h>
+#include <TMath.h>
 
 // ROOFIT INCLUDES
 #include <RooPlot.h>
@@ -35,7 +36,7 @@ namespace {
     RooHist* graph = plot->pullHist(dataName,pdfName);
     RooPlot *pulls = variable->frame(variable->getBins()); 
     pulls->addObject((TObject*) graph,"XP"); // the "XP" makes these be points, without a connecting line
-    pulls->SetYTitle("Normalized Residuals"); // i.e. pulls
+    pulls->SetYTitle("Normalized Residuals");
     string resname;
     if (name)
       resname = name;
@@ -43,19 +44,19 @@ namespace {
       resname = string(pdfName) + "_resid";
     pulls->SetName(resname.c_str());
     pulls->SetTitle(resname.c_str());
-    pulls->SetMinimum(-5);
-    pulls->SetMaximum(+5); 
+    pulls->SetMinimum(-15);
+    pulls->SetMaximum(+15); 
     
     // RETURN
     return pulls;
   }
 }
 
-  
+
 // UNSPLIT CONSTRUCTOR
 SplitFitter::SplitFitter(RooRealVar *mass, //
                          RooAbsPdf *model, //
-                         RooCmdArg* range,
+                         RooCmdArg *range,
                          RooArgList *vars,
                          string directory)
   : _mass(mass),
@@ -101,7 +102,7 @@ void SplitFitter::initialize()
   RooMsgService::instance().setStreamStatus(0,false);
 
   // VERBOSITY
-  this->fitpath.Add(new RooCmdArg(PrintLevel(1))); // MINUIT print level
+  this->fitpath.Add(new RooCmdArg(PrintLevel(-1))); // MINUIT print level
   this->fitpath.Add(new RooCmdArg(Verbose(false))); // no verbose output
   this->fitpath.Add(new RooCmdArg(Warnings(false))); // no warnings
 
@@ -172,8 +173,9 @@ vector<binValsAndErrs> SplitFitter::_fitAll(RooDataHist *hist,
 
   // CREATE ARRAYS OF FIT PARAMETERS TO BE MONITORED
   int num = _vars->getSize();
+  // also going to add ln(P(chi^2)), calculated two ways
   vector<binValsAndErrs> data;
-  for (int i = 0; i < num; i++) {
+  for (int i = 0; i < num + 2; i++) {
     double* values = new double[0];
     double* errors = new double[0];
     binValsAndErrs bve;
@@ -188,17 +190,21 @@ vector<binValsAndErrs> SplitFitter::_fitAll(RooDataHist *hist,
   std::ofstream fit_stream(fit_filename.c_str(), std::ofstream::out);
   
   if (not justPlot) {
+    _model->getVariables()->writeToStream(fit_stream,false);
     fitresult = _model->fitTo(*hist,fitpath);
     fitresult->Print("v");
     _model->getVariables()->writeToStream(fit_stream,false);
   }
   fit_stream.close();
-
+  
   // SAVE VALS AND ERRS
   for (int i = 0; i < num; i++) {
-    RooRealVar* var = (RooRealVar*)_vars->at(i);
+    RooAbsReal* var = (RooAbsReal*)_vars->at(i);
     data[i].vals[0] = var->getValV();
-    data[i].errs[0] = var->getError();
+    if (fitresult != 0)
+      data[i].errs[0] = var->getPropagatedError(*fitresult);
+    else
+      data[i].errs[0] = 0;
   }
 
   // DEFINE PLOT
@@ -217,14 +223,27 @@ vector<binValsAndErrs> SplitFitter::_fitAll(RooDataHist *hist,
                  RooFit::Name("fit_all"));
   _model->plotOn(frame,
                  *_range,
-                 Components("signal*"),
+                 Components("*sig"),
                  LineColor(kRed),
                  RooFit::Name("signal_all"));
   _model->plotOn(frame,
                  *_range,
-                 Components("bkg*"),
+                 Components("*bkg"),
                  LineColor(kMagenta),
                  RooFit::Name("bkg_all"));
+
+  // SAVE LOG(P(CHI2))
+  frame->Draw();
+  Double_t chi2 = frame->chiSquare("fit_all","hist_all");
+  Double_t pchi2 = TMath::Prob(chi2,1);
+  data[num].vals[0] = log(pchi2);
+  data[num].errs[0] = 0;
+//   Int_t num_params = _model->getParameters(hist)->selectByAttrib("Constant",kFALSE)->getSize();
+//   Int_t ndof = hist->numEntries() - num_params - 1;
+//   Double_t pchi2_b = TMath::Prob(chi2*ndof,ndof);
+//   data[num+1].vals[0] = log(pchi2_b);
+//   data[num+1].errs[0] = 0;
+
   
   // PLOT RESIDUAL
   RooPlot *pulls = getPullHist(frame,"hist_all","fit_all","pulls_all");
@@ -232,15 +251,26 @@ vector<binValsAndErrs> SplitFitter::_fitAll(RooDataHist *hist,
   // MAKE CANVAS
   TCanvas canvas("Fit","Fit");
   canvas.cd();
-  TPad* HistogramPad = new TPad("HistogramPad","HistogramPad",0.0,0.5,1.0,1.0);
+  TPad* HistogramPad = new TPad("HistogramPad","HistogramPad",0.0,0.25,1.0,1.0);
   HistogramPad->Draw();
-  TPad* ResidualPad = new TPad("ResidualPad","ResidualPad",0.0,0.0,1.0,0.5);
+  HistogramPad->SetTopMargin(0.1);
+  TPad* ResidualPad = new TPad("ResidualPad","ResidualPad",0.0,0.0,1.0,0.25);
   ResidualPad->Draw();
   ResidualPad->SetTopMargin(0.1);
   HistogramPad->cd();
+  frame->SetTitleFont(63,"XY");
+  frame->SetTitleSize(18,"ZY");
+  frame->SetTitleOffset(2,"XY");
+  frame->SetLabelFont(63,"XY");
+  frame->SetLabelSize(14,"XY");
   frame->Draw();
   HistogramPad->Update();
   ResidualPad->cd();
+  pulls->SetTitleFont(63,"XY");
+  pulls->SetTitleSize(18,"XY");
+  pulls->SetTitleOffset(2,"XY");
+  pulls->SetLabelFont(63,"XY");
+  pulls->SetLabelSize(14,"XY");
   pulls->Draw();
   ResidualPad->Update();
   canvas.Update();
@@ -274,7 +304,7 @@ vector<binValsAndErrs> SplitFitter::_fitSplit(RooDataHist *hist, // Data total h
   // CREATE ARRAYS OF FIT PARAMETERS TO BE MONITORED
   int num = _vars->getSize();
   vector<binValsAndErrs> data;
-  for (int i = 0; i < num; i++) {
+  for (int i = 0; i < num + 2; i++) {
     double* values = new double[nTypes];
     double* errors = new double[nTypes];
     binValsAndErrs bve;
@@ -308,7 +338,7 @@ vector<binValsAndErrs> SplitFitter::_fitSplit(RooDataHist *hist, // Data total h
       if (subhist->sum(false) > 0) {
         std::cout << "Enough entries to fit:" << std::endl;
         fitresult = fitter->fitTo(*subhist,fitpath);
-        fitresult->Print("v");
+        //        fitresult->Print("v");
         fitter->getVariables()->writeToStream(fit_stream,false);
       } else {
         std::cout << "Not enough entries; skipping bin ..." << std::endl;
@@ -317,9 +347,12 @@ vector<binValsAndErrs> SplitFitter::_fitSplit(RooDataHist *hist, // Data total h
 
     // SAVE VALS AND ERRS
     for (int i = 0; i < num; i++) {
-      RooRealVar* var = (RooRealVar*)_vars->at(i);
+      RooAbsReal* var = (RooAbsReal*)_vars->at(i);
       data[i].vals[iType] = var->getValV();
-      data[i].errs[iType] = var->getError();
+      if (fitresult != 0)
+        data[i].errs[iType] = var->getPropagatedError(*fitresult);
+      else
+        data[i].errs[iType] = 0;
     }
 
     // DEFINE PLOT
@@ -344,16 +377,27 @@ vector<binValsAndErrs> SplitFitter::_fitSplit(RooDataHist *hist, // Data total h
     string signalName = string("signal_") + _SplitCat->getLabel();
     fitter->plotOn(frame,
                    *_range,
-                   Components("signal*"),
+                   Components("*sig"),
                    LineColor(kRed),
                    RooFit::Name(signalName.c_str()));
     string bkgName = string("bkg_") + _SplitCat->getLabel();
     fitter->plotOn(frame,
                    *_range,
-                   Components("bkg*"),
+                   Components("*bkg"),
                    LineColor(kMagenta),
                    RooFit::Name(bkgName.c_str()));
     
+    // SAVE LOG(P(CHI2))
+    Double_t chi2 = frame->chiSquare(fitName.c_str(),histName.c_str());
+    Double_t pchi2 = TMath::Prob(chi2,1);
+    data[num].vals[iType] = log(pchi2);
+    data[num].errs[iType] = 0;
+//     Int_t num_params = _model->getParameters(hist)->selectByAttrib("Constant",kFALSE)->getSize();
+//     Int_t ndof = hist->numEntries() - num_params - 1;
+//     Double_t pchi2_b = TMath::Prob(chi2*ndof,ndof);
+//     data[num+1].vals[iType] = log(pchi2_b);
+//     data[num+1].errs[iType] = 0;
+
     // PLOT RESIDUAL
     string pulls_name = string("pulls_") + _SplitCat->getLabel();
     RooPlot* pulls = getPullHist(frame,histName.c_str(),fitName.c_str(),pulls_name.c_str());
@@ -363,15 +407,29 @@ vector<binValsAndErrs> SplitFitter::_fitSplit(RooDataHist *hist, // Data total h
     string canvas_title = canvas_name;
     TCanvas canvas(canvas_name.c_str(),canvas_title.c_str());
     canvas.cd();
-    TPad* HistogramPad = new TPad("HistogramPad","HistogramPad",0.0,0.5,1.0,1.0);
+    TPad* HistogramPad = new TPad("HistogramPad","HistogramPad",0.0,0.25,1.0,1.0);
     HistogramPad->Draw();
-    TPad* ResidualPad = new TPad("ResidualPad","ResidualPad",0.0,0.0,1.0,0.5);
+    HistogramPad->SetTopMargin(0.1);
+    TPad* ResidualPad = new TPad("ResidualPad","ResidualPad",0.0,0.0,1.0,0.25);
     ResidualPad->Draw();
     ResidualPad->SetTopMargin(0.1);
     HistogramPad->cd();
+    frame->SetTitleFont(63,"XY");
+    frame->SetTitleSize(18,"XY");
+    frame->SetTitleOffset(2,"XY");
+    frame->SetLabelFont(63,"XY");
+    frame->SetLabelSize(14,"XY");
     frame->Draw();
+    HistogramPad->Update();
     ResidualPad->cd();
+    pulls->SetTitleFont(63,"XY");
+    pulls->SetTitleSize(18,"XY");
+    pulls->SetTitleOffset(2,"XY");
+    pulls->SetLabelFont(63,"XY");
+    pulls->SetLabelSize(14,"XY");    
     pulls->Draw();
+    ResidualPad->Update();
+    canvas.Update();
   
     // SAVE TO ROOT FILE
     fout->cd();

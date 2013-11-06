@@ -1,0 +1,25 @@
+# EventType: 59999991
+#
+# Descriptor: psi(2S) => mu- mu+
+#
+# NickName: Psi2S2MuMu
+#
+# Cuts: 
+#
+# Momentum: 0.0*MeV
+#
+# Documentation: Decay file for psi(2S) particle gun
+# EndDocumentation
+#
+# PhysicsWG: 
+# Tested: No
+# Responsible:     Jack Wimberley
+# Email: jack.wimberley@cern.ch
+# Date:   20131011
+#
+Decay psi(2S)
+  1.0000  mu+        mu-                    PHOTOS VLL ;
+Enddecay
+#
+End
+#
