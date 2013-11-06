@@ -10,8 +10,6 @@ LHCbApp().EvtMax = nEvts
 from Configurables import LHCbApp, CondDB
 
 CondDB().Upgrade     = True
-LHCbApp().DDDBtag    = "dddb-20130808"
-LHCbApp().CondDBtag  = "sim-20130722-vc-md100"
 Gauss().DataType     = "Upgrade" 
 
 CondDB().AllLocalTagsByDataType = ["Muon_NoM1"]

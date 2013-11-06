@@ -16,7 +16,7 @@
 	<text>$GAUSSROOT/tests/refs/testGauss-Upgrade-Baseline.ref</text>
 </argument>
 <argument name="error_reference">
-	<text>$GAUSSROOT/tests/refs/testGauss-Upgrade-Baseline-err.ref</text>
+	<text>$GAUSSROOT/tests/refs/testGauss-Upgrade-err.ref</text>
 </argument>
 <argument name="stdout">
 	<text/>
@@ -26,13 +26,12 @@
 </argument>
 <argument name="args">
 	<set>
-		<text>$APPCONFIGOPTS/Gauss/Beam7000GeV-md100-nu3.8.py</text>
+		<text>$APPCONFIGOPTS/Gauss/Beam7000GeV-md100-nu3.8-HorExtAngle.py</text>
 		<text>$DECFILESROOT/options/10000000.py</text>
 		<text>$LBPYTHIAROOT/options/Pythia.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-Upgrade-DBTags.py</text>
-		<text>--option</text>
-		<text>from Configurables import Gauss; Gauss().DetectorGeo  = { "Detectors": ['VP', 'UT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DetectorSim  = { "Detectors": ['VP', 'UT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DetectorMoni = { "Detectors": ['VP', 'UT', 'FT', 'Rich1Pmt', 'Rich2Pmt', 'Ecal', 'Hcal', 'Muon', 'Magnet' ] }; Gauss().DataType     = "Upgrade"; from Configurables import CondDB; CondDB().Upgrade     = True; CondDB().AllLocalTagsByDataType=["VP+RICH_2019+UT_UUT", "FT_StereoAngle5", "Muon_NoM1", "Calo_NoSPDPRS"];from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20131009"; LHCbApp().CondDBtag="sim-20130830-vc-md100";</text>
+		<text>$APPCONFIGOPTS/Gauss/Gauss-Upgrade-Baseline-20131029.py</text>
 	</set>
 </argument>
 <argument name="exit_code">

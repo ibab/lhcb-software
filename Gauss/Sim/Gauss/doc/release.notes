@@ -4,6 +4,15 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-11-06 - Paul Szczypka
+ - Additional QMTests and modifications for Upgrade
+   . gauss-upgrade-baseline      (inc ref)
+   . gauss-upgrade-baseline-25ns (inc ref)
+   . gauss-upgrade-baseline-ut   (inc ref)
+   . gauss-upgrade-mininal       (exit code only)
+   . gauss-upgrade-calo_nospdprs (inc ref)
+   . gauss-upgrade-muon_nom1     (inc ref)
+
 ! 2013-10-28 - Paul Szczypka
  - Corrections to Configuration.py to safely access GenInit's properties after
    PowHeg additions.

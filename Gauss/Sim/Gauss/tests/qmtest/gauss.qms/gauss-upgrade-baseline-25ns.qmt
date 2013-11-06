@@ -13,7 +13,7 @@
 	<integer>1800</integer>
 </argument>
 <argument name="reference">
-	<text>$GAUSSROOT/tests/refs/testGauss-Upgrade-Muon_NoM1.ref</text>
+	<text>$GAUSSROOT/tests/refs/testGauss-Upgrade-Baseline-25ns.ref</text>
 </argument>
 <argument name="error_reference">
 	<text>$GAUSSROOT/tests/refs/testGauss-Upgrade-err.ref</text>
@@ -28,13 +28,11 @@
 	<set>
 		<text>$APPCONFIGOPTS/Gauss/Beam7000GeV-md100-nu3.8-HorExtAngle.py</text>
 		<text>$DECFILESROOT/options/10000000.py</text>
-		<text>$LBPYTHIA8ROOT/options/Pythia8.py</text>
+		<text>$LBPYTHIAROOT/options/Pythia.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
 		<text>$GAUSSROOT/tests/options/testGauss-Upgrade-DBTags.py</text>
-		<text>$GAUSSROOT/tests/options/testGauss-Upgrade-Muon_NoM1.py</text>
-		<text>$GAUSSOPTS/Gauss-Upgrade-Reference.py</text>
-		<text>--option</text>
-		<text>from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130808"; LHCbApp().CondDBtag="sim-20130830-vc-md100";</text>
+		<text>$APPCONFIGOPTS/Gauss/Gauss-Upgrade-Baseline-20131029.py</text>
+		<text>$APPCONFIGOPTS/Gauss/EnableSpillover-25ns.py</text>
 	</set>
 </argument>
 <argument name="exit_code">
