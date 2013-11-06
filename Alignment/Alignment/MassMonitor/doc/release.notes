@@ -4,6 +4,14 @@
 ! Purpose     : Package for making fits to 2D histograms (mass vs. VARIABLE)
 !-----------------------------------------------------------------------------
 
+! 2013-11-06 - Jack Wimberley
+- Added complete support for J/psi, psi(2S), Ups(1S), D0
+- Partial support for Z0, barring numerical problems in RooFFTConvPdf that add a bias
+- Changed bias vs. iov to show separate markers for MagUp / MagDown IOVs
+- Added a linear trend in middle of bias vs. momentum asymmetry to show curvature bias
+- Added example selections and monitors in python/MassMonitor/ExampleSelections.py and python/MassMonitor/ExampleMonitors.py
+- Added demo DaVinci scripts in scripts
+
 ! 2013-04-23 - Jack Wimberley
 - Added MassBiasesMonitor, which reproduces most of the functionality
 	of TrackParticleMonitor but without the TrackStateVertex fit
