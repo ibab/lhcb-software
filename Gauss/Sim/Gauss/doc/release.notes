@@ -12,6 +12,17 @@
    . gauss-upgrade-mininal       (exit code only)
    . gauss-upgrade-calo_nospdprs (inc ref)
    . gauss-upgrade-muon_nom1     (inc ref)
+ - Removal of obsolete upgrade qmtests
+   . gauss-upgrade-ft_mono.qmt
+   . gauss-upgrade-ft.qmt
+   . gauss-upgrade-vl_compact_microchannel-ut-ft.qmt
+   . gauss-upgrade-vl_compact_tpg-ut-ft.qmt
+   . gauss-upgrade-vl_loi_microchannel-ut-ft.qmt
+   . gauss-upgrade-vl_loi_tpg-ut-ft.qmt
+   . gauss-upgrade-vp_compact_microchannel-ut-ft.qmt
+   . gauss-upgrade-vp_compact_pocofoam-ut-ft.qmt
+   . gauss-upgrade-vp-ut-ft.qmt
+
 
 ! 2013-10-28 - Paul Szczypka
  - Corrections to Configuration.py to safely access GenInit's properties after
