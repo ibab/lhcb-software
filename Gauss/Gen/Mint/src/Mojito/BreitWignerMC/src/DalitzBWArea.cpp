@@ -421,7 +421,7 @@ counted_ptr<DalitzEvent> DalitzBWArea::tryEventForOwner(const Permutation& mappi
 				   << " returning event with weight " 
 				   << evtPtr->getWeight()
 				   << endl;
-    if(_pat[0] < 0) evtPtr->P_conjugateYourself();
+    if(0 != evtPtr && _pat[0] < 0) evtPtr->P_conjugateYourself();
     // the above ensures that, for the same random seed,
     // identical but CP conjugate events are generated
     // for D->f and Dbar->fbar.
