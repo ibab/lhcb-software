@@ -57,6 +57,10 @@ StatusCode PrHitManager::finalize() {
   for ( PrHitZones::iterator itS = m_zones.begin(); m_zones.end() != itS; ++itS ) {
     if ( NULL != *itS ) delete *itS;
   }
+  for ( PrHits::iterator itP = m_pool.begin(); m_pool.end() != itP; ++itP) {
+    if( NULL != *itP ) delete *itP;    
+  }
+  
   return GaudiTool::finalize();
 }
 //=============================================================================
