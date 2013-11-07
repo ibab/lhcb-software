@@ -1,8 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : Pr/PrKernel
-! Responsible : Olivier Callot
+! Responsible : 
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
+
+! 2013-11-07 - Marco Cattaneo
+ - Fix initialize/finalize memory leak in PrHitManager
 
 !========================= PrKernel v1r2 2013-02-14 =========================
 ! 2013-02-08 - Marco Clemencic
