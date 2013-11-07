@@ -21,21 +21,24 @@ DECLARE_TOOL_FACTORY( L0DUFromRawTool )
 //=============================================================================
 L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
                                   const std::string& name,
-                                  const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_confTool(NULL),
-    m_emuTool(NULL),
-    m_condDB(NULL),
-    m_banks(),
-    m_report(),
-    m_processorDatas(),
-    // DO NOT TOUCH !! IF YOU MODIFY THIS VALUE THIS WILL BREAK THE DC06 BACKWARD COMPATIBILITY
-    m_tck(0xDC06), // default value for DC06 production (TCK was not implemented in Bank) 
-    m_warning(true),
-    m_data(NULL),
-    m_slot("T0"),
-    m_dumping(-1),
-    m_count(0)
+                                  const IInterface* parent ): GaudiTool ( type, name , parent ),
+  m_confTool(NULL),
+  m_emuTool(NULL),
+  m_condDB(NULL),
+  m_banks(),
+  m_report(),
+  m_processorDatas(),
+// DO NOT TOUCH !! IF YOU MODIFY THIS VALUE THIS WILL BREAK THE DC06 BACKWARD COMPATIBILITY
+  m_tck(0xDC06), // default value for DC06 production (TCK was not implemented in Bank) 
+  m_warning(true),
+  m_data(NULL),
+  m_slot("T0"),
+  m_dumping(-1),
+  m_count(0),
+  m_vsn(0),
+  m_size(0),
+  m_roStatus(),
+  m_source(0)
 {
   declareInterface<IL0DUFromRawTool>(this);
   
@@ -62,7 +65,9 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-L0DUFromRawTool::~L0DUFromRawTool() {} 
+L0DUFromRawTool::~L0DUFromRawTool() {
+  if(m_processorDatas)delete m_processorDatas;
+} 
 
 
 

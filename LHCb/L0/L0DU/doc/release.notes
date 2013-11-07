@@ -3,6 +3,9 @@
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+! 2013-11-07 - Olivier Deschamps
+ - L0DUFromRawTool : fix uninitialized m_size attribute and fix minor memory leak
+
 !========================= L0DU v10r29 2013-10-23 =========================
 ! 2013-10-04 - Olivier Deschamps
  - L0DUFromRawAlg :  
