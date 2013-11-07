@@ -30,7 +30,7 @@
 		<text>$GAUSSROOT/tests/options/testGauss-Upgrade-DBTags.py</text>
 		<text>$GAUSSOPTS/Gauss-Upgrade-Reference.py</text>
 		<text>--option</text>
-		<text>from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130808"; LHCbApp().CondDBtag="sim-20130830-vc-md100";</text>
+		<text>from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130808"; LHCbApp().CondDBtag="sim-20130722-vc-md100";</text>
 	</set>
 </argument>
 <argument name="exit_code">

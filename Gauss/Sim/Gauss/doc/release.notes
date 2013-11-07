@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-11-07 - Paul Szczypka
+ - Corrected simcond values in upgrade tests.
+
 ! 2013-11-06 - Paul Szczypka
  - Additional QMTests and modifications for Upgrade
    . gauss-upgrade-baseline      (inc ref)
