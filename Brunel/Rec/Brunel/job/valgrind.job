@@ -59,9 +59,7 @@ else
 endif
 
 # == set the program environment
-source /afs/cern.ch/lhcb/group/rich/vol4/jonrob/scripts/new-valgrind.csh
-SetupProject Brunel $Bversion
-
+SetupProject Brunel $Bversion valgrind
 
 # Go to working directory
 cd $WORKDIR
@@ -81,8 +79,7 @@ echo "from Brunel.Configuration import *" >&! valgrind-opts.py
 echo "Brunel().EvtMax=5" >> valgrind-opts.py
 
 # == run the excutable ================================
-
-valgrind --tool=memcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=40 --suppressions=$ROOTSYS/etc/valgrind-root.supp --suppressions=$STDOPTS/valgrind-python.supp --suppressions=$STDOPTS/Gaudi.supp --suppressions=$SuppFile python `which gaudirun.py` valgrind-opts.py $options >&! memcheck.log
+gaudirun.py --profilerName=valgrindmemcheck --profilerExtraOptions="-v __leak-check=yes __num-callers=40 __suppressions=$ROOTSYS/etc/valgrind-root.supp __suppressions=$STDOPTS/valgrind-python.supp __suppressions=$STDOPTS/Gaudi.supp __suppressions=$SuppFile" valgrind-opts.py $options >&! memcheck.log
 
 # == job is finished: remove temporary files ==========
 rm valgrind-opts.py
