@@ -1,3 +1,8 @@
+2013-11-07  Illya Shapoval <Illya.Shapoval@cern.ch>
+
+	* scripts/ariadne_add: new security model is taken on-board
+	* scripts/ariadne: new script - a common tool to talk to Ariadne
+
 2013-10-03  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* scripts/lb-project-manage-volume: New script to manage LHCb AFS volumes 

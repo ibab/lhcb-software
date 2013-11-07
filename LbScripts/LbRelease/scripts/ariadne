@@ -1,0 +1,38 @@
+#!/bin/bash
+
+setup_env () {
+    . SetupProject.sh --silent Tools --runtime LCGCMT --use Ariadne
+
+    if [ "$SetupProjectStatus" != 0 ] ; then
+        echo "ERROR: Cannot prepare the environment to use Ariadne."
+        exit 1
+    fi
+}
+
+case $1 in
+  add)
+    command -v cern-get-sso-cookie >/dev/null 2>&1 || { echo >&2 "I need 'cern-get-sso-cookie' package to run but it's not installed. Aborting."; exit 1; }
+    cookie_file=/tmp/$USER/ssocookie-ariadne.txt
+    cern-get-sso-cookie --nocertverify --krb -u https://ariadne-lhcb.cern.ch/ -o $cookie_file
+    if [ $? != 0 ] ; then
+        printf "ERROR: CERN SSO cookie could not be acquired for Ariadne, thus no way to connect to the service. Exiting.\n\n"
+        exit 1
+    fi    
+
+    setup_env
+    ariadne_add.py "${@:2}"
+    rm -f $cookie_file
+    
+    exit 0
+    ;;
+
+  query | q )
+    setup_env
+    ariadne_query.py "${@:2}"
+    ;;
+
+  *)
+    echo "Usage: $0 { add [OPTIONS] NODE_IDENTIFIER [INSTRUCTION1 [INSTRUCTION2 [...] ]] | q[uery] NODE_IDENTIFIER | help | {add|q[uery]} {-h|--help} }"
+    exit 0;;
+
+esac

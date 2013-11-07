@@ -1,7 +1,10 @@
 #!/bin/bash
 
-if [ `hostname -s` != lxbuild119 ]; then
-    printf "\nWARNING: this operation is allowed only from lxbuild119 machine. Exiting.\n\n"
+command -v cern-get-sso-cookie >/dev/null 2>&1 || { echo >&2 "I need 'cern-get-sso-cookie' package to run but it's not installed. Aborting."; exit 1; }
+cookie_file=/tmp/$USER/ssocookie-ariadne.txt
+cern-get-sso-cookie --nocertverify --krb -u https://ariadne-lhcb.cern.ch/ -o $cookie_file
+if [ $? != 0 ] ; then
+    printf "\nERROR: CERN SSO cookie could not be acquired for Ariadne, thus no way to connect to the service. Exiting.\n\n"
     exit 1
 fi
 
@@ -13,3 +16,8 @@ if [ "$SetupProjectStatus" != 0 ] ; then
 fi
 
 ariadne_add.py "$@"
+exitcode=$?
+
+rm -f $cookie_file
+
+exit $exitcode
