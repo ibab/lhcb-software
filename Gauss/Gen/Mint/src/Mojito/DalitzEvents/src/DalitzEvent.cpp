@@ -628,6 +628,23 @@ bool DalitzEvent::shoutAndKill(){
   throw "probably insonsistent pattern in DalitzEvent";
 }
 
+void DalitzEvent::P_conjugateYourself(){
+  resetST(); // shouldn't be necessary, but to be save.
+  if(_p.empty()) return;
+  for(unsigned int i=0; i < _p.size(); i++){
+    _p[i].SetX( - _p[i].X() );
+    _p[i].SetY( - _p[i].Y() );
+    _p[i].SetZ( - _p[i].Z() );
+  }
+}
+void DalitzEvent::C_conjugateYourself(){
+  _pat = _pat.makeCPConjugate();
+}
+void DalitzEvent::CP_conjugateYourself(){
+  P_conjugateYourself();
+  C_conjugateYourself();
+}
+
 bool DalitzEvent::resetST(){ 
   // resets (possibly previously calculated) values for sij, tij
 

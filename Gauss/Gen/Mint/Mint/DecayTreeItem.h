@@ -15,9 +15,25 @@ class DecayTreeItem{
   // it associates a final state particle in the
   // decay tree to a particle number (1-3 or 1-4) in
   // the event record.
+
+  int defaultParityFactor()const{
+    // parity factor is the factor by which I multiply
+    // 3-momenta before calculating spin factors.
+    // The default is set such that if you have the
+    // same amplitude model for D->f and Dbar->fbar
+    // MINT conserves CP (and not just C by iteself, which
+    // would be the case w/o this measure)
+    // There is a public "parityFactor()" method below.
+    // This can be modified in case I want to allow users in the future
+    // to change this behaviour, for example by adding a variable
+    // the modifies the parity factor. For now it's fixed and
+    // parityFactor just returns the defaultParityFactor,
+    // which is 1 for particles, -1 for antiparticles
+    // and 1 for particles that are their own antiparticles.
+    return (_pdg_id < 0 ? -1 : +1);
+  }
  public: 
   int _pdg_id;
-
   int _L_angMom; // angular momentum in decay
   //         (default: -9999; the fitter then uses automatically
   //         the smallest _L_angMom compatible with L conservation and P
@@ -34,6 +50,7 @@ class DecayTreeItem{
   operator int() const{
     return _pdg_id;
   }
+  int parityFactor()const{return defaultParityFactor();} // see above
   int L()const {return _L_angMom;}
   char L_as_SPD()const;
   void setL(int l){ _L_angMom = l;}

@@ -130,8 +130,8 @@ std::string convertInt(int number)
    ss << number;//add number to the stream
    return ss.str();//return a string with the contents of the stream
 }
-void DalitzHistogram::smartTitle(const DalitzCoordSet& c_in
-								, const DalitzEventPattern& pat_in)
+void DalitzHistogram::smartTitle(  const DalitzCoordSet& c_in
+				 , const DalitzEventPattern& pat_in)
 {
 //	pat_in
 	TString c_out = c_in.name();

@@ -421,6 +421,17 @@ counted_ptr<DalitzEvent> DalitzBWArea::tryEventForOwner(const Permutation& mappi
 				   << " returning event with weight " 
 				   << evtPtr->getWeight()
 				   << endl;
+    if(_pat[0] < 0) evtPtr->P_conjugateYourself();
+    // the above ensures that, for the same random seed,
+    // identical but CP conjugate events are generated
+    // for D->f and Dbar->fbar.
+    // Note that this step of the event generation is
+    // completely P-even, and the event generation would
+    // still be correct without this P-conjugation. The 
+    // crucial P-senstive step is the reweighting applied 
+    // later, which will then take into account the full
+    // amplitude model. The P-conjugation here is just to keep the
+    // random numbers in sync between CP conjugate event generations.
     return evtPtr;
   }
   cout << "ERROR in DalitzBWArea::tryEventForOwner() can only make events"
@@ -785,6 +796,7 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight
 
 
   if(ResonanceConfigurationNumber() == 0){
+    // like D->K* rho, K*->Kpi, rho->pipi
     if(dbThis) cout << " making s12, s34 configuration " << endl;
 
     double rho12     = sf(1,2).second->generateRho(_rnd);
@@ -911,6 +923,8 @@ DalitzBWArea::try4EventWithPhaseSpace(double& maxWeight
     returnEvent = thisEvent;
   }else{
     if(dbThis) cout << " making s123, s12 configuration " << endl;
+    // like D->K1 pi, K1->K* pi, K*->Kpi
+
     double rho123    = sf(1,2,3).second->generateRho(_rnd);
     double s123      = sf(1,2,3).second->coordTransformToS(rho123);
     if(s123 < 0) return nullEvtPtr;

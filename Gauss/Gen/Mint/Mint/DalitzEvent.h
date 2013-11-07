@@ -117,6 +117,10 @@ public:
   virtual void   setGeneratorPdfRelativeToPhaseSpace(double gpdf);
   virtual double getGeneratorPdfRelativeToPhaseSpace()const;
 
+  virtual void P_conjugateYourself();
+  virtual void C_conjugateYourself();
+  virtual void CP_conjugateYourself();
+
   bool resetST();
 
   const Permutation& currentPermutation() const{
