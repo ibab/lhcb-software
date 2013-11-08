@@ -10,6 +10,7 @@
 #include "PrKernel/PrHitManager.h"
 #include "PrSeedTrack.h"
 #include "PrGeometryTool.h"
+#include "TfKernel/RecoFuncs.h"
 
 /** @class PrSeedingXLayers PrSeedingXLayers.h
  *  Stand alone seeding for the FT T stations
@@ -29,10 +30,12 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
-  void findXProjections( unsigned int zone );
+ 
 
-  void addStereo( unsigned int zone );
+protected:
+  void findXProjections( unsigned int part );
+
+  void addStereo( unsigned int part );
 
   bool fitTrack( PrSeedTrack& track );
 
@@ -58,6 +61,31 @@ protected:
     }
     return false;
   };
+
+  /// Class to find lower bound of x of PrHit
+  class lowerBoundX {
+  public:
+    bool operator() (const PrHit* lhs, const double testval ) const { return lhs->x() < testval; }
+  };
+
+  /// Class to compare x positions of PrHits
+  class compX {
+  public:
+    bool operator() (const PrHit* lhs, const PrHit* rhs ) const { return lhs->x() < rhs->x(); }
+  };
+
+  /// Class to find lower bound of LHCbIDs of PrHits
+  class lowerBoundLHCbID {
+  public:
+    bool operator() (const PrHit* lhs, const LHCb::LHCbID id ) const { return lhs->id() < id; }
+  };
+  
+  /// Class to compare LHCbIDs of PrHits
+  class compLHCbID {
+  public:
+    bool operator() (const PrHit* lhs, const PrHit* rhs ) const { return lhs->id() < rhs->id(); }
+  };
+
 
 private:
   std::string     m_inputName;

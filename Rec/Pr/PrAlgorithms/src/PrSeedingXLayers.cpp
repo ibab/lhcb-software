@@ -120,22 +120,35 @@ StatusCode PrSeedingXLayers::execute() {
   // Extract the seed part from the forward tracks.
   //====================================================================
   if ( "" != m_inputName ) {
+    
+    // -- sort hits according to LHCbID
+    for(int i = 0; i < 24; i++){
+      PrHitZone* zone = m_hitManager->zone(i);
+      std::sort( zone->hits().begin(),  zone->hits().end(), compLHCbID());
+    }
+    // ------------------------------------------
+    
     LHCb::Tracks* forward = get<LHCb::Tracks>( m_inputName );
     for ( LHCb::Tracks::iterator itT = forward->begin(); forward->end() != itT; ++itT ) {
       std::vector<LHCb::LHCbID> ids;
+      ids.reserve(20);
       for ( std::vector<LHCb::LHCbID>::const_iterator itId = (*itT)->lhcbIDs().begin();
             (*itT)->lhcbIDs().end() != itId; ++itId ) {
         if ( (*itId).isFT() ) {
           LHCb::FTChannelID ftId =(*itId).ftID();
           int zoneNb = 2 * ftId.layer() + ftId.quarter()/2;
           PrHitZone* zone = m_hitManager->zone(zoneNb);
-	  // for next dev, think of using binary search (that takes lhcb ids)
-          for ( PrHits::iterator itH = zone->hits().begin(); zone->hits().end() != itH; ++itH ) {
+          // -- The hits are sorted according to LHCbID, we can therefore use a lower bound to speed up the search
+          PrHits::iterator itH = std::lower_bound(  zone->hits().begin(),  zone->hits().begin(), *itId, lowerBoundLHCbID() );
+                    
+          for ( ; zone->hits().end() != itH; ++itH ) {
+            if( *itId < (*itH)->id() ) break;
             if ( (*itH)->id() == *itId ) (*itH)->setUsed( true );
           }
           ids.push_back( *itId );
         }
       }
+      
       LHCb::Track* seed = new LHCb::Track;
       seed->setLhcbIDs( ids );
       seed->setType( LHCb::Track::Ttrack );
@@ -144,24 +157,36 @@ StatusCode PrSeedingXLayers::execute() {
       seed->addToStates( (*itT)->closestState( 9000. ) );
       result->insert( seed );
     }
+
+    // -- sort hits according to x
+    for(int i = 0; i < 24; i++){
+      PrHitZone* zone = m_hitManager->zone(i);
+      std::sort( zone->hits().begin(),  zone->hits().end(), compX());
+    }
+
+
+
   }
+
+
   m_trackCandidates.clear();
   if ( m_doTiming ) {
     m_timerTool->stop( m_timeFromForward );
   }
 
-  for ( unsigned int zone = 0; 2 > zone; ++zone ) {
+  // -- Loop through lower and upper half
+  for ( unsigned int part= 0; 2 > part; ++part ) {
     if ( m_doTiming ) {
       m_timerTool->start( m_timeXProjection);
     }
-    findXProjections( zone );
+    findXProjections( part );
 
     if ( m_doTiming ) {
       m_timerTool->stop( m_timeXProjection);
       m_timerTool->start( m_timeStereo);
     }
 
-    if ( ! m_xOnly ) addStereo( zone );
+    if ( ! m_xOnly ) addStereo( part );
     if ( m_doTiming ) {
       m_timerTool->stop( m_timeStereo);
     }
@@ -196,13 +221,13 @@ StatusCode PrSeedingXLayers::finalize() {
 //=========================================================================
 //
 //=========================================================================
-void PrSeedingXLayers::findXProjections( unsigned int zone ){
+void PrSeedingXLayers::findXProjections( unsigned int part ){
   m_xCandidates.clear();
   for ( unsigned int iCase = 0 ; 3 > iCase ; ++iCase ) {
-    int firstZone = zone;
-    int lastZone  = 22 + zone;
-    if ( 1 == iCase ) firstZone = zone + 6;
-    if ( 2 == iCase ) lastZone  = 16 + zone;
+    int firstZone = part;
+    int lastZone  = 22 + part;
+    if ( 1 == iCase ) firstZone = part + 6;
+    if ( 2 == iCase ) lastZone  = 16 + part;
     
     PrHitZone* fZone = m_hitManager->zone( firstZone );
     PrHitZone* lZone = m_hitManager->zone( lastZone  );
@@ -216,11 +241,17 @@ void PrSeedingXLayers::findXProjections( unsigned int zone ){
 
     
     std::vector<PrHitZone*> xZones;
+    xZones.reserve(12);
     for ( int kk = firstZone+2; lastZone > kk ; kk += 2 ) {
       if ( m_hitManager->zone( kk )->isX() ) xZones.push_back( m_hitManager->zone(kk) );
     }
     
     PrHits::iterator itLBeg = lHits.begin();
+
+    // -- Define the iterators for the "in-between" layers
+    std::vector< PrHits::iterator > iterators;
+    iterators.reserve(24);
+    
     for ( PrHits::iterator itF = fHits.begin(); fHits.end() != itF; ++itF ) {
       if ( 0 != iCase && (*itF)->isUsed() ) continue;
       float minXl = (*itF)->x() * zRatio - m_maxIpAtZero * ( zRatio - 1 );
@@ -228,38 +259,75 @@ void PrSeedingXLayers::findXProjections( unsigned int zone ){
   
 
       if ( matchKey( *itF ) ) info() << "Search from " << minXl << " to " << maxXl << endmsg;
+      
+      itLBeg = std::lower_bound( lHits.begin(), lHits.end(), minXl, lowerBoundX() );
       while ( itLBeg != lHits.end() && (*itLBeg)->x() < minXl ) {
         ++itLBeg;
         if ( lHits.end() == itLBeg ) break;
       }
+
       PrHits::iterator itL = itLBeg;
+    
+      // -- Initialize the iterators
+      iterators.clear();
+      for(std::vector<PrHitZone*>::iterator it = xZones.begin(); it != xZones.end(); it++){
+        iterators.push_back( (*it)->hits().end() );
+      }
+      
+
       while ( itL != lHits.end() && (*itL)->x() < maxXl ) {
+      
+        
         if ( 0 != iCase && (*itL)->isUsed() ) {
           ++itL;
           continue;
         }
+     
+        
         float tx = ((*itL)->x() - (*itF)->x()) / (lZone->z() - fZone->z() );
         float x0 = (*itF)->x() - (*itF)->z() * tx;
         bool debug = matchKey( *itF ) || matchKey( *itL );
         PrHits xCandidate;
+        xCandidate.reserve(30); // assume no more than 5 hits per layer
         xCandidate.push_back( *itF );
         int nMiss = 0;
         if ( 0 != iCase ) nMiss = 1;
         
 
-	//loop over ALL x zones 
+        //loop over ALL x zones 
+        unsigned int counter = 0; // counter to identify the iterators
         for ( std::vector<PrHitZone*>::iterator itZ = xZones.begin(); xZones.end() != itZ; ++itZ ) {
+          
           float xP   = x0 + (*itZ)->z() * tx;
-          float xMin = xP - m_tolXInf;
           float xMax = xP + m_tolXSup;
+          float xMin = xP - m_tolXInf;
+        
           if ( x0 < 0 ) {
             xMin = xP - m_tolXSup;
             xMax = xP + m_tolXInf;
           }
+  
+          // -- If iterator is not set to any position, search lower bound for it
+          if(  iterators.at( counter ) == (*itZ)->hits().end() ){
+            iterators.at( counter ) =  std::lower_bound( (*itZ)->hits().begin(), (*itZ)->hits().end(), xMin, lowerBoundX() );
+          }
+          PrHits::iterator itH = iterators.at( counter );
+          
+          float xMinStrict = xP - m_tolXSup;
           PrHit* best = NULL;
-          for ( PrHits::iterator itH = (*itZ)->hits().begin(); (*itZ)->hits().end() != itH; ++itH ) {
+
+          for ( ; (*itZ)->hits().end() != itH; ++itH ) {
+            
+            // -- Advance the iterator, if it is lower than any possible bound 
+            //-- (as lower bound could change, need to use strict criterion here)
+            if ( (*itH)->x() < xMinStrict ){
+              iterators.at( counter )++;
+              continue;
+            }
+            
             if ( (*itH)->x() < xMin ) continue;
             if ( (*itH)->x() > xMax ) break;
+            
             best = *itH;
             xCandidate.push_back( best );
           }
@@ -267,10 +335,14 @@ void PrSeedingXLayers::findXProjections( unsigned int zone ){
             nMiss++;
             if ( 1 < nMiss ) break;
           }
+          counter++;
+ 
         }
+        
+
         if ( nMiss < 2 ) {
           xCandidate.push_back( *itL );
-          PrSeedTrack temp( zone, m_geoTool->zReference(), xCandidate );
+          PrSeedTrack temp( part, m_geoTool->zReference(), xCandidate );
           
           bool OK = fitTrack( temp );
           if ( debug ) {
@@ -362,15 +434,15 @@ void PrSeedingXLayers::findXProjections( unsigned int zone ){
 //=========================================================================
 //  
 //=========================================================================
-void PrSeedingXLayers::addStereo( unsigned int zone ) {
+void PrSeedingXLayers::addStereo( unsigned int part ) {
   PrSeedTracks xProjections;
   for ( PrSeedTracks::iterator itT1 = m_xCandidates.begin(); m_xCandidates.end() !=itT1; ++itT1 ) {
     if ( !(*itT1).valid() ) continue;
     xProjections.push_back( *itT1 );
   }
 
-  unsigned int firstZone = zone + 2;
-  unsigned int lastZone  = zone + 22;
+  unsigned int firstZone = part + 2;
+  unsigned int lastZone  = part + 22;
   for ( PrSeedTracks::iterator itT = xProjections.begin(); xProjections.end() !=itT; ++itT ) {
     bool debug = false;
     int nMatch = 0;
@@ -384,6 +456,7 @@ void PrSeedingXLayers::addStereo( unsigned int zone ) {
     }
     
     PrHits myStereo;
+    myStereo.reserve(30);
     for ( unsigned int kk = firstZone; lastZone > kk ; kk+= 2 ) {
       if ( m_hitManager->zone(kk)->isX() ) continue;
       float dxDy = m_hitManager->zone(kk)->dxDy();
@@ -397,7 +470,11 @@ void PrSeedingXLayers::addStereo( unsigned int zone ) {
         xMax = xMin;
         xMin = tmp;
       }
-      for ( PrHits::iterator itH = m_hitManager->zone(kk)->hits().begin();
+
+      PrHits::iterator itH = std::lower_bound( m_hitManager->zone(kk)->hits().begin(),  
+                                               m_hitManager->zone(kk)->hits().end(), xMin, lowerBoundX() );
+      //      for ( PrHits::iterator itH = m_hitManager->zone(kk)->hits().begin();
+      for ( ;
             m_hitManager->zone(kk)->hits().end() != itH; ++itH ) {
         if ( (*itH)->x() < xMin ) continue;
         if ( (*itH)->x() > xMax ) break;
@@ -405,8 +482,8 @@ void PrSeedingXLayers::addStereo( unsigned int zone ) {
         if ( debug ) {
           if ( matchKey( *itH ) ) printHit( *itH, "" );
         }
-        if ( 0 == zone && (*itH)->coord() < -0.005 ) continue;
-        if ( 1 == zone && (*itH)->coord() >  0.005 ) continue;
+        if ( 0 == part && (*itH)->coord() < -0.005 ) continue;
+        if ( 1 == part && (*itH)->coord() >  0.005 ) continue;
         myStereo.push_back( *itH );
       }
     }

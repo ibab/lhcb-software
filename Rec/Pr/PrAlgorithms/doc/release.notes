@@ -3,6 +3,10 @@
 ! Responsible : Yasmin Amhis
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
+
+! 2013-11-08 - Michel De Cian
+ - Put some speed improvements in PrSeedingXLayers
+
 ! 2013-11-01 - Espen Eie Bowen
  - Implemented the new momentum dependent windows.
 
