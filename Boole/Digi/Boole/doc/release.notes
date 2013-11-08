@@ -12,6 +12,7 @@ Purpose: LHCb Digitization program
      - boole-upgrade-baseline-25ns
      - boole-upgrade-calo_nospdprs
      - boole-upgrade-muon_nom1
+   . Updated upgrade tests to new DB tags after UT changes in DB.
 
 - Configuration Changes
    . Added a line for the UT as submitted by JC. 
