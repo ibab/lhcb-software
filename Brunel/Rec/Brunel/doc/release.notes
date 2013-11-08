@@ -3,6 +3,15 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to QMTests
+  . Updated full Upgrade test suite and removed old tests.
+    - baseline
+    - baseline-25ns
+    - baseline-ut
+    - minimal
+    - calo_nospdprs
+    - muon_nom1
+
 - Update valgrind.job to use gaudirun.py directly
 
 - Changes to references to reflect changes since v44r8
