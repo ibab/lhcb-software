@@ -5,6 +5,9 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2013-11-08 Sebastian Neubert
+ - Set reporting level for release of tool which empties the stack to MSG::DEBUG
+
 !========================= LoKiArrayFunctors v10r4 2013-10-29 =========================
 
 ! 2013-10-24 Sebastian Neubert

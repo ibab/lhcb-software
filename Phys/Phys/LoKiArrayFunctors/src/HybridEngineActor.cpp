@@ -94,7 +94,9 @@ StatusCode LoKi::Hybrid::EngineActor::releaseTool
     return LoKi::Report::Warning(msg.str(),StatusCode::SUCCESS) ;
   }
   //
-  return LoKi::Report::Warning("LoKi:Hybrid::EngineActor::releaseTool(): Stack empty after release. All is well.",StatusCode::SUCCESS) ;
+  LoKi::Report::Print("LoKi:Hybrid::EngineActor::releaseTool(): Stack empty after release. All is well.",
+                      StatusCode::SUCCESS,MSG::DEBUG) ;
+  return StatusCode::SUCCESS;
 }
 // ============================================================================
 // connect the hybrid tool for code translation 
