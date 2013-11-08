@@ -5,6 +5,13 @@ Purpose: LHCb Digitization program
 
 - QMTest Changes
    . Updated Upgrade references
+   . Changed suite of upgrade qmtests to
+     - boole-upgrade-minimal
+     - boole-upgrade-baseline
+     - boole-upgrade-baseline-ut
+     - boole-upgrade-baseline-25ns
+     - boole-upgrade-calo_nospdprs
+     - boole-upgrade-muon_nom1
 
 - Configuration Changes
    . Added a line for the UT as submitted by JC. 

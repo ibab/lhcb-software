@@ -3,11 +3,13 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
     <text>$APPCONFIGOPTS/Boole/Default.py</text>
-    <text>$APPCONFIGOPTS/Boole/Boole-Upgrade-Baseline-20131029.py</text>
+    <text>$APPCONFIGOPTS/Boole/Boole-Upgrade-Reference.py</text>
+    <text>$APPCONFIGOPTS/Boole/Boole-Upgrade-NoSPDPRS.py</text>
+    <text>$APPCONFIGOPTS/Boole/patchUpgrade1.py</text>
     <text>--option</text>
-    <text>from Boole.Configuration import *; from Configurables import Boole; Boole().DataType     = "Upgrade"; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20131025"; LHCbApp().CondDBtag="sim-20130830-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/Baseline/Baseline.sim'"];</text>
+    <text>from Boole.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130808"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/Calo_NoSpdPrs/Calo_NoSpdPrs.sim'"];</text>
     </set></argument>
-  <argument name="reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-baseline.ref</text></argument>
+  <argument name="reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-calo_nospdprs.ref</text></argument>
   <argument name="error_reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-err.ref</text></argument>
   <argument name="validator"><text>
 from Boole.QMTest.BooleExclusions import preprocessor

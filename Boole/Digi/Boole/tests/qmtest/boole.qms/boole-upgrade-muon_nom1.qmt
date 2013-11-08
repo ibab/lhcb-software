@@ -6,9 +6,9 @@
     <text>$APPCONFIGOPTS/Boole/Boole-Upgrade-Reference.py</text>
     <text>$APPCONFIGOPTS/Boole/patchUpgrade1.py</text>
     <text>--option</text>
-    <text>from Boole.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130808"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/Minimal/Minimal.sim'"];</text>
-    </set></argument>
-  <argument name="reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-minimal.ref</text></argument>
+    <text>from Boole.Configuration import *; from Configurables import CondDB; CondDB().Upgrade = True; from Configurables import LHCbApp; LHCbApp().DDDBtag="dddb-20130808"; LHCbApp().CondDBtag="sim-20130722-vc-md100"; CondDB().AllLocalTagsByDataType = ["Muon_NoM1"]; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/s/szczypka/nightlyTestFiles/BooleStep/Muon_NoM1/Muon_NoM1.sim'"];</text>
+  </set></argument>
+  <argument name="reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-muon_nom1.ref</text></argument>
   <argument name="error_reference"><text>$BOOLEROOT/tests/refs/boole-upgrade-err.ref</text></argument>
   <argument name="validator"><text>
 from Boole.QMTest.BooleExclusions import preprocessor
