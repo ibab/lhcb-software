@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2013-11-08 - Paul Szczypka
+ - Updated upgrade tests and refs after new UT additions in DB.
+
 ! 2013-11-07 - Paul Szczypka
  - Corrected simcond values in upgrade tests.
 

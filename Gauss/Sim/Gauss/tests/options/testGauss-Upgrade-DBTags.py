@@ -6,7 +6,7 @@ nEvts = 1
 LHCbApp().EvtMax = nEvts
 
 from Configurables import LHCbApp, CondDB
-LHCbApp().DDDBtag    = "dddb-20131025"
-LHCbApp().CondDBtag  = "sim-20130830-vc-md100"
+LHCbApp().DDDBtag    = "dddb-20131108"
+LHCbApp().CondDBtag  = "sim-20131108-vc-md100"
 
 
