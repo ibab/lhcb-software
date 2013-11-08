@@ -112,6 +112,7 @@ void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){
   // uses for Lauren's KKpipi analysis (make sure you also use the
   // same mass-width file if you want to reproduce the results
   // exactly!)
+  bool dbThis=false;
 
   bool isBg=A_is_in_B("BgSpinZero",opt);
   bool isCLEO2012=A_is_in_B("CLEO2012",opt);
@@ -122,6 +123,8 @@ void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){
 
   if(! isCLEO2012)addSimple(ai, opt + "CLEO2012");
   // if it already is a decay with the CLEO2012 option, then there's not point in adding it again.
+  if(dbThis) cout << "NamedDecayTreeList::add: just added D->f\t" 
+		  << ai.tree().oneLiner() << endl;
 
   DecayTree      dt = ai.tree();
   anti(dt);   // CP conjugate
@@ -130,6 +133,8 @@ void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){
   addSimple(CPai, opt);
   if(! isBg) addSimple(CPai, opt + "BgSpinZero");
   if(! isCLEO2012)addSimple(CPai, opt + "CLEO2012");
+  if(dbThis) cout << "NamedDecayTreeList::add: just added Dbar->fbar\t" 
+		  << dt.oneLiner() << endl;
 
   dt.getVal().antiThis(); // mum back to D0
   AmpInitialiser DtoCPai(ai);
@@ -137,6 +142,8 @@ void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){
   addSimple(DtoCPai, opt);
   if(! isBg) addSimple(DtoCPai, opt + "BgSpinZero");
   if(! isCLEO2012)addSimple(DtoCPai, opt + "CLEO2012");
+  if(dbThis) cout << "NamedDecayTreeList::add: just added D->fbar\t" 
+		  << dt.oneLiner() << endl;
 
   anti(dt); // and the CP conjugate of that, i.e. Dbar->original
   AmpInitialiser DbarToOriginal(ai);
@@ -144,6 +151,8 @@ void NamedDecayTreeList::add(const AmpInitialiser& ai, const std::string& opt){
   addSimple(DbarToOriginal, opt);
   if(! isBg) addSimple(DbarToOriginal, opt + "BgSpinZero");
   if(! isCLEO2012)addSimple(DbarToOriginal, opt + "CLEO2012");
+  if(dbThis) cout << "NamedDecayTreeList::add: just added Dbar->f\t" 
+		  << dt.oneLiner() << endl;
 
 }
 void NamedDecayTreeList::addSimple(const AmpInitialiser& ai, const std::string& opt){ // formerly "add"

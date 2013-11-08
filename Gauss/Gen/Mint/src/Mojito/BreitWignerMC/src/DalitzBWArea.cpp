@@ -413,31 +413,39 @@ double DalitzBWArea::integral() const{
 }
   
 counted_ptr<DalitzEvent> DalitzBWArea::tryEventForOwner(const Permutation& mapping) const{
-  bool dbThis = false;
-  if(_pat.numDaughters() == 3) return try3Event(mapping);
-  if(_pat.numDaughters() == 4){
-    counted_ptr<DalitzEvent> evtPtr(try4Event(mapping));
-    if(dbThis && 0 != evtPtr) cout << " DalitzBWArea::makeEventForOwner() "
-				   << " returning event with weight " 
-				   << evtPtr->getWeight()
-				   << endl;
-    if(0 != evtPtr && _pat[0] < 0) evtPtr->P_conjugateYourself();
-    // the above ensures that, for the same random seed,
-    // identical but CP conjugate events are generated
-    // for D->f and Dbar->fbar.
-    // Note that this step of the event generation is
-    // completely P-even, and the event generation would
-    // still be correct without this P-conjugation. The 
-    // crucial P-senstive step is the reweighting applied 
-    // later, which will then take into account the full
-    // amplitude model. The P-conjugation here is just to keep the
-    // random numbers in sync between CP conjugate event generations.
-    return evtPtr;
+  bool dbThis=false;
+  counted_ptr<DalitzEvent> evtPtr(0);
+  if(_pat.numDaughters() == 3){
+    evtPtr = try3Event(mapping);
+  }else if(_pat.numDaughters() == 4){
+    evtPtr = try4Event(mapping);
+    if(dbThis && 0 != evtPtr){
+      cout << " DalitzBWArea::makeEventForOwner() "
+	   << " returning event with weight " 
+	   << evtPtr->getWeight()
+	   << endl;
+    }
+  }else{
+    cout << "ERROR in DalitzBWArea::tryEventForOwner() can only make events"
+	 << " with 3 or 4 daughters. You want : " << _pat
+	 << endl;
+    return counted_ptr<DalitzEvent>(0);
   }
-  cout << "ERROR in DalitzBWArea::tryEventForOwner() can only make events"
-       << " with 3 or 4 daughters. You want : " << _pat
-       << endl;
-  return counted_ptr<DalitzEvent>(0);
+
+  if(dbThis && 0 != evtPtr) cout << "Event before P-con " << *evtPtr << endl;
+  if(0 != evtPtr && _pat[0] < 0) evtPtr->P_conjugateYourself();
+  // the above ensures that, for the same random seed,
+  // identical but CP conjugate events are generated
+  // for D->f and Dbar->fbar.
+  // Note that this step of the event generation is
+  // completely P-even, and the event generation would
+  // still be correct without this P-conjugation. The 
+  // crucial P-senstive step is the reweighting applied 
+  // later, which will then take into account the full
+  // amplitude model. The P-conjugation here is just to keep the
+  // random numbers in sync between CP conjugate event generations.
+  if(dbThis && 0 != evtPtr) cout << "Event after P-con " << *evtPtr << endl;
+  return evtPtr;
 }
 
 counted_ptr<DalitzEvent> DalitzBWArea::try3Event(const Permutation& mapping) const{

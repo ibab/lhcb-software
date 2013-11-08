@@ -614,6 +614,7 @@ void DalitzEvent::print(std::ostream& os) const{
        << ", " << s(3,4) << ", " << t(4, 0);
   }
   os << "\n\t ps = " << this->phaseSpace();
+  os << "\t weight = " << this->getWeight();
   os << endl;
 }
 
@@ -629,13 +630,17 @@ bool DalitzEvent::shoutAndKill(){
 }
 
 void DalitzEvent::P_conjugateYourself(){
+  // p-conjugates in mums restframe, but keeps old D momentum.
+
   resetST(); // shouldn't be necessary, but to be save.
   if(_p.empty()) return;
+  TVector3 mums3Momentum(_p[0].X(), _p[0].Y(), _p[0].Z());
   for(unsigned int i=0; i < _p.size(); i++){
     _p[i].SetX( - _p[i].X() );
     _p[i].SetY( - _p[i].Y() );
     _p[i].SetZ( - _p[i].Z() );
   }
+  setMothers3Momentum(mums3Momentum);
 }
 void DalitzEvent::C_conjugateYourself(){
   _pat = _pat.makeCPConjugate();

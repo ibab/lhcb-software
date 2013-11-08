@@ -100,10 +100,21 @@ counted_ptr<DalitzEvent> DalitzPhaseSpaceBox::makeEventForOwner(){
     counted_ptr<DalitzEvent> zero(0);
     return zero;
   }
-  counted_ptr<DalitzEvent> evt(new DalitzEvent(_pat, _rnd));
-  evt->setWeight(weight());
+  counted_ptr<DalitzEvent> evtPtr(new DalitzEvent(_pat, _rnd));
+  evtPtr->setWeight(weight());
   // above constructor makes a phase space event, weight 1.
-  return evt;
+  if(0 != evtPtr && _pat[0] < 0) evtPtr->P_conjugateYourself();
+  // the above ensures that, for the same random seed,
+  // identical but CP conjugate events are generated
+  // for D->f and Dbar->fbar.
+  // Note that this step of the event generation is
+  // completely P-even, and the event generation would
+  // still be correct without this P-conjugation. The 
+  // crucial P-senstive step is the reweighting applied 
+  // later, which will then take into account the full
+  // amplitude model. The P-conjugation here is just to keep the
+  // random numbers in sync between CP conjugate event generations.
+  return evtPtr;
 }
 
 counted_ptr<DalitzEvent> DalitzPhaseSpaceBox::tryNewEvent(){

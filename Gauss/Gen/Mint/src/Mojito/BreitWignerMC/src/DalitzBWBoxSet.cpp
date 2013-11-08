@@ -220,11 +220,16 @@ double DalitzBWBoxSet::calc_pick_ps_prob() const{
   bool dbThis=false;
   if(_phaseSpaceFrac <= 0) return 0;
   double returnVal= _psbox.volume()/(_psbox.volume() + VolumeSum());
-  if(dbThis) cout << "calc_pick_ps_prob() " << returnVal << endl;
+  if(dbThis){
+    cout << "calc_pick_ps_prob() = "
+	 <<  _psbox.volume() << " / " << "(" 
+	 << _psbox.volume() << " + " <<  VolumeSum() << ")"
+	 << " = " << returnVal << endl;
+  }
   return returnVal;
 }
 double DalitzBWBoxSet::pick_ps_prob(){
-  bool dbThis=true;
+  bool dbThis=false;
   if(_phaseSpaceFrac <= 0) return 0;
   if(_pick_ps_prob < 0){
     _pick_ps_prob = calc_pick_ps_prob();

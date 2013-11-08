@@ -104,7 +104,7 @@ bool DalitzBWBox::insideArea(const DalitzEvent& evt) const{
 
 double DalitzBWBox::volume() const{
   //return height(); // 
-  bool dbThis = false;
+  bool dbThis=false;
   if(dbThis){
     cout << " DalitzBWBox::volume() " << name() << ": "
 	 << area().integral() << " * " << height() << endl;
