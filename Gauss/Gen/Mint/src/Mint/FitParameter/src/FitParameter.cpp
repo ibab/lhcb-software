@@ -166,10 +166,10 @@ int FitParameter::parSetIndex() const{
 
 bool FitParameter::setFromParsedLine(const ParsedParameterLine& line){
   const std::vector<std::string>& vsl = line.parsedStrings();
-  if(vsl.size() < 4){
+  if(vsl.size() < 3){
     if(! _quiet) cout << "ERROR in FitParameter::setFromParsedLine"
 		      << " need at least 3 parameters:\n"
-		      << " iFix, initial mean, initial stepsize"
+		      << " iFix, initial mean"
 		      << endl;
     return false;
   }

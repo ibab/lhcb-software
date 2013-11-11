@@ -159,6 +159,9 @@ class FitAmplitude : public FastAmplitude
   }
 
   virtual double boxFactor(){
+/*     std::cout << "boxFacror in FitAmplitude " << this->theDecay().oneLiner() << " = " */
+/* 	 << "norm(" << AmpPhase() << ") * " << Amplitude::boxFactor() */
+/* 	 << " = " << norm(AmpPhase()) * Amplitude::boxFactor() << std::endl; */
     return norm(AmpPhase()) * Amplitude::boxFactor();
   }
 
