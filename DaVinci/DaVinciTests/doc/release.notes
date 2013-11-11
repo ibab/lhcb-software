@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2013-11-11 - Christopher Rob Jones
+ - Adapt stripping references to removal of temporary LoKi message, introduced
+   in the last commit.
+
 ! 2013-10-30 - Chris Jones
  - Update stripping references to adapt to :
   + new 'Detectors' property in the DaVinci() Configurable.
