@@ -36,9 +36,6 @@ class HEPMCJetMakerConf:
         self.setupHEPJetMaker()
 
     def setupHEPJetMaker(self):
-        from GaudiKernel.ProcessJobOptions import importOptions
-        importOptions("$LOKIGENMCROOT/python/LoKiGenMC/HepMC2MC_Configuration.py")
-        importOptions("$LOKIGENMCROOT/python/LoKiGenMC/MC2Collision_Configuration.py")
         jetMakerName = self.name
         algo =  LoKi__HEPMCJetMaker ( jetMakerName )
         algo.CodeForMotherSelection = self.CodeForMotherSelection
