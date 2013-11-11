@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v13r9 2013-11-11 ==========================
+! 2013-11-11 - John Back
+ - Added Gounaris-Sakurai and Gaussian shapes to EvtGenericDalitz 
+   and set sensible defaults for LASS parameters (from Daniel Craik).
+
 !========================== EvtGen v13r8 2013-10-11 ==========================
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.

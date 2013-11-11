@@ -260,11 +260,11 @@ void EvtDalitzTable::readXMLDecayFile(const std::string dec_name, bool verbose){
           alpha = parser.readAttributeDouble("alpha",0.0);
         }
         if(shape=="LASS") {
-          aLass = parser.readAttributeDouble("a",0.0);
-          rLass = parser.readAttributeDouble("r",0.0);
-          BLass = parser.readAttributeDouble("B",0.0);
+          aLass = parser.readAttributeDouble("a",2.07);
+          rLass = parser.readAttributeDouble("r",3.32);
+          BLass = parser.readAttributeDouble("B",1.0);
           phiBLass = parser.readAttributeDouble("phiB",0.0);
-          RLass = parser.readAttributeDouble("R",0.0);
+          RLass = parser.readAttributeDouble("R",1.0);
           phiRLass = parser.readAttributeDouble("phiR",0.0);
           cutoffLass = parser.readAttributeDouble("cutoff",-1.0);
         }
@@ -436,6 +436,14 @@ EvtDalitzReso EvtDalitzTable::getResonance(std::string shape, EvtDalitzPlot dp, 
     return EvtDalitzReso( dp, angPair, resPair, spinType, mass, width, EvtDalitzReso::RBW_CLEO, FFp, FFr );
   } else if( shape=="RBW_CLEO_ZEMACH" ) {
     return EvtDalitzReso( dp, angPair, resPair, spinType, mass, width, EvtDalitzReso::RBW_CLEO_ZEMACH, FFp, FFr );
+  } else if( shape=="GS" || shape=="GS_CLEO" ) {
+    return EvtDalitzReso( dp, angPair, resPair, spinType, mass, width, EvtDalitzReso::GS_CLEO, FFp, FFr );
+  } else if( shape=="GS_CLEO_ZEMACH" ) {
+    return EvtDalitzReso( dp, angPair, resPair, spinType, mass, width, EvtDalitzReso::GS_CLEO_ZEMACH, FFp, FFr );
+  } else if( shape=="GAUSS" || shape=="GAUSS_CLEO" ) {
+    return EvtDalitzReso( dp, angPair, resPair, spinType, mass, width, EvtDalitzReso::GAUSS_CLEO, FFp, FFr );
+  } else if( shape=="GAUSS_CLEO_ZEMACH" ) {
+    return EvtDalitzReso( dp, angPair, resPair, spinType, mass, width, EvtDalitzReso::GAUSS_CLEO_ZEMACH, FFp, FFr );
   } else if( shape=="Flatte" ) {
     return EvtDalitzReso( dp, resPair, mass );
   } else if( shape=="LASS" ) {
