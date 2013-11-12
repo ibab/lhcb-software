@@ -28,7 +28,7 @@ _phi2kk.CombinationCut = "ADAMASS('phi(1020)')<50*MeV"
 
 #####################################################################################
 ### use a BDT to select the phi
-##################################################################################### 
+#####################################################################################
 from Configurables import LoKi__Hybrid__DictValue as DictValue
 from Configurables import LoKi__Hybrid__DictTransform_TMVATransform_ as TMVAClassifier
 from Configurables import LoKi__Hybrid__DictOfFunctors
@@ -46,12 +46,12 @@ TMVA.Options = {
 }
 
 # Add a DictOfFunctors as the source of the classifier
-# the DictOfFunctors will use LoKiFunctors to query the variables needed 
+# the DictOfFunctors will use LoKiFunctors to query the variables needed
 # and write them into the dictionary
 
 TMVA.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict")
 TMVA.Source = "LoKi__Hybrid__DictOfFunctors/MVAdict"
-# the variable names have to correspond exactly to what is needed by the classifier 
+# the variable names have to correspond exactly to what is needed by the classifier
 # the prefixing with the node names has to be done manually here!
 # this allows to apply this to arbitary branches in a decay tree
 TMVA.MVAdict.Variables = {
@@ -67,7 +67,7 @@ TMVA.MVAdict.Variables = {
 _manager.addTool(TMVA) # using TMVA
 _manager.MVATransform = "LoKi__Hybrid__DictTransform_TMVATransform_/TMVA"
 
-# use the VALUE functor to access IParticleValue tools 
+# use the VALUE functor to access IParticleValue tools
 _phi2kk.MotherCut = "VALUE('LoKi__Hybrid__DictValue/MVAResponse')> -0.5"
 # we will get our cut value from a dictionary tool
 _phi2kk.addTool(DictValue,"MVAResponse")
@@ -90,9 +90,9 @@ _bs2JpsiPhi = CombineParticles("Bs2JpsiPhi",
 Bs2JpsiPhi = Selection("SelBs2JpsiPhi",
                        Algorithm = _bs2JpsiPhi,
                        RequiredSelections = [Phi2KK,Jpsi2MuMu])
-                       
+
 from PhysSelPython.Wrappers import SelectionSequence
-SeqBs2JpsiPhi = SelectionSequence("SeqBs2JpsiPhi",TopSelection=Bs2JpsiPhi) 
+SeqBs2JpsiPhi = SelectionSequence("SeqBs2JpsiPhi",TopSelection=Bs2JpsiPhi)
 
 simulation = False
 

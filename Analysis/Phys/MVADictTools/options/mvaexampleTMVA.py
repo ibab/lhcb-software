@@ -37,9 +37,9 @@ _bs2JpsiPhi = CombineParticles("Bs2JpsiPhi",
 Bs2JpsiPhi = Selection("SelBs2JpsiPhi",
                        Algorithm = _bs2JpsiPhi,
                        RequiredSelections = [Phi2KK,Jpsi2MuMu])
-                       
+
 from PhysSelPython.Wrappers import SelectionSequence
-SeqBs2JpsiPhi = SelectionSequence("SeqBs2JpsiPhi",TopSelection=Bs2JpsiPhi) 
+SeqBs2JpsiPhi = SelectionSequence("SeqBs2JpsiPhi",TopSelection=Bs2JpsiPhi)
 
 simulation = False
 
@@ -58,7 +58,7 @@ tuple.RevertToPositiveID = False
 #    "lokiPT" : "PT",
 #}
 ################################################################################
-# Finished building normal selection 
+# Finished building normal selection
 ################################################################################
 
 
@@ -77,7 +77,7 @@ tuple.addBranches({
     "Phi" : "B_s0 -> (^phi(1020) -> K+ K-) ? ",
     })
 
-# we are adding the Dict2Tuple to the Phi branch. 
+# we are adding the Dict2Tuple to the Phi branch.
 # this will write the MVA classifier response dictionary into the ntuple
 # All variables in the dict will be prefixed with "Phi_" as they are added to the ntuple
 Phi_tmva=tuple.Phi.addTupleTool(LoKi__Hybrid__Dict2Tuple, "TMVA2Tuple")
@@ -97,10 +97,10 @@ Phi_tmva.TMVA.Options = {
 
 
 # Add a DictOfFunctors as the source of the classifier
-# the MultiTool will use LoKiFunctors to query the variables needed  
+# the MultiTool will use LoKiFunctors to query the variables needed
 Phi_tmva.TMVA.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict3")
 Phi_tmva.TMVA.Source = "LoKi__Hybrid__DictOfFunctors/MVAdict3"
-# the variable names have to correspond exactly to what is needed by the classifier 
+# the variable names have to correspond exactly to what is needed by the classifier
 # the prefixing with the node names has to be done manually here!
 Phi_tmva.TMVA.MVAdict3.Variables = {
     "lab1_PT"               : "PT",
@@ -126,7 +126,7 @@ Phi_tmva.TMVA.MVAdict3.Variables = {
 # End of MVAClassifier TupleTool
 ################################################################################
 
-    
+
 
 if(simulation) : tuple.ToolList += [ "TupleToolMCTruth" ]
 
