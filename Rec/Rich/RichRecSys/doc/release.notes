@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecSys v4r9 2013-11-12 =========================
 ! 2013-11-12 - Chris Jones
  - Fix a logic flaw that caused a configuration error when PidConfig="None".
 
