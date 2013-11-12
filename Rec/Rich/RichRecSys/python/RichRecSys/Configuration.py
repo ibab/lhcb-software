@@ -139,12 +139,6 @@ class RichRecSysConf(RichConfigurableUser):
         if not self.isPropertySet("RecoSequencer") :
             raise RuntimeError("ERROR : Reconstruction Sequence not set")
         recoSequencer = self.getProp("RecoSequencer")
-
-        # Pass some settings to used configurables
-        self.setOtherProps( self.photonConfig(), ["DataType"] )
-        self.setOtherProps( self.pixelConfig(),  ["DataType"] )
-        self.setOtherProps( self.trackConfig(),  ["DataType"] )
-        self.setOtherProps( self.gpidConfig(),   ["DataType"] )
          
         # Tools. (Should make this automatic in the base class somewhere)
         self.setOtherProps(self.richTools(),["Context","OutputLevel"])
@@ -272,7 +266,7 @@ class RichRecSysConf(RichConfigurableUser):
             
             if pidMode == "FullGlobal" or pidMode == "FastGlobal":
                 pidConf = self.gpidConfig()
-                if pidMode == "FastGlobal": pidConf.Mode = "Fast"
+                if pidMode == "FastGlobal" : pidConf.Mode = "Fast"
                 gpidSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"GPIDSeq")
                 pidSeq.Members += [ gpidSeq ]
                 pidConf.PidSequencer = gpidSeq
@@ -280,7 +274,7 @@ class RichRecSysConf(RichConfigurableUser):
                 raise RuntimeError("ERROR : Unknown PID config '%s'"%pidConf)
 
             pidConf.setProp("Radiators",self.usedRadiators())
-            self.setOtherProps(pidConf,["Context","OutputLevel"])
+            self.setOtherProps(pidConf,["DataType","Context","OutputLevel"])
             
             self.printInfo(pidConf)
 
@@ -313,18 +307,18 @@ class RichRecSysConf(RichConfigurableUser):
         # Tracks and segments
         tkConf = self.trackConfig()
         tkConf.setProp("Radiators",self.usedRadiators())
-        self.setOtherProps(tkConf,["OutputLevel","Context","SpecialData",
+        self.setOtherProps(tkConf,["DataType","OutputLevel","Context","SpecialData",
                                    "UseCaloMomentumTracks"])
 
         # Pixels
         pixConf = self.pixelConfig()
         pixConf.setProp("Detectors",self.usedDetectors())
-        self.setOtherProps(pixConf,["OutputLevel","Context"])
+        self.setOtherProps(pixConf,["DataType","OutputLevel","Context"])
  
         # Photons
         photConf = self.photonConfig()
         photConf.setProp("Radiators",self.usedRadiators())
-        self.setOtherProps(photConf,["OutputLevel","SpecialData","Context","Simulation"])
+        self.setOtherProps(photConf,["DataType","OutputLevel","SpecialData","Context","Simulation"])
 
         #--------------------------------------------------------------------
 
