@@ -222,7 +222,7 @@ D_tmva.Source = "LoKi__Hybrid__DictTransform_TMVATransform_/TMVA"
 
 # Configure the classifier (available options depend upon classifier)
 D_tmva.TMVA.Options = {
-    "XMLFile"    : "bdt_d.xml", # TMVA uses an xml file to load classifier
+    "XMLFile"    : "bdt_d2kpipi.xml", # TMVA uses an xml file to load classifier
     "Name"       : "MyBDT",     # Name of responce variable in nTuple, D_MyBDT
     "KeepVars"   : "1",         # Write out input variables 0/1
 }
@@ -252,7 +252,7 @@ DaVinci().TupleFile = "bdt_d.root"
 
 
 ################################################################################
-# Run on eos data stored at CERN
+# Run on some eos data stored at CERN
 ################################################################################
 from Configurables import EventSelector
 DaVinci().EvtMax = 10000
