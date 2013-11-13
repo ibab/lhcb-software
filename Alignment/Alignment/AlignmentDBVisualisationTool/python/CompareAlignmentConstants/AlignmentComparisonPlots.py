@@ -40,6 +40,7 @@ from Pages                         import ( folders
 def plotAlignmentParametersTimeSeries( elmGroup, dofs
                                      , sliceConnectString=None, sliceTag="HEAD"
                                      , since="2012-01-01", until="2013-01-01"
+                                     , timezone="CET"
                                      , refConnectString=None, refTag="HEAD"
                                      , outputdir="."
                                      , defaultTag="cond-20130114"
@@ -49,8 +50,8 @@ def plotAlignmentParametersTimeSeries( elmGroup, dofs
     for given dofs of detector group elmGroup, optionally adding a reference
     """
     # get the time periods
-    pSince = parseTimeMin(since)
-    pUntil = parseTimeMax(until)
+    pSince = parseTimeMin(since, timezone)
+    pUntil = parseTimeMax(until, timezone)
     timePeriods = list( period for period in statusPeriodsFromTable("$ALIGNMENTDBVISUALISATIONTOOLROOT/data/LHCbStatus2011.txt") + statusPeriodsFromTable("$ALIGNMENTDBVISUALISATIONTOOLROOT/data/LHCbStatus2012.txt") if period.startTime < pUntil and period.endTime > pSince )
     for p in timePeriods:
         if p.startTime < pSince:
@@ -66,12 +67,12 @@ def plotAlignmentParametersTimeSeries( elmGroup, dofs
     alignConnectStringsAndTags = list()
     if sliceConnectString is not None:
         alignConnectStringsAndTags.append((sliceConnectString, sliceTag))
-    theAlignmentParameters = AlignmentsWithIOVs( alignConnectStringsAndTags, detsToLoad, since, until, defaultTag=defaultTag )
+    theAlignmentParameters = AlignmentsWithIOVs( alignConnectStringsAndTags, detsToLoad, since, until, timezone=timezone, defaultTag=defaultTag )
 
-    drawTimeTrends( timePeriods, elmGroup, theAlignmentParameters, dofs, addStats=addStats )
+    drawTimeTrends( timePeriods, elmGroup, theAlignmentParameters, dofs, timezone=timezone, addStats=addStats )
 
     if refConnectString:
-        refAlignmentParameters = AlignmentsWithIOVs( [ (refConnectString, refTag) ], detsToLoad, since, until, defaultTag=defaultTag )
+        refAlignmentParameters = AlignmentsWithIOVs( [ (refConnectString, refTag) ], detsToLoad, since, until, timezone=timezone, defaultTag=defaultTag )
         drawTimeTrendReference( timePeriods, elmGroup, refAlignmentParameters, dofs )
 
     for folder in folders.itervalues():

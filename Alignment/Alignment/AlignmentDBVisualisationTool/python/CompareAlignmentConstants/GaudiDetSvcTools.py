@@ -15,6 +15,7 @@ __all__  = ( "AlignmentsWithIOVs"
 
 import logging
 from datetime import datetime, timedelta
+import pytz
 
 from PyCool import cool
 from CondDBUI.Admin import timeToValKey
@@ -68,22 +69,70 @@ def getAlignableTreeFromDetectorElement( detElm, nodeValue=lambda det : None, pa
 ############################################################
 #       conversion between datetime and gaudi time         #
 ############################################################
+# Times are in two formats:
+# - Gaudi::Time (or IOV timestamps)
+# - python datetime.datetime objects (with timezone information)
+# the toTimeStamp and toDateTime methods can be used to convert between them,
+# parsing from a string to a datetime can be done with parseTimeMin or parseTimeMax
 
 def toTimeStamp(dt):
+    """ Convert a datetime or timedelta object to a timestamp
+
+    In case a timedelta object is passed, it is assumed to be
+    the difference with 1970-01-01_00:00:00.000UTC.
+
+    The granularity is 1s
+    """
     if isinstance(dt, timedelta):
         t = dt
     else:
-        t = dt - datetime(1970, 1, 1, 0)
+        t = dt - pytz.utc.localize(datetime(1970, 1, 1, 0))
     return (t.days * 60 * 60 * 24 + t.seconds) * 1000000000
 
 def toDateTime(ts):
-    return datetime(1970, 1, 1, 0) + timedelta(seconds=ts/1000000000)
+    """ Convert a timestamp to a datetime object
 
-def parseTimeMin(timeStr):
-    return toDateTime(timeToValKey(timeStr, cool.ValidityKeyMin))
+    The granularity is 1s
+    """
+    return pytz.utc.localize(datetime(1970, 1, 1, 0)) + timedelta(seconds=ts/1000000000)
 
-def parseTimeMax(timeStr):
-    return toDateTime(timeToValKey(timeStr, cool.ValidityKeyMax))
+_defaultTZ = "CET"
+def _parseTime(timeStr, tzName=_defaultTZ):
+    # Format YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC] (based on CondDBUI.Admin.timeToValKey)
+    tz = None
+    if timeStr.endswith("UTC"):
+        timeStr = timeStr[:-3]
+        tz = pytz.utc
+    else:
+        tz = pytz.timezone(tzName)
+
+    for fmtStr in ("%Y-%m-%d", "%Y-%m-%d_%H:%M", "%Y-%m-%d_%H:%M:%S.%f"):
+        try:
+            return tz.localize(datetime.strptime(timeStr, fmtStr)).astimezone(pytz.utc)
+        except:
+            pass
+
+def parseTimeMin(timeStr, tzName=_defaultTZ):
+    """ Parse a "lower bound" time from string to datetime
+
+    If the parsing fails, the minimum allowed time is returned.
+    The allowed format is "YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]";
+    the timezone to use if UTC is not specified can be passed
+    using the 'tzName' keyword argument (CERN local time by default)
+    """
+    parsed = _parseTime(timeStr, tzName=tzName)
+    return parsed if parsed is not None else toDateTime(cool.ValidityKeyMin)
+
+def parseTimeMax(timeStr, tzName=_defaultTZ):
+    """ Parse an "upper bound" time from string to datetime
+
+    If the parsing fails, the maximum allowed time is returned.
+    The allowed format is "YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]";
+    the timezone to use if UTC is not specified, can be passed
+    using the 'tzName' keyword argument (CERN local time by default)
+    """
+    parsed = _parseTime(timeStr, tzName=tzName)
+    return parsed if parsed is not None else toDateTime(cool.ValidityKeyMax)
 
 
 def combinedIOVs(listOfIOVLists):
@@ -167,7 +216,7 @@ def extractAlignmentParameters(
 
     from Configurables import EventClockSvc, FakeEventTime
 
-    ecs = EventClockSvc(InitialTime=toTimeStamp(datetime(2010,1,1,12)))
+    ecs = EventClockSvc(InitialTime=toTimeStamp(datetime(2010,1,1,12, tzinfo=pytz.utc)))
     ecs.addTool(FakeEventTime, "EventTimeDecoder")
     ecs.EventTimeDecoder.StartTime = ecs.InitialTime
     ecs.EventTimeDecoder.TimeStep = toTimeStamp(timedelta(days=1))
@@ -253,11 +302,11 @@ class AlignmentsWithIOVs(object):
     Initialized with a connect string and detector root element names.
     Extracts the parameters and provides access to them
     """
-    def __init__(self, connectStringsAndTags, detectorNames, since, until, defaultTag="default", valueExtractor=lambda detElm : getGlobalPositionFromGeometryInfo(detElm.geometry()) if detElm.geometry().alignmentCondition() else None ):
+    def __init__(self, connectStringsAndTags, detectorNames, since, until, timezone=_defaultTZ, defaultTag="default", valueExtractor=lambda detElm : getGlobalPositionFromGeometryInfo(detElm.geometry()) if detElm.geometry().alignmentCondition() else None ):
         self.connectStringsAndTags = connectStringsAndTags
         self.detectorNames = detectorNames
-        self.since = parseTimeMin(since)
-        self.until = parseTimeMax(until)
+        self.since = parseTimeMin(since, tzName=timezone)
+        self.until = parseTimeMax(until, tzName=timezone)
         self.defaultTag = defaultTag
         self.valueExtractor = valueExtractor
         self._dets = dict()

@@ -14,6 +14,7 @@ import os
 import re
 import logging
 import datetime
+import pytz
 import math
 
 import matplotlib as mpl
@@ -66,7 +67,8 @@ class TrendPlotRegion(PlotRegion):
                      , "MD"      : { "facecolor" : "k" , "alpha" : 0.05 , "lw" : 0.0 }
                      , "VDM"     : { "facecolor" : "k" , "alpha" : 0.05 , "lw" : 0.0 }
                      }
-    def __init__(self, name, var, parent, axes, periods=None):
+    def __init__(self, name, var, parent, axes, timezone="CET", periods=None):
+        self.timezone = timezone
         self.periods  = periods
         self.mn = None
         self.mx = None
@@ -99,9 +101,10 @@ class TrendPlotRegion(PlotRegion):
 
         self.axes.xaxis.set_minor_locator( matplotlib.dates.MonthLocator() )
 
+        tz = pytz.timezone(self.timezone)
         for period in self.periods:
             if not period.status.needAlignment:
-                self.axes.axvspan( period.startTime, period.endTime, **(TrendPlotRegion.DefaultFormats[period.status.name]))
+                self.axes.axvspan( period.startTime.astimezone(tz), period.endTime.astimezone(tz), **(TrendPlotRegion.DefaultFormats[period.status.name]))
         self.axes.set_title(self.name)
 
     def addAlignment(self, parValues, addStats=False, **drawOptions):
@@ -115,13 +118,15 @@ class TrendPlotRegion(PlotRegion):
         if not len(parValues) == sum(1 for p in self.periods if p.status.needAlignment):
             logging.error("Too few parameter values, check!!")
             return
+        tz = pytz.timezone(self.timezone)
         curPar = None
         curParIt = iter(parValues)
         for period in self.periods:
             if period.status.needAlignment:
                 curPar = curParIt.next()
                 fmt = drawOptions.pop("fmt", TrendPlotRegion.DefaultFormats[period.status.name])
-                self.axes.plot( (period.startTime, period.endTime), (curPar, curPar), fmt, **drawOptions )
+                logging.debug("Adding alignment for period %s -- %s (localized to %s: %s -- %s)", period.startTime, period.endTime, self.timezone, period.startTime.astimezone(tz), period.endTime.astimezone(tz))
+                self.axes.plot( (period.startTime.astimezone(tz), period.endTime.astimezone(tz)), (curPar, curPar), fmt, **drawOptions )
 
         if addStats:
             avg = sum( p for p in parValues ) / len(parValues)
@@ -319,7 +324,7 @@ def getRegion( folder, elmGroup, elmPageName, dof, RegionType=TrendPlotRegion, *
         page.addRegion( regName, dof, RegionType=RegionType, **kwargs )
     return page[regName]
 
-def drawTimeTrends( periods, elmGroupName, alignmentsWithIOVs, dofs, addStats=False ):
+def drawTimeTrends( periods, elmGroupName, alignmentsWithIOVs, dofs, timezone="CET", addStats=False ):
     folder = getOrCreateFolder(elmGroupName)
     elmGroup = ElementGroups[elmGroupName]
     elmDetName = elmGroupName.split(".")[0]
@@ -328,7 +333,7 @@ def drawTimeTrends( periods, elmGroupName, alignmentsWithIOVs, dofs, addStats=Fa
 
     for geomName, elmPageName, matrixForAll in alignmentsWithIOVs.loopWithTimesAndValues(elmDetName, elmGroup, periods):
         for dof in dofs:
-            region = getRegion(folder, elmGroup, elmPageName, dof, RegionType=TrendPlotRegion, periods=periods )
+            region = getRegion(folder, elmGroup, elmPageName, dof, RegionType=TrendPlotRegion, periods=periods, timezone=timezone )
             logging.debug("Adding constants for element %s: %s to region %s (%s)" % ( geomName, [ getattr(align, dof) for align in matrixForAll ], region, region.name ))
             region.addAlignment( [ getattr(align, dof) for align in matrixForAll ], addStats=addStats )
 
