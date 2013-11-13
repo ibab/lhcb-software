@@ -1,6 +1,7 @@
 <lcgdict>
   <class name = "ISTClusterCollector"        />
   <class name    = "IAddTTClusterTool"       />
+  <class name    = "IPrAddUTCoordTool"       />
   <class name    = "IHitExpectation"         />
   <class name    = "IHltV0Upgrade"           />
   <class name    = "IMaterialLocator"        />

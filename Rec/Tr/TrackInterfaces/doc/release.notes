@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2013-11-13 - Michel De Cian
+ - Add IPrAddUTCoordTool.h, which is the new interface for the (renamed) tool that adds UT hits to long tracks.
+
 ! 2013-10-31 - Michel De Cian
  - Remove IAddUTClusterTool.h from TrackInterfacesDict.h and TrackInterfacesDict.xml 
 
