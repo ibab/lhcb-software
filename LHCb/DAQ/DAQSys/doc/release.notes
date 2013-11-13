@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-11-13 - Rob Lambert
+ - Add in HLT decoders, add to expected test differences
+
 ! 2013-11-05 - Rob Lambert
  - Adapt test to new behaviour of Calo configurable
 

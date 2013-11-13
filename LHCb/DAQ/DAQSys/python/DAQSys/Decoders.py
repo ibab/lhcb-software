@@ -204,6 +204,35 @@ Decoder("L0DUFromRawTool",
         inputs={"RawLocations" : ["Trigger/RawEvent","DAQ/RawEvent"]},
         conf=DecoderDB)
 
+#TRIGGER ==========HLT===========
+
+Decoder("HltSelReportsDecoder",
+        active=True, banks=["HltSelReports"],
+        inputs=["Trigger/RawEvent","DAQ/RawEvent"],
+        #currently cannot be configured, it's a list not present in constructor
+        outputs={"OutputHltSelReportsLocation":None},
+        conf=DecoderDB)
+
+Decoder("HltDecReportsDecoder",
+        active=True, banks=["HltDecReports"],
+        inputs=["Trigger/RawEvent","DAQ/RawEvent"],
+        #currently cannot be configured, it's a list not present in constructor
+        outputs={"OutputHltDecReportsLocation":None},
+        conf=DecoderDB)
+
+Decoder("HltVertexReportsDecoder",
+        active=True, banks=["HltVertexReports"],
+        inputs=["Trigger/RawEvent","DAQ/RawEvent"],
+        #currently cannot be configured properly, it's a list not present in constructor
+        outputs={"OutputHltVertexReportsLocation":None},
+        conf=DecoderDB)
+
+#is a Routing bits filter really a decoder? it doesn't create output...
+Decoder("HltRoutingBitsFilter",
+        active=False, banks=["HltRoutingBits"],
+        inputs=["Trigger/RawEvent","DAQ/RawEvent"],
+        #currently cannot be configured properly, it's a list not present in constructor
+        conf=DecoderDB)
 
 #UPGRADE ===========VP===========
 Decoder("VPRawBankToLiteCluster/createVPLiteClusters",

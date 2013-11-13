@@ -86,8 +86,8 @@ class DecodeRawEvent(ConfigurableUser):
         if not d.isInputSettable():
             flag=False
             whereall=WhereAll(d.Banks[0],v)
-            for d in adecoder.listInputs():
-                if d in whereall:
+            for l in adecoder.listInputs():
+                if l in whereall:
                     flag = True
                     break
             if not flag:
