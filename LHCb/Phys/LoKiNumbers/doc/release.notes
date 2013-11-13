@@ -13,6 +13,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-11-13 - Bram Bouwens
+ - add tests for and/or operations
+   (see https://savannah.cern.ch/task/?46676)
+
 !========================= LoKiNumbers v10r4p1 2013-09-30 =========================
 ! 2013-09-17 - Marco Cattaneo
  - Remove unnecessary linkopts macro from requirements
