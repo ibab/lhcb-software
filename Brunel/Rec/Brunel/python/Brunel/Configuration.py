@@ -435,8 +435,11 @@ class Brunel(LHCbConfigurableUser):
         noSPDPRS = False
         if [det for det in ['Spd', 'Prs'] if det not in self.getProp("Detectors")]:
             noSPDPRS = True
-        CaloProcessor().setProp("NoSpdPrs", noSPDPRS)
-        GlobalRecoConf().setProp("NoSpdPrs", noSPDPRS)
+        # only set properties if no use RecoSequence is defined or if it contains 'PROTO'
+        # not that 'PROTO' alone is not sufficient to run the Calo reconstruction, but a requirement
+        if ( not self.isPropertySet("RecoSequence") or "PROTO" in self.getProp("RecoSequence") ):
+            CaloProcessor().setProp("NoSpdPrs", noSPDPRS)
+            GlobalRecoConf().setProp("NoSpdPrs", noSPDPRS)
 
 
         # Always print Magnetic Field used
