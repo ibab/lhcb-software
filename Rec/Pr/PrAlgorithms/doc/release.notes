@@ -4,6 +4,10 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-11-13 - Michel De Cian
+ - Introduce PrAddUTCoordTool, which is to replace PrAddUTCoord. The new tool is 
+   basically a copy of the old one, but without keeping the non-uprade inheritance structure.
+
 ! 2013-11-08 - Michel De Cian
  - Put some speed improvements in PrSeedingXLayers
 
