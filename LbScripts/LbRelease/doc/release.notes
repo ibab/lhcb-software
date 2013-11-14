@@ -1,3 +1,8 @@
+2013-11-14  Illya Shapoval <Illya.Shapoval@cern.ch>
+
+	* scripts/ariadne_add: ignorance of SSL certificate validation is removed.
+	* scripts/ariadne: ignorance of SSL certificate validation is removed.
+	
 2013-11-07  Illya Shapoval <Illya.Shapoval@cern.ch>
 
 	* scripts/ariadne_add: new security model is taken on-board
