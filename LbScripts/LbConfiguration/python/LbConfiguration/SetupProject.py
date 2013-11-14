@@ -1414,7 +1414,10 @@ class SetupProject:
         # check if the project works
         out = self.cmt("check", "configuration", cwd = root_dir)
         if out and not self.force: # non empty output means error
-            raise SetupProjectError(out)
+            # ignore incompatibility notices
+            inc_notice = re.compile(r'^# Required version.*incompatible with.*')
+            if [l for l in out.splitlines() if not inc_notice.match(l)]:
+                raise SetupProjectError(out)
 
         script = self.cmt("setup", "-" + self.shell, cwd = root_dir)
 
