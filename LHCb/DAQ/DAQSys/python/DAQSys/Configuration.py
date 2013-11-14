@@ -146,4 +146,15 @@ class DecodeRawEvent(ConfigurableUser):
                     if loc in DataOnDemandSvc().AlgMap:
                         raise AttributeError("At least two active algs want to write to the same location. Check your DecoderDB! "+loc)
                     DataOnDemandSvc().AlgMap[loc]=thedecoder
+        
+        #finally, if ODIN is active, then configure the EventTimeDecoder
+        from DAQSys.DecoderClass import decodersForBank
+        odinconfs=decodersForBank(self.__db__(),"ODIN")
+        if len(odinconfs):
+            #force to take the same public tool
+            publicTool=odinconfs[0].PublicTools[0]
+            from Configurables import EventClockSvc
+            EventClockSvc(EventTimeDecoder = publicTool)
         #Done :)
+
+

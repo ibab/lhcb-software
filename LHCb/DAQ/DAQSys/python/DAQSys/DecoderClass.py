@@ -20,7 +20,8 @@ class Decoder(object):
         Inputs={} # list of input locations or {Property : value dict}
         Outputs={} # list of output locations or {Property: value} dict
         Properties={} # {Property: value dict of misc properties
-        PrivateTools=[] #related private toolsmust also be in the DB at configuration time
+        PrivateTools=[] #related private tools, must also be in the DB at configuration time
+        PublicTools=[] #related public tools, must also be in the DB at configuration time
 
     Private member:
         __db__ reference to the databse in which I am stored. Can be overwritten if required, or used to validate the database. Used to find the public/private tools.

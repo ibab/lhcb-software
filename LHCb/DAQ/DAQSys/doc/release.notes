@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-11-14 - Rob Lambert
+ - Set EventTimeDecoder if there is an active ODIN decoder, adapt tests to change in DecodeRawEvent.py
+
 ! 2013-11-13 - Rob Lambert
  - Add in HLT decoders, add to expected test differences
 

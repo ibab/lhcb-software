@@ -1,5 +1,5 @@
 from Gaudi.Configuration import *
-importOptions("$STDOPTS/DecodeRawEvent.py")
+importOptions("../options/OldDecodeRawEvent.py")
 
 from GaudiConf.Manipulations import configurableInstanceFromString
 
