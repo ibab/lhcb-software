@@ -6,6 +6,11 @@
 
 !========================= MVADictTools v1r2 2013-10-29 =========================
 
+! 2013-11-14 - Sam Hall
+ - Updated mvaDfromB.py with improved syntax and use of LoKi preambulo and also
+   interfacing with the MVADictHelper module, such that only a single line is
+   required.
+
 ! 2013-11-12 - Sam Hall
  - Added mvaDfromB.py and bdt_d2kpipi.xml.  The former (uses the latter) to run
    the D+ -> K- pi+ pi+ BDT on the B+ -> (D+ -> K- pi+ pi+) (rho -> pi+ pi-)

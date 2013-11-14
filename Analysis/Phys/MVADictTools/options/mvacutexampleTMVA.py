@@ -118,7 +118,7 @@ from Configurables import DaVinci,LHCbApp
 DaVinci().DataType="2012"
 DaVinci().DDDBtag="dddb-20120831"
 DaVinci().CondDBtag="cond-20120831"
-DaVinci().Input = ['/afs/cern.ch/work/s/shall/dsts/00020198_00012742_1.dimuon.dst']
+DaVinci().Input = ['/afs/cern.ch/work/s/shall/dsts/00024183_00028683_1.dimuon.dst']
 
 #save an ntuple with the luminosity
 DaVinci().Lumi=True
