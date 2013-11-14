@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-11-14 - Rob Lambert
+ - Replace contents of DecodeRawEvent.py with new DecodersDB
+
 !========================= GaudiConf v17r13 2013-10-23 =========================
 ! 2013-10-09 - Olivier Deschamps
  - options/DecodeRawEvent.py : relies on CaloDigitsConf for decoding calorimeter onDemand
