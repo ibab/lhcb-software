@@ -18,6 +18,7 @@ class DecodeRawEvent(ConfigurableUser):
         , "Sequencer" : None #Add decoding to this sequence?
         , "DecoderDB" : None #if none, then decoder_db is used
         , "OverrideInputs" : None #use raw event version to override input locations
+        , "EvtClockBank" : "ODIN" #use the ODIN bank tool to configure the EvtClock Svc, needs to be an option such that we can override it with RecHeader info
         }
     def __db__(self):
         db=None
@@ -149,12 +150,13 @@ class DecodeRawEvent(ConfigurableUser):
         
         #finally, if ODIN is active, then configure the EventTimeDecoder
         from DAQSys.DecoderClass import decodersForBank
-        odinconfs=decodersForBank(self.__db__(),"ODIN")
-        if len(odinconfs):
-            #force to take the same public tool
-            publicTool=odinconfs[0].PublicTools[0]
-            from Configurables import EventClockSvc
-            EventClockSvc(EventTimeDecoder = publicTool)
+        if self.getProp("EvtClockBank") is not None and len(self.getProp("EvtClockBank")):
+            odinconfs=decodersForBank(self.__db__(),self.getProp("EvtClockBank"))
+            if len(odinconfs):
+                #force to take the same public tool
+                publicTool=odinconfs[0].PublicTools[0]
+                from Configurables import EventClockSvc
+                EventClockSvc(EventTimeDecoder = publicTool)
         #Done :)
 
 

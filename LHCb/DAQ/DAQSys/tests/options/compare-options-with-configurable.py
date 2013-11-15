@@ -1,7 +1,7 @@
 import commands
 
 #extra locations known to be added
-known_extras=['Raw/Prs/Adcs', 'Raw/Hcal/Adcs', 'Hlt/SelReports', 'Raw/Ecal/Adcs', 'Hlt/VertexReports', 'Hlt/DecReports', 'Trig/L0/L0DUData', 'Raw/Spd/Adcs']
+known_extras=['Raw/Prs/Adcs', 'Raw/Velo/PUClusters', 'Hlt/SelReports', 'Raw/Velo/PUClustersNZS', 'Raw/Hcal/Adcs', 'Raw/Ecal/Adcs', 'Hlt/VertexReports', 'Hlt/DecReports', 'Trig/L0/L0DUData', 'Raw/Spd/Adcs']
 
 #known differences
 known_diffs={"Raw/VL/Clusters":{"VLRawBankDecoder/createVLClusters":{"DecodeToLiteClusters":[True,'-->',False]}}}
