@@ -6,4 +6,7 @@
 
 ! 2013-11-15 - Chris Jones
  - First version. Move the tracking specific tools from DecayTreeTupleReco
-   into this dedicatd package.
+   into this dedicatd package. Imported :-
+     TupleToolDEDX, TupleToolTrackIsolation, TupleToolTrackKink, 
+     TupleToolTrackPosition, TupleToolVELOClusters, 
+     TupleToolVeloTrackClusterInfo
