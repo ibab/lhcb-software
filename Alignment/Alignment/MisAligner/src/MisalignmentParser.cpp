@@ -4,7 +4,7 @@
 
 MisalignmentParser::MisalignmentParser(const std::string& optionFileName) 
 {
-  ifstream options(optionFileName.c_str(), std::ios::in);
+  std::ifstream options(optionFileName.c_str(), std::ios::in);
 
   std::size_t nLines = 0;
   std::string line;
