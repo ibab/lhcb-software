@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+! 2013-11-15 - Chris Jones
+ - Add new package Phys/DecayTreeTupleTracking
+
 </PRE><H1><A NAME=v11r3>2013-10-29 Analysis v11r3</A></H1><PRE>
 New development release, built against Phys v17r3.
 

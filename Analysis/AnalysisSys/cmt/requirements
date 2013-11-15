@@ -39,6 +39,7 @@ use  DecayTreeTupleJets         v1r1p2   Phys
 use  DecayTreeTupleMC           v1r4     Phys
 use  DecayTreeTupleTrigger      v1r1     Phys
 use  DecayTreeTupleMuonCalib    v1r2p1   Phys
+use  DecayTreeTupleTracking     v1r0     Phys
 use  DecayTreeTuple             v4r5     Phys
 
 ####################################################################
