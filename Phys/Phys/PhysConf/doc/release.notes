@@ -5,6 +5,9 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2013-10-29 - Rob Lambert
+ - Replace DecodeRawEvent.py with my new configurable. Retire SteerRawLocations.
+
 ! 2013-10-29 - Chris Jones
  - Add a new property "Detectors" to the DaVinci() configurable. Primarily
    for Upgrade studies.
@@ -18,7 +21,7 @@
 !========================= PhysConf v1r22 2013-06-13 =========================
 
 ! 2013-05-13 - Chris Jones
- - Do not force verbose printout from DataOnDemandSvc. If a user wants 
+ - Do not force verbose printout from DataOnDemandSvc. If a user wants
    this, they should activate it themselves...
 
 !========================= PhysConf v1r21 2013-05-02 =========================
@@ -29,16 +32,16 @@
 !========================= PhysConf v1r20 2013-04-23 =========================
 
 ! 2013-04-19 - Chris Jones
- - Add options to automatically apply the recalibration of the ANNPID 
+ - Add options to automatically apply the recalibration of the ANNPID
    information on demand, when running on 'Reco14' data.
 
 ! 2013-04-13 - Vanya Belyaev
- - MicroDST : killDAQ - minor protection against the double deletion 
+ - MicroDST : killDAQ - minor protection against the double deletion
 
 !========================= PhysConf v1r19 2013-04-05 =========================
 
 ! 2013-03-24 - Vanya Belyaev
- - small update for MicorDST.py 
+ - small update for MicorDST.py
 
 !========================= PhysConf v1r18 2012-11-30 =========================
 
@@ -55,7 +58,7 @@
 
 !========================= PhysConf v1r16 2012-06-28 =========================
 
-! 2012-05-15 - Olivier Deschamps 
+! 2012-05-15 - Olivier Deschamps
  - Configuration.py : add CaloReProcessing slot that triggers the full Calo re-reconstruction
     in the init sequence (default False)
 
@@ -70,11 +73,11 @@
 !========================= PhysConf v1r14 2011-12-15 =========================
 
 ! 2011-12-07 - Chris Jones
- - Update last commit to run the algs on demand, when neded, instead of every 
+ - Update last commit to run the algs on demand, when neded, instead of every
    event. Also enable by default in PhysConf, so users don't have to ...
 
 ! 2011-12-06 - Chris Jones
- - Add a python file that contains the options needed to create the 
+ - Add a python file that contains the options needed to create the
    Rec/Summary and Trigger/RawEvent TES data objects when missing.
 
 ! 2011-11-29 - Chris Jones
@@ -107,7 +110,7 @@
 
  - Filters.py:
 
-    fix bugs in tretament of MC_Code and GEN_Code 
+    fix bugs in tretament of MC_Code and GEN_Code
 
 ! 2011-07-20 - Vanya Belyaev
 
@@ -117,9 +120,9 @@
 
    criteria:
 
-     - N_long tracks in vertex > 8 or beam_line < 0.5 * mm 
+     - N_long tracks in vertex > 8 or beam_line < 0.5 * mm
 
- - cmt/requirements 
+ - cmt/requirements
     version increment  to v1r11
 
 !========================= PhysConf v1r10 2011-07-08 =========================
@@ -131,9 +134,9 @@
 
 !========================= PhysConf v1r9 2011-06-16 =========================
 ! 2011-06-02 - Vanya Belyaev
- - Filters: 
-    add possibility to filter based on MC and Gen-information 
- - cmt/requirements 
+ - Filters:
+    add possibility to filter based on MC and Gen-information
+ - cmt/requirements
     version increment  to v1r9
 
 !========================== PhysConf v1r8 2010-09-29 ===================
@@ -147,7 +150,7 @@
 
 ! 2010-09-21 - Chris Jones
  - Updates to the PhysConf configurable, to move some of the initialisation
-   algorithms to GaudiConf where they are run as needed via the data on 
+   algorithms to GaudiConf where they are run as needed via the data on
    demand service, as part of the data unpacking. All that remains is the
    options that rerun the MuonPID on old data (MC09 or older). These should
    be removed as soon as backwards compatibility can be broken.
@@ -187,11 +190,11 @@
  - Fix PhysConf() for rDSTs
 
 ! 2009-11-06 - Chris Jones
- - Rework the PID re-calibration sequence to adapt to future DST content 
+ - Rework the PID re-calibration sequence to adapt to future DST content
    changes (Rich and Muon PID objects directly stored on the DSTs)
  - Implement version checking of the MuonPID DataObject to conditionally rerun
    the full Muon PID sequence when needed for DC06/MC09
- 
+
 !========================== PhysConf v1r5 2009-10-27 ===================
 
 ! 2009-10-27 - Juan PALACIOS
@@ -201,7 +204,7 @@
 
 ! 2009-09-11 - Juan PALACIOS
  - python/PhysConf/Configuration.py
-  . Use MDST option for InputType property. 
+  . Use MDST option for InputType property.
     Disables ProtoParticle re-calibration
     Maybe should sidable some Data-on-demand?
 
@@ -209,12 +212,12 @@
 
  - configuration
 
-    Remove the dupicated entries from "calorimeter-unpack"  
-    versus "calorimete-recontruct" : unpacking wins... 
+    Remove the dupicated entries from "calorimeter-unpack"
+    versus "calorimete-recontruct" : unpacking wins...
 
  - cmt/requirements
 
-    version increment to v1r5  
+    version increment to v1r5
 
 !========================== PhysConf v1r4 2009-10-06 ===================
 ! 2009-10-02 - Patrick Koppenburg
@@ -231,11 +234,11 @@
 
  - python/PhysConf/Configuration.py
 
-     make use of new CeloReco & CaloPIDs configurables 
+     make use of new CeloReco & CaloPIDs configurables
 
- - cmt/requirements 
+ - cmt/requirements
 
-     version increment to v1r3 
+     version increment to v1r3
 
 !========================== PhysConf v1r2 2009-07-23 =========================
 

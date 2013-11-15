@@ -7,15 +7,15 @@ package           PhysConf
 version           v1r23
 
 # ============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 # ============================================================================
 branches          cmt doc python
 
 # ============================================================================
 # Used packages.
 # ============================================================================
-use       GaudiPolicy v*                             
-use       Python      v* LCG_Interfaces 
+use       GaudiPolicy v*
+use       Python      v* LCG_Interfaces
 use 	  GaudiConf   v*
 use       CaloReco    v* Calo
 use       CaloPIDs    v* Calo
@@ -24,6 +24,9 @@ use       LHCbAlgs    v* Kernel
 use       MuonDAQ     v* Muon
 use       MuonID      v* Muon
 use       LoKiCore    v* Phys
+use       DAQSys      v* DAQ
+use       RawEventFormat v*
+use       RawEventCompat v* DAQ
 
 include_path      none
 

@@ -9,15 +9,18 @@ import GaudiKernel.ProcessJobOptions
 from Configurables import (EventClockSvc,
                            RecEventTime,
                            TimeDecoderList,
-                           OdinTimeDecoder)
-                  
+                           OdinTimeDecoder,
+                           DecodeRawEvent)
+
 def configureEventTime() :
     """
     Configure EventClockSvc to get event time from RecHeader first
-    and then from ODIN in case of faulire.
+    and then from ODIN in case of failure.
     Returns EventClockSvs()
     Author: Marco Clemencic.
     """
+    #turn off setting that's done in DecodeRawEvent first
+    DecodeRawEvent().EvtClockBank=""
     ecs = EventClockSvc()
     ecs.addTool(TimeDecoderList, "EventTimeDecoder")
     tdl = ecs.EventTimeDecoder
@@ -42,9 +45,10 @@ class PhysConf(LHCbConfigurableUser) :
     __used_configurables__ = (
         'DstConf',
         'CaloDstUnPackConf'   ,
-        'CaloProcessor'
+        'CaloProcessor',
+        'DecodeRawEvent'
         )
-    
+
 #
 # configure reconstruction to be redone
 #
@@ -57,7 +61,7 @@ class PhysConf(LHCbConfigurableUser) :
         init = GaudiSequencer("PhysInitSeq")
         self.configureReco(init)
         return init
-        
+
 #
 # configure reconstruction to be redone
 #
@@ -69,35 +73,35 @@ class PhysConf(LHCbConfigurableUser) :
         ## CaloReco & CaloPIDs on-demand
         clusters= [ 'Digits' , 'Clusters' ]
         from Configurables  import CaloProcessor
-        caloProc = CaloProcessor(EnableOnDemand=True)  # enable caloDigits & Clusters onDemand 
+        caloProc = CaloProcessor(EnableOnDemand=True)  # enable caloDigits & Clusters onDemand
         caloProc.RecList =  clusters
-        # --- 
+        # ---
         #if self.getProp('DataType')=='Upgrade' :
         #    caloProc.NoSpdPrs=True
 
         ## General unpacking
         from Configurables import DstConf
         if self.isPropertySet('EnableUnpack') :
-            DstConf().setProp('EnableUnpack',self.getProp('EnableUnpack')) 
-        
+            DstConf().setProp('EnableUnpack',self.getProp('EnableUnpack'))
+
         ## unpack Calo Hypos ?
-        from Configurables import CaloDstUnPackConf 
+        from Configurables import CaloDstUnPackConf
         unpack = CaloDstUnPackConf()
         hypos= [ 'Photons',  'MergedPi0s', 'SplitPhotons' ,'Electrons' ]  # CaloHypos
         if self.isPropertySet('EnableUnpack') and "Reconstruction" in self.getProp('EnableUnpack') :
             unpack.setProp('Enable',True)
         else :
             caloProc.RecList +=  hypos  # enable caloHypos onDemand
-            
+
         # Reprocess explicitely the full calo sequence in the init sequence ?
         inputtype = self.getProp('InputType').upper()
         if ( self.getProp("CaloReProcessing") and inputtype != 'MDST' and inputtype != 'RDST' ) :
             caloProc.RecList =  clusters + hypos
             caloSeq = caloProc.sequence() # apply the CaloProcessor configuration
             cSeq = GaudiSequencer( 'CaloReProcessing' )
-            cSeq.Members += [ caloSeq ] 
+            cSeq.Members += [ caloSeq ]
             init.Members += [cSeq]
-            unpack.setProp('Enable',False) 
+            unpack.setProp('Enable',False)
         else :
             caloProc.applyConf()
 
@@ -106,13 +110,13 @@ class PhysConf(LHCbConfigurableUser) :
         # is no longer needed
         if ( self.getProp("DataType") == 'MC09' and inputtype != 'MDST' and
              self.getProp("AllowPIDRerunning") and inputtype != 'RDST' ) :
-            
+
             from Configurables import DataObjectVersionFilter, MuonRec, TESCheck
             from MuonID import ConfiguredMuonIDs
-            
+
             rerunPIDSeq = GaudiSequencer("ReRunMuonPID")
             init.Members += [rerunPIDSeq]
-            
+
             # Check data version, to see if this is needed or not
             rerunPIDSeq.Members += [ DataObjectVersionFilter( "MuonPIDVersionCheck",
                                                               DataObjectLocation = "/Event/Rec/Muon/MuonPID",
@@ -143,21 +147,23 @@ class PhysConf(LHCbConfigurableUser) :
         dataOnDemand service
         """
         dataOnDemand = DataOnDemandSvc()
-        
+
         dataOnDemand.NodeMap['/Event/Rec']            = 'DataObject'
         dataOnDemand.NodeMap['/Event/Rec/Muon']       = 'DataObject'
         dataOnDemand.NodeMap['/Event/Rec/Rich']       = 'DataObject'
         dataOnDemand.NodeMap['/Event/Phys']           = 'DataObject'
         dataOnDemand.NodeMap['/Event/Relations/Phys'] = 'DataObject'
-        
+
         # raw event
-        importOptions("$STDOPTS/DecodeRawEvent.py")
+        DecodeRawEvent().DataOnDemand=True
+        #require L0 just in case I need to do L0 decoding
+        importOptions( "$L0TCK/L0DUConfig.opts" )
 
         # ANN PID recalibration
         if self.getProp("AllowPIDRecalib") :
 
             from Gaudi.Configuration import appendPostConfigAction
-            
+
             def _ANNPIDReCalib_() :
 
                 from Configurables import ( DstConf, DataOnDemandSvc,
@@ -173,10 +179,10 @@ class PhysConf(LHCbConfigurableUser) :
                     ApplicationVersionFilter( name = "Reco14Filter",
                                               HeaderLocation = "Rec/Header",
                                               VersionRegex = recoRegex ) ]
-                
+
                 # ANN PID Configurable
                 annPIDConf = ChargedProtoANNPIDConf("ReDoANNPID")
-            
+
                 # Configure Configurable for recalibration of the DST charged protos
                 annPIDConf.DataType = self.getProp("DataType")
                 annPIDConf.RecoSequencer = annPIDSeq
@@ -202,7 +208,7 @@ class PhysConf(LHCbConfigurableUser) :
                 DataOnDemandSvc().AlgMappingTools  = [cppmapper] + DataOnDemandSvc().AlgMappingTools
 
             appendPostConfigAction( _ANNPIDReCalib_ )
-            
+
 #
 # LoKi
 #
@@ -213,7 +219,7 @@ class PhysConf(LHCbConfigurableUser) :
         from Configurables import LoKiSvc
         lokiService = LoKiSvc()
         ApplicationMgr().ExtSvc +=  [ lokiService ]
-        
+
 #
 # Main configuration
 #
