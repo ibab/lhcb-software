@@ -14,8 +14,8 @@ branches          cmt doc src
 # Used packages.
 #============================================================================
 use   DecayTreeTupleBase  v*    Phys
-use   HltEvent            v*    Event
-use   TrackFitEvent       v*    Tr
+#use   HltEvent            v*    Event # Probably no longer required...
+
 #============================================================================
 # Component library building rule
 #============================================================================

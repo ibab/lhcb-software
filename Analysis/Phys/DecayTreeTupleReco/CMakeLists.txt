@@ -3,11 +3,8 @@
 ################################################################################
 gaudi_subdir(DecayTreeTupleReco v1r3)
 
-gaudi_depends_on_subdirs(Det/MuonDet
-                         Event/HltEvent
-                         Phys/DecayTreeTupleBase)
+gaudi_depends_on_subdirs(Phys/DecayTreeTupleBase)
 
 gaudi_add_module(DecayTreeTupleReco
                  src/*.cpp
-                 LINK_LIBRARIES MuonDetLib HltEvent DecayTreeTupleBaseLib)
-
+                 LINK_LIBRARIES DecayTreeTupleBaseLib)
