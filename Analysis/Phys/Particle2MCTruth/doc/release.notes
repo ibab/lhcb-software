@@ -6,6 +6,9 @@
 !               P2MCPBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
+! 2013-11-15 - Marco Clemencic
+ - Fixed genreflex XML selection file.
+
 !========================= Particle2MCTruth v2r5 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

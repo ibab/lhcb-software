@@ -3,9 +3,7 @@
 <!--- Author  : Juan PALACIOS -->
 <!--- Created : 2009-03-10 -->
 
-<!DOCTYPE gdd SYSTEM "gdd.dtd" >
 <lcgdict>
-
 <!-- P2MCP -->
   <class name = "IP2MCP"/>
   <class name = "P2MCP::DecayLines"/>
