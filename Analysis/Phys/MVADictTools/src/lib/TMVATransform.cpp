@@ -79,7 +79,7 @@ TMVATransform::operator()(const IParticleDictTool::DICT& in, IParticleDictTool::
 
 bool
 TMVATransform::checkWeightsFile(std::ostream& info) {
-  ifstream fin(m_weightfile.c_str());
+  std::ifstream fin(m_weightfile.c_str());
   // Check existence of WeightFile: locally
   if (fin.good()) {
     return true;
@@ -111,7 +111,7 @@ void TMVATransform::readWeightsFile(std::ostream& info) {
   m_variables.clear();
   m_spectator.clear();
   // Check that the WeightFile exists
-  ifstream fin(m_weightfile.c_str());
+  std::ifstream fin(m_weightfile.c_str());
   m_setup_success &= checkWeightsFile(info);
   if (!m_setup_success) {
     return;

@@ -4,6 +4,9 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+! 2013-11-15 - Marco Clemencic
+ - Fixed use of std namespace in TMVATransform.cpp.
+
 !========================= MVADictTools v1r2 2013-10-29 =========================
 
 ! 2013-11-14 - Sam Hall
