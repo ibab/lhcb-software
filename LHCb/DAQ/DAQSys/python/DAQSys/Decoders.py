@@ -36,6 +36,15 @@ Decoder("DecodeVeloRawBuffer/createVeloLiteClusters",
         properties={"DecodeToVeloClusters": False,"DecodeToVeloLiteClusters":True},
         conf=DecoderDB)
 
+#===========PU==========
+
+Decoder("DecodePileUpData",
+        active=True, banks=["PU"],
+        inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
+        outputs={"PUClusterLocation" : None, "PUClusterNZSLocation": None},
+        conf=DecoderDB)
+
+
 #===========TT===========
 Decoder("RawBankToSTLiteClusterAlg/createTTLiteClusters",
         active=True, banks=["TT","TTPedestal","TTFull","TTProcFull","TTError"],

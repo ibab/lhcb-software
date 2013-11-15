@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-11-15 - Rob Lambert
+ - Add PileUp decoder.. why wasn't it in there already?
+
 ! 2013-11-14 - Rob Lambert
  - Set EventTimeDecoder if there is an active ODIN decoder, adapt tests to change in DecodeRawEvent.py
 
