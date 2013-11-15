@@ -2,6 +2,9 @@
 ! Responsible : Silvia Borghi, Marco Gersabeck
 !=============================================================================
 
+! 2013-11-15 - Marco Clemencic
+ - Removed unneeded explicit use of libReflex.
+
 ! 30/07/2013 - Maurizio Martinelli
  - resolve compilation errors on gcc 4.7
 

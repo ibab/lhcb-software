@@ -35,6 +35,6 @@ apply_pattern component_library    library=VeloAlignment
 # ========================= Install configurable ============================
 apply_pattern install_python_modules
 
-macro_append ROOT_linkopts " -lHist -lReflex -lMatrix -lGraf" WIN32 " libHist.lib libReflex.lib libMatrix.lib libGraf.lib"
+macro_append ROOT_linkopts " -lHist -lMatrix -lGraf" WIN32 " libHist.lib libMatrix.lib libGraf.lib"
 
 set VELOALIGNMENTOPTS  ${VELOALIGNMENTROOT}/options
