@@ -1,6 +1,6 @@
 // $Id: PrAddUTCoordTool.h,v 1.5 2010-04-15 11:42:44 decianm Exp $
-#ifndef PRADDUTCOORDTOOL_H
-#define PRADDUTCOORDTOOL_H 1
+#ifndef PRADDUTHITSTOOL_H
+#define PRADDUTHITSTOOL_H 1
 
 // Include files
 // from Gaudi
@@ -8,15 +8,15 @@
 
 #include "Event/Track.h"
 #include "Event/State.h"
-#include "TrackInterfaces/IPrAddUTCoordTool.h"            // Interface
+#include "TrackInterfaces/IPrAddUTHitsTool.h"            // Interface
 #include "PrKernel/PrUTHit.h"
 #include "Kernel/ILHCbMagnetSvc.h"
 #include "TfKernel/UTStationHitManager.h"
 
 
-  /** @class PrAddUTCoordTool PrAddUTCoordTool.h
+  /** @class PrAddUTHitsTool PrAddUTHitsTool.h
    *
-   * \brief  Adds UT clusters to tracks, see note LHCb-INT-2010-20 for TT version
+   * \brief  Adds UT hits to tracks, see note LHCb-INT-2010-20 for TT version
    *
    * Parameters:
    * - ZUTField: Z-Position of the kink for the state extrapolation
@@ -38,20 +38,20 @@
    *  
    */
 
-class PrAddUTCoordTool : public GaudiTool, virtual public IPrAddUTCoordTool {
+class PrAddUTHitsTool : public GaudiTool, virtual public IPrAddUTHitsTool {
 public:
     /// Standard constructor
-  PrAddUTCoordTool( const std::string& type,
+  PrAddUTHitsTool( const std::string& type,
                     const std::string& name,
                     const IInterface* parent);
   
-  virtual ~PrAddUTCoordTool( ); ///< Destructor
+  virtual ~PrAddUTHitsTool( ); ///< Destructor
   
   virtual StatusCode initialize();
   
   /// Add UT clusters to matched tracks
-  StatusCode addUTClusters( LHCb::Track& track);
-  StatusCode returnUTClusters( LHCb::State& state, PrUTHits& utHits, double& finalChi2, double p = 0 );
+  StatusCode addUTHits( LHCb::Track& track);
+  StatusCode returnUTHits( LHCb::State& state, PrUTHits& utHits, double& finalChi2, double p = 0 );
    
 
 private:
@@ -81,4 +81,4 @@ private:
 
 };
 
-#endif // PRADDUTCOORDTOOL_H
+#endif // PRADDUTHITSTOOL_H

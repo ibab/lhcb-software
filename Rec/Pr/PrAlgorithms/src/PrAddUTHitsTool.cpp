@@ -7,28 +7,28 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 
-#include "PrAddUTCoordTool.h"
+#include "PrAddUTHitsTool.h"
 
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : PrAddUTCoordTool
+// Implementation file for class : PrAddUTHitsTool
 //
-// 2013-11-13 : Michel De Cian, based on PrAddUTCoord
+// 2013-11-13 : Michel De Cian, based on PrAddUTHits
 //
 //-----------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PrAddUTCoordTool )
+DECLARE_TOOL_FACTORY( PrAddUTHitsTool )
 
 using ROOT::Math::CholeskyDecomp; // -- Maybe copy locally if not running at CERN?
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PrAddUTCoordTool::PrAddUTCoordTool( const std::string& type,
+PrAddUTHitsTool::PrAddUTHitsTool( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
-  declareInterface<IPrAddUTCoordTool>(this);
+  declareInterface<IPrAddUTHitsTool>(this);
   declareProperty( "ZUTField"  , m_zUTField            =  1740. * Gaudi::Units::mm );
   declareProperty( "ZMSPoint"  , m_zMSPoint            =  400. * Gaudi::Units::mm  );
   declareProperty( "UTParam"   , m_utParam             =  29.                      );
@@ -46,12 +46,12 @@ PrAddUTCoordTool::PrAddUTCoordTool( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-PrAddUTCoordTool::~PrAddUTCoordTool() {}
+PrAddUTHitsTool::~PrAddUTHitsTool() {}
 
 //=========================================================================
 //
 //=========================================================================
-StatusCode PrAddUTCoordTool::initialize ( ) {
+StatusCode PrAddUTHitsTool::initialize ( ) {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
@@ -66,7 +66,7 @@ StatusCode PrAddUTCoordTool::initialize ( ) {
 //=========================================================================
 //  Add the UT hits on the track, only the ids.
 //=========================================================================
-StatusCode PrAddUTCoordTool::addUTClusters( LHCb::Track& track){
+StatusCode PrAddUTHitsTool::addUTHits( LHCb::Track& track){
 
   LHCb::State state = track.closestState( m_zUTProj );
   PrUTHits myUTHits;
@@ -74,7 +74,7 @@ StatusCode PrAddUTCoordTool::addUTClusters( LHCb::Track& track){
 
   double momentum = track.p();
 
-  StatusCode sc = returnUTClusters(state, myUTHits, chi2, momentum);
+  StatusCode sc = returnUTHits(state, myUTHits, chi2, momentum);
 
   if(!sc){
 
@@ -110,7 +110,7 @@ StatusCode PrAddUTCoordTool::addUTClusters( LHCb::Track& track){
 //=========================================================================
 //  Return the UT hits
 //=========================================================================
-StatusCode PrAddUTCoordTool::returnUTClusters( LHCb::State& state, PrUTHits& utHits, double& finalChi2, double p){
+StatusCode PrAddUTHitsTool::returnUTHits( LHCb::State& state, PrUTHits& utHits, double& finalChi2, double p){
 
   // -- If no momentum is given, use the one from the state
   if(p < 1e-10){
@@ -127,7 +127,7 @@ StatusCode PrAddUTCoordTool::returnUTClusters( LHCb::State& state, PrUTHits& utH
   double chi2  = 0.;
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-    debug() << "--- Entering addUTClusters ---" << endmsg;
+    debug() << "--- Entering returnUTHits ---" << endmsg;
 
   // -- Get the container with all the hits compatible with the tack
   selectHits(selected, state, p);
@@ -208,7 +208,7 @@ StatusCode PrAddUTCoordTool::returnUTClusters( LHCb::State& state, PrUTHits& utH
 //=========================================================================
 // Select the hits in a certain window
 //=========================================================================
-void PrAddUTCoordTool::selectHits(PrUTHits& selected, const LHCb::State& state, const double p){
+void PrAddUTHitsTool::selectHits(PrUTHits& selected, const LHCb::State& state, const double p){
 
   // -- Define the tolerance parameters
   double yTol = m_yTolSlope / p ;
@@ -256,7 +256,7 @@ void PrAddUTCoordTool::selectHits(PrUTHits& selected, const LHCb::State& state, 
 //=========================================================================
 // Calculate Chi2
 //=========================================================================
-void PrAddUTCoordTool::calculateChi2(PrUTHits& goodUT, double& chi2, const double& bestChi2,
+void PrAddUTHitsTool::calculateChi2(PrUTHits& goodUT, double& chi2, const double& bestChi2,
                                   double& finalDist, const double& p ){
 
   // -- Fit a straight line to the points and calculate the chi2 of the hits with respect to the fitted track
@@ -380,7 +380,7 @@ void PrAddUTCoordTool::calculateChi2(PrUTHits& goodUT, double& chi2, const doubl
 //=========================================================================
 // Print out info
 //=========================================================================
-void PrAddUTCoordTool::printInfo(const PrUTHits& goodUT, double dist, double chi2, const LHCb::State& state){
+void PrAddUTHitsTool::printInfo(const PrUTHits& goodUT, double dist, double chi2, const LHCb::State& state){
 
   // -- Print some information at the end
 

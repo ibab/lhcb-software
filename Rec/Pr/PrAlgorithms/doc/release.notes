@@ -4,6 +4,11 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-11-15 - Michel De Cian
+
+ - Rename PrAddUTCoordTool to PrAddUTHitsTool, introduce PrMatch / PrMatchTool, which are
+ at the moment just copies of PatMatch / PatMatchTool.
+
 ! 2013-11-13 - Michel De Cian
  - Introduce PrAddUTCoordTool, which is to replace PrAddUTCoord. The new tool is 
    basically a copy of the old one, but without keeping the non-uprade inheritance structure.
