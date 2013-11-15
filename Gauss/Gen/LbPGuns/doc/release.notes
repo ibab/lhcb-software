@@ -4,6 +4,10 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+! 2013-11-15 - Michel De Cian
+ - Added MomentumSpectrum.py and BSpectrum.root as example files for the class 
+   MomentumSpectrum to options.
+
 !========================== LbPGuns v4r1 2013-10-10 ==========================
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
