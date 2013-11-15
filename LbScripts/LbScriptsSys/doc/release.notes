@@ -1,3 +1,19 @@
+2013-11-15 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v7r9p2
+
+	LbConfiguration
+	* python/LbConfiguration/SetupProject.py: ignore messages about incompatible
+		versions of packages when checking the configuration
+
+	LbRelease
+	* scripts/ariadne_add: new security model implemented
+	* scripts/ariadne: new script - a common tool to interface with Ariadne
+	* scripts/lb-project-manage-volume: New script to manage LHCb AFS volumes 
+
+	LbLegacy
+  * python/LbLegacy/install_project.py:  release of LbScripts version v7r9p2
+
 2013-10-02 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v7r9p1
