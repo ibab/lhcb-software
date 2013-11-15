@@ -11,7 +11,6 @@
 #include "TF1.h"
 #include "TGraphErrors.h"
 #include "TMinuit.h"
-#include "TFitterMinuit.h"
 
 #include <vector>
 #include <iostream>
