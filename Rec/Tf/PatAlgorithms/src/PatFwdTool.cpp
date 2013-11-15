@@ -487,7 +487,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
           if ( !hit->isSelected() ) continue;
           if ( ignoreX &&
                (hit->hit()->layer() == 0 ||
-                hit->hit()->layer() == 4)) continue;
+                hit->hit()->layer() == 3)) continue;
           double chi2 = chi2Hit( track, hit );
           if ( 1000. < chi2 ) {
             planeCount.removeHit( hit );

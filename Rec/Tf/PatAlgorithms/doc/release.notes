@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2013-11-15 - Sascha Stahl
+ - Fixed inconsistency PatFwdTool.cpp in fitStereoCandidate where a x layer 
+	 was marked as a stereo layer.
+
 !========================= PatAlgorithms v4r28 2013-10-01 =========================
 ! 2013-09-24 - Sascha Stahl
  - Fixed bug in PatSeedingTool which disabled protection against hot events 
