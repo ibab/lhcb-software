@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-11-15 - Rob Lambert
+ - Add import statement to fix stupid bug.
+
 ! 2013-11-14 - Rob Lambert
  - Replace contents of DecodeRawEvent.py with new DecodersDB
 
