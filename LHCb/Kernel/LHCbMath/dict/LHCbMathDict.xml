@@ -37,6 +37,7 @@
   <class name    = "Gaudi::Math::Novosibirsk"             />
   <class name    = "Gaudi::Math::CrystalBall"             />
   <class name    = "Gaudi::Math::Needham"                 />
+  <class name    = "Gaudi::Math::CrystalBallRightSide"    />
   <class name    = "Gaudi::Math::CrystalBallDoubleSided"  />
   <class name    = "Gaudi::Math::BifurcatedGauss"         />
   <class name    = "Gaudi::Math::GramCharlierA"           />

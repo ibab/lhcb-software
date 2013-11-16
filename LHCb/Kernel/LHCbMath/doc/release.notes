@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2013-11-16 - Vanya Belyaev
+ - adjust alpha in Crystal Ball 
+
 ! 2013-10-27 - Vanya Belyaev
  - add few math-functions for phase space modulated by polynomial
 

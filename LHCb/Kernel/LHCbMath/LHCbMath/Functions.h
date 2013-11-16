@@ -284,6 +284,7 @@ namespace Gaudi
     // ========================================================================
     /** @class Bernstein
      *  The Bernstein's polynomial of order N
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      */
     class GAUDI_API Bernstein : public std::unary_function<double,double>
     {
@@ -945,6 +946,25 @@ namespace Gaudi
     // ========================================================================
     /** @class CrystalBall
      *  ``Crystal Ball-function'' for description of gaussian with the tail
+     *  @see http://en.wikipedia.org/wiki/Crystal_Ball_function
+     *
+     *  for \f$\alpha>0\f$
+     * 
+     *  \f[ f(x;\alpha,n,x_0,\sigma) = \frac{1}{ \sqrt{2\pi\sigma^2} } \left\{
+     *  \begin{array}{ll}
+     *  \mathrm{e}^{-\frac{1}{2}\left(\frac{x-x_0}{\sigma}\right)^2} 
+     *  & \text{for}~\frac{x-x_0}\ge-\alpha\sigma \\ 
+     *  \mathrm{- \frac{\alpha^2}{2}} \times 
+     *  \left(  \frac{n+1}{ n+1 - \alpha^2 - \left|\alpha\right\frac{x-x_0}{\sigma}}\right)^{n+1}
+     *  & \text{for}~\frac{x-x_0}\le-\alpha\sigma 
+     *  \end{array}
+     *  \right.\f]
+     *
+     * where 
+     *
+     * \f[ C = \frac{n+1}{\left|\alpha\right|\times \frac{1}{n} \times \mathrm{e}^{-\frac{\alpha^2}{2}}  \f] 
+     * \f[ B = \sqrt{\frac{\pi}{2}}\left(1+\mathrm{erf}\left(-\frac{\alpha}{\sqrt{2}}\right)\right) \f] 
+     *
      *  @date 2011-05-25
      */
     class GAUDI_API CrystalBall : public std::unary_function<double,double>
@@ -954,16 +974,16 @@ namespace Gaudi
       /** constructor from all parameters
        *  @param m0     m0       parameter
        *  @param sigma  sigma    parameter
-       *  @param alpha (alpha-1) parameter
-       *  @param n     (N-1)     parameter
+       *  @param alpha  alpha    parameter
+       *  @param n      n        parameter (equal for N-1 for "standard" definition)
        */
       CrystalBall
       ( const double m0    = 0 ,
         const double sigma = 1 ,
         const double alpha = 2 ,
-        const double N     = 1 ) ;
+        const double n     = 1 ) ;
       /// destructor
-      ~CrystalBall() ;
+      ~CrystalBall () ;
       // ======================================================================
     public:
       // ======================================================================
@@ -978,7 +998,7 @@ namespace Gaudi
       double peak  () const { return   m0 () ; }
       double sigma () const { return m_sigma ; }
       double alpha () const { return m_alpha ; }
-      double n     () const { return m_N     ; }
+      double n     () const { return m_n     ; }
       // ======================================================================
     public: // trivial accessors
       // ======================================================================
@@ -991,16 +1011,11 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get (possibly trunkated) integral
+      /// get (possibly truncated, if n==0 or alpha=0) integral
       double integral () const ;
-      /// get integral between low and high
+      /// get the integral between low and high
       double integral ( const double low ,
                         const double high ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// recalculate integral
-      void integrate () ;                               // recalculate integral
       // ======================================================================
     private:
       // ======================================================================
@@ -1010,19 +1025,30 @@ namespace Gaudi
       double m_sigma    ;  // the peak resolution
       /// parameter alpha
       double m_alpha    ;  // parameter alpha
-      /// parameter N
-      double m_N        ;  // parameter N
-      /// helper constant
-      double m_const    ;
-      /// integral
-      double m_integral ;  // the integral
+      /// parameter n
+      double m_n        ;  // parameter n
+      /// helper constants 
+      double m_A        ;  // exp(-0.5*alpha^2) 
+      double m_B        ;  // integral over the gaussian part 
+      double m_C        ;  // integral over the power-law tail 
       // ======================================================================
     } ;
     // ========================================================================
     /** @class Needham
      *  The special parametrization by Matthew NEEDHAM of
-     *  ``Crystal Ball-function'' suitable for \f$J/\psi\f$-peak
+     *  ``Crystal Ball-function'' suitable for \f$J/\psi/\Upsilon\f$-peaks
      *  @thank Matthew Needham
+     *
+     *  Recommended constants for \f$J/psi\f$-peak: 
+     *    -  \f$a_0 =  1.975   \f$
+     *    -  \f$a_1 =  0.0011  \f$ 
+     *    -  \f$a_2 = -0.00018 \f$ 
+     *
+     *  Recommended constants for \f$\Upsilon\f$-peaks: 
+     *    -  \f$a_0 =  1.91    \f$
+     *    -  \f$a_1 =  0.0017  \f$ 
+     *    -  \f$a_2 = -5.22\times10^{-6} \f$ 
+     *
      *  @see Gaudi::Math::CrystalBall
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2012-05-13
@@ -1039,7 +1065,7 @@ namespace Gaudi
        *  @param a2     a2       parameter
        */
       Needham
-      ( const double m0    = 3096.0     ,
+      ( const double m0    = 3096.0     ,  // for J/psi 
         const double sigma =   13.5     ,
         const double a0    =    1.975   ,
         const double a1    =    0.0011  ,
@@ -1062,7 +1088,7 @@ namespace Gaudi
       double a0    () const { return m_a0          ; }
       double a1    () const { return m_a1          ; }
       double a2    () const { return m_a2          ; }
-      double alpha () const { return a0()+sigma()*(a1()+sigma()*a2()) ; }
+      double alpha () const { return a0 () + sigma() * ( a1() + sigma() * a2 () ) ; }
       // ======================================================================
     public: // trivial accessors
       // ======================================================================
@@ -1076,11 +1102,11 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get (possibly trunkated) integral
+      /// get (possibly truncated) integral
       double integral () const { return m_cb.integral() ; }
       /// get integral between low and high
       double integral ( const double low ,
-                        const double high ) const
+                        const double high ) const 
       { return m_cb.integral ( low , high ) ; }
       // ======================================================================
     private:
@@ -1096,8 +1122,72 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class CrystalBallRightSide
+     *  ritgh-sided Crystal Ball function 
+     *  @see CrystalBall 
+     *  @date 2011-05-25
+     */
+    class GAUDI_API CrystalBallRightSide : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor from all parameters
+       *  @param m0     m0       parameter
+       *  @param sigma  sigma    parameter
+       *  @param alpha  alpha    parameter
+       *  @param n      n        parameter (equal for N-1 for "standard" definition)
+       */
+      CrystalBallRightSide
+      ( const double m0    = 0 ,
+        const double sigma = 1 ,
+        const double alpha = 2 ,
+        const double n     = 1 ) ;
+      /// destructor
+      ~CrystalBallRightSide () ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate CrystalBall's function
+      double pdf        ( const double x ) const ;
+      /// evaluate CrystalBall's function
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      // ======================================================================
+    public: // trivial accessors
+      // ======================================================================
+      double m0    () const { return m_cb.m0    () ; }
+      double peak  () const { return      m0    () ; }
+      double sigma () const { return m_cb.sigma () ; }
+      double alpha () const { return m_cb.alpha () ; }
+      double n     () const { return m_cb.n     () ; }
+      // ======================================================================
+    public: // trivial accessors
+      // ======================================================================
+      bool setM0    ( const double value ) { return m_cb.setM0    ( value ) ; }
+      bool setPeak  ( const double value ) { return setM0 ( value ) ; }
+      bool setMass  ( const double value ) { return setPeak ( value ) ; }
+      bool setSigma ( const double value ) { return m_cb.setSigma ( value ) ; }
+      bool setAlpha ( const double value ) { return m_cb.setAlpha ( value ) ; }
+      bool setN     ( const double value ) { return m_cb.setN     ( value ) ; }  
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get (possibly truncated, if n==0 or alpha=0) integral
+      double integral () const ;
+      /// get the integral between low and high
+      double integral ( const double low ,
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual CB-function: 
+      Gaudi::Math::CrystalBall m_cb ;                 // the actual CB-function
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class CrystalBallDoubleSided
      *  ``Crystal Ball-function'' for description of gaussian with the tail
+     *  @see CrystalBall 
+     *  @see CrystalBallRightSide  
      *  @date 2011-05-25
      */
     class GAUDI_API CrystalBallDoubleSided
@@ -1108,10 +1198,10 @@ namespace Gaudi
       /** constructor from all parameters
        *  @param m0      m0          parameter
        *  @param sigma   sigma       parameter
-       *  @param alpha_L (alpha_L-1) parameter
-       *  @param n_L     (n_L-1)     parameter
-       *  @param alpha_R (alpha_R-1) parameter
-       *  @param n_R     (n_R-1)     parameter
+       *  @param alpha_L alpha_L     parameter
+       *  @param n_L     n_L         parameter  (N-1 for "standard" definition) 
+       *  @param alpha_R alpha_R parameter
+       *  @param n_R     n_R         parameter  (N-1 for "standard" definition)
        */
       CrystalBallDoubleSided
       ( const double m0      = 1 ,
@@ -1136,9 +1226,9 @@ namespace Gaudi
       double peak    () const { return   m0 ()   ; }
       double sigma   () const { return m_sigma   ; }
       double alpha_L () const { return m_alpha_L ; }
-      double n_L     () const { return m_N_L     ; }
+      double n_L     () const { return m_n_L     ; }
       double alpha_R () const { return m_alpha_R ; }
-      double n_R     () const { return m_N_R     ; }
+      double n_R     () const { return m_n_R     ; }
       // ======================================================================
     public: // trivial accessors
       // ======================================================================
@@ -1153,16 +1243,11 @@ namespace Gaudi
       // ======================================================================
     public: //
       // ======================================================================
-      /// get (possibly trunkated) integral
+      /// get (possibly truncated) integral
       double integral () const ;
       /// get integral between low and high
-      double integral ( const double low ,
+      double integral ( const double low  ,
                         const double high ) const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// recalculate integral
-      void integrate () ;                               // recalculate integral
       // ======================================================================
     private:
       // ======================================================================
@@ -1173,16 +1258,17 @@ namespace Gaudi
       /// parameter alpha
       double m_alpha_L  ;  // parameter alpha
       /// parameter N
-      double m_N_L      ;  // parameter N
+      double m_n_L      ;  // parameter N
       /// parameter alpha_R
       double m_alpha_R  ;  // parameter alpha
       /// parameter N_R
-      double m_N_R      ;  // parameter N
-      ///
-      double m_const_L  ;
-      double m_const_R  ;
-      /// integral
-      double m_integral ;  // the integral
+      double m_n_R      ;  // parameter N
+      /// helper constants 
+      double m_AL       ;  // exp(-0.5*alpha_L^2) 
+      double m_AR       ;  // exp(-0.5*alpha_R^2) 
+      double m_B        ;  // integral over the gaussian part 
+      double m_TL       ;  // integral over the left  power-law tail 
+      double m_TR       ;  // integral over the right power-law tail
       // ======================================================================
     } ;
     // ========================================================================
@@ -1238,7 +1324,7 @@ namespace Gaudi
       // ======================================================================
     public: //
       // ======================================================================
-      /// get (possibly trunkated) integral
+      /// get (possibly truncated) integral
       double integral () const ;
       /// get integral between low and high
       double integral ( const double low ,

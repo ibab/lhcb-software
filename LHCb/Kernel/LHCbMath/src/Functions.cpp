@@ -347,6 +347,13 @@ namespace
    */
   const double s_SQRT2PI    =       std::sqrt ( 2 * M_PI ) ;
   // ===========================================================================
+  /** @var s_SQRT2PIi
+   *  helper constant \f$ \frac{1}{\sqrt{2\pi}}\f$
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-04-19
+   */
+  const double s_SQRT2PIi    =      1./s_SQRT2PI ;
+  // ===========================================================================
   /** @var s_SQRT2 
    *  helper constant \f$\sqrt{2}\f$
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
@@ -775,6 +782,12 @@ namespace
     return factor * ( error_func ( b_prime ) + 1  ) ;
   }
   // ==========================================================================
+  /** evaluate very simple power-law intergal 
+   *  
+   *  \f[ I = \int_{x_{low}}^{x_{high}} \left( \frac{A}{B+Cx}\right)^{N} dx \f]
+   * 
+   *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+   */
   double tail_integral 
   ( const double A    , 
     const double B    , 
@@ -784,15 +797,17 @@ namespace
     const double high )
   {
     //
-    // few really simple cases:
+    // few really very simple cases:
+    if      ( s_equal ( N , 0 ) ) { return high - low ; }
+    else if ( s_equal ( A , 0 ) ) { return 0 ; }
+    else if ( s_equal ( C , 0 ) ) { return std::pow ( A / B , N ) * ( high - low ) ; }
     //
-    if      ( s_equal ( N , 0 )                      ) { return high - low ; }
-    else if ( s_equal ( A , 0 )                      ) { return 0 ; }
-    //
+    // again the trivial cases 
     if ( s_equal ( low , high ) ) { return 0 ; }
     else if      ( low > high   ) { return -1 * tail_integral ( A , B , C , N , high , low ) ; }
     //
-    //  y = (B+CX/A)
+    //  y = (B+C*x)/A
+    //
     const double y_low  = ( B + C * low  ) / A ;
     const double y_high = ( B + C * high ) / A ;
     //
@@ -2201,23 +2216,27 @@ Gaudi::Math::CrystalBall::CrystalBall
 ( const double m0    ,
   const double sigma ,
   const double alpha ,
-  const double N     )
+  const double n     )
   : std::unary_function<double,double> ()
-  , m_m0         ( m0                  )
-  , m_sigma      (     std::fabs ( sigma ) )
-  , m_alpha      ( 1 + std::fabs ( alpha ) )
-  , m_N          ( 1 + std::fabs ( N     ) )
+  , m_m0         ( m0 )
+  , m_sigma      (  1 )
+  , m_alpha      (  2 )
+  , m_n          (  2 )
 //
-  , m_const      ( 0.0   )
-  , m_integral   ( -1000 )
+  , m_A  ( -1000 ) 
+  , m_B  ( -1000 ) 
+  , m_C  ( -1000 ) 
 {
   //
+  setM0     ( m0    ) ;
   setAlpha  ( alpha ) ;
   setSigma  ( sigma ) ;
-  setN      ( N     ) ;
-  setM0     ( m0    ) ;
+  setN      ( n     ) ;
   //
-  m_const = my_exp ( -0.5 * m_alpha * m_alpha ) ;
+  m_A = my_exp ( -0.5 * m_alpha * m_alpha ) ;
+  m_B =  0.5 * ( 1 + gsl_sf_erf ( - m_alpha * s_SQRT2i ) ) ;
+  if   ( !s_equal ( m_n , 0 ) && !s_equal ( m_alpha , 0 )  ) 
+  { m_C  = ( m_n + 1 )  / std::abs( m_alpha )  / m_n  * s_SQRT2PIi ; }
 }
 // ============================================================================
 // destructor
@@ -2226,10 +2245,10 @@ Gaudi::Math::CrystalBall::~CrystalBall (){}
 // ============================================================================
 bool  Gaudi::Math::CrystalBall::setM0 ( const double value )
 {
+  //
   if ( s_equal ( value , m_m0 ) ) { return false ; }
   //
   m_m0       = value ;
-  m_integral = -1000 ;
   //
   return true ;
 }
@@ -2240,32 +2259,41 @@ bool Gaudi::Math::CrystalBall::setSigma ( const double value )
   if ( s_equal ( value_ , m_sigma ) ) { return false ; }
   //
   m_sigma    = value_ ;
-  m_integral = -1000  ;
   //
   return true ;
 }
 // ============================================================================
 bool Gaudi::Math::CrystalBall::setAlpha  ( const double value )
 {
-  const double value_ = 1 + std::fabs ( value );
-  if ( s_equal ( value_ , m_alpha ) ) { return false ; }
   //
-  m_alpha    = value_ ;
-  m_const    = my_exp ( -0.5 * m_alpha * m_alpha ) ;
-  m_integral = -1000  ;
+  if ( s_equal ( value , m_alpha ) ) { return false ; }
+  //
+  m_alpha    = value  ;
+  //
+  m_A        = my_exp ( -0.5 * m_alpha * m_alpha ) ;
+  //
+  const double aa  = std::abs ( m_alpha ) ;
+  const double np1 = n() + 1 ;
+  // 
+  if   ( s_equal ( n () , 0 ) || s_equal ( m_alpha , 0 )  ) { m_C = -1000 ; }
+  else { m_C  = np1 / aa / n()  * s_SQRT2PIi ; }
+  //
+  m_B  = 0.5 * ( 1 + gsl_sf_erf ( - m_alpha * s_SQRT2i ) ) ;
   //
   return true ;
 }
 // ============================================================================
 bool Gaudi::Math::CrystalBall::setN      ( const double value )
 {
-  const double value_ = 1 + std::fabs ( value );
-  if ( s_equal ( value_ , m_N     ) ) { return false ; }
+  const double value_ = std::fabs ( value );
+  if ( s_equal ( value_ , m_n     ) ) { return false ; }
   //
-  m_N        = value_ ;
-  if ( s_equal ( m_N , 1 ) ) { m_N = 1 ; }
+  m_n        = value_ ;
+  if ( s_equal ( m_n , 0 ) ) { m_n = 0 ; }
   //
-  m_integral = -1000  ;
+  const double aa  = std::abs ( m_alpha ) ;
+  if   ( s_equal ( n () , 0 ) || s_equal ( m_alpha , 0 )  ) { m_C = -1000 ; }
+  else { m_C  = ( n() + 1 )  / aa / n() * s_SQRT2PIi ; }
   //
   return true ;
 }
@@ -2277,21 +2305,18 @@ double Gaudi::Math::CrystalBall::pdf ( const double x ) const
   //
   const double dx    = ( x - m_m0 ) / m_sigma ;
   //
-  const double norm  = s_SQRT2PI * sigma() ;
-  //
-  // tail
+  // the tail
   //
   if  ( dx < -m_alpha )
   {
-    const double f1 = m_N / m_alpha ;
-    const double f2 = m_N / m_alpha - m_alpha - dx ;
-    //
-    return m_const * std::pow ( f1 / f2 , m_N ) / norm  ;  // note NORM! 
+    const double np1  = n() + 1 ;
+    const double frac = np1 / ( np1 - std::abs( m_alpha ) * ( m_alpha + dx ) )  ;
+    return std::pow ( frac , np1 ) * m_A * s_SQRT2PIi / sigma() ;
   }
   //
-  // peak
+  // the peak
   //
-  return my_exp ( -0.5 * dx * dx )              / norm  ; // note NORM!
+  return my_exp ( -0.5 * dx * dx ) * s_SQRT2PIi / sigma() ;
 }
 // ============================================================================
 // get the integral between low and high
@@ -2311,61 +2336,43 @@ double Gaudi::Math::CrystalBall::integral
   //
   if      ( low < x0 && x0 < high )
   { return integral ( low , x0 ) + integral ( x0 , high ) ; }
-  
+  //
+  // Z = (x-x0)/sigma 
+  //
+  const double zlow  = ( low  - m_m0 ) / sigma() ;
+  const double zhigh = ( high - m_m0 ) / sigma() ;
   //
   // peak
   //
   if ( x0 <= low  )
-  {
-    const double norm = s_SQRT2PI * sigma() ;
-    return gaussian_int ( 0.5 / m_sigma / m_sigma ,
-                          0                       ,
-                          low  - m_m0             ,
-                          high - m_m0             ) / norm ;  // NOTE "norm" here!
-  }
+  { return s_SQRT2PIi * gaussian_int ( 0.5   , 0 , zlow  , zhigh ) ; }
   //
   // tail
   //
-  const double A = m_N / m_alpha ;
-  const double B = m_N / m_alpha - m_alpha + m_m0 / m_sigma ;
-  const double C =  -1 / m_sigma ;
+  const double np1 = n() + 1 ;
   //
-  const double result = m_const / s_SQRT2PI / sigma() * 
-    tail_integral ( A , B , C , m_N , low , high ) ;
+  const double A = np1 ;
+  const double B = np1 ;
+  const double C = - std::abs ( alpha () ) ;
+  //
+  const double result = s_SQRT2PIi * m_A * 
+    tail_integral ( A , B , C , np1 , zlow + alpha() , zhigh + alpha() ) ;
   //
   return result ;
-}
-// ============================================================================
-// get the (trunkated)  integral
-// ============================================================================
-void Gaudi::Math::CrystalBall::integrate ()
-{
-  //
-  const double x0  = m_m0 - m_alpha * m_sigma ;
-  //
-  const double low = std::max  ( m_m0 - s_TRUNC * m_sigma , 0.0 ) ;
-  //
-  // integrate the tail:
-  m_integral  = integral       ( low , x0 ) ;
-  //
-  // integrate the peak:
-  const double norm = s_SQRT2PI * sigma() ;
-  m_integral += gaussian_int_R ( 0.5 / m_sigma / m_sigma ,
-                                 0         ,
-                                 x0 - m_m0 ) / norm ;
 }
 // =========================================================================
 // get the integral
 // =========================================================================
 double Gaudi::Math::CrystalBall::integral () const
 {
-  if ( m_integral <= 0 )
-  {
-    CrystalBall* cb = const_cast<CrystalBall*> ( this ) ;
-    cb -> integrate() ;
-  }
+  /// the regular case 
+  if ( 0 < m_C ) { return m_C + m_B ; }
   //
-  return m_integral ;
+  /// trunkate it! 
+  const double left = ( 0 < m_alpha ) ?  (-m_alpha-s_TRUNC) : -s_TRUNC ;
+  // 
+  return m_B + integral ( m0 () + left     * sigma() , 
+                          m0 () - alpha () * sigma() ) ;
 }
 // ============================================================================
 // Needham function
@@ -2425,6 +2432,51 @@ bool Gaudi::Math::Needham::setA2 ( const double value )
 double Gaudi::Math::Needham::pdf ( const double x ) const
 { return m_cb ( x ) ; }
 // ============================================================================
+
+
+// ============================================================================
+/*  constructor from all parameters
+ *  @param m0 m0 parameter
+ *  @param alpha alpha parameter
+ *  @param n     n-parameter
+ */
+// ============================================================================
+Gaudi::Math::CrystalBallRightSide::CrystalBallRightSide
+( const double m0    ,
+  const double sigma ,
+  const double alpha ,
+  const double n     )
+  : std::unary_function<double,double> ()
+  , m_cb         ( m0 , sigma , alpha , n ) 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::CrystalBallRightSide::~CrystalBallRightSide (){}
+// ============================================================================
+//  evaluate CrystalBall's function
+// ============================================================================
+double Gaudi::Math::CrystalBallRightSide::pdf ( const double x ) const
+{
+  const double y = 2 * m0 ()  - x ;
+  //
+  return  m_cb.pdf ( y ) ;  
+}
+// ============================================================================
+// get the integral between low and high
+// ============================================================================
+double Gaudi::Math::CrystalBallRightSide::integral
+( const double low ,
+  const double high ) const
+{ return m_cb.integral ( 2 * m0 () - high  , 2 * m0 () - low ) ; }
+// =========================================================================
+// get the integral
+// =========================================================================
+double Gaudi::Math::CrystalBallRightSide::integral () const 
+{ return m_cb.integral () ; }
+// =========================================================================
+
+// ============================================================================
 /*  constructor from all parameters
  *  @param m0 m0 parameter
  *  @param alpha alpha parameter
@@ -2435,24 +2487,41 @@ Gaudi::Math::CrystalBallDoubleSided::CrystalBallDoubleSided
 ( const double m0      ,
   const double sigma   ,
   const double alpha_L ,
-  const double N_L     ,
+  const double n_L     ,
   const double alpha_R ,
-  const double N_R     )
+  const double n_R     )
   : std::unary_function<double,double> ()
-  , m_m0         (  m0                        )
-  , m_sigma      (      std::fabs ( sigma   ) )
-  , m_alpha_L    (  1 + std::fabs ( alpha_L ) )
-  , m_N_L        (  1 + std::fabs ( N_L     ) )
-  , m_alpha_R    (  1 + std::fabs ( alpha_R ) )
-  , m_N_R        (  1 + std::fabs ( N_R     ) )
+  , m_m0         (  m0 )
+  , m_sigma      (   1 )
+  , m_alpha_L    (   2 )
+  , m_n_L        (   2 )
+  , m_alpha_R    (   2 )
+  , m_n_R        (   2 )
 //
-  , m_const_L    (  1 )
-  , m_const_R    (  1 )
-  , m_integral   ( -1000 )
+  , m_AL         ( -1000 ) 
+  , m_AR         ( -1000 )
+  , m_B          ( -1000 ) 
+  , m_TL         ( -1000 ) 
+  , m_TR         ( -1000 ) 
 {
   //
-  m_const_L = my_exp ( -0.5 * m_alpha_L * m_alpha_L ) ;
-  m_const_R = my_exp ( -0.5 * m_alpha_R * m_alpha_R ) ;
+  setM0       ( m0      ) ;
+  setSigma    ( sigma   ) ;
+  setAlpha_L  ( alpha_L ) ;
+  setAlpha_R  ( alpha_R ) ;
+  setN_L      ( n_L     ) ;
+  setN_R      ( n_R     ) ;
+  //
+  m_AL = my_exp ( -0.5 * m_alpha_L * m_alpha_L ) ;
+  m_AR = my_exp ( -0.5 * m_alpha_R * m_alpha_R ) ;
+  m_B  = 0.5 *  ( gsl_sf_erf (  m_alpha_R * s_SQRT2i ) - 
+                  gsl_sf_erf ( -m_alpha_L * s_SQRT2i ) ) ;
+  //
+  if   ( !s_equal ( m_n_L , 0 ) && !s_equal ( m_alpha_L , 0 )  ) 
+  { m_TL  = ( m_n_L + 1 )  / std::abs ( m_alpha_L )  / m_n_L  * s_SQRT2PIi ; }
+  if   ( !s_equal ( m_n_R , 0 ) && !s_equal ( m_alpha_R , 0 )  ) 
+  { m_TR  = ( m_n_R + 1 )  / std::abs ( m_alpha_R )  / m_n_R  * s_SQRT2PIi ; }
+  //
 }
 // ============================================================================
 // destructor
@@ -2464,7 +2533,6 @@ bool Gaudi::Math::CrystalBallDoubleSided::setM0 ( const double value )
   if ( s_equal ( value , m_m0 ) ) { return false ; }
   //
   m_m0       = value ;
-  m_integral = -1000 ;
   //
   return true ;
 }
@@ -2475,57 +2543,64 @@ bool Gaudi::Math::CrystalBallDoubleSided::setSigma ( const double value )
   if ( s_equal ( value_ , m_sigma ) ) { return false ; }
   //
   m_sigma    = value_ ;
-  m_integral = -1000  ;
   //
   return true ;
 }
 // ============================================================================
 bool Gaudi::Math::CrystalBallDoubleSided::setAlpha_L ( const double value )
 {
-  const double value_ = 1 + std::fabs ( value );
-  if ( s_equal ( value_ , m_alpha_L ) ) { return false ; }
+  if ( s_equal ( value , m_alpha_L ) ) { return false ; }
   //
-  m_alpha_L  = value_ ;
-  m_const_L  = my_exp ( -0.5 * m_alpha_L * m_alpha_L ) ;
-  m_integral = -1000  ;
+  m_alpha_L  = value  ;
+  m_AL       = my_exp ( -0.5 * m_alpha_L * m_alpha_L ) ;
+  m_B        = 0.5 *  ( gsl_sf_erf (  m_alpha_R * s_SQRT2i ) - 
+                        gsl_sf_erf ( -m_alpha_L * s_SQRT2i ) ) ;
+  //
+  if   ( s_equal ( m_n_L , 0 ) || s_equal  ( m_alpha_L , 0 )  ) {  m_TL = -1000 ; }
+  else { m_TL  = ( m_n_L + 1 )  / std::abs ( m_alpha_L )  / m_n_L  * s_SQRT2PIi ; }
   //
   return true ;
 }
 // ============================================================================
 bool Gaudi::Math::CrystalBallDoubleSided::setAlpha_R ( const double value )
 {
-  const double value_ = 1 + std::fabs ( value );
-  if ( s_equal ( value_ , m_alpha_R ) ) { return false ; }
+  if ( s_equal ( value , m_alpha_R ) ) { return false ; }
   //
-  m_alpha_R  = value_ ;
-  m_const_R  = my_exp ( -0.5 * m_alpha_R * m_alpha_R ) ;
-  m_integral = -1000  ;
+  m_alpha_R  = value  ;
+  m_AR       = my_exp ( -0.5 * m_alpha_R * m_alpha_R ) ;
+  m_B        = 0.5 *  ( gsl_sf_erf (  m_alpha_R * s_SQRT2i ) - 
+                        gsl_sf_erf ( -m_alpha_L * s_SQRT2i ) ) ;
+  //
+  if   ( s_equal ( m_n_R , 0 ) || s_equal ( m_alpha_R , 0 )  ) { m_TR = -1000 ; }
+  else { m_TR  = ( m_n_R + 1 )  / std::abs ( m_alpha_R )  / m_n_R  * s_SQRT2PIi ; }
   //
   return true ;
 }
 // ============================================================================
 bool Gaudi::Math::CrystalBallDoubleSided::setN_L     ( const double value )
 {
-  const double value_ = 1 + std::fabs ( value );
-  if ( s_equal ( value_ , m_N_L    ) ) { return false ; }
+  const double value_ = std::fabs ( value );
+  if ( s_equal ( value_ , m_n_L    ) ) { return false ; }
   //
-  m_N_L      = value_ ;
-  if ( s_equal ( m_N_L , 1 ) ) { m_N_L = 1 ; }
+  m_n_L      = value_ ;
+  if ( s_equal ( m_n_L , 0 ) ) { m_n_L = 0 ; }
   //
-  m_integral = -1000  ;
+  if   ( s_equal ( m_n_L , 0 ) || s_equal ( m_alpha_L , 0 )  ) {  m_TL = -1000 ; }
+  else { m_TL  = ( m_n_L + 1 )  / std::abs ( m_alpha_L )  / m_n_L  * s_SQRT2PIi ; }
   //
   return true ;
 }
 // ============================================================================
 bool Gaudi::Math::CrystalBallDoubleSided::setN_R     ( const double value )
 {
-  const double value_ = 1 + std::fabs ( value );
-  if ( s_equal ( value_ , m_N_R    ) ) { return false ; }
+  const double value_ = std::fabs ( value );
+  if ( s_equal ( value_ , m_n_R    ) ) { return false ; }
   //
-  m_N_R      = value_ ;
-  if ( s_equal ( m_N_R , 1 ) ) { m_N_R = 1 ; }
+  m_n_R      = value_ ;
+  if ( s_equal ( m_n_R , 0 ) ) { m_n_R = 1 ; }
   //
-  m_integral = -1000  ;
+  if   ( s_equal ( m_n_R , 0 ) || s_equal ( m_alpha_R , 0 )  ) { m_TR = -1000 ; }
+  else { m_TR  = ( m_n_R + 1 )  / std::abs ( m_alpha_R )  / m_n_R  * s_SQRT2PIi ; }
   //
   return true ;
 }
@@ -2535,29 +2610,26 @@ bool Gaudi::Math::CrystalBallDoubleSided::setN_R     ( const double value )
 double Gaudi::Math::CrystalBallDoubleSided::pdf ( const double x ) const
 {
   //
-  const double dx = ( x - m_m0 ) / m_sigma ;
+  const double dx   = ( x - m_m0 ) / m_sigma ;
   //
-  const double norm = sigma() * s_SQRT2PI ;
-  // left tail
+  // the left tail
   if      ( dx  < -m_alpha_L )  // left tail
   {
-    const double f1 = m_N_L / m_alpha_L ;
-    const double f2 = m_N_L / m_alpha_L - m_alpha_L - dx ;
-    //
-    return m_const_L * std::pow ( f1 / f2 , m_N_L ) / norm ; // NORM is here 
+    const double np1  = n_L() + 1 ;
+    const double frac = np1 / ( np1 - std::abs ( m_alpha_L ) * ( m_alpha_L + dx ) )  ;
+    return std::pow ( frac , np1 ) * m_AL * s_SQRT2PIi / sigma() ;
   }
-  // right tail
+  // the right tail
   else if  ( dx >  m_alpha_R )  // right tail
   {
-    const double f1 = m_N_R / m_alpha_R ;
-    const double f2 = m_N_R / m_alpha_R - m_alpha_R + dx ;
-    //
-    return m_const_R * std::pow ( f1 / f2 , m_N_R ) / norm ; // NORM is here 
+    const double np1  = n_R () + 1 ;
+    const double frac = np1 / ( np1 - std::abs ( m_alpha_R ) * ( m_alpha_R - dx ) )  ;
+    return std::pow ( frac , np1 ) * m_AR * s_SQRT2PIi / sigma() ;
   }
   //
-  // peak
+  // the peak
   //
-  return my_exp ( -0.5 * dx * dx ) / norm ;                  // NORM is here 
+  return my_exp ( -0.5 * dx * dx ) * s_SQRT2PIi / sigma() ; 
 }
 // ============================================================================
 // get the integral between low and high
@@ -2580,27 +2652,28 @@ double Gaudi::Math::CrystalBallDoubleSided::integral
   if ( low < x_high && x_high < high )
   { return integral ( low , x_high ) + integral ( x_high , high ) ; }
   //
+  // Z = (x-x0)/sigma 
+  //
+  const double zlow  = ( low  - m_m0 ) / sigma() ;
+  const double zhigh = ( high - m_m0 ) / sigma() ;
+  //
   // the peak
   //
   if ( x_low <= low && high <= x_high )
-  {
-    const double norm = sigma() * s_SQRT2PI ;
-    return gaussian_int ( 0.5 / ( m_sigma * m_sigma ) ,
-                          0            ,
-                          low   - m_m0 , 
-                          high  - m_m0 ) / norm ;
-  }
+  { return  s_SQRT2PIi * gaussian_int ( 0.5   , 0 , zlow  , zhigh ) ; }
   //
   // left tail 
   //
   if ( high <= x_low ) 
   {
-    const double A = m_N_L / m_alpha_L ;
-    const double B = m_N_L / m_alpha_L - m_alpha_L + m_m0 / m_sigma ;
-    const double C =    -1 / m_sigma ;
+    const double np1 = n_L () + 1 ;
     //
-    return  m_const_L / s_SQRT2PI / sigma() * 
-      tail_integral ( A , B , C , m_N_L , low , high ) ;
+    const double A   = np1 ;
+    const double B   = np1 ;
+    const double C   = - std::abs ( alpha_L () ) ;
+    //
+    return s_SQRT2PIi * m_AL * 
+      tail_integral ( A , B , C , np1 , zlow + alpha_L() , zhigh + alpha_L() ) ;
   }
   //
   // right tail 
@@ -2608,46 +2681,51 @@ double Gaudi::Math::CrystalBallDoubleSided::integral
   if ( low  >= x_high ) 
   {
     //
-    const double A = m_N_R / m_alpha_R ;
-    const double B = m_N_R / m_alpha_R - m_alpha_L - m_m0 / m_sigma ;
-    const double C =    +1 / m_sigma ;
+    const double np1 = n_R () + 1 ;
     //
-    return  m_const_R / s_SQRT2PI / sigma() * 
-      tail_integral ( A , B , C , m_N_R , low , high ) ;
+    const double A   = np1 ;
+    const double B   = np1 ;
+    const double C   = std::abs ( alpha_R () ) ;
+    //
+    return s_SQRT2PIi * m_AR * 
+      tail_integral ( A , B , C , np1 , zlow - alpha_R() , zhigh - alpha_R() ) ;
   }
   //
   return 0 ;
 }
 // ============================================================================
-// get the (trunkated)  integral
+// get the (truncated)  integral
 // ============================================================================
-void Gaudi::Math::CrystalBallDoubleSided::integrate ()
+double Gaudi::Math::CrystalBallDoubleSided::integral () const 
 {
   //
-  const double x_low  = m_m0 - m_alpha_L * m_sigma ;
-  const double x_high = m_m0 + m_alpha_R * m_sigma ;
-  //
-  const double low  = x_low  - std::max ( s_TRUNC , m_alpha_L ) * m_sigma ;
-  const double high = x_high + std::max ( s_TRUNC , m_alpha_R ) * m_sigma ;
-  //
-  m_integral = integral ( low , high ) ;
-}
-// =========================================================================
-// get the integral
-// =========================================================================
-double Gaudi::Math::CrystalBallDoubleSided::integral () const
-{
-  if ( m_integral <= 0 )
+  if      ( 0 < m_TL && 0 <= m_TR ) { return m_TL + m_TR + m_B ; }
+  else if ( 0 < m_TR ) 
   {
-    CrystalBallDoubleSided* cb = const_cast<CrystalBallDoubleSided*> ( this ) ;
-    cb -> integrate() ;
+    /// truncate it! 
+    const double left = ( 0 < alpha_L() ) ?  (-alpha_L()-s_TRUNC) : -s_TRUNC ;
+    // 
+    return m_TR + m_B + integral ( m0 () + left       * sigma() , 
+                                   m0 () - alpha_L () * sigma() ) ;
+    
+  }
+  else if ( 0 < m_TL ) 
+  {
+    /// truncate it! 
+    const double right = ( 0 < alpha_R() ) ?  ( alpha_R () + s_TRUNC) : + s_TRUNC ;
+    // 
+    return m_TL + m_B + integral ( m0 () + alpha_R () * sigma() , 
+                                   m0 () + right      * sigma() ) ;
+    
   }
   //
-  return m_integral ;
+  /// truncate both
+  const double left  = ( 0 < alpha_L() ) ?  (-alpha_L () - s_TRUNC ) : -s_TRUNC ;
+  /// truncate it! 
+  const double right = ( 0 < alpha_R() ) ?  ( alpha_R () + s_TRUNC ) : + s_TRUNC ;
+  //
+  return integral ( m0 () - left  * sigma () , m0 () + right * sigma () ) ;
 }
-// ============================================================================
-
-
 // ============================================================================
 // Gram-Charlier type A
 // ============================================================================
@@ -6949,12 +7027,6 @@ double Gaudi::Math::BetaPrime::skewness  () const
   return 2 * ( 2 * a + b - 1 ) / ( b - 3 ) * std::sqrt( ( b - 2 ) / a / ( a + b - 1 ) ) ;
 }
 // ===========================================================================
-
-
-
-
-
-
 
 
 
