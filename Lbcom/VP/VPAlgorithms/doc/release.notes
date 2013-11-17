@@ -3,6 +3,9 @@
 ! Responsible : Daniel Hynds
 !--------------------------------------------------------------------------
 
+! 2013-11-10 - Heinrich Schindler
+ - Speed improvements
+
 !========================= VPAlgorithms v4r1 2013-10-24 =========================
 ! 2013-10-23 - Daniel Hynds
  - Fixed iterator for clustering search

@@ -61,15 +61,6 @@ StatusCode VPClustering::execute() {
     return StatusCode::SUCCESS;
   }  
   // If no lite clusters, then cluster the digits.
-  return clusterDigits();
-
-}
-
-//=============================================================================
-// Loop over track container
-//=============================================================================
-StatusCode VPClustering::clusterDigits() {
-  
   if (m_debug) debug() << "Clustering digits" << endmsg;
   // Pick up pixel hits (digits) to cluster
   LHCb::VPDigits* digits = getIfExists<LHCb::VPDigits>(m_digitLocation);
@@ -83,92 +74,128 @@ StatusCode VPClustering::clusterDigits() {
 
   // Sort digits by channelID
   std::sort(digits->begin(), digits->end(), less_than_channelID()); 
-  
-  // Cluster while there are still pixels in the temporary storage
-  unsigned int oldsize = 0;
-  std::vector<bool> isUsed(digits->size()); // If each pixel is used NEW
-  LHCb::VPDigits::const_iterator iSeed; // Cluster seed iterator NEW
-  for (iSeed = digits->begin(); iSeed != digits->end(); iSeed++) { // NEW
-    if(isUsed[iSeed - digits->begin()]) continue;
-    // Create a new cluster.
-    std::vector<LHCb::VPDigits::const_iterator> cluster; //NEW
-    std::vector<std::pair<LHCb::VPChannelID,int> > totVec;     
-    // Add the first hit in the container.
-    cluster.push_back(iSeed); // NEW
-    isUsed[iSeed - digits->begin()] = true;
-    totVec.push_back(std::make_pair((*iSeed)->channelID(), (*iSeed)->ToTValue())); // NEW
-
-    do {
-      oldsize = cluster.size();
-      for (unsigned int i = 0; i < cluster.size(); i++) { 
-        LHCb::VPDigits::const_iterator iCand = cluster[0];
-        if (iCand != digits->end() - 1) iCand++; // Candidate  iterator NEW
-        else break;
-        if ((*cluster[i])->channelID().module() != (*iCand)->channelID().module()) break;  // Next hit not on same module NEW
-        if (sensorNumber((*cluster[i])) != sensorNumber(*iCand) ) break; // Next hit not on same sensor
-        // Loop down the stored hits until new pixels cannot be part of cluster    
-        for (; iCand != digits->end(); iCand++) { 
-          if (isUsed[iCand - digits->begin()]) continue;
-          if (!isEdge((*cluster[i]))) {
-            // Not edge
-            if ((*cluster[i])->channelID().chip() != (*iCand)->channelID().chip()) break;  // Next hit not on same chip
-            if (abs((*cluster[i])->channelID().row() - (*iCand)->channelID().row()) > 1) continue; // Not neighbouring in y
-            if (abs((*cluster[i])->channelID().col() - (*iCand)->channelID().col()) > 1) break; // Too far away to be added
-            addToCluster(cluster, totVec, iCand); 
-            isUsed[iCand - digits->begin()] = true;
-            break; //NEW
+  LHCb::VPDigits::const_iterator itBegin = digits->begin();
+  LHCb::VPDigits::const_iterator itLast = digits->end() - 1;
+ 
+  std::vector<LHCb::VPDigits::const_iterator> cluster;
+  cluster.reserve(100);
+  std::vector<std::pair<LHCb::VPChannelID, int> > totVec;
+  totVec.reserve(100);
+  // Keep track of used digits.
+  std::vector<bool> isUsed(digits->size(), false);
+  // Loop over digits.
+  LHCb::VPDigits::const_iterator itSeed; 
+  for (itSeed = digits->begin(); itSeed != digits->end(); ++itSeed) {
+    if(isUsed[itSeed - itBegin]) continue;
+    // Create a new cluster with this seed.
+    cluster.clear();
+    cluster.push_back(itSeed);
+    // Store the sensor and module of this cluster.
+    const unsigned int sensorNumber = floor((*itSeed)->channelID().chip() / 3);
+    const unsigned int module = (*itSeed)->channelID().module();
+    // Tag the digit as used. 
+    isUsed[itSeed - itBegin] = true;
+    // Look for neighbouring hits until the cluster size stops changing. 
+    bool keepSearching = true;
+    if (itSeed == itLast) keepSearching = false;
+    // Start the search on the next unused pixel.
+    LHCb::VPDigits::const_iterator itCandBegin = itSeed;
+    while (isUsed[itCandBegin - itBegin]) {
+      if (itCandBegin == itLast) break;
+      ++itCandBegin;
+    }
+    while (keepSearching) {
+      keepSearching = false;
+      // Loop over the digits which are already pare of the cluster.
+      for (unsigned int i = 0; i < cluster.size(); ++i) {
+        // Store some properties of this digit.
+        const bool edge = isEdge((*cluster[i]));
+        const unsigned int chip = (*cluster[i])->channelID().chip();
+        const unsigned int row = (*cluster[i])->channelID().row();
+        const unsigned int col = (*cluster[i])->channelID().col();
+        // Loop down the stored digits until new pixels cannot be part of cluster.
+        LHCb::VPDigits::const_iterator iCand;
+        for (iCand = itCandBegin; iCand != digits->end(); ++iCand) {
+          if (isUsed[iCand - itBegin]) continue;
+          // Check if the candidate is on the same module.
+          if (module != (*iCand)->channelID().module()) break;
+          // Check if the candidate is on the same sensor.
+          if (sensorNumber != (*iCand)->channelID().chip() / 3) break;
+          if (!edge) {
+            if (chip != (*iCand)->channelID().chip()) break;  // Next hit not on same chip
+            // Skip pixels not neighbouring in y.
+            if (abs(row - (*iCand)->channelID().row()) > 1) continue;
+            if (abs(col - (*iCand)->channelID().col()) > 1) break; // Too far away to be added
+            // Add pixel and tag it as used.
+            cluster.push_back(iCand);
+            isUsed[iCand - itBegin] = true;
+            keepSearching = true;
+            break;
           } else {
             // Deal with edge pixels
-            if ((*cluster[i])->channelID().chip() == (*iCand)->channelID().chip()) {
+            if (chip == (*iCand)->channelID().chip()) {
               // On the same chip
-              if (abs((*cluster[i])->channelID().row() - (*iCand)->channelID().row()) > 1) continue; // Not neighbouring in y
-              if (abs((*cluster[i])->channelID().col() - (*iCand)->channelID().col()) > 1) break; // Too far away to be added
-              addToCluster(cluster, totVec, iCand); 
-              isUsed[iCand - digits->begin()] = true;
-              break; //NEW
+              // Skip pixels not neighbouring in y.
+              if (abs(row - (*iCand)->channelID().row()) > 1) continue;
+              if (abs(col - (*iCand)->channelID().col()) > 1) break; // Too far away to be added
+              // Add pixel and tag it as used.
+              cluster.push_back(iCand);
+              isUsed[iCand - itBegin] = true;
+              keepSearching = true;
+              break;
             } else {
               // Not on the same chip
               if (!isEdge(*iCand)) break; // No hits on neighbouring edge
-              if (abs((*cluster[i])->channelID().row() - (*iCand)->channelID().row()) > 1) continue; // Not neighbouring in y
-              addToCluster(cluster, totVec, iCand); 
-              isUsed[iCand - digits->begin()] = true;
-              break; //NEW
+              // Skip pixels not neighbouring in y.
+              if (abs(row - (*iCand)->channelID().row()) > 1) continue;
+              // Add pixel and tag it as used.
+              cluster.push_back(iCand);
+              isUsed[iCand - itBegin] = true;
+              keepSearching = true;
+              break;
             }
           } // End of edge pixel check
         }
       }
-    } while (cluster.size() != oldsize); // no more hits to be added to cluster
+    }
     // Calculate the barycentre of the cluster. 
-    double x = 0;
-    double y = 0;
-    double z = 0;
+    double x = 0.;
+    double y = 0.;
     const DeVPSensor* vp_sensor = m_vpDet->sensorOfChannel((*cluster[0])->channelID());
-    int clustToT = 0;
-    for (unsigned int i = 0; i < cluster.size(); i++) { 
-      const double tot = (*cluster[i])->ToTValue();
-      clustToT += tot;
-      Gaudi::XYZPoint pixel = vp_sensor->channelToPoint((*cluster[i])->channelID());
+    int sum = 0;
+    const unsigned int nPixels = cluster.size();
+    totVec.resize(nPixels);
+    for (unsigned int i = 0; i < nPixels; ++i) {
+      LHCb::VPChannelID channel = (*cluster[i])->channelID();
+      const int tot = (*cluster[i])->ToTValue();
+      totVec[i] = std::make_pair(channel, tot);
+      sum += tot;
+      Gaudi::XYZPoint pixel = vp_sensor->channelToPoint(channel, true);
       x += pixel.x() * tot;
       y += pixel.y() * tot;
-      z += pixel.z() * tot;
     }
-    x /= clustToT;
-    y /= clustToT;
-    z /= clustToT;
-    Gaudi::XYZPoint cluster_point(x, y, z);
-    // Get the channel ID and inter-pixel fraction of the barycentre.
+    x /= sum; 
+    y /= sum;
+    Gaudi::XYZPoint point(x, y, 0.);
+    // Get the channel ID and inter-pixel fractions of the barycentre.
     LHCb::VPChannelID id;
     std::pair<double, double> frac;
-    StatusCode mycode = vp_sensor->pointToChannel(cluster_point, id, frac);
-    if (mycode == StatusCode::FAILURE) continue;
+    StatusCode sc = vp_sensor->pointToChannel(point, true, id, frac);
+    if (sc == StatusCode::FAILURE) continue;
     // Make sure there isn't already a cluster with the same channel ID.
     if (clusters->object(id)) {
       warning() << "Duplicated channel ID " << id << endmsg;
       continue; 
     }
+    // Map the interpixel-fractions to 3-bit integers.
+    std::pair<unsigned int,  unsigned int> intFrac;
+    intFrac.first = int(ceil(frac.first * 7));
+    intFrac.second = int(ceil(frac.second * 7));
+    if (intFrac.first > 7) intFrac.first = 7;
+    if (intFrac.second > 7) intFrac.second = 7; 
     // Add the lite cluster to the list.
     bool isLong = false; 
-    const VPLiteCluster newLiteCluster(id, 1, scaleFrac(frac), isLong);
+    const VPLiteCluster newLiteCluster(id, 1, intFrac, isLong);
     liteClusters->push_back(newLiteCluster);
     // Add the cluster to the list. 
     LHCb::VPCluster* newCluster = new LHCb::VPCluster(newLiteCluster, totVec);
@@ -185,49 +212,16 @@ StatusCode VPClustering::clusterDigits() {
 }
 
 //=============================================================================
-//  Get sensor number for a given digit
-//=============================================================================
-int VPClustering::sensorNumber(LHCb::VPDigit* digit) {
-  return floor(digit->channelID().chip() / 3);
-}
-
-
-//=============================================================================
 //  Check if pixel is on the edge of a chip
 //=============================================================================
-bool VPClustering::isEdge(LHCb::VPDigit* digit) {
+bool VPClustering::isEdge(LHCb::VPDigit* digit) const {
   
-  const int ladder_position = digit->channelID().chip() % 3;
-  if ((ladder_position == 0 && digit->channelID().col() == 255) ||
-      (ladder_position == 1 && (digit->channelID().col() == 255 || digit->channelID().col() == 0)) ||
-      (ladder_position == 2 && digit->channelID().col() == 0)) {
-    return true;  
+  if (digit->channelID().col() == 255) {
+    if (digit->channelID().chip() % 3 < 2) return true;
+  } else if (digit->channelID().col() == 0) {
+    if (digit->channelID().chip() % 3 > 0) return true;
   }
   return false;
   
 }
 
-//=============================================================================
-//  Add pixel to cluster
-//=============================================================================
-void VPClustering::addToCluster(std::vector<LHCb::VPDigits::const_iterator>& cluster, 
-                                std::vector<std::pair<LHCb::VPChannelID, int> >& totVec,
-                                LHCb::VPDigits::const_iterator candidate) {
-  // Add hit to cluster
-  totVec.push_back(std::make_pair((*candidate)->channelID(), (*candidate)->ToTValue()));
-  cluster.push_back(candidate);      
-}
-
-//============================================================================
-// Scale 3 bit xyFraction
-//============================================================================
-std::pair<unsigned int, unsigned int> 
-VPClustering::scaleFrac(std::pair<double, double> xyFraction) {
-  const unsigned int maxValue = 7;
-  std::pair<unsigned int, unsigned int> xyFrac;
-  xyFrac.first = int(ceil(xyFraction.first * maxValue));
-  xyFrac.second = int(ceil(xyFraction.second * maxValue));
-  if (xyFrac.first > maxValue) xyFrac.first = maxValue;
-  if (xyFrac.second > maxValue) xyFrac.second = maxValue;
-  return xyFrac;
-}
