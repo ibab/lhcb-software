@@ -52,8 +52,8 @@ DECLARE_TOOL_FACTORY(PrMatchTool)
   declareProperty("MinMomentum"           , m_minMomentum           =  0. * Gaudi::Units::GeV );
   declareProperty("FastMomentumToolName",
                   m_fastMomentumToolName = "FastMomentumEstimate");
-  declareProperty("AddUTCoord"   , m_addUT            = true);
-  declareProperty("AddUTHitsName", m_addUTHitsToolName = "PrAddUTHitsTool");
+  declareProperty("AddUTHits"   , m_addUT            = true);
+  declareProperty("AddUTHitsToolName", m_addUTHitsToolName = "PrAddUTHitsTool");
   declareProperty("writeNNVariables", m_writeNNVariables = true);
   
 }

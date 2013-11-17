@@ -51,7 +51,7 @@ DECLARE_TOOL_FACTORY( PrForwardTool )
   declareProperty( "DeltaQuality",           m_deltaQuality           =    3.                    );
   declareProperty( "YQualityWeight",         m_yQualityWeight         =    4.                    );
 
-  declareProperty("AddUTClusterName", m_addUtToolName = "PrAddUTCoord" );
+  declareProperty("AddUTHitsToolName", m_addUTHitsToolName = "PrAddUTHitsTool" );
 
   declareProperty( "UseMomentumEstimate"   , m_useMomentumEstimate = false ); 
   declareProperty( "Preselection"              , m_Preselection              =   false  );
@@ -75,10 +75,10 @@ StatusCode PrForwardTool::initialize ( ) {
   m_hitManager = tool<PrHitManager>( m_hitManagerName );
   m_allXHits.reserve(5000);
 
-  if ( "" != m_addUtToolName  ) {
-    m_addUTClusterTool = tool<IAddTTClusterTool>( m_addUtToolName, this );
+  if ( "" != m_addUTHitsToolName  ) {
+    m_addUTHitsTool = tool<IPrAddUTHitsTool>( m_addUTHitsToolName, this );
   } else {
-    m_addUTClusterTool = NULL;
+    m_addUTHitsTool = NULL;
   }
   
   return StatusCode::SUCCESS;
@@ -977,11 +977,11 @@ void PrForwardTool::makeLHCbTracks ( LHCb::Tracks* result ) {
     tmp->addInfo( LHCb::Track::PatQuality, (*itT).quality() );
 
     //ADD UT hits on track
-    if ( NULL != m_addUTClusterTool ) {
-      StatusCode sc = m_addUTClusterTool->addTTClusters( *tmp );
+    if ( NULL != m_addUTHitsTool ) {
+      StatusCode sc = m_addUTHitsTool->addUTHits( *tmp );
       if (sc.isFailure()){
         if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-          debug()<<" Failure in adding UT clusters to track"<<endmsg;
+          debug()<<" Failure in adding UT hits to track"<<endmsg;
       }
     }
 
