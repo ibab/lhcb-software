@@ -211,6 +211,7 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit,
   // Accumulate deposits on pixels.
   std::map<LHCb::VPChannelID, double> pixels;
   for (unsigned int i = 0; i < nPoints; ++i) {
+    Gaudi::XYZPoint localPoint = sensor->globalToLocal(point);
     charges[i] *= adjust;
 #ifdef DEBUG_HISTO
     plot(charges[i], "ChargePerPoint",
@@ -221,7 +222,6 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit,
       dz = fabs(point.z() - hit->entry().z()); 
     } else {
       // Pixel side is always at z = -thickness/2 in local coordinates.
-      Gaudi::XYZPoint localPoint = sensor->globalToLocal(point);
       dz = fabs(localPoint.z() + 0.5 * thickness);
     }
     if (m_irradiated) {
@@ -236,9 +236,9 @@ void VPDepositCreator::createDeposits(LHCb::MCHit* hit,
     for (unsigned int j = 0; j < nSplit; ++j) {
       const double dx = sigmaD * m_gauss();
       const double dy = sigmaD * m_gauss();
-      Gaudi::XYZPoint endpoint = sensor->globalToLocal(point) + Gaudi::XYZVector(dx, dy, 0.);
+      Gaudi::XYZPoint endpoint = localPoint + Gaudi::XYZVector(dx, dy, 0.);
       LHCb::VPChannelID channel;
-      StatusCode valid = sensor->pointToChannel(sensor->localToGlobal(endpoint), channel);
+      StatusCode valid = sensor->pointToChannel(endpoint, true, channel);
       if (valid) {
         if (pixels.find(channel) == pixels.end()) {
           pixels[channel] = q;

@@ -342,7 +342,7 @@ void OldVPMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
     std::pair<double,double> EntryFraction;
     StatusCode channelValid;
     LHCb::VPChannelID entryChannel;
-    channelValid = sensor->pointToChannel(pnt,entryChannel,EntryFraction);                     // which pixel is this ?
+    channelValid = sensor->pointToChannel(pnt, false, entryChannel,EntryFraction);                     // which pixel is this ?
     if(!channelValid) {
 #ifdef DEBUG_HISTO
       plot2D(pnt.x(), pnt.y(), "DeadSensorArea", "OldVPMCDepositCreator: Dead sensor area [mm]",
@@ -369,7 +369,7 @@ void OldVPMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,          // MC hit
     for(std::vector<LHCb::VPChannelID>::iterator                  // loop over center and neib. pixel
         ic = neighbsVec.begin(); ic != neighbsVec.end(); ++ic ) {
       LHCb::VPChannelID channel = *ic;                            // every channel = pixel
-      Gaudi::XYZPoint midPoint = sensor->channelToPoint(channel);
+      Gaudi::XYZPoint midPoint = sensor->channelToPoint(channel, false);
       // removed pointValid check (hschindl)
       // StatusCode pointValid;
       // pointValid = sensor->channelToPoint(channel,midPoint);           // mid-point of given pixel

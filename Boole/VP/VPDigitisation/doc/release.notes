@@ -3,6 +3,10 @@
 ! Responsible : Pawel Jalocha
 !--------------------------------------------------------------------------
 
+! 2013-11-10 - Heinrich Schindler 
+ - Changes due to added local variable in detector element functions 
+   pointToChannel, channelToPoint
+
 !========================= VPDigitisation v1r1 2013-10-24 =========================
 ! 2013-10-23 - Daniel Hynds
  - Fix in cluster monitoring code

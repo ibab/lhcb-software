@@ -52,7 +52,7 @@ StatusCode VPClusterMonitor::initialize() {
   // Get detector element
   m_vpDet = getDet<DeVP>(DeVPLocation::Default);
   // Get radiation damage tool
-  if(m_irradiated) m_radDamageTool = tool<VPRadiationDamageTool>("VPRadiationDamageTool");
+  if (m_irradiated) m_radDamageTool = tool<VPRadiationDamageTool>("VPRadiationDamageTool");
   return StatusCode::SUCCESS;
 }
 
@@ -77,7 +77,7 @@ StatusCode VPClusterMonitor::execute() {
 //=============================================================================
 // Loop over cluster container
 //=============================================================================
-void VPClusterMonitor::loopClusters (){
+void VPClusterMonitor::loopClusters() {
   if (msgLevel(MSG::DEBUG)) {
     debug() << "==> Looping over clusters " << endmsg;
   }
@@ -88,23 +88,21 @@ void VPClusterMonitor::loopClusters (){
   for (itc = m_clusters->begin(); itc != m_clusters->end(); itc++) {
     LHCb::VPCluster* cluster = *itc;
     LHCb::VPLiteCluster lCluster = cluster->lCluster();
+    // Get sensor
+    const DeVPSensor* sensor = m_vpDet->sensorOfChannel(lCluster.channelID());
     // Set up some objects for later use
     std::vector<std::pair<LHCb::VPChannelID, int> > totVec = cluster->pixelHitVec();
     int clustToT = 0;
     double cluster_x(0), cluster_y(0), cluster_z(0), pix1ToT(0), pix2ToT(0), pixel_x(0); 
     std::vector<double> xvalues;
     // Loop over pixel hits
-    
-    
-    for(unsigned int it=0;it<totVec.size();it++){
-      clustToT+=totVec[it].second;
+    for (unsigned int it = 0; it < totVec.size(); ++it) {
+      clustToT += totVec[it].second;
       // Enter pixel values for eta distribution plots
       if (it == 0 && totVec.size() == 2) pix1ToT = totVec[it].second;
       if (it == 1 && totVec.size() == 2) pix2ToT = totVec[it].second;
-      // Get sensor
-      const DeVPSensor* sensor = m_vpDet->sensorOfChannel(totVec[it].first);
       // Get XYZ of pixel
-      Gaudi::XYZPoint pointGlobal = sensor->channelToPoint(totVec[it].first);
+      Gaudi::XYZPoint pointGlobal = sensor->channelToPoint(totVec[it].first, false);
       // Get pixel radius
       double radius = sqrt(pow(pointGlobal.x(), 2) + pow(pointGlobal.y(), 2));
       // Plot pixel information
@@ -177,12 +175,22 @@ void VPClusterMonitor::loopClusters (){
       const double dy = cluster_point.y() - mchitPoint.y();
       const double dz = cluster_point.z() - mchitPoint.z();
       const double resid3d = sqrt(dx * dx + dy * dy + dz * dz);
+      Gaudi::XYZPoint liteClusterPoint = sensor->channelToPoint(lCluster.channelID(), lCluster.interPixelFraction());
+      plot(liteClusterPoint.x() - mchitPoint.x(), "xresLite", -0.2, 0.2, 4000); 
+      plot(liteClusterPoint.y() - mchitPoint.y(), "yresLite", -0.2, 0.2, 4000); 
       plot(resid3d, "3d_residuals",-0.2,0.2,4000);
       plot2D(theta, resid3d, "3d_residuals_versus_track_theta", 0., 50., -0.2, 0.2, 100, 400);
       plot2D(cluster_radius, resid3d, "3d_residuals_versus_radius", 0., 100, -0.2, 0.2, 200, 400);
       // Plot XY residuals
       plot(dx, "x_residuals",-0.2,0.2,4000);
       plot(dy, "y_residuals",-0.2,0.2,4000);
+      if (1 == totVec.size()) {
+        plot(dx, "x_residuals1", -0.2, 0.2, 4000);
+        plot(dy, "y_residuals1", -0.2, 0.2, 4000);
+      } else if (2 == totVec.size()) {
+        plot(dx, "x_residuals2", -0.2, 0.2, 4000);
+        plot(dy, "y_residuals2", -0.2, 0.2, 4000);
+      }
       plot2D(xangle, dx, "x_residuals_versus_track_angle_x", -30., 30., -0.2, 0.2, 120, 400);
       plot2D(xangle, dy, "y_residuals_versus_track_angle_x", -30., 30., -0.2, 0.2, 120, 400);
       plot2D(xangle, totVec.size(), "cluster_size_versus_track_angle_x", -30., 30., 0, 20, 120, 20);

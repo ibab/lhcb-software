@@ -255,7 +255,7 @@ void OldVPClusterCreator::baryCenter(std::vector<PixDigit> activePixels,
     // Gaudi::XYZPoint midPoint(0.0,0.0,0.0);
     // StatusCode pointValid;
     // pointValid = sensor->channelToPoint(dgt.key,midPoint);
-    Gaudi::XYZPoint midPoint = sensor->channelToPoint(dgt.key);
+    Gaudi::XYZPoint midPoint = sensor->channelToPoint(dgt.key, false);
     // if(pointValid) {
       sumXW = sumXW + dgt.tot * midPoint.x();
       sumYW = sumYW + dgt.tot * midPoint.y();
@@ -272,7 +272,7 @@ void OldVPClusterCreator::baryCenter(std::vector<PixDigit> activePixels,
   Gaudi::XYZPoint baryCenter(avX,avY,avZ);
   StatusCode EntryValid;
   const DeVPSensor* sensor = m_vPelDet->sensorOfChannel(activePixels[0].key);
-  EntryValid = sensor->pointToChannel(baryCenter,baryCenterChID,xyFraction);
+  EntryValid = sensor->pointToChannel(baryCenter, false, baryCenterChID,xyFraction);
   if(!EntryValid) Warning("pointToChannel failure");
   isLong = sensor->isLong(baryCenterChID);
 }
