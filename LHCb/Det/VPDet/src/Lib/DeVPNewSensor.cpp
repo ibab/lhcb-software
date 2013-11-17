@@ -120,9 +120,10 @@ std::auto_ptr<LHCb::Trajectory> DeVPNewSensor::trajectory(const LHCb::VPChannelI
 /// Calculate the nearest pixel to a point in the global frame. 
 //==============================================================================
 StatusCode DeVPNewSensor::pointToChannel(const Gaudi::XYZPoint& point,
+                                         const bool local,
                                          LHCb::VPChannelID& channel) const {
 
-  Gaudi::XYZPoint localPoint = globalToLocal(point);
+  Gaudi::XYZPoint localPoint = local ? point : globalToLocal(point);
   // Check if the point is in the active area of the sensor.
   StatusCode sc = isInActiveArea(localPoint);
   if (!sc.isSuccess()) return sc;
@@ -159,10 +160,11 @@ StatusCode DeVPNewSensor::pointToChannel(const Gaudi::XYZPoint& point,
 /// Calculate the pixel and fraction corresponding to a global point.
 //==============================================================================
 StatusCode DeVPNewSensor::pointToChannel(const Gaudi::XYZPoint& point,
+                                         const bool local,
                                          LHCb::VPChannelID& channel,
                                          std::pair<double, double>& fraction) const {
   
-  Gaudi::XYZPoint localPoint = globalToLocal(point);
+  Gaudi::XYZPoint localPoint = local ? point : globalToLocal(point);
   // Check if the point is in the active area of the sensor.
   StatusCode sc = isInActiveArea(localPoint);
   if (!sc.isSuccess()) return sc;
@@ -234,7 +236,8 @@ StatusCode DeVPNewSensor::pointToChannel(const Gaudi::XYZPoint& point,
 //==============================================================================
 /// Calculate the position of a pixel with given channel ID.
 //==============================================================================
-Gaudi::XYZPoint DeVPNewSensor::channelToPoint(const LHCb::VPChannelID& channel) const {
+Gaudi::XYZPoint DeVPNewSensor::channelToPoint(const LHCb::VPChannelID& channel,
+                                              const bool local) const {
 
   const unsigned int chip = channel.chip() % m_nChips;
   const unsigned int col = channel.col();
@@ -248,6 +251,7 @@ Gaudi::XYZPoint DeVPNewSensor::channelToPoint(const LHCb::VPChannelID& channel) 
   }
   const double y = (row + 0.5) * m_pixelSize;
   Gaudi::XYZPoint point(x, y, 0.); 
+  if (local) return point;
   return localToGlobal(point);
 
 }
@@ -296,7 +300,7 @@ StatusCode DeVPNewSensor::pointTo3x3Channels(const Gaudi::XYZPoint& point,
   // Get the channel corresponding to the central point 
   LHCb::VPChannelID centralChannel;
   std::pair<double, double> fraction;
-  StatusCode sc = pointToChannel(point, centralChannel, fraction);
+  StatusCode sc = pointToChannel(point, false, centralChannel, fraction);
   if (!sc.isSuccess()) return sc;
   channels.clear();
   sc = channelToNeighbours(centralChannel, channels);

@@ -39,14 +39,17 @@ public:
                                                      const std::pair<double, double> offset) const;
 
 
-  /// Calculate the nearest channel to point in the global frame.
+  /// Calculate the nearest channel to a given point.
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
+                                    const bool local,
                                     LHCb::VPChannelID& channel) const;
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
+                                    const bool local,
                                     LHCb::VPChannelID& channel,
                                     std::pair<double, double>& fraction) const;
   /// Calculate the global position of a given pixel.
-  virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel) const;
+  virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
+                                         const bool local) const;
   virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
                                          const std::pair<double, double> fraction) const;
 

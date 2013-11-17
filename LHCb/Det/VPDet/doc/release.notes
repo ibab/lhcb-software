@@ -4,6 +4,10 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2013-11-10 - Heinrich Schindler
+ - added possibility for in/output in local coordinates to 
+   channelToPoint and pointToChannel functions
+
 !========================= VPDet v2r4 2013-10-23 =========================
 ! 2013-10-06 - Heinrich Schindler
  - removed ladderOfChip function

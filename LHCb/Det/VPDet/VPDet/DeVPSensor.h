@@ -43,14 +43,17 @@ public:
   virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VPChannelID& id, 
                                                      const std::pair<double, double> offset) const = 0;
 
-  /// Calculate the nearest channel to point in the global frame.
-  virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point, 
+  /// Calculate the nearest channel to a given point.
+  virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
+                                    const bool local, 
                                     LHCb::VPChannelID& channel) const = 0;
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
+                                    const bool local,
                                     LHCb::VPChannelID& channel,
                                     std::pair <double, double>& fraction) const = 0;
-  /// Calculate the global position of a given pixel.
-  virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel) const = 0;
+  /// Calculate the position of a given pixel.
+  virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
+                                         const bool local) const = 0;
   virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel, 
                                          const std::pair<double, double> fraction) const = 0;
 

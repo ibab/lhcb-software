@@ -56,13 +56,16 @@ public:
 
   /// Calculate the nearest channel to a 3-d point.
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
+                                    const bool local,
                                     LHCb::VPChannelID& channel) const;
   /// Also returns the fractional x-y position IN the pixel
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
+                                    const bool local,
                                     LHCb::VPChannelID& channel,
                                     std::pair <double, double>& fraction) const;
   /// Calculate the XYZ center of a pixel
-  virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel) const;
+  virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
+                                         const bool local) const;
   virtual Gaudi::XYZPoint channelToPoint(const LHCb::VPChannelID& channel,
                                          const std::pair<double, double> offset) const {
     return localToGlobal(xyzOfPixel(channel.pixel(), offset));

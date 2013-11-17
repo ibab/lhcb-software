@@ -331,22 +331,24 @@ std::auto_ptr<LHCb::Trajectory> DeVPSquareType::trajectory(const LHCb::VPChannel
 /// (assuming the DeVPSquareType instance is already the correct one: z is corresponding to the sensor number)
 //==============================================================================
 StatusCode DeVPSquareType::pointToChannel(const Gaudi::XYZPoint& point,
+                                          const bool local,
                                           LHCb::VPChannelID& channel) const {
 
   std::pair<double, double> fraction;
-  StatusCode sc = pointToChannel(point, channel, fraction);
+  StatusCode sc = pointToChannel(point, local, channel, fraction);
   if (!sc.isSuccess()) return sc;
   return StatusCode::SUCCESS;
   
 }
 
 StatusCode DeVPSquareType::pointToChannel(const Gaudi::XYZPoint& point,
-                                               LHCb::VPChannelID& channel,
-                                               std::pair <double, double>& fraction) const
+                                          const bool local,
+                                          LHCb::VPChannelID& channel,
+                                          std::pair <double, double>& fraction) const
 {
   //MsgStream msg(msgSvc(), "DeVPSquareType");
   
-  Gaudi::XYZPoint localPoint = globalToLocal(point);
+  Gaudi::XYZPoint localPoint = local ? point : globalToLocal(point);
 
   // Check that the point is in the active area of the sensor
   StatusCode sc = isInActiveArea(localPoint);
@@ -401,15 +403,17 @@ Gaudi::XYZPoint DeVPSquareType::channelToPoint(const LHCb::VPChannelID& channel,
 //==============================================================================
 /// Calculate the center of the pixel from a given channel
 //==============================================================================
-Gaudi::XYZPoint DeVPSquareType::channelToPoint(const LHCb::VPChannelID& channel) const {
+Gaudi::XYZPoint DeVPSquareType::channelToPoint(const LHCb::VPChannelID& channel,
+                                               const bool local) const {
 
-  MsgStream msg(msgSvc(), "DeVPSquareType");
+  // MsgStream msg(msgSvc(), "DeVPSquareType");
   Gaudi::XYZPoint LocalPoint(0.,0.,0.);
   int ladderIndex = WhichLadder(channel.chip());
   std::pair<double,double> point2d = xyOfPixel(channel.pixel());
   LocalPoint.SetX(point2d.first);
   LocalPoint.SetY(point2d.second);
   LocalPoint.SetZ(m_ladders[ladderIndex].ReferencePoint().z());
+  if (local) return LocalPoint;
   return localToGlobal(LocalPoint);
 
 }
@@ -426,7 +430,7 @@ StatusCode  DeVPSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point,
   // Get the channel corresponding to the central point 
   LHCb::VPChannelID  channelCentral;
   std::pair <double, double> fraction;
-  StatusCode sc = pointToChannel( point, channelCentral, fraction);
+  StatusCode sc = pointToChannel(point, false, channelCentral, fraction);
   Gaudi::XYZPoint loc_point = globalToLocal(point);
   // Initialise the size and if there is a channel at the central point get its size
   std::pair <double, double> size (0.,0.);
@@ -486,7 +490,7 @@ StatusCode  DeVPSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point,
 	Gaudi::XYZPoint tmpPoint(point.x()+x*hpSize(),point.y()+y*hpSize(),point.z());
 	LHCb::VPChannelID  channeltmp;
 	std::pair <double, double> fractiontmp;
-	sc = pointToChannel( tmpPoint, channeltmp, fractiontmp);
+	sc = pointToChannel(tmpPoint, false, channeltmp, fractiontmp);
 	if (sc.isSuccess()){
 	  bool used = false;
 	  // prevent reuse of long pixel (since here the space is checked in small pixel size)
@@ -516,7 +520,7 @@ StatusCode  DeVPSquareType::channelToNeighbours( const LHCb::VPChannelID& seedCh
   MsgStream msg(msgSvc(), "DeVPSquareType");
   // Get the point corresponding to the seedChannel 
   std::pair <double, double> fraction(0.5,0.5);
-  Gaudi::XYZPoint point = channelToPoint(seedChannel);
+  Gaudi::XYZPoint point = channelToPoint(seedChannel, false);
   Gaudi::XYZPoint loc_point = globalToLocal(point);
   
   // Initialise the size of the seed pixel
