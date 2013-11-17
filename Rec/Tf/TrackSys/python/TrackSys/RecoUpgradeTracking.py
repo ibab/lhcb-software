@@ -145,11 +145,12 @@ def RecoUpgradeTracking(exclude=[]):
     if "Match" in trackTypes:
         matchSeq = GaudiSequencer("TrMatchSeq")
         GaudiSequencer("RecoTrSeq").Members += [ matchSeq ]
-        from Configurables import PatMatch, PatMatchTool, PrAddUTCoord
-        matchSeq.Members += [ PatMatch() ]
-        PatMatch().addTool(PatMatchTool, "PatMatchTool")
-        PatMatch().PatMatchTool.AddTTClusters = True
-        PatMatch().PatMatchTool.AddTTClusterName = "PrAddUTCoord"
+        from Configurables import PrMatch
+        #from Configurables import PatMatch, PatMatchTool, PrAddUTCoord
+        matchSeq.Members += [ PrMatch() ]
+        #PatMatch().addTool(PatMatchTool, "PatMatchTool")
+        #PatMatch().PatMatchTool.AddTTClusters = True
+        #PatMatch().PatMatchTool.AddTTClusterName = "PrAddUTCoord"
       
 
     # Do the Clone Killing and create Best tracks container

@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2013-11-17 - Michel De Cian
+ - Replace PatMatch with PrMatch in upgrade reco sequence (no performance difference).
+
 !========================= TrackSys v7r13 2013-10-24 =========================
 ! 2013-10-05 - Michel De Cian
  - Issue a warning if a non-default track type is used.
