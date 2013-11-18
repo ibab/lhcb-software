@@ -248,20 +248,16 @@ class DaVinci(LHCbConfigurableUser) :
 # Decode DecReports
 #
     def _decReports(self):
+        """
+        Make L0 reports look just like HLT reports
+        """
         from Configurables import L0SelReportsMaker, L0DecReportsMaker
         DataOnDemandSvc().AlgMap["HltLikeL0/DecReports"] = L0DecReportsMaker( OutputLevel = 4 )
         DataOnDemandSvc().AlgMap["HltLikeL0/SelReports"] = L0SelReportsMaker( OutputLevel = 4 )        
         from Configurables import L0Conf
         L0Conf().FullL0MuonDecoding = True
         L0Conf().EnableL0DecodingOnDemand = True
-        
-        """
-        Decode DecReports 
-        """
-        from Configurables import HltDecReportsDecoder,HltSelReportsDecoder,HltVertexReportsDecoder
-        DataOnDemandSvc().AlgMap["Hlt/DecReports"] = HltDecReportsDecoder( OutputLevel = 4 )
-        DataOnDemandSvc().AlgMap["Hlt/SelReports"] = HltSelReportsDecoder( OutputLevel = 4 )
-        DataOnDemandSvc().AlgMap["Hlt/VertexReports"] = HltVertexReportsDecoder( OutputLevel = 4 )
+        #HLT already done in DecodersDB
        
         
 ################################################################################

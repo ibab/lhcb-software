@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2013-11-18 - Rob Lambert
+ - Suppressed configuration fo the HLT decoders, now picked up through
+   DecodeRawEvent configurable via PhysConf, see task #19106
+
 ! 2013-10-29 - Chris Jones
  - Add a new property "Detectors" to the DaVinci() configurable. Primarily
    for Upgrade studies.
