@@ -27,21 +27,22 @@ StatusCode fill( const std::vector<const TYPE*>& dauts      /// daughters
           i != j; ++j ) 
     {
       const std::string n2 = particleName( (*j)->particleID(), revert );
-      const Gaudi::LorentzVector p = p1 + (*j)->momentum() ;
-      std::string _name = prefix+"_Dalitz_"+n1+"_"+n2+"_M2";
+      const Gaudi::LorentzVector p = p1 + (*j)->momentum();
+      const std::string basename = prefix+"_Dalitz_"+n1+"_"+n2+"_M2";
+      std::string name = basename;
       bool renamed = false;
-      while ( usedNames.find(_name) != usedNames.end() ) 
+      while ( usedNames.find(name) != usedNames.end() ) 
       {
         renamed = true;
-        _name += "_" + boost::lexical_cast<std::string>(add++);
+        name = basename + "_" + boost::lexical_cast<std::string>(add++);
       }
-      if ( renamed ) Info("Renaming duplicate to "+_name,StatusCode::SUCCESS,1);
+      if ( renamed ) Info("Renaming duplicate to "+name,StatusCode::SUCCESS,1);
       if (msgLevel(MSG::VERBOSE))
       {
         verbose() << (*i)->particleID().pid() << " " << (*j)->particleID().pid() << " "
-                  << _name << " " << revert << endmsg ;
+                  << name << " " << revert << endmsg ;
       }
-      test &= tuple->column( _name, p .M2() );
+      test &= tuple->column( name, p .M2() );
     }
   }
 
@@ -64,7 +65,7 @@ std::string particleName(const LHCb::ParticleID& id, bool revert)const
 }
 
 /// get particle property serivce
-const LHCb::IParticlePropertySvc* ppSvc()const
+const LHCb::IParticlePropertySvc* ppSvc() const
 {
   return m_ppSvc;
 }
@@ -73,9 +74,12 @@ public:
 
 StatusCode initialize()
 {
-  if (!TupleToolBase::initialize()) return StatusCode::FAILURE ;
-  m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true );
-  return StatusCode::SUCCESS ;
+  const StatusCode sc = TupleToolBase::initialize();
+  if ( sc.isSuccess() ) 
+  {
+    m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc", true );
+  }
+  return sc;
 }
 
 private:
