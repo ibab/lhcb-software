@@ -1,19 +1,19 @@
-// Include files 
-
-// from Gaudi
+// Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+// Event/MCEvent
 #include "Event/MCHit.h"
+#include "Event/MCTrackInfo.h"
+// Event/TrackEvent
 #include "Event/Track.h"
 #include "Event/StateParameters.h"
-#include "Event/VeloCluster.h"
+// Event/LinkerEvent
 #include "Linker/LinkedTo.h"
 #include "Linker/LinkedFrom.h"
-#include "Event/MCTrackInfo.h"
-#include "Event/VPCluster.h"
-#include "Event/VPLiteCluster.h"
+// Det/VPDet
 #include "VPDet/DeVP.h"
 
-// local
+// Local
+#include "PrFitPolinomial.h"
 #include "PrCheatedVP.h"
 
 using namespace LHCb;
@@ -26,14 +26,12 @@ using namespace LHCb;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( PrCheatedVP )
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 PrCheatedVP::PrCheatedVP( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
-{
+  : GaudiAlgorithm (name, pSvcLocator) {
   declareProperty("useMCHits", m_useMCHits = true);
   declareProperty("binaryClusters", m_binaryClusters = false);
 }
@@ -50,7 +48,7 @@ StatusCode PrCheatedVP::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-  m_veloPix = getDet<DeVP>( DeVPLocation::Default );
+  m_vp = getDet<DeVP>( DeVPLocation::Default );
 
   return StatusCode::SUCCESS;
 }
@@ -193,16 +191,10 @@ StatusCode PrCheatedVP::execute() {
 //===========================================================================
 //   Get XYZ point for VPCluster associated MCHit
 //===========================================================================
-Gaudi::XYZPoint PrCheatedVP::getXYZ(LHCb::VPCluster* cluster){
+Gaudi::XYZPoint PrCheatedVP::getXYZ(LHCb::VPCluster* cluster) {
   
-//  Gaudi::XYZPoint pointGlobal;
-  const DeVPSensor* vpSensor = m_veloPix->sensorOfChannel(cluster->channelID());
-  
-  Gaudi::XYZPoint pointGlobal = vpSensor->channelToPoint(cluster->channelID(),cluster->lCluster().interPixelFraction());
-
-//  vpSensor->channelToPointWithFraction(cluster->channelID(), cluster->lCluster().interPixelFraction(),pointGlobal);
-//  std::cout<<"Point global in getXYZ has x = "<<pointGlobal.x()<<", y = "<<pointGlobal.y()<<", z = "<<pointGlobal.z()<<std::endl;
-  
+  const DeVPSensor* vpSensor = m_vp->sensorOfChannel(cluster->channelID());
+  Gaudi::XYZPoint pointGlobal = vpSensor->channelToPoint(cluster->channelID(), cluster->lCluster().interPixelFraction());
   return pointGlobal;
   
 }
@@ -210,12 +202,10 @@ Gaudi::XYZPoint PrCheatedVP::getXYZ(LHCb::VPCluster* cluster){
 //===========================================================================
 //   Get binary XYZ point for VPCluster associated MCHit
 //===========================================================================
-Gaudi::XYZPoint PrCheatedVP::getBinaryXYZ(LHCb::VPCluster* cluster){
+Gaudi::XYZPoint PrCheatedVP::getBinaryXYZ(LHCb::VPCluster* cluster) {
   
-  const DeVPSensor* vpSensor = m_veloPix->sensorOfChannel(cluster->channelID());
-  Gaudi::XYZPoint pointGlobal = vpSensor->channelToPoint(cluster->channelID());
-  //  std::cout<<"Point global in getXYZ has x = "<<pointGlobal.x()<<", y = "<<pointGlobal.y()<<", z = "<<pointGlobal.z()<<std::endl;
-  
+  const DeVPSensor* vpSensor = m_vp->sensorOfChannel(cluster->channelID());
+  Gaudi::XYZPoint pointGlobal = vpSensor->channelToPoint(cluster->channelID(), false);
   return pointGlobal;
   
 }

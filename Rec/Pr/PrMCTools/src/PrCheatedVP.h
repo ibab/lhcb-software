@@ -1,11 +1,11 @@
 #ifndef PRCHEATEDVP_H 
 #define PRCHEATEDVP_H 1
 
-// Include files
-// from Gaudi
+// Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+// Event/DigiEvent
 #include "Event/VPCluster.h"
-#include "PrFitPolinomial.h"
+
 /** @class PrCheatedVP PrCheatedVP.h
  *  Cheated Pattern for the Velo
  *
@@ -22,11 +22,9 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
-protected:
-
 private:
 
-  DeVP* m_veloPix;
+  DeVP* m_vp;
   bool m_useMCHits;
   bool m_binaryClusters;
   Gaudi::XYZPoint getXYZ(LHCb::VPCluster* cluster);

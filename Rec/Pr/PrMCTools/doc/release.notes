@@ -4,8 +4,12 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-11-18 - Heinrich Schindler
+ - PrCheatedVP: Follow change in channelToPoint syntax in DeVPSensor, 
+   remove unused includes
+ 
 !========================= PrMCTools v1r7 2013-10-24 =========================
-! 2013-10-16 0 Wouter Hulsbergen
+! 2013-10-16 - Wouter Hulsbergen
  - Make sure PrTrackAssociator clears a linker table before filling it
 
 ! 2013-10-05 - Michel De Cian
