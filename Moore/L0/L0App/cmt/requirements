@@ -23,6 +23,7 @@ use L0Muon       v* L0
 use L0MuonKernel v* L0
 use L0Calo       v* L0
 use L0DU         v* L0
+use DAQSys       v* DAQ
 
 use ProcessorKernel v* L0
 
@@ -44,6 +45,7 @@ use L0TCK       v* TCK
 use DDDB        v* Det
 use PRConfig    v* 
 use AppConfig   v*
+use RawEventFormat v*
 
 apply_pattern install_python_modules
 apply_pattern QMTest

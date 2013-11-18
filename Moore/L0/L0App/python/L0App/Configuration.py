@@ -10,7 +10,8 @@ from Configurables import LHCbApp, L0Conf, L0DUFromRawAlg
 class L0App(LHCbConfigurableUser):
     ## Possible used Configurables
     __used_configurables__ = [ LHCbApp
-                             , L0Conf ]
+                             , L0Conf
+                             , DecodeRawEvent ]
     
     __slots__ = {
           "EvtMax":            -1    # Maximum number of events to process
@@ -95,8 +96,10 @@ class L0App(LHCbConfigurableUser):
         dod = DataOnDemandSvc()
         if dod not in ApplicationMgr().ExtSvc :
             ApplicationMgr().ExtSvc.append( dod )
-        #eventually this will be a configurable, I hope...
-        importOptions('$STDOPTS/DecodeRawEvent.py')
+        
+	DecodeRawEvent().DataOnDemand=True
+	
+	importOptions( "$L0TCK/L0DUConfig.opts" )
         
         ############## The L0 Part  ###################
         
