@@ -145,7 +145,14 @@ class DecodeRawEvent(ConfigurableUser):
                 locs=v.listOutputs()
                 for loc in locs:
                     if loc in DataOnDemandSvc().AlgMap:
-                        raise AttributeError("At least two active algs want to write to the same location. Check your DecoderDB! "+loc)
+                        test=False
+                        testname=DataOnDemandSvc().AlgMap[loc]
+                        if type(testname) is not str:
+                            testname=testname.GetFullName()
+                        if testname==v.FullName:
+                            print "# WARNING: something else configured a decoder already, "+loc+" "+testname
+                        else:
+                            raise AttributeError("At least two different active algs want to write to the same location. Check your DecoderDB! "+loc+": "+testname+" & "+v.FullName)
                     DataOnDemandSvc().AlgMap[loc]=thedecoder
         
         #finally, if ODIN is active, then configure the EventTimeDecoder

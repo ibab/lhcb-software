@@ -4,8 +4,11 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-11-18 - Rob Lambert
+ - Throw a warning instead of an exception if a given DoD location has been configured elsewhere, but with the same alg.
+
 ! 2013-11-15 - Rob Lambert
- - Add PileUp decoder.. why wasn't it in there already?
+ - Add PileUp decoder.. why wasn't it in there already? Wierd due to multiple bank decoding.
  - add options required to prevent overwriting EventClockSvc needed by DaVinci
 
 ! 2013-11-14 - Rob Lambert
