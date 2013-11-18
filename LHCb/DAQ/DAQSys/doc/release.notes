@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-11-18 - Rob Lambert
+ - Add concept of a "used" decoder, to suplpement the concept of an "Active" decoder.
+
+! 2013-11-18 - Rob Lambert
  - Throw a warning instead of an exception if a given DoD location has been configured elsewhere, but with the same alg.
 
 ! 2013-11-15 - Rob Lambert

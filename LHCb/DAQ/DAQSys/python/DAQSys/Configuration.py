@@ -46,6 +46,9 @@ class DecodeRawEvent(ConfigurableUser):
         with a different location as specified in RawEventFormat DB.
         
         Will complain if what you're trying to go from/to is not possible.
+
+        Will override any decoder which has either been set to active *or* was 'used'
+        
         """
         if (not self.isPropertySet("OverrideInputs")) or (self.getProp("OverrideInputs") is None):
             return
@@ -61,8 +64,8 @@ class DecodeRawEvent(ConfigurableUser):
                 b_locs_toset[b]=WhereBest(b,v)
             reset_list={}
             for b in banks:
-                from DAQSys.DecoderClass import decodersForBank
-                for d in decodersForBank(self.__db__(),b):
+                from DAQSys.DecoderClass import decodersForBank, usedDecoders
+                for d in decodersForBank(self.__db__(),b)+usedDecoders(self.__db__(),b):
                     if d.listInputs()[0]!=b_locs_toset[b]:
                         if b not in reset_list:
                             reset_list[b]=[d]
@@ -85,6 +88,9 @@ class DecodeRawEvent(ConfigurableUser):
         
         #am I able to overwrite these banks?
         if not d.isInputSettable():
+            if not d.Active:
+                #ignore other not-Active things..., pah, not sure, new to enable overriding all "used" items...
+                return
             flag=False
             whereall=WhereAll(d.Banks[0],v)
             for l in adecoder.listInputs():

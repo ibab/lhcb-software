@@ -25,6 +25,7 @@ class Decoder(object):
 
     Private member:
         __db__ reference to the databse in which I am stored. Can be overwritten if required, or used to validate the database. Used to find the public/private tools.
+        __used__: someone has actually used this tool
     """
     FullName="" #the full Gaudi name of the low-level configurable
     Active=False # Flags this as an alg to be configured, which somehow writes something on the TES
@@ -54,6 +55,7 @@ class Decoder(object):
         """
         self.FullName=fullname
         self.Active=active
+        self.__used__=False
         self.Banks=banks
         self.Inputs=inputs
         self.Outputs=outputs
@@ -92,6 +94,11 @@ class Decoder(object):
         self.Active=True
     def deactivate(self):
         self.Active=False
+    def wasUsed(self):
+        """
+        setup was called on this decoder already somewhere...
+        """
+        return (self.__used__==True)
     def clone(self, newname):
         """return another copy of this guy with a new name
         deep copy dictionaries,  but not the DB!!"""
@@ -310,6 +317,7 @@ class Decoder(object):
                     if self.Outputs[prop] is not None:
                         self.__setprop__(thedecoder,prop, self.Outputs[prop])
         if not cascade or self.__db__ is None:
+            self.__used__=True
             return thedecoder
         #configure public tools
         for atool in self.PublicTools:
@@ -324,6 +332,7 @@ class Decoder(object):
                 self.__db__[atool].setup(True,thetool,onlyInputs=onlyInputs)
             else:
                 raise KeyError("Error: "+tool+" not found in DB, set cascade=False, remove this from the list, or re-validate the db")
+        self.__used__=True
         return thedecoder
 
 # =============== Database tools =======================
@@ -381,3 +390,17 @@ def decoderToLocation(db,location,ignoreActive=False):
     if not len(retlist):
         return None
     return retlist[0]
+
+def usedDecoders(db,bank=None):
+    """
+    Obtain any used decoders irrespective of whether they were 'active'
+    A "used" decoder is any decoder which was previously "setup()" by someone
+    """
+    retlist=[]
+    for k,v in db.items():
+        if not v.wasUsed():
+            continue
+        if bank is None or bank in v.Banks:
+            retlist.append(v)
+    return retlist[0]
+    
