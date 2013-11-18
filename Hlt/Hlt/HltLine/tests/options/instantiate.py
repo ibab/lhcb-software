@@ -18,8 +18,6 @@ for name,conf in cfgDb.iteritems():
         traceback.print_exc()
 
 
-importOptions("$STDOPTS/DecodeRawEvent.py")
-
 # =========== Auto-generated, import all python modules ====
 import glob, os, sys, traceback
 modules=glob.glob('../../python/HltLine/*.py')

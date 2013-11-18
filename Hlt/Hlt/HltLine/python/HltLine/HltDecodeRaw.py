@@ -1,42 +1,47 @@
-#
-# @todo Move me to LHCB !
-#
+"""
+Python module to handle bringing in the Decoders as Hlt members
+
+Ideally this should not be a module, because that fixes *all* the decoders as soon as you ask for any one of them... really it should be a function which returns the correct thing...
+"""
 from Configurables import DataOnDemandSvc
 from GaudiKernel.ProcessJobOptions import importOptions
 from HltLine import bindMembers
-importOptions('$STDOPTS/DecodeRawEvent.py')
+from DAQSys import Decoders, DecoderClass
+from DAQSys.Decoders import DecoderDB
+from DAQSys.DecoderClass import decoderToLocation, decodersForBank
+#importOptions('$STDOPTS/DecodeRawEvent.py')
 
-def _convert(map, name) :
-    x = map.pop(name)
-    a = x.split('/')
-    if len(a) == 2 :
-        (t,n) = a
-    elif len(a) == 1 :
-        (t,n) = (a[0],a[0])
-    cls = getattr( __import__('Configurables'),t.replace(':','_') )  # TODO: deaul with Rich::DAQ::[
-    return bindMembers( None, [ cls(n) ]).ignoreOutputSelection()
+def _convert(db,bank) :
+    algs=[d.setup() for d in decodersForBank(db,bank)]
+    return bindMembers( None, algs).ignoreOutputSelection()
+
+def _convertName(db,name) :
+    algs=[db[name].setup()]
+    return bindMembers( None, algs).ignoreOutputSelection()
 
 # bind __convert to _convert
-__convert = lambda x : _convert( DataOnDemandSvc().AlgMap,x) 
+__convert = lambda x : _convert( DecoderDB,x) 
+__convertName = lambda x : _convertName( DecoderDB,x) 
 
 # __convert = lambda x : bindMembers( None, [] ).ignoreOutputSelection()
 
 
-DecodeODIN       = __convert( 'DAQ/ODIN' )
-DecodeL0MUON     = __convert( 'Trig/L0/MuonCtrl' )
-DecodeL0CALO     = __convert( 'Trig/L0/Calo' )
-DecodeL0FullCALO = __convert( 'Trig/L0/FullCalo')
-DecodeL0DU       = __convert( 'Trig/L0/L0DUReport' )
-DecodeVELO       = __convert( 'Raw/Velo/LiteClusters' )
-DecodeTT         = __convert( 'Raw/TT/LiteClusters' )
-DecodeIT         = __convert( 'Raw/IT/LiteClusters' )
-DecodeOT         = __convert( 'Raw/OT/Times' )
-DecodeMUON       = __convert( 'Raw/Muon/Coords' )
-DecodeRICH       = __convert( 'Raw/Rich/Digits' )
-DecodeECAL       = __convert( 'Raw/Ecal/Digits' )
-DecodeSPD        = __convert( 'Raw/Spd/Digits' )
-DecodePRS        = __convert( 'Raw/Prs/Digits' )
-DecodeHCAL       = __convert( 'Raw/Hcal/Digits' )
+DecodeODIN       = __convert( 'ODIN' )
+DecodeL0MUON     = __convert( 'L0Muon' )
+DecodeL0CALO     = __convert( 'L0Calo' )
+DecodeL0FullCALO = __convert( 'L0CaloFull')
+#... nominally returns the same algorithm for both L0CaloFull and L0Calo...
+DecodeL0DU       = __convert( 'L0DU' )
+DecodeVELO       = __convert( 'Velo' )
+DecodeTT         = __convert( 'TT' )
+DecodeIT         = __convert( 'IT' )
+DecodeOT         = __convert( 'OT' )
+DecodeMUON       = __convert( 'Muon' )
+DecodeRICH       = __convert( 'Rich' )
+DecodeECAL       = __convert( 'Ecal' )
+DecodeSPD        = __convertName("CaloDigitsFromRaw/SpdFromRaw")
+DecodePRS        = __convertName("CaloDigitsFromRaw/PrsFromRaw")
+DecodeHCAL       = __convert( 'Hcal' )
 
 
 #and export explicit (configured!) decoders:

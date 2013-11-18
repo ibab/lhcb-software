@@ -20,6 +20,7 @@ use SelPy               v*  Phys
 use HltBase             v*  Hlt
 # our python uses various instances defined in HltCommon...
 use HltCommon           v*  Hlt
+use DAQSys		v*  DAQ
 
 
 #============================================================================
