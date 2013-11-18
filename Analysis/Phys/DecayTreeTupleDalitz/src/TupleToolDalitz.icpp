@@ -6,25 +6,42 @@ private:
 //=============================================================================
 /// The templated method that does it all
 template<class TYPE>
-StatusCode fill( const std::vector<const TYPE*> dauts      /// daughters
-                 , const std::string head                  /// header
+StatusCode fill( const std::vector<const TYPE*>& dauts      /// daughters
+                 , const std::string& head                 /// header
                  , Tuples::Tuple& tuple                    /// tuple
-                 , bool revert ){                          /// revert all PID (because mother is antiparticle)
+                 , bool revert ) /// revert all PID (because mother is antiparticle)
+{                         
 
-  const std::string prefix=fullName(head);
+  const std::string prefix = fullName(head);
   bool test = true;
 
-  typename std::vector<const TYPE*>::const_iterator i, j;
-  for ( i = dauts.begin() ; i!= dauts.end() ; ++i){
-    std::string n1 = particleName( (*i)->particleID(), revert );
-    Gaudi::LorentzVector p1 = (*i)->momentum() ;
-    for ( j = dauts.begin() ; i!= j ; ++j){
-      std::string n2 = particleName( (*j)->particleID(), revert );
-      Gaudi::LorentzVector p = p1+(*j)->momentum() ;
+  std::set<std::string> usedNames;
+  unsigned int add = 0;
+  
+  for ( typename std::vector<const TYPE*>::const_iterator i = dauts.begin(); 
+        i != dauts.end(); ++i )
+  {
+    const std::string n1 = particleName( (*i)->particleID(), revert );
+    const Gaudi::LorentzVector& p1 = (*i)->momentum() ;
+    for ( typename std::vector<const TYPE*>::const_iterator j = dauts.begin(); 
+          i != j; ++j ) 
+    {
+      const std::string n2 = particleName( (*j)->particleID(), revert );
+      const Gaudi::LorentzVector p = p1 + (*j)->momentum() ;
+      std::string _name = prefix+"_Dalitz_"+n1+"_"+n2+"_M2";
+      bool renamed = false;
+      while ( usedNames.find(_name) != usedNames.end() ) 
+      {
+        renamed = true;
+        _name += "_" + boost::lexical_cast<std::string>(add++);
+      }
+      if ( renamed ) Info("Renaming duplicate to "+_name,StatusCode::SUCCESS,1);
       if (msgLevel(MSG::VERBOSE))
-        verbose() << (*i)->particleID().pid() << " " << (*j)->particleID().pid()  << " "
-                  << prefix+"Dalitz_"+n1+"_"+n2+"_M2"<< " " << revert << endmsg ;
-      test &= tuple->column( prefix+"Dalitz_"+n1+"_"+n2+"_M2",p.M2()  );
+      {
+        verbose() << (*i)->particleID().pid() << " " << (*j)->particleID().pid() << " "
+                  << _name << " " << revert << endmsg ;
+      }
+      test &= tuple->column( _name, p .M2() );
     }
   }
 
@@ -35,7 +52,7 @@ StatusCode fill( const std::vector<const TYPE*> dauts      /// daughters
 std::string particleName(const LHCb::ParticleID& id, bool revert)const
 {
   const LHCb::ParticleProperty* ppp = ppSvc()->find( id );
-  if (!ppp)
+  if ( !ppp )
   {
     std::ostringstream mess;
     mess << "Unknown ParticleID " << id;
@@ -43,7 +60,7 @@ std::string particleName(const LHCb::ParticleID& id, bool revert)const
   }
   return Decays::escape( ( revert ?
                            ppp->antiParticle()->particle() :
-                           ppp->particle() )) ;
+                           ppp->particle() ) ) ;
 }
 
 /// get particle property serivce

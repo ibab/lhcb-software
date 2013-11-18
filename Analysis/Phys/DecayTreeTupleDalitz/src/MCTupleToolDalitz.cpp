@@ -1,6 +1,9 @@
 // $Id: MCTupleToolDalitz.cpp,v 1.6 2010-01-26 15:39:25 rlambert Exp $
 // Include files
 
+#include <set>
+#include <string>
+
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 

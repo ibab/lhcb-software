@@ -4,6 +4,10 @@
 ! Purpose     : Dalitz tools
 !-----------------------------------------------------------------------------
 
+! 2013-11-18 - Chris Jones
+ - Fix a bug in setting the prefix name properly.
+ - Try and fix a issue when the tool is wrong on Wrong Sign decays ...
+
 !========================= DecayTreeTupleDalitz v1r0 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

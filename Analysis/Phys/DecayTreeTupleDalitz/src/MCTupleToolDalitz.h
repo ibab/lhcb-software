@@ -13,6 +13,9 @@
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 
+// Boost
+#include <boost/lexical_cast.hpp>
+
 /** @class MCTupleToolDalitz MCTupleToolDalitz.h
  *
  *  Fills square masses of all combinations of direct daughters
