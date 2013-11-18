@@ -23,12 +23,12 @@ ChargedProtoANN...SUCCESS List of booked 1D histograms in directory         "PRO
  | Downstream/MuonANN        | "Downstream Muon ANN PID"                     |   3963  |  0.0023543 | 0.034658   |     21.158 |     492.46 |
  | Downstream/PionANN        | "Downstream Pion ANN PID"                     |   3963  |    0.10846 | 0.2098     |     2.6833 |     6.6331 |
  | Downstream/ProtonANN      | "Downstream Proton ANN PID"                   |   3963  |   0.023152 | 0.063226   |     5.9696 |     45.568 |
- | Long/ElectronANN          | "Long Electron ANN PID"                       |  10439  |   0.023013 | 0.10973    |     6.4732 |     44.545 |
- | Long/GhostANN             | "Long Ghost ANN PID"                          |  10439  |    0.43325 | 0.42881    |    0.31714 |    -1.7384 |
- | Long/KaonANN              | "Long Kaon ANN PID"                           |  10439  |   0.061123 | 0.1537     |     3.8636 |      15.94 |
- | Long/MuonANN              | "Long Muon ANN PID"                           |  10439  |  0.0072236 | 0.063982   |     11.543 |     142.75 |
- | Long/PionANN              | "Long Pion ANN PID"                           |  10439  |    0.43412 | 0.40159    |    0.18398 |    -1.7149 |
- | Long/ProtonANN            | "Long Proton ANN PID"                         |  10439  |    0.03601 | 0.094116   |     5.1995 |     34.708 |
+ | Long/ElectronANN          | "Long Electron ANN PID"                       |  10440  |   0.023011 | 0.10972    |     6.4735 |      44.55 |
+ | Long/GhostANN             | "Long Ghost ANN PID"                          |  10440  |     0.4333 | 0.42882    |    0.31692 |    -1.7385 |
+ | Long/KaonANN              | "Long Kaon ANN PID"                           |  10440  |   0.061117 | 0.15369    |     3.8638 |     15.941 |
+ | Long/MuonANN              | "Long Muon ANN PID"                           |  10440  |  0.0072229 | 0.063979   |     11.544 |     142.77 |
+ | Long/PionANN              | "Long Pion ANN PID"                           |  10440  |    0.43408 | 0.4016     |    0.18415 |    -1.7148 |
+ | Long/ProtonANN            | "Long Proton ANN PID"                         |  10440  |   0.036007 | 0.094112   |     5.1997 |     34.712 |
  | Upstream/ElectronANN      | "Upstream Electron ANN PID"                   |   1361  |   0.051368 | 0.11758    |     4.1116 |     20.277 |
  | Upstream/GhostANN         | "Upstream Ghost ANN PID"                      |   1361  |    0.40367 | 0.35586    |    0.31298 |     -1.507 |
  | Upstream/KaonANN          | "Upstream Kaon ANN PID"                       |   1361  |   0.055409 | 0.071284   |     3.5445 |     16.882 |
