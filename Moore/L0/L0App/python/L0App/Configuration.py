@@ -5,7 +5,7 @@ High-level configuration tool for running L0Emulation
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from LHCbKernel.Configuration import *
-from Configurables import LHCbApp, L0Conf, L0DUFromRawAlg
+from Configurables import LHCbApp, L0Conf, L0DUFromRawAlg, DecodeRawEvent
 
 class L0App(LHCbConfigurableUser):
     ## Possible used Configurables
