@@ -32,7 +32,10 @@ class FromFileGenerator
 		    , MINT::IEventGenerator<IDalitzEvent>* addThisWhenFileEmpty
 		    , const std::string& opt="UPDATE"
 		    );
-  
+  // alternative option: "READ", which makes sure it only takes
+  // events from the file, and does not generate new ones
+  // when it runs out.
+
   virtual MINT::counted_ptr<IDalitzEvent> newDalitzEvent();
 
   // this one below is required by MINT::IEventGenerator<IDalitzEvent>
