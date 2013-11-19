@@ -1872,7 +1872,7 @@ int NamedDecayTreeList::make4PiList() {
   bool dbThis=false;
     
   DecayTree* dk=0;
-    DecayTree* a1=0;
+  DecayTree* a1=0;
 
   //D0 -> a1(1260)pi-, a1(1260)->rho(770)pi+, rho->pi+pi-   [S-WAVE]
   dk = new DecayTree(421);

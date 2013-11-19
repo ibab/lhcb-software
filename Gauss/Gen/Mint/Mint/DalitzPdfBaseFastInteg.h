@@ -156,7 +156,17 @@ class DalitzPdfBaseFastInteg
 
   void setIntegratorFileName(const std::string& commaSeparatedList);
 
-  double getIntegralValue() const{return _norm;}
+  double getIntegralValue() const{
+    return _norm;
+  }
+  double getIntegralValue(){
+    if(_norm < 0) getNorm(); return _norm;
+  }
+  double redoIntegrator(){
+    _norm = -1;
+    getNorm();
+    return _norm;
+  }
 
   void doFinalStats(MINT::Minimiser* mini=0);
 };
