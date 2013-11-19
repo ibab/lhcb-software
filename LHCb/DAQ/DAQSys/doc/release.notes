@@ -4,6 +4,13 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-11-19 - Rob Lambert
+ - Add/Separate Hlt1 and Hlt2 DecReports decoders
+ - Add function to set time decoding, it's needed by some other configurables
+
+! 2013-11-19 - Rob Lambert
+ - Fix little bug with usedDecoders
+
 ! 2013-11-18 - Rob Lambert
  - Add concept of a "used" decoder, to suplpement the concept of an "Active" decoder.
 

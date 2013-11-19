@@ -218,19 +218,30 @@ Decoder("L0DUFromRawTool",
 
 #TRIGGER ==========HLT===========
 
-Decoder("HltSelReportsDecoder",
+dec=Decoder("HltSelReportsDecoder",
         active=True, banks=["HltSelReports"],
         inputs=["Trigger/RawEvent","DAQ/RawEvent"],
         #currently cannot be configured, it's a list not present in constructor
         outputs={"OutputHltSelReportsLocation":None},
         conf=DecoderDB)
 
-Decoder("HltDecReportsDecoder",
+#split Hlt1/2 scenario
+dec2=dec.clone(dec.FullName+"/Hlt2SelReportsDecoder")
+dec2.overrideOutputs({"OutputHltSelReportsLocation":"Hlt2/SelReports"})
+
+dec=Decoder("HltDecReportsDecoder",
         active=True, banks=["HltDecReports"],
         inputs=["Trigger/RawEvent","DAQ/RawEvent"],
         #currently cannot be configured, it's a list not present in constructor
         outputs={"OutputHltDecReportsLocation":None},
         conf=DecoderDB)
+
+#split Hlt1/2 scenario
+dec1=dec.clone(dec.FullName+"/Hlt1DecReportsDecoder")
+dec1.overrideOutputs({"OutputHltDecReportsLocation":"Hlt1/DecReports"})
+
+dec2=dec.clone(dec.FullName+"/Hlt2DecReportsDecoder")
+dec2.overrideOutputs({"OutputHltDecReportsLocation":"Hlt2/DecReports"})
 
 Decoder("HltVertexReportsDecoder",
         active=True, banks=["HltVertexReports"],

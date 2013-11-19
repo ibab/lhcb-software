@@ -143,13 +143,16 @@ class Decoder(object):
     
     def overrideInputs(self,input):
         """
-        List of input locations to search, set to all daughters
+        Set a List of input locations to search, set to all daughters
         """
         if not self.isInputSettable():
             raise AttributeError("My input is not settable "+self.FullName)
-        if type(self.Inputs) is list and len(self.Inputs):
-            self.Inputs=input
-        elif type(self.Inputs) is dict and len(self.Inputs):
+        #if type(self.Inputs) is list and len(self.Inputs):
+        #    if type(input) is list:
+        #        self.Inputs=input
+        #    if type(input) is str:
+        #        self.Inputs=[input]
+        if type(self.Inputs) is dict and len(self.Inputs):
             for k,ip in self.Inputs.items():
                 ensuretype=list
                 if ip is None:
@@ -174,14 +177,27 @@ class Decoder(object):
     
     def overrideOutputs(self,output):
         """
-        List of output locations to search, set to all daughters
+        Set a list or dict of OutputLocations, set to all daughters
         """
+        #print "GAAAAAAAHHHHHHHHH!!!!!!", output, self.FullName
         if not self.isOutputSettable():
             raise AttributeError("My output is not settable "+self.FullName)
-        if type(self.Outputs) is list and len(self.Outputs):
-            self.Outputs=output
-        elif type(self.Outputs) is dict and len(self.Outputs):
+        #if type(self.Outputs) is list and len(self.Outputs):
+        #    if type(output) is list:
+        #        self.Outputs=output
+        #    elif type(output) is str:
+        #        self.Outputs=[output]
+        if type(self.Outputs) is dict and len(self.Outputs):
+            #print "recognized I can set the output"
             for k,op in self.Outputs.items():
+                #get this entry in any supplied dictionary
+                setoutput=output
+                if type(setoutput) is dict:
+                    if k in setoutput:
+                        setoutput=setoutput[k]
+                    else:
+                        continue
+                #determine the type I need to set
                 ensuretype=list
                 if op is None:
                     #determine default type, first get my configurable
@@ -189,14 +205,18 @@ class Decoder(object):
                     ensuretype=type(self.__getprop__(thedecoder,k))
                 else:
                     ensuretype=type(op)
-                if type(output)==ensuretype:
-                    self.Outputs[k]=output
-                elif type(output) is list and len(output)>0 and ensuretype is str:
-                    raise TypeError("Cannot set property of type list to this string, "+self.FullName+" "+output.__str__())
-                elif ensuretype is list and type(output) is str:
-                    self.Outputs[k]=[output]
+                #set this type
+                #print "Type converted"
+                if type(setoutput)==ensuretype:
+                    self.Outputs[k]=setoutput
+                elif type(setoutput) is list and (len(setoutput)>1 or len(setoutput)==0) and ensuretype is str:
+                    raise TypeError("Cannot set property of type list to this string, "+self.FullName+" "+setoutput.__str__())
+                elif type(setoutput) is list and len(setoutput)==1 and ensuretype is str:
+                    self.Outputs[k]=setoutput[0]
+                elif ensuretype is list and type(setoutput) is str:
+                    self.Outputs[k]=[setoutput]
                 else:
-                    raise TypeError(self.FullName+": Cannot convert from type "+ str(type(output)) +" to "+ str(ensuretype))
+                    raise TypeError(self.FullName+": Cannot convert from type "+ str(type(setoutput)) +" to "+ str(ensuretype))
         #then cascade downwards
         for tool in self.PublicTools+self.PrivateTools:
             if tool in self.__db__:
@@ -402,5 +422,5 @@ def usedDecoders(db,bank=None):
             continue
         if bank is None or bank in v.Banks:
             retlist.append(v)
-    return retlist[0]
+    return retlist
     

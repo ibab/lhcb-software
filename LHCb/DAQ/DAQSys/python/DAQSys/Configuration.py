@@ -2,6 +2,23 @@ from Configurables import RawEventFormatConf
 from Gaudi.Configuration import ConfigurableUser
 from Configurables import DataOnDemandSvc
 
+
+def SetEvtClock(bank,db=None):
+    """
+    Add specific decoder to EvtClockSvc, replace disparate code
+    """
+    if db is None:
+        from DAQSys.Decoders import DecoderDB
+        db=DecoderDB
+    from DAQSys.DecoderClass import decodersForBank
+    odinconfs=decodersForBank(db,bank)
+    if len(odinconfs):
+        #force to take the same public tool
+        publicTool=odinconfs[0].PublicTools[0]
+        from Configurables import EventClockSvc
+        EventClockSvc(EventTimeDecoder = publicTool)
+
+
 class DecodeRawEvent(ConfigurableUser):
     """Complicated beast to handle raw event decoding
     
@@ -119,8 +136,13 @@ class DecodeRawEvent(ConfigurableUser):
         #they should have edited the database, not edited the configurables directly, or they should
         #add a postConfigAction to do what they want to change
         
+        #if ODIN is active, then configure the EventTimeDecoder
+        from DAQSys.DecoderClass import decodersForBank
+        if self.getProp("EvtClockBank") is not None and len(self.getProp("EvtClockBank")):
+            SetEvtClock(self.getProp("EvtClockBank"),self.__db__())
+        
         if not self.isPropertySet("Sequencer") and not self.getProp("DataOnDemand"):
-            #then I'm not doing anything
+            #then I'm not doing anything else
             return
         if self.isPropertySet("Sequencer") and self.getProp("DataOnDemand"):
             raise ValueError("You asked me to do the DoD service *and* a sequencer, but it only make sense to do one of these")
@@ -151,25 +173,14 @@ class DecodeRawEvent(ConfigurableUser):
                 locs=v.listOutputs()
                 for loc in locs:
                     if loc in DataOnDemandSvc().AlgMap:
-                        test=False
                         testname=DataOnDemandSvc().AlgMap[loc]
                         if type(testname) is not str:
-                            testname=testname.GetFullName()
+                            testname=testname.getFullName()
                         if testname==v.FullName:
                             print "# WARNING: something else configured a decoder already, "+loc+" "+testname
                         else:
                             raise AttributeError("At least two different active algs want to write to the same location. Check your DecoderDB! "+loc+": "+testname+" & "+v.FullName)
                     DataOnDemandSvc().AlgMap[loc]=thedecoder
         
-        #finally, if ODIN is active, then configure the EventTimeDecoder
-        from DAQSys.DecoderClass import decodersForBank
-        if self.getProp("EvtClockBank") is not None and len(self.getProp("EvtClockBank")):
-            odinconfs=decodersForBank(self.__db__(),self.getProp("EvtClockBank"))
-            if len(odinconfs):
-                #force to take the same public tool
-                publicTool=odinconfs[0].PublicTools[0]
-                from Configurables import EventClockSvc
-                EventClockSvc(EventTimeDecoder = publicTool)
         #Done :)
-
 
