@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
 
+! 2013-11-19 - Michel De Cian
+ - Add histories for upgrade, remove TrackVeloUT history (not used).
+
 !========================= TrackEvent v5r22 2013-06-03 =========================
 ! 2013-05-27 - Wouter Hulsbergen
  - Added function State::linearTransportTo.

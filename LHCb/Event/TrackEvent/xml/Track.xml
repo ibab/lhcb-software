@@ -80,7 +80,11 @@
         <enumval name = "PatFastVelo"    value="21" desc="track produced by FastVelo algorithm"/>
         <enumval name = "PatVP"    value="22" desc="track produced by VP algorithm"/>
         <enumval name = "PatVeloUT"      value="23" desc="track produced with the online Velo-UT pattern recognition"/>
-        <enumval name = "TrackVeloUT"    value="24" desc="track produced with the offline Velo-UT pattern recognition"/>
+        <enumval name = "PrForward"      value="30" desc="track produced with the PrForward pattern recognition for the upgrade"/>
+        <enumval name = "PrSeeding"      value="31" desc="track produced with the PrSeeding pattern recognition for the upgrade"/>
+        <enumval name = "PrMatch"        value="32" desc="track produced with the PrMatch pattern recognition for the upgrade"/>
+        <enumval name = "PrDownstream"   value="33" desc="track produced with the PrDownstream pattern recognition for the upgrade"/>
+        <enumval name = "PrVeloUT"       value="34" desc="track produced with the PrVeloUT pattern recognition for the upgrade"/>
       </enum>
 
       <enum
