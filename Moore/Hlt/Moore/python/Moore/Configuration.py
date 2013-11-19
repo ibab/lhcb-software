@@ -129,7 +129,7 @@ class Moore(LHCbConfigurableUser):
             dod = DataOnDemandSvc()
             if dod not in ApplicationMgr().ExtSvc :
                 ApplicationMgr().ExtSvc.append( dod ) 
-            importOptions('$STDOPTS/DecodeRawEvent.py')
+    #        importOptions('$STDOPTS/DecodeRawEvent.py')
     
     def _configureOnline(self) :
         from Configurables import LoKiSvc
@@ -278,7 +278,6 @@ class Moore(LHCbConfigurableUser):
                        , "SIMCOND" : self.getProp('CondDBtag') 
                        , "ONLINE"  : 'fake'
                        }
-        # hack to allow us to chance connectionstrings...
         conddb.setProp('IgnoreHeartBeat',self.getProp('IgnoreDBHeartBeat')  )
         self.setOtherProps( conddb, [ 'UseDBSnapshot',
                                       'DBSnapshotDirectory',
@@ -602,8 +601,10 @@ class Moore(LHCbConfigurableUser):
             # TODO: shunt lumi nano events...
             # globally prepend a HltDecReportsDecoder for Hlt1...
             # TODO: find a better way of doing this... ditto for L0 decoding...
-            from Configurables import HltDecReportsDecoder
-            seq.Members.insert( seq.Members.index(gs('Hlt2')), HltDecReportsDecoder('Hlt1DecReportsDecoder') )
+            from DAQSys.Decoders import DecoderDB
+            dec=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
+            decAlg=dec.setup()
+            seq.Members.insert( seq.Members.index(gs('Hlt2')), decAlg )
             # TODO: replace Hlt1 filter in endsequence by Hlt2 filter...
             # remove LumuWriter, LumiStripper
             end = gs('HltEndSequence')
@@ -615,15 +616,15 @@ class Moore(LHCbConfigurableUser):
 
             # shunt Hlt1 decreports
             _updateProperties( gs('Hlt')
-                             , dict( HltDecReportsDecoder = 'OutputHltDecReportsLocation'
-                                   , LoKi__HDRFilter      = 'Location'
+                             , dict( LoKi__HDRFilter      = 'Location'
                                    , TisTosParticleTagger = 'HltDecReportsInputLocation'
                                    , HltRoutingBitsWriter = 'Hlt1DecReportsLocation'
                                    )
-                             , 'Hlt1/DecReports'
+                             , dec.listOutputs()[0]
                              )
 
-            # shunt Hlt2 decreports 
+            # shunt Hlt2 decreports
+            dec2=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
             _updateProperties( gs('Hlt')
                              , dict( Hlt__Line            = 'HltDecReportsLocation'
                                    , HltRoutingBitsWriter = 'Hlt2DecReportsLocation'
@@ -631,14 +632,15 @@ class Moore(LHCbConfigurableUser):
                                    , HltSelReportsMaker   = 'InputHltDecReportsLocation'
                                    , HltGlobalMonitor     = 'HltDecReports'
                                    )
-                             , 'Hlt2/DecReports'
+                             , dec2.listOutputs()[0]
                              )
 
             # shunt selreports
+            dec3=DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"]
             _updateProperties( gs('Hlt')
                              , dict( HltSelReportsMaker   = 'OutputHltSelReportsLocation'
                                    , HltSelReportsWriter  = 'InputHltSelReportsLocation' )
-                             , 'Hlt2/SelReports'
+                             ,  dec3.listOutputs()[0]
                              )
            
             _updateProperties( gs('Hlt')
@@ -648,11 +650,14 @@ class Moore(LHCbConfigurableUser):
 
 
         def hlt2_only_tck() :
-            from Configurables import HltDecReportsDecoder
-            hlt1decrep_location = 'Hlt1/DecReports' 
-            hlt2decrep_location = 'Hlt2/DecReports' 
-            hlt2selrep_location = 'Hlt2/SelReports'
-            HltDecReportsDecoder('Hlt1DecReportsDecoder').OutputHltDecReportsLocation = hlt1decrep_location
+            from DAQSys.Decoders import DecoderDB
+            dec=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
+            decAlg=dec.setup()
+            dec2=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
+            dec3=DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"]
+            hlt1decrep_location = dec.listOutputs()[0]
+            hlt2decrep_location = dec2.listOutputs()[0]
+            hlt2selrep_location = dec3.listOutputs()[0]
             from Configurables import HltConfigSvc
             cfg = HltConfigSvc()
             cfg.ApplyTransformation = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'GaudiSequencer/HltDecisionSequence' : "HltDecReportsDecoder/Hlt1DecReportsDecoder', 'GaudiSequencer/Hlt2"  } }
@@ -769,19 +774,20 @@ class Moore(LHCbConfigurableUser):
         #app.CondDBtag = self.getProp('CondDBtag')
         #app.DDDBtag   = self.getProp('DDDBtag')
         self.setOtherProps( app, ['CondDBtag','DDDBtag'])
-        # Get the event time (for CondDb) from ODIN 
+        # Get the event time (for CondDb) from ODIN
+        from DAQSys.Configuration import SetEvtClock
+        SetEvtClock("ODIN")
         from Configurables import EventClockSvc
-        EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
         import time
         EventClockSvc().InitialTime = int(time.time()*1e9)  #now
-
+        
         # make sure we don't pick up small variations of the read current
         # Need a defined HistogramPersistency to read some calibration inputs!!!
         ApplicationMgr().HistogramPersistency = 'ROOT'
         self._outputLevel()
-
+        
         if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
-
+        
         if self.getProp('UseTCK') :
             self._config_with_tck()
             self._split( useTCK = True )

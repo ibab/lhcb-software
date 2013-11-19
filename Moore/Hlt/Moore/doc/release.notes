@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-11-19 - Rob Lambert
+ - Migrate to DAQSys, DecoderDB, see task #19106
+
 !========================= Moore v20r4 2013-10-09 =========================
 ! 2013-10-08 - Marco Clemencic
  - Disabled the FileStagerSvc in the swimming tests because it may make the
