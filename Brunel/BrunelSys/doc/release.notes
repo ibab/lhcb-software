@@ -3,7 +3,18 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v44r8>2013-10-25 Brunel v44r8</A></H1><PRE>
+</PRE><H1><A NAME=v44r8p1>2013-11-21 Brunel v44r8p1</A></H1><PRE>
+This version uses projects LCG 66, Gaudi v23r10, LHCb v36r3, Lbcom v14r3,
+ Rec v15r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+Patch release for 2013 Heavy Ion reprocessing.
+
+- Bug fixes
+  . Fixed bug when making R cluster VELO tracks crossing sectors (FastVelo v1r14)
+  . Fixed inconsistency PatFwdTool.cpp in fitStereoCandidate where a x layer 
+	  was marked as a stereo layer (PatAlgorithms v4r29)
+
+V</PRE><H1><A NAME=v44r8>2013-10-25 Brunel v44r8</A></H1><PRE>
 This version uses projects LCG 66, Gaudi v23r10, LHCb v36r3, Lbcom v14r3,
  Rec v15r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
