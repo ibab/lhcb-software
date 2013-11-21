@@ -455,6 +455,7 @@ EvtDalitzReso EvtDalitzTable::getResonance(std::string shape, EvtDalitzPlot dp, 
   } else if( shape=="NonRes_Exp" ) {
     return EvtDalitzReso( dp, resPair, EvtDalitzReso::NON_RES_EXP, alpha );
   } else { //NBW
+    if( shape!="NBW") report(WARNING,"EvtGen")<<"EvtDalitzTable: shape "<<shape<<" is unknown. Defaulting to NBW."<<endl;
     return EvtDalitzReso( dp, angPair, resPair, spinType, mass, width, EvtDalitzReso::NBW, FFp, FFr );
   }
 }

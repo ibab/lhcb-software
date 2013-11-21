@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v13r10 2013-11-21 ==========================
+! 2013-11-21 - John Back
+ - Modified EvtDalitzTable used by the EvtGenericDalitz model to warn 
+   if an unknown shape is used (and reverts to use a non-relativistic BW).
+
 !========================== EvtGen v13r9 2013-11-11 ==========================
 ! 2013-11-11 - John Back
  - Added Gounaris-Sakurai and Gaussian shapes to EvtGenericDalitz 
