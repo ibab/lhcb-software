@@ -5,7 +5,6 @@
 #include "Kernel/IParticleTupleTool.h"
 #include "DecayTreeTupleBase/TupleToolBase.h"
 
-
 /** @class TupleToolVeloTrackMatch TupleToolVeloTrackMatch.h
 * \brief Fill information about velo tracks matching the flight direction of a downstream composite candidate
 * The tool searches for velo tracks at LHCb::TrackLocation::Velo around a given direction, re-running the Velo tracking beforehand may be necessary
