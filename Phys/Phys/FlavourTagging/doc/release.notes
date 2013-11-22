@@ -7,6 +7,12 @@
 
 !========================= FlavourTagging v13r3 2013-10-02 =========================
 
+! 2013-11-21 - Katharina Kreplin
+ - NNet OSK changes: 
+    - Reco 14 only
+    - solved p0 calibration offset in Bs0 decays
+    - new NN1 (trained on Bs0 MC), new NN2 (trained on B+ data)
+
 ! 2013-09-20 - Stefania Vecchi
  - Add some code to run MC12 Reco14 with calibrated mistag
    affects: Tagger*Tool.*, NNet_MLP.* INNetTool.h

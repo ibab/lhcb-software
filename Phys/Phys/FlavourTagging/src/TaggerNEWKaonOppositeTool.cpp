@@ -32,14 +32,14 @@ DECLARE_TOOL_FACTORY( TaggerNEWKaonOppositeTool )
   declareProperty( "Kaon_distPhi_cut",  m_distPhi_cut      = 0.005 );
   declareProperty( "Kaon_tsa_cut",      m_tsa_cut          = -999.0 );
 
-  declareProperty( "Kaon_P0_Cal",        m_P0_Cal_kaon   = 0.4520 );
-  declareProperty( "Kaon_P1_Cal",        m_P1_Cal_kaon   = 1.0470 );
-  declareProperty( "Kaon_AverageOmega",  m_AverageOmega  = 0.4496 );
-  declareProperty( "Kaon_ProbMin",       m_ProbMin_kaon  = 0.48 );
+  declareProperty( "Kaon_P0_Cal",        m_P0_Cal_kaon   = 0.4363 );
+  declareProperty( "Kaon_P1_Cal",        m_P1_Cal_kaon   = 1.0890 );
+  declareProperty( "Kaon_AverageOmega",  m_AverageOmega  = 0.4348 );
+  declareProperty( "Kaon_ProbMin",       m_ProbMin_kaon  = 0.5    ); // no cut
 
   declareProperty( "Kaon_ghost_cut",  m_ghost_cut          = 0.5 );
-  declareProperty( "Kaon_ipPU_cut",   m_ipPU_cut_kaon      = 7.5 );
-  declareProperty( "Kaon_NN1_cut",    m_NN1_cut_kaon       = 0.3 );
+  declareProperty( "Kaon_ipPU_cut",   m_ipPU_cut_kaon      = 3.0 ); // no cut
+  declareProperty( "Kaon_NN1_cut",    m_NN1_cut_kaon       = 0.6 ); // tightened
   declareProperty( "Personality",     m_personality        = "Reco14");
 
   m_nn_1      = 0.;
@@ -398,13 +398,12 @@ Tagger TaggerNEWKaonOppositeTool::tagReco12( const Particle* AXB0,
   if(my_os_k_eta < m_ProbMin_kaon)
     my_os_k_dec = -1;
 
-  // set tag decision before calibration:
-  // same decision as used to determine the calibration parameters!
-  my_os_k_eta = m_P0_Cal_kaon + m_P1_Cal_kaon * (my_os_k_eta  - m_AverageOmega);
-
   if(my_os_k_eta > 0.5)
     my_os_k_eta = 1. - my_os_k_eta;
 
+  // set tag decision before calibration:
+  // same decision as used to determine the calibration parameters!
+  my_os_k_eta = m_P0_Cal_kaon + m_P1_Cal_kaon * (my_os_k_eta  - m_AverageOmega);
 
   if( my_os_k_dec == 0 ) return tkaon;
   
@@ -658,12 +657,13 @@ Tagger TaggerNEWKaonOppositeTool::tagReco14( const Particle* AXB0,
   if(my_os_k_eta < m_ProbMin_kaon)
     my_os_k_dec = -1;
 
+  if(my_os_k_eta > 0.5) // fold first, than calibrate
+    my_os_k_eta = 1. - my_os_k_eta;
+
   // set tag decision before calibration:
   // same decision as used to determine the calibration parameters!
   my_os_k_eta = m_P0_Cal_kaon + m_P1_Cal_kaon * (my_os_k_eta  - m_AverageOmega);
 
-  if(my_os_k_eta > 0.5)
-    my_os_k_eta = 1. - my_os_k_eta;
 
   tkaon.setOmega( my_os_k_eta );
   tkaon.setDecision( my_os_k_dec );
