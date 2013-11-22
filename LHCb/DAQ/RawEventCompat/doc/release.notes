@@ -4,6 +4,10 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+! 2013-11-22 - Rob Lambert
+ - Solve bug due to lack of _checkv in some configurables/methods
+ - Now all configurables accept versions as strings or numbers
+
 !========================= RawEventCompat v1r3 2013-10-23 =========================
 ! 2013-10-15 - Rob Lambert
  - Solve indentation bug and add a test which checks for TCK replacement

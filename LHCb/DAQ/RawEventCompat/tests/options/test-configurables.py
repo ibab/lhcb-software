@@ -35,7 +35,7 @@ RawEventFormatConf().RecoDict=test_versions
 
 
 #test RecombineRawEvent with all options
-RecombineRawEvent().Version=99.0
+RecombineRawEvent().Version="Eggs"
 RecombineRawEvent().Method="Map"
 RecombineRawEvent().Regex=".*(_A|_B)"
 RecombineRawEvent().__apply_configuration__()
@@ -52,7 +52,7 @@ if expected_combiner.RawBanksToCopy!={'Bank_A' : 'FooBar', 'Bank_B' : "FooBar"}:
 
 #test RawEventJuggler with all options
 RawEventJuggler().Sequencer=GS("JuggleRawEvent")
-RawEventJuggler().Input=99.0
+RawEventJuggler().Input="Eggs"
 RawEventJuggler().Output=0.0
 RawEventJuggler().KillExtraNodes=True
 RawEventJuggler().KillExtraBanks=True

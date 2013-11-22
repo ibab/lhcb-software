@@ -249,30 +249,36 @@ class RecombineRawEvent(ConfigurableUser):
     __slots__ = {
         "Method" : "Simple"  #Simple or Map combiner
         , "Regex" : ".*"  #locations or RawBanks to copy.
-        , "Version" : 2.0 #version to copy from
+        , "Version" : None #version to copy from
         }
     _propertyDocDct={
         "Method" : "Simple or Map combiner, see the documentation of the methods in __known_methods__, default Simple"  #Simple or Map combiner
         , "Regex" : "locations or RawBanks to copy. A regular expression such that you can ignore certain locations or bank names. Default .*"  #locations or RawBanks to copy.
-        , "Version" : "Version to copy from, float. Default 2.0" #version to copy from
+        , "Version" : "Version to copy from, float. Default 2.0" #version to copy from, can be string or float
         }
     
     __known_methods__={
         "Simple": RecombineWholeEvent,
         "Map" : RecombineEventByMap
         }
-
+    
     def __apply_configuration__(self):
         #check arguments
+        if self.isPropertySet("Version") and self.getProp("Version") is not None:
+            pass
+        else:
+            #default 2.0, split raw event
+            self.setProp("Version",2.0)
         if self.getProp("Method") not in self.__known_methods__:
             raise KeyError("You have asked for an undefined method ", self.getProp("Method"))
-        if self.getProp("Version") in [0.0,1.0]:
-            raise KeyError("Versions 0.0 and 1.0 anyway have a combined raw event... why would you want to do this? ", self.getProp("Version"))
         #make sure the dictionaries are there... Hack! %TODO -> Remove this!
         RawEventFormatConf().loadIfRequired()
         #then get them
         loc,rec=_getDict()
         #call correct method
+        self.setProp("Version",_checkv(self.getProp("Version"),loc,rec))
+        if self.getProp("Version") in [0.0,1.0]:
+            raise KeyError("Versions 0.0 and 1.0 anyway have a combined raw event... why would you want to do this? ", self.getProp("Version"))
         self.__known_methods__[self.getProp("Method")](
             version=self.getProp("Version"),
             regex=self.getProp("Regex"),
@@ -324,7 +330,11 @@ class RawEventJuggler(ConfigurableUser):
         
         if not self.isPropertySet("Output") or  not self.isPropertySet("Input"):
             raise AttributeError("You must set both the input and the output version, this can be a version number (float, int) or a name, see: "+rec.__str__())
-
+        
+        #swap logical for numeric, and check it exists
+        self.setProp("Output",_checkv(self.getProp("Output"),locs,rec))
+        self.setProp("Input",_checkv(self.getProp("Input"),locs,rec))
+        
         output_locations=ReverseDict(self.getProp("Output"),locs,rec)
         input_locations=ReverseDict(self.getProp("Input"),locs,rec)
         #check if a Trigger TCK is needed
