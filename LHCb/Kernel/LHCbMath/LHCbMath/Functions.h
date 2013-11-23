@@ -2515,6 +2515,156 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Bugg
+     *  parametrisation of sigma-pole for
+     *  two pion mass distribution
+     *
+     *  The parameterization of sigma pole by
+     *  B.S.Zou and D.V.Bugg, Phys.Rev. D48 (1993) R3948.
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-04-01
+     */
+    class GAUDI_API Bugg
+      : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor from all masses and angular momenta
+       *  @param M  mass of sigma (very different from the pole positon!)
+       *  @param g2 width parameter g2 (4pi width)
+       *  @param b1 width parameter b1  (2pi coupling)
+       *  @param b2 width parameter b2  (2pi coupling)
+       *  @param s1 width parameter s1  (cut-off for 4pi coupling)
+       *  @param s2 width parameter s2  (cut-off for 4pi coupling)
+       *  @param a  parameter a (the exponential cut-off)
+       *  @param m1 the mass of the first  particle
+       *  @param m3 the mass of the third  particle
+       *  @param m  the mass of the mother particle (m>m1+m2+m3)
+       *  @param L  the angular momentum between the first pair and the third
+       */
+      Bugg    ( const double         M  = 0.9264        ,  // GeV
+                const double         g2 = 0.0024        ,  // GeV
+                const double         b1 = 0.5848        ,  // GeV
+                const double         b2 = 1.6663        ,  // GeV-1
+                const double         a  = 1.082         ,  // GeV^2
+                const double         s1 = 2.8           ,  // GeV^2
+                const double         s2 = 3.5           ,
+                const double         m1 =  139.6 / 1000 ) ; // GeV
+      /// destructor
+      ~Bugg () ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// calculate the Bugg shape
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      double pdf        ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the amlitude  (not normalized!)
+      std::complex<double> amplitude (  const double x ) const ;
+      /// get the phase space factor (taking into account L)
+      double phaseSpace ( const double x ) const { return m_ps  ( x ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      // phase space variables
+      // ======================================================================
+      double m1        () const { return m_ps.m1 () ; }
+      double m2        () const { return m_ps.m2 () ; }
+      // ======================================================================
+      double lowEdge   () const { return m_ps. lowEdge() ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the running width by Bugg
+      std::complex<double>
+      gamma ( const double x ) const ; // get the running width by Bugg
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// adler factor
+      double               adler       ( const double x ) const ; // adler factor
+      /// ratio of 2pi-phase spaces
+      double               rho2_ratio  ( const double x ) const ;
+      /// ratio of 4pi-phase spaces
+      std::complex<double> rho4_ratio  ( const double x ) const ;
+      /// b-factor for 2-pi coupling
+      double b ( const double x ) const { return  b1 () + x * x * b2 () ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// approximation for  4pi-phase space
+      std::complex<double> rho4        ( const double x ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // sigma & Bugg variables
+      // ======================================================================
+      double M     () const  { return m_M       ; }
+      double M2    () const  { return m_M * m_M ; }
+      double m0    () const  { return   M ()    ; }
+      double mass  () const  { return   M ()    ; }
+      double peak  () const  { return   M ()    ; }
+      // ======================================================================
+      double g2    () const  { return m_g2   ; }
+      double b1    () const  { return m_b1   ; }
+      double b2    () const  { return m_b2   ; }
+      double s1    () const  { return m_s1   ; }
+      double s2    () const  { return m_s2   ; }
+      double a     () const  { return m_a    ; }
+      // ======================================================================
+      bool setM    ( const double value  ) ;
+      bool setM0   ( const double value  ) { return setM ( value )  ; }
+      bool setMass ( const double value  ) { return setM ( value )  ; }
+      bool setPeak ( const double value  ) { return setM ( value )  ; }
+      // ======================================================================
+      bool setG2   ( const double value  ) ;
+      bool setB1   ( const double value  ) ;
+      bool setB2   ( const double value  ) ;
+      bool setS1   ( const double value  ) ;
+      bool setS2   ( const double value  ) ;
+      bool setA    ( const double value  ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral
+      /// double integral () const ;
+      /// get the integral between low and high limits
+      double integral ( const double low  ,
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      // sigma & Bugg varibales
+      // ======================================================================
+      /// mass of sigma (very different from the pole positon!)
+      double m_M  ; // mass of sigma (very different from the pole positon!)
+      /// width parameter g2 (4pi width)
+      double m_g2 ; // width parameter g2 (4-p width)
+      /// width parameter b1  (2pi coupling)
+      double m_b1 ; // width parameter b1  (2pi coupling)
+      /// width parameter b2  (2pi coupling)
+      double m_b2 ; // width parameter b2  (2pi coupling)
+      /// width parameter s1  (cut-off for 4pi coupling)
+      double m_s1 ; // width parameter b1  (cut-off for 4pi coupling)
+      /// width parameter s2  (cut-off for 4pi coupling)
+      double m_s2 ; // width parameter b2  (cut-off for 4pi coupling)
+      /// parameter a (the exponential cut-off)
+      double m_a  ; // parameter a (the exponential cut-off)
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// phase space
+      Gaudi::Math::PhaseSpace2   m_ps         ; // phase space
+      // ======================================================================
+    private:
+      /// integration workspace
+      Gaudi::Math::WorkSpace     m_workspace  ;    // integration workspace
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class Bugg23L
      *  parametrisation of sigma-pole for
      *  two pion mass distribution from three body decays
@@ -2554,18 +2704,31 @@ namespace Gaudi
                 const double         m3 = 3097.0 / 1000 ,  // MeV
                 const double         m  = 5278.0 / 1000 ,  // MeV
                 const unsigned short L  =    1          ) ;
+      /** constructor from bugg & phase space parameters 
+       *  @param m3 the mass of the third  particle
+       *  @param m  the mass of the mother particle (m>m1+m2+m3)
+       *  @param L  the angular momentum between the first pair and the third
+       */
+      Bugg23L ( const Gaudi::Math::Bugg& bugg               ,
+                const double             m3 = 3097.0 / 1000 ,  // MeV
+                const double             m  = 5278.0 / 1000 ,  // MeV
+                const unsigned short     L  =    1          ) ;
+      
+      
       /// destructor
       ~Bugg23L () ;
       // ======================================================================
     public:
       // ======================================================================
-      /// calculate the Breit-Wigner shape
-      double operator() ( const double x ) const ;
+      /// calculate the Bugg shape
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      double pdf        ( const double x ) const ;
       // ======================================================================
     public:
       // ======================================================================
       /// get the amlitude  (not normalized!)
-      std::complex<double> amplitude (  const double x ) const ;
+      std::complex<double> amplitude (  const double x ) const 
+      { return m_bugg.amplitude ( x ) ; }
       /// get the phase space factor (taking into account L)
       double phaseSpace ( const double x ) const { return m_ps  ( x ) ; }
       // ======================================================================
@@ -2585,52 +2748,50 @@ namespace Gaudi
       // ======================================================================
       /// get the running width by Bugg
       std::complex<double>
-      gamma ( const double x ) const ; // get the running width by Bugg
+      gamma ( const double x ) const { return m_bugg.gamma ( x )  ; }
       // ======================================================================
     public:
       // ======================================================================
       /// adler factor
-      double               adler       ( const double x ) const ; // adler factor
+      double               adler       ( const double x ) const
+      { return m_bugg.adler      ( x ) ; } // adler factor
       /// ratio of 2pi-phase spaces
-      double               rho2_ratio  ( const double x ) const ;
+      double               rho2_ratio  ( const double x ) const 
+      { return m_bugg.rho2_ratio ( x ) ; }
       /// ratio of 4pi-phase spaces
-      std::complex<double> rho4_ratio  ( const double x ) const ;
+      std::complex<double> rho4_ratio  ( const double x ) const 
+      { return m_bugg.rho4_ratio ( x ) ; }        
       /// b-factor for 2-pi coupling
-      double b( const double x ) const { return  b1 () + x * x * b2 () ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// approximation for  4pi-phase space
-      std::complex<double> rho4        ( const double x ) const ;
+      double b ( const double x ) const { return m_bugg. b ( x ) ; }
       // ======================================================================
     public:
       // ======================================================================
       // sigma & Bugg variables
       // ======================================================================
-      double M     () const  { return m_M       ; }
-      double M2    () const  { return m_M * m_M ; }
-      double m0    () const  { return   M ()    ; }
-      double mass  () const  { return   M ()    ; }
-      double peak  () const  { return   M ()    ; }
+      double M     () const  { return m_bugg. M    () ; }
+      double M2    () const  { return m_bugg. M2   () ; }
+      double m0    () const  { return m_bugg. m0   () ; }
+      double mass  () const  { return m_bugg. mass () ; }
+      double peak  () const  { return m_bugg. peak () ; }
       // ======================================================================
-      double g2    () const  { return m_g2   ; }
-      double b1    () const  { return m_b1   ; }
-      double b2    () const  { return m_b2   ; }
-      double s1    () const  { return m_s1   ; }
-      double s2    () const  { return m_s2   ; }
-      double a     () const  { return m_a    ; }
+      double g2    () const  { return m_bugg. g2   () ; }
+      double b1    () const  { return m_bugg. b1   () ; }
+      double b2    () const  { return m_bugg. b2   () ; }
+      double s1    () const  { return m_bugg. s1   () ; }
+      double s2    () const  { return m_bugg. s2   () ; }
+      double a     () const  { return m_bugg. a    () ; }
       // ======================================================================
-      bool setM    ( const double value  ) ;
-      bool setM0   ( const double value  ) { return setM ( value )  ; }
-      bool setMass ( const double value  ) { return setM ( value )  ; }
-      bool setPeak ( const double value  ) { return setM ( value )  ; }
+      bool setM    ( const double value  ) { return m_bugg.setM    ( value ) ; }
+      bool setM0   ( const double value  ) { return m_bugg.setM0   ( value ) ; }
+      bool setMass ( const double value  ) { return m_bugg.setMass ( value ) ; }
+      bool setPeak ( const double value  ) { return m_bugg.setPeak ( value ) ; }
       // ======================================================================
-      bool setG2   ( const double value  ) ;
-      bool setB1   ( const double value  ) ;
-      bool setB2   ( const double value  ) ;
-      bool setS1   ( const double value  ) ;
-      bool setS2   ( const double value  ) ;
-      bool setA    ( const double value  ) ;
+      bool setG2   ( const double value  ) { return m_bugg.setG2   ( value ) ; }
+      bool setB1   ( const double value  ) { return m_bugg.setB1   ( value ) ; }
+      bool setB2   ( const double value  ) { return m_bugg.setB2   ( value ) ; } 
+      bool setS1   ( const double value  ) { return m_bugg.setS1   ( value ) ; }  
+      bool setS2   ( const double value  ) { return m_bugg.setS2   ( value ) ; }  
+      bool setA    ( const double value  ) { return m_bugg.setA    ( value ) ; }  
       // ======================================================================
     public:
       // ======================================================================
@@ -2642,25 +2803,8 @@ namespace Gaudi
       // ======================================================================
     private:
       // ======================================================================
-      // sigma & Bugg varibales
-      // ======================================================================
-      /// mass of sigma (very different from the pole positon!)
-      double m_M  ; // mass of sigma (very different from the pole positon!)
-      /// width parameter g2 (4pi width)
-      double m_g2 ; // width parameter g2 (4-p width)
-      /// width parameter b1  (2pi coupling)
-      double m_b1 ; // width parameter b1  (2pi coupling)
-      /// width parameter b2  (2pi coupling)
-      double m_b2 ; // width parameter b2  (2pi coupling)
-      /// width parameter s1  (cut-off for 4pi coupling)
-      double m_s1 ; // width parameter b1  (cut-off for 4pi coupling)
-      /// width parameter s2  (cut-off for 4pi coupling)
-      double m_s2 ; // width parameter b2  (cut-off for 4pi coupling)
-      /// parameter a (the exponential cut-off)
-      double m_a  ; // parameter a (the exponential cut-off)
-      // ======================================================================
-    private:
-      // ======================================================================
+      /// bugg function 
+      Gaudi::Math::Bugg          m_bugg       ; // bugg function 
       /// phase space
       Gaudi::Math::PhaseSpace23L m_ps         ; // phase space
       // ======================================================================
@@ -2865,7 +3009,7 @@ namespace Gaudi
     // ========================================================================
     /** @class Gounaris23L
      *  parametrisation of rho0 for
-     *  two pion mass distribution from three body decays
+     *  two pion mass distribution 
      *
      *  G.J.Gounaris and J.J.Sakurai,
      *  "Finite width corrections to the vector meson dominance

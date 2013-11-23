@@ -959,6 +959,18 @@ namespace
     return (*bugg)(x) ;
   }
   // ==========================================================================
+  /** helper function for itegration of Bugg shape
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2012-05-23
+   */
+  double Bugg_GSL ( double x , void* params )
+  {
+    //
+    const Gaudi::Math::Bugg* bugg = (Gaudi::Math::Bugg*) params ;
+    //
+    return (*bugg)(x) ;
+  }
+  // ==========================================================================
   /** helper function for itegration of BW23L shape
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date 2012-05-23
@@ -4697,8 +4709,286 @@ double  Gaudi::Math::LASS23L::integral () const
 { return integral ( m_ps.lowEdge () , m_ps.highEdge() ) ; }
 // ============================================================================
 
+
 // ============================================================================
 // Bugg
+// ============================================================================
+/*  constructor from all masses and angular momenta
+ *  @param M  mass of sigma (very different from the pole positon!)
+ *  @param g2 width parameter g2 (4pi width)
+ *  @param b1 width parameter b1  (2pi coupling)
+ *  @param b2 width parameter b2  (2pi coupling)
+ *  @param s1 width parameter s1  (cut-off for 4pi coupling)
+ *  @param s2 width parameter s2  (cut-off for 4pi coupling)
+ *  @param a  parameter a (the exponential cut-off)
+ *  @param m1 the mass of the first  particle
+ */
+// ============================================================================
+Gaudi::Math::Bugg::Bugg
+( const double         M  ,
+  const double         g2 ,
+  const double         b1 ,
+  const double         b2 ,
+  const double         a  ,
+  const double         s1 ,
+  const double         s2 ,
+  const double         m1 )
+  : std::unary_function<double,double> ()
+//
+  , m_M  ( std::abs ( M  ) )
+  , m_g2 ( std::abs ( g2 ) )
+  , m_b1 ( std::abs ( b1 ) )
+  , m_b2 ( std::abs ( b2 ) )
+  , m_s1 ( std::abs ( s1 ) )
+  , m_s2 ( std::abs ( s2 ) )
+  , m_a  ( std::abs ( a  ) )
+// phase space
+  , m_ps ( m1 , m1 )
+//
+  , m_workspace ()
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::Bugg::~Bugg(){}
+// ============================================================================
+double Gaudi::Math::Bugg::rho2_ratio ( const double x ) const
+{
+  if ( lowEdge() >= x ) { return 0 ; }
+  //
+  return
+    Gaudi::Math::PhaseSpace2::phasespace ( x    , m1() , m2 () ) /
+    Gaudi::Math::PhaseSpace2::phasespace ( M () , m1() , m2 () ) ;
+}
+// ============================================================================
+std::complex<double>
+Gaudi::Math::Bugg::rho4_ratio ( const double x ) const
+{
+  //
+  if ( 2 * m1() >= x ) { return 0 ; }
+  //
+  return rho4 ( x ) / rho4 ( M() ) ;
+}
+// ============================================================================
+std::complex<double>
+Gaudi::Math::Bugg::rho4 ( const double x ) const
+{
+  const double s  = x * x ;
+  //
+  const double r2 = 1 - 16 * m1() * m1() / s ;
+  //
+  const double r  =
+    std::sqrt ( std::abs ( r2 ) ) *
+    ( 1 + std::exp ( ( s1 () - s )  / s2 () ) ) ;
+  //
+  return 0 <= r2 ?
+    std::complex<double> ( r , 0 ) :
+    std::complex<double> ( 0 , r ) ;
+}
+// ============================================================================
+// Adler's pole
+// ============================================================================
+double Gaudi::Math::Bugg::adler ( const double x ) const
+{
+  if ( lowEdge() >= x ) { return 0 ; }
+  //
+  const double pole = 0.5 * m1 () * m1 ()  ;
+  //
+  return ( x * x - pole ) / ( M2 () - pole ) ;
+}
+// ============================================================================
+// get the running width by Bugg
+// ============================================================================
+std::complex<double>
+Gaudi::Math::Bugg::gamma ( const double x ) const
+{
+  //
+  if ( lowEdge() >= x ) { return 0 ; }
+  //
+  const double s = x * x ;
+  //
+  const double g1 =
+    b     ( x ) *
+    adler ( x ) * std::exp ( -1 * ( s - M2() )  / a() ) ;
+  //
+  return g1 * rho2_ratio ( x ) + g2 () * rho4_ratio ( x ) ;
+}
+// ============================================================================
+// get the amlitude  (not normalized!)
+// ============================================================================
+std::complex<double>
+Gaudi::Math::Bugg::amplitude (  const double x ) const
+{
+  if ( lowEdge() >= x ) { return 0 ; }
+  //
+  static const std::complex<double> j ( 0 , 1 ) ;
+  //
+  std::complex<double> d = M2() - x * x  - j * M() * gamma ( x ) ;
+  //
+  return 1.0 / d ;
+}
+// ============================================================================
+// evaluate Bugg
+// ============================================================================
+double Gaudi::Math::Bugg::pdf ( const double x ) const
+{
+  //
+  if ( lowEdge() >= x ) { return 0 ; }
+  //
+  const double result = phaseSpace  ( x ) ;
+  if ( 0 >= result ) { return 0 ; }
+  //
+  return result * std::norm ( amplitude ( x ) ) ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::Bugg::setM ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_M ) ) { return false ; }
+  //
+  m_M = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::Bugg::setG2 ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_g2 ) ) { return false ; }
+  //
+  m_g2 = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::Bugg::setB1 ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_b1 ) ) { return false ; }
+  //
+  m_b1 = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::Bugg::setB2 ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_b2 ) ) { return false ; }
+  //
+  m_b2 = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::Bugg::setS1 ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_s1 ) ) { return false ; }
+  //
+  m_s1 = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::Bugg::setS2 ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_s2 ) ) { return false ; }
+  //
+  m_s2 = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// set the proper parameters
+// ============================================================================
+bool Gaudi::Math::Bugg::setA ( const double x )
+{
+  //
+  const double v = std::abs ( x ) ;
+  if ( s_equal ( v , m_a ) ) { return false ; }
+  //
+  m_a = v ;
+  //
+  return true ;
+}
+// ============================================================================
+// get the integral between low and high limits
+// ============================================================================
+double  Gaudi::Math::Bugg::integral
+( const double low  ,
+  const double high ) const
+{
+  if ( s_equal ( low , high ) ) { return                 0.0 ; } // RETURN
+  if (           low > high   ) { return - integral ( high ,
+                                                      low  ) ; } // RETURN
+  //
+  if ( high <= lowEdge  () ) { return 0 ; }
+  //
+  if ( low  <  lowEdge  () )
+  { return integral ( lowEdge() , high        ) ; }
+  //
+  // use GSL to evaluate the integral
+  //
+  Sentry sentry ;
+  //
+  gsl_function F                 ;
+  F.function         = &Bugg_GSL ;
+  const Bugg*    _ps = this  ;
+  F.params           = const_cast<Bugg*> ( _ps ) ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //
+  const int ierror = gsl_integration_qag
+    ( &F                ,            // the function
+      low   , high      ,            // low & high edges
+      s_PRECISION       ,            // absolute precision
+      s_PRECISION       ,            // relative precision
+      s_SIZE            ,            // size of workspace
+      GSL_INTEG_GAUSS31 ,            // integration rule
+      workspace ( m_workspace ) ,    // workspace
+      &result           ,            // the result
+      &error            ) ;          // the error in result
+  //
+  if ( ierror )
+  {
+    gsl_error ( "Gaudi::Math::BUGG::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ;
+  }
+  //
+  return result ;
+}
+// ============================================================================
+// get the integral
+// ============================================================================
+// double  Gaudi::Math::Bugg23L::integral () const
+// { return integral ( lowEdge () , highEdge() ) ; }
+// ============================================================================
+
+
+
+// ============================================================================
+// Bugg23L
 // ============================================================================
 /*  constructor from all masses and angular momenta
  *  @param M  mass of sigma (very different from the pole positon!)
@@ -4728,15 +5018,27 @@ Gaudi::Math::Bugg23L::Bugg23L
   const unsigned short L  )
   : std::unary_function<double,double> ()
 //
-  , m_M  ( std::abs ( M  ) )
-  , m_g2 ( std::abs ( g2 ) )
-  , m_b1 ( std::abs ( b1 ) )
-  , m_b2 ( std::abs ( b2 ) )
-  , m_s1 ( std::abs ( s1 ) )
-  , m_s2 ( std::abs ( s2 ) )
-  , m_a  ( std::abs ( a  ) )
-// phase space
-  , m_ps ( m1 , m1 , m3 , m , L , 0 )
+  , m_bugg ( M  , g2 , b1 , b2 , a , s1 , s2 , m1 ) 
+  , m_ps   ( m1 , m1 , m3 , m  , L , 0 )
+//
+  , m_workspace ()
+{}
+// ============================================================================
+/** constructor from bugg & phase space parameters 
+ *  @param m3 the mass of the third  particle
+ *  @param m  the mass of the mother particle (m>m1+m2+m3)
+ *  @param L  the angular momentum between the first pair and the third
+ */
+// ============================================================================
+Gaudi::Math::Bugg23L::Bugg23L
+( const Gaudi::Math::Bugg& bugg ,
+  const double             m3   ,  // MeV
+  const double             m    ,  // MeV
+  const unsigned short     L    ) 
+  : std::unary_function<double,double> ()
+//
+  , m_bugg ( bugg ) 
+  , m_ps   ( bugg.m1 () , bugg.m1 ()  , m3 , m  , L , 0 )
 //
   , m_workspace ()
 {}
@@ -4745,85 +5047,9 @@ Gaudi::Math::Bugg23L::Bugg23L
 // ============================================================================
 Gaudi::Math::Bugg23L::~Bugg23L(){}
 // ============================================================================
-double Gaudi::Math::Bugg23L::rho2_ratio ( const double x ) const
-{
-  if ( lowEdge() >= x ) { return 0 ; }
-  //
-  return
-    Gaudi::Math::PhaseSpace2::phasespace ( x    , m1() , m2 () ) /
-    Gaudi::Math::PhaseSpace2::phasespace ( M () , m1() , m2 () ) ;
-}
-// ============================================================================
-std::complex<double>
-Gaudi::Math::Bugg23L::rho4_ratio ( const double x ) const
-{
-  //
-  if ( 2 * m1() >= x ) { return 0 ; }
-  //
-  return rho4 ( x ) / rho4 ( M() ) ;
-}
-// ============================================================================
-std::complex<double>
-Gaudi::Math::Bugg23L::rho4 ( const double x ) const
-{
-  const double s  = x * x ;
-  //
-  const double r2 = 1 - 16 * m1() * m1() / s ;
-  //
-  const double r  =
-    std::sqrt ( std::abs ( r2 ) ) *
-    ( 1 + std::exp ( ( s1 () - s )  / s2 () ) ) ;
-  //
-  return 0 <= r2 ?
-    std::complex<double> ( r , 0 ) :
-    std::complex<double> ( 0 , r ) ;
-}
-// ============================================================================
-// Adler's pole
-// ============================================================================
-double Gaudi::Math::Bugg23L::adler ( const double x ) const
-{
-  if ( lowEdge() >= x ) { return 0 ; }
-  //
-  const double pole = 0.5 * m1 () * m1 ()  ;
-  //
-  return ( x * x - pole ) / ( M2 () - pole ) ;
-}
-// ============================================================================
-// get the running width by Bugg
-// ============================================================================
-std::complex<double>
-Gaudi::Math::Bugg23L::gamma ( const double x ) const
-{
-  //
-  if ( lowEdge() >= x || highEdge() <= x ) { return 0 ; }
-  //
-  const double s = x * x ;
-  //
-  const double g1 =
-    b     ( x ) *
-    adler ( x ) * std::exp ( -1 * ( s - M2() )  / a() ) ;
-  //
-  return g1 * rho2_ratio ( x ) + g2 () * rho4_ratio ( x ) ;
-}
-// ============================================================================
-// get the amlitude  (not normalized!)
-// ============================================================================
-std::complex<double>
-Gaudi::Math::Bugg23L::amplitude (  const double x ) const
-{
-  if ( lowEdge() >= x || highEdge() <= x ) { return 0 ; }
-  //
-  static const std::complex<double> j ( 0 , 1 ) ;
-  //
-  std::complex<double> d = M2() - x * x  - j * M() * gamma ( x ) ;
-  //
-  return 1.0 / d ;
-}
-// ============================================================================
 // evaluate Bugg
 // ============================================================================
-double Gaudi::Math::Bugg23L::operator () ( const double x ) const
+double Gaudi::Math::Bugg23L::pdf ( const double x ) const
 {
   //
   if ( lowEdge() >= x || highEdge() <= x ) { return 0 ; }
@@ -4832,97 +5058,6 @@ double Gaudi::Math::Bugg23L::operator () ( const double x ) const
   if ( 0 >= result ) { return 0 ; }
   //
   return result * std::norm ( amplitude ( x ) ) ;
-}
-// ============================================================================
-// set the proper parameters
-// ============================================================================
-bool Gaudi::Math::Bugg23L::setM ( const double x )
-{
-  //
-  const double v = std::abs ( x ) ;
-  if ( s_equal ( v , m_M ) ) { return false ; }
-  //
-  m_M = v ;
-  //
-  return true ;
-}
-// ============================================================================
-// set the proper parameters
-// ============================================================================
-bool Gaudi::Math::Bugg23L::setG2 ( const double x )
-{
-  //
-  const double v = std::abs ( x ) ;
-  if ( s_equal ( v , m_g2 ) ) { return false ; }
-  //
-  m_g2 = v ;
-  //
-  return true ;
-}
-// ============================================================================
-// set the proper parameters
-// ============================================================================
-bool Gaudi::Math::Bugg23L::setB1 ( const double x )
-{
-  //
-  const double v = std::abs ( x ) ;
-  if ( s_equal ( v , m_b1 ) ) { return false ; }
-  //
-  m_b1 = v ;
-  //
-  return true ;
-}
-// ============================================================================
-// set the proper parameters
-// ============================================================================
-bool Gaudi::Math::Bugg23L::setB2 ( const double x )
-{
-  //
-  const double v = std::abs ( x ) ;
-  if ( s_equal ( v , m_b2 ) ) { return false ; }
-  //
-  m_b2 = v ;
-  //
-  return true ;
-}
-// ============================================================================
-// set the proper parameters
-// ============================================================================
-bool Gaudi::Math::Bugg23L::setS1 ( const double x )
-{
-  //
-  const double v = std::abs ( x ) ;
-  if ( s_equal ( v , m_s1 ) ) { return false ; }
-  //
-  m_s1 = v ;
-  //
-  return true ;
-}
-// ============================================================================
-// set the proper parameters
-// ============================================================================
-bool Gaudi::Math::Bugg23L::setS2 ( const double x )
-{
-  //
-  const double v = std::abs ( x ) ;
-  if ( s_equal ( v , m_s2 ) ) { return false ; }
-  //
-  m_s2 = v ;
-  //
-  return true ;
-}
-// ============================================================================
-// set the proper parameters
-// ============================================================================
-bool Gaudi::Math::Bugg23L::setA ( const double x )
-{
-  //
-  const double v = std::abs ( x ) ;
-  if ( s_equal ( v , m_a ) ) { return false ; }
-  //
-  m_a = v ;
-  //
-  return true ;
 }
 // ============================================================================
 // get the integral between low and high limits
@@ -4981,6 +5116,8 @@ double  Gaudi::Math::Bugg23L::integral
 double  Gaudi::Math::Bugg23L::integral () const
 { return integral ( lowEdge () , highEdge() ) ; }
 // ============================================================================
+
+
 
 
 

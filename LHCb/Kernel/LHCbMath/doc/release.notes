@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2013-11-23 - Vanya Belyaev
+ - adjust a bit Bugg&Co family of functions 
+
 ! 2013-11-16 - Vanya Belyaev
  - adjust alpha in Crystal Ball 
 
