@@ -129,6 +129,16 @@ Double_t Analysis::Models::BreitWigner::evaluate() const
   return m_bw ( m_x ) ;
 }
 // ============================================================================
+// get the amplitude 
+// ============================================================================
+std::complex<double> Analysis::Models::BreitWigner::amplitude () const
+{
+  //
+  m_bw.setM0   ( m_mass  ) ;
+  m_bw.setGamma ( m_width ) ;
+  //
+  return m_bw.amplitude ( m_x ) ;
+}
 
 // ============================================================================
 // constructor from all parameters 
@@ -169,6 +179,161 @@ Analysis::Models::Rho0*
 Analysis::Models::Rho0::clone( const char* name ) const 
 { return new Analysis::Models::Rho0(*this,name) ; }
 
+
+
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::Kstar::Kstar 
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          mass      ,
+  RooAbsReal&          width     ,
+  const double         k_mass    ,
+  const double         pi_mass   ) 
+  : Analysis::Models::BreitWigner ( name    , 
+                                    title   , 
+                                    x       , 
+                                    mass    ,
+                                    width   ,
+                                    k_mass  , 
+                                    pi_mass , 
+                                    1       , 
+                                    Gaudi::Math::BreitWigner::Jackson_A2 )
+{}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::Kstar::Kstar 
+( const Analysis::Models::Kstar& right , 
+  const char*                    name  ) 
+  : Analysis::Models::BreitWigner ( right , name ) 
+{}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::Kstar::~Kstar(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Kstar*
+Analysis::Models::Kstar::clone( const char* name ) const 
+{ return new Analysis::Models::Kstar(*this,name) ; }
+
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::BW23L::BW23L
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          mass      ,
+  RooAbsReal&          width     ,
+  const double         m1        , 
+  const double         m2        ,
+  const unsigned short l         , 
+  //
+  const double         m3        , 
+  const double         m         , 
+  const double         L         ) 
+  : RooAbsPdf ( name , title ) 
+  , m_x     ( "x"     , "Observable" , this , x     ) 
+  , m_mass  ( "mass"  , "BW/Peak"    , this , mass  ) 
+  , m_width ( "wigth" , "BW/Width"   , this , width )
+//
+  , m_bw      ( 10 , 1 , m1 , m2 , m3 , m , l , L ) 
+{
+  m_bw.setM0    ( m_mass  ) ;
+  m_bw.setGamma ( m_width ) ;
+}
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::BW23L::BW23L
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          mass      ,
+  RooAbsReal&          width     ,
+  const double         m1        , 
+  const double         m2        ,
+  const unsigned short l                         ,
+  const Gaudi::Math::BreitWigner::JacksonRho rho , 
+  const double         m3        , 
+  const double         m         , 
+  const double         L         ) 
+  : RooAbsPdf ( name , title ) 
+  , m_x     ( "x"     , "Observable" , this , x     ) 
+  , m_mass  ( "mass"  , "BW/Peak"    , this , mass  ) 
+  , m_width ( "wigth" , "BW/Width"   , this , width )
+//
+  , m_bw      ( 10 , 1 , m1 , m2 , m3 , m , l , L , rho ) 
+{
+  m_bw.setM0    ( m_mass  ) ;
+  m_bw.setGamma ( m_width ) ;
+}
+// ============================================================================
+// constructor from main parameters and "shape"
+// ============================================================================
+Analysis::Models::BW23L::BW23L
+( const char*          name      , 
+  const char*          title     , 
+  RooAbsReal&          x         ,
+  RooAbsReal&          mass      ,
+  RooAbsReal&          width     ,
+  const Gaudi::Math::BW23L& bw   ) // shape 
+  : RooAbsPdf ( name , title ) 
+  , m_x     ( "x"     , "Observable" , this , x     ) 
+  , m_mass  ( "mass"  , "BW/Peak"    , this , mass  ) 
+  , m_width ( "wigth" , "BW/Width"   , this , width )
+//
+  , m_bw        ( bw ) 
+{
+  m_bw.setM0    ( m_mass  ) ;
+  m_bw.setGamma ( m_width ) ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::BW23L::BW23L
+( const Analysis::Models::BW23L& right , 
+  const char*                     name  ) 
+  : RooAbsPdf ( right , name )
+//
+  , m_x      ( "x"     , this , right.m_x     ) 
+  , m_mass   ( "mass"  , this , right.m_mass  ) 
+  , m_width  ( "width" , this , right.m_width )
+  , m_bw     ( right.m_bw )
+{}
+// ============================================================================
+Analysis::Models::BW23L::~BW23L(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::BW23L* 
+Analysis::Models::BW23L::clone ( const char* name ) const 
+{ return new Analysis::Models::BW23L( *this , name ) ; }
+// ============================================================================
+// get the amplitude 
+// ============================================================================
+std::complex<double> Analysis::Models::BW23L::amplitude () const
+{
+  m_bw.setM0    ( m_mass  ) ;
+  m_bw.setGamma ( m_width ) ;
+  return m_bw.amplitude ( m_x ) ;
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::BW23L::evaluate() const 
+{
+  m_bw.setM0     ( m_mass  ) ;
+  m_bw.setGamma0 ( m_width ) ;
+  //
+  return m_bw ( m_x ) ;
+}
+  
 // ============================================================================
 // constructor from all parameters 
 // ============================================================================
@@ -231,6 +396,18 @@ Double_t Analysis::Models::Flatte::evaluate() const
   return m_flatte ( m_x ) ;
 }
 // ===========================================================================
+// get the amplitude 
+// ===========================================================================
+std::complex<double> Analysis::Models::Flatte::amplitude () const  
+{
+  m_flatte.setM0     ( m_m0    ) ;
+  m_flatte.setM0G1   ( m_m0g1  ) ;
+  m_flatte.setG2oG1  ( m_g2og1 ) ;
+  //
+  return m_flatte.amplitude ( m_x ) ;
+}
+
+  
 
 
 
@@ -287,6 +464,14 @@ Double_t Analysis::Models::Flatte2::evaluate() const
   return m_flatte.flatte2 ( m_x ) ;
 }
 // ============================================================================
+std::complex<double> Analysis::Models::Flatte2::amplitude () const  
+{
+  m_flatte.setM0     ( m_m0    ) ;
+  m_flatte.setM0G1   ( m_m0g1  ) ;
+  m_flatte.setG2oG1  ( m_g2og1 ) ;
+  //
+  return m_flatte.flatte2_amp ( m_x ) ;
+}
 
 
 
@@ -428,6 +613,143 @@ Double_t Analysis::Models::CrystalBallDS::evaluate() const
   return m_cb2     ( m_x      ) ;
 }
 // ============================================================================
+
+
+// ============================================================================
+// constructor form all parameters 
+// ============================================================================
+Analysis::Models::CrystalBall::CrystalBall
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          m0        ,
+  RooAbsReal&          sigma     ,    
+  RooAbsReal&          alpha     ,
+  RooAbsReal&          n         ) 
+  : RooAbsPdf ( name , title )
+//
+  , m_x       ( "x"       , "Observable"   , this , x      ) 
+  , m_m0      ( "m0"      , "CB/mass"      , this , m0     ) 
+  , m_sigma   ( "sigma"   , "CB/sigma"     , this , sigma  )
+//
+  , m_alpha   ( "alpha"   , "CB/alpha"     , this , alpha  ) 
+  , m_n       ( "n"       , "CB/n"         , this , n      ) 
+//
+  , m_cb      ( 100 , 1 , 1 , 10 ) 
+{
+  //
+  m_cb.setM0      ( m_m0     ) ;
+  m_cb.setSigma   ( m_sigma  ) ;
+  m_cb.setAlpha   ( m_alpha  ) ;
+  m_cb.setN       ( m_n      ) ;
+  //
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::CrystalBall::CrystalBall
+( const Analysis::Models::CrystalBall& right , 
+  const char*                          name  ) 
+  : RooAbsPdf ( right , name )
+//
+  , m_x       ( "x"       , this , right.m_x      ) 
+  , m_m0      ( "m0"      , this , right.m_m0     ) 
+  , m_sigma   ( "sigma"   , this , right.m_sigma  )
+//
+  , m_alpha   ( "alpha"   , this , right.m_alpha  ) 
+  , m_n       ( "n"       , this , right.m_n      ) 
+//
+  , m_cb      ( 100 , 1 , 1 , 10 ) 
+{}
+// ============================================================================
+Analysis::Models::CrystalBall::~CrystalBall(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::CrystalBall*
+Analysis::Models::CrystalBall::clone ( const char* name ) const 
+{ return new Analysis::Models::CrystalBall (*this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::CrystalBall::evaluate() const
+{
+  //
+  m_cb.setM0      ( m_m0     ) ;
+  m_cb.setSigma   ( m_sigma  ) ;
+  m_cb.setAlpha   ( m_alpha  ) ;
+  m_cb.setN       ( m_n      ) ;
+  //
+  return m_cb ( m_x ) ;
+}
+
+// ============================================================================
+// constructor form all parameters 
+// ============================================================================
+Analysis::Models::CrystalBallRS::CrystalBallRS
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          m0        ,
+  RooAbsReal&          sigma     ,    
+  RooAbsReal&          alpha     ,
+  RooAbsReal&          n         ) 
+  : RooAbsPdf ( name , title )
+//
+  , m_x       ( "x"       , "Observable"   , this , x      ) 
+  , m_m0      ( "m0"      , "CB/mass"      , this , m0     ) 
+  , m_sigma   ( "sigma"   , "CB/sigma"     , this , sigma  )
+//
+  , m_alpha   ( "alpha"   , "CB/alpha"     , this , alpha  ) 
+  , m_n       ( "n"       , "CB/n"         , this , n      ) 
+//
+  , m_cb      ( 100 , 1 , 1 , 10 ) 
+{
+  //
+  m_cb.setM0      ( m_m0     ) ;
+  m_cb.setSigma   ( m_sigma  ) ;
+  m_cb.setAlpha   ( m_alpha  ) ;
+  m_cb.setN       ( m_n      ) ;
+  //
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::CrystalBallRS::CrystalBallRS
+( const Analysis::Models::CrystalBallRS& right , 
+  const char*                          name  ) 
+  : RooAbsPdf ( right , name )
+//
+  , m_x       ( "x"       , this , right.m_x      ) 
+  , m_m0      ( "m0"      , this , right.m_m0     ) 
+  , m_sigma   ( "sigma"   , this , right.m_sigma  )
+//
+  , m_alpha   ( "alpha"   , this , right.m_alpha  ) 
+  , m_n       ( "n"       , this , right.m_n      ) 
+//
+  , m_cb      ( 100 , 1 , 1 , 10 ) 
+{}
+// ============================================================================
+Analysis::Models::CrystalBallRS::~CrystalBallRS(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::CrystalBallRS*
+Analysis::Models::CrystalBallRS::clone ( const char* name ) const 
+{ return new Analysis::Models::CrystalBallRS (*this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::CrystalBallRS::evaluate() const
+{
+  //
+  m_cb.setM0      ( m_m0     ) ;
+  m_cb.setSigma   ( m_sigma  ) ;
+  m_cb.setAlpha   ( m_alpha  ) ;
+  m_cb.setN       ( m_n      ) ;
+  //
+  return m_cb ( m_x ) ;
+}
 
 
 // ============================================================================
@@ -816,6 +1138,222 @@ std::complex<double> Analysis::Models::LASS23L::amplitude() const
   return m_lass.amplitude ( m_x  ) ;
 }
 // ============================================================================
+
+
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::Bugg::Bugg  
+( const char*          name               , 
+  const char*          title              ,
+  RooAbsReal&          x                  ,
+  RooAbsReal&          M                  ,   // sigma M 
+  RooAbsReal&          g2                 ,   // sigma G2 
+  RooAbsReal&          b1                 ,   // sigma B1 
+  RooAbsReal&          b2                 ,   // sigma B2
+  RooAbsReal&          a                  ,   // sigma a 
+  RooAbsReal&          s1                 ,   // sigma s1 
+  RooAbsReal&          s2                 ,   // sigma s2 
+  const double         m1                 )   // mass of pi GeV 
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x     ( "x"     , "Observable"      , this , x     ) 
+  , m_M     ( "M"     , "Bugg/M"          , this , M     ) 
+  , m_g2    ( "g2"    , "Bugg/G2"         , this , g2    ) 
+  , m_b1    ( "b1"    , "Bugg/b1"         , this , b1    )
+  , m_b2    ( "b2"    , "Bugg/b2"         , this , b2    )
+  , m_a     ( "a"     , "Bugg/a"          , this , a     )
+  , m_s1    ( "s1"    , "Bugg/s1"         , this , s1    )
+  , m_s2    ( "s2"    , "Bugg/s2"         , this , s2    )
+//
+  , m_bugg  ( 0.92 , 0.0024 , 0.5848 , 1.6663 , 1.082 , 2.8 , 3.5 , m1 )  
+{
+  m_bugg.setM  ( m_M  ) ;
+  m_bugg.setG2 ( m_g2 ) ;
+  m_bugg.setB1 ( m_b1 ) ;
+  m_bugg.setB2 ( m_b2 ) ;
+  m_bugg.setA  ( m_a  ) ;
+  m_bugg.setS1 ( m_s1 ) ;
+  m_bugg.setS2 ( m_s2 ) ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::Bugg::Bugg 
+( const Analysis::Models::Bugg& right , 
+  const char*                      name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x     ( "x"     , this , right.m_x     ) 
+  , m_M     ( "M"     , this , right.m_M     ) 
+  , m_g2    ( "g2"    , this , right.m_g2    ) 
+  , m_b1    ( "b1"    , this , right.m_b1    )
+  , m_b2    ( "b2"    , this , right.m_b2    )
+  , m_a     ( "a"     , this , right.m_a     )
+  , m_s1    ( "s1"    , this , right.m_s1    )
+  , m_s2    ( "s2"    , this , right.m_s2    )
+//
+  , m_bugg  ( right.m_bugg ) 
+{
+  m_bugg.setM  ( m_M  ) ;
+  m_bugg.setG2 ( m_g2 ) ;
+  m_bugg.setB1 ( m_b1 ) ;
+  m_bugg.setB2 ( m_b2 ) ;
+  m_bugg.setA  ( m_a  ) ;
+  m_bugg.setS1 ( m_s1 ) ;
+  m_bugg.setS2 ( m_s2 ) ;
+}
+// ============================================================================
+Analysis::Models::Bugg::~Bugg(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Bugg*
+Analysis::Models::Bugg::clone( const char* name ) const 
+{ return new Analysis::Models::Bugg ( *this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Bugg::evaluate() const 
+{
+  m_bugg.setM  ( m_M  ) ;
+  m_bugg.setG2 ( m_g2 ) ;
+  m_bugg.setB1 ( m_b1 ) ;
+  m_bugg.setB2 ( m_b2 ) ;
+  m_bugg.setA  ( m_a  ) ;
+  m_bugg.setS1 ( m_s1 ) ;
+  m_bugg.setS2 ( m_s2 ) ;
+  //
+  return m_bugg ( m_x  ) ;
+}
+// ===========================================================================
+// get the complex amplitude 
+// ===========================================================================
+std::complex<double> Analysis::Models::Bugg::amplitude() const 
+{
+  m_bugg.setM  ( m_M  ) ;
+  m_bugg.setG2 ( m_g2 ) ;
+  m_bugg.setB1 ( m_b1 ) ;
+  m_bugg.setB2 ( m_b2 ) ;
+  m_bugg.setA  ( m_a  ) ;
+  m_bugg.setS1 ( m_s1 ) ;
+  m_bugg.setS2 ( m_s2 ) ;
+  //
+  return m_bugg.amplitude ( m_x  ) ;
+}
+// ============================================================================
+
+
+
+
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::Bugg23L::Bugg23L  
+( const char*          name               , 
+  const char*          title              ,
+  RooAbsReal&          x                  ,
+  RooAbsReal&          M                  ,   // sigma M 
+  RooAbsReal&          g2                 ,   // sigma G2 
+  RooAbsReal&          b1                 ,   // sigma B1 
+  RooAbsReal&          b2                 ,   // sigma B2
+  RooAbsReal&          a                  ,   // sigma a 
+  RooAbsReal&          s1                 ,   // sigma s1 
+  RooAbsReal&          s2                 ,   // sigma s2 
+  const double         m1                 ,   // mass of pi GeV 
+  const double         m3                 ,   // mass of third particle 
+  const double         m                  ,   // mass of mother  
+  const unsigned short L                  )
+  : RooAbsPdf ( name , title ) 
+//
+  , m_x     ( "x"     , "Observable"      , this , x     ) 
+  , m_M     ( "M"     , "Bugg/M"          , this , M     ) 
+  , m_g2    ( "g2"    , "Bugg/G2"         , this , g2    ) 
+  , m_b1    ( "b1"    , "Bugg/b1"         , this , b1    )
+  , m_b2    ( "b2"    , "Bugg/b2"         , this , b2    )
+  , m_a     ( "a"     , "Bugg/a"          , this , a     )
+  , m_s1    ( "s1"    , "Bugg/s1"         , this , s1    )
+  , m_s2    ( "s2"    , "Bugg/s2"         , this , s2    )
+//
+  , m_bugg  ( 0.92 , 0.0024 , 0.5848 , 1.6663 , 1.082 , 2.8 , 3.5 , m1 , m3 , m , L )  
+{
+  m_bugg.setM  ( m_M  ) ;
+  m_bugg.setG2 ( m_g2 ) ;
+  m_bugg.setB1 ( m_b1 ) ;
+  m_bugg.setB2 ( m_b2 ) ;
+  m_bugg.setA  ( m_a  ) ;
+  m_bugg.setS1 ( m_s1 ) ;
+  m_bugg.setS2 ( m_s2 ) ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::Bugg23L::Bugg23L 
+( const Analysis::Models::Bugg23L& right , 
+  const char*                      name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x     ( "x"     , this , right.m_x     ) 
+  , m_M     ( "M"     , this , right.m_M     ) 
+  , m_g2    ( "g2"    , this , right.m_g2    ) 
+  , m_b1    ( "b1"    , this , right.m_b1    )
+  , m_b2    ( "b2"    , this , right.m_b2    )
+  , m_a     ( "a"     , this , right.m_a     )
+  , m_s1    ( "s1"    , this , right.m_s1    )
+  , m_s2    ( "s2"    , this , right.m_s2    )
+//
+  , m_bugg  ( right.m_bugg ) 
+{
+  m_bugg.setM  ( m_M  ) ;
+  m_bugg.setG2 ( m_g2 ) ;
+  m_bugg.setB1 ( m_b1 ) ;
+  m_bugg.setB2 ( m_b2 ) ;
+  m_bugg.setA  ( m_a  ) ;
+  m_bugg.setS1 ( m_s1 ) ;
+  m_bugg.setS2 ( m_s2 ) ;
+}
+// ============================================================================
+Analysis::Models::Bugg23L::~Bugg23L(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Bugg23L*
+Analysis::Models::Bugg23L::clone( const char* name ) const 
+{ return new Analysis::Models::Bugg23L ( *this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Bugg23L::evaluate() const 
+{
+  m_bugg.setM  ( m_M  ) ;
+  m_bugg.setG2 ( m_g2 ) ;
+  m_bugg.setB1 ( m_b1 ) ;
+  m_bugg.setB2 ( m_b2 ) ;
+  m_bugg.setA  ( m_a  ) ;
+  m_bugg.setS1 ( m_s1 ) ;
+  m_bugg.setS2 ( m_s2 ) ;
+  //
+  return m_bugg ( m_x  ) ;
+}
+// ===========================================================================
+// get the complex amplitude 
+// ===========================================================================
+std::complex<double> 
+Analysis::Models::Bugg23L::amplitude() const 
+{
+  m_bugg.setM  ( m_M  ) ;
+  m_bugg.setG2 ( m_g2 ) ;
+  m_bugg.setB1 ( m_b1 ) ;
+  m_bugg.setB2 ( m_b2 ) ;
+  m_bugg.setA  ( m_a  ) ;
+  m_bugg.setS1 ( m_s1 ) ;
+  m_bugg.setS2 ( m_s2 ) ;
+  //
+  return m_bugg.amplitude ( m_x  ) ;
+}
+// ============================================================================
+
+
 
 
 // ============================================================================

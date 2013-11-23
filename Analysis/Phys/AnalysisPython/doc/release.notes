@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2013-11-23 - Vanya Belyaev
+ - adjust a bit Bugg&Co family of functions 
+
 ! 2013-10-27 - Vanya Belyaev
  - Add GetNdata for the Analysis::Formula 
 

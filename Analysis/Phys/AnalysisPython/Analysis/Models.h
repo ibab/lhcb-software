@@ -92,8 +92,10 @@ namespace Analysis
       // ======================================================================
     public:
       // ======================================================================
+      /// get the amplitude 
+      std::complex<double>            amplitude () const  ;
       /// access to underlying function 
-      const Gaudi::Math::BreitWigner& function() const { return m_bw ; }
+      const Gaudi::Math::BreitWigner& function  () const { return m_bw ; }
       // ======================================================================
     protected:
       // ======================================================================
@@ -146,6 +148,131 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class Kstar
+     *
+     *  J.D.Jackson, 
+     *  "Remarks on the Phenomenological Analysis of Resonances",
+     *  In Nuovo Cimento, Vol. XXXIV, N.6
+     *
+     *  http://www.springerlink.com/content/q773737260425652/
+     *
+     *  @see Analysis::Models::BreitWigner
+     *  @see Gaudi::Math::BreitWigner
+     *  @see Gaudi::Math::Kstar
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API Kstar : public Analysis::Models::BreitWigner
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::Kstar, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Kstar ( const char*          name      , 
+              const char*          title     ,
+              RooAbsReal&          x         ,
+              RooAbsReal&          mass      ,
+              RooAbsReal&          width     ,
+              const double         k_mass    , 
+              const double         pi_mass   ) ;
+      /// "copy" constructor 
+      Kstar ( const Kstar& , const char* name = 0 ) ;
+      /// virtual destructor 
+      virtual ~Kstar () ;
+      /// clone 
+      virtual  Kstar* clone ( const char* name ) const ; 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class BW23L
+     *
+     *  J.D.Jackson, 
+     *  "Remarks on the Phenomenological Analysis of Resonances",
+     *  In Nuovo Cimento, Vol. XXXIV, N.6
+     *
+     *  http://www.springerlink.com/content/q773737260425652/
+     *
+     *  @see Gaudi::Math::BreitWigner
+     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @date 2011-11-30
+     */
+    class GAUDI_API BW23L : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::BW23L, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      BW23L ( const char*          name      , 
+              const char*          title     ,
+              RooAbsReal&          x         ,
+              RooAbsReal&          mass      ,
+              RooAbsReal&          width     ,
+              const double         m1        , 
+              const double         m2        ,
+              const unsigned short l         , 
+              //
+              const double         m3        , 
+              const double         m         , 
+              const double         L         ) ;      
+      /// constructor from all parameters 
+      BW23L ( const char*          name      , 
+              const char*          title     ,
+              RooAbsReal&          x         ,
+              RooAbsReal&          mass      ,
+              RooAbsReal&          width     ,
+              const double         m1        , 
+              const double         m2        ,
+              const unsigned short l                         ,
+              const Gaudi::Math::BreitWigner::JacksonRho rho , 
+              //
+              const double         m3        , 
+              const double         m         , 
+              const double         L         ) ;
+      /// constructor from main parameters and "shape"
+      BW23L ( const char*          name      , 
+              const char*          title     , 
+              RooAbsReal&          x         ,
+              RooAbsReal&          mass      ,
+              RooAbsReal&          width     ,
+              const Gaudi::Math::BW23L& bw   ) ; // shape 
+      /// "copy" constructor 
+      BW23L ( const BW23L& , const char* name = 0 ) ;
+      /// virtual destructor 
+      virtual ~BW23L() ;
+      /// clone 
+      virtual BW23L* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t     evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the amplitude 
+      std::complex<double>      amplitude () const  ;
+      /// access to underlying function 
+      const Gaudi::Math::BW23L& function  () const { return m_bw ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x     ;
+      RooRealProxy m_mass  ;
+      RooRealProxy m_width ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::BW23L m_bw ;            // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class Flatte
      *
      *  S.M.Flatte, 
@@ -190,8 +317,10 @@ namespace Analysis
       // ======================================================================
     public:
       // ======================================================================
+      /// get the amplitude 
+      virtual std::complex<double> amplitude () const  ;
       /// access to underlying function 
-      const Gaudi::Math::Flatte& function() const { return m_flatte ; }
+      const Gaudi::Math::Flatte&   function  () const { return m_flatte ; }
       // ======================================================================
     protected:
       // ======================================================================
@@ -248,6 +377,11 @@ namespace Analysis
       // ======================================================================
     public:
       // ======================================================================
+      /// get the amplitude 
+      virtual std::complex<double> amplitude () const  ;
+      // ======================================================================
+    public:
+      // ======================================================================
       // the actual evaluation of function 
       virtual Double_t evaluate() const ;
       // ======================================================================
@@ -287,7 +421,7 @@ namespace Analysis
       // ======================================================================
     public:
       // ======================================================================
-      /// access to underlying function 
+      /// access to underlying function       /// access to underlying function 
       const Gaudi::Math::PhaseSpace2& function() const { return m_ps2 ; }
       // ======================================================================
     protected:
@@ -676,8 +810,10 @@ namespace Analysis
       // ======================================================================
     public:
       // ======================================================================
+      /// get the amplitude 
+      std::complex<double>     amplitude () const ;
       /// access to underlying function 
-      const Gaudi::Math::LASS& function() const { return m_lass ; }
+      const Gaudi::Math::LASS& function  () const { return m_lass ; }
       // ======================================================================
     protected:
       // ======================================================================
@@ -690,11 +826,6 @@ namespace Analysis
       RooRealProxy m_a     ;
       RooRealProxy m_r     ;
       RooRealProxy m_e     ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// get the complex amplitude 
-      std::complex<double> amplitude() const ; // get the complex amplitude 
       // ======================================================================
     private:
       // ======================================================================
@@ -745,8 +876,10 @@ namespace Analysis
       // ======================================================================
     public:
       // ======================================================================
+      /// get the complex amplitude 
+      std::complex<double>        amplitude () const ; // get the complex amplitude 
       /// access to underlying function 
-      const Gaudi::Math::LASS23L& function() const { return m_lass ; }
+      const Gaudi::Math::LASS23L& function  () const { return m_lass ; }
       // ======================================================================
     protected:
       // ======================================================================
@@ -760,15 +893,264 @@ namespace Analysis
       RooRealProxy m_r     ;
       RooRealProxy m_e     ;
       // ======================================================================
-    public:
-      // ======================================================================
-      /// get the complex amplitude 
-      std::complex<double> amplitude() const ; // get the complex amplitude 
-      // ======================================================================
     private:
       // ======================================================================
       /// the actual function 
       mutable Gaudi::Math::LASS23L m_lass ;              // the actual function 
+      // ======================================================================
+    } ;    
+    // ========================================================================
+    /** @class Bugg
+     *  parametrisation of sigma-pole for
+     *  two pion mass distribution
+     *
+     *  The parameterization of sigma pole by
+     *  B.S.Zou and D.V.Bugg, Phys.Rev. D48 (1993) R3948.
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-04-01
+     *  @see Gaudi::Math::Bugg
+     */
+    class GAUDI_API Bugg : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::Bugg, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Bugg  ( const char*          name               , 
+              const char*          title              ,
+              RooAbsReal&          x                  ,
+              RooAbsReal&          M                  ,   // sigma M 
+              RooAbsReal&          g2                 ,   // sigma G2 
+              RooAbsReal&          b1                 ,   // sigma B1 
+              RooAbsReal&          b2                 ,   // sigma B2
+              RooAbsReal&          a                  ,   // sigma a 
+              RooAbsReal&          s1                 ,   // sigma s1 
+              RooAbsReal&          s2                 ,   // sigma s2 
+              const double         m1    = 139.6/1000 ) ; // mass of pi GeV 
+      /// "copy constructor"
+      Bugg  ( const Bugg& right , const char* name = 0 )  ;
+      /// destructor 
+      virtual ~Bugg () ;
+      /// clone 
+      virtual  Bugg* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the amplitude 
+      std::complex<double>     amplitude () const ;
+      /// access to underlying function 
+      const Gaudi::Math::Bugg& function  () const { return m_bugg ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// the mass 
+      RooRealProxy m_x     ;
+      /// sigma/bugg parameters 
+      RooRealProxy m_M     ;
+      RooRealProxy m_g2    ;
+      RooRealProxy m_b1    ;
+      RooRealProxy m_b2    ;
+      RooRealProxy m_a     ;
+      RooRealProxy m_s1    ;
+      RooRealProxy m_s2    ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Bugg m_bugg ;              // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Bugg23L
+     *  parametrisation of sigma-pole for
+     *  two pion mass distribution form three body decays 
+     *
+     *  The parameterization of sigma pole by
+     *  B.S.Zou and D.V.Bugg, Phys.Rev. D48 (1993) R3948.
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-04-01
+     *  @see Gaudi::Math::Bugg23L
+     */
+    class GAUDI_API Bugg23L : public RooAbsPdf 
+    {
+    public:
+      // ======================================================================
+      ClassDef(Analysis::Models::Bugg23L, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Bugg23L ( const char*          name               , 
+                const char*          title              ,
+                RooAbsReal&          x                  ,
+                RooAbsReal&          M                  ,   // sigma M 
+                RooAbsReal&          g2                 ,   // sigma G2 
+                RooAbsReal&          b1                 ,   // sigma B1 
+                RooAbsReal&          b2                 ,   // sigma B2
+                RooAbsReal&          a                  ,   // sigma a 
+                RooAbsReal&          s1                 ,   // sigma s1 
+                RooAbsReal&          s2                 ,   // sigma s2 
+                const double         m1    = 139.6/1000 ,   // mass of pi GeV 
+                const double         m3 = 3097.0 / 1000 ,   //  GeV
+                const double         m  = 5278.0 / 1000 ,   // GeV
+                const unsigned short L  =    1          ) ;
+      /// "copy constructor"
+      Bugg23L ( const Bugg23L& right , const char* name = 0 )  ;
+      /// destructor 
+      virtual ~Bugg23L () ;
+      /// clone 
+      virtual  Bugg23L* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the amplitude 
+      std::complex<double>        amplitude () const ;
+      /// access to underlying function 
+      const Gaudi::Math::Bugg23L& function  () const { return m_bugg ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// the mass 
+      RooRealProxy m_x     ;
+      /// sigma/bugg parameters 
+      RooRealProxy m_M     ;
+      RooRealProxy m_g2    ;
+      RooRealProxy m_b1    ;
+      RooRealProxy m_b2    ;
+      RooRealProxy m_a     ;
+      RooRealProxy m_s1    ;
+      RooRealProxy m_s2    ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Bugg23L m_bugg ;              // the actual function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class CrystalBall
+     *  The special parametrization of ``Crystal Ball-function''
+     *  @see Gaudi::Math::CrystalBall
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-05-13
+     */
+    class GAUDI_API CrystalBall : public RooAbsPdf 
+    { 
+    public:
+      // ====================================================================== 
+      ClassDef(Analysis::Models::CrystalBall, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      CrystalBall
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          m0        ,
+        RooAbsReal&          sigma     ,  
+        RooAbsReal&          alpha     ,  
+        RooAbsReal&          n         ) ;  // n-1
+      /// "copy" constructor 
+      CrystalBall ( const CrystalBall& right , const char* name = 0 ) ;
+      /// virtual destructor 
+      virtual ~CrystalBall () ;
+      /// clone 
+      virtual  CrystalBall* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::CrystalBall& function() const { return m_cb ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_sigma  ;
+      RooRealProxy m_alpha  ;
+      RooRealProxy m_n      ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::CrystalBall m_cb ;                  // the function 
+      // ======================================================================
+    } ;    
+    // ========================================================================
+    /** @class CrystalBallRS
+     *  The special parametrization of ``Crystal Ball-function''
+     * rigth-side crystal ball 
+     *  @see Gaudi::Math::CrystalBallRightSide 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2012-05-13
+     */
+    class GAUDI_API CrystalBallRS : public RooAbsPdf 
+    { 
+    public:
+      // ====================================================================== 
+      ClassDef(Analysis::Models::CrystalBallRS, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      CrystalBallRS
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         ,
+        RooAbsReal&          m0        ,
+        RooAbsReal&          sigma     ,  
+        RooAbsReal&          alpha     ,  
+        RooAbsReal&          n         ) ;  // n-1
+      /// "copy" constructor 
+      CrystalBallRS ( const CrystalBallRS& right , const char* name = 0 ) ;
+      /// virtual destructor 
+      virtual ~CrystalBallRS () ;
+      /// clone 
+      virtual  CrystalBallRS* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::CrystalBallRightSide& function() const { return m_cb ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_sigma  ;
+      RooRealProxy m_alpha  ;
+      RooRealProxy m_n      ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::CrystalBallRightSide m_cb ;  // the function 
       // ======================================================================
     } ;
     // ========================================================================
@@ -849,6 +1231,7 @@ namespace Analysis
      *  double-sided ``Crystal Ball-function'' 
      *  for description of gaussian with the tail
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @see Gaudi::Math::CrystalBallDoubleSided
      *  @date 2011-05-25
      */
     class GAUDI_API CrystalBallDS : public RooAbsPdf 
@@ -866,10 +1249,10 @@ namespace Analysis
         RooAbsReal&          x         ,
         RooAbsReal&          m0        ,
         RooAbsReal&          sigma     ,  //    
-        RooAbsReal&          alphaL    ,  // alpha_L - 1   
+        RooAbsReal&          alphaL    ,  // alpha_L 
         RooAbsReal&          nL        ,  //     n_L - 1   
         RooAbsReal&          alphaR    ,  // alpha_R - 1   
-        RooAbsReal&          nR        ); //     n_R - 1 
+        RooAbsReal&          nR        ); //     n_R 
       /// "copy" constructor 
       CrystalBallDS ( const CrystalBallDS& right , const char* name = 0 ) ;
       /// virtual destructor 

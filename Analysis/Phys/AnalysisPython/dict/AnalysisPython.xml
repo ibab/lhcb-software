@@ -24,6 +24,7 @@
   <class name = "Analysis::PyIterator"                />
   <class name = "Analysis::Models::BreitWigner"       />
   <class name = "Analysis::Models::Rho0"              />
+  <class name = "Analysis::Models::Kstar"             />
   <class name = "Analysis::Models::Flatte"            />
   <class name = "Analysis::Models::Flatte2"           />
   <class name = "Analysis::Models::Bukin"             />
@@ -34,11 +35,16 @@
   <class name = "Analysis::Models::PhaseSpaceRight"   />
   <class name = "Analysis::Models::PhaseSpacePol"     />
   <class name = "Analysis::Models::Needham"           />
+  <class name = "Analysis::Models::CrystalBall"       />
+  <class name = "Analysis::Models::CrystalBallRS"     />
   <class name = "Analysis::Models::CrystalBallDS"     />
   <class name = "Analysis::Models::GramCharlierA"     />
   <class name = "Analysis::Models::Voigt"             />
   <class name = "Analysis::Models::LASS"              />
+  <class name = "Analysis::Models::Bugg"              />
   <class name = "Analysis::Models::LASS23L"           />
+  <class name = "Analysis::Models::Bugg23L"           />
+  <class name = "Analysis::Models::BW23L"             />
   <class name = "Analysis::Models::PolyPositive"      />
   <class name = "Analysis::Models::ExpoPositive"      />
   <class name = "Analysis::Models::Poly2DPositive"    />
