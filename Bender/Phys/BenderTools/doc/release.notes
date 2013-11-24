@@ -5,6 +5,9 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! 2013-11-24 - Vanya Belyaev
+ - minor fix in fillMasses 
+
 ! ==================== Phys/BenderTools v22r9    2013-10-11 ====================
 
 ! 2013-10-11 - Vanya Belyaev

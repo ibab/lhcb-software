@@ -109,6 +109,7 @@ def _fill_initialize ( self ) :
     #
     self._min_CL_gamma  = MINTREE ( 'gamma' == ID , CL ) 
     self._min_Et_gamma  = MINTREE ( 'gamma' == ID , PT ) / GeV 
+    self._min_E_gamma   = MINTREE ( 'gamma' == ID ,  E ) / GeV 
     #
     self._maxTrChi2       = MAXTREE ( ISBASIC & HASTRACK , TRCHI2DOF    )
     self._maxTrGhost      = MAXTREE ( ISBASIC & HASTRACK , TRGHOSTPROB  )
@@ -127,7 +128,8 @@ def _fill_initialize ( self ) :
     self._maxEcalE      = MAXTREE ( 'mu+' == ABSID , self._EcalE )
     self._maxHcalE      = MAXTREE ( 'mu+' == ABSID , self._HcalE )
     #
-    self._delta_m2      = LoKi.PhysKinematics.deltaM2 
+    self._delta_m2      = LoKi.PhysKinematics.deltaM2
+    self._masses        = {} 
     #
     return SUCCESS 
 
@@ -173,6 +175,7 @@ def _fill_finalize   ( self ) :
     self._min_Eta       = None 
     self._max_Eta       = None
     #
+    self._min_E_gamma   = None 
     self._min_Et_gamma  = None 
     self._min_CL_gamma  = None 
     #
@@ -192,7 +195,8 @@ def _fill_finalize   ( self ) :
     self._maxEcalE     = None 
     self._maxHcalE     = None 
     #
-    self._delta_m2     = None 
+    self._delta_m2     = None
+    self._masses       = None 
     #
     return SUCCESS 
 
@@ -213,6 +217,9 @@ def treatPions ( self         ,
     #
     good  = LHCb.Particle.ConstVector()
     p.children ( self._pions , good ) 
+    #
+    _cnt  = self.counter ( '#pion' + suffix )
+    _cnt += good.size()
     #
     sc = tup.column_float ( 'mindll_piK' + suffix , self._min_dll_Pi    ( p ) ) 
     sc = tup.column_float ( 'minann_pi'  + suffix , self._min_annpid_Pi ( p ) ) 
@@ -246,6 +253,9 @@ def treatKaons ( self         ,
     good  = LHCb.Particle.ConstVector()
     p.children ( self._kaons , good ) 
     #
+    _cnt  = self.counter ( '#kaon' + suffix )
+    _cnt += good.size()
+    #
     sc = tup.column_float ( 'mindll_K' + suffix , self._min_dll_K     ( p ) ) 
     sc = tup.column_float ( 'minann_K' + suffix , self._min_annpid_K  ( p ) ) 
     #
@@ -277,6 +287,9 @@ def treatProtons ( self         ,
     #
     good   = LHCb.Particle.ConstVector()
     p.children ( self._protons , good ) 
+    #
+    _cnt  = self.counter ( '#proton' + suffix )
+    _cnt += good.size()
     #
     sc = tup.column_float ( 'mindll_pK'  + suffix , self._min_dll_PK   ( p ) ) 
     sc = tup.column_float ( 'mindll_ppi' + suffix , self._min_dll_Ppi  ( p ) ) 
@@ -312,7 +325,11 @@ def treatPhotons ( self         ,
     good   = LHCb.Particle.ConstVector()
     p.children ( self._gamma , good ) 
     #
+    _cnt  = self.counter ( '#gamma' + suffix )
+    _cnt += good.size()
+    #
     sc = tup.column_float ( 'minEt_gamma'  + suffix , self._min_Et_gamma ( p ) ) 
+    sc = tup.column_float ( 'minE_gamma'   + suffix , self._min_E_gamma  ( p ) ) 
     sc = tup.column_float ( 'minCl_gamma'  + suffix , self._min_CL_gamma ( p ) ) 
     #
     tup.fArrayP (
@@ -345,6 +362,9 @@ def treatDiGamma ( self         ,
     good   = LHCb.Particle.ConstVector()
     p.children ( self._digamma , good ) 
     #
+    _cnt  = self.counter ( '#digamma' + suffix )
+    _cnt += good.size()
+    #
     tup.fArrayP (
         'e_digamma'    + suffix       , P   / GeV , 
         'et_digamma'   + suffix       , PT  / GeV , 
@@ -373,6 +393,9 @@ def treatMuons ( self         ,
     #
     good    = LHCb.Particle.ConstVector()
     p.children ( self._muons , good ) 
+    #
+    _cnt  = self.counter ( '#muon' + suffix )
+    _cnt += good.size()
     #
     sc = tup.column_float ( 'mindll_mu'   + suffix , self._min_dll_Mu    ( p ) ) 
     sc = tup.column_float ( 'minann_mu'   + suffix , self._min_annpid_Mu ( p ) ) 
@@ -410,6 +433,9 @@ def treatTracks ( self         ,
     #
     good   = LHCb.Particle.ConstVector()
     p.children ( self._tracks , good ) 
+    #
+    _cnt  = self.counter ( '#track' + suffix )
+    _cnt += good.size()
     #
     ## calcualate the minimal mass variable 
     m2min = 2.0
@@ -499,26 +525,109 @@ def treatKine ( self          ,
     return SUCCESS
 
 # =============================================================================
-## fill information about masses 
+## fill information about masses
+#
+#  @code
+#
+#  tup = ...
+#    
+#  b   = ...
+#
+#  ## var-names will be m12, m23, ...
+#  self.fillMasses ( tup , b )  ## no constraints are applies 
+#    
+#  ## var-names will be m12c, m23c, ...
+#  ## last two parameters are propagated to Decay Tree Fitter
+#  self.fillMasses ( tup , b , 'c' , True , 'J/psi(1S)')  ## with constraints
+#
+#  @endcode
+#
 def fillMasses ( self        ,
                  tup         ,
                  b           ,
-                 suffix = '' ) :
+                 suffix      ,
+                 *args       ) :
     """
-    fill infomation about masses         
+    Fill information about mass of all sub-combinations 
+    
+    tup = ...
+    
+    b   = ...
+    
+    ## var-names will be m12, m23, ...
+    self.fillMasses ( tup , b )  ## no constraints are applies 
+    
+    ## var-names will be m12c, m23c, ...
+    ## last parameters are propagated to Decay Tree Fitter
+    self.fillMasses ( tup , b , 'c' , True , 'J/psi(1S)')  ## with constraints
+    
     """
+    if not self._masses.has_key (suffix) :
+        self._masses[suffix] = {}
+        
     nc = b.nChildren()
-    for i in range ( 1 , nc + 1 )  :
-        for j in range ( i + 1 , nc + 1 ) :
-            m2 = MASS ( i , j )
-            tup.column_float ( 'm%s%s' % ( i , j ) + suffix , m2 ( b ) / GeV )
-            for k in range ( j + 1 , nc + 1 ) :
-                m3 = MASS ( i , j , k )
-                tup.column_float ( 'm%s%s%s' % ( i , j , k ) + suffix , m3 ( b ) / GeV )
-                for l in range ( k + 1 , nc + 1 ) :
-                    m4 = MASS ( i , j , k , l )
-                    tup.column_float ( 'm%s%s%s%s' % ( i , j , k , l ) + suffix , m4 ( b ) / GeV )
+        
+    _ms = self._masses[suffix]
+    
+    nc = b.nChildren()
+
+    if not _ms :
+
+        ##
+        for i in range ( 1 , nc + 1 )  :
+            
+            bi = b(i)
+            if bi and not bi.isBasicParticle() : 
+                k1 = "m%d" % i 
+                m1 = MASS  ( i )
+                if args : m1 = DTF_FUN ( m1 , *args )
+                _ms [ k1 + suffix ]  =   m1
+
+            ##
+            for j in range ( i + 1 , nc + 1 ) :
+                
+                k2 = "m%d%d" % ( i , j )
+                m2 =   MASS    ( i , j )
+                if args : m2 = DTF_FUN ( m2 , *args )
+                _ms [ k2 + suffix ]  =   m2
+
+                ##
+                for k in range ( j + 1 , nc + 1 ) :
                     
+                    k3 = "m%d%d%d" % ( i , j , k )
+                    m3 =     MASS    ( i , j , k )
+                    if args : m3 = DTF_FUN ( m3 , *args )
+                    _ms [ k3 + suffix ]  =   m3
+
+                    ## 
+                    for l in range ( k + 1 , nc + 1 ) :
+                        
+                        k4 = "m%d%d%d%d" % ( i , j , k , l )
+                        m4 =       MASS    ( i , j , k , l )
+                        if args : m4 = DTF_FUN ( m4 , *args )
+                        _ms [ k4 + suffix ]  =   m4
+                        
+                        ## 
+                        for m in range ( l + 1 , nc + 1 ) :
+                            
+                            k5 = "m%d%d%d%d%d" % ( i , j , k , l , m )
+                            
+                            _ind5 = LoKi.Particles.InvariantMass.Indices ()
+                            
+                            _ind5 . push_back ( i )
+                            _ind5 . push_back ( j )
+                            _ind5 . push_back ( k )
+                            _ind5 . push_back ( l )
+                            _ind5 . push_back ( m )
+                            
+                            m5 = MASS     ( _ind5 )
+                            if args : m5 = DTF_FUN ( m5 , *args )
+                            _ms [ k5 + suffix ]  =   m5
+
+    ## finally fill n-tuple 
+    for k in _ms :
+        tup.column_float ( k , _ms [ k ] ( b ) / GeV )
+
     return SUCCESS
 
 # =============================================================================
