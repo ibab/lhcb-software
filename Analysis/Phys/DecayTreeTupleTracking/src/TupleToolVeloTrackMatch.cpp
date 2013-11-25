@@ -32,7 +32,7 @@ DECLARE_TOOL_FACTORY(TupleToolVeloTrackMatch)
   declareInterface<IParticleTupleTool>(this);
   declareProperty("ConeAngle", m_slopediff = 0.05);
   declareProperty("ConeAroundMomentum", m_momentumcone = false);
-  declareProperty("Verbose", m_verbose = false);
+  declareProperty("VerboseInfo", m_verbose = false);
 }
 
 //=============================================================================

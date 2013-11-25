@@ -4,6 +4,8 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-11-25 - Andrea Contu
+ - Minor change in TupleTollVeloTrackMatch, one property has been renamed.
 
 ! 2013-11-21 - Andrea Contu
  - Added TupleToolVeloTrackMatch. It fills variables related to the matching of a velo track 
