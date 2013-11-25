@@ -24,7 +24,7 @@
 # =============================================================================
 project BENDER
 
-use DAVINCI	DAVINCI_v33r7p1
+use DAVINCI	DAVINCI_v33r8
 
 container       BenderSys
 build_strategy	with_installarea
