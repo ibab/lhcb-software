@@ -24,8 +24,9 @@ fi
 # Adding EOS to the path from AFS if available 
 EOS_LHCB=/afs/cern.ch/project/eos/installation/lhcb
 if [ -d $EOS_LHCB ]; then
-    export PATH=${PATH}:${EOS_LHCB}/bin
-    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${EOS_LHCB}/lib64
-    export EOS_MGM_URL=root://eoslhcb.cern.ch
+    source ${EOS_LHCB}/etc/setup.sh
+    #export PATH=${PATH}:${EOS_LHCB}/bin
+    #export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${EOS_LHCB}/lib64
+    #export EOS_MGM_URL=root://eoslhcb.cern.ch
 fi
 
