@@ -28,8 +28,8 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Rec/RecAlgs
                          Rec/RecConf
                          Rec/RecInterfaces
-                         Rec/RecoUpgrade
-                         Rec/RecoUpgradeMC
+                         #Rec/RecoUpgrade
+                         #Rec/RecoUpgradeMC
                          Rich/RichAlignment
                          Rich/RichENNRingFinder
                          Rich/RichGlobalPID

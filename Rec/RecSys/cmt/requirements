@@ -43,8 +43,8 @@ use RecConf              v2r14   Rec  # Rob Lambert
 use RecInterfaces        v1r1    Rec  # Chris Jones
 
 # Non sub-detector specific components upgrade related
-use RecoUpgrade          v3r2    Rec  #
-use RecoUpgradeMC        v2r2    Rec  #
+#use RecoUpgrade          v3r2    Rec  #
+#use RecoUpgradeMC        v2r2    Rec  #
 
 # Rich
 use RichAlignment        v1r8p1  Rich # Chris Jones, Antonis Papanestis
