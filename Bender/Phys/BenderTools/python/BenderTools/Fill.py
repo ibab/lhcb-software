@@ -623,7 +623,25 @@ def fillMasses ( self        ,
                             m5 = MASS     ( _ind5 )
                             if args : m5 = DTF_FUN ( m5 , *args )
                             _ms [ k5 + suffix ]  =   m5
-
+                            
+                            for n in range ( m + 1 , nc + 1 ) :
+                                
+                                k6 = "m%d%d%d%d%d" % ( i , j , k , l , m , n )
+                                
+                                _ind6 = LoKi.Particles.InvariantMass.Indices ()
+                                
+                                _ind5 . push_back ( i )
+                                _ind5 . push_back ( j )
+                                _ind5 . push_back ( k )
+                                _ind5 . push_back ( l )
+                                _ind5 . push_back ( m )
+                                _ind5 . push_back ( n )
+                                
+                                m6 = MASS     ( _ind6 )
+                                if args : m6 = DTF_FUN ( m6 , *args )
+                                _ms [ k6 + suffix ]  =   m6
+                                
+                                
     ## finally fill n-tuple 
     for k in _ms :
         tup.column_float ( k , _ms [ k ] ( b ) / GeV )
