@@ -7,6 +7,11 @@
 
 !========================= FlavourTagging v13r3 2013-10-02 =========================
 
+! 2013-11-25 - Katharina Kreplin
+ - Updated Tunings.py for NNet OSK : 
+    - Reco14_2012  --> data calibration
+    - Reco14_MC12  --> MC calibration
+
 ! 2013-11-21 - Katharina Kreplin
  - NNet OSK changes: 
     - Reco 14 only

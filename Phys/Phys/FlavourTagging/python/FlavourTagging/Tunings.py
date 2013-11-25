@@ -101,13 +101,13 @@ tunings = {
         "TaggerNEWKaonOppositeTool.Kaon_PIDkp_cut":   -3.,
         "TaggerNEWKaonOppositeTool.Kaon_distPhi_cut":  0.005,
         "TaggerNEWKaonOppositeTool.Kaon_tsa_cut":   -999.0, # formerly Kaon_ghost_cut
-        "TaggerNEWKaonOppositeTool.Kaon_ipPU_cut":     7.5,
+        "TaggerNEWKaonOppositeTool.Kaon_ipPU_cut":     3.0,
         "TaggerNEWKaonOppositeTool.Kaon_ghost_cut":    0.5,
-        "TaggerNEWKaonOppositeTool.Kaon_NN1_cut":      0.3,
-        "TaggerNEWKaonOppositeTool.Kaon_ProbMin":      0.48,
-        "TaggerNEWKaonOppositeTool.Kaon_P0_Cal":       0.4520, #+/- 0.0008
-        "TaggerNEWKaonOppositeTool.Kaon_P1_Cal":       1.0470, #+/- 0.0179
-        "TaggerNEWKaonOppositeTool.Kaon_AverageOmega": 0.4496,
+        "TaggerNEWKaonOppositeTool.Kaon_NN1_cut":      0.6,
+        "TaggerNEWKaonOppositeTool.Kaon_ProbMin":      0.5,
+        "TaggerNEWKaonOppositeTool.Kaon_P0_Cal":       0.4363, #+/- 0.0011
+        "TaggerNEWKaonOppositeTool.Kaon_P1_Cal":       1.0890, #+/- 0.0288
+        "TaggerNEWKaonOppositeTool.Kaon_AverageOmega": 0.4348,
 
         "TaggerKaonSameTool.KaonSame_Pt_cut" : 850,
         "TaggerKaonSameTool.KaonSame_P_cut"  : 5250,
@@ -611,13 +611,13 @@ tunings = {
         "TaggerNEWKaonOppositeTool.Kaon_PIDkp_cut":   -3.,
         "TaggerNEWKaonOppositeTool.Kaon_distPhi_cut":  0.005,
         "TaggerNEWKaonOppositeTool.Kaon_tsa_cut":   -999.0, # formerly Kaon_ghost_cut
-        "TaggerNEWKaonOppositeTool.Kaon_ipPU_cut":     7.5,
+        "TaggerNEWKaonOppositeTool.Kaon_ipPU_cut":     3.0,
         "TaggerNEWKaonOppositeTool.Kaon_ghost_cut":    0.5,
-        "TaggerNEWKaonOppositeTool.Kaon_NN1_cut":      0.3,
-        "TaggerNEWKaonOppositeTool.Kaon_ProbMin":      0.48,
-        "TaggerNEWKaonOppositeTool.Kaon_P0_Cal":       0.414,
-        "TaggerNEWKaonOppositeTool.Kaon_P1_Cal":       1.48,
-        "TaggerNEWKaonOppositeTool.Kaon_AverageOmega": 0.434,
+        "TaggerNEWKaonOppositeTool.Kaon_NN1_cut":      0.6,
+        "TaggerNEWKaonOppositeTool.Kaon_ProbMin":      0.5,
+        "TaggerNEWKaonOppositeTool.Kaon_P0_Cal":       0.4146, #+/- 0.0032
+        "TaggerNEWKaonOppositeTool.Kaon_P1_Cal":       1.2640, #+/- 0.0537
+        "TaggerNEWKaonOppositeTool.Kaon_AverageOmega": 0.4262,
 
         "TaggerKaonSameTool.KaonSame_Pt_cut" : 850,
         "TaggerKaonSameTool.KaonSame_P_cut"  : 5250,
