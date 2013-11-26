@@ -33,7 +33,3 @@ library          PatAlgorithms    ../src/*.cpp
 #=========================================================================
 apply_pattern    install_python_modules
 apply_pattern    component_library library=PatAlgorithms
-
-macro_append cppflags " -ftree-vectorize -march=native -ftree-vectorizer-verbose=7 -ffast-math -funsafe-loop-optimizations -ftree-loop-if-convert-stores "
-macro_append fflags   " -ftree-vectorize -march=native -ftree-vectorizer-verbose=7 -ffast-math -funsafe-loop-optimizations -ftree-loop-if-convert-stores "
-macro_append cflags   " -ftree-vectorize -march=native -ftree-vectorizer-verbose=7 -ffast-math -funsafe-loop-optimizations -ftree-loop-if-convert-stores "
