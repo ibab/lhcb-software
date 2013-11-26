@@ -325,6 +325,8 @@ class RawEventJuggler(ConfigurableUser):
             aloc=_replaceWrap(aloc)
             if not aloc.startswith(self.getProp("RootInTES")):
                 aloc=(self.getProp("RootInTES")+"/"+aloc).replace("//","/")
+            if aloc.endswith("/"):
+                aloc=aloc.rstrip("/")
             if not aloc.endswith(self.getProp("Depth")):
                 aloc=aloc+self.getProp("Depth")
             retlist.append(aloc)

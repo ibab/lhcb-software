@@ -68,7 +68,7 @@ if [ent.getFullName() for ent in GS("JuggleRawEvent").Members] != ['bankKiller/k
     print [ent.getFullName() for ent in GS("JuggleRawEvent").Members]
     raise ValueError("Configuration order or members are wrong")
 
-if ics("WriteAsOptItems").OptItemList!=os("WriteAsItems").ItemList or ics("WriteAsOptItems").OptItemList!=['/Foo#1', '/Bar#1', '/SpamAndEggs#1', 'FooBar/Null/#1']:
+if ics("WriteAsOptItems").OptItemList!=os("WriteAsItems").ItemList or ics("WriteAsOptItems").OptItemList!=['/Event/Foo#1', '/Event/Bar#1', '/Event/SpamAndEggs#1', '/Event/FooBar/Null#1']:
     print ics("WriteAsOptItems").OptItemList, os("WriteAsItems").ItemList
     raise ValueError("Output locations are wrong")
 

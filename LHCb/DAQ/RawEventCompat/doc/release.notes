@@ -7,6 +7,7 @@
 ! 2013-11-26 - Rob Lambert
  - Check for bad/unknown banks!
  - Fix missing addition of Depth!! Why did I remove it?
+ - Adapt test to new addition of /Event/ when needed (always?)
 
 ! 2013-11-22 - Rob Lambert
  - Solve bug due to lack of _checkv in some configurables/methods
