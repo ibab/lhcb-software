@@ -20,5 +20,3 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use FastVelo      v1r14 Tf
-use PatAlgorithms v4r29 Tf
