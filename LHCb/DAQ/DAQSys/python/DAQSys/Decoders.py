@@ -110,16 +110,24 @@ Decoder("RawBankToSTClusterAlg/createITClusters",
 #outputs={"clusterLocation":"Raw/IT/LiteClusters"}, set logically in the code, resetting may not work...
 
 #===========OT===========
-Decoder("OTTimeCreator",
-        active=True,banks=["OT","OTFull","OTError"],
-        privateTools=["OTRawBankDecoder/RawBankDecoder"],#tool handle??
+ott=Decoder("OTTimeCreator", #the only one which makes a TES location
+        active=True,banks=["OT","OTRaw","OTError"],
+        #privateTools=["OTRawBankDecoder/RawBankDecoder"],#tool handle??
+        #I hope the tool handle actually calls *this* public tool...
+        publicTools=["OTRawBankDecoder/ToolSvc.OTRawBankDecoder"],
         outputs={"OutputLocation": None},
         conf=DecoderDB)
 
-Decoder("OTRawBankDecoder/RawBankDecoder",#tool handle??
+from GaudiKernel.SystemOfUnits import ns
+rbd=Decoder(ott.PublicTools[0],#tool handle??
+        banks=ott.Banks,
         active=False,
         inputs={"RawEventLocations":["Other/RawEvent","DAQ/RawEvent"]},
+        properties={"TimeWindow":(-8.0*ns, 56.0*ns)},
         conf=DecoderDB)
+
+#prbd=rbd.clone("OTRawBankDecoder/ToolSvc.OTRawBankDecoder")
+# copy into PublicTool, actually it's the same instance used in OTTimeCreator
 
 #===========SPD===========
 name="SpdFromRaw" #as in C++
@@ -208,6 +216,7 @@ Decoder("L0CaloCandidatesFromRaw/L0CaloFromRaw",
 Decoder("L0DUFromRawAlg/L0DUFromRaw",
         active=True, banks=["L0DU"],
         privateTools=["L0DUFromRawTool"],
+        inputs={"RawEventLocations" : None},
         outputs={"L0DUReportLocation": None, "ProcessorDataLocation": None},
         conf=DecoderDB)
 
@@ -255,6 +264,12 @@ Decoder("HltRoutingBitsFilter",
         active=False, banks=["HltRoutingBits"],
         inputs=["Trigger/RawEvent","DAQ/RawEvent"],
         #currently cannot be configured properly, it's a list not present in constructor
+        conf=DecoderDB)
+
+Decoder("HltLumiSummaryDecoder",
+        active=True, banks=["HltLumiSummary"],
+        inputs={"RawEventLocation":None},
+        outputs={"OutputContainerName":None},
         conf=DecoderDB)
 
 #UPGRADE ===========VP===========

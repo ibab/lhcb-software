@@ -1,0 +1,51 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>daqsys.decoder-setup</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
+  <argument name="args"><set>
+    <text>../options/setup-crazy-split.py</text>
+    <text>../options/read-split.py</text>
+    <text>--option</text>
+    <text>from PRConfig import TestFileDB; TestFileDB.test_file_db['2012_raw_default'].run();from Configurables import LHCbApp; LHCbApp().EvtMax=10; from GaudiConf import IOHelper; IOHelper().inputFiles(['crazy-split.dst'], clear=True);</text>
+  </set></argument>
+  <argument name="validator"><text>
+
+#check that the locations were actually overwritten!
+
+#check the configurable was configured, then check for certain configured locations, finally check for retrieval...
+lookfor=['# applying configuration of DecodeRawEvent',
+    '# |-OverrideInputs = 999  (default: None)',
+    "ToolSvc.OdinTim...  DEBUG Property ['Name': Value] =  'RawEventLocations':[ 'Crazy/RawEvent' ]",
+    "createTTClusters    DEBUG Property ['Name': Value] =  'RawEventLocations':[ 'Crazy/RawEvent' ]",
+    "SpdFromRaw.SpdF...  DEBUG Property ['Name': Value] =  'RawEventLocations':[ 'Crazy/RawEvent' ]",
+    "L0CaloFromRaw       DEBUG Property ['Name': Value] =  'RawEventLocations':[ 'Crazy/RawEvent' ]",
+    "createITLiteClu...  DEBUG Property ['Name': Value] =  'RawEventLocations':[ 'Crazy/RawEvent' ]",
+    "L0DUFromRaw.L0D...  DEBUG Property ['Name': Value] =  'RawLocations':[ 'Crazy/RawEvent' ]",
+    "PrsFromRaw.PrsF...  DEBUG Property ['Name': Value] =  'RawEventLocations':[ 'Crazy/RawEvent' ]",
+    "createVeloLiteC...  DEBUG Property ['Name': Value] =  'RawEventLocations':[ 'Crazy/RawEvent' ]",
+    "EcalZSup.EcalZS...  DEBUG Property ['Name': Value] =  'RawEventLocations':[ 'Crazy/RawEvent' ]",
+    "ToolSvc.OdinTim...  DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'Crazy/RawEvent'",
+    "createTTClusters    DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'Crazy/RawEvent'",
+    "SpdFromRaw.SpdF...  DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'Crazy/RawEvent'",
+    "L0CaloFromRaw       DEBUG The object of type 'LHCb::RawEvent*' has been retrieved from TS at address 'Crazy/RawEvent'"]
+
+found=[]
+
+for line in stdout.split("\n"):
+    if line.strip() in lookfor:
+        if line not in found:
+            found.append(line)
+
+if len(found)!=len(lookfor):
+    lost=[l for l in lookfor if l not in found]
+    causes.append("Required modifications not found")
+    result["daqsys.read-split-raw.missing"]=result.Quote("\n\t".join(lost))
+
+countErrorLines({"FATAL":0, "ERROR":10, "WARNING" :0})
+
+</text></argument>
+</extension>
+

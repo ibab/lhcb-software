@@ -24,6 +24,7 @@ use GaudiConf   v*
 
 use RawEventCompat v* DAQ
 use RawEventFormat v*
+use HltTCK v* TCK
 
 apply_pattern install_python_modules
 apply_pattern QMTest

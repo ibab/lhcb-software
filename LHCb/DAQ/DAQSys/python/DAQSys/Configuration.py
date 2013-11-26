@@ -16,7 +16,8 @@ def SetEvtClock(bank,db=None):
         #force to take the same public tool
         publicTool=odinconfs[0].PublicTools[0]
         from Configurables import EventClockSvc
-        EventClockSvc(EventTimeDecoder = publicTool)
+        #force it to use the same public tool as the rest of the ODIN decoding
+        EventClockSvc(EventTimeDecoder = publicTool.replace("ToolSvc.","")+":PUBLIC")
 
 
 class DecodeRawEvent(ConfigurableUser):
@@ -25,7 +26,7 @@ class DecodeRawEvent(ConfigurableUser):
     set DataOnDemand=True to simulate old configuration style
     
     Nominally this will only be used to overwrite inputs with different inputs in the case that the
-    property 'OverrideInputRawEventLocations' is required
+    property 'OverrideInputs' is required
     
     """
     __queried_configurables__ = [RawEventFormatConf]
@@ -67,15 +68,24 @@ class DecodeRawEvent(ConfigurableUser):
         Will override any decoder which has either been set to active *or* was 'used'
         
         """
+        #print "IN OVERRIDE IF REQUIRED!!"
         if (not self.isPropertySet("OverrideInputs")) or (self.getProp("OverrideInputs") is None):
+            #print "RETURNING FOR SOME STUPID REASON"
             return
         #load dictionary of possible raw event locations
         RawEventFormatConf().loadIfRequired()
         from RawEventCompat.Configuration import WhereBest, WhereAll
         v=self.getProp("OverrideInputs")
+        
         if adecoder is None:
+            print "Finding the decoders!"
             #which banks, and which decoders will be overwritten
+            from DAQSys.DecoderClass import decodersForBank, usedDecoders
             banks=self.allBanks()
+            for d in usedDecoders(self.__db__()):
+                for b in d.Banks:
+                    if b not in banks:
+                        banks.append(b)
             b_locs_toset={}
             for b in banks:
                 b_locs_toset[b]=WhereBest(b,v)
@@ -92,7 +102,7 @@ class DecodeRawEvent(ConfigurableUser):
                     return
             for k,ds in reset_list.iteritems():
                 for d in ds:
-                    self.overrideIfRequired(d)
+                    self.overrideIfRequired(d, setup=setup)
             return
         #when a decoder is passed...
         d=adecoder

@@ -4,6 +4,12 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-11-26 - Rob Lambert
+ - Fix issue with overrideIfRequired, now truly call setup!
+
+! 2013-11-21 - Rob Lambert
+ - Modifications appropriate to Rec/Brunel
+
 ! 2013-11-19 - Rob Lambert
  - Add/Separate Hlt1 and Hlt2 DecReports decoders
  - Add function to set time decoding, it's needed by some other configurables
