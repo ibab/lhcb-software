@@ -276,11 +276,11 @@ class RecombineRawEvent(ConfigurableUser):
         #then get them
         loc,rec=_getDict()
         #call correct method
-        self.setProp("Version",_checkv(self.getProp("Version"),loc,rec))
-        if self.getProp("Version") in [0.0,1.0]:
+        version=_checkv(self.getProp("Version"),loc,rec)
+        if version in [0.0,1.0]:
             raise KeyError("Versions 0.0 and 1.0 anyway have a combined raw event... why would you want to do this? ", self.getProp("Version"))
         self.__known_methods__[self.getProp("Method")](
-            version=self.getProp("Version"),
+            version=version,
             regex=self.getProp("Regex"),
             locations=loc,
             recodict=rec
@@ -312,6 +312,7 @@ class RawEventJuggler(ConfigurableUser):
         , "Depth" : "#1"
         , "TCK" : None
         , "TCKReplacePattern" : "#TCK#"
+        , "RootInTES" : "/Event"
         , "GenericReplacePatterns" : {}
         }
     def __safeset__(self,other, prop):
@@ -319,7 +320,13 @@ class RawEventJuggler(ConfigurableUser):
             other.setProp(prop,self.getProp(prop))
     
     def __opWrap__(self,loc):
-        return [_replaceWrap(aloc) +self.getProp("Depth") for aloc in loc]
+        retlist=[]
+        for aloc in loc:
+            if self.getProp("RootInTES") not in aloc:
+                aloc=(self.getProp("RootInTES")+"/"+aloc).replace("//","/")
+            aloc=_replaceWrap(aloc)
+            retlist.append(aloc)
+        return retlist
     
     def __apply_configuration__(self):
         #make sure the dictionaries are there... Hack! %TODO -> Remove this!
@@ -332,11 +339,11 @@ class RawEventJuggler(ConfigurableUser):
             raise AttributeError("You must set both the input and the output version, this can be a version number (float, int) or a name, see: "+rec.__str__())
         
         #swap logical for numeric, and check it exists
-        self.setProp("Output",_checkv(self.getProp("Output"),locs,rec))
-        self.setProp("Input",_checkv(self.getProp("Input"),locs,rec))
+        ov=_checkv(self.getProp("Output"),locs,rec)
+        iv=_checkv(self.getProp("Input"),locs,rec)
         
-        output_locations=ReverseDict(self.getProp("Output"),locs,rec)
-        input_locations=ReverseDict(self.getProp("Input"),locs,rec)
+        output_locations=ReverseDict(ov,locs,rec)
+        input_locations=ReverseDict(iv,locs,rec)
         #check if a Trigger TCK is needed
 
         if len([loc for loc in input_locations if self.getProp("TCKReplacePattern") in loc]) or len([loc for loc in output_locations if self.getProp("TCKReplacePattern") in loc]):
@@ -372,7 +379,7 @@ class RawEventJuggler(ConfigurableUser):
         ##################################
         # The part which does the juggling
         ##################################
-        if self.getProp("Input")!=self.getProp("Output"):
+        if iv!=ov:
             ######################################
             # Stage 2: Check options
             ######################################
@@ -405,7 +412,7 @@ class RawEventJuggler(ConfigurableUser):
             for loc in output_locations:
                 if loc not in input_locations:
                     #if none of the banks are available, skip
-                    if len([abank for abank in output_locations[loc] if abank in locs[self.getProp("Input")]])==0:
+                    if len([abank for abank in output_locations[loc] if abank in locs[iv]])==0:
                         print "#WARNING, nowhere to copy any banks for "+loc+" from, skipping"
                         continue
                     wloc=_replaceWrap(loc)
@@ -416,10 +423,10 @@ class RawEventJuggler(ConfigurableUser):
                     added_locations.append(wloc)
                     
                     for abank in output_locations[loc]:
-                        if abank not in locs[self.getProp("Input")]:
+                        if abank not in locs[iv]:
                             print "#WARNING, nowhere to copy "+abank+" from, skipping"
                             continue
-                        loc_to_alg_dict[wloc].RawBanksToCopy[abank]=WhereBest(abank,self.getProp("Input"),locs,rec)
+                        loc_to_alg_dict[wloc].RawBanksToCopy[abank]=WhereBest(abank,iv,locs,rec)
                         
             
             ###############################################

@@ -4,6 +4,9 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+! 2013-11-26 - Rob Lambert
+ - Check for bad/unknown banks!
+
 ! 2013-11-22 - Rob Lambert
  - Solve bug due to lack of _checkv in some configurables/methods
  - Now all configurables accept versions as strings or numbers
