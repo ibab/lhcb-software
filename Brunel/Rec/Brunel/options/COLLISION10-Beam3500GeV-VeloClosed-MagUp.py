@@ -12,6 +12,5 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 #-- Use latest 2010 database tags for real data
 Brunel().DataType = "2010"
 
-EventSelector().Input = [
-  "DATAFILE='mdf:root://eoslhcb.cern.ch//eos/lhcb/swtest/lhcb/data/2010/RAW/FULL/LHCb/COLLISION10/69623/069623_0000000003.raw' SVC='LHCb::MDFSelector'"
-    ]
+from PRConfig import TestFileDB
+TestFileDB.test_file_db['2010_MagUp_raw_default'].run()

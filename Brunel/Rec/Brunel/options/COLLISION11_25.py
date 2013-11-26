@@ -14,6 +14,5 @@ from GaudiKernel.ProcessJobOptions import importOptions
 importOptions("$APPCONFIGOPTS/Brunel/2011-25ns.py")
 
 # Events from run 103053, fill 2186 on 2011-10-07, 25ns bunch spacing
-EventSelector().Input = [
-  "DATAFILE='mdf:root://eoslhcb.cern.ch//eos/lhcb/swtest/lhcb/data/2011/RAW/FULL/LHCb/COLLISION11_25/103053/103053_0000000035.raw' SVC='LHCb::MDFSelector'"
-    ]
+from PRConfig import TestFileDB
+TestFileDB.test_file_db['2011_25ns_raw_default'].run()

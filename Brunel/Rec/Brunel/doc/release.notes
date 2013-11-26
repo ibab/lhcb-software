@@ -18,6 +18,9 @@ Purpose: LHCb reconstruction program
 
 - Update valgrind.job to use gaudirun.py directly
 
+- Changes to example options
+  . Remove explicit setting of DATAFILEs, pick them up from PRConfig TestFileDB
+
 - Changes to references to reflect changes since v44r8
   . Fixed bug when making R cluster VELO tracks crossing sectors (FastVelo)
   . Changed UT number of hits from 8 to 4 and use LastMeasurement state (PrVeloUT)
