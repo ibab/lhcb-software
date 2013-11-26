@@ -16,9 +16,7 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Muon/MuonTrackRec
                          Rec/GlobalReco
                          Rec/LumiAlgs
-                         Rec/RecAlgs
-                         Rec/RecoUpgrade
-                         Rec/RecoUpgradeMC
+		         Rec/RecAlgs
                          Rich/RichENNRingFinder
                          Rich/RichGlobalPID
                          Rich/RichHPDImageAnalysis

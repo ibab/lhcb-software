@@ -30,8 +30,6 @@ use GlobalReco           v*  Rec  # Chris Jones
 use LumiAlgs             v*  Rec  # Jaap Panman
 use RecAlgs              v*  Rec  # Marco Cattaneo
 # Non sub-detector specific components upgrade related
-use RecoUpgrade          v*  Rec  # Victor Coco
-use RecoUpgradeMC        v*  Rec  # Victor Coco
 
 # Rich
 use RichGlobalPID        v*  Rich # Chris Jones
