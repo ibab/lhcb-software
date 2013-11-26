@@ -12,6 +12,7 @@
 #include "EvtGenModels/EvtPhspFlatLifetime.hh"
 #include "EvtGenModels/EvtLb2plnuLCSR.hh"
 #include "EvtGenModels/EvtLb2plnuLQCD.hh"
+#include "EvtGenModels/EvtLb2Baryonlnu.hh"
 
 //we use auto_ptr here to show explicit transfer of ownership
 std::auto_ptr<const EvtModelList> EvtModelRegExtras::getModels(){
@@ -28,7 +29,8 @@ std::auto_ptr<const EvtModelList> EvtModelRegExtras::getModels(){
 	models -> push_back( new EvtBcVHad() );
 	models -> push_back( new EvtPhspFlatLifetime() ) ;
 	models -> push_back(new EvtLb2plnuLQCD);
-	models -> push_back (new EvtLb2plnuLCSR);
+	models -> push_back(new EvtLb2plnuLCSR);
+	models -> push_back (new EvtLb2Baryonlnu);
 	return std::auto_ptr<const EvtModelList>(models);
 	
 }

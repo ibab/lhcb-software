@@ -380,6 +380,15 @@ void EvtSLBaryonAmp::CalcAmp(EvtParticle *parent,
   static EvtId LAMC2P=EvtPDL::getId("Lambda_c(2625)+");
   static EvtId LAMB=EvtPDL::getId("Lambda_b0");
   static EvtId PRO=EvtPDL::getId("p+");
+  static EvtId N1440=EvtPDL::getId("N(1440)+");
+  static EvtId N1520=EvtPDL::getId("N(1520)+");
+  static EvtId N1535=EvtPDL::getId("N(1535)+");
+  static EvtId N1720=EvtPDL::getId("N(1720)+");
+  static EvtId N1650=EvtPDL::getId("N(1650)+");
+  static EvtId N1700=EvtPDL::getId("N(1700)+");
+  static EvtId N1710=EvtPDL::getId("N(1710)+");
+  static EvtId N1875=EvtPDL::getId("N(1875)+");
+  static EvtId N1900=EvtPDL::getId("N(1900)+");
 
   // Anti-Baryons
   static EvtId LAMCM=EvtPDL::getId("anti-Lambda_c-");
@@ -387,6 +396,15 @@ void EvtSLBaryonAmp::CalcAmp(EvtParticle *parent,
   static EvtId LAMC2M=EvtPDL::getId("anti-Lambda_c(2625)-");
   static EvtId LAMBB=EvtPDL::getId("anti-Lambda_b0");
   static EvtId PROB=EvtPDL::getId("anti-p-");
+  static EvtId N1440B=EvtPDL::getId("anti-N(1440)-");
+  static EvtId N1520B=EvtPDL::getId("anti-N(1520)-");
+  static EvtId N1535B=EvtPDL::getId("anti-N(1535)-");
+  static EvtId N1720B=EvtPDL::getId("anti-N(1720)-");
+  static EvtId N1650B=EvtPDL::getId("anti-N(1650)-");
+  static EvtId N1700B=EvtPDL::getId("anti-N(1700)-");
+  static EvtId N1710B=EvtPDL::getId("anti-N(1710)-");
+  static EvtId N1875B=EvtPDL::getId("anti-N(1875)-");
+  static EvtId N1900B=EvtPDL::getId("anti-N(1900)-");
 
   // Set the spin density matrix of the parent baryon
   EvtSpinDensity rho;
@@ -477,12 +495,18 @@ void EvtSLBaryonAmp::CalcAmp(EvtParticle *parent,
     if ( (par_num==LAMB && bar_num==LAMCP) 
 	 || (par_num==LAMBB && bar_num==LAMCM)
          || (par_num==LAMB && bar_num==PRO )
-	 || (par_num==LAMBB && bar_num==PROB)) {
+	 || (par_num==LAMBB && bar_num==PROB)
+         || (par_num==LAMB && bar_num==N1440 )
+	 || (par_num==LAMBB && bar_num==N1440B)
+         || (par_num==LAMB && bar_num==N1710 )
+	 || (par_num==LAMBB && bar_num==N1710B)
+	 
+	 ) {
 
       // Set particle/anti-particle flag
-      if (bar_num==LAMCP || bar_num==PRO)
+      if (bar_num==LAMCP || bar_num==PRO || bar_num==N1440 || bar_num==N1710)
 	pflag = 0;
-      else if (bar_num==LAMCM || bar_num==PROB)
+      else if (bar_num==LAMCM || bar_num==PROB || bar_num==N1440B || bar_num==N1710B)
 	pflag = 2;
 
       b11=EvtBaryonVACurrent(parent->getDaug(0)->spParent(0),
@@ -500,13 +524,19 @@ void EvtSLBaryonAmp::CalcAmp(EvtParticle *parent,
     }
 
     // Handle 1/2+ -> 1/2- second
-    else if( (par_num==LAMB && bar_num==LAMC1P) 
-	     || (par_num==LAMBB && bar_num==LAMC1M) ) {
+    else if( 
+	    (par_num==LAMB && bar_num==LAMC1P) 
+	     || (par_num==LAMBB && bar_num==LAMC1M)
+	     || (par_num==LAMB && bar_num==N1535) 
+	     || (par_num==LAMBB && bar_num==N1535B)
+	     || (par_num==LAMB && bar_num==N1650) 
+	     || (par_num==LAMBB && bar_num==N1650B)
+	   ) {
       
       // Set particle/anti-particle flag
-      if (bar_num==LAMC1P)
+      if (bar_num==LAMC1P || bar_num == N1535 || bar_num == N1650)
 	pflag = 1;
-      else if (bar_num==LAMC1M)
+      else if (bar_num==LAMC1M || bar_num == N1535B || bar_num == N1650B)
 	pflag = 3;
 
       b11=EvtBaryonVACurrent((parent->getDaug(0)->spParent(0)),
@@ -588,14 +618,33 @@ void EvtSLBaryonAmp::CalcAmp(EvtParticle *parent,
     // pflag = 1 => anti-particle
     int pflag = 0;
     
-    // Handle cases of 1/2+ -> 3/2-
-    if (par_num==LAMB && bar_num==LAMC2P) {
+    // Handle cases of 1/2+ -> 3/2- or 3/2+
+    if ( (par_num==LAMB && bar_num==LAMC2P) 
+	    ||(par_num==LAMB && bar_num==N1720 )
+	    ||(par_num==LAMB && bar_num==N1520 )
+	    ||(par_num==LAMB && bar_num==N1700 )
+	    ||(par_num==LAMB && bar_num==N1875 )
+	    ||(par_num==LAMB && bar_num==N1900 )
+       ) {
       // Set flag for particle case
       pflag = 0;
     }
-    else if (par_num==LAMBB && bar_num==LAMC2M) {
-      // Set flag for anti-particle case
+    else if (
+	    (par_num==LAMBB && bar_num==LAMC2M)
+	    ||(par_num==LAMBB && bar_num==N1520B )
+	    ||(par_num==LAMBB && bar_num==N1700B )
+	    ||(par_num==LAMBB && bar_num==N1875B )
+	    )
+    {
+    // Set flag for anti-particle opposite parity case
       pflag = 1;
+    }
+    // Handle anti-particle case for 1/2+ -> 3/2+
+    else if (
+	   ( par_num==LAMBB && bar_num==N1720B)
+	    || (par_num==LAMBB && bar_num==N1900B)
+	    ) {
+      pflag = 2;
     }
     else {
       report(ERROR,"EvtGen") << "Rarita-Schwinger semilep. baryon current " 
@@ -669,7 +718,7 @@ EvtVector4C EvtSLBaryonAmp::EvtBaryonVACurrent( const EvtDiracSpinor& Bf,
 							  const double *ff,
 							  int pflag) {
 
-  // flag == 0 => particle, same parity 
+  // flag == 0 => particle
   // flag == 1 => particle, opposite parity 
   // flag == 2 => anti-particle, same parity 
   // flag == 3 => anti-particle, opposite parity 
@@ -687,18 +736,23 @@ EvtVector4C EvtSLBaryonAmp::EvtBaryonVACurrent( const EvtDiracSpinor& Bf,
     ca = EvtComplex(1.0, 0.);
 
     cg0 =  EvtComplex(1.0, 0.0);
-    cg5 =  EvtComplex(0.0, -1.0);
+    // Changed cg5 from -i to -1 as appears to fix particle - anti-particle discrepency
+    cg5 =  EvtComplex(-1.0,0.0 );
   }
   // antiparticle- opposite parity parent & daughter
   else if( pflag == 3) {
     cv = EvtComplex(1.0, 0.);
     ca = EvtComplex(-1.0, 0.);
 
-    cg0 =  EvtComplex(0.0, -1.0);
+    // Changed cg0 from -i to -1 as appears to fix particle - anti-particle discrepency
+    cg0 =  EvtComplex(-1.0, 0.0);
     cg5 =  EvtComplex(1.0, 0.0);
   }
 
   EvtVector4C t[6];
+
+
+  
 
   // Term 1 = \bar{u}(p',s')*(F_1(q^2)*\gamma_{mu})*u(p,s)
   t[0] = cv*EvtLeptonVCurrent( Bf, Bi);
@@ -742,14 +796,22 @@ EvtVector4C EvtSLBaryonAmp::EvtBaryonVARaritaCurrent( const EvtRaritaSchwinger& 
   EvtComplex cg0 = EvtComplex(1.0, 0.);
   EvtComplex cg5 = EvtComplex(1.0, 0.);
 
-  // antiparticle
+  // antiparticle opposite parity
   if( pflag == 1 ) {
     cv = EvtComplex(-1.0, 0.);
     ca = EvtComplex(1.0, 0.);
  
     cg0 =  EvtComplex(1.0, 0.0);
-    cg5 =  EvtComplex(0.0, -1.0);
+    cg5 =  EvtComplex(-1.0, 0.0);
  }
+  // antiparticle same parity
+  else if( pflag == 2) {
+    cv = EvtComplex(1.0, 0.);
+    ca = EvtComplex(-1.0, 0.);
+
+    cg0 =  EvtComplex(-1.0, 0.0);
+    cg5 =  EvtComplex(1.0, 0.0);
+  }
 
   EvtVector4C t[8];
   EvtTensor4C id;
