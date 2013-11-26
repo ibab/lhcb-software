@@ -322,9 +322,11 @@ class RawEventJuggler(ConfigurableUser):
     def __opWrap__(self,loc):
         retlist=[]
         for aloc in loc:
-            if self.getProp("RootInTES") not in aloc:
-                aloc=(self.getProp("RootInTES")+"/"+aloc).replace("//","/")
             aloc=_replaceWrap(aloc)
+            if not aloc.startswith(self.getProp("RootInTES")):
+                aloc=(self.getProp("RootInTES")+"/"+aloc).replace("//","/")
+            if not aloc.endswith(self.getProp("Depth")):
+                aloc=aloc+self.getProp("Depth")
             retlist.append(aloc)
         return retlist
     

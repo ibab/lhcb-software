@@ -2,6 +2,7 @@ import RawEventCompat
 import RawEventCompat.Configuration as conf
 
 from RawEventFormat import Raw_location_db
+
 Raw_location_db[1.0]['DeliberatelyBadBank']="DAQ/RawEvent"
 
 banks=[]
