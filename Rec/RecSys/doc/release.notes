@@ -5,6 +5,8 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+- Updated QMtest reference for RecSys to take removed RecoUpgrade(MC) into account (M. De Cian)
+
 - Removed the Rec/RecoUpgrade and Rec/RecoUpgradeMC from CMakeLists.txt, because
   the '#' does not work as a comment between parenteses in CMake (M. Clemencic)
 
