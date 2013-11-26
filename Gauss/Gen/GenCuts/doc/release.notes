@@ -4,6 +4,10 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-11-25 - Jack Wimberley
+ - JpsiLeptonInAcceptance.cpp: Add tool to search for J/psi (or psi(2S)), lepton in event
+ with configurable cuts on P, PT, DOCA, etc. (based on DiLeptonInAcceptance.cpp)
+
 !========================== GenCuts v3r7 2013-10-23 ========================== 
 ! 2013-10-16 - Marc Olivier Bettler
  - Lowered the verbosity of BcDaughtersInLHCbAndMassCut.cpp to debug
