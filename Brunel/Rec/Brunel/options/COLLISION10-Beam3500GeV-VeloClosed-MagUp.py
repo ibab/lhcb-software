@@ -13,4 +13,4 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 Brunel().DataType = "2010"
 
 from PRConfig import TestFileDB
-TestFileDB.test_file_db['2010_MagUp_raw_default'].run()
+TestFileDB.test_file_db['2010_MagUp_raw_default'].run(withDB=False)

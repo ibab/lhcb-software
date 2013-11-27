@@ -15,4 +15,4 @@ importOptions("$APPCONFIGOPTS/Brunel/2011-25ns.py")
 
 # Events from run 103053, fill 2186 on 2011-10-07, 25ns bunch spacing
 from PRConfig import TestFileDB
-TestFileDB.test_file_db['2011_25ns_raw_default'].run()
+TestFileDB.test_file_db['2011_25ns_raw_default'].run(withDB=False)
