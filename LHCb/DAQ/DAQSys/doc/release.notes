@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-11-27 - Rob Lambert
+ - Remove added debug print now that all is working :)
+
 ! 2013-11-26 - Rob Lambert
  - Fix issue with overrideIfRequired, now truly call setup!
 

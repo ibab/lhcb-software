@@ -78,7 +78,7 @@ class DecodeRawEvent(ConfigurableUser):
         v=self.getProp("OverrideInputs")
         
         if adecoder is None:
-            print "Finding the decoders!"
+            #print "Finding the decoders!"
             #which banks, and which decoders will be overwritten
             from DAQSys.DecoderClass import decodersForBank, usedDecoders
             banks=self.allBanks()
