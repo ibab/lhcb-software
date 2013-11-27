@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-11-27 - Rob Lambert
+ - Integrate DstConf with the DecodersDB -- major change. 
+ - Tested using Brunel(), which propagates certain extra options.
+
 ! 2013-11-15 - Rob Lambert
  - Add import statement to fix stupid bug.
 

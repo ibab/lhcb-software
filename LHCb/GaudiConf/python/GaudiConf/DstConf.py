@@ -12,6 +12,7 @@ from Gaudi.Configuration import *
 import GaudiKernel.ProcessJobOptions
 from CaloPackingConf import CaloDstPackConf, CaloDstUnPackConf
 from Configurables   import LHCbConfigurableUser
+from Configurables   import RawEventFormatConf
 from SimConf  import SimConf
 from DigiConf import DigiConf
 
@@ -35,7 +36,7 @@ class DstConf(LHCbConfigurableUser):
        , "DataType"        : ""
        , "Persistency"     : None
        , "WriteFSR"        : True
-       , "KeepDAQRawEvent" : False
+       , "SplitRawEventOutput" : 2.0 #split raw event from Stripping 20
          }
 
     _propertyDocDct = {
@@ -52,7 +53,7 @@ class DstConf(LHCbConfigurableUser):
        ,'DataType'        : """ Flag for backward compatibility with old data """
        ,'Persistency'     : """ Overwrite the default persistency with something else. """
        ,'WriteFSR'        : """ Flags whether to write out an FSR """
-       ,'KeepDAQRawEvent' : """ Keep original RawEvent instead of Trigger+Muon+Other split copy """
+       ,"SplitRawEventOutput" : "Which version fo the split raw event to write out, default 2.0, same as Reco 14/Stripping 20 DSTs"
        }
 
     __used_configurables__ = [
@@ -137,25 +138,18 @@ class DstConf(LHCbConfigurableUser):
 
         # Additional objects not packable as MDF
         if pType != "MDF":
-            if self.getProp("KeepDAQRawEvent") :
-            # Keep original RawEvent
-                writer.ItemList += [ "/Event/DAQ/RawEvent#1" ]
-            else :
-            # Keep split copy of RawEvent instead of the original
-                writer.ItemList += [
-                    #Exists from Brunel v41r0 onwards...
-                    "/Event/Trigger/RawEvent#1"]
-                if "Muon" in self.getProp("Detectors"):
-                    writer.ItemList += [ "/Event/Muon/RawEvent#1" ]
-                    #Exists from Brunel v44r0 onwards...
-                if "Calo" in self.getProp("Detectors"):
-                    writer.ItemList += [ "/Event/Calo/RawEvent#1" ]
-                if "Rich" in self.getProp("Detectors"):
-                    writer.ItemList += [ "/Event/Rich/RawEvent#1"]
-                    
-                writer.ItemList += [ "/Event/Other/RawEvent#1"]
-
-
+            #get RawEventLocations from the new database
+            #copied code from the RawEventJuggler
+            RawEventFormatConf().loadIfRequired()
+            from RawEventCompat.Configuration import _replaceWrap, _getDict, ReverseDict
+            locs,rec=_getDict()
+            output_locations=ReverseDict(self.getProp("SplitRawEventOutput"),locs,rec)
+            for loc in output_locations:
+                if not loc.startswith("/Event/"):
+                    loc=("/Event/"+loc).replace("//","/")
+                writer.ItemList += [ _replaceWrap(loc)+"#1" ]
+            
+            
             # Add the simulation objects if simulation DST
             if sType != "None":
                 

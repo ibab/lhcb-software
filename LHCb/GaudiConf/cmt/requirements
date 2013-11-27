@@ -8,6 +8,8 @@ use LHCbKernel     v* Kernel # For LHCbConfigurableUser dependency
 use GaudiPolicy    v*
 # For L0 Decoding (Awaiting reorganisation of DAQ decoding options).
 use L0DU           v*    L0
+use RawEventCompat v*    DAQ
+use RawEventFormat v*
 
 ignore_pattern package_stamps
 
