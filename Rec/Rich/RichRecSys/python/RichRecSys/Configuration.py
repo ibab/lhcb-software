@@ -186,8 +186,15 @@ class RichRecSysConf(RichConfigurableUser):
             pixelSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"PixelsSeq")
             initSeq.Members += [ pixelSeq ]
             # Raw decoding algorithm
-            decodeRich = self.makeRichAlg( Rich__DAQ__RawBufferToRichDigitsAlg, "DecodeRawRich"+cont )
-            decodeRich.DecodeBufferOnly = True
+            # Parasite in on thsi with my database so that the
+            # automatic reconfiguration of locations is spawned
+            from DAQSys.Decoders import DecoderDB
+            from DAQSys.DecoderClass import decodersForBank
+            decodeRich =DecoderDB["Rich::DAQ::RawBufferToRichDigitsAlg/RichRawEventToDigits"].clone("Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRich"+cont)
+            decodeRich.Properties["DecodeBufferOnly"]=True
+            decodeRich.Active=True
+            decodeRich=decodeRich.setup()
+            decodeRich = self.makeRichAlg( Rich__DAQ__RawBufferToRichDigitsAlg, decodeRich.getFullName() )
             pixelSeq.Members += [ decodeRich ]
             # Add random background ?
             pixBackPercent = self.getProp("HpdRandomBackgroundProb")

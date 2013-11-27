@@ -15,7 +15,8 @@ gaudi_depends_on_subdirs(Rich/RichENNRingFinder
                          Rich/RichRecStereoTools
                          Rich/RichRecTemplateRings
                          Rich/RichRecTools
-                         Rich/RichRecTrackTools)
+                         Rich/RichRecTrackTools
+			 DAQ/DAQSys)
 
 gaudi_install_python_modules()
 

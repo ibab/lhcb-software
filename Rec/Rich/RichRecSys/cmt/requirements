@@ -41,5 +41,8 @@ use RichRecTemplateRings  v*   Rich
 # Exotic Particle search
 use RichParticleSearch    v*   Rich
 
+# Decoding
+use   DAQSys               v*    DAQ
+
 # Setup Python Configurables
 apply_pattern install_python_modules

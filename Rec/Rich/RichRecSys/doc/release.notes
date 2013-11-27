@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2013-11-27 - Rob Lambert
+ - Migrate to using the DecodersDB, requires LHCb v36r4, major change.
+
 !========================= RichRecSys v4r9 2013-11-12 =========================
 ! 2013-11-12 - Chris Jones
  - Fix a logic flaw that caused a configuration error when PidConfig="None".
