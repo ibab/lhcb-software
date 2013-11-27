@@ -1,0 +1,18 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>brunel.juggling.simplesplit</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
+  <argument name="args"><set>
+    <text>--option</text>
+    <text>from Configurables import Brunel; from GaudiConf import IOHelper; from PRConfig import TestFileDB; TestFileDB.test_file_db['2012_raw_default'].run(configurable=Brunel()); IOHelper().inputFiles(['split-raw-event.dst'], clear=True);Brunel().EvtMax=10; Brunel().DatasetName="recombine"; Brunel().SplitRawEventInput=2.0; Brunel().SplitRawEventOutput=0.0; Brunel().InputType="DST"; </text>
+  </set></argument>
+  <argument name="validator"><text>
+
+countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
+
+</text></argument>
+</extension>
+

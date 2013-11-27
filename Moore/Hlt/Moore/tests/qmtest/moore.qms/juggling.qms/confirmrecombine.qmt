@@ -1,0 +1,34 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>brunel.juggling.recombine</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
+  <argument name="args"><set>
+    <text>--option</text>
+    <text>from Gaudi.Configuration import *; from GaudiConf import IOHelper; from PRConfig import TestFileDB; TestFileDB.test_file_db['2012_raw_default'].run();  IOHelper().inputFiles(['recombine-10ev.dst'], clear=True); from Configurables import StoreExplorerAlg; ApplicationMgr().TopAlg=[StoreExplorerAlg()]; StoreExplorerAlg().Load=True;</text>
+  </set></argument>
+  <argument name="validator"><text>
+
+findReferenceBlock("""StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x2]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Rec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x69 Type=0x2]  LHCb::RecHeader
+StoreExplorerAlg     INFO | | +--> /Status [Address: CLID=0x1389 Type=0x2]  LHCb::ProcStatus
+StoreExplorerAlg     INFO | | +--> /Summary [Address: CLID=0x6a Type=0x2]  LHCb::RecSummary
+StoreExplorerAlg     INFO   +--> /pRec [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | +--> /Track [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Best [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO   | | +--> /Muon [Address: CLID=0x60e Type=0x2]  LHCb::PackedTracks
+StoreExplorerAlg     INFO   | +--> /Rich [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | +--> /PIDs [Address: CLID=0x619 Type=0x2]  LHCb::PackedRichPIDs
+StoreExplorerAlg     INFO   | +--> /Muon [Address: CLID=0x1 Type=0x2]  DataObject
+StoreExplorerAlg     INFO   | | +--> /MuonPID [Address: CLID=0x623 Type=0x2]  LHCb::PackedMuonPIDs""", stdout, result, causes, signature_offset =0, id="4100")
+
+countErrorLines({"FATAL":0, "ERROR":0, "WARNING" :0})
+
+</text></argument>
+</extension>
+
