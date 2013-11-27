@@ -105,9 +105,9 @@ tunings = {
         "TaggerNEWKaonOppositeTool.Kaon_ghost_cut":    0.5,
         "TaggerNEWKaonOppositeTool.Kaon_NN1_cut":      0.6,
         "TaggerNEWKaonOppositeTool.Kaon_ProbMin":      0.5,
-        "TaggerNEWKaonOppositeTool.Kaon_P0_Cal":       0.4363, #+/- 0.0011
-        "TaggerNEWKaonOppositeTool.Kaon_P1_Cal":       1.0890, #+/- 0.0288
-        "TaggerNEWKaonOppositeTool.Kaon_AverageOmega": 0.4348,
+        "TaggerNEWKaonOppositeTool.Kaon_P0_Cal":       0.4352, #+/- 0.0016
+        "TaggerNEWKaonOppositeTool.Kaon_P1_Cal":       1.1330, #+/- 0.0292
+        "TaggerNEWKaonOppositeTool.Kaon_AverageOmega": 0.4350,
 
         "TaggerKaonSameTool.KaonSame_Pt_cut" : 850,
         "TaggerKaonSameTool.KaonSame_P_cut"  : 5250,
@@ -615,9 +615,9 @@ tunings = {
         "TaggerNEWKaonOppositeTool.Kaon_ghost_cut":    0.5,
         "TaggerNEWKaonOppositeTool.Kaon_NN1_cut":      0.6,
         "TaggerNEWKaonOppositeTool.Kaon_ProbMin":      0.5,
-        "TaggerNEWKaonOppositeTool.Kaon_P0_Cal":       0.4146, #+/- 0.0032
-        "TaggerNEWKaonOppositeTool.Kaon_P1_Cal":       1.2640, #+/- 0.0537
-        "TaggerNEWKaonOppositeTool.Kaon_AverageOmega": 0.4262,
+        "TaggerNEWKaonOppositeTool.Kaon_P0_Cal":       0.4072, #+/- 0.0015
+        "TaggerNEWKaonOppositeTool.Kaon_P1_Cal":       1.2940, #+/- 0.0250
+        "TaggerNEWKaonOppositeTool.Kaon_AverageOmega": 0.4245,
 
         "TaggerKaonSameTool.KaonSame_Pt_cut" : 850,
         "TaggerKaonSameTool.KaonSame_P_cut"  : 5250,

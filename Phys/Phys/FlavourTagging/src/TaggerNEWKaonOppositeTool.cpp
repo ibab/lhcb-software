@@ -32,9 +32,9 @@ DECLARE_TOOL_FACTORY( TaggerNEWKaonOppositeTool )
   declareProperty( "Kaon_distPhi_cut",  m_distPhi_cut      = 0.005 );
   declareProperty( "Kaon_tsa_cut",      m_tsa_cut          = -999.0 );
 
-  declareProperty( "Kaon_P0_Cal",        m_P0_Cal_kaon   = 0.4363 );
-  declareProperty( "Kaon_P1_Cal",        m_P1_Cal_kaon   = 1.0890 );
-  declareProperty( "Kaon_AverageOmega",  m_AverageOmega  = 0.4348 );
+  declareProperty( "Kaon_P0_Cal",        m_P0_Cal_kaon   = 0.4352 );
+  declareProperty( "Kaon_P1_Cal",        m_P1_Cal_kaon   = 1.1330 );
+  declareProperty( "Kaon_AverageOmega",  m_AverageOmega  = 0.4350 );
   declareProperty( "Kaon_ProbMin",       m_ProbMin_kaon  = 0.5    ); // no cut
 
   declareProperty( "Kaon_ghost_cut",  m_ghost_cut          = 0.5 );
