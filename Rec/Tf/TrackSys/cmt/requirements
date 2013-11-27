@@ -42,6 +42,8 @@ use   PatVelo              v*    Tf
 use   PatVeloTT            v*    Tf
 use   FastVelo             v*    Tf
 
+use   DAQSys               v*    DAQ
+
 #=========================================================================
 # Install the configurable
 apply_pattern install_python_modules

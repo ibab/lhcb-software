@@ -16,28 +16,24 @@ def RecoTracking(exclude=[]):
    
    # Which algs to run ?
    trackAlgs = TrackSys().getProp("TrackPatRecAlgorithms")
-
+   
+   #configure the decoding
+   from DAQSys.Decoders import DecoderDB
+   from DAQSys.DecoderClass import decodersForBank
+   decs=[]
    if "Velo" or "FastVelo" in trackAlgs :
-      from Configurables import DecodeVeloRawBuffer
-      GaudiSequencer("RecoDecodingSeq").Members += [ DecodeVeloRawBuffer("DecodeVeloClusters")]
-
-      veloClusters = DecodeVeloRawBuffer("DecodeVeloClusters")
-      veloClusters.DecodeToVeloLiteClusters = True;
-      veloClusters.DecodeToVeloClusters     = True;
+      vdecs=decodersForBank(DecoderDB,"Velo")
       globalCuts = TrackSys().getProp("GlobalCuts")
       if( "Velo" in globalCuts ) :
-          veloClusters.MaxVeloClusters =  globalCuts["Velo"]
+         for dec in vdecs:
+            dec.Properties["MaxVeloClusters"] =  globalCuts["Velo"]
+      decs=decs+vdecs
       
    from Configurables import RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg
-   GaudiSequencer("RecoDecodingSeq").Members += [ RawBankToSTClusterAlg("CreateTTClusters"),
-                                                  RawBankToSTLiteClusterAlg("CreateTTLiteClusters") ]
+   decs=decs+decodersForBank(DecoderDB,"TT")
+   decs=decs+decodersForBank(DecoderDB,"IT")
+   GaudiSequencer("RecoDecodingSeq").Members += [d.setup() for d in decs ]
    
-   createITClusters = RawBankToSTClusterAlg("CreateITClusters")
-   createITLiteClusters = RawBankToSTLiteClusterAlg("CreateITLiteClusters")
-   createITClusters.DetType     = "IT"
-   createITLiteClusters.DetType = "IT"
-   
-   GaudiSequencer("RecoDecodingSeq").Members += [ createITClusters, createITLiteClusters ]
    
    from Configurables import STOfflinePosition
    IT = STOfflinePosition('ITClusterPosition')
@@ -114,12 +110,14 @@ def RecoTracking(exclude=[]):
    if "noDrifttimes" in TrackSys().getProp("ExpertTracking"):
       from Configurables import (Tf__OTHitCreator)
       Tf__OTHitCreator("OTHitCreator").NoDriftTimes = True
-
-   if "disableOTTimeWindow" not in TrackSys().getProp("ExpertTracking"):
-      from Configurables import OTRawBankDecoder
-      from GaudiKernel.SystemOfUnits import ns
-      OTRawBankDecoder().TimeWindow = ( -8.0*ns, 56.0*ns )                     
       
+   d=DecoderDB["OTRawBankDecoder/ToolSvc.OTRawBankDecoder"]
+   if "disableOTTimeWindow" in TrackSys().getProp("ExpertTracking"):
+      from GaudiKernel.SystemOfUnits import ns
+      d.Properties["TimeWindow"] = ( -999.0*ns, 999.0*ns )
+   #ensure the public tool is configured and marked as used
+   d.setup()
+   
    # Get the fitters
    from TrackFitter.ConfiguredFitters import ConfiguredFit, ConfiguredFitSeed, ConfiguredMasterFitter
    

@@ -23,7 +23,8 @@ gaudi_depends_on_subdirs(Event/TrackEvent
                          Tr/TrackMonitors
                          Tr/TrackProjectors
                          Tr/TrackTools
-                         Tr/TrackUtils)
+                         Tr/TrackUtils
+			 DAQ/DAQSys)
 
 gaudi_install_python_modules()
 

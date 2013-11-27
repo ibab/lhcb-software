@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2013-11-27 - Rob Lambert
+ - Update to take decoders from my DecodersDB -- needs LHCb v36r4, major change
+
 ! 2013-11-17 - Michel De Cian
  - Replace PatMatch with PrMatch in upgrade reco sequence (no performance difference).
 

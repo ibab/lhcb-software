@@ -61,30 +61,23 @@ def RecoUpgradeTracking(exclude=[]):
 
 
     decodingSeq = GaudiSequencer("RecoDecodingSeq")
-
+    from DAQSys.Decoders import DecoderDB
+    from DAQSys.DecoderClass import decodersForBank
+    decs=[]
     # Are these the right decoders?
     if "VL" in subDets:
-        from Configurables import VLRawBankDecoder
-        VLRawBankDecoder().DecodeToClusters = True
-        VLRawBankDecoder().DecodeToLiteClusters = True
-        decodingSeq.Members += [ VLRawBankDecoder() ]
+        decs=decs+decodersForBank(DecoderDB,"VL")
     if "VP" in subDets:
-        from Configurables import VPRawBankToLiteCluster,VPRawBankToPartialCluster
-        decodingSeq.Members += [ VPRawBankToLiteCluster() ]
+        decs=decs+decodersForBank(DecoderDB,"VP")
     if "UT" in subDets:
-        from Configurables import RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg
-        createUTClusters = RawBankToSTClusterAlg("CreateUTClusters")
-        createUTLiteClusters = RawBankToSTLiteClusterAlg("CreateUTLiteClusters")
-        createUTClusters.DetType     = "UT"
-        createUTLiteClusters.DetType = "UT"
-        decodingSeq.Members += [ createUTClusters, createUTLiteClusters ]
+        decs=decs+decodersForBank(DecoderDB,"UT")
         from Configurables import STOfflinePosition
         UT = STOfflinePosition('ToolSvc.UTClusterPosition')
         UT.DetType = "UT"
     if "FT" in subDets:
-        from Configurables import FTRawBankDecoder
-        decodingSeq.Members += [ FTRawBankDecoder() ]
-
+        decs=decs+decodersForBank(DecoderDB,"FTCluster")
+        
+    decodingSeq.Members+=[d.setup() for d in decs]
     ### Define the pattern recognition
     if "Velo" in trackTypes:
         veloSeq = GaudiSequencer("TrVeloSeq")
