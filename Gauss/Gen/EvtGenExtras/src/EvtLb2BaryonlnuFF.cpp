@@ -69,7 +69,8 @@ void EvtLb2BaryonlnuFF::getdiracff(EvtId parent, EvtId daught,
       double md = 0.40;
       double MLamB = EvtPDL::getMass(parent);
       double MLamq = EvtPDL::getMass(daught);
-      double mq, aLp;
+      double mq = md;
+      double aLp = 0.48;
       
       //set mq and aLp based on whether Lb->Lc* or Lb->N*
       if (
@@ -79,14 +80,6 @@ void EvtLb2BaryonlnuFF::getdiracff(EvtId parent, EvtId daught,
       {
       mq = 1.89;
       aLp = 0.55;
-      }
-      else if (
-        (parent==LAMB && daught==PRO) 
-       || (parent==LAMBB && daught==PROB) 
-       )
-      {
-      mq = md;
-      aLp = 0.48;
       }
       
       double aL2  = aL*aL;
@@ -187,7 +180,8 @@ void EvtLb2BaryonlnuFF::getdiracff(EvtId parent, EvtId daught,
       double aL  = 0.59;
       double MLamB = EvtPDL::getMass(parent);
       double MLamq = EvtPDL::getMass(daught);
-      double mq, aLp;
+      double mq = md;
+      double aLp = 0.37;
       
       //set mq and aLp based on whether Lb->Lc* or Lb->N*
       if (
@@ -197,11 +191,6 @@ void EvtLb2BaryonlnuFF::getdiracff(EvtId parent, EvtId daught,
       {
       mq = 1.89;
       aLp = 0.47;
-      }
-      else  
-      {
-      mq = md;
-      aLp = 0.37;
       }
       
       double aL2  = aL*aL;
@@ -285,7 +274,8 @@ void EvtLb2BaryonlnuFF::getraritaff( EvtId parent, EvtId daught,
       double aL  = 0.59;
       double MLamB = EvtPDL::getMass(parent);
       double MLamq = EvtPDL::getMass(daught);
-      double mq, aLp;
+      double mq = md;
+      double aLp = 0.37;
       
       
       //set mq and aLp based on whether Lb->Lc* or Lb->N*
@@ -296,11 +286,6 @@ void EvtLb2BaryonlnuFF::getraritaff( EvtId parent, EvtId daught,
       {
       mq = 1.89;
       aLp = 0.47;
-      }
-      else  
-      {
-      mq = md;
-      aLp = 0.37;
       }
 
 
