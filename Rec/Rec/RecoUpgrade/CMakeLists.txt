@@ -16,7 +16,8 @@ gaudi_depends_on_subdirs(Det/VPDet
                          Tf/TfKernel
                          Tf/TrackSys
                          Tr/TrackFitEvent
-                         Tr/TrackKernel)
+                         Tr/TrackKernel
+			 DAQ/DAQSys)
 
 gaudi_add_module(RecoUpgrade
                  src/*.cpp

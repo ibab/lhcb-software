@@ -20,6 +20,9 @@ use     PatAlgorithms   v*      Tf
 use  GaudiAlg           v*
 use  GaudiKernel        v*
 
+# Decoding
+use   DAQSys               v*    DAQ
+
 
 #============================================================================
 # Component library building rule

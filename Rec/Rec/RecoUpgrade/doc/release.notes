@@ -4,6 +4,9 @@
 ! Purpose     : Package for the reconstruction in upgraded detector classes
 !-----------------------------------------------------------------------------
 
+! 2013-11-21 - Rob Lambert
+ - Adapt to DecoderDB, this is a major change
+
 !========================= RecoUpgrade v3r2 2013-10-01 =========================
 ! 2013-09-09 - Heinrich Schindler
  - Follow VP detector element and channel ID changes (r162190, 162191)

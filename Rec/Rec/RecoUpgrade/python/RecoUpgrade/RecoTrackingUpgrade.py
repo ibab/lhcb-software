@@ -10,8 +10,7 @@ from Configurables import TrackSys
 from Configurables import RecSysConf
 
 
-from Configurables import (  ProcessPhase,DecodeVeloRawBuffer,MuonIDAlg,
-                             VeloPixRawBankToLiteCluster,VeloPixRawBankToPartialCluster,
+from Configurables import (  ProcessPhase,MuonIDAlg,
                              PatLHCbIDUp2MCParticle,PatLHCbIDUp2MCHit,
                              CheatedVeloPixPat,
                              VeloPixPatLinear,
@@ -86,18 +85,17 @@ def RecoTrackingUpgrade(exclude=[]):
    # Which algs to run ?
    trackAlgs = TrackSys().getProp("TrackPatRecAlgorithms")
    cloneKiller = TrackEventCloneKiller()
-
+   from DAQSys.Decoders import DecoderDB
+   from DAQSys.DecoderClass import decodersForBank
    ########## Replace/insert decoding of velopart
    if "VeloPix" in trackAlgs :
-       veloUPLiteClusters = VeloPixRawBankToLiteCluster("VeloPixRawBankToLiteCluster")
-       veloUPLiteClusters.ClusterLocation = "Raw/VeloPix/LiteClusters"
-       veloUPClusters = VeloPixRawBankToPartialCluster("VeloPixRawBankToPartialCluster")
-       veloUPClusters.ClusterLocation = "Raw/VeloPix/Clusters"
+       decs=decodersForBank(DecoderDB,"VP")
+       from Configurables import DecodeVeloRawBuffer
        if DecodeVeloRawBuffer("DecodeVeloClusters") in GaudiSequencer("RecoDecodingSeq").Members :
            GaudiSequencer("RecoDecodingSeq").remove(DecodeVeloRawBuffer("DecodeVeloClusters"))
-       GaudiSequencer("RecoDecodingSeq").Members.insert(0,veloUPLiteClusters)
-       GaudiSequencer("RecoDecodingSeq").Members.insert(1,veloUPClusters)
-
+       seq=GaudiSequencer("RecoDecodingSeq")
+       seq.Members=[d.setup() for d in decs]+seq.Members
+   
    ## Do what is needed for Dst
    #from GaudiConf.DstConf import DummyWriter
    
