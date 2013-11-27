@@ -16,7 +16,9 @@ gaudi_depends_on_subdirs(DAQ/MDF
                          LbcomSys
                          RecSys
                          Sim/SimComponents
-                         Tools/XmlTools)
+                         Tools/XmlTools
+			 DAQ/DAQSys
+			 DAQ/RawEventCompat)
 
 find_package(HepMC)
 

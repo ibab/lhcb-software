@@ -23,6 +23,8 @@ use FieldMap    v5r*       -no_auto_imports
 use AppConfig   v3r*       -no_auto_imports
 use PRConfig    v1r*       -no_auto_imports
 use QMTestFiles v1r*       -no_auto_imports
+use RawEventFormat v*      -no_auto_imports
+
 
 # The rest are needed only to set up environment variables for job options
 # and to give a cmt broadcast dependency for user checked out component packages
@@ -38,6 +40,8 @@ use CaloDetXmlCnv  v*  Det            -no_auto_imports
 use DetDescSvc     v*  Det            -no_auto_imports
 use Magnet         v*  Det            -no_auto_imports
 use MDF            v*  DAQ            -no_auto_imports
+use DAQSys 	   v*  DAQ            -no_auto_imports
+use RawEventCompat v*  DAQ            -no_auto_imports
 
 # The whole LBCOM project
 use LbcomSys  v*                      -no_auto_imports

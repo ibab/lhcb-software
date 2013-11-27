@@ -11,7 +11,9 @@ import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
                             RecMoniConf,GaudiSequencer, RichRecQCConf, DstConf,
                             LumiAlgsConf, L0Conf, GlobalRecoChecks, CondDB,
-                            CaloDigitConf, CaloMoniDstConf, CaloProcessor, GlobalRecoConf )
+                            CaloDigitConf, CaloMoniDstConf, CaloProcessor,
+                            GlobalRecoConf, RawEventJuggler, DecodeRawEvent,
+                            RawEventFormatConf)
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -26,7 +28,10 @@ class Brunel(LHCbConfigurableUser):
     __used_configurables__ = [ TrackSys, RecSysConf, RecMoniConf,
                                (RichRecQCConf,richMoniConfName),
                                LHCbApp, DstConf, LumiAlgsConf, L0Conf,
-                               GlobalRecoChecks,CaloDigitConf,CaloMoniDstConf ]
+                               GlobalRecoChecks,CaloDigitConf,CaloMoniDstConf,
+                               RawEventJuggler, DecodeRawEvent,
+                               RawEventFormatConf
+                               ]
 
     ## Default init sequences
     DefaultInitSequence      = ["Brunel"]
@@ -76,6 +81,8 @@ class Brunel(LHCbConfigurableUser):
        ,"VetoHltErrorEvents" : True
        ,"Detectors"       : ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
        ,"UpgradeDets"     : []
+       ,"SplitRawEventInput" : None #Where the raw event sits on the input
+       ,"SplitRawEventOutput" : 2.0 #how to split the raw event
         # only use for Online running
        ,"UseDBSnapshot" : False
        ,"PartitionName" : "LHCb"
@@ -117,6 +124,8 @@ class Brunel(LHCbConfigurableUser):
        ,"VetoHltErrorEvents" : """Do not reconstruct events that have been flagged as error by Hlt"""
        ,"Detectors"    : """List of detectors""" 
        ,"UpgradeDets"  : """List of Upgrade detectors"""
+       , "SplitRawEventInput" : "How is the even split up in the input? Default 'None' doesn't reset any locations. Other values propagate to RawEventJuggler() and DecodeRawEvent()."
+       , "SplitRawEventOutput" : "How to split the raw event up, versions are defined in the RawEventFormat DB, and RawEventCompat/RawEventJuggler is used for the splitting, default 2.0 the split type for Reco14/Stripping20-style DSTs"
         # only use for Online running
         ,"UseDBSnapshot" : """Use a snapshot for velo position and rich pressure"""
         ,"PartitionName" : """Name of the partition when running (needed to find DB: '', 'FEST', or 'LHCb'"""
@@ -275,7 +284,20 @@ class Brunel(LHCbConfigurableUser):
             if histOpt == "Expert": histosName += '-expert'
             histosName += '-histos.root'
             HistogramPersistencySvc().OutputFile = histosName
-
+            
+        #reconfigure decoders to point to default location, if required!
+        if DecodeRawEvent().isPropertySet("OverrideInputs") and DecodeRawEvent().getProp("OverrideInputs") is not None:
+            #do nothing, it's been configured by someone else!
+            pass
+        elif self.isPropertySet("SplitRawEventInput") and self.getProp("SplitRawEventInput") is not None:
+            #print "WAAAAH Overriding RawEvent Locations"
+            DecodeRawEvent().setProp("OverrideInputs",self.getProp("SplitRawEventInput"))
+        elif inputType in [ "MDF", "DIGI", "XDIGI" ]:
+            #set to the default of what comes out of Moore
+            DecodeRawEvent().setProp("OverrideInputs","Moore")
+        #remember that the default is a long list of locations,
+        #starting with places which only exist _after_ brunel has run!
+    
     def defineMonitors(self):
 
         # get all defined monitors
@@ -326,11 +348,13 @@ class Brunel(LHCbConfigurableUser):
             #brunelSeq.Members += [ lumiSeq ]
 
         # Do not process events flagged as error in Hlt, but still write procstatus
-        from Configurables import HltDecReportsDecoder
         if vetoHltErrorEvents:
             """
             By Patrick Koppenburg, 16/6/2011
             """
+            
+            from DAQSys.Decoders import DecoderDB
+            HltDecReportsDecoder=DecoderDB["HltDecReportsDecoder"].setup()
             from Configurables import LoKi__HDRFilter, AddToProcStatus
             # identifies events that are not of type Hlt1ErrorEvent or Hlt2ErrorEvent
             filterCode = "HLT_PASS_RE('Hlt1(?!ErrorEvent).*Decision') & HLT_PASS_RE('Hlt2(?!ErrorEvent).*Decision')"  # from Gerhard
@@ -338,7 +362,7 @@ class Brunel(LHCbConfigurableUser):
             # Make a sequence that selects these events
             hltfilterSeq = GaudiSequencer( "HltFilterSeq" )
             if handleLumi: hltfilterSeq.Members = [ physFilter ]         # protect against lumi (that doesn't have decreports)
-            hltfilterSeq.Members += [ HltDecReportsDecoder(),            # decode DecReports
+            hltfilterSeq.Members += [ HltDecReportsDecoder,              # decode DecReports
                                       hltErrorFilter ]                   # apply filter
             # Sequence to be executed if hltErrorFilter is failing to set ProcStatus
             hlterrorSeq = GaudiSequencer("HltErrorSeq", ModeOR = True, ShortCircuit = True) # anti-logic
@@ -352,12 +376,14 @@ class Brunel(LHCbConfigurableUser):
         caloDetectors = [det for det in ['Spd','Prs','Ecal','Hcal'] if det in self.getProp("Detectors")]
         CaloDigitConf(ReadoutStatusConvert=True,Sequence=caloBanks,Detectors=caloDetectors)
         physicsSeq.Members += [caloBanks]
-
+        
         # Decode L0 (and HLT if not already done)
         trgSeq = GaudiSequencer("DecodeTriggerSeq")
         l0TrgSeq = GaudiSequencer("L0TriggerSeq")
         if self.getProp( "DataType" ) not in [ "2008", "2009" ]:
-            trgSeq.Members += [ HltDecReportsDecoder() ]
+            from DAQSys.Decoders import DecoderDB
+            HltDecReportsDecoder=DecoderDB["HltDecReportsDecoder"].setup()
+            trgSeq.Members += [ HltDecReportsDecoder ]
         trgSeq.Members += [ l0TrgSeq ]
         physicsSeq.Members += [ trgSeq ]
         L0Conf().L0Sequencer = l0TrgSeq
@@ -517,82 +543,50 @@ class Brunel(LHCbConfigurableUser):
                 IODataManager().AgeLimit += 1
 
             if dstType in ["SDST","DST","XDST"] and packType not in ["MDF"]:
+                jseq=GaudiSequencer("RawEventSplitSeq")
+                #################################
                 # Split the Raw Event for the DST
-
-                # first the Trigger Raw Event
-                from Configurables import RawEventSelectiveCopy
-                trigRawBankCopy = RawEventSelectiveCopy('TriggerRawBank')
-                trigBanks = [ 'ODIN',
-                              'HltSelReports',
-                              'HltDecReports',
-                              'HltRoutingBits',
-                              'HltVertexReports',
-                              'L0Calo',
-                              'L0CaloFull',
-                              'L0DU',
-                              'L0Muon',
-                              'L0MuonProcCand',
-                              'L0PU'
-                              ]
-                trigRawBankCopy.RawBanksToCopy = trigBanks
-                trigRawBankCopy.OutputRawEventLocation = "Trigger/RawEvent"
-                GaudiSequencer("OutputDSTSeq").Members += [trigRawBankCopy]
-                    
-                # then the Calo Raw Event
-                caloRawBankCopy = RawEventSelectiveCopy('CaloRawBank')
-                caloBanks = []
-                if self.isPropertySet("Detectors"):
-                    for det in ['Prs', 'Ecal', 'Hcal']:
-                        if det in self.getProp("Detectors"):
-                            for bankType in ['E', 'Trig', 'Packed', 'PackedError']:
-                                caloBanks.append("%s%s" %(det, bankType))
+                # Use the RawEventJuggler.
+                # Not delegated to DSTConf.
+                # Some information must be shared with DSTConf
+                #################################
+                juggler=RawEventJuggler()
+                juggler.Sequencer=jseq
+                dstseq=GaudiSequencer("OutputDSTSeq")
+                dstseq.Members.append(jseq)
+                # Set the output version if not already overwritten
+                if juggler.isPropertySet("Output") and juggler.getProp("Output") is not None:
+                    #it's already set
+                    pass
                 else:
-                    caloBanks = [ 'PrsE',
-                                  'EcalE',
-                                  'HcalE',
-                                  'PrsTrig',
-                                  'EcalTrig',
-                                  'HcalTrig',
-                                  'EcalPacked',
-                                  'HcalPacked',
-                                  'PrsPacked',
-                                  'EcalPackedError',
-                                  'HcalPackedError',
-                                  'PrsPackedError'
-                                  ]
-                caloRawBankCopy.RawBanksToCopy = caloBanks
-                caloRawBankCopy.OutputRawEventLocation = "Calo/RawEvent"
-                GaudiSequencer("OutputDSTSeq").Members += [caloRawBankCopy]
-                    
-                banksToRemove = []
-                if "Muon" in self.getProp("Detectors"):
-                    # then the Muon Raw Event
-                    muonRawBankCopy = RawEventSelectiveCopy('MuonRawBank')
-                    muonRawBankCopy.RawBanksToCopy = [ 'Muon' ]
-                    muonRawBankCopy.OutputRawEventLocation = "Muon/RawEvent"
-                    GaudiSequencer("OutputDSTSeq").Members += [muonRawBankCopy]
-                    banksToRemove += ['Muon']
-
-                if [det for det in ['Rich1', 'Rich2', 'Rich1Pmt', 'Rich2Pmt'] if det in self.getProp("Detectors")]:
-                    # then the Rich Raw Event
-                    richRawBankCopy = RawEventSelectiveCopy('RichRawBank')
-                    richRawBankCopy.RawBanksToCopy = [ 'Rich' ]
-                    richRawBankCopy.OutputRawEventLocation = "Rich/RawEvent"
-                    GaudiSequencer("OutputDSTSeq").Members += [richRawBankCopy]
-                    banksToRemove += ['Rich']                    
-
-                # and the rest
-                allOtherRawBankCopy = RawEventSelectiveCopy('OtherRawEvent')
-                allOtherRawBankCopy.RawBanksToRemove = trigBanks + banksToRemove + caloBanks
-                allOtherRawBankCopy.OutputRawEventLocation = "Other/RawEvent"
-                GaudiSequencer("OutputDSTSeq").Members += [allOtherRawBankCopy]
-                                        
-                # Finally, remove knowledge of original RawEvent
-                from Configurables import EventNodeKiller
-                daqKiller = EventNodeKiller("DAQKiller")
-                daqKiller.Nodes += [ "DAQ" ]
-                GaudiSequencer("OutputDSTSeq").Members += [daqKiller]
-
+                    juggler.setProp("Output",self.getProp("SplitRawEventOutput"))
+                #set the input version, could come from several places
+                if self.isPropertySet("SplitRawEventInput") and self.getProp("SplitRawEventInput") is not None:
+                    #if set, take it from Brunel()
+                    juggler.setProp("Input",self.getProp("SplitRawEventInput"))
+                    #otherwise use the setting of the juggler if it is set
+                elif juggler.isPropertySet("Input") and juggler.getProp("Input") is not None:
+                    pass
+                    #else find it from DecodeRawEvent
+                elif DecodeRawEvent().isPropertySet("OverrideInputs") and DecodeRawEvent().getProp("OverrideInputs") is not None:
+                    juggler.setProp("Input",DecodeRawEvent().getProp("OverrideInputs"))
+                else:
+                    #or set the default to whatever comes out of Moore by default
+                    juggler.setProp("Input","Moore")
+                
+                #share information from the Juggler with DSTConf
+                #always write out to where the Juggler asked!    
+                DstConf().setProp("SplitRawEventOutput", juggler.getProp("Output"))
+                #or else the default in the juggler is used, should be 0.0
+                #TODO, handle the turned off Calo, shouldn't actually be a problem...
+                from RawEventCompat.Configuration import _checkv
+                from Configurables import RawEventFormatConf
+                RawEventFormatConf().loadIfRequired()
+                if juggler.getProp("Input")!=juggler.getProp("Output"):
+                    if (juggler.getProp("Input") is None or juggler.getProp("Output")) is None or (_checkv(juggler.getProp("Input")))!=(_checkv(juggler.getProp("Output"))):
+                        juggler.KillExtraBanks=True
+                        juggler.KillExtraNodes=True
+            
             from Configurables import TrackToDST
 
             # Filter Best Track States to be written
@@ -624,6 +618,14 @@ class Brunel(LHCbConfigurableUser):
             DstConf().Writer     = writerName
             DstConf().DstType    = dstType
             DstConf().PackType   = packType
+            #In case we didn't juggle the raw event,
+            #We should write out the same as the input type!
+            if not DstConf().isPropertySet("SplitRawEventOutput"):
+                if self.isPropertySet("SplitRawEventInput") and self.getProp("SplitRawEventInput") is not None:
+                    DstConf().setProp("SplitRawEventOutput",self.getProp("SplitRawEventInput"))
+                elif DecodeRawEvent().isPropertySet("OverrideInputs") and DecodeRawEvent().getProp("OverrideInputs") is not None:
+                    DstConf().setProp("SplitRawEventOutput",DecodeRawEvent().getProp("SplitRawEventInput"))
+            
             if withMC:
                 DstConf().SimType = "Full"
             elif self.getProp("DigiType").capitalize() == "Minimal":
