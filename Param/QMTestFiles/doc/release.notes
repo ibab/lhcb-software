@@ -4,6 +4,11 @@
 ! Purpose     : Small data files used as input to QMTests
 !-----------------------------------------------------------------------------
 
+!========================= QMTestFiles v1r1 2013-11-26 =========================
+! 2013-11-26 - Marco Cattaneo
+ - Add data/136237_10ev_bug_svn164539.dst: 10 events from 2013 pA run 136237,
+   including event (9th in the file) that triggered bug fixed in SVN r164539
+
 !========================= QMTestFiles v1r0 2013-04-30 =========================
 ! 2013-04-16 - Marco Cattaneo
  - Initial version containing single events files used by Brunel regression tests
