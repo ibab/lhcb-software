@@ -13,7 +13,8 @@ gaudi_depends_on_subdirs(Det/DetDesc
                          Kernel/FSRAlgs
                          Kernel/HltInterfaces
                          Kernel/LHCbAlgs
-                         Kernel/LHCbKernel)
+                         Kernel/LHCbKernel
+			 DAQ/DAQSys)
 
 find_package(Boost COMPONENTS iostreams)
 find_package(RELAX)

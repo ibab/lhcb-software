@@ -73,17 +73,24 @@ class LumiAlgsConf(LHCbConfigurableUser):
         - to keep code clean it is better to use for earlier versions of Moore only the other FSR -
         '''
         from Configurables import ( LumiAccounting,
-                                    HltLumiSummaryDecoder, FilterOnLumiSummary, FilterFillingScheme,
+                                    FilterOnLumiSummary, FilterFillingScheme,
                                     GaudiSequencer )
         from Configurables import LoKi__ODINFilter  as ODINFilter
         # Create sub-sequences according to BXTypes
         crossings = self.getProp("BXTypes")
         BXMembers = []
+        from DAQSys.Decoders import DecoderDB
+        HltLumiSummaryDecoder=DecoderDB["HltLumiSummaryDecoder"]
         for i in crossings:
             seqMembers=[]
             seqMembers.append( ODINFilter ( 'Filter'+i,
                                             Code = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.'+i+' ) ' ))
-            decoder = HltLumiSummaryDecoder('LumiDecode'+i)
+            ddb=HltLumiSummaryDecoder.clone('HltLumiSummaryDecoder/LumiDecode'+i)
+            #ddb.Active=True
+            #don't think this will work, all decoders would be writing to the same location? What if a bunch is of two types?
+            if self.getProp('InputType') == 'DST':
+                    ddb.overrideOutputs('LumiSummaries')
+            decoder=ddb.setup()
             seqMembers.append( decoder )
             methodfilter = FilterOnLumiSummary('LumiFilter'+i,
                                                CounterName = "Random",
@@ -137,7 +144,6 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                              ShortCircuit = True
                                              ))
             if self.getProp('InputType') == 'DST':
-                    decoder.OutputContainerName='LumiSummaries'
                     accounting.InputDataContainer='LumiSummaries'
         
         return BXMembers
@@ -155,11 +161,18 @@ class LumiAlgsConf(LHCbConfigurableUser):
         # Create sub-sequences according to BXTypes
         crossings = self.getProp("BXTypes")
         BXMembers = []
+        from DAQSys.Decoders import DecoderDB
+        HltLumiSummaryDecoder=DecoderDB["HltLumiSummaryDecoder"]
         for i in crossings:
             seqMembers=[]
             seqMembers.append( ODINFilter ( 'FilterLow'+i,
                                             Code = ' ( ODIN_TRGTYP <= LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.'+i+' ) ' ))
-            decoder = HltLumiSummaryDecoder('LumiDecode'+i)  # keep the name without "Low" to avoid double execution
+            ddb=HltLumiSummaryDecoder.clone('HltLumiSummaryDecoder/LumiDecode'+i)
+            #ddb.Active=True
+            #don't think this will work, all decoders would be writing to the same location? What if a bunch is of two types?
+            if self.getProp('InputType') == 'DST':
+                    ddb.overrideOutputs('LumiSummaries')
+            decoder=ddb.setup()
             seqMembers.append( decoder )
             methodfilter = FilterOnLumiSummary('LumiLowFilter'+i,
                                                CounterName = "Method",
@@ -179,7 +192,6 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                              ShortCircuit = True
                                              ))
             if self.getProp('InputType') == 'DST':
-                    decoder.OutputContainerName='LumiSummaries'
                     accounting.InputDataContainer='LumiSummaries'
                     methodfilter.InputDataContainer='LumiSummaries'
         

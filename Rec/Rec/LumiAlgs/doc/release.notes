@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2013-11-21 - Rob Lambert
+ - Adapt to DecoderDB, this is a major change
+
 !========================= LumiAlgs v8r2 2013-10-01 =========================
 ! 2013-09-19 - Jaap Panman
  - Fix bug in TimeAccounting.cpp to avoid writing multiple timeSpanFSRs 

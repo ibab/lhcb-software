@@ -12,12 +12,10 @@ from Configurables import LHCb__MDFWriter as MDFWriter
 from Configurables import GaudiSequencer as Sequence
 from Configurables import ( LHCbConfigurableUser, LHCbApp )
 
-from Configurables import createODIN
 from Configurables import LoKi__ODINFilter  as ODINFilter
 from Configurables import RawEventDump
 from Configurables import bankKiller 
 from Configurables import FileIdBankWriter
-from Configurables import HltLumiSummaryDecoder
 from Configurables import FilterOnLumiSummary
 
 
@@ -68,9 +66,11 @@ class LumiWriterConf(LHCbConfigurableUser):
                                                     IgnoreFilterPassed = False,
                                                     MeasureTime = True,
                                                     OutputLevel = debugOPL  ) )
-        
+    from DAQSys.Decoders import DecoderDB
+    from DAQSys.DecoderClass import decodersForBank
     # create ODIN by hand
-    writeLumiSequence( createODIN ('createODIN') )
+    for d in decodersForBank(DecoderDB,"ODIN"):
+        writeLumiSequence( d.setup() )
     # verbose output
     if debugging:
       writeLumiSequence( RawEventDump( 'InputDump', DumpData = False, OutputLevel = debugOPL ) )
@@ -82,7 +82,8 @@ class LumiWriterConf(LHCbConfigurableUser):
 
     ## Lumi only triggers 
     # decode summary data
-    writeLumiSequence( HltLumiSummaryDecoder( OutputLevel = debugOPL ))
+    for d in decodersForBank(DecoderDB,"HltLumiSummary"):
+        writeLumiSequence( d.setup() ) 
     # add filter to check if this was L0 triggered
     filterRan = FilterOnLumiSummary('LumiRandomFilter', CounterName = "Random", ValueName = "RandomMethod")
     #filterLow = FilterOnLumiSummary('LumiLowFilter', CounterName = "Method", ValueName = "L0RateMethod")

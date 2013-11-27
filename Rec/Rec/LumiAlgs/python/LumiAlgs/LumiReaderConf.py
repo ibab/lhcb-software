@@ -10,10 +10,8 @@ from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
 from Configurables import ( LHCbConfigurableUser, LHCbApp )
 
-from Configurables import createODIN
 from Configurables import LoKi__ODINFilter  as ODINFilter
 from Configurables import RawEventDump
-from Configurables import HltLumiSummaryDecoder
 from Configurables import FilterOnLumiSummary
 from Configurables import LumiFileReader
 
@@ -62,15 +60,18 @@ class LumiReaderConf(LHCbConfigurableUser):
                                                     IgnoreFilterPassed = False,
                                                     MeasureTime = True,
                                                     OutputLevel = debugOPL  ) )
-        
+    from DAQSys.Decoders import DecoderDB
+    from DAQSys.DecoderClass import decodersForBank
     # create ODIN by hand
-    readLumiSequence( createODIN ('createODIN') )
+    for d in decodersForBank(DecoderDB,"ODIN"):
+        readLumiSequence( d.setup() )
     # select only the right Trigger Type
     readLumiSequence( ODINFilter ( 'OdinTriggerTypes',
                                    Code = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) ' ))
     
     # decode lumi
-    readLumiSequence( HltLumiSummaryDecoder( 'LumiDecoder' ) ) 
+    for d in decodersForBank(DecoderDB,"HltLumiSummary"):
+        readLumiSequence( d.setup() ) 
     # add filter to check if this was L0 triggered
     filterRan = FilterOnLumiSummary('LumiRandomFilter', CounterName = "Random", ValueName = "RandomMethod")
     filterLow = FilterOnLumiSummary('LumiLowFilter', CounterName = "Method", ValueName = "L0RateMethod")
