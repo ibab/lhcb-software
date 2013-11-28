@@ -230,18 +230,23 @@ class OptionsWriter(Control.AllocatorClient):
     return None
 
   # ===========================================================================
-  def _makeRunInfo(self,partition):
+  def optHeader(self,partition):
     activity = self.activityName()
     run_type = self.run.runType()
-    opts = Options('//  Auto generated RunInfo options for partition:'+partition+\
-                   ' activity:'+run_type+'  '+time.ctime())
+    msg = 'Auto generated RunInfo options for partition:'+partition+\
+        ' activity:'+run_type+'  '+time.ctime()
+    return msg
+
+  # ===========================================================================
+  def _makeRunInfo(self,partition):
+    opts = Options('//'+self.optHeader(partition))
     opts.object = 'OnlineRunInfo'
     rt = run_type.lower()
     opts.add('//\n// ---------------- RunInfo:  ')
     opts.add('general.PartitionID',           self.run.partitionID())
     opts.add('general.PartitionName',         partition)
     opts.add('general.PartitionIDName',       '%04X'%self.run.partitionID())
-    opts.add('general.RunType',               run_type)
+    opts.add('general.RunType',               self.run.runType())
     opts.add('general.TAE',                   self.run.TAE())
     opts.add('HLTFarm.nSubFarms',             self.run.nSubFarm.data)
     opts.add('Storage.dataDirectory',         self.run.storageDir.data)
@@ -348,9 +353,8 @@ class OptionsWriter(Control.AllocatorClient):
 
   # ===========================================================================
   def _getOnlineEnv(self,partition):
-    run_type = self.run.runType()
-    opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
-    self.addGeneralInfo(partition,opts)
+    opts = Options('//'+self.optHeader(partition))
+    opts = self.addGeneralInfo(partition,opts)
     opts.add('MessageSvc.OutputLevel     = '+str(self.run.outputLevel())+';')
     return self.addTriggerInfo(opts)
 
@@ -365,9 +369,9 @@ class OptionsWriter(Control.AllocatorClient):
   # ===========================================================================
   def _writePyOnlineEnv(self,partition,fname='OnlineEnv',subdir=None):
     run_type = self.run.runType()
-    opts = PyOptions('#  Auto generated PyOnlineEnv for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
-    self.addGeneralInfo(partition,opts)
-    self.addTriggerInfo(opts)
+    opts = PyOptions('#'+self.optHeader(partition))
+    opts = self.addGeneralInfo(partition,opts)
+    opts = self.addTriggerInfo(opts)
     if self.writePythonFile(partition, fname+'Base', subdir, opts.value) is None:
       return None
 
@@ -696,15 +700,7 @@ class HLTOptionsWriter(OptionsWriter):
         log('      --> Farm:'+farm+' sends to slot:'+slots[i]+', Task:'+name,timestamp=1)
 
       opts = PyOptions('#  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
-      opts.comment().comment('---------------- General partition information:  ')
-      opts.add('PartitionID',    self.run.partitionID())
-      opts.add('PartitionIDName','%04X'%self.run.partitionID())
-      opts.add('PartitionName',  partition)
-      opts.add('Activity',       run_type)
-      opts.add('TAE',            self.run.TAE())
-      opts.add('OutputLevel',    self.run.outputLevel())
-      opts.add('HltArchitecture',self.run.hltArchitecture())
-      opts.add('CalibArchitecture',self.run.calibArchitecture())
+      opts = self.addGeneralInfo(partition,opts)
       opts.comment('---------------- HLT patrameters:   ')
       opts.add('SubFarms',       farm_names)
 
