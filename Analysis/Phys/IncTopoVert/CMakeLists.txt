@@ -11,8 +11,9 @@ gaudi_depends_on_subdirs(GaudiAlg
                          Event/L0Event
                          Phys/DaVinciInterfaces)
 
+gaudi_install_headers(IncTopoVert)
+
 gaudi_add_module(IncTopoVert
                  src/*.cpp
-                 PUBLIC_HEADERS IncTopoVert
                  LINK_LIBRARIES GaudiAlgLib RecEventLib TrackEventLib)
 

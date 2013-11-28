@@ -4,6 +4,9 @@
 ! Purpose     : Inclusive Vertex Reconstruction
 !-----------------------------------------------------------------------------
 
+! 2013-11-28 - Marco Clemencic
+ - Fixed CMake configuration.
+
 !========================= IncTopoVert v1r1 2013-10-29 =========================
 
 ! 2013-10-17 - Chris Jones
