@@ -241,7 +241,7 @@ class OptionsWriter(Control.AllocatorClient):
   def _makeRunInfo(self,partition):
     opts = Options('//'+self.optHeader(partition))
     opts.object = 'OnlineRunInfo'
-    rt = run_type.lower()
+    rt = self.run.runType().lower()
     opts.add('//\n// ---------------- RunInfo:  ')
     opts.add('general.PartitionID',           self.run.partitionID())
     opts.add('general.PartitionName',         partition)
@@ -368,19 +368,16 @@ class OptionsWriter(Control.AllocatorClient):
 
   # ===========================================================================
   def _writePyOnlineEnv(self,partition,fname='OnlineEnv',subdir=None):
-    run_type = self.run.runType()
     opts = PyOptions('#'+self.optHeader(partition))
     opts = self.addGeneralInfo(partition,opts)
     opts = self.addTriggerInfo(opts)
     if self.writePythonFile(partition, fname+'Base', subdir, opts.value) is None:
       return None
-
-    opts = PyOptions('#  Auto generated PyOnlineEnv for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
+    opts = PyOptions('#'+self.optHeader(partition))
     opts.comment().add('from '+fname+'Base import *')
     opts.comment().add('from OnlineConfig import *')
     if self.writePythonFile(partition, fname, subdir, opts.value) is None:
       return None
-
     return self.run
 
   
@@ -407,7 +404,6 @@ class OptionsWriter(Control.AllocatorClient):
   def _getTell1Boards(self,partition,hdr=''):
     h = hdr
     if len(h)>0: h = h+'\n'
-    run_type = self.run.runType()
     opts = Options(h+'// ---------------- Tell1 board information:')
     opts.add('OnlineEnv.Tell1Boards         = {')
     err = None
@@ -452,8 +448,7 @@ class OptionsWriter(Control.AllocatorClient):
   # ===========================================================================
   def _writeTell1Boards(self,partition):
     opts = self._getTell1Boards(partition)
-    opts.value = '//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime()+'\n'+\
-                 opts.value
+    opts.value = '//'+self.optHeader(partition)+'\n'+opts.value
     fname = partition+'_Tell1Boards'
     if self.writeOptionsFile(partition, fname, opts.value) is None:
       return None
@@ -475,7 +470,6 @@ class OptionsWriter(Control.AllocatorClient):
   def _getInjectorInfo(self,partition):
     b = ''
     try:
-      run_type = self.run.runType()
       opts = Options().comment('---------------- Injector information:')
       #opts.comment('  RUN_Info.Injector.FullPartId:')
       #opts.add('Injector_FullPartId',      self.run.inj_fullPartId.data)
@@ -537,13 +531,10 @@ class OptionsWriter(Control.AllocatorClient):
     tasks = self.getTasks(activity)
     env = self._getOnlineEnv(partition).value
     if tasks is not None:
-      run_type = self.run.runType()
       for task in tasks:
-        opts = Options('//  Auto generated options for partition:'+partition+\
-               ' activity:'+run_type+' task:'+task.name+'  '+time.ctime()+'\n' +\
-               '#include "$PREAMBLE_OPTS"')
+        opts = Options('//'+self.optHeader(partition)+'\n#include "$PREAMBLE_OPTS"')
         if task.defaults.data:
-          rt = run_type.lower()
+          rt = self.run.runType().lower()
           opts.value = opts.value + env
           opts.add('HostType',       self.hostType)
           opts.add('HostTypes',     [self.hostType])
@@ -617,7 +608,6 @@ class HLTOptionsWriter(OptionsWriter):
 
   # ===========================================================================
   def _writeHLTOpts(self,partition):
-    run_type = self.run.runType()
     info = self.getStreamInfo(self.storageMgr,'Storage')
     if info is not None:
       farms = self.run.subFarms.data
@@ -626,10 +616,8 @@ class HLTOptionsWriter(OptionsWriter):
         error('Severe mismatch: Number of subfarms:'+str(len(farms))+' Number of recv tasks:'+str(len(slots)))
         return None
       num = len(farms)
-      run_type = self.run.runType()
       farm_names = []
-      hdr='//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime()+'\n'+\
-          '//  Number of subfarms:'+str(len(farms))
+      hdr='//'+self.optHeader(partition)+'\n//  Number of subfarms:'+str(len(farms))
       
       for i in xrange(num):
         node = slots[i].split(':')[0]
@@ -670,8 +658,7 @@ class HLTOptionsWriter(OptionsWriter):
 
   # ===========================================================================
   def _writePyHLTOpts(self,partition):
-    #import ctypes
-    run_type = self.run.runType()
+    opt_header = self.optHeader(partition)
     info = self.getStreamInfo(self.storageMgr,'Storage')
     if info is not None:
       farms = self.run.subFarms.data
@@ -687,8 +674,7 @@ class HLTOptionsWriter(OptionsWriter):
         name = '%s_%s_SF%02d_HLT'%(partition,node,i)
         farm = farms[i]
         farm_names.append(farm)
-        opts = '# Auto generated PyHLTOpts for partition:'+partition+' activity:'+run_type+\
-               '  '+time.ctime()+'\n#\n'+\
+        opts = '#'+opt_header+'\n#\n'+\
                '# ---------------- Data sending information for sub-farm:'+farm+'\n'+\
                'Target  = "'+node+'-d1::'+name+'"\n'+\
                'Target0 = [ "'+node+'-d1::'+name+'" ]\n'+\
@@ -699,7 +685,7 @@ class HLTOptionsWriter(OptionsWriter):
           return None
         log('      --> Farm:'+farm+' sends to slot:'+slots[i]+', Task:'+name,timestamp=1)
 
-      opts = PyOptions('#  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
+      opts = PyOptions('#'+opt_header)
       opts = self.addGeneralInfo(partition,opts)
       opts.comment('---------------- HLT patrameters:   ')
       opts.add('SubFarms',       farm_names)
@@ -710,8 +696,7 @@ class HLTOptionsWriter(OptionsWriter):
       #else:
       #  opts.add('DeferredRuns', ["*"])
 
-      self.addTriggerInfo(opts)
-
+      opts = self.addTriggerInfo(opts)
       if self.writePythonFile(partition, partition+'_Info', subdir='HLT', opts=opts.value) is None:
         return None
 
@@ -720,7 +705,7 @@ class HLTOptionsWriter(OptionsWriter):
         self._makeRunInfo(partition)
         return self.run
         
-      opts = Options('#  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
+      opts = Options('#'+opt_header)
       opts.comment().comment('---------------- Tell1 board information:  ')
       opts.add('Tell1Boards         = [')
       err = None
