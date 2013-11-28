@@ -186,15 +186,22 @@ class RichRecSysConf(RichConfigurableUser):
             pixelSeq = self.makeRichAlg(GaudiSequencer,"Rich"+cont+"PixelsSeq")
             initSeq.Members += [ pixelSeq ]
             # Raw decoding algorithm
-            # Parasite in on thsi with my database so that the
+            # Parasite in on this with my database so that the
             # automatic reconfiguration of locations is spawned
             from DAQSys.Decoders import DecoderDB
             from DAQSys.DecoderClass import decodersForBank
-            decodeRich =DecoderDB["Rich::DAQ::RawBufferToRichDigitsAlg/RichRawEventToDigits"].clone("Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRich"+cont)
+            aname="DecodeRawRich"+cont
+            #clone the pre-existing alg in the database first...
+            decodeRich =DecoderDB["Rich::DAQ::RawBufferToRichDigitsAlg/RichRawEventToDigits"].clone("Rich::DAQ::RawBufferToRichDigitsAlg/"+aname)
             decodeRich.Properties["DecodeBufferOnly"]=True
-            decodeRich.Active=True
+            #with ["DecodeBufferOnly"]=True, alg produces no output ...
+            decodeRich.Outputs=[]
+            #set "Active" to auto reconfigure the input location if needed
+            decodeRich.Active=True 
             decodeRich=decodeRich.setup()
-            decodeRich = self.makeRichAlg( Rich__DAQ__RawBufferToRichDigitsAlg, decodeRich.getFullName() )
+            #call the makeRichAlg anyway, even though it is already "made..."
+            #just in case it is adapted to do other things in the future
+            decodeRich = self.makeRichAlg( Rich__DAQ__RawBufferToRichDigitsAlg, aname )
             pixelSeq.Members += [ decodeRich ]
             # Add random background ?
             pixBackPercent = self.getProp("HpdRandomBackgroundProb")
