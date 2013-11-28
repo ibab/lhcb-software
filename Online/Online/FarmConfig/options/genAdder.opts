@@ -1,0 +1,4 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+#include "$INFO_OPTIONS"
+#include "$AdderOptsFile"

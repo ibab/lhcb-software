@@ -9,4 +9,6 @@
 #
 # =========================================================================
 #
-exec -a ${UTGID} ${Class1_task} -opts=../options/NodeAdder.opts
+export AdderOptsFile=/tmp/${PARTITION_NAME}_AdderOpts.opts
+python ./Tasklist_from_architecture.py ${ARCH_FILE} 3 ${AdderOptsFile}
+exec -a ${UTGID} ${Class1_task} -opts=../options/genAdder.opts
