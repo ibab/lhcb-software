@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-11-28 - Marco Cattaneo
+ - Remove RawEventFormat dependency from CMakeLists.txt, data dependencies are
+   declared in the project CMakeLists.txt
+
 ! 2013-11-27 - Rob Lambert
  - Integrate DstConf with the DecodersDB -- major change. 
  - Tested using Brunel(), which propagates certain extra options.
