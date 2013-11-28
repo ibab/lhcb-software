@@ -122,7 +122,9 @@ class General:
     self.beamgasTrigger  = None
     self.passThroughDelay= None
     self.deferredRuns    = None
-    
+    self.hltARCH         = None
+    self.calARCH         = None
+
     dpn = self.manager.name()+':'+self.name+postfix+'.general.outputLevel'
     if self.devMgr.exists(dpn):
       self.outputLvl = self.dp('general.outputLevel')
@@ -145,6 +147,12 @@ class General:
       self.passThroughDelay = self.dp('general.passThroughDelay')
     else:
       print 'No datapoint present:',dpn
+    dpn = self.manager.name()+':'+self.name+postfix+'.HLTFarm.architecture'
+    if self.devMgr.exists(dpn):
+      self.hltARCH = self.dp('HLTFarm.architecture')
+    dpn = self.manager.name()+':'+self.name+postfix+'.CALIBFarm.architecture'
+    if self.devMgr.exists(dpn):
+      self.calARCH = self.dp('CALIBFarm.architecture')
 
     if complete:
       self.addBasic()
@@ -172,6 +180,10 @@ class General:
       self.reader.add(self.tae)
     if self.passThroughDelay is not None:
       self.reader.add(self.passThroughDelay)
+    if self.hltARCH is not None:
+      self.reader.add(self.hltARCH)
+    if self.calARCH is not None:
+      self.reader.add(self.calARCH)
 
   # ===========================================================================
   def addHLT(self):
@@ -576,6 +588,22 @@ class General:
     if self.monSlice:
       if self.monSlice.data is None: self.load()
       return self.monSlice.data
+    return None
+  
+  # ===========================================================================
+  def hltArchitecture(self):
+    "Access HLT architecture name from run info."
+    if self.hltARCH:
+      if self.hltARCH.data is None: self.load()
+      return self.hltARCH.data
+    return None
+  
+  # ===========================================================================
+  def calibArchitecture(self):
+    "Access CALIB architecture name from run info."
+    if self.calARCH:
+      if self.calARCH.data is None: self.load()
+      return self.calARCH.data
     return None
   
 # =============================================================================

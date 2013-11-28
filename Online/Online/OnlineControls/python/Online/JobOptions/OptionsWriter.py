@@ -703,6 +703,8 @@ class HLTOptionsWriter(OptionsWriter):
       opts.add('Activity',       run_type)
       opts.add('TAE',            self.run.TAE())
       opts.add('OutputLevel',    self.run.outputLevel())
+      opts.add('HltArchitecture',self.run.hltArchitecture())
+      opts.add('CalibArchitecture',self.run.calibArchitecture())
       opts.comment('---------------- HLT patrameters:   ')
       opts.add('SubFarms',       farm_names)
 
