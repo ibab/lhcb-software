@@ -262,6 +262,19 @@ class OptionsWriter(Control.AllocatorClient):
     return self.writeOptionsFile(self.run.name, self.run.name+'_RunInfo', opts.value)
   
   # ===========================================================================
+  def addGeneralInfo(self,partition,opts):
+    opts.comment().comment('---------------- General partition parameters:    ')
+    opts.add('PartitionID',    self.run.partitionID())
+    opts.add('PartitionIDName','%04X'%self.run.partitionID())
+    opts.add('PartitionName',  partition)
+    opts.add('Activity',       self.run.runType())
+    opts.add('TAE',            self.run.TAE())
+    opts.add('OutputLevel',    self.run.outputLevel())
+    opts.add('HltArchitecture',self.run.hltArchitecture())
+    opts.add('CalibArchitecture',self.run.calibArchitecture())
+    return opts
+
+  # ===========================================================================
   def addTriggerInfo(self,opts):
     import math
     opts.comment('---------------- Trigger parameters:    ')
@@ -331,20 +344,13 @@ class OptionsWriter(Control.AllocatorClient):
       opts.add('OnlineVersion',   str(self.run.onlineVersion.data))
     if self.run.dataflowVersion is not None:
       opts.add('DataflowVersion',   str(self.run.dataflowVersion.data))
-
     return opts
 
   # ===========================================================================
   def _getOnlineEnv(self,partition):
     run_type = self.run.runType()
     opts = Options('//  Auto generated options for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
-    opts.comment().comment('---------------- General partition information:  ')
-    opts.add('PartitionID',    self.run.partitionID())
-    opts.add('PartitionIDName','%04X'%self.run.partitionID())
-    opts.add('PartitionName',  partition)
-    opts.add('Activity',       run_type)
-    opts.add('TAE',            self.run.TAE())
-    opts.add('OutputLevel',    self.run.outputLevel())
+    self.addGeneralInfo(partition,opts)
     opts.add('MessageSvc.OutputLevel     = '+str(self.run.outputLevel())+';')
     return self.addTriggerInfo(opts)
 
@@ -360,13 +366,7 @@ class OptionsWriter(Control.AllocatorClient):
   def _writePyOnlineEnv(self,partition,fname='OnlineEnv',subdir=None):
     run_type = self.run.runType()
     opts = PyOptions('#  Auto generated PyOnlineEnv for partition:'+partition+' activity:'+run_type+'  '+time.ctime())
-    opts.comment().comment('---------------- General partition information:  ')
-    opts.add('PartitionID',    self.run.partitionID())
-    opts.add('PartitionIDName','%04X'%self.run.partitionID())
-    opts.add('PartitionName',  partition)
-    opts.add('Activity',       run_type)
-    opts.add('TAE',            self.run.TAE())
-    opts.add('OutputLevel',    self.run.outputLevel())
+    self.addGeneralInfo(partition,opts)
     self.addTriggerInfo(opts)
     if self.writePythonFile(partition, fname+'Base', subdir, opts.value) is None:
       return None
