@@ -270,8 +270,8 @@ class OptionsWriter(Control.AllocatorClient):
     opts.add('Activity',       self.run.runType())
     opts.add('TAE',            self.run.TAE())
     opts.add('OutputLevel',    self.run.outputLevel())
-    opts.add('HltArchitecture',self.run.hltArchitecture())
-    opts.add('CalibArchitecture',self.run.calibArchitecture())
+    opts.add('HltArchitecture',str(self.run.hltArchitecture()))
+    opts.add('CalibArchitecture',str(self.run.calibArchitecture()))
     return opts
 
   # ===========================================================================
