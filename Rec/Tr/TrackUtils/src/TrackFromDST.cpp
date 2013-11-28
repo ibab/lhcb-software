@@ -56,7 +56,13 @@ StatusCode TrackFromDST::initialize()
   m_map[ LHCb::Track::PatMatch ]      = LHCb::TrackLocation::Match;
   m_map[ LHCb::Track::TsaTrack      ] = LHCb::TrackLocation::Seed;
   m_map[ LHCb::Track::PatDownstream ] = LHCb::TrackLocation::Downstream;
-  
+  // -- Upgrade types
+  m_map[ LHCb::Track::PrForward    ] = LHCb::TrackLocation::Forward;
+  m_map[ LHCb::Track::PrDownstream    ] = LHCb::TrackLocation::Downstream;
+  m_map[ LHCb::Track::PrSeeding    ] = LHCb::TrackLocation::Seed;
+  m_map[ LHCb::Track::PrMatch    ] = LHCb::TrackLocation::Match;
+  m_map[ LHCb::Track::PrVeloUT    ] = LHCb::TrackLocation::VeloTT;
+
   return StatusCode::SUCCESS;
 }
 
