@@ -1,5 +1,6 @@
 from xml.dom import minidom
 import sys
+import OnlineEnvBase
 
 def TaskListfromArch(arch, tasklist):
     xmldoc = minidom.parse(arch)
@@ -178,11 +179,12 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write("\n")
 
 tasklist = []
-arch = sys.argv[1]
-level = sys.argv[2]
+arch = OnlineEnvBase.HLTFarm.architecture
+arch = "/group/online/dataflow/architectures/lbDataflowArch_"+arch+".xml"
+level = sys.argv[1]
 TaskListfromArch(arch, tasklist)
-if len(sys.argv) >= 4:
-    ofile = sys.argv[3]
+if len(sys.argv) >= 3:
+    ofile = sys.argv[2]
 else:
     ofile = "/tmp/AdderOptions.opts"
 OptionsfromTasks(tasklist,level,ofile)
