@@ -20,9 +20,13 @@
       &KeyedObject;
 
       <constructor desc     = "Constructor"
-		   argList  = "LHCb::FTChannelID&amp; id, LHCb::MCHit* aHit, double energy">
+		   argList  = "LHCb::FTChannelID&amp; id, LHCb::MCHit* aHit, double energy, double energyRef, double time, double timeRef">
         <code> this->setKey(id); 
-	  m_mcHitVec.push_back(std::make_pair(aHit,energy));
+	  m_mcHitVec.push_back(aHit);
+	  m_energyVec.push_back(energy);
+	  m_energyRefVec.push_back(energyRef);
+	  m_timeVec.push_back(time);
+	  m_timeRefVec.push_back(timeRef);
 	</code>
       </constructor>
 
@@ -38,16 +42,46 @@
       </method>
 
       <method    name   = "addMCHit"
-                 desc   = "Add MCHit to the m_mcHitVec vector"
+                 desc   = "Add MCHit, energies and times to the relevant vectors"
                  type   = "void"
-		 argList = "LHCb::MCHit* hit, double deposit"
+		 argList = "LHCb::MCHit* aHit, double energy, double energyRef, double time, double timeRef "
                  access = "PUBLIC">
-        <code> m_mcHitVec.push_back(std::make_pair(hit,deposit)); </code>
+        <code> 
+	  m_mcHitVec.push_back(aHit);
+	  m_energyVec.push_back(energy);
+	  m_energyRefVec.push_back(energyRef);
+	  m_timeVec.push_back(time);
+	  m_timeRefVec.push_back(timeRef);
+	</code>
       </method>
 
       <attribute name   = "mcHitVec"
-                 desc   = "Vector of pairs &lt;MCHit, Deposited energy in MeV&gt;"
-                 type   = "std::vector &lt; std::pair &lt;LHCb::MCHit*, double&gt; &gt;"
+                 desc   = "Vector of MCHits"
+                 type   = "std::vector &lt; LHCb::MCHit* &gt;"
+		 setMeth = "FALSE"
+                 access = "PRIVATE"/>
+
+      <attribute name   = "energyVec"
+                 desc   = "Vector of energy deposits"
+                 type   = "std::vector &lt; double &gt;"
+		 setMeth = "FALSE"
+                 access = "PRIVATE"/>
+
+      <attribute name   = "energyRefVec"
+                 desc   = "Vector of energy deposits"
+                 type   = "std::vector &lt; double &gt;"
+		 setMeth = "FALSE"
+                 access = "PRIVATE"/>
+
+      <attribute name   = "timeVec"
+                 desc   = "Vector of energy deposits"
+                 type   = "std::vector &lt; double &gt;"
+		 setMeth = "FALSE"
+                 access = "PRIVATE"/>
+
+      <attribute name   = "timeRefVec"
+                 desc   = "Vector of energy deposits"
+                 type   = "std::vector &lt; double &gt;"
 		 setMeth = "FALSE"
                  access = "PRIVATE"/>
 

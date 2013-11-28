@@ -4,6 +4,12 @@
 ! Purpose     : Event model for FT digitisation and reconstruction
 !-----------------------------------------------------------------------------
 
+! 2013-11-28 - Maurizio Martinelli
+ - modified FTDeposit structure, from map<MCHit,double energy> to a structure
+ with many containers with MCHit, energy, and arrival time to SiPM for both
+ the direct and reflected light pulse.
+ - FTDigit is modified accordingly to store the FTDeposit pointers used.
+
 !========================= FTEvent v1r4 2013-05-14 =========================
 ! 2013-05-07 - Eric Cogneras
  - add xml/lcgdict/lcg_selection.xml and dict/lcgDict.h for python compatibility

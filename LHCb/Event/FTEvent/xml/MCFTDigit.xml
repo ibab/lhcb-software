@@ -13,6 +13,7 @@
            serializers="FALSE">
       <import   name = "Kernel/FTChannelID" />
       <import   name = "Event/MCHit.h" />
+      <import   name = "Event/MCFTDeposit.h" />
       <location name = "Default"   place="MC/FT/Digits"   />
 
       <template name = "KeyedObjectDict" t1="LHCb::FTChannelID"/>
@@ -20,8 +21,8 @@
       &KeyedObject;
 
       <constructor desc     = "Constructor"
-		   argList  = "LHCb::FTChannelID&amp; id, int adc, std::map&lt;const LHCb::MCHit*, double&gt; hitMap" 
-                   initList = "m_adcCount(adc),m_mcHitMap(hitMap)">
+		   argList  = "LHCb::FTChannelID&amp; id, int adc, const LHCb::MCFTDeposit* deposit" 
+                   initList = "m_adcCount(adc),m_deposit(deposit)">
         <code> this->setKey(id); </code>
       </constructor>
 
@@ -50,9 +51,9 @@
                  type   = "int"
                  access = "PRIVATE"/>
 
-      <attribute name   = "mcHitMap"
-                 desc   = "map of MCHit involved in the digit and deposited energy"
-                 type   = "std::map&lt; const LHCb::MCHit*, double&gt;"
+      <attribute name   = "deposit"
+                 desc   = "the MCFTDeposit corresponding to this digit"
+                 type   = "const LHCb::MCFTDeposit*"
                  setMeth = "FALSE"
                  access = "PRIVATE"/>
 
