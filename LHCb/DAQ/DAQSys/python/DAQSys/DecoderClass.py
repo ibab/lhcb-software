@@ -68,7 +68,7 @@ class Decoder(object):
             self.__db__=conf
     def listRequired(self):
         """
-        Return a unique ordered list of the requirements, from lowest to highest level
+        Return a unique ordered list of the requirements, i.e entries added to 'Required', from lowest to highest level
         """
         retlist=[]
         for alg in self.PrivateTools+self.PublicTools:
@@ -82,6 +82,31 @@ class Decoder(object):
                 continue
             retlist+=[alg]
             res=self.__db__[alg].listRequired()
+            res.reverse()
+            retlist+=res
+        retlist.reverse()
+        unique=[]
+        for alg in retlist:
+            if alg not in unique:
+                unique.append(alg)
+        return unique
+    def allDaughters(self):
+        """
+        Return a unique ordered list of all the daugter tools and required algorithms, from lowest to highest level
+        """
+        retlist=[]
+        for alg in self.PrivateTools+self.PublicTools:
+            if alg not in self.__db__:
+                continue
+            retlist+=[alg]
+            res=self.__db__[alg].allDaughters()
+            res.reverse()
+            retlist+=res
+        for alg in self.Required:
+            if alg not in self.__db__:
+                continue
+            retlist+=[alg]
+            res=self.__db__[alg].allDaughters()
             res.reverse()
             retlist+=res
         retlist.reverse()
@@ -344,14 +369,14 @@ class Decoder(object):
             if atool in self.__db__:
                 self.__db__[atool].setup(True,onlyInputs=onlyInputs)
             else:
-                raise KeyError("Error: "+tool+" not found in DB, set cascade=False, remove this from the list, or re-validate the db")
+                raise KeyError("Error: "+atool+" not found in DB, set cascade=False, remove this from the list, or re-validate the db")
         #configure private tools
         for atool in self.PrivateTools:
             if atool in self.__db__:
                 thetool=addPrivateToolFromString(thedecoder,atool)
                 self.__db__[atool].setup(True,thetool,onlyInputs=onlyInputs)
             else:
-                raise KeyError("Error: "+tool+" not found in DB, set cascade=False, remove this from the list, or re-validate the db")
+                raise KeyError("Error: "+atool+" not found in DB, set cascade=False, remove this from the list, or re-validate the db")
         self.__used__=True
         return thedecoder
 

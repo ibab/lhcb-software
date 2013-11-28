@@ -3,7 +3,7 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
   <argument name="prerequisites"><set>
-    <tuple><text>daqsys.decoder-setup</text><enumeral>PASS</enumeral></tuple>
+    <tuple><text>daqsys.split-raw-event</text><enumeral>PASS</enumeral></tuple>
   </set></argument>
   <argument name="args"><set>
     <text>../options/setup-crazy-split.py</text>

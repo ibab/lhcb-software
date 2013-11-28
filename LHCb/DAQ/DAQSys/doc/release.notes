@@ -4,6 +4,12 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-11-28 - Rob Lambert
+ - Double check that cloning actually works in a new little unit test.
+
+! 2013-11-28 - Rob Lambert
+ - Test order was slightly incorrect.
+
 ! 2013-11-27 - Rob Lambert
  - Remove added debug print now that all is working :)
 
