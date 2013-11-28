@@ -27,6 +27,8 @@
 // LHCbKernel
 #include "Kernel/FTChannelID.h"
 
+// local
+#include "SiPMResponse.h"
 
 class MCFTDigitCreator : public GaudiHistoAlg {
 public: 
@@ -39,6 +41,8 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
 
   int deposit2ADC(const LHCb::MCFTDeposit* ftdeposit); ///< This function converts deposited energy in ADC Count
+  std::pair<double,double> integrateResponse(const LHCb::MCFTDeposit* ftdeposit);
+  int averagePhotoElectrons(double energy);
   
 protected:
 
@@ -52,8 +56,16 @@ private:
   double m_sipmGainVariation;    ///< SiPM gain relative fluctuation
   double m_adcNoise;             ///< Sigma of the noise in the ADC.
   //bool m_channelNoiseEnabled;    ///< Boolean to en/disable channel noise 
+  std::vector<double> m_integrationOffset; ///< Vector of the integration offsets for T1,T2,T3
+  std::vector<double> m_stationsZ; ///< Vector of the Z position for T1,T2,T3
 
   Rndm::Numbers m_gauss;
   Rndm::Numbers m_flat;
+
+  // tools
+  SiPMResponse* m_SiPMResponse; ///< pointer to SiPM integrated response function
+  
+  // detectors
+  DeFTDetector* m_deFT; ///< pointer to FT detector description
 };
 #endif // MCFTDIGITCREATOR_H

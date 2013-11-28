@@ -5,6 +5,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 
+// from Event
+#include "Event/MCHit.h"
+
 // LHCbKernel
 #include "Kernel/FTChannelID.h"
 
@@ -28,11 +31,17 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
+  std::string findSpill( const LHCb::MCHit* mcHit );
+
 protected:
 
 private:
   std::string m_hitLocation;  ///< FT MCHits Location
   std::string m_depositLocation; ///< FT energy deposit Location
+
+  // Spill properties
+  std::vector<std::string> m_spillNames;  ///< Vector of spill names and mc hit path
+  std::vector<std::string> m_spillVector; ///< Vector of spill names
 
   DeFTDetector* m_deFT; ///< pointer to FT detector description
 };

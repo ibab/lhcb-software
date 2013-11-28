@@ -60,10 +60,19 @@ StatusCode MCFTDigitMonitor::execute() {
   if ( msgLevel(MSG::DEBUG) ) 
     debug() <<"mcDigitsCont->size() : " << mcDigitsCont->size()<< endmsg;
 
+  // number of clusters
+  plot(mcDigitsCont->size(), "ClustersNumber",
+       "# Clusters; # Clusters; " , 
+       0. , 50000. , 100);
 
   // Loop over MCFTDigits
   for (MCFTDigits::const_iterator iterDigit = mcDigitsCont->begin(); iterDigit!=mcDigitsCont->end();++iterDigit){
-    MCFTDigit* mcDigit = *iterDigit;
+    MCFTDigit* mcDigit = *iterDigit; 
+
+    // plot number of hits
+    plot((int)mcDigit->deposit()->mcHitVec().size(), "# Hits",
+         "# Hits; # Hits; Number of SiPM channels" , 
+         0. , 50. ,50);
 
     // plot digit adc count
     plot((double)mcDigit->adcCount(), "DigADCCount",
@@ -76,7 +85,27 @@ StatusCode MCFTDigitMonitor::execute() {
          "ADC count [Channel level]; ADC count;Number of SiPM channels" , 
          -1. , 1.);
 
-    // plot digit adc count vs energy deposited in the channel
+    // average adc counts per hits
+    plot((double)mcDigit->adcCount()/(int)mcDigit->deposit()->mcHitVec().size(), "DigADCCountPerHits",
+         "ADC count [Channel level] / nHits; ADC count / nHits;Number of SiPM channels" , 
+         0. , 100. ,100);
+    plot((double)mcDigit->adcCount()/(int)mcDigit->deposit()->mcHitVec().size(), "DigADCCountPerHitsZOOM",
+         "ADC count [Channel level] / nHits; ADC count / nHits;Number of SiPM channels" , 
+         0. , 10. ,10);
+    plot((double)mcDigit->adcCount()/(int)mcDigit->deposit()->mcHitVec().size(), "DigADCCountPerHitsZOOMZOOM",
+         "ADC count [Channel level] / nHits; ADC count / nHits;Number of SiPM channels" , 
+         -1. ,1.);
+
+    // deposits distribution in (x,y)
+    plot2D(mcDigit->deposit()->mcHitVec()[0]->midPoint().x(), mcDigit->deposit()->mcHitVec()[0]->midPoint().y(), "DigitsDistribution",
+	   "Digits Distribution; x[mm]; y[mm]" , 
+	   -3600. , 3600. , -2700. , 2700. , 100, 100);
+    
+    // profile plot of the adc counts vs time
+    
+
+    /*
+    // plot digit adc count vs energy deposited in the channel - to be fixed with new MCFTDigit
     double EnergySum = 0;
     std::map< const LHCb::MCHit*, double>::const_iterator mchit = (mcDigit->mcHitMap()).begin();
     for(;mchit != (mcDigit->mcHitMap()).end(); ++mchit)
@@ -85,9 +114,12 @@ StatusCode MCFTDigitMonitor::execute() {
     plot2D(EnergySum, mcDigit->adcCount(), "DigADCCountvsEnergy",
            "ADC count vs deposited energy [Channel level]; Deposited energy [MeV]; ADC count" ,
            0. , 5. ,100, 0. , 20., 20);
+    */
+
+    
+
   }
 
   return StatusCode::SUCCESS;
 }
-
 //=============================================================================

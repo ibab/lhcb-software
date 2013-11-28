@@ -37,17 +37,23 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
-  StatusCode HitToChannelConversion_OldGeometry(LHCb::MCHit* ftHit, LHCb::MCFTDeposits *depositCont);
-  StatusCode HitToChannelConversion_NewGeometry(LHCb::MCHit* ftHit, LHCb::MCFTDeposits *depositCont);
+  StatusCode HitToChannelConversion_OldGeometry(LHCb::MCHit* ftHit, LHCb::MCFTDeposits *depositCont, unsigned int iSpill);
+  StatusCode HitToChannelConversion_NewGeometry(LHCb::MCHit* ftHit, LHCb::MCFTDeposits *depositCont, unsigned int iSpill);
 private:
   // Locations
   std::string m_inputLocation;     ///< FT MCHits Location
   std::string m_outputLocation;    ///< FT energy deposit Location
 
+  // Spill properties     
+  std::vector<std::string> m_spillNames;  ///< Vector of spill names and mc hit path
+  std::vector<std::string> m_spillVector; ///< Vector of spill names
+  std::vector<double> m_spillTimes;       ///< Vector of spill arrival times       
+
   // FT Geometry version
-  // int m_ftGeomVersion;
+  int m_ftGeomVersion;
   
   // Fibre properties
+  float       m_fiberRefractionIndex;   ///< Fiber refraction index
   float       m_shortAttenuationLength; ///< Attenuation lengh of the light along the fibre : short component
   float       m_longAttenuationLength;  ///< Attenuation lengh of the light along the fibre : long component
   float       m_fractionShort;          ///< Fraction of short attenuation length at SiPM
@@ -62,7 +68,8 @@ private:
   float       m_yStepOfMap;               ///< Step  along Y-axis of the FullAttenuationMap(in mm)
   int         m_nXSteps;
   int         m_nYSteps;
-  std::vector<float> m_transmissionMap;
+  std::vector<float> m_transmissionMap;    ///< Maps hits to transmitted energy from the direct pulse
+  std::vector<float> m_transmissionRefMap; ///< Maps hits to transmitted energy from the reflected pulse
 
   DeFTDetector* m_deFT; ///< pointer to FT detector description
 

@@ -16,13 +16,20 @@
 // local
 #include "MCFTDepositMonitor.h"
 
+// boost
+#include <boost/assign/std/vector.hpp>
+#include <boost/assign/list_of.hpp>
+
+
+using namespace LHCb;
+using namespace Gaudi;
+using namespace boost;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : MCFTDepositMonitor
 //
 // 2012-07-04 : Eric Cogneras
 //-----------------------------------------------------------------------------
-
-using namespace LHCb;
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( MCFTDepositMonitor )
@@ -36,6 +43,13 @@ DECLARE_ALGORITHM_FACTORY( MCFTDepositMonitor )
     : GaudiHistoAlg ( name , pSvcLocator )
     , m_deFT(NULL)
 {
+  std::vector<std::string> tmp1 = boost::assign::list_of("/PrevPrev/")
+                                                        ("/Prev/")
+                                                        ("/")
+                                                        ("/Next/")
+                                                        ("/NextNext/");
+
+  declareProperty( "SpillVector"                , m_spillVector                 = tmp1);
   declareProperty("HitLocation" , m_hitLocation = LHCb::MCHitLocation::FT, "Path to  MCHits");
   declareProperty("DepositLocation" , m_depositLocation =  LHCb::MCFTDepositLocation::Default, "Path to MCFTDeposits");
 }
@@ -59,6 +73,15 @@ StatusCode MCFTDepositMonitor::initialize() {
     if(msgLevel(MSG::DEBUG)) debug() << "Successfully retrieved DeFT" << endmsg;
   }  
   else { return Error("Could not retrieve " + DeFTDetectorLocation::Default); }
+
+  // construct container spill names once
+  std::vector<std::string>::const_iterator iSpillName = m_spillVector.begin();
+  while (iSpillName!=m_spillVector.end()){
+    // path in Transient data store
+    std::string mcHitPath = "/Event"+(*iSpillName)+m_hitLocation;//MCHitLocation::FT;
+    m_spillNames.push_back(mcHitPath);
+    ++iSpillName;
+  } // iterSpillName
 
   return StatusCode::SUCCESS;
 }
@@ -144,23 +167,53 @@ StatusCode MCFTDepositMonitor::execute() {
     plot((double)(*iterDeposit)->mcHitVec().size(), "DepHitPerChannel",
          "Number of Hits per Channel;Number of Hits per Channel;" , 0. , 50.);
 
-    std::vector<std::pair<LHCb::MCHit*,double> >::const_iterator energyPerHit = (*iterDeposit)->mcHitVec().begin();
-    
-    for(;energyPerHit != (*iterDeposit)->mcHitVec().end(); ++energyPerHit){
-      
-      plot(energyPerHit->second,
+    for (unsigned int idx = 0; idx < (*iterDeposit)->mcHitVec().size(); idx++) {
+      // Direct energy to channel
+      plot((*iterDeposit)->energyVec()[idx],
            "DepEnergyPerChannel",
            "Energy deposited [Channel level];Energy [MeV];Number of SiPM channels", 
            0, 100);
-      plot(energyPerHit->second,
+      plot((*iterDeposit)->energyVec()[idx],
            "DepEnergyPerChannelZoom",
            "Energy deposited [Channel level];Energy [MeV];Number of SiPM channels", 
            0, 10);
-      plot(energyPerHit->second,
+      plot((*iterDeposit)->energyVec()[idx],
            "DepEnergyPerChannelBigZoom",
            "Attenuation correction factor[Channel level]; Attenuation correction factor;Number of SiPM channels", 
            //"Energy deposited [Channel level];Energy [MeV];Number of SiPM channels", 
            0, 1);
+      // Reflected energy to channel
+      plot((*iterDeposit)->energyRefVec()[idx],
+           "DepEnergyPerChannelRef",
+           "Energy deposited [Channel level];Energy [MeV];Number of SiPM channels", 
+           0, 100);
+      plot((*iterDeposit)->energyRefVec()[idx],
+           "DepEnergyPerChannelRefZoom",
+           "Energy deposited [Channel level];Energy [MeV];Number of SiPM channels", 
+           0, 10);
+      plot((*iterDeposit)->energyRefVec()[idx],
+           "DepEnergyPerChannelRefBigZoom",
+           "Attenuation correction factor[Channel level]; Attenuation correction factor;Number of SiPM channels", 
+           //"Energy deposited [Channel level];Energy [MeV];Number of SiPM channels", 
+           0, 1);
+      // Direct pulse arrival time to channel
+      plot((*iterDeposit)->timeVec()[idx],
+           "DirArrivalTimePerChannel",
+           "Arrival time [Channel level]; Time [ns]; Number of SiPM channels", 
+           -50, 150);
+      plot((*iterDeposit)->timeRefVec()[idx],
+           "RefArrivalTimePerChannel",
+           "Arrival time [Channel level]; Time [ns]; Number of SiPM channels", 
+           -50, 150);
+
+      /*
+      // Arrival time and spillover
+      std::string spillname = findSpill( (*iterDeposit)->mcHitVec()[idx] );
+      plot((*iterDeposit)->mcHitVec()[idx]->time(),
+           (spillname+std::string("DirArrivalTimePerChannelSpill")).c_str(),
+           "Arrival time [Channel level]; Time [ns]; Number of SiPM channels", 
+           -50, 150);
+      */
     }
     
   }
@@ -169,4 +222,31 @@ StatusCode MCFTDepositMonitor::execute() {
   return StatusCode::SUCCESS;
 }
 
+
+std::string 
+MCFTDepositMonitor::findSpill( const LHCb::MCHit* mcHit )
+{
+  // Loop over the spills
+  // retrieve MCHits and make first list of deposits
+  for (unsigned int iSpill = 0; iSpill < m_spillNames.size(); ++iSpill){
+    SmartDataPtr<MCHits> ftMCHits( eventSvc(), m_spillNames[iSpill] );
+
+    if (!ftMCHits) {
+      if (msgLevel(MSG::DEBUG)) 
+	debug() << "Spillover missing in the loop " + m_spillNames[iSpill] <<endmsg;
+    } else {
+      // found spill - create some digitizations and add them to deposits
+      if ( msgLevel( MSG::DEBUG) )
+	debug() << "ftMCHits->size() : " << ftMCHits->size()<< endmsg;
+
+      // add the loop on the hits
+      for ( MCHits::const_iterator iterHit = ftMCHits->begin(); 
+	    iterHit!=ftMCHits->end();++iterHit){
+	if (*iterHit == mcHit)
+	  return m_spillVector[iSpill];
+      } // loop over hit
+    } // spillover
+  } // loop on ftMChits
+  return "";
+}
 //=============================================================================

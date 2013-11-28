@@ -4,6 +4,10 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2013-11-28 - Maurizio Martinelli
+ - Implemented direct and reflected light pulse in the DepositCreator. This is needed for studying spillover.
+ - DigitCreator is also modified for matching the new Deposit.
+
 !========================= FTDigitisation v1r6 2013-10-02 =========================
 ! 2013-09-26 - Marco Cattaneo
  - Remove extra ';' to fix CMake warnings

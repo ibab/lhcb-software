@@ -9,6 +9,7 @@
 #include "Linker/LinkerWithKey.h"
 
 // from FTEvent
+#include "Event/MCFTDeposit.h"
 #include "Event/MCFTDigit.h"
 #include "Event/FTCluster.h"
 
@@ -108,23 +109,24 @@ StatusCode FTClusterCreator::execute() {
   if(msgLevel(MSG::DEBUG)){
     for (MCFTDigits::const_iterator iterDigit = mcDigitsCont->begin(); iterDigit!=mcDigitsCont->end();++iterDigit){
       MCFTDigit* mcDigit = *iterDigit;
-      std::map< const LHCb::MCHit*, double> hitMap = mcDigit->mcHitMap();
+      //      std::map< const LHCb::MCHit*, double> hitMap = mcDigit->mcHitMap();
       debug() <<"Channel ="<<mcDigit->channelID()<< " : " <<"\t ADC ="<<mcDigit->adcCount() << endmsg;
-      for(std::map<const LHCb::MCHit*,double>::const_iterator mapiter=hitMap.begin(); mapiter!=hitMap.end(); ++mapiter){
-        debug() <<"MCParticle : index="<<mapiter->first->mcParticle()->index() <<" "<<mapiter->first->mcParticle()->particleID()
-                << " Energy=" <<mapiter->second << endmsg;
+      // print deposit content
+      const MCFTDeposit* mcDeposit = mcDigit->deposit();
+      for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx)
+        debug() <<"MCParticle : index="<< mcDeposit->mcHitVec()[idx]->mcParticle()->index() <<" "<<mcDeposit->mcHitVec()[idx]->mcParticle()->particleID()
+                << " Energy=" << mcDeposit->energyVec()[idx] << " Time=" << mcDeposit->timeVec()[idx] 
+		<< " EnergyRef=" <<mcDeposit->energyRefVec()[idx] << " TimeRef=" << mcDeposit->timeRefVec()[idx] << endmsg;
       }
     }
-  }
 
   // Create map of involved hits, all of them associated to false (not yet in clusters)
   std::map<const LHCb::MCHit*, bool> hitBoolMap;
   for (MCFTDigits::const_iterator iterDigit = mcDigitsCont->begin(); iterDigit!=mcDigitsCont->end();++iterDigit){
     MCFTDigit* mcDigit = *iterDigit;
-    std::map< const LHCb::MCHit*, double> hitMap = mcDigit->mcHitMap();
-    for(std::map<const LHCb::MCHit*,double>::const_iterator mapiter=hitMap.begin(); mapiter!=hitMap.end(); ++mapiter){
-      hitBoolMap[mapiter->first]=false;
-    }
+    const MCFTDeposit* mcDeposit = mcDigit->deposit();
+    for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx)
+      hitBoolMap[ mcDeposit->mcHitVec()[idx] ]=false;
   }
 
   // Since Digit Container is sorted wrt channelID, clusters are defined searching for bumps of ADC Count
@@ -172,17 +174,16 @@ StatusCode FTClusterCreator::execute() {
         }
         if ( lastDigit->adcCount() > m_clusterMinADCPeak ) hasSeed = true;
     
-        NbOfHitInvolvedInCluster += lastDigit->mcHitMap().size();
+	const MCFTDeposit* mcDeposit = lastDigit->deposit();
+        NbOfHitInvolvedInCluster += mcDeposit->mcHitVec().size();
 
 
         // Keep track of MCParticles involved in the cluster definition
         clusterADCDistribution.push_back(lastDigit->adcCount());
-        std::map<const LHCb::MCHit*, double> hitMap = lastDigit->mcHitMap();
-        std::map<const LHCb::MCHit*, double>::const_iterator hitMapIter=hitMap.begin();
-        for(; hitMapIter!=hitMap.end(); ++hitMapIter){
-          totalEnergyFromMC +=hitMapIter->second;
-          mcContributionMap[hitMapIter->first->mcParticle()] += hitMapIter->second;
-          clusterHitDistribution.push_back(hitMapIter->first);
+	for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx) {
+          totalEnergyFromMC += mcDeposit->energyVec()[idx]; // only direct pulse energy is stored!!! TO BE UPDATED
+          mcContributionMap[mcDeposit->mcHitVec()[idx]->mcParticle()] += mcDeposit->energyVec()[idx];// only direct pulse energy is stored!!! TO BE UPDATED
+          clusterHitDistribution.push_back(mcDeposit->mcHitVec()[idx]);
         }
         ++lastDigitIter;
 
@@ -280,6 +281,7 @@ StatusCode FTClusterCreator::execute() {
              "Cluster Fraction Part Distribution;Cluster Fractional part; Nber of events" , 0 , 1);
         // draw cluster width
         plot(newCluster->size(),"ClusSize","Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 70., 70);
+        plot(newCluster->size(),"ClusSizeZOOM","Cluster Size Distribution;Cluster Size;Nber of events" , 0. , 10., 10);
         // draw cluster total adc charge
         plot(newCluster->charge(),"ClusCharge","Cluster Charge Distribution;Cluster Charge;Nber of events" , 0 , 100);
         plot(newCluster->charge(),"ClusChargeZOOM","Cluster Charge Distribution;Cluster Charge;Nber of events" , 
