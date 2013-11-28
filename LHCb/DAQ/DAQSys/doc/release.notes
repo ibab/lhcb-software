@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-11-28 - Rob Lambert
+ - Use one decoder for the Velo clusters, but split into two in the case DataOnDemand is used.
+
+! 2013-11-28 - Rob Lambert
  - Double check that cloning actually works in a new little unit test.
 
 ! 2013-11-28 - Rob Lambert

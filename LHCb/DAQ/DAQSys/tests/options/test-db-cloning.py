@@ -46,4 +46,4 @@ if rcloneset.getProp(rclone.Outputs.keys()[0])!=r0set.getProp(r0.Outputs.keys()[
     print rcloneset.getProp(rclone.Outputs.keys()[0]), r0set.getProp(r0.Outputs.keys()[0])
     raise ValueError("Cloning failed to preserve output location")
 
-print "PASS"
+print "Pass"

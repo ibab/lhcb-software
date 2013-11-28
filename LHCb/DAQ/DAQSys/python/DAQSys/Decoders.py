@@ -22,19 +22,32 @@ Decoder("ODINDecodeTool",active=False,#tool handle??
         conf=DecoderDB)
 
 #===========VELO===========
-Decoder("DecodeVeloRawBuffer/createVeloClusters",
-        active=True, banks=["Velo"],
+
+#first create a decoder which can decode either location.
+#This is not active by default, but is turned on later
+# by RecoTracking.py when rewuired for Brunel, alignment, etc.
+vd=Decoder("DecodeVeloRawBuffer/createBothVeloClusters",
+        active=False, banks=["Velo"],
         inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
-        outputs={"VeloClusterLocation" : None},
-        properties={"DecodeToVeloClusters": True,"DecodeToVeloLiteClusters":False},
+        outputs={"VeloClusterLocation" : None, "VeloLiteClustersLocation" : None},
+        properties={"DecodeToVeloClusters": True,"DecodeToVeloLiteClusters":True},
         conf=DecoderDB)
 
-Decoder("DecodeVeloRawBuffer/createVeloLiteClusters",
-        active=True, banks=["Velo"],
-        inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
-        outputs={"VeloLiteClustersLocation" : None},
-        properties={"DecodeToVeloClusters": False,"DecodeToVeloLiteClusters":True},
-        conf=DecoderDB)
+#now clone into two algs which can decode these things separately
+vdClus=vd.clone("DecodeVeloRawBuffer/createVeloClusters")
+vdClus.Active=True
+#delete the other unused output location...
+del vdClus.Outputs["VeloLiteClustersLocation"]
+vdClus.Properties["DecodeToVeloClusters"]=True
+vdClus.Properties["DecodeToVeloLiteClusters"]=False
+
+vdLite=vd.clone("DecodeVeloRawBuffer/createVeloLiteClusters")
+vdLite.Active=True
+#delete the other unused output location...
+del vdLite.Outputs["VeloClusterLocation"]
+vdLite.Properties["DecodeToVeloClusters"]=False
+vdLite.Properties["DecodeToVeloLiteClusters"]=True
+
 
 #===========PU==========
 
