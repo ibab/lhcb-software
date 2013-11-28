@@ -22,12 +22,15 @@ def RecoTracking(exclude=[]):
    from DAQSys.DecoderClass import decodersForBank
    decs=[]
    if "Velo" or "FastVelo" in trackAlgs :
-      vdecs=decodersForBank(DecoderDB,"Velo")
+      #clone an existing algorithm, in order to create both the full
+      #and the partial clusters
+      vdec=DecoderDB["DecodeVeloRawBuffer/createBothVeloClusters"]
+      #set as active to make sure nobody tries to use the DoD service along side...
+      vdec.Active=True
       globalCuts = TrackSys().getProp("GlobalCuts")
       if( "Velo" in globalCuts ) :
-         for dec in vdecs:
-            dec.Properties["MaxVeloClusters"] =  globalCuts["Velo"]
-      decs=decs+vdecs
+         vdec.Properties["MaxVeloClusters"] =  globalCuts["Velo"]
+      decs=decs+[vdec]
       
    from Configurables import RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg
    decs=decs+decodersForBank(DecoderDB,"TT")

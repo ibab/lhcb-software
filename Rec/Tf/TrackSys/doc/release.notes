@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2013-11-28 - Rob Lambert
+ - Combine both velo decoders into one. No need for two algs if we need both sets of info anyway.
+
 ! 2013-11-27 - Rob Lambert
  - Update to take decoders from my DecodersDB -- needs LHCb v36r4, major change
 
