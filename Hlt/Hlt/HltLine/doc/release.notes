@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2013-11-28 - Rob Lambert
+ - Only VeloLite clusters :)
+
 ! 2013-11-18 - Rob Lambert
  - Migrate to using DecoderDB, simplest first try, see task #19106
  - would prefer to replace HltDecodeRaw substatially with just-in-time functions

@@ -30,9 +30,10 @@ DecodeODIN       = __convert( 'ODIN' )
 DecodeL0MUON     = __convert( 'L0Muon' )
 DecodeL0CALO     = __convert( 'L0Calo' )
 DecodeL0FullCALO = __convert( 'L0CaloFull')
-#... nominally returns the same algorithm for both L0CaloFull and L0Calo...
+#... ^^ nominally returns the same algorithm for both L0CaloFull and L0Calo...
 DecodeL0DU       = __convert( 'L0DU' )
-DecodeVELO       = __convert( 'Velo' )
+DecodeVELO       = __convertName("DecodeVeloRawBuffer/createVeloLiteClusters")
+#... ^^ only do the VeloLite clusters, all that's needed for Moore
 DecodeTT         = __convert( 'TT' )
 DecodeIT         = __convert( 'IT' )
 DecodeOT         = __convert( 'OT' )
