@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2013-11-29 - Maurizio Martinelli
+ - forgot to add a class
+
 ! 2013-11-28 - Maurizio Martinelli
  - Implemented direct and reflected light pulse in the DepositCreator. This is needed for studying spillover.
  - DigitCreator is also modified for matching the new Deposit.
