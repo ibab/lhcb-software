@@ -148,13 +148,15 @@ class B2KShhConf(LineBuilder) :
                                      prescale = config['Prescale'],
                                      postscale = config['Postscale'],
                                      selection = self.selB2KSDDhh,
-                                     FILTER = GECCode
+                                     FILTER = GECCode,
+                                     EnableFlavourTagging = True
                                      )
         self.ll_line = StrippingLine(ll_name+"Line",
                                      prescale = config['Prescale'],
                                      postscale = config['Postscale'],
                                      selection =  self.selB2KSLLhh,
-                                     FILTER = GECCode
+                                     FILTER = GECCode,
+                                     EnableFlavourTagging = True
                                      )
 
         self.dd_line_same = StrippingLine(dd_name_same+"Line",

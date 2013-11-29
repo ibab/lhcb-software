@@ -178,14 +178,16 @@ class B2KSKpiConf(LineBuilder) :
                                      postscale = config['Postscale'],
                                      selection = self.selB2KSDDhhBDTCut,
                                      HLT = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))",
-                                     FILTER = GECCode
+                                     FILTER = GECCode,
+                                     EnableFlavourTagging = True
                                      )
         self.ll_line = StrippingLine(ll_name+"Line",
                                      prescale = config['Prescale'],
                                      postscale = config['Postscale'],
                                      selection =  self.selB2KSLLhhBDTCut,
                                      HLT = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))",
-                                     FILTER = GECCode
+                                     FILTER = GECCode,
+                                     EnableFlavourTagging = True
                                      )
 
         self.ld_line = StrippingLine(ld_name+"Line",
@@ -193,7 +195,8 @@ class B2KSKpiConf(LineBuilder) :
                                      postscale = config['Postscale'],
                                      selection =  self.selB2KSLDhhBDTCut,
                                      HLT = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))",
-                                     FILTER = GECCode
+                                     FILTER = GECCode,
+                                     EnableFlavourTagging = True
                                      )
         
         self.dd_line_same = StrippingLine(dd_name_same+"Line",
