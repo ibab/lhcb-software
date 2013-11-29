@@ -16,7 +16,9 @@ Brunel().EvtMax   = 10
 Brunel().Monitors = ["SC","FPE"]
 Brunel().InputType="XDST"
 Brunel().WithMC=True
-Brunel().DataType="2011"</text></argument>
+Brunel().DataType="2011"
+Brunel().SplitRawEventInput=0.0
+</text></argument>
   <argument name="reference"><text>../refs/brunel-mc11a-xdst.ref</text></argument>
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor

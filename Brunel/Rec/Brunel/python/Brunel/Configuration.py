@@ -498,6 +498,9 @@ class Brunel(LHCbConfigurableUser):
                 TESCheck().Inputs = ["Link/Rec/Track/Best"]
             InitReprocSeq.Members.append( "EventNodeKiller" )
             EventNodeKiller().Nodes += [ "pRec", "Rec", "Raw", "Link/Rec" ]
+            ### see configureOutput to see how the remainder of the juggler
+            ### is configured
+            
 
         if inputType in [ "SDST" ]:
             # Allow navigation to ancestor file
@@ -570,6 +573,9 @@ class Brunel(LHCbConfigurableUser):
                     #else find it from DecodeRawEvent
                 elif DecodeRawEvent().isPropertySet("OverrideInputs") and DecodeRawEvent().getProp("OverrideInputs") is not None:
                     juggler.setProp("Input",DecodeRawEvent().getProp("OverrideInputs"))
+                    #else if I'm input with a DST, assume it is a Stripping20 type
+                elif self._isReprocessing(self.getProp("InputType")):
+                    juggler.setProp("Input",2.0)
                 else:
                     #or set the default to whatever comes out of Moore by default
                     juggler.setProp("Input","Moore")
