@@ -30,7 +30,7 @@ if (nar != 0) then
 endif
 #
 #*******>
-if ($1 == "-h" || $nar == 0 ) then
+if ("${1}" == "-h" || $nar == 0 ) then
 
    echo ""
    echo "usage of Lbglimpse version ${script_version}:"
@@ -54,7 +54,7 @@ unset noclobber
 
 #========================get the options =============================
 
-set string = $1
+set string = "${1}"
 set here = `pwd`
 #========================check existence of $CMTPATH =========================
 if ( ! $?CMTPATH ) then
@@ -101,7 +101,7 @@ set npath = `echo $CMTPATH | awk '{print(split($0,array,":"))}'`
 set j = 1
 while ($j <= $npath)
   set jpath = $depath[$j]
-  if ( -f ${jpath}/.glimpse_filenames ) glimpse -y -H ${jpath} ${string}
+  if ( -f ${jpath}/.glimpse_filenames ) glimpse -y -H ${jpath} "${string}"
   @ j++
 end
  
