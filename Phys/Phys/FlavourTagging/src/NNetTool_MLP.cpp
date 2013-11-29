@@ -15,6 +15,8 @@
 #include "NeuralNet/weights/ele__eleMLPBNN.class.C"
 #include "NeuralNet/weights/kaon__kaonMLPBNN.class.C"
 #include "NeuralNet/weights/vtx__vtxMLPBNN.class.C"
+#include "NeuralNet/weights/charm__charmMLPBNN.class.C"
+
 // MC12 Reco14
 #include "NeuralNet/weights/muon__muonMLPBNN_MC.class.C"
 #include "NeuralNet/weights/ele__eleMLPBNN_MC.class.C"
@@ -22,6 +24,7 @@
 #include "NeuralNet/weights/vtx__vtxMLPBNN_MC.class.C"
 #include "NeuralNet/weights/pionS__pionSMLPBNN_MC.class.C"
 #include "NeuralNet/weights/kaonS__kaonSMLPBNN_MC.class.C"
+
 
 
 //-----------------------------------------------------------------------------
@@ -74,6 +77,12 @@ NNetTool_MLP::NNetTool_MLP( const std::string& type,
   declareProperty( "P1_ps_scale", m_P1ps = -1.76027);
   declareProperty( "P2_ps_scale", m_P2ps =  0.651766);
   declareProperty( "P3_ps_scale", m_P3ps =  0.);
+
+  declareProperty( "P0_charm_scale", m_P0charm =  0.3206);
+  declareProperty( "P1_charm_scale", m_P1charm =  -0.8247);
+  declareProperty( "P2_charm_scale", m_P2charm =  0.6732);
+  declareProperty( "P3_charm_scale", m_P3charm =  0.);
+
   /*
   declareProperty( "XML_dir",          m_XML_dir   = "$FLAVOURTAGGINGROOT/src/NeuralNet/weights/"  );
   declareProperty( "NNetWeights_mu",   m_NNetWeights_mu   = "muon__muonMLPBNN.weights.xml"  );
@@ -384,6 +393,26 @@ double NNetTool_MLP::MLPvtxTMVA(std::vector <std::string>& inputVars, std::vecto
   }
   return pn;
 }
+//=============================================================================
+double NNetTool_MLP::MLPcharmTMVA(std::vector <std::string>& inputVars, std::vector<double>& inputVals) {
+
+  double rnet = 0.5;  
+  double pn = 0.5;  
+
+  Read_charmMLPBNN *reader = new Read_charmMLPBNN(inputVars); 
+  rnet = reader->GetMvaValue(inputVals);
+
+  if (rnet>=0 && rnet<=1) {
+    pn = 1.0 - (m_P0charm + m_P1charm * (rnet - m_P2charm));
+    verbose()<<"Using MLPBNN for charm - rnet "<<rnet<<" pn "<<pn<<endmsg;
+  } else {
+    debug()<<"**********************BAD TRAINING charm"<<rnet<<endmsg;
+    pn = -1.;
+  }
+
+  return pn;
+
+};
 //============================================================================
 double NNetTool_MLP::MLPmTMVA_MC(std::vector <std::string>& inputVars, std::vector<double>& inputVals) 
 {

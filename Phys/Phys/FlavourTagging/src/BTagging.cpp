@@ -139,6 +139,7 @@ void BTagging::performTagging(const std::string & location)
           case Tagger::Topology    : tts="Topology";    break;
           case Tagger::OS_nnetKaon : tts="OS_nnetKaon"; break;
           case Tagger::SS_nnetKaon : tts="SS_nnetKaon"; break;
+          case Tagger::OS_Charm    : tts="OS_Charm";    break;
           }
           debug() << "--> tagger type: " << tts <<endreq;
           debug() << "    decision = "

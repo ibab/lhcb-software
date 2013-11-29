@@ -80,6 +80,10 @@ private:
 
   bool isinTreeReco14(const LHCb::Particle*,
                  const LHCb::Particle::ConstVector& , double& );
+
+  const IDistanceCalculator* getDistanceCalculator() { return m_Dist;}
+  std::string getCharmDecayMode(const LHCb::Particle*, int);
+
 };
 
 //===============================================================//

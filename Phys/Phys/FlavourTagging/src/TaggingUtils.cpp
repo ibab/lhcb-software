@@ -17,6 +17,14 @@
 using namespace LHCb;
 using namespace Gaudi::Units;
 
+#include "LoKi/LoKi.h" 
+#include "LoKi/ParticleContextCuts.h" 
+
+using namespace LoKi::Cuts;
+using namespace LoKi::Types;
+using namespace LoKi::Particles;
+
+
 // Declaration of the Algorithm Factory
 DECLARE_TOOL_FACTORY( TaggingUtils )
 
@@ -266,6 +274,145 @@ bool TaggingUtils::isinTreeReco14(const LHCb::Particle* axp,
   }
   return false;
 }
+
+//=============================================================================
+std::string TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int candType)
+{
+
+  std::string mode = "None";
+
+  const unsigned int d0_pid = LoKi::Particles::_ppFromName("D0")->particleID().abspid();
+  const unsigned int d_pid = LoKi::Particles::_ppFromName("D+")->particleID().abspid();
+  const unsigned int k_pid = LoKi::Particles::_ppFromName("K+")->particleID().abspid();
+  const unsigned int ks_pid = LoKi::Particles::_ppFromName("KS0")->particleID().abspid();
+  const unsigned int pi_pid = LoKi::Particles::_ppFromName("pi+")->particleID().abspid();
+  const unsigned int pi0_pid = LoKi::Particles::_ppFromName("pi0")->particleID().abspid();
+  const unsigned int e_pid = LoKi::Particles::_ppFromName("e+")->particleID().abspid();
+  const unsigned int mu_pid = LoKi::Particles::_ppFromName("mu+")->particleID().abspid();
+
+  const SmartRefVector<Particle>& daus = cand->daughters();
+
+  switch(candType){
+    
+  case 0: // full reco, exclusive
+    
+    if (cand->particleID().abspid() == d0_pid) {
+
+      switch(daus.size()){
+      
+      case 2:
+        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = "D0_Kpi";//0; // D0 -> K pi
+        break;
+      
+      case 3:
+        if (daus[0]->particleID().abspid()==ks_pid && daus[1]->particleID().abspid()==pi_pid 
+            && daus[2]->particleID().abspid()==pi_pid) mode = "D0_Kspipi";//2; // D0 -> Ks pi pi
+        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid 
+            && daus[2]->particleID().abspid()==pi0_pid) mode = "D0_Kpipi0";//3; // D0 -> K pi pi0
+        break;
+      
+      case 4:
+        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid
+            && daus[2]->particleID().abspid()==pi_pid && daus[3]->particleID().abspid()==pi_pid) mode = "D0_Kpipipi";//1; // D0 -> K pi pi pi
+        break;
+
+      default:
+        fatal()<<"Invalid daus size: "<<daus.size()<<" candtype: "<<candType<<endreq;
+
+      }
+      
+    } else if (cand->particleID().abspid() == d_pid) {
+
+      switch(daus.size()){
+      
+      case 2:
+        if (daus[0]->particleID().abspid()==ks_pid && daus[1]->particleID().abspid()==pi_pid) mode = "Dp_Kspi";//5; // D+ -> Ks pi
+        break;
+      
+      case 3:
+        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid 
+            && daus[2]->particleID().abspid()==pi_pid) mode = "Dp_Kpipi";//4; // D+ -> K pi pi
+        break;
+      
+//       case 4:
+//         if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = 0; // D0 -> K pi
+//         break;
+      default:
+        fatal()<<"Invalid daus size: "<<daus.size()<<" candtype: "<<candType<<endreq;
+
+      }
+      
+    }
+    
+    break;
+
+  case 1:// part reco, inclusive
+
+    switch(daus.size()){
+      
+    case 2:
+
+      if (cand->particleID().abspid() == d0_pid) {
+
+        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = "D0_KpiX";//6; // D0 -> K pi X
+        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==e_pid) mode = "D0_KeX";//7; // D0 -> K e X
+        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==mu_pid) mode = "D0_KmuX";//8; // D0 -> K mu X
+
+      } else if (cand->particleID().abspid() == d_pid) {
+
+        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = "Dp_KpiX";//10; // D+ -> K pi X
+        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==e_pid) mode = "Dp_KeX";//11; // D+ -> K e X
+        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==mu_pid) mode = "Dp_KmuX";//12; // D+ -> K mu X
+
+      }
+      break;
+      
+      //       case 3:
+      //         if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = 0; // D0 -> K pi
+      //         break;
+      
+      //       case 4:
+      //         if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = 0; // D0 -> K pi
+      //         break;
+      
+    default:
+      fatal()<<"Invalid daus size: "<<daus.size()<<" candtype: "<<candType<<endreq;
+    }
+    break;
+      
+  case 2:// dstar reco
+
+    switch(daus.size()){
+      
+      //     case 2:
+      //       if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = 6; // D -> K pi X
+      //       if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==e_pid) mode = 7; // D0 -> K e X
+      //       if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==mu_pid) mode = 8; // D0 -> K pi X
+      //       break;
+      
+    case 3:
+      if (daus[0]->particleID().abspid()==ks_pid && daus[1]->particleID().abspid()==pi_pid 
+          && daus[2]->particleID().abspid()==pi_pid) mode = "Dstar_D0_Kspipi";//9; // D0 -> Ks pi pi
+      break;
+      //       case 4:
+      //         if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = 0; // D0 -> K pi
+      //         break;
+    default:
+      fatal()<<"Invalid daus size: "<<daus.size()<<" candtype: "<<candType<<endreq;
+    }
+    break;
+
+  default:
+    fatal()<<"Invalid candtype: "<<candType<<endreq;
+
+  }
+  
+  if (mode.length()==0) fatal() << "unknown Charm cand type: " << candType << endreq;
+
+  return mode;
+  
+}
+
 
 //====================================================================
 StatusCode TaggingUtils::finalize() { return GaudiTool::finalize(); }

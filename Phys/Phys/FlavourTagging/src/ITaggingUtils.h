@@ -7,6 +7,8 @@
 #include "Event/Particle.h"
 #include "Event/RecVertex.h"
 
+#include <Kernel/IDistanceCalculator.h>
+
 static const InterfaceID IID_ITaggingUtils("ITaggingUtils", 1 , 0); 
 
 /** @class ITaggingUtils ITaggingUtils.h 
@@ -39,6 +41,9 @@ public:
 
   virtual bool isinTree( const LHCb::Particle*, 
                          const LHCb::Particle::ConstVector& , double& )=0;
+
+  virtual const IDistanceCalculator* getDistanceCalculator()=0;
+  virtual std::string getCharmDecayMode(const LHCb::Particle*, int)=0;
 
 };
 

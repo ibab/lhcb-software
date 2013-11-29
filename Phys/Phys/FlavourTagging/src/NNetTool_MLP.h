@@ -50,6 +50,8 @@ public:
   //virtual double MLPeTMVA(std::list<std::pair<std::string, Float_t> >&);
   //virtual double MLPkaonTMVA(std::list<std::pair<std::string, Float_t> >&);
   //virtual double MLPvtxTMVA(std::list<std::pair<std::string, Float_t> >&);
+  virtual double MLPcharmTMVA(std::vector<std::string>&, std::vector<double>&);
+
   virtual double MLPmTMVA_MC(std::vector<std::string>&, std::vector<double>&);
   virtual double MLPeTMVA_MC(std::vector<std::string>&, std::vector<double>&);
   virtual double MLPkaonTMVA_MC(std::vector<std::string>&, std::vector<double>&);
@@ -75,6 +77,7 @@ private:
   double m_P0vtx,m_P1vtx,m_P2vtx,m_P3vtx;  
   double m_P0ps, m_P1ps, m_P2ps, m_P3ps;  
   double m_P0ks, m_P1ks, m_P2ks, m_P3ks;
+  double m_P0charm,m_P1charm,m_P2charm,m_P3charm;  
   /*
   std::string m_NNetWeights_mu, m_NNetWeights_ele, m_NNetWeights_kaon, m_NNetWeights_vtx, m_XML_dir;
   */

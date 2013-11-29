@@ -50,6 +50,7 @@ GaudiTool ( type, name, parent )
   // NNet tagging algorithms
   declareProperty( "EnableNNetKaonOSTagger",   m_EnableNNetKaonOS  = true );
   declareProperty( "EnableNNetKaonSSTagger",   m_EnableNNetKaonSS  = true );
+  declareProperty( "EnableCharmTagger",        m_EnableCharm    = false );
 
   declareProperty( "ForceSignalID",           m_ForceSignalID  = " "); //force signal B as Bu, Bd, B
 
@@ -64,6 +65,8 @@ GaudiTool ( type, name, parent )
   m_taggerMu = m_taggerEle=m_taggerKaon = NULL;
   m_taggerKaonS = m_taggerPionS=m_taggerVtx = NULL;
   m_taggerNNetKaonS = m_taggerNNetKaon = NULL;
+  m_taggerCharm = NULL;
+  
 }
 
 BTaggingTool::~BTaggingTool() { }
@@ -95,6 +98,8 @@ StatusCode BTaggingTool::initialize()
   m_taggerNNetKaon  = tool<ITagger> ("TaggerNEWKaonOppositeTool", this);
 
   m_taggerNNetKaonS = tool<ITagger> ("TaggerNEWKaonSameTool", this);
+
+  m_taggerCharm   = tool<ITagger> ("TaggerCharmTool", this);
 
   m_combine = tool<ICombineTaggersTool> (m_CombineTaggersName, this);
 
@@ -212,7 +217,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   ///Choose Taggers ------------------------------------------------------
   if (msgLevel(MSG::DEBUG)) debug() <<"evaluate taggers" <<endreq;
 
-  Tagger muon, elec, kaon, kaonS, pionS, vtxCh, jetS, nnetkaon, nnetkaonS;
+  Tagger muon, elec, kaon, kaonS, pionS, vtxCh, jetS, nnetkaon, nnetkaonS, charm;
   if(m_EnableMuon)            muon = m_taggerMu    -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableKaonOS)          kaon = m_taggerKaon  -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableNNetKaonOS)  nnetkaon = m_taggerNNetKaon -> tag(AXB, RecVert, allVtx, vtags);
@@ -222,10 +227,11 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   if(m_EnablePionSS)         pionS = m_taggerPionS-> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableJetSame)         jetS = m_taggerJetS  -> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableVertexCharge)   vtxCh = m_taggerVtxCh -> tag(AXB, RecVert, allVtx, vtags);
+  if(m_EnableCharm)          charm = m_taggerCharm -> tag(AXB, RecVert, allVtx, vtags);
 
 
   std::vector<Tagger*> taggers;
-  taggers.reserve(8);
+  taggers.reserve(9);
   taggers.push_back(&muon);
   taggers.push_back(&elec);
   taggers.push_back(&kaon);
@@ -234,6 +240,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   taggers.push_back(&vtxCh);
   taggers.push_back(&nnetkaon);
   taggers.push_back(&nnetkaonS);
+  taggers.push_back(&charm);
 
 
   //----------------------------------------------------------------------
@@ -285,6 +292,8 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
             << std::setw(6) << nnetkaon.omega()
             << std::setw(3) << nnetkaonS.decision()<<" "
             << std::setw(6) << nnetkaonS.omega()
+            << std::setw(3) << charm.decision()<<" "
+            << std::setw(6) << charm.omega()
             << endmsg;
   }
 
@@ -529,7 +538,7 @@ BTaggingTool::chooseCandidatesReco12(const Particle* AXB,
         Error("FlavourTaggingIPPUs info already set: erasing it");
         c->eraseInfo(LHCb::Particle::FlavourTaggingIPPUs);
       }
-      c->addInfo(LHCb::Particle::FlavourTaggingIPPUs, ippu/ippuerr); // store the information on the IPPU of the tagging particle
+      c->addInfo(LHCb::Particle::FlavourTaggingIPPUs, ippu/ippuerr); //store the information on the IPPU of the tagging particle
       m_extraInfoToClear.push_back( c );
       if (msgLevel(MSG::VERBOSE))
         verbose()<<"particle p="<<(*ip)->p()<<" ippu_sig "<<ippu/ippuerr<<endmsg;
