@@ -106,9 +106,8 @@ private:
   ITaggingUtils* m_util;
   IParticleDescendants* m_descend;
 
-  ITagger *m_taggerMu, *m_taggerEle, *m_taggerKaon, *m_taggerVtxCh;
-  ITagger *m_taggerKaonS, *m_taggerPionS, *m_taggerVtx, *m_taggerJetS;
-  ITagger *m_taggerNNetKaon, *m_taggerNNetKaonS;
+  ITagger *m_taggerMu,    *m_taggerEle,   *m_taggerKaon,     *m_taggerVtxCh,     *m_taggerJetS;
+  ITagger *m_taggerKaonS, *m_taggerPionS, *m_taggerNNetKaon, *m_taggerNNetKaonS, *m_taggerProtonS;
   ITagger *m_taggerCharm;
   ICombineTaggersTool *m_combine;
   IPVReFitter* m_pvReFitter;
@@ -125,6 +124,7 @@ private:
   bool m_EnableMuon,m_EnableElectron,m_EnableKaonOS;
   bool m_EnableKaonSS,m_EnablePionSS,m_EnableVertexCharge;
   bool m_EnableJetSame,m_EnableNNetKaonOS,m_EnableNNetKaonSS;
+  bool m_EnableProtonSS;
   bool m_EnableCharm;
   
   bool m_UseReFitPV,  m_CombineWithNNetTagger;

@@ -4,8 +4,13 @@
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2013-11-30 - Stefania Vecchi
+ - Add SSproton tagging TaggerProtonSame.cpp,h and updated several related files 
+ - updates in NNet OSK and SSK to save all the tagging particle candidates in the 
+   vector of particles associated to the tagger
 
-!========================= FlavourTagging v13r3 2013-10-02 =========================
+! 2013-11-29 - Riccardo Cenci
+ - Add OS-Charm tagging and updates several related files
 
 ! 2013-11-27 - Katharina Kreplin
  - Updated Tunings.py for NNet OSK : 
@@ -17,6 +22,8 @@
     - Reco 14 only
     - solved p0 calibration offset in Bs0 decays
     - new NN1 (trained on Bs0 MC), new NN2 (trained on B+ data)
+
+!========================= FlavourTagging v13r3 2013-10-02 =========================
 
 ! 2013-09-20 - Stefania Vecchi
  - Add some code to run MC12 Reco14 with calibrated mistag

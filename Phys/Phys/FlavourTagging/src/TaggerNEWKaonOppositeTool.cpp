@@ -411,7 +411,10 @@ Tagger TaggerNEWKaonOppositeTool::tagReco12( const Particle* AXB0,
   tkaon.setOmega( my_os_k_eta );
   tkaon.setDecision( my_os_k_dec );
   tkaon.setType( Tagger::OS_nnetKaon);
-  tkaon.addToTaggerParts(ikaon);
+
+  for (int i=0; i<cands_nn_2; i++){    
+    tkaon.addToTaggerParts(*event_map[i].second);
+  }
 
   return tkaon;
 }
@@ -444,7 +447,6 @@ Tagger TaggerNEWKaonOppositeTool::tagReco14( const Particle* AXB0,
   //Particle::ConstVector::iterator ipart;
 
   Particle::ConstVector vtags_sel;
-
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ )
   { // presel before NN1
 
@@ -479,6 +481,7 @@ Tagger TaggerNEWKaonOppositeTool::tagReco14( const Particle* AXB0,
 
     ++cands;
   }
+  
 
   double cands_nn_1 = cands;
 
@@ -561,6 +564,10 @@ Tagger TaggerNEWKaonOppositeTool::tagReco14( const Particle* AXB0,
     event_map.push_back(ev_pair);
 
   }
+  if ( msgLevel(MSG::DEBUG))   
+    debug()<< vtags.size()<<
+      " selected x NN1 "<<vtags_sel.size()<<
+      " selected x NN2 "<<event_map.size()<<endmsg;
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << " vtags_sel.size()="<<  vtags_sel.size() <<" myMap.size()"<<myMap.size()<<endmsg;
@@ -669,7 +676,10 @@ Tagger TaggerNEWKaonOppositeTool::tagReco14( const Particle* AXB0,
   tkaon.setDecision( my_os_k_dec );
   tkaon.setType( Tagger::OS_nnetKaon);
 
-  tkaon.addToTaggerParts(ikaon);
+  for (int i=0; i<cands_nn_2; i++){    
+    tkaon.addToTaggerParts(*event_map[i].second);
+  }
+  
   if ( msgLevel(MSG::DEBUG) )
     debug() << " NNetOSK decision="<<  my_os_k_dec <<" omega="<< my_os_k_eta<<endmsg;
 

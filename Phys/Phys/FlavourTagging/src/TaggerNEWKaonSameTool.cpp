@@ -366,7 +366,12 @@ Tagger TaggerNEWKaonSameTool::tag( const Particle* AXB0,
   tkaon.setOmega( my_os_k_eta );
   tkaon.setDecision( my_os_k_dec );
   tkaon.setType( Tagger::SS_nnetKaon);
-  tkaon.addToTaggerParts(ikaon);
+  //tkaon.addToTaggerParts(ikaon);
+  for (int i=0; i<cands_nn_2; i++){    
+    tkaon.addToTaggerParts(*event_map[i].second);
+  }
+
+
   if ( msgLevel(MSG::DEBUG) )
     debug() << " NNetSSK decision="<<  my_os_k_dec <<" omega="<< my_os_k_eta<<endmsg;
 

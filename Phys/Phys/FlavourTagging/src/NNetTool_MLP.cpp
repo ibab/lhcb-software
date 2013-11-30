@@ -375,7 +375,6 @@ double NNetTool_MLP::MLPkaonTMVA(std::vector <std::string>& inputVars, std::vect
   }
   return pn;
 }
-
 //=============================================================================
 double NNetTool_MLP::MLPvtxTMVA(std::vector <std::string>& inputVars, std::vector<double>& inputVals) 
 {
