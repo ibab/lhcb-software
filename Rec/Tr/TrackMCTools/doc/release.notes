@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2013-11-30 - Michel De Cian
+ - Add upgrade detector linking to LHCbIDsToMCParticles.
+
 !========================= TrackMCTools v3r5 2013-10-01 =========================
 ! 2013-09-09 - Heinrich Schindler
  - Replace VPChannelID::sensor() by VPChannelID::module()

@@ -8,6 +8,8 @@
 #include "Event/Track.h"
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
+#include "Event/VPCluster.h"
+#include "Event/FTCluster.h"
 #include "Event/OTTime.h"
 #include "Event/MuonCoord.h"
 
@@ -23,11 +25,18 @@ LHCbIDsToMCParticles::LHCbIDsToMCParticles(const std::string& type,
   m_otLinks(0,0,""),
   m_veloLinks(0,0,""),
   m_muonLinks(0,0,""),
+  m_vpLinks(0,0,""),
+  m_utLinks(0,0,""),
+  m_ftLinks(0,0,""),
   m_configuredOT(false),
   m_configuredIT(false),
   m_configuredTT(false),
   m_configuredVelo(false),
-  m_configuredMuon(false){
+  m_configuredMuon(false),
+  m_configuredVP(false),
+  m_configuredUT(false),
+  m_configuredFT(false)
+{
 
   // constructer
   declareInterface<ILHCbIDsToMCParticles>(this);
@@ -73,13 +82,14 @@ StatusCode LHCbIDsToMCParticles::link(const LHCbID& id, LinkMap& output) const{
 
  // switch statement from hell
  const unsigned int type = id.detectorType();
+
  switch(type){
  case LHCbID::IT:
    return linkIT(id,output);
    break;
  case LHCbID::TT:
    return linkTT(id,output);
-   break;
+   break; 
  case LHCbID::Velo:
    return linkVelo(id,output);
    break;
@@ -89,8 +99,20 @@ StatusCode LHCbIDsToMCParticles::link(const LHCbID& id, LinkMap& output) const{
  case LHCbID::Muon:
    return linkMuon(id,output);
    break;
+   // -- upgrade
+ case LHCbID::VP:
+   return linkVP(id,output);
+   break;
+ case LHCbID::UT:
+   return linkUT(id,output);
+   break;
+ case LHCbID::FT:
+   return linkFT(id,output);
+   break; 
+
+
  default:
-   return Warning("Unknown type !", StatusCode::SUCCESS, 1);
+   return Warning("Unknown type !", StatusCode::SUCCESS, 10);
    break;
  }
  
@@ -105,6 +127,10 @@ void LHCbIDsToMCParticles::handle ( const Incident& incident )
     m_configuredTT = false;
     m_configuredVelo = false;
     m_configuredMuon = false;
+    m_configuredVP = false;
+    m_configuredUT = false;
+    m_configuredFT = false;
+    
   }
 }
 
@@ -135,6 +161,9 @@ StatusCode LHCbIDsToMCParticles::linkTT(const LHCbID& lhcbid, LinkMap& output) c
   linkToDetTruth(lhcbid.stID(),m_ttLinks, output); 
   return StatusCode::SUCCESS;
 }
+
+
+
 
 StatusCode LHCbIDsToMCParticles::linkOT(const LHCbID& lhcbid, LinkMap& output) const{
 
@@ -175,4 +204,49 @@ StatusCode LHCbIDsToMCParticles::linkMuon(const LHCbID& lhcbid, LinkMap& output)
   linkToDetTruth(lhcbid.muonID(),m_muonLinks, output);
   return StatusCode::SUCCESS;
 }
+
+// -- upgrade
+StatusCode LHCbIDsToMCParticles::linkVP(const LHCbID& lhcbid, LinkMap& output) const{
+
+  if (!m_configuredVP){
+    m_configuredVP = true;
+    m_vpLinks = VPLinks(evtSvc(), msgSvc(),
+                            LHCb::VPClusterLocation::VPClusterLocation);
+    if (m_vpLinks.notFound()) {
+      return Error("no VPLinker",StatusCode::FAILURE,10);
+    }
+  }  
+  linkToDetTruth(lhcbid.vpID(),m_vpLinks, output); 
+  return StatusCode::SUCCESS;
+}
+
+StatusCode LHCbIDsToMCParticles::linkUT(const LHCbID& lhcbid, LinkMap& output) const{
+
+  if (!m_configuredUT){
+    m_configuredUT = true;
+    m_utLinks = STLinks(evtSvc(), msgSvc(),
+                        LHCb::STClusterLocation::UTClusters);
+    if (m_utLinks.notFound()) {
+      return Error("no UTLinker",StatusCode::FAILURE,10);
+    }
+  }  
+  linkToDetTruth(lhcbid.stID(),m_utLinks, output); 
+  return StatusCode::SUCCESS;
+}
+
+StatusCode LHCbIDsToMCParticles::linkFT(const LHCbID& lhcbid, LinkMap& output) const{
+
+  if (!m_configuredFT){
+    m_configuredFT = true;
+    m_ftLinks = FTLinks(evtSvc(), msgSvc(),
+                            LHCb::FTClusterLocation::Default);
+    if (m_ftLinks.notFound()) {
+      return Error("no FTLinker",StatusCode::FAILURE,10);
+    }
+  }  
+  linkToDetTruth(lhcbid.ftID(),m_ftLinks, output); 
+  return StatusCode::SUCCESS;
+}
+
+
 

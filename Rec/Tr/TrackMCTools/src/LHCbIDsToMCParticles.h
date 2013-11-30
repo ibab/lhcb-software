@@ -23,6 +23,8 @@ namespace LHCb{
   class STCluster;
   class VeloCluster;
   class MuonCoord;
+  class VPCluster;
+  class FTCluster; 
 }
 
 class LHCbIDsToMCParticles: public GaudiTool, virtual public ILHCbIDsToMCParticles,
@@ -86,6 +88,9 @@ private:
   typedef LinkedTo<LHCb::MCParticle> OTLinks;
   typedef LinkedTo<LHCb::MCParticle,LHCb::VeloCluster> VeloLinks;
   typedef LinkedTo<LHCb::MCParticle,LHCb::MuonCoord> MuonLinks;
+  // -- upgrade
+  typedef LinkedTo<LHCb::MCParticle,LHCb::VPCluster> VPLinks;
+  typedef LinkedTo<LHCb::MCParticle,LHCb::FTCluster> FTLinks;
 
   template<typename ID, typename LINKER>
   void linkToDetTruth(const ID& id, LINKER& aLinker, LinkMap& output ) const;
@@ -95,18 +100,31 @@ private:
   StatusCode linkOT(const LHCb::LHCbID& id, LinkMap& output) const;
   StatusCode linkVelo(const LHCb::LHCbID& id, LinkMap& output) const;
   StatusCode linkMuon(const LHCb::LHCbID& id, LinkMap& output) const;
+  // -- upgrade
+  StatusCode linkVP(const LHCb::LHCbID& id, LinkMap& output) const;
+  StatusCode linkUT(const LHCb::LHCbID& id, LinkMap& output) const;
+  StatusCode linkFT(const LHCb::LHCbID& id, LinkMap& output) const;
 
   mutable STLinks m_itLinks;
   mutable STLinks m_ttLinks;
   mutable OTLinks m_otLinks;
   mutable VeloLinks m_veloLinks;
   mutable MuonLinks m_muonLinks;
+  // -- upgrade
+  mutable VPLinks m_vpLinks;
+  mutable STLinks m_utLinks;
+  mutable FTLinks m_ftLinks;
+  
 
   mutable bool m_configuredOT;
   mutable bool m_configuredIT;
   mutable bool m_configuredTT;
   mutable bool m_configuredVelo;
   mutable bool m_configuredMuon;
+  // -- upgrade
+  mutable bool m_configuredVP;
+  mutable bool m_configuredUT;
+  mutable bool m_configuredFT;
  
 };
 
