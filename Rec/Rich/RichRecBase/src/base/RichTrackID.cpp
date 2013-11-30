@@ -82,18 +82,22 @@ Rich::Rec::Track::Type Rich::Rec::Track::type( const LHCb::Track * track )
     // check all known track types (order according to abundance)
     // Forward types
     if      ( LHCb::Track::PatForward    == hist )  { return Rich::Rec::Track::Forward;  }
+    else if ( LHCb::Track::PrForward     == hist )  { return Rich::Rec::Track::Forward;  }
     // match track types
     else if ( LHCb::Track::TrackMatching == hist )  { return Rich::Rec::Track::Match;    }
     else if ( LHCb::Track::PatMatch      == hist )  { return Rich::Rec::Track::Match;    }
+    else if ( LHCb::Track::PrMatch       == hist )  { return Rich::Rec::Track::Match;    }
     // seed types
     else if ( LHCb::Track::TsaTrack      == hist )  { return Rich::Rec::Track::Seed;     }
     else if ( LHCb::Track::PatSeeding    == hist )  { return Rich::Rec::Track::Seed;     }
+    else if ( LHCb::Track::PrSeeding     == hist )  { return Rich::Rec::Track::Seed;     }
     // veloTT types
     else if ( LHCb::Track::PatVeloTT     == hist )  { return Rich::Rec::Track::VeloTT;   }
-    else if ( LHCb::Track::PatVeloUT     == hist )  { return Rich::Rec::Track::VeloTT;   }
+    else if ( LHCb::Track::PrVeloUT      == hist )  { return Rich::Rec::Track::VeloTT;   }
     // Ks Tracks
     else if ( LHCb::Track::PatKShort     == hist ||
               LHCb::Track::PatDownstream == hist )  { return Rich::Rec::Track::KsTrack;  }
+    else if ( LHCb::Track::PrDownstream  == hist )  { return Rich::Rec::Track::KsTrack;   }
     // Velo only tracks (from any source)
     else if ( LHCb::Track::Velo  == track->type() ||
               LHCb::Track::VeloR == track->type() ) { return Rich::Rec::Track::Velo;     }
