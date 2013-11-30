@@ -5,6 +5,7 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 ! 2013-11-30 - Stefania Vecchi
+ - Set "Silent" option in the TMVA::Reader for OS_Charm tagger 
  - Add SSproton tagging TaggerProtonSame.cpp,h and updated several related files 
  - updates in NNet OSK and SSK to save all the tagging particle candidates in the 
    vector of particles associated to the tagger

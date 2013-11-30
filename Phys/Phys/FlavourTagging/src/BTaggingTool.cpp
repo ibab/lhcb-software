@@ -52,7 +52,7 @@ GaudiTool ( type, name, parent )
   declareProperty( "EnableNNetKaonSSTagger",  m_EnableNNetKaonSS  = true );
   // SSproton taggin
   declareProperty( "EnableProtonTagger",      m_EnableProtonSS  = true );
-  declareProperty( "EnableCharmTagger",        m_EnableCharm    = true );
+  declareProperty( "EnableCharmTagger",       m_EnableCharm    = true );
 
   declareProperty( "ForceSignalID",           m_ForceSignalID  = " "); //force signal B as Bu, Bd, B
 
@@ -236,7 +236,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag,
   if(m_EnableCharm)          charm = m_taggerCharm -> tag(AXB, RecVert, allVtx, vtags);
 
   std::vector<Tagger*> taggers;
-  taggers.reserve(9);
+  taggers.reserve(11);
   taggers.push_back(&muon);
   taggers.push_back(&elec);
   taggers.push_back(&kaon);

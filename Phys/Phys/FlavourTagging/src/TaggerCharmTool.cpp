@@ -113,7 +113,7 @@ StatusCode TaggerCharmTool::initialize()
 
     CharmDecayMode decay = iter->second;
 
-    TMVA::Reader *reader = new TMVA::Reader();
+    TMVA::Reader *reader = new TMVA::Reader("Silent");
     
     reader->AddVariable("RecVerts",&m_eval_recverts);
     reader->AddVariable("Ntrks",&m_eval_ntrks);
