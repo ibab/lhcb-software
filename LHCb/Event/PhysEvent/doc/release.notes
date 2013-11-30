@@ -2,6 +2,8 @@
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
+! 2013-11-30 - Stefania Vecchi
+ - Added SS_Proton and OS_Charm tagger type in Tagger.xml and Tagger.h
 
 !========================= PhysEvent v11r22 2013-08-19 =========================
 
