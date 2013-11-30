@@ -11,6 +11,7 @@
 
 // local
 #include "HltDecReportsDecoder.h"
+#include "HltDecReportsWriter.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltDecReportsDecoder
@@ -76,6 +77,10 @@ HltDecReportsDecoder::HltDecReportsDecoder( const std::string& name,
                   m_inputRawEventLocation);  
 
 
+  declareProperty("SourceID",
+		  m_sourceID= HltDecReportsWriter::kSourceID_Dummy );  
+
+
 }
 //=============================================================================
 // Destructor
@@ -131,11 +136,47 @@ StatusCode HltDecReportsDecoder::execute() {
   // get the bank from RawEvent
   // ----------------------------------------------------------
 
-  const std::vector<RawBank*> hltdecreportsRawBanks = rawEvent->banks( RawBank::HltDecReports );
-  if( !hltdecreportsRawBanks.size() ){
+  const std::vector<RawBank*> hltdecreportsRawBanksAll = rawEvent->banks( RawBank::HltDecReports );
+  if( !hltdecreportsRawBanksAll.size() ){
     return Warning( " No HltDecReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 20 );
+  } 
+
+  std::vector<const RawBank*> hltdecreportsRawBanks;
+  for( std::vector<RawBank*>::const_iterator hltdecreportsRawBankP=hltdecreportsRawBanksAll.begin();
+	 hltdecreportsRawBankP!=hltdecreportsRawBanksAll.end(); ++hltdecreportsRawBankP ){    
+    const RawBank* hltdecreportsRawBank = *hltdecreportsRawBankP;
+
+    unsigned int sourceID=HltDecReportsWriter::kSourceID_Hlt;
+    if( hltdecreportsRawBank->version() > 1 ){
+      sourceID = hltdecreportsRawBank->sourceID() >> HltDecReportsWriter::kSourceID_BitShift;
+    }
+    if( m_sourceID != sourceID )continue;
+
+    hltdecreportsRawBanks.push_back( hltdecreportsRawBank );
+  }
+  if( !hltdecreportsRawBanks.size() ){
+    if( ( m_sourceID == HltDecReportsWriter::kSourceID_Hlt1 ) ||
+        ( m_sourceID == HltDecReportsWriter::kSourceID_Hlt2 ) ){
+
+      for( std::vector<RawBank*>::const_iterator hltdecreportsRawBankP=hltdecreportsRawBanksAll.begin();
+	   hltdecreportsRawBankP!=hltdecreportsRawBanksAll.end(); ++hltdecreportsRawBankP ){    
+	const RawBank* hltdecreportsRawBank = *hltdecreportsRawBankP;
+
+	unsigned int sourceID=HltDecReportsWriter::kSourceID_Hlt;
+	if( hltdecreportsRawBank->version() > 1 ){
+	  sourceID = hltdecreportsRawBank->sourceID() >> HltDecReportsWriter::kSourceID_BitShift;
+	}
+	if( HltDecReportsWriter::kSourceID_Hlt != sourceID )continue;
+
+	hltdecreportsRawBanks.push_back( hltdecreportsRawBank );
+      }
+
+    }
+  }
+  if( !hltdecreportsRawBanks.size() ){
+    return Warning( " No HltDecReports RawBank for requested SourceID in RawEvent. Quiting. ",StatusCode::SUCCESS, 20 );
   } else if( hltdecreportsRawBanks.size() != 1 ){
-    Warning(" More then one HltDecReports RawBanks in RawEvent. Will only process the first one. " ,StatusCode::SUCCESS, 20 );
+    Warning(" More then one HltDecReports RawBanks for requested SourceID in RawEvent. Will only process the first one. " ,StatusCode::SUCCESS, 20 );
   }
   const RawBank* hltdecreportsRawBank = hltdecreportsRawBanks.front();
   if( hltdecreportsRawBank->magic() != RawBank::MagicPattern ){
@@ -145,9 +186,9 @@ StatusCode HltDecReportsDecoder::execute() {
     return Error(
 " HltDecReports RawBank version # is larger then the known ones.... cannot decode, use newer version." ,StatusCode::FAILURE );
   }
-  if( hltdecreportsRawBank->sourceID() != kSourceID ){
-    Warning( " HltDecReports RawBank has unexpected source ID. Will try to decode it anyway.",StatusCode::SUCCESS, 20 );
-  }
+  //if( hltdecreportsRawBank->sourceID() != kSourceID ){
+  //  Warning( " HltDecReports RawBank has unexpected source ID. Will try to decode it anyway.",StatusCode::SUCCESS, 20 );
+  // }
 
   // ----------------------------------------------------------
   const unsigned int *content = hltdecreportsRawBank->begin<unsigned int>();  
@@ -170,7 +211,8 @@ StatusCode HltDecReportsDecoder::execute() {
     case 0 : err+=this->decodeHDR<v0_v1>( content, hltdecreportsRawBank->end<unsigned int>(), 
                                      *outputSummary );
         break;
-    case 1 : err+=this->decodeHDR<vx_vx>( content, hltdecreportsRawBank->end<unsigned int>(), 
+    case 1 :
+    case 2 : err+=this->decodeHDR<vx_vx>( content, hltdecreportsRawBank->end<unsigned int>(), 
                                      *outputSummary );
         break;
     default : Error(
@@ -203,11 +245,24 @@ HltDecReportsDecoder::decodeHDR(I i, I end,
     int id=dec.intDecisionID();
 
     boost::optional<IANNSvc::minor_value_type> selName = m_hltANNSvc->value("Hlt1SelectionID",id);
-    if (!selName) selName = m_hltANNSvc->value("Hlt2SelectionID",id);
+    unsigned int hltType(HltDecReportsWriter::kSourceID_Hlt2); 
+    if (!selName) {
+      selName = m_hltANNSvc->value("Hlt2SelectionID",id);
+    } else {
+      hltType=HltDecReportsWriter::kSourceID_Hlt1;
+    }
     if( selName ){
-      if( !output.insert( selName->first, dec ).isSuccess() ) {
-        Error(" Duplicate decision report in storage "+selName->first, StatusCode::FAILURE, 20 ).ignore();
-        ++ret;
+      //   skip reports of the wrong type
+      bool store(true);
+      if( ( m_sourceID == HltDecReportsWriter::kSourceID_Hlt1 ) ||
+	  ( m_sourceID == HltDecReportsWriter::kSourceID_Hlt2 ) ){
+	store = ( hltType == m_sourceID );
+      } 
+      if( store ){
+	if( !output.insert( selName->first, dec ).isSuccess() ) {
+	  Error(" Duplicate decision report in storage "+selName->first, StatusCode::FAILURE, 20 ).ignore();
+	  ++ret;
+	}
       }
     } else {
       std::ostringstream mess;

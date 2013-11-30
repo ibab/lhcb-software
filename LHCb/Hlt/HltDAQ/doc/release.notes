@@ -4,6 +4,12 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2013-11-30 - Tomasz Skwarnicki
+ - changes in Dec, Sel, Vertex Writers and Decoders to equip with SourceID (0=Hlt, 1=Hlt1, 2=Hlt2)
+   bank version numbers advanced to 2
+   Decoders will decode SourceID=1 or 2 from RawBanks with SourceID=0 if 1,2 not present 
+     (allows splitting of the old Hlt report into two separate Hlt1,Hlt2 reports in TES)
+
 !========================= HltDAQ v2r18 2013-09-30 =========================
 ! 2013-08-23 - Gerhard Raven
  - HltRoutingBitsWriter: use two different, configurable, TES location for HltDecReports used to fill 

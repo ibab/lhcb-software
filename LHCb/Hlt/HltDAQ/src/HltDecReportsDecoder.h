@@ -30,9 +30,7 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
 
 private:
-  enum HeaderIDs { kSourceID=0,
-                   kVersionNumber=1 
-  };
+  enum HeaderIDs { kVersionNumber=2 };
 
   template <typename HDRConverter,typename I > 
   int decodeHDR(I i, I end,  LHCb::HltDecReports& output) const ;
@@ -47,5 +45,7 @@ private:
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;
 
+  /// SourceID to decode 0=Hlt 1=Hlt1 2=Hlt2 ... (1,2 will decode from 0 if 1,2 not found)
+  UnsignedIntegerProperty m_sourceID;
 };
 #endif // HLTDECREPORTSDECODER_H

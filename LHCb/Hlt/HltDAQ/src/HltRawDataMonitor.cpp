@@ -23,6 +23,7 @@
 
 // local
 #include "HltRawDataMonitor.h"
+#include "HltSelReportsWriter.h"
 
 #include "Event/Track.h"
 #include "Event/Particle.h"
@@ -60,6 +61,11 @@ HltRawDataMonitor::HltRawDataMonitor( const std::string& name,
   m_stdinfoSize     =     0;
   m_extinfoSize     =     0;
   m_event           =     0;
+
+  declareProperty("SourceID",
+		  m_sourceID= HltSelReportsWriter::kSourceID_Hlt );  
+
+
 }
 
 //=============================================================================
@@ -167,32 +173,78 @@ StatusCode HltRawDataMonitor::fillRawBank()
     Warning( " HltSelReports RawBank version is higher than expected. Will try to decode it anyway." ,StatusCode::SUCCESS, 20 );
   }
 
+  unsigned int bankCounterMax = 0;
   unsigned int bankSize =0;
   std::vector<const RawBank*> orderedBanks(hltselreportsRawBanks.size(),(const RawBank*)0);
   for( std::vector<RawBank*>::const_iterator hltselreportsRawBankP=hltselreportsRawBanks.begin();
 	 hltselreportsRawBankP!=hltselreportsRawBanks.end(); ++hltselreportsRawBankP ){    
     const RawBank* hltselreportsRawBank = *hltselreportsRawBankP;
+
+    unsigned int sourceID=HltSelReportsWriter::kSourceID_Hlt;
+    if( hltselreportsRawBank->version() > 1 ){
+      sourceID = hltselreportsRawBank->sourceID() >> HltSelReportsWriter::kSourceID_BitShift;
+    }
+    if( m_sourceID != sourceID )continue;
+
     if( hltselreportsRawBank->magic() != RawBank::MagicPattern ){
       Error(" HltSelReports RawBank has wrong magic number. Skipped ",StatusCode::SUCCESS, 20 );
       continue;
     }
-    unsigned int sourceId = hltselreportsRawBank->sourceID();
-    if( sourceId < hltselreportsRawBanks.size() ){
-      orderedBanks[sourceId]= hltselreportsRawBank;
+    unsigned int bankCounter = hltselreportsRawBank->sourceID();
+    if( hltselreportsRawBank->version() > 1 ){
+      bankCounter = bankCounter & HltSelReportsWriter::kSourceID_MinorMask;
+    }
+    if( bankCounter < hltselreportsRawBanks.size() ){
+      orderedBanks[bankCounter]= hltselreportsRawBank;
+      if( bankCounter > bankCounterMax ) bankCounterMax = bankCounter;
     } else {
       Error( " Illegal Source ID HltSelReports bank skipped ", StatusCode::SUCCESS, 20 );
     }
     bankSize += hltselreportsRawBank->size();
   }
+  //      if new Hlt1,Hlt2 reports not found try for Hlt1+Hlt2 reports
+  if( !bankSize ){
+    if( ( m_sourceID == HltSelReportsWriter::kSourceID_Hlt1 ) ||
+        ( m_sourceID == HltSelReportsWriter::kSourceID_Hlt2 ) ){
+
+      for( std::vector<RawBank*>::const_iterator hltselreportsRawBankP=hltselreportsRawBanks.begin();
+	   hltselreportsRawBankP!=hltselreportsRawBanks.end(); ++hltselreportsRawBankP ){    
+	const RawBank* hltselreportsRawBank = *hltselreportsRawBankP;
+
+	unsigned int sourceID= HltSelReportsWriter::kSourceID_Hlt;
+	if( hltselreportsRawBank->version() > 1 ){
+	  sourceID = hltselreportsRawBank->sourceID() >> HltSelReportsWriter::kSourceID_BitShift;
+	}
+	if( HltSelReportsWriter::kSourceID_Hlt != sourceID )continue;
+
+	if( hltselreportsRawBank->magic() != RawBank::MagicPattern ){
+	  Error(" HltSelReports RawBank has wrong magic number. Skipped ",StatusCode::SUCCESS, 20 );
+	  continue;
+	}
+	unsigned int bankCounter = hltselreportsRawBank->sourceID();
+	if( hltselreportsRawBank->version() > 1 ){
+	  bankCounter = bankCounter & HltSelReportsWriter::kSourceID_MinorMask;
+	}
+	if( bankCounter < hltselreportsRawBanks.size() ){
+	  orderedBanks[bankCounter]= hltselreportsRawBank;
+	  if( bankCounter > bankCounterMax ) bankCounterMax = bankCounter;
+	} else {
+	  Error( " Illegal Source ID HltSelReports bank skipped ", StatusCode::SUCCESS, 20 );
+	}
+	bankSize += hltselreportsRawBank->size();
+      }
+    }
+  }
+  if( !bankSize ){
+    return Warning( " No HltSelReports RawBank for requested SourceID in RawEvent. Quiting. ",StatusCode::SUCCESS, 10 );
+  }    
   bankSize = (bankSize+3)/4; // from bytes to words
   // need to copy it to local array to get rid of const restriction
-  // ???? WHY ???? you're not going to modify it here (should not!), 
-  // so if there are (member0functions you want to call which are not 
-  // declared const, but which could be, those ought to be fixed!
   unsigned int* pBank = new unsigned int[bankSize];
   HltSelRepRawBank hltSelReportsBank( pBank );
 
-  for( unsigned int iBank=0; iBank<hltselreportsRawBanks.size(); ++iBank){
+  ++bankCounterMax;
+  for( unsigned int iBank=0; iBank<bankCounterMax; ++iBank){
     const RawBank* hltselreportsRawBank = orderedBanks[iBank];
     if( !hltselreportsRawBank ){
       hltSelReportsBank.deleteBank();
@@ -203,6 +255,7 @@ StatusCode HltRawDataMonitor::fillRawBank()
       (*pBank) = hltselreportsRawBank->data()[i]; ++pBank;
     }
   }
+
 
   HltSelRepRBHits hitsSubBank( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kHitsID ) );
   HltSelRepRBObjTyp objTypSubBank( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kObjTypID ) );

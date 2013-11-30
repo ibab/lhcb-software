@@ -9,6 +9,8 @@
 
 // local
 #include "HltVertexReportsDecoder.h"
+#include "HltVertexReportsWriter.h"
+
 namespace { 
     double doubleFromInt(unsigned int i) {
             union IntFloat { unsigned int mInt; float mFloat; };
@@ -44,6 +46,10 @@ HltVertexReportsDecoder::HltVertexReportsDecoder( const std::string& name,
     m_outputHltVertexReportsLocation= LHCb::HltVertexReportsLocation::Default);  
   declareProperty("InputRawEventLocation",
                   m_inputRawEventLocation);  
+
+  declareProperty("SourceID",
+		  m_sourceID= HltVertexReportsWriter::kSourceID_Dummy );  
+
 
 }
 //=============================================================================
@@ -105,43 +111,93 @@ StatusCode HltVertexReportsDecoder::execute() {
   // get the bank from RawEvent
   // ----------------------------------------------------------
 
-  const std::vector<RawBank*> hltVertexReportsRawBanks = rawEvent->banks( RawBank::HltVertexReports );
-  if( !hltVertexReportsRawBanks.size() ){
-    return Warning(" No HltVertexReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 20 );
-  } else if( hltVertexReportsRawBanks.size() != 1 ){
-    Warning(" More then one HltVertexReports RawBanks in RawEvent. Will process only the first one. ",StatusCode::SUCCESS, 20 );
+  const std::vector<RawBank*> hltvertexreportsRawBanksAll = rawEvent->banks( RawBank::HltVertexReports );
+  if( !hltvertexreportsRawBanksAll.size() ){
+    return Warning( " No HltVertexReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 20 );
+  } 
+
+  std::vector<const RawBank*> hltvertexreportsRawBanks;
+  for( std::vector<RawBank*>::const_iterator hltvertexreportsRawBankP=hltvertexreportsRawBanksAll.begin();
+	 hltvertexreportsRawBankP!=hltvertexreportsRawBanksAll.end(); ++hltvertexreportsRawBankP ){    
+    const RawBank* hltvertexreportsRawBank = *hltvertexreportsRawBankP;
+
+    unsigned int sourceID=HltVertexReportsWriter::kSourceID_Hlt;
+    if( hltvertexreportsRawBank->version() > 1 ){
+      sourceID = hltvertexreportsRawBank->sourceID() >> HltVertexReportsWriter::kSourceID_BitShift;
+    }
+    if( m_sourceID != sourceID )continue;
+
+    hltvertexreportsRawBanks.push_back( hltvertexreportsRawBank );
   }
-  const RawBank* hltvertexReportsRawBank = *(hltVertexReportsRawBanks.begin());
-  if( hltvertexReportsRawBank->magic() != RawBank::MagicPattern ){
+  if( !hltvertexreportsRawBanks.size() ){
+    if( ( m_sourceID == HltVertexReportsWriter::kSourceID_Hlt1 ) ||
+        ( m_sourceID == HltVertexReportsWriter::kSourceID_Hlt2 ) ){
+
+      for( std::vector<RawBank*>::const_iterator hltvertexreportsRawBankP=hltvertexreportsRawBanksAll.begin();
+	   hltvertexreportsRawBankP!=hltvertexreportsRawBanksAll.end(); ++hltvertexreportsRawBankP ){    
+	const RawBank* hltvertexreportsRawBank = *hltvertexreportsRawBankP;
+
+	unsigned int sourceID=HltVertexReportsWriter::kSourceID_Hlt;
+	if( hltvertexreportsRawBank->version() > 1 ){
+	  sourceID = hltvertexreportsRawBank->sourceID() >> HltVertexReportsWriter::kSourceID_BitShift;
+	}
+	if( HltVertexReportsWriter::kSourceID_Hlt != sourceID )continue;
+
+	hltvertexreportsRawBanks.push_back( hltvertexreportsRawBank );
+      }
+
+    }
+  }
+  if( !hltvertexreportsRawBanks.size() ){
+    return Warning( " No HltVertexReports RawBank for requested SourceID in RawEvent. Quiting. ",StatusCode::SUCCESS, 20 );
+  } else if( hltvertexreportsRawBanks.size() != 1 ){
+    Warning(" More then one HltVertexReports RawBanks for requested SourceID in RawEvent. Will only process the first one. " ,StatusCode::SUCCESS, 20 );
+  }
+  const RawBank* hltvertexreportsRawBank = hltvertexreportsRawBanks.front();
+
+  if( hltvertexreportsRawBank->magic() != RawBank::MagicPattern ){
     return Error(" HltVertexReports RawBank has wrong magic number. Return without decoding.",StatusCode::FAILURE );
   }
-  const unsigned int bankVersionNumber = hltvertexReportsRawBank->version();  
+  const unsigned int bankVersionNumber = hltvertexreportsRawBank->version();  
   if( bankVersionNumber > kVersionNumber ){
     std::ostringstream mess;
     mess <<  " HltVertexReports Raw Bank version number " << bankVersionNumber
          << " higher than the one of the decoder " << int(kVersionNumber);
     Warning( mess.str(),  StatusCode::SUCCESS, 20 ).ignore();
   }
-  if( hltvertexReportsRawBank->sourceID() != kSourceID ){
-    Warning(" HltVertexReports RawBank has unexpected source ID. Will try to decode it anyway." ,  StatusCode::SUCCESS, 20 ).ignore();
-  }
+  //  if( hltvertexreportsRawBank->sourceID() != kSourceID ){
+  //  Warning(" HltVertexReports RawBank has unexpected source ID. Will try to decode it anyway." ,  StatusCode::SUCCESS, 20 ).ignore();
+  // }
 
-  const unsigned int *i   = hltvertexReportsRawBank->begin<unsigned int>();
-  const unsigned int *end = hltvertexReportsRawBank->end<unsigned int>();
+  const unsigned int *i   = hltvertexreportsRawBank->begin<unsigned int>();
+  const unsigned int *end = hltvertexreportsRawBank->end<unsigned int>();
   int nSel = *i++;
   while ( i < end ) { // avoid infinite loop with corrupt/incompatible data... (i.e. do NOT use i!=end)
     --nSel;
     unsigned nVert    = ( ( *i ) & 0xFFFFL ); // can we decode the per vertex size here???
     unsigned intSelID = ( *i++ >> 16 );
 
+    unsigned int hltType(HltVertexReportsWriter::kSourceID_Hlt2); 
     boost::optional<IANNSvc::minor_value_type> value = m_hltANNSvc->value("Hlt1SelectionID",intSelID);
-    if (!value) value = m_hltANNSvc->value("Hlt2SelectionID",intSelID);
+    if (!value) {
+      value = m_hltANNSvc->value("Hlt2SelectionID",intSelID);
+    } else {
+      hltType=HltVertexReportsWriter::kSourceID_Hlt1;
+    }
     if (!value) {
       std::ostringstream mess; mess <<  " did not find name for id = " << intSelID << "; skipping this selection";
       Error(mess.str(), StatusCode::SUCCESS, 50 );
       i += nVert * ( bankVersionNumber == 0 ? 5 : 11 ); // would have been nice to have a size / vtx in the bank...
       continue;
     }
+    // skip reports if of wrong type
+    if( ( m_sourceID == HltVertexReportsWriter::kSourceID_Hlt1 ) ||
+	( m_sourceID == HltVertexReportsWriter::kSourceID_Hlt2 ) ){
+      if( hltType != m_sourceID ) {
+	i += nVert * ( bankVersionNumber == 0 ? 5 : 11 ); // would have been nice to have a size / vtx in the bank...
+	continue;
+      }
+    } 
 
     // create output container for vertices and put it on TES
     VertexBase::Container* verticesOutput = new VertexBase::Container();

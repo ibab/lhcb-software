@@ -20,9 +20,7 @@
 class HltVertexReportsDecoder : public GaudiAlgorithm {
 public:
 
-  enum HeaderIDs { kSourceID=0,
-                   kVersionNumber=1 
-  };
+  enum HeaderIDs { kVersionNumber=2 };
 
 
   /// Standard constructor
@@ -45,6 +43,9 @@ private:
 
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;  
+
+  /// SourceID to decode 0=Hlt 1=Hlt1 2=Hlt2 ... (1,2 will decode from 0 if 1,2 not found)
+  UnsignedIntegerProperty m_sourceID;
 
 };
 

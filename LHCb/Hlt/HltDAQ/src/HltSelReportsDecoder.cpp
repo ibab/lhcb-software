@@ -19,6 +19,7 @@
 
 // local
 #include "HltSelReportsDecoder.h"
+#include "HltSelReportsWriter.h"
 
 #include "Event/Track.h"
 #include "Event/Particle.h"
@@ -55,6 +56,10 @@ HltSelReportsDecoder::HltSelReportsDecoder( const std::string& name,
   declareProperty("InputRawEventLocation",
                   m_inputRawEventLocation);  
 
+  declareProperty("SourceID",
+		  m_sourceID= HltSelReportsWriter::kSourceID_Dummy );  
+
+
   // declareProperty("InputRawEventLocation",
   //  m_inputRawEventLocation= LHCb::RawEventLocation::Default);
 
@@ -84,6 +89,11 @@ StatusCode HltSelReportsDecoder::initialize() {
   m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
 
   m_hltANNSvc = svc<IANNSvc>("ANNDispatchSvc");
+
+  if( m_sourceID > HltSelReportsWriter::kSourceID_Max ){
+    m_sourceID = m_sourceID & HltSelReportsWriter::kSourceID_Max;
+    return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -134,29 +144,78 @@ StatusCode HltSelReportsDecoder::execute() {
     Warning( " HltSelReports RawBank version is higher than expected. Will try to decode it anyway." ,StatusCode::SUCCESS, 20 );
   }
 
+  unsigned int bankCounterMax = 0;
   unsigned int bankSize =0;
   std::vector<const RawBank*> orderedBanks(hltselreportsRawBanks.size(),(const RawBank*)0);
   for( std::vector<RawBank*>::const_iterator hltselreportsRawBankP=hltselreportsRawBanks.begin();
 	 hltselreportsRawBankP!=hltselreportsRawBanks.end(); ++hltselreportsRawBankP ){    
     const RawBank* hltselreportsRawBank = *hltselreportsRawBankP;
+
+    unsigned int sourceID=HltSelReportsWriter::kSourceID_Hlt;
+    if( hltselreportsRawBank->version() > 1 ){
+      sourceID = hltselreportsRawBank->sourceID() >> HltSelReportsWriter::kSourceID_BitShift;
+    }
+    if( m_sourceID != sourceID )continue;
+
     if( hltselreportsRawBank->magic() != RawBank::MagicPattern ){
       Error(" HltSelReports RawBank has wrong magic number. Skipped ",StatusCode::SUCCESS, 20 );
       continue;
     }
-    unsigned int sourceId = hltselreportsRawBank->sourceID();
-    if( sourceId < hltselreportsRawBanks.size() ){
-      orderedBanks[sourceId]= hltselreportsRawBank;
+    unsigned int bankCounter = hltselreportsRawBank->sourceID();
+    if( hltselreportsRawBank->version() > 1 ){
+      bankCounter = bankCounter & HltSelReportsWriter::kSourceID_MinorMask;
+    }
+    if( bankCounter < hltselreportsRawBanks.size() ){
+      orderedBanks[bankCounter]= hltselreportsRawBank;
+      if( bankCounter > bankCounterMax ) bankCounterMax = bankCounter;
     } else {
       Error( " Illegal Source ID HltSelReports bank skipped ", StatusCode::SUCCESS, 20 );
     }
     bankSize += hltselreportsRawBank->size();
   }
+  //      if new Hlt1,Hlt2 reports not found try for Hlt1+Hlt2 reports
+  if( !bankSize ){
+    if( ( m_sourceID == HltSelReportsWriter::kSourceID_Hlt1 ) ||
+        ( m_sourceID == HltSelReportsWriter::kSourceID_Hlt2 ) ){
+
+      for( std::vector<RawBank*>::const_iterator hltselreportsRawBankP=hltselreportsRawBanks.begin();
+	   hltselreportsRawBankP!=hltselreportsRawBanks.end(); ++hltselreportsRawBankP ){    
+	const RawBank* hltselreportsRawBank = *hltselreportsRawBankP;
+
+	unsigned int sourceID= HltSelReportsWriter::kSourceID_Hlt;
+	if( hltselreportsRawBank->version() > 1 ){
+	  sourceID = hltselreportsRawBank->sourceID() >> HltSelReportsWriter::kSourceID_BitShift;
+	}
+	if( HltSelReportsWriter::kSourceID_Hlt != sourceID )continue;
+
+	if( hltselreportsRawBank->magic() != RawBank::MagicPattern ){
+	  Error(" HltSelReports RawBank has wrong magic number. Skipped ",StatusCode::SUCCESS, 20 );
+	  continue;
+	}
+	unsigned int bankCounter = hltselreportsRawBank->sourceID();
+	if( hltselreportsRawBank->version() > 1 ){
+	  bankCounter = bankCounter & HltSelReportsWriter::kSourceID_MinorMask;
+	}
+	if( bankCounter < hltselreportsRawBanks.size() ){
+	  orderedBanks[bankCounter]= hltselreportsRawBank;
+	  if( bankCounter > bankCounterMax ) bankCounterMax = bankCounter;
+	} else {
+	  Error( " Illegal Source ID HltSelReports bank skipped ", StatusCode::SUCCESS, 20 );
+	}
+	bankSize += hltselreportsRawBank->size();
+      }
+    }
+  }
+  if( !bankSize ){
+    return Warning( " No HltSelReports RawBank for requested SourceID in RawEvent. Quiting. ",StatusCode::SUCCESS, 10 );
+  }    
   bankSize = (bankSize+3)/4; // from bytes to words
   // need to copy it to local array to get rid of const restriction
   unsigned int* pBank = new unsigned int[bankSize];
   HltSelRepRawBank hltSelReportsBank( pBank );
 
-  for( unsigned int iBank=0; iBank<hltselreportsRawBanks.size(); ++iBank){
+  ++bankCounterMax;
+  for( unsigned int iBank=0; iBank<bankCounterMax; ++iBank){
     const RawBank* hltselreportsRawBank = orderedBanks[iBank];
     if( !hltselreportsRawBank ){
       hltSelReportsBank.deleteBank();
@@ -548,17 +607,28 @@ StatusCode HltSelReportsDecoder::execute() {
     if( hos->summarizedObjectCLID()!=1 )continue; 
 
     boost::optional<IANNSvc::minor_value_type> selName;
+    unsigned int hltType(HltSelReportsWriter::kSourceID_Hlt2); 
     for( HltObjectSummary::Info::const_iterator i=hos->numericalInfo().begin();
          i!=hos->numericalInfo().end();++i ){
       if( i->first == "0#SelectionID" ){
         int id = (int)(i->second+0.1);
         selName = m_hltANNSvc->value("Hlt1SelectionID",id);
-        if (!selName) selName = m_hltANNSvc->value("Hlt2SelectionID",id);
+        if (!selName) {
+	  selName = m_hltANNSvc->value("Hlt2SelectionID",id);
+	} else {
+	  hltType=HltSelReportsWriter::kSourceID_Hlt1;
+	}
         break;
       }
     }
     if( selName  ){
-      
+
+      //   skip reports of the wrong type
+      if( ( m_sourceID == HltSelReportsWriter::kSourceID_Hlt1 ) ||
+	  ( m_sourceID == HltSelReportsWriter::kSourceID_Hlt2 ) ){
+	if( hltType != m_sourceID )continue;
+      } 
+
       // clone hos
       HltObjectSummary selSumOut;
       selSumOut.setSummarizedObjectCLID( hos->summarizedObjectCLID() );

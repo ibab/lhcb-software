@@ -21,7 +21,7 @@
 class HltRawDataMonitor : public GaudiHistoAlg {
 public:
 
-  enum HeaderIDs { kVersionNumber=0 };
+  enum HeaderIDs { kVersionNumber=2 };
   
   /// Standard constructor
   HltRawDataMonitor( const std::string& name, ISvcLocator* pSvcLocator );
@@ -40,7 +40,11 @@ protected:
   std::string m_inputRawEventLocation;
   std::vector<std::string> m_rawEventLocations;
 
-  // <0 never 0=at finalize >0 event frequency
+
+  /// SourceID to decode 0=Hlt 1=Hlt1 2=Hlt2 ... (1,2 will decode from 0 if 1,2 not found)
+  UnsignedIntegerProperty m_sourceID;
+
+  /// <0 never 0=at finalize >0 event frequency
   IntegerProperty                                                 m_diagnosticsFrequency;
 
   IANNSvc*                                                        m_hltANNSvc;

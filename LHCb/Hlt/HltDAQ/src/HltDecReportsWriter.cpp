@@ -38,6 +38,8 @@ HltDecReportsWriter::HltDecReportsWriter( const std::string& name,
     m_inputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
   declareProperty("OutputRawEventLocation",
     m_outputRawEventLocation= LHCb::RawEventLocation::Default);  
+  declareProperty("SourceID",
+    m_sourceID= kSourceID_Dummy );  
 
 }
 //=============================================================================
@@ -53,6 +55,13 @@ StatusCode HltDecReportsWriter::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+
+
+  if( m_sourceID > kSourceID_Max ){
+    m_sourceID = m_sourceID & kSourceID_Max;
+    return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
+  }
+
 
   return StatusCode::SUCCESS;
 }
@@ -110,16 +119,24 @@ StatusCode HltDecReportsWriter::execute() {
   const std::vector<RawBank*> hltdecreportsRawBanks = rawEvent->banks( RawBank::HltDecReports );
   for( std::vector<RawBank*>::const_iterator b=hltdecreportsRawBanks.begin();
        b!=hltdecreportsRawBanks.end(); ++b){
+    unsigned int sourceID=kSourceID_Hlt;
+    if( (*b)->version() > 1 ){
+      sourceID = (*b)->sourceID() >> kSourceID_BitShift;
+    }
+    if( m_sourceID != sourceID )continue;
+
     rawEvent->removeBank(*b);
     if ( msgLevel(MSG::VERBOSE) ){ verbose() << " Deleted previosuly inserted HltDecReports bank " << endmsg;
     }    
   }
   
- 
-  rawEvent->addBank(  kSourceID, RawBank::HltDecReports, kVersionNumber, bankBody );
+  // shift bits in sourceID for the same convention as in HltSelReports
+  rawEvent->addBank(  int(m_sourceID<<kSourceID_BitShift), RawBank::HltDecReports, kVersionNumber, bankBody );
 
   if ( msgLevel(MSG::VERBOSE) ){
     verbose() << " Output:  ";  
+    verbose() << " VersionNumber= " << kVersionNumber;  
+    verbose() << " SourceID= " << m_sourceID;
     std::vector<unsigned int>::const_iterator i=bankBody.begin();
     verbose() << " configuredTCK = " << *i++ << " " ;
     verbose() << " taskID = " << *i++ << " " ;

@@ -46,6 +46,8 @@ HltSelReportsWriter::HltSelReportsWriter( const std::string& name,
     m_inputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);  
   declareProperty("OutputRawEventLocation",
     m_outputRawEventLocation= LHCb::RawEventLocation::Default);
+  declareProperty("SourceID",
+    m_sourceID= kSourceID_Dummy );  
 
     m_hltANNSvc = 0;
 
@@ -65,6 +67,12 @@ StatusCode HltSelReportsWriter::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
+
+  if( m_sourceID > kSourceID_Max ){
+    m_sourceID = m_sourceID & kSourceID_Max;
+    return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
+  }
+
 
   return StatusCode::SUCCESS;
 }
@@ -373,12 +381,19 @@ StatusCode HltSelReportsWriter::execute() {
   hltSelReportsBank.saveSize();
 
 
-  // delete any previously inserted sel reports
+  // delete any previously inserted sel reports with the same major sourceID
   const std::vector<RawBank*> hltselreportsRawBanks = rawEvent->banks( RawBank::HltSelReports );
   for( std::vector<RawBank*>::const_iterator b=hltselreportsRawBanks.begin();
        b!=hltselreportsRawBanks.end(); ++b){
+    unsigned int sourceID=kSourceID_Hlt;
+    if( (*b)->version() > 1 ){
+      sourceID = (*b)->sourceID() >> kSourceID_BitShift;
+    }
+    if( m_sourceID != sourceID )continue;
+
     rawEvent->removeBank(*b);
     if ( msgLevel(MSG::VERBOSE) ){ verbose() << " Deleted previosuly inserted HltSelReports bank " << endmsg;
+
     }    
   }
 
@@ -389,13 +404,20 @@ StatusCode HltSelReportsWriter::execute() {
   // RawBank is limited in size to 65535 bytes i.e. 16383 words; be conservative cut it off at a smaller limit.
   // Save in chunks if exceed this size.
   int nBank = (hltSelReportsBank.size()-1)/16300 + 1;
-  for( int iBank=0; iBank < nBank; ++iBank ){
+  if( nBank > kSourceID_MinorMask ){
+    // delete the main bank
+    hltSelReportsBank.deleteBank();
+    // 
+    return Error("HltSelReports too long to save", StatusCode::SUCCESS, 50 );    
+  }
+  for(int iBank=0; iBank < nBank; ++iBank ){
     int ioff=iBank*16300;
     int isize=hltSelReportsBank.size()-ioff;
     if( isize > 16300 )isize=16300;	
     std::vector< unsigned int > bankBody( &(hltSelReportsBank.location()[ioff]), 
                                           &(hltSelReportsBank.location()[ioff+isize]) );
-    rawEvent->addBank(  iBank, RawBank::HltSelReports, kVersionNumber, bankBody );
+    int sourceID = iBank | ( m_sourceID << kSourceID_BitShift );
+    rawEvent->addBank(  sourceID, RawBank::HltSelReports, kVersionNumber, bankBody );
   }
   if( nBank>1 ){
     std::ostringstream mess;
