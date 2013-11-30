@@ -5,6 +5,10 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+! 2013-11-30 - Stefania Vecchi
+ - BTaggingChecker.cpp changes to print SS_Proton and OS_Charm tagging performance
+ - TaggingUtilsChecker.cpp changes to read the information on the origin of a particle
+   from MCParticle instead of HepMC (needed by Sim08)
 
 !========================= FlavourTaggingChecker v7r1 2013-08-01 =========================
 

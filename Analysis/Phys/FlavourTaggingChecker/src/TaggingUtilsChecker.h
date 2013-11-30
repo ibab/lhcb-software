@@ -59,12 +59,12 @@ public:
   //-------------------------------------------------------------
 
 private:
-  // TO Fix with MC12
-  LHCb::MCParticle::ConstVector prodsBstar( const LHCb::MCParticle*  );
-  LHCb::MCParticle::ConstVector prodsBstarstar( const LHCb::MCParticle*  );
-  LHCb::MCParticle::ConstVector prodsBstring( const LHCb::MCParticle*  );
-  HepMC::GenParticle* HEPassociated(const LHCb::MCParticle* );
-  LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* );
+  //  no more valid for Sim08 (no HepMC classes)
+  //  LHCb::MCParticle::ConstVector prodsBstar( const LHCb::MCParticle*  );
+  //  LHCb::MCParticle::ConstVector prodsBstarstar( const LHCb::MCParticle*  );
+  //  LHCb::MCParticle::ConstVector prodsBstring( const LHCb::MCParticle*  );
+  //  HepMC::GenParticle* HEPassociated(const LHCb::MCParticle* );
+  //  LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* );
 
   IPrintMCDecayTreeTool* m_debug;
   const IDistanceCalculator *m_Dist;

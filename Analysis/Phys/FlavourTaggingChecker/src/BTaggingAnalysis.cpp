@@ -323,6 +323,10 @@ StatusCode BTaggingAnalysis::execute() {
   std::vector<float> ptrackxfirst(0), ptrackyfirst(0), ptrackzfirst(0), ptrackp(0);
 
   Particle::ConstVector::const_iterator ip;
+  //  std::cout<<" Found B-signal with "<<vtags.size()<<" tagging particles "<<std::endl;
+  //bool fromBS=false;
+  //  bool fromBO=false;
+  //  bool fromBstar=false;  
   for( ip = vtags.begin(); ip != vtags.end(); ++ip ) {
 
     const Particle* axp = (*ip);
@@ -565,7 +569,9 @@ StatusCode BTaggingAnalysis::execute() {
         }
 
         const MCParticle* ancestor = m_util->originof(mcp) ;
+
         if (ancestor){          
+          //std::cout<<" Ancestor ID="<<ancestor->particleID().pid()<<" hasBottom="<< ancestor->particleID().hasBottom() <<std::endl;        
           ancID = ancestor->particleID().pid();
           debug()<< " Associated ancestor PID="<<ancID<<endreq;
           if( ancestor->particleID().hasBottom() ) {
@@ -577,7 +583,9 @@ StatusCode BTaggingAnalysis::execute() {
             }
           }
           if(m_BS) xFlag = m_util->comes_from_excitedB(m_BS, mcp);
-          if(xFlag) debug()<<" comes_from_excitedB="<< xFlag << endreq;
+          if(xFlag>0) debug()<<" comes_from_excitedB xFlag="<< xFlag <<
+            " (1=from signal BS string, 2=from signal BS and Bstar, -1=from Boppo, <0 origin"<<  endreq;
+          
         }
         
         //Check direct mother of particle to see if it is the OSB. Excludes secondary OS muons.
@@ -608,6 +616,7 @@ StatusCode BTaggingAnalysis::execute() {
       
     }
   }
+  
 
   if(pID.size() > 199) {
     warning()<<"Bursting array limit of 200.  "<<pID.size()<<endreq;

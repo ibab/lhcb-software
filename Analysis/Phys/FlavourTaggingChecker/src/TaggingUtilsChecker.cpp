@@ -278,6 +278,7 @@ Particle::ConstVector TaggingUtilsChecker::FindDaughters( const Particle* axp ) 
 }
 
 //=============================================================================
+/* OLD CODE
 MCParticle::ConstVector 
 TaggingUtilsChecker::prodsBstarstar( const MCParticle* B0 ) {
 
@@ -325,7 +326,9 @@ TaggingUtilsChecker::prodsBstarstar( const MCParticle* B0 ) {
   
   return ExcitedProdsBstar2;
 }
+*/
 //=============================================================================
+/* OLD CODE
 MCParticle::ConstVector 
 TaggingUtilsChecker::prodsBstar( const MCParticle* B0 ) {
 
@@ -366,7 +369,9 @@ TaggingUtilsChecker::prodsBstar( const MCParticle* B0 ) {
 
   return ExcitedProdsBstar1;
 }
+*/
 //=============================================================================
+/* OLD CODE
 MCParticle::ConstVector 
 TaggingUtilsChecker::prodsBstring( const MCParticle* B0 ) {
 
@@ -403,7 +408,9 @@ TaggingUtilsChecker::prodsBstring( const MCParticle* B0 ) {
   
   return BstringProds;
 }
+*/
 //=============================================================================
+/* OLD CODE
 HepMC::GenParticle* TaggingUtilsChecker::HEPassociated(const MCParticle* mcp) {
 
   LHCb::HepMCEvents* hepVect =
@@ -429,7 +436,9 @@ HepMC::GenParticle* TaggingUtilsChecker::HEPassociated(const MCParticle* mcp) {
   }
   return 0;
 }
+*/
 //============================================================================
+/* OLD CODE
 MCParticle* TaggingUtilsChecker::associatedofHEP(HepMC::GenParticle* hepmcp) {
 
   MCParticles* mcpart = get<MCParticles> (MCParticleLocation::Default);
@@ -449,8 +458,9 @@ MCParticle* TaggingUtilsChecker::associatedofHEP(HepMC::GenParticle* hepmcp) {
   }
   return 0;
 }
+*/
 //=============================================================================
-/* TO BE FIXED
+/* OLD CODE
 int TaggingUtilsChecker::comes_from_excitedB(const MCParticle* BS,
                                              const MCParticle* mcp ) {
   MCParticle::ConstVector::iterator iexc;
@@ -475,15 +485,52 @@ int TaggingUtilsChecker::comes_from_excitedB(const MCParticle* BS,
   return origin;
 }
 
-
 */
-
 //=============================================================================
 int TaggingUtilsChecker::comes_from_excitedB(const MCParticle* BS,
                                              const MCParticle* mcp ) {
   MCParticle::ConstVector::iterator iexc;
-  debug()<<" TaggingUtilsChecker::comes_from_excitedB is not supported anymore BS="<< *BS <<" mcp="<<*mcp<<endreq;
   int origin=0;
+
+  MCParticle *ancestorBS = const_cast<LHCb::MCParticle*>( BS ); 
+  MCParticle *ancestorP  = const_cast<LHCb::MCParticle*>( mcp );
+  MCParticle *originP    = const_cast<LHCb::MCParticle*>( mcp );
+
+  while( ancestorP->mother() ) {
+    originP = ancestorP;    
+    ancestorP = const_cast<LHCb::MCParticle*>(ancestorP->mother());
+  }
+
+  while( ancestorBS->mother() ) {
+    ancestorBS = const_cast<LHCb::MCParticle*>(ancestorBS->mother());
+  }
+    
+  if(ancestorP->particleID().hasBottom() ){    
+    if(ancestorP == ancestorBS) {  // come from the same b-quark
+      origin = 3; 
+      if (originP->particleID().hasBottom()) origin = 2;
+
+      int genid = abs(originP->particleID().pid());
+      if (genid == 533 || genid == 523 || genid == 513) origin=1;  //std::cout<<" Tagging Particle is coming from a B*"<<genid<<std::endl;
+      /*
+      if (genid == 535 || genid == 525 || genid == 515 || 
+          genid == 10511 || genid == 10521 || genid == 10531 || 
+          genid == 10513 || genid == 10523 || genid == 10533 || 
+          genid == 20513 || genid == 20523 || genid == 20533 
+          ) oriding = 2; //std::cout<<" Tagging Particle is coming from a B**"<<genid<<std::endl;
+      */
+
+    }else{
+      origin = -1;
+      // Tagging Particle and Signal B have the DIFFERENT ancestors
+    }
+  } else {    
+    origin = -abs(ancestorP->particleID().pid());
+  }
+  if (ancestorP == mcp ) origin = 0;  
+
+  debug()<<" TaggingUtilsChecker::comes_from_excitedB has found xFlag="<< origin<< endreq;
+  
   return origin;
 }
 //=============================================================================
