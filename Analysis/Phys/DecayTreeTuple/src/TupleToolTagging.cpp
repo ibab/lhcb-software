@@ -61,6 +61,8 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
   m_tagger_map[(int)Tagger::jetCharge]="jetCharge";
   m_tagger_map[(int)Tagger::OS_nnetKaon]="OS_nnetKaon";
   m_tagger_map[(int)Tagger::SS_nnetKaon]="SS_nnetKaon";
+  m_tagger_map[(int)Tagger::SS_Proton]="SS_Proton";
+  m_tagger_map[(int)Tagger::OS_Charm]="OS_Charm";
 
   for(std::map<int, std::string>::const_iterator t=m_tagger_map.begin();
       t!=m_tagger_map.end(); t++)
@@ -77,6 +79,8 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
   m_activeTaggers.push_back("VtxCharge");
   m_activeTaggers.push_back("OS_nnetKaon");
   m_activeTaggers.push_back("SS_nnetKaon");
+  m_activeTaggers.push_back("SS_Proton");
+  m_activeTaggers.push_back("OS_Charm");
 
   declareProperty("TaggingToolName", m_toolName = "",
                   "The Tagging Tool, if empty string, the tool will be retrieved from the parent DVAlg");
@@ -193,14 +197,16 @@ StatusCode TupleToolTagging::fill( const Particle* mother
     int tdec = taggers[i].decision();
 
     if(tdec) switch ( taggers[i].type() ) {
-    case Tagger::OS_nnetKaon : taggers_code +=1000000 *(tdec+2); break;
-    case Tagger::SS_nnetKaon : taggers_code += 100000 *(tdec+2); break;
-    case Tagger::OS_Muon     : taggers_code +=  10000 *(tdec+2); break;
-    case Tagger::OS_Electron : taggers_code +=   1000 *(tdec+2); break;
-    case Tagger::OS_Kaon     : taggers_code +=    100 *(tdec+2); break;
-    case Tagger::SS_Kaon     : taggers_code +=     10 *(tdec+2); break;
-    case Tagger::SS_Pion     : taggers_code +=     10 *(tdec+2); break;
-    case Tagger::VtxCharge   : taggers_code +=      1 *(tdec+2); break;
+    case Tagger::OS_Charm    : taggers_code +=1000000000 *(tdec+2); break;
+    case Tagger::SS_Proton   : taggers_code += 100000000 *(tdec+2); break;
+    case Tagger::OS_nnetKaon : taggers_code +=  10000000 *(tdec+2); break;
+    case Tagger::SS_nnetKaon : taggers_code +=   1000000 *(tdec+2); break;
+    case Tagger::OS_Muon     : taggers_code +=    100000 *(tdec+2); break;
+    case Tagger::OS_Electron : taggers_code +=     10000 *(tdec+2); break;
+    case Tagger::OS_Kaon     : taggers_code +=      1000 *(tdec+2); break;
+    case Tagger::SS_Kaon     : taggers_code +=       100 *(tdec+2); break;
+    case Tagger::SS_Pion     : taggers_code +=        10 *(tdec+2); break;
+    case Tagger::VtxCharge   : taggers_code +=         1 *(tdec+2); break;
 
     }
   }

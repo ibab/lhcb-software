@@ -3,6 +3,9 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+! 2013-11-30 - Stefania Vecchi
+ - TupleToolTagging: add OS_Charm and SS_Proton taggers in the list of active taggers
+   to save 
 
 !========================= DecayTreeTuple v4r5 2013-10-29 =========================
 

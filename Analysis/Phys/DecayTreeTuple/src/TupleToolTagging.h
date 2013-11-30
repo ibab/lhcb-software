@@ -25,18 +25,26 @@ class IBTaggingTool;
  * - ("SS_Kaon");
  * - ("SS_Pion");
  * - ("VtxCharge");
+ * - ("OS_nnetKaon");
+ * - ("SS_nnetKaon");
+ * - ("SS_Proton");
+ * - ("OS_Charm");
  * 
  * Since only one of SS_Kaon and SS_Pion will fire at any on time, these typical
  * cases are packed into a single variable: head+_TAGGER
  *
  *  @code
  *   if(tdec) switch ( taggers[i].type() ) {
- *   case Tagger::OS_Muon     : taggers_code +=  10000 *(tdec+2); break;
- *   case Tagger::OS_Electron : taggers_code +=   1000 *(tdec+2); break;
- *   case Tagger::OS_Kaon     : taggers_code +=    100 *(tdec+2); break;
- *   case Tagger::SS_Kaon     : taggers_code +=     10 *(tdec+2); break;
- *   case Tagger::SS_Pion     : taggers_code +=     10 *(tdec+2); break;
- *   case Tagger::VtxCharge   : taggers_code +=      1 *(tdec+2); break;
+ *   case Tagger::OS_Charm    : taggers_code +=1000000000 *(tdec+2); break;
+ *   case Tagger::SS_Proton   : taggers_code += 100000000 *(tdec+2); break;
+ *   case Tagger::OS_nnetKaon : taggers_code +=  10000000 *(tdec+2); break;
+ *   case Tagger::SS_nnetKaon : taggers_code +=   1000000 *(tdec+2); break;
+ *   case Tagger::OS_Muon     : taggers_code +=    100000 *(tdec+2); break;
+ *   case Tagger::OS_Electron : taggers_code +=     10000 *(tdec+2); break;
+ *   case Tagger::OS_Kaon     : taggers_code +=      1000 *(tdec+2); break;
+ *   case Tagger::SS_Kaon     : taggers_code +=       100 *(tdec+2); break;
+ *   case Tagger::SS_Pion     : taggers_code +=        10 *(tdec+2); break;
+ *   case Tagger::VtxCharge   : taggers_code +=         1 *(tdec+2); break;
  *     
  *   }
  *  @endcode
