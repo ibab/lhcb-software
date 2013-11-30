@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2013-11-30
+ - Fix bug in RecMoniConf, which caused crash when expertHistos were enabled and CheckEnabled was false.
+
 ! 2013-11-26 - Michel De Cian
 - Removed RecoUpgrade and RecoUpgradeMC from CMakeLists and cmt/requirements.
 

@@ -394,7 +394,8 @@ class RecMoniConf(LHCbConfigurableUser):
             seq.Members += [ ChargedProtoParticleMoni("ChargedProtoPMoni"),
                              ANNGlobalPID__ChargedProtoANNPIDMoni("ChargedProtoANNPIDMoni") ]
             if self.expertHistos() and not self.getProp("CheckEnabled") :
-                self.setOtherProps(GlobalRecoChecks(),["OutputType"])
+                # next line does not work, as OutputType is not a slot of RecMoniConf
+                #self.setOtherProps(GlobalRecoChecks(),["OutputType"]) 
                 exSeq = GaudiSequencer("ExpertProtoMoni")
                 seq.Members += [exSeq]
                 GlobalRecoChecks().Sequencer = exSeq
