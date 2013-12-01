@@ -23,7 +23,8 @@ use TrackInterfaces v*   Tr
 use PhysEvent       v*   Event
 use DaVinciKernel   v*   Phys
 use CaloInterfaces  v*   Calo
-use LoKiPhys        v*  Phys
+use LoKiPhys        v*   Phys
+use LoKi            v*   Phys
 
 private
 macro_append   ROOT_linkopts   " -lMLP -lGraf -lHist -lMatrix -lTreePlayer -lGpad -lGraf3d -lTMVA" 

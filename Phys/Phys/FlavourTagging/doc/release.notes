@@ -1,9 +1,13 @@
 ! $Id: release.notes,v 1.172 2010-07-02 08:10:16 mgrabalo Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
-! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa, Miriam Calvo
+! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa (2011-2012), 
+!                                               ---> Miriam Calvo   (2012-2013), 
+!                                               ---> Stefania Vecchi (2013)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2013-12-01 - Stefania Vecchi
+ - removed an unused include file that caused failure in the nightlies (??)
 ! 2013-11-30 - Stefania Vecchi
  - Set "Silent" option in the TMVA::Reader for OS_Charm tagger 
  - Add SSproton tagging TaggerProtonSame.cpp,h and updated several related files 

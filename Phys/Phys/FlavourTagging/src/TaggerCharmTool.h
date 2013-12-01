@@ -14,7 +14,6 @@
 #include "TMVA/Reader.h"
 
 // interface
-#include "Kernel/IParticle2MCAssociator.h"
 #include "Kernel/IBackgroundCategory.h"
 
 #include "Kernel/IParticleDescendants.h"
