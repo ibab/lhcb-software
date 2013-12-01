@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-12-01 - Michel De Cian
+ - Add PrForward track history to TrackEventCloneKiller
+
 ! 2013-11-28 - Michel De Cian
  - Add upgrade histories to TrackFromDST
 

@@ -138,22 +138,25 @@ StatusCode TrackEventCloneKiller::execute() {
     for( unsigned int i2 = i1+1; i2 < allTracks.size(); ++i2){
 
       if( ( allTracks[i1]->checkFlag( LHCb::Track::Clone) &&   
-	    (allTracks[i1]->history() != LHCb::Track::PatForward)) ||   
-	  allTracks[i2]->checkFlag( LHCb::Track::Clone))continue;  
+            ( (allTracks[i1]->history() != LHCb::Track::PatForward) ||
+              (allTracks[i1]->history() != LHCb::Track::PrForward))) ||   
+          allTracks[i2]->checkFlag( LHCb::Track::Clone))continue;  
       
       if( m_skipSameContainerTracks &&
-	  !m_compareInSameContainerForwardUpstream){
-	if( allTracks[i1]->parent()->name() == 
-	    allTracks[i2]->parent()->name())continue;
+          !m_compareInSameContainerForwardUpstream){
+        if( allTracks[i1]->parent()->name() == 
+            allTracks[i2]->parent()->name())continue;
       }else if( m_skipSameContainerTracks &&
-		m_compareInSameContainerForwardUpstream){
-	if( ( allTracks[i1]->parent()->name() == 
-	      allTracks[i2]->parent()->name()) &&
-	    ( !( allTracks[i1]->type() == LHCb::Track::Upstream &&
-		 allTracks[i2]->type() == LHCb::Track::Upstream)) &&
-	    ( !( allTracks[i1]->history() == LHCb::Track::PatForward &&
-		 allTracks[i2]->history() == LHCb::Track::PatForward))
-	    )continue;
+                m_compareInSameContainerForwardUpstream){
+        if( ( allTracks[i1]->parent()->name() == 
+              allTracks[i2]->parent()->name()) &&
+            ( !( allTracks[i1]->type() == LHCb::Track::Upstream &&
+                 allTracks[i2]->type() == LHCb::Track::Upstream)) &&
+            ( !( (allTracks[i1]->history() == LHCb::Track::PatForward &&
+                  allTracks[i2]->history() == LHCb::Track::PatForward) || 
+                 (allTracks[i1]->history() == LHCb::Track::PrForward &&
+                  allTracks[i2]->history() == LHCb::Track::PrForward) ))
+            )continue;
       }
       
       // clones are flagged by the tool
