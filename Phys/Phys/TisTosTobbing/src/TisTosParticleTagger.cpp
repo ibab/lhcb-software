@@ -325,7 +325,8 @@ StatusCode TisTosParticleTagger::execute()
   // determine if split reports
   bool split(false);
   if( m_split_checkDecReport ){
-    split = exist<LHCb::HltDecReports>(m_decReportLoc1);    
+    split = exist<LHCb::HltDecReports>(m_decReportLoc1,false);    
+    if( !split ) split= exist<LHCb::HltDecReports>(m_decReportLoc1);    
   }
 
 
@@ -333,41 +334,51 @@ StatusCode TisTosParticleTagger::execute()
   if( m_checkDecReport ){
     if( split ){
       if( m_tistostoolHlt2 ){
-	if( !exist<LHCb::HltDecReports>(m_decReportLoc2) ){
-	  setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
-	  if ( msgLevel(MSG::DEBUG) ) debug() << " No HltDecReport at " << m_decReportLoc2 << endmsg;
-	  return StatusCode::SUCCESS;
+	if( !exist<LHCb::HltDecReports>(m_decReportLoc2,false) ){
+	  if( !exist<LHCb::HltDecReports>(m_decReportLoc2) ){
+	    setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
+	    if ( msgLevel(MSG::DEBUG) ) debug() << " No HltDecReport at " << m_decReportLoc2 << endmsg;
+	    return StatusCode::SUCCESS;
+	  }
 	}
       }
     } else {
-      if( !exist<LHCb::HltDecReports>(m_decReportLoc) ){
-	setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
-	if ( msgLevel(MSG::DEBUG) ) debug() << " No HltDecReport at " << m_decReportLoc << endmsg;
-	return StatusCode::SUCCESS;
+      if( !exist<LHCb::HltDecReports>(m_decReportLoc,false) ){
+	if( !exist<LHCb::HltDecReports>(m_decReportLoc) ){
+	  setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
+	  if ( msgLevel(MSG::DEBUG) ) debug() << " No HltDecReport at " << m_decReportLoc << endmsg;
+	  return StatusCode::SUCCESS;
+	}
       }
     }
   }
   if( m_checkSelReport ){
     if( split ){
       if( m_tistostoolHlt1 ){
-	if( !exist<LHCb::HltSelReports>(m_selReportLoc1) ){
-	  setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
-	  if ( msgLevel(MSG::DEBUG) ) debug() << " No HltSelReport at " << m_selReportLoc1 << endmsg;
-	  return StatusCode::SUCCESS;
+	if( !exist<LHCb::HltSelReports>(m_selReportLoc1,false) ){
+	  if( !exist<LHCb::HltSelReports>(m_selReportLoc1) ){
+	    setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
+	    if ( msgLevel(MSG::DEBUG) ) debug() << " No HltSelReport at " << m_selReportLoc1 << endmsg;
+	    return StatusCode::SUCCESS;
+	  }
 	}
       }
       if( m_tistostoolHlt2 ){
-	if( !exist<LHCb::HltSelReports>(m_selReportLoc2) ){
-	  setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
-	  if ( msgLevel(MSG::DEBUG) ) debug() << " No HltSelReport at " << m_selReportLoc2 << endmsg;
-	  return StatusCode::SUCCESS;
+	if( !exist<LHCb::HltSelReports>(m_selReportLoc2,false) ){
+	  if( !exist<LHCb::HltSelReports>(m_selReportLoc2) ){
+	    setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
+	    if ( msgLevel(MSG::DEBUG) ) debug() << " No HltSelReport at " << m_selReportLoc2 << endmsg;
+	    return StatusCode::SUCCESS;
+	  }
 	}
       }
     } else {
-      if( !exist<LHCb::HltSelReports>(m_selReportLoc) ){
-	setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
-	if ( msgLevel(MSG::DEBUG) ) debug() << " No HltSelReport at " << m_selReportLoc << endmsg;
-	return StatusCode::SUCCESS;
+      if( !exist<LHCb::HltSelReports>(m_selReportLoc,false) ){
+	if( !exist<LHCb::HltSelReports>(m_selReportLoc) ){
+	  setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
+	  if ( msgLevel(MSG::DEBUG) ) debug() << " No HltSelReport at " << m_selReportLoc << endmsg;
+	  return StatusCode::SUCCESS;
+	}
       }
     }
   }

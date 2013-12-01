@@ -3,6 +3,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2013-12-01 - Tomasz Skwarnicki
+ - Check RootInTES and absolute locations of reports in TisTosParticleTagger 
+
 ! 2013-11-30 - Tomasz Skwarnicki
  - Create Hlt1TriggerTis, Hlt2TriggerTisTos to work with split Hlt1, Hlt2 reports
    Change TisTosParticleTagger to adopt automatically to split/not-split Hlt reports
