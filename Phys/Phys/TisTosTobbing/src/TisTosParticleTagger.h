@@ -53,25 +53,36 @@ private:
   /// Pass Trigger Stage on First Satisfied Spec (set always to true if all tag-keys are zero)
   bool m_fast;
 
+
   /// name of the TriggerTisTos tool if want to overwrite default (""=default)
   std::string m_TriggerTisTosName;
 
-  /// location of input HltDecReports to be chcked for existance ("None"=no check, ""=default)
+  /// location of input HltDecReports to be checked for existance ("None"=no check, ""=default)
   std::string m_decReportsLocation;
-  /// location of input HltSe;Reports to be chcked for existance ("None"=no check, ""=default)
+  /// location of input HltSe;Reports to be checked for existance ("None"=no check, ""=default)
   std::string m_selReportsLocation;
+
+  /// location of HltDecReports to be checked for existance to determine if Hlt report is split ("None"=no check, ""=default)
+  std::string m_split_decReportsLocation;
 
   /// flags to check existance of reports
   bool m_checkDecReport;
   bool m_checkSelReport;
+  bool m_split_checkDecReport;
   /// and actual locations to check
   std::string m_decReportLoc;
   std::string m_selReportLoc;
+  std::string m_decReportLoc1;
+  std::string m_selReportLoc1;
+  std::string m_decReportLoc2;
+  std::string m_selReportLoc2;
 
 
   /// TisTos tool
   ITriggerTisTos* m_tistostool;
   ITriggerTisTos* m_tistostoolL0;
+  ITriggerTisTos* m_tistostoolHlt1;
+  ITriggerTisTos* m_tistostoolHlt2;
   ITriggerTisTos* m_tistostoolStage[NTriggerStages];
 
   /// pairs of < "InputTrigger", Info Id > (Id=0 do not tag Particles) (derived from m_tistosSpecs)

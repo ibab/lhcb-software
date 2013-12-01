@@ -36,6 +36,7 @@ TisTosParticleTagger::TisTosParticleTagger( const std::string& name,
 
   declareProperty("HltDecReportsInputLocation", m_decReportsLocation = "" );
   declareProperty("HltSelReportsInputLocation", m_selReportsLocation = "" );
+  declareProperty("HltSplitDecReportsLocation", m_split_decReportsLocation = "" );
 
   // pass these to the TisTos tool
   declareProperty("ProjectTracksToCalo", m_projectTracksToCalo=true );
@@ -51,6 +52,7 @@ TisTosParticleTagger::TisTosParticleTagger( const std::string& name,
 
   // this will affect execution only in non-zero tag-keys are used
   declareProperty("SatisfiedOnFirstSpec",m_SatisfiedOnFirstSpec =false);
+
 
 }
 //=============================================================================
@@ -68,6 +70,8 @@ StatusCode TisTosParticleTagger::initialize()
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
+  m_split_checkDecReport=true;
+
   if( m_TriggerTisTosName != "" )
   {
     // Specific TriggerTisTos tool
@@ -76,12 +80,14 @@ StatusCode TisTosParticleTagger::initialize()
     if( m_TriggerTisTosName.find("TES") == 0 ){
       m_checkDecReport=false;
       m_checkSelReport=false;
+      m_split_checkDecReport=false;
     } else {
       m_checkDecReport=true;
       if( m_TriggerTisTosName.find("L0") == 0 ){
         m_decReportLoc="HltLikeL0/DecReports";
         m_checkSelReport=true;
         m_selReportLoc="HltLikeL0/SelReports";
+	m_split_checkDecReport=false;
       } else {
         m_decReportLoc=HltDecReportsLocation::Default;
         m_checkSelReport=false;
@@ -98,8 +104,12 @@ StatusCode TisTosParticleTagger::initialize()
     m_tistostool = tool<ITriggerTisTos>(  "TriggerTisTos" , "TriggerTisTosTool" ,this);
     m_checkDecReport=true;
     m_decReportLoc=HltDecReportsLocation::Default;
+    //m_decReportLoc1="Hlt1/DecReports";
+    m_decReportLoc2="Hlt2/DecReports";
     m_checkSelReport=true;
     m_selReportLoc=HltSelReportsLocation::Default;
+    m_selReportLoc1="Hlt1/SelReports";
+    m_selReportLoc2="Hlt2/SelReports";
   }
   if( !m_tistostool )return Error("Could not allocate TriggerTisTos tool", StatusCode::FAILURE);
 
@@ -118,6 +128,15 @@ StatusCode TisTosParticleTagger::initialize()
       m_checkSelReport=true;
       m_selReportLoc=m_selReportsLocation;
     }
+  }
+  if( m_split_decReportsLocation != "" ){
+    if( m_split_decReportsLocation == "None" ){
+      m_split_checkDecReport=false;
+    } else {
+      //      m_split_checkDecReport=true;
+    }
+  } else {
+    m_decReportLoc1="Hlt1/DecReports";
   }
 
   for( unsigned int iTriggerStage = (unsigned int)(defaultTriggerStage);
@@ -204,9 +223,21 @@ StatusCode TisTosParticleTagger::initialize()
   } else {
     m_tistostoolL0 = 0;
   }
-  m_tistostoolStage[HLT1] = m_tistostool;
-  m_tistostoolStage[HLT2] = m_tistostool;
-  m_tistostoolStage[L0]   = m_tistostoolL0;
+  if( !m_NoSpecs[HLT1] ) {
+    m_tistostoolHlt1 = tool<ITriggerTisTos>(  "Hlt1TriggerTisTos" , "Hlt1TriggerTisTosTool" ,this);
+    if( !m_tistostoolHlt1 )return Error("Could not allocate Hlt1TriggerTisTos tool", StatusCode::FAILURE);
+  } else {
+    m_tistostoolHlt1 = 0;
+  }
+  if( !m_NoSpecs[HLT2] ) {
+    m_tistostoolHlt2 = tool<ITriggerTisTos>(  "Hlt2TriggerTisTos" , "Hlt2TriggerTisTosTool" ,this);
+    if( !m_tistostoolHlt2 )return Error("Could not allocate Hlt2TriggerTisTos tool", StatusCode::FAILURE);
+  } else {
+    m_tistostoolHlt2 = 0;
+  }
+  //m_tistostoolStage[HLT1] = m_tistostool;
+  //m_tistostoolStage[HLT2] = m_tistostool;
+  //m_tistostoolStage[L0]   = m_tistostoolL0;
 
 
   // configure TisTos tool
@@ -216,13 +247,19 @@ StatusCode TisTosParticleTagger::initialize()
   m_tistostool->setCompositeTPSviaPartialTOSonly(m_compositeTPSviaPartialTOSonly);
   m_tistostool->setNoHitTypes(m_noHitTypes);
   if( m_tistostoolL0 ){  m_tistostoolL0->setNoHitTypes(m_noHitTypes);  }
+  if( m_tistostoolHlt1 ){  m_tistostoolHlt1->setNoHitTypes(m_noHitTypes);  }
+  if( m_tistostoolHlt2 ){  m_tistostoolHlt2->setNoHitTypes(m_noHitTypes);  }
   for( std::map<int,double>::const_iterator entry=m_TOSFrac.begin();entry!=m_TOSFrac.end();++entry){
     m_tistostool->setTOSFrac( entry->first, entry->second );
     if( m_tistostoolL0 ){  m_tistostoolL0->setTOSFrac( entry->first, entry->second ); }
+    if( m_tistostoolHlt1 ){  m_tistostoolHlt1->setTOSFrac( entry->first, entry->second ); }
+    if( m_tistostoolHlt2 ){  m_tistostoolHlt2->setTOSFrac( entry->first, entry->second ); }
   }
   for( std::map<int,double>::const_iterator entry=m_TISFrac.begin();entry!=m_TISFrac.end();++entry){
     m_tistostool->setTISFrac( entry->first, entry->second );
     if( m_tistostoolL0 ){  m_tistostoolL0->setTISFrac( entry->first, entry->second ); }
+    if( m_tistostoolHlt1 ){  m_tistostoolHlt1->setTISFrac( entry->first, entry->second ); }
+    if( m_tistostoolHlt2 ){  m_tistostoolHlt2->setTISFrac( entry->first, entry->second ); }
   }
 
   if ( msgLevel(MSG::DEBUG) ) {
@@ -285,22 +322,65 @@ StatusCode TisTosParticleTagger::execute()
   const LHCb::Particle::ConstVector& particles = this->i_particles();
 
 
+  // determine if split reports
+  bool split(false);
+  if( m_split_checkDecReport ){
+    split = exist<LHCb::HltDecReports>(m_decReportLoc1);    
+  }
+
+
   // Useful for MC: check if necessary reports exists
   if( m_checkDecReport ){
-    if( !exist<LHCb::HltDecReports>(m_decReportLoc) ){
-      setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
-      if ( msgLevel(MSG::DEBUG) ) debug() << " No HltDecReport at " << m_decReportLoc << endmsg;
-      return StatusCode::SUCCESS;
+    if( split ){
+      if( m_tistostoolHlt2 ){
+	if( !exist<LHCb::HltDecReports>(m_decReportLoc2) ){
+	  setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
+	  if ( msgLevel(MSG::DEBUG) ) debug() << " No HltDecReport at " << m_decReportLoc2 << endmsg;
+	  return StatusCode::SUCCESS;
+	}
+      }
+    } else {
+      if( !exist<LHCb::HltDecReports>(m_decReportLoc) ){
+	setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
+	if ( msgLevel(MSG::DEBUG) ) debug() << " No HltDecReport at " << m_decReportLoc << endmsg;
+	return StatusCode::SUCCESS;
+      }
     }
   }
   if( m_checkSelReport ){
-    if( !exist<LHCb::HltSelReports>(m_selReportLoc) ){
-      setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
-      if ( msgLevel(MSG::DEBUG) ) debug() << " No HltSelReport at " << m_selReportLoc << endmsg;
-      return StatusCode::SUCCESS;
+    if( split ){
+      if( m_tistostoolHlt1 ){
+	if( !exist<LHCb::HltSelReports>(m_selReportLoc1) ){
+	  setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
+	  if ( msgLevel(MSG::DEBUG) ) debug() << " No HltSelReport at " << m_selReportLoc1 << endmsg;
+	  return StatusCode::SUCCESS;
+	}
+      }
+      if( m_tistostoolHlt2 ){
+	if( !exist<LHCb::HltSelReports>(m_selReportLoc2) ){
+	  setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
+	  if ( msgLevel(MSG::DEBUG) ) debug() << " No HltSelReport at " << m_selReportLoc2 << endmsg;
+	  return StatusCode::SUCCESS;
+	}
+      }
+    } else {
+      if( !exist<LHCb::HltSelReports>(m_selReportLoc) ){
+	setFilterPassed(m_passOnAll);  // Mandatory. Set to true if event is accepted.
+	if ( msgLevel(MSG::DEBUG) ) debug() << " No HltSelReport at " << m_selReportLoc << endmsg;
+	return StatusCode::SUCCESS;
+      }
     }
   }
 
+  if( split ){
+    m_tistostoolStage[HLT1] = m_tistostoolHlt1;
+    m_tistostoolStage[HLT2] = m_tistostoolHlt2;
+    m_tistostoolStage[L0]   = m_tistostoolL0;
+  } else {
+    m_tistostoolStage[HLT1] = m_tistostool;
+    m_tistostoolStage[HLT2] = m_tistostool;
+    m_tistostoolStage[L0]   = m_tistostoolL0;
+  }
 
   std::vector<LHCb::Particle> outparts;
 
@@ -319,11 +399,21 @@ StatusCode TisTosParticleTagger::execute()
 
     Particle* candi = const_cast<Particle*>(*particle);
 
+
     // This is a slow part of TisTos tool - do it only once
+    //      only this tool is guaranteed to be allocated and configured
     m_tistostool->setOfflineInput(*candi);
     //      copying offline hits is fast
+    if( split ){
+      if( m_tistostoolHlt1 ){
+	m_tistostoolHlt1->setOfflineInput( m_tistostool->offlineLHCbIDs() );
+      }
+      if( m_tistostoolHlt2 ){
+	m_tistostoolHlt2->setOfflineInput( m_tistostool->offlineLHCbIDs() );
+      }
+    } 
     if( m_tistostoolL0 ){
-      m_tistostoolL0->setOfflineInput( m_tistostool->offlineLHCbIDs() );
+	m_tistostoolL0->setOfflineInput( m_tistostool->offlineLHCbIDs() );
     }
 
     bool acceptStage[NTriggerStages] = { false, false, false };
