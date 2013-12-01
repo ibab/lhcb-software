@@ -89,24 +89,54 @@ StatusCode TupleToolTrigger::fillBasic( Tuples::Tuple& tuple )
   // fill the HLT global
   if ( m_doHlt1 || m_doHlt2 )
   {
-    const LHCb::HltDecReports* decReports =
-      getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default);
-    if ( !decReports )
+    const LHCb::HltDecReports* decReports2(0);
+    //    look for split report first
+    const LHCb::HltDecReports* decReports1 =
+      getIfExists<LHCb::HltDecReports>(evtSvc(),"Hlt1/DecReports");
+    if ( !decReports1 )
     {
-      decReports =
-        getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default,false);
+      decReports1 =
+        getIfExists<LHCb::HltDecReports>(evtSvc(),"Hlt1/DecReports",false);
     }
+    //        if not found look for old style Hlt1+Hlt2
+    if ( !decReports1 )
+    {
+      decReports1 =
+	getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default);
+      if ( !decReports1 )
+      {
+	decReports1 =
+	  getIfExists<LHCb::HltDecReports>(evtSvc(),LHCb::HltDecReportsLocation::Default,false);
+      }
+      if( decReports1 )
+      {
+	decReports2 = decReports1;
+      }
+    }
+
+    //       allow data with only Hlt2 report
+    if( !decReports2 )
+    {
+      decReports2 =
+      getIfExists<LHCb::HltDecReports>(evtSvc(),"Hlt2/DecReports");
+      if ( !decReports2 )
+      {
+	decReports2 =
+	  getIfExists<LHCb::HltDecReports>(evtSvc(),"Hlt2/DecReports",false);
+      }
+    }
+
 
     //fill the HLT1 global
     if ( !tuple->column( prefix+"Hlt1Global", 
-                        decReports && decReports->decReport("Hlt1Global") ?
-                        decReports->decReport("Hlt1Global")->decision() : 0 ) )
+                        decReports1 && decReports1->decReport("Hlt1Global") ?
+                        decReports1->decReport("Hlt1Global")->decision() : 0 ) )
       return StatusCode::FAILURE;
 
     //fill the HLT2 global
     if ( !tuple->column( prefix+"Hlt2Global", 
-                         decReports && decReports->decReport("Hlt2Global") ?
-                         decReports->decReport("Hlt2Global")->decision() : 0 ) )
+                         decReports2 && decReports2->decReport("Hlt2Global") ?
+                         decReports2->decReport("Hlt2Global")->decision() : 0 ) )
       return StatusCode::FAILURE;
 
   }
@@ -164,13 +194,32 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
 {
   const std::string prefix = fullName();
 
-  const std::string loca = ( level == "L0" ? "HltLikeL0/DecReports" :
-                             LHCb::HltDecReportsLocation::Default );
-  const LHCb::HltDecReports* decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca);
-  if ( !decReports )
-  {
-    decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca,false);
+  const LHCb::HltDecReports* decReports(0);
+  if( level == "L0" ){
+    const std::string loca = "HltLikeL0/DecReports";
+    decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca);
+    if ( !decReports )
+    {
+	decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca,false);
+    }
+  } else {
+    //  look for split reports first
+    std::string loca = level + "/DecReports";
+    decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca);
+    if ( !decReports )
+    {
+	decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca,false);
+    }
+    //  if not found look for old style Hlt report
+    loca = LHCb::HltDecReportsLocation::Default;
+    decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca);
+    if ( !decReports )
+    {
+	decReports = getIfExists<LHCb::HltDecReports>(evtSvc(),loca,false);
+    }
   }
+
+
 
   if ( decReports )
   {
@@ -212,7 +261,7 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
     }
     if ( ! tuple->column(prefix+level+"nSelections" , nsel ) ) return StatusCode::FAILURE;
   }
-  else return Warning("No HltDecReports at "+loca,StatusCode::FAILURE,2);
+  else return Warning("No HltDecReports found ",StatusCode::FAILURE,2);
   if (msgLevel(MSG::DEBUG)) debug() << "Done " << prefix+level << endmsg ;
   return StatusCode::SUCCESS ;
 }

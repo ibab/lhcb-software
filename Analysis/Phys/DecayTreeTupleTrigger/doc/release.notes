@@ -4,6 +4,10 @@
 ! Purpose     : Trigger and stripping related tuple tools
 !-----------------------------------------------------------------------------
 
+! 2013-12-01 Tomasz Skwarnicki	
+ - TupleToolTrigger,TupleToolTISTOS: self adapt to split Hlt1/Hlt2 reports (still compatible with old Hlt reports) 
+ - TupleToolTISTOS: add new properties TPS,TUS,TopParticleOnly (default false) TIS,TOS (default true)
+
 !========================= DecayTreeTupleTrigger v1r1 2013-05-07 =========================
 
 ! 2013-04-26

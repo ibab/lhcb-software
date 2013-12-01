@@ -59,21 +59,25 @@ protected:
 
   /// to make it possible to replace standard TisTos tools.
   std::string m_TriggerTisTosName;
+  std::string m_Hlt1TriggerTisTosName;
+  std::string m_Hlt2TriggerTisTosName;
   std::string m_L0TriggerTisTosName;
   
 private:
 
   ITriggerTisTos* m_TriggerTisTosTool;
+  ITriggerTisTos* m_Hlt1TriggerTisTosTool;
+  ITriggerTisTos* m_Hlt2TriggerTisTosTool;
   ITriggerTisTos* m_L0TriggerTisTosTool;
 
 private:
 
-  virtual StatusCode fillBasic( const LHCb::Particle*
+  virtual StatusCode fillBasic( const LHCb::Particle* top
                                 , const LHCb::Particle* P
                                 , const std::string& head
                                 , Tuples::Tuple& tuple );
 
-  virtual StatusCode fillVerbose( const LHCb::Particle*
+  virtual StatusCode fillVerbose( const LHCb::Particle* top
                                   , const LHCb::Particle* P
                                   , const std::string& head
                                   , Tuples::Tuple& tuple );
@@ -93,6 +97,14 @@ private:
   std::string m_hlt1Phys;
   std::string m_hlt2Phys;
   
+  //  must be true to fill this info
+  bool m_TIS;
+  bool m_TOS;
+  bool m_TUS;
+  bool m_TPS;
+
+  // set to true to fill only top particle in decay descriptor
+  bool m_onlyTop;
 };
 
 #endif // TUPLETOOLTISTOS_H
