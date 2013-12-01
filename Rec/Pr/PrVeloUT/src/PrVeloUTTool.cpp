@@ -813,7 +813,7 @@ void PrVeloUTTool::prepareOutputTracks( std::vector<PrVUTTrack>& vttTracks,
     } // over PrUTCoords
 
     outTr->setType( LHCb::Track::Upstream );
-    outTr->setHistory( LHCb::Track::PatVeloTT );
+    outTr->setHistory( LHCb::Track::PrVeloUT );
     outTr->addToAncestors( veloTr );
     outTr->setPatRecStatus( LHCb::Track::PatRecIDs );
     outTr->setChi2PerDoF(cand.chi2PerDoF());

@@ -24,8 +24,13 @@ DECLARE_ALGORITHM_FACTORY( PrVeloUT )
 //=============================================================================
 PrVeloUT::PrVeloUT( const std::string& name,
                       ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
-  , m_veloUTTime(0)
+: GaudiAlgorithm ( name , pSvcLocator ),
+  m_trackSelector(NULL),
+  m_utHitManager(NULL),
+  m_tracksFitter(NULL),
+  m_veloUTTool(NULL),
+  m_timerTool(NULL),
+  m_veloUTTime(0)
 {
   if ( "Hlt" == context() ) {
     m_inputTracksName =  "";
