@@ -25,7 +25,7 @@ public:
 
   IPrForwardTool( const std::string& type,
                   const std::string& name,
-                  const IInterface* parent) : GaudiTool( type, name, parent ) {};
+                  const IInterface* parent) : GaudiTool( type, name, parent ), m_debugTool(NULL) {};
 
 
   virtual void extendTrack( LHCb::Track* velo, LHCb::Tracks* result ) = 0;

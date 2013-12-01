@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2013-12-01 - Michel De Cian
+ - Replace all 'Pat' track histories with 'Pr' track histories, fix uninitialized pointers in various PrClasses.
+
 ! 2013-11-17 - Michel De Cian
  - Replace PrAddUTCoord with PrAddUTHitsTool in PrForwardTool, to make everything consistent.
 

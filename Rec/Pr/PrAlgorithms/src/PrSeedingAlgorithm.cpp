@@ -23,7 +23,10 @@ DECLARE_ALGORITHM_FACTORY( PrSeedingAlgorithm )
 //=============================================================================
   PrSeedingAlgorithm::PrSeedingAlgorithm( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-    : GaudiAlgorithm ( name , pSvcLocator )
+: GaudiAlgorithm ( name , pSvcLocator ),
+  m_hitManager(NULL),
+  m_geoTool(NULL),
+  m_debugTool(NULL)
 {
   declareProperty( "InputName",           m_inputName            = LHCb::TrackLocation::Forward );
   declareProperty( "OutputName",          m_outputName           = LHCb::TrackLocation::Seed    );
@@ -121,7 +124,7 @@ StatusCode PrSeedingAlgorithm::execute() {
       LHCb::Track* seed = new LHCb::Track;
       seed->setLhcbIDs( ids );
       seed->setType( LHCb::Track::Ttrack );
-      seed->setHistory( LHCb::Track::PatSeeding );
+      seed->setHistory( LHCb::Track::PrSeeding );
       seed->setPatRecStatus( LHCb::Track::PatRecIDs );
       seed->addToStates( (*itT)->closestState( 9000. ) );
       result->insert( seed );
@@ -571,7 +574,7 @@ void PrSeedingAlgorithm::makeLHCbTracks ( LHCb::Tracks* result ) {
     if ( !(*itT).valid() ) continue;
     LHCb::Track* tmp = new LHCb::Track;
     tmp->setType( LHCb::Track::Ttrack );
-    tmp->setHistory( LHCb::Track::PatSeeding );
+    tmp->setHistory( LHCb::Track::PrSeeding );
     double qOverP = m_geoTool->qOverP( *itT );
 
     LHCb::State tState;

@@ -22,7 +22,11 @@ DECLARE_ALGORITHM_FACTORY( PrForwardTracking )
 //=============================================================================
 PrForwardTracking::PrForwardTracking( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+: GaudiAlgorithm ( name , pSvcLocator ),
+  m_hitManager(NULL),
+  m_forwardTool(NULL),
+  m_debugTool(NULL),
+  m_timerTool(NULL)
 {
   declareProperty( "InputName",          m_inputName       = LHCb::TrackLocation::Velo    );
   declareProperty( "OutputName",         m_outputName      = LHCb::TrackLocation::Forward );

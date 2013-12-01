@@ -20,6 +20,8 @@ public:
     m_sz2 = 0.;
     m_sc  = 0.;
     m_scz = 0.;
+    m_c0 = 0.;
+    m_tc = 0.;
   };
   
   virtual ~PrLineFitter( ){}; ///< Destructor

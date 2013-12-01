@@ -140,7 +140,7 @@ StatusCode PrMatchTool::match(const LHCb::Tracks& velos,
 
     //== estimate q/p
     double qOverP, sigmaQOverP;
-    bool const cubicFit = sTr->checkHistory(LHCb::Track::PatSeeding);
+    bool const cubicFit = sTr->checkHistory(LHCb::Track::PrSeeding);
     const LHCb::State& vState = vTr->closestState(0.);
     const LHCb::State& sState =sTr->closestState(m_zMatchY);
     StatusCode sc = m_fastMomentumTool->calculate(&vState,&sState,
@@ -245,7 +245,7 @@ void PrMatchTool::makeTrack(const LHCb::Track& velo,
   output.addToAncestors(seed);
   //== Adjust flags
   output.setType(LHCb::Track::Long);
-  output.setHistory(LHCb::Track::PatMatch);
+  output.setHistory(LHCb::Track::PrMatch);
   output.setPatRecStatus(LHCb::Track::PatRecIDs);
   output.addInfo(LHCb::Track::MatchChi2, chi2);
   //== copy LHCbIDs
@@ -277,7 +277,7 @@ void PrMatchTool::makeTrack(const LHCb::Track& velo,
   }
   //== estimate q/p
   double qOverP, sigmaQOverP;
-  bool const cubicFit = seed.checkHistory(LHCb::Track::PatSeeding);
+  bool const cubicFit = seed.checkHistory(LHCb::Track::PrSeeding);
   const LHCb::State& vState = velo.closestState(0.);
   const LHCb::State& sState =seed.closestState(m_zMatchY);
   StatusCode sc = m_fastMomentumTool->calculate(&vState,&sState,

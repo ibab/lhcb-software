@@ -628,7 +628,7 @@ void PrForwardFromPointTool::makeLHCbTracks ( LHCb::Tracks* result ) {
     if ( !(*itT).valid() ) continue;
     LHCb::Track* tmp = (*itT).track()->clone();
     tmp->setType( LHCb::Track::Long );
-    tmp->setHistory( LHCb::Track::PatForward );
+    tmp->setHistory( LHCb::Track::PrForward );
     tmp->addToAncestors( (*itT).track() );
     double qOverP  = m_geoTool->qOverP( *itT );
     double errQop2 = 0.1 * 0.1 * qOverP * qOverP;

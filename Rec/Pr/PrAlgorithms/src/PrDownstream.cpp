@@ -831,7 +831,7 @@ void PrDownstream::storeTrack( PrDownTrack& track, LHCb::Tracks* finalTracks, LH
   dTr->addToAncestors( tr );   
   //== Adjust flags
   dTr->setType(         LHCb::Track::Downstream  );
-  dTr->setHistory(      LHCb::Track::PatDownstream   );
+  dTr->setHistory(      LHCb::Track::PrDownstream   );
   dTr->setPatRecStatus( LHCb::Track::PatRecIDs   );
   //== add Seed LHCbIDs
   dTr->addSortedToLhcbIDs(  tr->lhcbIDs()      );  

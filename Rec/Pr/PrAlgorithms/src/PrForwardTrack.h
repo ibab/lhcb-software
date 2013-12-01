@@ -166,6 +166,7 @@ private:
     m_dXCoord = 0.;
     m_meanDy  = 0.;
     m_quality = 0.;
+    m_chi2AtMagnet = 0.;
   }
   
   const LHCb::Track* m_track;
