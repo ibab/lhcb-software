@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2013-12-01 - Maurizio Martinelli
+ - fixed a few compilation warnings
+
 ! 2013-11-29 - Maurizio Martinelli
  - forgot to add a class
 

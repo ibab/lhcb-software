@@ -41,9 +41,8 @@ SiPMResponse::SiPMResponse( const std::string& type,
   declareProperty("times",  m_times, "Times for user-defined function" );
   declareProperty("values", m_values, "Values for user-defined function" );
   declareProperty("splineType", m_splineType = "Cspline", "The spline type" );
-  // initialize
-  StatusCode sc = initialize();
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================

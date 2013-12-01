@@ -34,7 +34,7 @@ using namespace boost;
 
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCFTDepositCreator );
+DECLARE_ALGORITHM_FACTORY( MCFTDepositCreator )
 
 
 //=============================================================================
@@ -377,6 +377,11 @@ StatusCode MCFTDepositCreator::HitToChannelConversion_OldGeometry(LHCb::MCHit* f
                                   (1-fracY) * m_transmissionMap[m_nYSteps*(kx+1)+ky]   ) +
                     (1-fracX) * ( fracY     * m_transmissionMap[m_nYSteps*kx+ky+1] + 
                                   (1-fracY) * m_transmissionMap[m_nYSteps*kx+ky]   ) );
+
+      float attRef = ( fracX     * ( fracY     * m_transmissionRefMap[m_nYSteps*(kx+1)+ky+1] + 
+				     (1-fracY) * m_transmissionRefMap[m_nYSteps*(kx+1)+ky]   ) +
+		       (1-fracX) * ( fracY     * m_transmissionRefMap[m_nYSteps*kx+ky+1] + 
+				     (1-fracY) * m_transmissionRefMap[m_nYSteps*kx+ky]   ) );
         
       if ( msgLevel( MSG::DEBUG ) ) {
         debug() << format( "[ATTENUATION] x %9.2f y %9.2f kx %3d ky %3d fracx %8.3f fracY %8.3f att %7.4f",
@@ -385,29 +390,48 @@ StatusCode MCFTDepositCreator::HitToChannelConversion_OldGeometry(LHCb::MCHit* f
         
       plot(att,"AttenuationFactor","AttFactorDistrib; Attenuation factor ; Nber of Events" ,0 ,1);
 
-
+      // Calculate the arrival time
+      double yMax = m_deFT->fibremats()[0]->layerMaxY();
+      double timeToSiPM = ftHit->time() + (yMax - fabs(ftHit->midPoint().y())) * m_fiberRefractionIndex / Gaudi::Units::c_light + m_spillTimes[iSpill]; // tilted angles... -> y of module
+      double timeRefToSiPM = ftHit->time() + (yMax + fabs(ftHit->midPoint().y())) * m_fiberRefractionIndex / Gaudi::Units::c_light + m_spillTimes[iSpill]; 
+      if ( msgLevel( MSG::DEBUG) ){
+        debug()  << "[Pulse Arrival Time] Hit(y)=" << fabs(ftHit->midPoint().y())
+                 << " DirectPulseArrTime="<< timeToSiPM 
+                 << " ReflectedPulseArrTime="<< timeRefToSiPM << endmsg;
+      }
+      
       // Fill MCFTDeposit
       FTDoublePairs::const_iterator vecIter;
       for( vecIter = channels.begin(); vecIter != channels.end(); ++vecIter){
-        double EnergyInSiPM = vecIter->second * att;
+
+        double DirectEnergyInSiPM = vecIter->second * att;
+        double ReflectedEnergyInSiPM = vecIter->second * attRef;
           
         if ( msgLevel( MSG::DEBUG) ){
-          debug()  << "[FTCHANNEL] FTChannel=" << vecIter->first << " EnergyHitFraction="<< EnergyInSiPM << endmsg;
+          debug()  << "[FTCHANNEL] FTChannel=" << vecIter->first 
+		   << " DirectEnergyHitFraction="<< DirectEnergyInSiPM 
+		   << " ReflectedEnergyHitFraction="<< ReflectedEnergyInSiPM << endmsg;
         }
+
+        plot(vecIter->second, "EnergyDepositedInCell","EnergyDepositedInCell; Energy Deposited [MeV]; Nber of Channels", 0., 2.);    
+        plot(vecIter->second, "EnergyDepositedInCellZOOM","EnergyDepositedInCell; Energy Deposited [MeV]; Nber of Channels", 0., 1.);  
           
-        plot(vecIter->second,"EnergyDepositedInCell",
-             "EnergyDepositedInCell ; Energy Deposited in Cell [MeV]; Nber of Channels",0. ,2);
-        plot(vecIter->second,"EnergyDepositedInCellZOOM",
-             "EnergyDepositedInCell; Energy Deposited in Cell [MeV]; Nber of Channels",0.,1);
-        plot(EnergyInSiPM,"EnergyRecordedInCell","EnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,2);
-        plot(EnergyInSiPM,"EnergyRecordedInCellZOOM",
-             "EnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,1);
-        // if reference to the channelID already exists, just add DepositedEnergy
+        plot(DirectEnergyInSiPM,"DirectEnergyRecordedInCell","DirectEnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,2);
+        plot(DirectEnergyInSiPM,"DirectEnergyRecordedInCellZOOM",
+             "DirectEnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,1);
+        plot(ReflectedEnergyInSiPM,"ReflectedEnergyRecordedInCell","ReflectedEnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,2);
+        plot(ReflectedEnergyInSiPM,"ReflectedEnergyRecordedInCellZOOM",
+             "ReflectedEnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,1);
+
+	//!!!  add zoom!
+
+
+        // if reference to the channelID already exists, just add DepositedEnergy and arrival time
         if( depositCont->object(vecIter->first) != 0 ){
-          (depositCont->object(vecIter->first))->addMCHit(ftHit,EnergyInSiPM,0.,0.,0.); // in the old geometry do not calculate everything
+          (depositCont->object(vecIter->first))->addMCHit(ftHit,DirectEnergyInSiPM,ReflectedEnergyInSiPM,timeToSiPM,timeRefToSiPM);
         } else if ( vecIter->first.layer() < 12 ) { // Set to 12 instaed 15 because of a bug in new geometry
           // else, create a new fired channel but ignore fake cells, i.e. not readout, i.e. layer 15
-          MCFTDeposit *energyDeposit = new MCFTDeposit(vecIter->first,ftHit,EnergyInSiPM,0.,0.,0.); // in the old geometry do not calculate everything
+          MCFTDeposit *energyDeposit = new MCFTDeposit(vecIter->first,ftHit,DirectEnergyInSiPM,ReflectedEnergyInSiPM,timeToSiPM,timeRefToSiPM);
           depositCont->insert(energyDeposit,vecIter->first);
         }
       }
@@ -416,7 +440,7 @@ StatusCode MCFTDepositCreator::HitToChannelConversion_OldGeometry(LHCb::MCHit* f
         debug()  << "Call (if(pL->calculateHit)) returned FALSE" << endmsg;
       }
     }// end if(pL->calculateHit)
-      
+
   }// end if(pL)
 
   return StatusCode::SUCCESS;
@@ -493,10 +517,10 @@ StatusCode MCFTDepositCreator::HitToChannelConversion_NewGeometry(LHCb::MCHit* f
       double timeToSiPM = ftHit->time() + (yMax - fabs(ftHit->midPoint().y())) * m_fiberRefractionIndex / Gaudi::Units::c_light + m_spillTimes[iSpill]; // tilted angles... -> y of module
       double timeRefToSiPM = ftHit->time() + (yMax + fabs(ftHit->midPoint().y())) * m_fiberRefractionIndex / Gaudi::Units::c_light + m_spillTimes[iSpill]; 
       if ( msgLevel( MSG::DEBUG) ){
-	debug()  << "[Pulse Arrival Time] Hit(y)=" << fabs(ftHit->midPoint().y())
-		   << " DirectPulseArrTime="<< timeToSiPM 
-		   << " ReflectedPulseArrTime="<< timeRefToSiPM << endmsg;
-        }
+        debug()  << "[Pulse Arrival Time] Hit(y)=" << fabs(ftHit->midPoint().y())
+                 << " DirectPulseArrTime="<< timeToSiPM 
+                 << " ReflectedPulseArrTime="<< timeRefToSiPM << endmsg;
+      }
 
       // Fill MCFTDeposit
       FTDoublePairs::const_iterator vecIter;
@@ -506,14 +530,13 @@ StatusCode MCFTDepositCreator::HitToChannelConversion_NewGeometry(LHCb::MCHit* f
           
         if ( msgLevel( MSG::DEBUG) ){
           debug()  << "[FTCHANNEL] FTChannel=" << vecIter->first 
-		   << " DirectEnergyHitFraction="<< DirectEnergyInSiPM 
-		   << " ReflectedEnergyHitFraction="<< ReflectedEnergyInSiPM << endmsg;
+                   << " DirectEnergyHitFraction="<< DirectEnergyInSiPM 
+                   << " ReflectedEnergyHitFraction="<< ReflectedEnergyInSiPM << endmsg;
         }
-          
-        plot(vecIter->second,"EnergyDepositedInCell",
-             "EnergyDepositedInCell ; Energy Deposited in Cell [MeV]; Nber of Channels",0. ,2);
-        plot(vecIter->second,"EnergyDepositedInCellZOOM",
-             "EnergyDepositedInCell; Energy Deposited in Cell [MeV]; Nber of Channels",0.,1);
+         
+        plot(vecIter->second, "EnergyDepositedInCell","EnergyDepositedInCell; Energy Deposited [MeV]; Nber of Channels", 0., 2.);    
+        plot(vecIter->second, "EnergyDepositedInCellZOOM","EnergyDepositedInCell; Energy Deposited [MeV]; Nber of Channels", 0., 1.);        
+        
         plot(DirectEnergyInSiPM,"DirectEnergyRecordedInCell","DirectEnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,2);
         plot(DirectEnergyInSiPM,"DirectEnergyRecordedInCellZOOM",
              "DirectEnergyRecordedInCell; EnergyReachingSiPM [MeV]; Nber of Channels" ,0. ,1);
