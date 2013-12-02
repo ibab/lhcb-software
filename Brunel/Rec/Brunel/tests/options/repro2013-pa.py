@@ -10,6 +10,7 @@ Brunel().DataType =  "2013"
 Brunel().InputType = "DST"
 file = "$QMTESTFILESROOT/data/136237_10ev_bug_svn164539.dst"
 EventSelector().Input.append(file)
+Brunel().SplitRawEventInput=2.0  # Stripping20
 
 from Configurables import TrackSys
 

@@ -37,6 +37,7 @@ Purpose: LHCb reconstruction program
   . Some more fixes to run with no M1 (MuonID)
   . Fix inconsistency in PatFwdTool::fitStereoCandidate, where a X layer was
     marked as a stereo layer (PatAlgorithms)
+  . Follow DecoderDB development
 
 </PRE><H1><A NAME=v44r8>2013-10-25 Brunel v44r8</A></H1><PRE>
 This version uses projects LCG 66, Gaudi v23r10, LHCb v36r3, Lbcom v14r3,

@@ -61,11 +61,10 @@ preprocessor = BrunelPreprocessor + \
   LineSkipper(["SpdL0Bit.SpdL0B...SUCCESS Number of counters"]) + \
   LineSkipper(["PrsL0Bit.PrsL0B...SUCCESS Number of counters"]) + \
   LineSkipper(["PrsADCs.PrsADCs...SUCCESS Number of counters"]) + \
-  LineSkipper(["TriggerRawBank    SUCCESS "]) + \
-  LineSkipper(["CaloRawBank       SUCCESS "]) + \
-  LineSkipper(["MuonRawBank       SUCCESS "]) + \
-  LineSkipper(["RichRawBank       SUCCESS "]) + \
-  LineSkipper(["OtherRawEvent     SUCCESS "])
+  LineSkipper(["INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object"]) + \
+  LineSkipper(["INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object"]) + \
+  LineSkipper(["ToolSvc.RichSma...   INFO Using [Rich/RawEvent, DAQ/RawEvent] as search path for the RawEvent object"]) + \
+  LineSkipper(["RawEventSplitSeq     INFO Member list:"])
 validateWithReference(preproc = preprocessor)
 </text></argument>
   <argument name="prerequisites"><set>
