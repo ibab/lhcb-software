@@ -33,7 +33,7 @@ DECLARE_TOOL_FACTORY( SiPMResponse )
 SiPMResponse::SiPMResponse( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ), m_responseSpline(0)
 {
   declareInterface<SiPMResponse>(this);
   // properties

@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2013-12-02 - Marco Clemencic
+ - Fixed segmentation fault during genconf (on some platforms).
+
 ! 2013-12-01 - Maurizio Martinelli
  - fixed a few compilation warnings
 
