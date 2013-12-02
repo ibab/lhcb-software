@@ -49,9 +49,9 @@ DECLARE_TOOL_FACTORY( TaggerCharmTool )
 
   declareProperty( "MvaFileDirectory", m_MvaFileDir = "$FLAVOURTAGGINGROOT/src/mva_charmtagger_reco14" );
 
-  declareProperty( "Charm_P0_Cal",           m_P0_Cal_charm   = 0.); 
-  declareProperty( "Charm_P1_Cal",           m_P1_Cal_charm   = 1. ); 
-  declareProperty( "Charm_Eta_Cal",          m_Eta_Cal_charm  = 0. );
+  declareProperty( "Charm_P0_Cal",           m_P0_Cal_charm   = 0.3371); 
+  declareProperty( "Charm_P1_Cal",           m_P1_Cal_charm   = 0.9111); 
+  declareProperty( "Charm_Eta_Cal",          m_Eta_Cal_charm  = 0.3121);
 
   // initialize decay map
   CharmDecayModeMap["D0_Kpi"]          = CharmDecayMode("D0_Kpi",0,          1,0,0,0, 1.82, 1.915, -0.0223261, 0.630175 );
@@ -97,7 +97,6 @@ StatusCode TaggerCharmTool::initialize()
     fatal() << "Unable to retrieve LifetimeFitter tool" << endreq;
     return StatusCode::FAILURE;
   }
-  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
   m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
   if( ! m_descend ) {
     fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
@@ -152,7 +151,8 @@ StatusCode TaggerCharmTool::initialize()
       int len = wmvaName.length();
       const std::string env = wmvaName.substr(1, i-1);
       std::string tmpStr = ( std::string(getenv(env.c_str())) + wmvaName.substr(i,len-i+1));
-      debug()<< " directory "<< wmvaName << " resolved "<< tmpStr <<endreq;
+      if ( msgLevel(MSG::DEBUG) )
+        debug()<< " directory "<< wmvaName << " resolved "<< tmpStr <<endreq;
       wmvaName = tmpStr;
     }
     ifstream mvaFile(wmvaName.data());
@@ -162,14 +162,14 @@ StatusCode TaggerCharmTool::initialize()
       nFoundReaders++;
     } else {
       reader = NULL;
-      debug()<<"Reader file "<<wmvaName<<" not found"<<endreq;
+      if ( msgLevel(MSG::DEBUG) )      debug()<<"Reader file "<<wmvaName<<" not found"<<endreq;
     }
 
     m_readers[iter->first] = reader;
     
   }
 
-  debug() << " Number of TMVA readers found: " << nFoundReaders << endreq;
+  if ( msgLevel(MSG::DEBUG) )  debug() << " Number of TMVA readers found: " << nFoundReaders << endreq;
   
   return sc;
   
@@ -190,7 +190,7 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
   addCands(cands, m_CharmInclTagLocations, RecVert, 1);
   addCands(cands, m_CharmStarTagLocations, RecVert, 2);
   
-  debug() << "Number of charm cands retrieved: "<<cands.size()<<endreq;
+  if ( msgLevel(MSG::DEBUG) )  debug() << "Number of charm cands retrieved: "<<cands.size()<<endreq;
     
   // selection
   CharmParticle *thecharm = NULL;
@@ -204,7 +204,8 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
     CharmParticle *cpart = &(*ipart);
     std::string mode = cpart->mode;
 
-    debug()<<"cand #"<<icand<<" flavour "<<cpart->flavour<<" mode "<<mode<<" ptr "<<cpart<<" thecharm "<<thecharm<<endreq;
+    if ( msgLevel(MSG::DEBUG) )
+      debug()<<"cand #"<<icand<<" flavour "<<cpart->flavour<<" mode "<<mode<<" ptr "<<cpart<<" thecharm "<<thecharm<<endreq;
     icand++;
 
     if (cpart->flavour==0) continue;
@@ -213,39 +214,40 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
     // selection
 
     // mass
-    debug()<<"mass "<<cpart->mass<<endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug()<<"mass "<<cpart->mass<<endreq;
     if ( cpart->mass <= CharmDecayModeMap[mode].lowMcut || cpart->mass >= CharmDecayModeMap[mode].highMcut ) continue;
 
     // decay time
-    debug()<<"tau "<<cpart->tau<<endreq;
+    if ( msgLevel(MSG::DEBUG) )
+      debug()<<"tau "<<cpart->tau<<endreq;
     if ( cpart->tau <= -100 || cpart->tau >= 100 ) continue;
 
-    debug()<<"bpvdira "<<cpart->bpvdira<<endreq;
+    if ( msgLevel(MSG::DEBUG) )    debug()<<"bpvdira "<<cpart->bpvdira<<endreq;
     if ( cpart->bpvdira <= 0.5 ) continue;
 
     // kaon vars
     if (CharmDecayModeMap[mode].hasK) {
-      debug()<<"kaonProbnnk "<<cpart->kaonProbnnk<<endreq;
+      if ( msgLevel(MSG::DEBUG) )      debug()<<"kaonProbnnk "<<cpart->kaonProbnnk<<endreq;
       if ( cpart->kaonProbnnk <= 0.05 ) continue;
-      debug()<<" kaonIppvchi2 "<<cpart->kaonIppvchi2<<endreq;
+      if ( msgLevel(MSG::DEBUG) )      debug()<<" kaonIppvchi2 "<<cpart->kaonIppvchi2<<endreq;
       if ( cpart->kaonIppvchi2 <= 0 ) continue;
     }
 
-    debug()<<"maxProbGhostDaus "<<cpart->maxProbGhostDaus<<endreq;
+    if ( msgLevel(MSG::DEBUG) )    debug()<<"maxProbGhostDaus "<<cpart->maxProbGhostDaus<<endreq;
     if ( cpart->maxProbGhostDaus >= 0.8 ) continue;
 
-    debug()<<"pchi2 "<<cpart->pchi2<<endreq;
+    if ( msgLevel(MSG::DEBUG) )    debug()<<"pchi2 "<<cpart->pchi2<<endreq;
     if( cpart->pchi2 <= 0.001 ) continue;
 
     // mva cut
     double mvaVar = getMvaVal(cpart, nPV, tagParticles.size(), signalB);
 
-    debug()<<"mva "<<mvaVar<<endreq;
+    if ( msgLevel(MSG::DEBUG) )    debug()<<"mva "<<mvaVar<<endreq;
     if ( mvaVar < CharmDecayModeMap[mode].mvaCut ) continue;
 
     ncands++;
 
-    debug()<<"purity "<<CharmDecayModeMap[mode].purity<<endreq;
+    if ( msgLevel(MSG::DEBUG) )    debug()<<"purity "<<CharmDecayModeMap[mode].purity<<endreq;
 
     if( mvaVar > max_mvaVar && CharmDecayModeMap[mode].purity >= curr_purity ) { //discrVar ordering
       thecharm = cpart;
@@ -256,19 +258,20 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
       
   }
   
-  debug() << "Number of charm cands selected: "<<ncands<<" picked idx "<<ipicked<<" thecharm"<<thecharm<<endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Number of charm cands selected: "<<ncands<<" picked idx "<<ipicked<<" thecharm"<<thecharm<<endreq;
 
   if(!thecharm) return tcharm;
 
   //calculate omega
   double omega = getOmega(thecharm, nPV, tagParticles.size(), signalB);
-    debug()<<"omega "<<omega << endreq; 
+  if ( msgLevel(MSG::DEBUG) )    debug()<<"omega "<<omega << endreq; 
   if( omega < 0 ||  omega > 1 )  {
-    debug()<<"Something wrong with Charm Training "<<omega << endreq; 
+    if ( msgLevel(MSG::DEBUG) )    debug()<<"Something wrong with Charm Training "<<omega << endreq; 
     return tcharm;
   }
   
-  debug()<<"the charm flavour "<<thecharm->flavour<<endreq;
+  if ( msgLevel(MSG::DEBUG) )  debug()<<"the charm flavour "<<thecharm->flavour<<endreq;
 
   int decision = thecharm->flavour > 0 ? +1: -1; // double flip, one for opposite side, one for D from B
   
@@ -290,7 +293,8 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
     if (exist<Particle::Range>(*ilist)){
       LHCb::Particle::Range partsin  = get<Particle::Range>(*ilist) ;
 
-      debug() << "Found "<<partsin.size()<<" charm cands for location "<<*ilist<<endreq;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Found "<<partsin.size()<<" charm cands for location "<<*ilist<<endreq;
     
       for (Gaudi::Range_<LHCb::Particle::ConstVector>::const_iterator icand = partsin.begin(); 
            icand != partsin.end(); ++icand) {
@@ -337,14 +341,15 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
 
         std::string mode = m_util->getCharmDecayMode(cand,type);
 
-        debug()<<"mode "<<mode<<endreq;
+        if ( msgLevel(MSG::DEBUG) )        debug()<<"mode "<<mode<<endreq;
 
         float maxProbGhostDaus = 0.;
         float kaonId = 0, kaonProbnnk = 1., kaonIppvchi2 = -1, kaonIpMinchi2 = -1;
         float elecProbnne = 1., muonProbnnmu = 1.;
         
         const SmartRefVector<Particle>& daus = cand->daughters();
-        debug() << "Charm cand, dau vector size = " << daus.size() << endreq;
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << "Charm cand, dau vector size = " << daus.size() << endreq;
         for( SmartRefVector<Particle>::const_iterator idau = daus.begin(); idau != daus.end(); ++idau) {
           const Particle *daucand = *idau;
           if (daucand->proto()) {
@@ -437,15 +442,16 @@ double TaggerCharmTool::getMvaVal(const CharmParticle *cpart, const int nPV, con
 
   m_eval_dstarDm = cpart->dstarDm;
 
-  debug()<<"Set MvaCharm Var: recv "<<nPV<<" mult "<<multiplicity<<" sigpt "<<signalB->pt()/GeV
-         <<" m "<<part->measuredMass()/GeV<<" p "<<part->p()/GeV<<" pt "<<part->pt()/GeV
-         <<" deta "<<part->momentum().Eta() - signalB->momentum().Eta()
-         <<" logpchi2 "<<log(cpart->pchi2)<<" logtau "<<log(cpart->tau)<<" logfd "<<log(cpart->fd)
-         <<" logfdchi2 "<<log(cpart->fdchi2)<<" logdira "<<log(1-cpart->bpvdira)<<" logmghost "<<log(cpart->maxProbGhostDaus)
-         <<" logkprobk "<<log(1-cpart->kaonProbnnk)<<" logkipchi2 "<<log(cpart->kaonIppvchi2)
-         <<" logprobe "<<log(1-cpart->elecProbnne)<<" logprobmu "<<log(1-cpart->muonProbnnmu)
-         <<" dstarm "<<cpart->dstarDm
-         <<endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug()<<"Set MvaCharm Var: recv "<<nPV<<" mult "<<multiplicity<<" sigpt "<<signalB->pt()/GeV
+           <<" m "<<part->measuredMass()/GeV<<" p "<<part->p()/GeV<<" pt "<<part->pt()/GeV
+           <<" deta "<<part->momentum().Eta() - signalB->momentum().Eta()
+           <<" logpchi2 "<<log(cpart->pchi2)<<" logtau "<<log(cpart->tau)<<" logfd "<<log(cpart->fd)
+           <<" logfdchi2 "<<log(cpart->fdchi2)<<" logdira "<<log(1-cpart->bpvdira)<<" logmghost "<<log(cpart->maxProbGhostDaus)
+           <<" logkprobk "<<log(1-cpart->kaonProbnnk)<<" logkipchi2 "<<log(cpart->kaonIppvchi2)
+           <<" logprobe "<<log(1-cpart->elecProbnne)<<" logprobmu "<<log(1-cpart->muonProbnnmu)
+           <<" dstarm "<<cpart->dstarDm
+           <<endreq;
 
   return m_readers[mode] ? m_readers[mode]->EvaluateMVA("myMVA") : -10.;
   
@@ -485,7 +491,7 @@ double TaggerCharmTool::getOmega(const CharmParticle* cpart, const int nPV, cons
 
   //Calibration (w=1-pn) w' = p0 + p1(w-eta)
   omega = m_P0_Cal_charm + m_P1_Cal_charm * ( omega-m_Eta_Cal_charm);
-  debug()<<" Vtx pn="<<1-omega<<" w="<<omega<<endmsg;
+  if ( msgLevel(MSG::DEBUG) )  debug()<<" Vtx pn="<<1-omega<<" w="<<omega<<endmsg;
 
   return omega;
 }

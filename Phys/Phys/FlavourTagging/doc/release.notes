@@ -6,6 +6,10 @@
 !                                               ---> Stefania Vecchi (2013)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2013-12-02 - Stefania Vecchi
+ - updated Tunings.py
+ - removed another unused include file that caused failure in the nightlies (??)
+ - fix debug printouts in TaggerCharmTool.cpp
 ! 2013-12-01 - Stefania Vecchi
  - removed an unused include file that caused failure in the nightlies (??)
 ! 2013-11-30 - Stefania Vecchi

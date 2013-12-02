@@ -14,8 +14,6 @@
 #include "TMVA/Reader.h"
 
 // interface
-#include "Kernel/IBackgroundCategory.h"
-
 #include "Kernel/IParticleDescendants.h"
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/ITriggerTisTos.h"
@@ -27,7 +25,7 @@
 #include <utility>
 #include <string>
 
-// #include "Kernel/IParticleDescendants.h"
+
 #include "ITaggingUtils.h"
 #include "INNetTool.h"
 
