@@ -1,0 +1,20 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>brunel.brunel2012magdown</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
+  <argument name="args"><set>
+    <text>--option</text>
+    <text>from Brunel.Configuration import *; Brunel().DataType="2012"; Brunel().InputType="DST"; from GaudiConf.IOHelper import IOHelper; IOHelper().inputFiles(["brunel2012magdown-200ev.dst"]); Brunel().DatasetName="brunel2012recombine"; Brunel().SplitRawEventOutput=0.0; Brunel().EvtMax=10;</text>
+  </set></argument>
+  <argument name="validator"><text>
+#check if the output exists, and check the split locations are on it
+from RawEventCompat.QMTest.FormatTests import checkIsSplit
+checkIsSplit("brunel2012recombine-10ev.dst",0.0,causes,result,"brunel.repro2012recombine")
+
+countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
+
+</text></argument>
+</extension>
+

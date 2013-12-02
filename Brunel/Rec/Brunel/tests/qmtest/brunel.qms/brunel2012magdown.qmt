@@ -10,6 +10,10 @@
   </set></argument>
   <argument name="reference"><text>../refs/brunel2012magdown.ref</text></argument>
   <argument name="validator"><text>
+#check if the output exists, and check the split locations are on it
+from RawEventCompat.QMTest.FormatTests import checkIsSplit
+checkIsSplit("brunel2012magdown-200ev.dst",2.0,causes,result,"brunel.brunel2012magdown")
+
 from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
 preprocessor = BrunelPreprocessor + \
   RegexpReplacer(r'mdf:\S*(/lhcb/data\S*\.raw)(\?\S*)?',r'\1')

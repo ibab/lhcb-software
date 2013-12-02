@@ -15,12 +15,19 @@ from Brunel.Configuration import *
 Brunel().EvtMax   = 10
 Brunel().Monitors = ["SC","FPE"]
 Brunel().InputType="XDST"
+Brunel().OutputType="XDST"
 Brunel().WithMC=True
 Brunel().DataType="2011"
 Brunel().SplitRawEventInput=0.0
+Brunel().DatasetName="mc11a-test"
 </text></argument>
   <argument name="reference"><text>../refs/brunel-mc11a-xdst.ref</text></argument>
   <argument name="validator"><text>
+#check if the output exists, and check the split locations are on it
+from RawEventCompat.QMTest.FormatTests import checkIsSplit
+checkIsSplit("mc11a-test-10ev.xdst",2.0,causes,result,"brunel.brunel-mc11a-xdst")
+
+#check against reference
 from Brunel.QMTest.BrunelExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
 </text></argument>

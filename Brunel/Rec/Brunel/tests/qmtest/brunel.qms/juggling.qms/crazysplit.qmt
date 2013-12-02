@@ -1,12 +1,14 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
-  <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
   <argument name="args"><set>
     <text>--option</text>
     <text>from Configurables import Brunel; from PRConfig import TestFileDB; TestFileDB.test_file_db['2012_raw_default'].run(configurable=Brunel()); Brunel().EvtMax=10; Brunel().DatasetName="crazysplit"; Brunel().SplitRawEventOutput=1.0;</text>
   </set></argument>
   <argument name="validator"><text>
+#check if the output exists, and check the split locations are on it
+from RawEventCompat.QMTest.FormatTests import checkIsSplit
+checkIsSplit("crazysplit-10ev.dst",0.0,causes,result,"brunel.juggling.crazysplit")
 
 countErrorLines({"FATAL":0,"ERROR":2,"WARNING":0})
 
