@@ -8,6 +8,7 @@
 # |-DatasetName         = 'Brunel'
 # |-ProductionMode      = False
 # |-PackType            = 'TES'
+# |-NoWarnings          = False
 # |-WriteLumi           = False
 # |-UpgradeDets         = []  (default: [])
 # |-DDDBtag             = ''
@@ -19,6 +20,7 @@
 # |-VetoHltErrorEvents  = True
 # |-MCCheckSequence     = None
 # |-InputType           = 'MDF'  (default: 'MDF')
+# |-WriteFSR            = True
 # |-DBSnapshotDirectory = '/group/online/hlt/conditions'
 # |-PrintFreq           = 1
 # |-Detectors           = ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
@@ -33,8 +35,8 @@
 # |-OutputLevel         = 3
 # |-InitSequence        = ['Brunel']  (default: None)
 # |-DataType            = '2012'
-# |-NoWarnings          = False
-# |-WriteFSR            = True
+# |-SplitRawEventInput  = None
+# |-SplitRawEventOutput = 2.0
 # |-RecL0Only           = False
 # |-RawBanksToKill      = None
 # |-SpecialData         = []  (default: [])
@@ -89,16 +91,23 @@
 # Configure caloSequencer  : CaloProcessorCaloSeq
 # WARNING: ConfiguredMuonIDs: Not available info for DATA=2012,VERSION=def. Loading default
 # ConfiguredMuonIDs: Loaded configuration info M_2011_def
-# DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/Rec/Summary#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/Trigger/RawEvent#1', '/Event/Muon/RawEvent#1', '/Event/Calo/RawEvent#1', '/Event/Rich/RawEvent#1', '/Event/Other/RawEvent#1']
+############ CONFIGURING RawEventFormatConf!! ###############
+# DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/Rec/Summary#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/Other/RawEvent#1', '/Event/Muon/RawEvent#1', '/Event/Trigger/RawEvent#1', '/Event/Rich/RawEvent#1', '/Event/Calo/RawEvent#1']
 # DstWriter.OptItemList=[]
 # No Writer defined for DIGI
 # WARNING: Using default tag dddb-20130503-1 for partition DDDB
-# WARNING: Using default tag cond-20130710 for partition LHCBCOND
+# WARNING: Using default tag cond-20131028 for partition LHCBCOND
 # WARNING: Using default tag dq-20130806-1 for partition DQFLAGS
+# WARNING: Re-configuration of inputs for HltSelReportsDecoder was not done, but it might be OK since at least one location is in the default decode list
+# WARNING: Re-configuration of inputs for HltSelReportsDecoder/Hlt2SelReportsDecoder was not done, but it might be OK since at least one location is in the default decode list
+# WARNING: Re-configuration of inputs for HltDecReportsDecoder was not done, but it might be OK since at least one location is in the default decode list
+# WARNING: Re-configuration of inputs for HltDecReportsDecoder/Hlt2DecReportsDecoder was not done, but it might be OK since at least one location is in the default decode list
+# WARNING: Re-configuration of inputs for HltDecReportsDecoder/Hlt1DecReportsDecoder was not done, but it might be OK since at least one location is in the default decode list
+# WARNING: Re-configuration of inputs for HltVertexReportsDecoder was not done, but it might be OK since at least one location is in the default decode list
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v44r5
-                                          running on lxplus0461 on Tue Oct 15 11:11:03 2013
+                                                   Welcome to Brunel version v44r8
+                                          running on lxplus0576 on Mon Dec  2 11:24:12 2013
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -107,7 +116,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   0.87 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   0.95 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -129,7 +138,8 @@ COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "dddb-20130503-1"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "cond-20130710"
+LHCBCOND             INFO Using TAG "cond-20131028"
+ToolSvc.OdinTim...   INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing, with context 'Offline'
 LumiBeam1Seq         INFO Member list: LoKi::ODINFilter/FilterBeam1, HltLumiSummaryDecoder/LumiDecodeBeam1, FilterOnLumiSummary/LumiFilterBeam1, FilterFillingScheme/FillingBeam1, LumiAccounting/LumiCountBeam1, with context 'Offline'
 ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2012.db/ONLINE"
@@ -144,14 +154,18 @@ HltErrorProc         INFO   Algorithm: HltErrorProc, Subsystem: Hlt, Status: -3,
 PhysicsSeq           INFO Member list: HltRoutingBitsFilter/PhysFilter, GaudiSequencer/HltFilterSeq, GaudiSequencer/CaloBanksHandler, GaudiSequencer/DecodeTriggerSeq, ProcessPhase/Reco, ProcessPhase/Moni, with context 'Offline'
 CaloBanksHandler     INFO Member list: GaudiSequencer/CaloDigits, with context 'Offline'
 CaloDigits           INFO Member list: CaloDigitsFromRaw/SpdFromRaw, GaudiSequencer/PrsDigitsSeq, GaudiSequencer/EcalDigitsSeq, GaudiSequencer/HcalDigitsSeq, with context 'Offline'
+SpdFromRaw.SpdF...   INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object
 PrsDigitsSeq         INFO Member list: CaloDigitsFromRaw/PrsFromRaw, RawBankReadoutStatusConverter/PrsProcStatus, with context 'Offline'
+PrsFromRaw.PrsF...   INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object
 EcalDigitsSeq        INFO Member list: CaloZSupAlg/EcalZSup, RawBankReadoutStatusConverter/EcalProcStatus, with context 'Offline'
 EcalDet.Quality      INFO Found  43 problematic readout channel(s)
 EcalDet.Quality      INFO Found  5 channel(s) with 'LED monitoring problem'
 EcalZSup             INFO Calorimeter has 6016 cells. Zsup method 2D Threshold 20
+EcalZSup.EcalZS...   INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object
 HcalDigitsSeq        INFO Member list: CaloZSupAlg/HcalZSup, RawBankReadoutStatusConverter/HcalProcStatus, with context 'Offline'
 HcalDet.Quality      INFO Found  10 problematic readout channel(s)
 HcalZSup             INFO Calorimeter has 1488 cells. Zsup method 1D Threshold 4
+HcalZSup.HcalZS...   INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object
 DecodeTriggerSeq     INFO Member list: HltDecReportsDecoder, GaudiSequencer/L0TriggerSeq, with context 'Offline'
 L0TriggerSeq         INFO Member list: L0DUFromRawAlg/L0DUFromRaw, with context 'Offline'
 ToolSvc.L0DUConfig   INFO Creating the TEMPLATE configuration tools : ToolSvc.L0DUConfig.Template for time slot :  'T0'
@@ -160,8 +174,13 @@ ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.L0DUCon...   INFO **** L0DU Config loading : L0TCK = 0x10000 for slot T0 ==> OK
 ToolSvc.L0DUCon...   INFO Short description :: NO DESCRIPTION (L0DUConfig.Template)
 Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoVELOSeq, GaudiSequencer/RecoTTSeq, GaudiSequencer/RecoITSeq, GaudiSequencer/RecoOTSeq, GaudiSequencer/RecoTrSeq, GaudiSequencer/RecoVertexSeq, GaudiSequencer/RecoRICHSeq, GaudiSequencer/RecoCALOSeq, GaudiSequencer/RecoMUONSeq, GaudiSequencer/RecoPROTOSeq, GaudiSequencer/RecoSUMMARYSeq, with context 'Offline'
-RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/DecodeVeloClusters, RawBankToSTClusterAlg/CreateTTClusters, RawBankToSTLiteClusterAlg/CreateTTLiteClusters, RawBankToSTClusterAlg/CreateITClusters, RawBankToSTLiteClusterAlg/CreateITLiteClusters, with context 'Offline'
-DecodeVeloClusters   INFO Cancel processing of events with more than 6000 Velo clusters
+RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/createBothVeloClusters, RawBankToSTClusterAlg/createTTClusters, RawBankToSTLiteClusterAlg/createTTLiteClusters, RawBankToSTLiteClusterAlg/createITLiteClusters, RawBankToSTClusterAlg/createITClusters, with context 'Offline'
+createBothVeloC...   INFO Cancel processing of events with more than 6000 Velo clusters
+createBothVeloC...   INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object
+createTTClusters     INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object
+createTTLiteClu...   INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object
+createITLiteClu...   INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object
+createITClusters     INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object
 RecoVELOSeq          INFO Member list: FastVeloTracking, with context 'Offline'
 RecoTTSeq            INFO Member list: , with context 'Offline'
 RecoITSeq            INFO Member list: , with context 'Offline'
@@ -169,6 +188,7 @@ RecoOTSeq            INFO Member list: , with context 'Offline'
 RecoTrSeq            INFO Member list: ProcessPhase/Track, with context 'Offline'
 Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq, with context 'Offline'
 TrackForwardPatSeq   INFO Member list: PatForward, with context 'Offline'
+ToolSvc.OTRawBa...   INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255 require window [-8,56]
 MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c1.down.cdf
 MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c2.down.cdf
@@ -218,6 +238,7 @@ RichRecInitOffl...   INFO Member list: Rich::Rec::Initialise/CheckProcOfflineSta
 RichOfflinePixe...   INFO Member list: Rich::DAQ::RawBufferToRichDigitsAlg/DecodeRawRichOffline, Rich::Rec::Initialise/CreateOfflinePixels, with context 'Offline'
 ToolSvc.Offline...   INFO Rich::ToolRegistry:: Nickname 'RichMCTruthTool' mapping changed : 'Rich::MC::MCTruthTool' to 'Rich::MC::NULLMCTruthTool'
 ToolSvc.Offline...   INFO Rich::ToolRegistry:: Nickname 'RichRecMCTruthTool' mapping changed : 'Rich::Rec::MC::MCTruthTool' to 'Rich::Rec::MC::NULLMCTruthTool'
+ToolSvc.RichSma...   INFO Using [DAQ/RawEvent] as search path for the RawEvent object
 DecodeRawRichOf...   INFO Will only decode Raw Buffer -> No RichDigits produced
 ToolSvc.Offline...   INFO # ray tracing attempts before bailout = [50, 50, 50]
 ToolSvc.Offline...   INFO Particle types considered = [electron, muon, pion, kaon, proton, below_threshold]
@@ -510,7 +531,8 @@ MoniTrSeq            INFO Member list: TrackMonitor, TrackDiMuonMonitor, TrackVe
 MoniPROTOSeq         INFO Member list: ChargedProtoParticleMoni/ChargedProtoPMoni, ANNGlobalPID::ChargedProtoANNPIDMoni/ChargedProtoANNPIDMoni, with context 'Offline'
 MoniHltSeq           INFO Member list: HltDecReportsDecoder, HltRateMonitor, HltRateMonitor/HltRateMonitorMB, HltCompositionMonitor, MuMonitor, EventTimeMonitor, with context 'Offline'
 Output               INFO Member list: GaudiSequencer/OutputDSTSeq, with context 'Offline'
-OutputDSTSeq         INFO Member list: RawEventSelectiveCopy/TriggerRawBank, RawEventSelectiveCopy/CaloRawBank, RawEventSelectiveCopy/MuonRawBank, RawEventSelectiveCopy/RichRawBank, RawEventSelectiveCopy/OtherRawEvent, EventNodeKiller/DAQKiller, TrackToDST/FilterBestTrackStates, TrackToDST/FilterMuonTrackStates, GaudiSequencer/PackDST, with context 'Offline'
+OutputDSTSeq         INFO Member list: GaudiSequencer/RawEventSplitSeq, TrackToDST/FilterBestTrackStates, TrackToDST/FilterMuonTrackStates, GaudiSequencer/PackDST, with context 'Offline'
+RawEventSplitSeq     INFO Member list: RawEventMapCombiner/create_Other_RawEvent, RawEventMapCombiner/create_Muon_RawEvent, RawEventMapCombiner/create_Trigger_RawEvent, RawEventMapCombiner/create_Rich_RawEvent, RawEventMapCombiner/create_Calo_RawEvent, EventNodeKiller/KillRawEventNodes, with context 'Offline'
 PackDST              INFO Member list: PackTrack/PackTracks, DataPacking::Pack<LHCb::RichPIDPacker>/PackRichPIDs, DataPacking::Pack<LHCb::MuonPIDPacker>/PackMuonPIDs, GaudiSequencer/CaloPacking, ChargedProtoParticleRemovePIDInfo/ProtoParticlePIDClean, PackProtoParticle/PackChargedProtos, PackProtoParticle/PackNeutralProtos, PackRecVertex, PackTwoProngVertex, PackTrack/PackMuonTracks, with context 'Offline'
 CaloPacking          INFO Member list: PackCaloHypo/PackPhotons, PackCaloHypo/PackElectrons, PackCaloHypo/PackMergedPi0s, PackCaloHypo/PackSplitPhotons, with context 'Offline'
 EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
@@ -536,23 +558,23 @@ LumiCountBeam2       INFO INTEGRAL: {  runs :  files :  info (key/incr/integral)
 TimeSpanAccounting   INFO number of files seen: 0
 TimeSpanAccounting   INFO FSR: {  earliest : 0 - latest : 0 }
 EventAccount         INFO Overriding status: UNRELIABLE with: VERIFIED
-CreateTTClusters     INFO Successfully processed 0 %
-CreateTTClusters  SUCCESS Number of counters : 2
+createTTClusters     INFO Successfully processed 0 %
+createTTClusters  SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
  | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-CreateTTLiteClu...   INFO Successfully processed 0 %
-CreateTTLiteClu...SUCCESS Number of counters : 2
+createTTLiteClu...   INFO Successfully processed 0 %
+createTTLiteClu...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
  | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-CreateITClusters     INFO Successfully processed 0 %
-CreateITClusters  SUCCESS Number of counters : 2
+createITLiteClu...   INFO Successfully processed 0 %
+createITLiteClu...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
  | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-CreateITLiteClu...   INFO Successfully processed 0 %
-CreateITLiteClu...SUCCESS Number of counters : 2
+createITClusters     INFO Successfully processed 0 %
+createITClusters  SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
  | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
@@ -701,7 +723,7 @@ ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   0.87 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   0.95 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -764,11 +786,11 @@ TimingAuditor.T...   INFO     L0TriggerSeq              |     0.000 |     0.000 
 TimingAuditor.T...   INFO      L0DUFromRaw              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    Reco                       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     RecoDecodingSeq           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      DecodeVeloClusters       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      CreateTTClusters         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      CreateTTLiteClusters     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      CreateITClusters         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      CreateITLiteClusters     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      createBothVeloClusters   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      createTTClusters         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      createTTLiteClusters     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      createITLiteClusters     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      createITClusters         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     RecoVELOSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      FastVeloTracking         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     RecoTTSeq                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1048,12 +1070,13 @@ TimingAuditor.T...   INFO      MuMonitor                |     0.000 |     0.000 
 TimingAuditor.T...   INFO      EventTimeMonitor         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO   Output                      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    OutputDSTSeq               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     TriggerRawBank            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     CaloRawBank               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     MuonRawBank               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     RichRawBank               |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     OtherRawEvent             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     DAQKiller                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     RawEventSplitSeq          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      create_Other_RawEvent    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      create_Muon_RawEvent     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      create_Trigger_RawEvent  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      create_Rich_RawEvent     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      create_Calo_RawEvent     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      KillRawEventNodes        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     FilterBestTrackStates     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     FilterMuonTrackStates     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     PackDST                   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
