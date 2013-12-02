@@ -2,6 +2,8 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ========================================================================
+! 2013-12-02 - Liang Sun
+ - __init__.py: Fixed a glitch of only translating strings from the 'data' key in the DB payload
 
 !========================= CondDBUI v3r25 2013-09-30 =========================
 ! 2013-08-08 - Liang Sun
