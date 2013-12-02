@@ -6,6 +6,10 @@
 !                                               ---> Stefania Vecchi (2013)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2013-12-02 - Marco Clemencic
+ - Fixed CMake configuration.
+
 ! 2013-12-02 - Stefania Vecchi
  - updated Tunings.py
  - removed another unused include file that caused failure in the nightlies (??)
