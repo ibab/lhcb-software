@@ -439,8 +439,8 @@ tunings = {
         #"CombineTaggersProbability.ProbMin_OS" : 0.58,
         #"CombineTaggersProbability.ProbMin" : 0.55,
 
-        "EnableCharmTagger": 'false',
-        "EnableProtonTagger": 'false',
+        "EnableCharmTagger": "False",
+        "EnableProtonTagger": "False",
         "CombineTaggersProbability.P0_Cal_OS" : 0.392, #+/-0.0016
         "CombineTaggersProbability.P1_Cal_OS" : 0.953, #+/-0.017
         "CombineTaggersProbability.Eta_Cal_OS": 0.362, 
