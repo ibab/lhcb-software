@@ -127,14 +127,6 @@ def RecoUpgradeTracking(exclude=[]):
             upSeq.Members += [ PrVeloUT() ]
             
 
-    if "Downstream" in trackTypes:
-        downSeq = GaudiSequencer("TrDownSeq")
-        GaudiSequencer("RecoTrSeq").Members += [ downSeq ]
-        if "UT" in subDets:
-            from Configurables import PrDownstream
-            downSeq.Members += [ PrDownstream() ]
-
-
     if "Match" in trackTypes:
         matchSeq = GaudiSequencer("TrMatchSeq")
         GaudiSequencer("RecoTrSeq").Members += [ matchSeq ]
@@ -144,6 +136,15 @@ def RecoUpgradeTracking(exclude=[]):
         #PatMatch().addTool(PatMatchTool, "PatMatchTool")
         #PatMatch().PatMatchTool.AddTTClusters = True
         #PatMatch().PatMatchTool.AddTTClusterName = "PrAddUTCoord"
+
+    if "Downstream" in trackTypes:
+        downSeq = GaudiSequencer("TrDownSeq")
+        GaudiSequencer("RecoTrSeq").Members += [ downSeq ]
+        if "UT" in subDets:
+            from Configurables import PrDownstream
+            downSeq.Members += [ PrDownstream() ]
+
+
       
 
     # Do the Clone Killing and create Best tracks container
