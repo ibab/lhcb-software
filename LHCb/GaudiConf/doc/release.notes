@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2013-12-02 - Marco Cattaneo
+ - Skip warnings about 3*sigma changes in memory use in QMTests exclusions file
+   LHCbExclusions.py (previously in BrunelExclusions.py)
+
 ! 2013-11-28 - Marco Cattaneo
  - Remove RawEventFormat dependency from CMakeLists.txt, data dependencies are
    declared in the project CMakeLists.txt

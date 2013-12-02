@@ -23,4 +23,6 @@ preprocessor = normalizeExamples + \
     LineSkipper(["INFO Disconnect from database after being idle"]) + \
     LineSkipper(["INFO Memory has changed from"]) + \
     LineSkipper(["INFO Memory change after pool release"]) + \
+    LineSkipper(["Memory for the event exceeds 3*sigma"]) + \
+    LineSkipper(["Mean 'delta-memory' exceeds 3*sigma"]) + \
     LineSkipper(["INFO  'CnvServices':"])
