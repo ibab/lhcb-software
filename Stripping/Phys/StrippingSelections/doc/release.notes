@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-12-02 - Mika Vesterinen
+ - Use StdAllLooseKaons in StrippingPhiToKSKS.py.
+
 ! 2013-11-29 - Thomas Latham
  - Enabled flavour tagging in StrippingB2KShh and StrippingB2KSKpi lines.
 

@@ -11,7 +11,7 @@ from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLoosePions, StdLooseKaons
+from StandardParticles import StdLoosePions, StdAllLooseKaons
 from Configurables import FitDecayTrees
 from PhysSelPython.Wrappers import AutomaticData, MergedSelection
 
@@ -141,7 +141,7 @@ class PhiToKSKSAllLinesConf(LineBuilder) :
         
         self.Kaons = Selection( "KaonsFor" + _name,
                                 Algorithm = FilterDesktop(name = "KaonFilterFor"+_name, Code = self.KaonCuts ),
-                                RequiredSelections = [StdLooseKaons])
+                                RequiredSelections = [StdAllLooseKaons])
         
         ####### phi(1020) #############
 
