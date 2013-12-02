@@ -4,6 +4,10 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+! 2013-12-02 - Rob Lambert
+ - Add a test validator which can interpret the contents of DSTs
+   and work out if the required locations are there or not
+
 ! 2013-11-26 - Rob Lambert
  - Check for bad/unknown banks!
  - Fix missing addition of Depth!! Why did I remove it?
