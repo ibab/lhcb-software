@@ -4,7 +4,7 @@
 # Maintainer : Patrick ROBBE
 #============================================================================
 package       GenCuts
-version       v3r7
+version       v3r8
 
 #============================================================================
 # Structure, i.e. directories to process. 
