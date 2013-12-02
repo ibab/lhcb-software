@@ -4,15 +4,17 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
-!======================= EvtGenExtras v3r9 2013-10-10 ========================
-
+!======================= EvtGenExtras v3r10 2013-12-02 =======================
 ! 2013-11-27 - William Sutcliffe
  - Fix in EvtLb2BaryonlnuFF for warning message.
 
 ! 2013-11-26 - William Sutcliffe
- - Added new model EvtLb2Baryonlnu and corresponding form factor class EvtLb2BaryonlnuFF. Registered this new model.
- - Updated EvtSLBaryonAmp with a fix for discrepencies between baryon and anti-baryon decays.
+ - Added new model EvtLb2Baryonlnu and corresponding form factor class 
+   EvtLb2BaryonlnuFF. Registered this new model.
+ - Updated EvtSLBaryonAmp with a fix for discrepencies between baryon and 
+   anti-baryon decays.
 
+!======================= EvtGenExtras v3r9 2013-10-10 ========================
 ! 2013-10-09 - Sam Hall
  - K_1(1270) - K_1(1400) mixing angle changed from 34^o to -34^o
  - And a correction on the 17th.
