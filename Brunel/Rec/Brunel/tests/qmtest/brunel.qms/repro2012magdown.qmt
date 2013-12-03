@@ -64,6 +64,7 @@ preprocessor = BrunelPreprocessor + \
   LineSkipper(["INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object"]) + \
   LineSkipper(["INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object"]) + \
   LineSkipper(["ToolSvc.RichSma...   INFO Using [Rich/RawEvent, DAQ/RawEvent] as search path for the RawEvent object"]) + \
+  LineSkipper(["ToolSvc.RichSma...   INFO Using [DAQ/RawEvent] as search path for the RawEvent object"]) + \
   LineSkipper(["RawEventSplitSeq     INFO Member list:"])
 validateWithReference(preproc = preprocessor)
 </text></argument>
