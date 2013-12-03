@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================= GENSER v13r0p1 2013-12-03 =========================
+! 2013-12-03 - Gloria Corti
+ - Change the version of LHAPDFSet to v* as it should be fixed in Gauss itself
+
 !========================== GENSER v13r0 2013-10-10 ==========================
 ! 2013-10-03 - Gloria Corti
  - Put v1r* in version of LHAPDFSet to be used
