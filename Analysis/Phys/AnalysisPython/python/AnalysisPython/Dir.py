@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 from GaudiPython.Bindings import iDataSvc, SUCCESS, FAILURE
+
  
 
 def _dir_ ( self , node = None , forceload = False, level = -1 , ondemand = False ) :

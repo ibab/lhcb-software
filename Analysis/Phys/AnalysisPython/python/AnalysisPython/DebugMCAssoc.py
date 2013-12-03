@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 from AnalysisPython import Helpers
+
 class AssocTreeDebugger :
     def __init__(self, assoc, particleName) :
         self.assoc = assoc

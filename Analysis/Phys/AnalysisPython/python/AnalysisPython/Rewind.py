@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from GaudiPython.Bindings import iHistogramSvc, AppMgr, SUCCESS, FAILURE
 from AnalysisPython import Dir
 

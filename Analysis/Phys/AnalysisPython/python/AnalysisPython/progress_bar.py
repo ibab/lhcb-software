@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # =============================================================================
 # A Python Library to create a Progress Bar.
 # Copyright (C) 2008  BJ Dierkes <wdierkes@5dollarwhitebox.org>

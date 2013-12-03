@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #==============================================================================
 """
 This module contains various functors useful for interactive DSt and MicroDST

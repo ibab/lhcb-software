@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
 This module contains a set of random helper functions
 for GaudiPython analysis.
