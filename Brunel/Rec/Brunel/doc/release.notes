@@ -24,6 +24,9 @@ Purpose: LHCb reconstruction program
     - muon_nom1
   . Add test and options for reprocessing of 2013 pA data without GECs. Includes
     event that was failing prior to FastVelo fix (brunel.repro-2013pa)
+  . Added tests of DecoderDB use cases, mainly in existing tests but also new
+    tests splittostrip17rawevent and repro2012recombine
+  . brunel-mc11a-xdst now also writes out xdst
 
 - Update valgrind.job to use gaudirun.py directly
 
@@ -38,6 +41,7 @@ Purpose: LHCb reconstruction program
   . Fix inconsistency in PatFwdTool::fitStereoCandidate, where a X layer was
     marked as a stereo layer (PatAlgorithms)
   . Follow DecoderDB development
+  . Move matching algorithm before downstream in RecoUpgradeTracking.py (TrackSys)
 
 </PRE><H1><A NAME=v44r8>2013-10-25 Brunel v44r8</A></H1><PRE>
 This version uses projects LCG 66, Gaudi v23r10, LHCb v36r3, Lbcom v14r3,
