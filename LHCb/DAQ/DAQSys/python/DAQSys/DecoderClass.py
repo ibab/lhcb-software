@@ -22,6 +22,7 @@ class Decoder(object):
         Properties={} # {Property: value dict of misc properties
         PrivateTools=[] #related private tools, must also be in the DB at configuration time
         PublicTools=[] #related public tools, must also be in the DB at configuration time
+        Required=[] list of possible decoders which must be run before me, should also be defined in the DB
 
     Private member:
         __db__ reference to the databse in which I am stored. Can be overwritten if required, or used to validate the database. Used to find the public/private tools.
@@ -53,19 +54,33 @@ class Decoder(object):
         PrivateTools and PublicTools are configured at the same time as this decoder, providing that they exist in the DB.
         Required partners are not configured automatically, but must be declared active and configured separately.
         """
-        self.FullName=fullname
+        #ensure I actually construct the members!!
+        self.FullName="" #the full Gaudi name of the low-level configurable
+        self.Active=False # Flags this as an alg to be configured, which somehow writes something on the TES
+        self.Banks={} # list of banks I decode
+        self.Inputs={} # list of input locations or {Property : value dict}
+        self.Outputs={} # list of output locations or {Property: value} dict
+        self.Properties={} # {Property: value dict of misc properties
+        self.PrivateTools=[] #related private toolsmust also be in the DB at configuration time
+        self.PublicTools=[] #related public tools, must also be in the DB at configuration time
+        self.Required=[] #required other algorithms, must also be in the DB at configuration time
+        #deepcopy things that were sent in...
+        self.FullName=fullname[:]
         self.Active=active
         self.__used__=False
-        self.Banks=banks
-        self.Inputs=inputs
-        self.Outputs=outputs
-        self.Properties=properties
-        self.PrivateTools=privateTools
-        self.PublicTools=publicTools
+        self.Banks=banks[:]
+        tipi=type(inputs)
+        self.Inputs=tipi(inputs)
+        tipo=type(outputs)
+        self.Outputs=tipo(outputs)
+        self.Properties=dict(properties)
+        self.PrivateTools=privateTools[:]
+        self.PublicTools=publicTools[:]
         self.Required=required
         if conf is not None:
             conf[self.FullName]=self
             self.__db__=conf
+    
     def listRequired(self):
         """
         Return a unique ordered list of the requirements, i.e entries added to 'Required', from lowest to highest level
@@ -131,13 +146,13 @@ class Decoder(object):
         op=self.Outputs
         pr=self.Properties
         #construct new dictionaries to avoid having the same objects
-        if type(ip) is dict:
-            ip=dict(ip)
-        if type(op) is dict:
-            op=dict(op)
-        if type(pr) is dict:
-            pr=dict(pr)
-        return Decoder(newname,self.Active,self.Banks,ip,op,pr,self.PrivateTools,self.PublicTools,self.Required,self.__db__)
+        tipi=type(ip)
+        ip=tipi(ip)
+        tipo=type(op)
+        op=tipo(op)
+        tipp=type(pr)
+        pr=tipp(pr)
+        return Decoder(newname,self.Active,self.Banks[:],ip,op,pr,self.PrivateTools[:],self.PublicTools[:],self.Required[:],self.__db__)
     def __setprop__(self,top,prop,val):
         """
         Handle tool handles? not 100% sure...

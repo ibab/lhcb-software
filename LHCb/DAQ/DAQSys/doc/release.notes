@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-12-03 - Rob Lambert
+ - default dictionaries were all using the same objects :S ooops
+
 ! 2013-11-28 - Rob Lambert
  - Use one decoder for the Velo clusters, but split into two in the case DataOnDemand is used.
 
