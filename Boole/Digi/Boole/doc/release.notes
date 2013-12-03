@@ -13,6 +13,7 @@ Purpose: LHCb Digitization program
      - boole-upgrade-calo_nospdprs
      - boole-upgrade-muon_nom1
    . Updated upgrade tests to new DB tags after UT changes in DB.
+   . Add exclusion for memory change warnings from BooleInit
 
 - Configuration Changes
    . Added a line for the UT as submitted by JC. 
