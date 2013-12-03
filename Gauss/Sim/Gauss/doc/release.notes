@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== Gauss v46r6 2013-02-03 ===========================
+! 2013-12-03 - Gloria Corti
+ - Insert use of LHAPDFSets to fix here the major version
+
 ! 2013-11-08 - Paul Szczypka
  - Updated upgrade tests and refs after new UT additions in DB.
 
@@ -29,12 +33,11 @@
    . gauss-upgrade-vp_compact_pocofoam-ut-ft.qmt
    . gauss-upgrade-vp-ut-ft.qmt
 
-
+!========================== Gauss v46r5 2013-10-28 ===========================
 ! 2013-10-28 - Paul Szczypka
  - Corrections to Configuration.py to safely access GenInit's properties after
    PowHeg additions.
 
-!========================== Gauss v46r5 2013-10-24 ===========================
 ! 2013-10-24 - Gloria Corti
  - Port from v45b branch chnages by Patrick Robbe (r163031)
    . Configuration.py: add options to generate events with Powheg
