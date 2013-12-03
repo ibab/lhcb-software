@@ -4,6 +4,99 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v46r6">2013-12-03 - GaussSys v46r6</A></H1><PRE>
+<H2><A NAME="Note"For development and Upgrade studies. 
+    </A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v36r3 (and Gaudi v23r10)
+   AppConfig v3r*,
+   <b>DecFiles v27r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   pythia 6.427.2, lhapdf 5.8.5 
+   photos++ 2.6.1a and tauola++ 1.0.7 
+   pythia8 175 (via LCG_GeneratorsInterfaces),
+   HepMC 2.06.05 (via LCG_Interfaces),
+   LHAPDFSets v1r* (private LHCb version)
+   Geant4 v95r2p5g4 (based on geant4.9.5.p02 + patches for LHCb) and 
+   Geant4Files v95r0, 
+   XmlVis v1r18,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.6.1b and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
+   rivet 1.8.3 (via LCG_GeneratorsInterfaces),
+   <b>EvtGen v13r10, EvtGenExtras v3r10</b> and Mint v2r1 
+   (private LHCb version),
+   BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r0 + GenXiccData v2r0 and 
+   HidValley v3r2 (private LHCb versions)
+</A></H3>
+
+!========================== Gauss v46r6 2013-02-03 ===========================
+! 2013-12-03 - Gloria Corti
+ - Insert use of LHAPDFSets to fix here the major version
+
+! 2013-11-08 - Paul Szczypka
+ - Updated upgrade tests and refs after new UT additions in DB.
+
+! 2013-11-07 - Paul Szczypka
+ - Corrected simcond values in upgrade tests.
+
+! 2013-11-06 - Paul Szczypka
+ - Additional QMTests and modifications for Upgrade
+   . gauss-upgrade-baseline      (inc ref)
+   . gauss-upgrade-baseline-25ns (inc ref)
+   . gauss-upgrade-baseline-ut   (inc ref)
+   . gauss-upgrade-mininal       (exit code only)
+   . gauss-upgrade-calo_nospdprs (inc ref)
+   . gauss-upgrade-muon_nom1     (inc ref)
+ - Removal of obsolete upgrade qmtests
+   . gauss-upgrade-ft_mono.qmt
+   . gauss-upgrade-ft.qmt
+   . gauss-upgrade-vl_compact_microchannel-ut-ft.qmt
+   . gauss-upgrade-vl_compact_tpg-ut-ft.qmt
+   . gauss-upgrade-vl_loi_microchannel-ut-ft.qmt
+   . gauss-upgrade-vl_loi_tpg-ut-ft.qmt
+   . gauss-upgrade-vp_compact_microchannel-ut-ft.qmt
+   . gauss-upgrade-vp_compact_pocofoam-ut-ft.qmt
+   . gauss-upgrade-vp-ut-ft.qmt
+
+!========================== GenCuts v3r8 2013-12-02 ========================== 
+! 2013-11-25 - Jack Wimberley
+ - JpsiLeptonInAcceptance.cpp: Add tool to search for J/psi (or psi(2S)), 
+   lepton in event with configurable cuts on P, PT, DOCA, etc. 
+   (based on DiLeptonInAcceptance.cpp)
+
+!========================= GENSER v13r0p1 2013-12-03 =========================
+! 2013-12-03 - Gloria Corti
+ - Change the version of LHAPDFSet to v* as it should be fixed in Gauss itself
+
+!========================== EvtGen v13r10 2013-11-21 ==========================
+! 2013-11-21 - John Back
+ - Modified EvtDalitzTable used by the EvtGenericDalitz model to warn 
+   if an unknown shape is used (and reverts to use a non-relativistic BW).
+
+!========================== EvtGen v13r9 2013-11-11 ==========================
+! 2013-11-11 - John Back
+ - Added Gounaris-Sakurai and Gaussian shapes to EvtGenericDalitz 
+   and set sensible defaults for LASS parameters (from Daniel Craik).
+
+!======================= EvtGenExtras v3r10 2013-12-02 =======================
+! 2013-11-27 - William Sutcliffe
+ - Fix in EvtLb2BaryonlnuFF for warning message.
+
+! 2013-11-26 - William Sutcliffe
+ - Added new model EvtLb2Baryonlnu and corresponding form factor class 
+   EvtLb2BaryonlnuFF. Registered this new model.
+ - Updated EvtSLBaryonAmp with a fix for discrepencies between baryon and 
+   anti-baryon decays.
+
+!========================= LbPGuns v4r1p1 2013-12-02 =========================
+! 2013-11-15 - Michel De Cian
+ - Added MomentumSpectrum.py and BSpectrum.root as example files for the class 
+   MomentumSpectrum to options.
+
+!=============================================================================
 </PRE><H1><A NAME="v46r5">2013-10-24 - GaussSys v46r5</A></H1><PRE>
 <H2><A NAME="Note"For development and Upgrade studies. 
     </A></H2>

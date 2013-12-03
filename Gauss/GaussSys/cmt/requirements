@@ -1,5 +1,5 @@
 package GaussSys
-version v46r5
+version v46r6
 
 branches cmt doc
 
@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-use Gauss               v46r5   Sim
+use Gauss               v46r6   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
 use LCG_Settings        v66r0p1 
@@ -25,11 +25,11 @@ use hijing              v66r0p1 LCG_GeneratorsInterfaces
 use powhegbox           v66r0p1 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
-use GenCuts             v3r7    Gen
-use GENSER              v13r0   Gen
-use EvtGen              v13r8   Gen
+use GenCuts             v3r8    Gen
+use GENSER              v13r0p1 Gen
+use EvtGen              v13r10  Gen
 use Mint                v2r2    Gen
-use EvtGenExtras        v3r9    Gen
+use EvtGenExtras        v3r10   Gen
 use Generators          v14r6   Gen
 use LbPythia            v14r2   Gen
 
@@ -54,7 +54,7 @@ use LbHijing            v9r0p1  Gen
 use LbMIB               v7r0p1  Gen
 
 # Generators packages: LHCb particle gun generator
-use LbPGuns             v4r1    Gen
+use LbPGuns             v4r1p1  Gen
 
 # Simulation basic packages
 use GiGa        	v20r2p2	  Sim     
