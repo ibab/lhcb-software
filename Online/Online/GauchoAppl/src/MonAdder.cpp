@@ -179,13 +179,16 @@ void *MonAdder::ReAllocate(int incsiz)
 
 void MonAdder::TaskName(std::string &server, std::string &tname, std::string &tgen)
 {
+  printf("Comparing Server %s with %s...",server.c_str(),this->m_taskPattern.c_str());
   bool status = boost::regex_search(server,m_taskexp);
   if (status)
   {
+    printf("=====>SUCCESS\n");
     tname = server;
     tgen = "";
     return;
   }
+  printf("FAILED\n");
   tname = "";
   tgen = "";
 }
