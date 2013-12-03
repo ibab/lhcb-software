@@ -11,7 +11,7 @@
 #include "Kernel/ITagger.h"
 
 //from ROOT
-#include "TMVA/Reader.h"
+//#include "TMVA/Reader.h"
 
 // interface
 #include "Kernel/IParticleDescendants.h"
@@ -19,6 +19,22 @@
 #include "Kernel/ITriggerTisTos.h"
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/IVertexFit.h"
+
+// mva classes
+#include "mva_charmtagger_reco14/train_D0_Kpi_BDT.C"
+#include "mva_charmtagger_reco14/train_D0_Kpipipi_BDT.C"
+//#include "mva_charmtagger_reco14/train_D0_Kspipi_BDT.C"
+#include "mva_charmtagger_reco14/train_D0_Kpipi0_BDT.C"
+#include "mva_charmtagger_reco14/train_Dp_Kpipi_BDT.C"
+#include "mva_charmtagger_reco14/train_Dp_Kspi_BDT.C"
+#include "mva_charmtagger_reco14/train_D0_KpiX_BDT.C"
+#include "mva_charmtagger_reco14/train_D0_KeX_BDT.C"
+#include "mva_charmtagger_reco14/train_D0_KmuX_BDT.C"
+#include "mva_charmtagger_reco14/train_Dstar_D0_Kspipi_BDT.C"
+#include "mva_charmtagger_reco14/train_Dp_KpiX_BDT.C"
+#include "mva_charmtagger_reco14/train_Dp_KeX_BDT.C"
+#include "mva_charmtagger_reco14/train_Dp_KmuX_BDT.C"
+
 
 // from local
 #include <list>
@@ -115,9 +131,10 @@ private:
 
   float m_P0_Cal_charm, m_P1_Cal_charm, m_Eta_Cal_charm;
 
-  std::string  m_MvaFileDir;
+  //std::string  m_MvaFileDir;
 
-  std::map< std::string,TMVA::Reader* > m_readers;
+  //std::map< std::string,TMVA::Reader* > m_readers;
+  std::map< std::string,IClassifierReader* > m_classifiers;
   
   float m_eval_mode;
   float m_eval_recverts, m_eval_sigBpt, m_eval_ntrks;

@@ -7,6 +7,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2013-12-02 - Riccardo Cenci
+ - TaggerCharmTool: switched from using weights.xml file for MVA's to C++ classes 
+
 ! 2013-12-02 - Marco Clemencic
  - Fixed CMake configuration.
 

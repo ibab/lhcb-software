@@ -47,8 +47,6 @@ DECLARE_TOOL_FACTORY( TaggerCharmTool )
   declareProperty( "CharmInclTagLocations", m_CharmInclTagLocations); // = "Phys/StdLooseD02KPi/Particles");
   declareProperty( "CharmStarTagLocations", m_CharmStarTagLocations); // = "Phys/StdLooseD02KPi/Particles");
 
-  declareProperty( "MvaFileDirectory", m_MvaFileDir = "$FLAVOURTAGGINGROOT/src/mva_charmtagger_reco14" );
-
   declareProperty( "Charm_P0_Cal",           m_P0_Cal_charm   = 0.3371); 
   declareProperty( "Charm_P1_Cal",           m_P1_Cal_charm   = 0.9111); 
   declareProperty( "Charm_Eta_Cal",          m_Eta_Cal_charm  = 0.3121);
@@ -105,71 +103,69 @@ StatusCode TaggerCharmTool::initialize()
 
   m_nnet = tool<INNetTool> ( "NNetTool_MLP", this);
 
-  //load tmva readers
-  int nFoundReaders = 0;
+//   //load tmva readers
+//   int nFoundReaders = 0;
+  
+  std::map<std::string, std::vector< std::string> > inputVarMap;
+
   for( std::map<std::string, CharmDecayMode>::iterator iter = CharmDecayModeMap.begin(); iter !=CharmDecayModeMap.end(); ++iter)
   {
 
     CharmDecayMode decay = iter->second;
 
-    TMVA::Reader *reader = new TMVA::Reader("Silent");
+    std::vector< std::string > inputVars;
     
-    reader->AddVariable("RecVerts",&m_eval_recverts);
-    reader->AddVariable("Ntrks",&m_eval_ntrks);
-    reader->AddVariable("SigBpt",&m_eval_sigBpt);
-    reader->AddVariable("Mass",&m_eval_mm);
-    reader->AddVariable("P",&m_eval_p);
-    reader->AddVariable("Pt",&m_eval_pt);
-    reader->AddVariable("DeltaEta",&m_eval_dEta);
+    inputVars.push_back("RecVerts");
+    inputVars.push_back("Ntrks");
+    inputVars.push_back("SigBpt");
+    inputVars.push_back("Mass");
+    inputVars.push_back("P");
+    inputVars.push_back("Pt");
+    inputVars.push_back("DeltaEta");
 
-    reader->AddVariable("log(Probchi2)",&m_eval_probchi2);
-    reader->AddVariable("log(Tau)",&m_eval_tau);
-    reader->AddVariable("log(FlightDist)",&m_eval_fd);
-    reader->AddVariable("log(FlightDistChi2)",&m_eval_fdchi2);
-    reader->AddVariable("log(1-BpvDira)",&m_eval_bpvdira);
-    reader->AddVariable("log(MaxProbNNGhostDaus)",&m_eval_maxProbnnGhostDaus);
+    inputVars.push_back("log(Probchi2)");
+    inputVars.push_back("log(Tau)");
+    inputVars.push_back("log(FlightDist)");
+    inputVars.push_back("log(FlightDistChi2)");
+    inputVars.push_back("log(1-BpvDira)");
+    inputVars.push_back("log(MaxProbNNGhostDaus)");
 
     if (decay.hasK) {
-      reader->AddVariable("log(1-KaonProbNNk)",&m_eval_kProbnnk);
-      reader->AddVariable("log(KaonIppvChi2)",&m_eval_kIppvchi2);
-      reader->AddVariable("log(KaonIpMinChi2)",&m_eval_kIpMinchi2);
+      inputVars.push_back("log(1-KaonProbNNk)");
+      inputVars.push_back("log(KaonIppvChi2)");
+      inputVars.push_back("log(KaonIpMinChi2)");
     }
-    
+ 
     if (decay.hasE)
-      reader->AddVariable("log(1-ElecProbNNe)",&m_eval_eProbnne);
+      inputVars.push_back("log(1-ElecProbNNe)");
 
     if (decay.hasMu)
-      reader->AddVariable("log(1-MuonProbNNmu)",&m_eval_muProbnnmu);
+      inputVars.push_back("log(1-MuonProbNNmu)");
 
     if (decay.hasDstar) {
-      reader->AddVariable("DstarDeltaM",&m_eval_dstarDm);
+      inputVars.push_back("DstarDeltaM");
     }
-    
-    std::string wmvaName = m_MvaFileDir + "/train_" + decay.mode +"_BDT.weights.xml";
-    if ( wmvaName.compare(0,1,"$")==0 ) {
-      int i = wmvaName.find_first_of("/");
-      int len = wmvaName.length();
-      const std::string env = wmvaName.substr(1, i-1);
-      std::string tmpStr = ( std::string(getenv(env.c_str())) + wmvaName.substr(i,len-i+1));
-      if ( msgLevel(MSG::DEBUG) )
-        debug()<< " directory "<< wmvaName << " resolved "<< tmpStr <<endreq;
-      wmvaName = tmpStr;
-    }
-    ifstream mvaFile(wmvaName.data());
-    if (mvaFile.good()) {
-      mvaFile.close();
-      reader->BookMVA("myMVA",wmvaName);
-      nFoundReaders++;
-    } else {
-      reader = NULL;
-      if ( msgLevel(MSG::DEBUG) )      debug()<<"Reader file "<<wmvaName<<" not found"<<endreq;
-    }
-
-    m_readers[iter->first] = reader;
-    
+  
+    inputVarMap[decay.mode] = inputVars;
+  
   }
 
-  if ( msgLevel(MSG::DEBUG) )  debug() << " Number of TMVA readers found: " << nFoundReaders << endreq;
+//   if ( msgLevel(MSG::DEBUG) )  debug() << " Number of TMVA readers found: " << nFoundReaders << endreq;
+
+  //initialize classifier map
+  m_classifiers["D0_Kpi"] = new D0_Kpi::ReadBDT(inputVarMap["D0_Kpi"]);
+  m_classifiers["D0_Kpipipi"] = new D0_Kpipipi::ReadBDT(inputVarMap["D0_Kpipipi"]);
+  m_classifiers["D0_Kspipi"] = NULL; //new D0_Kspipi::ReadBDT(inputVarMap["D0_Kspipi"]);
+  m_classifiers["D0_Kpipi0"] = new D0_Kpipi0::ReadBDT(inputVarMap["D0_Kpipi0"]);
+  m_classifiers["Dp_Kpipi"] = new Dp_Kpipi::ReadBDT(inputVarMap["Dp_Kpipi"]);
+  m_classifiers["Dp_Kspi"] = new Dp_Kspi::ReadBDT(inputVarMap["Dp_Kspi"]);
+  m_classifiers["D0_KpiX"] = new D0_KpiX::ReadBDT(inputVarMap["D0_KpiX"]);
+  m_classifiers["D0_KeX"] = new D0_KeX::ReadBDT(inputVarMap["D0_KeX"]);
+  m_classifiers["D0_KmuX"] = new D0_KmuX::ReadBDT(inputVarMap["D0_KmuX"]);
+  m_classifiers["Dstar_D0_Kspipi"] = new Dstar_D0_Kspipi::ReadBDT(inputVarMap["Dstar_D0_Kspipi"]);
+  m_classifiers["Dp_KpiX"] = new Dp_KpiX::ReadBDT(inputVarMap["Dp_KpiX"]);
+  m_classifiers["Dp_KeX"] = new Dp_KeX::ReadBDT(inputVarMap["Dp_KeX"]);
+  m_classifiers["Dp_KmuX"] = new Dp_KmuX::ReadBDT(inputVarMap["Dp_KmuX"]);
   
   return sc;
   
@@ -414,33 +410,44 @@ double TaggerCharmTool::getMvaVal(const CharmParticle *cpart, const int nPV, con
   const Particle *part = cpart->part;
   std::string mode = cpart->mode;
 
-  m_eval_recverts = nPV;
-  m_eval_ntrks = multiplicity;
+  CharmDecayMode decay = CharmDecayModeMap[mode];
 
-  m_eval_sigBpt = signalB->pt()/GeV;
+  std::vector<double> inputVals;
+  
+  inputVals.push_back(nPV);
+  inputVals.push_back(multiplicity);
 
-  m_eval_mm =  part->measuredMass()/GeV;
-  m_eval_p = part->p()/GeV;
-  m_eval_pt = part->pt()/GeV;
-  m_eval_dEta = part->momentum().Eta() - signalB->momentum().Eta();
+  inputVals.push_back(signalB->pt()/GeV);
 
-  m_eval_probchi2 = log(cpart->pchi2);      
+  inputVals.push_back(part->measuredMass()/GeV);
+  inputVals.push_back(part->p()/GeV);
+  inputVals.push_back(part->pt()/GeV);
+  inputVals.push_back(part->momentum().Eta() - signalB->momentum().Eta());
 
-  m_eval_tau = log(cpart->tau);      
-  m_eval_fd = log(cpart->fd);      
+  inputVals.push_back(log(cpart->pchi2));      
 
-  m_eval_fdchi2 = log(cpart->fdchi2);      
-  m_eval_bpvdira = log(1-cpart->bpvdira);      
-  m_eval_maxProbnnGhostDaus = log(cpart->maxProbGhostDaus);      
+  inputVals.push_back(log(cpart->tau));      
+  inputVals.push_back(log(cpart->fd));      
 
-  m_eval_kProbnnk = log(1-cpart->kaonProbnnk);      
-  m_eval_kIppvchi2 = log(cpart->kaonIppvchi2);      
-  m_eval_kIpMinchi2 = log(cpart->kaonIpMinchi2);      
+  inputVals.push_back(log(cpart->fdchi2));      
+  inputVals.push_back(log(1-cpart->bpvdira));      
+  inputVals.push_back(log(cpart->maxProbGhostDaus));      
 
-  m_eval_eProbnne = log(1-cpart->elecProbnne);      
-  m_eval_muProbnnmu = log(1-cpart->muonProbnnmu);      
+  if (decay.hasK) {
+    inputVals.push_back(log(1-cpart->kaonProbnnk));      
+    inputVals.push_back(log(cpart->kaonIppvchi2));      
+    inputVals.push_back(log(cpart->kaonIpMinchi2));      
+  }
+ 
+  if (decay.hasE)
+    inputVals.push_back(log(1-cpart->elecProbnne));      
 
-  m_eval_dstarDm = cpart->dstarDm;
+  if (decay.hasMu)
+    inputVals.push_back(log(1-cpart->muonProbnnmu));
+
+  if (decay.hasDstar) {
+    inputVals.push_back(cpart->dstarDm);
+  }
 
   if ( msgLevel(MSG::DEBUG) )
     debug()<<"Set MvaCharm Var: recv "<<nPV<<" mult "<<multiplicity<<" sigpt "<<signalB->pt()/GeV
@@ -453,7 +460,7 @@ double TaggerCharmTool::getMvaVal(const CharmParticle *cpart, const int nPV, con
            <<" dstarm "<<cpart->dstarDm
            <<endreq;
 
-  return m_readers[mode] ? m_readers[mode]->EvaluateMVA("myMVA") : -10.;
+  return m_classifiers[mode] ? m_classifiers[mode]->GetMvaValue(inputVals) : -10.;
   
 }
 
