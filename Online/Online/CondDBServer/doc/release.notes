@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-12-03 - Marco Clemencic
+ - Minor fix to compile with the latest COOL on gcc48.
+
 ! 2010-01-19 - Marco Clemencic
  - Fixed a couple of compilation warnings.
 

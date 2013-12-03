@@ -31,7 +31,9 @@ apply_tag NEEDS_PYCOOL
 
 use Python      v* LCG_Interfaces -no_auto_imports
 use Reflex      v* LCG_Interfaces -no_auto_imports
-
+private
+use ROOT        v* LCG_Interfaces
+end_private
 use XercesC     v* LCG_Interfaces -no_auto_imports
 
 use DIM v* Online
