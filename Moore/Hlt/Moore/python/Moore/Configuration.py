@@ -10,6 +10,7 @@ from Gaudi.Configuration import *
 from Configurables import HltConf
 from Configurables import GaudiSequencer
 from Configurables import LHCbApp, L0Conf, L0DUFromRawAlg
+from Configurables import DecodeRawEvent, RawEventFormatConf
 
 import GaudiKernel.ProcessJobOptions
 from  ctypes import c_uint
@@ -62,7 +63,8 @@ class Moore(LHCbConfigurableUser):
     ## Possible used Configurables
     __used_configurables__ = [ HltConf
                              , LHCbApp
-                             , L0Conf ]
+                             , L0Conf
+                             , DecodeRawEvent ]
 
 
     __slots__ = {
@@ -303,6 +305,39 @@ class Moore(LHCbConfigurableUser):
                 persistency=self.getProp("Persistency")
         from GaudiConf import IOExtension
         IOExtension(persistency).inputFiles(files,clear=True)
+        
+    def _setRawEventLocations(self):
+        """
+        Check that I can set DecodeRawEvent.py options correctly.
+        """
+        #if not set, I will override the inputs with the "Pit locations"
+        if (not DecodeRawEvent().isPropertySet("OverrideInputs")) or DecodeRawEvent().getProp("OverrideInputs") is None:
+            #default version which comes out of the Pit,
+            #currently just DAQ/RawEvent
+            DecodeRawEvent().OverrideInputs="Pit" 
+            return
+        from RawEventCompat.Configuration import _checkv
+        from Configurables import RawEventFormatConf
+        RawEventFormatConf().loadIfRequired()
+        #if set explicitly to the pit locations, all is good already
+        if _checkv(DecodeRawEvent().getProp("OverrideInputs"))==_checkv("Pit"):
+            return
+        #else it's a screw-up
+        if self.getProp("RunOnline"):
+            raise ValueError("When running in Online Mode, you'd better not try and reset the RawEventLocations, this is baaaad")
+        if self.getProp("UseTCK"):
+            raise ValueError("You are trying to reset RawEvent inputs/outputs when running from a TCK, this won't work because they are fixed inside the TCK anyway! (they're part of the Hlt sequence), try adding RecombineRawEvent() or RawEventJuggler() instead, or some other such trick.")
+        if self.getProp("generateConfig"):
+            raise ValueError("When generating a TCK, you'd better not be trying to overwrite the RawEvent input/output locations, this would be a disaster!, try adding RecombineRawEvent() or RawEventJuggler() instead or some other such trick.")
+        # if input is MDF, RAW, DIGI, XDIGI, then raise an error,
+        # these locations are always "DAQ/RawEvent"
+        files = self.getProp('inputFiles')
+        if files is None or not len(files):
+            return
+        
+        ext=files[0].split('.')[-1].strip().split('?')[0].strip().upper()
+        if ext in ["MDF","RAW","DIGI","XDIGI"]:
+            raise ValueError("When running from a DIGI, XDIGI or RAW file, the only raw event location is DAQ/RawEvent, but you're resetting it into"+DecodeRawEvent().getProp("OverrideInputs"))
     
     def _configureOutput(self):
         fname = self.getProp('outputFile')
@@ -785,6 +820,9 @@ class Moore(LHCbConfigurableUser):
         # Need a defined HistogramPersistency to read some calibration inputs!!!
         ApplicationMgr().HistogramPersistency = 'ROOT'
         self._outputLevel()
+        
+        #set the decoders to read from the default location
+        self._setRawEventLocations()
         
         if self.getProp('UseDBSnapshot') : self._configureDBSnapshot()
         
