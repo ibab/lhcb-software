@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import ROOT
 import PyCintex
 cpp = PyCintex.makeNamespace('')
