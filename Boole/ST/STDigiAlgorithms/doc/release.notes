@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+! 2013-12-03 - Jianchun Wang
+ - Translate utDigi.opts to utDigi.py
+
 ! 2013-10-29 - Jianchun Wang
  - Revise UT signal pulse shape and crosstalk.
 
