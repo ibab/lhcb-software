@@ -30,6 +30,9 @@ FTRawBankEncoder::FTRawBankEncoder( const std::string& name,
   //== These parameters should eventually come from the Detector Element
   m_nbBanks = 48;
   m_nbSipmPerTELL40 = 128;
+
+  declareProperty("OutputLocation", m_outputLocation = LHCb::RawEventLocation::Default, "RawBank output location");  
+
 }
 //=============================================================================
 // Destructor
@@ -60,7 +63,7 @@ StatusCode FTRawBankEncoder::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   LHCb::FTClusters* clusters = get<LHCb::FTClusters>(LHCb::FTClusterLocation::Default );
-  LHCb::RawEvent* event = getOrCreate<LHCb::RawEvent,LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+  LHCb::RawEvent* event = getOrCreate<LHCb::RawEvent,LHCb::RawEvent>( m_outputLocation );
   
   int codingVersion = 0;
 
@@ -69,6 +72,7 @@ StatusCode FTRawBankEncoder::execute() {
       m_sipmData[iBank][iPm].clear();
     }
   }
+
 
   for ( LHCb::FTClusters::const_iterator itC = clusters->begin(); clusters->end() != itC; ++itC ) {
     LHCb::FTChannelID id = (*itC)->channelID();
@@ -109,6 +113,7 @@ StatusCode FTRawBankEncoder::execute() {
       m_sipmData[bankNumber][sipmNumber][0] += 1;
     }
   }
+
 
   //== Now build the banks: We need to put the 16 bits content into 32 bits words.
 

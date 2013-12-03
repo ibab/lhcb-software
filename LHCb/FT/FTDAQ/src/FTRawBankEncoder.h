@@ -30,5 +30,8 @@ private:
   int m_nbBanks;
   int m_nbSipmPerTELL40;
   std::vector<std::vector<std::vector<unsigned int> > > m_sipmData;
+
+  std::string m_outputLocation; 
+
 };
 #endif // FTRAWBANKENCODER_H
