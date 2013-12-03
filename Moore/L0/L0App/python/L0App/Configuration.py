@@ -5,7 +5,7 @@ High-level configuration tool for running L0Emulation
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from LHCbKernel.Configuration import *
-from Configurables import LHCbApp, L0Conf, L0DUFromRawAlg, DecodeRawEvent
+from Configurables import LHCbApp, L0Conf, DecodeRawEvent
 
 class L0App(LHCbConfigurableUser):
     ## Possible used Configurables
@@ -52,6 +52,16 @@ class L0App(LHCbConfigurableUser):
             
             conf.setProp(p,self.getProp(p))
             #print "setting", p
+    
+    def _setRawEventLocations(self):
+        """
+        Copied from Moore, check the raw event locations are set correctly
+        """
+        if (not DecodeRawEvent().isPropertySet("OverrideInputs")) or DecodeRawEvent().getProp("OverrideInputs") is None:
+            #default version which comes out of the Pit,
+            #currently just DAQ/RawEvent
+            DecodeRawEvent().OverrideInputs="Pit" 
+        
     
     def _configureOutput(self):
         """ Copied from Moore, handle output to DST or MDF
@@ -101,14 +111,13 @@ class L0App(LHCbConfigurableUser):
 	
 	importOptions( "$L0TCK/L0DUConfig.opts" )
         
+        self._setRawEventLocations()
+        
         ############## The L0 Part  ###################
         
-        # What is this for, and why isn't it in L0Conf?
-        from Configurables import L0DUFromRawTool
-        l0du   = L0DUFromRawAlg("L0DUFromRaw")
-        l0du.addTool(L0DUFromRawTool,name = "L0DUFromRawTool")
-        l0du = getattr( l0du, 'L0DUFromRawTool' )
-        l0du.StatusOnTES         = False
+        from DAQSys.Decoders import DecoderDB
+        l0du=DecoderDB["L0DUFromRawTool"]
+        l0du.Properties["StatusOnTES"] = False
         
         #configure L0 Sequence
         l0seq = GaudiSequencer("L0")
@@ -123,7 +132,7 @@ class L0App(LHCbConfigurableUser):
             L0Conf().setProp("ReplaceL0BanksWithEmulated",True)
         else:
             L0Conf().setProp("SimulateL0",True)
-            
+        
         #done, that was quite easy, now for the output files
         self._configureOutput()
         

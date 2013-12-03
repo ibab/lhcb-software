@@ -4,6 +4,10 @@
 ! Purpose     : An LHCb application to run L0 Emulation
 !-----------------------------------------------------------------------------
 
+! 2013-12-03 - Rob Lambert
+ - Replace setting a decoder property with setting the DecoderDB
+ - Add auto-reconfiguration of input locations, default is like DIGI or pit
+
 ! 2013-11-18 - Rob Lambert
  - Replace importOptions of DecodeRawEvent with configurable
 
