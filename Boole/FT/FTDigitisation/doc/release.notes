@@ -4,6 +4,11 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2013-12-04 - Jacco de Vries
+ - Fixed MCFTDigit::MCFTDigit call to match new FTDigitisation implementation
+ - Added on 2013-12-03 : FTNoiseCreator implementation for thermal noise,
+    afterpulsing and cross-talk.
+
 ! 2013-12-02 - Marco Clemencic
  - Fixed segmentation fault during genconf (on some platforms).
 

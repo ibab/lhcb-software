@@ -397,8 +397,9 @@ StatusCode FTNoiseCreator::execute() {
     plot(noiseADCs[i]    , "noiseADCcount", "Noise ADC count; Noise ADC count", 0. , 30. ,30);
     plot(noiseChannels[i], "noiseChannels", "Noise channelID; Noise channelID", 0., 800000., 800000);
 
-    const std::map< const LHCb::MCHit*, double > MCHitMapDummy;
-    MCFTDigit* noiseMCDigit = new MCFTDigit( noiseChannels[i], noiseADCs[i], MCHitMapDummy );
+    //const std::map< const LHCb::MCHit*, double > MCHitMapDummy;
+    MCFTDeposit* dummyDeposit = 0;
+    MCFTDigit* noiseMCDigit = new MCFTDigit( noiseChannels[i], noiseADCs[i], dummyDeposit );
     try { mcDigitsCont->add( noiseMCDigit ); }
     catch(GaudiException) { debug() << "Caught GaudiException: Noise hit " << addOK
        << " not inserted due to faulty random generated key" << endmsg; 
