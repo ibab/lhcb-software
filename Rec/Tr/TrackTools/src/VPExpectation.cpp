@@ -212,7 +212,6 @@ IVPExpectation::Info VPExpectation::scan(const LHCb::Track& aTrack,
 
         nHits.expectedZ.push_back(z);
 
-        //TODO: this is probably not applicable to VP...
 //      unsigned int station = ((*iterV)->sensorNumber()%64)/2 ;
 //      unsigned int side    = ((*iterV)->sensorNumber()%2) ;
 //      unsigned int type    = ((*iterV)->sensorNumber()/64) ;
@@ -247,116 +246,6 @@ bool VPExpectation::isInside(const DeVPSensor* sensor,
   if(sc) return true;
 
   return false;
-
-//   Gaudi::XYZPoint trackPos(xLine.value(z),yLine.value(z),z);
-//   StatusCode sc = sensor->isInActiveArea(sensor->globalToLocal(trackPos));
-//   if(sc) return true;
-
-//   trackPos = Gaudi::XYZPoint(xLine.value(z+0.504),yLine.value(z+0.504),z+0.504);
-//   sc = sensor->isInActiveArea(sensor->globalToLocal(trackPos));
-//   if(sc) return true;
-//
-//   trackPos = Gaudi::XYZPoint(xLine.value(z-0.504),yLine.value(z-0.504),z-0.504);
-//   sc = sensor->isInActiveArea(sensor->globalToLocal(trackPos));
-//   if(sc) return true;
-//
-//   trackPos = Gaudi::XYZPoint(xLine.value(z+2.804),yLine.value(z+2.804),z+2.804);
-//   sc = sensor->isInActiveArea(sensor->globalToLocal(trackPos));
-//   if(sc) return true;
-//
-//   trackPos = Gaudi::XYZPoint(xLine.value(z-2.804),yLine.value(z-2.804),z-2.804);
-//   sc = sensor->isInActiveArea(sensor->globalToLocal(trackPos));
-//   if(sc) return true;
-
-//   return false;#
-
-
-
-
-
-
-//   StatusCode sc = sensor->isInActiveArea(sensor->globalToLocal(trackPos));
-//   if(!sc) return false;
-//   return true;
-
-//   VP1
-// 175.004
-// 173.996
-// 0.504
-//   VP2
-// 177.304
-// 171.696
-// 2.804
-/*
-
-  if ( fabs( z-sensor->z() )>1. ) {
-    return false;
-  }
-
-  double sensWidth = 14.5;
-  double innerR = 5.1;
-
-  // left sensor (L-shape not gamma shape)
-  if ( sensor->isLeft() ) {
-    // verticle ladders first
-    if ( trackPos.x() < (innerR+2.*sensWidth) and trackPos.x() > innerR ) {
-      if ( trackPos.y() < (3.*sensWidth-innerR) and trackPos.y() > (-innerR) ) {
-        return true;
-      }
-    }
-    // horizontal ladders
-    if ( trackPos.x() < (3.*sensWidth-innerR) and trackPos.x() > (-innerR) ) {
-      if ( trackPos.y() < (-innerR) and trackPos.y() > (-innerR-2.*sensWidth) ) {
-        return true;
-      }
-    }
-    return false;
-  // right sensor (backwards gamma shape)
-  } else if (sensor->isRight() ) {
-    // verticle ladders first
-    if ( trackPos.x() < (-innerR) and trackPos.x() > (-innerR - 2.*sensWidth) ) {
-      if ( trackPos.y() < (innerR) and trackPos.y() > (innerR-3.*sensWidth) ) {
-        return true;
-      }
-    }
-    // horizontal ladders
-    if ( trackPos.x() < (innerR) and trackPos.x() > (innerR-3.*sensWidth) ) {
-      if ( trackPos.y() < (innerR+2.*sensWidth) and trackPos.y() > (innerR) ) {
-        return true;
-      }
-    }
-    return false;
-  }
-  return false;*/
-
-
-//   // check whole sensor readout
-// //   Doesnt seem VP needs this
-// //  if( ! sensor->isReadOut() ) return false;
-//   // get the strip corresponding to the point
-//   // also checks if local point is in active area
-//   Gaudi::XYZPoint trackPos(xLine.value(z),yLine.value(z),z);
-//   Gaudi::XYZPoint localPoint = sensor->globalToLocal(trackPos);
-//   //std::cout << "isInside(" << xLine.value(z) << "," << yLine.value(z) << "," << (z) << "): type " << (sensor->isSquare() ? "square" : (sensor->isX() ? "X" : (sensor->isY() ? "Y" : "unknown"))) << " lv " << ((IGeometryInfo *)(sensor->geometry()))->belongsToPath(trackPos) << std::endl;
-//   //std::cout << "isInside(): local (" << localPoint.x() << "," << localPoint.y() << "," << localPoint.z() << ") ladder " << sensor->squareType()->WhichLadder(localPoint) << " lv " << sensor->geometry()->lvolumeName() << std::endl;
-//   LHCb::VPChannelID channel;
-//   double stripFraction;
-//   double stripPitch;
-//   std::pair <double,double> temp(stripFraction, stripPitch);
-//   bool sc = isInsideChildren((IGeometryInfo *)(sensor->geometry()),trackPos);
-// //   bool sc = sensor->squareType()->isInside(trackPos);
-// //   StatusCode sc = sensor->squareType()->isInActiveArea(localPoint);
-// //   StatusCode sc = sensor->pointToChannel(trackPos,channel,temp);
-// //   StatusCode sc = sensor->pointToChannel(trackPos,channel,stripFraction,
-// // 					 stripPitch);
-//   if(!sc) {
-//     //std::cout << "isInside(): pointToChannel failed" << std::endl;
-//     return false; // was not in a channel
-//   }
-//   // can finally test state of nearest strip
-// //   return sensor->OKStrip(channel.strip());
-//   //std::cout << "isInside(): pointToChannel succeeded" << std::endl;
-//   return true;
 }
 
 bool VPExpectation::isInsideChildren(const IGeometryInfo* igi, const Gaudi::XYZPoint globalPoint) const{
