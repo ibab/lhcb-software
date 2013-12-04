@@ -303,12 +303,15 @@ StatusCode BTaggingAnalysis::execute() {
   //------------------------------------------------------------------------------
   debug()<<"Fill tagger info, vtags: "<<vtags.size()<<endreq;
 
-  std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), pipsign(0), piperr(0), pipPU(0), pPl(0), ptheta(0);
+  std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), pipsign(0), piperr(0), pipsign_Bs(0), piperr_Bs(0), pipPU(0), pPl(0), ptheta(0);
   std::vector<float> ptrtyp(0), plcs(0), pcloneDist(0), ptsal(0), pgprob(0),  pNNgprob(0), pdistPhi(0), pveloch(0), pEOverP(0);
   std::vector<float> pPIDe(0), pPIDm(0), pPIDk(0), pPIDp(0),pPIDfl(0);
   std::vector<float> pPIDNNe(0), pPIDNNm(0), pPIDNNk(0), pPIDNNp(0),pPIDNNpi(0);
-  std::vector<float> pMCID(0), pMCP(0), pMCPt(0), pMCphi(0), pMCx(0), pMCy(0), pMCz(0), pMCPl(0),
-    pmothID(0), pancID(0), pbFlag(0), pxFlag(0), pvFlag(0), pMC_OS_muon_type(0);
+  std::vector<float> 
+    pMCID(0)  , pMCKEY(0), 
+    pMCP(0), pMCPt(0), pMCphi(0), pMCx(0), pMCy(0), pMCz(0), pMCPl(0),
+    pmothID(0), pmothKEY(0), pGmothID(0), pGmothKEY(0), 
+    pancID(0) , pancKEY(0), pbFlag(0), pxFlag(0), pvFlag(0), pMC_OS_muon_type(0);
   std::vector<float> pIPSV(0), pIPSVerr(0), pDOCA(0), pDOCAerr(0);
   std::vector<float> pdeta(0), pdphi(0), pdQ(0);
   std::vector<float> ppionCombinedMass(0);
@@ -327,6 +330,7 @@ StatusCode BTaggingAnalysis::execute() {
   //bool fromBS=false;
   //  bool fromBO=false;
   //  bool fromBstar=false;  
+
   for( ip = vtags.begin(); ip != vtags.end(); ++ip ) {
 
     const Particle* axp = (*ip);
@@ -362,6 +366,15 @@ StatusCode BTaggingAnalysis::execute() {
     if(!(axp->particleID().hasBottom())) {
       m_util->calcIP(axp, RecVert, IPsign, IPerr);
       IP=fabs(IPsign); 
+    }
+    
+    //calculate signed IP wrt B-signal decay vertex
+    double IP_Bs(-1000), IPerr_Bs(-1000), IPsign_Bs(-1000);    
+    if(!(axp->particleID().hasBottom()) &&   AXBS->endVertex()!=0) {
+      m_util->calcIP(axp, AXBS->endVertex(), IPsign_Bs, IPerr_Bs);
+      IP_Bs=fabs(IPsign_Bs); 
+      debug()<<" IP wrt B decay vertex="<<IP_Bs<<" IPsign_Bs="<<IPsign_Bs<<" IPerr_Bs="<<IPerr_Bs<<endreq;
+      
     }
 
     //calculate min IP wrt all pileup vtxs 
@@ -421,6 +434,8 @@ StatusCode BTaggingAnalysis::execute() {
     pip         .push_back(IP);
     pipsign     .push_back(IPsign);
     piperr      .push_back(IPerr);
+    pipsign_Bs  .push_back(IPsign_Bs);
+    piperr_Bs   .push_back(IPerr_Bs);
     pipPU       .push_back(IPPU);
     plcs        .push_back(lcs);
     pcloneDist  .push_back(cloneDist);
@@ -545,12 +560,17 @@ StatusCode BTaggingAnalysis::execute() {
     //store MC info of tagging candidate
     if (m_EnableMC) {
       float MCP= 0.0, MCPt= 0.0, MCPl=0.0, MCphi=-999.0, MCx= -999.0, MCy= -999.0, MCz= -999.0;
-      long  MCID = 0, mothID= 0, ancID = 0, bFlag = 0, xFlag = 0, MC_OS_muon_type = -1;
+      long  MCID = 0, MCKEY = 0, 
+            mothID= 0, mothKEY=0, 
+            GmothID= 0, GmothKEY=0, 
+            ancID = 0, ancKEY=0,
+            bFlag = 0, xFlag = 0, MC_OS_muon_type = -1;
       debug()<<" Going to look for associated MC particles "<<endreq;      
       const MCParticle* mcp = m_assoc->relatedMCP( axp );
       if( mcp ) {
         MCID = mcp->particleID().pid();
-        debug()<< " Associated MCParticle PID="<<MCID<<endreq;
+        MCKEY = mcp->key();
+        debug()<< " Associated MCParticle PID="<<MCID<<" with key="<<MCKEY<<endreq;
         MCP = mcp->momentum().P()/GeV;
         MCPt = mcp->pt()/GeV;
         if(m_BS) MCPl = mcp->momentum().Dot(m_BS->momentum())/GeV;
@@ -559,28 +579,35 @@ StatusCode BTaggingAnalysis::execute() {
         const MCParticle* mother = mcp->mother();
         if(mother) {
           mothID = mother->particleID().pid();
-          debug()<< " Associated Mother PID="<<mothID<<endreq;
+          mothKEY = mother->key();
+          debug()<< " Associated Mother PID="<<mothID<<" with key="<<mothKEY<<endreq;
           const SmartRefVector<MCVertex>& motherVtx = mother->endVertices();
           if(motherVtx.size()) {
             MCx = motherVtx.at(0)->position().x()/mm;
             MCy = motherVtx.at(0)->position().y()/mm;
             MCz = motherVtx.at(0)->position().z()/mm;
           }
+          const MCParticle* Gmother = mother->mother();
+          if(Gmother) {
+            GmothID = Gmother->particleID().pid();
+            GmothKEY = Gmother->key();
+            debug()<< " Associated Grand-Mother PID="<<GmothID<<" with key="<<GmothKEY<<endreq;            
+          }
+          
         }
-
+        
         const MCParticle* ancestor = m_util->originof(mcp) ;
-
         if (ancestor){          
-          //std::cout<<" Ancestor ID="<<ancestor->particleID().pid()<<" hasBottom="<< ancestor->particleID().hasBottom() <<std::endl;        
           ancID = ancestor->particleID().pid();
-          debug()<< " Associated ancestor PID="<<ancID<<endreq;
+          ancKEY = ancestor->key();
+          debug()<< " Associated ancestor PID="<<ancID<<" with key="<<ancKEY<<endreq;
           if( ancestor->particleID().hasBottom() ) {
             bFlag = 1;            
             if(m_BS) if( ancestor == m_BS ) {
               bFlag = -1;
               debug() <<" Warning: tag from signal! ID=" << mcp->particleID().pid() 
                       <<" P="<< mcp->momentum().P() << endreq;
-            }
+            }            
           }
           if(m_BS) xFlag = m_util->comes_from_excitedB(m_BS, mcp);
           if(xFlag>0) debug()<<" comes_from_excitedB xFlag="<< xFlag <<
@@ -601,6 +628,7 @@ StatusCode BTaggingAnalysis::execute() {
       }//if( mcp )
 
       pMCID  .push_back(MCID);
+      pMCKEY .push_back(MCKEY);
       pMCP   .push_back(MCP);
       pMCPt  .push_back(MCPt);
       pMCPl  .push_back(MCPl);
@@ -609,13 +637,18 @@ StatusCode BTaggingAnalysis::execute() {
       pMCy   .push_back(MCy);
       pMCz   .push_back(MCz);
       pmothID.push_back(mothID);
+      pmothKEY.push_back(mothKEY);
+      pGmothID.push_back(GmothID);
+      pGmothKEY.push_back(GmothKEY);
       pancID .push_back(ancID);
+      pancKEY.push_back(ancKEY);
       pxFlag .push_back(xFlag);
       pbFlag .push_back(bFlag);
       pMC_OS_muon_type.push_back(MC_OS_muon_type);
       
+      }
+      
     }
-  }
   
 
   if(pID.size() > 199) {
@@ -629,11 +662,13 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("Pt",      pPt, "N", 200);
   tuple -> farray ("Pl",      pPl, "N", 200);
   tuple -> farray ("phi",     pphi, "N", 200);
-  tuple -> farray ("theta",     ptheta, "N", 200);
+  tuple -> farray ("theta",   ptheta, "N", 200);
   tuple -> farray ("ch",      pch, "N", 200);
   tuple -> farray ("ip",      pip, "N", 200);
-  tuple -> farray ("ipsign",      pipsign, "N", 200);
+  tuple -> farray ("ipsign",  pipsign, "N", 200);
   tuple -> farray ("iperr",   piperr, "N", 200);
+  tuple -> farray ("iperr_Bs",piperr_Bs, "N", 200);
+  tuple -> farray ("ipsign_Bs",pipsign_Bs, "N", 200);
   tuple -> farray ("ipPU",    pipPU, "N", 200);
   tuple -> farray ("ipmean",  pipmean, "N", 200);
   tuple -> farray ("nippu",   pnippu, "N", 200);
@@ -694,6 +729,7 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("PIDNNpi",  pPIDNNpi, "N", 200);
   if (m_EnableMC) {
     tuple -> farray ("MCID",    pMCID, "N", 200);
+    tuple -> farray ("MCKEY",   pMCKEY, "N", 200);
     tuple -> farray ("MCP",     pMCP, "N", 200);
     tuple -> farray ("MCPt",    pMCPt, "N", 200);
     tuple -> farray ("MCPl",    pMCPl, "N", 200);
@@ -702,7 +738,11 @@ StatusCode BTaggingAnalysis::execute() {
     tuple -> farray ("MCy",     pMCy, "N", 200);
     tuple -> farray ("MCz",     pMCz, "N", 200);
     tuple -> farray ("mothID",  pmothID, "N", 200);
+    tuple -> farray ("mothKEY", pmothKEY, "N", 200);
+    tuple -> farray ("GmothID",  pGmothID, "N", 200);
+    tuple -> farray ("GmothKEY", pGmothKEY, "N", 200);
     tuple -> farray ("ancID",   pancID, "N", 200);
+    tuple -> farray ("ancKEY",  pancKEY, "N", 200);
     tuple -> farray ("bFlag",   pbFlag, "N", 200);
     tuple -> farray ("xFlag",   pxFlag, "N", 200);
     tuple -> farray ("MC_OS_muon_type",   pMC_OS_muon_type, "N", 200);
@@ -723,6 +763,7 @@ StatusCode BTaggingAnalysis::execute() {
   setFilterPassed( true );
   return StatusCode::SUCCESS;
 }
+  
 
 
 //=============================================================================
@@ -1266,15 +1307,18 @@ Particle::ConstVector BTaggingAnalysis::FillSelectedB (Tuple& tuple, const Parti
           << "  daughters, Mass=" << AXBS->momentum().M()/GeV
           << "  pT="<<AXBS->pt()/GeV<< endreq;
 
-  std::vector<float> sigID, sigMothID, sigP, sigPt, sigPhi, sigMass;
+  std::vector<float> sigID, sigKEY, sigmothID, sigmothKEY, sigP, sigPt, sigPhi, sigMass;
   std::vector<float> sigVx, sigVy, sigVz;
-  std::vector<float> sigMCID, sigMCMothID, sigMCP, sigMCPt, sigMCPhi;
+  std::vector<float> sigMCID, sigMCKEY, sigMCmothID, sigMCmothKEY, sigMCGmothID, sigMCGmothKEY,
+                     sigMCancID, sigMCancKEY, 
+                     sigMCP, sigMCPt, sigMCPhi;
   
   Particle::ConstVector::const_iterator ip;
   for ( ip = axdaugh.begin(); ip != axdaugh.end(); ++ip){
     sigID.push_back((*ip)->particleID().pid());
+    sigKEY.push_back((*ip)->key());
     const Particle* mater = m_util->motherof(*ip, axdaugh);
-    if(mater) sigMothID.push_back(mater->particleID().pid()); else sigMothID.push_back(0);
+    if(mater) sigmothID.push_back(mater->particleID().pid()); else sigmothID.push_back(0);
     sigP.push_back((*ip)->p() /GeV);
     sigPt.push_back((*ip)->pt()/GeV);
     sigPhi.push_back((*ip)->momentum().Phi());
@@ -1298,23 +1342,45 @@ Particle::ConstVector BTaggingAnalysis::FillSelectedB (Tuple& tuple, const Parti
         sigMCPt.push_back(mcp->pt()/GeV);
         sigMCPhi.push_back(mcp->momentum().Phi());
         sigMCID.push_back(mcp->particleID().pid());
+        sigMCKEY.push_back(mcp->key());
         const MCParticle* sigmcmother = mcp->mother();
-        if(sigmcmother) sigMCMothID.push_back(sigmcmother->particleID().pid());
-        else sigMCMothID.push_back(0);
-      }
-      else {
+        if(sigmcmother) {
+          sigMCmothID.push_back(sigmcmother->particleID().pid());
+          sigMCmothKEY.push_back(sigmcmother->key());
+          const MCParticle* sigmcGmother = sigmcmother->mother();
+          if(sigmcGmother) {
+            sigMCGmothID.push_back(sigmcGmother->particleID().pid());
+            sigMCGmothKEY.push_back(sigmcGmother->key());
+          } else{
+            sigMCGmothID.push_back(0);
+            sigMCGmothKEY.push_back(0);
+          }
+        } else{
+          sigMCmothID.push_back(0);
+          sigMCmothKEY.push_back(0);
+          sigMCGmothID.push_back(0);
+          sigMCGmothKEY.push_back(0);
+        }
+        
+      } else {
         sigMCP.push_back(0);
         sigMCPt.push_back(0);
         sigMCPhi.push_back(0);
         sigMCID.push_back(0);
-        sigMCMothID.push_back(0);
+        sigMCKEY.push_back(0);
+        sigMCmothID.push_back(0);
+        sigMCmothKEY.push_back(0);
+        sigMCGmothID.push_back(0);
+        sigMCGmothKEY.push_back(0);
       }
     }
   
   }
 
   tuple -> farray ("sID",     sigID, "M", 10);
-  tuple -> farray ("sMothID", sigMothID, "M", 10);
+  tuple -> farray ("sKEY",    sigKEY, "M", 10);
+  tuple -> farray ("sMothID", sigmothID, "M", 10);
+  tuple -> farray ("sMothKEY", sigmothKEY, "M", 10);
   tuple -> farray ("sP",      sigP, "M", 10);
   tuple -> farray ("sPt",     sigPt, "M", 10);
   tuple -> farray ("sPhi",    sigPhi, "M", 10);
@@ -1322,11 +1388,19 @@ Particle::ConstVector BTaggingAnalysis::FillSelectedB (Tuple& tuple, const Parti
   tuple -> farray ("sVx",     sigVx, "M", 10);
   tuple -> farray ("sVy",     sigVy, "M", 10);
   tuple -> farray ("sVz",     sigVz, "M", 10);
-  if (m_EnableMC) tuple -> farray ("sMCID",     sigMCID, "M", 10);
-  if (m_EnableMC) tuple -> farray ("sMCMothID", sigMCMothID, "M", 10);
-  if (m_EnableMC) tuple -> farray ("sMCP",      sigMCP, "M", 10);
-  if (m_EnableMC) tuple -> farray ("sMCPt",     sigMCPt, "M", 10);
-  if (m_EnableMC) tuple -> farray ("sMCPhi",    sigMCPhi, "M", 10);
+  if (m_EnableMC) {
+    tuple -> farray ("sMCID",     sigMCID, "M", 10);
+    tuple -> farray ("sMCKEY",    sigMCKEY, "M", 10);
+    tuple -> farray ("sMCMothID", sigMCmothID, "M", 10);
+    tuple -> farray ("sMCMothKEY", sigMCmothKEY, "M", 10);
+    tuple -> farray ("sMCGMothID", sigMCGmothID, "M", 10);
+    tuple -> farray ("sMCGMothKEY", sigMCGmothKEY, "M", 10);
+    tuple -> farray ("sMCancID", sigMCancID, "M", 10);
+    tuple -> farray ("sMCancKEY", sigMCancKEY, "M", 10);
+    tuple -> farray ("sMCP",      sigMCP, "M", 10);
+    tuple -> farray ("sMCPt",     sigMCPt, "M", 10);
+    tuple -> farray ("sMCPhi",    sigMCPhi, "M", 10);
+  }
   
   return axdaugh;
 }
