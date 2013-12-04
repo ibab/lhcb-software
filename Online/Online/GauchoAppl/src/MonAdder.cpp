@@ -10,7 +10,7 @@
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "AIDA/IHistogram1D.h"
 static int mpty;
-DimServerDns *MonAdder::m_DimDns = 0;
+DimServerDns *MonAdder::m_ServiceDns = 0;
 typedef std::pair<std::string, MonObj*> MonPair;
 extern "C"
 {
@@ -66,7 +66,7 @@ MonAdder::~MonAdder()
   deletePtr(m_RPCser);
   deletePtr(m_rpc);
   deletePtr(m_Dimcmd);
-  deletePtr(m_DimDns);
+  deletePtr(m_ServiceDns);
 }
 
 void MonAdder::Configure()
@@ -80,28 +80,30 @@ void MonAdder::Configure()
   m_outsvcname = m_name+m_serviceName;
   m_cmdname = nodename+"_"+RTL::processName()+"/"+m_MyName+"/"+m_serviceName+"/Timeout";
 //  DimClient::getDnsNode();
-  if (m_DimDns == 0)
-  {
-    std::string cdnsname = DimClient::getDnsNode();
-    std::string sdnsname = DimServer::getDnsNode();
-    toLowerCase(cdnsname);
-    toLowerCase(sdnsname);
-    if (sdnsname == std::string("localhost"))
-    {
-      sdnsname = RTL::nodeNameShort();
-      toLowerCase(sdnsname);
-    }
-    dyn_string *cdns = Strsplit(cdnsname.c_str(),".");
-    dyn_string *sdns = Strsplit(sdnsname.c_str(),".");
-    if (cdns->at(0) != sdns->at(0))
-    {
-      m_DimDns = new DimServerDns(cdnsname.c_str());
-//      printf("Created new DimServerDns with node name %s\n",cdnsname.c_str());
-      m_DimDns->autoStartOn();
-      DimServer::start(m_DimDns, (char*)((RTL::processName()+"//").c_str()));
-    }
-  }
-  m_Dimcmd = new TimeoutCmd(m_DimDns,(char*)m_cmdname.c_str(),this);
+//  if (m_DimDns == 0)
+//  {
+//    std::string cdnsname = DimClient::getDnsNode();
+//    std::string sdnsname = DimServer::getDnsNode();
+//    toLowerCase(cdnsname);
+//    toLowerCase(sdnsname);
+//    if (sdnsname == std::string("localhost"))
+//    {
+//      sdnsname = RTL::nodeNameShort();
+//      toLowerCase(sdnsname);
+//    }
+//    dyn_string *cdns = Strsplit(cdnsname.c_str(),".");
+//    dyn_string *sdns = Strsplit(sdnsname.c_str(),".");
+//    if (cdns->at(0) != sdns->at(0))
+//    {
+//      m_ServiceDns = new DimServerDns(cdnsname.c_str());
+////      printf("Created new DimServerDns with node name %s\n",cdnsname.c_str());
+//      m_DimDns->autoStartOn();
+//      DimServer::start(m_DimDns, (char*)((RTL::processName()+"/").c_str()));
+//    }
+//  }
+  m_ServiceDns->autoStartOn();
+  DimServer::start(m_ServiceDns,(char*)((RTL::processName()+"/").c_str()));
+  m_Dimcmd = new TimeoutCmd(m_ServiceDns,(char*)m_cmdname.c_str(),this);
   m_timer = new AddTimer(this,m_rectmo);
   m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
   m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
@@ -319,7 +321,7 @@ void MonAdder::NewService(DimInfo *, std::string &TaskName, std::string &Service
 //      printf ("First client for adding... Creating our output service...%s\n",m_outsvcname.c_str());
       if (!m_disableOutput)
       {
-        m_outservice = new ObjService(m_ser,m_outsvcname.c_str(),(char*) "C", (void*) &mpty, 4, &m_buffer, &m_usedSize);
+        m_outservice = new ObjService(m_ServiceDns,m_ser,m_outsvcname.c_str(),(char*) "C", (void*) &mpty, 4, &m_buffer, &m_usedSize);
       }
     }
     DimServer::start();

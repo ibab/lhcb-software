@@ -53,6 +53,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
   SegvHandler::instance();
   declareProperty("MyName",          m_MyName       = "");
   declareProperty("InDNS",           m_InputDNS     = "");
+  declareProperty("OutDNS",          m_OutputDNS     = "<dns>");
   declareProperty("SaveRootDir",     m_SaveRootDir  = "/home/beat/Hist/Savesets");
   declareProperty("IsSaver",         m_isSaver      = false);
   declareProperty("SaveInterval",    m_SaveInterval = 900);
@@ -168,6 +169,7 @@ StatusCode AdderSvc::start()
   toLowerCase(nodename);
   toLowerCase(m_AdderClass);
   toLowerCase(m_InputDNS);
+  toLowerCase(m_OutputDNS);
   if (m_AdderClass == "hists")
   {
     servicename = "Histos";
@@ -203,7 +205,19 @@ StatusCode AdderSvc::start()
   std::string ddns(dnsnode ? dnsnode : "");
   StringReplace(m_InputDNS,"<node>",nodename);
   StringReplace(m_InputDNS,"<dns>",ddns);
-
+  if (m_OutputDNS.length() != 0)
+  {
+    StringReplace(m_OutputDNS,"<node>",nodename);
+    StringReplace(m_OutputDNS,"<dns>",ddns);
+  }
+  else
+  {
+    m_OutputDNS = ddns;
+  }
+  if (MonAdder::m_ServiceDns == 0)
+  {
+    MonAdder::m_ServiceDns = new DimServerDns(m_OutputDNS.c_str());
+  }
   m_errh->start();
   if (m_started) return StatusCode::SUCCESS;
   if (m_errh != 0) DimClient::addErrorHandler(m_errh);

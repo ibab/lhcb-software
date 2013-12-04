@@ -194,7 +194,7 @@ public:
 //  std::string m_NamePrefix;
   DimBuffBase *m_oldProf;
 public:
-  static DimServerDns *m_DimDns;
+  static DimServerDns *m_ServiceDns;
   TimeoutCmd *m_Dimcmd;
   BRTLLock *m_lockid;
   BRTLLock m_maplock;
