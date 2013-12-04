@@ -123,7 +123,7 @@ void MonAdder::Configure()
     }
     m_RPCser = new AddSerializer((ObjMap*)&m_hmap);
     m_maplock.m_name = nam;
-    m_rpc = new ObjRPC(m_RPCser,(char*)nam.c_str(), (char*)"I:1;C",(char*)"C", &m_maplock, 0/*this->m_lockid*/);
+    m_rpc = new ObjRPC(m_ServiceDns,m_RPCser,(char*)nam.c_str(), (char*)"I:1;C",(char*)"C", &m_maplock, 0/*this->m_lockid*/);
   }
 }
 
