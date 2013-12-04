@@ -1,14 +1,11 @@
 <?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
-  <argument name="program"><text>../options/run_moore.py</text></argument>
+  <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="timeout">
     <integer>1200</integer>
   </argument>
   <argument name="args"><set>
-    <text>-n</text>
-    <text>1200</text>
-    <text>--l0</text>
-    <text>Physics_September2012</text>
+    <text>../options/Moore_Hlt1And2.py</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
@@ -22,6 +19,11 @@ from Moore.QMTest.MooreTests import compareTimingTableEvents
 
 compareTimingTableEvents(myname,result,causes,stdout,reftable,"Hlt")
 
+savestdout='phys2012.stdout'
+#save stdout
+f=open(savestdout,'w')
+f.write(stdout)
+f.close()
 
 #count error lines, shouldn't be any warnings or errors, ideally
 #error lines here are stupid Gaudi warnings about not being able to navigate to input file, 3 input files means 6 errors.

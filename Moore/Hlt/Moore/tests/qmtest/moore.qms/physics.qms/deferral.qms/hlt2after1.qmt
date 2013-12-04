@@ -17,7 +17,7 @@
   <argument name="validator"><text>
 #print "YES"
 #reftable
-reftable='../refs/physics.deferral.timing.ref'
+reftable='../refs/physics.2012.timing.ref'
 savestdout='hlt2after1.stdout'
 myname='moore.physics.deferral.hlt2after1'
 

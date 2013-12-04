@@ -416,6 +416,8 @@ Hlt2DiMuonAndGamma: 1200
 Hlt2DiMuonAndGammaPreScaler: 1200
 Hlt2DiMuonAndGammaHltFilter: 0
 Hlt2DiMuonAndGammaFilterSequence: 0
+Hlt2BiKalmanFittedForwardTracking_CaloProcessorCaloSeq: 28
+Hlt2BiKalmanFittedForwardTracking_CaloProcessorNeutralProtoPUpdateSeq: 15
 Hlt2BiKalmanFittedPhotons: 0
 Hlt2DiMuonGamma:GoodPhotons: 0
 Hlt2DiMuonAndGammaCombine: 0
@@ -642,6 +644,7 @@ Hlt2TopoE2BodyBBDTL0DUFilter: 1200
 Hlt2TopoE2BodyBBDTHltFilter: 140
 Hlt2TopoE2BodyBBDTFilterSequence: 14
 Hlt2BiKalmanFittedForwardTrackingWithCaloIDChargedProtoPAlg: 14
+Hlt2BiKalmanFittedForwardTracking_CaloProcessorChargedProtoPUpdateSeq: 13
 Hlt2BiKalmanFittedForwardTrackingChargedCaloProtoPCombDLLs: 14
 Hlt2BiKalmanFittedKaonsWithEID: 14
 Hlt2TopoInputKaonsEFilter: 14

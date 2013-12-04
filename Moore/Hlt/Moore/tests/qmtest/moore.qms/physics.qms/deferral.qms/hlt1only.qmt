@@ -15,7 +15,7 @@
   <argument name="validator"><text>
 #print "YES"
 #reftable
-reftable='../refs/physics.deferral.timing.ref'
+reftable='../refs/physics.2012.timing.ref'
 myname='moore.physics.deferral.hlt1only'
 
 from Moore.QMTest.MooreTests import compareTimingTableEvents

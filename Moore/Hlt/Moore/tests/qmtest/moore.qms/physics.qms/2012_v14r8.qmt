@@ -1,0 +1,24 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>ls</text></argument>
+  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
+  <argument name="validator"><text>
+#print "YES"
+#reftable
+reftable='../refs/physics.2012_v14r8.timing.ref'
+myname='moore.physics.2012_v14r8'
+
+
+from Moore.QMTest.MooreTests import compareTimingTableEvents
+
+savestdout='phys2012.stdout'
+#open saved stdout, don't rerun the test!
+f=open(savestdout)
+stdout=f.read()
+f.close()
+
+compareTimingTableEvents(myname,result,causes,stdout,reftable,"Hlt")
+
+</text></argument>
+</extension>
+

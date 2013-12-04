@@ -11,7 +11,7 @@ from Moore.Configuration import Moore
 
 Moore().ThresholdSettings = 'Physics_September2012'
 
-Moore().EvtMax = 1000
+Moore().EvtMax = 1200
 
 Moore().UseDBSnapshot = False
 Moore().ForceSingleL0Configuration = False
