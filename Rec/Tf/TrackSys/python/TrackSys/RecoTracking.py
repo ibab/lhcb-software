@@ -27,12 +27,17 @@ def RecoTracking(exclude=[]):
       vdec=DecoderDB["DecodeVeloRawBuffer/createBothVeloClusters"]
       #set as active to make sure nobody tries to use the DoD service along side...
       vdec.Active=True
+      #set the other algs to inactive, needed for re-running tracking in DaVinci... quite annoying really, see task #19106
+      #there is another way to do this, set vdec.Active=False, but then someone might run a decoder before the createBoth alg, and screw everything up
+      DecoderDB["DecodeVeloRawBuffer/createVeloClusters"].Active=False
+      DecoderDB["DecodeVeloRawBuffer/createVeloLiteClusters"].Active=False
+      
       globalCuts = TrackSys().getProp("GlobalCuts")
       if( "Velo" in globalCuts ) :
          vdec.Properties["MaxVeloClusters"] =  globalCuts["Velo"]
       decs=decs+[vdec]
       
-   from Configurables import RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg
+   #from Configurables import RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg
    decs=decs+decodersForBank(DecoderDB,"TT")
    decs=decs+decodersForBank(DecoderDB,"IT")
    GaudiSequencer("RecoDecodingSeq").Members += [d.setup() for d in decs ]
