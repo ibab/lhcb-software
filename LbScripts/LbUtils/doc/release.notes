@@ -1,5 +1,9 @@
 2013-10-02  Ben Couturier  <ben.couturier@cern.ch>
 
+	* python/LbUtils/Path.py: LBCORE-321 Fixed to recognize CVMFS2 filesystems as CVMFS
+
+2013-10-02  Ben Couturier  <ben.couturier@cern.ch>
+
 	* cmt/requirements: release of version v3r15p1
 
 2013-09-27  Marco Clemencic  <Marco.Clemencic@cern.ch>

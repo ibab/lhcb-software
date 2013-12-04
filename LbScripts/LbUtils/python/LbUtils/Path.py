@@ -221,4 +221,4 @@ def isCVMFS(path):
     Tells if a path is on a CVMFS mount.
     It works only on Linux, for other OSs it returns always false.
     """
-    return _FSType(path) == "cvmfs"
+    return _FSType(path).lower().startswith("cvmfs")
