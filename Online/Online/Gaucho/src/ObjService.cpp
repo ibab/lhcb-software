@@ -13,6 +13,28 @@ ObjService::~ObjService()
 {
 };
 
+ObjService::ObjService (DimServerDns *dns,ObjSerializer *s,const char *name, char *format, void *buff, int siz)
+:DimService(dns,name, format, buff, siz)
+{
+  setup();
+  //m_extBuffer = false;
+  //m_buffer=0;
+  //m_buffersize =0;
+  m_ser = s;
+  //m_runnr = 0;
+  //m_EORservice = false;
+}
+ObjService::ObjService (DimServerDns *dns,ObjSerializer *s,const char *name, char *format, void *buff, int siz, void **extbuff, int *extbuffs)
+:DimService(dns,name, format, buff, siz)
+{
+  setup();
+  m_extBuffer = true;
+  m_buffer = extbuff;
+  m_buffersize = extbuffs;
+  m_ser = s;
+}
+
+
 ObjService::ObjService (ObjSerializer *s,const char *name, char *format, void *buff, int siz)
 :DimService(name, format, buff, siz)
 {

@@ -24,6 +24,8 @@ public:
   ObjService ();
   virtual ~ObjService();
   //ObjService (void *h, const char *name, char *format, void *buff, int siz);
+  ObjService (DimServerDns *dns,ObjSerializer *,const char *name, char *format, void *buff, int siz);
+  ObjService (DimServerDns *dns,ObjSerializer *,const char *name, char *format, void *buff, int siz, void **extbuff, int *extbufs);
   ObjService (ObjSerializer *,const char *name, char *format, void *buff, int siz);
   ObjService (ObjSerializer *,const char *name, char *format, void *buff, int siz, void **extbuff, int *extbufs);
 //  ObjService (const char *name, char *format, void *buff, int siz, void **extbuff, int *extbufs);
