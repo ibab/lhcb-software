@@ -28,6 +28,22 @@ ObjRPC::ObjRPC(ObjSerializer *srv, char *n, char *f_in, char *f_out, BRTLLock *m
   m_maplockid = mlid;
   m_objlockid = olid;
 }
+ObjRPC::ObjRPC(DimServerDns *dns,ObjSerializer *srv, char *n, char *f_in, char *f_out) : DimRpc(dns,n, f_in, f_out)
+{
+  s = srv;
+  buffersize = 0;
+  buffer = 0;
+  m_maplockid = 0;
+  m_objlockid = 0;
+}
+ObjRPC::ObjRPC(DimServerDns *dns,ObjSerializer *srv, char *n, char *f_in, char *f_out, BRTLLock *mlid, BRTLLock *olid) : DimRpc(dns,n, f_in, f_out)
+{
+  s = srv;
+  buffersize = 0;
+  buffer = 0;
+  m_maplockid = mlid;
+  m_objlockid = olid;
+}
 void ObjRPC::rpcHandler()
 {
 //  char toksep[] = " ";

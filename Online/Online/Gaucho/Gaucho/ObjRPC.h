@@ -16,6 +16,8 @@ public:
   ObjRPC();
   ObjRPC(ObjSerializer *, char *, char *, char*);
   ObjRPC(ObjSerializer *, char *, char *, char*, BRTLLock*, BRTLLock *);
+  ObjRPC(DimServerDns *,ObjSerializer *, char *, char *, char*);
+  ObjRPC(DimServerDns *,ObjSerializer *, char *, char *, char*, BRTLLock*, BRTLLock *);
   virtual ~ObjRPC();
   void rpcHandler();
 };
