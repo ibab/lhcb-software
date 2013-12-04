@@ -39,10 +39,13 @@ TaggerProtonSameTool::TaggerProtonSameTool( const std::string& type,
   declareProperty( "ProtonSame_cosTheta_cut",m_cosTheta_cut_protonS = -0.5);
   declareProperty( "ProtonSame_BDT_cut",    m_BDT_cut_protonS   = 0.);
 
-  declareProperty( "ProtonSame_P0_pol",     m_P0_pol_protonS   = 0.4049 );
-  declareProperty( "ProtonSame_P1_pol",     m_P1_pol_protonS   = 0.83   );
-  declareProperty( "ProtonSame_P2_pol",     m_P2_pol_protonS   = -1.99  );
-  declareProperty( "ProtonSame_P3_pol",     m_P3_pol_protonS   = -1.99  );
+  declareProperty( "ProtonSame_P0_pol",     m_P0_pol_protonS   = 0.4892  );
+  declareProperty( "ProtonSame_P1_pol",     m_P1_pol_protonS   = -0.0868 );
+  declareProperty( "ProtonSame_P2_pol",     m_P2_pol_protonS   =  0.     );
+  declareProperty( "ProtonSame_P3_pol",     m_P3_pol_protonS   =  0.     );
+  declareProperty( "ProtonSame_P4_pol",     m_P4_pol_protonS   =  0.     );
+  declareProperty( "ProtonSame_P5_pol",     m_P5_pol_protonS   = -0.2945 );
+
 
 
   declareProperty( "ProtonSame_AverageOmega",  m_AverageOmega   = 0.40 );
@@ -67,7 +70,8 @@ StatusCode TaggerProtonSameTool::initialize()
   if ( msgLevel(MSG::DEBUG) )
     debug() << "ProtonSS calib ctt: P0_pol "<<m_P0_pol_protonS
             << ", P1_pol "<<m_P1_pol_protonS<< ", P2_pol "<<m_P2_pol_protonS
-            << ", P3_pol "<<m_P3_pol_protonS<<endreq;
+            << ", P3_pol "<<m_P3_pol_protonS<< ", P4_pol "<<m_P4_pol_protonS
+            << ", P5_pol "<<m_P5_pol_protonS<<endreq;
   
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
@@ -263,7 +267,9 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
     pn = 1. - ( m_P0_pol_protonS + 
                 m_P1_pol_protonS*bestBDT +  
                 m_P2_pol_protonS*bestBDT*bestBDT + 
-                m_P3_pol_protonS*bestBDT*bestBDT*bestBDT);
+                m_P3_pol_protonS*bestBDT*bestBDT*bestBDT+
+                m_P4_pol_protonS*bestBDT*bestBDT*bestBDT*bestBDT + 
+                m_P5_pol_protonS*bestBDT*bestBDT*bestBDT*bestBDT*bestBDT);
     
   
     if ( msgLevel(MSG::DEBUG) )

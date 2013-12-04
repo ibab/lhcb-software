@@ -20,6 +20,8 @@ tunings = {
 
         #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
 
+        "EnableCharmTagger": "True",
+        "EnableProtonTagger": "True",
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
         #When performing your analisis, please find yourself the cut which maximeze the Eeff
         #Probably if you are using Eeff event per event no cut will be needed
@@ -228,6 +230,9 @@ tunings = {
         "distphi_cut" : 0.005,
         #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
 
+        "EnableCharmTagger": "False",
+        "EnableProtonTagger": "False",
+
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
         #When performing your analisis, please find yourself the cut which maximeze the Eeff
         #Probably if you are using Eeff event per event no cut will be needed
@@ -365,7 +370,6 @@ tunings = {
         "TaggerPionSameTool.PionSame_P2_Cal" : -1.99,
         "TaggerPionSameTool.PionSame_Eta_Cal" : 0.3908,  
 
-        "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedProbability" : 0.42,
         "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedPtmin"       : 0.1,
         "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedIPSmin"      : 2.5,
         "TaggerVertexChargeTool.SVertexOneSeedTool.MinSeedDphimin"     : 0.,
@@ -433,14 +437,14 @@ tunings = {
         "distphi_cut" : 0.005,
         #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
 
+        "EnableCharmTagger": "False",
+        "EnableProtonTagger": "False",
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
         #When performing your analisis, please find yourself the cut which maximeze the Eeff
         #Probably if you are using Eeff event per event no cut will be needed
         #"CombineTaggersProbability.ProbMin_OS" : 0.58,
         #"CombineTaggersProbability.ProbMin" : 0.55,
 
-        "EnableCharmTagger": "False",
-        "EnableProtonTagger": "False",
         "CombineTaggersProbability.P0_Cal_OS" : 0.392, #+/-0.0016
         "CombineTaggersProbability.P1_Cal_OS" : 0.953, #+/-0.017
         "CombineTaggersProbability.Eta_Cal_OS": 0.362, 
@@ -756,6 +760,8 @@ tunings = {
 
         #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
 
+        "EnableCharmTagger": "True",
+        "EnableProtonTagger": "True",
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
         #When performing your analisis, please find yourself the cut which maximeze the Eeff
         #Probably if you are using Eeff event per event no cut will be needed
@@ -960,6 +966,8 @@ tunings = {
 
         #"ForceSignalID" :   , #"Bs", "Bd", "Bu" to force SSk or SSpi
 
+        "EnableCharmTagger": "True",
+        "EnableProtonTagger": "True",
         #Following 2 lines optimize the average and combined (5 cat) performances for B2JpsiK
         #When performing your analisis, please find yourself the cut which maximeze the Eeff
         #Probably if you are using Eeff event per event no cut will be needed

@@ -93,6 +93,8 @@ private:
   double m_P1_pol_protonS ;
   double m_P2_pol_protonS ;
   double m_P3_pol_protonS ;
+  double m_P4_pol_protonS ;
+  double m_P5_pol_protonS ;
   int    m_isMonteCarlo;
   
 };

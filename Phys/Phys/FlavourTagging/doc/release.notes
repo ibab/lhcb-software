@@ -7,6 +7,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2013-12-04 - Stefania Vecchi
+ - Updated SSproton BDT and polynomial coefficients with the latest files by Antonio
+
 ! 2013-12-02 - Riccardo Cenci
  - TaggerCharmTool: switched from using weights.xml file for MVA's to C++ classes 
 
@@ -17,8 +20,10 @@
  - updated Tunings.py
  - removed another unused include file that caused failure in the nightlies (??)
  - fix debug printouts in TaggerCharmTool.cpp
+
 ! 2013-12-01 - Stefania Vecchi
  - removed an unused include file that caused failure in the nightlies (??)
+
 ! 2013-11-30 - Stefania Vecchi
  - Set "Silent" option in the TMVA::Reader for OS_Charm tagger 
  - Add SSproton tagging TaggerProtonSame.cpp,h and updated several related files 
