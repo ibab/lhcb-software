@@ -59,7 +59,13 @@ def protoParticlesFromHLTSelSequence( Name, HltDecision,
     hltTrackConv = HltTrackConverter(Name + "HltTrackConv")
     hltTrackConv.ReadHltLinesFrom1stEvent = HltDecision
     hltTrackConv.TrackDestignation = 'Rec/Track/' + Name + 'All'
-    seq.Members += [ HltSelReportsDecoder(), hltTrackConv ]
+    ## TODO: Watch out for the HLT1/2 Split here!!
+    ## probably the decoder DB will take care of it for you... 
+    from DAQSys.Decoders import DecoderDB
+    from DAQSys.DecoderClass import decodersForBank
+    hltdecs=decodersForBank(DecoderDB,"HltSelReports")
+    seq.Members += [ d.setup() for d in hltdecs ]
+    seq.Members += [ hltTrackConv ]
     # now fit those tracks and apply a selection
     from TAlignment.Utils import configuredFitAndHitAdderSequence
     fitseq = configuredFitAndHitAdderSequence( Name + 'Fit',
@@ -95,11 +101,18 @@ def defaultHLTD0Selection():
     # revive only particles used for trigger
     from Configurables import GaudiSequencer
     trackseq = GaudiSequencer("RecoAlignTrSeq")
-    from Configurables import HltTrackConverter, HltSelReportsDecoder
+    from Configurables import HltTrackConverter
     hltTrackConv = HltTrackConverter("HltTrackConv")
     hltTrackConv.HltLinesToUse = TriggerLines
     hltTrackConv.TrackDestignation = 'Rec/Track/AllBest'
-    trackseq.Members += [ HltSelReportsDecoder(), hltTrackConv ]
+    
+    ## TODO: Watch out for the HLT1/2 Split here!!
+    ## probably the decoder DB will take care of it for you... 
+    from DAQSys.Decoders import DecoderDB
+    from DAQSys.DecoderClass import decodersForBank
+    hltdecs=decodersForBank(DecoderDB,"HltSelReports")
+    trackseq.Members += [ d.setup() for d in hltdecs ]
+    trackseq.Members += [ hltTrackConv ]
 
     # create a sequence that fits the tracks and does the hit-adding
     from TAlignment.Utils import configuredFitAndHitAdderSequence
@@ -209,11 +222,17 @@ def defaultHLTDstarSelection():
     # revive only particles used for trigger
     from Configurables import GaudiSequencer
     trackseq = GaudiSequencer("RecoAlignTrSeq")
-    from Configurables import HltTrackConverter, HltSelReportsDecoder
+    from Configurables import HltTrackConverter
     hltTrackConv = HltTrackConverter("HltTrackConv")
     hltTrackConv.HltLinesToUse = TriggerLines
     hltTrackConv.TrackDestignation = 'Rec/Track/AllBest'
-    trackseq.Members += [ HltSelReportsDecoder(), hltTrackConv ]
+    ## TODO: Watch out for the HLT1/2 Split here!!
+    ## probably the decoder DB will take care of it for you... 
+    from DAQSys.Decoders import DecoderDB
+    from DAQSys.DecoderClass import decodersForBank
+    hltdecs=decodersForBank(DecoderDB,"HltSelReports")
+    trackseq.Members += [ d.setup() for d in hltdecs ]
+    trackseq.Members += [ hltTrackConv ]
 
     # create a sequence that fits the tracks and does the hit-adding
     from TAlignment.Utils import configuredFitAndHitAdderSequence
@@ -316,14 +335,20 @@ def defaultHLTJPsiSelection():
     # revive only particles used for trigger 
     from Configurables import GaudiSequencer
     trackseq = GaudiSequencer("RecoAlignTrSeq")
-    from Configurables import HltTrackConverter, HltSelReportsDecoder
+    from Configurables import HltTrackConverter
     hltTrackConv = HltTrackConverter("HltTrackConv")
     hltTrackConv.HltLinesToUse = ['Hlt2ExpressJPsiDecision',
                                   'Hlt2DiMuonDetachedJPsiDecision',
                                   'Hlt2DiMuonJPsiDecision',
                                   'Hlt2DiMuonJPsiHighPTDecision']
     hltTrackConv.TrackDestignation = 'Rec/Track/AllBest'
-    trackseq.Members += [ HltSelReportsDecoder(), hltTrackConv ]
+    ## TODO: Watch out for the HLT1/2 Split here!!
+    ## probably the decoder DB will take care of it for you... 
+    from DAQSys.Decoders import DecoderDB
+    from DAQSys.DecoderClass import decodersForBank
+    hltdecs=decodersForBank(DecoderDB,"HltSelReports")
+    trackseq.Members += [ d.setup() for d in hltdecs ]
+    trackseq.Members += [ hltTrackConv ]
 
     # create a sequence that fits the tracks and does the hit-adding
     from TAlignment.Utils import configuredFitAndHitAdderSequence

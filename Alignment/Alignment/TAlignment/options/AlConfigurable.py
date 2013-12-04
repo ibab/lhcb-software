@@ -6,12 +6,12 @@ from Gaudi.Configuration import *
 from DetCond.Configuration import *
 from TrackSys.Configuration import TrackSys
 from RecConf.Configuration   import RecSysConf
-from Configurables import ( DDDBConf )
+from Configurables import ( DDDBConf, DecodeRawEvent )
 
 class AlConfigurable( LHCbConfigurableUser ) :
     
     ## Possible used Configurables
-    __used_configurables__ = [ TrackSys, DDDBConf ]
+    __used_configurables__ = [ TrackSys, DDDBConf, DecodeRawEvent  ]
     
     __slots__ = {
         "DDDBTag"                      : "",     # Tag for DDDB. Default as set in DDDBConf for DataType
@@ -124,40 +124,27 @@ class AlConfigurable( LHCbConfigurableUser ) :
     def decodingSeq( self, outputLevel = INFO ) :
         if not allConfigurables.get( "DecodingSeq" ) :
             if outputLevel == VERBOSE : print "VERBOSE: Decoding Sequencer not defined! Defining!" 
-
             decodingSequencer = GaudiSequencer( "DecodingSeq" )
             decodingSequencer.MeasureTime = True
+            
+            from DAQSys.Decoders import DecoderDB
+            from DAQSys.DecoderClass import decodersForBank
+            DecodeRawEvent().DataOnDemand=False
+            decs=[]
+            decs+=decodersForBank(DecoderDB,"ODIN")
+            decs+=decodersForBank(DecoderDB,"Velo")
+            decs+=decodersForBank(DecoderDB,"IT")
+            decs+=decodersForBank(DecoderDB,"TT")
+            for d in decs:
+                d.Properties["OutputLevel"]=outputLevel
+            
+            decodingSequencer.Members=[d.setup() for d in decs]
 
-            ## Velo Decoding
-            from Configurables import ( DecodeVeloRawBuffer )
-            decodingSequencer.Members.append(  DecodeVeloRawBuffer(OutputLevel = outputLevel ) )
-                        
             ## ST Decoding
-            from Configurables import ( RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg, STOfflinePosition ) 
+            from Configurables import ( STOfflinePosition ) 
 
             itClusterPosition = STOfflinePosition( "ITClusterPosition",OutputLevel = outputLevel )
             itClusterPosition.ErrorVec = [ 0.22, 0.11, 0.24, 0.20 ]
-        
-            ## TT Decoding
-            createTTClusters =  RawBankToSTClusterAlg( "CreateTTClusters",
-                                                       OutputLevel = outputLevel )
-            createTTLiteClusters =  RawBankToSTLiteClusterAlg( "CreateTTLiteClusters",
-                                                               OutputLevel = outputLevel )
-
-            decodingSequencer.Members.append( createTTClusters     )
-            decodingSequencer.Members.append( createTTLiteClusters )
-        
-            ## IT Decoding
-            createITClusters = RawBankToSTClusterAlg( "CreateITClusters",
-                                                      OutputLevel = outputLevel )
-            createITLiteClusters = RawBankToSTLiteClusterAlg( "CreateITLiteClusters",
-                                                              OutputLevel = outputLevel )
-        
-            createITClusters.BankType     = "IT";
-            createITLiteClusters.BankType = "IT";
-
-            decodingSequencer.Members.append( createITClusters     )
-            decodingSequencer.Members.append( createITLiteClusters )
             
             ## Muons (not yet)
 
@@ -359,8 +346,7 @@ class AlConfigurable( LHCbConfigurableUser ) :
             print "\n ****************************************************************************** \n"
         
     def __apply_configuration__( self ) :
-        from Configurables import EventClockSvc
-        EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
+        DecodeRawEvent()
 
         # just to make sure we don't forget
         if self.getProp( "SimplifiedGeom" ) : TrackSys().ExpertTracking += ['simplifiedGeometry']

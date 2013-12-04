@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+! 2013-12-04 - Rob Lambert
+ - Migrate to DecoderDB, see task #19106
+
 </PRE><H1><A NAME=v4r14>2013-01-14 Escher v4r14</A></H1><PRE>
 
 ! 2013-10-02 - Maurizio Martinelli

@@ -1,13 +1,13 @@
-# --> Including file '/tmp/mamartin/Alignment_v9r1/Alignment/Escher/tests/options/testEscher-defaults.py'
-# <-- End of file '/tmp/mamartin/Alignment_v9r1/Alignment/Escher/tests/options/testEscher-defaults.py'
-# skipping configuration of SurveyConstraints
+# --> Including file '/afs/cern.ch/user/r/rlambert/cmtuser/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
+# <-- End of file '/afs/cern.ch/user/r/rlambert/cmtuser/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
+# skipping configuration of RawEventFormatConf
 # applying configuration of Escher
 # Initializing sequences!
 # Defining options!
 # Setting up alignment sequence
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v35r3/GaudiConf/options/RootHist.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/RootHist.opts'
 # ApplicationMgr.HistogramPersistency = "ROOT";
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v35r3/GaudiConf/options/RootHist.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb-head/Wed/LHCB/LHCB_HEAD/GaudiConf/options/RootHist.opts'
 # /***** User Escher/Escher **************************************************************************
 # |-Persistency    = None
 # |-SkipEvents     = 0
@@ -16,7 +16,7 @@
 # |-Kalman         = True
 # |-DDDBtag        = ''
 # |-WithMC         = False
-# |-MainSequence   = ['ProcessPhase/Init', <GaudiSequencer/HltFilterSeq at 0x15f248a0>, 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x15f0aa00>]
+# |-MainSequence   = ['ProcessPhase/Init', <GaudiSequencer/HltFilterSeq at 0x21f48e0>, 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x1de8140>]
 # |                (default: [])
 # |-OutputType     = 'NONE'
 # |-Incident       = ''
@@ -42,24 +42,28 @@
 # |-Millepede      = False
 # \----- (End of User Escher/Escher) -----------------------------------------------------------------
 # /***** User LHCbApp/LHCbApp ************************************************************************
-# |-Persistency   = None
-# |-DataType      = '2011'
-# |-DDDBtag       = ''
-# |-SkipEvents    = 0
-# |-XMLSummary    = None
-# |-OutputLevel   = 3
-# |-EvtMax        = 10  (default: -1)
-# |-CondDBtag     = ''
-# |-DQFLAGStag    = ''
-# |-Monitors      = []  (default: [])
-# |-TimeStamp     = False
-# |-Simulation    = False
-# |-IgnoreDQFlags = True
+# |-Persistency    = None
+# |-DataType       = '2011'
+# |-DDDBtag        = ''
+# |-SkipEvents     = 0
+# |-XMLSummary     = None
+# |-OutputLevel    = 3
+# |-EvtMax         = 10  (default: -1)
+# |-Simulation     = False
+# |-DQFLAGStag     = ''
+# |-IgnoreDQFlags  = True
+# |-Detectors      = []  (default: [])
+# |-LocalDataTypes = []  (default: [])
+# |-TimeStamp      = False
+# |-CondDBtag      = ''
+# |-Monitors       = []  (default: [])
 # \----- (End of User LHCbApp/LHCbApp) ---------------------------------------------------------------
 # /***** User RecSysConf/RecSysConf ******************************************************************
 # |-DataType     = '2011'
-# |-Histograms   = 'OfflineFull'
 # |-OutputLevel  = 3
+# |-Histograms   = 'OfflineFull'
+# |-Detectors    = ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon', 'L0']
+# |              (default: ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon', 'L0'])
 # |-OutputType   = 'NONE'
 # |-Simulation   = False
 # |-Context      = 'Offline'
@@ -74,6 +78,7 @@
 # |-TrackExtraInfoAlgorithms = []  (default: [])
 # |-DataType                 = '2011'
 # |-ForceOldSeq              = False
+# |-TrackTypes               = []  (default: [])
 # |-OutputType               = ''
 # |-Simulation               = False
 # |-OldCloneKiller           = False
@@ -84,6 +89,8 @@
 # \----- (End of User TrackSys/TrackSys) -------------------------------------------------------------
 # /***** User RecMoniConf/RecMoniConf ****************************************************************
 # |-DataType     = '2011'
+# |-Detectors    = ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon', 'L0']
+# |              (default: ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon', 'L0'])
 # |-Histograms   = 'OfflineFull'
 # |-OutputLevel  = 3
 # |-Simulation   = False
@@ -99,8 +106,8 @@
 # |-PVSelection                  = None
 # |-LogFile                      = 'alignlog.txt'
 # |-ParticleSelections           = []  (default: [])
-# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x15f7c368>]
-# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x15f7c368>])
+# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x232ee60>]
+# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x232ee60>])
 # |-SolvTool                     = 'DiagSolvTool'
 # |-MinNumberOfHits              = 10
 # |-Precision                    = 16
@@ -125,38 +132,40 @@
 # |-TrackLocation                = ''
 # |-ElementsToAlign              = []  (default: [])
 # |-UseCorrelations              = True
-# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0x15f0aa00>
-# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0x15f20270>)
+# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0x1de8140>
+# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0x226e500>)
 # |-UsePreconditioning           = True
 # \----- (End of User TAlignment/TAlignment) ---------------------------------------------------------
 # /***** User DstConf/DstConf ************************************************************************
 # |-OutputName          = ''
-# |-WriteFSR            = True
 # |-SimType             = 'None'
 # |-PackType            = 'TES'
 # |-DstType             = 'NONE'
 # |-EnablePackingChecks = False
 # |-DataType            = ''
 # |-Writer              = 'DstWriter'
+# |-Detectors           = ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon']
+# |                     (default: ['Velo', 'TT', 'IT', 'OT', 'Rich', 'Tr', 'Calo', 'Muon'])
 # |-Persistency         = None
-# |-KeepDAQRawEvent     = False
+# |-WriteFSR            = True
 # |-PackSequencer       = None
 # |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next', 'NextNext']
 # |                     (default: ['Prev', 'PrevPrev', 'Next', 'NextNext'])
 # |-EnableUnpack        = []  (default: [])
+# |-SplitRawEventOutput = 2.0
 # |-AlwaysCreate        = False
 # \----- (End of User DstConf/DstConf) ---------------------------------------------------------------
 ******* calling  TAlignment
 ****** setting up Kalman type alignment!
 **** setting the main kalman aligment sequence!
 # No Writer defined for DIGI
-# WARNING: Using default tag dddb-20120727 for partition DDDB
-# WARNING: Using default tag cond-20120724 for partition LHCBCOND
-# WARNING: Using default tag dq-20120910 for partition DQFLAGS
+# WARNING: Using default tag dddb-20130503 for partition DDDB
+# WARNING: Using default tag cond-20130522 for partition LHCBCOND
+# WARNING: Using default tag dq-20130806-1 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Escher version v4r14
-                                          running on lxplus423.cern.ch on Mon Jan 21 12:31:54 2013
+                                          running on lxplus0539 on Wed Dec  4 17:07:01 2013
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -164,7 +173,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.36 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.27 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 EscherSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/HltFilterSeq, ProcessPhase/Reco, ProcessPhase/Moni, GaudiSequencer/AlignSequence
@@ -175,7 +184,7 @@ EscherInit        SUCCESS Requested to process 10 events
 EscherInit        SUCCESS ==================================================================
 RootHistSvc          INFO Writing ROOT histograms to: -10ev-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
-HltFilterSeq         INFO Member list: HltDecReportsDecoder, HltCompositionMonitor, LoKi::HDRFilter/HltErrorFilter
+HltFilterSeq         INFO Member list: HltDecReportsDecoder, HltDecReportsDecoder/Hlt2DecReportsDecoder, HltDecReportsDecoder/Hlt1DecReportsDecoder, HltCompositionMonitor, LoKi::HDRFilter/HltErrorFilter
 LoKiSvc           SUCCESS
 
 
@@ -200,20 +209,26 @@ Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome 
 
 
 Reco                 INFO Member list: GaudiSequencer/RecoDecodingSeq, GaudiSequencer/RecoVELOSeq, GaudiSequencer/RecoTrSeq, GaudiSequencer/RecoVertexSeq
-RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/DecodeVeloClusters, RawBankToSTClusterAlg/CreateTTClusters, RawBankToSTLiteClusterAlg/CreateTTLiteClusters, RawBankToSTClusterAlg/CreateITClusters, RawBankToSTLiteClusterAlg/CreateITLiteClusters
-DecodeVeloClusters   INFO Cancel processing of events with more than 6000 Velo clusters
+RecoDecodingSeq      INFO Member list: DecodeVeloRawBuffer/createBothVeloClusters, RawBankToSTClusterAlg/createTTClusters, RawBankToSTLiteClusterAlg/createTTLiteClusters, RawBankToSTLiteClusterAlg/createITLiteClusters, RawBankToSTClusterAlg/createITClusters
+createBothVeloC...   INFO Cancel processing of events with more than 6000 Velo clusters
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "dddb-20120727"
+DDDB                 INFO Using TAG "dddb-20130503"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "cond-20120724"
+LHCBCOND             INFO Using TAG "cond-20130522"
 ONLINE_2011          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2011.db/ONLINE"
 ONLINE_2011          INFO Using TAG ""
+createBothVeloC...   INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object
+createTTClusters     INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object
+createTTLiteClu...   INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object
+createITLiteClu...   INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object
+createITClusters     INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object
 RecoVELOSeq          INFO Member list: FastVeloTracking
 RecoTrSeq            INFO Member list: ProcessPhase/Track
 Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq
 TrackForwardPatSeq   INFO Member list: PatForward
+ToolSvc.OTRawBa...   INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64 numberOfBX  = 3 timePerBX = 25 ForceBankVersion = 255 require window [-8,56]
 MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c1.up.cdf
 MagneticFieldSvc     INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/cdf/field101.c2.up.cdf
@@ -260,7 +275,7 @@ TrackEraseExtra...   INFO Member list: TrackEraseExtraInfo
 RecoVertexSeq        INFO Member list: PatPVOffline, TrackV0Finder
 Moni                 INFO Member list: GaudiSequencer/MoniVELOSeq, GaudiSequencer/MoniTrSeq, GaudiSequencer/MoniOTSeq, GaudiSequencer/MoniSTSeq
 MoniVELOSeq          INFO Member list: Velo::VeloClusterMonitor/VeloClusterMonitor, Velo::VeloTrackMonitor/VeloTrackMonitor, Velo::VeloIPResolutionMonitor/VeloIPResolutionMonitor
-MoniTrSeq            INFO Member list: TrackMonitor, TrackDiMuonMonitor, TrackVertexMonitor, TrackV0Monitor, TrackFitMatchMonitor, TrackAlignMonitor, TrackITOverlapMonitor, TrackVeloOverlapMonitor, TTTrackMonitor, ITTrackMonitor, TrackPV2HalfAlignMonitor
+MoniTrSeq            INFO Member list: TrackMonitor, TrackDiMuonMonitor, TrackVertexMonitor, AlignmentOnlineMonitor, TrackV0Monitor, TrackFitMatchMonitor, TrackAlignMonitor, TrackITOverlapMonitor, TrackVeloOverlapMonitor, TTTrackMonitor, ITTrackMonitor, TrackPV2HalfAlignMonitor
 MoniOTSeq            INFO Member list: OTTimeMonitor, OTTrackMonitor, OTHitEfficiencyMonitor
 MoniSTSeq            INFO Member list: ST::STClusterMonitor/TTClusterMonitor, ST::STClusterMonitor/ITClusterMonitor
 AlignSequence        INFO Member list: GaudiSequencer/AlignInputSeq, GaudiSequencer/AlignMonitorSeq, GaudiSequencer/AlignmentAlgSeq
@@ -295,23 +310,23 @@ EscherInit        SUCCESS 0 events processed
 EscherInit        SUCCESS ==================================================================
 EscherInit        WARNING Should have processed 10 events
 EscherInit        WARNING ==================================================================
-CreateTTClusters     INFO Successfully processed 0 %
-CreateTTClusters  SUCCESS Number of counters : 2
+createTTClusters     INFO Successfully processed 0 %
+createTTClusters  SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
  | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-CreateTTLiteClu...   INFO Successfully processed 0 %
-CreateTTLiteClu...SUCCESS Number of counters : 2
+createTTLiteClu...   INFO Successfully processed 0 %
+createTTLiteClu...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
  | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-CreateITClusters     INFO Successfully processed 0 %
-CreateITClusters  SUCCESS Number of counters : 2
+createITLiteClu...   INFO Successfully processed 0 %
+createITLiteClu...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
  | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-CreateITLiteClu...   INFO Successfully processed 0 %
-CreateITLiteClu...SUCCESS Number of counters : 2
+createITClusters     INFO Successfully processed 0 %
+createITClusters  SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "# valid banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
  | "skipped Banks"                                 |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
@@ -323,6 +338,7 @@ VeloClusterMonitorSUCCESS Booked 15 Histogram(s) : 1D=12 2D=3
 VeloTrackMonitor  SUCCESS Booked 38 Histogram(s) : 1D=27 1DProf=11
 VeloIPResolutio...SUCCESS Booked 21 Histogram(s) : 1D=21
 TrackVertexMonitorSUCCESS Booked 29 Histogram(s) : 1D=15 1DProf=14
+AlignmentOnline...SUCCESS Booked 34 Histogram(s) : 1D=34
 TrackFitMatchMo...SUCCESS Booked 10 Histogram(s) : 1D=5 1DProf=5
 TrackAlignMonitor    INFO Number of elements in jacobian map: 0
 TrackAlignMonitor SUCCESS Booked 27 Histogram(s) : 1D=18 1DProf=9
@@ -371,7 +387,7 @@ ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.36 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.27 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -381,15 +397,17 @@ TimingAuditor.T...   INFO    InitEscherSeq              |     0.000 |     0.000 
 TimingAuditor.T...   INFO     EscherInit                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO   HltFilterSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    HltDecReportsDecoder       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    Hlt2DecReportsDecoder      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO    Hlt1DecReportsDecoder      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    HltCompositionMonitor      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    HltErrorFilter             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO   Reco                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    RecoDecodingSeq            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     DecodeVeloClusters        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     CreateTTClusters          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     CreateTTLiteClusters      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     CreateITClusters          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO     CreateITLiteClusters      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     createBothVeloClusters    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     createTTClusters          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     createTTLiteClusters      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     createITLiteClusters      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     createITClusters          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    RecoVELOSeq                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     FastVeloTracking          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    RecoTrSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -426,6 +444,7 @@ TimingAuditor.T...   INFO    MoniTrSeq                  |     0.000 |     0.000 
 TimingAuditor.T...   INFO     TrackMonitor              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     TrackDiMuonMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     TrackVertexMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     AlignmentOnlineMonitor    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     TrackV0Monitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     TrackFitMatchMonitor      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     TrackAlignMonitor         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |

@@ -9,7 +9,8 @@ __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
-                            ProcessPhase, GaudiSequencer, DstConf, TAlignment, VeloAlignment,
+                            ProcessPhase, GaudiSequencer, DstConf, TAlignment,
+                            VeloAlignment, DecodeRawEvent,
                             CountingPrescaler, RecMoniConf )
 
 ## @class Escher
@@ -21,7 +22,7 @@ class Escher(LHCbConfigurableUser):
     ## Possible used Configurables
     #__used_configurables__ = [ TAlignment, VeloAlignment, TrackSys, RecSysConf, LHCbApp, DstConf ]
 
-    __used_configurables__ = [ TrackSys, RecSysConf, RecMoniConf, LHCbApp, DstConf, TAlignment ]
+    __used_configurables__ = [ TrackSys, RecSysConf, RecMoniConf, LHCbApp, DstConf, TAlignment, DecodeRawEvent ]
     ## Default main sequences for real and simulated data
     DefaultSequence = [ #CountingPrescaler("EscherPrescaler")
                         #, 
@@ -135,13 +136,20 @@ class Escher(LHCbConfigurableUser):
         GaudiSequencer("InitEscherSeq").Members += [ recInit ]
 
         # set up the HltFilterSeq
-        from Configurables import HltDecReportsDecoder, HltCompositionMonitor
+        from Configurables import HltCompositionMonitor
         from Configurables import LoKi__HDRFilter as HDRFilter 
         hltFilterSeq = GaudiSequencer( "HltFilterSeq" )
         # identifies events that are not of type Hlt1ErrorEvent or Hlt2ErrorEvent
         hltErrCode = "HLT_PASS_RE('Hlt1(?!ErrorEvent).*Decision') & HLT_PASS_RE('Hlt2(?!ErrorEvent).*Decision')"
         hltErrorFilter = HDRFilter('HltErrorFilter', Code = hltErrCode )   # the filter
-        hltFilterSeq.Members = [ HltDecReportsDecoder(),  HltCompositionMonitor(), hltErrorFilter ]
+        
+        ## TODO: Watch out for the HLT1/2 Split here!!
+        ## probably the decoder DB will take care of it for you... 
+        from DAQSys.Decoders import DecoderDB
+        from DAQSys.DecoderClass import decodersForBank
+        hltdecs=decodersForBank(DecoderDB,"HltDecReports")
+        hltFilterSeq.Members = [d.setup() for d in hltdecs]
+        hltFilterSeq.Members += [ HltCompositionMonitor(), hltErrorFilter ]
         # add more hlt filters, if requested
         if hasattr(self,"HltFilterCode") and len(self.getProp("HltFilterCode"))>0:
             hltfilter = HDRFilter ( 'HLTFilter',
@@ -207,11 +215,8 @@ class Escher(LHCbConfigurableUser):
         #if inputType in [ "MDF", "RDST", "ETC" ]:
         #    # In case raw data resides in MDF file
         #    EventPersistencySvc().CnvServices.append("LHCb::RawDataCnvSvc")
+        DecodeRawEvent()
         
-        # Get the event time (for CondDb) from ODIN
-        from Configurables import EventClockSvc
-        EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
-
         if self.getProp("UseFileStager") :
             import os, getpass
             from FileStager.Configuration import configureFileStager

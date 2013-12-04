@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2013-12-04 - Rob Lambert
+ - Migrate to DecoderDB, see task #19106
+
 ! 2013-07-30 - Wouter Hulsbergen
  - changes to comply with c11
 
