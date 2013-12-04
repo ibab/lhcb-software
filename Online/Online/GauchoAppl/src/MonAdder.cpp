@@ -102,7 +102,7 @@ void MonAdder::Configure()
 //    }
 //  }
   m_ServiceDns->autoStartOn();
-  DimServer::start(m_ServiceDns,(char*)((RTL::processName()).c_str()));
+  DimServer::start(m_ServiceDns,(char*)((RTL::processName()+"\\"").c_str()));
   m_Dimcmd = new TimeoutCmd(m_ServiceDns,(char*)m_cmdname.c_str(),this);
   m_timer = new AddTimer(this,m_rectmo);
   m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
