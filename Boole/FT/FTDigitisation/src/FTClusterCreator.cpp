@@ -86,24 +86,25 @@ StatusCode FTClusterCreator::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "[FTClusterCreator] ==> Execute NEW EVENT" << endmsg;
 
- 
   
   // retrieve FTDigits
   const MCFTDigits* mcDigitsCont = get<MCFTDigits>(m_inputLocation);
   if ( msgLevel(MSG::DEBUG) )
     debug() <<"mcDigitsCont->size() : " << mcDigitsCont->size()<< endmsg;
 
+
   // define clusters container
   FTClusters *clusterCont = new FTClusters();
   clusterCont->reserve(mcDigitsCont->size());
 
+
   // Register FTClusters in the transient data store
   put(clusterCont, m_outputLocation);
+
 
   // Create a link between the FTCluster and the MCParticle which leave a track
   LinkerWithKey<LHCb::MCParticle,LHCb::FTCluster> mcToClusterLink( evtSvc(), msgSvc(), LHCb::FTClusterLocation::Default);
 
- 
 
   // DEBUG : print Digit content : should be sorted
   if(msgLevel(MSG::DEBUG)){
@@ -113,20 +114,31 @@ StatusCode FTClusterCreator::execute() {
       debug() <<"Channel ="<<mcDigit->channelID()<< " : " <<"\t ADC ="<<mcDigit->adcCount() << endmsg;
       // print deposit content
       const MCFTDeposit* mcDeposit = mcDigit->deposit();
-      for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx)
-        debug() <<"MCParticle : index="<< mcDeposit->mcHitVec()[idx]->mcParticle()->index() <<" "<<mcDeposit->mcHitVec()[idx]->mcParticle()->particleID()
-                << " Energy=" << mcDeposit->energyVec()[idx] << " Time=" << mcDeposit->timeVec()[idx] 
-		<< " EnergyRef=" <<mcDeposit->energyRefVec()[idx] << " TimeRef=" << mcDeposit->timeRefVec()[idx] << endmsg;
+      if (mcDeposit != 0) {
+        for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx) {
+          debug() <<"MCParticle : index="<< mcDeposit->mcHitVec()[idx]->mcParticle()->index() <<" "<<mcDeposit->mcHitVec()[idx]->mcParticle()->particleID()
+                  << " Energy=" << mcDeposit->energyVec()[idx] << " Time=" << mcDeposit->timeVec()[idx] 
+                  << " EnergyRef=" <<mcDeposit->energyRefVec()[idx] << " TimeRef=" << mcDeposit->timeRefVec()[idx] << endmsg;
+          }
+        } else {
+          debug() << "MCParticle : no mcDeposit found: noise channel?" << endmsg;
+        }
       }
     }
+
 
   // Create map of involved hits, all of them associated to false (not yet in clusters)
   std::map<const LHCb::MCHit*, bool> hitBoolMap;
   for (MCFTDigits::const_iterator iterDigit = mcDigitsCont->begin(); iterDigit!=mcDigitsCont->end();++iterDigit){
     MCFTDigit* mcDigit = *iterDigit;
     const MCFTDeposit* mcDeposit = mcDigit->deposit();
-    for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx)
-      hitBoolMap[ mcDeposit->mcHitVec()[idx] ]=false;
+    if (mcDeposit != 0) {
+      for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx) {
+        hitBoolMap[ mcDeposit->mcHitVec()[idx] ]=false;
+      }
+    } else {
+      //debug() << "[hitBoolMap] no mcDeposit for hit found! (noise hit?). No hitmap added." << endmsg;
+    }
   }
 
   // Since Digit Container is sorted wrt channelID, clusters are defined searching for bumps of ADC Count
@@ -174,16 +186,19 @@ StatusCode FTClusterCreator::execute() {
         }
         if ( lastDigit->adcCount() > m_clusterMinADCPeak ) hasSeed = true;
     
-	const MCFTDeposit* mcDeposit = lastDigit->deposit();
-        NbOfHitInvolvedInCluster += mcDeposit->mcHitVec().size();
+	      const MCFTDeposit* mcDeposit = lastDigit->deposit();
+        if( mcDeposit != 0 )
+          NbOfHitInvolvedInCluster += mcDeposit->mcHitVec().size();
 
 
         // Keep track of MCParticles involved in the cluster definition
         clusterADCDistribution.push_back(lastDigit->adcCount());
-	for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx) {
-          totalEnergyFromMC += mcDeposit->energyVec()[idx]; // only direct pulse energy is stored!!! TO BE UPDATED
-          mcContributionMap[mcDeposit->mcHitVec()[idx]->mcParticle()] += mcDeposit->energyVec()[idx];// only direct pulse energy is stored!!! TO BE UPDATED
-          clusterHitDistribution.push_back(mcDeposit->mcHitVec()[idx]);
+        if( mcDeposit != 0 ) { 
+          for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx) {
+            totalEnergyFromMC += mcDeposit->energyVec()[idx]; // only direct pulse energy is stored!!! TO BE UPDATED
+            mcContributionMap[mcDeposit->mcHitVec()[idx]->mcParticle()] += mcDeposit->energyVec()[idx];// only direct pulse energy is stored!!! TO BE UPDATED
+            clusterHitDistribution.push_back(mcDeposit->mcHitVec()[idx]);
+          }
         }
         ++lastDigitIter;
 

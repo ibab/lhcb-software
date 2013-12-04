@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2013-12-04 - Jacco de Vries
+ - Adapted FTClusterCreator to handle noise clusters that will have
+    no associated mcDeposit (null-pointer checks).
+
+! 2013-12-04 - Jacco de Vries
  - Fixed MCFTDigit::MCFTDigit call to match new FTDigitisation implementation
  - Added on 2013-12-03 : FTNoiseCreator implementation for thermal noise,
     afterpulsing and cross-talk.
