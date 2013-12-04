@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2013-12-04 - Rob Lambert
+ - Turn off the other velo decoders, toehrwise there is potentially a problem using DataOnDemand in DaVinci
+
 ! 2013-12-02 - Mika Vesterinen
  - Move the matching algorithm to before the downstream in RecoUpgradeTracking.py, 
    so that we are able to exclude hits used in match for the downstream.
