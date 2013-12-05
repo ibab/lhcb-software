@@ -113,7 +113,7 @@ void HAdderTaskInfoHandler::infoHandler(void)
   {
     return;
   }
-  printf("Task Info Handler Input %s\n",input);
+//  printf("Task Info Handler Input %s\n",input);
   if ((input[0] == '+') || (input[0] == '-') || (input[0] == '!'))
   {
     Newe = (input[0] == '+');
