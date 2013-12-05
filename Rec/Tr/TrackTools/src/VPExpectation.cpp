@@ -4,8 +4,8 @@
  *
  *  Implementation file for reconstruction tool : VPExpectation
  *
- *  @author M.Needham Matt.Needham@cern.ch
- *  @date   11/03/2007
+ *  @author T.Bird Thomas.Bird@cern.ch
+ *  @date   05/12/2012
  */
 //-----------------------------------------------------------------------------
 
@@ -63,23 +63,6 @@ int VPExpectation::nExpected ( const Track& aTrack ) const
   return expectedHits.n;
 }
 
-IVPExpectation::Info VPExpectation::expectedInfo ( const Track& aTrack, std::bitset<30> velo[4] ) const{
-
-  // work out the first and last z on the track
-  double zStart; double zStop;
-  if (aTrack.checkFlag( Track::Backward) == false){
-    // forward track
-    zStart = zMin(aTrack)  - 1e-3;
-    zStop = 9999.0;
-  } else {
-    //backward track
-    zStart = -9999.;
-    zStop = zMax(aTrack)+ 1e-3;
-  }
-
-  return expectedInfo(aTrack, zStart, zStop, velo);
-}
-
 
 IVPExpectation::Info VPExpectation::expectedInfo ( const Track& aTrack ) const {
 
@@ -105,17 +88,10 @@ int VPExpectation::nExpected(const LHCb::Track& aTrack,
   return expectedHits.n;
 }
 
-
-IVPExpectation::Info VPExpectation::expectedInfo(const LHCb::Track& aTrack,
-                               const double zStart, const double zStop,std::bitset<30> velo[4]) const{
-  return scan(aTrack,zStart, zStop, velo);
-}
-
 IVPExpectation::Info VPExpectation::expectedInfo(const LHCb::Track& aTrack,
                                const double zStart, const double zStop) const {
 
-  std::bitset<30> velo[4];
-  return scan(aTrack,zStart, zStop, velo);
+  return scan(aTrack,zStart, zStop);
 }
 
 bool VPExpectation::isInside(const LHCb::Track& aTrack,
@@ -150,8 +126,7 @@ int VPExpectation::nMissed ( const Track& aTrack ) const
 
 
   // number expected...
-  std::bitset<30> velo[4];
-  IVPExpectation::Info expectedHits = scan(aTrack,zStart,zStop,velo);
+  IVPExpectation::Info expectedHits = scan(aTrack,zStart,zStop);
 
   return expectedHits.n - nFound(aTrack,zStart,zStop);
 }
@@ -170,14 +145,13 @@ int VPExpectation::nMissed( const Track& aTrack, const double z ) const{
   }
 
   // number expected...
-  std::bitset<30> velo[4];
-  IVPExpectation::Info expectedHits = scan(aTrack, zStart, zStop, velo);
+  IVPExpectation::Info expectedHits = scan(aTrack, zStart, zStop);
 
   return expectedHits.n - nFound(aTrack,zStart,zStop);
 }
 
 IVPExpectation::Info VPExpectation::scan(const LHCb::Track& aTrack,
-                          const double zStart, const double zStop, std::bitset<30> velo[4]) const {
+                          const double zStart, const double zStop) const {
 
   IVPExpectation::Info nHits;
   nHits.n = 0;

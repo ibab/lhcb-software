@@ -55,14 +55,6 @@ public:
   virtual int nExpected ( const LHCb::Track& aTrack ) const;
 
 
-  /** Returns info on expected hits and fill bitmap for hit pattern
-   *
-   *  @param aTrack Reference to the Track to test
-   *  @return Info
-   */
-  virtual IVPExpectation::Info expectedInfo ( const LHCb::Track& aTrack, std::bitset<30> velo[4] ) const;
-
-
   /** Returns info on expected hits
    *
    *  @param aTrack Reference to the Track to test
@@ -89,17 +81,6 @@ public:
    *  @return Info
    */
   virtual IVPExpectation::Info expectedInfo ( const LHCb::Track& aTrack , const double zStart, const double zStop) const;
-
-
-   /** Returns expected hits info, from zStart to zStop and hit pattern
-   *
-   *  @param aTrack Reference to the Track to test
-   *  @param zStart --> start of scan range
-   *  @param zStop --> end of scan range
-   *  @return Info
-   */
-  virtual IVPExpectation::Info expectedInfo ( const LHCb::Track& aTrack , const double zStart, const double zStop,
-						std::bitset<30> velo[4]) const;
 
 
   /** Returns number of hits missed, from zBeamLine to firstHit
@@ -137,7 +118,7 @@ public:
 private:
 
   IVPExpectation::Info scan(const LHCb::Track& aTrack,
-                              const double zStart, const double zStop,std::bitset<30> velo[4] ) const;
+                              const double zStart, const double zStop ) const;
 
   bool isInside(const DeVPSensor* sensor, const Tf::Tsa::Line& xLine,
                 const Tf::Tsa::Line& yLine, const double z) const;
