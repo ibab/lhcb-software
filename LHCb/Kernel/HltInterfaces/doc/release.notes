@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+! 2013-12-05 - Rob Lambert
+ - Changes to comply with new Gaudi::StringKey types in IANSvc and related
+ - see task #48818
+
 !========================= HltInterfaces v4r9 2013-09-30 =========================
 ! 2013-09-22 - Gerhard Raven
  - make parsing of PropertyConfig and ConfigTreeNode more flexible:

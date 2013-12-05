@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include "GaudiKernel/INamedInterface.h"
+#include "GaudiKernel/StringKey.h"
 
 
 /** @class IANSvc IANSvc.h
@@ -30,8 +31,8 @@ public:
   static const InterfaceID& interfaceID();
   virtual ~IANSvc();
 
-  typedef std::string                                 major_key_type;
-  typedef std::string                                 minor_key_type;
+  typedef Gaudi::StringKey                                major_key_type;
+  typedef Gaudi::StringKey                                minor_key_type;
 
   /// introspection, i.e. access to what is available: is a major present?
   virtual bool hasMajor(const major_key_type& major) const = 0;

@@ -8,7 +8,7 @@
 #include <utility>
 #include "Kernel/IANSvc.h"
 #include "boost/optional.hpp"
-
+#include "GaudiKernel/VectorMap.h"
 
 /** @class IANNSvc IANNSvc.h
  *
@@ -56,5 +56,7 @@ public:
   virtual std::vector< major_key_type > majors() const = 0;
   ///                                                  return minors for a given major
   virtual std::vector<minor_value_type> items(const major_key_type& major) const = 0;
+  ///                                                  optimal return of map for later use without additional lookups
+  virtual GaudiUtils::VectorMap< minor_value_type::first_type, minor_value_type::second_type > item_map(const major_key_type& major) const = 0;
 };
 #endif // IANNSVC_H
