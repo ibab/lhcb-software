@@ -187,6 +187,16 @@ bool VPExpectation::isInside(const DeVPSensor* sensor, const Tf::Tsa::Line& xLin
   StatusCode sc = sensor->isInActiveArea(sensor->globalToLocal(trackPos));
   if(sc) return true;
 
+  // This part is needed to work with older VP geometries when the active areas are not at the z of the sensor
+  // Note this will not work for pocofoam only microchannel
+  trackPos = Gaudi::XYZPoint(xLine.value(z+0.504*Gaudi::Units::mm),yLine.value(z+0.504*Gaudi::Units::mm),z+0.504*Gaudi::Units::mm);
+  sc = sensor->isInActiveArea(sensor->globalToLocal(trackPos));
+  if(sc) return true;
+
+  trackPos = Gaudi::XYZPoint(xLine.value(z-0.504*Gaudi::Units::mm),yLine.value(z-0.504*Gaudi::Units::mm),z-0.504*Gaudi::Units::mm);
+  sc = sensor->isInActiveArea(sensor->globalToLocal(trackPos));
+  if(sc) return true;
+
   return false;
 }
 
