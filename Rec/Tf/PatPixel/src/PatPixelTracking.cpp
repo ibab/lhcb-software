@@ -30,12 +30,18 @@ PatPixelTracking::PatPixelTracking(const std::string& name,
   declareProperty("MaxXSlope", m_maxXSlope = 0.400);
   declareProperty("MaxYSlope", m_maxYSlope = 0.400);
   // Tolerance window when adding hits
-  declareProperty("ExtraTol", m_extraTol = 1. * Gaudi::Units::mm); // 0.2 
+  declareProperty("ExtraTol", m_extraTol = 0.6 * Gaudi::Units::mm);
   // Number of modules without a hit after which to stop extrapolation
-  declareProperty("MaxMissed", m_maxMissed = 4); 
+  declareProperty("MaxMissed", m_maxMissed = 3); 
 
   // Acceptance criteria for adding new hits
   declareProperty("MaxScatter", m_maxScatter = 0.004);
+  
+  // Acceptance criteria for track candidates
+  // Max. chi2 for 3-hit tracks
+  declareProperty("MaxChi2Short", m_maxChi2Short = 20.0); 
+  // Min. fraction of unused hits
+  declareProperty("FractionUnused", m_fractionUnused = 0.5);
 
   // Flag to clear hits (for rerunning in same event) 
   declareProperty("ClearHits", m_clearHits = false);  
@@ -51,14 +57,6 @@ PatPixelTracking::PatPixelTracking(const std::string& name,
   declareProperty("ClosestToBeamStateKalmanFit", m_stateClosestToBeamKalmanFit = true);
   declareProperty("EndVeloStateKalmanFit", m_stateEndVeloKalmanFit = false);
   declareProperty("AddFirstLastMeasurementStatesKalmanFit", m_addStateFirstLastMeasurementKalmanFit = false);
-
-  // Obsolete parameters - only kept in for backwards compatibility
-  // Limit on hit chi2 when removing worst hits
-  declareProperty("MaxChi2PerHit", m_maxChi2PerHit = 25.0);  // 12.0
-  // Max. chi2 for 3-hit tracks
-  declareProperty("MaxChi2Short", m_maxChi2Short = 20.0); 
-  // Limit on hit chi2 when adding new hits
-  declareProperty("MaxChi2ToAdd", m_maxChi2ToAdd = 200.0);
 
 }
 
@@ -298,8 +296,9 @@ void PatPixelTracking::searchByPair() {
     const double dyMax = m_maxYSlope * fabs(dz);
     // Loop over hits in the first module (larger Z) in the pair.
     PatPixelHits::const_iterator ith0;
+    PatPixelHits::const_iterator last0 = module0->hits().end();
     PatPixelHits::const_iterator first1 = module1->hits().begin();
-    for (ith0 = module0->hits().begin(); module0->hits().end() != ith0; ++ith0) {
+    for (ith0 = module0->hits().begin(); last0 != ith0; ++ith0) {
       // Skip hits already assigned to tracks.
       if ((*ith0)->isUsed()) continue;                                            
       const double x0 = (*ith0)->x();
@@ -313,7 +312,8 @@ void PatPixelTracking::searchByPair() {
       }
       // Loop over hits in the second module (smaller Z) in the pair.
       PatPixelHits::const_iterator ith1;
-      for (ith1 = first1; module1->hits().end() != ith1; ++ith1) { 
+      PatPixelHits::const_iterator last1 = module1->hits().end();
+      for (ith1 = first1; last1 != ith1; ++ith1) { 
         const double x1 = (*ith1)->x();
         // Skip hits below the X-pos. limit.
         if (x1 < xMin) {
@@ -342,9 +342,6 @@ void PatPixelTracking::searchByPair() {
         m_track.set(*ith0, *ith1);
         // Extend the seed track towards smaller Z.
         extendTrack(*ith0, *ith1);
-        if (m_track.hits().size() < 3) {
-          // extendTrackOtherSide(*ith1, *ith0);
-        }
         if (m_track.hits().size() < 3) continue;
 
         // Final checks
@@ -364,8 +361,7 @@ void PatPixelTracking::searchByPair() {
             }
           }
         } else {
-          // TODO: make fraction unused a parameter.
-          if (m_track.nbUnused() < 0.5 * m_track.hits().size()) {
+          if (m_track.nbUnused() < m_fractionUnused * m_track.hits().size()) {
             if (m_debug) {
               info() << "  -- reject, only " << m_track.nbUnused() << "/" 
                      << m_track.hits().size() << " hits are unused." << endmsg;
@@ -406,7 +402,7 @@ void PatPixelTracking::makeLHCbTracks() {
   PatPixelTracks::iterator itt;
   for (itt = m_tracks.begin(); m_tracks.end() != itt; ++itt) {
     // Skip 3-hit tracks with double-used hits.
-    if ((*itt).hits().size() == 3 && (*itt).nbUnused() != 3 ) continue; 
+    if ((*itt).hits().size() == 3 && (*itt).nbUnused() != 3) continue; 
     // Create a new LHCb track.
     LHCb::Track* newTrack = new LHCb::Track(key++);
     newTrack->setType(LHCb::Track::Velo);
@@ -563,13 +559,14 @@ PatPixelHit* PatPixelTracking::bestHit(PatPixelModule* module, double xTol, doub
     step /= 2;
     if ((*(itStart + step))->x() < xGuess) itStart += step;
   }
+  PatPixelHits::const_iterator itEnd = module->hits().end();
 
   // Find the hit that matches best.
   unsigned int nFound = 0;
   double bestScatter = maxScatter;
   PatPixelHit* bestHit = NULL;
   PatPixelHits::const_iterator ith;
-  for (ith = itStart; module->hits().end() != ith; ++ith) {
+  for (ith = itStart; itEnd != ith; ++ith) {
     const double dz = (*ith)->z() - z1; 
     const double xPred = x1 + tx * dz;
     const double yPred = y1 + ty * dz;

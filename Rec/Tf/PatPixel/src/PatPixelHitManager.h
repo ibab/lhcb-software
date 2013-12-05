@@ -1,7 +1,6 @@
 #ifndef PATPIXELHITMANAGER_H 
 #define PATPIXELHITMANAGER_H 1
 
-#include "TMath.h"
 // Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentSvc.h"

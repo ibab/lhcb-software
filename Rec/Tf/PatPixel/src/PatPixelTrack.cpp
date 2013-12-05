@@ -57,9 +57,7 @@ void PatPixelTrack::set(PatPixelHit* h1, PatPixelHit* h2) {
 //=========================================================================
 void PatPixelTrack::addHit(PatPixelHit* hit) {
 
-  // TODO: inserting at front is bad idea!
-  if (hit->module() >= m_hits[0]->module()) m_hits.insert(m_hits.begin(), hit ); // m_hits.push_front( hit );
-                                        else m_hits.push_back( hit );
+  m_hits.push_back(hit);
 
   const double x = hit->x();
   const double y = hit->y();
@@ -166,13 +164,6 @@ namespace
   { SortDecreasingZ() {}
     bool operator()( const PatPixelHit* lhs, const PatPixelHit* rhs) const { return lhs->z() > rhs->z(); }
   } ;
-
-  /*
-  struct SortDecreasingR
-  { SortDecreasingR() {}
-    bool operator()( const PatPixelHit* lhs, const PatPixelHit* rhs) const { return lhs->r() > rhs->r(); }
-  } ;
-  */
 
   /// Helper function to filter one hit
   inline double filter( double z,

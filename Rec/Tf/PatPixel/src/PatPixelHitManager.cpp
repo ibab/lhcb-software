@@ -1,3 +1,4 @@
+#include "TMath.h"
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
@@ -175,7 +176,7 @@ void PatPixelHitManager::buildHits() {
   LHCb::VPLiteCluster::VPLiteClusters::iterator itc; 
   for (itc = liteClusters->begin(); liteClusters->end() != itc; ++itc) {
     const unsigned int module = itc->channelID().module();
-    if (module >= m_modules.size()) break; // TODO: why?
+    if (module >= m_modules.size()) break;
     // Get the next object in the pool => here we store the new hit
     PatPixelHit* hit = &(*(m_nextInPool++));
     // Calculate the 3-D position for this cluster.

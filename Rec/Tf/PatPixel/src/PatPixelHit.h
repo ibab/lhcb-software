@@ -61,7 +61,7 @@ public:
   double chi2(const double x, const double y) const {
     const double dx = x - m_x;
     const double dy = y - m_y;
-    return dx * dx *m_wx + dy * dy * m_wy;
+    return dx * dx * m_wx + dy * dy * m_wy;
   }
 
   // Operators for sorting the vectors of pointers to hits
@@ -69,7 +69,6 @@ public:
   struct IncreasingByZ { bool operator() (const PatPixelHit* lhs, const PatPixelHit* rhs) const { return lhs->z() < rhs->z(); } };
   struct LowerByX      { bool operator() (const PatPixelHit* lhs, const PatPixelHit* rhs) const { return lhs->x() < rhs->x(); } };
   struct LowerByY      { bool operator() (const PatPixelHit* lhs, const PatPixelHit* rhs) const { return lhs->y() < rhs->y(); } };
-  // struct HigherByR     { bool operator() (const PatPixelHit* lhs, const PatPixelHit* rhs) const { return lhs->r() > rhs->r(); } };
 
 private:
   /// Channel ID

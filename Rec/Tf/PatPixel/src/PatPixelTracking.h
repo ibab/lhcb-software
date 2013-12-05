@@ -78,10 +78,10 @@ private:
   unsigned int m_maxMissed;
   /// Criteria for adding hits to an existing track
   double m_maxScatter;
-  double m_maxChi2PerHit;
-  double m_maxChi2ToAdd;
   /// Max. chi2 for 3-hit tracks
   double m_maxChi2Short;
+  /// Min. fraction of unused hits
+  double m_fractionUnused;
 
   bool m_useSlopeCorrection;
   bool m_clearHits;
@@ -92,7 +92,7 @@ private:
   /// List of tracks found
   PatPixelTracks m_tracks;                  
   /// Current track being worked with
-  PatPixelTrack  m_track;                   
+  PatPixelTrack m_track;                   
 
   /// Debug control
   std::string m_debugToolName;
