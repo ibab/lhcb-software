@@ -104,7 +104,7 @@ void VPClusterMonitor::loopClusters() {
       // Get XYZ of pixel
       Gaudi::XYZPoint pointGlobal = sensor->channelToPoint(totVec[it].first, false);
       // Get pixel radius
-      double radius = sqrt(pow(pointGlobal.x(), 2) + pow(pointGlobal.y(), 2));
+      double radius = pointGlobal.rho();
       // Plot pixel information
       plot(radius, "pixel_radius", 0, 100, 200);
       plot(totVec[it].second, "single_pixel_tot", 0, 50, 50);

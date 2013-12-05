@@ -15,7 +15,6 @@ use  DigiEvent     v*  Event
 use  GaudiAlg      v*
 use  LinkerEvent   v*  Event
 use  VPDet         v*  Det
-use  GSL           v*  LCG_Interfaces
 
 # Component library building rule
 #=========================================================================
