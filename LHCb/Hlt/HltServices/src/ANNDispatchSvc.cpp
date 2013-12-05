@@ -48,6 +48,9 @@ public:
   { verify(); return m_child->keys(major); }
   std::vector<minor_value_type>  items(const major_key_type& major) const
   { verify(); return m_child->items(major); }
+  GaudiUtils::VectorMap< minor_value_type::first_type, minor_value_type::second_type > item_map(const major_key_type& major) const
+  { verify(); return m_child->item_map(major); }
+  
   std::vector<major_key_type>    majors() const
   {  verify(); return m_child->majors(); }
 private:

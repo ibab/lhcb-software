@@ -4,6 +4,10 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+! 2013-12-05 - Rob Lambert
+ - Changes to comply with new Gaudi::StringKey types in IANSvc and related
+ - see task #48818
+
 !========================= HltServices v1r0 2013-09-30 =========================
 ! 2013-08-22 - Gerhard Raven
  - HltConfigSvc: make HltDecReportsLocation a property

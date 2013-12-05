@@ -3,6 +3,7 @@
 #include "boost/assign/list_of.hpp"
 #include <boost/functional/hash.hpp>
 
+
 class HltANNSvc : public ANNSvc {
 public:
     HltANNSvc( const std::string& name, ISvcLocator *svcLocator )

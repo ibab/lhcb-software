@@ -4,10 +4,11 @@
 
 // Include files
 #include "Kernel/IANNSvc.h"
-#include "GaudiKernel/VectorMap.h"
+//#include "GaudiKernel/VectorMap.h"
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
 #include <string>
+//#include "GaudiKernel/ParsersFactory.h"
 
 namespace ANNSvcUtilities {
   template <typename KEY, typename VALUE> class bimap_t;
@@ -40,6 +41,7 @@ public:
 
   std::vector<minor_key_type>    keys(const major_key_type& major) const;
   std::vector<minor_value_type>  items(const major_key_type& major) const;
+  GaudiUtils::VectorMap< minor_value_type::first_type, minor_value_type::second_type > item_map(const major_key_type& major) const;
   std::vector<major_key_type>    majors() const;
 
 protected:
@@ -60,4 +62,7 @@ private:
   friend class ANNSvcUtilities::bimap_t<minor_key_type, minor_mapped_type> ;
 
 };
+
+
+
 #endif // ANNSVC_H 1
