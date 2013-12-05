@@ -104,7 +104,6 @@ void HAdderTaskInfoHandler::infoHandler(void)
 {
   bool Newe = true;
   const char* input = itsService->getString();
-
   if (strcmp(input, "DEAD") == 0)
   {
 //    printf("Task Info Handler from DNS DEAD\n");
@@ -114,6 +113,7 @@ void HAdderTaskInfoHandler::infoHandler(void)
   {
     return;
   }
+  printf("Task Info Handler Input %d\n",input);
   if ((input[0] == '+') || (input[0] == '-') || (input[0] == '!'))
   {
     Newe = (input[0] == '+');
