@@ -178,9 +178,9 @@ StatusCode HltVertexReportsDecoder::execute() {
     unsigned intSelID = ( *i++ >> 16 );
 
     unsigned int hltType(HltVertexReportsWriter::kSourceID_Hlt2); 
-    boost::optional<IANNSvc::minor_value_type> value = m_hltANNSvc->value("Hlt1SelectionID",intSelID);
+    boost::optional<IANNSvc::minor_value_type> value = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt1SelectionID")),intSelID);
     if (!value) {
-      value = m_hltANNSvc->value("Hlt2SelectionID",intSelID);
+      value = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt2SelectionID")),intSelID);
     } else {
       hltType=HltVertexReportsWriter::kSourceID_Hlt1;
     }
@@ -201,7 +201,7 @@ StatusCode HltVertexReportsDecoder::execute() {
 
     // create output container for vertices and put it on TES
     VertexBase::Container* verticesOutput = new VertexBase::Container();
-    put( verticesOutput, m_outputHltVertexReportsLocation.value() + "/" + value->first  );
+    put( verticesOutput, m_outputHltVertexReportsLocation.value() + "/" + std::string(value->first)  );
 
     SmartRefVector<VertexBase> pVtxs;
 
@@ -230,7 +230,8 @@ StatusCode HltVertexReportsDecoder::execute() {
 
     // insert selection into the container
     if( outputSummary->insert(value->first,pVtxs) == StatusCode::FAILURE ){
-      Error(" Failed to add Hlt vertex selection name " + value->first
+      Error(" Failed to add Hlt vertex selection name " 
+            + std::string(value->first)
             + " to its container ",StatusCode::SUCCESS, 20 );
     }    
   }

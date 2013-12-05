@@ -244,10 +244,10 @@ HltDecReportsDecoder::decodeHDR(I i, I end,
 
     int id=dec.intDecisionID();
 
-    boost::optional<IANNSvc::minor_value_type> selName = m_hltANNSvc->value("Hlt1SelectionID",id);
+    boost::optional<IANNSvc::minor_value_type> selName = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt1SelectionID")),id);
     unsigned int hltType(HltDecReportsWriter::kSourceID_Hlt2); 
     if (!selName) {
-      selName = m_hltANNSvc->value("Hlt2SelectionID",id);
+      selName = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt2SelectionID")),id);
     } else {
       hltType=HltDecReportsWriter::kSourceID_Hlt1;
     }
@@ -260,7 +260,7 @@ HltDecReportsDecoder::decodeHDR(I i, I end,
       } 
       if( store ){
 	if( !output.insert( selName->first, dec ).isSuccess() ) {
-	  Error(" Duplicate decision report in storage "+selName->first, StatusCode::FAILURE, 20 ).ignore();
+	  Error(" Duplicate decision report in storage "+std::string(selName->first), StatusCode::FAILURE, 20 ).ignore();
 	  ++ret;
 	}
       }

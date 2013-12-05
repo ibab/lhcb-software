@@ -483,10 +483,10 @@ StatusCode HltSelReportsDecoder::execute() {
           infoPersistent.insert( "0#SelectionID", floatFromInt(stdInfo[0]) );
           if( stdInfo.size()>1 ){
             int id = (int)(  floatFromInt(stdInfo[1])+0.1 );            
-            boost::optional<IANNSvc::minor_value_type> selName = m_hltANNSvc->value("Hlt1SelectionID",id);
-            if (!selName) selName = m_hltANNSvc->value("Hlt2SelectionID",id);
+            boost::optional<IANNSvc::minor_value_type> selName = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt1SelectionID")),id);
+            if (!selName) selName = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt2SelectionID")),id);
             if (selName) {
-              infoPersistent.insert( "10#" + selName->first, floatFromInt(stdInfo[1]) );        
+              infoPersistent.insert( "10#" + std::string(selName->first), floatFromInt(stdInfo[1]) );        
             } else {
               std::ostringstream mess;
               mess << " Did not find string key for PV-selection-ID in trigger selection in storage id=" << id;
@@ -524,7 +524,7 @@ StatusCode HltSelReportsDecoder::execute() {
       for( HltSelRepRBExtraInfo::ExtraInfo::const_iterator i=extraInfo.begin();
            i!=extraInfo.end(); ++i){
         // convert int to string
-        boost::optional<IANNSvc::minor_value_type> infos = m_hltANNSvc->value("InfoID",i->first); 
+        boost::optional<IANNSvc::minor_value_type> infos = m_hltANNSvc->value(Gaudi::StringKey(std::string("InfoID")),i->first); 
         if ( infos ) {
           infoPersistent.insert( infos->first, i->second );
         } else {
@@ -612,9 +612,9 @@ StatusCode HltSelReportsDecoder::execute() {
          i!=hos->numericalInfo().end();++i ){
       if( i->first == "0#SelectionID" ){
         int id = (int)(i->second+0.1);
-        selName = m_hltANNSvc->value("Hlt1SelectionID",id);
+        selName = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt1SelectionID")),id);
         if (!selName) {
-	  selName = m_hltANNSvc->value("Hlt2SelectionID",id);
+          selName = m_hltANNSvc->value(Gaudi::StringKey(std::string("Hlt2SelectionID")),id);
 	} else {
 	  hltType=HltSelReportsWriter::kSourceID_Hlt1;
 	}
@@ -637,7 +637,8 @@ StatusCode HltSelReportsDecoder::execute() {
 
       // insert selection into the container
       if( outputSummary->insert(selName->first,selSumOut) == StatusCode::FAILURE ){
-          Error( "  Failed to add Hlt selection name " + selName->first
+        Error( "  Failed to add Hlt selection name " 
+               + std::string(selName->first)
                 + " to its container ", StatusCode::SUCCESS, 10 );
       }
 

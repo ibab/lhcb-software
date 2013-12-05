@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+! 2013-12-05 - Rob Lambert
+ - Changes to comply with new Gaudi::StringKey types in IANSvc and related
+ - see task #48818
+
 ! 2013-11-30 - Tomasz Skwarnicki
  - changes in Dec, Sel, Vertex Writers and Decoders to equip with SourceID (0=Hlt, 1=Hlt1, 2=Hlt2)
    bank version numbers advanced to 2

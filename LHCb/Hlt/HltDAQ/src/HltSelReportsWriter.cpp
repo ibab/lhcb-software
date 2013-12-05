@@ -188,7 +188,7 @@ StatusCode HltSelReportsWriter::execute() {
   HltSelRepRBExtraInfo extraInfoSubBank;
   HltSelRepRBStdInfo stdInfoSubBank;
 
-  std::vector<IANNSvc::minor_value_type> hltinfos = m_hltANNSvc->items("InfoID"); 
+  std::vector<IANNSvc::minor_value_type> hltinfos = m_hltANNSvc->items(Gaudi::StringKey(std::string("InfoID"))); 
 
   objTypSubBank.initialize();
   substrSubBank.initialize();  
