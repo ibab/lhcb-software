@@ -34,12 +34,9 @@ DECLARE_TOOL_FACTORY( VPExpectation )
 
 //-----------------------------------------------------------------------------
 
-VPExpectation::VPExpectation( const std::string& type,
-                              const std::string& name,
-                              const IInterface* parent ):
+VPExpectation::VPExpectation( const std::string& type, const std::string& name, const IInterface* parent ):
   GaudiTool ( type, name, parent )
 {
-
   // interface
   declareInterface<IVPExpectation>(this);
 }
@@ -68,7 +65,7 @@ IVPExpectation::Info VPExpectation::expectedInfo ( const Track& aTrack ) const {
 
   // work out the first and last z on the track
   double zStart; double zStop;
-  if (aTrack.checkFlag( Track::Backward) == false){
+  if (aTrack.checkFlag( Track::Backward) == false) {
     // forward track
     zStart = zMin(aTrack)  - 1e-3;
     zStop = 9999.0;
@@ -81,21 +78,18 @@ IVPExpectation::Info VPExpectation::expectedInfo ( const Track& aTrack ) const {
   return expectedInfo(aTrack, zStart, zStop);
 }
 
-int VPExpectation::nExpected(const LHCb::Track& aTrack,
-                               const double zStart, const double zStop) const {
+int VPExpectation::nExpected(const LHCb::Track& aTrack, const double zStart, const double zStop) const {
 
   IVPExpectation::Info expectedHits = expectedInfo(aTrack,zStart,zStop);
   return expectedHits.n;
 }
 
-IVPExpectation::Info VPExpectation::expectedInfo(const LHCb::Track& aTrack,
-                               const double zStart, const double zStop) const {
+IVPExpectation::Info VPExpectation::expectedInfo(const LHCb::Track& aTrack, const double zStart, const double zStop) const {
 
   return scan(aTrack,zStart, zStop);
 }
 
-bool VPExpectation::isInside(const LHCb::Track& aTrack,
-                             const unsigned int sensorNum) const {
+bool VPExpectation::isInside(const LHCb::Track& aTrack, const unsigned int sensorNum) const {
 
   // make a line representing the track
   const State& state = aTrack.firstState();
@@ -111,19 +105,15 @@ bool VPExpectation::isInside(const LHCb::Track& aTrack,
 int VPExpectation::nMissed ( const Track& aTrack ) const
 {
 
-  // number of hits missed from zBeam to zFirst
-
   // forward or backward track ?
   double zStart; double zStop;
   if ( aTrack.checkFlag( Track::Backward) == false){
     zStart = zBeamLine(aTrack) - 1e-3;
     zStop = zMin(aTrack);
-  }
-  else {
+  } else {
     zStart = zMax(aTrack) - 1e-3;
     zStop = zBeamLine(aTrack);
   }
-
 
   // number expected...
   IVPExpectation::Info expectedHits = scan(aTrack,zStart,zStop);
@@ -135,11 +125,10 @@ int VPExpectation::nMissed( const Track& aTrack, const double z ) const{
 
   // line representing track
   double zStart; double zStop;
-  if ( aTrack.checkFlag( Track::Backward) == false){
+  if ( aTrack.checkFlag( Track::Backward) == false) {
     zStart = z;
     zStop = zMin(aTrack) + 1e-3;
-  }
-  else {
+  } else {
     zStart = zMax(aTrack) - 1e-3;
     zStop = z;
   }
@@ -151,7 +140,7 @@ int VPExpectation::nMissed( const Track& aTrack, const double z ) const{
 }
 
 IVPExpectation::Info VPExpectation::scan(const LHCb::Track& aTrack,
-                          const double zStart, const double zStop) const {
+  const double zStart, const double zStop) const {
 
   IVPExpectation::Info nHits;
   nHits.n = 0;
@@ -160,12 +149,12 @@ IVPExpectation::Info VPExpectation::scan(const LHCb::Track& aTrack,
 
   Tf::Tsa::Line xLine(0.,0.); Tf::Tsa::Line yLine(0.,0.);
   std::vector<DeVPSensor*>::const_iterator iterV = m_veloDet->sensorsBegin();
-  for (; iterV != m_veloDet->sensorsEnd(); ++iterV){
+  for (; iterV != m_veloDet->sensorsEnd(); ++iterV) {
     // only sensors the track could see
     const double z = (*iterV)->z();
     if (z >= zStart && z <= zStop ) {
       param(aTrack,z,xLine,yLine);
-      if (isInside(*iterV,xLine,yLine,z) == true){
+      if (isInside(*iterV,xLine,yLine,z) == true) {
         ++nHits.n ;
 
         double x = xLine.value(z);
@@ -182,15 +171,12 @@ IVPExpectation::Info VPExpectation::scan(const LHCb::Track& aTrack,
         nHits.expectedZ.push_back(z);
       }
     }
-  } // iterV
+  }                                                         // iterV
 
   return nHits;
 }
 
-bool VPExpectation::isInside(const DeVPSensor* sensor,
-			       const Tf::Tsa::Line& xLine,
-			       const Tf::Tsa::Line& yLine,
-			       const double z) const{
+bool VPExpectation::isInside(const DeVPSensor* sensor, const Tf::Tsa::Line& xLine, const Tf::Tsa::Line& yLine, const double z) const {
 
   if ( abs(sensor->z() - z) > 1e-2 ) {
     warning() << "The sensor z isnt the sensor z! "  << sensor->z() << " " << z << " " << abs(sensor->z() - z) << endmsg;
@@ -204,7 +190,7 @@ bool VPExpectation::isInside(const DeVPSensor* sensor,
   return false;
 }
 
-bool VPExpectation::isInsideChildren(const IGeometryInfo* igi, const Gaudi::XYZPoint globalPoint) const{
+bool VPExpectation::isInsideChildren(const IGeometryInfo* igi, const Gaudi::XYZPoint globalPoint) const {
   if (igi->isInside(globalPoint)) {
     return true;
   } else {
@@ -218,61 +204,57 @@ bool VPExpectation::isInsideChildren(const IGeometryInfo* igi, const Gaudi::XYZP
   return false;
 }
 
-double VPExpectation::zMin(const Track& aTrack) const{
+double VPExpectation::zMin(const Track& aTrack) const {
 
   // get the hit at least z
   double z = 99999.0;
   const std::vector<LHCbID>& vids = aTrack.lhcbIDs();
-  for (std::vector<LHCbID>::const_iterator iter = vids.begin() ; iter != vids.end() ; ++iter){
-      if (iter->isVP() )  {
+  for (std::vector<LHCbID>::const_iterator iter = vids.begin() ; iter != vids.end() ; ++iter) {
+    if (iter->isVP() )  {
       VPChannelID chan = iter->vpID();
       const DeVPSensor* sensor = m_veloDet->sensorOfChannel(chan);
       if (sensor != NULL) {
-        if (sensor->z() < z){
+        if (sensor->z() < z) {
           z = sensor->z();
         }
       } else warning() << "Sensor is null for " << chan << endmsg;
     }
-  }  // loop ids
+  } 
   return z;
 }
 
-double VPExpectation::zMax(const Track& aTrack) const{
+double VPExpectation::zMax(const Track& aTrack) const {
 
   double z = -99999.0;
   const std::vector<LHCbID>& vids = aTrack.lhcbIDs();
-  for (std::vector<LHCbID>::const_iterator iter = vids.begin() ; iter != vids.end() ; ++iter){
+  for (std::vector<LHCbID>::const_iterator iter = vids.begin() ; iter != vids.end() ; ++iter) {
     if (iter->isVP()){
       VPChannelID chan = iter->vpID();
       const DeVPSensor* sensor = m_veloDet->sensorOfChannel(chan);
-      if (sensor->z() > z){
+      if (sensor->z() > z) {
         z = sensor->z();
       }
     } 
-  } // loop ids
- return z;
+  }  
+  return z;
 }
 
-int VPExpectation::nFound(const Track& aTrack,
-                            const double zStart, const double zStop) const{
-
- int nFound = 0;
- const std::vector<LHCbID>& vids = aTrack.lhcbIDs();
- for (std::vector<LHCbID>::const_iterator iter = vids.begin() ; iter != vids.end() ; ++iter){
-   if (iter->isVP()){
-     VPChannelID chan = iter->vpID();
-     const DeVPSensor* sensor = m_veloDet->sensorOfChannel(chan);
-     if (sensor->z() >= zStart && sensor->z() <= zStop ){
-       ++nFound;
-     }
-   }
- } // ids
-
- return nFound;
+int VPExpectation::nFound(const Track& aTrack, const double zStart, const double zStop) const {
+  int nFound = 0;
+  const std::vector<LHCbID>& vids = aTrack.lhcbIDs();
+  for (std::vector<LHCbID>::const_iterator iter = vids.begin() ; iter != vids.end() ; ++iter) {
+    if (iter->isVP()) {
+      VPChannelID chan = iter->vpID();
+      const DeVPSensor* sensor = m_veloDet->sensorOfChannel(chan);
+      if (sensor->z() >= zStart && sensor->z() <= zStop ) {
+        ++nFound;
+      }
+    }
+  }
+  return nFound;
 }
 
-void VPExpectation::param(const LHCb::Track& aTrack, const double z,
-                            Tf::Tsa::Line& xLine, Tf::Tsa::Line& yLine) const {
+void VPExpectation::param(const LHCb::Track& aTrack, const double z, Tf::Tsa::Line& xLine, Tf::Tsa::Line& yLine) const {
 
   const LHCb::State& state = aTrack.closestState(z);
   xLine = Tf::Tsa::Line(state.tx(), state.x(), state.z());
@@ -289,8 +271,8 @@ double VPExpectation::zBeamLine(const Track& aTrack) const {
     double z = state.z();
     // check on division by zero (track parallel to beam line!)
     if ( fabs(vec[2]) > TrackParameters::lowTolerance
-        || vec[3]  > TrackParameters::lowTolerance ) {
-      z -= ( vec[0]*vec[2] + vec[1]*vec[3] ) / ( vec[2]*vec[2] + vec[3]*vec[3] );
+      || vec[3]  > TrackParameters::lowTolerance ) {
+        z -= ( vec[0]*vec[2] + vec[1]*vec[3] ) / ( vec[2]*vec[2] + vec[3]*vec[3] );
     }
   }
   return z;
