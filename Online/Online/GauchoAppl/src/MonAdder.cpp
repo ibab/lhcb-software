@@ -78,7 +78,7 @@ void MonAdder::Configure()
     m_name= "MON_" + m_MyName;
   }
   m_outsvcname = m_name+m_serviceName;
-  m_cmdname = nodename+"_"+RTL::processName()+"/"+m_MyName+"/"+m_serviceName+"/Timeout";
+  m_cmdname = nodename+"_"+RTL::processName()+"/"+m_MyName+/*"/"+*/m_serviceName+"/Timeout";
 //  DimClient::getDnsNode();
 //  if (m_DimDns == 0)
 //  {
