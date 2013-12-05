@@ -3,7 +3,6 @@
 #define _IVPExpectation_H
 
 #include "GaudiKernel/IAlgTool.h"
-#include <bitset>
 
 static const InterfaceID IID_IVPExpectation( "IVPExpectation", 0, 0 );
 
@@ -49,14 +48,6 @@ public:
   virtual int nExpected ( const LHCb::Track& aTrack ) const = 0;
 
 
-  /** Returns info on expected hits and fill bitmap for hit pattern
-   *
-   *  @param aTrack Reference to the Track to test
-   *  @return Info
-   */
-  virtual IVPExpectation::Info expectedInfo ( const LHCb::Track& aTrack, std::bitset<30> velo[4] ) const = 0;
-
-
   /** Returns info on expected hits
    *
    *  @param aTrack Reference to the Track to test
@@ -83,17 +74,6 @@ public:
    *  @return Info
    */
   virtual IVPExpectation::Info expectedInfo ( const LHCb::Track& aTrack , const double zStart, const double zStop) const = 0;
-
-
-   /** Returns expected hits info, from zStart to zStop and hit pattern
-   *
-   *  @param aTrack Reference to the Track to test
-   *  @param zStart --> start of scan range
-   *  @param zStop --> end of scan range
-   *  @return Info
-   */
-  virtual IVPExpectation::Info expectedInfo ( const LHCb::Track& aTrack , const double zStart, const double zStop,
-                                                std::bitset<30> velo[4]) const = 0;
 
 
   /** Returns number of hits missed, from zBeamLine to firstHit
