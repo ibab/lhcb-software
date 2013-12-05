@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-12-05 - Edmund Smith
+ - Adding lines to reconstruct Xi_b baryons.
+
 ! 2013-12-02 - Mika Vesterinen
  - Use StdAllLooseKaons in StrippingPhiToKSKS.py.
 

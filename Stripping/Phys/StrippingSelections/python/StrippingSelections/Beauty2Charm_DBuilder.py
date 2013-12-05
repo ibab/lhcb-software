@@ -92,6 +92,7 @@ class DBuilder(object):
         self.hh_pid_tight_up = [filterPID('D2HHPIDTIGHTUP',self.hh_up,config_pid['TIGHT'])]
         # subset decays
         oneK = "NINTREE(ABSID=='K+') == 1"
+        self.kpi = [filterSelection('D2KPi',oneK,self.hh)]
         d_cf = "(((ID=='D+') & (NINTREE(ID=='K-')==1) & (%s)) | "\
                "((ID=='D-') & (NINTREE(ID=='K+')==1) & (%s)))" % (oneK,oneK)
         ds_cf = "((NINTREE(ID=='K-')==1) & (NINTREE(ID=='K+')==1))"
