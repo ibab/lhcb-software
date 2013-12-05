@@ -160,17 +160,12 @@ IVPExpectation::Info VPExpectation::scan(const LHCb::Track& aTrack,
 
   Tf::Tsa::Line xLine(0.,0.); Tf::Tsa::Line yLine(0.,0.);
   std::vector<DeVPSensor*>::const_iterator iterV = m_veloDet->sensorsBegin();
-  //std::cout << "scan(track,"<<zStart<<","<<zStop<<"): Looping over the sensors..."<<std::endl;
   for (; iterV != m_veloDet->sensorsEnd(); ++iterV){
     // only sensors the track could see
     const double z = (*iterV)->z();
-//     if (true ) {
     if (z >= zStart && z <= zStop ) {
-      //std::cout << "scan() sensor in range " << z << std::endl;
       param(aTrack,z,xLine,yLine);
-      //std::cout << "scan(): state (" << aTrack.closestState(z).x() << "," << aTrack.closestState(z).y() << "," << aTrack.closestState(z).z() << ")" << std::endl;
       if (isInside(*iterV,xLine,yLine,z) == true){
-        //std::cout << "scan() state is inside sensor" << std::endl;
         ++nHits.n ;
 
         double x = xLine.value(z);
@@ -185,20 +180,7 @@ IVPExpectation::Info VPExpectation::scan(const LHCb::Track& aTrack,
         }
 
         nHits.expectedZ.push_back(z);
-
-//      unsigned int station = ((*iterV)->sensorNumber()%64)/2 ;
-//      unsigned int side    = ((*iterV)->sensorNumber()%2) ;
-//      unsigned int type    = ((*iterV)->sensorNumber()/64) ;
-//
-//      station += 2*(1-type/2) ;
-//      type     = type%2 ;
-//      velo[side+2*type].set(station) ;
-
-      } else {
-        //std::cout << "scan() state is not inside sensor" << std::endl;
       }
-    } else {// if
-      //std::cout << "scan() sensor out of range " << z << std::endl;
     }
   } // iterV
 
@@ -223,20 +205,16 @@ bool VPExpectation::isInside(const DeVPSensor* sensor,
 }
 
 bool VPExpectation::isInsideChildren(const IGeometryInfo* igi, const Gaudi::XYZPoint globalPoint) const{
-  //std::cout << igi->lvolumeName() << std::endl;
   if (igi->isInside(globalPoint)) {
     return true;
-    //std::cout << "return TRUE" << std::endl;
   } else {
     std::vector<IGeometryInfo*> children = igi->childIGeometryInfos();
     for (std::vector<IGeometryInfo*>::const_iterator iChild = children.begin(); iChild != children.end(); ++iChild) {
       if (isInsideChildren((*iChild), globalPoint)) {
-        //std::cout << "return TRUE" << std::endl;
         return true;
       }
     }
   }
-  //std::cout << "return false" << std::endl;
   return false;
 }
 
@@ -270,10 +248,7 @@ double VPExpectation::zMax(const Track& aTrack) const{
       if (sensor->z() > z){
         z = sensor->z();
       }
-      //std::cout << "zMax(): VP hit z " << sensor->z() << " max " << z << std::endl;
-    } else {
-      //std::cout << "zMax(): Not a VP hit" << std::endl;
-    }
+    } 
   } // loop ids
  return z;
 }

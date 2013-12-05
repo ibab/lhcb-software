@@ -1,4 +1,3 @@
-//  $Id: VPExpectation.h,v 1.7 2009-08-06 18:19:10 smenzeme Exp $
 #ifndef TRACKTOOLS_VPExpectation_H
 #define TRACKTOOLS_VPExpectation_H
 
@@ -20,11 +19,6 @@
 #include "Event/Track.h"
 #include "TsaKernel/Line.h"
 #include "DetDesc/IGeometryInfo.h"
-
-#include "Linker/AllLinks.h"
-#include "Linker/LinkedTo.h"
-#include "Linker/LinkedFrom.h"
-#include "Linker/LinkerTool.h"
 
 class DeVP;
 class DeVPSensor;
