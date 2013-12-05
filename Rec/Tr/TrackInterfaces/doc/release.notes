@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2013-12-05 - Thomas Bird
+ - Added IVPExpectation, which is a new interface to VP Expectation class 
+
 ! 2013-11-15 - Michel De Cian
  - Rename IPrAddUTCoordTool to IPrAddUTHitsTool.
 
