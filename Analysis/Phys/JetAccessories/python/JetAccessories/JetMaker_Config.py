@@ -42,6 +42,7 @@ class JetMakerConf:
             self.PFParticleTypes.append(dictOfPFType['MergedPi0'])
             self.PFParticleTypes.append(dictOfPFType['ResolvedPi0'])
         self.algorithms = []
+        self.JetSeq = GaudiSequencer("JetSeq",IgnoreFilterPassed = True)
         self.setupJetMaker()
         hsvc = HistogramSvc ( 'HistogramDataSvc' );
         alreadySet = False
@@ -70,4 +71,6 @@ class JetMakerConf:
             algo.HistoPath = 'JEC/'
         if self.JetIDCut :
             algo.ApplyJetID = True
+        
+        self.JetSeq.Members+= [ algo  ]
         self.algorithms.append(algo)
