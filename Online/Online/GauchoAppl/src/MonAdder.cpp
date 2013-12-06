@@ -185,12 +185,12 @@ void MonAdder::TaskName(std::string &server, std::string &tname, std::string &tg
   bool status = boost::regex_search(server,m_taskexp);
   if (status)
   {
-    printf("=====>SUCCESS\n");
+//    printf("=====>SUCCESS\n");
     tname = server;
     tgen = "";
     return;
   }
-  printf("FAILED\n");
+//  printf("FAILED\n");
   tname = "";
   tgen = "";
 }
