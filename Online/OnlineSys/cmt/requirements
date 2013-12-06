@@ -17,7 +17,7 @@ use GaudiObjDesc        v11r17
 #=======================================================
 use Camera              v1r24    Online
 use Checkpointing       v0r14    Online
-macro CondDBServer_use "CondDBServer v1r4 Online" target-i686 ""
+macro CondDBServer_use "CondDBServer v1r5 Online" target-i686 ""
 use $(CondDBServer_use)
 use CondDBServer        v1r5     Online
 use Controller          v0r8     Online
