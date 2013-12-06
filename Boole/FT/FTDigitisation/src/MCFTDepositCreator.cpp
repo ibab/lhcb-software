@@ -394,10 +394,13 @@ StatusCode MCFTDepositCreator::HitToChannelConversion_OldGeometry(LHCb::MCHit* f
         
       plot(att,"AttenuationFactor","AttFactorDistrib; Attenuation factor ; Nber of Events" ,0 ,1);
 
+      // Calculate scintillation light release time
+      double releaseTime = -log( m_flatDist() ) * m_scintillationDecayTime; 
+
       // Calculate the arrival time
       double yMax = m_deFT->fibremats()[0]->layerMaxY();
-      double timeToSiPM = ftHit->time() + (yMax - fabs(ftHit->midPoint().y())) * m_fiberPropagationTime + m_scintillationDecayTime + m_spillTimes[iSpill]; // tilted angles... -> y of module
-      double timeRefToSiPM = ftHit->time() + (yMax + fabs(ftHit->midPoint().y())) * m_fiberPropagationTime + m_scintillationDecayTime + m_spillTimes[iSpill]; 
+      double timeToSiPM = ftHit->time() + (yMax - fabs(ftHit->midPoint().y())) * m_fiberPropagationTime + releaseTime + m_spillTimes[iSpill]; // tilted angles... -> y of module
+      double timeRefToSiPM = ftHit->time() + (yMax + fabs(ftHit->midPoint().y())) * m_fiberPropagationTime + releaseTime + m_spillTimes[iSpill]; 
       if ( msgLevel( MSG::DEBUG) ){
         debug()  << "[Pulse Arrival Time] Hit(y)=" << fabs(ftHit->midPoint().y())
                  << " DirectPulseArrTime="<< timeToSiPM 
@@ -521,8 +524,8 @@ StatusCode MCFTDepositCreator::HitToChannelConversion_NewGeometry(LHCb::MCHit* f
 
       // Calculate the arrival time
       double yMax = m_deFT->fibremats()[0]->layerMaxY();
-      double timeToSiPM = ftHit->time() + (yMax - fabs(ftHit->midPoint().y())) * m_fiberPropagationTime + m_scintillationDecayTime + m_spillTimes[iSpill]; // tilted angles... -> y of module
-      double timeRefToSiPM = ftHit->time() + (yMax + fabs(ftHit->midPoint().y())) * m_fiberPropagationTime + m_scintillationDecayTime + m_spillTimes[iSpill]; 
+      double timeToSiPM = ftHit->time() + (yMax - fabs(ftHit->midPoint().y())) * m_fiberPropagationTime + releaseTime + m_spillTimes[iSpill]; // tilted angles... -> y of module
+      double timeRefToSiPM = ftHit->time() + (yMax + fabs(ftHit->midPoint().y())) * m_fiberPropagationTime + releaseTime + m_spillTimes[iSpill]; 
       if ( msgLevel( MSG::DEBUG) ){
         debug()  << "[Pulse Arrival Time] Hit(y)=" << fabs(ftHit->midPoint().y())
                  << " DirectPulseArrTime="<< timeToSiPM 

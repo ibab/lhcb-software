@@ -140,20 +140,11 @@ StatusCode FTNoiseCreator::execute() {
   float roomTemp = 20.; // deg.C
   int NthermalNoise = Ntotchannels * (m_thermalNoiseRateBase / readoutFreq) * (irradCoef * m_irradiation) * pow(2,(m_temperature-roomTemp)/tempCoef);
 
-  // Calculate number of expected afterpulses due to thermal noise hits
-  float avgNoisePE = 1. + m_crossTalkProbability + pow(m_crossTalkProbability,2) + pow(m_crossTalkProbability,3) + pow(m_crossTalkProbability,4); 
-  int NthermalNoise_AP = 0;
-  float APLoop = float(NthermalNoise);
-  while (APLoop > 1.) {
-    APLoop *= m_afterpulseProbability ; // effectively also takes into account afterpulses of cross-talk (of cross-talk) of thermal noise
-    NthermalNoise_AP += int(APLoop*avgNoisePE+0.5);
-  }
 
   // Calculate number of VISIBLE thermal noise hits, due to cross-talk:
   //int minPEforCluster = int( float(m_clusterMinCharge) / m_sipmGain );
-  int NvisibleThermalNoise = int( (NthermalNoise+NthermalNoise_AP) * pow(m_crossTalkProbability, 0) ); // ct^0 = generate all pulses
-  info() << "[THERMAL] NthermalNoise = " << NvisibleThermalNoise << " (of which "
-    << float(NthermalNoise_AP) / (float(NthermalNoise + NthermalNoise_AP)) * 100. << " \% afterpulses)" << endmsg;
+  int NvisibleThermalNoise = int( NthermalNoise * pow(m_crossTalkProbability, 0) ); // ct^0 = generate all pulses
+  info() << "[THERMAL] NthermalNoise = " << NvisibleThermalNoise << endmsg;
   plot(NvisibleThermalNoise, "NvisibleThermalNoiseHits", "NvisibleThermalNoiseHits; NvisibleThermalNoiseHits", 0. , 1000000. ,10000);
 
 
@@ -243,8 +234,9 @@ StatusCode FTNoiseCreator::execute() {
   int NhitAfterpulses = NavgClusInEvent; 
      
   // Calculate number of additional hit afterpulse hits due to afterpulsing
+  float avgNoisePE = 1. + m_crossTalkProbability + pow(m_crossTalkProbability,2) + pow(m_crossTalkProbability,3) + pow(m_crossTalkProbability,4); 
   int NhitAfterpulses_AP = 0;
-  APLoop = float(NhitAfterpulses);
+  float APLoop = float(NhitAfterpulses);
   while (APLoop > 1.) {
     APLoop *= m_afterpulseProbability; // effectively also takes into account afterpulses of cross-talk of (cross-talk of) MCHit afterpulses
     NhitAfterpulses_AP += int(APLoop*avgNoisePE+0.5);

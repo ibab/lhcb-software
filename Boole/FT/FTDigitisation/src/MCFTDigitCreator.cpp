@@ -41,9 +41,9 @@ MCFTDigitCreator::MCFTDigitCreator( const std::string& name,
   : GaudiHistoAlg ( name , pSvcLocator )
   , m_SiPMResponse(0)
 {
-  std::vector<double> tmp = boost::assign::list_of(21*Gaudi::Units::ns)
-                                                  (23*Gaudi::Units::ns)
-                                                  (25*Gaudi::Units::ns);// tof (21+2+2) + full fiber propagation time (15) - integration rise (15)
+  std::vector<double> tmp = boost::assign::list_of(26*Gaudi::Units::ns)
+                                                  (28*Gaudi::Units::ns)
+                                                  (30*Gaudi::Units::ns);// tof (21+2+2) + full fiber propagation time (15) - integration rise (15)
 
   declareProperty("InputLocation" ,       m_inputLocation        = LHCb::MCFTDepositLocation::Default );
   declareProperty("OutputLocation" ,      m_outputLocation       = LHCb::MCFTDigitLocation::Default   );
