@@ -6,6 +6,17 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r5>2013-06-12 OnlineSys v5r6</A></H1>
+<PRE>
+  Use new Gaudi v24r2
+  Updated/new packages:	
+   CondDBServer        v1r5     Online
+   FarmConfig          v0r3     Online
+   Gaucho              v7r33    Online
+   GauchoAppl          v1r12    Online
+   GaudiRootCnvTests   v1r11    Online
+</PRE>
+
 <H1><A NAME=v5r5>2013-10-11 OnlineSys v5r5</A></H1>
 <PRE>
   Use new Gaudi v23r10
