@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-12-06 - Rob Lambert
+ - Adapt to change in IANSvc, Gaudi::StringKey, see task #48818
+
 ! 2013-12-01 - Michel De Cian
  - Add PrForward track history to TrackEventCloneKiller
 

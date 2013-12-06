@@ -110,10 +110,10 @@ HltTrackConverter::HltTrackConverter( const std::string& name,
 
 StatusCode HltTrackConverter::initializeTriggerLists()
 {
-  std::vector<std::string> m_hlt1_init = svc<IANNSvc>("ANNDispatchSvc")->keys("Hlt1SelectionID");
-  std::vector<std::string> m_hlt2_init = svc<IANNSvc>("ANNDispatchSvc")->keys("Hlt2SelectionID");
+  std::vector<IANSvc::minor_key_type> m_hlt1_init = svc<IANNSvc>("ANNDispatchSvc")->keys(Gaudi::StringKey(std::string("Hlt1SelectionID")));
+  std::vector<IANSvc::minor_key_type> m_hlt2_init = svc<IANNSvc>("ANNDispatchSvc")->keys(Gaudi::StringKey(std::string("Hlt2SelectionID")));
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< "Available Hlt1 Triggers\n";
-  for (std::vector<std::string>::iterator it = m_hlt1_init.begin();it!=m_hlt1_init.end();++it)
+  for (std::vector<IANSvc::minor_key_type>::iterator it = m_hlt1_init.begin();it!=m_hlt1_init.end();++it)
     {
       m_HltLines.push_back(*it);
       if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< *it << "\n";
@@ -122,7 +122,7 @@ StatusCode HltTrackConverter::initializeTriggerLists()
     debug() << endmsg;
     debug()<< "Available Hlt2 Triggers\n";
   }
-  for (std::vector<std::string>::iterator it = m_hlt2_init.begin();it!=m_hlt2_init.end();++it)
+  for (std::vector<IANSvc::minor_key_type>::iterator it = m_hlt2_init.begin();it!=m_hlt2_init.end();++it)
     {
       m_HltLines.push_back(*it);
       if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< *it << "\n";
