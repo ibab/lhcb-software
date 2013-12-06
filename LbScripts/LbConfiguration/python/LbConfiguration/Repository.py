@@ -20,6 +20,7 @@ repositories = { "gaudi": { "ssh":       SVNReposInfo( "svn+ssh", "svn.cern.ch",
                             "anonymous": SVNReposInfo( "http", "svn.cern.ch", "/guest/lhcb" ) },
                  "dirac": { "ssh":       SVNReposInfo( "svn+ssh", "svn.cern.ch", "/reps/dirac" ),
                             "anonymous": SVNReposInfo( "http", "svn.cern.ch", "/guest/dirac" ) },
+                 "lhcbint": { "ssh":       SVNReposInfo( "svn+ssh", "svn.cern.ch", "/reps/lhcbint" ) },
                  }
 
 #only needed information for svn switch --relocate
