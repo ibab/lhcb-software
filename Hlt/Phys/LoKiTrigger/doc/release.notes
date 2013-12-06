@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2013-12-06 - Rob Lambert
+ - Adapt to change in IANSvc, Gaudi::StringKey, see task #48818
+
 !========================= LoKiTrigger v13r0p1 2013-08-01 =========================
 ! 2013-07-08 - Chris Jones
  - Add various missing default constructors. Fixes clang32 compilation errors.

@@ -103,7 +103,7 @@ int Hlt::Base::hltInfoID
 ( const std::string& name ) const 
 {
   boost::optional<IANNSvc::minor_value_type> i =  
-    annSvc() -> value ( "InfoID" , name ) ;
+    annSvc() -> value ( Gaudi::StringKey(std::string("InfoID")) , name ) ;
   Assert ( i, " request for unknown Info ID" ) ;
   return i->second;
 }
@@ -114,7 +114,7 @@ std::string Hlt::Base::hltInfoName
 ( const int id ) const  
 {
   boost::optional<IANNSvc::minor_value_type> i =  
-    annSvc() -> value ( "InfoID" , id );
+    annSvc() -> value ( Gaudi::StringKey(std::string("InfoID")) , id );
   Assert( i, " request for unknown Info ID");
   return i->first;
 }

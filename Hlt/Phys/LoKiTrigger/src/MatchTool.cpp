@@ -82,7 +82,7 @@ LoKi::Hlt1::MatchTool::MatchTool
   //
   { // recoID 
     boost::optional<IANNSvc::minor_value_type> info = 
-      ann->value( "InfoID" , mTool()  );
+      ann->value( Gaudi::StringKey(std::string("InfoID")) , mTool()  );
     Assert( info , " request for unknown Info ID : " + mTool() );
     //
     m_recoID = info->second ;

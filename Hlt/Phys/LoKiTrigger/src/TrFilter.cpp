@@ -75,7 +75,7 @@ LoKi::Hlt1::FilterTracks::FilterTracks
    SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ); 
 
    boost::optional<IANNSvc::minor_value_type> info 
-      = ann->value( "InfoID", tool() );
+     = ann->value( Gaudi::StringKey(std::string("InfoID")), tool() );
    Assert( info , "request for unknown Info ID :" + tool() );
 
    m_recoID = info->second;

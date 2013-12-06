@@ -46,7 +46,7 @@ void LoKi::RecVertices::Hlt_TrackCutAsRecVertexCut_Any::retrieveFailKey()
   // get the InfoID from HltANNSvc
   SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ) ;
   const std::string infoIDName = "HltUnit/" + alg->name() ;
-  boost::optional<IANNSvc::minor_value_type> _info = ann->value("InfoID" , infoIDName );
+  boost::optional<IANNSvc::minor_value_type> _info = ann->value(Gaudi::StringKey(std::string("InfoID")) , infoIDName );
   Assert( _info , " request for unknown Info ID : " + infoIDName );
   m_extraInfoKey = _info->second;
 

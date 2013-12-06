@@ -60,7 +60,7 @@ LoKi::Hlt1::UpgradeTool::UpgradeTool
   /// get the service 
   SmartIF<IANNSvc> ann = LoKi::Hlt1::Utils::annSvc( *this ) ;
   //
-  boost::optional<IANNSvc::minor_value_type> _info = ann->value("InfoID" , trTool()  );
+  boost::optional<IANNSvc::minor_value_type> _info = ann->value(Gaudi::StringKey(std::string("InfoID")) , trTool()  );
   Assert( _info , " request for unknown Info ID : " + trTool() );
   //
   m_recoID = _info->second ;
