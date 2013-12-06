@@ -12,6 +12,10 @@
     <text>from PRConfig import TestFileDB; TestFileDB.test_file_db['2012_raw_default'].run();from Configurables import LHCbApp; LHCbApp().EvtMax=10;</text>
   </set></argument>
   <argument name="validator"><text>
+#check if the output exists, and check the split locations are on it
+from RawEventCompat.QMTest.FormatTests import checkIsSplit, checkIsGone
+checkIsSplit("split-raw-event.dst",2.0,causes,result,"raweventcompat.gaudirun")
+checkIsGone("split-raw-event.dst",["Event/DAQ"],causes,result,"raweventcompat.gaudirun")
 
 findReferenceBlock("""StoreExplorerAlg     INFO | +--> /Other [No Address]  DataObject
 StoreExplorerAlg     INFO | | +--> /RawEvent [No Address]  LHCb::RawEvent

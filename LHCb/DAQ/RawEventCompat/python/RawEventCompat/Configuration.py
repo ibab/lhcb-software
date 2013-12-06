@@ -305,6 +305,7 @@ class RawEventJuggler(ConfigurableUser):
         , "KillInputBanksAfter" : None #Regex of banks to kill AFTER copying around, from input locations
         , "KillExtraBanks" : False #Bool, whether or not to remove banks which don't exist in target format
         , "KillExtraNodes" : False #Bool, whether to remove nodes which don't exist in target format
+        , "KillExtraDirectories" : False #Kill not only the RawEvent, but also unlink the parent directories. Requires KillExtraNodes.
         , "WriterOptItemList" : None #append a writer here to add output locations as OptItemList
         , "WriterItemList" : None #append a writer here to add output locations as ItemList
         , "Sequencer" : None #send in a sequencer to add the juggling into
@@ -403,10 +404,11 @@ class RawEventJuggler(ConfigurableUser):
             #if KillBanks or KillNodes... has been requested, I can't use DoD, it's unsafe. I don't know what's "before" and "after"
             if self.getProp("DataOnDemand")  and (self.getProp("KillExtraNodes") or self.isPropertySet("KillInputBanksBefore") or self.isPropertySet("KillInputBanksAfter") or self.getProp("KillExtraBanks")):
                 raise AttributeError("You have asked for some killing of banks, and asked for DoD, which is not a safe way to run. Either cope with the extra banks, or use a sequencer instead of DoD")
-
+            if self.getProp("KillExtraDirectories") and not self.getProp("KillExtraNodes"):
+                raise AttributeError("In order to kill extra directories, you must also be killing the extra nodes (raw events)")
             #raise import error if you don't have the correct requirements
             from Configurables import RawEventMapCombiner, EventNodeKiller, bankKiller
-
+            
             ###############################################
             # Stage 3: Recombine banks from given locations
             ###############################################
@@ -465,7 +467,12 @@ class RawEventJuggler(ConfigurableUser):
                     for loc in input_locations:
                         if loc not in output_locations:
                             enk.Nodes.append(_replaceWrap(loc))
-
+                            if self.getProp("KillExtraDirectories"):
+                                dloc=loc.replace("/RawEvent","")
+                                flags=[o.startswith(dloc) for o in output_locations]
+                                if (True not in flags) and (dloc not in enk.Nodes):
+                                    enk.Nodes.append(_replaceWrap(dloc))
+        
         elif self.isPropertySet("KillInputBanksAfter") or self.getProp("KillExtraNodes") or self.isPropertySet("KillExtraBanks"):
             raise AttributeError("You've asked to kill something from the input *after* copying, but you aren't actually doing any copying. Please kill them yourself without this configurable, or use KillInputBanksBefore!")
         

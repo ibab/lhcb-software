@@ -16,6 +16,7 @@ RawEventJuggler().Input=0.0 #From original location
 RawEventJuggler().Output=2.0 #go to Stripping20 format
 RawEventJuggler().Sequencer=MySeq
 RawEventJuggler().KillExtraNodes=True #remove DAQ/RawEvent completely
+RawEventJuggler().KillExtraDirectories=True
 RawEventJuggler().WriterOptItemList=MyWriter
 
 ApplicationMgr().TopAlg=[MySeq]
