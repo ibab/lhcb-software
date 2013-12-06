@@ -4,6 +4,10 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2013-12-06 - Jacco de Vries
+ - Adapted MCFTDepositCreator to include fiberPropagationTime of light
+   (instead of refractive_index / c_light), and scintillation light release time
+
 ! 2013-12-04 - Jacco de Vries
  - Adapted FTClusterCreator to handle noise clusters that will have
     no associated mcDeposit (null-pointer checks).

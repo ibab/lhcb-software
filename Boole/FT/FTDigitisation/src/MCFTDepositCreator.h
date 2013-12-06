@@ -15,6 +15,7 @@
 // Include files
 /// from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiKernel/RndmGenerators.h"
 
 // from Event
 #include "Event/MCHit.h"
@@ -53,7 +54,8 @@ private:
   int m_ftGeomVersion;
   
   // Fibre properties
-  float       m_fiberRefractionIndex;   ///< Fiber refraction index
+  float       m_fiberPropagationTime;   ///< Light propagation time in fiber
+  float       m_scintillationDecayTime; ///< Decay time of scintillation light release
   float       m_shortAttenuationLength; ///< Attenuation lengh of the light along the fibre : short component
   float       m_longAttenuationLength;  ///< Attenuation lengh of the light along the fibre : long component
   float       m_fractionShort;          ///< Fraction of short attenuation length at SiPM
@@ -72,6 +74,7 @@ private:
   std::vector<float> m_transmissionRefMap; ///< Maps hits to transmitted energy from the reflected pulse
 
   DeFTDetector* m_deFT; ///< pointer to FT detector description
+  Rndm::Numbers m_flatDist; ///< random number generator 
 
 };
 #endif // MCFTDEPOSITCREATOR_H

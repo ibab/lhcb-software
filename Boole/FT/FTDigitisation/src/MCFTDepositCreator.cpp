@@ -64,7 +64,8 @@ MCFTDepositCreator::MCFTDepositCreator( const std::string& name,
   declareProperty( "SpillTimes"                 , m_spillTimes                  = tmp2);  
   declareProperty( "InputLocation"              , m_inputLocation  = LHCb::MCHitLocation::FT, "Path to input MCHits");
   declareProperty( "OutputLocation"             , m_outputLocation = LHCb::MCFTDepositLocation::Default, "Path to output MCDeposits");
-  declareProperty( "FiberRefractionIndex"       , m_fiberRefractionIndex        = 1.59, "Scintillator refraction index");
+  declareProperty( "FiberPropagationTime"       , m_fiberPropagationTime        = 6.0 * Gaudi::Units::ns / Gaudi::Units::m, "light propagation time in fiber");
+  declareProperty( "ScintillationDecayTime"     , m_scintillationDecayTime      = 2.8 * Gaudi::Units::ns, "Scintillation decay time of photons");
   declareProperty( "ShortAttenuationLength"     , m_shortAttenuationLength      = 200 * Gaudi::Units::mm, 
                    "Distance along the fibre to divide the light amplitude by a factor e : short component");
   declareProperty( "LongAttenuationLength"      , m_longAttenuationLength       = 4700 * Gaudi::Units::mm, 
@@ -108,6 +109,9 @@ StatusCode MCFTDepositCreator::initialize() {
 
   /// Retrieve and initialize DeFT (no test: exception in case of failure)
   m_deFT = getDet<DeFTDetector>( DeFTDetectorLocation::Default );
+
+  // Initialize random generator
+  m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0) );
 
   // construct container names once
   std::vector<std::string>::const_iterator iSpillName = m_spillVector.begin();
@@ -392,8 +396,8 @@ StatusCode MCFTDepositCreator::HitToChannelConversion_OldGeometry(LHCb::MCHit* f
 
       // Calculate the arrival time
       double yMax = m_deFT->fibremats()[0]->layerMaxY();
-      double timeToSiPM = ftHit->time() + (yMax - fabs(ftHit->midPoint().y())) * m_fiberRefractionIndex / Gaudi::Units::c_light + m_spillTimes[iSpill]; // tilted angles... -> y of module
-      double timeRefToSiPM = ftHit->time() + (yMax + fabs(ftHit->midPoint().y())) * m_fiberRefractionIndex / Gaudi::Units::c_light + m_spillTimes[iSpill]; 
+      double timeToSiPM = ftHit->time() + (yMax - fabs(ftHit->midPoint().y())) * m_fiberPropagationTime + m_scintillationDecayTime + m_spillTimes[iSpill]; // tilted angles... -> y of module
+      double timeRefToSiPM = ftHit->time() + (yMax + fabs(ftHit->midPoint().y())) * m_fiberPropagationTime + m_scintillationDecayTime + m_spillTimes[iSpill]; 
       if ( msgLevel( MSG::DEBUG) ){
         debug()  << "[Pulse Arrival Time] Hit(y)=" << fabs(ftHit->midPoint().y())
                  << " DirectPulseArrTime="<< timeToSiPM 
@@ -512,10 +516,13 @@ StatusCode MCFTDepositCreator::HitToChannelConversion_NewGeometry(LHCb::MCHit* f
       plot(att,"AttenuationFactor","AttFactorDistrib; Attenuation factor ; Nber of Events" ,0 ,1);
       plot(attRef,"AttenuationFactorRef","AttFactorDistribRef; Attenuation factor ref ; Nber of Events" ,0 ,1);
 
+      // Calculate scintillation light release time
+      double releaseTime = -log( m_flatDist() ) * m_scintillationDecayTime; 
+
       // Calculate the arrival time
       double yMax = m_deFT->fibremats()[0]->layerMaxY();
-      double timeToSiPM = ftHit->time() + (yMax - fabs(ftHit->midPoint().y())) * m_fiberRefractionIndex / Gaudi::Units::c_light + m_spillTimes[iSpill]; // tilted angles... -> y of module
-      double timeRefToSiPM = ftHit->time() + (yMax + fabs(ftHit->midPoint().y())) * m_fiberRefractionIndex / Gaudi::Units::c_light + m_spillTimes[iSpill]; 
+      double timeToSiPM = ftHit->time() + (yMax - fabs(ftHit->midPoint().y())) * m_fiberPropagationTime + m_scintillationDecayTime + m_spillTimes[iSpill]; // tilted angles... -> y of module
+      double timeRefToSiPM = ftHit->time() + (yMax + fabs(ftHit->midPoint().y())) * m_fiberPropagationTime + m_scintillationDecayTime + m_spillTimes[iSpill]; 
       if ( msgLevel( MSG::DEBUG) ){
         debug()  << "[Pulse Arrival Time] Hit(y)=" << fabs(ftHit->midPoint().y())
                  << " DirectPulseArrTime="<< timeToSiPM 
