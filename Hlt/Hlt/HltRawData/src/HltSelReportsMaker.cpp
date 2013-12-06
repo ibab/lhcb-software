@@ -160,10 +160,10 @@ StatusCode HltSelReportsMaker::initialize() {
  // get string-to-int selection ID map
   typedef std::map<IANNSvc::minor_key_type,IANNSvc::minor_mapped_type> map_t;
   map_t selectionNameToIntMap;
-  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items("Hlt1SelectionID") ) {
+  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items(Gaudi::StringKey(std::string("Hlt1SelectionID"))) ) {
       selectionNameToIntMap.insert( p );
   }
-  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items("Hlt2SelectionID") ) {
+  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items(Gaudi::StringKey(std::string("Hlt2SelectionID"))) ) {
       selectionNameToIntMap.insert( p );
   }
  
@@ -199,7 +199,7 @@ StatusCode HltSelReportsMaker::initialize() {
   }
 
   m_infoIntToName.clear();
-  std::vector<IANNSvc::minor_value_type> hltinfos = m_hltANNSvc->items("InfoID"); 
+  std::vector<IANNSvc::minor_value_type> hltinfos = m_hltANNSvc->items(Gaudi::StringKey(std::string("InfoID"))); 
   for( std::vector<IANNSvc::minor_value_type>::const_iterator i= hltinfos.begin();i!=hltinfos.end();++i){
     if( ( 0<= i->second ) && ( i->second<=65535 ) ){
       m_infoIntToName.insert( i->second, i->first );
@@ -550,7 +550,7 @@ StatusCode HltSelReportsMaker::execute() {
        if( pvSelectionName == m_lastPVSelectionName ){
          intPVSelID = m_intPVSelID;
        } else {
-         std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID");
+         std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items(Gaudi::StringKey(std::string("Hlt1SelectionID")));
          for( std::vector<IANNSvc::minor_value_type>::const_iterator si=hlt1.begin();
               si!=hlt1.end();++si){
            if( si->first == pvSelectionName ){
@@ -561,7 +561,7 @@ StatusCode HltSelReportsMaker::execute() {
            }
          }
          if( !intPVSelID ){           
-           std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
+           std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items(Gaudi::StringKey(std::string("Hlt2SelectionID")));
            for( std::vector<IANNSvc::minor_value_type>::const_iterator si=hlt2.begin();
                 si!=hlt2.end();++si){
              if( si->first == pvSelectionName ){

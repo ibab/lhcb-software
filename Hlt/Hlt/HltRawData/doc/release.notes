@@ -5,6 +5,9 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2013-12-06 - Rob Lambert
+ - Adapt to change in IANSvc, Gaudi::StringKey, see task #48818
+
 
 !========================= HltRawData v3r0p1 2013-04-09 =========================
 ! 2013-03-25 - Rob Lambert

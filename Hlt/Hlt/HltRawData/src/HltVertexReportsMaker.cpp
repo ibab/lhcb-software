@@ -103,10 +103,10 @@ StatusCode HltVertexReportsMaker::initialize() {
  // get string-to-int selection ID map
   typedef std::map<IANNSvc::minor_key_type,IANNSvc::minor_mapped_type> map_t;
   map_t selectionNameToIntMap;
-  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items("Hlt1SelectionID") ) {
+  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items(Gaudi::StringKey(std::string("Hlt1SelectionID"))) ) {
       selectionNameToIntMap.insert( p );
   }
-  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items("Hlt2SelectionID") ) {
+  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items(Gaudi::StringKey(std::string("Hlt2SelectionID"))) ) {
       selectionNameToIntMap.insert( p );
   }
 
