@@ -24,8 +24,9 @@ Brunel().DatasetName="mc11a-test"
   <argument name="reference"><text>../refs/brunel-mc11a-xdst.ref</text></argument>
   <argument name="validator"><text>
 #check if the output exists, and check the split locations are on it
-from RawEventCompat.QMTest.FormatTests import checkIsSplit
+from RawEventCompat.QMTest.FormatTests import checkIsSplit, checkIsGone
 checkIsSplit("mc11a-test-10ev.xdst",2.0,causes,result,"brunel.brunel-mc11a-xdst")
+checkIsGone("mc11a-test-10ev.xdst",["Event/DAQ"],causes,result,"brunel.brunel-mc11a-xdst")
 
 #check against reference
 from Brunel.QMTest.BrunelExclusions import preprocessor

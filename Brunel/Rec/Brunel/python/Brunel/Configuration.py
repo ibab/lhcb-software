@@ -592,6 +592,8 @@ class Brunel(LHCbConfigurableUser):
                     if (juggler.getProp("Input") is None or juggler.getProp("Output")) is None or (_checkv(juggler.getProp("Input")))!=(_checkv(juggler.getProp("Output"))):
                         juggler.KillExtraBanks=True
                         juggler.KillExtraNodes=True
+                        #really kill /Event/DAQ to prevent it re-appearing!
+                        juggler.KillExtraDirectories=True
             
             from Configurables import TrackToDST
 
