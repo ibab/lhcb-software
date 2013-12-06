@@ -89,7 +89,7 @@ IANNSvc& HltBase<EBASE>::annSvc() const {
 template <class EBASE>
 int HltBase<EBASE>::hltInfoID(const std::string& infoname) 
 {
-  boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("InfoID",infoname);
+  boost::optional<IANNSvc::minor_value_type> i =  annSvc().value(Gaudi::StringKey(std::string("InfoID")),infoname);
   if(!i) {
 	EBASE::info()<<"request for unknown Info id for name: "<<infoname <<endmsg;
 	return 0;
@@ -100,7 +100,7 @@ int HltBase<EBASE>::hltInfoID(const std::string& infoname)
 template <class EBASE>
 std::string HltBase<EBASE>::hltInfoName(int id) 
 {
-  boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("InfoID",id);
+  boost::optional<IANNSvc::minor_value_type> i =  annSvc().value(Gaudi::StringKey(std::string("InfoID")),id);
   if(!i) {
 	EBASE::info()<<"request for unknown Info name for id: "<<id << endmsg;
 	return "UNKNOWN";
