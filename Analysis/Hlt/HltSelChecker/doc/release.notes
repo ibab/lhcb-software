@@ -4,6 +4,9 @@
 ! Purpose     : Checking and debugging of Hlt2
 !-----------------------------------------------------------------------------
 
+! 2013-12-06 - Rob Lambert
+ - Adapt to change in IANSvc, Gaudi::StringKey, see task #48818
+
 !========================= HltSelChecker v12r1p4 2013-04-05 =========================
 
 ! 2013-02-26 - Chris Jones

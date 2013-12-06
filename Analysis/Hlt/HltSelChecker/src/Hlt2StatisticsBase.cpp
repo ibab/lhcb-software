@@ -49,7 +49,11 @@ StatusCode Hlt2StatisticsBase::initialize()
 //=========================================================================
 strings Hlt2StatisticsBase::getSelections( ) const 
 {
-  return svc<IANNSvc>("HltANNSvc")->keys(m_hlt2SelectionID);
+  strings tofill;
+  std::vector<IANNSvc::minor_key_type> keys=svc<IANNSvc>("HltANNSvc")->keys(m_hlt2SelectionID);
+  tofill.reserve(keys.size());
+  for( std::vector<IANNSvc::minor_key_type>::const_iterator i=keys.begin(); i!=keys.end(); ++i) tofill.push_back(*i);
+  return tofill;
 }
 //=============================================================================
 //  Finalize

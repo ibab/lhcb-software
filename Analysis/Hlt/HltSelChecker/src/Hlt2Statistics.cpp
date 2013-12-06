@@ -91,8 +91,8 @@ StatusCode Hlt2Statistics::fillHlt ( std::string level)
     if( !m_algoCorr->fillResult( level+"Global", (decReports->decReport(level+"Global"))? 
                         (decReports->decReport(level+"Global")->decision()):0 )) return StatusCode::FAILURE;
     unsigned int nsel = 0 ;
-    std::vector<std::string> names = svc<IANNSvc>("HltANNSvc")->keys(level+"SelectionID");
-    for ( std::vector<std::string>::const_iterator n = names.begin() ; n!= names.end() ; ++n){
+    std::vector<IANNSvc::minor_key_type> names = svc<IANNSvc>("HltANNSvc")->keys(level+"SelectionID");
+    for ( std::vector<IANNSvc::minor_key_type>::const_iterator n = names.begin() ; n!= names.end() ; ++n){
       bool found = false ;
       // individual Hlt trigger lines
       for(LHCb::HltDecReports::Container::const_iterator it=decReports->begin();
@@ -105,7 +105,7 @@ StatusCode Hlt2Statistics::fillHlt ( std::string level)
       }
       if (msgLevel(MSG::VERBOSE)) verbose() << "Added " << *n << " " << found 
                                             << " to " << nsel << endmsg ;
-      bool isDecision = ( n->find("Decision") == n->length()-8  ) ; // 8 is length of Decision
+      bool isDecision = ( std::string(*n).find("Decision") == std::string(*n).length()-8  ) ; // 8 is length of Decision
       if (isDecision && found) nsel++ ;
       if (!m_algoCorr->fillResult(*n, found )) return StatusCode::FAILURE;
     }
