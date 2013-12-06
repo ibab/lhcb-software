@@ -20,5 +20,5 @@ exec -a ${UTGID} ${CONTROLLERROOT}/${CMTCONFIG}/fsm_ctrl.exe \
     -partition=${PARTITION_NAME} \
     -runinfo=${RUNINFO} \
     -mode=${MOORESTARTUP_MODE} \
-    -taskconfig=${TASK_CONFIG} \
+    -taskconfig=${ARCH_FILE} \
     -count=${NBOFSLAVES}

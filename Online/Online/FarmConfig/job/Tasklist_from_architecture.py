@@ -10,8 +10,9 @@ def TaskListfromArch(arch, tasklist):
         tasklist.append(s.attributes['name'].value)
 def OptionsfromTasks(tasklist,level,ofile):
     f = open(ofile,'w')
+    f.write("//  Adder Level "+level+"\n")
     if level == "1":
-        f.write("""#include "$INFOOPTIONS"
+        f.write("""#include "$INFO_OPTIONS"
 
 ApplicationMgr.ExtSvc               += {"MonitorSvc","BusySvc"};
 
@@ -33,7 +34,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
         histsvc = []
         cntsvc = []
         for s in tasklist:
-            if 'Adder' in s:
+            if 'NodeAdder' in s:
                 continue
             hsvc = s#+"HistAdder"
             f.write("ApplicationMgr.ExtSvc               += {\"AdderSvc/"+hsvc+"HistAdder\"};\n")
@@ -45,23 +46,25 @@ MonitorSvc.CounterUpdateInterval     = 5;
 
         for s in histsvc:
             svc = s+"HistAdder"
-            f.write(svc+".MyName  = \"<node>_"+s+"\";\n");
-            f.write(svc+".TaskPattern = \"<node>_"+s+"_\";\n");
-            f.write(svc+".ServicePattern  = \"MON_<node>_"+s+"_(.*)/Histos/\";\n");
+            f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n");
+            f.write(svc+".MyName  = \"<part>_<node>_"+s+"\";\n");
+            f.write(svc+".TaskPattern = \"<part>_<node>_"+s+"_\";\n");
+            f.write(svc+".ServicePattern  = \"MON_<part>_<node>_"+s+"_(.*)/Histos/\";\n");
             f.write(svc+".AdderClass  = \"hists\";\n");
             f.write(svc+".ReceiveTimeout = 3;\n")
             f.write("\n")
 
         for s in cntsvc:
             svc = s+"CountAdder"
-            f.write(svc+".MyName  = \"<node>_"+s+"\";\n");
-            f.write(svc+".TaskPattern = \"<node>_"+s+"_\";\n");
-            f.write(svc+".ServicePattern  = \"MON_<node>_"+s+"_(.*)/Counter/\";\n");
+            f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n");
+            f.write(svc+".MyName  = \"<part>_<node>_"+s+"\";\n");
+            f.write(svc+".TaskPattern = \"<part>_<node>_"+s+"_\";\n");
+            f.write(svc+".ServicePattern  = \"MON_<part>_<node>_"+s+"_(.*)/Counter/\";\n");
             f.write(svc+".AdderClass  = \"Counter\";\n");
             f.write(svc+".ReceiveTimeout = 2;\n")
             f.write("\n")
     elif level == "2":
-        f.write("""#include "$INFOOPTIONS"
+        f.write("""#include "$INFO_OPTIONS"
 
 ApplicationMgr.ExtSvc               += {"MonitorSvc","AdderSvc/BusyAdder"};
 
@@ -82,16 +85,17 @@ MonitorSvc.CounterUpdateInterval     = 5;
 
 BusyAdder.MyName                = "<part>_<node>_Busy";
 BusyAdder.PartitionName         = @OnlineEnv.PartitionName;
-BusyAdder.TaskPattern           = "<node>[0-9][0-9]_Adder";
-BusyAdder.ServicePattern        = "MON_<node>[0-9][0-9]_Adder_01/Counter/";
+BusyAdder.TaskPattern           = "<part>_<node>[0-9][0-9]_NodeAdder_0";
+BusyAdder.ServicePattern        = "MON_<part>_<node>[0-9][0-9]_NodeAdder_0/Counter/";
 BusyAdder.AdderClass            = "Counter";
 BusyAdder.InDNS                 = "<node>";
+BusyAdder.OutDNS                = "hlt01";
 BusyAdder.ReceiveTimeout          = 3;
 """)
         histsvc = []
         cntsvc = []
         for s in tasklist:
-            if 'Adder' in s:
+            if 'SubFarmAdder' in s:
                 continue
             hsvc = s#+"HistAdder"
             f.write("ApplicationMgr.ExtSvc               += {\"AdderSvc/"+hsvc+"HistAdder\"};\n")
@@ -103,27 +107,30 @@ BusyAdder.ReceiveTimeout          = 3;
 
         for s in histsvc:
             svc = s+"HistAdder"
+            f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
             f.write(svc+".MyName  = \"<part>_<node>_"+s+"\";\n");
-            f.write(svc+".TaskPattern = \"<node>[0-9][0-9]_Adder\";\n");
-            f.write(svc+".ServicePattern  = \"MON_<node>[0-9][0-9]_"+s+"/Histos/\";\n");
-            f.write(svc+".AdderClass  = \"hists\";\n");
+            f.write(svc+".TaskPattern = \"<part>_<node>[0-9][0-9]_NodeAdder_0\";\n")
+            f.write(svc+".ServicePattern  = \"MON_<part>_<node>[0-9][0-9]_"+s+"/Histos/\";\n")
+            f.write(svc+".AdderClass  = \"hists\";\n")
             f.write(svc+".ReceiveTimeout = 6;\n")
-            f.write(svc+".AdderClass            = \"hists\";\n")
             f.write(svc+".InDNS = \"<node>\";\n")
+            f.write(svc+".OutDNS = \"hlt01\";\n")
             f.write("\n")
+            
 
         for s in cntsvc:
             svc = s+"CountAdder"
-            f.write(svc+".MyName  = \"<part>_<node>_"+s+"\";\n");
-            f.write(svc+".TaskPattern = \"<node>[0-9][0-9]_Adder\";\n");
-            f.write(svc+".ServicePattern  = \"MON_<node>[0-9][0-9]_"+s+"/Counter/\";\n");
-            f.write(svc+".AdderClass  = \"hists\";\n");
+            f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
+            f.write(svc+".MyName  = \"<part>_<node>_"+s+"\";\n")
+            f.write(svc+".TaskPattern = \"<part>_<node>[0-9][0-9]_NodeAdder_0\";\n")
+            f.write(svc+".ServicePattern  = \"MON_<part>_<node>[0-9][0-9]_"+s+"/Counter/\";\n")
             f.write(svc+".ReceiveTimeout = 6;\n")
-            f.write(svc+".AdderClass            = \"Counter\";\n")
+            f.write(svc+".AdderClass = \"Counter\";\n")
             f.write(svc+".InDNS = \"<node>\";\n")
+            f.write(svc+".OutDNS = \"hlt01\";\n")
             f.write("\n")
     elif level == "3":
-        f.write("""#include "$INFOOPTIONS"
+        f.write("""#include "$INFO_OPTIONS"
 
 ApplicationMgr.ExtSvc               += {"MonitorSvc","AdderSvc/BusyAdder"};
 
@@ -148,8 +155,6 @@ MonitorSvc.CounterUpdateInterval     = 5;
         histsvc.append("Adder")
         cntsvc.append("Busy")
         for s in tasklist:
-            if 'Adder' in s:
-                continue
             hsvc = s#+"HistAdder"
             f.write("ApplicationMgr.ExtSvc               += {\"AdderSvc/"+hsvc+"HistAdder\"};\n")
             csvc = s#+"CountAdder"
@@ -179,7 +184,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write("\n")
 
 tasklist = []
-arch = OnlineEnvBase.HLTFarm.architecture
+arch = OnlineEnvBase.HltArchitecture
 arch = "/group/online/dataflow/architectures/lbDataflowArch_"+arch+".xml"
 level = sys.argv[1]
 TaskListfromArch(arch, tasklist)
