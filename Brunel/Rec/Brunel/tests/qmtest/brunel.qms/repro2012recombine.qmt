@@ -10,7 +10,7 @@
   </set></argument>
   <argument name="validator"><text>
 #check if the output exists, and check the split locations are on it
-from RawEventCompat.QMTest.FormatTests import checkIsSplit
+from RawEventCompat.QMTest.FormatTests import checkIsSplit, checkIsGone
 checkIsSplit("brunel2012recombine-10ev.dst",0.0,causes,result,"brunel.repro2012recombine")
 checkIsGone("brunel2012recombine-10ev.dst",["Trigger/RawEvent","Other/RawEvent"],causes,result,"brunel.repro2012recombine")
 
