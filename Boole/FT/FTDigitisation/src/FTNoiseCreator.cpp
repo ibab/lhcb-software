@@ -245,7 +245,7 @@ StatusCode FTNoiseCreator::execute() {
   // Determine number of VISIBLE hit afterpulses due to cross-talk
   int NvisibleHitAfterpulses = int( (NhitAfterpulses+NhitAfterpulses_AP) * pow(m_crossTalkProbability, 0) ); // ct^0 = do all
   info() << "[HIT AFTERPULSING] N channel hits for afterpulses = " << NvisibleHitAfterpulses << " (of which "
-    << float(NhitAfterpulses_AP) / float(NhitAfterpulses + NhitAfterpulses_AP) * 100. << " \% afterpulses)" << endmsg;
+    << float(NhitAfterpulses_AP) / float(NhitAfterpulses + NhitAfterpulses_AP) * 100. << " % afterpulses)" << endmsg;
   plot(NvisibleHitAfterpulses, "NvisibleHitAfterpulses", "NvisibleHitAfterpulses; NvisibleHitAfterpulses", 0. , 1000000. ,10000);
 
 

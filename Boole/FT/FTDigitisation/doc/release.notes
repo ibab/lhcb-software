@@ -4,6 +4,9 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+! 2013-12-08 Jacco de Vries
+ - removed escape character '\%' that gives a warning in cmake
+
 ! 2013-12-06 Jacco de Vries
  - Fixed bug in previous update to MCFTDepositCreator
  - Added 5 ns time offset in MCFTDigitCreator, to match extra times of previous update
