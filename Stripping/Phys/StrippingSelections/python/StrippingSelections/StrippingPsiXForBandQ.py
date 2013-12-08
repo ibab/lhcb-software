@@ -30,18 +30,7 @@ __all__ = (
 # =============================================================================
 from GaudiKernel.SystemOfUnits             import GeV, MeV, mm, micrometer 
 from StrippingUtils.Utils                  import LineBuilder
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from GaudiConfUtils.ConfigurableGenerators import Pi0Veto__Tagger2g 
-from PhysSelPython.Wrappers                import Selection
-# =============================================================================
-# Standard Particles 
-# =============================================================================
-from StandardParticles  import ( StdLoosePions       ,
-                                 StdLooseKaons       ,
-                                 StdLooseMuons       , 
-                                 StdLooseProtons     , 
-                                 StdLoosePi02gg      ) ## for gamma-eff
 # =============================================================================
 ## logging
 # =============================================================================
@@ -66,9 +55,8 @@ _default_configuration_ = {
     #
     ## c*tau cut for B-hadrons 
     #
-    'CTAU'      : 100 * micrometer , 
+    'CTAU'      :  75 * micrometer , 
     'CTAU_BC'   :  50 * micrometer , 
-    'CTAU_Kst'  : 150 * micrometer , 
     #
     ## muon selection for  psi(') -> mu+ mu-
     #
@@ -82,41 +70,47 @@ _default_configuration_ = {
     ## pions and kaons
     # 
     'PionCut'   : """
-    ( CLONEDIST   > 5000   ) & 
-    ( TRGHOSTPROB < 0.5    ) &
-    ( TRCHI2DOF   < 4      ) & 
-    in_range ( 2 , ETA , 5 ) &
-    HASRICH                  &
-    ( PIDpi - PIDK > -5    ) &
-    ( MIPCHI2DV()  >  9    )
+    ( PT          > 200 * MeV ) & 
+    ( CLONEDIST   > 5000      ) & 
+    ( TRGHOSTPROB < 0.5       ) &
+    ( TRCHI2DOF   < 4         ) & 
+    in_range ( 2          , ETA , 5         ) &
+    in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
+    HASRICH                     &
+    ( PROBNNpi     > 0.1      ) &
+    ( MIPCHI2DV()  > 4        )
     """ ,
     #
     'KaonCut'   : """
-    ( CLONEDIST   > 5000   ) & 
-    ( TRCHI2DOF   < 4      ) & 
-    ( TRGHOSTPROB < 0.5    ) & 
-    in_range ( 2 , ETA , 5 ) &
-    HASRICH                  &
-    ( PIDK - PIDpi > -5    ) &
-    ( MIPCHI2DV()  >  9    ) 
+    ( PT          > 200 * MeV ) & 
+    ( CLONEDIST   > 5000      ) & 
+    ( TRGHOSTPROB < 0.5       ) &
+    ( TRCHI2DOF   < 4         ) & 
+    in_range ( 2          , ETA , 5         ) &
+    in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
+    HASRICH                     &
+    ( PROBNNk      > 0.1      ) &
+    ( MIPCHI2DV()  > 4        )
     """ ,
     #
     'ProtonCut'   : """
-    ( CLONEDIST   > 5000   ) & 
-    ( TRCHI2DOF   < 4      ) & 
-    ( TRGHOSTPROB < 0.5    ) & 
-    in_range ( 2 , ETA , 5 ) &
-    HASRICH                  &
-    ( PIDp - PIDpi >  0    ) &
-    ( PIDp - PIDK  >  0    ) &
-    ( MIPCHI2DV()  >  9    ) 
+    ( PT           > 200 * MeV ) & 
+    ( CLONEDIST    > 5000      ) & 
+    ( TRCHI2DOF    < 4         ) & 
+    ( TRGHOSTPROB  < 0.5       ) & 
+    in_range ( 2         , ETA , 5         ) &
+    in_range ( 10 * GeV  , P   , 150 * GeV ) &
+    HASRICH                     &
+    ( PROBNNp      > 0.1      ) &
+    ( MIPCHI2DV()  > 4        ) 
     """ ,
     #
     ## useful shortcuts:
     #
     'Preambulo' : [
     ## shortcut for chi2 of vertex fit 
-    'chi2vx = VFASPF(VCHI2) '                                  , 
+    'chi2vx    = VFASPF(VCHI2)     '                           , 
+    'chi2vxndf = VFASPF(VCHI2PDOF) '                           , 
     ## shortcut for the c*tau
     "from GaudiKernel.PhysicalConstants import c_light"        , 
     ## use the embedded cut for chi2(LifetimeFit)<16
@@ -124,16 +118,24 @@ _default_configuration_ = {
     "ctau_9    = BPVLTIME (  9 ) * c_light "                   ,
     "ctau_16   = BPVLTIME ( 16 ) * c_light "                   ,
     "APT23     = LoKi.AParticles.TransverseMomentum ( 2 , 3 )" ,
-    ## Combination mass-cut for neutral beauty particles 
-    "mb0_acut  = in_range ( 5.100 * GeV , AM , 5.550 * GeV ) " ,
-    "mbp_acut  = in_range ( 5.100 * GeV , AM , 5.550 * GeV ) " ,
-    "mlb_acut  = in_range ( 5.350 * GeV , AM , 5.850 * GeV ) " ,
-    "mbc_acut  = in_range ( 6.050 * GeV , AM , 6.550 * GeV ) " ,
+    ## Combination mass-cut for neutral beauty particles
+    "mb0_ahigh = 5.550 * GeV " , 
+    "mbu_ahigh = mb0_ahigh   " , 
+    "mlb_ahigh = 5.850 * GeV " , 
+    "mbc_ahigh = 6.555 * GeV " , 
+    "mb0_acut  = in_range ( 5.100 * GeV , AM , mb0_ahigh   ) " ,
+    "mbu_acut  = in_range ( 5.100 * GeV , AM , mbu_ahigh   ) " ,
+    "mlb_acut  = in_range ( 5.350 * GeV , AM , mlb_ahigh   ) " ,
+    "mbc_acut  = in_range ( 6.050 * GeV , AM , mbc_ahigh   ) " ,
+    "mbp_acut  = mbu_acut    " ,
     ## mass-cut for beauty particles 
-    "mb0_cut   = in_range ( 5.150 * GeV ,  M , 5.500 * GeV ) " ,
-    "mbp_cut   = in_range ( 5.150 * GeV ,  M , 5.500 * GeV ) " ,
-    "mlb_cut   = in_range ( 5.400 * GeV ,  M , 5.800 * GeV ) " ,
-    "mbc_cut   = in_range ( 6.100 * GeV ,  M , 6.500 * GeV ) " ,
+    "mb0_high  = 5.510 * GeV " , 
+    "mbu_high  = mb0_high    " , 
+    "mlb_high  = 5.810 * GeV " , 
+    "mb0_cut   = in_range ( 5.140 * GeV ,  M , mb0_high    ) " ,
+    "mbu_cut   = in_range ( 5.140 * GeV ,  M , mbu_high    ) " ,
+    "mlb_cut   = in_range ( 5.390 * GeV ,  M , 5.810 * GeV ) " ,
+    "mbc_cut   = in_range ( 6.090 * GeV ,  M , 6.510 * GeV ) " ,
     ] ,
     # =========================================================================
     ## Prescales 
@@ -160,10 +162,6 @@ _default_configuration_ = {
     'B2Psi6PiPrescale'  : 1.0 ,
     'B2Psi6KPiPrescale' : 1.0 ,
     #
-    'B2PsiD0Prescale'   : 1.0 ,
-    'B2PsiDpPrescale'   : 1.0 ,
-    'B2PsiDsPrescale'   : 1.0 ,
-    # 
     'Lb2PsiPKPrescale'      : 1.0 ,
     'Lb2PsiPPiPrescale'     : 1.0 ,
     'Lb2PsiPKPiPiPrescale'  : 1.0 ,
@@ -176,9 +174,8 @@ _default_configuration_ = {
     'B2PsiPPKPiPiPrescale'  : 1.0 ,
     'B2PsiPPPiPiPiPrescale' : 1.0 ,
     # =========================================================================
-    'B2PsiKstPrescale'  : 1.0   ,
-    # =========================================================================
     }
+
 ## ============================================================================
 ## @class  PsiX_BQ_Conf
 #  psi(') X configuration file 
@@ -273,7 +270,39 @@ class PsiX_BQ_Conf(LineBuilder) :
         
         return sel
     
-   ## get all single charm lines 
+    ## the basic Mother cuts for all charged modea
+    def _chargedB ( self ) :
+        """
+        The basic MotherCuts for all charged modea
+        """
+        return """
+        ( chi2vxndf < 12  ) &
+        ( ( mbu_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
+        """ % ( self['CTAU'] , self['CTAU_BC'] ) 
+    
+    ## the basic Mother cuts for all charged modea
+    def _neutralB ( self ) :
+        """
+        The basic MotherCuts for all neutral modea
+        """
+        return """
+        mb0_cut            &
+        ( chi2vxndf < 10 ) &
+        ( ctau      > %s ) 
+        """ % self['CTAU']
+    
+    ## the basic Mother cuts for baryons 
+    def _lambdaB ( self ) :
+        """
+        The basic MotherCuts for baruons 
+        """
+        return """
+        mlb_cut            &
+        ( chi2vxndf < 10 ) &
+        ( ctau      > %s ) 
+        """ % self['CTAU'] 
+
+    ## get all single charm lines 
     def _lines_psiX   ( self ) :
         """
         Get all psiX lines 
@@ -281,6 +310,7 @@ class PsiX_BQ_Conf(LineBuilder) :
         sel = self._selection ( 'PsiX_Lines' )
         if sel : return sel
         #
+        from StrippingConf.StrippingLine import StrippingLine
         sel = [
             # =================================================================
             #
@@ -559,22 +589,8 @@ class PsiX_BQ_Conf(LineBuilder) :
             ODIN            = self [ 'ODIN'    ]          ,
             L0DU            = self [ 'L0DU'    ]          ,
             HLT             = self [ 'L0DU'    ]          ,
-            algos           = [ self.psi_pppipipi ()       ]  ) ,
+            algos           = [ self.psi_pppipipi ()       ]  ) 
             #            
-            # =================================================================
-            # Helper line to study gamma/pi0 reconstruction efficiency
-            # =================================================================
-            StrippingLine (
-            "B2PsiKstFor"   + self.name()                 ,
-            prescale        = self [ 'B2PsiKstPrescale' ] , 
-            checkPV         = self [ 'CheckPV' ]          ,
-            FILTER          = self [ 'FILTER'  ]          ,
-            ODIN            = self [ 'ODIN'    ]          ,
-            L0DU            = self [ 'L0DU'    ]          ,
-            HLT             = self [ 'L0DU'    ]          ,
-            algos           = [ self.psi_Kst ()       ]   ) ,
-            ##
-            # =================================================================
             ]
             ## 
         return self._add_selection ( 'PsiX_Lines' , sel ) 
@@ -617,8 +633,6 @@ class PsiX_BQ_Conf(LineBuilder) :
             self.psi_6pi      () ,
             self.psi_6Kpi     () ,
             ##
-            self.psi_Kst      () ,
-            ##
             self.psi_pK       () ,
             self.psi_ppi      () ,
             self.psi_pKpipi   () ,
@@ -633,100 +647,127 @@ class PsiX_BQ_Conf(LineBuilder) :
             ]
         
         return self._add_selection ( 'Selections' , sel )
+    
+    # =========================================================================
+    ## pure technical method for creation of selections
+    # =========================================================================
+    def make_selection ( self      ,
+                         tag       , 
+                         algotype  ,
+                         inputs    , 
+                         *args     ,
+                         **kwargs  ) :
+        """
+        Technical method for creation of 1-step selections 
+        """
+        sel_tag  = '%s_Selection' % tag
+        sel_name = 'Sel%sFor%s'   % ( tag , self.name() )
+        #
+        ## check existing selection
+        #
+        sel      = self._selection ( sel_tag )
+        if sel : return sel 
+
+        #
+        ## adjust a bit the arguments
+        if not kwargs.has_key('Preambulo')           :
+            kwargs ['Preambulo'        ] = self['Preambulo']
+
+        if not kwargs.has_key( 'ParticleCombiners' ) :
+            kwargs ['ParticleCombiners'] = { '' : 'LoKi::VertexFitter:PUBLIC' } 
+            
+        #
+        ## create new seleciton
+        #
+        alg = algotype ( *args , **kwargs )
+        # 
+        from PhysSelPython.Wrappers import Selection
+        sel = Selection (
+            sel_name                    , 
+            Algorithm          = alg    ,
+            RequiredSelections = inputs
+            )
+        # 
+        return self._add_selection( sel_tag , sel ) 
+
         
     ## muons 
-    def muons     ( self ) : return StdLooseMuons 
+    def muons     ( self ) :    
+        from StandardParticles import StdLooseMuons
+        return StdLooseMuons
     
     ## pi0s :
-    def pi0s      ( self ) : return StdLoosePi02gg 
+    def pi0s      ( self ) :
+        from StandardParticles import StdLoosePi02gg
+        return StdLoosePi02gg 
     
+    # ========================================================================
     ## pions :
-    def pions     ( self ) :
+    # ========================================================================
+    def pions    ( self ) :
         """
         Pions for   B -> psi X lines 
-        """        
-        sel = self._selection ( 'Pion_Selection')
-        if sel : return sel
-        
-        alg  = FilterDesktop (
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
+        """
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from StandardParticles                     import StdAllLoosePions as inpts 
+        ##
+        return self.make_selection (
+            'Pion'                 ,
+            FilterDesktop          ,
+            [ inpts ]              ,
             Code = self['PionCut'] ,
-            ##
             )
-        
-        sel  = Selection (
-            "SelPiFor"         + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ StdLoosePions ]  
-            )
-        
-        return self._add_selection( 'Pion_Selection' , sel ) 
     
-    ## kaons :
+    # ========================================================================
+    ## pions :
+    # ========================================================================
     def kaons     ( self ) :
         """
         Kaons for   B -> psi X lines 
         """
-        sel = self._selection ( 'Kaon_Selection')
-        if sel : return sel
-
-        alg  = FilterDesktop (
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from StandardParticles                     import StdAllLooseKaons as inpts 
+        ##
+        return self.make_selection (
+            'Kaon'                 ,
+            FilterDesktop          ,
+            [ inpts ]              ,
             Code = self['KaonCut'] ,
-            ##
             )
-        
-        sel  = Selection (
-            "SelKFor"      + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ StdLooseKaons ]  
-            )
-        
-        return self._add_selection( 'Kaon_Selection' , sel ) 
 
+    # ========================================================================
     ## protons :
+    # ========================================================================
     def protons    ( self ) :
         """
         Protons for   b -> psi X lines 
         """
-        sel = self._selection ( 'Proton_Selection')
-        if sel : return sel
-        
-        alg  = FilterDesktop (
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from StandardParticles                     import StdAllLooseProtons as inpts 
+        ##
+        return self.make_selection (
+            'Proton'                 ,
+            FilterDesktop            ,
+            [ inpts ]                ,
             Code = self['ProtonCut'] ,
-            ##
             )
-        
-        sel  = Selection (
-            "SelPFor"          +   self.name()     ,
-            Algorithm          =   alg             ,
-            RequiredSelections = [ StdLooseProtons ]  
-            )
-        
-        return self._add_selection( 'Proton_Selection' , sel ) 
     
-    
+    # =========================================================================
     ## psi(') -> mu+ mu-
+    # =========================================================================
     def psi ( self ) :
         """
         psi(') -> mu+ mu- 
         """
-        sel = self._selection ( 'Psi_Selection')
-        if sel : return sel
-        
-        alg     = CombineParticles (
-            ##
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        ##
+        return self.make_selection (
+            'Psi' ,
+            CombineParticles ,
+            [ self.muons() ] ,
+            ## 
             DecayDescriptor = " J/psi(1S) -> mu+ mu- " ,
             ##
-            Preambulo       = self['Preambulo'] , 
-            ## 
             DaughtersCuts   = {
             'mu+'   :  self [ 'MuonCut' ] 
             } ,
@@ -739,1292 +780,1096 @@ class PsiX_BQ_Conf(LineBuilder) :
             MotherCut       = """
             chi2vx < 20
             """ 
-            ## 
             )
-        
-        sel  = Selection (
-            "SelPsiFor"        + self.name()    ,
-            Algorithm          =   alg          ,
-            RequiredSelections = [ self.muons() ] 
-            )
-        
-        return self._add_selection( 'Psi_Selection' , sel ) 
     
-    # B -> psi(') pi 
-    def psi_pi ( self ) :
-        """
-        B -> psi(') pi 
-        """
-        sel = self._selection ( 'PsiPi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
-            DecayDescriptors = [
-            "[B+ -> J/psi(1S) pi+        ]cc" ,
-            ],
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mbp_acut | mbc_acut
-            """ ,
-            ## 
-            MotherCut = """
-            ( chi2vx    < 16    ) &
-            ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
-            """ % ( self['CTAU'] , self['CTAU_BC'] ) 
-            ##
-            )
-        
-        sel  = Selection (
-            "SelPsiPiFor"      + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.pions () ] 
-            )
-        
-        return self._add_selection( 'PsiPi_Selection' , sel ) 
-    
+    # =========================================================================
     # B -> psi(') K
+    # =========================================================================
     def psi_K ( self ) :
         """
         B -> psi(') K
         """
-        sel = self._selection ( 'PsiK_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        return self.make_selection (
+            ## the unique tag 
+            'PsiK'                        ,
+            ## algorithm type to be used 
+            CombineParticles              ,
+            ## input selections 
+            [ self.psi() , self.kaons() ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "[B+ -> J/psi(1S) pi+ ]cc" ,
             ##
-            DecayDescriptors = [
-            "[B+ -> J/psi(1S) K+      ]cc" ,
-            ] ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mbp_acut | mbc_acut 
-            """ ,
+            CombinationCut  = " mbu_acut | mbc_acut "    ,
             ## 
-            MotherCut = """
-            ( chi2vx    < 16 ) &
-            ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
-            """ % ( self['CTAU'] , self['CTAU_BC'] ) 
-            ##
+            MotherCut       = self._chargedB() 
             )
-        
-        sel  = Selection (
-            "SelPsiKFor"      + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.kaons () ] 
-            )
-        
-        return self._add_selection( 'PsiK_Selection' , sel ) 
-
-    # B -> psi(') ( K* -> Kpi0)
-    def psi_Kst ( self ) :
-        """
-        This is just a control line to study
-        the reconstruction efficiency for pi0 and gamma
-        see LHCb-INT-2012-001 
-        
-        """
-        sel = self._selection ( 'PsiK*+_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
-            DecayDescriptors = [
-            "[B+ -> J/psi(1S) K+ pi0 ]cc" ,
-            ] ,
-            ##
-            DaughtersCuts = {
-            'J/psi(1S)' : " M < 3.3 * GeV "       ,    ## keep only J/psi
-            ## 'pi0'       : """
-            ## ( abs ( LV01 ) < 0.9 ) &
-            ## ( MINTREE ( 'gamma' == ID , PT ) > 250 * MeV ) 
-            ## """ , 
-            } , 
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            in_range ( 4.95 * GeV , AM   , 5.75 * GeV ) &
-            in_range ( 750  * MeV , AM23 , 1050 * MeV ) &
-            ( APT23 > 1.5 * GeV ) 
-            """ ,
-            ## 
-            MotherCut = """
-            in_range ( 5.0 * GeV , M , 5.7 * GeV ) & 
-            ( chi2vx    < 16 ) &
-            ( ctau_9    > %s ) 
-            """ % self['CTAU_Kst'] 
-            ## 
-            )
-        #
-        sel_ = Selection (
-            "SelPrePsiK*+For"  + self.name ()    ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.kaons () ,
-                                   self.pi0s  () ] 
-            )
-        
-        tag = Pi0Veto__Tagger2g (
-            MassWindow     = 25 * MeV  ,
-            MassChi2       = -1        ,
-            ExtraInfoIndex = 25020     ## unique ! 
-            )
-        
-        sel  = Selection (
-            "SelPsiK*+For"     + self.name ()   ,
-            Algorithm          =   tag           ,
-            RequiredSelections = [ sel_          ]  
-            )
-        
-        return self._add_selection( 'PsiK*+_Selection' , sel ) 
     
-    # B -> psi(') pipi
-    def psi_2pi ( self ) :
+    # =========================================================================
+    ## B -> psi(') pi
+    # =========================================================================
+    def psi_pi ( self ) :
         """
-        B -> psi(') pipi
+        B -> psi(') pi 
         """
-        sel = self._selection ( 'Psi2Pi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        ##
+        return self.make_selection (
+            ## the unique tag 
+            'PsiPi'                       ,
+            ## algorithm type to be used 
+            CombineParticles              ,
+            ## input selections 
+            [ self.psi() , self.pions() ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "[B+ -> J/psi(1S) pi+ ]cc"  ,
             ##
-            DecayDescriptor = "B0 -> J/psi(1S) pi+ pi-" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mb0_acut 
-            """ ,
+            CombinationCut  = " mbu_acut | mbc_acut "     ,
             ## 
-            MotherCut = """
-            mb0_cut            &
-            ( chi2vx    < 25 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU'] 
+            MotherCut       = self._chargedB() 
             ##
-            )
-        
-        sel  = Selection (
-            "SelPsi2PiFor"       + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.pions () ] 
-            )
-        
-        return self._add_selection( 'Psi2Pi_Selection' , sel ) 
-
+            )    
     
-    # B -> psi(') Kpi
-    def psi_2Kpi ( self ) :
-        """
-        B -> psi(') Kpi
-        """
-        sel = self._selection ( 'Psi2KPi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
-            DecayDescriptor = "[B0 -> J/psi(1S) K+ pi-]cc" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mb0_acut & 
-            ADOCACHI2CUT ( 9 , '' )
-            """ ,
-            ## 
-            MotherCut = """
-            mb0_cut & 
-            ( chi2vx    < 25 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU'] ,
-            ## 
-            )
-        
-        sel  = Selection (
-            "SelPsi2KPiFor"     + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.kaons () ,
-                                   self.pions () ]
-            )
-        
-        return self._add_selection( 'Psi2KPi_Selection' , sel ) 
-    
-    # B -> psi(') KK
+    # =========================================================================
+    # B -> psi(') K+ K- 
+    # =========================================================================
     def psi_2K ( self ) :
         """
-        B -> psi(') KK
+        B -> psi(') K+ K-
         """
-        sel = self._selection ( 'Psi2K_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi2K'                       ,
+            ## algorithm type to be used
+            DaVinci__N3BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.kaons() ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = " B0 -> J/psi(1S) K+ K- " ,
             ##
-            DecayDescriptor = "B_s0 -> J/psi(1S) K+ K-" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mb0_acut & 
-            ADOCACHI2CUT ( 9 , '' )
-            """ ,
+            Combination12Cut = """ ( AM < mb0_ahigh )   &
+            ( ACHI2DOCA(1,2) < 20 )  
+            """  , 
+            CombinationCut   = """        mb0_acut      &
+            ( ACHI2DOCA(1,3) < 20 ) &
+            ( ACHI2DOCA(2,3) < 20 ) 
+            """  ,
             ## 
-            MotherCut = """
-            mb0_cut & 
-            ( chi2vx    < 25 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU'] 
-            ## 
+            MotherCut       = self._neutralB() 
             )
-        
-        sel  = Selection (
-            "SelPsi2KFor"      + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.kaons () ] 
-            )
-        
-        return self._add_selection( 'Psi2K_Selection' , sel ) 
-
-
     
-    # B -> psi(') 3pi 
-    def psi_3pi ( self ) :
+    # =========================================================================
+    # B -> psi(') K+ pi- 
+    # =========================================================================
+    def psi_2Kpi ( self ) :
         """
-        B -> psi(') 3pi         
+        B -> psi(') K+ K-
         """
-        sel = self._selection ( 'Psi3Pi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi2KPi'                     ,
+            ## algorithm type to be used
+            DaVinci__N3BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.kaons() , self.pions() ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "[ B0 -> J/psi(1S) K+ pi-]cc" ,
             ##
-            DecayDescriptors = [
-            "[B+ -> J/psi(1S) pi+ pi+ pi-]cc" ,
-            ],
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            ( mbp_acut | mbc_acut ) & 
-            ADOCACHI2CUT ( 9 , '' )
-            """ ,
+            Combination12Cut = """ ( AM < mb0_ahigh )  &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """  , 
+            CombinationCut   = """        mb0_acut     &
+            ( ACHI2DOCA(1,3) <  20 ) &   
+            ( ACHI2DOCA(2,3) <  20 )   
+            """   ,
             ## 
-            MotherCut = """
-            ( chi2vx < 36 ) &
-            ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
-            """ % ( self['CTAU'] , self['CTAU_BC'] ) 
-            ## 
+            MotherCut       = self._neutralB() 
             )
-        
-        sel  = Selection (
-            "SelPsi3PiFor"     + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.pions () ] 
-            )
-        
-        return self._add_selection( 'Psi3Pi_Selection' , sel ) 
     
+    # =========================================================================
+    # B -> psi(') pi+ pi- 
+    # =========================================================================
+    def psi_2pi ( self ) :
+        """
+        B -> psi(') pi+ pi-
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi2Pi'                      ,
+            ## algorithm type to be used
+            DaVinci__N3BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.pions() ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "B0 -> J/psi(1S) pi+ pi-"  ,
+            ##
+            Combination12Cut = """ ( AM < mb0_ahigh )  &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """  , 
+            CombinationCut   = """        mb0_acut     &
+            ( ACHI2DOCA(1,3) <  20 ) &   
+            ( ACHI2DOCA(2,3) <  20 )   
+            """   ,
+            ## 
+            MotherCut       = self._neutralB() 
+            )
+
+    # ========================================================================
     # B -> psi(') 3K
+    # ========================================================================
     def psi_3K ( self ) :
         """
         B -> psi(') 3K        
         """
-        sel = self._selection ( 'Psi3K_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi3K'                       ,
+            ## algorithm type to be used
+            DaVinci__N4BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.kaons () ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "[B+ -> J/psi(1S) K+ K+ K-]cc"  ,
             ##
-            DecayDescriptors = [
-            "[B+ -> J/psi(1S) K+ K+ K- ]cc" ,
-            ] ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            ( mbp_acut | mbc_acut ) & 
-            ADOCACHI2CUT ( 9 , '' )
+            Combination12Cut = """  ( AM < mbc_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) &  
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ , 
+            CombinationCut   = """  ( mbp_acut | mbc_acut ) &
+            ( ACHI2DOCA(1,4) <  20 ) &
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
             """ ,
             ## 
-            MotherCut = """
-            ( chi2vx < 36 ) &
-            ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
-            """ % ( self['CTAU'] , self['CTAU_BC'] ) 
-            ## 
+            MotherCut       = self._chargedB() 
             )
-        
-        sel  = Selection (
-            "SelPsi3KFor"      + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.kaons () ] 
-            )
-        
-        return self._add_selection( 'Psi3K_Selection' , sel ) 
-    
-    # B -> psi(') 3(Kpi) 
+
+    # ========================================================================
+    # B -> psi(') 3Kpi
+    # ========================================================================
     def psi_3Kpi ( self ) :
         """
-        B -> psi(') 3(Kpi) 
+        B -> psi(') 3Kpi
         """
-        sel = self._selection ( 'Psi3KPi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi3KPi'                     ,
+            ## algorithm type to be used
+            DaVinci__N4BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.kaons () , self.pions () ] ,
+            #
+            ## algorithm configuration
+            #
             DecayDescriptors = [
             "[B+ -> J/psi(1S) K+ pi+ pi-]cc" ,
             "[B+ -> J/psi(1S) K+ K-  pi+]cc" ,
-            "[B+ -> J/psi(1S) K- pi+ pi+]cc" , ## ATTENTION: wrong charge combination!!!
+            "[B+ -> J/psi(1S) K- pi+ pi+]cc"  ## ATTENTION: wrong charge combination!!!
             ],
             ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            ( mbp_acut | mbc_acut ) & 
-            ADOCACHI2CUT ( 9 , '' )
+            Combination12Cut = """  ( AM < mbc_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) &
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ , 
+            CombinationCut   = """  ( mbp_acut | mbc_acut ) &
+            ( ACHI2DOCA(1,4) <  20 ) &
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
             """ ,
             ## 
-            MotherCut = """
-            ( chi2vx < 36 ) &
-            ( ( mbp_cut & ( ctau > %s  ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
-            """ % ( self['CTAU'] , self['CTAU_BC'] ) 
-            ## 
+            MotherCut       = self._chargedB() 
             )
-        
-        sel  = Selection (
-            "SelPsi3KPiFor"    + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.kaons () ,
-                                   self.pions () ] 
-            )
-        
-        return self._add_selection( 'Psi3KPi_Selection' , sel )
-    
-    # B -> psi(') 4pi
-    def psi_4pi ( self ) :
+
+
+    # ========================================================================
+    # B -> psi(') 3pi
+    # ========================================================================
+    def psi_3pi ( self ) :
         """
-        B -> psi(') 4pi
+        B -> psi(') 3pi
         """
-        sel = self._selection ( 'Psi4Pi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi3Pi'                      ,
+            ## algorithm type to be used
+            DaVinci__N4BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.pions () ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "[B+ -> J/psi(1S) pi+ pi+ pi-]cc" ,
             ##
-            DecayDescriptor = "B_s0 -> J/psi(1S) pi+ pi+ pi- pi-" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mb0_acut &
-            ADOCACHI2CUT ( 9 , '' )
+            Combination12Cut = """  ( AM < mbc_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) &
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ , 
+            CombinationCut   = """  ( mbp_acut | mbc_acut ) &
+            ( ACHI2DOCA(1,4) <  20 ) &
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
             """ ,
             ## 
-            MotherCut = """
-            mb0_cut            &
-            ( chi2vx    < 49 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU']  
-            ## 
+            MotherCut       = self._chargedB() 
             )
-        
-        sel  = Selection (
-            "SelPsi4PiFor"     + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.pions () ] 
-            )
-        
-        return self._add_selection( 'Psi4Pi_Selection' , sel ) 
-    
+
+
+
+    # ========================================================================
     # B -> psi(') 4K
+    # ========================================================================
     def psi_4K ( self ) :
         """
         B -> psi(') 4K
         """
-        sel = self._selection ( 'Psi4K_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N5BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi4k'                       ,
+            ## algorithm type to be used
+            DaVinci__N5BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.kaons () ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor    = "B_s0 -> J/psi(1S) K+ K+ K- K-"  ,
             ##
-            DecayDescriptor = "B_s0 -> J/psi(1S) K+ K+ K- K-" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mb0_acut & 
-            ADOCACHI2CUT ( 9 , '' )
+            Combination12Cut   = """ ( AM < mb0_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut  = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) &
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ , 
+            Combination1234Cut = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,4) <  20 ) &
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(4,4) <  20 ) 
+            """ , 
+            CombinationCut   = """  mb0_acut  &
+            ( ACHI2DOCA(1,5) <  20 ) &
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) &
+            ( ACHI2DOCA(4,5) <  20 ) 
             """ ,
             ## 
-            MotherCut = """
-            mb0_cut            &
-            ( chi2vx    < 49 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU'] 
-            ## 
+            MotherCut       = self._neutralB() 
             )
-        
-        sel  = Selection (
-            "SelPsi4KFor"      + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.kaons () ] 
-            )
-        
-        return self._add_selection( 'Psi4K_Selection' , sel ) 
 
-    # B -> psi(') 4(Kpi)
+    # ========================================================================
+    # B -> psi(') 4Kpi
+    # ========================================================================
     def psi_4Kpi ( self ) :
         """
-        B -> psi(') 4(Kpi)        
+        B -> psi(') 4Kpi
         """
-        sel = self._selection ( 'Psi4KPi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N5BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi4KPi'                     ,
+            ## algorithm type to be used
+            DaVinci__N5BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.kaons () , self.pions () ] ,
+            #
+            ## algorithm configuration
+            #
             DecayDescriptors = [
-            "[ B_s0 -> J/psi(1S) K+ pi+ pi- pi- ]cc" ,
-            "  B_s0 -> J/psi(1S) K+ pi+ K-  pi-    " ,
-            "[ B_s0 -> J/psi(1S) K+ K+  K-  pi- ]cc"
-            ] ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mb0_acut & 
-            ADOCACHI2CUT ( 9 , '' )
-            """ ,
-            ## 
-            MotherCut = """
-            mb0_cut            &
-            ( chi2vx    < 49 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU'] 
-            ## 
-            )
-        
-        sel  = Selection (
-            "SelPsi4KPiFor"    + self.name()     ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () ,
-                                   self.kaons () , 
-                                   self.pions () ] 
-            )
-        
-        return self._add_selection( 'Psi4KPi_Selection' , sel ) 
-
-    # B -> psi(') 5pi 
-    def psi_5pi ( self ) :
-        """
-        B -> psi(') 5pi 
-        """
-        sel = self._selection ( 'Psi5Pi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
-            DecayDescriptors = [
-            "[B+ -> J/psi(1S) pi+ pi+ pi+ pi- pi-]cc" ,
+            "[B0 -> J/psi(1S) K+ pi+ pi- pi-]cc" ,
+            " B0 -> J/psi(1S) K+ pi+ K-  pi-   " ,
+            "[B0 -> J/psi(1S) K+ K+  K-  pi-]cc" ,
             ],
             ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            ( mbp_acut | mbc_acut ) &
-            ADOCACHI2CUT ( 9 , '' )
+            Combination12Cut  = """  ( AM < mb0_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut  = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) &
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ , 
+            Combination1234Cut = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,4) <  20 ) &
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
+            """ , 
+            CombinationCut   = """  mb0_acut  &
+            ( ACHI2DOCA(1,5) <  20 ) &
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) &
+            ( ACHI2DOCA(4,5) <  20 ) 
             """ ,
             ## 
-            MotherCut = """
-            ( chi2vx < 64 ) &
-            ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
-            """ % ( self['CTAU'] , self['CTAU_BC'] ) ,
-            ## 
+            MotherCut       = self._neutralB() 
             )
-        
-        sel  = Selection (
-            "SelPsi5PiFor"      + self.name()     ,
-            Algorithm          =   alg            ,
-            RequiredSelections = [ self.psi    () , 
-                                   self.pions  () ] 
-            )
-        
-        return self._add_selection( 'Psi5Pi_Selection' , sel ) 
-    
-    # B -> psi(') 5(K,pi)
-    def psi_5Kpi ( self ) :
-        """
-        B -> psi(') 5(K,pi)        
-        """
-        sel = self._selection ( 'Psi5KPi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
-            DecayDescriptors = [
-            "[B+ -> J/psi(1S) K+ pi+ pi+ pi- pi-]cc" ,
-            "[B+ -> J/psi(1S) K+ pi+ pi+ K-  pi-]cc" ,            
-            "[B+ -> J/psi(1S) K+ K+  pi+ K-  pi-]cc" ,            
-            "[B+ -> J/psi(1S) K+ K+  pi+ K-  K- ]cc" ,            
-            ],
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            ( mbp_acut | mbc_acut ) &
-            ADOCACHI2CUT ( 9 , '' ) 
-            """ ,
-            ## 
-            MotherCut = """
-            ( chi2vx    < 64 ) &
-            ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
-            """ % ( self['CTAU'] , self['CTAU_BC'] ) 
-            ## 
-            )
-        
-        sel  = Selection (
-            "SelPsi5KPiFor"    + self.name()      ,
-            Algorithm          =   alg            ,
-            RequiredSelections = [ self.psi    () ,
-                                   self.kaons  () ,
-                                   self.pions  () ]
-            
-            )
-        
-        return self._add_selection( 'Psi5KPi_Selection' , sel ) 
 
+    # ========================================================================
+    # B -> psi(') 4pi
+    # ========================================================================
+    def psi_4pi ( self ) :
+        """
+        B -> psi(') 4pi
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N5BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi4Pi'                      ,
+            ## algorithm type to be used
+            DaVinci__N5BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.pions () ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor   = "B0 -> J/psi(1S) pi+ pi+ pi- pi-" ,
+            ##
+            Combination12Cut  = """  ( AM < mb0_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut  = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) & 
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ ,            
+            Combination1234Cut = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,4) <  20 ) & 
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
+            """ ,
+            CombinationCut   = """  mb0_acut &
+            ( ACHI2DOCA(1,5) <  20 ) &
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) & 
+            ( ACHI2DOCA(4,5) <  20 ) 
+            """ ,
+            ## 
+            MotherCut       = self._neutralB() 
+            )
+
+
+    # ========================================================================
     # B -> psi(') 5K
+    # ========================================================================
     def psi_5K ( self ) :
         """
-        B -> psi(') 5K
+        B -> psi(') 5K        
         """
-        sel = self._selection ( 'Psi5K_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N6BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi5K'                       ,
+            ## algorithm type to be used
+            DaVinci__N6BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.kaons () ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "[B_c+ -> J/psi(1S) K+ K+ K+ K- K-]cc"  ,
             ##
-            DecayDescriptor = "[B+ -> J/psi(1S) K+  K+  K+ K- K- ]cc" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            ( mbp_acut | mbc_acut ) & 
-            ADOCACHI2CUT ( 9 , '' ) 
+            Combination12Cut = """  ( AM < mbc_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) &  
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ , 
+            Combination1234Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,4) <  20 ) &  
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
+            """ ,            
+            Combination12345Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,5) <  20 ) &  
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) &  
+            ( ACHI2DOCA(4,5) <  20 ) 
             """ ,
-            ## 
-            MotherCut = """
-            ( chi2vx    < 64 ) &
-            ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
-            """ % ( self['CTAU'] , self['CTAU_BC'] ) 
-            ## 
+            CombinationCut   = """  ( mbp_acut | mbc_acut ) &
+            ( ACHI2DOCA(1,6) <  20 ) &  
+            ( ACHI2DOCA(2,6) <  20 ) &
+            ( ACHI2DOCA(3,6) <  20 ) &  
+            ( ACHI2DOCA(4,6) <  20 ) &
+            ( ACHI2DOCA(5,6) <  20 ) 
+            """ ,
+            ##
+            MotherCut       = self._chargedB() 
             )
-        
-        sel  = Selection (
-            "SelPsi5KFor"     + self.name()      ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () ,
-                                   self.kaons () ] 
-            
-            )
-        
-        return self._add_selection( 'Psi5K_Selection' , sel ) 
 
-    # B -> psi(') 6pi
-    def psi_6pi ( self ) :
+    # ========================================================================
+    # B -> psi(') 5Kpi
+    # ========================================================================
+    def psi_5Kpi ( self ) :
         """
-        B -> psi(') 6pi        
+        B -> psi(') 5Kpi
         """
-        sel = self._selection ( 'Psi6Pi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
-            DecayDescriptor = "B_s0 -> J/psi(1S) pi+ pi+ pi+ pi- pi- pi-" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mb0_acut         &
-            ADOCACHI2CUT ( 9 , '')             
-            """ ,
-            ## 
-            MotherCut = """
-            mb0_cut            &
-            ( chi2vx    < 81 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU'] 
-            ## 
-            )
-        
-        sel  = Selection (
-            "SelPsi6PiFor"       + self.name()   ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.pions () ] 
-            )
-        
-        return self._add_selection( 'Psi6Pi_Selection' , sel ) 
-    
-    # B -> psi(') 6(K,pi)
-    def psi_6Kpi ( self ) :
-        """
-        B -> psi(') 6(K,pi)        
-        """
-        sel = self._selection ( 'Psi6KPi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N6BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi5KPi'                     ,
+            ## algorithm type to be used
+            DaVinci__N6BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.kaons () , self.pions () ] ,
+            #
+            ## algorithm configuration
+            #
             DecayDescriptors = [
-            "[B_s0 -> J/psi(1S) K+ pi+ pi+ pi- pi- pi-]cc" ,  ## 1K 
-            " B_s0 -> J/psi(1S) K+ pi+ pi+ K-  pi- pi-   " ,  ## 2K
-            "[B_s0 -> J/psi(1S) K+ K+  pi+ K-  pi- pi-]cc" ,  ## 3K
-            " B_s0 -> J/psi(1S) K+ K+  pi+ K-  K-  pi-   "    ## 4K
+            "[B+ -> J/psi(1S) K+ pi+ pi+ pi- pi-]cc" ,
+            "[B+ -> J/psi(1S) K+ pi+ pi+ K-  pi-]cc" ,
+            "[B+ -> J/psi(1S) K+ K+  pi+ K-  pi-]cc" ,
+            "[B+ -> J/psi(1S) K+ K+  pi+ K-  K- ]cc" 
             ],
             ##
-            DaughtersCuts = {
-            "K+"  : "PIDK  - PIDpi >  2" , ## make tigth kaons here to suppress combinators 
-            "pi+" : "PIDpi - PIDK  > -2" , ## make tigth pions here to suppress combinators 
-            } , 
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mb0_acut         &
-            ADOCACHI2CUT ( 9 , '')             
+            Combination12Cut = """  ( AM < mbc_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) &  
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ , 
+            Combination1234Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,4) <  20 ) &  
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
+            """ ,            
+            Combination12345Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,5) <  20 ) &  
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) &  
+            ( ACHI2DOCA(4,5) <  20 ) 
+            """ ,
+            CombinationCut   = """  ( mbp_acut | mbc_acut ) &
+            ( ACHI2DOCA(1,6) <  20 ) &  
+            ( ACHI2DOCA(2,6) <  20 ) &
+            ( ACHI2DOCA(3,6) <  20 ) &  
+            ( ACHI2DOCA(4,6) <  20 ) &
+            ( ACHI2DOCA(5,6) <  20 ) 
             """ ,
             ## 
-            MotherCut = """
-            mb0_cut            &
-            ( chi2vx    < 81 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU'] 
-            ## 
+            MotherCut       = self._chargedB() 
             )
-        
-        sel  = Selection (
-            "SelPsi6KPiFor"    +   self.name  () ,
-            Algorithm          =   alg           ,
-            RequiredSelections = [ self.psi   () , 
-                                   self.kaons () ,
-                                   self.pions () ] 
-            )
-        
-        return self._add_selection( 'Psi6KPi_Selection' , sel )
 
-    # =========================================================================
-    # a little bit of charm 
-    # =========================================================================
+
+
+    # ========================================================================
+    # B -> psi(') 5pi
+    # ========================================================================
+    def psi_5pi ( self ) :
+        """
+        B -> psi(') 5pi
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N6BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi5Pi'                      ,
+            ## algorithm type to be used
+            DaVinci__N6BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.pions () ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "[B+ -> J/psi(1S) pi+ pi+ pi+ pi- pi-]cc" ,
+            ##
+            ##
+            Combination12Cut = """  ( AM < mbc_ahigh )    &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut = """ ( AM < mbc_ahigh )    & 
+            ( ACHI2DOCA(1,3) <  20 ) &  
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ , 
+            Combination1234Cut = """ ( AM < mbc_ahigh )    & 
+            ( ACHI2DOCA(1,4) <  20 ) &  
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
+            """ ,            
+            Combination12345Cut = """ ( AM < mbc_ahigh )    & 
+            ( ACHI2DOCA(1,5) <  20 ) &  
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) &  
+            ( ACHI2DOCA(4,5) <  20 ) 
+            """ ,
+            CombinationCut   = """  ( mbp_acut | mbc_acut ) &
+            ( ACHI2DOCA(1,6) <  20 ) &  
+            ( ACHI2DOCA(2,6) <  20 ) &
+            ( ACHI2DOCA(3,6) <  20 ) &  
+            ( ACHI2DOCA(4,6) <  20 ) &
+            ( ACHI2DOCA(5,6) <  20 ) 
+            """ ,
+            ## 
+            MotherCut       = self._chargedB() 
+            )
+
     
-    ## D0 -> Kpi candidates
-    def D0 ( self ) :
-        """
-        D0 -> K pi candidates 
-        """
-        sel = self._selection ( 'D0_Selection')
-        if sel : return sel
-
-        alg = CombineParticles (
-            ## the decays to be reconstructed
-            DecayDescriptor = "[D0  -> K-  pi+]cc ", 
-            ##
-            ## combination cut : wide mass-cut & PT-cut
-            CombinationCut = """
-            ( ADAMASS('D0') <  80 * MeV ) &
-            ( APT           > 500 * MeV )
-            """ , 
-            ## mother cut
-            MotherCut      = """
-            ( chi2vx       <  9       ) &
-            ( PT           >  1 * GeV ) &
-            ( ADMASS('D0') < 75 * MeV ) 
-            """ ,
-            ## 
-            ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' } 
-            )
-        
-        sel = Selection (
-            'SelD0For'         +   self.name  () ,
-            Algorithm          = alg             ,
-            RequiredSelections = [ self.kaons () ,
-                                   self.pions () ]
-            )
-        
-        return self._add_selection( 'D0_Selection' , sel )
+    # ========================================================================
+    # B -> psi(') 6K
+    # ========================================================================
     
-    
-    ## D+ -> K pi pi
-    def Dp ( self ) :
+    # ========================================================================
+    # B -> psi(') 6Kpi
+    # ========================================================================
+    def psi_6Kpi ( self ) :
         """
-        D+ -> K- pi pi 
+        B -> psi(') 6Kpi
         """
-        sel = self._selection ( 'Dp_Selection')
-        if sel : return sel
-        
-        alg = CombineParticles (
-            ## the decays to be reconstructed
-            DecayDescriptor = "[D+  -> K-  pi+ pi+]cc ", 
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N7BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi6KPi'                     ,
+            ## algorithm type to be used
+            DaVinci__N7BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.kaons () , self.pions () ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptors = [
+            "[B0 -> J/psi(1S) K+ pi+ pi+ pi- pi- pi-]cc" ,
+            " B0 -> J/psi(1S) K+ pi+ pi+ K-  pi- pi-   " ,
+            "[B0 -> J/psi(1S) K+ K+  pi+ K-  pi- pi-]cc" ,
+            " B0 -> J/psi(1S) K+ K+  pi+ K-  K-  pi-   " ,
+            ],
             ##
-            ## combination cut : wide mass-cut & PT-cut
-            CombinationCut = """
-            ( ADAMASS('D+') <  60 * MeV ) &
-            ( APT           > 500 * MeV )
+            Combination12Cut     = """  ( AM < mb0_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
             """ , 
-            ## mother cut
-            MotherCut      = """
-            ( chi2vx       < 25       ) &
-            ( PT           >  1 * GeV ) &
-            ( ADMASS('D+') < 50 * MeV ) 
+            Combination123Cut    = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) &
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ , 
+            Combination1234Cut   = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,4) <  20 ) &
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
+            """ , 
+            Combination12345Cut  = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,5) <  20 ) &
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) &
+            ( ACHI2DOCA(4,5) <  20 ) 
+            """ , 
+            Combination123456Cut = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,6) <  20 ) &
+            ( ACHI2DOCA(2,6) <  20 ) &
+            ( ACHI2DOCA(3,6) <  20 ) & 
+            ( ACHI2DOCA(4,6) <  20 ) &
+            ( ACHI2DOCA(5,6) <  20 ) 
+            """ , 
+            CombinationCut   = """  mb0_acut  &
+            ( ACHI2DOCA(1,7) <  20 ) &
+            ( ACHI2DOCA(2,7) <  20 ) &
+            ( ACHI2DOCA(3,7) <  20 ) &
+            ( ACHI2DOCA(4,7) <  20 ) &
+            ( ACHI2DOCA(5,7) <  20 ) &
+            ( ACHI2DOCA(6,7) <  20 ) 
             """ ,
             ## 
-            ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' } 
+            MotherCut       = self._neutralB() 
             )
-        
-        sel = Selection (
-            'SelDpFor'         +   self.name  () ,
-            Algorithm          = alg             ,
-            RequiredSelections = [ self.kaons () ,
-                                   self.pions () ]
-            )
-        
-        return self._add_selection( 'Dp_Selection' , sel )
-    
-    ## Ds -> phi pi
-    def Ds ( self ) :
-        """
-        Ds -> phi pi 
-        """
-        sel = self._selection ( 'Ds_Selection')
-        if sel : return sel
 
-        alg = CombineParticles (
-            ## the decays to be reconstructed
-            DecayDescriptor = "[D_s+ -> K-  K+ pi+]cc ", 
+    # ========================================================================
+    # B -> psi(') 6pi
+    # ========================================================================
+    def psi_6pi ( self ) :
+        """
+        B -> psi(') 6pi
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N7BodyDecays
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'Psi6Pi'                      ,
+            ## algorithm type to be used
+            DaVinci__N7BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.pions () ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor   = "B0 -> J/psi(1S) pi+ pi+ pi+ pi- pi- pi-" ,
             ##
-            ## combination cut : wide mass-cut & PT-cut
-            CombinationCut = """
-            (   AM12           < 1050 * MeV ) & 
-            ( ( ADAMASS('D+')  <   60 * MeV ) | ( ADAMASS('D_s+') <   60 * MeV ) ) & 
-            (   APT            >  500 * MeV )
+            Combination12Cut  = """  ( AM < mb0_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
             """ , 
-            ## mother cut
-            MotherCut      = """
-            (   chi2vx        < 25       ) &
-            (   PT            >  1 * GeV ) &
-            ( ( ADMASS('D+')  < 50 * MeV ) | ( ADMASS('D_s+') < 50 * MeV ) ) 
+            Combination123Cut  = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) & 
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ ,            
+            Combination1234Cut = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,4) <  20 ) & 
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
+            """ ,
+            Combination12345Cut = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,5) <  20 ) & 
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) &
+            ( ACHI2DOCA(4,5) <  20 ) 
+            """ ,
+            Combination123456Cut = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,6) <  20 ) & 
+            ( ACHI2DOCA(2,6) <  20 ) &
+            ( ACHI2DOCA(3,6) <  20 ) &
+            ( ACHI2DOCA(4,6) <  20 ) &
+            ( ACHI2DOCA(5,6) <  20 ) 
+            """ ,
+            CombinationCut   = """  mb0_acut &
+            ( ACHI2DOCA(1,7) <  20 ) & 
+            ( ACHI2DOCA(2,7) <  20 ) &
+            ( ACHI2DOCA(3,7) <  20 ) &
+            ( ACHI2DOCA(4,7) <  20 ) &
+            ( ACHI2DOCA(5,7) <  20 ) & 
+            ( ACHI2DOCA(6,7) <  20 )
             """ ,
             ## 
-            ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' } 
-            )
-        
-        sel = Selection (
-            'SelDsFor'         +   self.name  () ,
-            Algorithm          = alg             ,
-            RequiredSelections = [ self.kaons () ,
-                                   self.pions () ]
-            )
-        
-        return self._add_selection( 'Ds_Selection' , sel )
- 
-    ## B -> psi D0 
-    def psi_D0 ( self ) :
-        """
-        B -> psi D0 
-        """
-        sel = self._selection ( 'PsiD0_Selection')
-        if sel : return sel
-       
-        alg = CombineParticles (
-            ## the decays to be reconstructed
-            DecayDescriptor = "[ B0 -> J/psi(1S) D0 ]cc ", 
-            ##
-            Preambulo      = self['Preambulo'] , 
-            ## combination cut : 
-            CombinationCut = """
-            in_range ( 5 * GeV , AM ,  7 * GeV ) 
-            """ , 
-            ## mother cut
-            MotherCut      = """
-            ( chi2vx  < 16              ) &
-            ( ctau    > 50 * micrometer ) 
-            """ ,
-            ## 
-            ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' } 
+            MotherCut       = self._neutralB() 
             )
 
-        ## make the selection
-        sel = Selection (
-            'B2PsiD0For'       +   self.name () ,
-            Algorithm          =   alg          ,
-            RequiredSelections = [ self.psi  () ,
-                                   self.D0   () ]
-            )
-        
-        return self._add_selection( 'PsiD0_Selection' , sel )
 
-    ## B -> psi D+
-    def psi_Dp ( self ) :
-        """
-        B -> psi D+ 
-        """
-        sel = self._selection ( 'PsiDp_Selection')
-        if sel : return sel
-
-        alg = CombineParticles (
-            ## the decays to be reconstructed
-            DecayDescriptor = "[ B+ -> J/psi(1S) D+ ]cc ", 
-            ##
-            Preambulo      = self['Preambulo'] , 
-            ## combination cut : 
-            CombinationCut = """
-            in_range ( 5 * GeV , AM ,  7 * GeV ) 
-            """ , 
-            ## mother cut
-            MotherCut      = """
-            ( chi2vx  < 16              ) &
-            ( ctau    > 50 * micrometer ) 
-            """ , 
-            ## 
-            ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' } 
-            )
-        
-        ## make the selection
-        sel = Selection (
-            'B2PsiDpFor'       +   self.name () ,
-            Algorithm          =   alg          ,
-            RequiredSelections = [ self.psi  () ,
-                                   self.Dp   () ]
-            )
-        
-        return self._add_selection( 'PsiDp_Selection' , sel )
-    
-    ## B -> psi Ds+
-    def psi_Ds ( self ) :
-        """
-        B -> psi Ds+ 
-        """
-        sel = self._selection ( 'PsiDs_Selection')
-        if sel : return sel
-
-        
-        alg = CombineParticles (
-            ## the decays to be reconstructed
-            DecayDescriptor = "[ B_c+ -> J/psi(1S) D_s+ ]cc ", 
-            ##
-            Preambulo      = self['Preambulo'] , 
-            ## combination cut : 
-            CombinationCut = """
-            in_range ( 5 * GeV , AM ,  7 * GeV ) 
-            """ , 
-            ## mother cut
-            MotherCut      = """
-            ( chi2vx  < 16              ) &
-            ( ctau    > 50 * micrometer ) 
-            """ ,
-            ## 
-            ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' } 
-            )
-        
-        ## make the selection
-        sel = Selection (
-            'B2PsiDsFor'       +   self.name () ,
-            Algorithm          =   alg          ,
-            RequiredSelections = [ self.psi  () ,
-                                   self.Ds   () ]
-            )
-        
-        return self._add_selection( 'PsiDs_Selection' , sel )
-
-    # =========================================================================
+    # ===========================================================================
     # make use of protons 
     # =========================================================================
     
+    # =========================================================================
     # Lb -> psi(') pK
+    # =========================================================================
     def psi_pK ( self ) :
         """
         Lb -> psi(') pK
         """
-        sel = self._selection ( 'PsiPK_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+        return self.make_selection (
+            ## the unique tag 
+            'PsiPK'                      ,
+            ## algorithm type to be used
+            DaVinci__N3BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.protons() , self.kaons() ] ,
+            #
+            ## algorithm configuration
+            #
             DecayDescriptor = "[Lambda_b0 -> J/psi(1S) p+ K-]cc" ,
             ##
-            Preambulo = self['Preambulo'] ,
+            Combination12Cut = """ ( AM < mlb_ahigh )  &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """  , 
+            CombinationCut   = """        mlb_acut     &
+            ( ACHI2DOCA(1,3) <  20 ) &   
+            ( ACHI2DOCA(2,3) <  20 )   
+            """   ,
             ##
-            CombinationCut = """
-            mlb_acut & 
-            ADOCACHI2CUT ( 9 , '' )
-            """ ,
-            ## 
-            MotherCut = """
-            mlb_cut & 
-            ( chi2vx    < 25 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU'] 
-            ## 
+            MotherCut       = self._lambdaB() 
             )
-        
-        sel  = Selection (
-            "SelPsiPKFor"      + self.name()       ,
-            Algorithm          =   alg             ,
-            RequiredSelections = [ self.psi     () , 
-                                   self.protons () ,
-                                   self.kaons   () ] 
-            )
-        
-        return self._add_selection( 'PsiPK_Selection' , sel ) 
 
-    # Lb -> psi(') pK pipi
-    def psi_pKpipi( self ) :
-        """
-        Lb -> psi(') pKpipi
-        """
-        sel = self._selection ( 'PsiPKpipi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
-            DecayDescriptor = "[Lambda_b0 -> J/psi(1S) p+ K- pi+ pi-]cc" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mlb_acut & 
-            ADOCACHI2CUT ( 9 , '' )
-            """ ,
-            ## 
-            MotherCut = """
-            mlb_cut & 
-            ( chi2vx    < 49 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU'] 
-            ## 
-            )
-        
-        sel  = Selection (
-            "SelPsiPKpipiFor"  + self.name()       ,
-            Algorithm          =   alg             ,
-            RequiredSelections = [ self.psi     () , 
-                                   self.protons () ,
-                                   self.kaons   () ,
-                                   self.pions   () ] 
-            )
-        
-        return self._add_selection( 'PsiPKpipi_Selection' , sel ) 
-    
-    # Lb -> psi(') p pipipi
-    def psi_ppipipi( self ) :
-        """
-        Lb -> psi(') p pi pi pi
-        """
-        sel = self._selection ( 'PsiPpipipi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
-            DecayDescriptor = "[Lambda_b0 -> J/psi(1S) p+ pi- pi- pi+]cc" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mlb_acut & 
-            ADOCACHI2CUT ( 9 , '' )
-            """ ,
-            ## 
-            MotherCut = """
-            mlb_cut & 
-            ( chi2vx    < 49 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU'] 
-            ## 
-            )
-        
-        sel  = Selection (
-            "SelPsiPpipipiFor"  + self.name()       ,
-            Algorithm          =   alg             ,
-            RequiredSelections = [ self.psi     () , 
-                                   self.protons () ,
-                                   self.pions   () ] 
-            )
-        
-        return self._add_selection( 'PsiPpipipi_Selection' , sel ) 
-
-    
-    # Lb -> psi(') pPi
+    # =========================================================================
+    # Lb -> psi(') ppi
+    # =========================================================================
     def psi_ppi ( self ) :
         """
-        Lb -> psi(') pK
+        Lb -> psi(') p pi
         """
-        sel = self._selection ( 'PsiPPi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+        return self.make_selection (
+            ## the unique tag 
+            'PsiPPi'                      ,
+            ## algorithm type to be used
+            DaVinci__N3BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.protons() , self.pions() ] ,
+            #
+            ## algorithm configuration
+            #
             DecayDescriptor = "[Lambda_b0 -> J/psi(1S) p+ pi-]cc" ,
             ##
-            Preambulo = self['Preambulo'] ,
+            Combination12Cut = """ ( AM < mlb_ahigh )  &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """  , 
+            CombinationCut   = """        mlb_acut     &
+            ( ACHI2DOCA(1,3) <  20 ) &   
+            ( ACHI2DOCA(2,3) <  20 )   
+            """   ,
+            ## 
+            MotherCut       = self._lambdaB() 
+            )
+
+    # =========================================================================
+    # Lb -> psi(') pK pipi
+    # =========================================================================
+    def psi_pKpipi ( self ) :
+        """
+        Lb -> psi(') pK pi pi
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N5BodyDecays 
+        return self.make_selection (
+            ## the unique tag 
+            'PsiPKpipi'                   ,
+            ## algorithm type to be used
+            DaVinci__N5BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.protons() , self.kaons() , self.pions() ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor    = "[Lambda_b0 -> J/psi(1S) p+ K- pi+ pi- ]cc" ,
             ##
-            CombinationCut = """
-            mlb_acut & 
-            ADOCACHI2CUT ( 9 , '' )
-            """ ,
+            Combination12Cut   = """ ( AM < mlb_ahigh )  &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """  , 
+            Combination123Cut  = """ ( AM < mlb_ahigh )  &
+            ( ACHI2DOCA(1,3) <  20 ) &
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """  , 
+            Combination1234Cut = """ ( AM < mlb_ahigh )  &
+            ( ACHI2DOCA(1,4) <  20 ) &
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
+            """  , 
+            CombinationCut   = """        mlb_acut       &
+            ( ACHI2DOCA(1,5) <  20 ) &
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) &
+            ( ACHI2DOCA(4,5) <  20 ) 
+            """   ,
             ## 
-            MotherCut = """
-            mlb_cut & 
-            ( chi2vx    < 25 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU'] 
+            MotherCut       = self._lambdaB() 
+            )
+
+
+    # =========================================================================
+    # Lb -> psi(') p pipipi
+    # =========================================================================
+    def psi_ppipipi ( self ) :
+        """
+        Lb -> psi(') p pipipi
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N5BodyDecays 
+        return self.make_selection (
+            ## the unique tag 
+            'PsiPpipipi'                  ,
+            ## algorithm type to be used
+            DaVinci__N5BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.protons() , self.pions() ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor    = "[Lambda_b0 -> J/psi(1S) p+ pi+ pi- pi- ]cc" ,
+            ##
+            Combination12Cut   = """ ( AM < mlb_ahigh )  &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """  , 
+            Combination123Cut  = """ ( AM < mlb_ahigh )  &
+            ( ACHI2DOCA(1,3) <  20 ) &
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """  , 
+            Combination1234Cut = """ ( AM < mlb_ahigh )  &
+            ( ACHI2DOCA(1,4) <  20 ) &
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
+            """  , 
+            CombinationCut   = """        mlb_acut       &
+            ( ACHI2DOCA(1,5) <  20 ) &
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) &
+            ( ACHI2DOCA(4,5) <  20 ) 
+            """   ,
             ## 
+            MotherCut       = self._lambdaB() 
             )
-        
-        sel  = Selection (
-            "SelPsiPPiFor"     + self.name()       ,
-            Algorithm          =   alg             ,
-            RequiredSelections = [ self.psi     () , 
-                                   self.protons () ,
-                                   self.pions   () ] 
-            )
-        
-        return self._add_selection( 'PsiPPi_Selection' , sel ) 
     
+    
+    # =========================================================================
     # B -> psi(') pp
+    # =========================================================================    
     def psi_pp ( self ) :
         """
         B -> psi(') pp
         """
-        sel = self._selection ( 'PsiPP_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+        return self.make_selection (
+            ## the unique tag 
+            'PsiPP'                       ,
+            ## algorithm type to be used
+            DaVinci__N3BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.protons() ] ,
+            #
+            ## algorithm configuration
+            #
             DecayDescriptor = "B_s0 -> J/psi(1S) p+ p~-" ,
             ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mb0_acut & 
-            ADOCACHI2CUT ( 9 , '' )
-            """ ,
+            Combination12Cut = """ ( AM < mlb_ahigh )  &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """  , 
+            CombinationCut   = """        mlb_acut     &
+            ( ACHI2DOCA(1,3) <  20 ) &   
+            ( ACHI2DOCA(2,3) <  20 )   
+            """   ,
             ## 
-            MotherCut = """
-            mb0_cut & 
-            ( chi2vx    < 25 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU'] 
-            ## 
+            MotherCut       = self._neutralB() 
             )
-        
-        sel  = Selection (
-            "SelPsiPPFor"      + self.name()       ,
-            Algorithm          =   alg             ,
-            RequiredSelections = [ self.psi     () , 
-                                   self.protons () ] 
-            )
-        
-        return self._add_selection( 'PsiPP_Selection' , sel ) 
-        
-    # B -> psi(') pppi
+    
+    # =========================================================================
+    # B -> psi(') pp pi
+    # =========================================================================    
     def psi_pppi( self ) :
         """
-        B -> psi(') pppi
+        B -> psi(') pp pi
         """
-        sel = self._selection ( 'PsiPPPi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays 
+        return self.make_selection (
+            ## the unique tag 
+            'PsiPPpi'                     ,
+            ## algorithm type to be used
+            DaVinci__N4BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.protons() , self.pions() ] ,
+            #
+            ## algorithm configuration
+            #
             DecayDescriptor = "[B+ -> J/psi(1S) p+ p~- pi+]cc" ,
             ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            ( mbp_acut | mbc_acut ) & 
-            ADOCACHI2CUT ( 9 , '' )
+            Combination12Cut = """  ( AM < mbc_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) &
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ , 
+            CombinationCut   = """  ( mbp_acut | mbc_acut ) &
+            ( ACHI2DOCA(1,4) <  20 ) &
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
             """ ,
             ## 
-            MotherCut = """
-            ( chi2vx    < 36 ) &
-            ( ( mbp_cut & ( ctau > %s ) ) | ( mbc_cut & ( ctau > %s ) ) ) 
-            """ % ( self['CTAU'] , self['CTAU_BC'] ) 
-            ## 
+            MotherCut       = self._chargedB() 
             )
-        
-        sel  = Selection (
-            "SelPsiPPPiFor"      + self.name()       ,
-            Algorithm          =   alg             ,
-            RequiredSelections = [ self.psi     () , 
-                                   self.protons () ,
-                                   self.pions   () ] 
-            )
-        
-        return self._add_selection( 'PsiPPPi_Selection' , sel ) 
-    
-    # B -> psi(') ppK
+
+    # =========================================================================
+    # B -> psi(') pp pi
+    # =========================================================================    
     def psi_ppK( self ) :
         """
-        Bc -> psi(') pppi
+        B -> psi(') pp K
         """
-        sel = self._selection ( 'PsiPPK_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N4BodyDecays 
+        return self.make_selection (
+            ## the unique tag 
+            'PsiPPK'                   ,
+            ## algorithm type to be used
+            DaVinci__N4BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.protons() , self.kaons() ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "[B+ -> J/psi(1S) p+ p~- K+]cc" ,
             ##
-            DecayDescriptor = "[B_c+ -> J/psi(1S) p+ p~- K+]cc" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mbc_acut  & 
-            ADOCACHI2CUT ( 9 , '' )
+            Combination12Cut = """  ( AM < mbc_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) &
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ , 
+            CombinationCut   = """  ( mbp_acut | mbc_acut ) &
+            ( ACHI2DOCA(1,4) <  20 ) &
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
             """ ,
             ## 
-            MotherCut = """
-            mbc_cut         &
-            ( chi2vx < 36 ) &
-            ( ctau   > %s )            
-            """ % self['CTAU_BC'] 
-            ## 
+            MotherCut       = self._chargedB() 
             )
-        
-        sel  = Selection (
-            "SelPsiPPKFor"      + self.name()       ,
-            Algorithm          =   alg             ,
-            RequiredSelections = [ self.psi     () , 
-                                   self.protons () ,
-                                   self.kaons   () ] 
-            )
-        
-        return self._add_selection( 'PsiPPK_Selection' , sel ) 
-    
-    # B -> psi(') pppipi
-    def psi_pppipi ( self ) :
+
+
+    # =========================================================================
+    # B -> psi(') pp pipi
+    # =========================================================================    
+    def psi_pppipi( self ) :
         """
-        B -> psi(') pp pi pi 
+        B -> psi(') pp pi pi
         """
-        sel = self._selection ( 'PsiPPPiPi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N5BodyDecays 
+        return self.make_selection (
+            ## the unique tag 
+            'PsiPPpipi'                   ,
+            ## algorithm type to be used
+            DaVinci__N5BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.protons() , self.pions() ] ,
+            #
+            ## algorithm configuration
+            #
             DecayDescriptor = "B_s0 -> J/psi(1S) p+ p~- pi+ pi-" ,
             ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mb0_acut & 
-            ADOCACHI2CUT ( 9 , '' )
+            Combination12Cut  = """  ( AM < mb0_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut  = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) & 
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ ,            
+            Combination1234Cut = """ ( AM < mb0_ahigh )      & 
+            ( ACHI2DOCA(1,4) <  20 ) & 
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
+            """ ,
+            CombinationCut   = """  mb0_acut &
+            ( ACHI2DOCA(1,5) <  20 ) &
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) & 
+            ( ACHI2DOCA(4,5) <  20 ) 
             """ ,
             ## 
-            MotherCut = """
-            mb0_cut & 
-            ( chi2vx    < 49 ) &
-            ( ctau      > %s ) 
-            """ % self['CTAU'] 
-            ## 
+            MotherCut       = self._neutralB() 
             )
-        
-        sel  = Selection (
-            "SelPsiPPPiPiFor"  + self.name()       ,
-            Algorithm          =   alg             ,
-            RequiredSelections = [ self.psi     () , 
-                                   self.protons () ,
-                                   self.pions   () ] 
-            )
-        
-        return self._add_selection( 'PsiPPPiPi_Selection' , sel ) 
-        
-    # Bc -> psi(') ppKpipi
-    def psi_ppKpipi( self ) :
-        """
-        Bc -> psi(') ppKpipi
-        """
-        sel = self._selection ( 'PsiPPKPiPi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
-            ##
-            DecayDescriptor = "[B_c+ -> J/psi(1S) p+ p~- K+ pi+ pi-]cc" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mbc_acut  & 
-            ADOCACHI2CUT ( 9 , '' )
-            """ ,
-            ## 
-            MotherCut = """
-            mbc_cut          &
-            ( chi2vx  < 64 ) &
-            ( ctau    > %s )
-            """ % self['CTAU_BC'] 
-            ## 
-            )
-        
-        sel  = Selection (
-            "SelPsiPPKPiPiFor" + self.name()       ,
-            Algorithm          =   alg             ,
-            RequiredSelections = [ self.psi     () , 
-                                   self.protons () ,
-                                   self.kaons   () , 
-                                   self.pions   () ] 
-            )
-        
-        return self._add_selection( 'PsiPPKPiPi_Selection' , sel ) 
 
-    # Bc -> psi(') pppipipi
+
+    # =========================================================================
+    # B -> psi(') pp pipipi
+    # =========================================================================    
     def psi_pppipipi( self ) :
         """
-        Bc -> psi(') p p pi pi pi
+        B -> psi(') pp pi pi pi
         """
-        sel = self._selection ( 'PsiPPPiPiPi_Selection')
-        if sel : return sel
-        
-        alg  = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N6BodyDecays 
+        return self.make_selection (
+            ## the unique tag 
+            'PsiPPpipipi'                     ,
+            ## algorithm type to be used
+            DaVinci__N6BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.protons() , self.pions() ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor = "[B+ -> J/psi(1S) p+ p~- pi+ pi+ pi-]cc" ,
             ##
-            DecayDescriptor = "[B_c+ -> J/psi(1S) p+ p~- pi+ pi+ pi-]cc" ,
-            ##
-            Preambulo = self['Preambulo'] ,
-            ##
-            CombinationCut = """
-            mbc_acut  & 
-            ADOCACHI2CUT ( 9 , '' )
+            Combination12Cut = """  ( AM < mbc_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) &
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ , 
+            Combination1234Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,4) <  20 ) &
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
+            """ , 
+            Combination12345Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,5) <  20 ) &
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) &
+            ( ACHI2DOCA(4,5) <  20 ) 
+            """ , 
+            CombinationCut   = """  ( mbp_acut | mbc_acut ) &
+            ( ACHI2DOCA(1,6) <  20 ) &
+            ( ACHI2DOCA(2,6) <  20 ) &
+            ( ACHI2DOCA(3,6) <  20 ) &
+            ( ACHI2DOCA(4,6) <  20 ) &
+            ( ACHI2DOCA(5,6) <  20 ) 
             """ ,
             ## 
-            MotherCut = """
-            mbc_cut          &
-            ( chi2vx  < 64 ) &
-            ( ctau    > %s )
-            """ % self['CTAU_BC'] 
+            MotherCut       = self._chargedB() 
+            )
+
+    # =========================================================================
+    # B -> psi(') pp Kpipi
+    # =========================================================================    
+    def psi_ppKpipi( self ) :
+        """
+        B -> psi(') pp K pi pi
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N6BodyDecays 
+        return self.make_selection (
+            ## the unique tag 
+            'PsiPPKpipi'                  ,
+            ## algorithm type to be used
+            DaVinci__N6BodyDecays         ,
+            ## input selections 
+            [ self.psi() , self.protons() , self.kaons() , self.pions() ] ,
+            #
+            ## algorithm configuration
+            #
+            DecayDescriptor  = "[B+ -> J/psi(1S) p+ p~- K+ pi+ pi-]cc" ,
+            ##
+            Combination12Cut = """  ( AM < mbc_ahigh )      &
+            ( ACHI2DOCA(1,2) <  20 ) 
+            """ , 
+            Combination123Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,3) <  20 ) &
+            ( ACHI2DOCA(2,3) <  20 ) 
+            """ , 
+            Combination1234Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,4) <  20 ) &
+            ( ACHI2DOCA(2,4) <  20 ) &
+            ( ACHI2DOCA(3,4) <  20 ) 
+            """ , 
+            Combination12345Cut = """ ( AM < mbc_ahigh )      & 
+            ( ACHI2DOCA(1,5) <  20 ) &
+            ( ACHI2DOCA(2,5) <  20 ) &
+            ( ACHI2DOCA(3,5) <  20 ) &
+            ( ACHI2DOCA(4,5) <  20 ) 
+            """ , 
+            CombinationCut   = """  ( mbp_acut | mbc_acut ) &
+            ( ACHI2DOCA(1,6) <  20 ) &
+            ( ACHI2DOCA(2,6) <  20 ) &
+            ( ACHI2DOCA(3,6) <  20 ) &
+            ( ACHI2DOCA(4,6) <  20 ) &
+            ( ACHI2DOCA(5,6) <  20 ) 
+            """ ,
             ## 
+            MotherCut       = self._chargedB() 
             )
-        
-        sel  = Selection (
-            "SelPsiPPPiPiPiFor" + self.name()       ,
-            Algorithm           =   alg             ,
-            RequiredSelections  = [ self.psi     () , 
-                                    self.protons () ,
-                                    self.pions   () ] 
-            )
-        
-        return self._add_selection( 'PsiPPPiPiPi_Selection' , sel )
     
+    
+    # =========================================================================
     ## merged few basic B-hadrons: B+ , B- & Bs 
+    # =========================================================================
     def beauty ( self ) :
         """
         Merged selection of B-, B+ & Bs  
         """
-        sel = self._selection ( 'BeautySelection')
+        sel = self._selection ( 'Beauty_Selection')
         if sel : return sel
         
         from PhysSelPython.Wrappers import MergedSelection
@@ -2037,7 +1882,7 @@ class PsiX_BQ_Conf(LineBuilder) :
                                    self.psi_3Kpi () ]  ## B+ 
             )
         #
-        return self._add_selection ( 'BeautySelection' , sel )
+        return self._add_selection ( 'Beauty_Selection' , sel )
         
 # =============================================================================
 if '__main__' == __name__ :
