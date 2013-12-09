@@ -1,9 +1,9 @@
 #========================================================================
 # Created    : 2012-05-11
-# Maintainer : Olivier Callot,Eric Cogneras
+# Maintainer : Eric Cogneras
 #========================================================================
 package           FT/FTEvent
-version           v1r4
+version           v1r5
 
 # Structure, i.e. directories to process.
 #========================================================================

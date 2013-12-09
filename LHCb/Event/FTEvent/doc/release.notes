@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Event/FTEvent
-! Responsible : Eric Cogneras, Olivier Callot
+! Responsible : Eric Cogneras
 ! Purpose     : Event model for FT digitisation and reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= FTEvent v1r5 2013-12-09 =========================
 ! 2013-11-28 - Maurizio Martinelli
  - modified FTDeposit structure, from map<MCHit,double energy> to a structure
  with many containers with MCHit, energy, and arrival time to SiPM for both
