@@ -7,6 +7,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2013-12-08 - Stefania Vecchi
+ - CombineTaggersProbability.cpp: set combination of OS taggers
+
 ! 2013-12-04 - Stefania Vecchi
  - Updated SSproton BDT and polynomial coefficients with the latest files by Antonio
 

@@ -66,6 +66,7 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   { //multiply all probabilities
     if(! vtg.at(i)) continue;
     if( vtg.at(i)->type() == (Tagger::SS_Pion) || 
+        vtg.at(i)->type() == (Tagger::SS_Proton) || 
         vtg.at(i)->type() == (Tagger::SS_Kaon) || 
         vtg.at(i)->type() == (Tagger::SS_nnetKaon) 
         ) continue; // Just combine the prob of OS
@@ -117,6 +118,7 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
   { //multiply all probabilities
     if(! vtg.at(i)) continue;
     if( (signalType == 1 && vtg.at(i)->type() == (Tagger::SS_Pion)) ||
+        (signalType == 1 && vtg.at(i)->type() == (Tagger::SS_Proton)) ||
         (signalType == 2 && !m_nnetTaggers && vtg.at(i)->type() == (Tagger::SS_Kaon)) ||
         (signalType == 2 && m_nnetTaggers && vtg.at(i)->type() == (Tagger::SS_nnetKaon))
         )
