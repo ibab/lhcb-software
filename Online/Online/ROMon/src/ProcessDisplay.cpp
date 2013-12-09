@@ -108,7 +108,7 @@ static inline bool is_sys_task(const char* cmd) {
     __procmatch(cmd,"dhclient");
 }
 static inline bool is_pvss_task(const char* cmd) { 
-  return __procmatch(cmd,"PVSS00") || __procmatch(cmd,"smiSM ");
+  return __procmatch(cmd,"PVSS00") || __procmatch(cmd,"smiSM ") || __procmatch(cmd,"WCC") ;
 }
 
 /// Update display content

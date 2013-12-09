@@ -270,7 +270,17 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t /* len */) {
       pnam = _P::projectName(pr.cmd);
       if ( !pnam.empty() ) {
         pvss[pnam].name=pnam;
-        if ( ::strcmp(cmd.c_str(),"PVSS00event")==0 ) 
+        if ( ::strcmp(cmd.c_str(),"WCCILevent")==0 ) 
+          pvss[pnam].eventMgr = true;
+        else if (::strcmp(cmd.c_str(),"WCCILdata")==0 )
+          pvss[pnam].dataMgr = true;
+        else if (::strcmp(cmd.c_str(),"WCCILdist")==0 )
+          pvss[pnam].distMgr = true;
+        else if (::strcmp(cmd.c_str(),"WCCOActrl")==0 ) {
+          if ( command.find("fwFsmSrvr") != string::npos ) pvss[pnam].fsmSrv = true;
+          else if ( command.find("fwFsmDeviceHandler") != string::npos ) pvss[pnam].devHdlr = true;
+        }
+        else if ( ::strcmp(cmd.c_str(),"PVSS00event")==0 ) 
           pvss[pnam].eventMgr = true;
         else if (::strcmp(cmd.c_str(),"PVSS00data")==0 )
           pvss[pnam].dataMgr = true;
