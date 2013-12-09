@@ -3,7 +3,7 @@
 # Maintainer : Tomasz Skwarnicki
 #=========================================================================
 package           HltDAQ
-version           v2r18
+version           v3r0
 
 #=========================================================================
 # Structure, i.e. directories to process.

@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-------------------------------------------------------------------------------
 
+!========================= HltDAQ v3r0 2013-12-09 =========================
 ! 2013-12-05 - Rob Lambert
  - Changes to comply with new Gaudi::StringKey types in IANSvc and related
  - see task #48818
