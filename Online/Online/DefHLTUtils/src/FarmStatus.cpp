@@ -71,7 +71,7 @@ FarmStatus::FarmStatus()
     fprintf(outf,"%s\n",sf);
     m_AllpFarms.insert(string(sf));
   }
-  string otherNodes[]={"ECS03","ECS04","MONA08","MONA09","STORECTL01"};
+  string otherNodes[]={"ECS03","ECS04","MONA08","MONA09","STORECTL01","CALD07"};
   int nothers = sizeof(otherNodes)/sizeof(string*);
   for (int N=0;N<nothers;N++)
   {
