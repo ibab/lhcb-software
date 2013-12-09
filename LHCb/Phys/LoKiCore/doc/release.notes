@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r16 2013-12-09 =========================
 ! 2013-10-31 - Bram Bouwens
  - Primitives.h: make it generate the void version as well,
    thus eliminating the need for VoidPrimitives.h
