@@ -8,6 +8,7 @@
 #include <Kernel/GetIDVAlgorithm.h>
 #include <Kernel/IBTaggingTool.h>
 #include <Kernel/IDVAlgorithm.h>
+#include <Kernel/IDistanceCalculator.h>
 
 // local
 #include "TupleToolTagging.h"
@@ -41,6 +42,7 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
                                     const IInterface* parent )
   : TupleToolBase ( type, name , parent )
   , m_dva(0)
+  , m_dist(0)
   , m_tagging(0)
   , m_tagger_map()
   , m_tagger_rmap()
@@ -52,7 +54,7 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
   m_tagger_map[(int)Tagger::none]="none";
   m_tagger_map[(int)Tagger::unknown]="unknown";
   m_tagger_map[(int)Tagger::OS_Muon]="OS_Muon";
-  m_tagger_map[(int)Tagger::OS_Electron ]="OS_Electron";
+  m_tagger_map[(int)Tagger::OS_Electron]="OS_Electron";
   m_tagger_map[(int)Tagger::OS_Kaon]="OS_Kaon";
   m_tagger_map[(int)Tagger::SS_Kaon]="SS_Kaon";
   m_tagger_map[(int)Tagger::SS_Pion]="SS_Pion";
@@ -84,7 +86,7 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
 
   declareProperty("TaggingToolName", m_toolName = "",
                   "The Tagging Tool, if empty string, the tool will be retrieved from the parent DVAlg");
-  // declareProperty("StoreTaggersInfo", m_extendedTagging = false );
+  declareProperty("StoreTaggersInfo", m_extendedTagging = false);
 
   declareProperty("ActiveTaggers", m_activeTaggers );
   // declareProperty("StoreTaggersInfo", m_extendedTagging = false );
@@ -98,6 +100,7 @@ StatusCode TupleToolTagging::initialize() {
   m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
   //if (m_dva==NULL) return Error("Couldn't get parent DVAlgorithm",
   //                           StatusCode::FAILURE);
+  m_dist = m_dva->distanceCalculator();
 
   //if null string, get parent DVA, else use own private tool
   if(m_toolName == "" && m_dva!=NULL) m_tagging = m_dva->flavourTagging();
@@ -116,6 +119,44 @@ StatusCode TupleToolTagging::initialize() {
 }
 
 //=============================================================================
+VerboseData TupleToolTagging::getVerboseData(const LHCb::Particle *particle, const LHCb::Particle *B) {
+        const ProtoParticle *proto = particle->proto();
+        VerboseData data;
+
+        data.id = particle->particleID().pid();
+        data.p = particle->momentum().P();
+        data.px = particle->momentum().Px();
+        data.py = particle->momentum().Py();
+        data.pz = particle->momentum().Pz();
+        data.pt = particle->momentum().Pt();
+        data.theta = particle->momentum().theta();
+        data.phi = particle->momentum().phi();
+        data.pid_e = proto->info(LHCb::ProtoParticle::CombDLLe, -1000);
+        data.pid_mu = proto->info(LHCb::ProtoParticle::CombDLLmu, -1000);
+        data.pid_k = proto->info(LHCb::ProtoParticle::CombDLLk, -1000);
+        data.pid_p = proto->info(LHCb::ProtoParticle::CombDLLp, -1000);
+
+        // ip wrt the B primary vertex
+        const VertexBase *primVtxB = m_dva->bestVertex(B);
+        StatusCode test = m_dist->distance(particle, primVtxB, data.ip, data.chi2);
+        if ( !test )
+        {
+          data.ip   = -1;
+          data.chi2 = -1;
+        }
+
+        // ip wrt the B decay vertex
+        const VertexBase *decayVtxB = B->endVertex();
+        test = m_dist->distance (particle, decayVtxB, data.bip, data.bchi2);
+        if ( !test )
+        {
+          data.bip   = -1;
+          data.bchi2 = -1;
+        }
+
+        return data;
+}
+
 
 StatusCode TupleToolTagging::fill( const Particle* mother
                                    , const Particle* P
@@ -212,32 +253,106 @@ StatusCode TupleToolTagging::fill( const Particle* mother
   }
   
   test &= tuple->column( prefix+"_TAGGER" , taggers_code);
-  
-  if(isVerbose())
-  {
-    
-    //intitialize a map to some unphysical defaults
-    std::map< std::string, std::pair<int, double > > tag_results;
-    for(std::vector<std::string>::const_iterator t=m_activeTaggers.begin();
-        t!=m_activeTaggers.end(); t++)
-    {
-      tag_results[*t]=std::pair<int, double >(0,0.5);
-    }
-    //fill the map for the taggers which were used
-    for(size_t i=0; i<taggers.size(); ++i)
-    {
-      tag_results[m_tagger_map[(int)taggers[i].type()]]=
-        std::pair<int, double >(taggers[i].decision(),taggers[i].omega());
-    }
-    //fill the tuple for
-    for(std::vector<std::string>::const_iterator t=m_activeTaggers.begin();
-        t!=m_activeTaggers.end(); t++)
-    {
-      test &= tuple->column( prefix+"_"+(*t)+"_DEC"   , tag_results[*t].first   );
-      test &= tuple->column( prefix+"_"+(*t)+"_PROB"  , tag_results[*t].second   );
-    }
-  }
+ 
+  if(isVerbose())  
+  {    
+    // Initialize all columns to default values
+    for(size_t i=0; i<m_activeTaggers.size(); i++) {
+        std::string active = m_activeTaggers[i];
 
+        test &= tuple->column( prefix+"_"+active+"_DEC",  (short int)0 );
+        test &= tuple->column( prefix+"_"+active+"_PROB", (float)0.5 );
+        
+        if(m_extendedTagging){
+          if( true ) {
+            std::vector<double> id, p, px, py, pz, pt, theta, phi;
+            std::vector<double> pid_e, pid_mu, pid_k, pid_p;
+            std::vector<double> ip, chi2, bip, bchi2;
+            
+            const std::string num_name = prefix+"_"+active+"_PARTICLES_NUM";
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_ID", id.begin(), id.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_P", p.begin(), p.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_PX", px.begin(), px.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_PY", py.begin(), py.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_PZ", pz.begin(), pz.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_PT", pt.begin(), pt.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_THETA", theta.begin(), theta.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_PHI", phi.begin(), phi.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_PIDe", pid_e.begin(), pid_e.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_PIDmu", pid_mu.begin(), pid_mu.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_PIDk", pid_k.begin(), pid_k.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_PIDp", pid_p.begin(), pid_p.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_IP_OWNPV", ip.begin(), ip.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_IPCHI2_OWNPV", chi2.begin(), chi2.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_IP_BVertex", bip.begin(), bip.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_IPCHI2_BVertex", bchi2.begin(), bchi2.end(), num_name, 20 );
+            }
+         }
+                
+    }  
+
+    for(size_t i=0; i<taggers.size(); i++) {
+      std::string name = m_tagger_map[(int)taggers[i].type()];
+
+      //loop over active taggers only
+      if(std::find(m_activeTaggers.begin(), m_activeTaggers.end(), name) != m_activeTaggers.end()) {
+        Tagger tagger = taggers[i];
+
+        test &= tuple->column( prefix+"_"+name+"_DEC",  tagger.decision() );
+        test &= tuple->column( prefix+"_"+name+"_PROB", tagger.omega()    );
+
+        if(m_extendedTagging){
+          // Save interesting tagging data
+          std::vector<double> id, p, px, py, pz, pt, theta, phi;
+          std::vector<double> pid_e, pid_mu, pid_k, pid_p;
+          std::vector<double> ip, chi2, bip, bchi2;
+          
+          SmartRefVector<LHCb::Particle> parts = tagger.taggerParts();
+          for(SmartRefVector<LHCb::Particle>::const_iterator it=parts.begin();
+              it != parts.end(); it++) {
+            
+            VerboseData data = getVerboseData(*it, P);
+            
+            id.push_back(data.id);
+            p.push_back(data.p);
+            px.push_back(data.px);
+            py.push_back(data.py);
+            pz.push_back(data.pz);
+            pt.push_back(data.pt);
+            theta.push_back(data.theta);
+            phi.push_back(data.phi);
+            pid_e.push_back(data.pid_e);
+            pid_mu.push_back(data.pid_mu);
+            pid_k.push_back(data.pid_k);
+            pid_p.push_back(data.pid_p);
+            ip.push_back(data.ip);
+            chi2.push_back(data.chi2);
+            bip.push_back(data.bip);
+            bchi2.push_back(data.bchi2);
+          }
+          
+          const std::string num_name = prefix+"_"+name+"_PARTICLES_NUM";
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_ID", id.begin(), id.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_P", p.begin(), p.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_PX", px.begin(), px.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_PY", py.begin(), py.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_PZ", pz.begin(), pz.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_PT", pt.begin(), pt.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_THETA", theta.begin(), theta.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_PHI", phi.begin(), phi.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_PIDe", pid_e.begin(), pid_e.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_PIDmu", pid_mu.begin(), pid_mu.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_PIDk", pid_k.begin(), pid_k.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_PIDp", pid_p.begin(), pid_p.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_IP_OWNPV", ip.begin(), ip.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_IPCHI2_OWNPV", chi2.begin(), chi2.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_IP_BVertex", bip.begin(), bip.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_IPCHI2_BVertex", bchi2.begin(), bchi2.end(), num_name, 20 );
+        }        
+      }      
+    }    
+  }
+  
 
   if( msgLevel( MSG::DEBUG ) ){
     debug() << "Tagging summary: decision: " << dec

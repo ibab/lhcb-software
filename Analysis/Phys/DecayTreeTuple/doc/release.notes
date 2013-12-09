@@ -3,6 +3,11 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+
+! 2013-12-09 - Stefania Vecchi
+ - TupleToolTagging: add Igor's code to save tagger informations (IP,p,pT,IP_B...)
+   if StoreTaggersInfo = True
+
 ! 2013-11-30 - Stefania Vecchi
  - TupleToolTagging: add OS_Charm and SS_Proton taggers in the list of active taggers
    to save 
