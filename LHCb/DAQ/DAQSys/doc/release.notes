@@ -4,6 +4,7 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+!========================= DAQSys v7r2 2013-12-09 =========================
 ! 2013-12-03 - Rob Lambert
  - default dictionaries were all using the same objects :S ooops
 
@@ -33,7 +34,7 @@
  - Fix little bug with usedDecoders
 
 ! 2013-11-18 - Rob Lambert
- - Add concept of a "used" decoder, to suplpement the concept of an "Active" decoder.
+ - Add concept of a "used" decoder, to supplement the concept of an "Active" decoder.
 
 ! 2013-11-18 - Rob Lambert
  - Throw a warning instead of an exception if a given DoD location has been configured elsewhere, but with the same alg.
@@ -53,7 +54,7 @@
 
 ! 2013-10-24 - Marco Clemencic
  - Fixed configuration of decoding tests: the event time was not picked up
-   from the data (ODIN), but set to '0' (default if not explicitely changed).
+   from the data (ODIN), but set to '0' (default if not explicitly changed).
 
 !========================= DAQSys v7r1p1 2013-10-23 =========================
 ! 2013-10-16 - Rob Lambert

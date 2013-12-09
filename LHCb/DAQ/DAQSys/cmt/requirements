@@ -1,5 +1,5 @@
 package DAQSys
-version           v7r1p1
+version           v7r2
 
 branches doc cmt python tests
 
