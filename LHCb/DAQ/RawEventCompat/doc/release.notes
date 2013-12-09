@@ -4,6 +4,7 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+!========================= RawEventCompat v1r4 2013-12-09 =========================
 ! 2013-12-06 - Rob Lambert
  - Extend the juggler to also remove extra directories if asked to.
  - see task #19106
