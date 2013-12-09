@@ -27,6 +27,7 @@ Purpose: LHCb reconstruction program
   . Added tests of DecoderDB use cases, mainly in existing tests but also new
     tests splittostrip17rawevent and repro2012recombine
   . brunel-mc11a-xdst now also writes out xdst
+  . upgrade baseline references updated to reflect VP changes
 
 - Update valgrind.job to use gaudirun.py directly
 
