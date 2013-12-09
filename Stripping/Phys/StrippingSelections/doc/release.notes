@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-12-09 - Edmund Smith
+ - Bugfixes to Xi_b lines.
+
 ! 2013-12-08 - Vanya Belyaev
  - re-write PsiX and PsiX0 using DaVinci::N<x>BodyDecays
 

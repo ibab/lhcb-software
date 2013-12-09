@@ -103,15 +103,15 @@ class Lb2XBuilder(object):
         # Lb -> Xic+- H-+ (+WS)
         self._makeLb2XicH()
 
-        # Xib+ -> Xic0 H+ (+WS)
+        # Xib- -> Xic0 H- (+WS)
         self._makeXib2Xic0H()
         # Xib0 -> Xic+ D- (+WS)
         self._makeXib02XicD()
-        # Xib+ -> Xic0 D+ (+WS)
+        # Xib- -> Xic0 D- (+WS)
         self._makeXib2Xic0D()
         # Xib0 -> Xic+ HHH- (+WS) (HHH = 3pi, Kpipi)
         self._makeXib02XicHHH()
-        #Xib+ -> Xic0 HHH+ (+WS) (HHH = 3pi, Kpipi)
+        #Xib- -> Xic0 HHH- (+WS) (HHH = 3pi, Kpipi)
         self._makeXib2Xic0HHH()
 
         # Sb+- -> D0(HH) p+-
@@ -125,10 +125,10 @@ class Lb2XBuilder(object):
         # Lb -> Lc D (+WS)
         self._makeLb2LcD()
 
-        # bc baryon -> Lc D0 (+WS)
+        # bc baryon -> Lc D0
         self._makeX2LcD0()
-        # bc baryon -> Lc D0 HH (+WS)
-        self._makeX2LcD0HH()
+        # bc baryon -> Lc D0 H (+WS)
+        self._makeX2LcD0H()
         # Xib -> Lc HH (+WS)
         self._makeXib2LcHH()
         
@@ -180,7 +180,7 @@ class Lb2XBuilder(object):
         self.lines.append(ProtoLine(ws,0.1))
 
     def _makeXib2Xic0H(self):
-        '''Make RS and WS Xi_b+ -> Xi_c0 H (H=pi,K) + cc.'''
+        '''Make RS and WS Xi_b- -> Xi_c0 H (H=pi,K) + cc.'''
         pions = self.topoPions
         kaons = self.topoKaons
         decays = {'Xib2Xic0Pi': ["[Xi_b- -> Xi_c0 pi-]cc"],
@@ -195,7 +195,7 @@ class Lb2XBuilder(object):
         self.lines.append(ProtoLine(ws,0.1))
 
     def _makeXib02XicD(self):
-        '''Make RS and WS Xi_b0 -> Xi_c+ D (D=D+,Ds) + cc.'''
+        '''Make RS and WS Xi_b0 -> Xi_c+ D (D=D-,Ds) + cc.'''
         decays = {'Xib02XicD': ["[Xi_b0 -> Xi_c+ D-]cc"]}
         inputs = {'Xib02XicD': self.xic+self.d.hhh_cf_pid}
         rs = makeB2XSels(decays,'Xic2PKPi',inputs,self.config)
@@ -206,11 +206,11 @@ class Lb2XBuilder(object):
         self.lines.append(ProtoLine(ws,0.1))
 
     def _makeXib2Xic0D(self):
-        '''Make RS and WS Xi_b+ -> Xi_c0 D (D=D+,Ds) + cc.'''
-        decays = {'Xib2Xic0D': ["[Xi_b+ -> Xi_c0 D+]cc"]}
+        '''Make RS and WS Xi_b- -> Xi_c0 D (D=D-,Ds) + cc.'''
+        decays = {'Xib2Xic0D': ["[Xi_b- -> Xi_c0 D-]cc"]}
         inputs = {'Xib2Xic0D': self.xic0+self.d.hhh_cf_pid}
         rs = makeB2XSels(decays,'Xic02PKKPi',inputs,self.config)
-        decays = {'Xib2Xic0DWS': ["[Xi_b+ -> Xi_c0 D-]cc"]}
+        decays = {'Xib2Xic0DWS': ["[Xi_b- -> Xi_c0 D+]cc"]}
         inputs = {'Xib2Xic0DWS':self.xic0+self.d.hhh_cf_pid}
         ws = makeB2XSels(decays,'Xic02PKKPi',inputs,self.config)
         self.lines.append(ProtoLine(rs,1.0))
@@ -234,16 +234,16 @@ class Lb2XBuilder(object):
         self.lines.append(ProtoLine(ws,0.1))
 
     def _makeXib2Xic0HHH(self):
-        '''Make RS and WS Xi_b+ -> Xi_c0 HHH (HHH=3pi,Kpipi) + cc.'''
+        '''Make RS and WS Xi_b- -> Xi_c0 HHH- (HHH=3pi,Kpipi) + cc.'''
         pipipi = self.hhh.pipipi
         kpipi = self.hhh.kpipi
-        decays = {'Xib2Xic0PiPiPi': ["[Xi_b+ -> Xi_c0 a_1(1260)+]cc"],
-                  'Xib2Xic0KPiPi': ["[Xi_b+ -> Xi_c0 K_1(1270)+]cc"]}
+        decays = {'Xib2Xic0PiPiPi': ["[Xi_b- -> Xi_c0 a_1(1260)-]cc"],
+                  'Xib2Xic0KPiPi': ["[Xi_b- -> Xi_c0 K_1(1270)-]cc"]}
         inputs = {'Xib2Xic0PiPiPi': self.xic0+pipipi,
                   'Xib2Xic0KPiPi': self.xic0+kpipi}
         rs = makeB2XSels(decays,'Xic02PKKPi',inputs,self.config)
-        decays = {'Xib2Xic0PiPiPiWS': ["[Xi_b+ -> Xi_c0 a_1(1260)-]cc"],
-                  'Xib2Xic0KPiPiWS': ["[Xi_b+ -> Xi_c0 K_1(1270)-]cc"]}
+        decays = {'Xib2Xic0PiPiPiWS': ["[Xi_b- -> Xi_c0 a_1(1260)+]cc"],
+                  'Xib2Xic0KPiPiWS': ["[Xi_b- -> Xi_c0 K_1(1270)+]cc"]}
         inputs = {'Xib2Xic0PiPiPiWS': self.xic0+pipipi,
                   'Xib2Xic0KPiPiWS': self.xic0+kpipi}
         ws = makeB2XSels(decays,'Xic02PKKPi',inputs,self.config)
@@ -338,32 +338,30 @@ class Lb2XBuilder(object):
         self.lines.append(ProtoLine(ws,0.1))
 
     def _makeX2LcD0(self):
-        '''Makes RS + WS Xib -> Lc D0 + c.c.'''
+        '''Makes RS X -> Lc D0 + c.c.'''
         config = deepcopy(self.config)
         config['AM_MAX'] = '9000*MeV'
         decays = {'X2LcD0': ["[B+ -> Lambda_c+ D0]cc"]}
         inputs = {'X2LcD0': self.d.kpi+self.lc_pid}
         rs = makeB2XSels(decays,'D02KPi',inputs,config)
         self.lines.append(ProtoLine(rs,1.0))
-        decays = {'X2LcD0WS': ["[B+ -> Lambda_c~- D0]cc"]}
-        inputs = {'X2LcD0WS': self.d.kpi+self.lc_pid}
-        ws = makeB2XSels(decays,'D02KPi',inputs,config)
-        self.lines.append(ProtoLine(ws,0.1))
 
-    def _makeX2LcD0HH(self):
-        '''Makes RS + WS Xib -> Lc D0 HH + c.c.'''
+    def _makeX2LcD0H(self):
+        '''Makes RS + WS X -> Lc D0 H + c.c.'''
+        pions = self.topoPions
+        kaons = self.topoKaons
         config = deepcopy(self.config)
         config['AM_MAX'] = '9000*MeV'
-        decays = {'X2LcD0PiPi': ["[B+ -> Lambda_c+ D0 rho(770)0]cc"],
-                  'X2LcD0KPi': ["[B+ -> Lambda_c+ D0 K*(892)0]cc","[B- -> Lambda_c~- D0 K*(892)0]cc"],
-                  'X2LcD0KK': ["[B+ -> Lambda_c+ D0 phi(1020)]cc"]}
-        inputs = {'X2LcD0PiPi': self.d.kpi+self.lc_pid+self.hh.pipi,
-                  'X2LcD0KPi': self.d.kpi+self.lc_pid+self.hh.kpi,
-                  'X2LcD0KK': self.d.kpi+self.lc_pid+self.hh.kk}
+        decays = {'X2LcD0Pi': ["[B0 -> Lambda_c+ D0 pi-]cc"],
+                  'X2LcD0K': ["[B0 -> Lambda_c+ D0 K-]cc"]}
+        inputs = {'X2LcD0Pi': self.d.kpi+self.lc_pid+pions,
+                  'X2LcD0K': self.d.kpi+self.lc_pid+kaons}
         rs = makeB2XSels(decays,'D02KPi',inputs,config)
         self.lines.append(ProtoLine(rs,1.0))
-        decays = {'X2LcD0HHWS': ["[B+ -> Lambda_c~- D0 rho(770)-]cc"]}
-        inputs = {'X2LcD0HHWS': self.d.kpi+self.lc_pid+self.hh.hh_ws}
+        decays = {'X2LcD0PiWS': ["[B0 -> Lambda_c+ D0 pi+]cc"],
+                  'X2LcD0KWS': ["[B0 -> Lambda_c+ D0 K+]cc"]}
+        inputs = {'X2LcD0PiWS': self.d.kpi+self.lc_pid+pions,
+                  'X2LcD0KWS': self.d.kpi+self.lc_pid+kaons}
         ws = makeB2XSels(decays,'D02KPi',inputs,config)
         self.lines.append(ProtoLine(ws,0.1))
 
