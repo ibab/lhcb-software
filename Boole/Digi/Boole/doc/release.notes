@@ -14,6 +14,7 @@ Purpose: LHCb Digitization program
      - boole-upgrade-muon_nom1
    . Updated upgrade tests to new DB tags after UT changes in DB.
    . Add exclusion for memory change warnings from BooleInit
+   . Updated boole-upgrade-baseline-{,25ns,-ut} references
 
 - Configuration Changes
    . Added a line for the UT as submitted by JC. 
