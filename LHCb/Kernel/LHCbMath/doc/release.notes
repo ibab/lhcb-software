@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r44 2013-12-09 =========================
 ! 2013-12-03 - Sasha Baranov
  - Add utf-8 coding string(PEP 0263) to python files
 
