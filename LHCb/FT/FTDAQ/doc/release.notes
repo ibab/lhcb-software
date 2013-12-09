@@ -4,6 +4,7 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+!========================= FTDAQ v1r4 2013-12-09 =========================
 ! 2013-12-04 - Jacco de Vries
  - Added outputLocation property to FTRawBankEncoder
 
