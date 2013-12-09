@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v18r0 2013-12-09 =========================
 ! 2013-12-02 - Marco Cattaneo
  - Skip warnings about 3*sigma changes in memory use in QMTests exclusions file
    LHCbExclusions.py (previously in BrunelExclusions.py)
