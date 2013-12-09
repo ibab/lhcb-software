@@ -5,6 +5,104 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v36r4>2013-12-10 LHCbSys v36r4</A></H1><PRE>
+This version uses Gaudi v24r2 and LCG_66
+
+- Packages modified: DAQ/DAQSys v7r2, DAQ/RawEventCompat v1r4, Det/DDDB v1r67,
+    Det/VPDet v2r5, Event/FTEvent v1r5, Event/PhysEvent v11r23,
+    Event/TrackEvent v5r23, FT/FTDAQ v1r4, GaudiConf v18r0, Hlt/HltDAQ v3r0,
+    Hlt/HltServices v2r0, Hlt/HltInterfaces v5r0, Kernel/LHCbMath v3r44,
+    L0/L0DU v10r30, Phys/LoKiCore v11r16, Tools/CondDBUI v3r26
+
+- In DAQ/DAQSys v7r2
+  . Fix default dictionaries that were all using the same objects
+  . Use one decoder for the Velo clusters, but split into two in the case
+    DataOnDemand is used.
+  . Double check that cloning actually works in a new little unit test.
+  . Fix issue with overrideIfRequired, now truly call setup!
+  . Modifications appropriate to Rec/Brunel
+  . Add/Separate Hlt1 and Hlt2 DecReports decoders
+  . Add function to set time decoding, it's needed by some other configurables
+  . Add concept of a "used" decoder, to supplement the concept of an "Active"
+    decoder.
+  . Throw a warning instead of an exception if a given DoD location has been
+    configured elsewhere, but with the same alg.
+  . Add PileUp decoder
+  . Add options required to prevent overwriting EventClockSvc needed by DaVinci
+  . Set EventTimeDecoder if there is an active ODIN decoder, adapt tests to
+    change in DecodeRawEvent.py
+  . Add in HLT decoders, add to expected test differences
+  . Adapt test to new behaviour of Calo configurable
+  . Fixed configuration of decoding tests: the event time was not picked up
+    from the data (ODIN), but set to '0' (default if not explicitly changed).
+
+- In DAQ/RawEventCompat v1r4
+  . Extend the juggler to also remove extra directories if asked to 
+    (see https://savannah.cern.ch/task/?19106)
+  . Add a test validator which can interpret the contents of DSTs
+    and work out if the required locations are there or not
+  . Check for bad/unknown banks
+  . Fix missing addition of Depth
+  . Adapt test to new addition of /Event/ when needed (always?)
+  . Solve bug due to lack of _checkv in some configurables/methods
+  . Now all configurables accept versions as strings or numbers
+
+- In Det/DDDB v1r67
+  . Make "cond-20131128" the default LHCBCOND tag for 2012 and 2013 data.
+
+- In Det/VPDet v2r5
+  . Added possibility for in/output in local coordinates to channelToPoint and
+    pointToChannel functions
+
+- In Event/FTEvent v1r5
+  . Modified FTDeposit structure, from map<MCHit,double energy> to a structure
+    with many containers with MCHit, energy, and arrival time to SiPM for both
+    the direct and reflected light pulse.
+  . FTDigit is modified accordingly to store the FTDeposit pointers used.
+
+- In Event/PhysEvent v11r23
+  . Added SS_Proton and OS_Charm tagger type in Tagger.xml and Tagger.h
+
+- In Event/TrackEvent v5r23
+  . Add histories for upgrade, remove TrackVeloUT history (not used).
+
+- In FT/FTDAQ v1r4
+  . Added outputLocation property to FTRawBankEncoder
+
+- In GaudiConf v18r0
+  . Skip warnings about 3*sigma changes in memory use in QMTests exclusions file
+    LHCbExclusions.py (previously in BrunelExclusions.py)
+  . Integrate DstConf with the DecodersDB -- major change. 
+  . Replace contents of DecodeRawEvent.py with new DecodersDB
+
+- In Hlt/HltDAQ v3r0
+  . Changes in Dec, Sel, Vertex Writers and Decoders to equip with SourceID
+    (0=Hlt, 1=Hlt1, 2=Hlt2)
+  . Bank version numbers advanced to 2
+  . Decoders will decode SourceID=1 or 2 from RawBanks with SourceID=0 if 1,2 not
+    present (allows splitting of the old Hlt report into two separate Hlt1,Hlt2
+    reports in TES)
+
+- In Hlt/HltDAQ v3r0, Hlt/HltServices v2r0, Hlt/HltInterfaces v5r0
+  . Changes to comply with new Gaudi::StringKey types in IANSvc and related
+    (see https://savannah.cern.ch/task/?48818)
+
+- In Kernel/LHCbMath v3r44
+  . Add utf-8 coding string(PEP 0263) to python files
+  . Adjust a bit Bugg&Co family of functions 
+  . Adjust alpha in Crystal Ball 
+  . Add few math-functions for phase space modulated by polynomial
+
+- In L0/L0DU v10r30
+  . L0DUFromRawTool : fix uninitialized m_size attribute and fix minor memory leak
+
+- In Phys/LoKiCore v11r16
+  . Primitives.h: make it generate the void version as well, thus eliminating the
+    need for VoidPrimitives.h (see https://savannah.cern.ch/task/?46676)
+
+- In Tools/CondDBUI v3r26
+  . __init__.py: Fixed a glitch of only translating strings from the 'data' key
+    in the DB payload
 
 </PRE><H1><A NAME=v36r3>2013-10-24 LHCbSys v36r3</A></H1><PRE>
 This version uses Gaudi v23r10 and LCG_66
