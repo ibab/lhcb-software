@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+! 2013-12-09 - Stefania Vecchi
+- Updated reference file tagging.qms/test_tag_mc12.qmt according to the change
+   in NNetOSK, to add results on SSproton.
 
 ! 2013-11-11 - Christopher Rob Jones
  - Adapt stripping references to removal of temporary LoKi message, introduced
