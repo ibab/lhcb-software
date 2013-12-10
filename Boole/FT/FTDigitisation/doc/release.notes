@@ -4,6 +4,7 @@
 ! Purpose     : Digitize the FT hits
 !-----------------------------------------------------------------------------
 
+!========================= FTDigitisation v1r7 2013-12-10 =========================
 ! 2013-12-08 Jacco de Vries
  - removed escape character '\%' that gives a warning in cmake
 
