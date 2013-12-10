@@ -36,6 +36,15 @@ This version uses projects LCGCMT 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4
     channelToPoint (VPDigitization v1r2, VPDet v2r5)
   . Speed improvements in clustering (VPAlgorithms v4r2)
 
+- Persistency changes
+  . Add support for data federations (try out all PFN replicas in file catalog in
+    turn in case of file open failures) (GaudiUtils v4r7)
+  . Add output for per-event timing of execute(). Controlled by ChronoStatSvc
+    property "PerEventFile". Default is empty string, do nothing
+    (GaudiCommonSvc v2r2)
+  . Add property to RootHistCnv::RFileCnv that allows ROOT compression settings
+    to be defined (RootHistCnv v11r3)
+
 - Packaging changes
   . Remove OldVPxxx algorithms (VPDigitization v1r2)
 
