@@ -4,6 +4,7 @@
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrKernel v1r3 2013-12-10 =========================
 ! 2013-11-07 - Marco Cattaneo
  - Fix initialize/finalize memory leak in PrHitManager
 
