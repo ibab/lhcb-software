@@ -9,48 +9,95 @@ Purpose: LHCb reconstruction packages.
 This version uses Gaudi v24r2, LHCb v36r4 and Lbcom v14r4
 
 - Packages removed:  Rec/RecoUpgrade, Rec/RecoUpgradeMC (obsolete)
-- Packages modified: 
+- Packages modified: Calo/CaloReco v5r18, Muon/MuonID v9r8, Pr/PrAlgorithms v1r8,
+    Pr/PrKernel v1r3, Pr/PrMCTools v1r8, Pr/PrVeloUT v1r3, Rec/LumiAlgs v9r0,
+    Rec/RecConf v2r15, Rich/RichRecBase v4r17, Rich/RichRecSys v5r0,
+    Tf/FastVelo v1r14, Tf/PatAlgorithms v4r29, Tf/PatPixel v1r4, Tf/TrackSys v8r0,
+    Tr/TrackCheckers v4r19, Tr/TrackInterfaces v4r26, Tr/TrackMCTools v3r6,
+    Tr/TrackTools v4r27, Tr/TrackUtils v1r53
 
-Calo/CaloReco v5r18
-Muon/MuonID v9r8
-Pr/PrAlgorithms v1r8
-Pr/PrKernel v1r3
-Pr/PrMCTools v1r8
-Pr/PrVeloUT v1r3
-Rec/LumiAlgs v9r0
-Rec/RecConf v2r15
-Rich/RichRecBase v4r17
-Rich/RichRecSys v5r0
-Tf/FastVelo v1r14
-Tf/PatAlgorithms v4r29
-Tf/PatPixel v1r4
-Tf/TrackSys v8r0
-Tr/TrackCheckers v4r19
-Tr/TrackInterfaces v4r26
-Tr/TrackMCTools v3r6
-Tr/TrackTools v4r27
-Tr/TrackUtils v1r53
+- In Calo/CaloReco v5r18
+  .  python/CaloReco/Configuration.py : fix typo in CaloLines method.
 
-Calo/CaloReco v5r18
-Muon/MuonID v9r8
-Pr/PrAlgorithms v1r8
-Pr/PrKernel v1r3
-Pr/PrMCTools v1r8
-Pr/PrVeloUT v1r3
-Rec/LumiAlgs v9r0
-Rec/RecConf v2r15
-Rich/RichRecBase v4r17
-Rich/RichRecSys v5r0
-Tf/FastVelo v1r14
-Tf/PatAlgorithms v4r29
-Tf/PatPixel v1r4
-Tf/TrackSys v8r0
-Tr/TrackCheckers v4r19
-Tr/TrackInterfaces v4r26
-Tr/TrackMCTools v3r6
-Tr/TrackTools v4r27
-Tr/TrackUtils v1r53
+- In Muon/MuonID v9r8
+  . Avoid repeated calculation of index station * m_NRegion + region. 
+  . Fixes for the No M1 upgrade studies setup: a few bugs to correctly pick the 
+    station index and set FindQuality to false because Chi2MuIDTool is not yet 
+    fixed to no M1 case. 
 
+- In Pr/PrAlgorithms v1r8
+  . Replace all 'Pat' track histories with 'Pr' track histories
+  . Fix uninitialized pointers in various Pr Classes.
+  . Introduce PrMatch / PrMatchTool, which are at the moment just copies of 
+    PatMatch / PatMatchTool.
+  . Introduce PrAddUTHitsTool, which is to replace PrAddUTCoord. The new tool is 
+    basically a copy of the old one, but without keeping the non-uprade
+    inheritance structure.
+  . Put some speed improvements in PrSeedingXLayers
+  . Implemented the new momentum dependent windows.
+
+- In Pr/PrKernel v1r3
+  . Fix initialize/finalize memory leak in PrHitManager
+
+- In Pr/PrMCTools v1r8
+  . PrCheatedVP: Follow change in channelToPoint syntax in DeVPSensor, 
+    remove unused includes
+
+- In Pr/PrVeloUT v1r3
+  . Fix uninitialized pointers in PrVeloUT, change track history to PrVeloUT
+  . Changed number of hits from 8 to 4, pick up LastMeasurement state.
+
+- In Rec/LumiAlgs v9r0, Rich/RichRecSys v5r0, Tf/TrackSys v8r0 
+  . Adapt to DecoderDB, this is a major change
+
+- In Rec/RecConf v2r15
+  . Fix bug in RecMoniConf, which caused crash when expertHistos were enabled and
+    CheckEnabled was false.
+  . Removed RecoUpgrade and RecoUpgradeMC from CMakeLists and cmt/requirements.
+
+- In Rich/RichRecBase v4r17
+  . Add support for upgrade track histories, remove PatVeloUT
+    (was not used, will be replaced with PrVeloUT).
+
+- In Tf/FastVelo v1r14
+  . Fixed bug when making R cluster VELO tracks crossing sectors
+
+- In Tf/PatAlgorithms v4r29
+  . Fixed inconsistency PatFwdTool.cpp in fitStereoCandidate where a x layer 
+    was marked as a stereo layer.
+
+- In Tf/PatPixel v1r4
+  . Removed unused variables, changed default values
+
+- In Tf/TrackSys v8r0
+  . Combine both velo decoders into one. No need for two algs if we need both
+    sets of info anyway.
+  . Turn off the other velo decoders, otherwise there is potentially a problem
+    using DataOnDemand in DaVinci
+  . Move matching algorithm to before the downstream in RecoUpgradeTracking.py,
+    so that we are able to exclude hits used in match for the downstream.
+  . Replace PatMatch with PrMatch in upgrade reco sequence
+    (no performance difference).
+
+- In Tr/TrackCheckers v4r19
+  . Fixed eta range in TrackIPResolutionChecker
+
+- In Tr/TrackInterfaces v4r26
+  . Added IVPExpectation, which is a new interface to VP Expectation class 
+  . Add IPrAddUTHitsTool.h, which is the new interface for the (renamed) tool
+    that adds UT hits to long tracks.
+  . Remove IAddUTClusterTool.h, as it was not used by any other class
+
+- In Tr/TrackMCTools v3r6
+  . Add upgrade detector linking to LHCbIDsToMCParticles.
+
+- In Tr/TrackTools v4r27
+  . Added the VP Expectation class
+
+- In Tr/TrackUtils v1r53
+  . Adapt to change in IANNSvc, Gaudi::StringKey, see task #48818
+  . Add PrForward track history to TrackEventCloneKiller
+  . Add upgrade histories to TrackFromDST
 
 </PRE><H1><A NAME=v15r3>2013-10-25 RecSys v15r3</A></H1><PRE>
 This version uses Gaudi v23r10, LHCb v36r3 and Lbcom v14r3
