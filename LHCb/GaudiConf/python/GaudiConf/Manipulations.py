@@ -109,12 +109,14 @@ def removeConfigurables(conf_list):
     for k in conftodel:
         del allConfigurables[k]
 
+
 # Copied from HLT Conf, setting given configurables with a dictionary:
 
-def forAllConf( head, prop_value_dict, types=[], force=False ) :
+def forAllConf( head=None, prop_value_dict={}, types=[], force=False ) :
     """ Find all configurable algorithms and set certain properties
     
-    head_conf: can be a sequence or a list, or a configurable to start with.
+    head: can be a sequence or a list, or a configurable to start with.
+    if None is given, allConfigurables plus ApplicationMgr().TopAlg will be used
     prop_value_dict: A dictionary of Property: Value, e.g. {'OutputLevel':3}
     types: A list of types to check against, e.g. ['FilterDesktop','CombineParticles','DVAlgorithm'...], default empty list, doesn't check for types
     force: Overwrite properties even if they are already set, default False
@@ -122,10 +124,18 @@ def forAllConf( head, prop_value_dict, types=[], force=False ) :
     To obtain all configurables try something like:
     forAllConf(ApplicationMgr().TopAlg,{'OutputLevel':3})
     or:
-    forAllConf(fullNameConfigurables(),keys(),{'OutputLevel':3})
+    forAllConf(fullNameConfigurables().keys(),{'OutputLevel':3})
+    or:
+    forAllConf(head=None, prop_value_dict={'OutputLevel':3})
+    (last if you want to find all configurable which exist during a
+    postconfig action, for example)
     """
     if type(prop_value_dict) is not dict:
         raise TypeError("Hey, you need to give me a dictionary, you passed me a, "+str(type(prop_value_dict)))
+    
+    if head is None:
+        from Gaudi.Configuration import ApplicationMgr
+        head=[ApplicationMgr()]+fullNameConfigurables().values()
     
     #recurse over lists
     if type(head) is list:
@@ -191,8 +201,8 @@ def postConfigCallable(*args,**kwargs):
         mydummy=dummyPostConf(args[0],args[1:],kwargs)
     appendPostConfigAction(mydummy.method)
 
-def postConfForAll(head, prop_value_dict, types=[], force=False ) :
+def postConfForAll(head=None, prop_value_dict={}, types=[], force=False ) :
     """postConfigCallable with signature for forAllConf
     Append postConfigAction or forAllConf"""
-    postConfigCallable(forAllConf,head,prop_value_dict, types=[], force=False)
+    postConfigCallable(forAllConf,head,prop_value_dict, types=types, force=force)
 
