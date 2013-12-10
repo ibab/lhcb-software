@@ -4,6 +4,7 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================= CaloReco v5r18 2013-12-10 =========================
 ! 2013-10-30 - Olivier Deschamps
  -  python/CaloReco/Configuration.py : fix typo in CaloLines method.
 
