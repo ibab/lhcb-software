@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v26r10>2013-12-11 Boole v26r10</A></H1><PRE>
+This version uses projects LCGCMT 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
 - QMTest Changes
    . Updated Upgrade references
    . Changed suite of upgrade qmtests to
@@ -21,7 +25,7 @@ Purpose: LHCb Digitization program
 
 </PRE><H1><A NAME=v26r9>2013-10-25 Boole v26r9</A></H1><PRE>
 This version uses projects LCGCMT 65a, Gaudi v23r10, LHCb v36r3, Lbcom v14r3
- and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
 - Configuration changes
    . Updated LinkVPSeq to use new linker algorithms
@@ -32,7 +36,7 @@ This version uses projects LCGCMT 65a, Gaudi v23r10, LHCb v36r3, Lbcom v14r3
 
 </PRE><H1><A NAME=v26r8>2013-10-02 Boole v26r8</A></H1><PRE>
 This version uses projects LCGCMT 65a, Gaudi v23r10, LHCb v36r2, Lbcom v14r2
- and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
  - QMTest Changes
    . Updated VP reference
@@ -50,7 +54,7 @@ This version uses projects LCGCMT 65a, Gaudi v23r10, LHCb v36r2, Lbcom v14r2
 
 </PRE><H1><A NAME=v26r7>2013-07-25 Boole v26r7</A></H1><PRE>
 This version uses projects LCGCMT 65a, Gaudi v23r9, LHCb v36r1, Lbcom v14r1
- and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
  - Configuration Changes
    . Adapted configuration to accommodate no SPD/PRS
@@ -68,7 +72,7 @@ This version uses projects LCGCMT 65a, Gaudi v23r9, LHCb v36r1, Lbcom v14r1
 
 </PRE><H1><A NAME=v26r6>2013-06-07 Boole v26r6</A></H1><PRE>
 This version uses projects LCGCMT 65, Gaudi v23r8, LHCb v36r0, Lbcom v14r0
- and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
  - QMTest Changes
    . vl_compact tests updated to use the new optimised geometry
@@ -80,7 +84,7 @@ This version uses projects LCGCMT 65, Gaudi v23r8, LHCb v36r0, Lbcom v14r0
 
 </PRE><H1><A NAME=v26r5>2013-05-02 Boole v26r5</A></H1><PRE>
 This version uses projects LCGCMT 64d, Gaudi v23r7, LHCb v35r6, Lbcom v13r6p1
- and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
  - Changes to tests
    . Added tests/options/db-latest-upgrade.py
@@ -91,9 +95,9 @@ This version uses projects LCGCMT 64d, Gaudi v23r7, LHCb v35r6, Lbcom v13r6p1
 
 </PRE><H1><A NAME=v26r4>2013-03-26 Boole v26r4</A></H1><PRE>
 This version uses projects LCGCMT 64d, Gaudi v23r7, LHCb v35r5, Lbcom v13r5
- and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
- - Bug fix release for upgrade simulation.
+ - Bug fix release for upgrade simulation.
 
  - Changes to configuration:
     . Disabled activation of spillover sequences for the UT which do not exist.
@@ -108,9 +112,9 @@ This version uses projects LCGCMT 64d, Gaudi v23r7, LHCb v35r5, Lbcom v13r5
 
 </PRE><H1><A NAME=v26r3>2013-03-06 Boole v26r3</A></H1><PRE>
 This version uses projects LCGCMT 64c, Gaudi v23r6, LHCb v35r4, Lbcom v13r4
- and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
- - Bug fix release for upgrade simulation.
+ - Bug fix release for upgrade simulation.
 
 </PRE><H1><A NAME=v26r2>2013-02-18 Boole v26r2</A></H1><PRE>
 This version uses projects LCGCMT 64c, Gaudi v23r6, LHCb v35r4, Lbcom v13r4
