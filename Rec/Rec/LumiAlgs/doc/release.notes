@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v9r0 2013-12-10 =========================
 ! 2013-11-21 - Rob Lambert
  - Adapt to DecoderDB, this is a major change
 
