@@ -4,7 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
-!========================= RichRecSys v4r10 2013-12-10 =========================
+!========================= RichRecSys v5r0 2013-12-10 =========================
 ! 2013-11-28 - Rob Lambert
  - Was adding the wrong algorithm to the sequence... some wierd interferrence between cloning and the name.
     Fixed now.
