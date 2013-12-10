@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2013-12-10 - Andrea Contu
+ - Minor change in TupleTollVeloTrackMatch, added property for maxIP of VELO tracks
+ 
+
 ! 2013-11-25 - Andrea Contu
  - Minor change in TupleTollVeloTrackMatch, one property has been renamed.
 

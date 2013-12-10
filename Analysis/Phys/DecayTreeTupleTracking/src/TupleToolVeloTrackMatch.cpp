@@ -33,6 +33,7 @@ DECLARE_TOOL_FACTORY(TupleToolVeloTrackMatch)
   declareProperty("ConeAngle", m_slopediff = 0.05);
   declareProperty("ConeAroundMomentum", m_momentumcone = false);
   declareProperty("VerboseInfo", m_verbose = false);
+  declareProperty("MaxIPwrtBestPV", m_maxVbestPVdist=0.5);
 }
 
 //=============================================================================
@@ -72,8 +73,12 @@ StatusCode TupleToolVeloTrackMatch::fill( const LHCb::Particle * /* top */,
   std::vector<double> vfpx,vfpy,vfpz;
   std::vector<double> vfpxxerr,vfpyyerr,vfpxyerr;
   std::vector<double> vconedist;
-    
+  std::vector<double> vbestip;
+  
+  double ipcut=m_maxVbestPVdist;
+  
   double bestdt=9999.;
+  double bestip=9999.;
   double nvelotracks=-1.;
   double bestsloperatiox=9999.;
   double bestsloperatioy=9999.;
@@ -95,6 +100,7 @@ StatusCode TupleToolVeloTrackMatch::fill( const LHCb::Particle * /* top */,
       aPV = m_dva->bestVertex (part);
       if(!aPV){
         conemom=true;
+        ipcut=9999.;
         Warning("Could not find best PV, falling back to momentum cone!");
       }
     }
@@ -140,9 +146,21 @@ StatusCode TupleToolVeloTrackMatch::fill( const LHCb::Particle * /* top */,
         double dty = msy - tmpslope.Y() ;
         double dt  = std::sqrt(dtx*dtx+dty*dty) ;
         double tmpR3d=sqrt(pow((1-tmpslope.X()/msx),2)+pow((1-tmpslope.Y()/msy),2));
-        if(dt<m_slopediff){
+        
+        double ipbestpv=-1.;
+        double tmpvect2=0.;
+        double tmpscalar2=0.;
+        
+        if(!conemom){
+          tmpvect2= pow((tmpfp.X()-aPV->position().x()),2) + pow((tmpfp.Y()-aPV->position().y()),2) + pow((tmpfp.Z()-aPV->position().z()),2);
+          tmpscalar2=pow( ((tmpfp.X()-aPV->position().x())*tmpslope.X() + (tmpfp.Y()-aPV->position().y())*tmpslope.Y() + (tmpfp.Z()-aPV->position().z())),2)/(tmpslope.X()*tmpslope.X()+tmpslope.Y()*tmpslope.Y()+tmpslope.Z()*tmpslope.Z());
+          ipbestpv=sqrt(tmpvect2-tmpscalar2);
+        }
+        
+        if(dt<m_slopediff && ipbestpv<ipcut){
           if(tmpR3d<bestdt ) {
             bestdt = tmpR3d ;
+            bestip = ipbestpv ;
             besttrackindex=nvelotracks;
             bestfposition=tmpfp;
             bestfpositionerr=fperror;
@@ -167,6 +185,7 @@ StatusCode TupleToolVeloTrackMatch::fill( const LHCb::Particle * /* top */,
           vslopesxratio.push_back(tmpslope.X()/msx);
           vslopesyratio.push_back(tmpslope.Y()/msy);
           vR.push_back(tmpR3d);
+          vbestip.push_back(ipbestpv);
           vconedist.push_back(dt);
         }
       }
@@ -176,6 +195,7 @@ StatusCode TupleToolVeloTrackMatch::fill( const LHCb::Particle * /* top */,
     tuple->column(prefix+"_VM_cand_slope_Y",msy);
     tuple->column(prefix+"_VM_nvelotracks",nvelotracks);
     tuple->column(prefix+"_VM_R",bestdt);
+    tuple->column(prefix+"_VM_IP",bestip);
     tuple->column(prefix+"_VM_CD",bestconedist);
     tuple->column(prefix+"_VM_index",besttrackindex);
     tuple->column(prefix+"_VM_fpos_X",bestfposition.X());
@@ -207,6 +227,7 @@ StatusCode TupleToolVeloTrackMatch::fill( const LHCb::Particle * /* top */,
       tuple->farray( prefix+"_VM_array_sloperatio_X", vslopesxratio ,prefix+"_VM_nTP",maxVeloTracks );
       tuple->farray( prefix+"_VM_array_sloperatio_Y", vslopesyratio ,prefix+"_VM_nTP",maxVeloTracks );
       tuple->farray( prefix+"_VM_array_R", vR ,prefix+"_VM_nTP",maxVeloTracks );
+      tuple->farray( prefix+"_VM_array_IP", vbestip ,prefix+"_VM_nTP",maxVeloTracks );
       tuple->farray( prefix+"_VM_array_CD", vconedist ,prefix+"_VM_nTP",maxVeloTracks );
     }
   }

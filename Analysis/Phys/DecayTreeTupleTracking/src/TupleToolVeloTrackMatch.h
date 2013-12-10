@@ -13,6 +13,8 @@
 *  This is an approximation of the true angle, it is sqrt( (slopedifference_X)^2 + (slopedifference_Y)^2  ),
 *  Where slopedifference is the difference in slope between the velo track and the reference direction
 *
+* -The minimum distance of the VELO tracks from the best PV can be set using the property "MaxIPwrtBestPV", the default value is 0,5 mm
+*
 * -If ConeAroundMomentum=True:
 *    The reference direction is set to be the 3-momentum of the downstream candidate
 *    if False (default value) is the flight direction determined by the decay vertex and the associate PV
@@ -26,6 +28,7 @@
 *    head_VM_cand_slope_Y: dy/dz of reference direction
 *    head_VM_nvelotracks: number of velo tracks inside the cone
 *    head_VM_R: R of best velo track
+*    head_VM_IP: IP of best velo track wrt best PV
 *    head_VM_CD: cone angle best velo track
 *    head_VM_chi2: chi2 of velo track fit
 *    head_VM_index: index of best velo track
@@ -60,6 +63,7 @@
 *    head_VM_array_sloperatio_X
 *    head_VM_array_sloperatio_Y
 *    head_VM_array_R
+*    head_VM_array_IP
 *    head_VM_array_CD
 *    head_VM_array_chi2
 *    head_VM_array_nMeas
@@ -95,6 +99,7 @@ class TupleToolVeloTrackMatch  : public TupleToolBase, public virtual IParticleT
     double m_slopediff;
     bool m_momentumcone;
     bool m_verbose;
+    double m_maxVbestPVdist;
 };
 #endif // TupleToolVeloTrackMatch_H
 
