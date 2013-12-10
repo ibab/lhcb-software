@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2013-12-10 - Rob Lambert
+ - Add new option, "Silent", which is incomptible with Verbose, and reduces the print-out of Moore to <100 lines
+ - Add a test which checks for this. Could do with an extra test on more events...
+
 ! 2013-11-19 - Rob Lambert
  - Migrate to DAQSys, DecoderDB, see task #19106
 

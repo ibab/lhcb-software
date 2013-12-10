@@ -100,6 +100,7 @@ class Moore(LHCbConfigurableUser):
         , 'EnableAcceptIfSlow' : False
         , 'WriterRequires' : [ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2
         , "Verbose" :           True # whether or not to print Hlt sequence
+        , "Silent"  : False #whether or not to suppress all print out possible
         , "ThresholdSettings" : ''
         , 'RequireL0ForEndSequence'     : False
         , 'SkipHltRawBankOnRejectedEvents' : True
@@ -423,7 +424,35 @@ class Moore(LHCbConfigurableUser):
         SequencerTimerTool().OutputLevel          = WARNING
         # Print algorithm name with 40 characters
         MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
-
+        
+        if self.getProp("Silent"):
+            MessageSvc().OutputLevel = WARNING
+            ToolSvc().OutputLevel = WARNING
+            if self.isPropertySet("Verbose") and self.getProp("Verbose"):
+                raise AttributeError("Cannot be both verbose and silent, please fix")
+            self.setProp("Verbose",False)
+            if self.isPropertySet("EnableTimer") and self.getProp("EnableTimer"):
+                raise AttributeError("Timing table is very far from silent, please disable timing if you want to run silently")
+            self.setProp("EnableTimer",False)
+            from Configurables import LoKiSvc
+            LoKiSvc().Welcome = False
+            #post config to really reset all the output to null
+            from DAQSys.Decoders import DecoderDB
+            from GaudiConf.Manipulations import postConfForAll#,fullNameConfigurables
+            props={"StatPrint":False,
+                   "ErrorsPrint":False,
+                   "PropertiesPrint":False,
+                   "OutputLevel":WARNING
+                   }
+            from DAQSys.Decoders import DecoderDB
+            for k,v in DecoderDB.iteritems():
+                for pk,pv in props.iteritems():
+                    v.Properties[pk]=pv
+            #only for GaudiHistoAlgs...
+            props["HistoCountersPrint"]=False
+            postConfForAll(head=None, prop_value_dict=props,force=True)
+            
+    
     def _profile(self) :
         ApplicationMgr().AuditAlgorithms = 1
         auditors = self.getProp('EnableAuditor')

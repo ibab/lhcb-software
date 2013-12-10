@@ -1,0 +1,25 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout">
+    <integer>1200</integer>
+  </argument>
+  <argument name="args"><set>
+    <text>../options/Moore_Hlt1And2.py</text>
+    <text>--option</text>
+    <text>from Configurables import Moore; Moore().Verbose=False; Moore().Silent=True; Moore().EvtMax=10; </text>
+  </set></argument>
+  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
+  <argument name="validator"><text>
+
+if len(stdout.split('\n'))&gt;100:
+    causes.append('stdout is too long, aiming for less than 100 lines')
+    result['moore.physics.silent']=result.Quote('Expected less than 100 lines, got '+ str(len(stdout.split('\n'))))
+
+#count error lines, shouldn't be any warnings or errors, ideally
+#error lines here are stupid Gaudi warnings about not being able to navigate to input file, 3 input files means 6 errors.
+countErrorLines({"FATAL":0,"ERROR":2,"WARNING":1})
+
+</text></argument>
+</extension>
+
