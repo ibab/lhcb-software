@@ -3,9 +3,50 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v26r10>2013-12-11 Boole v26r10</A></H1><PRE>
+This version uses projects LCGCMT 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+
+- Configuration Changes
+   . Added a line for the UT in Boole/Configuration.py 
+   . Translate utDigi.opts to utDigi.py (STDigiAlgorithms v2r5)
+
+- New functionality
+  . Implemented direct and reflected light pulse in the FT DepositCreator. This
+    is needed for studying spillover. DigitCreator is also modified for matching
+    the new Deposit (FTDigitisation v1r7)
+  . Adapted MCFTDepositCreator to include fiberPropagationTime of light
+    (instead of refractive_index / c_light), and scintillation light release time
+    Added 5 ns time offset in MCFTDigitCreator, to match extra times of above
+    update(FTDigitisation v1r7) 
+  . Adapted FTClusterCreator to handle noise clusters that will have
+    no associated mcDeposit (null-pointer checks). (FTDigitisation v1r7)
+  . Removed Afterpulsing on Thermal noise in FTNoiseCreator (FTDigitisation v1r7)
+  . Revise UT signal pulse shape and crosstalk (STDigiAlgorithms v2r5).
+
+- New tuning
+  . Added local variable in detector element functions pointToChannel, 
+    channelToPoint (VPDigitization v1r2)
+
+- Packaging changes
+  . Remove OldVPxxx algorithms (VPDigitization v1r2)
+
+- QMTest Changes
+   . Updated Upgrade references
+   . Changed suite of upgrade qmtests to
+     - boole-upgrade-minimal
+     - boole-upgrade-baseline
+     - boole-upgrade-baseline-ut
+     - boole-upgrade-baseline-25ns
+     - boole-upgrade-calo_nospdprs
+     - boole-upgrade-muon_nom1
+   . Updated upgrade tests to new DB tags after UT changes in DB.
+   . Add exclusion for memory change warnings from BooleInit
+   . Updated boole-upgrade-baseline-{,25ns,-ut} references
+
 </PRE><H1><A NAME=v26r9>2013-10-25 Boole v26r9</A></H1><PRE>
 This version uses projects LCGCMT 65a, Gaudi v23r10, LHCb v36r3, Lbcom v14r3
- and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
 - Configuration changes
   . Updated LinkVPSeq to use simplified VP digit and cluster linker algorithms
@@ -36,7 +77,7 @@ This version uses projects LCGCMT 65a, Gaudi v23r10, LHCb v36r3, Lbcom v14r3
 
 </PRE><H1><A NAME=v26r8>2013-10-03 Boole v26r8</A></H1><PRE>
 This version uses projects LCGCMT 65a, Gaudi v23r10, LHCb v36r2, Lbcom v14r2
- and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
  - Platform support
    . Support for x86_64-slc6-gcc47 removed, replaced by x86_64-slc6-gcc48
@@ -73,9 +114,9 @@ This version uses projects LCGCMT 65a, Gaudi v23r10, LHCb v36r2, Lbcom v14r2
  - QMTest Changes
    . Updated mc11a-xdst test to use input file from EOS
 
-<</PRE><H1><A NAME=v26r7>2013-07-25 Boole v26r7</A></H1><PRE>
+</PRE><H1><A NAME=v26r7>2013-07-25 Boole v26r7</A></H1><PRE>
 This version uses projects LCGCMT 65a, Gaudi v23r9, LHCb v36r1, Lbcom v14r1
- and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
  - New functionality
    . Adapted configuration to accomodate no SPD/PRS option (Configuration.py)
@@ -122,7 +163,7 @@ This version uses projects LCGCMT 65a, Gaudi v23r9, LHCb v36r1, Lbcom v14r1
 
 </PRE><H1><A NAME=v26r6>2013-06-07 Boole v26r6</A></H1><PRE>
 This version uses projects LCGCMT 65, Gaudi v23r8, LHCb v36r0, Lbcom v14r0
- and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
  - Changes to external packages (LCGCMT 65). Main changes:
    . ROOT 5.34.07a (was 5.34.05)
@@ -156,7 +197,7 @@ This version uses projects LCGCMT 65, Gaudi v23r8, LHCb v36r0, Lbcom v14r0
 
 </PRE><H1><A NAME=v26r5>2013-05-02 Boole v26r5</A></H1><PRE>
 This version uses projects LCGCMT 64d, Gaudi v23r7, LHCb v35r6, Lbcom v13r6p1
- and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
  - Changes to supported platforms
    . Now supports build with CMake, gcc47, clang32
@@ -176,9 +217,9 @@ This version uses projects LCGCMT 64d, Gaudi v23r7, LHCb v35r6, Lbcom v13r6p1
 
 </PRE><H1><A NAME=v26r4>2013-03-26 Boole v26r4</A></H1><PRE>
 This version uses projects LCGCMT 64d, Gaudi v23r7, LHCb v35r5, Lbcom v13r5
- and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
 
- - Bug fix release for upgrade simulation.
+ - Bug fix release for upgrade simulation.
 
  - Changes to configuration:
     . Disabled activation of spillover sequences for the UT which do not exist.
