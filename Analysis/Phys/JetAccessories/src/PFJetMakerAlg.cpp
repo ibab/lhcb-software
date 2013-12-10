@@ -95,6 +95,18 @@ namespace LoKi
       declareProperty ( "ApplyJetID"  ,
 			m_applyJetID = false, 
 			"Apply jet ID cuts") ; 
+      declareProperty ( "JetIDMinMPT"  ,
+			m_JetID_MPT = 1200, 
+			"jet ID mpt cut") ; 
+      declareProperty ( "JetIDMinCPF"  ,
+			m_JetID_CPF = 0.1, 
+			"jet ID cpf cut") ; 
+      declareProperty ( "JetIDMinNTrk"  ,
+			m_JetID_NTRK = 1.5, 
+			"jet ID ntrk cut") ; 
+      declareProperty ( "JetIDMaxMPF"  ,
+			m_JetID_MPF = 0.8, 
+			"jet ID MPF cut") ; 
       declareProperty("ApplyJEC"  , 
 		      m_applyJEC = false ,
 		      "Apply jet energy corrections");
@@ -209,6 +221,11 @@ namespace LoKi
     double m_minlogIPChi2toPV_Up;
     double m_minlogIPChi2toPV_Long;
 
+    double m_JetID_MPT ;
+    double m_JetID_NTRK ;
+    double m_JetID_CPF;
+    double m_JetID_MPF ;
+
     
     // ========================================================================    
   };
@@ -288,7 +305,9 @@ StatusCode LoKi::PFJetMaker::analyse   ()
 
     // Some definitions for jet ID
     LoKi::Types::Fun mtf = LoKi::Cuts::INFO(9003,-10.);
+    LoKi::Types::Fun mnf = LoKi::Cuts::INFO(9012,-10.);
     LoKi::Types::Fun mpt = LoKi::Cuts::INFO(9011,-10.);
+    LoKi::Types::Fun cpf = LoKi::Cuts::INFO(9006,-10.);
     LoKi::Types::Fun nPVInfo = LoKi::Cuts::INFO(9005,-10.);
     
     // A cut to get the position of the bestPV of input particles (would be better to code a VKEY functor)
@@ -438,37 +457,45 @@ StatusCode LoKi::PFJetMaker::analyse   ()
         if(m_applyJEC) this->JEC(jet);  
         // If the jet contain info on PV, assign a PV and update the P2PV relation table
         if ( PVPointingInfo(jet) ){
+
           jet->setReferencePoint( Gaudi::XYZPoint((*i_pv)->position ()) );
-          LHCb::Vertex  vJet;
-          vJet.setPosition((*i_pv)->position());
-          vJet.setCovMatrix((*i_pv)->covMatrix());
-          vJet.setChi2((*i_pv)->chi2());
-          vJet.setNDoF((*i_pv)->nDoF());
-          vJet.setOutgoingParticles(jet->daughters());
-          jet->setEndVertex(vJet.clone());
+          LHCb::Vertex* vJet = new LHCb::Vertex();
+          vJet->setPosition((*i_pv)->position());
+          vJet->setCovMatrix((*i_pv)->covMatrix());
+          vJet->setChi2((*i_pv)->chi2());
+          vJet->setNDoF((*i_pv)->nDoF());
+          vJet->setOutgoingParticles(jet->daughters());
+          jet->setEndVertex(vJet);
           this->relate ( jet , *i_pv );
+
         }
-        if (m_applyJetID && ( mtf(jet)>0.75 || nPVInfo(jet)<2 || mpt(jet)<1800 )){
-          jets.pop_back() ;
-          delete jet ;
-          continue;
-        }
-        if ( m_onlysavewithB && jet->info(B,-100.)<1.e-6){
-          jets.pop_back() ;
-          delete jet ;
-          continue;
-        }
-        verbose()<<PT(jet)<<" "<<jet->info(B,-100.)<<" "<<ID(jet)<<endreq;
-        save ( "jets" , jet ).ignore() ;
+	
+	//    if (m_applyJetID && ( mtf(jet)>0.75 || nPVInfo(jet)<2 || mpt(jet)<1800 )){
+	
+        if ( !( m_applyJetID && ( mpt(jet)< m_JetID_MPT  || nPVInfo(jet)<   m_JetID_NTRK ||  cpf(jet) <  m_JetID_CPF || std::max(mtf(jet),mnf(jet))  >  m_JetID_MPF  ) ) )
+	  {  
+	    
+	    if (!( m_onlysavewithB && jet->info(B,-100.)<1.e-6)){
+	      verbose()<<PT(jet)<<" "<<jet->info(B,-100.)<<" "<<ID(jet)<<endreq;
+	      sc = save ( "jets" , jet ) ;
+	      if ( sc.isFailure() ) { return Error ( "Error from save function in jet maker" , sc ) ; }
+	    }
+	  }
         jets.pop_back() ;
-        delete jet ;
+        unRelatePV(jet);
+        delete jet->endVertex();
+        delete jet;
+	
+
       }
     }
   }
   else{
     // Some definitions for jet ID
     LoKi::Types::Fun mtf = LoKi::Cuts::INFO(9003,-10.);
+    LoKi::Types::Fun mnf = LoKi::Cuts::INFO(9012,-10.);
     LoKi::Types::Fun mpt = LoKi::Cuts::INFO(9011,-10.);
+    LoKi::Types::Fun cpf = LoKi::Cuts::INFO(9006,-10.);
     LoKi::Types::Fun nPVInfo = LoKi::Cuts::INFO(9005,-10.);
     LoKi::Types::Fun PFType =  LoKi::Cuts::INFO(900,-10.);
     LoKi::Types::Cut GoodInput = fabs( PFType - m_inputTypes[0] ) < 1e-6 ;
@@ -489,19 +516,21 @@ StatusCode LoKi::PFJetMaker::analyse   ()
     {
       LHCb::Particle* jet = jets.back() ;
       this->appendJetIDInfo(jet);
-      if (( m_applyJetID  && ( mtf(jet)>0.75 || nPVInfo(jet)<2 || mpt(jet)<1800) ) ){
-          jets.pop_back() ;
-          delete jet ;
-          continue;
-      }
-      if ( m_onlysavewithB && jet->info(B,-100.)<1e-6){
+
+
+      if ( !( m_applyJetID && ( mpt(jet)< m_JetID_MPT  || nPVInfo(jet)<   m_JetID_NTRK ||  cpf(jet) <  m_JetID_CPF || std::max(mtf(jet),mnf(jet))  >  m_JetID_MPF  ) ) )
+	  {  
+	    
+	    if (!( m_onlysavewithB && jet->info(B,-100.)<1.e-6)){
+	      verbose()<<PT(jet)<<" "<<jet->info(B,-100.)<<" "<<ID(jet)<<endreq;
+	      sc = save ( "jets" , jet ) ;
+	      if ( sc.isFailure() ) { return Error ( "Error from save function in jet maker" , sc ) ; }
+	    }
+	  }
         jets.pop_back() ;
-        delete jet ;
-        continue;
-      }
-      save ( "jets" , jet ).ignore() ;
-      jets.pop_back() ;
-      delete jet ;
+        delete jet;
+	
+
     }
   }
   if ( statPrint() || msgLevel ( MSG::DEBUG ) ) 

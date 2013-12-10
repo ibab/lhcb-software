@@ -6,6 +6,10 @@
 
 
 ! 2013-12-10 - Cedric Potterat
+ - correct Memoryleak in PFJetMakerAlg.cpp
+
+
+! 2013-12-10 - Cedric Potterat
  - Preapre ParticleFlow_Config.py and JetMaker_Config.py for the StdJets and Co.
 
 !========================= JetAccessories v3r1 2013-10-02 =========================
