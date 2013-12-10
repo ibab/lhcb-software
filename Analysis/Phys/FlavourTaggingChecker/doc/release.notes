@@ -5,6 +5,9 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+! 2013-12-10 - Stefania Vecchi
+ - BTaggingAnalysis.cpp added extra info useful for SSproton running offline
+
 ! 2013-12-04 - Stefania Vecchi
  - BTaggingAnalysis.cpp added extra info useful for debugging:
    - IPsign and IPerr of the tagging particles wrt the Bsignal end vertex;

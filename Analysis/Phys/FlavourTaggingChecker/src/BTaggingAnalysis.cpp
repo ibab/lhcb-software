@@ -303,7 +303,8 @@ StatusCode BTaggingAnalysis::execute() {
   //------------------------------------------------------------------------------
   debug()<<"Fill tagger info, vtags: "<<vtags.size()<<endreq;
 
-  std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), pipsign(0), piperr(0), pipsign_Bs(0), piperr_Bs(0), pipPU(0), pPl(0), ptheta(0);
+  std::vector<float> pID(0), pP(0), pPt(0), pphi(0), pch(0), pip(0), pipsign(0), piperr(0), 
+    chi2_pBs(0), pipsign_Bs(0), piperr_Bs(0), pipPU(0), pPl(0), ptheta(0);
   std::vector<float> ptrtyp(0), plcs(0), pcloneDist(0), ptsal(0), pgprob(0),  pNNgprob(0), pdistPhi(0), pveloch(0), pEOverP(0);
   std::vector<float> pPIDe(0), pPIDm(0), pPIDk(0), pPIDp(0),pPIDfl(0);
   std::vector<float> pPIDNNe(0), pPIDNNm(0), pPIDNNk(0), pPIDNNp(0),pPIDNNpi(0);
@@ -312,7 +313,7 @@ StatusCode BTaggingAnalysis::execute() {
     pMCP(0), pMCPt(0), pMCphi(0), pMCx(0), pMCy(0), pMCz(0), pMCPl(0),
     pmothID(0), pmothKEY(0), pGmothID(0), pGmothKEY(0), 
     pancID(0) , pancKEY(0), pbFlag(0), pxFlag(0), pvFlag(0), pMC_OS_muon_type(0);
-  std::vector<float> pIPSV(0), pIPSVerr(0), pDOCA(0), pDOCAerr(0);
+  std::vector<float>  pIPSV(0), pIPSVerr(0), pDOCA(0), pDOCAerr(0);
   std::vector<float> pdeta(0), pdphi(0), pdQ(0);
   std::vector<float> ppionCombinedMass(0);
   // data for multPV 
@@ -369,13 +370,19 @@ StatusCode BTaggingAnalysis::execute() {
     }
     
     //calculate signed IP wrt B-signal decay vertex
-    double IP_Bs(-1000), IPerr_Bs(-1000), IPsign_Bs(-1000);    
+    double IP_Bs(-1000), IPerr_Bs(-1000), IPsign_Bs(-1000), chi2ndof_pBs(-1000);    
     if(!(axp->particleID().hasBottom()) &&   AXBS->endVertex()!=0) {
       m_util->calcIP(axp, AXBS->endVertex(), IPsign_Bs, IPerr_Bs);
       IP_Bs=fabs(IPsign_Bs); 
       debug()<<" IP wrt B decay vertex="<<IP_Bs<<" IPsign_Bs="<<IPsign_Bs<<" IPerr_Bs="<<IPerr_Bs<<endreq;
       
     }
+    //calculate the vertex fit of the tagging particle and the signal B
+    Vertex vtx;
+    StatusCode sc = m_fitter->fit(vtx,*AXBS,*axp);    
+    if(!sc.isFailure() ) chi2ndof_pBs = vtx.chi2()/vtx.nDoF();
+
+    
 
     //calculate min IP wrt all pileup vtxs 
     double IPPU = 10000;
@@ -436,6 +443,7 @@ StatusCode BTaggingAnalysis::execute() {
     piperr      .push_back(IPerr);
     pipsign_Bs  .push_back(IPsign_Bs);
     piperr_Bs   .push_back(IPerr_Bs);
+    chi2_pBs    .push_back(chi2ndof_pBs);
     pipPU       .push_back(IPPU);
     plcs        .push_back(lcs);
     pcloneDist  .push_back(cloneDist);
@@ -669,6 +677,7 @@ StatusCode BTaggingAnalysis::execute() {
   tuple -> farray ("iperr",   piperr, "N", 200);
   tuple -> farray ("iperr_Bs",piperr_Bs, "N", 200);
   tuple -> farray ("ipsign_Bs",pipsign_Bs, "N", 200);
+  tuple -> farray ("chi2_pBs",chi2_pBs, "N", 200);
   tuple -> farray ("ipPU",    pipPU, "N", 200);
   tuple -> farray ("ipmean",  pipmean, "N", 200);
   tuple -> farray ("nippu",   pnippu, "N", 200);
