@@ -459,5 +459,28 @@ std::string TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int cand
 
 
 //====================================================================
+int TaggingUtils::getCharmDecayModeInt(const LHCb::Particle* cand, int candType)
+{
+  
+  std::string mode = getCharmDecayMode(cand, candType);
+
+  if(mode=="D0_Kpi") return 0;
+  else if(mode=="D0_Kspipi") return 2;
+  else if(mode=="D0_Kpipi0") return 3;
+  else if(mode=="D0_Kpipipi") return 1;
+  else if(mode=="Dp_Kspi") return 5;
+  else if(mode=="Dp_Kpipi") return 4;
+  else if(mode=="D0_KpiX") return 6;
+  else if(mode=="D0_KeX") return 7;
+  else if(mode=="D0_KmuX") return 8;
+  else if(mode=="Dp_KpiX") return 10;
+  else if(mode=="Dp_KeX") return 11;
+  else if(mode=="Dp_KmuX") return 12;
+  else if(mode=="Dstar_D0_Kspipi") return 9;
+  else return -1;
+  
+}
+
+//====================================================================
 StatusCode TaggingUtils::finalize() { return GaudiTool::finalize(); }
 
