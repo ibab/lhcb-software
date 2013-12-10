@@ -1,5 +1,5 @@
 package           LbcomSys
-version           v14r3
+version           v14r4
 
 branches doc cmt tests
 
@@ -50,7 +50,7 @@ use VeloSimulation    v3r14    Velo      # Tomasz Szumlak
 use VeloTools         v4r2     Velo      # Tomasz Szumlak
 
 # Velo Pixel
-use VPAlgorithms      v4r1     VP        # Daniel Hynds
+use VPAlgorithms      v4r2     VP        # Daniel Hynds
 use VPTools           v2r2     VP        # Heinrich Schindler
 
 # Declare this as a container package

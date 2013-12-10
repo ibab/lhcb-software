@@ -6,6 +6,14 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v14r3>2013-12-11 LbcomSys v14r4</A></H1><PRE>
+This version uses Gaudi v24r2 and LHCb v36r4
+
+- Packages modified: VP/VPAlgorithms v4r2
+
+- In VP/VPAlgorithms v4r2
+  . Speed improvements in clustering
+
 </PRE><H1><A NAME=v14r3>2013-10-25 LbcomSys v14r3</A></H1><PRE>
 This version uses Gaudi v23r10 and LHCb v36r3
 
