@@ -34,6 +34,10 @@
 
 #include "CaloUtils/ICaloElectron.h"
 
+#include "TrackInterfaces/ITrackManipulator.h"
+
+#include "src/ITaggingUtils.h"
+
 // from local
 #include "ITaggingUtilsChecker.h"
 
@@ -45,6 +49,9 @@
 
 using namespace LHCb;
 using namespace Gaudi::Units;
+
+const int c_maxCharmDau = 6;
+typedef std::map<std::string,std::vector<float>*> vecptrMap;
 
 class BTaggingAnalysis : public DaVinciTupleAlgorithm {
 
@@ -80,6 +87,16 @@ private:
 		    const Particle *&SVpart1, 
 		    const Particle *&SVpart2 ) ;
 
+  void GetMCDauInfo(const LHCb::MCParticles* mcpart, const LHCb::MCParticle* mother
+                    , std::vector<std::vector<float>* >* dauInfo, const int mothIdx = -1);
+
+  StatusCode FillCharmInfo(Tuple& tuple, const Particle::ConstVector& charmCands, 
+                           const Particle::ConstVector& charmInclCands, 
+                           const Particle::ConstVector& charmStarCands, 
+                           const RecVertex* RecVert); //, const Particle* BS);
+
+  StatusCode AddCharmInfo(const Particle::ConstVector& cands, const RecVertex* RecVert, const int type, vecptrMap& infoMap);
+
   double GetInvariantMass(double MA, Gaudi::LorentzVector PA, double MB, Gaudi::LorentzVector PB);
   
   std::string m_veloChargeName, 
@@ -87,19 +104,26 @@ private:
     m_TagLocation, 
     m_BHypoCriterium, 
     m_ChoosePV, 
-    m_taggerLocation ;
+    m_taggerLocation;
+  std::vector<std::string> m_CharmTagLocations;
+  std::vector<std::string> m_CharmInclTagLocations;
+  std::vector<std::string> m_CharmStarTagLocations;
   bool m_ReFitPVs;
   
   IPrintMCDecayTreeTool*     m_debug;
   ICaloElectron*             m_electron;
   IBDecayTool*               m_forcedBtool;
   IBackgroundCategory*       m_bkgCategory;
+  IProperty*                 m_prop;
   ILifetimeFitter*           m_pLifetimeFitter;
+  ITaggingUtils*             m_utilFT;
   ITaggingUtilsChecker*      m_util;
   IParticleDescendants*      m_descend;
   IPVReFitter*               m_pvReFitter;
   ITriggerTisTos*            m_TriggerTisTosTool;
   ITriggerTisTos*            m_L0TriggerTisTosTool;
+
+  ITrackManipulator*         m_ghostTool;
 
   IParticle2MCAssociator*    m_assoc; 
   ISecondaryVertexTool*      m_svtool;
@@ -111,6 +135,8 @@ private:
   //properties ----------------
   bool m_requireTrigger, m_requireTisTos;
   bool m_saveHlt1Lines, m_saveHlt2Lines;
+
+  bool m_debugGhostProb;
 
   //mc
   bool m_EnableMC;

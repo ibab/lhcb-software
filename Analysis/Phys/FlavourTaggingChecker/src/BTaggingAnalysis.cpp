@@ -1,6 +1,9 @@
 // Include files 
 #include "BTaggingAnalysis.h"
 
+#include "LoKi/LoKi.h" 
+#include "LoKi/ParticleContextCuts.h" 
+
 #include "Event/ODIN.h" // event & run number
 #include "TaggingHelpers.h"
 //-----------------------------------------------------------------------------
@@ -10,8 +13,15 @@
 // 
 //-----------------------------------------------------------------------------
 
+using namespace LoKi::Cuts;
+using namespace LoKi::Types;
+using namespace LoKi::Particles;
+
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( BTaggingAnalysis )
+
+// const max values for number of elements in the ntuple variable-size arrays
+const int c_nBODau_max = 500;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -22,13 +32,16 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
   m_debug(0), 
   m_electron(0), 
   m_forcedBtool(0),
-  m_bkgCategory(0) ,
+  m_bkgCategory(0),
+  m_prop(0),
   m_pLifetimeFitter(0),
+  m_utilFT(0),
   m_util(0),
   m_descend(0),
   m_pvReFitter(0),
   m_TriggerTisTosTool(0),
   m_L0TriggerTisTosTool(0),
+  m_ghostTool(0),
   m_assoc(0),
   m_svtool(0),
   m_fitter(0),
@@ -49,6 +62,30 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
   declareProperty( "TagOutputLocation",       m_TagLocation = FlavourTagLocation::Default );
   declareProperty( "SecondaryVertexToolName", m_SecondaryVertexToolName = "SVertexOneSeedTool");
 
+  std::vector<std::string> def_CharmTagLocations;
+  def_CharmTagLocations.push_back("Phys/Tag_StdD02KPi/Particles");
+  def_CharmTagLocations.push_back("Phys/Tag_StdD02KPiPiPi/Particles");
+  def_CharmTagLocations.push_back("Phys/Tag_StdD02KsPiPi/Particles");
+  def_CharmTagLocations.push_back("Phys/Tag_StdD02KPiPi0/Particles");
+  def_CharmTagLocations.push_back("Phys/Tag_StdDp2KPiPi/Particles");
+  def_CharmTagLocations.push_back("Phys/Tag_StdDp2KsPi/Particles");
+  declareProperty( "CharmTagLocations", m_CharmTagLocations = def_CharmTagLocations);
+
+  std::vector<std::string> def_CharmInclTagLocations;
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdD02KPipart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdD02Kepart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdD02Kmupart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdDp2KPipart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdDp2Kepart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdDp2Kmupart/Particles");
+  declareProperty( "CharmInclTagLocations", m_CharmInclTagLocations = def_CharmInclTagLocations);
+
+  std::vector<std::string> def_CharmStarTagLocations;
+  def_CharmStarTagLocations.push_back("Phys/Tag_StdDstar2D0Pi2KsPiPi/Particles");
+  declareProperty( "CharmStarTagLocations", m_CharmStarTagLocations = def_CharmStarTagLocations);
+
+  declareProperty( "DebugGhostProb",          m_debugGhostProb   = false );
+
   //preselection cuts
   declareProperty( "IPPU_cut",                m_IPPU_cut    = 3.0 );
   declareProperty( "distphi_cut",             m_distphi_cut = 0.005 );
@@ -65,7 +102,6 @@ StatusCode BTaggingAnalysis::initialize() {
   if ( sc.isFailure() ) return sc;
 
   m_assoc = tool<IParticle2MCAssociator>("MCMatchObjP2MCRelator", this);
-
   if( !m_assoc ) {
     fatal() << "Unable to retrieve Link Associator tool"<<endreq;
     return StatusCode::FAILURE;
@@ -82,11 +118,15 @@ StatusCode BTaggingAnalysis::initialize() {
       return StatusCode::FAILURE;
     }
   }
+
   m_bkgCategory = tool<IBackgroundCategory>("BackgroundCategory", this);
   if (m_EnableMC) if(!m_bkgCategory){
     fatal() << "Unable to retrieve BackgroundCategory tool" << endreq;
     return StatusCode::FAILURE;
   }
+
+  m_prop = dynamic_cast<IProperty*>(m_bkgCategory);
+
   m_pLifetimeFitter = tool<ILifetimeFitter>("PropertimeFitter", this);
   if(!m_pLifetimeFitter){
     fatal() << "Unable to retrieve LifetimeFitter tool" << endreq;
@@ -117,6 +157,11 @@ StatusCode BTaggingAnalysis::initialize() {
     fatal() << "Unable to retrieve TaggingUtilsChecker tool "<< endreq;
     return StatusCode::FAILURE;
   }
+  m_utilFT = tool<ITaggingUtils> ( "TaggingUtils", this );
+  if( ! m_utilFT ) {
+    fatal() << "Unable to retrieve TaggingUtils tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
   m_pvReFitter = tool<IPVReFitter>("AdaptivePVReFitter", this );
   if(! m_pvReFitter) {
     fatal() << "Unable to retrieve AdaptivePVReFitter" << endreq;
@@ -130,6 +175,11 @@ StatusCode BTaggingAnalysis::initialize() {
   m_fitter = tool<IVertexFit>("OfflineVertexFitter");
   if ( !m_fitter ) {   
     err() << "Unable to Retrieve Default VertexFitter" << endreq;
+    return StatusCode::FAILURE;
+  }
+  m_ghostTool = tool<ITrackManipulator> ("TrackNNGhostId",this);
+  if ( !m_ghostTool ) {   
+    err() << "Unable to Retrieve TrackNNGhostId" << endreq;
     return StatusCode::FAILURE;
   }
   
@@ -297,6 +347,56 @@ StatusCode BTaggingAnalysis::execute() {
   FillSeedInfo(tuple, RecVert, vtags, svertices, SVpart1, SVpart2);
   debug() << "  Loop on seeds done " <<endreq;
 
+  //------------------------------------------------------------------------------
+  // fill reco charm info
+
+  // full reco cand
+  Particle::ConstVector charmCands;
+  for( std::vector<std::string>::const_iterator ilist = m_CharmTagLocations.begin() ;
+       ilist != m_CharmTagLocations.end(); ++ilist) {
+    if (exist<Particle::Range>(*ilist)){
+      LHCb::Particle::Range partsin  = get<Particle::Range>(*ilist) ;
+      debug() << "Found "<<partsin.size()<<" charm cands for location "<<*ilist<<endreq;
+      // removing candidates with daughters in common with signal B
+      LHCb::Particle::ConstVector purgedParts = m_utilFT->purgeCands(partsin, *AXBS);
+      for (LHCb::Particle::ConstVector::const_iterator ipart = purgedParts.begin(); 
+           ipart != purgedParts.end(); ++ipart) 
+        charmCands.push_back(*ipart);
+    }
+  }
+  
+  // partial reco cand
+  Particle::ConstVector charmInclCands;
+  for( std::vector<std::string>::const_iterator ilist = m_CharmInclTagLocations.begin() ;
+       ilist != m_CharmInclTagLocations.end(); ++ilist) {
+    if (exist<Particle::Range>(*ilist)){
+      LHCb::Particle::Range partsin  = get<Particle::Range>(*ilist) ;
+      debug() << "Found "<<partsin.size()<<" charm cands for location "<<*ilist<<endreq;
+      // removing candidates with daughters in common with signal B
+      LHCb::Particle::ConstVector purgedParts = m_utilFT->purgeCands(partsin, *AXBS);
+      charmInclCands.insert(charmInclCands.end(), purgedParts.begin(), purgedParts.end());
+//       for (LHCb::Particle::ConstVector::const_iterator ipart = purgedParts.begin(); 
+//            ipart != purgedParts.end(); ++ipart) 
+//         charmInclCands.push_back(*ipart);
+    }
+  }
+  
+  // dstar full reco cand
+  Particle::ConstVector charmStarCands;
+  for( std::vector<std::string>::const_iterator ilist = m_CharmStarTagLocations.begin() ;
+       ilist != m_CharmStarTagLocations.end(); ++ilist) {
+    if (exist<Particle::Range>(*ilist)){
+      LHCb::Particle::Range partsin  = get<Particle::Range>(*ilist) ;
+      debug() << "Found "<<partsin.size()<<" charm cands for location "<<*ilist<<endreq;
+      // removing candidates with daughters in common with signal B
+      LHCb::Particle::ConstVector purgedParts = m_utilFT->purgeCands(partsin, *AXBS);
+      for (LHCb::Particle::ConstVector::const_iterator ipart = purgedParts.begin(); 
+           ipart != purgedParts.end(); ++ipart) 
+        charmStarCands.push_back(*ipart);
+    }
+  }
+  
+  FillCharmInfo(tuple,charmCands,charmInclCands,charmStarCands,RecVert);//,AXBS);  
 
   //------------------------------------------------------------------------------
   //Fill Tagger info -------------------------------------------------------------
@@ -425,6 +525,17 @@ StatusCode BTaggingAnalysis::execute() {
         debug()<<" proto is = to the SEED particles "<<endreq;
       }
     }
+
+    // ghost test
+    if (m_debugGhostProb) {
+      debug() << "ghost prob pre " << track->ghostProbability() << endreq;
+
+      Track clone_track = *track;
+      m_ghostTool->execute(clone_track).ignore();
+      
+      debug() << "ghost prob post " << clone_track.ghostProbability() << endreq;
+    }
+    
 
     //Fill NTP info -------------------------------------------------------   
     ptsal       .push_back(track->likelihood());
@@ -582,8 +693,8 @@ StatusCode BTaggingAnalysis::execute() {
         MCP = mcp->momentum().P()/GeV;
         MCPt = mcp->pt()/GeV;
         if(m_BS) MCPl = mcp->momentum().Dot(m_BS->momentum())/GeV;
-        MCphi = mcp->momentum().phi();
-        
+        MCphi = mcp->momentum().phi();        
+
         const MCParticle* mother = mcp->mother();
         if(mother) {
           mothID = mother->particleID().pid();
@@ -605,12 +716,13 @@ StatusCode BTaggingAnalysis::execute() {
         }
         
         const MCParticle* ancestor = m_util->originof(mcp) ;
-        if (ancestor){          
+        if (ancestor){
           ancID = ancestor->particleID().pid();
           ancKEY = ancestor->key();
           debug()<< " Associated ancestor PID="<<ancID<<" with key="<<ancKEY<<endreq;
           if( ancestor->particleID().hasBottom() ) {
-            bFlag = 1;            
+            bFlag = 1;  
+            
             if(m_BS) if( ancestor == m_BS ) {
               bFlag = -1;
               debug() <<" Warning: tag from signal! ID=" << mcp->particleID().pid() 
@@ -828,7 +940,7 @@ BTaggingAnalysis::choosePrimary(const Particle* AXB,
       double var(0), ip(0), iperr(0);
       if(m_ChoosePV == "CheatPV") {//mc vertex
         debug()<<"CheatPV criteria";
-        if (m_EnableMC && m_BS) {
+        if (m_EnableMC) {
           var = fabs( m_BS->primaryVertex()->position().z() - (*iv)->position().z() );
           debug()<<" distance from true PV="<<var<<endreq;
         } else warning()<<"MC disable and try to use CheatPV -> Change ChoosePVCriterium!"<<endreq;
@@ -940,6 +1052,18 @@ BTaggingAnalysis::chooseCandidates(const Particle::Range& parts,
     const ProtoParticle* proto = (*ip)->proto();
     if( !proto )                                     continue;
     if( !proto->track() )                            continue;
+
+    if (msgLevel(MSG::DEBUG)) 
+      debug() <<"   part ID="<<(*ip)->particleID().pid()
+              <<" p="<<(*ip)->p()/GeV
+              <<" pt="<<(*ip)->pt()/GeV
+              <<" theta="<<p->momentum().theta()
+              <<" ghostprob="<<proto->track()->ghostProbability()
+              <<" PIDm="<<proto->info( ProtoParticle::CombDLLmu, 0)
+              <<" PIDe="<<proto->info( ProtoParticle::CombDLLe, 0)
+              <<" PIDk="<<proto->info( ProtoParticle::CombDLLk, 0)
+              <<" proto="<<proto<<endreq;
+
     if( p->charge() == 0 )                           continue;                
     bool trackTypeOK = (proto->track()->type() == LHCb::Track::Long) || 
                        (proto->track()->type() == LHCb::Track::Upstream);
@@ -1083,7 +1207,7 @@ BTaggingAnalysis::chooseCandidates(const Particle::Range& parts,
 
 
     if (msgLevel(MSG::DEBUG)) 
-      debug() <<"   part ID="<<(*ip)->particleID().pid()
+      debug() <<"   part ID (end)="<<(*ip)->particleID().pid()
               <<" p="<<(*ip)->p()/GeV
               <<" pt="<<(*ip)->pt()/GeV
               <<" PIDm="<<proto->info( ProtoParticle::CombDLLmu, 0)
@@ -1150,8 +1274,10 @@ const ProtoParticle::ConstVector BTaggingAnalysis::tagevent (Tuple& tuple,
 
   tuple -> column ("Tag",     theTag->decision());
   tuple -> column ("Omega",   theTag->omega());
+  //tuple -> column ("TagCat",  theTag->category());
   tuple -> column ("TagOS",   theTag->decisionOS());
   tuple -> column ("OmegaOS", theTag->omegaOS());
+  //tuple -> column ("TagCatOS",theTag->categoryOS());
 
   debug()<<"looking at taggers --------------- "<<endreq;
   std::vector<float> tagtype, tagdecision, tagomega;
@@ -1477,6 +1603,9 @@ StatusCode BTaggingAnalysis::FillMCInfoOfB(Tuple& tuple,
   //debug()<<"SIGNAL B:"<<endreq; m_debug -> printTree(BS);
   //if(BO)debug()<<"OPPOSITE B (TAGGING B):"<<endreq; m_debug->printTree(BO);
 
+  std::vector<float> pBODau_ID(0), pBODau_mothIdx(0), pBODau_firstDauIdx(0), pBODau_nDau(0)
+    , pBODau_p(0), pBODau_the(0), pBODau_phi(0);
+
   int BOosc = 0;
   long BOID =0;
   float BOx=-10000., BOy=-10000., BOz=-10000.;
@@ -1493,7 +1622,21 @@ StatusCode BTaggingAnalysis::FillMCInfoOfB(Tuple& tuple,
     BOx = (BOvert.at(0))->position().x()/mm;
     BOy = (BOvert.at(0))->position().y()/mm;
     BOz = (BOvert.at(0))->position().z()/mm;
-  } 
+
+    // looking for info about opposite B daughters
+    std::vector<std::vector<float>* > pBODau_Info(0);
+    pBODau_Info.push_back(&pBODau_ID);
+    pBODau_Info.push_back(&pBODau_mothIdx);
+    pBODau_Info.push_back(&pBODau_firstDauIdx);
+    pBODau_Info.push_back(&pBODau_nDau);
+    pBODau_Info.push_back(&pBODau_p);
+    pBODau_Info.push_back(&pBODau_the);
+    pBODau_Info.push_back(&pBODau_phi);
+
+    GetMCDauInfo(mcpart, BO, &pBODau_Info);
+    
+  } // endo if on BO
+
   tuple -> column ("BOID",  BOID);
   tuple -> column ("BOP",   BOP);
   tuple -> column ("BOthe", BOthe);
@@ -1503,7 +1646,15 @@ StatusCode BTaggingAnalysis::FillMCInfoOfB(Tuple& tuple,
   tuple -> column ("BOz",   BOz);
   tuple -> column ("BOosc", BOosc);
 
-  return StatusCode::SUCCESS;
+  tuple -> farray ("BODau_ID", pBODau_ID, "nBODau", c_nBODau_max);
+  tuple -> farray ("BODau_mothIdx", pBODau_mothIdx, "nBODau", c_nBODau_max);
+  tuple -> farray ("BODau_firstDauIdx", pBODau_firstDauIdx, "nBODau", c_nBODau_max);
+  tuple -> farray ("BODau_nDau", pBODau_nDau, "nBODau", c_nBODau_max);
+  tuple -> farray ("BODau_p", pBODau_p, "nBODau", c_nBODau_max);
+  tuple -> farray ("BODau_the", pBODau_the, "nBODau", c_nBODau_max);
+  tuple -> farray ("BODau_phi", pBODau_phi, "nBODau", c_nBODau_max);
+
+ return StatusCode::SUCCESS;
 
 }
 
@@ -1527,6 +1678,8 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
   
 
   if(m_svtool) svertices = m_svtool -> buildVertex( *RecVert, vtags ); // SVertexOneSeedTool from FT
+
+  counter("nVertices_VtxTag") += svertices.size();
 
   debug() << "  Look seed vertex position " <<endreq;
   debug() << "  vertices: " <<svertices.size()<<endreq;
@@ -1597,6 +1750,378 @@ void BTaggingAnalysis::FillSeedInfo(Tuple& tuple, const RecVertex* RecVert,
   tuple -> farray ("BOVtx_zerr", pBOVtx_zerr, "V", 100);
   tuple -> farray ("BOVtx_chi2", pBOVtx_chi2, "V", 100);
 }
+
+//============================================================================
+void BTaggingAnalysis::GetMCDauInfo(const LHCb::MCParticles* mcpart, const LHCb::MCParticle* mother
+                                    , std::vector<std::vector<float>* >* dauInfo, const int mothIdx)
+{
+  // include mother
+  int mothIdxTmp = mothIdx;
+  if (mothIdxTmp==-1) {
+    dauInfo->at(0)->push_back(mother->particleID().pid());      
+    dauInfo->at(1)->push_back(mothIdxTmp);
+    dauInfo->at(4)->push_back(mother->momentum().P()/GeV);
+    dauInfo->at(5)->push_back(mother->momentum().Theta());
+    dauInfo->at(6)->push_back(mother->momentum().Phi());
+    debug() << "MC Original particle has ID " << mother->particleID() 
+            << " moth Idx " << mothIdxTmp << endreq;        
+    mothIdxTmp = 0;
+  }
+
+  std::vector<LHCb::MCParticle*> dauList(0);
+  int dauMothIdx(-1);
+  MCParticles::const_iterator imc;
+  for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
+    if ((*imc)->mother() == mother) {
+      if (dauList.size()==0) dauMothIdx = dauInfo->at(0)->size()-1;
+      dauInfo->at(0)->push_back((*imc)->particleID().pid());      
+      dauInfo->at(1)->push_back(mothIdxTmp);
+      dauInfo->at(4)->push_back((*imc)->momentum().P()/GeV);
+      dauInfo->at(5)->push_back((*imc)->momentum().Theta());
+      dauInfo->at(6)->push_back((*imc)->momentum().Phi());
+      // debug() << "#" << dauInfo->at(0)->size()-1 << " ID " << (*imc)->particleID() << " Daughter of "<< mother->particleID() 
+      // << " moth Idx " << mothIdxTmp << endreq;        
+      dauList.push_back((*imc));
+    }      
+  }
+
+  dauInfo->at(2)->push_back(dauMothIdx+1);
+  dauInfo->at(3)->push_back(dauList.size());
+  debug() << "#" << dauInfo->at(3)->size()-1 << " ID " << mother->particleID() 
+          << " Mother "<< dauInfo->at(1)->at(dauInfo->at(3)->size()-1)
+          << " First Daughter Idx "<< dauMothIdx+1 << " of n Dau " << dauList.size() << endreq;        
+
+  for ( imc = dauList.begin(); imc != dauList.end(); ++imc )
+    GetMCDauInfo(mcpart, (*imc), dauInfo, ++dauMothIdx);
+
+}
+
+//=============================================================================
+StatusCode BTaggingAnalysis::FillCharmInfo(Tuple& tuple, const Particle::ConstVector& charmCands, 
+                                           const Particle::ConstVector& charmInclCands,
+                                           const Particle::ConstVector& charmStarCands,
+                                           const RecVertex* RecVert) //, const Particle* BS)
+{
+  
+  //look for a secondary Vtx due to opposite B (inclusive sec vertex)
+  std::vector<float> 
+    pCharm_id(0), pCharm_m(0), pCharm_p(0), pCharm_pt(0), pCharm_MCid(0);
+  std::vector<float> 
+    pCharm_vchi2(0), pCharm_vndof(0), pCharm_maxProbGhostDaus(0), pCharm_tau(0), pCharm_bpvdira(0),
+    pCharm_fd(0), pCharm_fdchi2(0);
+  std::vector<float> pCharm_kaonProbnnk(0), pCharm_kaonIppvchi2(0), pCharm_kaonIpMinchi2(0), pCharm_kaonId(0);
+  std::vector<float> pCharm_bcat(0), pCharm_ancID(0), pCharm_mode(0);
+
+  std::vector<float> pCharmStar_id(0), pCharmStar_m(0), pCharmStar_MCid(0), pCharmPisoft_id(0), pCharmPisoft_MCid(0);
+
+  std::vector<float> pCharm_elecProbnne(0), pCharm_muonProbnnmu(0);
+
+  std::vector<float> pCharm_dauID[c_maxCharmDau];
+
+  // fill charm info map with vectors
+  vecptrMap infoMap;
+
+  infoMap["id"] = &pCharm_id; infoMap["m"] = &pCharm_m; infoMap["p"] = &pCharm_p; infoMap["pt"] = &pCharm_pt;
+  infoMap["MCid"] = &pCharm_MCid;
+
+  infoMap["vchi2"] = &pCharm_vchi2; infoMap["vndof"] = &pCharm_vndof; infoMap["maxProbGhostDaus"] = &pCharm_maxProbGhostDaus;
+  infoMap["tau"] = &pCharm_tau; infoMap["bpvdira"] = &pCharm_bpvdira; infoMap["fd"] = &pCharm_fd; infoMap["fdchi2"] = &pCharm_fdchi2;
+
+  infoMap["kaonProbnnk"] = &pCharm_kaonProbnnk; infoMap["kaonIppvchi2"] = &pCharm_kaonIppvchi2; 
+  infoMap["kaonIpMinchi2"] = &pCharm_kaonIpMinchi2; infoMap["kaonId"] = &pCharm_kaonId;
+
+  infoMap["bcat"] = &pCharm_bcat; infoMap["ancID"] = &pCharm_ancID; infoMap["mode"] = &pCharm_mode;
+
+  infoMap["starId"] = &pCharmStar_id; infoMap["starM"] = &pCharmStar_m; infoMap["starMCid"] = &pCharmStar_MCid;
+  infoMap["PisoftId"] = &pCharmPisoft_id; infoMap["PisoftMCid"] = &pCharmPisoft_MCid;
+
+  infoMap["elecProbnne"] = &pCharm_elecProbnne; infoMap["muonProbnnmu"] = &pCharm_muonProbnnmu;
+  
+  for (int i=0;i<c_maxCharmDau;i++) { char i_str[30]; sprintf(i_str,"dauID_%d",i);  infoMap[i_str] = &pCharm_dauID[i];  }
+
+  // cands are already purged
+  
+  AddCharmInfo(charmCands, RecVert, 0, infoMap);
+  AddCharmInfo(charmInclCands, RecVert, 1, infoMap);
+  AddCharmInfo(charmStarCands, RecVert, 2, infoMap);
+  
+  int nmaxCharmCand = 200;
+
+  tuple -> farray ("Charm_id", pCharm_id, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_m", pCharm_m, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_p", pCharm_p, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_pt", pCharm_pt, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_MCid", pCharm_MCid, "C", nmaxCharmCand);
+
+  tuple -> farray ("Charm_vchi2", pCharm_vchi2, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_vndof", pCharm_vndof, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_maxProbGhostDaus", pCharm_maxProbGhostDaus, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_tau", pCharm_tau, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_bpvdira", pCharm_bpvdira, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_fd", pCharm_fd, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_fdchi2", pCharm_fdchi2, "C", nmaxCharmCand);
+
+  tuple -> farray ("Charm_kaonProbnnk", pCharm_kaonProbnnk, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_kaonIppvchi2", pCharm_kaonIppvchi2, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_kaonIpMinchi2", pCharm_kaonIpMinchi2, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_kaonId", pCharm_kaonId, "C", nmaxCharmCand);
+
+  tuple -> farray ("Charm_bcat", pCharm_bcat, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_ancID", pCharm_ancID, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_mode", pCharm_mode, "C", nmaxCharmCand);
+
+  for (int i=0;i<c_maxCharmDau;i++) {
+    char i_str[30]; sprintf(i_str,"Charm_dauID_%d",i);
+    tuple -> farray (i_str,pCharm_dauID[i],"C", nmaxCharmCand);
+  }
+
+  tuple -> farray ("CharmStar_id", pCharmStar_id, "C", nmaxCharmCand);
+  tuple -> farray ("CharmStar_m", pCharmStar_m, "C", nmaxCharmCand);
+  tuple -> farray ("CharmStar_MCid", pCharmStar_MCid, "C", nmaxCharmCand);
+  tuple -> farray ("CharmPisoft_id", pCharmPisoft_id, "C", nmaxCharmCand);
+  tuple -> farray ("CharmPisoft_MCid", pCharmPisoft_MCid, "C", nmaxCharmCand);
+  
+  tuple -> farray ("Charm_elecProbnne", pCharm_elecProbnne, "C", nmaxCharmCand);
+  tuple -> farray ("Charm_muonProbnnmu", pCharm_muonProbnnmu, "C", nmaxCharmCand);
+
+  return StatusCode::SUCCESS;
+  
+}
+
+
+//=============================================================================
+StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands, const RecVertex* RecVert, 
+                                          const int type, vecptrMap& infoMap)
+{
+
+  counter(std::string("# charm candidates")) += cands.size();
+
+
+  // 0=full reco, 1=part reco, 2=dstar reco
+  switch(type) {
+  case 0: m_prop->setProperty("InclusiveDecay","False"); break;
+  case 1: m_prop->setProperty("InclusiveDecay","True"); break;
+  case 2: m_prop->setProperty("InclusiveDecay","False"); break;
+  default: break;
+  }    
+
+  Particle::ConstVector::const_iterator icand;
+  for( icand = cands.begin(); icand != cands.end(); ++icand ) {
+
+    const Particle *cand, *dstar_cand, *pisoft_cand;
+    if (type==2) {
+      dstar_cand = (*icand);
+      cand = (*icand)->daughters().at(0);
+      pisoft_cand = (*icand)->daughters().at(1);
+    } else {
+      dstar_cand = pisoft_cand = NULL;  
+      cand = (*icand);
+    }
+    
+    debug() << " ## Charm cand, candType = " << type << endreq;
+    
+    infoMap["id"]->push_back(cand->particleID().pid());
+    infoMap["m"]->push_back(cand->measuredMass()/GeV);
+    infoMap["p"]->push_back(cand->p()/GeV);
+    infoMap["pt"]->push_back(cand->pt()/GeV);
+
+    int charm_MCid = 0;
+
+    if (m_EnableMC) {
+      const MCParticle* mc_cand = m_assoc->relatedMCP( cand );
+      if( mc_cand ) {
+        charm_MCid = mc_cand->particleID().pid();
+        debug() << "Charm cand is truth matched to pid " << charm_MCid << endmsg;
+      }
+    }
+    
+    infoMap["MCid"]->push_back(charm_MCid);
+    if (abs(charm_MCid)==421 or abs(charm_MCid)==411)
+      counter(std::string("# TruthMatched charm candidates"))++;
+
+    infoMap["vchi2"]->push_back(cand->endVertex()->chi2());
+    infoMap["vndof"]->push_back(cand->endVertex()->nDoF());
+
+    // construct the functors
+    Fun fDIRA = DIRA( RecVert );
+    const float bpvdira = fDIRA( cand ) ;
+    infoMap["bpvdira"]->push_back(bpvdira);
+
+    Fun fVD = VD ( RecVert );
+    const float fd = fVD( cand ) ;
+    infoMap["fd"]->push_back(fd);
+
+    Fun fVDCHI2 = VDCHI2 ( RecVert );
+    const float fdchi2 = fVDCHI2( cand ) ;
+    infoMap["fdchi2"]->push_back(fdchi2);
+
+    LHCb::VertexBase::ConstVector verts; verts.push_back(RecVert);
+    Fun ipPvChi2 = MIPCHI2 ( verts , m_utilFT->getDistanceCalculator() ) ;
+    const MIPCHI2DV ipChi2Min  = MIPCHI2DV ( "" ) ;
+
+    float maxProbGhostDaus = 0.;
+    float kaonId = 0, kaonProbnnk = 1., kaonIppvchi2 = -1, kaonIpMinchi2 = -1;
+    float elecProbnne = 1., muonProbnnmu = 1.;
+
+    const SmartRefVector<Particle>& daus = cand->daughters();
+    int i=0;
+    debug() << "Charm cand, dau vector size = " << daus.size() << endreq;
+    for( SmartRefVector<Particle>::const_iterator idau = daus.begin(); idau != daus.end(); ++idau) {
+      const Particle *daucand = *idau;
+      if (daucand->proto()) {
+        float pghostnn = daucand->proto()->info(ProtoParticle::ProbNNghost, -1. );
+        if(maxProbGhostDaus < pghostnn ) maxProbGhostDaus = pghostnn;
+      }
+      if ( daucand->particleID() == LoKi::Particles::_ppFromName("K+")->particleID() || 
+           daucand->particleID() == LoKi::Particles::_ppFromName("K-")->particleID() ) {
+        kaonId = daucand->particleID().pid();
+        if (daucand->proto()) {
+          kaonProbnnk = daucand->proto()->info(ProtoParticle::ProbNNk, -1. );
+        }
+        kaonIppvchi2 = ipPvChi2(daucand) ;
+        kaonIpMinchi2 = ipChi2Min(daucand) ;        // use the functor:
+    
+      }      
+
+      if ( daucand->particleID() == LoKi::Particles::_ppFromName("e+")->particleID() || 
+           daucand->particleID() == LoKi::Particles::_ppFromName("e-")->particleID() ) 
+        if (daucand->proto()) 
+          elecProbnne = daucand->proto()->info(ProtoParticle::ProbNNe, -1. );
+      
+      if ( daucand->particleID() == LoKi::Particles::_ppFromName("mu+")->particleID() || 
+           daucand->particleID() == LoKi::Particles::_ppFromName("mu-")->particleID() ) 
+        if (daucand->proto()) 
+          muonProbnnmu = daucand->proto()->info(ProtoParticle::ProbNNmu, -1. );
+      
+      if (i<c_maxCharmDau) { 
+        char i_str[30]; sprintf(i_str,"dauID_%d",i);
+        infoMap[i_str]->push_back(daucand->particleID().pid()); i++;}
+      
+    }
+    // fill rest of dau id with 0
+    for (int j = i; j <c_maxCharmDau; j++) { char j_str[30]; sprintf(j_str,"dauID_%d",j); infoMap[j_str]->push_back(0); }
+
+    infoMap["maxProbGhostDaus"]->push_back(maxProbGhostDaus);
+
+    double ct=0., ctErr=0., ctChi2=0.;
+    StatusCode sc = m_pLifetimeFitter->fit(*RecVert, *cand, ct, ctErr, ctChi2);
+    if(sc){
+      infoMap["tau"]->push_back(ct/picosecond);
+    } else {
+      infoMap["tau"]->push_back(-1.);
+    }
+
+    infoMap["kaonProbnnk"]->push_back(kaonProbnnk);
+    infoMap["kaonIppvchi2"]->push_back(kaonIppvchi2);
+    infoMap["kaonIpMinchi2"]->push_back(kaonIpMinchi2);
+
+    infoMap["kaonId"]->push_back(kaonId);
+    
+    infoMap["elecProbnne"]->push_back(elecProbnne);
+    infoMap["muonProbnnmu"]->push_back(muonProbnnmu);
+
+    int bcat = -2;
+    //Background category
+    if (! cand->isBasicParticle()) {
+      IBackgroundCategory::categories cat = IBackgroundCategory::Undefined;
+      cat = m_bkgCategory->category(cand);
+      debug() << "Result of BackgroundCategory for charm cand is: " << (int) cat << endreq;
+      bcat = (int) cat;
+    }
+    
+    infoMap["bcat"]->push_back(bcat);
+
+    int ancID = 0;
+    if (m_EnableMC) {
+      const MCParticle* mcp = m_assoc->relatedMCP( cand );
+      if (mcp) {
+        const MCParticle* ancestor = m_util->originof(mcp) ;
+        ancID = ancestor->particleID().pid();
+      }
+    }
+    infoMap["ancID"]->push_back(ancID);
+    
+    infoMap["mode"]->push_back(m_utilFT->getCharmDecayModeInt(cand,type));
+    
+    if (type==2) {
+      infoMap["starId"]->push_back(dstar_cand->particleID().pid());
+      infoMap["starM"]->push_back(dstar_cand->measuredMass()/GeV);
+      
+      infoMap["PisoftId"]->push_back(pisoft_cand->particleID().pid());
+      
+      int dstar_MCid = 0, pisoft_MCid = 0;
+      if (m_EnableMC) {
+        const MCParticle* mc_dstar_cand = m_assoc->relatedMCP( dstar_cand );
+        if( mc_dstar_cand ) {
+          dstar_MCid = mc_dstar_cand->particleID().pid();
+          debug() << "Charm dstar cand is truth matched to pid " << dstar_MCid << endmsg;
+        }
+        const MCParticle* mc_pisoft_cand = m_assoc->relatedMCP( pisoft_cand );
+        if( mc_pisoft_cand ) {
+          pisoft_MCid = mc_pisoft_cand->particleID().pid();
+        }
+      }
+      infoMap["starMCid"]->push_back(dstar_MCid);
+      infoMap["PisoftMCid"]->push_back(pisoft_MCid);
+      
+    } else {
+      
+      infoMap["starId"]->push_back(0);
+      infoMap["starM"]->push_back(0);
+      infoMap["starMCid"]->push_back(0);
+      infoMap["PisoftId"]->push_back(0);
+      infoMap["PisoftMCid"]->push_back(0);
+
+    }
+    
+    debug() 
+      << "Charm Cand  id " << infoMap["id"]->back()
+      << " m " << infoMap["m"]->back()
+      << " p " << infoMap["p"]->back()
+      << " pt " << infoMap["pt"]->back()
+      << " MCid " << infoMap["MCid"]->back()
+      << " vchi2 " << infoMap["vchi2"]->back()
+      << " vndof " << infoMap["vndof"]->back()
+      << " maxPGhostDaus " << infoMap["maxProbGhostDaus"]->back()
+      << " fd " << infoMap["fd"]->back()
+      << " fdchi2 " << infoMap["fdchi2"]->back()
+      << " tau " << infoMap["tau"]->back()
+      << " bpvdira " << infoMap["bpvdira"]->back()
+      << endreq;
+    
+    debug()
+      << " Charm cand kaon probnnk " << infoMap["kaonProbnnk"]->back()
+      << " ippvchi2 " << infoMap["kaonIppvchi2"]->back()
+      << " ippvchi2 " << infoMap["kaonIpMinchi2"]->back()
+      << " id " << infoMap["kaonId"]->back();
+
+    debug() 
+      << " Charm dstar pid " << infoMap["starId"]->back()
+      << " mass " << infoMap["starM"]->back()
+      << " MCpid " << infoMap["starMCid"]->back()
+      << " ## pisoft pid " << infoMap["PisoftId"]->back()
+      << " MCpid " << infoMap["PisoftMCid"]->back()
+      << endreq;
+
+    debug()
+      << " Charm cand lepton probnne " << infoMap["elecProbnne"]->back()
+      << " probnnmu " << infoMap["muonProbnnmu"]->back()
+      << endreq;
+
+    for (int i=0;i<c_maxCharmDau;i++) {
+      char i_str[30]; sprintf(i_str,"dauID_%d",i);
+      std::vector<float> *dauId = infoMap[i_str];
+      if (dauId->back())
+        debug() << " dau(" << i << ")id " << dauId->back();
+    }
+    
+    debug()<< endreq;
+    
+  }
+  
+  return StatusCode::SUCCESS;
+}
+  
 
 //=============================================================================
 double BTaggingAnalysis::GetInvariantMass(double MA, Gaudi::LorentzVector PA, double MB, Gaudi::LorentzVector PB)
