@@ -4,6 +4,7 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+!========================= PatPixel v1r4 2013-12-10 =========================
 ! 2013-12-05 - Heinrich Schindler
  - Removed unused variables, changed default values
 

@@ -3,7 +3,7 @@
 # Maintainer : Heinrich Schindler
 #=========================================================================
 package           PatPixel
-version           v1r3
+version           v1r4
 
 #=========================================================================
 # Structure, i.e. directories to process. 
