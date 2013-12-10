@@ -3,6 +3,8 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+! 2013-12-10 - Stefania Vecchi
+ - TupleToolTagging: add info on the chisquare of the vertex fit B+particle
 
 ! 2013-12-09 - Stefania Vecchi
  - TupleToolTagging: add Igor's code to save tagger informations (IP,p,pT,IP_B...)

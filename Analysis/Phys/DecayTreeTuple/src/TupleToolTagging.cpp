@@ -43,6 +43,7 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
   : TupleToolBase ( type, name , parent )
   , m_dva(0)
   , m_dist(0)
+  , m_fitter(0)
   , m_tagging(0)
   , m_tagger_map()
   , m_tagger_rmap()
@@ -102,6 +103,8 @@ StatusCode TupleToolTagging::initialize() {
   //                           StatusCode::FAILURE);
   m_dist = m_dva->distanceCalculator();
 
+  m_fitter = tool<IVertexFit>("OfflineVertexFitter");
+
   //if null string, get parent DVA, else use own private tool
   if(m_toolName == "" && m_dva!=NULL) m_tagging = m_dva->flavourTagging();
   else if (m_toolName != "") m_tagging = tool<IBTaggingTool>( m_toolName, this );
@@ -153,6 +156,11 @@ VerboseData TupleToolTagging::getVerboseData(const LHCb::Particle *particle, con
           data.bip   = -1;
           data.bchi2 = -1;
         }
+
+        Vertex vtx;    
+        test = m_fitter->fit(vtx,*B,*particle);    
+        if( !test ) data.bp_chi2 = -1.;
+        else data.bp_chi2 = vtx.chi2()/(float)vtx.nDoF();
 
         return data;
 }
@@ -267,7 +275,7 @@ StatusCode TupleToolTagging::fill( const Particle* mother
           if( true ) {
             std::vector<double> id, p, px, py, pz, pt, theta, phi;
             std::vector<double> pid_e, pid_mu, pid_k, pid_p;
-            std::vector<double> ip, chi2, bip, bchi2;
+            std::vector<double> ip, chi2, bip, bchi2, bp_chi2;
             
             const std::string num_name = prefix+"_"+active+"_PARTICLES_NUM";
             test &= tuple->farray( prefix+"_"+active+"_PARTICLES_ID", id.begin(), id.end(), num_name, 20 );
@@ -286,6 +294,7 @@ StatusCode TupleToolTagging::fill( const Particle* mother
             test &= tuple->farray( prefix+"_"+active+"_PARTICLES_IPCHI2_OWNPV", chi2.begin(), chi2.end(), num_name, 20 );
             test &= tuple->farray( prefix+"_"+active+"_PARTICLES_IP_BVertex", bip.begin(), bip.end(), num_name, 20 );
             test &= tuple->farray( prefix+"_"+active+"_PARTICLES_IPCHI2_BVertex", bchi2.begin(), bchi2.end(), num_name, 20 );
+            test &= tuple->farray( prefix+"_"+active+"_PARTICLES_CHI2_BpVertex", bp_chi2.begin(), bp_chi2.end(), num_name, 20 );
             }
          }
                 
@@ -305,7 +314,7 @@ StatusCode TupleToolTagging::fill( const Particle* mother
           // Save interesting tagging data
           std::vector<double> id, p, px, py, pz, pt, theta, phi;
           std::vector<double> pid_e, pid_mu, pid_k, pid_p;
-          std::vector<double> ip, chi2, bip, bchi2;
+          std::vector<double> ip, chi2, bip, bchi2, bp_chi2;
           
           SmartRefVector<LHCb::Particle> parts = tagger.taggerParts();
           for(SmartRefVector<LHCb::Particle>::const_iterator it=parts.begin();
@@ -329,6 +338,7 @@ StatusCode TupleToolTagging::fill( const Particle* mother
             chi2.push_back(data.chi2);
             bip.push_back(data.bip);
             bchi2.push_back(data.bchi2);
+            bp_chi2.push_back(data.bp_chi2);
           }
           
           const std::string num_name = prefix+"_"+name+"_PARTICLES_NUM";
@@ -348,6 +358,7 @@ StatusCode TupleToolTagging::fill( const Particle* mother
           test &= tuple->farray( prefix+"_"+name+"_PARTICLES_IPCHI2_OWNPV", chi2.begin(), chi2.end(), num_name, 20 );
           test &= tuple->farray( prefix+"_"+name+"_PARTICLES_IP_BVertex", bip.begin(), bip.end(), num_name, 20 );
           test &= tuple->farray( prefix+"_"+name+"_PARTICLES_IPCHI2_BVertex", bchi2.begin(), bchi2.end(), num_name, 20 );
+          test &= tuple->farray( prefix+"_"+name+"_PARTICLES_CHI2_BpVertex", bp_chi2.begin(), bp_chi2.end(), num_name, 20 );
         }        
       }      
     }    

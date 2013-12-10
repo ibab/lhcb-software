@@ -6,18 +6,20 @@
 // from Gaudi
 #include "DecayTreeTupleBase/TupleToolBase.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
+#include "Kernel/IVertexFit.h"
 
 class IDVAlgorithm;
 class IDistanceCalculator;
 class IBTaggingTool;
+class IVertexFit;
 
 struct VerboseData {
-    double id, p, px, py, pz, pt, theta, phi;
-    double pid_e, pid_mu, pid_k, pid_p;
-    double ip, chi2, bip, bchi2;
-    VerboseData(): id(0), p(0), px(0), pz(0), pt(0), theta(0), phi(0),
-        pid_e(0), pid_mu(0), pid_k(0), pid_p(0),
-        ip(0), chi2(0), bip(0), bchi2(0) {}
+  double id, p, px, py, pz, pt, theta, phi;
+  double pid_e, pid_mu, pid_k, pid_p;
+  double ip, chi2, bip, bchi2, bp_chi2 ;
+  VerboseData(): id(0), p(0), px(0), pz(0), pt(0), theta(0), phi(0),
+                 pid_e(0), pid_mu(0), pid_k(0), pid_p(0),
+                 ip(0), chi2(0), bip(0), bchi2(0), bp_chi2(0) {}
 };
 
 /** @class TupleToolTagging TupleToolTagging.h jborel/TupleToolTagging.h
@@ -91,6 +93,7 @@ private:
   std::string m_inputLocation, m_toolName;
   IDVAlgorithm* m_dva;
   const IDistanceCalculator* m_dist;
+  IVertexFit *m_fitter;
   IBTaggingTool* m_tagging;
   
   std::map<int, std::string> m_tagger_map; ///<map of enum to string
