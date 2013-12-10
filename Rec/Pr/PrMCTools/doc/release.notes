@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Pr/PrMCTools
-! Responsible : Olivier Callot
+! Responsible : Michel De Cian
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrMCTools v1r8 2013-12-10 =========================
 ! 2013-11-18 - Heinrich Schindler
  - PrCheatedVP: Follow change in channelToPoint syntax in DeVPSensor, 
    remove unused includes
