@@ -64,8 +64,9 @@ class ParticleFlowConf:
              "scalingANDsmearing" : False
              }
          # set the datafile
+         ### Get all the name coherantly
          self.MCCor = _MCCor
-         self.PFSeq = GaudiSequencer("PFSeq",IgnoreFilterPassed = True)
+         self.PFSeq = GaudiSequencer(_name+"Particles",IgnoreFilterPassed = True)
          self.algorithms = []
          self.setupParam(_params)
          self.setupPF()
