@@ -248,7 +248,7 @@ Tagger TaggerProtonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert
 
     if ( msgLevel(MSG::DEBUG) ) debug() << " BDT="<<  BDT<<endmsg;
     
-    if( BDT<-1 || BDT > 1) std::cout<<" ATTENZIONE BDT fuori dal range "<<BDT<<std::endl;    
+    if( msdLevel(MSG::INFO) ) if (BDT<-1 || BDT > 1) info()<<" WARNING SSproton BDT out of range "<<BDT<<endmsg;    
     if( BDT < m_BDT_cut_protonS) continue;    
     if( BDT < bestBDT ) continue;
 

@@ -6,10 +6,12 @@
 !                                               ---> Stefania Vecchi (2013)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2013-12-10 - Stefania Vecchi
+  fix a printout
 
 ! 2013-12-09 - Riccardo Cenci
  - TaggerCharmTool: lists purging done within the tagger class, charm lists created automatically
-   charm lists configured during FlavourTagging configuration (Configuration,py)
+   charm lists configured during FlavourTagging configuration (Configuration.py)
 
 ! 2013-12-08 - Stefania Vecchi
  - CombineTaggersProbability.cpp: set combination of OS taggers
