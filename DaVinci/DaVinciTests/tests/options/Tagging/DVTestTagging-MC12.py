@@ -30,9 +30,6 @@ cheatsel.BDecayTool.MCDecayFinder.Decay = myDecay
 #
 location = "Phys/CheatedSelection"
 
-# ==========================================================
-## create charm list
-# ==========================================================
 ####
 from Configurables import BTagging, BTaggingTool, BTaggingChecker, BDecayTool, MCDecayFinder
 
@@ -44,8 +41,6 @@ tag.BDecayTool.addTool( MCDecayFinder )
 tag.BDecayTool.MCDecayFinder.Decay = myDecay
 tag.addTool( BTaggingTool )
 tag.BTaggingTool.ChoosePVCriterium = "PVbyIP" #needed by CheatedSel
-tag.BTaggingTool.EnableCharmTagger = False # waiting for Riccardo's particle list 
-
 
 
 # Reco14

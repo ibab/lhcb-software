@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+! 2013-12-10 - Stefania Vecchi
+- Add reference of OS_Charm tagger in  tagging.qms/test_tag_mc12.qmt 
+
 ! 2013-12-09 - Stefania Vecchi
 - Updated reference file tagging.qms/test_tag_mc12.qmt according to the change
    in NNetOSK, to add results on SSproton.
