@@ -9,6 +9,8 @@ from Configurables import GaudiSequencer
 from Configurables import ( LHCbConfigurableUser, LHCbApp,
                             DstConf, CaloDstUnPackConf )
 
+from Gaudi.Configuration import * 
+
 import GaudiKernel.ProcessJobOptions
 
 class Swimming(LHCbConfigurableUser) :
@@ -189,7 +191,6 @@ class Swimming(LHCbConfigurableUser) :
         EventSelector().PrintFreq = -1
         EventSelector().OutputLevel = 6
         if not (self.getProp('Input') == []) :
-            from Gaudi.Configuration import * 
             from GaudiConf import IOHelper
             IOHelper('ROOT').inputFiles(self.getProp('Input'))
 
