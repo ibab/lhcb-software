@@ -3,6 +3,7 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
+!========================= MuonID v9r8 2013-12-10 =========================
 ! 2013-11-04 - J. Helder Lopes
  - Fixes comparison between signed and unsigned integer warning. Avoid repeated 
    calculation of index station * m_NRegion + region. 
