@@ -49,3 +49,8 @@ class FlavourTaggingConf(LHCbConfigurableUser) :
         dod.AlgMap.update( { eLoc   : taggerElectrons  } )
         dod.AlgMap.update( { pLoc   : taggerPions      } )
         dod.AlgMap.update( { tagLoc : taggingParticles } )
+
+
+        # configure charm candidate lists
+        import FlavourTagging.CharmTaggerLists
+        

@@ -44,6 +44,7 @@ public:
 
   virtual const IDistanceCalculator* getDistanceCalculator()=0;
   virtual std::string getCharmDecayMode(const LHCb::Particle*, int)=0;
+  virtual LHCb::Particle::ConstVector purgeCands(const LHCb::Particle::Range& cands, const LHCb::Particle& BS)=0;
 
 };
 

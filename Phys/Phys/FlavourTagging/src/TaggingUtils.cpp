@@ -34,7 +34,8 @@ DECLARE_TOOL_FACTORY( TaggingUtils )
                               const IInterface* parent ) :
     GaudiTool ( type, name, parent ),
     m_Dist(0),
-    m_dva(0)
+    m_dva(0),
+    m_descend(0)
 {
   declareProperty( "ChoosePVCriterium", m_ChoosePV = "PVbyIPs");
   declareProperty( "Personality", m_personality = "Reco14" );
@@ -64,6 +65,12 @@ StatusCode TaggingUtils::initialize()
     return StatusCode::FAILURE;
   }
   
+  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  if( ! m_descend ) {
+    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
+
   // register multiple personalities
   m_countTracks.registerPersonality("Reco12",
 	  this, &TaggingUtils::countTracksReco12);
@@ -273,6 +280,43 @@ bool TaggingUtils::isinTreeReco14(const LHCb::Particle* axp,
     }
   }
   return false;
+}
+
+//=============================================================================
+LHCb::Particle::ConstVector TaggingUtils::purgeCands(const LHCb::Particle::Range& cands, const LHCb::Particle& BS)
+{
+  // remove any charm cand that has descendents in common with the signal B
+  LHCb::Particle::ConstVector purgedCands;
+
+  Particle::ConstVector signalDaus = m_descend->descendants(&BS);
+
+  Particle::ConstVector::const_iterator icand;
+  for( icand = cands.begin(); icand != cands.end(); ++icand ) {  
+
+    const Particle* cand = *icand;
+    Particle::ConstVector candDaus = m_descend->descendants(cand);
+    bool isUsedForSignal = false;
+
+    Particle::ConstVector::const_iterator icandDau;
+    for( icandDau = candDaus.begin(); icandDau != candDaus.end(); ++icandDau ) {  
+
+      const LHCb::ProtoParticle* proto_candDau = (*icandDau)->proto();
+
+      Particle::ConstVector::const_iterator isignalDau;
+      for( isignalDau = signalDaus.begin(); isignalDau != signalDaus.end(); ++isignalDau ) {
+        if (proto_candDau == (*isignalDau)->proto()) isUsedForSignal = true;
+        if (isUsedForSignal) break;
+      }
+
+      if (isUsedForSignal) break;
+    }
+    
+    if (!isUsedForSignal) purgedCands.push_back(cand);
+
+  }
+    
+  return purgedCands;
+
 }
 
 //=============================================================================

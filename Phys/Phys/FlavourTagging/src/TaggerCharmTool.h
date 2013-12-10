@@ -113,11 +113,11 @@ public:
                              LHCb::Particle::ConstVector& tagParticles);
 
   virtual int addCands(std::vector< CharmParticle> & cands, const std::vector< std::string > & locations,
-                       const LHCb::RecVertex* RecVert, const int type);
+                       const LHCb::Particle& signalB, const LHCb::RecVertex* RecVert, const int type);
 
-  virtual double getMvaVal(const CharmParticle* cpart, const int nPV, const int multiplicity, const LHCb::Particle* signalB);
+  virtual double getMvaVal(const CharmParticle* cpart, const int nPV, const int multiplicity, const LHCb::Particle& signalB);
   
-  virtual double getOmega(const CharmParticle* cpart, const int nPV, const int multiplicity, const LHCb::Particle* signalB);
+  virtual double getOmega(const CharmParticle* cpart, const int nPV, const int multiplicity, const LHCb::Particle& signalB);
   
 
 

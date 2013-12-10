@@ -411,7 +411,7 @@ double NNetTool_MLP::MLPcharmTMVA(std::vector <std::string>& inputVars, std::vec
 
   return pn;
 
-};
+}
 //============================================================================
 double NNetTool_MLP::MLPmTMVA_MC(std::vector <std::string>& inputVars, std::vector<double>& inputVals) 
 {

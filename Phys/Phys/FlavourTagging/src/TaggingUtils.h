@@ -13,6 +13,8 @@ class IDVAlgorithm;
 #include "ITaggingUtils.h"
 #include "MultiplePersonalityCall.h"
 
+#include "Kernel/IParticleDescendants.h"
+
 /** @class TaggingUtils TaggingUtils.h
  *
  *  Tool to tag the B flavour with a Electron Tagger
@@ -56,6 +58,12 @@ public:
   bool isinTree(const LHCb::Particle*,
                  const LHCb::Particle::ConstVector& , double& );
 
+  // remove any charm cand that has descendents in common with the signal B
+  LHCb::Particle::ConstVector purgeCands(const LHCb::Particle::Range& cands, const LHCb::Particle& BS);
+
+  // classify charm decay modes
+  std::string getCharmDecayMode(const LHCb::Particle*, int);
+
   //-------------------------------------------------------------
 
 private:
@@ -65,6 +73,8 @@ private:
   const IDistanceCalculator *m_Dist;
   IDVAlgorithm* m_dva;
   const IPVReFitter* m_pvReFitter;
+
+  IParticleDescendants*      m_descend;
 
   MultiplePersonalityCall<boost::function<
       int(const LHCb::Particle::ConstVector&)> > m_countTracks;
@@ -82,7 +92,6 @@ private:
                  const LHCb::Particle::ConstVector& , double& );
 
   const IDistanceCalculator* getDistanceCalculator() { return m_Dist;}
-  std::string getCharmDecayMode(const LHCb::Particle*, int);
 
 };
 

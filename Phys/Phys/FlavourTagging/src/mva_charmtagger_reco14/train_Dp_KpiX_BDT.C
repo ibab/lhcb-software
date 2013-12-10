@@ -145,7 +145,7 @@ private:
 {
    if (fLeft  != NULL) delete fLeft;
    if (fRight != NULL) delete fRight;
-}; 
+} 
    
 //_______________________________________________________________________
 bool BDTNode::GoesRight( const std::vector<double>& inputValues ) const
@@ -342,7 +342,7 @@ double ReadBDT::GetMvaValue__( const std::vector<double>& inputValues ) const
       norm  += fBoostWeights[itree];
    }
    return myMVA /= norm;
-};
+}
 
 void ReadBDT::Initialize()
 {
@@ -10935,7 +10935,7 @@ NN(
 5, 1.17597, 0, 0, 0.428423,-99) , 
 8, -0.991119, 0, 0, 0.500121,-99)    );
    return;
-};
+}
  
 // Clean up
 inline void ReadBDT::Clear() 

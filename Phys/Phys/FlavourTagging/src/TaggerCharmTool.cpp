@@ -43,9 +43,28 @@ DECLARE_TOOL_FACTORY( TaggerCharmTool )
 {
   declareInterface<ITagger>(this);
 
-  declareProperty( "CharmTagLocations", m_CharmTagLocations); // = "Phys/StdLooseD02KPi/Particles");
-  declareProperty( "CharmInclTagLocations", m_CharmInclTagLocations); // = "Phys/StdLooseD02KPi/Particles");
-  declareProperty( "CharmStarTagLocations", m_CharmStarTagLocations); // = "Phys/StdLooseD02KPi/Particles");
+  std::vector<std::string> def_CharmTagLocations;
+  def_CharmTagLocations.push_back("Phys/Tag_StdD02KPi/Particles");
+  def_CharmTagLocations.push_back("Phys/Tag_StdD02KPiPiPi/Particles");
+  def_CharmTagLocations.push_back("Phys/Tag_StdD02KsPiPi/Particles");
+  def_CharmTagLocations.push_back("Phys/Tag_StdD02KPiPi0/Particles");
+  def_CharmTagLocations.push_back("Phys/Tag_StdDp2KPiPi/Particles");
+  def_CharmTagLocations.push_back("Phys/Tag_StdDp2KsPi/Particles");
+  declareProperty( "CharmTagLocations", m_CharmTagLocations = def_CharmTagLocations);
+
+  std::vector<std::string> def_CharmInclTagLocations;
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdD02KPipart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdD02Kepart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdD02Kmupart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdDp2KPipart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdDp2Kepart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdDp2Kmupart/Particles");
+  declareProperty( "CharmInclTagLocations", m_CharmInclTagLocations = def_CharmInclTagLocations);
+
+  std::vector<std::string> def_CharmStarTagLocations;
+  def_CharmStarTagLocations.push_back("Phys/Tag_StdDstar2D0Pi2KsPiPi/Particles");
+  declareProperty( "CharmStarTagLocations", m_CharmStarTagLocations = def_CharmStarTagLocations);
+
 
   declareProperty( "Charm_P0_Cal",           m_P0_Cal_charm   = 0.3371); 
   declareProperty( "Charm_P1_Cal",           m_P1_Cal_charm   = 0.9111); 
@@ -173,18 +192,18 @@ StatusCode TaggerCharmTool::initialize()
 
 //=====================================================================
 Tagger TaggerCharmTool::tag( const Particle* signalB,
-                                       const RecVertex* RecVert,
-                                       const int nPV,
-                                       Particle::ConstVector& tagParticles )
+                             const RecVertex* RecVert,
+                             const int nPV,
+                             Particle::ConstVector& tagParticles )
 {
 
   Tagger tcharm;
 
   std::vector< CharmParticle > cands;
   
-  addCands(cands, m_CharmTagLocations    , RecVert, 0);
-  addCands(cands, m_CharmInclTagLocations, RecVert, 1);
-  addCands(cands, m_CharmStarTagLocations, RecVert, 2);
+  addCands(cands, m_CharmTagLocations    , *signalB, RecVert, 0);
+  addCands(cands, m_CharmInclTagLocations, *signalB, RecVert, 1);
+  addCands(cands, m_CharmStarTagLocations, *signalB, RecVert, 2);
   
   if ( msgLevel(MSG::DEBUG) )  debug() << "Number of charm cands retrieved: "<<cands.size()<<endreq;
     
@@ -236,7 +255,7 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
     if( cpart->pchi2 <= 0.001 ) continue;
 
     // mva cut
-    double mvaVar = getMvaVal(cpart, nPV, tagParticles.size(), signalB);
+    double mvaVar = getMvaVal(cpart, nPV, tagParticles.size(), *signalB);
 
     if ( msgLevel(MSG::DEBUG) )    debug()<<"mva "<<mvaVar<<endreq;
     if ( mvaVar < CharmDecayModeMap[mode].mvaCut ) continue;
@@ -260,7 +279,7 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
   if(!thecharm) return tcharm;
 
   //calculate omega
-  double omega = getOmega(thecharm, nPV, tagParticles.size(), signalB);
+  double omega = getOmega(thecharm, nPV, tagParticles.size(), *signalB);
   if ( msgLevel(MSG::DEBUG) )    debug()<<"omega "<<omega << endreq; 
   if( omega < 0 ||  omega > 1 )  {
     if ( msgLevel(MSG::DEBUG) )    debug()<<"Something wrong with Charm Training "<<omega << endreq; 
@@ -282,7 +301,7 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
 
 //=====================================================================
 int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::vector<std::string>& locations, 
-                              const RecVertex* RecVert, const int type)
+                              const LHCb::Particle& signalB, const RecVertex* RecVert, const int type)
 {
 
   for( std::vector<std::string>::const_iterator ilist = locations.begin(); ilist != locations.end(); ++ilist) {
@@ -291,9 +310,12 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
 
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Found "<<partsin.size()<<" charm cands for location "<<*ilist<<endreq;
+
+      // removing candidates with daughters in common with signal B
+      LHCb::Particle::ConstVector purgedParts = m_util->purgeCands(partsin, signalB);
     
-      for (Gaudi::Range_<LHCb::Particle::ConstVector>::const_iterator icand = partsin.begin(); 
-           icand != partsin.end(); ++icand) {
+      for (Gaudi::Range_<LHCb::Particle::ConstVector>::const_iterator icand = purgedParts.begin(); 
+           icand != purgedParts.end(); ++icand) {
 
         const Particle *cand, *dstar_cand, *pisoft_cand;
         if (type==2) {
@@ -404,7 +426,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
   
 //=====================================================================
 double TaggerCharmTool::getMvaVal(const CharmParticle *cpart, const int nPV, const int multiplicity, 
-                                  const LHCb::Particle* signalB)
+                                  const LHCb::Particle& signalB)
 {
 
   const Particle *part = cpart->part;
@@ -417,12 +439,12 @@ double TaggerCharmTool::getMvaVal(const CharmParticle *cpart, const int nPV, con
   inputVals.push_back(nPV);
   inputVals.push_back(multiplicity);
 
-  inputVals.push_back(signalB->pt()/GeV);
+  inputVals.push_back(signalB.pt()/GeV);
 
   inputVals.push_back(part->measuredMass()/GeV);
   inputVals.push_back(part->p()/GeV);
   inputVals.push_back(part->pt()/GeV);
-  inputVals.push_back(part->momentum().Eta() - signalB->momentum().Eta());
+  inputVals.push_back(part->momentum().Eta() - signalB.momentum().Eta());
 
   inputVals.push_back(log(cpart->pchi2));      
 
@@ -450,9 +472,9 @@ double TaggerCharmTool::getMvaVal(const CharmParticle *cpart, const int nPV, con
   }
 
   if ( msgLevel(MSG::DEBUG) )
-    debug()<<"Set MvaCharm Var: recv "<<nPV<<" mult "<<multiplicity<<" sigpt "<<signalB->pt()/GeV
+    debug()<<"Set MvaCharm Var: recv "<<nPV<<" mult "<<multiplicity<<" sigpt "<<signalB.pt()/GeV
            <<" m "<<part->measuredMass()/GeV<<" p "<<part->p()/GeV<<" pt "<<part->pt()/GeV
-           <<" deta "<<part->momentum().Eta() - signalB->momentum().Eta()
+           <<" deta "<<part->momentum().Eta() - signalB.momentum().Eta()
            <<" logpchi2 "<<log(cpart->pchi2)<<" logtau "<<log(cpart->tau)<<" logfd "<<log(cpart->fd)
            <<" logfdchi2 "<<log(cpart->fdchi2)<<" logdira "<<log(1-cpart->bpvdira)<<" logmghost "<<log(cpart->maxProbGhostDaus)
            <<" logkprobk "<<log(1-cpart->kaonProbnnk)<<" logkipchi2 "<<log(cpart->kaonIppvchi2)
@@ -465,7 +487,7 @@ double TaggerCharmTool::getMvaVal(const CharmParticle *cpart, const int nPV, con
 }
 
 /////////////////////////////////////////////
-double TaggerCharmTool::getOmega(const CharmParticle* cpart, const int nPV, const int multiplicity, const LHCb::Particle* signalB)
+double TaggerCharmTool::getOmega(const CharmParticle* cpart, const int nPV, const int multiplicity, const LHCb::Particle& signalB)
 {
 
   const Particle *part = cpart->part;
@@ -475,7 +497,7 @@ double TaggerCharmTool::getOmega(const CharmParticle* cpart, const int nPV, cons
 
   inputVars.push_back("mult"                    ); inputVals.push_back( (double)multiplicity                        );
   inputVars.push_back("nnkrec"                  ); inputVals.push_back( (double)nPV                                 );
-  inputVars.push_back("ptB"                     ); inputVals.push_back( (double)log(signalB->pt()/GeV)              );
+  inputVars.push_back("ptB"                     ); inputVals.push_back( (double)log(signalB.pt()/GeV)              );
   inputVars.push_back("charm_mass"              ); inputVals.push_back( (double)part->measuredMass()/GeV            );
   inputVars.push_back("charm_mode"              ); inputVals.push_back( (double)CharmDecayModeMap[cpart->mode].index);
   inputVars.push_back("charm_bpvdira"           ); inputVals.push_back( (double)cpart->bpvdira                      );
