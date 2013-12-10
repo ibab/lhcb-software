@@ -477,11 +477,14 @@ class Boole(LHCbConfigurableUser):
         if tae == "":
             if det == "IT":
                 importOptions("$STDIGIALGORITHMSROOT/options/itDigi.opts")
+                #importOptions("$STDIGIALGORITHMSROOT/python/itDigi.py")
                 #MCITDepositCreator.DepChargeTool =  " SiGeantDepositedCharge"
             elif det == "TT":
                 importOptions("$STDIGIALGORITHMSROOT/options/ttDigi.opts")
+                #importOptions("$STDIGIALGORITHMSROOT/python/ttDigi.py")
             elif det == "UT":
-                importOptions("$STDIGIALGORITHMSROOT/options/utDigi.opts")
+                #importOptions("$STDIGIALGORITHMSROOT/options/utDigi.opts")
+                importOptions("$STDIGIALGORITHMSROOT/python/utDigi.py")
             else:
                 raise RuntimeError("Unknown ST detector '%s'"%det)
 
