@@ -8,6 +8,14 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2013-12-10 - Cédric Potterat
+  - Adding:
+    . StdJets.py
+    . StdParticleFlow.py
+    . StandardJets.py
+  - Modifying:
+    . StandardBasic.py (Adding StandardJets.py)
+
 !========================= CommonParticles v8r16 2013-10-29 =========================
 
 ! 2013-10-25 - Chris Jones
