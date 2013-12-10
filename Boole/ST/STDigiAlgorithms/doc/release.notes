@@ -4,6 +4,7 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+!========================= STDigiAlgorithms v2r5 2013-12-10 =========================
 ! 2013-12-03 - Jianchun Wang
  - Translate utDigi.opts to utDigi.py
 
