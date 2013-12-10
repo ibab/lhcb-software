@@ -4,6 +4,7 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrAlgorithms v1r8 2013-12-10 =========================
 ! 2013-12-01 - Michel De Cian
  - Replace all 'Pat' track histories with 'Pr' track histories, fix uninitialized pointers in various PrClasses.
 
