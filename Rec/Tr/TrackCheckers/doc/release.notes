@@ -4,7 +4,7 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
-
+!========================= TrackCheckers v4r19 2013-12-10 =========================
 ! 2013-10-29 - Panagiotis Tsopelas
 ! - Fixed eta range in TrackIPResolutionChecker
 
