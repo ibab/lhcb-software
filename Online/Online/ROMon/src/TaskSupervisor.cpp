@@ -266,7 +266,7 @@ void NodeTaskMon::updateTaskInfo(const char* ptr, size_t /* len */) {
     if ( ::strcmp(cmd.c_str(),"init")==0 ) {
       xml << "\t\t<Boot time=\"" << pr.start << "\"/>" << endl;
     }
-    if ( cmd.substr(0,6)=="PVSS00" )  {
+    if ( cmd.substr(0,6)=="PVSS00" || cmd.substr(0,3)=="WCC" )  {
       pnam = _P::projectName(pr.cmd);
       if ( !pnam.empty() ) {
         pvss[pnam].name=pnam;
