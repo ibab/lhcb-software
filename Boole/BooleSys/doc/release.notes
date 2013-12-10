@@ -10,6 +10,7 @@ This version uses projects LCGCMT 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4
 - Configuration Changes
    . Added a line for the UT in Boole/Configuration.py 
    . Translate utDigi.opts to utDigi.py (STDigiAlgorithms v2r5)
+   . Added outputLocation property to FTRawBankEncoder (FTDAQ v1r4)
 
 - New functionality
   . Implemented direct and reflected light pulse in the FT DepositCreator. This
@@ -25,8 +26,15 @@ This version uses projects LCGCMT 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4
   . Revise UT signal pulse shape and crosstalk (STDigiAlgorithms v2r5).
 
 - New tuning
+  . Modified FTDeposit structure, from map<MCHit,double energy> to a structure
+    with many containers with MCHit, energy, and arrival time to SiPM for both
+    the direct and reflected light pulse. FTDigit is modified accordingly to 
+    store the FTDeposit pointers used (FTEvent v1r5)
+
+- Speed improvements
   . Added local variable in detector element functions pointToChannel, 
-    channelToPoint (VPDigitization v1r2)
+    channelToPoint (VPDigitization v1r2, VPDet v2r5)
+  . Speed improvements in clustering (VPAlgorithms v4r2)
 
 - Packaging changes
   . Remove OldVPxxx algorithms (VPDigitization v1r2)
@@ -42,7 +50,8 @@ This version uses projects LCGCMT 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4
      - boole-upgrade-muon_nom1
    . Updated upgrade tests to new DB tags after UT changes in DB.
    . Add exclusion for memory change warnings from BooleInit
-   . Updated boole-upgrade-baseline-{,25ns,-ut} references
+   . Skip warnings about 3*sigma changes in memory use in QMTests exclusions file
+     LHCbExclusions.py (GaudiConf v18r0)
 
 </PRE><H1><A NAME=v26r9>2013-10-25 Boole v26r9</A></H1><PRE>
 This version uses projects LCGCMT 65a, Gaudi v23r10, LHCb v36r3, Lbcom v14r3
