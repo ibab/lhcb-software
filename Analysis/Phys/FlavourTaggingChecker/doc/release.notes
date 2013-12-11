@@ -5,6 +5,9 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+! 2013-12-11 - Riccardo Cenci
+ - fixed include in BTaggingAnalysis.cpp
+
 ! 2013-12-10 - Riccardo Cenci
  - BTaggingAnalysis.cpp,  added extra info useful for CharmTagger running offline
  - cmake and cmt config updated

@@ -36,7 +36,7 @@
 
 #include "TrackInterfaces/ITrackManipulator.h"
 
-#include "src/ITaggingUtils.h"
+#include "FlavourTagging/ITaggingUtils.h"
 
 // from local
 #include "ITaggingUtilsChecker.h"
