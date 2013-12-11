@@ -17,7 +17,7 @@
 #include <TROOT.h>
 
 // from local
-#include "ITaggingUtils.h"
+#include "FlavourTagging/ITaggingUtils.h"
 #include "INNetTool.h"
 #include <list>
 #include <utility>

@@ -33,7 +33,7 @@
 
 // local
 #include "ICombineTaggersTool.h"
-#include "ITaggingUtils.h"
+#include "FlavourTagging/ITaggingUtils.h"
 #include "MultiplePersonalityCall.h"
 #include "TaggingHelpers.h"
 

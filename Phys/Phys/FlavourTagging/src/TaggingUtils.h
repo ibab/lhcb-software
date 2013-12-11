@@ -10,7 +10,7 @@ class IDistanceCalculator;
 class IPVReFitter;
 class IDVAlgorithm;
 
-#include "ITaggingUtils.h"
+#include "FlavourTagging/ITaggingUtils.h"
 #include "MultiplePersonalityCall.h"
 
 #include "Kernel/IParticleDescendants.h"

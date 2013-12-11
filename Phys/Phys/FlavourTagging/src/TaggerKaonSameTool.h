@@ -14,7 +14,7 @@
 // from local
 #include "INNetTool.h"
 #include "Kernel/IParticleDescendants.h"
-#include "ITaggingUtils.h"
+#include "FlavourTagging/ITaggingUtils.h"
 
 /** @class TaggerKaonSameTool TaggerKaonSameTool.h
  *

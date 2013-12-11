@@ -13,7 +13,7 @@
 #include <TROOT.h>
 
 // from local
-#include "ITaggingUtils.h"
+#include "FlavourTagging/ITaggingUtils.h"
 #include "Kernel/IParticleDescendants.h"
 #include "INNetTool.h"
 #include <list>

@@ -42,7 +42,7 @@
 #include <string>
 
 
-#include "ITaggingUtils.h"
+#include "FlavourTagging/ITaggingUtils.h"
 #include "INNetTool.h"
 
 

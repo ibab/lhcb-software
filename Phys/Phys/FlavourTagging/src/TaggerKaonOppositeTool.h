@@ -15,7 +15,7 @@
 // from local
 #include "INNetTool.h"
 #include "Kernel/IParticleDescendants.h"
-#include "ITaggingUtils.h"
+#include "FlavourTagging/ITaggingUtils.h"
 #include <list>
 #include <utility>
 #include <string>

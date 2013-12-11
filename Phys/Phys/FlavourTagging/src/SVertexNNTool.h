@@ -6,7 +6,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
-#include "ITaggingUtils.h"
+#include "FlavourTagging/ITaggingUtils.h"
 
 #include "Kernel/IVertexFit.h"
 #include "Kernel/ISecondaryVertexTool.h"   // Interface

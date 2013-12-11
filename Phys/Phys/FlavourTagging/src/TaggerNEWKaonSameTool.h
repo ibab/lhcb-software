@@ -13,7 +13,7 @@
 // from local
 //#include "ITMVANNetTool.h"
 #include "Kernel/IParticleDescendants.h"
-#include "ITaggingUtils.h"
+#include "FlavourTagging/ITaggingUtils.h"
 
 #include <tr1/array>
 

@@ -6,6 +6,10 @@
 !                                               ---> Stefania Vecchi (2013)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2013-12-11 - Riccardo Cenci
+ - Created directory FlavourTagging for public headers, added ITaggingUtils
+ - fixed cmt and cmake configuration 
+
 ! 2013-12-10 - Riccardo Cenci
  - Consolidated functions in TaggerUtils.cpp used also in FlavourTaggingChecker package
  - cmake and cmt config updated

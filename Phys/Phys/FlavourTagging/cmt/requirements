@@ -39,7 +39,7 @@ library          FlavourTagging    ../src/*.cpp
 apply_pattern component_library library=FlavourTagging
 
 # =============== own includes ===============================================
-apply_pattern install_more_includes  more=src
+apply_pattern install_more_includes  more=FlavourTagging
 
 #============================================================================
 apply_pattern install_python_modules

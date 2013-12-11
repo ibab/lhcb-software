@@ -9,7 +9,7 @@
 #include "Event/ProtoParticle.h"
 #include "Kernel/IVertexFit.h"
 #include "Kernel/ISecondaryVertexTool.h" // Interface
-#include "ITaggingUtils.h"
+#include "FlavourTagging/ITaggingUtils.h"
 #include <string>
 
 #include "MultiplePersonalityCall.h"
