@@ -3,6 +3,10 @@
 ! Responsible : Rob Lambert, Patrick Koppenburg & The WGs
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
+
+! 2013-12-11 - Alex Shires
+ - TupleToolBremInfo - add the HasBremAdded flag (the BremMultiplicity is not correct on mDSTs)
+
 ! 2013-12-10 - Stefania Vecchi
  - TupleToolTagging: add info on the chisquare of the vertex fit B+particle
 

@@ -79,7 +79,19 @@ StatusCode TupleToolBremInfo::fill(const Particle*,
   LHCb::CaloMomentum brem =
     m_adder->bremMomentum( P, Gaudi::Utils::toString(P->particleID().pid()) );
 
+
+    if ( msgLevel(MSG::VERBOSE) )
+    { // https://savannah.cern.ch/bugs/?92524
+      verbose() << "Multi : " << brem.multiplicity() << endmsg ;
+      verbose() << " Brem P : " << brem.momentum() << endmsg ;
+      verbose() << " Origin : " << brem.referencePoint() << endmsg ;
+    }
+
   bool filltuple = true;
+  //brem info from the particle (from creation)
+  filltuple &= tuple->column( prefix+"_HasBremAdded"    , P->info(LHCb::Particle::HasBremAdded,0.)==1) ;
+  //brem info from rerunning the BremAdder, looking at the photons
+  //This is not correct when running on an mDST - you look at a subset of the total photons in the event.
   filltuple &= tuple->column( prefix+"_BremMultiplicity", brem.multiplicity() );
   filltuple &= tuple->column( prefix+"_BremP"           , brem.momentum());
   filltuple &= tuple->column( prefix+"_BremOrigin"      , brem.referencePoint());
