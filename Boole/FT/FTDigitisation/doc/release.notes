@@ -7,6 +7,10 @@
 !========================= FTDigitisation v1r7 2013-12-10 =========================
 
 ! 2013-12-12 Jacco de Vries
+ - Forgot to change some values in previous commit, fixed now
+ - Added noise cluster plots
+
+! 2013-12-12 Jacco de Vries
  - Removed some printouts in FTNoiseCreator
  - Edited the plots in MCFTDepositCreator
  - Made FTClusterCreator cluster cuts more intuitive (> --> >=) and changed values accordingly
