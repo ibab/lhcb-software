@@ -42,10 +42,10 @@ FTClusterCreator::FTClusterCreator( const std::string& name,
   declareProperty("InputLocation" ,     m_inputLocation     = LHCb::MCFTDigitLocation::Default, "Path to input MCDigits");
   declareProperty("OutputLocation" ,    m_outputLocation    = LHCb::FTClusterLocation::Default, "Path to output Clusters");
   declareProperty("ADCThreshold" ,      m_adcThreshold      = 1 , "Minimal ADC Count to be added in cluster");
-  declareProperty("ClusterMinWidth" ,   m_clusterMinWidth   = 1 , "Minimal allowed width for clusters");
-  declareProperty("ClusterMaxWidth" ,   m_clusterMaxWidth   = 8 , "Maximal allowed width for clusters");
-  declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 8 , "Minimal charge to keep cluster ~4 p.e.");
-  declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 5 , "Minimal ADC for cluster peaks, ~2.5 pe.");
+  declareProperty("ClusterMinWidth" ,   m_clusterMinWidth   = 2 , "Minimal allowed width for clusters");
+  declareProperty("ClusterMaxWidth" ,   m_clusterMaxWidth   = 9 , "Maximal allowed width for clusters");
+  declareProperty("ClusterMinCharge" ,  m_clusterMinCharge  = 9 , "Minimal charge to keep cluster ~4 p.e.");
+  declareProperty("ClusterMinADCPeak" , m_clusterMinADCPeak = 6 , "Minimal ADC for cluster peaks, ~2.5 pe.");
 
 
   m_nberOfLostHitFromMap = 0;
@@ -152,7 +152,7 @@ StatusCode FTClusterCreator::execute() {
     MCFTDigit* seedDigit = *seedDigitIter;
 
     if(seedDigit->adcCount() > m_adcThreshold){ // ADC count in  digit is over threshold : start cluster
-      bool hasSeed = seedDigit->adcCount() > m_clusterMinADCPeak;
+      bool hasSeed = seedDigit->adcCount() >= m_clusterMinADCPeak;
       // vector of ADC count of each cell from the cluster
       std::vector<int> clusterADCDistribution;
       std::vector<const LHCb::MCHit*> clusterHitDistribution;
@@ -162,6 +162,7 @@ StatusCode FTClusterCreator::execute() {
 
       // map of contributing MCParticles with their relative energy deposit
       std::map< const LHCb::MCParticle*, double> mcContributionMap;
+      std::map< const LHCb::MCHit*, double> mcHitContributionMap; // Jacco
 
 
 
@@ -184,7 +185,7 @@ StatusCode FTClusterCreator::execute() {
         if ( msgLevel( MSG::DEBUG) ) {
           debug() <<"+Add to Cluster : "<<lastDigit->channelID()<<" (ADC = "<<lastDigit->adcCount() <<" )"<< endmsg;
         }
-        if ( lastDigit->adcCount() > m_clusterMinADCPeak ) hasSeed = true;
+        if ( lastDigit->adcCount() >= m_clusterMinADCPeak ) hasSeed = true;
     
 	      const MCFTDeposit* mcDeposit = lastDigit->deposit();
         if( mcDeposit != 0 )
@@ -197,6 +198,7 @@ StatusCode FTClusterCreator::execute() {
           for (unsigned int idx = 0; idx<mcDeposit->mcHitVec().size(); ++idx) {
             totalEnergyFromMC += mcDeposit->energyVec()[idx]; // only direct pulse energy is stored!!! TO BE UPDATED
             mcContributionMap[mcDeposit->mcHitVec()[idx]->mcParticle()] += mcDeposit->energyVec()[idx];// only direct pulse energy is stored!!! TO BE UPDATED
+            mcHitContributionMap[mcDeposit->mcHitVec()[idx]] += mcDeposit->energyVec()[idx]; //Jacco
             clusterHitDistribution.push_back(mcDeposit->mcHitVec()[idx]);
           }
         }
@@ -204,7 +206,7 @@ StatusCode FTClusterCreator::execute() {
 
       }while((lastDigitIter != mcDigitsCont->end()) 
              && keepAdding(lastDigitIter)
-             && (clusterADCDistribution.size()<m_clusterMaxWidth));
+             && (clusterADCDistribution.size()<=m_clusterMaxWidth));
       
 
       /** Compute total ADC counts and cluster barycenter position in ChannelID unit
@@ -240,9 +242,9 @@ StatusCode FTClusterCreator::execute() {
       // - total ADC charge of the cluster is over threshold and
       // - A seed has been found and
       // - number of cells above the minimal allowed value      
-      if( ( totalCharge > m_clusterMinCharge) &&
+      if( ( totalCharge >= m_clusterMinCharge) &&
           hasSeed &&
-          (clusterADCDistribution.size() > m_clusterMinWidth) ) {
+          (clusterADCDistribution.size() >= m_clusterMinWidth) ) {
 
         if(ReferenceSiPMID == 0 ) ReferenceSiPMID = (*seedDigitIter)->channelID().sipmId();
 
@@ -288,9 +290,9 @@ StatusCode FTClusterCreator::execute() {
 
         // draw cluster channelID
         plot(newCluster->channelID().sipmId(), "ClusSiPMID", "Cluster SiPMID; Cluster SiPMID" , 
-             0. , 10000. ,10000);
+             0. , 96. ,96);
         plot(newCluster->channelID(), "ClusChannelID", "Cluster ChannelID; Cluster ChannelID" , 
-             0. , 1000000. ,10000);
+             0. , 589824. ,4608);
         // draw cluster fractional part
         plot(newCluster->fraction(), "ClusFraction", 
              "Cluster Fraction Part Distribution;Cluster Fractional part; Nber of events" , 0 , 1);
@@ -358,6 +360,23 @@ StatusCode FTClusterCreator::execute() {
           //           }
         }
 
+        //[Jacco]
+        if( mcHitContributionMap.size() > 0 ) {
+          double largestDeposit = 0;
+          const LHCb::MCHit* largestHit = 0; 
+          for(std::map<const LHCb::MCHit*,double>::iterator i = mcHitContributionMap.begin(); i != mcHitContributionMap.end(); ++i) {
+            if(largestDeposit < (i->second)) {
+              largestDeposit = (i->second);
+              largestHit = (i->first);
+            }
+          }
+          plot( largestHit -> midPoint().x(), "Cluster_x_position", "Cluster x position (from MCHit) ; x [mm] ; Number of clusters",-3500,3500,200 ); 
+          plot( largestHit -> midPoint().y(), "Cluster_y_position", "Cluster y position (from MCHit) ; y [mm] ; Number of clusters",-3000,3000,200 ); 
+          plot2D( largestHit -> midPoint().x(), largestHit -> midPoint().y(), 
+              "Cluster_xy_position", "Cluster xy position ; x [mm]; y[mm]",
+              -3500,3500,200, -3000,3000,200);
+        }
+        //[/Jacco]
 
 
       }

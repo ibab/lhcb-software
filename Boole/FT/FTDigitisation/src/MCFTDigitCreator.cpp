@@ -144,7 +144,7 @@ StatusCode MCFTDigitCreator::execute() {
       debug() <<"Channel ="<<mcDeposit->channelID()<< " : " << endmsg;
     }
 
-    plot((double)mcDeposit->channelID(), "FiredChannelID","Fired Channel; ChannelID" , 0. , 800000.);
+    plot((double)mcDeposit->channelID(), "FiredChannelID","Fired Channel; ChannelID" , 0. , 589824. , 4608);
     plot((double)mcDeposit->mcHitVec().size(), "HitPerChannel",
          "Number of Hits per Channel;Number of Hits per Channel; Number of channels" , 0. , 10., 10);
 

@@ -94,7 +94,7 @@ StatusCode FTNoiseCreator::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "[FTNoiseCreator] ==> Execute NEW EVENT" << endmsg;
   
-  info() << " -- START NEW EVENT" << endmsg;
+  debug() << " -- START NEW EVENT" << endmsg;
 
   // retrieve FTDigits
   MCFTDigits* mcDigitsCont = get<MCFTDigits>(m_inputLocation);
@@ -109,7 +109,7 @@ StatusCode FTNoiseCreator::execute() {
     mcHitDigits.push_back( mcDigit );
     mcHitChannels.push_back( mcDigit -> channelID() );
   }
-  info() << "size of mcHitChannels: " << mcHitChannels.size() << endmsg;
+  debug() << "size of mcHitChannels: " << mcHitChannels.size() << endmsg;
 
   // Set geometry
   int Nlayers = 4*3;  // layers * stations
@@ -144,7 +144,7 @@ StatusCode FTNoiseCreator::execute() {
   // Calculate number of VISIBLE thermal noise hits, due to cross-talk:
   //int minPEforCluster = int( float(m_clusterMinCharge) / m_sipmGain );
   int NvisibleThermalNoise = int( NthermalNoise * pow(m_crossTalkProbability, 0) ); // ct^0 = generate all pulses
-  info() << "[THERMAL] NthermalNoise = " << NvisibleThermalNoise << endmsg;
+  debug() << "[THERMAL] NthermalNoise = " << NvisibleThermalNoise << endmsg;
   plot(NvisibleThermalNoise, "NvisibleThermalNoiseHits", "NvisibleThermalNoiseHits; NvisibleThermalNoiseHits", 0. , 1000000. ,10000);
 
 
@@ -195,7 +195,7 @@ StatusCode FTNoiseCreator::execute() {
     }
   }
 
-  info() << "[THERMAL] Created: " << totalThermalCreated << ", Appended: " << totalThermalAppended << ", Added to MCHit: " << totalThermalInMCHit << endmsg;
+  debug() << "[THERMAL] Created: " << totalThermalCreated << ", Appended: " << totalThermalAppended << ", Added to MCHit: " << totalThermalInMCHit << endmsg;
 
 
 
@@ -244,7 +244,7 @@ StatusCode FTNoiseCreator::execute() {
 
   // Determine number of VISIBLE hit afterpulses due to cross-talk
   int NvisibleHitAfterpulses = int( (NhitAfterpulses+NhitAfterpulses_AP) * pow(m_crossTalkProbability, 0) ); // ct^0 = do all
-  info() << "[HIT AFTERPULSING] N channel hits for afterpulses = " << NvisibleHitAfterpulses << " (of which "
+  debug() << "[HIT AFTERPULSING] N channel hits for afterpulses = " << NvisibleHitAfterpulses << " (of which "
     << float(NhitAfterpulses_AP) / float(NhitAfterpulses + NhitAfterpulses_AP) * 100. << " % afterpulses)" << endmsg;
   plot(NvisibleHitAfterpulses, "NvisibleHitAfterpulses", "NvisibleHitAfterpulses; NvisibleHitAfterpulses", 0. , 1000000. ,10000);
 
@@ -369,7 +369,7 @@ StatusCode FTNoiseCreator::execute() {
     }
   }
 
-  info() << "[HIT AFTERPULSING] Created: " << totalAPCreated << ", Appended: " << totalAPAppended << ", Added to MCHit: " << totalAPInMCHit << endmsg;
+  debug() << "[HIT AFTERPULSING] Created: " << totalAPCreated << ", Appended: " << totalAPAppended << ", Added to MCHit: " << totalAPInMCHit << endmsg;
 
 
 
@@ -387,7 +387,8 @@ StatusCode FTNoiseCreator::execute() {
   int addFailed = 0;
   for (unsigned int i=0; i<noiseChannels.size(); i++) {
     plot(noiseADCs[i]    , "noiseADCcount", "Noise ADC count; Noise ADC count", 0. , 30. ,30);
-    plot(noiseChannels[i], "noiseChannels", "Noise channelID; Noise channelID", 0., 800000., 800000);
+    plot(noiseChannels[i], "noiseChannels", "Noise channelID; Noise channelID", 0., 589824., 589824);
+    plot(noiseChannels[i], "noiseChannelsPerSipm", "Noise channelID; Noise channelID", 0., 589824., 4608);
 
     //const std::map< const LHCb::MCHit*, double > MCHitMapDummy;
     MCFTDeposit* dummyDeposit = 0;

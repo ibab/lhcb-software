@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 !========================= FTDigitisation v1r7 2013-12-10 =========================
+
+! 2013-12-12 Jacco de Vries
+ - Removed some printouts in FTNoiseCreator
+ - Edited the plots in MCFTDepositCreator
+ - Made FTClusterCreator cluster cuts more intuitive (> --> >=) and changed values accordingly
+
 ! 2013-12-08 Jacco de Vries
  - removed escape character '\%' that gives a warning in cmake
 
