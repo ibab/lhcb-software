@@ -158,7 +158,7 @@ def useDBTagsFromData (
         logger.info ( ' DaVinci/CondDBtag : %s ' % daVinci.CondDBtag  )
 
     return tags
-    
+
 
 # =============================================================================
 ## get DB-tags from the data
