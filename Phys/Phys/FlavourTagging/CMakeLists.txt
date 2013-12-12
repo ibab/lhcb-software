@@ -14,7 +14,7 @@ gaudi_depends_on_subdirs(Calo/CaloInterfaces
 
 find_package(ROOT COMPONENTS MLP Graf Hist Matrix TreePlayer Gpad Graf3d TMVA)
 
-gaudi_install_includes(FlavourTagging)
+gaudi_install_headers(FlavourTagging)
 
 gaudi_add_module(FlavourTagging
                  src/*.cpp
