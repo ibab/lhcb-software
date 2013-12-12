@@ -73,6 +73,19 @@ def _lfn_pfn_strip_ ( file_name ) :
     
     return file_name
 
+
+## guess about the main DDB-tag from the list 
+def dddb_tag ( tags ) :
+    """
+    Guess about the main DDB-tag from the list
+    """
+    if isinstance ( tags , str ) : return tags
+    #
+    for t in tags :
+        if 0 == t.find('dddb-') or 0 == t.find('DDDB-') : return t
+    #
+    return tags[0] 
+    
 # =============================================================================
 def useDBTagsFromData (
     file_name      ,   ## the file name 
@@ -101,20 +114,48 @@ def useDBTagsFromData (
         logger.warning ( 'No tags are extracted from the file %s' % file_name )
         return tags  
     #
-    logger.info    ( 'Extractes tags from DATA are : %s' % tags         )
+    logger.info    ( 'Extracted tags from DATA are : %s' % tags         )
     
     if not daVinci :
         from Configurables import DaVinci
-        daVinci = DaVinci () 
-    if tags.has_key ( 'DDDB'    ) and tags ['DDDB'   ] : 
-        daVinci.DDDBtag   = tags ['DDDB'  ]                 
-        logger.info ( ' DDDBtag   : %s ' % daVinci.DDDBtag    )
-    if tags.has_key ( 'CONDDB'  ) and tags ['CONDDB' ] : 
-        daVinci.CondDBtag = tags ['CONDDB']
-        logger.info ( ' CondDBtag : %s ' % daVinci.CondDBtag  )
+        daVinci = DaVinci ()
+        
+    if tags.has_key ( 'DDDB'    ) and tags ['DDDB'   ] :
+
+        daVinci.DDDBtag   = dddb_tag ( tags ['DDDB'  ] )
+        logger.info ( ' DaVinci/DDDBtag   : %s ' % daVinci.DDDBtag    )
+
+        if isinstance ( tags['DDDB'] , list ) and  1 < len ( tags['DDDB'] ) :
+            from Configurables import CondDB  
+            db = CondDB()
+            db.LocalTags['DDDB'] = tags['DDDB']
+            logger.info ( " ConDB/LocalTags['DDDB'] : %s " % db.LocalTags['DDDB'] )
+            
+    if tags.has_key ( 'CONDDB'  ) and tags ['CONDDB' ] :
+
+        if isinstance ( tags ['CONDDB'] , str ) :
+            daVinci.CondDBtag = tags ['CONDDB']
+        else :
+            daVinci.CondDBtag = tags ['CONDDB'][0]
+            from Configurables import CondDB  
+            db = CondDB()
+            db.LocalTags['CONDDB'] = tags['CONDDB']
+            logger.info ( " ConDB/LocalTags['CONDDB'] : %s " % db.LocalTags['CONDDB'] )
+
+        logger.info ( ' DaVinci/CondDBtag : %s ' % daVinci.CondDBtag  )
+        
     if tags.has_key ( 'SIMCOND' ) and tags ['SIMCOND'] :
-        daVinci.CondDBtag = tags ['SIMCOND']
-        logger.info ( ' CondDBtag : %s ' % daVinci.CondDBtag  )
+        
+        if isinstance ( tags ['SIMCOND'] , str ) :
+            daVinci.CondDBtag = tags ['SIMCOND']
+        else :
+            daVinci.CondDBtag = tags ['SIMCOND'][0]
+            from Configurables import CondDB  
+            db = CondDB()
+            db.LocalTags['CONDDB'] = tags['SIMCOND']
+            logger.info ( " CondDB/LocalTags['SIMCOND'] : %s " % db.LocalTags['SIMCOND'] )
+        
+        logger.info ( ' DaVinci/CondDBtag : %s ' % daVinci.CondDBtag  )
 
     return tags
     

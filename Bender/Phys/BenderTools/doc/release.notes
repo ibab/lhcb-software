@@ -5,6 +5,14 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+
+! 2013-12-12 - Vanya Belyaev
+
+ - allow list of tags to be used  in GetDBTags and all relaetd scripts.
+   In particular it is very important for upgrade simulation
+   Many thanks for Frederic Machefert and Thomas Ruf for kind help.
+
+
 ! ==================== Phys/BenderTools v22r10   2013-11-25 ====================
 
 ! 2013-11-25 - Vanya Belyaev
