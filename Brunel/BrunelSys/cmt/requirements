@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v44r8p1 Rec
+use Brunel v44r9 Rec
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
