@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+! 2013-12-13 - Paul Szczypka
+ - Add itDigi.py and ttDigi.py
+
 !========================= STDigiAlgorithms v2r5 2013-12-10 =========================
 ! 2013-12-03 - Jianchun Wang
  - Translate utDigi.opts to utDigi.py
