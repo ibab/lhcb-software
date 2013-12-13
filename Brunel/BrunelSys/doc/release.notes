@@ -3,6 +3,86 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v44r9>2013-12-16 Brunel v44r9</A></H1><PRE>
+This version uses projects LCG 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4,
+ Rec v15r4 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Configuration changes
+  . Major change: RawEvent decoders are now configured via DecoderDB. RawEvent
+    writing delegated to DSTConf, juggling to the RawEventJuggler, reconfiguring
+    to DecodeRawData() (Configuration.py, LumiAlgs v9r0, RichRecSys v5r0,
+    TrackSys v8r0, DAQSys v7r2, RawEventCompat v1r4, GaudiConf v18r0)
+  . New options added to over-ride default settings of above change:
+    o Brunel().SplitRawEventInput (for reconfiguring decoders)
+    o Brunel().SplitRawEventOutput (for juggling before writing)
+  . Upgrade: Move matching algorithm before downstream in RecoUpgradeTracking.py
+    (TrackSys v8r0)
+
+- New tuning 
+  . Make "cond-20131128" the default LHCBCOND tag for 2012 and 2013 data
+    (DDDB v1r67)
+
+- New tuning (Upgrade only)
+  . Implemented the new momentum dependent windows (PrAlgorithms v1r8)
+  . Changed number of hits from 8 to 4, pick up LastMeasurement state
+    (PrVeloUT v1r3)
+  . Removed unused variables, changed default values (PatPixel v1r4)
+
+- Persistency changes
+  . Add support for data federations (try out all PFN replicas in file catalog in
+    turn in case of file open failures) (GaudiUtils v4r7)
+  . Add output for per-event timing of execute(). Controlled by ChronoStatSvc
+    property "PerEventFile". Default is empty string, do nothing
+    (GaudiCommonSvc v2r2)
+  . Add property to RootHistCnv::RFileCnv that allows ROOT compression settings
+    to be defined (RootHistCnv v11r3)
+  . Upgrade: Replace all 'Pat' track histories with 'Pr' track histories
+    (PrAlgorithms v1r8, PrVeloUT v1r3, RichRecBase v4r17, TrackUtils v1r3,
+     TrackEvent v5r23)
+
+- Performance optimisation
+  . Avoid repeated calculation of index station * m_NRegion + region (MuonID v9r8)
+  . Added possibility for in/output in local coordinates to channelToPoint and
+    pointToChannel functions (VPDet v2r5, PrMCTools v1r8)
+
+- Performance optimisation (Upgrade only)
+  . Put some speed improvements in PrSeedingXLayers (PrAlgorithms v1r8)
+  . Speed improvements in clustering (VPAlgorithms v4r2)
+
+- Bug fixes
+  . Fixed bug when making R cluster VELO tracks crossing sectors
+    (FastVelo v1r14, also in v44r8p1 branch release)
+  . Fixed inconsistency PatFwdTool.cpp in fitStereoCandidate where a x layer 
+	  was marked as a stereo layer
+    (PatAlgorithms v4r29, also in v44r8p1 branch release)
+  . Fix in RecMoniConf, was crashing when expertHistos were enabled and
+    CheckEnabled was false (RecConf v2r15)
+  . Fixed eta range in TrackIPResolutionChecker (TrackCheckers v4r19)
+   
+- Bug fixes (Upgrade only)
+  . No SPD/Prs property is only set if no user RecoSequence is defined 
+    or if "PROTO" is in user RecoSequence (Configuration.py)
+  . Fixes for the No M1 setup: a few bugs to correctly pick the station
+    index and set FindQuality to false because Chi2MuIDTool is not yet fixed to
+    no M1 case (MuonID v9r8)
+  . Fix uninitialized pointers in various Pr Classes (PrAlgorithms v1r8)
+  . Fix initialize/finalize memory leak in PrHitManager (PrKernel v1r3)
+  . Fix uninitialized pointers, change track history to PrVeloUT (PrVeloUT v1r3)
+
+- Changes to QMTests
+  . Updated full Upgrade test suite and removed old tests.
+  . Add test and options for reprocessing of 2013 pA data without GECs. Includes
+    event that was failing prior to FastVelo fix (brunel.repro-2013pa)
+  . Added tests of DecoderDB use cases, mainly in existing tests but also new
+    tests splittostrip17rawevent and repro2012recombine
+  . brunel-mc11a-xdst now also writes out xdst
+
+- Changes to example options
+  . Remove explicit setting of DATAFILEs, pick them up from PRConfig TestFileDB
+    Requires PRConfig > v1r6p3
+
+- Updated valgrind.job to use gaudirun.py directly
+
 </PRE><H1><A NAME=v44r8p1>2013-11-21 Brunel v44r8p1</A></H1><PRE>
 This version uses projects LCG 66, Gaudi v23r10, LHCb v36r3, Lbcom v14r3,
  Rec v15r3 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
