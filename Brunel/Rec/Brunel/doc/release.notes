@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v44r9>2013-12-16 Brunel v44r9</A></H1><PRE>
+This version uses projects LCG 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4,
+ Rec v15r4 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
 - Changes to Configuration.py
   . No SPD/Prs property is only set if no user RecoSequence is defined 
     or if "PROTO" is in user RecoSequence
@@ -12,7 +16,6 @@ Purpose: LHCb reconstruction program
   . Writing delegated to DSTConf, juggling to the RawEventJuggler,
     reconfiguring to DecodeRawData()
   . Decoders now found via the DecoderDB
-
 
 - Changes to QMTests
   . Updated full Upgrade test suite and removed old tests.
@@ -35,14 +38,16 @@ Purpose: LHCb reconstruction program
   . Remove explicit setting of DATAFILEs, pick them up from PRConfig TestFileDB
     Requires PRConfig > v1r6p3
 
-- Changes to references to reflect changes since v44r8
-  . Fixed bug when making R cluster VELO tracks crossing sectors (FastVelo)
+- Changes to references to reflect changes since v44r8p1 (branch release)
   . Changed UT number of hits from 8 to 4 and use LastMeasurement state (PrVeloUT)
   . Some more fixes to run with no M1 (MuonID)
-  . Fix inconsistency in PatFwdTool::fitStereoCandidate, where a X layer was
-    marked as a stereo layer (PatAlgorithms)
   . Follow DecoderDB development
   . Move matching algorithm before downstream in RecoUpgradeTracking.py (TrackSys)
+
+- Changes to references to reflect changes since v44r8
+  . Fixed bug when making R cluster VELO tracks crossing sectors (FastVelo)
+  . Fix inconsistency in PatFwdTool::fitStereoCandidate, where a X layer was
+    marked as a stereo layer (PatAlgorithms)
 
 </PRE><H1><A NAME=v44r8>2013-10-25 Brunel v44r8</A></H1><PRE>
 This version uses projects LCG 66, Gaudi v23r10, LHCb v36r3, Lbcom v14r3,
