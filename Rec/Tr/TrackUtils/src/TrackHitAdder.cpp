@@ -17,7 +17,6 @@
 #include "TfKernel/IITHitCreator.h"
 #include "TfKernel/IOTHitCreator.h"
 #include "TfKernel/ITTHitCreator.h"
-#include "TfKernel/IUTHitCreator.h"
 #include "TrackInterfaces/ITrackHitCollector.h"
 #include "LHCbMath/GeomFun.h"
 #include "LHCbMath/Line.h"
@@ -49,7 +48,6 @@ private:
 private:
   ToolHandle<Tf::IITHitCreator> m_ithitcreator ;
   ToolHandle<Tf::ITTHitCreator> m_tthitcreator ;
-  ToolHandle<Tf::IUTHitCreator> m_uthitcreator ;
   ToolHandle<Tf::IOTHitCreator> m_othitcreator ;
   ToolHandle<ITrackHitCollector> m_trackhitcollector ;
 
@@ -57,7 +55,6 @@ private:
   double m_maxDistOT ;
   double m_maxDistIT ;
   double m_maxDistTT ;
-  double m_maxDistUT ;
   double m_maxDistVelo ;
   double m_maxTolY ;
 } ;
@@ -70,7 +67,6 @@ TrackHitAdder::TrackHitAdder( const std::string& name,
   : GaudiHistoAlg( name , pSvcLocator ),
     m_ithitcreator("Tf::STHitCreator<Tf::IT>/ITHitCreator"),
     m_tthitcreator("Tf::STHitCreator<Tf::TT>/TTHitCreator"),
-    m_uthitcreator("Tf::STHitCreator<Tf::UT>/UTHitCreator"),
     m_othitcreator("Tf::OTHitCreator/OTHitCreator"),
     m_trackhitcollector("TrackHitCollector",this)
 {
@@ -78,7 +74,6 @@ TrackHitAdder::TrackHitAdder( const std::string& name,
   declareProperty("MaxDistOT", m_maxDistOT = 2.5 ) ;
   declareProperty("MaxDistIT", m_maxDistIT = 1.0 ) ;
   declareProperty("MaxDistTT", m_maxDistTT = 0.5 ) ;
-  declareProperty("MaxDistUT", m_maxDistUT = 0.5 ) ;
   declareProperty("MaxDistVelo", m_maxDistVelo = 0.1 ) ;
   declareProperty("MaxTolY", m_maxTolY = 10.0 ) ; 
 }
@@ -95,9 +90,6 @@ StatusCode TrackHitAdder::initialize() {
   if(!m_tthitcreator.retrieve().isSuccess()) 
     return Error("==> Failed to retrieve TT hit creator",StatusCode::FAILURE);
   
-  if(!m_uthitcreator.retrieve().isSuccess()) 
-    return Error("==> Failed to retrieve UT hit creator",StatusCode::FAILURE);
-  
   if(!m_othitcreator.retrieve().isSuccess()) 
     return Error("==> Failed to retrieve OT hit creator",StatusCode::FAILURE);
 
@@ -112,7 +104,6 @@ StatusCode TrackHitAdder::finalize()
 {
   m_ithitcreator.release() ;
   m_tthitcreator.release() ;
-  m_uthitcreator.release() ;
   m_othitcreator.release() ;
   m_trackhitcollector.release() ;
   return GaudiHistoAlg::finalize();
@@ -146,15 +137,6 @@ namespace {
   {
     typedef Tf::ITTHitCreator HitCreatorType ;
     typedef Tf::ITTHitCreator::STRegion RegionType ;
-    typedef Tf::STHit HitType ;
-    typedef Tf::STHitRange HitRangeType ;
-    enum {MaxStation=2,MaxLayer=2,MaxRegion=12} ;
-  } ;
-  
-  struct UT
-  {
-    typedef Tf::IUTHitCreator HitCreatorType ;
-    typedef Tf::IUTHitCreator::STRegion RegionType ;
     typedef Tf::STHit HitType ;
     typedef Tf::STHitRange HitRangeType ;
     enum {MaxStation=2,MaxLayer=2,MaxRegion=12} ;
@@ -302,14 +284,6 @@ StatusCode TrackHitAdder::execute()
 	std::vector<LHCb::LHCbID> ttlhcbids ;
 	addHits<TT>( tracktraj, *m_tthitcreator, m_maxDistTT, m_maxTolY, ttlhcbids) ;
 	counter("NumTTHitsAdded") += addLHCbIDs(lhcbids,ttlhcbids) ;
-      }
-
-      const unsigned int nUTHits = std::count_if(track->lhcbIDs().begin(), track->lhcbIDs().end(),
-						 bind(&LHCb::LHCbID::isUT,_1));
-      if( nUTHits>0 && m_maxDistUT > 0 ) {
-        std::vector<LHCb::LHCbID> utlhcbids ;
-        addHits<UT>( tracktraj, *m_uthitcreator, m_maxDistUT, m_maxTolY, utlhcbids) ;
-        counter("NumUTHitsAdded") += addLHCbIDs(lhcbids,utlhcbids) ;
       }
 
       if( track->hasVelo() && m_maxDistVelo > 0 ) {
