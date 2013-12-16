@@ -5,6 +5,10 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+!========================= Swimming v3r1p1 2013-12-16 =======================
+! 2013-12-16 - N. Torr
+ - Patch for releae wuth DaVinci v32r1 satck
+
 !========================= Swimming v3r1 2013-11-11 =========================
 ! 2013-10-16 - V. Gligorov
  - Update Hlt transforms to include a transform for swimming the
