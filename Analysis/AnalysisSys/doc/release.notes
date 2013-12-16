@@ -3,6 +3,10 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+! 2013-12-16 - Chris Jones
+ - Move Phys/JetAccessories to Phys project, so it can be used
+   by the Stripping.
+
 ! 2013-11-15 - Chris Jones
  - Add new package Phys/DecayTreeTupleTracking
 
