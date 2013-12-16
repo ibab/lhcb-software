@@ -57,6 +57,10 @@ use FlavourTagging              v13r3    Phys   # Stefania Vecchi
 
 #===================================================================
 
+use JetAccessories              v3r1     Phys   # Victor Coco, Cedric Potterat
+
+#===================================================================
+
 # Temporary MC stuff.
 use DaVinciMCKernel v4r4 Phys
 

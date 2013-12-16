@@ -3,6 +3,9 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+! 2013-12-16 - Chris Jones
+ - Import Phys/JetAccessories from Analysis.
+
 </PRE><H1><A NAME=v17r3>2013-10-29 Phys v17r3</A></H1><PRE>
 Development release, based on Rec v15r3, LHCb v36r3 and Gaudi v23r10.
 
