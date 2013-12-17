@@ -570,6 +570,7 @@ class Boole(LHCbConfigurableUser):
                 RichDigiSysConf().ResponseModel = "Copy"
                 RichDigiSysConf().OutputLevel = INFO
                 RichDigiSysConf().RawDataFormatVersion = 3                
+                RichDigiSysConf().UseSpillover = False
         else:
             raise RuntimeError("TAE not implemented for RICH")
             

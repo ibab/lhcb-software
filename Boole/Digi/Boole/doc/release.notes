@@ -6,6 +6,7 @@ Purpose: LHCb Digitization program
 - Configuration Changes
    . Changed import of utDigi.opts to utDigi.py
    . import ttDigi.py and itDigi.py rather than their .opts equivalents 
+   . line added to stop RichMaPmt from digitising spillover hits
 
 </PRE><H1><A NAME=v26r10>2013-12-11 Boole v26r10</A></H1><PRE>
 This version uses projects LCGCMT 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4
