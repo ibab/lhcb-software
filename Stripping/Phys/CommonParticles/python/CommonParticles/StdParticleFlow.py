@@ -28,7 +28,6 @@ algorithm = ParticleFlowConf("PF" , _MCCor = False ).PFSeq
 ## configure Data-On-Demand service 
 locations = updateDoD ( algorithm )
 
-print "########################################################",locations
 
 ## finally: define the symbol 
 StdParticleFlow = algorithm 
