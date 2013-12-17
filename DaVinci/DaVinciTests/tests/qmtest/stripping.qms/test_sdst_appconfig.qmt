@@ -4,7 +4,7 @@
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="timeout"><integer>3600</integer></argument>
 <argument name="args"><set>
-  <text>../options/Stripping/test_sdst_appconfig.py</text>
+  <text>$DAVINCITESTSROOT/tests/options/Stripping/test_sdst_appconfig.py</text>
 </set>
 </argument>
 <argument name="validator"><text>
