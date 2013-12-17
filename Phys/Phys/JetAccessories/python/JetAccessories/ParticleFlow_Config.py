@@ -3,7 +3,7 @@ __author__  = "Victor Coco <Victor.Coco@cern.ch>"
 
 from LHCbKernel.Configuration import *
 
-from Configurables import ( GaudiSequencer, TrackSelector, DelegatingTrackSelector, ParticleFlow, CellularAutomatonAlg, CaloClusterizationTool,CaloClusterCovarianceAlg,ClusterSpreadTool,ClusterCovarianceMatrixTool, CaloPhotonMatch , PhotonMatchAlg , CaloClusterMCTruth,CaloDigit2MCLinks2Table,NeutralPP2MC , PVRelatorAlg, ChargedProtoParticleMaker, FilterDesktop)
+from Configurables import ( GaudiSequencer, TrackSelector, DelegatingTrackSelector, ParticleFlow, CellularAutomatonAlg, CaloClusterizationTool,CaloClusterCovarianceAlg,ClusterSpreadTool,ClusterCovarianceMatrixTool, CaloPhotonMatch , PhotonMatchAlg , PVRelatorAlg, ChargedProtoParticleMaker, FilterDesktop)
 
 
 class ParticleFlowConf:
@@ -70,8 +70,6 @@ class ParticleFlowConf:
          self.algorithms = []
          self.setupParam(_params)
          self.setupPF()
-         if self.MC and 'NeutralHadrons' in self.InputParticles:
-             self.setupHCALMC()
 
     
     def setupTypeTrackSelector(self,tsname,selector,trackCuts):
@@ -251,24 +249,6 @@ class ParticleFlowConf:
         self.PFSeq.Members += [hcal2Track]
                 
 
-    def setupHCALMC(self):
-        caloDigitMC= CaloDigit2MCLinks2Table('CaloDigit2MCLinks2TableHCAL')
-        caloDigitMC.Inputs+=['Raw/Hcal/Digits']
-        caloDigitMC.Output = 'Relations/Raw/Hcal/Digits'
-        self.PFSeq.Members += [caloDigitMC]
-        caloClusterMC= CaloClusterMCTruth('CaloClusterMCTruthHCAL')
-        caloClusterMC.Clusters += ['Rec/Calo/HcalClusters']
-        caloClusterMC.Input = 'Relations/Raw/Hcal/Digits'
-        caloClusterMC.Output = 'Relations/Rec/Calo/HcalClusters' 
-        self.PFSeq.Members += [caloClusterMC]
-        HCALPP2MC = NeutralPP2MC('NeutralPP2MCHCAL')
-        HCALPP2MC.OutputTable = 'Relations/Rec/ProtoP/Neutrals'
-        HCALPP2MC.MCCaloTable = 'Relations/Rec/Calo/HcalClusters'
-        HCALPP2MC.InputData = ['Rec/ProtoP/PF','Rec/ProtoP/Neutrals']
-        self.PFSeq.Members += [HCALPP2MC]
-
-
-        
 
 
 # ----------------------------------------------------------------------------------

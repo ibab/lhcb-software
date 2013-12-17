@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 
+! 2013-12-17 - Cedric Potterat
+ - remove MC dependencies in ParticleFlow_Config.py
+ - default value of pvassociationMinIPChi2 put to Ture in  JetMaker_Config.py
+
 ! 2013-12-10 - Cedric Potterat
  - correct Memoryleak in PFJetMakerAlg.cpp
 
