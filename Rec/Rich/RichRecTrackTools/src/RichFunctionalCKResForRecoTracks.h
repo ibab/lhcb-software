@@ -1,4 +1,3 @@
-
 //----------------------------------------------------------------------------------------
 /** @file RichFunctionalCKResForRecoTracks.h
  *
@@ -14,6 +13,9 @@
 
 // base class
 #include "RichRecBase/RichRecHistoToolBase.h"
+#include "RichDet/DeRich1.h"
+#include "RichDet/DeRich2.h"
+#include "RichDet/DeRichPDPanel.h"
 
 // interfaces
 #include "RichRecBase/IRichCherenkovResolution.h"
@@ -103,6 +105,9 @@ namespace Rich
         return m_trExt;
       }
 
+      /// Set flags for geometry, pmt etc.
+      void setUseOfPmtFlags();
+      
     private: // data
 
       /// Pointer to RichCherenkovAngle interface
@@ -142,7 +147,18 @@ namespace Rich
 
       /// Overall factors for each radiator
       std::vector<double> m_scale;
+     /// Overall factors for Rich2 radiator for MixedPMT
+      std::vector<double> m_scaleR2Pmt;
+      
 
+      /// Possible uses of Grand Pixel for pmts
+      bool m_useOfGrandPixPmt;
+      bool m_rich2UseMixedPmt;
+      bool m_usePDWithPMT;
+      bool m_useUpgradeOptics;
+      DeRich1 * m_rich1DE;
+      DeRichPDPanel * m_aRichPDPanel;
+      double m_grandPmtPixelSizeFactor;
     };
 
   }
