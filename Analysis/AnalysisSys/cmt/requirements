@@ -1,5 +1,5 @@
 package AnalysisSys
-version v11r3
+version v11r4
 
 branches doc cmt
 
@@ -19,35 +19,35 @@ use  LoKiAlgoMC                 v9r5p2   Phys   # Vanya Belyaev
 use  LoKiGenMC                  v9r1p2   Phys   # Vanya Belyaev
 use  LoKiPhysMC                 v9r6p2   Phys   # Vanya Belyaev
 use  DaVinciAssociators         v9r5p2   Phys   # Vladimir Gligorov
-use  Particle2MCTruth           v2r5     Phys   # Chris Jones
+use  Particle2MCTruth           v2r5p1   Phys   # Chris Jones
 use  VertexFitCheck             v1r8p3   Phys   # Yuehong Xie
-use  FlavourTaggingChecker      v7r1     Phys   # Marc Grabalosa
+use  FlavourTaggingChecker      v7r2     Phys   # Marc Grabalosa
 use  ParticleMakerChecker       v1r5p1   Phys   # Chris Jones
 use  DisplVerticesMC            v1r4p5   Phys   # Victor Coco
 use  JetTagging                 v1r2     Phys   # Cedric Potterat
-use  JetAccessoriesMC		v2r4     Phys   # Victor Coco, Cedric Potterat
+use  JetAccessoriesMC		v2r5     Phys   # Victor Coco, Cedric Potterat
 use  CommonMCParticles          v1r0     Phys   # Conor Fitzpatrick
-use  IncTopoVert                v1r1     Phys   # Mathieu Perrin-Terrin
+use  IncTopoVert                v1r1p1   Phys   # Mathieu Perrin-Terrin
 
 ####################################################################
 
 use  DecayTreeTupleBase         v1r3     Phys   # Rob Lambert
-use  DecayTreeTupleReco         v1r3     Phys   
-use  DecayTreeTupleDalitz       v1r0     Phys
+use  DecayTreeTupleReco         v1r4     Phys   
+use  DecayTreeTupleDalitz       v1r1     Phys
 use  DecayTreeTupleJets         v1r1p2   Phys
 use  DecayTreeTupleMC           v1r4     Phys
 use  DecayTreeTupleTrigger      v1r1     Phys
 use  DecayTreeTupleMuonCalib    v1r2p1   Phys
 use  DecayTreeTupleTracking     v1r0     Phys
-use  DecayTreeTuple             v4r5     Phys
+use  DecayTreeTuple             v4r6     Phys
 
 ####################################################################
 
-use  HltSelChecker              v12r1p4  Hlt    # Patrick Koppenburg
+use  HltSelChecker              v12r2    Hlt    # Patrick Koppenburg
 
 ####################################################################
 
-use  AnalysisPython             v2r24    Phys
+use  AnalysisPython             v2r25    Phys
 use  PyAna                      v1r3p1   Analysis
 
 ####################################################################
@@ -72,7 +72,7 @@ use  DaVinciTrackScaling        v1r3    Phys   # Vanya Belyaev
 
 ####################################################################
 
-use  MVADictTools               v1r2    Phys   # S.Neubert
+use  MVADictTools               v1r2p1  Phys   # S.Neubert
 
 ####################################################################
 

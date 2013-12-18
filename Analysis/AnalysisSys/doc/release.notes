@@ -3,6 +3,72 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v11r4>2013-12-18 Analysis v11r4</A></H1><PRE>
+New development release, built against Phys v17r4.
+
+- Packages Updated :-
+   HltSelChecker, AnalysisPython, DecayTreeTuple, DecayTreeTupleDalitz,
+   DecayTreeTupleReco, FlavourTaggingChecker, IncTopoVert,
+   JetAccessoriesMC, MVADictTools, Particle2MCTruth
+
+- New Packages :-
+   DecayTreeTupleTracking
+
+In HltSelChecker :
+ - Adapt to change in IANSvc, Gaudi::StringKey, see task #48818
+
+In AnalysisPython :
+ - Add utf-8 coding string(PEP 0263) to python files
+ - Adjust a bit Bugg&Co family of functions 
+ - Add GetNdata for the Analysis::Formula 
+ - Add a few functions for phase space modulated by polynomial
+ - Add StatVar : useful utility to get the statistics for 
+   certain variables in TTree/Dataset 
+ - Few minor decorators for StatEntity 
+
+In DecayTreeTuple :
+ - TupleToolBremInfo - Add the HasBremAdded flag (the BremMultiplicity is not
+   correct on uDSTs).
+ - TupleToolTagging: Add info on the chisquare of the vertex fit B+particle.
+ - TupleToolTagging: Add Igor's code to save tagger informations
+                     (IP,p,pT,IP_B...) if StoreTaggersInfo = True.
+ - TupleToolTagging: Add OS_Charm and SS_Proton taggers in the list of active
+                     taggers to save.
+
+In DecayTreeTupleDalitz :
+ - Fix a bug in setting the prefix name properly.
+ - Try and fix a issue when the tool is wrong on Wrong Sign decays ...
+
+In DecayTreeTupleReco :
+ - Adding TupleToolKink. A tool to find kink information in the given tracks.
+                         TrackFitEvent added in the requirements.
+
+In DecayTreeTupleTracking :
+ - Minor change in TupleTollVeloTrackMatch, added property for maxIP of VELO tracks
+ - Minor change in TupleTollVeloTrackMatch, one property has been renamed.
+ - Added TupleToolVeloTrackMatch. It fills variables related to the matching
+   of a velo track to a downstream composite condidate.
+ - First version. Move the tracking specific tools from DecayTreeTupleReco
+   into this dedicatd package. Imported :-
+     TupleToolDEDX, TupleToolTrackIsolation, TupleToolTrackKink, 
+     TupleToolTrackPosition, TupleToolVELOClusters, 
+     TupleToolVeloTrackClusterInfo
+
+In FlavourTaggingChecker :
+ - Fixed include in BTaggingAnalysis.cpp.
+ - BTaggingAnalysis.cpp added extra info useful for CharmTagger running offline.
+ - BTaggingAnalysis.cpp added extra info useful for SSproton running offline.
+ - BTaggingAnalysis.cpp added extra info useful for debugging:
+   . IPsign and IPerr of the tagging particles wrt the Bsignal end vertex.
+   . KEY of particles and MCPArticles and relatives (signal and tagging particles).
+ - BTaggingChecker.cpp changes to print SS_Proton and OS_Charm tagging performance.
+ - TaggingUtilsChecker.cpp changes to read the information on the origin of a particle
+   from MCParticle instead of HepMC (needed by Sim08).
+
+In JetAccessoriesMC :
+ - Add python/JetAccessoriesMC/Jets2HepMCJetsMatcher.py to keep the HepMC Jet to MC
+   jets config.
+
 ! 2013-12-16 - Chris Jones
  - Move Phys/JetAccessories to Phys project, so it can be used
    by the Stripping.
