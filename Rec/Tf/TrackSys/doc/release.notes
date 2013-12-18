@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2013-12-18 - Marco Cattaneo
+ - Add support for 'pA' SpecialData type, to set special GECs developed for
+   Reco14r1 reprocessing of 2013 heavy ion data
+
 !========================= TrackSys v8r0 2013-12-10 =========================
 ! 2013-12-04 - Rob Lambert
  - Turn off the other velo decoders, toehrwise there is potentially a problem using DataOnDemand in DaVinci

@@ -46,11 +46,13 @@ class TrackSys(LHCbConfigurableUser):
     DefaultPatRecAlgorithms    = ["FastVelo","Forward","PatSeed","PatMatch","Downstream","VeloTT"]
     ## Default global cuts from 2011
     DefaultGlobalCuts          = { 'Velo':6000, 'IT':999999, 'OT':15000 }
+    ## Global cuts for pA, from 2013
+    DefaultpAGlobalCuts        = { 'Velo':80000, 'IT':999999, 'OT':999999 }
     ## Default track 'extra info' algorithms to run
     DefaultExtraInfoAlgorithms = ["CloneFlagging","TrackLikelihood","GhostProbability"]
     ## Cosmic track pattern recognition algorithms to run
     CosmicPatRecAlgorithms    = ["PatSeed"]
-    ## Cosmic expert swithces
+    ## Cosmic expert switches
     CosmicExpertTracking      = ["noDrifttimes"] 
     ## DefaultTrackTypes
     DefaultTrackTypes = ["Velo","Upstream","Forward","Seeding","Match","Downstream"]
@@ -80,6 +82,8 @@ class TrackSys(LHCbConfigurableUser):
           else:
               defaultPatRecAlgorithms = self.DefaultPatRecAlgorithms
               defaultGlobalCuts       = self.DefaultGlobalCuts
+          if "pA" in  self.getProp("SpecialData"):
+              defaultGlobalCuts       = self.DefaultpAGlobalCuts
 
           if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
               self.setProp("TrackPatRecAlgorithms",defaultPatRecAlgorithms)
