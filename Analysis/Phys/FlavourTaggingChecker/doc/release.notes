@@ -5,25 +5,28 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+
+!========================= FlavourTaggingChecker v7r2 2013-12-18 =========================
+
 ! 2013-12-11 - Riccardo Cenci
- - fixed include in BTaggingAnalysis.cpp
+ - Fixed include in BTaggingAnalysis.cpp
 
 ! 2013-12-10 - Riccardo Cenci
  - BTaggingAnalysis.cpp,  added extra info useful for CharmTagger running offline
- - cmake and cmt config updated
+ - cmake and cmt config updated.
 
 ! 2013-12-10 - Stefania Vecchi
- - BTaggingAnalysis.cpp added extra info useful for SSproton running offline
+ - BTaggingAnalysis.cpp added extra info useful for SSproton running offline.
 
 ! 2013-12-04 - Stefania Vecchi
  - BTaggingAnalysis.cpp added extra info useful for debugging:
-   - IPsign and IPerr of the tagging particles wrt the Bsignal end vertex;
-   - KEY of particles and MCPArticles and relatives (signal and tagging particles)
+   . IPsign and IPerr of the tagging particles wrt the Bsignal end vertex.
+   . KEY of particles and MCPArticles and relatives (signal and tagging particles).
 
 ! 2013-11-30 - Stefania Vecchi
- - BTaggingChecker.cpp changes to print SS_Proton and OS_Charm tagging performance
+ - BTaggingChecker.cpp changes to print SS_Proton and OS_Charm tagging performance.
  - TaggingUtilsChecker.cpp changes to read the information on the origin of a particle
-   from MCParticle instead of HepMC (needed by Sim08)
+   from MCParticle instead of HepMC (needed by Sim08).
 
 !========================= FlavourTaggingChecker v7r1 2013-08-01 =========================
 
