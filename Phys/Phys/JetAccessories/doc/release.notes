@@ -4,17 +4,17 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessories v3r2 2013-12-18 =========================
 
 ! 2013-12-17 - Cedric Potterat
- - remove MC dependencies in ParticleFlow_Config.py
- - default value of pvassociationMinIPChi2 put to Ture in  JetMaker_Config.py
+ - Remove MC dependencies in ParticleFlow_Config.py
+ - Default value of pvassociationMinIPChi2 put to Ture in  JetMaker_Config.py
 
 ! 2013-12-10 - Cedric Potterat
- - correct Memoryleak in PFJetMakerAlg.cpp
-
+ - Correct Memoryleak in PFJetMakerAlg.cpp
 
 ! 2013-12-10 - Cedric Potterat
- - Preapre ParticleFlow_Config.py and JetMaker_Config.py for the StdJets and Co.
+ - Prepare ParticleFlow_Config.py and JetMaker_Config.py for the StdJets and Co.
 
 !========================= JetAccessories v3r1 2013-10-02 =========================
 

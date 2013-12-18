@@ -1,7 +1,7 @@
 ################################################################################
 # Package: JetAccessories
 ################################################################################
-gaudi_subdir(JetAccessories v3r1)
+gaudi_subdir(JetAccessories v3r2)
 
 gaudi_depends_on_subdirs(Calo/CaloUtils
                          Kernel/LHCbMath
