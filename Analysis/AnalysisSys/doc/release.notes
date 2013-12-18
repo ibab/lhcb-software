@@ -28,7 +28,7 @@ In AnalysisPython :
 
 In DecayTreeTuple :
  - TupleToolBremInfo - Add the HasBremAdded flag (the BremMultiplicity is not
-   correct on uDSTs).
+                       correct on uDSTs).
  - TupleToolTagging: Add info on the chisquare of the vertex fit B+particle.
  - TupleToolTagging: Add Igor's code to save tagger informations
                      (IP,p,pT,IP_B...) if StoreTaggersInfo = True.
@@ -37,7 +37,7 @@ In DecayTreeTuple :
 
 In DecayTreeTupleDalitz :
  - Fix a bug in setting the prefix name properly.
- - Try and fix a issue when the tool is wrong on Wrong Sign decays ...
+ - Fix an issue when the tool is wrong on Wrong Sign decays ...
 
 In DecayTreeTupleReco :
  - Adding TupleToolKink. A tool to find kink information in the given tracks.
