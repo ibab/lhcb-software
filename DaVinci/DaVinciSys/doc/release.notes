@@ -3,6 +3,47 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v33r9>2013-12-18 DaVinci v33r9</A></H1><PRE>
+
+New development release based on the LHCb v36r4 stack.
+
+Executive Summary of notable Phys, Analysis and Stripping changes :-
+
+FlavourTagging and FlavourTaggingChecker :
+ - Various new tunings. See Phys release notes for the full details.
+
+Swimming :
+ - Various updates to support swimming Stripping20rXpY data. 
+   See package release notes (in Phys) for details.
+
+DecayTreeTuple :
+ - TupleToolBremInfo - Add the HasBremAdded flag (the BremMultiplicity is not
+                       correct on uDSTs).
+ - TupleToolTagging: Add info on the chisquare of the vertex fit B+particle.
+ - TupleToolTagging: Add Igor's code to save tagger informations
+                     (IP,p,pT,IP_B...) if StoreTaggersInfo = True.
+ - TupleToolTagging: Add OS_Charm and SS_Proton taggers in the list of active
+                     taggers to save.
+ - DecayTreeTupleDalitz: Fix a bug in setting the prefix name properly.
+                         Fix an issue when the tool is wrong on Wrong Sign decays ..
+ - Adding TupleToolKink. A tool to find kink information in the given tracks.
+                         TrackFitEvent added in the requirements.
+ - DecayTreeTupleTracking: New package containing tracking related tools.
+ - Added TupleToolVeloTrackMatch. It fills variables related to the matching
+   of a velo track to a downstream composite condidate.
+
+Updated Packages :- DaVinciTests
+
+In DaVinciTests :
+ - Update stripping references to adapt to new messages from the decoders.
+ - Add reference of OS_Charm tagger in  tagging.qms/test_tag_mc12.qmt 
+ - Updated reference file tagging.qms/test_tag_mc12.qmt according to the change
+   in NNetOSK, to add results on SSproton.
+ - Adapt stripping references to removal of temporary LoKi message, introduced
+   in the last commit.
+ - Update stripping references to adapt to :
+  + new 'Detectors' property in the DaVinci() Configurable.
+
 </PRE><H1><A NAME=v33r8>2013-10-29 DaVinci v33r8</A></H1><PRE>
 
 New development release based on the LHCb v36r3 stack.
