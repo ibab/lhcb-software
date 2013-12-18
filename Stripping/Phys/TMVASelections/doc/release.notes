@@ -4,6 +4,12 @@
 ! Purpose     : To accommodate all TMVA based selections used in stripping
 !-----------------------------------------------------------------------------
 
+! 2013-12-18 - Jibo He
+ - src/Bc2JpsiHBDTSelection
+  . Added BDT for Bc->JpsiH
+ - cmt/requirements
+  . Enabled DecayTreeFitter 
+
 !========================= TMVASelections v1r6 2013-04-05 =========================
 
 ! 2013-03-29 - Stefano Perazzini

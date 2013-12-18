@@ -19,6 +19,7 @@ use GaudiAlg            v*
 use DaVinciKernel       v*  Phys
 use LoKi                v*  Phys
 use LoKiPhys            v*  Phys
+use DecayTreeFitter     v*  Phys
 use TMVAWeights         v* 
 
 private 
