@@ -8,6 +8,8 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================= DaVinci v33r9 2013-12-18 ===========================
+
 ! 2013-11-18 - Rob Lambert
  - Suppressed configuration fo the HLT decoders, now picked up through
    DecodeRawEvent configurable via PhysConf, see task #19106
