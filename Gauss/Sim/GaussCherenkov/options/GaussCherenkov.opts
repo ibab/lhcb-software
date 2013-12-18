@@ -88,6 +88,12 @@ GiGa.ModularPL.GiGaPhysConstructorOpCkv.RichPmtQESource=0;
 
 //GiGa.ModularPL.GiGaPhysConstructorOpCkv.ActivatePmtModuleSuppressSet3=true;
 //GiGa.ModularPL.GiGaPhysConstructorOpCkv.ActivatePmtModuleSuppressSet4=true;
+//GiGa.ModularPL.GiGaPhysConstructorOpCkv.ActivatePmtModuleSuppressSet5=true;
+//GiGa.ModularPL.GiGaPhysConstructorOpCkv.ActivatePmtModuleSuppressSet6=true;
+
+//GiGa.ModularPL.GiGaPhysConstructorOpCkv.ActivatePmtSuppressSet0 = true ;
+//GiGa.ModularPL.GiGaPhysConstructorOpCkv.ActivatePmtSuppressSet1 = true ;
+//GiGa.ModularPL.GiGaPhysConstructorOpCkv.ActivatePmtSuppressSet2 = true ;
 
 
 //GiGaGeo.RichPMTAnodeSensDet.RichPmtAviodDuplicateHitsActivate=true;
