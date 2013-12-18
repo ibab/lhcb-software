@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2013-12-18 - Marco Cattaneo
+ - Add 'pA' to KnownSpecialData 
+
 !========================= RecConf v2r15 2013-12-10 =========================
 ! 2013-11-30
  - Fix bug in RecMoniConf, which caused crash when expertHistos were enabled and CheckEnabled was false.
