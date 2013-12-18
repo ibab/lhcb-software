@@ -13,4 +13,5 @@ EventSelector().Input.append(file)
 Brunel().SplitRawEventInput=2.0  # Stripping20
 
 # Suppress GECs for pA data
-importOptions("$APPCONFIGOPTS/Brunel/pA-GECs.py")
+#importOptions("$APPCONFIGOPTS/Brunel/pA-GECs.py")
+Brunel().SpecialData += ["pA"]
