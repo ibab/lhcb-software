@@ -8,6 +8,10 @@ Purpose: LHCb Digitization program
    . import ttDigi.py and itDigi.py rather than their .opts equivalents 
    . line added to stop RichMaPmt from digitising spillover hits
 
+- Changes to references to follow changes in underlying packages
+	. Made FT cluster cuts more intuitive and changed values accordingly
+    (FTDigitisation)
+
 </PRE><H1><A NAME=v26r10>2013-12-11 Boole v26r10</A></H1><PRE>
 This version uses projects LCGCMT 66, Gaudi v24r2, LHCb v36r4, Lbcom v14r4
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, L0TCK v4r*, AppConfig v3r*
