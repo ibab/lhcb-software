@@ -1,7 +1,18 @@
 <PRE>
 Package     : StrippingSys
-Package Coordinator : l.carson@imperial.ac.uk, Stefano.Perazzini@cern.ch
+Package Coordinator : l.carson@ed.ac.uk, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
+
+!========================= StrippingSys v7r4 2013-12-18 =========================
+
+* Version for future development.
+
+* Phys/CommonParticles
+  - Add new files StdJets.py, StandardJets.py, StdParticleFlow.py
+
+* Phys/StrippingSelections
+  - Various small changes, including new hadronic Xi_b lines and modifying some lines
+    to use N<x>BodyDecays algo
 
 ! 2013-11-27 - Marco Cattaneo
  - Update strippingsys.configurables test to follow removal of RecoUpgrade and
