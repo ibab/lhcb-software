@@ -51,6 +51,10 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         ##     if not self.isPropertySet("SelectionMode") :
         ##         self.setProp("SelectionMode","All")
 
+        # Relaxed GECs for pA data, tuning for 2013 Reco14r1 
+        if "pA" in self.getProp("SpecialData"):
+            if not self.isPropertySet("MaxPhotons") : self.setProp("MaxPhotons", 900000)
+
     ## Apply configurations
     def applyConf(self):
 

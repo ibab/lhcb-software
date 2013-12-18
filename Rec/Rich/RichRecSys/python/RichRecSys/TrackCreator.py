@@ -87,6 +87,10 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         ##                                      "VeloTT"  : { "GhostProbCut": [0.0,0.3], "Chi2Cut" : [0,5], "PCut" : [0,9999999] } ,
         ##                                      "KsTrack" : { "GhostProbCut": [0.0,0.3], "Chi2Cut" : [0,5], "PCut" : [0,9999999] } } )
             
+        # Relaxed GECs for pA data, tuning for 2013 Reco14r1 
+        if "pA" in self.getProp("SpecialData"):
+            if not self.isPropertySet("MaxUsedTracks") : self.setProp("MaxUsedTracks", 10000)
+            if not self.isPropertySet("MaxInputTracks") : self.setProp("MaxInputTracks", 99999)
 
     ## @brief Apply the configuration
     #

@@ -288,7 +288,7 @@ class RichRecSysConf(RichConfigurableUser):
                 raise RuntimeError("ERROR : Unknown PID config '%s'"%pidConf)
 
             pidConf.setProp("Radiators",self.usedRadiators())
-            self.setOtherProps(pidConf,["DataType","Context","OutputLevel"])
+            self.setOtherProps(pidConf,["DataType","Context","OutputLevel","SpecialData"])
             
             self.printInfo(pidConf)
 
@@ -327,7 +327,7 @@ class RichRecSysConf(RichConfigurableUser):
         # Pixels
         pixConf = self.pixelConfig()
         pixConf.setProp("Detectors",self.usedDetectors())
-        self.setOtherProps(pixConf,["DataType","OutputLevel","Context"])
+        self.setOtherProps(pixConf,["DataType","OutputLevel","Context","SpecialData"])
  
         # Photons
         photConf = self.photonConfig()

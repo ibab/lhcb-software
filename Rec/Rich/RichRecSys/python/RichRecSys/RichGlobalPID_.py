@@ -33,6 +33,7 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         "DataType"                : "", # Type of data, propagated from application
         "Mode"                    : "Full",
         "Radiators"               : [], # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
+        "SpecialData"             : [], # Various special data processing options. See KnownSpecialData in RecSys for all options
         "InitAlgorithms"          : True,
         "InitTools"               : True,
         "NIterations"             : 0,
@@ -122,6 +123,11 @@ class RichGlobalPIDConfig(RichConfigurableUser):
         if dataType == "2009" or dataType == "2010" :
             if not self.isPropertySet("MaxUsedPixels") :
                 self.setProp( "MaxUsedPixels", 20000 )
+
+        # Relaxed GECs for pA data, tuning for 2013 Reco14r1 
+        if "pA" in self.getProp("SpecialData"):
+            if not self.isPropertySet("MaxUsedPixels") : self.setProp("MaxUsedPixels", 120000)
+            if not self.isPropertySet("MaxUsedTracks") : self.setProp("MaxUsedTracks", 10000)
 
     ## @brief Configure the algorithms, adding them to the supplied sequencer
     #  @param sequence The sequencer to add the PID algorithms to

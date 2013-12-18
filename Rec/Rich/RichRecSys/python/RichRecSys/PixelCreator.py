@@ -24,6 +24,7 @@ class RichPixelCreatorConfig(RichConfigurableUser):
     __slots__ = {
         "Context"                : "Offline"   # The context within which to run
        ,"DataType"               : ""          # Type of data, propagated from application
+       ,"SpecialData"            : []   # Various special data processing options. See KnownSpecialData in RecSys for all options
        ,"Detectors"              : [ True, True ] # Which RICH detectors to use (RICH1/RICH2)
        ,"PixelCleaning"          : "HotHPDs" # Turn on RICH pixel cleaning (hot HPDs etc.)
        ,"FindClusters"           : True # Find clusters in the HPD data
@@ -41,12 +42,18 @@ class RichPixelCreatorConfig(RichConfigurableUser):
         # default values
         self.setRichDefaults ( "MaxPixels", { "Offline" : 30000, 
                                               "HLT"     : 30000 } )
-
     ## @brief Check the configuration is OK
     #
     def checkConfiguration(self):
         dets = self.getProp("Detectors")
         if len(dets) != 2 : raise RuntimeError("ERROR : Invalid Detectors '%s'"%config)
+
+    ## @brief Apply any tweaks to the default configuration that vary by DataType
+    def dataTypeTweaks(self):
+
+        # Relaxed GECs for pA data, tuning for 2013 Reco14r1 
+        if "pA" in self.getProp("SpecialData"):
+            if not self.isPropertySet("MaxPixels") : self.setProp("MaxPixels", 90000)
 
     ## @brief Apply the configuration
     #
@@ -54,6 +61,10 @@ class RichPixelCreatorConfig(RichConfigurableUser):
 
         # Check the configuration
         self.checkConfiguration()
+
+        # DataType specific tweaks
+        self.dataTypeTweaks()
+
         context = self.getProp("Context")
 
         # Pixel Creator

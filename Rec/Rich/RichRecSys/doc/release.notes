@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2013-12-18 - Marco Cattaneo
+ - Add support for 'pA' SpecialData type, to set special GECs developed for
+   Reco14r1 reprocessing of 2013 heavy ion data
+
 !========================= RichRecSys v5r0 2013-12-10 =========================
 ! 2013-11-28 - Rob Lambert
  - Was adding the wrong algorithm to the sequence... some wierd interferrence between cloning and the name.
