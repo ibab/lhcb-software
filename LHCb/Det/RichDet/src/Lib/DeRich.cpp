@@ -112,6 +112,7 @@ StatusCode DeRich::initialize ( )
 
   m_Rich2PhotoDetectorArrayConfig = 0;
   m_Rich2UseGrandPmt              = false;
+  m_Rich2UseMixedPmt              = false;
 
   if ( exists("Rich2PMTArrayConfig") )
   {
@@ -119,6 +120,10 @@ StatusCode DeRich::initialize ( )
     if ( m_Rich2PhotoDetectorArrayConfig >= 1 )
     {
       m_Rich2UseGrandPmt = true;
+      if( m_Rich2PhotoDetectorArrayConfig == 2 ) {   
+        m_Rich2UseMixedPmt = true;
+      }
+      
     }
   }
 

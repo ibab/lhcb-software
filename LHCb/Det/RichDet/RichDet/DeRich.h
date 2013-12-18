@@ -125,18 +125,18 @@ public:
     return m_sphMirrorRadius;
   }
 
-  /// Returns the Photon Detector config type
+  /// Returns the Photon Detector config type 0=hpd, 1=pmt
   inline Rich::RichPhDetConfigType RichPhotoDetConfig() const
   {
     return m_RichPhotoDetConfig;
   }
-  /// Returns the Rich Geometry config type
+  /// Returns the Rich Geometry config type 0=current optics, 1 upgrade optics, 2 horizontal rich1-upgrade optics.
   inline int RichGeometryConfig() const
   {
     return m_RichGeometryConfig;
   }
 
-  // returns phodetector array config
+  // returns phodetector array config 0=standardpmt, 1=grandpmt, 2= mixture of stand+grandpmt
   inline int Rich2PhotoDetectorArrayConfig() const
   {
     return m_Rich2PhotoDetectorArrayConfig;
@@ -146,6 +146,11 @@ public:
   inline bool Rich2UseGrandPmt () const
   {
     return m_Rich2UseGrandPmt;
+  }
+  /// Use large+small  PMTs
+  inline bool Rich2UseMixedPmt () const
+  {
+    return m_Rich2UseMixedPmt;
   }
 
   /**
@@ -267,14 +272,20 @@ protected:
   int m_RichGeometryConfig;
 
   /** RICH2 PhotoDetector Configuration
-   * @todo This is specific to RICH2, so should be moved to DeRich2
+   * This is specific to RICH2, but is part of the overall RICH geometry config.
    */
   int m_Rich2PhotoDetectorArrayConfig;
 
   /** Use large PMTs in RICH2
-   * @todo This is specific to RICH2, so should be moved to DeRich2
+   * This is specific to RICH2, but the flags are in RICH1 part of DB since
+   * all the pmts are created there together. So at the moment giving the capability to access it from
+   * RICH1 or RICH2 detector elements as per convenience and saving cpu time. There is also the possibility of
+   * different array config in RICH1 in future. So keeping all the flags here makes it easier to
+   * navigate through them.
+   * The mixed pmt means some pmts are large and others are with standard size.
    */
   bool m_Rich2UseGrandPmt;
+  bool m_Rich2UseMixedPmt;
 
   /// refractive index of the quartz gas window
   const Rich::TabulatedProperty1D* m_gasWinRefIndex;

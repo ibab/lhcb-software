@@ -93,7 +93,8 @@ private:
 
   /// Returns the PD number for the given RichSmartID
   unsigned int pdNumber( const LHCb::RichSmartID smartID ) const;
-
+  bool pdGrandSize( const LHCb::RichSmartID smartID ) const ;
+  
   const DeRichPMT* dePMT( const unsigned int PmtCopyNumber ) const;
 
 
@@ -119,15 +120,15 @@ private:
   int getPmtNumFromRowCol(int PRow, int PCol) const;
   int getGrandPmtNumFromRowCol(int PRow, int PCol) const;
 
-  bool isInPmtAnodeLateralAcc(const Gaudi::XYZPoint& aPointInPmtAnode ) const;
-  bool isInPmt(const Gaudi::XYZPoint& aPointInPmt ) const;
+  bool isInPmtAnodeLateralAcc(const Gaudi::XYZPoint& aPointInPmtAnode , const bool bFlagGrandPMT  ) const;
+  bool isInPmt(const Gaudi::XYZPoint& aPointInPmt, const bool aFlagGrandPMT ) const;
   bool isInPmtPanel(const Gaudi::XYZPoint& aPointInPanel ) const;
   StatusCode getPanelInterSection ( const Gaudi::XYZPoint& pGlobal,
                                     const Gaudi::XYZVector& vGlobal ,
                                     Gaudi::XYZPoint& panelIntersection,
                                     Gaudi::XYZPoint& panelIntersectionGlobal ) const;
 
-
+ 
 private:
 
   std::vector<IDetectorElement*> m_DePMTModules; ///< Container for the PMT Modules
@@ -168,7 +169,9 @@ private:
   /// Setup for Lens Flag
   void Rich1SetupPMTModulesWithLens();
   int getLensPmtNumFromRowCol(int PRow, int PCol ) const;
-  
+  /// setup flags for grand Modules
+  int getModuleCopyNumber ( const std::string aModuleName);
+  void  RichSetupMixedSizePmtModules();
   int m_Rich1PmtLensPresence;
   std::vector<int> m_Rich1PmtLensModuleCol;
   std::vector<bool> m_RichPmtModuleLensFlag;
@@ -185,6 +188,12 @@ private:
    bool isCurrentPmtModuleWithLens(const int aModuleNum);
    bool isCurrentPmtWithLens(const int aPMTNum) ;
    Gaudi::XYZPoint DemagnifyFromLens(const Gaudi::XYZPoint aLensPoint) const ;
+   bool  ModuleIsWithGrandPMT(int aModuleNum ) const  {
+     return (( aModuleNum >=0 && aModuleNum < (int) m_ModuleIsWithGrandPMT.size() ) ? m_ModuleIsWithGrandPMT[aModuleNum] : false);    
+   }
+  
+ 
+
  
   double  m_PmtMasterWithLensLateralSize;
   double  m_PmtModuleWithLensPitch;
@@ -196,12 +205,14 @@ private:
   double m_Rich1LensMagnificationFactor;
 
 
-  bool m_Rich2UseGrandModule;
-  int m_Rich2ArrayConfig;
-  
+  bool  m_Rich2UseGrandModule;
+  int   m_Rich2ArrayConfig;
+  bool  m_Rich2UseMixedModule; 
 
 
   std::vector<double> m_GrandPmtModulePlaneHalfSizeR2;
+  std::vector<double> m_MixedPmtModulePlaneHalfSizeR2;
+  std::vector<double> m_MixedStdPmtModulePlaneHalfSizeR2;
   double m_GrandPmtModulePitch;
   std::vector<double>  m_RichGrandPmtModuleActiveAreaHalfSize;
   double m_GrandPmtPitch;
@@ -220,7 +231,13 @@ private:
   int m_GrandNumPmtInRichModule;
   std::vector<int> m_NumGrandPmtInRowCol;
   int m_Rich2TotNumGrandPmts;
-  
+  int m_Rich2TotNumStdPmts;
+  int m_Rich2TotNumGrandModules;
+  int m_Rich2TotNumStdModules;
+
+  std::vector<int> m_Rich2MixedModuleArrayColumnSize;
+  std::vector<bool>  m_ModuleIsWithGrandPMT;
+    
 };
 
 #endif // RICHDET_DERICHPMTPANEL_H

@@ -133,6 +133,8 @@ private: // methods
 
   /// Returns the PD number for the given RichSmartID
   unsigned int pdNumber( const LHCb::RichSmartID smartID ) const;
+  bool pdGrandSize( const LHCb::RichSmartID smartID ) const {return false;}
+  
 
   /// Check HPD panel acceptance
   LHCb::RichTraceMode::RayTraceResult checkPanelAcc( const Gaudi::XYZPoint & point ) const;

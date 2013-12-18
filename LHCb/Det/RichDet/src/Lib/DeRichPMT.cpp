@@ -179,6 +179,9 @@ StatusCode DeRichPMT::getPMTParameters()
   m_Rich2UseGrandPmt =false;
   if(m_Rich2PmtArrayConfig >= 1 ) {
     m_Rich2UseGrandPmt = true;
+    if(m_Rich2PmtArrayConfig == 2) {
+      m_Rich2UseMixedPmt = true;       
+    }
     
   }
   m_Rich1Rich2ZDivideLimit = 6000.0;
@@ -244,7 +247,7 @@ StatusCode DeRichPMT::detectionPoint ( const double fracPixelCol,
   // First find which RichDetector this point is in
   const Gaudi::XYZPoint atestPoint = Gaudi::XYZPoint (0.0,0.0,0.0);
   const Gaudi::XYZPoint atestGlobalPoint = geometry()->toGlobalMatrix() *atestPoint ;
-  bool aGrandPmtUse = ( atestGlobalPoint.z()> m_Rich1Rich2ZDivideLimit ) &&  (m_Rich2UseGrandPmt);  
+  bool aGrandPmtUse = ( atestGlobalPoint.z()> m_Rich1Rich2ZDivideLimit ) &&  (m_PmtIsGrand);  
  
   const Gaudi::XYZPoint aLocalHit = 
    aGrandPmtUse ? getAnodeHitCoordFromGrandPixelNum( fracPixelCol,fracPixelRow ):
@@ -364,7 +367,7 @@ DeRichPMT::getAnodeHitCoordFromMultTypePixelNum( const double fracPixelCol,
 {
   Gaudi::XYZPoint aP = Gaudi::XYZPoint(0.0,0.0,0.0);
   
-  if( (smartID.rich()== Rich::Rich2) && (  m_Rich2UseGrandPmt ) ) {
+  if( (smartID.rich()== Rich::Rich2) && ( m_PmtIsGrand ) ) {
    aP = getAnodeHitCoordFromGrandPixelNum(fracPixelCol , fracPixelRow);
       
   } else {

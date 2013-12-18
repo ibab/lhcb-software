@@ -84,7 +84,8 @@ public:
   int pmtCopyNumber() {  return m_number;}
   bool PmtLensFlag()  {  return m_PmtLensFlag;}
   
-  
+  void setPmtIsGrandFlag(bool aflagG ) {m_PmtIsGrand  = aflagG ;}   
+  bool PmtIsGrand()  {  return m_PmtIsGrand;}
     
 private:
 
@@ -147,8 +148,10 @@ private:
   double m_GrandPmtEdgePixelYDiff;
   double m_GrandPmtAnodeHalfThickness;
   bool m_Rich2UseGrandPmt;
+  bool m_Rich2UseMixedPmt;
   double m_Rich1Rich2ZDivideLimit;
   int m_Rich2PmtArrayConfig;
+  bool m_PmtIsGrand;
   
 };
 
