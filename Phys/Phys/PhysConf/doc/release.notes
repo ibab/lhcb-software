@@ -5,12 +5,14 @@
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+!========================= PhysConf v1r24 2013-12-18 =========================
+
 ! 2013-10-29 - Rob Lambert
  - Replace DecodeRawEvent.py with my new configurable. Retire SteerRawLocations.
 
 ! 2013-10-29 - Chris Jones
- - Add a new property "Detectors" to the DaVinci() configurable. Primarily
-   for Upgrade studies.
+ - Add a new property "Detectors" to the configurable. Primarily for Upgrade
+   studies.
 
 !========================= PhysConf v1r23 2013-10-29 =========================
 
