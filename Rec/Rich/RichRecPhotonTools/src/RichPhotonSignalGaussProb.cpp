@@ -59,33 +59,34 @@ StatusCode PhotonSignalGaussProb::initialize()
   // Get Rich Detector elements
   const DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocations::Rich1 );
   const DeRich2 * Rich2DE = getDet<DeRich2>( DeRichLocations::Rich2 );
+  m_aRichPDPanel = Rich2DE->pdPanel(Rich::left);
 
   // Mirror radii of curvature in mm
   m_radiusCurv[Rich::Rich1] = Rich1DE->sphMirrorRadius();
   m_radiusCurv[Rich::Rich2] = Rich2DE->sphMirrorRadius();
 
-  const bool pmtActivate = ( Rich1DE->RichPhotoDetConfig() == Rich::PMTConfig );
-  bool rich2GrandPixelActivate = false;
+  m_pmtActivate = ( Rich1DE->RichPhotoDetConfig() == Rich::PMTConfig );
+  m_useGrandPmtInRich2 =  Rich1DE->Rich2UseGrandPmt();
+  m_useMixedPmtInRich2 =  Rich1DE->Rich2UseMixedPmt();
 
   // PD sizes
-  const double xSize = ( !pmtActivate ?  // 0.5*mm for hpd, 2.78 mm for pmt.
+  const double xSize = ( !m_pmtActivate ?  // 0.5*mm for hpd, 2.78 mm for pmt.
                          Rich1DE->param<double>("RichHpdPixelXsize") :
                          Rich1DE->param<double>("RichPmtPixelYSize") );
-  const double ySize = ( !pmtActivate ?  // 0.5*mm for hpd , 2.78 mm for pmt
+  const double ySize = ( !m_pmtActivate ?  // 0.5*mm for hpd , 2.78 mm for pmt
                          Rich1DE->param<double>("RichHpdPixelYsize") :
                          Rich1DE->param<double>("RichPmtPixelYSize") );
 
   // for GrandPMTS large pixel size of 6 mm
   double gpmxSize = Rich1DE->param<double>("RichHpdPixelXsize");
   double gpmySize = Rich1DE->param<double>("RichHpdPixelYsize");
-  if ( pmtActivate ) 
+  if ( m_pmtActivate ) 
   {
     if ( Rich1DE->Rich2UseGrandPmt() && 
          Rich1DE->exists("RichGrandPmtPixelXSize") ) 
     {
       gpmxSize = Rich1DE->param<double>("RichGrandPmtPixelXSize");
       gpmySize = Rich1DE->param<double>("RichGrandPmtPixelYSize");
-      rich2GrandPixelActivate = true;
     }
     else
     {
@@ -94,17 +95,23 @@ StatusCode PhotonSignalGaussProb::initialize()
     }
   }
 
-  const double demagScale = ( !pmtActivate ? 4.8 : 1.0 );
+  const double demagScale = ( !m_pmtActivate ? 4.8 : 1.0 );
 
-  // area of pixel in mm^2
-  m_pixelArea[Rich::Rich1] = demagScale*xSize * demagScale*ySize;
-  m_pixelArea[Rich::Rich2] = ( !rich2GrandPixelActivate ?
-                               demagScale*xSize    * demagScale*ySize    :
-                               demagScale*gpmxSize * demagScale*gpmySize );
+  // area of pixel in mm^2 
+  m_stdPixelArea = demagScale*xSize    * demagScale*ySize;
+  m_grandPixelArea=demagScale*gpmxSize * demagScale*gpmySize;
 
-  // These numbers should come from the DB eventually. Not be job options.
+  m_pixelArea[Rich::Rich1] = m_stdPixelArea;
+  m_pixelArea[Rich::Rich2] = (! m_useGrandPmtInRich2)? m_stdPixelArea : m_grandPixelArea;
+                                                       
+  
+  
+  // These numbers should come from the DB eventually. Not be job options. 
+  if(Rich1DE->exists("Rich2BrunelPidPixelSignalScaleFactor")) m_rich2PixelSignalScaleFactor=Rich1DE->param<double>("Rich2BrunelPidPixelSignalScaleFactor");
+
+
   m_scaleFactor[Rich::Rich1] = 4.0;
-  m_scaleFactor[Rich::Rich2] = ( !pmtActivate ? 4.0 : 4.0 * m_rich2PixelSignalScaleFactor );
+  m_scaleFactor[Rich::Rich2] = ( !m_pmtActivate ? 4.0 : 4.0 * m_rich2PixelSignalScaleFactor );
 
   // exp params
   m_expMinArg = vdt::fast_exp( m_minArg );
@@ -147,6 +154,22 @@ PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
     // Reconstructed Cherenkov theta angle
     const double thetaReco = photon->geomPhoton().CherenkovTheta();
 
+    double aPixelArea=  m_pixelArea[det];
+    if( (det == Rich::Rich2) && m_pmtActivate ) {
+        if(m_useMixedPmtInRich2 ) {
+          if( m_aRichPDPanel->pdGrandSize(photon->richRecPixel()->hpd())) {
+            aPixelArea = m_grandPixelArea;
+          } else {
+            aPixelArea = m_stdPixelArea;  
+          }
+          
+        }
+        
+    }  
+
+    //    info()<<"RichPhotonSignalGaussProb detector scaleFact pixelArea  std grand    "<<"  "<< det <<"  "
+    //      << m_scaleFactor[det]<<"   "  << aPixelArea <<"   "<<m_stdPixelArea<<"   "<<m_grandPixelArea<<endmsg;
+    
     // Compute the expected pixel contribution
     // See note LHCB/98-040 page 10 equation 16 for the details of where this comes from
     double pixelSignal = photon->geomPhoton().activeSegmentFraction() *
@@ -154,7 +177,7 @@ PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
           m_signal->nSignalPhotons(photon->richRecSegment(),id) ) +
         ( scatterProb(photon, id) *
           m_signal->nScatteredPhotons(photon->richRecSegment(),id) ) ) *
-      m_scaleFactor[det] * m_pixelArea[det] / ( m_radiusCurv[det] * m_radiusCurv[det] *
+      m_scaleFactor[det] * aPixelArea / ( m_radiusCurv[det] * m_radiusCurv[det] *
                                                 (thetaReco>1e-10 ? thetaReco : 1e-10) );
 
     // if ( msgLevel(MSG::VERBOSE) )  
@@ -174,11 +197,15 @@ PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
 
     // save final result
     photon->setExpPixelSignalPhots( id, (LHCb::RichRecPhoton::FloatType)(pixelSignal) );
-
+    
   }
+  
+
+
 
   return photon->expPixelSignalPhots( id );
 }
+
 
 double PhotonSignalGaussProb::signalProbFunc( const double thetaDiff,
                                               const double thetaExpRes ) const

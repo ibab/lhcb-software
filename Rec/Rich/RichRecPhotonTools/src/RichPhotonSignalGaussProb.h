@@ -20,6 +20,7 @@
 // Detector Description
 #include "RichDet/DeRich1.h"
 #include "RichDet/DeRich2.h"
+#include "RichDet/DeRichPDPanel.h"
 
 // Interfaces
 #include "RichRecBase/IRichPhotonSignal.h"
@@ -112,10 +113,18 @@ namespace Rich
       // Pixel Signal scale factor for RICH2
       double m_rich2PixelSignalScaleFactor;
       
+      
       // chaced parameters
       double m_minArg;
       double m_expMinArg;
 
+      double m_stdPixelArea;
+      double m_grandPixelArea;
+
+      DeRichPDPanel * m_aRichPDPanel;
+      bool m_pmtActivate;
+      bool m_useGrandPmtInRich2;
+      bool m_useMixedPmtInRich2;
     };
 
   }
