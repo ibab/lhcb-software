@@ -251,6 +251,11 @@ void RichG4HistoDefineSet4::bookRichG4HistogramsSet4()
     
       m_hCkvRich2GasResEmis = CurHistoSvc->book(m_RichG4HistoPathSet4+"1730",
                                            title, 500,-0.003,0.003);
+      //  title="Rich2Gas ReconsD3E4- Recons D3E1 Emiss error limited range";
+       title="Rich2Gas ReconsD4E4- Recons D4E1 Emiss error limited region";
+    
+      m_hCkvRich2GasResEmisLimited = CurHistoSvc->book(m_RichG4HistoPathSet4+"1739",
+                                           title, 500,-0.003,0.003);
       // agel exit refraction error
 
       title="Rich1Agel ReconsD3E1 - Recons D3E3 AgelExitRef error";

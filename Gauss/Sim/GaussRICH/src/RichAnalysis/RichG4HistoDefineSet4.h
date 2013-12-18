@@ -77,6 +77,7 @@ private:
   IHistogram1D*  m_hCkvRich1GasResEmis;
   IHistogram1D*  m_hCkvRich1AgelResEmis;
   IHistogram1D*  m_hCkvRich2GasResEmis;
+  IHistogram1D*  m_hCkvRich2GasResEmisLimited;
   IHistogram1D*  m_hCkvRich1GasResPixel;
   IHistogram1D*  m_hCkvRich1AgelResPixel;
   IHistogram1D*  m_hCkvRich2GasResPixel;
