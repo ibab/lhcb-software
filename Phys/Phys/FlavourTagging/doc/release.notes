@@ -6,20 +6,26 @@
 !                                               ---> Stefania Vecchi (2013)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+!========================= FlavourTagging v13r4 2013-12-18 =========================
+
 ! 2013-12-11 - Riccardo Cenci
  - Created directory FlavourTagging for public headers, added ITaggingUtils
- - fixed cmt and cmake configuration 
+ - Fixed cmt and cmake configuration 
 
 ! 2013-12-10 - Riccardo Cenci
- - Consolidated functions in TaggerUtils.cpp used also in FlavourTaggingChecker package
+ - Consolidated functions in TaggerUtils.cpp used also in FlavourTaggingChecker
+   package.
  - cmake and cmt config updated
 
 ! 2013-12-10 - Stefania Vecchi
-  fix a printout
+ - Fix a printout
 
 ! 2013-12-09 - Riccardo Cenci
- - TaggerCharmTool: lists purging done within the tagger class, charm lists created automatically
-   charm lists configured during FlavourTagging configuration (Configuration.py)
+ - TaggerCharmTool: lists purging done within the tagger class, charm lists created
+                    automatically.
+                    Charm lists configured during FlavourTagging configuration
+                    (Configuration.py)
 
 ! 2013-12-08 - Stefania Vecchi
  - CombineTaggersProbability.cpp: set combination of OS taggers
@@ -34,17 +40,17 @@
  - Fixed CMake configuration.
 
 ! 2013-12-02 - Stefania Vecchi
- - updated Tunings.py
- - removed another unused include file that caused failure in the nightlies (??)
- - fix debug printouts in TaggerCharmTool.cpp
+ - Updated Tunings.py
+ - Removed another unused include file that caused failure in the nightlies (??)
+ - Fix debug printouts in TaggerCharmTool.cpp
 
 ! 2013-12-01 - Stefania Vecchi
- - removed an unused include file that caused failure in the nightlies (??)
+ - Removed an unused include file that caused failure in the nightlies (??)
 
 ! 2013-11-30 - Stefania Vecchi
  - Set "Silent" option in the TMVA::Reader for OS_Charm tagger 
  - Add SSproton tagging TaggerProtonSame.cpp,h and updated several related files 
- - updates in NNet OSK and SSK to save all the tagging particle candidates in the 
+ - Updates in NNet OSK and SSK to save all the tagging particle candidates in the 
    vector of particles associated to the tagger
 
 ! 2013-11-29 - Riccardo Cenci
