@@ -3,6 +3,59 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v17r4>2013-12-18 Phys v17r4</A></H1><PRE>
+Development release, based on Rec v15r4, LHCb v36r4 and Gaudi v24r2..
+
+- Packages Updated :
+   FlavourTagging, LoKiArrayFunctors, PhysConf, Swimming
+
+- Packages Added :
+   JetAccessories
+
+In FlavourTagging :
+ - Created directory FlavourTagging for public headers, added ITaggingUtils
+ - Consolidated functions in TaggerUtils.cpp used also in FlavourTaggingChecker
+   package.
+ - TaggerCharmTool: lists purging done within the tagger class, charm lists created
+                    automatically.
+                    Charm lists configured during FlavourTagging configuration
+                    (Configuration.py)
+ - CombineTaggersProbability.cpp: set combination of OS taggers
+ - Updated SSproton BDT and polynomial coefficients with the latest files by Antonio
+ - TaggerCharmTool: switched from using weights.xml file for MVA's to C++ classes 
+ - Updated Tunings.py
+ - Removed another unused include file that caused failure in the nightlies (??)
+ - Fix debug printouts in TaggerCharmTool.cpp
+ - Removed an unused include file that caused failure in the nightlies (??)
+ - Set "Silent" option in the TMVA::Reader for OS_Charm tagger 
+ - Add SSproton tagging TaggerProtonSame.cpp,h and updated several related files 
+ - Updates in NNet OSK and SSK to save all the tagging particle candidates in the 
+   vector of particles associated to the tagger
+ - Add OS-Charm tagging and updates several related files
+ - Updated Tunings.py for NNet OSK : 
+    - Reco14_2012  --> data calibration
+    - Reco14_MC12  --> MC calibration
+ - NNet OSK changes: 
+    - Reco 14 only
+    - solved p0 calibration offset in Bs0 decays
+    - new NN1 (trained on Bs0 MC), new NN2 (trained on B+ data)
+
+In JetAccessories (imported from Analysis) :
+ - Remove MC dependencies in ParticleFlow_Config.py
+ - Default value of pvassociationMinIPChi2 put to Ture in  JetMaker_Config.py
+ - Correct Memoryleak in PFJetMakerAlg.cpp
+ - Prepare ParticleFlow_Config.py and JetMaker_Config.py for the StdJets and Co.
+
+In LoKiArrayFunctors :
+ - Set reporting level for release of tool which empties the stack to MSG::DEBUG
+
+In PhysConf :
+ - Replace DecodeRawEvent.py with my new configurable. Retire SteerRawLocations.
+ - Add a new property "Detectors" to the configurable. Primarily for Upgrade studies.
+
+In Swimming :
+ - Many changes. See package release notes.
+
 ! 2013-12-16 - Chris Jones
  - Import Phys/JetAccessories from Analysis.
 

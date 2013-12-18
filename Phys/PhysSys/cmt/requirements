@@ -1,5 +1,5 @@
 package PhysSys
-version v17r3
+version v17r4
 
 branches doc cmt
 
@@ -15,7 +15,7 @@ use  PhysSelPython              v9r4     PhysSel # Juan Palacios
 
 #===================================================================
 
-use  PhysConf                   v1r23    Phys    # Patrick Koppenburg
+use  PhysConf                   v1r24    Phys    # Patrick Koppenburg
 use  ProtoParticleFilter        v1r7p2   Phys    # Chris Jones
 use  DaVinciTools       	v23r11   Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r11    Phys    # Juan Palacios
@@ -32,7 +32,7 @@ use  BBDecTreeTool              v1r6p2   Phys    # Mike Williams
 use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
 use  LoKiJets                   v6r9     Phys    # Vanya Belyaev, Victor Coco
 use  LoKiAlgo                   v9r8p3   Phys    # Vanya Belyaev
-use  LoKiArrayFunctors          v10r4    Phys    # Vanya Belyaev
+use  LoKiArrayFunctors          v10r4p1  Phys    # Vanya Belyaev
 use  LoKiPhys                   v10r16   Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v2r1p3   Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
@@ -45,7 +45,7 @@ use TisTosTobbing		v7r8p4   Phys	 # Tomasz Skwarnicki
 
 #===================================================================
 
-use Swimming                    v3r0p1   Phys    # Vava Gligorov, Roel Aaij
+use Swimming                    v3r1p1   Phys    # Vava Gligorov, Roel Aaij
 
 #===================================================================
 
@@ -53,11 +53,11 @@ use NeuroBayesTools             v1r2p3   Phys   # ???
 
 #===================================================================
 
-use FlavourTagging              v13r3    Phys   # Stefania Vecchi
+use FlavourTagging              v13r4    Phys   # Stefania Vecchi
 
 #===================================================================
 
-use JetAccessories              v3r1     Phys   # Victor Coco, Cedric Potterat
+use JetAccessories              v3r2     Phys   # Victor Coco, Cedric Potterat
 
 #===================================================================
 
