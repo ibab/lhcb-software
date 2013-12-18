@@ -4,8 +4,11 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessoriesMC v2r5 2013-12-18 =========================
+
 ! 2013-11-11 - Victor Coco
- - Add python/JetAccessoriesMC/Jets2HepMCJetsMatcher.py to keep the HepMC Jet 2 MC jets config
+ - Add python/JetAccessoriesMC/Jets2HepMCJetsMatcher.py to keep the HepMC Jet to MC
+   jets config.
 
 !========================= JetAccessoriesMC v2r4 2013-10-02 =========================
 
