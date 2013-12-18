@@ -415,7 +415,8 @@ RichG4ReconTransformPmt::RichG4ReconTransformPmt( int aRichDetNum,
           const Gaudi::Transform3D & bpvbTrans = bpvb->matrix();
           const Gaudi::Transform3D & bpvbTransInv = bpvb->matrixInv();
 
-          //          RichG4ReconTransformPmtlog<<MSG::INFO<<" Now get bpvc "<<aPmtNumberInModule<< endreq;
+          //  RichG4ReconTransformPmtlog<<MSG::INFO<<" Now get Rich2 bpvs pmtModule  pmtModuleinSide PmtNumInModule   "
+          //      << aPmtModuleNumber <<"    "<< aPmtModuleIndexR2<<"   "<<aPmtNumberInModule<< endreq;
           
           const IPVolume* bpvc =
                bpvb->lvolume()->pvolume(aPmtModuleIndexR2);
@@ -438,6 +439,7 @@ RichG4ReconTransformPmt::RichG4ReconTransformPmt( int aRichDetNum,
               const Gaudi::Transform3D & bpvgTrans = bpvg->matrix();
               const Gaudi::Transform3D & bpvgTransInv = bpvg->matrixInv();
 
+             
             m_PmtGlobalToLocal =
               bpvgTrans*bpvfTrans* bpvcTrans * bpvbTrans *
               bpvaTrans * aRich2MasterTrans;
@@ -451,8 +453,8 @@ RichG4ReconTransformPmt::RichG4ReconTransformPmt( int aRichDetNum,
              
 
 
-            //      Gaudi::XYZPoint testkall(0.0,0.0,0.0);
-            //  RichG4ReconTransformPmtlog<<MSG::INFO<<"test Kall  "<<testkall<<"   "<<m_PmtGlobalToLocal *testkall<<endreq;
+            // Gaudi::XYZPoint testkall(0.0,0.0,0.0);
+            // RichG4ReconTransformPmtlog<<MSG::INFO<<"test Kall  "<<testkall<<"   "<<m_PmtGlobalToLocal *testkall<<endreq;
 
             //           Gaudi::XYZPoint testkallInv(0.0,0.0,0.0);
             //  RichG4ReconTransformPmtlog<<MSG::INFO<<"test KallInv  "<<testkallInv<<"   "

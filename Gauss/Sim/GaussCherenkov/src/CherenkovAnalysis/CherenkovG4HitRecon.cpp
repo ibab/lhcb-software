@@ -192,7 +192,7 @@ void CherenkovG4HitRecon::RichG4GetOccupancies( const G4Event* anEvent,
 
 
             Gaudi::XYZPoint aLocalHitFromPixelNum = m_RichG4CkvRec->
-              GetSiHitCoordFromPixelNumRDet(aPixelXNum,aPixelYNum,aRichDetNum);
+              GetSiHitCoordFromPixelNumRDet(aPixelXNum,aPixelYNum,aRichDetNum,aPmtNum );
           
             Gaudi::XYZPoint aLocalCoordInPhDetPanelPlane = m_RichG4CkvRec->
               GetCoordInPhDetPanelPlane(aLocalHitFromPixelNum,0);
@@ -280,7 +280,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
           const G4ThreeVector & LocalHitCoord = aHit->GetLocalPos();
          // G4int aPmtNum =    aHit-> GetCurHpdNum();
           G4int aPmtNum =    aHit-> CurPmtNum();
-          //  G4int aPmtModuleNum =  aHit-> CurModuleNum();
+          G4int aPmtModuleNum =  aHit-> CurModuleNum();
           G4int aPmtLensFlag= aHit->pdWithLens() ;
           
 
@@ -292,7 +292,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
           //           G4cout<<" RichG4Recon Pmt LocalCoord Pixel Num GapFlag"<< LocalHitCoord <<"  "
           //      <<aPixelXNum<<"  "<< aPixelYNum<<"   "<<aHitInPixelGap <<G4endl;
           //  G4cout<<" RichG4Recon DetNum Pmt num Module num "<<aRichDetNum<< "   "
-          //      <<aPmtNum <<"  "<<aPmtModuleNum<<G4endl;
+          //     <<aPmtNum <<"  "<<aPmtModuleNum<<G4endl;
             
 	  // now to accomodate the new pmt numbering scheme.
 	         if(  aRichDetNum == 1 ) { aPmtNum -= aNumPmtInRich[0] ;  }
@@ -355,7 +355,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
           }
 
 
-          //    G4cout<<"   mass mom energ  beta "<< ChTkPDGMass <<"  "<<aChTrackTotMom <<"  "<<ChTkEnergy <<"  "<<ChTkBeta<<G4endl;
+          //   G4cout<<"   mass mom energ  beta "<< ChTkPDGMass <<"  "<<aChTrackTotMom <<"  "<<ChTkEnergy <<"  "<<ChTkBeta<<G4endl;
           
           int ChtkId =  (int) (aHit-> GetChTrackID()) ;
 
@@ -461,7 +461,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
 
           }else {
 
-          //  CherenkovG4HitReconlog<<MSG::INFO<<" Now recon only sat  hits "<<NumTkIdRich1Gas<<"  "<<NumTkIdRich2Gas<< endreq;
+            // CherenkovG4HitReconlog<<MSG::INFO<<" Now recon only sat  hits "<<NumTkIdRich1Gas<<"  "<<NumTkIdRich2Gas<< endreq;
            
             // first for agel saturated  hits
             int itagel=0;
@@ -494,7 +494,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
 
             while (( aRadiatornum == (aRMIdValues-> Rich1GaseousCkvRadiatorNum() )) && (itr1s < NumTkIdRich1Gas) ) {
 
-              //  CherenkovG4HitReconlog<<MSG::INFO<<" radiator num   tk num TkID " 
+              // CherenkovG4HitReconlog<<MSG::INFO<<" radiator num   tk num TkID " 
               //                      <<aRadiatornum <<"  "<<itr1s <<" "<< TkIdVectRich1Gas[itr1s] <<"   "<<ChtkId<<  endmsg;
 
               if( TkIdVectRich1Gas[itr1s] ==  ChtkId ) {
@@ -512,8 +512,9 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
                     if( aChTrackTotMom <  m_minMomTracksForReconR1Gas )  SelectThisHit= false;
                     
                   }
-                  //    CherenkovG4HitReconlog<<MSG::INFO<<" radiator tk mom select hit "<< aRadiatornum<<"   "
-                  //    <<   aChTrackTotMom <<"  "<<SelectThisHit<<endmsg;
+
+                  // CherenkovG4HitReconlog<<MSG::INFO<<" radiator tk mom select hit "<< aRadiatornum<<"   "
+                  //     <<   aChTrackTotMom <<"  "<<SelectThisHit<<endmsg;
                   //  CherenkovG4HitReconlog<<MSG::INFO<<" ChTrackPreStepPos  min max RichPos "
                   //                      <<aChTrackPreStepPos<<"  "
                   //  <<m_MaxRich1TrackPreStepPosZ<<"  "<<m_MinRich1TrackPostStepPosZ<<endmsg;
@@ -618,7 +619,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
              // CherenkovG4HitReconlog<<MSG::INFO<<
             //  "RichG4Hit selected hitnum  RichDetNum collectionNum pmtModule pmt "<<iha<<"   "<<aRichDetNum<<"   "
             //                                  << ihcol<<"   "<<aPmtModuleNum<<"   "
-            //                                  <<aPmtNum<<endreq;
+            //                                  <<aPmtNum<<endmsg;
 
             //  CherenkovG4HitReconlog<<MSG::INFO<<" Sidet Pixel X Y num are "
             //                  <<aPixelXNum<<"   "<<aPixelYNum<<endreq;
@@ -796,7 +797,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
 
             Gaudi::XYZPoint aLocalHitFromPixelNum =
               m_RichG4CkvRec->
-              GetSiHitCoordFromPixelNumRDet(aPixelXNum,aPixelYNum,aRichDetNum);
+              GetSiHitCoordFromPixelNumRDet(aPixelXNum,aPixelYNum,aRichDetNum,aPmtNum  );
 
             //   G4cout<<" Local hit from pixel num "<<aPixelXNum<<"  "<<aPixelYNum<<"  "<<aLocalHitFromPixelNum<<G4endl;
             
@@ -1161,7 +1162,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
               // G4cout<<" Now for the gas radaitor ckv D1E1 "<<G4endl;
               //  G4double atestCkvAngled1e1= m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD1E1,
               //                                                                 EmisPtUseTrueEmissPt);
-              // G4double atestCkvAngled3e1= m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD3E1,
+              //  G4double atestCkvAngled3e1= m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD3E1,
               //                                                                 EmisPtUseTrueEmissPt);
               //   G4double atestCkvAngled2e1= m_RichG4CkvRec->CherenkovThetaFromReflPt(aReflPointD2E1,
               //                                                                 EmisPtUseTrueEmissPt);
@@ -1171,8 +1172,8 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
                  //  G4cout<<" Example refl point recon d1e1 d3e1 d2e1"<<aReflPointD1E1 <<"   "<< aReflPointD3E1 <<"   "
                  //   <<aReflPointD2E1<<G4endl;
               
-                 //    G4cout<<"  Current example Recon Ckv Angle "<<atestCkvAngled1e1<<"   "<< atestCkvAngled3e1 <<"   "
-                 //    <<  atestCkvAngled2e1 <<G4endl;
+              //     G4cout<<"  Current example Recon Ckv Angle "<<atestCkvAngled1e1<<"   "<< atestCkvAngled3e1 <<"   "
+              //      <<  atestCkvAngled2e1 <<G4endl;
 
               // G4cout<<"Sph REfl pt from D9E4  trueTS "<<aReflPointD9E4<<"   "<<aDetPointSphMirrorTrue<<G4endl;
               

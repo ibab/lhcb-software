@@ -345,7 +345,7 @@ void CherenkovG4HistoFillSet4::FillRichG4HistoSet4(CkvG4Hit* acHit,
   
   if((curRdet == 0) &&   (curRadiator== (aRMIdValues-> Rich1GaseousCkvRadiatorNum()))) {
 
-    //    std::cout<<" Now fill rich1 set4 histo "<<std::endl;
+    //   std::cout<<" Now fill rich1 set4 histo "<<std::endl;
     
     if(hCkvRich1GasD3E1) hCkvRich1GasD3E1->fill(aCkvRecD3E1) ;
     //if(hCkvRich1GasD3E1A) hCkvRich1GasD3E1A->fill(aCkvRecD3E1) ;
@@ -377,13 +377,13 @@ void CherenkovG4HistoFillSet4::FillRichG4HistoSet4(CkvG4Hit* acHit,
 
     //    if(hCkvRich1GasD1E4){
         
-    //  std::cout<<" Now fill Ckv D1E4    "<<aCkvRecD1E4 <<std::endl;
+    //   std::cout<<" Now fill Ckv D1E4    "<<aCkvRecD1E4 <<std::endl;
     
     //  } else {
       
     //  std::cout<<"NO hCkvRich1GasD1E4 "<<std::endl;
       
-    // }
+    //  }
     
 
     if(hCkvRich1GasD1E4) hCkvRich1GasD1E4->fill(aCkvRecD1E4) ;

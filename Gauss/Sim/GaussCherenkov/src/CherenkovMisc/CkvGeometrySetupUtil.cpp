@@ -30,7 +30,13 @@ CkvGeometrySetupUtil::CkvGeometrySetupUtil() :
   m_classicTwoRichFlag(true),
   m_horizontalRich1Flag(false),
   m_optVerticalRichFlag(false),
-  m_optHorizontalRichFlag(false) 
+  m_optHorizontalRichFlag(false),
+  m_NumPmtInModule(16),
+  m_MaxNumModuleRich1(168),
+  m_MaxNumModuleRich2(182),
+  m_NumModuleInRich2ModuleArrayCol(13),
+  m_Rich2MixedModuleArrayColumnSize(std::vector<int> (3)),
+  m_ModuleWithGrandPMT(std::vector<bool> (350)) 
 {
 
   InitCkvGeometrySuperRichFlag();
@@ -139,6 +145,7 @@ void CkvGeometrySetupUtil::InitCkvGeometryTwoRichFlags(){
 
           if(Rich1DE ->exists ("Rich1PMTArrayConfig") ) m_Rich1PmtArrayConfig=Rich1DE ->param<int>("Rich1PMTArrayConfig");
           if(Rich1DE ->exists ("Rich2PMTArrayConfig") ) m_Rich2PmtArrayConfig=Rich1DE ->param<int>("Rich2PMTArrayConfig");
+           SetupGrandPMTConfig();
 
           
 
@@ -155,14 +162,78 @@ void CkvGeometrySetupUtil::InitCkvGeometryTwoRichFlags(){
     
   }
   
-  if(m_Rich2PmtArrayConfig >= 1 ) m_Rich2_UseGrandPmt=true;
+  if(m_Rich2PmtArrayConfig >= 1 )  {
 
+    m_Rich2_UseGrandPmt=true;
+  }
   
   
 }
 
 //=============================================================================
 
+void CkvGeometrySetupUtil::SetupGrandPMTConfig()  {
+    IDataProviderSvc* detSvc = RichG4SvcLocator::RichG4detSvc();
+    IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
+    MsgStream CkvGeometrylog( msgSvc, "CkvGeometry" );
+    SmartDataPtr<DetectorElement> Rich1DE(detSvc, Rich1ClassicDeStructurePathName);
+
+    if( !Rich1DE ){
+          CkvGeometrylog<<MSG::ERROR<<"Can't find detelem for RICH1 from  "
+                        <<   Rich1ClassicDeStructurePathName << "       for  CkvGeometrySetupUtil "<< endmsg;
+    }else {
+      
+      if( Rich1DE->exists("RichTotNumPmtInModule"))  m_NumPmtInModule = Rich1DE->param<int>("RichTotNumPmtInModule") ;
+      if( Rich1DE->exists("Rich1TotNumModules"))  m_MaxNumModuleRich1=Rich1DE->param<int>("Rich1TotNumModules");
+      if( Rich1DE->exists("Rich2TotNumModules"))  m_MaxNumModuleRich2=Rich1DE->param<int>("Rich2TotNumModules");
+      // if( Rich1DE->exists("Rich2NumberOfModulesInRow")) m_NumModuleInRich2ModuleArrayRow= ( Rich1DE->param<int>("Rich2NumberOfModulesInRow"));
+      if( Rich1DE->exists("Rich2NumberOfModulesInCol"))   m_NumModuleInRich2ModuleArrayCol= ( Rich1DE->param<int>("Rich2NumberOfModulesInCol")) ;
+      if(Rich1DE->exists("Rich2MixedNumModulesArraySetup") )
+               m_Rich2MixedModuleArrayColumnSize = Rich1DE->param<std::vector<int> >("Rich2MixedNumModulesArraySetup");
+
+
+
+
+
+
+      int m_ModuleTot= m_MaxNumModuleRich1+ m_MaxNumModuleRich2;
+      // m_ModuleWithGrandPMT.resize(m_ModuleTot);
+      m_ModuleWithGrandPMT.assign(m_ModuleTot,false);
+
+
+      // now set the flags for modules in RICH2 according to the geometry setup
+
+      if(m_Rich2PmtArrayConfig >= 1 ) {
+        
+          for (int im=m_MaxNumModuleRich1; im<m_ModuleTot; ++im) {
+            if( m_Rich2PmtArrayConfig == 1 ) {
+               m_ModuleWithGrandPMT[im]=true;
+          
+            }else if ( m_Rich2PmtArrayConfig == 2 ) {
+              int imLocal=im- m_MaxNumModuleRich1;
+              if(imLocal >(m_MaxNumModuleRich2/2) ) imLocal -= (m_MaxNumModuleRich2/2);
+              int aColNum= imLocal/m_NumModuleInRich2ModuleArrayCol;
+              int aRowNum= imLocal - aColNum*m_NumModuleInRich2ModuleArrayCol;
+             if( (aRowNum < m_Rich2MixedModuleArrayColumnSize[0] ) || 
+                 (aRowNum >= ( m_Rich2MixedModuleArrayColumnSize[0]+ m_Rich2MixedModuleArrayColumnSize[1] ) ) ) {
+               m_ModuleWithGrandPMT[im] = true;   
+             }
+              
+             
+            }
+        
+            
+          }// end loop over modules
+          
+      }// end test on arrayflag
+      
+      
+    }// end test on Rich1DE
+    
+    
+  
+  
+}
 
 
 

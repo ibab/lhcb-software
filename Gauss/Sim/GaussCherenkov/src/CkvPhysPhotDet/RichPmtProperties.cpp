@@ -143,18 +143,18 @@ void RichPmtProperties::InitializePmtProperties( ) {
     //    m_numPmtTotRich[1]= Rich1DE->userParameterAsInt("Rich2TotNumPmt");
     if( R_DE[1] ) {
       m_numPmtTotRich[1]= R_DE[0]->param<int>("Rich2TotNumPmt");
-      if(R_DE[0]->exists("Rich2TotNumPmt")){
-        m_numPmtTotUsedRich[1]= R_DE[0]->param<int>("Rich2TotNumPmt");
+      if(R_DE[0]->exists("Rich2TotUsedNumPmt")){
+        m_numPmtTotUsedRich[1]= R_DE[0]->param<int>("Rich2TotUsedNumPmt");
       }else {
         m_numPmtTotUsedRich[1]= m_numPmtTotRich[1];
       } 
       
-      RichPmtlog << MSG::INFO << "Classic RICH1 Total Number of pmts used   MaxNumPmt  = "
-                 << m_numPmtTotUsedRich[0] <<"   "<< m_numPmtTotRich[0]  <<endreq;
+      //      RichPmtlog << MSG::INFO << "Classic RICH1 Total Number of pmts used   MaxNumPmt  = "
+      //           << m_numPmtTotUsedRich[0] <<"   "<< m_numPmtTotRich[0]  <<endreq;
       
-      RichPmtlog << MSG::INFO
-                 << "Classic RICH2: Total Number of pmts Used MaxNumPmt = "
-                 << m_numPmtTotUsedRich[1] << "   "<<  m_numPmtTotRich[1] <<endreq;
+      // RichPmtlog << MSG::INFO
+      //           << "Classic RICH2: Total Number of pmts Used MaxNumPmt = "
+      //           << m_numPmtTotUsedRich[1] << "   "<<  m_numPmtTotRich[1] <<endreq;
       
     } // end test R_DE[1]
      
@@ -271,6 +271,15 @@ void RichPmtProperties::InitializePmtProperties( ) {
 
    //   RichPmtlog << MSG::INFO
    //   << "Filled the PMT QE, PSF and Demag tables for  RICH  "<<endreq;
+
+
+      RichPmtlog << MSG::INFO << "Classic RICH1 Total Number of pmts used   MaxNumPmt  = "
+                 << m_numPmtTotUsedRich[0] <<"   "<< m_numPmtTotRich[0]  <<endreq;
+      
+      RichPmtlog << MSG::INFO
+                 << "Classic RICH2: Total Number of pmts Used MaxNumPmt = "
+                 << m_numPmtTotUsedRich[1] << "   "<<  m_numPmtTotRich[1] <<endreq;
+
 
 
   //Now get the PMT High Voltage
@@ -477,11 +486,16 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
           << m_ActivatePmtSuppressSet0 <<"   "
           << m_ActivatePmtSuppressSet1 <<"   "
           << m_ActivatePmtSuppressSet2 << G4endl;    
-    
+
+
+     int aNumSupPmt3=0;
+   
     if(m_ActivatePmtModuleSuppressSet3) {
       SmartDataPtr<TabulatedProperty>  PmtModuleSupressSet3Table( detSvc,RichPmtModuleSuppressSet3Path  );
       if( PmtModuleSupressSet3Table ){
         tableSupSet3= PmtModuleSupressSet3Table->table();
+        aNumSupPmt3 = ((int) tableSupSet3.size())*aNumPmtInModule;
+        
         
         TabulatedProperty::Table::const_iterator ita;
 
@@ -497,11 +511,13 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
       
     }
 
+     int aNumSupPmt4=0;
     if ( m_ActivatePmtModuleSuppressSet4) {
       // for this set only one of row pmts kept. The other three rows are annuled. 6-3-2013
       SmartDataPtr<TabulatedProperty>  PmtModuleSupressSet4Table( detSvc,RichPmtModuleSuppressSet4Path  );
       if( PmtModuleSupressSet4Table ){
         tableSupSet4= PmtModuleSupressSet4Table->table();
+
         
         TabulatedProperty::Table::const_iterator itb;
         for(itb=tableSupSet4.begin(); itb != tableSupSet4.end(); itb++) {
@@ -519,6 +535,7 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
           
           for (int iPb=aPmtSupStartSet4; iPb<aPmtSupEndSet4 ; iPb++) {
             PmtSupFlag[iPb]=true; 
+            aNumSupPmt4++;
           }
           
         } 
@@ -526,12 +543,14 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
         
       }
     }
-    
+  
+     int aNumSupPmt5=0;  
     if ( m_ActivatePmtModuleSuppressSet5) {
       SmartDataPtr<TabulatedProperty>  PmtModuleSupressSet5Table( detSvc,RichPmtModuleSuppressSet5Path  );
       if( PmtModuleSupressSet5Table ){
         tableSupSet5= PmtModuleSupressSet5Table->table();
-        
+        aNumSupPmt5 = ((int) tableSupSet5.size())*aNumPmtInModule;
+          
         TabulatedProperty::Table::const_iterator itb;
         for(itb=tableSupSet5.begin(); itb != tableSupSet5.end(); itb++) {
           int aSupModuleC = (int) (itb->second);
@@ -545,11 +564,12 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
       }
     }
     
-
+     int aNumSupPmt6=0;
       if ( m_ActivatePmtModuleSuppressSet6) {
       SmartDataPtr<TabulatedProperty>  PmtModuleSupressSet6Table( detSvc,RichPmtModuleSuppressSet6Path  );
       if( PmtModuleSupressSet6Table ){
         tableSupSet6= PmtModuleSupressSet6Table->table();
+        aNumSupPmt6 = ((int) tableSupSet6.size())*aNumPmtInModule;
         
         TabulatedProperty::Table::const_iterator itb;
         for(itb=tableSupSet6.begin(); itb != tableSupSet6.end(); itb++) {
@@ -568,6 +588,7 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
       
       // Now suppress PMT according to their copy numbers 
       // PMT Set0 
+      int aNumSupPmt0=0;
       if ( m_ActivatePmtSuppressSet0 ) {
         SmartDataPtr<TabulatedProperty>  PmtSupressSet0Table( detSvc, RichPmtSuppressSet0Path  );
         
@@ -576,7 +597,7 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
 
         if( PmtSupressSet0Table ){
           tableSupPmtSet0 = PmtSupressSet0Table->table();
-          
+          aNumSupPmt0=(int) tableSupPmtSet0.size();
           for(TabulatedProperty::Table::const_iterator itPmt = tableSupPmtSet0.begin(); 
               itPmt != tableSupPmtSet0.end(); itPmt++ ) {
             PmtSupFlag[ (int)(itPmt->second) ] = true ;
@@ -586,11 +607,13 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
 
       
       // PMT Set1 
+      int aNumSupPmt1=0;
       if ( m_ActivatePmtSuppressSet1 ) {
         SmartDataPtr<TabulatedProperty>  PmtSupressSet1Table( detSvc, RichPmtSuppressSet1Path  );
         
         if( PmtSupressSet1Table ){
           tableSupPmtSet1 = PmtSupressSet1Table->table();
+          aNumSupPmt1=(int) tableSupPmtSet1.size();
           
           for(TabulatedProperty::Table::const_iterator itPmt = tableSupPmtSet1.begin(); 
               itPmt != tableSupPmtSet1.end(); itPmt++ ) {
@@ -601,11 +624,13 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
       
       
       // PMT Set2 
+      int aNumSupPmt2=0;
       if ( m_ActivatePmtSuppressSet2 ) {
         SmartDataPtr<TabulatedProperty>  PmtSupressSet2Table( detSvc, RichPmtSuppressSet2Path  );
         
         if( PmtSupressSet2Table ){
           tableSupPmtSet2 = PmtSupressSet2Table->table();
+          aNumSupPmt2=(int) tableSupPmtSet2.size();
           
           for(TabulatedProperty::Table::const_iterator itPmt = tableSupPmtSet2.begin(); 
               itPmt != tableSupPmtSet2.end(); itPmt++ ) {
@@ -614,6 +639,8 @@ void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc,
         }
       }
       
+      m_numPmtTotUsedRich[0] -= (aNumSupPmt3+ aNumSupPmt4+ aNumSupPmt5+ aNumSupPmt0    );
+      m_numPmtTotUsedRich[1] -= (aNumSupPmt6 + aNumSupPmt1 + aNumSupPmt2 );
       
       //Check
       //for( int i=0; i<(aTotNumPmtRICH) ; ++i ) {

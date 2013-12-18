@@ -62,8 +62,10 @@ CherenkovG4CkvRecon::CherenkovG4CkvRecon()
    m_RichG4ReconPmt(0),
    m_curLocalHitCoord(-10000.,-10000.,-10000.0), m_curEmisPt(0,0,0),
    m_curTkMom(0,0,0),m_curGlobalHitPhCath(0,0,0),
-   m_curDetPoint(0,0,0), m_curReflPt(0,0,0) {
- 
+   m_curDetPoint(0,0,0), m_curReflPt(0,0,0),
+   m_Rich2MixedModuleArrayColumnSize(std::vector<int> (3)),
+   m_ModuleArrayRichCopyNumBegin(std::vector<int> (4))   {
+  
 
   //  m_PmtTransforms(2,std::vector<RichG4ReconTransformPmt*>(6000)),
 
@@ -216,6 +218,14 @@ CherenkovG4CkvRecon::CherenkovG4CkvRecon()
     m_PmtAnodePixelYSize=Rich1DE->param<double> ("RichPmtPixelYsize" );
     m_PmtAnodePixelGap=Rich1DE->param<double> ("RichPmtPixelGap"  );
     m_NumPmtInModule=Rich1DE->param<int> ("RichTotNumPmtInModule"  );
+    m_MaxNumModuleRich1=Rich1DE->param<int>("Rich1TotNumModules");
+    m_MaxNumModuleRich2=Rich1DE->param<int>("Rich2TotNumModules");
+    
+
+    m_NumModuleInRich2ModuleArrayRow= ( Rich1DE->exists("Rich2NumberOfModulesInRow"))  ?  Rich1DE->param<int> ( "Rich2NumberOfModulesInRow"  ) : 7  ;
+    m_NumModuleInRich2ModuleArrayCol= ( Rich1DE->exists("Rich2NumberOfModulesInCol"))  ?  Rich1DE->param<int> ( "Rich2NumberOfModulesInCol"  ): 13  ;
+    if ( Rich1DE->exists("RichPmtModuleNumBeginInPanels") ) m_ModuleArrayRichCopyNumBegin =   Rich1DE->param<std::vector<int> >( "RichPmtModuleNumBeginInPanels"  );
+    
     
     m_PmtPhCathZFromPMTCenter=10.0;
     if( Rich1DE->exists("RichPmtQwToCenterZDist"))
@@ -232,8 +242,18 @@ CherenkovG4CkvRecon::CherenkovG4CkvRecon()
            m_GrandPmtAnodePixelYSize=Rich1DE->param<double> ("RichGrandPmtPixelYSize" );
            m_GrandPmtAnodePixelGap=Rich1DE->param<double> ("RichGrandPmtPixelGap"  );
            m_NumGrandPmtInModule=Rich1DE->param<int> ("RichTotNumGrandPmtInModule" );
-          
+           if(  ( aCkvGeometrySetup-> Rich2PmtArrayConfig()) == 2  ) {
+       
+             if(Rich1DE->exists("Rich2MixedNumModulesArraySetup") )    { 
+               m_Rich2MixedModuleArrayColumnSize = Rich1DE->param<std::vector<int> >("Rich2MixedNumModulesArraySetup");
+             }
+             
+        
+           }
+           
+           
        }
+       
        
           
           
@@ -336,9 +356,11 @@ CherenkovG4CkvRecon::CherenkovG4CkvRecon()
         } else if ( idet == 1 ) {
           bool getR2Transform=true;
           CkvGeometrySetupUtil * aCkvGeometrySetup=CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance() ;     
-          if(aCkvGeometrySetup-> Rich2_UseGrandPmt()) {
+          if( (aCkvGeometrySetup-> Rich2_UseGrandPmt()) &&  (aCkvGeometrySetup->  Rich2PmtArrayConfig() ==1)   ) {
+            // all PMTS in Rich2 are large pmts
             if( aPmtVV[1] >=  m_NumGrandPmtInModule ) getR2Transform=false;
           }
+
           if(getR2Transform  ) {
                 
             m_Rich2_PmtTransforms[ih]=  new RichG4ReconTransformPmt (idet, aPmtVV[0], aPmtVV[1]);
@@ -414,11 +436,71 @@ std::vector<int> CherenkovG4CkvRecon::GetPmtModuleNumber(int aPmtNum) {
 return aPmtV;
 }
 
-Gaudi::XYZPoint CherenkovG4CkvRecon::GetSiHitCoordFromPixelNumRDet(int aPXNum,
-                                                                   int aPYNum, int aRichDetNum ) 
-{
+bool CherenkovG4CkvRecon::HitIsFromGrandPmt(int aPmtNum, int aRichDetNum) {
+  // Here the pmt num used is that inside each richdet rahter than the global pmtnum.
+  bool aFlagGrand = false;
+  if(  aRichDetNum ==1 ) {
+      CkvGeometrySetupUtil * aCkvGeometrySetup=CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance() ;
+      if(  aCkvGeometrySetup-> Rich2_UseGrandPmt() ) {
+        if( aCkvGeometrySetup-> Rich2PmtArrayConfig() ==1 ) {
+          aFlagGrand =true;
+        }else {
+          // Now using Mixed PMT configuration          
+          // Get the PMT Module Row number.
+          std::vector<int> aPmtAV= GetPmtModuleNumber(aPmtNum);
+          int aModuleLocalNum=aPmtAV[0];
+         if (aModuleLocalNum >= ( m_MaxNumModuleRich2/2)   ) {
+          aModuleLocalNum -= ( m_MaxNumModuleRich2/2)  ;
+         }
+        
+        
+          int aColNum= aModuleLocalNum/m_NumModuleInRich2ModuleArrayCol;
+          int aRowNum= aModuleLocalNum - aColNum*m_NumModuleInRich2ModuleArrayCol;
+          if( (aRowNum < m_Rich2MixedModuleArrayColumnSize[0] ) || 
+              (aRowNum >= ( m_Rich2MixedModuleArrayColumnSize[0]+ m_Rich2MixedModuleArrayColumnSize[1] ) ) ) {
+           aFlagGrand =true;   
+          }
+ 
+          // std::cout<<" RDet PmtNum Module ModuleLocal Col Row GrandFlag "<<aRichDetNum<<"  "<<aPmtNum<<"   "<<aPmtAV[0]
+          //          <<"  "<<aModuleLocalNum<<"  "<<aColNum<<"  "<<aRowNum<<"  "<<aFlagGrand<<std::endl;
+          
+          
+        }
+        
+        
+      }// end   if rich2use_grandpmt
+      
+      
+  }  // end richdet==1
+  
+
+  
+  return  aFlagGrand;
+}
+
+bool  CherenkovG4CkvRecon::GrandPmtFlagfromPmtNumInRichDet(int aPmtNumInRichDet, int aRichDetNum) {
+  
      CkvGeometrySetupUtil * aCkvGeometrySetup=CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance() ;
-     if((aRichDetNum ==1) && (aCkvGeometrySetup-> Rich2_UseGrandPmt()) ) {
+     std::vector<int> aPmtAV= GetPmtModuleNumber(aPmtNumInRichDet);
+     int GlobalModuleNum = (aRichDetNum==1) ? (aPmtAV[0]+m_MaxNumModuleRich1) : aPmtAV[0]  ;
+     return aCkvGeometrySetup->ModuleWithGrandPMT(GlobalModuleNum);
+     
+
+}
+
+Gaudi::XYZPoint CherenkovG4CkvRecon::GetSiHitCoordFromPixelNumRDet(int aPXNum,
+                                                                   int aPYNum, int aRichDetNum ,int aPmtNumInRichDet  ) 
+{
+  //   CkvGeometrySetupUtil * aCkvGeometrySetup=CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance() ;
+   //     bool CurHitIsFromGrandPMT = HitIsFromGrandPmt(aPmtNumInRichDet,aRichDetNum);
+
+     bool CurHitIsFromGrandPMT = GrandPmtFlagfromPmtNumInRichDet(aPmtNumInRichDet,aRichDetNum);
+     // std::cout<<" flaggrand  px py rdet pmtnumInRDet SiHitcoord Gr std  "<< CurHitIsFromGrandPMT <<"  "
+     //         <<aPXNum<<"  "<<aPYNum<<"  "<<aRichDetNum<<"   "
+     //         <<GetSiHitCoordFromGrandPixelNum(aPXNum,aPYNum)<<"   "<<GetSiHitCoordFromPixelNum(aPXNum,aPYNum)<<std::endl;
+     
+     
+     if( CurHitIsFromGrandPMT ) {
        return GetSiHitCoordFromGrandPixelNum(aPXNum,aPYNum);
        
      }else {
@@ -504,18 +586,25 @@ Gaudi::XYZPoint  CherenkovG4CkvRecon::GetCoordInPhDetPanelPlane(const Gaudi::XYZ
 
       RichG4ReconTransformPmt* CurPmtTransformB = 
         (m_CurrentRichDetNum ==0) ? m_Rich1_PmtTransforms[m_CurrentPmtNum]: m_Rich2_PmtTransforms[m_CurrentPmtNum];   
+      // CherenkovG4CkvReconlog << MSG::INFO<<" Get PMT transform  RDEt PMTNum "
+      //                       <<m_CurrentRichDetNum<<"   "<<  m_CurrentPmtNum<<"  "<<endreq;
                     
       if(CurPmtTransformB) {
         Gaudi::Transform3D PmttoPhDetTransform = CurPmtTransformB -> PmtLocalToPmtPhDetPanel();
         aPhDetCoordPoint  = PmttoPhDetTransform * curLocalHitDetPlane;
+
         //test print
+        // CherenkovG4CkvReconlog << MSG::INFO<<" Ph coord pt "<<aPhDetCoordPoint <<endreq;
+        
         //  Gaudi::Transform3D PmttoGlobalTransform  =   CurPmtTransformB -> PmtLocalToGlobal();
         //  Gaudi::XYZPoint phcathGlob =   PmttoGlobalTransform * curLocalHitDetPlane;
         //   CherenkovG4CkvReconlog << MSG::INFO<<"Phcath GlobalPt  "<<phcathGlob<<endreq;
         //end test print
         
       }else {
-        CherenkovG4CkvReconlog << MSG::INFO<<" Did not get Pmt transforms for reconstruction "<<endreq;
+
+        CherenkovG4CkvReconlog << MSG::INFO<<"PMTNum No Transform Recon "<< m_CurrentPmtNum<< endreq;
+        CherenkovG4CkvReconlog << MSG::INFO<<" Did not get Pmt transforms for reconstruction  PMT NUM"<< m_CurrentPmtNum<< endreq;
         
       }
       

@@ -122,7 +122,7 @@ public:
 
   Gaudi::XYZPoint GetSiHitCoordFromPixelNum(int aPx, int aPy);
   Gaudi::XYZPoint GetSiHitCoordFromGrandPixelNum(int aPxd, int aPyd);
-  Gaudi::XYZPoint GetSiHitCoordFromPixelNumRDet(int aPxa, int aPya, int aRDet);
+  Gaudi::XYZPoint GetSiHitCoordFromPixelNumRDet(int aPxa, int aPya, int aRDet, int aPmtNumber);
   
 
 
@@ -190,6 +190,9 @@ public:
   
   double DistFromSphMirror( const Gaudi::XYZPoint& aSphRefPoint );
    
+  bool HitIsFromGrandPmt(int aPmtNum, int aRichDetNum) ;
+  bool GrandPmtFlagfromPmtNumInRichDet(int aPmtNumber, int aRichDetNumber) ;
+
 protected:
 
 private:
@@ -259,6 +262,15 @@ private:
   double m_c4f10nominalrefrativeindex;
   double m_agelnominalrefractiveindex;
   CkvG4ReconFlatMirr* m_CurReconFlatMirr;
+
+  std::vector<int> m_Rich2MixedModuleArrayColumnSize;
+  int m_NumModuleInRich2ModuleArrayRow;
+  int m_NumModuleInRich2ModuleArrayCol;
+  std::vector<int>  m_ModuleArrayRichCopyNumBegin;
+  int m_MaxNumModuleRich1;
+  int m_MaxNumModuleRich2;
+  
+
 };
 
 #endif // RICHANALYSIS_RICHG4CKVRECON_H
