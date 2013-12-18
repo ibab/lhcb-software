@@ -3,6 +3,8 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+!2013-12-18 - Sajan Easo
+- Added some monitoring histograms
 
 !======================== GaussRICH v14r0p1 2013-10-22 =======================
 ! 2013-09-23 - Marco Clemencic
