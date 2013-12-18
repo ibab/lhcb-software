@@ -1,8 +1,12 @@
-!-----------------------------------------------------------------------------
+at !-----------------------------------------------------------------------------
 ! Package     : DaVinciTests
 ! Responsible : Chris Jones
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+
+! 2013-12-18 - Christopher Rob Jones
+ - Update stripping references to adapt to new messages from the decoders.
+
 ! 2013-12-10 - Stefania Vecchi
 - Add reference of OS_Charm tagger in  tagging.qms/test_tag_mc12.qmt 
 
