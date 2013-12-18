@@ -4,16 +4,17 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTupleTracking v1r0 2013-12-18 =========================
+
 ! 2013-12-10 - Andrea Contu
  - Minor change in TupleTollVeloTrackMatch, added property for maxIP of VELO tracks
- 
 
 ! 2013-11-25 - Andrea Contu
  - Minor change in TupleTollVeloTrackMatch, one property has been renamed.
 
 ! 2013-11-21 - Andrea Contu
- - Added TupleToolVeloTrackMatch. It fills variables related to the matching of a velo track 
-   to a downstream composite condidate.
+ - Added TupleToolVeloTrackMatch. It fills variables related to the matching
+   of a velo track to a downstream composite condidate.
 
 ! 2013-11-15 - Chris Jones
  - First version. Move the tracking specific tools from DecayTreeTupleReco

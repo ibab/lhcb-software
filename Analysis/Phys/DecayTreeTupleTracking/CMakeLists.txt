@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DecayTreeTupleTracking
 ################################################################################
-gaudi_subdir(DecayTreeTupleTracking v1r3)
+gaudi_subdir(DecayTreeTupleTracking v1r0)
 
 gaudi_depends_on_subdirs(Event/TrackFitEvent
                          Phys/DecayTreeTupleBase)
