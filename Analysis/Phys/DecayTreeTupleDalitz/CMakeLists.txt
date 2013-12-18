@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DecayTreeTupleDalitz
 ################################################################################
-gaudi_subdir(DecayTreeTupleDalitz v1r0)
+gaudi_subdir(DecayTreeTupleDalitz v1r1)
 
 gaudi_depends_on_subdirs(Phys/DaVinciMCKernel
                          Phys/DecayTreeTupleBase
