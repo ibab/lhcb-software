@@ -26,8 +26,12 @@ public:
 
   bool Rich2_UseGrandPmt() 
   {  return  m_Rich2_UseGrandPmt;}
+  int  Rich2PmtArrayConfig()
+  {    return m_Rich2PmtArrayConfig;}
   
-    
+  bool ModuleWithGrandPMT(int aModuleNum)
+  { return  m_ModuleWithGrandPMT[aModuleNum]; }
+  
   
 
 
@@ -39,7 +43,8 @@ private:
   
   void InitCkvGeometrySuperRichFlag();
   void InitCkvGeometryTwoRichFlags();
-
+  void SetupGrandPMTConfig();
+  
 
 private:
  static CkvGeometrySetupUtil* CkvGeometrySetupUtilInstance;
@@ -52,9 +57,18 @@ private:
   int m_Rich1PmtArrayConfig;  // 0 for standard arrangement
   int m_Rich2PmtArrayConfig;  // 0 for standard arrangement:all pmts=R11265.
                               // 1  all pmts= grandPMT=H12700
+                              // 2  for a mixture of R11265 and H12700
   bool m_Rich2_UseGrandPmt;
   
 
+  int  m_NumPmtInModule;
+  int  m_MaxNumModuleRich1;
+  int  m_MaxNumModuleRich2;
+  //int m_NumModuleInRich2ModuleArrayRow;
+  int  m_NumModuleInRich2ModuleArrayCol;
+  std::vector<int>m_Rich2MixedModuleArrayColumnSize;
+  std::vector<bool> m_ModuleWithGrandPMT;
+  
   
   
 };
