@@ -4,19 +4,22 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTuple v4r6 2013-12-18 =========================
+
 ! 2013-12-11 - Alex Shires
- - TupleToolBremInfo - add the HasBremAdded flag (the BremMultiplicity is not correct on mDSTs)
+ - TupleToolBremInfo - Add the HasBremAdded flag (the BremMultiplicity is not
+   correct on uDSTs).
 
 ! 2013-12-10 - Stefania Vecchi
- - TupleToolTagging: add info on the chisquare of the vertex fit B+particle
+ - TupleToolTagging: Add info on the chisquare of the vertex fit B+particle.
 
 ! 2013-12-09 - Stefania Vecchi
- - TupleToolTagging: add Igor's code to save tagger informations (IP,p,pT,IP_B...)
-   if StoreTaggersInfo = True
+ - TupleToolTagging: Add Igor's code to save tagger informations
+                     (IP,p,pT,IP_B...) if StoreTaggersInfo = True.
 
 ! 2013-11-30 - Stefania Vecchi
- - TupleToolTagging: add OS_Charm and SS_Proton taggers in the list of active taggers
-   to save 
+ - TupleToolTagging: Add OS_Charm and SS_Proton taggers in the list of active
+                     taggers to save.
 
 !========================= DecayTreeTuple v4r5 2013-10-29 =========================
 
