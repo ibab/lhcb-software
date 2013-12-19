@@ -2,7 +2,8 @@
 
 import unittest
 
-import PyCintex
+import CondDBCompression
+
 #from Gaudi.Configuration import *
 #import GaudiKernel.Configurable
 #from GaudiKernel.Configurable import purge, applyConfigurableUsers
@@ -17,7 +18,7 @@ import PyCintex
 #import logging
 #from GaudiKernel.ProcessJobOptions import InstallRootLoggingHandler
 #InstallRootLoggingHandler(level = logging.DEBUG)
-import sys    
+import sys
 
 import string
 import random
@@ -29,43 +30,48 @@ class DetCondCompressionTest(unittest.TestCase):
 
     def assertEqualsConfig(self, lhs, rhs):
         self.assertEquals(lhs.getFullName(), rhs.getFullName())
-    
+
     def setUp(self):
         unittest.TestCase.setUp(self)
         self.testin = 'data'
         self.testout = ['0WFoAOAAABAAA/Td6WFoAAAFpIt42AgAhARwAAAAQz1jMAQADZGF0YQBj8/OtAAEYBGvp8KWQQpkNAQAAAAABWVo=', '1QlpoOTFBWSZTWa/mnnIAAAEBgCQABAAgADDMDHqCcXckU4UJCv5p5yA=']
         self.Nmethods = 1 # number of methods
-    
+
 #    def tearDown(self):
 #        unittest.TestCase.tearDown(self)
 
     def test_compression(self):
-        """Check compression method 0"""
+        """Check all compression methods"""
         for method in range(self.Nmethods):
-            ret = PyCintex.gbl.CondDBCompression.compress(self.testin,method)
+            ret = CondDBCompression.compress(self.testin,method)
             self.assertEquals(self.testout[method], ret)
-        
+
+    def test_compression_default(self):
+        """Check default compression method"""
+        ret = CondDBCompression.compress(self.testin)
+        self.assertEquals(self.testout[0], ret)
+
     def test_decompression(self):
-        """Check decompression method""" 
+        """Check decompression method"""
         for method in range(self.Nmethods):
-            ret = PyCintex.gbl.CondDBCompression.decompress(self.testout[method])
+            ret = CondDBCompression.decompress(self.testout[method])
             self.assertEquals(self.testin, ret)
-        
+
     def test_decompression_2(self):
         """Check decompression method with random string
            should do nothing here"""
         rdnstr = "<" + str_generator(random.randint(1,10000))
-        ret = PyCintex.gbl.CondDBCompression.decompress(rdnstr)
+        ret = CondDBCompression.decompress(rdnstr)
         self.assertEquals(rdnstr, ret)
 
     def test_both(self):
         """Check both compression and decompression methods with random string in sequence
-           should return exactly the same string""" 
+           should return exactly the same string"""
         rdnstr = str_generator(random.randint(1,10000))
         for method in range(self.Nmethods):
-            ret = PyCintex.gbl.CondDBCompression.compress(rdnstr, method)
+            ret = CondDBCompression.compress(rdnstr, method)
             self.assertTrue(ret)
-            ret = PyCintex.gbl.CondDBCompression.decompress(ret)
+            ret = CondDBCompression.decompress(ret)
             self.assertEquals(rdnstr, ret)
 
 if __name__ == '__main__':

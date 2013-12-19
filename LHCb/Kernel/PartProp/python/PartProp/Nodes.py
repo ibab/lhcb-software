@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id$ 
-# =============================================================================
 ## @file PartProp/Nodes.py
 #  Simple "decorator for nodes"
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -11,22 +9,20 @@
 Simple 'decorator for nodes'
 """
 # =============================================================================
-__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision$"
+__author__  = "Vanya BELYAEV <Ivan.Belyaev@nikhef.nl>"
+__version__ = "version $Revision$"
 # =============================================================================
 
-import PyCintex
+import GaudiPython
 
-# construct the global namespace 
-_global   = PyCintex.makeNamespace('')
-# namespaces
-Decays = _global.Decays
-LHCb   = _global.LHCb
-std    = _global.std
+# namespaces shortcuts
+Decays = GaudiPython.gbl.Decays
+LHCb   = GaudiPython.gbl.LHCb
+std    = GaudiPython.gbl.std
 
 
 # =============================================================================
-## Decorate the nodes 
+## Decorate the nodes
 def _decorate ( nodes  , opers ) :
     """
     Decorate the functions
@@ -39,10 +35,10 @@ def _decorate ( nodes  , opers ) :
     _rshift_  = None
     _rrshift_ = None
     _invert_  = None
-    
-    ## __call__ 
+
+    ## __call__
     if hasattr ( opers , '__call__' ) :
-        ## the regular call 
+        ## the regular call
         def _call_ ( self , arg ) :
             """
             Evaluate the functor
@@ -52,78 +48,78 @@ def _decorate ( nodes  , opers ) :
             >>> res = fun ( arg )
             """
             result = opers.__call__ ( self , arg )
-            return True if result else False 
-        _call_ . __doc__ = opers . __call__ . __doc__ 
+            return True if result else False
+        _call_ . __doc__ = opers . __call__ . __doc__
 
-    ## __or__ 
+    ## __or__
     if hasattr ( opers , '__or__' ) :
-        ## the regular call 
+        ## the regular call
         def _or_ ( self , arg ) :
             """
-            LOGICAL or 
+            LOGICAL or
 
             >>> fun1 = ... # get the functor
             >>> fun2 = ... # get the functor
-            >>> fun  = fun1 | fun2 
+            >>> fun  = fun1 | fun2
             """
             return opers.__or__ ( self , arg )
-        _or_ . __doc__ = opers . __or__ . __doc__ 
+        _or_ . __doc__ = opers . __or__ . __doc__
 
-    ## __ror__ 
+    ## __ror__
     if hasattr ( opers , '__ror__' ) :
-        ## the regular call 
+        ## the regular call
         def _ror_ ( self , arg ) :
             """
-            LOGICAL or 
+            LOGICAL or
 
             >>> fun1 = ... # get the functor
             >>> fun2 = ... # get the functor
-            >>> fun  = fun1 | fun2 
+            >>> fun  = fun1 | fun2
             """
             return opers.__ror__ ( self , arg )
-        _or_ . __doc__ = opers . __or__ . __doc__ 
+        _or_ . __doc__ = opers . __or__ . __doc__
 
-    ## __and__ 
+    ## __and__
     if hasattr ( opers , '__and__' ) :
-        ## the regular call 
+        ## the regular call
         def _and_ ( self , arg ) :
             """
-            LOGICAL and 
+            LOGICAL and
 
             >>> fun1 = ... # get the functor
             >>> fun2 = ... # get the functor
-            >>> fun  = fun1 & fun2 
+            >>> fun  = fun1 & fun2
             """
             return opers.__and__ ( self , arg )
-        _and_ . __doc__ = opers . __and__ . __doc__ 
+        _and_ . __doc__ = opers . __and__ . __doc__
 
-    ## __rand__ 
+    ## __rand__
     if hasattr ( opers , '__rand__' ) :
-        ## the regular call 
+        ## the regular call
         def _rand_ ( self , arg ) :
             """
-            LOGICAL and 
+            LOGICAL and
 
             >>> fun1 = ... # get the functor
             >>> fun2 = ... # get the functor
-            >>> fun  = fun1 & fun2 
+            >>> fun  = fun1 & fun2
             """
             return opers.__rand__ ( self , arg )
-        _rand_ . __doc__ = opers . __rand__ . __doc__ 
+        _rand_ . __doc__ = opers . __rand__ . __doc__
 
 
-    ## __invert__ 
+    ## __invert__
     if hasattr ( opers , '__invert__' ) :
-        ## the regular call 
+        ## the regular call
         def _invert_ ( self , *arg ) :
             """
-            LOGICAL negation 
+            LOGICAL negation
 
             >>> fun1 = ... # get the functor
-            >>> fun  = ~fun2 
+            >>> fun  = ~fun2
             """
             return opers.__invert__ ( self , *arg )
-        _invert_ . __doc__ = opers . __invert__ . __doc__ 
+        _invert_ . __doc__ = opers . __invert__ . __doc__
 
 
     ## __rshift__
@@ -131,14 +127,14 @@ def _decorate ( nodes  , opers ) :
         ## 'right'-shift
         def _rshift_ ( self , arg ) :
             """
-            Streamers 
+            Streamers
 
             >>> fun1 = ... # get the functor
             >>> fun1 = ... # get the functor
-            >>> fun = fun1 >> fun2 
+            >>> fun = fun1 >> fun2
             """
             return opers.__rshift__ ( self , arg )
-        _rshift_ . __doc__ = opers . __rshift__ . __doc__ 
+        _rshift_ . __doc__ = opers . __rshift__ . __doc__
 
 
     ## __rrshift__
@@ -146,18 +142,18 @@ def _decorate ( nodes  , opers ) :
         ## 'right/right'-shift
         def _rrshift_ ( self , arg ) :
             """
-            Evaluate the functor as streametr shift 
+            Evaluate the functor as streametr shift
 
             >>> fun = ... # get the functor
             >>> arg = ... # get the argument
-            >>> res = arg >> fun 
+            >>> res = arg >> fun
             """
             result = opers.__rrshift__ ( self , arg )
-            return True if result else False 
-        _rrshift_ . __doc__ = opers . __rrshift__ . __doc__ 
+            return True if result else False
+        _rrshift_ . __doc__ = opers . __rrshift__ . __doc__
 
         for node in nodes :
-            
+
             if _call_    : node . __call__    = _call_
             if _or_      : node . __or__      = _or_
             if _ror_     : node . __ror__     = _ror_
@@ -169,16 +165,16 @@ def _decorate ( nodes  , opers ) :
 
             node . __repr__ =  lambda s : s.toString()
             node . __str__  =  lambda s : s.toString()
-            
-    return nodes 
+
+    return nodes
 
 ## decorate the nodes
 _decorated = _decorate ( ( Decays.iNode               ,
                            Decays.Node                ,
                            #
-                           Decays.Nodes.Any           , 
-                           Decays.Nodes.Pid           , 
-                           Decays.Nodes.CC            , 
+                           Decays.Nodes.Any           ,
+                           Decays.Nodes.Pid           ,
+                           Decays.Nodes.CC            ,
                            #
                            Decays.Nodes.Lepton        ,
                            Decays.Nodes.Nu            ,
@@ -191,12 +187,12 @@ _decorated = _decorate ( ( Decays.iNode               ,
                            Decays.Nodes.Charged       ,
                            Decays.Nodes.Positive      ,
                            Decays.Nodes.Negative      ,
-                           Decays.Nodes.Neutral       , 
-                           Decays.Nodes.HasQuark      , 
-                           Decays.Nodes.JSpin         , 
-                           Decays.Nodes.SSpin         , 
-                           Decays.Nodes.LSpin         , 
-                           Decays.Nodes.Nucleus       , 
+                           Decays.Nodes.Neutral       ,
+                           Decays.Nodes.HasQuark      ,
+                           Decays.Nodes.JSpin         ,
+                           Decays.Nodes.SSpin         ,
+                           Decays.Nodes.LSpin         ,
+                           Decays.Nodes.Nucleus       ,
                            Decays.Nodes.CTau          ,
                            Decays.Nodes.ShortLived_   ,
                            Decays.Nodes.LongLived_    ,
@@ -212,40 +208,40 @@ _decorated = _decorate ( ( Decays.iNode               ,
                            #
                            Decays.Nodes.Or            ,
                            Decays.Nodes.And           ,
-                           Decays.Nodes.Not           ) , ## nodes 
-                         # operations 
-                         opers = Decays.Dict.NodeOps ) 
+                           Decays.Nodes.Not           ) , ## nodes
+                         # operations
+                         opers = Decays.Dict.NodeOps )
 
-## full list of known nodes 
-    
+## full list of known nodes
+
 iNode     = Decays.iNode
 Node      = Decays.Node
 #
-Any       = Decays.Nodes.Any      ()  # instance  
-Pid       = Decays.Nodes.Pid         # type 
-CC        = Decays.Nodes.CC           # type 
-Lepton    = Decays.Nodes.Lepton   ()  # instance  
-Nu        = Decays.Nodes.Nu       ()  # instance  
-Ell       = Decays.Nodes.Ell      ()  # instance  
-EllPlus   = Decays.Nodes.EllPlus  ()  # instance  
-EllMinus  = Decays.Nodes.EllMinus ()  # instance  
-Hadron    = Decays.Nodes.Hadron   ()  # instance  
-Meson     = Decays.Nodes.Meson    ()  # instance  
-Baryon    = Decays.Nodes.Baryon   ()  # instance  
-Charged   = Decays.Nodes.Charged  ()  # instance  
-Positive  = Decays.Nodes.Positive ()  # instance  
-Negative  = Decays.Nodes.Negative ()  # instance  
-Neutral   = Decays.Nodes.Neutral  ()  # instance  
-HasQuark  = Decays.Nodes.HasQuark     # type   
-JSpin     = Decays.Nodes.JSpin        # type   
-SSpin     = Decays.Nodes.SSpin        # type   
-LSpin     = Decays.Nodes.LSpin        # type   
-Nucleus   = Decays.Nodes.Nucleus  ()  # instance  
-Or        = Decays.Nodes.Or           # type   
-And       = Decays.Nodes.And          # type   
+Any       = Decays.Nodes.Any      ()  # instance
+Pid       = Decays.Nodes.Pid         # type
+CC        = Decays.Nodes.CC           # type
+Lepton    = Decays.Nodes.Lepton   ()  # instance
+Nu        = Decays.Nodes.Nu       ()  # instance
+Ell       = Decays.Nodes.Ell      ()  # instance
+EllPlus   = Decays.Nodes.EllPlus  ()  # instance
+EllMinus  = Decays.Nodes.EllMinus ()  # instance
+Hadron    = Decays.Nodes.Hadron   ()  # instance
+Meson     = Decays.Nodes.Meson    ()  # instance
+Baryon    = Decays.Nodes.Baryon   ()  # instance
+Charged   = Decays.Nodes.Charged  ()  # instance
+Positive  = Decays.Nodes.Positive ()  # instance
+Negative  = Decays.Nodes.Negative ()  # instance
+Neutral   = Decays.Nodes.Neutral  ()  # instance
+HasQuark  = Decays.Nodes.HasQuark     # type
+JSpin     = Decays.Nodes.JSpin        # type
+SSpin     = Decays.Nodes.SSpin        # type
+LSpin     = Decays.Nodes.LSpin        # type
+Nucleus   = Decays.Nodes.Nucleus  ()  # instance
+Or        = Decays.Nodes.Or           # type
+And       = Decays.Nodes.And          # type
 Not       = Decays.Nodes.Not          # type
 Invalid   = Decays.Nodes.Invalid ()   # instance
-_Node     = Decays.Nodes._Node        # type 
+_Node     = Decays.Nodes._Node        # type
 
 Up        = HasQuark ( LHCb.ParticleID.up      )
 Down      = HasQuark ( LHCb.ParticleID.down    )
@@ -268,31 +264,31 @@ Spinor    = JSpin    ( 2 )
 Vector    = JSpin    ( 3 )
 Tensor    = JSpin    ( 5 )
 
-OneHalf   = JSpin    ( 2 ) 
-ThreeHalf = JSpin    ( 4 ) 
-FiveHalf  = JSpin    ( 6 ) 
+OneHalf   = JSpin    ( 2 )
+ThreeHalf = JSpin    ( 4 )
+FiveHalf  = JSpin    ( 6 )
 
 
-CTau          = Decays.Nodes.CTau              # type 
-LongLived_    = Decays.Nodes.LongLived_        # type 
+CTau          = Decays.Nodes.CTau              # type
+LongLived_    = Decays.Nodes.LongLived_        # type
 LongLived     = Decays.Nodes.LongLived_    ()  # instance
-ShortLived_   = Decays.Nodes.ShortLived_       # type 
+ShortLived_   = Decays.Nodes.ShortLived_       # type
 ShortLived    = Decays.Nodes.ShortLived_   ()  # instance
 Stable        = Decays.Nodes.Stable        ()  # instance
 StableCharged = Decays.Nodes.StableCharged ()  # instance
-Mass          = Decays.Nodes.Mass              # type 
-Light         = Decays.Nodes.Light             # type 
-Heavy         = Decays.Nodes.Heavy             # type 
-Symbol        = Decays.Nodes.Symbol            # type 
+Mass          = Decays.Nodes.Mass              # type
+Light         = Decays.Nodes.Light             # type
+Heavy         = Decays.Nodes.Heavy             # type
+Symbol        = Decays.Nodes.Symbol            # type
 
 NodeList      = Decays.NodeList
 
 
 if '__main__' == __name__ :
     print ' decorated objects: %s ' % str(_decorated)
-    print _decorated 
-    print dir() 
-    
+    print _decorated
+    print dir()
+
 # =============================================================================
-# The END 
+# The END
 # =============================================================================

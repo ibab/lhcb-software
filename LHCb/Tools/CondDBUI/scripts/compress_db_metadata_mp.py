@@ -4,7 +4,9 @@ import os
 import shutil
 import sqlite3 as lite
 import sys
-import PyCintex
+
+import CondDBCompression
+
 from subprocess import Popen, PIPE
 from multiprocessing import Process, Queue, JoinableQueue, Event, Value, Array
 
@@ -27,7 +29,7 @@ def myprocfunc (num, qin, qu):
         else:
             qu.put(sys.getsizeof(xml))
         qin.task_done()
-#    print "Finishing process #"+ str(num)        
+#    print "Finishing process #"+ str(num)
     qin.task_done()
 
 def updatestatusbar(qu, con, cur, arr, nrow):
@@ -40,7 +42,7 @@ def updatestatusbar(qu, con, cur, arr, nrow):
         if (type(elem) is int):
             arr[1] += elem
             arr[2] += elem
-        else:  
+        else:
             (newxml, iovtblname, pln, pid) = elem
             arr[0] += 1
             arr[1] += sys.getsizeof(newxml)
@@ -62,11 +64,11 @@ def stringcompression(ustring):
     string = ustring
     isunicode = isinstance(ustring, unicode)
     if (isunicode): string = ustring.encode('utf-8')
-    ret = PyCintex.gbl.CondDBCompression.compress(string, Method)
+    ret = CondDBCompression.compress(string, Method)
     if (len(ret) >= len(string)):
         return ustring # do nothing if no benefit from compression whatsoever
 #    if (isunicode): ret = ret.decode('utf-8')
-    return ret                    
+    return ret
 
 def main():
     # Configure the parser
@@ -76,9 +78,9 @@ def main():
                           description =
 """This script tries to compress the content of a CondDB file.
 The user has to provide a source
-(the exact path to a SQLite file), 
+(the exact path to a SQLite file),
 the partition to modify (DDDB, LHCBCOND or SIMCOND). The destination
-for the compressed db file (*_compressed.db) is the current directory by default.""") 
+for the compressed db file (*_compressed.db) is the current directory by default.""")
     parser.add_option("-s", "--source",
             dest="dbpath", type="string",
             help="source db file to be compressed")
@@ -86,13 +88,13 @@ for the compressed db file (*_compressed.db) is the current directory by default
             dest="dbpart", type="string",
             help="Partition name in the source db file")
     parser.add_option("-d", "--dir", dest="destdir", type = "string",
-            help = "Directory where to put the compressed db file. [default is current directory]", 
+            help = "Directory where to put the compressed db file. [default is current directory]",
             default="." )
     parser.add_option("-m", "--method", type = "int",
             help = "Method type [default: %default] DEACTIVATED FOR NOW",
             default=0)
     parser.add_option("-j", "--jobs", type = "int",
-            help = "Number of concurrent jobs for the compression. [default: %default]", 
+            help = "Number of concurrent jobs for the compression. [default: %default]",
             default=2 )
 
     (options, args) = parser.parse_args()
@@ -155,7 +157,7 @@ for the compressed db file (*_compressed.db) is the current directory by default
             t.start()
             threads.append(t)
 
-        # Populate input queue with data 
+        # Populate input queue with data
         for elem in contents: in_queue.put(elem)
         in_queue.join()
 

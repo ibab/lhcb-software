@@ -4,6 +4,9 @@
 ! Purpose     : Event Model classes for persistency of the swimming result
 !-----------------------------------------------------------------------------
 
+! 2013-11-07 - Marco Clemencic
+ - Renamed the dummy class __Instantiations to have a unique name (for ROOT 6).
+
 !========================= SwimmingEvent v1r3 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
@@ -27,11 +30,11 @@
 -  Use the proper options for the dictionary generation.
 
 ! 2011-10-16 - Roel Aaij
- - Add function to calculate the hash of an LHCb::Particle using its particle ID 
+ - Add function to calculate the hash of an LHCb::Particle using its particle ID
    and the LHCbIDs of its track. If a particle is composite the particle IDs of
    all daughters and lhcbIDs of all basic particle daughters are used.
  - Change key of daughter information in TurningPoint to size_t and use the hash
-   of the particle to enter the information. 
+   of the particle to enter the information.
 
 ! 2011-10-13 - Roel Aaij
  - Update requirements to suppress icc warnings.

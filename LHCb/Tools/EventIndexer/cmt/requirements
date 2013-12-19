@@ -35,7 +35,7 @@ apply_pattern    QMTest
 
 include_dirs  $(EventIndexer_root)/src
 
-macro EventIndexer_cintflags " $(includes) $(use_includes) "
+macro EventIndexer_cintflags " -inlineInputHeader $(includes) $(use_includes) "
 
 document rootcint EventIndexerDict EventIndexer.h
 

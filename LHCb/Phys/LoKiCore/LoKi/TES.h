@@ -4,6 +4,8 @@
 // ============================================================================
 // Include files
 // ============================================================================
+#include <boost/shared_ptr.hpp>
+// ============================================================================
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/Kernel.h"
@@ -36,23 +38,23 @@ namespace LoKi
   namespace TES
   {
     // ========================================================================
-    /** @class Get 
-     *  helper class to get some objects from TES 
+    /** @class Get
+     *  helper class to get some objects from TES
      *
      *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
      *  @date 2013-03-28
      */
-    class GAUDI_API Get : public virtual LoKi::AuxFunBase 
+    class GAUDI_API Get : public virtual LoKi::AuxFunBase
     {
     public:
       // =======================================================================
       /** constructor from TES location and root-in-tes flag
        *  @param location     TES-location
-       *  @param useRootInTES RootInTES-flag 
+       *  @param useRootInTES RootInTES-flag
        */
-      Get ( const std::string& location            , 
+      Get ( const std::string& location            ,
             const bool         useRootInTES = true ) ;
-      /// virtual destructor 
+      /// virtual destructor
       virtual ~Get() ;
       // ======================================================================
       /// OPTIONAL: nice printout
@@ -60,16 +62,16 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      /// default constructor is disabled 
-      Get () ;                                // defalt constructor is disabled 
+      /// default constructor is disabled
+      Get () ;                                // defalt constructor is disabled
       // ======================================================================
     public:
-      // ======================================================================      
-      const LoKi::Interface<GaudiAlgorithm>&   algorithm () const 
+      // ======================================================================
+      const LoKi::Interface<GaudiAlgorithm>&   algorithm () const
       { return m_algorithm ; }
-      const LoKi::Interface<IDataProviderSvc>& service   () const 
+      const LoKi::Interface<IDataProviderSvc>& service   () const
       { return m_datasvc   ; }
-      const LoKi::Interface<IDataProviderSvc>& dataSvc   () const 
+      const LoKi::Interface<IDataProviderSvc>& dataSvc   () const
       { return m_datasvc   ; }
       const std::string& location     () const { return m_location     ; }
       bool               useRootInTES () const { return m_useRootInTES ; }
@@ -82,14 +84,14 @@ namespace LoKi
       // ======================================================================
     private:
       // ======================================================================
-      /// the actual TES location 
-      std::string m_location     ; // the actual TES location 
+      /// the actual TES location
+      std::string m_location     ; // the actual TES location
       /// "Root-in-TES" flag
       bool        m_useRootInTES ; // "Root-in-TES" flag
       /// the algorithm to be used
       mutable LoKi::Interface<GaudiAlgorithm>   m_algorithm ;  // the algorithm
       /// the service   to be used
-      mutable LoKi::Interface<IDataProviderSvc> m_datasvc   ;  // the service 
+      mutable LoKi::Interface<IDataProviderSvc> m_datasvc   ;  // the service
       // ======================================================================
     } ;
     // ========================================================================
@@ -101,9 +103,9 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl
      *  @date 2010-02-13
      */
-    class GAUDI_API Exists 
+    class GAUDI_API Exists
       : public LoKi::Functor<void,bool>
-      , public LoKi::TES::Get 
+      , public LoKi::TES::Get
     {
     public:
       // ======================================================================
@@ -139,9 +141,9 @@ namespace LoKi
      *  @author Vanya BELYAEV  Ivan.BElyaev@nikhef.nl
      *  @date 2010-02-13
      */
-    class GAUDI_API Contains 
+    class GAUDI_API Contains
       : public LoKi::Functor<void,double>
-      , public LoKi::TES::Get 
+      , public LoKi::TES::Get
     {
     public:
       // ======================================================================
@@ -280,33 +282,33 @@ namespace LoKi
     } ;
     // ========================================================================
     template <class TYPE>
-    inline 
-    const TYPE* 
-    get_ ( const LoKi::TES::Get&  obj ) 
+    inline
+    const TYPE*
+    get_ ( const LoKi::TES::Get&  obj )
     {
       if      ( !(!obj.algorithm() ) )
       { return obj.algorithm()->getIfExists<TYPE> ( obj.location () , obj.useRootInTES () ) ; }
-      else if ( !(!obj.service  () ) ) 
+      else if ( !(!obj.service  () ) )
       { return SmartDataPtr<TYPE>                 ( obj.service  () , obj.location     () ) ; }
-      // 
-      return 0 ;     
-    }      
+      //
+      return 0 ;
+    }
     // ========================================================================
     template <class TYPE>
-    inline 
-    bool 
-    exists_ ( const LoKi::TES::Get&  obj ) 
+    inline
+    bool
+    exists_ ( const LoKi::TES::Get&  obj )
     {
       if      ( !(!obj.algorithm () ) )
       { return obj.algorithm()->exist<TYPE> ( obj.location () , obj.useRootInTES () ) ; }
-      else if ( !(!obj.service   () ) ) 
-      { 
-        SmartDataPtr<TYPE> o                ( obj.service  () , obj.location     () ) ; 
+      else if ( !(!obj.service   () ) )
+      {
+        SmartDataPtr<TYPE> o                ( obj.service  () , obj.location     () ) ;
         return !(!o) ;
       }
-      // 
-      return false  ;     
-    }      
+      //
+      return false  ;
+    }
     // ========================================================================
   } //                                               end of namespace LoKi::TES
   // ==========================================================================

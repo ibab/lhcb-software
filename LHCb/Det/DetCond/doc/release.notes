@@ -4,6 +4,17 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2013-12-05 - Marco Clemencic
+ - Fixed the use of boost::shared_ptr according to the macro COOL_HAS_CPP11 (the
+   one used in COOL headers).
+
+! 2013-12-05 - Marco Clemencic
+ - Do not explicitly use boost::shared_ptr.
+   See https://sft.its.cern.ch/jira/browse/ROOT-5806
+
+! 2013-07-18 - Marco Clemencic
+ - Minor change.
+
 !========================= DetCond v12r32 2013-07-17 =========================
 ! 2013-06-12 - Marco Cattaneo
  - Add virtual destructor to ICondDBReader interface class. Fixes gcc48 warning

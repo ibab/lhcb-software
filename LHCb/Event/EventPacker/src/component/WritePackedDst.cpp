@@ -5,7 +5,7 @@
 #include "GaudiKernel/IOpaqueAddress.h"
 
 // Kernel
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 
 // Event model
 #include "Event/RawEvent.h"

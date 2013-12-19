@@ -1,4 +1,4 @@
-#ifndef DICT_LCGDICT_H 
+#ifndef DICT_LCGDICT_H
 #define DICT_LCGDICT_H 1
 
 // begin include files
@@ -23,7 +23,7 @@ namespace {
    typedef std::map<std::string, bool> map_sb;
    typedef std::map<std::string, std::map<size_t, bool> > map_sinfo;
 
-   struct __Instantiations {
+   struct SwimmingEvent_Instantiations {
       // begin instantiations
       // Persistency
       LHCb::SwimmingReport::Container     _sr0;
@@ -82,12 +82,12 @@ namespace {
       map_culb::iterator _i02;
       map_culb::const_iterator _i03;
       std::pair<map_culb::iterator, bool> _p02;
- 
+
       map_sb::const_iterator _i21;
       map_sinfo::const_iterator _i11;
 
       std::pair<const size_t,bool> _p01;
-      
+
       typedef std::map<const std::string, double> map_csd;
       map_sd::iterator _i31;
       std::pair<map_csd::iterator, bool> _p31;

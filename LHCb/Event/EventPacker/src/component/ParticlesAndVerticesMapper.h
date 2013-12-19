@@ -18,7 +18,7 @@
 #include "Event/PackedRelations.h"
 #include "Event/PackedFlavourTag.h"
 
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 
 class IJobOptionsSvc;
 

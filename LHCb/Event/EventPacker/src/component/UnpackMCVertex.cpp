@@ -5,7 +5,7 @@
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "Event/MCVertex.h"
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 #include "Event/PackedMCVertex.h"
 // local
 #include "UnpackMCVertex.h"

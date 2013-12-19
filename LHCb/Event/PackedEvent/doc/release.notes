@@ -4,6 +4,9 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2013-06-27 - Marco Clemencic
+ - Made the requirements and the CMakeLists.txt inactive.
+
 ! 2013-04-09 - Chris Jones
  - Retire this package. Imported into Event/EventPacker.
 
@@ -26,12 +29,12 @@
 
 !========================= PackedEvent v4r11 2012-06-25 =========================
 ! 2012-06-21 - Heinrich Schindler
- - Added MCVLHitPacker class 
+ - Added MCVLHitPacker class
 
 !========================= PackedEvent v4r10 2012-04-28 =========================
 
 ! 2012-04-28 - Chris Jones
- - Some more tune tuning of the packing checks. 
+ - Some more tune tuning of the packing checks.
  - Add the object key to and warnings that are issued.
 
 ! 2012-04-27 - Chris Jones
@@ -41,7 +44,7 @@
 ! 2012-04-24 - Chris Jones
  - Improvements to the checks of Particle packing, to remove some false
    positives when comparing the momentum covariance matrix.
- - Change the 'mass' check for LorentzVectors to energy, to avoid machine 
+ - Change the 'mass' check for LorentzVectors to energy, to avoid machine
    precision issues with comparsions of small differences of large numbers.
 
 ! 2012-04-23 - Chris Jones
@@ -50,7 +53,7 @@
  - Print the TES location of Particles and Vertices with packing problems.
 
 ! 2012-04-12 - Chris Jones
- - Various improvements to the packers, to improve the way the checks are 
+ - Various improvements to the packers, to improve the way the checks are
    implemented. Allows the checking to be run directly by the packing algorithms.
 
 ! 2012-04-04 - Chris Jones
@@ -70,7 +73,7 @@
 
 !========================= PackedEvent v4r9 2012-03-26 =========================
 ! 2012-03-22 - Chris Jones
- - Fix the packing of RichPID and MuonPID objects, where the key was not 
+ - Fix the packing of RichPID and MuonPID objects, where the key was not
    properly restored.
 
 ! 2012-03-16 - Olivier Callot
@@ -79,7 +82,7 @@
 !========================= PackedEvent v4r8 2012-03-14 =========================
 ! 2012-03-14 - Olivier Callot
  - Fix the PackedVertex class: most of the information was not stored!
-  https://savannah.cern.ch/bugs/?92524 
+  https://savannah.cern.ch/bugs/?92524
 
 ! 2012-03-06 - Olivier Callot
  - New class PackedCluster to store the Velo and ST clusters on track
@@ -90,7 +93,7 @@
    use 64 bit integers, to avoid packing problems.
 
 ! 2012-02-17 - Chris Jones
- - Update the RecVertex packed class to support the new RecVertex class 
+ - Update the RecVertex packed class to support the new RecVertex class
    with track weights
 
 ! 2012-02-16 - Chris Jones
@@ -120,7 +123,7 @@
 
 !========================= PackedEvent v4r5 2011-02-22 =========================
 ! 2011-02-12 - Chris Jones
- - Initialise all data members of packed structs in default constructors. 
+ - Initialise all data members of packed structs in default constructors.
    Fixes various coverity defects.
 
 !======================= PackedEvent v4r4 2011-01-31 =========================
@@ -132,25 +135,25 @@
  - Fix compilation warning on windows, due to implicit double to float conversion
 
 ! 2010-09-23 - Chris Jones
- - Update LHCb::WeightsVector packing to store the packed weight as a short 
+ - Update LHCb::WeightsVector packing to store the packed weight as a short
    int, exploiting the fact it will only ever be in the range 0 to 1
 
 ! 2010-09-22 - Chris Jones
  - Add packed data classes for LHCb::WeightsVector class.
- - Fix bugs in the PackedParticle and PackedVertex class, where some smartrefs 
-   were stored in a way that would break things for WritePackedDst and 
+ - Fix bugs in the PackedParticle and PackedVertex class, where some smartrefs
+   were stored in a way that would break things for WritePackedDst and
    ReadPackedDst in Event/EventPacker
  - Add a few additional const statements here and there.
 
 ! 2010-09-18 - Chris Jones
- - Fix some compilation warnings from the Particle and Vertex packers on 
+ - Fix some compilation warnings from the Particle and Vertex packers on
    gcc 3.4
 
 ! 2010-09-15 - Chris Jones
  - Add a first try at full implementations of the packers for Particles and
    Vertices, for use in the stripping. The packing is not 100% ideal yet, the
-   MomCov matrix in the Particle class has room for improvement I think and 
-   should be improved before this is put into production, but what is there 
+   MomCov matrix in the Particle class has room for improvement I think and
+   should be improved before this is put into production, but what is there
    is OK and enough to start testing against.
 
 !======================= PackedEvent v4r2 2010-07-19 =========================
@@ -192,7 +195,7 @@
 
 !======================= PackedEvent v3r6 2009-09-03 =========================
 ! 2009-09-03 - Marco Cattaneo
- - In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows 
+ - In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows
 
 ! 2009-09-01 - Olivier Callot
  - Remove HitPattern from PackedTrack
@@ -202,7 +205,7 @@
 
 !======================= PackedEvent v3r5p1 2009-05-28 =======================
 ! 2009-05-28 - Marco Cattaneo
- - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows
 
 !======================= PackedEvent v3r5 2009-02-18 =========================
 ! 2009-01-27 - Marco Cattaneo
@@ -210,7 +213,7 @@
 
 ! 2009-01-26 - Olivier Callot
  - New class for PackedTwoProngVertex.
- - Remove version from Track, CaloHypo, Protoparticle and Vertex: 
+ - Remove version from Track, CaloHypo, Protoparticle and Vertex:
    This exists in all DataObjects
  - Some new methods to access internal arrays.
 
@@ -239,7 +242,7 @@
 !======================= PackedEvent v3r0 2007-01-30 =========================
 ! 2007-01-30 - Marco Cattaneo
  - Fix requirements for linking Reflex dict on Windows and retag
- 
+
 ! 2006-12-07 - Florence RANJARD
  - remove build of library since it is done by reflex
 
@@ -257,7 +260,7 @@
    . Remove PackedTrStateP, PackedTrStateL - to be migrated to new State
    . Remove PackedTrack - to be reimplemented for new Track
    . Put remaining classes in LHCb:: namespace, generate reflex dictionary
-   . Remove all code/decode/compare algorithms (to be moved to SimComponents 
+   . Remove all code/decode/compare algorithms (to be moved to SimComponents
      for MCParticle/MCVertex and a REC package for Track/State)
    . Remove DataOnDemand options
 
@@ -284,20 +287,20 @@
    they exist on an ancestor file.
 
 ! 2005-05-20 - Olivier Callot
- - Replace the (*it).linkID() by (*it)->key() when storing references, to 
-   avoid problems when the SmartRef is created in the job, i.e. linkID() is 
+ - Replace the (*it).linkID() by (*it)->key() when storing references, to
+   avoid problems when the SmartRef is created in the job, i.e. linkID() is
    not yet defined.
 
 !=========================== Rdst v1r0 2005-05-10 ==========================
 ! 2005-05-10 - Marco Cattaneo
  - Add default TES locations for Rdst classes
- - Add options/Rdst.opts for Rdst encoding and decoding via DataOnDemandSvc 
+ - Add options/Rdst.opts for Rdst encoding and decoding via DataOnDemandSvc
 
 ! 2005-03-18 - Olivier Callot
  - First attempt. The package has a class ( in Event ) for each container
    one want to compress, a struc describing the data and a DataObject which
    contains a vector of these struct.
-  
+
    The xml directory contains the lcg_dict generation
 
    The Rdst directory contains a small tool to pack various double to int and

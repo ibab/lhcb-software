@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2013-07-18 - Marco Clemencic
+ - Minor change.
+
 !========================= LHCbAlgs v2r59 2013-07-17 =========================
 ! 2013-07-15 - Paul Szczypka
  - Re-add __dtMapping dict in Configuration.
@@ -29,7 +32,7 @@
 !========================= LHCbAlgs v2r56 2013-04-23 =========================
 
 ! 2013-04-19 - Chris Jones
- - Add a new simple little algorithm, ApplicationVersionFilter, that 
+ - Add a new simple little algorithm, ApplicationVersionFilter, that
    selects/rejects events based on a regex filter on the application version.
 
 ! 2013-04-02 - Marco Cattaneo
@@ -76,11 +79,11 @@
  - Added CMake configuration file.
 
 ! 2012-11-09 - Chris Jones
- - Use getIfExists in DataObjectVersionFilter + increase default max 
+ - Use getIfExists in DataObjectVersionFilter + increase default max
    version number
 
 ! 2012-11-08 - Chris Jones
- - Add a trivial new algorithm DataRemove that just removes a TES location. 
+ - Add a trivial new algorithm DataRemove that just removes a TES location.
    Useful in the stripping packing options.
 
 ! 2012-10-12 - Marco Clemencic

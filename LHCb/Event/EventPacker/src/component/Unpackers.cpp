@@ -114,8 +114,8 @@ typedef DataPacking::Unpack<LHCb::CaloClusterPacker> R;
 DECLARE_ALGORITHM_FACTORY( R )
 
 template class DataPacking::Unpack<LHCb::MCFTHitPacker>;
-typedef DataPacking::Unpack<LHCb::MCFTHitPacker> S;
-DECLARE_ALGORITHM_FACTORY( S )
+typedef DataPacking::Unpack<LHCb::MCFTHitPacker> S_;
+DECLARE_ALGORITHM_FACTORY( S_ )
 
 template class DataPacking::Unpack<LHCb::MCSLHitPacker>;
 typedef DataPacking::Unpack<LHCb::MCSLHitPacker> T;

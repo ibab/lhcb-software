@@ -22,6 +22,8 @@
 
 #include "DetCond/ICondDBReader.h"
 
+#include <boost/shared_ptr.hpp>
+
 /** @class CondDBCache CondDBCache.h component/CondDBCache.h
  *
  *  Class used to manage in memory conditions.

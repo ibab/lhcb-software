@@ -17,7 +17,7 @@
 // end include files
 
 namespace {
-  struct _Instantiations {
+  struct @@@dictName@@@_Instantiations {
     // begin instantiations
 @@@dictInstances@@@
     // end instantiations

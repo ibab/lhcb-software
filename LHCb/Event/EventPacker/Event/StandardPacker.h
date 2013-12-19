@@ -7,7 +7,7 @@
 #include "GaudiKernel/IRegistry.h"
 
 //---------------------------------------------------------------------------
-/** @class StandardPacker StandardPacker.h Kernel/StandardPacker.h
+/** @class StandardPacker StandardPacker.h Event/StandardPacker.h
  *
  *  This is a simple class to convert to int/short with standard factors
  *  various quantities.

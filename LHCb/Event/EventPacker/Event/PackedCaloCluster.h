@@ -4,7 +4,7 @@
 #include <string>
 
 // Kernel
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 
 // Event
 #include "Event/CaloCluster.h"

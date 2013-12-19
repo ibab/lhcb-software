@@ -3,20 +3,22 @@
 ################################################################################
 gaudi_subdir(CondDBEntityResolver v5r6)
 
-gaudi_depends_on_subdirs(Det/DetCond
+gaudi_depends_on_subdirs(GaudiKernel
+                         Det/DetCond
                          Tools/XmlTools)
+
+find_package(Boost COMPONENTS python)
+find_package(ROOT COMPONENTS Core)
+find_package(PythonLibs)
 
 gaudi_add_module(CondDBEntityResolver
                  src/component/*.cpp
                  LINK_LIBRARIES DetCondLib XmlToolsLib)
 
-find_package(ROOT COMPONENTS Core)
-
-gaudi_add_dictionary(CondDBEntityResolver
-                     src/dict/dict.h
-                     src/dict/dict.xml
-                     INCLUDE_DIRS src/component ROOT
-                     LINK_LIBRARIES ROOT GaudiKernel
-                     OPTIONS "-U__MINGW32__")
+gaudi_add_python_module(CondDBCompression
+                          src/component/CondDBCompression.cpp
+                          src/python/module.cpp
+                        LINK_LIBRARIES ${Boost_PYTHON_LIBRARY} ROOT GaudiKernel
+                        INCLUDE_DIRS Boost ROOT PythonLibs)
 
 gaudi_add_test(QMTest QMTEST)

@@ -232,6 +232,7 @@ class genClassDicts:
         self.sDictInstances = self.align(self.sDictInstances)
         self.sClassSelections.sort()
         # fill the dictionary used for generation of files
+        self.packageDict['dictName']        = packagename
         self.packageDict['includes']        = '\n'.join(self.sIncludes)
         self.packageDict['dictInstances']   = '\n'.join(self.sDictInstances)
         self.packageDict['classSelections'] = '\n'.join(self.sClassSelections)

@@ -17,11 +17,9 @@ gaudi_depends_on_subdirs(DAQ/MDF
 
 find_package(Boost COMPONENTS regex)
 
-include_directories(src)
-
 gaudi_add_library(EventPackerLib
                   src/lib/*.cpp
-                  NO_PUBLIC_HEADERS
+                  PUBLIC_HEADERS Event
                   LINK_LIBRARIES MCEvent PhysEvent RecEvent GaudiAlgLib GaudiKernel LHCbKernel)
 
 gaudi_add_module(EventPacker

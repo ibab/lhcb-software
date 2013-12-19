@@ -3,8 +3,16 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+! 2013-10-02 - Marco Clemencic
+ - More minor changes to comments in lcg_selection.xml that were breaking the
+   build.
+
+! 2013-10-01 - Marco Clemencic
+ - Minor change to lcg_selection.xml to take into account the fact that
+   GaudiObjDesc sorts the lines when it adds more selections.
+
 !========================= GenEvent v6r9 2013-09-30 =========================
-! 2013-09-24 - Patrick Robbe 
+! 2013-09-24 - Patrick Robbe
  - GenHeader.xml : protect against missing BeamParameter pointer
 
 !========================= GenEvent v6r8 2013-07-17 =========================

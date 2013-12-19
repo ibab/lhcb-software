@@ -37,7 +37,11 @@ public:
   /// virtual destructor
   virtual ~ICondDBReader() {}
 
+#ifdef COOL_HAS_CPP11
+  typedef std::shared_ptr<const cool::IRecord> DataPtr;
+#else
   typedef boost::shared_ptr<const cool::IRecord> DataPtr;
+#endif
 
   /// Helper class to easily manage an interval of validity as a pair of Gaudi::Time
   /// instances.

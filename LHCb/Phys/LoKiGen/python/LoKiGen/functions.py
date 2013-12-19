@@ -3,14 +3,14 @@
 # $Id$
 # =============================================================================
 ## @file LoKiGen/functions.py
-#  The full set of useful objects from LoKiGen library 
+#  The full set of useful objects from LoKiGen library
 #
-#  This file is a part of LoKi project - 
+#  This file is a part of LoKi project -
 #   'C++ ToolKit  for Smart and Friendly Physics Analysis'
 #
 #  The package has been designed with the kind help from
-#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
-#  contributions and advices from G.Raven, J.van Tilburg, 
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+#  contributions and advices from G.Raven, J.van Tilburg,
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -23,35 +23,33 @@
 """
 The full set of useful objects from LoKiGen library
 
-This file is a part of LoKi project - 
+This file is a part of LoKi project -
 'C++ ToolKit  for Smart and Friendly Physics Analysis'
 
 The package has been designed with the kind help from
-Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
-contributions and advices from G.Raven, J.van Tilburg, 
+Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+contributions and advices from G.Raven, J.van Tilburg,
 A.Golutvin, P.Koppenburg have been used in the design.
 
 """
 # =============================================================================
-__author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu" 
+__author__  = "Vanya BELYAEV <ibelyaev@physics.syr.edu>"
 __date__    = "2007-12-01"
-__version__ = "$Revision$ "
+__version__ = "$Revision$"
 # =============================================================================
 
-import LoKiCore.decorators as _LoKiCore 
+import LoKiCore.decorators as _LoKiCore
 
 ## needed since there is no autoloading of HepMC dictionaries:
-import sys,PyCintex
+import GaudiPython
+GaudiPython.loaddict("HepMCRflx")
 
-if sys.platform == 'win32' : PyCintex.loadDict (    "HepMCRflx" )  
-else                       : PyCintex.loadDict ( "libHepMCRflx" )  
-    
 # Namespaces:
 cpp      = _LoKiCore.cpp
 std      = _LoKiCore.std
 LoKi     = _LoKiCore.LoKi
 HepMC    = cpp.HepMC
-Gaudi    = cpp.Gaudi 
+Gaudi    = cpp.Gaudi
 
 _GP = 'const HepMC::GenParticle*'
 _GV = 'const HepMC::GenVertex*'
@@ -62,7 +60,7 @@ _c2 = std.vector( _GV )
 ## ranges
 GRange   = Gaudi.NamedRange_ ( _c1     )
 GVRange  = Gaudi.NamedRange_ ( _c2     )
-## range-lists: 
+## range-lists:
 GRangeL  = LoKi.RangeList_  (  GRange )
 GVRangeL = LoKi.RangeList_  ( GVRange )
 
@@ -71,41 +69,41 @@ GVRangeL = LoKi.RangeList_  ( GVRange )
 # =============================================================================
 
 ## @see LoKi::Types::GFunc
-GFunc  = LoKi.Functor                ( _GP  + ',double' ) 
+GFunc  = LoKi.Functor                ( _GP  + ',double' )
 ## @see LoKi::Types::GCuts
-GCuts  = LoKi.Functor                ( _GP  + ',bool'   ) 
+GCuts  = LoKi.Functor                ( _GP  + ',bool'   )
 ## @see LoKi::Types::GFun
-GFun   = LoKi.FunctorFromFunctor     ( _GP  + ',double' ) 
+GFun   = LoKi.FunctorFromFunctor     ( _GP  + ',double' )
 ## @see LoKi::Types::GCut
-GCut   = LoKi.FunctorFromFunctor     ( _GP  + ',bool'   ) 
-## @see LoKi::Types::GFunc  
-GVFunc = LoKi.Functor                ( _GV  + ',double' ) 
+GCut   = LoKi.FunctorFromFunctor     ( _GP  + ',bool'   )
+## @see LoKi::Types::GFunc
+GVFunc = LoKi.Functor                ( _GV  + ',double' )
 ## @see LoKi::Types::GCuts
-GVCuts = LoKi.Functor                ( _GV  + ',bool'   ) 
+GVCuts = LoKi.Functor                ( _GV  + ',bool'   )
 ## @see LoKi::Types::GFun
-GVFun  = LoKi.FunctorFromFunctor     ( _GV  + ',double' ) 
+GVFun  = LoKi.FunctorFromFunctor     ( _GV  + ',double' )
 ## @see LoKi::Types::GCut
-GVCut  = LoKi.FunctorFromFunctor     ( _GV  +  ',bool'  ) 
+GVCut  = LoKi.FunctorFromFunctor     ( _GV  +  ',bool'  )
 
 # =============================================================================
-## All concrete types 
+## All concrete types
 # =============================================================================
 
 
 ## @see LoKi::Cuts::G3Q
-G3Q      = LoKi.GenParticles.ThreeCharge() 
+G3Q      = LoKi.GenParticles.ThreeCharge()
 ## @see LoKi::Cuts::GABSID
 GABSID    = LoKi.GenParticles.AbsIdentifier()
 ## @see LoKi::Cuts::GALL
-GALL      = LoKi.Constant ( _GP + ',bool' ) ( True ) 
+GALL      = LoKi.Constant ( _GP + ',bool' ) ( True )
 ## @see LoKi::Cuts::GANCESTOR
 GANCESTOR = LoKi.GenParticles.IsAnAncestor
 ## @see LoKi::Cuts::GBAR
 GBAR      = LoKi.GenParticles.BarCode ()
-## @see LoKi::Cuts::GBARCODE 
+## @see LoKi::Cuts::GBARCODE
 GBARCODE  = LoKi.GenParticles.BarCode ()
 ## @see LoKi::Cuts::GBARYON
-GBARYON  = LoKi.GenParticles.IsBaryon() 
+GBARYON  = LoKi.GenParticles.IsBaryon()
 ## @see LoKi::Cuts::GBEAUTY
 ##GBEAUTY   = GQUARK( LHCb.ParticleID.bottom  )
 GBEAUTY   = LoKi.GenParticles.HasQuark ( 5 )
@@ -114,7 +112,7 @@ GCHARGED  = LoKi.GenParticles.IsCharged ()
 ## @see LoKi::Cuts::GCHARM
 ##GCHARM  = GQUARK( LHCb.ParticleID.charm  )
 GCHARM    = LoKi.GenParticles.HasQuark ( 4 )
-## @see LoKi::Cuts::GCHILD 
+## @see LoKi::Cuts::GCHILD
 GCHILD    = LoKi.GenParticles.ChildFun
 ## @see LoKi::Cuts::GCHILDCUT
 GCHILDCUT = LoKi.GenParticles.ChildCut
@@ -122,16 +120,16 @@ GCHILDCUT = LoKi.GenParticles.ChildCut
 GCHILDFUN = LoKi.GenParticles.ChildFun
 ## @see LoKi::Cuts::GCTAU
 GCTAU     = LoKi.GenParticles.ProperLifeTime ()
-## @see LoKi::Cuts::GDECNODE 
+## @see LoKi::Cuts::GDECNODE
 GDECNODE  = LoKi.GenParticles.DecNode
-## @see LoKi::Cuts::GDECTREE 
+## @see LoKi::Cuts::GDECTREE
 GDECTREE  = LoKi.GenParticles.DecTree
 ## @see LoKi::Cuts::GDELTAR2
-GDELTAR2  = LoKi.GenParticles.DeltaR2   
+GDELTAR2  = LoKi.GenParticles.DeltaR2
 ## @see LoKi::Cuts::GDETA
-GDETA     = LoKi.GenParticles.DeltaEta  
+GDETA     = LoKi.GenParticles.DeltaEta
 ## @see LoKi::Cuts::GDPHI
-GDPHI     = LoKi.GenParticles.DeltaPhi  
+GDPHI     = LoKi.GenParticles.DeltaPhi
 ## @see LoKi::Cuts::GDR2
 GDR2      = LoKi.GenParticles.DeltaR2
 ## @see LoKi::Cuts::GFALSE
@@ -143,37 +141,37 @@ GFAPVX   = LoKi.GenParticles.AdapterToProductionVertex
 ## @see LoKi::Cuts::GFROMTREE
 GFROMTREE = LoKi.GenParticles.FromHepMCTree
 ## @see LoKi::Cuts::GHADRON
-GHADRON  = LoKi.GenParticles.IsHadron   () 
+GHADRON  = LoKi.GenParticles.IsHadron   ()
 ## @see LoKi::Cuts::GID
 GID      = LoKi.GenParticles.Identifier ()
 ## @see LoKi::Cuts::GINTREE
 GINTREE  = LoKi.GenParticles.InTree
 ## @see LoKi::Cuts::GLEPTON
-GLEPTON   = LoKi.GenParticles.IsLepton  () 
+GLEPTON   = LoKi.GenParticles.IsLepton  ()
 ## @see LoKi::Cuts::GMESON
-GMESON   = LoKi.GenParticles.IsMeson    () 
+GMESON   = LoKi.GenParticles.IsMeson    ()
 ## @see LoKi::Cuts::GMOMDIST
 GMOMDIST  = LoKi.GenParticles.MomentumDistance
 ## @see LoKi::Cuts::GNEUTRAL
-GNEUTRAL  = LoKi.GenParticles.IsNeutral () 
+GNEUTRAL  = LoKi.GenParticles.IsNeutral ()
 ## @see LoKi::Cuts::GNINTREE
 GNINTREE  = LoKi.GenParticles.NInTree
 ## @see LoKi::Cuts::GNLT
-GNLT     = LoKi.GenParticles.NominalLifeTime () 
+GNLT     = LoKi.GenParticles.NominalLifeTime ()
 ## @see LoKi::Cuts::GNONE
 GNONE    = LoKi.Constant( _GP + ',bool' )(False)
 ## @see LoKi::Cuts::GNUCLEUS
-GNUCLEUS = LoKi.GenParticles.IsNucleus () 
+GNUCLEUS = LoKi.GenParticles.IsNucleus ()
 ## @see LoKi::Cuts::GONE
 GONE      = LoKi.Constant ( _GP + ',double' )( 1.0 )
 ## @see LoKi::Cust::GOSCILLATED
-GOSCILLATED = LoKi.GenParticles.Oscillated() 
+GOSCILLATED = LoKi.GenParticles.Oscillated()
 ## @see LoKi::Cust::GOSCILLATED1
-GOSCILLATED1 = LoKi.GenParticles.Oscillated1() 
+GOSCILLATED1 = LoKi.GenParticles.Oscillated1()
 ## @see LoKi::Cust::GOSCILLATED2
-GOSCILLATED2 = LoKi.GenParticles.Oscillated2() 
+GOSCILLATED2 = LoKi.GenParticles.Oscillated2()
 ## @see LoKi::Cuts::GPT0
-GPT0     = LoKi.GenParticles.TransverseMomentum     () 
+GPT0     = LoKi.GenParticles.TransverseMomentum     ()
 ## @see LoKi::Cuts::GPTDIR
 GPTDIR    = LoKi.GenParticles.TransverseMomentumRel
 ## @see LoKi::Cuts::GPTREL
@@ -188,7 +186,7 @@ GSTATUS   = LoKi.GenParticles.Status ( )
 ## GSTRANGE  = LoKi.GenParticles.HasQuark ( LHCb.ParticleID.strange )
 GSTRANGE  = LoKi.GenParticles.HasQuark ( 3 )
 ## @see LoKi::Cuts::GTIME
-GTIME    = LoKi.GenParticles.ProperLifeTime () 
+GTIME    = LoKi.GenParticles.ProperLifeTime ()
 ## @see LoKi::Cuts::GTOP
 ## GTOP  = LoKi.GenParticles.HasQuark ( LHCb.ParticleID.top )
 GTOP     = LoKi.GenParticles.HasQuark ( 6 )
@@ -199,42 +197,42 @@ GVALID   = LoKi.Valid           ( _GP ) ()
 ## @see LoKi::Cuts::GVEV
 GVEV     = LoKi.GenParticles.ValidEndVertex()
 ## @see LoKi::Cuts::GZERO
-GZERO    = LoKi.Constant       ( _GP + ',double' )( 0.0 )    
+GZERO    = LoKi.Constant       ( _GP + ',double' )( 0.0 )
 
 
 
 ## @see LoKi::Cuts::GM
-GM        = LoKi.GenParticles.Mass       () 
+GM        = LoKi.GenParticles.Mass       ()
 ## @see LoKi::Cuts::GMASS
-GMASS     = LoKi.GenParticles.Mass      
+GMASS     = LoKi.GenParticles.Mass
 
 ## @see LoKi::Cuts::GE
 GE        = LoKi.GenParticles.Energy  ()
 ## @see L oKi::Cuts::GENERGY
-GENERGY   = LoKi.GenParticles.Energy  
+GENERGY   = LoKi.GenParticles.Energy
 
 ## @see LoKi::Cuts::GP
-GP        = LoKi.GenParticles.Momentum () 
+GP        = LoKi.GenParticles.Momentum ()
 ## @see LoKi::Cuts::GMOMENTUM
-GMOMENTUM = LoKi.GenParticles.Momentum 
+GMOMENTUM = LoKi.GenParticles.Momentum
 
 ## @see LoKi::Cuts::GPX
-GPX       = LoKi.GenParticles.MomentumX () 
+GPX       = LoKi.GenParticles.MomentumX ()
 ## @see LoKi::Cuts::GMOMX
-GMOMX     = LoKi.GenParticles.MomentumX 
+GMOMX     = LoKi.GenParticles.MomentumX
 
 ## @see LoKi::Cuts::GPY
-GPY       = LoKi.GenParticles.MomentumY () 
+GPY       = LoKi.GenParticles.MomentumY ()
 ## @see LoKi::Cuts::GMOMY
 GMOMY     = LoKi.GenParticles.MomentumY
 
 ## @see LoKi::Cuts::GPZ
-GPZ       = LoKi.GenParticles.MomentumZ () 
+GPZ       = LoKi.GenParticles.MomentumZ ()
 ## @see LoKi::Cuts::GMOMENTUM
-GMOMZ     = LoKi.GenParticles.MomentumZ 
+GMOMZ     = LoKi.GenParticles.MomentumZ
 
 ## @see LoKi::Cuts::GPT
-GPT       = LoKi.GenParticles.TransverseMomentum () 
+GPT       = LoKi.GenParticles.TransverseMomentum ()
 ## @see LoKi::Cuts::GMOMENTUM
 GMOMT     = LoKi.GenParticles.TransverseMomentum
 
@@ -242,15 +240,15 @@ GMOMT     = LoKi.GenParticles.TransverseMomentum
 ## @see LoKi::Cuts::GETA
 GETA      = LoKi.GenParticles.PseudoRapidity ()
 ## @see LoKi::Cuts::GPSEUDORAPIDITY
-GPSEUDORAPIDITY = LoKi.GenParticles.PseudoRapidity 
+GPSEUDORAPIDITY = LoKi.GenParticles.PseudoRapidity
 
-## @see LoKi::Cuts::GBETA 
+## @see LoKi::Cuts::GBETA
 GBETA      = LoKi.GenParticles.Beta      ()
 ## @see LoKi::Cuts::GGAMMA
 GGAMMA     = LoKi.GenParticles.Gamma     ()
-## @see LoKi::Cuts::GBETAGAMMA 
+## @see LoKi::Cuts::GBETAGAMMA
 GBETAGAMMA = LoKi.GenParticles.BetaGamma ()
-## @see LoKi::Cuts::GBGAMMA 
+## @see LoKi::Cuts::GBGAMMA
 GBGAMMA    = LoKi.GenParticles.BetaGamma ()
 ## @see LoKi::Cuts::GBG
 GBG        = LoKi.GenParticles.BetaGamma ()
@@ -275,18 +273,18 @@ GTHETA    = LoKi.GenParticles.Theta  ()
 ## @see LoKi::Cuts::GASYMUTH
 GPOLAR    = LoKi.GenParticles.Theta
 
-## @see LoKi::Cuts::GFLIGHTPV 
-GFLIGHTPV = LoKi.GenParticles.Flight ( True  ) 
+## @see LoKi::Cuts::GFLIGHTPV
+GFLIGHTPV = LoKi.GenParticles.Flight ( True  )
 ## @see LoKi::Cuts::GPVFLIGHT
-GPVFLIGHT = LoKi.GenParticles.Flight ( True  ) 
+GPVFLIGHT = LoKi.GenParticles.Flight ( True  )
 ## @see LoKi::Cuts::GFLIGHT
-GFLIGHT   = LoKi.GenParticles.Flight ( False ) 
+GFLIGHT   = LoKi.GenParticles.Flight ( False )
 
 
 ## @see LoKi::Cuts::GCOUNT
 GCOUNT    = LoKi.GenParticles.Count
 ## @see LoKi::Cuts::GHAS
-GHAS      = LoKi.GenParticles.Has 
+GHAS      = LoKi.GenParticles.Has
 
 
 ## @see LoKi::Cuts::GVTRUE
@@ -307,7 +305,7 @@ GVVALID    = LoKi.Valid        ( _GV )()
 GVSAME     = LoKi.TheSame      ( _GV )
 ## @see LoKi::Cuts::GVBAR
 GVBAR      = LoKi.GenVertices.BarCode()
-## @see LoKi::Cuts::GVBARCODE 
+## @see LoKi::Cuts::GVBARCODE
 GVBARCODE  = GVBAR
 ## @see LoKi::Cuts::GVTIME
 GVTIME     = LoKi.GenVertices.PositionT()
@@ -317,32 +315,32 @@ GVCOUNT    = LoKi.GenVertices.CountIF
 GVSUM      = LoKi.GenVertices.SumIF
 
 
-## @see LoKi::Cuts::GVX 
-GVX        = LoKi.GenVertices.PositionX () 
-## @see LoKi::Cuts::GVY 
-GVY        = LoKi.GenVertices.PositionY () 
-## @see LoKi::Cuts::GVZ 
-GVZ        = LoKi.GenVertices.PositionZ () 
+## @see LoKi::Cuts::GVX
+GVX        = LoKi.GenVertices.PositionX ()
+## @see LoKi::Cuts::GVY
+GVY        = LoKi.GenVertices.PositionY ()
+## @see LoKi::Cuts::GVZ
+GVZ        = LoKi.GenVertices.PositionZ ()
 ## @see LoKi::Cuts::GVRHO
-GVRHO      = LoKi.GenVertices.Rho       ()  
+GVRHO      = LoKi.GenVertices.Rho       ()
 ## @see LoKi::Cuts::GVT
 GVT        = LoKi.GenVertices.PositionT()
 
 ## @see LoKi::Cuts::GCOSPOL
-GCOSPOL     = LoKi.GenParticles.PolarizationAngle 
+GCOSPOL     = LoKi.GenParticles.PolarizationAngle
 ## @see LoKi::Cuts::GSINCHI
 GSINCHI     = LoKi.GenParticles.SinChi
 ## @see LoKi::Cuts::GCOSCHI
 GCOSCHI     = LoKi.GenParticles.CosChi
 ## @see LoKi::Cuts::GANGLECHI
 GANGLECHI   = LoKi.GenParticles.AngleChi
-## @see LoKi::Cuts::GCOSTHETATR 
+## @see LoKi::Cuts::GCOSTHETATR
 GCOSTHETATR = LoKi.GenParticles.CosThetaTr
-## @see LoKi::Cuts::GSINPHITR 
+## @see LoKi::Cuts::GSINPHITR
 GSINPHITR   = LoKi.GenParticles.SinPhiTr
-## @see LoKi::Cuts::GCOSPHITR 
+## @see LoKi::Cuts::GCOSPHITR
 GCOSPHITR   = LoKi.GenParticles.CosPhiTr
-## @see LoKi::Cuts::GANGLEPHITR 
+## @see LoKi::Cuts::GANGLEPHITR
 GANGLEPHITR = LoKi.GenParticles.AnglePhiTr
 
 
@@ -381,7 +379,7 @@ GSOURCE    = LoKi.GenParticles.SourceTES
 GEMPTY      = LoKi.Functors.Empty ( _GP ) ()
 GVEMPTY     = LoKi.Functors.Empty ( _GV ) ()
 GSIZE       = LoKi.Functors.Size  ( _GP ) ()
-GVSIZE      = LoKi.Functors.Size  ( _GV ) () 
+GVSIZE      = LoKi.Functors.Size  ( _GV ) ()
 
 # =============================================================================
 if '__main__' == __name__ :
@@ -389,10 +387,10 @@ if '__main__' == __name__ :
     print __doc__
     print ' Author  : ' , __author__
     print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
+    print ' Date    : ' , __date__
     print 80*'*'
-    for i in dir() : print i 
-        
+    for i in dir() : print i
+
 # =============================================================================
 # The END
 # =============================================================================

@@ -25,16 +25,12 @@ library          CondDBEntityResolver    ../src/component/*.cpp
 #=========================================================================
 apply_pattern    component_library library=CondDBEntityResolver
 
-# =============== LCG Dictionary ==============================================
-include_dirs ../src/component
-apply_pattern     reflex_dictionary                                     \
-                  dictionary=CondDBEntityResolver                                    \
-                  headerfiles=$(CONDDBENTITYRESOLVERROOT)/src/dict/dict.h     \
-                  selectionfile=$(CONDDBENTITYRESOLVERROOT)/src/dict/dict.xml \
-                  options="-U__MINGW32__"
-# Disable some compiler warnings in the automatically generated dict code
-macro_append DetCondDict_cppflags "" \
-                       target-icc " -wd2259"
+#------------------------------------------------------------------------------
+# Python binary module to acces the compression-decompression functions
+# -----------------------------------------------------------------------------
+use Python * LCG_Interfaces -no_auto_imports
+apply_pattern pyd_boost_module module=CondDBCompression files="component/CondDBCompression.cpp python/module.cpp"
+#------------------------------------------------------------------------------
 
 apply_pattern QMTest
 

@@ -5,6 +5,10 @@
 ! Package manager: Stefan Roiser
 !--------------------------------------------------------------------------------
 
+! 2013-11-01 - Marco Clemencic
+ - Modified the generated dictionary header so that the dummy class for the
+   instantiations has a different name for each dictionary (needed in ROOT 6).
+
 !========================= GaudiObjDesc v11r17 2012-11-16 =========================
 ! 2012-11-16 - Marco Clemencic
  - Updated version in CMakelists.txt.

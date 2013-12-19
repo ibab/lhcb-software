@@ -13,26 +13,36 @@
 ! 2013-11-23 - Vanya Belyaev
  - adjust a bit Bugg&Co family of functions 
 
+! 2013-11-07 - Marco Clemencic
+ - Renamed the dummy class __Instantiations to have a unique name (for ROOT 6).
+
+! 2013-11-07 - Marco Clemencic
+ - Added work-around for autoloading dictionary of templates in ROOT 6.
+
+! 2013-11-07 - Marco Clemencic
+ - Restore the use of GaudiPython in Types.py and Math.py to facilitate the
+   transition to ROOT 6.
+
 ! 2013-11-16 - Vanya Belyaev
- - adjust alpha in Crystal Ball 
+ - adjust alpha in Crystal Ball
 
 ! 2013-10-27 - Vanya Belyaev
  - add few math-functions for phase space modulated by polynomial
 
 !========================= LHCbMath v3r43 2013-10-23 =========================
 ! 2013-10-05 - Vanya Belyaev
- - add few math-functions 
+ - add few math-functions
 
 !========================= LHCbMath v3r42 2013-09-30 =========================
 ! 2013-08-28 - Vanya Belyaev
- - add more useful functions 
+ - add more useful functions
 
 !========================= LHCbMath v3r41 2013-07-17 =========================
 ! 2013-07-11 - Vanya Belyaev
  - python/LHCbMath/Types.py
    python/LHCbMath/Math.py
 
-   eliminate unnesessary imports from GaudiPython 
+   eliminate unnesessary imports from GaudiPython
 
 ! 2013-06-17 - Marco Cattaneo
  - Remove Gaudi::Math::invertPosDefSymMatrix altogether
@@ -43,24 +53,24 @@
 
 !========================= LHCbMath v3r40 2013-06-03 =========================
 ! 2013-05-18 - Vanya Belyaev
- - Types.py: minor fix in symmatrix alias 
+ - Types.py: minor fix in symmatrix alias
 
 ! 2013-05-12 - Vanya Belyaev
- - add gamma-dist and loggamma-dist functions 
+ - add gamma-dist and loggamma-dist functions
 
 ! 2013-05-11 - Vanya Belyaev
- - speedup the integration 
+ - speedup the integration
 
 !========================= LHCbMath v3r39 2013-04-29 =========================
-! 2013-04-27  - Vanya Belyaev 
- - EqualTo: add comparison ove vectors, points & matrices 
- - Functions.h: small fix 
+! 2013-04-27  - Vanya Belyaev
+ - EqualTo: add comparison ove vectors, points & matrices
+ - Functions.h: small fix
 
 ! 2013-04-25 - Vanya Belyaev
  -  add few helper functions into ValueWithError
 
 ! 2013-04-23 - Chris Jones
- - Move 'operator<<' for MD5 inside a namespace to fix compilation 
+ - Move 'operator<<' for MD5 inside a namespace to fix compilation
    errors with clang.
 
 ! 2013-04-22 - Chris Jones

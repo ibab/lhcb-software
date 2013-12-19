@@ -6,7 +6,7 @@
 #include "GaudiKernel/StatusCode.h"
 
 // Kernel
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 
 // Event
 #include "Event/CaloHypo.h"

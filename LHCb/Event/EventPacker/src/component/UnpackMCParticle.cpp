@@ -3,7 +3,7 @@
 #include "GaudiKernel/AlgFactory.h"
 
 #include "Event/MCParticle.h"
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 #include "Event/PackedMCParticle.h"
 // local
 #include "UnpackMCParticle.h"

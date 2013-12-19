@@ -3,7 +3,7 @@
 #define EVENT_PACKEDRELATIONS_H 1
 
 // Kernel
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 
 // Include files
 namespace LHCb 

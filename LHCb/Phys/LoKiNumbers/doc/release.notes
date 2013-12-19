@@ -1,17 +1,20 @@
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiNumbers
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
-! Purpose     : Set of dictionaries for LoKi functions 
+! Purpose     : Set of dictionaries for LoKi functions
 ! -----------------------------------------------------------------------------
-! 
-!   This file is a part of LoKi project - 
+!
+!   This file is a part of LoKi project -
 !     "C++ ToolKit  for Smart and Friendly Physics Analysis"
-! 
+!
 !   The package has been designed with the kind help from
-!   Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
-!   contributions and advices from G.Raven, J.van Tilburg, 
+!   Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+!   contributions and advices from G.Raven, J.van Tilburg,
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2013-11-07 - Marco Clemencic
+ - Added work-around for autoloading dictionary of templates in ROOT 6.
 
 ! 2013-11-13 - Bram Bouwens
  - add tests for and/or operations
@@ -24,7 +27,7 @@
 
 !========================= LoKiNumbers v10r4 2013-04-29 =========================
 ! 2013-03-29 - Vanya Belyaev
- - fix according to changes in LoKiCore 
+ - fix according to changes in LoKiCore
 
 !========================= LoKiNumbers v10r3 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
@@ -32,28 +35,28 @@
 
 !========================= LoKiNumbers v10r2 2011-11-07 =========================
 ! 2011-10-30 - Vanya Belyaev
- - update for stream sorting functors 
+ - update for stream sorting functors
 
 !========================= LoKiNumbers v10r1 2011-07-25 =========================
 ! 2011-07-20 - Vanya Belyaev
- - add helper functor for ``smart'' creation of RecSummary functors 
+ - add helper functor for ``smart'' creation of RecSummary functors
 
 !========================= LoKiNumbers v10r0 2011-04-04 =========================
 ! 2011-04-02 - Vanya Belyaev
- - add tests for round/jbit/jbits functions 
+ - add tests for round/jbit/jbits functions
 
 ! 2011-03-30 - Vanya Belyaev
  - add test for 'modulo'-operator
 
 ! 2011-03-28 - Vanya Belyaev
- - add test for 'fetch'-decorator 
+ - add test for 'fetch'-decorator
 
 ! 2011-03-24 - Vanya Belyaev
  - add
      HASRECSUMMARY & RECSUMMARY symbols for Sophie Redford & Andy Powell
 
 ! 2011-03-16 - Vanya Belyaev
- - update for new method names 
+ - update for new method names
 
 ! 2011-03-10 - Vanya Belyaev
  - kill bad concept of 'Element'-functor
@@ -67,9 +70,9 @@
 !========================= LoKiNumbers v9r4 2010-10-25 =========================
 
 ! 2010-10-10 - Vanya Belyaev
- - add blinding functions 
+ - add blinding functions
  - cmt/requirements
-   version increment to v9r4 
+   version increment to v9r4
 
 
 !========================== LoKiNumbers v9r3 2010-10-04 =======================
@@ -77,61 +80,61 @@
 
  - add missing dictionary for void->vector<double>
  - cmt/requirements
-   version increment to v9r3 
+   version increment to v9r3
 
 !========================== LoKiNumbers v9r2 2010-08-25 =======================
 ! 2010-08-02 - Vanya Belyaev
 
- - add new functors CHECK & ACCEPT, 
-     needed for Global Event Cuts in Hlt, see task #16675 
+ - add new functors CHECK & ACCEPT,
+     needed for Global Event Cuts in Hlt, see task #16675
 
- - cmt/requirements 
-     version increment to v9r2 
+ - cmt/requirements
+     version increment to v9r2
 
 !========================== LoKiNumbers v9r1 2010-06-18 =======================
 ! 2010-06-05 - Vanya Belyaev
 
- - add examples/tests  for new streamers 
+ - add examples/tests  for new streamers
 
- - cmt/requirmeents 
+ - cmt/requirmeents
 
-     version incement to v9r1 
+     version incement to v9r1
 
 !========================== LoKiNumbers v9r0 2010-04-26 =======================
 ! 2010-04-06 - Vanya Belyaev
- - use Gaudi::Raneg instead of LoKi::Range 
+ - use Gaudi::Raneg instead of LoKi::Range
 
- - cmt/requirements 
+ - cmt/requirements
 
-    version increment to v9r0 
+    version increment to v9r0
 
 !========================== LoKiNumbers v8r6 2010-04-07 =======================
 ! 2010-04-04 - Vanya Belyaev
 
- - add enum LoKi::Scalers::RateLimitTyepintothe dictionary 
+ - add enum LoKi::Scalers::RateLimitTyepintothe dictionary
 
-    (needed for Moore) 
+    (needed for Moore)
 
 
 !========================== LoKiNumbers v8r5 2010-03-17 =======================
 ! 2010-03-07 - Vanya Belyaev
 
- - use new comparisons & functions fo LoKicore 
+ - use new comparisons & functions fo LoKicore
 
  - cmt/requirements
 
-   version increment to v8r5 
+   version increment to v8r5
 
 
 !========================== LoKiNumbers v8r4 2010-02-24 =======================
 ! 2010-02-13 - Vanya Belyaev
  - add new symbols:
-       EXISTS    LoKi::TES::Exists   to check existence of object in TES 
-       CONTAINS  LoKi::TES::Contains to check existence and size of Container in TES 
-       The concept belongs to Gerhard The Great Raven 
-      
- - cmt/requirements 
-    version increment to v8r4 
+       EXISTS    LoKi::TES::Exists   to check existence of object in TES
+       CONTAINS  LoKi::TES::Contains to check existence and size of Container in TES
+       The concept belongs to Gerhard The Great Raven
+
+ - cmt/requirements
+    version increment to v8r4
 
 !========================== LoKiNumbers v8r3p2 2009-12-11 =====================
 ! 2009-12-06 - Vanya Belyaev
@@ -140,53 +143,53 @@
 
  - "generic scalers"  void --> bool
 
-     SKIP  :   SKIP ( N )  - accept only Nth  
+     SKIP  :   SKIP ( N )  - accept only Nth
      SCALE :   SCALE ( f ) - accept only "f"-fraction ( random!)
      RATE  :   RATE  ( r ) - keeps the rate limit at "r"
 
  - helpers scalers (useful for streamers)  double -> bool
 
-     XSKIP 
-     XSCALE 
-     XRATE 
+     XSKIP
+     XSCALE
+     XRATE
 
- - add exampel for scalers/prescalers 
-  
+ - add exampel for scalers/prescalers
+
 
 ! 2009-11-29 - Vanya Belyaev
 
  - python/LoKiNumbers/test.py
 
-     fix the example of usage of in_range function 
+     fix the example of usage of in_range function
 
- - cmt/requirements 
-     version increment to v8r3p2 
+ - cmt/requirements
+     version increment to v8r3p2
 
 !========================== LoKiNumbers v8r3p1 2009-11-22 =====================
 ! 2009-11-21 - Vanya Belyaev
 
  - python/LoKiNumbers/test.py
 
-     add the example of usage of in_range function 
+     add the example of usage of in_range function
 
- - cmt/requirements 
+ - cmt/requirements
 
-     version increment to v8r3p1 
+     version increment to v8r3p1
 
-    
+
 !========================== LoKiNumbers v8r3 2009-10-16 =======================
 ! 2009-10-12 - Marco Cattaneo
- - Remove duplicate dictionaries already produced by Root 5.24 
- - In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows 
+ - Remove duplicate dictionaries already produced by Root 5.24
+ - In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows
 
 !========================== LoKiNumbers v8r2 2009-06-02 =======================
 ! 2009-06-02 - Marco Cattaneo
- - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows
 
 ! 2009-05-09 - Vanya BELYAEV
- - remove unnesessary std:unary/binary_function bases 
- - cmt/requirements 
-   version incrmen tto v8r2 
+ - remove unnesessary std:unary/binary_function bases
+ - cmt/requirements
+   version incrmen tto v8r2
 
 !========================== LoKiNumbers v8r1 2009-01-08 =======================
 ! 2009-01-08 - Marco Cattaneo
@@ -196,70 +199,70 @@
  - first attempt to provide the integrated QMtests
 
 ! 2008-11-21 - Vanya Belyaev
- - add more improvements fo  vector->bool functors 
+ - add more improvements fo  vector->bool functors
  - cmt/requirements
-   version incrmeent to v8r1 
+   version incrmeent to v8r1
 
 ! =========================== LoKiNumbers v8r0 2008-11-17 =====================
 ! 2008-11-02 - Vanya BELYAEV
- - more fixes for various compilers 
+ - more fixes for various compilers
 
 ! 2008-10-29 - Vanya BELYAEV
- - fixes for gcc43 compilation 
+ - fixes for gcc43 compilation
 
 ! 2008-10-19 - Vanya BELYAEV
- - add the dictionary for various "void"-functors 
- - new module python/LoKiNumbers/sources.py with basic "void"-functors 
- - cmt/requirements 
-    version increment to v8r0 
+ - add the dictionary for various "void"-functors
+ - new module python/LoKiNumbers/sources.py with basic "void"-functors
+ - cmt/requirements
+    version increment to v8r0
 
 ! =========================== LoKiNumbers v7r3p1 2008-06-30 ===================
 ! 2008-06-11 - Vanya  BELYAEV
  - dict/LoKiNumbers.xml
-   fix the warning form Reflex 
+   fix the warning form Reflex
 
- - cmt/requirements 
-   version incrment to v7r3p1 
+ - cmt/requirements
+   version incrment to v7r3p1
 
 ! =========================== LoKiNumbers v7r3 2008-04-10 =====================
-! 2008-04-09 - Vanya BELYAEV 
+! 2008-04-09 - Vanya BELYAEV
  - dic/LoKiNumbersDict.h
-   add missing __rshift__ method 
+   add missing __rshift__ method
 
 ! 2008-03-30 - Vanya BELYAEV
  - introduce the symbol for "random" cuts
- - new streamers/shift __rshift__ 
- - cmt/requirements 
-    version increment to v7r3 
+ - new streamers/shift __rshift__
+ - cmt/requirements
+    version increment to v7r3
 
 ! =========================== LoKiNumbers v7r2 2008-02-11 =====================
 ! 2008-02-11 - Vanya BELYAEV
- - various fixes for new Gaudi 
- - cmt/requirements 
-    version incretement to v7r2 
+ - various fixes for new Gaudi
+ - cmt/requirements
+    version incretement to v7r2
 
 ! =========================== LoKiNumbers v7r1 2008-01-24 =====================
 ! 2008-01-22 - Vanya BELYAEV
- - dict/LoKiNumbers.xml, dict/LoKiNumbersDict.h 
-    fix for windows 32 platform to suppress the (auto)generation 
+ - dict/LoKiNumbers.xml, dict/LoKiNumbersDict.h
+    fix for windows 32 platform to suppress the (auto)generation
     of "strange" functors
-      XXX<double*,yyy>, XXX<const double*,yyy>, 
-     XXX<std::vector<double>*,yyy> and XXX<const std::vector<double>*,yyy> 
+      XXX<double*,yyy>, XXX<const double*,yyy>,
+     XXX<std::vector<double>*,yyy> and XXX<const std::vector<double>*,yyy>
 
- - cmt/requirements 
-     version increment to v7r1 
+ - cmt/requirements
+     version increment to v7r1
 
 ! =========================== LoKiNumbers v7r0 2007-12-01 =====================
 ! 2007-12-01 - Vanya BELYAEV
 
  - New package.
 
-   It is pure dictionary package, which contains only the dictionaries for 
+   It is pure dictionary package, which contains only the dictionaries for
    the LoKi's functors which deal only with "plain numbers".
 
-   For the overall coherency the version is set to v7r0 
+   For the overall coherency the version is set to v7r0
 
 
 ! -----------------------------------------------------------------------------
-! The END 
+! The END
 ! -----------------------------------------------------------------------------

@@ -8,7 +8,7 @@
 #include "GaudiKernel/DataObject.h"
 
 // Kernel
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 
 // Event
 #include "Event/RecVertex.h"

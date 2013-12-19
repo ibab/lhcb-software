@@ -13,6 +13,15 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-12-05 - Marco Clemencic
+ - Added include for boost::smart_ptr.
+
+! 2013-07-18 - Marco Clemencic
+ - Removed unnecessary dependency on Reflex.
+
+! 2013-06-27 - Marco Clemencic
+ - Replaced PyCintex with ROOT (preparing migration to ROOT 6).
+
 !========================= LoKiCore v11r16 2013-12-09 =========================
 ! 2013-10-31 - Bram Bouwens
  - Primitives.h: make it generate the void version as well,
@@ -24,7 +33,7 @@
  - Algs.h: reorder _found_2 (see https://savannah.cern.ch/bugs/?102220)
 
 ! 2013-09-03 - Vanya Belyaev
- - Trees.h: fix a stupid bug in negation of decay trees 
+ - Trees.h: fix a stupid bug in negation of decay trees
 
 !========================= LoKiCore v11r14 2013-08-27 =========================
 ! 2013-08-21 - Gerhard Raven
@@ -32,7 +41,7 @@
 
 !========================= LoKiCore v11r13 2013-06-03 =========================
 ! 2013-05-15 - Chris Jones
- - Fix a bug in addMomenta in Kinematics.h where the Predicate cut was not 
+ - Fix a bug in addMomenta in Kinematics.h where the Predicate cut was not
    being properly applied.
 
 !========================= LoKiCore v11r12 2013-04-29 =========================

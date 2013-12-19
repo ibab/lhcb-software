@@ -10,15 +10,14 @@
 // local
 #include "ODINBadTimeTest.h"
 
-namespace LHCbAlgsTests {
-
 // ----------------------------------------------------------------------------
 // Implementation file for class: ODINBadTimeTest
 //
 // 18/10/2011: Marco Clemencic
 // ----------------------------------------------------------------------------
-DECLARE_ALGORITHM_FACTORY(ODINBadTimeTest)
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCbAlgsTests, ODINBadTimeTest)
 
+namespace LHCbAlgsTests {
 // ============================================================================
 // Standard constructor, initializes variables
 // ============================================================================

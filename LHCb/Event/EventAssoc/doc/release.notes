@@ -4,9 +4,12 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2013-11-07 - Marco Clemencic
+ - Renamed the dummy class __Instantiations to have a unique name (for ROOT 6).
+
 !========================= EventAssoc v5r2 2012-11-26 =========================
 ! 2012-11-22 - Vanya Belyaev
- - add the dictionary for MCParticle -> ProtoParticle for Philippe Ghez 
+ - add the dictionary for MCParticle -> ProtoParticle for Philippe Ghez
 
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
@@ -21,7 +24,7 @@
 
 ! 2009-11-05 - Juan PALACIOS
  - Split selection into selMC and selPhys to reduce size of dictionaries.
-   . Executable dict/selection.py imports new modules mc.py and mc.py 
+   . Executable dict/selection.py imports new modules mc.py and mc.py
      to create dictionaries EventAssocMCDict and EventAssocPhysDict.
  - cmt/requirements
   . Increase version to v5r0
@@ -37,7 +40,7 @@
 
 !======================= EventAssoc v4r7 2009-09-03 ========================
 ! 2009-09-03 - Marco Cattaneo
- - In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows 
+ - In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows
 
 ! 2009-09-02 - Juan PALACIOS
  - dict/selection.py
@@ -47,7 +50,7 @@
 
 !======================= EventAssoc v4r6p1 2009-05-28 ========================
 ! 2009-05-28 - Marco Cattaneo
- - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows
 
 !======================= EventAssoc v4r6 2009-05-06 ==========================
 ! 2009-04-23 - Juan PALACIOS
@@ -63,27 +66,27 @@
    dict/selection.xml
     regenerate the files using the updated Kernel/Relations package
 
- - cmt/requirement 
-    version increment to v4r5 
+ - cmt/requirement
+    version increment to v4r5
 
 !======================= EventAssoc v4r4 2008-02-19 ==========================
 ! 2008-02-19 - Vanya BELYAEV
- - add the dictionary for "L0CaloCandidate -> MCParticle with the weight=double" 
-	 relation table (bi-directional) 
- - cmt/requirements 
-   version increment to v4r4 
+ - add the dictionary for "L0CaloCandidate -> MCParticle with the weight=double"
+	 relation table (bi-directional)
+ - cmt/requirements
+   version increment to v4r4
 
 !======================= EventAssoc v4r3 2007-11-29 ==========================
 ! 2007-11-27 - Vanya BELYAEV
  - dict/selection.py
    tiny update to take into accunt new (python) structure in Kernel/Relations
    package
- - cmt/requirements 
-   version increment to v4r3 
+ - cmt/requirements
+   version increment to v4r3
 
 !======================= EventAssoc v4r2 2007-07-02 ==========================
 ! 2007-06-29 - Vanya BELYAEV
- - dict/selection.py 
+ - dict/selection.py
     add dictionary for LHCb::RelationWeighted1D<LHCb::Particle,LHCb::VertexBase,double>
     andd related classes.
  - dict/selection.h, dict/selection.xml
@@ -92,12 +95,12 @@
 !======================= EventAssoc v4r1 2007-03-23 ==========================
 ! 2007-03-23 - Vanya BELYAEV
  - dict/selection.py, .h, .xml
-     add a dictionary for class 
+     add a dictionary for class
       LHCb::RelationWeighted1D<LHCb::MCParticle,LHCb::CaloCluster,float>
-     Formally it is not needed for persistenc, but it drastically 
+     Formally it is not needed for persistenc, but it drastically
      simplify the interactive manipulation with the relation tables
      (e.g. see the examples in the latest Bender v7r0)
- 
+
 !======================= EventAssoc v4r0 2007-01-31 ==========================
 ! 2007-01-31 - Marco Cattaneo
  - Fix reflex dict link for Windows and retag requirements
@@ -108,13 +111,13 @@
 !======================= EventAssoc v3r4 2006-11-27 ==========================
 ! 2006-11-27 - Vanya BELYAEV
  - dict/selection.py
-      Replace all occurances of "size_t" with  "unsigned int" to 
-      suppress the messages form genreflex 
+      Replace all occurances of "size_t" with  "unsigned int" to
+      suppress the messages form genreflex
 
 ! 2006-11-25 - Vanya BELYAEV
  - dict/selection.py
      add dictionaries for the relations tables used in LoKi/Phys/DaVinci/Bender:
- 
+
     # $DAVINCIMCKERNELROOT/Kernel/HepMC2MC.h:
     classes += [ Relations.Rel2D  ( 'HepMC::GenParticle*' , 'LHCb::MCParticle'   ) ]
     # $DAVINCIMCKERNELROOT/Kernel/MC2Collision.h:
@@ -129,8 +132,8 @@
     # $DAVINCIMCKERNELROOT/Kernel/Particle2MC.h:
     classes += [ Relations.RelW2D ('LHCb::Particle' , 'LHCb::MCParticle' ,'double' ) ]
     classes += [ Relations.Rel2D  ('LHCb::Particle' , 'LHCb::MCParticle'           ) ]
-    
- - dict/selection.h, dict/selection.xml 
+
+ - dict/selection.h, dict/selection.xml
      files are regenerated from updated dict/selection.py
 
 ! 2006-11-23 - Marco Cattaneo
@@ -139,20 +142,20 @@
 !======================= EventAssoc v3r3 2006-11-03 ==========================
 ! 2006-11-03 - Marco Cattaneo for Stefan Roiser
  - Add explicit generation of dictionaries for all enums in the event model,
-   due to a bug with the implicit generation in root 5.13.04b. Fix to be 
+   due to a bug with the implicit generation in root 5.13.04b. Fix to be
    removed with future versions of root.
 
 !======================= EventAssoc v3r2 2006-06-12 ==========================
 ! 2006-06-11 - Vanya BELYAEV
- - enable dictionaries on Windows (requires Kernel/Relations v4r0) 
+ - enable dictionaries on Windows (requires Kernel/Relations v4r0)
  - dict/selection.py
-     new script to generate properly selection.h and selection.xml files 
- - dict/selection.h 
-     updated selection file 
+     new script to generate properly selection.h and selection.xml files
+ - dict/selection.h
+     updated selection file
  - dict/selection.xml
-     updated selection file 
+     updated selection file
  - cmt/reqiorements
-     verson increment to v3r2 
+     verson increment to v3r2
 
 !======================= EventAssoc v3r1 2006-04-03 ==========================
  - Disable creation of dictionary on Windows (with ifndef in selection.h)
@@ -160,9 +163,9 @@
 
 !======================= EventAssoc v3r0 2006-02-03 ==========================
 ! 2006-02-02 - Vanya BELYAEV
- - remove src/EventAssoc_Associations_dict.cpp fiel with "hand-made" 
+ - remove src/EventAssoc_Associations_dict.cpp fiel with "hand-made"
    dictionaries. Replace it with "standard" selection.h/selection.xml
-   files for "normal" Reflex dictionaries. 
+   files for "normal" Reflex dictionaries.
 - cmt/rerquirement
    version increment to v3r0
 
@@ -180,9 +183,9 @@
 
  - xml/EventAssoc.xml:
    Add the new line to allow the new MC relation tabel to be persistent
-   e.g. for some test, private DSTs, etc... (For standard data flow 
+   e.g. for some test, private DSTs, etc... (For standard data flow
    the table is assumed to be transient only)
-  
+
     <assoc from="CaloDigit" to="MCParticle" weight="float"/>
 
 !======================= EventAssoc v1r4 2004-10-18 ==========================

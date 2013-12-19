@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Test the 
+Test the
 """
 __author__ = "Marco Clemencic"
 
@@ -26,10 +26,10 @@ def configure(use_case = "simple"):
                               ConnectionString = "sqlite_file:../data/VeloAlignCondTest.db/DDDB",
                               DefaultTAG = "simple")
     CondDB().addLayer(localDb) # use local DB
-    
+
     ApplicationMgr(TopAlg = [], EvtSel = "NONE")
     #MessageSvc(OutputLevel = 1)
-    
+
     if use_case == "simple":
         # nothing to do more
         return
@@ -41,7 +41,7 @@ def configure(use_case = "simple"):
     elif use_case == "override_alignment2":
         UpdateManagerSvc().ConditionsOverride.append("Conditions/Alignment/Velo/VeloLeft := double_v YOffsetCoeffs = 20 -5")
         UpdateManagerSvc().ConditionsOverride.append("Conditions/Alignment/Velo/VeloRight := double_v YOffsetCoeffs = 0 1")
-    
+
 def datastore_walk(ds, top = "/"):
     if top == "/":
         top = ds._idm.rootName()
@@ -66,24 +66,24 @@ def main(use_case = "simple"):
     print " " * max(0,(screenwidth - len(txt_use_case))/2) + txt_use_case
     print "#" * screenwidth
     configure(use_case)
-    
+
     from Gaudi.Configuration import configurationDict
     from pprint import pprint
-    
+
     import ROOT
-    ROOT.gSystem.Load("libMathCore")
-    
+    Math = ROOT.ROOT.Math
+
     import GaudiPython
     app = GaudiPython.AppMgr()
     pprint(configurationDict())
     app.initialize()
     app.start()
-    
+
     dds = app.detsvc()
     # load everything in the store
     nodes = node_names(dds)
     app.run(1)
-    
+
     print "=== Begin Conditions ==="
     for n in ConditionPaths:
         print n
@@ -91,33 +91,33 @@ def main(use_case = "simple"):
     print "=== End Conditions ==="
 
     if use_case == "simple":
-        expected = { "Left": ROOT.Math.Transform3D(1, 0, 0, 30,
-                                                   0, 1, 0, 1,
-                                                   0, 0, 1, 0),
-                     "Right": ROOT.Math.Transform3D(1, 0, 0, -30,
-                                                    0, 1, 0, 15,
-                                                    0, 0, 1, 0) }
+        expected = { "Left": Math.Transform3D(1, 0, 0, 30,
+                                              0, 1, 0, 1,
+                                              0, 0, 1, 0),
+                     "Right": Math.Transform3D(1, 0, 0, -30,
+                                               0, 1, 0, 15,
+                                               0, 0, 1, 0) }
     elif use_case == "override_motion_system":
-        expected = { "Left": ROOT.Math.Transform3D(1, 0, 0, 30,
-                                                   0, 1, 0, 100,
-                                                   0, 0, 1, 0),
-                     "Right": ROOT.Math.Transform3D(1, 0, 0, -30,
-                                                    0, 1, 0, -480,
-                                                    0, 0, 1, 0) }
+        expected = { "Left": Math.Transform3D(1, 0, 0, 30,
+                                              0, 1, 0, 100,
+                                              0, 0, 1, 0),
+                     "Right": Math.Transform3D(1, 0, 0, -30,
+                                               0, 1, 0, -480,
+                                               0, 0, 1, 0) }
     elif use_case == "override_alignment":
-        expected = { "Left": ROOT.Math.Transform3D(1, 0, 0, 30,
-                                                   0, 1, 0, 101,
-                                                   0, 0, 1, 0),
-                     "Right": ROOT.Math.Transform3D(1, 0, 0, -30,
-                                                    0, 1, 0, 15,
-                                                    0, 0, 1, 0) }
+        expected = { "Left": Math.Transform3D(1, 0, 0, 30,
+                                              0, 1, 0, 101,
+                                              0, 0, 1, 0),
+                     "Right": Math.Transform3D(1, 0, 0, -30,
+                                               0, 1, 0, 15,
+                                               0, 0, 1, 0) }
     elif use_case == "override_alignment2":
-        expected = { "Left": ROOT.Math.Transform3D(1, 0, 0, 30,
-                                                   0, 1, 0, 15,
-                                                   0, 0, 1, 0),
-                     "Right": ROOT.Math.Transform3D(1, 0, 0, -30,
-                                                    0, 1, 0, 1,
-                                                    0, 0, 1, 0) }
+        expected = { "Left": Math.Transform3D(1, 0, 0, 30,
+                                              0, 1, 0, 15,
+                                              0, 0, 1, 0),
+                     "Right": Math.Transform3D(1, 0, 0, -30,
+                                               0, 1, 0, 1,
+                                               0, 0, 1, 0) }
 
     result = 0 # success
     for i in expected:

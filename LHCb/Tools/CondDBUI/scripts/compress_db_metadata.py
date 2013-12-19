@@ -4,7 +4,8 @@ import os
 import shutil
 import sqlite3 as lite
 import sys
-import PyCintex
+
+import CondDBCompression
 
 import xml2struct
 from xml2struct import *
@@ -23,11 +24,11 @@ def stringcompression(ustring):
     string = ustring
     isunicode = isinstance(ustring, unicode)
     if (isunicode): string = ustring.encode('utf-8')
-    ret = PyCintex.gbl.CondDBCompression.compress(string, Method)
+    ret = CondDBCompression.compress(string, Method)
     if (len(ret) >= len(string)):
         return ustring # do nothing if no benefit from compression whatsoever
 #    if (isunicode): ret = ret.decode('utf-8')
-    return ret                    
+    return ret
 
 def main():
     # Configure the parser
@@ -37,9 +38,9 @@ def main():
                           description =
 """This script tries to compress the content of a CondDB file.
 The user has to provide a source
-(the exact path to a SQLite file), 
+(the exact path to a SQLite file),
 the partition to modify (DDDB, LHCBCOND or SIMCOND). The destination
-for the compressed db file (*_compressed.db) is the current directory by default.""") 
+for the compressed db file (*_compressed.db) is the current directory by default.""")
     parser.add_option("-s", "--source",
             dest="dbpath", type="string",
             help="source db file to be compressed")
@@ -47,7 +48,7 @@ for the compressed db file (*_compressed.db) is the current directory by default
             dest="dbpart", type="string",
             help="Partition name in the source db file")
     parser.add_option("-d", "--dir", dest="destdir", type = "string",
-            help = "Directory where to put the compressed db file. [default is current directory]", 
+            help = "Directory where to put the compressed db file. [default is current directory]",
             default="." )
     parser.add_option("-m", "--method", type = "int",
             help = "Method type [default: %default] DEACTIVATED FOR NOW",
@@ -118,7 +119,7 @@ for the compressed db file (*_compressed.db) is the current directory by default
         sys.stdout.write("\nStart updating the database....\n")
         i = 0
         for (iovtblname, pln, newxml, pid) in newcontents:
-#            print  "update %s set %s=\'%s\' where OBJECT_ID=%d" %(iovtblname, pln, newxml, pid) 
+#            print  "update %s set %s=\'%s\' where OBJECT_ID=%d" %(iovtblname, pln, newxml, pid)
             cur.execute("update %s set %s=\'%s\' where OBJECT_ID=%d" %(iovtblname, pln, newxml, pid))
             con.commit()
             statusbar(i, len(newcontents))

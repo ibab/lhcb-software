@@ -5,7 +5,7 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 #include "Relations/Relation1D.h"
 #include "Event/Particle.h"
 #include "Event/PackedParticle.h"

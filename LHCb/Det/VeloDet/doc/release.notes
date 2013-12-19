@@ -2,6 +2,9 @@
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+! 2013-11-13 - Marco Clemencic
+ - Minor change in the tests for VeloAlignCond to work with ROOT 6.
+
 !========================= VeloDet v13r19p1 2013-06-03 =======================
 ! 2013-05-07 - Marco Cattaneo
  - Fix clang32 warning
@@ -20,7 +23,7 @@
 ! 2012-01-12 - David Hutchcroft
  - Added a new function to DeVeloRType to map the 2nd metal layer to the hits
    to simulate the effects of the intra-sensor cross-talk seen in 2011 data,
-   will produce a warning unless run with new DDDB update describing the M2 
+   will produce a warning unless run with new DDDB update describing the M2
    layout
 
 ! 2012-01-09 - Marco Clemencic

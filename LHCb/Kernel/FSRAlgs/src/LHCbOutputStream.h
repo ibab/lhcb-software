@@ -1,4 +1,3 @@
-// $Id: OutputStream.h,v 1.4 2010/05/20 17:07:50 marcocle Exp $
 #ifndef LHCB_OUTPUTSTREAM_H
 #define LHCB_OUTPUTSTREAM_H
 
@@ -29,9 +28,8 @@ class DataStoreItem;
     author R. Lambert
     Version: 1.0
 */
-class LHCbOutputStream : public Algorithm     {
+class LHCbOutputStream : public Algorithm {
   friend class AlgFactory<LHCbOutputStream>;
-  friend class Factory<LHCbOutputStream,IAlgorithm* (std::string,ISvcLocator *)>;
 
 public:
   typedef std::vector<DataStoreItem*> Items;

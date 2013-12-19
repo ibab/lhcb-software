@@ -4,6 +4,9 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+! 2013-07-18 - Marco Clemencic
+ - Minor change.
+
 !========================= FSRAlgs v1r4 2013-10-23 =========================
 ! 2013-10-08 - Jaap Panman
  - Add code in LumiMergeFSR to handle legacy productions.
@@ -72,10 +75,10 @@
  - Creation of package. First step is a complete copy of Rec/LumiAlgs to preserve svn history.
  - Removal of algorithms which belong only in Rec/LumiAlgs. remainder is:
    . DumpFSR, PropagateFSR, LumiMergeFSR, EventAccounting and the FSRNavigator
- - Removal of tests which should stay in Rec/LumiAlgs 
+ - Removal of tests which should stay in Rec/LumiAlgs
  - Removal of python modules which should stay in Rec/LumiAlgs
  - Creation of includes directory for interfaces
  - move test directory
  - remove jobs directory
- - Tested in Brunel with the new Rec/LumiAlgs, and all works fine. 
+ - Tested in Brunel with the new Rec/LumiAlgs, and all works fine.
  - Needs a nightly test to check packaging.

@@ -6,12 +6,11 @@ version           v6r1p1
 # ========================================================================
 
 # ============= structure =====================================================
-branches      Relations doc cmt src dict python tests 
+branches      Relations doc cmt src dict python tests
 
 # ============== dependencies =================================================
 use              GaudiKernel v*
 use              Python      v* LCG_Interfaces -no_auto_imports
-use              Reflex      v* LCG_Interfaces -no_auto_imports
 use              Boost       v* LCG_Interfaces
 # ============== own includes =================================================
 apply_pattern	 install_more_includes more=Relations
@@ -27,15 +26,15 @@ apply_pattern     reflex_dictionary                                 \
 library          RelationsLib    *.cpp
 application      RelationsTests  -check ../tests/RelationsTest.cpp
 macro_append     RelationsTests_dependencies RelationsLib
- 
+
 # ============== patterns ====================================================
 apply_pattern    linker_library    library=RelationsLib
-apply_pattern    install_python_modules 
+apply_pattern    install_python_modules
 
 # ============== find memory leaks ============================================
 macro_append     Relations_pp_cppflags '  -DCOUNT_INSTANCES  ' \
                  WIN32                 ' /D"COUNT_INSTANCES" '
 
 # ========================================================================
-# The END 
+# The END
 # ========================================================================

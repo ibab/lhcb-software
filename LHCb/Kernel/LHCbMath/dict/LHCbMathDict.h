@@ -1,6 +1,6 @@
 // $Id$
 // ============================================================================
-#ifndef DICT_LHCBMATHDICT_H 
+#ifndef DICT_LHCBMATHDICT_H
 #define DICT_LHCBMATHDICT_H 1
 // ============================================================================
 // Include files
@@ -30,8 +30,8 @@
 #include "LHCbMath/Chi2Fit.h"
 #include "LHCbMath/Spline.h"
 // ============================================================================
-/** @file LHCbMathDict.h 
- *  
+/** @file LHCbMathDict.h
+ *
  *
  *  @author Juan PALACIOS
  *  @date   2008-06-20
@@ -40,7 +40,7 @@
 namespace Gaudi
 {
   // ==========================================================================
-  namespace Math 
+  namespace Math
   {
     // ========================================================================
     template <typename aPoint, typename aLine, typename aPlane>
@@ -51,21 +51,21 @@ namespace Gaudi
                                 aPoint&       intersect ,
                                 double&       mu        )
       {
-        return Gaudi::Math::intersection<aLine, aPlane, aPoint>(line, 
-                                                                plane, 
-                                                                intersect, 
+        return Gaudi::Math::intersection<aLine, aPlane, aPoint>(line,
+                                                                plane,
+                                                                intersect,
                                                                 mu);
       }
 
       static bool intersection( const aPlane& plane0    ,
                                 const aPlane& plane1    ,
-                                aLine&        intersect ) 
+                                aLine&        intersect )
       {
         return Gaudi::Math::intersection<aLine, aPlane>(plane0,
                                                         plane1,
                                                         intersect);
       }
-      
+
       static  bool intersection( const aPlane& plane0    ,
                                  const aPlane& plane1    ,
                                  const aPlane& plane2    ,
@@ -78,7 +78,7 @@ namespace Gaudi
       }
 
       static double impactParameter(const aPoint&  point ,
-                                    const aLine&   line  ) 
+                                    const aLine&   line  )
       {
         return Gaudi::Math::impactParameter<aPoint,aLine>(point, line);
       }
@@ -88,42 +88,42 @@ namespace Gaudi
       {
         return Gaudi::Math::distance<aLine, aLine>(line0, line1);
       }
-      
+
       static  bool closestPoints( const aLine& line0 ,
                                   const aLine& line1 ,
                                   aPoint&      p0    ,
                                   aPoint&      p1    )
       {
-        return Gaudi::Math::closestPoints<aLine, aLine, aPoint>(line0, 
-                                                                line1, 
-                                                                p0, 
+        return Gaudi::Math::closestPoints<aLine, aLine, aPoint>(line0,
+                                                                line1,
+                                                                p0,
                                                                 p1);
       }
-      
+
       static double closestPointParam( const aPoint&  point ,
                                        const aLine&   line  )
       {
         return Gaudi::Math::closestPointParam<aLine, aPoint>(point, line);
       }
-      
+
       static aPoint closestPoint(const aPoint&  point ,
                           const aLine& line)
       {
         return Gaudi::Math::closestPoint<aLine, aPoint>(point, line);
       }
-      
+
       static bool closestPointParams( const aLine& line0 ,
                                       const aLine& line1 ,
-                                      double&      mu0   , 
-                                      double&      mu1   ) 
+                                      double&      mu0   ,
+                                      double&      mu1   )
       {
         return Gaudi::Math::closestPointParams<aLine, aLine>(line0,
                                                              line1,
                                                              mu0,
                                                              mu1);
-        
+
       }
-      
+
       static bool parallel( const aLine& line0 ,
                             const aLine& line1 )
       {
@@ -132,134 +132,134 @@ namespace Gaudi
 
     };
     typedef GF<XYZPoint, XYZLine, Plane3D> XYZGeomFun;
-    
+
     // ========================================================================
-    class Functions 
+    class Functions
     {
     public:
-      // ====================================================================== 
-      /// evaluate the mean of a and b 
+      // ======================================================================
+      /// evaluate the mean of a and b
       static ValueWithError mean
-      ( const ValueWithError& a , 
+      ( const ValueWithError& a ,
         const ValueWithError& b ) { return a.mean ( b ) ; }
       // =====================================================================-
-      /// evaluate chi2 
+      /// evaluate chi2
       static double chi2
-      ( const ValueWithError& a , 
+      ( const ValueWithError& a ,
         const ValueWithError& b ) { return a.chi2 ( b ) ; }
-      /// evaluate chi2 
+      /// evaluate chi2
       static  double chi2
-      ( const ValueWithError& a , 
+      ( const ValueWithError& a ,
         const double          b ) { return a.chi2 ( b ) ; }
-      /// evaluate chi2 
+      /// evaluate chi2
       static double chi2
       ( const double          b ,
         const ValueWithError& a ) { return a.chi2 ( b ) ; }
       // ======================================================================
       /// evaluate the "fraction"  a/(a+b)
-      static ValueWithError frac 
-      ( const ValueWithError& a , 
+      static ValueWithError frac
+      ( const ValueWithError& a ,
         const ValueWithError& b ) { return a.frac ( b ) ; }
       /// evaluate the "fraction"  a/(a+b)
-      static ValueWithError frac 
-      ( const ValueWithError& a , 
+      static ValueWithError frac
+      ( const ValueWithError& a ,
         const double          b ) { return a.frac ( b ) ; }
       /// evaluate the "fraction"  a/(a+b)
-      static ValueWithError frac 
-      ( const double          a , 
+      static ValueWithError frac
+      ( const double          a ,
         const ValueWithError& b ) { return frac ( ValueWithError ( a ) , b ) ; }
       /// evaluate the "fraction"  a/(a+b)
-      static ValueWithError frac 
-      ( const double          a , 
+      static ValueWithError frac
+      ( const double          a ,
         const double          b ) { return frac ( ValueWithError ( a ) , b ) ; }
       // ======================================================================
       /// evaluate the "asymmetry"  (a-b)/(a+b)
-      static ValueWithError asym 
-      ( const ValueWithError& a , 
+      static ValueWithError asym
+      ( const ValueWithError& a ,
         const ValueWithError& b ) { return a.asym ( b ) ; }
       /// evaluate the "asymmetry"  (a-b)/(a+b)
-      static ValueWithError asym 
-      ( const ValueWithError& a , 
+      static ValueWithError asym
+      ( const ValueWithError& a ,
         const double          b ) { return a.asym ( b ) ; }
       /// evaluate the "asymmetry"  (a-b)/(a+b)
-      static ValueWithError asym 
-      ( const double          a , 
+      static ValueWithError asym
+      ( const double          a ,
         const ValueWithError& b ) { return asym ( ValueWithError ( a ) , b ) ; }
       /// evaluate the "asymmetry"  (a-b)/(a+b)
-      static ValueWithError asym 
-      ( const double          a , 
+      static ValueWithError asym
+      ( const double          a ,
         const double          b ) { return asym ( ValueWithError ( a ) , b ) ; }
       // ======================================================================
-      /** evaluate the binomial efficiency for Bernulli scheme 
-       *  @param n (INPUT) number of 'success' 
-       *  @param N (INPUT) total number 
-       *  @return the binomial efficiency 
+      /** evaluate the binomial efficiency for Bernulli scheme
+       *  @param n (INPUT) number of 'success'
+       *  @param N (INPUT) total number
+       *  @return the binomial efficiency
        */
-      static ValueWithError binomEff   
-      ( const size_t n , 
-        const size_t N ) 
+      static ValueWithError binomEff
+      ( const size_t n ,
+        const size_t N )
       { return Gaudi::Math::binomEff ( n , N ) ; }
       // ======================================================================
     } ;
     // ========================================================================
-    class EigenSystems 
+    class EigenSystems
     {
       // ======================================================================
-    public : // eigen values 
-      // ======================================================================
-      // 2x2 
-      static Gaudi::Vector2 eigenValues  
-      ( const Gaudi::SymMatrix2x2& mtrx          , 
-        const bool                 sorted = true ) 
-      { 
-        Gaudi::Math::GSL::EigenSystem system ;
-        return system.eigenValues ( mtrx , sorted ) ;
-      }
-      // 3x3 
-      static Gaudi::Vector3 eigenValues  
-      ( const Gaudi::SymMatrix3x3& mtrx          , 
-        const bool                 sorted = true ) 
-      { 
-        Gaudi::Math::GSL::EigenSystem system ;
-        return system.eigenValues ( mtrx , sorted ) ;
-      }
-      // 4x4 
-      static Gaudi::Vector4 eigenValues  
-      ( const Gaudi::SymMatrix4x4& mtrx          , 
-        const bool                 sorted = true ) 
-      { 
-        Gaudi::Math::GSL::EigenSystem system ;
-        return system.eigenValues ( mtrx , sorted ) ;
-      }
-      // ======================================================================
-    public: // eigen vectors 
+    public : // eigen values
       // ======================================================================
       // 2x2
-      static StatusCode eigenVectors  
+      static Gaudi::Vector2 eigenValues
+      ( const Gaudi::SymMatrix2x2& mtrx          ,
+        const bool                 sorted = true )
+      {
+        Gaudi::Math::GSL::EigenSystem system ;
+        return system.eigenValues ( mtrx , sorted ) ;
+      }
+      // 3x3
+      static Gaudi::Vector3 eigenValues
+      ( const Gaudi::SymMatrix3x3& mtrx          ,
+        const bool                 sorted = true )
+      {
+        Gaudi::Math::GSL::EigenSystem system ;
+        return system.eigenValues ( mtrx , sorted ) ;
+      }
+      // 4x4
+      static Gaudi::Vector4 eigenValues
+      ( const Gaudi::SymMatrix4x4& mtrx          ,
+        const bool                 sorted = true )
+      {
+        Gaudi::Math::GSL::EigenSystem system ;
+        return system.eigenValues ( mtrx , sorted ) ;
+      }
+      // ======================================================================
+    public: // eigen vectors
+      // ======================================================================
+      // 2x2
+      static StatusCode eigenVectors
       ( const Gaudi::SymMatrix2x2&   mtrx          ,
-        Gaudi::Vector2&              vals          , 
-        std::vector<Gaudi::Vector2>& vecs          , 
-        const bool                   sorted = true ) 
+        Gaudi::Vector2&              vals          ,
+        std::vector<Gaudi::Vector2>& vecs          ,
+        const bool                   sorted = true )
       {
         Gaudi::Math::GSL::EigenSystem system ;
         return system.eigenVectors ( mtrx , vals , vecs , sorted ) ;
       }
-      // 3x3 
-      static StatusCode eigenVectors  
+      // 3x3
+      static StatusCode eigenVectors
       ( const Gaudi::SymMatrix3x3&   mtrx          ,
-        Gaudi::Vector3&              vals          , 
-        std::vector<Gaudi::Vector3>& vecs          , 
-        const bool                   sorted = true ) 
+        Gaudi::Vector3&              vals          ,
+        std::vector<Gaudi::Vector3>& vecs          ,
+        const bool                   sorted = true )
       {
         Gaudi::Math::GSL::EigenSystem system ;
         return system.eigenVectors ( mtrx , vals , vecs , sorted ) ;
       }
-      // 4x4 
-      static StatusCode eigenVectors  
+      // 4x4
+      static StatusCode eigenVectors
       ( const Gaudi::SymMatrix4x4&   mtrx          ,
-        Gaudi::Vector4&              vals          , 
-        std::vector<Gaudi::Vector4>& vecs          , 
-        const bool                   sorted = true ) 
+        Gaudi::Vector4&              vals          ,
+        std::vector<Gaudi::Vector4>& vecs          ,
+        const bool                   sorted = true )
       {
         Gaudi::Math::GSL::EigenSystem system ;
         return system.eigenVectors ( mtrx , vals , vecs , sorted ) ;
@@ -267,17 +267,17 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
-  } //                                             end of namespace Gaudi::Math 
+  } //                                             end of namespace Gaudi::Math
   // ==========================================================================
-} //                                                     end of namespace Gaudi 
+} //                                                     end of namespace Gaudi
 // ============================================================================
 namespace
 {
   // ==========================================================================
-  struct __Instantiations
+  struct LHCbMath_Instantiations
   {
-    __Instantiations();
-    
+    LHCbMath_Instantiations();
+
 #ifndef WIN32 // FIXME: Does not compile on Windows
     Gaudi::Math::XYZLine       __lineXYZ;
     Gaudi::Math::Polar3DLine   __linePolar3D;
@@ -308,25 +308,25 @@ namespace
     std::vector<Gaudi::Vector2>  _vct_2 ;
     std::vector<Gaudi::Vector3>  _vct_3 ;
     std::vector<Gaudi::Vector3>  _vct_4 ;
-    
+
     Gaudi::Math::Chi2Solution<4,2>          __cs11 ;
     Gaudi::Math::Chi2Solution<4,2>::DATA    __cs21 ;
     Gaudi::Math::Chi2Solution<4,2>::COV2    __cs31 ;
     Gaudi::Math::Chi2Solution<4,2>::CMTRX2  __cs41 ;
     Gaudi::Math::Chi2Solution<4,2>::COFF    __cs51 ;
     Gaudi::Math::Chi2Solution<4,2>::VECT    __cs61 ;
-    
+
     Gaudi::Math::Chi2Solution<6,2>          __cs12 ;
     Gaudi::Math::Chi2Solution<6,2>::DATA    __cs22 ;
     Gaudi::Math::Chi2Solution<6,2>::COV2    __cs32 ;
     Gaudi::Math::Chi2Solution<6,2>::CMTRX2  __cs42 ;
     Gaudi::Math::Chi2Solution<6,2>::COFF    __cs52 ;
     Gaudi::Math::Chi2Solution<6,2>::VECT    __cs62 ;
-    
+
     Gaudi::Math::Splines::DATA    _sd_1 ;
     Gaudi::Math::Splines::PAIR    _sd_2 ;
     Gaudi::Math::Splines::DATAERR _sd_3 ;
- 
+
   };
 }
 

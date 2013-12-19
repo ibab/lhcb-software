@@ -114,8 +114,8 @@ typedef DataPacking::Check<LHCb::CaloClusterPacker> R;
 DECLARE_ALGORITHM_FACTORY( R )
 
 template class DataPacking::Check<LHCb::MCFTHitPacker>;
-typedef DataPacking::Check<LHCb::MCFTHitPacker> S;
-DECLARE_ALGORITHM_FACTORY( S )
+typedef DataPacking::Check<LHCb::MCFTHitPacker> S_;
+DECLARE_ALGORITHM_FACTORY( S_ )
 
 template class DataPacking::Check<LHCb::MCSLHitPacker>;
 typedef DataPacking::Check<LHCb::MCSLHitPacker> T;

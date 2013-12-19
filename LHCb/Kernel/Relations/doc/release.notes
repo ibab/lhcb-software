@@ -4,6 +4,15 @@
 ! Purpose     : General purposes templated relations between classes
 !------------------------------------------------------------------------------
 
+! 2013-11-07 - Marco Clemencic
+ - Renamed the dummy class __Instantiations to _Instantiations (for ROOT 6).
+
+! 2013-07-18 - Marco Clemencic
+ - Removed unnecessary dependency on Reflex.
+
+! 2013-06-27 - Marco Clemencic
+ - Replaced PyCintex with ROOT (preparing migration to ROOT 6).
+
 !========================= Relations v6r1p1 2013-09-30 =========================
 ! 2013-09-17 - Marco Cattaneo
  - Remove unnecessary linkopts macro from requirements
@@ -43,26 +52,26 @@
 
 !====================== Relations v5r9p1 2010-03-17 ===========================
 ! 2010-03-07 - Vanya Belyaev
- - remove Relations.cpp: 
+ - remove Relations.cpp:
     empty file that causes warnings for Win32 platform
- 
- - verison increment to v5r9p1 
+
+ - verison increment to v5r9p1
 
 !====================== Relations v5r9 2009-10-16 ============================
 ! 2009-09-14 - Vanya BELYAEV
  - RelationBase & RelationWeightedBase :
-     imporve CPU performance of "merge" & "imerge" methods 
-      (on the price of ugly switch) 
- -cmt/requirements 
-    version increment to v5r9 
+     imporve CPU performance of "merge" & "imerge" methods
+      (on the price of ugly switch)
+ -cmt/requirements
+    version increment to v5r9
 
 !====================== Relations v5r8 2009-05-25 ============================
 ! 2009-05-25 - Juan PALACIOS
- - Relations/Get.h: 
+ - Relations/Get.h:
   . Fix typo in _getUniqueFrom
 
 ! 2009-05-24 - Vanya Belyaev
- - Relations/Get.h: 
+ - Relations/Get.h:
     add new methods getUniqueFrom
 
  cmt/requirements
@@ -71,45 +80,45 @@
 !====================== Relations v5r7 2009-05-07 ============================
 ! 2009-04-24 - Vanya BELYAEV
  - introduce the new methods for each relation object:
-     i_add ( Entry )  - inlined 
+     i_add ( Entry )  - inlined
        add ( Entry )  - virtual
 
       TABLE::i_add
-      TABLE::add 
+      TABLE::add
 
- - reimplement i_relate in term of i_add 
+ - reimplement i_relate in term of i_add
  - add public type "Entry" fo reach relation object
 
-         TABLE::Entry 
+         TABLE::Entry
 
- - specify boolean enum for compile-time recoginition of 
+ - specify boolean enum for compile-time recoginition of
     weighted/unweighted relations:
 
-         TABLE::TypeTraits::weighted 
+         TABLE::TypeTraits::weighted
 
-     (set to "true" for weighted and "false" for ordinary relations) 
+     (set to "true" for weighted and "false" for ordinary relations)
 
 
 ! 2009-04-15 - Marco Cattaneo
  - Fix dependecies of RelationsTest, for make -j
 
-! 2009-04-09 - Vanya BELYAEV 
+! 2009-04-09 - Vanya BELYAEV
  - src/Relations.cpp
-   remove local instances of relation tables. 
+   remove local instances of relation tables.
    Due to some unknown reasons
    it causes some problem with compilation of PHYS with SUSE
-   
- - tests/RelationsTests.cpp
-   add the auxillary test for queich checks of compilation problems. 
 
- - cmt/requirements 
-    version increment to v5r7 
+ - tests/RelationsTests.cpp
+   add the auxillary test for queich checks of compilation problems.
+
+ - cmt/requirements
+    version increment to v5r7
 
 !====================== Relations v5r6 2008-11-17 ============================
 ! 2008-11-29 - Vanya BELYAEV
  - Relations/IsConvertible.h
-   Reflex fof gcc4.3 does not accept usage of 
-   boost::is_convertible 
+   Reflex fof gcc4.3 does not accept usage of
+   boost::is_convertible
    (claim for the problem for boost:is_abstract)/
    C++ code is OK, but Refelx does not like it..
    TEMPORARY, disable the usage of boost::is_convertible
@@ -117,36 +126,36 @@
 
    The same problmes happens with LoKi::Convertible..
    Probably it is worth to report the problem to Reflex team.
-   Btw - I woudl propose to move this utility 
-   Relations::IsConvertible (or LoKi::Convertible) somewhere 
-   to Gaudi 
-   
- - cmt/requirements 
-   version increment to v5r6 
+   Btw - I woudl propose to move this utility
+   Relations::IsConvertible (or LoKi::Convertible) somewhere
+   to Gaudi
+
+ - cmt/requirements
+   version increment to v5r6
 
 !====================== Relations v5r5 2008-11-17 ============================
 ! 2008-11-02 - Vanya BELYAEV
  - python/Relations/Rels.py
-    Remove unnesessary "operator=" from many objects 
+    Remove unnesessary "operator=" from many objects
  - Relations/*.h
-    fix the compiler ambiguity for "merge" family inthe case 
+    fix the compiler ambiguity for "merge" family inthe case
     of FROM==TO by introduction of "imerge" function.
 
 ! 2008-11-01 - Vanya BELYAEV
- - for each concrete type add the method "merge" to merge 
+ - for each concrete type add the method "merge" to merge
    with the sorted range and the corresponidng shortcut: 'operator+='
-   Using this methods it is easy to add some valid range of 
-   relations into the table without explicit loop  
-   Important prerequisitye: the range *MUST* be valid range, 
-   which in particualr implies that it must 
-   be *SORTED* range, or the raneg extracted form the VALID 
-   relatiion table. [ Note that "i_push" invalidate the table, 
+   Using this methods it is easy to add some valid range of
+   relations into the table without explicit loop
+   Important prerequisitye: the range *MUST* be valid range,
+   which in particualr implies that it must
+   be *SORTED* range, or the raneg extracted form the VALID
+   relatiion table. [ Note that "i_push" invalidate the table,
    the table is validated again with "i_sort"].
 
 ! 2008-10-31 - Vanya BELYAEV
- - fix for gcc43 compilations 
- - cmt/requirements 
-   version increment to v5r5 
+ - fix for gcc43 compilations
+ - cmt/requirements
+   version increment to v5r5
 
 !====================== Relations v5r4 2008-02-29 ============================
 ! 2008-02-29 - Vanya BELYAEV
@@ -154,16 +163,16 @@
      change the printout for non-deleted objects from INFO fro WARNING
 
 ! 2008-02-19 - Vanya BELYAEV
- - cmt/requirements 
+ - cmt/requirements
     1) remove the explicit manipulations of PYTHONPATH
-    2) version increment to v5r4 
+    2) version increment to v5r4
 
 !====================== Relations v5r3 2007-11-29 ============================
 ! 2007-11-27 - Vanya BELYAEV
   - move python/Relations.py in python/Relations/Rels.py
-  - add python/Relations/__init__.py 
+  - add python/Relations/__init__.py
   - cmt/requirements
-    version increment to v5r3 
+    version increment to v5r3
 
 !====================== Relations v5r2 2007-09-04 ============================
 ! 2007-08-28
@@ -183,36 +192,36 @@
  - Relations/Relation2D.h
     fix a bug inside the copy constructor of class LHCb::Relation2D.h
  - python/Relations.py
-    fix the generated names to be valid C++ names in the case of templated 
-     types/parameters: (">>" --> "> >" and "  " --> " " ) 
+    fix the generated names to be valid C++ names in the case of templated
+     types/parameters: (">>" --> "> >" and "  " --> " " )
  - cmt/requirments
-   version increment to v4r1  
+   version increment to v4r1
 
 ! ====================== Relations v4r0 2006-06-12 ============================
 ! 2006-06-12 - Ivan BELYAEV
- - [ I've got too much success in reducing thr interdependencies 
-     inbetween different files, in particular for relations with   
+ - [ I've got too much success in reducing thr interdependencies
+     inbetween different files, in particular for relations with
      and without the weight. roll back the system]
-   - put all *Base* into sepearate file to be included 
-   - Relations/Bases.h - new file 
-   MOIDIFIED: 
-   - Relations/Range.h, 
-     Relations/RelationTypeTraghts.h, 
+   - put all *Base* into sepearate file to be included
+   - Relations/Bases.h - new file
+   MOIDIFIED:
+   - Relations/Range.h,
+     Relations/RelationTypeTraghts.h,
      Relations/RelationWeightedTypeTraghts.h
 
 ! 2006-06-11 - Vanya BELYAEV
  - surprizingly new structure do not work on OLD gcc compiler..
-    boost is Ok for all version GCC but not for hom-made checker 
+    boost is Ok for all version GCC but not for hom-made checker
     home-made chacker is OK for Win32 anfd gcc3.45
-    final solution: 
-       Win32 : home-made checker 
-       GCC   : boost 
+    final solution:
+       Win32 : home-made checker
+       GCC   : boost
 
 ! 2006-06-11 - Vanya BELYAEV
- - significant simplification in Relations 
-    only BASIC types are appear in interfaces now 
-    (good for python-interactivity, since no weird lines 
-     SmartRef <--> Object conversion are required now. 
+ - significant simplification in Relations
+    only BASIC types are appear in interfaces now
+    (good for python-interactivity, since no weird lines
+     SmartRef <--> Object conversion are required now.
      bad fro code readability (e.g.instead of one "From"
      type now "From_" and "From" and "FromInner" are appears in the code.
 
@@ -220,9 +229,9 @@
 
       TYPE_     (=="From_", "To_", "Weight_" ) is "input" type (usually 'const')
       TYPE      (=="From","To","Weight") is "output" type (usually 'const-away')
-      TYPEInner (=="FromInner","ToInner","WeightInner") is the 
+      TYPEInner (=="FromInner","ToInner","WeightInner") is the
                   internal representation
-    The overall number of classes for dictionaries is reduced.   
+    The overall number of classes for dictionaries is reduced.
     The lines are reshuffled to reduce a bit the duplication.
 
   New files:
@@ -232,7 +241,7 @@
     Relations/Range.h
     Relations/Reference.h
     Relations/WEntry.h
-  Removed files: 
+  Removed files:
     Relations/ObjectTypeTraitsStripped.h
     Relations/PragmaWarnings.h
     Relations/TypeContainedObject.h
@@ -269,24 +278,24 @@
     Relations/Reserve.h
     src/Relations.cpp
 
-  The dictionary 'RelationsDict' contains only the basic base classes 
+  The dictionary 'RelationsDict' contains only the basic base classes
     dict/selection.h
     dict/selection.xml
-  
-  python/Relations.py 
-    The python script to produce the proper selection.h(.xml) files 
-    has been updated to the new class structure. The size of generated 
-    dictionaries is reduced by factor of 2 
+
+  python/Relations.py
+    The python script to produce the proper selection.h(.xml) files
+    has been updated to the new class structure. The size of generated
+    dictionaries is reduced by factor of 2
 
  -  cmt/requirements
      a) add the option "-U__MINGW32__"
-     b) version incrmeent to v4r0 
+     b) version incrmeent to v4r0
 
 
  python/Relations.py
 
 ! 2006-06-09 - Vanya BELYAEV
- - fix the compilation warnings for gcc345 (SLC4) 
+ - fix the compilation warnings for gcc345 (SLC4)
      Relations/Relation2.h
      Relations/Relation2Weighted.h
      Relations/RelationWeighted.h
@@ -297,8 +306,8 @@
  - Remove from requirements temporary fix needed for previous ROOT version
 
 ! 2006-06-02 - Vanya BELYAEV
-  - fixes for the new compiler (SLC4) 
-  - remove the obsolete Apply&Serializer 
+  - fixes for the new compiler (SLC4)
+  - remove the obsolete Apply&Serializer
 
 ! ====================== Relations v3r1 2006-02-29 ============================
 ! 2006-03-29 - Marco Cattaneo
@@ -313,30 +322,30 @@
 ! 2006-02-22 - Vanya BELYAEV
 
  - ******************** REMOVE ALL ASSOCIATORS/TOOLS ************************
-	
-   The initial proposal, design and the first implementation of relation 
+
+   The initial proposal, design and the first implementation of relation
    tables has no concept of "associator tool". Instead it has been based
-   on direct manipulaiton with relation tables *AND* *FORCED* execution 
-   of "builder" algorithm. The concept of "associator tool" has been 
-   introduced a bit later after long discussions to simplify the dealing 
-   with forced execution of algorithm. In addition at those time is has 
-   been thought that "associator tool" could be specialized and enhanced 
-   to provide soem additional fucntionality. 
-   As practice has shown the addiitonal functionality has never been used, 
+   on direct manipulaiton with relation tables *AND* *FORCED* execution
+   of "builder" algorithm. The concept of "associator tool" has been
+   introduced a bit later after long discussions to simplify the dealing
+   with forced execution of algorithm. In addition at those time is has
+   been thought that "associator tool" could be specialized and enhanced
+   to provide soem additional fucntionality.
+   As practice has shown the addiitonal functionality has never been used,
    and the basic "associator tool" has been used just to force the execution
-   of the algorithm "on-demand". Soon after very nice Gaudi feature - 
-   "Data-On-Demand Service" has been appeared in GaudiSvc. Professional 
-   and efficient high quality design and implementation of this service 
-   by Markus FRANK has the natural consequence to declare the "hand-made" 
-   "associator tools" to be deprecated. Soon after the associator tools 
-   has been drastically simplified to allow the parallel coexistence 
-   with much better functionality, provided by Data-On-Demand Service. 
-   At the same time the "associator tool" has been declared as "deprecated" 
-   and I've made a strong recommendation to use the relation tables 
-   *DIRECTLY* (without intermediate "tool") providing with the proper 
+   of the algorithm "on-demand". Soon after very nice Gaudi feature -
+   "Data-On-Demand Service" has been appeared in GaudiSvc. Professional
+   and efficient high quality design and implementation of this service
+   by Markus FRANK has the natural consequence to declare the "hand-made"
+   "associator tools" to be deprecated. Soon after the associator tools
+   has been drastically simplified to allow the parallel coexistence
+   with much better functionality, provided by Data-On-Demand Service.
+   At the same time the "associator tool" has been declared as "deprecated"
+   and I've made a strong recommendation to use the relation tables
+   *DIRECTLY* (without intermediate "tool") providing with the proper
    configurtaion of "Data-On-Demand Service".
 
-   Now it is a good and right moment to *REMOVE* the associator tools 
+   Now it is a good and right moment to *REMOVE* the associator tools
    from the model completely
 
 	 ============
@@ -359,118 +368,118 @@
 
  - Relations/Get.h
 
-   The new file with few useful technical utilities for manipulations 
-   with relation tables and ranges 
- 
+   The new file with few useful technical utilities for manipulations
+   with relation tables and ranges
+
     ---  Relations::getTo
-    new utility/function/algorihtm, which allows to represent a "range" 
-    of relations as a plain list of "TO" objects, e.g.: 
-   
-    ***************************************************************************   
+    new utility/function/algorihtm, which allows to represent a "range"
+    of relations as a plain list of "TO" objects, e.g.:
+
+    ***************************************************************************
     *
     *  typedef IRelationWeighted<LHCb::CaloDigit,LHCb::MCParticle,float> Table ;
     *
-    *  // (1) get the relation table:   
+    *  // (1) get the relation table:
     *  const ITable* table = ...  ;
-    *  
+    *
     *  const LCHb::CaloDigit* digit = ... ;
     *
     *  // (2) get all links from the given LHCb::CaloDigit obejct:
     *  Table::Range links = table->relations( digit ) ;
-    *  
-    *  // (3) get all MC-particles into one plain container: 
+    *
+    *  // (3) get all MC-particles into one plain container:
     *  typedef std:vector<const LHCb::MCParticle*> MCPARTICLES ;
     *  MCPARTICLES mcparticles ;
-    * 
-    *  Relations::getTo ( links.begin () , 
+    *
+    *  Relations::getTo ( links.begin () ,
     *                     links.end   () ,
     *                     std::back_inserter( mcparticles ) ) ;
     *
     *  // (3') the same, but with slightly different semantics:
     *  // Relations::getTo ( links , std::back_inserter( mcparticles ) ) ;
-    * 
-    ***************************************************************************   
+    *
+    ***************************************************************************
 
 
     --- Relations::getWeight
-    new utility/function/algorihtm, which allows to represent a "range" 
-    of "weighted" relations as a plain list of "WEIGHT" objects, e.g.: 
+    new utility/function/algorihtm, which allows to represent a "range"
+    of "weighted" relations as a plain list of "WEIGHT" objects, e.g.:
 
 
-    ***************************************************************************   
+    ***************************************************************************
     *
     *  typedef IRelationWeighted<LHCb::CaloDigit,LHCb::MCParticle,float> Table ;
     *
-    *  // (1) get the relation table:   
+    *  // (1) get the relation table:
     *  const ITable* table = ...  ;
-    *  
+    *
     *  const LCHb::CaloDigit* digit = ... ;
     *
     *  // (2) get all links from the given LHCb::CaloDigit obejct:
     *  Table::Range links = table->relations( digit ) ;
-    *  
-    *  // (3) get all weights in one plain container 
+    *
+    *  // (3) get all weights in one plain container
     *  typedef std:vector<double> WEIGHTS ;
     *  WEIGHT weight ;
-    * 
-    *  Relations::getWeigh ( links.begin () , 
+    *
+    *  Relations::getWeigh ( links.begin () ,
     *                        links.end   () ,
     *                        std::back_inserter ( weights ) ) ;
     *
     *  // (3') the same, but with slightly different semantics:
     *  // Relations::getWeight ( links , std::back_inserter ( weights ) ) ;
-    * 
-    ***************************************************************************   
+    *
+    ***************************************************************************
 
     --- Relations::sumWeight
-    new utility/function/algorihtm, which allows to accumulate all 
+    new utility/function/algorihtm, which allows to accumulate all
     "weights" from the range of "weighted" relations:
 
-    ***************************************************************************   
+    ***************************************************************************
     *
     *  typedef IRelationWeighted<LHCb::CaloDigit,LHCb::MCParticle,float> Table ;
     *
-    *  // (1) get the relation table:   
+    *  // (1) get the relation table:
     *  const ITable* table = ...  ;
-    *  
+    *
     *  const LCHb::CaloDigit* digit = ... ;
     *
     *  // (2) get all links from the given LHCb::CaloDigit obejct:
     *  Table::Range links = table->relations( digit ) ;
-    *  
-    *  // (3) get the SUM of all weigths: 
-    * 
-    *  const double weights = 
+    *
+    *  // (3) get the SUM of all weigths:
+    *
+    *  const double weights =
     *    Relations::sumWeigh ( links.begin () , links.end () , 0.0 ) ;
     *
     *  // (3') the same, but with slightly different semantics:
-    *  //const double weights = 
+    *  //const double weights =
     *  //  Relations::sumWeigh ( links , 0.0 ) ;
-    * 
-    ***************************************************************************   
+    *
+    ***************************************************************************
 
-    --- Relations::getUniqueTo 
-    new utility/function/algorithm to get the *UNIQUE* "TO" objcts 
+    --- Relations::getUniqueTo
+    new utility/function/algorithm to get the *UNIQUE* "TO" objcts
     form the specified range of relations:
 
-    ***************************************************************************   
+    ***************************************************************************
     *
     *  typedef IRelationWeighted<LHCb::CaloCluster,LHCb::MCParticle,float> Table ;
-    *  // (1) get the relation table:   
+    *  // (1) get the relation table:
     *  const ITable* table = ...  ;
-    *  
-    *  // (2) get ALL links 
-    *  Table::Range links = table->relations() ;
-    *  
-    *  // (3) get all *UNIQUE* MC-particles into one plain container 
     *
-    *  /// not very efficient: 
-    *  // typedef std:vector<const LHCb::MCParticle*> MCPARTICLES ;  
-    *  /// efficient: 
-    *  typedef std:vector<const LHCb::MCParticle*> MCPARTICLES ;  
+    *  // (2) get ALL links
+    *  Table::Range links = table->relations() ;
+    *
+    *  // (3) get all *UNIQUE* MC-particles into one plain container
+    *
+    *  /// not very efficient:
+    *  // typedef std:vector<const LHCb::MCParticle*> MCPARTICLES ;
+    *  /// efficient:
+    *  typedef std:vector<const LHCb::MCParticle*> MCPARTICLES ;
     *
     *  MCPARTICLES mcparticles ;
-    *  Relations::getUniqueTo ( links.begin () , 
+    *  Relations::getUniqueTo ( links.begin () ,
     *                           links.end   () ,
     *                           mcparticles    ) ;
     *
@@ -479,87 +488,87 @@
     *
     * // ///////////////////////////////////////////////////////////////////////
     * // IMPORTANT!!!
-    * // This utility/function/algorihtm is not very efficient for 
-    * // "std::vector" conatiners. but it is efficient for std::set 
+    * // This utility/function/algorihtm is not very efficient for
+    * // "std::vector" conatiners. but it is efficient for std::set
     * // containers:
     * // //////////////////////////////////////////////////////////////////////
-    ***************************************************************************   
+    ***************************************************************************
 ! 2006-02-07 - Vanya BELYAEV
 
- - many tiny changes to simplify the " semiautomated" generation of 
-   selection (XML&C++) files for building of Reflex dictionaries 
-  
+ - many tiny changes to simplify the " semiautomated" generation of
+   selection (XML&C++) files for building of Reflex dictionaries
+
   now to prepare the corresponding selelctions (XML & C++) files one
   needs to use the trivial python script:
 
   ----- >>> cut here <<< ------------
 
     # (1) import the module:
-    import Relations 
-  
+    import Relations
+
     # (2) make a list of classes:
-    classes  = [ Relations.Rel1D  ('LHCb::Particle' , 'LHCb::Vertex'            ) , 
-                 Relations.Rel2D  ('LHCb::Particle' , 'LHCb::Vertex'            ) , 
+    classes  = [ Relations.Rel1D  ('LHCb::Particle' , 'LHCb::Vertex'            ) ,
+                 Relations.Rel2D  ('LHCb::Particle' , 'LHCb::Vertex'            ) ,
                  Relations.RelW1D ('LHCb::Particle' , 'LHCb::Vertex' , 'double' ) ,
                  Relations.RelW2D ('LHCb::Particle' , 'LHCb::Vertex' , 'double' ) ]
 
 	  # (3) make a list of include files:
-	  includes = [ "Event/Particle.h" , 
-                 "Event/Vertex.h"   ] 
+	  includes = [ "Event/Particle.h" ,
+                 "Event/Vertex.h"   ]
 
     # (4) prepare the selection XML & C++ files: selection.xml and selection.h :
-    Relations.prepare ( classes , includes ) 
+    Relations.prepare ( classes , includes )
 
   ----- >>> cut here <<< ------------
 
-    one gets in the current directory the files 
+    one gets in the current directory the files
       selection.h
-      selection.xml 
+      selection.xml
 
     Then the files need to be added into some directory, e.g.
-    $(MYPACKAGEROOT)/dict 
+    $(MYPACKAGEROOT)/dict
 
     The cmt/requirements of the package looks like:
 
-       apply_pattern reflex_dictionary                             \ 
+       apply_pattern reflex_dictionary                             \
                      dictionary=MyPackage                          \
                      headerfiles=$(MYPACKAGEROOT)/dict/selection.h \
                      selectionfile=$(MYPACKAGEROOT)/dict/selection.xml
-       apply_pattern component_library library=MyPackageDict        
-   
+       apply_pattern component_library library=MyPackageDict
+
 ! 2006-02-03 - P. Koppenburg
   - Relations/Associator.h
   - Relations/AssociatorWeighted.h
-    . Put explicitly LHCb:: in some typedefs. There are probably 
+    . Put explicitly LHCb:: in some typedefs. There are probably
       more of these missing.
 
-! 2006-02-02 - Vanya BELYAEV ibelyaev@physics.syr.edu 
+! 2006-02-02 - Vanya BELYAEV ibelyaev@physics.syr.edu
 
- - remove all local 'member'-instances of comparison/ordering 
+ - remove all local 'member'-instances of comparison/ordering
     criteria (due to *UNKNOWN* reasons I've put all comparison
-    /ordering criteria as "data" members into Relations::Relation*Base 
+    /ordering criteria as "data" members into Relations::Relation*Base
     classes. Due to this "feature" one has some difficulties
-    with Reflex dictionaries. Now I've removed all these 
-    artificial "data"-members. It almost halves the numeber of 
+    with Reflex dictionaries. Now I've removed all these
+    artificial "data"-members. It almost halves the numeber of
     "active" classes for dictionaries!
 
- - all "interface" and "dataobject" classes have got the static 
-    methods "GUID", which returns a valid unique POOL identifier 
-    for the class. 
- 
- - Home-made dictionaries are removed. 
-    Normal "reflex" dictionaries coudl be built now 
-    from the code itself. Helper structures "a'la Markus" 
-    to provide the nesessary instantiations are provided 
-    in Relations/RelationsDict.h file  
-  
+ - all "interface" and "dataobject" classes have got the static
+    methods "GUID", which returns a valid unique POOL identifier
+    for the class.
+
+ - Home-made dictionaries are removed.
+    Normal "reflex" dictionaries coudl be built now
+    from the code itself. Helper structures "a'la Markus"
+    to provide the nesessary instantiations are provided
+    in Relations/RelationsDict.h file
+
     //
-    #include "Relations/RelationsDict.h" 
+    #include "Relations/RelationsDict.h"
     //
     namespace EventAssoc
     {
-     struct __Instantiations 
-     {    
+     struct __Instantiations
+     {
        GaudiDict::Relation1DDict<
          LHCb::Track,float>                                    _1 ;
        GaudiDict::Relation2DDict<
@@ -578,22 +587,22 @@
          LHCb::Particle,LHCb::MCParticle, double>              _8 ;
        GaudiDict::RelationWeighted2DDict<
          LHCb::Particle,LHCb::Vertex,float>                    _9 ;
-     } ; 
-   } ;  
-  
+     } ;
+   } ;
+
    The corresponding *UNIVERSAL* selection XML file is :
-    
+
   <lcgdict>
-  
+
      <class pattern= "LHCb::Relation1D<*>"/>
      <class pattern= "LHCb::Relation2D<*>"/>
      <class pattern= "LHCb::RelationWeighted1D<*>"/>
-     <class pattern= "LHCb::RelationWeighted2D<*>"/> 
+     <class pattern= "LHCb::RelationWeighted2D<*>"/>
 
 
      <class pattern= "Relations::RelationBase<*>"/>
      <class pattern= "Relations::RelationWeightedBase<*>"/>
-  
+
      <class pattern= "Relations::RelationWeighted<*>">
         <field name="m_inverse_aux" transient="true"/>
      </class>
@@ -603,15 +612,15 @@
      </class>
 
      <class pattern= "Relations::Relation2<*>"/>
-     <class pattern= "Relations::Relation2Weighted<*>" />  
-  
+     <class pattern= "Relations::Relation2Weighted<*>" />
+
      <class pattern= "IRela*"/>
      <class pattern= "*Range"/>
      <class pattern= "Relations::*Entry"/>
-  
+
      <class pattern= "std::vector<*Relation*Entry*>"/>
      <class pattern= "std::pair<*std::vector*Relations*>"/>
- 
+
   </lcgdict>
 
 
@@ -620,53 +629,53 @@
 ! 2006-01-27 - Vanya BELYAEV
 
  - add new methods i_inRange and inRange for all relations with weight
-   to allow the extarction fo relations with the weigth in the given 
+   to allow the extarction fo relations with the weigth in the given
    range: e.g.
 
      Range links = table -> inRange( object , lowCut , highCut ) ;
 
- - add new methods i_inverse and i_direct for all "2D" relation classes 
-   to allow fast (non-virtual) access to inverse tables 
+ - add new methods i_inverse and i_direct for all "2D" relation classes
+   to allow fast (non-virtual) access to inverse tables
 
 ! ====================== Relations v2r6 2005-10-19 ============================
 ! 2005-10-19 - Markus Frank
  - Reimplement RelationsDict.h for Reflex persistency
 
 ! ====================== Relations v2r5 2005-05-17 ============================
-! 2005-05-13 - Vanya BELYAEV   
+! 2005-05-13 - Vanya BELYAEV
  - Relations/Pointer.h
    pointer-wrapper class to make a realions to RAW poiter objects
  - Relations/ObjectTypeTraitsStripped.h
    make usage of Relations::Pointer
-   
+
    THIS MODIFICATION IS BACKWARD COMPATIBLE.
    Indeed allexisting relations are not affected at all.
-   I need it to make a relations with HepMC::GenParticle* 
+   I need it to make a relations with HepMC::GenParticle*
 
  - cmt/requirements
-   version increment to v2r5 
+   version increment to v2r5
 
 ! ====================== Relations v2r4 2005-03-14 ============================
 ! 2005-03-14 - Marco Cattaneo
  - Small fixes to doxygen comments, to suppress warnings
 
 ! 2005-02-16 - Vanya BELYAEV
- - few minor fixes to enable the generation of "standard" 
-   LCG dictionaries using "lcgdict" tool 
+ - few minor fixes to enable the generation of "standard"
+   LCG dictionaries using "lcgdict" tool
 
  - more uniform treatment of constructors.
-    now each table-like class has: 
-      a) default constructor with optional "reserve" argument 
-      b) constructor from *ANY* "direct"  interface 
-      c) constructor from *ANY* "inverse" interface 
+    now each table-like class has:
+      a) default constructor with optional "reserve" argument
+      b) constructor from *ANY* "direct"  interface
+      c) constructor from *ANY* "inverse" interface
         (useful for "on-flight" inversion of relation tables)
       d) copy constructor
 
- - add more optimization   into constructors 
-      extensive usage of i_push/i_sort in the *SAFE* environment  
+ - add more optimization   into constructors
+      extensive usage of i_push/i_sort in the *SAFE* environment
 
- - cmt/requirements 
-   version increment to v2r4 
+ - cmt/requirements
+   version increment to v2r4
 
 ! 2005-02-16 - Vanya Belyaev
  - src/AssociatorBase.cpp
@@ -678,42 +687,42 @@
  - Relations/RealtionsDict.h
      modify a  "field-names"  (visible e.g. for Python)
        now "Entry" has 2 "visible" fields :
-         "_to" ,"_from" for ordinary relations 
-       and 3 visible fields :  
-         "_to" , "_from" and "_weight" for relations with weight 
+         "_to" ,"_from" for ordinary relations
+       and 3 visible fields :
+         "_to" , "_from" and "_weight" for relations with weight
 
-    DICTIONARIES (AND DATA) ARE NOT COMPATIBLE ANYMORE !!! 
+    DICTIONARIES (AND DATA) ARE NOT COMPATIBLE ANYMORE !!!
 
 ! ====================== Relations v2r2 2005-01-27 ============================
 ! 2005-01-26 - Vanya BELYAEV
- 
+
   - few modification to improve CPU performance.
-  
-   If one compare the CPU performance for "filling" of Relation 
-   table and Linker object, Linker seems to be MUCH more efficient 
-   for creation. The CPU penalty comes from inservtion of 
-   relation entries into large vector. It is well-knbown problem 
-   that associative vector (which is the  internal implementation 
-   of Relation table) is slower for filling, but usually faster 
-   for reading/using than e.g. std::map or other associative 
-   technique. 
-   
+
+   If one compare the CPU performance for "filling" of Relation
+   table and Linker object, Linker seems to be MUCH more efficient
+   for creation. The CPU penalty comes from inservtion of
+   relation entries into large vector. It is well-knbown problem
+   that associative vector (which is the  internal implementation
+   of Relation table) is slower for filling, but usually faster
+   for reading/using than e.g. std::map or other associative
+   technique.
+
    To solve the problem the "power input" is enabled now:
    e.g. instead of "safe" and robust code
 
    for( ... )
-     {  
-     for( ... ) 
+     {
+     for( ... )
        {
        table->relate( object1 , object2 ) ;
        }
     }
-  
+
    Now one can write more efficient:
 
    for( ... )
-     {  
-     for( ... ) 
+     {
+     for( ... )
        {
        table->i_push( object1 , object2 ) ;
        }
@@ -721,75 +730,75 @@
     table->i_sort() ; // NB!!! call for i_sort() is mandatory
 
    This code is more efficient, but less safe.
-   E.g. there is no control for duplicated entries, 
-  
-   New method i_push is ENOURMOUSLY fast, 
-   for realistc case it has the perfromace 5 times better that "Linker".
-   But, after the usage of i_push, the relatioin tabel stays in invald state and 
-   need to be manually set into valid state. It is doen using i_sort() 
-   method which is CPU-consuming.
-   
-   The overall CPU performance of i_push/i_sort is approximately 
-   2 times slower than filling of  Linker object. 
+   E.g. there is no control for duplicated entries,
 
-   The special new package Tests/RelationTest is developed to measure 
+   New method i_push is ENOURMOUSLY fast,
+   for realistc case it has the perfromace 5 times better that "Linker".
+   But, after the usage of i_push, the relatioin tabel stays in invald state and
+   need to be manually set into valid state. It is doen using i_sort()
+   method which is CPU-consuming.
+
+   The overall CPU performance of i_push/i_sort is approximately
+   2 times slower than filling of  Linker object.
+
+   The special new package Tests/RelationTest is developed to measure
    correctly the relative performace of Relations tables and Linker objects.
    Indeed it is not an easy task to measure only the performance of relations
-   and factorize everything else. 
-  
-   The package is is CVS and it contains realistic example whith 
-     CaloCluster->MCParticle weighted relations/links. 
- 
-   CPU Performance in some arbirtary units: 
+   and factorize everything else.
+
+   The package is is CVS and it contains realistic example whith
+     CaloCluster->MCParticle weighted relations/links.
+
+   CPU Performance in some arbirtary units:
    ----------------------------------------
-  
+
    ----------------------------------------------------------------------------------
      Technique                             Filling        Using/Looping/Extraction
    ----------------------------------------------------------------------------------
-      1) Linker object                          419                261  
+      1) Linker object                          419                261
    ----------------------------------------------------------------------------------
-      2) non-optmized Relations tables  
-         with random input data        
-          (using Table::relate method)          16478           
+      2) non-optmized Relations tables
+         with random input data
+          (using Table::relate method)          16478
    ----------------------------------------------------------------------------------
       3) non-optimized Relation tables
          with sorted input data                 817
-          (using Table::relate method)  
+          (using Table::relate method)
    ----------------------------------------------------------------------------------
-      4) non-optmized Relations tables  
-         with random input data                 16349   
-          (using Table::i_relate method)          
+      4) non-optmized Relations tables
+         with random input data                 16349
+          (using Table::i_relate method)
    ----------------------------------------------------------------------------------
-      5) optmized Relations tables  
-          with random input data        
-          (using Table::i_push/i_sort methods)  693                47 
+      5) optmized Relations tables
+          with random input data
+          (using Table::i_push/i_sort methods)  693                47
    ----------------------------------------------------------------------------------
 
    For Using/Looping/Extarction there  (2),(3),(4) and (5) are the same.
-   All numbers were measured in ONE job using 1000 events and exising 
+   All numbers were measured in ONE job using 1000 events and exising
    input data for CaloCluster->MCParticle MC-associations.
-   The job has been run few times to prove the stability of measurement. 
- 
-   As a bottom-line I'd like to note that this version of Kernel/Relations 
-   package with "power input" option result in 1.65 worser performance for 
-   filling of the relation table relative to Linker technique, 
+   The job has been run few times to prove the stability of measurement.
+
+   As a bottom-line I'd like to note that this version of Kernel/Relations
+   package with "power input" option result in 1.65 worser performance for
+   filling of the relation table relative to Linker technique,
    but it has 5.5 better CPU performace for extration of relations.
-   
+
    I could be wrong, but probably the idiom "one time write - many times read"
-   is valid for *almost* any relations/links  (at least it is true for all 
+   is valid for *almost* any relations/links  (at least it is true for all
    MC-associations).
 
-   
- - cmt/requirements 
-    version increment to v2r2 
+
+ - cmt/requirements
+    version increment to v2r2
 
 ! ====================== Relations v2r1 2004-12-09 ============================
 ! 2004-12-08 - Vanya BELYAEV
 
- - remove few obsolete tricks to unify GCC and Visual C++ 
+ - remove few obsolete tricks to unify GCC and Visual C++
    these tricks were introduced for Visual C++ 6.0.
-   The main reason - the absence pf partical template specializations. 
-   Since the support of partial template specializations in Visual C++ 7.1 
+   The main reason - the absence pf partical template specializations.
+   Since the support of partial template specializations in Visual C++ 7.1
    is on the desired level, all onsolete lines can be eliminated.
 
  - Relations/Less.h
@@ -798,57 +807,57 @@
  - Relations/TypeApplyAux.h
  - Relations/TypeSelect.h
 
-      remove WIN32 specific clause 
+      remove WIN32 specific clause
 
- - Relations/TypeSelect.Aux.h 
- - Relations/TypeSerializers.h 
-     
-      remove obsolete file 
+ - Relations/TypeSelect.Aux.h
+ - Relations/TypeSerializers.h
 
- - cmt/requirements 
-     
-      version increment to v2r1 
+      remove obsolete file
 
-  From *NOW*  the package is formally "platform-independent" 
+ - cmt/requirements
 
-   Platform dependency now comes only:    
+      version increment to v2r1
 
-    - indirectly through usage of 
-      boost::is_convertible structure in Relations/TypeConversion.h file 
-    - through #pragma directive in Relations/PragmaWarning.h file 
+  From *NOW*  the package is formally "platform-independent"
+
+   Platform dependency now comes only:
+
+    - indirectly through usage of
+      boost::is_convertible structure in Relations/TypeConversion.h file
+    - through #pragma directive in Relations/PragmaWarning.h file
 
 
 !====================== Relations v2r0 2004-11-22 ============================
 ! 2004-11-19 - Vanya BELYAEV
  - put few *SERIOUS* modification into Associators
 
-  
-  The purpose is to eliminate the algorithm 
-  handling by associators and to allow new 
-  Data-On-Demand service to take care about 
-  handling of algorithms. 
+
+  The purpose is to eliminate the algorithm
+  handling by associators and to allow new
+  Data-On-Demand service to take care about
+  handling of algorithms.
 
   To allow a management of relational tables by Data-On-Demand Service
-  one needs to achieve the proper configuration of the Service: 
+  one needs to achieve the proper configuration of the Service:
 
-     Assuming that the relation table at location "MyTableLocation", 
-              to be created with some algorithm of type "MyAlgorithmType" 
+     Assuming that the relation table at location "MyTableLocation",
+              to be created with some algorithm of type "MyAlgorithmType"
               with algorithm instance name "MyAlgInstanceName".
 
-  The corresponding configuration lines are:  
+  The corresponding configuration lines are:
 
-  DataOnDemandSvc.Algorithms 
+  DataOnDemandSvc.Algorithms
      += { "DATA='MyTableLocation' , TYPE='MyAlgorithmType/MyAlgInstanceName'" } ;
 
   e.g. for concrete examples with MC association for CaloClusters:
 
-    DataOnDemandSvc.Algorithms 
+    DataOnDemandSvc.Algorithms
       += { "DATA='/Event/Rec/Relations/EcalClusters2MCParticles' , TYPE='CaloClustersMCTruth5Alg/CCs2MCPs'" } ;
 
-  With such configuration one *DOES NOT* need the associators at all, 
-  the relation table can be retrieved and use inside the 
-  algorithms and tools "locally", e.g. 
-  
+  With such configuration one *DOES NOT* need the associators at all,
+  the relation table can be retrieved and use inside the
+  algorithms and tools "locally", e.g.
+
       typedef IRelationWeighted<CaloCluster,MCPrticle,float ITable ;
       const ITable* table = get<ITable>( "Rec/Relations/EcalClusters2MCParticles" );
 
@@ -861,60 +870,60 @@
         const MCParticle* mcp    = it->to() ;
         const double      weight = it->weight() ;
       };
-   
+
   The associators are still *in the game*, if someone wants to use them.
   *BUT* from now the usage of properties "AlgorithmType" and "AlgorithmName"
-  becomes obsolete and deprecates. Being used these properties will trigger 
-  the WARNING messages , e.g. 
+  becomes obsolete and deprecates. Being used these properties will trigger
+  the WARNING messages , e.g.
 
   --------------------------------
-      ToolSvc.CCs2MCPs    WARNING  Obsolete properties 'AlgorithmName' and 'AlgorithmType'. Use new 'Data-On-Demand' Service: 
-    
+      ToolSvc.CCs2MCPs    WARNING  Obsolete properties 'AlgorithmName' and 'AlgorithmType'. Use new 'Data-On-Demand' Service:
+
                DataOnDemandSvc.Algorithms += { "DATA='/Event/Rec/Relations/EcalClusters2MCParticles' , TYPE='CaloClustersMCTruth5Alg/CCs2MCPs'" } ;
 
   --------------------------------
-   
-   If one gets such message, one needs to *ELIMINATE* the lines 
+
+   If one gets such message, one needs to *ELIMINATE* the lines
 
      ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruth5Alg" ;
      ToolSvc.CCs2MCPs.AlgorithmName = "CCs2MCPs" ;
 
-  from *.opts files and to use the line, proposed by Associators itself 
+  from *.opts files and to use the line, proposed by Associators itself
   instead of such lines.
 
-  for general case, the lines: 
+  for general case, the lines:
 
     The.Full.Name.Of.My.Associator.Location      = "MyTableLocation"   ;
     The.Full.Name.Of.My.Associator.AlgorithmType = "MyAlgorithmType"   ;
     The.Full.Name.Of.My.Associator.AlgorithmName = "MyAlgInstanceName" ;
- 
+
   need to be substituted by lines:
 
-    The.Full.Name.Of.My.Associator.Location      = "MyTableLocation"   ; // THE LINE 
-    DataOnDemandSvc.Algorithms 
+    The.Full.Name.Of.My.Associator.Location      = "MyTableLocation"   ; // THE LINE
+    DataOnDemandSvc.Algorithms
          += { "DATA='MyTableLocation' , TYPE='MyAlgorithmType/MyAlgInstanceName'" } ;
-	
+
   Important Notes:
      - "MyTableLocation" is a FULL location of object in TES, including "/Event/"
      - do not forget the "The.Full.Name.Of.My.Associator" is really *FULL" name
        and includes the parent name, e.g. "ToolSvc" for "PUBLIC" associators
 
 
-   Let me stress here once more that, the line, marked by "//THE LINE" is needed 
-   only if one still uses "Associators", for direct usage of relation table 
+   Let me stress here once more that, the line, marked by "//THE LINE" is needed
+   only if one still uses "Associators", for direct usage of relation table
    it is not needed at all.
 
-        I *THINK* (this is my personal preference) that it is worth 
-        to declare the explicit usage of "Associators" as 
-        DEPRECATED/OBSOLETE feature and I'd like to  recommend for everybody 
+        I *THINK* (this is my personal preference) that it is worth
+        to declare the explicit usage of "Associators" as
+        DEPRECATED/OBSOLETE feature and I'd like to  recommend for everybody
         the direct manipulations with relation tables.
 
-   For further details see in lhcb-core-soft@cern.ch archive the mail 
-   titled "Relations and DataOnDemandSvc" from October 26th 
-     
+   For further details see in lhcb-core-soft@cern.ch archive the mail
+   titled "Relations and DataOnDemandSvc" from October 26th
+
  - cmt/requirements
- 
-     increment the MAJOR version 
+
+     increment the MAJOR version
 
 !====================== Relations v1r0 2004-07-19 ============================
 ! 2004-07-19 - Marco Cattaneo
@@ -926,5 +935,5 @@
    LHCbKernel (until version v4r6)
 
 ! -----------------------------------------------------------------------------
-! The END 
+! The END
 ! -----------------------------------------------------------------------------

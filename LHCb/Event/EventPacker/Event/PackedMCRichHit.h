@@ -1,14 +1,14 @@
-// $Id: PackedMCRichDigitSummary.h,v 1.4 2009-11-07 12:20:26 jonrob Exp $
-#ifndef EVENT_PackedMCRichDigitSummary_H
-#define EVENT_PackedMCRichDigitSummary_H 1
+// $Id: PackedMCRichHit.h,v 1.4 2009-11-07 12:20:26 jonrob Exp $
+#ifndef EVENT_PACKEDMCRICHHIT_H
+#define EVENT_PACKEDMCRICHHIT_H 1
 
 #include <string>
 
 // Kernel
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 
 // Event
-#include "Event/MCRichDigitSummary.h"
+#include "Event/MCRichHit.h"
 
 // Gaudi
 #include "GaudiKernel/DataObject.h"
@@ -20,51 +20,55 @@ namespace LHCb
 {
   // -----------------------------------------------------------------------
 
-  /** @struct PackedMCRichDigitSummary Event/PackedMCRichDigitSummary.h
+  /** @struct PackedMCRichHit Event/PackedMCRichHit.h
    *
    *  Packed MCRichHit
    *
    *  @author Christopher Rob Jones
    *  @date   2009-10-13
    */
-  struct PackedMCRichDigitSummary
+  struct PackedMCRichHit
   {
     /// Default constructor
-    PackedMCRichDigitSummary()
-      : history(0),
-        richSmartID(0),
+    PackedMCRichHit()
+      : x(0), y(0), z(0),
+        energy(0), tof(0),
+        sensDetID(0), history(0),
         mcParticle(-1)
     {}
 
-    int history;
-    int richSmartID;
-    int mcParticle;
+    int   x,y,z;
+    int   energy;
+    int   tof;
+    int   sensDetID;
+    int   history;
+    int   mcParticle;
   };
 
   // -----------------------------------------------------------------------
 
-  static const CLID CLID_PackedMCRichDigitSummarys = 1527;
+  static const CLID CLID_PackedMCRichHits = 1521;
 
   /// Namespace for locations in TDS
-  namespace PackedMCRichDigitSummaryLocation
+  namespace PackedMCRichHitLocation
   {
-    static const std::string& Default = "pSim/Rich/DigitSummaries";
+    static const std::string& Default = "pSim/Rich/Hits";
   }
 
-  /** @class PackedMCRichDigitSummarys Event/PackedMCRichDigitSummary.h
+  /** @class PackedMCRichHits Event/PackedMCRichHit.h
    *
-   *  Packed MCRichDigitSummarys
+   *  Packed MCRichHits
    *
    *  @author Christopher Rob Jones
    *  @date   2009-10-13
    */
-  class PackedMCRichDigitSummarys : public DataObject
+  class PackedMCRichHits : public DataObject
   {
 
   public:
 
     /// Vector of packed objects
-    typedef std::vector<LHCb::PackedMCRichDigitSummary> Vector;
+    typedef std::vector<LHCb::PackedMCRichHit> Vector;
 
   public:
     
@@ -74,16 +78,16 @@ namespace LHCb
   public:
 
     /// Standard constructor
-    PackedMCRichDigitSummarys( ) : m_packingVersion(defaultPackingVersion()) { }
+    PackedMCRichHits( ) : m_packingVersion(defaultPackingVersion()) { }
 
     /// Destructor
-    virtual ~PackedMCRichDigitSummarys( ) { }
+    virtual ~PackedMCRichHits( ) { }
 
     /// Class ID
-    static const CLID& classID() { return CLID_PackedMCRichDigitSummarys; }
+    static const CLID& classID() { return CLID_PackedMCRichHits; }
 
     /// Class ID
-    virtual const CLID& clID() const { return PackedMCRichDigitSummarys::classID(); }
+    virtual const CLID& clID() const { return PackedMCRichHits::classID(); }
 
   public:
 
@@ -111,46 +115,46 @@ namespace LHCb
 
   // -----------------------------------------------------------------------
 
-  /** @class MCRichDigitSummaryPacker Event/PackedMCRichDigitSummary.h
+  /** @class MCRichHitPacker Event/PackedMCRichHit.h
    *
-   *  Utility class to handle the packing and unpacking of the MCRichDigitSummarys
+   *  Utility class to handle the packing and unpacking of the MCRichHits
    *
    *  @author Christopher Rob Jones
    *  @date   2009-10-13
    */
-  class MCRichDigitSummaryPacker
+  class MCRichHitPacker
   {
   public:
 
     // These are required by the templated algorithms
-    typedef LHCb::MCRichDigitSummary                    Data;
-    typedef LHCb::PackedMCRichDigitSummary        PackedData;
-    typedef LHCb::MCRichDigitSummarys             DataVector;
-    typedef LHCb::PackedMCRichDigitSummarys PackedDataVector;
-    static const std::string& packedLocation()   { return LHCb::PackedMCRichDigitSummaryLocation::Default; }
-    static const std::string& unpackedLocation() { return LHCb::MCRichDigitSummaryLocation::Default; }
+    typedef LHCb::MCRichHit                    Data;
+    typedef LHCb::PackedMCRichHit        PackedData;
+    typedef LHCb::MCRichHits             DataVector;
+    typedef LHCb::PackedMCRichHits PackedDataVector;
+    static const std::string& packedLocation()   { return LHCb::PackedMCRichHitLocation::Default; }
+    static const std::string& unpackedLocation() { return LHCb::MCRichHitLocation::Default; }
 
   private:
 
     /// Default Constructor hidden
-    MCRichDigitSummaryPacker() : m_parent(NULL) {}
+    MCRichHitPacker() {}
 
   public:
 
-    /// Default Constructor
-    MCRichDigitSummaryPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+    /// Constructor
+    MCRichHitPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
 
   public:
 
-    /// Pack MCRichDigitSummarys
+    /// Pack MCRichHits
     void pack( const DataVector & hits,
                PackedDataVector & phits ) const;
 
-    /// Unpack MCRichDigitSummarys
+    /// Unpack MCRichHits
     void unpack( const PackedDataVector & phits,
-                 DataVector             & hits ) const;
+                 DataVector       & hits ) const;
 
-    /// Compare two MCRichDigitSummarys to check the packing -> unpacking performance
+    /// Compare two MCRichHits to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
                       const DataVector & dataB ) const;
 
@@ -173,4 +177,4 @@ namespace LHCb
 
 }
 
-#endif // EVENT_PackedMCRichDigitSummary_H
+#endif // EVENT_PACKEDMCRICHHIT_H

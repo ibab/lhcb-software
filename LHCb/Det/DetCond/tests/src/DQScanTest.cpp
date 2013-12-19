@@ -31,14 +31,14 @@ namespace {
   }
 }
 
-namespace DetCondTest {
 // ----------------------------------------------------------------------------
 // Implementation file for class: DQScanTest
 //
 // 31/01/2012: Marco Clemencic
 // ----------------------------------------------------------------------------
-DECLARE_ALGORITHM_FACTORY(DQScanTest)
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(DetCondTest, DQScanTest)
 
+namespace DetCondTest {
 // ============================================================================
 // Standard constructor, initializes variables
 // ============================================================================

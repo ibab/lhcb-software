@@ -3,7 +3,7 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 #include "Event/PackedCaloHypo.h"
 #include "Event/CaloHypo.h"
 

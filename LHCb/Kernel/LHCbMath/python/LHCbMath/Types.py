@@ -84,9 +84,7 @@ __all__     = () ## nothing to be imported !
 import ROOT
 
 ## get global C++ namespace 
-## from GaudiPython.Bindings import gbl as cpp
-import PyCintex
-cpp  = PyCintex.makeNamespace('')
+from GaudiPython.Bindings import gbl as cpp
 
 ## C++ namespace Gaudi
 Gaudi = cpp.Gaudi

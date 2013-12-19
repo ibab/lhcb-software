@@ -7,37 +7,30 @@ Simple module for 'decorations' of various relation tables
 for interactive work in (Gauid)python
 """
 # =============================================================================
-__author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
+__author__ = "Vanya BELYAEV <ibelyaev@physics.syr.edu>"
 # =============================================================================
 
 
-import sys,os,os.path,datetime  
-import PyCintex
+import sys,os,os.path,datetime
+import GaudiPython
 
-def _loadDict_ ( name ) :
-    """
-    Helper *LOCAL* function to load the dictionaries
-    """
-    if 'win32' != sys.platform and 'lib' != name[:3] : name = 'lib' + name
-    return PyCintex.loadDict ( name )
+GaudiPython.loaddict('RelationsDict')
 
-_loadDict_( 'RelationsDict' )
-
-_gbl=PyCintex.makeNamespace('')
+_gbl = GaudiPython.gbl
 
 _range = _gbl.Relations.BaseRange
 
 def _range_iter_ ( self ) :
     """
     Iterator function which allows the sequential iteration over the range
-    
+
     >>> range = ...
-    >>> for i in range : print i 
-    
+    >>> for i in range : print i
+
     """
     _r   = self
     _num = _r.size()
-    _i   = 0 
+    _i   = 0
     while _i < _num :
         yield _r.at(_i)
         _i += 1
@@ -48,34 +41,34 @@ def _range_len_ ( self ) :
 
     >>> range = ...
     >>> len( range )
-    
+
     """
     return self.size()
 
 _range.__iter__    = _range_iter_
-_range.__len__     = _range_len_  
+_range.__len__     = _range_len_
 
 def _entry_ ( _from , _to , _weight = None ) :
-    """ get the correspoonding entry type from the types """
+    """ get the corresponding entry type from the types """
     if _weight :
         name = "Relations::WEntry_<%s,%s,%s>" % ( _from , _to , _weight )
     else       :
         name = "Relations::Entry_<%s,%s>"     % ( _from , _to )
-    return PyCintex.makeClass ( name )
+    return getattr(gbl, name)
 
 def _range_ ( _from , _to , _weight = None ) :
-    """ get the correspoonding range type from the types """
+    """ get the corresponding range type from the types """
     entry = _entry_ ( _from  , _to , _weight )
     entries = _gbl.std.vector( entry )
-    return _gbl.Relations.Range_( entries ) 
-    
+    return _gbl.Relations.Range_( entries )
+
 def __unique_and_sort__ ( lst ) :
-    """ LOCAL: return the unique elements of sorted list """ 
+    """ LOCAL: return the unique elements of sorted list """
     _dct=  {}
     for item in lst : _dct[item] = item
     _lst = _dct.keys()
     _lst.sort()
-    return _lst  
+    return _lst
 
 def _substitute_stream_ ( klass ) :
     """ substitute '>>' with '> >' in (templated) class name """
@@ -86,7 +79,7 @@ def _substitute_stream_ ( klass ) :
     index = klass.find('  ')
     while -1 != index :
         klass = klass.replace('  ',' ')
-        index = klass.find( '  ' )        
+        index = klass.find( '  ' )
     return klass
 
 def _fmt_type_ ( fmt , klass ) :
@@ -99,69 +92,69 @@ def _writeLines_ ( klass ) :
     good3 = 0 == klass.find( 'Relations::Relation2<' )
     good4 = 0 == klass.find( 'Relations::Relation2Weighted<' )
     good5 = 0 == klass.find( 'Relations::Range_<' )
-    if good1 or good2 : 
+    if good1 or good2 :
         lines  = [ ' <class name="%s" >' % klass ]
         lines += [ '    <field name="m_inverse_aux" transient="true" />' ]
         lines += [ ' </class> ' ]
-        return lines 
-    elif good3 or good4 : 
+        return lines
+    elif good3 or good4 :
         lines  = [ ' <class name="%s" >' % klass ]
         lines += [ '    <field name="m_inverse" transient="true" />' ]
         lines += [ ' </class> ' ]
-        return lines 
+        return lines
     elif good5 :
         lines  = [ ' <class name="%s" >' % klass ]
         lines += [ '    <field name="m_begin" transient="true" />' ]
         lines += [ '    <field name="m_end"   transient="true" />' ]
         lines += [ ' </class> ' ]
-        return lines     
+        return lines
     return [ ' <class name="%s" /> ' % klass ]
-    
+
 class Rel   ( object ) :
     def __hash__ ( self ) : return hash (                self.name() )
     def __repr__ ( self ) : return                       self.name()
     def   guid   ( self ) : return _gbl.Relations.guid ( self.name() )
-    def __cmp__  ( self , other ) : return cmp( self.name() , other.name() ) 
-    
+    def __cmp__  ( self , other ) : return cmp( self.name() , other.name() )
+
 class Rel1D ( Rel ) :
     def __init__ ( self , From , To ) :
         self.From = From
         self.To   = To
-    def related ( self ) : return [] ##  Rel1D( self.To , self.From ) ] 
+    def related ( self ) : return [] ##  Rel1D( self.To , self.From ) ]
     def types ( self ) :
-        pair = ( self.From , self.To ) 
-        table   = _fmt_type_ ( "LHCb::Relation1D<%s,%s>"         , pair    ) 
-        ibase   = _fmt_type_ ( "IRelation<%s,%s>"                , pair    ) 
-        base0   = _fmt_type_ ( "Relations::RelationBase<%s,%s>"  , pair    ) 
-        base1   = _fmt_type_ ( "Relations::Relation<%s,%s>"      , pair    ) 
-        entry   = _fmt_type_ ( "Relations::Entry_<%s,%s>"        , pair    ) 
-        entries = _fmt_type_ ( "std::vector<%s>"                 , entry   ) 
-        range   = _fmt_type_ ( "Relations::Range_<%s>"           , entries ) 
+        pair = ( self.From , self.To )
+        table   = _fmt_type_ ( "LHCb::Relation1D<%s,%s>"         , pair    )
+        ibase   = _fmt_type_ ( "IRelation<%s,%s>"                , pair    )
+        base0   = _fmt_type_ ( "Relations::RelationBase<%s,%s>"  , pair    )
+        base1   = _fmt_type_ ( "Relations::Relation<%s,%s>"      , pair    )
+        entry   = _fmt_type_ ( "Relations::Entry_<%s,%s>"        , pair    )
+        entries = _fmt_type_ ( "std::vector<%s>"                 , entry   )
+        range   = _fmt_type_ ( "Relations::Range_<%s>"           , entries )
         return ( table , [ ibase , base0   , base1 ,
                            entry , entries , range ] )
-    def name     ( self ) : return self.types()[0] 
+    def name     ( self ) : return self.types()[0]
     def Dict     ( self ) :
-        return _fmt_type_ ( "GaudiDict::Relation1DDict<%s,%s>" , ( self.From , self.To ) ) 
-        
+        return _fmt_type_ ( "GaudiDict::Relation1DDict<%s,%s>" , ( self.From , self.To ) )
+
 class Rel2D ( Rel ) :
     def __init__ ( self , From , To ) :
         self.From = From
         self.To   = To
     def related ( self ) : return [ Rel2D( self.To   , self.From ) ]
     def types  ( self ) :
-        pair    = ( self.From , self.To ) 
-        table   = _fmt_type_ ( "LHCb::Relation2D<%s,%s>"         , pair    ) 
-        ibas1   = _fmt_type_ ( "IRelation<%s,%s>"                , pair    ) 
-        ibas2   = _fmt_type_ ( "IRelation2D<%s,%s>"              , pair    ) 
-        base0   = _fmt_type_ ( "Relations::RelationBase<%s,%s>"  , pair    ) 
-        base1   = _fmt_type_ ( "Relations::Relation<%s,%s>"      , pair    ) 
-        base2   = _fmt_type_ ( "Relations::Relation2<%s,%s>"     , pair    ) 
-        entry   = _fmt_type_ ( "Relations::Entry_<%s,%s>"        , pair    ) 
-        entries = _fmt_type_ ( "std::vector<%s>"                 , entry   ) 
+        pair    = ( self.From , self.To )
+        table   = _fmt_type_ ( "LHCb::Relation2D<%s,%s>"         , pair    )
+        ibas1   = _fmt_type_ ( "IRelation<%s,%s>"                , pair    )
+        ibas2   = _fmt_type_ ( "IRelation2D<%s,%s>"              , pair    )
+        base0   = _fmt_type_ ( "Relations::RelationBase<%s,%s>"  , pair    )
+        base1   = _fmt_type_ ( "Relations::Relation<%s,%s>"      , pair    )
+        base2   = _fmt_type_ ( "Relations::Relation2<%s,%s>"     , pair    )
+        entry   = _fmt_type_ ( "Relations::Entry_<%s,%s>"        , pair    )
+        entries = _fmt_type_ ( "std::vector<%s>"                 , entry   )
         range   = _fmt_type_ ( "Relations::Range_<%s>"           , entries )
         return ( table , [ ibas1 , ibas2   , base0 , base1 , base2 ,
                            entry , entries , range ] )
-    def name     ( self ) : return self.types()[0] 
+    def name     ( self ) : return self.types()[0]
     def Dict     ( self ) :
         return _fmt_type_ ( "GaudiDict::Relation2DDict<%s,%s>" , ( self.From , self.To ) )
 
@@ -172,19 +165,19 @@ class RelW1D ( Rel ) :
         self.Weight = Weight
     def related ( self ) : return [] ##  RelW1D( self.To , self.From , self.Weight ) ]
     def types   ( self ) :
-        triplet = ( self.From , self.To , self.Weight ) 
+        triplet = ( self.From , self.To , self.Weight )
         table   = _fmt_type_ ( "LHCb::RelationWeighted1D<%s,%s,%s>"        , triplet )
-        ibase   = _fmt_type_ ( "IRelationWeighted<%s,%s,%s>"               , triplet ) 
-        base0   = _fmt_type_ ( "Relations::RelationWeightedBase<%s,%s,%s>" , triplet ) 
-        base1   = _fmt_type_ ( "Relations::RelationWeighted<%s,%s,%s>"     , triplet ) 
+        ibase   = _fmt_type_ ( "IRelationWeighted<%s,%s,%s>"               , triplet )
+        base0   = _fmt_type_ ( "Relations::RelationWeightedBase<%s,%s,%s>" , triplet )
+        base1   = _fmt_type_ ( "Relations::RelationWeighted<%s,%s,%s>"     , triplet )
         entry   = _fmt_type_ ( "Relations::WEntry_<%s,%s,%s>"              , triplet )
-        entries = _fmt_type_ ( "std::vector<%s>"                           , entry   ) 
-        range   = _fmt_type_ ( "Relations::Range_<%s>"                     , entries ) 
+        entries = _fmt_type_ ( "std::vector<%s>"                           , entry   )
+        range   = _fmt_type_ ( "Relations::Range_<%s>"                     , entries )
         return ( table , [ ibase , base0   , base1 ,
                            entry , entries , range ] )
-    def name     ( self ) : return self.types()[0] 
+    def name     ( self ) : return self.types()[0]
     def Dict     ( self ) :
-        return _fmt_type_ ( "GaudiDict::RelationWeighted1DDict<%s,%s,%s>", ( self.From , self.To , self.Weight ) ) 
+        return _fmt_type_ ( "GaudiDict::RelationWeighted1DDict<%s,%s,%s>", ( self.From , self.To , self.Weight ) )
 
 class RelW2D ( Rel ) :
     def __init__ ( self , From , To , Weight ) :
@@ -193,34 +186,34 @@ class RelW2D ( Rel ) :
         self.Weight = Weight
     def related ( self ) :
         lst = [ RelW2D( self.To   , self.From , self.Weight ) ]
-        return lst 
+        return lst
     def types  ( self ) :
         triplet = ( self.From , self.To , self.Weight )
-        table   = _fmt_type_ ( "LHCb::RelationWeighted2D<%s,%s,%s>"              , triplet ) 
-        ibas1   = _fmt_type_ ( "IRelationWeighted<%s,%s,%s>"                     , triplet ) 
-        ibas2   = _fmt_type_ ( "IRelationWeighted2D<%s,%s,%s>"                   , triplet ) 
-        base0   = _fmt_type_ ( "Relations::RelationWeightedBase<%s,%s,%s>"       , triplet ) 
-        base1   = _fmt_type_ ( "Relations::RelationWeighted<%s,%s,%s>"           , triplet ) 
-        base2   = _fmt_type_ ( "Relations::Relation2Weighted<%s,%s,%s>"          , triplet ) 
-        entry   = _fmt_type_ ( "Relations::WEntry_<%s,%s,%s>"                    , triplet ) 
-        entries = _fmt_type_ ( "std::vector<%s>"                                 , entry   ) 
+        table   = _fmt_type_ ( "LHCb::RelationWeighted2D<%s,%s,%s>"              , triplet )
+        ibas1   = _fmt_type_ ( "IRelationWeighted<%s,%s,%s>"                     , triplet )
+        ibas2   = _fmt_type_ ( "IRelationWeighted2D<%s,%s,%s>"                   , triplet )
+        base0   = _fmt_type_ ( "Relations::RelationWeightedBase<%s,%s,%s>"       , triplet )
+        base1   = _fmt_type_ ( "Relations::RelationWeighted<%s,%s,%s>"           , triplet )
+        base2   = _fmt_type_ ( "Relations::Relation2Weighted<%s,%s,%s>"          , triplet )
+        entry   = _fmt_type_ ( "Relations::WEntry_<%s,%s,%s>"                    , triplet )
+        entries = _fmt_type_ ( "std::vector<%s>"                                 , entry   )
         range   = _fmt_type_ ( "Relations::Range_<%s>"                           , entries )
         return ( table , [ ibas1  , ibas2   , base0 , base1 , base2 ,
-                           entry , entries , range ] ) 
-    def name     ( self ) : return self.types()[0] 
+                           entry , entries , range ] )
+    def name     ( self ) : return self.types()[0]
     def Dict     ( self ) :
-        return _fmt_type_ ( "GaudiDict::RelationWeighted2DDict<%s,%s,%s>" , ( self.From , self.To , self.Weight ) ) 
+        return _fmt_type_ ( "GaudiDict::RelationWeighted2DDict<%s,%s,%s>" , ( self.From , self.To , self.Weight ) )
 
 def _write_xml_( lines , lst ) :
-    
-    lines += ['<!-- * $Id: Rels.py,v 1.2 2008-11-02 16:44:38 ibelyaev Exp $ '] 
+
+    lines += ['<!-- * $Id: Rels.py,v 1.2 2008-11-02 16:44:38 ibelyaev Exp $ ']
     lines += ['     * ========================================================================']
     lines += ['     * $CVS tag:$, version $Revision: 1.2 $ ']
     lines += ['     * ========================================================================']
     lines += ['-->']
     lines += ['']
     lines += ['<!-- * @file']
-    lines += ['     *' ] 
+    lines += ['     *' ]
     lines += ['     * The basic selection file to build the Reflex dictionaries']
     if   'USERNAME' in os.environ :
         lines += ['     * @author %s ' % os.environ['USERNAME'] ]
@@ -232,10 +225,10 @@ def _write_xml_( lines , lst ) :
         lines += ['     * @author %s ' % os.environ['username'] ]
     else :
         lines += ['     * @author %s ' % '<Unknown>' ]
-        
+
     lines += ['     * @date  %s ' % datetime.datetime.today() ]
     lines += ['     * ========================================================================']
-    lines += ['--> ']  
+    lines += ['--> ']
     lines += ['']
     lines += ['']
     #
@@ -245,7 +238,7 @@ def _write_xml_( lines , lst ) :
     classes = []
     for o in lst : classes += o.types()[1]
     classes = __unique_and_sort__ ( classes )
-    
+
     for o in lst :
         lines += ['']
         types = o.types()
@@ -254,60 +247,60 @@ def _write_xml_( lines , lst ) :
         lines     += ['           id="%s" />'  % o.guid() ]
     lines += ['']
     for o in classes :
-        lines     += _writeLines_ ( o ) 
-        
+        lines     += _writeLines_ ( o )
+
     lines += ['']
     lines += [' <class pattern="Relations::Pointer<*>"   /> ']
     lines += [' <class pattern="Relations::Reference<*>" /> ']
     lines += ['']
-    lines += [' <!-- * EXCLUSIONS                       * -->'] 
-    lines += [' <!-- *  1) Not needed for interactivity * -->'] 
-    lines += [' <!-- *  2) Not needed for persistency   * -->'] 
+    lines += [' <!-- * EXCLUSIONS                       * -->']
+    lines += [' <!-- *  1) Not needed for interactivity * -->']
+    lines += [' <!-- *  2) Not needed for persistency   * -->']
     lines += ['']
-    lines += [' <exclusion>']    
+    lines += [' <exclusion>']
     lines += ['']
     lines += [' <class pattern="IRelation*">']
-    lines += ['    <method name="="/>']    
-    lines += [' </class>']        
+    lines += ['    <method name="="/>']
+    lines += [' </class>']
     lines += [' <class pattern="LHCb::Relation*">']
-    lines += ['    <method name="="/>']    
-    lines += [' </class>']        
+    lines += ['    <method name="="/>']
+    lines += [' </class>']
     lines += [' <class pattern="Relations::Relation*">']
-    lines += ['    <method name="="/>']    
-    lines += [' </class>']        
+    lines += ['    <method name="="/>']
+    lines += [' </class>']
     lines += [' <class pattern="Relations::Entry_*">']
-    lines += ['    <method name="="/>']    
-    lines += [' </class>']        
+    lines += ['    <method name="="/>']
+    lines += [' </class>']
     lines += [' <class pattern="Relations::WEntry_*">']
-    lines += ['    <method name="="/>']    
-    lines += [' </class>']        
+    lines += ['    <method name="="/>']
+    lines += [' </class>']
     lines += [' <class pattern="Relations::Range_*">']
-    lines += ['    <method name="="/>']    
-    lines += [' </class>']        
+    lines += ['    <method name="="/>']
+    lines += [' </class>']
     lines += [' <class pattern="Relations::Pointer*">']
-    lines += ['    <method name="="/>']    
-    lines += [' </class>']        
+    lines += ['    <method name="="/>']
+    lines += [' </class>']
     lines += [' <class pattern="Relations::Reference*">']
-    lines += ['    <method name="="/>']    
-    lines += [' </class>']        
+    lines += ['    <method name="="/>']
+    lines += [' </class>']
     lines += [' <class pattern="std::vector&lt;Relations::*&gt;">']
-    lines += ['    <method name="="/>']    
-    lines += [' </class>']        
+    lines += ['    <method name="="/>']
+    lines += [' </class>']
     lines += ['']
-    lines += [' </exclusion>']    
-    lines += ['']    
-    lines += ['</lcgdict>']    
+    lines += [' </exclusion>']
+    lines += ['']
+    lines += ['</lcgdict>']
     lines += ['']
     lines += ['<!-- * ===================================================================== -->']
     lines += ['<!-- * The END * =========================================================== -->']
     lines += ['<!-- * ===================================================================== -->']
     lines += ['']
     #
-    return lines 
+    return lines
 
 
 def _write_cpp_ ( lines , lst , includes = [] ) :
-    lines += ['// $Id: Rels.py,v 1.2 2008-11-02 16:44:38 ibelyaev Exp $' ] 
+    lines += ['// $Id: Rels.py,v 1.2 2008-11-02 16:44:38 ibelyaev Exp $' ]
     lines += ['// ====================================================================']
     lines += ['// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ ']
     lines += ['// ====================================================================']
@@ -346,39 +339,39 @@ def _write_cpp_ ( lines , lst , includes = [] ) :
         lines += ['   * @author %s ' % os.environ['username'] ]
     else :
         lines += ['   * @author %s ' % '<Unknown>' ]
-            
+
     lines += ['  * @date  %s ' % datetime.datetime.today() ]
     lines += ['  *       ']
     lines += ['  */      ']
     lines += ['']
     lines += ['namespace Dict']
     lines += ['{']
-    lines += ['  struct __Instantiations ']    
+    lines += ['  struct _Instantiations ']
     lines += ['  {']
-    _i = 0 
+    _i = 0
     for o in lst :
-        _i+=1 
+        _i+=1
         lines += ['        %s\t_%s ;' %( o.Dict() , _i ) ]
     lines += ['  };']
-    lines += ['} // end of namespace Dict ']    
-    lines += ['']    
+    lines += ['} // end of namespace Dict ']
+    lines += ['']
     lines += ['// ====================================================================']
     lines += ['// The END ============================================================']
     lines += ['// ====================================================================']
-    
-    return lines 
+
+    return lines
 
 def _backup_ ( file1 , suffix = "_old" ) :
     """
-    Trivial function to move/backup/rename file 
+    Trivial function to move/backup/rename file
     """
-    # nothing to be moved 
+    # nothing to be moved
     if not os.path.exists( file1 ) : return
     # construct the name for back-up
     file2 = file1 + suffix
-    # backup the backup file is needed 
+    # backup the backup file is needed
     if os.path.exists( file2 ) : _backup_ ( file2 , suffix )
-    # move the file 
+    # move the file
     os.rename( file1 , file2 )
 
 
@@ -388,7 +381,7 @@ def prepare ( classes                    ,
               cppname  = "selection.h"   ) :
 
     def _helper_ ( lst , num = 10 ) :
-        _lst = lst 
+        _lst = lst
         for i in range(0,num) :
             _tmp = []
             for o in _lst :
@@ -397,7 +390,7 @@ def prepare ( classes                    ,
             _lst = __unique_and_sort__ ( _tmp )
         return _lst
     classes = _helper_ ( classes )
-    
+
     for o in classes :
         print " Prepare Reflex dictionaries for class %s"% o .name()
 
@@ -415,18 +408,18 @@ def prepare ( classes                    ,
     _backup_( cppname )
     hfile = open( cppname , 'w' )
     for line in hlines : hfile.write(line+'\n')
-    print " C++-selection file prepared: '%s' " % cppname 
+    print " C++-selection file prepared: '%s' " % cppname
     #for line in hlines : print line
 
 if "__main__" == __name__ :
 
     classes  = []
-    #classes += [ Rel1D('int'        ,'int') ] 
+    #classes += [ Rel1D('int'        ,'int') ]
     classes += [ Rel1D('std::string','int') ]
 
     # make XML and C++ selction files:
-    prepare ( classes ) 
-    
+    prepare ( classes )
+
 # =============================================================================
-# The END 
+# The END
 # =============================================================================

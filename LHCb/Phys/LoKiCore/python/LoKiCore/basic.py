@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id$ 
+# $Id$
 # =============================================================================
-# $URL$ 
+# $URL$
 # =============================================================================
 ## @file decorators.py LoKiCore/basic.py
 #
 #  The set of basic decorator for objects from LoKiCore library
 #
-#        This file is a part of LoKi project - 
+#        This file is a part of LoKi project -
 #    "C++ ToolKit  for Smart and Friendly Physics Analysis"
 #
 #  The package has been designed with the kind help from
-#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
-#  contributions and advices from G.Raven, J.van Tilburg, 
+#  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+#  contributions and advices from G.Raven, J.van Tilburg,
 #  A.Golutvin, P.Koppenburg have been used in the design.
 #
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -25,17 +25,17 @@
 """
 The set of basic decorators for objects from LoKiCore library
 
-    This file is a part of LoKi project - 
+    This file is a part of LoKi project -
 ``C++ ToolKit  for Smart and Friendly Physics Analysis''
 
 The package has been designed with the kind help from
-Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
-contributions and advices from G.Raven, J.van Tilburg, 
+Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+contributions and advices from G.Raven, J.van Tilburg,
 A.Golutvin, P.Koppenburg have been used in the design.
 
 """
 # =============================================================================
-__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
+__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
 __date__    = "2010-09-27"
 __version__ = "SVN $Revision$ "
 # =============================================================================
@@ -44,22 +44,18 @@ __all__     = (
     'std'   ,
     'LoKi'  ,
     'LHCb'  ,
-    'Gaudi' 
+    'Gaudi'
     )
 # =============================================================================
 
-import PyCintex
+import GaudiPython
 
-# construct the global namespace 
-_global   = PyCintex.makeNamespace('')
-
-# namespaces
-
-cpp   = _global 
-std   = _global.std
-LoKi  = _global.LoKi
-LHCb  = _global.LHCb
-Gaudi = _global.Gaudi
+# namespaces shortcuts
+cpp   = GaudiPython.gbl
+std   = GaudiPython.gbl.std
+LoKi  = GaudiPython.gbl.LoKi
+LHCb  = GaudiPython.gbl.LHCb
+Gaudi = GaudiPython.gbl.Gaudi
 
 # =============================================================================
 if '__main__' == __name__ :
@@ -68,10 +64,10 @@ if '__main__' == __name__ :
     print __doc__
     print ' Author  : ' , __author__
     print ' Version : ' , __version__
-    print ' Date    : ' , __date__    
+    print ' Date    : ' , __date__
     print 80*'*'
-    for i in dir() : print i 
-        
+    for i in dir() : print i
+
 
 # =============================================================================
 # The END

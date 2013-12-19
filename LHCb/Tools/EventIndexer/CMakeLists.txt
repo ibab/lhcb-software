@@ -14,6 +14,7 @@ set(dict_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/EventIndexer.h
 add_custom_command(OUTPUT EventIndexerDict.h EventIndexerDict.cpp
                    COMMAND ${env_cmd} --xml ${env_xml}
                      ${ROOT_rootcint_CMD} -f EventIndexerDict.cpp -c
+                           -inlineInputHeader
                            ${dict_srcs}
                    DEPENDS ${dict_srcs})
 

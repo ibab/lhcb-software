@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-import ROOT
-import PyCintex
-cpp = PyCintex.makeNamespace('')
-gbl = cpp
-## import GaudiPython
-Math = gbl.ROOT.Math
+import GaudiPython
+Math = GaudiPython.gbl.ROOT.Math
+
+from GaudiKernel import ROOT6WorkAroundEnabled
+if ROOT6WorkAroundEnabled('template-autoloading'):
+    GaudiPython.gbl.gSystem.Load('libLHCbMathDict')
+
 # neet to get this first so that all of the other stuff is understood!
 # seems to work since Transform3D isn't a templated class.
 Transform3D = Math.Transform3D
@@ -44,7 +45,7 @@ PtEtaPhiMVector  = Math.PtEtaPhiMVector # LorentzVector<PtEtaPhiM4D<double> >
 # Lorentz vectors (float)
 XYZTVectorF       = Math.XYZTVectorF    # LorentzVector<PxPyPzE4D<float> >
 #
-Line = gbl.Gaudi.Math.Line
+Line = GaudiPython.gbl.Gaudi.Math.Line
 XYZLine        = Line(XYZPoint, XYZVector)
 Polar3DLine    = Line(Polar3DPoint, Polar3DVector)
 RhoEtaPhiLine  = Line(RhoEtaPhiPoint, RhoEtaPhiVector)
@@ -55,7 +56,7 @@ Polar3DLineF   = Line(Polar3DPointF, Polar3DVectorF)
 RhoEtaPhiLineF = Line(RhoEtaPhiPointF, RhoEtaPhiVectorF)
 RhoZPhiLineF   = Line(RhoZPhiPointF, RhoZPhiVectorF)
 #
-GeomFun = gbl.Gaudi.Math.GF
+GeomFun = GaudiPython.gbl.Gaudi.Math.GF
 # this causes a seg fault in debug mode:
 #XYZGeomFun = GeomFun(XYZPoint, XYZLine, Plane3D)
 """

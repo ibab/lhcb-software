@@ -4,6 +4,12 @@
 ! Purpose     :
 ! -----------------------------------------------------------------------------
 
+! 2013-07-18 - Marco Clemencic
+ - Removed unnecessary dependency on Reflex.
+
+! 2013-06-27 - Marco Clemencic
+ - Replaced PyCintex with ROOT (preparing migration to ROOT 6).
+
 !========================= PartProp v1r16 2013-04-29 =========================
 ! 2013-04-15 - Marco Clemencic
  - Move 'operator<<' inside a namespace to fix compilation errors with clang.

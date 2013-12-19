@@ -6,7 +6,7 @@
 #include <vector>
 
 // Kernel
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 
 // Event
 #include "Event/MCRichSegment.h"

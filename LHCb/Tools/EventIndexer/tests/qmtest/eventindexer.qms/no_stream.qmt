@@ -37,10 +37,13 @@ app.TopAlg = [FakeIndexerData("FakeIndexerData"), ei]
 validateWithReference()
 # countErrorLines()
 
+import os
+root_dir = os.environ['EVENTINDEXERROOT']
+
 from subprocess import Popen, PIPE
-root = Popen(['root', '-b', '-n', 'indexer_data.root'],
-             stdin=PIPE, stdout=PIPE, stderr=PIPE)
-out, err = root.communicate('index->Scan()\n')
+root = Popen(['root', '-b', '-q', os.path.join(root_dir, 'tests', 'scripts', 'tree_scan.C')],
+             stdout=PIPE, stderr=PIPE)
+out, err = root.communicate()
 
 result['index_dump'] = result.Quote(out)
 

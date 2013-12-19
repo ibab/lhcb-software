@@ -3,7 +3,7 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 #include "Event/HltDecReports.h"
 #include "Event/PackedDecReport.h"
 

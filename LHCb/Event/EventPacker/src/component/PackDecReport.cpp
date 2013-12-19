@@ -4,7 +4,7 @@
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/HltDecReports.h"
 #include "Event/PackedDecReport.h"
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 
 // local
 #include "PackDecReport.h"

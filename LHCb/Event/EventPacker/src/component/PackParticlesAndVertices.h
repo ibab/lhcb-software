@@ -7,7 +7,7 @@
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/SmartIF.h"
 
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 #include "Kernel/Particle2LHCbIDs.h"
 
 #include "Relations/Relation1D.h"

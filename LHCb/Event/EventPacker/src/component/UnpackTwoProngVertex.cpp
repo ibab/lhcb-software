@@ -5,7 +5,7 @@
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/PackedTwoProngVertex.h"
 #include "Event/TwoProngVertex.h"
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 // local
 #include "UnpackTwoProngVertex.h"
 

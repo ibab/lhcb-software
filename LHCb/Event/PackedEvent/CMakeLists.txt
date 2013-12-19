@@ -1,6 +1,10 @@
 ################################################################################
 # Package: PackedEvent
 ################################################################################
+
+# This pacakge has been disabled
+if(FALSE)
+
 gaudi_subdir(PackedEvent v4r13)
 
 gaudi_depends_on_subdirs(Event/MCEvent
@@ -20,3 +24,4 @@ gaudi_add_dictionary(PackedEvent
                      dict/PackedEventDict.xml
                      LINK_LIBRARIES MCEvent PhysEvent RecEvent GaudiAlgLib GaudiKernel LHCbKernel PackedEventLib)
 
+endif()

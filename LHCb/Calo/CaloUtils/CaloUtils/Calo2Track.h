@@ -1,26 +1,28 @@
-#ifndef CALO2TRACK_H 
+#ifndef CALO2TRACK_H
 #define CALO2TRACK_H 1
 
-//Forward dec'
-template <class FROM,class TO,class WEIGHT> class IRelationWeighted; 
-template <class FROM,class TO,class WEIGHT> class IRelationWeighted2D; 
-template <class FROM,class TO> class IRelation; 
+#include <string>
 
-namespace LHCb{ 
+//Forward dec'
+template <class FROM,class TO,class WEIGHT> class IRelationWeighted;
+template <class FROM,class TO,class WEIGHT> class IRelationWeighted2D;
+template <class FROM,class TO> class IRelation;
+
+namespace LHCb{
   class CaloHypo;
   class CaloCluster;
   class Track;
 }
 
 /** @class Calo2Track Calo2Track.h Event/Calo2Track.h
- *  
+ *
  *
  *  @author Olivier Deschamps
  *  @date   2006-02-21
  */
-namespace LHCb { 
+namespace LHCb {
   namespace CaloIdLocation {
-    // Calo-Track matching tables   : IRelationWeighted< CaloCluster/Hypo , Track , float > 
+    // Calo-Track matching tables   : IRelationWeighted< CaloCluster/Hypo , Track , float >
     const std::string ClusterMatch  = "Rec/Calo/ClusterMatch";
     const std::string PhotonMatch   = "Rec/Calo/PhotonMatch";
     const std::string BremMatch     = "Rec/Calo/BremMatch";
@@ -31,7 +33,7 @@ namespace LHCb {
     const std::string InBrem        =  "Rec/Calo/InAccBrem";
     const std::string InEcal        =  "Rec/Calo/InAccEcal";
     const std::string InHcal        =  "Rec/Calo/InAccHcal";
-    // Intermediate estimators : IRelation< Track , float >   
+    // Intermediate estimators : IRelation< Track , float >
     const std::string SpdE          = "Rec/Calo/SpdE";
     const std::string PrsE          = "Rec/Calo/PrsE";
     const std::string EcalE         = "Rec/Calo/EcalE";
@@ -39,7 +41,7 @@ namespace LHCb {
     const std::string EcalChi2      = "Rec/Calo/EcalChi2";
     const std::string BremChi2      = "Rec/Calo/BremChi2";
     const std::string ClusChi2      = "Rec/Calo/ClusChi2";
-    // CaloPID DLLs            : IRelation< Track , float >   
+    // CaloPID DLLs            : IRelation< Track , float >
     const std::string PrsPIDe       = "Rec/Calo/PrsPIDe";
     const std::string EcalPIDe      = "Rec/Calo/EcalPIDe";
     const std::string BremPIDe      = "Rec/Calo/BremPIDe";
@@ -50,12 +52,12 @@ namespace LHCb {
     const std::string PhotonID      = "Rec/Calo/PhotonID" ;
     const std::string MergedID      = "Rec/Calo/MergedID" ;
     const std::string PhotonFromMergedID      = "Rec/Calo/PhotonFromMergedID" ;
-    
+
 
 
     // =================== Hlt locations ============== DEPRECATED : use CaloAlgUtils::pathFromContext instead !!
 
-    // Calo-Track matching tables   : IRelationWeighted< CaloCluster/Hypo , Track , float > 
+    // Calo-Track matching tables   : IRelationWeighted< CaloCluster/Hypo , Track , float >
     const std::string ClusterMatchHlt  = "Hlt/Calo/ClusterMatch";
     const std::string PhotonMatchHlt   = "Hlt/Calo/PhotonMatch";
     const std::string BremMatchHlt     = "Hlt/Calo/BremMatch";
@@ -66,7 +68,7 @@ namespace LHCb {
     const std::string InBremHlt        =  "Hlt/Calo/InAccBrem";
     const std::string InEcalHlt        =  "Hlt/Calo/InAccEcal";
     const std::string InHcalHlt        =  "Hlt/Calo/InAccHcal";
-    // Intermediate estimators : IRelation< Track , float >   
+    // Intermediate estimators : IRelation< Track , float >
     const std::string SpdEHlt          = "Hlt/Calo/SpdE";
     const std::string PrsEHlt         = "Hlt/Calo/PrsE";
     const std::string EcalEHlt         = "Hlt/Calo/EcalE";
@@ -74,7 +76,7 @@ namespace LHCb {
     const std::string EcalChi2Hlt      = "Hlt/Calo/EcalChi2";
     const std::string BremChi2Hlt      = "Hlt/Calo/BremChi2";
     const std::string ClusChi2Hlt      = "Hlt/Calo/ClusChi2";
-    // CaloPID DLLs            : IRelation< Track , float >   
+    // CaloPID DLLs            : IRelation< Track , float >
     const std::string PrsPIDeHlt       = "Hlt/Calo/PrsPIDe";
     const std::string EcalPIDeHlt      = "Hlt/Calo/EcalPIDe";
     const std::string BremPIDeHlt      = "Hlt/Calo/BremPIDe";
@@ -100,7 +102,7 @@ namespace LHCb {
 
     typedef IRelation< LHCb::Track , float >                                         ITrEvalTable;
     typedef IRelation< LHCb::Track , bool  >                                         ITrAccTable;
-  }   
+  }
 }
 
-#endif // CALO2TRACK_H 
+#endif // CALO2TRACK_H

@@ -1,14 +1,14 @@
-// $Id: PackedMCRichHit.h,v 1.4 2009-11-07 12:20:26 jonrob Exp $
-#ifndef EVENT_PACKEDMCRICHHIT_H
-#define EVENT_PACKEDMCRICHHIT_H 1
+// $Id: PackedMuonPID.h,v 1.3 2009-11-10 10:24:09 jonrob Exp $
+#ifndef EVENT_PACKEDMUONPID_H
+#define EVENT_PACKEDMUONPID_H 1
 
 #include <string>
 
 // Kernel
-#include "Kernel/StandardPacker.h"
+#include "Event/StandardPacker.h"
 
 // Event
-#include "Event/MCRichHit.h"
+#include "Event/MuonPID.h"
 
 // Gaudi
 #include "GaudiKernel/DataObject.h"
@@ -20,74 +20,76 @@ namespace LHCb
 {
   // -----------------------------------------------------------------------
 
-  /** @struct PackedMCRichHit Event/PackedMCRichHit.h
+  /** @struct PackedMuonPID Event/PackedMuonPID.h
    *
-   *  Packed MCRichHit
+   *  Packed MuonPID
    *
    *  @author Christopher Rob Jones
    *  @date   2009-10-13
    */
-  struct PackedMCRichHit
+  struct PackedMuonPID
   {
     /// Default constructor
-    PackedMCRichHit()
-      : x(0), y(0), z(0),
-        energy(0), tof(0),
-        sensDetID(0), history(0),
-        mcParticle(-1)
+    PackedMuonPID()
+      : MuonLLMu(0), MuonLLBg(0),
+        nShared(0), status(0),
+        idtrack(-1),
+        mutrack(-1),
+        key(0)
     {}
 
-    int   x,y,z;
-    int   energy;
-    int   tof;
-    int   sensDetID;
-    int   history;
-    int   mcParticle;
+    int MuonLLMu;
+    int MuonLLBg;
+    int nShared;
+    int status;
+    int idtrack;
+    int mutrack;
+    int key;
   };
 
   // -----------------------------------------------------------------------
 
-  static const CLID CLID_PackedMCRichHits = 1521;
+  static const CLID CLID_PackedMuonPIDs = 1571;
 
   /// Namespace for locations in TDS
-  namespace PackedMCRichHitLocation
+  namespace PackedMuonPIDLocation
   {
-    static const std::string& Default = "pSim/Rich/Hits";
+    static const std::string& Default = "pRec/Muon/MuonPID";
   }
 
-  /** @class PackedMCRichHits Event/PackedMCRichHit.h
+  /** @class PackedMuonPIDs Event/PackedMuonPID.h
    *
-   *  Packed MCRichHits
+   *  Packed MuonPIDs
    *
    *  @author Christopher Rob Jones
    *  @date   2009-10-13
    */
-  class PackedMCRichHits : public DataObject
+  class PackedMuonPIDs : public DataObject
   {
 
   public:
 
     /// Vector of packed objects
-    typedef std::vector<LHCb::PackedMCRichHit> Vector;
+    typedef std::vector<LHCb::PackedMuonPID> Vector;
 
   public:
     
     /// Default Packing Version
-    static char defaultPackingVersion() { return 0; }
-
+    static char defaultPackingVersion() { return 1; }
+    
   public:
 
     /// Standard constructor
-    PackedMCRichHits( ) : m_packingVersion(defaultPackingVersion()) { }
+    PackedMuonPIDs( ) : m_packingVersion(defaultPackingVersion()) { }
 
     /// Destructor
-    virtual ~PackedMCRichHits( ) { }
+    virtual ~PackedMuonPIDs( ) { }
 
     /// Class ID
-    static const CLID& classID() { return CLID_PackedMCRichHits; }
+    static const CLID& classID() { return CLID_PackedMuonPIDs; }
 
     /// Class ID
-    virtual const CLID& clID() const { return PackedMCRichHits::classID(); }
+    virtual const CLID& clID() const { return PackedMuonPIDs::classID(); }
 
   public:
 
@@ -105,7 +107,7 @@ namespace LHCb
 
   private:
 
-    /// Data packing version (not used as yet, but for any future schema evolution)
+    /// Data packing version 
     char   m_packingVersion;
 
     /// The packed data objects
@@ -115,46 +117,46 @@ namespace LHCb
 
   // -----------------------------------------------------------------------
 
-  /** @class MCRichHitPacker Event/PackedMCRichHit.h
+  /** @class MuonPIDPacker Event/PackedMuonPID.h
    *
-   *  Utility class to handle the packing and unpacking of the MCRichHits
+   *  Utility class to handle the packing and unpacking of the MuonPIDs
    *
    *  @author Christopher Rob Jones
    *  @date   2009-10-13
    */
-  class MCRichHitPacker
+  class MuonPIDPacker
   {
   public:
 
     // These are required by the templated algorithms
-    typedef LHCb::MCRichHit                    Data;
-    typedef LHCb::PackedMCRichHit        PackedData;
-    typedef LHCb::MCRichHits             DataVector;
-    typedef LHCb::PackedMCRichHits PackedDataVector;
-    static const std::string& packedLocation()   { return LHCb::PackedMCRichHitLocation::Default; }
-    static const std::string& unpackedLocation() { return LHCb::MCRichHitLocation::Default; }
+    typedef LHCb::MuonPID                    Data;
+    typedef LHCb::PackedMuonPID        PackedData;
+    typedef LHCb::MuonPIDs             DataVector;
+    typedef LHCb::PackedMuonPIDs PackedDataVector;
+    static const std::string& packedLocation()   { return LHCb::PackedMuonPIDLocation::Default; }
+    static const std::string& unpackedLocation() { return LHCb::MuonPIDLocation::Default; }
 
   private:
 
     /// Default Constructor hidden
-    MCRichHitPacker() {}
+    MuonPIDPacker() : m_parent(NULL) {}
 
   public:
 
-    /// Constructor
-    MCRichHitPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+    /// Default Constructor
+    MuonPIDPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
 
   public:
 
-    /// Pack MCRichHits
+    /// Pack MuonPIDs
     void pack( const DataVector & hits,
                PackedDataVector & phits ) const;
 
-    /// Unpack MCRichHits
+    /// Unpack MuonPIDs
     void unpack( const PackedDataVector & phits,
-                 DataVector       & hits ) const;
+                 DataVector             & hits ) const;
 
-    /// Compare two MCRichHits to check the packing -> unpacking performance
+    /// Compare two MuonPIDs to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
                       const DataVector & dataB ) const;
 
@@ -177,4 +179,4 @@ namespace LHCb
 
 }
 
-#endif // EVENT_PACKEDMCRICHHIT_H
+#endif // EVENT_PACKEDMUONPID_H
