@@ -13,7 +13,6 @@ C ======================================================================
       DOUBLE PRECISION VALUE 
       CHARACTER*(*)    TITLE 
       INTEGER          LNBLNK 
-C      EXTERNAL         LENOCCHV 
 C ======================================================================
       
       IF     ( 'ECM' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
@@ -45,8 +44,14 @@ C ======================================================================
       ELSEIF ( 'UPS2S3S' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
         SwOn(16) = (VALUE.gt.0D0)
         Kfct(16) = VALUE
-c      ELSEIF ( 'NRUNS' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
-c        NRUNS = VALUE 
+      ELSEIF ( 'SCFALPS' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
+        ScfAlpS = VALUE
+      ELSEIF ( 'SCFPDF'  .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
+        ScfPDF  = VALUE
+      ELSEIF ( 'SCFSHWR' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
+        ScfShwr = VALUE
+      ELSEIF ( 'MAXWGHTMULT' .EQ. TITLE(1:LNBLNK(TITLE)) ) THEN 
+         MaxWghtMult = VALUE
       ELSE 
         WRITE(*,*) 'INVALID TITLE:"' , TITLE(1:LNBLNK(TITLE)) , '"'
       ENDIF 

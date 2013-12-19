@@ -9,50 +9,50 @@
 // ============================================================================
 /** @class OniaPairsProduction
  *
- *  The productiuon tool tfor Onia-pairs 
+ *  The productiuon tool for Onia-pairs 
  *
- *  @author Alexey NONOSELOV Alexey.Novoselov@cern.ch
+ *  @author Alexey NOVOSELOV Alexey.Novoselov@cern.ch
  *
- *                     $Revision$
- *  Last modiffication $Date$
- *                  by $Author$
+ *                    $Revision$
+ *  Last modification mid/10/2013
+ *                 by alexn
  */
 class OniaPairsProduction : public PythiaProduction 
 {
-public:
+ public:
   // ==========================================================================
   /** standard constructor 
-   *  @param type   tool type (?)
+   *  @param type   tool type 
    *  @param name   tool name 
    *  @param parent parent component 
    */
   OniaPairsProduction 
-  ( const std::string& type   , 
-    const std::string& name   , 
-    const IInterface*  parent ) ;
+    ( const std::string& type   , 
+      const std::string& name   , 
+      const IInterface*  parent ) ;
   /// virtual  desctructor 
   virtual ~OniaPairsProduction( ) { ; }
-  // ==========================================================================  
-public:
   // ==========================================================================
   /// initilize the production tool 
   virtual StatusCode initialize( ) ;
   /// finalize
   virtual StatusCode finalize( ) ;
-  // ==========================================================================  
-public:
-  // ==========================================================================  
+  // ==========================================================================
   /// generate the event
   virtual StatusCode generateEvent
-  ( HepMC::GenEvent*    theEvent     , 
+    ( HepMC::GenEvent*    theEvent     , 
       LHCb::GenCollision* theCollision ) ;
   // ==========================================================================
-private:  
-  // ==========================================================================  
-  /// my Ecm
+ protected:
+  // ==========================================================================
+ private:  
+  // ==========================================================================
   double m_ecm ;
   double m_psi1S1S, m_psi1S2S, m_psi2S2S ;
   double m_ups1S1S, m_ups1S2S, m_ups1S3S, m_ups2S2S, m_ups2S3S, m_ups3S3S ; 
+  double m_ScfAlpS, m_ScfPDF, m_ScfShwr, m_MaxWghtMult ;
+  CommandVector m_PyDefComm, m_PyCommVec ;
+
   // ==========================================================================
 };
 // ============================================================================
@@ -60,5 +60,3 @@ private:
 // ============================================================================
 #endif // LBONIAPAIRS_PRODUCTION_H 
 // ============================================================================
-
-

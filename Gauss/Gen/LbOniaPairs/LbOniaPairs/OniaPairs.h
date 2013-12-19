@@ -10,15 +10,15 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StatusCode.h"
 // ============================================================================
-/** @namespace ObniaPairs 
+/** @namespace OniaPairs 
  *
  *  The main namespace to keep code related to production of Onia-Pairs 
  *
- *  @author Alexey NONOSELOV Alexey.Novoselov@cern.ch
+ *  @author Alexey NOVOSELOV Alexey.Novoselov@cern.ch
  *
- *                     $Revision$
- *  Last modiffication $Date$
- *                  by $Author$
+ *                    $Revision$
+ *  Last modification mid/10/2013
+ *                 by alexn
  */
 namespace OniaPairs 
 {
@@ -26,6 +26,7 @@ namespace OniaPairs
   GAUDI_API 
   bool   SetPar ( std::string n , double value );
   double GetPar ( std::string n );
+  void   PrintCSTable ( ) ;
   // ==========================================================================
 } //                                                 end of namespace OniaPairs 
 // ============================================================================

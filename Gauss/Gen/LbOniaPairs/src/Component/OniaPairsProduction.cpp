@@ -1,6 +1,7 @@
 // $Id: $
 // ============================================================================
 // local LbOniaPairs
+#include "LbOniaPairs/OniaPairsProduction.h"
 #include "LbOniaPairs/OniaPairs.h"
 
 // from GaudiKernel
@@ -10,17 +11,15 @@
 #include "Event/GenCollision.h"
 
 // Generators 
-#include "Generators/IBeamTool.h"
+//#include "Generators/IBeamTool.h"
 
 // LbPythia 
 #include "LbPythia/Pythia.h"
-// ============================================================================
-// Local 
-#include "OniaPairsProduction.h"
+
 // ============================================================================
 // Standard constructor, initializes variables
 // ============================================================================
-  OniaPairsProduction::OniaPairsProduction
+OniaPairsProduction::OniaPairsProduction
 ( const std::string& type   , 
   const std::string& name   , 
   const IInterface*  parent ) 
@@ -28,132 +27,43 @@
 {
   
   declareInterface< IProductionTool >( this ) ;
-  //
-  declareProperty ( "Ecm"     , m_ecm     = 7e3 ) ;
-  declareProperty ( "Psi1S1S" , m_psi1S1S = 0.  ) ;
-  declareProperty ( "Psi1S2S" , m_psi1S2S = 0.  ) ;
-  declareProperty ( "Psi2S2S" , m_psi2S2S = 0.  ) ;
-  
-  declareProperty ( "Ups1S1S" , m_ups1S1S = 0.  ) ;
-  declareProperty ( "Ups1S2S" , m_ups1S2S = 0.  ) ;
-  declareProperty ( "Ups1S3S" , m_ups1S3S = 0.  ) ;
-  declareProperty ( "Ups2S2S" , m_ups2S2S = 0.  ) ;
-  declareProperty ( "Ups2S3S" , m_ups2S3S = 0.  ) ;
-  declareProperty ( "Ups3S3S" , m_ups3S3S = 0.  ) ;
-  
-  
-  m_defaultSettings.push_back ( "pysubs ckin 41 12.0" ) ;
-  m_defaultSettings.push_back ( "pypars mstp 2 1" ) ;
-  m_defaultSettings.push_back ( "pypars mstp 33 0" ) ;
-  m_defaultSettings.push_back ( "pypars mstp 81 1" ) ;
-  m_defaultSettings.push_back ( "pypars mstp 82 4" ) ;
-  m_defaultSettings.push_back ( "pypars mstp 52 2" ) ;
-  m_defaultSettings.push_back ( "pypars mstp 51 10042" ) ;
-  m_defaultSettings.push_back ( "pypars mstp 142 0" ) ;
-  m_defaultSettings.push_back ( "pypars parp 67 4" ) ;
-  m_defaultSettings.push_back ( "pypars parp 82 2.0" ) ;
-  m_defaultSettings.push_back ( "pypars parp 89 1800" ) ;
-  m_defaultSettings.push_back ( "pypars parp 90 0.16" ) ;
-  m_defaultSettings.push_back ( "pypars parp 85 0.9" ) ;
-  m_defaultSettings.push_back ( "pypars parp 86 0.95" ) ;
-  m_defaultSettings.push_back ( "pypars parp 91 2.0" ) ;
-  m_defaultSettings.push_back ( "pypars parp 149 0.02" ) ;
-  m_defaultSettings.push_back ( "pypars parp 150 0.085" ) ;
-  m_defaultSettings.push_back ( "pydat1 parj 11 0.5" ) ;
-  m_defaultSettings.push_back ( "pydat1 parj 12 0.6" ) ;
-  m_defaultSettings.push_back ( "pydat1 parj 13 0.75" ) ;
-  m_defaultSettings.push_back ( "pydat1 parj 14 0.0" ) ;
-  m_defaultSettings.push_back ( "pydat1 parj 15 0.0" ) ;
-  m_defaultSettings.push_back ( "pydat1 parj 16 0.0" ) ;
-  m_defaultSettings.push_back ( "pydat1 parj 17 0.0" ) ;
-  m_defaultSettings.push_back ( "pydat1 mstj 26 0" ) ;
-  m_defaultSettings.push_back ( "pydat1 parj 33 0.4" ) ;
 
-  m_defaultSettings.push_back ( "pysubs msub 11 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 12 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 13 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 28 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 53 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 68 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 91 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 92 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 93 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 94 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 95 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 421 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 422 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 423 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 424 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 425 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 426 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 427 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 428 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 429 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 430 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 431 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 432 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 433 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 434 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 435 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 436 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 437 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 438 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 439 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 461 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 462 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 463 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 464 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 465 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 466 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 467 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 468 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 469 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 470 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 471 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 472 0" ) ;
-  m_defaultSettings.push_back (  "pysubs msub 473 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 474 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 475 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 476 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 477 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 478 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 479 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 480 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 481 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 482 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 483 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 484 0" ) ;
-  m_defaultSettings.push_back ( "pysubs msub 485 0" ) ;
+  declareProperty ( "Ecm"     , m_ecm     = 0. ) ;
+  declareProperty ( "Psi1S1S" , m_psi1S1S = 0. ) ;
+  declareProperty ( "Psi1S2S" , m_psi1S2S = 0. ) ;
+  declareProperty ( "Psi2S2S" , m_psi2S2S = 0. ) ;
   
-  // postpone the PyInit initialization 
-  //  setProperty ( "PostponePyInit" , true ) ;
-  //  setProperty ( "ValidateHEPEVT" , true ) ;
- 
+  declareProperty ( "Ups1S1S" , m_ups1S1S = 0. ) ;
+  declareProperty ( "Ups1S2S" , m_ups1S2S = 0. ) ;
+  declareProperty ( "Ups1S3S" , m_ups1S3S = 0. ) ;
+  declareProperty ( "Ups2S2S" , m_ups2S2S = 0. ) ;
+  declareProperty ( "Ups2S3S" , m_ups2S3S = 0. ) ;
+  declareProperty ( "Ups3S3S" , m_ups3S3S = 0. ) ;
+
+  declareProperty ( "ScaleFactorInAlpS"    , m_ScfAlpS = 1. ) ;
+  declareProperty ( "ScaleFactorInPDF"     , m_ScfPDF  = 1. ) ;
+  declareProperty ( "ScaleFactorInShowers" , m_ScfShwr = 1. ) ;
+
+  declareProperty ( "MaxWeightMultiplier" , m_MaxWghtMult = 1. ) ;
+
+  declareProperty( "PyCommVec" , m_PyCommVec ) ;
+  
+  // Use raw Pythia, except ...
+  m_PyDefComm.clear() ;
+  // PDFs - select CTEQ6l1 
+  //m_PyDefComm.push_back( "pypars mstp 52 2" ) ;
+  //m_PyDefComm.push_back( "pypars mstp 51 10042" ) ;
+  // Tune - Perugia 2012 - already with CTEQ6L1
+  m_PyDefComm.push_back( "pypars mstp 5 370" ) ;
+  // event record - store decay products in main section
+  m_PyDefComm.push_back( "pypars mstp 128 2" ) ;
+
 } 
 // =============================================================================
 // initialize the production tool 
 // =============================================================================
 StatusCode OniaPairsProduction::initialize() 
 {  
-  /*  m_defaultSettings.clear() ;    
-      m_commandVector.clear();
-      
-      PythiaProduction::m_defaultSettings.clear() ;    
-      PythiaProduction::m_commandVector.clear() ;
-  */
-  
-  Pythia::pydat1().mstu( 12 ) = 12345 ;
-  Pythia::pydat1().mstu( 13 ) = 0 ;
-  Pythia::pydat1().mstu( 25 ) = 0 ;
-  Pythia::pypars().mstp( 122 ) = 0 ;
-  m_initializationListingLevel = -1 ;
-  
-  /*
-    Pythia::pydat1().mstu( 12 ) = 1 ;
-    Pythia::pydat1().mstu( 13 ) = 1 ;
-    Pythia::pydat1().mstu( 25 ) = 1 ;
-    Pythia::pypars().mstp( 122 ) = 1 ;
-  */
 
   OniaPairs::SetPar ( "ECM", m_ecm ) ;
   
@@ -168,16 +78,30 @@ StatusCode OniaPairsProduction::initialize()
   OniaPairs::SetPar ( "UPS2S3S", m_ups2S3S ) ;
   OniaPairs::SetPar ( "UPS3S3S", m_ups3S3S ) ;  
   
+  OniaPairs::SetPar ( "ScfAlpS", m_ScfAlpS ) ;
+  OniaPairs::SetPar ( "ScfPDF" , m_ScfPDF  ) ;
+  OniaPairs::SetPar ( "ScfShwr", m_ScfShwr ) ;  
+
+  OniaPairs::SetPar ( "MaxWghtMult", m_MaxWghtMult ) ;  
+
   // my user process number
   m_userProcess = 6 ;
   
   // set user process in pythia
   m_frame  = "USER" ;
-  m_beam   = " "    ;
-  m_target = " "    ;
-  m_win    = 0.     ;
+  m_beam   = "p"    ;
+  m_target = "p"    ;
+  m_win    = m_ecm  ;
+
+  // Discard default settings from LbPythia
+  m_defaultSettings.clear() ;
+  // Do not configure Pythia from behind
+  m_commandVector.clear() ;
   
-  // Initialize Pythia Production
+  // Configure Pythia from this tool only
+  m_defaultSettings = m_PyDefComm;
+  m_commandVector   = m_PyCommVec;
+
   StatusCode sc = PythiaProduction::initialize( ) ;
   if ( sc.isFailure() ) return sc ;
   
@@ -189,6 +113,8 @@ StatusCode OniaPairsProduction::initialize()
 StatusCode OniaPairsProduction::finalize() 
 {
   
+  OniaPairs::PrintCSTable () ;
+
   // Finalize Pythia Production
   StatusCode sc = PythiaProduction::finalize( ) ;
   if ( sc.isFailure() ) return sc ;
@@ -205,9 +131,7 @@ StatusCode OniaPairsProduction::generateEvent( HepMC::GenEvent * theEvent ,
   // Generate event
   StatusCode sc = PythiaProduction::generateEvent(theEvent, theCollision) ;
   if ( sc.isFailure() ) return sc ;
-  
-  //Pythia::PyList(2);
-  
+    
   return StatusCode::SUCCESS ;
 }
 // =============================================================================

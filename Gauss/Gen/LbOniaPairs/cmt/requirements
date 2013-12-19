@@ -1,20 +1,22 @@
 # $Id:$ 
 # =============================================================================
 # Created    : 2011-05-30
+# Updated    : 2013-12-19
 # Purpose    : Generator for onia-pairs production 
 # Authon     : Alexey Novoselov Alexey.Novoselov@cern.ch
 # Maintainer : Vanya Belyaev    Ivan.Belyaev@cern.ch
 # =============================================================================
 package           LbOniaPairs
-version           v1r2p1
+version           v1r3
 
 # =============== structure ===================================================
-branches          cmt src LbOniaPairs 
+branches          cmt src LbOniaPairs doc
 
 # =============== exported includes ===========================================
 include_dirs      $(LBONIAPAIRSROOT) 
 
 # =============== environment =================================================
+set               LBONIAPAIRSOPTS $(LBONIAPAIRSROOT)/options 
 
 # =============== dependencies ================================================
 use               LbPythia     v* Gen 
@@ -22,8 +24,8 @@ use               Boost        v* LCG_Interfaces
 use               GENSER       v* Gen 
 
 # =============== constituents ================================================
-library           LbOniaPairsLib Lib/*.cpp Lib/*.F
 library           LbOniaPairs    Component/*.cpp
+library           LbOniaPairsLib Lib/*.cpp Lib/*.F
 
 # =============== standard patterns ===========================================
 apply_pattern     component_library library=LbOniaPairs
@@ -33,10 +35,6 @@ macro_append      LbOniaPairs_dependencies " LbOniaPairsLib "
 
 # =============================================================================
 apply_pattern disable_package_on platform=target-winxp
-
-# =============================================================================
-# private 
-# macro_prepend fincludes $(ppcmd)"$(GENSER_path)/include/pythia/$(pythia_native_version)/include"
 
 # =============================================================================
 # The END 
