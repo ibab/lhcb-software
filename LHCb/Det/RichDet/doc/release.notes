@@ -3,6 +3,8 @@
 ! Responsible : Antonis Papanestis
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
+!2013-12-19 - Sajan Easo
+- Fixed a compilation warning in DeRichHPDPanel.h 
 
 ! 2013-12-18 - Sajan Easo
  - Adaptation for using large+standard PMTS in RICH2. Modified DeRich, DeRichPMT, DeRichPMTPanel 
