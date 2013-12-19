@@ -4,6 +4,10 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2013-12-19 - Chris Jones
+ - Add a warning message when a fit is failed due to the 
+   'mass error squared < -999' check.
+
 !========================= VertexFit v6r16 2013-10-02 =========================
 
 ! 2013-10-01 - Chris Jones
