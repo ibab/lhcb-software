@@ -15,15 +15,13 @@ __author__  = "Vanya BELYAEV <Ivan.Belyaev@nikhef.nl>"
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision$"
 # =============================================================================
 
-import PyCintex
+import GaudiPython
 
-# construct the global namespace
-_global   = PyCintex.makeNamespace('')
-# namespaces
-cpp    = _global
-std    = _global.std
-LHCb   = _global.LHCb
-Decays = _global.Decays
+# namespaces shortcuts
+cpp    = GaudiPython.gbl
+std    = GaudiPython.gbl.std
+LHCb   = GaudiPython.gbl.LHCb
+Decays = GaudiPython.gbl.Decays
 
 
 ## get all particl eproeprties form the service
