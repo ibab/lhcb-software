@@ -4,6 +4,10 @@
 ! Purpose     : To accommodate all TMVA based selections used in stripping
 !-----------------------------------------------------------------------------
 
+! 2013-12-19 - Jibo He
+ - src/Bc2JpsiHBDTSelection 
+  . Changed to use IPS w.r.t. its own PV
+ 
 ! 2013-12-18 - Jibo He
  - src/Bc2JpsiHBDTSelection
   . Added BDT for Bc->JpsiH

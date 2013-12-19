@@ -149,30 +149,53 @@ bool Bc2JpsiHBDTSelection::set (const LHCb::Particle* p) const{
                                    << ", Pion PID: " << pPion->particleID()
                                    << endmsg;
 
-
-  // BPV, just use the one of the mother for simplicity
-  const LHCb::VertexBase* BPV = m_dva->bestVertex(p);
-
   // IPCHI2
   m_BPVIPCHI2.setTool(m_dist);
+
+  // B 
+  const LHCb::VertexBase* BPV = m_dva->bestVertex(p);  
   m_BPVIPCHI2.setVertex(BPV);
+  double B_IPCHI2 = m_BPVIPCHI2( p ) ;
+
+  const LHCb::VertexBase* aPV = NULL;
+  
+  // L1
+  aPV = m_dva->bestVertex( pL1 );
+  m_BPVIPCHI2.setVertex(aPV);
+  double L1_IPCHI2 = m_BPVIPCHI2( pL1 ) ;
+
+  // L2
+  aPV = m_dva->bestVertex( pL2 );
+  m_BPVIPCHI2.setVertex(aPV);
+  double L2_IPCHI2 = m_BPVIPCHI2( pL2 ) ;  
+  
+  // Jpsi
+  aPV = m_dva->bestVertex( pJpsi );
+  m_BPVIPCHI2.setVertex(aPV);
+  double Jpsi_IPCHI2 = m_BPVIPCHI2( pJpsi ) ;  
+
+  // Pion
+  aPV = m_dva->bestVertex( pPion );
+  m_BPVIPCHI2.setVertex(aPV);
+  double Pion_IPCHI2 = m_BPVIPCHI2( pPion ) ;
+
 
   // protection, just in case 
-  if(    m_BPVIPCHI2( pL1 ) <0 
-      || m_BPVIPCHI2( pL2 ) <0 
-      || m_BPVIPCHI2( pJpsi ) <0
-      || m_BPVIPCHI2( pPion ) <0
-      || m_BPVIPCHI2( p ) < 0 ) {    
+  if(    L1_IPCHI2 <0 
+      || L2_IPCHI2 <0 
+      || Jpsi_IPCHI2 <0
+      || Pion_IPCHI2  <0
+      || B_IPCHI2 < 0 ) {    
 
     Error( "IPCHI2<0! Something must be wrong!" );
     return false ;
   }
    
-  m_values[0] = (float)sqrt( m_BPVIPCHI2( pL1 ) );
-  m_values[1] = (float)sqrt( m_BPVIPCHI2( pL2 ) );
-  m_values[2] = (float)sqrt( m_BPVIPCHI2( pJpsi ) );
-  m_values[3] = (float)sqrt( m_BPVIPCHI2( pPion ) );
-  m_values[4] = (float)sqrt( m_BPVIPCHI2( p ) );
+  m_values[0] = (float)sqrt( L1_IPCHI2 );
+  m_values[1] = (float)sqrt( L2_IPCHI2 );
+  m_values[2] = (float)sqrt( Jpsi_IPCHI2 );
+  m_values[3] = (float)sqrt( Pion_IPCHI2 );
+  m_values[4] = (float)sqrt( B_IPCHI2 );
 
 
   // PT
