@@ -1,8 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : TMVAWeights
-! Responsible : Jibo He
+! Responsible : Stripping coordinators 
 ! Purpose     : To accommodate weights file of all TMVA based selections 
 !-----------------------------------------------------------------------------
+
+! 2013-12-19 - Jibo He
+ - Added weights file for Bc->JpsiH
 
 ! 2013-09-22 - Chris Jones
  - Patch the TMVA wieghts file Bd2eeKstar_BDTG_v1r0.xml to work around a 
