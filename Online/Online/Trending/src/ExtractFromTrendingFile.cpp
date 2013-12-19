@@ -1,9 +1,8 @@
-// $Id: $
 // Include files
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
-#include "Reflex/PluginService.h"
+#include "GaudiKernel/AlgTool.h"
 
 // local
 #include "ExtractFromTrendingFile.h"
@@ -21,7 +20,7 @@ int main(int argc, char* argv[]) {
   iface -> getService( "ToolSvc" , isvc ) ;
   const IInterface * a3( isvc ) ;
   const std::string & name( "TrendingTool" ) ;
-  IAlgTool * intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( name, name, name, a3 ) ;
+  IAlgTool * intf = AlgTool::Factory::create(name, name, name, a3);
   ITrendingTool* trendTool = dynamic_cast< ITrendingTool * >( intf ) ;
   /*
   std::cout << "Arguments n=" << argc;
@@ -37,7 +36,7 @@ int main(int argc, char* argv[]) {
     std::cout << "        startDate is the first time in ISO format" << std::endl;
     std::cout << "        endDate   is the last time in ISO format" << std::endl;
     exit( 0 );
-  }  
+  }
 
   ExtractFromTrendingFile extract( trendTool );
   extract.extract( std::string(argv[1]), std::string(argv[2]), std::string(argv[3]), std::string(argv[4]) );
@@ -53,7 +52,7 @@ ExtractFromTrendingFile::ExtractFromTrendingFile( ITrendingTool* trend ) :
 //=============================================================================
 // Destructor
 //=============================================================================
-ExtractFromTrendingFile::~ExtractFromTrendingFile() {} 
+ExtractFromTrendingFile::~ExtractFromTrendingFile() {}
 
 
 //=========================================================================
@@ -70,7 +69,7 @@ void ExtractFromTrendingFile::extract( std::string file, std::string tag, std::s
     std::cout << "Invalid end time '" << end << "'" << std::endl;
     return;
   }
-  
+
   bool status = m_trend->openRead( file );
   if ( !status ) {
     std::cout << "*** Failed to open Trending file '" << file << "' ***" << std::endl;
@@ -85,14 +84,14 @@ void ExtractFromTrendingFile::extract( std::string file, std::string tag, std::s
       std::cout << "Tag " << kk << " = '" << tags[kk] << "'" << std::endl;
     }
     return;
-  }  
+  }
 
   status = m_trend->select( startTime, endTime, tag );
   if ( !status ) {
     m_trend->closeFile();
     return;
   }
-  
+
   unsigned int time;
   float value;
   while( m_trend->nextValue( time, value ) ) {

@@ -20,9 +20,9 @@ namespace Gaudi {
    *
    * Description:
    * Definition of the generic Db data converter.
-   * The generic data converter provides the infrastructure 
+   * The generic data converter provides the infrastructure
    * of all data converters. The templated class takes two arguments:
-   * The Transient and the Persistent object type. 
+   * The Transient and the Persistent object type.
    *
    * For a detailed description of the overridden function see the the
    * base class.
@@ -36,6 +36,10 @@ namespace Gaudi {
     SerializeCnvSvc* m_dbMgr;
 
   public:
+    typedef Gaudi::PluginService::Factory3<IConverter*,
+                                           long,
+                                           const CLID&,
+                                           ISvcLocator*> Factory;
 
     /** Initializing Constructor
      * @param      typ      [IN]     Concrete storage type of the converter
@@ -65,7 +69,7 @@ namespace Gaudi {
      *
      * @return Status code indicating success or failure.
      */
-    virtual StatusCode createObj(     IOpaqueAddress* pAddr, 
+    virtual StatusCode createObj(     IOpaqueAddress* pAddr,
 				      DataObject*& refpObj);
 
     /** Converter overrides: Resolve the references
@@ -76,7 +80,7 @@ namespace Gaudi {
      *
      * @return Status code indicating success or failure.
      */
-    virtual StatusCode fillObjRefs(   IOpaqueAddress* pAddr, 
+    virtual StatusCode fillObjRefs(   IOpaqueAddress* pAddr,
 				      DataObject*     pObj)
     {  return updateObjRefs(pAddr, pObj); }
 
@@ -87,11 +91,11 @@ namespace Gaudi {
      *
      * @return Status code indicating success or failure.
      */
-    virtual StatusCode updateObj(     IOpaqueAddress* /* pAddr */, 
+    virtual StatusCode updateObj(     IOpaqueAddress* /* pAddr */,
 				      DataObject*     /* pObj  */ )
     {  return StatusCode::SUCCESS; }
 
-    /** Converter overrides: Update the references of 
+    /** Converter overrides: Update the references of
      * an updated transient object.
      *
      * @param    pAddr    [IN]   Pointer to object address.
@@ -99,10 +103,10 @@ namespace Gaudi {
      *
      * @return Status code indicating success or failure.
      */
-    virtual StatusCode updateObjRefs( IOpaqueAddress* pAddr, 
+    virtual StatusCode updateObjRefs( IOpaqueAddress* pAddr,
 				      DataObject*     pObj);
 
-    /** Converter overrides: Convert the transient object to the 
+    /** Converter overrides: Convert the transient object to the
      * requested representation.
      *
      * @param    pObj     [IN]   Pointer to data object
@@ -110,10 +114,10 @@ namespace Gaudi {
      *
      * @return Status code indicating success or failure.
      */
-    virtual StatusCode createRep(     DataObject* pObj, 
+    virtual StatusCode createRep(     DataObject* pObj,
 				      IOpaqueAddress*& refpAddr);
 
-    /** Converter overrides: Resolve the references of the converted object. 
+    /** Converter overrides: Resolve the references of the converted object.
      *
      * @param    pAddr    [IN]   Pointer to object address.
      * @param    pObj     [IN]   Pointer to data object
@@ -132,11 +136,11 @@ namespace Gaudi {
      *
      * @return Status code indicating success or failure.
      */
-    virtual StatusCode updateRep(     IOpaqueAddress* /* pAddr */, 
+    virtual StatusCode updateRep(     IOpaqueAddress* /* pAddr */,
 				      DataObject*     /* pObj  */)
     {  return StatusCode::SUCCESS; }
 
-    /** Converter overrides: Update the references of an 
+    /** Converter overrides: Update the references of an
      * already converted object.
      *
      * @param    pAddr    [IN]   Pointer to object address.
@@ -150,5 +154,9 @@ namespace Gaudi {
 
   };
 }         // End namespace Gaudi
+
+#define DECLARE_SERIALIZE_CNV_FACTORY(x, clid) \
+   DECLARE_COMPONENT_WITH_ID(x, ConverterID(SERIALIZE_StorageType, clid))
+
 
 #endif    // SERIALIZE_SerializeBaseCnv_H

@@ -13,7 +13,7 @@
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/System.h"
 #include "RootCnv/RootRefs.h"
-#include "PoolClasses.h"
+#include "RootCnv/PoolClasses.h"
 #include <stdexcept>
 #include <iostream>
 #include "TROOT.h"
@@ -63,7 +63,7 @@ namespace GaudiRoot {
     /// ROOT I/O callback
     virtual void operator()(TBuffer &b, void *obj)  {
       try {
-        if ( b.IsReading() ) 
+        if ( b.IsReading() )
           get(b,obj);
         else
           put(b,obj);
@@ -202,6 +202,7 @@ namespace GaudiRoot {
     static bool first = true;
     if ( first ) {
       first = false;
+#if ROOT_VERSION_CODE < ROOT_VERSION(5,99,0)
       gSystem->Load("libCintex");
       gROOT->ProcessLine("Cintex::Cintex::Enable()");
       gROOT->ProcessLine("#include <vector>");
@@ -210,6 +211,11 @@ namespace GaudiRoot {
       gInterpreter->AutoLoad("PoolDbLinkManager");
       gSystem->Load("libGaudiKernelDict");
       gSystem->Load("libGaudiExamplesDict");
+#else
+      gInterpreter->EnableAutoLoading();
+      gInterpreter->AutoLoad("DataObject");
+      gInterpreter->AutoLoad("PoolDbLinkManager");
+#endif
 
 
       bool b1 = makeStreamer<SmartRefBase>(s);

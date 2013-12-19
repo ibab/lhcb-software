@@ -17,10 +17,11 @@
 #include "GaudiKernel/IUpdateable.h"
 #include "GaudiKernel/KeyedContainer.h"
 #include "GaudiSerialize/SerializeBaseCnv.h"
+#include "GAUDI_VERSION.h"
 
 using namespace Gaudi;
 
-#ifdef GAUDI_v21r11
+#if GAUDI_VERSION == CALC_GAUDI_VERSION(21, 11)
 namespace {
   union ObjectTypes {
     ObjectTypes(DataObject* p) { Object = p; }
@@ -65,7 +66,7 @@ StatusCode SerializeBaseCnv::initialize()   {
   return status;
 }
 
-/// Finalize the Db converter 
+/// Finalize the Db converter
 StatusCode SerializeBaseCnv::finalize()   {
   if ( m_dbMgr ) m_dbMgr->release();
   m_dbMgr = 0;
@@ -84,7 +85,7 @@ StatusCode SerializeBaseCnv::createRep(DataObject* pObj, IOpaqueAddress*& refpA)
 
 /// Update the references of an updated transient object.
 StatusCode SerializeBaseCnv::updateObjRefs(IOpaqueAddress* /* pA */, DataObject* pObj) {
-#ifdef GAUDI_v21r11
+#if GAUDI_VERSION == CALC_GAUDI_VERSION(21, 11)
   if ( pObj )    {
     ObjectTypes obj(pObj);
     const CLID id = (pObj->clID()&0xFFFF0000);
@@ -114,25 +115,11 @@ StatusCode SerializeBaseCnv::updateObjRefs(IOpaqueAddress* /* pA */, DataObject*
 #endif
 }
 
-PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any),
-                           IConverter*(long, CLID, ISvcLocator*) )
-PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any+CLID_ObjectList),
-                           IConverter*(long, CLID, ISvcLocator*) )
-PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any+CLID_ObjectVector),
-                           IConverter*(long, CLID, ISvcLocator*) )
+DECLARE_SERIALIZE_CNV_FACTORY(SerializeBaseCnv, CLID_Any)
+DECLARE_SERIALIZE_CNV_FACTORY(SerializeBaseCnv, CLID_Any+CLID_ObjectList)
+DECLARE_SERIALIZE_CNV_FACTORY(SerializeBaseCnv, CLID_Any+CLID_ObjectVector)
 
-PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any + CLID_ObjectVector+0x00030000),
-                           IConverter*(long, CLID, ISvcLocator*) )
-PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any + CLID_ObjectVector+0x00040000),
-                           IConverter*(long, CLID, ISvcLocator*) )
-PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any + CLID_ObjectVector+0x00050000),
-                           IConverter*(long, CLID, ISvcLocator*) )
-PLUGINSVC_FACTORY_WITH_ID( SerializeBaseCnv, 
-                           ConverterID(SERIALIZE_StorageType,CLID_Any + CLID(1<<31)),
-                           IConverter*(long, CLID, ISvcLocator*) )
+DECLARE_SERIALIZE_CNV_FACTORY(SerializeBaseCnv, CLID_Any + CLID_ObjectVector+0x00030000)
+DECLARE_SERIALIZE_CNV_FACTORY(SerializeBaseCnv, CLID_Any + CLID_ObjectVector+0x00040000)
+DECLARE_SERIALIZE_CNV_FACTORY(SerializeBaseCnv, CLID_Any + CLID_ObjectVector+0x00050000)
+DECLARE_SERIALIZE_CNV_FACTORY(SerializeBaseCnv, CLID_Any + CLID(1<<31))

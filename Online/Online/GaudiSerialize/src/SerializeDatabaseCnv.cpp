@@ -79,9 +79,7 @@ namespace Gaudi {
 #include "Event/RawEvent.h"
 
 using namespace Gaudi;
-PLUGINSVC_FACTORY_WITH_ID( SerializeDatabaseCnv,
-			   ConverterID(SERIALIZE_StorageType,CLID_StatisticsFile),
-			   IConverter*(long, CLID, ISvcLocator*) );
+DECLARE_SERIALIZE_CNV_FACTORY(SerializeDatabaseCnv, CLID_StatisticsFile)
 
 // Create database object
 StatusCode
@@ -94,7 +92,7 @@ SerializeDatabaseCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObj)  {
 }
 
 // Converter overrides: Fill the references of an updated transient object.
-StatusCode 
+StatusCode
 SerializeDatabaseCnv::fillObjRefs(IOpaqueAddress* /* pAddr */, DataObject* pObject)
 {
   std::string top = topLevel(pObject->registry())+"/RawTupleData";

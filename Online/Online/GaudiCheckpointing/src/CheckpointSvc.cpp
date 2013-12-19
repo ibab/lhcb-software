@@ -13,8 +13,8 @@
 #define GAUDICHECKPOINTING_CHECKPOINTSVC_H
 
 // Include files from Gaudi
-#include "GaudiKernel/Service.h" 
-#include "GaudiKernel/IIncidentListener.h" 
+#include "GaudiKernel/Service.h"
+#include "GaudiKernel/IIncidentListener.h"
 
 extern "C" {
 #include "dis.hxx"
@@ -58,7 +58,7 @@ namespace LHCb  {
     int                       m_saveFlags;
     /// Property: Checkpoint restart flags  (default: 0)
     int                       m_restartFlags;
-    
+
     /// Property: Number of instances to be forked.  (default: 0)
     int                       m_numInstances;
     /// Property: printout level for the checkpoint/restore mechanism (default:WARNING)
@@ -177,11 +177,11 @@ namespace LHCb  {
 //  ===========================================================
 // $Id: CheckpointSvc.cpp,v 1.7 2010-03-03 13:16:49 frankb Exp $
 
-#include "GaudiKernel/IJobOptionsSvc.h" 
-#include "GaudiKernel/IIncidentSvc.h" 
-#include "GaudiKernel/IAlgManager.h" 
-#include "GaudiKernel/IAlgorithm.h" 
-#include "GaudiKernel/MsgStream.h" 
+#include "GaudiKernel/IJobOptionsSvc.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IAlgManager.h"
+#include "GaudiKernel/IAlgorithm.h"
+#include "GaudiKernel/MsgStream.h"
 #include "GaudiOnline/ITaskFSM.h"
 #include "Checkpointing/Chkpt.h"
 #include "Checkpointing/Namespace.h"
@@ -205,7 +205,7 @@ namespace LHCb  {
   #define STDIN_FILENO  1
   #define STDOUT_FILENO 2
   #define STDERR_FILENO 3
-  #define S_IWUSR       _S_IWRITE 
+  #define S_IWUSR       _S_IWRITE
   #define S_IRUSR       _S_IREAD
   static const int S_IRWXU = (_S_IREAD|_S_IWRITE);
   static const int S_IRWXG = 0;
@@ -222,7 +222,8 @@ using namespace std;
 
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,CheckpointSvc)
+using namespace LHCb;
+DECLARE_SERVICE_FACTORY(CheckpointSvc)
 
 #define MARKER "=============================================="
 
@@ -239,7 +240,7 @@ namespace  {
     LHCb::ITaskFSM*      m_fsm;
   public:
     /// Constructor
-    Command(const std::string& nam, LHCb::CheckpointSvc* svc, LHCb::ITaskFSM* fsm) 
+    Command(const std::string& nam, LHCb::CheckpointSvc* svc, LHCb::ITaskFSM* fsm)
       : DimCommand(nam.c_str(), (char*)"C"), m_check(svc), m_fsm(fsm) { }
     /// DimCommand overload: handle DIM commands
     virtual void commandHandler()   {
@@ -275,7 +276,7 @@ namespace  {
       }
       else if ( cmd == "unload" || cmd == "recover" || cmd == "RESET" ) {
 	m_fsm->setTargetState(ITaskFSM::ST_UNKNOWN);
-	m_fsm->declareState(ITaskFSM::ST_UNKNOWN);	
+	m_fsm->declareState(ITaskFSM::ST_UNKNOWN);
 	// Sleep for 1 second, then exit
 	::lib_rtl_sleep(1000);
 	m_check->releaseChildren();
@@ -290,7 +291,7 @@ namespace  {
 }
 
 /// Standard constructor
-CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc) 
+CheckpointSvc::CheckpointSvc(const string& nam,ISvcLocator* pSvc)
   : Service(nam,pSvc), m_incidentSvc(0), m_fsm(0), m_files(0)
 {
   m_masterProcess = true;
@@ -587,9 +588,9 @@ int CheckpointSvc::parseRestartOptions()    {
 	      return sc;
 	    }
 	  }
-	  log << MSG::INFO << "Processed RESTARTOPTS:" << env 
-	      << " Process:" << RTL::processName() 
-	      << " Node:" << RTL::nodeNameShort() 
+	  log << MSG::INFO << "Processed RESTARTOPTS:" << env
+	      << " Process:" << RTL::processName()
+	      << " Node:" << RTL::nodeNameShort()
 	      << " DNS:" << (const char*)(dns ? dns : "???????")
 	      << endmsg;
 	  return StatusCode::SUCCESS;
@@ -687,9 +688,9 @@ int CheckpointSvc::resumeMainInstance(bool with_resume_child_threads) {
   }
   log << endmsg;
   //
-  // We have to overload the underlying dim command, since for the 
+  // We have to overload the underlying dim command, since for the
   // forker instance all Gaudi actions are over....
-  // This new command make sure nothing will happen 
+  // This new command make sure nothing will happen
   // ever again inside Gaudi.
   //
   if ( m_connectDIM ) {
@@ -856,7 +857,7 @@ void CheckpointSvc::handle(const Incident& inc) {
       stopMainInstance();
       if ( !(sc=saveCheckpoint()).isSuccess() ) {
 	MsgStream log(msgSvc(),name());
-	log << MSG::FATAL << "Failed to create checkpoint for process:" 
+	log << MSG::FATAL << "Failed to create checkpoint for process:"
 	    << RTL::processName() << endmsg;
 	throw GaudiException("Failed to save checkpoint:"+m_checkPoint, name(), StatusCode::FAILURE);
       }

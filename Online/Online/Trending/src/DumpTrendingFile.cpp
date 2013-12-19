@@ -1,9 +1,8 @@
-// $Id: $
 // Include files
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
-#include "Reflex/PluginService.h"
+#include "GaudiKernel/AlgTool.h"
 
 // local
 #include "Trending/TrendParams.h"
@@ -21,7 +20,7 @@ int main(int argc, char* argv[]) {
   iface -> getService( "ToolSvc" , isvc ) ;
   const IInterface * a3( isvc ) ;
   const std::string & name( "TrendingTool" ) ;
-  IAlgTool * intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( name, name, name, a3 ) ;
+  IAlgTool * intf = AlgTool::Factory::create(name, name, name, a3);
   ITrendingTool* trendTool = dynamic_cast< ITrendingTool * >( intf ) ;
 
   std::cout << "Arguments n=" << argc;
@@ -131,7 +130,7 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
         maxPrint = 10000000;
       }
       */
-      
+
       if ( verbose ) {
         for ( int kk = 0 ; kk <= m_dir.nbEntries ; ++kk ) {
           sprintf( line, "   entry%5d time%12d = %s address %15d", kk,  m_dir.entry[kk].firstTime,
@@ -193,7 +192,7 @@ void DumpTrendingFile::dump (std::string file, bool verbose ) {
                 std::cout << line << std::endl;
                 headPrinted = true;
               }
-              std::cout << " ** Mismatch record length: " << maxPtData - m_ptData << " words at " << m_ptData 
+              std::cout << " ** Mismatch record length: " << maxPtData - m_ptData << " words at " << m_ptData
                         << " last good " << lastGood << std::endl;
               if ( maxPtData > m_ptData && maxPtData-m_ptData < 10 ) {
                 for ( int kl = lastGood; maxPtData >= kl ; ++kl ) {

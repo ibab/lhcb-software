@@ -1,4 +1,8 @@
 Package: GaudiUPI
 Author:  Markus Frank
 
+! 2013-07-31 - Marco Clemencic
+ - Removed obsolete file.
+
+! ####-##-## - Markus Frank
   New Package.

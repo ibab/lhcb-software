@@ -1,6 +1,12 @@
  Package: GaudiSerialize
  Package Manager: Albert Puig
 
+! 2013-09-10 - Marco Clemencic
+ - Use GAUDI_VERSION.h instead of a define on the command line.
+
+! 2013-07-31 - Marco Clemencic
+ - Adapted to the new Gaudi Plugin Service.
+
 ! 2010-12-12 - Marco Clemencic
  - Added explicit import of ROOT to be able to link the library.
 

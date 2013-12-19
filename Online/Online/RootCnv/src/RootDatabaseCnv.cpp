@@ -15,10 +15,8 @@
 #include "GaudiKernel/NTuple.h"
 
 #if 0
-#include "GaudiKernel/CnvFactory.h"
-PLUGINSVC_FACTORY_WITH_ID( RootDatabaseCnv,
-                          ConverterID(ROOT_StorageType,CLID_StatisticsFile),
-                          IConverter*(long, CLID, ISvcLocator*) );
+DECLARE_COMPONENT_WITH_ID(RootDatabaseCnv,
+                          ConverterID(ROOT_StorageType,CLID_StatisticsFile) )
 #endif
 
 using namespace Gaudi;

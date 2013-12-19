@@ -1,13 +1,13 @@
 #include "RootCnv/RootRefs.h"
 
 #ifdef __POOL_COMPATIBILITY
-#include "src/PoolClasses.h"
+#include "RootCnv/PoolClasses.h"
 
 //typedef Gaudi::RootNTupleDescriptor PoolDbNTupleDescriptor;
 struct PoolDbNTupleDescriptor {
   /// Description string
   std::string   description;
-  /// Optional description 
+  /// Optional description
   std::string   optional;
   /// Identifier of description
   std::string   container;

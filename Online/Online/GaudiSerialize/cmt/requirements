@@ -2,7 +2,7 @@ package GaudiSerialize
 author Albert Puig
 version v0r11
 
-branches  cmt doc src GaudiSerialize 
+branches  cmt doc src GaudiSerialize
 
 use MDF            v* DAQ
 use DAQEvent	   v* Event
@@ -19,7 +19,6 @@ library     GaudiSerialize -import=ROOT ../src/*.cpp ../$(tag)/dict/GaudiSeriali
 macro_append  GaudiSerialize_dependencies GaudiSerializeGen
 apply_pattern component_library library=GaudiSerialize
 apply_pattern genconfig_add_preload library=$(library_prefix)MDF.$(shlibsuffix)
-macro_append  GaudiSerialize_pp_cppflags ' -D$(GaudiPolicy_project_release) '
 macro_append  GaudiSerialize_shlibflags  $(RootCnv_ext_linkopts)
 # Hack for Gaudi v21r1 to link dictionary on windows
 private

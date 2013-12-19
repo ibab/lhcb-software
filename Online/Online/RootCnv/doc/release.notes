@@ -4,6 +4,44 @@
 ! Purpose     : Root based persistency
 !-----------------------------------------------------------------------------
 
+! 2013-12-16 - Marco Clemencic
+ - Clean-up of some leftover from the autoloading workaround.
+
+! 2013-11-15 - Marco Clemencic
+ - Made the data member of pool::Token transient (it was implicit in ROOT 5, but
+   must be explicit in ROOT 6).
+   See https://sft.its.cern.ch/jira/browse/ROOT-5700
+
+! 2013-11-13 - Marco Clemencic
+ - Removed work-around for the autoloading problem.
+ - Made PoolClasses.h a public header (needed for relocatability of dictionaries).
+
+! 2013-10-03 - Marco Clemencic
+ - Work-around for ROOT 6 autoloading problem (genreflex rootmap is incomplete).
+
+! 2013-10-03 - Marco Clemencic
+ - Removed dynamic loading of libCintex.so in RootIOHandler (ROOT 6 only).
+
+! 2013-08-27 - Marco Clemencic, Danilo Piparo
+ - Removed unneeded dependency on libCintex.so.
+
+! 2013-07-19 - Marco Clemencic
+ - Clean up in the use of the new PluginService.
+
+! 2013-07-18 - Marco Clemencic
+ - Removed use of obsolete AlgFactory.h, SvcFactory.h, ToolFactory.h,
+   AudFactory.h and CnvFactory.h.
+
+! 2013-07-03 - Marco Clemencic
+ - Replaced Reflex queries with TClass queries.
+ - Replaced obsolete 'gROOT->GetClass' with 'TClass::GetClass'.
+ - Fixed gcc 4.7 narrowing conversion warnings.
+
+! 2013-12-11 - Sebastien Binet
+ - Added hwaf configuration files.
+
+============================= RootCnv v1r21 =================================
+============================ RootCnv v1r20p1 ================================
 ! 2013-07-08 - Marco Clemencic
  - Fixed dependency problem with event extractor.
 
@@ -22,7 +60,7 @@
  - Added CMake configuration file.
 
 ! 2012-11-14 - Markus Frank
- - Add incident "CorruptedInputFile" if the data or reference branch 
+ - Add incident "CorruptedInputFile" if the data or reference branch
    of a given file cannot be read (aka ROOT returns -1 on read).
 
 ! 2012-11-07 - Marco Clemencic
@@ -55,15 +93,15 @@
    RootCnvSvc.GlobalCompression     = "0";
 
    Please note:
-   Since setting individual options for all different conversion services 
+   Since setting individual options for all different conversion services
    (Event, FSR,...) is a major pain and in general only leads to confusion,
-   this is a GLOBAL option. You set it once and it will be valid for any 
+   this is a GLOBAL option. You set it once and it will be valid for any
    subsequent call to TFile::Open in ANY RootDataConnection objects.
 
 
 !========================= RootCnv v1r12 2012-01-24 ========================
 ! 2012-01-20 - Markus Frank
- - Fix gcc46 compile warning in merge.C 
+ - Fix gcc46 compile warning in merge.C
 
 !========================= RootCnv v1r11 2012-01-11 ========================
 ! 2011-11-11 - Markus Frank

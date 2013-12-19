@@ -21,6 +21,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiSerialize/SerializeBaseCnv.h"
 #include "GaudiSerialize/SerializeCnvSvc.h"
 #include "GaudiSerialize/SerializeAddress.h"
 #include "Event/RawEvent.h"
@@ -36,7 +37,6 @@
 #include "TBufferFile.h"
 #include "TInterpreter.h"
 
-using ROOT::Reflex::PluginService;
 using namespace std;
 using namespace LHCb;
 using namespace Gaudi;
@@ -46,7 +46,7 @@ typedef const std::string& CSTR;
 #define S_FAIL StatusCode::FAILURE
 
 namespace GaudiRoot  {
-  bool patchStreamers(MsgStream& s); 
+  bool patchStreamers(MsgStream& s);
   void popCurrentDataObject();
   void pushCurrentDataObject(DataObject** pobjAddr);
 }
@@ -75,10 +75,10 @@ SerializeCnvSvc::~SerializeCnvSvc()  {
 }
 
 /// Query interface
-StatusCode 
+StatusCode
 SerializeCnvSvc::queryInterface(const InterfaceID& riid, void** ppvInterface)    {
   if ( IID_ISerializeMgr == riid )  {
-    *ppvInterface = this; 
+    *ppvInterface = this;
     addRef();
     return S_OK;
   }
@@ -124,18 +124,18 @@ StatusCode SerializeCnvSvc::updateServiceState(IOpaqueAddress* /* pAddr */)  {
 }
 
 /// Create new Converter using factory
-IConverter* 
+IConverter*
 SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
 {
   IConverter* pConverter;
-  ConverterID cnvid0(SERIALIZE_StorageType, wanted);  
-  pConverter = PluginService::CreateWithId<IConverter*>(cnvid0, typ, wanted, serviceLocator().get());
+  ConverterID cnvid0(SERIALIZE_StorageType, wanted);
+  pConverter = SerializeBaseCnv::Factory::create(cnvid0, typ, wanted, serviceLocator().get());
   MsgStream log(msgSvc(), name());
 
   if ( 0 == pConverter )  {
-    const CLID gen_clids[] = {  
+    const CLID gen_clids[] = {
       /* ObjectList               */ CLID_Any + CLID_ObjectList,
-      /* ObjectVector             */ CLID_Any + CLID_ObjectVector, 
+      /* ObjectVector             */ CLID_Any + CLID_ObjectVector,
       /* Keyed Map                */ CLID_Any + CLID_ObjectVector+0x00030000,
       /* Keyed Hashmap            */ CLID_Any + CLID_ObjectVector+0x00040000,
       /* Keyed redirection array  */ CLID_Any + CLID_ObjectVector+0x00050000,
@@ -143,8 +143,8 @@ SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
     };
     for ( unsigned int i = 0; i < sizeof(gen_clids)/sizeof(gen_clids[0]); i++ ) {
       if ( (wanted>>16) == (gen_clids[i]>>16) )  {
-        ConverterID cnvid(SERIALIZE_StorageType, gen_clids[i]);  
-        pConverter = PluginService::CreateWithId<IConverter*>(cnvid,typ,wanted,serviceLocator().get());
+        ConverterID cnvid(SERIALIZE_StorageType, gen_clids[i]);
+        pConverter = SerializeBaseCnv::Factory::create(cnvid,typ,wanted,serviceLocator().get());
         if ( 0 != pConverter ) {
           return pConverter;
         }
@@ -153,18 +153,18 @@ SerializeCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFactory*)
     // Check if a converter using object update is needed
     if ( (wanted>>24) != 0 )  {
       ConverterID cnvid_obj(SERIALIZE_StorageType,CLID_Any + CLID(1<<31));
-      pConverter = PluginService::CreateWithId<IConverter*>(cnvid_obj,typ,wanted,serviceLocator().get());
+      pConverter = SerializeBaseCnv::Factory::create(cnvid_obj,typ,wanted,serviceLocator().get());
       if ( 0 != pConverter ) {
         return pConverter;
       }
     }
     // If we do not have found any suitable container after searching
-    // for standard containers, we will use the "ANY" converter 
+    // for standard containers, we will use the "ANY" converter
     // ... and pray for everything will go well.
-    ConverterID cnvid_any(SERIALIZE_StorageType, CLID_Any);  
-    pConverter = PluginService::CreateWithId<IConverter*>(cnvid_any,typ,wanted,serviceLocator().get());
+    ConverterID cnvid_any(SERIALIZE_StorageType, CLID_Any);
+    pConverter = SerializeBaseCnv::Factory::create(cnvid_any,typ,wanted,serviceLocator().get());
     if ( 0 != pConverter ) {
-      log << MSG::INFO << "Using \"Any\" converter for objects of type " 
+      log << MSG::INFO << "Using \"Any\" converter for objects of type "
 	  << showbase << hex << wanted << endmsg;
     }
   }
@@ -179,7 +179,7 @@ void SerializeCnvSvc::loadConverter(DataObject* pObject) {
     gInterpreter->EnableAutoLoading();
     gInterpreter->AutoLoad( cname.c_str());
   }
-}  
+}
 
 StatusCode SerializeCnvSvc::setDataProvider(IDataProviderSvc* pSvc)  {
   MsgStream log(msgSvc(), name());
@@ -215,7 +215,7 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
       map<string, TClass*> classes;
       int object_counter=1;
       std::auto_ptr<RawEvent> raw(new RawEvent());
-      for(Objects::iterator i=m_objects.begin(); i != m_objects.end(); ++i)      {    
+      for(Objects::iterator i=m_objects.begin(); i != m_objects.end(); ++i)      {
         TBufferFile rawBuffer(TBuffer::kWrite,256*1024);
 	DataObject* pObj = (*i);
 	DataObjectPush push_buffer(pObj);
@@ -227,23 +227,23 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
 	  classes[objClassName] = cl = gROOT->GetClass(objClassName.c_str());
 	}
 	if (cl==0){
-	  log << MSG::ERROR << "No valid class found for " << objClassName << endmsg;    
-	  return S_FAIL;      
+	  log << MSG::ERROR << "No valid class found for " << objClassName << endmsg;
+	  return S_FAIL;
 	}
-        
+
 	string loc = pObj->registry()->identifier();
 	rawBuffer.WriteString(loc.c_str());
         rawBuffer << (long)pObj->clID();
 	rawBuffer.WriteString(cl->GetName());
 	cl->Streamer(pObj,rawBuffer);
-        
+
 	LinkManager* linkMgr = pObj->linkMgr();
 	int numLinks = linkMgr->size();
         rawBuffer << numLinks;
 	for (int it = 0; it != numLinks; it++)        {
           rawBuffer.WriteString(linkMgr->link(it)->path().c_str());
 	}
-        
+
 	// Write the bank taking into account size limitations
         const char* start = rawBuffer.Buffer();
         const char* end = start+rawBuffer.Length();
@@ -346,16 +346,16 @@ StatusCode SerializeCnvSvc::disconnect(CSTR /* dsn */)  {
 /// IAddressCreator implementation: Address creation
 StatusCode SerializeCnvSvc::createAddress(long  typ,
 					  const CLID& clid,
-					  const string* par, 
+					  const string* par,
 					  const unsigned long* ip,
-					  IOpaqueAddress*& refpAddress) 
+					  IOpaqueAddress*& refpAddress)
 {
   refpAddress = new SerializeAddress(typ,clid,par[0],par[1],ip[0],ip[1]);
   return S_OK;
 }
 
 /// Mark an object for write given an object reference
-StatusCode 
+StatusCode
 SerializeCnvSvc::writeObject(DataObject* pObj, IOpaqueAddress*& refpAddr)  {
   if ( pObj ) {
     CLID clid = pObj->clID();
@@ -407,7 +407,7 @@ StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)
         }
 
 	//  The TBuffer is filled with as many banks as necessary. The memory is adopted by the TBuffer!
-        TBufferFile buffer(TBuffer::kRead,len,q,kTRUE); 
+        TBufferFile buffer(TBuffer::kRead,len,q,kTRUE);
         buffer.ReadString(text,sizeof(text));
         buffer >> class_id;
         buffer.ReadString(text,sizeof(text));

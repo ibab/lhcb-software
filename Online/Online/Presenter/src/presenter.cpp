@@ -22,7 +22,7 @@
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
-#include "Reflex/PluginService.h"
+#include "GaudiKernel/AlgTool.h"
 
 // Trending
 #include "Trending/ITrendingTool.h"
@@ -85,9 +85,7 @@ int main(int argc, char* argv[]) {
   iface -> getService( "ToolSvc" , isvc ) ;
   const IInterface * a3( isvc ) ;
   const std::string & name( "TrendingTool" ) ;
-  IAlgTool * intf =
-    ROOT::Reflex::PluginService::Create< IAlgTool *>( name , name ,
-                                                      name , a3 ) ;
+  IAlgTool * intf = AlgTool::Factory::create(name, name, name, a3);
   PresenterGaudi::trendingTool = dynamic_cast< ITrendingTool * >( intf ) ;
 
   // ROOT startup
@@ -197,10 +195,10 @@ int main(int argc, char* argv[]) {
           options(cmdline_options).positional(p).run(), startupSettings);
 
     if (startupSettings.count("config-file")) {
-      ifstream configFile(startupSettings["config-file"].as<std::string>().c_str());
+      std::ifstream configFile(startupSettings["config-file"].as<std::string>().c_str());
       store(parse_config_file(configFile, config_file_options), startupSettings);
     } else {
-      ifstream configFile("presenter.cfg");
+      std::ifstream configFile("presenter.cfg");
       store(parse_config_file(configFile, config_file_options), startupSettings);
     }
     notify(startupSettings);
@@ -292,10 +290,10 @@ int main(int argc, char* argv[]) {
       bool offline = startupSettings["offline-context"].as<bool>();
       std::string processing = startupSettings["offline-processing"].as<std::string>();
       std::string eventType  = startupSettings["offline-event-type"].as<std::string>();
-      
+
       presenterMainFrame.setOfflineContext( offline, processing, eventType );
     }
-    
+
     if (startupSettings.count("verbosity")) {
       if ("silent" == startupSettings["verbosity"].as<std::string>()) {
         messageLevelCli = pres::Silent;
@@ -339,10 +337,10 @@ int main(int argc, char* argv[]) {
       presenterMainFrame.setPartition(startupSettings["partition"].as<std::string>());
     }
 
-    if (startupSettings.count("shift-crew")) {  
+    if (startupSettings.count("shift-crew")) {
       presenterMainFrame.setShiftCrew(startupSettings["shift-crew"].as<bool>());
     }
-    
+
     //== Database mode
     if (startupSettings.count("login") &&
         ("batch" != startupSettings["mode"].as<std::string>())) {

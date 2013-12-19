@@ -1,6 +1,12 @@
 Package: GaudiCheckpointing
 Author:  Markus Frank
 
+! 2013-10-09 - Marco Clemencic
+ - Removed circular dependency in the requirements file.
+
+! 2013-07-31 - Marco Clemencic
+ - Minor fix in the use of the LHCb namespace.
+
 !================== GaudiOnline v0r1 2011-01-15 =============================
 
 New package:

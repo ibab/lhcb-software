@@ -1,6 +1,9 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2013-07-31 - Marco Clemencic
+ - Removed obsolete file.
+
 ! 2009-12-02 Albert Puig
  - Removed sliceID info from DimRPCFileReader and DimRPCFileReaderCommand.
 

@@ -5,6 +5,9 @@
 ! 20130826 GG
 - remove compilation warnings under clang 
 
+! 2013-10-09 - Marco Clemencic
+ - Use the Gaudi::PluginService instead of the Reflex one.
+
 ! ======== v4r2 ===============
 
 ! 20120411
@@ -25,7 +28,7 @@
 ! ======== v4r0 ===============
 ! 20110531
  - support user supplied fit ranges (requires OnlineHistDB v8)
- - extend default range of OMAFitHLTjpsi 
+ - extend default range of OMAFitHLTjpsi
 
 ! ======== v3r6 ===============
 ! 20110503
@@ -46,7 +49,7 @@
 
 ! ======== v3r4 ===============
 
-! 20101126 
+! 20101126
  - two other fixes from Markus to suppress windoz compilation messages
 
 ! 20101021 GG
@@ -56,7 +59,7 @@
 ! 20101019 GG
  - add OMAFitFunction::clone() method to correctly clone fit functions from the Presenter
  - add new custom fit function OMAFitHLTjpsi
- - modify behavior of OMADivideByReference.cpp when reference bins are empty: 0/0 = 1  
+ - modify behavior of OMADivideByReference.cpp when reference bins are empty: 0/0 = 1
 
 ! ======== v3r3 ===============
 
@@ -73,7 +76,7 @@
  - add support for declaration of trending histograms to Saveset2HistDB
 
 ! 20100816 GG
- - improve messages when raising down alarms 
+ - improve messages when raising down alarms
  - small fix in OMACheckDeadBins
 
 ! 20100803 GG
@@ -85,8 +88,8 @@
  - remove (harmless) crash at the end of Saveset2HistDB
 
 ! 20100706 GG
- - expand OMAScale to support multiplication instead of division and normalization by mean,rms,integral or 
-   entries of the normalization histogram 
+ - expand OMAScale to support multiplication instead of division and normalization by mean,rms,integral or
+   entries of the normalization histogram
 
 ! 20100704 GG
  - adapt OMACheckErrorBins to 2d histograms
@@ -155,26 +158,26 @@
 - add normalize option to OMACheckHolesAndSpikes
 - fix to allow multiple analysis task per job + MonitorSvc
 
-! 20091112 v2r10 
+! 20091112 v2r10
 - use conventions agreed with Clara for DIM message publishing:
   * one service per analysis task called OMA/analysisTask/partition/MESSAGES
   * message content is
     LEVEL/ID/text
     or
     LEVEL/CLEAR/ID
-- allow multiple analysis tasks on the same job, setting 
-  AnalysisTask.StopAlgSequence = false  
+- allow multiple analysis tasks on the same job, setting
+  AnalysisTask.StopAlgSequence = false
   for all algorithms in sequence but the last one
 
 ! 20091106 v2r9
-- bug fix in OMAHMerge 
+- bug fix in OMAHMerge
 
-! 20090831 v2r8 
+! 20090831 v2r8
 - add possibility to send alarm messages to a ascii log file (in addition to MsgService output)
 - publish messages also as DIM services
-- improve CheckDeadBins algorithm 
+- improve CheckDeadBins algorithm
 
-! 20090616 v2r7 
+! 20090616 v2r7
 - don't lower alarms if low statistics
 - new algorithm CheckDeadBins to spot significantly empty bins
 
@@ -189,14 +192,14 @@
 ! 20090402 v2r4
  - add to fit functions:
    * optional input parameters
-   * optional default values for input and fit parameters  
+   * optional default values for input and fit parameters
  - more info in alarm messages
 
 ! 20090325 v2r3
  - new check algorithm: OMAIfbMonitor by Ross Young
 
 ! 20090306 v2r2
- - improve and unify code to get histograms from root files (savesets 
+ - improve and unify code to get histograms from root files (savesets
    and references)
  - correct support for "any" task
  - avoid Gaudi looping eating all CPU
@@ -204,7 +207,7 @@
  - bug fix in OMAMsgInterface
  - fix compilation problems with gcc 4.3 and root 5.22
 
-! 20090226 
+! 20090226
  - new custom fit function FitTH2withSinCosC by Christopher Blanks
 
 ! 20090223 OMAlib v2r1
@@ -217,11 +220,11 @@
 ! 20090216 OMAlib v2r0alpha
   - add persistency to alarm logging using HistDB:
     * OMAmessage class moved to OnlineHistDB
-  - modifications to AnalysisTask: 
+  - modifications to AnalysisTask:
     * raiseMessage doesn't need the taskname anymore
     *  AnalysisTask::analyze should be called by derived classes
   - new class OMAFitFunction  to define any custom fit function for display or analysis
-   
+
 ! 20081121  OMAlib v1r7
  fixes for first test with Saver:
   - correct dim service subscribtion and content checks
@@ -236,7 +239,7 @@
  - In requirements, add dependency of application on library, to please make -j
 
 ! 20081009
-  - add a tool to declare histograms to DB from a saveset 
+  - add a tool to declare histograms to DB from a saveset
 
 ! 20081003  OMAlib v1r5
   - add default parameter values to algorithm declaration
@@ -256,19 +259,19 @@
   - make OMAEfficiency and OMADivide work for both THXF/THXD inputs
   - bug fixes in OMAGaussFit and OMAlib
 
-! 20080808 - OMAlib 
+! 20080808 - OMAlib
   - support for loading reference histograms
   - some reshuffling of class inheritance
   - new check algorithms: OMACheckEmptyBins, OMACompareToReference,
       OMACheckHolesAndSpikes
 
-! 20080730 
+! 20080730
   remove ROOT version requirement, not needed since Online v4r10
 
 ! 20080514 - OMAlib v1r1
   add OMADivide algorithm
 
-! 20080430 
+! 20080430
   Some style improvements:
   - remove "using statement" from header files
   - pass strings by reference and not by value when possible
@@ -290,7 +293,7 @@
 ! 20071011 - OMAlib v0r0
        Release first prototype of analysis library for Online Monitoring Data:
 	- algorithms are implemented in src/OMAAlgorithms.cpp
-	  as classes derived from OMAHcreatorAlg or OMACheckAlg 
+	  as classes derived from OMAHcreatorAlg or OMACheckAlg
  	- Algorithm classes are instantiated in the constructor of
 	  the OMAlib class
 	- the OMAlib constructor declares the algorithm to the DB if needed

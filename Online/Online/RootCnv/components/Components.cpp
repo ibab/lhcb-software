@@ -1,10 +1,8 @@
-#include "GaudiKernel/SvcFactory.h"
-
 #include "RootCnv/RootCnvSvc.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(Gaudi,RootCnvSvc)
-
 #include "RootCnv/RootEvtSelector.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(Gaudi,RootEvtSelector)
-
 #include "RootCnv/RootPerfMonSvc.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(Gaudi,RootPerfMonSvc)
+
+using namespace Gaudi;
+DECLARE_COMPONENT(RootCnvSvc)
+DECLARE_COMPONENT(RootEvtSelector)
+DECLARE_COMPONENT(RootPerfMonSvc)

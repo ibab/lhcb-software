@@ -4,6 +4,12 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2013-11-14 - Marco Clemencic
+ - Fixed missing "std::".
+
+! 2013-10-09 - Marco Clemencic
+ - Use the Gaudi::PluginService instead of the Reflex one.
+
 ! 2012-08-14 - Olivier Callot
  - Fix a bug (crash) when displaying alarm plots with associated pattern.
 

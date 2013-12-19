@@ -4,15 +4,18 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
+! 2013-10-09 - Marco Clemencic
+ - Use the Gaudi::PluginService instead of the Reflex one.
+
 !============================== 2011-11-09 v2r1 ==============================
 ! 2011-11-09 - Beat Jost
  - Changes to SimpleTrendWriter.cpp
-	 moved the retrieval of the TrendingTool from initialize to setPartitionAndName, 
+	 moved the retrieval of the TrendingTool from initialize to setPartitionAndName,
  	 creating a new instance of the TrendingTool for each file name, so that several
 	 trend writers can be used in the same program.
 
-	 This implies that any other call to the SimpleTrendWriter must be made AFTER 
-   setPartitionAndName, especially to setAverageTime and setMaxTimeNoWrite, 
+	 This implies that any other call to the SimpleTrendWriter must be made AFTER
+   setPartitionAndName, especially to setAverageTime and setMaxTimeNoWrite,
    otherwise an segmentation fault will result
 
 ! 2011-09-16 - Olivier Callot

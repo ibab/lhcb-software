@@ -39,7 +39,7 @@ namespace Gaudi {
     const RootEvtSelector*        m_sel;
     /// The file container managed by this context
     Files                         m_files;
-    /// The iterator to the 
+    /// The iterator to the
     Files::const_iterator         m_fiter;
     /// Current entry of current file
     long                          m_entry;
@@ -55,8 +55,8 @@ namespace Gaudi {
     /// Access to the file container
     const Files& files() const                       { return m_files;        }
     /// Set the file container
-    void setFiles(const Files& f)                    { 
-      m_files = f; 
+    void setFiles(const Files& f)                    {
+      m_files = f;
       m_fiter = m_files.begin();
     }
     /// Context identifier
@@ -120,7 +120,7 @@ StatusCode RootEvtSelector::initialize()    {
   if ( !status.isSuccess() ) {
     return error("Error initializing base class Service!");
   }
-  
+
   SmartIF<IPersistencySvc> ipers(serviceLocator()->service(m_persName));
   if( !ipers.isValid() )   {
     return error("Unable to locate IPersistencySvc interface of "+m_persName);

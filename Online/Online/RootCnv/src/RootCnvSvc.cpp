@@ -112,11 +112,11 @@ StatusCode RootCnvSvc::initialize()  {
   m_setup->setIncidentSvc(m_incidentSvc);
   GaudiRoot::patchStreamers(log());
   cname = System::typeinfoName(typeid(DataObject));
-  m_classDO = gROOT->GetClass(cname.c_str());
+  m_classDO = TClass::GetClass(cname.c_str());
   if ( 0 == m_classDO )
     return error("Unable to load class description for DataObject");
   cname = System::typeinfoName(typeid(RootObjectRefs));
-  m_classRefs = gROOT->GetClass(cname.c_str());
+  m_classRefs = TClass::GetClass(cname.c_str());
   if ( 0 == m_classRefs )
     return error("Unable to load class description for ObjectRefs");
   return S_OK;
@@ -174,7 +174,7 @@ void RootCnvSvc::loadConverter(DataObject* pObject) {
     log() << MSG::DEBUG << "Trying to 'Autoload' dictionary for class " << cname << endmsg;
     TClass* cl = s_classesNames[cname];
     if ( 0 == cl ) {
-      cl = gROOT->GetClass(cname.c_str());
+      cl = TClass::GetClass(cname.c_str());
       if ( cl ) {
         s_classesNames[cname] = cl;
         s_classesClids[pObject->clID()] = cl;
@@ -342,8 +342,8 @@ StatusCode  RootCnvSvc::commitOutput(CSTR dsn, bool /* doCommit */) {
 	if ( br_evt < evt ) {
 	  Long64_t num = evt-br_evt;
 	  br_ptr->SetAddress(0);
-	  while(num>0) { 
-	    br_ptr->Fill(); 
+	  while(num>0) {
+	    br_ptr->Fill();
 	    --num;
 	  }
 	  log() << "commit: Added " << long(evt-br_evt)
@@ -406,7 +406,7 @@ StatusCode RootCnvSvc::createNullRef(const std::string& path) {
   RootObjectRefs* refs = 0;
   size_t len = path.find('/',1);
   string section = path.substr(1,len==string::npos ? string::npos : len-1);
-  pair<int,unsigned long> ret = 
+  pair<int,unsigned long> ret =
     m_current->save(section,path+"#R",0,refs,m_bufferSize,m_splitLevel);
   log() << MSG::VERBOSE << "Writing object:" << path << " "
 	<< ret.first << " " << hex << ret.second << dec << " [NULL]" << endmsg;
@@ -423,7 +423,7 @@ StatusCode RootCnvSvc::i__createRep(DataObject* pObj, IOpaqueAddress*& refpAddr)
     TClass*    cl   = (clid == CLID_DataObject) ? m_classDO : getClass(pObj);
     size_t     len  = p[1].find('/',1);
     string     sect = p[1].substr(1,len==string::npos ? string::npos : len-1);
-    pair<int,unsigned long> ret = 
+    pair<int,unsigned long> ret =
       m_current->saveObj(sect,p[1],cl,pObj,m_bufferSize,m_splitLevel,true);
     if ( ret.first > 1 || (clid == CLID_DataObject && ret.first==1) ) {
       unsigned long ip[2] = {0,ret.second};
@@ -463,7 +463,7 @@ StatusCode RootCnvSvc::i__fillRepRefs(IOpaqueAddress* /* pA */, DataObject* pObj
 	  int link_id = m_current->makeLink(lnk->path());
 	  refs.links.push_back(link_id);
 	}
-	pair<int,unsigned long> ret = 
+	pair<int,unsigned long> ret =
 	  m_current->save(sect,id+"#R",m_classRefs,&refs,m_bufferSize,m_splitLevel,true);
 	if ( ret.first > 1 ) {
 	  log() << MSG::DEBUG << "Writing object:" << id << " "

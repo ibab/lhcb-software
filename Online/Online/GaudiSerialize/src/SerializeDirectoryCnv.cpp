@@ -15,19 +15,17 @@
 
 // Factory declaration
 using namespace Gaudi;
-PLUGINSVC_FACTORY_WITH_ID(SerializeDirectoryCnv, 
-                          ConverterID(SERIALIZE_StorageType,CLID_StatisticsDirectory),
-                          IConverter*(long, CLID, ISvcLocator*) );
+DECLARE_SERIALIZE_CNV_FACTORY(SerializeDirectoryCnv, CLID_StatisticsDirectory)
 
 // Create transient object from persistent data
-StatusCode 
+StatusCode
 SerializeDirectoryCnv::createObj(IOpaqueAddress* /* pAddr */,DataObject*& refpObj)  {
   refpObj = new NTuple::Directory();
   return StatusCode::SUCCESS;
 }
 
 // Converter overrides: Convert the transient object to the requested representation.
-StatusCode 
+StatusCode
 SerializeDirectoryCnv::createRep(DataObject* pObj,IOpaqueAddress*& /* refpAddr */)  {
   std::string dsc;
   if ( objType() == CLID_StatisticsDirectory )  {
@@ -44,7 +42,7 @@ SerializeDirectoryCnv::createRep(DataObject* pObj,IOpaqueAddress*& /* refpAddr *
 }
 
 // Converter overrides: Update the references of an updated transient object.
-StatusCode 
+StatusCode
 SerializeDirectoryCnv::updateObjRefs(IOpaqueAddress* /* pAddr */, DataObject* /* pObj */)  {
   return StatusCode::SUCCESS;
 }

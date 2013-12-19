@@ -55,7 +55,7 @@
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
-#include "Reflex/PluginService.h"
+#include "GaudiKernel/AlgTool.h"
 
 // Online
 #include "dim/dic.hxx"
@@ -686,7 +686,7 @@ void PresenterMainFrame::buildGUI() {
     m_historyIntervalComboBox->AddEntry("set file", M_File_Picker);
     m_historyIntervalComboBox->AddEntry("set interval", M_IntervalPicker);
     m_historyIntervalComboBox->Select(M_RecentHistory, false);
-    
+
     m_historyIntervalComboBox->Resize(112,22);
     m_historyIntervalComboBox->Connect("Selected(Int_t)", "PresenterMainFrame",
                                        this, "handleCommand(Command)");
@@ -1200,9 +1200,9 @@ void PresenterMainFrame::buildGUI() {
     m_rightVerticalSplitter->UnmapWindow();
     this->Resize(m_initWidth, m_initHeight);
     DoRedraw();
-    
+
     //}
-    
+
 }
 
 //==============================================================================
@@ -1276,13 +1276,13 @@ void PresenterMainFrame::dataDropped(TGListTreeItem* folder, TDNDData* data) {
 //==============================================================================
 void PresenterMainFrame::CloseWindow() {
   if ( m_refreshingPage ) stopPageRefresh();
-  if (0 != m_pageRefreshTimer) { 
+  if (0 != m_pageRefreshTimer) {
     m_pageRefreshTimer->Stop();
     delete m_pageRefreshTimer;
     m_pageRefreshTimer = 0;
   }
-  if (0 != m_clockTimer) { 
-    m_clockTimer->Stop(); 
+  if (0 != m_clockTimer) {
+    m_clockTimer->Stop();
     delete m_clockTimer;
     m_clockTimer = 0;
   }
@@ -1495,7 +1495,7 @@ void PresenterMainFrame::handleCommand(Command cmd) {
     break;
   case M_LoadPage_COMMAND:
   case M_RecentHistory:
-    loadSelectedPageFromDB( m_currentPageName,  
+    loadSelectedPageFromDB( m_currentPageName,
                             m_presenterInfo.globalTimePoint() ,
                             m_presenterInfo.globalPastDuration() ) ;
     break;
@@ -1828,7 +1828,7 @@ void PresenterMainFrame::savePageToHistogramDB() {
       refreshPagesDBListTree();
     } else {
       new TGMsgBox( fClient->GetRoot(), this, "Can't save to database",
-                    "Page can't be saved: It contains pure DIM histograms", 
+                    "Page can't be saved: It contains pure DIM histograms",
                     kMBIconExclamation, kMBOk, &m_msgBoxReturnCode );
     }
   }
@@ -1943,7 +1943,7 @@ void PresenterMainFrame::reportToLog() {
         if ( !m_groupPages.empty() ) {
           title = subject + " (from Presenter page " + m_currentPageName + ")";
         }
-        
+
         std::string severity = "Report";
         ProblemDB myProblem( m_pbdbConfig, m_rundbConfig );
         std::string link( linkText );
@@ -2588,7 +2588,7 @@ void PresenterMainFrame::setTreeNodeType( TGListTreeItem* node,
     std::cout << "Unknown tree node type " << type << std::endl;
     m_icon = m_iconQuestion;
   }
-  
+
 
   node->SetPictures(m_icon, m_icon);
 }
@@ -2963,7 +2963,7 @@ void PresenterMainFrame::reconfigureGUI() {
       if (( pres::Online  == m_prevPresenterMode ||
             pres::History == m_prevPresenterMode) &&
           presenterMode() != m_prevPresenterMode ) refreshHistogramSvcList(pres::s_withTree);
-      
+
       if (isConnectedToHistogramDB()) refreshHistoDBListTree() ;
 
       m_startRefreshButton->SetState(kButtonUp);
@@ -3142,7 +3142,7 @@ void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
       TGListTreeItem* node = m_histoSvcListTree->GetFirstItem();
       deleteTreeChildrenItemsUserData(node);
       m_histoSvcListTree->DeleteChildren(node);
-      
+
       TGListTreeItem* root = m_histoSvcListTree->GetFirstItem();
       const char* dimDnsServerNode = DimClient::getDnsNode();
       m_histoSvcListTree->RenameItem( root, dimDnsServerNode);
@@ -3192,7 +3192,7 @@ void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
             prevSubGroup = "???";
           }
 
-          std::string fullName = (*itS) + "/" + (*itH);          
+          std::string fullName = (*itS) + "/" + (*itH);
           std::string hName = (*itH).substr( indx+1 );
           std::string group("");
           std::string subGroup("");
@@ -3385,7 +3385,7 @@ void PresenterMainFrame::partitionSelectorComboBoxHandler(int partitionNumber) {
           std::cout << "** Task '" << *itS << "' has not the expected part_node_task_x format" << std::endl;
           continue;
         }
-        
+
         std::string partition = (*itS).substr(0,(*itS).find("_"));
         if ( !m_knownOnlinePartitionList->FindObject( partition.c_str() ) ) {
           std::cout << "Found publication for partition " << partition << std::endl;
@@ -3430,8 +3430,8 @@ void PresenterMainFrame::partitionSelectorComboBoxHandler(int partitionNumber) {
     setPartition( partition_entry ) ;
     m_runDb->setPartition( partition_entry );
   }
-  if ( isConnectedToHistogramDB() && 
-       (false == m_currentPageName.empty()) && 
+  if ( isConnectedToHistogramDB() &&
+       (false == m_currentPageName.empty()) &&
        (false == m_loadingPage) ) {
     loadSelectedPageFromDB(m_currentPageName, pres::s_startupFile, m_savesetFileName);
   }
@@ -3582,7 +3582,7 @@ void PresenterMainFrame::addHistoToHistoDB() {
         std::vector<std::string> histNames;
         histNames.push_back( myName );
         int status = myHists.Histos( histNames, results );
-        
+
         OnlineHistDBEnv::HistType dbType = OnlineHistDBEnv::H1D;
         if ( 0 == status ) {
           if ( 0 != dynamic_cast<TProfile*>( results[0]) ) {
@@ -3599,8 +3599,8 @@ void PresenterMainFrame::addHistoToHistoDB() {
                   << "   Db algorithm  " << hId.algorithmName() << std::endl
                   << "   Db histoName  " << hId.histogramFullName() << std::endl
                   << "   Db type       " << dbType << std::endl;
-          
-        
+
+
         m_histogramDB->declareHistogram( hId.taskName(),
                                          hId.algorithmName(),
                                          hId.histogramFullName(),
@@ -3653,7 +3653,7 @@ void PresenterMainFrame::addHistoToPage( const std::string& histogramUrl){
 }
 
 //=========================================================================
-// Display a list of histograms, with automatic pad assignment 
+// Display a list of histograms, with automatic pad assignment
 //=========================================================================
 void PresenterMainFrame::displaySimpleHistos ( ) {
   m_loadingPage = true;
@@ -3684,7 +3684,7 @@ void PresenterMainFrame::displaySimpleHistos ( ) {
 
   editorCanvas->Clear();
   editorCanvas->cd();
-  
+
   m_presenterPage.drawBanner( header, bannerText );
   m_presenterPage.simpleDisplay( editorCanvas, m_analysisLib );
   m_loadingPage = false;
@@ -3717,7 +3717,7 @@ void PresenterMainFrame::addDimHistosToPage() {
   m_histoSvcListTree->CheckAllChildren( m_histoSvcListTree->GetFirstItem(),
                                         pres::s_uncheckTreeItems);
 
-  displaySimpleHistos();  
+  displaySimpleHistos();
 }
 
 //==============================================================================
@@ -3754,7 +3754,7 @@ void PresenterMainFrame::addDbHistoToPage() {
   m_databaseHistogramTreeList->CheckAllChildren(m_databaseHistogramTreeList->
                                                 GetFirstItem(),
                                                 pres::s_uncheckTreeItems);
-  displaySimpleHistos();  
+  displaySimpleHistos();
 }
 
 //==============================================================================
@@ -4090,7 +4090,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
       std::cout << "*** loadSelectedPageFromDB: empty node for page " << pageName << std::endl;
       return;
     }
-    
+
     if ( m_groupPages.empty() ) fillGroupPages( node ) ;
     m_loadingPage = true;
     gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
@@ -4149,7 +4149,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
                                  m_runDb->currentStartTime().c_str() ,
                                  m_runDb->currentRunDuration().c_str() ) ;
             }
-            std::cout << "Set time for run, start " << m_runDb->currentStartTime() 
+            std::cout << "Set time for run, start " << m_runDb->currentStartTime()
                       << " end " << m_runDb->currentRunDuration() << std::endl;
             m_presenterInfo.setTimeC( m_runDb->currentStartTime(),  m_runDb->currentRunDuration(), true );
           } else {
@@ -4169,11 +4169,11 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
           }
         } else {
           std::string startTime =  m_intervalPickerData->startTimeString();
-          if ( startTime != "0-00-00 00:00" ) {  
+          if ( startTime != "0-00-00 00:00" ) {
             bannerText = Form("From %s for %s",
                               m_intervalPickerData->startTimeString(),
                               m_intervalPickerData->durationString());
-            std::cout << "Set time from " << m_intervalPickerData->startTimeString() << " end " 
+            std::cout << "Set time from " << m_intervalPickerData->startTimeString() << " end "
                       << m_intervalPickerData->durationString() << std::endl;
             m_presenterInfo.setTimeC( m_intervalPickerData->startTimeString(),
                                       m_intervalPickerData->durationString(), true );
@@ -4205,7 +4205,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
              isBatch() ) {
           m_presenterPage.setDimBrowser( m_dimBrowser );
           m_presenterPage.loadFromDIM( partition, false, message );
-          if ( m_referencesOverlayed ) { 
+          if ( m_referencesOverlayed ) {
             m_presenterPage.uploadReference( m_analysisLib, m_presenterInfo );
           }
           m_presenterPage.fillTrendingPlots( m_trendDuration, m_trendEnd );
@@ -4219,14 +4219,14 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
           if ( m_presenterInfo.processing() != m_oldProcessing ||
                m_presenterInfo.eventType()  != m_oldEventType    ) hasChanged = true;
           m_oldProcessing = m_presenterInfo.processing();
-          m_oldEventType  = m_presenterInfo.eventType();          
+          m_oldEventType  = m_presenterInfo.eventType();
 
           m_presenterPage.loadFromArchive( m_archive,
                                            m_presenterInfo.globalTimePoint(),
                                            m_presenterInfo.globalPastDuration(), hasChanged );
 
           if ( m_referencesOverlayed ) m_presenterPage.uploadReference( m_analysisLib, m_presenterInfo );
-          
+
           m_presenterPage.fillTrendingPlots( m_presenterInfo.startTimeC(),
                                              m_presenterInfo.endTimeC(), false );
         } else {
@@ -4258,7 +4258,7 @@ void PresenterMainFrame::loadSelectedPageFromDB(const std::string & pageName,
     }
 
     if ( m_resumePageRefreshAfterLoading &&
-         "" == message && 
+         "" == message &&
          ( pres::Online == m_presenterInfo.presenterMode())) startPageRefresh() ;
     gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
   }
@@ -4354,7 +4354,7 @@ void PresenterMainFrame::deleteSelectedPageFromDB() {
 
     try {
       TGListTreeItem *item = m_pagesFromHistoDBListTree->GetSelected();
-      
+
       std::vector<TGListTreeItem*> toDelete;
       std::vector<std::string> toDeleteName;
 
@@ -4439,7 +4439,7 @@ void PresenterMainFrame::deleteSelectedPageFromDB() {
           }
         }
       }
-      
+
     } catch (std::string sqlException) {
       setStatusBarText(sqlException.c_str(), 2);
       if (m_verbosity >= pres::Verbose) std::cout << sqlException << std::endl;
@@ -4704,15 +4704,15 @@ void PresenterMainFrame::refreshPage( ) {
 void PresenterMainFrame::refreshPageForced() {
   if ( presenterMode() != pres::Online    &&
        presenterMode() != pres::EditorOnline ) {
-    loadSelectedPageFromDB( m_currentPageName,  
+    loadSelectedPageFromDB( m_currentPageName,
                             m_presenterInfo.globalTimePoint() ,
-                            m_presenterInfo.globalPastDuration() ) ;    
+                            m_presenterInfo.globalPastDuration() ) ;
     return;
   }
-  
+
   std::cout << timeStamp() << " refreshing..." << std::endl;
   m_loadingPage = true;
-  
+
   editorCanvas->cd();
 
   std::string message ("" );
@@ -4781,7 +4781,7 @@ void PresenterMainFrame::removeHistogramsFromPage() {
   editorCanvas->SetEditable(true);
 
   m_presenterPage.clear();
-  
+
   editorCanvas->cd();
   editorCanvas->Clear();
   editorCanvas->Update();
@@ -4792,7 +4792,7 @@ void PresenterMainFrame::removeHistogramsFromPage() {
 // Mouse actions on pads in the presenter
 //==============================================================================
 void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected) {
-  
+
   switch (event) {
 
     // Left click goes to linked presenter page
@@ -4802,7 +4802,7 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
       TPad * thePad = dynamic_cast< TPad *>( editorCanvas -> GetClickSelectedPad() ) ;
       if ( 0 != thePad ) {
         TIter next( thePad -> GetListOfPrimitives() ) ;
-        TObject * obj ; 
+        TObject * obj ;
         TH1 * theHisto( 0 ) ;
         while ( ( obj = next( ) ) ) {
           if ( obj -> InheritsFrom( TH1::Class() ) ) {
@@ -4836,8 +4836,8 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
       if ( 0 != thePad ) {
         thePad->cd();
         TIter next( thePad -> GetListOfPrimitives() ) ;
-        TObject * obj ; 
-        TH1 * theHisto( 0 ) ; 
+        TObject * obj ;
+        TH1 * theHisto( 0 ) ;
         TGraph * theGraph( 0 ) ;
         while ( ( obj = next( ) ) ) {
           if ( obj -> InheritsFrom( TH1::Class() ) ) {
@@ -4849,7 +4849,7 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
           }
         }
         DisplayHistogram* dispH = NULL;
-        
+
         if ( 0 != theHisto ) dispH = m_presenterPage.displayHisto( theHisto );
         if ( 0 != theGraph ) dispH = m_presenterPage.displayHisto( theGraph );
         if ( NULL != dispH ) {
@@ -4862,9 +4862,9 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
           } else {
             m_histomenu -> AddEntry( theGraph -> GetName() , 1 , 0 , 0 ,
                                      m_histomenu -> GetEntry( 10 ) ) ;
-           }            
+           }
           m_histomenu -> PlaceMenu( px , py , true , true ) ;
-            
+
           m_weblink = dispH->histo()->doc() ;
           if ( ! m_weblink.empty() ) {
             if ( 0 != theHisto &&
@@ -4892,8 +4892,7 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
               const IInterface* a3( isvc ) ;
               const std::string& name( m_weblink ) ;
               std::cout <<"== Loading tool " << name << std::endl;
-              IAlgTool * intf = ROOT::Reflex::PluginService::Create< IAlgTool *>( name , name ,
-                                                                                  name , a3 ) ;
+              IAlgTool * intf = AlgTool::Factory::create(name, name, name, a3);
               if ( 0 != intf ) {
                 IPresenterDoc* docTool = dynamic_cast< IPresenterDoc * >( intf ) ;
                 std::string histoName( theHisto->GetName() );
@@ -4919,7 +4918,7 @@ void PresenterMainFrame::EventInfo(int event, int px, int py, TObject* selected)
           } else {
             m_histomenu -> AddEntry( "-- no documentation available --" , 2 ) ;
           }
-        } 
+        }
       }
     }
     break ;
@@ -5092,11 +5091,11 @@ void PresenterMainFrame::loadWebPage( Int_t item ) {
       }
     }
 #endif  // end: not _WIN32
-  } 
+  }
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 void PresenterMainFrame::clearAlarm ( Int_t item ) {
   if ( 2 == item ) m_alarmDisplay->clearAlarm();
@@ -5139,7 +5138,7 @@ void PresenterMainFrame::enablePageLoading() {
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
 void PresenterMainFrame::setDimDns ( ) {
   //setSystemEnvironment( "DIM_DNS_NODE", "hlta01" );
@@ -5194,12 +5193,12 @@ void PresenterMainFrame::reAccessPage( ) {
   } else {
     m_reAccess = true;
     std::cout << "Will reAccess the page later" << std::endl;
-  }     
+  }
 }
 //=========================================================================
 
 //=========================================================================
-//  
+//
 //=========================================================================
 void PresenterMainFrame::getDatabaseWriter ( std::string& pass, std::string& user, std::string& name ) {
   std::map<std::string*, std::string*>::iterator dbCreds;

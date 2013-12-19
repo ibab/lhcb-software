@@ -5,9 +5,10 @@ author Markus Frank
 
 branches  cmt dict src
 
-use GaudiKernel v*
-use ROOT        v* LCG_Interfaces
-##use GenEvent  v* Event
+use GaudiKernel *
+use GaudiUtils  *
+use ROOT        * LCG_Interfaces
+##use GenEvent  * Event
 
 #===========================================================================
 apply_pattern install_more_includes more=RootCnv
@@ -17,12 +18,12 @@ apply_pattern reflex_dictionary dictionary=RootCnv \
 		selectionfile=$(ROOTCNVROOT)/dict/RootCnv_dict.xml
 
 #===========================================================================
-library     RootCnvLib ../src/*.cpp
-macro_append RootCnvLib_pp_cppflags ' -D__POOL_COMPATIBILITY -D$(GaudiPolicy_project_release) '
+library     RootCnvLib ../src/*.cpp  -no_static
+macro_append RootCnvLib_pp_cppflags ' -D__POOL_COMPATIBILITY '
 apply_pattern linker_library library=RootCnvLib
 
-library RootCnv ../components/*.cpp
-macro_append RootCnv_pp_cppflags ' -D__POOL_COMPATIBILITY -D$(GaudiPolicy_project_release) '
+library RootCnv ../components/*.cpp  -no_static
+macro_append RootCnv_pp_cppflags ' -D__POOL_COMPATIBILITY '
 apply_pattern component_library library=RootCnv
 macro_append  RootCnv_dependencies  " RootCnvLib "
 
@@ -34,10 +35,11 @@ macro_append extract_event_dependencies  " RootCnvLib "
 macro RootCnv_ext_linkopts  ' -lRootCnvLib ' WIN32 ' RootCnvLib.lib '
 
 private
-set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
 
-macro_append ROOT_linkopts " -lCintex -lTreePlayer -lMathCore " \
-             target-winxp  " libCintex.lib libTreePlayer.lib libMathCore.lib "
+macro_append ROOT_linkopts " -lTreePlayer -lMathCore " \
+             target-winxp  " libTreePlayer.lib libMathCore.lib "
 
 macro_append ROOT_cppflags '' \
              target-winxp '-FI"$(ROOTSYS)/include/w32pragma.h"'
+
+end_private

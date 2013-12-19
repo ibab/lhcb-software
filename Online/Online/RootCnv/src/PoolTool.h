@@ -1,4 +1,4 @@
-#include "PoolClasses.h"
+#include "RootCnv/PoolClasses.h"
 /*
 *  Gaudi namespace declaration
 */

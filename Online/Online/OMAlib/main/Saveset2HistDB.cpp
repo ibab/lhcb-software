@@ -11,7 +11,8 @@
 // all the rest for the trending tool
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "Reflex/PluginService.h"
+#include "GaudiKernel/AlgTool.h"
+
 #include "Trending/ITrendingTool.h"
 #include <boost/filesystem.hpp>
 
@@ -24,7 +25,7 @@ std::string DBpw = "";
 OnlineHistDB *HistDB= NULL;
 
 class SavesetHistID {
-public: 
+public:
   SavesetHistID(std::string &hAlg,
                 std::string &hName,
                 OnlineHistDBEnv::HistType &hType) :
@@ -91,7 +92,7 @@ int main(int narg,char **argv ) {
     usage();
     return 1;
   }
-  
+
   // connect to DB
   if(DBpw == "") {
 #ifdef _WIN32
@@ -99,20 +100,20 @@ int main(int narg,char **argv ) {
     std::cin >> DBpw;
     std::cout<<endl;
 #else
-    char* pass =getpass("Enter your password:");   
+    char* pass =getpass("Enter your password:");
     DBpw=pass;
 #endif
   }
   HistDB = new OnlineHistDB(DBpw,DBuser,DB);
-  
+
   if (!HistDB) {
     cout << "ERROR: failed to connect to HistDB" << endl;
     return 1;
   }
-  
+
   // loop on input root files and store histograms to be declared
   int nh=0;
-  for (iarg = firstfile ; iarg < narg ; iarg++ ) {    
+  for (iarg = firstfile ; iarg < narg ; iarg++ ) {
     if (Task == "TrendHistograms") {
       // special case of trending histograms
       ISvcLocator * iface = Gaudi::svcLocator() ;
@@ -120,9 +121,8 @@ int main(int narg,char **argv ) {
       iface -> getService( "ToolSvc" , isvc ) ;
       const IInterface *a3( isvc ) ;
       const std::string &name("TrendingTool");
-      IAlgTool * intf = ROOT::Reflex::PluginService::Create<IAlgTool *>( name,
-                                                                         name, name , a3 );
-      
+      IAlgTool * intf = AlgTool::Factory::create(name, name, name, a3);
+
       trendingTool = dynamic_cast<ITrendingTool *>(intf) ;
       boost::filesystem::path filePath(argv[iarg] );
       trendingTool->openRead( filePath.replace_extension("").string() ) ;
@@ -149,7 +149,7 @@ int main(int narg,char **argv ) {
     cout << "Commit changes to DB? (Y/N) ";
     cin >> answ;
     cout<<endl;
-    
+
     std::vector<SavesetHistID*>::iterator ih;
     if ( answ == "Y") {
       cout << "committing"<<flush;
@@ -159,7 +159,7 @@ int main(int narg,char **argv ) {
         if((*ih)->isTrend)
           HistDB->declareTrendingHistogram((*ih)->alg, (*ih)->name);
         else
-          HistDB->declareHistogram(Task, 
+          HistDB->declareHistogram(Task,
                                    (*ih)->alg,
                                    (*ih)->name,
                                    (*ih)->type);
@@ -170,7 +170,7 @@ int main(int narg,char **argv ) {
     }
     for ( ih=histos.begin(); ih != histos.end() ; ih++) {
       delete (*ih);
-    }    
+    }
   }
   delete HistDB;
   // Release trending tool
@@ -206,13 +206,13 @@ int declareDir(TDirectory* dir, std::string algo,std::string hpath) {
         OnlineHistDBEnv::HistType type= typeFromClass(k->GetClassName());
         nh++;
         histos.push_back( new SavesetHistID(algo, hname, type ) );
-        
-        
+
+
       }
     }
   }
   return nh;
-  
+
 }
 
 OnlineHistDBEnv::HistType typeFromClass(std::string cl) {
@@ -225,16 +225,16 @@ OnlineHistDBEnv::HistType typeFromClass(std::string cl) {
       type= OnlineHistDBEnv::P1D;
     }
     else{
-      if (cl.substr(0,3) == "TH2") 
+      if (cl.substr(0,3) == "TH2")
         type= OnlineHistDBEnv::H2D;
     }
   }
   return type;
 }
 
-void setoption(char opt, char* value) 
+void setoption(char opt, char* value)
 {
-  switch(opt) 
+  switch(opt)
   {
   case 't':
     Task = value;
@@ -252,7 +252,7 @@ void setoption(char opt, char* value)
 }
 
 
-void usage() 
+void usage()
 {
   cout << "Saveset2HistDB <options> saveset1.root saveset2.root ..." <<endl;
   cout << "   where options are:" <<endl;

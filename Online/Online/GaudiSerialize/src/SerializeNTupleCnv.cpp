@@ -178,12 +178,8 @@ using namespace Gaudi;
 using namespace LHCb;
 using namespace std;
 
-PLUGINSVC_FACTORY_WITH_ID( SerializeNTupleCnv,
-			   ConverterID(SERIALIZE_StorageType,CLID_RowWiseTuple),
-			   IConverter*(long, CLID, ISvcLocator*) );
-PLUGINSVC_FACTORY_WITH_ID( SerializeNTupleCnv,
-			   ConverterID(SERIALIZE_StorageType,CLID_ColumnWiseTuple),
-			   IConverter*(long, CLID, ISvcLocator*) );
+DECLARE_SERIALIZE_CNV_FACTORY(SerializeNTupleCnv, CLID_RowWiseTuple)
+DECLARE_SERIALIZE_CNV_FACTORY(SerializeNTupleCnv, CLID_ColumnWiseTuple)
 
 static inline istream& loadLong(istream& is)    {
   long i;
@@ -212,7 +208,7 @@ StatusCode createItem (INTuple* tuple, istream& is,const string& name,const TYP&
   TYP low = null, high = null;
   is >> low >> c >> high >> c;
   is >> c;
-  switch( ndim ) 
+  switch( ndim )
   {
   case 0:
     it = NTuple::_Item<TYP>::create (tuple, name, typeid(TYP), low, high, null);
@@ -280,7 +276,7 @@ SerializeNTupleCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObject)   
       for ( int j = 0; j < siz && status.isSuccess(); j++ ) {
 	is >> c;
 	getline(is, title, ';') >> typ >> c;
-	switch ( typ )    
+	switch ( typ )
           {
           case DataTypeInfo::UCHAR:
             status = createItem(nt, is, title, (unsigned char)0);
@@ -369,7 +365,7 @@ StatusCode SerializeNTupleCnv::updateObj(IOpaqueAddress* pAddr, DataObject* pObj
       TTree* tree = rpA->section;
       if ( tree ) {
         con->resetAge();
-        if ( con->tool()->refs() ) 
+        if ( con->tool()->refs() )
           return i__updateObjRoot(rpA,tupl,tree,con);
 #ifdef __POOL_COMPATIBILITY
         // POOL compatibility mode:
@@ -399,7 +395,7 @@ StatusCode SerializeNTupleCnv::i__updateObjSerialize(SerializeAddress* rpA, INTu
     vector<SerializeRef>  addr(n);
     for(k = 0; k < n; ++k)      {
       Cont::value_type j = it[k];
-      switch( j->type() ) 
+      switch( j->type() )
       {
       case DataTypeInfo::OBJECT_ADDR:
         paddr[k] = &addr[k];
@@ -458,9 +454,9 @@ StatusCode SerializeNTupleCnv::i__updateObjSerialize(SerializeAddress* rpA, INTu
                   r->link      += ls.first->link;
 
                   if ( log().isActive() ) {
-                    log() << "Refs: LS [" << entry << "] -> " 
-                      << ls.first->dbase << "," << ls.first->container 
-                      << "," << ls.first->link 
+                    log() << "Refs: LS [" << entry << "] -> "
+                      << ls.first->dbase << "," << ls.first->container
+                      << "," << ls.first->link
                       << "," << ls.first->entry
                       << " DB:" << con->getDb(r->dbase)
                       << endmsg;
@@ -469,7 +465,7 @@ StatusCode SerializeNTupleCnv::i__updateObjSerialize(SerializeAddress* rpA, INTu
               }
               spar[0] = con->getDb(r->dbase);
               spar[1] = con->getCont(r->container);
-              spar[2] = con->getLink(r->link);		
+              spar[2] = con->getLink(r->link);
               ipar[0] = 0;
               ipar[1] = r->entry;
               pA->setClID(r->clid);
@@ -554,7 +550,7 @@ StatusCode SerializeNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAdd
         for ( long k = 0; k < it->ndim(); k++ )  {
           os << it->dim(k) << ';';
         }
-        switch(it->type()) 
+        switch(it->type())
         {
         case DataTypeInfo::STRING:
         case DataTypeInfo::NTCHAR:
@@ -603,7 +599,7 @@ StatusCode SerializeNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAdd
       }
       string spar[]   = { os.str(), pRegistry->identifier() };
       unsigned long ipar[] = { ~0x0u, 0x0u };
-      log() << MSG::INFO << "NTUPLE:" << spar[1] << endmsg 
+      log() << MSG::INFO << "NTUPLE:" << spar[1] << endmsg
 	    << spar[0] << endmsg;
       StatusCode status = m_dbMgr->createAddress(repSvcType(),pObj->clID(),spar,ipar,pAddr);
       if ( !status.isSuccess() )  {
@@ -716,5 +712,5 @@ StatusCode SerializeNTupleCnv::fillRepRefs(IOpaqueAddress* pAddr, DataObject* pO
     return makeError("Failed to access RAW data object in store:"+top);
   }
   return makeError("fillRepRefs> Invalid Tuple reference.");
-}      
+}
 

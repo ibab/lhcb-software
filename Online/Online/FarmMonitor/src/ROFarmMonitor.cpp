@@ -18,7 +18,6 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IAlgTool.h"
-#include "Reflex/PluginService.h"
 // local
 #include "RTL/strdef.h"
 #define MBM_IMPLEMENTATION
@@ -88,7 +87,7 @@ void ROFarmMonitor::initialize ( ) {
   strcpy( m_production,  m_shifter->getProduction().c_str() );
   if ( "" == m_shifter->getShiftLeader() ) strcpy( m_shiftLeader, m_shifter->getSLIMOS().c_str() );
 
-  std::cout << "Leader '" << m_shiftLeader 
+  std::cout << "Leader '" << m_shiftLeader
             << "' DM '" << m_dataManager
             << "' Production '" << m_production << "'" << std::endl;
 
@@ -120,7 +119,7 @@ void ROFarmMonitor::initialize ( ) {
     std::string part = myService.substr(  myService.find( "/" )+1 );
     part = part.substr( 0, part.find("/") );
     if ( 1 < m_print ) std::cout << "...found RunInfo for " << part << std::endl;
-    if ( "LHCb"  != part && 
+    if ( "LHCb"  != part &&
          "FEST"  != part  ) continue;
 
     PartitionDesc* myPart = new PartitionDesc( part );
@@ -212,14 +211,14 @@ void ROFarmMonitor::initialize ( ) {
       myPart->trendWriter->setThresholds( thresholds );
     }
   }
-  
+
   if ( 0 == m_test ) {
     // Start the DimServer providing the services
     m_dimServer = new DimServer();
     std::string serverName = "FarmMonitor";
     m_dimServer->start( serverName.c_str() );
   }
-  
+
   m_stateName.push_back( "Unknown" );
   m_stateName.push_back( "NOT_READY" );
   m_stateName.push_back( "READY" );
@@ -348,7 +347,7 @@ void ROFarmMonitor::update( )   {
     strcpy( m_dataManager, m_shifter->getDataManager().c_str() );
     strcpy( m_production,  m_shifter->getProduction().c_str() );
     if ( "" == m_shifter->getShiftLeader() ) strcpy( m_shiftLeader, m_shifter->getSLIMOS().c_str() );
-    std::cout << "Leader '" << m_shiftLeader 
+    std::cout << "Leader '" << m_shiftLeader
               << "' DM '" << m_dataManager
               << "' Production '" << m_production << "'" << std::endl;
     if ( 0 == m_test ) {
@@ -414,7 +413,7 @@ void ROFarmMonitor::update( )   {
                n > ns->nodes.end()   ||
                n == prev ) {
             FILE* dump = fopen( "/home/ocallot/FarmMonitor.log", "w" );
-            fprintf( dump, "Abnormal nodeset structure for part=%s. begin %p end %p  current %p \n", 
+            fprintf( dump, "Abnormal nodeset structure for part=%s. begin %p end %p  current %p \n",
                      (*itP)->name.c_str(), ns->nodes.begin(), ns->nodes.end(), n );
             prev = ns->nodes.begin();
             while ( prev != n ) {
@@ -453,7 +452,7 @@ void ROFarmMonitor::update( )   {
           if ( monNodes.end() != std::find( monNodes.begin(), monNodes.end(), (*n).name ) ) isMoni  = true;
           if ( recNodes.end() != std::find( recNodes.begin(), recNodes.end(), (*n).name ) ) isReco  = true;
           if ( isDef ) isHlt = false;
-          
+
           if ( !isHlt && !isCalib && !isDef && !isMoni && ! isReco ) continue;
           if ( 1 < m_print ) std::cout << "Part " << (*itP)->name << " node " << (*n).name << std::endl;
 
@@ -513,7 +512,7 @@ void ROFarmMonitor::update( )   {
               for ( itN = prevCounters.begin(); prevCounters.end() != itN; ++itN ) {
                 if ( (*itN).name() == cntr.name() ) {
                   if ( (*itN).lastTime() == newTime ) {
-                    if ( 0 < m_test ) std::cout << "Node " << (*itN).name() 
+                    if ( 0 < m_test ) std::cout << "Node " << (*itN).name()
                                                  << " has not updated, last time " <<  int(newTime) << std::endl;
                     cntr = *itN;
                   } else {
@@ -531,7 +530,7 @@ void ROFarmMonitor::update( )   {
               } else if ( isDef ) {
                 sumDef.sum( cntr );
                 defCounters.push_back( cntr );
-              } 
+              }
             }
           } else {
             const Buffers& buffs = *(*n).buffers();
@@ -651,7 +650,7 @@ void ROFarmMonitor::update( )   {
 
       std::vector<RONodeCounter> badCounters;
       /*
-      //== Force hlta01* node 
+      //== Force hlta01* node
       for ( itN = hltCounters.begin(); hltCounters.end() != itN; ++itN ) {
         if ( (*itN).name().substr(0,6) == "hlta01" ) {
           RONodeCounter forced( (*itN).name().c_str() );
@@ -666,7 +665,7 @@ void ROFarmMonitor::update( )   {
       int minEventRate = 0.1 * sumHlt.mepRate() / nbHltNodes;
       if ( minEventRate < 20 ) minEventRate = 0;  // low rate -> some farms without MEP!
       int minMooreTask = 7;
-      
+
       for ( itN = hltCounters.begin(); hltCounters.end() != itN; ++itN ) {
         std::string badName = "";
         if ( (*itN).mepRate() < minEventRate ) badName = badName + "+";
@@ -674,14 +673,14 @@ void ROFarmMonitor::update( )   {
         if ( "" != badName ) {
           badName = badName + (*itN).name();
           RONodeCounter badGuy( badName.c_str() );
-          badGuy.sum( *itN );          
+          badGuy.sum( *itN );
           badCounters.push_back( badGuy );
         }
       }
-      
+
       hltCounters = badCounters;
-      
-      //== Remove deffered nodes with 0 rate 
+
+      //== Remove deffered nodes with 0 rate
       std::vector<RONodeCounter> farmCounters;
       for ( itN = defCounters.begin(); defCounters.end() != itN; ++itN ) {
         if ( 0 != (*itN).mepRate() ) {
@@ -711,7 +710,7 @@ void ROFarmMonitor::update( )   {
         }
         hltCounters = farmCounters;
       }
-      
+
       //== If too many lines, compress: sum nodes in sub-farms.
       if ( MAXLINE-2 < hltCounters.size() + defCounters.size() ) {
         if ( 2 < m_print ) std::cout << "Compress by farm " << std::endl;
@@ -729,7 +728,7 @@ void ROFarmMonitor::update( )   {
         }
         defCounters = farmCounters;
       }
-      
+
       if ( 2 < m_print ) std::cout << "Update services " << std::endl;
 
       for ( itN = hltCounters.begin(); hltCounters.end() != itN; ++itN ) {

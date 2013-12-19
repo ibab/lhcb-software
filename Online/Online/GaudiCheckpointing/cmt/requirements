@@ -11,7 +11,6 @@ use DIM           v* Online
 use OnlineBase    v* Online
 use Checkpointing v* Online
 use GaudiOnline   v* Online -no_auto_imports
-use GaudiCheckpointing v* Online -no_auto_imports
 apply_pattern install_python_modules
 
 # ==================== component libraries ==================================

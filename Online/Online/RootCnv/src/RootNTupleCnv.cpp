@@ -27,7 +27,6 @@
 #include "TROOT.h"
 #include "TTree.h"
 #include "TBranch.h"
-#include "Reflex/Reflex.h"
 
 #include <limits>
 #include <memory>
@@ -47,11 +46,11 @@ static inline istream& operator>>(istream& is, IOpaqueAddress*& /*pObj*/)
 {  return loadLong(is);          }
 
 #if 0
-static inline istream& operator>>(istream& is, SmartRef<DataObject>& /*pObj*/)   
+static inline istream& operator>>(istream& is, SmartRef<DataObject>& /*pObj*/)
 {  return loadLong(is);          }
-static inline istream& operator>>(istream& is, SmartRef<ContainedObject>& /*pObj*/)   
+static inline istream& operator>>(istream& is, SmartRef<ContainedObject>& /*pObj*/)
 {  return loadLong(is);          }
-static inline istream& operator>>(istream& is, string& /*pObj*/)   
+static inline istream& operator>>(istream& is, string& /*pObj*/)
 {  return loadLong(is);          }
 #endif
 
@@ -74,7 +73,7 @@ StatusCode createItem ( TTree* tree, INTuple* tuple, istream& is,const string& n
   TYP low = null, high = null;
   is >> low >> c >> high >> c;
   is >> c;
-  switch( ndim ) 
+  switch( ndim )
   {
   case 0:
     it = NTuple::_Item<TYP>::create (tuple, name, typeid(TYP), low, high, null);
@@ -180,7 +179,7 @@ RootNTupleCnv::createObj(IOpaqueAddress* pAddr, DataObject*& refpObject)   {
         for ( int j = 0; j < siz && status.isSuccess(); j++ ) {
           is >> c;
           getline(is, title, ';') >> typ >> c;
-          switch ( typ )    
+          switch ( typ )
           {
           case DataTypeInfo::UCHAR:
             status = createItem(tree, nt, is, title, true, (unsigned char)0);
@@ -274,7 +273,7 @@ StatusCode RootNTupleCnv::updateObj(IOpaqueAddress* pAddr, DataObject* pObj)  {
       TTree* tree = rpA->section;
       if ( tree ) {
         con->resetAge();
-        if ( con->tool()->refs() ) 
+        if ( con->tool()->refs() )
           return i__updateObjRoot(rpA,tupl,tree,con);
 #ifdef __POOL_COMPATIBILITY
         // POOL compatibility mode:
@@ -304,7 +303,7 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
     vector<RootRef>  addr(n);
     for(k = 0; k < n; ++k)      {
       Cont::value_type j = it[k];
-      switch( j->type() ) 
+      switch( j->type() )
       {
       case DataTypeInfo::OBJECT_ADDR:
         paddr[k] = &addr[k];
@@ -363,9 +362,9 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
                   r->link      += ls.first->link;
 
                   if ( log().isActive() ) {
-                    log() << "Refs: LS [" << entry << "] -> " 
-                      << ls.first->dbase << "," << ls.first->container 
-                      << "," << ls.first->link 
+                    log() << "Refs: LS [" << entry << "] -> "
+                      << ls.first->dbase << "," << ls.first->container
+                      << "," << ls.first->link
                       << "," << ls.first->entry
                       << " DB:" << con->getDb(r->dbase)
                       << endmsg;
@@ -374,7 +373,7 @@ StatusCode RootNTupleCnv::i__updateObjRoot(RootAddress* rpA, INTuple* tupl, TTre
               }
               spar[0] = con->getDb(r->dbase);
               spar[1] = con->getCont(r->container);
-              spar[2] = con->getLink(r->link);		
+              spar[2] = con->getLink(r->link);
               ipar[0] = 0;
               ipar[1] = r->entry;
               pA->setClID(r->clid);
@@ -481,7 +480,7 @@ StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
         if ( it->hasIndex() )   {
           os << it->index() << ';';
           INTupleItem* itm = it->indexItem();
-          switch( itm->type() ) 
+          switch( itm->type() )
           {
           case DataTypeInfo::UCHAR:
             putRange(os, dynamic_cast<NTuple::_Data<unsigned char>*>(itm));
@@ -517,7 +516,7 @@ StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
         }
         desc = n;
         TClass* cl = 0;
-        switch(it->type()) 
+        switch(it->type())
         {
         case DataTypeInfo::STRING:
           desc = "/C";
@@ -531,15 +530,13 @@ StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
           if ( it->length() == 1 )  {
             desc = System::typeinfoName(typeid(RootRef));
             os << 0 << ';' << 0 << ';';
-            cl = gROOT->GetClass(desc.c_str(),kTRUE);
+            cl = TClass::GetClass(desc.c_str(),kTRUE);
           }
           break;
         case DataTypeInfo::POINTER:
           if ( it->length() == 1 )  {
-            ROOT::Reflex::Type typ = ROOT::Reflex::Type::ByName(it->typeName());
-            desc = typ.Name(ROOT::Reflex::SCOPED);
             os << 0 << ';' << 0 << ';';
-            cl = gROOT->GetClass(desc.c_str(),kTRUE);
+            cl = TClass::GetClass(it->typeID(), kTRUE);
           }
           break;
         case DataTypeInfo::UCHAR:
@@ -612,9 +609,9 @@ StatusCode RootNTupleCnv::createRep(DataObject* pObj, IOpaqueAddress*& pAddr)  {
               desc = n + tmp + text + desc;
             }
           }
-          log() << MSG::DEBUG << "Create branch:" << n << " Desc:" << desc 
+          log() << MSG::DEBUG << "Create branch:" << n << " Desc:" << desc
             << " of type:" << it->type() << endmsg;
-          switch(it->type()) 
+          switch(it->type())
           {
           case DataTypeInfo::OBJECT_ADDR:
             branches[n] = tree->Branch(n.c_str(),cl->GetName(),(void*)it->buffer());
@@ -675,7 +672,7 @@ StatusCode RootNTupleCnv::fillRepRefs(IOpaqueAddress* pAddr, DataObject* pObj)  
         for(k = 0; k < n; ++k)      {
           IOpaqueAddress* pA = 0;
           Cont::value_type j = it[k];
-          switch( j->type() )  
+          switch( j->type() )
           {
           case DataTypeInfo::OBJECT_ADDR:
             pA = (*(IOpaqueAddress**)j->buffer());
@@ -701,10 +698,10 @@ StatusCode RootNTupleCnv::fillRepRefs(IOpaqueAddress* pAddr, DataObject* pObj)  
     return makeError("fillRepRefs> Failed to access data source!");
   }
   return makeError("fillRepRefs> Invalid Tuple reference.");
-}      
+}
 
 #ifdef __POOL_COMPATIBILITY
-#include "PoolClasses.h"
+#include "RootCnv/PoolClasses.h"
 
 // Compatibility code to access ETCs, which were written using POOL
 
@@ -795,7 +792,7 @@ StatusCode RootNTupleCnv::i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTre
         for(k = 0; k < n; ++k)      {
           Cont::value_type j = it[k];
           char* buf = (char*)j->buffer();
-          switch( j->type() ) 
+          switch( j->type() )
           {
           case DataTypeInfo::OBJECT_ADDR: {
             RootRef r = con->tool()->poolRef(addr[k].token.m_oid.first);
@@ -805,11 +802,11 @@ StatusCode RootNTupleCnv::i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTre
               ipar = (unsigned long*)pA->ipar();
               spar[0] = con->getDb(r.dbase);
               spar[1] = con->getCont(r.container);
-              spar[2] = con->getLink(r.link);		
+              spar[2] = con->getLink(r.link);
               ipar[0] = 0;
               ipar[1] = addr[k].token.m_oid.second;
-              if ( r.svc == POOL_ROOT_StorageType || 
-                r.svc == POOL_ROOTKEY_StorageType || 
+              if ( r.svc == POOL_ROOT_StorageType ||
+                r.svc == POOL_ROOTKEY_StorageType ||
                 r.svc == POOL_ROOTTREE_StorageType ) {
                   r.svc = ROOT_StorageType;
                 }
@@ -839,7 +836,7 @@ StatusCode RootNTupleCnv::i__updateObjPool(RootAddress* rpA, INTuple* tupl, TTre
           }
           if ( 0 != sc )  {
             log() << MSG::DEBUG;
-            switch (sc)  
+            switch (sc)
             {
             case 10:
               log() << "CANNOT Set Ntuple token: dynamic_cast<GenericAddress*> is NULL";
