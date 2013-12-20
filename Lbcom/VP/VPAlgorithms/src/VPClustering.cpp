@@ -20,7 +20,10 @@ DECLARE_ALGORITHM_FACTORY(VPClustering)
 // Standard constructor, initializes variables
 //=============================================================================
 VPClustering::VPClustering(const std::string& name, ISvcLocator* pSvcLocator) :
-    GaudiAlgorithm(name, pSvcLocator) {
+  GaudiAlgorithm(name, pSvcLocator)
+, m_vpDet(NULL)
+, m_debug(false)
+{
 
   declareProperty("DigitContainer",       m_digitLocation       = LHCb::VPDigitLocation::VPDigitLocation);
   declareProperty("LiteClusterContainer", m_liteClusterLocation = LHCb::VPLiteClusterLocation::Default);
