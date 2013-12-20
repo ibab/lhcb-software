@@ -8,6 +8,9 @@
 !                  : G4 actions, etc for LHCb calorimeters
 ! -----------------------------------------------------------------------------
 
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
 !======================== GaussCalo v9r4p1 2013-10-10 =========================
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.

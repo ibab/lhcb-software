@@ -4,6 +4,9 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
 !===================== GaussPhysics v10r0p1 2013-10-10 ========================
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.

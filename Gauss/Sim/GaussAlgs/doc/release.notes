@@ -4,6 +4,9 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+! 2013-12-20 - Marco Clemencic
+ - Removed obsolete file (not working with Gaudi >= v25).
+
 !======================= GaussAlgs v7r0p1 2013-10-23 ==========================
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.
