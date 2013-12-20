@@ -4,6 +4,9 @@
 ! Purpose     : To accommodate all TMVA based selections used in stripping
 !-----------------------------------------------------------------------------
 
+! 2013-12-20 - Marco Clemencic
+ - Fixed CMake configuration.
+
 ! 2013-12-19 - Jibo He
  - src/Bc2JpsiHBDTSelection 
   . Changed to use IPS w.r.t. its own PV
