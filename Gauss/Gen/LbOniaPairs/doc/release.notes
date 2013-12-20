@@ -6,6 +6,9 @@
 ! Purpose     : Generator for onia pairs production 
 ! -----------------------------------------------------------------------------
 
+! 2013-12-20 - Marco Clemencic
+ - Fixed compilation problem with the latest Gaudi.
+
 ! 2013-12-19 - Alexey Novoselov
  - Ecm taken from Gauss
  - Do not rely on default Pythia configuration from LbPythia
