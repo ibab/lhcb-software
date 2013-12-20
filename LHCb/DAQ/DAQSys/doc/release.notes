@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2013-12-20 - Marco Clemencic
+ - Fixed CMake configuration.
+
 !========================= DAQSys v7r2 2013-12-09 =========================
 ! 2013-12-03 - Rob Lambert
  - default dictionaries were all using the same objects :S ooops

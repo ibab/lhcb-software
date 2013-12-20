@@ -11,6 +11,15 @@ gaudi_depends_on_subdirs(Calo/CaloDAQ
                          OT/OTDAQ
                          Rich/RichDAQ
                          Si/SiDAQ
-			 ST/STDAQ
-			 Velo/VeloDAQ)
+                         ST/STDAQ
+                         FT/FTDAQ
+                         Velo/VeloDAQ
+                         VL/VLDAQ
+                         VP/VPDAQ
+                         Kernel/LHCbAlgs
+                         GaudiConf
+                         DAQ/RawEventCompat)
 
+gaudi_install_python_modules()
+
+gaudi_add_test(QMTest QMTEST)
