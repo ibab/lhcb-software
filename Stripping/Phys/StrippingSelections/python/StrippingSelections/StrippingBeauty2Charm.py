@@ -101,10 +101,10 @@ config = {
     'pP_MIN'        : '5000*MeV' # for pH only (obviously)
     },
     "HHH": { # Cuts for PiPiPi, KPiPi analyese, etc.
-    'MASS_WINDOW'   : {'A1':'3000*MeV','K1':'3000*MeV','PPH':'3600*MeV'},
-    'KDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDK_MIN':'-5'},
+    'MASS_WINDOW'   : {'A1':'3000*MeV','K1':'4000*MeV','PPH':'3600*MeV'},
+    'KDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDK_MIN':'-2'},
     'PiDAUGHTERS'   : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDK_MAX':'10'},
-    'pDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDp_MIN':'-5'},
+    'pDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDp_MIN':'-2'},
     'AMAXDOCA_MAX'  : '0.40*mm',
     'VCHI2DOF_MAX'  : 8,
     'BPVVDCHI2_MIN' : 16, 
@@ -276,6 +276,7 @@ class Beauty2CharmConf(LineBuilder):
 
         # Lc -> X
         lc = LcBuilder(pions,kaons,protons,config['D2X'],config['PID'])
+        xicc = XiccBuilder(lc,pions,config['D2X'])
 
         # make B->DX
         b2dx = B2DXBuilder(d,dst,topoPions,topoKaons,ks,pi0_fromB,hh,hhh,
@@ -283,7 +284,7 @@ class Beauty2CharmConf(LineBuilder):
         self._makeLines(b2dx.lines,config)
 
         # Lb -> X
-        lb2x = Lb2XBuilder(lc,d,hh,topoPions,topoKaons,topoProtons,hhh,dst,lambda0, 
+        lb2x = Lb2XBuilder(lc,xicc,d,hh,topoPions,topoKaons,topoProtons,pions,kaons,hhh,dst,lambda0, 
                            config['B2X'])
         self._makeLines(lb2x.lines,config)
 
