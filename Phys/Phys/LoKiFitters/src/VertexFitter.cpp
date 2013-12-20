@@ -578,6 +578,7 @@ StatusCode LoKi::VertexFitter::fit
     }
     else if ( mmerr  > -1.0 * Gaudi::Units::MeV ) 
     {
+      mmerr = Gaudi::Units::MeV ;
       _Warning ( "fit(): measured mass error is slightly non-positive, adjust to 1 MeV" ) ; 
     }
     else

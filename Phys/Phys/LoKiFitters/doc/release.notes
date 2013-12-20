@@ -5,6 +5,10 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2013-12-20 - Vanya Belyaev
+ - set measured mass error to be 1MeV if it is -1 MeV < mErr < 0 
+
+
 !========================= LoKiFitters v4r7 2013-10-29 =========================
 
 ! 2013-10-08 - Vanya Belyaev
