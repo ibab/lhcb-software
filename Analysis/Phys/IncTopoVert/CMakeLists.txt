@@ -6,14 +6,16 @@ gaudi_subdir(IncTopoVert v1r1p1)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          Event/RecEvent
-                         Kernel/LHCbMath
                          Event/HltEvent
+                         Event/PhysEvent
                          Event/L0Event
+                         Event/MCEvent
+                         Kernel/LHCbMath
                          Phys/DaVinciInterfaces)
 
 gaudi_install_headers(IncTopoVert)
 
 gaudi_add_module(IncTopoVert
                  src/*.cpp
-                 LINK_LIBRARIES GaudiAlgLib RecEventLib TrackEventLib)
-
+                 LINK_LIBRARIES GaudiAlgLib RecEvent TrackEvent PhysEvent
+                                MCEvent HltEvent LHCbMathLib DaVinciInterfacesLib)

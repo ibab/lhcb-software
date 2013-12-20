@@ -3,9 +3,9 @@
 ################################################################################
 gaudi_subdir(DecayTreeTupleTracking v1r0)
 
-gaudi_depends_on_subdirs(Event/TrackFitEvent
+gaudi_depends_on_subdirs(Tr/TrackFitEvent
                          Phys/DecayTreeTupleBase)
 
 gaudi_add_module(DecayTreeTupleTracking
                  src/*.cpp
-                 LINK_LIBRARIES TrackFitEventLib DecayTreeTupleBaseLib)
+                 LINK_LIBRARIES TrackFitEvent DecayTreeTupleBaseLib)
