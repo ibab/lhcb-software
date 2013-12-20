@@ -44,7 +44,12 @@ __version__ = " version $Revision$ "
 # Namespaces:
 from LoKiCore.basic import cpp, std, LoKi, Gaudi
 
-from GaudiKernel import ROOT6WorkAroundEnabled
+try:
+    from GaudiKernel import ROOT6WorkAroundEnabled
+except ImportError:
+    # dummy implementation
+    def ROOT6WorkAroundEnabled(id=None):
+        return False
 if ROOT6WorkAroundEnabled('template-autoloading'):
     cpp.gSystem.Load('libLoKiNumbersDict')
 

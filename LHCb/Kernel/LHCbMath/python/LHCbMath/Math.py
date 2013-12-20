@@ -2,7 +2,12 @@
 import GaudiPython
 Math = GaudiPython.gbl.ROOT.Math
 
-from GaudiKernel import ROOT6WorkAroundEnabled
+try:
+    from GaudiKernel import ROOT6WorkAroundEnabled
+except ImportError:
+    # dummy implementation
+    def ROOT6WorkAroundEnabled(id=None):
+        return False
 if ROOT6WorkAroundEnabled('template-autoloading'):
     GaudiPython.gbl.gSystem.Load('libLHCbMathDict')
 

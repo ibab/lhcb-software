@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2013-12-20 - Marco Clemencic
+ - Restored backward compatibility to Gaudi v24.
+
 ! 2013-11-07 - Marco Clemencic
  - Added work-around for autoloading dictionary of templates in ROOT 6.
 

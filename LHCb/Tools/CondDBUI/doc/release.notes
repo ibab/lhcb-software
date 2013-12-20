@@ -2,12 +2,6 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ========================================================================
-! 2013-12-15 - Liang Sun
- - scripts/CondDBBrowser: Force the environment variable 'LC_ALL' to be 'C'
-
-!========================= CondDBUI v3r26 2013-12-09 =========================
-! 2013-12-02 - Liang Sun
- - __init__.py: Fixed a glitch of only translating strings from the 'data' key in the DB payload
 
 ! 2013-11-06 - Marco Clemencic
  - Use the new CondDBCompression Python binary module.
@@ -18,6 +12,13 @@
 
 ! 2013-06-27 - Marco Clemencic
  - Replaced PyCintex with ROOT (preparing migration to ROOT 6).
+
+! 2013-12-15 - Liang Sun
+ - scripts/CondDBBrowser: Force the environment variable 'LC_ALL' to be 'C'
+
+!========================= CondDBUI v3r26 2013-12-09 =========================
+! 2013-12-02 - Liang Sun
+ - __init__.py: Fixed a glitch of only translating strings from the 'data' key in the DB payload
 
 !========================= CondDBUI v3r25 2013-09-30 =========================
 ! 2013-08-08 - Liang Sun

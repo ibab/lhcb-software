@@ -6,12 +6,8 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
-!========================= LHCbMath v3r44 2013-12-09 =========================
-! 2013-12-03 - Sasha Baranov
- - Add utf-8 coding string(PEP 0263) to python files
-
-! 2013-11-23 - Vanya Belyaev
- - adjust a bit Bugg&Co family of functions 
+! 2013-12-20 - Marco Clemencic
+ - Restored backward compatibility to Gaudi v24.
 
 ! 2013-11-07 - Marco Clemencic
  - Renamed the dummy class __Instantiations to have a unique name (for ROOT 6).
@@ -22,6 +18,13 @@
 ! 2013-11-07 - Marco Clemencic
  - Restore the use of GaudiPython in Types.py and Math.py to facilitate the
    transition to ROOT 6.
+
+!========================= LHCbMath v3r44 2013-12-09 =========================
+! 2013-12-03 - Sasha Baranov
+ - Add utf-8 coding string(PEP 0263) to python files
+
+! 2013-11-23 - Vanya Belyaev
+ - adjust a bit Bugg&Co family of functions
 
 ! 2013-11-16 - Vanya Belyaev
  - adjust alpha in Crystal Ball
