@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!2013-12-21 - Jack Wimberley
+ - Modified EvtBCVFF to correct the Kiselev form factors
+
 !========================== EvtGen v13r10 2013-11-21 ==========================
 ! 2013-11-21 - John Back
  - Modified EvtDalitzTable used by the EvtGenericDalitz model to warn 

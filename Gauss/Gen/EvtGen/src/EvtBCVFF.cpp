@@ -59,13 +59,13 @@ void EvtBCVFF::getvectorff(EvtId,EvtId,
 	double Mbc = 6.277, Mpsi=3.0967; // Experimental values
 	double Mpole2 = 4.5*4.5, den = 1./(1.-q2/Mpole2);
 	double FV = 0.11*den,
-	FAp = -0.071*den,
+	FAp = -0.074*den,
 	FA0 = 5.9*den,
 	FAm = 0.12*den;
-	*vf = (Mbc + Mpsi)*FV;
+	*vf = -(Mbc + Mpsi)*FV;
 	*a2f = -(Mbc+Mpsi)*FAp;
 	*a1f = FA0/(Mbc+Mpsi);
-	*a0f = (q2*FAm + (Mbc-Mpsi)*(*a1f)-(Mbc+Mpsi)*(*a2f))/(2*Mpsi);    
+	*a0f = (q2*FAm + (Mbc+Mpsi)*(*a1f)-(Mbc-Mpsi)*(*a2f))/(2*Mpsi);    
 	return;
       }
       else if(whichfit == 2) {  // form factor set from  [Ebert, hep-ph/0306306] 
@@ -82,13 +82,13 @@ void EvtBCVFF::getvectorff(EvtId,EvtId,
 	double Mbc = 6.277, Mpsi=3.0967, Mpsi2S = 3.686, kappa = Mpsi/Mpsi2S; // Experimental values
 	double Mpole2 = 4.5*4.5, den=1./(1.-q2/Mpole2);
 	double FV = 0.11*den*kappa/3.1,
-	FAp = -0.071*den*kappa/4.9,
+	FAp = -0.074*den*kappa/4.9,
 	FA0 = 5.9*den*kappa/3.5,
 	FAm = 0.12*den*kappa/2.3;
-	*vf = (Mbc + Mpsi2S)*FV;
+	*vf = -(Mbc + Mpsi2S)*FV;
 	*a2f = -(Mbc+Mpsi2S)*FAp;
 	*a1f = FA0/(Mbc+Mpsi2S);
-	*a0f = (q2*FAm + (Mbc-Mpsi2S)*(*a1f)-(Mbc+Mpsi2S)*(*a2f))/(2*Mpsi2S);  
+	*a0f = (q2*FAm + (Mbc+Mpsi2S)*(*a1f)-(Mbc-Mpsi2S)*(*a2f))/(2*Mpsi2S);  
 	return;
       }
       else if(whichfit == 2) {
