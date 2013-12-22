@@ -23,6 +23,13 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v22r11> 2013-12-22 Bender v22r11 based on the DaVinci v33r9</A>
+
+It is very similar to to v22r10
+but is based on the DaVinci v33r0, 
+with few minor improments for standard bender scripts, 
+in particular support for list of tags (important for upgrade MC)
+
 <A NAME=v22r10> 2013-11-25 Bender v22r10 based on the DaVinci v33r8</A>
 
 It is very similar to to v22r9
