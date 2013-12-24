@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !2013-12-21 - Jack Wimberley
+ - Modified EvtBCVFF again; one of the corrections was incorrect
+
+!2013-12-21 - Jack Wimberley
  - Modified EvtBCVFF to correct the Kiselev form factors
 
 !========================== EvtGen v13r10 2013-11-21 ==========================

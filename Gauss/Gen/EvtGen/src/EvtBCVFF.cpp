@@ -62,7 +62,7 @@ void EvtBCVFF::getvectorff(EvtId,EvtId,
 	FAp = -0.074*den,
 	FA0 = 5.9*den,
 	FAm = 0.12*den;
-	*vf = -(Mbc + Mpsi)*FV;
+	*vf = (Mbc + Mpsi)*FV;
 	*a2f = -(Mbc+Mpsi)*FAp;
 	*a1f = FA0/(Mbc+Mpsi);
 	*a0f = (q2*FAm + (Mbc+Mpsi)*(*a1f)-(Mbc-Mpsi)*(*a2f))/(2*Mpsi);    
@@ -85,7 +85,7 @@ void EvtBCVFF::getvectorff(EvtId,EvtId,
 	FAp = -0.074*den*kappa/4.9,
 	FA0 = 5.9*den*kappa/3.5,
 	FAm = 0.12*den*kappa/2.3;
-	*vf = -(Mbc + Mpsi2S)*FV;
+	*vf = (Mbc + Mpsi2S)*FV;
 	*a2f = -(Mbc+Mpsi2S)*FAp;
 	*a1f = FA0/(Mbc+Mpsi2S);
 	*a0f = (q2*FAm + (Mbc+Mpsi2S)*(*a1f)-(Mbc-Mpsi2S)*(*a2f))/(2*Mpsi2S);  
