@@ -155,19 +155,19 @@ class Lb2XBuilder(object):
         self._makeLb2XicH()
 
         ### Xib- -> Xic0 H- (+WS)
-        #self._makeXib2Xic0H()
+        self._makeXib2Xic0H()
         ### Xib0 -> Xic+ D- (+WS)
-        #self._makeXib02XicD()
+        self._makeXib02XicD()
         ### Xib- -> Xic0 D- (+WS)
-        #self._makeXib2Xic0D()
+        self._makeXib2Xic0D()
         ### Xib0 -> Xic+ HHH- (+WS) (HHH = 3pi, Kpipi)
-        #self._makeXib02XicHHH()
+        self._makeXib02XicHHH()
         ###Xib- -> Xic0 HHH- (+WS) (HHH = 3pi, Kpipi)
-        #self._makeXib2Xic0HHH()
+        self._makeXib2Xic0HHH()
         ### Xb- -> Lc+ Ds- K-
-        #self._makeXib2LcDsK()
+        self._makeXib2LcDsK()
         ### Xb- -> Lc+ Ds- K- Pi+
-        #self._makeXib02LcDsKPi()
+        self._makeXib02LcDsKPi()
 
         # Sb+- -> D0(HH) p+-
         self._makeSb2D0P()
@@ -181,19 +181,19 @@ class Lb2XBuilder(object):
         self._makeLb2LcD()
 
         ### bc baryon -> Lc D0
-        #self._makeX2LcD0()
+        self._makeX2LcD0()
         ### bc baryon -> Lc D0 H (+WS)
-        #self._makeX2LcD0H()
+        self._makeX2LcD0H()
         ### bc baryon -> Xi_cc+ pi-
-        #self._makeX02XiccH()
+        self._makeX02XiccH()
         ### bc baryon -> Xi_cc++ pi-
-        #self._makeX2XiccH()
+        self._makeX2XiccH()
         ### Xib -> Lc H+H-, LcH-H- (+WS)
-        #self._makeX2LcHH()
+        self._makeX2LcHH()
         ### bc baryon -> Lc HHHH (+WS)
-        #self._makeX2LcKPiPiPi()
+        self._makeX2LcKPiPiPi()
         ### Xib,Omega_b -> Lc HH (+WS)
-        #self._makeXib2XicHH()
+        self._makeXib2XicHH()
         
         # Lb -> Lc D* (+WS)
         self._makeLb2LcDst()

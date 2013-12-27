@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2013-12-27 - S. Blusk
+ - Uncomment (remove #) for new lines
+
 ! 2013-12-20 - S. Blusk
  - Fix bugs in new b-baryon lines, add new ones
  - Increase M(Kpipi) mass cut to 4 GeV (from 3 GeV) & tighten PIDK (and PIDp) from -5 to -2 for HHH candidates)
