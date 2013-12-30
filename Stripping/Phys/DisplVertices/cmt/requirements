@@ -17,6 +17,7 @@ use DaVinciKernel       v* Phys
 use LoKiPhys            v* Phys
 use LoKiTracks          v* Phys
 use VeloDet             v* Det
+use TrackKernel         v* Tr
 
 # ============================================================================
 # Component library building rule
