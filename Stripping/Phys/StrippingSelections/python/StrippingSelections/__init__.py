@@ -198,6 +198,7 @@ import StrippingD2HHLTUnbiased
 import StrippingBu2hhh
 import StrippingZ02TauTau
 import StrippingX2D0D0
+import StrippingCC2DD
 import StrippingB2XTau
 
 import StrippingK0s2MuMuLines

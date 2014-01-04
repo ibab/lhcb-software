@@ -4,6 +4,15 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-03 - Lucio Anderlini (for Andrea Bizzeti)
+ - Added a draft for StrippingCC2DD.py. It includes the low momentum comb.:
+  . D0D0bar
+  . D0D0  &cc
+  . D+D-  
+  . D+D+  &cc
+  . D+D0  &cc
+  . D-D0  &cc
+
 ! 2013-12-27 - S. Blusk
  - Uncomment (remove #) for new lines
 
