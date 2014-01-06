@@ -13,12 +13,19 @@ __author__  = "Vanya BELYAEV <Ivan.Belyaev@nikhef.nl>"
 __version__ = "version $Revision$"
 # =============================================================================
 
-import GaudiPython
+try:
+    import cppyy
+except ImportError:
+    # FIXME: backward compatibility
+    print "# WARNING: using PyCintex as cppyy implementation"
+    import PyCintex as cppyy
+    import sys
+    sys.modules['cppyy'] = cppyy
 
 # namespaces shortcuts
-Decays = GaudiPython.gbl.Decays
-LHCb   = GaudiPython.gbl.LHCb
-std    = GaudiPython.gbl.std
+Decays = cppyy.gbl.Decays
+LHCb   = cppyy.gbl.LHCb
+std    = cppyy.gbl.std
 
 
 # =============================================================================

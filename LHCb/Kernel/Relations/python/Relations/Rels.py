@@ -12,9 +12,17 @@ __author__ = "Vanya BELYAEV <ibelyaev@physics.syr.edu>"
 
 
 import sys,os,os.path,datetime
-import GaudiPython
 
-GaudiPython.loaddict('RelationsDict')
+try:
+    import cppyy
+except ImportError:
+    # FIXME: backward compatibility
+    print "# WARNING: using PyCintex as cppyy implementation"
+    import PyCintex as cppyy
+    import sys
+    sys.modules['cppyy'] = cppyy
+
+cppyy.loadDict('RelationsDict')
 
 _gbl = GaudiPython.gbl
 

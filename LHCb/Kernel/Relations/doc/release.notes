@@ -4,6 +4,10 @@
 ! Purpose     : General purposes templated relations between classes
 !------------------------------------------------------------------------------
 
+! 2014-01-06 - Marco Clemencic
+ - Replaced import of GaudiPython with import of cppyy (to allow usage of the
+   modules in configuration files).
+
 ! 2013-11-07 - Marco Clemencic
  - Renamed the dummy class __Instantiations to _Instantiations (for ROOT 6).
 

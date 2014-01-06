@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
-import GaudiPython
-Math = GaudiPython.gbl.ROOT.Math
+try:
+    import cppyy
+except ImportError:
+    # FIXME: backward compatibility
+    print "# WARNING: using PyCintex as cppyy implementation"
+    import PyCintex as cppyy
+    import sys
+    sys.modules['cppyy'] = cppyy
+
+Math = cppyy.gbl.ROOT.Math
 
 try:
     from GaudiKernel import ROOT6WorkAroundEnabled
@@ -9,7 +17,7 @@ except ImportError:
     def ROOT6WorkAroundEnabled(id=None):
         return False
 if ROOT6WorkAroundEnabled('template-autoloading'):
-    GaudiPython.gbl.gSystem.Load('libLHCbMathDict')
+    cppyy.gbl.gSystem.Load('libLHCbMathDict')
 
 # neet to get this first so that all of the other stuff is understood!
 # seems to work since Transform3D isn't a templated class.
@@ -50,7 +58,7 @@ PtEtaPhiMVector  = Math.PtEtaPhiMVector # LorentzVector<PtEtaPhiM4D<double> >
 # Lorentz vectors (float)
 XYZTVectorF       = Math.XYZTVectorF    # LorentzVector<PxPyPzE4D<float> >
 #
-Line = GaudiPython.gbl.Gaudi.Math.Line
+Line = cppyy.gbl.Gaudi.Math.Line
 XYZLine        = Line(XYZPoint, XYZVector)
 Polar3DLine    = Line(Polar3DPoint, Polar3DVector)
 RhoEtaPhiLine  = Line(RhoEtaPhiPoint, RhoEtaPhiVector)
@@ -61,7 +69,7 @@ Polar3DLineF   = Line(Polar3DPointF, Polar3DVectorF)
 RhoEtaPhiLineF = Line(RhoEtaPhiPointF, RhoEtaPhiVectorF)
 RhoZPhiLineF   = Line(RhoZPhiPointF, RhoZPhiVectorF)
 #
-GeomFun = GaudiPython.gbl.Gaudi.Math.GF
+GeomFun = cppyy.gbl.Gaudi.Math.GF
 # this causes a seg fault in debug mode:
 #XYZGeomFun = GeomFun(XYZPoint, XYZLine, Plane3D)
 """

@@ -48,14 +48,21 @@ __all__     = (
     )
 # =============================================================================
 
-import GaudiPython
+try:
+    import cppyy
+except ImportError:
+    # FIXME: backward compatibility
+    print "# WARNING: using PyCintex as cppyy implementation"
+    import PyCintex as cppyy
+    import sys
+    sys.modules['cppyy'] = cppyy
 
 # namespaces shortcuts
-cpp   = GaudiPython.gbl
-std   = GaudiPython.gbl.std
-LoKi  = GaudiPython.gbl.LoKi
-LHCb  = GaudiPython.gbl.LHCb
-Gaudi = GaudiPython.gbl.Gaudi
+cpp   = cppyy.gbl
+std   = cppyy.gbl.std
+LoKi  = cppyy.gbl.LoKi
+LHCb  = cppyy.gbl.LHCb
+Gaudi = cppyy.gbl.Gaudi
 
 # =============================================================================
 if '__main__' == __name__ :

@@ -41,8 +41,8 @@ __version__ = "$Revision$"
 import LoKiCore.decorators as _LoKiCore
 
 ## needed since there is no autoloading of HepMC dictionaries:
-import GaudiPython
-GaudiPython.loaddict("HepMCRflx")
+from LoKiCore.basic import cppyy
+cppyy.loadDict("HepMCRflx")
 
 # Namespaces:
 cpp      = _LoKiCore.cpp
