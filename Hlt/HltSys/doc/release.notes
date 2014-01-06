@@ -5,9 +5,19 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
-! 2013-11-27 - Marco Cattaneo
- - Update hltsys.configurables test to follow removal of RecoUpgrade and
-   RecoUpgradeMC packages from Rec project'
+</PRE><H1><A NAME=v21r0>2014-01-06 HltSys v21r0</A></H1><PRE>
+Moore/HLT LS1 development version, LHCb stack. Depends on Rec v15r4 via Phys v17r4. Based on Gaudi v24r2. Aimed to fit the needs of the January 2014 commissioning week.
+
+This is the last Moore release which will be compatible with slc6/gcc46. All future stacks will be on slc6 gcc48 only.
+
+Several repackaging changes in the underlying stack. Two important changes here are:
+- GaudiStringKey, IANSvc now uses GaudiStringKey to speed up configuration (hopefully). see task #48818
+- DecoderDB, we now pick up where to decode what and with what from the standard decoder DB, see task #19106
+
+Both require new LHCb features, and so all dependent packages have had their major versions incremented.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v21r0
 
 </PRE><H1><A NAME=v20r4>2013-10-09 HltSys v20r4</A></H1><PRE>
 Moore/HLT LS1 development version. LHCb v36r2 stack. Depends on Rec v15r2 via Phys v17r2. Based on Gaudi v23r10.
