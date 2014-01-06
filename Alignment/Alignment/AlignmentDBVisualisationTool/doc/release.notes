@@ -3,6 +3,7 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+!========================= AlignmentDBVisualisationTool v1r1 2014-01-06 =========================
 ! 2013-11-13 - Pieter David
  - use localised (UTC) datetime objects everywhere
  - make plotAlignTrends timezone-aware (CERN local time everywhere)
