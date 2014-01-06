@@ -4,6 +4,9 @@
 ! Purpose     : utilities for managing and querying Trigger Configuration Keys,
 !               and the underlying information
 !-----------------------------------------------------------------------------
+
+
+!========================= TCKUtils v1r12p2 2014-01-06 =========================
 ! 2013-10-12 - Gerhard Raven
  - better 'copy' command
 
