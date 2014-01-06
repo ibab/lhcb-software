@@ -4,6 +4,7 @@
 ! Purpose     : Package for making fits to 2D histograms (mass vs. VARIABLE)
 !-----------------------------------------------------------------------------
 
+!========================= MassMonitor v1r1 2014-01-06 =========================
 ! 2013-11-06 - Jack Wimberley
 - Added complete support for J/psi, psi(2S), Ups(1S), D0
 - Partial support for Z0, barring numerical problems in RooFFTConvPdf that add a bias
