@@ -80,7 +80,6 @@ class Brunel(LHCbConfigurableUser):
        ,"RawBanksToKill"  : None
        ,"VetoHltErrorEvents" : True
        ,"Detectors"       : ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
-       ,"UpgradeDets"     : []
        ,"SplitRawEventInput" : None #Where the raw event sits on the input
        ,"SplitRawEventOutput" : 2.0 #how to split the raw event
         # only use for Online running
@@ -123,7 +122,6 @@ class Brunel(LHCbConfigurableUser):
        ,'RawBanksToKill':""" Raw banks to remove from RawEvent before processing. Removed also from DST copy of RawEvent """
        ,"VetoHltErrorEvents" : """Do not reconstruct events that have been flagged as error by Hlt"""
        ,"Detectors"    : """List of detectors""" 
-       ,"UpgradeDets"  : """List of Upgrade detectors"""
        , "SplitRawEventInput" : "How is the even split up in the input? Default 'None' doesn't reset any locations. Other values propagate to RawEventJuggler() and DecodeRawEvent()."
        , "SplitRawEventOutput" : "How to split the raw event up, versions are defined in the RawEventFormat DB, and RawEventCompat/RawEventJuggler is used for the splitting, default 2.0 the split type for Reco14/Stripping20-style DSTs"
         # only use for Online running
@@ -148,14 +146,7 @@ class Brunel(LHCbConfigurableUser):
                     
 
         # Delegate handling to LHCbApp configurable
-        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","Simulation"])
-
-        # Set list of detectors in LHCbApp
-        if hasattr(LHCbApp(), "Detectors"):
-            LHCbApp().setProp("Detectors", self.getProp("Detectors"))
-            self.setProp("UpgradeDets", LHCbApp().upgradeDetectors())
-
-       
+        self.setOtherProps(LHCbApp(),["DataType","CondDBtag","DDDBtag","Simulation","Detectors"])
 
         # Set list of detectors in DstConf
         dstConfDetList = []

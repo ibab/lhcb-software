@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to Configuration.py
+  . Remove never used UpgradeDets slot
+  . Clean up propagation to LHCbApp of Detectors slot
+
 - Changes to QMTests
   . repro2013-pa test now sets Brunel().SpecialData += ['pA'] instead of
     explicitly setting the Reco14r1 GECs
