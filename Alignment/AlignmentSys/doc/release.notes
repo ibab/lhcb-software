@@ -7,6 +7,23 @@ Purpose: LHCb Alignment packages.
          components.
 
 </PRE><H1><A NAME=v9r1>2013-01-14 AlignmentSys v9r1</A></H1><PRE>
+Depends on: Rec v15r4, Phys v17r4. For 2012 data.
+
+Miscellaneous changes to keep up with the latest stack, the last stack which will be released on slc5 gcc46, underlying stack has changed significantly lot since the previous release, but not in a way which directly affects the alignment procedures themselves.
+
+This is the first version to pick up Lbcom through the stack, rather than directly. 
+This version also adds the functionality of the DecoderDB, see task #19106
+
+New package:
+ . MassMonitor, Package for making fits to 2D histograms (mass vs. VARIABLE)
+
+Added temporarily:
+ . Tr/TrackUtils v1r54, to fix alignment segfaults from upgrade detectors accidentally added into the sequence.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Alignment&version=v9r2
+
+</PRE><H1><A NAME=v9r1>2013-01-14 AlignmentSys v9r1</A></H1><PRE>
 Depends on: Lbcom v13r3, Rec v14r3, Phys v16r3. For 2012 data.
 
 Latest changes to pick up the most recent Rec release.
