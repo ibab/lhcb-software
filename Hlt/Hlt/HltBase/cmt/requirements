@@ -3,7 +3,7 @@
 # Maintainer : Gerhard Raven
 #============================================================================
 package           HltBase
-version           v12r3p2
+version           v13r0
 
 # Structure, i.e. directories to process. 
 #============================================================================

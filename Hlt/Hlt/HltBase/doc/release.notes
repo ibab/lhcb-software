@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================= HltBase v13r0 2014-01-06 =========================
 ! 2013-12-06 - Rob Lambert
  - Adapt to change in IANSvc, Gaudi::StringKey, see task #48818
 
