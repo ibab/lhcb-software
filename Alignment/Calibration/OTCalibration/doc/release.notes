@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+!========================= OTCalibration v1r6 2014-01-06 =========================
 ! 2013-11-15 - Marco Clemencic
  - Removed unneeded include of a deprecated header (TFitterMinuit.h).
 
