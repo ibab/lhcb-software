@@ -4,6 +4,7 @@ Package Coordinator : Wouter Hulsbergen
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+!========================= AlignTrTools v4r12 2014-01-06 =========================
 ! 2013-07-30 - Maurizio Martinelli
  - solved a compilation error with gcc4.7
 
