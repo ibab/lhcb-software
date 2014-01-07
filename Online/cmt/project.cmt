@@ -1,0 +1,7 @@
+project ONLINE
+
+use GAUDI GAUDI_v24r2
+
+build_strategy with_installarea
+setup_strategy root
+container OnlineSys
