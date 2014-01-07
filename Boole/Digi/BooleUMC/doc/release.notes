@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-01-07 - Marco Cattaneo
+ - Removed BuildMCTrackInfoUpgrade, moved to Digi/DigiAlg and renamed
+   BuildMCTrackInfo, to replace old version not supporting upgrade detectors
+
+! 2014-01-07 - Marco Cattaneo
  - Remove obsolete algorithm BuildMCTrackWithVPInfo, use BuildMCTrackInfoUpgrade
    instead 
 
