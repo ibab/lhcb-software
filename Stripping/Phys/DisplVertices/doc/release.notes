@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2014-01-07 - Marco Clemencic
+ - Fixed CMake configuration.
+
 ! 2013-12-30 - Wouter Hulsbergen
  - Added TrackUniqueSegmentSelector
 
