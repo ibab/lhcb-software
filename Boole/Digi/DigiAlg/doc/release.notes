@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-01-07 - Marco Cattaneo
+ - Replaced BuildMCTrackInfo with version that also supports upgrade detectors,
+   previously in Digi/BooleUMC as BuildMCTrackInfoUpgrade
+
 !========================= DigiAlg v4r23 2012-12-12 =========================
 ! 2012-12-11 - Marco Clemencic
  - Added CMake configuration file.

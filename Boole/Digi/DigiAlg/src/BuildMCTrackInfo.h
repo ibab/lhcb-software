@@ -1,4 +1,3 @@
-// $Id: BuildMCTrackInfo.h,v 1.4 2007-04-30 08:27:10 mneedham Exp $
 #ifndef BUILDMCTRACKINFO_H 
 #define BUILDMCTRACKINFO_H 1
 
@@ -9,14 +8,16 @@
 #include "Event/MCTrackInfo.h"
 
 class DeVelo;
+class DeVP;
 class DeSTDetector;
-class DeOTStation;
+class DeOTDetector;
+class DeFTDetector;
 
 /** @class BuildMCTrackInfo BuildMCTrackInfo.h
  *  Build the Reconstructable MCProperty table.
  *
  *  @author Olivier Callot
- *  @date   2004-01-08
+ *  @date   2012-04-02 : Updated version for upgrade: IT, OT and FT optional, Pixel/normal Velo
  */
 class BuildMCTrackInfo : public GaudiAlgorithm {
 public: 
@@ -27,7 +28,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 
@@ -68,16 +68,31 @@ protected:
   
   void computeAcceptance ( std::vector<int>& station ) ;
 
+  ///< method for sorting the VP clusters. Should be in the VPCluster class!
+  struct increasingModule {
+     bool operator() ( LHCb::VPCluster* clust1, LHCb::VPCluster* clust2 ) const{
+       return clust1->channelID().module() < clust2->channelID().module();
+     }
+  };
+
 private:
+  bool m_withVelo;
+  bool m_withVL;
+  bool m_withVP;
+  bool m_withUT;
+  bool m_withIT;
+  bool m_withOT;
+  bool m_withFT;
+
   DeVelo*       m_velo;
+  DeVL*         m_vlDet;
+  DeVP*         m_vpDet;
 
   DeSTDetector* m_ttDet;
   DeSTDetector* m_itDet;
-
-  // OT Detector information
   DeOTDetector* m_otDet;
-  
-  bool m_utForTT; // UT for TT detector in upgrade
-  std::string m_ttLocation;
+  DeFTDetector* m_ftDet;
+  std::string   m_ttClustersName;
+  std::string   m_ttHitsName;
 };
 #endif // BUILDMCTRACKINFO_H
