@@ -7,6 +7,9 @@ Purpose: LHCb Digitization program
    . Changed import of utDigi.opts to utDigi.py
    . import ttDigi.py and itDigi.py rather than their .opts equivalents 
    . line added to stop RichMaPmt from digitising spillover hits
+   . Follow renaming of BuildMCTrackInfoUpgrade to replace old version of
+     BuildMCTrackInfo. Now the same algorithm is used for both current and
+     upgrade detector configurations
 
 - Changes to references to follow changes in underlying packages
 	. Made FT cluster cuts more intuitive and changed values accordingly
