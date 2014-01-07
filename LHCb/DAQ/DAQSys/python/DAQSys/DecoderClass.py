@@ -371,7 +371,8 @@ class Decoder(object):
                     self.__setprop__(thedecoder,prop, self.Inputs[prop])
         if not onlyInputs:
             for prop in self.Properties:
-                self.__setprop__(thedecoder,prop, self.Properties[prop])
+                if self.Properties[prop] is not None:
+                    self.__setprop__(thedecoder,prop, self.Properties[prop])
             if type(self.Outputs) is dict:
                 for prop in self.Outputs:
                     if self.Outputs[prop] is not None:

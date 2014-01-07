@@ -240,37 +240,36 @@ Decoder("L0DUFromRawTool",
 
 #TRIGGER ==========HLT===========
 
-dec=Decoder("HltSelReportsDecoder",
-        active=True, banks=["HltSelReports"],
-        inputs=["Trigger/RawEvent","DAQ/RawEvent"],
-        #currently cannot be configured, it's a list not present in constructor
-        outputs={"OutputHltSelReportsLocation":None},
-        conf=DecoderDB)
+#firstly the Dec/Sel/Vertex reports,
+#these need separate versions for Hlt1/2 split scenario,
+#decoding into different locations
 
-#split Hlt1/2 scenario
-dec2=dec.clone(dec.FullName+"/Hlt2SelReportsDecoder")
-dec2.overrideOutputs({"OutputHltSelReportsLocation":"Hlt2/SelReports"})
+#create them all in a similar way, since they have similar options
+#for each decoder we have an HLT1, HLT2 and combined version.
+#Decoders look like "Hlt(''/1/2)(Sel/Dec/Vertex)ReportsDecoder"
 
-dec=Decoder("HltDecReportsDecoder",
-        active=True, banks=["HltDecReports"],
-        inputs=["Trigger/RawEvent","DAQ/RawEvent"],
-        #currently cannot be configured, it's a list not present in constructor
-        outputs={"OutputHltDecReportsLocation":None},
-        conf=DecoderDB)
-
-#split Hlt1/2 scenario
-dec1=dec.clone(dec.FullName+"/Hlt1DecReportsDecoder")
-dec1.overrideOutputs({"OutputHltDecReportsLocation":"Hlt1/DecReports"})
-
-dec2=dec.clone(dec.FullName+"/Hlt2DecReportsDecoder")
-dec2.overrideOutputs({"OutputHltDecReportsLocation":"Hlt2/DecReports"})
-
-Decoder("HltVertexReportsDecoder",
-        active=True, banks=["HltVertexReports"],
-        inputs=["Trigger/RawEvent","DAQ/RawEvent"],
-        #currently cannot be configured properly, it's a list not present in constructor
-        outputs={"OutputHltVertexReportsLocation":None},
-        conf=DecoderDB)
+#report, the type of report
+for report in ["Dec","Sel","Vertex"]:
+    #hlt, which HLT to decode? None=both, 1=Hlt1, 2=Hlt2
+    for hlt in [None,1,2]:
+        hltname="Hlt"
+        if hlt is not None:
+            hltname=hltname+str(hlt)
+        #create the decoder
+        dec=Decoder(
+            #\/ e.g. HltSelReportsDecoder/Hlt1SelReportsDecoder
+            "Hlt"+report+"ReportsDecoder/"+hltname+report+"ReportsDecoder",
+            active=True,
+            #\/ e.g. HltSelReports
+            banks=["Hlt"+report+"Reports"],
+            inputs=["Trigger/RawEvent","DAQ/RawEvent"],
+            #/\ inputs currently cannot be configured,
+            #it's a list not present in constructor :S
+            #\/ e.g. OutputHltSelReportsLocation: Hlt1/SelReports
+            outputs={"OutputHlt"+report+"ReportsLocation" : hltname+"/"+report+"Reports"},
+            properties={"SourceID" : hlt}, #None=default(0)
+            conf=DecoderDB
+            )
 
 #is a Routing bits filter really a decoder? it doesn't create output...
 Decoder("HltRoutingBitsFilter",
