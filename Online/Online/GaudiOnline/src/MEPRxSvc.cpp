@@ -725,10 +725,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc) :
     m_trashCan = new u_int8_t[MAX_R_PACKET];
     m_expectOdin = false;
     m_overflowActive = false;
-    m_mepRQCommand = new MEPRQCommand(this, msgSvc(), RTL::processName());
-    m_clearMonCommand = new ClearMonCommand(this, msgSvc(), RTL::processName());
-    m_upMonCommand = new UpMonCommand(this, msgSvc(), RTL::processName());
-    m_setOverflowCmd = 0;
+
     m_runNumber = 0; // when this becomes a problem I have hopefully something more interesting to do...
     m_tLastAdded = 0; // us
     m_tLastRx = 0; // us
@@ -738,10 +735,7 @@ MEPRxSvc::MEPRxSvc(const std::string& nam, ISvcLocator* svc) :
 MEPRxSvc::~MEPRxSvc()
 {
     delete[] (u_int8_t*) m_trashCan;
-    delete m_mepRQCommand;
-    delete m_clearMonCommand;
-    delete m_upMonCommand;
-    //  delete m_setOverflowCmd;
+    
 }
 
 void MEPRxSvc::truncatedPkt(RTL::IPHeader *iphdr)
@@ -1429,6 +1423,10 @@ StatusCode MEPRxSvc::initialize()
         m_incidentSvc->addListener(this, "DAQ_CANCEL");
         m_incidentSvc->addListener(this, "DAQ_ENABLE");
     }
+    
+    m_mepRQCommand = new MEPRQCommand(this, msgSvc(), RTL::processName());
+    m_clearMonCommand = new ClearMonCommand(this, msgSvc(), RTL::processName());
+    m_upMonCommand = new UpMonCommand(this, msgSvc(), RTL::processName());
     m_setOverflowCmd = new SetOverflowCmd(this, msgSvc(), RTL::processName());
     if (service("MonitorSvc", m_monSvc).isSuccess()) {
         if (setupCounters()) {
@@ -1465,6 +1463,23 @@ StatusCode MEPRxSvc::finalize()
 {
     MsgStream log(msgSvc(), "MEPRx");
     log << MSG::INFO << "Entering finalize....." << endmsg;
+    
+    if (m_mepRQCommand) {
+      delete m_mepRQCommand;
+      m_mepRQCommand = 0;
+    }
+    if (m_upMonCommand) {
+      delete m_upMonCommand;
+      m_upMonCommand = 0;
+    }
+    if (m_clearMonCommand) {
+      delete m_clearMonCommand;
+      m_clearMonCommand = 0;
+    }
+    if (m_setOverflowCmd) {
+        delete m_setOverflowCmd;
+        m_setOverflowCmd = 0;
+    }
     releaseRx();
     if (m_incidentSvc) {
         m_incidentSvc->removeListener(this);
@@ -1475,10 +1490,6 @@ StatusCode MEPRxSvc::finalize()
         m_monSvc->undeclareAll(this);
         m_monSvc->release();
         m_monSvc = 0;
-    }
-    if (m_setOverflowCmd != 0) {
-        delete m_setOverflowCmd;
-        m_setOverflowCmd = 0;
     }
     if (m_histSvc)
         m_histSvc->release();
