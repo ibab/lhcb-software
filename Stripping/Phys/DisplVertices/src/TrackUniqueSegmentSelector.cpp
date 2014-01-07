@@ -141,7 +141,7 @@ namespace {
   class TrackData : public LHCb::TrackCloneData 
   {
   public:
-    TrackData(const LHCb::Track& track) : LHCb::TrackCloneData(track)
+    TrackData(const LHCb::Track& track, size_t index) : LHCb::TrackCloneData(track)
     {
       // the sorting criteria is based on track type, number of hits
       // and chi2/dof, just like in trackclonecleaner. I am not sure
@@ -153,8 +153,11 @@ namespace {
       m_weightFromType = weightFromType[track.type()] ;
       m_weightFromHits = track.nDoF() - track.chi2() ;
       m_flaggedByCloneCleaner = track.info(LHCb::Track::CloneDist,-1) > 0 ? 1 : 0 ;
+      m_index = index ;
     }
     double weightFromHits() const { return m_weightFromHits ; }
+    
+    size_t index() const { return m_index ; }
 
     // this routine should actually be in base class
     size_t nHits( HitType type ) const { return lhcbIDs(type).size() ; }
@@ -186,6 +189,7 @@ namespace {
     int m_weightFromType ;
     int m_flaggedByCloneCleaner ;
     double m_weightFromHits ;
+    size_t m_index ;
   } ;
 
   struct TrackDataSorter {
@@ -200,27 +204,26 @@ namespace {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode TrackUniqueSegmentSelector::flagClones(const LHCb::Track::Range& tracks,
+StatusCode TrackUniqueSegmentSelector::flagClones( const LHCb::Track::Range& tracks,
 						  std::vector<bool>& isclone) const
 {  
   // initialize all values to false
+  size_t N = tracks.size() ;
   isclone.resize(0) ;
-  isclone.resize( tracks.size(), false ) ;
-
-
+  isclone.resize(N, false ) ;
+  
   if ( m_debugLevel ) debug() << "==> Execute" << endmsg;
   
   // we don't want dynamic memory allocation as it is expensive.
-  std::vector<TrackData> alltracksstore ;
-  alltracksstore.reserve( tracks.size() ) ;
-  for( LHCb::Track::Range::const_iterator itr = tracks.begin() ;
-       itr != tracks.end(); ++itr )
-    alltracksstore.push_back( TrackData(**itr) );
+  std::vector<TrackData> alltracksstore ; alltracksstore.reserve(N) ;
+  size_t i(0) ;
+  for( LHCb::Track::Range::const_iterator it = tracks.begin() ; 
+       it != tracks.end() ; ++it,++i )
+    alltracksstore.push_back(TrackData(**it,i)) ;
   
   // create vector of pointers and sort it
-  int N = alltracksstore.size() ;
   std::vector<TrackData*> alltracks(N) ;
-  for(int i=0; i<N; ++i) alltracks[i] = &(alltracksstore[i]) ;
+  for(size_t i=0; i<N; ++i) alltracks[i] = &(alltracksstore[i]) ;
   std::stable_sort( alltracks.begin(), alltracks.end(), TrackDataSorter() ) ;
   
   // loop over all tracks and add them to output container if they
@@ -229,12 +232,12 @@ StatusCode TrackUniqueSegmentSelector::flagClones(const LHCb::Track::Range& trac
   selectedtracks.reserve( alltracks.size() ) ;
   for( std::vector<TrackData*>::const_iterator it = alltracks.begin() ; 
        it != alltracks.end() ; ++it ) {
-    // if( m_debugLevel)
-    //   verbose() << "processing track: " 
-    //   		<< (*it)->track().type() << " " << (*it)->lhcbIDs(TrackData::VeloPhi).size() << " " 
-    //  		<< (*it)->lhcbIDs(TrackData::VeloR).size() << " "
-    //  		<< (*it)->weightFromHits() << " "
-    //   		<< (*it)->track().info(LHCb::Track::CloneDist,-1) << endreq ;
+    // std::cout << "processing track: " 
+    // 	      << (*it)->track().type() << " " << (*it)->lhcbIDs(TrackData::VeloPhi).size() << " " 
+    // 	      << (*it)->lhcbIDs(TrackData::VeloR).size() << " "
+    // 	      << (*it)->weightFromHits() << " "
+    // 	      << (*it)->track().info(LHCb::Track::CloneDist,-1) << std::endl ;
+    
     bool found(false) ;
     bool iHasVelo = (*it)->nHits(TrackData::VeloR) >0 ;
     for( std::vector<TrackData*>::const_iterator jt(selectedtracks.begin()), jend(selectedtracks.end()); 
@@ -317,7 +320,7 @@ StatusCode TrackUniqueSegmentSelector::flagClones(const LHCb::Track::Range& trac
     }
     if(!found) selectedtracks.push_back( *it ) ;
     else {
-      isclone[ it - alltracks.begin() ] = true ;
+      isclone[ (*it)->index() ] = true ;
     }
   }
   
