@@ -20,9 +20,9 @@ class Boole(LHCbConfigurableUser):
     
     __slots__ = {
         "DetectorInit": {"DATA":['Data'],"MUON":['Muon']}
-        ,"DetectorDigi": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'L0']
+        ,"DetectorDigi": ['PuVeto', 'Velo', 'TT', 'IT', 'OT',       'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'L0']
         ,"DetectorLink": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'L0']
-        ,"DetectorMoni": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Tr', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'L0', 'MC']
+        ,"DetectorMoni": ['PuVeto', 'Velo', 'TT', 'IT', 'OT',       'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'L0', 'MC']
         ,"EvtMax"              : -1
         ,"SkipEvents"          : 0
         ,"UseSpillover"        : False
@@ -207,25 +207,11 @@ class Boole(LHCbConfigurableUser):
                     detListMoni += ['Calo']
                 
         if False:
-            if 'Prs' in self.getProp("DetectorDigi") :
-                detListDigi += ['Prs']
-                if 'Prs' in self.getProp('DetectorLink') : detListLink += ['Prs']
-                if 'Prs' in self.getProp('DetectorMoni') : detListMoni += ['Prs']
-
-            if 'Spd' in self.getProp("DetectorDigi") :
-                detListDigi += ['Spd']
-                if 'Spd' in self.getProp('DetectorLink') : detListLink += ['Spd']
-                if 'Spd' in self.getProp('DetectorMoni') : detListMoni += ['Spd']
-
-            if 'Ecal' in self.getProp("DetectorDigi") :
-                detListDigi += ['Ecal']
-                if 'Ecal' in self.getProp('DetectorLink') : detListLink += ['Ecal']
-                if 'Ecal' in self.getProp('DetectorMoni') : detListMoni += ['Ecal']
-
-            if 'Hcal' in self.getProp("DetectorDigi") :
-                detListDigi += ['Hcal']
-                if 'Hcal' in self.getProp('DetectorLink') : detListLink += ['Hcal']
-                if 'Hcal' in self.getProp('DetectorMoni') : detListMoni += ['Hcal']
+            for det in ['Prs', 'Spd', 'Ecal', 'Hcal']:
+                if det in self.getProp('DetectorDigi') :
+                    detListDigi += [det]
+                    if det in self.getProp('DetectorLink') : detListLink += [det]
+                    if det in self.getProp('DetectorMoni') : detListMoni += [det]
             
         if 'Muon' in self.getProp('DetectorInit')['MUON'] : detListInit += ['Muon']
         if 'Muon' in self.getProp('DetectorDigi') :
@@ -235,15 +221,20 @@ class Boole(LHCbConfigurableUser):
 
         if self.getProp("EnableL0"):
             if 'L0' in self.getProp('DetectorDigi') :
-                detListDigi += ['L0']        
+                detListDigi += ['L0']
                 if 'L0' in self.getProp('DetectorLink') : detListLink += ['L0']
                 if 'L0' in self.getProp('DetectorMoni') : detListMoni += ['L0']
 
         if 'MC' in self.getProp('DetectorMoni') : detListMoni += ['MC']
 
+        # Add requested linkers to Digi output
         for det in detListLink:
             self.__detLinkListDigiConf.append(det)
 
+        # Now that requested linkers are saved, add any additional linkers needed for monitoring
+        for det in ['Velo', 'VP', 'VL', 'TT', 'UT', 'IT', 'OT', 'FT', 'Calo']:
+            if not (det in detListLink) and (det in detListMoni): 
+                detListLink += [det]
 
         initDets   = self._setupPhase( "Init",   detListInit )
         digiDets   = self._setupPhase( "Digi",   detListDigi )
@@ -614,7 +605,7 @@ class Boole(LHCbConfigurableUser):
 
         doWriteTruth = ("DIGI" in self.getProp("Outputs")) and (self.getProp("DigiType").capitalize() != "Minimal")
 
-        if "Velo" in linkDets or "Velo" in moniDets:
+        if "Velo" in linkDets:
             seq = GaudiSequencer("LinkVeloSeq")
             from Configurables import DecodeVeloRawBuffer
             decodeVelo = DecodeVeloRawBuffer()
@@ -625,40 +616,36 @@ class Boole(LHCbConfigurableUser):
             seq.Members += [ "VeloCluster2MCHitLinker" ]
             seq.Members += [ "VeloCluster2MCParticleLinker" ]
 
-        if "VP" in linkDets or "VP" in moniDets:
+        if "VP" in linkDets:
             from Configurables import VPDigitLinker, VPClusterLinker
             seq = GaudiSequencer("LinkVPSeq")
             seq.Members += [VPDigitLinker()]
             seq.Members += [VPClusterLinker()]
 
-        if "VL" in linkDets or "VL" in moniDets:
+        if "VL" in linkDets:
             seq = GaudiSequencer("LinkVLSeq")
 
-        if (
-            ( det for det in ["TT", "IT", "UT"] if det in linkDets)
-            or
-            ( det for det in ["TT", "IT", "UT"] if det in moniDets)
-             ):
+        if (det for det in ["TT", "IT", "UT"] if det in linkDets):
             from Configurables import STDigit2MCHitLinker, STCluster2MCHitLinker, STCluster2MCParticleLinker
-            if "TT" in linkDets or "TT" in moniDets:
+            if "TT" in linkDets:
                 seq = GaudiSequencer("LinkTTSeq")
                 seq.Members += [ STDigit2MCHitLinker("TTDigitLinker") ]
                 seq.Members += [ STCluster2MCHitLinker("TTClusterLinker") ]
                 seq.Members += [ STCluster2MCParticleLinker("TTTruthLinker") ]
 
-            if "UT" in linkDets or "UT" in moniDets:
+            if "UT" in linkDets:
                 seq = GaudiSequencer("LinkUTSeq")
                 seq.Members += [ STDigit2MCHitLinker("UTDigitLinker", DetType = "UT") ]
                 seq.Members += [ STCluster2MCHitLinker("UTClusterLinker", DetType = "UT") ]
                 seq.Members += [ STCluster2MCParticleLinker("UTTruthLinker", DetType = "UT") ]
 
-            if "IT" in linkDets or "IT" in moniDets:
+            if "IT" in linkDets:
                 seq = GaudiSequencer("LinkITSeq")
                 seq.Members += [ STDigit2MCHitLinker("ITDigitLinker", DetType   = "IT") ]
                 seq.Members += [ STCluster2MCHitLinker("ITClusterLinker", DetType   = "IT") ]
                 seq.Members += [ STCluster2MCParticleLinker("ITTruthLinker", DetType   = "IT") ]
 
-        if "OT" in linkDets or "OT" in moniDets or "Tr" in linkDets:
+        if "OT" in linkDets:
             seq = GaudiSequencer("LinkOTSeq")
             seq.Members += [ "OTMCDepositLinker" ]
             seq.Members += [ "OTMCHitLinker" ]
@@ -667,7 +654,6 @@ class Boole(LHCbConfigurableUser):
         if "Tr" in linkDets and doWriteTruth:
             from Configurables import BuildMCTrackInfo           
             seq = GaudiSequencer("LinkTrSeq")
-            # eventually, BuildMCTrackInfoUpgrade should replace BuildMCTrackInfo algorithm
             buildMCTrackInfo = BuildMCTrackInfo()
             seq.Members += [ buildMCTrackInfo ]                
             
@@ -677,11 +663,15 @@ class Boole(LHCbConfigurableUser):
                 buildMCTrackInfo.WithVP = True
             elif "VL" in linkDets:
                 buildMCTrackInfo.WithVL = True
+            else:
+                raise RuntimeError("Need one of Velo, VP or VL to build MCTrackInfo")
                 
             if "UT" in linkDets:
                 buildMCTrackInfo.WithUT = True
+            elif "TT" in linkDets:
+                buildMCTrackInfo.WithUT = False
             else:
-                buildMCTrackInfo.WithUT = False # TT case
+                raise RuntimeError("Need one of TT or UT to build MCTrackInfo")
                 
             if "FT" in linkDets:
                 buildMCTrackInfo.WithFT = True
@@ -690,6 +680,9 @@ class Boole(LHCbConfigurableUser):
             if "OT" in linkDets:
                 buildMCTrackInfo.WithOT = True
 
+            if not (self.getProp("DataType") == "Upgrade") :
+                if not("IT" in linkDets) and not ("OT" in linkDets):
+                    raise RuntimeError("Need both IT and OT to build MCTrackInfo in non upgrade case")
 
         #if "Rich" in linkDets and doWriteTruth:
         if [det for det in linkDets if det in ["Rich1","Rich2","Rich"]] and doWriteTruth:
@@ -700,11 +693,7 @@ class Boole(LHCbConfigurableUser):
             seq = GaudiSequencer("LinkRichSeq")
             seq.Members += [ "Rich::MC::MCRichDigitSummaryAlg" ]
 
-        if (
-            ("Calo" in linkDets)
-            or
-            ("Calo" in moniDets)
-            ):
+        if "Calo" in linkDets:
             from Configurables import CaloDigitsFromRaw, CaloEnergyFromRaw, CaloReCreateMCLinks, CaloDigitMCTruth
             seq = GaudiSequencer("LinkCaloSeq")
             ecalDecoder = CaloDigitsFromRaw("EcalFromRaw")
