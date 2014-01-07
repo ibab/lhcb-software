@@ -6,6 +6,9 @@
 ! or using makedoc script in this folder
 !
 
+! 2014-01-07 - Marco Clemencic
+ - Added CMakeLists.txt.
+
 ! 20130826
 - remove compilation warnings under clang 
 

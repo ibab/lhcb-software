@@ -1,6 +1,9 @@
 ! Package     : InsertDB
 ! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
 
+! 2014-01-07 - Marco Clemencic
+ - Added CMakeLists.txt.
+
 ! 2010-06-08 - Johannes Albrecht
  - major rewriting started, to be continued
 

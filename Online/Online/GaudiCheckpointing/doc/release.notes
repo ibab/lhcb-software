@@ -1,6 +1,9 @@
 Package: GaudiCheckpointing
 Author:  Markus Frank
 
+! 2014-01-07 - Marco Clemencic
+ - Added CMakeLists.txt.
+
 ! 2013-10-09 - Marco Clemencic
  - Removed circular dependency in the requirements file.
 

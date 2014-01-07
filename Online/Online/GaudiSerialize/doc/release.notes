@@ -1,6 +1,9 @@
  Package: GaudiSerialize
  Package Manager: Albert Puig
 
+! 2014-01-07 - Marco Clemencic
+ - Added CMakeLists.txt.
+
 ! 2013-09-10 - Marco Clemencic
  - Use GAUDI_VERSION.h instead of a define on the command line.
 

@@ -1,0 +1,22 @@
+################################################################################
+# Package: Checkpointing
+################################################################################
+gaudi_subdir(Checkpointing v0r14)
+
+# this package works only on 64 bits platforms
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+  gaudi_add_library(Checkpointing aux/Image.cpp
+                    PUBLIC_HEADERS Checkpointing
+                    LINK_LIBRARIES ${CMAKE_DL_LIBS} -pthread)
+  set_property(TARGET Checkpointing APPEND PROPERTY COMPILE_FLAGS " -g -O0")
+  set_property(TARGET Checkpointing APPEND PROPERTY LINK_FLAGS " -g -O0")
+
+  gaudi_add_library(Chkpt         src/*.cpp
+                    NO_PUBLIC_HEADERS
+                    LINK_LIBRARIES ${CMAKE_DL_LIBS})
+
+  gaudi_add_executable(restore aux/main.cpp
+                       LINK_LIBRARIES Checkpointing)
+
+  gaudi_add_test(QMTest QMTEST)
+endif()

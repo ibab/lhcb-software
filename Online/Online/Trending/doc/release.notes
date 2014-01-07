@@ -4,6 +4,9 @@
 ! Purpose     : Provide tools for fast trending in C++
 !-----------------------------------------------------------------------------
 
+! 2014-01-07 - Marco Clemencic
+ - Added CMakeLists.txt.
+
 ! 2013-10-09 - Marco Clemencic
  - Use the Gaudi::PluginService instead of the Reflex one.
 

@@ -4,6 +4,9 @@
 ! Purpose     : Produce an HTML file every day with a summary of the run
 !-----------------------------------------------------------------------------
 
+! 2014-01-07 - Marco Clemencic
+ - Added CMakeLists.txt.
+
 !============================== 2012-01-10 v1r2 ==============================
 ! 2011-09-26 - Olivier Callot
  - Add 'piquet report' entries from HLT Trigger logbook

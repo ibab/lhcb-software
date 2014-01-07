@@ -3,6 +3,9 @@
 ! Responsible : Eric.van.Herwijnen@cern.ch
 !--------------------------------------------------------------------------
 
+! 2014-01-07 - Marco Clemencic
+ - Added CMakeLists.txt.
+
 ! 2011-03-28 - Beat Jost, Markus Frank
 
 To properly configure the new MonitorSvc for processes running in the

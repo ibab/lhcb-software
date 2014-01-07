@@ -1,6 +1,9 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2014-01-07 - Marco Clemencic
+ - Added CMakeLists.txt.
+
 ! 2010-09-10 Marco Clemencic
  - Fixed a problem when disabling the shared directories in Gaudi.
 

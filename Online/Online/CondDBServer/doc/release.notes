@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-01-07 - Marco Clemencic
+ - Added CMakeLists.txt.
+
 ! 2013-12-03 - Marco Clemencic
  - Minor fix to compile with the latest COOL on gcc48.
 

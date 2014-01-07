@@ -1,0 +1,18 @@
+################################################################################
+# Package: PyDIM
+################################################################################
+gaudi_subdir(PyDIM v2r12)
+
+gaudi_depends_on_subdirs(Online/DIM)
+
+#use DIM           v* Online
+#use Python        v* LCG_Interfaces
+
+#apply_pattern pyd_module module=dimc   files=dimmodule.cpp
+#apply_pattern pyd_module module=dimcpp files=dimcppmodule.cpp
+gaudi_add_python_module(dimc dimmodule.cpp
+                        LINK_LIBRARIES dim)
+gaudi_add_python_module(dimcpp dimcppmodule.cpp
+                        LINK_LIBRARIES dim)
+
+gaudi_install_python_modules()

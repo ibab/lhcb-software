@@ -4,6 +4,9 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2014-01-07 - Marco Clemencic
+ - Added CMakeLists.txt.
+
 =============== v1r23 ===============
 
 ! 2012-02-06 - Chris Jones
