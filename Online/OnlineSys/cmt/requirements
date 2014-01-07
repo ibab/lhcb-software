@@ -1,0 +1,75 @@
+package OnlineSys
+version v5r6
+###
+### last v4 release: v4r69 based on Gaudi v23r7
+###
+branches cmt doc
+ 
+#=======================================================
+# Overrides from LHCB  ( LHCB_v34r2 )
+#=======================================================
+use MDF                 v3r40    DAQ
+use MDF_ROOT            v1r9     DAQ
+use DAQEvent            v9r13    Event
+use GaudiObjDesc        v11r17
+#=======================================================
+# LHCb Online packages
+#=======================================================
+use Camera              v1r24    Online
+use Checkpointing       v0r14    Online
+macro CondDBServer_use "CondDBServer v1r5 Online" target-i686 ""
+use $(CondDBServer_use)
+use CondDBServer        v1r5     Online
+use Controller          v0r8     Online
+use ControllerTests     v0r2     Online
+use DailyReport         v1r2     Online
+use DefHLTUtils         v1r6     Online
+use DIM                 v20r7p2  Online
+use FarmConfig          v0r3     Online
+use FarmMonitor         v2r12    Online
+use Gaucho              v7r33    Online
+use GauchoAppl          v1r12    Online
+use GaudiCheckpointing  v0r12    Online
+use GaudiOnline         v2r68    Online
+use GaudiRootCnvTests   v1r11    Online
+use GaudiSerialize      v0r11    Online
+use GaudiUPI            v1r16    Online
+use HistDBPython        v1r7     Online
+use InsertDB            v1r9     Online
+use MBMDump             v1r15    Online
+use OMAlib              v4r3     Online
+use OnlineBase          v1r19    Online
+use OnlineHistDB        v8r1     Online
+use OnlineKernel        v2r13    Online
+use OnlineTools         v1r4     Online
+use OnlineTasks         v1r52    Online
+use Presenter           v3r7     Online
+use PresenterDoc        v1r0     Online
+use PyDIM               v2r12    Online
+use RawBankSizes        v2r17    Online
+use RootCnv             v1r21    Online
+use ROMon               v1r44    Online
+use ROLogger            v0r25    Online
+## Only at the pit: macro Stomp_use "" CERN "Stomp v1r2 Online"
+##use $(Stomp_use)
+
+use Trending            v2r2     Online
+use UPI                 v1r24    Online
+use UPIR                v1r4     Online
+use Writer              v1r49    Online
+use XML                 v0r2     Online
+
+#Obsolete: use confDB              v1r6     Online
+#Obsolete: use confDBpython        v1r7     Online
+#Obsolete: macro CCPCHist_use "CCPCHist v2r6 Online" target-x86_64 ""
+#Obsolete: use $(CCPCHist_use)
+#Obsolete  use Hugin              v1r6     Online
+#Obsolete: use HPDMonitor        v1r6     Online
+#Obsolete: use OnlineDummyReader v1r4     Online
+#Obsolete: use Viewer            v1r5     Online
+
+# Declare this as a container package
+apply_pattern container_package
+
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
