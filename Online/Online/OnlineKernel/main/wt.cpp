@@ -6,7 +6,8 @@ using OnlineBase::FuncPtrCast;
 int main (int argc, char** argv)  {
   void* handle = LOAD_LIB2("OnlineKernel");
   if ( 0 != handle )  {
-    auto fun = FuncPtrCast<int (*)(int, char**)>(GETPROC(handle, argv[1]));
+    typedef int (*func_t)(int, char**);
+    func_t fun = FuncPtrCast<func_t>(GETPROC(handle, argv[1]));
     if ( fun ) {
       return (*fun)(argc-1, &argv[1]);
     }
