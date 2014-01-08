@@ -220,8 +220,6 @@ StatusCode Pythia8Production::generateEvent( HepMC::GenEvent * theEvent ,
   // Generate Event
   m_pythia->next();
 
-  for (int i =0;i<100000;i++) {};
-  
   //not needed in all cases
   if (!m_pythia->flag("HadronLevel:all")) m_event = m_pythia->event;  
 

@@ -4,6 +4,8 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2014-01-08 - Paul Szczypka
+ - Removed loop from Pythia8Production.cpp which did nothing.
 
 !========================= LbPythia8 v7r6 2013-10-23 =========================
 ! 2013-10-23 - Chitsanu Khurewathanakul
