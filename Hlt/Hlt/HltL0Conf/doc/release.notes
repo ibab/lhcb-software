@@ -4,6 +4,9 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-01-08 - Marco Clemencic
+ - Added CMake configuration.
+
 !========================= HltL0Conf v3r1 2013-07-03 =========================
 ! 2013-06-28 - Rob Lambert
  - Fix Boost list_of, see task #42876

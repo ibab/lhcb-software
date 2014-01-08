@@ -5,6 +5,9 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+! 2014-01-08 - Marco Clemencic
+ - Added CMake configuration.
+
 !========================= Hlt2SharedParticles v7r0 2013-04-09 =========================
 ! 2013-04-08 - Rob Lambert
  - Remove obsolete D0 shared particle which doesn't run anyway

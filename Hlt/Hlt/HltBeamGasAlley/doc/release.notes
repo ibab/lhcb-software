@@ -4,6 +4,9 @@
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
 
+! 2014-01-08 - Marco Clemencic
+ - Added CMake configuration.
+
 !========================= HltBeamGasAlley v3r1p1 2013-04-09 =========================
 ! 2013-03-27 - Rob Lambert
  - Expect test failure

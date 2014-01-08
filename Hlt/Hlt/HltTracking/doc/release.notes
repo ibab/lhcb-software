@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-01-08 - Marco Clemencic
+ - Added CMake configuration.
+
 !========================= HltTracking v10r0 2013-07-04 =========================
 ! 2013-05-21 - Sebastian Neubert
  - Added streamer configurations for VeloTT lines, including VeloTTTool as pET 

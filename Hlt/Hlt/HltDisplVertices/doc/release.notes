@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2014-01-08 - Marco Clemencic
+ - Added CMake configuration.
+
 !========================= HltDisplVertices v4r0p1 2013-04-09 =========================
 ! 2013-03-25 - Rob Lambert
  - Print more details of given exceptions

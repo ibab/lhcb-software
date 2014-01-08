@@ -5,6 +5,9 @@
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
 
+! 2014-01-08 - Marco Clemencic
+ - Added CMake configuration.
+
 !========================= HltGlobalMonitor v4r1 2013-07-03 =========================
 ! 2013-06-28 - Rob Lambert
  - Fix Boost list_of, see task #42876
