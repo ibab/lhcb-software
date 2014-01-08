@@ -4,6 +4,10 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-01-08 - Marco Clemencic
+ - Restored GaudiPhysics_load.cpp as GaudiPhysics_factories.cpp
+   (removed by mistake).
+
 ! 2013-12-20 - Marco Clemencic
  - Removed obsolete file (not working with Gaudi >= v25).
 
