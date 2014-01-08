@@ -60,7 +60,7 @@ StatusCode NoPIDsParticleMaker::finalize()
   if ( 0 != m_calls  ) { sigma = m_sum2 / m_calls - mean * mean  ; }
   if ( sigma > 0     ) { sigma = sqrt( sigma )                   ; }
   
-  always()
+  info()
     << " created '"    << m_pid 
     << "' and '"       << m_apid  
     << " : "           << m_sum

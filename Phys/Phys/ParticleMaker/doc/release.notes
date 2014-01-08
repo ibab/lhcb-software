@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+! 2014-01-08 - Rob Lambert
+ - Move always to info printout in finalize to match the other algorithms
+
 !========================= ParticleMaker v6r8 2013-08-01 =========================
 
 ! 2013-07-18 - Chris Jones
