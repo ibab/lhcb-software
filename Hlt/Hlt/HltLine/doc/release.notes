@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-01-08 - Marco Clemencic
+ - Minor fix to requirements.
+
+! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.
 
 !========================= HltLine v6r0 2014-01-06 =========================

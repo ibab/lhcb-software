@@ -35,7 +35,7 @@ library          HltDisplVertices    ../src/*.cpp
 apply_pattern    component_library library=HltDisplVertices
 
 
-apply_pattern install_more_includes more =Kernel
+apply_pattern install_more_includes more=Kernel
 # ==== Auto added tests ====
 apply_pattern    QMTest
 private

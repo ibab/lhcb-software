@@ -33,7 +33,7 @@ include_path      none
 #============================================================================
 # Component library building rule
 #============================================================================
-library          HltLuminosity    ../src/*.cpp -import=LCG_Interfaces/AIDA
+library          HltLuminosity    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================

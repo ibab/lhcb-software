@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-01-08 - Marco Clemencic
+ - Minor fix to requirements.
+
+! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.
 
 !========================= HltLuminosity v3r0p1 2013-04-09 =========================

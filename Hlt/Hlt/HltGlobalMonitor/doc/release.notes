@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-01-08 - Marco Clemencic
+ - Minor fix to requirements.
+
+! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.
 
 !========================= HltGlobalMonitor v4r1 2013-07-03 =========================
