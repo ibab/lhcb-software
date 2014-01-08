@@ -4,6 +4,9 @@
 ! Purpose     : CMT Interface to DIM 
 !-----------------------------------------------------------------------------
 
+! 2014-01-08 - Marco Clemencic
+ - Ignore "-pedantic" warnings (in CMake).
+
 ! 2014-01-07 - Marco Clemencic
  - Added CMakeLists.txt.
 

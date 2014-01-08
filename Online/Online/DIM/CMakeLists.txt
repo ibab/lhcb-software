@@ -6,6 +6,10 @@ gaudi_subdir(DIM v1r19)
 find_package(X11)
 find_package(Motif)
 
+# Ignore pedantic warnings
+string(REPLACE "-pedantic" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+string(REPLACE "-pedantic" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+
 add_definitions(-DPROTOCOL=1 -DMIPSEL -Df2cFortran)
 gaudi_add_library(dim
                     src/conn_handler.c src/copy_swap.c src/dic.c src/dim_thr.c
