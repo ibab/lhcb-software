@@ -11,6 +11,9 @@
 #include <iostream>
 #include <cerrno>
 
+#include "RTL/DllAccess.h"
+using OnlineBase::currentCommand;
+
 using namespace std;
 using namespace RTL;
 
@@ -169,10 +172,7 @@ extern "C" int rtl_test_sub_processes(int, char** ) {
   const char *a1[]={"rtl_test_process_sleep","4",0}, *a2[]={"rtl_test_process_sleep","5",0};
   const char *a3[]={"rtl_test_process_sleep","6",0}, *a4[]={"rtl_test_process_sleep","7",0};
   const char *a5[]={"rtl_test_process_sleep","8",0}, *a6[]={"rtl_test_process_sleep","9",0};
-  string cmd = ::lib_rtl_getenv("ONLINEKERNELROOT");
-  cmd += "/";
-  cmd += ::lib_rtl_getenv("CMTCONFIG");
-  cmd += "/test.exe";
+  string cmd(currentCommand());
   ::lib_rtl_signal_log(false);
   Process::setDebug(true);
   pg.add(   new Process("SLEEPER_0xFEED0001",cmd.c_str(),a1,"/dev/null"));

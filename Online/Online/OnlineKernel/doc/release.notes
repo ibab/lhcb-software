@@ -1,6 +1,9 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2014-01-08 - Marco Clemencic
+ - Fixed the tests to work with a relocated executable.
+
 ! 2014-01-07 - Marco Clemencic
  - Added CMakeLists.txt.
 

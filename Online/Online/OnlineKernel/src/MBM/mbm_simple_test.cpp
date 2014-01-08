@@ -8,17 +8,13 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "RTL/DllAccess.h"
+using OnlineBase::currentCommand;
+
 using namespace std;
 using namespace RTL;
 extern "C" int mbm_summary(int argc, char** argv);
 
-static std::string command() {
-  string cmd = ::lib_rtl_getenv("ONLINEKERNELROOT");
-  cmd += "/";
-  cmd += ::lib_rtl_getenv("CMTCONFIG");
-  cmd += "/test.exe";
-  return cmd;
-}
 
 extern "C" int mbm_install_test_bm(int argc , char** argv) {
   try  {
@@ -69,24 +65,26 @@ extern "C" int mbm_simple_test(int argc, char** /* argv */)  {
   const char *a8[]={"mbm_prod","-name=prod_0","-m=50000","-s=3500",0};
   const char *a9[]={"mbm_summary",0};
 
+  std::string cmd(currentCommand());
+
   ::mbm_qmtest_check_start();
   Process::setDebug(true);
-  pg.add(p[0]=new Process("Installer",command(),a1,output));
+  pg.add(p[0]=new Process("Installer",cmd,a1,output));
   pg.start();
   ::lib_rtl_sleep(1500);
-  pg.add(p[1]=new Process("Cons_s_0",command(),a2,output));
-  pg.add(p[2]=new Process("Cons_o_0",command(),a4,output));
+  pg.add(p[1]=new Process("Cons_s_0",cmd,a2,output));
+  pg.add(p[2]=new Process("Cons_o_0",cmd,a4,output));
   pg.start();
   cout << "Starting processes ..... " << endl;
   ::lib_rtl_sleep(3000);
   cout << "Starting producer ...... " << endl;
-  p[3]=new Process("Prod_0",command(),a8,output);
+  p[3]=new Process("Prod_0",cmd,a8,output);
   p[3]->start();
   p[3]->wait(Process::WAIT_BLOCK);
   delete p[3];
   cout << "Producer finished work.. " << endl;
   ::lib_rtl_sleep(4000);
-  p[3]=new Process("Summary_0",command(),a9);
+  p[3]=new Process("Summary_0",cmd,a9);
   p[3]->start();
   p[3]->wait(Process::WAIT_BLOCK);
   delete p[3];
@@ -116,30 +114,32 @@ extern "C" int mbm_full_test(int argc, char** /* argv */)  {
   const char *a8[]={"mbm_prod","-name=prod_0","-m=5000","-s=3500",0};
   const char *a9[]={"mbm_summary",0};
 
+  std::string cmd(currentCommand());
+
   ::mbm_qmtest_check_start();
   Process::setDebug(true);
-  pg.add(p[0]=new Process("Install", command(),a1,output));
+  pg.add(p[0]=new Process("Install", cmd,a1,output));
   pg.start();
   ::lib_rtl_sleep(1500);
-  pg.add(p[1]=new Process("Cons_s_0",command(),a2,output));
-  pg.add(p[2]=new Process("Cons_s_1",command(),a3,output));
-  pg.add(p[3]=new Process("Cons_o_0",command(),a4,output));
-  pg.add(p[4]=new Process("Cons_o_1",command(),a5,output));
-  pg.add(p[5]=new Process("Cons_u_0",command(),a6,output));
-  pg.add(p[6]=new Process("Cons_u_1",command(),a7,output));
+  pg.add(p[1]=new Process("Cons_s_0",cmd,a2,output));
+  pg.add(p[2]=new Process("Cons_s_1",cmd,a3,output));
+  pg.add(p[3]=new Process("Cons_o_0",cmd,a4,output));
+  pg.add(p[4]=new Process("Cons_o_1",cmd,a5,output));
+  pg.add(p[5]=new Process("Cons_u_0",cmd,a6,output));
+  pg.add(p[6]=new Process("Cons_u_1",cmd,a7,output));
   pg.start();
 
   cout << "Starting processes ..... " << endl;
   ::lib_rtl_sleep(3000);
   cout << "Starting producer ...... " << endl;
-  Process* prod=new Process("Prod_0",command(),a8,output);
+  Process* prod=new Process("Prod_0",cmd,a8,output);
   prod->start();
   ::lib_rtl_sleep(4000);
   prod->wait(Process::WAIT_BLOCK);
   delete prod;
   cout << "Producer finished work.. " << endl;
   ::lib_rtl_sleep(4000);
-  Process* summary=new Process("Summary_0",command(),a9);
+  Process* summary=new Process("Summary_0",cmd,a9);
   summary->start();
   summary->wait(Process::WAIT_BLOCK);
   delete summary;
@@ -190,11 +190,8 @@ int mbm_qmtest_check_no_active_buffers(int, char**)   {
 }
 
 extern "C" int mbm_qmtest_check_start() {
-  char cmd[1024];
-  ::snprintf(cmd,sizeof(cmd),"%s/%s/test.exe mbm_qmtest_check_no_active_buffers",
-	     ::lib_rtl_getenv("ONLINEKERNELROOT"),
-	     ::lib_rtl_getenv("CMTCONFIG"));
-  int ret = system(cmd);
+  string cmd = currentCommand() + " mbm_qmtest_check_no_active_buffers";
+  int ret = system(cmd.c_str());
   if ( ret != 1 ) {
     _mbm_printf("MBM: Failed to wait for other test to finish....\n");
     return 0;
