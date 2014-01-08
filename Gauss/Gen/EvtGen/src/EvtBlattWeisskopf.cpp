@@ -76,9 +76,17 @@ double EvtBlattWeisskopf::compute(double p) const
     value = sqrt(1.0/(1.0 + zSq));
   } else if (_LL == 2) {
     value = sqrt(1.0/(zSq*(zSq + 3.0) + 9.0));
+  } else if (_LL == 3) {
+    double denom = zSq*(zSq*(zSq + 6.0) + 45.0) + 225.0;
+    value = sqrt(1.0/denom);
+  } else if (_LL == 4) {
+    double denom = zSq*(zSq*(zSq*(zSq + 10.0) + 135.0) + 1575.0) + 11025.0;
+    value = sqrt(1.0/denom);
+  } else if (_LL == 5) {
+    double denom = zSq*(zSq*(zSq*(zSq*(zSq + 15.0) + 315.0) + 6300.0) + 99225.0) + 893025.0;
+    value = sqrt(1.0/denom);
   }
 
   return value;
 
 }
-

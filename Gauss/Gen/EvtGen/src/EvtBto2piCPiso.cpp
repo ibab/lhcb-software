@@ -48,9 +48,9 @@ EvtDecayBase* EvtBto2piCPiso::clone(){
 
 void EvtBto2piCPiso::init(){
 
-  // check that there are 11 arguments
+  // check that there are 10 arguments
 
-  checkNArg(11);
+  checkNArg(10);
   checkNDaug(2);
 
   checkSpinParent(EvtSpinType::SCALAR);

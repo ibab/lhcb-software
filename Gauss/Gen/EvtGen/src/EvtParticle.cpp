@@ -110,6 +110,8 @@ int EvtParticle::firstornot() const { return _first;}
 
 EvtId EvtParticle::getId() const { return _id;}
 
+int EvtParticle::getPDGId() const {return EvtPDL::getStdHep(_id);}
+
 EvtSpinType::spintype EvtParticle::getSpinType() const 
       { return EvtPDL::getSpinType(_id);}
 
@@ -1140,7 +1142,7 @@ void EvtParticle::makeDaughters(unsigned int ndaugstore, std::vector<EvtId> idVe
     return;
   }
 
-  EvtId idArray[ndaugstore];
+  EvtId *idArray=new EvtId[ndaugstore];
   unsigned int i;
   for (i = 0; i < ndaugstore; i++) {
     idArray[i] = idVector[i];
@@ -1148,6 +1150,7 @@ void EvtParticle::makeDaughters(unsigned int ndaugstore, std::vector<EvtId> idVe
 
   this->makeDaughters(ndaugstore, idArray);
 
+  delete[] idArray;
 }
 
 void EvtParticle::makeDaughters( unsigned int ndaugstore, EvtId *id){

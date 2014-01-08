@@ -457,8 +457,6 @@ void EvtPythiaEngine::updateParticleLists() {
       bool alreadyStored(false);
       if (_addedPDGCodes.find(abs(PDGCode)) != _addedPDGCodes.end()) {alreadyStored = true;}
 
-      report(INFO,"EvtGen")<<"AddedPDGCodes for "<<PDGCode<<" = "<<int(alreadyStored)<<endl;
-
       if (dataName == " " && alreadyStored == false) {
 
         // Particle and its antiparticle does not exist in the Pythia database.

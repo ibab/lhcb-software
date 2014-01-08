@@ -4,10 +4,15 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!2013-12-21 - Jack Wimberley
+! 2014-01-08 - John Back
+ - Corrected parameter checks in EvtSVSCPiso and EvtBto2piCPiso.
+   Added getPDGId() to EvtParticle. Added Blatt-Weisskopf barrier factors up 
+   to L=5 in EvtBlattWeisskopf.
+
+! 2013-12-21 - Jack Wimberley
  - Modified EvtBCVFF again; one of the corrections was incorrect
 
-!2013-12-21 - Jack Wimberley
+! 2013-12-21 - Jack Wimberley
  - Modified EvtBCVFF to correct the Kiselev form factors
 
 !========================== EvtGen v13r10 2013-11-21 ==========================

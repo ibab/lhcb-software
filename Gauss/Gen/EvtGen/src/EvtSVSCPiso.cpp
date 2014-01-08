@@ -52,8 +52,8 @@ EvtDecayBase* EvtSVSCPiso::clone(){
 
 void EvtSVSCPiso::init(){
 
-  // check that there are 26 arguments
-  checkNArg(26);
+  // check that there are 27 arguments
+  checkNArg(27);
   checkNDaug(2);
 
   checkSpinParent(EvtSpinType::SCALAR);
@@ -138,7 +138,7 @@ void EvtSVSCPiso::decay( EvtParticle *p){
   if (p->getNDaug()==0) first_time=1;
 
   if (first_time){
-    if (EvtRandom::Flat(0.0,1.0)<getArg(3)) flip=1;
+    if (EvtRandom::Flat(0.0,1.0)<getArg(2)) flip=1;
   }
   else{
     if (getDaug(0)!=p->getDaug(0)->getId()) flip=1;
