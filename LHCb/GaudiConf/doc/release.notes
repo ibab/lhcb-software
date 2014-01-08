@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2014-01-08 - Rob Lambert
+ - Expand property resetting features to also handle tools linked to algorithms.
+ - Currently only one level of tools is possible to set, not tools-of-tools, but this is OK for now.
+
 ! 2013-12-10 - Rob Lambert
  - Fix some small problems with the postConfig actions of Manipulations.py
  - see task #42883
