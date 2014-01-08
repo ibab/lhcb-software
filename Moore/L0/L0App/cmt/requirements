@@ -49,4 +49,4 @@ use RawEventFormat v*
 
 apply_pattern install_python_modules
 apply_pattern QMTest
-apply_pattern GaudiApp
+#apply_pattern GaudiApp

@@ -2,6 +2,7 @@
 High-level configuration tool for running L0Emulation
 """
 
+
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from LHCbKernel.Configuration import *
@@ -99,6 +100,8 @@ class L0App(LHCbConfigurableUser):
         
         ############## Set other properties ###########
         self._safeSet( LHCbApp(), ['EvtMax','SkipEvents','Simulation', 'DataType' , 'Persistency', 'CondDBtag','DDDBtag'] )
+        
+        ApplicationMgr().AppName="L0App within Moore"
         
         ############## The raw event ##################
         

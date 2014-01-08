@@ -4,6 +4,9 @@
 ! Purpose     : An LHCb application to run L0 Emulation
 !-----------------------------------------------------------------------------
 
+! 2014-01-08 - Rob Lambert
+ - Fix bug #103574 by explicitly setting the option AppName to ApplicationMgr 
+
 ! 2013-12-03 - Rob Lambert
  - Replace setting a decoder property with setting the DecoderDB
  - Add auto-reconfiguration of input locations, default is like DIGI or pit
