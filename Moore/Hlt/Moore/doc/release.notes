@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-01-08 - Rob Lambert
+ - Expand silent behaviour to suppress Calo printout (total now <85 lines)
+ - Also check that there are less than 20,000 characters, to avoid really excessively long lines.
+
 ! 2013-12-10 - Rob Lambert
  - Add new option, "Silent", which is incomptible with Verbose, and reduces the print-out of Moore to <100 lines
  - Add a test which checks for this. Could do with an extra test on more events...

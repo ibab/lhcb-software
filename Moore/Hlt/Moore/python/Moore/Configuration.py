@@ -451,6 +451,24 @@ class Moore(LHCbConfigurableUser):
             #only for GaudiHistoAlgs...
             props["HistoCountersPrint"]=False
             postConfForAll(head=None, prop_value_dict=props,force=True)
+            #now turn off the calo tool finalize printout
+            tools={"CaloECorrection/ECorrection":{"OutputLevel":WARNING},
+                   "CaloSCorrection/SCorrection":{"OutputLevel":WARNING},
+                   "CaloLCorrection/LCorrection":{"OutputLevel":WARNING}
+                   }
+            postConfForAll(head=None, prop_value_dict={},types=["CaloSinglePhotonAlg","CaloElectronAlg","CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
+            #three extras for merged pi0
+            tools={"CaloCorrectionBase/ShowerProfile":{"OutputLevel":WARNING},
+                   "CaloCorrectionBase/Pi0SCorrection":{"OutputLevel":WARNING},
+                   "CaloCorrectionBase/Pi0LCorrection":{"OutputLevel":WARNING}
+                   }
+            postConfForAll(head=None, prop_value_dict={},types=["CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
+            #I still want to print "Application Manager Finalized Successfully"
+            #and "End of event input reached"
+            def AppMrgOP():
+                ApplicationMgr().OutputLevel=INFO
+                EventSelector().OutputLevel=INFO
+            appendPostConfigAction(AppMrgOP)
             
     
     def _profile(self) :
