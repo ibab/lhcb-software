@@ -250,42 +250,42 @@ extern "C" int start_rologger_win32(int argc, char** argv)  {
     ::sprintf(title,"%s: Error Logger display",partition);
     ::sprintf(utgid,"%s_ErrLog_%d_display",node,pid);
     ::sprintf(comm, "%s  romon_logger -service=%s -col -buff=0 -disp",logger,utgid);
-    si.lpTitle        = title;
-    si.dwX            = left_margin;
-    si.dwY            = top_margin;
-    si.dwXSize        = dt_width-left_margin;
-    si.dwYSize        = dt_height-top_margin-history_height;
-    si.dwXCountChars  = 0;          // Scroll size horizontal
-    si.dwYCountChars  = msg_scroll; // Scroll size vertical
-    si.dwFillAttribute=FOREGROUND_WHITE+BACKGROUND_BLACK;
-    si.dwFlags        =STARTF_USESIZE+STARTF_USEPOSITION+STARTF_USEFILLATTRIBUTE+STARTF_USECOUNTCHARS;
+    si.lpTitle         = title;
+    si.dwX             = left_margin;
+    si.dwY             = top_margin;
+    si.dwXSize         = dt_width-left_margin;
+    si.dwYSize         = dt_height-top_margin-history_height;
+    si.dwXCountChars   = 0;          // Scroll size horizontal
+    si.dwYCountChars   = msg_scroll; // Scroll size vertical
+    si.dwFillAttribute = (char)(FOREGROUND_WHITE+BACKGROUND_BLACK);
+    si.dwFlags         = (int)(STARTF_USESIZE+STARTF_USEPOSITION+STARTF_USEFILLATTRIBUTE+STARTF_USECOUNTCHARS);
     startTerminal(utgid,comm,si);
 
     ::sprintf(title,"%s: Error Logger history",partition);
     ::sprintf(utgid,"%s_ErrLog_%d_history",node,pid);
     ::sprintf(comm, "%s romon_logger -service=%s -col -buff=%d",logger,utgid,hist_buff);
-    si.lpTitle        = title;
-    si.dwX            = left_margin;
-    si.dwY            = dt_height-history_height+title_size;
-    si.dwXSize        = dt_width-left_margin-ctrl_width;
-    si.dwYSize        = history_height-2*title_size;
-    si.dwYCountChars  = his_scroll; // Scroll size vertical
-    si.dwFillAttribute=FOREGROUND_WHITE+BACKGROUND_BLACK;
-    si.dwFlags        =STARTF_USESIZE+STARTF_USEPOSITION+STARTF_USEFILLATTRIBUTE+STARTF_USECOUNTCHARS;
+    si.lpTitle         = title;
+    si.dwX             = left_margin;
+    si.dwY             = dt_height-history_height+title_size;
+    si.dwXSize         = dt_width-left_margin-ctrl_width;
+    si.dwYSize         = history_height-2*title_size;
+    si.dwYCountChars   = his_scroll; // Scroll size vertical
+    si.dwFillAttribute = (char)(FOREGROUND_WHITE+BACKGROUND_BLACK);
+    si.dwFlags         = (int)(STARTF_USESIZE+STARTF_USEPOSITION+STARTF_USEFILLATTRIBUTE+STARTF_USECOUNTCHARS);
     startTerminal(utgid,comm,si);
 
     ::lib_rtl_sleep(2000);
     ::sprintf(title,"%s: Error Logger control",partition);
     ::sprintf(utgid,"%s_ErrLog_%d",node,pid);
     ::sprintf(comm, "%s romon_display_server -service=%s",logger,partition);
-    si.lpTitle        = title;
-    si.dwX            = dt_width-ctrl_width+title_size;
-    si.dwY            = dt_height-history_height+title_size;
-    si.dwXSize        = dt_width-si.dwX+title_size;
-    si.dwYSize        = history_height-2*title_size;
-    si.dwYCountChars  = 0; // Scroll size vertical
-    si.dwFillAttribute=FOREGROUND_BLACK|BACKGROUND_WHITE;
-    si.dwFlags        =STARTF_USESIZE+STARTF_USEPOSITION+STARTF_USEFILLATTRIBUTE+STARTF_USECOUNTCHARS;
+    si.lpTitle         = title;
+    si.dwX             = dt_width-ctrl_width+title_size;
+    si.dwY             = dt_height-history_height+title_size;
+    si.dwXSize         = dt_width-si.dwX+title_size;
+    si.dwYSize         = history_height-2*title_size;
+    si.dwYCountChars   = 0; // Scroll size vertical
+    si.dwFillAttribute = (char)(FOREGROUND_BLACK|BACKGROUND_WHITE);
+    si.dwFlags         = (int)(STARTF_USESIZE+STARTF_USEPOSITION+STARTF_USEFILLATTRIBUTE+STARTF_USECOUNTCHARS);
     startTerminal(utgid,comm,si);
     return 1;
   }

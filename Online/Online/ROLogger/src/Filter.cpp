@@ -177,6 +177,7 @@ void Filter::dump(ostream& os) const {
 
 /// read filter object from file
 size_t Filter::read(istream& in) {
+  unsigned int ui;
   int   start = 0;
   char txt[1024];
   while( in.getline(txt,sizeof(txt)).good() ) {
@@ -192,7 +193,8 @@ size_t Filter::read(istream& in) {
       //::upic_write_message2("%d: %ld %ld %s",start,siz,::strlen(txt),txt);
       switch(start) {
       case 1:
-        ::sscanf(txt,"%08X",&type);
+        ::sscanf(txt,"%08X",&ui);
+	type = (int)ui;
         break;
       case 2:
         node = txt;
