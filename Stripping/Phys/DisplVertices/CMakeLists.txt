@@ -15,10 +15,3 @@ gaudi_add_module(DisplVertices
                  LINK_LIBRARIES VeloDetLib DaVinciKernelLib LoKiPhysLib
                                 LoKiTracksLib TrackKernel)
 
-gaudi_add_dictionary(DisplVertices
-                     dict/DisplVerticesDict.h
-                     dict/DisplVerticesDict.xml
-                     LINK_LIBRARIES VeloDetLib DaVinciKernelLib LoKiPhysLib
-                                    LoKiTracksLib TrackKernel
-                     OPTIONS "-U__MINGW32__")
-

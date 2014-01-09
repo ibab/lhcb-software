@@ -5,6 +5,14 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2014-01-09 - Pieter David
+ - Clean up
+   . unused files in fragment/
+   . unused algorithms CombineDV, DisplVertices and RecVertices2Particles
+   . reflection dictionary (only required for using the IMatterVeto tool in
+     Bender, so this can be put in MetaStable) and updated cmt/requirements
+     and CMakeLists accordingly
+
 ! 2014-01-07 - Marco Clemencic
  - Fixed CMake configuration.
 

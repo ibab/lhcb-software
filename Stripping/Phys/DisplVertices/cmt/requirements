@@ -8,7 +8,7 @@ version           v7r16
 # ============================================================================
 # Structure, i.e. directories to process. 
 # ============================================================================
-branches          cmt src options doc dict Kernel
+branches          cmt src doc Kernel
 
 # ============================================================================
 # Used packages.
@@ -30,11 +30,3 @@ library     DisplVertices    ../src/*.cpp -import=AIDA
 apply_pattern component_library library=DisplVertices
 
 apply_pattern install_more_includes more =Kernel
-
-# =============== LCG Dictionaries ============================================
-apply_pattern reflex_dictionary                                                     \
-              dictionary=DisplVertices                                              \
-              headerfiles=$(DISPLVERTICESROOT)/dict/DisplVerticesDict.h     \
-              selectionfile=$(DISPLVERTICESROOT)/dict/DisplVerticesDict.xml \
-              options="-U__MINGW32__"
-

@@ -1,6 +1,0 @@
-#ifndef DICT_DISPLVERTICESDICT_H 
-#define DICT_DISPLVERTICESDICT_H 1
-
-#include "Kernel/IMatterVeto.h"
-
-#endif // DICT_DISPLVERTICESDICT_H
