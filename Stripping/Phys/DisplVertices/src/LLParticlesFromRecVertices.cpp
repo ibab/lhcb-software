@@ -26,6 +26,11 @@ using namespace LoKi::Cuts;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( LLParticlesFromRecVertices )
 
+namespace {
+  typedef LoKi::Constant<const LHCb::VertexBase*,double> _VDOUBLE;
+  typedef LoKi::Constant<const LHCb::VertexBase*,bool>   _VBOOL;
+}
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -38,9 +43,9 @@ DECLARE_ALGORITHM_FACTORY( LLParticlesFromRecVertices )
 
     , m_chargedProto(NULL)
 
-    , m_RHO( LoKi::Constant<const LHCb::VertexBase*,double>(0.0) )
-    , m_Z( LoKi::Constant<const LHCb::VertexBase*,double>(0.0) )
-    , m_VERTEXCUT( LoKi::Constant<const LHCb::VertexBase*,bool>(false) )
+    , m_RHO( _VDOUBLE(0.0) )
+    , m_Z( _VDOUBLE(0.0) )
+    , m_VERTEXCUT( _VBOOL(false) )
     , m_UPPVZ( LoKi::Constant<std::vector<const LHCb::RecVertex*>,double>(LoKi::Constants::HugeDistance) )
 
 {
@@ -399,6 +404,12 @@ StatusCode LLParticlesFromRecVertices::execute()
 //=============================================================================
 StatusCode LLParticlesFromRecVertices::finalize() {
   if( msgLevel( MSG::DEBUG ) ) { debug() << "==> Finalize" << endmsg; }
+
+  // reset functors
+  m_RHO = _VDOUBLE(0.0);
+  m_Z = _VDOUBLE(0.0);
+  m_VERTEXCUT = _VBOOL(false);
+  m_UPPVZ = LoKi::Constant<std::vector<const LHCb::RecVertex*>,double>(LoKi::Constants::HugeDistance);
 
   return DaVinciAlgorithm::finalize();
 }

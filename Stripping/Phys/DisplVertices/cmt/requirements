@@ -16,8 +16,10 @@ branches          cmt src doc Kernel
 use DaVinciKernel       v* Phys
 use LoKiPhys            v* Phys
 use LoKiTracks          v* Phys
+use LoKiArrayFunctors   v* Phys
 use VeloDet             v* Det
 use TrackKernel         v* Tr
+use JetAccessories      v* Phys
 
 # ============================================================================
 # Component library building rule
@@ -30,3 +32,5 @@ library     DisplVertices    ../src/*.cpp -import=AIDA
 apply_pattern component_library library=DisplVertices
 
 apply_pattern install_more_includes more =Kernel
+
+apply_pattern install_python_modules

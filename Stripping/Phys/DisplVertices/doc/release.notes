@@ -6,6 +6,17 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-01-09 - Pieter David
+ -  Add jet maker for stripping
+   . main algorithm DisplacedVertexJetCandidateMaker to filter and
+     partition input, call tools for jet making, JEC, JetID and finally
+     makes the candidate
+   . JEC tool
+   . JetID tool
+   . python module to define a few functions (using jet enums from
+     JetAccessories) that make configuration of Hybrid functors easier
+   . add dependency on Phys/LoKiArrayFunctors and Phys/JetAccessories
+
+! 2014-01-09 - Pieter David
  - add algorithm to cut on Velo hits phi distribution
 
 ! 2014-01-09 - Pieter David
