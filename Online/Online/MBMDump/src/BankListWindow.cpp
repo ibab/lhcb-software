@@ -47,7 +47,7 @@ void BankListWindow::build()  {
     unsigned int eid = m_banks[cnt].first;
     const RawBank* b = m_banks[cnt].second;
     if ( b->magic() != RawBank::MagicPattern )  {
-      ::sprintf(txt,"EID:%u -> Corrpted data structures at %p - No magic pattern",eid,b);
+      ::sprintf(txt,"EID:%u -> Corrpted data structures at %p - No magic pattern",eid,(void*)b);
       addComment(C_BANKS+cnt,txt);
       break;
     }
