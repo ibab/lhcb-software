@@ -537,8 +537,7 @@ void PatPixelTracking::makeLHCbTracks() {
 //=========================================================================
 PatPixelHit* PatPixelTracking::bestHit(PatPixelModule* module, double xTol, double maxScatter,
                                        const PatPixelHit* h1, const PatPixelHit* h2) {
-
-  if (module->hits().empty()) return NULL;
+  if (module->empty()) return NULL;
   const double x1 = h1->x();
   const double y1 = h1->y();
   const double z1 = h1->z();
@@ -547,48 +546,54 @@ PatPixelHit* PatPixelTracking::bestHit(PatPixelModule* module, double xTol, doub
   const double z2 = h2->z();
   const double tx = (x2 - x1) / (z2 - z1);
   const double ty = (y2 - y1) / (z2 - z1); 
-  // Extrapolate to the z-position of the module.
+  // Extrapolate to the z-position of the module
   const double xGuess = x1 + tx * (module->z() - z1) - xTol;
 
   // If the first hit is already below this limit we can stop here.
-  if (module->hits().back()->x() < xGuess) return NULL;
+  if (module->lastHitX() < xGuess) return NULL;
   // Do a binary search through the hits.
-  PatPixelHits::const_iterator itStart = module->hits().begin();   
-  unsigned int step = module->hits().size();
+  unsigned int hit_start(0);
+  unsigned int step(module->hits().size());
+  const unsigned int module_nhits(step);
+  const PatPixelHits& module_hits(module->hits());
   while (2 < step) { // quick skip of hits that are above the X-limit
     step /= 2;
-    if ((*(itStart + step))->x() < xGuess) itStart += step;
+    if ((module_hits[hit_start+step])->x() < xGuess) hit_start += step;
   }
-  PatPixelHits::const_iterator itEnd = module->hits().end();
 
   // Find the hit that matches best.
   unsigned int nFound = 0;
   double bestScatter = maxScatter;
   PatPixelHit* bestHit = NULL;
-  PatPixelHits::const_iterator ith;
-  for (ith = itStart; itEnd != ith; ++ith) {
-    const double dz = (*ith)->z() - z1; 
+  PatPixelHit* hit(NULL);
+  for (unsigned int i=hit_start; i<module_nhits; ++i) {
+    hit = module_hits[i];
+    const double hit_x = hit->x();
+    const double hit_y = hit->y();
+    const double hit_z = hit->z();
+    const double dz = hit_z - z1; 
     const double xPred = x1 + tx * dz;
     const double yPred = y1 + ty * dz;
 #ifdef DEBUG_HISTO
-    plot(((*ith)->x() - xPred) / xTol, "HitExtraErrPerTol", "Hit X extrapolation error / tolerance", -4.0, +4.0, 400);
+    plot((hit->x() - xPred) / xTol, "HitExtraErrPerTol", "Hit X extrapolation error / tolerance", -4.0, +4.0, 400);
 #endif
     // If x-position is above prediction + tolerance, keep looking.
-    if ((*ith)->x() + xTol < xPred) continue;
+    if (hit_x + xTol < xPred) continue;
     // If x-position is below prediction - tolerance, stop the search.
-    if ((*ith)->x() - xTol > xPred) break;
-    const double dx = xPred - (*ith)->x();
-    const double dy = yPred - (*ith)->y();
+    if (hit_x - xTol > xPred) break;
+    const double dx = xPred - hit_x;
+    const double dy = yPred - hit_y;
     // Skip hits outside the y-position tolerance.
     if (fabs(dy) > xTol) continue;
-    const double scatter = sqrt(dx * dx + dy * dy) / fabs((*ith)->z() - z2);
+    const double scatter = sqrt(dx * dx + dy * dy) / fabs(hit_z - z2);
     if (scatter < bestScatter) { 
-      bestHit = *ith; 
+      bestHit = hit; 
       bestScatter = scatter;
     }
     if (scatter < maxScatter) ++nFound;
 #ifdef DEBUG_HISTO
     plot(scatter, "HitScatter", "hit scatter [rad]", 0.0, 0.5, 500);
+    plot2D(dx, dy, "Hit_dXdY", "Difference between hit and prediction in x and y [mm]", -1, 1, -1, 1, 500,500);
 #endif
   }
 #ifdef DEBUG_HISTO

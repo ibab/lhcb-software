@@ -18,12 +18,15 @@ class PatPixelModule {
 public:
   /// Constructor
   PatPixelModule(const unsigned int number, const bool right) : 
-    m_number(number), m_isRight(right), m_previous(-1) {
+    m_lastHitX(-1), m_empty(true), m_number(number), m_isRight(right), m_previous(-1) {
     reset();
   }
   /// Destructor
   virtual ~PatPixelModule() {}
 
+  bool empty() const {return m_empty;}
+  float lastHitX() const {return m_lastHitX;}
+  void setLastHitX(float x) {m_lastHitX = x;}
   unsigned int number() const {return m_number;}
   int previous() const {return m_previous;}
   bool isRight() const {return m_isRight;}
@@ -34,11 +37,19 @@ public:
   void setZ(const double z) {m_z = z;}
 
   /// Remove all stored hits.
-  void reset() {m_hits.clear();}
+  void reset() {
+    m_hits.clear();
+    m_empty = true;
+  }
   /// Add a new (pointer to) hit.
-  void addHit(PatPixelHit* hit) {m_hits.push_back(hit);} 
+  void addHit(PatPixelHit* hit) {
+    m_hits.push_back(hit);
+    m_empty = false;
+  }
 
 private:
+  float m_lastHitX;
+  bool m_empty;
   /// Module number
   unsigned int m_number;
   /// Right or left side of VELO

@@ -173,8 +173,9 @@ void PatPixelHitManager::buildHits() {
   // Assume binary resolution of hit position.
   const double dx = 0.055 / sqrt(12.0);
   // Loop over clusters.
-  LHCb::VPLiteCluster::VPLiteClusters::iterator itc; 
-  for (itc = liteClusters->begin(); liteClusters->end() != itc; ++itc) {
+  LHCb::VPLiteCluster::VPLiteClusters::const_iterator itc; 
+  LHCb::VPLiteCluster::VPLiteClusters::const_iterator itc_end(liteClusters->end());
+  for (itc = liteClusters->begin(); itc_end != itc; ++itc) {
     const unsigned int module = itc->channelID().module();
     if (module >= m_modules.size()) break;
     // Get the next object in the pool => here we store the new hit
@@ -228,8 +229,11 @@ void PatPixelHitManager::sortByX() {
   std::vector<PatPixelModule*>::iterator itm;
   for (itm = m_modules.begin(); m_modules.end() != itm; ++itm) {
     if (*itm) {
-      std::sort((*itm)->hits().begin(), (*itm)->hits().end(), 
-                PatPixelHit::LowerByX()); 
+      if (!((*itm)->empty())) {
+        std::sort((*itm)->hits().begin(), (*itm)->hits().end(), 
+                  PatPixelHit::LowerByX());
+        (*itm)->setLastHitX((*itm)->hits().back()->x());
+      }
     }
   }
 }

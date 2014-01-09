@@ -15,8 +15,9 @@
 class PatPixelHit {
 public:
   /// Standard constructor
-  PatPixelHit() : 
+  PatPixelHit() :
     m_x(0.), m_y(0.), m_z(0.), 
+    m_id(0),
     m_wx(0.), m_wy(0.),
     m_module(0),
     m_isUsed(false) {
@@ -71,12 +72,12 @@ public:
   struct LowerByY      { bool operator() (const PatPixelHit* lhs, const PatPixelHit* rhs) const { return lhs->y() < rhs->y(); } };
 
 private:
-  /// Channel ID
-  LHCb::LHCbID m_id;
   /// Global position
   double m_x;
   double m_y;
   double m_z;
+  /// Channel ID
+  LHCb::LHCbID m_id;
   /// Weights (1 / squared error) in X and Y
   double m_wx;
   double m_wy;
