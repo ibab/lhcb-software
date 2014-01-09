@@ -3,7 +3,7 @@
 #include "CreateHistDBPages.h"
 
 // Static Factory declaration
-DECLARE_ALGORITHM_FACTORY(CreateHistDBPages);
+DECLARE_ALGORITHM_FACTORY(CreateHistDBPages)
 
 //------------------------------------------------------------------------------
 // Constructor

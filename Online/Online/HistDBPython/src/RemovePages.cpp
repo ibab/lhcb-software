@@ -3,7 +3,7 @@
 #include "RemovePages.h"
 
 // Static Factory declaration
-DECLARE_ALGORITHM_FACTORY(RemovePages);
+DECLARE_ALGORITHM_FACTORY(RemovePages)
 
 //------------------------------------------------------------------------------
 // Constructor

@@ -3,7 +3,7 @@
 #include "SetHistDisplayOptions.h"
 
 // Static Factory declaration
-DECLARE_ALGORITHM_FACTORY(SetHistDisplayOptions);
+DECLARE_ALGORITHM_FACTORY(SetHistDisplayOptions)
 
 //------------------------------------------------------------------------------
 // Constructor

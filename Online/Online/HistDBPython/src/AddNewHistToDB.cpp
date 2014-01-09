@@ -3,7 +3,7 @@
 #include "AddNewHistToDB.h"
 
 // Static Factory declaration
-DECLARE_ALGORITHM_FACTORY(AddNewHistToDB);
+DECLARE_ALGORITHM_FACTORY(AddNewHistToDB)
 
 //------------------------------------------------------------------------------
 // Constructor
