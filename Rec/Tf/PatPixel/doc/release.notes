@@ -4,6 +4,13 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-01-09 - Tim Head
+ - Restructered code in hottest part of PatPixelTracking
+
+   Precompute the answer to common lookups like
+   whether a module has any hits or the value
+   of the largest X hit.
+
 !========================= PatPixel v1r4 2013-12-10 =========================
 ! 2013-12-05 - Heinrich Schindler
  - Removed unused variables, changed default values
