@@ -13,8 +13,8 @@ gaudi_add_module(GauchoAppl src/components/*.cpp
                  LINK_LIBRARIES GauchoApplLib)
 
 macro(ga_test name)
-  gaudi_add_unit_test(${name} ${ARGN}
-                      LINK_LIBRARIES GauchoApplLib)
+  gaudi_add_executable(${name} ${ARGN}
+                       LINK_LIBRARIES GauchoApplLib)
 endmacro()
 
 ga_test(Addertst src/Test/Addertst.cpp)
