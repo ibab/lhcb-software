@@ -3,16 +3,15 @@
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 
-namespace HistoComp
-{
+namespace HistoComp    {
 
   bool isLess2(OnlineHistogram* h1,OnlineHistogram* h2)
   {
     //    const char* h1name = h1->identifier();
     //const char* h2name = h2->identifier();
     return (std::strcmp(h1->identifier().c_str(),h2->identifier().c_str()) <0);
-  };
-};
+  }
+}
 
 class InsertDB : public GaudiHistoAlg {
 public:
