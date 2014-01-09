@@ -891,8 +891,7 @@ static char *sha256_crypt_r(const char *key, const char *salt, char *buffer, int
       int n = _snprintf(cp, MAX(0, buflen), "%s%zu$",
                         sha256_rounds_prefix, rounds);
 #else
-      int n = snprintf(cp, MAX(0, buflen), "%s%zu$",
-                       sha256_rounds_prefix, rounds);
+      int n = ::snprintf(cp,MAX(0,buflen),"%s%lu$",sha256_rounds_prefix,(unsigned long)rounds);
 #endif
       cp += n;
       buflen -= n;

@@ -21,8 +21,8 @@
 #include "Trending/ITrendingTool.h" 
 // global variable
 namespace PresenterGaudi { 
-  extern ITrendingTool * trendingTool ;
-};
+  extern ITrendingTool * trendingTool;
+}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PresenterPage

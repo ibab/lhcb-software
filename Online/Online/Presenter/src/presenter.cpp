@@ -44,13 +44,12 @@ namespace PresenterMutex {
   boost::recursive_mutex oraMutex ;
   boost::recursive_mutex dimMutex ;
   boost::recursive_mutex rootMutex ;
-};
+}
 
 // global variables (Gaudi tools)
 namespace PresenterGaudi {
   ITrendingTool * trendingTool ;
-};
-
+}
 
 void setSystemEnvironment(const char* environmentVariable, const char* value) {
 #if defined(_WIN32)

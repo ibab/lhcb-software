@@ -83,12 +83,12 @@ namespace pres {
 
   enum SavesetType {
     OnlineFile = 0,
-    OfflineFile = 1,
+    OfflineFile = 1
   };
   
   enum EffServiceType {
     MonRate = 0,
-    TCKinfo = 1,
+    TCKinfo = 1
   };
   
   enum ServicePlotMode {

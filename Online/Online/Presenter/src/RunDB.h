@@ -10,9 +10,9 @@
 // forward declarations
 namespace boost {
   namespace posix_time {
-    class ptime ;
-  };
-};
+    class ptime;
+  }
+}
 
 /** @class RunDB RunDB.h
  *  

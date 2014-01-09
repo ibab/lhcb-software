@@ -10,9 +10,9 @@
 // Forward declarations
 namespace boost {
   namespace gregorian {
-    class date ;
-  };
-};
+    class date;
+  }
+}
 
 /** @class ShiftDB ShiftDB.h
  *  

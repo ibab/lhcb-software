@@ -50,7 +50,7 @@ namespace ArchiveSpace {
     return (firstTime < secondTime);
   }
   const int maxRunInterval = 1000;
-};
+}
 
 //=============================================================================
 // Constructor

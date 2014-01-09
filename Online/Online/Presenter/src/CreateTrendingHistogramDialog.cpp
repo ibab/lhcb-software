@@ -21,12 +21,12 @@
 // This class
 #include "CreateTrendingHistogramDialog.h"
 
-ClassImp( CreateTrendingHistogramDialog )
+ClassImp(CreateTrendingHistogramDialog)
 
 // acces to trending tool
-  namespace PresenterGaudi {
-    extern ITrendingTool * trendingTool ;
-  };
+namespace PresenterGaudi {
+  extern ITrendingTool * trendingTool;
+}
 //===========================================================================
 // Constructor
 //===========================================================================

@@ -8,8 +8,8 @@
 
 // forward declaration
 namespace boost {
-  class mutex ;
-};
+  class mutex;
+}
 
 class MonRateRace: public DimInfo {
 public:

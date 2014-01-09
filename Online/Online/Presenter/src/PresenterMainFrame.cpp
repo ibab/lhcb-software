@@ -87,7 +87,7 @@
 
 PresenterMainFrame* gPresenter = 0;
 
-ClassImp(PresenterMainFrame);
+ClassImp(PresenterMainFrame)
 
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/recursive_mutex.hpp>
@@ -98,7 +98,7 @@ namespace PresenterMutex {
   extern boost::recursive_mutex oraMutex;
   extern boost::recursive_mutex dimMutex;
   extern boost::recursive_mutex rootMutex;
-};
+}
 
 //==============================================================================
 // Constructor
