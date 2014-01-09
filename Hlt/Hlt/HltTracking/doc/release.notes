@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-01-09 - Sebastian Neubert
+ - Configured HLT1 and HLT2 to both use the standard (offline) FastVelo algorithm 
+ - Removed HltTrackingConfUserModules "HltTracking.Hlt2Tracking" from requirements
+
 ! 2014-01-09 - Marco Clemencic
  - Fixed dependency problem after the fix in the requirements (as well as in
    CMake).

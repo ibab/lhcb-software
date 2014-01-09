@@ -137,8 +137,10 @@ from Configurables import FastVeloHitManager, DecodeVeloRawBuffer
 
 #### Velo Tracking
 patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo', OutputTracksName = _baseTrackLocation(HltSharedTracksPrefix,HltSharedRZVeloTracksName) ) 
-recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName))
-recoVelo.HLT1Only = True   
+recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName)) 
+# Run the full fast velo 
+recoVelo.HLT1Only = False 
+recoVelo.HLT2Complement = False 
 
 ##### Hlt selections
 from Configurables import Hlt__TrackFilter as HltTrackFilter

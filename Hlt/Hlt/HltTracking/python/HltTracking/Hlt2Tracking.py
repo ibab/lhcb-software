@@ -1203,10 +1203,13 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"VeloTracking"
         if FastVelo:
-            recoVeloExtra = FastVeloTracking( 'FastVeloHlt2', OutputTracksName = veloTracksOutputLocation )
+            # historically we would do the HLT2Complement tracking here on top of the minimal Velo
+            # for 2015 minimalVelo is already the full FastVelo algorithm.
             
-            recoVeloExtra.HLT2Complement = True
-            bm_members      = MinimalVelo.members() + [recoVeloExtra]
+            #recoVeloExtra = FastVeloTracking( 'FastVeloHlt2', OutputTracksName = veloTracksOutputLocation )
+            
+            #recoVeloExtra.HLT2Complement = True
+            bm_members      = MinimalVelo.members() #+ [recoVeloExtra]
         else:
             recoVeloGeneral         = Tf__PatVeloGeneralTracking(self.getProp("Prefix")+'RecoVeloGeneral'
                                                                   , OutputTracksLocation = veloTracksOutputLocation )
