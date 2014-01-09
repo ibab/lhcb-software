@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2014-01-09 - Pieter David
+ - Add header file (and dictionary) with enums used in ParticleFlow and jet reconstruction
+
 !========================= JetAccessories v3r2 2013-12-18 =========================
 
 ! 2013-12-17 - Cedric Potterat

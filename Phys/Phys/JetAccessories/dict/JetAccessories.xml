@@ -1,0 +1,7 @@
+<lcgdict>
+  <enum name="LHCb::ParticleFlowType::ParticleFlowTypes" />
+  <variable name="LHCb::ParticleFlowType::KEY" />
+  <enum name="LHCb::JetIDInfo::JetIDInfos" />
+  <enum name="LHCb::JECInfo::JECInfos" />
+  <enum name="LHCb::JetEnergyFractionInfo::JetEnergyFractionInfos" />
+</lcgdict>

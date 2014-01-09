@@ -19,3 +19,9 @@ gaudi_add_module(JetAccessories
 
 gaudi_install_python_modules()
 
+gaudi_add_dictionary(JetAccessories
+                     dict/JetAccessoriesDict.h
+                     dict/JetAccessories.xml
+                     LINK_LIBRARIES FastJet CaloUtils LHCbMathLib LoKiAlgo
+                     OPTIONS "-U__MINGW32__")
+
