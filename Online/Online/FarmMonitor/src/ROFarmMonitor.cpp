@@ -413,11 +413,11 @@ void ROFarmMonitor::update( )   {
                n > ns->nodes.end()   ||
                n == prev ) {
             FILE* dump = fopen( "/home/ocallot/FarmMonitor.log", "w" );
-            fprintf( dump, "Abnormal nodeset structure for part=%s. begin %p end %p  current %p \n",
-                     (*itP)->name.c_str(), ns->nodes.begin(), ns->nodes.end(), n );
+            ::fprintf( dump, "Abnormal nodeset structure for part=%s. begin %p end %p  current %p \n",
+		       (*itP)->name.c_str(), (void*)ns->nodes.begin(), (void*)ns->nodes.end(), (void*)n );
             prev = ns->nodes.begin();
             while ( prev != n ) {
-              fprintf( dump, "address %p node %s \n", prev, (*prev).name );
+              fprintf( dump, "address %p node %s \n", (void*)prev, (*prev).name );
               const Buffers& buffs = *(*n).buffers();
               for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
                 const Clients& clients = (*ib).clients;
