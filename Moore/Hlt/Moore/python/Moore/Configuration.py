@@ -9,7 +9,7 @@ from LHCbKernel.Configuration import *
 from Gaudi.Configuration import *
 from Configurables import HltConf
 from Configurables import GaudiSequencer
-from Configurables import LHCbApp, L0Conf, L0DUFromRawAlg
+from Configurables import LHCbApp #L0Conf, L0DUFromRawAlg
 from Configurables import DecodeRawEvent, RawEventFormatConf
 
 import GaudiKernel.ProcessJobOptions
@@ -63,66 +63,175 @@ class Moore(LHCbConfigurableUser):
     ## Possible used Configurables
     __used_configurables__ = [ HltConf
                              , LHCbApp
-                             , L0Conf
+                             #, L0Conf
                              , DecodeRawEvent ]
 
 
     __slots__ = {
+        #########################################
+        # Basic options, used to set LHCbApp
+        #########################################
           "EvtMax":            -1    # Maximum number of events to process
         , "SkipEvents":        0
-        , "NbOfSlaves":        0
         , "Simulation":        True # True implies use SimCond
         , "DataType":          '2010' # Data type, can be [ 'DC06','2008' ]
         , "DDDBtag" :          'default' # default as set in DDDBConf for DataType
         , "CondDBtag" :        'default' # default as set in DDDBConf for DataType
+        , 'Persistency' :  None #Root or Pool?
+        , 'WriteFSR'    :  True #copy FSRs as required
+        #########################################
+        # Mandatory options to consider
+        #########################################
+        # either run from a threshold setting
+        , "ThresholdSettings" : ''
+        #or decide how to handle a TCK
+        , "UseTCK"     :       False # use TCK instead of options...
+        , "InitialTCK" :'0x00012009'  # which configuration to use during initialize
+        , "CheckOdin"  :       True  # use TCK from ODIN
+        , 'EnableRunChangeHandler' : False #allow run boundaries and first event to reselect the correct TCK
+        #########################################
+        # Common options, used to configure Moore
+        #########################################
         , "outputFile" :       '' # output filename
         , "inputFiles" :       [ ] # input
-        , "UseTCK"     :       False # use TCK instead of options...
-        , 'ForceSingleL0Configuration' : True # use one single, fixed L0 configuration location (ToolSvc.L0DUConfig)
-        , 'SkipDisabledL0Channels' : False # add Hlt1L0xxx even for disabled L0 channels 
-        , "L0"         :       False # run L0
-        , "ReplaceL0BanksWithEmulated" : False # rerun L0
-        , "RunL0Emulator" : False # run L0 emulator for simulation mc production  
-        , "CheckOdin"  :       True  # use TCK from ODIN
-        , "InitialTCK" :'0x00012009'  # which configuration to use during initialize
-        , "prefetchConfigDir" :'MOORE_v8r8'  # which configurations to prefetch.
-        , "generateConfig" :   False # whether or not to generate a configuration
+        , "EnableTimer" :       True
+        , "EnableDataOnDemand": False
+        , "OutputLevel" : INFO #if this is set to WARNING (or higher) Moore will become almost silent.
+                             #if this is set to DEBUG or VERBOSE, this mimics the previous verbose setting
+                             #if this is set to INFO no changes to default printout is made
+        , 'Split'       : '' # HLT1 or HLT2?
+        , "EnableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
+        #########################################
+        # Options used to make/manipulate TCKs
+        #########################################
         , "configLabel" :      ''    # label for generated configuration
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...
         , "configServices" :   ['ToolSvc','Hlt::Service','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)...
         , "TCKData" :          '$HLTTCKROOT' # where do we read/write TCK data from/to?
         , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite' 
-        , "EnableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
-        , "EnableDataOnDemand": False
-        , "EnableLumiEventWriting"       : True
-        , "EnableTimer" :       True
-        , 'EnableRunChangeHandler' : False
-        , 'EnableAcceptIfSlow' : False
-        , 'WriterRequires' : [ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2
-        , "Verbose" :           True # whether or not to print Hlt sequence
-        , "Silent"  : False #whether or not to suppress all print out possible
-        , "ThresholdSettings" : ''
-        , 'RequireL0ForEndSequence'     : False
-        , 'SkipHltRawBankOnRejectedEvents' : True
-        , 'HistogrammingLevel' : 'Line'
-        , 'EnableMonitoring' : False
+        , "generateConfig" :   False # whether or not to generate a configuration
+        #######################################
+        # Options nominally for online running
+        #######################################
+        , "NbOfSlaves":        0
         , "RunOnline"         : False
+        , 'EnableMonitoring' : False
         , "RunMonitoringFarm" : False
         , "UseDBSnapshot"     : True
         , "DBSnapshotDirectory" : "/group/online/hlt/conditions"
         , "PartitionName" : "LHCb"
+        , 'REQ1' : ''
+        #########################################
+        # Expert options, only set if you know what you are doing
+        #########################################
+        , "NbOfSlaves":        0
+        , 'ForceSingleL0Configuration' : True # use one single, fixed L0 configuration location (ToolSvc.L0DUConfig)
+        , 'SkipDisabledL0Channels' : False # add Hlt1L0xxx even for disabled L0 channels 
+        , "prefetchConfigDir" :'MOORE_v8r8'  # which configurations to prefetch.
+        , "EnableLumiEventWriting"       : True
+        , 'EnableAcceptIfSlow' : False
+        , 'WriterRequires' : [ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2
+        , 'RequireL0ForEndSequence'     : False
+        , 'SkipHltRawBankOnRejectedEvents' : True
+        , 'HistogrammingLevel' : 'Line'
         , 'IgnoreDBHeartBeat'  : False
         , 'TimeOutThreshold'  : 10000  # milliseconds before giving up, and directing event to time out stream
         , 'TimeOutBits'       : 0x200
         , 'RequireRoutingBits' : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
         , 'VetoRoutingBits'    : []
-        , 'REQ1' : ''
-        , 'Persistency' :  None #Root or Pool?
-        , 'WriteFSR'    :  True #copy FSRs as required
-        , 'Split'       : ''
-        }   
-                
-
+        #########################################
+        # Deprecated former options
+        #########################################
+        , "L0"         :       False # run L0, deprecated
+        , "ReplaceL0BanksWithEmulated" : False # rerun L0, deprecated
+        , "RunL0Emulator" : False # run L0 emulator for simulation mc production  , deprecated
+        , "Verbose" :           True # whether or not to print Hlt sequence, deprecated, please use OutputLevel
+        }
+    
+    _propertyDocDct={
+        #########################################
+        # Basic options, used to set LHCbApp
+        #########################################
+          "EvtMax":   "Maximum number of events to process"
+        , "SkipEvents":        "Events to skip, default 0"
+        , "Simulation":        "True implies use SimCond"
+        , "DataType":          'Data type, can be 2010, 2012, etc.'
+        , "DDDBtag" :          'database tag, default as set in DDDBConf for DataType'
+        , "CondDBtag" :        'database tag, default as set in DDDBConf for DataType'
+        , 'Persistency' :      'Formerly used to decide between Pool and Root, not needed any longer'
+        , 'WriteFSR'    :      'copy FSRs if required'
+        #########################################
+        # Mandatory options to consider
+        #########################################
+        # either run from a threshold setting
+        , "ThresholdSettings" : 'Which threshold setting to use, set either this, or the TCK'
+        #or decide how to handle a TCK
+        , "UseTCK"     :       "use TCK instead of options. Set either this or ThresholdSettings"
+        , "InitialTCK" :       'which configuration to use during initialize. If there is no run change hadler enabled, the this will be the only TCK'
+        , "CheckOdin"  :       "use TCK from ODIN, need EnableRunChangeHandler"
+        , 'EnableRunChangeHandler' : "allow run boundaries and first event to reselect the correct TCK"
+        #########################################
+        # Common options, used to configure Moore
+        #########################################
+        , "outputFile" :       'output filename'
+        , "inputFiles" :       "input, can be a simple list of files"
+        , "EnableTimer" :      "Turn on the timing table, Warning! it's very very verbose"
+        , "EnableDataOnDemand": "Activate the DataOnDemand service, sometimes needed during testing"
+        , "OutputLevel" : """Multi-level option, keeps same logic as standard OutputLevel.
+        if this is set to WARNING (or higher) Moore will become almost silent.
+        if this is set to DEBUG or VERBOSE, this mimics the previous verbose setting
+        if this is set to INFO no changes to default printout is made"""
+        , 'Split'       : 'HLT1 or HLT2?'
+        , "EnableAuditor" :    'put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]'
+        #########################################
+        # Options used to make/manipulate TCKs
+        #########################################
+        , "configLabel" :      'label for generated configuration'
+        , "configAlgorithms" : 'which algorithms to configure (automatically including their children!)..., default [Hlt]'
+        , "configServices" :   "['ToolSvc','Hlt::Service','HltANNSvc' ]    # which services to configure (automatically including their dependencies!)..."
+        , "TCKData" :          "'$HLTTCKROOT' # where do we read/write TCK data from/to?"
+        , "TCKpersistency" :   "'tarfile' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite' "
+        , "generateConfig" :   "False # whether or not to generate a configuration"
+        #######################################
+        # Options nominally for online running
+        #######################################
+        , "NbOfSlaves":        "Only for online running"
+        , "RunOnline"         : "Only for online running"
+        , 'EnableMonitoring' : "Turn on monitoring"
+        , "RunMonitoringFarm" : "Only for online running"
+        , "UseDBSnapshot"     : "True for online running, False otherwise"
+        , "DBSnapshotDirectory" : "/group/online/hlt/conditions, where to find the DB snapshot"
+        , "PartitionName" : "LHCb, only for online running"
+        , 'REQ1' : 'Option to evt selector used only in online running'
+        #########################################
+        # Expert options, only set if you know what you are doing
+        #########################################
+        , 'ForceSingleL0Configuration' : "use one single, fixed L0 configuration location (ToolSvc.L0DUConfig), shoucl always be set to true"
+        , 'SkipDisabledL0Channels' : "False # add Hlt1L0xxx even for disabled L0 channels "
+        , "prefetchConfigDir" :"'MOORE_v8r8'  # which configurations to prefetch."
+        , "EnableLumiEventWriting"       : "True"
+        , 'EnableAcceptIfSlow' : "False"
+        , 'WriterRequires' : "[ 'HltDecisionSequence' ] # this contains Hlt1 & Hlt2"
+        , 'RequireL0ForEndSequence'     : "False"
+        , 'SkipHltRawBankOnRejectedEvents' : "True"
+        , 'HistogrammingLevel' : 'Line'
+        , 'IgnoreDBHeartBeat'  : "False, needed workaround to avoid certain DB problems"
+        , 'TimeOutThreshold'  : "10000  # milliseconds before giving up, and directing event to time out stream"
+        , 'TimeOutBits'       : "0x200, unsure"
+        , 'RequireRoutingBits' : "[] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]"
+        , 'VetoRoutingBits'    : "[]"
+        #########################################
+        # Deprecated former options
+        #########################################
+        , "L0"         :       "False # run L0, deprecated"
+        , "ReplaceL0BanksWithEmulated" : "False # rerun L0, deprecated"
+        , "RunL0Emulator" : "False # run L0 emulator for simulation mc production  , deprecated"
+        , "Verbose" :           "True # whether or not to print Hlt sequence, deprecated, please use OutputLevel"
+        }
+    
+    #for deprecation warnings, a map from deprecated option, to what you should use instead (if anything)
+    __deprecated__={"L0":"L0App","ReplaceL0BanksWithEmulated":"L0App","RunL0Emulator":"L0App","Verbose":"Moore().OutputLevel=VERBOSE"}
+    
     def _configureDataOnDemand(self) :
         if not self.getProp("EnableDataOnDemand") :
             if 'DataOnDemandSvc' in ApplicationMgr().ExtSvc : 
@@ -420,56 +529,74 @@ class Moore(LHCbConfigurableUser):
         from Configurables import XmlParserSvc 
         XmlParserSvc().OutputLevel                = WARNING
         MessageSvc().OutputLevel                  = INFO
-        ApplicationMgr().OutputLevel              = ERROR
+        ApplicationMgr().OutputLevel              = INFO #I still want the Application Manager Finalized Sucessfully printout
         SequencerTimerTool().OutputLevel          = WARNING
         # Print algorithm name with 40 characters
         MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
         
-        if self.getProp("Silent"):
-            MessageSvc().OutputLevel = WARNING
-            ToolSvc().OutputLevel = WARNING
-            if self.isPropertySet("Verbose") and self.getProp("Verbose"):
-                raise AttributeError("Cannot be both verbose and silent, please fix")
-            self.setProp("Verbose",False)
+        if self.getProp("OutputLevel")>INFO:
+            level=self.getProp("OutputLevel")
+            MessageSvc().OutputLevel = level
+            ToolSvc().OutputLevel = level
             if self.isPropertySet("EnableTimer") and self.getProp("EnableTimer"):
-                raise AttributeError("Timing table is very far from silent, please disable timing if you want to run silently")
+                raise AttributeError("Timing table is very far from silent, please disable timing if you want to run with lower verbosity")
             self.setProp("EnableTimer",False)
             from Configurables import LoKiSvc
             LoKiSvc().Welcome = False
-            #post config to really reset all the output to null
-            from DAQSys.Decoders import DecoderDB
-            from GaudiConf.Manipulations import postConfForAll#,fullNameConfigurables
-            props={"StatPrint":False,
-                   "ErrorsPrint":False,
-                   "PropertiesPrint":False,
-                   "OutputLevel":WARNING
-                   }
-            from DAQSys.Decoders import DecoderDB
-            for k,v in DecoderDB.iteritems():
-                for pk,pv in props.iteritems():
-                    v.Properties[pk]=pv
-            #only for GaudiHistoAlgs...
-            props["HistoCountersPrint"]=False
-            postConfForAll(head=None, prop_value_dict=props,force=True)
-            #now turn off the calo tool finalize printout
-            tools={"CaloECorrection/ECorrection":{"OutputLevel":WARNING},
-                   "CaloSCorrection/SCorrection":{"OutputLevel":WARNING},
-                   "CaloLCorrection/LCorrection":{"OutputLevel":WARNING}
-                   }
-            postConfForAll(head=None, prop_value_dict={},types=["CaloSinglePhotonAlg","CaloElectronAlg","CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
-            #three extras for merged pi0
-            tools={"CaloCorrectionBase/ShowerProfile":{"OutputLevel":WARNING},
-                   "CaloCorrectionBase/Pi0SCorrection":{"OutputLevel":WARNING},
-                   "CaloCorrectionBase/Pi0LCorrection":{"OutputLevel":WARNING}
-                   }
-            postConfForAll(head=None, prop_value_dict={},types=["CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
-            #I still want to print "Application Manager Finalized Successfully"
-            #and "End of event input reached"
-            def AppMrgOP():
-                ApplicationMgr().OutputLevel=INFO
-                EventSelector().OutputLevel=INFO
-            appendPostConfigAction(AppMrgOP)
-            
+            #################################################
+            # Running from thresholds, use post config action
+            #################################################
+            if not self.getProp("UseTCK"):
+                #post config to really reset all the output to null
+                from DAQSys.Decoders import DecoderDB
+                from GaudiConf.Manipulations import postConfForAll#,fullNameConfigurables
+                props={"StatPrint":False,
+                       "ErrorsPrint":False,
+                       "PropertiesPrint":False,
+                       "OutputLevel":level
+                       }
+                from DAQSys.Decoders import DecoderDB
+                for k,v in DecoderDB.iteritems():
+                    for pk,pv in props.iteritems():
+                        v.Properties[pk]=pv
+                #only for GaudiHistoAlgs...
+                props["HistoCountersPrint"]=False
+                postConfForAll(head=None, prop_value_dict=props,force=True)
+                #now turn off the calo tool finalize printout
+                tools={"CaloECorrection/ECorrection":{"OutputLevel":level},
+                       "CaloSCorrection/SCorrection":{"OutputLevel":level},
+                       "CaloLCorrection/LCorrection":{"OutputLevel":level}
+                       }
+                postConfForAll(head=None, prop_value_dict={},types=["CaloSinglePhotonAlg","CaloElectronAlg","CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
+                #three extras for merged pi0
+                tools={"CaloCorrectionBase/ShowerProfile":{"OutputLevel":level},
+                       "CaloCorrectionBase/Pi0SCorrection":{"OutputLevel":level},
+                       "CaloCorrectionBase/Pi0LCorrection":{"OutputLevel":level}
+                       }
+                postConfForAll(head=None, prop_value_dict={},types=["CaloMergedPi0Alg"],force=True,tool_value_dict=tools)
+                #I still want to print "Application Manager Finalized Successfully"
+                #and "End of event input reached"
+                def AppMrgOP():
+                    ApplicationMgr().OutputLevel=INFO
+                    EventSelector().OutputLevel=INFO
+                appendPostConfigAction(AppMrgOP)
+                #################################################
+                # Running from TCK define a similar transform
+                #################################################
+            else:
+                trans={".*":{"OutputLevel"        : {"^.*$":str(level)}
+                             ,"StatPrint"         : {"^.*$":'False'}
+                             ,"ErrorsPrint"       : {"^.*$":'False'}
+                             ,"PropertiesPrint"   : {"^.*$":'False'}
+                             ,"HistoCountersPrint": {"^.*$":'False'}
+                             }
+                       }
+                from Configurables import HltConfigSvc
+                cfg = HltConfigSvc()
+                cfg.ApplyTransformation = trans
+                #self-defeating warnings!
+                cfg.OutputLevel=ERROR
+                
     
     def _profile(self) :
         ApplicationMgr().AuditAlgorithms = 1
@@ -531,49 +658,23 @@ class Moore(LHCbConfigurableUser):
 
     def _l0(self) :
         from Configurables import L0DUFromRawTool
+        from DAQSys.Decoders import DecoderDB
         #L0DUFromRawAlg('L0DUFromRaw').ProcessorDataOnTES = False
-        l0du   = L0DUFromRawAlg("L0DUFromRaw")
-        #l0du.WriteProcData       = False
-        l0du.addTool(L0DUFromRawTool,name = "L0DUFromRawTool")
-        l0du = getattr( l0du, 'L0DUFromRawTool' )
-        #l0du.FillDataMap         = False
-        #l0du.EncodeProcessorData = False
-        #l0du.Emulate             = False
-        l0du.StatusOnTES         = False
-
-        if ( self.getProp("DataType") == 'DC06' and not self.getProp("L0") ):
-            log.warning("It is mandatory to rerun the L0 emulation on DC06 data to get the HLT to work correctly")
-            log.warning("Will set ReplaceL0BanksWithEmulated = True")
-            self.setProp("ReplaceL0BanksWithEmulated",True)
-        if ( self.getProp("ReplaceL0BanksWithEmulated") and not self.getProp("L0") ):
-            log.warning("You asked to replace L0 banks with emulation. Will set L0 = True")
-            self.setProp("L0",True)
-        if ( self.getProp("RunL0Emulator") and not self.getProp("L0") ):
-            log.warning("You asked to run the L0 emulator. Will set L0 = True")
-            self.setProp("L0",True)    
-        if ( self.getProp("ReplaceL0BanksWithEmulated") and self.getProp("RunL0Emulator") ):
-            raise TypeError('ReplaceL0BanksWithEmulated is not compatible with RunL0Emulator')
-                     
-        if ( self.getProp("L0") ):
-            l0seq = GaudiSequencer("seqL0")
-            ApplicationMgr().TopAlg += [ l0seq ]
-            L0TCK = None
-            if not self.getProp('UseTCK') :
-                from HltConf.ThresholdUtils import Name2Threshold
-                L0TCK = Name2Threshold(self.getProp('ThresholdSettings')).L0TCK()
-            else  :
-                L0TCK = '0x%s' % self.getProp('InitialTCK')[-4:]
-
-            L0Conf().setProp( "TCK", L0TCK )
-            L0Conf().setProp( "L0Sequencer", l0seq )
-            if ( self.getProp("ReplaceL0BanksWithEmulated") ):
-                self.setOtherProps( L0Conf(), [ "ReplaceL0BanksWithEmulated" , "DataType" ] )
-                log.info("Will rerun L0")
-            if ( self.getProp("RunL0Emulator") ):
-                L0Conf().setProp("SimulateL0",True)
-                self.setOtherProps( L0Conf(), [ "DataType" ] )
-                log.info("Will run L0 emulator")
-
+        l0dutool   = DecoderDB["L0DUFromRawTool"]
+        l0dutool.Properties["StatusOnTES"]=False
+        DecoderDB["L0DUFromRawAlg/L0DUFromRaw"].setup()
+        
+        # TODO: nasty hack to insure all L0 algorithms request the right type of config provider...
+        #       should extend the L0 configurable to support this explicitly
+        if self.getProp('ForceSingleL0Configuration') :
+            def _fixL0DUConfigProviderTypes() :
+                from Gaudi.Configuration import allConfigurables
+                for c in allConfigurables.values() :
+                    if hasattr(c,'L0DUConfigProviderType') : c.L0DUConfigProviderType = 'L0DUConfigProvider' 
+                
+            from Gaudi.Configuration import appendPostConfigAction
+            appendPostConfigAction( _fixL0DUConfigProviderTypes )
+        
 
 
     def _config_with_hltconf(self):
@@ -583,7 +684,7 @@ class Moore(LHCbConfigurableUser):
         hltConf = HltConf()
         self.setOtherProps( hltConf,  
                             [ 'ThresholdSettings'
-                            , 'DataType','Verbose'
+                            , 'DataType'
                             , 'RequireL0ForEndSequence'
                             , 'SkipHltRawBankOnRejectedEvents'
                             , 'HistogrammingLevel' 
@@ -596,6 +697,9 @@ class Moore(LHCbConfigurableUser):
                             , 'VetoRoutingBits' 
                             ]
                           )
+        if self.getProp("OutputLevel")<INFO:
+            hltConf.setProp("Verbose",True)
+        
         if self.getProp("Simulation") is True:
             hltConf.setProp("EnableHltGlobalMonitor",False)
             hltConf.setProp("EnableBeetleSyncMonitor",False)
@@ -613,23 +717,6 @@ class Moore(LHCbConfigurableUser):
         VFSSvc().FileAccessTools = ['FileReadTool', 'CondDBEntityResolver/CondDBEntityResolver'];
         from Configurables import LHCb__ParticlePropertySvc
         LHCb__ParticlePropertySvc().ParticlePropertiesFile = 'conddb:///param/ParticleTable.txt';
-        if (self.getProp('L0')) :
-            if (self.getProp('RunOnline')) : raise RuntimeError('NEVER try to rerun L0 online! -- aborting ')
-            from Hlt1Lines.HltL0Candidates import decodeL0Channels
-            decodeL0Channels( '0x%04X' % ( int( _tck(self.getProp('InitialTCK') ),16) & 0xFFFF )
-                            , skipDisabled               = self.getProp('SkipDisabledL0Channels')
-                            , forceSingleL0Configuration = self.getProp('ForceSingleL0Configuration') 
-                            )
-            # TODO: nasty hack to insure all L0 algorithms request the right type of config provider...
-            #       should extend the L0 configurable to support this explicitly
-            if self.getProp('ForceSingleL0Configuration') :
-                    def _fixL0DUConfigProviderTypes() :
-                        from Gaudi.Configuration import allConfigurables
-                        for c in allConfigurables.values() :
-                            if hasattr(c,'L0DUConfigProviderType') : c.L0DUConfigProviderType = 'L0DUConfigProvider' 
-                
-                    from Gaudi.Configuration import appendPostConfigAction
-                    appendPostConfigAction( _fixL0DUConfigProviderTypes )
 
     def _definePersistency(self):
         
@@ -733,7 +820,8 @@ class Moore(LHCbConfigurableUser):
 
         def hlt2_only_tck() :
             from DAQSys.Decoders import DecoderDB
-            dec=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
+            hlt1decoder_name="HltDecReportsDecoder/Hlt1DecReportsDecoder"
+            dec=DecoderDB[hlt1decoder_name]
             decAlg=dec.setup()
             dec2=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
             dec3=DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"]
@@ -742,7 +830,7 @@ class Moore(LHCbConfigurableUser):
             hlt2selrep_location = dec3.listOutputs()[0]
             from Configurables import HltConfigSvc
             cfg = HltConfigSvc()
-            cfg.ApplyTransformation = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'GaudiSequencer/HltDecisionSequence' : "HltDecReportsDecoder/Hlt1DecReportsDecoder', 'GaudiSequencer/Hlt2"  } }
+            cfg.ApplyTransformation = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'GaudiSequencer/HltDecisionSequence' : hlt1decoder_name+"', 'GaudiSequencer/Hlt2"  } }#is this OK?
                                       , 'GaudiSequencer/HltEndSequence' :     { 'Members' : { ", '.*/HltL0GlobalMonitor'" : '' 
                                                                                             , ", '.*/Hlt1Global'"         : ''
                                                                                             , ", '.*/HltLumiWriter'"      : ''
@@ -809,7 +897,13 @@ class Moore(LHCbConfigurableUser):
         # L0 decoding to look in a single place  
         # L0Conf().RawEventLocations = ['DAQ/RawEvent']        
         #L0DUFromRawAlg("L0DUFromRaw").Hlt1 = True 
-        
+        for prop in self.getProperties():
+            if prop in self.__deprecated__:
+                if self.isPropertySet(prop):
+                    warningprint="You are trying to set the deprecated property " + prop
+                    if self.__deprecated__[prop] is not None and len(self.__deprecated__[prop].strip()):
+                        warningprint=warningprint+" please use "+self.__deprecated__[prop]+" instead"
+                    raise AttributeError(warningprint)
         #turn off LoKi::Distance print outs, which are very frequent!
         #todo: put this in a "quiet" option of Moore
         from Configurables import LoKi__DistanceCalculator
@@ -851,7 +945,7 @@ class Moore(LHCbConfigurableUser):
         # WARNING: this triggers setup of /dd -- could be avoided in PA only mode...
         app = LHCbApp()
         self.setOtherProps( app, ['EvtMax','SkipEvents','Simulation', 'DataType' ] )
-
+        
         # this was a hack. Someone thought setOtherProps did not work?
         #app.CondDBtag = self.getProp('CondDBtag')
         #app.DDDBtag   = self.getProp('DDDBtag')

@@ -17,7 +17,6 @@ from Moore.Configuration import Moore
 
 Moore().ThresholdSettings = 'Physics_September2012'
 
-Moore().Verbose = True
 Moore().EvtMax = 10000
 from Configurables import EventSelector
 EventSelector().PrintFreq = 100

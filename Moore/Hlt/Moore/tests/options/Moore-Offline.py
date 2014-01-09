@@ -9,7 +9,6 @@ from Configurables import L0Conf, HltConf
 Moore().UseDBSnapshot= False;
 Moore().Persistency= 'ROOT';
 Moore().outputFile= 'Test.dst';
-Moore().Verbose= False;
 Moore().EnableRunChangeHandler= False;
 Moore().WriterRequires= [];
 Moore().WriteFSR= True;

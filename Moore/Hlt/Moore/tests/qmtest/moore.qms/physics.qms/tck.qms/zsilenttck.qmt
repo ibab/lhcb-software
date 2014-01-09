@@ -2,20 +2,21 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
-    <text>../options/Moore_Hlt1And2.py</text>
+    <text>../options/Moore-Testing-Default.py</text>
+    <text>../options/Moore-LocalTCKData.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().OutputLevel=4; Moore().EvtMax=10; </text>
+    <text>from Configurables import Moore; Moore().EvtMax=10; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False;  Moore().OutputLevel=4;</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
 
 if len(stdout.split('\n'))&gt;85:
     causes.append('stdout is too long, aiming for less than 85 lines')
-    result['moore.physics.silent']=result.Quote('Expected less than 85 lines, got '+ str(len(stdout.split('\n'))))
+    result['moore.physics.tck.zsilenttck']=result.Quote('Expected less than 85 lines, got '+ str(len(stdout.split('\n'))))
 
 if len(stdout)&gt;20000:
     causes.append('stdout is too long, aiming for less than 20k characters')
-    result['moore.physics.silent']=result.Quote('Expected less than 20k characters, got '+ str(len(stdout)))
+    result['moore.physics.tck.zsilenttck']=result.Quote('Expected less than 20k characters, got '+ str(len(stdout)))
 
 #count error lines, shouldn't be any warnings or errors, ideally
 #error lines here are stupid Gaudi warnings about not being able to navigate to input file, 3 input files means 6 errors.

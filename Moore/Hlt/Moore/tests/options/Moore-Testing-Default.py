@@ -12,7 +12,6 @@ from Configurables import Moore
 Moore().UseDBSnapshot= False;
 Moore().Persistency= 'ROOT';
 Moore().outputFile= 'Test.dst';
-Moore().Verbose= False;
 Moore().DataType= '2012';
 Moore().DDDBtag= 'dddb-20120831'; #from RunDB
 Moore().EnableRunChangeHandler= False;

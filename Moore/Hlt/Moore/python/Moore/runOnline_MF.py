@@ -26,7 +26,7 @@ def start() :
     Moore().IgnoreDBHeartBeat = True
     Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
     Moore().HistogrammingLevel = 'Line'
-    Moore().Verbose = True
+    #Moore().Verbose = True
 
     ### pick up requested DB tags
     if hasattr(OnlineEnv,'CondDBTag') and OnlineEnv.CondDBTag : Moore().CondDBtag = OnlineEnv.CondDBTag

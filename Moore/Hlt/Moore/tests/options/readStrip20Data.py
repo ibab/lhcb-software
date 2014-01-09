@@ -6,7 +6,6 @@ from Configurables import Moore
 Moore().UseDBSnapshot= False;
 Moore().Persistency= 'ROOT';
 Moore().outputFile= 'SwimmingTest.dst';
-Moore().Verbose= False;
 Moore().DataType= '2012';
 Moore().DDDBtag= 'head-20120413'; #from RunDB
 Moore().EnableRunChangeHandler= False;
