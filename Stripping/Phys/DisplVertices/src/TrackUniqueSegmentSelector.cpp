@@ -57,6 +57,8 @@ public:
   
   /// select a subset of tracks with unique velo/T segments
   virtual StatusCode select( const LHCb::Track::Range& tracksin, LHCb::Track::Selection& tracksout ) const ;
+  /// overload WARNING ignores track selector
+  virtual StatusCode select( const LHCb::Track::Range& tracksin, LHCb::Track::ConstVector& tracksout ) const ;
   
   /// select a subset of particles with unique velo/T segments
   virtual StatusCode select( const LHCb::Particle::Range& tracksin, LHCb::Particle::Selection& tracksout ) const ;
@@ -390,6 +392,18 @@ StatusCode TrackUniqueSegmentSelector::select(const LHCb::Track::Range& tracks,
   for( LHCb::Track::Range::const_iterator itr(selrange.begin()),end(selrange.end()); itr != end; ++itr,++i)
     if( !isclone[i] ) tracksout.push_back( *itr ) ;
   return sc; 
+}
+
+// simple overload
+StatusCode TrackUniqueSegmentSelector::select( const LHCb::Track::Range& tracksin, LHCb::Track::ConstVector& tracksout ) const
+{
+  std::vector<bool> isclone(tracksin.size(), false);
+  StatusCode sc = flagClones(tracksin, isclone);
+  int i(0);
+  //for( auto itr = tracks.begin(), end = tracks.end() ; itr != end ; ++itr,++i )
+  for( LHCb::Track::Range::const_iterator itr(tracksin.begin()),end(tracksin.end()); itr != end; ++itr,++i)
+    if( !isclone[i] ) tracksout.push_back( *itr ) ;
+  return sc;
 }
 
 //=============================================================================

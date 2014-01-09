@@ -5,6 +5,11 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/ToolHandle.h"
+
+#include "Kernel/ITrackUniqueSegmentSelector.h"
+
+#include "LoKi/UniqueKeeper.h"
 
 /**
  * @class SelectVeloTracksNotFromPV HltDisplVertices/SelectVeloTracksNotFromPV.h
@@ -41,19 +46,25 @@ private:
 
   std::string m_WithIPTrackLocation;          ///< where the tracks are saved
 
+  LHCb::Track::ConstVector m_inputTracks;
+  LHCb::Track::ConstVector m_tracksWithUniqueVelo;
+
   bool m_removeBackwardTracks;                ///< Remove backward tracks
   double m_ipcut;                             ///< Minimum IP cut value
   double m_ipchi2cut;                         ///< Minimum IPChi2 cut value
+  bool m_removeVeloClones;                    ///< Velo clones
+  bool m_removePVTracks;                      ///< Remove tracks that are in a PV
+  LoKi::UniqueKeeper<LHCb::Track> m_allPVTracks; // PV track keeper
 
   unsigned int m_minNumTracks;                ///< Minimal number of tracks that have to pass before accepting the event
 
-  bool m_rejectSplashEvents;                  ///< Reject all events where the FastVelo clone-killing fired
-  unsigned int m_maxNumInputTracks;           ///< Reject events with more than this number of tracks before the filter
   unsigned int m_maxNumOutputTracks;          ///< Reject events with more than this number of tracks after the filter
 
   // debug level flags
   bool m_debug;
   bool m_verbose;
 
+  // unique segment selector
+  ToolHandle<ITrackUniqueSegmentSelector> m_uniqueSegmentSelector;
 };
 #endif // HLTDISPLVERTICES_SELECTVELOTRACKSNOTFROMPV_H

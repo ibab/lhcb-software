@@ -6,6 +6,13 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-01-09 - Pieter David
+ - Unique Velo segment selector and PV track removal
+   . added an extra method to ITrackUniqueSegmentSelector and its
+     implementation to take a ConstVector (and skip the trackselector)
+   . added unique Velo segment selector to track preselection algorithm
+   . added option to remove PV tracks (instead of low MIP or MIPCHI2)
+
+! 2014-01-09 - Pieter David
  - Clean up
    . unused files in fragment/
    . unused algorithms CombineDV, DisplVertices and RecVertices2Particles

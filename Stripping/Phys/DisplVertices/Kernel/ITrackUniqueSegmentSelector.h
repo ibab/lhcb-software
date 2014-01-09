@@ -21,6 +21,8 @@ class GAUDI_API ITrackUniqueSegmentSelector : virtual public IAlgTool
   
   /// select a subset of tracks with unique velo/T segments
   virtual StatusCode select( const LHCb::Track::Range& tracksin, LHCb::Track::Selection& tracksout ) const = 0 ;
+  /// more low-level version of the above
+  virtual StatusCode select( const LHCb::Track::Range& tracksin, LHCb::Track::ConstVector& tracksout ) const = 0 ;
   
   /// select a subset of particles with unique velo/T segments
   virtual StatusCode select( const LHCb::Particle::Range& tracksin, LHCb::Particle::Selection& tracksout ) const = 0 ;
