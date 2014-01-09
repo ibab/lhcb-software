@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-08 - S. Blusk
+ - Change prescale for WS line StrippingX2LcKPiPiPiWSLc2PKPiBeauty2CharmLine from 1.0 to 0.1
+
 ! 2014-01-08 - Jason E. Andrews
  - Added StrippingBu2rho0rhoPlus.py
 

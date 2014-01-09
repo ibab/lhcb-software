@@ -485,7 +485,7 @@ class Lb2XBuilder(object):
         decays = {'X2LcKPiPiPiWS': ["[B+ -> Lambda_c+ a_1(1260)+ K+]cc"]}
         inputs = {'X2LcKPiPiPiWS': self.lc_pid+pipipi+kaons}
         ws = makeB2XSels(decays,'Lc2PKPi',inputs,self.config)
-        self.lines.append(ProtoLine(ws,1.0))
+        self.lines.append(ProtoLine(ws,0.1))
 
 
     def _makeXib2XicHH(self):
