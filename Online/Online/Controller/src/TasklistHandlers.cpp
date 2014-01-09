@@ -20,19 +20,19 @@ using namespace DD4hep;
 using namespace DD4hep::XML;
 using namespace FiniteStateMachine;
 
-DECLARE_UNICODE_TAG(tasks_inventory);
-DECLARE_UNICODE_TAG(task);
-DECLARE_UNICODE_TAG(command);
-DECLARE_UNICODE_TAG(argument);
-DECLARE_UNICODE_TAG(fmcparam);
-DECLARE_UNICODE_TAG(ioparam);
-DECLARE_UNICODE_TAG(action);
-DECLARE_UNICODE_TAG(user);
-DECLARE_UNICODE_TAG(group);
-DECLARE_UNICODE_TAG(instances);
-DECLARE_UNICODE_TAG(timeout);
-DECLARE_UNICODE_TAG(from);
-DECLARE_UNICODE_TAG(to);
+DECLARE_UNICODE_TAG(tasks_inventory)
+DECLARE_UNICODE_TAG(task)
+DECLARE_UNICODE_TAG(command)
+DECLARE_UNICODE_TAG(argument)
+DECLARE_UNICODE_TAG(fmcparam)
+DECLARE_UNICODE_TAG(ioparam)
+DECLARE_UNICODE_TAG(action)
+DECLARE_UNICODE_TAG(user)
+DECLARE_UNICODE_TAG(group)
+DECLARE_UNICODE_TAG(instances)
+DECLARE_UNICODE_TAG(timeout)
+DECLARE_UNICODE_TAG(from)
+DECLARE_UNICODE_TAG(to)
 
 namespace FiniteStateMachine {
   struct TaskParams : public xml_h {

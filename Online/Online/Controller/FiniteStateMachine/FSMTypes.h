@@ -51,6 +51,7 @@ namespace FiniteStateMachine   {
       STOPPED   = 'S',
       PAUSED    = 'P',
       ERROR     = 'E',
+      LAST_STATE_CHAR = 0
     };
   }
 
