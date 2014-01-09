@@ -56,6 +56,14 @@ typedef long (*func)(int, char**);
   #define DLERROR      ::dlerror()
 #endif
 
+namespace {
+  union function {
+    func f;
+    void* p;
+    function(void* ptr) { p = ptr; }
+  };
+}
+
 static int error(const char* format, ...)  {
   va_list args;
   va_start( args, format );
@@ -66,9 +74,9 @@ static int error(const char* format, ...)  {
 extern "C" int OnlineStart(int argc, char** argv)  {
   void* handle = LOAD_LIB( argv[1] );
   if ( 0 != handle )  {
-    func fun = (func)GETPROC(handle, argv[2] );
-    if ( fun ) {
-      return (*fun)(argc-2, &argv[2]);
+    function fun(GETPROC(handle, argv[2] ));
+    if ( fun.f ) {
+      return (*fun.f)(argc-2, &argv[2]);
     }
     std::cout << "Failed to access test procedure!" << std::endl;
   }
@@ -115,9 +123,9 @@ extern "C" int OnlineDeamon(int argc, char** argv)  {
   if ( !dll.empty() && !call.empty() )  {
     void* handle = LOAD_LIB(dll.c_str());
     if ( 0 != handle )  {
-      func fun = (func)GETPROC(handle, call.c_str());
-      if ( fun ) {
-        result = (*fun)(arg.size(), &arg[0]);
+      function fun(GETPROC(handle, call.c_str()));
+      if ( fun.f ) {
+        result = (*fun.f)(arg.size(), &arg[0]);
         if ( result&1 )  {
           printf("Starting DIM FSM....\n");
           LHCb::DimTaskFSM fsm(0);

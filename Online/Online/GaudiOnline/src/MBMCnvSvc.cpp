@@ -113,7 +113,7 @@ void* LHCb::MBMCnvSvc::openIO(const std::string& fname, const std::string&  mode
     // Writing: requires producer
     if ( fname.find("mbm://") == 0 )  {
       std::string proc = RTL::processName();
-      int partID = m_partitionID;
+      unsigned int partID = m_partitionID;
       size_t id1 = fname.find(".0x",6);
       std::string buff = fname.substr(6, id1==std::string::npos ? id1 : id1-6);
       if ( id1 != std::string::npos ) ::sscanf(fname.c_str()+id1+1,"0x%X",&partID);
