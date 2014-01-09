@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-01-09 - Marco Clemencic
+ - Fixed dependency problem after the fix in the requirements (as well as in
+   CMake).
+
 ! 2014-01-08 - Marco Clemencic
  - Minor fix to requirements.
 

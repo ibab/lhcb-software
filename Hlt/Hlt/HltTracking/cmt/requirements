@@ -23,8 +23,9 @@ use TrackInterfaces     v*  Tr
 #use Boost               v*  LCG_Interfaces
 use Python              v*  LCG_Interfaces
 #use SelPy               v*  Phys
-# our python uses various instances defined in HltCommon...
+# our python uses various instances defined in HltCommon and HltLine...
 use HltCommon           v*  Hlt
+use HltLine             v*  Hlt -no_auto_imports
 
 #============================================================================
 # Component library building rule

@@ -9,6 +9,7 @@ gaudi_depends_on_subdirs(Event/HltEvent
                          GaudiKernel
                          Hlt/HltBase
                          Hlt/HltCommon
+                         Hlt/HltLine
                          Tr/TrackInterfaces)
 
 gaudi_add_module(HltTracking
@@ -18,6 +19,6 @@ gaudi_add_module(HltTracking
 
 set_property(DIRECTORY PROPERTY CONFIGURABLE_USER_MODULES HltTracking.Hlt2Tracking)
 gaudi_install_python_modules()
-
+add_dependencies(HltTrackingConfUserDB HltLineConf)
 
 gaudi_add_test(QMTest QMTEST)
