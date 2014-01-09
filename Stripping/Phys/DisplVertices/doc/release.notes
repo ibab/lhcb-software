@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-01-09 - Pieter David
+ - add algorithm to cut on Velo hits phi distribution
+
+! 2014-01-09 - Pieter David
  - Unique Velo segment selector and PV track removal
    . added an extra method to ITrackUniqueSegmentSelector and its
      implementation to take a ConstVector (and skip the trackselector)
