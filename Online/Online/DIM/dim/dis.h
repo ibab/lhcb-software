@@ -24,21 +24,27 @@
 #define dis_selective_update_service dis_selective_update_service_
 #define dis_get_timestamp dis_get_timestamp_
 
-_DIM_PROTOE( int dis_start_serving,    (char *task_name) );
+#ifdef __cplusplus
+#define __CXX_CONST const
+#else
+#define __CXX_CONST
+#endif
+
+_DIM_PROTOE( int dis_start_serving,    (__CXX_CONST char *task_name) );
 _DIM_PROTOE( void dis_stop_serving,    () );
 _DIM_PROTOE( int dis_get_next_cmnd,    (dim_long *tag, int *buffer, int *size ) );
 _DIM_PROTOE( int dis_get_client,       (char *name ) );
 _DIM_PROTOE( int dis_get_conn_id,      () );
-_DIM_PROTOE( unsigned dis_add_service, (char *service_name, char *service_type,
+_DIM_PROTOE( unsigned dis_add_service, (__CXX_CONST char *service_name, __CXX_CONST char *service_type,
 				   void *service_address, int service_size,
 				   void (*usr_routine)(void*,void**,int*,int*), dim_long tag) );
-_DIM_PROTOE( unsigned dis_add_cmnd,        (char *service_name, char *service_type,
+_DIM_PROTOE( unsigned dis_add_cmnd,        (__CXX_CONST char *service_name, __CXX_CONST char *service_type,
 			           void (*usr_routine)(void*,void*,int*), dim_long tag) );
 _DIM_PROTOE( void dis_add_client_exit_handler,(void (*usr_routine)(int*)) );
 _DIM_PROTOE( void dis_set_client_exit_handler,(int conn_id, int tag) );
 _DIM_PROTOE( void dis_add_exit_handler,(void (*usr_routine)(int*)) );
 _DIM_PROTOE( void dis_add_error_handler,(void (*usr_routine)(int, int, char*)) );
-_DIM_PROTOE( void dis_report_service,  (char *service_name) );
+_DIM_PROTOE( void dis_report_service,  (__CXX_CONST char *service_name) );
 _DIM_PROTOE( int dis_update_service,   (unsigned service_id) );
 _DIM_PROTOE( int dis_remove_service,   (unsigned service_id) );
 _DIM_PROTOE( void dis_send_service,    (unsigned service_id, int *buffer,
@@ -53,15 +59,18 @@ _DIM_PROTOE( void dis_disable_padding,      		() );
 _DIM_PROTOE( int dis_get_timeout,      		(unsigned service_id, int client_id) );
 _DIM_PROTOE( char *dis_get_error_services,	() );
 _DIM_PROTOE( char *dis_get_client_services,	(int conn_id) );
-_DIM_PROTOE( int dis_start_serving_dns,		(dim_long dns_id, char *task_name/*, int *id_list*/) );
+_DIM_PROTOE( int dis_start_serving_dns,		(dim_long dns_id, __CXX_CONST char *task_name/*, int *id_list*/) );
 _DIM_PROTOE( void dis_stop_serving_dns,		(dim_long dns_id) );
-_DIM_PROTOE( unsigned dis_add_service_dns,	(dim_long dns_id, char *service_name, char *service_type,
+_DIM_PROTOE( unsigned dis_add_service_dns,	(dim_long dns_id, __CXX_CONST char *service_name, __CXX_CONST char *service_type,
 				   void *service_address, int service_size,
 				   void (*usr_routine)(void*,void**,int*,int*), dim_long tag) );
-_DIM_PROTOE( unsigned dis_add_cmnd_dns,		(dim_long dns_id, char *service_name, char *service_type,
+_DIM_PROTOE( unsigned dis_add_cmnd_dns,		(dim_long dns_id, __CXX_CONST char *service_name, __CXX_CONST char *service_type,
 			       void (*usr_routine)(void*,void*,int*), dim_long tag) );
 _DIM_PROTOE( int dis_get_n_clients,	(unsigned service_id) );
 _DIM_PROTOE( int dis_get_timestamp,     (unsigned service_id, 
 					int *secs, int *millisecs) );
+#ifdef __cplusplus
+#undef __CXX_CONST
+#endif
 
 #endif

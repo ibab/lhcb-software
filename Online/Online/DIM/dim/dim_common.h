@@ -174,6 +174,11 @@ _DIM_PROTOE( void dim_signal_cond,	() );
 #define ENABLE_AST      sigmask(DEC_LEVEL);
 #endif
 
+#ifdef __cplusplus
+#define __CXX_CONST const
+#else
+#define __CXX_CONST
+#endif
 
 _DIM_PROTOE( int id_get,           (void *ptr, int type) );
 _DIM_PROTOE( void id_free,         (int id, int type) );
@@ -186,13 +191,13 @@ _DIM_PROTOE( void dim_init,				() );
 _DIM_PROTOE( void dim_no_threads,		() );
 _DIM_PROTOE( void dna_set_test_write,	(int conn_id, int time) );
 _DIM_PROTOE( void dna_rem_test_write,	(int conn_id) );
-_DIM_PROTOE( int dim_set_dns_node,		(char *node) );
+_DIM_PROTOE( int dim_set_dns_node,		(__CXX_CONST char *node) );
 _DIM_PROTOE( int dim_get_dns_node,		(char *node) );
 _DIM_PROTOE( int dim_set_dns_port,		(int port) );
 _DIM_PROTOE( int dim_get_dns_port,		() );
 _DIM_PROTOE( void dic_set_debug_on,		() );
 _DIM_PROTOE( void dic_set_debug_off,	() );
-_DIM_PROTOE( void dim_print_msg,		(char *msg, int severity) );
+_DIM_PROTOE( void dim_print_msg,		(__CXX_CONST char *msg, int severity) );
 _DIM_PROTOE( void dim_print_date_time,		() );
 _DIM_PROTOE( void dim_set_write_timeout,		(int secs) );
 _DIM_PROTOE( int dim_get_write_timeout,		() );
@@ -203,19 +208,19 @@ _DIM_PROTOE( int dim_set_priority,		(int dim_thread, int *prio) );
 _DIM_PROTOE( int dim_set_scheduler_class,		(int sched_class) );
 _DIM_PROTOE( int dim_get_scheduler_class,		(int *sched_class) );
 _DIM_PROTOE( dim_long dim_start_thread,    (void(*rout)(void*), void *tag) );
-_DIM_PROTOE( int dic_set_dns_node,		(char *node) );
+_DIM_PROTOE( int dic_set_dns_node,		(__CXX_CONST char *node) );
 _DIM_PROTOE( int dic_get_dns_node,		(char *node) );
 _DIM_PROTOE( int dic_set_dns_port,		(int port) );
 _DIM_PROTOE( int dic_get_dns_port,		() );
-_DIM_PROTOE( int dis_set_dns_node,		(char *node) );
+_DIM_PROTOE( int dis_set_dns_node,		(__CXX_CONST char *node) );
 _DIM_PROTOE( int dis_get_dns_node,		(char *node) );
 _DIM_PROTOE( int dis_set_dns_port,		(int port) );
 _DIM_PROTOE( int dis_get_dns_port,		() );
 _DIM_PROTOE( void dim_stop,				() );
 _DIM_PROTOE( int dim_stop_thread,		(dim_long tid) );
-_DIM_PROTOE( dim_long dis_add_dns,		(char *node, int port) );
-_DIM_PROTOE( dim_long dic_add_dns,		(char *node, int port) );
-_DIM_PROTOE( int dim_get_env_var,		(char *env_var, char *value, int value_size) );
+_DIM_PROTOE( dim_long dis_add_dns,		(__CXX_CONST char *node, int port) );
+_DIM_PROTOE( dim_long dic_add_dns,		(__CXX_CONST char *node, int port) );
+_DIM_PROTOE( int dim_get_env_var,		(__CXX_CONST char *env_var, char *value, int value_size) );
 _DIM_PROTOE( int dim_set_write_buffer_size,		(int bytes) );
 _DIM_PROTOE( int dim_get_write_buffer_size,		() );
 _DIM_PROTOE( int dim_set_read_buffer_size,		(int bytes) );
@@ -243,6 +248,10 @@ _DIM_PROTOE( void dim_win_usleep,	(unsigned int t) );
 #define DIM_UNLOCK	dim_unlock();
 #define DISABLE_AST	DIM_LOCK
 #define ENABLE_AST  DIM_UNLOCK
+#endif
+
+#ifdef __cplusplus
+#undef __CXX_CONST
 #endif
 
 _DIM_PROTOE( void dim_print_date_time_millis,		() );

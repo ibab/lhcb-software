@@ -1,6 +1,7 @@
 ################################################################################
 # Package: DIM
 ################################################################################
+
 gaudi_subdir(DIM v1r19)
 
 find_package(X11)
@@ -9,6 +10,7 @@ find_package(Motif)
 # Ignore pedantic warnings
 string(REPLACE "-pedantic" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 string(REPLACE "-pedantic" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+string(REPLACE "-Wwrite-strings" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
 
 add_definitions(-DPROTOCOL=1 -DMIPSEL -Df2cFortran)
 gaudi_add_library(dim
