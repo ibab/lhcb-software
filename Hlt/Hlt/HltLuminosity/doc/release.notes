@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2014-01-09 - Marco Clemencic
+ - Fixed memory management and initialization/finalization logic in LumiPutResult.
+
 ! 2014-01-08 - Marco Clemencic
  - Minor fix to requirements.
 

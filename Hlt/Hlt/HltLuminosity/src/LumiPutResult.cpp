@@ -28,7 +28,7 @@ DECLARE_ALGORITHM_FACTORY( LumiPutResult );
 //=============================================================================
 LumiPutResult::LumiPutResult( const std::string& name,
                                   ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ), m_size(0)
 {
   declareProperty( "InputContainer", m_InputContainerName = LHCb::HltLumiResultLocation::Default );
 }
@@ -37,16 +37,7 @@ LumiPutResult::LumiPutResult( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-LumiPutResult::~LumiPutResult() {
-  // first release DIM
-
-  // how????
-
-  // then release storage
-  delete[] m_means;
-  delete[] m_thresholds;
-  delete[] m_infoKeys;
-} 
+LumiPutResult::~LumiPutResult() {} 
 
 //=============================================================================
 // Initialization
@@ -67,9 +58,9 @@ StatusCode LumiPutResult::initialize() {
   }
 
   // get arrays
-  m_means = new double[m_size];            // create a fixed location for DIM to look at
-  m_thresholds = new double[m_size];       // create a fixed location for DIM to look at
-  m_infoKeys = new unsigned int[m_size];   // corresponding key in the info 
+  m_means.reset(new double[m_size]);            // create a fixed location for DIM to look at
+  m_thresholds.reset(new double[m_size]);       // create a fixed location for DIM to look at
+  m_infoKeys.reset(new unsigned int[m_size]);   // corresponding key in the info 
 
   int i=0;
   for ( int iKey = 0; iKey != LHCb::LumiCounters::LastGlobal; iKey++ ) {
@@ -114,3 +105,28 @@ StatusCode LumiPutResult::execute() {
   return StatusCode::SUCCESS;
 }
 
+//=============================================================================
+// Finalization
+//=============================================================================
+StatusCode LumiPutResult::finalize() {
+  
+  IMonitorSvc* mS = monitorSvc().get();
+  if (mS) {
+    for ( int iKey = 0; iKey != LHCb::LumiCounters::LastGlobal; iKey++ ) {
+      if ( iKey != LHCb::LumiCounters::Unknown ) {
+        // undeclare all possible counters
+        std::string name = LHCb::LumiCounters::counterKeyToString(iKey);
+        mS->undeclareInfo("COUNTER_TO_RATE["+name+"_mean]", this);
+        mS->undeclareInfo("COUNTER_TO_RATE["+name+"_threshold]", this);
+        info() << "counter " << name << " undeclared" << endmsg;
+      }
+    }
+  }
+  
+  // release storage
+  m_means.reset();
+  m_thresholds.reset();
+  m_infoKeys.reset();
+
+  return GaudiAlgorithm::finalize();
+}

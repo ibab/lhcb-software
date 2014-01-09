@@ -3,6 +3,8 @@
 #define LUMIPUTRESULT_H 1
 
 // Include files
+#include <memory>
+
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
@@ -21,13 +23,14 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
   std::string m_InputContainerName;
   unsigned int m_size;
-  double *m_means;
-  double *m_thresholds;
-  unsigned int *m_infoKeys;
+  std::unique_ptr<double[]> m_means;
+  std::unique_ptr<double[]> m_thresholds;
+  std::unique_ptr<unsigned int[]> m_infoKeys;
 
 private:
 
