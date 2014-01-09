@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-01-09 - Sebastian Neubert
+ - New reference for moore.physics.2012 test 
+
 ! 2014-01-08 - Rob Lambert
  - Expand silent behaviour to suppress Calo printout (total now <85 lines)
  - Also check that there are less than 20,000 characters, to avoid really excessively long lines.
