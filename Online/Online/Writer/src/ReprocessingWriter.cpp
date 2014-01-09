@@ -16,7 +16,7 @@
 
 #include <stdexcept>
 
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,ReprocessingWriter);
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,ReprocessingWriter)
 
 using namespace std;
 using namespace LHCb;

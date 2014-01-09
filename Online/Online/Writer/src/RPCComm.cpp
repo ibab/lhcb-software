@@ -120,24 +120,22 @@ void RPCComm::updateFile(char *fileName, unsigned int *trgEvents, unsigned int *
   //XXX check if usual trick with 2 snprintf not better here 
   /* Now we fill up templates. */
 
-  size_t xml_size = snprintf(NULL, 0, UPDATE_TEMPLATE, fileName, msg) +1;
+  size_t xml_size = ::snprintf(NULL, 0, UPDATE_TEMPLATE, fileName, msg) +1;
  
-  char *xmlData = (char *) malloc(xml_size); 
+  char *xmlData = (char *)::malloc(xml_size); 
 
-  ret = snprintf(xmlData, xml_size, UPDATE_TEMPLATE,
-           fileName, msg);
+  ret = ::snprintf(xmlData, xml_size, UPDATE_TEMPLATE, fileName, msg);
   if(ret < 0 || (unsigned int) ret >= xml_size) {
     throw FailureException("Could not format rpc call correctly.");
   }
 
-  snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
-           "WriterHost",  strlen(xmlData));
+  ::snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
+	     "WriterHost",  (long)::strlen(xmlData));
 
-  memset(response, 0, sizeof(response));
+  ::memset(response, 0, sizeof(response));
   ret = requestResponse(headerData, xmlData, response, sizeof(response)-1);
-
-  free(xmlData);
-  free(msg);
+  ::free(xmlData);
+  ::free(msg);
   xmlData = NULL;
   msg = NULL;
 
@@ -183,7 +181,7 @@ void RPCComm::createFile(char *fileName, unsigned int runNumber)
 
   snprintf(xmlData, sizeof(xmlData), OPEN_TEMPLATE, fileName, runNumber);
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
-          "WriterHost", strlen(xmlData));
+	   "WriterHost", (long)strlen(xmlData));
 
   memset(response, 0, sizeof(response));
   ret = requestResponse(headerData, xmlData, response, sizeof(response)-1);
@@ -367,11 +365,10 @@ std::string RPCComm::createNewFile(unsigned int runNumber, std::string streamID,
   char failStr[] = "<value><int>0</int></value>";
   size_t start, end, err;
 
-  snprintf(xmlData, sizeof(xmlData), NEWFILE_TEMPLATE_STREAM, runNumber, streamID.c_str(), identifier.c_str());
-  snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
-          "WriterHost", (size_t) strlen(xmlData));
+  ::snprintf(xmlData, sizeof(xmlData), NEWFILE_TEMPLATE_STREAM, runNumber, streamID.c_str(), identifier.c_str());
+  ::snprintf(headerData,sizeof(headerData),HEADER_TEMPLATE,"WriterHost",(long)::strlen(xmlData));
 
-  memset(response, 0, sizeof(response));
+  ::memset(response, 0, sizeof(response));
   ret = requestResponse(headerData, xmlData, response, sizeof(response)-1);
 
   if (ret < 0)
