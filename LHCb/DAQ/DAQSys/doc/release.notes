@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2014-01-09 - Rob Lambert
+ - Fix issue with renamed HltXXXReportsDecoders introduced in last modification.
+
 ! 2014-01-07 - Rob Lambert
  - Reconfigure trigger decoding in preparation for Hlt1/2 split. 
    Currently both split and non-split reports are created.

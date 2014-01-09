@@ -253,12 +253,15 @@ for report in ["Dec","Sel","Vertex"]:
     #hlt, which HLT to decode? None=both, 1=Hlt1, 2=Hlt2
     for hlt in [None,1,2]:
         hltname="Hlt"
+        algtype="Hlt"+report+"ReportsDecoder"
+        algname=algtype
         if hlt is not None:
             hltname=hltname+str(hlt)
+            algname=algtype+"/"+hltname+report+"ReportsDecoder"
         #create the decoder
         dec=Decoder(
             #\/ e.g. HltSelReportsDecoder/Hlt1SelReportsDecoder
-            "Hlt"+report+"ReportsDecoder/"+hltname+report+"ReportsDecoder",
+            algname,
             active=True,
             #\/ e.g. HltSelReports
             banks=["Hlt"+report+"Reports"],
