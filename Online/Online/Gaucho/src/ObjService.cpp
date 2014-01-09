@@ -7,11 +7,11 @@
 #endif
 ObjService::ObjService()
 {
-};
+}
 
 ObjService::~ObjService()
 {
-};
+}
 
 ObjService::ObjService (DimServerDns *dns,ObjSerializer *s,const char *name, char *format, void *buff, int siz)
 :DimService(dns,name, format, buff, siz)

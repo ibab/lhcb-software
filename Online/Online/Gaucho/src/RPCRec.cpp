@@ -167,7 +167,7 @@ RPCRec::RPCRec(char *name, int timeout, bool synch) : DimRpcInfo(name, timeout, 
   hists = new PTRMAP;
   hists->clear();
   m_synch = synch;
-};
+}
 RPCRec::~RPCRec()
 {
   deletePtr(names);

@@ -43,7 +43,7 @@ dyn_string *Strsplit(char *s, char *del)
     pch = strtok(0,del);
   }
   return v;
-};
+}
 void StringReplace(std::string &in, const char *patt, std::string &repl)
 {
   if (in.find(patt) != std::string::npos)
