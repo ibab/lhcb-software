@@ -98,8 +98,7 @@ void AlarmDisplay::listAlarmsFromHistogramDB() {
     m_mainFrame->GetClient()->NeedRedraw(m_listView);
   }
   m_lastMsgId = -1;
-};
-
+}
 
 void AlarmDisplay::loadSelectedAlarmFromDB(int msgId) {
   bool error=false;
