@@ -49,7 +49,7 @@ WEAK(int) FileDesc::setup(int fdnum) {
                   procfdname,fd,name,strerror(-rc));
       return 0;
     }
-    istmp = (*(int*)name == *(int*)"/tmp/") == 0 ? 0 : 'y';
+    istmp = m_intcheck(name,"/tmp/") == 0 ? 0 : 'y';
     isdel = m_strfind(name,"(deleted)") == 0 ? 0 : 'y';
     is_sock = S_ISFIFO(statbuf.st_mode);
     is_pipe = m_strncmp(name,"pipe:[",6)==0;

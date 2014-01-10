@@ -108,12 +108,12 @@ int Area::write(int fd, bool write_nulls)    const {
         checkpointing_area_print(this,MTCP_DEBUG,"NULL  memory area:");
       }
       else {
-        long* ptr, *start, *sp;
+        long *ptr = 0, *start = 0, *sp = 0;
         if ( m_strcmp(my_name,"[stack]") == 0 ) {
           sp = (long*)low;
           start = ptr = (long*)malloc(((size/sizeof(long))+2)*sizeof(long));
         }
-        if ( m_strcmp(my_name,"[stack]") == 0 ) {
+        if ( sp ) {
           // Between the copy of the stack memory and the call to
           // getcontext, the stack may not change!
           for(;sp<(long*)high;++ptr,++sp) *ptr = *sp;

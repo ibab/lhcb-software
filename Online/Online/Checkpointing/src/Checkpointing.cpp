@@ -11,6 +11,18 @@ using namespace Checkpointing;
 namespace CHECKPOINTING_NAMESPACE {
 #endif
 
+HIDDEN(int)    m_intcheck(const void* a, const void* b)   {
+  const int* ia = (const int*)a;
+  const int* ib = (const int*)b;
+  return *ia == *ib ? 1 : 0;
+}
+
+HIDDEN(int)    m_longcheck(const void* a, const void* b)   {
+  const long* ia = (const long*)a;
+  const long* ib = (const long*)b;
+  return *ia == *ib ? 1 : 0;
+}
+
 HIDDEN(int)    m_isspace(char s) {
   return s==' '||s=='\n'||s=='\t'||s=='\r'||s=='\v'||s=='\f' ? 1 : 0;
 }
@@ -87,11 +99,11 @@ HIDDEN(size_t) m_memset(void* target, unsigned char pattern, size_t len) {
   return len;
 }
 
-HIDDEN(size_t) m_memcpy(void* target, const void* s, size_t len) {
-  const char* q=(const char*)s;
+HIDDEN(size_t) m_memcpy(void* target, const void* source, size_t len) {
+  const char* s=(const char*)source;
   char* t=(char*)target;
-  for(; len>0; ++q, ++t, --len) *t = *q;
-  return q-(const char*)s;
+  for(; len>0; ++s, ++t, --len) *t = *s;
+  return s-(const char*)source;
 }
 
 HIDDEN(int) saveMarker(void* p, Marker flag)   {

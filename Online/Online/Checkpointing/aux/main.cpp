@@ -218,14 +218,14 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
       mtcp_output(MTCP_FATAL,"restore:  address conflict...\n");
     }
   }
+
   if ( data != (void*)sys.addrStart ) {
     mtcp_output(MTCP_FATAL,"restore: %d byte restore region at %p got mapped at %p\n",
                 int(sys.addrSize),pvoid(sys.addrStart),pvoid(data));
   }
-  mtcp_output(MTCP_INFO,"restore: mapped %d byte restore image region at %p - %p in execution mode.\n",
-              int(sys.addrSize),data,pvoid(sys.addrStart+sys.addrSize));
-
   mtcp_sys_read(fd,&siz,sizeof(siz));
+  mtcp_output(MTCP_INFO,"restore: mapped %d [%d] bytes restore image region at %p - %p in execution mode.\n",
+              int(sys.addrSize),int(siz),data,pvoid(sys.addrStart+sys.addrSize));
   mtcp_sys_read(fd,data,sys.addrSize);
   checkMarker(fd,SYS_END_MARKER);
 

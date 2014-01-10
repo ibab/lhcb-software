@@ -11,6 +11,8 @@ namespace CHECKPOINTING_NAMESPACE  {
   typedef unsigned char* Pointer;
   typedef const unsigned char* const_Pointer;
 
+  HIDDEN(int)    m_intcheck(const void* a, const void* b);
+  HIDDEN(int)    m_longcheck(const void* a, const void* b);
   HIDDEN(int)    m_isspace(char s);
   HIDDEN(int)    m_strcmp(const char* t, const char* s);
   HIDDEN(int)    m_strncmp(const char* t, const char* s, size_t len);

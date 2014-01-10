@@ -145,15 +145,15 @@ AreaInfoHandler::AreaInfoHandler() {
 int AreaInfoHandler::handle(int, const Area& a)  {
   //if ( m_prev && a.name[0] != 0 ) m_prev = false;
   if ( a.name[0]=='[' ) {
-    if ( *(int*)a.name == *(int*)"[stack]" ) {
+    if ( m_intcheck(a.name,"[stack]") ) {
       stack[0] = a.low;
       stack[1] = a.high;
     }
-    else if ( *(int*)a.name == *(int*)"[vdso]" ) {
+    else if ( m_intcheck(a.name,"[vdso]") ) {
       vdso[0] = a.low;
       vdso[1] = a.high;
     }
-    else if ( *(int*)a.name == *(int*)"[vsyscall]" ) {
+    else if ( m_intcheck(a.name,"[vsyscall]") ) {
       vsyscall[0] = a.low;
       vsyscall[1] = a.high;
     }
@@ -202,11 +202,11 @@ int AreaWriteHandler::handle(int, const Area& a)    {
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP IMAGE area:");
     return 0;
   }  
-  else if( *(int*)a.name == *(int*)"[vdso]" && chkpt_sys.vsyscallStart == 0 ) {
+  else if( m_intcheck(a.name,"[vdso]") && chkpt_sys.vsyscallStart == 0 ) {
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP [vdso] area:");
     return 0;
   }
-  else if( *(long*)a.name == *(long*)"[vsyscall]" ) {
+  else if( m_longcheck(a.name,"[vsyscall]") ) {
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: SKIP [vsyscall] area:");
     return 0;
   }
@@ -227,7 +227,8 @@ AreaChkptWriteHandler::AreaChkptWriteHandler(int fd) : AreaWriteHandler(fd) {
 }
 
 int AreaChkptWriteHandler::handle(int, const Area& a)    {
-  if ( m_prev || m_strcmp(a.name,chkpt_sys.checkpointImage) == 0 ) {
+  bool is_image = m_strcmp(a.name,chkpt_sys.checkpointImage) == 0;
+  if ( m_prev || is_image ) {
     long rc = 0;
     if ( a.prot[0]=='r' ) {
       rc = m_writemem(m_fd,(void*)a.low,a.size);
@@ -237,7 +238,7 @@ int AreaChkptWriteHandler::handle(int, const Area& a)    {
     }
     if ( rc > 0 ) m_bytes += rc;
     checkpointing_area_print(&a,MTCP_INFO,"Write raw image:");
-    m_prev = m_prev ? false : true;
+    m_prev = is_image ? true : false;
     return rc;
   }
   m_prev = false;

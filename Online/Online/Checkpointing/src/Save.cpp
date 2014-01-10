@@ -259,7 +259,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_memory_scan(AreaHandler* hand
         ::sscanf(high,"%lx",&a.high);
         ::sscanf(off,"%lx",&a.offset);
         a.size = a.high - a.low;
-        *(int*)a.prot = *(int*)prot;
+	m_memcpy(a.prot,prot,sizeof(int));
         if ( !file[0] ) {
           unsigned long brk = (unsigned long)mtcp_sys_brk(0);
           if ( brk >= a.low && brk <= a.high ) file = "[heap]";

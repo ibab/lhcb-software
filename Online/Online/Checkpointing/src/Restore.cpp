@@ -406,7 +406,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread(Process* p, int
 }
 
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_datalength(const Area* a) {
-  if ( *(int*)a->name == *(int*)"[stack]" ) {
+  if ( m_intcheck(a->name,"[stack]") ) {
     // Only write NULL-size marker
     return a->size;
   }
