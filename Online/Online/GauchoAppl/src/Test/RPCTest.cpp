@@ -60,7 +60,8 @@ extern "C"
       }
       canv->Update();
     }
-};
+}
+
 int main(int argc, char *argv[])
 {
 //  int rpcCBValue = 0;
