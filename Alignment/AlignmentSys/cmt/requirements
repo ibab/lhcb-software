@@ -9,30 +9,30 @@ branches cmt doc
 
 # General purpose components
 
-use AlignmentDBVisualisationTool * Alignment # Pieter David
+use AlignmentDBVisualisationTool	v1r1	Alignment # Pieter David
 
-use AlignmentInterfaces * Alignment # Johan Blouw
-use AlignmentTools * Alignment # Sebastien Viret
-use AlignEvent * Alignment # Wouter Hulsbergen
-use AlignKernel * Alignment # Adlene Hicheur, Wouter Hulsbergen
-use AlignSolvTools * Alignment # A. Hicheur, W. Hulsbergen
-use AlignTrTools * Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
-use TAlignment * Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
+use AlignmentInterfaces	v3r3	Alignment # Johan Blouw
+use AlignmentTools      v3r0p1  Alignment # Sebastien Viret
+use AlignEvent		v1r1    Alignment # Wouter Hulsbergen
+use AlignKernel		v3r5    Alignment # Adlene Hicheur, Wouter Hulsbergen
+use AlignSolvTools	v3r3    Alignment # A. Hicheur, W. Hulsbergen
+use AlignTrTools	v4r12	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
+use TAlignment		v6r0	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
 #AlignT2Velo Removed, 03.03.2010
 #use AlignT2Velo         v1r1    Alignment # Steve Blusk
-use VeloAlignment * Alignment # Marco Gersabeck
-use MisAligner * Alignment # Johan Blouw, Manuel Schiller
-use Escher * Alignment # Johan Blouw
-use CommonParticles * Phys
+use VeloAlignment	v4r11	Alignment # Marco Gersabeck
+use MisAligner		v2r1	Alignment # Johan Blouw, Manuel Schiller
+use Escher		v5r0	Alignment # Johan Blouw
+use CommonParticles     v8r17    Phys
 
 #=======================================================
 # LHCb Calibration packages
 #=======================================================
 
-use OTCalibration * Calibration # Wouter Hulsbergen
+use OTCalibration	v1r6   Calibration # Wouter Hulsbergen
 
 #temporary segfault fix, from Rec
-use TrackUtils * Tr
+use TrackUtils v1r54 Tr
 
 # Declare this as a container package
 apply_pattern container_package
