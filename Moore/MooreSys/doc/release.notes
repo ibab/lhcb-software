@@ -3,6 +3,38 @@ Package     : MooreSys
 Package Coordinator : R. Lambert
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v21r0>2014-01-10 MooreSys v21r0</A></H1><PRE>
+Moore/HLT LS1 development version. LHCb v36r4 stack. Depends on Rec v15r4 via Phys v17r4. Based on Gaudi v24r2.
+
+This is a Dev version For January 2014 trigger workshop and commissioning week.
+
+This is expected to be the last HLT/Moore release compatible with slc5. 
+From v22r0 we will only release for slc6 to permit incoming C++11 modifications.
+This is the first Moore version to be macroscopically different from 2012 Moore.
+Deferred HLT2 is now much more similar to concurrent HLT2, but there are still significant differences.
+
+In HLT:
+- Hlt/Tracking v11r0
+ - See task #49515. HLT1 Velo reco is now identical to HLT2.
+
+
+In MOORE:
+
+- Hlt/Moore v21r0
+ - Several minor changes in the configurable.
+   . New options OutputLevel: let the user decide the verbosity of Moore. #42883
+   . INFO (usual really verbose), <INFO (even more verbose), >INFO (almost silent)
+   . Several deprecated options for L0 emulation, please now use L0App.
+   . Reorganize options into options groups and add documentation for options (finally).
+ - Migrate to DAQSys, DecoderDB, see task #19106
+
+Temporarily added packages, DAQSys and GaudiConf for small new features.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v21r0
+and
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v21r0
+
 </PRE><H1><A NAME=v20r4>2013-10-09 MooreSys v20r4</A></H1><PRE>
 Moore/HLT LS1 development version. LHCb v36r2 stack. Depends on Rec v15r2 via Phys v17r2. Based on Gaudi v23r10.
 

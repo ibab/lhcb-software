@@ -1,19 +1,22 @@
 package MooreSys
-version           v20r4
+version           v21r0
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v20r4      Hlt
+use  Moore               v21r0      Hlt
 use  IndependenceTests   v1r5       Hlt
 use  HltMonitor          v1r2	    Hlt   # Diego Martinez
 use  Swimming            v3r0p1     Phys  # Nick Torr
-use  L0App               v1r0p1     L0    # Rob Lambert
+use  L0App               v2r0       L0    # Rob Lambert
 
-# Bug fixes on top of LHCb v36r1 release stack
+# Bug fixes on top of LHCb v36r4 release stack
 
+#temporary for new features
+use  GaudiConf v18r0p1
+use  DAQSys    v7r3    DAQ
 
 # Declare this as a container package
 apply_pattern container_package
