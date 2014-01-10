@@ -60,7 +60,7 @@ LoKi::DistanceCalculatorBase::DistanceCalculatorBase
 // The state provider  tool itself 
   , m_extrapolator     ( 0 ) /// The extrapolator
 // allow transitions between different categories ?
-  , m_allowTransitions ( true )  // allow transitions between categories ?
+  , m_allowTransitions ( false )  // allow transitions between categories ?
 {
   // ==========================================================================
   declareProperty 

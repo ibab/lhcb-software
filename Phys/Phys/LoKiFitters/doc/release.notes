@@ -5,6 +5,11 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2014-01-10 - Vanya Belyaev
+
+ - DistanceCalulator : set AllowTransitions to be False 
+   (many thanks to Wouter and Pieter)
+
 ! 2013-12-20 - Vanya Belyaev
  - set measured mass error to be 1MeV if it is -1 MeV < mErr < 0 
 
