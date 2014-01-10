@@ -38,7 +38,8 @@ int main(int argc, char* argv[]) {
   DumpTrendingFile dump( trendTool );
   dump.dump( std::string( argv[1]), verbose );
   delete trendTool;
-};
+}
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================

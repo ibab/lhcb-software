@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
   ExtractFromTrendingFile extract( trendTool );
   extract.extract( std::string(argv[1]), std::string(argv[2]), std::string(argv[3]), std::string(argv[4]) );
   delete trendTool;
-};
+}
 
 //=============================================================================
 // Standard constructor, initializes variables
