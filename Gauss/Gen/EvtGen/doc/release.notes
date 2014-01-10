@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v13r11 2014-01-10 ==========================
 ! 2014-01-08 - John Back
  - Corrected parameter checks in EvtSVSCPiso and EvtBto2piCPiso.
    Added getPDGId() to EvtParticle. Added Blatt-Weisskopf barrier factors up 
