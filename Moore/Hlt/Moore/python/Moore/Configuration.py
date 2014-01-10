@@ -58,6 +58,48 @@ def _updateProperties( top, table, value ) :
         prop = table.get( conf.getType().replace(':','_') , None )
         if prop : setattr( conf, prop, value )
 
+def _zipdict(dict1,dict2):
+    """
+    return a dictionary with all entries of both dict1 and dict2
+    if entry is a dictionary, recurse, if entry is a list, append
+    """
+    retdict={}
+    
+    for k,v in dict1.iteritems():
+        #unique to dict 1
+        if k not in dict2:
+            retdict[k]=v
+            #else they are not unique, I need to decide what to do about that...
+        elif type(v) != type(dict2[k]):
+            raise TypeError("Cannot zip dicts with identical entries who differ in type! "+str(type(v))+"!="+str(type(dict2[k]))+" for "+str(k))
+        elif type(v) is dict: 
+            #recurse, transforms are dicts of dicts of dicts...
+            retdict[k]=_zipdict(v,dict2[k])
+        elif type(v) is list:
+            retdict[k]=v+[a for a in dict2[k] if a not in v]
+        else:
+            raise TypeError("No rule to zip entries of type "+str(type(v))+" for "+str(k))
+    
+    for k,v in dict2.iteritems():
+        #unique to dict 2
+        if k not in retdict:
+            retdict[k]=v
+    
+    return retdict
+
+def _mergeTransform(trans):
+    """
+    Concatenate transforms into the HltConfigSvc
+    """
+    from Configurables import HltConfigSvc
+    prop="ApplyTransformation"
+    svc=HltConfigSvc()
+    if (svc.getProp(prop) is not None and type(svc.getProp(prop)) is dict and len(svc.getProp(prop))):
+        #if it's already set, or the default is some non-zero dictionary, merge it
+        svc.setProp(prop,_zipdict(svc.getProp(prop),trans))
+    else:
+        #else set it
+        svc.setProp(prop,trans)
 
 class Moore(LHCbConfigurableUser):
     ## Possible used Configurables
@@ -591,9 +633,9 @@ class Moore(LHCbConfigurableUser):
                              ,"HistoCountersPrint": {"^.*$":'False'}
                              }
                        }
+                _mergeTransform(trans)
                 from Configurables import HltConfigSvc
                 cfg = HltConfigSvc()
-                cfg.ApplyTransformation = trans
                 #self-defeating warnings!
                 cfg.OutputLevel=ERROR
                 
@@ -757,11 +799,10 @@ class Moore(LHCbConfigurableUser):
             ##
 
         def hlt1_only_tck() :
-            from Configurables import HltConfigSvc
-            cfg = HltConfigSvc()
-            cfg.ApplyTransformation = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'HltDecisionSequence' : 'Hlt1' } } 
-                                      , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt2' : { '^.*$' : "{  }" } }
-                                      }
+            trans = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'HltDecisionSequence' : 'Hlt1' } } 
+                      , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt2' : { '^.*$' : "{  }" } }
+                      }
+            _mergeTransform(trans)
 
         def hlt2_only() :
             from Configurables import GaudiSequencer as gs
@@ -828,38 +869,36 @@ class Moore(LHCbConfigurableUser):
             hlt1decrep_location = dec.listOutputs()[0]
             hlt2decrep_location = dec2.listOutputs()[0]
             hlt2selrep_location = dec3.listOutputs()[0]
-            from Configurables import HltConfigSvc
-            cfg = HltConfigSvc()
-            cfg.ApplyTransformation = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'GaudiSequencer/HltDecisionSequence' : hlt1decoder_name+"', 'GaudiSequencer/Hlt2"  } }#is this OK?
-                                      , 'GaudiSequencer/HltEndSequence' :     { 'Members' : { ", '.*/HltL0GlobalMonitor'" : '' 
-                                                                                            , ", '.*/Hlt1Global'"         : ''
-                                                                                            , ", '.*/HltLumiWriter'"      : ''
-                                                                                            , ", '.*/LumiStripper'"       : '' } }
-                                      , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt1'             : { '^.*$' : '{ }'               } }
-                                      , '.*HDRFilter/.*'                    : { 'Location'                   : { '^.*$' : hlt1decrep_location } }
-                                      , 'TisTosParticleTagger/.*'           : { 'HltDecReportsInputLocation' : { '^.*$' : hlt1decrep_location } 
-                                                                              , 'PassOnAll'                  : { '^.*$' : 'True'              }
-                                                                              # , 'TriggerTisTosName'          : { '^.*$' : foobar              }
+            trans = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'GaudiSequencer/HltDecisionSequence' : hlt1decoder_name+"', 'GaudiSequencer/Hlt2"  } }#is this OK?
+                      , 'GaudiSequencer/HltEndSequence' :     { 'Members' : { ", '.*/HltL0GlobalMonitor'" : '' 
+                                                                              , ", '.*/Hlt1Global'"         : ''
+                                                                              , ", '.*/HltLumiWriter'"      : ''
+                                                                              , ", '.*/LumiStripper'"       : '' } }
+                      , 'HltGlobalMonitor/HltGlobalMonitor' : { 'DecToGroupHlt1'             : { '^.*$' : '{ }'               } }
+                      , '.*HDRFilter/.*'                    : { 'Location'                   : { '^.*$' : hlt1decrep_location } }
+                      , 'TisTosParticleTagger/.*'           : { 'HltDecReportsInputLocation' : { '^.*$' : hlt1decrep_location } 
+                                                                , 'PassOnAll'                  : { '^.*$' : 'True'              }
+                                                                # , 'TriggerTisTosName'          : { '^.*$' : foobar              }
                                                                               }
-                                      , '.*/HltRoutingBitsWriter'           : { 'Hlt1DecReportsLocation'     : { '^.*$' : hlt1decrep_location } 
-                                                                              , 'Hlt2DecReportsLocation'     : { '^.*$' : hlt2decrep_location } }
-                                      , 'Hlt::Line/.*'                      : { 'HltDecReportsLocation'      : { '^.*$' : hlt2decrep_location } }
-                                      , 'HltDecReportsWriter/.*'            : { 'InputHltDecReportsLocation' : { '^.*$' : hlt2decrep_location } }
-                                      , 'HltSelReportsMaker/.*'             : { 'InputHltDecReportsLocation' : { '^.*$' : hlt2decrep_location } }
-                                      , 'HltGlobalMonitor/.*'               : { 'HltDecReports'              : { '^.*$' : hlt2decrep_location } }
-                                      , 'HltSelReportsMaker/.*'             : { 'OutputHltSelReportsLocation': { '^.*$' : hlt2selrep_location } }
-                                      , 'HltSelReportsWriter/.*'            : { 'InputHltSelReportsLocation' : { '^.*$' : hlt2selrep_location } }
-                                      }
+                      , '.*/HltRoutingBitsWriter'           : { 'Hlt1DecReportsLocation'     : { '^.*$' : hlt1decrep_location } 
+                                                                , 'Hlt2DecReportsLocation'     : { '^.*$' : hlt2decrep_location } }
+                      , 'Hlt::Line/.*'                      : { 'HltDecReportsLocation'      : { '^.*$' : hlt2decrep_location } }
+                      , 'HltDecReportsWriter/.*'            : { 'InputHltDecReportsLocation' : { '^.*$' : hlt2decrep_location } }
+                      , 'HltSelReportsMaker/.*'             : { 'InputHltDecReportsLocation' : { '^.*$' : hlt2decrep_location } }
+                      , 'HltGlobalMonitor/.*'               : { 'HltDecReports'              : { '^.*$' : hlt2decrep_location } }
+                      , 'HltSelReportsMaker/.*'             : { 'OutputHltSelReportsLocation': { '^.*$' : hlt2selrep_location } }
+                      , 'HltSelReportsWriter/.*'            : { 'InputHltSelReportsLocation' : { '^.*$' : hlt2selrep_location } }
+                      }
+            _mergeTransform(trans)
 
         def hlt1hlt2() :
             from Configurables import GaudiSequencer as gs
             _updateProperties( gs('Hlt2') , dict( TisTosParticleTagger = 'PassOnAll' ) , True)
 
         def hlt1hlt2_tck() : 
-            from Configurables import HltConfigSvc
-            cfg = HltConfigSvc()
-            cfg.ApplyTransformation = { 'TisTosParticleTagger/.*' : { 'PassOnAll' : { '^.*$' : 'True' } } }
-
+            trans = { 'TisTosParticleTagger/.*' : { 'PassOnAll' : { '^.*$' : 'True' } } }
+            _mergeTransform(trans)
+        
         # rather nasty way of doing this.. but it is 'hidden' 
         # if you're reading this: don't expect this to remain like this!!!
         try : 

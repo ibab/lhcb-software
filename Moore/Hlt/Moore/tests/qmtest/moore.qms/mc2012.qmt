@@ -2,13 +2,13 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
-    <text>$APPCONFIGOPTS/Moore/MooreSimProductionWithL0Emulation.py</text>
+    <!--<text>$APPCONFIGOPTS/Moore/MooreSimProductionWithL0Emulation.py</text>-->
     <text>$APPCONFIGOPTS/Conditions/TCK-0x409f0045.py</text>
     <text>$APPCONFIGOPTS/Moore/DataType-2012.py</text>
     <text>$APPCONFIGOPTS/L0/L0TCK-0x0045.py</text>
     <text>../options/default-threshold.py</text>
     <text>--option</text>
-    <text>from Gaudi.Configuration import *; from PRConfig import TestFileDB; TestFileDB.test_file_db["Sim08_2012_ForMoore"].run(); from Configurables import L0MuonAlg; L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"</text>
+    <text>from Gaudi.Configuration import *; from Configurables import Moore, L0Conf; from PRConfig import TestFileDB; Moore().UseDBSnapshot=False; Moore().EnableRunChangeHandler = False; Moore().CheckOdin = False; L0Conf().EnsureKnownTCK=False; Moore().WriterRequires = []; TestFileDB.test_file_db["Sim08_2012_L045"].run(Moore()); from Configurables import L0MuonAlg; L0MuonAlg( "L0Muon" ).L0DUConfigProviderType = "L0DUConfigProvider"</text>
   </set></argument>
   <argument name="validator"><text>
 countErrorLines({"FATAL":0, "ERROR":0, "WARNING" :1})
