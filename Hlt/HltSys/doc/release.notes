@@ -14,6 +14,11 @@ Several repackaging changes in the underlying stack. Two important changes here 
 - GaudiStringKey, IANSvc now uses GaudiStringKey to speed up configuration (hopefully). see task #48818
 - DecoderDB, we now pick up where to decode what and with what from the standard decoder DB, see task #19106
 
+Major Developments:
+- HLT1 Velo reconstruction is now the same as the HLT2 velo reconstruction.
+  This reduces the differences between concurrent and deferred triggering by 50%
+  See task #49515
+
 Both require new LHCb features, and so all dependent packages have had their major versions incremented.
 
 For more details see:
