@@ -318,8 +318,9 @@ class StrippingLine(object):
                    postscale = 1    ,   # postscale factor
                    MaxCandidates = "Override",   # Maxumum number of candidates for CombineParticles
                    MaxCombinations = "Override", # Maxumum number of combinations for CombineParticles
-                   HDRLocation = None,  # if None, defined by stream name
+                   HDRLocation = None,           # if None, defined by stream name
                    EnableFlavourTagging = False, # If True, run FlavourTaggingTool to store FT info
+                   ExtraInfoTools = None,        # Configuration of ExtraInfo tools, as a list of dictionaries (or None)
                    **args           ) : # other configuration parameters
 
         if algos and selection :
@@ -359,6 +360,7 @@ class StrippingLine(object):
         self._args      = args
         self.MaxCandidates = MaxCandidates
         self.MaxCombinations = MaxCombinations
+        self.ExtraInfoTools = ExtraInfoTools
 
         line = self.subname()
 
@@ -462,6 +464,30 @@ class StrippingLine(object):
 	    from Configurables import BTagging
 	    btag = BTagging("BTag_"+self.name(), Inputs = [ self.outputLocation() ] ) 
 	    self._members.append(btag)
+
+	# Add extra info tools if needed
+	if self.ExtraInfoTools : 
+	    from Configurables import AddExtraInfo
+	    extraInfoAlg = AddExtraInfo('ExtraInfo' + self.name())
+            extraInfoAlg.MaxLevel = 1
+            extraInfoAlg.Inputs = [ self.outputLocation() ] 
+            toolNames = []
+            toolNum = 0
+            for itool in self.ExtraInfoTools : 
+        	toolNum += 1
+        	toolType = itool["Type"]
+        	toolName = "Tool%d" % toolNum
+        	module = __import__("Configurables", globals(), locals(), [ toolType ] )
+        	toolClass = getattr( module, toolType )
+                localName = "ExtraInfo" + self.name() + "." + toolName
+        	extraInfoAlg.addTool( toolClass, toolName )
+        	toolInstance = getattr( extraInfoAlg, toolName )
+        	for property,value in itool.iteritems() : 
+        	    if property == "Type" : continue
+        	    setattr( toolInstance, property, value)
+        	toolNames += [ toolType + '/' + toolName ]
+       	    extraInfoAlg.Tools = toolNames
+	    self._members.append(extraInfoAlg)
 
         if self._members : 
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = self._members, OutputLevel = WARNING ) })

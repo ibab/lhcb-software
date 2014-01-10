@@ -4,6 +4,18 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-01-10 - Anton Poluektov 
+ - Added ExtraInfoTools argument to StrippingLine. If not None, it adds 
+   AddExtraInfo algorithm and configures ExtraInfo tools (e.g. calculation 
+   of cone variables or vertex isolation variables to be stored in microDST). 
+   Example: 
+
+     ExtraInfoTools = [ 
+                        { "Type" : "ConeVariables", 
+                          "ConeAngle" : 1.0, 
+                          "Variables" = ["ptasy", "mult"] }
+                      ] 
+
 !========================= StrippingConf v4r9 2012-07-04 =========================
 
 ! 2013-07-02 - Anton Poluektov 
