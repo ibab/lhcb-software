@@ -132,7 +132,7 @@ namespace FiniteStateMachine {
     /// Slave mask
     int mask;
     /// Standard constructor. By default all slaves are acted on
-    SetSlaveState(const State* new_state, int match_mask=Slave::SLAVE_NONE) 
+  SetSlaveState(const State* new_state, int match_mask=(int)Slave::SLAVE_NONE) 
       : ActionCounter<State>(new_state), mask(match_mask) {}
     /// Operator invoked for each predicate to check if it is fulfilled
     void operator()(Slave* s);
