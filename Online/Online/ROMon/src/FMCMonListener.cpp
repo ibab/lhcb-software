@@ -69,7 +69,7 @@ void FMCMonListener::addHandler(const std::string& node,const std::string& svc) 
       std::string nam = svc;
       if ( !m_item.empty() ) nam += "/" + m_item;
       m_clients[node] = itm;
-      itm->id = ::dic_info_service((char*)nam.c_str(),MONITORED,m_infoTMO,0,0,infoHandler,(long)itm,0,0);
+      itm->id = ::dic_info_service(nam.c_str(),MONITORED,m_infoTMO,0,0,infoHandler,(long)itm,0,0);
       if ( m_verbose ) log() << "[FMCMonListener] Create DimInfo:" 
                              << nam << "@" << node << " id=" << itm->id << std::endl;
     }
