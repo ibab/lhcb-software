@@ -25,6 +25,7 @@
 #define dis_get_timestamp dis_get_timestamp_
 
 #ifdef __cplusplus
+extern "C" {
 #define __CXX_CONST const
 #else
 #define __CXX_CONST
@@ -71,6 +72,7 @@ _DIM_PROTOE( int dis_get_timestamp,     (unsigned service_id,
 					int *secs, int *millisecs) );
 #ifdef __cplusplus
 #undef __CXX_CONST
+}
 #endif
 
 #endif

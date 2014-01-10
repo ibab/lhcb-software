@@ -21,6 +21,7 @@
 
 /* Routine definition */
 #ifdef __cplusplus
+extern "C" {
 #define __CXX_CONST const
 #else
 #define __CXX_CONST
@@ -59,6 +60,7 @@ _DIM_PROTOE( int dic_get_server_pid,       (int *pid ) );
 
 #ifdef __cplusplus
 #undef __CXX_CONST
+}
 #endif
 
 #endif

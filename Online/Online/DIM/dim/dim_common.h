@@ -152,10 +152,20 @@ extern int DIM_Threads_OFF;
 #ifndef NOTHREADS
 #include <pthread.h>
 
+#ifdef __cplusplus
+extern "C" {
+#define __CXX_CONST const
+#else
+#define __CXX_CONST
+#endif
+
 _DIM_PROTOE( void dim_lock,		() );
 _DIM_PROTOE( void dim_unlock,	() );
 _DIM_PROTOE( void dim_wait_cond,		() );
 _DIM_PROTOE( void dim_signal_cond,	() );
+#ifdef __cplusplus
+}
+#endif
 
 #define DIM_LOCK 	dim_lock();
 #define DIM_UNLOCK	dim_unlock();
@@ -175,9 +185,7 @@ _DIM_PROTOE( void dim_signal_cond,	() );
 #endif
 
 #ifdef __cplusplus
-#define __CXX_CONST const
-#else
-#define __CXX_CONST
+extern "C" {
 #endif
 
 _DIM_PROTOE( int id_get,           (void *ptr, int type) );
@@ -251,6 +259,7 @@ _DIM_PROTOE( void dim_win_usleep,	(unsigned int t) );
 #endif
 
 #ifdef __cplusplus
+}
 #undef __CXX_CONST
 #endif
 

@@ -482,16 +482,22 @@ typedef struct dic_serv {
 } DIC_SERVICE;
 
 /* PROTOTYPES */
+#ifdef __cplusplus
+extern "C" {
+#define __CXX_CONST const
+#else
+#define __CXX_CONST
+#endif
 
 /* DNA */
 _DIM_PROTOE( int dna_start_read,    (int conn_id, int size) );
 _DIM_PROTOE( void dna_test_write,   (int conn_id) );
-_DIM_PROTOE( int dna_write,         (int conn_id, void *buffer, int size) );
-_DIM_PROTOE( int dna_write_nowait,  (int conn_id, void *buffer, int size) );
-_DIM_PROTOE( int dna_open_server,   (char *task, void (*read_ast)(), int *protocol,
+_DIM_PROTOE( int dna_write,         (int conn_id, __CXX_CONST void *buffer, int size) );
+_DIM_PROTOE( int dna_write_nowait,  (int conn_id, __CXX_CONST void *buffer, int size) );
+_DIM_PROTOE( int dna_open_server,   (__CXX_CONST char *task, void (*read_ast)(), int *protocol,
 				int *port, void (*error_ast)()) );
 _DIM_PROTOE( int dna_get_node_task, (int conn_id, char *node, char *task) );
-_DIM_PROTOE( int dna_open_client,   (char *server_node, char *server_task, int port,
+_DIM_PROTOE( int dna_open_client,   (__CXX_CONST char *server_node, __CXX_CONST char *server_task, int port,
                                 int server_protocol, void (*read_ast)(), void (*error_ast)(), SRC_TYPES src_type ));
 _DIM_PROTOE( int dna_close,         (int conn_id) );
 _DIM_PROTOE( void dna_report_error, (int conn_id, int code, char *routine_name) );
@@ -580,6 +586,12 @@ _DIM_PROTO( short _swaps_by_addr, (short *s) );
 _DIM_PROTO( void _swapd_buffer, (double *dout, double *din, int n) );
 _DIM_PROTO( void _swapl_buffer, (int *lout, int *lin, int n) );
 _DIM_PROTO( void _swaps_buffer, (short *sout, short *sin, int n) );
+
+#ifdef __cplusplus
+#undef __CXX_CONST
+}
+#endif
+
 
 #define SIZEOF_CHAR 1
 #define SIZEOF_SHORT 2
