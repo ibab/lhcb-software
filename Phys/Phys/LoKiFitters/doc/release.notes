@@ -5,9 +5,12 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+
+!========================= LoKiFitters v4r8 2014-01-10 =========================
+
 ! 2014-01-10 - Vanya Belyaev
 
- - DistanceCalulator : set AllowTransitions to be False 
+ - DistanceCalculator : set AllowTransitions to be False 
    (many thanks to Wouter and Pieter)
 
 ! 2013-12-20 - Vanya Belyaev
