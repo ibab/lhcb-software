@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v18r0p1 2014-01-10 =========================
 ! 2014-01-08 - Rob Lambert
  - Expand property resetting features to also handle tools linked to algorithms.
  - Currently only one level of tools is possible to set, not tools-of-tools, but this is OK for now.
