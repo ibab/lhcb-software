@@ -129,7 +129,7 @@ void *ObjSerializer::SerializeObj(std::vector<std::string> &nams,void * &ptr,int
     else
     {
       DimBuffBase hh;
-      hh.type = H_ILLEGAL;
+      hh.type = (unsigned int)H_ILLEGAL;
       memcpy (pp,&hh,sizeof(hh));
       pp = AddPtr(pp,sizeof(DimBuffBase));
     }
