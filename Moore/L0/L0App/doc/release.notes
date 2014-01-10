@@ -4,6 +4,7 @@
 ! Purpose     : An LHCb application to run L0 Emulation
 !-----------------------------------------------------------------------------
 
+!========================= L0App v2r0 2014-01-10 =========================
 ! 2014-01-08 - Rob Lambert
  - Fix bug #103574 by explicitly setting the option AppName to ApplicationMgr 
 

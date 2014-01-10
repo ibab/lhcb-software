@@ -3,7 +3,7 @@
 ###############################################
 
 package L0App
-version v1r0
+version           v2r0
 
 branches doc cmt options python tests
 
