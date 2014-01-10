@@ -67,15 +67,18 @@ dyn_string *Strsplit(char *s, char *del)
     pch = strtok(0,del);
   }
   return v;
-};
+}
+
 dyn_string *Strsplit(const char *s, const char *del)
 {
   return Strsplit((char*)s, (char*)del);
 }
+
 dyn_string *Strsplit(const char *s, char *del)
 {
   return Strsplit((char*)s,del);
 }
+
 dyn_string *Strsplit(char *s, const char *del)
 {
   return Strsplit(s,(char*)del);
@@ -365,8 +368,6 @@ time_t get_Boot_Time()
   return btime;
 }
 
-
-
 void get_cmd_line(int ipid,string &cmdline)
 {
   char line[4096];
@@ -464,7 +465,6 @@ static int nl_connect()
         close(nl_sock);
         return -1;
     }
-
     return nl_sock;
 }
 
@@ -474,14 +474,13 @@ static int nl_connect()
 static int set_proc_ev_listen(int nl_sock, bool enable)
 {
     int rc;
-    struct __attribute__ ((aligned(NLMSG_ALIGNTO))) {
+    struct __attribute__ ((aligned(NLMSG_ALIGNTO))) NLCN_MSG {
         struct nlmsghdr nl_hdr;
         struct __attribute__ ((__packed__)) {
             struct cn_msg cn_msg;
             enum proc_cn_mcast_op cn_mcast;
         };
     } nlcn_msg;
-
     memset(&nlcn_msg, 0, sizeof(nlcn_msg));
     nlcn_msg.nl_hdr.nlmsg_len = sizeof(nlcn_msg);
     nlcn_msg.nl_hdr.nlmsg_pid = getpid();
@@ -513,7 +512,7 @@ void *handle_proc_ev(void *arg)
 {
   int nl_sock = *(int*)arg;
     int rc;
-    struct __attribute__ ((aligned(NLMSG_ALIGNTO))) {
+    struct __attribute__ ((aligned(NLMSG_ALIGNTO))) NLCN_MSG {
         struct nlmsghdr nl_hdr;
         struct __attribute__ ((__packed__)) {
             struct cn_msg cn_msg;

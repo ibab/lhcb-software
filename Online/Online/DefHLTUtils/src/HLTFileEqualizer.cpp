@@ -798,7 +798,7 @@ LHCb1RunStatus::LHCb1RunStatus(char *name, int nolink,HLTFileEqualizer *e) : Dim
 {
   m_nolink = nolink;
   m_equalizer = e;
-};
+}
 
 void LHCb1RunStatus::infoHandler()
 {
@@ -810,7 +810,7 @@ void LHCb1RunStatus::infoHandler()
     m_equalizer->Dump();
   }
   m_state = data;
-};
+}
 
 ExclInfo::ExclInfo(char *name, NodeSet *nodeset) : DimInfo(name,(char*) "\0")
 {

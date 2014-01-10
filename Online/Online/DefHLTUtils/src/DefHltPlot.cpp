@@ -144,7 +144,7 @@ void BufferInfo::infoHandler()
     }
   }
 //  m_appl->Run(kTRUE);
-};
+}
 
 int main(int,char **)
 {
