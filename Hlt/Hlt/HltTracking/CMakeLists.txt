@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltTracking
 ################################################################################
-gaudi_subdir(HltTracking v10r0)
+gaudi_subdir(HltTracking v11r0)
 
 gaudi_depends_on_subdirs(Event/HltEvent
                          Event/TrackEvent
