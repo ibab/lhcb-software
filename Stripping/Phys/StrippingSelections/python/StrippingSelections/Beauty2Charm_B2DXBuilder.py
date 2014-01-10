@@ -66,6 +66,9 @@ class B2DXBuilder(object):
         #self._makeB2D0H('D2KSHHDDUP',self.d.kshh_dd_up)# B+- -> D0(KSDDHH) H+-
         self._makeB02D0HH('D2KSHHLL',self.d.kshh_ll) # B0  -> D0(KSLLHH)H+H-
         self._makeB02D0HH('D2KSHHDD',self.d.kshh_dd) # B0  -> D0(KSDDHH)H+H-
+        self._makeB02D0HH('D2KSHHLLWS',self.d.kshh_ll_ws, 0.1) # B0  -> D0(KSLLHH)H+H- (WS D daughters)
+        self._makeB02D0HH('D2KSHHDDWS',self.d.kshh_dd_ws, 0.1) # B0  -> D0(KSDDHH)H+H- (WS D daughters)
+        
         self._makeB2D0H('D2KSHHLLWS',self.d.kshh_ll_ws)
         self.lines[-1].pre = 0.1 # last line is WS D line
         self._makeB2D0H('D2KSHHDDWS',self.d.kshh_dd_ws)
@@ -357,7 +360,7 @@ class B2DXBuilder(object):
         b2dsth = makeB2XSels(decays,dname,inputs,self.config,True,False)
         self.lines.append(ProtoLine(b2dsth,1.0))
                                     
-    def _makeB02D0HH(self,dname,d2x):
+    def _makeB02D0HH(self,dname,d2x,presc=1.0):
         '''Makes RS B0 -> D0 h+h- (h=pi,K) + c.c.'''
         decays = {'B02D0PiPi' : ["B0 -> D0 rho(770)0"],
                   'B02D0KPi'  : ["B0 -> D0 K*(892)0","B0 -> D0 K*(892)~0"],
@@ -369,7 +372,7 @@ class B2DXBuilder(object):
         decays = {'B02DHHWS': ["B0 -> D0 rho(770)-","B0 -> D0 rho(770)+"]}
         inputs = {'B02DHHWS': d2x+self.hh.hh_ws}
         b2d0hh_ws = makeB2XSels(decays,dname,inputs,self.config)
-        self.lines.append(ProtoLine(b2d0hh,1.0))
+        self.lines.append(ProtoLine(b2d0hh,presc))
         self.lines.append(ProtoLine(b2d0hh_ws,0.1))        
 
     def _makeB02D0PPbar(self,dname,d2x):

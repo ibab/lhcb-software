@@ -4,6 +4,19 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-10 - Edmund Smith
+ - Added lines for WS candidates for B0 -> D0(KsHH) HH decays.
+		LL Kshorts:
+  	 * StrippingB02D0KPiD2KSHHLLWSBeauty2CharmLine - B0 -> D0(KsH+H+)K+pi- 
+     * StrippingB02D0KKD2KSHHLLWSBeauty2CharmLine - B0 -> D0(KsH+H+)K+K- 
+     * StrippingB02D0PiPiD2KSHHLLWSBeauty2CharmLine - B0 -> D0(KsH+H+)pi+pi- 
+     * StrippingB02DHHWSD2KSHHLLWSBeauty2CharmLine - B0 -> D0(KsH+H+)H+H+
+		DD Kshorts:
+	   * StrippingB02D0KPiD2KSHHDDWSBeauty2CharmLine - B0 -> D0(KsH+H+)K+pi- 
+  	 * StrippingB02D0KKD2KSHHDDWSBeauty2CharmLine - B0 -> D0(KsH+H+)K+K- 
+     * StrippingB02D0PiPiD2KSHHDDWSBeauty2CharmLine - B0 -> D0(KsH+H+)pi+pi- 
+     * StrippingB02DHHWSD2KSHHDDWSBeauty2CharmLine - B0 -> D0(KsH+H+)H+H+ 
+
 ! 2014-01-08 - S. Blusk
  - Change prescale for WS line StrippingX2LcKPiPiPiWSLc2PKPiBeauty2CharmLine from 1.0 to 0.1
 
