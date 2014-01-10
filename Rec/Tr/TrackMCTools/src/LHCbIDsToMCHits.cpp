@@ -11,6 +11,7 @@
 #include "Event/VPCluster.h"
 #include "Event/OTTime.h"
 #include "Event/MuonCoord.h"
+#include "Event/FTCluster.h"
 
 
 DECLARE_TOOL_FACTORY( LHCbIDsToMCHits )
@@ -22,16 +23,20 @@ LHCbIDsToMCHits::LHCbIDsToMCHits(const std::string& type,
   GaudiTool(type, name, parent),
   m_itLinks(0,0,""),
   m_ttLinks(0,0,""),
+  m_utLinks(0,0,""),
   m_otLinks(0,0,""),
   m_veloLinks(0,0,""),
   m_vPLinks(0,0,""),
   m_muonLinks(0,0,""),
+  m_ftLinks(0,0,""),
   m_configuredOT(false),
   m_configuredIT(false),
   m_configuredTT(false),
+  m_configuredUT(false),
   m_configuredVelo(false),
   m_configuredVP(false),
   m_configuredMuon(false),
+  m_configuredFT(false),
   m_endString("2MCHits") {
 
   // constructer
@@ -56,7 +61,7 @@ StatusCode LHCbIDsToMCHits::initialize(){
 
 
 StatusCode LHCbIDsToMCHits::link(LHCbIDs::const_iterator& start, 
-                                      LHCbIDs::const_iterator& stop, LinkMap& output) const{
+                                 LHCbIDs::const_iterator& stop, LinkMap& output) const{
 
  
 
@@ -84,6 +89,9 @@ StatusCode LHCbIDsToMCHits::link(const LHCbID& id, LinkMap& output) const{
  case LHCbID::TT:
    linkTT(id,output);
    break;
+ case LHCbID::UT:
+   linkUT(id,output);
+   break;
  case LHCbID::Velo:
    linkVelo(id,output);
    break;
@@ -96,8 +104,13 @@ StatusCode LHCbIDsToMCHits::link(const LHCbID& id, LinkMap& output) const{
  case LHCbID::Muon:   
    linkMuon(id,output);
    break;
+ case LHCbID::FT:
+   linkFT(id,output);   
+   break;
+   
+
  default:
-   Warning("Unknown type !", StatusCode::SUCCESS, 1);
+   Warning("Unknown type !", StatusCode::SUCCESS, 10);
    break;
  }
  
@@ -110,6 +123,8 @@ void LHCbIDsToMCHits::handle ( const Incident& incident )
     m_configuredOT = false; 
     m_configuredIT = false;
     m_configuredTT = false;
+    m_configuredUT = false;
+    m_configuredFT = false;
     m_configuredVelo = false;
     m_configuredVP = false;
     m_configuredMuon = false;
@@ -143,6 +158,22 @@ void LHCbIDsToMCHits::linkTT(const LHCbID& lhcbid, LinkMap& output) const{
   linkToDetTruth(lhcbid.stID(),m_ttLinks, output);
  
 }
+
+
+void LHCbIDsToMCHits::linkUT(const LHCbID& lhcbid, LinkMap& output) const
+{
+  if (!m_configuredUT){   
+    m_configuredUT = true;
+    m_utLinks = STLinks( evtSvc(), msgSvc(),LHCb::STClusterLocation::UTClusters+m_endString );
+    if (m_utLinks.notFound()) {
+      throw GaudiException("no UTLinker", "LHCbIDsToMCHits" ,
+                           StatusCode::FAILURE);
+    }
+  }
+  linkToDetTruth(lhcbid.stID(),m_utLinks, output);
+
+}
+
 
 void LHCbIDsToMCHits::linkOT(const LHCbID& lhcbid, LinkMap& output) const{
 
@@ -184,6 +215,22 @@ void LHCbIDsToMCHits::linkVP(const LHCbID& lhcbid, LinkMap& output) const{
   linkToDetTruth(lhcbid.vpID(),m_vPLinks, output);
  
 }
+
+void LHCbIDsToMCHits::linkFT(const LHCbID& lhcbid, LinkMap& output) const
+{
+  if (!m_configuredFT){   
+    m_configuredFT = true;
+    m_ftLinks = FTLinks( evtSvc(), msgSvc(),LHCb::FTClusterLocation::Default+m_endString);
+    if (m_ftLinks.notFound()) {
+      throw GaudiException("no FTLinker", "LHCbIDsToMCHits" ,
+                           StatusCode::FAILURE);
+    } 
+  }
+  linkToDetTruth(lhcbid.ftID(),m_ftLinks, output);
+}
+
+
+
 
 void LHCbIDsToMCHits::linkMuon(const LHCbID& lhcbid, LinkMap& output) const{
 
