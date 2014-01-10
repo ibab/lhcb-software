@@ -7,21 +7,21 @@
 #include "Event/VeloLiteCluster.h"
 
 // local
-#include "VeloEventShapeCuts.h"
+#include "VeloEventShapeCutsS20p3.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : VeloEventShapeCuts
+// Implementation file for class : VeloEventShapeCuts, Stripping20p3 version
 //
 // 2013-12-29 : Maurizio Martinelli, Wouter Hulsbergen, Pieter David
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloEventShapeCuts )
+DECLARE_ALGORITHM_FACTORY( VeloEventShapeCutsS20p3 )
 
 //==============================================================================
 // Constructor
 //==============================================================================
-VeloEventShapeCuts::VeloEventShapeCuts(const std::string& name, ISvcLocator* pSvcLocator)
+VeloEventShapeCutsS20p3::VeloEventShapeCutsS20p3(const std::string& name, ISvcLocator* pSvcLocator)
  : GaudiHistoAlg(name, pSvcLocator)
  , m_velo(0)
  , m_hVeloRatio(0)
@@ -35,14 +35,14 @@ VeloEventShapeCuts::VeloEventShapeCuts(const std::string& name, ISvcLocator* pSv
 //==============================================================================
 // Destructor
 //==============================================================================
-VeloEventShapeCuts::~VeloEventShapeCuts()
+VeloEventShapeCutsS20p3::~VeloEventShapeCutsS20p3()
 {
 }
 
 //==============================================================================
 // Initialize
 //==============================================================================
-StatusCode VeloEventShapeCuts::initialize()
+StatusCode VeloEventShapeCutsS20p3::initialize()
 {
   if (msgLevel(MSG::DEBUG)) { debug() << "==> Initialize" << endmsg; }
 
@@ -63,7 +63,7 @@ StatusCode VeloEventShapeCuts::initialize()
 //==============================================================================
 // Execute
 //==============================================================================
-StatusCode VeloEventShapeCuts::execute()
+StatusCode VeloEventShapeCutsS20p3::execute()
 {
   if (msgLevel(MSG::DEBUG)) { debug() << "==> Execute" << endmsg; }
 
@@ -85,7 +85,7 @@ StatusCode VeloEventShapeCuts::execute()
 //==============================================================================
 // Velo ratio
 //==============================================================================
-double VeloEventShapeCuts::calculateVeloRatio() const
+double VeloEventShapeCutsS20p3::calculateVeloRatio() const
 {
   const LHCb::RecSummary* recSummary = get<LHCb::RecSummary>(LHCb::RecSummaryLocation::Default);
   if (recSummary == 0) {
@@ -98,7 +98,7 @@ double VeloEventShapeCuts::calculateVeloRatio() const
 //==============================================================================
 // Phi vector size
 //==============================================================================
-double VeloEventShapeCuts::calculatePhiVectorSize() const
+double VeloEventShapeCutsS20p3::calculatePhiVectorSize() const
 {
   const LHCb::VeloLiteCluster::VeloLiteClusters* clusters = get<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default);
   if (clusters == 0) {
@@ -123,7 +123,7 @@ double VeloEventShapeCuts::calculatePhiVectorSize() const
 //==============================================================================
 // Finalize
 //==============================================================================
-StatusCode VeloEventShapeCuts::finalize()
+StatusCode VeloEventShapeCutsS20p3::finalize()
 {
   if (msgLevel(MSG::DEBUG)) { debug() << "==> Finalize" << endmsg; }
 

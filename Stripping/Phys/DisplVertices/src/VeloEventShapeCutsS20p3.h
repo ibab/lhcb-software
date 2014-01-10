@@ -1,23 +1,23 @@
-#ifndef DISPLVERTICES_VELOEVENTSHAPECUTS_H
-#define DISPLVERTICES_VELOEVENTSHAPECUTS_H 1
+#ifndef DISPLVERTICES_VELOEVENTSHAPECUTSS20p3_H
+#define DISPLVERTICES_VELOEVENTSHAPECUTSS20p3_H 1
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "VeloDet/DeVelo.h"
 
-/** @class VeloEventShapeCuts VeloEventShapeCuts.h DisplVertices/VeloEventShapeCuts.h
+/** @class VeloEventShapeCutsS20p3 VeloEventShapeCutsS20p3.h DisplVertices/VeloEventShapeCutsS20p3.h
  *
- * Global event cuts to reject events with high Velo track (and vertex) ghost rates
+ * Global event cuts to reject events with high Velo track (and vertex) ghost rates, Stripping20p3 version
  *
  * @author Wouter Hulsbergen
  * @author Pieter David
  * @date   2013-12-29
  */
-class VeloEventShapeCuts : public GaudiHistoAlg {
+class VeloEventShapeCutsS20p3 : public GaudiHistoAlg {
 public:
   /// Standard constructor
-  VeloEventShapeCuts( const std::string& name, ISvcLocator* pSvcLocator );
+  VeloEventShapeCutsS20p3( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~VeloEventShapeCuts();                ///< Destructor
+  virtual ~VeloEventShapeCutsS20p3();           ///< Destructor
 
   virtual StatusCode initialize();              ///< Algorithm initialization
   virtual StatusCode execute   ();              ///< Algorithm execution
@@ -34,4 +34,4 @@ private:
   AIDA::IHistogram1D* m_hVeloRatio;
   AIDA::IHistogram1D* m_hPhiVectorSize;
 };
-#endif // DISPLVERTICES_VELOEVENTSHAPECUTS_H
+#endif // DISPLVERTICES_VELOEVENTSHAPECUTSS20p3_H

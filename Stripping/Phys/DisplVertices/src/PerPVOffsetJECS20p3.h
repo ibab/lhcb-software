@@ -1,5 +1,5 @@
-#ifndef DISPLVERTICES_PERPVOFFSETJET_H
-#define DISPLVERTICES_PERPVOFFSETJET_H 1
+#ifndef DISPLVERTICES_PERPVOFFSETJETS20P3_H
+#define DISPLVERTICES_PERPVOFFSETJETS20P3_H 1
 
 #include "GaudiAlg/GaudiTool.h"
 
@@ -14,14 +14,14 @@ class TH3D;
  * @author Pieter David
  * @date   2013-12-19
  */
-class PerPVOffsetJEC : public GaudiTool, virtual public IParticleReFitter
+class PerPVOffsetJECS20p3 : public GaudiTool, virtual public IParticleReFitter
 {
 public:
-  PerPVOffsetJEC( const std::string& type
+  PerPVOffsetJECS20p3( const std::string& type
                 , const std::string& name
                 , const IInterface* parent );
 
-  virtual ~PerPVOffsetJEC();
+  virtual ~PerPVOffsetJECS20p3();
 
   StatusCode initialize();
 
@@ -33,4 +33,4 @@ private:
   std::vector<TH3D*> m_histos;
   float m_shiftJEC;
 };
-#endif // DISPLVERTICES_PERPVOFFSETJET_H
+#endif // DISPLVERTICES_PERPVOFFSETJETS20P3_H

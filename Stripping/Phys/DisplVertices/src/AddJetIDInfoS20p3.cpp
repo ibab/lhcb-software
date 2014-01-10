@@ -7,16 +7,16 @@
 using namespace LoKi::Cuts;
 
 // local
-#include "AddJetIDInfo.h"
+#include "AddJetIDInfoS20p3.h"
 
 //------------------------------------------------------------------------------
-// Implementation for class AddJetIDInfo
+// Implementation for class AddJetIDInfo, Stripping20p3 version
 //
 // Actaul code: Victor Coco
 // 2013-12-19 : Pieter David (copied from PFJetMakerForDVAlg)
 //------------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( AddJetIDInfo )
+DECLARE_TOOL_FACTORY( AddJetIDInfoS20p3 )
 
 namespace {
   typedef LoKi::Constant<const LHCb::Particle*,double> _PDOUBLE;
@@ -26,7 +26,7 @@ namespace {
 //==============================================================================
 // Constructor
 //==============================================================================
-AddJetIDInfo::AddJetIDInfo(const std::string& type, const std::string& name, const IInterface* parent)
+AddJetIDInfoS20p3::AddJetIDInfoS20p3(const std::string& type, const std::string& name, const IInterface* parent)
   : GaudiTool(type, name, parent)
   , m_cache()
   , PFTYPE          (_PDOUBLE(-1.))
@@ -42,13 +42,13 @@ AddJetIDInfo::AddJetIDInfo(const std::string& type, const std::string& name, con
 //==============================================================================
 // Destructor
 //==============================================================================
-AddJetIDInfo::~AddJetIDInfo()
+AddJetIDInfoS20p3::~AddJetIDInfoS20p3()
 { }
 
 //==============================================================================
 // Initialize
 //==============================================================================
-StatusCode AddJetIDInfo::initialize()
+StatusCode AddJetIDInfoS20p3::initialize()
 {
   if (msgLevel(MSG::DEBUG)) { debug() << "==> initialize" << endmsg; }
 
@@ -69,7 +69,7 @@ StatusCode AddJetIDInfo::initialize()
 //==============================================================================
 // Finalize
 //==============================================================================
-StatusCode AddJetIDInfo::finalize()
+StatusCode AddJetIDInfoS20p3::finalize()
 {
   if (msgLevel(MSG::DEBUG)) { debug() << "==> finalize" << endmsg; }
 
@@ -87,7 +87,7 @@ StatusCode AddJetIDInfo::finalize()
 //==============================================================================
 // Interface method
 //==============================================================================
-StatusCode AddJetIDInfo::calculateExtraInfo(const LHCb::Particle* /* top */, const LHCb::Particle* jet)
+StatusCode AddJetIDInfoS20p3::calculateExtraInfo(const LHCb::Particle* /* top */, const LHCb::Particle* jet)
 { // TODO review implementation
   clearCache();
 
@@ -168,7 +168,7 @@ StatusCode AddJetIDInfo::calculateExtraInfo(const LHCb::Particle* /* top */, con
   return StatusCode::SUCCESS;
 }
 
-bool AddJetIDInfo::cacheValid() const
+bool AddJetIDInfoS20p3::cacheValid() const
 {
   BOOST_FOREACH( const double& v, m_cache ) {
     if ( v == -10. ) {
@@ -178,7 +178,7 @@ bool AddJetIDInfo::cacheValid() const
   return true;
 }
 
-int AddJetIDInfo::getInfo(int index, double& value, std::string& name)
+int AddJetIDInfoS20p3::getInfo(int index, double& value, std::string& name)
 {
   if ( ( index < getFirstIndex() ) || ( index-getFirstIndex() >= getNumberOfParameters() ) || (!cacheValid()) ) {
     return 0;
@@ -200,7 +200,7 @@ int AddJetIDInfo::getInfo(int index, double& value, std::string& name)
   return 1;
 }
 
-void AddJetIDInfo::dump()
+void AddJetIDInfoS20p3::dump()
 {
   double value;
   std::string name;

@@ -13,21 +13,21 @@
 #include "Kernel/JetEnums.h"
 
 // local
-#include "PerPVOffsetJEC.h"
+#include "PerPVOffsetJECS20p3.h"
 
 //------------------------------------------------------------------------------
-// Implementation for class PerPVOffsetJEC
+// Implementation for class PerPVOffsetJEC, Stripping20p3 version
 //
 // Actaul code: Victor Coco
 // 2013-12-19 : Pieter David (copied from PFJetMakerForDVAlg)
 //------------------------------------------------------------------------------
 
-DECLARE_TOOL_FACTORY( PerPVOffsetJEC )
+DECLARE_TOOL_FACTORY( PerPVOffsetJECS20p3 )
 
 //==============================================================================
 // Constructor
 //==============================================================================
-PerPVOffsetJEC::PerPVOffsetJEC(const std::string& type, const std::string& name, const IInterface* parent)
+PerPVOffsetJECS20p3::PerPVOffsetJECS20p3(const std::string& type, const std::string& name, const IInterface* parent)
   : GaudiTool(type, name, parent)
   , m_apply()      // property
   , m_histo_path() // property
@@ -42,13 +42,13 @@ PerPVOffsetJEC::PerPVOffsetJEC(const std::string& type, const std::string& name,
 //==============================================================================
 // Destructor
 //==============================================================================
-PerPVOffsetJEC::~PerPVOffsetJEC()
+PerPVOffsetJECS20p3::~PerPVOffsetJECS20p3()
 { }
 
 //==============================================================================
 // Initialization
 //==============================================================================
-StatusCode PerPVOffsetJEC::initialize()
+StatusCode PerPVOffsetJECS20p3::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) { return sc; }
@@ -76,7 +76,7 @@ namespace {
 //==============================================================================
 // Main method
 //==============================================================================
-StatusCode PerPVOffsetJEC::reFit(LHCb::Particle& jet) const
+StatusCode PerPVOffsetJECS20p3::reFit(LHCb::Particle& jet) const
 {
   int nPVs = std::min( std::size_t(3), get<LHCb::RecVertex::Range>(LHCb::RecVertexLocation::Primary).size() );
   TH3D* histo = m_histos.at(nPVs-1);

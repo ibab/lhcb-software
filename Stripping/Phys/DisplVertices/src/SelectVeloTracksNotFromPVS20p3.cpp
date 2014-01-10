@@ -6,10 +6,9 @@
 
 // from LHCb
 #include "Event/RecVertex.h"
-#include "Event/ProcStatus.h"
 
-#include "LoKi/Constants.h"
 #include "LoKi/TrackCuts.h"
+#include "LoKi/Operators.h"
 #include "KalmanFilter/FastVertex.h"
 
 // boost
@@ -17,12 +16,10 @@
 #include "boost/limits.hpp"
 
 // local
-#include "SelectVeloTracksNotFromPV.h"
-
-using namespace LoKi::Cuts;
+#include "SelectVeloTracksNotFromPVS20p3.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class: SelectVeloTracksNotFromPV
+// Implementation file for class: SelectVeloTracksNotFromPV, Stripping20p3 version
 //
 // @author Neal Gauvin
 // @author Victor Coco
@@ -31,14 +28,14 @@ using namespace LoKi::Cuts;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( SelectVeloTracksNotFromPV )
+DECLARE_ALGORITHM_FACTORY( SelectVeloTracksNotFromPVS20p3 )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-  SelectVeloTracksNotFromPV::SelectVeloTracksNotFromPV( const std::string& name , 
-                                                        ISvcLocator* pSvcLocator )
-    : GaudiAlgorithm( name , pSvcLocator )
+SelectVeloTracksNotFromPVS20p3::SelectVeloTracksNotFromPVS20p3( const std::string& name ,
+                                                      ISvcLocator* pSvcLocator )
+  : GaudiAlgorithm( name , pSvcLocator )
 {
   declareProperty( "Inputs"
                    , m_TracksLocations
@@ -52,10 +49,6 @@ DECLARE_ALGORITHM_FACTORY( SelectVeloTracksNotFromPV )
                    , m_PVLocation = LHCb::RecVertexLocation::Primary
                    , "Primary Vertex location" );
 
-  declareProperty( "RejectSplashEvents"
-                   , m_rejectSplashEvents = true
-                   , "Reject all FastVelo beam splash events, cfr. FastVeloTracking::beamSplashSpaceMerge" );
-
   declareProperty( "RemoveBackwardTracks"
                    , m_removeBackwardTracks = true
                    , "Remove backward tracks" );
@@ -68,9 +61,13 @@ DECLARE_ALGORITHM_FACTORY( SelectVeloTracksNotFromPV )
                    , m_ipchi2cut = -1.0
                    , "Minimum IPChi2 cut value (negative for no cut)" );
 
-  declareProperty( "MaxNumInputTracks"
-                   , m_maxNumInputTracks = boost::numeric::bounds<unsigned int>::highest()
-                   , "Maximal number of input tracks" );
+  declareProperty( "RemoveVeloClones"
+                   , m_removeVeloClones = true
+                   , "Use TrackUniqueSegmentSelector" );
+
+  declareProperty( "RemovePVTracks"
+                   , m_removePVTracks = true
+                   , "Remove tracks that are in a PV (if true, IP and IPCHI2 cuts are ignored)" );
 
   declareProperty( "MaxNumOutputTracks"
                    , m_maxNumOutputTracks = boost::numeric::bounds<unsigned int>::highest()
@@ -80,19 +77,27 @@ DECLARE_ALGORITHM_FACTORY( SelectVeloTracksNotFromPV )
                    , m_minNumTracks = 4
                    , "Minimal number of output tracks required to accept the event" );
 
+  declareProperty( "UniqueVeloSegmentSelector"
+                   , m_uniqueSegmentSelector = ToolHandle<ITrackUniqueSegmentSelector>("TrackUniqueSegmentSelectorS20p3", this)
+                   , "Unique Velo segment selector tool handle" );
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-SelectVeloTracksNotFromPV::~SelectVeloTracksNotFromPV() { }
+SelectVeloTracksNotFromPVS20p3::~SelectVeloTracksNotFromPVS20p3() { }
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode SelectVeloTracksNotFromPV::initialize()
+StatusCode SelectVeloTracksNotFromPVS20p3::initialize()
 {
-  const StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
+  sc = m_uniqueSegmentSelector.retrieve();
+  if ( sc.isFailure() ) { return Error("Could not retrieve unique Velo segment selector", sc); }
+
+  m_inputTracks.reserve(500);
+  m_tracksWithUniqueVelo.reserve(500);
 
   m_debug   = msgLevel(MSG::DEBUG);
   m_verbose = msgLevel(MSG::VERBOSE);
@@ -128,33 +133,11 @@ namespace {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode SelectVeloTracksNotFromPV::execute()
+StatusCode SelectVeloTracksNotFromPVS20p3::execute()
 {
   if (m_debug) { debug() << "==> Execute" << endmsg; }
 
   setFilterPassed(false);
-
-  // If needed, reject splash events immedeately
-  if ( m_rejectSplashEvents ) 
-  {
-    if ( exist<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default ) )
-    {
-      const LHCb::ProcStatus* procStat = 
-        get<LHCb::ProcStatus>( LHCb::ProcStatusLocation::Default );
-      for( LHCb::ProcStatus::AlgStatusVector::const_iterator iAlg = procStat->algs().begin(); 
-           iAlg != procStat->algs().end(); ++iAlg )
-      {
-        if ( m_debug ) { debug() << "Found ProcStatus entry: " 
-                                 << (*iAlg).first << " (" << (*iAlg).second << ")" << endmsg; }
-        if ( (*iAlg).first.compare("OK:VELO:BeamSplashFastVelo:FastVeloTracking") == 0 ) 
-        {
-          if ( m_debug ) { debug() << "==> Rejecting event" << endmsg; }
-          ++counter("#rejected splash");
-          return StatusCode::SUCCESS;
-        }
-      }
-    }
-  }
 
   if ( ! exist<LHCb::RecVertex::Range>(m_PVLocation) )
   {
@@ -164,54 +147,63 @@ StatusCode SelectVeloTracksNotFromPV::execute()
   if (m_verbose) { verbose() << "Number of primary vertices: " 
                              << primaryVertices.size() << endmsg; }
 
-  LHCb::Tracks* iptracks = new LHCb::Tracks();
-  put( iptracks, m_WithIPTrackLocation );
-
-  unsigned int nInput = 0;
-  BOOST_FOREACH( std::string iLocation, m_TracksLocations )
-  {
-    if ( ! exist<LHCb::Tracks>(iLocation) ) 
-    {
-      return Warning( "No tracks found at " + iLocation, StatusCode::SUCCESS, 1 );
+  m_inputTracks.clear();
+  LoKi::TrackTypes::TrCut sel = LoKi::Cuts::TrHASVELO;
+  if ( m_removeBackwardTracks ) {
+    sel = sel && ( ! LoKi::Cuts::TrBACKWARD );
+  }
+  BOOST_FOREACH( const std::string& iLocation, m_TracksLocations ) {
+    if ( ! exist<LHCb::Track::Range>(iLocation) ) {
+      Warning("No tracks found at "+iLocation, StatusCode::SUCCESS);
+    } else {
+      const LHCb::Track::Range trackContainer = get<LHCb::Track::Range>(iLocation);
+      if (m_verbose) { verbose() << "Number of tracks at " << iLocation << " : " << trackContainer.size() << endmsg; }
+      LoKi::select( trackContainer.begin(), trackContainer.end(), std::back_inserter(m_inputTracks), sel ); // std::copy_if
     }
-    const LHCb::Track::Range trackContainer = get<LHCb::Track::Range>(iLocation);
-    if (m_verbose) { verbose() << "Number of tracks: " << trackContainer.size() << endmsg; }
-    nInput += trackContainer.size();
-    if ( nInput > m_maxNumInputTracks ) 
-    {
-      ++counter("# rejected due to a too large number of input tracks");
-      return StatusCode::SUCCESS;
+  }
+  counter("# input tracks with Velo segment") += m_inputTracks.size();
+
+  LHCb::Track::ConstVector& preselTracks = m_inputTracks;
+  if ( m_removeVeloClones ) {
+    m_tracksWithUniqueVelo.clear();
+    m_uniqueSegmentSelector->select( LHCb::Track::Range(m_inputTracks.begin(), m_inputTracks.end()), m_tracksWithUniqueVelo );
+    counter("# unique velo segments") += m_tracksWithUniqueVelo.size();
+    preselTracks = m_tracksWithUniqueVelo;
+  }
+
+  // apply IP cuts
+  LHCb::Tracks* selectedTracks = new LHCb::Tracks();
+  put( selectedTracks, m_WithIPTrackLocation );
+  if ( m_removePVTracks ) { // cfr. LoKi::Particles::HasTracks
+    // collect PV tracks
+    m_allPVTracks.clear();
+    BOOST_FOREACH( const LHCb::RecVertex* pv, primaryVertices ) {
+      const SmartRefVector<LHCb::Track>& pvTracks = pv->tracks();
+      m_allPVTracks.addObjects(pvTracks.begin(), pvTracks.end());
     }
-    counter("# " + iLocation) += trackContainer.size();
-
-    // add all forward tracks passing the MinIP requirement
-    BOOST_FOREACH( const LHCb::Track* iTr, trackContainer )
-    {
-      if (m_verbose) { verbose() << "Track " << iTr->key() << " "
-                                 << ( ( TrBACKWARD(iTr) ) ? "backward" : "forward" ) 
-                                 << endmsg; }
-
-      if ( ( ! ( m_removeBackwardTracks && iTr->checkFlag(LHCb::Track::Backward) ) )
-           && ( std::find_if( primaryVertices.begin(), primaryVertices.end(), CutIPAndChi2(iTr, m_ipcut, m_ipchi2cut) ) == primaryVertices.end() ) )
-      {
-        if (m_verbose) { verbose() << "inserting track " << endmsg; }
-        iptracks->add(iTr->clone());
+    // select tracks if they are not in a PV
+    BOOST_FOREACH( const LHCb::Track* iTr, preselTracks ) {
+      if ( ! std::binary_search( m_allPVTracks.begin(), m_allPVTracks.end(), iTr ) ) {
+        selectedTracks->insert(iTr->clone());
+      }
+    }
+    m_allPVTracks.clear();
+  } else {
+    BOOST_FOREACH( const LHCb::Track* iTr, preselTracks ) {
+      if ( std::find_if( primaryVertices.begin(), primaryVertices.end(), CutIPAndChi2(iTr, m_ipcut, m_ipchi2cut) ) == primaryVertices.end() ) {
+        selectedTracks->insert(iTr->clone());
       }
     }
   }
-  counter("# input tracks") += nInput;
+  counter("# accepted tracks (all events)") += selectedTracks->size();
 
-  if (m_debug) { debug() << "Accepted " << iptracks->size() << " tracks => " << ( ( iptracks->size() >= m_minNumTracks ) ? "Accepting" : "Rejecting" ) << " event"  << endmsg; }
-  counter("# accepted tracks (all events)") += iptracks->size();
-
-  if ( iptracks->size() > m_maxNumOutputTracks ) 
+  if ( selectedTracks->size() > m_maxNumOutputTracks )
   {
     ++counter("# rejected due to a too large number of output tracks");
-    return StatusCode::SUCCESS;
   }
-  if ( iptracks->size() >= m_minNumTracks )
+  if ( selectedTracks->size() >= m_minNumTracks )
   {
-    counter("# accepted tracks (accepted events)") += iptracks->size();
+    counter("# accepted tracks (accepted events)") += selectedTracks->size();
     setFilterPassed(true);
   }
 
@@ -221,9 +213,11 @@ StatusCode SelectVeloTracksNotFromPV::execute()
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode SelectVeloTracksNotFromPV::finalize()
+StatusCode SelectVeloTracksNotFromPVS20p3::finalize()
 {
   if( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+
+  m_uniqueSegmentSelector.release().ignore();
 
   return GaudiAlgorithm::finalize();
 }

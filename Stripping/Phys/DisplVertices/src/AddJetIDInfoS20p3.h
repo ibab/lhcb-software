@@ -1,5 +1,5 @@
-#ifndef DISPLVERTICES_ADDJETIDINFO_H
-#define DISPLVERTICES_ADDJETIDINFO_H 1
+#ifndef DISPLVERTICES_ADDJETIDINFOS20P3_H
+#define DISPLVERTICES_ADDJETIDINFOS20P3_H 1
 
 #include <boost/foreach.hpp>
 
@@ -13,20 +13,20 @@
 #include "LoKi/PhysTypes.h"
 
 /**
- * IExtraInfoTool to fill JetID variables
+ * IExtraInfoTool to fill JetID variables, Stripping20p3 version
  *
  * @author Victor Coco
  * @author Pieter David
  * @date   2013-12-19
  */
-class AddJetIDInfo : public GaudiTool, virtual public IExtraInfoTool
+class AddJetIDInfoS20p3 : public GaudiTool, virtual public IExtraInfoTool
 {
 public:
-  AddJetIDInfo( const std::string& type
+  AddJetIDInfoS20p3( const std::string& type
               , const std::string& name
               , const IInterface* parent );
 
-  virtual ~AddJetIDInfo();
+  virtual ~AddJetIDInfoS20p3();
 
   StatusCode initialize();
   StatusCode finalize();
@@ -54,4 +54,4 @@ private:
   LoKi::PhysTypes::Fun NWITHPVINFOCHI24;
   LoKi::PhysTypes::Cut HASPVINFO;
 };
-#endif // DISPLVERTICES_ADDJETIDINFO_H
+#endif // DISPLVERTICES_ADDJETIDINFOS20P3_H

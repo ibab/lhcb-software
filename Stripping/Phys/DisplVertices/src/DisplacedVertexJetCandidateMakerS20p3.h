@@ -1,5 +1,5 @@
-#ifndef DISPLVERTICES_DISPLACEDVERTEXJETCANDIDATEMAKER_H
-#define DISPLVERTICES_DISPLACEDVERTEXJETCANDIDATEMAKER_H 1
+#ifndef DISPLVERTICES_DISPLACEDVERTEXJETCANDIDATEMAKERS20P3_H
+#define DISPLVERTICES_DISPLACEDVERTEXJETCANDIDATEMAKERS20P3_H 1
 
 #include "GaudiKernel/ToolHandle.h"
 
@@ -10,9 +10,9 @@
 
 #include "LoKi/PhysTypes.h"
 
-/** @class DisplacedVertexJetCandidateMaker DisplacedVertexJetCandidateMaker.h DisplVertices/DisplacedVertexJetCandidateMaker.h
+/** @class DisplacedVertexJetCandidateMakerS20p3 DisplacedVertexJetCandidateMakerS20p3.h DisplVertices/DisplacedVertexJetCandidateMakerS20p3.h
  *
- * A class to create N-jet candidates out of displaced vertex candidates
+ * A class to create N-jet candidates out of displaced vertex candidates, Stripping20p3 version
  *
  * (merged PFJetMakerForDVAlg and MakeNJetsCandidate for Stripping20r*p3)
  * For each input DV candidate (passed through Inputs), the particle flow inputs
@@ -34,12 +34,12 @@
  * @author Pieter David
  * @date   2013-12-18
  */
-class DisplacedVertexJetCandidateMaker : public DaVinciAlgorithm {
+class DisplacedVertexJetCandidateMakerS20p3 : public DaVinciAlgorithm {
 public:
   /// Standard constructor
-  DisplacedVertexJetCandidateMaker( const std::string& name, ISvcLocator* pSvcLocator );
+  DisplacedVertexJetCandidateMakerS20p3( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~DisplacedVertexJetCandidateMaker();  ///< Destructor
+  virtual ~DisplacedVertexJetCandidateMakerS20p3();  ///< Destructor
 
   virtual StatusCode initialize();              ///< Algorithm initialization
   virtual StatusCode execute   ();              ///< Algorithm execution
@@ -84,4 +84,4 @@ private: // TODO clean up and reorder
   StatusCode updateCuts();
   void updateHandlerCuts( Property& p );
 };
-#endif // DISPLVERTICES_DISPLACEDVERTEXJETCANDIDATEMAKER_H
+#endif // DISPLVERTICES_DISPLACEDVERTEXJETCANDIDATEMAKERS20P3_H

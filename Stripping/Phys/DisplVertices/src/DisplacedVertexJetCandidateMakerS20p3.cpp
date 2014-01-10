@@ -14,17 +14,17 @@ using namespace LoKi::Cuts;
 #include "LoKi/IHybridFactory.h"
 
 // local
-#include "DisplacedVertexJetCandidateMaker.h"
+#include "DisplacedVertexJetCandidateMakerS20p3.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : DisplacedVertexJetCandidateMaker
+// Implementation file for class : DisplacedVertexJetCandidateMaker, Stripping20p3 version
 //
 // 2012-06-26 : Victor Coco
 // 2013-12-18 : Pieter David
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( DisplacedVertexJetCandidateMaker )
+DECLARE_ALGORITHM_FACTORY( DisplacedVertexJetCandidateMakerS20p3 )
 
 namespace {
   typedef LoKi::Constant<const LHCb::Particle*,double> _PDOUBLE;
@@ -34,7 +34,7 @@ namespace {
 //==============================================================================
 // Constructor
 //==============================================================================
-DisplacedVertexJetCandidateMaker::DisplacedVertexJetCandidateMaker
+DisplacedVertexJetCandidateMakerS20p3::DisplacedVertexJetCandidateMakerS20p3
   ( const std::string& name, ISvcLocator* pSvcLocator)
   : DaVinciAlgorithm(name, pSvcLocator)
   , PFTYPE         (_PDOUBLE(-1.0))
@@ -50,17 +50,17 @@ DisplacedVertexJetCandidateMaker::DisplacedVertexJetCandidateMaker
 {
   declareProperty("Factory"             , m_factory = "LoKi::Hybrid::Tool/HybridFactory:PUBLIC"
                  , "The Type/Name for C++/Python Hybrid Factory"
-                 )->declareUpdateHandler( &DisplacedVertexJetCandidateMaker::updateHandlerCuts, this );
+                 )->declareUpdateHandler( &DisplacedVertexJetCandidateMakerS20p3::updateHandlerCuts, this );
   declareProperty("Preambulo"           , m_preambulo
                  , "The preambulo to be used for decoding the Bender/Python cuts"
-                 )->declareUpdateHandler( &DisplacedVertexJetCandidateMaker::updateHandlerCuts, this );
+                 )->declareUpdateHandler( &DisplacedVertexJetCandidateMakerS20p3::updateHandlerCuts, this );
 
   declareProperty("PFInputLocation"
                  , m_pfInputLocation = "Phys/PFParticles/Particles"
                  , "Location of the Particle Flow input particles");
   declareProperty("PFInputCut"          , m_pfInputCode = "PALL"
                  , "Cut to apply on the PF inputs before making jets"
-                 )->declareUpdateHandler( &DisplacedVertexJetCandidateMaker::updateHandlerCuts, this );
+                 )->declareUpdateHandler( &DisplacedVertexJetCandidateMakerS20p3::updateHandlerCuts, this );
 
   // Partitioning
   declareProperty("MaxIP2DV"            , m_maxIP2DV = 3.
@@ -75,13 +75,13 @@ DisplacedVertexJetCandidateMaker::DisplacedVertexJetCandidateMaker
   // Jet making and selection
   declareProperty("JetMaker"            , m_jetMaker = ToolHandle<IJetMaker>("LoKi::FastJetMaker", this, true)
                  , "Jet-maker tool handle (IJetMaker interface)") ;
-  declareProperty("JEC"                 , m_JEC = ToolHandle<IParticleReFitter>("PerPVOffsetJEC", this, true)
+  declareProperty("JEC"                 , m_JEC = ToolHandle<IParticleReFitter>("PerPVOffsetJECS20p3", this, true)
                  , "JEC tool");
-  declareProperty("JetIDTool"           , m_jetIDInfoTool = ToolHandle<IExtraInfoTool>("AddJetIDInfo", this, true)
+  declareProperty("JetIDTool"           , m_jetIDInfoTool = ToolHandle<IExtraInfoTool>("AddJetIDInfoS20p3", this, true)
                  , "IExtraInfoTool to use for filling the JetID variables");
   declareProperty("JetIDCut"            , m_jetIDCode = "PALL"
                  , "JetID cut"
-                 )->declareUpdateHandler( &DisplacedVertexJetCandidateMaker::updateHandlerCuts, this );
+                 )->declareUpdateHandler( &DisplacedVertexJetCandidateMakerS20p3::updateHandlerCuts, this );
   // Candidate
   declareProperty("MinNumberOfJets"     , m_minJet = 1, "Minimum number of jets per candidates");
   declareProperty("ParticleCombiner"    , m_combiner = ToolHandle<IParticleCombiner>("MomentumCombiner", this, true)
@@ -92,7 +92,7 @@ DisplacedVertexJetCandidateMaker::DisplacedVertexJetCandidateMaker
 //==============================================================================
 // Destructor
 //==============================================================================
-DisplacedVertexJetCandidateMaker::~DisplacedVertexJetCandidateMaker()
+DisplacedVertexJetCandidateMakerS20p3::~DisplacedVertexJetCandidateMakerS20p3()
 {
 
 }
@@ -100,7 +100,7 @@ DisplacedVertexJetCandidateMaker::~DisplacedVertexJetCandidateMaker()
 //==============================================================================
 // Algorithm initialization
 //==============================================================================
-StatusCode DisplacedVertexJetCandidateMaker::initialize()
+StatusCode DisplacedVertexJetCandidateMakerS20p3::initialize()
 {
   if (msgLevel(MSG::DEBUG)) { debug() << "==> Initialize" << endmsg; }
 
@@ -149,7 +149,7 @@ StatusCode DisplacedVertexJetCandidateMaker::initialize()
 //==============================================================================
 // Algorithm finalization
 //==============================================================================
-StatusCode DisplacedVertexJetCandidateMaker::finalize()
+StatusCode DisplacedVertexJetCandidateMakerS20p3::finalize()
 {
   if (msgLevel(MSG::DEBUG)) { debug() << "==> Finalize" << endmsg; }
 
@@ -173,7 +173,7 @@ StatusCode DisplacedVertexJetCandidateMaker::finalize()
 }
 
 // Concatenate preambulo lines
-std::string DisplacedVertexJetCandidateMaker::preambulo() const
+std::string DisplacedVertexJetCandidateMakerS20p3::preambulo() const
 {
   std::ostringstream result;
   for ( std::vector<std::string>::const_iterator iline = m_preambulo.begin(), iline_end = m_preambulo.end();
@@ -188,14 +188,14 @@ std::string DisplacedVertexJetCandidateMaker::preambulo() const
 //==============================================================================
 // Update handler: re-decode cuts
 //==============================================================================
-void DisplacedVertexJetCandidateMaker::updateHandlerCuts(Property& /*p*/)
+void DisplacedVertexJetCandidateMakerS20p3::updateHandlerCuts(Property& /*p*/)
 {
   if ( Gaudi::StateMachine::INITIALIZED <= FSMState() ) {
       StatusCode sc = updateCuts();
       if (sc.isFailure()) { Error("Error from updateCuts", sc); }
   } // otherwise, it will get called from initialize()
 }
-StatusCode DisplacedVertexJetCandidateMaker::updateCuts()
+StatusCode DisplacedVertexJetCandidateMakerS20p3::updateCuts()
 {
   LoKi::IHybridFactory* factory = tool<LoKi::IHybridFactory>( m_factory, this );
   std::string preAmbulo = preambulo();
@@ -210,7 +210,7 @@ StatusCode DisplacedVertexJetCandidateMaker::updateCuts()
 //==============================================================================
 // Execute method
 //==============================================================================
-StatusCode DisplacedVertexJetCandidateMaker::execute()
+StatusCode DisplacedVertexJetCandidateMakerS20p3::execute()
 {
   if (msgLevel(MSG::DEBUG)) { debug() << "==> Execute" << endmsg; }
 
@@ -311,7 +311,7 @@ StatusCode DisplacedVertexJetCandidateMaker::execute()
 }
 
 // Helper method: combine the jets, construct the candidate and put it on the TES
-bool DisplacedVertexJetCandidateMaker::makeCandidate( const LHCb::Particle::Vector& daughters, const LHCb::Particle* strippingCandidate )
+bool DisplacedVertexJetCandidateMakerS20p3::makeCandidate( const LHCb::Particle::Vector& daughters, const LHCb::Particle* strippingCandidate )
 {
   if (msgLevel(MSG::DEBUG)) { debug() << "Creating candidate from " << daughters.size() << " jets" << endmsg; }
   bool accepted = false;
@@ -344,7 +344,7 @@ bool DisplacedVertexJetCandidateMaker::makeCandidate( const LHCb::Particle::Vect
 }
 
 // Helper method: actually save the extrainfos calculated by the JetID tool
-void DisplacedVertexJetCandidateMaker::addJetIDInfo(LHCb::Particle* jet)
+void DisplacedVertexJetCandidateMakerS20p3::addJetIDInfo(LHCb::Particle* jet)
 {
   m_jetIDInfoTool->calculateExtraInfo(0, jet);
   std::string name;

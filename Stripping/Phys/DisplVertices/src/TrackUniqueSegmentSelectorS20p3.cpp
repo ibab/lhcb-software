@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// Implementation file for class : TrackUniqueSegmentSelector
+// Implementation file for class : TrackUniqueSegmentSelectorS20p3, Stripping20p3 version
 //
 // 2013-12-22 Wouter Hulsbergen
 //-----------------------------------------------------------------------------
@@ -35,16 +35,16 @@
 //#include "Event/Particle.h"
 
 
-class TrackUniqueSegmentSelector : public GaudiTool, virtual public ITrackUniqueSegmentSelector
+class TrackUniqueSegmentSelectorS20p3 : public GaudiTool, virtual public ITrackUniqueSegmentSelector
 {
 public:
   /// Constructor
-  TrackUniqueSegmentSelector( const std::string& type, 
+  TrackUniqueSegmentSelectorS20p3( const std::string& type, 
 			      const std::string& name,
 			      const IInterface* parent );
   
   /// Destructor
-  virtual ~TrackUniqueSegmentSelector( );
+  virtual ~TrackUniqueSegmentSelectorS20p3( );
 
   /// Initialize
   virtual StatusCode initialize() ;
@@ -71,13 +71,13 @@ public:
 };
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( TrackUniqueSegmentSelector )
+DECLARE_TOOL_FACTORY( TrackUniqueSegmentSelectorS20p3 )
 
 //=============================================================================
 // Constructor
 //=============================================================================
 
-TrackUniqueSegmentSelector::TrackUniqueSegmentSelector( const std::string& type,
+TrackUniqueSegmentSelectorS20p3::TrackUniqueSegmentSelectorS20p3( const std::string& type,
 						  const std::string& name,
 						  const IInterface* parent )
   : GaudiTool ( type, name , parent ),
@@ -91,12 +91,12 @@ TrackUniqueSegmentSelector::TrackUniqueSegmentSelector( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackUniqueSegmentSelector::~TrackUniqueSegmentSelector() {}
+TrackUniqueSegmentSelectorS20p3::~TrackUniqueSegmentSelectorS20p3() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode TrackUniqueSegmentSelector::initialize()
+StatusCode TrackUniqueSegmentSelectorS20p3::initialize()
 {
   //StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   StatusCode sc = GaudiTool::initialize() ;
@@ -115,7 +115,7 @@ StatusCode TrackUniqueSegmentSelector::initialize()
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode TrackUniqueSegmentSelector::finalize()
+StatusCode TrackUniqueSegmentSelectorS20p3::finalize()
 {
   if( m_debugLevel ) debug() << "==> Finalize" << endmsg;
   if(!m_selector.empty()) m_selector.release().ignore() ;
@@ -206,7 +206,7 @@ namespace {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode TrackUniqueSegmentSelector::flagClones( const LHCb::Track::Range& tracks,
+StatusCode TrackUniqueSegmentSelectorS20p3::flagClones( const LHCb::Track::Range& tracks,
 						  std::vector<bool>& isclone) const
 {  
   // initialize all values to false
@@ -356,7 +356,7 @@ namespace {
   }
 }
 
-StatusCode TrackUniqueSegmentSelector::flag(std::vector<LHCb::Track*>& tracks) const
+StatusCode TrackUniqueSegmentSelectorS20p3::flag(std::vector<LHCb::Track*>& tracks) const
 {
   std::vector<bool> isclone ;
   // the usual mess with casting from non-const vector to a
@@ -372,7 +372,7 @@ StatusCode TrackUniqueSegmentSelector::flag(std::vector<LHCb::Track*>& tracks) c
 // Choose a subset of tracks
 //=============================================================================
 
-StatusCode TrackUniqueSegmentSelector::select(const LHCb::Track::Range& tracks,
+StatusCode TrackUniqueSegmentSelectorS20p3::select(const LHCb::Track::Range& tracks,
 					      LHCb::Track::Selection& tracksout ) const
 {
   // if the selector is set, we'll need to select those before flagging the clones
@@ -395,7 +395,7 @@ StatusCode TrackUniqueSegmentSelector::select(const LHCb::Track::Range& tracks,
 }
 
 // simple overload
-StatusCode TrackUniqueSegmentSelector::select( const LHCb::Track::Range& tracksin, LHCb::Track::ConstVector& tracksout ) const
+StatusCode TrackUniqueSegmentSelectorS20p3::select( const LHCb::Track::Range& tracksin, LHCb::Track::ConstVector& tracksout ) const
 {
   std::vector<bool> isclone(tracksin.size(), false);
   StatusCode sc = flagClones(tracksin, isclone);
@@ -412,7 +412,7 @@ StatusCode TrackUniqueSegmentSelector::select( const LHCb::Track::Range& tracksi
 // be selected only once. (Only the first is kept.)
 // =============================================================================
 
-StatusCode TrackUniqueSegmentSelector::select(const LHCb::Particle::Range& particles,
+StatusCode TrackUniqueSegmentSelectorS20p3::select(const LHCb::Particle::Range& particles,
 					      LHCb::Particle::Selection& output ) const
 {
   // Select the set of tracks
