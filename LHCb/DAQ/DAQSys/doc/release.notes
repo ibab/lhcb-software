@@ -4,6 +4,7 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+!========================= DAQSys v7r3 2014-01-10 =========================
 ! 2014-01-09 - Rob Lambert
  - Fix issue with renamed HltXXXReportsDecoders introduced in last modification.
 

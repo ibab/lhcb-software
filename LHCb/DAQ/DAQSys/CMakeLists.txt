@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DAQSys
 ################################################################################
-gaudi_subdir(DAQSys v7r2)
+gaudi_subdir(DAQSys v7r3)
 
 gaudi_depends_on_subdirs(Calo/CaloDAQ
                          L0/L0Calo
