@@ -3,6 +3,9 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2014-01-10 - Marco Clemencic
+ - Added CMake configuration.
+
 !========================= AlignmentDBVisualisationTool v1r1 2014-01-06 =========================
 ! 2013-11-13 - Pieter David
  - use localised (UTC) datetime objects everywhere

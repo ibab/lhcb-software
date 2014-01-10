@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2014-01-10 - Marco Clemencic
+ - Added CMake configuration.
+
 !========================= TAlignment v6r0 2014-01-06 =========================
 ! 2013-12-04 - Rob Lambert
  - Migrate to DecoderDB, see task #19106

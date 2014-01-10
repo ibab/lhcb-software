@@ -2,6 +2,9 @@
 ! Responsible : Silvia Borghi, Marco Gersabeck
 !=============================================================================
 
+! 2014-01-10 - Marco Clemencic
+ - Added CMake configuration.
+
 !========================= VeloAlignment v4r11 2014-01-06 =========================
 ! 2013-11-15 - Marco Clemencic
  - Removed unneeded explicit use of libReflex.

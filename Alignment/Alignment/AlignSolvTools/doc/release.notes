@@ -2,6 +2,9 @@
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
 !-----------------------------------------------------------------------------
 
+! 2014-01-10 - Marco Clemencic
+ - Added CMake configuration.
+
 !========================= AlignSolvTools v3r3 2012-03-28 =========================
 
 ! 2012-03-01 - Wouter Hulsbergen
