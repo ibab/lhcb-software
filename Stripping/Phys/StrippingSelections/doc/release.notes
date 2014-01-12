@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-12 - Liang Zhong
+ - Added lines for SS and OS Lc -> p mu mu decays to StrippingCharmFromBSemi.py
+  . Lambda_c+ -> p+ mu- mu+
+  . Lambda_c+ -> p+ mu+ mu+
+  . Lambda_c+ -> p~- mu+ mu-
+  . Lambda_c+ -> p~- mu+ mu+
+
 ! 2014-01-10 - Edmund Smith
  - Added lines for WS candidates for B0 -> D0(KsHH) HH decays.
 		LL Kshorts:

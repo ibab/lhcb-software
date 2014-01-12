@@ -546,6 +546,11 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                                       Algorithm = self._Lc2pHHFilter([ '[Lambda_c+ -> p+ pi- pi+]cc' ],'Lc2pPiPifor' + name),
                                       RequiredSelections = [self.selPionTight, self.selProton])## tighter pion PID needed here to reduce retention
         
+        self.selLc2pMuMu = Selection( 'SelLc2pMuMufor' + name,
+                                      Algorithm = self._Lc2pHHFilter([ '[Lambda_c+ -> p+ mu- mu+]cc', '[Lambda_c+ -> p+ mu+ mu+]cc', 
+                                          '[Lambda_c+ -> p~- mu+ mu-]cc', '[Lambda_c+ -> p~- mu+ mu+]cc' ],'Lc2pMuMufor' + name),
+                                      RequiredSelections = [StdLooseMuons, self.selProton])
+        
         self.sellambdac = Selection( 'SelLc2PKPifor' + name,
                                      Algorithm = self._Lc2pHHFilter([ '[Lambda_c+ -> K- p+ pi+]cc' ],'Lc2PKPifor' + name),
                                      RequiredSelections = [self.selKaon, self.selPion, self.selProton ] )
@@ -686,6 +691,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.selb2LcMuX = makeb2DMuX('b2LcMuX' + name,BDecays,MuSel, self.sellambdac ,BCuts)
         self.selb2LcDCSMuX = makeb2DMuX('b2LcDCSMuX' + name, BDecays,MuSel,self.sellambdacDCS,BCuts)
         self.selb2Lc2pPiPiMuX = makeb2DMuX('b2Lc2pPiPiMuX' + name, BDecays,MuSel,self.selLc2pPiPi,BCuts)
+        self.selb2Lc2pMuMuMuX = makeb2DMuX('b2Lc2pMuMuMuX' + name, BDecays,MuSel,self.selLc2pMuMu,BCuts)
         self.selb2Lc2pKKMuX = makeb2DMuX('b2Lc2pKKMuX' + name, BDecays,MuSel,self.selLc2pKK,BCuts)
 
         ####### Lambda_c -> p Ks
@@ -792,6 +798,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.registerLine( StrippingLine('b2LcMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2LcMuX) )
         self.registerLine( StrippingLine('b2LcDCSMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2LcDCSMuX) )
         self.registerLine( StrippingLine('b2Lc2pPiPiMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2Lc2pPiPiMuX) ) 
+        self.registerLine( StrippingLine('b2Lc2pMuMuMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2Lc2pMuMuMuX) ) 
         self.registerLine( StrippingLine('b2Lc2pKKMuX' + name + 'Line', prescale = 1, FILTER=GECs,selection = self.selb2Lc2pKKMuX) )
 
         ########## Lambda_c+ -> p KS0
