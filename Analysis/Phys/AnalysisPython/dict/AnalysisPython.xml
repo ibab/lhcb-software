@@ -38,6 +38,7 @@
   <class name = "Analysis::Models::CrystalBall"       />
   <class name = "Analysis::Models::CrystalBallRS"     />
   <class name = "Analysis::Models::CrystalBallDS"     />
+  <class name = "Analysis::Models::Apolonios"         />
   <class name = "Analysis::Models::GramCharlierA"     />
   <class name = "Analysis::Models::Voigt"             />
   <class name = "Analysis::Models::LASS"              />
@@ -64,8 +65,6 @@
   <class name = "Analysis::Models::GenGaussV1"        />
   <class name = "Analysis::Models::GenGaussV2"        />
   <class name = "Analysis::Models::SkewGauss"         />
-  <class name = "Analysis::Models::Product"           />
-  <class name = "Analysis::Models::Adjust"            />
   
   <class name = "Gaudi::Utils::HStats"                />
   <class name = "Gaudi::Utils::Mute"                  />
@@ -84,4 +83,3 @@
   </exclusion>
   
 </lcgdict> 
-

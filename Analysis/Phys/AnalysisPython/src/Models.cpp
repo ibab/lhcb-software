@@ -774,8 +774,6 @@ Analysis::Models::Needham::Needham
   , m_a1      ( "a1"      , "a1-parameter"               , this , a1     ) 
   , m_a2      ( "a2"      , "a2-parameter"               , this , a2     ) 
 //
-  , m_fixed   ( false ) 
-//
   , m_needham ( 100 , 1 , 1.9 , 0 , 0 ) 
 {
   //
@@ -785,39 +783,6 @@ Analysis::Models::Needham::Needham
   m_needham.setA0      ( m_a0     ) ;
   m_needham.setA1      ( m_a1     ) ;
   m_needham.setA2      ( m_a2     ) ;
-  //
-}
-// ============================================================================
-Analysis::Models::Needham::Needham
-( const char*          name      , 
-  const char*          title     ,
-  RooAbsReal&          x         ,
-  RooAbsReal&          m0        ,
-  RooAbsReal&          sigma     ,  
-  const double         a0        ,  
-  const double         a1        ,  
-  const double         a2        ) 
-  : RooAbsPdf ( name , title )
-//
-  , m_x       ( "x"       , "Observable"    , this , x      ) 
-  , m_m0      ( "m0"      , "mass"          , this , m0     ) 
-  , m_sigma   ( "sigma"   , "sigma"         , this , sigma  )
-//
-  , m_a0      () 
-  , m_a1      ()  
-  , m_a2      () 
-//
-  , m_fixed   ( true  ) 
-//
-  , m_needham ( 100 , 1 , 1.9 , 0 , 0 ) 
-{
-  //
-  m_needham.setM0      ( m_m0     ) ;
-  m_needham.setSigma   ( m_sigma  ) ;
-  //
-  m_needham.setA0      ( a0       ) ;
-  m_needham.setA1      ( a1       ) ;
-  m_needham.setA2      ( a2       ) ;
   //
 }
 // ============================================================================
@@ -836,7 +801,6 @@ Analysis::Models::Needham::Needham
   , m_a1      ( "a1"      , this , right.m_a1     ) 
   , m_a2      ( "a2"      , this , right.m_a2     ) 
 //
-  , m_fixed   ( right.m_fixed   ) 
   , m_needham ( right.m_needham ) 
 {}
 // ============================================================================
@@ -858,16 +822,99 @@ Double_t Analysis::Models::Needham::evaluate() const
   m_needham . setM0    ( m_m0     ) ;
   m_needham . setSigma ( m_sigma  ) ;
   //
-  if ( !m_fixed ) 
-  {
-    m_needham . setA0  ( m_a0     ) ;
-    m_needham . setA1  ( m_a1     ) ;
-    m_needham . setA2  ( m_a2     ) ;
-  }
+  m_needham . setA0    ( m_a0     ) ;
+  m_needham . setA1    ( m_a1     ) ;
+  m_needham . setA2    ( m_a2     ) ;
   //
   return m_needham     ( m_x      ) ;
 }
 // ============================================================================
+// get current alpha 
+// ============================================================================
+double Analysis::Models::Needham::alpha   () const 
+{
+  const double s  =         m_sigma  ;
+  double       a  =         m_a0     ;
+  a              += s *     m_a1     ;
+  a              += s * s * m_a2     ;
+  //
+  return a ;
+}
+
+// ============================================================================
+// Apolonios
+// ============================================================================
+Analysis::Models::Apolonios::Apolonios
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          m0        ,
+  RooAbsReal&          sigma     ,    
+  RooAbsReal&          alpha     ,    
+  RooAbsReal&          n         ,    
+  RooAbsReal&          b         ) 
+  : RooAbsPdf ( name , title )
+//
+  , m_x       ( "x"       , "Observable"                 , this , x      ) 
+  , m_m0      ( "m0"      , "mass"                       , this , m0     ) 
+  , m_sigma   ( "sigma"   , "sigma"                      , this , sigma  )
+  , m_alpha   ( "alpha"   , "alpha"                      , this , alpha  )
+  , m_n       ( "n"       , "n-parameter"                , this , n      )
+  , m_b       ( "b"       , "b-parameter"                , this , b      )
+//
+  , m_apo ( 1 , 1 , 1 , 1 , 1 ) 
+{
+  //
+  m_apo.setM0      ( m_m0     ) ;
+  m_apo.setSigma   ( m_sigma  ) ;
+  m_apo.setAlpha   ( m_alpha  ) ;
+  m_apo.setN       ( m_n      ) ;
+  m_apo.setB       ( m_b      ) ;
+  //
+}
+// ============================================================================
+// copy constructor 
+// ============================================================================
+Analysis::Models::Apolonios::Apolonios
+( const Analysis::Models::Apolonios& right , 
+  const char*                        name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x       ( "x"       , this , right.m_x      ) 
+  , m_m0      ( "m0"      , this , right.m_m0     ) 
+  , m_sigma   ( "sigma"   , this , right.m_sigma  )
+  , m_alpha   ( "alpha"   , this , right.m_alpha  )
+  , m_n       ( "n"       , this , right.m_n      )
+  , m_b       ( "b"       , this , right.m_b      )
+//
+  , m_apo     ( right.m_apo ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::Apolonios::~Apolonios (){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Apolonios*
+Analysis::Models::Apolonios::clone ( const char* name ) const 
+{ return new Analysis::Models::Apolonios ( *this , name ) ; }
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Apolonios::evaluate() const 
+{
+  //
+  m_apo.setM0      ( m_m0     ) ;
+  m_apo.setSigma   ( m_sigma  ) ;
+  m_apo.setAlpha   ( m_alpha  ) ;
+  m_apo.setN       ( m_n      ) ;
+  m_apo.setB       ( m_b      ) ;
+  //
+  return m_apo ( m_x ) ;
+}
+// ============================================================================
+
 
 
 // ============================================================================
@@ -2855,101 +2902,6 @@ Double_t Analysis::Models::LogGamma::evaluate() const
 
 
 // ============================================================================
-// constructor from all parameters
-// ============================================================================
-Analysis::Models::Product::Product 
-( const char* name  , 
-  const char* title ,
-  RooAbsPdf&  pdf1  , 
-  RooAbsPdf&  pdf2  ) 
-  : RooAbsPdf  (name ,title ) 
-//
-  , m_pdf1    ( "pdf1"  , "PDF1"  , this , pdf1 ) 
-  , m_pdf2    ( "pdf2"  , "PDF2"  , this , pdf2 ) 
-{}
-// ============================================================================
-// "copy" constructor 
-// ============================================================================
-Analysis::Models::Product::Product
-( const Analysis::Models::Product& right ,
-  const char*                      name  ) 
-  : RooAbsPdf ( right , name ) 
-//
-  , m_pdf1  ( "pdf1" , this , right.m_pdf1  ) 
-  , m_pdf2  ( "pdf2" , this , right.m_pdf2  ) 
-{}
-// ============================================================================
-// destrcutor 
-// ============================================================================
-Analysis::Models::Product::~Product(){}
-// ============================================================================
-// clone 
-// ============================================================================
-Analysis::Models::Product*
-Analysis::Models::Product::clone( const char* name ) const 
-{ return new Analysis::Models::Product ( *this , name) ; }
-// ============================================================================
-// the actual evaluation of function 
-// ============================================================================
-Double_t Analysis::Models::Product::evaluate() const 
-{ return m_pdf1 * m_pdf2 ; }
-
-
-// ============================================================================
-// constructor from all parameters
-// ============================================================================
-Analysis::Models::Adjust::Adjust 
-( const char*  name  , 
-  const char*  title ,
-  RooAbsPdf&   pdf   ,
-  const double small ) 
-  : RooAbsPdf  (name ,title ) 
-//
-  , m_pdf     ( "pdf"  , "PDF"  , this , pdf ) 
-  , m_small   ( std::abs ( small ) ) 
-{}
-// ============================================================================
-// constructor from all parameters
-// ============================================================================
-Analysis::Models::Adjust::Adjust 
-( const char*  name  , 
-  const char*  title ,
-  RooAbsPdf&   pdf   ) 
-  : RooAbsPdf  (name ,title ) 
-//
-  , m_pdf     ( "pdf"  , "PDF"  , this , pdf          ) 
-  , m_small   ( 4 * std::numeric_limits<float>::min() )
-{}
-// ============================================================================
-// "copy" constructor 
-// ============================================================================
-Analysis::Models::Adjust::Adjust
-( const Analysis::Models::Adjust& right ,
-  const char*                      name  ) 
-  : RooAbsPdf ( right , name ) 
-//
-  , m_pdf   ( "pdf " , this , right.m_pdf   ) 
-  , m_small ( right.m_small ) 
-{}
-// ============================================================================
-// destructor
-// ============================================================================
-Analysis::Models::Adjust::~Adjust (){}
-// ============================================================================
-// clone 
-// ============================================================================
-Analysis::Models::Adjust*
-Analysis::Models::Adjust::clone( const char* name ) const 
-{ return new Analysis::Models::Adjust ( *this , name) ; }
-// ============================================================================
-Double_t Analysis::Models::Adjust::evaluate() const 
-{ 
-  const double pdf = 1.0 * m_pdf  ;
-  return pdf <= m_small ? m_small : pdf ;
-}
-
-
-// ============================================================================
 //  PhaseSpace x poly
 // ============================================================================
 Analysis::Models::PhaseSpacePol::PhaseSpacePol 
@@ -3240,8 +3192,9 @@ Analysis::Models::Poly2DPositive::Poly2DPositive
   const unsigned short nY        ,
   RooArgList&          phis      ) 
   : RooAbsPdf ( name , title ) 
-  , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_phis     ( "phi"     , "Coefficients" , this     )
+  , m_x        ( "x"       , "Observable-X" , this , x ) 
+  , m_y        ( "y"       , "Observable-Y" , this , y ) 
+  , m_phis     ( "phis"    , "Coefficients" , this     )
 //
   , m_iterator ( 0 ) 
 //
@@ -3250,7 +3203,7 @@ Analysis::Models::Poly2DPositive::Poly2DPositive
   //
   TIterator* tmp  = phis.createIterator() ;
   RooAbsArg* coef = 0 ;
-  unsigned num = 0 ;
+  unsigned int num = 0 ;
   while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_positive.npars() )
   {
     RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
@@ -3274,9 +3227,10 @@ Analysis::Models::Poly2DPositive::Poly2DPositive
 Analysis::Models::Poly2DPositive::Poly2DPositive
 ( const Analysis::Models::Poly2DPositive&  right ,      
   const char*                              name  ) 
-  : RooAbsPdf ( right , name ) 
+  : RooAbsPdf  ( right , name ) 
 //
   , m_x        ( "x"      , this , right.m_x     ) 
+  , m_y        ( "y"      , this , right.m_y     ) 
   , m_phis     ( "phis"   , this , right.m_phis  ) 
 //
   , m_iterator ( 0 ) 
@@ -3288,7 +3242,8 @@ Analysis::Models::Poly2DPositive::Poly2DPositive
 // ============================================================================
 // destructor 
 // ============================================================================
-Analysis::Models::Poly2DPositive::~Poly2DPositive() { delete m_iterator ; }
+Analysis::Models::Poly2DPositive::~Poly2DPositive() 
+{ if ( 0 != m_iterator ) { delete m_iterator ; } }
 // ============================================================================
 // clone 
 // ============================================================================
@@ -3314,9 +3269,9 @@ Double_t Analysis::Models::Poly2DPositive::evaluate() const
     const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
     if ( 0 == r ) { continue ; }
     //
-    const double phi   = r->getVal ( nset ) ;
+    const double phiv   = r->getVal ( nset ) ;
     //
-    m_positive.setPar ( k  , phi ) ;
+    m_positive.setPar ( k  , phiv ) ;
     //
     ++k ;
   }
@@ -3339,8 +3294,9 @@ Analysis::Models::Poly2DSymPositive::Poly2DSymPositive
   const unsigned short n         ,
   RooArgList&          phis      ) 
   : RooAbsPdf ( name , title ) 
-  , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_phis     ( "phi"     , "Coefficients" , this     )
+  , m_x        ( "x"       , "Observable-X" , this , x ) 
+  , m_y        ( "y"       , "Observable-Y" , this , y ) 
+  , m_phis     ( "phis"    , "Coefficients" , this     )
 //
   , m_iterator ( 0 ) 
 //
@@ -3381,6 +3337,7 @@ Analysis::Models::Poly2DSymPositive::Poly2DSymPositive
   : RooAbsPdf ( right , name ) 
 //
   , m_x        ( "x"      , this , right.m_x     ) 
+  , m_y        ( "y"      , this , right.m_y     ) 
   , m_phis     ( "phis"   , this , right.m_phis  ) 
 //
   , m_iterator ( 0 ) 
@@ -3418,9 +3375,9 @@ Double_t Analysis::Models::Poly2DSymPositive::evaluate() const
     const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
     if ( 0 == r ) { continue ; }
     //
-    const double phi   = r->getVal ( nset ) ;
+    const double phiv   = r->getVal ( nset ) ;
     //
-    m_positive.setPar ( k  , phi ) ;
+    m_positive.setPar ( k  , phiv ) ;
     //
     ++k ;
   }
@@ -3447,8 +3404,9 @@ Analysis::Models::PS22DPol::PS22DPol
   const unsigned short nY        ,
   RooArgList&          phis      ) 
   : RooAbsPdf ( name , title ) 
-  , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_phis     ( "phi"     , "Coefficients" , this     )
+  , m_x        ( "x"       , "Observable-X" , this , x ) 
+  , m_y        ( "y"       , "Observable-Y" , this , y ) 
+  , m_phis     ( "phis"    , "Coefficients" , this     )
 //
   , m_iterator ( 0 ) 
 //
@@ -3487,6 +3445,7 @@ Analysis::Models::PS22DPol::PS22DPol
   : RooAbsPdf ( right , name ) 
 //
   , m_x        ( "x"      , this , right.m_x     ) 
+  , m_y        ( "y"      , this , right.m_y     ) 
   , m_phis     ( "phis"   , this , right.m_phis  ) 
 //
   , m_iterator ( 0 ) 
@@ -3526,9 +3485,9 @@ Double_t Analysis::Models::PS22DPol::evaluate() const
     const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
     if ( 0 == r ) { continue ; }
     //
-    const double phi   = r->getVal ( nset ) ;
+    const double phiv   = r->getVal ( nset ) ;
     //
-    m_positive.setPar ( k  , phi ) ;
+    m_positive.setPar ( k  , phiv ) ;
     //
     ++k ;
   }
@@ -3554,8 +3513,9 @@ Analysis::Models::PSnl2DPol::PSnl2DPol
   const unsigned short nY        ,
   RooArgList&          phis      ) 
   : RooAbsPdf ( name , title ) 
-  , m_x        ( "x"       , "Observable"   , this , x ) 
-  , m_phis     ( "phi"     , "Coefficients" , this     )
+  , m_x        ( "x"       , "Observable-X" , this , x ) 
+  , m_y        ( "y"       , "Observable-Y" , this , y ) 
+  , m_phis     ( "phis"    , "Coefficients" , this     )
 //
   , m_iterator ( 0 ) 
 //
@@ -3594,6 +3554,7 @@ Analysis::Models::PSnl2DPol::PSnl2DPol
   : RooAbsPdf ( right , name ) 
 //
   , m_x        ( "x"      , this , right.m_x     ) 
+  , m_y        ( "y"      , this , right.m_y     ) 
   , m_phis     ( "phis"   , this , right.m_phis  ) 
 //
   , m_iterator ( 0 ) 
@@ -3633,9 +3594,9 @@ Double_t Analysis::Models::PSnl2DPol::evaluate() const
     const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
     if ( 0 == r ) { continue ; }
     //
-    const double phi   = r->getVal ( nset ) ;
+    const double phiv   = r->getVal ( nset ) ;
     //
-    m_positive.setPar ( k  , phi ) ;
+    m_positive.setPar ( k  , phiv ) ;
     //
     ++k ;
   }
@@ -3657,11 +3618,12 @@ Analysis::Models::PS2s2DPol::PS2s2DPol
   const char*          title     ,
   RooRealVar&          x         ,
   RooRealVar&          y         ,
-    const Gaudi::Math::PhaseSpace2& ps        ,
+  const Gaudi::Math::PhaseSpace2& ps        ,
   const unsigned short n         ,
   RooArgList&          phis      ) 
   : RooAbsPdf ( name , title ) 
-  , m_x        ( "x"       , "Observable"   , this , x ) 
+  , m_x        ( "x"       , "Observable-X" , this , x ) 
+  , m_y        ( "y"       , "Observable-Y" , this , y ) 
   , m_phis     ( "phi"     , "Coefficients" , this     )
 //
   , m_iterator ( 0 ) 
@@ -3704,6 +3666,7 @@ Analysis::Models::PS2s2DPol::PS2s2DPol
   : RooAbsPdf ( right , name ) 
 //
   , m_x        ( "x"      , this , right.m_x     ) 
+  , m_y        ( "y"      , this , right.m_y     ) 
   , m_phis     ( "phis"   , this , right.m_phis  ) 
 //
   , m_iterator ( 0 ) 
@@ -3767,7 +3730,8 @@ Analysis::Models::PSnls2DPol::PSnls2DPol
   const unsigned short n         ,
   RooArgList&          phis      ) 
   : RooAbsPdf ( name , title ) 
-  , m_x        ( "x"       , "Observable"   , this , x ) 
+  , m_x        ( "x"       , "Observable-X" , this , x ) 
+  , m_y        ( "y"       , "Observable-Y" , this , y ) 
   , m_phis     ( "phi"     , "Coefficients" , this     )
 //
   , m_iterator ( 0 ) 
@@ -3810,6 +3774,7 @@ Analysis::Models::PSnls2DPol::PSnls2DPol
   : RooAbsPdf ( right , name ) 
 //
   , m_x        ( "x"      , this , right.m_x     ) 
+  , m_y        ( "y"      , this , right.m_y     ) 
   , m_phis     ( "phis"   , this , right.m_phis  ) 
 //
   , m_iterator ( 0 ) 

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# =============================================================================
 # -*- coding: utf-8 -*-
 # =============================================================================
 # $Id$
@@ -5569,6 +5570,7 @@ def _ral_iter_ ( self ) :
 ROOT.RooArgList . __len__       = lambda s   : s.getSize()
 ROOT.RooArgList . __contains__  = lambda s,i :  0<= i < len(s)
 ROOT.RooArgList . __iter__      = _ral_iter_
+ROOT.RooArgList . __nonzero__   = lambda s   : 0 != len ( s ) 
 
 ## helper function 
 def _rs_list_ ( self ) :
@@ -5651,9 +5653,10 @@ def _ras_contains_ ( self , ename ) :
 ## some decoration over RooArgSet 
 ROOT.RooArgSet . __len__       = lambda s   : s.getSize()
 ROOT.RooArgSet . __iter__      = _ras_iter_ 
-ROOT.RooArgSet  . __getattr__  = _ras_getattr_ 
-ROOT.RooArgSet  . __getitem__  = _ras_getitem_ 
-ROOT.RooArgSet  . __contains__ = _ras_contains_ 
+ROOT.RooArgSet . __getattr__   = _ras_getattr_ 
+ROOT.RooArgSet . __getitem__   = _ras_getitem_ 
+ROOT.RooArgSet . __contains__  = _ras_contains_ 
+ROOT.RooArgSet . __nonzero__   = lambda s   : 0 != len ( s ) 
         
 ROOT.RooArgSet . __str__   = lambda s : str ( tuple ( _rs_list_ ( s ) ) )  
 ROOT.RooArgSet . __repr__  = lambda s : str ( tuple ( _rs_list_ ( s ) ) )  
@@ -5685,7 +5688,7 @@ def _rds_getitem_ ( self , i ) :
 ROOT.RooDataSet . __len__       = lambda s   : s.numEntries()
 ROOT.RooDataSet . __iter__      = _rds_iter_ 
 ROOT.RooDataSet . __getitem__   = _rds_getitem_ 
-
+ROOT.RooDataSet . __nonzero__   = lambda s   : 0 != len ( s ) 
         
 # =============================================================================
 ## ``easy'' print of RooFitResult
@@ -5706,26 +5709,34 @@ def _rfr_print_ ( self , opts = 'v' ) :
 ## get parameters from RooFitResult
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
-def _rfr_params_ ( self ) :
+def _rfr_params_ ( self , float_only = True ) :
     """
     GetParameters from RooFitResult:
 
     >>> result = ...
     >>> params = results
-    >>> print params
+    >>> p0     = params['A'][0]  ## get the value
+    >>> p0s    = params['A'][1]  ## get the parameter itself 
     
     """
     pars  = self.floatParsFinal()
     pars_ = {}
     for p in pars :
         pars_ [ p.GetName() ] = p.as_VE(), p
+
+    ## also fixed parameters? 
+    if not float_only :
+        fixed = self.constPars()
+        for p in fixed :
+            pars_ [ p.GetName() ] = p.as_VE(), p
+            
     return pars_
 
 # =============================================================================
 ## get parameter by name  from RooFitResult
 #  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 #  @date   2011-06-07
-def _rfr_param_  ( self , pname ) :
+def _rfr_param_  ( self , pname , float_only = True ) :
     """
     Get Parameter from RooFitResult by name 
 
@@ -5733,7 +5744,7 @@ def _rfr_param_  ( self , pname ) :
     >>> signal = results.param('Signal')
     >>> print signal
     """
-    p = self.parameters()[ pname ] 
+    p = self.parameters ( float_only )[ pname ] 
     return p 
 
 # =============================================================================

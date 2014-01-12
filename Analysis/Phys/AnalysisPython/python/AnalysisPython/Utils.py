@@ -41,7 +41,7 @@ __all__     = (
     'silence_py'     , ## ditto 
     'mute'           , ## context manager to suppress stdout/strerr printout 
     'silence'        , ## ditto 
-    'rooSilent'      , ## control RooFit verbosity 
+    'rooSilent'      , ## control RooFit verbosity
     )    
 # =============================================================================
 import ROOT, time, os,sys, PyCintex   
@@ -628,6 +628,21 @@ class RooSilent(object) :
         
 
 # =============================================================================
+## @class NoContext
+#  Fake empty context manager to be used as empty placeholder
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  date 2013-01-12
+class NoContext(object) :
+    """
+    Fake (empty) context manager to be used as empty placeholder
+    """
+    def __init__  ( self , *args , **kwargs ) : pass
+    ## context manager
+    def __enter__ ( self         ) : pass
+    ## context manager 
+    def __exit__  ( self , *args ) : pass  
+        
+# =============================================================================
 ## very simple context manager to duplicate Python-printout into file ("tee")
 #  into separate file
 #  @code
@@ -656,7 +671,7 @@ def tee_py ( filename ) :
 #  >>> with tee_cpp ('tee.txt') :
 #  ...         print 'ququ!'
 #  @endcode
-#  @attention: only Python prinouts are grabbed 
+#  @attention: only C/C++ printouts are grabbed 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  date 2012-07-06
 def tee_cpp ( filename ) :

@@ -1180,16 +1180,6 @@ namespace Analysis
         RooAbsReal&          a0        ,  
         RooAbsReal&          a1        ,  
         RooAbsReal&          a2        ) ;
-      /// constructor from all parameters 
-      Needham
-      ( const char*          name             , 
-        const char*          title            ,
-        RooAbsReal&          x                ,
-        RooAbsReal&          m0               ,
-        RooAbsReal&          sigma            ,  
-        const double         a0    =  1.975   ,   
-        const double         a1    =  0.0011  ,  
-        const double         a2    = -0.00018 ) ;
       /// "copy" constructor 
       Needham ( const Needham& right , const char* name = 0 ) ;
       /// virtual destructor 
@@ -1206,6 +1196,8 @@ namespace Analysis
       // ======================================================================
       /// access to underlying function 
       const Gaudi::Math::Needham& function() const { return m_needham ; }
+      /// get current alpha 
+      double                      alpha   () const ;
       // ======================================================================
     protected:
       // ======================================================================
@@ -1215,10 +1207,6 @@ namespace Analysis
       RooRealProxy m_a0     ;
       RooRealProxy m_a1     ;
       RooRealProxy m_a2     ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      bool   m_fixed ;
       // ======================================================================
     private:
       // ======================================================================
@@ -1285,6 +1273,71 @@ namespace Analysis
       // ======================================================================
       /// the actual function 
       mutable Gaudi::Math::CrystalBallDoubleSided m_cb2 ;       // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Apolonios
+     *  A modified gaussian with power-law tail on rigth ride and exponential
+     *  tail on low-side 
+     *  The function is proposed by Diego Martinez Santos 
+     *  https://indico.cern.ch/getFile.py/access?contribId=2&resId=1&materialId=slides&confId=262633
+     *  Here a bit modified version is used with redefined parameter <code>n</code>
+     *  to be coherent with local definitions of Crystal Ball
+     *  
+     *  @see Gaudi::Math::Apolonios
+     *  @author Vanya BELYAEV Ivane.BElyaev@itep.ru
+     *  @date 2013-12-01
+     */
+    // ========================================================================
+    class GAUDI_API Apolonios : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Apolonios, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Apolonios
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          mean      , 
+        RooAbsReal&          sigma     , 
+        RooAbsReal&          alpha     ,
+        RooAbsReal&          n         , 
+        RooAbsReal&          b         ) ;
+      /// "copy" constructor 
+      Apolonios  ( const Apolonios& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~Apolonios () ;
+      /// clone 
+      virtual  Apolonios* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Apolonios& function() const { return m_apo ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_sigma  ;
+      RooRealProxy m_alpha  ;
+      RooRealProxy m_n      ;
+      RooRealProxy m_b      ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Apolonios m_apo ;                // the function 
       // ======================================================================
     } ;
     // ========================================================================
@@ -2347,96 +2400,6 @@ namespace Analysis
       // ======================================================================
       /// the actual function
       mutable Gaudi::Math::Log10GammaDist m_gamma ; // the actual function
-      // ======================================================================
-    } ;
-    // ========================================================================
-    /** @class Product 
-     *  helper utility for building run-time PDFs.
-     *  In many aspects it is similar to RooProduct
-     *  @see RooProduct
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2013-06-08
-     */
-    class GAUDI_API Product : public RooAbsPdf 
-    {
-    public:
-      // ======================================================================
-      ClassDef(Analysis::Models::Product, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters
-      Product ( const char* name  , 
-                const char* title ,
-                RooAbsPdf&  pdf1  , 
-                RooAbsPdf&  pdf2  ) ;
-      /// "copy constructor"
-      Product ( const Product& right    , 
-                const char*    name = 0 ) ;
-      /// virtual destructor 
-      virtual ~Product() ;
-      // clone 
-      virtual Product* clone ( const char* name ) const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the first  pdf 
-      RooRealProxy m_pdf1 ;  // the first  pdf 
-      /// the second pdf 
-      RooRealProxy m_pdf2 ;  // the second pdf 
-      // ======================================================================
-    } ;
-    // ========================================================================
-    /** @class Adjust
-     *  helper utility to make PDF positive 
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2013-06-08
-     */
-    class GAUDI_API Adjust : public RooAbsPdf 
-    {
-    public:
-      // ======================================================================
-      ClassDef(Analysis::Models::Adjust, 1) ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      /// constructor from all parameters
-      Adjust ( const char*  name  , 
-               const char*  title ,
-               RooAbsPdf&   pdf   ,
-               const double small ) ;
-      /// constructor from all parameters
-      Adjust ( const char*  name  , 
-               const char*  title ,
-               RooAbsPdf&   pdf   ) ;
-      /// "copy constructor"
-      Adjust ( const Adjust& right    , 
-               const char*   name = 0 ) ;
-      /// virtual destructor 
-      virtual ~Adjust () ;
-      // clone 
-      virtual  Adjust* clone ( const char* name ) const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      // the actual evaluation of function 
-      virtual Double_t evaluate() const ;
-      // ======================================================================
-    public:
-      // ======================================================================
-      double small() const { return m_small ; }
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the first  pdf 
-      RooRealProxy m_pdf   ; // the first  pdf 
-      /// small (positive) number to be added 
-      double       m_small ; // small number to be added to pdf
       // ======================================================================
     } ;
     // ========================================================================
