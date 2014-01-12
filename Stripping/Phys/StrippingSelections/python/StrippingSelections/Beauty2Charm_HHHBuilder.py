@@ -12,7 +12,7 @@ from Beauty2Charm_Utils import *
 class HHHBuilder(object):
     '''Produces all HHH quasi-particles for the Beauty2Charm module.'''
 
-    def __init__(self,pions,kaons,protons,config):
+    def __init__(self,pions,kaons,protons,config, config_pid):
         self.pions = filterInputs("HHHPions",[pions],config['PiDAUGHTERS'])
         self.kaons = filterInputs("HHHKaons",[kaons],config['KDAUGHTERS'])
         self.protons = filterInputs("HHHProtons",[protons],
@@ -31,6 +31,14 @@ class HHHBuilder(object):
         
         self.ppbarpi = [self._makeppbarPi()]
         self.ppbark = [self._makeppbarK()]
+
+        self.ppipi = [self._makepPiPi()]
+        self.pkpi  = [self._makepKPi()]
+        self.pkk   = [self._makepKK()]
+        
+        self.ppipi_pid = [filterPID('X2pPiPiTIGHTPID',self.ppipi,config_pid['TIGHTER'])]
+        self.pkpi_pid =  [filterPID('X2pKPiTIGHTPID', self.pkpi,config_pid['TIGHTER'])]
+        self.pkk_pid =   [filterPID('X2pKKTIGHTPID',  self.pkk,config_pid['TIGHTER'])]
         
     def _makeX2HHH(self,name,decays,amass,config,inputs):
         ''' Makes all X -> HHH selections with charged tracks only.'''
@@ -78,5 +86,27 @@ class HHHBuilder(object):
         return self._makeX2HHH('X2ppbarK',['[a_1(1260)+ -> p+ p~- K+]cc'],
                               massWindow,self.config,
                               [self.kaons,self.protons])
+
+    def _makepKPi(self):
+        '''Makes X- -> p K-pi- + c.c.'''
+        massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['PHH'])
+        return self._makeX2HHH('X2pKPi',['[a_1(1260)- -> p+ K- pi-]cc'],
+                              massWindow,self.config,
+                              [self.pions,self.kaons,self.protons])
+
+    def _makepKK(self):
+        '''Makes X- -> p K-pi- + c.c.'''
+        massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['PHH'])
+        return self._makeX2HHH('X2pKK',['[a_1(1260)- -> p+ K- K-]cc'],
+                              massWindow,self.config,
+                              [self.kaons,self.protons])
+
+    def _makepPiPi(self):
+        '''Makes X- -> p pi-pi- + c.c.'''
+        massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['PHH'])
+        return self._makeX2HHH('X2pPiPi',['[a_1(1260)- -> p+ pi- pi-]cc'],
+                              massWindow,self.config,
+                              [self.pions,self.protons])
+
         
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#

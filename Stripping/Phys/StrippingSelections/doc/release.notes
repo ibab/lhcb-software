@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-12 - Anton Poluektov 
+ - Added Lb->Dphh and Xib->D0phh lines to Beauty2Charm module
+ - Added the new cone variables configuration to Beauty2Charm 
+   (needs the latest Phys/StrippingConf package)
+
 ! 2014-01-12 - Liang Zhong
  - Added lines for SS and OS Lc -> p mu mu decays to StrippingCharmFromBSemi.py
   . Lambda_c+ -> p+ mu- mu+

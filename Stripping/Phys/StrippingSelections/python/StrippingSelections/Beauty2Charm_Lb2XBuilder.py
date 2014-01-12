@@ -203,6 +203,11 @@ class Lb2XBuilder(object):
         self._makeLb2Lc5Pi()
         # Lb -> D0 Lambda0
         self._makeLb2D0Lambda0()
+        
+        # Lb -> D+ p h- h-
+        self._makeLb2DpHH()
+        # Xib -> D0 p h- h-
+        self._makeXib2D0pHH()
 
     def _makeLb2LcH(self):
         '''Make RS and WS Lb -> Lc H (H=pi,K) + cc.'''
@@ -608,6 +613,38 @@ class Lb2XBuilder(object):
         inputs = {'Lb2Lc5Pi': self.lc_pid + self.hhh.pipipi + self.hh.pipi_pid}
         lb2lc5pi = makeB2XSels(decays,'Lc2PKPiPID',inputs,self.config)
         self.lines.append(ProtoLine(lb2lc5pi,1.0))
+
+    def _makeLb2DpHH(self):
+        '''Make RS and WS Lb ->DpHH (H=pi,K) + cc.'''
+        config = deepcopy(self.config)
+        config['AM_MAX'] = '7000*MeV'
+        ppipi = self.hhh.ppipi_pid
+        pkpi = self.hhh.pkpi_pid
+        pkk = self.hhh.pkk_pid
+        decays = {'Lb2DpPiPi'  : ["[Lambda_b0 -> D+ a_1(1260)-]cc"],
+                  'Lb2DpKPi'   : ["[Lambda_b0 -> D+ a_1(1260)-]cc"],
+                  'Lb2DpKK'    : ["[Lambda_b0 -> D+ a_1(1260)-]cc"]}
+        inputs = {'Lb2DpPiPi'  : self.d.hhh_cf_pid+ppipi,
+                  'Lb2DpKPi'   : self.d.hhh_cf_pid+pkpi,
+                  'Lb2DpKK'    : self.d.hhh_cf_pid+pkk}
+        rs = makeB2XSels(decays,'D2HHH',inputs,self.config)
+        self.lines.append(ProtoLine(rs,1.0))
+        
+    def _makeXib2D0pHH(self):
+        '''Make RS and WS Xi_b ->DpHH (H=pi,K) + cc.'''
+        config = deepcopy(self.config)
+        config['AM_MAX'] = '7000*MeV'
+        ppipi = self.hhh.ppipi_pid
+        pkpi = self.hhh.pkpi_pid
+        pkk = self.hhh.pkk_pid
+        decays = {'Xib2D0pPiPi'  : ["[Xi_b- -> D0 a_1(1260)-]cc"],
+                  'Xib2D0pKPi'   : ["[Xi_b- -> D0 a_1(1260)-]cc"],
+                  'Xib2D0pKK'    : ["[Xi_b- -> D0 a_1(1260)-]cc"]}
+        inputs = {'Xib2D0pPiPi'  : self.d0+ppipi,
+                  'Xib2D0pKPi'   : self.d0+pkpi,
+                  'Xib2D0pKK'    : self.d0+pkk}
+        rs = makeB2XSels(decays,'D02HH',inputs,self.config)
+        self.lines.append(ProtoLine(rs,1.0))
         
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 

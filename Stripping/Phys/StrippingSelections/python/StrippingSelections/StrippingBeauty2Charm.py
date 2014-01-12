@@ -101,7 +101,7 @@ config = {
     'pP_MIN'        : '5000*MeV' # for pH only (obviously)
     },
     "HHH": { # Cuts for PiPiPi, KPiPi analyese, etc.
-    'MASS_WINDOW'   : {'A1':'3000*MeV','K1':'4000*MeV','PPH':'3600*MeV'},
+    'MASS_WINDOW'   : {'A1':'3000*MeV','K1':'4000*MeV','PPH':'3600*MeV', 'PHH':'4000*MeV'},
     'KDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDK_MIN':'-2'},
     'PiDAUGHTERS'   : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDK_MAX':'10'},
     'pDAUGHTERS'    : {'PT_MIN':'100*MeV','P_MIN':'2000*MeV','PIDp_MIN':'-2'},
@@ -188,6 +188,11 @@ config = {
     'B2D0PiPiPiD2HHTIGHTBeauty2CharmLine',
     'B2D0PiD2HHHHTIGHTBeauty2CharmLine'
     ],
+    'ExtraInfoTools' : [
+      { "Type" : "ConeVariables", "ConeAngle" : 1.5, "ConeNumber" : 1, "Variables" : ['angle', 'mult', 'ptasy']}, 
+      { "Type" : "ConeVariables", "ConeAngle" : 1.7, "ConeNumber" : 2, "Variables" : ['angle', 'mult', 'ptasy']}, 
+      { "Type" : "ConeVariables", "ConeAngle" : 1.0, "ConeNumber" : 3, "Variables" : ['angle', 'mult', 'ptasy']}
+    ], 
     '2TOPO' : {'ANGLE_MIN': (2/57.),'M_MIN':19000,'DPHI_MIN':0},
     'BB' : {'ADDSUMPT':0,'COSANGLE_MAX':0.99,
             'COSDPHI_MAX':0,'M_MIN':0,'MAXPT_MIN': 4000,
@@ -198,7 +203,7 @@ config = {
     'D0INC' : {'PT_MIN' : 1000, 'IPCHI2_MIN': 100},
     "Prescales" : { # Prescales for individual lines
     'RUN_BY_DEFAULT' : True, # False = lines off by default
-    'RUN_RE'         : ['.*'],  
+    'RUN_RE'         : [ '.*' ],  
     # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
     # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
     #'B2D0PiD2HHBeauty2CharmLine'      : 1.0,
@@ -225,7 +230,7 @@ config = {
 
 class Beauty2CharmConf(LineBuilder):
     __configuration_keys__ = ('ALL','UPSTREAM','KS0','Lambda0','Pi0','D2X','B2X','Dstar','HH','HHH',
-                              'PID','FlavourTagging','2TOPO','BB','D0INC','Prescales','GECNTrkMax')
+                              'PID','FlavourTagging','ExtraInfoTools', '2TOPO','BB','D0INC','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
         
@@ -272,7 +277,7 @@ class Beauty2CharmConf(LineBuilder):
                        config['PID'])
 
         # X -> hhh
-        hhh = HHHBuilder(pions,kaons,protons,config['HHH'])
+        hhh = HHHBuilder(pions,kaons,protons,config['HHH'], config['PID'])
 
         # Lc -> X
         lc = LcBuilder(pions,kaons,protons,config['D2X'],config['PID'])
@@ -360,7 +365,9 @@ class Beauty2CharmConf(LineBuilder):
             sline = StrippingLine(name,protoLine.prescale(line,name,config),
                                   selection=tmpSel,checkPV=True,FILTER=filter,
                                   HLT=hlt,
-                                  EnableFlavourTagging = (name in config['FlavourTagging']))
+                                  EnableFlavourTagging = (name in config['FlavourTagging']), 
+                                  ExtraInfoTools = config['ExtraInfoTools'] )
+
             self.registerLine(sline)
 
     def _makeLines(self,lines,config):
