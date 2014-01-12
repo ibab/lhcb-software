@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-01-12 - Anton Poluektov 
+ - Config for B2OC WG (in Stripping20r0p3)
+
 ! 2014-01-06 - Lucio Anderlini
  - Created empty dbase entries for Stripping20rXp3
 
