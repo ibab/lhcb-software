@@ -15,7 +15,8 @@ include_dirs      $(LBALPGENROOT)
 # =============== environment =================================================
 set               LBALPGENOPTS $(LBALPGENROOT)/options 
 set               ALPGENPDFPATH $(alpgen_author_dir)/alplib/pdfdat
-
+#when alpgen pdf files will be copied to $LHAPDFSETSROOT directory, use instead:
+#set               ALPGENPDFPATH $(LHAPDFSETSROOT)/alpgen
 
 # =============== dependencies ================================================
 use               alpgen       v* LCG_GeneratorsInterfaces
