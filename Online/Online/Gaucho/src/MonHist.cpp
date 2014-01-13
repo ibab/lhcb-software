@@ -650,7 +650,7 @@ int MonHist::serialize(void* &ptr)
   DimBuffBase *pill = (DimBuffBase*)ptr;
   if(m_type == H_ILLEGAL)
   {
-    pill->type = H_ILLEGAL;
+    pill->type = (int)H_ILLEGAL;
     pill->reclen = sizeof(*pill);
     pill->nameoff=sizeof(*pill);
     pill->namelen = 0;
