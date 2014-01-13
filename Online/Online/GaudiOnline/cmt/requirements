@@ -26,23 +26,18 @@ apply_pattern generate_configurables library=GaudiOnline
 
 macro_append GaudiOnline_shlibflags ' $(MDFlib_linkopts) -lrt'
 
-apply_pattern QMTest
-apply_pattern QMTestSummarize
-
 private
 # ==================== private test application =============================
-application  Gaudi              ../main/main.cpp
-macro_append Gaudi_dependencies " GaudiOnline "
-macro_append Gaudi_use_linkopts " -L$(tcmalloc_home)/lib -ltcmalloc " target-icc " -Wl,--no-as-needed "
+application  Gaudi                        ../main/main.cpp
+macro_append Gaudi_dependencies           " GaudiOnline "
+macro_append Gaudi_use_linkopts           " -L$(tcmalloc_home)/lib -ltcmalloc " target-icc " -Wl,--no-as-needed "
+
+application  GaudiOnlineExe               ../main/main.cpp
+macro_append GaudiOnlineExe_dependencies  " GaudiOnline "
+macro_append GaudiOnlineExe_use_linkopts  " -L$(tcmalloc_home)/lib -ltcmalloc " target-icc " -Wl,--no-as-needed "
 
 application  GaudiCheckpoint              ../main/checkpoint.cpp
 macro_append GaudiCheckpoint_dependencies " GaudiOnline "
 macro_append GaudiCheckpoint_use_linkopts " -L$(tcmalloc_home)/lib -ltcmalloc " target-icc " -Wl,--no-as-needed "
-
-# Some dim tests, which failed for checkpointing
-#use DIM v* Online
-#application  dim_fork0           ../main/dim_fork0.cpp
-#application  dim_fork1           ../main/dim_fork1.cpp
-#application   dim_restart         ../main/dim_restart.cpp
 
 apply_pattern application_path
