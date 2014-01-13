@@ -20,8 +20,7 @@ gaudi_add_module(GaudiOnline src/*.cpp
                  INCLUDE_DIRS PythonLibs AIDA
                  LINK_LIBRARIES PythonLibs GaudiKernel dim DAQEventLib MDFLib OnlineKernel)
 
-#add_dependencies(GaudiOnlineGen RawBankSizesGen)
 gaudi_install_python_modules()
 
-gaudi_add_executable(GaudiOnlineExe  main/main.cpp       LINK_LIBRARIES GaudiKernel ${TCMALLOC_LIBS} ${CMAKE_DL_LIBS})
+gaudi_add_executable(GaudiOnlineExe  main/main.cpp       LINK_LIBRARIES GaudiKernel tcmalloc ${CMAKE_DL_LIBS})
 gaudi_add_executable(GaudiCheckpoint main/checkpoint.cpp LINK_LIBRARIES GaudiKernel OnlineBase tcmalloc ${CMAKE_DL_LIBS})
