@@ -815,6 +815,9 @@ class Moore(LHCbConfigurableUser):
             dec=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
             decAlg=dec.setup()
             seq.Members.insert( seq.Members.index(gs('Hlt2')), decAlg )
+            sel=DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"]
+            selAlg=sel.setup()
+            seq.Members.insert( seq.Members.index(gs('Hlt2')), selAlg )
             # TODO: replace Hlt1 filter in endsequence by Hlt2 filter...
             # remove LumuWriter, LumiStripper
             end = gs('HltEndSequence')
@@ -866,10 +869,13 @@ class Moore(LHCbConfigurableUser):
             decAlg=dec.setup()
             dec2=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"]
             dec3=DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"]
+            hlt1seloder_name="HltSelReportsDecoder/Hlt1SelReportsDecoder"
+            dec4=DecoderDB[hlt1seloder_name]
+            dec4Alg=dec4.setup()
             hlt1decrep_location = dec.listOutputs()[0]
             hlt2decrep_location = dec2.listOutputs()[0]
             hlt2selrep_location = dec3.listOutputs()[0]
-            trans = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'GaudiSequencer/HltDecisionSequence' : hlt1decoder_name+"', 'GaudiSequencer/Hlt2"  } }#is this OK?
+            trans = { 'GaudiSequencer/Hlt$' :               { 'Members' : { 'GaudiSequencer/HltDecisionSequence' : hlt1decoder_name+"', '"+hlt1seloder_name+"', 'GaudiSequencer/Hlt2"  } }#is this OK?
                       , 'GaudiSequencer/HltEndSequence' :     { 'Members' : { ", '.*/HltL0GlobalMonitor'" : '' 
                                                                               , ", '.*/Hlt1Global'"         : ''
                                                                               , ", '.*/HltLumiWriter'"      : ''
