@@ -4,11 +4,11 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v21r0 2014-01-10 =========================
 ! 2014-01-13 - Rob Lambert
  - Add Hlt1 SelReports decoding to split sequence, to appease the new Phys/TisTosTobbing warnings.
  - update notos reference, now only 33 differences turning off TOS.
 
-!========================= Moore v21r0 2014-01-10 =========================
 ! 2014-01-10 - Rob Lambert
  - Merge transforms within Moore, rather than assigning them.
  - begin to fix mc2012 test, now that the L0 options to Moore have been disabled. The test fails at the moment.
