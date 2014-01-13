@@ -4,6 +4,15 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+
+! 2014-01-12 - Mike Sokoloff
+ = Added StrippingKshort2PiPiMuMu.py
+    this supercedes StrippingKshort2MuMuPiPi.py'
+    MC studies indicate that the efficiency for candidates constructed from
+    long tracks is a factor of 20 higher here; also candidates are also
+    constructed from Downstream tracks, albeit with lower efficiency.
+ - Added StrippingKshort2MuMuMuMu.py
+
 ! 2014-01-12 - Anton Poluektov 
  - Added Lb->Dphh and Xib->D0phh lines to Beauty2Charm module
  - Added the new cone variables configuration to Beauty2Charm 
