@@ -1031,6 +1031,18 @@ namespace
     return (*f)(x) ;
   }
   // ==========================================================================
+  /** helper function for itegration of Apolonios shape 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2013-12-1
+   */
+  double apolonios_GSL ( double x , void* params )
+  {
+    //
+    const Gaudi::Math::Apolonios* f = (Gaudi::Math::Apolonios*) params ;
+    //
+    return (*f)(x) ;
+  }
+  // ==========================================================================
 } //                                                 end of anonymous namespace
 // ============================================================================
 namespace
@@ -2225,10 +2237,10 @@ void Gaudi::Math::Novosibirsk::integrate()
  */
 // ============================================================================
 Gaudi::Math::CrystalBall::CrystalBall
-( const double m0    ,
-  const double sigma ,
-  const double alpha ,
-  const double n     )
+( const double m0     ,
+  const double sigma  ,
+  const double alpha  ,
+  const double n      )
   : std::unary_function<double,double> ()
   , m_m0         ( m0 )
   , m_sigma      (  1 )
@@ -2240,15 +2252,15 @@ Gaudi::Math::CrystalBall::CrystalBall
   , m_C  ( -1000 ) 
 {
   //
-  setM0     ( m0    ) ;
-  setAlpha  ( alpha ) ;
-  setSigma  ( sigma ) ;
-  setN      ( n     ) ;
+  setM0     ( m0     ) ;
+  setAlpha  ( alpha  ) ;
+  setSigma  ( sigma  ) ;
+  setN      ( n      ) ;
   //
   m_A = my_exp ( -0.5 * m_alpha * m_alpha ) ;
   m_B =  0.5 * ( 1 + gsl_sf_erf ( - m_alpha * s_SQRT2i ) ) ;
   if   ( !s_equal ( m_n , 0 ) && !s_equal ( m_alpha , 0 )  ) 
-  { m_C  = ( m_n + 1 )  / std::abs( m_alpha )  / m_n  * s_SQRT2PIi ; }
+  { m_C  = ( m_n + 1 )  / aa ()  / m_n  * s_SQRT2PIi ; }
 }
 // ============================================================================
 // destructor
@@ -2282,13 +2294,11 @@ bool Gaudi::Math::CrystalBall::setAlpha  ( const double value )
   //
   m_alpha    = value  ;
   //
-  m_A        = my_exp ( -0.5 * m_alpha * m_alpha ) ;
+  m_A        = my_exp ( -0.5 * alpha () * alpha ()) ;
   //
-  const double aa  = std::abs ( m_alpha ) ;
-  const double np1 = n() + 1 ;
   // 
   if   ( s_equal ( n () , 0 ) || s_equal ( m_alpha , 0 )  ) { m_C = -1000 ; }
-  else { m_C  = np1 / aa / n()  * s_SQRT2PIi ; }
+  else { m_C  = np1 () / aa () / n()  * s_SQRT2PIi ; }
   //
   m_B  = 0.5 * ( 1 + gsl_sf_erf ( - m_alpha * s_SQRT2i ) ) ;
   //
@@ -2303,9 +2313,8 @@ bool Gaudi::Math::CrystalBall::setN      ( const double value )
   m_n        = value_ ;
   if ( s_equal ( m_n , 0 ) ) { m_n = 0 ; }
   //
-  const double aa  = std::abs ( m_alpha ) ;
   if   ( s_equal ( n () , 0 ) || s_equal ( m_alpha , 0 )  ) { m_C = -1000 ; }
-  else { m_C  = ( n() + 1 )  / aa / n() * s_SQRT2PIi ; }
+  else { m_C  = np1()  / aa () / n() * s_SQRT2PIi ; }
   //
   return true ;
 }
@@ -2321,9 +2330,8 @@ double Gaudi::Math::CrystalBall::pdf ( const double x ) const
   //
   if  ( dx < -m_alpha )
   {
-    const double np1  = n() + 1 ;
-    const double frac = np1 / ( np1 - std::abs( m_alpha ) * ( m_alpha + dx ) )  ;
-    return std::pow ( frac , np1 ) * m_A * s_SQRT2PIi / sigma() ;
+    const double frac = np1 () / ( np1 () - aa() * ( m_alpha + dx ) )  ;
+    return std::pow ( frac , np1 () ) * m_A * s_SQRT2PIi / sigma() ;
   }
   //
   // the peak
@@ -2361,14 +2369,12 @@ double Gaudi::Math::CrystalBall::integral
   //
   // tail
   //
-  const double np1 = n() + 1 ;
-  //
-  const double A = np1 ;
-  const double B = np1 ;
-  const double C = - std::abs ( alpha () ) ;
+  const double A =   np1 () ;
+  const double B =   np1 () ;
+  const double C = - aa  () ;
   //
   const double result = s_SQRT2PIi * m_A * 
-    tail_integral ( A , B , C , np1 , zlow + alpha() , zhigh + alpha() ) ;
+    tail_integral ( A , B , C , np1 () , zlow + alpha() , zhigh + alpha() ) ;
   //
   return result ;
 }
@@ -2738,6 +2744,215 @@ double Gaudi::Math::CrystalBallDoubleSided::integral () const
   //
   return integral ( m0 () - left  * sigma () , m0 () + right * sigma () ) ;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ============================================================================
+// apolonios 
+// ============================================================================
+/*  constructor from all parameters
+ *  @param m0 m0 parameter
+ *  @param alpha alpha parameter
+ *  @param n     n-parameter
+ *  @param b     b-parameter 
+ */
+// ============================================================================
+Gaudi::Math::Apolonios::Apolonios
+( const double m0    ,
+  const double sigma ,
+  const double alpha ,
+  const double n     ,
+  const double bp    )
+  : std::unary_function<double,double> ()
+  , m_m0         ( m0 )
+  , m_sigma      (  1 )
+  , m_alpha      (  2 )
+  , m_n          (  2 )
+  , m_b          (  2 )
+//
+  , m_A  ( -1000 ) 
+//
+  , m_workspace () 
+{
+  //
+  setM0     ( m0    ) ;
+  setAlpha  ( alpha ) ;
+  setSigma  ( sigma ) ;
+  setN      ( n     ) ;
+  setB      ( bp    ) ;
+  //
+  m_A = my_exp ( -b () * a1 () ) ;
+}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::Apolonios::~Apolonios(){}
+// ============================================================================
+bool  Gaudi::Math::Apolonios::setM0 ( const double value )
+{
+  //
+  if ( s_equal ( value , m_m0 ) ) { return false ; }
+  //
+  m_m0       = value ;
+  //
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::Apolonios::setSigma ( const double value )
+{
+  const double value_ = std::abs ( value );
+  if ( s_equal ( value_ , m_sigma ) ) { return false ; }
+  //
+  m_sigma    = value_ ;
+  //
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::Apolonios::setAlpha  ( const double value )
+{
+  //
+  if ( s_equal ( value , m_alpha ) ) { return false ; }
+  //
+  m_alpha    = value  ;
+  //
+  m_A = my_exp ( -b() * a1 () ) ; 
+  //
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::Apolonios::setN      ( const double value )
+{
+  const double value_ = std::fabs ( value );
+  if ( s_equal ( value_ , m_n     ) ) { return false ; }
+  //
+  m_n        = value_ ;
+  if ( s_equal ( m_n , 0 ) ) { m_n = 0 ; }
+  //
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::Apolonios::setB  ( const double value )
+{
+  //
+  const double value_ = std::abs ( value );
+  if ( s_equal ( value_ , m_b ) ) { return false ; }
+  //
+  m_b    = value_  ;
+  //
+  if ( s_equal ( m_b , 0 ) ) { m_b = 0 ; }
+  if ( s_equal ( m_b , 1 ) ) { m_b = 1 ; }
+  //
+  m_A = my_exp ( -b () * a1 () ) ;
+  //
+  return true ;
+}
+// ============================================================================
+//  evaluate Apolonios' function
+// ============================================================================
+double Gaudi::Math::Apolonios::pdf ( const double x ) const
+{
+  //
+  const double dx    = ( x - m_m0 ) / m_sigma ;
+  //
+  // the tail
+  //
+  if  ( dx < -m_alpha )
+  {
+    const double frac = np1 () / ( np1 () - ( m_alpha + dx ) / aa () )  ;
+    return std::pow ( frac , np1 () ) * m_A * s_SQRT2PIi / sigma() ;
+  }
+  //
+  // the peak
+  //
+  return my_exp ( -b() * std::sqrt ( 1 + dx*dx ) ) * s_SQRT2PIi / sigma() ;  
+}
+// ============================================================================
+// get the integral between low and high
+// ============================================================================
+double Gaudi::Math::Apolonios::integral
+( const double low ,
+  const double high ) const
+{
+  //
+  if      ( s_equal ( low , high ) ) { return                 0.0 ; } // RETURN
+  else if (           low > high   ) { return - integral ( high ,
+                                                           low  ) ; } // RETURN
+  //
+  const double x0 = m_m0 - m_alpha * m_sigma ;
+  //
+  // split into proper subintervals
+  //
+  if      ( low < x0 && x0 < high )
+  { return integral ( low , x0 ) + integral ( x0 , high ) ; }
+  //
+  // Z = (x-x0)/sigma 
+  //
+  const double zlow  = ( low  - m_m0 ) / sigma() ;
+  const double zhigh = ( high - m_m0 ) / sigma() ;
+  //
+  // peak
+  //
+  if ( x0 <= low  )
+  {
+    //
+    //
+    // use GSL to evaluate the integral
+    //
+    Sentry sentry ;
+    //
+    gsl_function F                ;
+    F.function = &apolonios_GSL ;
+    F.params   = const_cast<Apolonios*> ( this ) ;
+    //
+    double result   = 1.0 ;
+    double error    = 1.0 ;
+    //
+    const int ierror = gsl_integration_qag
+      ( &F                ,            // the function
+        low   , high      ,            // low & high edges
+        s_PRECISION       ,            // absolute precision
+        s_PRECISION       ,            // relative precision
+        s_SIZE            ,            // size of workspace
+        GSL_INTEG_GAUSS31 ,            // integration rule
+        workspace ( m_workspace ) ,    // workspace
+        &result           ,            // the result
+        &error            ) ;          // the error in result
+    //
+    if ( ierror )
+    {
+      gsl_error ( "Gaudi::Math::Apolonios::QAG" ,
+                  __FILE__ , __LINE__ , ierror ) ;
+    }
+    //
+    return result ;
+  }
+  //
+  // tail
+  //
+  const double A = np1 ()  ;
+  const double B = np1 () ;
+  const double C = - std::abs ( alpha () * b () ) / a1 ()  ;
+  //
+  const double result = s_SQRT2PIi * m_A * 
+    tail_integral ( A , B , C , np1 () , zlow + alpha() , zhigh + alpha() ) ;
+  //
+  return result ;
+}
+
+
 // ============================================================================
 // Gram-Charlier type A
 // ============================================================================
