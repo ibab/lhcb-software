@@ -468,29 +468,41 @@ static int nl_connect()
     return nl_sock;
 }
 
+
+namespace   {
+  struct __attribute__ ((aligned(NLMSG_ALIGNTO))) NLCN_MSG_MCAST {
+    struct nlmsghdr nl_hdr;
+    struct __attribute__ ((__packed__)) payload {
+      struct cn_msg cn_msg;
+      enum proc_cn_mcast_op cn_mcast;
+    } data;
+  };
+  struct __attribute__ ((aligned(NLMSG_ALIGNTO))) NLCN_MSG_PROCEV {
+    struct nlmsghdr nl_hdr;
+    struct __attribute__ ((__packed__)) payload {
+      struct cn_msg cn_msg;
+      struct proc_event proc_ev;
+    } data;
+  };
+}
+
 /*
  * subscribe on proc events (process notifications)
  */
 static int set_proc_ev_listen(int nl_sock, bool enable)
 {
     int rc;
-    struct __attribute__ ((aligned(NLMSG_ALIGNTO))) NLCN_MSG {
-        struct nlmsghdr nl_hdr;
-        struct __attribute__ ((__packed__)) {
-            struct cn_msg cn_msg;
-            enum proc_cn_mcast_op cn_mcast;
-        };
-    } nlcn_msg;
+    NLCN_MSG_MCAST nlcn_msg;
     memset(&nlcn_msg, 0, sizeof(nlcn_msg));
     nlcn_msg.nl_hdr.nlmsg_len = sizeof(nlcn_msg);
     nlcn_msg.nl_hdr.nlmsg_pid = getpid();
     nlcn_msg.nl_hdr.nlmsg_type = NLMSG_DONE;
 
-    nlcn_msg.cn_msg.id.idx = CN_IDX_PROC;
-    nlcn_msg.cn_msg.id.val = CN_VAL_PROC;
-    nlcn_msg.cn_msg.len = sizeof(enum proc_cn_mcast_op);
+    nlcn_msg.data.cn_msg.id.idx = CN_IDX_PROC;
+    nlcn_msg.data.cn_msg.id.val = CN_VAL_PROC;
+    nlcn_msg.data.cn_msg.len = sizeof(enum proc_cn_mcast_op);
 
-    nlcn_msg.cn_mcast = enable ? PROC_CN_MCAST_LISTEN : PROC_CN_MCAST_IGNORE;
+    nlcn_msg.data.cn_mcast = enable ? PROC_CN_MCAST_LISTEN : PROC_CN_MCAST_IGNORE;
 
     rc = send(nl_sock, &nlcn_msg, sizeof(nlcn_msg), 0);
     if (rc == -1) {
@@ -512,13 +524,7 @@ void *handle_proc_ev(void *arg)
 {
   int nl_sock = *(int*)arg;
     int rc;
-    struct __attribute__ ((aligned(NLMSG_ALIGNTO))) NLCN_MSG {
-        struct nlmsghdr nl_hdr;
-        struct __attribute__ ((__packed__)) {
-            struct cn_msg cn_msg;
-            struct proc_event proc_ev;
-        };
-    } nlcn_msg;
+    NLCN_MSG_PROCEV nlcn_msg;
     signal(SIGINT, &on_sigint);
     siginterrupt(SIGINT, true);
     pthread_mutex_lock(&mtx);
@@ -540,7 +546,7 @@ void *handle_proc_ev(void *arg)
           pthread_mutex_unlock(&mtx);
           return (void*)-1;
       }
-      switch (nlcn_msg.proc_ev.what)
+      switch (nlcn_msg.data.proc_ev.what)
       {
         case proc_event::PROC_EVENT_NONE:
         {
@@ -549,9 +555,9 @@ void *handle_proc_ev(void *arg)
         }
         case proc_event::PROC_EVENT_FORK:
         {
-          int ppid = nlcn_msg.proc_ev.event_data.fork.parent_tgid;
-          int pid = nlcn_msg.proc_ev.event_data.fork.child_tgid;
-          int tid = nlcn_msg.proc_ev.event_data.fork.child_pid;
+          int ppid = nlcn_msg.data.proc_ev.event_data.fork.parent_tgid;
+          int pid = nlcn_msg.data.proc_ev.event_data.fork.child_tgid;
+          int tid = nlcn_msg.data.proc_ev.event_data.fork.child_pid;
           int typ = TNODE_PROCESS;
           if (tid != pid)
           {
@@ -560,10 +566,10 @@ void *handle_proc_ev(void *arg)
             typ = TNODE_THREAD;
           }
 //              printf("fork: parent tid=%d pid=%d (%d) -> child tid=%d pid=%d\n",
-//                      nlcn_msg.proc_ev.event_data.fork.parent_pid,
-//                      nlcn_msg.proc_ev.event_data.fork.parent_tgid,tmSrv_PID,
-//                      nlcn_msg.proc_ev.event_data.fork.child_pid,
-//                      nlcn_msg.proc_ev.event_data.fork.child_tgid);
+//                      nlcn_msg.data.proc_ev.event_data.fork.parent_pid,
+//                      nlcn_msg.data.proc_ev.event_data.fork.parent_tgid,tmSrv_PID,
+//                      nlcn_msg.data.proc_ev.event_data.fork.child_pid,
+//                      nlcn_msg.data.proc_ev.event_data.fork.child_tgid);
           if (Taskmap.find(ppid) == Taskmap.end()) break;
 //          printf("Fork++++++++: TID %d PID %d (PPID %d)\n",tid,pid,ppid);
           TNode *n=new TNode(pid,ppid);
@@ -577,7 +583,7 @@ void *handle_proc_ev(void *arg)
         }
         case proc_event::PROC_EVENT_EXEC:
         {
-          int pid = nlcn_msg.proc_ev.event_data.exec.process_pid;
+          int pid = nlcn_msg.data.proc_ev.event_data.exec.process_pid;
           NodeMap::iterator it=Taskmap.find(pid);
           if ( it == Taskmap.end())break;
 //          printf("Exec+++++++++: PID %d \n",pid);
@@ -595,25 +601,25 @@ void *handle_proc_ev(void *arg)
         case proc_event::PROC_EVENT_UID:
         {
 //                printf("uid change: tid=%d pid=%d from %d to %d\n",
-//                        nlcn_msg.proc_ev.event_data.id.process_pid,
-//                        nlcn_msg.proc_ev.event_data.id.process_tgid,
-//                        nlcn_msg.proc_ev.event_data.id.r.ruid,
-//                        nlcn_msg.proc_ev.event_data.id.e.euid);
+//                        nlcn_msg.data.proc_ev.event_data.id.process_pid,
+//                        nlcn_msg.data.proc_ev.event_data.id.process_tgid,
+//                        nlcn_msg.data.proc_ev.event_data.id.r.ruid,
+//                        nlcn_msg.data.proc_ev.event_data.id.e.euid);
             break;
         }
         case proc_event::PROC_EVENT_GID:
         {
 //                printf("gid change: tid=%d pid=%d from %d to %d\n",
-//                        nlcn_msg.proc_ev.event_data.id.process_pid,
-//                        nlcn_msg.proc_ev.event_data.id.process_tgid,
-//                        nlcn_msg.proc_ev.event_data.id.r.rgid,
-//                        nlcn_msg.proc_ev.event_data.id.e.egid);
+//                        nlcn_msg.data.proc_ev.event_data.id.process_pid,
+//                        nlcn_msg.data.proc_ev.event_data.id.process_tgid,
+//                        nlcn_msg.data.proc_ev.event_data.id.r.rgid,
+//                        nlcn_msg.data.proc_ev.event_data.id.e.egid);
             break;
         }
         case proc_event::PROC_EVENT_EXIT:
         {
-          int pid = nlcn_msg.proc_ev.event_data.exit.process_tgid;
-          int tid = nlcn_msg.proc_ev.event_data.exit.process_pid;
+          int pid = nlcn_msg.data.proc_ev.event_data.exit.process_tgid;
+          int tid = nlcn_msg.data.proc_ev.event_data.exit.process_pid;
           NodeMap::iterator it=Taskmap.find(tid);
           if (pid == tmSrv_PID)
           {
@@ -622,7 +628,7 @@ void *handle_proc_ev(void *arg)
           }
           if ( it == Taskmap.end())break;
           TNode *t = (*it).second;
-//          printf("---------------EXIT: TID %d, pid=%d exit code: %d cmdline: %s\n",tid,pid,nlcn_msg.proc_ev.event_data.exit.exit_code,t->cmdline.c_str());
+//          printf("---------------EXIT: TID %d, pid=%d exit code: %d cmdline: %s\n",tid,pid,nlcn_msg.data.proc_ev.event_data.exit.exit_code,t->cmdline.c_str());
           TNode *p = t->Parent;
           if (p == 0)
           {

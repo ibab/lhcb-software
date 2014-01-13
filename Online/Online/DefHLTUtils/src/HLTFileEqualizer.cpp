@@ -651,9 +651,6 @@ void DefHltInfoHandler::infoHandler()
   return;
 }
 
-
-
-
 void HLTFileEqualizer::Dump()
 {
   fprintf(outf,"Dump of File Distribution at ");
@@ -703,96 +700,93 @@ void HLTFileEqualizer::Dump()
   }
   fprintf(outf,"\n%s\n",line.c_str());
   fflush(outf);
-};
-
-
-
-
-
-
-class ExitCommand : public DimCommand
-{
-public:
-  myNodeMap *m_nodemap;
-  HLTFileEqualizer *m_equl;
-  ExitCommand(const char *name, char *format, myNodeMap *nodm,HLTFileEqualizer *elz):  DimCommand(name, format)
-  {
-    m_nodemap = nodm;
-    m_equl = elz;
-  }
-  void ableAll(int StateValue)
-  {
-  myActionMap Actions;
-  myActionMap::iterator fit;
-  myNodeMap::iterator nit;
-  for (nit = m_nodemap->begin();nit != m_nodemap->end();nit++)
-  {
-    Actions[(*nit).second->m_subfarm].push_back(std::make_pair((*nit).first,StateValue));
-  }
-  for (fit = Actions.begin();fit!=Actions.end();fit++)
-  {
-    std::list<std::pair<std::string,int> >::iterator i;
-    std::string sf_mesg = "";
-    std::string endisSvc;
-    endisSvc = (*fit).first+"_HLTDefBridge/EnDisCommand";
-    for (i =(*fit).second.begin();i != (*fit).second.end();i++)
-    {
-      std::string svcname;
-      std::string node = (*i).first;
-      toUpperCase(node);
-      svcname = node+"_MEPRx_01/setOverflow";
-//      DimClient::sendCommand(svcname.c_str(), (*i).second);
-      char cmd[1024];
-//      sprintf(cmd,"dim_send_command.exe %s %d -dns %s -s -i&",svcname.c_str(),(*i).second,(*fit).first.c_str());
-      sprintf(cmd,"%s %d|",svcname.c_str(),StateValue);
-      sf_mesg.append(cmd);
-
-//      ::system(cmd);
-//      fprintf(outf,"\tMEPRX on Node %s (%s) value %d\n",(*i).first.c_str(),svcname.c_str(),(*i).second);
-    }
-    DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
-//    printf("message to Subfarm %s:\n%s\n",(*fit).first.c_str(),sf_mesg.c_str());
-  }
 }
 
-  void enableAll()
+namespace {
+  class ExitCommand : public DimCommand
   {
-    ableAll(1);
-  }
-  void disableAll()
-  {
-    ableAll(0);
-  }
-  virtual void commandHandler()
-  {
-    int command = getInt();
-    switch (command)
+  public:
+    myNodeMap *m_nodemap;
+    HLTFileEqualizer *m_equl;
+    ExitCommand(const char *name, char *format, myNodeMap *nodm,HLTFileEqualizer *elz):  DimCommand(name, format)
     {
-      case 0:
-      {
-        ableAll(0);
-        break;
-      }
-      case 1:
-      {
-        ableAll(1);
-        break;
-      }
-      case 2:
-      {
-        ableAll(1);
-        ::sleep(5);
-        ::exit(0);
-      }
-      case 3:
-      {
-        this->m_equl->Dump();
-        break;
-      }
-
+      m_nodemap = nodm;
+      m_equl = elz;
     }
-  }
-};
+    void ableAll(int StateValue)
+    {
+      myActionMap Actions;
+      myActionMap::iterator fit;
+      myNodeMap::iterator nit;
+      for (nit = m_nodemap->begin();nit != m_nodemap->end();nit++)
+	{
+	  Actions[(*nit).second->m_subfarm].push_back(std::make_pair((*nit).first,StateValue));
+	}
+      for (fit = Actions.begin();fit!=Actions.end();fit++)
+	{
+	  std::list<std::pair<std::string,int> >::iterator i;
+	  std::string sf_mesg = "";
+	  std::string endisSvc;
+	  endisSvc = (*fit).first+"_HLTDefBridge/EnDisCommand";
+	  for (i =(*fit).second.begin();i != (*fit).second.end();i++)
+	    {
+	      std::string svcname;
+	      std::string node = (*i).first;
+	      toUpperCase(node);
+	      svcname = node+"_MEPRx_01/setOverflow";
+	      //      DimClient::sendCommand(svcname.c_str(), (*i).second);
+	      char cmd[1024];
+	      //      sprintf(cmd,"dim_send_command.exe %s %d -dns %s -s -i&",svcname.c_str(),(*i).second,(*fit).first.c_str());
+	      sprintf(cmd,"%s %d|",svcname.c_str(),StateValue);
+	      sf_mesg.append(cmd);
+
+	      //      ::system(cmd);
+	      //      fprintf(outf,"\tMEPRX on Node %s (%s) value %d\n",(*i).first.c_str(),svcname.c_str(),(*i).second);
+	    }
+	  DimClient::sendCommandNB(endisSvc.c_str(),(void*)(sf_mesg.c_str()),sf_mesg.size());
+	  //    printf("message to Subfarm %s:\n%s\n",(*fit).first.c_str(),sf_mesg.c_str());
+	}
+    }
+
+    void enableAll()
+    {
+      ableAll(1);
+    }
+    void disableAll()
+    {
+      ableAll(0);
+    }
+    virtual void commandHandler()
+    {
+      int command = getInt();
+      switch (command)
+	{
+	case 0:
+	  {
+	    ableAll(0);
+	    break;
+	  }
+	case 1:
+	  {
+	    ableAll(1);
+	    break;
+	  }
+	case 2:
+	  {
+	    ableAll(1);
+	    ::sleep(5);
+	    ::exit(0);
+	  }
+	case 3:
+	  {
+	    this->m_equl->Dump();
+	    break;
+	  }
+
+	}
+    }
+  };
+}
 
 LHCb1RunStatus::LHCb1RunStatus(char *name, int nolink,HLTFileEqualizer *e) : DimInfo(name,nolink)
 {

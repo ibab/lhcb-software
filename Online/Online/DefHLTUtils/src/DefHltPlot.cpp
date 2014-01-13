@@ -63,12 +63,13 @@ class BufferInfo : public DimInfo
     buffer Overflow;
     TApplication *m_appl;
 };
+
 BufferInfo::BufferInfo(char *name, TApplication *a) : DimInfo(name,(char*)"\0")
 {
   m_histo = new TH1F("PDistribution","Node Performance Distribution",200,500.0,700.0);
   m_histo1 = new TH1F("PDistribution1","Node Performance Distribution (All)",200,500.0,700.0);
   m_appl = a;
-};
+}
 
 void BufferInfo::infoHandler()
 {

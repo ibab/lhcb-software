@@ -268,6 +268,7 @@ TaskSummaryInfoHandler::TaskSummaryInfoHandler(FarmStatus *e)
   this->m_bufsiz = 0;
   this->m_Equalizer = e;
 }
+
 void TaskSummaryInfoHandler::infoHandler()
 {
   size_t siz;
@@ -280,7 +281,7 @@ void TaskSummaryInfoHandler::infoHandler()
   void *ptr = this->itsService->getData();
   DimInfo *svc = this->getInfo();
   map<DimInfo*,string>::iterator i =m_Equalizer->m_DimMap.find(svc);
-  Cluster *clu;
+  Cluster *clu = 0;
   if (i != m_Equalizer->m_DimMap.end())
   {
     map<DimInfo*,Cluster*>::iterator ii;
@@ -316,21 +317,9 @@ void TaskSummaryInfoHandler::infoHandler()
       m_Equalizer->m_ProjDict->Add(n.projects[j].name);
     }
   }
-
-
 //  status =1;
   return;
 }
-
-
-
-
-
-
-
-
-
-
 
 int main(int /* argc   */, char** /* argv */)
 {
