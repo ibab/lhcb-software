@@ -19,6 +19,9 @@ use  GaudiConf v18r0p1
 use  DAQSys    v7r3    DAQ
 use  ParticleMaker v6r8p1 Phys
 
+# new split TisTosTobbing
+use  TisTosTobbing v8r0 Phys
+
 # Declare this as a container package
 apply_pattern container_package
 

@@ -28,6 +28,9 @@ In MOORE:
    . Reorganize options into options groups and add documentation for options (finally).
  - Migrate to DAQSys, DecoderDB, see task #19106
 
+- Phys/TisTosTobbing v8r0
+ - Implement split TisTosTob digesting, see task #48782
+
 Temporarily added packages, ParticleMaker, DAQSys and GaudiConf for small new features.
 
 For more details see:
