@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-13 - Mat Charles
+ - Added StrippingXibStarToXibZero.py
 
 ! 2014-01-12 - Mike Sokoloff
  = Added StrippingKshort2PiPiMuMu.py
