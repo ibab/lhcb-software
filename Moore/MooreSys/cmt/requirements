@@ -17,6 +17,7 @@ use  L0App               v2r0       L0    # Rob Lambert
 #temporary for new features
 use  GaudiConf v18r0p1
 use  DAQSys    v7r3    DAQ
+use  ParticleMaker v6r8p1 Phys
 
 # Declare this as a container package
 apply_pattern container_package

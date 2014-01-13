@@ -28,7 +28,7 @@ In MOORE:
    . Reorganize options into options groups and add documentation for options (finally).
  - Migrate to DAQSys, DecoderDB, see task #19106
 
-Temporarily added packages, DAQSys and GaudiConf for small new features.
+Temporarily added packages, ParticleMaker, DAQSys and GaudiConf for small new features.
 
 For more details see:
 https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v21r0
