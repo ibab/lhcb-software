@@ -1,0 +1,37 @@
+//
+//   Example file to populate "standard" MBM buffer from MDF file
+//   /Event/DAQ/RawEvent is accessed, serialized and committed to MBM
+//
+//#include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
+MessageSvc.OutputLevel      = 3;
+OnlineEnv.MonitorSvcType    = "LHCb::MemMonitorSvc/MonitorSvc";
+//ApplicationMgr.ExtSvc       = { "LHCb::MemMonitorSvc/MonitorSvc",
+//                                "LHCb::DimMonitoringEngine/MonitoringEngine" };
+
+ApplicationMgr.HistogramPersistency  = "NONE";
+//ApplicationMgr.ExtSvc               += {"EventSelector" };
+ApplicationMgr.Dlls                 += {"GaudiOnline"};
+ApplicationMgr.EvtMax                = 20000;
+Runable.MEPManager                   = "";
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices      = {"LHCb::MBMCnvSvc/MBMCnvSvc", "LHCb::RawDataCnvSvc/RawDataCnvSvc"};
+// This serializes /Event/DAQ/RawEvent to MBM buffer
+MBMCnvSvc.DataType                   = 3;     // MDF_BANKS
+//MBMCnvSvc.PartitionID                = @OnlineEnv.PartititonID;
+MBMCnvSvc.PartitionID                = 100000;
+ApplicationMgr.OutStream             = { "Writer_0"};
+Writer_0.Output                      = "DATAFILE='mbm://RECV_186a0' SVC='LHCb::MBMCnvSvc/MBMCnvSvc' OPT='REC'";
+Writer_0.ItemList         = {"/Event#1" };
+EventSelector.PrintFreq              = 1000;
+EventSelector.Input                  = { 
+  "DATA='file://mdfData_0.dat' SVC='LHCb::MDFSelector'"
+ ,"DATA='file://mdfData_1.dat' SVC='LHCb::MDFSelector'"
+ ,"DATA='file://mdfData_2.dat' SVC='LHCb::MDFSelector'"
+ ,"DATA='file://mdfData_3.dat' SVC='LHCb::MDFSelector'"
+};
+#pragma print off
+#include "data/data.opts"
+MessageSvc.OutputLevel = 3;

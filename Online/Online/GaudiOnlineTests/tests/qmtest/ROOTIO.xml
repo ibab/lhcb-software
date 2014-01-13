@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By POOL -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+  <File ID="BA4F204E-627C-E311-A59D-02163E00A623">
+    <physical>
+      <pfn filetype="ROOT" name="taeROOT.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+</POOLFILECATALOG>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By POOL -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+  <File ID="C2173550-587C-E311-80B9-02163E00A623">
+    <physical>
+      <pfn filetype="MDF" name="file://mepData_0.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="DEBF16B9-587C-E311-95A1-02163E00A623">
+    <physical>
+      <pfn filetype="MDF" name="file://taeData_0.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+</POOLFILECATALOG>

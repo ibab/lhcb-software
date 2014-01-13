@@ -1,0 +1,125 @@
+ApplicationMgr       INFO Application Manager Configured successfully
+{'ApplicationMgr': {'AppName': '',
+                    'AuditAlgorithms': True,
+                    'EvtMax': -1,
+                    'ExtSvc': ['Gaudi::MultiFileCatalog/FileCatalog',
+                               'Gaudi::IODataManager/IODataManager',
+                               'AuditorSvc'],
+                    'HistogramPersistency': 'NONE',
+                    'SvcOptMapping': ['Gaudi::MultiFileCatalog/FileCatalog',
+                                      'Gaudi::IODataManager/IODataManager'],
+                    'TopAlg': ['LHCb::RawEventTestDump/Dump',
+                               'StoreExplorerAlg/Explorer']},
+ 'AuditorSvc': {'Auditors': ['ChronoAuditor']},
+ 'ChronoStatSvc': {'OutputLevel': 4},
+ 'Dump': {'CheckData': False,
+          'DumpData': False,
+          'FullDump': False,
+          'OutputLevel': 3},
+ 'EventDataSvc': {'EnableFaultHandler': True,
+                  'ForceLeaves': True,
+                  'RootCLID': 1},
+ 'EventPersistencySvc': {'CnvServices': ['LHCb::RawDataCnvSvc/RawDataCnvSvc',
+                                         'Gaudi::RootCnvSvc/RootCnvSvc']},
+ 'EventSelector': {'Input': ["DATA='PFN:taeROOT.dat' SVC='Gaudi::RootEvtSelector'"],
+                   'PrintFreq': 200},
+ 'Explorer': {'AccessForeign': True,
+              'Load': True,
+              'OutputLevel': 3,
+              'PrintFreq': 0.00021},
+ 'FileCatalog': {'Catalogs': ['xmlcatalog_file:ROOTIO.xml']},
+ 'IODataManager': {'AgeLimit': 1, 'OutputLevel': 3},
+ 'JobOptionSvc': {'OutputLevel': 4},
+ 'MessageSvc': {'OutputLevel': 3},
+ 'ReadAlg': {'OutputLevel': 4},
+ 'RootCnvSvc': {'CacheSize': 50000000, 'GlobalCompression': 'LZMA:3'}}
++-------------------> Start processing events
+RootCnvSvc           INFO Setting global ROOT compression to:LZMA:3
+EventPersistenc...   INFO Added successfully Conversion service:RootCnvSvc
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATA='PFN:taeROOT.dat' SVC='Gaudi::RootEvtSelector'
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
+EventPersistenc...   INFO Added successfully Conversion service:RawDataCnvSvc
+IODataManager       ERROR Referring to existing dataset file://taeData.dat by its physical name.
+IODataManager       ERROR You may not be able to navigate back to the input file -- processing continues
+RawDataCnvSvc        INFO Opened(READ) MDF stream:file://taeData.dat ID:0xe728bf0
+R__unzip: too small target
+RawDataCnvSvc        INFO Retry with increased buffer space of 185208 bytes.
+Explorer             INFO ========= /Event[0xe3d93b0@EventDataSvc]:
+Explorer             INFO +--> /Event [Address: CLID=0x1 Type=0x2]  DataObject
+Explorer             INFO | +--> /Prev5 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Prev4 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Prev3 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Prev2 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Prev1 [Address: CLID=0x1 Type=0x2]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
+Explorer             INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Next1 [Address: CLID=0x1 Type=0x2]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0x2]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Next2 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Next3 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO | +--> /Next4 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO | |   +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+Explorer             INFO   +--> /Next5 [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO     +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject
+Explorer             INFO       +--> /RawEvent [Address: CLID=0x3ea Type=0xa000000]  LHCb::RawEvent
+EventSelector     SUCCESS Reading Event record 201. Record number within stream 1: 201
+EventSelector     SUCCESS Reading Event record 401. Record number within stream 1: 401
+EventSelector     SUCCESS Reading Event record 601. Record number within stream 1: 601
+EventSelector     SUCCESS Reading Event record 801. Record number within stream 1: 801
+EventSelector     SUCCESS Reading Event record 1001. Record number within stream 1: 1001
+EventSelector     SUCCESS Reading Event record 1201. Record number within stream 1: 1201
+EventSelector     SUCCESS Reading Event record 1401. Record number within stream 1: 1401
+EventSelector     SUCCESS Reading Event record 1601. Record number within stream 1: 1601
+EventSelector     SUCCESS Reading Event record 1801. Record number within stream 1: 1801
+EventSelector     SUCCESS Reading Event record 2001. Record number within stream 1: 2001
+EventSelector     SUCCESS Reading Event record 2201. Record number within stream 1: 2201
+EventSelector     SUCCESS Reading Event record 2401. Record number within stream 1: 2401
+EventSelector     SUCCESS Reading Event record 2601. Record number within stream 1: 2601
+EventSelector     SUCCESS Reading Event record 2801. Record number within stream 1: 2801
+EventLoopMgr         INFO No more events in event selection
++-------------------> Finished processing events
+ApplicationMgr       INFO Application Manager Stopped successfully
+EventLoopMgr         INFO Histograms converted successfully according to request.
+RawDataCnvSvc        INFO Closed connected MDF stream:file://taeData.dat ID:0xe728bf0
+RootCnvSvc           INFO Disconnected data IO:1040468F-8ACF-E211-B3AD-003048F0E01A [taeROOT.dat]
+ToolSvc              INFO Removing all tools created by ToolSvc
+*****Chrono*****     INFO ****************************************************************************************************
+*****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
+*****Chrono*****     INFO ****************************************************************************************************
+Explorer:BeginRun    INFO Time User   : Tot=    0 [us]                                             #=  1
+Explorer:Stop        INFO Time User   : Tot=    0 [us]                                             #=  1
+Explorer:Finalize    INFO Time User   : Tot=    0 [us]                                             #=  1
+Explorer:Start       INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:Finalize        INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:Start           INFO Time User   : Tot=    0 [us]                                             #=  1
+Explorer:EndRun      INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:BeginRun        INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:EndRun          INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:Stop            INFO Time User   : Tot=    0 [us]                                             #=  1
+Dump:Initialize      INFO Time User   : Tot=    0 [us]                                             #=  1
+Explorer:Initia...   INFO Time User   : Tot=    4 [ms]                                             #=  1
+Explorer:Execute     INFO Time User   : Tot=   69 [ms] Ave/Min/Max=   23(+-  191)/    0/7e+03 [us] #=3000
+Dump:Execute         INFO Time User   : Tot= 1.48  [s] Ave/Min/Max=  494(+-  504)/    0/4e+03 [us] #=3000
+*****Chrono*****     INFO ****************************************************************************************************
+ChronoStatSvc.f...   INFO  Service finalized successfully
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully

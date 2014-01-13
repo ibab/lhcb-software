@@ -1,0 +1,47 @@
+ApplicationMgr       INFO Application Manager Configured successfully
+{'ApplicationMgr': {'AppName': '',
+                    'EvtSel': 'NONE',
+                    'HistogramPersistency': 'NONE',
+                    'OutStream': ['LHCb::MEPWriter/Writer_0',
+                                  'LHCb::MEPWriter/Writer_1'],
+                    'TopAlg': ['LHCb::RawEventTestCreator/Creator',
+                               'StoreExplorerAlg/Explorer']},
+ 'EventDataSvc': {'EnableFaultHandler': True,
+                  'ForceLeaves': True,
+                  'RootCLID': 1},
+ 'EventPersistencySvc': {'CnvServices': ['LHCb::RawDataCnvSvc/RawDataCnvSvc']},
+ 'Explorer': {'AccessForeign': True,
+              'Load': True,
+              'OutputLevel': 3,
+              'PrintFreq': 0.00021},
+ 'FileCatalog': {'Catalogs': ['xmlcatalog_file:qmTest.xml']},
+ 'IODataManager': {'AgeLimit': 1, 'OutputLevel': 3},
+ 'Writer_0': {'ChecksumType': 0,
+              'Compress': 2,
+              'Connection': 'file://mep_data_0.dat',
+              'PackingFactor': 10},
+ 'Writer_1': {'ChecksumType': 0,
+              'Compress': 2,
+              'Connection': 'file://mep_data_1.dat',
+              'PackingFactor': 10}}
++-------------------> Start processing events
+Writer_0             INFO Initialize MDFWriter
+Writer_0             INFO Received event request connection.
+Writer_1             INFO Initialize MDFWriter
+Writer_1             INFO Received event request connection.
+EventLoopMgr      WARNING Unable to locate service "EventSelector"
+EventLoopMgr      WARNING No events will be processed from external input.
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+Explorer             INFO ========= /Event[0xa479cc0@EventDataSvc]:
+Explorer             INFO +--> /Event [No Address]  DataObject
+Explorer             INFO   +--> /DAQ [No Address]  DataObject
+Explorer             INFO     +--> /RawEvent [No Address]  LHCb::RawEvent
++-------------------> Finished processing events
+ApplicationMgr       INFO Application Manager Stopped successfully
+Writer_0             INFO Size:       0 Output:file://mep_data_0.dat MD5 sum:d41d8cd98f00b204e9800998ecf8427e
+Writer_1             INFO Size:       0 Output:file://mep_data_1.dat MD5 sum:d41d8cd98f00b204e9800998ecf8427e
+EventLoopMgr         INFO Histograms converted successfully according to request.
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully

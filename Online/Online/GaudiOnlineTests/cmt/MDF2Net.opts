@@ -1,0 +1,16 @@
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtMax                = 200000000;
+Runable.MEPManager                   = "";
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc"};
+ApplicationMgr.TopAlg               += {"LHCb::SocketDataSender/SND_0"};
+SND_0.DataSink                       = "storerecv02-d1::TDET_STORERECV02_SF00_HLT";
+SND_0.Compress                       = 0;
+SND_0.AllowSuspend                   = false;
+SND_0.InputDataType                  = 3; // MDF_NONE=1, MDF_RECORDS=2, MDF_BANKS=3 
+SND_0.DataType                       = 3;
+EventSelector.PrintFreq              = 5000;
+#pragma print off
+#include "data/data.opts"
+MessageSvc.OutputLevel = 3;

@@ -1,0 +1,26 @@
+#============================================================================
+# Maintainer : Markus Frank
+#============================================================================
+# Internal helper package to reduce dependencies in GaudiOnline iteself
+#============================================================================
+version Close_to_Hell
+#
+#
+use  GaudiAud      v*
+use  GaudiSvc      v*
+use  GaudiAlg      v*
+###use  GaudiPoolDb   v*
+use  GaudiPython   v*
+use  MDF_ROOT      v* DAQ
+###use  Gaucho        v* Online
+use  GaudiOnline   v* Online
+###use  MBMDump       v* Online
+use  RootCnv       v* Online
+#use GaudiUPI      v* Online
+###use Writer         v* Online
+#use Brunel v* Rec
+
+apply_pattern ld_library_path
+
+apply_pattern QMTest
+apply_pattern QMTestSummarize
