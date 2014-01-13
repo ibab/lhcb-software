@@ -29,6 +29,9 @@ class FstConf(LHCbConfigurableUser):
         ,"TTType"          : "ValidateTT"
         ,"TStationType"    : "IT+OT"
         ,"TStationHits"    : 16
+        ,"ForwardMinPt"    : 1250.  # MeV, determines window size in forward tracking
+                                    # or rejection cut in forward tracking if momentum
+                                    # estimate is used
         ,"FastDecoding"    : True   # if false uses the old official decoding
         ,"Compare"         : False  # if using the old decoding, can run the new one and compare the containers
         ,"TrackFit"        : "HltFit"
@@ -185,6 +188,67 @@ class FstConf(LHCbConfigurableUser):
             FstForward.addTool(PrForwardTool)
             FstForward.PrForwardTool.MinPt = 1250 #self.getProp("MinPt")
             FstForward.PrForwardTool.AddUTClusterName = ""
+
+        # Cheated forward tracking which uses MC truth to get
+        # momentum estimate, in the end the VeloUT should
+        # provide that estimate
+        elif "FT+VeloUT" == self.getProp("TStationType"):
+            from Configurables import PrForwardTracking, PrForwardTool
+            from Configurables import PrVeloUT
+            from Configurables import TrackMasterFitter
+            from Configurables import RawBankToSTLiteClusterAlg
+            from Configurables import PrVeloUTTool
+
+            prVeloUT = PrVeloUT()
+            prVeloUT.InputTracksName = self.getProp("RootInTES") + "Track/VeloFst"
+            prVeloUT.OutputTracksName = self.getProp("RootInTES") + "Track/VeloUTFst"
+            prVeloUT.TimingMeasurement = False
+            prVeloUT.removeUsedTracks = False
+            prVeloUT.InputUsedTracksNames = [ ]
+            prVeloUT.fitTracks = False
+            prVeloUT.maxChi2 = 1280.
+            prVeloUT.AddMomentumEstimate = True
+
+            prVeloUT.addTool(TrackMasterFitter, "Fitter")
+            prVeloUT.Fitter.MeasProvider.IgnoreVelo = True
+            prVeloUT.Fitter.MeasProvider.IgnoreVL = True
+            prVeloUT.Fitter.MeasProvider.IgnoreVP = True
+            prVeloUT.Fitter.MeasProvider.IgnoreTT = True
+            prVeloUT.Fitter.MeasProvider.IgnoreIT = True
+            prVeloUT.Fitter.MeasProvider.IgnoreOT = True
+            prVeloUT.Fitter.MeasProvider.IgnoreUT = False
+            if self.getProp("VeloType") == "VP":
+                prVeloUT.Fitter.MeasProvider.IgnoreVP = False
+            elif self.getProp("VeloType") == "VL":
+                prVeloUT.Fitter.MeasProvider.IgnoreVL = False
+            elif self.getProp("VeloType") == "Velo":
+                prVeloUT.Fitter.MeasProvider.IgnoreVelo = False
+
+            PrVeloUTTool("PrVeloUTTool").DxGroupFactor = 0.0
+            PrVeloUTTool("PrVeloUTTool").maxPseudoChi2 = 1280.
+            PrVeloUTTool("PrVeloUTTool").minMomentum = 2000.
+            PrVeloUTTool("PrVeloUTTool").minPT = 200.
+            PrVeloUTTool("PrVeloUTTool").PrintVariables = True
+            
+            createUTLiteClusters = RawBankToSTLiteClusterAlg("CreateUTLiteClusters")
+            createUTLiteClusters.DetType = "UT"
+            
+            FstSequencer("RecoFstSeq").Members += ["UnpackMCParticle", "UnpackMCVertex",
+                                                   createUTLiteClusters,
+                                                   PrVeloUT("PrVeloUT"),
+                                                   "FTRawBankDecoder",
+                                                   "PrForwardTracking/FstForward"]
+            
+            FstForward = PrForwardTracking("FstForward")
+            FstForward.InputName = self.getProp("RootInTES") + "Track/VeloUTFst"
+            FstForward.OutputName = self.getProp("RootInTES") + "Track/Forward"
+            FstForward.addTool(PrForwardTool)
+            FstForward.PrForwardTool.AddUTHitsToolName = ""
+            # Now with the momentum estimate
+            FstForward.PrForwardTool.UseMomentumEstimate = True
+            FstForward.PrForwardTool.MinPt = self.getProp("ForwardMinPt")
+            FstForward.PrForwardTool.PreselectionPT = self.getProp("ForwardMinPt")
+            FstForward.PrForwardTool.Preselection = True
             
         else:
             log.warning("Unknown TStationType option '%s' !"%self.getProp("TStationType"))
@@ -226,7 +290,7 @@ class FstConf(LHCbConfigurableUser):
                 HltFastFit.Fitter.MeasurementProvider.IgnoreTT = True
 
             # ignore IT+OT as it cannot initialize
-            if "FT" == self.getProp( "TStationType" ):
+            if "FT" in self.getProp("TStationType"):
                 HltFastFit.Fitter.MeasurementProvider.IgnoreIT = True
                 HltFastFit.Fitter.MeasurementProvider.IgnoreOT = True
                 HltFastFit.Fitter.MeasurementProvider.IgnoreFT = False
