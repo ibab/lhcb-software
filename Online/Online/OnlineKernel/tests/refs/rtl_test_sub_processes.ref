@@ -8,11 +8,8 @@ Child: Starting process:SLEEPER_0xFEED0002
 Child: Starting process:SLEEPER_0xFEED0004
 Child: Starting process:SLEEPER_0xFEED0006
 Stop process SLEEPER_0xFEED0002
-RTL:Handled signal: 15 [SIGTERM] Old action:(nil)
 Stop process SLEEPER_0xFEED0004
-RTL:Handled signal: 15 [SIGTERM] Old action:(nil)
 Stop process SLEEPER_0xFEED0006
-RTL:Handled signal: 15 [SIGTERM] Old action:(nil)
 Process SLEEPER_0xFEED0001 ended. Status=0 output redirected to:/dev/null
 Process SLEEPER_0xFEED0002 ended. Status=0
 Process SLEEPER_0xFEED0003 ended. Status=0 output redirected to:/dev/null
