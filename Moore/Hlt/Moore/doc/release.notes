@@ -4,10 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v21r0 2014-01-10 =========================
 ! 2014-01-13 - Rob Lambert
  - Modify MC test, rename to sim08
 
-!========================= Moore v21r0 2014-01-10 =========================
 ! 2014-01-13 - Rob Lambert
  - Add Hlt1 SelReports decoding to split sequence, to appease the new Phys/TisTosTobbing warnings.
  - update notos reference, now only 33 differences turning off TOS.
