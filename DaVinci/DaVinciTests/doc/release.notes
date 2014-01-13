@@ -1,8 +1,12 @@
-at !-----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 ! Package     : DaVinciTests
 ! Responsible : Chris Jones
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+
+! 2014-01-13 - Christopher Rob Jones
+ - Update references for new DAQ decoders and warning messages from
+   OfflineVertexFitter.
 
 !========================= DaVinciTests v2r21 2013-12-18 =========================
 
