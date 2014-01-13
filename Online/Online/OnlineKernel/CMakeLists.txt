@@ -6,6 +6,7 @@ gaudi_subdir(OnlineKernel v2r13)
 gaudi_depends_on_subdirs(Online/OnlineBase)
 
 find_package(PythonLibs)
+find_package(ROOT)
 
 gaudi_add_library(OnlineKernel
                     src/RTL/*.cpp
