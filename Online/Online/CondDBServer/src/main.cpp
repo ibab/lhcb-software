@@ -241,10 +241,12 @@ int Partition::storeCondition(CONDITION * cond)
    try 
    {
       // create the payload object
-      cool::FolderSpecification spec(cool::FolderVersioning::SINGLE_VERSION);
-      spec.payloadSpecification().extend("data",cool::StorageType::String16M);
+      cool::RecordSpecification recSpec;
+      recSpec.extend("data",cool::StorageType::String16M);
+      cool::FolderSpecification spec(cool::FolderVersioning::SINGLE_VERSION,
+                                     recSpec);
       cool::Record payload(spec.payloadSpecification());
-      payload["data"].setValue<std::string>(condition);                                           
+      payload["data"].setValue<std::string>(condition);
           
       folder = this->getFolderPtr(new_path);      
       if( folder == NULL )

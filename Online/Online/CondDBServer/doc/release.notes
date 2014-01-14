@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-01-14 - Marco Clemencic
+ - Fixed compilation problem with latest COOL.
+
 ! 2014-01-07 - Marco Clemencic
  - Added CMakeLists.txt.
 
