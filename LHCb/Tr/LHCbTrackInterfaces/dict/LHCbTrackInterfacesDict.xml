@@ -2,5 +2,4 @@
   <class name    = "ISTClusterPosition"      />
   <class name    = "IVeloClusterPosition"    />
   <class name    = "IVPClusterPosition" />
-  <class name    = "IVLClusterPosition" />
 </lcgdict>
