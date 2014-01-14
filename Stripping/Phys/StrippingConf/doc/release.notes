@@ -4,6 +4,19 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-01-14 - Anton Poluektov 
+ - Added two more arguments for StrippingLine related to ExtraInfo. 
+   These are needed only if one wants to store the ExtraInfo for 
+   particles down the decay tree. By default, only the info for top 
+   of the tree is stored. One can add daughters too by configuring the 
+   following: 
+
+     * ExtraInfoDaughters = [sel1, sel2]
+       Give the list of Selections (or MergedSelections) for which to 
+       store ExtraInfo. Other selection types are not supported. 
+     * ExtraInfoRecursionLevel = 1
+       Maximum depth in the tree the AddExtraInfo will descend. Equal to 1 by default. 
+
 ! 2014-01-10 - Anton Poluektov 
  - Added ExtraInfoTools argument to StrippingLine. If not None, it adds 
    AddExtraInfo algorithm and configures ExtraInfo tools (e.g. calculation 

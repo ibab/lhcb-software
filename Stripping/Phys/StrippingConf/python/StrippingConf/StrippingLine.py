@@ -321,6 +321,9 @@ class StrippingLine(object):
                    HDRLocation = None,           # if None, defined by stream name
                    EnableFlavourTagging = False, # If True, run FlavourTaggingTool to store FT info
                    ExtraInfoTools = None,        # Configuration of ExtraInfo tools, as a list of dictionaries (or None)
+                   ExtraInfoDaughters = None,    # Daughter selections for which store ExtraInfo. If None, use only the top selection.
+                   ExtraInfoRecursionLevel = 1,  # Maximum depth in the decay tree to calculate ExtraInfo
+                                                 # Only used is ExtraInfoDaughters are given, otherwise is 0
                    **args           ) : # other configuration parameters
 
         if algos and selection :
@@ -361,6 +364,8 @@ class StrippingLine(object):
         self.MaxCandidates = MaxCandidates
         self.MaxCombinations = MaxCombinations
         self.ExtraInfoTools = ExtraInfoTools
+        self.ExtraInfoDaughters = ExtraInfoDaughters
+        self.ExtraInfoRecursionLevel = ExtraInfoRecursionLevel
 
         line = self.subname()
 
@@ -468,9 +473,23 @@ class StrippingLine(object):
 	# Add extra info tools if needed
 	if self.ExtraInfoTools : 
 	    from Configurables import AddExtraInfo
-	    extraInfoAlg = AddExtraInfo('ExtraInfo' + self.name())
-            extraInfoAlg.MaxLevel = 1
-            extraInfoAlg.Inputs = [ self.outputLocation() ] 
+	    extraInfoAlg = AddExtraInfo('ExtraInfo_' + self.name())
+    	    extraInfoAlg.Inputs = [ self.outputLocation() ] 
+            if self.ExtraInfoDaughters : 
+        	extraInfoAlg.MaxLevel = self.ExtraInfoRecursionLevel
+        	daughtersList = []
+        	for sel in self.ExtraInfoDaughters : 
+        	    if type(sel).__name__ == 'Selection' or type(sel).__name__ == 'MergedSelection' : 
+        		fullPath = "/Event/" + sel.outputLocation()
+        		daughtersList += [ fullPath ]
+                        print "Added outputlocation %s to ExtraInfo in line %s" % (fullPath, self.name() )
+        	    else : 
+        		raise AttributeError, "Storing ExtraInfo is not supported for selection of type '%s' (in line %s)" % \
+        		      (type(sel).__name__, self.name() )
+    		extraInfoAlg.DaughterLocations = daughtersList
+            else : 
+        	extraInfoAlg.MaxLevel = 0
+        	
             toolNames = []
             toolNum = 0
             for itool in self.ExtraInfoTools : 
