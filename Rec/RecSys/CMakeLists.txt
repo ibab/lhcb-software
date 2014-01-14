@@ -20,7 +20,6 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Pr/PrKernel
                          Pr/PrMCTools
                          Pr/PrUtils
-                         Pr/PrVL
                          Pr/PrVeloUT
 			 Rec/ChargedProtoANNPID
                          Rec/GlobalReco

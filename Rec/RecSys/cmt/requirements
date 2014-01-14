@@ -31,7 +31,6 @@ use PrFitParams          v1r3    Pr   # Yasmine Amhis
 use PrKernel             v1r3    Pr   # Sascha Stahl
 use PrMCTools            v1r8    Pr   # Sascha Stahl
 use PrUtils              v1r1    Pr   # Thomas Nikodem
-use PrVL                 v1r4    Pr   # Heinrich Schindler
 use PrVeloUT             v1r3    Pr   # Jianchun Wang
 
 # Non sub-detector specific components

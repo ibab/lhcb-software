@@ -5,6 +5,8 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+- Packages removed:  Pr/PrVL (obsolete)
+
 </PRE><H1><A NAME=v15r4>2013-12-11 RecSys v15r4</A></H1><PRE>
 This version uses Gaudi v24r2, LHCb v36r4 and Lbcom v14r4
 
