@@ -174,14 +174,14 @@ int Process::wait(int flag)    {
     return INVALID;
   }
   else if( WIFEXITED(m_status) )      {
-    cout << "waitpid() exited: Status=" << WEXITSTATUS(m_status) << endl;
+    cout << "waitpid() '" << m_name << "' exited: Status=" << WEXITSTATUS(m_status) << endl;
     return ENDED;
   }
   else if( WIFSTOPPED(m_status) )      {
     return STOPPED;
   }
   else if( WIFSIGNALED(m_status) )      {
-    cout << "waitpid() exited due to a signal: " << WTERMSIG(m_status) << endl;
+    cout << "waitpid() '" << m_name << "' exited due to a signal: " << WTERMSIG(m_status) << endl;
     return ENDED;
   }
   return RUNNING;

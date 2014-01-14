@@ -8,7 +8,7 @@ Parent: Started process:Cons_u_1 output redirected to:/dev/null
 Starting processes .....
 Starting producer ......
 Parent: Started process:Prod_0 output redirected to:/dev/null
-waitpid() exited: Status=1
+waitpid() 'Prod_0' exited: Status=1
 Producer finished work..
 Parent: Started process:Summary_0
 Child: Starting process:Summary_0
@@ -28,13 +28,13 @@ Child: Starting process:Summary_0
  CONS_ONE              103    C                             5000   100   1       0
 
 +++++ MBM summary finished.
-waitpid() exited: Status=1
+waitpid() 'Summary_0' exited: Status=1
 Summary task finished work..
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
+waitpid() 'Cons_u_1' exited: Status=0
+waitpid() 'Cons_u_0' exited: Status=0
+waitpid() 'Cons_o_1' exited: Status=0
+waitpid() 'Cons_o_0' exited: Status=0
+waitpid() 'Cons_s_1' exited: Status=0
+waitpid() 'Cons_s_0' exited: Status=0
+waitpid() 'Install' exited: Status=0
 All processes finished work..
