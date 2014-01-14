@@ -1,5 +1,3 @@
-// $Id: Checkers.cpp,v 1.5 2010-05-18 09:03:21 jonrob Exp $
-
 #include "CheckerBaseAlg.icpp"
 
 #include "Event/PackedMCRichHit.h"
@@ -60,10 +58,6 @@ DECLARE_ALGORITHM_FACTORY( G )
 template class DataPacking::Check<LHCb::MCVPHitPacker>;
 typedef DataPacking::Check<LHCb::MCVPHitPacker> Fp;
 DECLARE_ALGORITHM_FACTORY( Fp )
-
-template class DataPacking::Check<LHCb::MCVLHitPacker>;
-typedef DataPacking::Check<LHCb::MCVLHitPacker> Fl;
-DECLARE_ALGORITHM_FACTORY( Fl )
 
 template class DataPacking::Check<LHCb::MCTTHitPacker>;
 typedef DataPacking::Check<LHCb::MCTTHitPacker> H;

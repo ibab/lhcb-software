@@ -1,5 +1,3 @@
-// $Id: Unpackers.cpp,v 1.5 2010-05-18 09:03:21 jonrob Exp $
-
 #include "UnpackerBaseAlg.icpp"
 
 #include "Event/PackedMCRichHit.h"
@@ -56,10 +54,6 @@ DECLARE_ALGORITHM_FACTORY( F )
 template class DataPacking::Unpack<LHCb::MCVPHitPacker>;
 typedef DataPacking::Unpack<LHCb::MCVPHitPacker> Fp;
 DECLARE_ALGORITHM_FACTORY( Fp )
-
-template class DataPacking::Unpack<LHCb::MCVLHitPacker>;
-typedef DataPacking::Unpack<LHCb::MCVLHitPacker> Fl;
-DECLARE_ALGORITHM_FACTORY( Fl )
 
 template class DataPacking::Unpack<LHCb::MCPuVetoHitPacker>;
 typedef DataPacking::Unpack<LHCb::MCPuVetoHitPacker> G;
