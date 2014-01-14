@@ -29,7 +29,6 @@ gaudi_depends_on_subdirs(Associators/MCAssociators
                          Det/OTDet
                          Det/RichDet
                          Det/STDet
-                         Det/VLDet
                          Det/VPDet
                          Det/VeloDet
                          Event/DAQEvent
@@ -103,7 +102,6 @@ gaudi_depends_on_subdirs(Associators/MCAssociators
                          Tools/FileStager
                          Tools/XmlTools
 			 Velo/VeloDAQ
-			 VL/VLDAQ
 			 VP/VPDAQ)
 
 

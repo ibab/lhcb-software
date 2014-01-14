@@ -40,7 +40,6 @@ use OTDet                 v8r10   Det     # Alexandr Kozlinskiy, Lucia Grillo
 use RichDet               v16r19  Det     # Chris Jones
 use STDet                 v4r30   Det     # J. van Tilburg
 use VeloDet               v13r19p1  Det   # Mark Tobin, Kurt Rinnert
-use VLDet                 v1r7    Det     # Heinrich Schindler
 use VPDet                 v2r5    Det     # Pawel Jalocha
 
 # Event data model
@@ -144,7 +143,6 @@ use LHCbTrackInterfaces   v1r0    Tr      # Marco Cattaneo
 
 use VeloDAQ               v6r10   Velo    # Kurt Rinnert
 
-use VLDAQ                 v1r4    VL      # Heinrich Schindler
 use VPDAQ                 v2r4    VP      # Marcin Kucharczyk
 
 # Declare this as a container package
