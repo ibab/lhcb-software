@@ -32,7 +32,8 @@ export MINITERM='xterm  -ls -132 -geometry 132x12 -title '
 export BIGTERM='xterm  -ls -132 -geometry 132x65 -title '
 export WIDETERM='xterm  -ls -132 -geometry 160x50 -title '
 #export MINITERM=echo
-export NODENAME=`python -c "print '$HOST'.split('.')[0]"`
+export HOST=`hostname -s`;
+export NODENAME=`python -c "print '$HOST'.split('.')[0]"`;
 if test "$NODENAME" = "storeio01";
 then
   ### Running on storeio01:
@@ -49,14 +50,14 @@ fi;
 #
 start_py_task()
 {
-  $MINITERM ${1}@${HOST}   -e "export UTGID=${NODENAME}/${1};   exec -a \${UTGID} $Class1_task -opt=command=\"${2}\""&
+  $MINITERM ${1}@${HOST}   -e "export UTGID=${NODENAME}_${1};   exec -a \${UTGID} $Class1_task -opt=command=\"${2}\""&
   ##bash -c "export UTGID=${NODENAME}/${1};   exec -a \${UTGID} $Class1_task -opt=command=\"${2}\""&
 }
 start_gaudi_task()
 {
-  $MINITERM ${1}@${HOST}   -e "UTGID=${NODENAME}/${1}; `which python` -c \"${2}\";"&
+  $MINITERM ${1}@${HOST}   -e "UTGID=${NODENAME}_${1}; `which python` -c \"${2}\";"&
 }
 start_python_prompt()
 {
-  $MINITERM ${1}@${HOST}   -e "UTGID=${NODENAME}/${1} `which python` "&
+  $MINITERM ${1}@${HOST}   -e "UTGID=${NODENAME}_${1} `which python` "&
 }
