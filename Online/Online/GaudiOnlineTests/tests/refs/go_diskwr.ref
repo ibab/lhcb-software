@@ -17,13 +17,14 @@ Child: Starting process:MBMsummary_0
                             Space(kB):[Tot:8088 Free:8088] Users:[Tot:2 Max:64]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
+
+ DiskWr_0              14d    C                             2000   100    AEvents_LHCb
  Prod_0                14d    P             2000   100                                Events_LHCb
- CONS_ONE              14d    C                             2000   100   1 Events_LHCb
 
 +++++ MBM summary finished.
-waitpid() exited: Status=1
+waitpid() 'MBMsummary_0' exited: Status=1
 Summary task finished work..
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
+waitpid() 'Prod_0' exited: Status=0
+waitpid() 'DiskWr_0' exited: Status=84
+waitpid() 'Events_0' exited: Status=0
 All processes finished work..

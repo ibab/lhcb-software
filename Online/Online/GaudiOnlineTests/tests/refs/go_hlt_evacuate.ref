@@ -34,8 +34,9 @@ Child: Starting process:MBMsummary_0
                             Space(kB):[Tot:8088 Free:8088] Users:[Tot:2 Max:64]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
+
  Prod1_0               14d    P             2000   100                                Node1_LHCb
- CONS_ONE              14d    C                             2000   100   1 Node1_LHCb
+ Sender1_0             14d    C                             2000   100    ANode1_LHCb
 
 ======================== MBM Bufer summary for buffer "Node2_LHCb" ========================
 
@@ -43,8 +44,9 @@ Child: Starting process:MBMsummary_0
                             Space(kB):[Tot:8088 Free:8088] Users:[Tot:2 Max:64]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
+
  Prod2_0               14d    P             2000   100                                Node2_LHCb
- CONS_ONE              14d    C                             2000   100   1 Node2_LHCb
+ Sender2_0             14d    C                             2000   100    ANode2_LHCb
 
 ======================== MBM Bufer summary for buffer "Node3_LHCb" ========================
 
@@ -52,8 +54,9 @@ Child: Starting process:MBMsummary_0
                             Space(kB):[Tot:8088 Free:8088] Users:[Tot:2 Max:64]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
+
  Prod3_0               14d    P             2000   100                                Node3_LHCb
- CONS_ONE              14d    C                             2000   100   1 Node3_LHCb
+ Sender3_0             14d    C                             2000   100    ANode3_LHCb
 
 ======================== MBM Bufer summary for buffer "Storage_LHCb" ========================
 
@@ -61,21 +64,22 @@ Child: Starting process:MBMsummary_0
                             Space(kB):[Tot:8088 Free:8088] Users:[Tot:1 Max:64]
 
  Name            Partition Type State   Produced %prod     #seen %seen Reqs Buffer
+
  Receiver_0            14d    P             6000   100                                Storage_LHCb
 
 +++++ MBM summary finished.
-waitpid() exited: Status=1
+waitpid() 'MBMsummary_0' exited: Status=1
 Summary task finished work..
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
-waitpid() exited: Status=0
+waitpid() 'Prod3_0' exited: Status=0
+waitpid() 'Prod2_0' exited: Status=0
+waitpid() 'Prod1_0' exited: Status=0
+waitpid() 'Sender3_0' exited: Status=84
+waitpid() 'Sender2_0' exited: Status=84
+waitpid() 'Sender1_0' exited: Status=84
+waitpid() 'Receiver_0' exited: Status=0
+waitpid() 'Storage_0' exited: Status=0
+waitpid() 'Node3_0' exited: Status=0
+waitpid() 'Node2_0' exited: Status=0
+waitpid() 'Node1_0' exited: Status=0
+waitpid() 'TanServ_0' exited: Status=0
 All processes finished work..
