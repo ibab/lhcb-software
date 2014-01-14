@@ -9,7 +9,7 @@ f=open("../options/Moore-LocalTCKData.py")
 configdest=f.read().split("'")[1]
 f.close()
 
-commandoptions="'from Configurables import Moore; Moore().ForceSingleL0Configuration=False; Moore.generateConfig=True; Moore().EvtMax="+str(numEvents)+"; Moore().configLabel=\"Test TCK from nightly builds, auto-generated in nightlies based on some physics threshold setting.\"; '"
+commandoptions="'from Configurables import Moore; Moore().generateConfig=True; Moore().EvtMax="+str(numEvents)+"; Moore().configLabel=\"Test TCK from nightly builds, auto-generated in nightlies based on some physics threshold setting.\"; '"
 
 def expp(apath):
     return os.path.abspath(os.path.expandvars(os.path.expanduser(apath)))
@@ -29,7 +29,7 @@ print "modified config in: "+ os.path.join(expp(configdest),"config.tar")
 #run events
 print "running",numEvents
 import commands
-status,output = commands.getstatusoutput("gaudirun.py ../options/Moore-Testing-Default.py ../options/Moore-LocalTCKData.py --option="+commandoptions)
+status,output = commands.getstatusoutput("gaudirun.py ../options/Moore-Testing-Default.py ../options/default-threshold.py ../options/Moore-LocalTCKData.py --option="+commandoptions)
 
 #
 #print status

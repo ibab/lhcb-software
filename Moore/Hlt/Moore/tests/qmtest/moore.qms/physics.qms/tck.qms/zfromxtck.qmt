@@ -5,21 +5,22 @@
     <integer>1200</integer>
   </argument>
   <argument name="args"><set>
-    <text>../options/Moore-Testing-Default.py</text>
+    <text>../options/Moore_Hlt1And2.py</text>
+    <text>../options/default-threshold.py</text>
     <text>../options/Moore-LocalTCKData.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().EvtMax=1200; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False;</text>
+    <text>from Configurables import Moore; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False;</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
 #print "YES"
 #reftable
-reftable='../refs/physics.fromthresh.timing.ref'
+reftable='../refs/physics.2012.timing.ref'
 myname='moore.physics.tck.zfromxtck'
 
 from Moore.QMTest.MooreTests import compareTimingTableEvents
 
-compareTimingTableEvents(myname,result,causes,stdout,reftable,"Hlt")
+compareTimingTableEvents(myname,result,causes,stdout,reftable,"Hlt",extranewref=".tck")
 
 
 #count error lines, shouldn't be any warnings or errors, ideally

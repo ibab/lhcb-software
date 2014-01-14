@@ -22,7 +22,6 @@ Moore().CheckOdin= False;
 Moore().InitialTCK= '0x00790038';
 Moore().Simulation= False;
 Moore().CondDBtag= 'cond-20120831'; #from RunDB
-Moore().ThresholdSettings="Physics_September2012"
 
 from Configurables import TimingAuditor, SequencerTimerTool
 TimingAuditor('TIMER').addTool(SequencerTimerTool, name="TIMER")

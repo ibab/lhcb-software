@@ -5,14 +5,12 @@ import sys
 # Setup the option parser
 usage = "usage: %prog [options] settings"
 parser = optparse.OptionParser( usage = usage )
-parser.add_option( "-d", "--data", action="store", dest="Data", 
+parser.add_option( "-d", "--data", action="store", dest="Data",
                    default="2012_raw_default", help="Data to run on.")
 parser.add_option( "-n", "--evtmax", type="int", action = "store", dest = "EvtMax",
                    default = 5000, help = "Number of events to run" )
 parser.add_option( "--dddbtag", action="store", dest="DDDBtag",
                    default='dddb-20120831', help="DDDBTag to use" )
-parser.add_option( "--l0", action="store_true", dest="L0",
-                   default=False, help="Rerun L0" )
 parser.add_option( "--conddbtag", action = "store", dest = "CondDBtag",
                    default = 'cond-20120831', help = "CondDBtag to use. " )
 
@@ -35,10 +33,6 @@ Moore().Simulation = False
 Moore().UseDBSnapshot = False
 Moore().DDDBtag    = options.DDDBtag
 Moore().CondDBtag  = options.CondDBtag
-
-if options.L0:
-    Moore().L0 = True
-    Moore().ReplaceL0BanksWithEmulated = True
 
 Moore().ForceSingleL0Configuration = True
 from Configurables import L0MuonAlg

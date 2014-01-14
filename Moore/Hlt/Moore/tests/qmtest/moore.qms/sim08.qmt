@@ -4,8 +4,9 @@
   <argument name="args"><set>
     <!--<text>$APPCONFIGOPTS/Moore/MooreSimProductionWithL0Emulation.py</text>-->
     <text>../options/Moore-Testing-Default.py</text>
+    <text>../options/default-threshold.py</text>
     <text>--option</text>
-    <text>from Gaudi.Configuration import *; from Configurables import Moore; from PRConfig import TestFileDB; Moore().UseDBSnapshot=False; Moore().EnableRunChangeHandler = False; Moore().CheckOdin = False; Moore().ForceSingleL0Configuration=True; Moore().WriterRequires = [];  TestFileDB.test_file_db["Sim08_2012_L044"].run(Moore(),clear=True); </text>
+    <text>from Gaudi.Configuration import *; from Configurables import Moore; Moore().EvtMax=99; from PRConfig import TestFileDB; Moore().UseDBSnapshot=False; Moore().EnableRunChangeHandler = False; Moore().CheckOdin = False; Moore().ForceSingleL0Configuration=True; Moore().WriterRequires = [];  TestFileDB.test_file_db["Sim08_2012_L044"].run(Moore(),clear=True); </text>
   </set></argument>
   <argument name="validator"><text>
 countErrorLines({"FATAL":0, "ERROR":0, "WARNING" :1})

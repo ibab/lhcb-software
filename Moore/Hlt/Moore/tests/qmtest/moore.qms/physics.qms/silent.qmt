@@ -3,6 +3,7 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
     <text>../options/Moore_Hlt1And2.py</text>
+    <text>../options/default-threshold.py</text>
     <text>--option</text>
     <text>from Configurables import Moore; Moore().OutputLevel=4; Moore().EvtMax=10; </text>
   </set></argument>

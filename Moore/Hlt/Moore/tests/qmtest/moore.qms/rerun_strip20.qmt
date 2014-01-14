@@ -3,6 +3,7 @@
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
     <text>../options/readStrip20Data.py</text>
+    <text>../options/default-threshold.py</text>
     <text>--option</text>
     <text>from PRConfig import TestFileDB; from Configurables import Moore; TestFileDB.test_file_db['Charm_Strip20_Test'].run(configurable=Moore()); Moore().EvtMax=300;</text>
   </set></argument>

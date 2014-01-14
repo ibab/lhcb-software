@@ -6,6 +6,7 @@
   </argument>
   <argument name="args"><set>
     <text>../options/Moore_Hlt1And2.py</text>
+    <text>../options/default-threshold.py</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>

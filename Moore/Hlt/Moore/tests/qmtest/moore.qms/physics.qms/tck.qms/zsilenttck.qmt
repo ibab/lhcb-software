@@ -2,7 +2,8 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
   <argument name="args"><set>
-    <text>../options/Moore-Testing-Default.py</text>
+    <text>../options/Moore_Hlt1And2.py</text>
+    <text>../options/default-threshold.py</text>
     <text>../options/Moore-LocalTCKData.py</text>
     <text>--option</text>
     <text>from Configurables import Moore; Moore().EvtMax=10; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False;  Moore().OutputLevel=4;</text>

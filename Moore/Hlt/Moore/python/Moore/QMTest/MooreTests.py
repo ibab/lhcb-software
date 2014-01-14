@@ -28,7 +28,7 @@ def extractEventsFromTiming(stdout,beginswith=None):
         line=line.split('|')
         if len(line)<5:
             continue
-        if not line[0].startswith(beginswith): 
+        if not line[0].startswith(beginswith):
             continue
         name=line[0].strip().rstrip().lstrip()
         num=line[4].strip().rstrip().lstrip()
@@ -44,8 +44,8 @@ def listToResult(testname,resname,thelist,refresultdict,timingdict,toomany,resst
     resname: the name of this specific result, the result name is made from
               testname+resname.lower()
     thelist: list of whatever to make into a quote
-    refresultsdict: dictionary of {referenceAlg : #events} 
-    timingdict: dictionary of {testAlg : #events} 
+    refresultsdict: dictionary of {referenceAlg : #events}
+    timingdict: dictionary of {testAlg : #events}
     toomany: flag to allow the full list as a quote, or only the first 10 entries
     resstr: override the resname in the quote, but not the results entry,
             usually the results entry starts with resname.split('_')[-1]
@@ -97,8 +97,8 @@ def eventTableRef(filename,beginswith=None):
     for ref in refresult:
         refdict[':'.join(ref.split(':')[:-1])]=int(ref.split(':')[-1])
     return refresult, refdict
-    
-def compareTimingTableEvents(testname,result,causes,stdout,refFile,beginswith=None,max=200):
+
+def compareTimingTableEvents(testname,result,causes,stdout,refFile,beginswith=None,max=200,extranewref=''):
     """
     compare the timing table with a test timing table
     testname: the name of this qmtest
@@ -106,20 +106,22 @@ def compareTimingTableEvents(testname,result,causes,stdout,refFile,beginswith=No
     causes: the causes to add to
     stdout: the stdout, a string
     refFile: where to find the reference, a string
-    beginswith: ignore timing table entris which do not start with this
+    beginswith: ignore timing table entries which do not start with this
     max: how many differences would be too many to print? default 200
+    extranewref: whether to append anything extra to the newly created ref file
     """
     #parse the tables
     refresult,refresultdict=eventTableRef(refFile,beginswith)
     timing, timingdict=extractEventsFromTiming(stdout,beginswith)
-    
+
     #compare, write out new refs?
     if refresult==timing or refresultdict==timingdict:
         return
     causes.append('#events in timing tables disagree')
-    extranewref=''
+    if len(extranewref) and not extranewref.startswith('.'):
+        extranewref='.'+extranewref
     if beginswith is not None:
-        extranewref='.'+beginswith
+        extranewref=extranewref+'.'+beginswith
     f=open(refFile+extranewref+'.new','w')
     f.write('\n'.join(timing))
     f.close()
@@ -131,7 +133,7 @@ def compareTimingTableEvents(testname,result,causes,stdout,refFile,beginswith=No
     lineFailureDiff=[r for r in diff if ((r not in singleEventDiffs) and (refresultdict[r]!=0) and (timingdict[r]==0))]
     tenPercentDiffs=[r for r in diff if ((r not in singleEventDiffs) and (r not in lineFailureDiff) and (fabs(float(refresultdict[r]-timingdict[r])/float(refresultdict[r]+timingdict[r]))<0.1))]
     rest=[r for r in diff if ((r not in singleEventDiffs) and (r not in lineFailureDiff) and (r not in tenPercentDiffs))]
-    
+
     #get the results
     toomany=False
     if len(missing)+len(added)+len(diff)>max:
@@ -145,4 +147,4 @@ def compareTimingTableEvents(testname,result,causes,stdout,refFile,beginswith=No
     listToResult(testname,"e_failure",lineFailureDiff,refresultdict,timingdict,toomany,"zero events",result=result)
     listToResult(testname,"f_10pc",tenPercentDiffs,refresultdict,timingdict,toomany,"+/- <10 %",result=result)
     listToResult(testname,"g_Rest",rest,refresultdict,timingdict,toomany,result=result)
-    
+

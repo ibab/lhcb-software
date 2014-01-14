@@ -7,6 +7,7 @@
   <argument name="args"><set>
     <text>../options/Moore_Hlt1And2.py</text>
     <text>../options/Moore_Hlt2Only.py</text>
+    <text>../options/default-threshold.py</text>
   </set></argument>
   <!--<argument name="prerequisites"><set>
     <tuple><text>moore.physics.deferral.hlt1only</text><enumeral>PASS</enumeral></tuple>

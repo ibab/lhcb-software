@@ -16,7 +16,6 @@ Moore().CheckOdin= False;
 Moore().InitialTCK= '0x00790038';
 Moore().Simulation= False;
 Moore().CondDBtag= 'head-20120420'; #from RunDB
-Moore().ThresholdSettings="Physics_September2012"
 Moore().ForceSingleL0Configuration = False
 
 from Configurables import L0Conf

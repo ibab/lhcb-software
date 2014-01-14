@@ -7,6 +7,7 @@
   <argument name="args"><set>
     <text>../options/Moore_Hlt1And2.py</text>
     <text>../options/Moore_Hlt1Only.py</text>
+    <text>../options/default-threshold.py</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <!--<argument name="prerequisites"><set>
@@ -24,7 +25,7 @@ compareTimingTableEvents(myname,result,causes,stdout,reftable,"Hlt1")
 
 #count error lines, shouldn't be any warnings or errors, ideally
 #error lines here are stupid Gaudi warnings about not being able to navigate to input file, 3 input files means 6 errors.
-#11 warnings are about 
+#11 warnings are about
 countErrorLines({"FATAL":0,"ERROR":6,"WARNING":1})
 
 </text></argument>
