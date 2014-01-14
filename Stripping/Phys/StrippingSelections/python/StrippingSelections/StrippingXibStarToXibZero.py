@@ -81,10 +81,10 @@ _my_immutable_config = {
         ,'DownTrack_PT_Min'            : 100.0*MeV
         ,'DownTrack_P_Min'             :   2.0*GeV
         ,'DownTrack_MIPCHI2DV_Min'     :  -1.0
-        ,'XibStar_PT_Min'              : 2000.0*MeV
+        ,'XibStar_PT_Min'              :2000.0*MeV
         ,'XibStar_VtxChisq_Max'        :  20.0
         ,'XibStar_DMCutLower'          : -50.0*MeV
-        ,'XibStar_DMCutUpper'          :  50.0*MeV
+        ,'XibStar_DMCutUpper'          :  75.0*MeV
         ,'XibStar_DMCutLower_SL'       :-250.0*MeV
         ,'XibStar_DMCutUpper_SL'       : 250.0*MeV
         ,'Xic_ADAMASS_HalfWin'         : 170.0*MeV
@@ -279,32 +279,56 @@ class XibStarBuilder(LineBuilder) :
         self.XibMode12 = makeGeneric(name+'Combine'+_name12, [ self.Xic0, self.dauPi, self.dauMu ], '[ Xi_b0 -> Xi_c0 pi+ mu- ]cc', _strCutXib0Comb, _strCutXib0MothSL)
         
         # Build Xib* -> Xib0 pi+
-        self.XibStarMode1  = makeXibStar(name+'CombineXibStar'+_name1,  [ self.XibMode1,  self.dauSoftPi ])
-        self.XibStarMode2  = makeXibStar(name+'CombineXibStar'+_name2,  [ self.XibMode2,  self.dauSoftPi ])
-        self.XibStarMode3  = makeXibStar(name+'CombineXibStar'+_name3,  [ self.XibMode3,  self.dauSoftPi ])
-        self.XibStarMode4  = makeXibStar(name+'CombineXibStar'+_name4,  [ self.XibMode4,  self.dauSoftPi ])
-        self.XibStarMode5  = makeXibStar(name+'CombineXibStar'+_name5,  [ self.XibMode5,  self.dauSoftPi ])
-        self.XibStarMode6  = makeXibStar(name+'CombineXibStar'+_name6,  [ self.XibMode6,  self.dauSoftPi ])
-        self.XibStarMode7  = makeXibStar(name+'CombineXibStar'+_name7,  [ self.XibMode7,  self.dauSoftPi ])
-        self.XibStarMode8  = makeXibStar(name+'CombineXibStar'+_name8,  [ self.XibMode8,  self.dauSoftPi ])
-        self.XibStarMode9  = makeXibStar(name+'CombineXibStar'+_name9,  [ self.XibMode9,  self.dauSoftPi ])
-        self.XibStarMode10 = makeXibStar(name+'CombineXibStar'+_name10, [ self.XibMode10, self.dauSoftPi ])
-        self.XibStarMode11 = makeXibStarSL(name+'CombineXibStar'+_name11, [ self.XibMode11, self.dauSoftPi ])
-        self.XibStarMode12 = makeXibStarSL(name+'CombineXibStar'+_name12, [ self.XibMode12, self.dauSoftPi ])
+        self.XibStarMode1RS  = makeXibStarRS(  name+'CombineXibStarRS'+_name1,  [ self.XibMode1,  self.dauSoftPi ])
+        self.XibStarMode2RS  = makeXibStarRS(  name+'CombineXibStarRS'+_name2,  [ self.XibMode2,  self.dauSoftPi ])
+        self.XibStarMode3RS  = makeXibStarRS(  name+'CombineXibStarRS'+_name3,  [ self.XibMode3,  self.dauSoftPi ])
+        self.XibStarMode4RS  = makeXibStarRS(  name+'CombineXibStarRS'+_name4,  [ self.XibMode4,  self.dauSoftPi ])
+        self.XibStarMode5RS  = makeXibStarRS(  name+'CombineXibStarRS'+_name5,  [ self.XibMode5,  self.dauSoftPi ])
+        self.XibStarMode6RS  = makeXibStarRS(  name+'CombineXibStarRS'+_name6,  [ self.XibMode6,  self.dauSoftPi ])
+        self.XibStarMode7RS  = makeXibStarRS(  name+'CombineXibStarRS'+_name7,  [ self.XibMode7,  self.dauSoftPi ])
+        self.XibStarMode8RS  = makeXibStarRS(  name+'CombineXibStarRS'+_name8,  [ self.XibMode8,  self.dauSoftPi ])
+        self.XibStarMode9RS  = makeXibStarRS(  name+'CombineXibStarRS'+_name9,  [ self.XibMode9,  self.dauSoftPi ])
+        self.XibStarMode10RS = makeXibStarRS(  name+'CombineXibStarRS'+_name10, [ self.XibMode10, self.dauSoftPi ])
+        self.XibStarMode11RS = makeXibStarRSSL(name+'CombineXibStarRS'+_name11, [ self.XibMode11, self.dauSoftPi ])
+        self.XibStarMode12RS = makeXibStarRSSL(name+'CombineXibStarRS'+_name12, [ self.XibMode12, self.dauSoftPi ])
+        self.XibStarMode1WS  = makeXibStarWS(  name+'CombineXibStarWS'+_name1,  [ self.XibMode1,  self.dauSoftPi ])
+        self.XibStarMode2WS  = makeXibStarWS(  name+'CombineXibStarWS'+_name2,  [ self.XibMode2,  self.dauSoftPi ])
+        self.XibStarMode3WS  = makeXibStarWS(  name+'CombineXibStarWS'+_name3,  [ self.XibMode3,  self.dauSoftPi ])
+        self.XibStarMode4WS  = makeXibStarWS(  name+'CombineXibStarWS'+_name4,  [ self.XibMode4,  self.dauSoftPi ])
+        self.XibStarMode5WS  = makeXibStarWS(  name+'CombineXibStarWS'+_name5,  [ self.XibMode5,  self.dauSoftPi ])
+        self.XibStarMode6WS  = makeXibStarWS(  name+'CombineXibStarWS'+_name6,  [ self.XibMode6,  self.dauSoftPi ])
+        self.XibStarMode7WS  = makeXibStarWS(  name+'CombineXibStarWS'+_name7,  [ self.XibMode7,  self.dauSoftPi ])
+        self.XibStarMode8WS  = makeXibStarWS(  name+'CombineXibStarWS'+_name8,  [ self.XibMode8,  self.dauSoftPi ])
+        self.XibStarMode9WS  = makeXibStarWS(  name+'CombineXibStarWS'+_name9,  [ self.XibMode9,  self.dauSoftPi ])
+        self.XibStarMode10WS = makeXibStarWS(  name+'CombineXibStarWS'+_name10, [ self.XibMode10, self.dauSoftPi ])
+        self.XibStarMode11WS = makeXibStarWSSL(name+'CombineXibStarWS'+_name11, [ self.XibMode11, self.dauSoftPi ])
+        self.XibStarMode12WS = makeXibStarWSSL(name+'CombineXibStarWS'+_name12, [ self.XibMode12, self.dauSoftPi ])
 
         # Build the stripping lines for Xib*:
-        self.line1  = self._strippingLine(name = name+_name1,  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode1)
-        self.line2  = self._strippingLine(name = name+_name2,  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode2)
-        self.line3  = self._strippingLine(name = name+_name3,  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode3)
-        self.line4  = self._strippingLine(name = name+_name4,  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode4)
-        self.line5  = self._strippingLine(name = name+_name5,  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode5)
-        self.line6  = self._strippingLine(name = name+_name6,  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode6)
-        self.line7  = self._strippingLine(name = name+_name7,  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode7)
-        self.line8  = self._strippingLine(name = name+_name8,  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode8)
-        self.line9  = self._strippingLine(name = name+_name9,  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode9)
-        self.line10 = self._strippingLine(name = name+_name10, prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode10)
-        self.line11 = self._strippingLine(name = name+_name11, prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode11)
-        self.line12 = self._strippingLine(name = name+_name12, prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode12)
+        self.line1RS  = self._strippingLine(name = name+_name1,        prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode1RS)
+        self.line1WS  = self._strippingLine(name = name+_name1+'_WS',  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode1WS)
+        self.line2RS  = self._strippingLine(name = name+_name2,        prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode2RS)
+        self.line2WS  = self._strippingLine(name = name+_name2+'_WS',  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode2WS)
+        self.line3RS  = self._strippingLine(name = name+_name3,        prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode3RS)
+        self.line3WS  = self._strippingLine(name = name+_name3+'_WS',  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode3WS)
+        self.line4RS  = self._strippingLine(name = name+_name4,        prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode4RS)
+        self.line4WS  = self._strippingLine(name = name+_name4+'_WS',  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode4WS)
+        self.line5RS  = self._strippingLine(name = name+_name5,        prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode5RS)
+        self.line5WS  = self._strippingLine(name = name+_name5+'_WS',  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode5WS)
+        self.line6RS  = self._strippingLine(name = name+_name6,        prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode6RS)
+        self.line6WS  = self._strippingLine(name = name+_name6+'_WS',  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode6WS)
+        self.line7RS  = self._strippingLine(name = name+_name7,        prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode7RS)
+        self.line7WS  = self._strippingLine(name = name+_name7+'_WS',  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode7WS)
+        self.line8RS  = self._strippingLine(name = name+_name8,        prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode8RS)
+        self.line8WS  = self._strippingLine(name = name+_name8+'_WS',  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode8WS)
+        self.line9RS  = self._strippingLine(name = name+_name9,        prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode9RS)
+        self.line9WS  = self._strippingLine(name = name+_name9+'_WS',  prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode9WS)
+        self.line10RS = self._strippingLine(name = name+_name10,       prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode10RS)
+        self.line10WS = self._strippingLine(name = name+_name10+'_WS', prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode10WS)
+        self.line11RS = self._strippingLine(name = name+_name11,       prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode11RS)
+        self.line11WS = self._strippingLine(name = name+_name11+'_WS', prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode11WS)
+        self.line12RS = self._strippingLine(name = name+_name12,       prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode12RS)
+        self.line12RS = self._strippingLine(name = name+_name12+'_WS', prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode12WS)
                                          
         # Build the control lines for Xib0:
         self.control1  = self._strippingLine(name = name+"ControlXib_"+_name1,  prescale = config['prescaleControlMuonic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode1)
@@ -418,8 +442,8 @@ def filterGhosts(localName, inputSelection, configDict = _my_immutable_config) :
                      RequiredSelections = [ inputSelection ] )
 
 def makeXi(localName, inputListLambda, inputListTrack, cutWide, cutTight, ChisqCutTwoBody) :
-    _strCutComb = "( ADAMASS('Xi-') < %(cutWide)s * MeV )" % locals()
-    _strCutMothMass = "( ADMASS('Xi-') < %(cutTight)s * MeV )" % locals()
+    _strCutComb = "( ADAMASS('Xi-') < %(cutWide)s )" % locals()
+    _strCutMothMass = "( ADMASS('Xi-') < %(cutTight)s )" % locals()
     _strCutMothChi2 = "(VFASPF(VCHI2)<%(ChisqCutTwoBody)s)" % locals()
     _strCutMothDIRA = "( BPVDIRA > 0.95 )"
     _strCutMoth = _strCutMothMass + '&' + _strCutMothChi2 + '&' + _strCutMothDIRA
@@ -428,8 +452,8 @@ def makeXi(localName, inputListLambda, inputListTrack, cutWide, cutTight, ChisqC
     return _output
 
 def makeOmega(localName, inputListLambda, inputListTrack, cutWide, cutTight,  ChisqCutTwoBody) :
-    _strCutComb = "( ADAMASS('Omega-') < %(cutWide)s * MeV )" % locals()
-    _strCutMothMass = "( ADMASS('Omega-') < %(cutTight)s * MeV )" % locals()
+    _strCutComb = "( ADAMASS('Omega-') < %(cutWide)s )" % locals()
+    _strCutMothMass = "( ADMASS('Omega-') < %(cutTight)s )" % locals()
     _strCutMothChi2 = "(VFASPF(VCHI2)<%(ChisqCutTwoBody)s)" % locals()
     _strCutMoth = _strCutMothMass + '&' + _strCutMothChi2
     _strDecay = '[Omega- -> Lambda0 K-]cc'
@@ -447,23 +471,41 @@ def makeXic(localName, inputSelections, inputChisqCut, inputDecay, configDict = 
     return _output
 
 # CDF measures: m(Xib*) - m(Xib) - m(pi) = 14.84 +- 0.74 +- 0.28 MeV
-def makeXibStar(localName, inputSelections, configDict = _my_immutable_config) :
-    _cutComb = '(AM > 5000.0*GeV) & (AM < 8000.0*GeV)'
-    _cutMothBase = '(PT > %(XibStar_PT_Min)s * MeV) & (VFASPF(VCHI2/VDOF) < %(XibStar_VtxChisq_Max)s )' % configDict
-    _cutMothDM = '(MM - CHILD(MM,1) - CHILD(MM,2) > %(XibStar_DMCutLower)s *MeV) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(XibStar_DMCutUpper)s *MeV)' % configDict
+def makeXibStar(localName, inputSelections, decay, configDict = _my_immutable_config) :
+    _cutComb = '(AM > 5000.0*MeV) & (AM < 8000.0*MeV)'
+    _cutMothBase = '(PT > %(XibStar_PT_Min)s) & (VFASPF(VCHI2/VDOF) < %(XibStar_VtxChisq_Max)s )' % configDict
+    _cutMothDM = '(MM - CHILD(MM,1) - CHILD(MM,2) > %(XibStar_DMCutLower)s) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(XibStar_DMCutUpper)s)' % configDict
     _cutMoth = '(' + _cutMothBase + ' & ' + _cutMothDM + ')'
-    _decay = '[ Sigma_b- -> Xi_b0 pi+ ]cc'
-    _output = makeGeneric(localName, inputSelections, _decay, _cutComb, _cutMoth)
+    _output = makeGeneric(localName, inputSelections, decay, _cutComb, _cutMoth)
     return _output
 
 # For SL decays, we expect some missing particles so DM resolution will be degraded.
-def makeXibStarSL(localName, inputSelections, configDict = _my_immutable_config) :
-    _cutComb = '(AM > 5000.0*GeV) & (AM < 8000.0*GeV)'
-    _cutMothBase = '(PT > %(XibStar_PT_Min)s * MeV) & (VFASPF(VCHI2/VDOF) < %(XibStar_VtxChisq_Max)s )' % configDict
-    _cutMothDM = '(MM - CHILD(MM,1) - CHILD(MM,2) > %(XibStar_DMCutLower_SL)s *MeV) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(XibStar_DMCutUpper_SL)s *MeV)' % configDict
+def makeXibStarSL(localName, inputSelections, decay, configDict = _my_immutable_config) :
+    _cutComb = '(AM > 5000.0*MeV) & (AM < 8000.0*MeV)'
+    _cutMothBase = '(PT > %(XibStar_PT_Min)s) & (VFASPF(VCHI2/VDOF) < %(XibStar_VtxChisq_Max)s )' % configDict
+    _cutMothDM = '(MM - CHILD(MM,1) - CHILD(MM,2) > %(XibStar_DMCutLower_SL)s) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(XibStar_DMCutUpper_SL)s)' % configDict
     _cutMoth = '(' + _cutMothBase + ' & ' + _cutMothDM + ')'
-    _decay = '[ Sigma_b- -> Xi_b0 pi+ ]cc'
-    _output = makeGeneric(localName, inputSelections, _decay, _cutComb, _cutMoth)
+    _output = makeGeneric(localName, inputSelections, decay, _cutComb, _cutMoth)
+    return _output
+
+def makeXibStarRS(localName, inputSelections, configDict = _my_immutable_config) :
+    _decay = '[ Sigma_b- -> Xi_b0 pi- ]cc'
+    _output = makeXibStar(localName, inputSelections, _decay, configDict)
+    return _output
+
+def makeXibStarWS(localName, inputSelections, configDict = _my_immutable_config) :
+    _decay = '[ Sigma_b+ -> Xi_b0 pi+ ]cc'
+    _output = makeXibStar(localName, inputSelections, _decay, configDict)
+    return _output
+
+def makeXibStarRSSL(localName, inputSelections, configDict = _my_immutable_config) :
+    _decay = '[ Sigma_b- -> Xi_b0 pi- ]cc'
+    _output = makeXibStarSL(localName, inputSelections, _decay, configDict)
+    return _output
+
+def makeXibStarWSSL(localName, inputSelections, configDict = _my_immutable_config) :
+    _decay = '[ Sigma_b+ -> Xi_b0 pi+ ]cc'
+    _output = makeXibStarSL(localName, inputSelections, _decay, configDict)
     return _output
 
 def makeGeneric(localName, inputSelections, decay, cutComb, cutMoth) :
