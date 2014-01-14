@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-14 - Alex Shires
+ - Bu2LLK - add vertex isolation and cone to stripping lines
+
 ! 2014-01-14 - Johannes Albrecht
  - Bu2LLK (Rk analysis): extended electron mass window
  - BLV lines: added control channel for B2Lcmu search

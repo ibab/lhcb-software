@@ -21,6 +21,12 @@ config_params =  {    'BFlightCHI2'         : 100       # adimentional
                       ,  'Bu2eeKLinePrescale'  : 1
                       ,  'Bu2mmKLinePrescale'  : 1
                       ,  'Bu2meKLinePrescale'  : 1
+                      ,  'ExtraInfoTools'      : [ { "Type" : "ConeVariables"
+                                                , "ConeAngle" : 1.5
+                                                , "ConeNumber" : 1
+                                                , "Variables" : ['angle', 'mult', 'ptasy']} 
+                                                , {'Type' : 'VertexIsolation'} 
+                                                 ]
 }
 
 __all__ = ('Bu2LLKConf', 'makeDiLepton', 'makeB2LLK' )
@@ -129,21 +135,25 @@ class Bu2LLKConf(LineBuilder) :
                                     prescale = config['Bu2eeKLinePrescale'],
                                     postscale = 1,
                                     selection = selB2LLK_ee
+                                    ,ExtraInfoTools = config['ExtraInfoTools']
                                     )
         self.eeKLine2 = StrippingLine(eeKLine_name+"Line2",
                                     prescale = config['Bu2eeKLinePrescale'],
                                     postscale = 1,
                                     selection = selB2LLK_ee2
+                                    ,ExtraInfoTools = config['ExtraInfoTools']
                                     )
         self.mmKLine = StrippingLine(mmKLine_name+"Line",
                                     prescale = config['Bu2mmKLinePrescale'],
                                     postscale = 1,
                                     selection = selB2LLK_mm
+                                    ,ExtraInfoTools = config['ExtraInfoTools']
                                     )
         self.meKLine = StrippingLine(meKLine_name+"Line",
                                     prescale = config['Bu2meKLinePrescale'],
                                     postscale = 1,
                                     selection = selB2LLK_me
+                                    ,ExtraInfoTools = config['ExtraInfoTools']
                                     )
 
         # 5 : register Line
