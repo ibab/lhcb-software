@@ -682,7 +682,7 @@ int CheckpointSvc::resumeMainInstance(bool with_resume_child_threads) {
   MsgStream log(msgSvc(),name());
   log << MSG::INFO;
   log << "ProcessName:" << proc << " ";
-  if ( dns ) {
+  if ( dns && m_connectDIM ) {
     log << "DIM_DNS_NODE:" << dns << " ";
     ::dis_set_dns_node((char*)dns);
   }
@@ -774,10 +774,10 @@ int CheckpointSvc::execChild() {
   /// Configure DIM startup
   const char* dns = ::getenv("DIM_DNS_NODE");
   string proc = RTL::processName();
-  if ( dns ) {
-    ::dis_set_dns_node((char*)dns);
-  }
   if ( m_connectDIM ) {
+    if ( dns ) {
+      ::dis_set_dns_node((char*)dns);
+    }
     m_fsm->connectDIM(0);
   }
   return StatusCode::SUCCESS;
