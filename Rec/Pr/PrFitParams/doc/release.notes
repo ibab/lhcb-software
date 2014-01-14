@@ -4,6 +4,9 @@
 ! Purpose     : Fit parameters for the pattern
 !-----------------------------------------------------------------------------
 
+! 2014-01-13 - Marco Cattaneo
+ - Remove VL support
+
 !========================= PrFitParams v1r3 2013-07-18 =========================
 ! 2013-07-03 - Michel De Cian
  - Fix (maybe) uninitialised variable in PrFitFwdParams

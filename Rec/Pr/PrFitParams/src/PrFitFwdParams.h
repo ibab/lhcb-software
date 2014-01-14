@@ -13,7 +13,7 @@
  *  @author Olivier Callot
  *  @date   2005-07-01
  *  @modification on 2013-01-23  : Yasmine Amhis
- *  Adapt to work with Fiber Tracker and VP or VL
+ *  Adapt to work with Fiber Tracker and VP
  */
 class PrFitFwdParams : public GaudiTupleAlg {
 public:

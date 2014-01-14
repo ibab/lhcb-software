@@ -28,7 +28,7 @@
 //
 // 13/10/2001 : Olivier Callot
 // 2013/01/23  : Yasmine Amhis
-// Adapt to work with Fiber Tracker and VP or VL
+// Adapt to work with Fiber Tracker and VP
 //-----------------------------------------------------------------------------
 
 DECLARE_ALGORITHM_FACTORY( PrFitFwdParams )
@@ -74,6 +74,7 @@ PrFitFwdParams::PrFitFwdParams( const std::string& name,
   declareProperty( "ZbeforeST3"           , m_zBeforeST3    );
 
   declareProperty( "VeloFromMC"           , m_veloFromMC = false );
+  // Next option is obsolete, kept for backward compatibility, VL no longer supported
   declareProperty( "useVeloPix"           , m_useVeloPix = true );
 
   declareProperty( "VeloTracksLocation", 
@@ -109,6 +110,10 @@ StatusCode PrFitFwdParams::initialize() {
 
   m_XsPar.init( "Xs"      , m_XsParams );
 
+  // MC - 2014-01-13: For backward compatibilty, when VL was also supported
+  if (m_useVeloPix == false ){
+    return Error("useVeloPix option is obsolete, should always be true, VL no longer supported", StatusCode::FAILURE);
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -123,15 +128,7 @@ StatusCode PrFitFwdParams::execute() {
   // Get the Velo hits
   //LHCb::MCHits* vHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VP );
 
-  LHCb::MCHits* vHits; 
-
-  if (m_useVeloPix == true ){
-    vHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VP );
-  }
-  else {
-    vHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VL );
-  }
-  
+  const LHCb::MCHits* vHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VP );
  
   // Get the FT hits
   LHCb::MCHits* ftHits = get<LHCb::MCHits>( LHCb::MCHitLocation::FT );
