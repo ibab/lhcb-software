@@ -19,7 +19,6 @@ use GaudiAlg            v*
 use GaudiGSL            v*
 use STDet               v*    Det
 use VeloDet             v*    Det
-use VLDet               v*    Det
 use VPDet               v*    Det
 use OTDet               v*    Det
 use FTDet               v*    Det

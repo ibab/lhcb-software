@@ -4,6 +4,9 @@
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
 
+! 2014-01-13 - Marco Cattaneo
+ - Removed VLDet dependency
+
 ! 2014-01-07 - Marco Cattaneo
  - Removed BuildMCTrackInfoUpgrade, moved to Digi/DigiAlg and renamed
    BuildMCTrackInfo, to replace old version not supporting upgrade detectors
