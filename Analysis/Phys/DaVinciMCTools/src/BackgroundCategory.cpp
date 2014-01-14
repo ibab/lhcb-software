@@ -57,6 +57,7 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   declareProperty("Calo2MCWeight", m_caloWeight=0.5); // equivalent of m_ovverride for neutral calorimetric objects
   declareProperty("ResonanceCut", m_rescut = 10.e-6);
   declareProperty("MCminWeight", m_minWeight = 0.);
+  declareProperty("IgnoreQuarks",m_ignoreQuarks = true);  
 }
 
 //=============================================================================
@@ -326,7 +327,7 @@ bool BackgroundCategory::isStable(int pid)
 }
 //=============================================================================
 BackgroundCategory::MCParticleVector
-BackgroundCategory::get_mc_mothers(MCParticleVector mc_particles_linked_to_decay)
+BackgroundCategory::get_mc_mothers(const MCParticleVector & mc_particles_linked_to_decay)
 //This function is responsible for getting the original mother of each
 //MCParticle associated to a final state product of
 //our candidate particle. If there is no such mother,
@@ -334,7 +335,7 @@ BackgroundCategory::get_mc_mothers(MCParticleVector mc_particles_linked_to_decay
 //MCParticle in the first place (for ghosts)
 {
   MCParticleVector mc_mothers;
-  MCParticleVector::iterator iP;
+  MCParticleVector::const_iterator iP;
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Starting to find the MC mothers of the associated particles"
                                         << endmsg;
@@ -572,8 +573,16 @@ BackgroundCategory::get_top_mother_of_MCParticle(const LHCb::MCParticle* candida
   {
 
     //go through all mothers until you find the final one
+    //if 'IgnoreQuarks' is set to true (default), then will ignore mothers with
+    //pythia ID below 10 (absolute) and just break at that point returning
+    //the last mother before this (this assumes quarks have no parents)  
     finalmother = tmpmother;
     tmpmother = finalmother->mother();
+    if (m_ignoreQuarks) {
+        if (abs(tmpmother->particleID().pid())<11) {
+            return finalmother;
+        }
+    }
 
   } while ( tmpmother != NULL );
 
@@ -713,9 +722,9 @@ BackgroundCategory::get_lowest_common_mother(const MCParticleVector & mc_particl
   return get_lowest_common_mother(mc_particles_to_compare);
 }
 //=============================================================================
-bool BackgroundCategory::doAllFinalStateParticlesHaveACommonMother(MCParticleVector mc_mothers_final,
-                                                                   MCParticleVector mc_particles_linked_to_decay,
-                                                                   ParticleVector particles_in_decay)
+bool BackgroundCategory::doAllFinalStateParticlesHaveACommonMother(const MCParticleVector & mc_mothers_final,
+                                                                   const MCParticleVector & mc_particles_linked_to_decay,
+                                                                   const ParticleVector & particles_in_decay)
 //This condition checks that all the MCParticles associated to the final-state daughters of our
 //candidate Particle have a common MCParticle mother.
 {
@@ -884,7 +893,7 @@ bool BackgroundCategory::doAllFinalStateParticlesHaveACommonMother(MCParticleVec
   return carryon;
 }
 //=============================================================================
-bool BackgroundCategory::isTheDecayFullyReconstructed(MCParticleVector mc_particles_linked_to_decay)
+bool BackgroundCategory::isTheDecayFullyReconstructed(const MCParticleVector & mc_particles_linked_to_decay)
 //This condition checks that all the final state daughters of the MCparticle
 //returned by condition A match up to the MCParticles associated to the  final state
 //daughters of the candidate Particle. In effect, condition A checked whether all
@@ -1047,8 +1056,8 @@ bool BackgroundCategory::isTheDecayFullyReconstructed(MCParticleVector mc_partic
 }
 //=============================================================================
 bool
-BackgroundCategory::areAllFinalStateParticlesCorrectlyIdentified(ParticleVector particles_in_decay,
-                                                                 MCParticleVector mc_particles_linked_to_decay)
+BackgroundCategory::areAllFinalStateParticlesCorrectlyIdentified(const ParticleVector & particles_in_decay,
+                                                                 const MCParticleVector & mc_particles_linked_to_decay)
 //This condition checks if all the final state particles used to make the candidate particle are correctly
 //identified (according to PID).
 {
@@ -1109,8 +1118,8 @@ bool BackgroundCategory::checkLowMassBackground(const LHCb::Particle* candidate)
   return carryon;
 }
 //=============================================================================
-bool BackgroundCategory::areAnyFinalStateParticlesGhosts(MCParticleVector mc_particles_linked_to_decay,
-                                                         ParticleVector particles_in_decay)
+bool BackgroundCategory::areAnyFinalStateParticlesGhosts(const MCParticleVector & mc_particles_linked_to_decay,
+                                                         const ParticleVector & particles_in_decay)
 //Checks if there are any ghosts in our final state Particles used to make the candidate Particle
 {
   bool carryon = true;
@@ -1135,8 +1144,8 @@ bool BackgroundCategory::areAnyFinalStateParticlesGhosts(MCParticleVector mc_par
 
 }
 //=============================================================================
-bool BackgroundCategory::isThisAPileup(MCParticleVector mc_particles_linked_to_decay,
-                                       ParticleVector particles_in_decay)
+bool BackgroundCategory::isThisAPileup(const MCParticleVector & mc_particles_linked_to_decay,
+                                       const ParticleVector & particles_in_decay)
 //Checks if the event is a pileup (final state Particles come from at least 2 different collisions) or not.
 {
   bool carryon = true;
@@ -1168,7 +1177,7 @@ bool BackgroundCategory::isThisAPileup(MCParticleVector mc_particles_linked_to_d
   return carryon;
 }
 //=============================================================================
-bool BackgroundCategory::isThisBBarBackground(MCParticleVector mc_mothers_final)
+bool BackgroundCategory::isThisBBarBackground(const MCParticleVector & mc_mothers_final)
 //Checks if at least one of the final state MCParticles associated
 //to the decay products of the candidate Particle had a mother
 //with bottom content.
@@ -1188,7 +1197,7 @@ bool BackgroundCategory::isThisBBarBackground(MCParticleVector mc_mothers_final)
   return carryon;
 }
 //=============================================================================
-bool BackgroundCategory::isThisCCbarBackground(MCParticleVector mc_mothers_final)
+bool BackgroundCategory::isThisCCbarBackground(const MCParticleVector & mc_mothers_final)
 //Checks if at least one of the final state MCParticles associated
 //to the decay products of the candidate Particle had a mother
 //with charm content.
@@ -1207,7 +1216,7 @@ bool BackgroundCategory::isThisCCbarBackground(MCParticleVector mc_mothers_final
   return carryon;
 }
 //=============================================================================
-int BackgroundCategory::areAnyFinalStateParticlesFromAPrimaryVertex(MCParticleVector mc_particles_linked_to_decay)
+int BackgroundCategory::areAnyFinalStateParticlesFromAPrimaryVertex(const MCParticleVector & mc_particles_linked_to_decay)
 {
   //This function evaluates whether some of the particles in the final state
   //of the candidate come from the primary vertex. Returns 0 if none, 1 if one,
@@ -1475,7 +1484,7 @@ BackgroundCategory::associate_particles_in_decay(const ParticleVector & particle
   return associated_mcparts;
 }
 //=============================================================================
-bool BackgroundCategory::foundClones(MCParticleVector mc_particles_linked_to_decay) {
+bool BackgroundCategory::foundClones(const MCParticleVector & mc_particles_linked_to_decay) {
   //Checks if two particles were linked to the same MCParticle in which case this is a
   //clone background. Shouldn't happen for charged particles but could happen for neutrals
 
@@ -1495,7 +1504,7 @@ bool BackgroundCategory::foundClones(MCParticleVector mc_particles_linked_to_dec
 
 }
 //=============================================================================
-bool BackgroundCategory::hierarchyProblem(MCParticleVector mc_particles_linked_to_decay) {
+bool BackgroundCategory::hierarchyProblem(const MCParticleVector & mc_particles_linked_to_decay) {
   //Check that there is no overlap between the associated MCParticles. We have
   //already checked that none of the final state particles are ghosts or clones,
   //but now we need to check that we didn't combine a particle with its own parent.

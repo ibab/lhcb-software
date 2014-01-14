@@ -85,7 +85,7 @@ public:
 private:
 
   MCParticleVector associate_particles_in_decay(const ParticleVector &, const LHCb::Particle*);
-  MCParticleVector get_mc_mothers(MCParticleVector);
+  MCParticleVector get_mc_mothers(const MCParticleVector&);
   MCParticleVector create_finalstatedaughterarray_for_mcmother(const LHCb::MCParticle*);
   const LHCb::MCParticle* get_top_mother_of_MCParticle(const LHCb::MCParticle*);
   const LHCb::MCParticle* get_lowest_common_mother(const MCParticleVector&,const ParticleVector&);
@@ -96,19 +96,19 @@ private:
 
   bool isStable(int);
 
-  bool hierarchyProblem(MCParticleVector);
-  bool foundClones(MCParticleVector);
-  bool doAllFinalStateParticlesHaveACommonMother(MCParticleVector, MCParticleVector, ParticleVector);
-  bool isTheDecayFullyReconstructed(MCParticleVector);
-  bool areAllFinalStateParticlesCorrectlyIdentified(ParticleVector, MCParticleVector);
+  bool hierarchyProblem(const MCParticleVector&);
+  bool foundClones(const MCParticleVector&);
+  bool doAllFinalStateParticlesHaveACommonMother(const MCParticleVector&, const MCParticleVector&, const ParticleVector&);
+  bool isTheDecayFullyReconstructed(const MCParticleVector&);
+  bool areAllFinalStateParticlesCorrectlyIdentified(const ParticleVector&, const MCParticleVector&);
   bool isTheMotherCorrectlyIdentified(const LHCb::Particle*);
   bool wereAnyResonancesMissed(const LHCb::Particle*);
   bool checkLowMassBackground(const LHCb::Particle*);
-  bool areAnyFinalStateParticlesGhosts(MCParticleVector,ParticleVector);
-  bool isThisAPileup(MCParticleVector,ParticleVector);
-  bool isThisBBarBackground(MCParticleVector);
-  bool isThisCCbarBackground(MCParticleVector);
-  int areAnyFinalStateParticlesFromAPrimaryVertex(MCParticleVector);
+  bool areAnyFinalStateParticlesGhosts(const MCParticleVector&,const ParticleVector&);
+  bool isThisAPileup(const MCParticleVector&,const ParticleVector&);
+  bool isThisBBarBackground(const MCParticleVector&);
+  bool isThisCCbarBackground(const MCParticleVector&);
+  int areAnyFinalStateParticlesFromAPrimaryVertex(const MCParticleVector&);
 
 private:
 
@@ -121,7 +121,7 @@ private:
   const LHCb::MCParticle* m_commonMother;
   DaughterAndPartnerVector m_daughtersAndPartners;
 
-
+  bool m_ignoreQuarks; //ignore quarks in the decay tree?
   bool m_inclusiveDecay; //are we studying an inclusive decay?
   bool m_semileptonicDecay; //are we studying a semileptnoic decay?
   int m_numNeutrinos; //How many neutrinos expected in our decay chain?
