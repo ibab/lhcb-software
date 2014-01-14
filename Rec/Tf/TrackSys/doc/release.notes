@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2014-01-13 - Marco Cattaneo
+ - Remove support for VL
+
 ! 2013-12-18 - Marco Cattaneo
  - Add support for 'pA' SpecialData type, to set special GECs developed for
    Reco14r1 reprocessing of 2013 heavy ion data

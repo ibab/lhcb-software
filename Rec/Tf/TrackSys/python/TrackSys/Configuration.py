@@ -156,7 +156,7 @@ class TrackSys(LHCbConfigurableUser):
         if hasattr(LHCbApp(),"Detectors"):
             if LHCbApp().isPropertySet("Detectors"):
                 upgradeDets = LHCbApp().upgradeDetectors()
-                useUpgrade = bool([det for det in upgradeDets if det in ['VP','VL','UT','FT']])
+                useUpgrade = bool([det for det in upgradeDets if det in ['VP','UT','FT']])
         if not TrackSys().isPropertySet("TrackTypes"):
             TrackSys().setProp("TrackTypes", self.DefaultTrackTypes)
         

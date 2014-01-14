@@ -40,8 +40,8 @@ def RecoUpgradeTracking(exclude=[]):
             raise RuntimeError("Specify UT.")
 
     if "Velo" in trackTypes:
-        if not (("VL" in subDets) or ("VP" in subDets)):
-            raise RuntimeError("Specify a Velo. VL or VP.")
+        if not (("VP" in subDets)):
+            raise RuntimeError("Specify VP.")
     
     if "Seeding" in trackTypes:
         if not ("FT" in subDets) :
@@ -65,8 +65,6 @@ def RecoUpgradeTracking(exclude=[]):
     from DAQSys.DecoderClass import decodersForBank
     decs=[]
     # Are these the right decoders?
-    if "VL" in subDets:
-        decs=decs+decodersForBank(DecoderDB,"VL")
     if "VP" in subDets:
         decs=decs+decodersForBank(DecoderDB,"VP")
     if "UT" in subDets:
@@ -82,9 +80,6 @@ def RecoUpgradeTracking(exclude=[]):
     if "Velo" in trackTypes:
         veloSeq = GaudiSequencer("TrVeloSeq")
         GaudiSequencer("RecoTrSeq").Members += [ veloSeq ]
-        if "VL" in subDets:
-            from Configurables import PrVLTracking
-            veloSeq.Members += [ PrVLTracking() ]
         if "VP" in subDets:
             from Configurables import  PatPixelTracking
             veloSeq.Members += [ PatPixelTracking() ]
@@ -114,7 +109,6 @@ def RecoUpgradeTracking(exclude=[]):
             prVeloUT.addTool(TrackMasterFitter,"Fitter")
             prVeloUT.Fitter.MeasProvider.IgnoreVelo = True
             prVeloUT.Fitter.MeasProvider.IgnoreVP = True
-            prVeloUT.Fitter.MeasProvider.IgnoreVL = True
             prVeloUT.Fitter.MeasProvider.IgnoreTT = True
             prVeloUT.Fitter.MeasProvider.IgnoreIT = True
             prVeloUT.Fitter.MeasProvider.IgnoreOT = True
@@ -122,8 +116,6 @@ def RecoUpgradeTracking(exclude=[]):
             prVeloUT.Fitter.MeasProvider.IgnoreUT = False
             if ("VP" in subDets):
                 prVeloUT.Fitter.MeasProvider.IgnoreVP = False
-            if ("VL" in subDets):
-                prVeloUT.Fitter.MeasProvider.IgnoreVL = False
             upSeq.Members += [ PrVeloUT() ]
             
 
