@@ -43,10 +43,9 @@ namespace LHCb
     for( LHCb::Track::LHCbIDContainer::const_iterator id = ids.begin() ;
          id != ids.end(); ++id ) {
       switch( id->detectorType() ) {
-      case LHCb::LHCbID::VL:
       case LHCb::LHCbID::VP:
       case LHCb::LHCbID::Velo:
-        if( id->isVeloR() || id->isVLR()) m_ids[VeloR].push_back(*id) ;
+        if( id->isVeloR() ) m_ids[VeloR].push_back(*id) ;
         else m_ids[VeloPhi].push_back(*id) ;
         break ;
       case LHCb::LHCbID::UT:
