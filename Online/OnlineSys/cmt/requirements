@@ -31,6 +31,7 @@ use Gaucho              v7r33    Online
 use GauchoAppl          v1r12    Online
 use GaudiCheckpointing  v0r12    Online
 use GaudiOnline         v2r68    Online
+use GaudiOnlineTests    v0r1     Online
 use GaudiRootCnvTests   v1r11    Online
 use GaudiSerialize      v0r11    Online
 use GaudiUPI            v1r16    Online
