@@ -73,11 +73,10 @@ namespace  {
 
           case LHCb::LHCbID::Velo: 
           case LHCb::LHCbID::VP: 
-          case LHCb::LHCbID::VL: 
 
             veloIds.push_back(*id); 
-            if( id->isVeloR() || id->isVLR()) veloRIds.push_back(*id) ;
-            if( id->isVeloPhi() || id->isVLPhi()) veloPhiIds.push_back(*id) ;
+            if( id->isVeloR()   ) veloRIds.push_back(*id) ;
+            if( id->isVeloPhi() ) veloPhiIds.push_back(*id) ;
             break;
 
           case LHCb::LHCbID::TT: 

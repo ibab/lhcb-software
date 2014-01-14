@@ -4,6 +4,9 @@
 ! Purpose     : Utils important for tracking
 !-----------------------------------------------------------------------------
 
+! 2014-01-13 - Marco Cattaneo
+ - Remove support for VL
+
 !========================= PrUtils v1r1 2013-02-18 =========================
 ! 2013-02-18 - Marco Cattaneo
  - Add missing dependency on PrKernel
@@ -21,5 +24,4 @@
  - Added PrUTStationHitManager.* to PrUtils.
 
 !========================= PrUtils v1r0 2013-01-30 =========================
-initial release
-~          
+ - Initial release
