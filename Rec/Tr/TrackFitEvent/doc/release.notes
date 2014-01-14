@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2014-01-13 - Marco Cattaneo
+ - Remove VL measurement types
+
 !========================= TrackFitEvent v5r24 2013-10-01 =========================
 ! 2013-09-09 - Heinrich Schindler
  - Follow VP detector element and channel ID changes (r162190, 162191) 
