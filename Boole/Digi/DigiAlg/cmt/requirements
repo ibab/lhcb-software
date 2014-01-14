@@ -18,7 +18,6 @@ use STDet           v* Det
 use OTDet           v* Det
 use VeloDet         v* Det
 use VPDet           v* Det
-use VLDet           v* Det
 use FTDet           v* Det
 use DigiEvent       v* Event
 use LinkerEvent     v* Event

@@ -6,7 +6,6 @@
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
 #include "Event/VeloCluster.h"
-#include "Event/VLCluster.h"
 #include "Event/VPCluster.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h" /// Needed for path of table
@@ -18,7 +17,6 @@
 
 // Det
 #include "VeloDet/DeVelo.h"
-#include "VLDet/DeVL.h"
 #include "VPDet/DeVP.h"
 #include "STDet/DeSTDetector.h"
 #include "OTDet/DeOTStation.h"
@@ -45,7 +43,6 @@ BuildMCTrackInfo::BuildMCTrackInfo( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_velo(0)
-  , m_vlDet(0)
   , m_vpDet(0)
   , m_ttDet(0)
   , m_itDet(0)
@@ -54,7 +51,6 @@ BuildMCTrackInfo::BuildMCTrackInfo( const std::string& name,
 {
   declareProperty( "WithVelo",  m_withVelo  = false );
   declareProperty( "WithVP",    m_withVP    = false );
-  declareProperty( "WithVL",    m_withVL    = false );
   declareProperty( "WithUT",    m_withUT    = false );
   declareProperty( "WithIT",    m_withIT    = false );
   declareProperty( "WithOT",    m_withOT    = false );
@@ -74,17 +70,14 @@ StatusCode BuildMCTrackInfo::initialize() {
 
   if(msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
-  if ( !(m_withVelo||m_withVP||m_withVL) ) {
-    error() << "At least one of Velo, VL or VP is needed !" << endmsg;
-    return StatusCode::FAILURE;
+  if ( !(m_withVelo||m_withVP) ) {
+    return Error( "At least one of Velo or VP is needed !" );
   }
-  if ( (m_withVelo&&m_withVL) || (m_withVelo&&m_withVP) || (m_withVL&&m_withVP) ) {
-    error() << "Only one of Velo, VP and VL allowed !" << endmsg;
-    return StatusCode::FAILURE;
+  if ( (m_withVelo&&m_withVP)  ) {
+    return Error( "Only one of Velo and VP allowed!" );
   }  
 
   if ( m_withVP )   m_vpDet = getDet<DeVP>( DeVPLocation::Default );
-  if ( m_withVL   ) m_vlDet = getDet<DeVL>( DeVLLocation::Default );
   if ( m_withVelo ) m_velo  = getDet<DeVelo>( DeVeloLocation::Default );
   if ( m_withUT  ) {
     m_ttDet = getDet<DeSTDetector>(DeSTDetLocation::UT );  
@@ -179,36 +172,6 @@ StatusCode BuildMCTrackInfo::execute() {
           }
         }
         part = veloLink.next() ;
-      }
-    }
-  } else if ( m_withVL ) {    //== particle-> VLDigit links
-    LHCb::VLClusters* vlClus = get<LHCb::VLClusters>( LHCb::VLClusterLocation::Default);
-    LinkedTo<LHCb::MCParticle, LHCb::VLCluster> vlLink( eventSvc(), msgSvc(), 
-                                                        LHCb::VLClusterLocation::Default );
-    if( vlLink.notFound() ) return StatusCode::FAILURE;
-  
-    for ( LHCb::VLClusters::const_iterator vIt = vlClus->begin() ;
-        vlClus->end() != vIt ; vIt++ ) {
-      int sensor = (*vIt)->channelID().sensor();
-      const DeVLSensor* sens = m_vlDet->sensor(sensor);
-      part = vlLink.first( *vIt );
-      while ( NULL != part ) {
-        if ( mcParts == part->parent() ) {  //== PArticle from the current spill. key is ALWAYS <= highestKey !
-          MCNum = part->key();
-          if ( sensor != lastVelo[MCNum] ) {  // Count only once per sensor a given MCParticle
-            lastVelo[MCNum] = sensor;
-            if ( sens->isR() ) {
-              veloR[MCNum]++;
-              if(isVerbose)
-                verbose() << "MC " << MCNum << " VL R sensor " << sensor << " nbR " << veloR[MCNum] << endmsg;
-            } else if ( sens->isPhi() ) {
-              veloPhi[MCNum]++;
-              if(isVerbose)
-                verbose() << "MC " << MCNum << " VL Phi sensor " << sensor << " nbPhi " << veloPhi[MCNum] << endmsg;
-            }
-          }
-        }
-        part = vlLink.next() ;
       }
     }
   } else if ( m_withVP ) {
@@ -401,23 +364,6 @@ void BuildMCTrackInfo::computeAcceptance ( std::vector<int>& station ) {
       if ( station.size() <= MCNum ) continue;
       int staNr = (*vHit)->sensDetID();
       const DeVeloSensor* sens=m_velo->sensor(staNr);   
-      if ( sens->isR() ) {
-        nVeloR[MCNum]++;
-      } else {
-        nVeloP[MCNum]++;
-      }
-    }
-  } else {
-    std::vector<int> nVeloR( station.size(), 0 );
-    std::vector<int> nVeloP( station.size(), 0 );
-    
-    LHCb::MCHits* vlHits = get<LHCb::MCHits>( LHCb::MCHitLocation::VL );
-    for ( LHCb::MCHits::const_iterator vHit = vlHits->begin();
-          vlHits->end() != vHit; vHit++ ) {
-      unsigned int MCNum = (*vHit)->mcParticle()->key();
-      if ( station.size() <= MCNum ) continue;
-      int staNr = (*vHit)->sensDetID();
-      const DeVLSensor* sens = m_vlDet->sensor(staNr);   
       if ( sens->isR() ) {
         nVeloR[MCNum]++;
       } else {

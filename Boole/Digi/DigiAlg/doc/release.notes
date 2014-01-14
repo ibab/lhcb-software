@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-01-13 - Marco Cattaneo
+ - Remove VL support
+
 ! 2014-01-07 - Marco Cattaneo
  - Replaced BuildMCTrackInfo with version that also supports upgrade detectors,
    previously in Digi/BooleUMC as BuildMCTrackInfoUpgrade

@@ -7,7 +7,6 @@ gaudi_depends_on_subdirs(Det/OTDet
                          Det/STDet
                          Det/VeloDet
                          Det/VPDet
-                         Det/VLDet
                          Det/FTDet
                          Event/DAQEvent
                          Event/DigiEvent
@@ -20,5 +19,5 @@ gaudi_depends_on_subdirs(Det/OTDet
 gaudi_add_module(DigiAlg
                  src/*.cpp
                  INCLUDE_DIRS Event/DigiEvent Event/EventBase
-                 LINK_LIBRARIES OTDetLib STDetLib VeloDetLib VPDetLib VLDetLib FTDetLib DAQEventLib GenEvent LinkerEvent MCEvent GaudiAlgLib)
+                 LINK_LIBRARIES OTDetLib STDetLib VeloDetLib VPDetLib FTDetLib DAQEventLib GenEvent LinkerEvent MCEvent GaudiAlgLib)
 

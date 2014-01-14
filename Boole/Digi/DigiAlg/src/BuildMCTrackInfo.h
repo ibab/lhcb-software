@@ -77,7 +77,6 @@ protected:
 
 private:
   bool m_withVelo;
-  bool m_withVL;
   bool m_withVP;
   bool m_withUT;
   bool m_withIT;
@@ -85,7 +84,6 @@ private:
   bool m_withFT;
 
   DeVelo*       m_velo;
-  DeVL*         m_vlDet;
   DeVP*         m_vpDet;
 
   DeSTDetector* m_ttDet;
