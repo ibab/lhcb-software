@@ -203,9 +203,6 @@ StatusCode PrDebugTrackingLosses::execute() {
           if ( (*itId).isVelo() ) {
             LHCb::VeloChannelID idV = (*itId).veloID();
             info() << format( "   Velo Sensor %3d Strip %4d    ", idV.sensor(), idV.strip() );
-          } else if ( (*itId).isVL() ) {
-            LHCb::VLChannelID idV = (*itId).vlID();
-            info() << format( "   Velo Sensor %3d Strip %4d    ", idV.sensor(), idV.strip() );
           } else if ( (*itId).isVP() ) {
             LHCb::VPChannelID idV = (*itId).vpID();
             info() << format( "   Velo Module %3d chip%3d pixel %4d ", idV.module(), idV.chip(), idV.pixel() );

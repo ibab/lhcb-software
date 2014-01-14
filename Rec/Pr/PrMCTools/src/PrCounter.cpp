@@ -186,7 +186,7 @@ int PrCounter::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* part
     nTrue = double( ids.size() );
   } else {
     for ( std::vector<LHCb::LHCbID>::const_iterator itId = ids.begin(); ids.end() != itId; ++itId ) {
-      if ( (*itId).isVP() || (*itId).isVL() || (*itId).isVelo() ) {
+      if ( (*itId).isVP() || (*itId).isVelo() ) {
         if ( 0 != (m_selectId & 3) ) nTrue += 1.;
       } else if ( (*itId).isTT() || (*itId).isUT() ) {
         if ( 0 != (m_selectId & 4) ) nTrue += 1.;

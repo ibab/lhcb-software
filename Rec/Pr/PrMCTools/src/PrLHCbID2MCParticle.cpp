@@ -8,9 +8,7 @@
 // includes from DigiEvent
 #include "Event/VeloCluster.h"
 #include "Event/VeloLiteCluster.h"
-#include "Event/VLLiteCluster.h"
 #include "Event/VPCluster.h"
-#include "Event/VLCluster.h"
 #include "Event/VPLiteCluster.h"
 #include "Event/STCluster.h"
 #include "Event/OTTime.h"
@@ -101,21 +99,6 @@ StatusCode PrLHCbID2MCParticle::execute() {
       int id            = myId.veloID();
       int size          = (*iClus).pseudoSize();
       linkAll( myId, id, size );
-    }
-  }
-
-  //== Velo Light for upgrade
-
-  if ( exist<LHCb::VLLiteCluster::VLLiteClusters>(LHCb::VLLiteClusterLocation::Default) ) {    
-    LinkedTo<LHCb::MCParticle> vlLink( evtSvc(), msgSvc(), LHCb::VLClusterLocation::Default );
-    m_detectorLink = &vlLink;    
-    LHCb::VLLiteCluster::VLLiteClusters* clusters = 
-      get<LHCb::VLLiteCluster::VLLiteClusters>(LHCb::VLLiteClusterLocation::Default);
-    LHCb::VLLiteCluster::VLLiteClusters::const_iterator iClus;
-    for(iClus = clusters->begin(); iClus != clusters->end(); ++iClus) {
-      LHCb::LHCbID myId = LHCb::LHCbID( (*iClus).channelID() );
-      int id            = myId.vlID();
-      linkAll( myId, id );
     }
   }
 
