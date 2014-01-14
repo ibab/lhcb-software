@@ -97,10 +97,6 @@ class SimConf(LHCbConfigurableUser) :
                     from Configurables import DataPacking__Pack_LHCb__MCVPHitPacker_     as MCVPHitPacker
                     packing.Members += [ MCVPHitPacker("MCVPHitPacker"+slot) ]
 
-                if 'VL' in dets :
-                    from Configurables import DataPacking__Pack_LHCb__MCVLHitPacker_     as MCVLHitPacker
-                    packing.Members += [ MCVLHitPacker("MCVLHitPacker"+slot) ]
-
                 if 'TT' in dets :
                     from Configurables import DataPacking__Pack_LHCb__MCTTHitPacker_     as MCTTHitPacker
                     packing.Members += [ MCTTHitPacker("MCTTHitPacker"+slot) ]
@@ -196,10 +192,6 @@ class SimConf(LHCbConfigurableUser) :
             if 'VP' in dets :
                 from Configurables import DataPacking__Unpack_LHCb__MCVPHitPacker_
                 self._makeUnpacker( DataPacking__Unpack_LHCb__MCVPHitPacker_, "UnpackMCVPHits", slot, 'VP/Hits' )
-
-            if 'VL' in dets :
-                from Configurables import DataPacking__Unpack_LHCb__MCVLHitPacker_
-                self._makeUnpacker( DataPacking__Unpack_LHCb__MCVLHitPacker_, "UnpackMCVLHits", slot, 'VL/Hits' )
 
             if 'IT' in dets :
                 from Configurables import DataPacking__Unpack_LHCb__MCITHitPacker_
@@ -363,9 +355,6 @@ class SimConf(LHCbConfigurableUser) :
 
                 if 'VP' in dets :
                     simList += [ self.tapeLocation( slot, mcRoot, 'VP/Hits' ) ]
-
-                if 'VL' in dets :
-                    simList += [ self.tapeLocation( slot, mcRoot, 'VL/Hits' ) ]
 
                 if 'IT' in dets :
                     simList += [ self.tapeLocation( slot, mcRoot, 'IT/Hits' ) ]

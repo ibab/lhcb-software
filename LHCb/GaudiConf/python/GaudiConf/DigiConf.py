@@ -128,8 +128,6 @@ class DigiConf(LHCbConfigurableUser):
             writer.ItemList += ["/Event/Link/Raw/Velo/Clusters#1"]
         if 'VP' in dets :
             writer.ItemList += ["/Event/Link/Raw/VP/Clusters#1"]
-        if 'VL' in dets :
-            writer.ItemList += ["/Event/Link/Raw/VL/Clusters#1"]
         if 'L0' in dets :
             writer.OptItemList += ["/Event/Link/Trig/L0/Calo#1"]
             writer.OptItemList += ["/Event/Link/Trig/L0/FullCalo#1"]
@@ -168,8 +166,6 @@ class DigiConf(LHCbConfigurableUser):
             writer.ItemList += ["/Event/Link/Raw/Velo/Clusters2MCHits#1"]
         if 'VP' in dets :
             writer.ItemList += ["/Event/Link/Raw/VP/Clusters2MCHits#1"]
-        if 'VL' in dets :
-            writer.ItemList += ["/Event/Link/Raw/VL/Clusters2MCHits#1"]
         if 'TT' in dets :
             writer.ItemList += ["/Event/Link/Raw/TT/Clusters2MCHits#1"]
         if 'UT' in dets :
@@ -274,7 +270,7 @@ class DigiConf(LHCbConfigurableUser):
             nodeKiller.Nodes += [ simDir+"/Velo", simDir+"/PuVeto", simDir+"/TT", simDir+"/IT",
                                   simDir+"/OT", simDir+"/Rich", simDir+"/Prs", simDir+"/Spd",
                                   simDir+"/Ecal", simDir+"/Hcal", simDir+"/Muon",
-                                  simDir+"VL", simDir+"VP", simDir+"UT", simDir+"FT"
+                                  simDir+"VP", simDir+"UT", simDir+"FT"
                                   ]
             nodeKiller.Nodes += self.KnownSpillPaths
 
