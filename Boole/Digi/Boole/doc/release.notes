@@ -11,6 +11,7 @@ Purpose: LHCb Digitization program
      BuildMCTrackInfo. Now the same algorithm is used for both current and
      upgrade detector configurations
    . Improve protections for invalid Linker combinations
+   . Remove support for VL
 
 - Changes to references to follow changes in underlying packages
 	. Made FT cluster cuts more intuitive and changed values accordingly

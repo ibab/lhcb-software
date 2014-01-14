@@ -31,7 +31,6 @@ gaudi_depends_on_subdirs(Bcm/BcmDigi
                          Sim/SimComponents
 			 ST/STDigiAlgorithms
                          Tools/XmlTools
-			 VL/VLDigitisation
 			 VP/VPDigitisation
 			 VP/VPAssociators)
 

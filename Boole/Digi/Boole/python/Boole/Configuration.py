@@ -134,7 +134,6 @@ class Boole(LHCbConfigurableUser):
             detListSim += ['Velo']
             detListSim += ['PuVeto'] # Add also PU Veto hits
         if 'VP'      in self.getProp('DetectorDigi') : detListSim += ['VP']
-        if 'VL'      in self.getProp('DetectorDigi') : detListSim += ['VL']
         if 'TT'      in self.getProp('DetectorDigi') : detListSim += ['TT']
         if 'UT'      in self.getProp('DetectorDigi') : detListSim += ['UT']
         if 'IT'      in self.getProp('DetectorDigi') : detListSim += ['IT']
@@ -175,7 +174,7 @@ class Boole(LHCbConfigurableUser):
 
         if 'Data' in self.getProp('DetectorInit')['DATA'] : detListInit += ['Data']
 
-        for det in ['Velo', 'VP', 'VL', 'TT', 'UT', 'IT', 'OT', 'FT']:
+        for det in ['Velo', 'VP', 'TT', 'UT', 'IT', 'OT', 'FT']:
             if det in self.getProp('DetectorDigi') :
                 detListDigi += [det]
                 if det in self.getProp('DetectorLink'): detListLink += [det]
@@ -232,7 +231,7 @@ class Boole(LHCbConfigurableUser):
             self.__detLinkListDigiConf.append(det)
 
         # Now that requested linkers are saved, add any additional linkers needed for monitoring
-        for det in ['Velo', 'VP', 'VL', 'TT', 'UT', 'IT', 'OT', 'FT', 'Calo']:
+        for det in ['Velo', 'VP', 'TT', 'UT', 'IT', 'OT', 'FT', 'Calo']:
             if not (det in detListLink) and (det in detListMoni): 
                 detListLink += [det]
 
@@ -337,7 +336,6 @@ class Boole(LHCbConfigurableUser):
         importOptions("$STDOPTS/PreloadUnits.opts") # needed by VELO and ST
         if "Velo"    in digiDets : self.configureDigiVelo(    GaudiSequencer("DigiVeloSeq"), "" )
         if "VP"      in digiDets : self.configureDigiVP(      GaudiSequencer("DigiVPSeq"), "" )
-        if "VL"      in digiDets : self.configureDigiVL(      GaudiSequencer("DigiVLSeq"), "" )
         if "TT"      in digiDets : self.configureDigiST(      GaudiSequencer("DigiTTSeq"), "TT", "" )
         if "UT"      in digiDets : self.configureDigiST(      GaudiSequencer("DigiUTSeq"), "UT", "" )
         if "IT"      in digiDets : self.configureDigiST(      GaudiSequencer("DigiITSeq"), "IT", "" )
@@ -400,19 +398,6 @@ class Boole(LHCbConfigurableUser):
             seq.Members += [PrepareVPRawBank()]
         else:
             raise RuntimeError("TAE not implemented for VP")
-
-    def configureDigiVL(self, seq, tae ):
-        # VL digitisation and clustering 
-        if tae == "":
-            from Configurables import VLDigitCreator
-            importOptions("$VLDIGITISATIONROOT/options/VLDigitisation.opts")
-            seq.Members += [VLDigitCreator("VLDigitCreator")]
-            from Configurables import VLClusterCreator
-            seq.Members += [VLClusterCreator("VLClusterCreator")]
-            from Configurables import VLRawBankEncoder
-            seq.Members += [VLRawBankEncoder("VLRawBankEncoder")]
-        else:
-            raise RuntimeError("TAE not implemented for VELO")
 
     def configureDigiST(self, seq, det, tae ):
         # Silicon Tracker digitisation
@@ -622,9 +607,6 @@ class Boole(LHCbConfigurableUser):
             seq.Members += [VPDigitLinker()]
             seq.Members += [VPClusterLinker()]
 
-        if "VL" in linkDets:
-            seq = GaudiSequencer("LinkVLSeq")
-
         if (det for det in ["TT", "IT", "UT"] if det in linkDets):
             from Configurables import STDigit2MCHitLinker, STCluster2MCHitLinker, STCluster2MCParticleLinker
             if "TT" in linkDets:
@@ -661,10 +643,8 @@ class Boole(LHCbConfigurableUser):
                 buildMCTrackInfo.WithVelo = True
             elif "VP" in linkDets:
                 buildMCTrackInfo.WithVP = True
-            elif "VL" in linkDets:
-                buildMCTrackInfo.WithVL = True
             else:
-                raise RuntimeError("Need one of Velo, VP or VL to build MCTrackInfo")
+                raise RuntimeError("Need one of Velo or VP to build MCTrackInfo")
                 
             if "UT" in linkDets:
                 buildMCTrackInfo.WithUT = True
@@ -766,8 +746,6 @@ class Boole(LHCbConfigurableUser):
                 self.configureDigiVelo( GaudiSequencer("Digi%sVeloSeq"%taeSlot), taeSlot )
             if "VP" in taeDets:
                 self.configureDigiVP( GaudiSequencer("Digi%sVPSeq"%taeSlot), taeSlot )
-            if "VL" in taeDets:
-                self.configureDigiVL( GaudiSequencer("Digi%sVLSeq"%taeSlot), taeSlot )
             if "TT" in taeDets:
                 self.configureDigiST( GaudiSequencer("Digi%sTTSeq"%taeSlot), "TT", taeSlot )
             if "UT" in taeDets:
@@ -923,11 +901,6 @@ class Boole(LHCbConfigurableUser):
             if True == self.getProp("VeloTell1Processing"):
                 GaudiSequencer("MoniVeloSeq").Members.remove( VeloDigit2MCHitLinker() )
                 GaudiSequencer("MoniVeloSeq").Members.remove( VeloDigiMoni() )
-
-        if "VL" in moniDets:
-            from Configurables import  VLDigitMonitor ,VLClusterMonitor
-            GaudiSequencer("MoniVLSeq").Members += [ VLDigitMonitor("VLDigitMonitor"),
-                                                       VLClusterMonitor( "VLClusterMonitor")  ]
 
         if "IT" in moniDets or "TT" in moniDets or "UT" in moniDets:
             from Configurables import ( MCSTDepositMonitor, MCSTDigitMonitor, STDigitMonitor,
