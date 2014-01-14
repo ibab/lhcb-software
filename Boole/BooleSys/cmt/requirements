@@ -43,9 +43,6 @@ use STDigiAlgorithms    v2r5    ST       # Jeroen van Tilburg
 use VPDigitisation      v1r2    VP       # Marcin Kucharczyk / Paul Szczypka
 use VPAssociators       v2r3    VP       # Marcin Kucharczyk / Paul Szczypka
 
-# VeloLite
-use VLDigitisation      v1r5p1  VL       # Heinrich Schindler
-
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
 
