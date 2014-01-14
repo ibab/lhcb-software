@@ -5,7 +5,6 @@ print "# WARNING: You have imported DecodeRawEvent.py, there is now a configurab
 from Gaudi.Configuration import *
 from Configurables import ( DataOnDemandSvc,
                             DecodeVeloRawBuffer,
-			    VLRawBankDecoder,
                             RawBankToSTClusterAlg,
                             DecodeVeloRawBuffer,
                             RawBankToSTLiteClusterAlg,
@@ -17,17 +16,10 @@ VPLiteClusters.ClusterLocation  = "Raw/VP/LiteClusters"
 VPClusters     = VPRawBankToPartialCluster("createVPClusters")
 VPClusters.ClusterLocation = "Raw/VP/Clusters"
 #
-VLClusters = VLRawBankDecoder("createVLClusters")
-VLClusters.DecodeToClusters     = True
-VLLiteClusters = VLRawBankDecoder("createVLLiteClusters")
-VLLiteClusters.DecodeToLiteClusters = True
-VLLiteClusters.DecodeToClusters     = False
 FTClusters =  FTRawBankDecoder("createFTClusters")
 # Set up the algorithms
 DataOnDemandSvc().AlgMap["Raw/VP/Clusters"]       = VPClusters 
 DataOnDemandSvc().AlgMap["Raw/VP/LiteClusters"]   = VPLiteClusters
-DataOnDemandSvc().AlgMap["Raw/VL/Clusters"]       = VLClusters 
-DataOnDemandSvc().AlgMap["Raw/VL/LiteClusters"]   = VLLiteClusters
 DataOnDemandSvc().AlgMap["Raw/Velo/Clusters"]     = "DecodeVeloRawBuffer/createVeloClusters"
 DataOnDemandSvc().AlgMap["Raw/TT/Clusters"]       = "RawBankToSTClusterAlg/createTTClusters"
 DataOnDemandSvc().AlgMap["Raw/IT/Clusters"]       = "RawBankToSTClusterAlg/createITClusters"

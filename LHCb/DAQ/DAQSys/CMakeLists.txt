@@ -14,7 +14,6 @@ gaudi_depends_on_subdirs(Calo/CaloDAQ
                          ST/STDAQ
                          FT/FTDAQ
                          Velo/VeloDAQ
-                         VL/VLDAQ
                          VP/VPDAQ
                          Kernel/LHCbAlgs
                          GaudiConf

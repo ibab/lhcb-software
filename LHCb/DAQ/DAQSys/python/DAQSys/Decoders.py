@@ -300,23 +300,6 @@ Decoder("VPRawBankToPartialCluster/createVPClusters",
         outputs={"ClusterLocation": "Raw/VP/Clusters"},
         conf=DecoderDB)
 
-#UPGRADE ===========VL===========
-Decoder("VLRawBankDecoder/createVLLiteClusters",
-        active=True, banks=["VL"],
-        inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
-        outputs={"LiteClusterLocation": None},
-        properties={"DecodeToLiteClusters":True,"DecodeToClusters":False},
-        conf=DecoderDB)
-
-Decoder("VLRawBankDecoder/createVLClusters",
-        active=True, banks=["VL"],
-        inputs={"RawEventLocations" : ["Other/RawEvent","DAQ/RawEvent"]},
-        outputs={"ClusterLocation": None},
-        properties={"DecodeToLiteClusters":False,"DecodeToClusters":True},
-        conf=DecoderDB)
-
-
-
 #UPGRADE ===========UT===========
 Decoder("RawBankToSTLiteClusterAlg/createUTLiteClusters",
         active=True, banks=["UT","UTPedestal","UTFull","UTError"],

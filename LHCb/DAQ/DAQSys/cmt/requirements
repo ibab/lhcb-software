@@ -16,7 +16,6 @@ use SiDAQ       v*  Si
 use STDAQ       v*  ST
 use FTDAQ       v*  FT
 use VeloDAQ     v*  Velo
-use VLDAQ       v*  VL
 use VPDAQ       v*  VP
 use LHCbAlgs    v*  Kernel
 
