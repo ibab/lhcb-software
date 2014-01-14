@@ -33,8 +33,9 @@ FstSelectForwardTracksPartOne::FstSelectForwardTracksPartOne( const std::string&
   declareProperty( "MinIP",                  m_minIP            = 0.100 * Gaudi::Units::mm );
   declareProperty( "MaxIP",                  m_maxIP            = 3.000 * Gaudi::Units::mm );
   declareProperty( "MinPt",                  m_minPt            = 1.500 * Gaudi::Units::GeV );
-  declareProperty( "MinP",                   m_minP            = 1.500 * Gaudi::Units::GeV );
+  declareProperty( "MinP",                   m_minP             = 1.500 * Gaudi::Units::GeV );
   declareProperty( "MaxChi2Ndf",             m_maxChi2Ndf       = 2.0 ); // set negative to deactivate
+  declareProperty( "DoNothing",              m_doNothing        = false);
 }
 //=============================================================================
 // Destructor
@@ -49,6 +50,11 @@ StatusCode FstSelectForwardTracksPartOne::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+
+  if (m_doNothing) {
+    info() << "This algorithm is turned off via the DoNothing property." << endmsg;
+    return StatusCode::SUCCESS;
+  }
 
   m_minIP2 = m_minIP * m_minIP;
   m_maxIP2 = m_maxIP * m_maxIP;
@@ -78,10 +84,18 @@ StatusCode FstSelectForwardTracksPartOne::initialize() {
 StatusCode FstSelectForwardTracksPartOne::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+
   LHCb::Tracks* forward  = get<LHCb::Tracks>( m_inputTracksName );
   LHCb::RecVertices* pvs = get<LHCb::RecVertices>( m_pvName );
   LHCb::Tracks* selected = new LHCb::Tracks();
   put(selected, m_outputTracksName);
+
+  if (m_doNothing) {
+    // After bookkeeping is done, let the event pass.
+    info() << "This algorithm is turned off via the DoNothing property." << endmsg;
+    setFilterPassed(true);
+    return StatusCode::SUCCESS;
+  }
 
   if (forward->size() > 0) {
     m_nInput++;
@@ -151,6 +165,11 @@ StatusCode FstSelectForwardTracksPartOne::execute() {
 StatusCode FstSelectForwardTracksPartOne::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+
+  if (m_doNothing) {
+    info() << "This algorithm is turned off via the DoNothing property." << endmsg;
+    return GaudiAlgorithm::finalize();
+  }
 
   float eff1 = 100. * float( m_nPtOK )   / float( m_nTracks );
   float eff2 = 100. * float( m_nHitsOK )  / float( m_nTracks );

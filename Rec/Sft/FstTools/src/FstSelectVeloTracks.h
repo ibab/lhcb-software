@@ -42,5 +42,8 @@ private:
   int    m_goodIPTracks;
   int    m_nSelTracks;
   int m_goodNHitsTracks;
+
+  // Flag that turns off the algorithm
+  bool m_doNothing;
 };
 #endif // FSTSELECTVELOTRACKS_H

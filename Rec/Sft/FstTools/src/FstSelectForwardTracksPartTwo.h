@@ -46,5 +46,8 @@ private:
   int m_nChi2OK;
   int m_nIPOK;
   int m_nIPSOK;
+
+  // Flag that turns off the algorithm
+  bool m_doNothing;
 };
 #endif // FSTSELECTFORWARDTRACKSPARTTWO_H

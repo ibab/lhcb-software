@@ -49,5 +49,8 @@ private:
   int m_nIPSOK;
   int m_nInput;
   int m_nHitsOK;
+
+  // Flag that turns off the algorithm
+  bool m_doNothing;
 };
 #endif // FSTSELECTFORWARDTRACKS_H

@@ -37,6 +37,7 @@ FstSelectForwardTracksPartTwo::FstSelectForwardTracksPartTwo( const std::string&
   declareProperty( "MinIPChi2",              m_minIPChi2        = 9. );
   declareProperty( "MaxIPChi2",              m_maxIPChi2        = -1 ); // negative deactivates the cut
   declareProperty( "MaxChi2Ndf",             m_maxChi2Ndf       = 2.0 ); // set negative to deactivate
+  declareProperty( "DoNothing",              m_doNothing        = false);
 }
 //=============================================================================
 // Destructor
@@ -51,6 +52,11 @@ StatusCode FstSelectForwardTracksPartTwo::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+
+  if (m_doNothing) {
+    info() << "This algorithm is turned off via the DoNothing property." << endmsg;
+    return StatusCode::SUCCESS;
+  }
 
   m_minIP2 = m_minIP * m_minIP;
   m_maxIP2 = m_maxIP * m_maxIP;
@@ -78,10 +84,18 @@ StatusCode FstSelectForwardTracksPartTwo::initialize() {
 StatusCode FstSelectForwardTracksPartTwo::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+
   LHCb::Tracks* forward  = get<LHCb::Tracks>( m_inputTracksName );
   LHCb::RecVertices* pvs = get<LHCb::RecVertices>( m_pvName );
   LHCb::Tracks* selected = new LHCb::Tracks();
   put( selected, m_outputTracksName );
+
+  if (m_doNothing) {
+    // After bookkeeping is done, let the event pass.
+    info() << "This algorithm is turned off via the DoNothing property." << endmsg;
+    setFilterPassed(true);
+    return StatusCode::SUCCESS;
+  }
   
   for ( LHCb::Tracks::iterator itT = forward->begin();
         forward->end() != itT; ++itT ) {
@@ -136,6 +150,11 @@ StatusCode FstSelectForwardTracksPartTwo::execute() {
 StatusCode FstSelectForwardTracksPartTwo::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+
+  if (m_doNothing) {
+    info() << "This algorithm is turned off via the DoNothing property." << endmsg;
+    return GaudiAlgorithm::finalize();
+  }
 
   float eff1 = 100. * float( m_nPtOK )   / float( m_nTracks );
   float eff2 = 100. * float( m_nChi2OK ) / float( m_nTracks );

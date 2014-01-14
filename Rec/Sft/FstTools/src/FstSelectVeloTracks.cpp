@@ -33,6 +33,7 @@ FstSelectVeloTracks::FstSelectVeloTracks( const std::string& name,
   declareProperty( "MinIP",                  m_minIP            = 0.100 * Gaudi::Units::mm );
   declareProperty( "MaxIP",                  m_maxIP            = 3.000 * Gaudi::Units::mm );
   declareProperty( "ValidateWithTT",         m_validateWithTT   = false );
+  declareProperty( "DoNothing",              m_doNothing        = false);
 }
 //=============================================================================
 // Destructor
@@ -47,6 +48,11 @@ StatusCode FstSelectVeloTracks::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+
+  if (m_doNothing) {
+    info() << "This algorithm is turned off via the DoNothing property." << endmsg;
+    return StatusCode::SUCCESS;
+  }
 
   m_minIP2 = m_minIP * m_minIP;
   m_maxIP2 = m_maxIP * m_maxIP;
@@ -76,12 +82,20 @@ StatusCode FstSelectVeloTracks::initialize() {
 StatusCode FstSelectVeloTracks::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  ++m_nEvents;
   
   LHCb::Tracks* velo = get<LHCb::Tracks>( m_inputTracksName );
   LHCb::RecVertices* pvs = get<LHCb::RecVertices>( m_pvName );
   LHCb::Tracks* selected = new LHCb::Tracks();
   put( selected, m_outputTracksName );
+
+  if (m_doNothing) {
+    // After bookkeeping is done, let the event pass.
+    info() << "This algorithm is turned off via the DoNothing property." << endmsg;
+    setFilterPassed(true);
+    return StatusCode::SUCCESS;
+  }
+  
+  m_nEvents++;
 
   std::vector<LHCb::Track*> largeIP;
   
@@ -154,6 +168,12 @@ StatusCode FstSelectVeloTracks::execute() {
 //=============================================================================
 StatusCode FstSelectVeloTracks::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
+
+  if (m_doNothing) {
+    info() << "This algorithm is turned off via the DoNothing property." << endmsg;
+    return GaudiAlgorithm::finalize();
+  }
+
   info() << format( "From %8d tracks:", m_nTotTracks ) << endmsg;
   info() << format( "     %8d tracks (%5.1f%%) with enough hits",
                     m_goodNHitsTracks, 100. * float( m_goodNHitsTracks)/float( m_nTotTracks) ) << endmsg;
