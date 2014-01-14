@@ -1,4 +1,3 @@
-// $Id: $
 // Include files
 
 // from Gaudi
@@ -37,7 +36,7 @@ RecSummaryAlg::RecSummaryAlg( const std::string& name,
   {
     const std::vector<std::string> tmpList = boost::assign::list_of
       ("RICH1")("RICH2")("VELO")("TT")("IT")("OT")("SPD")("MUON")
-      ("VL")("VP")("UT")("FT")("RICH1PMT")("RICH2PMT") 
+      ("VP")("UT")("FT")("RICH1PMT")("RICH2PMT") 
       ;
     m_knownDets = tmpList;
   }
@@ -61,8 +60,6 @@ RecSummaryAlg::RecSummaryAlg( const std::string& name,
   declareProperty( "MuonTracksLocation",
                    m_muonTracksLoc = LHCb::TrackLocation::Muon );
   // Upgrade detectors
-  declareProperty( "VLClustersLocation",
-                   m_vlLoc    = LHCb::VLClusterLocation::Default );
   declareProperty( "VPClustersLocation",
                    m_vpLoc    = LHCb::VPLiteClusterLocation::Default );
   declareProperty( "UTClustersLocation",
@@ -210,10 +207,6 @@ StatusCode RecSummaryAlg::execute()
     else if ( "VP" == *iDet )
     {
       addSizeSummary<LHCb::VPLiteCluster::VPLiteClusters>( summary, LHCb::RecSummary::nVeloClusters, m_vpLoc );
-    }
-    else if ( "VL" == *iDet )
-    {
-      addSizeSummary<LHCb::VLClusters>( summary, LHCb::RecSummary::nVeloClusters, m_vlLoc );
     }
     else if ( "UT" == *iDet )
     {

@@ -1,4 +1,3 @@
-// $Id: $
 #ifndef RECSUMMARYALG_H 
 #define RECSUMMARYALG_H 1
 
@@ -15,7 +14,6 @@
 #include "Event/RecVertex.h"
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
-#include "Event/VLCluster.h"
 #include "Event/VPCluster.h"
 #include "Event/FTRawCluster.h"
 #include "Event/CaloDigit.h"
@@ -115,9 +113,6 @@ private:
 
   /// TES location of Velo clusters
   std::string m_veloLoc;
-
-  /// TES location of VL clusters
-  std::string m_vlLoc;
 
   /// TES location of VP clusters
   std::string m_vpLoc;

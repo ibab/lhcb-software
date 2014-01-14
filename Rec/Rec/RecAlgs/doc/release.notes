@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-01-13 - Marco Cattaneo
+ - Remove support for VL
+
 !========================= RecAlgs v2r15 2013-10-24 =========================
 ! 2013-10-22 - Patrick Koppenburg
  - TimingTuple: fix warning 
