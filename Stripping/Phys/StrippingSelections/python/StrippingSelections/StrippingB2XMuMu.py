@@ -29,16 +29,20 @@ from Configurables import SubPIDMMFilter
 
 defaultConfig = {
       'KpiVXCHI2NDOF'      : 9.0           # dimensionless
-    , 'MuonPID'            : -3.0           # dimensionless
+    , 'MuonPID'            : -3.0          # dimensionless
     , 'DimuonUPPERMASS'    : 7100.0        # MeV
+    , 'InclDimuLOWERMASS'  : 3870.0        # MeV
+    , 'InclDimuUPPERMASS'  : 5400.0        # MeV
+    , 'InclDiMuCORRM_MIN'  : 0.0           # MeV
+    , 'InclDiMuCORRM_MAX'  : 15000.0       # MeV
     , 'Pi0MINPT'           : 800.0         # MeV
     , 'DplusLOWERMASS'     : 1600.0        # MeV
     , 'DplusUPPERMASS'     : 2300.0        # MeV      
     , 'KstarplusWINDOW'    : 300.0         # MeV      
     , 'KsWINDOW'           : 30.0          # MeV     
     , 'LambdaWINDOW'       : 30.0          # MeV    
-    , 'LongLivedPT'        : 0.0          # MeV , used to be 500.0 MeV 
-    , 'LongLivedTau'        : 2          # ps
+    , 'LongLivedPT'        : 0.0           # MeV , used to be 500.0 MeV 
+    , 'LongLivedTau'        : 2            # ps
     
     # A1 cuts
     , 'A1_Comb_MassLow'  :    0.0
@@ -58,27 +62,34 @@ defaultConfig = {
     'B_MassHigh'          : 7000.0,
     'B_VertexCHI2'        :    8.0,
     'B_IPCHI2'            :   16.0,
-    'B_DIRA'              :    0.9999,
+    'B_DIRA'              : 0.9999,
     'B_FlightCHI2'        :  121.0,
-    'B_Dau_MaxIPCHI2'     : 9.0,
+    'B_Dau_MaxIPCHI2'     :    9.0,
     
     # Daughter cuts
     'Dau_VertexCHI2'      :   12.0,
     'Dau_DIRA'            :   -0.9,
     
     # Kstar cuts
-    'Kstar_Comb_MassLow'  :  0.0,
+    'Kstar_Comb_MassLow'  :    0.0,
     'Kstar_Comb_MassHigh' : 6200.0,
-    'Kstar_MassLow'       :  0.0,
+    'Kstar_MassLow'       :    0.0,
     'Kstar_MassHigh'      : 6200.0,
     'Kstar_MinIPCHI2'     :    0.0,
     'Kstar_FlightChi2'    :    9.0,
-    'Kstar_Dau_MaxIPCHI2' : 9.0,
+    'Kstar_Dau_MaxIPCHI2' :    9.0,
     
     # JPsi (dimu) cuts
     'Dimu_FlightChi2'     :   9.0,
     'Dimu_Dau_MaxIPCHI2'  :   9.0,
-    
+
+    # Incl (dimu) cuts
+    'InclDimu_FlightChi2'     : 100.0,
+    'InclDimu_Dau_MaxIPCHI2'  :   9.0,
+    'InclDiMu_VertexCHI2'     :   6.0,
+    'InclDiMu_DIRA'           : -0.95,
+    'InclDiMu_CCbarPrescale'  :   0.1,
+      
     # Track cuts
     'Track_CHI2nDOF'      :    5.0,
     'Track_GhostProb'     :    0.4,  
@@ -119,7 +130,8 @@ defaultConfig = {
                               "B0 -> J/psi(1S) pi0",                        
                               "[B+ -> J/psi(1S) a_1(1260)+]cc",             
                               "[B+ -> J/psi(1S) K_1(1270)+]cc",             
-                              "[B+ -> J/psi(1S) K_2(1770)+]cc"
+                              "[B+ -> J/psi(1S) K_2(1770)+]cc",
+                              "B0 -> J/psi(1S) K_1(1270)0"
                               ]
 
       }
@@ -140,6 +152,10 @@ class B2XMuMuConf(LineBuilder) :
           'KpiVXCHI2NDOF'
         , 'MuonPID'
         , 'DimuonUPPERMASS'
+        , 'InclDimuLOWERMASS'
+        , 'InclDimuUPPERMASS'
+        , 'InclDiMuCORRM_MIN'
+        , 'InclDiMuCORRM_MAX'
         , 'Pi0MINPT'
         , 'DplusLOWERMASS'
         , 'DplusUPPERMASS'
@@ -190,6 +206,13 @@ class B2XMuMuConf(LineBuilder) :
         # JPsi (dimu) cuts
         'Dimu_FlightChi2',
         'Dimu_Dau_MaxIPCHI2',
+        
+       # Incl (dimu) cuts
+        'InclDimu_FlightChi2',
+        'InclDimu_Dau_MaxIPCHI2',
+        'InclDiMu_VertexCHI2',
+        'InclDiMu_DIRA',
+        'InclDiMu_CCbarPrescale',
         
         # Track cuts
         'Track_CHI2nDOF',
@@ -251,6 +274,17 @@ class B2XMuMuConf(LineBuilder) :
         self.DiMuonCut = DaughterCuts + " & (BPVVDCHI2 > %(Dimu_FlightChi2)s) & " \
                          "(MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> %(Dimu_Dau_MaxIPCHI2)s )" %config
         
+
+        InclDiMuDaughterCuts = "(VFASPF(VCHI2/VDOF) < %(InclDiMu_VertexCHI2)s) & " \
+                               "(BPVDIRA> %(InclDiMu_DIRA)s)" %config
+        self.InclDiMuHighQ2CombCut = "(AM > %(InclDimuLOWERMASS)s *MeV) & " \
+                                     "(AM < %(InclDimuUPPERMASS)s *MeV)" %config
+        self.InclDiMuCut = InclDiMuDaughterCuts + " & (BPVVDCHI2 > %(InclDimu_FlightChi2)s) & " \
+                           "(BPVCORRM > %(InclDiMuCORRM_MIN)s *MeV) & " \
+                           "(BPVCORRM < %(InclDiMuCORRM_MAX)s *MeV) &" \
+                           "(MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> %(InclDimu_Dau_MaxIPCHI2)s )" %config
+
+
         self.TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s) & (TRGHP < %(Track_GhostProb)s)" %config
         #self.TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s)" %config
         
@@ -263,7 +297,10 @@ class B2XMuMuConf(LineBuilder) :
 
         #self.KstarFilterCut  = self.KstarCut + " & (INTREE(ABSID=='K+') & " + self.KaonCut + ") & (INTREE(ABSID=='pi+') & " + self.PionCut + ")"
 
-        self.Dimuon = self.__Dimuon__(config)        
+        self.Dimuon = self.__Dimuon__(config)
+        self.InclDimuHighQ2 = self.__InclDimuHighQ2__(config,doWS=True)
+        self.InclDimuCCbar = self.__InclDimuHighQ2__(config,doWS=False,
+                                                           doCCbar=True)        
         self.Protons = self.__Protons__(config)
         self.Kaons = self.__Kaons__(config)
         self.Pions = self.__Pions__(config)       
@@ -284,7 +321,7 @@ class B2XMuMuConf(LineBuilder) :
         self.A1 = self.__A1__(self.Pions, config)
         self.K1 = self.__K1__(self.A1, config)
         self.K2 = self.__K2__(self.A1, config)
-
+        self.K10 = self.__K10__(self.Kshort,self.Pions,config)
 
         self.AvailableDaughters = {
             'K*(892)0'      : [ self.Kstar ] ,
@@ -304,7 +341,8 @@ class B2XMuMuConf(LineBuilder) :
             'pi0'           : [ self.Pi0 ] ,
             'a_1(1260)'     : [ self.A1 ],
             'K_1(1270)'     : [ self.K1 ],
-            'K_2(1770)'     : [ self.K2 ]
+            'K_2(1770)'     : [ self.K2 ],
+            'K_1(1270)0'    : [ self.K10 ]
             }
 
         self.DeclaredDaughters = [] 
@@ -324,7 +362,7 @@ class B2XMuMuConf(LineBuilder) :
 
         self.HadronicB = self.__HadronicB__( daughters = self.DeclaredDaughters,  
                                              conf = config )
-
+        # standard lines
         self.line = StrippingLine(
             self.name+"_Line",
             prescale = 1,
@@ -339,6 +377,7 @@ class B2XMuMuConf(LineBuilder) :
         
         self.registerLine(self.line)
 
+        # hadronic lines
         self.hadronic_line =  StrippingLine(
             self.name+"_HadronicLine",
             prescale = 1,
@@ -352,7 +391,43 @@ class B2XMuMuConf(LineBuilder) :
             )
 
         self.registerLine( self.hadronic_line )
-        
+
+        # inclusive dimuon line
+        self.inclusive_DiMuHighQ2_line =  StrippingLine(
+            self.name+"_InclDiMuHighQ2Line",
+            prescale = 1,
+            FILTER = {
+            'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
+            'Preambulo' : [
+            "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb"
+            ]
+            },
+            HLT="HLT_PASS_RE('Hlt2DiMuonDetachedDecision')|"\
+            "HLT_PASS_RE('Hlt2DiMuonDetachedHeavyDecision')|"\
+            "HLT_PASS_RE('Hlt2SingleMuonDecision')",
+            algos=[self.InclDimuHighQ2]
+            )
+
+        self.registerLine( self.inclusive_DiMuHighQ2_line )
+
+        # inclusive dimuon line around jpsi and psi2s
+        self.inclusive_DiMuCCbar_line =  StrippingLine(
+            self.name+"_InclDiMuCCbarLine",
+            prescale = config['InclDiMu_CCbarPrescale'],
+            FILTER = {
+            'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
+            'Preambulo' : [
+            "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb"
+            ]
+            },
+            HLT="HLT_PASS_RE('Hlt2DiMuonDetachedDecision')|"\
+            "HLT_PASS_RE('Hlt2DiMuonDetachedHeavyDecision')|"\
+            "HLT_PASS_RE('Hlt2SingleMuonDecision')",
+            algos=[self.InclDimuCCbar]
+            )
+
+        self.registerLine( self.inclusive_DiMuCCbar_line )
+
         
     def __Dimuon__(self, conf):
         '''
@@ -376,7 +451,40 @@ class B2XMuMuConf(LineBuilder) :
         from PhysSelPython.Wrappers import Selection
         SelDiMuon = Selection("Sel_" + self.name + "_DiMuon", Algorithm = CombineDiMuon, RequiredSelections = [ Muons ] )
         return SelDiMuon
+
+    def __InclDimuHighQ2__(self, conf, doWS=False, doCCbar=False):
+        '''
+        Create a new dimuon for high q2 inclusive B->Xmumu
+        '''
+        from  GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        CombineDiMuon = CombineParticles()
+        CombineDiMuon.DecayDescriptors = ["B0 -> mu- mu+"]
+        sel_name="InclDiMuHighQ2"
+        CombineDiMuon.DaughtersCuts = { "mu+" : self.MuonCut, "mu-" : self.MuonCut }
+        CombineDiMuon.CombinationCut = self.InclDiMuHighQ2CombCut
+        CombineDiMuon.MotherCut     = self.InclDiMuCut
+        # choose
+        if doCCbar == True:
+            # make sure cant run WS combinations if running ccbar
+            doWS=False
+            CombineDiMuon.DecayDescriptors = ["B0 -> mu- mu+"]
+            sel_name += "Jpsi"
+            CombineDiMuon.CombinationCut = "AM > 0 *MeV"
+            CombineDiMuon.MotherCut += " & ( (ADMASS('J/psi(1S)')<75*MeV) |"\
+                                       " (ADMASS('psi(2S)')<75*MeV) )"
+        if doWS == True:
+            CombineDiMuon.DecayDescriptors = ["B0 -> mu- mu+", "B0 -> mu- mu-", "B0 -> mu+ mu+"]
+
         
+        IsMuonFlag = conf['Muon_IsMuon'] 
+        from StandardParticles import StdAllLooseMuons, StdAllVeryLooseMuons
+        Muons = StdAllLooseMuons if IsMuonFlag else StdAllVeryLooseMuons
+         
+        from PhysSelPython.Wrappers import Selection
+        SelDiMuon = Selection("Sel_" + self.name + "_"+sel_name, Algorithm = CombineDiMuon,
+                              RequiredSelections = [ Muons ] )
+        return SelDiMuon
+
     
     def __Kaons__(self, conf):
         """
@@ -805,7 +913,37 @@ class B2XMuMuConf(LineBuilder) :
 
         return pick
 
-    
+    def __K10__(self,Kshort,Pions,conf):
+        """
+        K_1 0 -> Ks pi+ pi-
+        """
+
+        _k102kspipi = CombineParticles()
+        _k102kspipi.DecayDescriptors = [ "K_1(1270)0 -> KS0 pi+ pi-" ]
+        _k102kspipi.CombinationCut = self.__A1CombCut__(conf)
+        _k102kspipi.MotherCut = self.__A1Cut__(conf)
+
+        _sel_k10 = Selection( "Selection_"+self.name+"_k10",
+                              Algorithm=_k102kspipi,
+                              RequiredSelections=[Kshort,Pions] )
+        
+        pick = Selection(self.name+"_K10_PickDecay",
+                     Algorithm = FilterDesktop( Code = "(DECTREE('K_1(1270)0 -> KS0 pi+ pi-'))" ),
+                     RequiredSelections = [_sel_k10])
+
+        return pick
+
+        
+#        _k102kspipi = CombineParticles()
+#        _k102kspipi.DecayDescriptor = "[K_1(1270)0 -> KS0 pi- pi+]cc"
+#        _k102kspipi.CombinationCut = self.__A1CombCut__(conf)
+#        _k102kspipi.MotherCut = self.__A1Cut__(conf)
+#        _selK102KSPIPI = Selection( "Selection_"+self.name+"_K102kspipi",
+#                                    Algorithm = _k102kspipi,
+#                                    RequiredSelections = [ Kshort, Pions ] )
+#        return _selK102KSPIPI
+
+
     def __Lambdastar__(self, Rho, conf):
         """
         Make a Lambdastar

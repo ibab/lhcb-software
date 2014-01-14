@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-14 - Konstantinos A. Petridis
+ - Addition of new lines to StrippingB2XMuMu.py:
+   -- Added an inclusive b-Hadron->Xmumu line for q2>15GeV^2
+   -- Added an inclusive b-Hadron->Jpsi/psi2s X line with prescale
+   -- Added B0->Kspipimumu to suite of B2XMuMu lines
+
 ! 2014-01-13 - Mat Charles
  - Added StrippingXibStarToXibZero.py
 
