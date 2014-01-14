@@ -23,6 +23,7 @@ __all__ = ('BLVLinesConf',
            'makeLb2Lcpi',
            'makeB2Dpi',
            'makeBs2Dspi',
+           'makeB2Lcp',
            )
 
 ###################################################################################################
@@ -52,6 +53,7 @@ class BLVLinesConf(LineBuilder) :
                                   'Lb2LcpiPrescale',
                                   'B2DpiPrescale',
                                   'Bs2DspiPrescale',
+                                  'B2LcpPrescale',
                                   )
     
     #### This is the dictionary of all tunable cuts ########
@@ -67,6 +69,7 @@ class BLVLinesConf(LineBuilder) :
         'Lb2LcpiPrescale'     :0.1,
         'B2DpiPrescale'       :0.1,
         'Bs2DspiPrescale'     :0.1,
+        'B2LcpPrescale'      : 0.2,
         }                
     
     
@@ -90,11 +93,12 @@ class BLVLinesConf(LineBuilder) :
         Lb2Lcpi_name=name+'Lb2Lcpi'
         B2Dpi_name=name+'B2Dpi'
         Bs2Dspi_name=name+'Bs2Dspi'
+        B2Lcp_name=name+'B2Lcp'
 
         self.selLb2Lcpi = makeLb2Lcpi(Lb2Lcpi_name)
         self.selB2Dpi  = makeB2Dpi(B2Dpi_name)
         self.selBs2Dspi  = makeBs2Dspi(Bs2Dspi_name)
-
+        self.selB2Lcp  = makeB2Lcp(B2Lcp_name)
 
 #######################################################################################################
 
@@ -162,6 +166,15 @@ class BLVLinesConf(LineBuilder) :
                                      )
 
 #######################################################################################################        
+#######################################################################################################                                                                                                    
+                                                                                                      
+        self.b2LcpLine = StrippingLine(B2Lcp_name+"Line",                                           
+                                     prescale = config['B2LcpPrescale'],                             
+                                     postscale = config['Postscale'],                                 
+                                     algos = [ self.selB2Lcp ]                                       
+                                     )                                                                
+                                                                                                      
+#######################################################################################################                                                                       
 
         ### Signal Ch.
         self.registerLine(self.La2KmuLine)
@@ -173,7 +186,8 @@ class BLVLinesConf(LineBuilder) :
         self.registerLine(self.Lb2LcpiLine)        
         self.registerLine(self.B2DpiLine)
         self.registerLine(self.Bs2DspiLine)
-        
+        self.registerLine(self.b2LcpLine)
+
 #######################################################################################################
 
 TrackCuts = "(MIPCHI2DV(PRIMARY)>25.0) & (TRCHI2DOF<3.0) & (TRGHP<0.3)"
@@ -343,6 +357,23 @@ def makeB2Lcmu(name):
     return Selection (name, Algorithm = B2Lcmu, RequiredSelections = [ _myLambdaC, _myMuons ])
 
 #######################################################################################################
+
+def makeB2Lcp(name):
+
+    B2Lcp = CombineParticles("Combine"+name)
+    B2Lcp.DecayDescriptors = [ "[B0 -> Lambda_c+ p~-]cc","[B0 -> Lambda_c+ p+]cc" ]
+    B2Lcp.DaughtersCuts = { "p~-" : TrackCuts + "& (PIDp>5)"}
+
+    B2Lcp.CombinationCut = BCombinationCut
+
+    B2Lcp.MotherCut = BMotherCut
+
+    _myLambdaC= DataOnDemand(Location = "Phys/StdLooseLambdac2PKPi/Particles")
+    _myProtons = DataOnDemand(Location = "Phys/StdLooseProtons/Particles")
+
+    return Selection (name, Algorithm = B2Lcp, RequiredSelections = [ _myLambdaC, _myProtons ])
+
+
 #######################################################################################################
 
 def makeLb2Lcpi(name):

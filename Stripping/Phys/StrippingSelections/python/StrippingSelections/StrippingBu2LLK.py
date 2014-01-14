@@ -99,25 +99,29 @@ class Bu2LLKConf(LineBuilder) :
                                       dileptonSel = selDiElectron,
                                       kaonSel = selKaons,
                                       kstarSel = selKstars,
-                                      config=config)
+                                      config=config,
+                                      massCut="1000*MeV" )
         
         selB2LLK_ee2 = self._makeB2LLK(name=eeKLine_name+"2",
                                         dileptonSel = selDiElectron2,
                                         kaonSel = selKaons,
                                         kstarSel = selKstars,
-                                        config=config)
+                                        config=config,
+                                       massCut="1000*MeV" )
         
         selB2LLK_mm = self._makeB2LLK(name=mmKLine_name,
                                       dileptonSel = selDiMuon,
                                       kaonSel = selKaons,
                                       kstarSel = selKstars,
-                                      config=config)
+                                      config=config,
+                                      massCut="600*MeV" )
         
         selB2LLK_me = self._makeB2LLK(name=meKLine_name,
                                       dileptonSel = selMuE,
                                       kaonSel = selKaons,
                                       kstarSel = selKstars,
-                                      config=config)
+                                      config=config,
+                                      massCut="600*MeV" )
         
         
         # 4 : Declare Lines
@@ -149,13 +153,13 @@ class Bu2LLKConf(LineBuilder) :
         self.registerLine( self.meKLine )
         
 #####################################################
-    def _makeB2LLK(self, name, dileptonSel, kaonSel, kstarSel, config):
+    def _makeB2LLK(self, name, dileptonSel, kaonSel, kstarSel, config, massCut):
         """
         Handy interface for B2LLK
         """
         # 
         # B mass cuts : Hard-coded as we _need_ the full B mass window for the final fit. Nobody dare touch that!
-        _combcut = "(ADAMASS('B+')<600*MeV)"
+        _combcut = "(ADAMASS('B+')<"+massCut+")"
         # 
         # B candidate cuts : ((VFASPF(VCHI2/VDOF)<3) & (BPVIPCHI2()<25) & (BPVDIRA>0.9998) & (BPVVDCHI2>50))
         _bcut   = "((VFASPF(VCHI2/VDOF)< %(BVertexCHI2)s ) "\

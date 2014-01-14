@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-14 - Johannes Albrecht
+ - Bu2LLK (Rk analysis): extended electron mass window
+ - BLV lines: added control channel for B2Lcmu search
+
 ! 2014-01-14 - Konstantinos A. Petridis
  - Addition of new lines to StrippingB2XMuMu.py:
    -- Added an inclusive b-Hadron->Xmumu line for q2>15GeV^2
