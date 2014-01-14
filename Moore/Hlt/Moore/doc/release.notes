@@ -4,10 +4,13 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v21r0 2014-01-14 =========================
 ! 2014-01-14 - Rob Lambert
- - Fix up a lot of the test results, does not make sense any longer to make a test vs v14r8.
+ - Fix up a lot of the test results, 
+ - reduced again the number of running tests by one, 
+ - use only default-threshold.py file in the tests.
+ - does not make sense any longer to make a test vs v14r8.
 
-!========================= Moore v21r0 2014-01-10 =========================
 ! 2014-01-13 - Rob Lambert
  - Modify MC test, rename to sim08
 
