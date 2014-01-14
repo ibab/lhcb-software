@@ -40,14 +40,18 @@ class FstConf(LHCbConfigurableUser):
     def applyConf(self):
         GaudiSequencer( "RecoHLTSeq" ).Members = [ "FstSequencer/RecoFstSeq" ]
         FstSequencer( "RecoFstSeq" ).ForcePassOK = True
+
+        ## Multiplicity cuts (Kevin Dungs, 2014-01-10)
+        FstSequencer("RecoFstSeq").Members = ["FstSelectGEC"]
+
         ## Velo configuration
         if "Velo" == self.getProp("VeloType"):
             from Configurables import FastVeloTracking, FastVeloDecoding, DecodeVeloRawBuffer
             if self.getProp("FastDecoding"):
-                FstSequencer("RecoFstSeq").Members = ["FastVeloDecoding"]
+                FstSequencer("RecoFstSeq").Members += ["FastVeloDecoding"]
             else:
                 # TDH XXX had to rename it to DecodeVeloClusters2 to get my config changes to take effect?
-                FstSequencer("RecoFstSeq").Members = ["DecodeVeloRawBuffer/DecodeVeloClusters2"]
+                FstSequencer("RecoFstSeq").Members += ["DecodeVeloRawBuffer/DecodeVeloClusters2"]
                 DecodeVeloRawBuffer("DecodeVeloClusters2").MaxVeloClusters = 10000
                 DecodeVeloRawBuffer("DecodeVeloClusters2").DecodeToVeloClusters = False
                 
@@ -63,7 +67,7 @@ class FstConf(LHCbConfigurableUser):
             
         elif "VP" == self.getProp("VeloType"):
             from Configurables import PatPixelTracking, VPRawBankToLiteCluster
-            FstSequencer("RecoFstSeq").Members = ["VPRawBankToLiteCluster/FstVPDecoding",
+            FstSequencer("RecoFstSeq").Members += ["VPRawBankToLiteCluster/FstVPDecoding",
                                                   "PatPixelTracking/FstPixel"]
             # Centrally produced upgrade samples need this fix
             # see https://twiki.cern.ch/twiki/bin/viewauth/LHCbPhysics/UpgradeTrackingSequence
@@ -73,7 +77,7 @@ class FstConf(LHCbConfigurableUser):
         elif "VL" == self.getProp("VeloType"):
             from Configurables import PrVLTracking
             from Configurables import VLRawBankDecoder
-            FstSequencer("RecoFstSeq").Members = ["VLRawBankDecoder/FstVLDecoding",
+            FstSequencer("RecoFstSeq").Members += ["VLRawBankDecoder/FstVLDecoding",
                                                   "PrVLTracking/FstVLTracking"]
             # Centrally produced upgrade samples need this fix
             # see https://twiki.cern.ch/twiki/bin/viewauth/LHCbPhysics/UpgradeTrackingSequence
@@ -187,7 +191,7 @@ class FstConf(LHCbConfigurableUser):
             FstForward.OutputName = self.getProp("RootInTES") + "Track/Forward"
             FstForward.addTool(PrForwardTool)
             FstForward.PrForwardTool.MinPt = 1250 #self.getProp("MinPt")
-            FstForward.PrForwardTool.AddUTClusterName = ""
+            FstForward.PrForwardTool.AddUTHitsToolName = ""
 
         # Cheated forward tracking which uses MC truth to get
         # momentum estimate, in the end the VeloUT should

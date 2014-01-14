@@ -89,8 +89,13 @@ StatusCode FstSelectVeloTracks::execute() {
   put( selected, m_outputTracksName );
 
   if (m_doNothing) {
-    // After bookkeeping is done, let the event pass.
-    info() << "This algorithm is turned off via the DoNothing property." << endmsg;
+    // After bookkeeping is done, let the event pass. Also write tracks properly.
+    
+    for (LHCb::Tracks::iterator itT = velo->begin(); velo->end() != itT; ++itT) {
+      LHCb::Track* track = (*itT)->clone();
+      selected->add(track);
+    }
+
     setFilterPassed(true);
     return StatusCode::SUCCESS;
   }
@@ -170,7 +175,6 @@ StatusCode FstSelectVeloTracks::finalize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
   if (m_doNothing) {
-    info() << "This algorithm is turned off via the DoNothing property." << endmsg;
     return GaudiAlgorithm::finalize();
   }
 

@@ -9,7 +9,10 @@ from os import path
 from Configurables import (
     Brunel,
     CondDB,
-    FstSequencer,
+    FstSelectForwardTracksPartOne,
+    FstSelectForwardTracksPartTwo,
+    FstSelectGEC,
+    FstSelectVeloTracks,
     GaudiSequencer,
     InputCopyStream
 )
@@ -28,33 +31,26 @@ input_path = '/home/kdungs/data/timing/'
 input_files = glob(path.join(input_path, '*.xdst'))
 IOHelper().inputFiles(input_files)
 
-# configure output
-InputCopyStream('DstWriter2').Output = 'DATAFILE=\'PFN:~/kevin.dst\''
-
 # configure trigger emulation
 FstConf().VeloType = 'VP'
-FstConf().TStationType = 'FT'
+FstConf().TStationType = 'FT+VeloUT'
+FstConf().ForwardMinPt = 500  # MeV, pT cut in FT
 # use the newly introduced DoNothing property to turn off algorithms
-from Configurables import (
-    FstSelectForwardTracksPartOne,
-    FstSelectForwardTracksPartTwo,
-    FstSelectGEC,
-    FstSelectVeloTracks
-)
 algos = [
-    FstSelectForwardTracksPartOne,
-    FstSelectForwardTracksPartTwo,
-    FstSelectGEC,
-    FstSelectVeloTracks
+    FstSelectForwardTracksPartOne('SelectFwd1'),
+    FstSelectForwardTracksPartTwo('SelectFwd2'),
+    FstSelectGEC(),
+    FstSelectVeloTracks()
 ]
 for algo in algos:
-    algo().DoNothing = True
+    algo.DoNothing = True
 
 # set up CondDB
 CondDB().Upgrade = True
 CondDB().AllLocalTagsByDataType = ['VP_Compact_Pocofoam+UT', 'FT']
 
 # set up Brunel
+Brunel().PrintFreq = 1000
 Brunel().EvtMax = 10000
 Brunel().DataType = 'Upgrade'
 Brunel().Simulation = True
@@ -63,28 +59,22 @@ Brunel().DDDBtag = 'dddb-20130408'
 Brunel().MCLinksSequence = ['Unpack', 'Tr']
 Brunel().MCCheckSequence = ['Pat']
 
-# not sure what this does exactly (stolen from Tim)
+
 def setup_truth_matching():
-    from Configurables import (
-        GaudiSequencer,
-        PrChecker,
-        PrTrackAssociator,
-    )
-    GaudiSequencer('CaloBanksHandler').Members = []
-    GaudiSequencer('DecodeTriggerSeq').Members = []
-    GaudiSequencer('MCLinksTrSeq').Members = [
-        'UnpackMCParticle',
-        'UnpackMCVertex',
-        'PrLHCbID2MCParticle',
-        'PrTrackAssociator'
-    ]
-    PrTrackAssociator().RootOfContainers = '/Events/Fst/Track'
-    GaudiSequencer('CheckPatSeq').Members = [
-        'PrChecker',
-        'PrDebugTrackingLosses'
-    ]
-    PrChecker().VeloTracks = '/Event/Fst/Track/Velo'
-    PrChecker().ForwardTracks = '/Event/Fst/Track/Forward'
+   from Configurables import GaudiSequencer, PrTrackAssociator, PrChecker
+   from Configurables import UnpackMCParticle, UnpackMCVertex
+   from Configurables import PrDebugTrackingLosses
+   from Configurables import PatPixelTracking
+   GaudiSequencer("CaloBanksHandler").Members = []
+   GaudiSequencer("DecodeTriggerSeq").Members = []
+   #GaudiSequencer("MCLinksTrSeq").Members = ["UnpackMCParticle", "UnpackMCVertex"]
+   #GaudiSequencer("MCLinksTrSeq").Members += ["PrLHCbID2MCParticle", "PrTrackAssociator"]
+   GaudiSequencer("MCLinksTrSeq").Members = ["PrLHCbID2MCParticle", "PrTrackAssociator"]
+   PrTrackAssociator().RootOfContainers = "/Event/Fst/Track"
+   writer = InputCopyStream('DstWriter2')
+   GaudiSequencer("CheckPatSeq").Members = ["PrChecker"]#, writer]
+   PrChecker().VeloTracks = "/Event/Fst/Track/Velo"
+   PrChecker().ForwardTracks = "/Event/Fst/Track/Forward"
 
-
+   
 appendPostConfigAction(setup_truth_matching)

@@ -35,8 +35,6 @@ StatusCode FstSelectGEC::initialize() {
 
 StatusCode FstSelectGEC::execute() {
     if (m_doNothing) {
-        info() << "This algorithm is turned off via the DoNothing property."
-               << endmsg;
         setFilterPassed(true);
         return StatusCode::SUCCESS;
     }
@@ -48,8 +46,6 @@ StatusCode FstSelectGEC::execute() {
 
 StatusCode FstSelectGEC::finalize() {
     if (m_doNothing) {
-        info() << "This algorithm is turned off via the DoNothing property."
-               << endmsg;
         return GaudiAlgorithm::finalize();
     }
 
