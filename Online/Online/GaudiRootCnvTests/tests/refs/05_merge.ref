@@ -1,25 +1,8 @@
-Warning in <TClass::TClass>: no dictionary for class DataObject is available
-Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::Event is available
-Warning in <TClass::TClass>: no dictionary for class Gaudi::Time is available
-Warning in <TClass::TClass>: no dictionary for class SmartRefVector<Gaudi::Examples::Collision> is available
-Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::Collision> is available
-Warning in <TClass::TClass>: no dictionary for class SmartRefBase is available
-Warning in <TClass::TClass>: no dictionary for class ObjectContainerBase is available
-Warning in <TClass::TClass>: no dictionary for class KeyedObject<int> is available
-Warning in <TClass::TClass>: no dictionary for class ContainedObject is available
-Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::Event> is available
-Warning in <TClass::TClass>: no dictionary for class KeyedContainer<Gaudi::Examples::MyTrack,Containers::KeyedObjectManager<Containers::hashmap> > is available
-Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::MyTrack is available
-Warning in <TClass::TClass>: no dictionary for class SmartRef<Gaudi::Examples::MyVertex> is available
-Warning in <TClass::TClass>: no dictionary for class SmartRefVector<Gaudi::Examples::MyVertex> is available
-Warning in <TClass::TClass>: no dictionary for class Gaudi::RootObjectRefs is available
-Warning in <TClass::TClass>: no dictionary for class Gaudi::RootRef is available
-Warning in <TClass::TClass>: no dictionary for class Gaudi::Examples::Counter is available
 +++ Opened new output file ROOTIO.merge.mdst.
 +++ Start merging input file:ROOTIO.1.mdst
-Tree:Event 0
++++ Copy Tree:Event 0
 +++ Created new Tree Event.
-Tree:FileRecords 0
++++ Copy Tree:FileRecords 0
 +++ Created new Tree FileRecords.
 +++ section ['Containers'][0]                                       Start:       0 ...        7 [7 entries]
 +++ section ['Databases'][0]                                        Start:       0 ...        2 [2 entries]
@@ -35,21 +18,19 @@ Tree:FileRecords 0
 +++ section ['_FileRecords_R.'][0]                                  Start:       0 ...        1 [1 entries]
 +++ section ['_FileRecords_SumCount.'][0]                           Start:       0 ...        1 [1 entries]
 +++ Added 14 Sections entries with 509 bytes in total.
++++ Closing merge file.
 TFile**		ROOTIO.merge.mdst
  TFile*		ROOTIO.merge.mdst
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x1a625c90
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x1a625eb0
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x1a7fda10
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x1a8026e0
-  KEY: TTree	Event;2	Root data for Gaudi
-  KEY: TTree	FileRecords;2	Root data for Gaudi
+  OBJ: TTree	Sections	Root Section data : 0 at: 0xc51f50
+  OBJ: TTree	Refs	Root Section data : 0 at: 0xc52330
+  KEY: TTree	Event;1	Root data for Gaudi
+  KEY: TTree	FileRecords;1	Root data for Gaudi
   KEY: TTree	Refs;2	Root Section data
   KEY: TTree	Sections;2	Root Section data
-+++ Update output file ROOTIO.merge.mdst.
 +++ Start merging input file:ROOTIO.2.mdst
-Tree:Event 0
++++ Copy Tree:Event 0
 +++ Merged tree: Event res=1
-Tree:FileRecords 0
++++ Copy Tree:FileRecords 0
 +++ Merged tree: FileRecords res=1
 +++ section ['Containers'][0]                                       Start:       7 ...       14 [7 entries]
 +++ section ['Databases'][0]                                        Start:       2 ...        4 [2 entries]
@@ -65,21 +46,19 @@ Tree:FileRecords 0
 +++ section ['_FileRecords_R.'][0]                                  Start:       1 ...        2 [1 entries]
 +++ section ['_FileRecords_SumCount.'][0]                           Start:       1 ...        2 [1 entries]
 +++ Added 14 Sections entries with 520 bytes in total.
++++ Closing merge file.
 TFile**		ROOTIO.merge.mdst
  TFile*		ROOTIO.merge.mdst
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x1a905790
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x1a90e520
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x1a8f4610
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x1a909d80
-  KEY: TTree	Event;3	Root data for Gaudi
-  KEY: TTree	FileRecords;3	Root data for Gaudi
+  OBJ: TTree	Refs	Root Section data : 0 at: 0xc1a460
+  OBJ: TTree	Sections	Root Section data : 0 at: 0xeff290
+  KEY: TTree	Event;2	Root data for Gaudi
+  KEY: TTree	FileRecords;2	Root data for Gaudi
   KEY: TTree	Refs;4	Root Section data
   KEY: TTree	Sections;4	Root Section data
-+++ Update output file ROOTIO.merge.mdst.
 +++ Start merging input file:ROOTIO.3.mdst
-Tree:Event 0
++++ Copy Tree:Event 0
 +++ Merged tree: Event res=1
-Tree:FileRecords 0
++++ Copy Tree:FileRecords 0
 +++ Merged tree: FileRecords res=1
 +++ section ['Containers'][0]                                       Start:      14 ...       21 [7 entries]
 +++ section ['Databases'][0]                                        Start:       4 ...        6 [2 entries]
@@ -94,15 +73,14 @@ Tree:FileRecords 0
 +++ section ['_FileRecords_EvtCount_R.'][0]                         Start:       2 ...        3 [1 entries]
 +++ section ['_FileRecords_R.'][0]                                  Start:       2 ...        3 [1 entries]
 +++ section ['_FileRecords_SumCount.'][0]                           Start:       2 ...        3 [1 entries]
-+++ Added new GUID FID=16C4D272-0C91-11E1-9797-998D8A89BEEF to merge file.
++++ Added new GUID FID=FCD27A46-7D21-11E3-9717-441DB8BCBEEF to merge file.
 +++ Added 14 Sections entries with 526 bytes in total.
++++ Closing merge file.
 TFile**		ROOTIO.merge.mdst
  TFile*		ROOTIO.merge.mdst
-  OBJ: TTree	Event	Root data for Gaudi : 0 at: 0x1a90d3c0
-  OBJ: TTree	FileRecords	Root data for Gaudi : 0 at: 0x1a90beb0
-  OBJ: TTree	Refs	Root Section data : 0 at: 0x1a9203b0
-  OBJ: TTree	Sections	Root Section data : 0 at: 0x1a8c19c0
-  KEY: TTree	Event;4	Root data for Gaudi
-  KEY: TTree	FileRecords;4	Root data for Gaudi
+  OBJ: TTree	Refs	Root Section data : 0 at: 0xf11460
+  OBJ: TTree	Sections	Root Section data : 0 at: 0xeff290
+  KEY: TTree	Event;3	Root data for Gaudi
+  KEY: TTree	FileRecords;3	Root data for Gaudi
   KEY: TTree	Refs;7	Root Section data
   KEY: TTree	Sections;6	Root Section data
