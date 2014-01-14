@@ -139,7 +139,8 @@ MergeStatus RootDatabaseMerger::attach(const string& file_id) {
   }
   m_output = TFile::Open(fid,"UPDATE");
   if ( m_output && !m_output->IsZombie() ) {
-    if ( s_dbg ) ::printf("+++ Update output file %s.\n",fid);
+    //if ( s_dbg ) ::printf("+++ Update output file %s.\n",fid);
+    //if ( s_dbg ) ::printf("+++ Update output file.\n");
     return MERGE_SUCCESS;
   }
   ::printf("+++ Failed to open new output file %s.\n",fid);
@@ -203,6 +204,8 @@ MergeStatus RootDatabaseMerger::createFID() {
 /// Close output file
 MergeStatus RootDatabaseMerger::close() {
   if ( m_output ) {
+    //if ( s_dbg ) ::printf("+++ Closing merge file: %s.\n",m_output->GetName());
+    if ( s_dbg ) ::printf("+++ Closing merge file.\n");
     m_output->Write();
     m_output->Purge();
     if ( s_dbg ) m_output->ls();
@@ -356,7 +359,7 @@ MergeStatus RootDatabaseMerger::copyAllTrees(TFile* source) {
       string name = key->GetName();
       if ( name == "Refs" ) continue;
       m_treeSections = 0 == ::strncmp(key->GetName(),"<local>_",7);
-      printf("Tree:%s %d\n",name.c_str(),int(m_treeSections));
+      printf("+++ Copy Tree:%s %d\n",name.c_str(),int(m_treeSections));
       if ( copyTree(source,name) != MERGE_SUCCESS ) {
 	m_treeSections = false;
 	return MERGE_ERROR;
@@ -380,8 +383,9 @@ MergeStatus RootDatabaseMerger::copyTree(TFile* source, const string& name) {
     addSections(src_tree,out_tree);
     if ( out_tree == 0 ) {
       out_tree = src_tree->CloneTree(-1,"fast");
-      out_tree->Write();
       if ( s_dbg ) ::printf("+++ Created new Tree %s.\n",out_tree->GetName());
+      out_tree->Write();
+      delete out_tree;
       return MERGE_SUCCESS;
     }
     m_output->GetObject(name.c_str(),out_tree);
@@ -390,8 +394,9 @@ MergeStatus RootDatabaseMerger::copyTree(TFile* source, const string& name) {
       Long64_t out_entries = out_tree->GetEntries();
       out_tree->SetEntries(out_entries+src_entries);
       Bool_t res = cloner.Exec();
-      //out_tree->Write();
       if ( s_dbg ) ::printf("+++ Merged tree: %s res=%d\n",out_tree->GetName(),res);
+      out_tree->Write();
+      delete out_tree;
       return MERGE_SUCCESS;
     }
     else {

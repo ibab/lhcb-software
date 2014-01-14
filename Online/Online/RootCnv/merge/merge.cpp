@@ -1,4 +1,5 @@
 #include "merge/merge.C"
+#include "TError.h"
 #include <cstdlib>
 
 static int usage() {
@@ -11,6 +12,13 @@ static int usage() {
 	   "   -debug       Switch debug flag on.\n"
 	   );
   return 1;
+}
+
+static ErrorHandlerFunc_t s_err = 0;
+static void err_handler(Int_t level, Bool_t abort_bool, const char *location, const char *msg)
+{
+  if ( msg && strstr(msg,"no dictionary for class") ) return;
+  s_err(level,abort_bool, location, msg);
 }
 
 int main(int argc, char** argv) {
@@ -48,6 +56,7 @@ int main(int argc, char** argv) {
     return usage();
   }
   gROOT->SetBatch(kTRUE);
+  s_err = SetErrorHandler(err_handler);
   for(size_t i=0; i<input.size();++i)  {
     const string& in = input[i];
     bool do_fixup = fixup && ((i+1)==input.size());
