@@ -28,6 +28,7 @@ private:
   std::vector<std::string> m_toolNames;
   std::list<IExtraInfoTool*> m_tools;
   int m_maxLevel;
+  std::vector<std::string> m_daughterLocations;
   
   void fill(const LHCb::Particle* top, LHCb::Particle* c, int level);
 

@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-01-14 - Anton Poluektov 
+ - Modify AddExtraInfo to only store ExtraInfo for the daughter particles 
+   in the specified list of locations when recursing the decay tree. 
+
 !========================= DaVinciTools v23r11 2013-10-29 =========================
 
 ! 2013-10-14 - Chris Jones

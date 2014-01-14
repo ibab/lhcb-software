@@ -25,6 +25,7 @@ DECLARE_ALGORITHM_FACTORY( AddExtraInfo )
 {
   declareProperty("Tools", m_toolNames, "Names of ExtraInfoTools" );
   declareProperty("MaxLevel", m_maxLevel = 0, "Maximum recursion level");
+  declareProperty("DaughterLocations", m_daughterLocations, "Locations of daughters"); 
 }
 
 //=======================================================================
@@ -93,32 +94,59 @@ StatusCode AddExtraInfo::execute()
 
 void AddExtraInfo::fill(const Particle* top, Particle* c, int level) {
 
-  std::list<IExtraInfoTool*>::iterator iTool;
+  std::string c_location = c && c->parent() && c->parent()->registry() ?
+                           c->parent()->registry()->identifier() : "NotInTES"; 
 
-  // Calculate extra information using each tool
-  for (iTool = m_tools.begin(); iTool != m_tools.end(); iTool++) {
+  bool isInDaughters = false; 
 
-    StatusCode sc = (*iTool)->calculateExtraInfo(top, c);
-    if (sc.isFailure()) {
-      warning() << "Error calculating extra info" << endreq;
-      continue;
+  // For particles other than top of the decay tree, 
+  // check if they are in the list of daughter locations
+  if (c != top) {
+
+    std::vector<std::string>::const_iterator iDaughterLocation = m_daughterLocations.begin(); 
+    for (; iDaughterLocation != m_daughterLocations.end(); iDaughterLocation++) {
+      if (c_location.compare(*iDaughterLocation) == 0) {
+        isInDaughters = true; 
+        break;
+      }
     }
+  }
 
-    int index = (*iTool)->getFirstIndex();
+  if (c == top || isInDaughters) {
 
-    for (int i=0 ; i < (*iTool)->getNumberOfParameters(); i++ ) {
-      std::string name;
-      double value;
+    if (msgLevel(MSG::DEBUG)) debug() << "Filling ExtraInfo for particle at " << c_location << endreq; 
 
-      int result = (*iTool)->getInfo(index+i, value, name);
+    // Calculate extra information using each tool
+    std::list<IExtraInfoTool*>::iterator iTool;
+    for (iTool = m_tools.begin(); iTool != m_tools.end(); iTool++) {
 
-      if (result) {
-        c->addInfo( index+i, value);
-        if (msgLevel(MSG::DEBUG)) debug() << "Added extra info: " << name << "=" << value << endreq;
+      StatusCode sc = (*iTool)->calculateExtraInfo(top, c);
+      if (sc.isFailure()) {
+        warning() << "Error calculating extra info" << endreq;
+        continue;
       }
 
-    }
+      int index = (*iTool)->getFirstIndex();
 
+      for (int i=0 ; i < (*iTool)->getNumberOfParameters(); i++ ) {
+        std::string name;
+        double value;
+
+        int result = (*iTool)->getInfo(index+i, value, name);
+
+	if (c->hasInfo( index+i) ) {
+	  warning() << "Particle at " << c_location << " : rewriting ExtraInfo at key=" << index+i << endreq;
+	}
+
+        if (result) {
+          c->addInfo( index+i, value);
+          if (msgLevel(MSG::DEBUG)) debug() << "Added extra info: " << name << "=" << value << endreq;
+        }
+
+      }
+    }
+  } else {
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Particle at " << c_location << " not in the list, skipping" << endreq; 
   }
 
   // If we reached the maximum recursion level, we're done
