@@ -15,7 +15,7 @@ Deferred HLT2 is now much more similar to concurrent HLT2, but there are still s
 
 In HLT:
 - Hlt/Tracking v11r0
- - See task #49515. HLT1 Velo reco is now identical to HLT2.
+ - See task #49515. Up-front HLT1 Velo reco is now identical to HLT2.
 
 
 In MOORE:
