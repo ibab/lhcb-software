@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2014-01-13 - Marco Cattaneo
+ - Remove support for VL
+
 !========================= TrackProjectors v2r34 2013-02-14 =========================
 ! 2013-02-01 - Sascha Stahl
  - Added VL projector in selector.

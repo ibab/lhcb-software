@@ -1,6 +1,6 @@
 #============================================================================
 # Created    : 2005-03-10
-# Maintainer : Jose Hernando, Eduardo Rodrigues
+# Maintainer : Wouter Hulsbergen
 #============================================================================
 package           TrackProjectors
 version           v2r34
@@ -12,8 +12,7 @@ branches          cmt doc src
 include_path      none
 
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages.
 #============================================================================
 use   GaudiAlg        v*
 use   GSL             v*     LCG_Interfaces
@@ -29,7 +28,6 @@ use   OTDet           v*     Det
 use   STDet           v*     Det
 use   VeloDet         v*     Det
 use   VPDet           v*     Det
-use   VLDet           v*     Det
 
 #============================================================================
 # Component library building rule
