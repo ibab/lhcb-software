@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2014-01-13 - Marco Cattaneo
+ - Remove support for VL
+
 ! 2013-07-18 - Marco Clemencic
  - Minor change.
 

@@ -78,7 +78,6 @@ class LHCbApp(LHCbConfigurableUser):
         "ut"         : "UT", 
         "ft"         : "FT", 
         "vp"         : "VP", 
-        "vl"         : "VL", 
         "rich"       : "Rich", 
         "richpmt"    : "RichPmt", 
         "rich1"      : "Rich1", 
