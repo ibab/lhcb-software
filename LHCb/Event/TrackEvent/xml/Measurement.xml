@@ -31,14 +31,13 @@
    *   OT       : OT measurement in the seeding stations
    *   Muon     : Muon measurement
    *   VP       : VP x,y measurement
-   *   VL       : VL measurement
    *   UT       : UT measurement
    *
    */
 -->
       <enum
         name    = 'Type'
-        value   = 'Unknown,VeloR,VeloPhi,VeloLiteR,VeloLitePhi,TT,IT,OT,Muon, TTLite, ITLite,VPLite,Calo,Origin,FT,VLR,VLPhi,VLLiteR,VLLitePhi,UT,UTLite'
+        value   = 'Unknown,VeloR,VeloPhi,VeloLiteR,VeloLitePhi,TT,IT,OT,Muon, TTLite, ITLite,VPLite,Calo,Origin,FT,UT=19,UTLite'
         desc    = 'enumerator for the type of Measurement'
         access  = 'PUBLIC'
         strTypConv = 'TRUE' 

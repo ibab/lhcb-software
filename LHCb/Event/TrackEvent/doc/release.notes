@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-------------------------------------------------------------------------------
 
+! 2014-01-13 - Marco Cattaneo
+ - Remove VL measurement types
+
 !========================= TrackEvent v5r23 2013-12-09 =========================
 ! 2013-11-19 - Michel De Cian
  - Add histories for upgrade, remove TrackVeloUT history (not used).
