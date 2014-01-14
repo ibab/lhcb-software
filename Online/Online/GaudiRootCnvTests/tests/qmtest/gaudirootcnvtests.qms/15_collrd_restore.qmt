@@ -5,7 +5,7 @@
 	<text>-p</text><text>3</text>
 	<text>-n</text>
 	<text>-i</text><text>collrd.checkpoint</text>
-	<text>-l</text><text>/tmp/checkpoint</text>
+	<text>-l</text><text>./checkpoint</text>
   </set></argument>
 
   <argument name="unsupported_platforms"><set>

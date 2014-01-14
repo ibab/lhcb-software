@@ -12,4 +12,3 @@ CheckpointSvc.CheckpointSaveFlags = 2;
 CheckpointSvc.CheckpointLibs      = "/dev/shm/checkpoint";
 CheckpointSvc.InvokeIncident      = true;
 CheckpointSvc.ConnectToDIM        = false;
-
