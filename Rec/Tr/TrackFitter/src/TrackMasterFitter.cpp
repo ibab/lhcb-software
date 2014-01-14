@@ -1,7 +1,3 @@
-#ifdef _WIN32
-#pragma warning ( disable : 4355 ) // This used in initializer list, needed for ToolHandles
-#endif
-
 // Include files
 // -------------
 // from Gaudi
@@ -433,10 +429,6 @@ namespace {
     case LHCb::Measurement::Calo: rc = Unknown; break;
     case LHCb::Measurement::Origin : rc = Unknown; break;
     case LHCb::Measurement::FT : rc = T; break;
-    case LHCb::Measurement::VLR : rc = VeloR; break;
-    case LHCb::Measurement::VLPhi : rc = VeloPhi; break;
-    case LHCb::Measurement::VLLiteR : rc = VeloR; break;
-    case LHCb::Measurement::VLLitePhi : rc = VeloPhi; break;
     case LHCb::Measurement::UT : rc = TT; break;
     case LHCb::Measurement::UTLite : rc = TT; break;
     }

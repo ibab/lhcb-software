@@ -91,13 +91,9 @@ def ConfiguredMasterFitter( Name,
     if LiteClusters:
         from Configurables import (MeasurementProviderT_MeasurementProviderTypes__VeloLiteR_,
                                    MeasurementProviderT_MeasurementProviderTypes__VeloLitePhi_,
-                                   MeasurementProviderT_MeasurementProviderTypes__VLLiteR_,
-                                   MeasurementProviderT_MeasurementProviderTypes__VLLitePhi_,
                                    MeasurementProviderT_MeasurementProviderTypes__TTLite_,
                                    MeasurementProviderT_MeasurementProviderTypes__ITLite_,
                                    MeasurementProviderT_MeasurementProviderTypes__UTLite_)
-        fitter.MeasProvider.VLRProvider = MeasurementProviderT_MeasurementProviderTypes__VLLiteR_()
-        fitter.MeasProvider.VLPhiProvider = MeasurementProviderT_MeasurementProviderTypes__VLLitePhi_()
         fitter.MeasProvider.VeloRProvider = MeasurementProviderT_MeasurementProviderTypes__VeloLiteR_()
         fitter.MeasProvider.VeloPhiProvider = MeasurementProviderT_MeasurementProviderTypes__VeloLitePhi_()
         fitter.MeasProvider.TTProvider = MeasurementProviderT_MeasurementProviderTypes__TTLite_()
@@ -112,11 +108,10 @@ def ConfiguredMasterFitter( Name,
     if hasattr(LHCbApp(),"Detectors"):
         if LHCbApp().isPropertySet("Detectors"):
             subDets = LHCbApp().upgradeDetectors()
-            useUpgrade = bool([det for det in subDets if det in ['VP','VL','UT','FT']])            
+            useUpgrade = bool([det for det in subDets if det in ['VP','UT','FT']])            
             if useUpgrade:
                 fitter.MeasProvider.IgnoreVelo = True
                 fitter.MeasProvider.IgnoreVP = True
-                fitter.MeasProvider.IgnoreVL = True
                 fitter.MeasProvider.IgnoreTT = True
                 fitter.MeasProvider.IgnoreUT = True
                 fitter.MeasProvider.IgnoreIT = True
@@ -125,8 +120,6 @@ def ConfiguredMasterFitter( Name,
 
                 if ("VP" in subDets):
                     fitter.MeasProvider.IgnoreVP = False
-                if ("VL" in subDets):
-                    fitter.MeasProvider.IgnoreVL = False
                 if ("FT" in subDets):
                     fitter.MeasProvider.IgnoreFT = False
                 if ("UT" in subDets):
