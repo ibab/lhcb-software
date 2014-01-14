@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2014-01-13 - Marco Cattaneo
+ - Remove support for VL
+
 !========================= TrackTools v4r27 2013-12-10 =========================
 ! 2013-12-05 Thomas Bird
  - Added the VP Expectation class

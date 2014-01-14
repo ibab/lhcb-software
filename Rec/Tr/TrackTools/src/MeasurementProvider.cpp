@@ -11,11 +11,6 @@
 // local
 #include "MeasurementProvider.h"
 
-// Disable warning on windows about using 'this' in constructors
-#ifdef _WIN32
-#pragma warning ( disable:4355 )
-#endif
-
 using namespace LHCb;
 
 //-----------------------------------------------------------------------------
@@ -36,9 +31,6 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
     m_veloRProvider(  "MeasurementProviderT<MeasurementProviderTypes::VeloR>/VeloRMeasurementProvider", this ),
     m_veloPhiProvider("MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/VeloPhiMeasurementProvider", this ),
     m_vpProvider(     "VPLiteMeasurementProvider", this ),
-    //m_vlProvider(     "VLMeasurementProvider", this ), 
-    m_vlRProvider(     "MeasurementProviderT<MeasurementProviderTypes::VLR>/VLRMeasurementProvider", this ), 
-    m_vlPhiProvider(     "MeasurementProviderT<MeasurementProviderTypes::VLPhi>/VLPhiMeasurementProvider", this ), 
     m_ttProvider(     "MeasurementProviderT<MeasurementProviderTypes::TT>/TTMeasurementProvider", this ),
     m_utProvider(     "MeasurementProviderT<MeasurementProviderTypes::UT>/UTMeasurementProvider", this ),
     m_itProvider(     "MeasurementProviderT<MeasurementProviderTypes::IT>/ITMeasurementProvider", this ),
@@ -49,7 +41,6 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareInterface<IMeasurementProvider>(this);
   declareProperty( "IgnoreVelo", m_ignoreVelo = false );
   declareProperty( "IgnoreVP",   m_ignoreVP   = true ); // VP does not exist in default detector
-  declareProperty( "IgnoreVL",   m_ignoreVL   = true ); // VL does not exist in default detector
   declareProperty( "IgnoreTT",   m_ignoreTT   = false );
   declareProperty( "IgnoreUT",   m_ignoreUT   = true );
   declareProperty( "IgnoreIT",   m_ignoreIT   = false );
@@ -61,8 +52,6 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareProperty( "VeloRProvider", m_veloRProvider ) ;
   declareProperty( "VeloPhiProvider", m_veloPhiProvider ) ;
   declareProperty( "VPProvider", m_vpProvider ) ;
-  declareProperty( "VLRProvider", m_vlRProvider ) ;
-  declareProperty( "VLPhiProvider", m_vlPhiProvider ) ;
   declareProperty( "TTProvider", m_ttProvider ) ;
   declareProperty( "UTProvider", m_utProvider ) ;
   declareProperty( "ITProvider", m_itProvider ) ;
@@ -103,18 +92,6 @@ StatusCode MeasurementProvider::initialize()
     sc = m_vpProvider.retrieve() ;
     if (sc.isFailure()) return sc;  
     m_providermap[LHCb::Measurement::VPLite] = &(*m_vpProvider) ;
-  }
-
-  if (!m_ignoreVL) {
-    sc = m_vlRProvider.retrieve();
-    if (sc.isFailure()) return sc;
-    m_providermap[LHCb::Measurement::VLR] = &(*m_vlRProvider);
-
-    sc = m_vlPhiProvider.retrieve();
-    if (sc.isFailure()) return sc;
-    m_providermap[LHCb::Measurement::VLPhi] = &(*m_vlPhiProvider);
-
-
   }
 
   if(!m_ignoreTT) {
@@ -171,15 +148,7 @@ StatusCode MeasurementProvider::finalize()
   if(!m_ignoreVP) {
     sc = m_vpProvider.release() ;
     if (sc.isFailure()) return sc;
-  }
-  if (!m_ignoreVL) {
-    sc = m_vlRProvider.release();
-    if (sc.isFailure()) return sc;
-    sc = m_vlPhiProvider.release();
-    if (sc.isFailure()) return sc;
-    
-  }
-  
+  }  
   if(!m_ignoreTT) {
     sc = m_ttProvider.release() ;
     if (sc.isFailure()) return sc;
@@ -271,10 +240,7 @@ inline LHCb::Measurement::Type measurementtype(const LHCb::LHCbID& id)
   case LHCb::LHCbID::Velo: 
     rc = id.isVeloR() ? LHCb::Measurement::VeloR : LHCb::Measurement::VeloPhi ;
     break ;
-  case LHCb::LHCbID::VP:      rc = LHCb::Measurement::VPLite ; break ;
-  case LHCb::LHCbID::VL: 
-    rc = id.isVLR() ? LHCb::Measurement::VLR : LHCb::Measurement::VLPhi ;
-    break ;
+  case LHCb::LHCbID::VP:      rc = LHCb::Measurement::VPLite  ; break ;
   case LHCb::LHCbID::TT:      rc = LHCb::Measurement::TT      ; break ;
   case LHCb::LHCbID::UT:      rc = LHCb::Measurement::UT      ; break ;
   case LHCb::LHCbID::IT:      rc = LHCb::Measurement::IT      ; break ;

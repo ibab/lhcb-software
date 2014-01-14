@@ -8,7 +8,6 @@ gaudi_depends_on_subdirs(Calo/CaloUtils
                          Det/OTDet
                          Det/RichDet
                          Det/STDet
-                         Det/VLDet
                          Det/VPDet
                          Det/VeloDet
                          Event/DigiEvent
@@ -32,5 +31,5 @@ find_package(GSL)
 gaudi_add_module(TrackTools
                  src/*.cpp
                  INCLUDE_DIRS GSL Event/DigiEvent OT/OTDAQ Tf/PatKernel Tr/TrackInterfaces
-                 LINK_LIBRARIES GSL CaloUtils MuonDetLib OTDetLib RichDetLib STDetLib VLDetLib VPDetLib VeloDetLib TrackEvent GaudiAlgLib GaudiGSLLib LHCbKernel PartPropLib RelationsLib MuonInterfacesLib STKernelLib TsaKernel TrackFitEvent TrackKernel)
+                 LINK_LIBRARIES GSL CaloUtils MuonDetLib OTDetLib RichDetLib STDetLib VPDetLib VeloDetLib TrackEvent GaudiAlgLib GaudiGSLLib LHCbKernel PartPropLib RelationsLib MuonInterfacesLib STKernelLib TsaKernel TrackFitEvent TrackKernel)
 

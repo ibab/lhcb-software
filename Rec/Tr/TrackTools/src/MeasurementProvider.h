@@ -1,4 +1,3 @@
-// $Id: MeasurementProvider.h,v 1.22 2010-04-13 09:17:45 cocov Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H
 
@@ -56,8 +55,6 @@ private:
   ToolHandle<IMeasurementProvider> m_veloRProvider ;
   ToolHandle<IMeasurementProvider> m_veloPhiProvider ;
   ToolHandle<IMeasurementProvider> m_vpProvider ;
-  ToolHandle<IMeasurementProvider> m_vlRProvider ;
-  ToolHandle<IMeasurementProvider> m_vlPhiProvider ;
   ToolHandle<IMeasurementProvider> m_ttProvider ;
   ToolHandle<IMeasurementProvider> m_utProvider ;
   ToolHandle<IMeasurementProvider> m_itProvider ;
@@ -67,7 +64,6 @@ private:
   
   bool m_ignoreVelo;    ///< Ignore Velo hits
   bool m_ignoreVP;      ///< Ignore VP hits
-  bool m_ignoreVL;      ///< Ignore VL hits
   bool m_ignoreTT;      ///< Ignore TT hits
   bool m_ignoreUT;      ///< Ignore UT hits
   bool m_ignoreIT;      ///< Ignore IT hits
