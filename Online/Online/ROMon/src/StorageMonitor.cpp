@@ -197,16 +197,16 @@ void StorageMonitor::extractData(const Nodeset& ns) {
         continue;
 
       ++m.buffers;
-      switch(b) {
-      case EVT_BUFFER:
+      //switch(b) {
+      //case EVT_BUFFER:
         m.inUse  = 1;
         m.evtIN  = ctrl.tot_produced;
         m.space = float(ctrl.i_space)/float(ctrl.bm_size);
         m.slots = float(ctrl.p_emax-ctrl.i_events)/float(ctrl.p_emax);
-        break;
-      default:
-        continue;
-      }
+	//  break;
+	//default:
+	//  continue;
+	//}
       m.minIN = numeric_limits<int>::max();
       m.maxIN = numeric_limits<int>::min();
       for (MBMBuffer::Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
@@ -224,6 +224,7 @@ void StorageMonitor::extractData(const Nodeset& ns) {
             m.senders[nam] = nevt;
             m.evtOUT      += nevt;
           }
+	  break;
         case 'S':
           // Senders to streaming layer  SNDxxxx
           if ( p[1]=='N' && p[2]=='D' )  {

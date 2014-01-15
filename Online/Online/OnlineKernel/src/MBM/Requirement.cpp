@@ -34,11 +34,12 @@ void MBM::Requirement::parse(const std::string& reqstring)
   //  VetoMask=0x,0x,0x,0x;MaskType=ANY/ALL;UserType=USER/VIP/ONE;
   //  Frequency=MANY/PERC;Perc=20.5"
   for(int i=0; i<ikey; i++ )  {
-    char* keyw = strtok(items[i],"=");
-    for (unsigned int j=0;j<strlen(keyw);j++)  {
+    char* keyw = ::strtok(items[i],"=");
+    if ( !keyw ) break;
+    for (unsigned int j=0;j<::strlen(keyw);j++)  {
       keyw[j] = char(::toupper(keyw[j]));
     }
-    char* values = strtok(NULL,"=");
+    char* values = ::strtok(NULL,"=");
     if ( ::strcmp(keyw, "EVTYPE") == 0 )    {
       ::sscanf(values,"%d",&evtype);
       continue;

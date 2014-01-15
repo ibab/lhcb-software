@@ -358,7 +358,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_stack(SysInfo* sys,
   sys->arg0        = mem_address_t(argv[0]);
   m_memcpy(sys->arg0String,argv[0],m_strlen(argv[0])+1);
   if ( ee ) {
-    for(char* ep=*ee; *ep && *ee; ep=*(++ee)) {
+    for(char* ep=*ee; *ee && *ep; ep=*(++ee)) {
       if ( ep ) {
         if ( 0 == m_strncmp(ep,"UTGID=",6) ) {
           sys->utgid = (char*)ep + 6;
@@ -423,9 +423,11 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_set_utgid(SysInfo* sys, c
 
 /// Force process UTGID if availible
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_sys_force_utgid(SysInfo* sys, const char* new_utgid) {
-  int len = m_strlen(new_utgid);
+  int len = new_utgid ? m_strlen(new_utgid) : 0;
   if ( 0 == new_utgid ) {
     mtcp_output(MTCP_FATAL,"New UTGID pointer NULL.\n");
+    len = 0;
+    new_utgid="";
   }
   else if ( sys->utgid == 0 ) {
     mtcp_output(MTCP_WARNING,"UTGID pointer NULL adding UTGID=%s to local environment.\n", new_utgid);

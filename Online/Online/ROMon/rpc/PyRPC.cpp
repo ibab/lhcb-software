@@ -293,16 +293,20 @@ Arg& Arg::load(const string& v, const string& tag) {
   if ( !item.empty() )  {
     if ( debug() ) cout << endl << "ITEM:" << item << endl << "End_ITEM" << endl;
     switch(item[1]) {
-    case 'i':                                        // <int>
+    case 'i':  {                                   // <int>
+      string v = Item(item,"int").value();
       type = INT64;
-      data.i64val = ::atol(Item(item,"int").c_str());
+      data.i64val = ::atol(v.c_str());
       return *this;
-    case 'd':                                        // <double>, <dateTime.iso8601>
+    }
+    case 'd':                                      // <double>, <dateTime.iso8601>
       switch(item[2]) {
-    case 'o':                                      // double
+    case 'o':  {                                   // double
+      string v = Item(item,"double").value();
       type = DOUBLE;
-      data.dval = ::atof(Item(item,"double").c_str());
+      data.dval = ::atof(v.c_str());
       return *this;
+    }
     case 'a':
       return assign(TIME,&Time().load(Item(item,"dateTime.iso8601").value()));
     default:
@@ -326,10 +330,13 @@ Arg& Arg::load(const string& v, const string& tag) {
     case 'a':                                        // <array> Load tuple/list
       return assign(TUPLE,&Tuple().load(Item(item,"data")));
     case 's':                                        // <string>
-      if ( strncmp(&item[1],"string",6)==0)
-        return assign(STRING,Item(item,"string").c_str());
-      else if ( strncmp(&item[1],"struct",6)==0)     // Load dictionary
+      if ( strncmp(&item[1],"string",6)==0)  {
+	string v = Item(item,"string").value();
+        return assign(STRING,v.c_str());
+      }
+      else if ( strncmp(&item[1],"struct",6)==0) {   // Load dictionary
         return assign(DICT,&Dict().load(Item(item,"struct")));
+      }
     default:
       break;
     }

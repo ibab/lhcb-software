@@ -62,8 +62,7 @@ void test_dump_maps()   {
   char* buff = 0, *p, *ptr;
   size_t len=0;
   while( (rc=::getline(&buff,&len,fd)) > 0 ) {
-    ptr = buff;
-    if ( 0 == (ptr=strstr(ptr,"/tmp/")) ) {
+    if ( 0 == strstr(buff,"/tmp/") ) {
       for(p=ptr=strchr(buff,'/'); p; ptr=p+1, p=strchr(ptr,'/'));
     }
     // No printout. This confuses QMTest completely

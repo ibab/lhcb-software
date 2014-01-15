@@ -32,7 +32,7 @@ namespace LHCb  {
     static int i_receive_evt(const amsuc_info* i, void* p) {
       AmsDataReceiver* r = (AmsDataReceiver*)p;
       size_t len = i->length;
-      void* buff = ::operator new(i->length);
+      void* buff = 0; // Only when using amsc_read_message --> ::operator new(i->length);
       char source[128];
       unsigned int facility;
       int sc = ::amsc_read_message_long(&buff,&len,source,&facility,0);

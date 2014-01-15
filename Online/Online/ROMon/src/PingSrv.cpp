@@ -39,7 +39,7 @@ namespace ROMon {
     /// Initializing constructor
     NodePinger(const std::string& nam, const std::vector<std::string>& conns);
     /// Default destructor
-    virtual ~NodePinger() { if ( m_ptr ) delete [] m_ptr; }
+    virtual ~NodePinger();
     /// Access to own name
     const std::string& name() const { return m_name; }
     /// Access to connections container
@@ -100,6 +100,12 @@ NodePinger::NodePinger(const string& nam, const std::vector<std::string>& conns)
     (*ci).status = -1;
     ci = cs.add(ci);
   }
+}
+
+/// Default destructor
+NodePinger::~NodePinger() { 
+  if ( m_connections ) m_connections->~Connectionset();
+  if ( m_ptr ) delete [] m_ptr; 
 }
 
 /// Start the monitoring object

@@ -1,4 +1,5 @@
 #include "merge/extractEvt.C"
+#include <stdexcept>
 #include <cstdlib>
 
 static int usage() {
@@ -53,9 +54,18 @@ int main(int argc, char** argv) {
     return usage();
   }
   gROOT->SetBatch(kTRUE);
-  if ( extract_event(input.c_str(),output.c_str(),evt_num) != EXTRACT_SUCCESS ) {
-    printf("\nERROR: Event extraction from file %s failed.\n",input.c_str());
-    return 1;
+  try {
+    if ( extract_event(input.c_str(),output.c_str(),evt_num) != EXTRACT_SUCCESS ) {
+      ::printf("\nERROR: Event extraction from file %s failed.\n",input.c_str());
+      return 1;
+    }
+    return 0;
   }
-  return 0;
+  catch (const std::exception& e)  {
+    ::printf("\nERROR: Event extraction from file %s failed [%s]\n",input.c_str(),e.what());
+  }
+  catch( ... )  {
+    ::printf("\nERROR: Event extraction from file %s failed [unknown reason]\n",input.c_str());
+  }
+  return 1;
 }

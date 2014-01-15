@@ -73,6 +73,7 @@ PartitionListener::PartitionListener(Interactor* par, const string& nam, const s
         }
       }
     }
+    ::closedir(dir);
     IocSensor::instance().send(parent(),CMD_CONNECT,f.release());
     return;
   }

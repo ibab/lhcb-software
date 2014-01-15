@@ -58,7 +58,7 @@ static const char* _metaStateName(int state)   {
     MakeName(MACH_INACTION);         /// Executing state enter action
     MakeName(MACH_FAIL);             /// Code used on failure
 #undef MakeName
-  default: return "UNKNOWN";
+  default:    break;
   }
   return "UNKNOWN";
 }

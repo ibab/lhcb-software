@@ -40,10 +40,8 @@ Rule::Rule(const Type* typ, const Transition* tr, Direction dir)
   : TypedObject(typ,makeName(tr->type(),tr->from(),tr->to())), 
     m_currState(0), m_targetState(0), m_transition(tr), m_direction(dir)
 {
-  if ( tr ) {
-    m_currState = tr->from();
-    m_targetState = tr->to();
-  }
+  m_currState = tr->from();
+  m_targetState = tr->to();
 }
 
 /// Standatrd destructor  
@@ -72,7 +70,12 @@ const Transition* Rule::applies(const Transition* transition, const State* slave
 /// Check if a rule applies to a given slave state
 const Transition* Rule::applies(const State* slave_state, Direction direction_flag)  const  {
   const State* to = targetState();
-  if ( slave_state->type() == m_type && m_direction == direction_flag )  {
+  if ( !slave_state )  {
+    display(NOLOG,c_name(),"+++RULE: Ignore rule on slave for transition -> %s",
+	    to ? to->c_name() : "Unknown");
+    return 0;
+  }
+  else if ( slave_state->type() == m_type && m_direction == direction_flag )  {
     // If required slave state check it!
     const Transition* tr = m_transition;
     if ( tr )  {

@@ -49,7 +49,7 @@ TestAutoTrans& TestAutoTrans::configDAQ()  {
 
 void TestAutoTrans::print() const  {
   char txt[32]; 
-  ::sprintf(txt,"%-8d",cnt);
+  ::snprintf(txt,sizeof(txt),"%-8d",cnt);
   PrintObject(string(txt))(MachineHandle(m_machine)); 
 }
 

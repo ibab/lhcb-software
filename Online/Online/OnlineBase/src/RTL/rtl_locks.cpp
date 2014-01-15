@@ -43,7 +43,7 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   ::memset(h->name,0,sizeof(h->name));
   bool created = false;
   if ( mutex_name )  {
-    ::sprintf(h->name,"/%s",mutex_name);
+    ::snprintf(h->name,sizeof(h->name),"/%s",mutex_name);
     h->name[sizeof(h->name)-1] = 0;
   }
   h->held = 0;

@@ -43,6 +43,12 @@ static void backSpaceCallBack (int menu,int /* cmd */,int par,const void* param)
   ev.target->handle(ev);
 }
 
+static char* string_copy(char* to, const char* from, size_t len)  {
+  char* c = ::strncpy(to,from,len);
+  to[len-1] = 0;
+  return c;
+}
+
 static const char* s_slvList[]    = {"NativeDimSlave","FmcSlave"};
 static const char* s_partList[]   = {"LHCb","LHCb1","LHCb2","FEST","RICH","VELO"};
 static const char* s_modeList[]   = {"NORMAL","FORKING","CHECKPOINTING"};
@@ -55,18 +61,18 @@ UPI::ControlMenu::ControlMenu(const string& config, int prt)
 {
   string line = "----------------------------------------------------------------------------";
   m_id = UpiSensor::instance().newID();
-  ::strcpy(m_killCmd,   "Kill");
-  ::strcpy(m_pauseCmd,  "Pause");
-  ::strcpy(m_errorCmd,  "Error");
-  ::strcpy(m_tmoCmd,    "Timeout");
-  ::strcpy(m_anyCmd,    s_cmdList[0]);
-  ::strcpy(m_modeCmd,   s_modeList[0]);
-  ::strcpy(m_slaveCmd,  s_cmdList[0]);
-  ::strcpy(m_stateCmd,  s_stateList[0]);
-  ::strcpy(m_slvTypeCmd,s_slvList[0]);//[m_config_exists ? 1 : 0]);
-  ::strcpy(m_runinfoCmd,"OnlineEnv.py");
-  ::strcpy(m_partitionCmd,s_partList[0]);
-  ::strcpy(m_configCmd,config.empty() ? "Tasklist.xml" : config.c_str());
+  string_copy(m_killCmd,   "Kill", sizeof(m_killCmd));
+  string_copy(m_pauseCmd,  "Pause", sizeof(m_pauseCmd));
+  string_copy(m_errorCmd,  "Error", sizeof(m_errorCmd));
+  string_copy(m_tmoCmd,    "Timeout", sizeof(m_tmoCmd));
+  string_copy(m_anyCmd,    s_cmdList[0], sizeof(m_anyCmd));
+  string_copy(m_modeCmd,   s_modeList[0], sizeof(m_modeCmd));
+  string_copy(m_slaveCmd,  s_cmdList[0], sizeof(m_slaveCmd));
+  string_copy(m_stateCmd,  s_stateList[0], sizeof(m_stateCmd));
+  string_copy(m_slvTypeCmd,s_slvList[0], sizeof(m_slvTypeCmd));//[m_config_exists ? 1 : 0]);
+  string_copy(m_runinfoCmd,"OnlineEnv.py", sizeof(m_runinfoCmd));
+  string_copy(m_partitionCmd,s_partList[0], sizeof(m_partitionCmd));
+  string_copy(m_configCmd,config.empty() ? "Tasklist.xml" : config.c_str(), sizeof(m_configCmd));
 
   ::upic_open_window();
   ::upic_open_menu(m_id,0,0,"FSM Controller test facility",RTL::processName().c_str(),RTL::nodeName().c_str());
@@ -132,7 +138,7 @@ void UPI::ControlMenu::write_message(const char* fmt,...)   {
 /// Add lines and commands to menu for each task
 void UPI::ControlMenu::addTaskMenuLines(int which, const string& name)  {
   char text[256];
-  ::sprintf(text,"%-24s  ^^^^ Force ^^^^^^^ Send to ^^^^^  ^^^^^  ^^^^^^^^^ ",name.c_str());
+  ::snprintf(text,sizeof(text),"%-24s  ^^^^ Force ^^^^^^^ Send to ^^^^^  ^^^^^  ^^^^^^^^^ ",name.c_str());
   ::upic_set_param(m_killCmd,  1, "A4", m_killCmd,  0,0,0,0,1);
   ::upic_set_param(m_tmoCmd,   2, "A7", m_tmoCmd,   0,0,0,0,1);
   ::upic_set_param(m_pauseCmd, 3, "A5", m_pauseCmd, 0,0,0,0,1);

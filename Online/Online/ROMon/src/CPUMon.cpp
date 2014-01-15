@@ -261,6 +261,7 @@ Connectionset* Connectionset::reset() {
 NodeSummary::NodeSummary(const std::string& n) {
   reset();
   ::strncpy(name,n.c_str(),sizeof(name));
+  name[sizeof(name)-1] = 0;
 }
 
 /// Reset data structure content

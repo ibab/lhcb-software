@@ -105,6 +105,7 @@ StatusCode LHCb::OnlineService::throwError(const char* msg,...) const  {
     va_start(args, msg);
     char buff[1024];
     size_t nSize = vsnprintf(buff, sizeof(buff), msg, args);
+    va_end(args);
     err << buff << endmsg;
     if ( nSize == sizeof(buff) )  {
       err << MSG::FATAL << "Incomplete message - buffer overrun." << endreq;
@@ -136,6 +137,7 @@ StatusCode LHCb::OnlineService::error(const char* msg,...)   const {
     va_start(args, msg);
     char buff[1024];
     size_t nSize = vsnprintf(buff, sizeof(buff), msg, args);
+    va_end(args);
     err << buff << endmsg;
     if ( nSize == sizeof(buff) )  {
       err << MSG::FATAL << "Incomplete message - buffer overrun." << endreq;
@@ -158,6 +160,7 @@ void LHCb::OnlineService::info(const char* msg,...)   const {
     va_start(args, msg);
     char buff[1024];
     size_t nSize = vsnprintf(buff, sizeof(buff), msg, args);
+    va_end(args);
     err << buff << endmsg;
     if ( nSize == sizeof(buff) )  {
       err << MSG::FATAL << "Incomplete message - buffer overrun." << endreq;
@@ -179,6 +182,7 @@ void LHCb::OnlineService::warning(const char* msg,...)   const {
     va_start(args, msg);
     char buff[1024];
     size_t nSize = vsnprintf(buff, sizeof(buff), msg, args);
+    va_end(args);
     err << buff << endmsg;
     if ( nSize == sizeof(buff) )  {
       err << MSG::FATAL << "Incomplete message - buffer overrun." << endreq;
@@ -200,6 +204,7 @@ void LHCb::OnlineService::debug(const char* msg,...)   const {
     va_start(args, msg);
     char buff[1024];
     size_t nSize = vsnprintf(buff, sizeof(buff), msg, args);
+    va_end(args);
     err << buff << endmsg;
     if ( nSize == sizeof(buff) )  {
       err << MSG::FATAL << "Incomplete message - buffer overrun." << endreq;

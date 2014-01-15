@@ -205,31 +205,25 @@ Histo* upic_restore_histo (const char* text, const char* file_name) {
   int path;
 
   upic_init_histos();
-
   h = (Histo*) 0;
-
-  if (file_name)
-  {
+  if (file_name)  {
     t = (char*) list_malloc (strlen(file_name) + 1);
     strcpy (t, file_name);
   }
-  else
-  {
+  else  {
     t = (char*) list_malloc (strlen(text) + 5);
-    strcpy (t, text);
-    strcat (t, ".HIS");
+    ::strcpy (t, text);
+    ::strcat (t, ".HIS");
   }
-  path = open (t, O_RDONLY);
-  if (path != -1)
-  {
-    read (path, &htemp, sizeof(Histo));
+  path = ::open(t, O_RDONLY);
+  if (path != -1)  {
+    ::read (path, &htemp, sizeof(Histo));
     htemp.text  = (char*)text;
     htemp.first = (double*) list_malloc (htemp.bins*sizeof(double));
-    read (path, htemp.first, htemp.bins*sizeof(double));
-
+    ::read (path, htemp.first, htemp.bins*sizeof(double));
     h = (Histo*) upic_copy_histo (&htemp);
-
-    free (htemp.first);
+    ::free (htemp.first);
+    ::close(path);
   }
   free(t);
   return (h);  
@@ -244,19 +238,18 @@ Histo* upic_copy_histo (Histo* h_source)    {
     h = (Histo*) list_add_entry (&Header.first, sizeof(Histo));
     Histo* p = h->prev;
     Histo* n = h->next;
-    int* f = (int *)h->father;
-
+    int*   f = (int *)h->father;
+    size_t l = ::strlen(h_source->text)+1;
     *h = *h_source;
     h->prev = p;
     h->next = n;
     h->father = (Linked_list *)f;
 
-    h->text = (char*) list_malloc (strlen(h_source->text) + 1);
-    strcpy (h->text, h_source->text);
+    h->text = (char*)list_malloc(l);
+    ::strncpy (h->text, h_source->text,l);
     h->disp = 0;
   }
-  else
-  {
+  else    {
     Histo* p;
     Histo* n;
     int* f;
@@ -281,7 +274,7 @@ Histo* upic_copy_histo (Histo* h_source)    {
 
   h->first = (double*) list_malloc (h->bins*sizeof(double));
 
-  memcpy (h->first, h_source->first, h->bins*sizeof(double));
+  ::memcpy (h->first, h_source->first, h->bins*sizeof(double));
 #ifdef SCREEN
   if (h->pasted) upic_display_histo (h, h->row, h->col);
 #else

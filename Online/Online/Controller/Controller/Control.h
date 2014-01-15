@@ -104,8 +104,10 @@ namespace FiniteStateMachine {
       }
       SlaveTag& operator=(const SlaveTag& c) { 
 	if ( this != &c )  {
+	  size_t l = c.line ? strlen(c.line)+1 : 0;
 	  ctrl = c.ctrl; 
-	  line = c.line ? strcpy(new char[strlen(c.line)+1],c.line) : 0; 
+	  if ( line ) delete line;
+	  line = c.line ? strncpy(new char[l],c.line,l) : 0; 
 	  id   = c.id; 
 	  svc  = c.svc; 
 	  name = c.name; 

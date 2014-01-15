@@ -68,7 +68,7 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
   ::memset(h->name,0,sizeof(h->name));
   bool created = false;
   if ( name )  {
-    ::sprintf(h->name,"/%s",name);
+    ::snprintf(h->name,sizeof(h->name),"/%s",name);
     h->name[sizeof(h->name)-1] = 0;
   }
 #if defined(USE_PTHREADS)

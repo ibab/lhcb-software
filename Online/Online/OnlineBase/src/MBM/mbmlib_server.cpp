@@ -167,6 +167,8 @@ ServerBMID_t::ServerBMID_t() : BufferMemory(), client_thread(0) {
   alloc_event_param = 0;
   stop              = false;
   lockid            = 0;
+  clientfd          = 0;
+  num_threads       = 0;
 }
 
 ServerBMID_t::~ServerBMID_t()  {

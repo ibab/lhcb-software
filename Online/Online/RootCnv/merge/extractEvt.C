@@ -173,13 +173,13 @@ using namespace std;
 
 /// Default constructor
 RootEventExtractor::RootEventExtractor()     
-  : m_in(0), m_evt_in(0), m_ref_in(0), m_out(0), m_evt_out(0), m_ref_out(0)
+  : m_in(0), m_evt_in(0), m_ref_in(0), m_out(0), m_evt_out(0), m_ref_out(0), m_localDB_id(0)
 {
 }
 
 /// Initializing constructor directly opening the input file and the output file
 RootEventExtractor::RootEventExtractor(const char* input, const char* output, const char* output_option)
-  : m_in(0), m_evt_in(0), m_ref_in(0), m_out(0), m_evt_out(0), m_ref_out(0)
+  : m_in(0), m_evt_in(0), m_ref_in(0), m_out(0), m_evt_out(0), m_ref_out(0), m_localDB_id(0)
 {
   if ( EXTRACT_SUCCESS != openInput(input) ) {
     throw std::runtime_error("Failed to open input file:"+std::string(input));
@@ -318,7 +318,7 @@ ExtractStatus RootEventExtractor::extract()   {
     for( int i=0; i<br_in->GetEntries(); ++i ) { 
       br_in->GetEntry(i);
       if ( strncmp(text,"PFN=",4) == 0 ) {  // Update PFN entry
-	sprintf(text,"PFN=%s",br_out->GetFile()->GetName());    
+	::snprintf(text,sizeof(text),"PFN=%s",br_out->GetFile()->GetName());    
 	::printf("+++ PFN of the created output file is:%s\n",text);
       }
       else if ( strncmp(text,"FID=",4) == 0 ) {    // Create new FID for new file
@@ -330,8 +330,8 @@ ExtractStatus RootEventExtractor::extract()   {
 	} d;
 	TUUID uuid;
 	uuid.GetUUID(d.buf);
-	sprintf(text,fmt,d.ibuf[0],d.sbuf[2],d.sbuf[3],d.buf[8],d.buf[9],
-		d.buf[10],d.buf[11],d.buf[12],d.buf[13],d.buf[14],d.buf[15]);
+	::snprintf(text,sizeof(text),fmt,d.ibuf[0],d.sbuf[2],d.sbuf[3],d.buf[8],d.buf[9],
+		   d.buf[10],d.buf[11],d.buf[12],d.buf[13],d.buf[14],d.buf[15]);
 	::printf("+++ FID of the created output file is:%s\n",text);
       }
       br_out->Fill();

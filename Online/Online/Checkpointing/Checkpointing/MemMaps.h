@@ -63,6 +63,7 @@ namespace CHECKPOINTING_NAMESPACE {
   public:
     int (*f_map)(const AreaHandler* self,const Area& a, const unsigned char* data, int data_len);
     int (*f_handle)(const AreaHandler* self,int which, const Area& a);
+    /// Initializing constructor
     AreaHandler() : f_map(0), f_handle(0) {}
   };
 
@@ -77,12 +78,14 @@ namespace CHECKPOINTING_NAMESPACE {
     long m_count;
     int  updateCounts(const Area& a);
   public:
+    /// Initializing constructor
     AreaBaseHandler();
     long bytes() const {  return m_bytes; }
     long count() const {  return m_count; }
     static int do_map(const Area&, const unsigned char*, int data_len) 
     {      return data_len;    }
     static int mapArea(const Area& a, const unsigned char* data, int data_len);
+    /// Handler callback
     int handle(int which, const Area& a);
   };
 
@@ -93,7 +96,9 @@ namespace CHECKPOINTING_NAMESPACE {
    */
   class AreaPrintHandler : public AreaBaseHandler {
   public:
+    /// Initializing constructor
     AreaPrintHandler();
+    /// Handler callback
     int handle(int which, const Area& a);
   };
 
@@ -108,7 +113,11 @@ namespace CHECKPOINTING_NAMESPACE {
     int    m_numLibs;
     char** m_libs;
   public:
+    /// Initializing constructor
     AreaLibHandler(int fd);
+    /// Default destructor
+    ~AreaLibHandler();
+    /// Handler callback
     int handle(int which, const Area& a);
     int numLibs() const {  return m_numLibs; }
     void release();
@@ -131,7 +140,9 @@ namespace CHECKPOINTING_NAMESPACE {
     unsigned long highAddr;
 
   public:
+    /// Initializing constructor
     AreaInfoHandler();
+    /// Handler callback
     int handle(int which, const Area& a);
   };
 
@@ -144,7 +155,9 @@ namespace CHECKPOINTING_NAMESPACE {
   protected:
     int m_fd;
   public:
+    /// Initializing constructor
     AreaWriteHandler(int fd);
+    /// Handler callback
     int  handle(int which, const Area& a);
     long bytesWritten() const { return m_bytes; }
   };
@@ -157,7 +170,9 @@ namespace CHECKPOINTING_NAMESPACE {
   class AreaChkptWriteHandler : public AreaWriteHandler {
   public:
     bool m_prev;
+    /// Initializing constructor
     AreaChkptWriteHandler(int fd);
+    /// Handler callback
     int handle(int which, const Area& a);
   };
 
@@ -168,7 +183,9 @@ namespace CHECKPOINTING_NAMESPACE {
    */
   class AreaMapper : public AreaBaseHandler   {
   public:
+    /// Initializing constructor
     AreaMapper();
+    /// Handler callback
     int handle(int, const Area& ) { return 1; }
     static int do_map(const Area& a, const unsigned char* data, int data_len) {
       return mapArea(a,data,data_len);

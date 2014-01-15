@@ -60,7 +60,7 @@ bool DataFile::open() {
   m_fd = ::open(m_name.c_str(),O_RDONLY);
   ::memset(&m_stbuff,0,sizeof(m_stbuff));
   m_pointer = 0;
-  if ( m_fd ) {
+  if ( m_fd != -1 ) {
     if ( 0 == ::fstat(m_fd,&m_stbuff) ) {
       ::lib_rtl_output(LIB_RTL_DEBUG,"Successfully opened file:%s Inode:%u",
                        name().c_str(), m_stbuff.st_ino);
@@ -104,13 +104,14 @@ int DataFile::scan(const DataProcessor& functor) {
     size_t bytes = stbuff.st_size-m_pointer;
     if ( bytes > 0 ) {
       int count = 0;
-      char* buff = new char[bytes];
+      char* buff = new char[bytes+1];
       for(size_t rd=0; rd<bytes; ) {
         int cnt = ::read(m_fd,buff+rd,bytes-rd);
         if ( cnt > 0 ) rd += cnt;
         else if ( errno == EINTR ) continue;
         else break;
       }
+      buff[bytes] = 0;
       for(char *p=buff, *e=buff+bytes; p<e; ) {
         char* q = ::strchr(p,'\n');
         if ( q ) {

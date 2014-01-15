@@ -160,7 +160,7 @@ DataStructure& DataStructure::Add( const DataStructure& ds )  {
     alloc_size = ds.curr_size + curr_size;
     newarray = new DataElem[ alloc_size ];
     for(int i = 0; i < curr_size; i++ ) newarray[i] = array[i];
-    delete array;
+    delete [] array;
     array = newarray;
   }
   for(int i = 0; i < ds.curr_size; i++) array[i + curr_size] = ds.array[i];
@@ -185,11 +185,11 @@ DataStructure& DataStructure::Compress( )   {
 //------------------------------------------------------------------------------
 void DataStructure::Dump( )    {
   char f[] = "ISAFD";
-  printf( "DataStructure = [");
+  ::printf( "DataStructure = [");
   for (int i = 0; i < curr_size; i++ )  {
-    printf("%d%c,", array[i].length, f[array[i].type]); 
+    ::printf("%d%c,", array[i].length, f[array[i].type]); 
   }
-  printf( "]\n");
+  ::printf( "]\n");
 }
 
 //------------------------------------------------------------------------------

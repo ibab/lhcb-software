@@ -300,6 +300,7 @@ struct BootDataProcessor : public DataFile::DataProcessor {
           status.name().c_str(),::lib_rtl_timestr(),host);
       }
     }
+    if ( boot ) boot = 0;
     return true;
   }
 };
@@ -322,7 +323,7 @@ SubfarmBootStatus::~SubfarmBootStatus() {
     m_id = 0;
   }
   if ( m_status ) {
-    delete [] (char*)m_status;
+    delete m_status;
     m_status = 0;
   }
   m_file.close();
@@ -346,7 +347,7 @@ int SubfarmBootStatus::start() {
   if ( ni != inv.nodecollections.end() ) {
     const Inventory::NodeCollection::NodeList& nl = (*ni).second.nodes;
     Inventory::NodeCollection::NodeList::const_iterator niter = nl.begin();
-    m_status = new(new char[sizeof(BootNodeStatus)*(nl.size()+1)+sizeof(BootNodeStatusset)]) BootNodeStatusset(name());
+    m_status = new(::operator new(sizeof(BootNodeStatus)*(nl.size()+1)+sizeof(BootNodeStatusset))) BootNodeStatusset(name());
     string svc_name = s_svcPrefix+strupper(name())+"/TaskSupervisor/Summary";
     if ( s_use_ts ) {
       m_tsID = ::dic_info_service((char*)svc_name.c_str(),TIMED,15,0,0,summaryHandler,(long)this,0,0);

@@ -665,6 +665,7 @@ namespace {
     { net_unsubscribe(m_net,this,1);                         }
   };
 }
+
 static std::string host_name()  {
   char host[64];
   ::gethostname(host,sizeof(host));
@@ -672,8 +673,9 @@ static std::string host_name()  {
   const char* add = inet_ntoa(*(in_addr*)h->h_addr_list[0]);
   return add;
 }
+
 extern "C" int net_send(int argc, char **argv)  {
-  char *wmessage;
+  char *wmessage = 0;
   int count=1, length=256, loop=100000;
   std::string target = "RCV_0", name="SND_0";
 
@@ -707,6 +709,7 @@ extern "C" int net_send(int argc, char **argv)  {
         ::lib_rtl_sleep(100);
       }
     }
+    delete [] wmessage;
   }
   printf("Hit key+Enter to exit ...");
   getchar();

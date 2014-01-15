@@ -37,7 +37,7 @@ extern "C" int lib_rtl_gbl_exithandler() {
 int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* address, bool keep) {
   long siz  = (size/4096)*4096 + (((size%4096)==0) ? 0 : 4096);  //  multiple of page size
   std::auto_ptr<lib_rtl_gbl_desc> h(new lib_rtl_gbl_desc);
-  sprintf(h->name,"/%s",sec_name);
+  ::snprintf(h->name,sizeof(h->name),"/%s",sec_name);
   h->addaux = h.get();
   h->size   = siz;
   *address  = 0;
@@ -46,10 +46,10 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
   h->fd = ::shm_open(h->name,O_RDWR|O_CREAT|O_EXCL,0666);
-  if ( h->fd ) {
+  if ( h->fd != -1 ) {
     char path[1024];
-    sprintf(path,"/dev/shm%s",h->name);
-    chmod(path,0666);
+    ::snprintf(path,sizeof(path),"/dev/shm%s",h->name);
+    ::chmod(path,0666);
     ::ftruncate(h->fd, h->size);
     h->address = ::mmap (0, h->size, sysprot, sysflags, h->fd, 0);
     if ( h->address != MAP_FAILED && h->address != 0 )  {
@@ -111,7 +111,7 @@ int lib_rtl_delete_section(lib_rtl_gbl_t h)    {
 /// Map global section a a specific address
 int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* address)   {
   std::auto_ptr<lib_rtl_gbl_desc> h(new lib_rtl_gbl_desc);
-  sprintf(h->name,"/%s",sec_name);
+  ::snprintf(h->name,sizeof(h->name),"/%s",sec_name);
   h->addaux = h.get();
   *address = 0;
   //::lib_rtl_output(LIB_RTL_DEBUG,"Map global section %s of size:%d\n",h->name, h->size);
@@ -120,8 +120,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
   int sysflags = MAP_SHARED;
   h->fd = ::shm_open(h->name,O_RDWR,0666);
   h->size = (int((size+4095)/4096))*4096;  //  multiple of page size
-  if ( 0 == h->fd )  {
-    ::close(h->fd);
+  if ( -1 == h->fd )  {
     ::shm_unlink(h->name);
     return 0;
   }
@@ -135,9 +134,8 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
     *address = h.release();
     return 1;
   }
-  //int err = lib_rtl_get_error();
-  //::lib_rtl_output(LIB_RTL_DEBUG,"Error mapping section [%s]. Status %d [%s]\n",h->name,err,RTL::errorString(err));
-  if ( h->fd ) ::close(h->fd);
+  // File was already successfully opened
+  ::close(h->fd);
   return 0;
 #elif defined(_WIN32)
   h->size   = (int((size+4095)/4096))*4096;

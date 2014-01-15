@@ -65,8 +65,8 @@ extern "C"
         {
           close ((*i)->m_Handle);
         }
-        tis->m_FileCloseList.erase(i);
         delete (*i);
+        tis->m_FileCloseList.erase(i);
         i = tis->m_FileCloseList.begin();
       }
       tis->UnlockList();

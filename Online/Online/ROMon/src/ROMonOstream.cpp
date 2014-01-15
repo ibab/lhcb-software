@@ -51,7 +51,7 @@ ostream& ROMon::operator<<(ostream& os, const MBMBuffer& b) {
      << " Name:"   << setw(16) << left << b.name
      << " Len:"    << b.length() << endl;
   os << "Control:" << b.ctrl     << endl;
-  os << "Clients:" << b.clients  << endl;
+  os << "Clients:" << b.clients  << endl << right;
   return os;
 }
 
@@ -60,7 +60,7 @@ ostream& ROMon::operator<<(ostream& os, const FSMTask& t) {
      << " UTGID:"  << setw(32) << left << t.name
      << " PID:"    << setw(6)  << t.processID
      << " State:"  << t.state << " -> " << t.targetState << " [" << t.metaState << "]"
-     << " Stamps:" << t.lastCmd << " " << t.doneCmd
+     << " Stamps:" << t.lastCmd << " " << t.doneCmd << right
      << endl;
   return os;
 }

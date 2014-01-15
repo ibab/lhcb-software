@@ -15,7 +15,7 @@ using namespace Checkpointing;
 
 int MMap::create(const char* file_name, long len) {
   int fd = ::open(file_name,O_CREAT|O_TRUNC|O_WRONLY,S_IWUSR|S_IRUSR);
-  if ( fd > 0 ) {
+  if ( fd != -1 ) {
     if ( len < 0 )  {
       m_fd = fd;
       m_addr = 0;
@@ -89,7 +89,7 @@ int MMap::open(const char* file_name) {
   if ( 0 == ::stat(file_name,&buf) ) {
     long len = buf.st_size;
     int fd = ::open(file_name,O_RDONLY);
-    if ( fd > 0 ) {
+    if ( fd != -1 ) {
       if ( fd != chkpt_sys.checkpointFD ) {
 	if (mtcp_sys_dup2 (fd, chkpt_sys.checkpointFD) < 0) {
 	  mtcp_output(MTCP_ERROR,"FileDesc: cannot mmap file %s to fid:%d. %d:%s\n",

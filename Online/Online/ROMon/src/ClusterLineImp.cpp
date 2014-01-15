@@ -54,13 +54,15 @@ namespace ROMon {
 	min_free_slots = c.min_free_slots;
       }
       Info& operator=(const Info& c) {
-	free_slots     = c.free_slots;
-	min_free_slots = c.min_free_slots;
-	buf_clients    = c.buf_clients;
-	task_evt_tot   = c.task_evt_tot;
-	task_evt_min   = c.task_evt_min;
-	min_free_space = c.min_free_space;
-	min_free_slots = c.min_free_slots;
+	if ( &c != this )  {
+	  free_slots     = c.free_slots;
+	  min_free_slots = c.min_free_slots;
+	  buf_clients    = c.buf_clients;
+	  task_evt_tot   = c.task_evt_tot;
+	  task_evt_min   = c.task_evt_min;
+	  min_free_space = c.min_free_space;
+	  min_free_slots = c.min_free_slots;
+	}
 	return *this;
       }
     };

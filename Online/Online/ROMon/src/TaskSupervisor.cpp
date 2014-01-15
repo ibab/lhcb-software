@@ -104,13 +104,14 @@ string Cluster::PVSSProject::projectName(const string& n) {
 ostream& ROMon::operator<<(ostream& os, const vector<Cluster::Node::Item>& t) {
   for(Cluster::Node::Tasks::const_iterator i=t.begin(); i!=t.end();++i)
     os << setw(12) << left << (*i).first << " " << (const char*)((*i).second?"/OK":"/NOT OK");
+  os << right;
   return os;
 }
 
 ostream& ROMon::operator<<(ostream& os, const Cluster::Node& n) {
   os << "    Node:" << setw(12) << left << n.name << "   [" << n.status << "]" << endl
      << "       Tasks:      " << n.tasks << endl
-     << "       Connections:" << n.conns << endl;
+     << "       Connections:" << n.conns << endl << right;
   return os;
 }
 
@@ -118,6 +119,7 @@ ostream& ROMon::operator<<(ostream& os, const Cluster& c) {
   os << "  Cluster:" << setw(12) << left << c.name << "  [" << c.status << "]" << endl;
   for(Cluster::Nodes::const_iterator i=c.nodes.begin(); i!=c.nodes.end();++i)
     os << (*i).second;
+  os << right;
   return os;
 }
 
@@ -131,6 +133,7 @@ ostream& ROMon::operator<<(ostream& os, const Inventory::NodeCollection& nc) {
   os << "     -->Node Collection:" << nc.name << endl;
   for(Inventory::NodeCollection::NodeList::const_iterator j=nc.nodes.begin(); j != nc.nodes.end();++j)
     os << "         -->Node:      " << setw(18) << left << (*j).first << (*j).second << endl;
+  os << right;
   return os;
 }
 
@@ -176,6 +179,7 @@ ostream& Inventory::print(ostream& os)   const  {
   }
   os << "-->List of node types:" << endl << nodetypes;
   os << "-->List of node collections:" << endl << nodecollections;
+  os << right;
   return os;
 }
 

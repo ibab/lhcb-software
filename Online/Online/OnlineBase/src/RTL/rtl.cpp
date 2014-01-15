@@ -348,6 +348,7 @@ int lib_rtl_pid()  {
 }
 
 int lib_rtl_signal_message(int action, const char* fmt, ...)  {
+  int status = 1;
   char buff[2048];
   va_list args;
   va_start( args, fmt );
@@ -360,12 +361,13 @@ int lib_rtl_signal_message(int action, const char* fmt, ...)  {
         ::lib_rtl_output(LIB_RTL_ERROR,"RTL: %8d : %s\n",err, RTL::errorString(err));
         ::vsnprintf(buff, sizeof(buff), fmt, args);
         ::lib_rtl_output(LIB_RTL_ERROR,"                %s\n",buff);
-        return 0;
+        status = 0;
       }
-      return 1;
+      break;
     case LIB_RTL_DEFAULT:
         ::vsnprintf(buff, sizeof(buff), fmt, args);
         ::lib_rtl_output(LIB_RTL_ERROR,"RTL: %s\n",buff);
+        status = 0;
       break;
     case LIB_RTL_OS:
     default:
@@ -374,12 +376,13 @@ int lib_rtl_signal_message(int action, const char* fmt, ...)  {
         ::lib_rtl_output(LIB_RTL_ERROR,"RTL: %8d : %s\n",err, RTL::errorString(err));
         ::vsnprintf(buff, sizeof(buff), fmt, args);
         ::lib_rtl_output(LIB_RTL_ERROR,"                %s\n",buff);
-        return 0;
+        status = 0;
       }
-      return 1;
+      break;
     }
   }
-  return 1;
+  va_end(args);
+  return status;
 }
 
 int lib_rtl_signal_message(int,int,int) {

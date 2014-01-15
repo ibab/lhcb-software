@@ -424,10 +424,10 @@ def panoramixSimApp(partID, partName, source, algs=[]):
 
 #------------------------------------------------------------------------------------------------
 def defaultFilterApp(partID, partName, percent, print_freq):
-  mepMgr               = mepManager(partID,partName,['EVENT','RESULT'])
+  mepMgr               = mepManager(partID,partName,['Events','Send'])
   mepMgr.HandleSignals = True
   runable              = evtRunable(mepMgr)
-  evtSel               = mbmSelector('EVENT')
+  evtSel               = mbmSelector('Events')
   evtdata              = evtDataSvc()
   evtPers              = rawPersistencySvc()
   seq                  = CFG.Sequencer('SendSequence')

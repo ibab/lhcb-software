@@ -220,8 +220,9 @@ StatusCode DimTaskFSM::printErr(int flag, const char* format, ...)  {
   va_list args;
   char buffer[1024];
   sprintf(buffer,"Error: ");
-  va_start( args, format );
+  va_start(args, format);
   size_t len = ::vsnprintf(&buffer[7], sizeof(buffer)-8, format, args);
+  va_end(args);
   buffer[sizeof(buffer)-1] = 0;
   if ( len > sizeof(buffer) )  {
     // !! memory corruption !!

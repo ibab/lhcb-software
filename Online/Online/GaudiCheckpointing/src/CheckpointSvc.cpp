@@ -241,7 +241,7 @@ namespace  {
   public:
     /// Constructor
     Command(const std::string& nam, LHCb::CheckpointSvc* svc, LHCb::ITaskFSM* fsm)
-      : DimCommand(nam.c_str(), (char*)"C"), m_check(svc), m_fsm(fsm) { }
+      : DimCommand(nam.c_str(),"C"), m_check(svc), m_fsm(fsm) { }
     /// DimCommand overload: handle DIM commands
     virtual void commandHandler()   {
       using namespace LHCb;
@@ -471,7 +471,7 @@ string CheckpointSvc::buildChildUTGID(int which) const {
 /// Access the number of cors in the machines
 int CheckpointSvc::numCores() const {
   int n_core=-1, fd = ::open("/proc/stat",O_RDONLY);
-  if ( fd ) {
+  if ( fd != -1 ) {
     char buff[2048], *q=0, *p=0;
     int rc = ::read(fd,buff,sizeof(buff));
     ::close(fd);
@@ -621,7 +621,7 @@ int CheckpointSvc::saveCheckpoint() {
       checkpointing_set_save_flags(m_saveFlags);
     }
     int fd = ::open(m_checkPoint.c_str(),O_CREAT|O_TRUNC|O_WRONLY,S_IRWXU|S_IRWXG|S_IRWXO);
-    if ( fd > 0 ) {
+    if ( fd != -1 ) {
       int ret = checkpointing_write_checkpoint(fd);
       write(3,"[Error] Restore complete.....\n",31);
       ::close(fd);
@@ -684,7 +684,7 @@ int CheckpointSvc::resumeMainInstance(bool with_resume_child_threads) {
   log << "ProcessName:" << proc << " ";
   if ( dns && m_connectDIM ) {
     log << "DIM_DNS_NODE:" << dns << " ";
-    ::dis_set_dns_node((char*)dns);
+    ::dis_set_dns_node(dns);
   }
   log << endmsg;
   //
@@ -776,7 +776,7 @@ int CheckpointSvc::execChild() {
   string proc = RTL::processName();
   if ( m_connectDIM ) {
     if ( dns ) {
-      ::dis_set_dns_node((char*)dns);
+      ::dis_set_dns_node(dns);
     }
     m_fsm->connectDIM(0);
   }
@@ -874,7 +874,7 @@ void CheckpointSvc::handle(const Incident& inc) {
   }
   else if ( inc.type() == "APP_RUNNING" ) {
     // string proc  = RTL::processName();
-    //    ::dis_start_serving((char*)proc.c_str());
+    //    ::dis_start_serving(proc.c_str());
   }
   else if ( inc.type() == "APP_STOPPED" ) {
   }

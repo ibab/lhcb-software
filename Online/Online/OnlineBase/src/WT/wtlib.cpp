@@ -276,7 +276,8 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
       }
       if (mask_ok ==1)    {
         if ( _wtc_find_facility(*facility,mask_ptr) == (wt_fac_entry*)mask_ptr)  {
-          wt_queue_entry* entry_ptr = new wt_queue_entry(*facility,*userpar1);
+	  void* par = userpar1 ? *userpar1 : 0;
+          wt_queue_entry* entry_ptr = new wt_queue_entry(*facility,par);
           insqhi(entry_ptr,wt_stack);
           delete entry;
           continue;

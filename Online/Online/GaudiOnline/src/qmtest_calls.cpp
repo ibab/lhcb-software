@@ -8,18 +8,12 @@ using namespace std;
 using namespace RTL;
 
 static string command() {
-  string cmd = ::getenv("GAUDIONLINEROOT");
-  cmd += "/";
-  cmd += ::getenv("CMTCONFIG");
-  cmd += "/Gaudi.exe";
+  string cmd = ::getenv("GaudiOnlineExe");
   return cmd;
 }
 
 static string gentest() {
-  string cmd = ::getenv("ONLINEKERNELROOT");
-  cmd += "/";
-  cmd += ::getenv("CMTCONFIG");
-  cmd += "/gentest.exe";
+  string cmd = ::getenv("gentest_exe");
   return cmd;
 }
 
@@ -30,9 +24,8 @@ static void i_putenv(const string& n, const string& v) {
 
 static string makeOpts(const string& n) {
   string v = "-opt=";
-  v += ::getenv("GAUDIONLINEROOT");
-  v += "/options/";
-  v += n;
+  v += ::getenv("GAUDIONLINE_OPTS");
+  v += ("/"+n);
   return v;
 }
 
@@ -41,6 +34,12 @@ static string pyOpts(const string& n) {
   ::printf("Python options:%s\n",v.c_str());
   return v;
 }
+
+static string gaudionlineOpts()  {
+  string v = ::getenv("GAUDIONLINE_OPTS");
+  return v;
+}
+
 
 #define CLASS1(XXXXX)    {"libGaudiOnline.so","OnlineTask","-tasktype=LHCb::Class1Task","-msgsvc=MessageSvc","-auto",main_opts.c_str(),(new string(makeOpts( XXXXX )))->c_str(),0}
 #define CLASS1_PY(XXXXX) {"libGaudiOnline.so","OnlineTask","-tasktype=LHCb::Class1Task","-msgsvc=MessageSvc","-auto",main_opts.c_str(),(new string(pyOpts( XXXXX )))->c_str(),0}
@@ -80,8 +79,7 @@ static int collect_summary(size_t len,Process* p[], bool run_summary=true) {
 //   Test of HLT event processing
 //
 extern "C" int qmtest_hlt(int argc, char** argv)  {
-  string groot = ::getenv("GAUDIONLINEROOT");
-  string main_opts = "-main="+groot+"/options/Main.opts";
+  string main_opts = "-main="+gaudionlineOpts()+"/Main.opts";
   string out = argc>1 ? argv[1] : "/dev/null";
   string host = RTL::nodeNameShort();
   Process* p[21] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -124,8 +122,7 @@ extern "C" int qmtest_hlt(int argc, char** argv)  {
 //   Test of TAE event processing
 //
 extern "C" int qmtest_tae(int argc, char** argv)  {
-  string groot = ::getenv("GAUDIONLINEROOT");
-  string main_opts = "-main="+groot+"/options/Main.opts";
+  string main_opts = "-main="+gaudionlineOpts()+"/Main.opts";
   string out = argc>1 ? argv[1] : "/dev/null";
   string host = RTL::nodeNameShort();
   Process* p[21] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -159,8 +156,7 @@ extern "C" int qmtest_tae(int argc, char** argv)  {
 //   Test of data sending from MBM buffer to receiver connected to MBM buffer
 //
 extern "C" int qmtest_evacuate(int argc, char** argv)  {
-  string groot = ::getenv("GAUDIONLINEROOT");
-  string main_opts = "-main="+groot+"/options/Main.opts";
+  string main_opts = "-main="+gaudionlineOpts()+"/Main.opts";
   string out = argc>1 ? argv[1] : "/dev/null";
   string host = RTL::nodeNameShort();
   Process* p[21] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -210,8 +206,7 @@ extern "C" int qmtest_evacuate(int argc, char** argv)  {
 //   Test of disk writer attached to MBM buffer
 //
 extern "C" int qmtest_write_buffer(int argc, char** argv)  {
-  string groot = ::getenv("GAUDIONLINEROOT");
-  string main_opts = "-main="+groot+"/options/Main.opts";
+  string main_opts = "-main="+gaudionlineOpts()+"/Main.opts";
   string out = argc>1 ? argv[1] : "/dev/null";
   string host = RTL::nodeNameShort();
   Process* p[21] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -239,8 +234,7 @@ extern "C" int qmtest_write_buffer(int argc, char** argv)  {
 //   Test of event server application for event displays
 //
 extern "C" int qmtest_event_server(int argc, char** argv)  {
-  string groot = ::getenv("GAUDIONLINEROOT");
-  string main_opts = "-main="+groot+"/options/Main.opts";
+  string main_opts = "-main="+gaudionlineOpts()+"/Main.opts";
   string out = argc>1 ? argv[1] : "/dev/null";
   string host = RTL::nodeNameShort();
   Process* p[21] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -273,8 +267,7 @@ extern "C" int qmtest_event_server(int argc, char** argv)  {
 }
 
 extern "C" int pyhlt_test_run(int /* ac  */, char** /* av */)  {
-  string groot = ::getenv("GAUDIONLINEROOT");
-  string main_opts = "-main="+groot+"/options/Main.opts";
+  string main_opts = "-main="+gaudionlineOpts()+"/Main.opts";
   string out = "";//"/dev/null";
   string host = RTL::nodeNameShort();
   Process* p[21] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -344,10 +337,8 @@ extern "C" int pyhlt_test_run(int /* ac  */, char** /* av */)  {
   return 0;
 }
 
-
 extern "C" int qmtest_mepinj(int /* ac  */, char** /* av */)  {
-  string groot = ::getenv("GAUDIONLINEROOT");
-  string main_opts = "-main="+groot+"/options/Main.opts";
+  string main_opts = "-main="+gaudionlineOpts()+"/Main.opts";
   string out = "";//"/dev/null";
   string host = RTL::nodeNameShort();
   const char *injclass[] =CLASS1("MEPInjectorQMTest.opts");

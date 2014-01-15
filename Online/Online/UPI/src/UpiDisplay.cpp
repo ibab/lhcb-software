@@ -94,6 +94,7 @@ size_t UpiDisplay::draw_line_normal(const char* format,...)  {
   char buffer[1024];
   va_start( args, format );
   int len = ::vsprintf(buffer, format, args);
+  va_end(args);
   print_char(1, m_currLine, VERT_BAR);
   for(int j=0; j<len && j<m_area.width-1; ++j)
     print_char(j+2, m_currLine, buffer[j]);
@@ -108,6 +109,7 @@ size_t UpiDisplay::draw_line_bold(const char* format,...)  {
   char buffer[1024];
   va_start( args, format );
   int len = ::vsprintf(buffer, format, args);
+  va_end(args);
   print_char(1, m_currLine, VERT_BAR);
   for(int j=0; j<len && j<m_area.width-1; ++j)
     print_char(j+2, m_currLine, buffer[j]);
@@ -122,6 +124,7 @@ size_t UpiDisplay::draw_line_reverse(const char* format,...)  {
   char buffer[1024];
   va_start( args, format );
   int len = ::vsprintf(buffer, format, args);
+  va_end(args);
   print_char(1, m_currLine, VERT_BAR);
   for(int j=0; j<len && j<m_area.width-1; ++j)
     print_char(j+2, m_currLine, buffer[j]);

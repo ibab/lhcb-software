@@ -38,7 +38,7 @@ namespace PyRPC  {
     size_t      m_start, m_end;
     Item(const std::string& s, const std::string& t);
     operator const std::string&() const  { return m_item;         }
-    const char* c_str() const            { return value().c_str(); }
+    //const char* c_str() const;
     bool empty() const                   { return m_item.empty(); }
     const std::string& get();
     std::string value() const;

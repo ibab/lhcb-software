@@ -368,14 +368,16 @@ extern "C" int checkpointing_restart_type()  {
 extern "C" int checkpointing_get_file_descriptors(void** ptr) {
   FileMap m;
   long bytes = m.memoryCount();
-  void* mem = ::malloc(bytes);
-  FileStreamOutHandler wr(mem);
-  if ( m.scan(wr.start()) > 0 ) {
-    wr.stop();
-    *ptr = mem;
-    return 1;
+  if ( bytes > 0 )  {
+    void* mem = ::malloc(bytes);
+    FileStreamOutHandler wr(mem);
+    if ( m.scan(wr.start()) > 0 ) {
+      wr.stop();
+      *ptr = mem;
+      return 1;
+    }
+    ::free(mem);
   }
-  ::free(mem);
   *ptr = 0;
   return 0;
 }

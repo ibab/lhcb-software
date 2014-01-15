@@ -241,7 +241,7 @@ void LHCb::FmcMessageSvc::report(int typ,const std::string& src,const std::strin
     sNow[sizeof(sNow)-1] = 0;
     /*-------------------------------------------------------------------------*/
     /* compose message header */
-    typ = (typ>int(sizeof(sl)/sizeof(sl[0]))) ? (sizeof(sl)/sizeof(sl[0]))-1 : (typ<0 ? 0 : typ);
+    typ = (typ>=int(sizeof(sl)/sizeof(sl[0]))) ? (sizeof(sl)/sizeof(sl[0]))-1 : (typ<0 ? 0 : typ);
     snprintf(header,BUF_SZ/2,"%s%s%s: %s(%s): %s: ",sNow,sl[typ],RTL::nodeNameShort().c_str(),
 	     getPName(),RTL::processName().c_str(),src.c_str());
     /* NULL-terminate header if truncated */
@@ -316,7 +316,7 @@ const char* LHCb::FmcMessageSvc::getPName()   {
     int len=0;
     char buf[BUF_SZ]="";
     /*-------------------------------------------------------------------------*/
-    len=readlink("/proc/self/exe",pathName,sizeof(pathName));
+    len=readlink("/proc/self/exe",pathName,sizeof(pathName)-1);
     if(len==-1)  {
       ::snprintf(buf,BUF_SZ,"[ERROR] %s: readlink(): %s.",__func__,strerror(errno));
       syslog(LOG_ERR|LOG_DAEMON,"%s",buf);
@@ -359,7 +359,7 @@ int LHCb::FmcMessageSvc::printM(int out,int severity,const char* fName,const cha
   sNow[sizeof(sNow)-1] = 0;
   /*-------------------------------------------------------------------------*/
   /* compose message string with header */
-  severity = (severity>int(sizeof(sl)/sizeof(sl[0]))) 
+  severity = (severity>=int(sizeof(sl)/sizeof(sl[0]))) 
     ? (sizeof(sl)/sizeof(sl[0]))-1 : (severity<0 ? 0 : severity);
   snprintf(msg,BUF_SZ,"%s%s%s: %s(%s): %s(): %s\n",sNow,sl[severity],RTL::nodeNameShort().c_str(),
            getPName(),RTL::processName().c_str(),fName,rawMsg);

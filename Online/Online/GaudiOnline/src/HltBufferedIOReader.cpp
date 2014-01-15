@@ -188,18 +188,19 @@ StatusCode HltBufferedIOReader::queryInterface(const InterfaceID& riid, void** p
 /// IService implementation: initialize the service
 StatusCode HltBufferedIOReader::initialize()   {
   StatusCode sc;
+  string broken_hosts;
   if (!(sc = OnlineService::initialize()).isSuccess())
     return error("Failed to initialize service base class.");
   else if (!(sc = service("MEPManager", m_mepMgr)).isSuccess())
     return error("Failed to access MEP manager service.");
-
-  if ( !m_brokenHostsFile.empty() ) {
+  broken_hosts = m_brokenHostsFile;
+  if ( !broken_hosts.empty() ) {
     struct stat file;
-    if ( 0 == ::stat(m_brokenHostsFile.c_str(),&file) ) {
+    if ( 0 == ::stat(broken_hosts.c_str(),&file) ) {
       const std::string node = RTL::nodeNameShort();
-      int   fd   = ::open(m_brokenHostsFile.c_str(),O_RDONLY);
+      int   fd   = ::open(broken_hosts.c_str(),O_RDONLY);
       if ( -1 == fd )  {
-	return error("Failed to access broken node file:"+m_brokenHostsFile+" [Error ignored]");
+	return error("Failed to access broken node file:"+broken_hosts+" [Error ignored]");
       }
       char* data = new char[file.st_size+1];
       int rc = file_read(fd,data,file.st_size);
@@ -218,7 +219,7 @@ StatusCode HltBufferedIOReader::initialize()   {
       ::close(fd);
     }
     else {
-      error("Failed to access broken node file:"+m_brokenHostsFile+" [Error ignored]");
+      error("Failed to access broken node file:"+broken_hosts+" [Error ignored]");
     }
   }
 
@@ -405,16 +406,16 @@ StatusCode HltBufferedIOReader::i_run()  {
     }
     // loop over the events
     while (m_receiveEvts)   {
-      if (file_handle <= 0)  {
+      if (file_handle != 0)  {
         file_handle = openFile();
-        if ( file_handle <= 0 )   {
+        if ( file_handle != 0 )   {
           files_processed = scanFiles() == 0;
           if ( files_processed )    {
             break;
           }
         }
       }
-      if ( file_handle > 0 )  {
+      if ( file_handle != 0 )  {
         int size_buf[3];
         int status = ::file_read(file_handle, (char*)size_buf, sizeof(size_buf));
         if (status <= 0)   {

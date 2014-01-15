@@ -92,14 +92,18 @@ int Process::start()    {
   m_pid = ::fork();
   if (m_pid == 0)  {   // child
     int cnt = 0;
+    string utgid;
     char **e, **env, **arg = new char*[m_args.size()+2];
     //#if 0
     if ( !m_output.empty() ) {
       int fd = ::open(m_output.c_str(),O_WRONLY);
-      ::close(2);
-      ::close(1);
-      dup2(fd,2);
-      dup2(fd,1);
+      if ( fd != -1 )  {
+	::close(2);
+	::close(1);
+	::dup2(fd,2);
+	::dup2(fd,1);
+	::close(fd);
+      }
     }
     //#endif
     arg[0] = (char*)m_name.c_str();
@@ -108,7 +112,7 @@ int Process::start()    {
     arg[m_args.size()+1] = 0;
     for(cnt=0, e=environ; *e; ++e) ++cnt;
     env = new char*[cnt+2];
-    string utgid = "UTGID="+m_name;
+    utgid = "UTGID="+m_name;
     env[0] = (char*)utgid.c_str();
     for(e=environ,cnt=0; *e; ++e) env[++cnt] = *e;
     env[++cnt] = 0;

@@ -327,8 +327,10 @@ Tag_t& Tag_t::operator=(const char* s) {
 
 Tag_t& Tag_t::operator=(const Strng_t& s)  {
   if (m_xml) XmlString::release(&m_xml);
-  m_str = s.m_xml ? XmlString::transcode(s.m_xml) : "";
+  char* ns = s.m_xml ? XmlString::transcode(s.m_xml) : 0;
+  m_str = ns ? ns : "";
   m_xml = XmlString::transcode(m_str.c_str());
+  if ( ns ) XmlString::release(&ns);
   return *this;
 }
 

@@ -146,13 +146,14 @@ bool Filter::acceptMessage(const MessageLine& msg) const {
 
 /// Write filter object to file
 ostream& Filter::write(ostream& os) const {
+  char prev = os.fill('0');
   os << "<FILTER>"  <<endl
-    << hex    << setw(8) << setfill('0') << type << endl
+    << hex    << setw(8) << type << endl
     << node        << endl
     << utgid       << endl
     << component   << endl
     << message     << endl
-    << "</FILTER>" << endl;
+     << "</FILTER>" << endl << dec << setfill(prev);
   return os;
 }
 

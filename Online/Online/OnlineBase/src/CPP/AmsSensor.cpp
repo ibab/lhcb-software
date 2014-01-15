@@ -167,8 +167,8 @@ void AmsSensor::remove( Interactor* interactor, const Address* source )   {
         if( (*i).second == interactor )  {
 	  AmsSource* a = as;
           s_interactorTable.erase(i);
-          if ( last_as ) last_as->setNext(as->next());
-          else           as = SourceHead = as->next();
+          if ( last_as ) { last_as->setNext(as->next()); as = last_as; }
+          else           { as = SourceHead = as->next();               }
           delete a;
         }
       }

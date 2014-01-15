@@ -25,6 +25,7 @@ size_t RTL::ConsoleDisplay::draw_line(int flags, const char* format,...)  {
   char buffer[1024];
   va_start( args, format );
   /* size_t len = */ ::vsnprintf(buffer, sizeof(buffer), format, args);
+  va_end(args);
   ::scrc_put_chars(m_display,buffer,flags,m_currLine,1,1);
   return ++m_currLine;
 }

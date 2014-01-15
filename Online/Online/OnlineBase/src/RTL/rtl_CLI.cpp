@@ -9,6 +9,7 @@ static int string_assign(const char* p, const char* fmt, ...)  {
   va_list marker;
   va_start( marker, fmt );     /* Initialize variable arguments. */
   std::string *s = va_arg(marker, std::string*);
+  va_end(marker);
   if ( s ) {
     *s = p; 
     return 1;

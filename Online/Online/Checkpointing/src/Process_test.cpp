@@ -15,20 +15,21 @@ int test_Process_write() {
   MMap m;
   Process p;
 
-  int fd1=::open("/home/frankm/.bashrc",O_RDONLY);
-  int fd2=::open("/home/frankm/.bashrc",O_RDONLY|O_APPEND);
-
-  mtcp_output(MTCP_INFO,"Start process scan.\n");
-  if ( m.create(file_name) ) {
-    long true_len = p.write(m.fd());
-    mtcp_output(MTCP_INFO,"Wrote %ld bytes.\n",true_len);
+  int fd1 = ::open("/home/frankm/.bashrc",O_RDONLY);
+  int fd2 = ::open("/home/frankm/.bashrc",O_RDONLY|O_APPEND);
+  if ( fd1 != -1 && fd2 != -1 )  {
+    mtcp_output(MTCP_INFO,"Start process scan.\n");
+    if ( m.create(file_name) ) {
+      long true_len = p.write(m.fd());
+      mtcp_output(MTCP_INFO,"Wrote %ld bytes.\n",true_len);
+      ::close(fd1);
+      ::close(fd2);
+      return true_len;
+    }
+    mtcp_output(MTCP_ERROR,"Process size scan failed. Could not create output file.\n");
     ::close(fd1);
     ::close(fd2);
-    return true_len;
   }
-  mtcp_output(MTCP_ERROR,"Process size scan failed. Could not create output file.\n");
-  ::close(fd1);
-  ::close(fd2);
   return 0;
 }
 

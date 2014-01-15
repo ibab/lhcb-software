@@ -283,20 +283,23 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_memory_scan(AreaHandler* hand
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_memory_write(int fd)   {
   if ( fd > 0 ) {
     int  bytes  = writeMarker(fd,MEMMAP_BEGIN_MARKER);
-    long off, offset = ::lseek(fd,0,SEEK_CUR);
-    bytes += writeInt(fd,0);
-    AreaWriteHandler h(fd);
-    if ( 1 == checkpointing_memory_scan(&h) ) {
-      bytes += h.bytesWritten();
-      bytes += writeMarker(fd,MEMMAP_END_MARKER);
-      off = ::lseek(fd,0,SEEK_CUR);
-      ::lseek(fd,offset,SEEK_SET);
-      writeInt(fd,h.count()); // Update counter
-      ::lseek(fd,off,SEEK_SET);
-      return bytes;
+    off_t off, offset = ::lseek(fd,0,SEEK_CUR);
+    if ( offset != (off_t)-1 )  {
+      bytes += writeInt(fd,0);
+      AreaWriteHandler h(fd);
+      if ( 1 == checkpointing_memory_scan(&h) ) {
+	bytes += h.bytesWritten();
+	bytes += writeMarker(fd,MEMMAP_END_MARKER);
+	off = ::lseek(fd,0,SEEK_CUR);
+	::lseek(fd,offset,SEEK_SET);
+	writeInt(fd,h.count()); // Update counter
+	::lseek(fd,off,SEEK_SET);
+	return bytes;
+      }
+      mtcp_output(MTCP_ERROR,"Failed to scan memory sections!\n");
+      return -1;
     }
-    mtcp_output(MTCP_ERROR,"Failed to scan memory sections!\n");
-    return -1;
+    mtcp_output(MTCP_ERROR,"Failed to scan memory sections. [Failed lseek]\n");
   }
   return -1;
 }

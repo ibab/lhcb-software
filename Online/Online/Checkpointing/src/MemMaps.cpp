@@ -51,6 +51,7 @@ static int checkpointing_area_skip(const Area& a) {
   return 0;
 }
 
+/// Initializing constructor
 AreaBaseHandler::AreaBaseHandler() : m_bytes(0), m_count(0)   {
   f_map     = default_map<AreaBaseHandler>;
   f_handle  = default_handle<AreaBaseHandler>;
@@ -69,21 +70,24 @@ int AreaBaseHandler::mapArea(const Area& a, const unsigned char* in, int data_le
   return checkpointing_area_map(a,0,in,data_len);
 }
 
+/// Handler callback
 int AreaBaseHandler::handle(int, const Area& a)    {
   return updateCounts(a);
 }
 
+/// Initializing constructor
 AreaPrintHandler::AreaPrintHandler() : AreaBaseHandler()  {
   f_handle = default_handle<AreaPrintHandler>;
 }
 
+/// Handler callback
 int AreaPrintHandler::handle(int, const Area& a)    {
   checkpointing_area_print(&a,MTCP_INFO,"");
   return updateCounts(a);
 }
 
-AreaLibHandler::AreaLibHandler(int fd) 
-  : AreaBaseHandler(), m_fd(fd)
+/// Initializing constructor
+AreaLibHandler::AreaLibHandler(int fd) : AreaBaseHandler(), m_fd(fd)
 {
   f_handle = default_handle<AreaLibHandler>;
   m_numLibs = 0;
@@ -92,11 +96,20 @@ AreaLibHandler::AreaLibHandler(int fd)
   for(char** p=m_libs; p<m_libs+m_len; ++p) *p=0;
 }
 
-void AreaLibHandler::release()  {
-  for(char** p=m_libs; *p; ++p) ::free(*p);
-  free(m_libs);
+AreaLibHandler::~AreaLibHandler()  {
+  this->release();
 }
 
+void AreaLibHandler::release()  {
+  if ( m_libs )  {
+    for(char** p=m_libs; *p; ++p)
+      if ( *p ) ::free(*p);
+    ::free(m_libs);
+    m_libs = 0;
+  }
+}
+
+/// Handler callback
 int AreaLibHandler::handle(int, const Area& a)    {
   // Skip images, which are no files
   if ( a.name[0] != '/' ) {
@@ -128,6 +141,7 @@ int AreaLibHandler::handle(int, const Area& a)    {
   return bytes;
 }
 
+/// Initializing constructor
 AreaInfoHandler::AreaInfoHandler() {
   stack[0]           = stack[1]      = 0;
   vdso[0]            = vdso[1]       = 0;
@@ -142,6 +156,7 @@ AreaInfoHandler::AreaInfoHandler() {
   f_handle = default_handle<AreaInfoHandler>;
 }
 
+/// Handler callback
 int AreaInfoHandler::handle(int, const Area& a)  {
   //if ( m_prev && a.name[0] != 0 ) m_prev = false;
   if ( a.name[0]=='[' ) {
@@ -185,12 +200,13 @@ int AreaInfoHandler::handle(int, const Area& a)  {
   return updateCounts(a);
 }
 
-AreaWriteHandler::AreaWriteHandler(int fd) 
- : m_fd(fd)
+/// Initializing constructor
+AreaWriteHandler::AreaWriteHandler(int fd) : m_fd(fd)
 {
   f_handle = default_handle<AreaWriteHandler>;
 }
 
+/// Handler callback
 int AreaWriteHandler::handle(int, const Area& a)    {
   // Skip if the memory region is where we actually write!
   long rc;
@@ -221,11 +237,13 @@ int AreaWriteHandler::handle(int, const Area& a)    {
   return rc;
 }
 
+/// Initializing constructor
 AreaChkptWriteHandler::AreaChkptWriteHandler(int fd) : AreaWriteHandler(fd) {
   f_handle = default_handle<AreaChkptWriteHandler>;
   m_prev = false;
 }
 
+/// Handler callback
 int AreaChkptWriteHandler::handle(int, const Area& a)    {
   bool is_image = m_strcmp(a.name,chkpt_sys.checkpointImage) == 0;
   if ( m_prev || is_image ) {
@@ -245,6 +263,7 @@ int AreaChkptWriteHandler::handle(int, const Area& a)    {
   return 0;
 }
 
+/// Initializing constructor
 AreaMapper::AreaMapper()   {
   f_map    = default_map<AreaMapper>;
   f_handle = default_handle<AreaMapper>;

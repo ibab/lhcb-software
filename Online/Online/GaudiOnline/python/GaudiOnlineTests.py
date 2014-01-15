@@ -9,7 +9,7 @@ def _run(app,prt=print_config):              return (app,end_config(prt))
 def runDimReader(buffer):                    return _run(dimFileReaderApp(pid,pnam,buffer,True))
 #------------------------------------------------------------------------------------------------
 # HLT sender with input from MEP RESULT buffer, with decoding of fragments.
-def runSender(target):                       return _run(dataSenderApp(pid,pnam,target,'RESULT',False,True))
+def runSender(target):                       return _run(dataSenderApp(pid,pnam,target,'Send',partitionBuffers=False,decode=False,request='ONE'))
 #------------------------------------------------------------------------------------------------
 # Typical sender with input from partitioned buffers, no MEP decoding.
 def runDataSender(target,buffer,req='ALL'):  return _run(dataSenderApp(pid,pnam,target,buffer,True,False,req))
@@ -31,7 +31,8 @@ def runEvtProd():                            return _run(mepConverterApp(pid,pna
 def runEvtHolder(errBuffer='OUT'):           return _run(mepHolderApp(pid,pnam,errBuffer,True))
 #------------------------------------------------------------------------------------------------
 def runMBMRead(percent=1,print_freq=0.0001):
-  return _run(defaultFilterApp(pid,pnam,percent=percent,print_freq=print_freq))
+  return _run(hltApp(pid,pnam,percent=percent,print_freq=print_freq,buffers=['Events','Send'],type='ONE',decode=True,event_type=1))
+  #return _run(defaultFilterApp(pid,pnam,percent=percent,print_freq=print_freq))
 #------------------------------------------------------------------------------------------------
 def runMBMReadTimeout(percent=1,print_freq=0.0001):
   res = simpleFilterApp(pid,pnam,percent=percent,print_freq=print_freq)
@@ -99,11 +100,11 @@ def runEvtServer(buffer, partitionBuffers, request='USER'):
 def runBuffer(buffer='Events', partitionBuffers=True):
   return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i='+buffer+' -c',partitionBuffers=partitionBuffers))
 #------------------------------------------------------------------------------------------------
-def runOutBuffer():
-  return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i=OUT -c',partitionBuffers=True))
+def runOutBuffer(partitionBuffers=True):
+  return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i=OUT -c',partitionBuffers=partitionBuffers))
 #------------------------------------------------------------------------------------------------
-def runSendBuffer():
-  return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i=SEND -c',partitionBuffers=False))
+def runSendBuffer(partitionBuffers=False):
+  return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i=Send -c',partitionBuffers=partitionBuffers))
 #------------------------------------------------------------------------------------------------
 def runRecBuffer():
   return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i=Events -c -s=8096 -e=64 -u=64 -i=Output -c',partitionBuffers=True))
@@ -137,7 +138,7 @@ def runPanoramixSim(source,load=1,print_freq=1.0):
   return _run(app,True)
 #------------------------------------------------------------------------------------------------
 def runMepBuffer():
-  flags = '-s=7000 -e=100 -u=5 -b=12 -f -i=Mep -c -s=200 -e=500 -u=14 -f -i=Events -c -s=200 -e=100 -u=14 -f -i=Overflow -c'
+  flags = '-s=7000 -e=100 -u=5 -b=12 -f -i=Events -c -s=200 -e=500 -u=14 -f -i=Send -c -s=200 -e=100 -u=14 -f -i=Overflow -c'
   return _run(mbmInitApp(pid,pnam,flags))
 #------------------------------------------------------------------------------------------------
 #  New HLT architecture with Hlt1 and Hlt2 separation

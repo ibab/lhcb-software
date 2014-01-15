@@ -41,11 +41,14 @@ WEAK(FileWriteHandler&) FileWriteHandler::start()  {
 /// Stop and finish the write cycle
 WEAK(int) FileWriteHandler::stop()  {
   off_t off = ::lseek(m_fd,0,SEEK_CUR);
-  ::lseek(m_fd,m_offset,SEEK_SET);
-  writeInt(m_fd,m_count);
-  ::lseek(m_fd,off,SEEK_SET);
-  m_bytes += writeMarker(m_fd,FILEMAP_END_MARKER);
-  return m_bytes;
+  if ( off != (off_t)-1 )  {
+    ::lseek(m_fd,m_offset,SEEK_SET);
+    writeInt(m_fd,m_count);
+    ::lseek(m_fd,off,SEEK_SET);
+    m_bytes += writeMarker(m_fd,FILEMAP_END_MARKER);
+    return m_bytes;
+  }
+  return 0;
 }
 
 /// Handle single file entry

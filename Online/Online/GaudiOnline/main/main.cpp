@@ -30,6 +30,7 @@ int main (int argc, char** argv)  {
     if ( sc.isSuccess() ) {
       func fun = (func)e;
       if ( fun ) {
+	delete x;
         return (*fun)(argc-2, &argv[2]);
       }
     }
@@ -39,5 +40,6 @@ int main (int argc, char** argv)  {
   if ( argc>1 ) std::cout << THE_LOAD_LIBRARY << std::endl;
   else          std::cout << "<Unknown: No argument given>" << std::endl;
   std::cout << "Error: " << System::getLastErrorString() << std::endl;
+  delete x;
   return 0;
 }

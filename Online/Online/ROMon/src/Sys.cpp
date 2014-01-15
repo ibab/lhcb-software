@@ -522,6 +522,7 @@ int ROMon::read(Procset& procset, size_t max_len) {
   SystemUptime sys;
 
  Again:
+  if ( dir ) ::closedir(dir);
   dir=::opendir("/proc");
   Procset::Processes::iterator pr = procset.reset()->processes.begin();
   Procset::Processes::iterator start = pr;
@@ -629,6 +630,7 @@ int ROMon::read(Procset& procset, size_t max_len) {
     ::closedir(dir);
     return 1;
   }
+  if ( dir ) ::closedir(dir);
   return 0;
 }
 

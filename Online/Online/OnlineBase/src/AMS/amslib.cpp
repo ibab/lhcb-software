@@ -92,8 +92,14 @@ namespace {
     struct        sockaddr_in address;
     explicit amsentry_t(const char* dest=0, const char* me=0)  
     : chan(-1), refCount(0), del_pending(0), pending(0), msg_ptr(0), sndBuffSize(0)    {
-      if ( dest ) strncpy (name,dest ? dest : "", sizeof(name));
-      if ( me   ) strncpy (myName,me ? me : "", sizeof(myName));
+      if ( dest )  {
+	::strncpy (name,dest ? dest : "", sizeof(name));
+	name[sizeof(name)-1] = 0;
+      }
+      if ( me   ) {
+	::strncpy (myName,me ? me : "", sizeof(myName));
+	myName[sizeof(me)] = 0;
+      }
     }
     int release()  {
       if (refCount == 0) delete this;
@@ -284,6 +290,8 @@ static void _amsc_fill_header(amsheader_t *amh, size_t size,
   amh->msg_type = htonl(mtype);
   ::strncpy (amh->dest,   dest, sizeof (amh->dest));
   ::strncpy (amh->source, src,  sizeof (amh->source));
+  amh->dest[sizeof (amh->dest)-1]=0;
+  amh->source[sizeof (amh->source)-1]=0;
   if (buf_ptr)  {
     ::memcpy (amh+1,buf_ptr,size-sizeof(amsheader_t ));
   }
@@ -475,7 +483,7 @@ static int _amsc_tcp_recv_exact (amsentry_t *db, void *buffer, size_t siz, unsig
   return AMS_SUCCESS;
 }
 
-static int _amsc_tcp_get_host_name (char *nodename,int length) {
+static int _amsc_tcp_get_host_name (char *nodename, int length) {
   char name [HOST_NAME_LENGTH];
   WITHOUT_INTERCEPT(int status=::tan_host_name(name, sizeof (name)));
   if (status != AMS_SUCCESS) {
@@ -490,7 +498,7 @@ static int _amsc_tcp_get_host_name (char *nodename,int length) {
   return AMS_SUCCESS;
 }
 
-static int _amsc_tcp_set_send_buff(amsentry_t *db,u_int siz) {
+static int _amsc_tcp_set_send_buff(amsentry_t *db, u_int siz) {
   int sndbuf = (siz>CHOP_SIZE) ? CHOP_SIZE : (siz<LOWER_CHOP) ? LOWER_CHOP : siz;
   sndbuf *= 2;
   if ( sndbuf != db->sndBuffSize )     {
@@ -541,7 +549,7 @@ static int _amsc_restore_stack(int *cnt)  {
 }
 
 // This function returns a pointer: when this is 0 then the error is stored in errno,
-static amsentry_t *_amsc_connect_to_task (char *dest, char *from)  {
+static amsentry_t *_amsc_connect_to_task (const char *dest, const char *from)  {
   if (::strlen(dest) >= NAME_LENGTH) {
     errno = AMS_STRBUFFOVFL;
     return 0;
