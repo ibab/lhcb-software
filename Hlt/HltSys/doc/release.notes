@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
+! 2014-01-15 - Marco Cattaneo
+ - Fix configurables test following removal of VL classes
+
 </PRE><H1><A NAME=v21r0>2014-01-06 HltSys v21r0</A></H1><PRE>
 Moore/HLT LS1 development version, LHCb stack. Depends on Rec v15r4 via Phys v17r4. Based on Gaudi v24r2. Aimed to fit the needs of the January 2014 commissioning week.
 
