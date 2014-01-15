@@ -211,7 +211,7 @@ int PrCounter::countAndPlot(const IHistoTool* htool,const LHCb::MCParticle* part
           for ( std::vector<LHCb::LHCbID>::const_iterator itId = tr->lhcbIDs().begin();
                 tr->lhcbIDs().end() != itId; ++itId ) {
             if ( std::find( ids.begin(), ids.end(), *itId ) == ids.end() ) continue;
-            if ( (*itId).isVP() || (*itId).isVL() || (*itId).isVelo() ) {
+            if ( (*itId).isVP() || (*itId).isVelo() ) {
               if ( 0 != (m_selectId & 3) ) nbMeas += 1;
             } else if ( (*itId).isOT() || (*itId).isIT() || (*itId).isFT() ) {
               if ( 0 != (m_selectId & 8) ) nbMeas += 1;
