@@ -4,8 +4,12 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
-!2013-12-18 - Sajan Easo
-- Adaptation for using mixed set of PMTS (large+standard pixel size) in RICH2 for upgrade
+! 2014-01-15 - Chris Jones
+ - Clean up a bit the previous changes for different sized PMTs.
+
+! 2013-12-18 - Sajan Easo
+ - Adaptation for using a mixed set of PMTs (large+standard pixel size) in
+   RICH2 for upgrade.
 
 !========================= RichRecPhotonTools v1r12 2013-09-30 =========================
 ! 2013-09-27 - Chris Jones
