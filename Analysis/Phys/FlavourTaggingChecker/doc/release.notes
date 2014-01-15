@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.88 2010-07-02 08:12:17 mgrabalo Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marc Grabalosa (mgrabalo@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2014-01-15 - Marco Cattaneo
+ - Remove VL support
 
 !========================= FlavourTaggingChecker v7r2 2013-12-18 =========================
 
