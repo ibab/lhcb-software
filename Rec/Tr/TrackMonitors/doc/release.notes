@@ -4,7 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
-!========================= TrackMonitors v1r46 2013-10-01 =========================
+! 2014-01-15 - Marco Cattaneo
+ - Remove support for VL
+
+!========================= TrackMonitors v1r46 2013-10-01 ========================
 ! 2013-10-01 - Frederic Dupertuis 
  - Adding some additional verbose plotting to STEfficiency.
 

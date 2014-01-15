@@ -148,13 +148,9 @@ namespace {
     case LHCb::Measurement::Unknown: rc = HitTypeUnknown ; break ;
 
     case LHCb::Measurement::VPLite:
-    case LHCb::Measurement::VLR :
-    case LHCb::Measurement::VLLiteR :
     case LHCb::Measurement::VeloLiteR:
     case LHCb::Measurement::VeloR:   rc = VeloR ; break ;
 
-    case LHCb::Measurement::VLPhi :
-    case LHCb::Measurement::VLLitePhi :
     case LHCb::Measurement::VeloLitePhi:
     case LHCb::Measurement::VeloPhi: rc = VeloPhi ; break ;
 
