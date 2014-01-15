@@ -3,6 +3,9 @@ Package     : StrippingSys
 Package Coordinator : l.carson@ed.ac.uk, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+! 2014-01-15 - Marco Cattaneo
+ - Update strippingsys.configurables test to follow removal of VL classes
+
 !========================= StrippingSys v7r4 2013-12-18 =========================
 
 * Version for future development.
