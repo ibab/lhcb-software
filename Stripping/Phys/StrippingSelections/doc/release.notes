@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-14 - Mat Charles
+ - Patches to StrippingXibStarToXibZero.py. Also added it to __init__.py
+
 ! 2014-01-14 - Alex Shires
  - Bu2LLK - add vertex isolation and cone to stripping lines
 

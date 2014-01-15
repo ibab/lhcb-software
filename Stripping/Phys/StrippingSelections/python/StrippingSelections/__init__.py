@@ -235,6 +235,8 @@ import StrippingRareStrange
 
 import StrippingBc3h
 
+import StrippingXibStarToXibZero
+
 from sys import modules as _modules
 _this = _modules[__name__]
 

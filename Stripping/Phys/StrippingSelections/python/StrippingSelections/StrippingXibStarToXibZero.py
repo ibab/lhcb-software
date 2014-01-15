@@ -58,7 +58,7 @@ _my_immutable_config = {
         ,'DisplacedTrack_MIPCHI2DV_Tight_Min'  : 4.0
         ,'DisplacedTrack_GhostProb_Max'  : 0.7
         ,'Proton_ProbNNp_Min'            : 0.02
-        ,'Proton_ProbNNp_Tight_Min'      : 0.04
+        ,'Proton_ProbNNp_Tight_Min'      : 0.05
         ,'Kaon_ProbNNk_Min'              : 0.02
         ,'Kaon_ProbNNk_Tight_Min'        : 0.04
         ,'Pion_ProbNNpi_Min'             : 0.01
@@ -74,17 +74,18 @@ _my_immutable_config = {
         ,'Xi_DDL_VtxChisq_Max'           : 15.0
         ,'Xi_DDD_VtxChisq_Max'           : 15.0
         ,'SoftTrack_TRCHI2DOF_Max'     :   5.0
-        ,'SoftTrack_PT_Min'            : 100.0*MeV
-        ,'SoftTrack_P_Min'             :   2.0*GeV
-        ,'SoftTrack_MIPCHI2DV_Min'     :   4.0
+        ,'SoftTrack_PT_Min'            :   0.0*MeV
+        ,'SoftTrack_P_Min'             :   1.0*GeV
+        ,'SoftTrack_ProbNN_e_Max'      : 0.2
+        ,'SoftTrack_MIPCHI2DV_Min'     :   -999.0
         ,'DownTrack_TRCHI2DOF_Max'     :   5.0
         ,'DownTrack_PT_Min'            : 100.0*MeV
         ,'DownTrack_P_Min'             :   2.0*GeV
         ,'DownTrack_MIPCHI2DV_Min'     :  -1.0
-        ,'XibStar_PT_Min'              :2000.0*MeV
+        ,'XibStar_PT_Min'              :2500.0*MeV
         ,'XibStar_VtxChisq_Max'        :  20.0
-        ,'XibStar_DMCutLower'          : -50.0*MeV
-        ,'XibStar_DMCutUpper'          :  75.0*MeV
+        ,'XibStar_DMCutLower'          : -25.0*MeV
+        ,'XibStar_DMCutUpper'          :  50.0*MeV
         ,'XibStar_DMCutLower_SL'       :-250.0*MeV
         ,'XibStar_DMCutUpper_SL'       : 250.0*MeV
         ,'Xic_ADAMASS_HalfWin'         : 170.0*MeV
@@ -93,7 +94,10 @@ _my_immutable_config = {
         ,'Xic_BPVVDCHI2_Min'           :  25.0
         ,'Xib_BPVVDCHI2_Min'           :  36.0
         ,'Xib_VtxChisqPerDOF_Max'      :  10.0
+        ,'Xib_VtxChisqPerDOF_Tight_Max':   7.0
         ,'Xib_BPVDIRA_Min'             :   0.98
+        ,'Xib_BPVDIRA_Tight_Min'       :   0.995
+        ,'Xib_CombCutPT_Min'           :2000.0*MeV
         }
 
 
@@ -181,7 +185,7 @@ class XibStarBuilder(LineBuilder) :
         self.dauTightPi = filterPionsTight(name+'TightFilteredPions', self.dauPi)
         self.dauTightK  = filterKaonsTight(name+'TightFilteredKaons', self.dauK)
         self.dauTightP  = filterProtonsTight(name+'TightFilteredProtons', self.dauP)
-
+        self.dauPiForSL = filterForSL(name+'SLFilteredPions', self.dauPi)
 
         # Soft pions get special handling:
         self.dauSoftPi_init = DataOnDemand(Location = _my_immutable_config['SoftPions_InputList'])
@@ -202,10 +206,17 @@ class XibStarBuilder(LineBuilder) :
         self.stdDp   = DataOnDemand(Location = _my_immutable_config['DisplacedDpInputList'])
         self.stdLc   = DataOnDemand(Location = _my_immutable_config['DisplacedLcInputList'])
 
+        # Filter the Lc to be tighter:
+        _LcFiltCut = "( MINTREE('pi+'==ABSID, PROBNNpi) > 0.01 ) & ( MINTREE('K+'==ABSID, PROBNNk) > 0.02 ) & ( MINTREE('p+'==ABSID, PROBNNp) > 0.02 ) & ( PT > 2.0*GeV ) & (ADMASS('Lambda_c+')<50*MeV)"
+        _LcFilt = FilterDesktop(Code=_LcFiltCut)
+        self.Lc = Selection(name+"DisplacedLcFilt", Algorithm=_LcFilt, RequiredSelections = [self.stdLc])
+
         # Filter the D0 and D+ to be tighter...
-        _DFiltCutGeneric = "( MINTREE('pi+'==ABSID, PROBNNpi) > 0.01 ) & ( MINTREE('K+'==ABSID, PROBNNk) > 0.01 ) & ( PT > 2.0*GeV ) & ( M>1780.0*MeV ) & ( M<1980*MeV )"
-        _DpFilt= FilterDesktop( Code = _DFiltCutGeneric ) 
-        _D0Filt= FilterDesktop( Code = _DFiltCutGeneric ) 
+        _DFiltCutGeneric = "( MINTREE('pi+'==ABSID, PROBNNpi) > 0.01 ) & ( MINTREE('K+'==ABSID, PROBNNk) > 0.02 ) & ( PT > 2.0*GeV )"
+        _DpFiltCut = _DFiltCutGeneric + " & (ADMASS('D+')<50*MeV)"
+        _D0FiltCut = _DFiltCutGeneric + " & (ADMASS('D0')<50*MeV)"
+        _DpFilt= FilterDesktop(Code = _DpFiltCut) 
+        _D0Filt= FilterDesktop(Code = _D0FiltCut)
         self.D0 = Selection ( name+"DisplacedD0Filt", Algorithm = _D0Filt, RequiredSelections = [self.stdD0] )
         self.Dp = Selection ( name+"DisplacedDpFilt", Algorithm = _DpFilt, RequiredSelections = [self.stdDp] )
         
@@ -233,11 +244,11 @@ class XibStarBuilder(LineBuilder) :
         
         # Some very generic cuts for making Xib0:
         # Nominal mass: 5788 MeV
-        _strCutXib0Comb = "( APT>2000.0*MeV ) & ( AMAXDOCA('')<0.5*mm ) & ( AM>3800.0*MeV ) & ( AM<7200.0*MeV )"
-        _strCutXib0MothBase = "( BPVVDCHI2 > %(Xib_BPVVDCHI2_Min)s ) & ( VFASPF(VCHI2PDOF)<%(Xib_VtxChisqPerDOF_Max)s )" % _my_immutable_config
-        _strCutXib0MothSL = _strCutXib0MothBase+" & ( MM>4000.0*MeV ) & ( MM<7000.0*MeV )"
-        _strCutXib0MothReg = _strCutXib0MothBase+" & ( MM>4000.0*MeV ) & ( MM<7000.0*MeV ) & ( BPVDIRA > %(Xib_BPVDIRA_Min)s )" % _my_immutable_config
-        _strCutXib0MothTight = _strCutXib0MothBase+" & ( MM>5200.0*MeV ) & ( MM<6400.0*MeV ) & ( BPVDIRA > %(Xib_BPVDIRA_Min)s )" % _my_immutable_config
+        _strCutXib0Comb = "( APT > %(Xib_CombCutPT_Min)s ) & ( AMAXDOCA('')<0.5*mm ) & ( AM>3800.0*MeV ) & ( AM<7200.0*MeV )" % _my_immutable_config
+        _strCutXib0MothLoose = "( BPVVDCHI2 > %(Xib_BPVVDCHI2_Min)s ) & ( VFASPF(VCHI2PDOF)<%(Xib_VtxChisqPerDOF_Max)s )" % _my_immutable_config
+        _strCutXib0MothSL = _strCutXib0MothLoose + " & ( MM>4000.0*MeV ) & ( MM<6100.0*MeV )"
+        _strCutXib0MothReg = _strCutXib0MothLoose + " & ( MM>5200.0*MeV ) & ( MM<6400.0*MeV ) & ( BPVDIRA > %(Xib_BPVDIRA_Min)s )" % _my_immutable_config
+        _strCutXib0MothTight = "( BPVVDCHI2 > %(Xib_BPVVDCHI2_Min)s ) & ( VFASPF(VCHI2PDOF)<%(Xib_VtxChisqPerDOF_Tight_Max)s ) & ( MM>5500.0*MeV ) & ( MM<6100.0*MeV ) & ( BPVDIRA > %(Xib_BPVDIRA_Tight_Min)s )" % _my_immutable_config
 
         # Build the Xib0 decay to a range of different final states:
 
@@ -255,28 +266,28 @@ class XibStarBuilder(LineBuilder) :
         self.XibMode4  = makeGeneric(name+'Combine'+_name4, [ self.stdJpsi, self.dauP, self.dauK ], '[ Xi_b0 -> J/psi(1S) p+ K- ]cc', _strCutXib0Comb, _strCutXib0MothReg)
         # Line 5 uses: Xib0 -> D0 p+ K-
         _name5 = 'XibToD0PK'
-        self.XibMode5  = makeGeneric(name+'Combine'+_name5, [ self.D0, self.dauTightP, self.dauTightK ], '[ Xi_b0 ->  D0 p+ K- ]cc', _strCutXib0Comb, _strCutXib0MothReg)
+        self.XibMode5  = makeGeneric(name+'Combine'+_name5, [ self.D0, self.dauTightP, self.dauTightK ], '[ Xi_b0 ->  D0 p+ K- ]cc', _strCutXib0Comb, _strCutXib0MothTight)
         # Line 6 uses: Xib0 -> D+ p+ K- pi- (relatively high rate)
         _name6 = 'XibToDpPKPi'
-        self.XibMode6  = makeGeneric(name+'Combine'+_name6, [ self.Dp, self.dauP, self.dauK, self.dauPi ], '[ Xi_b0 -> D+ p+ K- pi- ]cc', _strCutXib0Comb, _strCutXib0MothTight)
+        self.XibMode6  = makeGeneric(name+'Combine'+_name6, [ self.Dp, self.dauTightP, self.dauTightK, self.dauPi ], '[ Xi_b0 -> D+ p+ K- pi- ]cc', _strCutXib0Comb, _strCutXib0MothTight)
         # Line 7 uses: Xib0 -> Lc+ K-
         _name7 = 'XibToLcK'
-        self.XibMode7  = makeGeneric(name+'Combine'+_name7, [ self.stdLc, self.dauTightK ], '[ Xi_b0 -> Lambda_c+ K- ]cc', _strCutXib0Comb, _strCutXib0MothReg)
+        self.XibMode7  = makeGeneric(name+'Combine'+_name7, [ self.Lc, self.dauTightK ], '[ Xi_b0 -> Lambda_c+ K- ]cc', _strCutXib0Comb, _strCutXib0MothTight)
         # Line 8 uses: Xib0 -> Xic+ pi-
         _name8 = 'XibToXicpPi'
-        self.XibMode8  = makeGeneric(name+'Combine'+_name8, [ self.Xicp, self.dauPi ], '[ Xi_b0 -> Xi_c+ pi- ]cc', _strCutXib0Comb, _strCutXib0MothReg)
+        self.XibMode8  = makeGeneric(name+'Combine'+_name8, [ self.Xicp, self.dauPi ], '[ Xi_b0 -> Xi_c+ pi- ]cc', _strCutXib0Comb, _strCutXib0MothTight)
         # Line 9 uses: Xib0 -> Xib0 pi- pi+
         _name9 = 'XibToXic0PiPi'
-        self.XibMode9  = makeGeneric(name+'Combine'+_name9, [ self.Xic0, self.dauPi ], '[ Xi_b0 -> Xi_c0 pi- pi+ ]cc', _strCutXib0Comb, _strCutXib0MothReg)
+        self.XibMode9  = makeGeneric(name+'Combine'+_name9, [ self.Xic0, self.dauPi ], '[ Xi_b0 -> Xi_c0 pi- pi+ ]cc', _strCutXib0Comb, _strCutXib0MothTight)
         # Line 10 uses: Xib0 -> p+ K-
         _name10 = 'XibToPK'
-        self.XibMode10 = makeGeneric(name+'Combine'+_name10, [ self.dauP, self.dauK ], '[ Xi_b0 -> p+ K- ]cc', _strCutXib0Comb, _strCutXib0MothReg)
+        self.XibMode10 = makeGeneric(name+'Combine'+_name10, [ self.dauTightP, self.dauTightK ], '[ Xi_b0 -> p+ K- ]cc', _strCutXib0Comb, _strCutXib0MothTight)
         # Line 11 uses: Xib0 -> Xic+ mu- [and missing neutrino etc]
         _name11 = 'XibToXicpMu'
         self.XibMode11 = makeGeneric(name+'Combine'+_name11, [ self.Xicp, self.dauMu ], '[ Xi_b0 -> Xi_c+ mu- ]cc', _strCutXib0Comb, _strCutXib0MothSL)
         # Line 12 uses: Xib0 -> Xic0 pi+ mu- [and missing neutrino etc]
         _name12 = 'XibToXic0PiMu'
-        self.XibMode12 = makeGeneric(name+'Combine'+_name12, [ self.Xic0, self.dauPi, self.dauMu ], '[ Xi_b0 -> Xi_c0 pi+ mu- ]cc', _strCutXib0Comb, _strCutXib0MothSL)
+        self.XibMode12 = makeGeneric(name+'Combine'+_name12, [ self.Xic0, self.dauPiForSL, self.dauMu ], '[ Xi_b0 -> Xi_c0 pi+ mu- ]cc', _strCutXib0Comb, _strCutXib0MothSL)
         
         # Build Xib* -> Xib0 pi+
         self.XibStarMode1RS  = makeXibStarRS(  name+'CombineXibStarRS'+_name1,  [ self.XibMode1,  self.dauSoftPi ])
@@ -334,7 +345,7 @@ class XibStarBuilder(LineBuilder) :
         self.control1  = self._strippingLine(name = name+"ControlXib_"+_name1,  prescale = config['prescaleControlMuonic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode1)
         self.control2  = self._strippingLine(name = name+"ControlXib_"+_name2,  prescale = config['prescaleControlMuonic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode2)
         self.control3  = self._strippingLine(name = name+"ControlXib_"+_name3,  prescale = config['prescaleControlMuonic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode3)
-        self.control4  = self._strippingLine(name = name+"ControlXib_"+_name4,  prescale = config['prescaleControlMuonic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode4)
+        self.control4  = self._strippingLine(name = name+"ControlXib_"+_name4,  prescale = config['prescaleControlHadronic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode4)
         self.control5  = self._strippingLine(name = name+"ControlXib_"+_name5,  prescale = config['prescaleControlHadronic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode5)
         self.control6  = self._strippingLine(name = name+"ControlXib_"+_name6,  prescale = config['prescaleControlHadronic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode6)
         self.control7  = self._strippingLine(name = name+"ControlXib_"+_name7,  prescale = config['prescaleControlHadronic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode7)
@@ -342,7 +353,7 @@ class XibStarBuilder(LineBuilder) :
         self.control9  = self._strippingLine(name = name+"ControlXib_"+_name9,  prescale = config['prescaleControlHadronic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode9)
         self.control10 = self._strippingLine(name = name+"ControlXib_"+_name10, prescale = config['prescaleControlHadronic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode10)
         self.control11 = self._strippingLine(name = name+"ControlXib_"+_name11, prescale = config['prescaleControlMuonic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode11)
-        self.control12 = self._strippingLine(name = name+"ControlXib_"+_name12, prescale = config['prescaleControlMuonic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode12)
+        self.control12 = self._strippingLine(name = name+"ControlXib_"+_name12, prescale = config['prescaleControlHadronic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode12)
 
 
 def filterDisplacedTracks(localName, inputSelection, configDict = _my_immutable_config) :
@@ -350,96 +361,57 @@ def filterDisplacedTracks(localName, inputSelection, configDict = _my_immutable_
               "& (P>%(DisplacedTrack_P_Min)s)" \
               "& (PT>%(DisplacedTrack_PT_Min)s)" \
               "& (MIPCHI2DV(PRIMARY)>%(DisplacedTrack_MIPCHI2DV_Min)s)" % configDict
-    _filter = FilterDesktop(Code = _strCut)
-    return Selection(localName,
-                     Algorithm = _filter,
-                     RequiredSelections = [ inputSelection ] )
-
+    return filterGeneric(localName, inputSelection, _strCut)
 
 def filterKaons(localName, inputSelection, configDict = _my_immutable_config) :
-    # Filter:
     _strCutDau = "(HASRICH)&(PROBNNk>%(Kaon_ProbNNk_Min)s)" % configDict
-    _filter = FilterDesktop(Code = _strCutDau)
-    return Selection ( localName,
-                       Algorithm = _filter,
-                       RequiredSelections = [ inputSelection ] )
+    return filterGeneric(localName, inputSelection, _strCutDau)
 
 def filterPions(localName, inputSelection, configDict = _my_immutable_config) :
-    # Filter:
     _strCutDau = "(HASRICH)&(PROBNNpi>%(Pion_ProbNNpi_Min)s)" % configDict
-    _filter = FilterDesktop(Code = _strCutDau)
-    return Selection ( localName,
-                       Algorithm = _filter,
-                       RequiredSelections = [ inputSelection ] )
+    return filterGeneric(localName, inputSelection, _strCutDau)
 
 def filterProtons(localName, inputSelection, configDict = _my_immutable_config) :
-    # Filter:
     _strCutDau = "(HASRICH)&(PROBNNp>%(Proton_ProbNNp_Min)s)" % configDict
-    _filter = FilterDesktop(Code = _strCutDau)
-    return Selection ( localName,
-                       Algorithm = _filter,
-                       RequiredSelections = [ inputSelection ] )
+    return filterGeneric(localName, inputSelection, _strCutDau)
 
 def filterMuons(localName, inputSelection, configDict = _my_immutable_config) :
-    # Filter:
     _strCutDau = "(PROBNNmu>%(Muon_ProbNNmu_Min)s)" % configDict
-    _filter = FilterDesktop(Code = _strCutDau)
-    return Selection ( localName,
-                       Algorithm = _filter,
-                       RequiredSelections = [ inputSelection ] )
+    return filterGeneric(localName, inputSelection, _strCutDau)
 
 def filterKaonsTight(localName, inputSelection, configDict = _my_immutable_config) :
-    # Filter:
     _strCutDau = "(PROBNNk>%(Kaon_ProbNNk_Tight_Min)s) & (MIPCHI2DV(PRIMARY)>%(DisplacedTrack_MIPCHI2DV_Tight_Min)s)" % configDict
-    _filter = FilterDesktop(Code = _strCutDau)
-    return Selection ( localName,
-                       Algorithm = _filter,
-                       RequiredSelections = [ inputSelection ] )
+    return filterGeneric(localName, inputSelection, _strCutDau)
 
 def filterPionsTight(localName, inputSelection, configDict = _my_immutable_config) :
-    # Filter:
     _strCutDau = "(PROBNNpi>%(Pion_ProbNNpi_Tight_Min)s) & (MIPCHI2DV(PRIMARY)>%(DisplacedTrack_MIPCHI2DV_Tight_Min)s)" % configDict
-    _filter = FilterDesktop(Code = _strCutDau)
-    return Selection ( localName,
-                       Algorithm = _filter,
-                       RequiredSelections = [ inputSelection ] )
+    return filterGeneric(localName, inputSelection, _strCutDau)
 
 def filterProtonsTight(localName, inputSelection, configDict = _my_immutable_config) :
-    # Filter:
     _strCutDau = "(PROBNNp>%(Proton_ProbNNp_Tight_Min)s) & (MIPCHI2DV(PRIMARY)>%(DisplacedTrack_MIPCHI2DV_Tight_Min)s)" % configDict
-    _filter = FilterDesktop(Code = _strCutDau)
-    return Selection ( localName,
-                       Algorithm = _filter,
-                       RequiredSelections = [ inputSelection ] )
-
+    return filterGeneric(localName, inputSelection, _strCutDau)
 
 def filterSoft(localName, inputSelection, configDict = _my_immutable_config) :
     _strCut = "(TRCHI2DOF<%(SoftTrack_TRCHI2DOF_Max)s)" \
               "& (P>%(SoftTrack_P_Min)s)" \
               "& (PT>%(SoftTrack_PT_Min)s)" \
+              "& (PROBNNp<%(SoftTrack_ProbNN_e_Max)s)" \
               "& (MIPCHI2DV(PRIMARY)>%(SoftTrack_MIPCHI2DV_Min)s)" % configDict    
-    _filter = FilterDesktop(Code = _strCut)
-    return Selection(localName,
-                     Algorithm = _filter,
-                     RequiredSelections = [ inputSelection ] )
+    return filterGeneric(localName, inputSelection, _strCut)
 
 def filterDownstream(localName, inputSelection, configDict = _my_immutable_config) :
-    # Filter:
     _strCut = "(TRCHI2DOF<%(DownTrack_TRCHI2DOF_Max)s)" \
               "& (P>%(DownTrack_P_Min)s)" \
               "& (PT>%(DownTrack_PT_Min)s)" \
               "& (MIPCHI2DV(PRIMARY)>%(DownTrack_MIPCHI2DV_Min)s)" % configDict
-    _filter = FilterDesktop(Code = _strCut)
-    return Selection ( localName,
-                       Algorithm = _filter,
-                       RequiredSelections = [ inputSelection ] )
+    return filterGeneric(localName, inputSelection, _strCut)
 
 def filterGhosts(localName, inputSelection, configDict = _my_immutable_config) :
     _strCutGhost = '(TRGHOSTPROB<%(DisplacedTrack_GhostProb_Max)s)' % configDict
-    _filter = FilterDesktop(Code = _strCutGhost)
-    return Selection(localName,
-                     Algorithm = _filter,
-                     RequiredSelections = [ inputSelection ] )
+    return filterGeneric(localName, inputSelection, _strCutGhost)
+
+def filterForSL(localName, inputSelection, configDict = _my_immutable_config) :
+    return filterGeneric(localName, inputSelection, '(PT>500*MeV)')
 
 def makeXi(localName, inputListLambda, inputListTrack, cutWide, cutTight, ChisqCutTwoBody) :
     _strCutComb = "( ADAMASS('Xi-') < %(cutWide)s )" % locals()
@@ -471,21 +443,22 @@ def makeXic(localName, inputSelections, inputChisqCut, inputDecay, configDict = 
     return _output
 
 # CDF measures: m(Xib*) - m(Xib) - m(pi) = 14.84 +- 0.74 +- 0.28 MeV
-def makeXibStar(localName, inputSelections, decay, configDict = _my_immutable_config) :
+def makeXibStarBase(localName, inputSelections, decay, cutMothDM, configDict = _my_immutable_config) :
     _cutComb = '(AM > 5000.0*MeV) & (AM < 8000.0*MeV)'
     _cutMothBase = '(PT > %(XibStar_PT_Min)s) & (VFASPF(VCHI2/VDOF) < %(XibStar_VtxChisq_Max)s )' % configDict
-    _cutMothDM = '(MM - CHILD(MM,1) - CHILD(MM,2) > %(XibStar_DMCutLower)s) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(XibStar_DMCutUpper)s)' % configDict
-    _cutMoth = '(' + _cutMothBase + ' & ' + _cutMothDM + ')'
+    _cutMoth = '(' + _cutMothBase + ' & ' + cutMothDM + ')'
     _output = makeGeneric(localName, inputSelections, decay, _cutComb, _cutMoth)
+    return _output
+
+def makeXibStar(localName, inputSelections, decay, configDict = _my_immutable_config) :
+    _cutMothDM = '(MM - CHILD(MM,1) - CHILD(MM,2) > %(XibStar_DMCutLower)s) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(XibStar_DMCutUpper)s)' % configDict
+    _output = makeXibStarBase(localName, inputSelections, decay, _cutMothDM, configDict)
     return _output
 
 # For SL decays, we expect some missing particles so DM resolution will be degraded.
 def makeXibStarSL(localName, inputSelections, decay, configDict = _my_immutable_config) :
-    _cutComb = '(AM > 5000.0*MeV) & (AM < 8000.0*MeV)'
-    _cutMothBase = '(PT > %(XibStar_PT_Min)s) & (VFASPF(VCHI2/VDOF) < %(XibStar_VtxChisq_Max)s )' % configDict
     _cutMothDM = '(MM - CHILD(MM,1) - CHILD(MM,2) > %(XibStar_DMCutLower_SL)s) & (MM - CHILD(MM,1) - CHILD(MM,2) < %(XibStar_DMCutUpper_SL)s)' % configDict
-    _cutMoth = '(' + _cutMothBase + ' & ' + _cutMothDM + ')'
-    _output = makeGeneric(localName, inputSelections, decay, _cutComb, _cutMoth)
+    _output = makeXibStarBase(localName, inputSelections, decay, _cutMothDM, configDict)
     return _output
 
 def makeXibStarRS(localName, inputSelections, configDict = _my_immutable_config) :
@@ -507,6 +480,13 @@ def makeXibStarWSSL(localName, inputSelections, configDict = _my_immutable_confi
     _decay = '[ Sigma_b+ -> Xi_b0 pi+ ]cc'
     _output = makeXibStarSL(localName, inputSelections, _decay, configDict)
     return _output
+
+def filterGeneric(localName, inputSelection, filterString) :
+    _filter = FilterDesktop(Code = filterString)
+    return Selection(localName,
+                     Algorithm = _filter,
+                     RequiredSelections = [ inputSelection ] )
+
 
 def makeGeneric(localName, inputSelections, decay, cutComb, cutMoth) :
     _combine = CombineParticles( DecayDescriptor = decay,
