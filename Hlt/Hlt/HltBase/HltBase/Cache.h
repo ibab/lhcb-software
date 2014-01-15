@@ -93,7 +93,7 @@ namespace Hlt
      * @returns The value associated with the specified type and key. If the such
      * value does not exists def is returned.
      */
-    template<typename T> T info(const StringKey& key, const T& def) const;
+    template<typename T> const T& info(const StringKey& key, const T& def) const;
     /// Cache to string 
     std::string toString() const;
     /// Fill the ASCII output stream
@@ -130,7 +130,7 @@ namespace Hlt
   template<> 
   inline bool Cache::has_<bool>(const StringKey& key) const 
   {
-    return m_boolean_store.count(key) > 0;
+    return  m_boolean_store.find(key) != m_boolean_store.end();
   }
   template<> 
   inline void Cache::_insert(const StringKey& key, const bool& value) 
@@ -144,11 +144,11 @@ namespace Hlt
     m_boolean_store.update(key,value);
   }
   template<> 
-  inline bool Cache::info<bool>(const StringKey& key,
-                                const bool& def) const 
+  inline const bool& Cache::info<bool>(const StringKey& key,
+                                       const bool& def) const 
   {
-    if (!has_<bool>(key)) return def;
-    return m_boolean_store[key];
+    auto i = m_boolean_store.find(key);
+    return i != m_boolean_store.end() ? i->second : def ;
   }
   // ==========================================================================
   // Integer
@@ -156,7 +156,7 @@ namespace Hlt
   template<> 
   inline bool Cache::has_<int>(const StringKey& key) const 
   {
-    return m_integer_store.count(key) > 0;
+    return  m_integer_store.find(key) != m_integer_store.end();
   }
   template<> 
   inline void Cache::_insert(const StringKey& key,
@@ -171,18 +171,18 @@ namespace Hlt
     m_integer_store.update(key, value);
   }
   template<> 
-  inline int Cache::info<int>(const StringKey& key,
-                              const int& def) const 
+  inline const int& Cache::info<int>(const StringKey& key,
+                                     const int& def) const 
   {
-    if (!has_<int>(key)) return def;
-    return m_integer_store[key];
+    auto i = m_integer_store.find(key);
+    return i != m_integer_store.end() ? i->second : def ;
   }
   // ==========================================================================
   // Double
   // ==========================================================================
   template<> inline bool Cache::has_<double>(const StringKey& key) const 
   {
-    return m_double_store.count(key) > 0;
+    return  m_double_store.find(key) != m_double_store.end();
   }
   template<> inline void Cache::_insert(const StringKey& key,
                                         const double& value) 
@@ -196,11 +196,11 @@ namespace Hlt
     m_double_store.update(key, value);
   }
   template<> 
-  inline double Cache::info<double>(const StringKey& key,
-                                    const double& def)  const 
+  inline const double& Cache::info<double>(const StringKey& key,
+                                           const double& def)  const 
   {
-    if (!has_<double>(key)) return def;
-    return m_double_store[key];
+    auto i = m_double_store.find(key);
+    return i != m_double_store.end() ? i->second : def ;
   }
   // ==========================================================================
   // String
@@ -208,7 +208,7 @@ namespace Hlt
   template<> 
   inline bool Cache::has_<std::string>(const StringKey& key) const 
   {
-    return m_string_store.count(key) > 0;
+    return  m_string_store.find(key) != m_string_store.end();
   }
   template<> 
   inline void Cache::_insert(const StringKey& key,
@@ -223,17 +223,17 @@ namespace Hlt
     m_string_store.update(key, value);
   }
   template<>
-  inline std::string Cache::info<std::string>(const StringKey& key,
-                                              const std::string& def) const 
+  inline const std::string& Cache::info<std::string>(const StringKey& key,
+                                                     const std::string& def) const 
   {
-    if (!has_<std::string>(key)) return def;
-    return m_string_store[key];
+    auto i = m_string_store.find(key);
+    return i != m_string_store.end() ? i->second : def ;
   }
   // =========================================================================
   inline bool Cache::has(const StringKey& key) const 
   {
-    return has_<bool>(key) || has_<int>(key) || has_<double>(key) ||
-      has_<std::string>(key);
+    return has_<bool>(key)   || has_<int>(key) 
+        || has_<double>(key) || has_<std::string>(key);
   }
   // ==========================================================================
   inline void Cache::erase(const StringKey& key) 

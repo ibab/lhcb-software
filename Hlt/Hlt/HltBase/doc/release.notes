@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2014-01-15 - Gerhard Raven
+ - HltStage: avoid double lookups in Cache when retrieving an item
+   (note: requires C++11, as I'm being lazy and used auto)
+
 ! 2014-01-08 - Marco Clemencic
  - Added CMake configuration.
 
