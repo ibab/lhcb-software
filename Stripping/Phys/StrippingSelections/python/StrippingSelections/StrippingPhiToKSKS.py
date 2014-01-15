@@ -4,14 +4,14 @@ Idea from Thomas Ruf.
 """
 __author__ = ['Mika Vesterinen','Thomas Ruf']
 __date__ = '30/07/2013'
-__version__ = '$Revision: 0.0 $'
+__version__ = '$Revision: 0.1 $'
 
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLoosePions, StdAllLooseKaons
+from StandardParticles import StdAllLooseKaons, StdAllLooseMuons
 from Configurables import FitDecayTrees
 from PhysSelPython.Wrappers import AutomaticData, MergedSelection
 
@@ -20,9 +20,10 @@ __all__ = ('PhiToKSKSAllLinesConf',
            'confdict')
 
 confdict = {
-    "prescale_PhiToKK" : 1.0,
+    "prescale_PhiToKK" : 0.001,
     "prescale_PhiToKsKs" : 1.0,
-    "prescale_JPsiToKK" : 1.0,
+    "prescale_PhiToMuMu" : 0.01,
+    "prescale_JPsiToKK" : 0.01,
     "prescale_JPsiToKsKs" : 1.0,
     
     "GEC_nLongTrk" : 250,
@@ -32,6 +33,10 @@ confdict = {
     "K_PTMIN" : 200, #MeV
     "K_PIDK_MIN" : 7, #adimensional
     "K_IPCHI2_MAX" : 9, #adimensional
+    
+    "Mu_PTMIN" : 200, #MeV
+    "Mu_PIDmu_MIN" : 0, #adimensional
+    "Mu_IPCHI2_MAX" : 9, #adimensional
     
     "KS_LL_PTMIN" : 200, #MeV
     "KS_LL_MASS_WINDOW" : 50, #MeV
@@ -66,6 +71,7 @@ class PhiToKSKSAllLinesConf(LineBuilder) :
     __configuration_keys__ = (
         "prescale_PhiToKK" ,
         "prescale_PhiToKsKs" ,
+        "prescale_PhiToMuMu" ,
         "prescale_JPsiToKK" ,
         "prescale_JPsiToKsKs" ,
         "GEC_nLongTrk",
@@ -74,6 +80,9 @@ class PhiToKSKSAllLinesConf(LineBuilder) :
         "K_PTMIN",
         "K_PIDK_MIN",
         "K_IPCHI2_MAX",
+        "Mu_PTMIN",
+        "Mu_PIDmu_MIN",
+        "Mu_IPCHI2_MAX",
         "KS_LL_PTMIN",
         "KS_LL_MASS_WINDOW",
         "KS_LL_FD_MIN",
@@ -128,6 +137,11 @@ class PhiToKSKSAllLinesConf(LineBuilder) :
             " & (MIPCHI2DV(PRIMARY) < %(K_IPCHI2_MAX)s)"\
             " & (TRGHOSTPROB < %(GHOSTPROB_MAX)s)" %config
         
+        self.MuonCuts = " (PT> %(Mu_PTMIN)s *MeV)" \
+            " & (PIDmu > %(Mu_PIDmu_MIN)s)"\
+            " & (MIPCHI2DV(PRIMARY) < %(Mu_IPCHI2_MAX)s)"\
+            " & (TRGHOSTPROB < %(GHOSTPROB_MAX)s)" %config
+        
         
         self.KsLL = Selection( "KsLLFor" + _name,
                                Algorithm = FilterDesktop(name = "KsLLFilterFor"+_name, Code = self.KsLLCuts ),
@@ -143,10 +157,17 @@ class PhiToKSKSAllLinesConf(LineBuilder) :
                                 Algorithm = FilterDesktop(name = "KaonFilterFor"+_name, Code = self.KaonCuts ),
                                 RequiredSelections = [StdAllLooseKaons])
         
+        self.Muons = Selection( "MuonsFor" + _name,
+                                Algorithm = FilterDesktop(name = "MuonFilterFor"+_name, Code = self.MuonCuts ),
+                                RequiredSelections = [StdAllLooseMuons])
+        
         ####### phi(1020) #############
 
         self.PhiToKK_Line = VMaker(_name+"_PhiToKK",[self.Kaons],"phi(1020) -> K+ K-",GECs,config,config["prescale_PhiToKK"])
         self.registerLine(self.PhiToKK_Line)        
+        
+        self.PhiToMuMu_Line = VMaker(_name+"_PhiToMuMu",[self.Muons],"phi(1020) -> mu+ mu-",GECs,config,config["prescale_PhiToMuMu"])
+        self.registerLine(self.PhiToMuMu_Line)        
         
         self.PhiToKsKs_Line = VMaker(_name+"_PhiToKsKs",[self.Ks],"phi(1020) -> KS0 KS0",GECs,config,config["prescale_PhiToKsKs"])
         self.registerLine(self.PhiToKsKs_Line)        
