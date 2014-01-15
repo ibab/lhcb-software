@@ -1,4 +1,3 @@
-! $Id: release.notes,v 1.172 2010-07-02 08:10:16 mgrabalo Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch) ---> Marc Grabalosa (2011-2012), 
@@ -6,6 +5,9 @@
 !                                               ---> Stefania Vecchi (2013)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2014-01-15 - Marco Cattaneo
+ - Remove support for VL
 
 !========================= FlavourTagging v13r4 2013-12-18 =========================
 

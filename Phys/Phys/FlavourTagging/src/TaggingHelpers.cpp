@@ -1,4 +1,3 @@
-// $Id: $
 /**
  * @file TaggingHelpers.cpp
  *
@@ -109,17 +108,17 @@ namespace TaggingHelpers
           //        stations for the upgrade clone detection?
           while (h1.end() != it && h2.end() != jt) {
             if (*it < *jt) {
-              if (it->isVelo() || it->isVP() || it->isVL()) ++nVelo1;
+              if (it->isVelo() || it->isVP()) ++nVelo1;
               else if (it->isIT() || it->isOT()) ++nT1;
               ++it;
             } else if (*jt < *it) {
-              if (jt->isVelo() || jt->isVP() || jt->isVL()) ++nVelo2;
+              if (jt->isVelo() || jt->isVP()) ++nVelo2;
               else if (jt->isIT() || jt->isOT()) ++nT2;
               ++jt;
             } else {
               ++nCommon;
               // common LHCb ID
-              if (it->isVelo() || it->isVP() || it->isVL()) {
+              if (it->isVelo() || it->isVP()) {
                 ++nVelo1;
                 ++nVelo2;
                 ++nVeloCommon;
@@ -134,13 +133,13 @@ namespace TaggingHelpers
           }
           // consume any hits potentially remaining in track 1
           while (h1.end() != it) {
-            if (it->isVelo() || it->isVP() || it->isVL()) ++nVelo1;
+            if (it->isVelo() || it->isVP()) ++nVelo1;
             else if (it->isIT() || it->isOT()) ++nT1;
             ++it;
           }
           // consume any hits potentially remaining in track 2
           while (h2.end() != jt) {
-            if (jt->isVelo() || jt->isVP() || jt->isVL()) ++nVelo2;
+            if (jt->isVelo() || jt->isVP()) ++nVelo2;
             else if (jt->isIT() || jt->isOT()) ++nT2;
             ++jt;
           }
