@@ -68,7 +68,7 @@ class FstConf(LHCbConfigurableUser):
         elif "VP" == self.getProp("VeloType"):
             from Configurables import PatPixelTracking, VPRawBankToLiteCluster
             FstSequencer("RecoFstSeq").Members += ["VPRawBankToLiteCluster/FstVPDecoding",
-                                                  "PatPixelTracking/FstPixel"]
+                                                   "PatPixelTracking/FstPixel"]
             # Centrally produced upgrade samples need this fix
             # see https://twiki.cern.ch/twiki/bin/viewauth/LHCbPhysics/UpgradeTrackingSequence
             VPRawBankToLiteCluster("FstVPDecoding").RawEventLocation = "/Event/Other/RawEvent"
@@ -250,7 +250,13 @@ class FstConf(LHCbConfigurableUser):
             FstForward.PrForwardTool.AddUTHitsToolName = ""
             # Now with the momentum estimate
             FstForward.PrForwardTool.UseMomentumEstimate = True
+            # MinPt determines the size of the search window, set
+            # this to the lowest pT you want to be able to find
             FstForward.PrForwardTool.MinPt = self.getProp("ForwardMinPt")
+            # Remove tracks with an UT estimated pT below this value,
+            # because the UT resolution is not perfect set this to a
+            # value less than the lowest pT you want to be able to
+            # find, eg: MinPt = 500 and PreselectionPT = 400MeV
             FstForward.PrForwardTool.PreselectionPT = self.getProp("ForwardMinPt")
             FstForward.PrForwardTool.Preselection = True
             
