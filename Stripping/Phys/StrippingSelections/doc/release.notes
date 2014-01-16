@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-16 - Marc Olivier Bettler
+ - added StrippingKshort2MuMuMuMu.py for Mike Sokoloff
+
 ! 2014-01-16 - Vanya Belyaev
 
   - PromptCharm: restore removed by mistake 2xdimuon line 
