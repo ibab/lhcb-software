@@ -6,6 +6,10 @@
 
 ! 2014-01-16 - Vanya Belyaev
 
+  - PromptCharm: restore removed by mistake 2xdimuon line 
+
+! 2014-01-16 - Vanya Belyaev
+
  - PromptCharm:
 
  	   remove all garbage Xicc, Ds+J/psi, Ds+Lc,...

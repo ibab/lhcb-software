@@ -301,6 +301,7 @@ _default_configuration_ = {
     'SigmaCPrescale'         : 1.0 ,
     'DiCharmPrescale'        : 1.0 ,
     'DiMu&CharmPrescale'     : 1.0 ,
+    'DoubleDiMuPrescale'     : 1.0 ,
     'Chi&CharmPrescale'      : 1.0 ,
     'Charm&WPrescale'        : 1.0 ,
     'DiMuon&WPrescale'       : 1.0 ,
@@ -445,7 +446,7 @@ class StrippingPromptCharmConf(LineBuilder) :
                  self.LamCstar       () ,
                  self.DiMuon         () ,
                  self.DiCharm        () ,
-                 self.DiMuonAndCharm () ,
+                 self.DoubleDiMuon   () ,
                  self.ChiAndCharm    () ,
                  self.W              () ,
                  self.CharmAndW      () ,
@@ -553,6 +554,13 @@ class StrippingPromptCharmConf(LineBuilder) :
             prescale = self['DiMu&CharmPrescale'] , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'           ] ,
             algos    =     [ self.DiMuonAndCharm () ]
+            ) ,
+            ##
+            StrippingLine (
+            "DoubleDiMuonFor" + self.name()       ,
+            prescale = self['DoubleDiMuPrescale'] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'           ] ,
+            algos    =     [ self.DoubleDiMuon () ]
             ) ,
             ##
             StrippingLine (
@@ -1095,6 +1103,27 @@ class StrippingPromptCharmConf(LineBuilder) :
             CombinationCut  = " psi | psi_prime | ( AM > 8 * GeV ) " ,
             ##      mother cut
             MotherCut       = " chi2vx < 20 " ,
+            )
+    
+    ## get the 2xdimuons
+    def DoubleDiMuon ( self ) :
+        """
+        Get the 2xdimuons
+        """
+        from GaudiConfUtils.ConfigurableGenerators      import CombineParticles 
+        return self.make_selection (
+            'DoubleDiMuon'         ,
+            CombineParticles ,
+            [ self.DiMuon() ] , 
+            #
+            ## algorihtm properties
+            # 
+            ## the decays to be reconstructed
+            DecayDescriptor = 'Upsilon(1S) -> J/psi(1S) J/psi(1S)' ,
+            ## combination cut
+            CombinationCut  = "AALL" ,
+            ##      mother cut
+            MotherCut       = " ALL" 
             )
     
     ## get the dimuons & charn
