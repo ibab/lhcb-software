@@ -113,7 +113,7 @@ class BW_BW : public DalitzEventAccess, virtual public ILineshape{
   virtual int numDaughters() const;
   virtual TLorentzVector daughterP4(int i) const;
 
-  virtual double daughterPDGMass(int i) const;
+  virtual double daughterPDGMass( const int& i ) const;
   virtual double daughterWidth(int i) const;
   virtual double daughterRecoMass2(int i) const;
   virtual double daughterRecoMass(int i) const;

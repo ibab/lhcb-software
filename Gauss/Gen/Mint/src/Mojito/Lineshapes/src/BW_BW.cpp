@@ -512,17 +512,23 @@ double BW_BW::mumsRecoMass() const{
   return _mumsRecoMass;
 }
 
-double BW_BW::daughterPDGMass(int i) const{
-  if( i >= _theDecay.nDgtr() || i < 0){
+double BW_BW::daughterPDGMass( const int& i ) const{
+  if( i >= _theDecay.nDgtr() || i < 0 ){
     cout << " ERROR in BW_BW::daughterPDGMass:"
 	 << " You requested the mass of dgtr number " << i
-	 << ". There are " << _theDecay.nDgtr() 
+	 << ". There are " << _theDecay.nDgtr()
 	 << " daughters." << endl;
     return -9999;
   }
-  if(_daughterPDGMass[i] < 0){
-    _daughterPDGMass[i] =  _theDecay.getDgtrVal(i).mass();
+
+  if( _daughterPDGMass[i] < 0 ){
+    _daughterPDGMass[i] = _theDecay.getDgtrVal(i).mass();
   }
+
+  if( _theDecay.getDgtrVal(i).isNonResonant() ){
+    _daughterPDGMass[i] = daughterRecoMass(i);
+  }
+
   return _daughterPDGMass[i];
 }
 
