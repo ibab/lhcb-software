@@ -15,6 +15,7 @@ gaudi_project(LHCb v36r4
               DATA Gen/DecFiles
                    Det/SQLDDDB VERSION v7r*
                    FieldMap
+                   ParamFiles
                    PRConfig
                    RawEventFormat
                    TCK/HltTCK
