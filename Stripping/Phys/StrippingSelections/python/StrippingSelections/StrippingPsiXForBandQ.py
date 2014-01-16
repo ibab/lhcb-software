@@ -673,7 +673,7 @@ class PsiX_BQ_Conf(LineBuilder) :
         if not kwargs.has_key('Preambulo')           :
             kwargs ['Preambulo'        ] = self['Preambulo']
 
-        if not kwargs.has_key( 'ParticleCombiners' ) :
+        if not kwargs.has_key ( 'ParticleCombiners' ) :
             kwargs ['ParticleCombiners'] = { '' : 'LoKi::VertexFitter:PUBLIC' } 
             
         #
@@ -1849,7 +1849,7 @@ class PsiX_BQ_Conf(LineBuilder) :
             ( ACHI2DOCA(2,5) <  20 ) &
             ( ACHI2DOCA(3,5) <  20 ) &
             ( ACHI2DOCA(4,5) <  20 ) 
-            """ , 
+            """ ,
             CombinationCut   = """  ( mbp_acut | mbc_acut ) &
             ( ACHI2DOCA(1,6) <  20 ) &
             ( ACHI2DOCA(2,6) <  20 ) &

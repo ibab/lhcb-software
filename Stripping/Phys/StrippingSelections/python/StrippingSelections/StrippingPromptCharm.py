@@ -67,13 +67,6 @@
 # | <>DiMuonAndWForPromptCharm     | 0.0119 |   33 | 0.033 |
 # | <>ChiAndWForPromptCharm        | 0.0054 |   15 | 0.033 |
 # +--------------------------------+--------+------+-------+
-# |               other                                    |
-# +--------------------------------+--------+------+-------+
-# | <>DsPsiForPromptCharm          | 0.0090 |   25 | 0.032 |
-# | <>DsLamCForPromptCharm         | 0.0090 |   25 | 0.032 |
-# | <>Xicc+ForPromptCharm          | 0.0090 |   25 | 0.032 |
-# | <>Xicc++ForPromptCharm         | 0.0090 |   25 | 0.032 |
-# +--------------------------------+--------+------+-------+
 #
 # Usage:
 #
@@ -190,20 +183,8 @@ from Gaudi.Configuration import *
 from GaudiKernel.SystemOfUnits             import GeV, MeV, mm
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from PhysSelPython.Wrappers import   Selection, MergedSelection
-from StandardParticles      import ( StdNoPIDsPions     ,
-                                     StdLoosePions      ,
-                                     StdLooseKaons      ,
-                                     StdLooseProtons    ,
-                                     ## for onia, prompt and W
-                                     StdAllLooseMuons   ,
-                                     ## for soft pion from D*+, Sigma_c, Lambda_c*
-                                     StdAllNoPIDsPions  ,
-                                     ## for chi_(c,b)
-                                     StdLooseAllPhotons )
-
-from StrippingConf.StrippingLine import StrippingLine
-from StrippingUtils.Utils import LineBuilder
+from PhysSelPython.Wrappers                import   Selection, MergedSelection
+from StrippingUtils.Utils                  import LineBuilder
 # =============================================================================
 ## logging
 # =============================================================================
@@ -219,32 +200,59 @@ _default_configuration_ = {
     #
     ## PT-cuts
     #
-    'pT(D0)'           :  3.0 * GeV ,    ## pt-cut for  prompt   D0
-    'pT(D0) for D*+'   :  2.0 * GeV ,    ## pt-cut for  D0 from  D*+
-    'pT(D+)'           :  3.0 * GeV ,    ## pt-cut for  prompt   D+
-    'pT(Ds+)'          :  3.0 * GeV ,    ## pt-cut for  prompt   Ds+
-    'pT(Ds+) for Bc+'  :  1.0 * GeV ,    ## pt-cut for  Ds+ from Bc+
-    'pT(Ds+) for Lb'   :  1.0 * GeV ,    ## pt-cut for  Ds+ from Lb0
-    'pT(Lc+)'          :  3.0 * GeV ,    ## pt-cut for  prompt   Lc+
-    'pT(Lc+) for Xicc' :  1.0 * GeV ,    ## pt-cut for  Lc+ from Xicc
-    'pT(Lc+) for Lb'   :  1.0 * GeV ,    ## pt-cut for  Lc+ from Lb0
-    'pT(Xicc+)'        :  2.0 * GeV ,    ## pt-cut for  Xicc+ 
-    'pT(Xicc++)'       :  2.0 * GeV ,    ## pt-cut for  Xicc++
+    #
+    ## attention: with 1GeV pt-cut prescale is needed for D0,D+,D*+ and Ds
+    #
+    'pT(D0)'   :  1.0 * GeV ,    ## pt-cut for  prompt   D0
+    'pT(D+)'   :  1.0 * GeV ,    ## pt-cut for  prompt   D+
+    'pT(Ds+)'  :  1.0 * GeV ,    ## pt-cut for  prompt   Ds+
+    'pT(Lc+)'  :  1.0 * GeV ,    ## pt-cut for  prompt   Lc+
     #
     # Selection of basic particles
     #
-    'TrackCuts'       : """
-    ( TRCHI2DOF < 4     ) &
-    ( PT > 250 * MeV    ) &
-    ( TRGHOSTPROB < 0.5 ) & 
-    in_range  ( 2 , ETA , 5 )
+    'PionCut'   : """
+    ( PT          > 250 * MeV ) & 
+    ( CLONEDIST   > 5000      ) & 
+    ( TRGHOSTPROB < 0.5       ) &
+    ( TRCHI2DOF   < 4         ) & 
+    in_range ( 2          , ETA , 4.9       ) &
+    in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
+    HASRICH                     &
+    ( PROBNNpi     > 0.1      ) &
+    ( MIPCHI2DV()  > 9        )
     """ ,
-    'BasicCuts'       : ' & ( 9 < MIPCHI2DV() ) ' ,
-    'KaonCuts'        : ' & ( 2 < PIDK  - PIDpi ) '                           ,
-    'PionCuts'        : ' & ( 2 < PIDpi - PIDK  ) '                           ,
-    'ProtonCuts'      : ' & ( 2 < PIDp  - PIDpi ) & ( 2 < PIDp - PIDK ) '     ,
-    'SlowPionCuts'    : ' TRCHI2DOF < 5 '                                     ,
-    'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) '   ,
+    #
+    'KaonCut'   : """
+    ( PT          > 250 * MeV ) & 
+    ( CLONEDIST   > 5000      ) & 
+    ( TRGHOSTPROB < 0.5       ) &
+    ( TRCHI2DOF   < 4         ) & 
+    in_range ( 2          , ETA , 4.9       ) &
+    in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
+    HASRICH                     &
+    ( PROBNNk      > 0.1      ) &
+    ( MIPCHI2DV()  > 9        )
+    """ ,
+    #
+    'ProtonCut'   : """
+    ( PT           > 250 * MeV ) & 
+    ( CLONEDIST    > 5000      ) & 
+    ( TRCHI2DOF    < 4         ) & 
+    ( TRGHOSTPROB  < 0.5       ) & 
+    in_range ( 2         , ETA , 4.9       ) &
+    in_range ( 10 * GeV  , P   , 150 * GeV ) &
+    HASRICH                      &
+    ( PROBNNp      > 0.1       ) &
+    ( MIPCHI2DV()  > 9         ) 
+    """ ,
+    ##
+    'MuonCut'   : """
+    ISMUON &
+    in_range ( 2 , ETA , 4.9     ) &
+    ( PT            >  550 * MeV ) &
+    ( PIDmu - PIDpi >    0       ) &
+    ( CLONEDIST     > 5000       )     
+    """ , 
     #
     ## photons from chi_(c,b)
     #
@@ -280,10 +288,6 @@ _default_configuration_ = {
     # dimuons:
     "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
     "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
-    ## good proton
-    "good_proton   = ( 'p+' == ABSID ) & HASRICH & in_range ( 8 * GeV , P , 150 * GeV )  " ,
-    "good_proton   = good_proton & ( PIDp - PIDpi > 2 ) " ,
-    "good_proton   = good_proton & ( PIDp - PIDK  > 2 ) " 
     ] ,
     ## monitoring ?
     'Monitor'     : False ,
@@ -294,14 +298,10 @@ _default_configuration_ = {
     'D+Prescale'             : 1.0 ,
     'LambdaCPrescale'        : 1.0 ,
     'LambdaC*Prescale'       : 1.0 ,
-    'Xicc+Prescale'          : 1.0 ,
-    'Xicc++Prescale'         : 1.0 ,
     'SigmaCPrescale'         : 1.0 ,
     'DiCharmPrescale'        : 1.0 ,
     'DiMu&CharmPrescale'     : 1.0 ,
     'Chi&CharmPrescale'      : 1.0 ,
-    'Ds&PsiPrescale'         : 1.0 ,
-    'Ds&Lc+Prescale'         : 1.0 ,
     'Charm&WPrescale'        : 1.0 ,
     'DiMuon&WPrescale'       : 1.0 ,
     'Chi&WPrescale'          : 1.0 ,
@@ -320,7 +320,6 @@ class StrippingPromptCharmConf(LineBuilder) :
     Helper class to confiugure 'PromptCharm'-lines
     """
     __configuration_keys__ = tuple ( _default_configuration_.keys() )
-
 
     ## get the default configuration
     @staticmethod
@@ -388,31 +387,66 @@ class StrippingPromptCharmConf(LineBuilder) :
         for line in self._lines_charm() :
             self.registerLine(line)
             logger.debug ( "Register line: %s" %  line.name () )
-                
+
+    # =========================================================================
+    ## pure technical method for creation of selections
+    # =========================================================================
+    def make_selection ( self      ,
+                         tag       , 
+                         algotype  ,
+                         inputs    , 
+                         *args     ,
+                         **kwargs  ) :
+        """
+        Technical method for creation of 1-step selections 
+        """
+        sel_tag  = '%s_Selection' % tag
+        sel_name = 'Sel%sFor%s'   % ( tag , self.name() )
+        #
+        ## check existing selection
+        #
+        sel      = self._selection ( sel_tag )
+        if sel : return sel 
+        
+        #
+        ## adjust a bit the arguments
+        if not kwargs.has_key('Preambulo')           :
+            kwargs ['Preambulo'        ] = self['Preambulo']
+
+        if not kwargs.has_key ( 'ParticleCombiners' ) :
+            kwargs ['ParticleCombiners'] = { '' : 'LoKi::VertexFitter:PUBLIC' } 
+            
+        #
+        ## create new seleciton
+        #
+        alg = algotype ( *args , **kwargs )
+        # 
+        from PhysSelPython.Wrappers import Selection
+        sel = Selection (
+            sel_name                    , 
+            Algorithm          = alg    ,
+            RequiredSelections = inputs
+            )
+        # 
+        return self._add_selection( sel_tag , sel ) 
+                           
     ## get the selections
     def _selections_private ( self ) :
 
         sel = self._selections ( 'Selections' )
         if sel : return sel
 
-        sel =  [ self.D02HH          () ,
+        sel =  [ self.D02Kpi         () ,
                  self.Dstar          () ,
                  self.Ds             () ,
                  self.Dplus          () ,
-                 self.preLamC        () ,
                  self.LamC           () ,
-                 self.LamC4Xicc      () ,
                  self.SigC           () ,
                  self.LamCstar       () ,
-                 self.XiccP          () ,
-                 self.XiccPP         () ,
                  self.DiMuon         () ,
                  self.DiCharm        () ,
                  self.DiMuonAndCharm () ,
                  self.ChiAndCharm    () ,
-                 self.preDs          () ,
-                 self.DsPsi          () ,
-                 self.DsLamC         () ,
                  self.W              () ,
                  self.CharmAndW      () ,
                  self.DiMuonAndW     () ,
@@ -454,13 +488,15 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'CharmLines' )
         if sel : return sel
         #
+        from StrippingConf.StrippingLine           import StrippingLine
+        #
         sel = [
             ##
             StrippingLine (
-            "D02HHFor" + self.name() ,
-            prescale = self['D0Prescale'  ]  , ## ATTENTION! Prescale here !!
-            checkPV  = self['CheckPV'     ]  ,
-            algos    =     [ self.D02HH() ]
+            "D02KpiFor" + self.name()         ,
+            prescale = self['D0Prescale'   ]  , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'      ]  ,
+            algos    =     [ self.D02Kpi() ]
             ) ,
             ##
             StrippingLine (
@@ -471,17 +507,17 @@ class StrippingPromptCharmConf(LineBuilder) :
             ) ,
             ##
             StrippingLine (
-            "DsFor" + self.name() ,
-            prescale = self['DsPrescale']    , ## ATTENTION! Prescale here !!
-            checkPV  = self['CheckPV'   ]    ,
-            algos    =     [ self.Ds()  ]
-            ) ,
-            ##
-            StrippingLine (
             "DFor" + self.name() ,
             prescale = self['D+Prescale' ] , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'    ] ,
             algos    =     [ self.Dplus () ]
+            ) ,
+            ##
+            StrippingLine (
+            "DsFor" + self.name() ,
+            prescale = self['DsPrescale']    , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'   ]    ,
+            algos    =     [ self.Ds()  ]
             ) ,
             ##
             StrippingLine (
@@ -504,20 +540,6 @@ class StrippingPromptCharmConf(LineBuilder) :
             checkPV  = self['CheckPV'         ] ,
             algos    =     [ self.LamCstar () ]
             ) ,
-            ## Xicc+ 
-            StrippingLine (
-            "Xicc+For" + self.name()     ,
-            prescale = self['Xicc+Prescale'] , ## ATTENTION! Prescale here !!
-            checkPV  = self['CheckPV'      ] ,
-            algos    =     [ self.XiccP () ]
-            ) ,
-            ## Xicc++ 
-            StrippingLine (
-            "Xicc++For" + self.name()         ,
-            prescale = self['Xicc++Prescale'] , ## ATTENTION! Prescale here !!
-            checkPV  = self['CheckPV'       ] ,
-            algos    =     [ self.XiccPP () ]
-            ) ,
             ## DiCharm
             StrippingLine (
             "DiCharmFor" + self.name() ,
@@ -538,20 +560,6 @@ class StrippingPromptCharmConf(LineBuilder) :
             prescale = self['Chi&CharmPrescale']  , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'          ] ,
             algos    =     [ self.ChiAndCharm () ]
-            ) ,
-            ##
-            StrippingLine (
-            "DsLamCFor" + self.name() ,
-            prescale   = self['Ds&Lc+Prescale' ] , ## ATTENTION! Prescale here !!
-            checkPV    = self['CheckPV'        ] ,
-            algos      =     [ self.DsLamC ()  ]
-            ) ,
-            ##
-            StrippingLine (
-            "DsPsiFor" + self.name() ,
-            prescale   = self['Ds&PsiPrescale' ] , ## ATTENTION! Prescale here !!
-            checkPV    = self['CheckPV'        ] ,
-            algos      =     [ self.DsPsi () ]
             ) ,
             ##
             StrippingLine (
@@ -586,210 +594,133 @@ class StrippingPromptCharmConf(LineBuilder) :
         get Charm stripping lines
         """
         return self._lines_charm ()
-
-    def trackCuts    ( self ) : return                    self [ 'TrackCuts'    ]
-    def basicCuts    ( self ) : return self.trackCuts() + self [ 'BasicCuts'    ]
-    def kaonCuts     ( self ) : return self.basicCuts() + self [ 'KaonCuts'     ]
-    def pionCuts     ( self ) : return self.basicCuts() + self [ 'PionCuts'     ]
-    def protonCuts   ( self ) : return self.basicCuts() + self [ 'ProtonCuts'   ]
-    def slowPionCuts ( self ) : return                    self [ 'SlowPionCuts' ]
-    def muonCuts     ( self ) : return                    self [ 'MuonCuts'     ]
-
-    ## get the selection of kaons
-    def kaons ( self ) :
+    
+    def muonCuts     ( self ) : return self [ 'MuonCut' ]
+    
+    # ========================================================================
+    ## muons:
+    # ========================================================================
+    def muons    ( self ) :
         """
-        Get the kaons
+        Muons 
         """
-        sel = self._selection ( 'KaonSelection')
-        if sel : return sel
-
-        _KaonFilter = FilterDesktop ( Code = """
-        ( 'K+'  == ABSID ) & ( %s )
-        """ % self.kaonCuts() )
-        #
-        sel = Selection (
-            'SelKaonsFor'      + self.name() ,
-            Algorithm          = _KaonFilter ,
-            RequiredSelections = [ StdLooseKaons ]
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from StandardParticles                     import StdAllLooseMuons as inpts 
+        ##
+        return self.make_selection (
+            'Muon'                 ,
+            FilterDesktop          ,
+            [ inpts ]              ,
+            Code = self['MuonCut'] ,
             )
 
-        return self._add_selection ( 'KaonSelection' , sel )
-
-    ## get the pion selection
-    def pions ( self ) :
+    # ========================================================================
+    ## pions :
+    # ========================================================================
+    def pions    ( self ) :
         """
-        Get the pions
+        Pions
         """
-        sel = self._selection ( 'PionSelection')
-        if sel : return sel
-
-        _PionFilter = FilterDesktop (
-            Code = """
-            ( 'pi+' == ABSID ) & ( %s )
-            """ % self.pionCuts() )
-        #
-        sel = Selection (
-            'SelPionsFor'      + self.name() ,
-            Algorithm          = _PionFilter ,
-            RequiredSelections = [ StdLoosePions ]
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from StandardParticles                     import StdLoosePions as inpts 
+        ##
+        return self.make_selection (
+            'Pion'                 ,
+            FilterDesktop          ,
+            [ inpts ]              ,
+            Code = self['PionCut'] ,
             )
-        #
-        return self._add_selection ( 'PionSelection' , sel )
-
-
-    ## get the proton selection
-    def protons ( self ) :
+    
+    # ========================================================================
+    ## kaons 
+    # ========================================================================
+    def kaons     ( self ) :
         """
-        Get the proton selection
+        Kaons for   B -> psi X lines 
         """
-        sel = self._selection ( 'ProtonSelection')
-        if sel : return sel
-
-        _ProtonFilter = FilterDesktop (
-            Code = """
-            ( 'p+'  == ABSID ) & ( %s )
-            """ % self.protonCuts() )
-
-        sel = Selection (
-            'SelProtonsFor' + self.name() ,
-            Algorithm          = _ProtonFilter ,
-            RequiredSelections = [ StdLooseProtons ]
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from StandardParticles                     import StdLooseKaons as inpts 
+        ##
+        return self.make_selection (
+            'Kaon'                 ,
+            FilterDesktop          ,
+            [ inpts ]              ,
+            Code = self['KaonCut'] ,
             )
-        #
-        return self._add_selection ( 'ProtonSelection' , sel )
 
+    # ========================================================================
+    ## protons :
+    # ========================================================================
+    def protons    ( self ) :
+        """
+        Protons for   b -> psi X lines 
+        """
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from StandardParticles                     import StdLooseProtons as inpts 
+        ##
+        return self.make_selection (
+            'Proton'                 ,
+            FilterDesktop            ,
+            [ inpts ]                ,
+            Code = self['ProtonCut'] ,
+            )
+    
     ## get the common preambulo:
     def preambulo ( self ) : return self['Preambulo']
-
-    ## get the preselection of D0->hh
-    def preD02HH ( self ) :
+    
+    
+    # =============================================================================
+    # D0 -> Kpi
+    # =============================================================================
+    def D02Kpi ( self ) :
         """
-        Get the preselection of D0->hh
+        Get D0->K-pi+
         """
-        sel = self._selection ( 'D02HHForPromptCharm_PreSelection' )
-        if sel : return sel
-
-        ## prepare D0 for D0 and D*+
-        _D0PreCombine = CombineParticles (
-            ## the decays to be reconstructed
-            DecayDescriptors = [
-            " D0  -> pi+ pi-    " ,
-            " D0  -> K+  K-     " ,
-            "[D0  -> K-  pi+]cc "
-            ] ,
-            ##
-            Preambulo      = self.preambulo() ,
+        #
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
+        #
+        ## D0 -> K- pi+ 
+        return self.make_selection (
+            'D02Kpi'       ,
+            ## the algorithm type
+            CombineParticles  ,
+            ## required selections
+            [ self.kaons() , self.pions() ]  ,
+            #
+            ## algorithm configuration
+            DecayDescriptor = "[D0  -> K-  pi+]cc",
             ## combination cut : wide mass-cut & PT-cut
-            CombinationCut = """
+            CombinationCut  = """
             ( ADAMASS('D0') < 85 * MeV ) &
             ( APT >  %s  )
-            """ %  ( 0.95 * min ( self['pT(D0)'        ] ,
-                                  self['pT(D0) for D*+'] ) ) ,
-            #
+            """ %  ( 0.95 * self['pT(D0)'] ) ,
             ## mother cut
             MotherCut      = """
             ( chi2vx < 9 )              &
             ( PT     > %s             ) &
             ( ADMASS('D0') < 75 * MeV ) &
-            ( abs ( LV01 ) < 0.9      ) &
             ( ctau > 100 * micrometer )
-            """ %           min ( self['pT(D0)'        ] ,
-                                  self['pT(D0) for D*+'] ) ,
-            #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } ,
-            #
-            )
-        #
-        ## make (pre)selection
-        sel = Selection (
-            ##
-            'PreSelD02HHFor'   + self.name()     ,
-            ##
-            Algorithm          = _D0PreCombine   ,
-            ##
-            RequiredSelections = [ self.kaons () ,
-                                   self.pions () ]
-            )
-
-        return self._add_selection ( 'D02HHForPromptCharm_PreSelection' , sel )
-
+            """ %  self['pT(D0)'] 
+            )           
+    
     # =============================================================================
-    # D0 -> Kpi, KK selection
-    # =============================================================================
-    def D02HH ( self ) :
-        """
-        Get the selection of D0 -> HH
-        """
-        sel = self._selection ( 'D02HHForPromptCharm_Selection' )
-        if sel : return sel
-
-        ##
-        _fltr = FilterDesktop (
-            ##
-            Monitor      = self['Monitor']  ,
-            HistoProduce = self['Monitor']  ,
-            ##
-            Preambulo = self.preambulo() + [
-            "hKpi = Gaudi.Histo1DDef ( 'mass K pi' , 1800 , 1920 , 60 )" ,
-            "hKK  = Gaudi.Histo1DDef ( 'mass K K'  , 1800 , 1920 , 60 )"
-            ] ,
-            ##
-            Code      = """
-            ( PT             > %s         ) &
-            ( ADMASS( 'D0' ) < 75  * MeV  ) &
-            ( kk | kpi )                    &
-            ( ctau > 100 * micrometer )
-            """ %  self['pT(D0)'] ,
-            ##
-            PostMonitor  = """
-            process ( switch ( kpi , monitor ( M , hKpi , 'mass Kpi' ) , monitor ( M , hKK  , 'mass KK'  ) ) ) >> ~EMPTY
-            """
-            )
-
-        ## make selection
-        sel = Selection (
-            'SelD02HHFor'      + self. name()      ,
-            Algorithm          = _fltr             ,
-            RequiredSelections = [ self.preD02HH() ]
-            )
-
-        return self._add_selection ( 'D02HHForPromptCharm_Selection' , sel )
-
-
-    # =============================================================================
-    # D*+ -> (D0 -> Kpi, piK, KK, pipi) pi+ selection
+    # D*+ -> (D0 -> Kpi) pi+ selection
     # =============================================================================
     def Dstar ( self ) :
         """
-        D*+ -> (D0 -> Kpi, piK, KK, pipi) pi+ selection
+        D*+ -> (D0 -> K- pi+) pi+ selection
         """
-
-        sel = self._selection ( 'DstarForPromptCharm_Selection' )
-        if sel : return sel
-
-        cmb = CombineParticles(
-            ##
-            Monitor      = self['Monitor'] ,
-            HistoProduce = self['Monitor'] ,
-            ##
-            DecayDescriptors = [
-            " [D*(2010)+ -> D0 pi+]cc" ,
-            " [D*(2010)- -> D0 pi-]cc"
-            ] ,
-            ##
-            Preambulo = self.preambulo() + [
-            "hdm1 = Gaudi.Histo1DDef ( 'delta Mass' , 135 , 160  , 50 )"
-            ] ,
-            ##
-            DaughtersCuts = {
-            'pi+' :  self.slowPionCuts() ,
-            'D0'  : """
-            ( PT > %s ) &
-            switch ( pipi , in_range ( -50 * MeV , DMASS('D0') , 75 * MeV ) , ALL )
-            """ % self['pT(D0) for D*+']
-            } ,
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from StandardParticles                     import StdAllLoosePions as inpts 
+        ##
+        return self.make_selection (
+            'Dstar'                   ,
+            CombineParticles          ,
+            [ self.D02Kpi() , inpts ] ,
+            #
+            ## algorithm properties 
+            #
+            DecayDescriptor = " [D*(2010)+ -> D0 pi+]cc" ,
             ##
             CombinationCut = """
             ( AM       < 2.5 * GeV ) &
@@ -799,501 +730,199 @@ class StrippingPromptCharmConf(LineBuilder) :
             MotherCut      = """
             ( chi2vx < 64        ) &
             ( M - M1 < 155 * MeV )
-            """ ,
-            ##
-            MotherMonitor  = """
-            process ( monitor ( M - M1 , hdm1 , 'Delta Mass' ) )  >> ~EMPTY
-            """ , 
-            #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } ,
-            #
+            """ 
             )
-
-        ## convert it to selection
-        sel = Selection  (
-            ##
-            "SelDstarFor"      + self.name() ,
-            ##
-            Algorithm          = cmb         ,
-            ##
-            ## ATTENITON: we need slow prompt pions!
-            RequiredSelections = [ self.preD02HH()   ,
-                                   StdAllNoPIDsPions ] ## slow prompt pion!
-            )
-
-        return self._add_selection ( 'DstarForPromptCharm_Selection' , sel )
-
-
-    # =============================================================================
-    # Ds+/D+ -> KKpi   selection  (all!!! without ctau & IP cuts!)
-    # =============================================================================
-    def preDs ( self ) :
-        """
-        ``Preselection'' for Ds+
-        """
-        sel = self._selection ( 'PreDsForPromptCharm_Selection' )
-        if sel : return sel
-
-        cmb = CombineParticles(
-            ##
-            Monitor      = self['Monitor'] ,
-            HistoProduce = self['Monitor'] ,
-            ##
-            ##
-            DecayDescriptors = [
-            " [D_s+ -> K-  K+  pi+ ]cc" , ## through phi !!!
-            ] ,
-            ##
-            Preambulo      = self.preambulo()  + [
-            "aphi  = AM12              < 1050 * MeV " , ## phi-mass window
-            "admD  = ADAMASS ('D+'  )  <   85 * MeV " , ## D+  mass window for combination cut
-            "admDs = ADAMASS ('D_s+')  <   85 * MeV " , ## Ds+ mass window for combination cut
-            "dmD   = ADMASS  ('D+'  )  <   75 * MeV " , ## D+  mass window
-            "dmDs  = ADMASS  ('D_s+')  <   75 * MeV " , ## Ds+ mass window
-            ##
-            "hKKpi = Gaudi.Histo1DDef ( ' mass K K pi' , 1800 , 2020 , 110 )" ,
-            ] ,
-            ##                                 phi
-            CombinationCut = """
-            aphi          &
-            ( APT > %s  ) &
-            ( admD | admDs  )
-            """  % ( 0.95 * min ( self['pT(Ds+)'        ] ,
-                                  self['pT(Ds+) for Bc+'] ,
-                                  self['pT(Ds+) for Lb' ] ) ) ,
-            #
-            ## ATTENTION: there is neither c*tau nor pointing cuts here!
-            MotherCut      = """
-            ( chi2vx  < 25  ) &
-            ( PT      > %s  ) &
-            ( dmD | dmDs    )
-            """  % min ( self['pT(Ds+)'        ] ,
-                         self['pT(Ds+) for Bc+'] ) ,
-            ##
-            MotherMonitor  = """
-            process ( monitor ( M , hKKpi , 'mass KKpi' )  ) >> ~EMPTY
-            """ ,
-            #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } ,
-            #
-            )
-
-        ## convert it to selection
-        sel = Selection (
-            "SelPreDsFor"      + self.name()     ,
-            Algorithm          = cmb             ,
-            RequiredSelections = [ self.kaons () ,
-                                   self.pions () ]
-            )
-
-        return self._add_selection ( 'PreDsForPromptCharm_Selection' , sel )
-
+    
     # =============================================================================
     # Ds+/D+ -> KKpi   selection
     # =============================================================================
     def Ds ( self ) :
-
-        sel = self._selection ( 'DsForPromptCharm_Selection' )
-        if sel : return sel
-
-        fltr = FilterDesktop (
-            Code = """
-            ( PT   > %s               ) &
-            ( ctau > 100 * micrometer )
-            """  % self['pT(Ds+)']
+        """
+        ``Preselection'' for Ds+
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+        ## 
+        return self.make_selection (
+            'Ds' ,
+            ## algorithm type to be used
+            DaVinci__N3BodyDecays           ,
+            ## required selections 
+            [ self.kaons() , self.pions() ] ,
+            #
+            ## algorithm properties
+            # 
+            DecayDescriptor = " [D_s+ -> K-  K+  pi+ ]cc" , ## through phi !!!
+            ##
+            Preambulo      = self.preambulo()  + [
+            "admD  = ADAMASS ('D+'  )  <   65 * MeV " , ## D+  mass window for combination cut
+            "admDs = ADAMASS ('D_s+')  <   65 * MeV " , ## Ds+ mass window for combination cut
+            "dmD   = ADMASS  ('D+'  )  <   55 * MeV " , ## D+  mass window
+            "dmDs  = ADMASS  ('D_s+')  <   55 * MeV " , ## Ds+ mass window
+            ] ,
+            ##
+            Combination12Cut = """
+            ( AM < 1050 * MeV      ) &
+            ( ACHI2DOCA(1,2)  < 16 ) 
+            """ ,
+            #                     phi
+            CombinationCut = """
+            ( AM12 < 1050 * MeV   ) &
+            ( APT  > %s           ) &
+            ( admD | admDs        ) & 
+            ( ACHI2DOCA(1,3) < 16 ) &
+            ( ACHI2DOCA(2,3) < 16 ) 
+            """  %  ( 0.95 * self['pT(Ds+)'] ) ,
+            #
+            ## 
+            MotherCut      = """
+            ( chi2vx  < 25  ) &
+            ( PT      > %s  ) & 
+            ( dmD  | dmDs    ) &
+            ( ctau    > 100 * micrometer )
+            """  % self['pT(Ds+)' ] 
             )
-
-        ## convert it to selection
-        sel = Selection (
-            "SelDsFor"         + self.name()     ,
-            Algorithm          = fltr            ,
-            RequiredSelections = [ self.preDs()  ]
-            )
-
-        return self._add_selection ( 'DsForPromptCharm_Selection' , sel )
-
 
     # =============================================================================
     # D+ -> Kpipi   selection
     # =============================================================================
     def Dplus ( self ) :
-
-        sel = self._selection ( 'DForPromptCharm_Selection' )
-        if sel : return sel
-
-        cmb = CombineParticles(
+        """
+        D+ -> Kpipi   selection
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+        return self.make_selection (
+            'D' ,
+            DaVinci__N3BodyDecays ,
+            ## inputs 
+            [ self.kaons() , self.pions()] ,
+            #
+            ## algorithm properties 
+            #
+            DecayDescriptor = " [D+ -> K-  pi+  pi+ ]cc" ,
             ##
-            Monitor      = self['Monitor'] ,
-            HistoProduce = self['Monitor'] ,
-            ##
-            DecayDescriptors = [
-            " [D+ -> K-  pi+  pi+ ]cc" ,
-            ] ,
-            ##
-            Preambulo      = self.preambulo() + [
-            "hKpipi = Gaudi.Histo1DDef ( 'mass K pi pi' , 1800 , 1920 , 60 )"
-            ] ,
-            ##
-            CombinationCut = """
-            ( ADAMASS('D+') < 65 * MeV ) &
-            ( APT > %s )
+            Combination12Cut = """
+            ( AM < 1.9 * GeV      ) &
+            ( ACHI2DOCA(1,2) < 16 )  
+            """ ,
+            CombinationCut   = """
+            ( ADAMASS('D+')  < 65 * MeV ) &
+            ( APT > %s                  ) & 
+            ( ACHI2DOCA(1,3) < 16       ) &
+            ( ACHI2DOCA(2,3) < 16       ) 
             """ % ( 0.95 * self['pT(D+)' ] ) ,
             ##
             MotherCut      = """
             ( chi2vx  < 25                 ) &
             ( PT      > %s                 ) &
-            ( ADMASS  ('D+'  )  < 50 * MeV ) &
+            ( ADMASS  ('D+'  )  < 55 * MeV ) &
             ( ctau    > 100 * micrometer   )
             """ % self['pT(D+)' ] ,
+            )
+    
+    # =============================================================================
+    # Lambda_C -> ( pKpi ) 
+    # =============================================================================
+    def LamC ( self ) :
+        """
+        Lambda_C -> ( pKpi )  (pre)selection
+        """ 
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays
+        #
+        return self.make_selection (
+            'LambdaC' ,
+            DaVinci__N3BodyDecays ,
+            ## inputs 
+            [ self.protons() , self.kaons() , self.pions()] ,
             ##
-            MotherMonitor  = """
-            process ( monitor ( M , hKpipi , 'mass K pi pi' ) )  >> ~EMPTY
+            DecayDescriptor = " [ Lambda_c+ -> p+  K-  pi+ ]cc" ,
+            ##
+            Combination12Cut  = """
+            ( AM < 2.5 * GeV      ) &
+            ( ACHI2DOCA(1,2) < 16 ) 
             """ ,
-            #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } ,
-            #
-            )
-
-        # convert it to selection
-        sel = Selection (
-            "SelDFor"          + self.name()     ,
-            Algorithm          = cmb             ,
-            RequiredSelections = [ self.kaons () ,
-                                   self.pions () ]
-            )
-
-        return self._add_selection ( 'DForPromptCharm_Selection' , sel )
-
-    # =============================================================================
-    # Lambda_C -> ( pKpi )  (pre)selection
-    # =============================================================================
-    def preLamC ( self ) :
-
-        sel = self._selection ( 'PreLambdaCForPromptCharm_Selection' )
-        if sel : return sel
-
-        cmb = CombineParticles(
-            ##
-            Monitor      = self['Monitor'] ,
-            HistoProduce = self['Monitor'] ,
-            ##
-            DecayDescriptors = [
-            " [ Lambda_c+ -> p+  K-  pi+ ]cc" ,
-            ] ,
-            ##
-            Preambulo = self.preambulo() + [
-            "hpKpi = Gaudi.Histo1DDef ( 'mass p K pi' , 2230 , 2350 , 60 )"
-            ] ,
-            ##
+            ## 
             CombinationCut = """
-            ( ADAMASS('Lambda_c+') < 65 * MeV ) &
-            ( APT > %s )
-            """ % ( 0.95 * self['pT(Lc+)' ] ) ,
+            ( ADAMASS ('Lambda_c+') < 65 * MeV ) &
+            ( APT            > %s ) & 
+            ( ACHI2DOCA(1,3) < 16 ) &
+            ( ACHI2DOCA(2,2) < 16 ) 
+            """ % ( 0.95 * self[ 'pT(Lc+)' ] ) ,
             ##
             MotherCut      = """
             ( chi2vx  < 25 )                   &
             ( PT      > %s                   ) &
-            ( ADMASS('Lambda_c+') < 50 * MeV ) &
-            ( ctau_no > 80 * micrometer      )
-            """ %  min ( self [ 'pT(Lc+)'          ] ,
-                         self [ 'pT(Lc+) for Xicc' ] ,
-                         self [ 'pT(Lc+) for Lb'   ] ) , 
-            ##
-            MotherMonitor  = """
-            process ( monitor ( M , hpKpi , 'mass p K pi ' ) ) >> ~EMPTY
-            """ , 
-            #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } ,
-            #
+            ( ADMASS('Lambda_c+') < 55 * MeV ) &
+            ( ctau  > 100 * micrometer       )  
+            """ % self [ 'pT(Lc+)']
             )
-
-        # convert it to selection
-        sel = Selection (
-            "PreSelLambdaCFor" + self.name()       ,
-            Algorithm          = cmb               ,
-            RequiredSelections = [ self.kaons   () ,
-                                   self.protons () ,
-                                   self.pions   () ] 
-            )
-
-        return self._add_selection( 'PreLambdaCForPromptCharm_Selection' ,  sel )
-
-    # =============================================================================
-    # Lambda_C -> ( pKpi )  (prompt) selection 
-    # =============================================================================
-    def LamC ( self ) :
-        """
-        Lambda_C -> ( pKpi )  (prompt) selection 
-        """
-        sel = self._selection ( 'LambdaCForPromptCharm_Selection' )
-        if sel : return sel
-        
-        fltr = FilterDesktop (
-            ##
-            Preambulo = self.preambulo() ,
-            ##
-            Code = """
-            ( PT     > %s               ) &
-            ( ctau_9 > 100 * micrometer ) 
-            """ % self [ 'pT(Lc+)' ] 
-            )
-        
-        # convert it to selection
-        sel = Selection (
-            "SelLambdaCFor"    + self.name()       ,
-            Algorithm          = fltr              ,
-            RequiredSelections = [ self.preLamC () ] 
-            )
-        
-        return self._add_selection( 'LambdaCForPromptCharm_Selection' ,  sel )
-    
-
-    # =============================================================================
-    # Lambda_C -> ( pKpi ) selection for Xicc 
-    # =============================================================================
-    def LamC4Xicc ( self ) :
-        """
-        Lambda_C -> ( pKpi ) selection for Xicc
-        """
-        sel = self._selection ( 'LamC4XiccForPromptCharm_Selection' )
-        if sel : return sel
-        
-        fltr = FilterDesktop (
-            ##
-            Preambulo = self.preambulo() ,
-            ##
-            Code = """
-            ( PT > %s ) & INTREE ( good_proton ) 
-            """ % self [ 'pT(Lc+) for Xicc' ] 
-            )
-        
-        # convert it to selection
-        sel = Selection (
-            "SelLamC4XiccFor"    + self.name()     ,
-            Algorithm          = fltr              ,
-            RequiredSelections = [ self.preLamC () ] 
-            )
-        
-        return self._add_selection( 'LamC4XiccForPromptCharm_Selection' ,  sel )
-    
     
     # =============================================================================
     # Sigma_C -> Lambda_C pi selection
     # =============================================================================
     def SigC ( self ) :
-
-        sel = self._selection ( 'SigmaCForPromptCharm_Selection' )
-        if sel : return sel
-
-        cmb = CombineParticles(
-            ##
-            Monitor      = self['Monitor'] ,
-            HistoProduce = self['Monitor'] ,
-            ##
+        """
+        Sigma_C -> Lambda_C pi selection
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from StandardParticles                     import StdAllLoosePions as inpts 
+        return self.make_selection (
+            'SigmaC'         ,
+            CombineParticles ,
+            [ self.LamC() , inpts ] , 
+            #
+            ## algorithm properties 
             DecayDescriptors = [
             " [ Sigma_c0  -> Lambda_c+ pi- ]cc" ,
             " [ Sigma_c++ -> Lambda_c+ pi+ ]cc" ,
             ] ,
             ##
-            DaughtersCuts = {
-            'Lambda_c+' : ' INTREE ( good_proton ) ' , 
-            'pi+'       :  self.slowPionCuts()
-            } ,
-            ##
-            Preambulo = self.preambulo() + [
-            "hDmSigC = Gaudi.Histo1DDef ( 'dm(Sigma_c)' , 100 , 400 , 150 )"
-            ] ,
-            ##
             CombinationCut = """
-            ( AM - AM1 < 400 * MeV )
+            ( AM - AM1 < ( 140*MeV + 100* MeV ) ) 
             """ ,
             ##
             MotherCut      = """
             ( chi2vx  < 16 )
             """ ,
-            ##
-            MotherMonitor  = """
-            process ( monitor ( M-M1 , hDmSigC , 'dm(Sigma_c)' ) ) >> ~EMPTY
-            """ ,
-            #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } ,
-            #
             )
-
-        # convert it to selection
-        sel = Selection (
-            "SelSigmaCFor"     +   self.name()       ,
-            Algorithm          =   cmb               ,
-            RequiredSelections = [ self.LamC    ()   ,
-                                   StdAllNoPIDsPions ] ## slow prompt pion!
-            )
-
-        return self._add_selection( 'SigmaCForPromptCharm_Selection' ,  sel )
-
 
     # =============================================================================
     # Lambda_C* -> Lambda_C pi pi selection
     # =============================================================================
     def LamCstar ( self ) :
-
-        sel = self._selection ( 'LambdaCstarForPromptCharm_Selection' )
-        if sel : return sel
-
-        cmb = CombineParticles(
-            ##
-            Monitor      = self['Monitor'] ,
-            HistoProduce = self['Monitor'] ,
-            ##
+        """
+        Lambda_C* -> Lambda_C pi pi selection
+        """
+        from GaudiConfUtils.ConfigurableGenerators import DaVinci__N3BodyDecays 
+        from StandardParticles                     import StdAllLoosePions     as inpts
+        ## 
+        return self.make_selection (
+            ## the unique tag 
+            'LambdaCstar'                 ,
+            ## algorithm type to be used
+            DaVinci__N3BodyDecays         ,
+            [ self.LamC() , inpts ]       ,
+            #
+            ## algorithm properties 
+            # 
             DecayDescriptors = [
             " [ Lambda_c(2625)+ -> Lambda_c+ pi+ pi-]cc"
             ] ,
             ##
-            DaughtersCuts = {
-            'Lambda_c+' : ' INTREE ( good_proton ) ' , 
-            'pi+'       :  self.slowPionCuts()
-            } ,
-            ##
-            Preambulo = self.preambulo() + [
-            "hDmLamC = Gaudi.Histo1DDef ( 'dm(Lambda_c)' , 200 , 700 , 200 )"
-            ] ,
-            ##
+            Combination12Cut = """
+            ( AM < 3 * GeV         ) &
+            ( ACHI2DOCA(1,2) < 16  ) 
+            """ , 
             CombinationCut = """
-            AM - AM1 < 650 * MeV
+            ( AM - AM1 <  ( 2 * 140 * MeV + 100 * MeV ) ) & 
+            ( ACHI2DOCA(1,3) < 16  ) &
+            ( ACHI2DOCA(2,3) < 16  ) 
             """ ,
             MotherCut      = """
             ( chi2vx  < 25 )
             """ ,
             ##
-            MotherMonitor  = """
-            process ( monitor ( M-M1 , hDmLamC , 'dm(Lambda_c)' ) ) >> ~EMPTY
-            """ ,
-            #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } ,
-            #
             )
-
-        # convert it to selection
-        sel = Selection (
-            "SelLambdaCstarFor" + self.name()         ,
-            Algorithm           =   cmb               ,
-            RequiredSelections  = [ self.LamC    ()   ,
-                                    StdAllNoPIDsPions ] ## slow prompt pion!
-            )
-
-        return self._add_selection( 'LambdaCstarForPromptCharm_Selection' ,  sel )
-
-    # ===========================================================================
-    ## try to reconstruct   Xicc+
-    def XiccP  ( self ) :
-        """
-        Try to reconstruct   Xicc+ -> Lambda_c+ K- pi+ 
-        """
-        sel = self._selection ( 'Xicc+ForPromptCharm_Selection' )
-        if sel : return sel
-        
-        cmb = CombineParticles(
-            ##
-            Preambulo = self.preambulo() , 
-            ##
-            DecayDescriptors = [
-            " [ Xi_cc+ -> Lambda_c+ K- pi+]cc" , 
-            " [ Xi_cc+ -> Lambda_c+ K+ pi-]cc"
-            ] ,
-            ##
-            DaughtersCuts = {
-            'K-'        : self [ 'TrackCuts' ] + ' & HASRICH '                    ,
-            'pi+'       : self [ 'TrackCuts' ] + ' & HASRICH ' + self['PionCuts'] 
-            } ,
-            ##
-            CombinationCut = """
-            ( AM  < 6 * GeV ) &
-            ( APT > %s      ) 
-            """ %  ( 0.95 * self[ 'pT(Xicc+)'] ) ,
-            ## 
-            MotherCut      = """
-            ( PT      > %s              ) &
-            ( chi2vx  < 16              ) &
-            ( ctau_16 > 50 * micrometer ) 
-            """ %        self[ 'pT(Xicc+)' ] , 
-            #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } 
-            #
-            )
-        
-        # convert it to selection
-        sel = Selection (
-            "SelXicc+For"       +   self.name()       ,
-            Algorithm           =   cmb               ,
-            RequiredSelections  = [ self.LamC4Xicc () ,
-                                    StdLooseKaons     ,
-                                    StdLoosePions     ]
-            )
-        return self._add_selection( 'Xicc+ForPromptCharm_Selection' ,  sel )
-
-
-    # ===========================================================================
-    ## try to reconstruct   XiccPP
-    def XiccPP  ( self ) :
-        """
-        Try to reconstruct   Xicc++ -> Lambda_c+ K- pi+ pi+
-        """
-        sel = self._selection ( 'Xicc++ForPromptCharm_Selection' )
-        if sel : return sel
-        
-        cmb = CombineParticles(
-            ##
-            Preambulo = self.preambulo() , 
-            ##
-            DecayDescriptors = [
-            " [ Xi_cc++ -> Lambda_c+ K- pi+ pi+]cc" , 
-            " [ Xi_cc++ -> Lambda_c+ K+ pi- pi-]cc" 
-            ] ,
-            ##
-            DaughtersCuts = {
-            'K-'        : self [ 'TrackCuts' ] + ' & HASRICH '                    ,
-            'pi+'       : self [ 'TrackCuts' ] + ' & HASRICH ' + self['PionCuts'] 
-            } ,
-            ##
-            CombinationCut = """
-            ( AM  < 6 * GeV ) &
-            ( APT > %s      ) 
-            """ %  ( 0.95 * self[ 'pT(Xicc++)'] ) ,
-            MotherCut      = """
-            ( PT      > %s              ) &
-            ( chi2vx  < 36              ) &
-            ( ctau_16 > 50 * micrometer ) 
-            """ %        self[ 'pT(Xicc++)'] ,
-            #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } 
-            #
-            )
-        
-        # convert it to selection
-        sel = Selection (
-            "SelXicc++For"      +   self.name()       ,
-            Algorithm           =   cmb               ,
-            RequiredSelections  = [ self.LamC4Xicc () ,
-                                    StdLooseKaons     ,
-                                    StdLoosePions     ]
-            )
-        return self._add_selection( 'Xicc++ForPromptCharm_Selection' ,  sel )
-     
+    
     ## helper merged selection of all charmed particles
     def PromptCharm ( self ) :
         """
@@ -1304,72 +933,32 @@ class StrippingPromptCharmConf(LineBuilder) :
 
         sel =  MergedSelection (
             ##
-            'PromptCharmFor' + self.name ()      ,
-            RequiredSelections = [ self.D02HH () ,
-                                   self.Dstar () ,
-                                   self.Ds    () ,
-                                   self.Dplus () ,
-                                   self.LamC  () ]
+            'PromptCharmFor' + self.name ()       ,
+            RequiredSelections = [ self.D02Kpi () ,
+                                   self.Dstar  () ,
+                                   self.Ds     () ,
+                                   self.Dplus  () ,
+                                   self.LamC   () ]
             )
-
+        
         return self._add_selection ( 'PromptCharm_Selection' , sel )
 
-    # =========================================================================
-    ## Lambda_c + Ds selection 
-    def DsLamC ( self ) :
-        """
-        Get Lambda_c + Ds 
-        """
-        sel = self._selection ( 'DsLamC_Selection' )
-        if sel : return sel
-        
-        cmb = CombineParticles (
-            ##
-            DecayDescriptors = [
-            "[ Lambda_b0 -> Lambda_c+ D_s- ]cc" ,
-            "[ Lambda_b0 -> Lambda_c+ D_s+ ]cc" ,
-            ] , 
-            ##
-            DaughtersCuts  = {
-            'Lambda_c+'   : " PT > %s " % self['pT(Lc+) for Lb'] , 
-            'D_s-'        : " PT > %s " % self['pT(Ds+) for Lb'] 
-            } ,
-            ##
-            CombinationCut = """
-            AALL
-            """,
-            ##
-            MotherCut      = """
-            ( chi2vx  < 100 )  
-            """ ,
-            #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } 
-            #
-            )
-        
-        sel = Selection  (
-            "SelDsLamCFor"     +   self.name()     ,
-            Algorithm          =   cmb             ,
-            RequiredSelections = [ self.preLamC () ,
-                                   self.preDs   () ]
-            )
-        
-        return self._add_selection( 'DsLamc_Selection' , sel )
     
-
     ## selection of W+-
     def W ( self )  :
         """
         Get simple  W+-selection
         """
-
-        sel = self._selection ( 'W_Selection' )
-        if sel : return sel
-
-        _Filter = FilterDesktop (
-            ##
+        from GaudiConfUtils.ConfigurableGenerators      import FilterDesktop 
+        from StandardParticles  import StdAllLooseMuons as     inpts 
+        #
+        return self.make_selection (
+            'W'           ,
+            FilterDesktop ,
+            [ inpts ]     , 
+            #
+            ## algorithm properties
+            #
             Preambulo = self.preambulo () + [ 
             "ptCone_ = SUMCONE (   0.25 , PT , '/Event/Phys/StdAllLoosePions/Particles'   )",
             "etCone_ = SUMCONE (   0.25 , PT , '/Event/Phys/StdLooseAllPhotons/Particles' )",
@@ -1382,26 +971,20 @@ class StrippingPromptCharmConf(LineBuilder) :
             & ( -100 * GeV < etCone ) 
             """ 
             )
-
-        sel = Selection  (
-            "SelWFor" + self._name  ,
-            Algorithm = _Filter ,
-            ## ATTENTION! prompt muons are here!
-            RequiredSelections = [ StdAllLooseMuons ]
-            )
-
-        return self._add_selection ( 'W_Selection' , sel )
-
+    
     ## get "Di-Charm"-selection
     def DiCharm ( self ) :
         """
         Di-Charm selection
         """
-        sel = self._selection ( 'DiCharm_Selection' )
-        if sel : return sel
-
-        ## prepare Di-charm
-        cmb = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators      import CombineParticles 
+        return self.make_selection (
+            'DiCharm'        ,
+            CombineParticles ,
+            [ self.PromptCharm() ] , 
+            #
+            ## algorithm properties
+            # 
             ## the decays to be reconstructed
             DecayDescriptors = [
             #
@@ -1450,39 +1033,26 @@ class StrippingPromptCharmConf(LineBuilder) :
             " [ psi(3770) -> Lambda_c+ Lambda_c+  ]cc "
 
             ] ,
-            Preambulo = self.preambulo () ,
             ## combination cut : accept all
             CombinationCut = " AALL " ,
             ##      mother cut : accept all
             MotherCut      = "  ALL " , 
             #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } 
-            #
             )
-
-        sel = Selection (
-            ##
-            'SelDiCharmFor'    + self.name() ,
-            ##
-            Algorithm          = cmb    ,
-            ##
-            RequiredSelections = [ self.PromptCharm () ]
-            )
-
-        return self._add_selection ( 'DiCharm_Selection' , sel )
 
     ## charm & W
     def CharmAndW ( self ) :
         """
         Charm & W+-
         """
-        sel = self._selection ( 'CharmW_Selection' )
-        if sel : return sel
-
-        ## prepare Di-charm
-        cmb = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators      import CombineParticles 
+        return self.make_selection (
+            'CharmW'        ,
+            CombineParticles ,
+            [ self.W() , self.PromptCharm() ] , 
+            #
+            ## algorithm properties
+            # 
             ## the decays to be reconstructed
             DecayDescriptors = [
             #
@@ -1499,71 +1069,34 @@ class StrippingPromptCharmConf(LineBuilder) :
             " [ chi_b0(2P) -> Lambda_c+ mu+ ]cc " ,
             " [ chi_b0(2P) -> Lambda_c+ mu- ]cc " ,
             ] ,
-            ##
-            Preambulo = self.preambulo() ,
             ## combination cut : accept all
             CombinationCut = " AALL " ,
             ##      mother cut : accept all
             MotherCut      = "  ALL " , 
             #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } 
-            #
             )
-
-        sel = Selection (
-            ##
-            'SelCharmWFor'    + self.name() ,
-            ##
-            Algorithm          = cmb    ,
-            ##
-            RequiredSelections = [ self . W           () ,
-                                   self . PromptCharm () ]
-            )
-
-        return self._add_selection ( 'CharmW_Selection' , sel )
-
+    
     ## get the dimuons
     def DiMuon ( self ) :
         """
         Get the dimuons
         """
-        sel = self._selection ( 'DiMuon_Selection' )
-        if sel : return sel
-
-        ## prepare Di-muons
-        cmb = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators      import CombineParticles 
+        return self.make_selection (
+            'DiMuon'         ,
+            CombineParticles ,
+            [ self.muons() ] , 
+            #
+            ## algorihtm properties
+            # 
             ## the decays to be reconstructed
             DecayDescriptor = 'J/psi(1S) -> mu+ mu-' ,
-            DaughtersCuts   = {
-            'mu+' : self.muonCuts()
-            } ,
-            Preambulo       = self.preambulo() ,
             ## combination cut
             CombinationCut  = " psi | psi_prime | ( AM > 8 * GeV ) " ,
             ##      mother cut
             MotherCut       = " chi2vx < 20 " ,
-            #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } 
-            #
             )
-
-        ##
-        sel = Selection (
-            ##
-            'SelDiMuonFor'     + self.name() ,
-            ##
-            Algorithm          = cmb         ,
-            #
-            ## ATTENTION: use 'AllLooseMuons' - we need prompt Onia!
-            RequiredSelections = [ StdAllLooseMuons ]
-            )
-
-        return self._add_selection ( 'DiMuon_Selection' , sel )
-
+    
     ## get the dimuons & charn
     def DiMuonAndCharm ( self ) :
         """
@@ -1571,10 +1104,14 @@ class StrippingPromptCharmConf(LineBuilder) :
         Select events with at leats one charm particle and
         at least one dimuon
         """
-        sel = self._selection ( 'DiMuonAndCharm_Selection' )
-        if sel : return sel
-
-        cmb = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators      import CombineParticles 
+        return self.make_selection (
+            'DiMuonandCharm' ,
+            CombineParticles ,
+            [ self.DiMuon()  , self.PromptCharm() ] , 
+            #
+            ## algorithm properties
+            # 
             DecayDescriptors = [
             "[ Upsilon(1S) -> J/psi(1S) D0        ]cc" ,
             "[ Upsilon(1S) -> J/psi(1S) D*(2010)+ ]cc" ,
@@ -1582,25 +1119,11 @@ class StrippingPromptCharmConf(LineBuilder) :
             "[ Upsilon(1S) -> J/psi(1S) D_s+      ]cc" ,
             "[ Upsilon(1S) -> J/psi(1S) Lambda_c+ ]cc"
             ] ,
-            Preambulo      = self.preambulo() , 
             CombinationCut = " AALL " ,
             MotherCut      = "  ALL " , 
             #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } 
-            #
             )
-
-        sel = Selection  (
-            "SelDiMuonAndCharmFor" +   self.name()         ,
-            Algorithm              =   cmb                 ,
-            RequiredSelections     = [ self.DiMuon      () ,
-                                       self.PromptCharm () ]
-            )
-
-        return self._add_selection( 'DiMuonAndCharm_Selection' , sel )
-
+    
     ## get the dimuons & charn
     def ChiAndCharm ( self ) :
         """
@@ -1608,11 +1131,16 @@ class StrippingPromptCharmConf(LineBuilder) :
         Select events with at leats one charm particle and
         at least one chi
         """
-        sel = self._selection ( 'ChiAndCharm_Selection' )
-        if sel : return sel
-
-        cmb = CombineParticles (
-            ##
+        from GaudiConfUtils.ConfigurableGenerators       import DaVinci__N3BodyDecays
+        from StandardParticles import StdLooseAllPhotons as     inpts 
+        #
+        pre_chi = self.make_selection (
+            'PreChiAndCharm'      ,
+            DaVinci__N3BodyDecays ,
+            [ self.DiMuonAndCharm () , self.DiMuon() , self.PromptCharm() , inpts ] ,
+            #
+            ## algorithm proeprties
+            # 
             DecayDescriptors = [
             "[ Upsilon(1S) -> J/psi(1S) D0        gamma ]cc" ,
             "[ Upsilon(1S) -> J/psi(1S) D*(2010)+ gamma ]cc" ,
@@ -1621,92 +1149,59 @@ class StrippingPromptCharmConf(LineBuilder) :
             "[ Upsilon(1S) -> J/psi(1S) Lambda_c+ gamma ]cc"
             ] ,
             ##
-            Preambulo = self.preambulo () ,
-            ##
             DaughtersCuts = {
             #                    J/psi                              Upsilon(1S)
             "J/psi(1S)" : " ( M  < 3.21 * GeV ) | in_range ( 9.3 * GeV , M , 9.6 * GeV ) " ,
             "gamma"     : self [ 'GammaChi' ]
-            },
+            } ,
+            ##
+            Combination12Cut = """
+            ACHI2DOCA(1,2) < 100 
+            """ ,
             ## require chi_(c,b)
             CombinationCut = """
             AM13 - AM1 < 1.01 * GeV
             """,
             ##
             MotherCut      = "  ALL " , 
-            #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } 
-            #
             )
-        ##
-        sel_ = Selection (
-            "ChiAndCharmPreFor" +   self.name()            ,
-            Algorithm           =   cmb                    ,
-            RequiredSelections  = [ self.DiMuonAndCharm () , ## fake one!
-                                    self.DiMuon         () ,
-                                    self.PromptCharm    () ,
-                                    StdLooseAllPhotons     ]
-            )
-        ## apply pi0-veto-tagger !
+        
         from GaudiConfUtils.ConfigurableGenerators import Pi0Veto__Tagger
-        tag = Pi0Veto__Tagger (
-            MassWindow     = 25 * MeV  ,
-            MassChi2       = -1        ,
-            ExtraInfoIndex = 25010     ## unique !
+        ## 
+        return self.make_selection (
+            'ChiAndCharm'                 ,
+            Pi0Veto__Tagger               ,
+            [ pre_chi ]                   ,
+            MassWindow     = 25 * MeV     ,
+            MassChi2       = -1           ,
+            ExtraInfoIndex = 25010     ## unique ! 
             )
-        ## the final selection
-        sel = Selection  (
-            "SelChiAndCharmFor" +   self.name()  ,
-            Algorithm           =   tag          ,
-            RequiredSelections  = [ sel_         ]
-            )
-
-        return self._add_selection( 'ChiAndCharm_Selection' , sel )
-
+    
     ## DiMuon & W
     def DiMuonAndW ( self ) :
         """
         dimuon & W+-
         """
-        sel = self._selection ( 'DiMuon&W_Selection' )
-        if sel : return sel
-
-        ## prepare Di-charm
-        cmb = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators   import CombineParticles 
+        ##
+        return self.make_selection (
+            'DiMuonAndW'                 ,
+            CombineParticles             ,
+            [ self.W() , self.DiMuon() ] ,
+            #
+            ## algorithm properties
+            # 
             ## the decays to be reconstructed
             DecayDescriptors = [
-            #
-            # dimuon and W
-            #
             " [ chi_b0(2P) -> J/psi(1S) mu+ ]cc " ,
             ] ,
             ##
-            Preambulo = self.preambulo () ,
             ## combination cut : accept all
             CombinationCut = " AALL " ,
             ##      mother cut : accept all
             MotherCut      = "  ALL " , 
-            #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } 
-            #
             )
-
-        sel = Selection (
-            ##
-            'SelDiMuonAndWFor' + self.name() ,
-            ##
-            Algorithm          = cmb    ,
-            ##
-            RequiredSelections = [ self . W      () ,
-                                   self . DiMuon () ]
-            )
-
-        return self._add_selection ( 'DiMuon&W_Selection' , sel )
-
+    
     ## get the dimuons & charn
     def ChiAndW ( self ) :
         """
@@ -1714,98 +1209,47 @@ class StrippingPromptCharmConf(LineBuilder) :
         Select events with at leats one charm particle and
         at least one chi
         """
-        sel = self._selection ( 'Chi&W_Selection' )
-        if sel : return sel
-
-        cmb = CombineParticles (
+        from GaudiConfUtils.ConfigurableGenerators       import DaVinci__N3BodyDecays
+        from StandardParticles import StdLooseAllPhotons as     inpts 
+        #
+        pre_chiw = self.make_selection (
+            'PreChiAndW'          ,
+            DaVinci__N3BodyDecays ,
+            [ self.DiMuonAndW () , self.W() , self.DiMuon() , inpts ] ,
+            #
+            ## algorihtm properties
+            # 
             ##
-            DecayDescriptor = "[ chi_b1(2P) -> J/psi(1S) gamma mu+ ]cc" ,
+            DecayDescriptor = "[ chi_b1(2P) -> J/psi(1S) mu+ gamma ]cc" ,
             ##
             DaughtersCuts = {
             "J/psi(1S)" : " ( M  < 3.21 * GeV ) | in_range ( 8.5 * GeV , M , 12.0 * GeV ) " ,
             "gamma"     : self [ 'GammaChi' ]
             },
             ##
-            Preambulo  = self.preambulo() ,
+            Combination12Cut = """
+            ACHI2DOCA(1,2) < 100 
+            """ , 
             ## require chi_(c,b)
             CombinationCut = """
-            AM12 - AM1 < 1.01 * GeV
+            AM13 - AM1 < 1.01 * GeV
             """,
             ##
             MotherCut      = "  ALL " , 
             #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } 
-            #
             )
         ##
-        sel_ = Selection (
-            "ChiAndWPreFor" +   self.name()                ,
-            Algorithm           =   cmb                    ,
-            RequiredSelections  = [ self.DiMuonAndW     () , ## fake one!
-                                    self.W              () ,
-                                    self.DiMuon         () ,
-                                    StdLooseAllPhotons     ]
-            )
-        ## apply pi0-veto-tagger !
         from GaudiConfUtils.ConfigurableGenerators import Pi0Veto__Tagger
-        tag = Pi0Veto__Tagger (
-            MassWindow     = 25 * MeV  ,
-            MassChi2       = -1        ,
-            ExtraInfoIndex = 25015     ## unique !
+        ## 
+        return self.make_selection (
+            'ChiAndW'                     ,
+            Pi0Veto__Tagger               ,
+            [ pre_chiw ]                  ,
+            MassWindow     = 25 * MeV     ,
+            MassChi2       = -1           ,
+            ExtraInfoIndex = 25015     ## unique ! 
             )
-        ## the final selection
-        sel = Selection  (
-            "SelChiAndWFor    " +   self.name()  ,
-            Algorithm           =   tag          ,
-            RequiredSelections  = [ sel_         ]
-            )
-
-        return self._add_selection( 'Chi&W_Selection' , sel )
-
-    ## get DsPsi
-    def DsPsi( self ) :
-        """
-        Get Ds and J/psi :
-        """
-        sel = self._selection ( 'DsPsi_Selection' )
-        if sel : return sel
-
-        cmb = CombineParticles (
-            ##
-            DecayDescriptor = "[ B_c+ -> J/psi(1S) D_s+ ]cc" ,
-            ##
-            Preambulo      = self.preambulo() ,
-            DaughtersCuts  = {
-            "J/psi(1S)" : "M < 4.0 * GeV " ,
-            "D_s+"      : "PT > %s " % self['pT(Ds+) for Bc+'],
-            } ,
-            ##
-            CombinationCut = """
-            AM < 7.1 * GeV
-            """,
-            ##
-            MotherCut      = """
-            ( chi2vx < 16 )
-            """, 
-            #
-            ## make the selection faster
-            #
-            ParticleCombiners = {'' : FITTER } 
-            #
-            )
-
-        sel = Selection  (
-            "SelDsPsiFor"      +   self.name()     ,
-            Algorithm          =   cmb             ,
-            RequiredSelections = [ self.DiMuon  () ,
-                                   self.preDs   () ]
-            )
-
-        return self._add_selection( 'DsPsi_Selection' , sel )
-
-
+    
 # =============================================================================
 if '__main__' == __name__ :
 

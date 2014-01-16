@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-16 - Vanya Belyaev
+
+ - PromptCharm:
+
+ 	   remove all garbage Xicc, Ds+J/psi, Ds+Lc,...
+     release pt-cut 
+
 ! 2014-01-16 - Konstantinos A. Petridis
  - Tidying up dictionary of B2XMuMu relating to inclusive Xmumu lines
 
