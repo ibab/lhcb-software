@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! ----------------------------------------------------------------------------- 
 
+! 2014-01-16 - Mat Charles
+ - Patches to StrippingXibStarToXibZero.py (added two new modes suggested by Anton)
+
 ! 2014-01-15 - Mika Vesterinen
  - Added Phi->mumu control line to StrippingPhiToKSKS.py
 

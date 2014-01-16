@@ -59,8 +59,10 @@ _my_immutable_config = {
         ,'DisplacedTrack_GhostProb_Max'  : 0.7
         ,'Proton_ProbNNp_Min'            : 0.02
         ,'Proton_ProbNNp_Tight_Min'      : 0.05
+        ,'Proton_ProbNNp_VeryTight_Min'      : 0.1
         ,'Kaon_ProbNNk_Min'              : 0.02
         ,'Kaon_ProbNNk_Tight_Min'        : 0.04
+        ,'Kaon_ProbNNk_VeryTight_Min'        : 0.1
         ,'Pion_ProbNNpi_Min'             : 0.01
         ,'Pion_ProbNNpi_Tight_Min'       : 0.04
         ,'Muon_ProbNNmu_Min'             : 0.01
@@ -88,8 +90,8 @@ _my_immutable_config = {
         ,'XibStar_DMCutUpper'          :  50.0*MeV
         ,'XibStar_DMCutLower_SL'       :-250.0*MeV
         ,'XibStar_DMCutUpper_SL'       : 250.0*MeV
-        ,'Xic_ADAMASS_HalfWin'         : 170.0*MeV
-        ,'Xic_ADMASS_HalfWin'          : 120.0*MeV
+        ,'Xic_ADAMASS_HalfWin'         :  80.0*MeV
+        ,'Xic_ADMASS_HalfWin'          :  50.0*MeV
         ,'Xic_BPVDIRA_Min'             :   0.9
         ,'Xic_BPVVDCHI2_Min'           :  25.0
         ,'Xib_BPVVDCHI2_Min'           :  36.0
@@ -186,6 +188,9 @@ class XibStarBuilder(LineBuilder) :
         self.dauTightK  = filterKaonsTight(name+'TightFilteredKaons', self.dauK)
         self.dauTightP  = filterProtonsTight(name+'TightFilteredProtons', self.dauP)
         self.dauPiForSL = filterForSL(name+'SLFilteredPions', self.dauPi)
+        # Very tight cuts
+        self.dauVeryTightP = filterProtonsVeryTight(name+'VeryTightFilteredProtons', self.dauTightP)
+        self.dauVeryTightK = filterKaonsVeryTight(name+'VeryTightFilteredKaons', self.dauTightK)
 
         # Soft pions get special handling:
         self.dauSoftPi_init = DataOnDemand(Location = _my_immutable_config['SoftPions_InputList'])
@@ -208,17 +213,18 @@ class XibStarBuilder(LineBuilder) :
 
         # Filter the Lc to be tighter:
         _LcFiltCut = "( MINTREE('pi+'==ABSID, PROBNNpi) > 0.01 ) & ( MINTREE('K+'==ABSID, PROBNNk) > 0.02 ) & ( MINTREE('p+'==ABSID, PROBNNp) > 0.02 ) & ( PT > 2.0*GeV ) & (ADMASS('Lambda_c+')<50*MeV)"
-        _LcFilt = FilterDesktop(Code=_LcFiltCut)
-        self.Lc = Selection(name+"DisplacedLcFilt", Algorithm=_LcFilt, RequiredSelections = [self.stdLc])
+        self.Lc = filterGeneric(name+"DisplacedLcFilt", self.stdLc, _LcFiltCut)
+        # Even tighter:
+        _LcTightFiltCut = "( MINTREE('K+'==ABSID, PROBNNk) > 0.05 ) & ( MINTREE('p+'==ABSID, PROBNNp) > 0.1 )"
+        self.TightLc = filterGeneric(name+"DisplacedLcTightFilt", self.Lc, _LcTightFiltCut)
+
 
         # Filter the D0 and D+ to be tighter...
         _DFiltCutGeneric = "( MINTREE('pi+'==ABSID, PROBNNpi) > 0.01 ) & ( MINTREE('K+'==ABSID, PROBNNk) > 0.02 ) & ( PT > 2.0*GeV )"
         _DpFiltCut = _DFiltCutGeneric + " & (ADMASS('D+')<50*MeV)"
         _D0FiltCut = _DFiltCutGeneric + " & (ADMASS('D0')<50*MeV)"
-        _DpFilt= FilterDesktop(Code = _DpFiltCut) 
-        _D0Filt= FilterDesktop(Code = _D0FiltCut)
-        self.D0 = Selection ( name+"DisplacedD0Filt", Algorithm = _D0Filt, RequiredSelections = [self.stdD0] )
-        self.Dp = Selection ( name+"DisplacedDpFilt", Algorithm = _DpFilt, RequiredSelections = [self.stdDp] )
+        self.D0 = filterGeneric(name+"DisplacedD0Filt", self.stdD0, _D0FiltCut)
+        self.Dp = filterGeneric(name+"DisplacedDpFilt", self.stdDp, _DpFiltCut)
         
         # Combine Lambda with pion to make Xi-
         self.stdLambdaLL = DataOnDemand(Location = 'Phys/StdLooseLambdaLL/Particles')
@@ -235,7 +241,9 @@ class XibStarBuilder(LineBuilder) :
         self.combineOmega    = mergeLists(name+'CombineOmega', [ self.combineOmegaLLL, self.combineOmegaDDL, self.combineOmegaDDD ] )
 
         # Build Xic+ (only one decay mode):
-        self.Xicp = makeXic(name+"CombineXicPlus", [ self.combineXi, self.dauTightPi ], 30.0, '[Xi_c+ -> Xi- pi+ pi+]cc')
+        self.combineXicPlusToXiPiPi = makeXic(name+"CombineXicPlusToXiPiPi", [ self.combineXi, self.dauTightPi ], 30.0, '[Xi_c+ -> Xi- pi+ pi+]cc')
+        self.combineXicPlusToPKPi = makeXic(name+"CombineXicPlusToPKpi",  [ self.dauVeryTightP, self.dauVeryTightK, self.dauTightPi ], 30.0,  '[Xi_c+ -> p+ K- pi+]cc')
+        self.Xicp = mergeLists(name+"CombineXicPlus", [ self.combineXicPlusToXiPiPi, self.combineXicPlusToPKPi ] )
         # Build Xic0 (few different modes):
         self.combineXicZeroToXiPi   = makeXic(name+"CombineXicZeroToXiPi",   [ self.combineXi,    self.dauTightPi    ], 10.0, '[Xi_c0 -> Xi- pi+]cc')
         self.combineXicZeroToOmegaK = makeXic(name+"CombineXicZeroToOmegaK", [ self.combineOmega, self.dauTightK     ], 10.0, '[Xi_c0 -> Omega- K+]cc')
@@ -288,7 +296,10 @@ class XibStarBuilder(LineBuilder) :
         # Line 12 uses: Xib0 -> Xic0 pi+ mu- [and missing neutrino etc]
         _name12 = 'XibToXic0PiMu'
         self.XibMode12 = makeGeneric(name+'Combine'+_name12, [ self.Xic0, self.dauPiForSL, self.dauMu ], '[ Xi_b0 -> Xi_c0 pi+ mu- ]cc', _strCutXib0Comb, _strCutXib0MothSL)
-        
+        # Line 13 uses: Xib0 -> Lc+ K- pi+ pi-
+        _name13 = 'XibToLcKPiPi'
+        self.XibMode13  = makeGeneric(name+'Combine'+_name13, [ self.TightLc, self.dauVeryTightK, self.dauPi ], '[ Xi_b0 -> Lambda_c+ K- pi+ pi- ]cc', _strCutXib0Comb, _strCutXib0MothTight)
+
         # Build Xib* -> Xib0 pi+
         self.XibStarMode1RS  = makeXibStarRS(  name+'CombineXibStarRS'+_name1,  [ self.XibMode1,  self.dauSoftPi ])
         self.XibStarMode2RS  = makeXibStarRS(  name+'CombineXibStarRS'+_name2,  [ self.XibMode2,  self.dauSoftPi ])
@@ -302,6 +313,7 @@ class XibStarBuilder(LineBuilder) :
         self.XibStarMode10RS = makeXibStarRS(  name+'CombineXibStarRS'+_name10, [ self.XibMode10, self.dauSoftPi ])
         self.XibStarMode11RS = makeXibStarRSSL(name+'CombineXibStarRS'+_name11, [ self.XibMode11, self.dauSoftPi ])
         self.XibStarMode12RS = makeXibStarRSSL(name+'CombineXibStarRS'+_name12, [ self.XibMode12, self.dauSoftPi ])
+        self.XibStarMode13RS = makeXibStarRSSL(name+'CombineXibStarRS'+_name13, [ self.XibMode13, self.dauSoftPi ])
         self.XibStarMode1WS  = makeXibStarWS(  name+'CombineXibStarWS'+_name1,  [ self.XibMode1,  self.dauSoftPi ])
         self.XibStarMode2WS  = makeXibStarWS(  name+'CombineXibStarWS'+_name2,  [ self.XibMode2,  self.dauSoftPi ])
         self.XibStarMode3WS  = makeXibStarWS(  name+'CombineXibStarWS'+_name3,  [ self.XibMode3,  self.dauSoftPi ])
@@ -314,6 +326,7 @@ class XibStarBuilder(LineBuilder) :
         self.XibStarMode10WS = makeXibStarWS(  name+'CombineXibStarWS'+_name10, [ self.XibMode10, self.dauSoftPi ])
         self.XibStarMode11WS = makeXibStarWSSL(name+'CombineXibStarWS'+_name11, [ self.XibMode11, self.dauSoftPi ])
         self.XibStarMode12WS = makeXibStarWSSL(name+'CombineXibStarWS'+_name12, [ self.XibMode12, self.dauSoftPi ])
+        self.XibStarMode13WS = makeXibStarWSSL(name+'CombineXibStarWS'+_name13, [ self.XibMode13, self.dauSoftPi ])
 
         # Build the stripping lines for Xib*:
         self.line1RS  = self._strippingLine(name = name+_name1,        prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode1RS)
@@ -339,7 +352,9 @@ class XibStarBuilder(LineBuilder) :
         self.line11RS = self._strippingLine(name = name+_name11,       prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode11RS)
         self.line11WS = self._strippingLine(name = name+_name11+'_WS', prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode11WS)
         self.line12RS = self._strippingLine(name = name+_name12,       prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode12RS)
-        self.line12RS = self._strippingLine(name = name+_name12+'_WS', prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode12WS)
+        self.line12WS = self._strippingLine(name = name+_name12+'_WS', prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode12WS)
+        self.line13RS = self._strippingLine(name = name+_name13,       prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode13RS)
+        self.line13WS = self._strippingLine(name = name+_name13+'_WS', prescale = config['prescale'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibStarMode13WS)
                                          
         # Build the control lines for Xib0:
         self.control1  = self._strippingLine(name = name+"ControlXib_"+_name1,  prescale = config['prescaleControlMuonic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode1)
@@ -354,6 +369,7 @@ class XibStarBuilder(LineBuilder) :
         self.control10 = self._strippingLine(name = name+"ControlXib_"+_name10, prescale = config['prescaleControlHadronic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode10)
         self.control11 = self._strippingLine(name = name+"ControlXib_"+_name11, prescale = config['prescaleControlMuonic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode11)
         self.control12 = self._strippingLine(name = name+"ControlXib_"+_name12, prescale = config['prescaleControlHadronic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode12)
+        self.control13 = self._strippingLine(name = name+"ControlXib_"+_name13, prescale = config['prescaleControlHadronic'], postscale = 1.0, FILTER = _globalEventCuts, selection = self.XibMode13)
 
 
 def filterDisplacedTracks(localName, inputSelection, configDict = _my_immutable_config) :
@@ -389,6 +405,14 @@ def filterPionsTight(localName, inputSelection, configDict = _my_immutable_confi
 
 def filterProtonsTight(localName, inputSelection, configDict = _my_immutable_config) :
     _strCutDau = "(PROBNNp>%(Proton_ProbNNp_Tight_Min)s) & (MIPCHI2DV(PRIMARY)>%(DisplacedTrack_MIPCHI2DV_Tight_Min)s)" % configDict
+    return filterGeneric(localName, inputSelection, _strCutDau)
+
+def filterKaonsVeryTight(localName, inputSelection, configDict = _my_immutable_config) :
+    _strCutDau = "(PROBNNk>%(Kaon_ProbNNk_VeryTight_Min)s) & (PROBNNk>PROBNNpi)" % configDict
+    return filterGeneric(localName, inputSelection, _strCutDau)
+
+def filterProtonsVeryTight(localName, inputSelection, configDict = _my_immutable_config) :
+    _strCutDau = "(PROBNNp>%(Proton_ProbNNp_VeryTight_Min)s) & (PROBNNp>PROBNNpi)" % configDict
     return filterGeneric(localName, inputSelection, _strCutDau)
 
 def filterSoft(localName, inputSelection, configDict = _my_immutable_config) :
